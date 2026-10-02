@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#9fb9cc">
-  <title>Tank Battle 3D · 50 Stages · Endless Loops</title>
+  <title>坦克大战 3D · 50 关无限周目</title>
   <meta name="description" content="坦克大战 3D：50 关程序化战场，通关后进入难度更高的下一周目无限循环。打砖墙、守老鹰、吃道具，键盘与手机横屏都能玩。">
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
@@ -16,15 +16,15 @@
   <div id="hud">
     <div class="brand"><span class="eyebrow">TANK BATTLE / 3D</span><strong id="stage-label">STAGE 1 · LOOP 1</strong></div>
     <div class="stats">
-      <span><small data-i18n="tank3d.score">SCORE</small><b id="score">000000</b></span>
-      <span><small data-i18n="tank3d.hi">HI</small><b id="hi">000000</b></span>
-      <span><small data-i18n="tank3d.lives">LIVES</small><b id="lives">×3</b></span>
-      <span><small data-i18n="tank3d.power">POWER</small><b id="level" class="stars">☆☆☆</b></span>
+      <span><small data-i18n="tank3d.score">分数</small><b id="score">000000</b></span>
+      <span><small data-i18n="tank3d.hi">最高</small><b id="hi">000000</b></span>
+      <span><small data-i18n="tank3d.lives">生命</small><b id="lives">×3</b></span>
+      <span><small data-i18n="tank3d.power">火力</small><b id="level" class="stars">☆☆☆</b></span>
     </div>
-    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="tank3d.pause">Pause</button><button class="tb-btn" id="full" data-i18n="tank3d.full">Fullscreen</button></div>
+    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="tank3d.pause">暂停</button><button class="tb-btn" id="full" data-i18n="tank3d.full">全屏</button></div>
   </div>
   <aside id="side" aria-label="Enemy reserve">
-    <small data-i18n="tank3d.enemies">ENEMIES</small>
+    <small data-i18n="tank3d.enemies">敌军</small>
     <div id="reserve"></div>
     <div id="chips"></div>
   </aside>
@@ -33,23 +33,23 @@
   <div id="bigtext" hidden></div>
   <section id="panel" class="panel" aria-labelledby="panel-title">
     <span class="eyebrow" id="panel-kicker">CLASSIC TANK BATTLE · 50 STAGES IN 3D</span>
-    <h1 id="panel-title" data-i18n="tank3d.title">Tank Battle
-in a new dimension.</h1>
-    <p id="panel-copy" data-i18n="tank3d.intro">Clear all 50 stages, then loop back for a harder second run. Guard the eagle, blast through brick walls and wipe out every enemy tank.</p>
+    <h1 id="panel-title" data-i18n="tank3d.title">坦克大战
+进入新的 3D 维度</h1>
+    <p id="panel-copy" data-i18n="tank3d.intro">50 关战场逐关不同：守住老鹰、轰开砖墙、清空场上所有敌方坦克。打通第 50 关就回到第 1 关进入下一周目，敌军更快更硬。</p>
     <p id="file-warning" class="file-warning" hidden>本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
     <div id="tally" class="tally" hidden></div>
-    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="tank3d.move">Drive (4 directions)</span></div><div><kbd>J</kbd><span data-i18n="tank3d.fire">Fire (hold)</span></div><div><kbd>C</kbd><span data-i18n="tank3d.camera">Cycle camera views</span></div><div><kbd>Enter · Esc</kbd><span data-i18n="tank3d.startPause">Start · Pause</span></div></div>
-    <div class="action-row"><button id="start" class="tb-btn" data-i18n="tank3d.start">Enter · Start battle</button><button id="restart-run" class="tb-btn" data-i18n="tank3d.restartRun" hidden>New run from stage 1</button><a class="tb-btn" href="../../../games.html" data-i18n="tank3d.back">Game hub</a></div>
-    <div class="action-row options"><button id="sound" class="tb-btn">Sound</button><button id="touch-toggle" class="tb-btn" data-i18n="tank3d.touch">Touch controls</button><button id="lang" class="tb-btn">中文 / EN</button></div>
-    <small class="footnote" data-i18n="tank3d.note">Fan-made 50-stage demo · Procedural art & sound · Not an official release</small>
+    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="tank3d.move">行驶（四方向）</span></div><div><kbd>J</kbd><span data-i18n="tank3d.fire">开炮（可按住）</span></div><div><kbd>C</kbd><span data-i18n="tank3d.camera">旋转 · 俯仰 · 镜头回正</span></div><div><kbd>Enter · Esc</kbd><span data-i18n="tank3d.startPause">开始 · 暂停</span></div></div>
+    <div class="action-row"><button id="start" class="tb-btn" data-i18n="tank3d.start">回车 · 开始战斗</button><button id="restart-run" class="tb-btn" data-i18n="tank3d.restartRun" hidden>从第 1 关重新开始</button><a class="tb-btn" href="../../../games.html" data-i18n="tank3d.back">游戏中心</a></div>
+    <div class="action-row options"><button id="sound" class="tb-btn">Sound</button><button id="touch-toggle" class="tb-btn" data-i18n="tank3d.touch">触屏操作</button></div>
+    <small class="footnote" data-i18n="tank3d.note">同人 50 关演示 · 程序化美术与音效 · 非官方作品</small>
   </section>
   <div id="touch" hidden>
     <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
     <div class="camera-pad action-row"><button class="tb-btn" id="recenter">C</button></div>
-    <div class="action-row touch-actions"><button class="tb-btn fire-btn" data-hold="KeyJ"><b>J</b><span data-i18n="tank3d.fireShort">Fire</span></button></div>
+    <div class="action-row touch-actions"><button class="tb-btn fire-btn" data-hold="KeyJ"><b>J</b><span data-i18n="tank3d.fireShort">开炮</span></button></div>
   </div>
-  <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="tank3d.rotate">Turn your phone sideways</h2><p data-i18n="tank3d.rotateHint">The eagle will wait for you.</p><button class="tb-btn" id="rotate-go" data-i18n="tank3d.resume">Resume</button></div>
-  <div id="keyboard-help" data-i18n="tank3d.help">WASD Drive · J Fire · C Camera · Esc Pause</div>
+  <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="tank3d.rotate">请将手机横过来</h2><p data-i18n="tank3d.rotateHint">老鹰会在这里等你。</p><button class="tb-btn" id="rotate-go" data-i18n="tank3d.resume">继续</button></div>
+  <div id="keyboard-help" data-i18n="tank3d.help">WASD 行驶 · J 开炮 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停</div>
 </main>
 <script src="../../../js/locales/zh-CN.js?v=stages1"></script>
 <script src="../../../js/i18n.js?v=nosTW1"></script>

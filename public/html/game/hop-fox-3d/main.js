@@ -140,7 +140,6 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) { cle
 $('start').onclick = startGame; $('pause').onclick = togglePause; $('full').onclick = requestFull;
 $('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSoundLabel(); };
 $('touch-toggle').onclick = () => { $('touch').hidden = !$('touch').hidden; document.body.classList.toggle('touch-mode', !$('touch').hidden); };
-$('lang').onclick = () => tbSetLocale(tbGetLocale() === 'zh-CN' ? 'en' : 'zh-CN');
 $('rotate-go').onclick = () => { orientation(); if (!orientationBlocked && paused) togglePause(); };
 $('recenter').addEventListener('pointerdown', e => { e.preventDefault(); pointerKeys.add('KeyC'); setTimeout(() => pointerKeys.delete('KeyC'), 90); });
 document.querySelectorAll('[data-hold]').forEach(btn => {

@@ -227,7 +227,6 @@ $('start').onclick = startGame; $('pause').onclick = togglePause; $('full').oncl
 $('restart-run').onclick = restartRun;
 $('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSoundLabel(); };
 $('touch-toggle').onclick = () => { $('touch').hidden = !$('touch').hidden; document.body.classList.toggle('touch-mode', !$('touch').hidden); };
-$('lang').onclick = () => tbSetLocale(tbGetLocale() === 'zh-CN' ? 'en' : 'zh-CN');
 $('rotate-go').onclick = () => { orientation(); if (!orientationBlocked && paused) togglePause(); };
 
 document.querySelectorAll('[data-hold]').forEach(btn => {
