@@ -62,3 +62,7 @@ base_version：web-wave-flow-v0.8.1（网站版）。Toy 正式版仍是 web-for
 ## Toy 提交补记
 
 2026-10-03 用户确认后提交 v0.9：toy_doctor 预检通过（1 条无内容指纹 WARN），预览 preview_TRG8p4iP 在桌面与手机视口实测可玩无报错，随后提交审核，CLI 与 mylist 均为 auditing，提交预览 https://www.bilibili.com/toy/preview/preview_oJwxymnW/index.html 。正式地址审核通过前仍是旧版。
+
+## 网站卡片封面补记
+
+2026-10-03 换掉 8 月首版的亮绿基地俯视封面（画风已改回深色、新增虫洞与第一人称，旧图与游戏不符）。新图为线上 v0.9.0 实机：Edge headless 1440×810、隐藏 HUD，虫洞口近身跟随开激光，居中裁成 512×512；文件 `public/assets/game/thumbs/starship_defense.jpg`（sha256 前 16 位 d1f7e7274f66f1fd），`config.js` 用独立 `thumb ...?v=2`，只刷新这一张卡片。
