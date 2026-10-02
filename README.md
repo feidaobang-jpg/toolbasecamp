@@ -17,14 +17,29 @@ toolbasecamp/
     └── home-nas/             # Cloudflare Tunnel (home PC / NAS)
 ```
 
-## Retired portals (2026-10)
+## Retired portals (2026-10) — 已于 2026-10-02 执行完毕
 
-The five sub-site portals **pdf / dev / chef / hoppscotch / translate** were shut down together with the
-in-site 安卓 and 开发者 tool groups. Their nginx confs, install/patch scripts, CI build steps and the
-main-site entry cards are all removed from this repository. Only **news.zhengxiaohui.cn** (科技资讯) remains
-as a portal. See `deploy/apply-zhengxiaohui-portals.sh` for the current one-shot, and note that the shared
-Let's Encrypt certificate must be shrunk (`expand-zhengxiaohui-portal-certs.sh`) **before** deleting the
-retired DNS records — certbot renews every SAN entry, so a stale name would break main-site HTTPS renewal.
+**pdf / dev / chef / hoppscotch / translate** 五个子站连同站内的「安卓」「开发者」两组工具一起下线，
+只保留 **news.zhengxiaohui.cn**（科技资讯）。仓库侧（nginx conf、install/patch 脚本、CI 构建步骤、
+首页入口卡片、i18n 文案、sitemap）与线上侧均已清理，下面是实际执行记录，避免以后重复排查。
+
+| 位置 | 已执行 |
+|------|--------|
+| 仓库 | 69 个文件删除；`.github/workflows/deploy.yml` 去掉 dev/chef 构建与 5 个子站校验步骤 |
+| VPS nginx | 卸载 `sites-enabled/toolbasecamp-{dev,chef,hoppscotch}`（备份在 `/root/backup-portal-retire-20261002/nginx/`），`nas-proxy` / `legacy-redirects` 本就未启用 |
+| VPS 磁盘 | 删 `/var/www/toolbasecamp-{dev,chef}`、`/opt/toolbasecamp-stirling`，以及 67 个已从仓库移除但被 CI 留在 `/opt/toolbasecamp-deploy` 的脚本 |
+| VPS Docker | Hoppscotch 两容器 + `toolbasecamp-hoppscotch_hoppscotch-pgdata` 卷 + `hoppscotch/hoppscotch:2026.6.0` / `postgres:15-alpine` 镜像 + 3 个 env/secret 文件；服务器现已**零容器**，内存 905Mi → 697Mi |
+| NAS | `tbc-stirling-pdf` / `tbc-pdf-proxy` / `tbc-libretranslate` / `tbc-translate-proxy` 已 `docker rm -f`；**保留** `tbc-cloudflared` 与 WSL 保活计划任务（ComfyUI 仍走这条 Tunnel） |
+| Cloudflare DNS | `dev` / `chef` / `hoppscotch` / `pdf` / `translate` 记录已删，现全部 NXDOMAIN；`@` / `www` / `news` / `comfy` / `nas` 保留 |
+| 证书 | `zhengxiaohui.cn` 的 SAN 已收敛为 `zhengxiaohui.cn` + `www` + `news`（certbot 会按整串 SAN 续签，残留域名会让主站续签失败） |
+
+**唯一剩余收尾（不影响可用性）**：Cloudflare Zero Trust → Networks → Tunnels → `home-nas-docker` →
+Public Hostname，删掉 `pdf` / `translate` 两条 ingress 残留路由（DNS 已删，这两个域名不可达）。
+
+两个踩过的坑，后续运维注意：
+
+1. CI 用 `rsync` 同步 `deploy/` → `/opt/toolbasecamp-deploy/` **不带 `--delete`**，仓库删文件不会让服务器上的副本消失，必须手动清。
+2. 别拿容器的 `com.docker.compose.project.working_dir` 标签当"项目专属目录"直接 `rm -rf` —— 本项目里它是 `/opt/toolbasecamp-deploy`，删它等于删掉 cron 依赖的运维脚本（可从仓库 `tar` + `sudo mv` 恢复，但服务器独有的 `_dump-now.sh` / `_finish-portals.sh` 已丢）。
 
 ## Main-site i18n (zhengxiaohui.cn only)
 
