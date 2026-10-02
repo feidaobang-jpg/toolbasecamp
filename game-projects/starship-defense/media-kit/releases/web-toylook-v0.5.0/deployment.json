@@ -1,0 +1,26 @@
+{
+  "checked_at": "2026-10-02T01:11:28.991Z",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?v=toylook1",
+  "commit": "1942deac",
+  "files": {
+    "index.html": {
+      "status": 200,
+      "equivalent": true,
+      "sha256": "5b7ab5b55776156b7d4290e0b6d8228fbffe4720197fdbe15d08d301076d45a5"
+    },
+    "game.js": {
+      "status": 200,
+      "equivalent": true,
+      "sha256": "4f874384e84e8d84751a9d2b6a1344bce79dd31fa3b7a8593391c901a5b98da1"
+    },
+    "toy-visuals.js": {
+      "status": 200,
+      "equivalent": true,
+      "sha256": "3d64ba44b62841bea84103ce94946a88354927b1a4ee8ef71e872f24a668a364"
+    }
+  },
+  "actor": "soldier",
+  "state": "battle",
+  "errors": [],
+  "missing": []
+}
