@@ -1,0 +1,405 @@
+{
+ "note": "Analytic model of the campaign formulas before/after v0.9 (loop 1). waveHp = bodies x mob HP (chapter 6 counts split children); meleePressure = bodies x damage per hit. Player DPS reference: starter LMG 100; shop guns 105-238 base, x1.2 per upgrade level (Lv10 = x3).",
+ "rows": [
+  {
+   "chapter": 1,
+   "level": 1,
+   "old": {
+    "mobHp": 30,
+    "mobDmg": 8,
+    "count": 12,
+    "effectiveBodies": 12,
+    "waveHp": 360,
+    "meleePressure": 96
+   },
+   "new": {
+    "mobHp": 30,
+    "mobDmg": 8,
+    "count": 11,
+    "effectiveBodies": 11,
+    "waveHp": 330,
+    "meleePressure": 88
+   }
+  },
+  {
+   "chapter": 1,
+   "level": 10,
+   "old": {
+    "mobHp": 41,
+    "mobDmg": 10.9,
+    "count": 30,
+    "effectiveBodies": 30,
+    "waveHp": 1224,
+    "meleePressure": 326
+   },
+   "new": {
+    "mobHp": 41,
+    "mobDmg": 10.9,
+    "count": 28,
+    "effectiveBodies": 28,
+    "waveHp": 1142,
+    "meleePressure": 305
+   }
+  },
+  {
+   "chapter": 2,
+   "level": 1,
+   "old": {
+    "mobHp": 62,
+    "mobDmg": 13.4,
+    "count": 14,
+    "effectiveBodies": 14,
+    "waveHp": 862,
+    "meleePressure": 188
+   },
+   "new": {
+    "mobHp": 49,
+    "mobDmg": 9.8,
+    "count": 13,
+    "effectiveBodies": 13,
+    "waveHp": 638,
+    "meleePressure": 128
+   }
+  },
+  {
+   "chapter": 2,
+   "level": 10,
+   "old": {
+    "mobHp": 84,
+    "mobDmg": 18.3,
+    "count": 32,
+    "effectiveBodies": 32,
+    "waveHp": 2681,
+    "meleePressure": 585
+   },
+   "new": {
+    "mobHp": 67,
+    "mobDmg": 13.3,
+    "count": 29,
+    "effectiveBodies": 29,
+    "waveHp": 1935,
+    "meleePressure": 387
+   }
+  },
+  {
+   "chapter": 3,
+   "level": 1,
+   "old": {
+    "mobHp": 136,
+    "mobDmg": 19.8,
+    "count": 16,
+    "effectiveBodies": 16,
+    "waveHp": 2182,
+    "meleePressure": 317
+   },
+   "new": {
+    "mobHp": 89,
+    "mobDmg": 13,
+    "count": 15,
+    "effectiveBodies": 15,
+    "waveHp": 1328,
+    "meleePressure": 195
+   }
+  },
+  {
+   "chapter": 3,
+   "level": 10,
+   "old": {
+    "mobHp": 186,
+    "mobDmg": 27,
+    "count": 34,
+    "effectiveBodies": 34,
+    "waveHp": 6307,
+    "meleePressure": 917
+   },
+   "new": {
+    "mobHp": 120,
+    "mobDmg": 17.7,
+    "count": 31,
+    "effectiveBodies": 31,
+    "waveHp": 3731,
+    "meleePressure": 547
+   }
+  },
+  {
+   "chapter": 4,
+   "level": 1,
+   "old": {
+    "mobHp": 109,
+    "mobDmg": 19,
+    "count": 18,
+    "effectiveBodies": 18,
+    "waveHp": 1958,
+    "meleePressure": 343
+   },
+   "new": {
+    "mobHp": 76,
+    "mobDmg": 14,
+    "count": 16,
+    "effectiveBodies": 16,
+    "waveHp": 1219,
+    "meleePressure": 224
+   }
+  },
+  {
+   "chapter": 4,
+   "level": 10,
+   "old": {
+    "mobHp": 148,
+    "mobDmg": 25.9,
+    "count": 36,
+    "effectiveBodies": 36,
+    "waveHp": 5327,
+    "meleePressure": 932
+   },
+   "new": {
+    "mobHp": 104,
+    "mobDmg": 19,
+    "count": 32,
+    "effectiveBodies": 32,
+    "waveHp": 3316,
+    "meleePressure": 608
+   }
+  },
+  {
+   "chapter": 5,
+   "level": 1,
+   "old": {
+    "mobHp": 222,
+    "mobDmg": 32.6,
+    "count": 20,
+    "effectiveBodies": 20,
+    "waveHp": 4440,
+    "meleePressure": 651
+   },
+   "new": {
+    "mobHp": 129,
+    "mobDmg": 17.7,
+    "count": 18,
+    "effectiveBodies": 18,
+    "waveHp": 2326,
+    "meleePressure": 318
+   }
+  },
+  {
+   "chapter": 5,
+   "level": 10,
+   "old": {
+    "mobHp": 302,
+    "mobDmg": 44.3,
+    "count": 38,
+    "effectiveBodies": 38,
+    "waveHp": 11473,
+    "meleePressure": 1683
+   },
+   "new": {
+    "mobHp": 176,
+    "mobDmg": 24,
+    "count": 34,
+    "effectiveBodies": 34,
+    "waveHp": 5974,
+    "meleePressure": 818
+   }
+  },
+  {
+   "chapter": 6,
+   "level": 1,
+   "old": {
+    "mobHp": 208,
+    "mobDmg": 28.8,
+    "count": 22,
+    "effectiveBodies": 66,
+    "waveHp": 7322,
+    "meleePressure": 1901
+   },
+   "new": {
+    "mobHp": 123,
+    "mobDmg": 17.4,
+    "count": 19,
+    "effectiveBodies": 38,
+    "waveHp": 3044,
+    "meleePressure": 479
+   }
+  },
+  {
+   "chapter": 6,
+   "level": 10,
+   "old": {
+    "mobHp": 283,
+    "mobDmg": 39.2,
+    "count": 40,
+    "effectiveBodies": 120,
+    "waveHp": 18104,
+    "meleePressure": 4700
+   },
+   "new": {
+    "mobHp": 168,
+    "mobDmg": 23.7,
+    "count": 36,
+    "effectiveBodies": 72,
+    "waveHp": 7845,
+    "meleePressure": 1235
+   }
+  },
+  {
+   "chapter": 7,
+   "level": 1,
+   "old": {
+    "mobHp": 344,
+    "mobDmg": 44.7,
+    "count": 24,
+    "effectiveBodies": 24,
+    "waveHp": 8256,
+    "meleePressure": 1073
+   },
+   "new": {
+    "mobHp": 177,
+    "mobDmg": 21.6,
+    "count": 21,
+    "effectiveBodies": 21,
+    "waveHp": 3719,
+    "meleePressure": 453
+   }
+  },
+  {
+   "chapter": 7,
+   "level": 10,
+   "old": {
+    "mobHp": 468,
+    "mobDmg": 60.8,
+    "count": 42,
+    "effectiveBodies": 42,
+    "waveHp": 19649,
+    "meleePressure": 2554
+   },
+   "new": {
+    "mobHp": 241,
+    "mobDmg": 29.3,
+    "count": 37,
+    "effectiveBodies": 37,
+    "waveHp": 8912,
+    "meleePressure": 1085
+   }
+  },
+  {
+   "chapter": 8,
+   "level": 1,
+   "old": {
+    "mobHp": 331,
+    "mobDmg": 58.9,
+    "count": 26,
+    "effectiveBodies": 26,
+    "waveHp": 8611,
+    "meleePressure": 1531
+   },
+   "new": {
+    "mobHp": 179,
+    "mobDmg": 26.1,
+    "count": 23,
+    "effectiveBodies": 23,
+    "waveHp": 4124,
+    "meleePressure": 600
+   }
+  },
+  {
+   "chapter": 8,
+   "level": 10,
+   "old": {
+    "mobHp": 450,
+    "mobDmg": 80.1,
+    "count": 44,
+    "effectiveBodies": 44,
+    "waveHp": 19819,
+    "meleePressure": 3523
+   },
+   "new": {
+    "mobHp": 244,
+    "mobDmg": 35.5,
+    "count": 39,
+    "effectiveBodies": 39,
+    "waveHp": 9510,
+    "meleePressure": 1383
+   }
+  },
+  {
+   "chapter": 9,
+   "level": 1,
+   "old": {
+    "mobHp": 784,
+    "mobDmg": 70.6,
+    "count": 28,
+    "effectiveBodies": 28,
+    "waveHp": 21952,
+    "meleePressure": 1976
+   },
+   "new": {
+    "mobHp": 327,
+    "mobDmg": 31,
+    "count": 24,
+    "effectiveBodies": 24,
+    "waveHp": 7843,
+    "meleePressure": 743
+   }
+  },
+  {
+   "chapter": 9,
+   "level": 10,
+   "old": {
+    "mobHp": 1066,
+    "mobDmg": 96,
+    "count": 46,
+    "effectiveBodies": 46,
+    "waveHp": 49047,
+    "meleePressure": 4414
+   },
+   "new": {
+    "mobHp": 444,
+    "mobDmg": 42.1,
+    "count": 40,
+    "effectiveBodies": 40,
+    "waveHp": 17778,
+    "meleePressure": 1684
+   }
+  },
+  {
+   "chapter": 10,
+   "level": 1,
+   "old": {
+    "mobHp": 728,
+    "mobDmg": 87.4,
+    "count": 30,
+    "effectiveBodies": 30,
+    "waveHp": 21840,
+    "meleePressure": 2621
+   },
+   "new": {
+    "mobHp": 317,
+    "mobDmg": 36.2,
+    "count": 26,
+    "effectiveBodies": 26,
+    "waveHp": 8236,
+    "meleePressure": 941
+   }
+  },
+  {
+   "chapter": 10,
+   "level": 10,
+   "old": {
+    "mobHp": 990,
+    "mobDmg": 118.8,
+    "count": 48,
+    "effectiveBodies": 48,
+    "waveHp": 47524,
+    "meleePressure": 5703
+   },
+   "new": {
+    "mobHp": 431,
+    "mobDmg": 49.2,
+    "count": 42,
+    "effectiveBodies": 42,
+    "waveHp": 18093,
+    "meleePressure": 2068
+   }
+  }
+ ]
+}

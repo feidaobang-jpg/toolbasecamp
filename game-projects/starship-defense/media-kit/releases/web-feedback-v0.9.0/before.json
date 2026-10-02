@@ -1,0 +1,186 @@
+{
+ "build": "web-wave-flow-v0.8.1 (HEAD before this task)",
+ "captured_at": "2026-10-02T21:21:46.138Z",
+ "method": "Playwright headless Edge + ?qa=1 hooks; numeric reproduction, not gameplay footage",
+ "newGameOverwritesSave": {
+  "before": {
+   "chapter": 4,
+   "gold": 8888,
+   "vehicles": [
+    "tank"
+   ]
+  },
+  "afterClickingNewGame": {
+   "chapter": 1,
+   "gold": 150,
+   "vehicles": []
+  },
+  "backupExists": false
+ },
+ "vehicleLostForever": {
+  "ownedAfterDestroy": [],
+  "vehiclesOnField": 0
+ },
+ "staleExplosionWhileDriving": {
+  "playerHpBefore": 120,
+  "playerHpAfter": 90,
+  "vehicleDistanceFromBlast": 93
+ },
+ "chapter6Split": {
+  "parent": {
+   "hp": 208,
+   "dmg": 28.8,
+   "speed": 6.5
+  },
+  "kids": [
+   {
+    "hp": 62,
+    "dmg": 28.8,
+    "speed": 6.5
+   },
+   {
+    "hp": 62,
+    "dmg": 28.8,
+    "speed": 6.5
+   }
+  ],
+  "perLevel": [
+   {
+    "level": 1,
+    "waveCount": 22,
+    "withSplitsUpTo": 66
+   },
+   {
+    "level": 5,
+    "waveCount": 30,
+    "withSplitsUpTo": 90
+   },
+   {
+    "level": 10,
+    "waveCount": 40,
+    "withSplitsUpTo": 120
+   }
+  ]
+ },
+ "weapons": [
+  {
+   "id": "smg",
+   "name": "冲锋枪",
+   "price": 0,
+   "dps": 55,
+   "range": 26
+  },
+  {
+   "id": "lmg",
+   "name": "轻机枪",
+   "price": 0,
+   "dps": 100,
+   "range": 30
+  },
+  {
+   "id": "rifle",
+   "name": "战斗步枪",
+   "price": 0,
+   "dps": 68,
+   "range": 42
+  },
+  {
+   "id": "shotgun",
+   "name": "霰弹枪",
+   "price": 450,
+   "dps": 59,
+   "range": 17
+  },
+  {
+   "id": "sniper",
+   "name": "狙击枪",
+   "price": 600,
+   "dps": 100,
+   "range": 70
+  },
+  {
+   "id": "launcher",
+   "name": "榴弹炮",
+   "price": 900,
+   "dps": 54,
+   "range": 38
+  },
+  {
+   "id": "flamer",
+   "name": "火焰喷射器",
+   "price": 1100,
+   "dps": 100,
+   "range": 13
+  },
+  {
+   "id": "laser",
+   "name": "脉冲激光炮",
+   "price": 1500,
+   "dps": 130,
+   "range": 40
+  },
+  {
+   "id": "minigun",
+   "name": "加特林",
+   "price": 1900,
+   "dps": 156,
+   "range": 28
+  },
+  {
+   "id": "plasma",
+   "name": "等离子炮",
+   "price": 1600,
+   "dps": 205,
+   "range": 36
+  },
+  {
+   "id": "missile",
+   "name": "追踪导弹",
+   "price": 2200,
+   "dps": 100,
+   "range": 48
+  },
+  {
+   "id": "railgun",
+   "name": "电磁轨道炮",
+   "price": 2800,
+   "dps": 150,
+   "range": 95
+  }
+ ],
+ "goldLostAtLevelEnd": {
+  "goldBefore": 150,
+  "goldAfterTransition": 150,
+  "levelBonusOnly": 0,
+  "state": "battle"
+ },
+ "spaceRetriggersFocusedButton": {
+  "initial": "high",
+  "afterClick": "smooth",
+  "afterPressingSpaceToJump": "high",
+  "jumpIgnored": true
+ },
+ "interactConflict": {
+  "hp": 30,
+  "actionOfI": "gate",
+  "label": "关门"
+ },
+ "fog": {
+  "fogNear": 100,
+  "fogFar": 235,
+  "worldMaxZ": 200,
+  "baseZ": -42,
+  "distanceFromFarFieldToBase": 242
+ },
+ "rocks": {
+  "total": 65,
+  "inCentralLane": 27,
+  "blockFriendlyShots": true
+ },
+ "touchDetection": {
+  "simulated": "Android phone whose browser reports (hover:hover)",
+  "touchUIVisible": false,
+  "stageRotated": false
+ },
+ "pageErrors": []
+}

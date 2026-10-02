@@ -188,5 +188,28 @@
     "tool": "Three.js r152 merged geometry assisted by Codex",
     "description": "Original mountain horseshoe, stair treads, traversable short cave and field shelter; gameplay layout inspired by retained native project, no native assets copied",
     "sha256": "ef1481e291a86c5a78d9af64779dd13c53e78f3a2bd30c6239222900204897ab"
+  },
+  {
+    "id": "dark-battlefield-procedural",
+    "purpose": "v0.9 默认深色战场画风：装甲兵、蛛形虫（含精英/首领/母皇）、机甲、夜空/星球/远山、深色地形与基地配色",
+    "runtime_file": [
+      "../../../public/html/game/starship-defense/dark-visuals.js",
+      "../../../public/html/game/starship-defense/theme.js"
+    ],
+    "source_type": "procedural",
+    "tool": "Claude Code 手写 Three.js 程序化几何（合并网格 + 顶点色 + aGlow 自发光属性）",
+    "prompt_or_params": null,
+    "processing": "以 v0.1-v0.3 深色版（实机截图 toy-v0.3.0/captures/desktop.png）的深蓝夜空、橄榄绿地面、蓝色装甲兵、彩色圆甲虫为参考重新建模；每个单位 3-4 个绘制部件",
+    "usage": "原创，无第三方素材"
+  },
+  {
+    "id": "hive-tunnels-procedural",
+    "purpose": "v0.9 虫洞隧道网络（6 段可步行隧道、5 个洞口）与后方虫巢（母巢穹顶、卵囊、骨刺环、光柱）",
+    "runtime_file": "../../../public/html/game/starship-defense/hive-world.js",
+    "source_type": "procedural",
+    "tool": "Claude Code 手写 Three.js：Catmull-Rom 中心线扫掠拱形截面、合并几何与实例化",
+    "prompt_or_params": "TUNNEL_LINES 中心线坐标、HALF=4、ARCH_H=5.7、STEP=2",
+    "processing": "隧道交汇处自动开天井；碰撞为圆柱实体与顶棚实体，供行走、子弹、镜头与飞虫高度共用",
+    "usage": "原创；玩法思路参考作者自己的裂隙防线（D:/project/gpt/worlds/breachline）洞网与母巢设计，未搬运其资产"
   }
 ]

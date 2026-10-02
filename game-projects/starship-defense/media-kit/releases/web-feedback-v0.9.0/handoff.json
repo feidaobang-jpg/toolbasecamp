@@ -1,0 +1,873 @@
+{
+ "schema_version": 1,
+ "game_id": "chongchao-qianshao",
+ "version": "web-feedback-v0.9.0",
+ "base_version": "web-wave-flow-v0.8.1",
+ "created_at": "2026-10-02T22:25:13.149853+00:00",
+ "build": {
+  "id": "web-feedback-v0.9.0-0821b16ade4e",
+  "commit": "a43d26b1",
+  "dirty": false,
+  "fingerprint": "0821b16ade4ec1350f86ecb1efc21a61b380035056a5a504553f06fba0e77377",
+  "entrypoint": "public/html/game/starship-defense/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "dark-theme",
+   "description": "默认深色战场画风（可切回明亮Q版）",
+   "status": "implemented",
+   "evidence_ids": [
+    "menu-dark",
+    "prep-base",
+    "theme-toy-field",
+    "theme-toy"
+   ]
+  },
+  {
+   "id": "camera-views",
+   "description": "第三人称三档+第一人称（V），鼠标/触屏自由视角，Q/E 加速转向",
+   "status": "implemented",
+   "evidence_ids": [
+    "desktop-realtime",
+    "first-person",
+    "phone-first-person"
+   ]
+  },
+  {
+   "id": "separate-keys",
+   "description": "I 互动、H 医疗、1-9/X/滚轮换枪、G 小队指令、P/Esc 立即暂停",
+   "status": "implemented",
+   "evidence_ids": [
+    "laser-damage-numbers",
+    "phone-pause-options"
+   ]
+  },
+  {
+   "id": "smart-gate",
+   "description": "走向城门自动开、虫潮中离开自动关",
+   "status": "implemented",
+   "evidence_ids": [
+    "desktop-realtime",
+    "prep-base"
+   ]
+  },
+  {
+   "id": "tunnels-hive",
+   "description": "5 个虫洞口、6 段可步行隧道、虫巢母皇与守卫",
+   "status": "implemented",
+   "evidence_ids": [
+    "hive-fight",
+    "hive-queen",
+    "tunnel-hive-realtime",
+    "tunnel-inside",
+    "tunnel-mouth",
+    "wave-from-mouth"
+   ]
+  },
+  {
+   "id": "bigger-map",
+   "description": "地图 220×405、侧翼掩体巨石、小地图、基地光柱",
+   "status": "implemented",
+   "evidence_ids": [
+    "desktop-realtime",
+    "wave-from-mouth"
+   ]
+  },
+  {
+   "id": "weapon-upgrades",
+   "description": "武器重平衡、强化 Lv1-10、伤害数字、激光升温贯穿",
+   "status": "implemented",
+   "evidence_ids": [
+    "laser-damage-numbers",
+    "shop-upgrade"
+   ]
+  },
+  {
+   "id": "progress-safety",
+   "description": "新游戏前备份、载具损毁修复、队友归队、金币自动回收、定时自动存档",
+   "status": "implemented",
+   "evidence_ids": []
+  },
+  {
+   "id": "mobile",
+   "description": "手机识别、自动横屏、全套触屏键与拖动视角",
+   "status": "implemented",
+   "evidence_ids": [
+    "phone-portrait-touch",
+    "phone-realtime",
+    "phone-shop"
+   ]
+  },
+  {
+   "id": "campaign",
+   "description": "十章×十关无限周目、小/大首领、自由测试模式（沿用）",
+   "status": "implemented",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "art-dark",
+   "feature_ids": [
+    "dark-theme"
+   ],
+   "before": "v0.5 起明亮Q版，网友嫌幼稚",
+   "after": "默认深色战场，Q版可选",
+   "user_visible_result": "默认深色战场，Q版可选",
+   "evidence_ids": [
+    "menu-dark",
+    "prep-base",
+    "theme-toy"
+   ],
+   "verification": "after.json default theme"
+  },
+  {
+   "id": "view",
+   "feature_ids": [
+    "camera-views"
+   ],
+   "before": "只有 Q/E 慢转，相机追随一顿一顿，没有第一人称",
+   "after": "鼠标/触屏自由视角，V 第一人称，相机抖动 0",
+   "user_visible_result": "鼠标/触屏自由视角，V 第一人称，相机抖动 0",
+   "evidence_ids": [
+    "desktop-realtime",
+    "first-person"
+   ],
+   "verification": "after.json camera checks"
+  },
+  {
+   "id": "keys",
+   "feature_ids": [
+    "separate-keys",
+    "smart-gate"
+   ],
+   "before": "I 同时管门/载具/医疗包，开战后出不了门；P 有时无效",
+   "after": "I/H 分离，智能城门，P/Esc 立即暂停",
+   "user_visible_result": "I/H 分离，智能城门，P/Esc 立即暂停",
+   "evidence_ids": [
+    "prep-base"
+   ],
+   "verification": "after.json gate/pause checks"
+  },
+  {
+   "id": "map",
+   "feature_ids": [
+    "bigger-map",
+    "tunnels-hive"
+   ],
+   "before": "160×260，满地石头挡枪，远处看不到家",
+   "after": "220×405，隧道虫巢，掩体只挡敌人，光柱+小地图",
+   "user_visible_result": "220×405，隧道虫巢，掩体只挡敌人，光柱+小地图",
+   "evidence_ids": [
+    "hive-queen",
+    "tunnel-inside",
+    "wave-from-mouth"
+   ],
+   "verification": "after.json world checks"
+  },
+  {
+   "id": "balance",
+   "feature_ids": [
+    "weapon-upgrades",
+    "campaign"
+   ],
+   "before": "第6章分裂子代满伤害，霰弹枪弱于初始枪，榴弹炮近距0伤害",
+   "after": "曲线放缓、子代1只45%伤害、武器强化、榴弹落点对准目标",
+   "user_visible_result": "曲线放缓、子代1只45%伤害、武器强化、榴弹落点对准目标",
+   "evidence_ids": [
+    "shop-upgrade"
+   ],
+   "verification": "after.json + balance.json + playthrough.json"
+  },
+  {
+   "id": "safety",
+   "feature_ids": [
+    "progress-safety"
+   ],
+   "before": "新游戏覆盖存档、载具被打爆永久消失、关末金币丢失",
+   "after": "确认+备份、损毁修复、自动回收、定时存档",
+   "user_visible_result": "确认+备份、损毁修复、自动回收、定时存档",
+   "evidence_ids": [],
+   "verification": "after.json save/vehicle/gold checks"
+  },
+  {
+   "id": "mobile",
+   "feature_ids": [
+    "mobile"
+   ],
+   "before": "部分手机无触屏按钮、不旋转、没有商店",
+   "after": "UA+首次触摸识别，全套按键，暂停菜单设置",
+   "user_visible_result": "UA+首次触摸识别，全套按键，暂停菜单设置",
+   "evidence_ids": [
+    "phone-portrait-touch",
+    "phone-shop"
+   ],
+   "verification": "after.json phone checks"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "newgame-overwrite",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "有进度时点开始新游戏，自动存档立即被第1章覆盖",
+   "observed": "有进度时点开始新游戏，自动存档立即被第1章覆盖",
+   "comedy_angle": null,
+   "cause": "startPrep 立即 autoSave",
+   "status": "fixed",
+   "fix": "确认框+备份槽",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json"
+  },
+  {
+   "id": "vehicle-lost",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "载具被击毁后从拥有列表删除",
+   "observed": "载具被击毁后从拥有列表删除",
+   "comedy_angle": null,
+   "cause": "damageVehicle splice vehiclesOwned",
+   "status": "fixed",
+   "fix": "损毁保留，下关修复；停放无敌",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json"
+  },
+  {
+   "id": "stale-blast",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "驾驶时在上车点的爆炸仍扣血",
+   "observed": "驾驶时在上车点的爆炸仍扣血",
+   "comedy_angle": null,
+   "cause": "explode 用未更新的 player.mesh 位置",
+   "status": "fixed",
+   "fix": "按载具位置结算",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json"
+  },
+  {
+   "id": "split-ch6",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "第6章分裂子代2只且满伤害",
+   "observed": "第6章分裂子代2只且满伤害",
+   "comedy_angle": null,
+   "cause": "split 只缩血量",
+   "status": "fixed",
+   "fix": "1只/精英2只，伤害45%",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json + balance.json"
+  },
+  {
+   "id": "touch-detect",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "报 hover:hover 的手机没有触屏UI",
+   "observed": "报 hover:hover 的手机没有触屏UI",
+   "comedy_angle": null,
+   "cause": "只用 (pointer:coarse)&&!(hover:hover)",
+   "status": "fixed",
+   "fix": "UA+首次触摸+手动记忆",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/captures/before-phone-no-touch-ui.jpg",
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [
+    "phone-portrait-touch"
+   ],
+   "retest": "after.json"
+  },
+  {
+   "id": "fog-base",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "远处基地消失",
+   "observed": "远处基地消失",
+   "comedy_angle": null,
+   "cause": "雾 235 米，场地 242 米",
+   "status": "fixed",
+   "fix": "光柱不受雾影响+小地图",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/captures/before-base-lost-in-fog.jpg",
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [
+    "desktop-realtime"
+   ],
+   "retest": "after.json"
+  },
+  {
+   "id": "launcher-zero",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "榴弹炮 30 米内 0 伤害",
+   "observed": "榴弹炮 30 米内 0 伤害",
+   "comedy_angle": null,
+   "cause": "固定抛物线",
+   "status": "fixed",
+   "fix": "按目标计算抛射",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json weapon spots"
+  },
+  {
+   "id": "tower-floor",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "城楼向下近射打到自己地板",
+   "observed": "城楼向下近射打到自己地板",
+   "comedy_angle": null,
+   "cause": "枪口处判地面",
+   "status": "fixed",
+   "fix": "枪口 1.6 米内不判地面",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json"
+  },
+  {
+   "id": "focus-steal",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "鼠标点按钮后空格/回车触发按钮而不是跳/射",
+   "observed": "鼠标点按钮后空格/回车触发按钮而不是跳/射",
+   "comedy_angle": null,
+   "cause": "按钮保留焦点",
+   "status": "fixed",
+   "fix": "游玩中按钮失焦",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "after.json"
+  },
+  {
+   "id": "fort-stuck",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "虫子卡进山顶堡垒，波次打不完",
+   "observed": "虫子卡进山顶堡垒，波次打不完",
+   "comedy_angle": null,
+   "cause": "直线转向无法离开 U 形围墙",
+   "status": "fixed",
+   "fix": "卡住5秒钻地重出；野怪不刷在堡垒",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "playthrough.json"
+  },
+  {
+   "id": "msg-timer",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "提示时间随帧率变化",
+   "observed": "提示时间随帧率变化",
+   "comedy_angle": null,
+   "cause": "按 1/60 每帧递减",
+   "status": "fixed",
+   "fix": "按 dt",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [],
+   "retest": "代码复查"
+  },
+  {
+   "id": "fp-particle",
+   "found_in": "web-wave-flow-v0.8.1",
+   "repro": "第一人称受伤粒子挡住画面",
+   "observed": "第一人称受伤粒子挡住画面",
+   "comedy_angle": null,
+   "cause": "粒子生成在眼睛位置",
+   "status": "fixed",
+   "fix": "第一人称改屏幕边缘闪光",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-feedback-v0.9.0/before.json"
+   ],
+   "after_media_ids": [
+    "first-person"
+   ],
+   "retest": "截图复查"
+  }
+ ],
+ "media": [
+  {
+   "id": "desktop-realtime",
+   "file": "releases/web-feedback-v0.9.0/captures/desktop-realtime.webm",
+   "sha256": "d1a2da1353acf5aed7396f08bae2ab9b05cb059d722927f1f76208fadb36bcc8",
+   "kind": "video",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "桌面实时：主菜单→买枪强化→开战走出智能城门→鼠标转视角→洞口虫潮→激光伤害数字→第一人称。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": 24.08,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 24.08,
+     "description": "桌面实时：主菜单→买枪强化→开战走出智能城门→鼠标转视角→洞口虫潮→激光伤害数字→第一人称",
+     "supports": "changes listed in handoff"
+    }
+   ]
+  },
+  {
+   "id": "desktop-sheet",
+   "file": "releases/web-feedback-v0.9.0/captures/desktop-sheet.jpg",
+   "sha256": "136ac63f8c706fdc5005b1626c243adf4066d4bf9db6aca4e9ab187354cd46d2",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "desktop-realtime.webm 每3秒抽帧拼图（审片用）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1920,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "first-person-fight",
+   "file": "releases/web-feedback-v0.9.0/captures/first-person-fight.jpg",
+   "sha256": "c198a0f1adcd180b44b4a6fbdbdbf68cd7c8913ce1bc1a2b5713124910798efb",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称战斗中阵亡后的复活提示（真实过程，未改结果）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "first-person",
+   "file": "releases/web-feedback-v0.9.0/captures/first-person.jpg",
+   "sha256": "089ddfe7709d90bcec10b1a711caf9f98f366806168594255ce851a5810480df",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称：准星、武器模型、伤害数字（验收脚本截图）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "hive-fight",
+   "file": "releases/web-feedback-v0.9.0/captures/hive-fight.jpg",
+   "sha256": "93019c3c00ac1647f729bc6d9165a9a14c4cf6bc71fe6eccc0eadb4ee8e3a072",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "击杀母皇后：母皇已击杀，本章虫潮 -35%。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "hive-queen",
+   "file": "releases/web-feedback-v0.9.0/captures/hive-queen.jpg",
+   "sha256": "8b245d5d705f1cac905a4e746b8f8c726139f7ec4e071a02ff7fbfb90c6916bb",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "虫巢：母皇、卵囊、精英护卫围攻（给了中期装备）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "laser-damage-numbers",
+   "file": "releases/web-feedback-v0.9.0/captures/laser-damage-numbers.jpg",
+   "sha256": "60689d9f63174b0a3039fb894ea29ecb1ce4de595b4539d6302d557a0fbb3e0a",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "激光持续光束+伤害数字，底部武器栏。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "menu-dark",
+   "file": "releases/web-feedback-v0.9.0/captures/menu-dark.jpg",
+   "sha256": "beb57536e8abe6bf66ebe6a2b4fd45d908b2a1a6826bb682b503bff7319e593d",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "新默认深色战场主菜单。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-first-person",
+   "file": "releases/web-feedback-v0.9.0/captures/phone-first-person.jpg",
+   "sha256": "d3f8331f0509642fbc8a14ed497a36a5a0e2418c9448e8b611e18e0405eed3d6",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "手机第一人称。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-pause-options",
+   "file": "releases/web-feedback-v0.9.0/captures/phone-pause-options.jpg",
+   "sha256": "41ad41e584de686c65a5ec6d8d565dc790c1b16edab6c84f0965b6a9a1b63b4a",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "手机暂停菜单：人称/画风/画质/声音/存档排行。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-portrait-touch",
+   "file": "releases/web-feedback-v0.9.0/captures/phone-portrait-touch.jpg",
+   "sha256": "191ae80973ddd9c90015fee92d28b46b5287826945a28d729c5146236af0e991",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "手机竖屏自动旋转为横屏布局，误报 hover 也有全套触屏按钮。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-realtime",
+   "file": "releases/web-feedback-v0.9.0/captures/phone-realtime.webm",
+   "sha256": "59b36b9ae71ee48c171d0f4a6112a9c4deb3f456d97c47e2f776760795c13a0f",
+   "kind": "video",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "手机竖屏模拟实时（竖屏物理录像，不是16:9母版）：摇杆移动、拖动视角、商店、第一人称、暂停菜单（真实触摸事件）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": 8.64,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 8.64,
+     "description": "手机竖屏模拟实时（竖屏物理录像，不是16:9母版）：摇杆移动、拖动视角、商店、第一人称、暂停菜单（真实触摸事件）",
+     "supports": "changes listed in handoff"
+    }
+   ]
+  },
+  {
+   "id": "phone-shop-open",
+   "file": "releases/web-feedback-v0.9.0/captures/phone-shop-open.jpg",
+   "sha256": "52f9fe004299f127c40b25ebeaec9b0f45651431a3677a5c22f1ee40bc38ce0f",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "手机录像过程中打开商店。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-shop",
+   "file": "releases/web-feedback-v0.9.0/captures/phone-shop.jpg",
+   "sha256": "548ee535ef261ffdccc0b74b0d4e16f9d06aeb1a0ebf991aa82a78a6d513506b",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "手机点 O 打开商店（验收脚本）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "prep-base",
+   "file": "releases/web-feedback-v0.9.0/captures/prep-base.jpg",
+   "sha256": "b2b0fa1f03437de3d2d38f319fca5102f3ce4a714b6fc250082a4f80f52b72d8",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "深色画风基地准备阶段，城门提示“走向城门会自动开门”。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "shop-upgrade",
+   "file": "releases/web-feedback-v0.9.0/captures/shop-upgrade.jpg",
+   "sha256": "27cf81200a2b52dde5e68bff564efa41e22c671402cf87d805c0bfa11d814360",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "商店：每把武器显示秒伤与定位，已购武器可强化 Lv1-10。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "theme-toy-field",
+   "file": "releases/web-feedback-v0.9.0/captures/theme-toy-field.jpg",
+   "sha256": "797d0610a890d5bc854f9e23c55301e3fc1105ecda187d10b467043e277bad8b",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "可选明亮Q版画风（野外）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "theme-toy",
+   "file": "releases/web-feedback-v0.9.0/captures/theme-toy.jpg",
+   "sha256": "7f0bfdcc032e15974755708dfb5575a671c2fe4426fbe6587a8495a9fda5314c",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "可选明亮Q版画风仍可用（基地）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "tunnel-hive-realtime",
+   "file": "releases/web-feedback-v0.9.0/captures/tunnel-hive-realtime.webm",
+   "sha256": "0aa8b5f208affad9aeceba11dd4c6d25f194e91e862ddb51867b427aa38b4ad9",
+   "kind": "video",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "桌面实时：从主洞口走进隧道→（传送到虫巢前）→母皇召唤护卫→击杀母皇。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": 21.6,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 21.6,
+     "description": "桌面实时：从主洞口走进隧道→（传送到虫巢前）→母皇召唤护卫→击杀母皇",
+     "supports": "changes listed in handoff"
+    }
+   ]
+  },
+  {
+   "id": "tunnel-inside",
+   "file": "releases/web-feedback-v0.9.0/captures/tunnel-inside.jpg",
+   "sha256": "d676420a492bd911dda794861b14cfda6c9787743991bf8655e319bc270691b6",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "隧道内部：镜头自动压低贴近，尽头是虫巢。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "tunnel-mouth",
+   "file": "releases/web-feedback-v0.9.0/captures/tunnel-mouth.jpg",
+   "sha256": "ec87812a97119d8494a12f7093c82c65318ddfb7b5f244c3269526c5f8cdb340",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "中央主洞口，可走进隧道。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "tunnel-sheet",
+   "file": "releases/web-feedback-v0.9.0/captures/tunnel-sheet.jpg",
+   "sha256": "ae294d863d3ecf81bfb00661ae8033530efe000a682b555148c04d7dee99b568",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "tunnel-hive-realtime.webm 每2秒抽帧拼图（审片用）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1920,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "wave-from-mouth",
+   "file": "releases/web-feedback-v0.9.0/captures/wave-from-mouth.jpg",
+   "sha256": "036621bbe8cb7e03070a227852992f607b1a99daf60c1cdd96aa1e90bfb43381",
+   "kind": "screenshot",
+   "version": "web-feedback-v0.9.0",
+   "build_id": "web-feedback-v0.9.0-0821b16ade4e",
+   "capture_mode": "realtime-automation",
+   "description": "正式虫潮从虫洞口钻出，小地图红圈是洞口。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "device": "Windows 11, RTX 4060 Ti",
+   "browser": "Edge headless (Playwright 1.62, ANGLE D3D11)",
+   "viewport": "1280x720 / 1440x810",
+   "method": "verify-feedback.cjs 45 项真实按键/鼠标/触屏为主",
+   "result": "45/45 通过",
+   "evidence": "releases/web-feedback-v0.9.0/after.json",
+   "untested": "真实手机、Toy iframe 内鼠标锁定"
+  },
+  {
+   "device": "同上",
+   "browser": "同上",
+   "viewport": "390x844 isMobile hasTouch（含误报 hover）",
+   "method": "触屏点击/摇杆/拖动",
+   "result": "触屏UI、旋转、商店、暂停通过",
+   "evidence": "after.json phone checks",
+   "untested": "真机性能"
+  },
+  {
+   "device": "同上",
+   "browser": "同上",
+   "viewport": "1280x720",
+   "method": "verify-playthrough-v09.cjs 纯键盘机器人实时整关",
+   "result": "见 playthrough.json",
+   "evidence": "releases/web-feedback-v0.9.0/playthrough.json",
+   "untested": "真人主观难度"
+  },
+  {
+   "device": "同上",
+   "browser": "同上，vsync off",
+   "viewport": "1280x720",
+   "method": "verify-performance-v09.cjs 48 虫+4 队友 15 秒",
+   "result": "均值 375-460 FPS，p95 3.1-3.7 ms",
+   "evidence": "releases/web-feedback-v0.9.0/performance.json",
+   "untested": "手机 GPU"
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "录像无游戏声音（未录 Web Audio）",
+   "未做真机手机测试",
+   "视觉审查仅开发者抽帧，未经用户听审/看审",
+   "Toy 尚未更新，玩家点网站卡片默认进入 Toy 旧版"
+  ]
+ }
+}

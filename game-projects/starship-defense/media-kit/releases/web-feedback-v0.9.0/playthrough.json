@@ -1,0 +1,108 @@
+{
+ "version": "web-feedback-v0.9.0",
+ "method": "Playwright keyboard bot (J held, Q/E turn to nearest bug, H heal, U grenades, stays by the gate); setup hooks only set chapter/gear before R; fight runs in real time without damage hooks",
+ "runs": [
+  {
+   "scenario": "chapter1-level1-starter",
+   "setup": {},
+   "won": true,
+   "seconds": 47,
+   "baseHp": 2000,
+   "deaths": 0,
+   "errors": []
+  },
+  {
+   "scenario": "chapter6-level1-midgame",
+   "setup": {
+    "weapons": [
+     "lmg",
+     "shotgun",
+     "laser",
+     "flamer"
+    ],
+    "cur": "laser",
+    "lv": {
+     "laser": 3,
+     "flamer": 2
+    },
+    "squad": 2,
+    "hpBonus": 80
+   },
+   "won": true,
+   "seconds": 53,
+   "baseHp": 2450,
+   "deaths": 0,
+   "errors": []
+  },
+  {
+   "scenario": "chapter6-level5-midgame",
+   "setup": {
+    "weapons": [
+     "lmg",
+     "shotgun",
+     "laser",
+     "flamer",
+     "launcher"
+    ],
+    "cur": "laser",
+    "lv": {
+     "laser": 4,
+     "flamer": 3,
+     "launcher": 2
+    },
+    "squad": 3,
+    "hpBonus": 120
+   },
+   "won": true,
+   "seconds": 56,
+   "baseHp": 2450,
+   "deaths": 0,
+   "errors": []
+  },
+  {
+   "scenario": "chapter10-level5-lategear",
+   "setup": {
+    "weapons": [
+     "lmg",
+     "laser",
+     "plasma",
+     "railgun"
+    ],
+    "cur": "plasma",
+    "lv": {
+     "laser": 6,
+     "plasma": 4,
+     "railgun": 3
+    },
+    "squad": 4,
+    "hpBonus": 240
+   },
+   "won": true,
+   "seconds": 67,
+   "baseHp": 2570,
+   "deaths": 1,
+   "errors": []
+  },
+  {
+   "scenario": "chapter6-level10-boss-lightgear",
+   "setup": {
+    "weapons": [
+     "lmg",
+     "shotgun",
+     "laser"
+    ],
+    "cur": "laser",
+    "lv": {
+     "laser": 1
+    },
+    "squad": 0,
+    "hpBonus": 40
+   },
+   "won": true,
+   "seconds": 69,
+   "baseHp": 2480,
+   "deaths": 0,
+   "errors": []
+  }
+ ]
+}
