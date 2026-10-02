@@ -1,0 +1,66 @@
+{
+  "url": "http://127.0.0.1:8765/game-projects/tank-3d/dist/collision-fix1/package/index.html",
+  "browser": "154.0.4258.48",
+  "captureMode": "realtime-automation",
+  "audio": "game",
+  "results": [
+    {
+      "mobile": false,
+      "geometry": {
+        "modelBoundsChecks": 16,
+        "stageWallLayouts": 50
+      },
+      "stopped": 5.01974375,
+      "fort": {
+        "pending": 0,
+        "z": 18.916280000000008
+      },
+      "perf": {
+        "fps": 169.99780364594776,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0,
+        "frames": 774,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 1,
+        "buffer": [
+          1280,
+          720
+        ],
+        "drawCalls": 54,
+        "triangles": 22690,
+        "recording": false
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "geometry": {
+        "modelBoundsChecks": 16,
+        "stageWallLayouts": 50
+      },
+      "stopped": 5.019575000000001,
+      "fort": {
+        "pending": 0,
+        "z": 18.916279999999997
+      },
+      "perf": {
+        "fps": 170.00087742388348,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0,
+        "frames": 775,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 1,
+        "buffer": [
+          844,
+          390
+        ],
+        "drawCalls": 54,
+        "triangles": 22690,
+        "recording": false
+      },
+      "errors": []
+    }
+  ]
+}

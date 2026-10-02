@@ -6,8 +6,8 @@
   "created_at": "2026-10-02",
   "build": {
     "id": "tank-3d-collision-fix1-b590647f0a46",
-    "commit": null,
-    "dirty": true,
+    "commit": "dcc65721",
+    "dirty": false,
     "fingerprint": "b590647f0a4665f04477dede324bd71e603c3f13f6dcea76dbf50204934b464a",
     "files": {
       "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
@@ -188,12 +188,16 @@
       "手机视口模拟，未测试真机性能",
       "未录修复前原片",
       "游戏声音有录制但未做主观听审"
-    ]
+    ],
+    "online": "online-captures/browser.json",
+    "toy_package": "toy-captures/browser.json",
+    "toy_preview": "toy-preview.json",
+    "model_bounds": "32 checks per viewport: player levels 0–3 and four enemy types, all cardinal directions"
   },
   "publication": {
-    "website": "pending_deploy",
+    "website": "verified_live_2026-10-02",
     "toy_preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html",
-    "toy": "preview_only"
+    "toy": "preview_verified_not_submitted"
   },
   "readiness": {
     "overview": "partial",

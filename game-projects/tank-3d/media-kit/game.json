@@ -10,7 +10,7 @@
   "controls": "电脑 WASD 移动、J 开炮、C 循环斜俯视/俯视、Esc 暂停、Enter 开始/继续；手机左摇杆、右侧 J 和 C 按钮，竖屏自动横屏布局。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
-  "public_play_url_note": "2026-10-01 powerup-fix1：公网 HTML/main.js/scene.js 已更新；线上桌面与手机视口模拟在缺少 roundRect 的条件下通过六种道具、复活、基地失败、中英切换和第50关进入下一周目回归。",
+  "public_play_url_note": "2026-10-02 collision-fix1 已上线：转向防重叠、围墙占用格延后重建、出生点实体检查、炮弹完整路径碰撞、模型防穿墙。公网桌面/手机视口（含触控）实测通过；11项碰撞+19项原逻辑、50关50000次移动检查通过。",
   "preview_url": "https://claude.ai/artifact/24AYVoSJXaPXLF9KLsKNtp",
   "preview_url_note": "claude.ai 私有预览副本（扁平目录 + 按 ` 显示帧时间浮层），仅所有者可见，不是公开试玩链接。",
   "development_model": "本版：GPT-6 Codex；初版：claude-opus-5-5（保留历史）",
