@@ -1,24 +1,26 @@
 ---
-description: 站内文案继续中英双语，不要只写中文再攒一批英文
+description: 全站只做简体中文（2026-10-02 起英文版已下线），新文案不要再写英文翻译
 alwaysApply: true
 ---
 
-# i18n 约定
+# 文案约定（仅中文）
 
-- 用户可见文案同时改 `public/js/locales/zh-CN.js` 与 `en.js`（同一 key）。
-- **不要**「先只写中文、以后统一补英文」：站点有语言切换，缺英文会回退成 key 或英文包空缺。
-- HTML 静态文案优先 `data-i18n`；JS 动态赋值用 `t()` / `TBImageCloud.tr()`，并在 `tb:locale` 时重刷。
-- `i18n.js` 在脚本加载时就会检测语言；动态文案不要依赖「默认 en 再等 DOMContentLoaded」。
+2026-10-02 起英文版下线：`i18n.js` 强制 `zh-CN`，页头语言切换器与游戏页中/EN 按钮已移除。双语规则作废，**新文案只写中文，不需要再维护 `en.js` 翻译**。
+
+- 用户可见文案只改 `public/js/locales/zh-CN.js`（同一 key 机制不变）。
+- `en.js` **冻结**：不再新增、不再维护；留着只为不破坏现有 `<script>` 引用，不要往里写新 key。
+- HTML 静态文案优先 `data-i18n`，fallback 内文直接写中文；JS 动态赋值用 `t()` / `TBImageCloud.tr()`。
+- 游戏等新页面不再做中/EN 切换按钮和英文兜底字典；历史页面里的英文兜底可顺手改成中文，不强制批量迁移。
 
 ## 禁止 key 当文案（中文环境出现英文 key 的根因）
 
-`t(key)` / `data-i18n` 在 **zh-CN.js 与 en.js 都找不到该路径** 时，会 **原样返回 key**（如 `topUp.goTopUp`），中文用户就会看到一串英文标识符。
+`t(key)` / `data-i18n` 在 **zh-CN.js 找不到该路径** 时会 **原样返回 key**（如 `topUp.goTopUp`），用户就会看到一串英文标识符。
 
 **新增或改 `data-i18n` / `t('…')` 前必须：**
 
-1. 在 `zh-CN.js` 与 `en.js` **同一嵌套路径** 各写一条（例如 `topUp.goTopUp`，不是只写在 `about.goTopUp`）。
-2. 用 Grep 确认 key 存在：`grep "goTopUp" public/js/locales/zh-CN.js public/js/locales/en.js`。
-3. HTML 里 `data-i18n` 的 **fallback 内文** 与 `en.js` 一致（作加载前/英文兜底）；**不要**在中文页只写英文 fallback 却指望用户永远看不到——未解析的 key 比英文 fallback 更糟。
+1. 在 `zh-CN.js` 的对应嵌套路径写一条（例如 `topUp.goTopUp`，不是只写在 `about.goTopUp`）。
+2. 用 Grep 确认 key 存在：`grep "goTopUp" public/js/locales/zh-CN.js`。
+3. HTML 里 `data-i18n` 的 **fallback 内文** 写中文（作加载前兜底）；未解析的 key 比任何 fallback 都糟。
 
 **命名：** 工具页按钮/说明优先 `tools.<toolId>.*`；跨页复用才用 `hub.*` / `topUp.*` / `about.*`，用之前先 Grep 确认路径。
 
