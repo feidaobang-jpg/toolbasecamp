@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-02T05:19:30.835929+00:00",
+  "note": "Actions changes script cache parameters to commit cc7a63c3; code and markup otherwise match.",
+  "checks": [
+    {
+      "file": "game.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js?verify=squad1",
+      "matches_content_excluding_deployment_cache_tags": true,
+      "remote_sha256": "0147bb9c0a4f2f919a27add8eab73895588f31fea29cccf7b9978741d1f3156f"
+    },
+    {
+      "file": "index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?verify=squad1",
+      "matches_content_excluding_deployment_cache_tags": true,
+      "remote_sha256": "70a37e0ef330efffb80507a31070c340841d75d39d475cc61d3a23b439a0b1e4"
+    }
+  ]
+}

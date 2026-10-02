@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-endless-squad-v0.8.0",
+  "base_version": "web-toy-platform-v0.7.0",
+  "created_at": "2026-10-02T05:19:30.835929+00:00",
+  "build": {
+    "id": "web-endless-squad-v0.8.0-31c82bd4320d",
+    "commit": "cc7a63c3",
+    "dirty": false,
+    "fingerprint": "31c82bd4320dfe640c15c19fef2d0a76c1433fc0c1e2ccaae1a58f78f9febc66",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "endless",
+      "description": "自由测试默认每3秒最多补4虫，持续轮换十类虫/精英/大小首领；同屏48上限；可暂停/清场/恢复",
+      "status": "implemented",
+      "evidence_ids": [
+        "toy-endless"
+      ]
+    },
+    {
+      "id": "squad",
+      "description": "保留4名队友，各自巡逻、分散索敌、近身退让并避让玩家与队友",
+      "status": "implemented",
+      "evidence_ids": [
+        "squad-desktop",
+        "squad-realtime"
+      ]
+    },
+    {
+      "id": "light-cta",
+      "description": "主动打开作者面板时展示一次可忽略的趣味三连提示；web-game-maker/game-video已记录用户偏好",
+      "status": "implemented",
+      "evidence_ids": []
+    }
+  ],
+  "changes": [
+    {
+      "id": "endless",
+      "feature_ids": [
+        "endless"
+      ],
+      "before": "首批展示虫群后测试模式跳过刷怪逻辑",
+      "after": "自由测试默认每3秒最多补4虫，持续轮换十类虫/精英/大小首领；同屏48上限；可暂停/清场/恢复",
+      "user_visible_result": "自由测试默认每3秒最多补4虫，持续轮换十类虫/精英/大小首领；同屏48上限；可暂停/清场/恢复",
+      "evidence_ids": [
+        "toy-endless"
+      ],
+      "verification": "verification.json、platform-regression.json和Toy真实预览"
+    },
+    {
+      "id": "squad",
+      "feature_ids": [
+        "squad"
+      ],
+      "before": "队友追同一目标，缺少相互避让",
+      "after": "保留4名队友，各自巡逻、分散索敌、近身退让并避让玩家与队友",
+      "user_visible_result": "保留4名队友，各自巡逻、分散索敌、近身退让并避让玩家与队友",
+      "evidence_ids": [
+        "squad-desktop",
+        "squad-realtime"
+      ],
+      "verification": "verification.json、platform-regression.json和Toy真实预览"
+    },
+    {
+      "id": "light-cta",
+      "feature_ids": [
+        "light-cta"
+      ],
+      "before": "互动提醒尚未形成两项技能的统一偏好",
+      "after": "主动打开作者面板时展示一次可忽略的趣味三连提示；web-game-maker/game-video已记录用户偏好",
+      "user_visible_result": "主动打开作者面板时展示一次可忽略的趣味三连提示；web-game-maker/game-video已记录用户偏好",
+      "evidence_ids": [],
+      "verification": "verification.json、platform-regression.json和Toy真实预览"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "one-wave",
+      "symptom": "测试只出首批",
+      "cause": "updWave测试分支提前return，无补怪逻辑",
+      "fix": "独立测试刷怪状态，周期补充，有上限和暂停恢复",
+      "status": "fixed",
+      "evidence_ids": [
+        "toy-endless"
+      ]
+    },
+    {
+      "id": "ally-overlap",
+      "symptom": "队友挤在一起",
+      "cause": "共同目标与无分离力",
+      "fix": "各自巡逻点/射程/目标分配与软避让，重叠时确定性分离",
+      "status": "fixed",
+      "evidence_ids": [
+        "squad-realtime"
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "squad-desktop",
+      "file": "releases/web-endless-squad-v0.8.0/captures/squad-desktop.jpg",
+      "sha256": "9c9d9bcc94734696e72cb3e0b45b0e40099ea29453a8a8e0dec1c69921729cd8",
+      "kind": "screenshot",
+      "version": "web-endless-squad-v0.8.0",
+      "build_id": "web-endless-squad-v0.8.0-31c82bd4320d",
+      "capture_mode": "realtime-automation",
+      "description": "开发场景：四名队友分散巡逻，测试传送玩家到野外",
+      "width": 948,
+      "height": 533,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "squad-phone",
+      "file": "releases/web-endless-squad-v0.8.0/captures/squad-phone.jpg",
+      "sha256": "acdd810be6552c3249bbffa998747de65f6feb3d49ac8b9c15623c3548809880",
+      "kind": "screenshot",
+      "version": "web-endless-squad-v0.8.0",
+      "build_id": "web-endless-squad-v0.8.0-31c82bd4320d",
+      "capture_mode": "realtime-automation",
+      "description": "390×844 iframe 模拟手机竖屏旋转横屏，测试台按钮可操作；外层缩放0.7",
+      "width": 273,
+      "height": 591,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "toy-endless",
+      "file": "releases/web-endless-squad-v0.8.0/captures/toy-endless.jpg",
+      "sha256": "995dec3c2efe8186ce19ab38dd35d65f4d8d65decb503160899a0a6458a899c5",
+      "kind": "screenshot",
+      "version": "web-endless-squad-v0.8.0",
+      "build_id": "web-endless-squad-v0.8.0-31c82bd4320d",
+      "capture_mode": "realtime-automation",
+      "description": "Toy新版真实试玩，初始18只之后仍持续补怪，已有击杀分数",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "squad-realtime",
+      "file": "releases/web-endless-squad-v0.8.0/captures/squad-realtime.webm",
+      "sha256": "640c251454ecf60dae08b88c03eac7cab4a9dfb551e0b172e2f0977034d079b3",
+      "kind": "video",
+      "version": "web-endless-squad-v0.8.0",
+      "build_id": "web-endless-squad-v0.8.0-31c82bd4320d",
+      "capture_mode": "realtime-automation",
+      "description": "四名队友独立巡逻；开发测试场景，Canvas真实实时录制，未包含DOM HUD和音轨。ffmpeg解码360帧/12秒，30fps，代表帧已审查。",
+      "width": 1200,
+      "height": 675,
+      "duration_seconds": 11.97,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 11.9,
+          "description": "各自移动并保持距离的四人小队"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "functional",
+      "status": "pass",
+      "result": "39项新回归通过，含25批重复清空再补充、48上限、清场/恢复、测试读档、小队全重叠后分离、巡逻碰撞、独立移动、分散目标和普通模式隔离；原25项功能复验通过；平台Node测试通过。"
+    },
+    {
+      "id": "performance",
+      "status": "pass",
+      "result": "verification.json：RTX4060Ti/Codex IAB，960×540CSS、1200×675缓冲，精致档；48活虫+4队友持续移动射击转镜头30秒，169.43FPS，P95 6.4ms，1帧>50ms；末次最小队友间距2.63。"
+    },
+    {
+      "id": "phone",
+      "status": "pass",
+      "result": "390×844 iframe模拟竖屏旋转横屏，实际点击暂停/继续，菜单文案状态更新；非真机、未测多指或真机性能。"
+    },
+    {
+      "id": "toy",
+      "status": "pass",
+      "result": "新预览初始18虫到后续19虫，期间产生击杀积分970，持续补兵；控制台无错误。新包未提交审核。"
+    },
+    {
+      "id": "website",
+      "status": "pass",
+      "result": "game.js与本地一致，HTML仅部署缓存标签不同，内容一致。"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次巡逻录像无游戏声音和HUD，连续虫潮完整动态战斗需补拍",
+      "手机真机性能和多指输入未测",
+      "修复前未留实机录像；按真实代码原因解释，不捏造对比片段"
+    ]
+  }
+}
