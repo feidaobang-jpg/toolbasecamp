@@ -335,7 +335,7 @@ jobs:
               && echo "$HEALTH_JSON" | grep -F '"stocks_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"ladder_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"nbcheck_api":true' >/dev/null \
-              && echo "$HEALTH_JSON" | grep -F '"nbcheck_api_rev":2' >/dev/null \
+              && echo "$HEALTH_JSON" | grep -F '"nbcheck_api_rev":5' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"pc_builds_api":true' >/dev/null \
               && echo "$HEALTH_JSON" | grep -F '"pc_builds_api_rev":4' >/dev/null; then
               echo "health OK with recipe/records/.../nbcheck/pc_builds"
@@ -382,7 +382,7 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-nbcheck-api.sh
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "$HEALTH_JSON" | grep -F '"nbcheck_api":true' >/dev/null || exit 1
-            echo "$HEALTH_JSON" | grep -F '"nbcheck_api_rev":2' >/dev/null || exit 1
+            echo "$HEALTH_JSON" | grep -F '"nbcheck_api_rev":5' >/dev/null || exit 1
             bash /opt/toolbasecamp-deploy/fix-pcbuilds-api.sh
             HEALTH_JSON="$(curl -sf http://127.0.0.1:8001/health || true)"
             echo "$HEALTH_JSON" | grep -F '"pc_builds_api":true' >/dev/null || exit 1
@@ -605,7 +605,7 @@ jobs:
             HEALTH="$(curl -sS "https://zhengxiaohui.cn/api/health?cb=$RANDOM" || true)"
             echo "health: $HEALTH"
             echo "$HEALTH" | grep -F '"nbcheck_api":true' >/dev/null \
-              && echo "$HEALTH" | grep -F '"nbcheck_api_rev":2' >/dev/null
+              && echo "$HEALTH" | grep -F '"nbcheck_api_rev":5' >/dev/null
           }
           CODE="$(curl -sS -o /tmp/nbcheck-gpu.json -w '%{http_code}' \
             "https://zhengxiaohui.cn/api/nbcheck/nb_gpu?cb=$RANDOM" || echo '000')"
