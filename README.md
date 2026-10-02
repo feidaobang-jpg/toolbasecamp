@@ -9,129 +9,28 @@ toolbasecamp/
 ├── public/                 # Static site → /var/www/toolbasecamp
 ├── server/                 # FastAPI → /opt/toolbasecamp-api
 └── deploy/                 # nginx, systemd, server scripts
-    ├── nginx-toolbasecamp-dev.conf   # dev.zhengxiaohui.cn
-    ├── nginx-toolbasecamp-pdf.conf   # pdf.zhengxiaohui.cn → Stirling-PDF
-    ├── nginx-toolbasecamp-chef.conf  # chef.zhengxiaohui.cn → CyberChef static
-    ├── nginx-toolbasecamp-hoppscotch.conf
-    ├── nginx-toolbasecamp-translate.conf
-    ├── install-stirling-pdf.sh       # Docker Stirling-PDF
-    ├── install-hoppscotch.sh         # Docker Hoppscotch + Postgres
-    ├── install-libretranslate.sh     # Docker LibreTranslate (en, zh)
-    ├── cyberchef.ref / hoppscotch.ref
-    ├── next-tools.ref                # pinned next-tools version
-    └── dev-portal-SOURCE.txt         # GPL source attribution
+    ├── nginx-toolbasecamp-news.conf      # news.zhengxiaohui.cn
+    ├── nginx-toolbasecamp.conf           # main site + toolbasecamp.com legacy
+    ├── nginx-legacy-toolbasecamp-redirects.conf  # toolbasecamp.com → zhengxiaohui.cn 301
+    ├── patch-nginx-news.sh / expand-zhengxiaohui-portal-certs.sh
+    ├── install-news-cron.sh
+    └── home-nas/             # Cloudflare Tunnel (home PC / NAS)
 ```
+
+## Retired portals (2026-10)
+
+The five sub-site portals **pdf / dev / chef / hoppscotch / translate** were shut down together with the
+in-site 安卓 and 开发者 tool groups. Their nginx confs, install/patch scripts, CI build steps and the
+main-site entry cards are all removed from this repository. Only **news.zhengxiaohui.cn** (科技资讯) remains
+as a portal. See `deploy/apply-zhengxiaohui-portals.sh` for the current one-shot, and note that the shared
+Let's Encrypt certificate must be shrunk (`expand-zhengxiaohui-portal-certs.sh`) **before** deleting the
+retired DNS records — certbot renews every SAN entry, so a stale name would break main-site HTTPS renewal.
 
 ## Main-site i18n (zhengxiaohui.cn only)
 
-English + 简体中文; browser language auto-detect; header **中文 / EN** toggle. Subdomains pdf/dev keep their own i18n.
+English + 简体中文; browser language auto-detect; header **中文 / EN** toggle. The news portal keeps its own i18n.
 
 **New UI on the main site must add keys to both** `public/js/locales/en.js` and `public/js/locales/zh-CN.js`. See [docs/I18N.md](docs/I18N.md).
-
-## PDF portal (pdf.zhengxiaohui.cn)
-
-**PDF Toolkit** runs [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF) in Docker on the same server (`127.0.0.1:8080`), proxied by nginx.
-
-### DNS (one-time)
-
-| Name | Type | Content | Proxy |
-|------|------|---------|-------|
-| `pdf` | A | same server IP as main site | **Proxied (orange cloud)** — required for China/mobile |
-
-**Important:** Use **Proxied (orange cloud)** like `dev` and the main site. **DNS only (grey cloud)** points phones at the US VPS IP directly; many mobile networks in China **cannot connect** (page never loads). Orange cloud may return HTTP **524** only on very long OCR/conversion jobs (>~100s) — split large files if that happens.
-
-**Do not** leave `pdf` on grey cloud unless all users are on networks that reach the origin IP.
-
-Push to GitHub → Actions runs `install-stirling-pdf.sh` + `patch-nginx-pdf.sh`. Manual:
-
-```bash
-bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh
-bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh
-```
-
-Requires **~4GB RAM**. Login disabled; CSRF off for public tool POSTs; onboarding/desktop slides disabled.
-
-**UI language:** `defaultLocale: ""` → browser auto-detect (zh-CN browser → Chinese UI, en → English).
-
-**OCR:** Install `eng` + `chi_sim` tessdata (`install-stirling-tessdata.sh`). For **JPEG/PNG screenshots**, `patch-stirling-ocr.sh` wraps ocrmypdf with `--image-dpi 300` (Stirling 2.14 bug). Select **简体中文** (or eng+chi_sim) in the OCR language dropdown.
-
-**HTTP 524 on large PDFs:** Cloudflare orange-cloud timeout (~100s). Split the PDF/OCR into smaller parts, or temporarily set `pdf` to grey cloud only for that job (if your network can reach the VPS IP).
-
-## Developer portal (dev.zhengxiaohui.cn)
-
-The **Developer Toolkit** is a self-hosted build of [next-tools](https://github.com/willjayyyy/next-tools) (GPL-3.0), deployed to `/var/www/toolbasecamp-dev` on the same server. The main site links to it via the Tools hub — no third-party tool site embeds or redirects.
-
-### DNS (one-time)
-
-In Cloudflare (or your DNS provider), add an **A record**:
-
-| Name | Type | Content | Proxy |
-|------|------|---------|-------|
-| `dev` | A | `134.209.221.228` (same as main site) | Proxied OK |
-
-Do **not** use a redirect rule, Worker, or CNAME-to-root that forwards `dev` to the main homepage.
-
-**Root cause (common):** Cloudflare SSL is **Full** → origin is contacted on **port 443**. If only port 80 has a dev vhost, HTTPS still serves the main site (`Last-Modified` identical on both domains). Fix: expand cert + enable HTTPS dev vhost (`patch-nginx-dev.sh`), or temporarily set Cloudflare **SSL/TLS → Flexible**.
-
-**If dev shows the main site but server `curl` on :80 shows Next Tools**, purge cache will not help — fix HTTPS on the server:
-
-```bash
-bash /opt/toolbasecamp-deploy/fix-dev-portal.sh
-```
-
-Quick test without certbot: Cloudflare → **SSL/TLS** → **Overview** → **Flexible** (origin HTTP only), then hard-refresh.
-
-Nginx for the dev subdomain is enabled automatically on each deploy via `deploy/patch-nginx-dev.sh`.
-
-**QR code, text diff, timestamp, color converter:** already in [next-tools](https://github.com/willjayyyy/next-tools) on `dev.zhengxiaohui.cn` — no duplicate on the main site.
-
-## CyberChef portal (chef.zhengxiaohui.cn)
-
-Static build of [CyberChef](https://github.com/gchq/CyberChef) (Apache-2.0), from the official **GitHub release zip** (pinned in `deploy/cyberchef.ref`) → `/var/www/toolbasecamp-chef`. No server-side Node build.
-
-| Name | Type | Content | Proxy |
-|------|------|---------|-------|
-| `chef` | A | same server IP | Proxied OK |
-
-## Hoppscotch portal (hoppscotch.zhengxiaohui.cn)
-
-[Hoppscotch](https://github.com/hoppscotch/hoppscotch) Community Edition via Docker Compose (Postgres + AIO). API client for REST / GraphQL / WebSocket.
-
-| Name | Type | Content | Proxy |
-|------|------|---------|-------|
-| `hoppscotch` | A | same server IP | Proxied OK |
-
-Requires **~2GB RAM** for Postgres + app. First deploy generates `hoppscotch.env` on the server (do not commit).
-
-## LibreTranslate portal (translate.zhengxiaohui.cn)
-
-[LibreTranslate](https://github.com/LibreTranslate/LibreTranslate) (AGPL) in Docker on `127.0.0.1:5000`, languages **en + zh only** (`LT_LOAD_ONLY`) to limit memory (~2GB cap).
-
-**Portal UX:** typing no longer auto-translates — click the **Translate** button. API request/response panels are hidden (`LT_HIDE_API`). Public programmatic access to `/translate` is blocked at nginx (POST requires Referer from this portal); rate limit 30 req/min per IP.
-
-| Name | Type | Content | Proxy |
-|------|------|---------|-------|
-| `translate` | A | same server IP | Proxied OK |
-
-**If dev shows the same page as the main site**, open DigitalOcean Web Console and run (type or paste one line at a time — avoid `^[[200~` paste glitches):
-
-```bash
-bash /opt/toolbasecamp-deploy/fix-dev-portal.sh
-```
-
-Or only nginx:
-
-```bash
-bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh
-```
-
-### Version pin
-
-Edit `deploy/next-tools.ref` to bump the next-tools release tag (e.g. `v1.10.3`), then push — GitHub Actions rebuilds and rsyncs the SPA.
-
-### GPL
-
-Deployed files include `SOURCE.txt` and `LICENSE` in the dev web root. See `deploy/dev-portal-SOURCE.txt`.
 
 ## Deploy (GitHub Actions)
 
@@ -149,9 +48,12 @@ Rollback: `git checkout <commit>` then push again.
 
 View deploy runs: GitHub repo → **Actions** tab.
 
-### Hybrid: home NAS (Docker Desktop)
+### Hybrid: home NAS / WSL Cloudflare Tunnel
 
-Memory-heavy portals (PDF, translate, etc.) can run on a **Win11 NAS with Docker Desktop + WSL2** instead of upgrading VPS RAM. See [docs/HOME-NAS.md](docs/HOME-NAS.md) and [docs/CLOUDFLARE-TUNNEL-NAS.md](docs/CLOUDFLARE-TUNNEL-NAS.md).
+A **Win11 box with Docker Desktop + WSL2** can host memory-heavy services behind one Cloudflare Tunnel
+instead of upgrading VPS RAM. Since the 2026-10 portal shutdown this stack only runs `cloudflared`
+(the home-PC ComfyUI endpoint `comfy.zhengxiaohui.cn` goes through it) — see
+[deploy/home-nas/README.md](deploy/home-nas/README.md) and [docs/COMFY-HOME-PC.md](docs/COMFY-HOME-PC.md).
 
 ### One-time: GitHub Secrets
 
@@ -273,9 +175,5 @@ Example file: `deploy/toolbasecamp-api.env.example`
 - https://zhengxiaohui.cn
 - https://zhengxiaohui.cn/html/life/ai-recipe.html
 - https://zhengxiaohui.cn/
-- https://dev.zhengxiaohui.cn
-- https://pdf.zhengxiaohui.cn
-- https://chef.zhengxiaohui.cn
-- https://hoppscotch.zhengxiaohui.cn
-- https://translate.zhengxiaohui.cn
+- https://news.zhengxiaohui.cn
 - `curl https://zhengxiaohui.cn/api/health`

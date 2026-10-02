@@ -1495,31 +1495,6 @@ window.TB_LOCALES['zh-CN'] = {
         }
     },
     portals: {
-        pdf: {
-            title: 'PDF 工具箱',
-            description: '50+ PDF 工具 — 合并、拆分、压缩、OCR、转 Word、签名等。自托管，浏览器打开即用。',
-            cta: '打开 PDF 工具箱'
-        },
-        dev: {
-            title: '开发者工具箱',
-            description: '120+ 浏览器端开发工具 — Base64、JWT、JSON、哈希、正则、UUID 等。数据留在本地浏览器。',
-            cta: '打开开发者工具箱'
-        },
-        chef: {
-            title: '网络安全瑞士军刀',
-            description: 'CyberChef — 编解码、加解密、压缩与数据分析，全部在浏览器本地运行，静态部署。',
-            cta: '打开 CyberChef'
-        },
-        hoppscotch: {
-            title: 'API 客户端',
-            description: 'Hoppscotch — REST、GraphQL、WebSocket 轻量调试，支持集合与环境变量。自托管，适合日常接口调试。',
-            cta: '打开 Hoppscotch'
-        },
-        translate: {
-            title: '机器翻译',
-            description: 'LibreTranslate — 注重隐私的英 ↔ 中翻译。自托管；小内存 VPS 建议只加载 en、zh 语言包。',
-            cta: '打开翻译'
-        },
         news: {
             title: '科技资讯',
             description: '国外科技资讯中文编译 — AI、硬件与数码动态，每日自动更新。',

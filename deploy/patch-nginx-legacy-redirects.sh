@@ -6,8 +6,8 @@ DEPLOY="/opt/toolbasecamp-deploy"
 SRC="$DEPLOY/nginx-legacy-toolbasecamp-redirects.conf"
 SITE="/etc/nginx/sites-available/toolbasecamp-legacy-redirects"
 
-if ! bash "$DEPLOY/require-zhengxiaohui-portal-san.sh" chef.zhengxiaohui.cn; then
-  echo "WARNING: skip legacy redirects until new portal cert is ready"
+if ! bash "$DEPLOY/require-zhengxiaohui-portal-san.sh" news.zhengxiaohui.cn; then
+  echo "WARNING: skip legacy redirects until portal cert includes news.zhengxiaohui.cn"
   exit 0
 fi
 

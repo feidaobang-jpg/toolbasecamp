@@ -17,11 +17,6 @@ const siteConfig = {
     icpBeianUrl: 'https://beian.miit.gov.cn/',
     adminEmail: 'admin@zhengxiaohui.cn',
     adminPhone: '15859130726',
-    devPortalUrl: 'https://dev.zhengxiaohui.cn',
-    pdfPortalUrl: 'https://pdf.zhengxiaohui.cn',
-    chefPortalUrl: 'https://chef.zhengxiaohui.cn',
-    hoppscotchPortalUrl: 'https://hoppscotch.zhengxiaohui.cn',
-    translatePortalUrl: 'https://translate.zhengxiaohui.cn',
     newsPortalUrl: 'https://news.zhengxiaohui.cn',
     /** 家里电脑 ComfyUI API（Cloudflare Tunnel） */
     homePcApiBase: 'https://comfy.zhengxiaohui.cn',
@@ -54,41 +49,6 @@ const portalsConfig = [
         url: 'https://news.zhengxiaohui.cn',
         ctaKey: 'portals.news.cta',
         theme: 'news'
-    },
-    {
-        titleKey: 'portals.dev.title',
-        descriptionKey: 'portals.dev.description',
-        url: 'https://dev.zhengxiaohui.cn',
-        ctaKey: 'portals.dev.cta',
-        theme: 'dev'
-    },
-    {
-        titleKey: 'portals.chef.title',
-        descriptionKey: 'portals.chef.description',
-        url: 'https://chef.zhengxiaohui.cn',
-        ctaKey: 'portals.chef.cta',
-        theme: 'chef'
-    },
-    {
-        titleKey: 'portals.hoppscotch.title',
-        descriptionKey: 'portals.hoppscotch.description',
-        url: 'https://hoppscotch.zhengxiaohui.cn',
-        ctaKey: 'portals.hoppscotch.cta',
-        theme: 'hoppscotch'
-    },
-    {
-        titleKey: 'portals.pdf.title',
-        descriptionKey: 'portals.pdf.description',
-        url: 'https://pdf.zhengxiaohui.cn',
-        ctaKey: 'portals.pdf.cta',
-        theme: 'pdf'
-    },
-    {
-        titleKey: 'portals.translate.title',
-        descriptionKey: 'portals.translate.description',
-        url: 'https://translate.zhengxiaohui.cn',
-        ctaKey: 'portals.translate.cta',
-        theme: 'translate'
     }
 ];
 

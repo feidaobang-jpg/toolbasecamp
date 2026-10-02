@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Upsert DNSPod A records for zhengxiaohui.cn portal subdomains."""
+"""Upsert DNSPod A records for zhengxiaohui.cn portal subdomains.
+
+Retired portals (dev/chef/hoppscotch/pdf/translate) are no longer upserted.
+Run with DROP_PORTAL_DNS=1 to also delete their leftover records — the shared
+Let's Encrypt certificate must be shrunk first (expand-zhengxiaohui-portal-certs.sh),
+otherwise certbot renewal of zhengxiaohui.cn starts failing.
+"""
 from __future__ import annotations
 
 import os
@@ -9,7 +15,9 @@ from pathlib import Path
 ENV_FILE = os.environ.get("API_ENV", "/etc/toolbasecamp-api.env")
 DOMAIN = "zhengxiaohui.cn"
 ORIGIN_IP = "111.229.172.111"
-SUBS = ("dev", "chef", "news", "hoppscotch", "pdf", "translate")
+SUBS = ("news",)
+# Only these exact hostnames are eligible for deletion, and only when opted in.
+DROP_SUBS = ("dev", "chef", "hoppscotch", "pdf", "translate")
 
 
 def load_env(path: str) -> None:
@@ -78,6 +86,24 @@ def main() -> int:
         client.CreateRecord(cre)
         print(f"CREATED {sub}.{DOMAIN} A {ORIGIN_IP}")
         changed += 1
+
+    if os.environ.get("DROP_PORTAL_DNS") == "1":
+        dropped = 0
+        for sub in DROP_SUBS:
+            rec = existing.get((sub, "A")) or existing.get((sub, "CNAME"))
+            if rec is None:
+                print(f"OK absent {sub}.{DOMAIN}")
+                continue
+            dele = models.DeleteRecordRequest()
+            dele.Domain = DOMAIN
+            dele.RecordId = rec.RecordId
+            client.DeleteRecord(dele)
+            print(f"DELETED {sub}.{DOMAIN} ({rec.Type} {rec.Value})")
+            dropped += 1
+        print(f"DONE dropped={dropped}")
+    else:
+        print("NOTE: retired portal records (dev/chef/hoppscotch/pdf/translate) left in place;"
+              " set DROP_PORTAL_DNS=1 after shrinking the cert SAN list")
 
     print(f"DONE changed={changed}")
     return 0

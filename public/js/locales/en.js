@@ -1496,31 +1496,6 @@ window.TB_LOCALES.en = {
         }
     },
     portals: {
-        pdf: {
-            title: 'PDF Toolkit',
-            description: '50+ PDF tools — merge, split, compress, OCR, convert to Word, sign, and more. Self-hosted and ready in the browser.',
-            cta: 'Open PDF Toolkit'
-        },
-        dev: {
-            title: 'Developer Toolkit',
-            description: '120+ browser-based developer tools — Base64, JWT, JSON, hash, regex, UUID, and more. Data stays in your browser.',
-            cta: 'Open Developer Toolkit'
-        },
-        chef: {
-            title: 'Cyber Swiss Army Knife',
-            description: 'CyberChef — encode, decode, encrypt, compress, and analyze data in your browser. Static build, no server processing.',
-            cta: 'Open CyberChef'
-        },
-        hoppscotch: {
-            title: 'API Client',
-            description: 'Hoppscotch — lightweight REST, GraphQL, and WebSocket debugging with collections and environments. Self-hosted for your team.',
-            cta: 'Open Hoppscotch'
-        },
-        translate: {
-            title: 'Machine Translation',
-            description: 'LibreTranslate — privacy-friendly English ↔ 中文 translation. Self-hosted; on small VPS plans load en and zh language packs only.',
-            cta: 'Open Translator'
-        },
         news: {
             title: 'Tech News',
             description: 'Overseas tech news rewritten in Chinese — AI, hardware, and gadgets, updated daily.',

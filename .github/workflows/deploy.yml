@@ -27,10 +27,6 @@ jobs:
               - 'server/**'
             deploy:
               - 'deploy/**'
-            portal_dev:
-              - 'deploy/next-tools.ref'
-            portal_chef:
-              - 'deploy/cyberchef.ref'
             portal_news:
               - 'scripts/news/**'
               - 'deploy/nginx-toolbasecamp-news.conf'
@@ -60,8 +56,6 @@ jobs:
           echo "public=${{ steps.changes.outputs.public }}"
           echo "server=${{ steps.changes.outputs.server }}"
           echo "deploy=${{ steps.changes.outputs.deploy }}"
-          echo "portal_dev=${{ steps.changes.outputs.portal_dev }}"
-          echo "portal_chef=${{ steps.changes.outputs.portal_chef }}"
           echo "portal_news=${{ steps.changes.outputs.portal_news }}"
           echo "portal_pcbuilds=${{ steps.changes.outputs.portal_pcbuilds }}"
           if [[ "${{ steps.full.outputs.yes }}" == "1" ]]; then
@@ -69,11 +63,9 @@ jobs:
           elif [[ "${{ steps.changes.outputs.public }}" == "true" \
              && "${{ steps.changes.outputs.server }}" != "true" \
              && "${{ steps.changes.outputs.deploy }}" != "true" \
-             && "${{ steps.changes.outputs.portal_dev }}" != "true" \
-             && "${{ steps.changes.outputs.portal_chef }}" != "true" \
              && "${{ steps.changes.outputs.portal_news }}" != "true" \
              && "${{ steps.changes.outputs.portal_pcbuilds }}" != "true" ]]; then
-            echo "Static-only change  - skip next-tools / CyberChef / API restart."
+            echo "Static-only change  - skip portal rebuilds and API restart."
           fi
 
       - name: Validate secrets
@@ -204,79 +196,7 @@ jobs:
           fi
           REMOTE
 
-      - name: Build next-tools dev portal
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
-        run: |
-          NEXT_TOOLS_REF="$(tr -d '\r\n' < deploy/next-tools.ref)"
-          echo "Building next-tools ref: ${NEXT_TOOLS_REF}"
-          git clone --depth 1 --branch "${NEXT_TOOLS_REF}" \
-            https://github.com/willjayyyy/next-tools.git /tmp/next-tools
-          cd /tmp/next-tools
-          corepack enable
-          corepack prepare pnpm@10.28.1 --activate
-          pnpm install --frozen-lockfile
-          pnpm build
 
-      - name: Download CyberChef release
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_chef == 'true'
-        run: |
-          CHEF_REF="$(tr -d '\r\n' < deploy/cyberchef.ref)"
-          echo "Downloading CyberChef release: ${CHEF_REF}"
-          mkdir -p /tmp/cyberchef-bundle
-          ASSET_URL="$(curl -fsSL "https://api.github.com/repos/gchq/CyberChef/releases/tags/${CHEF_REF}" \
-            | jq -r '.assets[0].browser_download_url')"
-          if [[ -z "$ASSET_URL" || "$ASSET_URL" == "null" ]]; then
-            echo "::error:: No release asset for ${CHEF_REF}"
-            exit 1
-          fi
-          curl -fsSL -o /tmp/cyberchef-bundle.zip "$ASSET_URL"
-          unzip -q /tmp/cyberchef-bundle.zip -d /tmp/cyberchef-bundle
-          CHEF_INDEX="$(find /tmp/cyberchef-bundle -type f \( -name index.html -o -name index.html.gz \) | head -1)"
-          CHEF_DIR="$(dirname "$CHEF_INDEX")"
-          if [[ -z "$CHEF_DIR" || ! -f "$CHEF_DIR/index.html" && ! -f "$CHEF_DIR/index.html.gz" ]]; then
-            echo "::error:: index.html / index.html.gz not found in release zip"
-            find /tmp/cyberchef-bundle -maxdepth 3 -type f | head -20 || true
-            exit 1
-          fi
-          if [[ -f "$CHEF_DIR/index.html.gz" && ! -f "$CHEF_DIR/index.html" ]]; then
-            gunzip -f "$CHEF_DIR/index.html.gz"
-          fi
-          echo "CHEF_DIR=$CHEF_DIR" >> "$GITHUB_ENV"
-
-      - name: Rsync dev portal
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
-        run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
-            "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-dev"
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
-            /tmp/next-tools/dist/ \
-            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/"
-          rsync -avz \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
-            deploy/dev-portal-SOURCE.txt \
-            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/SOURCE.txt"
-          rsync -avz \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
-            /tmp/next-tools/LICENSE \
-            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-dev/LICENSE"
-
-      - name: Rsync chef portal
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_chef == 'true'
-        run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
-            "${DO_USER}@${DO_HOST}" "mkdir -p /var/www/toolbasecamp-chef"
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
-            "${CHEF_DIR}/" \
-            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/"
-          rsync -avz \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
-            deploy/chef-portal-SOURCE.txt \
-            "${DO_USER}@${DO_HOST}:/var/www/toolbasecamp-chef/SOURCE.txt"
-
-      # 逍遥 AI key: set repo secret LK888_API_KEY (never commit the key).
-      # Separate step — quoted remote heredoc cannot see GitHub Actions env.
       - name: Install API deps and restart
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.server == 'true' || steps.changes.outputs.deploy == 'true'
         run: |
@@ -324,39 +244,12 @@ jobs:
           bash /opt/toolbasecamp-deploy/patch-nginx-main-cache.sh || true
           bash /opt/toolbasecamp-deploy/patch-nginx-main.sh || true
           bash /opt/toolbasecamp-deploy/install-migration-notice.sh || true
-          bash /opt/toolbasecamp-deploy/install-portal-home-bar-dev.sh || true
-          bash /opt/toolbasecamp-deploy/patch-nginx-dev.sh || true
-          bash /opt/toolbasecamp-deploy/install-stirling-tessdata.sh || true
-          bash /opt/toolbasecamp-deploy/patch-stirling-config.sh || true
-          if [[ ! -f /opt/toolbasecamp-deploy/pdf-on-nas.flag ]]; then
-            bash /opt/toolbasecamp-deploy/install-stirling-pdf.sh || true
-            bash /opt/toolbasecamp-deploy/install-stirling-warmup-cron.sh || true
-            bash /opt/toolbasecamp-deploy/patch-nginx-pdf.sh || true
-          else
-            echo "pdf-on-nas.flag set  - skip Stirling PDF on VPS"
-            bash /opt/toolbasecamp-deploy/stop-vps-pdf-after-nas-migration.sh || true
-          fi
-          if [[ ! -f /var/www/toolbasecamp-chef/index.html ]]; then
-            bash /opt/toolbasecamp-deploy/install-cyberchef-release.sh || true
-          fi
-          bash /opt/toolbasecamp-deploy/patch-nginx-chef.sh || true
-          bash /opt/toolbasecamp-deploy/install-hoppscotch.sh || true
-          bash /opt/toolbasecamp-deploy/patch-nginx-hoppscotch.sh || true
-          if [[ ! -f /opt/toolbasecamp-deploy/translate-on-nas.flag ]]; then
-            bash /opt/toolbasecamp-deploy/install-libretranslate.sh || true
-            bash /opt/toolbasecamp-deploy/build-libretranslate-app-patch.sh || true
-            bash /opt/toolbasecamp-deploy/patch-nginx-translate.sh || true
-          else
-            echo "translate-on-nas.flag set  - skip LibreTranslate on VPS"
-            bash /opt/toolbasecamp-deploy/stop-vps-translate-after-nas-migration.sh || true
-          fi
           if [[ -f /opt/toolbasecamp-news/build_news.py ]]; then
             bash /opt/toolbasecamp-deploy/install-news-cron.sh || true
             bash /opt/toolbasecamp-deploy/patch-nginx-news.sh || true
           else
             echo "news crawler not present  - skip news portal"
           fi
-          bash /opt/toolbasecamp-deploy/patch-nginx-nas-proxy.sh || true
           bash /opt/toolbasecamp-deploy/patch-disable-toolbasecamp-legacy.sh || true
           bash /opt/toolbasecamp-deploy/install-mysql-backup-cron.sh || true
           bash /opt/toolbasecamp-deploy/install-api-health-cron.sh || true
@@ -1189,81 +1082,6 @@ jobs:
           fi
           echo "Life-plans API public OK after fix."
 
-      - name: Verify dev portal (public URL)
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_dev == 'true'
-        run: |
-          sleep 3
-          HTTP_CODE="$(curl -s -o /tmp/dev-public.html -w '%{http_code}' \
-            'https://dev.zhengxiaohui.cn/' || echo '000')"
-          echo "HTTPS $HTTP_CODE"
-          head -c 800 /tmp/dev-public.html || true
-          echo ""
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: dev portal HTTPS returned $HTTP_CODE (nginx on server may still be OK)."
-            exit 0
-          fi
-          if grep -q '百宝箱 - 效率工具集' /tmp/dev-public.html; then
-            echo "::warning:: Public URL still shows main site  - purge Cloudflare cache or check Origin Rules."
-            exit 0
-          fi
-          if ! grep -qi 'next tools' /tmp/dev-public.html; then
-            echo "::warning:: Public URL did not return next-tools HTML."
-            exit 0
-          fi
-          if ! grep -q 'portal-has-home-bar' /tmp/dev-public.html; then
-            echo "::warning:: dev portal missing inline portal bar  - run patch-nginx-dev.sh"
-            exit 0
-          fi
-          if grep -q 'portal-home-bar.js' /tmp/dev-public.html; then
-            echo "::warning:: dev still uses external portal-home-bar.js  - run patch-nginx-dev.sh"
-          fi
-          echo "Dev portal OK."
-
-      - name: Verify pdf portal (public URL)
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
-        run: |
-          sleep 3
-          HTTP_CODE="$(curl -s -o /tmp/pdf-public.html -w '%{http_code}' \
-            'https://pdf.zhengxiaohui.cn/' || echo '000')"
-          echo "HTTPS $HTTP_CODE"
-          head -c 600 /tmp/pdf-public.html || true
-          echo ""
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: pdf portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: pdf A record, then re-run deploy."
-            exit 0
-          fi
-          if grep -q '百宝箱 - 效率工具集' /tmp/pdf-public.html; then
-            echo "::warning:: pdf URL shows main site  - check nginx 443 vhost for pdf.zhengxiaohui.cn."
-            exit 0
-          fi
-          if ! grep -q 'portal-home-bar.js' /tmp/pdf-public.html; then
-            echo "::warning:: pdf portal missing portal-home-bar injection (nginx sub_filter)."
-            exit 0
-          fi
-          echo "Pdf portal OK."
-
-      - name: Verify chef portal (public URL)
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_chef == 'true'
-        run: |
-          sleep 3
-          HTTP_CODE="$(curl -s -o /tmp/chef-public.html -w '%{http_code}' \
-            'https://chef.zhengxiaohui.cn/' || echo '000')"
-          echo "HTTPS $HTTP_CODE"
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: chef portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: chef A record, then re-run deploy."
-            exit 0
-          fi
-          if ! grep -qi 'cyberchef' /tmp/chef-public.html; then
-            echo "::warning:: chef URL did not return CyberChef HTML."
-            exit 0
-          fi
-          if grep -q 'portal-home-bar.js' /tmp/chef-public.html; then
-            echo "::warning:: chef still loads external portal-home-bar.js  - run patch-nginx-chef.sh"
-          fi
-          if ! grep -q 'portal-home-bar' /tmp/chef-public.html; then
-            echo "::warning:: chef missing inline portal-home-bar  - run patch-nginx-chef.sh"
-          fi
-          echo "Chef portal OK."
 
       - name: Verify news portal (public URL)
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.portal_news == 'true' || steps.changes.outputs.deploy == 'true'
@@ -1282,28 +1100,3 @@ jobs:
           fi
           echo "News portal OK."
 
-      - name: Verify hoppscotch portal (public URL)
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
-        run: |
-          sleep 3
-          HTTP_CODE="$(curl -s -o /tmp/hop-public.html -w '%{http_code}' \
-            'https://hoppscotch.zhengxiaohui.cn/' || echo '000')"
-          echo "HTTPS $HTTP_CODE"
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: hoppscotch portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: hoppscotch A record, then re-run deploy."
-            exit 0
-          fi
-          echo "Hoppscotch portal OK."
-
-      - name: Verify translate portal (public URL)
-        if: steps.full.outputs.yes == '1' || steps.changes.outputs.deploy == 'true'
-        run: |
-          sleep 3
-          HTTP_CODE="$(curl -s -o /tmp/tr-public.html -w '%{http_code}' \
-            'https://translate.zhengxiaohui.cn/' || echo '000')"
-          echo "HTTPS $HTTP_CODE"
-          if [[ "$HTTP_CODE" != "200" ]]; then
-            echo "::warning:: translate portal HTTPS returned $HTTP_CODE  - add Cloudflare DNS: translate A record, then re-run deploy."
-            exit 0
-          fi
-          echo "Translate portal OK."

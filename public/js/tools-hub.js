@@ -1,30 +1,5 @@
 (function () {
     const portalThemes = {
-        pdf: {
-            iconWrap: 'bg-rose-50 text-rose-600',
-            chip: 'border-rose-200 text-rose-800',
-            icon: 'fa-file-pdf'
-        },
-        dev: {
-            iconWrap: 'bg-slate-100 text-slate-700',
-            chip: 'border-slate-300 text-slate-800',
-            icon: 'fa-code'
-        },
-        chef: {
-            iconWrap: 'bg-amber-50 text-amber-600',
-            chip: 'border-amber-200 text-amber-900',
-            icon: 'fa-shield-halved'
-        },
-        hoppscotch: {
-            iconWrap: 'bg-emerald-50 text-emerald-600',
-            chip: 'border-emerald-200 text-emerald-900',
-            icon: 'fa-paper-plane'
-        },
-        translate: {
-            iconWrap: 'bg-sky-50 text-sky-600',
-            chip: 'border-sky-200 text-sky-900',
-            icon: 'fa-language'
-        },
         news: {
             iconWrap: 'bg-indigo-50 text-indigo-600',
             chip: 'border-indigo-200 text-indigo-900',
@@ -71,7 +46,7 @@
             '<ul class="hub-portal-list"></ul>';
         const listEl = sidebarEl.querySelector('.hub-portal-list');
         portalsConfig.forEach(portal => {
-            const theme = portalThemes[portal.theme] || portalThemes.dev;
+            const theme = portalThemes[portal.theme] || portalThemes.news;
             const desc = portalDesc(portal);
             const li = document.createElement('li');
             const a = document.createElement('a');
@@ -104,7 +79,7 @@
             '<div class="hub-mobile-portals-row"></div>';
         const rowEl = containerEl.querySelector('.hub-mobile-portals-row');
         portalsConfig.forEach(portal => {
-            const theme = portalThemes[portal.theme] || portalThemes.dev;
+            const theme = portalThemes[portal.theme] || portalThemes.news;
             const a = document.createElement('a');
             a.href = portal.url || '#';
             a.target = '_blank';
