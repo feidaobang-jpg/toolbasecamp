@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=nosTW1" />
   <link rel="stylesheet" href="../../css/admin-shell.css?v=nosTW4" />
   <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=nosTW1" />
-  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=nosTW2" />
+  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=game-clicks1" />
 </head>
 <body class="admin-page">
   <header class="admin-header">
@@ -81,6 +81,29 @@
         </div>
       </div>
 
+      <section class="stats-section" id="game-click-stats">
+        <h3 class="stats-section-title" data-i18n="gameClickStats.title">游戏入口点击</h3>
+        <p class="stats-section-sub" data-i18n="gameClickStats.description">统计游戏列表中「B 站玩」「本站玩」两个按钮，按北京时间筛选；不含封面、标题点击。</p>
+        <div class="stats-grid" id="game-click-cards"></div>
+        <div class="stats-table-wrap game-click-table-wrap">
+          <table class="stats-table">
+            <thead>
+              <tr>
+                <th data-i18n="gameClickStats.game">游戏</th>
+                <th data-i18n="gameClickStats.toyClicks">B 站玩 · 点击次数</th>
+                <th data-i18n="gameClickStats.toyVisitors">B 站玩 · 去重人数</th>
+                <th data-i18n="gameClickStats.siteClicks">本站玩 · 点击次数</th>
+                <th data-i18n="gameClickStats.siteVisitors">本站玩 · 去重人数</th>
+              </tr>
+            </thead>
+            <tbody id="game-click-body"></tbody>
+          </table>
+        </div>
+        <p id="game-click-error" class="stats-warn" hidden data-i18n="gameClickStats.unavailable">游戏点击统计暂不可用，请稍后刷新。</p>
+        <p class="stats-note" data-i18n="gameClickStats.note">人数按浏览器标识在所选日期内去重，同一访客跨游戏、跨天不会在入口总人数中重复累加；两种入口分别去重。清除浏览器数据或换设备会另计。管理员与排除 IP 不计入。</p>
+        <p class="stats-note" data-i18n="gameClickStats.history">从本功能上线后开始记录，历史点击无法补算。点击不等于实际游玩，也不等于 B 站 Toy 的已玩人数。</p>
+      </section>
+
       <section class="stats-section">
         <h3 class="stats-section-title">业务指标</h3>
         <p class="stats-section-sub">来自注册、余额流水与佣金表（非匿名埋点）</p>
@@ -133,10 +156,10 @@
     </div>
   </main>
 
-  <script src="../../js/locales/zh-CN.js?v=statsZh1"></script>
+  <script src="../../js/locales/zh-CN.js?v=game-clicks1"></script>
   <script src="../../js/i18n.js?v=nosTW1"></script>
   <script src="../../js/config.js?v=nosTW1"></script>
   <script src="../../js/admin/admin-gate.js?v=nosTW5"></script>
-  <script src="../../js/admin/site-stats.js?v=statsZh7"></script>
+  <script src="../../js/admin/site-stats.js?v=game-clicks1"></script>
 </body>
 </html>

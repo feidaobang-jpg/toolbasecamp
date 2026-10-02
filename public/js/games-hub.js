@@ -188,6 +188,8 @@
                 '<span class="hub-game-kind hub-game-kind--' + kind + '">' + escapeHtml(kindLabel(kind)) + '</span>' +
             '</span>';
         if (!external) {
+            var gameKeyMatch = (item.url || '').match(/(?:^|\/)html\/game\/([a-z0-9_-]+)(?:\.html|\/index\.html)(?:[?#]|$)/i);
+            var gameKey = gameKeyMatch ? gameKeyMatch[1].toLowerCase() : '';
             var mainLink = document.createElement('a');
             mainLink.className = 'hub-game-main';
             mainLink.href = item.url;
@@ -204,6 +206,7 @@
                 link.href = entry.url;
                 link.textContent = entry.label;
                 link.setAttribute('aria-label', label + ' · ' + entry.label);
+                if (gameKey) link.setAttribute('data-tb-track', 'game.play.' + (entry.external ? 'toy.' : 'site.') + gameKey);
                 if (entry.external) {
                     link.target = '_blank';
                     link.rel = 'noopener noreferrer';

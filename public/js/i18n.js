@@ -151,6 +151,8 @@
         return window.location.origin + '/api';
     }
 
+    window.tbGetVisitorId = getOrCreateVisitorId;
+
     function getOrCreateVisitorId() {
         var key = 'tb-visitor-id';
         try {

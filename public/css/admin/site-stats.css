@@ -273,3 +273,19 @@
 .stats-table-wrap {
   overflow-x: auto;
 }
+
+.game-click-table-wrap {
+  margin: 16px 0;
+}
+
+.game-click-table-wrap th {
+  white-space: nowrap;
+}
+
+.game-click-table-wrap td:not(:first-child) {
+  font-variant-numeric: tabular-nums;
+}
+
+#game-click-stats .stats-note + .stats-note {
+  margin-top: 8px;
+}

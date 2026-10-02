@@ -5,12 +5,14 @@ from __future__ import annotations
 import os
 import re
 import uuid
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from typing import Any, Callable, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
+
+from game_votes import ORIGINAL_GAMES
 
 router = APIRouter(prefix="/stats", tags=["stats"])
 security = HTTPBearer(auto_error=False)
@@ -32,6 +34,13 @@ _VISITOR_RE = re.compile(
     r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 )
 _EVENT_RE = re.compile(r"^[a-z][a-z0-9._-]{1,95}$")
+_GAME_CLICK_RE = re.compile(r"^game\.play\.(toy|site)\.([a-z0-9_-]+)$")
+_GAME_KEYS = {game["key"] for game in ORIGINAL_GAMES}
+_CN_TZ = timezone(timedelta(hours=8))
+
+
+def _today_cn() -> date:
+    return datetime.now(_CN_TZ).date()
 
 # Phone prefixes whose accounts should be excluded from all stats recording.
 _EXCLUDE_PHONE_PREFIXES: tuple[str, ...] = ("1585913072",)
@@ -139,6 +148,18 @@ def ensure_site_stats_tables(cur) -> None:
         """
     )
     cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS site_stats_game_clicks (
+            stat_date DATE NOT NULL,
+            channel VARCHAR(8) NOT NULL,
+            game_key VARCHAR(64) NOT NULL,
+            visitor_id CHAR(36) NOT NULL DEFAULT '',
+            hit_count BIGINT NOT NULL DEFAULT 0,
+            PRIMARY KEY (stat_date, channel, game_key, visitor_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+    cur.execute(
         "INSERT IGNORE INTO site_stats (id, site_pv, site_uv) VALUES (1, 0, 0)"
     )
     _tables_ready = True
@@ -158,6 +179,7 @@ class HitBody(BaseModel):
 
 class EventBody(BaseModel):
     name: str = Field(..., min_length=2, max_length=96)
+    visitor_id: Optional[str] = Field(default=None, max_length=36)
 
 
 def _normalize_visitor_id(raw: Optional[str]) -> str:
@@ -262,7 +284,7 @@ def _resolve_region(request: Request, cur, ip: str) -> str:
 
 def _bump_geo(cur, region: str, *, pv: int = 0, uv: int = 0) -> None:
     region = region if region in ("cn", "overseas", "unknown") else "unknown"
-    today = date.today().isoformat()
+    today = _today_cn().isoformat()
     cur.execute(
         """
         INSERT INTO site_stats_geo_daily (stat_date, region, pv, uv)
@@ -390,13 +412,32 @@ def record_event(
         raise HTTPException(status_code=503, detail="Stats unavailable")
     _require_db()
     name = _normalize_event_name(body.name)
-    today = date.today().isoformat()
+    today = _today_cn().isoformat()
+    game_click = _GAME_CLICK_RE.fullmatch(name)
+    if name.startswith('game.play.') and (not game_click or game_click[2] not in _GAME_KEYS):
+        raise HTTPException(status_code=400, detail="Invalid game click")
     if _should_skip_count(request, creds):
         return {"ok": True, "name": name, "date": today, "skipped": True}
 
     conn = _get_conn()
     try:
         with conn.cursor() as cur:
+            if game_click:
+                _ensure_tables(cur)
+                visitor = (body.visitor_id or '').strip().lower()
+                # Missing/invalid IDs count as clicks only, never invented visitors.
+                if not _VISITOR_RE.fullmatch(visitor):
+                    visitor = ''
+                cur.execute(
+                    """
+                    INSERT INTO site_stats_game_clicks
+                        (stat_date, channel, game_key, visitor_id, hit_count)
+                    VALUES (%s, %s, %s, %s, 1)
+                    ON DUPLICATE KEY UPDATE hit_count = hit_count + 1
+                    """,
+                    (today, game_click[1], game_click[2], visitor),
+                )
+                return {"ok": True, "name": name, "date": today, "skipped": False}
             cur.execute(
                 """
                 INSERT INTO site_stats_events (stat_date, event_name, hit_count)
@@ -431,13 +472,13 @@ def stats_overview(
             raise HTTPException(
                 status_code=400, detail="Invalid date (use YYYY-MM-DD)"
             ) from exc
-        if day > date.today():
+        if day > _today_cn():
             raise HTTPException(status_code=400, detail="Date cannot be in the future")
         start = end = day
         days = 1
         mode = "day"
     else:
-        end = date.today()
+        end = _today_cn()
         start = end - timedelta(days=days - 1)
         mode = "range"
     conn = _get_conn()
@@ -535,6 +576,7 @@ def stats_overview(
             }
 
             business = _business_snapshot(cur, start, end)
+            game_clicks = _game_click_snapshot(cur, start, end)
 
         return {
             "site_pv": totals["site_pv"],
@@ -549,6 +591,7 @@ def stats_overview(
                 "uv": uv_total,
             },
             "business": business,
+            "game_clicks": game_clicks,
             "events_top": top,
             "events_daily": daily,
             "modules": modules,
@@ -558,6 +601,49 @@ def stats_overview(
         }
     finally:
         conn.close()
+
+
+def _game_click_snapshot(cur, start: date, end: date) -> dict:
+    """Count each browser once per channel over the entire selected CN date range."""
+    totals = {channel: {"clicks": 0, "visitors": 0} for channel in ("toy", "site")}
+    games = {
+        game["key"]: {
+            "key": game["key"], "titleKey": game["titleKey"],
+            "toy": {"clicks": 0, "visitors": 0},
+            "site": {"clicks": 0, "visitors": 0},
+        }
+        for game in ORIGINAL_GAMES
+    }
+    params = (start.isoformat(), end.isoformat())
+    cur.execute(
+        """
+        SELECT channel, SUM(hit_count) AS clicks,
+               COUNT(DISTINCT NULLIF(visitor_id, '')) AS visitors
+        FROM site_stats_game_clicks
+        WHERE stat_date >= %s AND stat_date <= %s
+        GROUP BY channel
+        """, params,
+    )
+    for row in cur.fetchall() or []:
+        if row["channel"] in totals:
+            totals[row["channel"]] = {
+                "clicks": int(row["clicks"] or 0), "visitors": int(row["visitors"] or 0),
+            }
+    cur.execute(
+        """
+        SELECT game_key, channel, SUM(hit_count) AS clicks,
+               COUNT(DISTINCT NULLIF(visitor_id, '')) AS visitors
+        FROM site_stats_game_clicks
+        WHERE stat_date >= %s AND stat_date <= %s
+        GROUP BY game_key, channel
+        """, params,
+    )
+    for row in cur.fetchall() or []:
+        if row["game_key"] in games and row["channel"] in totals:
+            games[row["game_key"]][row["channel"]] = {
+                "clicks": int(row["clicks"] or 0), "visitors": int(row["visitors"] or 0),
+            }
+    return {"totals": totals, "games": list(games.values())}
 
 
 def _table_exists(cur, name: str) -> bool:

@@ -12,6 +12,7 @@
     var queued = {};
     var flushTimer = null;
     var pageTracked = false;
+    var gameVisitorId = null;
 
     function apiBase() {
         if (window.siteConfig && window.siteConfig.apiBase) return window.siteConfig.apiBase;
@@ -49,10 +50,17 @@
     function sendOne(name) {
         if (shouldExclude()) return;
         try {
+            var payload = { name: name };
+            if (name.indexOf('game.play.') === 0) {
+                if (!gameVisitorId && typeof window.tbGetVisitorId === 'function') {
+                    gameVisitorId = window.tbGetVisitorId();
+                }
+                payload.visitor_id = gameVisitorId;
+            }
             fetch(apiBase() + ENDPOINT, {
                 method: 'POST',
                 headers: authHeaders(),
-                body: JSON.stringify({ name: name }),
+                body: JSON.stringify(payload),
                 credentials: 'same-origin',
                 cache: 'no-store',
                 keepalive: true
@@ -61,6 +69,7 @@
     }
 
     function flush() {
+        if (flushTimer) clearTimeout(flushTimer);
         flushTimer = null;
         Object.keys(queued).forEach(function (name) {
             var n = queued[name];
@@ -109,12 +118,20 @@
     }
 
     function bindDataTrack() {
-        document.addEventListener('click', function (e) {
+        function onClick(e) {
+            if (e.type === 'auxclick' && e.button !== 1) return;
             var el = e.target && e.target.closest ? e.target.closest('[data-tb-track]') : null;
             if (!el) return;
             var name = el.getAttribute('data-tb-track');
-            if (name) track(name);
-        }, true);
+            if (name) {
+                track(name);
+                // Start keepalive requests before same-tab navigation can cancel the timer.
+                if (el.closest('a[href]')) flush();
+            }
+        }
+        document.addEventListener('click', onClick, true);
+        document.addEventListener('auxclick', onClick, true);
+        window.addEventListener('pagehide', flush);
     }
 
     function setExclude(on) {

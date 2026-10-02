@@ -4,6 +4,19 @@
  */
 window.TB_LOCALES = window.TB_LOCALES || {};
 window.TB_LOCALES['zh-CN'] = {
+    gameClickStats: {
+        title: '游戏入口点击',
+        description: '统计游戏列表中「B 站玩」「本站玩」两个按钮，按北京时间筛选；不含封面、标题点击。',
+        note: '人数按浏览器标识在所选日期内去重，同一访客跨游戏、跨天不会在入口总人数中重复累加；两种入口分别去重。清除浏览器数据或换设备会另计。管理员与排除 IP 不计入。',
+        history: '从本功能上线后开始记录，历史点击无法补算。点击不等于实际游玩，也不等于 B 站 Toy 的已玩人数。',
+        game: '游戏',
+        toyClicks: 'B 站玩 · 点击次数',
+        toyVisitors: 'B 站玩 · 去重人数',
+        siteClicks: '本站玩 · 点击次数',
+        siteVisitors: '本站玩 · 去重人数',
+        unavailable: '游戏点击统计暂不可用，请稍后刷新。',
+        unknownGame: '未命名游戏'
+    },
     site: {
         name: '百宝箱',
         logoBadge: '百',
