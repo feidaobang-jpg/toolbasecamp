@@ -1,0 +1,399 @@
+{
+ "schema_version": 1,
+ "game_id": "chongchao-qianshao",
+ "version": "web-arsenal-build-v0.9.1",
+ "base_version": "web-feedback-v0.9.0",
+ "created_at": "2026-10-02T23:47:04.022804+00:00",
+ "build": {
+  "id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+  "commit": "29d83ff3",
+  "dirty": false,
+  "fingerprint": "33c2b888dbcc21f81ae3fadf12116c2050d86548f5f509fec13fd37a42023999",
+  "entrypoint": "public/html/game/starship-defense/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "arsenal-6",
+   "description": "6 把武器各有独特机制：机枪/霰弹击退/榴弹抛射爆炸/火焰点燃穿透/激光持续升温贯穿/等离子重弹",
+   "status": "implemented",
+   "evidence_ids": [
+    "arsenal-build-realtime",
+    "flame-burn",
+    "shop-six-weapons"
+   ]
+  },
+  {
+   "id": "legacy-migration",
+   "description": "旧存档下架武器退款、三把机枪并入机枪保留最高强化",
+   "status": "implemented",
+   "evidence_ids": []
+  },
+  {
+   "id": "ghost-build",
+   "description": "建造 3D 虚影：移动/旋转/放置/取消，红色给原因，炮塔射程圈",
+   "status": "implemented",
+   "evidence_ids": [
+    "arsenal-build-realtime",
+    "ghost-blocked-on-wall",
+    "ghost-blocked",
+    "ghost-valid-turret",
+    "ghost-valid",
+    "phone-ghost"
+   ]
+  },
+  {
+   "id": "dark-theme",
+   "description": "v0.9 起的深色画风等（沿用）",
+   "status": "implemented",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "trim-arsenal",
+   "feature_ids": [
+    "arsenal-6",
+    "legacy-migration"
+   ],
+   "before": "12 把枪，步枪/狙击/导弹/轨道炮不好用，冲锋枪/轻机枪/加特林雷同",
+   "after": "6 把枪各有机制；旧存档退款或并入机枪",
+   "user_visible_result": "6 把枪各有机制；旧存档退款或并入机枪",
+   "evidence_ids": [
+    "flame-burn",
+    "shop-six-weapons"
+   ],
+   "verification": "arsenal-build.json"
+  },
+  {
+   "id": "ghost-build",
+   "feature_ids": [
+    "ghost-build"
+   ],
+   "before": "选中即在面前直接建；位置被占时不建也看不到提示",
+   "after": "先出虚影，调整后确认才扣钱，不能放时写原因",
+   "user_visible_result": "先出虚影，调整后确认才扣钱，不能放时写原因",
+   "evidence_ids": [
+    "ghost-blocked",
+    "ghost-valid",
+    "phone-ghost"
+   ],
+   "verification": "arsenal-build.json"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "build-silent-fail",
+   "found_in": "web-feedback-v0.9.0",
+   "repro": "不移动连续建同一设施：不建、无可见提示",
+   "observed": "不移动连续建同一设施：不建、无可见提示",
+   "comedy_angle": null,
+   "cause": "提示画在 HUD 层，被建造面板盖住",
+   "status": "fixed",
+   "fix": "虚影放置+面板打开时提示改到面板之上",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-arsenal-build-v0.9.1/captures/before-build-no-feedback.jpg",
+    "releases/web-arsenal-build-v0.9.1/before.json"
+   ],
+   "after_media_ids": [
+    "ghost-blocked"
+   ],
+   "retest": "arsenal-build.json"
+  },
+  {
+   "id": "touch-click-through",
+   "found_in": "web-feedback-v0.9.0",
+   "repro": "手机点商店/建造按钮，面板里手指下的卡片被同一次触摸点中（误买/误选）",
+   "observed": "手机点商店/建造按钮，面板里手指下的卡片被同一次触摸点中（误买/误选）",
+   "comedy_angle": null,
+   "cause": "触屏按钮未取消触摸合成的 click",
+   "status": "fixed",
+   "fix": "按钮取消 touchstart/touchend 默认行为+触摸打开后 0.25 秒忽略卡片点击",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "releases/web-arsenal-build-v0.9.1/before.json"
+   ],
+   "after_media_ids": [
+    "phone-ghost"
+   ],
+   "retest": "arsenal-build.json phone checks"
+  }
+ ],
+ "media": [
+  {
+   "id": "arsenal-build-realtime",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/arsenal-build-realtime.webm",
+   "sha256": "016b07da982299b27007f434a329b1bd11373b4feaf1ae8809773f0e561ec8ea",
+   "kind": "video",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "桌面实时：商店6把枪→围墙虚影旋转放置→炮台红色虚影→移开放置→霰弹击退→火焰灼烧。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": 19.08,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 19.08,
+     "description": "桌面实时：商店6把枪→围墙虚影旋转放置→炮台红色虚影→移开放置→霰弹击退→火焰灼烧",
+     "supports": "changes listed in handoff"
+    }
+   ]
+  },
+  {
+   "id": "arsenal-build-sheet",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/arsenal-build-sheet.jpg",
+   "sha256": "7d14b6d5ccfcd06ffef714d9649cf60c12c76d02200bf0212cbc8a0976788cf7",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "arsenal-build-realtime.webm 每2秒抽帧拼图（审片用）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1920,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "build-panel",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/build-panel.jpg",
+   "sha256": "ba49c0a476d5684d16ec74e6501f45c16e38c3776567de486f3c4f7078e6bcd5",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "建造面板：说明虚影放置操作。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "first-person",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/first-person.jpg",
+   "sha256": "778390ec38ae336fca93ea71ff9d91ee6daadeb9f8c1a7e28ba4591ccc54c0fb",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "v0.9 回归脚本截图：第一人称。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "flame-burn",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/flame-burn.jpg",
+   "sha256": "6f196af33e7fd6e3a80c4f920cf57cbee5618a336e77b24cd0c2da00844bf483",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "火焰喷射器点燃虫群的伤害数字。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ghost-blocked-on-wall",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/ghost-blocked-on-wall.jpg",
+   "sha256": "2df19b918525abe6a0ef78c1e3e83a135d7dead22eca294496a754df75b04883",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "炮台虚影压在刚放的围墙上变红并给原因。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ghost-blocked",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/ghost-blocked.jpg",
+   "sha256": "bd147055dde9505c0dfb54113c97f0ebd68078f266ed6f4649491e567021906e",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "同一位置再建：红色虚影写明“和墙体、岩石或其他设施重叠”（验收脚本）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ghost-valid-turret",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/ghost-valid-turret.jpg",
+   "sha256": "b26c29757bc55b2602e9881873c630a004932088e5f94f7bf7e7c894409772c9",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "走开后虚影变绿可放。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "ghost-valid",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/ghost-valid.jpg",
+   "sha256": "97c41cd15835ff84b0169f2b8c00f5b5b22d1838f977c188aea44ac1d3b5eb83",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "选中自动机枪塔后出现绿色虚影与射程圈，面板关闭，尚未扣钱（验收脚本）。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-ghost",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/phone-ghost.jpg",
+   "sha256": "04909daf729b7ac4d8ac686c8c503c18531ffd09bd374ed1eceb3936e770dcad",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "手机：建造按钮→选自动炮台→虚影与放置/旋转/取消按钮。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-portrait-touch",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/phone-portrait-touch.jpg",
+   "sha256": "a346fa96e6119e30cc863783fa7a9e0ae624be92b31762dd1c057dd1722f2390",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "v0.9 回归脚本截图：手机触屏布局。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-shop",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/phone-shop.jpg",
+   "sha256": "f93774ed769336902831b9f7b202bb85c8d31c7e07cf563c8dfdda63e61e1964",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "v0.9 回归脚本截图：手机商店。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "shop-six-weapons",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/shop-six-weapons.jpg",
+   "sha256": "998f70c3411247eb6232233a785e0ffd7d4d4e68f6d90e3d1b7cf2a956a9e4cc",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "商店只剩 6 把武器，各有独特机制。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1440,
+   "height": 810,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "theme-toy",
+   "file": "releases/web-arsenal-build-v0.9.1/captures/theme-toy.jpg",
+   "sha256": "ff614162a3dffd6ee7af904c7ba4de69bad44040c51b4dfa2408f38be966ce82",
+   "kind": "screenshot",
+   "version": "web-arsenal-build-v0.9.1",
+   "build_id": "web-arsenal-build-v0.9.1-33c2b888dbcc",
+   "capture_mode": "realtime-automation",
+   "description": "v0.9 回归脚本截图：明亮Q版。真实浏览器（headless Edge）实时运行；QA 钩子只用于摆放玩家/镜头或给中期装备，战斗、移动、UI 均实时发生。无麦克风，未录游戏声音。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "device": "Windows 11, RTX 4060 Ti",
+   "browser": "Edge headless (Playwright 1.62)",
+   "viewport": "1280x720 / 390x844 mobile",
+   "method": "verify-arsenal-build.cjs 20 项 + verify-feedback.cjs 45 项回归",
+   "result": "20/20, 45/45",
+   "evidence": "releases/web-arsenal-build-v0.9.1/arsenal-build.json, after.json",
+   "untested": "真机手机"
+  },
+  {
+   "device": "同上",
+   "browser": "同上",
+   "viewport": "1280x720",
+   "method": "键盘机器人整关 5 个场景",
+   "result": "全部通过",
+   "evidence": "releases/web-arsenal-build-v0.9.1/playthrough.json",
+   "untested": "真人主观手感"
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "录像无游戏声音",
+   "未做真机手机测试",
+   "Toy 未提交本版"
+  ]
+ }
+}

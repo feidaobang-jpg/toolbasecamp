@@ -1,0 +1,103 @@
+{
+ "build": "d7e38a76 (v0.9.0)",
+ "method": "Playwright real key/click input",
+ "first": {
+  "buildings": 12,
+  "gold": 2700,
+  "panelOpen": false
+ },
+ "second": {
+  "buildings": 12,
+  "gold": 2700,
+  "panelStillOpen": true,
+  "msg": "前方位置放不下，换个空地再建造",
+  "msgVisibleOnTop": false,
+  "elementOnTopOfMsg": "buildGrid"
+ },
+ "weapons": [
+  {
+   "id": "smg",
+   "name": "冲锋枪",
+   "price": 0,
+   "dps": 60,
+   "range": 27
+  },
+  {
+   "id": "lmg",
+   "name": "轻机枪",
+   "price": 0,
+   "dps": 100,
+   "range": 31
+  },
+  {
+   "id": "rifle",
+   "name": "战斗步枪",
+   "price": 0,
+   "dps": 94,
+   "range": 46
+  },
+  {
+   "id": "shotgun",
+   "name": "霰弹枪",
+   "price": 450,
+   "dps": 124,
+   "range": 19
+  },
+  {
+   "id": "sniper",
+   "name": "狙击枪",
+   "price": 650,
+   "dps": 142,
+   "range": 75
+  },
+  {
+   "id": "launcher",
+   "name": "榴弹炮",
+   "price": 900,
+   "dps": 105,
+   "range": 42
+  },
+  {
+   "id": "flamer",
+   "name": "火焰喷射器",
+   "price": 1100,
+   "dps": 140,
+   "range": 15
+  },
+  {
+   "id": "laser",
+   "name": "脉冲激光炮",
+   "price": 1500,
+   "dps": 200,
+   "range": 48
+  },
+  {
+   "id": "minigun",
+   "name": "加特林",
+   "price": 1900,
+   "dps": 200,
+   "range": 31
+  },
+  {
+   "id": "plasma",
+   "name": "等离子炮",
+   "price": 2300,
+   "dps": 217,
+   "range": 38
+  },
+  {
+   "id": "missile",
+   "name": "追踪导弹",
+   "price": 2600,
+   "dps": 156,
+   "range": 55
+  },
+  {
+   "id": "railgun",
+   "name": "电磁轨道炮",
+   "price": 3200,
+   "dps": 238,
+   "range": 100
+  }
+ ]
+}
