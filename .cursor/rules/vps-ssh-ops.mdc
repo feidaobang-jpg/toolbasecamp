@@ -43,12 +43,17 @@ Host toolbasecamp-cn
 `DO_SSH_KEY` Secret 已经是 CI 侧的唯一副本，不需要仓库再存一份。
 
 - **本机外的备份位置（重装系统不会丢）**：`D:\备用\toolbasecamp_deploy`（私钥）+ `toolbasecamp_deploy.pub`
-- 服务器侧只存**公钥**：`ubuntu@111.229.172.111:~/.ssh/authorized_keys`（2026-10-02 起含 3 条：新部署 key + 2 条历史 key，历史 key 待确认无其它设备使用后清理）
+- 服务器侧只存**公钥**，且**有两个位置都要装**（2026-10-02 因只装了第 1 个把静态部署搞挂过一次）：
+  1. `ubuntu@111.229.172.111:~/.ssh/authorized_keys` —— 本机日常运维（`ssh toolbasecamp-cn`，ubuntu + 免密 sudo）
+  2. `/root/.ssh/authorized_keys` —— **CI 用 `DO_USER=root` 直连 root 做 rsync**（见 README「GitHub Secrets」）；这里没公钥 → 凡动 `public/**`/`deploy/**`/`server/**` 的 push 都会在 "Rsync static site" 步骤失败，`auth.log` 表现为 `Failed password for root from 20.x`
 - **重装系统后恢复**（3 步，无需找回旧 key）：
   1. `mkdir -p ~/.ssh`，把 `D:\备用\toolbasecamp_deploy*` 拷回 `~/.ssh/`，按上面模板重建 `~/.ssh/config`
   2. 自检：`ssh -o BatchMode=yes toolbasecamp-cn "echo SSH_OK; sudo -n true && echo SUDO_OK"`
-  3. 若私钥丢了：`ssh-keygen -t ed25519 -f ~/.ssh/toolbasecamp_deploy -N ""` → 腾讯云轻量 **OrcaTerm/VNC** 登录把新公钥 append 进 `authorized_keys` → **同步更新 GitHub Secret `DO_SSH_KEY`**（否则下次 push 部署失败）
+  3. 若私钥丢了：`ssh-keygen -t ed25519 -f ~/.ssh/toolbasecamp_deploy -N ""` → 腾讯云轻量 **OrcaTerm/VNC** 登录把新公钥 append 进 `authorized_keys`（ubuntu **和** `/root` 两处）→ **同步更新 GitHub Secret `DO_SSH_KEY`**（否则下次 push 部署失败）
 - Secret 的 Value 要粘贴**私钥文件内容本身**（首行 `-----BEGIN OPENSSH PRIVATE KEY-----`），不是 `cat` 命令。
+- **换/加 key 之后必须验 CI 这条路**（运维 key 通了不等于 CI 通了）：
+  `ssh -i ~/.ssh/toolbasecamp_deploy -o BatchMode=yes -o IdentitiesOnly=yes root@111.229.172.111 "echo CI_SSH_OK"`
+  再看一次真实部署：push 一个动 `public/**` 的 commit，Actions 里 "Rsync static site" 必须 success，然后按 `verify-static-deploy` 抽查线上文件。
 
 ## 标准流程
 
