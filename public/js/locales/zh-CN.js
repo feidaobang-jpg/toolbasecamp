@@ -1358,6 +1358,8 @@ window.TB_LOCALES['zh-CN'] = {
         gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
     },
     games: {
+        toyTitle: 'B 站 Toy 游戏',
+        toyDesc: '飞刀班长发布的 Toy 游戏，点击名称在 B 站打开。',
         groups: {
             all: '游戏',
             action: '动作扮演',
