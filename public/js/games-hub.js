@@ -192,7 +192,12 @@
             var gameKey = gameKeyMatch ? gameKeyMatch[1].toLowerCase() : '';
             var mainLink = document.createElement('a');
             mainLink.className = 'hub-game-main';
-            mainLink.href = item.url;
+            mainLink.href = item.toyUrl || item.url;
+            if (item.toyUrl) {
+                mainLink.target = '_blank';
+                mainLink.rel = 'noopener noreferrer';
+            }
+            if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.' + (item.toyUrl ? 'toy.' : 'site.') + gameKey);
             while (card.firstChild) mainLink.appendChild(card.firstChild);
             card.appendChild(mainLink);
 
