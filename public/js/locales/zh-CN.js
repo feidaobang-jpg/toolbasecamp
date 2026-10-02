@@ -1503,11 +1503,7 @@ window.TB_LOCALES['zh-CN'] = {
             media: '媒体',
             document: '文档',
             diagram: '图表',
-            ladder: '性能跑分榜',
-            info: '资讯'
-        },
-        news: {
-            title: '科技资讯'
+            ladder: '性能跑分榜'
         },
         game: {
             restart: '开始',

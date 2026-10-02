@@ -174,13 +174,6 @@ const toolsConfig = {
                 { titleKey: 'tools.ladderNbCpuRank.title', url: 'html/ladder/nb_cpu_rank.html' },
                 { titleKey: 'tools.ladderNbGpuRank.title', url: 'html/ladder/nb_gpu_rank.html' }
             ]
-        },
-        {
-            titleKey: 'tools.groups.info',
-            items: [
-                // 独立部署的自托管子站，作为普通条目挂在工具列表末尾（external → 新窗口 + ↗）
-                { titleKey: 'tools.news.title', url: siteConfig.newsPortalUrl, external: true }
-            ]
         }
     ]
 };

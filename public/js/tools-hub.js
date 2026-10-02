@@ -112,17 +112,7 @@
                 card.href = item.url || '#';
                 card.className = 'hub-tool-card';
                 card.dataset.search = groupLabel + ' ' + label;
-                // 站外子站：新窗口打开并带 ↗ 标记
-                if (item.external) {
-                    card.target = '_blank';
-                    card.rel = 'noopener noreferrer';
-                }
-                const titleHtml =
-                    '<h3>' + escapeHtml(label) +
-                    (item.external
-                        ? ' <i class="fas fa-arrow-up-right-from-square hub-tool-external" aria-hidden="true"></i>'
-                        : '') +
-                    '</h3>';
+                const titleHtml = '<h3>' + escapeHtml(label) + '</h3>';
                 if (item.paid) {
                     card.innerHTML =
                         titleHtml +

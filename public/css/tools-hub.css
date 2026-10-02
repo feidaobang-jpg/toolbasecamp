@@ -139,18 +139,6 @@
     color: #2563eb;
 }
 
-/* 站外子站条目（如科技资讯）的 ↗ 标记 */
-.hub-tool-external {
-    font-size: 0.6875rem;
-    color: #9ca3af;
-    margin-left: 0.125rem;
-    vertical-align: 0.05em;
-}
-
-.hub-tool-card:hover .hub-tool-external {
-    color: #2563eb;
-}
-
 .hub-tool-card.is-hidden {
     display: none !important;
 }
