@@ -1,7 +1,8 @@
 /**
  * 简体中文文案（仅 zhengxiaohui.cn 主站）。
- * 新增 UI 文案时，请同步在 locales/en.js 添加相同 key。
+ * 英文版已下线（2026-10-02），新文案只写本文件。
  */
+window.TB_LOCALES = window.TB_LOCALES || {};
 window.TB_LOCALES['zh-CN'] = {
     site: {
         name: '百宝箱',
