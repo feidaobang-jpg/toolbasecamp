@@ -16,12 +16,12 @@
             });
     }
 
-    function rankRows(items, renderer) {
+    function rankRows(items, renderer, limit) {
         if (!items || !items.length) {
             return '<li class="gvb-empty">' + esc(tr('gameVote.emptyBoard')) + '</li>';
         }
         var html = '';
-        items.slice(0, TOP_N).forEach(function (item, index) {
+        items.slice(0, limit == null ? TOP_N : limit).forEach(function (item, index) {
             html += '<li class="gvb-row">' +
                 '<span class="gvb-rank gvb-rank--' + (index + 1) + '">' + (index + 1) + '</span>' +
                 renderer(item) +
@@ -33,17 +33,22 @@
         return html;
     }
 
-    function renderBoard(el, board) {
+    function renderBoard(el, board, options) {
         var V = global.TBGameVote;
         var favMap = {};
         (board.favorite || []).forEach(function (f) { favMap[f.key] = f; });
 
-        var favHtml = rankRows(board.favorite, function (item) {
+        var favorites = (options.favorites || []).map(function (option) {
+            return Object.assign({}, option, favMap[option.key] || { votes: 0, weekVotes: 0 });
+        }).sort(function (a, b) {
+            return b.votes - a.votes || b.weekVotes - a.weekVotes;
+        });
+        var favHtml = rankRows(favorites, function (item) {
             var name = V.gameName(item);
             var url = V.gameUrl(item);
             var inner = '<span class="gvb-name">' + esc(name) + '</span>';
             return url ? '<a class="gvb-link" href="' + esc(url) + '">' + inner + '</a>' : inner;
-        });
+        }, favorites.length);
 
         var wishHtml = rankRows(board.wishlist, function (item) {
             return '<span class="gvb-name">' + esc(item.name) + '</span>' +
@@ -78,8 +83,8 @@
         var el = document.getElementById('game-vote-board');
         var V = global.TBGameVote;
         if (!el || !V) return;
-        V.getBoard().then(function (board) {
-            renderBoard(el, board);
+        Promise.all([V.getBoard(), V.getOptions()]).then(function (data) {
+            renderBoard(el, data[0], data[1]);
         }).catch(function () {
             // 接口不通时不打扰玩家：游戏列表照常，只把投票卡降级成入口按钮。
             el.className = 'gvb gvb--fallback';
