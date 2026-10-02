@@ -1,8 +1,8 @@
 import * as THREE from './vendor/three.module.js';
-import {ToyVisuals} from './toy-visuals.js?v=platform1';
-import {FortressWorld} from './fortress-world.js?v=platform1';
+import {ToyVisuals} from './toy-visuals.js?v=squad1';
+import {FortressWorld} from './fortress-world.js?v=squad1';
 import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
-import {setupToyPlatform} from './toy-platform.js?v=platform1';
+import {setupToyPlatform} from './toy-platform.js?v=squad1';
 import {validateNormalSave} from './save-validation.js';
 let visualAssets=false;
 const frameTimes=[];let previousFrame=0,measuring=false;
@@ -1483,13 +1483,16 @@ function updVehicles(dt){
 
 /* ---------- AI队友 ---------- */
 function spawnSquad(){
+  if(squad.length>=4)return;
   const colors=[0xd5d53a,0xd53a8a,0x3ad5d5,0xff8833];
-  const mesh=makeSoldier(colors[squad.length%4]);
-  const a=rand(0,TAU);
-  mesh.position.set(player.mesh.position.x+Math.cos(a)*3,0,player.mesh.position.z+Math.sin(a)*3);
+  const slot=[0,1,2,3].find(i=>!squad.some(s=>s.slot===i));
+  const mesh=makeSoldier(colors[slot]);
+  const pp=player.inVehicle?player.inVehicle.mesh.position:player.pos;
+  const point=squadPatrolPoint(pp,slot,0);
+  mesh.position.set(point.x,groundY(point.x,point.z),point.z);
   scene.add(mesh);
   const hp=100*(1+(Game.loop-1)*.5);
-  const s={mesh,hp,maxHp:hp,dead:false,fireCd:0,anim:0};
+  const s={mesh,slot,hp,maxHp:hp,dead:false,fireCd:slot*.07,anim:0,patrol:point,patrolStep:0,patrolTimer:2+slot*.7,stuck:0};
   s.bar=makeHPBar(1.8,'#ff6');s.bar.position.y=2.6;mesh.add(s.bar);updHPBar(s.bar,1);
   squad.push(s);
 }
@@ -1503,29 +1506,61 @@ function damageSquad(s,d){
     showMsg('💀 一名队友阵亡',1.4);
   }
 }
+function squadCanWalk(x,z){
+  return x>WORLD.minX+1&&x<WORLD.maxX-1&&z>WORLD.minZ+1&&z<WORLD.maxZ-1&&!collideWalls(x,z,.65)&&!tooSteep(x,z);
+}
+function squadPatrolPoint(center,slot,step){
+  for(let i=0;i<24;i++){
+    const angle=slot*TAU/4+step*.65+i*.38,r=6+(i%3)*2;
+    const x=center.x+Math.cos(angle)*r,z=center.z+Math.sin(angle)*r;
+    if(squadCanWalk(x,z)&&squad.every(s=>Math.hypot(s.mesh.position.x-x,s.mesh.position.z-z)>2.5))return{x,z};
+  }
+  return{x:center.x,z:center.z};
+}
 function updSquad(dt){
   const t=performance.now()/1000;
   for(const s of squad){
     if(s.dead)continue;
     s.anim+=dt;s.fireCd-=dt;
-    visuals.animate(s.mesh,dt,'Walk',camera);
     if(typeof s.mesh.userData.tick==='function')s.mesh.userData.tick(dt,t);
     const pp=player.inVehicle?player.inVehicle.mesh.position:player.mesh.position;
     const d2p=dist2(s.mesh.position,pp);
-    // 找敌人
-    let best=null,bd2=28*28;
-    for(const mo of monsters){if(mo.dead)continue;const d2=dist2(s.mesh.position,mo.mesh.position);if(d2<bd2){bd2=d2;best=mo;}}
-    let dir=null;
-    if(d2p>60){dir=new THREE.Vector3().subVectors(pp,s.mesh.position);dir.y=0;dir.normalize();}
-    else if(best&&bd2>36){dir=new THREE.Vector3().subVectors(best.mesh.position,s.mesh.position);dir.y=0;dir.normalize();}
-    if(dir){
-      const nx=s.mesh.position.x+dir.x*8*dt,nz=s.mesh.position.z+dir.z*8*dt;
-      if(!collideWalls(nx,nz,.6)&&!tooSteep(nx,nz)){s.mesh.position.x=nx;s.mesh.position.z=nz;}
-      else if(!collideWalls(nx,s.mesh.position.z,.6)&&!tooSteep(nx,s.mesh.position.z))s.mesh.position.x=nx;
-      else if(!collideWalls(s.mesh.position.x,nz,.6)&&!tooSteep(s.mesh.position.x,nz))s.mesh.position.z=nz;
-      s.mesh.rotation.y=Math.atan2(dir.x,dir.z);
-      s.mesh.userData.legs.forEach((l,i)=>l.rotation.x=Math.sin(s.anim*10+i*Math.PI)*.6);
-    }else s.mesh.userData.legs.forEach(l=>l.rotation.x*=.8);
+    // 各自索敌；已有队友照顾的敌人降低优先级，但单一首领允许集火。
+    let best=null,bd2=0,score=Infinity;
+    for(const mo of monsters){
+      if(mo.dead)continue;const d2=dist2(s.mesh.position,mo.mesh.position);if(d2>28*28)continue;
+      const value=d2+squad.filter(other=>other!==s&&other.target===mo).length*180;
+      if(value<score){score=value;bd2=d2;best=mo;}
+    }
+    s.target=best;s.patrolTimer-=dt;
+    if(s.patrolTimer<=0||Math.hypot(s.patrol.x-pp.x,s.patrol.z-pp.z)>19||s.stuck>.8){
+      s.patrol=squadPatrolPoint(pp,s.slot,++s.patrolStep);s.patrolTimer=3+s.slot*.6;s.stuck=0;
+    }
+    const p=s.mesh.position;let dx=s.patrol.x-p.x,dz=s.patrol.z-p.z;
+    if(best&&d2p<24*24){
+      const distance=Math.sqrt(bd2),range=11+s.slot*1.5;
+      // 射程内保持各自位置，近身后退，避免所有队友贴在敌人身上。
+      const advance=distance>range?1:distance<7?-1:0;
+      dx=(best.mesh.position.x-p.x)*advance;dz=(best.mesh.position.z-p.z)*advance;
+    }
+    let length=Math.hypot(dx,dz);if(length>.3){dx/=length;dz/=length;}else{dx=0;dz=0;}
+    // 包含玩家的软避让；完全重合时也有稳定且不同的分离方向。
+    for(const other of [...squad.filter(o=>o!==s).map(o=>o.mesh.position),pp]){
+      let sx=p.x-other.x,sz=p.z-other.z,d=Math.hypot(sx,sz);
+      if(d>=2.6)continue;
+      if(d<.01){sx=Math.cos(s.slot*TAU/4);sz=Math.sin(s.slot*TAU/4);d=1;}
+      const force=(2.6-d)*2;dx+=sx/d*force;dz+=sz/d*force;
+    }
+    length=Math.hypot(dx,dz);if(length>1){dx/=length;dz/=length;}
+    const speed=7*slopeSpeed(groundY,p.x,p.z,dx,dz),ox=p.x,oz=p.z;
+    const nx=p.x+dx*speed*dt,nz=p.z+dz*speed*dt;
+    if(squadCanWalk(nx,nz)){p.x=nx;p.z=nz;}
+    else if(squadCanWalk(nx,p.z))p.x=nx;
+    else if(squadCanWalk(p.x,nz))p.z=nz;
+    const moved=Math.hypot(p.x-ox,p.z-oz);
+    s.stuck=moved<.005&&length>.3?s.stuck+dt:0;
+    visuals.animate(s.mesh,dt,moved>.001?'Walk':'Idle',camera);
+    if(moved>.001)s.mesh.rotation.y=Math.atan2(p.x-ox,p.z-oz);
     s.mesh.position.y=groundY(s.mesh.position.x,s.mesh.position.z);
     if(best&&s.fireCd<=0){
       s.fireCd=.25;
@@ -1701,12 +1736,29 @@ function updPlayer(dt){
   }
 }
 /* ================= 关卡流程 ================= */
+const sandboxWave={enabled:true,timer:3,spawned:0};
+function resetSandboxWave(){sandboxWave.enabled=true;sandboxWave.timer=3;sandboxWave.spawned=0;}
+function updSandboxWave(dt){
+  if(!sandboxWave.enabled)return;
+  sandboxWave.timer-=dt;
+  if(sandboxWave.timer>0)return;
+  sandboxWave.timer=3;
+  const pp=player.inVehicle?player.inVehicle.mesh.position:player.pos;
+  for(let i=0;i<4&&monsters.length<48;i++){
+    const n=sandboxWave.spawned++,ch=CHAPTERS[n%CHAPTERS.length];
+    const kind=n%32===31?'boss':n%16===15?'miniboss':'mob';
+    const angle=(n%9-4)*.24,r=28+(n%3)*4;
+    spawnMonster(kind,clamp(pp.x+Math.sin(angle)*r,-65,65),clamp(pp.z+Math.cos(angle)*r,18,180),
+      {ch,elite:kind==='mob'&&n%4===3,affix:Object.keys(ELITES)[Math.floor(n/4)%Object.keys(ELITES).length]});
+  }
+}
 function sandboxSpawn(action='selected'){
   if(!Game.testMode)return;
   if(action==='clear'||action==='showcase'){
     for(const m of monsters){visuals.release(m.mesh);scene.remove(m.mesh);}monsters.length=0;
     for(const b of bullets)disposeBullet(b.mesh);bullets.length=0;
-    if(action==='clear'){showMsg('已清理虫群，场景和装备保留');return;}
+    if(action==='clear'){sandboxWave.enabled=false;showMsg('已清场并暂停自动虫潮；在测试台点「继续自动虫潮」可恢复',3);return;}
+    resetSandboxWave();
   }
   const add=(ch,kind='mob',affix=null,index=0)=>{
     if(monsters.length>=48)return;
@@ -1747,6 +1799,7 @@ function openSandbox(){
   if(!Game.testMode||!['prep','battle'].includes(Game.state))return;
   closePanels();Input.reset();panelOpen=true;$('sandboxPanel').classList.remove('hidden');
   $('testStatus').textContent=`玩家 / 小队 / 基地 / 载具无敌 · 金币、弹药和道具无限 · 虫群 ${monsters.length}/48`;
+  $('test-auto').textContent=sandboxWave.enabled?'暂停自动虫潮':'继续自动虫潮';
 }
 function setupSandbox(){
   const fill=(id,entries)=>{$(id).replaceChildren(...entries.map(([value,text])=>{const o=document.createElement('option');o.value=value;o.textContent=text;return o;}));};
@@ -1754,6 +1807,7 @@ function setupSandbox(){
   fill('testAffix',Object.entries(ELITES).map(([k,c])=>[k,c.name]));
   for(const [id,data] of [['testWeapon',WEAPONS],['testItem',ITEMS],['testVehicle',VEHICLES],['testBuilding',BUILDINGS]])fill(id,Object.entries(data).map(([k,c])=>[k,c.name]));
   $('sandboxBtn').onclick=openSandbox;$('sandboxClose').onclick=closePanels;
+  $('test-auto').onclick=()=>{sandboxWave.enabled=!sandboxWave.enabled;sandboxWave.timer=.1;showMsg(sandboxWave.enabled?'自动虫潮已恢复，精英与首领轮番加入':'自动虫潮已暂停，可手动召唤');closePanels();};
   document.querySelectorAll('[data-test-claim]').forEach(b=>b.onclick=()=>claimSandbox(b.dataset.testClaim,$(b.dataset.select)?.value));
   for(const action of ['selected','showcase','clear'])$('test-'+action).onclick=()=>{sandboxSpawn(action);closePanels();};
   $('test-reset').onclick=()=>{closePanels();newGame(true);};
@@ -1820,7 +1874,7 @@ function startBattle(){
   showMsg('⚔ 虫潮来袭！城门已关闭（靠近按I可开关）！',2.5);
 }
 function updWave(dt){
-  if(Game.testMode){$('waveTxt').textContent=`🧪 自由测试 · 活跃虫群 ${monsters.length}/48`;return;}
+  if(Game.testMode){updSandboxWave(dt);$('waveTxt').textContent=`🧪 ${sandboxWave.enabled?'持续虫潮':'刷怪暂停'} · ${monsters.length}/48`;return;}
   const w=Game.wave;
   // 出怪
   if(w.spawned<w.total && monsters.length<48){
@@ -2106,6 +2160,7 @@ function showHUD(){
 }
 function newGame(test){
   runGeneration++;
+  resetSandboxWave();
   Game.testMode=!!test;
   Game.loop=1;Game.chapter=1;Game.level=1;
   Game.gold=test?99999:150;Game.score=0;
@@ -2134,7 +2189,7 @@ function newGame(test){
   if(test){
     for(let i=0;i<4;i++)spawnSquad();Game.squadCount=squad.length;
     Game.state='battle';$('readyBtn').classList.add('hidden');
-    sandboxSpawn('showcase');showHint('自由测试：无敌 / 无限金币弹药 · H 或点「测试台」召唤怪物、领取装备');
+    sandboxSpawn('showcase');showHint('自由测试：持续虫潮 / 无敌 / 无限弹药 · H 测试台：暂停刷怪、召唤首领、领取装备');
     showMsg('🧪 自由测试 · 玩家、小队、载具与基地无敌',3);
   }
 }
@@ -2364,7 +2419,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   $('keysHint').textContent+=' · R开战 · M声音 · F全屏';
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,bullets,buildings,rockColliders,fortress,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updWave,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,renderer,scene,camera,Input,newGame,startBattle,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,
+    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,bullets,buildings,rockColliders,fortress,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,renderer,scene,camera,Input,newGame,startBattle,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter(renderer.getContext().getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,raw:frameTimes.slice()};}
     };

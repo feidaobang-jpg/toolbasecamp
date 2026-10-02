@@ -1,0 +1,43 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>虫潮持续刷怪与小队回归</title>
+<style>body{margin:0;background:#edf4df;font:14px sans-serif}iframe{border:0;width:960px;height:540px}button{padding:10px}pre{white-space:pre-wrap}</style>
+<button id="run">验证持续虫潮与队友</button><button id="stress">30秒战斗压力测试</button><button id="view">查看自由巡逻</button><button id="phone">手机测试台</button><button id="record">录制12秒巡逻</button><a id="download" hidden>下载录像</a>
+<iframe id="game" src="../../public/html/game/starship-defense/index.html?qa=1"></iframe><pre id="results">等待操作</pre>
+<script type="module">
+const f=document.getElementById('game'),out=document.getElementById('results'),get=()=>f.contentWindow.__gameQA,wait=ms=>new Promise(r=>setTimeout(r,ms));
+const move=(q,x,z)=>{q.player.pos.set(x,q.groundY(x,z),z);q.player.mesh.position.copy(q.player.pos);};
+const minDistance=q=>Math.min(...q.squad.flatMap((s,i)=>q.squad.slice(i+1).map(o=>s.mesh.position.distanceTo(o.mesh.position))));
+const report={checks:[],errors:[]};const ok=(v,n)=>{if(!v)throw Error(n);report.checks.push(n);};
+document.getElementById('run').onclick=()=>{try{
+ const q=get();q.newGame(true);q.Game.state='paused';
+ ok(q.sandboxWave.enabled&&q.monsters.length===18,'测试默认自动刷怪，首批18只');
+ const seen=new Set(),ranks=new Set();let elites=0;
+ for(let batch=0;batch<25;batch++){
+  q.clearEntities(false);for(let i=0;i<61;i++)q.updWave(.05);
+  ok(q.monsters.length===4,'第'+(batch+1)+'批清空后仍补4只');
+  q.monsters.forEach(m=>{seen.add(q.CHAPTERS.indexOf(m.ch));ranks.add(m.kind);if(m.elite)elites++;});
+ }
+ ok(seen.size===10&&ranks.has('boss')&&ranks.has('miniboss')&&elites>0,'持续轮换十类虫、精英、大小Boss');
+ for(let i=0;i<1000;i++)q.updWave(.05);ok(q.monsters.length===48,'持续补兵达到48上限后停止分配');
+ q.sandboxSpawn('clear');for(let i=0;i<100;i++)q.updWave(.05);ok(q.monsters.length===0&&!q.sandboxWave.enabled,'清场暂停，手动测试不被打扰');
+ f.contentDocument.getElementById('test-auto').click();q.Game.state='paused';q.updWave(.2);ok(q.monsters.length===4&&q.sandboxWave.enabled,'继续按钮恢复自动虫潮');
+ const saved=q.saveData();q.loadGame(saved);q.Game.state='paused';ok(q.sandboxWave.enabled,'读取测试存档重新开启持续虫潮');
+ q.sandboxSpawn('clear');q.clearEntities(true);move(q,0,25);for(let i=0;i<4;i++)q.spawnSquad();q.spawnSquad();ok(q.squad.length===4,'小队上限4名');
+ ok(minDistance(q)>2.5,'生成位置互不重叠');
+ for(const s of q.squad)s.mesh.position.set(0,q.groundY(0,25),25);
+ for(let i=0;i<180;i++)q.updSquad(1/60);
+ report.separationAfterOverlap=minDistance(q);ok(report.separationAfterOverlap>1.8,'人为完全重叠后自行分离');
+ const starts=q.squad.map(s=>s.mesh.position.clone());let blocked=0;
+ for(let i=0;i<1200;i++){q.updSquad(1/60);for(const s of q.squad)if(q.collideWalls(s.mesh.position.x,s.mesh.position.z,.6))blocked++;}
+ ok(blocked===0,'巡逻不穿碰撞体');ok(q.squad.every((s,i)=>s.mesh.position.distanceTo(starts[i])>1),'每名队友都独立移动');
+ for(let i=0;i<4;i++){const m=q.spawnMonster('mob',-9+i*6,45,{ch:q.CHAPTERS[0]});m.hp=m.maxHp=1e8;}
+ for(let i=0;i<600;i++)q.updSquad(1/60);
+ ok(new Set(q.squad.map(s=>s.target)).size>=2,'多个目标时分散索敌');ok(minDistance(q)>1.5,'持续交战保持队友间距');
+ q.newGame(false);q.Game.state='paused';const before=q.monsters.length,n=q.sandboxWave.spawned;q.updWave(.01);ok(q.sandboxWave.spawned===n&&q.monsters.length===before,'普通模式不运行测试刷怪器');
+ out.textContent=JSON.stringify(report,null,2);
+ }catch(e){report.errors.push(e.stack);out.textContent=JSON.stringify(report,null,2);}};
+function patrol(){const q=get();q.newGame(true);q.sandboxSpawn('clear');move(q,0,25);q.clearEntities(true);for(let i=0;i<4;i++)q.spawnSquad();q.Game.state='battle';return q;}
+document.getElementById('view').onclick=patrol;
+document.getElementById('phone').onclick=()=>{f.style.width='390px';f.style.height='844px';f.style.transform='scale(.7)';f.style.transformOrigin='top left';const q=get();q.newGame(true);const d=f.contentDocument;if(!d.getElementById('stage').classList.contains('touch-mode'))d.getElementById('touchBtn').click();q.openSandbox();};
+document.getElementById('stress').onclick=async()=>{const q=patrol();for(let i=0;i<48;i++){const m=q.spawnMonster('mob',(i%8-3.5)*3,44+Math.floor(i/8)*4,{ch:q.CHAPTERS[i%10],elite:i%7===0});m.hp=m.maxHp=1e8;}await wait(800);q.startMeasure();const start=performance.now();const timer=setInterval(()=>{q.Input.keys.J=true;q.Input.keys.Q=true;q.Input.keys.left=Math.floor((performance.now()-start)/2500)%2===0;q.Input.keys.right=!q.Input.keys.left;},30);await wait(30000);clearInterval(timer);q.Input.reset();report.performance={...q.endMeasure(),liveEnemies:q.monsters.filter(m=>!m.dead).length,allies:q.squad.length,minimumAllyDistance:minDistance(q)};out.textContent=JSON.stringify(report,null,2);};
+document.getElementById('record').onclick=async()=>{const q=patrol(),stream=q.renderer.domElement.captureStream(30),chunks=[],rec=new MediaRecorder(stream,{mimeType:'video/webm'});rec.ondataavailable=e=>chunks.push(e.data);rec.start();await wait(12000);await new Promise(r=>{rec.onstop=r;rec.stop();});stream.getTracks().forEach(t=>t.stop());const a=document.getElementById('download');a.href=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(new Blob(chunks,{type:'video/webm'}));});a.hidden=false;a.download='squad-realtime.webm';};
+</script></html>

@@ -251,7 +251,7 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
   <div id="sandboxPanel" class="panel hidden" style="width:660px;max-height:86%;overflow:auto;z-index:60">
     <button class="closeX" id="sandboxClose" aria-label="关闭测试台">✕</button>
     <h3>🧪 自由测试台</h3><p id="testStatus"></p>
-    <p>随时换武器、驾驶载具、召唤虫群。所有十章怪物及对应首领均可选；普通存档不受影响。</p>
+    <p>默认每3秒补充虫群，精英与大小首领轮番加入。清场会暂停自动刷怪，可随时继续；普通存档不受影响。</p>
     <div class="testGrid">
       <label>武器<select id="testWeapon"></select></label><button class="mbtn" data-test-claim="weapon" data-select="testWeapon">装备武器</button>
       <label>道具<select id="testItem"></select></label><button class="mbtn" data-test-claim="item" data-select="testItem">立即使用 / 领取</button>
@@ -261,7 +261,7 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
       <label>精英词缀<select id="testAffix"></select></label><label>召唤数量<select id="testCount"><option>1</option><option>6</option><option>12</option></select></label>
     </div>
     <div class="btnRow"><button id="test-selected" class="mbtn green">召唤所选虫群</button><button id="test-showcase" class="mbtn">全类型混战</button><button id="test-clear" class="mbtn">清理虫群</button><button class="mbtn" data-test-claim="squad">补齐四人小队</button></div>
-    <div class="btnRow"><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
+    <div class="btnRow"><button id="test-auto" class="mbtn green">暂停自动虫潮</button><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
     <p class="small">同屏最多 48 只虫、4 名队友、32 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。H / Esc 关闭，Tab 与回车操作。</p>
   </div>
   <section id="platformPanel" class="panel hidden" aria-label="存档、排行与作者" style="width:630px;max-height:85%;">
@@ -274,7 +274,7 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <p class="small">只计普通模式已过关时的累计积分，自由测试与调试不参与。自愿提交后展示 B站昵称；这是休闲榜单。</p><ol id="rankList"></ol>
     <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
     <div class="btnRow"><button class="mbtn" id="authorVisit">支持作者</button><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
-    <p class="small">打开视频后可自行点赞、投币、收藏，不影响游戏奖励。云存档与排行榜失败不会影响本地游玩。</p>
+    <p class="small">喜欢这座小基地的话，顺手去视频空投个三连补给？玩得开心就好！云存档与排行榜失败不会影响本地游玩。</p>
   </section>
   <!-- 存档面板 -->
   <div id="savePanel" class="panel hidden" style="width:540px;">
@@ -283,6 +283,6 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div id="slotList"></div>
   </div>
 </div>
-<script type="module" src="./game.js?v=platform1"></script>
+<script type="module" src="./game.js?v=squad1"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>
