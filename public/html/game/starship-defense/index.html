@@ -95,7 +95,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #webTools{top:116px;right:8px;gap:6px}#webTools .mbtn{font-size:9px;padding:6px}
 #hint{font-size:11px;max-width:550px;bottom:50px;color:#a9c2bd}#keysHint{font-size:9px;background:rgba(9,19,26,.85)}#readyBtn{font-size:14px;top:18px;border:1px solid #9b9674;background:#354644;box-shadow:none;padding:9px 15px}
 .vbtn,.vbtn.sm{font-size:11px;border-radius:8px;width:52px;height:52px;line-height:48px;background:rgba(24,41,49,.78);border:1px solid #71848a}.vbtn::after{content:attr(data-key);font-size:9px;color:#bdd0d0;position:absolute;right:5px;top:-12px}
-#vJ{right:100px;bottom:22px}#vK{right:35px;bottom:22px}#vU{right:100px;bottom:86px}#vI{right:35px;bottom:86px}#vC{right:290px;bottom:18px}#vL{right:230px;bottom:18px}#vO{right:170px;bottom:18px}#vP{right:170px;bottom:80px}#vV{right:230px;bottom:80px}
+#vQ{right:350px;bottom:18px}#vE{right:290px;bottom:80px}#vJ{right:100px;bottom:22px}#vK{right:35px;bottom:22px}#vU{right:100px;bottom:86px}#vI{right:35px;bottom:86px}#vC{right:290px;bottom:18px}#vL{right:230px;bottom:18px}#vO{right:170px;bottom:18px}#vP{right:170px;bottom:80px}#vV{right:230px;bottom:80px}
 #joyBase{left:30px;bottom:24px;width:120px;height:120px}#interactHint{font-size:12px;bottom:170px}
 #menuMain .small{max-width:640px}#menuMain .subtitle{font-size:13px;letter-spacing:4px;color:#bda477;margin-bottom:5px}
 a.gameBack{color:#a7c4c3;font-size:12px;margin-top:10px;text-decoration:none;border-bottom:1px solid #617a7c;padding:6px 0}
@@ -129,13 +129,14 @@ html,body{background:#b5e3e6;font-family:"Microsoft YaHei",sans-serif}
 a.gameBack{color:#427d7b;border-color:#88b4a2}
 .touch-mode #keysHint{display:none}.touch-mode #hint{bottom:160px;max-width:470px;white-space:nowrap;font-size:10px;padding:5px 9px}.touch-mode #interactHint{bottom:130px}
  .testGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.testGrid label{display:flex;gap:8px;align-items:center}.testGrid select{min-width:0;flex:1;padding:8px;border-radius:8px;background:#fff3d7;color:#345c66;border:1px solid #96b8ae}#sandboxPanel p{font-size:12px;line-height:1.5}#sandboxPanel .mbtn{padding:7px;font-size:12px}
+#platformPanel p{font-size:12px;line-height:1.6;margin:8px 0}#platformPanel .mbtn{font-size:12px;padding:8px 12px}#rankList{max-height:130px;overflow:auto;margin:8px 25px}#platformStatus{color:#387979}#interactHint{max-width:600px;text-align:center;white-space:normal}
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在搭建玩具前哨…</div>
-<div id="webTools"><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 H</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="webTools"><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 H</button><button id="qualityBtn" class="mbtn">画质</button><button id="touchBtn" class="mbtn">虚拟按键</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -158,7 +159,7 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div id="msg" class="hidden"></div>
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
-    <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I医疗包 · L建造 · O商店 · C切换视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
+    <div id="keysHint">WASD/方向键移动 · J/回车攻击 · K/空格跳 · U手雷(无限) · I互动/医疗 · L建造 · O商店 · Q/E转视角 · C切换视角 · V换武器 · P/B暂停 | 靠近载具/城门按I上下车/开关门</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！</button>
   </div>
 
@@ -174,11 +175,12 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div class="vbtn sm" id="vV">换枪</div>
     <div class="vbtn sm" id="vP">暂停</div>
     <div class="vbtn sm" id="vC">视角</div>
+    <div class="vbtn sm" id="vQ" aria-label="Q 向左转视角">左转</div><div class="vbtn sm" id="vE" aria-label="E 向右转视角">右转</div>
   </div>
 
   <!-- 开始菜单 -->
   <div id="menuMain" class="overlay menu">
-    <a class="gameBack" href="../../../games.html">← 返回游戏列表 / Game list</a>
+    <a class="gameBack" href="../../../games.html">← 返回游戏列表</a>
     <h1>虫潮前哨</h1>
     <div style="font-size:16px;color:#8cf;letter-spacing:12px;">裂 隙 防 线 · 网 页 试 玩</div>
     <h2 style="margin:12px 0 6px;">选择前哨守卫</h2>
@@ -190,15 +192,15 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div class="btnRow">
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
-      <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
+      <button class="mbtn" id="btnPlatformMenu">☁ 存档 / 排行 / 作者</button><button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
     <div class="small" style="margin-top:6px;">
       PC按键：WASD/方向键移动 · J/回车=射击 · K/空格=跳跃 · U=手雷(无限) · I=医疗包/上下载具/城门开关 · L=建造 · O=商店<br>
-      C=切换视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），点「视角」切换镜头<br>
+      Q/E=左右转视角 · C=切换视角 · V=切换武器 · P或B=暂停 · 手机：左摇杆移动，右侧虚拟按键（商店/建造），按住「左转/右转」转镜头，点「视角」切换预设<br>
       玩法：每关先去野外刷怪赚金币 → 回基地买装备造炮塔 → 点"准备完毕"抵御虫潮 · 每章10关，3/6/9关有小BOSS，第10关大BOSS · 无限周目<br>
       精英虫带词缀（迅捷/坚甲/狂暴/剧毒/爆死/巨型），击杀掉落双份金币 · BOSS会冲锋/弹幕/召唤，注意走位！<br>
-      基地设施：医疗平台站上去持续回血 · 从城门两侧金色台阶登楼守门 · 左前方短洞穴可穿行 · 右前方野外地堡可回血 · 防空塔专打飞虫
+      基地设施：医疗平台站上去持续回血 · 从城门两侧金色台阶登楼守门 · 左前方短洞穴可穿行 · 右前方野外地堡可回血 · 两座山顶堡垒有射击窗，沿金色路标上山；上坡减速、下坡加速 · 防空塔专打飞虫
     </div>
   </div>
 
@@ -262,6 +264,18 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div class="btnRow"><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
     <p class="small">同屏最多 48 只虫、4 名队友、32 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。H / Esc 关闭，Tab 与回车操作。</p>
   </div>
+  <section id="platformPanel" class="panel hidden" aria-label="存档、排行与作者" style="width:630px;max-height:85%;">
+    <button class="closeX" id="platformClose" aria-label="关闭平台面板">×</button>
+    <h3>☁ 前哨档案站</h3>
+    <p id="platformStatus" role="status">本地自动存档始终可用，云存档需在 B站 Toy 中登录。</p>
+    <div class="btnRow"><button class="mbtn" id="cloudRead">查看云存档</button><button class="mbtn" id="cloudWrite">上传普通进度</button><button class="mbtn green hidden" id="cloudConfirm">确认上传并覆盖云档</button><button class="mbtn green hidden" id="cloudLoad">读取这份云档</button></div>
+    <p id="cloudInfo" class="small">先查看云档，再选择上传或读取；读取前会自动保留一份本地备份。测试模式独立保存。</p><button class="mbtn" id="cloudBackup">恢复读取云档前的本地备份</button>
+    <div class="btnRow"><button class="mbtn" id="rankRead">普通通关积分榜</button><button class="mbtn" id="rankSubmit">提交最佳通关成绩</button></div>
+    <p class="small">只计普通模式已过关时的累计积分，自由测试与调试不参与。自愿提交后展示 B站昵称；这是休闲榜单。</p><ol id="rankList"></ol>
+    <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
+    <div class="btnRow"><button class="mbtn" id="authorVisit">支持作者</button><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
+    <p class="small">打开视频后可自行点赞、投币、收藏，不影响游戏奖励。云存档与排行榜失败不会影响本地游玩。</p>
+  </section>
   <!-- 存档面板 -->
   <div id="savePanel" class="panel hidden" style="width:540px;">
     <div class="closeX" id="saveClose">✕</div>
@@ -269,6 +283,6 @@ a.gameBack{color:#427d7b;border-color:#88b4a2}
     <div id="slotList"></div>
   </div>
 </div>
-<script type="module" src="./game.js?v=fortress1"></script>
+<script type="module" src="./game.js?v=platform1"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

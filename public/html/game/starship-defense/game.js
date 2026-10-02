@@ -1,6 +1,9 @@
 import * as THREE from './vendor/three.module.js';
-import {ToyVisuals} from './toy-visuals.js?v=fortress1';
-import {FortressWorld} from './fortress-world.js?v=fortress1';
+import {ToyVisuals} from './toy-visuals.js?v=platform1';
+import {FortressWorld} from './fortress-world.js?v=platform1';
+import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
+import {setupToyPlatform} from './toy-platform.js?v=platform1';
+import {validateNormalSave} from './save-validation.js';
 let visualAssets=false;
 const frameTimes=[];let previousFrame=0,measuring=false;
 
@@ -164,7 +167,7 @@ const Input={
       const up=e=>{if(e.pointerId!==pointer)return;pointer=null;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    ['J','K','U','I','O','L','V','P','C'].forEach(k=>bind('v'+k,k));
+    ['J','K','U','I','O','L','V','P','C','Q','E'].forEach(k=>bind('v'+k,k));
     window.addEventListener('blur',()=>this.reset());
     window.addEventListener('resize',()=>this.reset());
     document.addEventListener('visibilitychange',()=>{if(document.hidden)this.reset();});
@@ -176,7 +179,7 @@ const Input={
   },
   mapKey(c){
     const m={KeyW:'up',ArrowUp:'up',KeyS:'down',ArrowDown:'down',KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',
-      KeyJ:'J',Enter:'J',KeyK:'K',Space:'K',KeyU:'U',KeyI:'I',KeyL:'L',KeyO:'O',KeyP:'P',KeyB:'P',KeyV:'V',KeyC:'C'};
+      KeyJ:'J',Enter:'J',KeyK:'K',Space:'K',KeyU:'U',KeyI:'I',KeyL:'L',KeyO:'O',KeyP:'P',KeyB:'P',KeyV:'V',KeyC:'C',KeyQ:'Q',KeyE:'E'};
     return m[c];
   },
   axis(){
@@ -246,8 +249,8 @@ function plateauH(x,z){
   return h;
 }
 function terrainH(x,z){
-  let h=plateauH(x,z);
-  const hills=[[-45,80,16,6],[45,110,18,7],[0,150,22,8],[-40,160,14,5],[50,55,12,4]];
+  let h=Math.max(plateauH(x,z),hillHeight(x,z));
+  const hills=[[0,150,22,8],[-40,160,14,5],[50,55,12,4]];
   for(const [hx,hz,r,hh] of hills){
     const d=Math.hypot(x-hx,z-hz);
     if(d<r)h=Math.max(h,hh*Math.cos(d/r*Math.PI/2)**2);
@@ -294,7 +297,7 @@ const rockColliders=[];
     const batch=new THREE.InstancedMesh(geometry,material,count),dummy=new THREE.Object3D();
     for(let i=0;i<count;i++){
       let x,z;
-      do{x=rand(WORLD.minX,WORLD.maxX);z=rand(12,WORLD.maxZ-10);}while(!plant&&(Math.abs(x)<8||Math.abs(x+42)<10&&Math.abs(z-49)<16||Math.abs(x-30)<10&&Math.abs(z-34)<12));
+      do{x=rand(WORLD.minX,WORLD.maxX);z=rand(12,WORLD.maxZ-10);}while(Math.abs(x)<8||Math.abs(x+42)<10&&Math.abs(z-49)<16||Math.abs(x-30)<10&&Math.abs(z-34)<12||HILL_FORTS.some(f=>Math.abs(x-f.x)<10&&Math.abs(z-f.z)<f.r));
       const s=plant?rand(.7,1.3):rand(.7,3.2);
       if(!plant)rockColliders.push({x,z,r:s*.82,bottom:terrainH(x,z)-s*.5,top:terrainH(x,z)+s*1.15});
       dummy.position.set(x,terrainH(x,z)+s*.35,z);dummy.rotation.set(0,rand(0,TAU),plant?rand(-.3,.3):0);dummy.scale.set(s,s*(plant?1:rand(.5,.85)),s);dummy.updateMatrix();batch.setMatrixAt(i,dummy.matrix);
@@ -1558,6 +1561,16 @@ function autoAimDir(from,facing,range){
   }
   return facing.clone();
 }
+function interactionTarget(){
+  if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车；驾驶时不能使用医疗包'};
+  let vehicle=null,best=20;
+  for(const v of vehicles){const d=dist2(player.pos,v.mesh.position);if(!v.dead&&!(v.noEnter>0)&&d<best&&Math.abs(player.pos.y-v.mesh.position.y)<3){vehicle=v;best=d;}}
+  if(vehicle)return {kind:'vehicle',vehicle,label:'驾驶',tip:'I 驾驶 '+vehicle.cfg.name};
+  if(dist2(player.pos,gate.mesh.position)<170&&Math.abs(player.pos.y-PLAT.H)<2)return {kind:'gate',label:gate.dead?'城门损毁':gate.open?'关门':'开门',tip:gate.dead?'城门损毁，下关自动修复':'I '+(gate.open?'关闭':'开启')+'城门'};
+  if(player.hp>=player.maxHp)return {kind:'full',label:'医疗',tip:'I 医疗包：回复60生命；当前满血，不消耗。靠近载具或城门可互动'};
+  return {kind:'heal',label:'医疗',tip:Game.testMode||Game.items.medkit>0?'I 使用医疗包，回复60生命':'医疗包已用完，O 打开商店购买'};
+}
+function updInteraction(){const a=interactionTarget();if($('vI').textContent!==a.label)$('vI').textContent=a.label;if($('interactHint').textContent!==a.tip){$('vI').setAttribute('aria-label',a.tip);$('interactHint').textContent=a.tip;}$('interactHint').classList.remove('hidden');}
 function updPlayer(dt){
   if(player.dead)return;
   const t=performance.now()/1000;
@@ -1565,6 +1578,8 @@ function updPlayer(dt){
   const ax=Input.axis();
   // 视角旋转
   if(Input.pop('C'))setCameraView(camView+1);
+  camYaw=(camYaw+((Input.keys.Q?1:0)-(Input.keys.E?1:0))*dt*1.65+TAU)%TAU;
+  updInteraction();
   // 移动方向以摄像机为准
   const cs=Math.cos(camYaw),sn=Math.sin(camYaw);
   const f=-ax.y,r=ax.x;
@@ -1574,7 +1589,7 @@ function updPlayer(dt){
   const v=player.inVehicle;
   if(v){
     // 驾驶载具
-    const sp=v.cfg.speed;
+    const sp=v.cfg.speed*(v.cfg.fly?1:slopeSpeed(groundY,v.mesh.position.x,v.mesh.position.z,mvx,mvz));
     if(moving){
       v.yaw=Math.atan2(mvx,mvz);
       v.mesh.rotation.y=v.yaw;
@@ -1620,7 +1635,7 @@ function updPlayer(dt){
   }
   if(moving){
     player.yaw=Math.atan2(mvx,mvz);
-    const sp=player.speed*(player.buffT>0?1.4:1);
+    const sp=player.speed*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
     const nx=player.pos.x+mvx*sp*dt,nz=player.pos.z+mvz*sp*dt;
     if(!collideWalls(nx,player.pos.z,.5)&&!tooSteep(nx,player.pos.z))player.pos.x=clamp(nx,WORLD.minX+1,WORLD.maxX-1);
     if(!collideWalls(player.pos.x,nz,.5)&&!tooSteep(player.pos.x,nz))player.pos.z=clamp(nz,WORLD.minZ+1,WORLD.maxZ-1);
@@ -1664,36 +1679,18 @@ function updPlayer(dt){
   }
   // 医疗包 / 上载具 / 城门开关
   if(Input.pop('I')){
-    // 先检测载具（下车冷却中的车不算，避免想开门却反复上下车）
-    let nearV=null;
-    for(const vv of vehicles){if(!vv.dead&&!(vv.noEnter>0)&&dist2(player.pos,vv.mesh.position)<20){nearV=vv;break;}}
-    if(!nearV&&dist2(player.pos,gate.mesh.position)<170){setGate(!gate.open);}
-    else if(nearV)enterVehicle(nearV);
+    const action=interactionTarget();
+    if(action.kind==='vehicle')enterVehicle(action.vehicle);
+    else if(action.kind==='gate'){if(!gate.dead)setGate(!gate.open);else showMsg(action.tip,2);}
+    else if(action.kind==='full')showMsg('I 是医疗包：受伤后回复60生命；满血不会消耗',2.5);
     else if(Game.testMode||Game.items.medkit>0){
-      if(player.hp>=player.maxHp)showMsg('生命值已满',1);
-      else{
-        if(!Game.testMode)Game.items.medkit--;
-        player.hp=Math.min(player.maxHp,player.hp+ITEMS.medkit.heal);
-        updHPBar(player.bar,player.hp/player.maxHp);
-        AudioSys.sfx('heal');
-        spawnParticles(player.pos.clone().add(new THREE.Vector3(0,1.5,0)),0x66ff99,10,3,.7);
-      }
-    }else showMsg('没有医疗包！商店可购买',1.4);
-  }
-  // 交互提示：靠近城门/载具/医疗平台时提示 I 键作用
-  {
-    let tip='';
-    if(gate.dead&&dist2(player.pos,gate.mesh.position)<170)tip='🛠 城门损毁，下关自动修复';
-    else if(dist2(player.pos,gate.mesh.position)<170)tip=gate.open?'按「互动/I」关闭城门':'按「互动/I」开启城门';
-    else{
-      let nearV=null;
-      for(const vv of vehicles){if(!vv.dead&&!(vv.noEnter>0)&&dist2(player.pos,vv.mesh.position)<20){nearV=vv;break;}}
-      if(nearV)tip='按「互动/I」驾驶 '+nearV.cfg.name;
-      else if(dist2(player.pos,healPad.pos)<healPad.r*healPad.r)tip='⛺ 基地医疗平台：生命回复中…';
-    }
-    const ih=$('interactHint');
-    if(tip){ih.textContent=tip;ih.classList.remove('hidden');}
-    else ih.classList.add('hidden');
+      if(!Game.testMode)Game.items.medkit--;
+      const healed=Math.min(ITEMS.medkit.heal,player.maxHp-player.hp);
+      player.hp+=healed;updHPBar(player.bar,player.hp/player.maxHp);
+      AudioSys.sfx('heal');showMsg('医疗包 +'+Math.ceil(healed)+'生命',1.5);
+      spawnParticles(player.pos.clone().add(new THREE.Vector3(0,1.5,0)),0x66ff99,10,3,.7);
+    }else showMsg('没有医疗包！O 打开商店购买',2);
+    updInteraction();
   }
   // 切换武器
   if(Input.pop('V')){
@@ -1861,6 +1858,7 @@ function levelWin(){
   AudioSys.sfx('win');
   const bonus=Math.round((80+Game.level*30+Game.chapter*50)*(1+(Game.loop-1)*.3));
   Game.gold+=bonus;Game.score+=100*Game.level;
+  if(!new URLSearchParams(location.search).has('qa'))try{const key=SAVE_PREFIX+'rank-best';localStorage.setItem(key,String(Math.max(Number(localStorage.getItem(key))||0,Math.min(16777215,Math.floor(Game.score)))));}catch{}
   showMsg(`🎉 关卡胜利！奖励 ${bonus} 金币`,3);
   Game.level++;
   if(Game.level>10){
@@ -2010,7 +2008,7 @@ function renderBuild(){
   }
 }
 function closePanels(){
-  $('shopPanel').classList.add('hidden');$('buildPanel').classList.add('hidden');$('savePanel').classList.add('hidden');$('sandboxPanel').classList.add('hidden');
+  $('shopPanel').classList.add('hidden');$('buildPanel').classList.add('hidden');$('savePanel').classList.add('hidden');$('sandboxPanel').classList.add('hidden');$('platformPanel').classList.add('hidden');
   panelOpen=false;Input.reset();
 }
 let panelOpen=false;
@@ -2331,8 +2329,16 @@ window.addEventListener('beforeunload',()=>{if(Game.state!=='menu')autoSave();})
 function frameStats(now){if(measuring&&previousFrame)frameTimes.push(now-previousFrame);previousFrame=now;}
 function setupWebControls(){
   setupSandbox();
+  setupToyPlatform({
+    prefix:SAVE_PREFIX,
+    getSave:()=>Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
+    load:d=>loadGame(d),isTest:()=>Game.testMode||new URLSearchParams(location.search).has('qa'),
+    open:()=>{closePanels();Input.reset();panelOpen=true;$('platformPanel').classList.remove('hidden');},close:closePanels,
+    validate:d=>validateNormalSave(d,{weapons:WEAPONS,buildings:BUILDINGS,vehicles:VEHICLES})
+  });
   document.querySelectorAll('.vbtn').forEach(el=>{el.dataset.key=el.id.slice(1);});
   let muted=false;
+  $('touchBtn').onclick=()=>{isTouch=!isTouch;Input.reset();stage.classList.toggle('touch-mode',isTouch);fitStage();renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();$('touchUI').classList.toggle('hidden',!isTouch||Game.state==='menu');$('touchBtn').textContent=isTouch?'隐藏按键':'虚拟按键';};
   const quality=localStorage.getItem('chongchao-quality')||((isTouch)?'smooth':'high');
   function applyQuality(value){
     const displayScale=Math.max(innerWidth,rotated?innerHeight:0)/BASE_W;
@@ -2358,7 +2364,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   $('keysHint').textContent+=' · R开战 · M声音 · F全屏';
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,bullets,buildings,rockColliders,fortress,groundY,tooSteep,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updWave,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,renderer,scene,camera,Input,newGame,startBattle,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,
+    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,bullets,buildings,rockColliders,fortress,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updWave,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,renderer,scene,camera,Input,newGame,startBattle,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter(renderer.getContext().getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,raw:frameTimes.slice()};}
     };

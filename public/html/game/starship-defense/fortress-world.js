@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
+import {HILL_FORTS} from './terrain-controls.js';
 
 // Static scenery is merged by colour. Collision is independent of render detail.
 export class FortressWorld {
@@ -63,6 +64,24 @@ export class FortressWorld {
     this.solids.push({x:30,z:34,hw:6,hd:6.5,bottom:4.25,top:4.75});
     add('box',navy,30,.04,34,9,.08,10);
     add('box',0x9de3bd,30,.1,34,3,.1,.7);add('box',0x9de3bd,30,.11,34,.7,.1,3);
+    this.hillForts=HILL_FORTS;
+    for(const f of HILL_FORTS){
+      const y=height(f.x,f.z);
+      // Rear doorway, low firing parapets and a roof: bullets really pass through the windows.
+      wall(f.x-5,f.z,1,11,.85,cream,y);wall(f.x+5,f.z,1,11,.85,cream,y);
+      wall(f.x,f.z+5,11,1,.85,cream,y);
+      for(const side of [-1,1])wall(f.x+side*3.4,f.z-5,3.2,1,.85,cream,y);
+      for(const side of [-1,1])for(const end of [-1,1]){
+        wall(f.x+side*5,f.z+end*5,1.35,1.35,4,cream,y);
+        add('box',0xf5bf63,f.x+side*5,y+4.2,f.z+end*5,1.7,.5,1.7);
+      }
+      wall(f.x,f.z,12,12,.45,teal,y+3.4);
+      add('box',navy,f.x,y+.03,f.z,9,.06,9);
+      for(let i=0;i<6;i++){
+        const z=f.z-6-i*2.6;
+        add('box',0xf5bf63,f.x,height(f.x,z)+.05,z,2,.07,.6);
+      }
+    }
     for(const [color,gs] of this.groups){
       const mesh=new THREE.Mesh(mergeGeometries(gs,false),new THREE.MeshLambertMaterial({color}));
       mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);gs.forEach(g=>g.dispose());

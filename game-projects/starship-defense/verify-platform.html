@@ -1,0 +1,65 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>虫潮 v0.7 开发回归</title>
+<style>body{margin:0;background:#edf4df;font:14px sans-serif}iframe{border:0;width:960px;height:540px}button{padding:10px}pre{white-space:pre-wrap}#results{max-height:340px;overflow:auto}</style>
+<button id="run">运行玩法回归</button><button id="stress">运行30秒移动转镜头压力测试</button><button id="fort">查看山顶堡垒</button><button id="phone">手机竖屏</button><button id="record">录制12秒堡垒转镜头</button><a id="download" hidden>下载实机录像</a>
+<iframe id="game" src="../../public/html/game/starship-defense/index.html?qa=1"></iframe><pre id="results">等待游戏加载</pre>
+<script type="module">
+const frame=document.getElementById('game'),out=document.getElementById('results');
+const get=()=>frame.contentWindow.__gameQA;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const report={checks:[],errors:[]};
+const ok=(v,name)=>{if(!v)throw Error(name);report.checks.push(name);};
+const reset=(q,x,z)=>{q.Input.reset();q.player.dead=false;q.player.inVehicle=null;q.player.pos.set(x,q.groundY(x,z),z);q.player.mesh.position.copy(q.player.pos);q.player.onGround=true;q.player.vy=0;};
+frame.onload=()=>{out.textContent='已加载，点击运行；测试仅修改本地开发页存档，不提交平台成绩。';};
+document.getElementById('run').onclick=async()=>{
+ try{
+ const q=get();q.newGame(false);q.Game.state='paused';q.clearEntities(true);reset(q,0,20);q.setCameraView(0,false);
+ q.Input.keys.Q=true;for(let i=0;i<20;i++)q.updPlayer(.05);ok(q.getCamYaw()>1.5&&q.getCamYaw()<1.8,'Q 按住连续左转');
+ q.Input.reset();q.Input.keys.E=true;for(let i=0;i<20;i++)q.updPlayer(.05);ok(Math.min(q.getCamYaw(),Math.PI*2-q.getCamYaw())<.01,'E 反向转回');q.Input.reset();
+ q.setCameraView(0,false);q.Input.keys.Q=true;q.Input.keys.E=true;q.updPlayer(.05);ok(q.getCamYaw()===0,'同时按 Q/E 不漂移');q.Input.reset();
+ for(const f of q.fortress.hillForts){
+   const up=q.slopeSpeed(q.groundY,f.x,f.z-20,0,1),down=q.slopeSpeed(q.groundY,f.x,f.z-20,0,-1),cross=q.slopeSpeed(q.groundY,f.x,f.z-20,1,0);
+   ok(up<.8&&down>1.15&&cross===1,'山坡顺向减速 / 反向加速 / 横向原速 '+f.x);
+   q.setCameraView(0,false);reset(q,f.x,f.z-29);q.Input.keys.up=true;
+   for(let i=0;i<110;i++)q.updPlayer(.04);q.Input.reset();
+   ok(q.player.pos.z>f.z-4&&q.player.pos.y>=f.h-.05,'实际走坡并从门口进入堡垒 '+f.x);
+   ok(!q.collideWalls(f.x,f.z,.5),'堡垒内可站立 '+f.x);
+   ok(q.collideWalls(f.x+5,f.z,.5),'矮掩体阻挡步行 '+f.x);
+   const v=q.player.pos.clone().set(f.x,f.h+1.35,f.z+5);
+   ok(!q.fortress.shotBlocked(v),'射击窗不挡枪 '+f.x);
+   v.y=f.h+.4;ok(q.fortress.shotBlocked(v),'下沿掩体挡低弹 '+f.x);
+   q.clearEntities(false);reset(q,f.x,f.z);const m=q.spawnMonster('mob',f.x,f.z+14);m.hp=1000;m.mesh.position.y=f.h;m.hitH=1.2;
+   const from=q.player.pos.clone();from.y+=1.35;q.fireBullet(from,from.clone().set(0,0,1),q.WEAPONS.laser,true);ok(m.hp<1000,'堡垒内激光真实击中窗外目标 '+f.x);
+ }
+ q.clearEntities(true);reset(q,0,30);q.player.hp=q.player.maxHp;q.Game.items.medkit=2;q.Input.pressed.I=true;q.updPlayer(.01);ok(q.Game.items.medkit===2,'满血不消耗医疗包');
+ ok(frame.contentDocument.getElementById('msg').textContent.includes('回复60'),'满血提示解释医疗包用途');
+ q.player.hp=20;q.Input.pressed.I=true;q.updPlayer(.01);ok(q.player.hp===80&&q.Game.items.medkit===1,'受伤 I 治疗60并扣除一个包');
+ const vehicle=q.spawnVehicle('jeep');vehicle.mesh.position.set(0,5,-18);reset(q,0,-18);ok(q.interactionTarget().kind==='vehicle','载具和城门同时邻近时统一优先驾驶');q.Input.pressed.I=true;q.updPlayer(.01);ok(q.player.inVehicle===vehicle,'I 执行与提示一致');q.Input.pressed.I=true;q.updPlayer(.01);ok(!q.player.inVehicle,'I 可以下车');
+ q.newGame(false);q.Game.gold=321;q.autoSave();const normal=frame.contentWindow.localStorage.getItem('sst_save_auto');q.newGame(true);q.autoSave();ok(frame.contentWindow.localStorage.getItem('sst_save_auto')===normal,'无限测试保留普通存档');
+ frame.contentDocument.getElementById('platformBtn').click();frame.contentDocument.getElementById('rankSubmit').click();await wait(50);ok(frame.contentDocument.getElementById('platformStatus').textContent.includes('不参与'),'测试模式禁止提交排行');
+ frame.contentDocument.getElementById('platformClose').click();q.Game.state='paused';
+ out.textContent=JSON.stringify(report,null,2);
+ }catch(e){report.errors.push(e.stack);out.textContent=JSON.stringify(report,null,2);}
+};
+function fortView(){const q=get();q.newGame(true);q.sandboxSpawn('clear');reset(q,-43,74);q.setCameraView(1,false);q.Game.state='battle';return q;}
+document.getElementById('fort').onclick=fortView;
+document.getElementById('phone').onclick=()=>{
+ frame.style.width='390px';frame.style.height='844px';
+ const d=frame.contentDocument;if(!d.getElementById('stage').classList.contains('touch-mode'))d.getElementById('touchBtn').click();
+ get().newGame(true);
+ d.getElementById('vQ').addEventListener('pointerdown',()=>{report.phoneYawBefore=get().getCamYaw();});
+ d.getElementById('vQ').addEventListener('pointerup',()=>setTimeout(()=>{report.phone={yawBefore:report.phoneYawBefore,yawAfter:get().getCamYaw(),released:!get().Input.keys.Q,viewport:[frame.contentWindow.innerWidth,frame.contentWindow.innerHeight]};out.textContent=JSON.stringify(report,null,2);},60));
+};
+document.getElementById('stress').onclick=async()=>{
+ const q=get();q.newGame(true);q.sandboxSpawn('clear');reset(q,0,26);
+ for(let i=0;i<48;i++){const m=q.spawnMonster('mob',(i%8-3.5)*3,42+Math.floor(i/8)*4,{ch:q.CHAPTERS[i%10],elite:i%7===0});m.hp=m.maxHp=100000;}
+ await wait(1200);q.startMeasure();let begin=performance.now();
+ const timer=setInterval(()=>{q.Input.keys.J=true;q.Input.keys.Q=true;q.Input.keys.left=Math.floor((performance.now()-begin)/2500)%2===0;q.Input.keys.right=!q.Input.keys.left;},30);
+ await wait(30000);clearInterval(timer);q.Input.reset();report.performance={...q.endMeasure(),liveEnemies:q.monsters.filter(m=>!m.dead).length};out.textContent=JSON.stringify(report,null,2);
+};
+document.getElementById('record').onclick=async()=>{
+ const q=fortView(),stream=q.renderer.domElement.captureStream(30),chunks=[];
+ const rec=new MediaRecorder(stream,{mimeType:'video/webm'});rec.ondataavailable=e=>chunks.push(e.data);rec.start();q.Input.keys.Q=true;
+ await wait(12000);q.Input.reset();await new Promise(resolve=>{rec.onstop=resolve;rec.stop();});stream.getTracks().forEach(t=>t.stop());
+ const a=document.getElementById('download');a.href=URL.createObjectURL(new Blob(chunks,{type:'video/webm'}));a.download='hill-forts-realtime.webm';a.hidden=false;out.textContent='录像完成（真实 Canvas 实时捕获，无声音；需补游戏声）';
+};
+</script></html>
