@@ -3,8 +3,8 @@
   "name": "坦克大战 3D：50 关无限周目",
   "name_en": "Tank Battle 3D: 50 Stages, Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤）",
-  "current_version": "powerup-fix1",
-  "handoff": "releases/powerup-fix1/handoff.json",
+  "current_version": "collision-fix1",
+  "handoff": "releases/collision-fix1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html",
   "controls": "电脑 WASD 移动、J 开炮、C 循环斜俯视/俯视、Esc 暂停、Enter 开始/继续；手机左摇杆、右侧 J 和 C 按钮，竖屏自动横屏布局。",
@@ -23,7 +23,7 @@
     "ffmpeg（逐帧合成 H.264、混入离线渲染音轨）"
   ],
   "notes": "FC《坦克大战》的同人 3D 网页实验。第 1 关按经典结构原创绘制，第 2–50 关由关号做种子程序化生成（含出生点—玩家—老鹰掩体连通性校验），打完第 50 关回到第 1 关进入下一周目，敌军更快更硬、分数倍率更高；关号与累计分存本机可继续。美术与音效全部程序化生成，不使用原作素材、音乐或音效。",
-  "version": "powerup-fix1",
+  "version": "collision-fix1",
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
@@ -32,6 +32,8 @@
     "review_status": "auditing",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_0jwGaplD/index.html",
     "verified_at": "2026-10-01",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiO8weV/index.html"
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiO8weV/index.html",
+    "pending_version": "collision-fix1",
+    "pending_preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html"
   }
 }

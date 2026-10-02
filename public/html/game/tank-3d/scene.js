@@ -1,5 +1,5 @@
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, BRICK, STEEL, BASE_WALL, EMPTY, DIRS } from './world.js?v=stages1';
+import { N, BRICK, STEEL, BASE_WALL, EMPTY, DIRS, HALF, cellAt } from './world.js?v=collision-fix1';
 
 // All art is procedural: primitive meshes + canvas-drawn textures. No sprites or audio from the original game.
 const C = N / 2;
@@ -96,6 +96,8 @@ const TANK_STYLE = {
 function tankModel(kind, sharedTread) {
   const st = TANK_STYLE[kind] || TANK_STYLE.basic;
   const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  // Keep track guards and upgraded side plates inside the gameplay collision box.
+  body.scale.set(.94, 1, .94);
   const bodyMat = new THREE.MeshStandardMaterial({ color: st.main, roughness: .45, metalness: .35 });
   const turretMat = new THREE.MeshStandardMaterial({ color: st.turret, roughness: .4, metalness: .35 });
   const darkMat = mat(st.dark, .6, .3);
@@ -305,20 +307,30 @@ export function createScene(canvas, world) {
     camera.lookAt(tg.x, tg.y + .4 * (1 - low), tg.z);
   }
 
-  function syncTank(t, snapRot) {
+  function syncTank(t) {
     let m = tankModels.get(t.id);
-    if (!m) { m = tankModel(t.team === 'player' ? 'player' : t.type, sharedTread); m.rot = -t.dir * Math.PI / 2; tankModels.set(t.id, m); scene.add(m.group); m.born = elapsed; }
+    if (!m) { m = tankModel(t.team === 'player' ? 'player' : t.type, sharedTread); m.group.name = 'tank-' + t.id; m.rot = -t.dir * Math.PI / 2; tankModels.set(t.id, m); scene.add(m.group); m.born = elapsed; }
     m.seen = true;
     if (t.team === 'player') applyPlayerLevel(m, world.level);
     m.group.position.set(wx(t.x), 0, wz(t.z));
     const goal = -t.dir * Math.PI / 2;
-    let d = goal - m.rot; d = Math.atan2(Math.sin(d), Math.cos(d));
-    m.rot += snapRot ? d : d * Math.min(1, dt_ * 18);
+    // Collision uses cardinal, axis-aligned tanks. Diagonal tween frames sweep into walls.
+    m.rot = goal;
     m.group.rotation.y = m.rot;
     m.tread.offset.y = -t.travel * .55;
     m.wheels.forEach(w => { w.rotation.x = -t.travel * 3; });
     m.body.position.y = t.moving ? Math.abs(Math.sin(elapsed * 22 + t.id)) * .025 : 0;
     m.barrel.position.z = -.26 + (t.recoil || 0) * 1.4;
+    // Retract only the barrel near solids, so a long upgraded gun cannot poke through them.
+    const [dx, dz] = DIRS[t.dir], others = [world.player, ...world.enemies];
+    let clearance = (m.barrelLen + .3) * .94;
+    for (let distance = .2; distance <= clearance; distance += .04) {
+      const x = t.x + dx * distance, z = t.z + dz * distance, radius = .11;
+      const wall = [-radius, radius].some(side => cellAt(world, Math.floor(x + dz * side), Math.floor(z + dx * side)) !== EMPTY);
+      const tank = others.some(o => o && o !== t && o.alive && Math.abs(o.x - x) < HALF + radius && Math.abs(o.z - z) < HALF + radius);
+      if (wall || tank) { clearance = distance - .04; break; }
+    }
+    m.barrel.scale.z = Math.min(1, Math.max(.05, clearance / .94 - .18 - .11) / m.barrelLen);
     const appear = Math.min(1, (elapsed - m.born) / .25); m.group.scale.setScalar(.6 + .4 * appear);
     // Carrier tanks flash red; frozen tanks glow icy; armour hits flash white.
     if (t.team === 'enemy') {
@@ -328,10 +340,9 @@ export function createScene(canvas, world) {
       m.bodyMat.emissive.set(hit ? '#ffffff' : '#4aa8ff'); m.bodyMat.emissiveIntensity = hit || ice;
     }
   }
-  let dt_ = 0;
   const seenTmp = [];
   function update(dt, cam = {}, snap = false) {
-    dt_ = dt; elapsed += dt;
+    elapsed += dt;
     intro = cam.intro === undefined ? -1 : cam.intro;
     sway += ((cam.attract ? Math.sin(elapsed * .22) * .42 : 0) - sway) * Math.min(1, dt * 1.5);
     shakeT = Math.max(0, shakeT - dt * 2);
@@ -343,8 +354,8 @@ export function createScene(canvas, world) {
     }
     // Tanks.
     for (const m of tankModels.values()) m.seen = false;
-    if (world.player && world.player.alive) syncTank(world.player, snap);
-    for (const e of world.enemies) if (e.alive) syncTank(e, snap);
+    if (world.player && world.player.alive) syncTank(world.player);
+    for (const e of world.enemies) if (e.alive) syncTank(e);
     seenTmp.length = 0;
     for (const [id, m] of tankModels) if (!m.seen) seenTmp.push(id);
     for (const id of seenTmp) { const m = tankModels.get(id); scene.remove(m.group); m.bodyMat.dispose(); m.turretMat.dispose(); m.tread.dispose(); tankModels.delete(id); }

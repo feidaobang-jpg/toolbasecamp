@@ -1,0 +1,32 @@
+{
+  "version": "collision-fix1",
+  "source": "public/html/game/tank-3d",
+  "source_sha256": {
+    "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
+    "field.js": "4102ae8a0c03fbb7c63465f0bce8473ccecb26aa4fea180b6b1504bcfd728c85",
+    "index.html": "1cff3b575acb983370a279c2475766f98b2d2eede41dde8f8d1c391cdb80ff52",
+    "main.js": "d5ca52e431e28c69a0a0d5f27e59f88eb20d8cc586167407d68631c74dc988b7",
+    "scene.js": "fa8b7f228540e26159713c0d10086a931b39aa317c6254547ed203426ff3ed28",
+    "stages.js": "cce1479199bf3d71170a08478cdf38950d1537a6dd50552b299cf92478cacfe6",
+    "style.css": "fa6c07a07f84785f5f2236873952cd4555ad9748d59122eec058b48623536f26",
+    "world.js": "783cfad733108d3d660608712df4f13f4316dd199f43862f58a9fc3e05d79912"
+  },
+  "files": {
+    "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
+    "css/base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "favicon.svg": "a6a197711cfa402bf5838aaddb16dd78a973e7f438724b17466e215d61741a07",
+    "field.js": "4102ae8a0c03fbb7c63465f0bce8473ccecb26aa4fea180b6b1504bcfd728c85",
+    "index.html": "f360fc5cc2dfa31e1790e41ad054dda90aed9390ecd071a05069f66623a3561b",
+    "js/game/demo-controls.js": "55753deca9f6e0548eff5cbbe7b045776c2db9a685dcb5855b43b2b13749de55",
+    "js/i18n.js": "b447f3445bba84c7950ade40fdf3b315669a6df6431d94d6ece9d272772464d0",
+    "js/locales/game-demo-zh-CN.js": "6e0c33ae2268cf48b9e4a1923129f1b618f54a64b26f5a08aa84e0573acac4c5",
+    "js/locales/zh-CN.js": "2a7d7397e7c3c6dcf2ab60271aacb91861a0e7704019442baea676bb2ce40216",
+    "main.js": "c534a2054ff0ec2c84452b428f4a6b5d9d72662a16fc386156d0f99d2cd0cf6d",
+    "scene.js": "481e00fcb2aa946d132b48d5b13647ab00c3a3e592da512fd4490a7734874fb7",
+    "stages.js": "cce1479199bf3d71170a08478cdf38950d1537a6dd50552b299cf92478cacfe6",
+    "style.css": "fa6c07a07f84785f5f2236873952cd4555ad9748d59122eec058b48623536f26",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "world.js": "783cfad733108d3d660608712df4f13f4316dd199f43862f58a9fc3e05d79912"
+  },
+  "status": "built_not_submitted"
+}

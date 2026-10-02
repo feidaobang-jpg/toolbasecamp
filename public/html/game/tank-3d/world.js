@@ -31,7 +31,7 @@ export function createWorld(seed = Date.now() % 100000, stage = 1, loop = 1) {
     enemies: [], spawning: [], bullets: [], powerup: null, events: [],
     roster: spec.roster, rosterIndex: 0, killed: 0,
     tally: { basic: 0, fast: 0, power: 0, armor: 0 }, pickups: 0,
-    spawnTimer: 0.4, spawnSlot: 0, freeze: 0, shovel: 0, baseAlive: true,
+    spawnTimer: 0.4, spawnSlot: 0, freeze: 0, shovel: 0, baseAlive: true, pendingBaseWall: [],
     endTimer: -1, pendingStatus: null, shake: 0
   };
 }
@@ -64,12 +64,11 @@ function solidCells(w, x, z, out) {
   for (let cz = z0; cz <= z1; cz++) for (let cx = x0; cx <= x1; cx++) if (cellAt(w, cx, cz) !== EMPTY) out.push(cz * 64 + cx);
   return out;
 }
-const _a = [], _b = [];
+const _b = [];
 function blocked(w, t, nx, nz) {
   if (nx - HALF < -1e-9 || nx + HALF > N + 1e-9 || nz - HALF < -1e-9 || nz + HALF > N + 1e-9) return true;
-  // Only newly entered solid cells block, so a tank caught by the shovel wall can still drive out.
-  solidCells(w, t.x, t.z, _a); solidCells(w, nx, nz, _b);
-  for (const c of _b) if (!_a.includes(c)) return true;
+  // Rebuilt fort cells wait until tanks leave; no solid cell needs a pass-through exception.
+  if (solidCells(w, nx, nz, _b).length) return true;
   for (const o of tanks(w)) {
     if (o === t || !o.alive) continue;
     if (overlapTanks(nx, nz, o.x, o.z)) {
@@ -79,9 +78,12 @@ function blocked(w, t, nx, nz) {
   }
   return false;
 }
-export function turnTank(t, dir) {
+export function turnTank(w, t, dir) {
   if (dir === t.dir) return;
-  if ((dir & 1) !== (t.dir & 1)) { if (t.dir & 1) t.x = Math.round(t.x); else t.z = Math.round(t.z); }
+  if ((dir & 1) !== (t.dir & 1)) {
+    const nx = t.dir & 1 ? Math.round(t.x) : t.x, nz = t.dir & 1 ? t.z : Math.round(t.z);
+    if (!blocked(w, t, nx, nz)) { t.x = nx; t.z = nz; }
+  }
   t.dir = dir;
 }
 export function moveTank(w, t, dist) {
@@ -108,7 +110,8 @@ export function fire(w, t) {
   const spec = t.team === 'player' ? playerSpec(w) : { bullet: enemyBulletSpeed(w, t), max: 1, power: false };
   if (activeBullets(w, t) >= spec.max) return false;
   const [dx, dz] = DIRS[t.dir];
-  w.bullets.push({ owner: t.id, team: t.team, x: t.x + dx * 1.05, z: t.z + dz * 1.05, dir: t.dir, speed: spec.bullet, power: spec.power, alive: true, age: 0 });
+  // Sweep the barrel path too: a projectile must not start beyond a nearby obstacle.
+  w.bullets.push({ owner: t.id, team: t.team, x: t.x, z: t.z, muzzleTravel: 1.05, dir: t.dir, speed: spec.bullet, power: spec.power, alive: true, age: 0 });
   t.recoil = 0.12;
   emit(w, 'fire', { team: t.team, x: t.x + dx * 1.2, z: t.z + dz * 1.2, dir: t.dir });
   return true;
@@ -157,7 +160,23 @@ function applyPowerup(w, pu) {
     case 'tank': w.lives++; emit(w, 'life'); break;
   }
 }
-export function setBaseWall(w, type) { for (const [x, z] of BASE_WALL) setCell(w, x, z, type); }
+function tankOccupiesCell(w, x, z) {
+  return tanks(w).some(t => t.alive && t.x + HALF > x && t.x - HALF < x + 1 && t.z + HALF > z && t.z - HALF < z + 1);
+}
+export function setBaseWall(w, type) {
+  w.pendingBaseWall = [];
+  if (!w.baseAlive) return;
+  for (const [x, z] of BASE_WALL) {
+    if (tankOccupiesCell(w, x, z)) w.pendingBaseWall.push({ x, z, type });
+    else setCell(w, x, z, type);
+  }
+}
+function rebuildVacantBaseWall(w) {
+  w.pendingBaseWall = w.pendingBaseWall.filter(c => {
+    if (tankOccupiesCell(w, c.x, c.z)) return true;
+    setCell(w, c.x, c.z, c.type); return false;
+  });
+}
 
 // Returns true when the bullet stops. Bricks break in a 2-cell-wide strip (4 with a steel-piercing shot's depth).
 function bulletVsWalls(w, b) {
@@ -189,6 +208,7 @@ function bulletVsWalls(w, b) {
 function destroyBase(w, by = 'enemy') {
   if (!w.baseAlive) return;
   w.baseAlive = false; w.shake = 1.2; w.baseBy = by;
+  w.pendingBaseWall.length = 0;
   for (let z = 24; z <= 25; z++) for (let x = 12; x <= 13; x++) setCell(w, x, z, EMPTY);
   emit(w, 'baseboom', { x: BASE_CENTER.x, z: BASE_CENTER.z, by });
   endGame(w, 'lost', 'base', 2.8);
@@ -212,14 +232,14 @@ function enemyThink(w, e, dt) {
       dir = Math.abs(ddx) > Math.abs(ddz) + (w.rng() - .5) * 6 ? (ddx > 0 ? 1 : 3) : (ddz > 0 ? 2 : 0);
     }
     if (moved < want * .5 && dir === e.dir) dir = (dir + (w.rng() < .5 ? 1 : 3)) % 4;
-    turnTank(e, dir);
+    turnTank(w, e, dir);
     if (moved < want * .5 && w.rng() < .45) e.fireTimer = Math.min(e.fireTimer, .05);
   }
   e.fireTimer -= dt;
   if (e.fireTimer <= 0) { e.fireTimer = (1.1 + w.rng() * 2) * w.spec.fireMult; fire(w, e); }
 }
 
-function spawnSlotFree(w, s) { return !tanks(w).some(t => overlapTanks(t.x, t.z, s.x, s.z)); }
+function spawnSlotFree(w, s) { return !solidCells(w, s.x, s.z, _b).length && !tanks(w).some(t => t.alive && overlapTanks(t.x, t.z, s.x, s.z)); }
 function updateSpawns(w, dt) {
   w.spawnTimer -= dt;
   const busy = w.enemies.filter(e => e.alive).length + w.spawning.length;
@@ -261,7 +281,7 @@ export function stepWorld(w, input, dt) {
   if (p && p.alive) {
     p.shield = Math.max(0, p.shield - dt); p.recoil = Math.max(0, p.recoil - dt);
     const controllable = w.pendingStatus !== 'lost';
-    if (controllable && input.dir >= 0) { turnTank(p, input.dir); p.moving = moveTank(w, p, 5.4 * dt) > 0.001; }
+    if (controllable && input.dir >= 0) { turnTank(w, p, input.dir); p.moving = moveTank(w, p, 5.4 * dt) > 0.001; }
     else p.moving = false;
     if (controllable && input.fire) fire(w, p);
   }
@@ -277,11 +297,12 @@ export function stepWorld(w, input, dt) {
   updateSpawns(w, dt);
   // Shovel wears off: the steel ring turns back into (fully rebuilt) bricks.
   if (w.shovel > 0) { w.shovel -= dt; if (w.shovel <= 0) { w.shovel = 0; if (w.baseAlive) setBaseWall(w, BRICK); emit(w, 'shovelEnd'); } }
+  rebuildVacantBaseWall(w);
   // Bullets, sub-stepped so nothing tunnels through a one-cell wall.
   for (const b of w.bullets) {
     if (!b.alive) continue;
     b.age += dt;
-    let dist = b.speed * dt;
+    let dist = b.speed * dt + (b.muzzleTravel || 0); b.muzzleTravel = 0;
     const [dx, dz] = DIRS[b.dir];
     while (dist > 0 && b.alive) {
       const step = Math.min(.2, dist); dist -= step; b.x += dx * step; b.z += dz * step;

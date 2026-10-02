@@ -38,7 +38,7 @@ test('turning snaps the old axis to the one-cell grid', () => {
   const p = w.player; p.x = 9; p.z = 25;
   run(w, { dir: 0, fire: false }, 0.27);
   assert.ok(Math.abs(p.z - Math.round(p.z)) > 0.05, 'mid-cell before turn: ' + p.z);
-  W.turnTank(p, 3);
+  W.turnTank(w, p, 3);
   assert.equal(p.z, Math.round(p.z));
 });
 

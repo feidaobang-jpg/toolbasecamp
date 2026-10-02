@@ -1,7 +1,7 @@
 import {installDemoControls} from '../../../js/game/demo-controls.js?v=single-view1';
-import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=stages1';
+import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=collision-fix1';
 import { TOTAL_STAGES } from './stages.js?v=stages1';
-import { createScene } from './scene.js?v=powerup-fix1';
+import { createScene } from './scene.js?v=collision-fix1';
 import { GameAudio } from './audio.js?v=stages1';
 
 const $ = id => document.getElementById(id);
@@ -281,7 +281,7 @@ requestAnimationFrame(frame);
 // --- QA hook: only created when the page is opened with ?qa=1, so normal play exposes nothing new.
 // Lets the browser automation jump between stages, force a clear and read the run state back.
 if (new URLSearchParams(location.search).has('qa')) {
-  import('./world.js?v=stages1').then(W => {
+  import('./world.js?v=collision-fix1').then(W => {
     window.tankQa = {
       world, view, W, TOTAL_STAGES,
       get stage() { return stage; }, get loop() { return loop; }, get runScore() { return runScore; },

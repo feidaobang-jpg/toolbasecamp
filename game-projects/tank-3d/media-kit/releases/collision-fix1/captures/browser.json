@@ -1,0 +1,66 @@
+{
+  "url": "http://127.0.0.1:8765/public/html/game/tank-3d/index.html",
+  "browser": "154.0.4258.48",
+  "captureMode": "realtime-automation",
+  "audio": "game",
+  "results": [
+    {
+      "mobile": false,
+      "geometry": {
+        "modelBoundsChecks": 16,
+        "stageWallLayouts": 50
+      },
+      "stopped": 5.0199124999999984,
+      "fort": {
+        "pending": 0,
+        "z": 18.91627999999999
+      },
+      "perf": {
+        "fps": 169.99977950741956,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0,
+        "frames": 771,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 1,
+        "buffer": [
+          1280,
+          720
+        ],
+        "drawCalls": 54,
+        "triangles": 22690,
+        "recording": false
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "geometry": {
+        "modelBoundsChecks": 16,
+        "stageWallLayouts": 50
+      },
+      "stopped": 5.019575000000001,
+      "fort": {
+        "pending": 0,
+        "z": 18.94813999999997
+      },
+      "perf": {
+        "fps": 169.9991191755483,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0,
+        "frames": 772,
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "dpr": 1,
+        "buffer": [
+          844,
+          390
+        ],
+        "drawCalls": 54,
+        "triangles": 22690,
+        "recording": false
+      },
+      "errors": []
+    }
+  ]
+}

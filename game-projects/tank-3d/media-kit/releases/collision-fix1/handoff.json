@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "collision-fix1",
+  "base_version": "powerup-fix1",
+  "created_at": "2026-10-02",
+  "build": {
+    "id": "tank-3d-collision-fix1-b590647f0a46",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "b590647f0a4665f04477dede324bd71e603c3f13f6dcea76dbf50204934b464a",
+    "files": {
+      "audio.js": "82f360fd922718b47729a0886f588f530d04259cda483cf6630445fd970de4bf",
+      "field.js": "4102ae8a0c03fbb7c63465f0bce8473ccecb26aa4fea180b6b1504bcfd728c85",
+      "index.html": "1cff3b575acb983370a279c2475766f98b2d2eede41dde8f8d1c391cdb80ff52",
+      "main.js": "d5ca52e431e28c69a0a0d5f27e59f88eb20d8cc586167407d68631c74dc988b7",
+      "scene.js": "fa8b7f228540e26159713c0d10086a931b39aa317c6254547ed203426ff3ed28",
+      "stages.js": "cce1479199bf3d71170a08478cdf38950d1537a6dd50552b299cf92478cacfe6",
+      "style.css": "fa6c07a07f84785f5f2236873952cd4555ad9748d59122eec058b48623536f26",
+      "world.js": "783cfad733108d3d660608712df4f13f4316dd199f43862f58a9fc3e05d79912"
+    },
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "collision",
+      "description": "墙体、边界、车体、炮弹与重建围墙的碰撞",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-wall.png",
+        "desktop-fort.png"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "safe-collision",
+      "before": "转向吸附可重叠车体，围墙可建在车体内，模型超出碰撞框",
+      "after": "吸附碰撞检测、占用格延后重建、炮弹完整路径检测、模型范围约束",
+      "feature_ids": [
+        "collision"
+      ],
+      "result": "车体不能穿实体，贴墙后需打碎障碍通过",
+      "evidence_ids": [
+        "desktop-collision.webm",
+        "phone-collision.webm"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "turn-overlap",
+      "status": "fixed",
+      "cause": "取整吸附没有碰撞检测",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "desktop-wall.png"
+      ],
+      "retest": "四方向贴近另一辆坦克均不重叠"
+    },
+    {
+      "id": "fort-overlap",
+      "status": "fixed",
+      "cause": "围墙直接重建在车体内且旧逻辑允许在重叠格内移动",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "desktop-fort.png"
+      ],
+      "retest": "双方占用位置延后补齐，离开后阻挡返回"
+    },
+    {
+      "id": "visual-clipping",
+      "status": "fixed",
+      "cause": "斜向插值与外露模型超出碰撞框",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "desktop-wall.png"
+      ],
+      "retest": "模型边界检查及实机抽帧通过"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop-collision.webm",
+      "file": "releases/collision-fix1/captures/desktop-collision.webm",
+      "sha256": "bf7323ffcbc2b8000122a64b56c25aa834136428fad2a5aadd1de40b46513504",
+      "kind": "video",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "desktop-fort.png",
+      "file": "releases/collision-fix1/captures/desktop-fort.png",
+      "sha256": "459b8750b4b6dff0b36aca725f25f4dcd942468b88ab33ef0cdf719430a8d992",
+      "kind": "screenshot",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-wall.png",
+      "file": "releases/collision-fix1/captures/desktop-wall.png",
+      "sha256": "f338ddfc03e07f100e505cb4a111d8a5a46cebc6ceabedd259f6beca87638a93",
+      "kind": "screenshot",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "motion-sheet.jpg",
+      "file": "releases/collision-fix1/captures/motion-sheet.jpg",
+      "sha256": "ebe9df31423e584f1886ec588c7cf30fd5b3f2fca7054d493bf3a4fb41a49320",
+      "kind": "screenshot",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-collision.webm",
+      "file": "releases/collision-fix1/captures/phone-collision.webm",
+      "sha256": "f33231230154c60e88df9f15c1c2d70d3d25a3c318ca0d81a158f6a05f6342b9",
+      "kind": "video",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": []
+    },
+    {
+      "id": "phone-fort.png",
+      "file": "releases/collision-fix1/captures/phone-fort.png",
+      "sha256": "00c2fbff72ee5d73dfc937b729993941de0c75518e1fe042d2f8ce55cb70419f",
+      "kind": "screenshot",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-wall.png",
+      "file": "releases/collision-fix1/captures/phone-wall.png",
+      "sha256": "4928d4fb48e5337006af29a0fd0643dec507be982a45752a1fc59c526e7bfb00",
+      "kind": "screenshot",
+      "version": "collision-fix1",
+      "build_id": "tank-3d-collision-fix1-b590647f0a46",
+      "capture_mode": "realtime-automation",
+      "description": "QA 设置贴墙或围墙占用情境后的实机操作",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "logic": "19 existing + 11 collision checks passed; 50000 random moves over 50 maps",
+    "browser": "captures/browser.json",
+    "limitations": [
+      "手机视口模拟，未测试真机性能",
+      "未录修复前原片",
+      "游戏声音有录制但未做主观听审"
+    ]
+  },
+  "publication": {
+    "website": "pending_deploy",
+    "toy_preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html",
+    "toy": "preview_only"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "修复前仅数值复现",
+      "声音未审"
+    ]
+  }
+}
