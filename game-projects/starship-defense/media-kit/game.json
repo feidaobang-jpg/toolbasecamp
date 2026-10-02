@@ -31,7 +31,7 @@
     "mode": "asset-and-presentation-merge",
     "full_native_port": false
   },
-  "visual_style": "User-approved original rounded toy-like 3D",
+  "visual_style": "v0.9 default dark battlefield (player feedback: bright toy look too childish); original rounded toy-like 3D kept as optional theme",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "auditing",
