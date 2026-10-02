@@ -1,0 +1,52 @@
+/* Shared author link on the games hub and about page. */
+.creator-follow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 1.5rem;
+    padding: 18px 20px;
+    border: 1px solid #dbeafe;
+    border-radius: 1rem;
+    background: #eff6ff;
+}
+
+.creator-follow-copy {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.creator-follow-copy h2 {
+    margin: 0 0 6px;
+    color: #111827;
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+.creator-follow-copy p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.creator-follow .tb-btn {
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.creator-follow .tb-btn:focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 3px;
+}
+
+@media (max-width: 639px) {
+    .creator-follow {
+        padding: 16px;
+    }
+
+    .creator-follow .tb-btn {
+        width: 100%;
+    }
+}

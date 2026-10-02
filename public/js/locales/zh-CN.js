@@ -4070,6 +4070,14 @@ window.TB_LOCALES['zh-CN'] = {
         noPreview: '暂无消息',
         unreadCount: '未读 {n}'
     },
+    creator: {
+        gamesTitle: '喜欢这些小游戏？来 B 站找我',
+        gamesDesc: '飞刀班长 · 分享 AI 游戏开发过程、玩法演示和更新视频。',
+        aboutTitle: '作者 · 飞刀班长',
+        aboutDesc: '在 B 站分享 AI 游戏开发过程、玩法演示和更新视频，欢迎关注交流。',
+        link: '作者的 B 站',
+        openTip: '在新标签页打开飞刀班长的 B 站主页'
+    },
     about: {
         title: '关于百宝箱',
         lead: '面向全球用户的效率工具集 — 文档转换、AI 出图、生活内容、休闲游戏与开发小工具，中英文可用。',
