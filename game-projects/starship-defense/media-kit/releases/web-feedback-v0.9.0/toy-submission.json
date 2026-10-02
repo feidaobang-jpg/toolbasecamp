@@ -1,0 +1,28 @@
+{
+ "version": "web-feedback-v0.9.0",
+ "toy_id": 38678478981120,
+ "slug": "chongchao-qianshao",
+ "submitted_at": "2026-10-03T07:07:49.980729+08:00",
+ "user_confirmation": "用户在对话中要求“这个版本提交到toy”，看过预览说明后再次选择“提交审核”",
+ "precheck": "toy_doctor.py：通过，1 条 WARN（JS/CSS 文件名无内容指纹，仅建议，与往期一致）",
+ "preview_checked": {
+  "url": "https://www.bilibili.com/toy/preview/preview_TRG8p4iP/index.html",
+  "result": "桌面与手机视口均加载成功、深色画风、开局可玩、V 切第一人称、手机触屏按键与自动横屏正常、无页面错误",
+  "captures": [
+   "captures/toy-preview-desktop.jpg",
+   "captures/toy-preview-phone.jpg"
+  ]
+ },
+ "submit_response": {
+  "status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_oJwxymnW/index.html"
+ },
+ "mylist_after": {
+  "status": "auditing",
+  "visibility": "PUBLIC",
+  "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html"
+ },
+ "zip_sha256": "0b2756182628f267ce8b47c120fed362ed0af0e8ca29f85b4ba3d1abe66d736a",
+ "zip_bytes": 3971715,
+ "note": "审核中；正式地址在审核通过前仍是此前发布的版本，不能宣称玩家已能玩到 v0.9。"
+}

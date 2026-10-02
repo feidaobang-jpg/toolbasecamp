@@ -57,3 +57,8 @@ base_version：web-wave-flow-v0.8.1（网站版）。Toy 正式版仍是 web-for
 - 开场：网友评论截图 → “你们说的我都改了”。对照：before-phone-no-touch-ui.jpg / before-base-lost-in-fog.jpg vs 新版。
 - 高光：虫潮从洞口钻出（wave-from-mouth.jpg）、激光伤害数字、第一人称钻隧道突袭母皇（tunnel-hive-realtime.webm）、“虫巢母皇被击杀！本章虫潮 -35%”。
 - 收尾一句：守住这座前哨的话，顺手给开发者空投个三连补给？
+
+
+## Toy 提交补记
+
+2026-10-03 用户确认后提交 v0.9：toy_doctor 预检通过（1 条无内容指纹 WARN），预览 preview_TRG8p4iP 在桌面与手机视口实测可玩无报错，随后提交审核，CLI 与 mylist 均为 auditing，提交预览 https://www.bilibili.com/toy/preview/preview_oJwxymnW/index.html 。正式地址审核通过前仍是旧版。
