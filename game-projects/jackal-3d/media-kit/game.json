@@ -9,7 +9,7 @@
   "build_command": "node game-projects/jackal-3d/build.mjs",
   "local_url": "http://127.0.0.1:8876/html/game/jackal-3d/index.html",
   "website_url": "https://www.zhengxiaohui.cn/html/game/jackal-3d/index.html",
-  "website_verified": false,
+  "website_verified": true,
   "release_intent": "web_demo",
   "development_model": null,
   "tools": [

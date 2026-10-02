@@ -1,0 +1,14 @@
+{
+  "base": "https://www.zhengxiaohui.cn",
+  "result": "pass",
+  "checks": [
+    "Chinese catalog card",
+    "actual game thumbnail",
+    "catalog link",
+    "3D load",
+    "Enter start",
+    "keyboard driving and shooting",
+    "no public test globals"
+  ],
+  "errors": []
+}

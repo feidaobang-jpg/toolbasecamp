@@ -3,7 +3,7 @@
   "game_id": "jackal-3d",
   "version": "v0.1.0",
   "base_version": null,
-  "created_at": "2026-10-02T02:57:58.605Z",
+  "created_at": "2026-10-02T03:02:54.126Z",
   "build": {
     "id": "jackal-v0.1.0-0eead38f946e",
     "commit": null,
@@ -244,6 +244,23 @@
       "build_id": "jackal-v0.1.0-0eead38f946e",
       "capture_mode": "realtime-automation",
       "description": "officer-upgrade",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "online-site",
+      "file": "releases/v0.1.0/captures/online-site.png",
+      "sha256": "6a15a37dd9b66740a800a6e8cc027d7b09849a3ba70460e82130a107006bbe41",
+      "kind": "screenshot",
+      "version": "v0.1.0",
+      "build_id": "jackal-v0.1.0-0eead38f946e",
+      "capture_mode": "realtime-automation",
+      "description": "online-site",
       "width": 1280,
       "height": 720,
       "duration_seconds": null,
@@ -1356,6 +1373,22 @@
       "id": "local-site",
       "evidence": "releases/v0.1.0/captures/local-site.json",
       "base": "http://127.0.0.1:8876",
+      "result": "pass",
+      "checks": [
+        "Chinese catalog card",
+        "actual game thumbnail",
+        "catalog link",
+        "3D load",
+        "Enter start",
+        "keyboard driving and shooting",
+        "no public test globals"
+      ],
+      "errors": []
+    },
+    {
+      "id": "online-site",
+      "evidence": "releases/v0.1.0/captures/online-site.json",
+      "base": "https://www.zhengxiaohui.cn",
       "result": "pass",
       "checks": [
         "Chinese catalog card",

@@ -1,0 +1,56 @@
+[
+  {
+    "file": "art.js",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "73462e386d6b03bbe356daac56e8e3f0d1af06a2519fb7ac4b22bf89cb780174"
+  },
+  {
+    "file": "audio.js",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "cbfabd2e53c5f75d30a706d07f52fc59446402df6c37e5091173d648d64a3a06"
+  },
+  {
+    "file": "index.html",
+    "status": 200,
+    "hash_match": false,
+    "sha256": "92826c3fcb38e77e4b1adca28eef944602c92529af37d7762f9bdc4c46d36f7b"
+  },
+  {
+    "file": "input.js",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "e124702f32f7712bc229d61957738ab0863a2faf2ab08659097bc65de076ce7b"
+  },
+  {
+    "file": "main.js",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "b3b76d898bc0fa9b97da7f7ae89415ef283a7d26a6fcc37d6f2174c3576f4403"
+  },
+  {
+    "file": "style.css",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "81f7c451c324f87da811a154002b60a6f7827c577954386c22e575ad59d82987"
+  },
+  {
+    "file": "vendor/BufferGeometryUtils.js",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "822e2d1a5a73c60069c8ad5fd140bce215a0606b79e09d6faa164f65f1775d10"
+  },
+  {
+    "file": "vendor/LICENSE.txt",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4"
+  },
+  {
+    "file": "vendor/three.module.js",
+    "status": 200,
+    "hash_match": true,
+    "sha256": "f4ced6dfae77168410b5e8415019c5066b47dd712e71dbbbcb0ed25cf9d9f4da"
+  }
+]
