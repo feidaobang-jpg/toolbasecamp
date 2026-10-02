@@ -57,7 +57,7 @@ export function setupToyPlatform(game,{sdkPromise}={}){
     $('cloudLoad').classList.toggle('hidden',!cloud);return cloud;
   }
   const open=()=>{game.open();status(sdk?'Toy 已连接。选择需要的功能；不会自动覆盖进度。':'本地存档可用；云存档和平台排行榜需在 B站 Toy 中登录使用。');};
-  $('btnPlatformMenu').onclick=$('platformBtn').onclick=open;
+  $('btnPlatformMenu').onclick=$('platformBtn').onclick=open;if($('platformBtnMenu'))$('platformBtnMenu').onclick=open;
   $('platformClose').onclick=game.close;
   $('cloudRead').onclick=()=>action($('cloudRead'),async()=>{await readCloud(Date.now()-cloudAt>60000);status('已查看云档；读取或覆盖需再点对应按钮');});
   $('cloudWrite').onclick=()=>action($('cloudWrite'),async()=>{

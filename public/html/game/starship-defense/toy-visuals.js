@@ -99,7 +99,7 @@ export class ToyVisuals {
       }
       this.part(b,'sphere',shell,[0,.64,.64],[.5,.4,.4]);
       // Face details must sit in front of the head.
-      if(kind==='boss'||kind==='miniboss'||kind==='elite')for(let i=-1;i<=1;i++)this.part(b,'cone',0xf9cb62,[i*.32,1.6-Math.abs(i)*.1,-.23],[.17,.5,.17],[0,0,-i*.25]);
+      if(kind==='boss'||kind==='miniboss'||kind==='elite'||kind==='queen')for(let i=-1;i<=1;i++)this.part(b,'cone',0xf9cb62,[i*.32,1.6-Math.abs(i)*.1,-.23],[.17,.5,.17],[0,0,-i*.25]);
       this.cache.set(key,{body:this.merged(b),legs});
     }
     const data=this.cache.get(key),root=this.root('bug',data.body,data.legs,1.7);
@@ -129,7 +129,7 @@ export class ToyVisuals {
   clearCorpses(){for(const c of this.corpses){this.release(c.root);c.root.removeFromParent();}this.corpses.length=0;}
   restyle(root){
     const colors=new Map([[0x8899aa,0xf2e8d0],[0x667788,0x398b9e],[0x556677,0x337c8c],[0x7788aa,0xffeacf],[0x664433,0x478d91],[0x996644,0xf5ba64],[0x332211,0x29485a],[0x445566,0x448d9b],[0x3d4a5c,0x337b8e],[0x6688aa,0xefeee0],[0x223344,0x29485a],[0x777f66,0xece6ce],[0x99a077,0x63b7b5],[0x88aacc,0xffefd3],[0x77879a,0xf8ebcf],[0x5c6b7d,0x4ea6af],[0x7c8aa0,0x4fa3af],[0x9aa8ba,0x68adb3],[0x99aabb,0xffefd3],[0x778899,0xf1e7d0],[0x2a5d3a,0x5fb69b],[0x6d5a35,0xdb8a53],[0x8a6d3b,0xedb363],[0x222222,0x314753],[0x111111,0x314753]]);
-    root.traverse(o=>{if(!o.isMesh||!o.material?.isMeshLambertMaterial||o.material.vertexColors)return;
+    root.traverse(o=>{if(!o.isMesh||!o.material?.isMeshLambertMaterial||o.material.vertexColors||o.userData.keepMaterial)return;
       const old=o.material,color=colors.get(old.color.getHex())||old.color.getHex();
       o.material=new THREE.MeshPhongMaterial({color,shininess:22,specular:0x273b40,transparent:old.transparent,opacity:old.opacity,side:old.side});
       // Round the silhouette through bevelled geometry, retaining exact dimensions.
@@ -148,15 +148,16 @@ export class ToyVisuals {
       if(o.isHemisphereLight){o.color.set(0xdaf5ff);o.groundColor.set(0xa39b77);o.intensity=.8;}
       if(o.isDirectionalLight){o.color.set(0xffedd2);o.intensity=1.15;o.position.set(-35,65,20);}
     });lights.forEach(o=>o.removeFromParent());this.restyle(scene);
-    const sky=new THREE.Mesh(new THREE.SphereGeometry(400,24,12),new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,
+    const sky=new THREE.Mesh(new THREE.SphereGeometry(820,24,12),new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,
       vertexShader:'varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
       fragmentShader:'varying vec3 p;void main(){float h=normalize(p).y;gl_FragColor=vec4(mix(vec3(.76,.88,.80),vec3(.24,.65,.79),smoothstep(-.05,.8,h)),1.);}'
     }));sky.renderOrder=-1;scene.add(sky);
     const dummy=new THREE.Object3D();
     const batch=(geo,color,items)=>{const m=new THREE.InstancedMesh(geo,new THREE.MeshPhongMaterial({color,shininess:4,flatShading:true}),items.length);items.forEach((v,i)=>{dummy.position.set(...v[0]);dummy.scale.set(...v[1]);dummy.rotation.set(0,i*1.37,0);dummy.updateMatrix();m.setMatrixAt(i,dummy.matrix);});m.receiveShadow=true;scene.add(m);return m;};
-    batch(new THREE.DodecahedronGeometry(1,0),0x85bfa8,Array.from({length:24},(_,i)=>[[-140+i*12,0,205+Math.sin(i*1.7)*12],[13,13+Math.sin(i)*7,12]]));
+    // Distant hills ring the enlarged map (sides and beyond the hive), never inside the playfield.
+    batch(new THREE.DodecahedronGeometry(1,0),0x85bfa8,[...Array.from({length:26},(_,i)=>[[-150+i*12,0,372+Math.sin(i*1.7)*10],[13,15+Math.sin(i)*7,12]]),...Array.from({length:34},(_,i)=>[[(i%2?1:-1)*(150+Math.sin(i)*8),0,-80+Math.floor(i/2)*27],[13,16+Math.cos(i)*7,12]])]);
     // Puffy clouds are geometry, not a sky photograph.
-    batch(new THREE.SphereGeometry(1,12,8),0xfff7dd,Array.from({length:27},(_,i)=>{const k=Math.floor(i/3);return[[-140+k*36+(i%3)*6,38+Math.sin(k*2)*8,165+Math.sin(k)*30],[8,3.5+(i%3)*1.1,4]];}));
+    batch(new THREE.SphereGeometry(1,12,8),0xfff7dd,Array.from({length:27},(_,i)=>{const k=Math.floor(i/3);return[[-140+k*36+(i%3)*6,44+Math.sin(k*2)*8,300+Math.sin(k)*40],[8,3.5+(i%3)*1.1,4]];}));
     // Flower clumps and mint shrubs are instanced; keep the central firing lane clear.
     const stems=[],flowers=[],shrubs=[];
     for(let i=0;i<160;i++){const x=Math.sin(i*127.1)*72,z=14+(i*17.13)%170;if(Math.abs(x)<8)continue;const y=terrainH(x,z);stems.push([[x,y+.2,z],[.12,.4,.12]]);flowers.push([[x,y+.43,z],[.23,.15,.23]]);if(i%4===0)shrubs.push([[x+1,y+.3,z],[.7,.55,.6]]);}
