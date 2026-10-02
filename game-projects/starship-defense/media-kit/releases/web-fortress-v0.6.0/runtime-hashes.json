@@ -1,5 +1,5 @@
 {
-  "fingerprint": "8e6bde1c5557364e7087719b19b3d085172b2805cb728041e7b431c4c809620c",
+  "fingerprint": "928801e1ff61508e3549510c51a10d23fdd5c5b3ab4f7658a1bc609e70c4f7ee",
   "files": {
     "assets/CREDITS.txt": "05edafc25c25920f7b4a3e8963510891cadf9c9b409ef1b486518f2eb616c93f",
     "assets/elite.glb": "d7ff4262f35da94d531289592387c644f120ca04788756c1d941a8a307b427a5",
@@ -15,7 +15,7 @@
     "assets/soldier.glb": "de4b3ef223b289856d12e501058db43ad596a2e3213df21c13fc7508e6a82a1c",
     "assets/sources.json": "e019febb56bdab762929644d1a7cb6ed2c4fa5070019c2f3e21444cb5cee90cc",
     "fortress-world.js": "ef1481e291a86c5a78d9af64779dd13c53e78f3a2bd30c6239222900204897ab",
-    "game.js": "b722b3caca5f934cd00f1d3a96d6e80f6b0fba0e5ce403a3fb16924ff760b6ac",
+    "game.js": "f0cffd773b5c01d48121d8f9e8967503e540a98e811cf34cfdf6f9fd5c50ff54",
     "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
     "index.html": "9efd2ffb9ebdb97825fb48477fd0f16fe4e7aa64474cd48a508fe986d148306d",
     "toy-visuals.js": "83f2d7234752f4ff92970f084a5fbfc4ba0e2c515af9987cbf9d1938f0ab0047",

@@ -10247,5 +10247,7 @@
       5.899999976158142,
       6.100000023841858
     ]
-  }
+  },
+  "measured_build_commit": "b05871cb",
+  "note": "Baseline retained; final-build mixed movement pressure is in fortress-verification.json."
 }

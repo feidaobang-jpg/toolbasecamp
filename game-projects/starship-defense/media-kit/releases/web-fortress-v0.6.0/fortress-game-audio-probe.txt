@@ -1,6 +1,6 @@
 Input #0, matroska,webm, from 'D:\project\toolbasecamp\game-projects\starship-defense\media-kit\releases\web-fortress-v0.6.0\captures\fortress-game-audio.webm':
   Metadata:
     encoder         : Chrome
-  Duration: 00:00:13.74, start: 0.000000, bitrate: 121 kb/s
+  Duration: 00:00:13.68, start: 0.000000, bitrate: 124 kb/s
   Stream #0:0(eng): Audio: opus, 48000 Hz, stereo, fltp (default)
 At least one output file must be specified
