@@ -1,0 +1,42 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "verified_at": "2026-10-02T08:42:23.423146+08:00",
+  "results": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "hash_match": true,
+      "raw_sha256_match": false,
+      "comparison": "normalized UTF8 line endings and deployment-added HTML cache query"
+    },
+    {
+      "file": "game.js",
+      "status": 200,
+      "hash_match": true,
+      "raw_sha256_match": false,
+      "comparison": "normalized UTF8 line endings and deployment-added HTML cache query"
+    },
+    {
+      "file": "worlds-visuals.js",
+      "status": 200,
+      "hash_match": true,
+      "raw_sha256_match": true,
+      "comparison": "normalized UTF8 line endings and deployment-added HTML cache query"
+    },
+    {
+      "file": "assets/roach.glb",
+      "status": 200,
+      "hash_match": true,
+      "raw_sha256_match": true,
+      "comparison": "byte-identical SHA256"
+    },
+    {
+      "file": "assets/mech.glb",
+      "status": 200,
+      "hash_match": true,
+      "raw_sha256_match": true,
+      "comparison": "byte-identical SHA256"
+    }
+  ],
+  "passed": true
+}

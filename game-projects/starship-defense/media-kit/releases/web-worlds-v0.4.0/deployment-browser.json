@@ -1,0 +1,44 @@
+{
+  "result": {
+    "state": "battle",
+    "models": [
+      "soldier",
+      "roach",
+      "mech",
+      "elite",
+      "queen"
+    ],
+    "saveKeys": [
+      "chongchao-quality",
+      "sst_save_auto"
+    ]
+  },
+  "errors": [],
+  "requests": [
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?qa=1",
+    "https://www.zhengxiaohui.cn/js/game/thumb-preview.js?v=9ebdc488",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js?v=9ebdc488",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/worlds-visuals.js",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/vendor/three.module.js",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/vendor/SkeletonUtils.js",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/vendor/GLTFLoader.js",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/vendor/BufferGeometryUtils.js",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/assets/soldier.glb",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/assets/roach.glb",
+    "blob:https://www.zhengxiaohui.cn/ab187701-0dcd-4c39-b052-dd244a82c1fb",
+    "blob:https://www.zhengxiaohui.cn/5d3e37b2-f9c4-4adf-9d65-e3339db72845",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/assets/mech.glb",
+    "blob:https://www.zhengxiaohui.cn/00afe2aa-d801-4dec-9f5e-2c49247ed303",
+    "blob:https://www.zhengxiaohui.cn/52376c91-0d4a-442b-b067-4bc4aaaa413e",
+    "blob:https://www.zhengxiaohui.cn/4f7c1fa2-c68f-457a-b190-82934d189cfd",
+    "blob:https://www.zhengxiaohui.cn/c457936f-b0d2-4224-934f-70418b972f8a",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/assets/queen.glb",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/assets/elite.glb",
+    "blob:https://www.zhengxiaohui.cn/338e4529-20e0-4371-87d4-a27b3cf2fdbb",
+    "blob:https://www.zhengxiaohui.cn/705fe931-998d-45d4-bf8d-fdaf748cb660",
+    "blob:https://www.zhengxiaohui.cn/5c5c2dc3-b498-4d51-8c9e-ee324380f989",
+    "blob:https://www.zhengxiaohui.cn/251e0848-7504-4e04-b464-7fdfe3845b30",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/assets/rock-diffuse.jpg"
+  ],
+  "status": "public_website_browser_pass"
+}
