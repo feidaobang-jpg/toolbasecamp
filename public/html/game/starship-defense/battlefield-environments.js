@@ -113,8 +113,13 @@ export class BattlefieldEnvironment{
     const landmarks=[];
     for(let i=0;i<16;i++)for(const side of [-1,1])landmarks.push([side*(136+(i%3)*10),-35+i*24,5+(i%4)*2]);
     for(let i=0;i<9;i++)landmarks.push([-115+i*29,372+(i%2)*14,8+(i%3)*2]);
-    const land=new THREE.Mesh(new THREE.PlaneGeometry(1900,1900),new THREE.MeshLambertMaterial({color:p.ground[0]}));
-    land.rotation.x=-Math.PI/2;land.position.set(0,-1.6,130);group.add(land);
+    // Horizon fill surrounds the playable terrain; a full plane would slice through underground galleries.
+    const horizon=[];
+    for(const [x0,x1,z0,z1] of [[-950,-110,-820,1080],[110,950,-820,1080],[-110,110,-820,-70],[-110,110,335,1080]]){
+      for(const [x,z] of [[x0,z0],[x0,z1],[x1,z1],[x0,z0],[x1,z1],[x1,z0]])horizon.push(x,-1.6,z);
+    }
+    const horizonGeo=new THREE.BufferGeometry();horizonGeo.setAttribute('position',new THREE.Float32BufferAttribute(horizon,3));horizonGeo.computeVertexNormals();
+    const land=new THREE.Mesh(horizonGeo,new THREE.MeshLambertMaterial({color:p.ground[0]}));land.name='outside-world-horizon';group.add(land);
     if(p.id==='desert'){
       batch(new THREE.CylinderGeometry(1,.8,1,6),p.rock,landmarks.map(([x,z,h])=>[[x,h*.9,z],[17,h*1.8,15]]));
       batch(new THREE.CylinderGeometry(1,1,1,6),p.detail,landmarks.map(([x,z,h])=>[[x,h*1.73,z],[17.7,.8,15.5]]));
