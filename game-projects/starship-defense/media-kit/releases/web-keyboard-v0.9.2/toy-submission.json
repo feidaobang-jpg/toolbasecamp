@@ -20,5 +20,13 @@
  },
  "zip_sha256": "675a0745e4c7d8f23ecdd7eb09a564bc930d1104d00557ff3aee08e7150dd726",
  "zip_bytes": 3977078,
- "note": "审核通过前正式地址仍是 v0.9.1。"
+ "note": "审核通过前正式地址仍是 v0.9.1。",
+ "published_verification": {
+  "checked_at": "2026-10-03T09:09:31.981333+08:00",
+  "mylist": "published / PUBLIC",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "runtime": "https://www.bilibili.com/toy/chongchao-qianshao/ → bilibilitoy.com 38678478981120-v21554",
+  "result": "桌面/手机均加载开局；菜单默认选中框、无旋转按钮、6 把枪、建造虚影、第一人称正常；无页面错误",
+  "file_match": "game.js 与提交包逐字节一致；index.html 仅多出平台注入的性能脚本"
+ }
 }

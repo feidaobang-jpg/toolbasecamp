@@ -28,3 +28,7 @@ base_version：web-arsenal-build-v0.9.1（网站已上线；Toy 上 v0.9.1 审�
 ## Toy 提交补记
 
 2026-10-03：提交前正式页已是 v0.9.1（过审上线）。v0.9.2 预检通过，预览 preview_BrXbX2MM 实测菜单/商店默认选中框、无旋转按钮、建造与手机正常，用户确认后提交，CLI 与 mylist 均为 auditing，提交预览 https://www.bilibili.com/toy/preview/preview_EqfTH5CI/index.html 。过审前正式地址仍是 v0.9.1。
+
+## Toy 上线核验
+
+2026-10-03 用户告知审核通过：mylist 为 published，正式页运行目录 38678478981120-v21554，桌面与手机实测为 v0.9.2（菜单默认选中框、无旋转按钮、6 把枪、虚影建造），game.js 与提交包一致，index.html 只多出平台注入的性能脚本。网站与 Toy 版本一致。
