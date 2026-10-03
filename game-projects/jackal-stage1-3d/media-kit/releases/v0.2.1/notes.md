@@ -27,7 +27,7 @@
 
 - desktop.js 80/80，mobile.js 33/33，botrun.js 种子 7 通关（0 阵亡、19/19 俘虏、4/4 坦克）
 - 网站：https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html
-- Toy：slug `feidao-jackal-3d`，预览 https://www.bilibili.com/toy/preview/preview_BHp27AWO/index.html 在桌面、手机竖屏 / 横屏模拟下实测可玩（M05～M07）；是否提交审核等用户确认，状态见 `game.json` 的 `toy` 字段
+- Toy：slug `feidao-jackal-3d`，预览 https://www.bilibili.com/toy/preview/preview_BHp27AWO/index.html 在桌面、手机竖屏 / 横屏模拟下实测可玩（M05～M07）；用户确认后已提交审核（Toy id 39863936092160，状态 auditing），状态见 `game.json` 的 `toy` 字段
 
 ## 待办
 

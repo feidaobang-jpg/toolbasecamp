@@ -13,5 +13,8 @@
     "js/THREE-LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
     "js/game.min.js": "335f1cec3bab4633de679985466c7b01af1e49b9856f4ea2cf5ee40584bbf788"
   },
-  "status": "built_not_submitted"
+  "status": "submitted_auditing",
+  "toy_id": 39863936092160,
+  "slug": "feidao-jackal-3d",
+  "submitted_at": "2026-10-03"
 }
