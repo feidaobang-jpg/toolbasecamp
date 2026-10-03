@@ -87,8 +87,13 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "not_submitted",
+    "review_status": "preview_ready_not_submitted",
     "verified_at": null,
-    "video_bindings": []
+    "video_bindings": [],
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_BHp27AWO/index.html",
+    "preview_verified_at": "2026-10-03",
+    "title": "赤色要塞 3D：第一关",
+    "category": "GAME",
+    "note": "正式地址在审核通过后才可用；未提交审核前不要对外发布 Toy 链接"
   }
 }

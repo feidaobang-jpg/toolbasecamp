@@ -114,7 +114,7 @@
   {
    "id": "M02",
    "file": "releases/v0.2.1/captures/s-v021-desktop-touch-after.png",
-   "sha256": "446aadae4650e68b4a0609a3a2cdaacf8c7acf6fecfa805a8b85257d024ff8fc",
+   "sha256": "40e3740dcc8079e7b9673349d1cfdf309d7f54a5b6db42112f121c02b5f893bb",
    "kind": "screenshot",
    "version": "v0.2.1",
    "build_id": "v0.2.1-2d156a62a2f8",
@@ -134,11 +134,62 @@
    "sha256": "9fa37a8d757b3b3a61c3573594d8dc046639e8692e85e8e3e050ea3026a8291d",
    "kind": "screenshot",
    "version": "v0.2.1",
-   "build_id": "v0.2.1-2d156a62a2f8",
+   "build_id": "v0.2.1-7474041ebaac",
    "capture_mode": "realtime-user-input",
-   "description": "修复后在用户本机真实输入环境（Claude 桌面应用内置浏览器，Chromium 152，pointer: fine 但 any-pointer: coarse、maxTouchPoints=10，800×600）：键盘 Enter 开始，开局约 5 秒；底部显示键位提示，没有摇杆。吉普停在原地被步兵打到 1 格护甲冒烟（没有操作躲避），不是 Bug。浏览器面板截图（JPEG）。",
+   "description": "修复后在用户本机真实输入环境（Claude 桌面应用内置浏览器，Chromium 152，pointer: fine 但 any-pointer: coarse、maxTouchPoints=10，800×600）：键盘 Enter 开始，开局约 5 秒；底部显示键位提示，没有摇杆。吉普停在原地被步兵打到 1 格护甲冒烟（没有操作躲避），不是 Bug。浏览器面板截图（JPEG）。拍摄于中间构建 game.min.js?v=3（还没加手机 UA 判断）；最终构建只多了手机 UA 判断，桌面 UA 下行为相同，已在同一浏览器用最终构建复核：键位提示显示、touch-on 关闭。",
    "width": 800,
    "height": 600,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "M05",
+   "file": "releases/v0.2.1/captures/s-v021-toy-preview-desktop.png",
+   "sha256": "9bbbbad07ca0ff776e2d3342764e8b215e45196a96db252784b434a9fa2a0193",
+   "kind": "screenshot",
+   "version": "v0.2.1",
+   "build_id": "v0.2.1-2d156a62a2f8",
+   "capture_mode": "realtime-automation",
+   "description": "Toy 预览页（preview_BHp27AWO，最终构建）桌面 1280×720：Toy 外壳 + iframe 内游戏，键盘 Enter 开始约 5 秒；键位提示显示、无触屏按键、菜单里没有「返回游戏列表」。Playwright 驱动系统 Edge。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "M06",
+   "file": "releases/v0.2.1/captures/s-v021-toy-preview-portrait.png",
+   "sha256": "06effef7b664e1e8b14baa05e68167da069c2d686818628267dd7d1ccad7eef9",
+   "kind": "screenshot",
+   "version": "v0.2.1",
+   "build_id": "v0.2.1-2d156a62a2f8",
+   "capture_mode": "realtime-automation",
+   "description": "Toy 预览页手机竖屏 390×844（Playwright 设备模拟：Pixel 8 UA、isMobile、hasTouch、DPR3，对 iframe 同样生效）：触摸「开始游戏」后约 5 秒，游戏自动旋转为横屏布局，摇杆与 J/K/C 显示。非真机。",
+   "width": 1170,
+   "height": 2532,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "M07",
+   "file": "releases/v0.2.1/captures/s-v021-toy-preview-landscape.png",
+   "sha256": "02b4bb3ecf4436b7aeee33999b1304af34b3fa707353fe0f45c7926d25a9cc52",
+   "kind": "screenshot",
+   "version": "v0.2.1",
+   "build_id": "v0.2.1-2d156a62a2f8",
+   "capture_mode": "realtime-automation",
+   "description": "Toy 预览页手机横屏 844×390（同上设备模拟）：Toy 顶栏占 44px，游戏区 844×346；触摸开始后约 3 秒，摇杆、J/K/C、暂停 / 全屏与 HUD 都在可见区内。非真机。",
+   "width": 2532,
+   "height": 1170,
    "duration_seconds": null,
    "audio": "none",
    "visual_review": "pass",
@@ -194,6 +245,20 @@
    "result": "0 阵亡，19/19 俘虏送达，4/4 Boss 坦克击毁，通关",
    "evidence": [],
    "untested": []
+  },
+  {
+   "device": "Toy 预览 https://www.bilibili.com/toy/preview/preview_BHp27AWO/index.html；Edge 桌面 1280×720、设备模拟竖屏 390×844 与横屏 844×390；另在用户本机内置浏览器桌面实测键盘操作",
+   "method": "toy_doctor.py 静态预检 0 警告；Playwright 进入 iframe 读状态并截图；内置浏览器里不点击直接按 Enter 开始、W 前进、J 射击、K 手雷、Esc 暂停",
+   "result": "三种视口都能开始游戏；桌面为键位提示、手机为触屏按键、竖屏自动横屏；Toy 外壳会把焦点给 iframe，不点击也能用键盘；无脚本错误。测试里先截图再触摸时，触摸事件到不了跨域 iframe（Playwright 现象，不截图时正常），不是游戏问题",
+   "evidence": [
+    "M05",
+    "M06",
+    "M07"
+   ],
+   "untested": [
+    "B 站 App 内 WebView 真机",
+    "审核后正式地址"
+   ]
   }
  ],
  "readiness": {

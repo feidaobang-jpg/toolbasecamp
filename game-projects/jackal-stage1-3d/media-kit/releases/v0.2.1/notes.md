@@ -13,7 +13,7 @@
 
 ## 搬家时发现的真实问题
 
-在本机用 Edge 跑原来的桌面验收，78/80。其中一项是真问题：本机 Edge 的 `navigator.maxTouchPoints` 报 10，但根本没有触屏（`pointer` / `any-pointer` 都不是 coarse）。游戏原来把 `maxTouchPoints>0` 当成触屏设备，结果在电脑上开局显示摇杆和 J/K/C 触屏按键，键位提示被藏掉（截图 M01）。原来的验收都在云端 Linux 无头 Chromium 上跑，那里 `maxTouchPoints` 是 0，所以一直没暴露。
+在本机用 Edge 跑原来的桌面验收，78/80。其中一项是真问题：本机 Edge 的 `navigator.maxTouchPoints` 报 10，但主指针是鼠标（无头 Edge 里 `pointer` / `any-pointer` 都不是 coarse）。游戏原来把 `maxTouchPoints>0` 当成触屏设备，结果在电脑上开局显示摇杆和 J/K/C 触屏按键，键位提示被藏掉（截图 M01）。原来的验收都在云端 Linux 无头 Chromium 上跑，那里 `maxTouchPoints` 是 0，所以一直没暴露。
 
 第一次修复只改成认 `pointer: coarse` 或 `any-pointer: coarse`，无头 Edge 下验收通过。但把 Toy 预览放进 Claude 桌面应用的内置浏览器（用的是本机真实输入设备）一看，菜单仍是触屏说明：这台电脑在真实浏览器里 `any-pointer: coarse` 也为真（有触控类输入），只是主指针是鼠标。无头浏览器看不到真实输入设备，所以第一次修复漏了。
 
@@ -27,7 +27,7 @@
 
 - desktop.js 80/80，mobile.js 33/33，botrun.js 种子 7 通关（0 阵亡、19/19 俘虏、4/4 坦克）
 - 网站：https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html
-- Toy：slug `feidao-jackal-3d`，状态见 `game.json` 的 `toy` 字段
+- Toy：slug `feidao-jackal-3d`，预览 https://www.bilibili.com/toy/preview/preview_BHp27AWO/index.html 在桌面、手机竖屏 / 横屏模拟下实测可玩（M05～M07）；是否提交审核等用户确认，状态见 `game.json` 的 `toy` 字段
 
 ## 待办
 
