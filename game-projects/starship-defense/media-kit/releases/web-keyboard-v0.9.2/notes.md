@@ -24,3 +24,7 @@ base_version：web-arsenal-build-v0.9.1（网站已上线；Toy 上 v0.9.1 审�
 ## 仓库变化（非本次改动）
 
 工作期间仓库被另一次会话改写历史，截图/录像改为只留本机（.gitignore 忽略 media-kit 下图片视频）。本版的截图仍在本地 captures/，handoff.json 引用它们，但不提交进 git。我的提交被对方重新应用为 fd3c201a，内容与原提交逐文件一致。
+
+## Toy 提交补记
+
+2026-10-03：提交前正式页已是 v0.9.1（过审上线）。v0.9.2 预检通过，预览 preview_BrXbX2MM 实测菜单/商店默认选中框、无旋转按钮、建造与手机正常，用户确认后提交，CLI 与 mylist 均为 auditing，提交预览 https://www.bilibili.com/toy/preview/preview_EqfTH5CI/index.html 。过审前正式地址仍是 v0.9.1。
