@@ -267,9 +267,10 @@ probe.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-eve
 document.body.appendChild(probe);
 const display = { rotated: false, W: 0, H: 0, vw: 0, vh: 0, dpr: 1, touchOn: false };
 const toLocal = (cx, cy) => display.rotated ? { x: cy, y: display.vw - cx } : { x: cx, y: cy };
-// 触屏还是键盘：开局看主指针（手机/平板是 coarse），之后跟随玩家实际用的输入——真摸屏幕切触屏按键，按键盘切回键位提示。
-// 不按硬件猜：部分 Windows 电脑报 10 个触点、any-pointer 也是 coarse，但主指针是鼠标，按它判断会把电脑当手机
-let inputMode = window.matchMedia && window.matchMedia('(pointer: coarse)').matches ? 'touch' : 'key';
+// 触屏还是键盘：开局看手机 UA 或主指针（手机/平板是 coarse），之后跟随玩家实际用的输入——真摸屏幕切触屏按键，按键盘切回键位提示。
+// 不按触点数猜：部分 Windows 电脑报 10 个触点、any-pointer 也是 coarse，但主指针是鼠标，按它判断会把电脑当手机
+const MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let inputMode = MOBILE_UA || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 'touch' : 'key';
 const coarsePointer = () => inputMode === 'touch';
 function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
 let lastOrient = null;
