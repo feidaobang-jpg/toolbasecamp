@@ -2,7 +2,7 @@
 // ghost-preview building placement. Real keyboard / mouse / touch input wherever practical.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases/web-arsenal-build-v0.9.1'),captures=path.join(release,'captures');
+const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-arsenal-build-v0.9.1'),captures=path.join(release,'captures');
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html';
 const results={},fail=[];
 const check=(name,ok,detail)=>{results[name]={ok:!!ok,...(detail!==undefined?{detail}:{})};if(!ok)fail.push(name);};
@@ -65,10 +65,10 @@ const msgOnTop=p=>p.evaluate(()=>{const panelUp=[...document.querySelectorAll('.
  await p.keyboard.press('KeyJ');await p.waitForTimeout(150);const g6=await p.evaluate(()=>({n:__gameQA.buildings.length,gold:__gameQA.Game.gold}));
  check('walk aside: ghost turns valid and places',g5.valid&&g6.n===n0+2&&g6.gold===4400,{g5,g6});
  await p.keyboard.press('KeyL');await p.locator('#buildGrid .shopItem').filter({hasText:'合金围墙'}).click();await p.waitForTimeout(150);
- const r0=await p.evaluate(()=>__gameQA.place.yaw);await p.keyboard.press('KeyR');await p.waitForTimeout(100);const r1=await p.evaluate(()=>__gameQA.place.yaw);
+ const r0=await p.evaluate(()=>__gameQA.place.yaw);await p.keyboard.down('KeyE');await p.waitForTimeout(400);await p.keyboard.up('KeyE');const r1=await p.evaluate(()=>__gameQA.place.yaw);
  const st=await p.evaluate(()=>__gameQA.Game.state);
  await p.keyboard.press('Escape');await p.waitForTimeout(150);const g7=await p.evaluate(()=>({kind:__gameQA.place.kind,gold:__gameQA.Game.gold,state:__gameQA.Game.state}));
- check('R rotates the ghost (does not start the wave); Esc cancels free of charge',Math.abs(Math.abs(r1-r0)-Math.PI/2)<.01&&st==='prep'&&!g7.kind&&g7.gold===4400&&g7.state==='prep',{r0,r1,st,g7});
+ check('Q/E turn the ghost with the camera; Esc cancels free of charge',Math.abs(r1-r0)>.4&&st==='prep'&&!g7.kind&&g7.gold===4400&&g7.state==='prep',{r0,r1,st,g7});
  const rules=await p.evaluate(()=>{const q=__gameQA,s=q.MOUTHS.find(m=>m.main);return{gate:q.placementCheck('mgTurret',0,-16,0),tunnel:q.placementCheck('mgTurret',s.x-s.dx*10,s.z-s.dz*10,0),steep:q.placementCheck('mgTurret',-31,-14,0)};});
  check('blocked spots explain why (gate / tunnel / cliff)',rules.gate.includes('城门')&&rules.tunnel.includes('隧道')&&rules.steep!=='',rules);
  await p.evaluate(()=>{__gameQA.Game.gold=0;});await p.keyboard.press('KeyL');await p.locator('#buildGrid .shopItem').filter({hasText:'重型堡垒'}).click();await p.waitForTimeout(100);
@@ -90,7 +90,7 @@ const msgOnTop=p=>p.evaluate(()=>{const panelUp=[...document.querySelectorAll('.
  check('phone: build button, pick, place button',ph.n===n1+1&&ph.gold===1300&&!ph.kind,ph);
  check('no page errors (phone)',m.errors.length===0,m.errors);
  await b.close();
- const summary={version:'web-arsenal-build-v0.9.1',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
+ const summary={version:process.env.RELEASE||'web-arsenal-build-v0.9.1',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
  fs.writeFileSync(path.join(release,'arsenal-build.json'),JSON.stringify(summary,null,1));
  console.log(JSON.stringify({passed:summary.passed,failed:fail},null,1));if(fail.length)process.exitCode=1;
 })().catch(e=>{console.error(e);process.exit(1);});

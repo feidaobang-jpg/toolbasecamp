@@ -2465,8 +2465,8 @@ function renderBuild(){
 }
 /* ================= 建造虚影：先看位置再放 =================
    选中设施后关闭面板，角色面前出现半透明 3D 虚影（绿=可放，红=不行并写明原因）；
-   走动/转视角调整位置，R 旋转，J/左键/「放置」确认（此时才扣钱），Esc/L/「取消」退出。 */
-const place={kind:null,ghost:null,ring:null,mat:null,rot:0,x:0,z:0,yaw:0,valid:false,reason:'',free:false,lastMouse:false};
+   走动或 Q/E/鼠标转视角调整位置和朝向（虚影跟着视角转），J/回车/左键/「放置」确认（此时才扣钱），Esc/L/「取消」退出。 */
+const place={kind:null,ghost:null,ring:null,mat:null,x:0,z:0,yaw:0,valid:false,reason:'',free:false,lastMouse:false};
 function startPlacement(kind,free=false){
   cancelPlacement(true);
   closePanels();
@@ -2475,7 +2475,7 @@ function startPlacement(kind,free=false){
   scene.add(ghost);
   const cfg=BUILDINGS[kind];let ring=null;
   if(cfg.range){ring=new THREE.Mesh(new THREE.RingGeometry(cfg.range-.25,cfg.range,72),new THREE.MeshBasicMaterial({color:0x7fd7ff,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);}
-  Object.assign(place,{kind,ghost,ring,mat,rot:0,valid:false,reason:'',free,lastMouse:Input.mouseFire});
+  Object.assign(place,{kind,ghost,ring,mat,valid:false,reason:'',free,lastMouse:Input.mouseFire});
   stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent=cfg.name+(free||Game.testMode?'':' · 💰'+cfg.price);
   AudioSys.sfx('click');updPlacement();
 }
@@ -2507,7 +2507,7 @@ function placementCheck(kind,x,z,yaw){
 function updPlacement(){
   if(!place.kind)return;
   const kind=place.kind,f=camForward(false),dist=kind==='wall'?6.5:kind==='bunker'?7.5:5.5;
-  const x=player.pos.x+f.x*dist,z=player.pos.z+f.z*dist,yaw=camYaw+place.rot*Math.PI/2;
+  const x=player.pos.x+f.x*dist,z=player.pos.z+f.z*dist,yaw=camYaw;
   const reason=placementCheck(kind,x,z,yaw);
   Object.assign(place,{x,z,yaw,valid:!reason,reason});
   place.ghost.position.set(x,groundY(x,z)+.02,z);place.ghost.rotation.y=yaw;
@@ -2527,7 +2527,6 @@ function confirmPlacement(){
   cancelPlacement(true);
   showMsg('🏗 '+cfg.name+' 建造完成！L 继续建造',1.6);autoSave();
 }
-function rotatePlacement(){if(!place.kind)return;place.rot=(place.rot+1)%4;AudioSys.sfx('click');updPlacement();}
 // 放置模式下 J/左键/射击键确认，不再开火
 function placementInput(){
   if(!place.kind)return;
@@ -2939,7 +2938,7 @@ function syncPauseOptions(){
   $('qualityBtnMenu').textContent=$('qualityBtn').textContent;$('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
 $('themeBtn').onclick=$('themeBtnMenu').onclick=switchTheme;
-$('placeOk').onclick=confirmPlacement;$('placeRot').onclick=rotatePlacement;$('placeCancel').onclick=()=>cancelPlacement();
+$('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
 $('touchUI').addEventListener('pointerdown',e=>{if(e.target.id==='squadChip')cycleSquadOrder();});
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
@@ -2953,6 +2952,61 @@ function setTouchMode(on,remember=true){
   if(remember)try{localStorage.setItem('chongchao-touch',on?'on':'off');}catch{}
 }
 
+/* ================= 纯键盘界面导航 =================
+   最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
+   Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
+const NAV_ROOTS=['confirmPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','menuOver','menuPause','menuMain'];
+const nav={root:null,index:0};
+function navRoot(){for(const id of NAV_ROOTS){const el=$(id);if(el&&!el.classList.contains('hidden'))return el;}return null;}
+function navItems(root){
+  return [...root.querySelectorAll('button,a[href],select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length&&!el.closest('.hidden'));
+}
+function navDefault(root){
+  const items=navItems(root);
+  const pick=root.id==='menuMain'?(hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart'))
+    :root.id==='menuPause'?$('btnResume'):root.id==='menuOver'?$('btnRetry'):root.id==='confirmPanel'?$('confirmCancel')
+    :root.querySelector('.shopItem,.saveSlot button,select')||items.find(el=>!el.classList.contains('closeX'));
+  return pick&&items.includes(pick)?pick:items[0];
+}
+function navFocus(el){if(!el)return;el.focus({preventScroll:false});el.scrollIntoView?.({block:'nearest'});nav.index=Math.max(0,navItems(nav.root).indexOf(el));}
+function navTick(){
+  const root=navRoot();
+  if(root!==nav.root){nav.root=root;nav.index=0;if(root)navFocus(navDefault(root));return;}
+  // 内容重新渲染（例如商店购买后）焦点丢失时，回到原来的位置
+  if(root&&!root.contains(document.activeElement)){const items=navItems(root);if(items.length)navFocus(items[Math.min(nav.index,items.length-1)]);}
+}
+function navMove(dir){
+  const items=navItems(nav.root),cur=document.activeElement;if(!items.length)return;
+  if(!items.includes(cur)){navFocus(items[0]);return;}
+  // 先在同一行/同一列（垂直方向有重叠）里找最近的；没有再按距离+偏移加权找
+  const a=cur.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2,horiz=dir==='left'||dir==='right';
+  let bestIn=null,inScore=Infinity,bestAny=null,anyScore=Infinity;
+  for(const el of items){
+    if(el===cur||(el.contains(cur)&&dir!=='up')||(cur.contains(el)&&dir!=='down'))continue;
+    const b=el.getBoundingClientRect(),bx=b.left+b.width/2,by=b.top+b.height/2,dx=bx-ax,dy=by-ay;
+    const main=dir==='left'?-dx:dir==='right'?dx:dir==='up'?-dy:dy,side=horiz?Math.abs(dy):Math.abs(dx);
+    if(main<=4)continue;
+    const overlap=horiz?b.top<a.bottom-2&&b.bottom>a.top+2:b.left<a.right-2&&b.right>a.left+2;
+    if(overlap&&main+side*.05<inScore){inScore=main+side*.05;bestIn=el;}
+    if(main+side*2.2<anyScore){anyScore=main+side*2.2;bestAny=el;}
+  }
+  const best=bestIn||bestAny;
+  if(best){navFocus(best);AudioSys.sfx('click');}
+}
+document.addEventListener('focusin',e=>{if(nav.root&&nav.root.contains(e.target)){const i=navItems(nav.root).indexOf(e.target);if(i>=0)nav.index=i;}});
+window.addEventListener('keydown',e=>{
+  if(Input.isPlaying()||!nav.root||(nav.root!==navRoot()))return;
+  const t=document.activeElement,inSelect=t&&t.tagName==='SELECT';
+  const dirs={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
+  if(dirs[e.code]&&!(inSelect&&(e.code==='ArrowUp'||e.code==='ArrowDown'))){e.preventDefault();navMove(dirs[e.code]);return;}
+  if(e.code==='Tab'){
+    e.preventDefault();const items=navItems(nav.root);if(!items.length)return;
+    const i=items.indexOf(t);navFocus(items[(i<0?0:i+(e.shiftKey?-1:1)+items.length)%items.length]);return;
+  }
+  // 回车/空格：原生按钮由浏览器触发；卡片、页签、职业卡等 div 在这里触发
+  if((e.code==='Enter'||e.code==='Space'||e.code==='NumpadEnter')&&t&&nav.root.contains(t)&&!t.matches('button,a,select')&&!e.defaultPrevented){e.preventDefault();t.click();}
+});
+
 /* ================= 主循环 ================= */
 let lastT=performance.now(),saveTimer=30;
 // 兜底：触摸打开面板后的 0.25 秒内忽略卡片点击（关闭按钮除外），防止打开它的那次触摸“穿透”到面板里
@@ -2963,6 +3017,7 @@ function openShop(){markPanelOpen();shopTab='weapon';document.querySelectorAll('
 function openBuild(){markPanelOpen();renderBuild();$('buildPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock?.();}
 function loop(){
   requestAnimationFrame(loop);
+  navTick();
   const now=performance.now();
   let dt=Math.min(.05,(now-lastT)/1000);lastT=now;
   if((Game.state==='prep'||Game.state==='battle')&&!panelOpen){
@@ -3067,7 +3122,6 @@ function setupWebControls(){
     if(!$('confirmPanel').classList.contains('hidden')){if(e.code==='Escape')$('confirmCancel').click();return;}
     if(e.code==='Enter'&&Game.state==='menu')requestNewGame();
     else if(e.code==='Enter'&&Game.state==='over')restartLevel();
-    else if(e.code==='KeyR'&&place.kind&&!panelOpen)rotatePlacement();
     else if(e.code==='KeyR'&&Game.state==='prep'&&!panelOpen)startBattle();
     else if(e.code==='Escape'){e.preventDefault();pauseKey(true);}
     else if(e.code==='KeyT'&&Game.testMode&&Game.state!=='menu'){e.preventDefault();if(panelOpen)closePanels();else openSandbox();}
@@ -3077,7 +3131,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,rotatePlacement,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter(renderer.getContext().getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}
