@@ -17,6 +17,22 @@
       "webview-boot (9 checks)"
     ]
   },
-  "website": "pending",
-  "toy": "pending"
+  "website": "verified (34 browser checks, runtime hash and normalized source checks)",
+  "toy": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "slug": "chongchao-qianshao",
+    "version": "web-operations-v0.13.0",
+    "status": "auditing",
+    "submitted_at": "2026-10-03T18:35:58.485304+00:00",
+    "source_commit": "8672ad96",
+    "validated_preview_url": "https://www.bilibili.com/toy/preview/preview_itF3RUDe/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_UvfCGRjj/index.html",
+    "zip_sha256": "cefe988dbe94d8e9f3208cc7ff6155ab15ab3f7ea9db97fbc3b0ecce09618494",
+    "package_bytes": 251957,
+    "preview_check": "toy/preview-verification.json: real Toy host iframe; desktop and mobile controls, nine tasks, start/pause/withdraw",
+    "content_check": "passed; advisory: JS/CSS filenames have no content hashes",
+    "metadata": "No title, slug, visibility, poster, icon or video-binding changes requested"
+  },
+  "source_commit": "8672ad96"
 }

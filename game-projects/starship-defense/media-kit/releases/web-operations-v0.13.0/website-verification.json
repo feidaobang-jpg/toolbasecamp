@@ -1,23 +1,35 @@
 {
-  "at": "2026-10-03T18:30:13.174696+00:00",
+  "verified_at": "2026-10-03T18:36:54.807948+00:00",
+  "source_commit": "8672ad96",
   "files": {
     "index.html": {
-      "bytes": 31235,
-      "sha256": "423bd39bad827f8d8e926aa2c1dc8e41604653e23915cc49a99e5dbbdcb3a178",
-      "matches": false,
-      "new_content": true
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "423bd39bad827f8d8e926aa2c1dc8e41604653e23915cc49a99e5dbbdcb3a178"
     },
     "game.compat.js": {
-      "bytes": 845442,
-      "sha256": "c18ef7f5df7c3bae373abef03591b7a68b12abc95e45d22ee181852db590bb27",
-      "matches": true,
-      "new_content": true
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "c18ef7f5df7c3bae373abef03591b7a68b12abc95e45d22ee181852db590bb27"
     },
     "operations.js": {
-      "bytes": 16223,
-      "sha256": "2aa513e58fc2e807733b4d62889070cd7f5a1da369b966000aeefbce3ee35d0b",
-      "matches": false,
-      "new_content": true
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "2aa513e58fc2e807733b4d62889070cd7f5a1da369b966000aeefbce3ee35d0b"
+    },
+    "fortress-world.js": {
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "2ce235f3b62cf22ba089d2ecf3ce9dfbff07c1ef9c6bdd91a3e10b7d333c213c"
+    },
+    "terrain-controls.js": {
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "bff290c49d597b5b191d6be61ca993cee96864bb1d4fb4b3b30205e951f6925d"
+    },
+    "dark-visuals.js": {
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "e6fe05d07ad58b111136a9be935ee810d8bd9f23f142c461c758e9705d6bbb45"
+    },
+    "battlefield-environments.js": {
+      "matches_after_line_endings_and_deploy_cache_versions": true,
+      "remote_sha256": "495bbdb9dd467b6bc01ca277f7998f0596ca947b445fb1417286a3fc60fc5d33"
     }
-  }
+  },
+  "browser_checks": "website/verification.json (34 passed)"
 }
