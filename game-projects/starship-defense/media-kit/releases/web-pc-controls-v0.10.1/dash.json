@@ -1,0 +1,240 @@
+{
+ "version": "web-pc-controls-v0.10.1",
+ "checked_at": "2026-10-03T16:23:22.535Z",
+ "url": "http://127.0.0.1:8877/html/game/starship-defense/index.html",
+ "passed": 20,
+ "failed": [],
+ "results": {
+  "K while standing dashes ~6.5 m forward": {
+   "ok": true,
+   "detail": {
+    "from": {
+     "x": 0,
+     "y": 0,
+     "z": 20
+    },
+    "to": {
+     "x": 0,
+     "y": 0,
+     "z": 26.5
+    },
+    "mid": {
+     "dashT": 0.0742999999970197,
+     "inv": 0.2001000000089407,
+     "fov": 69.18725855582892
+    }
+   }
+  },
+  "dash widens the view briefly": {
+   "ok": true,
+   "detail": {
+    "dashT": 0.0742999999970197,
+    "inv": 0.2001000000089407,
+    "fov": 69.18725855582892
+   }
+  },
+  "HUD shows the cooldown; view back to normal": {
+   "ok": true,
+   "detail": {
+    "txt": "💨 冲刺 1.9s",
+    "cd": 1.929300000011919,
+    "fov": 62.29479503046105
+   }
+  },
+  "second dash during cooldown is ignored": {
+   "ok": true,
+   "detail": {
+    "from": {
+     "x": 0,
+     "y": 0,
+     "z": 26.5
+    },
+    "to": {
+     "x": 0,
+     "y": 0,
+     "z": 26.5
+    }
+   }
+  },
+  "after the cooldown Space dashes again; HUD said ready; view fully back": {
+   "ok": true,
+   "detail": {
+    "ready": "💨 冲刺 就绪（K）",
+    "fovRest": 62,
+    "from": {
+     "x": 0,
+     "y": 0,
+     "z": 26.5
+    },
+    "to": {
+     "x": 0,
+     "y": 0,
+     "z": 33
+    }
+   }
+  },
+  "dash goes where you are moving": {
+   "ok": true,
+   "detail": {
+    "from": {
+     "x": 0,
+     "y": 0,
+     "z": 20
+    },
+    "to": {
+     "x": 7.91,
+     "y": 0,
+     "z": 20
+    }
+   }
+  },
+  "dashing out of a ring of biting mobs takes no damage (standing still does)": {
+   "ok": true,
+   "detail": {
+    "standLoss": 48,
+    "dashLoss": 0,
+    "endedAt": {
+     "x": 0,
+     "y": 0,
+     "z": 31.64
+    }
+   }
+  },
+  "acid passes through during the dash, hits otherwise": {
+   "ok": true,
+   "detail": {
+    "dashing": {
+     "lost": 0,
+     "flying": 1
+    },
+    "normal": {
+     "lost": 10,
+     "flying": 0
+    }
+   }
+  },
+  "dash stops at a wall instead of passing through": {
+   "ok": true,
+   "detail": {
+    "to": {
+     "x": 0,
+     "y": 0,
+     "z": 21.83
+    },
+    "inWall": false
+   }
+  },
+  "first person: dash goes where the camera looks": {
+   "ok": true,
+   "detail": {
+    "from": {
+     "x": 0,
+     "y": 0,
+     "z": 20
+    },
+    "to": {
+     "x": 6.5,
+     "y": 0,
+     "z": 20
+    }
+   }
+  },
+  "boarding the helicopter explains Y/H": {
+   "ok": true,
+   "detail": {
+    "alt": 4,
+    "msg": "🚁 驾驶 武装直升机（Y 升高 / H 降低，再按I下车）"
+   }
+  },
+  "Y raises the helicopter": {
+   "ok": true,
+   "detail": {
+    "start": 4,
+    "altUp": 7.015999999880787
+   }
+  },
+  "H lowers it and does not touch medkits": {
+   "ok": true,
+   "detail": {
+    "altUp": 7.015999999880787,
+    "afterH": {
+     "alt": 2.9215999999046343,
+     "medkit": 2,
+     "hp": 40,
+     "msg": "🚁 驾驶 武装直升机（Y 升高 / H 降低，再按I下车）"
+    }
+   }
+  },
+  "U in the helicopter points to Y/H; interact tip shows Y/H": {
+   "ok": true,
+   "detail": {
+    "uMsg": "直升机升降改为 Y 升高 / H 降低",
+    "tip": "I 下车 · Y 升高 / H 降低"
+   }
+  },
+  "no dash and no dash HUD while flying": {
+   "ok": true,
+   "detail": {
+    "hd": {
+     "dashCd": 0,
+     "hudDash": ""
+    },
+    "kInHeli": 0
+   }
+  },
+  "back on foot H uses a medkit": {
+   "ok": true,
+   "detail": {
+    "inVehicle": false,
+    "medkit": 1,
+    "hp": 100
+   }
+  },
+  "no page errors (desktop)": {
+   "ok": true,
+   "detail": []
+  },
+  "phone: button reads 冲, tapping it dashes, cooldown ring shows": {
+   "ok": true,
+   "detail": {
+    "lab0": {
+     "k": "冲",
+     "h": "医疗",
+     "touch": true
+    },
+    "from": {
+     "x": 0,
+     "y": 0,
+     "z": 20
+    },
+    "to": {
+     "x": 0,
+     "y": 0,
+     "z": 26.5
+    },
+    "ring": {
+     "cls": "vbtn cd",
+     "cd": "0.88",
+     "bg": "conic-gradient(rgba(0, 0, 0, 0.55) 316.8"
+    }
+   }
+  },
+  "phone helicopter: 冲→升, 医疗→降, holding 降 lowers it": {
+   "ok": true,
+   "detail": {
+    "lab1": {
+     "k": "升",
+     "h": "降",
+     "ring": false,
+     "msg": "🚁 驾驶 武装直升机（升 / 降 按钮调高度，互动下车）"
+    },
+    "alt0": 4,
+    "alt1": 0.6127999999523173
+   }
+  },
+  "no page errors (phone)": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}

@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>虫潮前哨：守卫基地</title>
 <script>try{var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('chongchao-theme');document.documentElement.className='theme-'+(t==='toy'?'toy':'dark');}catch(e){}</script>
+<link rel="stylesheet" href="./combat-controls.css?v=pc1">
 <style>
 /* ---------- 结构（两种画风共用） ---------- */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none;}
@@ -261,8 +262,8 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="vbtn sm" id="vQ" aria-label="Q 向左转视角">左转</div><div class="vbtn sm" id="vE" aria-label="E 向右转视角">右转</div>
   </div>
 
-  <section id="keyPanel" class="panel hidden" aria-label="自定义键位">
-    <button id="keysClose" class="closeX" aria-label="关闭键位设置">×</button><h3>⌨ 自定义键位</h3>
+  <section id="keyPanel" class="panel hidden" aria-label="操作设置">
+    <button id="keysClose" class="closeX" aria-label="关闭操作设置">×</button><h3>⌨ 操作设置</h3>
     <p class="small">选一项后按新键；Esc 取消改绑。Enter、Esc、Tab 保留给菜单；键位保存在当前设备，触屏按钮同步显示。</p>
     <div id="keyStatus" role="status"></div><button id="keysReset" class="mbtn">恢复默认键位</button><div id="keyGrid"></div>
   </section>
@@ -286,11 +287,11 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn" id="btnPlatformMenu">☁ 存档 / 排行 / 作者</button>
-      <button class="mbtn" id="keysMenu">⌨ 自定义键位</button>
+      <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
       <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
     <div class="small">
-      默认键位（可在菜单自定义）：WASD 移动 · J 或鼠标左键射击 · 点一下画面即可用鼠标自由转视角（Esc 释放）· Q/E 也能转 · V 第一/第三人称 · C 镜头远近/俯视<br>
+      电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 点击画面用鼠标转视角，右键手雷 · 空格冲刺 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
       K/空格 冲刺（短暂无敌，冷却 2.5 秒）· U 手雷（无限，自动抛向目标）· I 互动（开关城门、上下载具）· H 医疗包 · 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
       菜单和面板：方向键或 Tab 选择（黄色框），回车/空格确认，Esc 关闭或返回，全程不用鼠标<br>
@@ -314,7 +315,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
       <button class="mbtn" id="themeBtnMenu">画风</button>
       <button class="mbtn" id="qualityBtnMenu">画质</button>
       <button class="mbtn" id="muteBtnMenu">声音</button>
-      <button class="mbtn" id="keysPause">⌨ 自定义键位</button>
+      <button class="mbtn" id="keysPause">⌨ 操作设置</button>
       <button class="mbtn" id="opsPause">⚑ 副本</button>
       <button class="mbtn" id="platformBtnMenu">☁ 存档/排行</button>
       <a class="gameBack" href="../../../games.html">← 返回游戏列表</a>
@@ -395,6 +396,6 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
   </div>
 </div>
 <script src="./boot.js?v=ops10"></script>
-<script defer src="./game.compat.js?v=ops10" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=pc11" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

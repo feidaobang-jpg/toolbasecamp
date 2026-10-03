@@ -9,6 +9,9 @@ import {currentTheme,saveTheme,PALETTES} from './theme.js?v=fb97';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance} from './hive-world.js?v=fb9';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations} from './operations.js';
+import {createCombatControls,mountCombatSettings} from './combat-controls.js';
+let combatStorage;try{combatStorage=localStorage;}catch(_e){}
+const CombatControls=createCombatControls(combatStorage);
 const keyBindings=createKeyBindings();
 let bindingAction=null;
 const MAX_BUILDINGS=64;
@@ -166,33 +169,38 @@ const Input={
       if(onButton&&this.isPlaying()&&e.target!==document.body)e.target.blur();
       else if(onButton&&['Enter','Space'].includes(e.code))return;
       const k=this.mapKey(e.code);
+      if(k==='J'&&this.isPlaying()&&!place.kind&&!e.repeat)CombatControls.press(e.code);
       if(k==='P'){e.preventDefault();if(!e.repeat&&this.onPause)this.onPause();return;}
       if(k){if(!this.keys[k]&&!e.repeat)this.pressed[k]=true;this.keys[k]=true;e.preventDefault();}
       AudioSys.init();AudioSys.resume();
     });
-    window.addEventListener('keyup',e=>{const k=this.mapKey(e.code);if(k)this.keys[k]=false;});
+    window.addEventListener('keyup',e=>{CombatControls.release(e.code);const k=this.mapKey(e.code);if(k)this.keys[k]=false;});
     // Optional mouse look: click the view to capture the mouse (falls back to dragging when
     // pointer lock is not allowed, e.g. in some iframes). Keyboard-only play still works.
     const cv=$('c3d');
     cv.addEventListener('pointerdown',e=>{
       if(e.pointerType==='touch'){if(!isTouch&&this.onTouchDetected)this.onTouchDetected();return;}
-      if(!this.isPlaying())return;
+      if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
-      if(document.pointerLockElement===cv){if(e.button===0){this.mouseFire=true;}return;}
+      if(e.button===2){if(!place.kind)this.pressed.U=true;e.preventDefault();return;}
+      if(e.button!==0)return;
+      this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');
+      if(document.pointerLockElement===cv)return;
       this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};cv.setPointerCapture(e.pointerId);
       try{const r=cv.requestPointerLock&&cv.requestPointerLock();if(r&&r.catch)r.catch(()=>{});}catch(_e){}
     });
     cv.addEventListener('pointermove',e=>{
+      if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
       if(document.pointerLockElement===cv){this.look.yaw-=e.movementX*.0032;this.look.pitch-=e.movementY*.0032;return;}
       const d=this.drag;if(!d||d.id!==e.pointerId)return;
       const s=toStageScale();this.look.yaw-=(e.clientX-d.x)/s*.0075;this.look.pitch-=(e.clientY-d.y)/s*.0075;d.moved+=Math.abs(e.clientX-d.x)+Math.abs(e.clientY-d.y);d.x=e.clientX;d.y=e.clientY;
     });
-    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId)this.drag=null;if(e.button===0||e.type!=='pointerup')this.mouseFire=false;};
+    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId)this.drag=null;if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,endDrag));
-    document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0)this.mouseFire=false;});
-    document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv)this.mouseFire=false;else if(!this.lockHinted){this.lockHinted=true;showMsg('🖱 鼠标已接管视角：移动转向，左键射击，Esc 释放',2.6);}});
+    document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0){this.mouseFire=false;CombatControls.release('mouse');}});
+    document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv){this.mouseFire=false;CombatControls.reset();}else if(!this.lockHinted){this.lockHinted=true;showMsg('🖱 鼠标已接管视角：移动转向，左键射击，右键手雷，Esc 暂停',2.6);}});
     cv.addEventListener('contextmenu',e=>e.preventDefault());
-    cv.addEventListener('wheel',e=>{if(!this.isPlaying())return;e.preventDefault();this.wheel+=Math.sign(e.deltaY);},{passive:false});
+    cv.addEventListener('wheel',e=>{if(!this.isPlaying()||!CombatControls.mouseEnabled)return;e.preventDefault();this.wheel+=Math.sign(e.deltaY);},{passive:false});
     window.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!isTouch&&this.onTouchDetected)this.onTouchDetected();},true);
     // Touch look: drag anywhere on the right side that is not a button.
     const lz=$('lookZone');
@@ -240,6 +248,7 @@ const Input={
     document.addEventListener('visibilitychange',()=>{if(document.hidden)this.reset();});
   },
   reset(){
+    CombatControls.reset();
     this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
     $('joyKnob').style.left=$('joyKnob').style.top='35px';
     document.querySelectorAll('.vbtn.on').forEach(el=>{if(el._pointer!=null&&el.hasPointerCapture(el._pointer))el.releasePointerCapture(el._pointer);el.classList.remove('on');});
@@ -247,7 +256,7 @@ const Input={
   mapKey(c){
     return keyBindings.action(c);
   },
-  firing(){return !!(this.keys.J||this.mouseFire);},
+  firing(hasTarget=false){return this.isPlaying()&&!place.kind&&(isTouch?!!this.keys.J:CombatControls.firing(hasTarget));},
   axis(){
     let x=0,y=0;
     if(this.keys.left)x-=1;if(this.keys.right)x+=1;
@@ -1908,7 +1917,7 @@ function updSquad(dt){
 /* ---------- 玩家控制 ---------- */
 // 自动瞄准：在 facing 周围 minDot 锥形内挑目标（首领/精英优先），返回 {dir,target,mo}
 function autoAim(from,facing,range,minDot=.2){
-  let best=null,bestScore=-1;
+  let best=null,bestScore=minDot<0?-Infinity:-1;
   const flat=new THREE.Vector3(facing.x,0,facing.z).normalize();
   for(const mo of monsters){
     if(mo.dead||mo.emerge>0)continue;
@@ -1930,9 +1939,15 @@ function autoAim(from,facing,range,minDot=.2){
 function autoAimDir(from,facing,range){return autoAim(from,facing,range).dir;}
 function camForward(withPitch){const cp=withPitch?Math.cos(camPitch):1;return new THREE.Vector3(Math.sin(camYaw)*cp,withPitch?Math.sin(camPitch):0,Math.cos(camYaw)*cp).normalize();}
 function lookUser(){return !!document.pointerLockElement||performance.now()-(Input.lastLook||-1e9)<5000;}
-// 射击方向：第一人称沿准星（准星附近轻微吸附）；第三人称先找镜头前方的目标，
-// 纯键盘玩家没有目标时沿移动方向开火（保留原来边跑边打的手感）。
+// PC 第三人称自动瞄准覆盖四周；手动瞄准沿镜头，第一人称保留准星附近辅助。
+// 触屏沿用镜头前方寻敌和移动方向兜底。
 function playerAim(from,range,moveDir){
+  if(!isTouch){
+    const f=camForward(camMode==='first');
+    if(!CombatControls.autoAim)return {dir:f,target:from.clone().addScaledVector(f,Math.min(range,26)),mo:null};
+    // Full-circle targeting keeps keyboard retreat independent of aim. First person retains crosshair control.
+    if(camMode==='third')return autoAim(from,f,range,-1);
+  }
   if(camMode==='first'){
     const f=camForward(true),a=autoAim(from,f,range,isTouch?.94:.975);
     if(a.mo&&Math.abs(a.dir.y-f.y)<(isTouch?.2:.12))return a;
@@ -1941,6 +1956,12 @@ function playerAim(from,range,moveDir){
   const f=camForward(false);let a=autoAim(from,f,range,.5);
   if(!a.mo&&moveDir&&!lookUser()){a=autoAim(from,moveDir,range,.3);if(!a.mo)return {dir:moveDir.clone(),target:null,mo:null};}
   return a.mo?a:{dir:f,target:null,mo:null};
+}
+function automaticFireTarget(from,range,aim){
+  if(aim.mo)return true;
+  if(isTouch||CombatControls.autoAim)return false;
+  const target=autoAim(from,aim.dir,range,.995);
+  return !!target.mo&&target.dir.dot(aim.dir)>.995;
 }
 function interactionTarget(){
   if(player.inVehicle)return {kind:'exit',label:'下车',tip:'I 下车'+(player.inVehicle.cfg.fly?(isTouch?' · 升 / 降 按钮调高度':' · Y 升高 / H 降低'):'')};
@@ -2068,11 +2089,13 @@ function updPlayer(dt){
     player.mesh.position.copy(player.pos);
     // 载具开火：优先镜头前方目标，其次车头方向
     player.fireCd-=dt;
-    if(Input.firing()&&player.fireCd<=0){
+    const facing=new THREE.Vector3(Math.sin(v.yaw),0,Math.cos(v.yaw));
+    const from=v.mesh.position.clone();from.y+=v.cfg.seatH+.6;
+    let aim;
+    if(isTouch){aim=autoAim(from,camForward(false),v.cfg.range,.5);if(!aim.mo)aim=autoAim(from,facing,v.cfg.range,.2);}
+    else aim=playerAim(from,v.cfg.range,facing);
+    if(Input.firing(automaticFireTarget(from,v.cfg.range,aim))&&player.fireCd<=0){
       player.fireCd=v.cfg.rate;
-      const facing=new THREE.Vector3(Math.sin(v.yaw),0,Math.cos(v.yaw));
-      const from=v.mesh.position.clone();from.y+=v.cfg.seatH+.6;
-      let aim=autoAim(from,camForward(false),v.cfg.range,.5);if(!aim.mo)aim=autoAim(from,facing,v.cfg.range,.2);
       const dmg=v.cfg.dmg*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.4);
       fireBullet(from,aim.dir,{dmg,speed:70,range:v.cfg.range,spread:.03,explode:v.cfg.explode,color:0xffcc66},true,aim.target);
       AudioSys.sfx(v.cfg.sfx);
@@ -2097,7 +2120,11 @@ function updPlayer(dt){
   if(Input.pop('K')&&player.dashCd<=0)startDash(moveDir);
   if(player.dashT>0)stepDash(dt);
   else if(moving){
-    if(camMode==='third'&&!Input.firing())player.yaw=Math.atan2(mvx,mvz);
+    if(camMode==='third'){
+      const probe=player.pos.clone();probe.y+=1.35;
+      const range=WEAPONS[Game.curWeapon].range,aim=playerAim(probe,range,moveDir);
+      if(!Input.firing(automaticFireTarget(probe,range,aim)))player.yaw=Math.atan2(mvx,mvz);
+    }
     const sp=player.speed*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
     const nx=player.pos.x+mvx*sp*dt,nz=player.pos.z+mvz*sp*dt;
     if(!collideWalls(nx,player.pos.z,.5)&&!tooSteep(nx,player.pos.z))player.pos.x=clamp(nx,WORLD.minX+1,WORLD.maxX-1);
@@ -2126,14 +2153,16 @@ function updPlayer(dt){
     player.hp=Math.min(player.maxHp,player.hp+CLASSES[Game.cls].heal*dt);
     updHPBar(player.bar,player.hp/player.maxHp);
   }
-  // 开火（按住 J / 鼠标左键）；激光持续照射升温，伤害最高 +50%
+  // PC defaults to target-aware automatic fire; touch remains hold-to-fire.
   player.fireCd-=dt;
   const wp=WEAPONS[Game.curWeapon];
-  player.heat=Input.firing()&&wp.beam?Math.min(1,(player.heat||0)+dt/1.5):Math.max(0,(player.heat||0)-dt*2);
-  if(Input.firing()&&player.fireCd<=0&&!place.kind){
+  const probe=player.pos.clone();probe.y+=1.35;
+  const aim=playerAim(probe,wp.range,moveDir);
+  const firing=Input.firing(automaticFireTarget(probe,wp.range,aim));
+  player.heat=firing&&wp.beam?Math.min(1,(player.heat||0)+dt/1.5):Math.max(0,(player.heat||0)-dt*2);
+  if(firing&&player.fireCd<=0&&!place.kind){
     player.fireCd=wp.rate*(player.buffT>0?1/1.4:1);
-    const probe=player.pos.clone();probe.y+=1.35;
-    const aim=playerAim(probe,wp.range,moveDir);
+    // Reuse the target sampled for this frame.
     if(camMode==='third')player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
     const from=playerMuzzle(aim.dir);
     if(aim.target)aim.dir.subVectors(aim.target,from).normalize();
@@ -3187,8 +3216,8 @@ let lastT=performance.now(),saveTimer=30;
 let panelOpenedAt=-1e9;
 const markPanelOpen=()=>{panelOpenedAt=performance.now()-(Input.lastTouchT||-1e9)<500?performance.now():-1e9;};
 for(const id of ['shopPanel','buildPanel'])$(id).addEventListener('click',e=>{if(performance.now()-panelOpenedAt<250&&!e.target.closest('.closeX')){e.stopPropagation();e.preventDefault();}},true);
-function openShop(){markPanelOpen();shopTab='weapon';document.querySelectorAll('#shopTabs .tab').forEach(e=>e.classList.toggle('on',e.dataset.t==='weapon'));renderShop();$('shopPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
-function openBuild(){markPanelOpen();renderBuild();$('buildPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
+function openShop(){Input.reset();markPanelOpen();shopTab='weapon';document.querySelectorAll('#shopTabs .tab').forEach(e=>e.classList.toggle('on',e.dataset.t==='weapon'));renderShop();$('shopPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
+function openBuild(){Input.reset();markPanelOpen();renderBuild();$('buildPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
 function loop(){
   requestAnimationFrame(loop);
   navTick();
@@ -3244,7 +3273,9 @@ function syncKeyLabels(){
   for(const el of document.querySelectorAll('.vbtn')){const a=el.id.slice(1);if(KEY_ACTIONS[a])el.dataset.key=keyBindings.label(a);}
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
   $('weaponBar').dataset.key='';renderWeaponBar();
-  $('keysHint').textContent='移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','U','I','H','O','L','G','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
+  const combat=CombatControls.settings;
+  const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','U','I','H','O','L','G','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
@@ -3298,6 +3329,8 @@ window.addEventListener('beforeunload',()=>autoSave());
 function frameStats(now){if(measuring&&previousFrame)frameTimes.push(now-previousFrame);previousFrame=now;}
 function setupWebControls(){
   setupSandbox();setupFeaturePanels();
+  const combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
+  $('keyPanel').insertBefore(combatSection,$('keyStatus'));
   setupToyPlatform({
     prefix:SAVE_PREFIX,
     getSave:()=>Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
@@ -3337,7 +3370,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();syncKeyLabels();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

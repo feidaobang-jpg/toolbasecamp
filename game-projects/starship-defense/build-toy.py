@@ -21,7 +21,7 @@ def build():
         shutil.rmtree(PACKAGE)
     PACKAGE.mkdir(parents=True, exist_ok=True)
     # All game modules are now bundled. Exclude unused legacy assets and any other in-progress files.
-    runtime_files = [SOURCE / name for name in ('index.html', 'boot.js', 'game.compat.js', 'icon.svg', 'vendor/LICENSE.txt')]
+    runtime_files = [SOURCE / name for name in ('index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'icon.svg', 'vendor/LICENSE.txt')]
     for source in runtime_files:
         dest = PACKAGE / source.relative_to(SOURCE)
         dest.parent.mkdir(parents=True, exist_ok=True)
