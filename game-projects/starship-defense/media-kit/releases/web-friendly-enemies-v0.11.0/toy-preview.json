@@ -1,0 +1,25 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_HEMszuQH/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "ready": true,
+      "state": "prep",
+      "name": "圆甲虫",
+      "mob": "round-shell",
+      "boss": "sky-manta",
+      "touch": false,
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "ready": true,
+      "state": "prep",
+      "name": "圆甲虫",
+      "mob": "round-shell",
+      "boss": "sky-manta",
+      "touch": true,
+      "errors": []
+    }
+  ]
+}

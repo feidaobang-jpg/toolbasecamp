@@ -1,0 +1,16 @@
+{
+  "id": 38678478981120,
+  "title": "虫潮围城",
+  "slug": "chongchao-qianshao",
+  "version": "web-friendly-enemies-v0.11.0",
+  "status": "auditing",
+  "verified_at": "2026-10-04T02:18:20+08:00",
+  "source_commit": "8278880a",
+  "validated_preview_url": "https://www.bilibili.com/toy/preview/preview_HEMszuQH/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_l7iAUMyy/index.html",
+  "package_bytes": 245275,
+  "zip_sha256": "ea8e42ffb299ad6eb7e70b4502c6b1a972c912ec92115e52be724de79dcd0bca",
+  "poster": "Same game-native 512px square capture as the verified website thumbnail",
+  "content_check": "Passed; advisory: three JS/CSS file names lack content hashes",
+  "preview_check": "toy-preview.json; desktop and phone start, new enemy models and pause verified without runtime errors"
+}

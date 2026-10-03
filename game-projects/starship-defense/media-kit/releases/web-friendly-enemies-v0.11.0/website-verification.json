@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-10-04T02:15:00.135220+08:00",
+  "commit": "8278880a",
+  "files": {
+    "html/game/starship-defense/game.compat.js": {
+      "matches": true,
+      "bytes": 829075
+    },
+    "html/game/starship-defense/enemy-visuals.js": {
+      "matches": true,
+      "bytes": 10016
+    },
+    "html/game/starship-defense/dark-visuals.js": {
+      "matches": true,
+      "bytes": 13912
+    },
+    "html/game/starship-defense/game.js": {
+      "matches": true,
+      "bytes": 206760
+    },
+    "html/game/starship-defense/index.html": {
+      "matches": true,
+      "bytes": 30497,
+      "normalization": "Ignore line endings and deployment-added cache version queries."
+    },
+    "assets/game/thumbs/starship_defense.jpg": {
+      "matches": true,
+      "bytes": 50595
+    },
+    "js/config.js": {
+      "matches": true,
+      "bytes": 23798
+    },
+    "games.html": {
+      "matches": true,
+      "bytes": 4076
+    }
+  },
+  "all_verified": true
+}
