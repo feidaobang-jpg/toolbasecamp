@@ -17,8 +17,10 @@
   "toy": {
     "id": "38678478981120",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_3PgykmZX/index.html",
-    "status": "preview_only_not_submitted",
-    "zip_sha256": "dfa3918e7e9da0a5e30d2684f2d877a5cdd119a0bf4b7f1aef20d17448cb0a1a"
+    "status": "auditing",
+    "zip_sha256": "dfa3918e7e9da0a5e30d2684f2d877a5cdd119a0bf4b7f1aef20d17448cb0a1a",
+    "submitted_at": "2026-10-03T17:29:28.303893+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hfz2WcZ0/index.html"
   },
   "website": {
     "status": "verified_live",

@@ -22,7 +22,9 @@
     "verified_at": "2026-10-03T09:38:16.519932+08:00",
     "video_bindings": [],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "runtime_dir": "38678478981120-v21554"
+    "runtime_dir": "38678478981120-v21554",
+    "submitted_at": "2026-10-03T17:29:28.303893+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_hfz2WcZ0/index.html"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-heli-fix-v0.9.4",
@@ -35,9 +37,9 @@
   "visual_style": "v0.9 default dark battlefield (player feedback: bright toy look too childish); original rounded toy-like 3D kept as optional theme",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
-  "extension_review_status": "preview_uploaded_awaiting_confirmation",
+  "extension_review_status": "auditing",
   "preview_version": "web-mobile-classes-v0.10.2",
-  "submitted_toy_version": "web-webview-fix-v0.9.6",
+  "submitted_toy_version": "web-mobile-classes-v0.10.2",
   "website_version": "web-mobile-classes-v0.10.2",
   "website_verified_at": "2026-10-04",
   "site_list_name": "虫潮前哨",
