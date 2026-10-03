@@ -1,0 +1,10 @@
+{
+  "source_commit": "63a353d9aa152139dd9b6f84c1cac22603b15423",
+  "toy_id": 38678478981120,
+  "slug": "chongchao-qianshao",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_S2v4XkBB/index.html",
+  "status": "preview_uploaded_awaiting_user_confirmation",
+  "preview_check": "Browser iframe rendered canvas and game menu without page errors",
+  "qa": "20/20 dash checks passed",
+  "website": "verified_deployed"
+}
