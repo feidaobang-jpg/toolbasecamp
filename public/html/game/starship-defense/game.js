@@ -1123,14 +1123,14 @@ function fireBeam(from,dir,cfg){
     const glow=new THREE.Mesh(new THREE.CylinderGeometry(.2,.2,1,8),new THREE.MeshBasicMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));mesh.add(glow);
     scene.add(mesh);beam={mesh,glow,life:0};beamPool.push(beam);
   }
-  if(beam){const delta=end.clone().sub(from),heat=cfg.heat||0;beam.life=.12;beam.mesh.visible=true;beam.mesh.material.color.setHex(cfg.color||0x44ffff);beam.glow.material.color.setHex(cfg.color||0x44ffff);beam.mesh.material.opacity=.95;beam.glow.material.opacity=.25+heat*.25;beam.glow.scale.x=beam.glow.scale.z=1+heat*.8;beam.mesh.position.copy(from).add(end).multiplyScalar(.5);beam.mesh.scale.y=delta.length();beam.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());}
+  if(beam){const delta=end.clone().sub(from),heat=cfg.heat||0;beam.life=.12;beam.mesh.visible=true;beam.mesh.material.color.setHex(cfg.color||0x44ffff);beam.glow.material.color.setHex(cfg.color||0x44ffff);const soft=cfg.fp?.35:1;beam.coreOp=cfg.fp?.7:.95;beam.mesh.material.opacity=beam.coreOp;beam.glow.material.opacity=(.25+heat*.25)*soft;beam.glow.scale.x=beam.glow.scale.z=(1+heat*.8)*(cfg.fp?.55:1);beam.mesh.position.copy(from).add(end).multiplyScalar(.5);beam.mesh.scale.y=delta.length();beam.mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());}
   if(hits.length)spawnParticles(end,0x8ffff1,3,3,.22);
 }
 function disposeBullet(mesh){
   mesh.traverse(o=>{if(o.geometry&&o.geometry!==bulletGeo)o.geometry.dispose();if(o.material)o.material.dispose();});scene.remove(mesh);
 }
 function updBullets(dt){
-  for(const beam of beamPool){beam.life-=dt;beam.mesh.visible=beam.life>0;const k=Math.max(0,beam.life/.12);beam.mesh.material.opacity=k*.95;beam.glow.material.opacity=Math.min(beam.glow.material.opacity,k*.5);}
+  for(const beam of beamPool){beam.life-=dt;beam.mesh.visible=beam.life>0;const k=Math.max(0,beam.life/.12);beam.mesh.material.opacity=k*(beam.coreOp||.95);beam.glow.material.opacity=Math.min(beam.glow.material.opacity,k*.5);}
   for(let i=bullets.length-1;i>=0;i--){
     const b=bullets[i];b.life-=dt;
     // 追踪导弹：向最近敌人转向
@@ -1808,7 +1808,10 @@ function updSquad(dt){
     else if(s.patrolTimer<=0||Math.hypot(s.patrol.x-pp.x,s.patrol.z-pp.z)>19||s.stuck>.8){
       s.patrol=squadPatrolPoint(pp,s.slot,++s.patrolStep);s.patrolTimer=3+s.slot*.6;s.stuck=0;
     }
-    const p=s.mesh.position;let dx=s.patrol.x-p.x,dz=s.patrol.z-p.z;
+    const p=s.mesh.position;
+    // 队友被设施或残骸压住时（旧存档或其他原因），0.4 秒后挪到最近空地
+    if(collideWalls(p.x,p.z,.65)){s.insideT=(s.insideT||0)+dt;if(s.insideT>.4){const f=findFreeSpot(p.x,p.z);if(f){p.x=f.x;p.z=f.z;}s.insideT=0;}}else s.insideT=0;
+    let dx=s.patrol.x-p.x,dz=s.patrol.z-p.z;
     // 基地高台内外只能走城门坡道：先到坡道再走，靠近关闭的城门时请求开门。
     s.wantsGate=false;
     if(onPlateau(p)!==onPlateau(s.patrol)){
@@ -1938,7 +1941,8 @@ function updLook(dt){
 function playerMuzzle(dir){
   if(camMode==='first'){
     const f=camForward(true),right=new THREE.Vector3(-Math.cos(camYaw),0,Math.sin(camYaw));
-    return player.pos.clone().add(new THREE.Vector3(0,1.5,0)).addScaledVector(f,.35).addScaledVector(right,-.18);
+    // 第一人称枪口放在右下方武器模型前端，离眼睛 1 米以上，光束不再从眼前穿过
+    return player.pos.clone().add(new THREE.Vector3(0,1.42,0)).addScaledVector(f,1.1).addScaledVector(right,.24);
   }
   return player.pos.clone().add(new THREE.Vector3(dir.x*.55,1.35,dir.z*.55));
 }
@@ -2053,7 +2057,7 @@ function updPlayer(dt){
     if(camMode==='third')player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
     const from=playerMuzzle(aim.dir);
     if(aim.target)aim.dir.subVectors(aim.target,from).normalize();
-    fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*(wp.beam?1+.5*player.heat:1),heat:player.heat},true,aim.target);
+    fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*(wp.beam?1+.5*player.heat:1),heat:player.heat,fp:camMode==='first'},true,aim.target);
     AudioSys.sfx(wp.sfx);
     player.muzzle.intensity=2;setTimeout(()=>{if(player.muzzle)player.muzzle.intensity=0;},50);
     viewKick=Math.min(1,viewKick+(wp.rate>.3?1:.35));
@@ -2476,11 +2480,16 @@ function renderBuild(){
     div.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();div.click();}};
     grid.appendChild(div);
   }
+  const dm=document.createElement('div');dm.className='shopItem demolish';dm.tabIndex=0;dm.setAttribute('role','button');
+  dm.innerHTML=`<div class="nm">🔨 拆除设施</div><div>拆掉放错或挡路的设施（初始城墙、炮塔也能拆）<br>返还一半造价</div><div class="pr">进入拆除模式</div>`;
+  dm.onclick=()=>startDemolish();
+  dm.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();dm.click();}};
+  grid.appendChild(dm);
 }
 /* ================= 建造虚影：先看位置再放 =================
    选中设施后关闭面板，角色面前出现半透明 3D 虚影（绿=可放，红=不行并写明原因）；
    走动或 Q/E/鼠标转视角调整位置和朝向（虚影跟着视角转），J/回车/左键/「放置」确认（此时才扣钱），Esc/L/「取消」退出。 */
-const place={kind:null,ghost:null,ring:null,mat:null,x:0,z:0,yaw:0,valid:false,reason:'',free:false,lastMouse:false};
+const place={mode:null,target:null,kind:null,ghost:null,ring:null,mat:null,x:0,z:0,yaw:0,valid:false,reason:'',free:false,lastMouse:false};
 function startPlacement(kind,free=false){
   cancelPlacement(true);
   closePanels();
@@ -2489,18 +2498,20 @@ function startPlacement(kind,free=false){
   scene.add(ghost);
   const cfg=BUILDINGS[kind];let ring=null;
   if(cfg.range){ring=new THREE.Mesh(new THREE.RingGeometry(cfg.range-.25,cfg.range,72),new THREE.MeshBasicMaterial({color:0x7fd7ff,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);}
-  Object.assign(place,{kind,ghost,ring,mat,valid:false,reason:'',free,lastMouse:Input.mouseFire});
+  Object.assign(place,{mode:'build',target:null,kind,ghost,ring,mat,valid:false,reason:'',free,lastMouse:Input.mouseFire});
+  $('placeTip').textContent='走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 放置 · Esc/L 取消（放下时才扣钱）';
   stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent=cfg.name+(free||Game.testMode?'':' · 💰'+cfg.price);
   AudioSys.sfx('click');updPlacement();
 }
 function cancelPlacement(quiet=false){
   if(!place.kind)return;
+  const wasDemolish=place.mode==='demolish';
   // 共享/缓存的几何体（倒角盒等）不能释放，只释放虚影自己新建的
   const cached=new Set([...visuals.cache.values()].filter(v=>v&&v.isBufferGeometry));
   scene.remove(place.ghost);place.ghost.traverse(o=>{if(o.isMesh&&o.geometry&&!cached.has(o.geometry))o.geometry.dispose();});place.mat.dispose();
   if(place.ring){scene.remove(place.ring);place.ring.geometry.dispose();place.ring.material.dispose();}
-  place.kind=place.ghost=place.ring=null;$('placeBar').classList.add('hidden');stage.classList.remove('placing');
-  if(!quiet)showMsg('已取消建造（没有扣钱）',1.2);
+  place.kind=place.ghost=place.ring=place.mode=place.target=null;$('placeBar').classList.add('hidden');stage.classList.remove('placing');$('placeOk').textContent='✔ 放置 J';
+  if(!quiet)showMsg(wasDemolish?'已退出拆除模式':'已取消建造（没有扣钱）',1.2);
 }
 function placementCheck(kind,x,z,yaw){
   const cfg=BUILDINGS[kind];
@@ -2515,11 +2526,51 @@ function placementCheck(kind,x,z,yaw){
     if(tooSteep(px,pz))return '地面太陡';
     if(collideWalls(px,pz,r))return '和墙体、岩石或其他设施重叠';
     if(Math.hypot(px-player.pos.x,pz-player.pos.z)<r+.9)return '离自己太近，会把自己卡住';
+    if(squad.some(q=>!q.dead&&Math.hypot(px-q.mesh.position.x,pz-q.mesh.position.z)<r+1))return '会压到队友，换个位置';
+    if(vehicles.some(v=>!v.dead&&Math.hypot(px-v.mesh.position.x,pz-v.mesh.position.z)<r+2.2))return '会压到载具';
+    if(monsters.some(m=>!m.dead&&!m.fly&&Math.hypot(px-m.mesh.position.x,pz-m.mesh.position.z)<r+m.radius))return '前方有虫子';
   }
   return '';
 }
+/* 拆除模式：面朝的最近设施显示红圈，J/回车/左键/「拆除」拆掉并返还一半造价；可连续拆，Esc/L 退出 */
+function startDemolish(){
+  cancelPlacement(true);closePanels();
+  const ring=new THREE.Mesh(new THREE.RingGeometry(1,1.3,48),new THREE.MeshBasicMaterial({color:0xff4d4d,transparent:true,opacity:.85,depthWrite:false,side:THREE.DoubleSide}));
+  ring.rotation.x=-Math.PI/2;ring.visible=false;scene.add(ring);
+  const ghost=new THREE.Group();scene.add(ghost);
+  Object.assign(place,{mode:'demolish',kind:'demolish',ghost,ring,mat:new THREE.MeshBasicMaterial(),target:null,valid:false,reason:'',free:false,lastMouse:Input.mouseFire});
+  stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent='🔨 拆除模式';$('placeOk').textContent='🔨 拆除 J';
+  $('placeTip').textContent='走动或 Q/E 转向要拆的设施（红圈）· J/回车/左键 拆除并返还一半造价 · 可连续拆 · Esc/L 退出';
+  AudioSys.sfx('click');updPlacement();
+}
+function demolishTarget(){
+  const f=camForward(false);let best=null,score=Infinity;
+  for(const bd of buildings){
+    if(bd.dead)continue;
+    const dx=bd.mesh.position.x-player.pos.x,dz=bd.mesh.position.z-player.pos.z,d=Math.hypot(dx,dz);if(d>16)continue;
+    const dot=(dx*f.x+dz*f.z)/(d||1);if(dot<.55&&d>bd.radius+1.5)continue;
+    const sc=d*(1.6-dot);if(sc<score){score=sc;best=bd;}
+  }
+  return best;
+}
+const demolishRefund=bd=>Game.testMode?0:Math.round(BUILDINGS[bd.kind].price*.5);
+function confirmDemolish(){
+  const bd=place.target;
+  if(!bd||bd.dead||!buildings.includes(bd)){showMsg('前方 16 米内没有自己的设施：转向要拆的设施',1.6);AudioSys.sfx('click');return;}
+  const refund=demolishRefund(bd),name=BUILDINGS[bd.kind].name;
+  Game.gold+=refund;bd.dead=true;scene.remove(bd.mesh);buildings.splice(buildings.indexOf(bd),1);
+  spawnParticles(bd.mesh.position.clone().add(new THREE.Vector3(0,1.2,0)),0xbfc6cc,12,6,.6,1.3);AudioSys.sfx('build');
+  showMsg(`🔨 已拆除 ${name}${refund?'，返还 💰'+refund:''}；可继续拆，Esc 退出`,1.8);place.target=null;updPlacement();autoSave();
+}
 function updPlacement(){
   if(!place.kind)return;
+  if(place.mode==='demolish'){
+    const t=demolishTarget();place.target=t;place.valid=!!t;place.ring.visible=!!t;
+    if(t){const r=t.isWall?3.4:t.radius+.6;place.ring.position.set(t.mesh.position.x,groundY(t.mesh.position.x,t.mesh.position.z)+.12,t.mesh.position.z);place.ring.scale.setScalar(r);place.ring.material.opacity=.65+Math.sin(performance.now()/140)*.2;}
+    const s=t?`✔ ${BUILDINGS[t.kind].name}${demolishRefund(t)?' · 返还 💰'+demolishRefund(t):''}`:'✖ 前方没有设施：转向要拆的设施';
+    if($('placeState').textContent!==s){$('placeState').textContent=s;$('placeState').classList.toggle('bad',!t);}
+    return;
+  }
   const kind=place.kind,f=camForward(false),dist=kind==='wall'?6.5:kind==='bunker'?7.5:5.5;
   const x=player.pos.x+f.x*dist,z=player.pos.z+f.z*dist,yaw=camYaw;
   const reason=placementCheck(kind,x,z,yaw);
@@ -2532,6 +2583,7 @@ function updPlacement(){
 }
 function confirmPlacement(){
   if(!place.kind)return;
+  if(place.mode==='demolish'){confirmDemolish();return;}
   updPlacement();
   if(!place.valid){showMsg('这里不能建：'+place.reason,1.6);AudioSys.sfx('click');return;}
   const kind=place.kind,cfg=BUILDINGS[kind];
@@ -3145,7 +3197,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter(renderer.getContext().getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

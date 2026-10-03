@@ -225,7 +225,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
-      <div class="small">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 放置 · Esc/L 取消（放下时才扣钱）</div>
+      <div class="small" id="placeTip">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 确认 · Esc/L 退出（放下时才扣钱，拆除返还一半）</div>
       <div class="btnRow"><button class="mbtn green" id="placeOk">✔ 放置 J</button><button class="mbtn red" id="placeCancel">✖ 取消</button></div>
     </div>
   </div>
@@ -324,7 +324,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
   <!-- 建造 -->
   <div id="buildPanel" class="panel hidden" style="width:540px;">
     <button class="closeX" id="buildClose" aria-label="关闭建造">✕</button>
-    <h3>🏗 基地建造（选中后出现虚影，走动/Q·E 转视角调整，J 放置）　💰<span id="buildGold">0</span></h3>
+    <h3>🏗 基地建造（选中后出现虚影，走动/Q·E 转视角调整，J 放置；最后一项是拆除）　💰<span id="buildGold">0</span></h3>
     <div class="shopGrid" id="buildGrid" style="grid-template-columns:repeat(2,1fr);"></div>
   </div>
 
@@ -370,6 +370,6 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="btnRow" style="justify-content:center"><button class="mbtn" id="confirmCancel">取消</button><button class="mbtn green" id="confirmOk">确定</button></div>
   </div>
 </div>
-<script type="module" src="./game.js?v=fb94"></script>
+<script type="module" src="./game.js?v=fb95"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

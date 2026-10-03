@@ -1,0 +1,15 @@
+{
+ "placementAllowedOnSquadMate": {
+  "valid": true,
+  "reason": "",
+  "ghost": [
+   0,
+   25.5
+  ]
+ },
+ "squadInsideBuilding": true,
+ "squadMovedIn3s": 0,
+ "demolishFeature": false,
+ "laserFirstPerson": "see notes",
+ "build": "3429fa24 (v0.9.4)"
+}

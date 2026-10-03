@@ -1,0 +1,613 @@
+{
+ "build": "working tree",
+ "checked_at": "2026-10-03T10:16:53.522Z",
+ "spots": 43,
+ "stuck": 0,
+ "stuckByKind": {},
+ "examples": [],
+ "errors": [],
+ "all": [
+  {
+   "kind": "mountain",
+   "at": [
+    -51,
+    -58
+   ],
+   "landed": [
+    -40.5,
+    -55.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 23.8,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -54,
+    -45
+   ],
+   "landed": [
+    -43.3,
+    -47.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 27.1,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -51,
+    -32
+   ],
+   "landed": [
+    -40.4,
+    -32
+   ],
+   "insideSolid": false,
+   "walkedAway": 23.8,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -54,
+    -19
+   ],
+   "landed": [
+    -43.3,
+    -21.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 27.1,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -51,
+    -6
+   ],
+   "landed": [
+    -39,
+    -6
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -54,
+    7
+   ],
+   "landed": [
+    -42,
+    7
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    51,
+    -58
+   ],
+   "landed": [
+    63,
+    -60.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 35.6,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    54,
+    -45
+   ],
+   "landed": [
+    66,
+    -45
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    51,
+    -32
+   ],
+   "landed": [
+    63,
+    -34.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 35.6,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    54,
+    -19
+   ],
+   "landed": [
+    66,
+    -19
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    51,
+    -6
+   ],
+   "landed": [
+    63,
+    -8.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 35.6,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    54,
+    7
+   ],
+   "landed": [
+    66,
+    7
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -40,
+    -70
+   ],
+   "landed": [
+    -33,
+    -56.9
+   ],
+   "insideSolid": false,
+   "walkedAway": 19.5,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    -20,
+    -70
+   ],
+   "landed": [
+    -13,
+    -56.9
+   ],
+   "insideSolid": false,
+   "walkedAway": 19.5,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    0,
+    -70
+   ],
+   "landed": [
+    7,
+    -56.9
+   ],
+   "insideSolid": false,
+   "walkedAway": 19.5,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    20,
+    -70
+   ],
+   "landed": [
+    26.2,
+    -57.9
+   ],
+   "insideSolid": false,
+   "walkedAway": 14.6,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    40,
+    -70
+   ],
+   "landed": [
+    37.4,
+    -50.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 24.1,
+   "stuck": false
+  },
+  {
+   "kind": "mountain",
+   "at": [
+    0,
+    316
+   ],
+   "landed": [
+    10,
+    316
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    -62,
+    40
+   ],
+   "landed": [
+    -60.4,
+    34.3
+   ],
+   "insideSolid": false,
+   "walkedAway": 30.4,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    -58,
+    46
+   ],
+   "landed": [
+    -55.9,
+    46
+   ],
+   "insideSolid": false,
+   "walkedAway": 28,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    66,
+    70
+   ],
+   "landed": [
+    69.5,
+    70
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    71,
+    64
+   ],
+   "landed": [
+    74.5,
+    64
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    -78,
+    112
+   ],
+   "landed": [
+    -74.5,
+    112
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    -84,
+    118
+   ],
+   "landed": [
+    -80.5,
+    118
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    82,
+    140
+   ],
+   "landed": [
+    85.5,
+    140
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    76,
+    146
+   ],
+   "landed": [
+    79.5,
+    146
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    -66,
+    170
+   ],
+   "landed": [
+    -62.5,
+    170
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    64,
+    166
+   ],
+   "landed": [
+    67.5,
+    166
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    -96,
+    70
+   ],
+   "landed": [
+    -92.5,
+    70
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "cover-rock",
+   "at": [
+    98,
+    96
+   ],
+   "landed": [
+    101.4,
+    96
+   ],
+   "insideSolid": false,
+   "walkedAway": 34.1,
+   "stuck": false
+  },
+  {
+   "kind": "tunnel-wall",
+   "at": [
+    -69,
+    177
+   ],
+   "landed": [
+    -65.5,
+    177.1
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "tunnel-wall",
+   "at": [
+    -56,
+    257
+   ],
+   "landed": [
+    -52.3,
+    248.3
+   ],
+   "insideSolid": false,
+   "walkedAway": 29.5,
+   "stuck": false
+  },
+  {
+   "kind": "tunnel-wall",
+   "at": [
+    89,
+    213
+   ],
+   "landed": [
+    92.6,
+    213
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "tunnel-wall",
+   "at": [
+    38,
+    285
+   ],
+   "landed": [
+    41.3,
+    285.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "tunnel-wall",
+   "at": [
+    -68,
+    222
+   ],
+   "landed": [
+    -62.8,
+    212.9
+   ],
+   "insideSolid": false,
+   "walkedAway": 29,
+   "stuck": false
+  },
+  {
+   "kind": "hive-spire",
+   "at": [
+    34,
+    302
+   ],
+   "landed": [
+    38,
+    302
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "hive-spire",
+   "at": [
+    35,
+    312
+   ],
+   "landed": [
+    39,
+    312.4
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "hive-spire",
+   "at": [
+    30,
+    322
+   ],
+   "landed": [
+    33.9,
+    321.6
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "hive-spire",
+   "at": [
+    25,
+    330
+   ],
+   "landed": [
+    28,
+    324.5
+   ],
+   "insideSolid": false,
+   "walkedAway": 32.2,
+   "stuck": false
+  },
+  {
+   "kind": "fort-wall",
+   "at": [
+    -48,
+    49
+   ],
+   "landed": [
+    -45.4,
+    48.1
+   ],
+   "insideSolid": false,
+   "walkedAway": 31.3,
+   "stuck": false
+  },
+  {
+   "kind": "fort-wall",
+   "at": [
+    -36,
+    49
+   ],
+   "landed": [
+    -32.3,
+    48.9
+   ],
+   "insideSolid": false,
+   "walkedAway": 38,
+   "stuck": false
+  },
+  {
+   "kind": "fort-wall",
+   "at": [
+    -42,
+    49
+   ],
+   "landed": [
+    -45.2,
+    48.2
+   ],
+   "insideSolid": false,
+   "walkedAway": 26.6,
+   "stuck": false
+  },
+  {
+   "kind": "fort-wall",
+   "at": [
+    25,
+    34
+   ],
+   "landed": [
+    26.1,
+    28.8
+   ],
+   "insideSolid": false,
+   "walkedAway": 26.6,
+   "stuck": false
+  }
+ ]
+}
