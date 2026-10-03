@@ -1,0 +1,29 @@
+{
+ "version": "web-arsenal-build-v0.9.1",
+ "toy_id": 38678478981120,
+ "slug": "chongchao-qianshao",
+ "submitted_at": "2026-10-03T08:36:42.723734+08:00",
+ "user_confirmation": "用户要求“发布到toy”，看过预览说明后选择“提交审核”",
+ "precheck": "toy_doctor.py 通过，1 条无内容指纹 WARN（仅建议）",
+ "public_before_submit": "mylist 为 published；正式页实测为 v0.9.0（深色画风，无建造虚影栏），即 v0.9 已过审上线",
+ "preview_checked": {
+  "url": "https://www.bilibili.com/toy/preview/preview_EOVXgY7r/index.html",
+  "result": "桌面/手机加载成功；商店 6 把枪；建造虚影显示“可以放置”；V 第一人称；手机触屏布局；无页面错误",
+  "captures": [
+   "captures/toy-preview-desktop.jpg",
+   "captures/toy-preview-phone.jpg",
+   "captures/toy-preview-ghost.jpg"
+  ]
+ },
+ "submit_response": {
+  "status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_MFhD3yEI/index.html"
+ },
+ "mylist_after": {
+  "status": "auditing",
+  "visibility": "PUBLIC"
+ },
+ "zip_sha256": "3a8d13520230b9c3f9d77884a902215bbd4d9ffacdec2b2a4e80a9a83df3ec08",
+ "zip_bytes": 3975385,
+ "note": "审核通过前正式地址仍是 v0.9.0。"
+}

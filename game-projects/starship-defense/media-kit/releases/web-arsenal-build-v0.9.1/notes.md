@@ -27,3 +27,8 @@ base_version：web-feedback-v0.9.0（网站已上线；Toy 上 v0.9.0 审核中�
 - after.json：v0.9 的 45 项反馈回归在本版重跑全部通过。
 - playthrough.json：键盘机器人整关（见文件）。
 - 录像 arsenal-build-realtime.webm：商店 6 把枪、围墙虚影旋转放置、红色虚影提示、移开后放置炮台、霰弹击退、火焰灼烧；QA 只设置金币与站位。无游戏声音。
+
+
+## Toy 提交补记
+
+2026-10-03：提交前正式页已是 v0.9.0（v0.9 过审上线）。v0.9.1 预检通过，预览 preview_EOVXgY7r 实测商店 6 把枪、建造虚影、手机布局均正常，用户确认后提交，CLI 与 mylist 均为 auditing，提交预览 https://www.bilibili.com/toy/preview/preview_MFhD3yEI/index.html 。过审前正式地址仍是 v0.9.0。
