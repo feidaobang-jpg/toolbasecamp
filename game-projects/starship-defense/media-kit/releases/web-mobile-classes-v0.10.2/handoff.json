@@ -1,0 +1,25 @@
+{
+  "version": "web-mobile-classes-v0.10.2",
+  "created_at": "2026-10-03T16:28:17.407131+00:00",
+  "changes": [
+    "兵种专长：机枪伤害/减伤，霰弹伤害/短冲刺冷却，医疗光环",
+    "手机菜单横屏、放大文字，移除手雷/触控开关/左右转向按钮",
+    "菜单WASD和方向键导航，J/回车确认，K/Esc返回",
+    "建造升序排序；队友双向开关城门"
+  ],
+  "validation": {
+    "mobile_classes": "passed",
+    "pc_controls": 12,
+    "webview_boot": 9,
+    "real_bilibili_app_device_test": false
+  },
+  "toy": {
+    "id": "38678478981120",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_3PgykmZX/index.html",
+    "status": "preview_only_not_submitted",
+    "zip_sha256": "dfa3918e7e9da0a5e30d2684f2d877a5cdd119a0bf4b7f1aef20d17448cb0a1a"
+  },
+  "website": {
+    "status": "pending_verification"
+  }
+}

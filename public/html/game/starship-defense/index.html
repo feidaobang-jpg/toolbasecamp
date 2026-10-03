@@ -63,16 +63,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #vJ{right:96px;bottom:18px;width:76px;height:76px;line-height:74px;font-size:15px}
 #vK{right:22px;bottom:24px;width:62px;height:62px;line-height:60px}
 #vK.cd{background-image:conic-gradient(rgba(0,0,0,.55) calc(var(--cd)*360deg),transparent 0)}
-#vU{right:182px;bottom:20px}#vI{right:28px;bottom:100px}#vH{right:102px;bottom:106px}#vX{right:172px;bottom:88px}
+#vI{right:28px;bottom:100px}#vH{right:102px;bottom:106px}#vX{right:172px;bottom:88px}
 #vO{right:24px;bottom:172px}#vL{right:78px;bottom:172px}#vC{right:132px;bottom:172px}#vV{right:186px;bottom:172px}#vP{right:240px;bottom:172px}#vG{right:294px;bottom:172px}
-#vQ{right:306px;bottom:24px}#vE{right:250px;bottom:24px}
 .touch-mode #keysHint{display:none}
 .touch-mode #weaponBar{bottom:auto;top:58px;max-width:520px}
 .touch-mode #hint{bottom:auto;top:96px;max-width:470px;font-size:10px;padding:5px 9px}
 .touch-mode #interactHint{bottom:154px;left:42%}
 .touch-mode #radar{top:144px;width:92px;height:92px}
 .touch-mode #webTools{top:10px;right:auto;left:236px;max-width:none}
-.touch-mode #webTools .mbtn:not(#fullBtn):not(#touchBtn):not(#sandboxBtn){display:none}
+.touch-mode #webTools .mbtn:not(#fullBtn):not(#sandboxBtn){display:none}
 .touch-mode #hudTop,.touch-mode #hudRight{font-size:10px;line-height:1.45;padding:6px 8px}
 .touch-mode #hudTop{min-width:0;max-width:210px}.touch-mode #hpBarWrap,.touch-mode #baseBarWrap{width:150px}
 .touch-mode .panel{max-height:94%;width:92%!important}
@@ -198,13 +197,28 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
 #keyPanel *,#operationsPanel *{touch-action:pan-y}
 #keyStatus{min-height:28px;color:#ffdc78;padding:8px 0}
 #assetLoad{background:rgba(8,16,28,.94)}
+/* Phone menus share the same landscape stage from the first frame. */
+[hidden]{display:none!important}
+.touch-mode .menu{padding:14px 24px}
+.touch-mode .menu h1{font-size:30px}
+.touch-mode .menu h2{margin:5px 0;font-size:20px}
+.touch-mode .menu .subtitle{display:none}
+.touch-mode .classCard{width:210px;font-size:16px;padding:9px;line-height:1.4}
+.touch-mode .classCard b{font-size:20px}
+.touch-mode .menu .mbtn{font-size:17px;min-height:44px;padding:9px 14px}
+.touch-mode .menu .small{font-size:15px;max-width:860px}
+.touch-mode .shopItem{font-size:15px}
+.touch-mode .shopItem .nm{font-size:18px}
+.touch-mode .shopItem .desc,.touch-mode .shopItem .upg{font-size:14px}
+.touch-mode #fullBtn{font-size:14px}
+html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
 </style>
 </head>
 <body>
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在部署前哨基地…</div>
-<div id="webTools"><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="themeBtn" class="mbtn">画风</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="touchBtn" class="mbtn">虚拟按键</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="webTools"><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="themeBtn" class="mbtn">画风</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -234,7 +248,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格冲刺 · U手雷 · I互动(门/载具) · H医疗包 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · G小队指令 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格冲刺 · I互动(门/载具) · H医疗包 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · G小队指令 · O商店 · L建造 · R开战 · P/Esc暂停</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
@@ -248,8 +262,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div id="lookZone" aria-label="拖动转视角"></div>
     <div id="joyBase"><div id="joyKnob"></div></div>
     <div class="vbtn" id="vJ">射击</div>
-    <div class="vbtn" id="vK">冲</div>
-    <div class="vbtn" id="vU">手雷</div>
+    <div class="vbtn" id="vK">冲刺</div>
     <div class="vbtn" id="vI">互动</div>
     <div class="vbtn" id="vH">医疗</div>
     <div class="vbtn" id="vX">换枪</div>
@@ -259,7 +272,6 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="vbtn sm" id="vV">一人称</div>
     <div class="vbtn sm" id="vP">暂停</div>
     <div class="vbtn sm" id="vG">队令</div>
-    <div class="vbtn sm" id="vQ" aria-label="Q 向左转视角">左转</div><div class="vbtn sm" id="vE" aria-label="E 向右转视角">右转</div>
   </div>
 
   <section id="keyPanel" class="panel hidden" aria-label="操作设置">
@@ -278,9 +290,9 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="subtitle">守 卫 基 地 · 星 际 虫 潮 防 线</div>
     <h2>选择前哨守卫</h2>
     <div class="btnRow" id="classRow">
-      <div class="classCard sel" tabindex="0" role="button" data-c="gunner"><b>机枪兵</b><br>机枪扫射<br>生命最厚 最稳<br>生命 120</div>
-      <div class="classCard" tabindex="0" role="button" data-c="rifle"><b>火枪兵</b><br>机枪+霰弹枪<br>贴脸爆发 击退虫群<br>生命 100</div>
-      <div class="classCard" tabindex="0" role="button" data-c="medic"><b>医疗兵</b><br>机枪+自愈光环<br>持续回血 辅助强<br>生命 90</div>
+      <div class="classCard sel" tabindex="0" role="button" data-c="gunner"><b>机枪兵</b><br>机枪伤害 +25%<br>受到伤害 −15%<br>生命 120 · 持续守线</div>
+      <div class="classCard" tabindex="0" role="button" data-c="rifle"><b>火枪兵</b><br>霰弹伤害 +30%<br>冲刺冷却 1.8 秒<br>生命 100 · 近战突围</div>
+      <div class="classCard" tabindex="0" role="button" data-c="medic"><b>医疗兵</b><br>自身每秒回血 4<br>12 米内队友每秒回血 4<br>生命 90 · 小队续航</div>
     </div>
     <div class="btnRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
@@ -291,12 +303,12 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
       <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
     <div class="small">
-      电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 点击画面用鼠标转视角，右键手雷 · 空格冲刺 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
-      K/空格 冲刺（短暂无敌，冷却 2.5 秒）· U 手雷（无限，自动抛向目标）· I 互动（开关城门、上下载具）· H 医疗包 · 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
+      电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 点击画面用鼠标转视角 · 空格冲刺 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
+      K/空格 冲刺（短暂无敌，冷却 2.5 秒；火枪兵 1.8 秒）· I 互动（开关城门、上下载具）· H 医疗包 · 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
-      菜单和面板：方向键或 Tab 选择（黄色框），回车/空格确认，Esc 关闭或返回，全程不用鼠标<br>
+      菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
       玩法：准备阶段去野外打怪攒钱 → 商店买枪/强化（每把武器可强化到 Lv10）、造炮塔、雇队友 → 开战守住基地。虫子从远处虫洞钻出；地图最深处是虫巢，母皇和护卫只守老巢，击杀母皇本章虫潮 -35%<br>
-      城门：走过去会自动开门，I 手动开关 · 走远了看小地图和蓝色光柱找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、准备阶段可选 3 个副本
+      城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和蓝色光柱找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、准备阶段可选 3 个副本
     </div>
   </div>
 
@@ -395,7 +407,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="btnRow" style="justify-content:center"><button class="mbtn" id="confirmCancel">取消</button><button class="mbtn green" id="confirmOk">确定</button></div>
   </div>
 </div>
-<script src="./boot.js?v=ops10"></script>
-<script defer src="./game.compat.js?v=pc11" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script src="./boot.js?v=mobile12"></script>
+<script defer src="./game.compat.js?v=mobile12" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

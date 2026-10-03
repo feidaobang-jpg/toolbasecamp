@@ -28,11 +28,11 @@ const rand=(a,b)=>a+Math.random()*(b-a);
 const TAU=Math.PI*2;
 const BASE_W=960;let BASE_H=540;
 // Some phone browsers/webviews (e.g. in-app browsers) report hover:hover, which used to hide
-// every touch control and the landscape rotation. Use the UA as well, honour a manual
-// choice, and switch automatically on the first real touch (see Input.init).
+// every touch control and the landscape rotation. Detect the device before rendering
+// the main menu and switch automatically on the first real touch (see Input.init).
 const MOBILE_UA=/Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 let isTouch=MOBILE_UA||(matchMedia('(pointer:coarse)').matches&&!matchMedia('(hover:hover)').matches);
-try{const forced=localStorage.getItem('chongchao-touch');if(forced==='on')isTouch=true;else if(forced==='off')isTouch=false;}catch(_e){}
+// Device detection owns controls and landscape; obsolete manual preferences are ignored.
 
 /* ---------- 画布缩放 + 手机自动横屏 ---------- */
 const stage=$('stage');
@@ -182,7 +182,7 @@ const Input={
       if(e.pointerType==='touch'){if(!isTouch&&this.onTouchDetected)this.onTouchDetected();return;}
       if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
-      if(e.button===2){if(!place.kind)this.pressed.U=true;e.preventDefault();return;}
+      if(e.button===2){e.preventDefault();return;}
       if(e.button!==0)return;
       this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');
       if(document.pointerLockElement===cv)return;
@@ -198,7 +198,7 @@ const Input={
     const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId)this.drag=null;if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,endDrag));
     document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0){this.mouseFire=false;CombatControls.release('mouse');}});
-    document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv){this.mouseFire=false;CombatControls.reset();}else if(!this.lockHinted){this.lockHinted=true;showMsg('🖱 鼠标已接管视角：移动转向，左键射击，右键手雷，Esc 暂停',2.6);}});
+    document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv){this.mouseFire=false;CombatControls.reset();}else if(!this.lockHinted){this.lockHinted=true;showMsg('🖱 鼠标已接管视角：移动转向，左键射击，Esc 暂停',2.6);}});
     cv.addEventListener('contextmenu',e=>e.preventDefault());
     cv.addEventListener('wheel',e=>{if(!this.isPlaying()||!CombatControls.mouseEnabled)return;e.preventDefault();this.wheel+=Math.sign(e.deltaY);},{passive:false});
     window.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!isTouch&&this.onTouchDetected)this.onTouchDetected();},true);
@@ -238,7 +238,7 @@ const Input={
       const up=e=>{if(e.pointerId!==pointer)return;pointer=null;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    ['J','K','U','I','H','O','L','V','X','C','Q','E','G'].forEach(k=>bind('v'+k,k));
+    ['J','K','I','H','O','L','V','X','C','G'].forEach(k=>bind('v'+k,k));
     $('vP').addEventListener('pointerdown',e=>{e.preventDefault();if(this.onPause)this.onPause();});
     // 触屏按钮按下会打开商店/建造面板，同一次点击随后合成的 click 会落到面板里手指下的卡片上
     // （曾误买物品/误选建筑）。取消触摸的默认点击合成。
@@ -492,11 +492,12 @@ function weaponLv(id){return Game.weaponLv[id]||0;}
 function weaponMul(id){return 1+.2*weaponLv(id);}
 function upgradeCost(price,lv){return Math.round(Math.max(300,price)*.35*(lv+1)/10)*10;}
 function upgradePrice(id){return upgradeCost(WEAPONS[id].price,weaponLv(id));}
-function weaponDps(id){const w=WEAPONS[id];return Math.round(w.dmg*(w.pellets||1)/w.rate*weaponMul(id));}
+function classDamage(id){const c=CLASSES[Game.cls];return c.specialty===id?c.damage:1;}
+function weaponDps(id){const w=WEAPONS[id];return Math.round(w.dmg*(w.pellets||1)/w.rate*weaponMul(id)*classDamage(id));}
 const CLASSES={
-  gunner:{name:'机枪兵',hp:120,speed:9.5,weapon:'lmg',weapons:['lmg'],color:0x3a7bd5},
-  rifle:{name:'火枪兵',hp:100,speed:10.5,weapon:'shotgun',weapons:['lmg','shotgun'],color:0xd58a3a},
-  medic:{name:'医疗兵',hp:90,speed:10.5,weapon:'lmg',weapons:['lmg'],color:0x3ad57b,heal:3},
+  gunner:{specialty:'lmg',damage:1.25,armor:.85,name:'机枪兵',hp:120,speed:9.5,weapon:'lmg',weapons:['lmg'],color:0x3a7bd5},
+  rifle:{specialty:'shotgun',damage:1.3,dashCd:1.8,name:'火枪兵',hp:100,speed:10.5,weapon:'shotgun',weapons:['lmg','shotgun'],color:0xd58a3a},
+  medic:{name:'医疗兵',hp:90,speed:10.5,weapon:'lmg',weapons:['lmg'],color:0x3ad57b,heal:4,aura:4,auraRange:12},
 };
 const VEHICLES={
   jeep:{name:'突击战车',hp:300,speed:17,dmg:10,rate:.09,range:30,price:800,seatH:1.2,scale:1,sfx:'mg',color:0x557a3a},
@@ -515,7 +516,6 @@ const BUILDINGS={
 };
 const ITEMS={
   medkit:{name:'医疗包',price:120,desc:'按H回复60生命(按最大生命比例增强)',heal:60},
-  grenade:{name:'手雷×3',price:100,desc:'按U投掷,范围伤害',count:3},
   shield:{name:'护盾电池',price:300,desc:'获得60点能量护盾(上限150)',shield:60},
   adren:{name:'肾上腺素',price:250,desc:'20秒内移速+40%、射速+40%',buff:20},
   hpUp:{name:'强化装甲',price:500,desc:'最大生命+40',permanent:true},
@@ -826,7 +826,7 @@ const Game={
   loop:1,chapter:1,level:1,
   gold:0,score:0,cls:'gunner',testMode:false,
   weapons:['lmg'],curWeapon:'lmg',weaponLv:{},
-  items:{medkit:2,grenade:3},
+  items:{medkit:2},
   hpBonus:0,
   vehiclesOwned:[],squadCount:0,squadGear:[],opsCompleted:{},squadOrder:'follow',
   hive:{loop:1,chapter:1,queen:1,killed:false},
@@ -949,7 +949,7 @@ function setGate(open,manual=true){
   if(gate.dead){showMsg('城门已损毁，下关修复',1.4);return;}
   gate.open=open;AudioSys.sfx('vehicle');
   if(manual){gate.auto=false;gate.hold=open?0:2.5;}
-  showMsg(open?(manual?'🔓 城门已开启（保持打开）':'🔓 城门自动开启'):'🔒 城门已关闭',1.2);
+  showMsg(open?(manual?'🔓 城门已开启（队友通过后自动关门）':'🔓 城门自动开启'):'🔒 城门已关闭',1.2);
 }
 /* 智能城门：玩家/载具/要出城的队友走向关着的城门时自动打开，离开后（虫潮中）自动关闭。
    网友反馈“从基地里走不出来”，I 仍可手动开关并保持。 */
@@ -966,9 +966,10 @@ function gateOccupied(){
 function updSmartGate(dt){
   if(gate.dead)return;
   gate.hold=Math.max(0,gate.hold-dt);
+  if(gate.open&&squad.some(s=>!s.dead&&s.wantsGate)){gate.auto=true;gate.autoT=2.2;}
   if(!gate.open&&gate.hold<=0&&gateWanted()){setGate(true,false);gate.auto=true;gate.autoT=2.2;}
-  else if(gate.open&&gate.auto&&Game.state==='battle'){
-    if(gateOccupied())gate.autoT=2.2;
+  else if(gate.open&&gate.auto){
+    if(gateOccupied()||gateWanted())gate.autoT=2.2;
     else if((gate.autoT-=dt)<=0){gate.open=false;gate.auto=false;AudioSys.sfx('vehicle');}
   }
 }
@@ -1013,7 +1014,7 @@ function dist2(a,b){const dx=a.x-b.x,dz=a.z-b.z;return dx*dx+dz*dz;}
 function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textContent=t;$('msg').classList.remove('hidden');Game.msgTimer=dur;}
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
-  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H) 💣 手雷∞(U)`
+  $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
 }
@@ -1052,6 +1053,7 @@ function playerDamage(d){
   if(Game.testMode)return;
   if(player.dead||player.invulnerable>0||player.dashInv>0)return;
 
+  d*=CLASSES[Game.cls].armor||1;
   if(player.shield>0){ // 护盾优先吸收
     const ab=Math.min(player.shield,d);
     player.shield-=ab;d-=ab;
@@ -1867,13 +1869,6 @@ function updSquad(dt){
       const priority=d+(pk.type==='gold'?64:0);
       if(priority<lootScore){loot=pk;lootScore=priority;}
     }
-    // 基地高台内外只能走城门坡道：先到坡道再走，靠近关闭的城门时请求开门。
-    s.wantsGate=false;
-    if(onPlateau(p)!==onPlateau(s.patrol)){
-      const inRamp=Math.abs(p.x)<PLAT.rampW-1&&p.z>PLAT.rampTop-3&&p.z<PLAT.rampBot+4;
-      const wp=inRamp?{x:0,z:onPlateau(p)?PLAT.rampBot+4:PLAT.rampTop-4}:onPlateau(p)?{x:0,z:PLAT.rampTop-3}:{x:0,z:PLAT.rampBot+3};
-      dx=wp.x-p.x;dz=wp.z-p.z;s.wantsGate=Math.abs(p.z-gate.pos.z)<5;
-    }
     const engage=Game.squadOrder==='defend'?28:24;
     if(best&&(Game.squadOrder!=='follow'||d2p<24*24)&&!(Game.squadOrder==='defend'&&Math.hypot(p.x-s.patrol.x,p.z-s.patrol.z)>3)){
       const distance=Math.sqrt(bd2),range=11+s.slot*1.5;
@@ -1882,6 +1877,16 @@ function updSquad(dt){
       if(advance||distance<engage){dx=(best.mesh.position.x-p.x)*advance;dz=(best.mesh.position.z-p.z)*advance;}
     }
     if(loot){dx=loot.mesh.position.x-p.x;dz=loot.mesh.position.z-p.z;}
+    // Route the final movement target through the entrance before avoidance.
+    s.wantsGate=false;
+    const dest={x:p.x+dx,z:p.z+dz};
+    if((p.z<gate.pos.z)!==(dest.z<gate.pos.z)){
+      const inside=p.z<gate.pos.z;
+      const aligned=Math.abs(p.x)<PLAT.rampW-1;
+      const wp=aligned?{x:0,z:inside?PLAT.rampBot+4:PLAT.rampTop-4}:{x:0,z:inside?PLAT.rampTop-6:PLAT.rampBot+3};
+      dx=wp.x-p.x;dz=wp.z-p.z;
+      s.wantsGate=Math.abs(p.x)<6.5&&Math.abs(p.z-gate.pos.z)<5;
+    }
     let length=Math.hypot(dx,dz);if(length>.3){dx/=length;dz/=length;}else{dx=0;dz=0;}
     // 包含玩家的软避让；完全重合时也有稳定且不同的分离方向。
     for(const other of [...squad.filter(o=>o!==s).map(o=>o.mesh.position),pp]){
@@ -1910,7 +1915,8 @@ function updSquad(dt){
       if(Math.random()<.3)AudioSys.sfx('mg');
     }
     // 医疗兵光环治疗队友
-    if(Game.cls==='medic'&&d2p<80)s.hp=Math.min(s.maxHp,s.hp+2*dt),updHPBar(s.bar,s.hp/s.maxHp);
+    const cls=CLASSES[Game.cls];
+    if(!player.dead&&!player.inVehicle&&cls.aura&&d2p<cls.auraRange*cls.auraRange){s.hp=Math.min(s.maxHp,s.hp+cls.aura*dt);updHPBar(s.bar,s.hp/s.maxHp);}
   }
 }
 
@@ -2020,7 +2026,7 @@ function playerMuzzle(dir){
 const DASH={dist:6.5,time:.18,inv:.3,cd:2.5};
 function startDash(moveDir){
   const d=moveDir?moveDir.clone():camMode==='first'?camForward(false):new THREE.Vector3(Math.sin(player.yaw),0,Math.cos(player.yaw));
-  player.dashDir=d;player.dashT=DASH.time;player.dashCd=DASH.cd;player.dashInv=DASH.inv;
+  player.dashDir=d;player.dashT=DASH.time;player.dashCd=CLASSES[Game.cls].dashCd||DASH.cd;player.dashInv=DASH.inv;
   if(camMode==='third')player.yaw=Math.atan2(d.x,d.z);
   AudioSys.sfx('dash');
   selfFx(0xcfd8e0,8,4,.35,.2);
@@ -2076,11 +2082,10 @@ function updPlayer(dt){
     }
     if(v.cfg.fly){
       // 升降：Y 升 / H 降（键盘上下相邻）；驾驶中本来就不能用医疗包，H 不冲突。
-      // K/空格 也算升高（手机"升"就是 K 键位）；U 曾经是下降，按了提示新键位。
+      // K/空格 也算升高（手机“升”就是 K 键位）。
       const up=Input.keys.Y||Input.keys.K,down=Input.keys.H;
       if(up&&!down)v.alt=Math.min(18,v.alt+dt*8);
       if(down&&!up)v.alt=Math.max(0,v.alt-dt*8);
-      if(Input.pop('U'))showMsg(isTouch?'直升机用 升 / 降 按钮调高度':'直升机升降改为 Y 升高 / H 降低',1.6);
       v.mesh.position.y=Math.max(groundY(v.mesh.position.x,v.mesh.position.z),fortress.topAt(v.mesh.position.x,v.mesh.position.z))+2+v.alt;
     }else{
       v.mesh.position.y=groundY(v.mesh.position.x,v.mesh.position.z);
@@ -2166,18 +2171,12 @@ function updPlayer(dt){
     if(camMode==='third')player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
     const from=playerMuzzle(aim.dir);
     if(aim.target)aim.dir.subVectors(aim.target,from).normalize();
-    fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*(wp.beam?1+.5*player.heat:1),heat:player.heat,fp:camMode==='first'},true,aim.target);
+    fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*classDamage(Game.curWeapon)*(wp.beam?1+.5*player.heat:1),heat:player.heat,fp:camMode==='first'},true,aim.target);
     AudioSys.sfx(wp.sfx);
     player.muzzle.intensity=2;setTimeout(()=>{if(player.muzzle)player.muzzle.intensity=0;},50);
     viewKick=Math.min(1,viewKick+(wp.rate>.3?1:.35));
   }
-  // 手雷（无限）：抛向瞄准的目标
-  if(Input.pop('U')){
-    const probe=player.pos.clone();probe.y+=1.5;
-    const aim=playerAim(probe,26,moveDir||new THREE.Vector3(Math.sin(player.yaw),0,Math.cos(player.yaw)));
-    fireBullet(probe,aim.dir,{dmg:80*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.4),speed:16,range:26,spread:0,explode:4.5,arc:true,throw:16,color:0x88ff44},true,aim.target);
-    AudioSys.sfx('shoot');
-  }
+
   // I 只负责互动（载具 / 城门）；H 才是医疗包，避免开门时误吃药或想回血却关了门
   if(Input.pop('I')){
     const action=interactionTarget();
@@ -2455,7 +2454,7 @@ function restartLevel(){
 /* ================= 商店 & 空投 ================= */
 const SHOP={
   weapon:Object.keys(WEAPONS).map(k=>({id:k,type:'weapon'})),
-  item:Object.keys(ITEMS).filter(k=>k!=='grenade').map(k=>({id:k,type:'item'})),
+  item:Object.keys(ITEMS).map(k=>({id:k,type:'item'})),
   vehicle:Object.keys(VEHICLES).map(k=>({id:k,type:'vehicle'})),
   squad:[{id:'soldier',type:'squad'}],
 };
@@ -2557,7 +2556,6 @@ if(it.type==='weapon'){if(!Game.weapons.includes(it.id))Game.weapons.push(it.id)
       else if(it.type==='item'){
         const c=ITEMS[it.id];
         if(it.id==='medkit')Game.items.medkit++;
-        else if(it.id==='grenade')Game.items.grenade+=c.count;
         else if(it.id==='shield'){player.shield=Math.min(150,player.shield+c.shield);updHUDItem();}
         else if(it.id==='adren'){player.buffT=Math.max(player.buffT,c.buff);}
         else if(it.id==='hpUp'){if(player.maxHp<10000){Game.hpBonus+=40;player.maxHp+=40;player.hp+=40;}updHPBar(player.bar,player.hp/player.maxHp);}
@@ -2588,7 +2586,7 @@ function updAirdrops(dt){
 function renderBuild(){
   $('buildGold').textContent=(Game.testMode?'∞':Math.floor(Game.gold))+' · 设施 '+buildings.length+'/'+MAX_BUILDINGS;
   const grid=$('buildGrid');grid.innerHTML='';
-  for(const k of Object.keys(BUILDINGS)){
+  for(const k of Object.keys(BUILDINGS).sort((a,b)=>BUILDINGS[a].price-BUILDINGS[b].price)){
     const c=BUILDINGS[k];
     const div=document.createElement('div');div.className='shopItem';div.tabIndex=0;div.setAttribute('role','button');
     div.innerHTML=`<div class="nm">${c.name}</div><div>${c.desc}<br>耐久${c.hp}${c.dmg?' 伤害'+c.dmg:''}${c.range?' 射程'+c.range:''}</div><div class="pr">💰${c.price}</div>`;
@@ -2748,7 +2746,7 @@ function applySave(d){
   const mig=migrateWeapons(d);
   Game.weapons=mig.weapons;Game.curWeapon=mig.cur;Game.weaponLv=mig.lv;Game.gold+=mig.refund;
   Game.migrationNote=mig.note;
-  Game.items=d.items||{medkit:2,grenade:3};
+  Game.items={medkit:d.items&&Number.isFinite(d.items.medkit)?d.items.medkit:2};
   Game.hpBonus=d.hpBonus||0;
   Game.magnet=!!(d.perks&&d.perks.magnet);Game.regen=!!(d.perks&&d.perks.regen);
   Game.squadOrder=SQUAD_ORDERS[d.squadOrder]?d.squadOrder:'follow';
@@ -2893,7 +2891,7 @@ function newGame(test){
   Game.hpBonus=0;
   Game.weapons=test?Object.keys(WEAPONS):[...CLASSES[Game.cls].weapons];
   Game.curWeapon=CLASSES[Game.cls].weapon;Game.weaponLv={};
-  Game.items={medkit:test?99:2,grenade:test?99:3};
+  Game.items={medkit:test?99:2};
   Game.vehiclesOwned=[];Game.squadCount=0;Game.squadOrder='follow';Game.squadGear=[];Game.opsCompleted={};operations.clear();
   Game.hive={loop:1,chapter:1,queen:1,killed:false};
   Game.magnet=false;Game.regen=false;
@@ -2948,11 +2946,11 @@ function pauseKey(fromEsc=false){
 // 冲刺冷却（HUD 一行 + 手机按钮转圈）；坐直升机时手机 冲→升、医疗→降
 function updDashUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
-  const txt=v?'':player.dashCd>0?'💨 冲刺 '+player.dashCd.toFixed(1)+'s':'💨 冲刺 就绪（'+(isTouch?'冲':keyBindings.label('K'))+'）';
+  const txt=v?'':player.dashCd>0?'💨 冲刺 '+player.dashCd.toFixed(1)+'s':'💨 冲刺 就绪（'+(isTouch?'冲刺':keyBindings.label('K'))+'）';
   const el=$('dashTxt');if(el.textContent!==txt)el.textContent=txt;
-  const k=$('vK'),h=$('vH'),kl=fly?'升':'冲',hl=fly?'降':'医疗';
+  const k=$('vK'),h=$('vH'),kl=fly?'升':'冲刺',hl=fly?'降':'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
-  const cd=v?0:Math.round(player.dashCd/DASH.cd*100)/100;
+  const cd=v?0:Math.round(player.dashCd/(CLASSES[Game.cls].dashCd||DASH.cd)*100)/100;
   if(k._cd!==cd){k._cd=cd;k.style.setProperty('--cd',cd);k.classList.toggle('cd',cd>0);}
 }
 function updHUD(dt){
@@ -3148,11 +3146,10 @@ $('touchUI').addEventListener('pointerdown',e=>{if(e.target.id==='squadChip')cyc
 stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
 Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&$('confirmPanel').classList.contains('hidden');
 Input.onPause=pauseKey;
-Input.onTouchDetected=()=>setTouchMode(true,false);
-function setTouchMode(on,remember=true){
+Input.onTouchDetected=()=>setTouchMode(true);
+function setTouchMode(on){
   isTouch=on;Input.reset();stage.classList.toggle('touch-mode',isTouch);window.dispatchEvent(new Event('resize'));
-  $('touchUI').classList.toggle('hidden',!isTouch||!['prep','battle','paused'].includes(Game.state));$('touchBtn').textContent=isTouch?'隐藏按键':'虚拟按键';
-  if(remember)try{localStorage.setItem('chongchao-touch',on?'on':'off');}catch(_e){}
+  $('touchUI').classList.toggle('hidden',!isTouch||!['prep','battle','paused'].includes(Game.state));
 }
 
 /* ================= 纯键盘界面导航 =================
@@ -3198,17 +3195,35 @@ function navMove(dir){
 }
 document.addEventListener('focusin',e=>{if(nav.root&&nav.root.contains(e.target)){const i=navItems(nav.root).indexOf(e.target);if(i>=0)nav.index=i;}});
 window.addEventListener('keydown',e=>{
-  if(Input.isPlaying()||!nav.root||(nav.root!==navRoot()))return;
+  if(bindingAction)return;
+  const root=navRoot();
+  if(!root&&place.kind&&e.code==='KeyK'){e.preventDefault();e.stopImmediatePropagation();cancelPlacement();Input.reset();return;}
+  if(!root||Input.isPlaying())return;
+  if(nav.root!==root){nav.root=root;navFocus(navDefault(root));}
   const t=document.activeElement,inSelect=t&&t.tagName==='SELECT';
-  const dirs={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
-  if(dirs[e.code]&&!(inSelect&&(e.code==='ArrowUp'||e.code==='ArrowDown'))){e.preventDefault();navMove(dirs[e.code]);return;}
+  if(t&&t.matches('input,textarea'))return;
+  const dirs={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right'};
+  if(dirs[e.code]){
+    if(inSelect&&['ArrowUp','ArrowDown'].includes(e.code))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(inSelect&&['KeyW','KeyS'].includes(e.code)){t.selectedIndex=clamp(t.selectedIndex+(e.code==='KeyW'?-1:1),0,t.options.length-1);t.dispatchEvent(new Event('change',{bubbles:true}));}
+    else navMove(dirs[e.code]);return;
+  }
+  if(e.code==='KeyK'||e.code==='Escape'){
+    e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;Input.reset();
+    if(root.id==='confirmPanel')$('confirmCancel').click();
+    else if(root.id==='menuPause')togglePause();
+    else if(!['menuMain','menuOver'].includes(root.id))closePanels();
+    return;
+  }
   if(e.code==='Tab'){
-    e.preventDefault();const items=navItems(nav.root);if(!items.length)return;
+    e.preventDefault();e.stopImmediatePropagation();const items=navItems(root);if(!items.length)return;
     const i=items.indexOf(t);navFocus(items[(i<0?0:i+(e.shiftKey?-1:1)+items.length)%items.length]);return;
   }
-  // 回车/空格：原生按钮由浏览器触发；卡片、页签、职业卡等 div 在这里触发
-  if((e.code==='Enter'||e.code==='Space'||e.code==='NumpadEnter')&&t&&nav.root.contains(t)&&!t.matches('button,a,select')&&!e.defaultPrevented){e.preventDefault();t.click();}
-});
+  if(['KeyJ','Enter','Space','NumpadEnter'].includes(e.code)&&t&&root.contains(t)&&!inSelect){
+    e.preventDefault();e.stopImmediatePropagation();if(!e.repeat){Input.reset();t.click();}
+  }
+},true);
 
 /* ================= 主循环 ================= */
 let lastT=performance.now(),saveTimer=30;
@@ -3275,11 +3290,11 @@ function syncKeyLabels(){
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','U','I','H','O','L','G','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','I','H','O','L','G','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
-  for(const a of Object.keys(KEY_ACTIONS)){const b=document.createElement('button');b.className='mbtn';b.dataset.action=a;b.textContent=KEY_ACTIONS[a][0]+'：'+keyBindings.label(a);
+  for(const a of Object.keys(KEY_ACTIONS)){if(a==='F'&&$('fullBtn').hidden)continue;const b=document.createElement('button');b.className='mbtn';b.dataset.action=a;b.textContent=KEY_ACTIONS[a][0]+'：'+keyBindings.label(a);
     b.onclick=()=>{Input.reset();bindingAction=a;$('keyStatus').textContent='正在修改「'+KEY_ACTIONS[a][0]+'」：请按新键，Esc 取消';};grid.appendChild(b);}
 }
 function setupFeaturePanels(){
@@ -3340,8 +3355,6 @@ function setupWebControls(){
   });
   document.querySelectorAll('.vbtn').forEach(el=>{el.dataset.key=el.id.slice(1);});
   let muted=false;
-  $('touchBtn').onclick=()=>setTouchMode(!isTouch);
-  $('touchBtn').textContent=isTouch?'隐藏按键':'虚拟按键';
   let quality=isTouch?'smooth':'high';try{quality=localStorage.getItem('chongchao-quality')||quality;}catch(_e){}
   const applyPixelRatio=value=>renderer.setPixelRatio(value==='high'?Math.min(stageScale*(devicePixelRatio||1),2):Math.min(stageScale,1.2));
   window.addEventListener('resize',()=>applyPixelRatio($('qualityBtn').dataset.quality||quality));
@@ -3354,7 +3367,10 @@ function setupWebControls(){
   }
   applyQuality(quality);$('qualityBtn').onclick=$('qualityBtnMenu').onclick=()=>applyQuality($('qualityBtn').dataset.quality==='high'?'smooth':'high');
   $('muteBtn').onclick=$('muteBtnMenu').onclick=()=>{muted=!muted;AudioSys.init();AudioSys.master.gain.value=muted?0:.5;$('muteBtn').textContent=muted?'静音 M':'声音 M';syncPauseOptions();};
-  $('fullBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){showMsg('全屏不可用，可继续窗口游玩',2);}};
+  const full=$('fullBtn');
+  const fullscreenAllowed=()=>!!document.documentElement.requestFullscreen&&(typeof document.fullscreenEnabled==='boolean'?document.fullscreenEnabled:document.webkitFullscreenEnabled===true);
+  full.hidden=!fullscreenAllowed();
+  full.onclick=async()=>{if(full.hidden)return;try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){full.hidden=true;}};
   window.addEventListener('keydown',e=>{
     if(e.repeat)return;
     if(e.code!=='Escape'&&(e.target.closest&&e.target.closest('select,input')||(!Input.isPlaying()&&['Enter','Space'].includes(e.code)&&e.target.closest&&e.target.closest('button,[tabindex="0"]'))))return;
@@ -3370,7 +3386,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();syncKeyLabels();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

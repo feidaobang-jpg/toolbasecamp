@@ -44,8 +44,8 @@ const url=process.env.GAME_URL||'http://127.0.0.1:8877/html/game/starship-defens
     assert.equal(await page.evaluate(()=>__gameQA.Input.firing(false)),true);
     await page.mouse.up();assert.equal(await page.evaluate(()=>__gameQA.Input.firing(false)),false);
     await page.mouse.click(640,360,{button:'right'});
-    await page.waitForFunction(()=>__gameQA.bullets.some(b=>b.arc));
-    console.log('PASS left mouse fire without pointer lock and right mouse grenade');
+    assert.equal(await page.evaluate(()=>__gameQA.bullets.some(b=>b.arc)),false);
+    console.log('PASS left mouse fire without pointer lock and right mouse has no grenade');
     await page.evaluate(()=>{const q=__gameQA;q.CombatControls.set('fire','toggle');});
     await page.keyboard.press('KeyJ');await page.keyboard.press('KeyO');
     await page.locator('#shopPanel').waitFor({state:'visible'});

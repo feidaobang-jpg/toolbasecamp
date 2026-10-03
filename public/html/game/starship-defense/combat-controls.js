@@ -48,6 +48,6 @@ export function mountCombatSettings(container,controls,onChange){
     select.value=controls.settings[key];select.onchange=()=>{controls.set(key,select.value);onChange();};
     row.appendChild(select);section.appendChild(row);
   }
-  const help=document.createElement('p');help.className='small';help.textContent='默认自动寻敌并开火，可边撤退边攻击。键鼠模式：点击画面转视角，右键投雷；纯键盘模式：镜头左转 / 右转键调整方向。手动瞄准配合第一人称更准确。菜单用方向键 / Tab 选择、回车确认、Esc 返回。触屏仍使用原有按钮。设置自动保存。';section.appendChild(help);
+  const help=document.createElement('p');help.className='small';help.textContent='默认自动寻敌并开火，可边撤退边攻击。键鼠模式：点击画面转视角；纯键盘模式：镜头左转 / 右转键调整方向。手动瞄准配合第一人称更准确。菜单用方向键 / WASD / Tab 选择、J / 回车确认、K / Esc 返回。触屏仍使用原有按钮。设置自动保存。';section.appendChild(help);
   container.appendChild(section);return section;
 }
