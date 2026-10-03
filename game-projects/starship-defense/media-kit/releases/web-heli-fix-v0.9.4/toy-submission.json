@@ -1,0 +1,24 @@
+{
+ "version": "web-heli-fix-v0.9.4",
+ "includes": [
+  "web-cleanup-v0.9.3（去掉地上装饰光锥）",
+  "web-heli-fix-v0.9.4（直升机炸毁卡山体修复）"
+ ],
+ "toy_id": 38678478981120,
+ "slug": "chongchao-qianshao",
+ "submitted_at": "2026-10-03T09:38:16.519932+08:00",
+ "user_confirmation": "用户要求“一起更新toy”，看过预览说明后选择“提交审核”",
+ "precheck": "toy_doctor.py 通过，1 条无内容指纹 WARN",
+ "public_before_submit": "mylist published；正式页为 v0.9.2",
+ "preview_checked": {
+  "url": "https://www.bilibili.com/toy/preview/preview_GXhkE7ny/index.html",
+  "result": "桌面/手机加载开局正常、无页面错误；预览 game.js 含 findFreeSpot 与脱困提示，不含装饰小锥体"
+ },
+ "submit_response": {
+  "status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_bFahrvDT/index.html"
+ },
+ "zip_sha256": "d3c46e095fc57f849f73740d236466d6db5f9184c449f6df7865293a71d6e27f",
+ "zip_bytes": 3977488,
+ "note": "审核通过前正式地址仍是 v0.9.2。"
+}

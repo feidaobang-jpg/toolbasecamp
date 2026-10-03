@@ -14,3 +14,7 @@ base_version：web-cleanup-v0.9.3（网站已上线；Toy 为 v0.9.2）。
 ## 验证
 
 after-heli.json：43 处 0 卡死；人为放进大山内部、在门洞里关门两种情况都能自动脱困。after.json 45 项、arsenal-build.json 20 项回归通过。
+
+## Toy 提交补记
+
+2026-10-03：v0.9.3+v0.9.4 一起提交。预览 preview_GXhkE7ny 实测桌面/手机正常，预览代码含脱困修复、无装饰光锥；用户确认后提交，CLI 与 mylist 均为 auditing，提交预览 https://www.bilibili.com/toy/preview/preview_bFahrvDT/index.html 。过审前正式地址仍是 v0.9.2。
