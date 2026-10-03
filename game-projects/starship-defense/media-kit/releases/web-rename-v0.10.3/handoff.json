@@ -1,0 +1,33 @@
+{
+  "version": "web-rename-v0.10.3",
+  "name": "虫潮围城",
+  "previous_name": "虫潮前哨：守卫基地",
+  "created_at": "2026-10-03T17:47:16.275678+00:00",
+  "changes": [
+    "游戏菜单和网页标题、旧入口、网站列表及Toy名称统一更名",
+    "原ID、slug、存档命名空间和游戏运行脚本保持不变"
+  ],
+  "validation": {
+    "website_title": true,
+    "website_locale": true,
+    "legacy_entry": true,
+    "desktop_preview_starts": true,
+    "phone_preview_rotates_and_starts": true,
+    "utf8": true,
+    "toy_doctor": "passed with existing contenthash warning"
+  },
+  "cover": "沿用原实机封面：仅名称更新，玩法和画面未变",
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_fpUIzMNQ/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_dz6To3RE/index.html",
+    "submitted_at": "2026-10-03T17:47:16.275678+00:00",
+    "zip_sha256": "59ac76353abcf4d01a973a384c7e44f1d3ac75348aa2f5bd76c56cb7cfc1c06b"
+  },
+  "website": {
+    "status": "verified_live",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "commit": "6c926979"
+  }
+}
