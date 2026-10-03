@@ -1,0 +1,37 @@
+{
+  "version": "web-squad-tasks-v0.10.5",
+  "name": "虫潮围城",
+  "created_at": "2026-10-03T18:10:53.420717+00:00",
+  "commit": "5555a56a",
+  "changes": [
+    "移除队令按钮、G键与出击模式；暂停菜单保留跟随我/守基地",
+    "近距离索敌、分散目标、限制追击，虫潮近基地时自动回防",
+    "守卫岗位避让城门，过门后自动关门",
+    "副本跟随不覆盖长期选择，旧存档迁移，兼容无手雷的新云存档"
+  ],
+  "validation": {
+    "squad_tasks": "passed on isolated committed-source build",
+    "mobile_classes": "passed",
+    "pc_controls": "12 passed",
+    "squad_ops": "25 passed; see squad-ops.json",
+    "toy_preview_desktop": "passed",
+    "toy_preview_phone": "passed; emulated phone, not physical device",
+    "utf8": "passed",
+    "toy_doctor": "passed; existing contenthash warning"
+  },
+  "website": {
+    "status": "verified_live",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "bundle_sha256": "642151e419fa2c784060a849d0b98b6d2895bf07ba84379b260ae05c3435b258"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_u5LMHf6E/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_32Ggc1SN/index.html",
+    "zip_sha256": "4ba44c3ad3c254e165f4db95f72144ac7fb2d2aa3d21934062339dc2a191dadd",
+    "submitted_at": "2026-10-03T18:10:53.420717+00:00",
+    "archive": "dist/toy/chongchao-qianshao/releases/web-squad-tasks-v0.10.5.zip"
+  },
+  "build_scope": "Committed dark-only assets plus squad changes; concurrent unfinished enemy-art edits excluded."
+}
