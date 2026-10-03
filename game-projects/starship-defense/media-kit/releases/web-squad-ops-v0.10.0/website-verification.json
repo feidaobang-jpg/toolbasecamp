@@ -1,0 +1,14 @@
+{
+  "commit": "d4d4131b",
+  "checked_at": "2026-10-03T16:22:49.731388+00:00",
+  "files": {
+    "index.html": true,
+    "boot.js": true,
+    "game.compat.js": true,
+    "game.js": true,
+    "save-validation.js": true,
+    "key-bindings.js": true,
+    "operations.js": true
+  },
+  "normalization": "Line endings and deployment cache query versions only; compared to the released commit, not concurrent worktree edits."
+}
