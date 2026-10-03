@@ -1,0 +1,26 @@
+{
+  "commit": "af5668d6",
+  "checked_at": "2026-10-03T18:02:53.121269+00:00",
+  "website": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "tests": {
+    "dark_only_local": "passed: six geometry fingerprints, animations, corpse cleanup, legacy URL/storage and pause options",
+    "dark_only_live": "passed",
+    "pc_controls": "12 passed",
+    "mobile_classes": "6 groups passed",
+    "keyboard": "19 passed"
+  },
+  "resources": {
+    "index.html": {
+      "matches_commit_ignoring_cache_versions": true,
+      "sha256": "7aef0836ddd90c7aced8a3576790e2ec739545e006b6644d2b16ded310caf4be"
+    },
+    "game.compat.js": {
+      "matches_commit_ignoring_cache_versions": true,
+      "sha256": "6ab732d4d18757de5f5b1eff178cc42c3e69e1d1d5e9a23fb6d2db777f6dd6d0"
+    },
+    "combat-controls.css": {
+      "matches_commit_ignoring_cache_versions": true,
+      "sha256": "f73a3425305011beb029dd09850cc25d57afabd6b2a6514bffb1ef399f614bba"
+    }
+  }
+}
