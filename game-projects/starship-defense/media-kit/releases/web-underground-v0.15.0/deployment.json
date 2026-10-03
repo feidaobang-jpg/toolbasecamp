@@ -1,0 +1,14 @@
+{
+  "index.html": {
+    "matches": true,
+    "local_sha256": "e5917bbec44e2bca39c038ee40b4ad556da6cd90bc6d7dd49ec432fcbfdab533",
+    "remote_sha256": "5dea4a3cf11abaf16163357e3b033a1189c9064ed3db3a81cf99471aa8f064fb"
+  },
+  "game.compat.js": {
+    "matches": true,
+    "local_sha256": "89befb06be2410b4a05761c6b0bb926901eeb74f6f692fbab66796d89004c957",
+    "remote_sha256": "89befb06be2410b4a05761c6b0bb926901eeb74f6f692fbab66796d89004c957"
+  },
+  "checked_at": "2026-10-03T22:20:28.906039+00:00",
+  "html_normalization": "忽略部署添加/改写的 v 缓存查询和换行格式"
+}
