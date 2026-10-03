@@ -211,5 +211,15 @@
     "prompt_or_params": "TUNNEL_LINES 中心线坐标、HALF=4、ARCH_H=5.7、STEP=2",
     "processing": "隧道交汇处自动开天井；碰撞为圆柱实体与顶棚实体，供行走、子弹、镜头与飞虫高度共用",
     "usage": "原创；玩法思路参考作者自己的裂隙防线（D:/project/gpt/worlds/breachline）洞网与母巢设计，未搬运其资产"
+  },
+  {
+    "id": "friendly-space-fauna-v011",
+    "source_type": "procedural",
+    "runtime_file": "../../../public/html/game/starship-defense/enemy-visuals.js",
+    "tool": "Three.js r152 shared vertex-colour geometry",
+    "parameters": "Ten species silhouettes; short boots, two eyes, no teeth or spider limbs; species palette and rank topology in enemy-visuals.js. Animated body, two feet groups and optional two wings.",
+    "processing": "Spheres, cylinders and small badge plates merged per animated part; geometries cached by species/rank/flight.",
+    "placeholder": false,
+    "usage": "Original game models; no external images or downloads."
   }
 ]

@@ -1,11 +1,11 @@
 import * as THREE from './vendor/three.module.js';
 import {UnitVisuals} from './unit-visuals.js';
+import {createEnemy} from './enemy-visuals.js';
 
 // Deep night battlefield look requested by players (closest to the first released
-// version): armoured troopers, glossy arachnid bugs with glowing eyes, steel base.
+// version): armoured troopers, rounded space fauna, steel base.
 // Merged-part units: body + two limb meshes (+ wings) per unit.
 const SOLDIER_COLORS=new Map([[0x3a7bd5,0x3f74c4],[0xd58a3a,0xb8743a],[0x3ad57b,0x3f9a63],[0xd5d53a,0xb9a23c],[0xd53a8a,0xa8445f],[0x3ad5d5,0x3b9aa8],[0xff8833,0xc4682e],[0x4488ff,0x3f74c4]]);
-const BUG_COLORS=[0xd2692e,0x8cc63a,0x8a5fb8,0x3fb7c9,0xe0402a,0xa8b336,0x3f6fe6,0x5d5f86,0x8a8f96,0xb3245c];
 const shade=(c,k)=>new THREE.Color(c).multiplyScalar(k).getHex();
 const mix=(a,b,t)=>new THREE.Color(a).lerp(new THREE.Color(b),t).getHex();
 
@@ -82,48 +82,9 @@ export class DarkVisuals extends UnitVisuals {
     return root;
   }
   bug(scale=1,kind='mob',fly=false,species=0){
-    const key='dbug'+kind+(fly?'fly':'')+species;
-    if(!this.cache.has(key)){
-      const C=BUG_COLORS[species]||BUG_COLORS[0],CD=shade(C,.55),CL=mix(C,0xffe6c0,.25),U=0x2a2026,bone=0xe6d6ae,eye=0xff2a14,gold=0xf2c14e;
-      const big=kind==='boss'||kind==='queen',b=[],legs=[],wings=[],pivot=.9;
-      this.part(b,'sphere',C,[0,.98,-.6],[.7,.56,.82]);
-      for(let i=0;i<4;i++)this.part(b,'sphere',CD,[0,1.25+(i===0?.04:0)-i*.03,-.18-i*.28],[.6-i*.06,.17,.15]);
-      this.part(b,'sphere',U,[0,.78,-.55],[.6,.38,.72]);
-      this.part(b,'sphere',C,[0,.98,.22],[.46,.4,.46]);this.part(b,'sphere',CL,[0,1.18,.22],[.36,.18,.36]);
-      this.part(b,'sphere',C,[0,.94,.78],[.36,.31,.36]);this.part(b,'sphere',CD,[0,1.12,.72],[.26,.12,.26]);
-      for(const s of [-1,1]){
-        this.part(b,'sphere',eye,[s*.15,1.02,1.08],[.075,.075,.05],[0,0,0],1);
-        this.part(b,'sphere',eye,[s*.27,.97,1.0],[.045,.045,.035],[0,0,0],1);
-        this.part(b,'cone',bone,[s*.16,.78,1.17],[.07*(big?1.4:1),.42*(big?1.3:1),.07*(big?1.4:1)],[Math.PI/2.1,0,-s*.45]);
-      }
-      [[0,1.48,-.3],[0,1.4,-.75],[0,1.26,-1.1]].forEach(p=>this.part(b,'cone',bone,p,[.08,.3,.08],[-.5,0,0]));
-      this.part(b,'cone',CD,[0,.9,-1.42],[.12,.4,.12],[-Math.PI/2,0,0]);
-      if(kind==='elite'||kind==='miniboss')for(let i=-1;i<=1;i++)this.part(b,'cone',gold,[i*.2,1.36-Math.abs(i)*.06,.6],[.07,.32,.07],[-.3,0,-i*.4],.25);
-      if(kind==='miniboss')for(const s of [-1,1])this.part(b,'sphere',CD,[s*.42,1.12,.2],[.22,.16,.3]);
-      if(big){
-        for(let i=-2;i<=2;i++)this.part(b,'cone',gold,[i*.13,1.28-Math.abs(i)*.05,.86],[.06,.42-Math.abs(i)*.08,.06],[-.25,0,-i*.3],.35);
-        for(const s of [-1,1])this.part(b,'cylinder',0xff7a2a,[s*.3,1.33,-.5],[.07,.08,.07],[0,0,0],1);
-      }
-      if(kind==='queen'){
-        this.part(b,'sphere',mix(C,0xff6080,.4),[0,1.15,-1.75],[1.0,.82,1.25],[0,0,0],.35);
-        for(let i=0;i<5;i++)this.part(b,'sphere',0xff9a5a,[Math.sin(i*1.3)*.5,1.5+Math.cos(i*2.1)*.2,-1.4-i*.22],[.12,.12,.12],[0,0,0],1);
-      }
-      for(const s of [-1,1]){
-        const l=[];
-        for(const [z,splay] of [[.5,.5],[.1,.05],[-.3,-.45]]){
-          const hipP=[s*.42,.95-pivot,z],knee=[s*1.0,1.28-pivot,z+splay*.5],foot=[s*1.32,.03-pivot,z+splay];
-          this.segment(l,CD,hipP,knee,.075);this.segment(l,CD,knee,foot,.055);this.part(l,'cone',bone,[foot[0],foot[1]+.05,foot[2]],[.05,.14,.05],[Math.PI,0,0]);
-        }
-        legs.push(this.merged(l));
-        if(fly){const w=[];this.part(w,'sphere',0x9fe8ff,[s*.95,0,-.1],[.95,.05,.42],[0,s*.3,0],.4);wings.push(this.merged(w));}
-      }
-      this.cache.set(key,{body:this.merged(b),legs,wings});
-    }
-    const data=this.cache.get(key),root=this.root('bug',data.body,data.legs,1.75);
-    root.userData.toy.feet.forEach(m=>m.position.y=.9);
-    if(data.wings.length){root.userData.toy.wings=data.wings.map(g=>{const m=this.mesh(g);m.position.set(0,1.35,.05);root.add(m);return m;});}
-    root.scale.setScalar(scale);root.userData.toy.fly=fly;return root;
+    return createEnemy(this,scale,kind,fly,species);
   }
+
   mech(){
     const key='dmech';
     if(!this.cache.has(key)){
@@ -151,9 +112,20 @@ export class DarkVisuals extends UnitVisuals {
   }
   animate(root,dt,state,camera){
     super.animate(root,dt,state,camera);
-    const a=root&&root.userData.toy;if(!a||!a.wings)return;
-    const flap=Math.sin(a.time*30)*.55;a.wings[0].rotation.z=.25+flap;a.wings[1].rotation.z=-.25-flap;
+    const a=root&&root.userData.toy,e=root&&root.userData.enemy;if(!a||!e)return;
+    // Soft bob and short steps replace the skittering spider gait.
+    const moving=state==='Walk'||state==='Run',t=a.time;
+    if(e.motion==='hover'||a.fly){
+      a.body.position.y=.06+Math.sin(t*3)*.055;
+      a.feet.forEach(m=>m.rotation.x=.12);
+    }else{
+      const speed=e.motion==='march'?6:9;
+      a.feet.forEach((m,i)=>m.rotation.x=moving?Math.sin(t*speed+i*Math.PI)*.22:0);
+      a.body.rotation.z=moving?Math.sin(t*speed)*.026:0;
+    }
+    if(a.wings){const flap=Math.sin(t*9)*.18;a.wings.forEach((m,i)=>{m.rotation.z=(i?-1:1)*(.12+flap);m.castShadow=a.body.castShadow;});}
   }
+
   restyle(root){
     const colors=new Map([[0xf6dfae,0x7a8796],[0x53b4ae,0x3e8f96],[0xf5b957,0xc8953f],[0x8899aa,0x6d7b8c],[0x667788,0x4b5866],[0x88aacc,0x7f98b5],[0x77879a,0x5f6d7d],[0x5c6b7d,0x46525f],[0x7c8aa0,0x6a788a],[0x9aa8ba,0x7d8ea3],[0x2a5d3a,0x24442f],[0x222222,0x1c2228],[0x111111,0x161b20]]);
     root.traverse(o=>{if(!o.isMesh||!(o.material&&o.material.isMeshLambertMaterial)||o.material.vertexColors||o.userData.keepMaterial)return;

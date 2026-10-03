@@ -534,16 +534,16 @@ const ELITES={
 /* 敌人曲线整体放缓：原第6章分裂虫子代满伤害、血量曲线远超武器成长，导致“根本过不了”。
    tip 为推荐打法，显示在章节开场。 */
 const CHAPTERS=[
-  {name:'虫族小兵',color:0xcc6633,boss:'巨颚虫王',bossColor:0xff5522,mob:{hp:30,dmg:8,speed:5,gold:12},legs:4,bs:['charge'],tip:'任何武器都好用，先攒钱买枪'},
-  {name:'酸液虫',color:0x88cc22,boss:'毒雾之母',bossColor:0xaaff22,mob:{hp:45,dmg:9,speed:5.4,gold:15},legs:4,ranged:true,bs:['barrage'],tip:'会远程吐酸：躲到侧翼巨石后，或用激光远程先手'},
-  {name:'甲壳战虫',color:0x8866aa,boss:'装甲暴君',bossColor:0xbb66ff,mob:{hp:75,dmg:11,speed:4.6,gold:19},legs:6,bs:['charge'],tip:'皮厚但慢：霰弹枪和榴弹炮效率高'},
-  {name:'迅猛飞虫',color:0x44bbcc,boss:'风暴翼后',bossColor:0x33eeff,mob:{hp:60,dmg:11,speed:7.5,gold:22},legs:2,fly:true,bs:['barrage'],tip:'会飞越城墙：造防空塔，激光远程打飞虫'},
-  {name:'炎爆虫',color:0xdd4422,boss:'熔岩巨兽',bossColor:0xff3300,mob:{hp:95,dmg:13,speed:5,gold:26},legs:4,explodeOnDie:true,bs:['charge','barrage'],tip:'死亡会爆炸：保持距离，别贴脸'},
-  {name:'寄生蛛虫',color:0x99aa33,boss:'万蛛之巢',bossColor:0xccdd11,mob:{hp:85,dmg:12,speed:6,gold:29},legs:8,split:true,bs:['summon','charge'],tip:'死后分裂小蛛：火焰/榴弹范围伤害一起清'},
-  {name:'雷鞭虫',color:0x3366ee,boss:'雷暴主宰',bossColor:0x5588ff,mob:{hp:115,dmg:14,speed:5.8,gold:33},legs:6,ranged:true,bs:['barrage','summon'],tip:'远程电鞭：利用城墙与掩体，炮台帮忙'},
-  {name:'幽影刺虫',color:0x555577,boss:'虚空猎手',bossColor:0x8888cc,mob:{hp:110,dmg:16,speed:7.6,gold:37},legs:4,stealth:true,bs:['charge'],tip:'半透明高速：看小地图红点，激光自动锁定'},
-  {name:'钢铁巨虫',color:0x777777,boss:'泰坦碾压者',bossColor:0xaaaaaa,mob:{hp:190,dmg:18,speed:4.2,gold:42},legs:6,bs:['charge','summon'],tip:'超厚装甲：强化后的等离子炮、榴弹炮'},
-  {name:'虫族亲卫',color:0xaa2255,boss:'虫巢意志',bossColor:0xff0066,mob:{hp:175,dmg:20,speed:6.6,gold:48},legs:8,ranged:true,bs:['barrage','summon','charge'],tip:'最终章：小队+炮台+载具一起守，也可突袭虫巢削弱虫潮'},
+  {name:'圆甲虫',color:0xcc6633,boss:'金甲堡垒',bossColor:0xff5522,mob:{hp:30,dmg:8,speed:5,gold:12},legs:4,bs:['charge'],tip:'任何武器都好用，先攒钱买枪'},
+  {name:'芽囊虫',color:0x88cc22,boss:'翡翠飞翼',bossColor:0xaaff22,mob:{hp:45,dmg:9,speed:5.4,gold:15},legs:4,ranged:true,bs:['barrage'],tip:'会远程吐酸：躲到侧翼巨石后，或用激光远程先手'},
+  {name:'卷甲虫',color:0x8866aa,boss:'紫晶巨卫',bossColor:0xbb66ff,mob:{hp:75,dmg:11,speed:4.6,gold:19},legs:6,bs:['charge'],tip:'皮厚但慢：霰弹枪和榴弹炮效率高'},
+  {name:'月翼飞蛾',color:0x44bbcc,boss:'月翼领航者',bossColor:0x33eeff,mob:{hp:60,dmg:11,speed:7.5,gold:22},legs:2,fly:true,bs:['barrage'],tip:'会飞越城墙：造防空塔，激光远程打飞虫'},
+  {name:'熔火团子',color:0xdd4422,boss:'熔火飞翼',bossColor:0xff3300,mob:{hp:95,dmg:13,speed:5,gold:26},legs:4,explodeOnDie:true,bs:['charge','barrage'],tip:'死亡会爆炸：保持距离，别贴脸'},
+  {name:'三叶团虫',color:0x99aa33,boss:'三叶巨卫',bossColor:0xccdd11,mob:{hp:85,dmg:12,speed:6,gold:29},legs:8,split:true,bs:['summon','charge'],tip:'打败后分裂成小团虫：火焰/榴弹范围伤害一起清'},
+  {name:'电角鳐虫',color:0x3366ee,boss:'雷光堡垒',bossColor:0x5588ff,mob:{hp:115,dmg:14,speed:5.8,gold:33},legs:6,ranged:true,bs:['barrage','summon'],tip:'远程电鞭：利用城墙与掩体，炮台帮忙'},
+  {name:'彗星滑翔虫',color:0x555577,boss:'彗星飞翼',bossColor:0x8888cc,mob:{hp:110,dmg:16,speed:7.6,gold:37},legs:4,stealth:true,bs:['charge'],tip:'半透明高速：看小地图红点，激光自动锁定'},
+  {name:'铁背龟虫',color:0x777777,boss:'钢甲巨卫',bossColor:0xaaaaaa,mob:{hp:190,dmg:18,speed:4.2,gold:42},legs:6,bs:['charge','summon'],tip:'超厚装甲：强化后的等离子炮、榴弹炮'},
+  {name:'星冠卫兵',color:0xaa2255,boss:'星冠堡垒',bossColor:0xff0066,mob:{hp:175,dmg:20,speed:6.6,gold:48},legs:8,ranged:true,bs:['barrage','summon','charge'],tip:'最终章：小队+炮台+载具一起守，也可突袭虫巢削弱虫潮'},
 ];
 
 /* ================= 模型构建（纯代码几何体） ================= */
@@ -1236,9 +1236,7 @@ function spawnMonster(kind,x,z,opts={}){
     if(!found){x=0;z=clamp(z,15,130);}
   }
   const species=CHAPTERS.indexOf(ch);
-  const mesh=kind==='mob'
-    ? (visualAssets?visuals.bug(scale,opts.elite?'elite':'mob',fly,species):makeBug(color,ch.legs,scale,fly))
-    : (visualAssets?visuals.bug(scale,kind,fly,species):createArachnidBugModel({color,legs:ch.legs,fly,scale,boss:kind==='boss'||kind==='queen'}));
+  const mesh=visuals.bug(scale,kind==='mob'&&opts.elite?'elite':kind,fly,species);
   const y=fly?flyHeight(x,z):groundY(x,z);
   mesh.position.set(x,y,z);
   scene.add(mesh);
@@ -1272,7 +1270,7 @@ function spawnMonster(kind,x,z,opts={}){
   }
   mo.bar=makeHPBar(kind==='mob'?(mo.elite?2.4:1.8):(kind==='boss'||kind==='queen'?5:4.5),mo.elite?'#ff0':(kind==='mob'?'#f66':'#f0f'));
   mo.bar.position.y=(fly?2.2:1.6)*scale*(mo.scaleMul||1)+.6;mesh.add(mo.bar);updHPBar(mo.bar,1);
-  if(mesh.userData.worlds){mo.bar.scale.divideScalar(mesh.scale.x);mo.bar.position.y=mesh.userData.visualHeight+.5/mesh.scale.y;}
+  if(mesh.userData.worlds){mo.bar.scale.divideScalar(mesh.scale.x);mo.bar.position.y=mesh.userData.visualHeight+.5/mesh.scale.y;if(mo.gem)mo.gem.position.y=mesh.userData.visualHeight+.9/mesh.scale.y;}
   if(mo.stealth)mesh.traverse(o=>{if(o.material&&!o.material.transparent){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;}});
   monsters.push(mo);
   if(mo.elite&&!opts.quiet)showMsg('⚠ 精英虫「'+affixNames(mo.elite)+'」出现！',1.6);

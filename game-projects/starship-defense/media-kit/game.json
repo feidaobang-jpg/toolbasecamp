@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-squad-tasks-v0.10.5",
+  "current_version": "web-friendly-enemies-v0.11.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -36,7 +36,7 @@
     "mode": "asset-and-presentation-merge",
     "full_native_port": false
   },
-  "visual_style": "Dark battlefield only; bright toy art and theme switching removed in v0.10.4",
+  "visual_style": "Dark battlefield with rounded enamel space fauna: 10 distinct regular silhouettes, shield-and-pennant elites, gauntlet captains, three boss bodies and petal mothership queen.",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "auditing",
@@ -48,6 +48,6 @@
   "controls": "电脑默认自动攻击，可选纯键盘/手动瞄准/射击方式。菜单：方向键或WASD选择，J/回车确认，K/Esc返回。手机自动横屏和显示触控，空白处拖动视角；K/空格冲刺，I互动，H医疗；无手雷。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-squad-tasks-v0.10.5/handoff.json",
+  "handoff": "releases/web-friendly-enemies-v0.11.0/handoff.json",
   "squad_controls": "暂停菜单选择跟随我/守基地；无队令按钮和G键；虫潮近基地自动回防，副本自动跟随。"
 }

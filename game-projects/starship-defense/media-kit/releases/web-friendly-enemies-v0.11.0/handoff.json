@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-friendly-enemies-v0.11.0",
+  "base_version": "web-squad-tasks-v0.10.5",
+  "created_at": "2026-10-04T02:12:52.417710+08:00",
+  "build": {
+    "id": "bbe870e92709",
+    "commit": "c367f6ccc030e4822a27e35e5b989e77f427e2c2",
+    "dirty": true,
+    "fingerprint": "bbe870e9270912fb4b674e737b21eb1c20cf1cae6da11b0f756a474646180518",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "enemy-art",
+      "description": "十种圆润普通虫及分级精英/首领外观",
+      "status": "implemented",
+      "evidence_ids": [
+        "enemy-lineup",
+        "battle-desktop",
+        "battle-rotation"
+      ]
+    },
+    {
+      "id": "mobile-enemy-art",
+      "description": "移动端同一套共享几何与血条定位",
+      "status": "implemented",
+      "evidence_ids": [
+        "battle-phone"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "enemy-art",
+      "feature_ids": [
+        "enemy-art",
+        "mobile-enemy-art"
+      ],
+      "before": "十种虫共用蛛形躯体，主要靠颜色和尺寸区分，长腿、红色多眼和獠牙产生恐怖感。",
+      "after": "十个普通轮廓、金旗精英、拳甲小 Boss、巨龟/飞翼/直立大 Boss、星瓣母皇。",
+      "validation": "50 variants, gameplay lifecycle, desktop/phone emulation and continuous rotation verified",
+      "evidence_ids": [
+        "enemy-lineup",
+        "battle-desktop",
+        "battle-phone",
+        "battle-rotation"
+      ]
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "enemy-lineup",
+      "file": "releases/web-friendly-enemies-v0.11.0/captures/enemy-lineup.png",
+      "sha256": "929be4f631d44a00af3ac0103fbaf0fd187e54fd36186ab1b756eaf9f901e045",
+      "kind": "screenshot",
+      "version": "web-friendly-enemies-v0.11.0",
+      "build_id": "bbe870e92709",
+      "capture_mode": "realtime-automation",
+      "description": "当前运行模型的独立布光陈列，等比摆放以对比轮廓；不是战斗截图",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "battle-desktop",
+      "file": "releases/web-friendly-enemies-v0.11.0/captures/battle-desktop.png",
+      "sha256": "27738a418a458ba5972373ec9055b3144a9b91a441aa8bb1d8554e7b8a77cca0",
+      "kind": "screenshot",
+      "version": "web-friendly-enemies-v0.11.0",
+      "build_id": "bbe870e92709",
+      "capture_mode": "realtime-automation",
+      "description": "48 混合敌人与四名队友的桌面战斗，QA 生成并提高血量",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "battle-phone",
+      "file": "releases/web-friendly-enemies-v0.11.0/captures/battle-phone.png",
+      "sha256": "89a1dfbcc31db41e3a983e342f6fe2083aff1363b41626c3ca8a20c52a8d1037",
+      "kind": "screenshot",
+      "version": "web-friendly-enemies-v0.11.0",
+      "build_id": "bbe870e92709",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏自动横屏布局；触屏视口模拟",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "cover-candidate",
+      "file": "releases/web-friendly-enemies-v0.11.0/captures/cover-candidate.jpg",
+      "sha256": "7823309320ebef2cbc389e88b4c2b538ce4074a086349261fe31c3cf01f93518",
+      "kind": "screenshot",
+      "version": "web-friendly-enemies-v0.11.0",
+      "build_id": "bbe870e92709",
+      "capture_mode": "realtime-automation",
+      "description": "游戏原生战场，QA 排布敌人、镜头并隐藏 HUD；512 方形封面",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "battle-rotation",
+      "file": "releases/web-friendly-enemies-v0.11.0/captures/battle-rotation.webm",
+      "sha256": "3171fb0d6db8bddaa47b2399578c00055870cd841bc7c168b778fd903d1a33a6",
+      "kind": "video",
+      "version": "web-friendly-enemies-v0.11.0",
+      "build_id": "bbe870e92709",
+      "capture_mode": "realtime-automation",
+      "description": "48 混合敌人提高血量，四名队友；真实按键射击与四种视角旋转。按 6 fps 连续取帧复核，未听审。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 15.6,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 2,
+          "out_seconds": 14.8,
+          "description": "圆润虫群、各级首领、飞行、隐身和受击反馈；四视角切换旋转"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "evidence": "verification.json",
+      "method": "Headless Edge on NVIDIA RTX 4060 Ti; 48 mixed bugs + 4 squad, actual keyboard strafing/rotation, all four camera modes; quality smooth/high; recording separate.",
+      "result": "50 variants have finite shared geometry, bounds and lifecycle pass; no runtime errors.",
+      "visual_review": "Reviewed lineup, battlefield, phone and sequential 6 fps video sheets. No obvious flicker/missing faces in sampled motion.",
+      "not_tested": [
+        "Physical BBK S9",
+        "Physical phone GPU",
+        "Audio listening review"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录屏无音轨，视频制作时需补游戏声音；未做真机 S9 测试。"
+    ]
+  },
+  "cover_decision": "Update website square thumbnail: old cover explicitly depicted spiders that no longer exist. New capture uses actual battlefield models with HUD hidden; existing Toy cover unchanged pending platform acceptance."
+}
