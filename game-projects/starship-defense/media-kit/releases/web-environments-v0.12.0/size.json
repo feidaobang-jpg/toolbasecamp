@@ -1,0 +1,8 @@
+{
+  "baseline_commit": "cbf3b91314c80ef330aa2c8349fc446a1afaa729",
+  "before_bundle_bytes": 829075,
+  "after_bundle_bytes": 836243,
+  "before_gzip_bytes": 231327,
+  "after_gzip_bytes": 234070,
+  "extra_asset_downloads": 0
+}

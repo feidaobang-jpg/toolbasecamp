@@ -5,6 +5,7 @@ import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=fb97';
 import {validateNormalSave} from './save-validation.js?v=fb9';
 import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
+import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefieldGround} from './battlefield-environments.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance} from './hive-world.js?v=fb9';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations} from './operations.js';
@@ -361,38 +362,16 @@ function tooSteep(x,z){
   const sz=Math.abs(terrainH(x,z+d)-terrainH(x,z-d));
   return Math.max(sx,sz)/(2*d)>.75;
 }
-function segDist(x,z,ax,az,bx,bz){const vx=bx-ax,vz=bz-az,t=clamp(((x-ax)*vx+(z-az)*vz)/(vx*vx+vz*vz),0,1);return Math.hypot(x-ax-vx*t,z-az-vz*t);}
-(function buildGround(){
+const groundMesh=(()=>{
   const g=new THREE.PlaneGeometry(WORLD.maxX-WORLD.minX,WORLD.maxZ-WORLD.minZ,150,270);
   g.rotateX(-Math.PI/2);
   const pos=g.attributes.position;
-  const colors=[];
-  const c1=new THREE.Color(PAL.ground[0]),c2=new THREE.Color(PAL.ground[1]),c3=new THREE.Color(PAL.ground[2]);
-  const laneC=new THREE.Color(PAL.lane),plateauC=new THREE.Color(PAL.plateau),ridgeC=new THREE.Color(PAL.ridge),tunnelC=new THREE.Color(PAL.tunnelFloor),creepC=new THREE.Color(PAL.hive.shell);
-  // Worn bug trails from each tunnel mouth towards the central approach.
-  const trails=MOUTHS.map(m=>[m.out.x,m.out.z,m.x*.25,70]);
-  for(let i=0;i<pos.count;i++){
-    const x=pos.getX(i),z=pos.getZ(i)+ (WORLD.maxZ+WORLD.minZ)/2;
-    const h=terrainH(x,z);
-    pos.setY(i,h);
-    const t=clamp(h/8,0,1),n=Math.sin(x*.31+z*.17)*Math.cos(z*.23-x*.11);
-    const c=c1.clone().lerp(c2,Math.abs(Math.sin(x*.045)*Math.cos(z*.05))*.7).lerp(c3,t*.5);
-    c.multiplyScalar(.9+n*.1);
-    const lane=(1-smooth01((Math.abs(x-Math.sin(z*.022)*3)-6)/5))*(1-smooth01((z-250)/30));
-    if(z>-18)c.lerp(laneC,lane*.85);
-    let trail=0;for(const[ax,az,bx,bz] of trails)trail=Math.max(trail,1-smooth01((segDist(x,z,ax,az,bx,bz)-2.5)/4));
-    if(trail>0)c.lerp(laneC,trail*.55);
-    if(z<-13&&Math.abs(x)<35)c.lerp(plateauC,.85);
-    if(h>1&&h<4.8&&z<2&&Math.abs(x)>12)c.lerp(ridgeC,.7);
-    const td=tunnelDistance(x,z);if(td<6.5)c.lerp(tunnelC,1-smooth01((td-4.2)/2.3));
-    const hd=Math.hypot(x-HIVE.x,z-HIVE.z-4);if(hd<HIVE.r+8)c.lerp(creepC,(1-smooth01((hd-HIVE.r+6)/12))*.8);
-    colors.push(c.r,c.g,c.b);
-  }
-  g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  for(let i=0;i<pos.count;i++)pos.setY(i,terrainH(pos.getX(i),pos.getZ(i)+(WORLD.maxZ+WORLD.minZ)/2));
   g.computeVertexNormals();
   const m=new THREE.Mesh(g,new THREE.MeshLambertMaterial({vertexColors:true}));
   m.position.z=(WORLD.maxZ+WORLD.minZ)/2;
-  m.receiveShadow=true;scene.add(m);
+  paintBattlefieldGround(m,environmentForChapter(1));
+  m.receiveShadow=true;scene.add(m);return m;
 })();
 /* 装饰：侧翼掩体巨石（挡敌方酸液与走位，不挡我方子弹）与无碰撞碎石。
    （原来地上的 260 个发光小锥体纯装饰、无玩法作用，v0.9.3 按用户要求去掉）
@@ -409,7 +388,7 @@ function clearOfFeatures(x,z,pad=0){
     const y=terrainH(x,z);rockColliders.push({x,z,r:s*.85,bottom:y-s*.5,top:y+s*1.1,cover:true});
     dummy.position.set(x,y+s*.35,z);dummy.rotation.set(0,i*1.9,0);dummy.scale.set(s,s*.8,s);dummy.updateMatrix();rocks.setMatrixAt(i,dummy.matrix);
   });
-  rocks.castShadow=rocks.receiveShadow=true;scene.add(rocks);
+  rocks.name='battlefield-cover';rocks.castShadow=rocks.receiveShadow=true;scene.add(rocks);
   const scatter=(geometry,material,count,minS,maxS,shadow)=>{
     const batch=new THREE.InstancedMesh(geometry,material,count);
     for(let i=0;i<count;i++){
@@ -417,7 +396,7 @@ function clearOfFeatures(x,z,pad=0){
       const s=rand(minS,maxS);
       dummy.position.set(x,terrainH(x,z)+s*.2,z);dummy.rotation.set(0,rand(0,TAU),rand(-.3,.3));dummy.scale.set(s,s*rand(.6,1.4),s);dummy.updateMatrix();batch.setMatrixAt(i,dummy.matrix);
     }
-    batch.castShadow=shadow;batch.receiveShadow=true;scene.add(batch);
+    batch.name='battlefield-pebbles';batch.castShadow=shadow;batch.receiveShadow=true;scene.add(batch);
   };
   scatter(new THREE.DodecahedronGeometry(1,0),new THREE.MeshLambertMaterial({color:PAL.pebble,flatShading:true}),140,.15,.45,false);
 })();
@@ -2265,6 +2244,9 @@ function openSandbox(){
 }
 function setupSandbox(){
   const fill=(id,entries)=>{$(id).replaceChildren(...entries.map(([value,text])=>{const o=document.createElement('option');o.value=value;o.textContent=text;return o;}));};
+  fill('testEnvironment',Object.values(ENVIRONMENTS).map(p=>[p.id,p.name+' · '+p.chapters]));
+  $('testEnvironment').value=battlefield.current.id;
+  $('test-environment').onclick=()=>{if(!Game.testMode)return;setBattlefieldEnvironment(ENVIRONMENTS[$('testEnvironment').value]);closePanels();showMsg('进入 '+battlefield.current.name,2);};
   fill('testSpecies',CHAPTERS.map((c,i)=>[i,`${c.name} / ${c.boss}`]));
   fill('testAffix',Object.entries(ELITES).map(([k,c])=>[k,c.name]));
   for(const [id,data] of [['testWeapon',WEAPONS],['testItem',ITEMS],['testVehicle',VEHICLES],['testBuilding',BUILDINGS]])fill(id,Object.entries(data).map(([k,c])=>[k,c.name]));
@@ -2326,6 +2308,7 @@ function collectAllGold(){
   return sum;
 }
 function startPrep(){
+  setBattlefieldEnvironment(environmentForChapter(Game.chapter));
   Game.state='prep';
   Object.assign(Game.wave,{total:0,spawned:0,killed:0,done:false,transition:0});
   const collected=collectAllGold();
@@ -3255,6 +3238,7 @@ function loop(){
     placementInput();
     updPlayer(dt);if(player.dead)$('interactHint').classList.add('hidden');
     visuals.update(dt);
+    battlefield.update(dt,player.pos,visuals.quality);
     updMonsters(dt);
     updBullets(dt);
     updBuildings(dt);
@@ -3317,6 +3301,13 @@ function setupFeaturePanels(){
   },true);
 }
 const visuals=new DarkVisuals(THREE,scene,PAL);
+let battlefield;
+function setBattlefieldEnvironment(profile){
+  if(!battlefield)return;
+  battlefield.apply(profile);
+  $('environmentName').textContent=profile.name+' · '+profile.chapters;
+  $('testEnvironment').value=profile.id;
+}
 // 不用顶层 await：步步高学习平板等老内核（Chrome<89）遇到它会整份脚本解析失败，画面卡在“正在部署”。
 window.__ccBooted=true; // 同步初始化已跑完：index.html 的启动看门狗据此不再提示
 visuals.load().then(()=>{visualAssets=true;}).catch(error=>{
@@ -3327,6 +3318,8 @@ visuals.load().then(()=>{visualAssets=true;}).catch(error=>{
 function bootGame(){
 if(visualAssets)$('assetLoad').remove();
 visuals.environment(terrainH);
+battlefield=new BattlefieldEnvironment(scene,groundMesh,visuals.environmentObjects);
+setBattlefieldEnvironment(environmentForChapter(Game.chapter));
 player.reset('gunner');
 player.mesh.visible=false; // 菜单时隐藏
 const _origNewGame=newGame;
@@ -3391,7 +3384,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();syncKeyLabels();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

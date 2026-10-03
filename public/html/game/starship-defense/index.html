@@ -192,6 +192,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   <div id="hud" class="overlay hidden">
     <div id="hudTop">
       <div id="statLine">周目1 第1章 第1关</div>
+      <div id="environmentName" style="color:#9fc8db;font-size:10px;letter-spacing:.5px">暮色荒漠 · 第 1–3 章</div>
       <div>❤ 生命 <span id="hpTxt"></span></div>
       <div id="hpBarWrap"><div id="hpBar"></div></div>
       <div>🏰 基地 <span id="baseTxt"></span></div>
@@ -343,6 +344,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
       <label>道具<select id="testItem"></select></label><button class="mbtn" data-test-claim="item" data-select="testItem">立即使用 / 领取</button>
       <label>载具<select id="testVehicle"></select></label><button class="mbtn" data-test-claim="vehicle" data-select="testVehicle">立即驾驶</button>
       <label>防线<select id="testBuilding"></select></label><button class="mbtn" data-test-claim="building" data-select="testBuilding">前方建造</button>
+      <label>战场环境<select id="testEnvironment"></select></label><button id="test-environment" class="mbtn">前往此环境</button>
       <label>虫族<select id="testSpecies"></select></label><label>级别<select id="testRank"><option value="mob">普通虫</option><option value="elite">精英虫</option><option value="miniboss">小首领</option><option value="boss">大首领</option></select></label>
       <label>精英词缀<select id="testAffix"></select></label><label>召唤数量<select id="testCount"><option>1</option><option>6</option><option>12</option></select></label>
     </div>
@@ -376,6 +378,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=fauna110" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=biomes1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

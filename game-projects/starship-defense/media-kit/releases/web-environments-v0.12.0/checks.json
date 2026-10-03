@@ -1,0 +1,79 @@
+{
+  "chapterMapping": [
+    "desert",
+    "desert",
+    "desert",
+    "frost",
+    "frost",
+    "frost",
+    "hive",
+    "hive",
+    "hive",
+    "hive"
+  ],
+  "transition": {
+    "next": {
+      "chapter": 4,
+      "environment": "frost"
+    },
+    "loaded": "hive",
+    "chapter": 7
+  },
+  "invariants": {
+    "sameTerrain": true,
+    "sameCollision": true,
+    "sameLights": true,
+    "noSameBiomeRebuild": true,
+    "groups": 1
+  },
+  "operation": {
+    "during": "frost",
+    "after": "frost"
+  },
+  "scene": [
+    {
+      "id": "desert",
+      "memory": {
+        "geometries": 205,
+        "textures": 2
+      },
+      "drawCalls": 60,
+      "triangles": 143765
+    },
+    {
+      "id": "frost",
+      "memory": {
+        "geometries": 205,
+        "textures": 2
+      },
+      "drawCalls": 70,
+      "triangles": 144947
+    },
+    {
+      "id": "hive",
+      "memory": {
+        "geometries": 207,
+        "textures": 2
+      },
+      "drawCalls": 62,
+      "triangles": 148433
+    }
+  ],
+  "memory": [
+    {
+      "geometries": 207,
+      "textures": 2
+    },
+    {
+      "geometries": 207,
+      "textures": 2
+    },
+    {
+      "geometries": 207,
+      "textures": 2
+    }
+  ],
+  "phone": "touch selector, HUD and controls passed",
+  "errors": [],
+  "checkedAt": "2026-10-03T18:21:54.105Z"
+}

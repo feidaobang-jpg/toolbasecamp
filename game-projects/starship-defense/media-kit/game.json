@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-friendly-enemies-v0.11.0",
+  "current_version": "web-environments-v0.12.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -49,5 +49,11 @@
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
   "handoff": "releases/web-friendly-enemies-v0.11.0/handoff.json",
-  "squad_controls": "暂停菜单选择跟随我/守基地；无队令按钮和G键；虫潮近基地自动回防，副本自动跟随。"
+  "squad_controls": "暂停菜单选择跟随我/守基地；无队令按钮和G键；虫潮近基地自动回防，副本自动跟随。",
+  "environments": {
+    "desert": "第1–3章：暮色荒漠",
+    "frost": "第4–6章：极光冰原",
+    "hive": "第7–10章：虫巢边境",
+    "preview": "自由测试 → 测试台 → 战场环境"
+  }
 }

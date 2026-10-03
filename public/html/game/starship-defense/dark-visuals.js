@@ -155,7 +155,7 @@ export class DarkVisuals extends UnitVisuals {
     }));sky.renderOrder=-2;scene.add(sky);
     const sp=[],sc=[];for(let i=0;i<1100;i++){const a=Math.random()*Math.PI*2,e=Math.random()*1.35+.08,r=760;sp.push(Math.cos(a)*Math.cos(e)*r,Math.sin(e)*r,Math.sin(a)*Math.cos(e)*r);const k=.6+Math.random()*.4;sc.push(k*.8,k*.9,k);}
     const starG=new THREE.BufferGeometry();starG.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));starG.setAttribute('color',new THREE.Float32BufferAttribute(sc,3));
-    scene.add(new THREE.Points(starG,new THREE.PointsMaterial({vertexColors:true,size:1.7,sizeAttenuation:false,fog:false,depthWrite:false})));
+    const stars=new THREE.Points(starG,new THREE.PointsMaterial({vertexColors:true,size:1.7,sizeAttenuation:false,fog:false,depthWrite:false}));scene.add(stars);
     const planet=new THREE.Group();
     planet.add(new THREE.Mesh(new THREE.SphereGeometry(70,32,24),new THREE.MeshBasicMaterial({color:0xd8c9a0,fog:false})));
     const shadow=new THREE.Mesh(new THREE.SphereGeometry(70.6,32,24,0,Math.PI),new THREE.MeshBasicMaterial({color:0x1b2233,transparent:true,opacity:.55,fog:false,depthWrite:false}));shadow.rotation.y=-.9;planet.add(shadow);
@@ -168,7 +168,8 @@ export class DarkVisuals extends UnitVisuals {
     const peaks=[];
     for(let i=0;i<38;i++){const z=-90+i*12;peaks.push([[-158-Math.sin(i*2.3)*10,0,z],[16,26+Math.sin(i*1.7)*12,15]],[[158+Math.cos(i*1.9)*10,0,z],[16,24+Math.cos(i*1.3)*12,15]]);}
     for(let i=0;i<28;i++){const x=-160+i*12;peaks.push([[x,0,372+Math.sin(i*1.4)*10],[16,30+Math.sin(i*2.1)*14,15]]);}
-    batch(new THREE.DodecahedronGeometry(1,0),new THREE.MeshLambertMaterial({color:0x232c38,flatShading:true}),peaks);
+    const peakMesh=batch(new THREE.DodecahedronGeometry(1,0),new THREE.MeshLambertMaterial({color:0x232c38,flatShading:true}),peaks);
+    this.environmentObjects={sky,stars,planet,moon,peaks:peakMesh};
     const lamps=[];for(let i=0;i<10;i++){const z=-12+i*2.2;lamps.push([[-6.6,terrainH(-6.6,z)+.2,z],[.16,.16,.16]],[[6.6,terrainH(6.6,z)+.2,z],[.16,.16,.16]]);}
     batch(this.sphere,new THREE.MeshBasicMaterial({color:0xffc35a}),lamps);
     const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const ctx=canvas.getContext('2d'),g=ctx.createRadialGradient(32,32,2,32,32,31);g.addColorStop(0,'rgba(0,0,0,.45)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,64,64);
