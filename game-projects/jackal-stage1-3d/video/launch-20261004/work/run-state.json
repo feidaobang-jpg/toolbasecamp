@@ -1,0 +1,13 @@
+{
+  "mode": "overview",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "video_uploaded": false,
+  "toy_sync_status": "published",
+  "files_complete": false,
+  "game_id": "jackal-stage1-3d",
+  "next_step": "用户确认使用Playwright录制后，补拍当前版本正常实战并完成配音剪辑",
+  "status": "awaiting_capture_method",
+  "version": "v0.3"
+}

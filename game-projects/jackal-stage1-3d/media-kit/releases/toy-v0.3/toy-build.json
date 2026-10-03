@@ -13,5 +13,6 @@
     "js/THREE-LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
     "js/game.min.js": "ceead723be82336f87e15b365ccfe7b679b25797641d267720cc9036095d5071"
   },
-  "status": "built_not_submitted"
+  "status": "published",
+  "sync_record": "sync.json"
 }

@@ -1,10 +1,10 @@
 {
   "game_id": "jackal-stage1-3d",
   "name": {
-    "zh": "赤色要塞 · 第一关 3D 重置版",
-    "en": "Jackal · Stage 1 (FC-style 3D remake, fan-made)"
+    "zh": "赤色要塞 · 3D 重置版",
+    "en": "Jackal · 3D remake (fan-made)"
   },
-  "one_liner": "FC 赤色要塞第一关的 3D 网页重置版：驾驶武装吉普炸开营房救出俘虏、送上直升机，最后击败 4 辆蓝色坦克；默认 3 格护甲、营房掉修理包，也可切回原作的「经典一发」，电脑键盘与手机触屏都能玩。",
+  "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "current_version": "v0.3",
   "handoff": "releases/v0.2.1/handoff.json",
@@ -28,7 +28,7 @@
   "controls": {
     "keyboard": {
       "W/A/S/D（或方向键）": "8 向移动（按相机水平轴映射）",
-      "J（或空格）": "机枪：固定朝画面上方（北）射击，按住连发",
+      "J（或空格）": "机枪，按住连发；默认跟随车头，可在菜单切换为固定朝前",
       "K": "手雷 / 火箭：朝车头方向发射",
       "C": "循环切换视角：斜俯视 → 俯视 → 近景斜视",
       "Esc / Enter": "暂停；菜单里 Enter 确认",
@@ -87,15 +87,15 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": null,
+    "review_status": "published",
+    "verified_at": "2026-10-04T06:17:39.366900+08:00",
     "video_bindings": [],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_BHp27AWO/index.html",
-    "preview_verified_at": "2026-10-03",
-    "title": "赤色要塞 3D：第一关",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_ImWV63wl/index.html",
+    "preview_verified_at": "2026-10-04",
+    "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "2026-10-03 用户确认后提交审核；审核通过前正式地址不可用，通过后在 public/js/config.js 卡片补 toyUrl",
-    "submitted_at": "2026-10-03",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_e5DQEME9/index.html"
+    "note": "2026-10-04同步网站v0.3后已通过审核；正式页已核验双关卡、机枪跟随车头和标准3格护甲菜单。原试玩地址及公开可见性保持。新介绍视频尚未完成。",
+    "submitted_at": "2026-10-04T06:13:05.9760977+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_pwcPp1Um/index.html"
   }
 }
