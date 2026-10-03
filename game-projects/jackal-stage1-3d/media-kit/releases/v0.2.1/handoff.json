@@ -5,17 +5,17 @@
  "base_version": "v0.2",
  "created_at": "2026-10-03T10:20:00+08:00",
  "build": {
-  "id": "v0.2.1-f6c705c35b98",
+  "id": "v0.2.1-7474041ebaac",
   "commit": null,
   "dirty": true,
-  "fingerprint": "sha256:f6c705c35b9848c25eea18044f9f5990a1adecd3dd0f8b1a24f1dfd1232644e6",
+  "fingerprint": "sha256:7474041ebaac92200ec3742c5483ca2d932fea3ed2cee9a146eda754c5f94686",
   "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
   "fingerprint_method": "sha256 over sorted \"relative_path\\nfile_sha256\\n\" of every file in public/html/game/jackal-stage1-3d/",
   "files": {
    "css/style.css": "f4bf65cb0c5441fcc20b58bc80864873717747a63c6ff8d074fe3bcec9a41301",
-   "index.html": "91f264b010434c6e76a869b4022edb2c79c7848a500973c434e84c2e026ce803",
+   "index.html": "b0bb212958e169468faf9b131e9e3373d70b461cf574457d70caf740f8dbe061",
    "js/THREE-LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
-   "js/game.min.js": "8349e02e8a8f0639b839fd9dcb02dbb14297636e37be91fbdd62ad22553a577f"
+   "js/game.min.js": "a9e457b2cbb7a6a89fac973570c1eb794179c073bb4b7f7184213087adfbc8ad"
   },
   "git": "toolbasecamp 仓库；本清单随首个提交入库，提交号见 git log -- game-projects/jackal-stage1-3d",
   "source": "game-projects/jackal-stage1-3d/src（esbuild 0.28.2 打包为 js/game.min.js）",
@@ -30,10 +30,11 @@
   },
   {
    "id": "F-DESKTOP",
-   "description": "电脑纯键盘游玩，开局显示键位提示、隐藏触屏按键",
+   "description": "电脑纯键盘游玩，开局显示键位提示、隐藏触屏按键；跟随实际输入在键盘 / 触屏之间切换",
    "status": "implemented",
    "evidence_ids": [
-    "M02"
+    "M02",
+    "M04"
    ]
   },
   {
@@ -62,13 +63,14 @@
     "F-MOBILE"
    ],
    "before": "触屏判断 = pointer:coarse 或 navigator.maxTouchPoints>0；本机 Edge 报 maxTouchPoints=10，电脑上开局显示摇杆、隐藏键位提示",
-   "after": "触屏判断只认 pointer:coarse / any-pointer:coarse；电脑显示键位提示，手机与带触屏的笔记本照旧显示触屏按键",
-   "user_visible": "部分 Windows 台式机不再被当成手机",
+   "after": "不再按硬件猜：开局看主指针（pointer: coarse 才是触屏），之后跟随玩家实际输入——真摸屏幕（pointerType=touch）切到触屏按键，按键盘切回键位提示；菜单「触屏按键」的显示 / 隐藏仍然优先",
+   "user_visible": "电脑上（包括带触控输入的 Windows 电脑）开局显示键位提示；手机照旧显示摇杆；触屏笔记本一摸屏幕就出摇杆，按键盘又收起",
    "evidence_ids": [
     "M01",
-    "M02"
+    "M02",
+    "M04"
    ],
-   "verification": "desktop.js 80/80（修复前同环境 78/80，其中一项就是这个问题）；mobile.js 33/33（设备模拟 hasTouch）"
+   "verification": "desktop.js 80/80（修复前同环境 78/80，其中一项就是这个问题）；mobile.js 33/33（设备模拟 hasTouch，真显卡与 SwiftShader 各一次）；另用 hasTouch 桌面上下文验证 Enter→键盘、触摸→触屏、按 W→键盘 三次切换；用户本机内置浏览器（any-pointer: coarse 为真）实测开局为键位提示（M04）"
   }
  ],
  "bugs": [
@@ -78,16 +80,17 @@
    "repro": "Windows 11 + Edge（navigator.maxTouchPoints 报 10、没有触屏指针）打开游戏，Enter 开始",
    "observed": "电脑上显示摇杆和 J/K/C 触屏按键，底部键位提示被隐藏；窗口竖窄时还会被旋转成横屏布局",
    "comedy_angle": "",
-   "cause": "src/main.js 的 coarsePointer() 把 maxTouchPoints>0 也当触屏；部分台式机的触控 / 手写板驱动会报非 0",
+   "cause": "src/main.js 的 coarsePointer() 把 maxTouchPoints>0 也当触屏。用户本机报 maxTouchPoints=10，真实浏览器里 any-pointer: coarse 也为真（有触控类输入），但主指针是鼠标。第一次只改成认 any-pointer: coarse，无头 Edge 下通过（无头环境 any-pointer 为假），放到内置浏览器的 Toy 预览里仍显示触屏说明，才发现还要看实际输入",
    "status": "fixed",
-   "fix": "只看 pointer:coarse 与 any-pointer:coarse",
+   "fix": "开局按主指针 pointer: coarse 决定，之后按最近一次实际输入（触摸 / 键盘）切换",
    "before_media_ids": [
     "M01"
    ],
    "after_media_ids": [
-    "M02"
+    "M02",
+    "M04"
    ],
-   "retest": "同机同浏览器复拍 M02；desktop.js「桌面显示键位提示、隐藏触屏按键」通过"
+   "retest": "同机同浏览器复拍 M02；用户本机内置浏览器实测 M04；desktop.js「桌面显示键位提示、隐藏触屏按键」通过"
   }
  ],
  "media": [
@@ -111,14 +114,31 @@
   {
    "id": "M02",
    "file": "releases/v0.2.1/captures/s-v021-desktop-touch-after.png",
-   "sha256": "3aa08e9fa02e1d4c03eed46c1ad58810e73f80abd023fe6ea4e3ef87cecd3552",
+   "sha256": "446aadae4650e68b4a0609a3a2cdaacf8c7acf6fecfa805a8b85257d024ff8fc",
    "kind": "screenshot",
    "version": "v0.2.1",
-   "build_id": "v0.2.1-f6c705c35b98",
+   "build_id": "v0.2.1-7474041ebaac",
    "capture_mode": "realtime-automation",
    "description": "修复后（v0.2.1）：同一台机器、同一浏览器和种子，开局约 6 秒。触屏按键隐藏，底部显示 WASD/J/K/C/Esc 键位提示，右上角多出「C 斜俯视」视角按钮。实时运行，未用测试捷径。",
    "width": 1280,
    "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "M04",
+   "file": "releases/v0.2.1/captures/s-v021-desktop-realpc-after.jpg",
+   "sha256": "9fa37a8d757b3b3a61c3573594d8dc046639e8692e85e8e3e050ea3026a8291d",
+   "kind": "screenshot",
+   "version": "v0.2.1",
+   "build_id": "v0.2.1-7474041ebaac",
+   "capture_mode": "realtime-user-input",
+   "description": "修复后在用户本机真实输入环境（Claude 桌面应用内置浏览器，Chromium 152，pointer: fine 但 any-pointer: coarse、maxTouchPoints=10，800×600）：键盘 Enter 开始，开局约 5 秒；底部显示键位提示，没有摇杆。吉普停在原地被步兵打到 1 格护甲冒烟（没有操作躲避），不是 Bug。浏览器面板截图（JPEG）。",
+   "width": 800,
+   "height": 600,
    "duration_seconds": null,
    "audio": "none",
    "visual_review": "pass",
@@ -131,7 +151,7 @@
    "sha256": "d66115a17536485ee7c7ac32f6985623ceda2a95f6eaac3e8d5c3bd447327c34",
    "kind": "screenshot",
    "version": "v0.2.1",
-   "build_id": "v0.2.1-f6c705c35b98",
+   "build_id": "v0.2.1-7474041ebaac",
    "capture_mode": "offline-render",
    "description": "Toy 封面（1200×900，4:3）：近景斜视，营地大门被火箭炸开，两侧炮台、营房、帐篷和步兵，吉普在门前。手动时钟逐帧推进（与 qa/cover.js 同一流程，视口改为 1200×900），用了测试钩子传送到门前、短暂无敌、车上放 3 名俘虏；隐藏 HUD。",
    "width": 1200,

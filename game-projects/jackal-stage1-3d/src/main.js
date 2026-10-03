@@ -139,6 +139,7 @@ function show(name) {
 const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > *')) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
+  setInputMode('key');
   if (!current) {
     if (e.code === 'KeyF' && uiMode === 'game' && !e.repeat) { toggleFullscreen(); e.preventDefault(); }
     return;
@@ -167,7 +168,7 @@ document.addEventListener('keydown', (e) => {
       break;
   }
 });
-document.addEventListener('pointerdown', () => A.unlock(), { capture: true });
+document.addEventListener('pointerdown', (e) => { A.unlock(); if (e.pointerType === 'touch') setInputMode('touch'); }, { capture: true });
 document.addEventListener('click', (e) => {
   const t = e.target.closest('[data-act],[data-opt]');
   if (!t) return;
@@ -266,8 +267,11 @@ probe.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-eve
 document.body.appendChild(probe);
 const display = { rotated: false, W: 0, H: 0, vw: 0, vh: 0, dpr: 1, touchOn: false };
 const toLocal = (cx, cy) => display.rotated ? { x: cy, y: display.vw - cx } : { x: cx, y: cy };
-// 只认触屏指针：部分 Windows 台式机（触控/手写板驱动）maxTouchPoints 报 10 却没有触屏，按它判断会把电脑当手机
-const coarsePointer = () => !!window.matchMedia && (window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(any-pointer: coarse)').matches);
+// 触屏还是键盘：开局看主指针（手机/平板是 coarse），之后跟随玩家实际用的输入——真摸屏幕切触屏按键，按键盘切回键位提示。
+// 不按硬件猜：部分 Windows 电脑报 10 个触点、any-pointer 也是 coarse，但主指针是鼠标，按它判断会把电脑当手机
+let inputMode = window.matchMedia && window.matchMedia('(pointer: coarse)').matches ? 'touch' : 'key';
+const coarsePointer = () => inputMode === 'touch';
+function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
 let lastOrient = null;
 function layout() {
   const vw = window.innerWidth, vh = window.innerHeight, coarse = coarsePointer();

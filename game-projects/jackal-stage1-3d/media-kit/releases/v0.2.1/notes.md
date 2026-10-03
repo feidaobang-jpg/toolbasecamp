@@ -15,7 +15,9 @@
 
 在本机用 Edge 跑原来的桌面验收，78/80。其中一项是真问题：本机 Edge 的 `navigator.maxTouchPoints` 报 10，但根本没有触屏（`pointer` / `any-pointer` 都不是 coarse）。游戏原来把 `maxTouchPoints>0` 当成触屏设备，结果在电脑上开局显示摇杆和 J/K/C 触屏按键，键位提示被藏掉（截图 M01）。原来的验收都在云端 Linux 无头 Chromium 上跑，那里 `maxTouchPoints` 是 0，所以一直没暴露。
 
-修复：触屏判断只认 `pointer: coarse` 或 `any-pointer: coarse`（M02 为修复后同机复拍）。手机、平板和带触屏的笔记本照旧显示触屏按键；判断错了玩家还能在菜单「触屏按键」里手动切。
+第一次修复只改成认 `pointer: coarse` 或 `any-pointer: coarse`，无头 Edge 下验收通过。但把 Toy 预览放进 Claude 桌面应用的内置浏览器（用的是本机真实输入设备）一看，菜单仍是触屏说明：这台电脑在真实浏览器里 `any-pointer: coarse` 也为真（有触控类输入），只是主指针是鼠标。无头浏览器看不到真实输入设备，所以第一次修复漏了。
+
+最终修复：不再按硬件猜。开局只看主指针（`pointer: coarse` 才算触屏），之后跟随玩家实际用的输入——真的摸屏幕（`pointerType === 'touch'`）就切到触屏按键，按键盘就切回键位提示。菜单「触屏按键」选「显示 / 隐藏」时仍以玩家选择为准。M02 是无头 Edge 复拍，M04 是本机内置浏览器实测（开局显示键位提示，没有摇杆）。
 
 另一项失败是验收脚本自己的问题：断言里写死了旧的 `../index.html`，已改成新地址。
 
