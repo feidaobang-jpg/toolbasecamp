@@ -1,9 +1,133 @@
-// Original oscillator phrases, not a transcription of Nintendo music.
-export class GameAudio{
-  constructor(){this.enabled=true;this.ctx=null;this.next=0;this.beat=0;}
-  async unlock(){if(!this.ctx){this.ctx=new AudioContext();this.gain=this.ctx.createGain();this.gain.gain.value=.16;this.gain.connect(this.ctx.destination);this.capture=this.ctx.createMediaStreamDestination();this.gain.connect(this.capture);}await this.ctx.resume();}
-  tone(freq,duration=.1,type='square',delay=0,volume=.25){if(!this.enabled||!this.ctx)return;const t=this.ctx.currentTime+delay,o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.001,t+duration);o.connect(g);g.connect(this.gain);o.start(t);o.stop(t+duration);}
-  effect(name){const notes={jump:[350,600],coin:[1050,1500],bump:[160],break:[110,80],stomp:[200,100],grow:[262,330,392,523],hurt:[180,90],die:[440,392,330,220],win:[523,659,784,1047],checkpoint:[600,800],spawn:[300,400,500]};(notes[name]||[]).forEach((f,i)=>this.tone(f,.16,'square',i*.075,.4));}
-  tick(playing){if(!this.ctx)return;if(!playing){this.next=this.ctx.currentTime;return;}if(this.ctx.currentTime>=this.next){const notes=[392,0,523,659,587,0,440,523,330,392,494,0,440,659,587,523];const f=notes[this.beat%notes.length];if(f)this.tone(f,.12,'triangle',0,.16);if(this.beat%4===0)this.tone([131,165,147,196][Math.floor(this.beat/4)%4],.22,'triangle',0,.25);this.beat++;this.next=this.ctx.currentTime+.23;}}
-  mute(){this.enabled=!this.enabled;if(this.gain)this.gain.gain.value=this.enabled?.16:0;return this.enabled;}
+// 音乐与音效：用 Web Audio 方波/三角波按原作旋律重新合成（音符依据公开的乐谱转写，
+// 无敌星音乐为近似还原），不加载任何原始音频文件。
+const NOTE = {};
+(() => {
+  const names = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
+  for (let o = 1; o <= 8; o++) names.forEach((n, i) => { NOTE[n + o] = 440 * Math.pow(2, (o - 4) + (i - 9) / 12); });
+})();
+const S = 0.108;                       // 一个十六分音符（原作约 0.1 秒）
+const T = S * 4 / 3;                   // 三连音
+function seq(str, d = S) { return str.trim().split(/\s+/).map(n => [n === '-' ? 0 : NOTE[n], d]); }
+const tri = (a, b, c) => [[NOTE[a], T], [NOTE[b], T], [NOTE[c], T]];
+
+const OVER_INTRO = seq('E5 E5 - E5 - C5 E5 - G5 - - - G4 - - -');
+const OVER_A = [...seq('C5 - - G4 - - E4 - - A4 - B4 - As4 A4 -'), ...tri('G4', 'E5', 'G5'), ...seq('A5 - F5 G5 - E5 - C5 D5 B4 - -')];
+const OVER_B = [...seq('- - G5 Fs5 F5 Ds5 - E5 - Gs4 A4 C5 - A4 C5 D5'), ...seq('- - G5 Fs5 F5 Ds5 - E5 - C6 - C6 C6 - - -'),
+  ...seq('- - G5 Fs5 F5 Ds5 - E5 - Gs4 A4 C5 - A4 C5 D5'), ...seq('- - Ds5 - - D5 - - C5 - - - - - - -')];
+const OVER_C = [...seq('C5 C5 - C5 - C5 D5 - E5 C5 - A4 G4 - - -'), ...seq('C5 C5 - C5 - C5 D5 E5 - - - - - - - -'), ...seq('C5 C5 - C5 - C5 D5 - E5 C5 - A4 G4 - - -')];
+const OVERWORLD = { intro: OVER_INTRO, loop: [...OVER_A, ...OVER_A, ...OVER_B, ...OVER_B, ...OVER_C, ...OVER_INTRO, ...OVER_A, ...OVER_A], wave: 'square', vol: 0.16 };
+const U1 = seq('C4 C5 A3 A4 As3 As4'), U2 = seq('F3 F4 D3 D4 Ds3 Ds4');
+const UNDER_LOOP = [...U1, [0, S * 2], [0, S * 4], ...U1, [0, S * 2], [0, S * 4], ...U2, [0, S * 2], [0, S * 4], ...U2, [0, S * 2], [0, S * 2],
+  ...seq('Ds4 Cs4 D4', S * 0.72), ...seq('Cs4 Ds4 Ds4 Gs3 G3 Cs4', S * 2), ...seq('C4 Fs4 F4 E3 As4 A4', S * 0.72), ...seq('Gs4 Ds4 B3 As3 A3 Gs3', S * 1.3), [0, S * 4], [0, S * 4], [0, S * 4]];
+const UNDERGROUND = { intro: [], loop: UNDER_LOOP, wave: 'square', vol: 0.18 };
+const STAR = { intro: [], loop: [...seq('C5 C5 C5 - C5 - C5 D5 C5 - C5 - C5 D5 C5 -'), ...seq('B4 B4 B4 - B4 - B4 C5 B4 - B4 - B4 C5 B4 -')], wave: 'square', vol: 0.15 };
+const TRACKS = { overworld: OVERWORLD, underground: UNDERGROUND, star: STAR };
+
+const JINGLES = {
+  die: [[NOTE.B4, 0.13], [NOTE.F5, 0.13], [0, 0.13], [NOTE.F5, 0.13], [NOTE.F5, 0.18], [NOTE.E5, 0.18], [NOTE.D5, 0.18], [NOTE.C5, 0.14], [NOTE.E4, 0.14], [0, 0.14], [NOTE.E4, 0.14], [NOTE.C4, 0.4]],
+  gameover: [[NOTE.C5, 0.28], [0, 0.1], [NOTE.G4, 0.28], [0, 0.1], [NOTE.E4, 0.3], [NOTE.A4, 0.18], [NOTE.B4, 0.18], [NOTE.A4, 0.18], [NOTE.Gs4, 0.2], [NOTE.As4, 0.2], [NOTE.Gs4, 0.2], [NOTE.G4, 0.14], [NOTE.F4, 0.14], [NOTE.G4, 0.6]],
+  clear: [...tri('G3', 'C4', 'E4'), ...tri('G4', 'C5', 'E5'), [NOTE.G5, T * 3], [NOTE.E5, T * 3], ...tri('Gs3', 'C4', 'Ds4'), ...tri('Gs4', 'C5', 'Ds5'), [NOTE.Gs5, T * 3], [NOTE.Ds5, T * 3],
+    ...tri('As3', 'D4', 'F4'), ...tri('As4', 'D5', 'F5'), [NOTE.As5, T * 3], [NOTE.As5, T], [NOTE.As5, T], [NOTE.As5, T], [NOTE.C6, T * 6]],
+  hurry: seq('E6 - E6 - Fs6 - Fs6 - G6 - G6 - - - - -', 0.07),
+  oneup: seq('E6 G6 E7 C7 D7 G7', 0.09),
+  sprout: seq('G4 B4 D5 G5 B5 D6', 0.035)
+};
+
+export class GameAudio {
+  constructor() {
+    this.ctx = null; this.volume = 0.7; this.track = null; this.hurry = false; this.paused = false;
+    this.next = 0; this.idx = 0; this.inIntro = false; this.jingleUntil = 0;
+  }
+  unlock() {
+    try {
+      if (!this.ctx) {
+        const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+        this.ctx = new AC();
+        this.master = this.ctx.createGain(); this.master.connect(this.ctx.destination);
+        this.musicBus = this.ctx.createGain(); this.musicBus.connect(this.master);
+        this.sfxBus = this.ctx.createGain(); this.sfxBus.connect(this.master);
+        this.applyVolume();
+      }
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+    } catch (e) { /* 无音频设备时静默 */ }
+  }
+  setVolume(v) { this.volume = Math.max(0, Math.min(1, v)); this.applyVolume(); }
+  applyVolume() { if (this.master) this.master.gain.value = this.volume * 0.55; }
+  tone(freq, start, dur, wave = 'square', vol = 0.2, bus = this.sfxBus, slideTo = 0) {
+    if (!this.ctx || !freq) return;
+    const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = wave; o.frequency.setValueAtTime(freq, start);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, start + dur);
+    g.gain.setValueAtTime(0.0001, start); g.gain.exponentialRampToValueAtTime(vol, start + 0.006);
+    g.gain.setValueAtTime(vol, start + Math.max(0.01, dur * 0.7)); g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    o.connect(g); g.connect(bus); o.start(start); o.stop(start + dur + 0.02);
+  }
+  noise(start, dur, vol = 0.2, cutoff = 1800) {
+    if (!this.ctx) return;
+    const n = Math.floor(this.ctx.sampleRate * dur), buf = this.ctx.createBuffer(1, n, this.ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const src = this.ctx.createBufferSource(), f = this.ctx.createBiquadFilter(), g = this.ctx.createGain();
+    f.type = 'lowpass'; f.frequency.value = cutoff; g.gain.value = vol;
+    src.buffer = buf; src.connect(f); f.connect(g); g.connect(this.sfxBus); src.start(start);
+  }
+  playSeq(notes, wave = 'square', vol = 0.2, bus = this.sfxBus) {
+    if (!this.ctx) return 0;
+    let t = this.ctx.currentTime + 0.02;
+    for (const [f, d] of notes) { this.tone(f, t, d * 0.92, wave, vol, bus); t += d; }
+    return t;
+  }
+  sfx(name, opt) {
+    if (!this.ctx || this.volume <= 0) return;
+    const t = this.ctx.currentTime + 0.005;
+    switch (name) {
+      case 'jump': opt && opt.big ? this.tone(170, t, 0.2, 'square', 0.16, this.sfxBus, 480) : this.tone(240, t, 0.17, 'square', 0.16, this.sfxBus, 640); break;
+      case 'coin': this.tone(NOTE.B5, t, 0.07, 'square', 0.16); this.tone(NOTE.E6, t + 0.07, 0.38, 'square', 0.15); break;
+      case 'bump': this.tone(150, t, 0.09, 'square', 0.22, this.sfxBus, 80); break;
+      case 'break': this.noise(t, 0.28, 0.35, 1400); this.tone(120, t, 0.18, 'triangle', 0.3, this.sfxBus, 50); break;
+      case 'stomp': this.tone(520, t, 0.06, 'square', 0.18, this.sfxBus, 200); this.tone(300, t + 0.06, 0.08, 'square', 0.16, this.sfxBus, 120); break;
+      case 'kick': this.tone(1000, t, 0.06, 'square', 0.15, this.sfxBus, 300); break;
+      case 'fireball': this.tone(1500, t, 0.06, 'square', 0.12, this.sfxBus, 400); break;
+      case 'pop': this.noise(t, 0.08, 0.15, 3000); break;
+      case 'sprout': this.playSeq(JINGLES.sprout, 'square', 0.13); break;
+      case 'grow': case 'fire': case 'powerup': {
+        const notes = seq('C5 G4 C5 E5 G5 C6 G5 C6 E6 G6 C7', 0.045); this.playSeq(notes, 'square', 0.14); break;
+      }
+      case 'oneup': this.playSeq(JINGLES.oneup, 'square', 0.15); break;
+      case 'pipe': case 'shrink': case 'hurt': for (let i = 0; i < 3; i++) this.tone(i % 2 ? 110 : 150, t + i * 0.12, 0.09, 'square', 0.22); break;
+      case 'flagpole': this.tone(1300, t, 1.0, 'square', 0.12, this.sfxBus, 180); break;
+      case 'tick': this.tone(1046, t, 0.025, 'square', 0.08); break;
+      case 'firework': this.noise(t, 0.45, 0.4, 900); break;
+      case 'checkpoint': this.tone(NOTE.C6, t, 0.08, 'square', 0.1); this.tone(NOTE.G6, t + 0.08, 0.16, 'square', 0.1); break;
+      case 'revive': this.tone(300, t, 0.05, 'square', 0.06); break;
+    }
+  }
+  jingle(name) {
+    if (!this.ctx) return;
+    this.stopMusic();
+    const end = this.playSeq(JINGLES[name], 'square', 0.17, this.musicBus);
+    this.jingleUntil = end;
+  }
+  music(name, restart = true) {
+    if (!restart && this.track === TRACKS[name]) return;
+    this.track = name ? TRACKS[name] : null; this.trackName = name;
+    this.idx = 0; this.inIntro = !!(this.track && this.track.intro.length);
+    this.next = this.ctx ? Math.max(this.ctx.currentTime + 0.05, this.jingleUntil) : 0;
+  }
+  stopMusic() { this.track = null; this.trackName = null; }
+  setHurry(h) { this.hurry = h; }
+  pause(p) { this.paused = p; if (this.musicBus && this.ctx) this.musicBus.gain.setTargetAtTime(p ? 0.0001 : 1, this.ctx.currentTime, 0.03); }
+  tick() {
+    if (!this.ctx || !this.track || this.paused) { if (this.ctx) this.next = Math.max(this.next, this.ctx.currentTime); return; }
+    const tr = this.track, speed = this.hurry ? 1.45 : 1;
+    if (this.next < this.ctx.currentTime - 0.3) this.next = this.ctx.currentTime + 0.02;
+    while (this.next < this.ctx.currentTime + 0.25) {
+      const list = this.inIntro ? tr.intro : tr.loop;
+      const [f, d] = list[this.idx];
+      const dur = d / speed;
+      if (f) { this.tone(f, this.next, dur * 0.85, tr.wave, tr.vol, this.musicBus); this.tone(f / 2, this.next, dur * 0.8, 'triangle', tr.vol * 0.55, this.musicBus); }
+      this.next += dur;
+      this.idx++;
+      if (this.idx >= list.length) { this.idx = 0; this.inIntro = false; }
+    }
+  }
 }

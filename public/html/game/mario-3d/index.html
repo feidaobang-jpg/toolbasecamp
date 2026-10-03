@@ -1,61 +1,140 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#95d8ee">
-  <title>超级玛丽 3D · 第一关</title>
-  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=single-view1">
-  <link rel="stylesheet" href="./file-warning.css?v=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#6d9cff">
+<meta name="description" content="FC 超级马力欧兄弟 1-1、1-2 原作地图的 3D 复刻：顶砖、蘑菇、火焰花、无敌星、隐藏 1UP、钻水管、奖励房间与传送区。电脑键盘与手机触屏均可游玩。">
+<title>超级玛丽 3D · 1-1 与 1-2</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./style.css?v=2.0.0">
 </head>
 <body>
-<main id="game" tabindex="-1">
-  <canvas id="world" aria-label="3D game"></canvas>
-  <div id="hud">
-    <div class="brand"><span class="eyebrow">SUPER MARIO / 3D</span><strong data-i18n="mario3d.world">WORLD 1–1</strong></div>
-    <div class="stats"><span><small data-i18n="mario3d.coins">金币</small><b id="coins">00</b></span><span><small data-i18n="mario3d.score">分数</small><b id="score">000000</b></span><span><small data-i18n="mario3d.time">时间</small><b id="time">300</b></span></div>
-    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="mario3d.pause">暂停</button><button class="tb-btn" id="full" data-i18n="mario3d.full">全屏</button></div>
+<div id="app" data-list-url="../../../games.html" tabindex="-1">
+  <div id="stage">
+    <canvas id="screen" aria-label="超级玛丽 3D 游戏画面"></canvas>
+
+    <div id="hud" hidden>
+      <div class="h-item"><b>MARIO</b><span id="h-score">000000</span></div>
+      <div class="h-item"><b>金币</b><span id="h-coins"><i class="coin-ico"></i>×00</span></div>
+      <div class="h-item"><b>WORLD</b><span id="h-world">1-1</span></div>
+      <div class="h-item"><b>TIME</b><span id="h-time">400</span></div>
+      <div class="h-item"><b>命</b><span id="h-lives">∞</span></div>
+      <div class="h-item" id="h-hearts-wrap"><b>护心</b><span id="h-hearts" class="hearts"></span></div>
+    </div>
+
+    <div id="hud-top" hidden>
+      <span id="demo-badge" hidden>演示模式 · 无敌</span>
+      <button id="btn-cam" tabindex="-1" aria-label="切换视角"><b>C</b> <span id="cam-label">侧视</span></button>
+      <button id="btn-pause" tabindex="-1" aria-label="暂停"><b>Esc</b> 暂停</button>
+      <button id="btn-fs" tabindex="-1" aria-label="全屏"><b>⛶</b> <span class="fs-label">全屏</span></button>
+    </div>
+
+    <div id="keyhint" hidden>
+      <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动</span>
+      <span><kbd>K</kbd> 跳（按住跳更高）</span>
+      <span><kbd>J</kbd> 跑 / 火球</span>
+      <span><kbd>L</kbd> 下蹲 · 钻水管</span>
+      <span><kbd>Q</kbd><kbd>E</kbd> 转视角</span>
+      <span><kbd>C</kbd> 切视角</span>
+      <span><kbd>Esc</kbd> 暂停</span>
+    </div>
+
+    <div id="touch" hidden>
+      <div id="joy-zone" aria-label="移动摇杆">
+        <div id="joy-base"><div id="joy-knob"></div><span class="joy-tip">移动</span></div>
+      </div>
+      <div class="cam-keys">
+        <button class="act small" data-hold="rotL" tabindex="-1" aria-label="Q 向左转视角"><b>Q</b><span>左转</span></button>
+        <button class="act small" id="btn-cam-t" tabindex="-1" aria-label="C 切换视角"><b>C</b><span>视角</span></button>
+        <button class="act small" data-hold="rotR" tabindex="-1" aria-label="E 向右转视角"><b>E</b><span>右转</span></button>
+      </div>
+      <div class="act-keys">
+        <button class="act" data-hold="down" tabindex="-1" aria-label="L 下蹲或钻水管"><b>L</b><span>蹲/钻管</span></button>
+        <button class="act" data-hold="run" tabindex="-1" aria-label="J 跑或火球"><b>J</b><span id="run-label">跑</span></button>
+        <button class="act big" data-hold="jump" tabindex="-1" aria-label="K 跳"><b>K</b><span>跳</span></button>
+      </div>
+    </div>
+
+    <div id="card" hidden>
+      <div class="card-world" id="card-world">WORLD 1-1</div>
+      <div class="card-lives"><span class="mini-mario"></span> × <b id="card-lives">∞</b></div>
+      <div class="card-tip" id="card-tip"></div>
+    </div>
+
+    <div id="menu" class="overlay title-screen">
+      <div class="panel">
+        <div class="brand">
+          <div class="kicker">FC 经典 · 原作地图 3D 复刻</div>
+          <h1 class="logo">超级玛丽 <span>3D</span></h1>
+          <div class="sub">WORLD 1-1 地面 · WORLD 1-2 地下</div>
+          <p class="rules">按原作逐格还原的两关：顶砖块拿蘑菇、火焰花、无敌星，找隐藏 1UP，按 <b>L</b> 钻进水管去奖励房间，1-2 还藏着传送区。水管、台阶和砖墙沿纵深铺满跑道，不能从旁边绕过去。</p>
+          <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>K</kbd> 跳 · <kbd>J</kbd> 跑 / 火球 · <kbd>L</kbd> 蹲 / 钻水管<br><kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
+          <p class="help help-touch">左侧摇杆移动 · 右侧 <b>K</b> 跳、<b>J</b> 跑 / 火球、<b>L</b> 蹲 / 钻水管 · <b>Q</b>/<b>E</b> 转视角、<b>C</b> 切视角</p>
+          <p class="hi">最高分 <span id="hi-val">0</span></p>
+          <p class="legal">粉丝向非官方复刻：3D 模型、贴图与音乐均为程序化重新制作；《超级马力欧兄弟》原作版权归任天堂所有。</p>
+        </div>
+        <nav class="items" aria-label="主菜单">
+          <button data-act="start" class="primary">开始游戏 <kbd>Enter</kbd></button>
+          <button data-opt="level"></button>
+          <button data-opt="lives"></button>
+          <button data-opt="armor"></button>
+          <button data-opt="demo"></button>
+          <button data-opt="camera"></button>
+          <button data-opt="quality"></button>
+          <button data-opt="volume"></button>
+          <button data-opt="touch"></button>
+          <button data-opt="fps"></button>
+          <button data-act="fullscreen" class="fs-btn">全屏</button>
+          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="pause" class="overlay" hidden>
+      <div class="panel small">
+        <h2>暂停</h2>
+        <nav class="items" aria-label="暂停菜单">
+          <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
+          <button data-act="restart">从本关开头重来</button>
+          <button data-opt="demo"></button>
+          <button data-opt="camera"></button>
+          <button data-opt="quality"></button>
+          <button data-opt="volume"></button>
+          <button data-opt="fps"></button>
+          <button data-act="fullscreen" class="fs-btn">全屏</button>
+          <button data-act="title">返回主菜单</button>
+          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="result" class="overlay" hidden>
+      <div class="panel small">
+        <h2 id="res-title">通关！</h2>
+        <table id="tally"></table>
+        <p id="res-extra"></p>
+        <p class="sanlian">旗杆已经拔到顶啦！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？</p>
+        <nav class="items" aria-label="结算菜单">
+          <button data-act="again" class="primary">再玩一次 <kbd>Enter</kbd></button>
+          <button data-act="title">返回主菜单</button>
+          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="fps" hidden></div>
+    <div id="toast" role="status" hidden></div>
   </div>
-  <div class="journey"><i id="progress"></i></div>
-  <div id="toast" role="status"></div>
-  <section id="panel" class="panel" aria-labelledby="panel-title">
-    <span class="eyebrow" id="panel-kicker">THE FIRST ADVENTURE, A NEW DIMENSION</span>
-    <h1 id="panel-title" data-i18n="mario3d.title">超级玛丽
-进入新的 3D 维度</h1>
-    <p id="panel-copy" data-i18n="mario3d.intro">熟悉的第一关，现在可以在更大的空间里探索。</p>
-    <p id="file-warning" class="file-warning" hidden data-i18n="mario3d.fileWarning">本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
-    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="mario3d.move">移动</span></div><div><kbd>K</kbd><span data-i18n="mario3d.jump">跳跃</span></div><div><kbd>J</kbd><span data-i18n="mario3d.run">加速</span></div><div><kbd>C</kbd><span data-i18n="mario3d.camera">旋转 · 俯仰 · 镜头回正</span></div></div>
-    <div class="action-row"><button id="start" class="tb-btn" data-i18n="mario3d.start">回车 · 开始冒险</button><button id="restart" class="tb-btn" hidden data-i18n="mario3d.restart">重新开始</button><a class="tb-btn" href="../../../games.html" data-i18n="mario3d.back">返回游戏列表</a></div>
-    <div class="action-row options"><button id="sound" class="tb-btn">静音</button><button id="touch-toggle" class="tb-btn" data-i18n="mario3d.touch">触屏操作</button></div>
-    <small class="footnote" data-i18n="mario3d.note">同人第一关演示 · 程序化美术与音效 · 非官方作品</small>
-  </section>
-  <div id="touch" hidden>
-    <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
-    <div class="camera-pad action-row"><button class="tb-btn" id="recenter">C</button></div>
-    <div class="action-row touch-actions"><button class="tb-btn" data-hold="KeyJ"><b>J</b><span data-i18n="mario3d.run">加速</span></button><button class="tb-btn" data-hold="KeyK"><b>K</b><span data-i18n="mario3d.jump">跳跃</span></button></div>
-  </div>
-  <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="mario3d.rotate">请将手机横过来</h2><p data-i18n="mario3d.rotateHint">你的冒险会在这里等你。</p></div>
-  <div id="keyboard-help" data-i18n="mario3d.help">WASD 移动 · K 跳跃 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停</div>
-</main>
-<script src="../../../js/locales/zh-CN.js?v=menu-first"></script>
-<script src="../../../js/i18n.js?v=nosTW1"></script>
+  <div id="loading">正在搭建蘑菇王国…</div>
+</div>
 <script>
-  if (location.protocol === 'file:') {
-    document.getElementById('file-warning').hidden = false;
-    document.getElementById('start').disabled = true;
-    document.getElementById('panel-copy').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
-  }
-</script>
-<script type="module">
-  import('./main.js?v=single-view1').catch(() => {
-    if (location.protocol !== 'file:') {
-      document.getElementById('panel-copy').textContent = t('mario3d.loadError');
-      document.getElementById('start').textContent = t('mario3d.retry');
-      document.getElementById('start').onclick = () => location.reload();
-    }
+  window.addEventListener('error', function (e) {
+    var el = document.getElementById('loading');
+    if (el && !window.__marioReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
+  if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
+<script type="module" src="./main.js?v=2.0.0"></script>
 </body>
 </html>
