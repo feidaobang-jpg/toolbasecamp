@@ -1,0 +1,20 @@
+{
+  "commit": "86c561db",
+  "checked_at": "2026-10-03T18:26:41.289950+00:00",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "runtime_checks": "live/checks.json",
+  "files": {
+    "index.html": {
+      "matches_commit_except_cache_versions": true,
+      "sha256": "aac141647cf29e9a752cb85d66fbb7debe7085146ac1d5a7f31f99c7d36f656e"
+    },
+    "game.compat.js": {
+      "matches_commit_except_cache_versions": true,
+      "sha256": "fb4d012e9d0b7b55d29bc14790e044dbdf6fcf78468f74204cc47c3f08fe4a1d"
+    },
+    "battlefield-environments.js": {
+      "matches_commit_except_cache_versions": true,
+      "sha256": "822acbfa26ba4d791ff860c0f411545e9f135b3893ca62168b3cbd5c910fc7cb"
+    }
+  }
+}
