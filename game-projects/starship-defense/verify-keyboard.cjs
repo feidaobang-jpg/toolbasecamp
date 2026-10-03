@@ -2,7 +2,7 @@
 // and placement without R-rotate (ghost follows Q/E camera). Real key presses only after load.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases/web-keyboard-v0.9.2'),captures=path.join(release,'captures');
+const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-keyboard-v0.9.2'),captures=path.join(release,'captures');
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html';
 const results={},fail=[];
 const check=(name,ok,detail)=>{results[name]={ok:!!ok,...(detail!==undefined?{detail}:{})};if(!ok)fail.push(name);};
@@ -68,7 +68,7 @@ const check=(name,ok,detail)=>{results[name]={ok:!!ok,...(detail!==undefined?{de
  check('confirm dialog: 取消 preselected, arrow to 确认, Enter starts new game',c0.id==='confirmCancel'&&c1.id==='confirmOk'&&ng.chapter===1&&ng.backup,{c0,c1,ng});
  check('no page errors',errors.length===0,errors);
  await b.close();
- const summary={version:'web-keyboard-v0.9.2',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
+ const summary={version:process.env.RELEASE||'web-keyboard-v0.9.2',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
  fs.writeFileSync(path.join(release,'keyboard.json'),JSON.stringify(summary,null,1));
  console.log(JSON.stringify({passed:summary.passed,failed:fail},null,1));if(fail.length)process.exitCode=1;
 })().catch(e=>{console.error(e);process.exit(1);});

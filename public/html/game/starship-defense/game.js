@@ -29,29 +29,41 @@ try{const forced=localStorage.getItem('chongchao-touch');if(forced==='on')isTouc
 /* ---------- 画布缩放 + 手机自动横屏 ---------- */
 const stage=$('stage');
 stage.classList.toggle('touch-mode',isTouch);
-let rotated=false;
+let rotated=false,stageScale=1,fitW=0,fitH=0;
+// App 内嵌页（如 B 站 App 的 Toy 容器）启动时可能报 0×0 的窗口尺寸，之后拿到真实尺寸却不发 resize：
+// 读不到就先按屏幕尺寸排版，并持续检查尺寸变化，自己补发 resize。
+function viewSize(){
+  const vv=window.visualViewport,de=document.documentElement;
+  let w=window.innerWidth||de.clientWidth||0,h=window.innerHeight||de.clientHeight||0;
+  if(w<80||h<80){w=Math.round(vv?.width||0)||screen.width||960;h=Math.round(vv?.height||0)||screen.height||540;}
+  if(w<80||h<80){w=screen.width||960;h=screen.height||540;}
+  return{w,h};
+}
 function fitStage(){
-  let w=window.innerWidth,h=window.innerHeight;
+  const v=viewSize(),w=v.w,h=v.h;fitW=window.innerWidth;fitH=window.innerHeight;
   rotated=(h>w)&&isTouch; // 竖屏手机 → 旋转
   let vw=rotated?h:w, vh=rotated?w:h;
   BASE_H=BASE_W*vh/vw;stage.style.height=BASE_H+'px';
-  const s=Math.min(vw/BASE_W,vh/BASE_H);
-  stage.style.transform='translate(-50%,-50%) '+(rotated?'rotate(90deg) ':'')+'scale('+s+')';
+  stageScale=Math.min(vw/BASE_W,vh/BASE_H);
+  stage.style.transform='translate(-50%,-50%) '+(rotated?'rotate(90deg) ':'')+'scale('+stageScale+')';
 }
-window.addEventListener('resize',fitStage);window.addEventListener('orientationchange',()=>setTimeout(fitStage,120));
+window.addEventListener('resize',fitStage);window.addEventListener('orientationchange',()=>setTimeout(()=>window.dispatchEvent(new Event('resize')),120));
 fitStage();
+function checkViewport(){if(window.innerWidth!==fitW||window.innerHeight!==fitH)window.dispatchEvent(new Event('resize'));}
+setInterval(checkViewport,500);window.visualViewport?.addEventListener('resize',checkViewport);
+try{new ResizeObserver(checkViewport).observe(document.documentElement);}catch{}
 /* 把屏幕坐标转到舞台坐标（考虑旋转与缩放） */
 function toStage(cx,cy){
   const r=stage.getBoundingClientRect();
   // rect 是旋转+缩放后的包围盒；用中心逆变换
   const mx=r.left+r.width/2, my=r.top+r.height/2;
   let dx=cx-mx, dy=cy-my;
-  const s=Math.min((rotated?window.innerHeight:window.innerWidth)/BASE_W,(rotated?window.innerWidth:window.innerHeight)/BASE_H);
+  const s=stageScale;
   dx/=s;dy/=s;
   if(rotated){const t=dx;dx=dy;dy=-t;}
   return {x:dx+BASE_W/2,y:dy+BASE_H/2};
 }
-function toStageScale(){return Math.min((rotated?window.innerHeight:window.innerWidth)/BASE_W,(rotated?window.innerWidth:window.innerHeight)/BASE_H);}
+function toStageScale(){return stageScale;}
 
 /* ================= 音频系统 ================= */
 const AudioSys={
@@ -3013,7 +3025,7 @@ Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&$(
 Input.onPause=pauseKey;
 Input.onTouchDetected=()=>setTouchMode(true,false);
 function setTouchMode(on,remember=true){
-  isTouch=on;Input.reset();stage.classList.toggle('touch-mode',isTouch);fitStage();renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();
+  isTouch=on;Input.reset();stage.classList.toggle('touch-mode',isTouch);window.dispatchEvent(new Event('resize'));
   $('touchUI').classList.toggle('hidden',!isTouch||!['prep','battle','paused'].includes(Game.state));$('touchBtn').textContent=isTouch?'隐藏按键':'虚拟按键';
   if(remember)try{localStorage.setItem('chongchao-touch',on?'on':'off');}catch{}
 }
@@ -3171,9 +3183,10 @@ function setupWebControls(){
   $('touchBtn').onclick=()=>setTouchMode(!isTouch);
   $('touchBtn').textContent=isTouch?'隐藏按键':'虚拟按键';
   const quality=localStorage.getItem('chongchao-quality')||((isTouch)?'smooth':'high');
+  const applyPixelRatio=value=>renderer.setPixelRatio(value==='high'?Math.min(stageScale*(devicePixelRatio||1),2):Math.min(stageScale,1.2));
+  window.addEventListener('resize',()=>applyPixelRatio($('qualityBtn').dataset.quality||quality));
   function applyQuality(value){
-    const displayScale=Math.max(innerWidth,rotated?innerHeight:0)/BASE_W;
-    renderer.setPixelRatio(value==='high'?Math.min(displayScale*(devicePixelRatio||1),2):Math.min(displayScale,1.2));
+    applyPixelRatio(value);
     renderer.shadowMap.enabled=value==='high';visuals.quality=value;
     $('qualityBtn').textContent=value==='high'?'画质：精致':'画质：流畅';$('qualityBtn').dataset.quality=value;
     try{localStorage.setItem('chongchao-quality',value);}catch{}

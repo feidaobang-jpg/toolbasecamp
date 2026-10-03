@@ -1,0 +1,45 @@
+{
+ "normal": {
+  "rotated": true,
+  "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+  "rect": [
+   0,
+   0,
+   393,
+   692
+  ],
+  "canvas": [
+   692,
+   393
+  ]
+ },
+ "zeroBothNoResize": {
+  "rotated": false,
+  "transform": "none",
+  "rect": [
+   114,
+   346,
+   960,
+   540
+  ],
+  "canvas": [
+   0,
+   0
+  ]
+ },
+ "zeroHeightThenResize": {
+  "rotated": true,
+  "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+  "rect": [
+   0,
+   0,
+   393,
+   692
+  ],
+  "canvas": [
+   393,
+   223
+  ]
+ },
+ "build": "3fd454a1 (v0.9.5)"
+}

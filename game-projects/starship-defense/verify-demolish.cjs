@@ -2,7 +2,7 @@
 // first-person laser glare. Keyboard input for the demolish/placement flows.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases/web-demolish-v0.9.5'),captures=path.join(release,'captures');
+const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-demolish-v0.9.5'),captures=path.join(release,'captures');
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html';
 const results={},fail=[];const check=(n,ok,d)=>{results[n]={ok:!!ok,...(d!==undefined?{detail:d}:{})};if(!ok)fail.push(n);};
 (async()=>{
@@ -46,6 +46,6 @@ const results={},fail=[];const check=(n,ok,d)=>{results[n]={ok:!!ok,...(d!==unde
  check('first-person laser starts ≥1 m from the eye with a dimmer glow and still hits',fp.startFromEye>=1&&fp.glow<.2&&fp.core<=.7&&fp.hit>0,fp);
  check('no page errors',errors.length===0,errors);
  await b.close();
- const summary={version:'web-demolish-v0.9.5',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
+ const summary={version:process.env.RELEASE||'web-demolish-v0.9.5',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
  fs.writeFileSync(path.join(release,'demolish.json'),JSON.stringify(summary,null,1));console.log(JSON.stringify({passed:summary.passed,failed:fail},null,1));if(fail.length)process.exitCode=1;
 })().catch(e=>{console.error(e);process.exit(1);});

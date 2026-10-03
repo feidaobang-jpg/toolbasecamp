@@ -5,6 +5,7 @@
 ## v0.9 验证脚本
 
 - `verify-feedback.cjs`：逐条核对网友反馈与本次发现的 Bug（45 项），结果写入 `media-kit/releases/web-feedback-v0.9.0/after.json`；修复前复现见同目录 `before.json`。
+- `verify-webview-boot.cjs`：模拟 B 站 App 内嵌页启动时窗口尺寸为 0、不发 resize，检查画面恢复横屏铺满、能开始游戏和打开商店（v0.9.6，9 项）。`RELEASE=<版本>` 可让 feedback/arsenal/keyboard/demolish 脚本把结果写到指定版本目录。
 - `verify-performance-v09.cjs`：48 虫交战、移动转镜头的帧时间（两种画风、两档画质、第一人称）。
 - `verify-playthrough-v09.cjs`：纯键盘机器人实时打完整关（第 1 章、第 6 章中期配置）。
 - `capture-v09.cjs`：本版截图与实时录像。
