@@ -1,0 +1,31 @@
+{
+ "version": "web-webview-fix-v0.9.6",
+ "previewed_at": "2026-10-03T23:07:44+08:00",
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_QfJK7H0E/index.html",
+ "zip_sha256": "5e085927ed355cebac5da79ad87efd776d4b4ab246d17bd0ff233c978728d2f8",
+ "doctor": "passed，1 条 WARN（文件名无内容指纹，与以往相同）",
+ "preview_checked": "Playwright 打开预览宿主页：桌面 1280×720 与手机 393×692 均铺满、手机竖屏自动转横屏、菜单可见、game.js 含 viewSize/checkViewport；内置浏览器里宿主页加载 4 秒时游戏 iframe 仍为 0×0，之后才设为 1024×768（佐证游戏在 0 尺寸框里启动）；本地 Toy 包跑 verify-webview-boot 9/9（webview-toy-package.json）",
+ "status": "auditing",
+ "submitted_at": "2026-10-03T23:11:15+08:00",
+ "user_confirmation": "用户在同一确认中选择“提交审核”与“就用这三条回复”",
+ "submit_response": {
+  "status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_tGGAOaGa/index.html"
+ },
+ "comment_replies": [
+  {
+   "root": "319415014640",
+   "reply": "315924017153"
+  },
+  {
+   "root": "315601189569",
+   "reply": "315923916769"
+  },
+  {
+   "root": "319187968688",
+   "reply": "315923917777"
+  }
+ ],
+ "comment_source": "opus/1253705235842465792（oid 410772284，type 11）",
+ "replies_verified": "reply/reply 接口读回，三条均在对应楼中楼"
+}

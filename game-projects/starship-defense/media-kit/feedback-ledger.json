@@ -1,7 +1,46 @@
 {
- "note": "评论反馈台账：已处理的评论不再重复修复/回复。kind/status 由开发判断；reply_rpid 为我方回复。",
- "updated_at": "2026-10-03T18:30:33.140367+08:00",
+ "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
+ "updated_at": "2026-10-03T23:11:15+08:00",
  "items": [
+  {
+   "rpid": "319415014640",
+   "video": "opus:1253705235842465792",
+   "comment_type": 11,
+   "user": "草亻尔女马",
+   "date": "2026-10-03",
+   "text": "刚点进来就这样了（B站App截图：画面卡在右下角、未转横屏）",
+   "kind": "bug",
+   "status": "fixed",
+   "fixed_in": "web-webview-fix-v0.9.6",
+   "reply_rpid": "315924017153",
+   "note": "App 内嵌页启动时尺寸为 0 且不发 resize"
+  },
+  {
+   "rpid": "315601189569",
+   "video": "opus:1253705235842465792",
+   "comment_type": 11,
+   "user": "草木竹石2",
+   "date": "2026-10-01",
+   "text": "商店手机端在哪？",
+   "kind": "bug",
+   "status": "fixed",
+   "fixed_in": "web-feedback-v0.9.0 + web-webview-fix-v0.9.6",
+   "reply_rpid": "315923916769",
+   "note": "楼里“UP主小赵阅读”是普通用户昵称，不是作者"
+  },
+  {
+   "rpid": "319187968688",
+   "video": "opus:1253705235842465792",
+   "comment_type": 11,
+   "user": "堵电梯来",
+   "date": "2026-10-01",
+   "text": "商店都打不开",
+   "kind": "bug",
+   "status": "fixed",
+   "fixed_in": "web-feedback-v0.9.0 + web-webview-fix-v0.9.6",
+   "reply_rpid": "315923917777",
+   "note": ""
+  },
   {
    "rpid": "315889972065",
    "video": "BV1Ujad6DEuf",

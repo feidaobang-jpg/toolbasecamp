@@ -1,0 +1,161 @@
+{
+ "version": "web-webview-fix-v0.9.6",
+ "checked_at": "2026-10-03T10:56:22.481Z",
+ "passed": 9,
+ "failed": [],
+ "results": {
+  "normal portrait phone: rotated to landscape and fills the screen": {
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+    "rect": [
+     0,
+     0,
+     393,
+     692
+    ],
+    "canvas": [
+     692,
+     393
+    ]
+   }
+  },
+  "webview reports 0×0 at boot, no resize event": {
+   "ok": true,
+   "detail": {
+    "got": {
+     "rotated": true,
+     "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+     "rect": [
+      0,
+      0,
+      393,
+      692
+     ],
+     "canvas": [
+      692,
+      393
+     ]
+    },
+    "expectCanvas": [
+     692,
+     393
+    ]
+   }
+  },
+  "webview reports height 0 at boot, no resize event": {
+   "ok": true,
+   "detail": {
+    "got": {
+     "rotated": true,
+     "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+     "rect": [
+      0,
+      0,
+      393,
+      692
+     ],
+     "canvas": [
+      692,
+      393
+     ]
+    },
+    "expectCanvas": [
+     692,
+     393
+    ]
+   }
+  },
+  "late resize event: canvas resolution recomputed (was blurry)": {
+   "ok": true,
+   "detail": {
+    "got": {
+     "rotated": true,
+     "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+     "rect": [
+      0,
+      0,
+      393,
+      692
+     ],
+     "canvas": [
+      692,
+      393
+     ]
+    },
+    "expectCanvas": [
+     692,
+     393
+    ]
+   }
+  },
+  "size never readable: falls back to the screen size instead of a broken layout": {
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "transform": "translate(-50%, -50%) rotate(90deg) scale(0.720833)",
+    "rect": [
+     0,
+     0,
+     393,
+     692
+    ],
+    "canvas": [
+     692,
+     393
+    ]
+   }
+  },
+  "after the 0×0 boot: tap 开始新游戏, shop button on screen, tapping 商店 opens it": {
+   "ok": true,
+   "detail": {
+    "started": true,
+    "state": "prep",
+    "shopVisible": true,
+    "shop": {
+     "open": true,
+     "onScreen": true
+    }
+   }
+  },
+  "landscape phone with 0×0 boot: not rotated, fills the screen": {
+   "ok": true,
+   "detail": {
+    "rotated": false,
+    "transform": "translate(-50%, -50%) scale(0.879167)",
+    "rect": [
+     0,
+     0,
+     844,
+     390
+    ],
+    "canvas": [
+     844,
+     390
+    ]
+   }
+  },
+  "desktop unchanged: no rotation, fills 1280×720": {
+   "ok": true,
+   "detail": {
+    "rotated": false,
+    "transform": "translate(-50%, -50%) scale(1.33333)",
+    "rect": [
+     0,
+     0,
+     1280,
+     720
+    ],
+    "canvas": [
+     1280,
+     720
+    ]
+   }
+  },
+  "no page errors": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}
