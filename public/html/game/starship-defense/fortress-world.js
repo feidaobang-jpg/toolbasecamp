@@ -6,7 +6,7 @@ import {HILL_FORTS} from './terrain-controls.js';
 export class FortressWorld {
   constructor(scene, height, palette) {
     this.solids=[];this.height=height;this.groups=new Map();this.grid=new Map();this.indexed=-1;
-    this.shelter={x:30,z:34,r:3.5};this.cave={x:-42,z:49};
+    this.shelter={x:30,z:34,r:3.5};
     const P=palette.fort,cream=P.cream,teal=P.teal,navy=P.navy,stone=P.stone;
     const add=(shape,color,x,y,z,sx,sy,sz)=>{
       const source=shape==='rock'?new THREE.DodecahedronGeometry(1,0):new THREE.BoxGeometry(1,1,1);
@@ -43,23 +43,14 @@ export class FortressWorld {
         wall(x+offset,z,.15,.82,.5,teal,height(x,z));
       }
     }
-    // A short, genuinely traversable cave with both ends open, not a sealed prop.
-    for(const side of [-1,1])this.solids.push({x:-42+side*6,z:49,hw:2,hd:11,bottom:0,top:8});
-    for(const [i,z] of [40,44.5,49,53.5,58].entries()){
-      for(const side of [-1,1])add('rock',i%2?stone:P.cave,-42+side*6.2,4.5,z,2.8,5.6,3.6);
-      add('rock',stone,-42,9.7+(i%2)*.35,z,6.8,4,3.6);
-    }
-    this.solids.push({x:-42,z:49,hw:6,hd:11,bottom:6,top:12.5});
-    for(const z of [38,60]){
-      add('box',teal,-42,5.8,z,8,.3,.35);
-      for(const side of [-1,1])add('box',cream,-42+side*3.8,2.9,z,.3,5.8,.35);
-    }
-    for(const z of [42,49,56])add('box',P.mint,-42,5.4,z,2,.12,.6);
     // Rear-entry field shelter: walls provide cover and the interior heals.
     wall(25,34,1,12,4.4,cream,0);wall(35,34,1,12,4.4,cream,0);
     wall(30,39.5,11,1,4.4,cream,0);
     add('box',teal,30,4.5,34,12,.5,13);
-    for(const x of [25,35])for(const z of [29,34,39])add('box',cream,x,5.1,z,1.6,.8,1.4);
+    for(const x of [27,33]){add('box',cream,x,.65,35,1.4,.3,3);add('box',P.mint,x,.84,35,1.25,.12,2.6);}
+    const floorRing=new THREE.Mesh(new THREE.RingGeometry(3.35,3.5,48),new THREE.MeshBasicMaterial({color:P.mint,side:THREE.DoubleSide}));floorRing.rotation.x=-Math.PI/2;floorRing.position.set(30,.14,34);scene.add(floorRing);
+    const sign=document.createElement('canvas');sign.width=512;sign.height=128;const ctx=sign.getContext('2d');ctx.fillStyle='#102b32';ctx.fillRect(0,0,512,128);ctx.fillStyle='#9dffe0';ctx.textAlign='center';ctx.font='bold 44px Microsoft YaHei, sans-serif';ctx.fillText('＋ 野战医疗站',256,53);ctx.font='28px Microsoft YaHei, sans-serif';ctx.fillText('进入绿圈 · 自动回血',256,99);
+    const board=new THREE.Mesh(new THREE.PlaneGeometry(8,2),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(sign),side:THREE.DoubleSide}));board.position.set(30,5.55,27.35);board.rotation.y=Math.PI;scene.add(board);
     add('box',P.amber,30,4.9,28,5,.25,.5);
     this.solids.push({x:30,z:34,hw:6,hd:6.5,bottom:4.25,top:4.75});
     add('box',navy,30,.04,34,9,.08,10);

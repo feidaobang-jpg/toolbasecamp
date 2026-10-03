@@ -1,0 +1,22 @@
+{
+  "version": "web-operations-v0.13.0",
+  "created_at": "2026-10-03T18:29:10.616544+00:00",
+  "base_commit": "3755bf35",
+  "changes": [
+    "9 missions with distinct objectives, chapter unlocks and three difficulties",
+    "field medical station, walkable approach hill, remove ringed planet and cosmetic pebbles",
+    "visible menu controls and 3m/4m construction placement"
+  ],
+  "qa": {
+    "objective_checks": 34,
+    "desktop_mobile": "Edge desktop and mobile viewport emulation; no physical-phone claim",
+    "regressions": [
+      "squad-tasks",
+      "environments",
+      "platform-unit",
+      "webview-boot (9 checks)"
+    ]
+  },
+  "website": "pending",
+  "toy": "pending"
+}

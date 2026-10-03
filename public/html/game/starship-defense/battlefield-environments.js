@@ -91,7 +91,7 @@ export class BattlefieldEnvironment{
     });
     const u=o.sky.material.uniforms;u.horizon.value.set(p.horizon);u.zenith.value.set(p.zenith);u.glow.value.set(p.glow);u.aurora.value=p.id==='frost'?1:0;
     o.peaks.visible=false;o.stars.material.opacity=p.id==='desert'?.48:.75;o.stars.material.transparent=true;
-    o.planet.children[0].material.color.set(p.planet);o.moon.material.color.set(p.moon);
+    o.moon.material.color.set(p.moon);
     this.clearDecor();this.buildDecor(p);return true;
   }
   clearDecor(){

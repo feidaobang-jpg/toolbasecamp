@@ -8,7 +8,7 @@ import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
 import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefieldGround} from './battlefield-environments.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance} from './hive-world.js?v=fb9';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
-import {createOperations} from './operations.js';
+import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
 import {createCombatControls,mountCombatSettings} from './combat-controls.js';
 let combatStorage;try{combatStorage=localStorage;}catch(_e){}
 const CombatControls=createCombatControls(combatStorage);
@@ -373,7 +373,7 @@ const groundMesh=(()=>{
   paintBattlefieldGround(m,environmentForChapter(1));
   m.receiveShadow=true;scene.add(m);return m;
 })();
-/* 装饰：侧翼掩体巨石（挡敌方酸液与走位，不挡我方子弹）与无碰撞碎石。
+/* 装饰：侧翼掩体巨石（挡敌方酸液与走位，不挡我方子弹），移除无玩法作用的零散碎石。
    （原来地上的 260 个发光小锥体纯装饰、无玩法作用，v0.9.3 按用户要求去掉）
    网友反馈满地石头挡住怪物，中路与常用射界不再放置任何有碰撞的石头。 */
 const rockColliders=[];
@@ -389,16 +389,7 @@ function clearOfFeatures(x,z,pad=0){
     dummy.position.set(x,y+s*.35,z);dummy.rotation.set(0,i*1.9,0);dummy.scale.set(s,s*.8,s);dummy.updateMatrix();rocks.setMatrixAt(i,dummy.matrix);
   });
   rocks.name='battlefield-cover';rocks.castShadow=rocks.receiveShadow=true;scene.add(rocks);
-  const scatter=(geometry,material,count,minS,maxS,shadow)=>{
-    const batch=new THREE.InstancedMesh(geometry,material,count);
-    for(let i=0;i<count;i++){
-      let x,z,n=0;do{x=rand(WORLD.minX+4,WORLD.maxX-4);z=rand(12,WORLD.maxZ-12);}while(!clearOfFeatures(x,z)&&++n<40);
-      const s=rand(minS,maxS);
-      dummy.position.set(x,terrainH(x,z)+s*.2,z);dummy.rotation.set(0,rand(0,TAU),rand(-.3,.3));dummy.scale.set(s,s*rand(.6,1.4),s);dummy.updateMatrix();batch.setMatrixAt(i,dummy.matrix);
-    }
-    batch.name='battlefield-pebbles';batch.castShadow=shadow;batch.receiveShadow=true;scene.add(batch);
-  };
-  scatter(new THREE.DodecahedronGeometry(1,0),new THREE.MeshLambertMaterial({color:PAL.pebble,flatShading:true}),140,.15,.45,false);
+
 })();
 
 const fortress=new FortressWorld(scene,terrainH,PAL);
@@ -1386,6 +1377,7 @@ function updMonsters(dt){
       if(mo.dead)continue;
     }
     if(mo.dmgT>0&&(mo.dmgT-=dt)<=0)popDamage(mo);
+    if(mo.operationStatic)continue;
     mo.anim+=dt*8;
     visuals.animate(mo.mesh,dt,mo.emerge>0?'Walk':mo.atkCd>.75?'Attack':'Walk',camera);
     if(mo.emerge>0){ // 从虫洞口钻出：先升出地面再行动
@@ -1972,6 +1964,8 @@ function interactionTarget(){
 function updInteraction(){
   const a=interactionTarget();if($('vI').textContent!==a.label)$('vI').textContent=a.label;
   let tip=a.tip;
+  const medicalDistance=Math.hypot(player.pos.x-fortress.shelter.x,player.pos.z-fortress.shelter.z);
+  if(!tip&&!player.inVehicle&&medicalDistance<10)tip=medicalDistance<fortress.shelter.r?(player.hp<player.maxHp?'＋ 野战医疗站 · 正在自动回血':'＋ 野战医疗站 · 生命已恢复'):'＋ 野战医疗站 · 走进绿色圆圈自动回血';
   if(player.dead)tip='';
   else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：H 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
   if($('interactHint').textContent!==tip){$('vI').setAttribute('aria-label',a.tip||'互动');$('interactHint').textContent=tip;}
@@ -2684,7 +2678,7 @@ function updPlacement(){
     if($('placeState').textContent!==s){$('placeState').textContent=s;$('placeState').classList.toggle('bad',!t);}
     return;
   }
-  const kind=place.kind,f=camForward(false),dist=kind==='wall'?6.5:kind==='bunker'?7.5:5.5;
+  const kind=place.kind,f=camForward(false),dist=kind==='wall'?3:kind==='bunker'?4:3;
   const x=player.pos.x+f.x*dist,z=player.pos.z+f.z*dist,yaw=camYaw;
   const reason=placementCheck(kind,x,z,yaw);
   Object.assign(place,{x,z,yaw,valid:!reason,reason});
@@ -2746,7 +2740,7 @@ function applySave(d){
   Game.magnet=!!(d.perks&&d.perks.magnet);Game.regen=!!(d.perks&&d.perks.regen);
   Game.squadOrder=d.squadOrder==='defend'?'defend':'follow';Game.squadAlert=0;
   Game.squadGear=Array.from({length:4},(_,i)=>{const g=(d.squadGear||[])[i]||{};return{weapon:clamp(Math.floor(g.weapon)||0,0,5),armor:clamp(Math.floor(g.armor)||0,0,5)};});
-  Game.opsCompleted={};for(const k of ['depot','signal','hunter'])if(d.opsCompleted&&typeof d.opsCompleted[k]==='string')Game.opsCompleted[k]=d.opsCompleted[k];
+  Game.opsCompleted={};for(const k of OP_COMPLETION_KEYS)if(d.opsCompleted&&typeof d.opsCompleted[k]==='string')Game.opsCompleted[k]=d.opsCompleted[k];
   operations.clear();
   Game.hive=Object.assign({loop:Game.loop,chapter:Game.chapter,queen:1,killed:false},d.hive||{});
   Game.vehiclesOwned=[];
@@ -3271,11 +3265,13 @@ function loop(){
   frameStats(now);renderer.render(scene,camera);
   Input.clearFrame();
 }
-const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMsg,showHint,findFreeSpot,groundY,exitVehicle,clearEntities,autoSave,closePanels,collectAllGold,startPrep,showHUD,spawnMonster,
+const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMsg,showHint,findFreeSpot,groundY,exitVehicle,clearEntities,autoSave,closePanels,collectAllGold,startPrep,showHUD,spawnMonster,playerDamage,getYaw:()=>camYaw,canWalk:(x,z,r)=>!collideWalls(x,z,r)&&!tooSteep(x,z),
   resetCamera(){camState.init=false;},openPanel(){closePanels();Input.reset();panelOpen=true;$('operationsPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();}});
 function syncKeyLabels(){
   for(const el of document.querySelectorAll('.vbtn')){const a=el.id.slice(1);if(KEY_ACTIONS[a])el.dataset.key=keyBindings.label(a);}
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
+  $('menuButton').textContent='☰ 菜单 '+keyBindings.label('P')+' / Esc';
+  $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
@@ -3290,6 +3286,7 @@ function setupFeaturePanels(){
   const open=()=>{closePanels();Input.reset();panelOpen=true;$('keyPanel').classList.remove('hidden');$('keyStatus').textContent='选择要修改的动作';renderKeys();if(document.pointerLockElement)document.exitPointerLock();};
   $('keysMenu').onclick=$('keysPause').onclick=open;$('keysClose').onclick=closePanels;
   $('keysReset').onclick=()=>{bindingAction=null;keyBindings.reset();Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已恢复默认键位';};
+  $('menuButton').onclick=()=>pauseKey();
   $('opsButton').onclick=$('opsPause').onclick=operations.open;$('opsClose').onclick=closePanels;
   window.addEventListener('keydown',e=>{
     if(!bindingAction)return;e.preventDefault();e.stopImmediatePropagation();

@@ -50,6 +50,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .placing #hint,.placing #interactHint{display:none!important}.touch-mode #placeBar .small{display:none}
 #webTools{position:absolute;right:10px;top:178px;z-index:35;display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:250px}
 #webTools .mbtn{font-size:10px;padding:5px 7px}
+#webTools #menuButton{font-size:12px;font-weight:bold;border:1px solid #71c8da;min-height:34px}
+#operationsList [aria-pressed="true"]{outline:2px solid #71c8da}
+#operationsList .operation-card{white-space:normal;line-height:1.6;text-align:left}
 /* 虚拟触控 */
 #touchUI{pointer-events:none;z-index:20;}
 #lookZone{position:absolute;left:44%;right:0;top:80px;bottom:0;pointer-events:auto}
@@ -186,7 +189,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在部署前哨基地…</div>
-<div id="webTools"><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="webTools"><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">☰ 菜单 P / Esc</button><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -239,7 +242,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div class="vbtn sm" id="vL">建造</div>
     <div class="vbtn sm" id="vC">镜头</div>
     <div class="vbtn sm" id="vV">一人称</div>
-    <div class="vbtn sm" id="vP">暂停</div>
+    <div class="vbtn sm" id="vP" role="button" aria-label="打开游戏菜单">菜单</div>
   </div>
 
   <section id="keyPanel" class="panel hidden" aria-label="操作设置">
@@ -248,7 +251,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div id="keyStatus" role="status"></div><button id="keysReset" class="mbtn">恢复默认键位</button><div id="keyGrid"></div>
   </section>
   <section id="operationsPanel" class="panel hidden" aria-label="副本任务">
-    <button id="opsClose" class="closeX" aria-label="关闭副本列表">×</button><h3>⚑ 前哨副本</h3>
+    <button id="opsClose" class="closeX" aria-label="关闭副本列表">×</button><h3>⚑ 前哨副本 · 9 项行动</h3>
     <p id="operationsInfo" class="small"></p><div id="operationsList"></div>
   </section>
   <!-- 开始菜单 -->
@@ -276,7 +279,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
       手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
       菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
       玩法：准备阶段去野外打怪攒钱 → 商店买枪/强化（每把武器可强化到 Lv10）、造炮塔、雇队友 → 开战守住基地。虫子从远处虫洞钻出；地图最深处是虫巢，母皇和护卫只守老巢，击杀母皇本章虫潮 -35%<br>
-      城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和蓝色光柱找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、准备阶段可选 3 个副本
+      城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和蓝色光柱找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，三档难度分别领奖；右侧「菜单」或 P/Esc 暂停
     </div>
   </div>
 
@@ -378,6 +381,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=biomes1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=ops130" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>
