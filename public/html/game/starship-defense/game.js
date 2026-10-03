@@ -1699,16 +1699,25 @@ function enterVehicle(v){
 function exitVehicle(){
   const v=player.inVehicle;if(!v)return;
   player.inVehicle=null;player.mesh.visible=true;
-  // 下车点：优先车身右侧，被墙/隧道壁/悬崖占用时依次换方向，避免人卡进墙里动不了
-  const vp=v.mesh.position;let placed=false;
-  for(const a of [0,Math.PI,Math.PI/2,-Math.PI/2,Math.PI/4,-Math.PI/4,3*Math.PI/4,-3*Math.PI/4])for(const r of [3.5,5,2.5]){
-    const off=new THREE.Vector3(r,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),v.yaw+a),x=vp.x+off.x,z=vp.z+off.z;
-    if(!placed&&x>WORLD.minX+1&&x<WORLD.maxX-1&&!collideWalls(x,z,.5)&&!tooSteep(x,z)){player.pos.set(x,0,z);placed=true;}
+  // 下车点：优先车身右侧；直升机在大山/岩石上空被打爆时附近可能全是实体，
+  // 就向外一圈圈找最近的空地，实在没有回基地检查点（原来会直接落进山体里出不来）。
+  const vp=v.mesh.position;let spot=null;
+  for(const a of [0,Math.PI,Math.PI/2,-Math.PI/2,Math.PI/4,-Math.PI/4,3*Math.PI/4,-3*Math.PI/4]){
+    for(const r of [3.5,5,2.5]){const off=new THREE.Vector3(r,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),v.yaw+a);if(spotFree(vp.x+off.x,vp.z+off.z)){spot={x:vp.x+off.x,z:vp.z+off.z};break;}}
+    if(spot)break;
   }
-  if(!placed)player.pos.set(vp.x,0,vp.z);
+  spot=spot||findFreeSpot(vp.x,vp.z)||{x:0,z:-20};
+  player.pos.set(spot.x,0,spot.z);
   player.vy=0;player.mesh.position.copy(player.pos);
   if(v.cfg.fly)v.landing=true;
   v.noEnter=1.2; // 下车冷却：防止立刻又上车
+}
+function spotFree(x,z){return x>WORLD.minX+1&&x<WORLD.maxX-1&&z>WORLD.minZ+1&&z<WORLD.maxZ-1&&!collideWalls(x,z,.65)&&!tooSteep(x,z);}
+// 从 (x0,z0) 向外一圈圈找最近的可站立空地
+function findFreeSpot(x0,z0,maxR=60){
+  if(spotFree(x0,z0))return {x:x0,z:z0};
+  for(let r=2;r<=maxR;r+=2){const n=Math.max(8,Math.round(r*2.4));for(let i=0;i<n;i++){const a=i/n*TAU,x=x0+Math.cos(a)*r,z=z0+Math.sin(a)*r;if(spotFree(x,z))return {x,z};}}
+  return null;
 }
 function updVehicles(dt){
   for(const v of vehicles){
@@ -2015,6 +2024,11 @@ function updPlayer(dt){
     player.mesh.userData.legs.forEach(l=>l.rotation.x*=.8);
   }
   if(camMode==='first')player.yaw=camYaw;
+  // 兜底脱困：任何原因卡在实体里（载具残骸、城门关在身上等）超过 0.5 秒，移到最近的空地
+  if(player.onGround&&collideWalls(player.pos.x,player.pos.z,.5)){
+    player.stuckT=(player.stuckT||0)+dt;
+    if(player.stuckT>.5){const f=findFreeSpot(player.pos.x,player.pos.z)||{x:0,z:-20};player.pos.set(f.x,groundY(f.x,f.z),f.z);player.stuckT=0;showMsg('已从卡住的位置脱困',1.4);}
+  }else player.stuckT=0;
   // 跳跃与重力
   const gy=groundY(player.pos.x,player.pos.z);
   if(Input.pop('K')&&player.onGround){player.vy=9;player.onGround=false;AudioSys.sfx('jump');}
@@ -3131,7 +3145,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter(renderer.getContext().getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}
