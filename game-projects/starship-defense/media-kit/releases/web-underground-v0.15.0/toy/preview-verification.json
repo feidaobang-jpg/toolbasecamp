@@ -1,0 +1,31 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_CY2IC7qz/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "start": {
+        "mouths": 3,
+        "depth": -22,
+        "crew": true
+      },
+      "end": {
+        "z": 45.68127000009354,
+        "key": false
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "start": {
+        "mouths": 3,
+        "depth": -22,
+        "crew": true
+      },
+      "end": {
+        "z": 45.78472500000014,
+        "key": false
+      },
+      "errors": []
+    }
+  ]
+}

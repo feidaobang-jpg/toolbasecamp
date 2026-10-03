@@ -6,9 +6,9 @@
   "created_at": "2026-10-03T22:12:09.962586+00:00",
   "build": {
     "id": "web-underground-v0.15.0",
-    "commit": null,
-    "dirty": true,
-    "fingerprint": "7e66d1f4ee857d9100153bbd2ec2387460852b9063d74cc694317c19aad8f9d6",
+    "commit": "b65c84b6",
+    "dirty": false,
+    "fingerprint": "89befb06be2410b4a05761c6b0bb926901eeb74f6f692fbab66796d89004c957",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
   "changes": [
@@ -34,14 +34,170 @@
       "手机仅视口/触控模拟，未测真机",
       "录像无音轨",
       "QA 场景定位用于录制起点与镜头总览"
-    ]
+    ],
+    "visual": "已检查最终录像连续采样帧；修正远景地面穿洞和墙顶共面条纹",
+    "keybindings": "旧K=ShiftLeft、J=Z保留，跑步迁移到ShiftRight"
   },
-  "media": [],
+  "media": [
+    {
+      "id": "entrance",
+      "file": "releases/web-underground-v0.15.0/entrance.jpg",
+      "sha256": "613ec0d201a3c3784c7d18cb825200d9e5601760c3ee2456abe5e53cf815d854",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "entrance",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "descent",
+      "file": "releases/web-underground-v0.15.0/descent.jpg",
+      "sha256": "9ee9ea909b3d8fff79992c6cc5fcc306f4706d45ef11e798f071b753a8148fad",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "descent",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "chamber",
+      "file": "releases/web-underground-v0.15.0/chamber.jpg",
+      "sha256": "bee6302d78e49aa39e91584621b2c93d2d1f81b390931fe5b241fb12b400d86b",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "chamber",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rampart",
+      "file": "releases/web-underground-v0.15.0/rampart.jpg",
+      "sha256": "38a0930a6991e598e3d0634203126bcb6ff6f05a7e92cb4a0d3c5223f7b6d208",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "rampart",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fortress-overview",
+      "file": "releases/web-underground-v0.15.0/fortress-overview.jpg",
+      "sha256": "18e068ac5e30a0de3328b8289bc2884905bb661e8fdc620af8bac840c13aa37a",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "fortress-overview",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-running",
+      "file": "releases/web-underground-v0.15.0/mobile-running.jpg",
+      "sha256": "0b18936612320f47767b545e7e41841ea2d1be0039834a71120eba01556a0015",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "mobile-running",
+      "width": 915,
+      "height": 412,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile-portrait",
+      "file": "releases/web-underground-v0.15.0/mobile-portrait.jpg",
+      "sha256": "c2f7da6fc1e35880ccae2b96cee6ef5ba5f4e8f2c505baca78d7077e9d3cbe9c",
+      "kind": "screenshot",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "mobile-portrait",
+      "width": 412,
+      "height": 915,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "page@c97ed96a47dc4ec3c109557cdc575acd",
+      "file": "releases/web-underground-v0.15.0/video/page@c97ed96a47dc4ec3c109557cdc575acd.webm",
+      "sha256": "b94b070934aea68a0ce9711f5e6adfc151a2863b72b0a2b488a413663c6dbb0d",
+      "kind": "video",
+      "version": "web-underground-v0.15.0",
+      "build_id": "web-underground-v0.15.0",
+      "capture_mode": "realtime-automation",
+      "description": "QA起点定位，实际键盘行走/转镜头；总览使用定位镜头",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 15.68,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 15.68,
+          "description": "进洞下坡、母巢大厅、转镜头、城墙坡道与总览"
+        }
+      ]
+    }
+  ],
   "readiness": {
     "overview": "partial",
     "update": "partial",
     "gaps": [
       "需补游戏音轨、真人手机试玩"
     ]
+  },
+  "website": {
+    "verified_at": "2026-10-03T22:19:32.664833+00:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "checks": "live/checks.json"
+  },
+  "toy": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_0z2tku61/index.html",
+    "zip_sha256": "8740d5e682b087f70b09d1cf50aa3193c71e1d89a9507b47aa0715523f5635f6",
+    "verification": "toy/preview-verification.json"
   }
 }

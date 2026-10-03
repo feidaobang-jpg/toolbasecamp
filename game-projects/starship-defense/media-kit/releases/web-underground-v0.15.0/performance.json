@@ -2,14 +2,14 @@
   {
     "device": "desktop Edge headless",
     "samples": 1105,
-    "averageFPS": 170.00784651552533,
+    "averageFPS": 169.84844292753777,
     "medianMs": 5.9000000059604645,
     "p95Ms": 6,
     "over50ms": 0,
-    "drawCalls": 182,
-    "triangles": 340270,
+    "drawCalls": 172,
+    "triangles": 335546,
     "memory": {
-      "geometries": 120,
+      "geometries": 119,
       "textures": 7
     },
     "viewport": [
@@ -27,15 +27,15 @@
   },
   {
     "device": "mobile viewport emulation, no CPU throttle",
-    "samples": 1089,
-    "averageFPS": 167.23743415651973,
+    "samples": 1098,
+    "averageFPS": 168.75172901377152,
     "medianMs": 5.9000000059604645,
-    "p95Ms": 6.700000017881393,
+    "p95Ms": 6.0999999940395355,
     "over50ms": 0,
-    "drawCalls": 198,
-    "triangles": 356050,
+    "drawCalls": 172,
+    "triangles": 342516,
     "memory": {
-      "geometries": 118,
+      "geometries": 119,
       "textures": 6
     },
     "viewport": [
