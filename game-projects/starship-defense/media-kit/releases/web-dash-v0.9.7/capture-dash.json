@@ -1,0 +1,36 @@
+{
+ "file": "captures/dash-swarm-heli.webm",
+ "capture_mode": "realtime-automation",
+ "staging": "bug ring and helicopter placed through ?qa=1 hooks; all player actions are real keyboard input",
+ "hp_after_swarm": {
+  "hp": 0,
+  "max": 120
+ },
+ "marks": [
+  {
+   "at": 4.2,
+   "d": "surrounded by a ring of bugs"
+  },
+  {
+   "at": 5.8,
+   "d": "W + K: dash out of the ring"
+  },
+  {
+   "at": 8.1,
+   "d": "turn back and shoot"
+  },
+  {
+   "at": 9.9,
+   "d": "second dash sideways (D + Space) after the cooldown"
+  },
+  {
+   "at": 12.2,
+   "d": "helicopter: Y up, H down"
+  },
+  {
+   "at": 17.3,
+   "d": "end"
+  }
+ ],
+ "errors": []
+}

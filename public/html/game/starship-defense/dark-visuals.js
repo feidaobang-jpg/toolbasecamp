@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three.module.js';
-import {ToyVisuals} from './toy-visuals.js?v=fb9';
+import {ToyVisuals} from './toy-visuals.js?v=fb97';
 
 // Deep night battlefield look requested by players (closest to the first released
 // version): armoured troopers, glossy arachnid bugs with glowing eyes, steel base.
@@ -151,12 +151,12 @@ export class DarkVisuals extends ToyVisuals {
   }
   animate(root,dt,state,camera){
     super.animate(root,dt,state,camera);
-    const a=root?.userData.toy;if(!a?.wings)return;
+    const a=root&&root.userData.toy;if(!a||!a.wings)return;
     const flap=Math.sin(a.time*30)*.55;a.wings[0].rotation.z=.25+flap;a.wings[1].rotation.z=-.25-flap;
   }
   restyle(root){
     const colors=new Map([[0xf6dfae,0x7a8796],[0x53b4ae,0x3e8f96],[0xf5b957,0xc8953f],[0x8899aa,0x6d7b8c],[0x667788,0x4b5866],[0x88aacc,0x7f98b5],[0x77879a,0x5f6d7d],[0x5c6b7d,0x46525f],[0x7c8aa0,0x6a788a],[0x9aa8ba,0x7d8ea3],[0x2a5d3a,0x24442f],[0x222222,0x1c2228],[0x111111,0x161b20]]);
-    root.traverse(o=>{if(!o.isMesh||!o.material?.isMeshLambertMaterial||o.material.vertexColors||o.userData.keepMaterial)return;
+    root.traverse(o=>{if(!o.isMesh||!(o.material&&o.material.isMeshLambertMaterial)||o.material.vertexColors||o.userData.keepMaterial)return;
       const old=o.material,color=colors.get(old.color.getHex())||old.color.getHex();
       o.material=new THREE.MeshPhongMaterial({color,shininess:18,specular:0x2a3038,transparent:old.transparent,opacity:old.opacity,side:old.side});
       if(o.geometry.type==='BoxGeometry'){

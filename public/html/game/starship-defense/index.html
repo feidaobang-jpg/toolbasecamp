@@ -14,7 +14,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #c3d{position:absolute;left:0;top:0;width:100%;height:100%;display:block;}
 .overlay{position:absolute;left:0;top:0;width:100%;height:100%;z-index:10;}
 .hidden{display:none!important;}
-#assetLoad{position:absolute;inset:0;z-index:100;display:grid;place-content:center;font-size:19px;text-align:center;padding:30px}
+#assetLoad{position:absolute;left:0;top:0;right:0;bottom:0;z-index:100;display:grid;place-content:center;font-size:19px;text-align:center;padding:30px}
 #hud{pointer-events:none;}
 #hudTop{position:absolute;left:10px;top:10px;font-size:12px;line-height:1.6;padding:8px 11px;min-width:196px;max-width:240px}
 #hudRight{position:absolute;right:10px;top:10px;text-align:right;font-size:12px;line-height:1.6;padding:8px 11px;max-width:250px}
@@ -36,8 +36,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #crosshair{position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);pointer-events:none;z-index:11}
 #crosshair::before,#crosshair::after{content:"";position:absolute;background:rgba(220,250,255,.9);box-shadow:0 0 3px #000}
 #crosshair::before{left:12px;top:2px;width:2px;height:22px}#crosshair::after{top:12px;left:2px;height:2px;width:22px}
-#dmgLayer{position:absolute;inset:0;pointer-events:none;z-index:11;overflow:hidden}
-#screenFx{position:absolute;inset:0;pointer-events:none;z-index:9;opacity:0;background:radial-gradient(ellipse at center,rgba(255,0,0,0) 55%,rgba(255,30,30,.55) 100%)}
+#dmgLayer{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:11;overflow:hidden}
+#screenFx{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:9;opacity:0;background:radial-gradient(ellipse at center,rgba(255,0,0,0) 55%,rgba(255,30,30,.55) 100%)}
 #screenFx.heal{background:radial-gradient(ellipse at center,rgba(0,255,120,0) 60%,rgba(60,255,150,.4) 100%)}
 .dmgNum{position:absolute;left:0;top:0;font-weight:900;font-size:14px;color:#fff;text-shadow:0 1px 0 #000,1px 0 0 #000,-1px 0 0 #000,0 -1px 0 #000;will-change:transform}
 .dmgNum.big{font-size:19px;color:#ffd84d}
@@ -61,6 +61,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .vbtn.sm{width:46px;height:46px;line-height:44px;font-size:11px;border-radius:12px}
 #vJ{right:96px;bottom:18px;width:76px;height:76px;line-height:74px;font-size:15px}
 #vK{right:22px;bottom:24px;width:62px;height:62px;line-height:60px}
+#vK.cd{background-image:conic-gradient(rgba(0,0,0,.55) calc(var(--cd)*360deg),transparent 0)}
 #vU{right:182px;bottom:20px}#vI{right:28px;bottom:100px}#vH{right:102px;bottom:106px}#vX{right:172px;bottom:88px}
 #vO{right:24px;bottom:172px}#vL{right:78px;bottom:172px}#vC{right:132px;bottom:172px}#vV{right:186px;bottom:172px}#vP{right:240px;bottom:172px}#vG{right:294px;bottom:172px}
 #vQ{right:306px;bottom:24px}#vE{right:250px;bottom:24px}
@@ -82,6 +83,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .menu .subtitle{font-size:13px;letter-spacing:6px;margin-bottom:4px}
 .menu h2{font-size:18px;margin:10px 0 8px}
 .btnRow{display:flex;gap:10px;margin:7px 0;flex-wrap:wrap;}
+/* 老内核（Chrome<84）不支持 flex 的 gap，按钮会挤在一起：由页尾脚本检测后加 no-flexgap，用外边距补间距 */
+.no-flexgap .btnRow>*,.no-flexgap .tabRow>*{margin:0 5px 6px}.no-flexgap #weaponBar>*{margin:0 2px 3px}.no-flexgap #webTools>*{margin:0 0 5px 5px}.no-flexgap .saveSlot>*+*,.no-flexgap .testGrid label>*+*{margin-left:8px}
 .mbtn{font-size:13px;padding:8px 18px;cursor:pointer;font-weight:bold;font-family:inherit}
 .mbtn:active{transform:scale(.95);}
 .mbtn:focus-visible,.shopItem:focus-visible,.tab:focus-visible,.vbtn:focus-visible,.wslot:focus-visible{outline:3px solid #ffe066;outline-offset:1px}
@@ -210,6 +213,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
       <div>⭐ 分数 <span id="scoreTxt">0</span></div>
       <div id="weapTxt">🔫 轻机枪</div>
       <div id="itemTxt"></div>
+      <div id="dashTxt"></div>
       <div id="squadTxt"></div>
       <div id="hiveTxt"></div>
       <div id="waveTxt" style="white-space:pre-line"></div>
@@ -221,7 +225,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · J/鼠标左键射击 · 点画面用鼠标转视角 · K跳 · U手雷 · I互动(门/载具) · H医疗包 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · G小队指令 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格冲刺 · U手雷 · I互动(门/载具) · H医疗包 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · G小队指令 · O商店 · L建造 · R开战 · P/Esc暂停</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
@@ -235,7 +239,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div id="lookZone" aria-label="拖动转视角"></div>
     <div id="joyBase"><div id="joyKnob"></div></div>
     <div class="vbtn" id="vJ">射击</div>
-    <div class="vbtn" id="vK">跳</div>
+    <div class="vbtn" id="vK">冲</div>
     <div class="vbtn" id="vU">手雷</div>
     <div class="vbtn" id="vI">互动</div>
     <div class="vbtn" id="vH">医疗</div>
@@ -269,7 +273,7 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     </div>
     <div class="small">
       电脑：WASD 移动 · J 或鼠标左键射击 · 点一下画面即可用鼠标自由转视角（Esc 释放）· Q/E 也能转 · V 第一/第三人称 · C 镜头远近/俯视<br>
-      K 跳 · U 手雷（无限，自动抛向目标）· I 互动（开关城门、上下载具）· H 医疗包 · 1-6 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
+      K/空格 冲刺（短暂无敌，冷却 2.5 秒）· U 手雷（无限，自动抛向目标）· I 互动（开关城门、上下载具）· H 医疗包 · 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · G 小队指令 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
       菜单和面板：方向键或 Tab 选择（黄色框），回车/空格确认，Esc 关闭或返回，全程不用鼠标<br>
       玩法：准备阶段去野外打怪攒钱 → 商店买枪/强化（每把武器可强化到 Lv10）、造炮塔、雇队友 → 开战守住基地。虫子从远处虫洞钻出；地图最深处是虫巢，母皇和护卫只守老巢，击杀母皇本章虫潮 -35%<br>
@@ -370,6 +374,33 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
     <div class="btnRow" style="justify-content:center"><button class="mbtn" id="confirmCancel">取消</button><button class="mbtn green" id="confirmOk">确定</button></div>
   </div>
 </div>
-<script type="module" src="./game.js?v=fb96"></script>
+<script>
+/* 老内核兼容：步步高学习平板等内置浏览器停在较老的 Chrome 内核。2026-10-02 改版后的顶层 await / ?. 让整份脚本解析失败，
+   画面一直卡在“正在部署”。这里补几个新 API（replaceChildren / Object.hasOwn / 全屏 webkit 前缀）、给不支持 flex gap 的内核补按钮间距；游戏脚本仍没能启动时显示内核版本与提示。
+   本段须保持 ES5 写法（var / function），否则老内核连这段提示也跑不起来。 */
+(function(){
+  var E=Element.prototype;
+  if(!E.replaceChildren)E.replaceChildren=function(){while(this.firstChild)this.removeChild(this.firstChild);this.append.apply(this,arguments);};
+  if(!Object.hasOwn)Object.hasOwn=function(o,k){return Object.prototype.hasOwnProperty.call(o,k);};
+  var d=document;if(!E.requestFullscreen&&E.webkitRequestFullscreen)E.requestFullscreen=function(){return this.webkitRequestFullscreen();};
+  if(!d.exitFullscreen&&d.webkitExitFullscreen)d.exitFullscreen=function(){return d.webkitExitFullscreen();};
+  if(!('fullscreenElement' in d)&&('webkitFullscreenElement' in d))Object.defineProperty(d,'fullscreenElement',{get:function(){return d.webkitFullscreenElement;}});
+  try{var f=document.createElement('div');f.style.cssText='display:flex;flex-direction:column;row-gap:1px;position:absolute;visibility:hidden';
+    f.appendChild(document.createElement('div'));f.appendChild(document.createElement('div'));document.body.appendChild(f);
+    if(f.scrollHeight!==1)document.documentElement.classList.add('no-flexgap');f.parentNode.removeChild(f);}catch(e){}
+  var shown=false;
+  function fail(){
+    if(shown||window.__ccBooted)return;shown=true;
+    var m=/Chrome\/(\d+)/.exec(navigator.userAgent||''),stage=document.getElementById('stage'),box=document.getElementById('assetLoad');
+    var s=Math.min(innerWidth/960,innerHeight/540)||1;if(stage)stage.style.transform='translate(-50%,-50%) scale('+s+')';
+    if(box)box.textContent='游戏没能在这个浏览器里启动'+(m?'（内核 Chrome '+m[1]+'）':'')+'。请把系统浏览器或 WebView 升级到最新，或换一个浏览器打开；也欢迎把这句话截图反馈给作者。';
+  }
+  var base=location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,''); // 只认本游戏目录下脚本的报错
+  window.addEventListener('error',function(e){if(!window.__ccBooted&&(!e.filename||e.filename.indexOf(base)===0))fail();});
+  if(!('noModule' in document.createElement('script')))fail();
+  setTimeout(fail,45000);
+})();
+</script>
+<script type="module" src="./game.js?v=dash1"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

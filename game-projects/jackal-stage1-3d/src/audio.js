@@ -70,6 +70,13 @@ const SONGS = {
     bass: 'A2 - E3 - A2 - E3 - | D3 - A2 - D3 - A2 - | A2 - E3 - A2 - E3 - | E3 - B2 - E3 - E2 - | F2 - C3 - F2 - C3 - | C3 - G2 - C3 - G2 - | G2 - D3 - G2 - D3 - | A2 - E3 - A2 - A2 -',
     drum: 'k h s h k h s h'
   },
+  // 第二关：废墟城（原创，多利亚调式的行进曲）
+  ruins: {
+    bpm: 128,
+    lead: 'D5 - F5 - A5 - G5 F5 | E5 - C5 - D5 - - - | D5 - F5 - A5 - C6 B5 | A5 - G5 - A5 - - - | G5 - A5 - B5 - A5 G5 | F5 - E5 - D5 - C5 - | D5 - F5 A5 G5 - F5 E5 | D5 - A4 - D5 - - -',
+    bass: 'D3 - A2 - D3 - A2 - | C3 - G2 - C3 - G2 - | D3 - A2 - D3 - A2 - | A2 - E2 - A2 - E2 - | G2 - D3 - G2 - D3 - | F2 - C3 - F2 - C3 - | D3 - A2 - D3 - A2 - | D3 - A2 - D3 - D3 -',
+    drum: 'k h h s k h s h'
+  },
   boss: {
     bpm: 164,
     lead: 'E5 E5 - E5 D5 - E5 - | G5 - F5 - E5 - D5 - | E5 E5 - E5 D5 - E5 - | B5 - A5 - G5 - F#5 - | C5 C5 - C5 B4 - C5 - | D5 - C5 - B4 - G#4 - | A4 A4 - C5 E5 - A5 - | G#5 - E5 - B4 - G#4 -',
@@ -138,6 +145,9 @@ const A = {
   powFree() { seq(['E6', 'G6'], 0.06, 'triangle', 0.14); },
   powPick() { seq(['C6', 'E6', 'G6'], 0.05, 'square', 0.08); },
   powDeliver() { seq(['G5', 'C6', 'E6', 'G6'], 0.07, 'square', 0.09); },
+  missile() { noise(0.45, 0.14, 600, 2600, null, null, 'bandpass'); tone('sawtooth', 140, 380, 0.3, 0.05); },
+  plane() { noise(2.4, 0.16, 300, 900, null, null, 'bandpass'); tone('sawtooth', 90, 70, 2.2, 0.05); },
+  rumble() { noise(0.7, 0.3, 500, 120); tone('sine', 70, 40, 0.6, 0.18); },
   hurt() { tone('square', 260, 90, 0.16, 0.12); noise(0.18, 0.3, 2600, 400); tone('triangle', 1400, 900, 0.08, 0.06); },
   repair() { seq(['C6', 'G6', 'C7'], 0.06, 'triangle', 0.14); tone('square', 1800, 2400, 0.08, 0.04); },
   upgrade() { seq(['C5', 'E5', 'G5', 'C6', 'E6', 'G6', 'C7'], 0.05, 'square', 0.1); },
@@ -186,7 +196,7 @@ const A = {
   state() { return ctx ? ctx.state : 'none'; },
   musicState() { return music.song; }
 };
-const LOGGED = ['hurt', 'repair', 'music', 'musicDuck', 'mg', 'grenade', 'rocket', 'boom', 'splash', 'enemyShot', 'shell', 'ping', 'thud', 'soldierDown', 'squash', 'powFree', 'powPick', 'powDeliver', 'upgrade', 'checkpoint', 'star', 'playerDown', 'alarm', 'pause', 'tick', 'clear', 'gameOver', 'engine'];
+const LOGGED = ['missile', 'plane', 'rumble', 'hurt', 'repair', 'music', 'musicDuck', 'mg', 'grenade', 'rocket', 'boom', 'splash', 'enemyShot', 'shell', 'ping', 'thud', 'soldierDown', 'squash', 'powFree', 'powPick', 'powDeliver', 'upgrade', 'checkpoint', 'star', 'playerDown', 'alarm', 'pause', 'tick', 'clear', 'gameOver', 'engine'];
 const RAW = {};
 for (const k of LOGGED) {
   RAW[k] = A[k];

@@ -4,10 +4,10 @@ export const THEME_KEY='chongchao-theme';
 export function currentTheme(){
   const forced=new URLSearchParams(location.search).get('theme');
   if(forced==='dark'||forced==='toy')return forced;
-  try{const saved=localStorage.getItem(THEME_KEY);if(saved==='dark'||saved==='toy')return saved;}catch{}
+  try{const saved=localStorage.getItem(THEME_KEY);if(saved==='dark'||saved==='toy')return saved;}catch(_e){}
   return 'dark';
 }
-export function saveTheme(value){try{localStorage.setItem(THEME_KEY,value);}catch{}}
+export function saveTheme(value){try{localStorage.setItem(THEME_KEY,value);}catch(_e){}}
 
 export const PALETTES={
   dark:{

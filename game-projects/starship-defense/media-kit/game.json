@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮前哨：守卫基地",
   "engine": "Three.js r152",
-  "current_version": "web-webview-fix-v0.9.6",
+  "current_version": "web-dash-v0.9.7",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "python game-projects/starship-defense/build-toy.py",
   "release_intent": "web_demo",

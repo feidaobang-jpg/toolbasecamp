@@ -88,7 +88,15 @@ export function blob(w, d) {
 }
 
 const cache = new Map();
-function cached(key, fn) { if (!cache.has(key)) cache.set(key, fn()); return cache.get(key); }
+const CACHED = new WeakSet();   // 共享几何体：换关时不释放
+function markCached(v) {
+  if (!v) return;
+  if (v.isBufferGeometry) CACHED.add(v);
+  else if (Array.isArray(v)) v.forEach(markCached);
+  else if (typeof v === 'object') for (const k in v) if (v[k] && (v[k].isBufferGeometry || Array.isArray(v[k]))) markCached(v[k]);
+}
+export function cached(key, fn) { if (!cache.has(key)) { const v = fn(); markCached(v); cache.set(key, v); } return cache.get(key); }
+export const isCached = (g) => CACHED.has(g);
 export function mesh(geo, mat, shadow) {
   const m = new THREE.Mesh(geo, mat || MAT.toy);
   m.castShadow = shadow !== false; m.receiveShadow = false;
@@ -105,7 +113,7 @@ export const C = {
 };
 
 // ---------- Q 版小人（头大身小） ----------
-function chibiHead(b, x, y, z, s, helmet, helmetColor) {
+export function chibiHead(b, x, y, z, s, helmet, helmetColor) {
   part(b, 'sphere', C.skin, [x, y, z], [0.62 * s, 0.6 * s, 0.58 * s]);
   part(b, 'sphere', 0x2b2b2b, [x - 0.12 * s, y + 0.02 * s, z - 0.27 * s], [0.07 * s, 0.11 * s, 0.05 * s]);
   part(b, 'sphere', 0x2b2b2b, [x + 0.12 * s, y + 0.02 * s, z - 0.27 * s], [0.07 * s, 0.11 * s, 0.05 * s]);
@@ -288,14 +296,16 @@ export function makeTank(variant) {
   const sets = {
     normal: () => cached('tank-n', () => tankGeos(C.khaki, C.khakiD, C.red, 1)),
     blue: () => cached('tank-b', () => tankGeos(C.blue, C.blueD, C.cream, 1.18)),
-    brown: () => cached('tank-r', () => tankGeos(C.brown, C.brownD, C.cream, 1.18))
+    brown: () => cached('tank-r', () => tankGeos(C.brown, C.brownD, C.cream, 1.18)),
+    brownS: () => cached('tank-rs', () => tankGeos(0xa8743f, 0x7a512a, C.cream, 1)),
+    bull: () => cached('tank-bull', () => tankGeos(0x8b9399, 0x5f676d, C.yellow, 1.3))
   };
   const g = sets[variant]();
   const root = new THREE.Group();
   const hull = mesh(g.hull); root.add(hull);
   const turret = new THREE.Group(); root.add(turret);
   const tm = mesh(g.tur); turret.add(tm);
-  const sc = variant === 'normal' ? 1 : 1.18;
+  const sc = variant === 'normal' || variant === 'brownS' ? 1 : variant === 'bull' ? 1.3 : 1.18;
   root.add(blob(3.2 * sc, 4 * sc));
   return {
     root, hull, turret, tm,
@@ -364,17 +374,27 @@ export function makeBoat() {
   return { root, turret, wake };
 }
 
-// 营房 / 俘虏屋（带铁栏窗）
-export function hutGeo(w, d, ruined) {
-  return cached('hut-' + w + 'x' + d + (ruined ? 'r' : ''), () => {
+// 营房 / 俘虏屋（带铁栏窗）。style：wood 木屋红顶（第 1 关）/ stone 石屋（第 2 关）/ tent 帆布棚（第 3、6 关）/ cabin 原木屋（第 4 关）/ brick 砖房（第 5 关）
+const HUT_STYLE = {
+  wood:  { wall: C.wood, trim: C.woodD, roof: C.red, roofD: C.redD, door: 0x5a3a22, roofShape: 'cone4' },
+  stone: { wall: 0xa7a59c, trim: 0x77756d, roof: 0x5a5d61, roofD: 0x3f4246, door: 0x3b3a36, roofShape: 'flat' },
+  tent:  { wall: 0xe0a24a, trim: 0xb07428, roof: 0xd98a2e, roofD: 0x9a5c1c, door: 0x6b4420, roofShape: 'tent' },
+  cabin: { wall: 0x8a5a36, trim: 0x5e3b22, roof: 0x7d6a3a, roofD: 0x56482a, door: 0x3a2a1c, roofShape: 'cone4' },
+  brick: { wall: 0xd06a3a, trim: 0x8f4224, roof: 0x7a3a24, roofD: 0x552616, door: 0x3a2a1c, roofShape: 'flat' }
+};
+export function hutGeo(w, d, ruined, style) {
+  const st = HUT_STYLE[style] || HUT_STYLE.wood;
+  return cached('hut-' + (style || 'wood') + w + 'x' + d + (ruined ? 'r' : ''), () => {
     const b = [];
     if (!ruined) {
-      part(b, 'rbox', C.wood, [0, 0.9, 0], [w, 1.8, d]);
-      part(b, 'box', C.woodD, [0, 0.12, 0], [w + 0.1, 0.24, d + 0.1]);
-      for (let k = -1; k <= 1; k += 2) part(b, 'box', C.woodD, [k * (w / 2 - 0.15), 0.9, -d / 2 - 0.02], [0.18, 1.8, 0.06]);
-      part(b, 'cone4', C.red, [0, 2.35, 0], [w * 1.38, 1.2, d * 1.38], [0, Math.PI / 4, 0]);
-      part(b, 'box', C.redD, [0, 1.82, 0], [w + 0.4, 0.14, d + 0.4]);
-      part(b, 'rbox', 0x5a3a22, [0, 0.65, -d / 2 - 0.03], [0.9, 1.2, 0.08]);
+      part(b, 'rbox', st.wall, [0, 0.9, 0], [w, 1.8, d]);
+      part(b, 'box', st.trim, [0, 0.12, 0], [w + 0.1, 0.24, d + 0.1]);
+      for (let k = -1; k <= 1; k += 2) part(b, 'box', st.trim, [k * (w / 2 - 0.15), 0.9, -d / 2 - 0.02], [0.18, 1.8, 0.06]);
+      if (st.roofShape === 'cone4') part(b, 'cone4', st.roof, [0, 2.35, 0], [w * 1.38, 1.2, d * 1.38], [0, Math.PI / 4, 0]);
+      else if (st.roofShape === 'tent') { part(b, 'cone4', st.roof, [0, 2.25, 0], [w * 1.42, 1.0, d * 1.42], [0, Math.PI / 4, 0]); for (let k = 0; k < 5; k++) part(b, 'box', st.roofD, [(k - 2) * w * 0.22, 1.86, 0], [0.08, 0.06, d + 0.3]); }
+      else { part(b, 'rbox', st.roof, [0, 2.0, 0], [w + 0.3, 0.36, d + 0.3]); part(b, 'box', st.roofD, [0, 2.22, 0], [w * 0.5, 0.2, d * 0.4]); }
+      part(b, 'box', st.roofD, [0, 1.82, 0], [w + 0.4, 0.14, d + 0.4]);
+      part(b, 'rbox', st.door, [0, 0.65, -d / 2 - 0.03], [0.9, 1.2, 0.08]);
       for (const s of [-1, 1]) {
         const x = s * w * 0.28;
         part(b, 'box', 0x3a2a1c, [x, 1.1, -d / 2 - 0.03], [0.8, 0.6, 0.06]);
@@ -382,25 +402,30 @@ export function hutGeo(w, d, ruined) {
       }
     } else {
       const r = [[-0.3, 0.4], [0.4, -0.3], [0.1, 0.2], [-0.4, -0.35], [0.45, 0.4]];
-      r.forEach(([ax, az], k) => part(b, 'rbox', k % 2 ? C.woodD : 0x5b4030, [ax * w, 0.22, az * d], [w * 0.36, 0.4, d * 0.3], [0, k * 0.7, k % 2 ? 0.2 : -0.15]));
-      part(b, 'box', C.redD, [0.1 * w, 0.2, 0], [w * 0.5, 0.12, d * 0.4], [0.2, 0.5, 0.1]);
+      r.forEach(([ax, az], k) => part(b, 'rbox', k % 2 ? st.trim : 0x5b4030, [ax * w, 0.22, az * d], [w * 0.36, 0.4, d * 0.3], [0, k * 0.7, k % 2 ? 0.2 : -0.15]));
+      part(b, 'box', st.roofD, [0.1 * w, 0.2, 0], [w * 0.5, 0.12, d * 0.4], [0.2, 0.5, 0.1]);
       for (let k = 0; k < 4; k++) part(b, 'box', 0x3a2a1c, [(k - 1.5) * w * 0.2, 0.1, (k % 2 - 0.5) * d * 0.5], [0.16, 0.16, 1.1], [0, k * 0.9, 0]);
     }
     return merged(b);
   });
 }
-export function gateGeo(ruined) {
-  return cached('gate' + (ruined ? 'r' : ''), () => {
+// 大门。style：wood 木门（第 1、4 关）/ green 绿色钢门（第 2、5 关）/ orange 橙色推拉门（第 3、6 关）；w 门宽，ew 东西向（门在南北墙上为默认）
+const GATE_STYLE = { wood: [C.wood, C.dark, C.redD], green: [0x4f8a52, 0x2f4f33, 0x6d6f70], orange: [0xe0882e, 0x8a4a14, 0x6d6f70] };
+export function gateGeo(ruined, style, w) {
+  const W = w || 6, st = GATE_STYLE[style] || GATE_STYLE.wood;
+  return cached('gate' + (style || 'wood') + W + (ruined ? 'r' : ''), () => {
     const b = [];
     if (!ruined) {
+      const half = W / 2;
       for (const s of [-1, 1]) {
-        part(b, 'rbox', C.wood, [s * 1.5, 1.2, 0], [2.96, 2.4, 0.6]);
-        for (const y of [0.6, 1.8]) part(b, 'box', C.dark, [s * 1.5, y, -0.32], [2.9, 0.16, 0.06]);
+        part(b, 'rbox', st[0], [s * half / 2, 1.2, 0], [half - 0.04, 2.4, 0.6]);
+        for (const y of [0.6, 1.8]) part(b, 'box', st[1], [s * half / 2, y, -0.32], [half - 0.1, 0.16, 0.06]);
         part(b, 'cyl', C.grayL, [s * 0.3, 1.2, -0.34], [0.16, 0.06, 0.16], [Math.PI / 2, 0, 0]);
+        if (style === 'orange') for (let k = 0; k < 3; k++) part(b, 'box', 0x2b2b2b, [s * (0.5 + k * half / 3.2), 1.2, -0.33], [0.12, 1.6, 0.04], [0, 0, s * 0.7]);
       }
-      part(b, 'box', C.redD, [0, 2.6, 0], [6.4, 0.3, 0.9]);
+      part(b, 'box', st[2], [0, 2.6, 0], [W + 0.4, 0.3, 0.9]);
     } else {
-      for (let k = 0; k < 6; k++) part(b, 'box', k % 2 ? C.wood : C.woodD, [(k - 2.5) * 0.9, 0.12, (k % 3 - 1) * 0.4], [0.5, 0.18, 1.6], [0, k * 0.6 - 1, 0]);
+      for (let k = 0; k < Math.round(W); k++) part(b, 'box', k % 2 ? st[0] : st[1], [(k - W / 2 + 0.5) * 0.9, 0.12, (k % 3 - 1) * 0.4], [0.5, 0.18, 1.6], [0, k * 0.6 - 1, 0]);
     }
     return merged(b);
   });
@@ -479,9 +504,12 @@ export function makeLandingCraft() {
   return m;
 }
 
-export function makeStar() {
+// 隐藏道具星：bomb 棕色（消灭画面上敌人）/ up 绿色（多一辆吉普）/ max 闪光（武器满级）
+const STAR_COLOR = { bomb: 0xc8743a, up: 0x5fd36a, max: C.gold };
+export function makeStar(kind) {
   const root = new THREE.Group();
-  const s = mesh(cached('starBig', () => { const b = []; part(b, 'star', C.gold, [0, 0, 0], [1.3, 1.3, 1.3]); return merged(b); }), MAT.toy, false);
+  const k = STAR_COLOR[kind] ? kind : 'max';
+  const s = mesh(cached('starBig-' + k, () => { const b = []; part(b, 'star', STAR_COLOR[k], [0, 0, 0], [1.3, 1.3, 1.3]); return merged(b); }), MAT.toy, false);
   s.position.y = 1.2; root.add(s);
   const ring = new THREE.Mesh(cached('ringGeo2', () => new THREE.RingGeometry(0.8, 1.2, 24)), MAT.glow);
   ring.rotation.x = -Math.PI / 2; ring.position.y = 0.06; root.add(ring);

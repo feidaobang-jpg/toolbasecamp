@@ -59,6 +59,7 @@ comfyui-api-server/__pycache__/
 
 # Game QA intermediate artifacts (screenshots / screencast frames / perf json)
 game-projects/*/qa/render-results/
+game-projects/*/qa/out/
 
 # Game media (gameplay captures, recordings, video covers/frames, audio) stay on the local disk only.
 # Commit game code & resources (public/html/game/) plus media-kit / video text notes, json and scripts.
@@ -75,6 +76,8 @@ game-projects/*/media-kit/**/*.wav
 game-projects/*/media-kit/**/*.mp3
 game-projects/*/media-kit/**/*.m4a
 game-projects/*/media-kit/**/*.flac
+# 第三方参考资料（原作地图、攻略文本）只留本机，不入库
+game-projects/*/media-kit/assets/reference/
 game-projects/*/video/**/*.png
 game-projects/*/video/**/*.jpg
 game-projects/*/video/**/*.jpeg

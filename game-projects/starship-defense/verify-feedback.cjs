@@ -92,12 +92,12 @@ async function open(b,opts={},query=''){
  await p.keyboard.press('Escape');if(await p.evaluate(()=>__gameQA.Game.state==='paused'))await p.keyboard.press('KeyP');
  check('weapon upgrade raises level and damage multiplier',up.lv===1&&up.cost>0&&up.mul>1,up);
 
- // 9. Space after mouse-clicking a toolbar button jumps instead of re-clicking
- await p.evaluate(()=>{const q=__gameQA;q.player.pos.set(0,0,20);q.player.vy=0;q.player.onGround=true;});
+ // 9. Space after mouse-clicking a toolbar button dashes instead of re-clicking (v0.9.7: jump became dash)
+ await p.evaluate(()=>{const q=__gameQA;q.player.pos.set(0,0,20);q.player.vy=0;q.player.onGround=true;q.player.dashCd=0;});
  const q0=await p.evaluate(()=>document.getElementById('qualityBtn').dataset.quality);await p.click('#qualityBtn');const q1=await p.evaluate(()=>document.getElementById('qualityBtn').dataset.quality);
- await p.keyboard.down('Space');await p.waitForTimeout(80);const jumped=await p.evaluate(()=>__gameQA.player.vy>0||!__gameQA.player.onGround);await p.keyboard.up('Space');
+ await p.keyboard.down('Space');await p.waitForTimeout(80);const jumped=await p.evaluate(()=>__gameQA.player.dashCd>0);await p.keyboard.up('Space');
  const q2=await p.evaluate(()=>document.getElementById('qualityBtn').dataset.quality);
- check('space jumps after clicking a toolbar button',jumped&&q2===q1,{q0,q1,q2,jumped});
+ check('space dashes after clicking a toolbar button',jumped&&q2===q1,{q0,q1,q2,jumped});
  await p.click('#qualityBtn');
 
  // 10. separate keys: I interacts, H heals

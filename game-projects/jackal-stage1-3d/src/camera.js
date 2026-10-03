@@ -30,7 +30,7 @@ export function createCamera() {
       const hw = Math.cos(p.pitch) * 0 + p.dist * Math.tan(hfov / 2) * 0.86;
       if (opt && opt.lock) {
         const L = opt.lock;
-        gx = clamp(px, L.cx - 7, L.cx + 7); gy = clamp(py + p.ahead * 0.5, L.cy - 8, L.cy + 8);
+        gx = clamp(px, L.cx - 7, L.cx + 7); gy = L.lockY ? L.cy : clamp(py + p.ahead * 0.5, L.cy - 8, L.cy + 8);
       } else {
         gx = hw < 34 ? clamp(gx, -36 + hw, 36 - hw) : 0;
         gy = clamp(gy, 9, 342);

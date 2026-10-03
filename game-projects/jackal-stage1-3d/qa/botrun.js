@@ -10,11 +10,11 @@ const { makeBot } = require('./bot');
   if (process.env.ARMOR) await page.addInitScript((v) => { try { localStorage.setItem('jk3d-stage1:armor', JSON.stringify(v)); } catch (e) {} }, process.env.ARMOR);
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.goto(BASE + '?test=1&clean=1&q=' + (process.env.Q || 'low') + '&seed=' + seed);
+  await page.goto(BASE + '?test=1&clean=1&q=' + (process.env.Q || 'low') + '&seed=' + seed + (process.env.STAGE ? '&stage=' + process.env.STAGE : ''));
   await page.waitForTimeout(800);
   await page.evaluate(() => __JK_TEST__.manual(true));
   await page.keyboard.press('Enter');
-  const bot = makeBot(page, { seed: +seed, dodge: process.env.DODGE !== '0' });   // DODGE=0：关闭躲子弹，模拟手生的玩家
+  const bot = makeBot(page, { seed: +seed, dodge: process.env.DODGE !== '0', stage: +(process.env.STAGE || 1) });   // DODGE=0：关闭躲子弹，模拟手生的玩家
   let s, k = 0, last = 0;
   const t0 = Date.now();
   while (true) {

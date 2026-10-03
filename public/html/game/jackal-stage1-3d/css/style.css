@@ -242,3 +242,12 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 62px); }
 #stage.portrait .logo { font-size: clamp(42px, 14vw, 78px); }
 #stage.portrait .title-screen { justify-content: center; }
 @media (prefers-reduced-motion: reduce) { .hud-lives.low .pips i.on { animation: none; } }
+
+/* ---------- 第二关（v0.3） ---------- */
+.stage-tag { font-size: 11px; font-weight: 800; color: #fff; background: var(--olive); border-radius: 8px; padding: 0 7px; display: inline-block; margin-bottom: 2px; letter-spacing: .12em; }
+.lv4 { background: #d9a43a; }
+#boss-bar[data-type=statues] i.ok { background: #ece6d6; } #boss-bar[data-type=statues] i.hurt { background: #c99a5a; }
+.items > button > span:first-child { white-space: nowrap; }
+/* 内容比屏幕高时（手机竖屏主菜单）：用 margin:auto 居中，溢出部分可以滚动看到，不会被顶出屏幕 */
+.overlay { align-items: flex-start; }
+.overlay > .panel { margin: auto; }

@@ -27,6 +27,9 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
 
   // ---------- 菜单键盘导航 ----------
   await page.keyboard.press('ArrowDown'); s = await snap(page);
+  const stageTxt = await page.textContent('#menu [data-opt=stage]');
+  check('↓ 到「起始关卡」，未过关时只有第一关', s.ui.focus === 'stage' && /第一关/.test(stageTxt), { focus: s.ui.focus, stageTxt });
+  await page.keyboard.press('ArrowDown'); s = await snap(page);
   check('↓ 移动焦点到「命数」', s.ui.focus === 'lives', s.ui.focus);
   await page.keyboard.press('ArrowRight'); s = await snap(page);
   const livesTxt = await page.textContent('#menu [data-opt=lives]');
@@ -41,6 +44,11 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   await page.keyboard.press('ArrowLeft'); const armTxt2 = await page.textContent('#menu [data-opt=armor]');
   check('←/→ 在「标准 3 格 / 经典一发」之间切换', /经典一发/.test(armTxt1) && /标准 3 格/.test(armTxt2), { armTxt1, armTxt2 });
   await page.keyboard.press('ArrowDown');
+  const gunTxt0 = await page.textContent('#menu [data-opt=gun]');
+  await page.keyboard.press('ArrowRight'); const gunTxt1 = await page.textContent('#menu [data-opt=gun]');
+  await page.keyboard.press('ArrowLeft'); const gunTxt2 = await page.textContent('#menu [data-opt=gun]');
+  check('「机枪方向」默认跟随车头，可切换为原作朝上（原作）', /跟随车头/.test(gunTxt0) && /原作朝上/.test(gunTxt1) && /跟随车头/.test(gunTxt2), { gunTxt0, gunTxt1, gunTxt2 });
+  await page.keyboard.press('ArrowDown');
   const demoTxt = await page.textContent('#menu [data-opt=demo]');
   check('演示模式默认关闭', /关/.test(demoTxt), demoTxt);
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowRight'); s = await snap(page);
@@ -53,7 +61,7 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   await page.keyboard.press('ArrowRight');
   check('音量可用 ←/→ 调节', vol0 !== vol1, { vol0, vol1 });
   // 回到开始按钮并按 Enter
-  for (let i = 0; i < 6; i++) await page.keyboard.press('ArrowUp');
+  for (let i = 0; i < 8; i++) await page.keyboard.press('ArrowUp');
   s = await snap(page);
   check('↑ 回到「开始游戏」', s.ui.focus === 'start', s.ui.focus);
   await page.keyboard.press('Enter');
@@ -96,13 +104,13 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   let b = await snap(page);
   const dx = b.player.x - a.player.x, dy = b.player.y - a.player.y;
   check('W+D 斜向移动且速度归一化', b.player.dir === 1 && dx > 1 && dy > 1 && Math.hypot(dx, dy) > 2.2 && Math.hypot(dx, dy) < 3.0, { dx: +dx.toFixed(2), dy: +dy.toFixed(2), dir: b.player.dir });
-  // 机枪固定向北
+  // 机枪默认跟随车头
   await page.keyboard.down('KeyD'); await steps(3); await page.keyboard.up('KeyD');   // 车头朝东
   a = await snap(page);
   await page.keyboard.down('KeyJ'); await steps(2);
   s = await snap(page); const vel = s.pbVel;
   await steps(20); b = await snap(page);
-  check('按住 J 机枪连发（车头朝东时子弹仍向北飞）', b.mgShots - a.mgShots >= 3 && vel && vel[0] === 0 && vel[1] > 0 && s.player.dir === 2, { shots: b.mgShots - a.mgShots, vel, dir: s.player.dir });
+  check('按住 J 机枪连发（默认跟随车头：朝东时子弹向东飞）', b.mgShots - a.mgShots >= 3 && vel && vel[0] > 20 && Math.abs(vel[1]) < 0.01 && s.player.dir === 2, { shots: b.mgShots - a.mgShots, vel, dir: s.player.dir });
   await page.keyboard.up('KeyJ');
   // 手雷朝车头方向
   await cheat('teleport', [-20, 26]); await cheat('invuln', [60]); await page.keyboard.down('KeyD'); await steps(2); await page.keyboard.up('KeyD');
@@ -203,11 +211,13 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   await page.keyboard.down('KeyD'); await steps(2); await page.keyboard.up('KeyD');
   await key('KeyK', 2); await steps(45);
   s = await snap(page);
-  check('炸林角露出隐藏星', s.star && s.star.hidden === false, s.star);
+  check('炸林角露出隐藏的棕色星', s.star && s.star.hidden === false && s.star.item === 'bomb', s.star);
   a = s;
+  const inView0 = a.enemies.filter(e => e.active).length;
   await cheat('teleport', [29.2, 205]); await steps(3);
   b = await snap(page);
-  check('拾取隐藏星：+3000 分并获得护盾', b.star.picked && b.player.shield > 5 && b.score - a.score >= 3000, { shield: b.player.shield, ds: b.score - a.score });
+  const picked = (await evs()).find(e => e.name === 'starPicked');
+  check('拾取棕色星：消灭画面上的敌人（原作智能炸弹），画面内不剩敌人', b.star.picked && picked && picked.data.item === 'bomb' && b.enemies.filter(e => e.active).length === 0 && /棕色星/.test(b.banner || ''), { killed: picked && picked.data.killed, before: inView0, after: b.enemies.filter(e => e.active).length, banner: b.banner });
 
   // 阵亡与复活（连续多次）：先清场，避免其他敌人干扰计数
   await cheat('kill'); await steps(5);
@@ -235,7 +245,8 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   await page.keyboard.press('Escape'); await steps(1); s = await snap(page);
   check('Esc 暂停并打开暂停菜单', s.ui.overlay === 'pause' && s.ui.paused, s.ui.overlay);
   check('暂停菜单首焦点「继续」', s.ui.focus === 'resume', s.ui.focus);
-  await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowDown'); s = await snap(page);
+  for (let k = 0; k < 3; k++) await page.keyboard.press('ArrowDown');
+  s = await snap(page);
   await page.keyboard.press('Enter'); s = await snap(page);
   check('暂停菜单里开启演示模式（无敌）', s.settings.demo === true && s.demoUsed, s.settings);
   await page.keyboard.press('Escape'); await steps(1); s = await snap(page);
@@ -250,7 +261,8 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   ev = (await evs()).slice(n0);
   check('演示模式下敌弹不会击毁吉普', b.player.alive && b.deaths === s.deaths && ev.some(e => e.name === 'demoBlock'), { alive: b.player.alive, block: ev.filter(e => e.name === 'demoBlock').length });
   await page.keyboard.press('Escape'); await steps(1);
-  await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter');
+  for (let k = 0; k < 3; k++) await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
   await page.keyboard.press('Escape'); await steps(1);
   s = await snap(page);
   check('关闭演示模式后恢复正常', s.settings.demo === false && !(await page.isVisible('#demo-badge')), s.settings);
@@ -321,14 +333,17 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   const resTitle = await page.textContent('#res-title');
   const tally = await page.textContent('#tally');
   check('结算含击毁统计、送达俘虏与总分', /第一关完成/.test(resTitle) && /送达俘虏/.test(tally) && /总分/.test(tally), resTitle);
+  const nextTxt = await page.textContent('#res-next');
   ev = await evs();
   const end = ev.find(e => e.name === 'end');
   check('用过演示模式的局不计最高分', end && end.data.demo === true && end.data.newHi === false, end && end.data);
   s = await snap(page);
-  check('结算首焦点「再玩一次」', s.ui.focus === 'restart', s.ui.focus);
+  check('第一关结算首焦点「进入第二关」', s.ui.focus === 'next' && /进入第二关/.test(nextTxt), { focus: s.ui.focus, nextTxt });
+  const scoreBefore = s.score, weaponBefore = s.weapon;
   await page.keyboard.press('Enter'); await steps(5);
   s = await snap(page);
-  check('Enter 再玩一次：营房与大门复位、分数归零', s.mode === 'intro' && s.huts.every(h => h.alive) && s.gate.alive && s.score === 0 && s.boss.state === 'idle', { mode: s.mode, huts: s.huts.filter(h => !h.alive).length, gate: s.gate.alive });
+  check('Enter 进入第二关：换成废墟城，分数和武器保留，营房与大门是新的', s.stage === 2 && s.stageNo === 2 && s.mode === 'intro' && s.huts.length === 6 && s.huts.every(h => h.alive) && s.score === scoreBefore && s.weapon === weaponBefore && s.boss.state === 'idle', { stage: s.stage, mode: s.mode, score: s.score, scoreBefore, weapon: s.weapon, weaponBefore, huts: s.huts.length });
+  check('第二关开场换成废墟城 BGM', s.ui.music === 'ruins', s.ui.music);
 
   // 经典 3 命：命用完 → 失败结算
   await steps(130);
@@ -340,15 +355,16 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   await page.keyboard.press('Enter');
   s = await snap(page);
   check('暂停菜单「返回主菜单」', s.ui.overlay === 'menu' && s.ui.uiMode === 'title', s.ui);
+  await page.keyboard.press('ArrowDown');                                             // 起始关卡（保持第一关）
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowRight');   // 经典 3 命
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowRight');   // 经典一发
-  for (let k = 0; k < 2; k++) await page.keyboard.press('ArrowUp');
+  for (let k = 0; k < 3; k++) await page.keyboard.press('ArrowUp');
   await page.keyboard.press('Enter'); await steps(130);
   s = await snap(page);
   check('经典模式开局 3 命，HUD 显示 ×3', s.settings.lives === 'classic' && s.lives === 3 && (await page.textContent('#h-lives')) === '×3', { lives: s.lives });
   const clsCls = await page.evaluate(() => document.getElementById('hc-armor').classList.contains('classic'));
   check('经典一发：护甲上限 1，HUD 标「一发」', s.settings.armor === 'classic' && s.player.armorMax === 1 && s.player.armor === 1 && clsCls && (await pips()) === 1, { armor: s.player.armor, max: s.player.armorMax, clsCls });
-  await steps(170);
+  await cheat('invuln', [6]); await steps(170);   // 开局附近有步兵开火：先保护一下，这里只验证修理包
   a = await snap(page); n0 = (await evs()).length;
   await page.evaluate(([x, y]) => __JK_TEST__.cheat.kitAt(x, y + 2.5), [a.player.x, a.player.y]);
   await page.keyboard.down('KeyW'); await steps(20); await page.keyboard.up('KeyW');
@@ -367,9 +383,10 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   check('结算注明「经典 3 命 · 经典一发」', /经典 3 命/.test(resExtra) && /经典一发/.test(resExtra), resExtra);
   // 复原无限命 + 标准 3 格设置
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('Enter'); await page.waitForTimeout(100);
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowLeft');
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowLeft');
-  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('ArrowUp'); await page.keyboard.press('ArrowUp');
 
   // 全屏：F 键请求；无头环境可能被拒绝，但不能崩溃
   await page.evaluate(() => __JK_TEST__.manual(false));

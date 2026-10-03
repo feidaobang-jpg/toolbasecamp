@@ -107,7 +107,7 @@ export class ToyVisuals {
   }
   mech(){const root=this.soldier(0x65c5b2);root.scale.setScalar(1.7);root.userData.visualHeight=2.72;root.userData.turret=new THREE.Group();return root;}
   animate(root,dt,state,camera){
-    const a=root?.userData.toy;if(!a)return;a.elapsed+=dt;
+    const a=root&&root.userData.toy;if(!a)return;a.elapsed+=dt;
     const distance=root.position.distanceToSquared(camera.position);
     if(a.elapsed<(distance<900?1/60:distance<4225?1/24:1/12))return;
     a.time+=a.elapsed;a.elapsed=0;const moving=state==='Walk'||state==='Run',t=a.time;
@@ -118,18 +118,18 @@ export class ToyVisuals {
     if(root.userData.gun)root.userData.gun.position.z=.43+Math.sin(t*11)*(moving?.035:0);
     for(const mesh of [a.body,...a.feet])mesh.castShadow=this.quality==='high'&&distance<2025;
   }
-  release(root){root?.traverse(o=>{if(o.isSprite){o.material.map?.dispose();o.material.dispose();}else if(o.isMesh&&o.material!==this.material&&o.material!==this.contactMaterial&&o.material.transparent){o.material.dispose();}});}
+  release(root){if(root)root.traverse(o=>{if(o.isSprite){if(o.material.map)o.material.map.dispose();o.material.dispose();}else if(o.isMesh&&o.material!==this.material&&o.material!==this.contactMaterial&&o.material.transparent){o.material.dispose();}});}
   death(root){
-    if(!root?.userData.toy)return false;
+    if(!root||!root.userData.toy)return false;
     while(this.corpses.length>=8){const c=this.corpses.shift();this.release(c.root);c.root.removeFromParent();}
-    root.children.filter(o=>o.isSprite).forEach(o=>{o.material.map?.dispose();o.material.dispose();root.remove(o);});
+    root.children.filter(o=>o.isSprite).forEach(o=>{if(o.material.map)o.material.map.dispose();o.material.dispose();root.remove(o);});
     root.userData.corpse=true;this.corpses.push({root,life:.75,scale:root.scale.x});return true;
   }
   update(dt){for(let i=this.corpses.length-1;i>=0;i--){const c=this.corpses[i];c.life-=dt;c.root.rotation.z+=(Math.PI/2-c.root.rotation.z)*Math.min(1,dt*16);if(c.life<.25)c.root.scale.setScalar(c.scale*Math.max(0,c.life/.25));if(c.life<=0){this.release(c.root);c.root.removeFromParent();this.corpses.splice(i,1);}}}
   clearCorpses(){for(const c of this.corpses){this.release(c.root);c.root.removeFromParent();}this.corpses.length=0;}
   restyle(root){
     const colors=new Map([[0x8899aa,0xf2e8d0],[0x667788,0x398b9e],[0x556677,0x337c8c],[0x7788aa,0xffeacf],[0x664433,0x478d91],[0x996644,0xf5ba64],[0x332211,0x29485a],[0x445566,0x448d9b],[0x3d4a5c,0x337b8e],[0x6688aa,0xefeee0],[0x223344,0x29485a],[0x777f66,0xece6ce],[0x99a077,0x63b7b5],[0x88aacc,0xffefd3],[0x77879a,0xf8ebcf],[0x5c6b7d,0x4ea6af],[0x7c8aa0,0x4fa3af],[0x9aa8ba,0x68adb3],[0x99aabb,0xffefd3],[0x778899,0xf1e7d0],[0x2a5d3a,0x5fb69b],[0x6d5a35,0xdb8a53],[0x8a6d3b,0xedb363],[0x222222,0x314753],[0x111111,0x314753]]);
-    root.traverse(o=>{if(!o.isMesh||!o.material?.isMeshLambertMaterial||o.material.vertexColors||o.userData.keepMaterial)return;
+    root.traverse(o=>{if(!o.isMesh||!(o.material&&o.material.isMeshLambertMaterial)||o.material.vertexColors||o.userData.keepMaterial)return;
       const old=o.material,color=colors.get(old.color.getHex())||old.color.getHex();
       o.material=new THREE.MeshPhongMaterial({color,shininess:22,specular:0x273b40,transparent:old.transparent,opacity:old.opacity,side:old.side});
       // Round the silhouette through bevelled geometry, retaining exact dimensions.

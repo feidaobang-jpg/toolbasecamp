@@ -13,7 +13,7 @@ export class ToyBridge {
     const p=(async()=>{
       if(!this.sdk||!await this.sdk.isSupport(method))throw new Error('当前环境不支持，请在 B站 Toy 中使用此功能');
       try{const value=await this.sdk[method](arg);if(cacheKey)this.cache.set(key,value);this.failures=0;return value;}
-      catch(e){if(e?.code===307044){this.blockedUntil=this.now()+Math.min(120000,5000*2**this.failures++);throw new Error('平台繁忙，请稍后手动重试；本地进度已保留');}throw e;}
+      catch(e){if(e&&e.code===307044){this.blockedUntil=this.now()+Math.min(120000,5000*2**this.failures++);throw new Error('平台繁忙，请稍后手动重试；本地进度已保留');}throw e;}
     })();
     this.pending.set(key,p);try{return await p;}finally{this.pending.delete(key);}
   }
@@ -37,7 +37,7 @@ export function setupToyPlatform(game,{sdkPromise}={}){
   const support=new Set();let cloudAt=0;
   const describe=d=>d?`周目${d.loop} · 第${d.chapter}章第${d.level}关 · ${Math.floor(d.score)}分 · ${new Date(d.time).toLocaleString('zh-CN')}`:'尚无存档';
   const error=e=>{
-    const message=e?.message||'';
+    const message=e&&e.message||'';
     if(/toy id not available|toy_context_unavailable/i.test(message))status('Toy 预览暂不提供作品身份，云存档和排行榜请在审核后的正式试玩页使用');
     else if(/unauthori[sz]ed|not logged|登录/i.test(message))status('请先在 B站登录，再使用云存档或提交成绩；本地游戏可以继续');
     else if(/denied|cancel/i.test(message))status('已取消，本地存档和游戏不受影响');
@@ -46,7 +46,7 @@ export function setupToyPlatform(game,{sdkPromise}={}){
   async function action(button,fn){button.disabled=true;try{await fn();}catch(e){error(e);}finally{button.disabled=false;}}
   function parse(raw){
     const envelope=JSON.parse(raw);
-    if(envelope?.schema!==1||!game.validate(envelope.save))throw new Error('云档版本或数据不兼容，已保留本地进度');
+    if(!envelope||envelope.schema!==1||!game.validate(envelope.save))throw new Error('云档版本或数据不兼容，已保留本地进度');
     return envelope.save;
   }
   async function readCloud(refresh=false){
@@ -102,12 +102,12 @@ export function setupToyPlatform(game,{sdkPromise}={}){
   $('videoVisit').onclick=()=>visit('video',VIDEO,'https://www.bilibili.com/video/'+VIDEO);
   $('toyShare').onclick=()=>{
     if(sdk&&support.has('share'))sdk.share({path:'index.html'}).catch(error);
-    else if(navigator.clipboard?.writeText)navigator.clipboard.writeText(PLAY_URL).then(()=>status('试玩链接已复制，可发给朋友'),error);
+    else if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(PLAY_URL).then(()=>status('试玩链接已复制，可发给朋友'),error);
     else status('试玩地址：'+PLAY_URL);
   };
   sdkReady.then(async value=>{
     sdk=value;bridge=new ToyBridge(value);if(!value)return;
-    for(const method of ['navigate','share'])try{if(await sdk.isSupport(method))support.add(method);}catch{}
-    try{const author=await bridge.call('getAuthorProfile',undefined,{cacheKey:'author'});if(author.status==='ok')$('authorInfo').textContent='作者：'+author.data.nickname+' · 万物皆可游戏';}catch{}
+    for(const method of ['navigate','share'])try{if(await sdk.isSupport(method))support.add(method);}catch(_e){}
+    try{const author=await bridge.call('getAuthorProfile',undefined,{cacheKey:'author'});if(author.status==='ok')$('authorInfo').textContent='作者：'+author.data.nickname+' · 万物皆可游戏';}catch(_e){}
   });
 }

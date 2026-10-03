@@ -26,6 +26,25 @@ const MISSION = [
   { type: 'pad' },
   { type: 'goto', x: 0, y: 300 }, { type: 'boss' }
 ];
+// 第二关：军官屋 → 窄口 → 营地前门 → 3 座营房 → 后门 → 西侧营房 → 长廊闪光星 → 草场军官屋 → 直升机坪 → 废墟 → 石桥 → 绿星 → 石像
+const MISSION2 = [
+  { type: 'hut', name: 'H1' }, { type: 'pows', near: 'H1' },
+  { type: 'goto', x: -9, y: 48 }, { type: 'goto', x: -6, y: 72 },
+  { type: 'gate', name: '营地前门' },
+  { type: 'hut', name: 'B1' }, { type: 'pows', near: 'B1' },
+  { type: 'hut', name: 'B2' }, { type: 'pows', near: 'B2' },
+  { type: 'hut', name: 'B3' }, { type: 'pows', near: 'B3' },
+  { type: 'gate', name: '营地后门' }, { type: 'goto', x: 15, y: 114 },
+  { type: 'hut', name: 'H2' }, { type: 'pows', near: 'H2' },
+  { type: 'goto', x: -28, y: 116 }, { type: 'star', item: 'max' },
+  { type: 'goto', x: -28, y: 156 }, { type: 'goto', x: -10, y: 166 }, { type: 'goto', x: 0, y: 176 }, { type: 'goto', x: 0, y: 198 },
+  { type: 'hut', name: 'H3' }, { type: 'pows', near: 'H3' },
+  { type: 'pad' },
+  { type: 'goto', x: 2, y: 248 }, { type: 'goto', x: 0, y: 272 }, { type: 'goto', x: 0, y: 296 }, { type: 'goto', x: 0, y: 307 },
+  { type: 'goto', x: 10, y: 306.5 }, { type: 'star', item: 'up', from: 'west' },
+  { type: 'goto', x: 0, y: 312 }, { type: 'boss' }
+];
+const MISSIONS = { 1: MISSION, 2: MISSION2 };
 
 function makeBot(page, opts) {
   const o = opts || {};
@@ -34,7 +53,8 @@ function makeBot(page, opts) {
   const held = new Set();
   let grid = null, level = null, gridT = -99;
   let path = null, pathGoal = null, pathT = -99;
-  let mi = 0, phase = null, phaseT = 0;
+  let mi = 0, phase = null, phaseT = 0, tphase = null;
+  const MISSION = MISSIONS[o.stage || 1];
   let stuck = { x: 0, y: 0, t: 0, wiggle: 0, dir: 0 };
   const log = [];
 
@@ -140,13 +160,21 @@ function makeBot(page, opts) {
     }
 
     // 附近有坦克就先处理（避免沿路被坦克反复击毁）
-    const tankNear = goal.type !== 'boss' && s.enemies.filter(e => e.type === 'tank' && d2(e.x, e.y, P.x, P.y) < 12 * 12)[0];
+    const tankNear = s.enemies.filter(e => (e.type === 'tank' || e.type === 'bulltank' || e.type === 'ejeep') && d2(e.x, e.y, P.x, P.y) < 12 * 12 && (goal.type !== 'boss' || s.stage === 2))[0];
     if (tankNear) {
       const t = tankNear, dd = Math.sqrt(d2(t.x, t.y, P.x, P.y));
-      dir = q8(angTo(P.x, P.y, t.x, t.y));
-      if (P.dir === dir && (s.weapon > 1 || Math.abs(dd - 9) < 2)) bomb = true;
-      if (dd < 7.5) dir = (dir + 4) % 8;
-      else if (P.dir === dir && bomb) dir = -1;
+      const a = angTo(P.x, P.y, t.x, t.y), bear = q8(a);
+      let err = Math.abs(a - bear * Math.PI / 4); if (err > Math.PI) err = Math.PI * 2 - err;
+      if (err > 0.2 && dd > 4 && goal.type === 'boss') {
+        // 不在 8 个方向的射线上：先挪到能对准的位置（火箭只能 8 向发射）
+        if (!tphase || s.t - tphase.t > 2.5) tphase = { t: s.t, e: t.x + ',' + t.y, so: standoff(s, t.x, t.y, s.weapon === 1 ? 9 : 8) };
+        dir = tphase.so ? steerTo(s, tphase.so.x, tphase.so.y) : bear;
+      } else {
+        dir = bear;
+        if (P.dir === dir && (s.weapon > 1 || Math.abs(dd - 9) < 2)) bomb = true;
+        if (dd < 7.5) dir = (dir + 4) % 8;
+        else if (P.dir === dir && bomb) dir = -1;
+      }
     } else if (nearKit && goal.type !== 'boss') {
       dir = steerTo(s, nearKit.x, nearKit.y);
     } else if (nearPow && goal.type !== 'boss' && !(goal.type === 'pad' && P && d2(P.x, P.y, level.pad.x, level.pad.y) < 25)) {
@@ -154,7 +182,7 @@ function makeBot(page, opts) {
     } else if (goal.type === 'goto') {
       if (d2(P.x, P.y, goal.x, goal.y) < 2.2 * 2.2) next(); else dir = steerTo(s, goal.x, goal.y);
     } else if (goal.type === 'hut' || goal.type === 'gate') {
-      const tgt = goal.type === 'gate' ? { alive: s.gate.alive, x: level.gate.x, y: level.gate.y } : s.huts.find(h => h.name === goal.name);
+      const tgt = goal.type === 'gate' ? (goal.name ? s.gates.find(g => g.name === goal.name) : { alive: s.gate.alive, x: level.gate.x, y: level.gate.y }) : s.huts.find(h => h.name === goal.name);
       if (!tgt || !tgt.alive) next();
       else {
         if (!phase || phase.kind !== 'attack' || s.t - phase.t > 14) phase = { kind: 'attack', t: s.t, so: standoff(s, tgt.x, tgt.y, s.weapon === 1 ? 8.8 : 8, goal.type === 'gate' ? 0 : undefined) };
@@ -186,17 +214,25 @@ function makeBot(page, opts) {
       }
     } else if (goal.type === 'star') {
       if (!phase || phase.kind !== 'star') phase = { kind: 'star', t: s.t, lined: false };
-      if (!s.star || s.star.picked || s.t - phase.t > 25) next();
-      else if (!s.star.hidden) dir = steerTo(s, s.star.x, s.star.y);
-      else {
-        const so = { x: s.star.x - 8.6, y: s.star.y - 1 };
+      const st = goal.item ? (s.stars || []).find(q => q.item === goal.item) : (s.star && !s.star.picked ? s.star : null);
+      if (!st || s.t - phase.t > 30) next();
+      else if (!st.hidden) dir = steerTo(s, st.x, st.y);
+      else if (goal.item) {
+        // 第二关：从南面（goal.from = 'west' 时从西面）对准星所在位置开炮（火箭能直接擦出来）
+        const west = goal.from === 'west', fd = west ? 2 : 0, off = s.weapon === 1 ? 8.8 : 6;
+        const so = west ? { x: st.x - off, y: st.y } : { x: st.x, y: st.y - off };
+        const dd = Math.sqrt(d2(P.x, P.y, so.x, so.y));
+        if (dd > 2.5 && !phase.lined) dir = steerTo(s, west ? so.x - 1.6 : so.x, west ? so.y : so.y - 1.6);
+        else { phase.lined = true; dir = (P.dir !== fd || dd > 0.8) ? fd : -1; if (P.dir === fd) bomb = true; if (dd > 4) phase.lined = false; }
+      } else {
+        const so = { x: st.x - 8.6, y: st.y - 1 };
         const dd = Math.sqrt(d2(P.x, P.y, so.x, so.y));
         if (dd > 3 && !phase.lined) dir = steerTo(s, so.x - 1.6, so.y);
         else { phase.lined = true; dir = (P.dir !== 2 || dd > 0.8) ? 2 : -1; if (P.dir === 2) bomb = true; if (dd > 4.5) phase.lined = false; }
       }
     } else if (goal.type === 'pad') {
       const pad = level.pad;
-      const stray = s.pows.filter(p => p.y < 300).sort((a, b) => d2(a.x, a.y, P.x, P.y) - d2(b.x, b.y, P.x, P.y))[0];
+      const stray = s.pows.filter(p => p.y < level.boss.y0 - 6).sort((a, b) => d2(a.x, a.y, P.x, P.y) - d2(b.x, b.y, P.x, P.y))[0];
       if (!phase || phase.kind !== 'pad') phase = { kind: 'pad', t: s.t };
       if ((s.carried === 0 && !stray) || s.t - phase.t > 90) next();
       else if (stray) dir = steerTo(s, stray.x, stray.y);
@@ -204,7 +240,21 @@ function makeBot(page, opts) {
     } else if (goal.type === 'boss') {
       const tanks = s.enemies.filter(e => e.type === 'boss');
       if (s.boss && s.boss.state === 'done') { await setKeys([]); return { done: true }; }
-      if (s.boss.state === 'idle') dir = steerTo(s, 0, 312);
+      if (s.boss.state === 'idle') dir = steerTo(s, level.boss.respawn.x, level.boss.trigger + 1.5);
+      else if (s.boss.type === 'statues' && !tankNear) {
+        // 石像：站到目标正南方约 8.5 米处朝北开炮，机枪一直开着打掉追踪导弹
+        const busts = s.enemies.filter(e => e.type === 'bust').sort((a, b) => Math.abs(a.x - P.x) - Math.abs(b.x - P.x));
+        const t = busts[0];
+        if (t) {
+          const so = { x: t.x, y: t.y - (s.weapon === 1 ? 8.8 : 8) };
+          const dd = Math.sqrt(d2(P.x, P.y, so.x, so.y));
+          if (dd > 1.2) dir = steerTo(s, so.x, so.y); else { dir = P.dir !== 0 ? 0 : -1; if (P.dir === 0) bomb = true; }
+        }
+      }
+      else if (s.boss.type === 'statues') {
+        const t = tankNear, dd = Math.sqrt(d2(t.x, t.y, P.x, P.y));
+        dir = q8(angTo(P.x, P.y, t.x, t.y)); if (P.dir === dir) bomb = true; if (dd < 6) dir = (dir + 4) % 8;
+      }
       else if (!tanks.length) dir = steerTo(s, 0, 314);
       else {
         const t = tanks.sort((a, b) => d2(a.x, a.y, P.x, P.y) - d2(b.x, b.y, P.x, P.y))[0];

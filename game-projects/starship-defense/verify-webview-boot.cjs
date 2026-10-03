@@ -4,7 +4,7 @@
 // TAG=before GAME_URL=<old build> only records the broken state.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const release=path.join(__dirname,'media-kit/releases/web-webview-fix-v0.9.6'),captures=path.join(release,'captures');
+const release=path.join(__dirname,'media-kit/releases',process.env.RELEASE||'web-webview-fix-v0.9.6'),captures=path.join(release,'captures');
 const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship-defense/index.html',tag=process.env.TAG||'after';
 const UA='Mozilla/5.0 (Linux; Android 13; V2219A) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.61 Mobile Safari/537.36 BiliApp/7.80.0';
 const results={},fail=[];const check=(n,ok,d)=>{results[n]={ok:!!ok,...(d!==undefined?{detail:d}:{})};if(!ok)fail.push(n);};

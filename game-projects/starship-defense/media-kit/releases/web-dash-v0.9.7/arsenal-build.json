@@ -1,0 +1,230 @@
+{
+ "version": "web-dash-v0.9.7",
+ "checked_at": "2026-10-03T15:20:16.086Z",
+ "passed": 20,
+ "failed": [],
+ "results": {
+  "six weapons, removed guns gone": {
+   "ok": true,
+   "detail": [
+    "lmg",
+    "shotgun",
+    "launcher",
+    "flamer",
+    "laser",
+    "plasma"
+   ]
+  },
+  "every shop weapon out-damages the machine gun": {
+   "ok": true,
+   "detail": {
+    "lmg": 100,
+    "shotgun": 124,
+    "launcher": 105,
+    "flamer": 140,
+    "laser": 200,
+    "plasma": 250
+   }
+  },
+  "classes start with existing guns (rifleman gets shotgun)": {
+   "ok": true,
+   "detail": {
+    "gunner": [
+     "lmg"
+    ],
+    "rifle": [
+     "lmg",
+     "shotgun"
+    ],
+    "medic": [
+     "lmg"
+    ]
+   }
+  },
+  "all six weapons deal damage at 12 m": {
+   "ok": true,
+   "detail": {
+    "lmg": 160,
+    "shotgun": 154,
+    "launcher": 300,
+    "flamer": 245,
+    "laser": 420,
+    "plasma": 480,
+    "burnAfterStop": 44,
+    "knockback": 2.09
+   }
+  },
+  "flamethrower keeps burning after you stop": {
+   "ok": true,
+   "detail": {
+    "lmg": 160,
+    "shotgun": 154,
+    "launcher": 300,
+    "flamer": 245,
+    "laser": 420,
+    "plasma": 480,
+    "burnAfterStop": 44,
+    "knockback": 2.09
+   }
+  },
+  "shotgun knocks bugs back": {
+   "ok": true,
+   "detail": {
+    "lmg": 160,
+    "shotgun": 154,
+    "launcher": 300,
+    "flamer": 245,
+    "laser": 420,
+    "plasma": 480,
+    "burnAfterStop": 44,
+    "knockback": 2.09
+   }
+  },
+  "legacy guns merged/refunded on load": {
+   "ok": true,
+   "detail": {
+    "migrated": {
+     "weapons": [
+      "lmg",
+      "shotgun",
+      "laser"
+     ],
+     "cur": "shotgun",
+     "lv": {
+      "laser": 2,
+      "lmg": 5
+     },
+     "refund": 15830,
+     "note": "🔧 武器调整：狙击枪、电磁轨道炮已下架；战斗步枪、冲锋枪、加特林并入机枪（保留最高强化等级），退还 15830 金币"
+    },
+    "loaded": {
+     "weapons": [
+      "lmg",
+      "shotgun",
+      "laser"
+     ],
+     "cur": "shotgun",
+     "lv": {
+      "laser": 2,
+      "lmg": 5
+     },
+     "gold": 16830
+    },
+    "saved": [
+     "lmg",
+     "shotgun",
+     "laser"
+    ],
+    "note": "🔧 武器调整：狙击枪、电磁轨道炮已下架；战斗步枪、冲锋枪、加特林并入机枪（保留最高强化等级），退还 15830 金币",
+    "expectedRefundApprox": 15520
+   }
+  },
+  "migration notice shown to the player": {
+   "ok": true,
+   "detail": "🔧 武器调整：狙击枪、电磁轨道炮已下架；战斗步枪、冲锋枪、加特林并入机枪（保留最高强化等级），退还 15830 金币"
+  },
+  "choosing a building shows a ghost, no charge yet": {
+   "ok": true,
+   "detail": {
+    "kind": "mgTurret",
+    "ghost": true,
+    "panelOpen": false,
+    "gold": 5000,
+    "bar": true,
+    "state": "✔ 可以放置"
+   }
+  },
+  "J places it and charges then": {
+   "ok": true,
+   "detail": {
+    "n": 12,
+    "gold": 4700,
+    "kind": null
+   }
+  },
+  "same spot again: red ghost with reason, J refused with a visible message, no charge": {
+   "ok": true,
+   "detail": {
+    "g3": {
+     "valid": false,
+     "reason": "和墙体、岩石或其他设施重叠",
+     "state": "✖ 和墙体、岩石或其他设施重叠"
+    },
+    "blockedMsg": "这里不能建：和墙体、岩石或其他设施重叠",
+    "g4": {
+     "n": 12,
+     "gold": 4700
+    }
+   }
+  },
+  "walk aside: ghost turns valid and places": {
+   "ok": true,
+   "detail": {
+    "g5": {
+     "valid": true,
+     "reason": ""
+    },
+    "g6": {
+     "n": 13,
+     "gold": 4400
+    }
+   }
+  },
+  "Q/E turn the ghost with the camera; Esc cancels free of charge": {
+   "ok": true,
+   "detail": {
+    "r0": 0,
+    "r1": 5.604696384744699,
+    "st": "prep",
+    "g7": {
+     "kind": null,
+     "gold": 4400,
+     "state": "prep"
+    }
+   }
+  },
+  "blocked spots explain why (gate / tunnel / cliff)": {
+   "ok": true,
+   "detail": {
+    "gate": "不能堵住城门",
+    "tunnel": "隧道或洞穴里不能建",
+    "steep": "地面太陡"
+   }
+  },
+  "not enough gold message is visible above the build panel": {
+   "ok": true,
+   "detail": "金币不足！还差 1200"
+  },
+  "no page errors (desktop)": {
+   "ok": true,
+   "detail": []
+  },
+  "phone: tapping 商店 opens it without buying what is under the finger": {
+   "ok": true,
+   "detail": {
+    "gold": 2000,
+    "weapons": 1,
+    "open": true
+   }
+  },
+  "phone: tapping 建造 opens the panel without picking a building": {
+   "ok": true,
+   "detail": {
+    "open": true,
+    "kind": null
+   }
+  },
+  "phone: build button, pick, place button": {
+   "ok": true,
+   "detail": {
+    "n": 12,
+    "gold": 1300,
+    "kind": null
+   }
+  },
+  "no page errors (phone)": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}

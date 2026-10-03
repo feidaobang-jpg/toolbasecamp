@@ -1,0 +1,26 @@
+{
+ "version": "web-webview-fix-v0.9.6",
+ "checked_at": "2026-10-03T15:19:06.793Z",
+ "url": "http://127.0.0.1:8791/public/html/game/starship-defense/index.html",
+ "results": {
+  "old jump peak height (m)": {
+   "ok": true,
+   "detail": 1.66
+  },
+  "old jump: bites still land while airborne": {
+   "ok": true,
+   "detail": {
+    "hpBefore": 120,
+    "hpAfterJump": 72
+   }
+  },
+  "old jump: cannot clear a wall": {
+   "ok": true,
+   "detail": {
+    "x": 0,
+    "y": 0,
+    "z": 21.9
+   }
+  }
+ }
+}

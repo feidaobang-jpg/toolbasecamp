@@ -25,8 +25,13 @@ const settings = {
   demo: false,
   quality: ['auto', 'high', 'low'].indexOf(store.get('quality', 'auto')) >= 0 ? store.get('quality', 'auto') : 'auto',
   touch: ['auto', 'show', 'hide'].indexOf(store.get('touch', 'auto')) >= 0 ? store.get('touch', 'auto') : 'auto',
-  fps: store.get('fps', false) === true
+  fps: store.get('fps', false) === true,
+  gun: store.get('gun', 'follow') === 'up' ? 'up' : 'follow',
+  stage: 1
 };
+const unlocked = () => Math.max(1, Math.min(L.STAGE_COUNT, store.get('unlocked', 1) | 0));
+settings.stage = Math.max(1, Math.min(unlocked(), store.get('stage', 1) | 0));
+if (params.get('stage')) settings.stage = Math.max(1, Math.min(L.STAGE_COUNT, parseInt(params.get('stage'), 10) || 1));   // 测试用：直接从某关开始
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');   // 测试/录制用：强制画质
 let effQuality = settings.quality === 'low' ? 'low' : 'high';
 let autoProbe = { on: settings.quality === 'auto', frames: [], done: false, decided: null };
@@ -51,6 +56,7 @@ const world = buildWorld(scene);
 const fx = createFx(scene);
 GM.init(scene, world, fx, camCtl);
 A.setClock(() => G.t);
+L.loadStage(settings.stage); world.rebuild();
 GM.toTitle();
 
 function applyQuality() {
@@ -72,6 +78,8 @@ function optLabel(name) {
     case 'touch': return ['触屏按键', { auto: '自动', show: '显示', hide: '隐藏' }[settings.touch], false];
     case 'camera': return ['视角（C）', camCtl.preset().name, false];
     case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
+    case 'gun': return ['机枪方向', settings.gun === 'up' ? '原作朝上' : '跟随车头', false];
+    case 'stage': return ['起始关卡', GM.STAGE_NAME[settings.stage], false];
   }
   return [name, '', false];
 }
@@ -86,6 +94,7 @@ function refreshOptions() {
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
   $('demo-badge').hidden = !(uiMode === 'game' && settings.demo);
   $('cam-label').textContent = camCtl.preset().name;
+  if (uiMode === 'title' && L.STAGE) $('menu-sub').textContent = GM.STAGE_NAME[L.STAGE_NO] + ' · ' + L.STAGE.title;
 }
 function adjust(name, delta) {
   if (name === 'lives') { settings.lives = settings.lives === 'inf' ? 'classic' : 'inf'; store.set('lives', settings.lives); }
@@ -111,6 +120,14 @@ function adjust(name, delta) {
     layout(true);
   } else if (name === 'camera') { cycleCamera(); }
   else if (name === 'fps') { settings.fps = !settings.fps; store.set('fps', settings.fps); fpsEl.hidden = !settings.fps; }
+  else if (name === 'gun') {
+    settings.gun = settings.gun === 'up' ? 'follow' : 'up'; store.set('gun', settings.gun);
+    if (uiMode === 'game') G.settings.gun = settings.gun;
+  } else if (name === 'stage') {
+    const n = unlocked();
+    settings.stage = ((settings.stage - 1 + (delta < 0 ? n - 1 : 1)) % n) + 1; store.set('stage', settings.stage);
+    if (uiMode === 'title' && L.STAGE_NO !== settings.stage) { GM.toTitle(settings.stage); titleT = 0; }
+  }
   refreshOptions();
 }
 function cycleCamera() {
@@ -132,11 +149,11 @@ function show(name) {
   current = name;
   IN.clear();
   refreshOptions();
-  if (name) { const first = overlays[name].querySelector('.items > *'); if (first) first.focus({ preventScroll: true }); }
+  if (name) { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > *'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout(true);
 }
-const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > *')) : [];
+const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > *')).filter(el => !el.hidden) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');
@@ -174,7 +191,9 @@ document.addEventListener('click', (e) => {
   if (!t) return;
   if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), 1); return; }
   switch (t.getAttribute('data-act')) {
-    case 'start': case 'restart': startGame(); break;
+    case 'start': startGame(); break;
+    case 'restart': startGame(current === 'pause' ? G.stage : +(t.getAttribute('data-stage') || settings.stage)); break;
+    case 'next': nextStage(); break;
     case 'resume': resume(); break;
     case 'title': toTitle(); break;
     case 'fullscreen': toggleFullscreen(); break;
@@ -189,14 +208,22 @@ $('btn-cam').addEventListener('click', () => { if (uiMode === 'game' && !current
 const gameRunning = () => uiMode === 'game' && ['intro', 'play', 'over', 'clear'].indexOf(G.mode) >= 0;
 IN.active = () => gameRunning() && !current && !paused;
 let paused = false;
-function startGame() {
+function startGame(stageNo) {
   A.unlock();
   uiMode = 'game'; paused = false;
-  GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor });
+  GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor, gun: settings.gun, stage: stageNo || settings.stage });
   show(null);
   camCtl.update(0, GM.player().x, GM.player().y, { instant: true });
   last = performance.now(); acc = 0;
   autoProbe.frames = [];
+}
+function nextStage() {
+  A.unlock();
+  uiMode = 'game'; paused = false;
+  if (!GM.nextStage()) return toTitle();
+  show(null);
+  camCtl.update(0, GM.player().x, GM.player().y, { instant: true });
+  last = performance.now(); acc = 0;
 }
 function pauseGame() {
   if (!gameRunning() || paused) return;
@@ -211,29 +238,40 @@ function resume() {
 function toTitle() {
   uiMode = 'title'; paused = false;
   A.musicDuck(false);
-  GM.toTitle();
+  GM.toTitle(settings.stage);
   titleT = 0;
   show('menu');
 }
 G.onEnd = (res) => { setTimeout(() => showResult(res), 300); };
-const KILL_ROWS = [['soldier', '步兵'], ['officer', '军官'], ['mg', '机枪巢'], ['cannon', '炮台'], ['boat', '炮艇'], ['tank', '坦克'], ['boss', 'Boss 蓝色坦克'], ['hut', '营房']];
+const KILL_ROWS = [['soldier', '步兵'], ['officer', '军官'], ['mg', '机枪巢'], ['turret', '炮塔'], ['cannon', '炮台'], ['boat', '炮艇'], ['tank', '坦克'], ['brownTank', '棕色坦克'], ['bulltank', '重型坦克'],
+  ['ejeep', '敌方吉普'], ['bomber', '轰炸机'], ['wstatue', '水中石像'], ['fallpillar', '倒塌石柱'], ['boss', 'Boss 蓝色坦克'], ['bust', 'Boss 石像'], ['hut', '营房']];
+const BOSS_KEY = { tanks: 'boss', statues: 'bust' };
 function showResult(res) {
   if (uiMode !== 'game') return;
-  $('res-title').textContent = res.win ? '第一关完成！' : '任务失败';
+  $('res-title').textContent = res.win ? GM.STAGE_NAME[res.stage] + '完成！' : '任务失败 · ' + GM.STAGE_NAME[res.stage];
   let rows = '';
-  for (const [k, name] of KILL_ROWS) { const n = res.kills[k] || 0; if (!n && k !== 'boss') continue; rows += '<tr><td>' + name + '</td><td>× ' + n + '</td><td>' + n * GM.POINTS[k] + '</td></tr>'; }
+  const bossKey = BOSS_KEY[L.BOSS.type];
+  for (const [k, name] of KILL_ROWS) { const n = res.kills[k] || 0; if (!n && k !== bossKey) continue; rows += '<tr><td>' + name + '</td><td>× ' + n + '</td><td>' + n * GM.POINTS[k] + '</td></tr>'; }
   rows += '<tr><td>送达俘虏</td><td>' + res.delivered + ' / ' + res.total + '</td><td>' + res.delivered * GM.POINTS.pow + '</td></tr>';
   if (res.win) rows += '<tr><td>救援奖励</td><td>' + res.delivered + ' × ' + GM.POINTS.powBonus + '</td><td>' + res.powBonus + '</td></tr>';
   rows += '<tr class="total"><td>总分</td><td></td><td>' + res.score + '</td></tr>';
   $('tally').innerHTML = rows;
   const extra = [];
-  extra.push('用时 ' + Math.floor(res.seconds / 60) + ' 分 ' + (res.seconds % 60) + ' 秒 · 阵亡 ' + res.deaths + ' 次');
+  extra.push('本关用时 ' + Math.floor(res.seconds / 60) + ' 分 ' + (res.seconds % 60) + ' 秒 · 阵亡 ' + res.deaths + ' 次');
+  if (res.finalStage) extra.push('已打通目前全部 ' + res.stageCount + ' 关，后续关卡制作中');
   extra.push((res.lives === 'inf' ? '无限命' : '经典 3 命') + ' · ' + (res.armor === 'classic' ? '经典一发' : '标准 3 格护甲'));
   if (res.armor !== 'classic') extra.push('受击 ' + res.hits + ' 次 · 修理包 ' + res.kitsPicked + ' 个');
   if (res.demo) extra.push('本局用过演示模式（无敌），不计最高分');
   else if (res.newHi) extra.push('新纪录！最高分 ' + res.hi);
   else extra.push('最高分 ' + res.hi);
   $('res-extra').textContent = extra.join(' · ');
+  // 过关：主按钮「进入下一关」；失败：重来本关；打通最后一关：从第一关再玩
+  const nb = $('res-next'), rb = $('res-restart');
+  nb.hidden = !res.hasNext;
+  if (res.hasNext) nb.innerHTML = '进入' + GM.STAGE_NAME[res.stage + 1] + ' <kbd>Enter</kbd>';
+  rb.setAttribute('data-stage', res.finalStage ? 1 : res.stage);
+  rb.innerHTML = (res.finalStage ? '从第一关再玩一次' : res.win ? '重玩' + GM.STAGE_NAME[res.stage] : '重新开始' + GM.STAGE_NAME[res.stage]) + (res.hasNext ? '' : ' <kbd>Enter</kbd>');
+  rb.classList.toggle('primary', !res.hasNext);
   show('result');
 }
 
@@ -319,7 +357,7 @@ let lastHitId = '', lastArmor = '';
 let lastHud = '';
 let lastBanner = null, lastToast = null;
 function updateHud() {
-  const s = [G.score, G.hi, G.weapon, G.carried, G.delivered, G.settings.lives === 'inf' ? '∞' : Math.max(0, G.lives)].join('|');
+  const s = [G.score, G.hi, G.weapon, G.carried, G.delivered, G.settings.lives === 'inf' ? '∞' : Math.max(0, G.lives), G.stage].join('|');
   if (s !== lastHud) {
     lastHud = s;
     hudEls.score.textContent = G.score; hudEls.hi.textContent = Math.max(G.hi, G.score);
@@ -328,6 +366,7 @@ function updateHud() {
     hudEls.carried.textContent = G.carried; hudEls.deliv.textContent = G.delivered + '/' + L.POW_TOTAL;
     hudEls.lives.textContent = G.settings.lives === 'inf' ? '∞' : '×' + Math.max(0, G.lives);
     hudEls.bombLabel.textContent = GM.WEAPON_NAME[G.weapon];
+    $('h-stage').textContent = GM.STAGE_NAME[G.stage];
   }
   const pl = GM.player();
   const arm = pl ? pl.armor : G.armorMax;
@@ -351,11 +390,8 @@ function updateHud() {
   const bossOn = b && (b.state === 'fight' || b.state === 'intro');
   bossBar.hidden = !bossOn;
   if (bossOn) {
-    const pips = [];
-    for (let k = 1; k <= 4; k++) {
-      const e = GM.snapshotBoss(k);
-      pips.push('<i class="' + (e === 'dead' ? 'dead' : e === 'brown' ? 'hurt' : e === 'blue' ? 'ok' : 'wait') + '"></i>');
-    }
+    const pips = GM.bossPips().map(v => '<i class="' + v + '"></i>');
+    bossBar.dataset.type = b.type || '';
     const html = '<b>BOSS</b>' + pips.join('');
     if (bossBar.innerHTML !== html) bossBar.innerHTML = html;
   }
@@ -496,6 +532,31 @@ if (TEST) {
       return { cols: L.COLS, rows: L.ROWS, x0: L.X0, cells: a.join('') };
     },
     level: () => ({ huts: L.HUTS.map(h => ({ name: h.data.name, x: h.x, y: h.y, x0: h.x0, x1: h.x1, y0: h.y0, y1: h.y1 })), gate: { x: L.GATE.x, y: L.GATE.y }, pad: L.PAD, checkpoints: L.CHECKPOINTS, boss: L.BOSS, road: L.ROAD, bluffs: L.BLUFFS.length, powTotal: L.POW_TOTAL }),
+    // 连通性检查：从起点出发（可破坏物体视为可通过，吉普占 3×3 格），能否到达直升机坪、各营房、Boss 触发线
+    reach() {
+      const C = L.COLS, R = L.ROWS;
+      const bad = new Uint8Array(C * R);
+      for (let j = 0; j < R; j++) for (let i = 0; i < C; i++) {
+        const c = j * C + i, t = L.terrain[c];
+        if (L.isNoGo(t)) { bad[c] = 1; continue; }
+        const id = L.solid[c];
+        if (id && L.statics[id].blocksMove && !L.statics[id].by && L.statics[id].kind !== 'barricade') bad[c] = 1;
+      }
+      const ok = (i, j) => { for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) { const a = i + di, b = j + dj; if (a < 0 || b < 0 || a >= C || b >= R || bad[b * C + a]) return false; } return true; };
+      const seen = new Uint8Array(C * R), q = [];
+      const si = L.ci(L.START.x), sj = L.cj(L.START.y);
+      seen[sj * C + si] = 1; q.push(si, sj);
+      for (let h = 0; h < q.length; h += 2) {
+        const i = q[h], j = q[h + 1];
+        for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const a = i + di, b = j + dj; if (a < 0 || b < 0 || a >= C || b >= R || seen[b * C + a] || !ok(a, b)) continue; seen[b * C + a] = 1; q.push(a, b); }
+      }
+      const near = (x, y, r) => { for (let j = Math.floor(y - r); j <= y + r; j++) for (let i = L.ci(x - r); i <= L.ci(x + r); i++) if (i >= 0 && j >= 0 && i < C && j < R && seen[j * C + i]) return true; return false; };
+      return {
+        cells: q.length / 2, pad: near(L.PAD.x, L.PAD.y, 3), boss: near(L.BOSS.respawn.x, L.BOSS.trigger + 2, 2),
+        huts: L.HUTS.map(h => ({ name: h.data.name, ok: near(h.x, h.y, Math.max(h.x1 - h.x0, h.y1 - h.y0) / 2 + 3) })),
+        checkpoints: L.CHECKPOINTS.map(c => ({ name: c.name, ok: near(c.x, c.y, 1.5) }))
+      };
+    },
     audioLogStart: () => A.logStart(),
     audioLogStop: () => A.logStop(),
     audioOffline: (events, dur) => A.renderOffline(events, dur)

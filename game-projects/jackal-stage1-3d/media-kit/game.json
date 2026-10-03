@@ -6,7 +6,7 @@
   },
   "one_liner": "FC 赤色要塞第一关的 3D 网页重置版：驾驶武装吉普炸开营房救出俘虏、送上直升机，最后击败 4 辆蓝色坦克；默认 3 格护甲、营房掉修理包，也可切回原作的「经典一发」，电脑键盘与手机触屏都能玩。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.2.1",
+  "current_version": "v0.3",
   "handoff": "releases/v0.2.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",

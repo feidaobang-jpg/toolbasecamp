@@ -1,0 +1,87 @@
+{
+ "version": "web-dash-v0.9.7",
+ "checked_at": "2026-10-03T15:20:38.323Z",
+ "passed": 8,
+ "failed": [],
+ "results": {
+  "turret placement refused on top of a squad mate": {
+   "ok": true,
+   "detail": {
+    "check": {
+     "valid": false,
+     "reason": "会压到队友，换个位置"
+    },
+    "placedOnMate": true,
+    "mateStillInside": false,
+    "mateAt": [
+     2.2,
+     25.5
+    ]
+   }
+  },
+  "a squad mate already inside a building walks free": {
+   "ok": true,
+   "detail": {
+    "check": {
+     "valid": false,
+     "reason": "会压到队友，换个位置"
+    },
+    "placedOnMate": true,
+    "mateStillInside": false,
+    "mateAt": [
+     2.2,
+     25.5
+    ]
+   }
+  },
+  "keyboard: build panel → 拆除 card → red ring on the turret in front": {
+   "ok": true,
+   "detail": {
+    "onCard": "🔨 拆除设施拆掉放错或挡路的设施（初始城墙、炮塔也能拆）返还一半造价进入拆除模式",
+    "d0": {
+     "mode": "demolish",
+     "target": "cannonTurret",
+     "state": "✔ 自动炮台 · 返还 💰350",
+     "btn": "🔨 拆除 J"
+    }
+   }
+  },
+  "J demolishes it, refunds half (700→350), stays in demolish mode": {
+   "ok": true,
+   "detail": {
+    "removed": true,
+    "gold": 1350,
+    "mode": "demolish",
+    "cannonGone": true
+   }
+  },
+  "turning targets the next building; Esc exits without pausing": {
+   "ok": true,
+   "detail": {
+    "d2": "mgTurret",
+    "d3": {
+     "mode": null,
+     "state": "prep"
+    }
+   }
+  },
+  "initial base walls/turrets can be demolished too": {
+   "ok": true,
+   "detail": "mgTurret"
+  },
+  "first-person laser starts ≥1 m from the eye with a dimmer glow and still hits": {
+   "ok": true,
+   "detail": {
+    "startFromEye": 1.17,
+    "core": 0.7,
+    "glow": 0.09041666666666667,
+    "glowScale": 0.5646666666666667,
+    "hit": 16.266666666720994
+   }
+  },
+  "no page errors": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}
