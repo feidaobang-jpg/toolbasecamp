@@ -57,6 +57,32 @@ comfyui-api-server/__pycache__/
 # WorkBuddy workspace data (local memory / notes, not for version control)
 .workbuddy/
 
-# Game QA intermediate artifacts (screenshots / screencast frames / perf json);
-# only qa scripts and media-kit captures are committed
+# Game QA intermediate artifacts (screenshots / screencast frames / perf json)
 game-projects/*/qa/render-results/
+
+# Game media (gameplay captures, recordings, video covers/frames, audio) stay on the local disk only.
+# Commit game code & resources (public/html/game/) plus media-kit / video text notes, json and scripts.
+game-projects/*/media-kit/**/*.png
+game-projects/*/media-kit/**/*.jpg
+game-projects/*/media-kit/**/*.jpeg
+game-projects/*/media-kit/**/*.webp
+game-projects/*/media-kit/**/*.gif
+game-projects/*/media-kit/**/*.webm
+game-projects/*/media-kit/**/*.mp4
+game-projects/*/media-kit/**/*.mkv
+game-projects/*/media-kit/**/*.mov
+game-projects/*/media-kit/**/*.wav
+game-projects/*/media-kit/**/*.mp3
+game-projects/*/media-kit/**/*.m4a
+game-projects/*/video/**/*.png
+game-projects/*/video/**/*.jpg
+game-projects/*/video/**/*.jpeg
+game-projects/*/video/**/*.webp
+game-projects/*/video/**/*.gif
+game-projects/*/video/**/*.webm
+game-projects/*/video/**/*.mp4
+game-projects/*/video/**/*.mkv
+game-projects/*/video/**/*.mov
+game-projects/*/video/**/*.wav
+game-projects/*/video/**/*.mp3
+game-projects/*/video/**/*.m4a
