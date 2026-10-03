@@ -11,7 +11,8 @@
     "mobile_classes": "passed",
     "pc_controls": 12,
     "webview_boot": 9,
-    "real_bilibili_app_device_test": false
+    "real_bilibili_app_device_test": false,
+    "toy_hosted_iframe": "mobile start, dash, build menu, removed buttons passed"
   },
   "toy": {
     "id": "38678478981120",
@@ -20,6 +21,11 @@
     "zip_sha256": "dfa3918e7e9da0a5e30d2684f2d877a5cdd119a0bf4b7f1aef20d17448cb0a1a"
   },
   "website": {
-    "status": "pending_verification"
-  }
+    "status": "verified_live",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-03T16:31:36.838633+00:00",
+    "runtime_hashes_match": true,
+    "behavior_tests": "passed"
+  },
+  "commit": "7e32a5db"
 }
