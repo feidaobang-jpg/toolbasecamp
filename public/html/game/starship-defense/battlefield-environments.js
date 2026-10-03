@@ -55,7 +55,7 @@ export function paintBattlefieldGround(ground,palette){
     if(trail>0)c.lerp(laneC,trail*.55);
     if(z<-13&&Math.abs(x)<35)c.lerp(plateauC,.85);
     if(h>1&&h<4.8&&z<2&&Math.abs(x)>12)c.lerp(ridgeC,.7);
-    const td=tunnelDistance(x,z);if(td<6.5)c.lerp(tunnelC,1-smooth((td-4.2)/2.3));
+    const td=tunnelDistance(x,z);if(td<9)c.lerp(tunnelC,1-smooth((td-6)/3));
     const hd=Math.hypot(x-HIVE.x,z-HIVE.z-4);if(hd<HIVE.r+8)c.lerp(creepC,(1-smooth((hd-HIVE.r+6)/12))*.8);
     colors.setXYZ(i,c.r,c.g,c.b);
   }

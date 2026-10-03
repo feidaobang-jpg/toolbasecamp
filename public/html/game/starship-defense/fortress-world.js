@@ -25,23 +25,16 @@ export class FortressWorld {
       this.solids.push({x,z,r:10,bottom:0,top:h});
     }
     for(let i=-2;i<=2;i++){
-      const x=i*20,z=-70,h=24-Math.abs(i)*3;
+      const x=i*20,z=-82,h=24-Math.abs(i)*3;
       add('rock',P.mountainB,x,h*.5,z,17,h,16);
       this.solids.push({x,z,r:13,bottom:0,top:h});
     }
-    // Bright stair treads make the existing continuous walkable ramps readable.
+    // Two broad, continuous rear ramps lead onto the front firing platforms.
     for(const side of [-1,1]){
-      const x=side*8.75;
-      for(let i=0;i<14;i++){
-        const z=-26.35+i*.49,y=height(x,z)+.04;
-        add('box',i%2?cream:P.amber,x,y,z,3.15,.07,.35);
-      }
-      add('box',teal,x,9.65,-16,3.1,.1,6.7);
-      // Raised side kerbs stop accidental lateral slipping off the stairs.
-      for(const offset of [-1.72,1.72])for(let i=0;i<7;i++){
-        const z=-25.9+i*.95;
-        wall(x+offset,z,.15,.82,.5,teal,height(x,z));
-      }
+      for(let i=0;i<24;i++){const z=-45.5+i,y=height(side*24,z);add('box',i%3?teal:P.amber,side*24,y+.035,z,7.7,.07,.16);}
+      // Low outer parapets provide a readable edge without blocking outward fire.
+      for(let x=10;x<38;x+=4)add('box',stone,side*x,10.1,-10.3,2,.95,.65);
+      for(let z=-55;z<-12;z+=4)add('box',stone,side*37.6,10.1,z,.65,.95,2);
     }
     // Rear-entry field shelter: walls provide cover and the interior heals.
     wall(25,34,1,12,4.4,cream,0);wall(35,34,1,12,4.4,cream,0);

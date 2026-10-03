@@ -6,7 +6,8 @@ import {setupToyPlatform} from './toy-platform.js?v=fb97';
 import {validateNormalSave} from './save-validation.js?v=fb9';
 import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
 import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefieldGround} from './battlefield-environments.js';
-import {HiveWorld,HIVE,MOUTHS,tunnelDistance} from './hive-world.js?v=fb9';
+import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation} from './fortress-layout.js';
+import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=fb9';
 import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
@@ -238,7 +239,7 @@ const Input={
       const up=e=>{if(e.pointerId!==pointer)return;pointer=null;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    ['J','K','I','H','O','L','V','X','C'].forEach(k=>bind('v'+k,k));
+    ['J','K','I','H','O','L','V','X','C','SPRINT'].forEach(k=>bind('v'+k,k));
     $('vP').addEventListener('pointerdown',e=>{e.preventDefault();if(this.onPause)this.onPause();});
     // 触屏按钮按下会打开商店/建造面板，同一次点击随后合成的 click 会落到面板里手指下的卡片上
     // （曾误买物品/误选建筑）。取消触摸的默认点击合成。
@@ -337,14 +338,7 @@ function plateauH(x,z){
     const sxr=smooth01((PLAT.rampW+e-Math.abs(x))/e);
     h=Math.max(h,PLAT.H*t*sxr);
   }
-  // 城门塔楼平台（与城墙同高的瞭望台）+ 基地内侧斜梯：关门后可登塔越墙瞭望
-  if(Math.abs(x)>6.8&&Math.abs(x)<10.7){
-    if(z>=-19.6&&z<=-12.4)h=Math.max(h,GATE_TOP); // 塔楼平台
-    else if(z<-19.6&&z>=-26.6){ // 内侧斜梯（坡度0.66，可步行）
-      const t=clamp((z+26.6)/7,0,1);
-      h=Math.max(h,PLAT.H+(GATE_TOP-PLAT.H)*t);
-    }
-  }
+  h=Math.max(h,rampartHeight(x,z));
   return h;
 }
 function terrainH(x,z){
@@ -354,7 +348,7 @@ function terrainH(x,z){
     const d=Math.hypot(x-hx,z-hz);
     if(d<r)h=Math.max(h,hh*Math.cos(d/r*Math.PI/2)**2);
   }
-  return h;
+  return hiveFloor(x,z,h);
 }
 /* 坡度过陡（悬崖）则地面单位不可通行，只能走斜坡 */
 function tooSteep(x,z){
@@ -364,7 +358,7 @@ function tooSteep(x,z){
   return Math.max(sx,sz)/(2*d)>.75;
 }
 const groundMesh=(()=>{
-  const g=new THREE.PlaneGeometry(WORLD.maxX-WORLD.minX,WORLD.maxZ-WORLD.minZ,150,270);
+  const g=new THREE.PlaneGeometry(WORLD.maxX-WORLD.minX,WORLD.maxZ-WORLD.minZ,220,405);
   g.rotateX(-Math.PI/2);
   const pos=g.attributes.position;
   for(let i=0;i<pos.count;i++)pos.setY(i,terrainH(pos.getX(i),pos.getZ(i)+(WORLD.maxZ+WORLD.minZ)/2));
@@ -891,21 +885,6 @@ const gate={open:true,hp:2500,maxHp:2500,mesh:null,door:null,bar:null,pos:new TH
   }
   const door=new THREE.Mesh(new THREE.BoxGeometry(12,4.6,.9),new THREE.MeshLambertMaterial({color:0x9aa8ba}));
   door.position.y=2.3;door.castShadow=true;grp.add(door);gate.door=door;
-  // 塔楼护栏 + 旗杆 + 警示灯（平台地形由 plateauH 抬升，可从内侧斜梯走上来）
-  for(const s of[-1,1]){
-    const cX=8.75*s;
-    const par=(w,d,x,z)=>{
-      const p=new THREE.Mesh(new THREE.BoxGeometry(w,.9,d),new THREE.MeshLambertMaterial({color:0x7c8aa0}));
-      p.position.set(cX+x,GATE_TOP+.45-PLAT.H,z+16);p.castShadow=true;grp.add(p);
-    };
-    par(3.9,.35,0,-12.6);par(3.9,.35,0,-19.4);par(.35,7.4,1.78*s,-16);
-    const pole=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,3,5),postM);
-    pole.position.set(cX-1.4*s,GATE_TOP+1.5-PLAT.H,-2.6);grp.add(pole);
-    const flag=new THREE.Mesh(new THREE.PlaneGeometry(1.4,.8),new THREE.MeshBasicMaterial({color:s>0?0xdd3344:0x3366dd,side:THREE.DoubleSide}));
-    flag.position.set(cX-.7*s,GATE_TOP+2.6-PLAT.H,-2.6);grp.add(flag);
-    const lamp=new THREE.Mesh(new THREE.SphereGeometry(.2,6,5),new THREE.MeshBasicMaterial({color:0xffcc44}));
-    lamp.position.set(cX+1.5*s,GATE_TOP+.95-PLAT.H,3);grp.add(lamp);
-  }
   grp.position.set(gate.pos.x,terrainH(gate.pos.x,gate.pos.z),gate.pos.z);
   scene.add(grp);gate.mesh=grp;
   gate.bar=makeHPBar(5,'#6cf');gate.bar.position.y=6.6;grp.add(gate.bar);updHPBar(gate.bar,1);
@@ -957,16 +936,16 @@ function updGate(dt){
 }
 function gateBlocked(){return !gate.open&&!gate.dead;}
 /* 两侧与后方城墙（静态，不可摧毁）：[x,z,半宽,半深] */
-const RAMPARTS=[[-31,-36,1,20],[31,-36,1,20],[0,-55,32,1]];
+// RAMPARTS is shared with terrain, collision and the two ascent ramps.
 (function buildRamparts(){
   const m=new THREE.MeshLambertMaterial({color:0x77879a});
   const top=new THREE.MeshLambertMaterial({color:0x5c6b7d});
   const grp=new THREE.Group();
   for(const[rx,rz,hw,hd] of RAMPARTS){
-    const b=new THREE.Mesh(new THREE.BoxGeometry(hw*2,3.2,hd*2),m);
-    b.position.set(rx,1.6,rz);b.castShadow=b.receiveShadow=true;grp.add(b);
-    const t=new THREE.Mesh(new THREE.BoxGeometry(hw*2+.5,.4,hd*2+.5),top);
-    t.position.set(rx,3.4,rz);grp.add(t);
+    const b=new THREE.Mesh(new THREE.BoxGeometry(hw*2,WALL_TOP-PLAT.H-.1,hd*2),m);
+    b.position.set(rx,(WALL_TOP-PLAT.H-.1)/2,rz);b.castShadow=b.receiveShadow=true;grp.add(b);
+    const t=new THREE.Mesh(new THREE.BoxGeometry(hw*2,.08,hd*2),top);
+    t.position.set(rx,WALL_TOP-PLAT.H,rz);grp.add(t);
   }
   grp.position.y=PLAT.H;
   scene.add(grp);
@@ -1182,7 +1161,7 @@ function flyHeight(x,z){const g=groundY(x,z),top=fortress.topAt(x,z);return Math
 function spawnMonster(kind,x,z,opts={}){
   const ch=opts.ch||chapterCfg();
   const mul=diffMul()*(1+(Game.level-1)*.04); // 同章内关卡递增
-  let hp,dmg,speed,scale,gold,ranged=ch.ranged,fly=ch.fly;
+  let hp,dmg,speed,scale,gold,ranged=ch.ranged,fly=ch.fly&&!opts.route&&z<182;
   if(kind==='mob'){
     hp=ch.mob.hp*mul;dmg=ch.mob.dmg*mul;speed=ch.mob.speed*(1+(Game.loop-1)*.08);scale=rand(.85,1.15);gold=Math.round(ch.mob.gold*(1+(Game.loop-1)*.3));
   }else if(kind==='miniboss'){
@@ -1208,7 +1187,7 @@ function spawnMonster(kind,x,z,opts={}){
   mesh.position.set(x,y,z);
   scene.add(mesh);
   const mo={ch,mesh,kind,hp,maxHp:hp,dmg,speed,radius:.9*scale,hitH:.7*scale,gold,dead:false,
-    atkCd:0,ranged,fly,anim:rand(0,10),wild:opts.wild||false,guard:!!opts.home,home:opts.home||null,
+    atkCd:0,ranged,fly,route:opts.route||null,routeIndex:0,flightAfterExit:!!(opts.route&&ch.fly),anim:rand(0,10),wild:opts.wild||false,guard:!!opts.home,home:opts.home||null,
     explodeOnDie:ch.explodeOnDie,split:ch.split&&kind==='mob'&&!opts.isSplit,stealth:ch.stealth,
     target:null,spitCd:rand(1,3),chargeCd:5,emerge:opts.emerge?.9:0,
     bs:kind==='boss'?(ch.bs||['summon']):kind==='queen'?['barrage','summon']:(kind==='miniboss'?(ch.bs||[]).slice(0,1):null),
@@ -1389,6 +1368,15 @@ function updMonsters(dt){
     if(mo.mesh.userData.wingL){mo.mesh.userData.wingL.rotation.z=.3+Math.sin(t*30)*.5;mo.mesh.userData.wingR.rotation.z=-.3-Math.sin(t*30)*.5;}
     mo.atkCd-=dt;mo.spitCd-=dt;
     if(mo.gem){mo.gem.rotation.y+=dt*2.5;mo.gem.position.y+=Math.sin(t*3+mo.anim)*.004;}
+    if(mo.route){
+      let wp=mo.route[mo.routeIndex];
+      while(wp&&Math.hypot(wp.x-mo.mesh.position.x,wp.z-mo.mesh.position.z)<2){mo.routeIndex++;wp=mo.route[mo.routeIndex];}
+      if(!wp){mo.route=null;mo.fly=mo.flightAfterExit;}
+      else {
+        const close=monsterTargets(mo),engaged=close&&close.d2<18*18&&Math.abs(close.pos.y-mo.mesh.position.y)<6;
+        if(!engaged){const d=new THREE.Vector3(wp.x-mo.mesh.position.x,0,wp.z-mo.mesh.position.z).normalize();mo.mesh.rotation.y=Math.atan2(d.x,d.z);moveMonster(mo,d,dt,2.2);continue;}
+      }
+    }
     let tgt;
     if(mo.home){ // 老巢护卫/母皇：只在巢穴范围内迎战，玩家离开就回家并回血
       const h=mo.home,p=mo.mesh.position,dh=Math.hypot(p.x-h.x,p.z-h.z);
@@ -1439,7 +1427,7 @@ function updMonsters(dt){
     }
     const atkRange=mo.radius+tgt.r+(mo.ranged?14:1.2);
     // 卡住检测：5 秒没有靠近目标（例如钻进山顶堡垒找不到门）就钻地，从靠近目标的空地重新钻出。
-    if(!mo.home&&!mo.fly&&mo.chargeT<=0){
+    if(!mo.home&&!mo.fly&&!mo.route&&mo.mesh.position.z<182&&mo.chargeT<=0){
       mo.trackT=(mo.trackT||0)+dt;
       if(mo.trackT>=1){mo.trackT=0;const d=Math.sqrt(tgt.d2);mo.stuckT=(mo.lastD!==undefined&&d>mo.lastD-.8&&d>atkRange+1)?(mo.stuckT||0)+1:0;mo.lastD=d;}
       if(mo.stuckT>=5){burrowToward(mo,tgt.pos);continue;}
@@ -1447,7 +1435,7 @@ function updMonsters(dt){
     if(mo.chargeT>0){ // 冲锋中：直线突进
       mo.chargeT-=dt;
       moveMonster(mo,mo.chargeDir,dt,3.4);
-    }else if(dist>atkRange){
+    }else if(dist>atkRange||Math.abs(tgt.pos.y-mo.mesh.position.y)>6){
       let mdir=dir;
       if(!mo.fly){const nd=navDir(mo,tgt.pos);if(nd){mdir=nd;mo.mesh.rotation.y=Math.atan2(nd.x,nd.z);}}
       // 远处行军加速，缩短从虫洞到基地的空档；近基地恢复原速。
@@ -1515,9 +1503,11 @@ function moveMonster(mo,dir,dt,mul){
 /* 寻路：高台内外互通只能走正门斜坡 */
 function navDir(mo,tgtPos){
   const p=mo.mesh.position;
+  const route=hiveNavigation(p,tgtPos);
+  if(route)return new THREE.Vector3(route.x-p.x,0,route.z-p.z).normalize();
   const onPlat=plateauH(p.x,p.z)>PLAT.H*.6;
   const tgtPlat=plateauH(tgtPos.x,tgtPos.z)>PLAT.H*.6;
-  if(onPlat===tgtPlat)return null;
+  if(onPlat===tgtPlat){const wp=rampartNavigation(p,tgtPos);return wp?new THREE.Vector3(wp.x-p.x,0,wp.z-p.z).normalize():null;}
   // 已在坡道走廊内：沿坡直行
   if(Math.abs(p.x)<PLAT.rampW-1&&p.z>PLAT.rampTop-2&&p.z<PLAT.rampBot+4){
     return new THREE.Vector3(0,0,tgtPlat?-1:1);
@@ -1578,7 +1568,7 @@ function collideWalls(x,z,r,y=groundY(x,z)){
   if(y<base.pos.y+6&&dxb*dxb+dzb*dzb<(4+r)**2)return true;
   // 周边静态城墙
   for(const[rx,rz,hw,hd] of RAMPARTS){
-    if(y<PLAT.H+3.7&&Math.abs(x-rx)<hw+r&&Math.abs(z-rz)<hd+r)return true;
+    if(y<WALL_TOP-.8&&Math.abs(x-rx)<hw+r&&Math.abs(z-rz)<hd+r)return true;
   }
   // 城门（关闭时阻挡）
   if(y<PLAT.H+4.8&&gateBlocked()&&Math.abs(x-gate.pos.x)<6+r&&Math.abs(z-gate.pos.z)<.9+r)return true;
@@ -1921,7 +1911,7 @@ function squadAnchor(s){
   // 虫群突破到基地后收缩防线；门外的敌人只在城门防线内应战。
   const breached=monsters.some(mo=>squadBaseThreat(mo)&&mo.mesh.position.z<-30);
   return breached?{x:base.pos.x+[-7,-2,3,8][s.slot],z:base.pos.z+7+(s.slot%2)*3}
-    :{x:[-10,-4,4,10][s.slot],z:-28+(s.slot%2)*1.5};
+    :{x:[-12,-21,12,21][s.slot],z:-18};
 }
 function squadCanWalk(x,z){
   return x>WORLD.minX+1&&x<WORLD.maxX-1&&z>WORLD.minZ+1&&z<WORLD.maxZ-1&&!collideWalls(x,z,.65)&&!tooSteep(x,z);
@@ -2002,6 +1992,8 @@ function updSquad(dt){
       dx=wp.x-p.x;dz=wp.z-p.z;
       s.wantsGate=Math.abs(p.x)<6.5&&Math.abs(p.z-gate.pos.z)<5;
     }
+    const route=hiveNavigation(p,dest)||((p.z<gate.pos.z)===(dest.z<gate.pos.z)?rampartNavigation(p,dest):null);
+    if(route){dx=route.x-p.x;dz=route.z-p.z;}
     let length=Math.hypot(dx,dz);if(length>.3){dx/=length;dz/=length;}else{dx=0;dz=0;}
     // 包含玩家的软避让；完全重合时也有稳定且不同的分离方向。
     for(const other of [...squad.filter(o=>o!==s).map(o=>o.mesh.position),pp]){
@@ -2181,6 +2173,7 @@ function updPlayer(dt){
   const f=-ax.y,r=ax.x;
   let mvx=f*sn-r*cs, mvz=f*cs+r*sn;
   const moving=Math.hypot(mvx,mvz)>.01;
+  player.sprinting=!!(moving&&Input.keys.SPRINT&&!player.inVehicle&&player.dashT<=0);
   player.moveZ=moving?mvz/Math.hypot(mvx,mvz):0;
   const moveDir=moving?new THREE.Vector3(mvx,0,mvz).normalize():null;
   visuals.animate(player.mesh,dt,moving?'Run':'Idle',camera);
@@ -2247,11 +2240,11 @@ function updPlayer(dt){
       const range=WEAPONS[Game.curWeapon].range,aim=playerAim(probe,range,moveDir);
       if(!Input.firing(automaticFireTarget(probe,range,aim)))player.yaw=Math.atan2(mvx,mvz);
     }
-    const sp=player.speed*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
+    const sp=player.speed*(player.sprinting?1.65:1)*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
     const nx=player.pos.x+mvx*sp*dt,nz=player.pos.z+mvz*sp*dt;
     if(!collideWalls(nx,player.pos.z,.5)&&!tooSteep(nx,player.pos.z))player.pos.x=clamp(nx,WORLD.minX+1,WORLD.maxX-1);
     if(!collideWalls(player.pos.x,nz,.5)&&!tooSteep(player.pos.x,nz))player.pos.z=clamp(nz,WORLD.minZ+1,WORLD.maxZ-1);
-    player.anim+=dt*10;
+    player.anim+=dt*(player.sprinting?15:10);
     player.mesh.userData.legs.forEach((l,i)=>l.rotation.x=Math.sin(player.anim+i*Math.PI)*.7);
   }else{
     player.mesh.userData.legs.forEach(l=>l.rotation.x*=.8);
@@ -2483,8 +2476,7 @@ function startBattle(){
 // 虫洞口出生点：轮流使用各洞口，首领从中央主洞出来
 function mouthSpawn(main=false){
   const w=Game.wave,m=main?MOUTHS.find(m=>m.main):MOUTHS[(w.mouth=(w.mouth+1)%MOUTHS.length)];
-  const side=rand(-3,3);
-  return {x:m.out.x+(-m.dz)*side+m.dx*rand(0,3),z:m.out.z+m.dx*side+m.dz*rand(0,3),mouth:m};
+  return {x:0,z:HIVE.z-3,mouth:m,route:hiveRoute(m.id)};
 }
 function updWave(dt){
   if(operations.update(dt))return;
@@ -2504,19 +2496,19 @@ function updWave(dt){
       const remaining=w.total-w.spawned;
       if(isBossLevel()&&!w.bossSpawned&&remaining===1){
         w.bossSpawned=true;w.spawned++;
-        const p=mouthSpawn(true);spawnMonster('boss',p.x,p.z,{emerge:true});
-        showMsg('💀 '+chapterCfg().boss+' 从'+p.mouth.name+'钻出来了！',3);
+        const p=mouthSpawn(true);spawnMonster('boss',p.x,p.z,{route:p.route});
+        showMsg('💀 '+chapterCfg().boss+' 正沿'+p.mouth.name+'向基地进军！',3);
         AudioSys.sfx('wave');Game.shake=Math.min(.7,Game.shake+.35);
       }else if(isMiniBossLevel()&&!w.bossSpawned&&remaining<=Math.ceil(w.total*.4)){
         w.bossSpawned=true;w.spawned++;
-        const p=mouthSpawn(true);spawnMonster('miniboss',p.x,p.z,{emerge:true});
+        const p=mouthSpawn(true);spawnMonster('miniboss',p.x,p.z,{route:p.route});
         showMsg('⚔ 小BOSS '+chapterCfg().boss+'的先锋 杀到！',2.5);
       }else if(!(isBossLevel()&&remaining<=1)){
         w.spawned++;
         // 从虫洞口钻出；随进度提升精英概率
         const p=mouthSpawn();
         const ec=Math.min(.28,.04+(Game.loop-1)*.05+(Game.chapter-1)*.012);
-        spawnMonster('mob',p.x,p.z,Math.random()<ec?{elite:true,emerge:true}:{emerge:true});
+        spawnMonster('mob',p.x,p.z,{elite:Math.random()<ec,route:p.route});
       }
       w.timer=Math.max(.45,2.2-Game.level*.1-Game.chapter*.05-(Game.loop-1)*.25);
     }
@@ -3024,9 +3016,9 @@ function newGame(test){
   restoreView();
   base.maxHp=baseMaxHp();base.hp=base.maxHp;updHPBar(base.bar,base.hp/base.maxHp);
   // 高台正面围墙（城门两侧；±9 空出给城门塔楼）
-  for(const x of[-31,-25,-19,-13,13,19,25,31])placeBuilding('wall',x,-16,0);
-  placeBuilding('mgTurret',-13.5,-21,0);placeBuilding('mgTurret',13.5,-21,0);
-  placeBuilding('antiAir',22,-23,0);
+  // Permanent broad ramparts leave the wall walk free for soldiers and turrets.
+  placeBuilding('mgTurret',-15,-13,0);placeBuilding('mgTurret',15,-13,0);
+  placeBuilding('antiAir',27,-13,0);
   gate.dead=false;gate.hp=gate.maxHp=2500;updHPBar(gate.bar,1);gate.open=true;gate.auto=false;
   if(test){
     for(const vk of Object.keys(VEHICLES)){Game.vehiclesOwned.push(vk);spawnVehicle(vk);}
@@ -3071,9 +3063,10 @@ function pauseKey(fromEsc=false){
 // 冲刺冷却（HUD 一行 + 手机按钮转圈）；坐直升机时手机 冲→升、医疗→降
 function updDashUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
-  const txt=v?'':player.dashCd>0?'💨 冲刺 '+player.dashCd.toFixed(1)+'s':'💨 冲刺 就绪（'+(isTouch?'冲刺':keyBindings.label('K'))+'）';
+  const txt=v?'':player.dashCd>0?'💨 闪避 '+player.dashCd.toFixed(1)+'s':'💨 闪避 就绪（'+(isTouch?'闪避':keyBindings.label('K'))+'）';
+  $('vSPRINT').classList.toggle('hidden',!!v);
   const el=$('dashTxt');if(el.textContent!==txt)el.textContent=txt;
-  const k=$('vK'),h=$('vH'),kl=fly?'升':'冲刺',hl=fly?'降':'医疗';
+  const k=$('vK'),h=$('vH'),kl=fly?'升':'闪避',hl=fly?'降':'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
   const cd=v?0:Math.round(player.dashCd/(CLASSES[Game.cls].dashCd||DASH.cd)*100)/100;
   if(k._cd!==cd){k._cd=cd;k.style.setProperty('--cd',cd);k.classList.toggle('cd',cd>0);}
@@ -3166,7 +3159,7 @@ function camBlocked(p){
 function updCamera(dt){
   const v=player.inVehicle,tp=v?v.mesh.position:player.pos;
   // 冲刺时视野略微拉宽，第一人称也能感觉到“冲出去”
-  const fovT=62+(player.dashT>0&&!v?8:0);
+  const fovT=62+(player.dashT>0&&!v?8:player.sprinting&&!v?4:0);
   if(camera.fov!==fovT){camera.fov=Math.abs(fovT-camera.fov)<.05?fovT:camera.fov+(fovT-camera.fov)*Math.min(1,dt*(fovT>camera.fov?20:8));camera.updateProjectionMatrix();}
   if(!camState.init){camState.target.copy(tp);camState.init=true;camState.dist=99;}
   camState.target.lerp(tp,1-Math.exp(-dt*(v?11:18)));
@@ -3411,7 +3404,7 @@ function syncKeyLabels(){
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','I','H','O','L','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['SPRINT','J','K','I','H','O','L','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
@@ -3484,7 +3477,7 @@ function setupWebControls(){
     open:()=>{closePanels();Input.reset();panelOpen=true;$('platformPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();},close:closePanels,
     validate:d=>validateNormalSave(d,{weapons:{...WEAPONS,...LEGACY_WEAPONS},buildings:BUILDINGS,vehicles:VEHICLES})
   });
-  document.querySelectorAll('.vbtn').forEach(el=>{el.dataset.key=el.id.slice(1);});
+  document.querySelectorAll('.vbtn').forEach(el=>{el.dataset.key=el.id==='vSPRINT'?'Shift':el.id.slice(1);});
   let muted=false;
   let quality=isTouch?'smooth':'high';try{quality=localStorage.getItem('chongchao-quality')||quality;}catch(_e){}
   const applyPixelRatio=value=>renderer.setPixelRatio(value==='high'?Math.min(stageScale*(devicePixelRatio||1),2):Math.min(stageScale,1.2));
@@ -3517,7 +3510,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();syncKeyLabels();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

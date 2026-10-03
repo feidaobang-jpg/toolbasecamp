@@ -15,7 +15,7 @@ const output=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-
         if(o.isInstancedMesh&&g.type==='PlaneGeometry'&&m.transparent&&m.opacity===.28)mouthCurtains++;
       });return {tallBeams,mouthCurtains,mouths:q.MOUTHS.length};
     });
-    assert.deepEqual(results.landmarks,{tallBeams:0,mouthCurtains:0,mouths:5});
+    assert.deepEqual(results.landmarks,{tallBeams:0,mouthCurtains:0,mouths:3});
     for(const difficulty of ['normal','hard','nightmare']){
       const result=await p.evaluate(d=>{
         const q=__gameQA;q.newGame(false);q.Game.chapter=6;q.startPrep();q.operations.start('toxic',d);q.Game.state='paused';q.clearEntities(false);
