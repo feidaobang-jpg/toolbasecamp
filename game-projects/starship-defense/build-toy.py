@@ -9,7 +9,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'public/html/game/starship-defense'
 OUT = ROOT / 'dist/toy/chongchao-qianshao'
 PACKAGE = OUT / 'package'
-VERSION = json.loads((Path(__file__).parent / 'media-kit/game.json').read_text('utf-8'))['current_version']
+GAME = json.loads((Path(__file__).parent / 'media-kit/game.json').read_text('utf-8'))
+VERSION = GAME['current_version']
 
 
 def build():
@@ -40,7 +41,7 @@ def build():
             rel = source.relative_to(SOURCE)
             z.write(PACKAGE / rel, str(rel).replace('\\', '/'))
     manifest = {
-        'title': '虫潮前哨：守卫基地', 'slug': 'chongchao-qianshao',
+        'title': GAME['name'], 'slug': 'chongchao-qianshao',
         'version': VERSION, 'source': str(SOURCE.relative_to(ROOT)),
         'zip_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
         'files': {str(p.relative_to(SOURCE)).replace('\\', '/'): hashlib.sha256((PACKAGE / p.relative_to(SOURCE)).read_bytes()).hexdigest() for p in runtime_files},

@@ -1796,7 +1796,7 @@ window.TB_LOCALES['zh-CN'] = {
             desc: '经典坦克大战：20 关地形递进、敌方吃道具模式，横屏双端操控。'
         },
         starshipDefense: {
-            title: '虫潮前哨',
+            title: '虫潮围城',
             desc: '3D 守卫基地：深色星际战场，虫群从隧道钻出；第一/第三人称、武器强化、小队与载具，可突袭虫巢母皇；电脑手机均可玩。'
         },
         journeyWest: {
