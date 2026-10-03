@@ -5,10 +5,9 @@
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>虫潮围城</title>
-<script>try{var t=new URLSearchParams(location.search).get('theme')||localStorage.getItem('chongchao-theme');document.documentElement.className='theme-'+(t==='toy'?'toy':'dark');}catch(e){}</script>
-<link rel="stylesheet" href="./combat-controls.css?v=pc1">
+<link rel="stylesheet" href="./combat-controls.css?v=dark104">
 <style>
-/* ---------- 结构（两种画风共用） ---------- */
+/* ---------- 结构 ---------- */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none;}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Microsoft YaHei","PingFang SC",sans-serif;}
 #stage{position:absolute;left:50%;top:50%;transform-origin:center center;width:960px;height:540px;}
@@ -159,37 +158,6 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
 .theme-dark #joyBase{background:radial-gradient(circle,rgba(120,180,255,.16),rgba(120,180,255,.04));border:2px solid rgba(140,200,255,.45)}
 .theme-dark #joyKnob{background:radial-gradient(circle at 35% 30%,rgba(210,235,255,.9),rgba(80,140,220,.75));box-shadow:0 0 8px rgba(120,200,255,.7)}
 
-/* ---------- 明亮Q版（可选） ---------- */
-.theme-toy body{background:#b5e3e6}
-.theme-toy #assetLoad{background:#e8f2df;color:#28596a}
-.theme-toy .menu{background:linear-gradient(90deg,rgba(241,248,230,.97),rgba(233,245,227,.91) 46%,rgba(215,239,224,.08) 78%);color:#284c58}
-.theme-toy #menuPause,.theme-toy #menuOver{background:rgba(233,245,227,.9)}
-.theme-toy .menu h1{color:#286779;text-shadow:0 3px 0 #fff7dc}
-.theme-toy .menu .subtitle{color:#bda477}.theme-toy .menu h2{color:#347284}.theme-toy .small{color:#52776e}.theme-toy .classCard b{color:#347a8e}
-.theme-toy .classCard{border-radius:16px;border:2px solid #bbd7c5;background:#fff9e9;color:#52756e;box-shadow:0 4px 0 #b9d4c3}
-.theme-toy .classCard.sel{background:#ffedb8;border-color:#eab65b;box-shadow:0 4px 0 #d6a352}.theme-toy .classCard.sel b{color:#926b36}
-.theme-toy .mbtn{border-radius:12px;background:#397f91;border:2px solid #285e71;box-shadow:0 3px 0 #254f61;color:#fff9e6}
-.theme-toy .mbtn.green{background:#4b9f8d;border-color:#35796b;box-shadow:0 3px 0 #35796b}.theme-toy .mbtn.red{background:#b0605a;border-color:#8a443f;box-shadow:0 3px 0 #8a443f}
-.theme-toy #hudTop,.theme-toy #hudRight{color:#294d58;background:rgba(255,248,226,.93);border:2px solid #b1d2c1;border-radius:13px;box-shadow:0 4px 0 rgba(48,92,90,.14)}
-.theme-toy #hpBarWrap,.theme-toy #baseBarWrap{background:#d4e0cb}.theme-toy #hpBar{background:#58b9a1}.theme-toy #baseBar{background:#eab85e}.theme-toy #baseGuide{color:#518679}
-.theme-toy #placeBar{color:#294d58;background:rgba(255,248,226,.95);border:2px solid #b1d2c1}
-.theme-toy #readyBtn{background:#f6c665;border:2px solid #ddaa47;border-radius:14px;color:#66512d;box-shadow:0 4px 0 #c9923f}
-.theme-toy #msg{color:#fff8dd;text-shadow:0 2px 0 #386c73,2px 0 0 #386c73,-2px 0 0 #386c73,0 -2px 0 #386c73}
-.theme-toy #hint{color:#315e64;background:rgba(247,249,230,.87)}
-.theme-toy #keysHint{color:#ecf4e4;background:rgba(40,79,84,.8)}
-.theme-toy #interactHint{color:#315c67;background:#fff1c7;border:1px solid #d6b66c}
-.theme-toy .wslot{color:#386777;background:rgba(247,249,231,.93);border:1px solid #a3c5b9}.theme-toy .wslot.on{background:#f6c665;color:#66512d;border-color:#ddaa47}
-.theme-toy .vbtn{background:rgba(247,249,231,.9);border:2px solid #a1cbbb;color:#326d7b;border-radius:17px;box-shadow:0 3px 0 rgba(43,91,89,.3)}
-.theme-toy .vbtn::after{color:#44776c}.theme-toy #vJ{background:#efbf66;color:#66512d;border-color:#d5a64e}
-.theme-toy #joyBase{border:2px solid rgba(255,248,222,.8);background:rgba(54,104,99,.15)}.theme-toy #joyKnob{background:#fff0c4;box-shadow:0 3px 0 rgba(40,85,79,.25)}
-.theme-toy .panel{background:#edf4df;color:#345c62;border:2px solid #8bbab0;border-radius:18px;box-shadow:0 10px 35px #315c6455}.theme-toy .panel h3{color:#347888}
-.theme-toy .shopItem,.theme-toy .saveSlot{background:#fff8e4;color:#41666b;border:1px solid #bbd1b5;border-radius:11px}.theme-toy .shopItem.own{border-color:#4b9f8d}.theme-toy .shopItem .nm{color:#347d8b}.theme-toy .shopItem .pr{color:#aa7e32}
-.theme-toy .shopItem .lv{background:#f6c665;color:#66512d}.theme-toy .shopItem .upg{background:#4c948d;color:#fff;border:1px solid #34796f}
-.theme-toy .tab{background:#d1e4cf;color:#437365;border:1px solid #91baa4}.theme-toy .tab.on{background:#4c948d;color:white;border-color:#34796f}
-.theme-toy .closeX{color:#b0605a}.theme-toy a.gameBack{color:#427d7b;border-bottom:1px solid #88b4a2}
-.theme-toy .testGrid select{background:#fff3d7;color:#345c66;border:1px solid #96b8ae}
-.theme-toy #crosshair::before,.theme-toy #crosshair::after{background:rgba(40,80,90,.9);box-shadow:0 0 2px #fff}
-
 #keyGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0}
 #keyGrid button{text-align:left;min-height:42px;font-size:13px}
 .operation-card{display:block;width:100%;text-align:left;white-space:normal;margin:12px 0;min-height:54px}
@@ -218,7 +186,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在部署前哨基地…</div>
-<div id="webTools"><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="themeBtn" class="mbtn">画风</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="webTools"><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -324,7 +292,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     </div>
     <div class="btnRow optRow">
       <button class="mbtn" id="personBtnMenu">人称</button>
-      <button class="mbtn" id="themeBtnMenu">画风</button>
       <button class="mbtn" id="qualityBtnMenu">画质</button>
       <button class="mbtn" id="muteBtnMenu">声音</button>
       <button class="mbtn" id="keysPause">⌨ 操作设置</button>
@@ -408,6 +375,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=mobile12" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=dark104" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

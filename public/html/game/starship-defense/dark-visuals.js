@@ -1,15 +1,15 @@
 import * as THREE from './vendor/three.module.js';
-import {ToyVisuals} from './toy-visuals.js?v=fb97';
+import {UnitVisuals} from './unit-visuals.js';
 
 // Deep night battlefield look requested by players (closest to the first released
 // version): armoured troopers, glossy arachnid bugs with glowing eyes, steel base.
-// Same merged-part approach as ToyVisuals: body + two limb meshes (+ wings) per unit.
+// Merged-part units: body + two limb meshes (+ wings) per unit.
 const SOLDIER_COLORS=new Map([[0x3a7bd5,0x3f74c4],[0xd58a3a,0xb8743a],[0x3ad57b,0x3f9a63],[0xd5d53a,0xb9a23c],[0xd53a8a,0xa8445f],[0x3ad5d5,0x3b9aa8],[0xff8833,0xc4682e],[0x4488ff,0x3f74c4]]);
 const BUG_COLORS=[0xd2692e,0x8cc63a,0x8a5fb8,0x3fb7c9,0xe0402a,0xa8b336,0x3f6fe6,0x5d5f86,0x8a8f96,0xb3245c];
 const shade=(c,k)=>new THREE.Color(c).multiplyScalar(k).getHex();
 const mix=(a,b,t)=>new THREE.Color(a).lerp(new THREE.Color(b),t).getHex();
 
-export class DarkVisuals extends ToyVisuals {
+export class DarkVisuals extends UnitVisuals {
   constructor(_,scene,palette){
     super(_,scene);this.palette=palette;this.pointLights=[];
     // Lighter shared primitives: 48 bugs x ~30 parts stays well under phone triangle budgets.

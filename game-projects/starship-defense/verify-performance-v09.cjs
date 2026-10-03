@@ -7,7 +7,7 @@ const url=process.env.GAME_URL||'http://127.0.0.1:8765/public/html/game/starship
 (async()=>{
  const b=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--use-angle=d3d11','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-gpu-vsync','--disable-frame-rate-limit']});
  const runs=[];
- for(const [theme,quality,view] of [['dark','high','third'],['dark','smooth','third'],['dark','high','first'],['toy','high','third']]){
+ for(const [theme,quality,view] of [['dark','high','third'],['dark','smooth','third'],['dark','high','first']]){
   const c=await b.newContext({viewport:{width:1280,height:720}});const p=await c.newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.goto(url+'?qa=1&theme='+theme);await p.waitForFunction(()=>window.__gameQA);
   await p.evaluate(q=>{localStorage.setItem('chongchao-quality',q);},quality);await p.reload();await p.waitForFunction(()=>window.__gameQA);await p.waitForTimeout(500);

@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-rename-v0.10.3",
+  "current_version": "web-dark-only-v0.10.4",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -35,7 +35,7 @@
     "mode": "asset-and-presentation-merge",
     "full_native_port": false
   },
-  "visual_style": "v0.9 default dark battlefield (player feedback: bright toy look too childish); original rounded toy-like 3D kept as optional theme",
+  "visual_style": "Dark battlefield only; bright toy art and theme switching removed in v0.10.4",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "auditing",

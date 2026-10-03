@@ -1,0 +1,946 @@
+{
+  "soldier": [
+    {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 1336,
+          "hash": "41efeb8d"
+        },
+        "normal": {
+          "count": 1336,
+          "hash": "d9459395"
+        },
+        "uv": {
+          "count": 1336,
+          "hash": "df97de05"
+        },
+        "color": {
+          "count": 1336,
+          "hash": "f1f31151"
+        },
+        "aGlow": {
+          "count": 1336,
+          "hash": "55d66b95"
+        }
+      },
+      "index": "9cfc7fe"
+    },
+    {
+      "position": [
+        0,
+        0.92,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 120,
+          "hash": "f0d0f7c5"
+        },
+        "normal": {
+          "count": 120,
+          "hash": "51aec705"
+        },
+        "uv": {
+          "count": 120,
+          "hash": "d71af045"
+        },
+        "color": {
+          "count": 120,
+          "hash": "a58aee45"
+        },
+        "aGlow": {
+          "count": 120,
+          "hash": "bf19ff45"
+        }
+      },
+      "index": "e73efa25"
+    },
+    {
+      "position": [
+        0,
+        0.92,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 120,
+          "hash": "749bc2e5"
+        },
+        "normal": {
+          "count": 120,
+          "hash": "51aec705"
+        },
+        "uv": {
+          "count": 120,
+          "hash": "d71af045"
+        },
+        "color": {
+          "count": 120,
+          "hash": "a58aee45"
+        },
+        "aGlow": {
+          "count": 120,
+          "hash": "bf19ff45"
+        }
+      },
+      "index": "e73efa25"
+    },
+    {
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "scale": [
+        0.85,
+        0.85,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 4,
+          "hash": "7f375b45"
+        },
+        "normal": {
+          "count": 4,
+          "hash": "919d15a5"
+        },
+        "uv": {
+          "count": 4,
+          "hash": "4990eb05"
+        }
+      },
+      "index": "7c0d37e"
+    },
+    {
+      "position": [
+        0.22,
+        1.2,
+        0.43
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 224,
+          "hash": "147aae11"
+        },
+        "normal": {
+          "count": 224,
+          "hash": "487e94f5"
+        },
+        "uv": {
+          "count": 224,
+          "hash": "bf8cfb45"
+        },
+        "color": {
+          "count": 224,
+          "hash": "d9213785"
+        },
+        "aGlow": {
+          "count": 224,
+          "hash": "6f87a105"
+        }
+      },
+      "index": "78c49c35"
+    }
+  ],
+  "bug": [
+    {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 2078,
+          "hash": "cd206984"
+        },
+        "normal": {
+          "count": 2078,
+          "hash": "c83ba410"
+        },
+        "uv": {
+          "count": 2078,
+          "hash": "7e998561"
+        },
+        "color": {
+          "count": 2078,
+          "hash": "639b98fb"
+        },
+        "aGlow": {
+          "count": 2078,
+          "hash": "3ffe1ee5"
+        }
+      },
+      "index": "7d3064de"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "da19adf3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "e29d0723"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "47ac0d04"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "643025d3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "b9a2083"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "47ac0d04"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.2,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 4,
+          "hash": "7f375b45"
+        },
+        "normal": {
+          "count": 4,
+          "hash": "919d15a5"
+        },
+        "uv": {
+          "count": 4,
+          "hash": "4990eb05"
+        }
+      },
+      "index": "7c0d37e"
+    }
+  ],
+  "flying": [
+    {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 2078,
+          "hash": "cd206984"
+        },
+        "normal": {
+          "count": 2078,
+          "hash": "c83ba410"
+        },
+        "uv": {
+          "count": 2078,
+          "hash": "7e998561"
+        },
+        "color": {
+          "count": 2078,
+          "hash": "127600e5"
+        },
+        "aGlow": {
+          "count": 2078,
+          "hash": "3ffe1ee5"
+        }
+      },
+      "index": "7d3064de"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "da19adf3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "e29d0723"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "5c475374"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "643025d3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "b9a2083"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "5c475374"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.2,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 4,
+          "hash": "7f375b45"
+        },
+        "normal": {
+          "count": 4,
+          "hash": "919d15a5"
+        },
+        "uv": {
+          "count": 4,
+          "hash": "4990eb05"
+        }
+      },
+      "index": "7c0d37e"
+    },
+    {
+      "position": [
+        0,
+        1.35,
+        0.05
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 130,
+          "hash": "f326d515"
+        },
+        "normal": {
+          "count": 130,
+          "hash": "c9c2e66b"
+        },
+        "uv": {
+          "count": 130,
+          "hash": "33b063d0"
+        },
+        "color": {
+          "count": 130,
+          "hash": "22ac96d1"
+        },
+        "aGlow": {
+          "count": 130,
+          "hash": "a4b5a6e1"
+        }
+      },
+      "index": "bd4a5a85"
+    },
+    {
+      "position": [
+        0,
+        1.35,
+        0.05
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 130,
+          "hash": "ee8eed3d"
+        },
+        "normal": {
+          "count": 130,
+          "hash": "c17d2693"
+        },
+        "uv": {
+          "count": 130,
+          "hash": "33b063d0"
+        },
+        "color": {
+          "count": 130,
+          "hash": "22ac96d1"
+        },
+        "aGlow": {
+          "count": 130,
+          "hash": "a4b5a6e1"
+        }
+      },
+      "index": "bd4a5a85"
+    }
+  ],
+  "boss": [
+    {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 2397,
+          "hash": "81731e83"
+        },
+        "normal": {
+          "count": 2397,
+          "hash": "dc1499cb"
+        },
+        "uv": {
+          "count": 2397,
+          "hash": "3f9fe7cd"
+        },
+        "color": {
+          "count": 2397,
+          "hash": "aed61367"
+        },
+        "aGlow": {
+          "count": 2397,
+          "hash": "8440c4c2"
+        }
+      },
+      "index": "ba380472"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "da19adf3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "e29d0723"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "4d017cd4"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "643025d3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "b9a2083"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "4d017cd4"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.2,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 4,
+          "hash": "7f375b45"
+        },
+        "normal": {
+          "count": 4,
+          "hash": "919d15a5"
+        },
+        "uv": {
+          "count": 4,
+          "hash": "4990eb05"
+        }
+      },
+      "index": "7c0d37e"
+    }
+  ],
+  "queen": [
+    {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 3177,
+          "hash": "5196529d"
+        },
+        "normal": {
+          "count": 3177,
+          "hash": "3fae1b1f"
+        },
+        "uv": {
+          "count": 3177,
+          "hash": "f9262af1"
+        },
+        "color": {
+          "count": 3177,
+          "hash": "312b7abd"
+        },
+        "aGlow": {
+          "count": 3177,
+          "hash": "e7d95efa"
+        }
+      },
+      "index": "31f78de4"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "da19adf3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "e29d0723"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "77f47e4"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.9,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 441,
+          "hash": "643025d3"
+        },
+        "normal": {
+          "count": 441,
+          "hash": "b9a2083"
+        },
+        "uv": {
+          "count": 441,
+          "hash": "21dc1279"
+        },
+        "color": {
+          "count": 441,
+          "hash": "77f47e4"
+        },
+        "aGlow": {
+          "count": 441,
+          "hash": "496c3295"
+        }
+      },
+      "index": "cb6fc3e7"
+    },
+    {
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.2,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 4,
+          "hash": "7f375b45"
+        },
+        "normal": {
+          "count": 4,
+          "hash": "919d15a5"
+        },
+        "uv": {
+          "count": 4,
+          "hash": "4990eb05"
+        }
+      },
+      "index": "7c0d37e"
+    }
+  ],
+  "mech": [
+    {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 550,
+          "hash": "d12f16b8"
+        },
+        "normal": {
+          "count": 550,
+          "hash": "7636f960"
+        },
+        "uv": {
+          "count": 550,
+          "hash": "6cb561c9"
+        },
+        "color": {
+          "count": 550,
+          "hash": "50699a9d"
+        },
+        "aGlow": {
+          "count": 550,
+          "hash": "df23adb5"
+        }
+      },
+      "index": "84f28318"
+    },
+    {
+      "position": [
+        0,
+        2.1,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 96,
+          "hash": "3d724451"
+        },
+        "normal": {
+          "count": 96,
+          "hash": "f46552c5"
+        },
+        "uv": {
+          "count": 96,
+          "hash": "4a34b3c5"
+        },
+        "color": {
+          "count": 96,
+          "hash": "319df8a5"
+        },
+        "aGlow": {
+          "count": 96,
+          "hash": "25e26bc5"
+        }
+      },
+      "index": "5b052505"
+    },
+    {
+      "position": [
+        0,
+        2.1,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 96,
+          "hash": "62250fd1"
+        },
+        "normal": {
+          "count": 96,
+          "hash": "f46552c5"
+        },
+        "uv": {
+          "count": 96,
+          "hash": "4a34b3c5"
+        },
+        "color": {
+          "count": 96,
+          "hash": "319df8a5"
+        },
+        "aGlow": {
+          "count": 96,
+          "hash": "25e26bc5"
+        }
+      },
+      "index": "5b052505"
+    },
+    {
+      "position": [
+        0,
+        0.035,
+        0
+      ],
+      "scale": [
+        0.85,
+        0.85,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 4,
+          "hash": "7f375b45"
+        },
+        "normal": {
+          "count": 4,
+          "hash": "919d15a5"
+        },
+        "uv": {
+          "count": 4,
+          "hash": "4990eb05"
+        }
+      },
+      "index": "7c0d37e"
+    },
+    {
+      "position": [
+        1.05,
+        2.75,
+        0.43
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "attributes": {
+        "position": {
+          "count": 152,
+          "hash": "a8827dd1"
+        },
+        "normal": {
+          "count": 152,
+          "hash": "c6c5e135"
+        },
+        "uv": {
+          "count": 152,
+          "hash": "a0987fc5"
+        },
+        "color": {
+          "count": 152,
+          "hash": "a1938595"
+        },
+        "aGlow": {
+          "count": 152,
+          "hash": "b7198685"
+        }
+      },
+      "index": "25975065"
+    }
+  ]
+}

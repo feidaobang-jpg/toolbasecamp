@@ -1,11 +1,10 @@
 import * as THREE from './vendor/three.module.js';
-import {ToyVisuals} from './toy-visuals.js?v=fb97';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
 import {FortressWorld} from './fortress-world.js?v=fb9';
 import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=fb97';
 import {validateNormalSave} from './save-validation.js?v=fb9';
-import {currentTheme,saveTheme,PALETTES} from './theme.js?v=fb97';
+import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance} from './hive-world.js?v=fb9';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations} from './operations.js';
@@ -15,8 +14,7 @@ const CombatControls=createCombatControls(combatStorage);
 const keyBindings=createKeyBindings();
 let bindingAction=null;
 const MAX_BUILDINGS=64;
-const THEME=currentTheme(),PAL=PALETTES[THEME];
-document.documentElement.classList.remove('theme-dark','theme-toy');document.documentElement.classList.add('theme-'+THEME);
+const THEME='dark',PAL=BATTLEFIELD_PALETTE;
 let visualAssets=false;
 const frameTimes=[];let previousFrame=0,measuring=false;
 
@@ -379,7 +377,7 @@ function segDist(x,z,ax,az,bx,bz){const vx=bx-ax,vz=bz-az,t=clamp(((x-ax)*vx+(z-
     pos.setY(i,h);
     const t=clamp(h/8,0,1),n=Math.sin(x*.31+z*.17)*Math.cos(z*.23-x*.11);
     const c=c1.clone().lerp(c2,Math.abs(Math.sin(x*.045)*Math.cos(z*.05))*.7).lerp(c3,t*.5);
-    if(THEME==='dark')c.multiplyScalar(.9+n*.1);
+    c.multiplyScalar(.9+n*.1);
     const lane=(1-smooth01((Math.abs(x-Math.sin(z*.022)*3)-6)/5))*(1-smooth01((z-250)/30));
     if(z>-18)c.lerp(laneC,lane*.85);
     let trail=0;for(const[ax,az,bx,bz] of trails)trail=Math.max(trail,1-smooth01((segDist(x,z,ax,az,bx,bz)-2.5)/4));
@@ -2988,7 +2986,7 @@ function drawRadar(){
   const p=player.inVehicle?player.inVehicle.mesh.position:player.pos,c=Math.cos(camYaw),s=Math.sin(camYaw);
   const toS=(x,z)=>{const dx=x-p.x,dz=z-p.z;return [cx+(-dx*c+dz*s)*sc,cy-(dx*s+dz*c)*sc];};
   rctx.clearRect(0,0,W,H);rctx.save();
-  rctx.beginPath();rctx.arc(cx,cy,R,0,TAU);rctx.fillStyle=THEME==='dark'?'rgba(6,14,24,.78)':'rgba(240,247,232,.85)';rctx.fill();rctx.clip();
+  rctx.beginPath();rctx.arc(cx,cy,R,0,TAU);rctx.fillStyle='rgba(6,14,24,.78)';rctx.fill();rctx.clip();
   rctx.lineCap='round';rctx.lineWidth=7;rctx.strokeStyle='rgba(150,60,90,.55)';
   for(const pts of radarTunnels){rctx.beginPath();pts.forEach((q,i)=>{const [x,y]=toS(q.x,q.z);i?rctx.lineTo(x,y):rctx.moveTo(x,y);});rctx.stroke();}
   const dot=(x,z,r,col,shape)=>{const [X,Y]=toS(x,z);if(Math.hypot(X-cx,Y-cy)>R+r)return;rctx.fillStyle=col;rctx.beginPath();if(shape==='sq')rctx.rect(X-r,Y-r,r*2,r*2);else rctx.arc(X,Y,r,0,TAU);rctx.fill();};
@@ -3005,7 +3003,7 @@ function drawRadar(){
   const [bx,by]=toS(base.pos.x,base.pos.z),bd=Math.hypot(bx-cx,by-cy);
   if(bd>R-6){const a=Math.atan2(by-cy,bx-cx),ex=cx+Math.cos(a)*(R-8),ey=cy+Math.sin(a)*(R-8);rctx.save();rctx.translate(ex,ey);rctx.rotate(a);rctx.fillStyle='#3fa9ff';rctx.beginPath();rctx.moveTo(8,0);rctx.lineTo(-6,-6);rctx.lineTo(-6,6);rctx.fill();rctx.restore();}
   rctx.save();rctx.translate(cx,cy);rctx.rotate(-((player.inVehicle?player.inVehicle.yaw:player.yaw)-camYaw));rctx.fillStyle='#fff';rctx.beginPath();rctx.moveTo(0,-8);rctx.lineTo(6,6);rctx.lineTo(-6,6);rctx.closePath();rctx.fill();rctx.restore();
-  rctx.strokeStyle=THEME==='dark'?'rgba(120,170,200,.55)':'rgba(70,120,110,.5)';rctx.lineWidth=2;rctx.beginPath();rctx.arc(cx,cy,R,0,TAU);rctx.stroke();
+  rctx.strokeStyle='rgba(120,170,200,.55)';rctx.lineWidth=2;rctx.beginPath();rctx.arc(cx,cy,R,0,TAU);rctx.stroke();
 }
 
 /* ================= 第一人称武器模型 ================= */
@@ -3126,19 +3124,10 @@ document.querySelectorAll('#shopTabs .tab').forEach(el=>{
     el.classList.add('on');shopTab=el.dataset.t;renderShop();AudioSys.sfx('click');
   };
 });
-/* 画风：深色战场（默认，接近第一版）/ 明亮Q版；切换会保存进度并重新载入 */
-function switchTheme(){
-  const next=THEME==='dark'?'toy':'dark';
-  askConfirm(`切换到「${next==='dark'?'深色战场':'明亮Q版'}」画风需要重新载入页面，当前进度会先自动保存（读档后从本关准备阶段继续）。`,'切换并重新载入',()=>{
-    if(Game.state!=='menu')autoSave();saveTheme(next);const u=new URL(location.href);u.searchParams.delete('theme');location.replace(u.toString());
-  });
-}
 function syncPauseOptions(){
   syncViewLabels();
-  $('themeBtnMenu').textContent=$('themeBtn').textContent='画风：'+(THEME==='dark'?'深色战场':'明亮Q版');
   $('qualityBtnMenu').textContent=$('qualityBtn').textContent;$('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
-$('themeBtn').onclick=$('themeBtnMenu').onclick=switchTheme;
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
 $('touchUI').addEventListener('pointerdown',e=>{if(e.target.id==='squadChip')cycleSquadOrder();});
@@ -3311,7 +3300,7 @@ function setupFeaturePanels(){
     bindingAction=null;Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已保存，新键位立即生效';
   },true);
 }
-const visuals=THEME==='dark'?new DarkVisuals(THREE,scene,PAL):new ToyVisuals(THREE,scene);
+const visuals=new DarkVisuals(THREE,scene,PAL);
 // 不用顶层 await：步步高学习平板等老内核（Chrome<89）遇到它会整份脚本解析失败，画面卡在“正在部署”。
 window.__ccBooted=true; // 同步初始化已跑完：index.html 的启动看门狗据此不再提示
 visuals.load().then(()=>{visualAssets=true;}).catch(error=>{

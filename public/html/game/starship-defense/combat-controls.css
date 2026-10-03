@@ -4,4 +4,3 @@
 .combatSettingRow select{font:inherit;max-width:76%;padding:6px;border:1px solid #68778a;border-radius:5px;background:#152439;color:#eef6ff}
 .combatSettings .small{margin:10px 0 0;max-width:none;line-height:1.6;font-size:12px}
 .combatSettingRow select:focus-visible{outline:3px solid #ffd75e;outline-offset:2px}
-.theme-toy .combatSettingRow select{background:#fff;color:#172c3b}

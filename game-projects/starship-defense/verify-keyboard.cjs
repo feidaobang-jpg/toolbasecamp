@@ -40,7 +40,7 @@ const check=(name,ok,detail)=>{results[name]={ok:!!ok,...(detail!==undefined?{de
  await p.evaluate(()=>{const q=__gameQA;q.clearEntities(false);q.player.pos.set(0,0,20);q.player.mesh.position.copy(q.player.pos);q.setCamYaw(0);q.player.yaw=0;});
  await key('KeyL');await p.waitForTimeout(200);const b0=await focus();await key('ArrowRight');const b1=await focus();await key('Enter');await p.waitForTimeout(200);
  const g=await p.evaluate(()=>({kind:__gameQA.place.kind,yaw:__gameQA.place.yaw}));
- check('build panel preselects first card; arrows + Enter start the ghost',b0.cls.includes('shopItem')&&b1.text.includes('合金围墙')&&g.kind==='wall',{b0,b1,g});
+ check('build panel preselects cheapest card; arrows + Enter start the ghost',b0.cls.includes('shopItem')&&b0.text.includes('合金围墙')&&b1.text.includes('自动机枪塔')&&g.kind==='mgTurret',{b0,b1,g});
  await p.keyboard.down('KeyQ');await p.waitForTimeout(500);await p.keyboard.up('KeyQ');const gq=await p.evaluate(()=>__gameQA.place.yaw);
  check('Q/E turn the ghost with the camera',Math.abs(gq-g.yaw)>.5,{before:g.yaw,after:gq});
  const hasRot=await p.evaluate(()=>!!document.getElementById('placeRot')||'rotatePlacement' in __gameQA);
@@ -55,7 +55,7 @@ const check=(name,ok,detail)=>{results[name]={ok:!!ok,...(detail!==undefined?{de
  check('pause → 存档 → first slot preselected → Enter saves',p1.id==='btnSaveMenu'&&sv.text.includes('保存')&&saved,{p1,sv,saved});
  await key('Escape');await p.waitForTimeout(150);const p2=await focus();
  await p.screenshot({path:path.join(captures,'pause-keyboard-focus.jpg'),quality:84});
- const opts=[];for(let i=0;i<6;i++){await key('ArrowDown');opts.push((await focus()).id);if(opts.at(-1)==='themeBtnMenu'||opts.at(-1)==='personBtnMenu')break;}
+ const opts=[];for(let i=0;i<6;i++){await key('ArrowDown');opts.push((await focus()).id);if(opts.at(-1)==='personBtnMenu')break;}
  check('Esc returns to the pause menu; option row reachable by arrows',p2.id==='btnResume'&&opts.some(id=>/BtnMenu$/.test(id)),{p2,opts});
  await key('Escape');await p.waitForTimeout(150);check('Esc resumes the game',await p.evaluate(()=>['prep','battle'].includes(__gameQA.Game.state)));
  // confirm dialog via keyboard (new game with progress)

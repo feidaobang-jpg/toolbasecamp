@@ -1,0 +1,52 @@
+{
+  "method": "Identical six runtime files compressed with Python zipfile before/after (website bytes, not a submitted Toy package).",
+  "before": {
+    "bundle_bytes": 837938,
+    "bundle_gzip_bytes": 233466,
+    "html_bytes": 34522,
+    "runtime_files_bytes": 877573,
+    "runtime_zip_bytes": 248471,
+    "source_files": {
+      "toy-visuals.js": {
+        "bytes": 13823,
+        "lines": 176
+      },
+      "dark-visuals.js": {
+        "bytes": 16472,
+        "lines": 205
+      },
+      "theme.js": {
+        "bytes": 1607,
+        "lines": 29
+      }
+    }
+  },
+  "after": {
+    "bundle_bytes": 828452,
+    "bundle_gzip_bytes": 230528,
+    "html_bytes": 30552,
+    "runtime_files_bytes": 864056,
+    "runtime_zip_bytes": 244338,
+    "source_files": {
+      "unit-visuals.js": {
+        "bytes": 3293,
+        "lines": 46
+      },
+      "dark-visuals.js": {
+        "bytes": 16651,
+        "lines": 205
+      },
+      "battlefield-palette.js": {
+        "bytes": 578,
+        "lines": 9
+      }
+    }
+  },
+  "saved_bytes": {
+    "bundle_bytes": 9486,
+    "bundle_gzip_bytes": 2938,
+    "html_bytes": 3970,
+    "runtime_files_bytes": 13517,
+    "runtime_zip_bytes": 4133
+  }
+}

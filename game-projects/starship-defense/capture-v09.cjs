@@ -63,8 +63,5 @@ const shot=(p,name)=>p.screenshot({path:path.join(captures,name+'.jpg'),quality:
   await tap('vV');await p.waitForTimeout(900);await shot(p,'phone-first-person');await tap('vV');
   await tap('vP');await p.waitForTimeout(900);await shot(p,'phone-pause-options');
  });
- // 4. Bright theme still available
- const t=await (await b.newContext({viewport:{width:1440,height:810}})).newPage();await t.goto(url+'?qa=1&theme=toy');await t.waitForFunction(()=>window.__gameQA);
- await t.evaluate(()=>{const q=__gameQA;q.newGame(false);q.player.pos.set(0,0,40);q.player.mesh.position.copy(q.player.pos);q.setCamYaw(0);});await t.waitForTimeout(1500);await shot(t,'theme-toy-field');
  await b.close();console.log('done');
 })().catch(e=>{console.error(e);process.exit(1);});

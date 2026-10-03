@@ -212,11 +212,11 @@ async function open(b,opts={},query=''){
  check('phone (hover misreported) gets touch UI, landscape rotation and shop',touch.touchUI&&touch.rotated&&touch.buttons&&touch.shopOpens&&touch.pauseButton==='paused',touch);
  check('no page errors (phone)',m.errors.length===0,m.errors);
 
- // 20. bright theme still works
+ // 20. legacy bright-theme links now use the dark battlefield
  const t=await open(b,{},'&theme=toy');await t.evaluate(()=>__gameQA.newGame(false));await t.waitForTimeout(600);
- check('bright Q theme still selectable',await t.evaluate(()=>__gameQA.THEME==='toy'&&document.documentElement.classList.contains('theme-toy')));
- await t.screenshot({path:path.join(captures,'theme-toy.jpg'),quality:80});
- check('no page errors (toy theme)',t.errors.length===0,t.errors);
+ check('legacy Q theme link uses dark battlefield',await t.evaluate(()=>__gameQA.THEME==='dark'&&document.documentElement.classList.contains('theme-dark')&&!document.getElementById('themeBtn')));
+ await t.screenshot({path:path.join(captures,'legacy-theme-dark.jpg'),quality:80});
+ check('no page errors (legacy theme fallback)',t.errors.length===0,t.errors);
 
  await b.close();
  const summary={version:process.env.RELEASE||'web-arsenal-build-v0.9.1',checked_at:new Date().toISOString(),passed:Object.values(results).filter(v=>v.ok).length,failed:fail,results};
