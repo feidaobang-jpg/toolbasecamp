@@ -23,9 +23,9 @@ try{
  const grenade=await p.evaluate(()=>{const q=__gameQA;q.Input.pressed.U=true;q.updPlayer(.02);return{mapped:q.keyBindings.action('KeyU'),arcs:q.bullets.filter(b=>b.arc).length,item:!!q.ITEMS.grenade};});assert.deepEqual(grenade,{mapped:null,arcs:0,item:false});
  console.log('PASS grenade removed from inputs, combat and inventory');
  // Use actual squad movement to approach, request, pass and close the door both ways.
- const gate=await p.evaluate(()=>{const q=__gameQA;q.clearEntities(true);q.Game.cls='gunner';q.Game.state='prep';q.Game.squadCount=1;q.Game.squadOrder='attack';q.spawnSquad();const s=q.squad[0];s.mesh.position.set(0,q.groundY(0,-22),-22);s.patrol={x:0,z:22};s.patrolTimer=100;q.player.pos.set(25,q.groundY(25,-30),-30);q.player.mesh.position.copy(q.player.pos);q.gate.open=false;q.gate.auto=false;q.gate.hold=0;let opened=false,min=Infinity,max=-Infinity;
+ const gate=await p.evaluate(()=>{const q=__gameQA;q.clearEntities(true);q.Game.cls='gunner';q.Game.state='prep';q.Game.squadCount=1;q.Game.squadOrder='follow';q.spawnSquad();const s=q.squad[0];s.mesh.position.set(0,q.groundY(0,-22),-22);s.patrol={x:0,z:22};s.patrolTimer=100;q.player.pos.set(0,q.groundY(0,30),30);q.player.mesh.position.copy(q.player.pos);q.gate.open=false;q.gate.auto=false;q.gate.hold=0;let opened=false,min=Infinity,max=-Infinity;
  for(let i=0;i<1000;i++){q.updSquad(.02);q.updSmartGate(.02);opened ||= q.gate.open;min=Math.min(min,s.mesh.position.z);max=Math.max(max,s.mesh.position.z);}
- const out={opened,closed:!q.gate.open,z:s.mesh.position.z,min,max};q.Game.squadOrder='defend';s.patrol={x:0,z:-26};s.patrolTimer=100;let reopen=false;
+ const out={opened,closed:!q.gate.open,z:s.mesh.position.z,min,max};q.setSquadTask('defend');s.patrol={x:0,z:-26};s.patrolTimer=100;let reopen=false;
  for(let i=0;i<1000;i++){q.updSquad(.02);q.updSmartGate(.02);reopen ||= q.gate.open;}
  return{out,back:{reopen,closed:!q.gate.open,z:s.mesh.position.z}};});
  assert.ok(gate.out.opened&&gate.out.closed&&gate.out.z>-8,JSON.stringify(gate));assert.ok(gate.back.reopen&&gate.back.closed&&gate.back.z<-23,JSON.stringify(gate));console.log('PASS teammates open, traverse and close the gate in both directions',gate);

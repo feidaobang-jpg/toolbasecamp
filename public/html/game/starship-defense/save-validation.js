@@ -7,7 +7,7 @@ export function validateNormalSave(d,{weapons,buildings,vehicles}){
   return !!(d&&typeof d==='object'&&!d.testMode&&['gunner','rifle','medic'].includes(d.cls)&&
     int(d.loop,1,100000)&&int(d.chapter,1,10)&&int(d.level,1,10)&&num(d.gold,0,1e12)&&num(d.score,0,1e12)&&
     Array.isArray(d.weapons)&&d.weapons.length>0&&d.weapons.length<=30&&d.weapons.every(k=>Object.hasOwn(weapons,k))&&Object.hasOwn(weapons,d.curWeapon)&&
-    (d.items===undefined||d.items&&num(d.items.medkit,0,100000)&&num(d.items.grenade,0,100000))&&
+    (d.items===undefined||d.items&&num(d.items.medkit,0,100000)&&(d.items.grenade===undefined||num(d.items.grenade,0,100000)))&&
     (d.hpBonus===undefined||num(d.hpBonus,0,100000))&&(d.baseHp===undefined||num(d.baseHp,0,1e7))&&
     (d.squadCount===undefined||int(d.squadCount,0,4))&&num(d.time,0,1e15)&&
     (d.weaponLv===undefined||plain(d.weaponLv)&&Object.entries(d.weaponLv).length<=30&&Object.entries(d.weaponLv).every(([k,v])=>Object.hasOwn(weapons,k)&&int(v,0,10)))&&

@@ -236,7 +236,7 @@ const Input={
       const up=e=>{if(e.pointerId!==pointer)return;pointer=null;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    ['J','K','I','H','O','L','V','X','C','G'].forEach(k=>bind('v'+k,k));
+    ['J','K','I','H','O','L','V','X','C'].forEach(k=>bind('v'+k,k));
     $('vP').addEventListener('pointerdown',e=>{e.preventDefault();if(this.onPause)this.onPause();});
     // 触屏按钮按下会打开商店/建造面板，同一次点击随后合成的 click 会落到面板里手指下的卡片上
     // （曾误买物品/误选建筑）。取消触摸的默认点击合成。
@@ -1804,22 +1804,29 @@ function damageSquad(s,d){
     showMsg('🚑 一名队友重伤撤离，下一关归队',1.6);
   }
 }
-const SQUAD_ORDERS={follow:'跟随',defend:'守城',attack:'出击'};
-function cycleSquadOrder(){
-  const keys=Object.keys(SQUAD_ORDERS);Game.squadOrder=keys[(keys.indexOf(Game.squadOrder)+1)%keys.length];
-  for(const s of squad){s.patrolTimer=0;}
-  showMsg('🪖 小队指令：'+SQUAD_ORDERS[Game.squadOrder]+(squad.length?'':'（商店「队友」可雇佣）'),1.6);AudioSys.sfx('click');
+const SQUAD_ORDERS={follow:'跟随我',defend:'守基地'};
+function setSquadTask(task){
+  if(!Object.hasOwn(SQUAD_ORDERS,task))return false;
+  Game.squadOrder=task;
+  for(const s of squad)s.patrolTimer=0;
+  syncPauseOptions();autoSave();AudioSys.sfx('click');return true;
 }
-function onPlateau(p){return plateauH(p.x,p.z)>PLAT.H*.6;}
+function squadBaseThreat(mo){
+  return !mo.dead&&!mo.home&&(dist2(mo.mesh.position,base.pos)<30*30||dist2(mo.mesh.position,gate.pos)<24*24);
+}
+function squadBehavior(){
+  if(operations.active)return 'follow';
+  return Game.squadOrder==='defend'||Game.squadAlert>0?'defend':'follow';
+}
+function squadTaskLabel(){
+  if(operations.active)return '副本跟随';
+  return Game.squadOrder==='defend'?'守基地':Game.squadAlert>0?'自动回防':'跟随我';
+}
 function squadAnchor(s){
-  const pp=player.inVehicle?player.inVehicle.mesh.position:player.pos;
-  if(Game.squadOrder==='defend')return {x:[-10,-4,4,10][s.slot],z:-21+(s.slot%2)*1.5};
-  if(Game.squadOrder==='attack'){
-    let best=null,bd=1e9;for(const mo of monsters){if(mo.dead||mo.home)continue;const d=dist2(mo.mesh.position,base.pos);if(d<bd){bd=d;best=mo;}}
-    if(best){const a=s.slot*TAU/4;return {x:best.mesh.position.x+Math.cos(a)*12,z:best.mesh.position.z-9+Math.sin(a)*4};}
-    return {x:[-12,-4,4,12][s.slot],z:30};
-  }
-  return null;
+  // 虫群突破到基地后收缩防线；门外的敌人只在城门防线内应战。
+  const breached=monsters.some(mo=>squadBaseThreat(mo)&&mo.mesh.position.z<-30);
+  return breached?{x:base.pos.x+[-7,-2,3,8][s.slot],z:base.pos.z+7+(s.slot%2)*3}
+    :{x:[-10,-4,4,10][s.slot],z:-28+(s.slot%2)*1.5};
 }
 function squadCanWalk(x,z){
   return x>WORLD.minX+1&&x<WORLD.maxX-1&&z>WORLD.minZ+1&&z<WORLD.maxZ-1&&!collideWalls(x,z,.65)&&!tooSteep(x,z);
@@ -1834,6 +1841,10 @@ function squadPatrolPoint(center,slot,step){
 }
 function updSquad(dt){
   const t=performance.now()/1000;
+  const battle=(Game.state==='paused'?Game.pausedFrom:Game.state)==='battle';
+  if(!battle||operations.active)Game.squadAlert=0;
+  else Game.squadAlert=monsters.some(squadBaseThreat)?3:Math.max(0,(Game.squadAlert||0)-dt);
+  const behavior=squadBehavior();
   for(const s of squad){
     if(s.dead)continue;
     s.anim+=dt;s.fireCd-=dt;
@@ -1843,13 +1854,17 @@ function updSquad(dt){
     // 各自索敌；已有队友照顾的敌人降低优先级，但单一首领允许集火。
     let best=null,bd2=0,score=Infinity;
     for(const mo of monsters){
-      if(mo.dead)continue;const d2=dist2(s.mesh.position,mo.mesh.position);if(d2>28*28)continue;
+      if(mo.dead)continue;
+      // 只照顾队形附近的敌人，不因追击残血虫远离玩家或基地。
+      if(behavior==='defend'?!squadBaseThreat(mo):dist2(mo.mesh.position,pp)>24*24)continue;
+      const d2=dist2(s.mesh.position,mo.mesh.position);if(d2>28*28)continue;
       const value=d2+squad.filter(other=>other!==s&&other.target===mo).length*180;
       if(value<score){score=value;bd2=d2;best=mo;}
     }
     s.target=best;s.patrolTimer-=dt;
-    const anchor=squadAnchor(s);
-    if(anchor){if(s.patrolTimer<=0||s.stuck>.8){s.patrol=squadPatrolPoint(anchor,s.slot,++s.patrolStep);if(Game.squadOrder==='defend')s.patrol=anchor;s.patrolTimer=2.5+s.slot*.5;s.stuck=0;}}
+    if(s.behavior!==behavior){s.behavior=behavior;s.patrolTimer=0;}
+    const anchor=behavior==='defend'?squadAnchor(s):null;
+    if(anchor){s.patrol=anchor;s.patrolTimer=0;}
     else if(s.patrolTimer<=0||Math.hypot(s.patrol.x-pp.x,s.patrol.z-pp.z)>19||s.stuck>.8){
       s.patrol=squadPatrolPoint(pp,s.slot,++s.patrolStep);s.patrolTimer=3+s.slot*.6;s.stuck=0;
     }
@@ -1857,22 +1872,24 @@ function updSquad(dt){
     // 队友被设施或残骸压住时（旧存档或其他原因），0.4 秒后挪到最近空地
     if(collideWalls(p.x,p.z,.65)){s.insideT=(s.insideT||0)+dt;if(s.insideT>.4){const f=findFreeSpot(p.x,p.z);if(f){p.x=f.x;p.z=f.z;}s.insideT=0;}}else s.insideT=0;
     let dx=s.patrol.x-p.x,dz=s.patrol.z-p.z;
+    const returning=anchor?dist2(p,anchor)>8*8:d2p>18*18;
     // Nearby supplies only: don't abandon a defence post or cross the map for loot.
     let loot=null,lootScore=Infinity;
-    if(!best||s.hp<s.maxHp*.5)for(const pk of pickups){
+    if(!returning&&(!best||s.hp<s.maxHp*.5))for(const pk of pickups){
       if(pk.type!=='gold'&&s.hp>=s.maxHp)continue;
       const d=dist2(pk.mesh.position,p);
       if(d>64||Math.abs(groundY(pk.mesh.position.x,pk.mesh.position.z)-p.y)>2)continue;
-      if(Game.squadOrder==='defend'&&Math.hypot(pk.mesh.position.x-s.patrol.x,pk.mesh.position.z-s.patrol.z)>8)continue;
+      if(dist2(pk.mesh.position,anchor||pp)>(anchor?8*8:16*16))continue;
       const priority=d+(pk.type==='gold'?64:0);
       if(priority<lootScore){loot=pk;lootScore=priority;}
     }
-    const engage=Game.squadOrder==='defend'?28:24;
-    if(best&&(Game.squadOrder!=='follow'||d2p<24*24)&&!(Game.squadOrder==='defend'&&Math.hypot(p.x-s.patrol.x,p.z-s.patrol.z)>3)){
+    if(best&&!returning){
       const distance=Math.sqrt(bd2),range=11+s.slot*1.5;
-      // 射程内保持各自位置，近身后退，避免所有队友贴在敌人身上；守城时原地射击。
-      const advance=Game.squadOrder==='defend'?0:distance>range?1:distance<7?-1:0;
-      if(advance||distance<engage){dx=(best.mesh.position.x-p.x)*advance;dz=(best.mesh.position.z-p.z)*advance;}
+      const advance=distance<7?-1:!anchor&&distance>range?1:0;
+      const mx=(best.mesh.position.x-p.x)*advance,mz=(best.mesh.position.z-p.z)*advance;
+      // 保持射程；只有下一步仍在队形内才追击或后撤。守基地时先走到岗位。
+      const len=Math.hypot(mx,mz)||1,next={x:p.x+mx/len*2,z:p.z+mz/len*2};
+      if((!anchor||dist2(p,anchor)<3*3)&&dist2(next,anchor||pp)<(anchor?8*8:18*18)){dx=mx;dz=mz;}
     }
     if(loot){dx=loot.mesh.position.x-p.x;dz=loot.mesh.position.z-p.z;}
     // Route the final movement target through the entrance before avoidance.
@@ -2051,7 +2068,6 @@ function updPlayer(dt){
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
   if(Input.pop('C'))setCameraView(camView+1);
   if(Input.pop('V'))setCamMode(camMode==='first'?'third':'first');
-  if(Input.pop('G'))cycleSquadOrder();
   for(let n=1;n<=9;n++)if(Input.pop('N'+n)){if(Game.weapons[n-1])selectWeapon(Game.weapons[n-1]);else showMsg('第'+n+'格还没有武器',1);}
   if(Input.pop('X'))cycleWeapon(1);
   if(Input.wheel){cycleWeapon(Input.wheel>0?1:-1);Input.wheel=0;}
@@ -2563,7 +2579,7 @@ if(it.type==='weapon'){if(!Game.weapons.includes(it.id))Game.weapons.push(it.id)
         showMsg('📦 获得 '+c.name,1.6);
       }
       else if(it.type==='vehicle'){if(!Game.testMode||!vehicles.some(v=>v.kind===it.id)){Game.vehiclesOwned.push(it.id);spawnVehicle(it.id);}showMsg('🚗 '+VEHICLES[it.id].name+' 已送达停机坪！靠近按I驾驶',2.2);}
-      else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad();if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 雇佣兵队友加入战斗！G 切换指令：'+SQUAD_ORDERS[Game.squadOrder],2.2);}
+      else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad();if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 队友已加入！暂停菜单可选队友任务：'+SQUAD_ORDERS[Game.squadOrder],2.2);}
 }
 function updAirdrops(dt){
   for(let i=airdrops.length-1;i>=0;i--){
@@ -2747,7 +2763,7 @@ function applySave(d){
   Game.items={medkit:d.items&&Number.isFinite(d.items.medkit)?d.items.medkit:2};
   Game.hpBonus=d.hpBonus||0;
   Game.magnet=!!(d.perks&&d.perks.magnet);Game.regen=!!(d.perks&&d.perks.regen);
-  Game.squadOrder=SQUAD_ORDERS[d.squadOrder]?d.squadOrder:'follow';
+  Game.squadOrder=d.squadOrder==='defend'?'defend':'follow';Game.squadAlert=0;
   Game.squadGear=Array.from({length:4},(_,i)=>{const g=(d.squadGear||[])[i]||{};return{weapon:clamp(Math.floor(g.weapon)||0,0,5),armor:clamp(Math.floor(g.armor)||0,0,5)};});
   Game.opsCompleted={};for(const k of ['depot','signal','hunter'])if(d.opsCompleted&&typeof d.opsCompleted[k]==='string')Game.opsCompleted[k]=d.opsCompleted[k];
   operations.clear();
@@ -2890,7 +2906,7 @@ function newGame(test){
   Game.weapons=test?Object.keys(WEAPONS):[...CLASSES[Game.cls].weapons];
   Game.curWeapon=CLASSES[Game.cls].weapon;Game.weaponLv={};
   Game.items={medkit:test?99:2};
-  Game.vehiclesOwned=[];Game.squadCount=0;Game.squadOrder='follow';Game.squadGear=[];Game.opsCompleted={};operations.clear();
+  Game.vehiclesOwned=[];Game.squadCount=0;Game.squadOrder='follow';Game.squadAlert=0;Game.squadGear=[];Game.opsCompleted={};operations.clear();
   Game.hive={loop:1,chapter:1,queen:1,killed:false};
   Game.magnet=false;Game.regen=false;
   clearEntities(true);
@@ -2968,7 +2984,7 @@ function updHUD(dt){
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name+' · I 下车';
   else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(weaponLv(Game.curWeapon)?' Lv'+weaponLv(Game.curWeapon):'')+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*50)+'%':'');
   updHUDItem();updDashUI();
-  $('squadTxt').textContent=Game.squadCount||squad.length?`🪖 小队 ${squad.length}/${Math.max(Game.squadCount,squad.length)} · ${SQUAD_ORDERS[Game.squadOrder]}（${keyBindings.label('G')}）`:'';
+  $('squadTxt').textContent=Game.squadCount||squad.length?`🪖 小队 ${squad.length}/${Math.max(Game.squadCount,squad.length)} · ${squadTaskLabel()}`:'';
   $('hiveTxt').textContent=Game.testMode?'':Game.hive.killed?'👑 母皇已击杀 · 本章虫潮 -35%':`👑 虫巢母皇 ${Math.round(Game.hive.queen*100)}%`;
   if(Game.state==='prep'){
     const wilds=waveMonsters().length;
@@ -3126,11 +3142,13 @@ document.querySelectorAll('#shopTabs .tab').forEach(el=>{
 });
 function syncPauseOptions(){
   syncViewLabels();
+  $('squadTask').value=Game.squadOrder;
+  $('squadTaskHint').textContent=operations.active?'副本中自动跟随，返回后执行所选任务。':'跟随时自动应战、就近拾取；虫潮逼近基地时自动回防。';
   $('qualityBtnMenu').textContent=$('qualityBtn').textContent;$('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
-$('touchUI').addEventListener('pointerdown',e=>{if(e.target.id==='squadChip')cycleSquadOrder();});
+$('squadTask').onchange=e=>setSquadTask(e.target.value);
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
 stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
 Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&$('confirmPanel').classList.contains('hidden');
@@ -3279,7 +3297,7 @@ function syncKeyLabels(){
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','I','H','O','L','G','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['J','K','I','H','O','L','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
@@ -3375,7 +3393,7 @@ function setupWebControls(){
   window.addEventListener('blur',()=>{Input.reset();if(['prep','battle'].includes(Game.state))togglePause();});
   syncPauseOptions();syncKeyLabels();
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,cycleSquadOrder,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

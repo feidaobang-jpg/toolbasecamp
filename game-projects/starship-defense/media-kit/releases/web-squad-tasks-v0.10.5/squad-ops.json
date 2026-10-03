@@ -1,0 +1,244 @@
+{
+  "url": "http://127.0.0.1:8881/html/game/starship-defense/index.html",
+  "method": "Edge desktop + emulated tablets/phones; QA hooks used for deterministic scenario setup",
+  "checks": [
+    {
+      "name": "injured teammate consumes nearby medkit, player is untouched",
+      "ok": true,
+      "detail": {
+        "hp": 70,
+        "pickups": 0,
+        "player": 120
+      }
+    },
+    {
+      "name": "teammate coins enter shared wallet exactly once",
+      "ok": true,
+      "detail": {
+        "gain": 37,
+        "remaining": 0
+      }
+    },
+    {
+      "name": "full-health teammate leaves medkit for later",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "teammate moves toward a nearby needed medkit",
+      "ok": true,
+      "detail": {
+        "before": 10,
+        "after": 11.4
+      }
+    },
+    {
+      "name": "individual weapon and armour upgrades charge once and survive loading",
+      "ok": true,
+      "detail": {
+        "a": true,
+        "c": true,
+        "gold": 680,
+        "gear": {
+          "weapon": 1,
+          "armor": 1
+        },
+        "maxHp": 138,
+        "oldHp": 110
+      }
+    },
+    {
+      "name": "equipment refuses insufficient gold and caps at Lv5",
+      "ok": true,
+      "detail": {
+        "ok": false,
+        "before": 1,
+        "cap": 5,
+        "gold": 97480
+      }
+    },
+    {
+      "name": "64 facilities persist, placement refuses the 65th",
+      "ok": true,
+      "detail": {
+        "n": 64,
+        "blocked": "设施已达 64 座",
+        "cap": 64
+      }
+    },
+    {
+      "name": "conflicting binding explained without overwriting",
+      "ok": true
+    },
+    {
+      "name": "new binding saved and old primary released",
+      "ok": true
+    },
+    {
+      "name": "Escape cancels capture and keeps panel open",
+      "ok": true
+    },
+    {
+      "name": "rebound key actually starts a dash",
+      "ok": true
+    },
+    {
+      "name": "binding survives reload",
+      "ok": true
+    },
+    {
+      "name": "restore defaults restores K and space aliases",
+      "ok": true
+    },
+    {
+      "name": "depot has working objective, completion reward and no campaign skip",
+      "ok": true,
+      "detail": {
+        "started": true,
+        "ended": true,
+        "before": {
+          "level": 1,
+          "chapter": 1,
+          "gold": 1000
+        },
+        "level": 1,
+        "chapter": 1,
+        "gold": 1666,
+        "completed": "1:1",
+        "bosses": 0,
+        "state": "prep"
+      }
+    },
+    {
+      "name": "signal has working objective, completion reward and no campaign skip",
+      "ok": true,
+      "detail": {
+        "started": true,
+        "ended": true,
+        "before": {
+          "level": 1,
+          "chapter": 1,
+          "gold": 1666
+        },
+        "level": 1,
+        "chapter": 1,
+        "gold": 2556,
+        "completed": "1:1",
+        "outside": 0,
+        "bosses": 0,
+        "state": "prep"
+      }
+    },
+    {
+      "name": "holdout timer stops outside beacon area",
+      "ok": true,
+      "detail": {
+        "started": true,
+        "ended": true,
+        "before": {
+          "level": 1,
+          "chapter": 1,
+          "gold": 1666
+        },
+        "level": 1,
+        "chapter": 1,
+        "gold": 2556,
+        "completed": "1:1",
+        "outside": 0,
+        "bosses": 0,
+        "state": "prep"
+      }
+    },
+    {
+      "name": "hunter has working objective, completion reward and no campaign skip",
+      "ok": true,
+      "detail": {
+        "started": true,
+        "ended": true,
+        "before": {
+          "level": 1,
+          "chapter": 1,
+          "gold": 2556
+        },
+        "level": 1,
+        "chapter": 1,
+        "gold": 4283,
+        "completed": "1:1",
+        "bosses": 2,
+        "state": "prep"
+      }
+    },
+    {
+      "name": "elite nest spawns two minibosses",
+      "ok": true,
+      "detail": {
+        "started": true,
+        "ended": true,
+        "before": {
+          "level": 1,
+          "chapter": 1,
+          "gold": 2556
+        },
+        "level": 1,
+        "chapter": 1,
+        "gold": 4283,
+        "completed": "1:1",
+        "bosses": 2,
+        "state": "prep"
+      }
+    },
+    {
+      "name": "death in a side mission safely returns to base",
+      "ok": true,
+      "detail": {
+        "ended": true,
+        "state": "prep",
+        "alive": true,
+        "level": 1
+      }
+    },
+    {
+      "name": "withdrawal and loading preserve side-mission completion stamps",
+      "ok": true,
+      "detail": {
+        "level": 1,
+        "done": {
+          "depot": "1:1",
+          "signal": "1:1",
+          "hunter": "1:1"
+        },
+        "active": false
+      }
+    },
+    {
+      "name": "desktop has no script errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "tablet emulation boots without module requests or modern APIs/storage",
+      "ok": true,
+      "detail": {
+        "state": "prep",
+        "touch": true,
+        "width": 980,
+        "height": 519.987060546875,
+        "errors": []
+      }
+    },
+    {
+      "name": "portrait phone rotates and starts with controls visible",
+      "ok": true
+    },
+    {
+      "name": "phone can open side-mission list",
+      "ok": true
+    },
+    {
+      "name": "failed script download shows centred diagnostic and retry button",
+      "ok": true
+    }
+  ],
+  "passed": 25,
+  "failed": []
+}

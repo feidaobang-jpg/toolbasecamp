@@ -156,8 +156,8 @@ async function open(b,opts={},query=''){
 
  // 14. squad persistence + orders
  const sq=await p.evaluate(()=>{const q=__gameQA;q.newGame(false);q.Game.state='paused';q.Game.squadCount=2;q.spawnSquad();q.spawnSquad();q.damageSquad(q.squad[0],1e9);const after=q.squad.length;q.startPrep();q.Game.state='paused';
-  const back=q.squad.length;q.cycleSquadOrder();const o1=q.Game.squadOrder;q.cycleSquadOrder();const o2=q.Game.squadOrder;q.cycleSquadOrder();return{after,back,orders:[o1,o2,q.Game.squadOrder]};});
- check('evacuated squad returns next level; G cycles orders',sq.after===1&&sq.back===2&&sq.orders.join()==='defend,attack,follow',sq);
+  const back=q.squad.length;q.setSquadTask('defend');const o1=q.Game.squadOrder;const rejected=!q.setSquadTask('attack');q.setSquadTask('follow');return{after,back,rejected,orders:[o1,q.Game.squadOrder]};});
+ check('evacuated squad returns next level; pause tasks replace attack order',sq.after===1&&sq.back===2&&sq.rejected&&sq.orders.join()==='defend,follow',sq);
 
  // 15. gold left on the field is collected at level end
  const gold=await p.evaluate(()=>{const q=__gameQA;q.newGame(false);q.Game.state='battle';const V=q.player.pos.constructor;for(let i=0;i<5;i++)q.dropPickup(new V(70,0,150+i),'gold',40);

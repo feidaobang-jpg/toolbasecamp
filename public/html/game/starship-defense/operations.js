@@ -23,7 +23,7 @@ export function createOperations(c){
     const p=c.findFreeSpot(cfg.x,cfg.z)||{x:cfg.x,z:cfg.z};
     player.pos.set(p.x,c.groundY(p.x,p.z),p.z);player.mesh.position.copy(player.pos);player.invulnerable=3;player.dashT=0;
     squad.forEach((s,i)=>{const q=c.findFreeSpot(p.x+(i-1.5)*3,p.z-5)||p;s.mesh.position.set(q.x,c.groundY(q.x,q.z),q.z);s.patrol={x:q.x,z:q.z};s.patrolTimer=0;});
-    active={cfg,center:p,timer:.5,spawned:0,held:0,previousOrder:Game.squadOrder};Game.squadOrder='follow';Game.state='battle';
+    active={cfg,center:p,timer:.5,spawned:0,held:0};Game.state='battle';
     const ring=new THREE.RingGeometry(23.7,24,64);ring.rotateX(-Math.PI/2);
     const points=ring.attributes.position;
     for(let i=0;i<points.count;i++)points.setY(i,c.groundY(p.x+points.getX(i),p.z+points.getZ(i))+.08);
@@ -35,8 +35,8 @@ export function createOperations(c){
   }
   function finish(won){
     if(!active)return;
-    const cfg=active.cfg,order=active.previousOrder,first=(Game.opsCompleted||{})[cfg.id]!==stamp();
-    c.collectAllGold();clear();Game.squadOrder=order;c.closePanels();document.getElementById('menuPause').classList.add('hidden');
+    const cfg=active.cfg,first=(Game.opsCompleted||{})[cfg.id]!==stamp();
+    c.collectAllGold();clear();c.closePanels();document.getElementById('menuPause').classList.add('hidden');
     if(won&&first){Game.opsCompleted[cfg.id]=stamp();Game.gold+=cfg.reward;Game.score+=cfg.reward;}
     c.clearEntities(false);player.reset(Game.cls);player.invulnerable=3;
     squad.forEach((s,i)=>{const p=c.findFreeSpot(player.pos.x+(i-1.5)*3,player.pos.z+5)||player.pos;s.mesh.position.set(p.x,c.groundY(p.x,p.z),p.z);s.patrol={x:p.x,z:p.z};s.patrolTimer=0;});
