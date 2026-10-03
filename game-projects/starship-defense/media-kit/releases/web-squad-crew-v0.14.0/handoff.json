@@ -6,8 +6,8 @@
   "created_at": "2026-10-03T21:46:43.706652+00:00",
   "build": {
     "id": "web-squad-crew-v0.14.0",
-    "commit": null,
-    "dirty": true,
+    "commit": "07b9a19b",
+    "dirty": false,
     "fingerprint": "b542cf1507c7f071ae0df9a52a2e21dac0f84c7defd3d26a27f8e173a2036db4",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -43,7 +43,7 @@
     {
       "id": "crew-battle",
       "file": "releases/web-squad-crew-v0.14.0/captures/crew-battle.png",
-      "sha256": "1ee0e4178fcb62b576531f748015514a9110cac568c4bbd93431e5b29e14ecb2",
+      "sha256": "f7c60be057baf776630bfb4b53beeee480e1135c232ae4ee6142b47046a6d954",
       "kind": "screenshot",
       "version": "web-squad-crew-v0.14.0",
       "capture_mode": "realtime-automation",
@@ -52,14 +52,16 @@
       "height": 720,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "representative frames reviewed",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
-      "segments": []
+      "segments": [],
+      "build_id": "web-squad-crew-v0.14.0",
+      "review_note": "截图及录像代表帧已检查；未完整审片，无音轨"
     },
     {
       "id": "crew-flank",
       "file": "releases/web-squad-crew-v0.14.0/captures/crew-flank.png",
-      "sha256": "8c42d88ec4b5c1c74d829abd24c2e636ce4407d77f8d2c8918e69ab07f40d072",
+      "sha256": "3e8ca35c1110d4c57dc9f65c4472f089a59a6b39d5cca5ecd614a109187c981e",
       "kind": "screenshot",
       "version": "web-squad-crew-v0.14.0",
       "capture_mode": "realtime-automation",
@@ -68,14 +70,16 @@
       "height": 720,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "representative frames reviewed",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
-      "segments": []
+      "segments": [],
+      "build_id": "web-squad-crew-v0.14.0",
+      "review_note": "截图及录像代表帧已检查；未完整审片，无音轨"
     },
     {
       "id": "crew-shop",
       "file": "releases/web-squad-crew-v0.14.0/captures/crew-shop.png",
-      "sha256": "65c1818f74f6361d3b2ceb0962158130a6f366540862c773ea77d76d4e556760",
+      "sha256": "8a0248169dcab0d82a73c394eeacb6ec88bceb3f6d2e44d6dfbf23943f33b40c",
       "kind": "screenshot",
       "version": "web-squad-crew-v0.14.0",
       "capture_mode": "realtime-automation",
@@ -84,23 +88,25 @@
       "height": 720,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "representative frames reviewed",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
-      "segments": []
+      "segments": [],
+      "build_id": "web-squad-crew-v0.14.0",
+      "review_note": "截图及录像代表帧已检查；未完整审片，无音轨"
     },
     {
       "id": "crew-demo",
       "file": "releases/web-squad-crew-v0.14.0/captures/crew-demo.webm",
-      "sha256": "a5c7d01ba8edd79600c0ec4188a4aa1ab77938664218561125292b4265dbb065",
+      "sha256": "b220e3546ab15318083bacedd1058e92993f5562686b754b492eeeb81c7533e3",
       "kind": "video",
       "version": "web-squad-crew-v0.14.0",
       "capture_mode": "realtime-automation",
       "description": "真实时间自动移动和转视角；内部摆位和无敌测试模式",
       "width": 1280,
       "height": 720,
-      "duration_seconds": 10.72,
+      "duration_seconds": 10.48,
       "audio": "none",
-      "visual_review": "representative frames reviewed",
+      "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": [
         {
@@ -113,7 +119,9 @@
           "out_seconds": 10.72,
           "description": "队友商店职业与驾驶分配"
         }
-      ]
+      ],
+      "build_id": "web-squad-crew-v0.14.0",
+      "review_note": "截图及录像代表帧已检查；未完整审片，无音轨"
     }
   ],
   "historical_media": [],
@@ -122,25 +130,36 @@
     "squad_tasks": "passed",
     "mobile_classes": "passed",
     "operations_expansion": "passed; operations-regression/",
-    "performance": "performance.json; RTX4060Ti headless Edge, 1280x720, 48 enemies + 4 allies / 2 drivers; ~169.6fps, p95 ~6.1ms, no >50ms frames",
+    "performance": "performance.json; RTX4060Ti headless Edge 1280x720, 48 enemies + 4 allies / 2 drivers; 170.1fps, p95 6.0ms, 0 frames >50ms; not a phone test",
     "unverified": [
       "physical phone performance",
       "audio capture"
-    ]
+    ],
+    "toy_preview": "Desktop and emulated phone passed: four roles, changing job, assigning jeep, actual autonomous boarding; no script errors"
   },
   "readiness": {
     "overview": "partial",
     "update": "partial",
     "gaps": [
-      "演示录像无音轨；未做手机真机性能测试"
+      "演示录像无音轨；未做手机真机性能测试",
+      "录像只抽查代表帧，完整动态审片留待视频制作"
     ]
   },
   "website": {
-    "status": "pending_verification"
+    "status": "verified_live",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-03T21:51:21.924646+00:00",
+    "bundle_sha256": "b542cf1507c7f071ae0df9a52a2e21dac0f84c7defd3d26a27f8e173a2036db4"
   },
   "toy": {
     "id": 38678478981120,
-    "status": "not_submitted"
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_ir0sGSLM/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_5R9L4iFv/index.html",
+    "submitted_at": "2026-10-03T21:51:21.924646+00:00",
+    "zip_sha256": "0881fb5dfc7966a0abe7896fd1a86a027d6ce8cef7f408b001a6de9bd2dc3573",
+    "archive": "dist/toy/chongchao-qianshao/releases/web-squad-crew-v0.14.0.zip",
+    "doctor": "passed; existing no-contenthash warning"
   },
   "cover": "retained; existing art and camera, vehicle assets unchanged"
 }
