@@ -815,10 +815,6 @@ const base={hp:2000,maxHp:2000,mesh:null,pos:new THREE.Vector3(-12,0,-42),bar:nu
   dome.position.y=6;grp.add(dome);
   const beacon=new THREE.PointLight(0x66ccff,1.4,30);beacon.position.y=8;grp.add(beacon);
   const ant=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,4,4),m1);ant.position.y=9;grp.add(ant);
-  // 基地信标光柱：穿透雾气，走到地图最远处也能看到家在哪里。
-  const pillarMat=new THREE.MeshBasicMaterial({color:PAL.beacon,transparent:true,opacity:.16,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,side:THREE.DoubleSide});
-  const pillar=new THREE.Mesh(new THREE.CylinderGeometry(2.2,3.4,190,20,1,true),pillarMat);pillar.position.y=100;grp.add(pillar);
-  const pillarCore=new THREE.Mesh(new THREE.CylinderGeometry(.5,.8,190,10,1,true),pillarMat.clone());pillarCore.material.opacity=.45;pillarCore.position.y=100;grp.add(pillarCore);base.pillar=pillar;
   // 停机坪
   const pad=new THREE.Mesh(new THREE.CylinderGeometry(6,6,.3,16),new THREE.MeshLambertMaterial({color:0x445566}));
   pad.position.set(24,.15,4);pad.receiveShadow=true;grp.add(pad);
@@ -2953,7 +2949,7 @@ function updHUD(dt){
   const sx=-Math.cos(camYaw)*dx+Math.sin(camYaw)*dz,sy=-Math.sin(camYaw)*dx-Math.cos(camYaw)*dz;
   const arrows=['→','↘','↓','↙','←','↖','↑','↗'];
   const distance=Math.hypot(dx,dz);
-  $('baseGuide').textContent=distance<10?'🏰 基地附近':arrows[(Math.round(Math.atan2(sy,sx)/(Math.PI/4))+8)%8]+' 基地 '+Math.round(distance)+'米（蓝色光柱）';
+  $('baseGuide').textContent=distance<10?'🏰 基地附近':arrows[(Math.round(Math.atan2(sy,sx)/(Math.PI/4))+8)%8]+' 基地 '+Math.round(distance)+'米';
   $('goldTxt').textContent=Game.testMode?'∞':Math.floor(Game.gold);
   $('scoreTxt').textContent=Game.score;
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name+' · I 下车';

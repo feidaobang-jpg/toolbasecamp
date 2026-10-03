@@ -6,7 +6,8 @@ export const OPERATIONS=[
   {id:'rescue',name:'难民撤离',type:'rescue',chapter:2,brief:'靠近三名幸存者，带他们回蓝色撤离圈；远离会停步。',x:0,z:42,total:24,reward:750,medkits:2},
   {id:'eggs',name:'虫卵清剿',type:'eggs',chapter:2,brief:'射击摧毁六枚虫卵；90 秒后残存虫卵孵化，必须清除幼虫。',x:28,z:156,total:20,reward:900},
   {id:'convoy',name:'运输线保卫',type:'convoy',chapter:3,brief:'护送运输车抵达前方蓝圈；靠近才行驶，清除贴近车身的虫群。',x:0,z:65,total:32,reward:1100,medkits:1},
-  {id:'toxic',name:'毒雾采集',type:'toxic',chapter:3,brief:'在三个紫色样本旁停留 3 秒采集，再回蓝圈撤离；毒区持续掉血。',x:-25,z:195,total:26,reward:1050,medkits:3},
+  // Keep the historical mission ID so claimed rewards in old saves stay valid.
+  {id:'toxic',name:'虫巢采样',type:'sample',chapter:3,brief:'在三个紫色样本旁停留 3 秒采集，再回蓝圈撤离。',x:-25,z:195,total:26,reward:1050,medkits:3},
   {id:'outposts',name:'前哨争夺',type:'capture',chapter:4,brief:'依次占领三个信标，每处坚守 15 秒；近处有敌人时占领暂停。',x:0,z:100,total:36,reward:1300},
   {id:'mother',name:'母巢突袭',type:'assault',chapter:5,brief:'先射击摧毁三个护盾节点，再击败母巢首领。',x:0,z:254,total:28,reward:1800}
 ];
@@ -93,12 +94,12 @@ export function createOperations(c){
     const a=active;a.marker=ring(p,cfg.type==='hold'?24:6,0x65d7ff);
     if(cfg.type==='rescue')for(const [x,z] of [[-18,16],[0,24],[18,16]]){const q=locate(p.x+x,p.z+z);a.objects.push({mesh:prop('person',q,0xefc65c),hp:100,joined:false,safe:false,ring:ring(q,3,0xefc65c)});}
     if(cfg.type==='convoy'){a.end={x:p.x,z:p.z+50};a.objects.push({mesh:prop('truck',p,0x538b9c),hp:300});ring(a.end,6,0x65d7ff);}
-    if(['eggs','assault','toxic','capture'].includes(cfg.type)){
+    if(['eggs','assault','sample','capture'].includes(cfg.type)){
       const n=cfg.type==='eggs'?6:3;
       for(let i=0;i<n;i++){
         const q=locate(p.x+Math.sin(i*2*Math.PI/n+Math.PI/3)*16,p.z+18+Math.cos(i*2*Math.PI/n+Math.PI/3)*13);
         if(cfg.type==='eggs'||cfg.type==='assault')a.objects.push({enemy:target(q,cfg.type==='eggs'?'egg':'node'),hatched:false});
-        else a.objects.push({mesh:prop('node',q,cfg.type==='toxic'?0xb677db:0x66cbd8),ring:ring(q,cfg.type==='toxic'?7:6,cfg.type==='toxic'?0xad58d6:0x65d7ff),held:0,done:false});
+        else a.objects.push({mesh:prop('node',q,cfg.type==='sample'?0xb677db:0x66cbd8),ring:ring(q,cfg.type==='sample'?3:6,cfg.type==='sample'?0xad58d6:0x65d7ff),held:0,done:false});
       }
     }
     document.getElementById('readyBtn').classList.add('hidden');c.showHUD();c.resetCamera();
@@ -154,18 +155,17 @@ export function createOperations(c){
       const left=a.objects.filter(o=>!o.enemy.dead);goal=left.length?left[0].enemy.mesh.position:a.center;
       status='剩余目标 '+left.length+'/6 · '+(a.elapsed<90?'孵化倒计时 '+Math.ceil(90-a.elapsed)+'秒':'清除孵化幼虫');won=left.length===0;
     }
-    if(cfg.type==='toxic'||cfg.type==='capture'){
+    if(cfg.type==='sample'||cfg.type==='capture'){
       for(let i=0;i<a.objects.length;i++){
         const o=a.objects[i];if(o.done)continue;
         const d=distance(player.pos,o.mesh.position);
-        if(cfg.type==='toxic'&&d<7){a.poison=(a.poison||0)+dt;if(a.poison>=1){c.playerDamage(3*a.difficulty.dmg);a.poison-=1;}}
         const contested=combat().some(m=>distance(m.mesh.position,o.mesh.position)<7);
-        if(cfg.type==='toxic'?d<3:i===a.stage&&d<6&&!contested)o.held+=dt;
-        if(o.held>=(cfg.type==='toxic'?3:15)){o.done=true;o.ring.material.color.setHex(0x5beba1);o.mesh.visible=false;if(cfg.type==='capture')a.stage++;}
+        if(cfg.type==='sample'?d<3:i===a.stage&&d<6&&!contested)o.held+=dt;
+        if(o.held>=(cfg.type==='sample'?3:15)){o.done=true;o.ring.material.color.setHex(0x5beba1);o.mesh.visible=false;if(cfg.type==='capture')a.stage++;}
       }
       if(player.dead){finish(false,'行动失败');return true;}
       const left=a.objects.filter(o=>!o.done);goal=left.length?left[0].mesh.position:a.center;
-      status=cfg.type==='toxic'?'样本 '+(3-left.length)+'/3'+(left.length?' · 紫圈有毒，靠近样本采集':' · 回蓝圈撤离'):'已占领 '+a.stage+'/3'+(left.length?' · 当前 '+Math.floor(left[0].held)+'/15 秒，清敌后占领':'');
+      status=cfg.type==='sample'?'样本 '+(3-left.length)+'/3'+(left.length?' · 靠近紫色样本停留 3 秒采集':' · 回蓝圈撤离'):'已占领 '+a.stage+'/3'+(left.length?' · 当前 '+Math.floor(left[0].held)+'/15 秒，清敌后占领':'');
       won=left.length===0&&(cfg.type==='capture'||distance(player.pos,a.center)<6);
     }
     if(cfg.type==='assault'){

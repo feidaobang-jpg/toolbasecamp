@@ -94,9 +94,6 @@ export class HiveWorld {
     const inst=(geo,mat,list,shadow=true)=>{const im=new THREE.InstancedMesh(geo,mat,list.length);list.forEach((m,i)=>im.setMatrixAt(i,m));im.castShadow=shadow;im.receiveShadow=true;scene.add(im);return im;};
     inst(new THREE.DodecahedronGeometry(1,0),new THREE.MeshPhongMaterial({color:P.rock,flatShading:true,shininess:6}),rocks);
     inst(new THREE.SphereGeometry(1,8,6),new THREE.MeshBasicMaterial({color:P.fungus}),fungus,false);
-    // Mouth glow: a dim red throat so the openings read at distance.
-    const throat=[];for(const m of MOUTHS){dummy.position.set(m.x-m.dx*3,height(m.x,m.z)+2.4,m.z-m.dz*3);dummy.rotation.set(0,Math.atan2(m.dx,m.dz),0);dummy.scale.set(HALF*1.6,ARCH_H*.75,1);dummy.updateMatrix();throat.push(dummy.matrix.clone());}
-    inst(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({color:P.glow,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide}),throat,false);
     this.buildHive(scene,height,P,solids,dummy,inst);
     this.mouths=MOUTHS;this.tunnels=TUNNELS;this.hive=HIVE;
   }
@@ -122,8 +119,6 @@ export class HiveWorld {
     inst(new THREE.ConeGeometry(1,1,7),new THREE.MeshPhongMaterial({color:P.rock,flatShading:true,shininess:8}),spires);
     const creep=new THREE.Mesh(new THREE.CircleGeometry(HIVE.r+2,48),new THREE.MeshLambertMaterial({color:P.shell,transparent:true,opacity:.55,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));
     creep.rotation.x=-Math.PI/2;creep.position.set(HIVE.x,y+.06,HIVE.z+4);creep.userData.keepMaterial=true;scene.add(creep);
-    const beam=new THREE.Mesh(new THREE.CylinderGeometry(1.4,3.5,160,16,1,true),new THREE.MeshBasicMaterial({color:P.glow,transparent:true,opacity:.12,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,side:THREE.DoubleSide}));
-    beam.position.set(HIVE.x,y+80,HIVE.z+14);scene.add(beam);
-    this.hiveBeam=beam;this.dome=dome;
+    this.dome=dome;
   }
 }

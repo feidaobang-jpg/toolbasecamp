@@ -37,7 +37,7 @@ const checks=[];function check(name,ok,details){checks.push({name,ok:!!ok,detail
    }else if(id==='toxic'||id==='outposts'){
     if(id==='outposts'){q.player.pos.copy(a.objects[1].mesh.position);tick(3);negative=a.objects[1].held===0;}
     for(const o of a.objects){q.player.pos.copy(o.mesh.position);for(let n=0;n<200&&!o.done;n++){kill();tick(.1);}}
-    if(id==='toxic'){negative=!!q.operations.active&&q.player.hp<q.player.maxHp;q.player.pos.set(a.center.x,0,a.center.z);tick(.1);}
+    if(id==='toxic'){negative=!!q.operations.active&&q.player.hp===q.player.maxHp;q.player.pos.set(a.center.x,0,a.center.z);tick(.1);}
    }else for(let n=0;n<180&&q.operations.active;n++){tick(1);kill();}
    const ended=!q.operations.active,completed=q.Game.opsCompleted[id],gold=q.Game.gold;
    if(ended){q.operations.start(id);q.operations.finish(true);}

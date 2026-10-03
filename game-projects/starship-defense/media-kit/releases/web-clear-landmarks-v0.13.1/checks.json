@@ -1,0 +1,43 @@
+{
+  "landmarks": {
+    "tallBeams": 0,
+    "mouthCurtains": 0,
+    "mouths": 5
+  },
+  "normal": {
+    "outerHp": 80,
+    "innerHp": 80,
+    "collected": true,
+    "name": "虫巢采样",
+    "finished": true,
+    "rewardKey": "1:6",
+    "chapter": 6,
+    "expectedChapter": 6
+  },
+  "hard": {
+    "outerHp": 80,
+    "innerHp": 80,
+    "collected": true,
+    "name": "虫巢采样",
+    "finished": true,
+    "rewardKey": "1:6",
+    "chapter": 6,
+    "expectedChapter": 6
+  },
+  "nightmare": {
+    "outerHp": 80,
+    "innerHp": 80,
+    "collected": true,
+    "name": "虫巢采样",
+    "finished": true,
+    "rewardKey": "1:6",
+    "chapter": 6,
+    "expectedChapter": 6
+  },
+  "tunnel": {
+    "x": 4,
+    "z": 212
+  },
+  "errors": [],
+  "checkedAt": "2026-10-03T21:25:05.423Z"
+}

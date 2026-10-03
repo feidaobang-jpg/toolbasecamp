@@ -122,14 +122,14 @@ async function open(b,opts={},query=''){
   let blockedInside=0,samples=0,roofed=0;for(const t of q.hive.tunnels)for(const s of t.samples){samples++;if(q.collideWalls(s.x,s.z,.5))blockedInside++;if(isFinite(q.fortress.ceilingAt(s.x,s.z,q.groundY(s.x,s.z)+.5)))roofed++;}
   out.tunnel={samples,blockedInside,roofed};
   const s=q.hive.tunnels[0].samples[20];out.wallBlocks=q.collideWalls(s.x+s.nx*5.1,s.z+s.nz*5.1,.5);
-  out.beaconNoFog=q.base.pillar&&q.base.pillar.material.fog===false;
+  out.noLandmarkBeams=!q.base.pillar&&!q.hive.hiveBeam;
   return out;});
  check('map extended with a deep hive',world.mapDepth>=300,world);
  check('five tunnel mouths',world.mouths===5,world);
  check('no blocking rocks left in the combat lanes; side rocks are cover only',world.laneRocks===0&&world.coverOnly,world);
  check('tunnels walkable end to end (junctions open) and roofed',world.tunnel.blockedInside<=world.tunnel.samples*.02&&world.tunnel.roofed>world.tunnel.samples*.7,world.tunnel);
  check('tunnel walls block from outside',world.wallBlocks);
- check('base beacon ignores fog',world.beaconNoFog);
+ check('base and hive no longer have tall light beams',world.noLandmarkBeams);
  const cover=await p.evaluate(()=>{const q=__gameQA;q.clearEntities(false);const r=q.rockColliders[0],V=q.player.pos.constructor;
   const m=q.spawnMonster('mob',r.x,r.z+r.r+3);m.hp=1e6;m.emerge=0;const a=new V(r.x,q.groundY(r.x,r.z)+1.2,r.z-r.r-3);q.fireBullet(a,new V(0,0,1),q.WEAPONS.laser,true);const friendly=1e6-m.hp;
   q.player.hp=q.player.maxHp;q.player.pos.set(r.x,q.groundY(r.x,r.z-r.r-3),r.z-r.r-3);q.player.mesh.position.copy(q.player.pos);q.player.invulnerable=0;
