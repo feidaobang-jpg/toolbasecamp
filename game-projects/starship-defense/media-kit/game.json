@@ -9,7 +9,7 @@
   "development_model": null,
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_bFahrvDT/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_aTHeb4Ls/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
   "qa": "releases/web-keyboard-v0.9.2/handoff.json",
@@ -25,7 +25,7 @@
     "runtime_dir": "38678478981120-v21554"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-keyboard-v0.9.2",
+  "published_toy_version": "web-heli-fix-v0.9.4",
   "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -36,11 +36,12 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "auditing",
-  "preview_version": "web-heli-fix-v0.9.4",
-  "submitted_toy_version": "web-heli-fix-v0.9.4",
+  "preview_version": "web-demolish-v0.9.5",
+  "submitted_toy_version": "web-demolish-v0.9.5",
   "website_version": "web-demolish-v0.9.5",
   "website_verified_at": "2026-10-03",
   "site_list_name": "虫潮前哨",
   "controls": "WASD 移动 · J/鼠标左键 射击 · 点画面鼠标转视角 · K 跳 · U 手雷 · I 互动 · H 医疗 · 1-9/X/滚轮 换枪 · V 第一/第三人称 · C 镜头 · Q/E 转向 · G 小队 · O 商店 · L 建造 · R 开战 · P/Esc 暂停",
-  "default_theme": "dark"
+  "default_theme": "dark",
+  "feedback_ledger": "feedback-ledger.json"
 }

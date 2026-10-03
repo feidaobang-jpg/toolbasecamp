@@ -1,0 +1,26 @@
+{
+ "version": "web-demolish-v0.9.5",
+ "submitted_at": "2026-10-03T18:30:33.140367+08:00",
+ "user_confirmation": "用户在同一确认中选择“提交审核”与“就用这三条回复”",
+ "preview_checked": "https://www.bilibili.com/toy/preview/preview_I6SxxfEb/index.html 桌面/手机正常，game.js 含拆除与压队友检查",
+ "submit_response": {
+  "status": "auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_aTHeb4Ls/index.html"
+ },
+ "zip_sha256": "759218e4e6b34c34b899ac670d38f3ea6f4f0cdf45783a262a7b43d610984331",
+ "comment_replies": [
+  {
+   "root": "315889972065",
+   "reply": "315892516369"
+  },
+  {
+   "root": "315861770289",
+   "reply": "315892521313"
+  },
+  {
+   "root": "319425106304",
+   "reply": "315892461441"
+  }
+ ],
+ "replies_verified": "reply/reply 接口读回，三条均在对应楼中楼"
+}
