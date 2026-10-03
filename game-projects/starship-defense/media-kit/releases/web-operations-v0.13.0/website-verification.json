@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-03T18:30:13.174696+00:00",
+  "files": {
+    "index.html": {
+      "bytes": 31235,
+      "sha256": "423bd39bad827f8d8e926aa2c1dc8e41604653e23915cc49a99e5dbbdcb3a178",
+      "matches": false,
+      "new_content": true
+    },
+    "game.compat.js": {
+      "bytes": 845442,
+      "sha256": "c18ef7f5df7c3bae373abef03591b7a68b12abc95e45d22ee181852db590bb27",
+      "matches": true,
+      "new_content": true
+    },
+    "operations.js": {
+      "bytes": 16223,
+      "sha256": "2aa513e58fc2e807733b4d62889070cd7f5a1da369b966000aeefbce3ee35d0b",
+      "matches": false,
+      "new_content": true
+    }
+  }
+}

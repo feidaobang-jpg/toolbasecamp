@@ -1,0 +1,41 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_itF3RUDe/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "names": [
+        "depot",
+        "signal",
+        "hunter",
+        "rescue",
+        "eggs",
+        "convoy",
+        "toxic",
+        "outposts",
+        "mother"
+      ],
+      "started": "signal",
+      "withdrawn": true,
+      "menu": true,
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "names": [
+        "depot",
+        "signal",
+        "hunter",
+        "rescue",
+        "eggs",
+        "convoy",
+        "toxic",
+        "outposts",
+        "mother"
+      ],
+      "started": "signal",
+      "withdrawn": true,
+      "menu": true,
+      "errors": []
+    }
+  ]
+}
