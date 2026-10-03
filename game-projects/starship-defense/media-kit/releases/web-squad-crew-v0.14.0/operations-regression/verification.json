@@ -1,0 +1,518 @@
+{
+  "url": "http://127.0.0.1:8884/html/game/starship-defense/index.html",
+  "checks": [
+    {
+      "name": "常驻菜单按钮打开暂停菜单",
+      "ok": true
+    },
+    {
+      "name": "Esc 打开菜单",
+      "ok": true
+    },
+    {
+      "name": "P 打开菜单",
+      "ok": true
+    },
+    {
+      "name": "副本第一页三个任务",
+      "ok": true
+    },
+    {
+      "name": "新手能看到后续章节要求",
+      "ok": true
+    },
+    {
+      "name": "章节与难度在逻辑层同样锁定",
+      "ok": true,
+      "details": {
+        "locked": false,
+        "difficulty": false
+      }
+    },
+    {
+      "name": "depot 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2134,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "depot 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2134,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "signal 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2410,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "signal 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2410,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "hunter 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 4574,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "hunter 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 4574,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "rescue 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 1978,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 4
+      }
+    },
+    {
+      "name": "rescue 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 1978,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 4
+      }
+    },
+    {
+      "name": "eggs 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 1900,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "eggs 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 1900,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "convoy 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2480,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 3
+      }
+    },
+    {
+      "name": "convoy 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2480,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 3
+      }
+    },
+    {
+      "name": "toxic 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2240,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 5
+      }
+    },
+    {
+      "name": "toxic 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 2240,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 5
+      }
+    },
+    {
+      "name": "outposts 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 3174,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "outposts 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 3174,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "mother 完成真实目标、保存成绩且不推进主线",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 4986,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "mother 边界条件与重复领奖",
+      "ok": true,
+      "details": {
+        "started": true,
+        "ended": true,
+        "negative": true,
+        "stationary": true,
+        "completed": "1:6",
+        "gold": 4986,
+        "noRepeatReward": true,
+        "before": {
+          "chapter": 6,
+          "level": 2,
+          "medkits": 2
+        },
+        "chapter": 6,
+        "level": 2,
+        "saved": "1:6",
+        "medkits": 2
+      }
+    },
+    {
+      "name": "虫卵超时孵化后可清除幼虫通关",
+      "ok": true,
+      "details": {
+        "hatched": true,
+        "ended": true
+      }
+    },
+    {
+      "name": "运输车损毁失败返回基地，不发首通奖励",
+      "ok": true,
+      "details": {
+        "ended": true,
+        "state": "prep"
+      }
+    },
+    {
+      "name": "困难敌人更强、难度奖励独立并可读档",
+      "ok": true,
+      "details": {
+        "ratio": 1.5,
+        "normal": "1:6",
+        "hard": "1:6",
+        "valid": true
+      }
+    },
+    {
+      "name": "设施虚影距玩家 3～4 米且可放置",
+      "ok": true,
+      "details": [
+        {
+          "kind": "mgTurret",
+          "distance": 3,
+          "valid": true
+        },
+        {
+          "kind": "wall",
+          "distance": 3,
+          "valid": true
+        },
+        {
+          "kind": "bunker",
+          "distance": 4,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "name": "原山洞改成无隐形碰撞的可行走缓坡",
+      "ok": true,
+      "details": {
+        "height": 3.2,
+        "blocked": false,
+        "ceiling": null
+      }
+    },
+    {
+      "name": "野战医疗站实际回血",
+      "ok": true,
+      "details": {
+        "healed": true
+      }
+    },
+    {
+      "name": "虫卵可被实际武器射线击中",
+      "ok": true,
+      "details": {
+        "hit": true
+      }
+    },
+    {
+      "name": "手机点击常驻菜单入口",
+      "ok": true
+    },
+    {
+      "name": "手机副本面板未越出屏幕",
+      "ok": true,
+      "details": {
+        "x": 33.76549530029297,
+        "y": 31.8046932220459,
+        "width": 776.4690017700195,
+        "height": 326.3906192779541
+      }
+    },
+    {
+      "name": "浏览器无脚本异常",
+      "ok": true,
+      "details": []
+    }
+  ]
+}

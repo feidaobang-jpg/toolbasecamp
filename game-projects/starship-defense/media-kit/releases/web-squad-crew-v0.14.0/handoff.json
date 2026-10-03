@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-squad-crew-v0.14.0",
+  "base_version": "web-clear-landmarks-v0.13.1",
+  "created_at": "2026-10-03T21:46:43.706652+00:00",
+  "build": {
+    "id": "web-squad-crew-v0.14.0",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "b542cf1507c7f071ae0df9a52a2e21dac0f84c7defd3d26a27f8e173a2036db4",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "squad-roles",
+      "status": "implemented",
+      "description": "四类队友与免费转职",
+      "evidence_ids": [
+        "crew-shop",
+        "crew-battle"
+      ]
+    },
+    {
+      "id": "squad-vehicles",
+      "status": "implemented",
+      "description": "四种载具分配、自动驾驶和玩家接管",
+      "evidence_ids": [
+        "crew-demo"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "crew-update",
+      "before": "单一雇佣兵，只能步行，载具仅玩家驾驶",
+      "after": "四职业步行/驾驶配队，商店分配，不增加常驻按钮",
+      "validation": "passed"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "crew-battle",
+      "file": "releases/web-squad-crew-v0.14.0/captures/crew-battle.png",
+      "sha256": "1ee0e4178fcb62b576531f748015514a9110cac568c4bbd93431e5b29e14ecb2",
+      "kind": "screenshot",
+      "version": "web-squad-crew-v0.14.0",
+      "capture_mode": "realtime-automation",
+      "description": "四类队友与两名驾驶员交战",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "representative frames reviewed",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "crew-flank",
+      "file": "releases/web-squad-crew-v0.14.0/captures/crew-flank.png",
+      "sha256": "8c42d88ec4b5c1c74d829abd24c2e636ce4407d77f8d2c8918e69ab07f40d072",
+      "kind": "screenshot",
+      "version": "web-squad-crew-v0.14.0",
+      "capture_mode": "realtime-automation",
+      "description": "转镜头后的队友/车辆与敌人位置",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "representative frames reviewed",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "crew-shop",
+      "file": "releases/web-squad-crew-v0.14.0/captures/crew-shop.png",
+      "sha256": "65c1818f74f6361d3b2ceb0962158130a6f366540862c773ea77d76d4e556760",
+      "kind": "screenshot",
+      "version": "web-squad-crew-v0.14.0",
+      "capture_mode": "realtime-automation",
+      "description": "队友招募、转职和驾驶分配",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "representative frames reviewed",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "crew-demo",
+      "file": "releases/web-squad-crew-v0.14.0/captures/crew-demo.webm",
+      "sha256": "a5c7d01ba8edd79600c0ec4188a4aa1ab77938664218561125292b4265dbb065",
+      "kind": "video",
+      "version": "web-squad-crew-v0.14.0",
+      "capture_mode": "realtime-automation",
+      "description": "真实时间自动移动和转视角；内部摆位和无敌测试模式",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 10.72,
+      "audio": "none",
+      "visual_review": "representative frames reviewed",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 1,
+          "out_seconds": 7.8,
+          "description": "队友载具射击、玩家移动和转镜头"
+        },
+        {
+          "in_seconds": 8.3,
+          "out_seconds": 10.72,
+          "description": "队友商店职业与驾驶分配"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "crew_behavior": "passed",
+    "squad_tasks": "passed",
+    "mobile_classes": "passed",
+    "operations_expansion": "passed; operations-regression/",
+    "performance": "performance.json; RTX4060Ti headless Edge, 1280x720, 48 enemies + 4 allies / 2 drivers; ~169.6fps, p95 ~6.1ms, no >50ms frames",
+    "unverified": [
+      "physical phone performance",
+      "audio capture"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "演示录像无音轨；未做手机真机性能测试"
+    ]
+  },
+  "website": {
+    "status": "pending_verification"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "not_submitted"
+  },
+  "cover": "retained; existing art and camera, vehicle assets unchanged"
+}

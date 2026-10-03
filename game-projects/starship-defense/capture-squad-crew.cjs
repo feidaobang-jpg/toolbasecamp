@@ -1,0 +1,17 @@
+// Real browser time after explicit QA setup. No audio is captured by Playwright.
+const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs'),path=require('path');
+const out=path.join(__dirname,'media-kit/releases/web-squad-crew-v0.14.0'),captures=path.join(out,'captures');fs.mkdirSync(captures,{recursive:true});
+const url=process.env.GAME_URL||'http://127.0.0.1:8884/html/game/starship-defense/index.html';
+async function setup(p,count){await p.goto(url+'?qa=1');await p.waitForFunction(()=>window.__gameQA&&window.__ccReady);await p.evaluate(n=>{const q=__gameQA;q.newGame(true);q.clearEntities(false);q.sandboxWave.enabled=false;q.Game.state='battle';q.player.pos.set(0,q.groundY(0,45),45);q.player.mesh.position.copy(q.player.pos);q.setCamMode('third');q.setCamYaw(0);q.setCameraView(1);q.CombatControls.set('fire','auto');
+ for(let i=0;i<4;i++){const s=q.squad[i];s.mesh.position.set(-9+i*6,q.groundY(-9+i*6,42),42);s.hp=s.maxHp*.6;}
+ for(const [slot,kind,x] of [[0,'jeep',-12],[1,'tank',12]]){const v=q.vehicles.find(v=>v.kind===kind);v.mesh.position.set(x,q.groundY(x,40),40);v.hp=v.maxHp*.6;q.assignSquadVehicle(slot,kind);q.boardSquadVehicle(q.squad[slot],v);}
+ for(let i=0;i<n;i++){const m=q.spawnMonster(i%12===11?'miniboss':'mob',(i%8-3.5)*4,62+Math.floor(i/8)*6,{quiet:true,ch:q.CHAPTERS[i%10]});m.hp=m.maxHp=1e6;m.emerge=0;}
+ },count);}
+(async()=>{const b=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11','--disable-background-timer-throttling','--disable-renderer-backgrounding']});try{
+ const c=await b.newContext({viewport:{width:1280,height:720},recordVideo:{dir:captures,size:{width:1280,height:720}}}),p=await c.newPage();await setup(p,16);await p.waitForTimeout(1200);
+ await p.screenshot({path:path.join(captures,'crew-battle.png')});await p.keyboard.down('KeyD');await p.waitForTimeout(2200);await p.keyboard.up('KeyD');await p.keyboard.down('KeyQ');await p.waitForTimeout(1000);await p.keyboard.up('KeyQ');await p.waitForTimeout(1000);await p.screenshot({path:path.join(captures,'crew-flank.png')});await p.keyboard.down('KeyA');await p.waitForTimeout(2000);await p.keyboard.up('KeyA');await p.keyboard.press('KeyO');await p.locator('[data-t="squad"]').click();await p.screenshot({path:path.join(captures,'crew-shop.png')});await p.waitForTimeout(1500);
+ const video=p.video();await c.close();fs.renameSync(await video.path(),path.join(captures,'crew-demo.webm'));
+ const perf=await b.newPage({viewport:{width:1280,height:720}});await setup(perf,48);await perf.waitForTimeout(1500);await perf.evaluate(()=>__gameQA.startMeasure());await perf.keyboard.down('KeyD');await perf.keyboard.down('KeyQ');await perf.waitForTimeout(8000);await perf.keyboard.up('KeyD');await perf.keyboard.up('KeyQ');const result=await perf.evaluate(()=>({liveBugs:__gameQA.monsters.length,crew:__gameQA.squad.length,drivers:__gameQA.squad.filter(s=>s.vehicle).length,...__gameQA.endMeasure()}));
+ fs.writeFileSync(path.join(out,'performance.json'),JSON.stringify({method:'Headless Edge ANGLE D3D11, 1280x720, no recording during 8-second frame sample; 48 enemies + 4 allies, two drivers; desktop only, not physical phone',...result},null,2));console.log(JSON.stringify({fps:result.averageFPS,p95:result.p95Ms,over50:result.over50ms,drivers:result.drivers,renderer:result.renderer}));
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

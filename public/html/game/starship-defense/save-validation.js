@@ -1,3 +1,4 @@
+import {SQUAD_ROLES} from './squad-roles.js';
 import {OP_COMPLETION_KEYS} from './operations.js';
 // Cloud data is untrusted input. Keep legacy normal saves compatible; reject broken structures.
 export function validateNormalSave(d,{weapons,buildings,vehicles}){
@@ -14,7 +15,7 @@ export function validateNormalSave(d,{weapons,buildings,vehicles}){
     (d.weaponLv===undefined||plain(d.weaponLv)&&Object.entries(d.weaponLv).length<=30&&Object.entries(d.weaponLv).every(([k,v])=>Object.hasOwn(weapons,k)&&int(v,0,10)))&&
     (d.squadOrder===undefined||['follow','defend','attack'].includes(d.squadOrder))&&
     (d.hive===undefined||plain(d.hive)&&num(d.hive.queen,0,1)&&typeof d.hive.killed==='boolean'&&int(d.hive.chapter,1,10)&&int(d.hive.loop,1,100000))&&
-    list(d.squadGear,4,g=>plain(g)&&int(g.weapon,0,5)&&int(g.armor,0,5))&&
+    list(d.squadGear,4,g=>plain(g)&&int(g.weapon,0,5)&&int(g.armor,0,5)&&(g.role===undefined||Object.hasOwn(SQUAD_ROLES,g.role))&&(g.vehicle===undefined||g.vehicle===null||Object.hasOwn(vehicles,g.vehicle)))&&
     (d.opsCompleted===undefined||plain(d.opsCompleted)&&Object.entries(d.opsCompleted).length<=OP_COMPLETION_KEYS.length&&Object.entries(d.opsCompleted).every(([k,v])=>OP_COMPLETION_KEYS.includes(k)&&typeof v==='string'&&/^\d{1,6}:\d{1,2}$/.test(v)))&&
     list(d.buildings,64,b=>b&&Object.hasOwn(buildings,b.k)&&num(b.x,-120,120)&&num(b.z,-80,340)&&num(b.r,-1e6,1e6)&&num(b.hp,0,1e7))&&
     list(d.vehiclesOwned,4,k=>Object.hasOwn(vehicles,k))&&list(d.pendingDrops,32,it=>it&&['item','vehicle','squad'].includes(it.type)&&typeof it.id==='string'));

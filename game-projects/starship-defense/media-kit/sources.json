@@ -221,5 +221,16 @@
     "processing": "Spheres, cylinders and small badge plates merged per animated part; geometries cached by species/rank/flight.",
     "placeholder": false,
     "usage": "Original game models; no external images or downloads."
+  },
+  {
+    "id": "squad-role-identity-v014",
+    "type": "procedural",
+    "tool": "existing Three.js soldier models and CanvasTexture labels",
+    "runtime": [
+      "public/html/game/starship-defense/squad-roles.js",
+      "public/html/game/starship-defense/game.js::makeSquadTag"
+    ],
+    "description": "角色专属装甲配色与编号/兵种名牌，驾驶时名牌转移到载具上；复用原有士兵和载具模型，无外部新素材。",
+    "version": "web-squad-crew-v0.14.0"
   }
 ]
