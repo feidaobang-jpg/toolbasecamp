@@ -321,8 +321,12 @@
 
 .gvb-cols {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
+}
+
+.gvb-col {
+    min-width: 0;
 }
 
 .gvb-col-title {
@@ -373,6 +377,8 @@
 }
 
 .gvb-link {
+    display: block;
+    min-width: 0;
     color: #0f172a;
     text-decoration: none;
 }
@@ -381,9 +387,17 @@
     color: #2563eb;
 }
 
+/* 名字 + 愿望备注各一行，整块随列宽收缩 */
+.gvb-row-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0.125rem;
+}
+
 .gvb-name {
     display: block;
-    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -392,12 +406,13 @@
 
 .gvb-note {
     display: block;
-    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1.5;
 }
 
 .gvb-votes {
@@ -426,7 +441,7 @@
 
 @media (min-width: 720px) {
     .gvb-cols {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 1.5rem;
     }
 }

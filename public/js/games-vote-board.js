@@ -47,12 +47,17 @@
             var name = V.gameName(item);
             var url = V.gameUrl(item);
             var inner = '<span class="gvb-name">' + esc(name) + '</span>';
-            return url ? '<a class="gvb-link" href="' + esc(url) + '">' + inner + '</a>' : inner;
+            // 名字与愿望备注各占一行，长备注才不会把票数挤出榜单卡
+            return '<span class="gvb-row-main">' +
+                (url ? '<a class="gvb-link" href="' + esc(url) + '">' + inner + '</a>' : inner) +
+            '</span>';
         }, favorites.length);
 
         var wishHtml = rankRows(board.wishlist, function (item) {
-            return '<span class="gvb-name">' + esc(item.name) + '</span>' +
-                (item.note ? '<span class="gvb-note">' + esc(item.note) + '</span>' : '');
+            return '<span class="gvb-row-main">' +
+                '<span class="gvb-name">' + esc(item.name) + '</span>' +
+                (item.note ? '<span class="gvb-note">' + esc(item.note) + '</span>' : '') +
+            '</span>';
         });
 
         var totals = board.totals || {};
