@@ -5,7 +5,7 @@ import {FortressWorld} from './fortress-world.js?v=fb9';
 import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=fb9';
 import {validateNormalSave} from './save-validation.js?v=fb9';
-import {currentTheme,saveTheme,PALETTES} from './theme.js?v=fb9';
+import {currentTheme,saveTheme,PALETTES} from './theme.js?v=fb93';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance} from './hive-world.js?v=fb9';
 const THEME=currentTheme(),PAL=PALETTES[THEME];
 document.documentElement.classList.remove('theme-dark','theme-toy');document.documentElement.classList.add('theme-'+THEME);
@@ -373,7 +373,8 @@ function segDist(x,z,ax,az,bx,bz){const vx=bx-ax,vz=bz-az,t=clamp(((x-ax)*vx+(z-
   m.position.z=(WORLD.maxZ+WORLD.minZ)/2;
   m.receiveShadow=true;scene.add(m);
 })();
-/* 装饰：侧翼掩体巨石（挡敌方酸液与走位，不挡我方子弹）、无碰撞碎石与荧光植物。
+/* 装饰：侧翼掩体巨石（挡敌方酸液与走位，不挡我方子弹）与无碰撞碎石。
+   （原来地上的 260 个发光小锥体纯装饰、无玩法作用，v0.9.3 按用户要求去掉）
    网友反馈满地石头挡住怪物，中路与常用射界不再放置任何有碰撞的石头。 */
 const rockColliders=[];
 const COVER_ROCKS=[[-62,40,2.6],[-58,46,1.8],[66,70,2.8],[71,64,1.9],[-78,112,3],[-84,118,2],[82,140,2.8],[76,146,2],[-66,170,2.4],[64,166,2.6],[-96,70,3.2],[98,96,3]];
@@ -398,7 +399,6 @@ function clearOfFeatures(x,z,pad=0){
     batch.castShadow=shadow;batch.receiveShadow=true;scene.add(batch);
   };
   scatter(new THREE.DodecahedronGeometry(1,0),new THREE.MeshLambertMaterial({color:PAL.pebble,flatShading:true}),140,.15,.45,false);
-  scatter(new THREE.ConeGeometry(.2,.8,5),PAL.plantGlow?new THREE.MeshBasicMaterial({color:PAL.plant}):new THREE.MeshLambertMaterial({color:PAL.plant}),260,.7,1.4,false);
 })();
 
 const fortress=new FortressWorld(scene,terrainH,PAL);
