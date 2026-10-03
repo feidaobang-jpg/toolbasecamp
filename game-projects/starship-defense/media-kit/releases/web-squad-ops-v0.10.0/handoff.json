@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-squad-ops-v0.10.0",
+  "base_version": "web-dash-v0.9.7",
+  "created_at": "2026-10-04T00:14:44.872754+08:00",
+  "build": {
+    "id": "ffc206314b83",
+    "commit": "bb227a22d7135d94441658151a13c49003fb9947",
+    "dirty": true,
+    "fingerprint": "ffc206314b83e78d3debb16d453f53e1308a4b2cb9295b132158926b99ff47a6",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "compat",
+      "description": "兼容脚本入口与独立启动诊断",
+      "status": "implemented",
+      "evidence_ids": [
+        "tablet-compat"
+      ]
+    },
+    {
+      "id": "squad",
+      "description": "队友拾取与每人装备升级",
+      "status": "implemented",
+      "evidence_ids": [
+        "squad-equipment"
+      ]
+    },
+    {
+      "id": "facilities",
+      "description": "64 座设施与云档兼容",
+      "status": "implemented",
+      "evidence_ids": []
+    },
+    {
+      "id": "operations",
+      "description": "三个独立目标副本",
+      "status": "implemented",
+      "evidence_ids": [
+        "operations",
+        "depot-gameplay"
+      ]
+    },
+    {
+      "id": "bindings",
+      "description": "自定义键位与冲突处理",
+      "status": "implemented",
+      "evidence_ids": [
+        "key-settings"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "compat",
+      "feature_ids": [
+        "compat"
+      ],
+      "after": "兼容脚本入口与独立启动诊断",
+      "validation": "passed emulated/local tests"
+    },
+    {
+      "id": "squad",
+      "feature_ids": [
+        "squad"
+      ],
+      "after": "队友拾取与每人装备升级",
+      "validation": "passed emulated/local tests"
+    },
+    {
+      "id": "facilities",
+      "feature_ids": [
+        "facilities"
+      ],
+      "after": "64 座设施与云档兼容",
+      "validation": "passed emulated/local tests"
+    },
+    {
+      "id": "operations",
+      "feature_ids": [
+        "operations"
+      ],
+      "after": "三个独立目标副本",
+      "validation": "passed emulated/local tests"
+    },
+    {
+      "id": "bindings",
+      "feature_ids": [
+        "bindings"
+      ],
+      "after": "自定义键位与冲突处理",
+      "validation": "passed emulated/local tests"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "s9-startup",
+      "status": "not_reproduced",
+      "cause": "Exact S9 browser version / failure remains unknown. The old version already polyfilled some APIs; removing replaceChildren/Object.hasOwn alone did not reproduce the issue. ESM-only loading dependency removed; independent error UI and failed-initialization catch added.",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "tablet-compat"
+      ],
+      "retest": "25 targeted checks and 9 zero-viewport tests passed on current Edge with feature-removal/mobile emulation. Physical S9 untested."
+    }
+  ],
+  "media": [
+    {
+      "id": "squad-equipment",
+      "file": "releases/web-squad-ops-v0.10.0/captures/squad-equipment.png",
+      "sha256": "5b85d2df942fce3fbe6b61f9c06ca267c9bff93f504c8927f1f844bbc1f2575d",
+      "kind": "screenshot",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "队友装备界面",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "operations",
+      "file": "releases/web-squad-ops-v0.10.0/captures/operations.png",
+      "sha256": "7010989ce869d79e91c265d79dc9cc4fb3376abc8af9f8809bf9fc4cd5776705",
+      "kind": "screenshot",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "三个副本入口",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "depot-gameplay",
+      "file": "releases/web-squad-ops-v0.10.0/captures/depot-gameplay.png",
+      "sha256": "9f8942dcab4036a90119ff2cd5db336defe8048a27c3b828436f193d0735e4d4",
+      "kind": "screenshot",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "补给站实际移动与射击",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "key-settings",
+      "file": "releases/web-squad-ops-v0.10.0/captures/key-settings.png",
+      "sha256": "d439a43862da3a73047e753fff63df1d7891fcc23c10a718c3f6ae120d21b158",
+      "kind": "screenshot",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "键位设置",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "tablet-compat",
+      "file": "releases/web-squad-ops-v0.10.0/captures/tablet-compat.png",
+      "sha256": "41a4567cfa765ad1ee89b5a3154b31baf0e15a1e39c6ce729e74dd5ea5757488",
+      "kind": "screenshot",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "旧 API / 存储禁用模拟；不是 S9 真机",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/web-squad-ops-v0.10.0/captures/phone-portrait.png",
+      "sha256": "f036a2a4007129cc7d6e247f1466484eea0c6559381cb910f9f1ef190b960f69",
+      "kind": "screenshot",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏旋转与副本面板",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "squad-operations",
+      "file": "releases/web-squad-ops-v0.10.0/captures/squad-operations.webm",
+      "sha256": "658e99b168cb629345c5385cadff7c8743274013fd16f672612c0afb3ece7a32",
+      "kind": "video",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "当前版本实机自动化录像；初始金币和队友用 QA 设置",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 1,
+          "out_seconds": 4,
+          "description": "商店中升级队友武器和护甲"
+        },
+        {
+          "in_seconds": 4,
+          "out_seconds": 10,
+          "description": "从面板进入副本，移动和射击"
+        },
+        {
+          "in_seconds": 10,
+          "out_seconds": 13,
+          "description": "将冲刺改绑到 Z"
+        }
+      ],
+      "duration_seconds": 13.08,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "id": "game-audio",
+      "file": "releases/web-squad-ops-v0.10.0/captures/game-audio.webm",
+      "sha256": "dd275be8ef709de5609e9b264cba2b060d1e1b9d2fed38b3ff104d72f65ca268",
+      "kind": "audio",
+      "version": "web-squad-ops-v0.10.0",
+      "build_id": "ffc206314b83",
+      "capture_mode": "realtime-automation",
+      "description": "同次采集的原始游戏音频；单独轨道、未混入麦克风",
+      "audio": "game",
+      "visual_review": "not-run",
+      "audio_review": "not-run",
+      "segments": [],
+      "duration_seconds": 11.461326
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge browser automation; deterministic hooks for gameplay; real keyboard/touch for UI",
+      "targeted": "squad-ops.json",
+      "regressions": "after.json (45), webview.json (9)",
+      "save_compatibility": "save-validation.json",
+      "performance": "performance.json (32 vs 64 facilities, 48 bugs, 4 teammates; desktop GPU only)",
+      "visual": "Screenshots and 1 fps contact-sheet reviewed; full motion/audio playback not reviewed",
+      "not_tested": [
+        "Physical BBK S9",
+        "Real phone GPU performance"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "S9 hardware retest required; exact original failure not confirmed",
+      "Raw audio saved separately; full motion and listening review remains for video production"
+    ]
+  },
+  "cover_decision": "Keep existing cover: same dark battlefield, default scene, camera and player; changes are systems and optional missions."
+}

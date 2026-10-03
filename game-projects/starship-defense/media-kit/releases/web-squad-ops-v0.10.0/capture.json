@@ -1,0 +1,21 @@
+{
+  "capture_mode": "realtime-automation",
+  "staging": "Starting gold and two teammates provided through QA hooks; upgrades, mission entry, firing, moving and rebinding use real UI/keyboard inputs.",
+  "video": "captures/squad-operations.webm",
+  "audio": "captures/game-audio.webm",
+  "marks": [
+    {
+      "seconds": 2.654,
+      "text": "Individual squad equipment upgrades"
+    },
+    {
+      "seconds": 3.896,
+      "text": "Supply depot instance entered through the UI"
+    },
+    {
+      "seconds": 10.655,
+      "text": "Rebound dash to Z through the settings UI"
+    }
+  ],
+  "errors": []
+}

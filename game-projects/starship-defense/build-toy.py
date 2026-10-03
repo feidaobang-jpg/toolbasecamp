@@ -13,8 +13,15 @@ VERSION = json.loads((Path(__file__).parent / 'media-kit/game.json').read_text('
 
 
 def build():
+    # This is a generated package, never a source directory. Rebuild only inside our fixed output root.
+    expected = ROOT / 'dist/toy/chongchao-qianshao/package'
+    if PACKAGE.resolve() != expected.resolve() or not PACKAGE.resolve().is_relative_to(ROOT.resolve()):
+        raise RuntimeError('Unexpected package output path')
+    if PACKAGE.exists():
+        shutil.rmtree(PACKAGE)
     PACKAGE.mkdir(parents=True, exist_ok=True)
-    runtime_files = [p for p in SOURCE.rglob('*') if p.is_file()]
+    # All game modules are now bundled. Exclude unused legacy assets and any other in-progress files.
+    runtime_files = [SOURCE / name for name in ('index.html', 'boot.js', 'game.compat.js', 'icon.svg', 'vendor/LICENSE.txt')]
     for source in runtime_files:
         dest = PACKAGE / source.relative_to(SOURCE)
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -23,9 +30,10 @@ def build():
     text = text.replace('../../../games.html', 'https://www.zhengxiaohui.cn/games.html')
     text = text.replace('<script src="../../../js/game/thumb-preview.js"></script>', '')
     (PACKAGE / 'index.html').write_text(text, 'utf-8')
-    script = (PACKAGE / 'game.js').read_text('utf-8')
-    script = script.replace("const SAVE_PREFIX='sst_save_';", "const SAVE_PREFIX='toy-chongchao-v1-sst_save_';")
-    (PACKAGE / 'game.js').write_text(script, 'utf-8')
+    bundled = (PACKAGE / 'game.compat.js').read_text('utf-8')
+    if '"sst_save_"' not in bundled:
+        raise RuntimeError('Rebuild game.compat.js before packaging: save namespace not found')
+    (PACKAGE / 'game.compat.js').write_text(bundled.replace('"sst_save_"', '"toy-chongchao-v1-sst_save_"'), 'utf-8')
     archive = OUT / 'chongchao-qianshao.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
         for source in runtime_files:

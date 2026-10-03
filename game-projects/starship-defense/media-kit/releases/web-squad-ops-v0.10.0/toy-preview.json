@@ -1,0 +1,21 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_vw2glpgT/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "cards": 3,
+      "canvas": true,
+      "ready": true,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "mobile": true,
+      "cards": 3,
+      "canvas": true,
+      "ready": true,
+      "errors": [],
+      "failed": []
+    }
+  ]
+}
