@@ -1,0 +1,1178 @@
+{
+ "schema_version": 1,
+ "game_id": "jackal-stage1-3d",
+ "version": "v0.2",
+ "base_version": "v0.1",
+ "created_at": "2026-10-02T18:30:00+08:00",
+ "build": {
+  "id": "v0.2-c71eea837c7f",
+  "commit": null,
+  "dirty": false,
+  "fingerprint": "sha256:c71eea837c7f87d6e9a06dbbbbb67a0f62e6daa6dfd95a45ec2e90ac80ad411b",
+  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+  "fingerprint_method": "sha256 over sorted \"relative_path\\nfile_sha256\\n\" of every file in public/html/game/jackal-stage1-3d/",
+  "files_manifest": "releases/v0.2/qa/build.json",
+  "git": "无 Git 仓库",
+  "base_build": "v0.1-7c08b3582259",
+  "source": "game-projects/jackal-stage1-3d/src（esbuild 0.28.2 打包为 js/game.min.js）",
+  "hosted_copy": {
+   "url": "https://claude.ai/artifact/CkhWeEfGUhWgtxd1xAAwXF",
+   "note": "同一份 game.min.js 内联进单文件 HTML，去掉「返回游戏列表」入口；私有；不属于本构建指纹"
+  },
+  "device_fingerprint": "sha256:e22ce8c7afa1ecc82a260d9f6314e91be8c40bf8c5a2b37fb22a65ab99db5682",
+  "fingerprint_note": "fingerprint 是云端实测构建（所有录像、截图和验收都来自它）。本机副本只有 cover.jpg 因 v0.1 写回时附加 C2PA 而字节不同（像素一致），device_fingerprint 是本机副本的指纹。media 的 sha256 是本机副本的值，cloud_original_sha256 是写回前的原值；已逐个核对图片像素与音视频流哈希一致"
+ },
+ "feature_inventory": [
+  {
+   "id": "F-DRIVE",
+   "description": "8 向驾驶、转角滑移、碾压步兵、碰撞",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "v01-M01-01",
+    "v01-S02"
+   ]
+  },
+  {
+   "id": "F-MG",
+   "description": "机枪固定朝北，按住连发",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-M01-01"
+   ]
+  },
+  {
+   "id": "F-BOMB",
+   "description": "手雷 / 火箭 / 强化火箭，朝车头方向发射",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-M01-01",
+    "v01-M01-03",
+    "v01-M01-04",
+    "v01-M02",
+    "v01-S03",
+    "v01-S22"
+   ]
+  },
+  {
+   "id": "F-POW",
+   "description": "炸营房救俘虏、接上车、直升机坪送达；阵亡后俘虏散落可再接",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "A01",
+    "S02",
+    "v01-M01-01",
+    "v01-M01-02",
+    "v01-M01-06",
+    "v01-M01-07",
+    "v01-M01-08",
+    "v01-M02",
+    "v01-M03",
+    "v01-S04",
+    "v01-S07",
+    "v01-S10"
+   ]
+  },
+  {
+   "id": "F-UPGRADE",
+   "description": "闪光俘虏升级武器（4 名，其中一名关在守桥坦克里）",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "A01",
+    "v01-M01-01",
+    "v01-M01-02",
+    "v01-M01-03",
+    "v01-M01-05",
+    "v01-M01-08",
+    "v01-S05"
+   ]
+  },
+  {
+   "id": "F-ENEMY",
+   "description": "步兵、军官、机枪巢、地面 / 崖顶炮台、坦克、炮艇",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "A01",
+    "v01-M01-01",
+    "v01-M01-02",
+    "v01-M01-03",
+    "v01-M01-05",
+    "v01-M01-06",
+    "v01-M01-07",
+    "v01-M01-08"
+   ]
+  },
+  {
+   "id": "F-DESTRUCT",
+   "description": "营房、大门、沙袋、木箱、油桶连爆、火箭可炸岩崖",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "A01",
+    "S02",
+    "v01-M01-01",
+    "v01-M01-02",
+    "v01-M01-03",
+    "v01-M01-04",
+    "v01-M01-07",
+    "v01-M01-08",
+    "v01-S03",
+    "v01-S06"
+   ]
+  },
+  {
+   "id": "F-STAR",
+   "description": "林角隐藏星",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-M01-06",
+    "v01-S09"
+   ]
+  },
+  {
+   "id": "F-LIVES",
+   "description": "无限命 + 9 个检查点 + 复活保护（复活与检查点补满护甲）；经典 3 命可选",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "A01",
+    "S07",
+    "v01-M01-01",
+    "v01-M01-02",
+    "v01-M01-03",
+    "v01-M01-05",
+    "v01-M01-07",
+    "v01-M01-09",
+    "v01-M02",
+    "v01-M03",
+    "v01-S06",
+    "v01-S07",
+    "v01-S08"
+   ]
+  },
+  {
+   "id": "F-ARMOR",
+   "description": "v0.2：3 格护甲、受击闪白 / 四周红边 / 1.2 秒闪烁无敌、残甲黑烟；营房掉修理包（7 个，满甲时留在原地）；检查点与复活补满；可选「经典一发」（修理包改 +300 分）",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "A01",
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10",
+    "S11",
+    "S12"
+   ]
+  },
+  {
+   "id": "F-DEMO",
+   "description": "演示模式（无敌），默认关闭，有标识，不计最高分",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-S19"
+   ]
+  },
+  {
+   "id": "F-BOSS",
+   "description": "4 辆蓝色坦克：依次开进、追踪、三连发、两段受伤只吃直接命中",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-M01-09",
+    "v01-S11",
+    "v01-S12"
+   ]
+  },
+  {
+   "id": "F-RESULT",
+   "description": "救援直升机降落、结算（含耐久模式、受击次数、修理包数）、最高分",
+   "status": "implemented",
+   "evidence_ids": [
+    "S10",
+    "v01-M01-10",
+    "v01-S13",
+    "v01-S14"
+   ]
+  },
+  {
+   "id": "F-CAMERA",
+   "description": "C 键循环斜俯视 / 俯视 / 近景斜视，移动与射击按相机水平轴映射",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-S15",
+    "v01-S16",
+    "v01-S17"
+   ]
+  },
+  {
+   "id": "F-DESKTOP",
+   "description": "纯键盘菜单与游玩，键位提示",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01",
+    "S01",
+    "S08",
+    "v01-M01-01",
+    "v01-S01",
+    "v01-S18"
+   ]
+  },
+  {
+   "id": "F-MOBILE",
+   "description": "左摇杆 + J/K/C 多点触控，竖屏自动旋转与触控逆变换",
+   "status": "implemented",
+   "evidence_ids": [
+    "S11",
+    "S12",
+    "v01-M02",
+    "v01-M03",
+    "v01-S20",
+    "v01-S21",
+    "v01-S22",
+    "v01-S23",
+    "v01-S24",
+    "v01-S25",
+    "v01-S26"
+   ]
+  },
+  {
+   "id": "F-DISPLAY",
+   "description": "铺满视口、安全区、独立全屏按钮、画质自动 / 高 / 流畅、帧率显示",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-M02",
+    "v01-M03",
+    "v01-S19",
+    "v01-S25"
+   ]
+  },
+  {
+   "id": "F-AUDIO",
+   "description": "程序化音效与原创 BGM，音量保存；v0.2 新增受击、修理音效",
+   "status": "implemented",
+   "evidence_ids": [
+    "A01",
+    "v01-A01"
+   ]
+  },
+  {
+   "id": "F-LIST",
+   "description": "各界面「返回游戏列表」普通链接",
+   "status": "implemented",
+   "evidence_ids": [
+    "v01-M02",
+    "v01-S01",
+    "v01-S20"
+   ]
+  }
+ ],
+ "changes": [
+  {
+   "id": "C-101",
+   "feature_ids": [
+    "F-ARMOR",
+    "F-LIVES"
+   ],
+   "before": "v0.1：吉普中一发子弹或炮弹就被击毁（与原作一致）",
+   "after": "默认 3 格护甲：中弹扣 1 格并有约 1.2 秒闪烁无敌，第 3 次才被击毁；检查点与复活时补满",
+   "user_visible": "新手不会一碰就炸；HUD 一眼能看到还剩几格，受击时车身闪白、四周闪红，只剩 1 格时车尾冒黑烟",
+   "evidence_ids": [
+    "M01",
+    "S03",
+    "S04",
+    "S07",
+    "v01-S07",
+    "v01-M01-02"
+   ],
+   "verification": "pass（desktop.js 新增 18 项全过：扣甲、无敌期不扣、第 3 次才毁、复活补满、检查点补满等；录像 M01 是真实一局）"
+  },
+  {
+   "id": "C-102",
+   "feature_ids": [
+    "F-ARMOR",
+    "F-POW",
+    "F-DESTRUCT"
+   ],
+   "before": "v0.1：营房炸开只放出俘虏",
+   "after": "每个营房炸开时同时弹出一个修理包（全关 7 个）；护甲不满时开过去 +1 格，满甲时留在原地",
+   "user_visible": "炸营房多了一层回报，受伤后知道去哪里补",
+   "evidence_ids": [
+    "M01",
+    "S02",
+    "S05",
+    "S06"
+   ],
+   "verification": "pass（desktop.js：H0 掉包、满甲不捡、捡包 +1；bot 在 4 个种子上每局都掉落 7 个）"
+  },
+  {
+   "id": "C-103",
+   "feature_ids": [
+    "F-ARMOR",
+    "F-DESKTOP",
+    "F-MOBILE"
+   ],
+   "before": "v0.1：主菜单只有「命数」等选项，没有耐久选择",
+   "after": "主菜单新增「耐久：标准 3 格 / 经典一发」（键盘 ←/→ 或触屏点击切换，保存在本地）；经典一发保留原作一发即毁，HUD 显示金色 1 格「一发」",
+   "user_visible": "想要原作紧张感的玩家可以一键切回",
+   "evidence_ids": [
+    "S01",
+    "S08",
+    "S09",
+    "S11",
+    "v01-S01"
+   ],
+   "verification": "pass（desktop.js 经典一发三项、mobile.js 触屏切换）"
+  },
+  {
+   "id": "C-104",
+   "feature_ids": [
+    "F-RESULT",
+    "F-ARMOR"
+   ],
+   "before": "v0.1：结算说明只写命数模式",
+   "after": "结算说明写上命数与耐久模式；标准模式另写受击次数和捡到的修理包数",
+   "user_visible": "打完能看到这局被打中了几次",
+   "evidence_ids": [
+    "S10"
+   ],
+   "verification": "pass（desktop.js 经典模式结算文字检查；S10 为标准模式结算截图）"
+  },
+  {
+   "id": "C-105",
+   "feature_ids": [
+    "F-ARMOR",
+    "F-LIVES"
+   ],
+   "before": "v0.1：同一个会躲子弹的 bot 在 seed 11 / 23 / 67 阵亡 5 / 4 / 1 次",
+   "after": "标准 3 格：同样的 bot 在 seed 11 / 23 / 67 / 41 都 0 阵亡通关（受击 3 / 2 / 2 / 4 次）；不躲子弹时 seed 11 标准模式阵亡 6 次、经典一发 28 次",
+   "user_visible": "默认难度明显降低；经典一发保留原作压力",
+   "evidence_ids": [],
+   "verification": "partial：只有 bot 数据（qa/bot-runs.json），没有真人试玩，不能当作难度结论"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "BUG-007",
+   "found_in": "v0.2（开发中）",
+   "repro_steps": "用手动时钟逐帧渲染，在吉普中弹后的几帧截图",
+   "observed": "画面四周的受击红边没有出现",
+   "joke_angle": "红边闪得太快，录像机还没按下快门就没了",
+   "cause": "红边用 CSS 动画按真实时间播放 0.45 秒，而离线渲染每帧要约 1 秒",
+   "status": "fixed",
+   "fix": "改由游戏时间驱动透明度（每个逻辑步衰减），实时游玩与逐帧录制一致",
+   "before_media_ids": [],
+   "before_note": "修复前的检查截图后来被同名文件覆盖，没有留存",
+   "after_media_ids": [
+    "S03",
+    "M01"
+   ],
+   "retest": "desktop.js「HUD 护甲同步减为 2 格，画面四周闪红」「红边约 0.45 秒后褪去」通过；S03 可见红边"
+  },
+  {
+   "id": "BUG-008",
+   "found_in": "v0.2（开发中）",
+   "repro_steps": "中弹后立即截图",
+   "observed": "受击闪白的那一帧吉普不见了",
+   "joke_angle": "",
+   "cause": "受击后的无敌闪烁会隐藏车身，和 0.22 秒的闪白重叠",
+   "status": "fixed",
+   "fix": "闪白期间不做无敌闪烁",
+   "before_media_ids": [],
+   "before_note": "修复前截图被覆盖，没有留存",
+   "after_media_ids": [
+    "S03"
+   ],
+   "retest": "S03 中吉普整体闪白可见"
+  },
+  {
+   "id": "BUG-009",
+   "found_in": "v0.2（开发中，仅测试钩子）",
+   "repro_steps": "desktop.js 先调用测试钩子 kill() 清场，再去炸林角",
+   "observed": "隐藏星直接消失，「炸出隐藏星」检查失败",
+   "joke_angle": "清场太彻底，连彩蛋都一起清了",
+   "cause": "测试钩子 kill() 把隐藏星当作普通实体处理",
+   "status": "fixed",
+   "fix": "kill() 默认跳过隐藏星（只影响 ?test=1 的测试钩子，玩家版本不受影响）",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "desktop.js 80/80"
+  }
+ ],
+ "media": [
+  {
+   "id": "M01",
+   "file": "releases/v0.2/captures/armor-demo-16x9.mp4",
+   "sha256": "501a60b589d323a409dff005b054a79d1d56ea727e2f4a413481c2fa0e5a4d92",
+   "kind": "video",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "v0.2 护甲演示（16:9，1280×720 30fps H.264 CRF20 + AAC 192k；CRF18 版约 25 MB，超过写回本机的 20 MB 上限，所以用 CRF20 单文件）：开局到第一次被击毁并复活，包含营房掉修理包、受击扣甲与闪红、捡修理包、炮弹受击、残甲黑烟、第 3 次中弹被击毁、复活补满。这一局经过的检查点护甲都是满的，所以没有「检查点补满」镜头（见截图 S07）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、标准 3 格护甲、演示模式关闭；seed=11；bot 关闭了躲子弹（DODGE=0），所以会比较容易中弹，这是为了把受击与修理都拍进来，不代表正常玩家水平。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 61.033,
+   "frame_rate": "30/1",
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 3.0,
+     "description": "主菜单：标题镜头掠过海滩，菜单里能看到新增的「耐久：标准 3 格」，键盘 Enter 开始",
+     "facts": [
+      "F-ARMOR",
+      "F-DESKTOP"
+     ]
+    },
+    {
+     "in_seconds": 3.0,
+     "out_seconds": 4.8,
+     "description": "登陆艇开场，HUD 命数卡片下有 3 格绿色护甲",
+     "facts": [
+      "F-ARMOR",
+      "F-DRIVE"
+     ]
+    },
+    {
+     "in_seconds": 6.8,
+     "out_seconds": 9.0,
+     "description": "手雷炸开营房 H0：放出 2 名俘虏，同时弹出黄色修理包（源 7.4 秒）",
+     "facts": [
+      "F-ARMOR",
+      "F-POW",
+      "F-DESTRUCT"
+     ]
+    },
+    {
+     "in_seconds": 11.0,
+     "out_seconds": 12.6,
+     "description": "被步兵子弹击中：吉普闪白、画面四周闪红，护甲 3 → 2，之后约 1.2 秒闪烁无敌（源 11.4 秒）",
+     "facts": [
+      "F-ARMOR"
+     ]
+    },
+    {
+     "in_seconds": 13.8,
+     "out_seconds": 16.2,
+     "description": "炸开营房 H1（闪光俘虏），马上开过掉出的修理包：护甲 2 → 3，提示「修理包：护甲 +1」（源 14.2 / 14.77 秒）",
+     "facts": [
+      "F-ARMOR",
+      "F-POW",
+      "F-UPGRADE"
+     ]
+    },
+    {
+     "in_seconds": 20.6,
+     "out_seconds": 28.0,
+     "description": "经过检查点「营地外」「营地内」（护甲是满的，所以没有补满提示），进入营地",
+     "facts": [
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 28.2,
+     "out_seconds": 35.0,
+     "description": "营地内炸开 B1、B2，各掉一个修理包；护甲满时修理包留在原地",
+     "facts": [
+      "F-ARMOR",
+      "F-DESTRUCT"
+     ]
+    },
+    {
+     "in_seconds": 41.5,
+     "out_seconds": 46.0,
+     "description": "过桥，检查点「南岸」「北岸」",
+     "facts": [
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 46.9,
+     "out_seconds": 48.4,
+     "description": "被守桥坦克的炮弹击中：护甲 3 → 2（炮弹也只扣 1 格，源 47.3 秒）",
+     "facts": [
+      "F-ARMOR",
+      "F-ENEMY"
+     ]
+    },
+    {
+     "in_seconds": 48.8,
+     "out_seconds": 51.8,
+     "description": "再中一发子弹只剩 1 格：HUD 护甲变红闪烁，车尾冒深色烟（源 49.1 秒）",
+     "facts": [
+      "F-ARMOR"
+     ]
+    },
+    {
+     "in_seconds": 51.8,
+     "out_seconds": 53.8,
+     "description": "第 3 次中弹被击毁：爆炸、四周闪红，车上 11 名俘虏散落，武器回到手雷（源 52.07 秒）",
+     "facts": [
+      "F-ARMOR",
+      "F-LIVES",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 53.8,
+     "out_seconds": 56.0,
+     "description": "在检查点「北岸」闪烁复活，HUD 护甲补满 3 格；复活点就在残骸旁，马上把散落的 11 名俘虏接回车上，同时击毁守桥坦克（源 54.0～55.8 秒）",
+     "facts": [
+      "F-ARMOR",
+      "F-LIVES",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 56.0,
+     "out_seconds": 61.0,
+     "description": "接上坦克里放出的闪光俘虏，武器升级为火箭（横幅，源 56.33 秒），继续向北；录像在游戏时间 58 秒处结束",
+     "facts": [
+      "F-UPGRADE",
+      "F-POW"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "eba9733a691c55f45d8fcedc1857c24e37babe9ea91a5b8b2e5ed1c6b6d2ca0e"
+  },
+  {
+   "id": "A01",
+   "file": "releases/v0.2/captures/armor-demo-audio.flac",
+   "sha256": "f52c5dd0aa67095df8fc84640798547f2ad43f7d9017b78c07dcbf0d2fe79a73",
+   "kind": "audio",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "M01 的无损游戏音轨（48 kHz 立体声 FLAC，与 M01 时间轴完全对齐，0～3 秒为菜单静音段），含 v0.2 新增的受击音与修理音。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入。",
+   "width": null,
+   "height": null,
+   "duration_seconds": 61.033,
+   "audio": "game",
+   "visual_review": "not-applicable",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 6.8,
+     "out_seconds": 9.0,
+     "description": "手雷炸开营房 H0：放出 2 名俘虏，同时弹出黄色修理包（源 7.4 秒）（音效）",
+     "facts": [
+      "F-ARMOR",
+      "F-POW",
+      "F-DESTRUCT",
+      "F-AUDIO"
+     ]
+    },
+    {
+     "in_seconds": 11.0,
+     "out_seconds": 12.6,
+     "description": "被步兵子弹击中：吉普闪白、画面四周闪红，护甲 3 → 2，之后约 1.2 秒闪烁无敌（源 11.4 秒）（音效）",
+     "facts": [
+      "F-ARMOR",
+      "F-AUDIO"
+     ]
+    },
+    {
+     "in_seconds": 13.8,
+     "out_seconds": 16.2,
+     "description": "炸开营房 H1（闪光俘虏），马上开过掉出的修理包：护甲 2 → 3，提示「修理包：护甲 +1」（源 14.2 / 14.77 秒）（音效）",
+     "facts": [
+      "F-ARMOR",
+      "F-POW",
+      "F-UPGRADE",
+      "F-AUDIO"
+     ]
+    },
+    {
+     "in_seconds": 46.9,
+     "out_seconds": 48.4,
+     "description": "被守桥坦克的炮弹击中：护甲 3 → 2（炮弹也只扣 1 格，源 47.3 秒）（音效）",
+     "facts": [
+      "F-ARMOR",
+      "F-ENEMY",
+      "F-AUDIO"
+     ]
+    },
+    {
+     "in_seconds": 48.8,
+     "out_seconds": 51.8,
+     "description": "再中一发子弹只剩 1 格：HUD 护甲变红闪烁，车尾冒深色烟（源 49.1 秒）（音效）",
+     "facts": [
+      "F-ARMOR",
+      "F-AUDIO"
+     ]
+    },
+    {
+     "in_seconds": 51.8,
+     "out_seconds": 53.8,
+     "description": "第 3 次中弹被击毁：爆炸、四周闪红，车上 11 名俘虏散落，武器回到手雷（源 52.07 秒）（音效）",
+     "facts": [
+      "F-ARMOR",
+      "F-LIVES",
+      "F-POW",
+      "F-AUDIO"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "c1308177b3a82637946cf3aef017a7a7a341340dc432921c08a8b69621e9c8e0"
+  },
+  {
+   "id": "S01",
+   "file": "releases/v0.2/captures/s-v02-title-armor-option.png",
+   "sha256": "78cb141be799d6ccda0545a210d333ae6dab95380aa599d37a35055f64135ef7",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "主菜单新增「耐久：标准 3 格 / 经典一发」，键盘焦点在该项（1280×720）。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；全程键盘操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "558a84bc4d47ac9fb8efe0f8db1d228cc6bde1b08572203d529ac76d77b878f8"
+  },
+  {
+   "id": "S02",
+   "file": "releases/v0.2/captures/s-v02-hut-kit-drop.png",
+   "sha256": "c428d44351a28bc016779316caa4e95928321ce98993813668a2d5bcd6743644",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "键盘扔手雷炸开营房 H0：俘虏跑出，同时弹出黄色修理包（绿色光圈）。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：用测试钩子把吉普传送到 H0 南侧并给 3 秒无敌，手雷由键盘 K 发出",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "e5a3b721cd181c7a5328a89e4f171ff3cbd47ddb1b4c3ed6440934bdeadbd731"
+  },
+  {
+   "id": "S03",
+   "file": "releases/v0.2/captures/s-v02-hit-flash.png",
+   "sha256": "09d2eeecd2277d7c75f87c0bbac29203f4d34906e1b4b5f476044acbb94298e6",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "敌弹命中：吉普闪白、画面四周闪红，HUD 护甲 3 → 2。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：敌弹由测试钩子 bulletsAt 放在吉普西侧 3 米处，命中判定与受击流程是游戏本身的",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "bb9d9b59e9e260cc0d6623f4de1e20e9215218731e42e6e1bd0b8207c7f01895"
+  },
+  {
+   "id": "S04",
+   "file": "releases/v0.2/captures/s-v02-armor1-smoke.png",
+   "sha256": "9e8c6eb5895aeb638c493fda301233617f0bca83ec7c9be3dfee63184d628d6b",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "只剩 1 格护甲：HUD 护甲变红，车尾冒深色烟。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：第 2 发敌弹同样由测试钩子放置",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "f2d65f083c0a4f75a0742f4a8de5ab90e95535235c2a94a5943856ab5c122a78"
+  },
+  {
+   "id": "S05",
+   "file": "releases/v0.2/captures/s-v02-kit-ahead.png",
+   "sha256": "c8128e04d36086b984f2f604122003ef6f13fd27b37ae198e0c6babf2a4f2678",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "修理包在吉普前方（外观与营房掉落的相同）。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：修理包由测试钩子 kitAt 放置；拍摄前给了短暂无敌防止被周围敌人打掉，截图那一帧已关闭",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "243e59ee6edd8e99a5e35def44575af428d832f29d25802d6084aa8bb490d038"
+  },
+  {
+   "id": "S06",
+   "file": "releases/v0.2/captures/s-v02-kit-picked.png",
+   "sha256": "b64ebddd2b7253705f6438951d308249157dc7d26d70ef97cc16a19dde7509c2",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "键盘 W 开过修理包：护甲 1 → 2，提示「修理包：护甲 +1」。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：同上，短暂无敌在截图那一帧关闭",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "e72a40fb6ecc14abeb475762fb7abaac55c4d88a80906168f8de02f4b5d230c0"
+  },
+  {
+   "id": "S07",
+   "file": "releases/v0.2/captures/s-v02-checkpoint-refill.png",
+   "sha256": "1615133d017e9161a78e5e9dbbf61abb67d26d239ee59436da41a03ba6b579a3",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "经过检查点「营地外」：护甲自动补满，提示「检查点：营地外 · 护甲已补满」。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：用测试钩子把护甲设为 1 格、传送到检查点南侧 2.4 米并给无敌，之后键盘 W 开过检查点；截图那一帧关闭无敌",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "93e43860e26024bf054878f689743e14fe20d27ad5755122a9c46335b79c0905"
+  },
+  {
+   "id": "S08",
+   "file": "releases/v0.2/captures/s-v02-title-classic.png",
+   "sha256": "9ba532fbdf8363883b2fa8043a73609fef763d205bf8ba987bf1098fb3509502",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "主菜单切到「耐久：经典一发」。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；全程键盘操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "252a2f412c2584f28b19667cb2b34c5ba7c5c0bebd3ab2fcb65b4fe9b46e1b2f"
+  },
+  {
+   "id": "S09",
+   "file": "releases/v0.2/captures/s-v02-classic-hud.png",
+   "sha256": "cb92d754b13096116745b9ceac77052546001561cd7f3cb5f9ce7a3edf874f66",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "经典一发开局：HUD 只有 1 格金色并标注「一发」。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；全程键盘操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "7361a498d34e16db3cc7d391a4f1648ff6220a3ec6b57fbd6fb224782bd054b9"
+  },
+  {
+   "id": "S10",
+   "file": "releases/v0.2/captures/s-v02-result.png",
+   "sha256": "7cbc95dac58c882f48af45b9a9e90fd80c2ec81f2c10c09ad956565929233ba5",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "标准 3 格通关结算：结算说明里写「无限命 · 标准 3 格护甲 · 受击 4 次 · 修理包 2 个」（seed 41，bot 带躲子弹，0 阵亡）。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：qa/botrun.js 手动时钟逻辑推进，只在结算时渲染一帧截图（?q=high）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "e7e23cc9d3f57ee769ad6e0d1b16fd8e50897a45840d5f23728df730b0428193"
+  },
+  {
+   "id": "S11",
+   "file": "releases/v0.2/captures/s-v02-m-land-play.png",
+   "sha256": "6fd3e36bcd73d19d375ad1fb35bbecaf115082afbab6a4b15440ae3b45dee1ce",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "手机横屏（844×390，DPR3）：HUD 命数卡片下的 3 格护甲，不压右上角按钮。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：qa/mobile.js 设备模拟，?q=low",
+   "width": 2532,
+   "height": 1170,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "89e19c5789bdfbb533ba8d5466eb9f7a078fbe87efd2b32d943ecfe5eea49d3e"
+  },
+  {
+   "id": "S12",
+   "file": "releases/v0.2/captures/s-v02-m-port-play.png",
+   "sha256": "b823a8961bc59399058e21a88389eec521210ef5bff2ddecf571e7817152d721",
+   "kind": "screenshot",
+   "version": "v0.2",
+   "build_id": "v0.2-c71eea837c7f",
+   "capture_mode": "offline-render",
+   "description": "手机竖屏开始后自动旋转为横屏布局，护甲卡片完整可见。手动时钟渲染后 page.screenshot（qa/shots_v02.js 等）；测试捷径：qa/mobile.js 设备模拟，?q=low",
+   "width": 1170,
+   "height": 2532,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "446bb603184573aa3d2002a26014477fe6d17f2f9eca453e74b7b3026db7be7f"
+  }
+ ],
+ "historical_media": [
+  {
+   "id": "v01-M01-01",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-01",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-02",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-02",
+   "reason": "改动前对照：v0.1 录像局源 34.0～37.6 秒，吉普被一发击毁后在检查点复活"
+  },
+  {
+   "id": "v01-M01-03",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-03",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-04",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-04",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-05",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-05",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-06",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-06",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-07",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-07",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-08",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-08",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-09",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-09",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M01-10",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M01-10",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M02",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M02",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-M03",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "M03",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-A01",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "A01",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S01",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S01",
+   "reason": "改动前对照：v0.1 主菜单没有「耐久」选项"
+  },
+  {
+   "id": "v01-S02",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S02",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S03",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S03",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S04",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S04",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S05",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S05",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S06",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S06",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S07",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S07",
+   "reason": "改动前对照：v0.1 吉普中一发就被击毁（车上俘虏散落）"
+  },
+  {
+   "id": "v01-S08",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S08",
+   "reason": "改动前对照：v0.1 复活画面，HUD 只有命数没有护甲格"
+  },
+  {
+   "id": "v01-S09",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S09",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S10",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S10",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S11",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S11",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S12",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S12",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S13",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S13",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S14",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S14",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S15",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S15",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S16",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S16",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S17",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S17",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S18",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S18",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S19",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S19",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S20",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S20",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S21",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S21",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S22",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S22",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S23",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S23",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S24",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S24",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S25",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S25",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  },
+  {
+   "id": "v01-S26",
+   "handoff": "releases/v0.1/handoff.json",
+   "media_id": "S26",
+   "reason": "未改动功能的 v0.1 证据；注意 v0.1 画面里的 HUD 还没有护甲格，玩法规则是中一发即毁"
+  }
+ ],
+ "qa": [
+  {
+   "area": "桌面纯键盘",
+   "device": "Playwright 1.56.0 Chromium 无头，SwiftShader 软件渲染，1280×720，?q=low",
+   "method": "qa/desktop.js：菜单流程用实时时钟，玩法检查用手动时钟（按键是真实键盘事件；敌弹和修理包部分由测试钩子放置）",
+   "result": "80/80 通过（v0.1 原有 62 项 + v0.2 新增 18 项）",
+   "evidence": [
+    "releases/v0.2/qa/desktop.json"
+   ],
+   "untested": [
+    "外接手柄"
+   ]
+  },
+  {
+   "area": "手机触控",
+   "device": "Chromium 设备模拟（isMobile/hasTouch，DPR3，Pixel 8 UA），844×390 与 390×844",
+   "method": "qa/mobile.js：CDP 多点触摸；新增触屏切换「耐久」、横屏 HUD 护甲不压按钮、竖屏旋转后护甲卡片完整可见",
+   "result": "33/33 通过",
+   "evidence": [
+    "releases/v0.2/qa/mobile.json",
+    "S11",
+    "S12"
+   ],
+   "untested": [
+    "真机触控"
+   ]
+  },
+  {
+   "area": "整关可通关与难度对比",
+   "device": "无头 Chromium，1280×720",
+   "method": "qa/botrun.js：bot 用真实键盘事件打完整关（手动时钟）；DODGE=0 关闭躲子弹，ARMOR=classic 切到经典一发",
+   "result": "全部 7 局通关。会躲子弹 + 标准 3 格：seed 11 / 23 / 67 / 41 阵亡 0 / 0 / 0 / 0；不躲子弹：seed 11 标准阵亡 6、经典一发阵亡 28；会躲子弹 + 经典一发 seed 11 阵亡 8",
+   "evidence": [
+    "releases/v0.2/qa/bot-runs.json"
+   ],
+   "untested": [
+    "真人试玩"
+   ]
+  },
+  {
+   "area": "画面",
+   "device": "手动时钟渲染截图 + 护甲演示录像",
+   "method": "人工逐张查看 12 张截图；录像抽看关键事件帧",
+   "result": "pass：修理包、HUD 护甲格、红边、闪白、残甲烟都清楚；受击截图里的敌弹是测试钩子放置的，已在描述中标注",
+   "evidence": [
+    "S02",
+    "S03",
+    "S04",
+    "M01"
+   ],
+   "untested": [
+    "真实 GPU 上的表现"
+   ]
+  },
+  {
+   "area": "性能",
+   "device": "—",
+   "method": "本版未重新测帧",
+   "result": "not-run：只增加最多 7 个小修理包模型和 HUD 元素，没有新数据，沿用 v0.1 的软件渲染结果作参考",
+   "evidence": [],
+   "untested": [
+    "真实显卡 / 真机帧率"
+   ]
+  },
+  {
+   "area": "音频",
+   "device": "OfflineAudioContext（无头 Chromium）",
+   "method": "离线渲染音轨，确认受击 / 修理音出现在对应事件时间",
+   "result": "受击、修理音效能触发并出现在离线音轨里",
+   "evidence": [
+    "A01"
+   ],
+   "untested": [
+    "人工听审"
+   ]
+  },
+  {
+   "area": "其他",
+   "device": "无头 Chromium",
+   "method": "qa/filetest.js（file:// 直接打开）",
+   "result": "file:// 可运行",
+   "evidence": [],
+   "untested": []
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "实机画面是离线逐帧渲染（无 GPU 环境），不是实时录屏；音轨按事件离线渲染，不是实时录音",
+   "护甲演示录像里 bot 关闭了躲子弹，所以中弹频率高于正常玩家",
+   "多张截图用了测试钩子（放置敌弹 / 修理包、设护甲、传送、短暂无敌），每张都在描述里写明",
+   "改动前对照只有 v0.1 原片（一发即毁、无耐久选项），没有重新拍「改动前」",
+   "overview 模式的完整一局录像仍是 v0.1 的（HUD 没有护甲格），v0.2 没有重录完整一局",
+   "新音效没有人工听审；没有真人试玩；性能未重新测"
+  ]
+ }
+}

@@ -1,0 +1,146 @@
+{
+ "when": "2026-10-02",
+ "build": "v0.1-7c08b3582259",
+ "method": "qa/botrun.js：手动时钟逐步推进逻辑（不逐帧渲染），bot 通过真实键盘事件操作，视口 1280×720；bot 带简单躲子弹，不代表真人水平",
+ "runs": [
+  {
+   "seed": "11",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 224.6,
+   "deaths": 5,
+   "delivered": 19,
+   "freed": 19,
+   "score": 70100,
+   "kills": {
+    "soldier": 23,
+    "officer": 3,
+    "mg": 1,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "errors": [],
+   "botLogTail": [
+    {
+     "t": 172.1,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 172.2,
+     "msg": "stuck",
+     "x": 20.3,
+     "y": 293.25
+    },
+    {
+     "t": 180.9,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "seed": "23",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 237.3,
+   "deaths": 4,
+   "delivered": 0,
+   "freed": 19,
+   "score": 19800,
+   "kills": {
+    "soldier": 21,
+    "officer": 2,
+    "mg": 1,
+    "cannon": 1,
+    "tank": 3,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "errors": [],
+   "botLogTail": [
+    {
+     "t": 115,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 206.7,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 210,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "seed": "67",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 345,
+   "deaths": 1,
+   "delivered": 19,
+   "freed": 19,
+   "score": 70150,
+   "kills": {
+    "soldier": 21,
+    "officer": 3,
+    "mg": 1,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "errors": [],
+   "botLogTail": [
+    {
+     "t": 305,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 317.1,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 319.6,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  }
+ ],
+ "recorded_run": {
+  "seed": 41,
+  "source": "captures/full-run-timeline.json",
+  "final": {
+   "mode": "clear",
+   "score": 69600,
+   "deaths": 4,
+   "delivered": 19,
+   "kills": {
+    "soldier": 23,
+    "officer": 2,
+    "mg": 2,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   }
+  },
+  "video_seconds": 213.367
+ },
+ "notes": [
+  "seed 23：bot 在直升机坪任务里收集散落俘虏超过 90 秒后放弃，带着俘虏进入 Boss 战并阵亡，最终送达 0 名。这是 bot 任务逻辑的限制，送达机制本身在 seed 11 / 67 和录像局都正常（19/19）。"
+ ]
+}

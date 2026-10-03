@@ -1,0 +1,19 @@
+{
+ "note": "写回 D:/project/claude/test 前的云端原文件 sha256（传输通道会给 PNG/MP4/FLAC 附加 C2PA 内容凭证）",
+ "files": {
+  "releases/v0.2/captures/armor-demo-16x9.mp4": "eba9733a691c55f45d8fcedc1857c24e37babe9ea91a5b8b2e5ed1c6b6d2ca0e",
+  "releases/v0.2/captures/armor-demo-audio.flac": "c1308177b3a82637946cf3aef017a7a7a341340dc432921c08a8b69621e9c8e0",
+  "releases/v0.2/captures/s-v02-armor1-smoke.png": "f2d65f083c0a4f75a0742f4a8de5ab90e95535235c2a94a5943856ab5c122a78",
+  "releases/v0.2/captures/s-v02-checkpoint-refill.png": "93e43860e26024bf054878f689743e14fe20d27ad5755122a9c46335b79c0905",
+  "releases/v0.2/captures/s-v02-classic-hud.png": "7361a498d34e16db3cc7d391a4f1648ff6220a3ec6b57fbd6fb224782bd054b9",
+  "releases/v0.2/captures/s-v02-hit-flash.png": "bb9d9b59e9e260cc0d6623f4de1e20e9215218731e42e6e1bd0b8207c7f01895",
+  "releases/v0.2/captures/s-v02-hut-kit-drop.png": "e5a3b721cd181c7a5328a89e4f171ff3cbd47ddb1b4c3ed6440934bdeadbd731",
+  "releases/v0.2/captures/s-v02-kit-ahead.png": "243e59ee6edd8e99a5e35def44575af428d832f29d25802d6084aa8bb490d038",
+  "releases/v0.2/captures/s-v02-kit-picked.png": "e72a40fb6ecc14abeb475762fb7abaac55c4d88a80906168f8de02f4b5d230c0",
+  "releases/v0.2/captures/s-v02-m-land-play.png": "89e19c5789bdfbb533ba8d5466eb9f7a078fbe87efd2b32d943ecfe5eea49d3e",
+  "releases/v0.2/captures/s-v02-m-port-play.png": "446bb603184573aa3d2002a26014477fe6d17f2f9eca453e74b7b3026db7be7f",
+  "releases/v0.2/captures/s-v02-result.png": "e7e23cc9d3f57ee769ad6e0d1b16fd8e50897a45840d5f23728df730b0428193",
+  "releases/v0.2/captures/s-v02-title-armor-option.png": "558a84bc4d47ac9fb8efe0f8db1d228cc6bde1b08572203d529ac76d77b878f8",
+  "releases/v0.2/captures/s-v02-title-classic.png": "252a2f412c2584f28b19667cb2b34c5ba7c5c0bebd3ab2fcb65b4fe9b46e1b2f"
+ }
+}

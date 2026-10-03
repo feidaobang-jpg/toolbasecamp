@@ -1,0 +1,358 @@
+{
+ "when": "2026-10-02T08:44:54.708Z",
+ "env": "Chromium 设备模拟（isMobile/hasTouch，DPR3，Pixel 8 UA）+ CDP 触摸事件；SwiftShader；非真机",
+ "pass": 33,
+ "total": 33,
+ "results": [
+  {
+   "name": "[横屏] 打开即显示菜单（不旋转）",
+   "ok": true,
+   "detail": "menu"
+  },
+  {
+   "name": "[横屏] 触屏设备显示触控说明",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[横屏] 菜单完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 47.5,
+    "bottom": 342.5,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 390
+   }
+  },
+  {
+   "name": "[横屏] 菜单有「返回游戏列表」且可点（≥40px）",
+   "ok": true,
+   "detail": {
+    "x": 723.96875,
+    "y": 307.5,
+    "w": 178.03125,
+    "h": 40,
+    "x0": 634.953125,
+    "y0": 287.5,
+    "x1": 812.984375,
+    "y1": 327.5
+   }
+  },
+  {
+   "name": "[横屏] 点「耐久」在经典一发 / 标准 3 格之间切换（≥40px）",
+   "ok": true,
+   "detail": {
+    "h": 40,
+    "armT1": "耐久◂ 经典一发 ▸",
+    "armT2": "耐久◂ 标准 3 格 ▸"
+   }
+  },
+  {
+   "name": "[横屏] 点开始进入游戏且未自动全屏",
+   "ok": true,
+   "detail": {
+    "mode": "intro",
+    "fs": false
+   }
+  },
+  {
+   "name": "[横屏] 触屏控件显示、键位提示隐藏",
+   "ok": true,
+   "detail": {
+    "touchHidden": false
+   }
+  },
+  {
+   "name": "[横屏] J/K/C 与暂停/全屏按钮触控目标 ≥44px",
+   "ok": true,
+   "detail": {
+    "J": 94,
+    "K": 76,
+    "C": 56,
+    "pause": 44,
+    "fs": 44
+   }
+  },
+  {
+   "name": "[横屏] 按键同时显示字母与功能",
+   "ok": true,
+   "detail": [
+    "J机枪",
+    "K手雷",
+    "C视角"
+   ]
+  },
+  {
+   "name": "[横屏] HUD 显示 3 格护甲，且不压住右上角按钮",
+   "ok": true,
+   "detail": {
+    "pipsL": 3,
+    "hud": [
+     340.65625,
+     10,
+     430.859375,
+     52.78125
+    ],
+    "pause": [
+     683.484375,
+     10
+    ]
+   }
+  },
+  {
+   "name": "[横屏] 视角键不遮挡 J/K 动作键",
+   "ok": true,
+   "detail": {
+    "C": [
+     748,
+     200,
+     804,
+     256
+    ],
+    "J": [
+     724,
+     266,
+     818,
+     360
+    ],
+    "K": [
+     640,
+     292,
+     716,
+     368
+    ]
+   }
+  },
+  {
+   "name": "[横屏 · oblique] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · top] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · low] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏] C 键（触屏）循环视角回到斜俯视",
+   "ok": true,
+   "detail": "oblique"
+  },
+  {
+   "name": "[横屏] 多点触控：边移动边按住 J 连发",
+   "ok": true,
+   "detail": {
+    "shots": 5,
+    "dy": 4.3,
+    "input": {
+     "held": {
+      "u": false,
+      "d": false,
+      "l": false,
+      "r": false
+     },
+     "keyFire": false,
+     "keyBomb": false,
+     "touchDir": 0,
+     "touchFire": true,
+     "touchBomb": false,
+     "queue": []
+    }
+   }
+  },
+  {
+   "name": "[横屏] 三指同时：K 抛出手雷",
+   "ok": true,
+   "detail": [
+    "grenade"
+   ]
+  },
+  {
+   "name": "[横屏] 松手后无持续移动/连发",
+   "ok": true,
+   "detail": {
+    "held": {
+     "u": false,
+     "d": false,
+     "l": false,
+     "r": false
+    },
+    "keyFire": false,
+    "keyBomb": false,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+   }
+  },
+  {
+   "name": "[横屏] touchcancel 清空方向",
+   "ok": true,
+   "detail": {
+    "held": {
+     "u": false,
+     "d": false,
+     "l": false,
+     "r": false
+    },
+    "keyFire": false,
+    "keyBomb": false,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+   }
+  },
+  {
+   "name": "[横屏] 右上角暂停按钮",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "[横屏] 触屏「继续」",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[横屏] 独立全屏按钮触发请求（有结果记录）",
+   "ok": true,
+   "detail": [
+    "ok",
+    "lock-ok"
+   ]
+  },
+  {
+   "name": "[横屏] 全屏时虚拟按键仍在（对整个文档请求全屏）",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[横屏] 退出全屏自动暂停",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "[竖屏] 菜单正常显示（未旋转、无横屏阻断提示）",
+   "ok": true,
+   "detail": {
+    "rotated": false,
+    "W": 390,
+    "H": 844,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 1.25,
+    "touchOn": true,
+    "backing": [
+     487,
+     1055
+    ]
+   }
+  },
+  {
+   "name": "[竖屏] 开始后自动旋转为横屏布局（逻辑 844×390）",
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "W": 844,
+    "H": 390,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 1.25,
+    "touchOn": true,
+    "backing": [
+     1055,
+     487
+    ]
+   }
+  },
+  {
+   "name": "[竖屏] 旋转布局下护甲卡片完整可见、不与按钮重叠",
+   "ok": true,
+   "detail": {
+    "hud": [
+     337.21875,
+     340.65625,
+     380,
+     430.859375
+    ]
+   }
+  },
+  {
+   "name": "[竖屏] 触控逆变换：物理向右拖 = 画面上方（北），物理向下拖 = 画面右（东）",
+   "ok": true,
+   "detail": {
+    "upLocal": 2.87,
+    "rightLocal": 2.87
+   }
+  },
+  {
+   "name": "[竖屏] 旋转布局下 J 键开火",
+   "ok": true,
+   "detail": 3
+  },
+  {
+   "name": "[竖屏] 旋转布局下暂停按钮可用",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "[切换] 竖屏 → 横屏：取消旋转并清空按住的方向",
+   "ok": true,
+   "detail": {
+    "rotated": false,
+    "input": {
+     "held": {
+      "u": false,
+      "d": false,
+      "l": false,
+      "r": false
+     },
+     "keyFire": false,
+     "keyBomb": false,
+     "touchDir": -1,
+     "touchFire": false,
+     "touchBomb": false,
+     "queue": []
+    }
+   }
+  },
+  {
+   "name": "[切换] 横屏 → 竖屏：重新旋转布局",
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "W": 844,
+    "H": 390,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 1.25,
+    "touchOn": true,
+    "backing": [
+     1055,
+     487
+    ]
+   }
+  },
+  {
+   "name": "全程无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

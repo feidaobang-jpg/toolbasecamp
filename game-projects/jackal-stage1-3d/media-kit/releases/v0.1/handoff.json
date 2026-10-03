@@ -1,0 +1,1603 @@
+{
+ "schema_version": 1,
+ "game_id": "jackal-stage1-3d",
+ "version": "v0.1",
+ "base_version": null,
+ "created_at": "2026-10-02T14:40:00+08:00",
+ "build": {
+  "id": "v0.1-7c08b3582259",
+  "commit": null,
+  "dirty": false,
+  "fingerprint": "sha256:7c08b358225994be7fd9c8ad317d02f28e5d7a9384df36f40ecdbfe2eee605df",
+  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+  "fingerprint_method": "sha256 over sorted \"relative_path\\nfile_sha256\\n\" of every file in public/html/game/jackal-stage1-3d/",
+  "files_manifest": "releases/v0.1/qa/build.json",
+  "git": "无 Git 仓库",
+  "source": "game-projects/jackal-stage1-3d/src（esbuild 0.28.2 打包为 js/game.min.js）",
+  "hosted_copy": {
+   "url": "https://claude.ai/artifact/CkhWeEfGUhWgtxd1xAAwXF",
+   "note": "同一份 game.min.js 内联进单文件 HTML，去掉「返回游戏列表」入口；私有，需要用户自行分享；不属于本构建指纹"
+  },
+  "device_fingerprint": "sha256:f8a06cf2f00cdda4465d547c97a2d19b051286f9dc83a7293e715ba1557cac27",
+  "fingerprint_note": "fingerprint 是云端实测构建（所有录像、截图和验收都来自它）。写入 D:/project/claude/test 时，传输通道给 JPG/PNG/MP4/FLAC 附加了 C2PA 内容凭证（每个文件多约 5.8 KB），所以 cover.jpg 的字节不同，但像素一致；其余运行文件逐字节一致。device_fingerprint 是本机副本的指纹。media 的 sha256 是本机副本的值，cloud_original_sha256 是写回前的原值；已逐个核对图片像素与音视频流哈希一致"
+ },
+ "feature_inventory": [
+  {
+   "id": "F-DRIVE",
+   "description": "8 向驾驶、转角滑移、碾压步兵、碰撞",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "S02"
+   ]
+  },
+  {
+   "id": "F-MG",
+   "description": "机枪固定朝北，按住连发",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01"
+   ]
+  },
+  {
+   "id": "F-BOMB",
+   "description": "手雷 / 火箭 / 强化火箭，朝车头方向发射",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "M01-03",
+    "M01-04",
+    "M02",
+    "S03",
+    "S22"
+   ]
+  },
+  {
+   "id": "F-POW",
+   "description": "炸营房救俘虏、接上车、直升机坪送达；阵亡后俘虏散落可再接",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "M01-02",
+    "M01-06",
+    "M01-07",
+    "M01-08",
+    "M02",
+    "M03",
+    "S04",
+    "S07",
+    "S10"
+   ]
+  },
+  {
+   "id": "F-UPGRADE",
+   "description": "闪光俘虏升级武器（4 名，其中一名关在守桥坦克里）",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "M01-02",
+    "M01-03",
+    "M01-05",
+    "M01-08",
+    "S05"
+   ]
+  },
+  {
+   "id": "F-ENEMY",
+   "description": "步兵、军官、机枪巢、地面 / 崖顶炮台、坦克、炮艇",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "M01-02",
+    "M01-03",
+    "M01-05",
+    "M01-06",
+    "M01-07",
+    "M01-08"
+   ]
+  },
+  {
+   "id": "F-DESTRUCT",
+   "description": "营房、大门、沙袋、木箱、油桶连爆、火箭可炸岩崖",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "M01-02",
+    "M01-03",
+    "M01-04",
+    "M01-07",
+    "M01-08",
+    "S03",
+    "S06"
+   ]
+  },
+  {
+   "id": "F-STAR",
+   "description": "林角隐藏星",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-06",
+    "S09"
+   ]
+  },
+  {
+   "id": "F-LIVES",
+   "description": "无限命 + 9 个检查点 + 复活保护；经典 3 命可选",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "M01-02",
+    "M01-03",
+    "M01-05",
+    "M01-07",
+    "M01-09",
+    "M02",
+    "M03",
+    "S06",
+    "S07",
+    "S08"
+   ]
+  },
+  {
+   "id": "F-DEMO",
+   "description": "演示模式（无敌），默认关闭，有标识，不计最高分",
+   "status": "implemented",
+   "evidence_ids": [
+    "S19"
+   ]
+  },
+  {
+   "id": "F-BOSS",
+   "description": "4 辆蓝色坦克：依次开进、追踪、三连发、两段受伤只吃直接命中",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-09",
+    "S11",
+    "S12"
+   ]
+  },
+  {
+   "id": "F-RESULT",
+   "description": "救援直升机降落、结算、最高分",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-10",
+    "S13",
+    "S14"
+   ]
+  },
+  {
+   "id": "F-CAMERA",
+   "description": "C 键循环斜俯视 / 俯视 / 近景斜视，移动与射击按相机水平轴映射",
+   "status": "implemented",
+   "evidence_ids": [
+    "S15",
+    "S16",
+    "S17"
+   ]
+  },
+  {
+   "id": "F-DESKTOP",
+   "description": "纯键盘菜单与游玩，键位提示",
+   "status": "implemented",
+   "evidence_ids": [
+    "M01-01",
+    "S01",
+    "S18"
+   ]
+  },
+  {
+   "id": "F-MOBILE",
+   "description": "左摇杆 + J/K/C 多点触控，竖屏自动旋转与触控逆变换",
+   "status": "implemented",
+   "evidence_ids": [
+    "M02",
+    "M03",
+    "S20",
+    "S21",
+    "S22",
+    "S23",
+    "S24",
+    "S25",
+    "S26"
+   ]
+  },
+  {
+   "id": "F-DISPLAY",
+   "description": "铺满视口、安全区、独立全屏按钮、画质自动 / 高 / 流畅、帧率显示",
+   "status": "implemented",
+   "evidence_ids": [
+    "M02",
+    "M03",
+    "S19",
+    "S25"
+   ]
+  },
+  {
+   "id": "F-AUDIO",
+   "description": "程序化音效与原创 BGM，音量保存",
+   "status": "implemented",
+   "evidence_ids": [
+    "A01"
+   ]
+  },
+  {
+   "id": "F-LIST",
+   "description": "各界面「返回游戏列表」普通链接",
+   "status": "implemented",
+   "evidence_ids": [
+    "M02",
+    "S01",
+    "S20"
+   ]
+  }
+ ],
+ "changes": [
+  {
+   "id": "C-001",
+   "feature_ids": [
+    "F-DRIVE",
+    "F-MG",
+    "F-BOMB",
+    "F-POW",
+    "F-UPGRADE",
+    "F-ENEMY",
+    "F-DESTRUCT",
+    "F-STAR",
+    "F-LIVES",
+    "F-DEMO",
+    "F-BOSS",
+    "F-RESULT",
+    "F-CAMERA",
+    "F-DESKTOP",
+    "F-MOBILE",
+    "F-DISPLAY",
+    "F-AUDIO",
+    "F-LIST"
+   ],
+   "before": "无（新游戏）",
+   "after": "FC 赤色要塞第一关的 3D 网页重置版首版",
+   "user_visible": "可以完整玩完第一关（含 Boss 与结算），电脑键盘和手机触屏都能玩",
+   "evidence_ids": [
+    "M01-01",
+    "M01-09",
+    "M01-10",
+    "M02",
+    "M03",
+    "S14"
+   ],
+   "verification": "pass（自动试玩通关、桌面 62/62、手机模拟 30/30，见 qa）"
+  },
+  {
+   "id": "C-002",
+   "feature_ids": [
+    "F-DESTRUCT",
+    "F-DRIVE"
+   ],
+   "before": "开发构建：烟雾是灰色多面体，像石块；崖顶每块是圆角盒，拼起来像棋盘格；草地是一整片亮绿色，花朵是黑点",
+   "after": "烟雾改为半透明柔和球体；崖顶改为无缝平顶；草地降饱和并加入草丛；修正花朵颜色",
+   "user_visible": "爆炸和场景更干净，更像玩具风的统一画面",
+   "evidence_ids": [
+    "S03",
+    "S15",
+    "M01-03"
+   ],
+   "before_evidence_files": [
+    "assets/dev-evidence/smoke-boulders-before-devbuild.png",
+    "assets/dev-evidence/bluff-tiles-before-devbuild.png"
+   ],
+   "verification": "pass（目视对比）"
+  },
+  {
+   "id": "C-003",
+   "feature_ids": [
+    "F-ENEMY",
+    "F-LIVES",
+    "F-BOSS"
+   ],
+   "before": "开发构建：步兵子弹 9.5 m/s、射程 15 m；不会躲子弹的 bot 每局阵亡 16～28 次",
+   "after": "步兵子弹 8.0 m/s、射程 13.5 m；机枪巢、炮台、坦克、Boss 的开火间隔各加长约 0.3～0.5 秒；吉普受击半径缩小约 12%；复活时附近敌人推迟开火",
+   "user_visible": "压力降低，复活后不会立刻被围射",
+   "evidence_ids": [
+    "M01-02",
+    "M01-05"
+   ],
+   "verification": "partial：带简单躲子弹的 bot 阵亡降到 1～5 次（见 qa/bot-runs.json）；没有真人试玩，不能当作难度结论"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "BUG-001",
+   "found_in": "v0.1（开发中）",
+   "repro_steps": "开局后看海滩左侧的海面",
+   "observed": "西侧海面有一条横向亮线",
+   "joke_angle": "",
+   "cause": "两块半透明海面重叠，重叠处透明度叠加",
+   "status": "fixed",
+   "fix": "合并为一整块海面（陆地会遮住它）",
+   "before_media_ids": [],
+   "before_evidence_files": [
+    "assets/dev-evidence/sea-seam-before-devbuild.png"
+   ],
+   "before_note": "修复前截图来自首次冒烟测试的开发构建，代码没有单独保留，没有构建指纹，所以不列入 media",
+   "after_media_ids": [
+    "S02",
+    "M01-01"
+   ],
+   "retest": "开场海滩各视角都没有接缝"
+  },
+  {
+   "id": "BUG-002",
+   "found_in": "v0.1（开发中）",
+   "repro_steps": "bot 试玩 seed 23，在最后一个检查点之后阵亡",
+   "observed": "在 Boss 入口前反复阵亡：35 次死亡都在 (2, 298)，每次复活约 5.1 秒后又被击毁",
+   "joke_angle": "复活点正对着 4 名守卫的枪口",
+   "cause": "检查点「场地入口」的复活位置离 4 名原地守卫只有约 4 米，2.6 秒复活保护一过就被围射",
+   "status": "fixed",
+   "fix": "复活点后移到 (2, 293.5)；复活时 15 米内敌人推迟 2.4～3.4 秒开火、清掉 14 米内敌弹",
+   "before_media_ids": [],
+   "before_note": "原始事件日志后来被复测覆盖，只剩会话里的统计摘要；没有修复前的画面",
+   "after_media_ids": [
+    "M01-09"
+   ],
+   "retest": "最终构建 3 个种子 + 录像局都没有连死；desktop.js 连续 3 次阵亡复活检查通过"
+  },
+  {
+   "id": "BUG-003",
+   "found_in": "v0.1（开发中）",
+   "repro_steps": "拿火箭朝崖顶区域右侧的林角发射",
+   "observed": "隐藏星不出现，只有手雷能炸出来",
+   "joke_angle": "",
+   "cause": "只按爆炸落点判定；树不挡子弹，火箭直接飞过林角，在射程末端才爆炸",
+   "status": "fixed",
+   "fix": "火箭擦过星所在位置 1.7 米内也会让星现身",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "S09",
+    "M01-06"
+   ],
+   "retest": "录像局里火箭让星现身并被拾取（源 128.07 秒）"
+  },
+  {
+   "id": "BUG-004",
+   "found_in": "v0.1（开发中）",
+   "repro_steps": "看草地上的小花",
+   "observed": "花朵是黑点",
+   "joke_angle": "",
+   "cause": "实例颜色下标对负数 x 取模得到 undefined，颜色变成 NaN",
+   "status": "fixed",
+   "fix": "改为非负取模",
+   "before_media_ids": [],
+   "before_note": "只在会话里放大检查过修复前截图，没有单独留存",
+   "after_media_ids": [
+    "S15",
+    "S16"
+   ],
+   "retest": "花朵显示为黄、粉、白、紫"
+  },
+  {
+   "id": "BUG-005",
+   "found_in": "v0.1（开发中）",
+   "repro_steps": "同一种子、同样 bot 连跑两次",
+   "observed": "两次结果不同（通关时间 142 秒 vs 254 秒）",
+   "joke_angle": "",
+   "cause": "特效和玩法共用随机数，大爆炸第二团火球用 setTimeout 在真实时间里抢随机数；镜头震动的随机偏移影响「敌人是否在画面内」",
+   "status": "fixed",
+   "fix": "特效改用 Math.random；可视区按不抖动的镜头计算",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "同一页面配置下两次空跑的事件序列完全一致。注意：录像局多了 3 秒菜单渲染和高画质参数，结果与空跑不同（4 次阵亡、69600 分），录像本身是真实的一局"
+  },
+  {
+   "id": "BUG-006",
+   "found_in": "v0.1（开发中）",
+   "repro_steps": "分析 bot 整局事件日志",
+   "observed": "最早的营房 H0 被炸事件不见了",
+   "joke_angle": "",
+   "cause": "每发机枪弹都记一条事件，日志上限 2000 条，早期事件被挤掉",
+   "status": "fixed",
+   "fix": "机枪只计数不逐条记录",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "录像局时间线包含开局全部关键事件"
+  }
+ ],
+ "media": [
+  {
+   "id": "M01-01",
+   "file": "releases/v0.1/captures/full-run-16x9.part00.mp4",
+   "sha256": "e94ed4d9b67cc29d6ffe26aadf337f02242f5790c2e25784396e15e5fb9199c0",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 1/10 段（源 0.00～28.02 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 28.021,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 0.0,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 3.0,
+     "description": "主菜单：标题镜头掠过海滩，键盘 Enter 开始",
+     "facts": [
+      "F-DESKTOP"
+     ]
+    },
+    {
+     "in_seconds": 3.0,
+     "out_seconds": 4.7,
+     "description": "登陆艇开场，「第一关 · 海滩登陆」横幅",
+     "facts": [
+      "F-DRIVE"
+     ]
+    },
+    {
+     "in_seconds": 4.7,
+     "out_seconds": 8.6,
+     "description": "机枪向北连发，手雷炸毁营房 H0，放出 2 名俘虏",
+     "facts": [
+      "F-MG",
+      "F-BOMB",
+      "F-POW",
+      "F-DESTRUCT"
+     ]
+    },
+    {
+     "in_seconds": 11.5,
+     "out_seconds": 17.6,
+     "description": "沿海滩推进、击毙步兵，炸开 H1，接到闪光俘虏后武器升级为火箭",
+     "facts": [
+      "F-ENEMY",
+      "F-UPGRADE",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 19.8,
+     "out_seconds": 21.0,
+     "description": "火箭摧毁机枪巢",
+     "facts": [
+      "F-BOMB",
+      "F-ENEMY"
+     ]
+    },
+    {
+     "in_seconds": 23.4,
+     "out_seconds": 28.021,
+     "description": "炸开营地大门，依次记录检查点「营地外」「营地内」（下一段继续）",
+     "facts": [
+      "F-DESTRUCT",
+      "F-LIVES"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "72096628045f4c8ff337334aa0299e6a2cdcb623ed6ee9df5f5c79703e43a6dc"
+  },
+  {
+   "id": "M01-02",
+   "file": "releases/v0.1/captures/full-run-16x9.part01.mp4",
+   "sha256": "7a800cdb6dcca11ba535233c20d708e627e4fb6e823e3f0d71120f5937864b65",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 2/10 段（源 28.02～44.69 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 16.667,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 28.021,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 1.579,
+     "description": "炸开营地大门，依次记录检查点「营地外」「营地内」（接续上一段）",
+     "facts": [
+      "F-DESTRUCT",
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 1.379,
+     "out_seconds": 3.179,
+     "description": "摧毁营地炮台；营房 B1 与油桶连环爆炸",
+     "facts": [
+      "F-DESTRUCT",
+      "F-ENEMY"
+     ]
+    },
+    {
+     "in_seconds": 5.979,
+     "out_seconds": 9.579,
+     "description": "吉普被击毁，车上 8 名俘虏散落；在「营地内」检查点闪烁复活",
+     "facts": [
+      "F-LIVES",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 15.279,
+     "out_seconds": 16.667,
+     "description": "摧毁机枪巢，炸开 B2，闪光俘虏再次升级武器（下一段继续）",
+     "facts": [
+      "F-UPGRADE",
+      "F-DESTRUCT"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "3671bc271ff2ee4590c9ebe74a8ed029aa62ad31cd25c4dc637b57282fed2f79"
+  },
+  {
+   "id": "M01-03",
+   "file": "releases/v0.1/captures/full-run-16x9.part02.mp4",
+   "sha256": "783671831e9e2e67bdb5164544195a87c1bb962d84065ff479378eaf16976cb4",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 3/10 段（源 44.69～69.69 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 25.0,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 44.688,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 0.312,
+     "description": "摧毁机枪巢，炸开 B2，闪光俘虏再次升级武器（接续上一段）",
+     "facts": [
+      "F-UPGRADE",
+      "F-DESTRUCT"
+     ]
+    },
+    {
+     "in_seconds": 5.312,
+     "out_seconds": 13.912,
+     "description": "离开营地、过桥（检查点「南岸」「北岸」），河上有炮艇",
+     "facts": [
+      "F-ENEMY",
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 14.712,
+     "out_seconds": 15.912,
+     "description": "北岸油桶连爆",
+     "facts": [
+      "F-DESTRUCT"
+     ]
+    },
+    {
+     "in_seconds": 24.112,
+     "out_seconds": 25.0,
+     "description": "火箭逐块炸塌岩崖（下一段继续）",
+     "facts": [
+      "F-DESTRUCT",
+      "F-BOMB"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "b4a17eb6bbbd49b626163480abed0d91ba422b3a05ec7a2ea68672cc5d465b5a"
+  },
+  {
+   "id": "M01-04",
+   "file": "releases/v0.1/captures/full-run-16x9.part03.mp4",
+   "sha256": "9c7ef4b171895515d00b2352ef38a7cc19dff1a00b2d381146d830e7740f1013",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 4/10 段（源 69.69～94.69 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 25.0,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 69.688,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 7.312,
+     "description": "火箭逐块炸塌岩崖（接续上一段）",
+     "facts": [
+      "F-DESTRUCT",
+      "F-BOMB"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "5bc92a14110a69c4708a1d41f14f60322570d7ca69d8b961fc972692e4a07190"
+  },
+  {
+   "id": "M01-05",
+   "file": "releases/v0.1/captures/full-run-16x9.part04.mp4",
+   "sha256": "fa948efb2c92afe7910476015619eecf46803bbc90352261203f30f86406ba0d",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 5/10 段（源 94.69～111.35 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 16.667,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 94.688,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 7.712,
+     "out_seconds": 12.512,
+     "description": "阵亡后在北岸复活；手雷击毁守桥坦克，坦克里的闪光俘虏升级武器",
+     "facts": [
+      "F-LIVES",
+      "F-UPGRADE",
+      "F-ENEMY"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "dad7d5921283915dc34addf8a41ada3678fd78994b0c897fb7e12d0e38c3d7b3"
+  },
+  {
+   "id": "M01-06",
+   "file": "releases/v0.1/captures/full-run-16x9.part05.mp4",
+   "sha256": "3fae442ead17a757689eeb62d7a6e8b9eb1323599b54bba76a572eae5181fd05",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 6/10 段（源 111.35～136.35 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 25.0,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 111.354,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 3.446,
+     "out_seconds": 6.646,
+     "description": "检查点「崖顶」；炸开 H2，击毙军官",
+     "facts": [
+      "F-POW",
+      "F-ENEMY"
+     ]
+    },
+    {
+     "in_seconds": 16.246,
+     "out_seconds": 18.246,
+     "description": "炸出林角隐藏星并拾取（+3000 分、护盾）",
+     "facts": [
+      "F-STAR"
+     ]
+    },
+    {
+     "in_seconds": 19.446,
+     "out_seconds": 25.0,
+     "description": "进入丛林：火箭清理步兵与军官，炸开 H3（下一段继续）",
+     "facts": [
+      "F-ENEMY",
+      "F-POW"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "3a04ed2eeeb964d9aad6fa993c113d5b65f92029f886544fe79d835d044e9843"
+  },
+  {
+   "id": "M01-07",
+   "file": "releases/v0.1/captures/full-run-16x9.part06.mp4",
+   "sha256": "c48c3836bf821206ef6adc9183da848c8d3765950dbd647b1c46bf76a70c9b55",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 7/10 段（源 136.35～156.75 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 20.4,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 136.354,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 2.046,
+     "description": "进入丛林：火箭清理步兵与军官，炸开 H3（接续上一段）",
+     "facts": [
+      "F-ENEMY",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 9.646,
+     "out_seconds": 12.646,
+     "description": "被坦克炮弹击毁，在丛林检查点复活",
+     "facts": [
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 19.046,
+     "out_seconds": 20.4,
+     "description": "击毁巡逻坦克，油桶连爆（下一段继续）",
+     "facts": [
+      "F-ENEMY",
+      "F-DESTRUCT"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "e32d72d3467255f18a811a99c0a9b1b519a43c50dc3b46ed420f26bd2d7c05ae"
+  },
+  {
+   "id": "M01-08",
+   "file": "releases/v0.1/captures/full-run-16x9.part07.mp4",
+   "sha256": "1b318508857a44403faf132de02aee0c39d6fb12a18df556ff52fd6989c8ae2b",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 8/10 段（源 156.75～181.75 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 25.0,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 156.754,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 2.446,
+     "description": "击毁巡逻坦克，油桶连爆（接续上一段）",
+     "facts": [
+      "F-ENEMY",
+      "F-DESTRUCT"
+     ]
+    },
+    {
+     "in_seconds": 3.446,
+     "out_seconds": 13.246,
+     "description": "最后阵地：炸开 H4、闪光俘虏升级，火箭击毁两辆坦克",
+     "facts": [
+      "F-POW",
+      "F-UPGRADE",
+      "F-ENEMY"
+     ]
+    },
+    {
+     "in_seconds": 16.446,
+     "out_seconds": 24.446,
+     "description": "直升机坪：19 名俘虏逐个跑上直升机（每名 +500）",
+     "facts": [
+      "F-POW"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "79b034539f7f94bf4f66047887a07764f7db71738f6769890ca4a6d2eee76b34"
+  },
+  {
+   "id": "M01-09",
+   "file": "releases/v0.1/captures/full-run-16x9.part08.mp4",
+   "sha256": "83dfbdf4554bbb097c82a3771c6d05a52f3966e739eb697e0f87fdd005020801",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 9/10 段（源 181.75～204.69 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 22.933,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 181.754,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.246,
+     "out_seconds": 6.646,
+     "description": "检查点「场地入口」，路障升起，BOSS 横幅与警报",
+     "facts": [
+      "F-BOSS"
+     ]
+    },
+    {
+     "in_seconds": 6.646,
+     "out_seconds": 22.933,
+     "description": "Boss：蓝色坦克依次开进；火箭击毁第一辆；吉普阵亡并在场地内复活；其余三辆被击毁（下一段继续）",
+     "facts": [
+      "F-BOSS",
+      "F-LIVES"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "5d5086ecbafee42ada50652140697f593777f8ba4378645ccbbe75ccd83b0e4e"
+  },
+  {
+   "id": "M01-10",
+   "file": "releases/v0.1/captures/full-run-16x9.part09.mp4",
+   "sha256": "dd1e41fd18c9e3ff7aba6b11a14edb1f81d899cd162017ca0057c323a34b26d7",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "完整一局 16:9 母版第 10/10 段（源 204.69～213.39 秒）。1280×720 30fps H.264 CRF18 + AAC。原片约 97 MB，超过写回本机的单文件 20 MB 上限，按关键帧无损切成 10 段；用同目录 full-run-16x9.concat.txt 可无损拼回（已验证拼回 6401 帧）。手动时钟：每 1/30 秒推进 2 个逻辑步并渲染一帧，page.screenshot 截图（含 DOM HUD）；无头 Chromium + SwiftShader；操作由 bot 通过真实键盘事件发出（?test=1 读取快照决策，?clean=1 隐藏键位提示，?q=high）；无限命、演示模式关闭；seed=41。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 8.7,
+   "frame_rate": "30/1",
+   "source_offset_seconds": 204.688,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 4.612,
+     "description": "「第一关完成！」横幅，救援直升机降落（接续上一段）",
+     "facts": [
+      "F-RESULT"
+     ]
+    },
+    {
+     "in_seconds": 4.612,
+     "out_seconds": 8.672,
+     "description": "结算：19/19 送达、救援奖励 38000、总分 69600",
+     "facts": [
+      "F-RESULT"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "b078dd1f997eb9ed0b8fb14269b5f1af66c84555bac7020be16cf2c84d401916"
+  },
+  {
+   "id": "M02",
+   "file": "releases/v0.1/captures/mobile-landscape-touch.mp4",
+   "sha256": "94b20367d51335be3d30bc40c5ad7dd8e07126358d981ff0552db3305749c7ce",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "手机横屏 844×390（截图 1688×780）触控录像，可见左摇杆位移、J/K 按下状态、右侧 C 视角键与右上角暂停/全屏。Chromium 设备模拟（isMobile/hasTouch，DPR2，Pixel 8 UA）+ CDP 多点触摸事件驱动虚拟摇杆与 J/K 键；bot 只做决策，再换算成摇杆方向；手动时钟逐帧渲染（?q=high）；音轨同样按事件离线渲染；非真机。",
+   "width": 1688,
+   "height": 780,
+   "duration_seconds": 17.5,
+   "frame_rate": "30/1",
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 1.5,
+     "description": "手机横屏菜单：紧凑两列、触屏操作说明、返回游戏列表",
+     "facts": [
+      "F-MOBILE",
+      "F-LIST"
+     ]
+    },
+    {
+     "in_seconds": 1.5,
+     "out_seconds": 3.2,
+     "description": "触摸「开始游戏」，登陆艇开场（未自动全屏）",
+     "facts": [
+      "F-MOBILE",
+      "F-DISPLAY"
+     ]
+    },
+    {
+     "in_seconds": 3.2,
+     "out_seconds": 6.8,
+     "description": "摇杆驾驶 + 按住 J 机枪；K 手雷炸开 H0，接上 2 名俘虏",
+     "facts": [
+      "F-MOBILE",
+      "F-BOMB",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 6.8,
+     "out_seconds": 9.1,
+     "description": "连续按 K 抛手雷、击毙步兵；吉普被击毁",
+     "facts": [
+      "F-MOBILE",
+      "F-BOMB",
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 9.1,
+     "out_seconds": 11.2,
+     "description": "在海滩检查点闪烁复活",
+     "facts": [
+      "F-LIVES"
+     ]
+    },
+    {
+     "in_seconds": 11.2,
+     "out_seconds": 17.5,
+     "description": "复活后摇杆继续驾驶（bot 驶向西侧海滩，是自动化寻路的结果，不是游戏行为）",
+     "facts": [
+      "F-MOBILE"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "d8afddb6e5230d28d443218b270cb15aab0f9d2c1b6ddb64d6faa4bd20a69f3d"
+  },
+  {
+   "id": "M03",
+   "file": "releases/v0.1/captures/mobile-portrait-rotated.mp4",
+   "sha256": "3be0a0316a342c0ee45b65e958cc2a516b5f79b3568b32a72740aba18641b3c8",
+   "kind": "video",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "手机竖屏 390×844（截图 780×1688）物理画面：开始后游戏容器自动旋转为横屏布局，触控坐标做逆变换。不是 16:9 母版，画面在竖屏里是侧躺的。Chromium 设备模拟（isMobile/hasTouch，DPR2，Pixel 8 UA）+ CDP 多点触摸事件驱动虚拟摇杆与 J/K 键；bot 只做决策，再换算成摇杆方向；手动时钟逐帧渲染（?q=high）；音轨同样按事件离线渲染；非真机。",
+   "width": 780,
+   "height": 1688,
+   "duration_seconds": 13.5,
+   "frame_rate": "30/1",
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 1.5,
+     "description": "竖屏菜单正常显示（不旋转、没有横屏阻断提示）",
+     "facts": [
+      "F-MOBILE"
+     ]
+    },
+    {
+     "in_seconds": 1.5,
+     "out_seconds": 3.2,
+     "description": "触摸开始后自动旋转为横屏布局，登陆艇开场",
+     "facts": [
+      "F-MOBILE",
+      "F-DISPLAY"
+     ]
+    },
+    {
+     "in_seconds": 3.2,
+     "out_seconds": 9.1,
+     "description": "旋转布局下摇杆、J、K 操作：炸开 H0、接俘虏，随后被击毁",
+     "facts": [
+      "F-MOBILE",
+      "F-POW"
+     ]
+    },
+    {
+     "in_seconds": 9.1,
+     "out_seconds": 13.5,
+     "description": "复活并继续驾驶",
+     "facts": [
+      "F-LIVES",
+      "F-MOBILE"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "caa835f47ea09e7fbfb89fbe7768951bb2e3be515fac620edfe0eac59a7ba8c7"
+  },
+  {
+   "id": "A01",
+   "file": "releases/v0.1/captures/full-run-audio.flac",
+   "sha256": "1a0d951fe0ef9a75e946bfd57994bc41544d1a97238a91cf7cb278fcada26af1",
+   "kind": "audio",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "M01 的无损游戏音轨（48 kHz 立体声 FLAC，与 M01 源时间轴完全对齐，0～3 秒为菜单静音段）。音轨不是实时录音：记录每次音效调用的游戏时间，由游戏自身的 WebAudio 合成函数在 OfflineAudioContext 中离线渲染后混入，事件与画面逐帧对齐（抽查炸 H0、炸大门、阵亡、通关四处，电平峰值都在事件后 0.05～0.1 秒内）。整体约 -21 dBFS，峰值约 -3 dBFS。",
+   "width": null,
+   "height": null,
+   "duration_seconds": 213.367,
+   "audio": "game",
+   "visual_review": "not-applicable",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 3.0,
+     "out_seconds": 213.36,
+     "description": "关卡进行曲 → Boss 曲 → 通关乐句，含全部音效",
+     "facts": [
+      "F-AUDIO"
+     ]
+    }
+   ],
+   "cloud_original_sha256": "412d790b20fbe9a6ce226e04590d3983815a657ee6f069514cd944e712da69ef"
+  },
+  {
+   "id": "S01",
+   "file": "releases/v0.1/captures/s-title-menu.png",
+   "sha256": "bdef7cd0a740e02347ad3cb7abd8fca3afabb541e0ef517c0e94a0d81cba22f9",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "桌面主菜单（1280×720）：标题、规则、键位、选项、版权说明。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "dd7591b1766c5d721d41f2c3345bfb72d5a5e3e24369be173a1e3cd07271089c"
+  },
+  {
+   "id": "S02",
+   "file": "releases/v0.1/captures/s-intro-landing.png",
+   "sha256": "7e796625c854e4875cb78fa3e90189d9ea60084208379af07098afeea8705d0f",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "登陆艇开场与「第一关 · 海滩登陆」横幅。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "e73fb72256d2749cd15ff0da9e54479ddf7efbd461f40dedc53f983812a78eed"
+  },
+  {
+   "id": "S03",
+   "file": "releases/v0.1/captures/s-hut-h0-blown.png",
+   "sha256": "8e926be5af885448f078f33befa315e8d34578df2121e6662d1d7b1d7877457c",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "手雷炸毁营房 H0 的瞬间。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "f48346439fbc46cd8500aabce4dcca52bf135be6ca837c4f5fb558145662c68c"
+  },
+  {
+   "id": "S04",
+   "file": "releases/v0.1/captures/s-pow-pickup.png",
+   "sha256": "e039baabeb60696bbc90454518ec963312fb8f249dd1c1004fb48af2d100d13b",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "俘虏跑出营房，吉普接人。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "3743b0b686b7385867c84703c7fd50186b04a1eef6bf65ee705088ee1a07be15"
+  },
+  {
+   "id": "S05",
+   "file": "releases/v0.1/captures/s-upgrade-rocket.png",
+   "sha256": "531d5e35b7f1ca3f4dfaab32981d5f9683e66ca141c1f7c6a7b52a0ba8c00179",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "接到闪光俘虏：「武器升级：火箭」横幅。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "391bd53615eee7cd4ff643a86ec9ee8d5fbc85bba517ce91dba4d73a372659c3"
+  },
+  {
+   "id": "S06",
+   "file": "releases/v0.1/captures/s-gate-blown.png",
+   "sha256": "bc1c1b8ccfcccec9df7accc4b788d6cc0baa032a760d0b45a366467685864952",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "营地大门被炸开（横幅 + 检查点提示）。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "2fbe03f588887be675a660d123e340b2a5f59b509ceee303977a7ea474f96a8e"
+  },
+  {
+   "id": "S07",
+   "file": "releases/v0.1/captures/s-player-down.png",
+   "sha256": "d014a779d0d03c0e3f017a0465d730987025464c09ff046f66cf0b9a0cfcfa2c",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "吉普被击毁，提示车上俘虏散落。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "cf5d71678864ac89fe0f97e2156a6147ac3fd301b2293e936a7f6acf374c6f3e"
+  },
+  {
+   "id": "S08",
+   "file": "releases/v0.1/captures/s-respawn.png",
+   "sha256": "4b4f7587353d38412cf47426781ae922bdc1a208c1bd8cc8cddc7a1174cb6321",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "在检查点闪烁复活。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "4ca7c58babf991318a88265d986fcd8427b347d361b3f958495d6028a439c515"
+  },
+  {
+   "id": "S09",
+   "file": "releases/v0.1/captures/s-star-revealed.png",
+   "sha256": "c99efb9892756f1ded57a5b9c48077d590025a6212332b5fa0155b07aecf8353",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "林角隐藏星被炸出。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "0a11dc45130d0b512f8f4464d7f1c7e784e11bc5199c0de985464756d04386e6"
+  },
+  {
+   "id": "S10",
+   "file": "releases/v0.1/captures/s-heli-delivery.png",
+   "sha256": "def5821d832cd4cc65572a94f96b9a3cffc5eae84380d06476c8d9bfc440ad3c",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "直升机坪送达俘虏。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "0c91c648c778876d1333eb73239947ba07223606cc452f87f41918ff9f7856a6"
+  },
+  {
+   "id": "S11",
+   "file": "releases/v0.1/captures/s-boss-fight.png",
+   "sha256": "99771f6265fddc4df72f8824b41dc1274d4c1c0c38670b77553efba610e8e200",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "Boss 战：蓝色坦克开进、BOSS 血条。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "329f3ae9f770c6fad2b708d7f209705a4528f987b23ee1205a287f308b100bdb"
+  },
+  {
+   "id": "S12",
+   "file": "releases/v0.1/captures/s-boss-damaged.png",
+   "sha256": "ca6b9370d3eeaddb36e29608ba080daa7f89e3bd686031dfd4cfe435f8c34284",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "Boss 坦克受击（蓝 → 棕）。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "41d17d07dd4f4cb69793510e1e188db5560acfa7ebcebc0d6790056e4bf326e0"
+  },
+  {
+   "id": "S13",
+   "file": "releases/v0.1/captures/s-stage-clear.png",
+   "sha256": "afc7345f33f347ea02c994e7a3701ace6c1bb58ab62e5451d5fca0890f4fa062",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "「第一关完成！」与救援直升机。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "e532cca45f8656c0bb0498af85bb2d84e361c043d2d626188e7d86e3d56769e0"
+  },
+  {
+   "id": "S14",
+   "file": "releases/v0.1/captures/s-result.png",
+   "sha256": "96b2e1013cbd30b5923f0e0b1961f6883cb749c0c1c3b2c3ecc423396262debe",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "结算表。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "2fc3d6a9e4904ef85d06f72fd2f5ef4edd75f46f2718f73790f7448da829982c"
+  },
+  {
+   "id": "S15",
+   "file": "releases/v0.1/captures/s-camera-oblique.png",
+   "sha256": "00473c9b3dbf2f0bc4d6830069bf7154d68d54859dc7c77aeaa2135a64a457a8",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "视角：斜俯视（默认），木桥。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "d140e31332054491c4c82ae4f2459206a866d503f0ea78f46db680356010b387"
+  },
+  {
+   "id": "S16",
+   "file": "releases/v0.1/captures/s-camera-top.png",
+   "sha256": "c7726b99bdd18bba8930cec1740ba9d4159e98650ef87f11350b8c22b424c622",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "视角：俯视。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "5b5341d4b42ac85a39e790cf1f74b2b44b6ebe0a9cf495492ec36fa14bb8e44b"
+  },
+  {
+   "id": "S17",
+   "file": "releases/v0.1/captures/s-camera-low.png",
+   "sha256": "f41ba78596bc0a7dc0e572421e08626704296e9f810a887b3999acbd05c9e5fd",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "视角：近景斜视。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "c7aa73d7fa4c32b923fcab7a44fce68d92f587895becda126adad360c2e70b86"
+  },
+  {
+   "id": "S18",
+   "file": "releases/v0.1/captures/s-pause-menu.png",
+   "sha256": "e22ce5aa969037fed167d43a7350f7284f54d6cd6ed4d9caf746bbb0323dd343",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "桌面暂停菜单。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "a7cae839812324afbb604be80d3c64ee4aa8676e59586c7bfc5aab24537e47e2"
+  },
+  {
+   "id": "S19",
+   "file": "releases/v0.1/captures/s-demo-badge-fps.png",
+   "sha256": "615a0a3befafe740a239a88bacf96092a211214b23c96ea52aac02217e58c535",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "realtime-automation",
+   "description": "演示模式红色标识与帧率显示（实时渲染，SwiftShader 下的低帧率数字不代表真实设备）。实时渲染，脚本操作",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "650bae64ccbd869c39d0706f3bcb6ff6d82b906ffbce93fbf9fd945a29b35613"
+  },
+  {
+   "id": "S20",
+   "file": "releases/v0.1/captures/s-m-land-menu.png",
+   "sha256": "fd0ff2cb7c7c1a7d43b39dd38a88a1c466a526aa3e48cc469fcc90a7a7bcc126",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "realtime-automation",
+   "description": "手机横屏菜单（844×390，DPR3）。实时渲染，脚本操作",
+   "width": 2532,
+   "height": 1170,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "febdd68462a04853f863f8350b15dc87f835450a82a870e726edb416e751b0d5"
+  },
+  {
+   "id": "S21",
+   "file": "releases/v0.1/captures/s-m-land-play.png",
+   "sha256": "97a126fd5f718c47b768fd972033a42d88c9ed4cad5199267d28f84380460f4c",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "手机横屏游戏：左摇杆、J/K/C、右上角暂停/全屏。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 2532,
+   "height": 1170,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "d02bf03cf5a4941e04297cd591e0f332d09699320f23147445121775e6dd6ff7"
+  },
+  {
+   "id": "S22",
+   "file": "releases/v0.1/captures/s-m-land-multitouch.png",
+   "sha256": "f9ed56028b993bd15c718783551c0ccf0c6377a414c6b9d3cf86e0352a126aa5",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "三指同时：摇杆 + 按住 J + K 抛手雷。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 2532,
+   "height": 1170,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "ea36e5c0ccf9b3650cc865838074bed2bb780adb6c9720cfe2395f4ca2021209"
+  },
+  {
+   "id": "S23",
+   "file": "releases/v0.1/captures/s-m-land-pause.png",
+   "sha256": "5f923471d9d956f8e156f26b64c5afdc705eade51b6a370e3bc40d469bd476e0",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "手机横屏暂停菜单（两列）。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 2532,
+   "height": 1170,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "67953a7cccab81e93e76184247cb87a90e99eb02062f50481abd47e2579ff41b"
+  },
+  {
+   "id": "S24",
+   "file": "releases/v0.1/captures/s-m-port-menu.png",
+   "sha256": "4904228d84d0a3d68ad65f9615853e3ef27dea84b69c8cabc51c5a157108867f",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "realtime-automation",
+   "description": "手机竖屏菜单（390×844）。实时渲染，脚本操作",
+   "width": 1170,
+   "height": 2532,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "083819312799ac543443529768dde4a1ca2903f03db3239247f395b881dc9b64"
+  },
+  {
+   "id": "S25",
+   "file": "releases/v0.1/captures/s-m-port-play.png",
+   "sha256": "bfb95a5cc4f1dff1eaad7b76404b0571a78c522650fb411faf5e6b3e9d3d49e8",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "手机竖屏开始后自动旋转为横屏布局。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1170,
+   "height": 2532,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "46007657c36440b39c9e68fcc72c265f1ec07f2caf1d9f9f2b790022eb460538"
+  },
+  {
+   "id": "S26",
+   "file": "releases/v0.1/captures/s-m-port-pause.png",
+   "sha256": "b80bff23fbeb370ba5e592677f055b843aee8a5c2ea09102bb24442f5df68509",
+   "kind": "screenshot",
+   "version": "v0.1",
+   "build_id": "v0.1-7c08b3582259",
+   "capture_mode": "offline-render",
+   "description": "旋转布局下的暂停菜单。手动时钟渲染（qa/shots.js、extras.js、mobile.js），bot 或脚本操作",
+   "width": 1170,
+   "height": 2532,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "cloud_original_sha256": "6d6aacc99ce74f14b89a31b43fe7b4ea9ad9889aa58de711728477d5a58a89f1"
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "area": "桌面纯键盘",
+   "device": "Playwright 1.56.0 Chromium 无头，SwiftShader 软件渲染，1280×720，?q=low",
+   "method": "qa/desktop.js：菜单流程用实时时钟，玩法检查用手动时钟（按键是真实键盘事件）",
+   "result": "62/62 通过",
+   "evidence": [
+    "releases/v0.1/qa/desktop.json"
+   ],
+   "untested": [
+    "真实键盘之外的输入法 / 外接手柄"
+   ]
+  },
+  {
+   "area": "手机触控",
+   "device": "Chromium 设备模拟（isMobile/hasTouch，DPR3，Pixel 8 UA），844×390 与 390×844",
+   "method": "qa/mobile.js：CDP 多点触摸事件；横屏摇杆 / J / K / C、多点、touchcancel、暂停、全屏、竖屏自动旋转与逆变换、横竖切换",
+   "result": "30/30 通过",
+   "evidence": [
+    "releases/v0.1/qa/mobile.json",
+    "M02",
+    "M03"
+   ],
+   "untested": [
+    "真机触控（Android Chrome、iOS Safari）",
+    "iOS 不支持元素全屏时的回退只按代码判断"
+   ]
+  },
+  {
+   "area": "整关可通关",
+   "device": "无头 Chromium，1280×720",
+   "method": "qa/botrun.js：bot 用真实键盘事件打完整关（手动时钟）",
+   "result": "3/3 通关：seed 11 送达 19/19、阵亡 5；seed 23 送达 0（bot 任务逻辑超时放弃送达，见 bot-runs.json）、阵亡 4；seed 67 送达 19/19、阵亡 1。录像局 seed 41 送达 19/19、阵亡 4、69600 分",
+   "evidence": [
+    "releases/v0.1/qa/bot-runs.json",
+    "M01-01"
+   ],
+   "untested": [
+    "真人试玩"
+   ]
+  },
+  {
+   "area": "画面稳定性",
+   "device": "离线逐帧录像 6401 帧",
+   "method": "人工抽看 16 帧 + 全帧亮度 / 相邻帧差分扫描（qa/full-run-frame-scan.json）",
+   "result": "pass：没有闪烁候选；8 个最大跳变帧都对应转场（开局、4 次复活镜头切换、阵亡爆炸、结算弹出）",
+   "evidence": [
+    "releases/v0.1/qa/full-run-frame-scan.json",
+    "M01-01"
+   ],
+   "untested": [
+    "真实 GPU 上的阴影 / 抗锯齿表现"
+   ]
+  },
+  {
+   "area": "性能（软件渲染）",
+   "device": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+   "method": "qa/perf.js：bot 实时游玩 25 秒，采样 rAF 间隔与每帧 JS 耗时（与录像分开测）",
+   "result": "1280×720 高画质 1.29 fps（中位 767 ms）；1280×720 流畅 2.58 fps；640×360 流畅 5.77 fps；手机模拟 844×390 DPR3 0.94 fps。每帧 JS 约 5～16 ms，瓶颈在软件光栅。绘制调用 70～96 次，三角形约 15～17 万。没有达到 60/30 fps 目标，但这是无 GPU 环境的结果，不能外推到真实设备",
+   "evidence": [
+    "releases/v0.1/qa/perf.json"
+   ],
+   "untested": [
+    "真实显卡测帧（尝试在用户 4060 Ti 电脑的内置浏览器打开托管版，但该浏览器未登录 claude.ai，没有完成）",
+    "真机手机测帧"
+   ]
+  },
+  {
+   "area": "音频",
+   "device": "OfflineAudioContext（无头 Chromium）",
+   "method": "离线渲染的音轨做电平检查与事件对齐抽查",
+   "result": "音轨存在，整体约 -21 dBFS、峰值约 -3 dBFS；4 处事件对齐抽查通过",
+   "evidence": [
+    "A01"
+   ],
+   "untested": [
+    "人工听审",
+    "实时播放时的混音（与离线渲染使用同一套合成函数）"
+   ]
+  },
+  {
+   "area": "其他",
+   "device": "无头 Chromium",
+   "method": "qa/filetest.js（file:// 直接打开）、返回游戏列表链接、最高分命名空间",
+   "result": "file:// 可运行；三个界面的返回链接都是 ../index.html；演示模式局不计最高分",
+   "evidence": [
+    "releases/v0.1/qa/desktop.json"
+   ],
+   "untested": [
+    "接入 toolbasecamp 网站后的子目录部署"
+   ]
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "not_applicable",
+  "gaps": [
+   "实机画面是离线逐帧渲染（无 GPU 环境），不是实时录屏；音轨按事件离线渲染，不是实时录音。剪辑时如需「实时试玩」素材，要在有显卡的电脑上补录",
+   "音效与音乐没有人工听审",
+   "没有真人试玩录像",
+   "没有真实显卡 / 真机的帧率数据",
+   "16:9 母版因写回上限切成 10 段，使用前用 full-run-16x9.concat.txt 无损拼接"
+  ]
+ }
+}

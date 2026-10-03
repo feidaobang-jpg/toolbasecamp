@@ -1,0 +1,248 @@
+{
+  "when": "2026-10-02T06:32:45.909Z",
+  "note": "云端无 GPU：SwiftShader 软件渲染（2 核 CPU）。帧率主要受软件光栅限制（每帧 JS 只有几毫秒），不能外推到真实电脑或手机；手机为设备模拟。",
+  "runs": [
+    {
+      "name": "desktop-1280x720-high",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "browser": "Chromium headless (Playwright 1.56.0)",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "dpr": 1,
+      "quality": "high",
+      "effective": {
+        "setting": "high",
+        "effective": "high",
+        "auto": null
+      },
+      "backing": [
+        1280,
+        720
+      ],
+      "seconds": 25,
+      "route": "bot 实时游玩（seed=41），从 0,60 开始",
+      "frameInterval": {
+        "n": 31,
+        "mean_ms": 776.85,
+        "fps": 1.29,
+        "median_ms": 766.6,
+        "p95_ms": 1500,
+        "max_ms": 1516.6,
+        "over50ms": 31
+      },
+      "jsPerFrame": {
+        "n": 31,
+        "mean_ms": 5.48,
+        "fps": 182.46,
+        "median_ms": 4.8,
+        "p95_ms": 11.8,
+        "max_ms": 16.3,
+        "over50ms": 0
+      },
+      "drawCalls": {
+        "min": 70,
+        "max": 70
+      },
+      "triangles": {
+        "min": 147126,
+        "max": 147126
+      },
+      "memory": {
+        "geometries": 53,
+        "textures": 2
+      },
+      "gameTimeAdvanced": 3.72,
+      "finalPos": {
+        "x": -14.74,
+        "y": 25.44,
+        "dir": 0,
+        "alive": true,
+        "invuln": 0,
+        "shield": 0,
+        "moving": true
+      }
+    },
+    {
+      "name": "desktop-1280x720-low",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "browser": "Chromium headless (Playwright 1.56.0)",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "dpr": 1,
+      "quality": "low",
+      "effective": {
+        "setting": "low",
+        "effective": "low",
+        "auto": null
+      },
+      "backing": [
+        1280,
+        720
+      ],
+      "seconds": 25,
+      "route": "bot 实时游玩（seed=41），从 0,60 开始",
+      "frameInterval": {
+        "n": 64,
+        "mean_ms": 387.48,
+        "fps": 2.58,
+        "median_ms": 366.6,
+        "p95_ms": 766.7,
+        "max_ms": 1016.6,
+        "over50ms": 59
+      },
+      "jsPerFrame": {
+        "n": 64,
+        "mean_ms": 16.17,
+        "fps": 61.84,
+        "median_ms": 5,
+        "p95_ms": 11.1,
+        "max_ms": 714,
+        "over50ms": 1
+      },
+      "drawCalls": {
+        "min": 70,
+        "max": 75
+      },
+      "triangles": {
+        "min": 146910,
+        "max": 162110
+      },
+      "memory": {
+        "geometries": 53,
+        "textures": 1
+      },
+      "gameTimeAdvanced": 6.95,
+      "finalPos": {
+        "x": -10.44,
+        "y": 32.82,
+        "dir": 2,
+        "alive": true,
+        "invuln": 0,
+        "shield": 0,
+        "moving": true
+      }
+    },
+    {
+      "name": "desktop-640x360-low",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "browser": "Chromium headless (Playwright 1.56.0)",
+      "viewport": {
+        "width": 640,
+        "height": 360
+      },
+      "dpr": 1,
+      "quality": "low",
+      "effective": {
+        "setting": "low",
+        "effective": "low",
+        "auto": null
+      },
+      "backing": [
+        640,
+        360
+      ],
+      "seconds": 25,
+      "route": "bot 实时游玩（seed=41），从 0,60 开始",
+      "frameInterval": {
+        "n": 143,
+        "mean_ms": 173.19,
+        "fps": 5.77,
+        "median_ms": 166.7,
+        "p95_ms": 316.7,
+        "max_ms": 483.3,
+        "over50ms": 131
+      },
+      "jsPerFrame": {
+        "n": 143,
+        "mean_ms": 8.22,
+        "fps": 121.72,
+        "median_ms": 4.3,
+        "p95_ms": 11,
+        "max_ms": 468.1,
+        "over50ms": 1
+      },
+      "drawCalls": {
+        "min": 74,
+        "max": 96
+      },
+      "triangles": {
+        "min": 151170,
+        "max": 171790
+      },
+      "memory": {
+        "geometries": 55,
+        "textures": 1
+      },
+      "gameTimeAdvanced": 15.22,
+      "finalPos": {
+        "x": -1.82,
+        "y": 57.82,
+        "dir": 4,
+        "alive": true,
+        "invuln": 0.52,
+        "shield": 0,
+        "moving": false
+      }
+    },
+    {
+      "name": "mobile-emu-844x390-dpr3-auto",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "browser": "Chromium headless (Playwright 1.56.0)",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 3,
+      "quality": "auto",
+      "effective": {
+        "setting": "auto",
+        "effective": "high",
+        "auto": null
+      },
+      "backing": [
+        1688,
+        780
+      ],
+      "seconds": 25,
+      "route": "bot 实时游玩（seed=41），从 0,60 开始",
+      "frameInterval": {
+        "n": 21,
+        "mean_ms": 1061.86,
+        "fps": 0.94,
+        "median_ms": 1000,
+        "p95_ms": 1699.9,
+        "max_ms": 2033.2,
+        "over50ms": 21
+      },
+      "jsPerFrame": {
+        "n": 21,
+        "mean_ms": 5.76,
+        "fps": 173.55,
+        "median_ms": 5.3,
+        "p95_ms": 9.7,
+        "max_ms": 10.3,
+        "over50ms": 0
+      },
+      "drawCalls": null,
+      "triangles": null,
+      "memory": {
+        "geometries": 53,
+        "textures": 2
+      },
+      "gameTimeAdvanced": 2.72,
+      "finalPos": {
+        "x": -17.78,
+        "y": 18.1,
+        "dir": 1,
+        "alive": true,
+        "invuln": 0.2,
+        "shield": 0,
+        "moving": true
+      }
+    }
+  ]
+}

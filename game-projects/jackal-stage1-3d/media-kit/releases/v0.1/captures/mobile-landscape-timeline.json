@@ -1,0 +1,258 @@
+{
+ "mode": "land",
+ "viewport": {
+  "width": 844,
+  "height": 390
+ },
+ "dpr": 2,
+ "fps": 30,
+ "frames": 525,
+ "duration_s": 17.5,
+ "startFrame": 45,
+ "rotated": false,
+ "capture": "offline-render：设备模拟 + CDP 触摸事件，手动时钟逐帧渲染 + page.screenshot；音轨按事件离线渲染",
+ "final": {
+  "score": 400,
+  "carried": 0,
+  "weapon": 1,
+  "pos": {
+   "x": -30.15,
+   "y": 9.9,
+   "dir": 5,
+   "alive": true,
+   "invuln": -0.02,
+   "shield": 0,
+   "moving": false
+  }
+ },
+ "events": [
+  {
+   "t": 0,
+   "t_video": 1.5,
+   "name": "newGame",
+   "data": {
+    "lives": "inf",
+    "demo": false,
+    "seed": 41,
+    "gameNo": 1
+   }
+  },
+  {
+   "t": 1.72,
+   "t_video": 3.22,
+   "name": "introDone",
+   "data": null
+  },
+  {
+   "t": 4.43,
+   "t_video": 5.93,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 0,
+    "x": -14.5,
+    "y": 34
+   }
+  },
+  {
+   "t": 4.43,
+   "t_video": 5.93,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 15,
+    "name": "H0"
+   }
+  },
+  {
+   "t": 4.43,
+   "t_video": 5.93,
+   "name": "grenadeLand",
+   "data": {
+    "x": -14.7,
+    "y": 34.6
+   }
+  },
+  {
+   "t": 4.78,
+   "t_video": 6.28,
+   "name": "grenadeLand",
+   "data": {
+    "x": -14.7,
+    "y": 37.6
+   }
+  },
+  {
+   "t": 5.13,
+   "t_video": 6.63,
+   "name": "grenadeLand",
+   "data": {
+    "x": -14.7,
+    "y": 40.5
+   }
+  },
+  {
+   "t": 5.17,
+   "t_video": 6.67,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": false
+   }
+  },
+  {
+   "t": 5.23,
+   "t_video": 6.73,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "t": 5.48,
+   "t_video": 6.98,
+   "name": "grenadeLand",
+   "data": {
+    "x": -14.7,
+    "y": 40.5
+   }
+  },
+  {
+   "t": 5.83,
+   "t_video": 7.33,
+   "name": "grenadeLand",
+   "data": {
+    "x": -8.9,
+    "y": 38.5
+   }
+  },
+  {
+   "t": 6.18,
+   "t_video": 7.68,
+   "name": "grenadeLand",
+   "data": {
+    "x": -6.8,
+    "y": 40.7
+   }
+  },
+  {
+   "t": 6.53,
+   "t_video": 8.03,
+   "name": "grenadeLand",
+   "data": {
+    "x": -4.6,
+    "y": 42.8
+   }
+  },
+  {
+   "t": 6.88,
+   "t_video": 8.38,
+   "name": "grenadeLand",
+   "data": {
+    "x": -2.5,
+    "y": 30.2
+   }
+  },
+  {
+   "t": 7.23,
+   "t_video": 8.73,
+   "name": "grenadeLand",
+   "data": {
+    "x": -0.4,
+    "y": 28
+   }
+  },
+  {
+   "t": 7.45,
+   "t_video": 8.95,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -6,
+    "y": 52
+   }
+  },
+  {
+   "t": 7.53,
+   "t_video": 9.03,
+   "name": "playerDown",
+   "data": {
+    "cause": "bullet",
+    "x": -3.2,
+    "y": 33.1,
+    "dropped": 2,
+    "weaponWas": 1,
+    "deaths": 1
+   }
+  },
+  {
+   "t": 7.58,
+   "t_video": 9.08,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "explosive",
+    "x": 6,
+    "y": 31.8
+   }
+  },
+  {
+   "t": 7.58,
+   "t_video": 9.08,
+   "name": "grenadeLand",
+   "data": {
+    "x": 4.8,
+    "y": 33.3
+   }
+  },
+  {
+   "t": 7.93,
+   "t_video": 9.43,
+   "name": "grenadeLand",
+   "data": {
+    "x": 6,
+    "y": 33.3
+   }
+  },
+  {
+   "t": 9.45,
+   "t_video": 10.95,
+   "name": "respawn",
+   "data": {
+    "x": -19,
+    "y": 10,
+    "cp": 0
+   }
+  }
+ ],
+ "errors": [],
+ "timeline": [
+  {
+   "frame": 45,
+   "name": "tapStart",
+   "pos": {
+    "x": 633.453125,
+    "y": 77.5
+   }
+  },
+  {
+   "frame": 52,
+   "name": "controls",
+   "joy": {
+    "x": 92,
+    "y": 300
+   },
+   "J": {
+    "x": 771,
+    "y": 313
+   },
+   "K": {
+    "x": 678,
+    "y": 330
+   },
+   "rotated": false
+  }
+ ]
+}

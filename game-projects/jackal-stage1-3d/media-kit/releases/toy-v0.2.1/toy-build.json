@@ -1,0 +1,17 @@
+{
+  "version": "v0.2.1",
+  "source": "public/html/game/jackal-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "f4bf65cb0c5441fcc20b58bc80864873717747a63c6ff8d074fe3bcec9a41301",
+    "index.html": "91f264b010434c6e76a869b4022edb2c79c7848a500973c434e84c2e026ce803",
+    "js/THREE-LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
+    "js/game.min.js": "8349e02e8a8f0639b839fd9dcb02dbb14297636e37be91fbdd62ad22553a577f"
+  },
+  "files": {
+    "css/style.css": "f4bf65cb0c5441fcc20b58bc80864873717747a63c6ff8d074fe3bcec9a41301",
+    "index.html": "09c81e1e1769595cb23b366f4372df48f66f1316ef914129ade23c6285bcd00a",
+    "js/THREE-LICENSE.txt": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
+    "js/game.min.js": "8349e02e8a8f0639b839fd9dcb02dbb14297636e37be91fbdd62ad22553a577f"
+  },
+  "status": "built_not_submitted"
+}

@@ -1,0 +1,31 @@
+{
+ "fingerprint": "sha256:7c08b358225994be7fd9c8ad317d02f28e5d7a9384df36f40ecdbfe2eee605df",
+ "method": "sha256 over sorted \"relative_path\\nfile_sha256\\n\" of every file in public/html/game/jackal-stage1-3d/",
+ "files": [
+  {
+   "path": "cover.jpg",
+   "sha256": "0f130a3796bcced81d38a030a87cbc180d9f3945bcfc6deb9d11056411932a57",
+   "bytes": 40689
+  },
+  {
+   "path": "css/style.css",
+   "sha256": "a69e2c50917a247e5b414b9f1120927426066a3fe5e16ee27b71eafaed686298",
+   "bytes": 14781
+  },
+  {
+   "path": "index.html",
+   "sha256": "2563df15013a35992a7e0204f109b9a2fbc1cf6d08e3091282b2a35d2e946638",
+   "bytes": 6525
+  },
+  {
+   "path": "js/THREE-LICENSE.txt",
+   "sha256": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
+   "bytes": 1102
+  },
+  {
+   "path": "js/game.min.js",
+   "sha256": "f4d958d0106bb7f4b47feb233a3ddb152f4106b4be1e84020e219e63e3b513e2",
+   "bytes": 595106
+  }
+ ]
+}

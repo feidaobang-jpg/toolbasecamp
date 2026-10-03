@@ -1,0 +1,125 @@
+[
+ {
+  "in_seconds": 0.0,
+  "out_seconds": 3.0,
+  "description": "主菜单：标题镜头掠过海滩，菜单里能看到新增的「耐久：标准 3 格」，键盘 Enter 开始",
+  "facts": [
+   "F-ARMOR",
+   "F-DESKTOP"
+  ]
+ },
+ {
+  "in_seconds": 3.0,
+  "out_seconds": 4.8,
+  "description": "登陆艇开场，HUD 命数卡片下有 3 格绿色护甲",
+  "facts": [
+   "F-ARMOR",
+   "F-DRIVE"
+  ]
+ },
+ {
+  "in_seconds": 6.8,
+  "out_seconds": 9.0,
+  "description": "手雷炸开营房 H0：放出 2 名俘虏，同时弹出黄色修理包（源 7.4 秒）",
+  "facts": [
+   "F-ARMOR",
+   "F-POW",
+   "F-DESTRUCT"
+  ],
+  "audio_cue": true
+ },
+ {
+  "in_seconds": 11.0,
+  "out_seconds": 12.6,
+  "description": "被步兵子弹击中：吉普闪白、画面四周闪红，护甲 3 → 2，之后约 1.2 秒闪烁无敌（源 11.4 秒）",
+  "facts": [
+   "F-ARMOR"
+  ],
+  "audio_cue": true
+ },
+ {
+  "in_seconds": 13.8,
+  "out_seconds": 16.2,
+  "description": "炸开营房 H1（闪光俘虏），马上开过掉出的修理包：护甲 2 → 3，提示「修理包：护甲 +1」（源 14.2 / 14.77 秒）",
+  "facts": [
+   "F-ARMOR",
+   "F-POW",
+   "F-UPGRADE"
+  ],
+  "audio_cue": true
+ },
+ {
+  "in_seconds": 20.6,
+  "out_seconds": 28.0,
+  "description": "经过检查点「营地外」「营地内」（护甲是满的，所以没有补满提示），进入营地",
+  "facts": [
+   "F-LIVES"
+  ]
+ },
+ {
+  "in_seconds": 28.2,
+  "out_seconds": 35.0,
+  "description": "营地内炸开 B1、B2，各掉一个修理包；护甲满时修理包留在原地",
+  "facts": [
+   "F-ARMOR",
+   "F-DESTRUCT"
+  ]
+ },
+ {
+  "in_seconds": 41.5,
+  "out_seconds": 46.0,
+  "description": "过桥，检查点「南岸」「北岸」",
+  "facts": [
+   "F-LIVES"
+  ]
+ },
+ {
+  "in_seconds": 46.9,
+  "out_seconds": 48.4,
+  "description": "被守桥坦克的炮弹击中：护甲 3 → 2（炮弹也只扣 1 格，源 47.3 秒）",
+  "facts": [
+   "F-ARMOR",
+   "F-ENEMY"
+  ],
+  "audio_cue": true
+ },
+ {
+  "in_seconds": 48.8,
+  "out_seconds": 51.8,
+  "description": "再中一发子弹只剩 1 格：HUD 护甲变红闪烁，车尾冒深色烟（源 49.1 秒）",
+  "facts": [
+   "F-ARMOR"
+  ],
+  "audio_cue": true
+ },
+ {
+  "in_seconds": 51.8,
+  "out_seconds": 53.8,
+  "description": "第 3 次中弹被击毁：爆炸、四周闪红，车上 11 名俘虏散落，武器回到手雷（源 52.07 秒）",
+  "facts": [
+   "F-ARMOR",
+   "F-LIVES",
+   "F-POW"
+  ],
+  "audio_cue": true
+ },
+ {
+  "in_seconds": 53.8,
+  "out_seconds": 56.0,
+  "description": "在检查点「北岸」闪烁复活，HUD 护甲补满 3 格；复活点就在残骸旁，马上把散落的 11 名俘虏接回车上，同时击毁守桥坦克（源 54.0～55.8 秒）",
+  "facts": [
+   "F-ARMOR",
+   "F-LIVES",
+   "F-POW"
+  ]
+ },
+ {
+  "in_seconds": 56.0,
+  "out_seconds": 61.0,
+  "description": "接上坦克里放出的闪光俘虏，武器升级为火箭（横幅，源 56.33 秒），继续向北；录像在游戏时间 58 秒处结束",
+  "facts": [
+   "F-UPGRADE",
+   "F-POW"
+  ]
+ }
+]

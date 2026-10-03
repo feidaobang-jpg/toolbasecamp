@@ -1,0 +1,143 @@
+[
+ {
+  "id": "A-THREE",
+  "purpose": "3D 渲染库",
+  "original_files": [
+   "D:/project/toolbasecamp/public/html/game/starship-defense/vendor/three.module.js",
+   "D:/project/toolbasecamp/public/html/game/starship-defense/vendor/BufferGeometryUtils.js"
+  ],
+  "runtime_files": [
+   "public/html/game/jackal-stage1-3d/js/game.min.js（打包在内）",
+   "public/html/game/jackal-stage1-3d/js/THREE-LICENSE.txt"
+  ],
+  "source_type": "licensed",
+  "tool_or_model": "Three.js r152（three.module.js sha256 f4ced6dfae77168410b5e8415019c5066b47dd712e71dbbbcb0ed25cf9d9f4da）",
+  "prompt_or_params": null,
+  "processing": "云端无法访问 npm 与 CDN，只读复用用户本机 starship-defense 的固定副本，复制到 game-projects/jackal-stage1-3d/vendor/，由 esbuild 打包（保留 @license 注释）",
+  "usage_terms": "MIT（vendor/LICENSE.txt，随运行文件附 THREE-LICENSE.txt）"
+ },
+ {
+  "id": "A-JEEP",
+  "purpose": "玩家吉普（车身随朝向转动，机枪台与机枪手固定朝北，车斗最多显示 3 名俘虏）",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/models.js#makeJeep"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "原创程序化低模：圆角盒、球、圆柱拼合 + 顶点色，共享 Phong 材质",
+  "prompt_or_params": "车长约 2.6 m、宽 1.6 m；橄榄绿车身、奶油色圆形车标、黄色车灯、黑色轮胎；Q 版大头驾驶员与机枪手",
+  "processing": "合并为车身 / 机枪台 / 4 个车轮 / 3 个乘客网格；接地软阴影贴片",
+  "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-INFANTRY",
+  "purpose": "敌方步兵、军官、原地守卫；俘虏（普通 / 闪光）",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/models.js#makeSoldier",
+   "game-projects/jackal-stage1-3d/src/models.js#makePow"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "原创程序化 Q 版小人（头身比约 1:1），腿 / 手臂为独立网格做行走与挥手动画",
+  "prompt_or_params": "敌兵：砖红军服 + 灰色钢盔；军官：红色大檐帽 + 金扣；俘虏：奶油色上衣 + 浅蓝裤 + 头巾，闪光俘虏为金色上衣、脚下光环、头顶旋转星星",
+  "processing": "按类型缓存合并几何体",
+  "usage_terms": "本项目原创；刻意不使用原作角色造型"
+ },
+ {
+  "id": "A-VEHICLES",
+  "purpose": "坦克（卡其）、Boss 坦克（蓝 → 受损后棕）、炮台、机枪巢、炮艇、救援直升机、登陆艇",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/models.js"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "原创程序化低模，炮塔 / 旋翼为独立网格；Boss 两段受伤时切换蓝 / 棕两套几何体",
+  "prompt_or_params": null,
+  "processing": "被击毁的载具换成深色残骸材质，冒烟后下沉消失",
+  "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-WORLD",
+  "purpose": "关卡场景：顶点色地面（按 44 行分块）、海与河水面（顶点波动）、营地围墙与塔楼、木桥、直升机坪、营房、帐篷、瞭望塔、沙袋、油桶、木箱、崖顶台地、树林、棕榈、灌木、花草",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/level.js",
+   "game-projects/jackal-stage1-3d/src/world.js"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "原创程序化：关卡网格 72×352（每格 1 m），按 NES 版第一关流程手工布置；不可破坏物体按 40 m 区块合并，树林与岩崖块用 InstancedMesh（树林按 32 m 区块拆分以便视锥剔除）",
+  "prompt_or_params": "布景随机数固定种子 20261002 / 77",
+  "processing": "开发中三次调整：草地颜色降饱和并加草丛；岩崖顶面由圆角盒改为无缝平顶（修复前截图 assets/dev-evidence/bluff-tiles-before-devbuild.png）；两块半透明海面合并为一块，消除接缝（修复前截图 assets/dev-evidence/sea-seam-before-devbuild.png）",
+  "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-FX",
+  "purpose": "火球、烟、碎片、火花、水花、冲击环、尘土、金色闪光；投射物（机枪曳光、敌弹光晕、炮弹、手雷、火箭尾焰）；v0.2 新增受击闪白（吉普临时换成受击材质）、只剩 1 格护甲时的车尾黑烟、画面四周的受击红边（CSS 径向渐变，按游戏时间衰减）",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/fx.js",
+   "game-projects/jackal-stage1-3d/src/game.js"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "实例化粒子池（火 160 / 烟 140 / 碎片 140 / 火花 120），上限固定",
+  "prompt_or_params": null,
+  "processing": "烟雾由多面体改为半透明低细分球体并调浅颜色，避免看起来像石块（修复前截图 assets/dev-evidence/smoke-boulders-before-devbuild.png）",
+  "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-KIT",
+  "purpose": "v0.2 修理包：黄色工具箱 + 灰色提手 + 银色扳手，地面绿色光圈脉动；每个营房炸开时掉一个，护甲不满时开过去 +1 格",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/models.js#makeRepairKit",
+   "game-projects/jackal-stage1-3d/src/game.js#spawnKit"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "原创程序化低模：圆角盒、圆柱、圆环拼合 + 顶点色，共享 Phong 材质；光圈为 RingGeometry + 半透明基础材质",
+  "prompt_or_params": "工具箱约 0.9×0.55×0.6 m，离地 0.75 m 上下浮动并自转；掉落时弹起约 1.2 m",
+  "processing": "合并为一个网格并缓存，7 个营房共用",
+  "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-AUDIO",
+  "purpose": "音效与 BGM：关卡进行曲（138 BPM，A 小调）、Boss 战（164 BPM，E 小调）、通关与失败短乐句；机枪、手雷、火箭、爆炸、炮弹、水花、俘虏、升级、检查点、星、警报、引擎声；v0.2 新增受击（hurt）与修理（repair）音效",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/audio.js"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "WebAudio 实时合成（方波 / 三角波 / 噪声 + 滤波），总线压缩器",
+  "prompt_or_params": "旋律为本项目原创编写，不取自原作；见 audio.js 的 SONGS 表",
+  "processing": "录像音轨用同一套合成函数按音效事件的游戏时间在 OfflineAudioContext 中离线渲染（audio.js#renderOffline）；开发中调整过一次混音（爆炸压低、音乐抬高、加压缩器）",
+  "usage_terms": "本项目原创；未经人工听审"
+ },
+ {
+  "id": "A-COVER",
+  "purpose": "游戏列表封面",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/qa/cover.js"
+  ],
+  "runtime_files": [
+   "public/html/game/jackal-stage1-3d/cover.jpg"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "实机渲染截图（无头 Chromium + SwiftShader，手动时钟，隐藏 HUD），1280×720 → 960×540 JPEG",
+  "prompt_or_params": "?seed=9&q=high；吉普在营地大门前，机枪曳光与手雷爆炸",
+  "processing": "由冻结前的开发构建渲染。冻结前之后的改动只涉及特效随机数来源、镜头震动与可视区判定分离、音频混音、菜单版权说明，画面元素与 v0.1 一致",
+  "usage_terms": "本项目原创"
+ }
+]

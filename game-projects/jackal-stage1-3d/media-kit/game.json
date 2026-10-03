@@ -1,0 +1,94 @@
+{
+  "game_id": "jackal-stage1-3d",
+  "name": {
+    "zh": "赤色要塞 · 第一关 3D 重置版",
+    "en": "Jackal · Stage 1 (FC-style 3D remake, fan-made)"
+  },
+  "one_liner": "FC 赤色要塞第一关的 3D 网页重置版：驾驶武装吉普炸开营房救出俘虏、送上直升机，最后击败 4 辆蓝色坦克；默认 3 格护甲、营房掉修理包，也可切回原作的「经典一发」，电脑键盘与手机触屏都能玩。",
+  "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
+  "current_version": "v0.2.1",
+  "handoff": "releases/v0.2.1/handoff.json",
+  "launch": {
+    "public_entry": "public/html/game/jackal-stage1-3d/index.html",
+    "device_root": "D:/project/toolbasecamp",
+    "device_entry": "D:/project/toolbasecamp/public/html/game/jackal-stage1-3d/index.html",
+    "game_list": "D:/project/toolbasecamp/public/games.html（public/js/config.js 的 gamesConfig 动作组）",
+    "site_url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+    "source": "D:/project/toolbasecamp/game-projects/jackal-stage1-3d/src",
+    "build": "在 game-projects/jackal-stage1-3d 运行 node tools/build.mjs（需要 esbuild 0.28.2）；Toy 包：node tools/build-toy.mjs",
+    "serve": "在 D:/project/toolbasecamp/public 目录运行 python -m http.server 8766，然后打开 http://127.0.0.1:8766/html/game/jackal-stage1-3d/index.html",
+    "previous_location": "2026-10-03 前在 D:/project/claude/test（无 Git），原目录保留未删",
+    "url_params": {
+      "seed": "固定随机种子",
+      "test": "=1 时暴露自动化测试钩子 window.__JK_TEST__（玩家界面不暴露）",
+      "clean": "=1 时隐藏桌面键位提示，用于录制",
+      "q": "high / low：测试用强制画质"
+    }
+  },
+  "controls": {
+    "keyboard": {
+      "W/A/S/D（或方向键）": "8 向移动（按相机水平轴映射）",
+      "J（或空格）": "机枪：固定朝画面上方（北）射击，按住连发",
+      "K": "手雷 / 火箭：朝车头方向发射",
+      "C": "循环切换视角：斜俯视 → 俯视 → 近景斜视",
+      "Esc / Enter": "暂停；菜单里 Enter 确认",
+      "F": "全屏（独立操作，开始游戏不会自动全屏）",
+      "↑↓ / ←→": "菜单选择 / 调整选项（命数、耐久「标准 3 格 / 经典一发」、视角、画质、音量等）"
+    },
+    "touch": {
+      "左侧浮动摇杆": "8 向移动",
+      "右侧 J": "机枪，按住连发",
+      "右侧 K": "手雷 / 火箭",
+      "右侧 C": "切换视角",
+      "右上角": "暂停、全屏按钮"
+    }
+  },
+  "release_intent": "web_demo",
+  "verified_public_links": [],
+  "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型、贴图、音乐、音效全部原创；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
+  "dev": {
+    "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
+    "tools": [
+      "Claude Cowork 云端工作区",
+      "Three.js r152（复用 D:/project/toolbasecamp/public/html/game/starship-defense/vendor 的固定副本）",
+      "esbuild 0.28.2",
+      "Playwright 1.56 + Chromium（无头，SwiftShader 软件渲染）",
+      "ffmpeg / ffprobe",
+      "Python Pillow"
+    ],
+    "skill": "web-game-maker（用户 ~/.codex/skills），交接协议来自 game-video/references/development-handoff.md"
+  },
+  "hosted_copy": {
+    "url": "https://claude.ai/artifact/CkhWeEfGUhWgtxd1xAAwXF",
+    "visibility": "private（仅用户本人，可在页面 Share 菜单分享）",
+    "note": "同一份 game.min.js 内联的单文件版本，去掉了「返回游戏列表」入口"
+  },
+  "versions": [
+    {
+      "version": "v0.1",
+      "handoff": "releases/v0.1/handoff.json",
+      "summary": "首版：完整第一关，中一发即毁"
+    },
+    {
+      "version": "v0.2",
+      "handoff": "releases/v0.2/handoff.json",
+      "base_version": "v0.1",
+      "summary": "3 格护甲、营房修理包、检查点补满、耐久选项（经典一发）"
+    },
+    {
+      "version": "v0.2.1",
+      "handoff": "releases/v0.2.1/handoff.json",
+      "base_version": "v0.2",
+      "summary": "搬进 toolbasecamp 上架网站与 Toy；修复部分 Windows 台式机被误判为触屏（显示摇杆、隐藏键位提示）"
+    }
+  ],
+  "toy": {
+    "id": null,
+    "slug": "feidao-jackal-3d",
+    "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "visibility": "public",
+    "review_status": "not_submitted",
+    "verified_at": null,
+    "video_bindings": []
+  }
+}

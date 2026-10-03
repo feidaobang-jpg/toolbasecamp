@@ -1,0 +1,807 @@
+{
+ "seed": "11",
+ "fps": 30,
+ "frames": 1831,
+ "duration_s": 61.033,
+ "startFrame": 90,
+ "viewport": [
+  1280,
+  720
+ ],
+ "quality": "high",
+ "dodge": false,
+ "capture": "offline-render：手动时钟逐帧渲染 + page.screenshot（含 DOM HUD）；bot 通过真实键盘事件操作；音轨由游戏合成器按音效事件的游戏时间离线渲染",
+ "audio": {
+  "events": 762,
+  "peak": 0.8012696504592896
+ },
+ "final": {
+  "mode": "play",
+  "score": 4900,
+  "deaths": 1,
+  "delivered": 0,
+  "kills": {
+   "soldier": 10,
+   "officer": 1,
+   "mg": 2,
+   "cannon": 1,
+   "tank": 1,
+   "boat": 0,
+   "boss": 0,
+   "hut": 4
+  }
+ },
+ "errors": [],
+ "elapsed_s": 1953,
+ "timeline": [
+  {
+   "frame": 90,
+   "t_video": 3,
+   "name": "pressEnter"
+  },
+  {
+   "frame": 90,
+   "t_video": 3,
+   "t_game": 0,
+   "name": "newGame",
+   "data": {
+    "lives": "inf",
+    "demo": false,
+    "armor": "std",
+    "seed": 11,
+    "gameNo": 1
+   }
+  },
+  {
+   "frame": 141,
+   "t_video": 4.7,
+   "t_game": 1.72,
+   "name": "introDone",
+   "data": null
+  },
+  {
+   "frame": 176,
+   "t_video": 5.867,
+   "t_game": 2.9,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -19.5,
+    "y": 30.6
+   }
+  },
+  {
+   "frame": 222,
+   "t_video": 7.4,
+   "t_game": 4.43,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 0,
+    "x": -14.5,
+    "y": 34
+   }
+  },
+  {
+   "frame": 222,
+   "t_video": 7.4,
+   "t_game": 4.43,
+   "name": "kitDropped",
+   "data": {
+    "x": -12.3,
+    "y": 32.4
+   }
+  },
+  {
+   "frame": 222,
+   "t_video": 7.4,
+   "t_game": 4.43,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 15,
+    "name": "H0"
+   }
+  },
+  {
+   "frame": 241,
+   "t_video": 8.033,
+   "t_game": 5.07,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": false
+   }
+  },
+  {
+   "frame": 243,
+   "t_video": 8.1,
+   "t_game": 5.12,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "frame": 327,
+   "t_video": 10.9,
+   "t_game": 7.92,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -7,
+    "y": 41.7
+   }
+  },
+  {
+   "frame": 342,
+   "t_video": 11.4,
+   "t_game": 8.43,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -6,
+    "y": 52
+   }
+  },
+  {
+   "frame": 342,
+   "t_video": 11.4,
+   "t_game": 8.43,
+   "name": "playerHit",
+   "data": {
+    "cause": "bullet",
+    "armor": 2,
+    "x": 0.1,
+    "y": 32.1
+   }
+  },
+  {
+   "frame": 345,
+   "t_video": 11.5,
+   "t_game": 8.53,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "explosive",
+    "x": 6,
+    "y": 34.2
+   }
+  },
+  {
+   "frame": 381,
+   "t_video": 12.7,
+   "t_game": 9.73,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "explosive",
+    "x": 12,
+    "y": 22
+   }
+  },
+  {
+   "frame": 388,
+   "t_video": 12.933,
+   "t_game": 9.97,
+   "name": "kill",
+   "data": {
+    "type": "mg",
+    "by": "bullet",
+    "x": 10,
+    "y": 34
+   }
+  },
+  {
+   "frame": 426,
+   "t_video": 14.2,
+   "t_game": 11.23,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 1,
+    "x": 26.5,
+    "y": 22
+   }
+  },
+  {
+   "frame": 426,
+   "t_video": 14.2,
+   "t_game": 11.23,
+   "name": "kitDropped",
+   "data": {
+    "x": 24.3,
+    "y": 20.4
+   }
+  },
+  {
+   "frame": 426,
+   "t_video": 14.2,
+   "t_game": 11.23,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 16,
+    "name": "H1"
+   }
+  },
+  {
+   "frame": 437,
+   "t_video": 14.567,
+   "t_game": 11.58,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 19.5,
+    "y": 38
+   }
+  },
+  {
+   "frame": 443,
+   "t_video": 14.767,
+   "t_game": 11.78,
+   "name": "kitPicked",
+   "data": {
+    "armor": 3,
+    "classic": false
+   }
+  },
+  {
+   "frame": 450,
+   "t_video": 15,
+   "t_game": 12.03,
+   "name": "upgrade",
+   "data": {
+    "weapon": 2
+   }
+  },
+  {
+   "frame": 450,
+   "t_video": 15,
+   "t_game": 12.03,
+   "name": "powPicked",
+   "data": {
+    "carried": 3,
+    "flash": true
+   }
+  },
+  {
+   "frame": 453,
+   "t_video": 15.1,
+   "t_game": 12.12,
+   "name": "powPicked",
+   "data": {
+    "carried": 4,
+    "flash": false
+   }
+  },
+  {
+   "frame": 454,
+   "t_video": 15.133,
+   "t_game": 12.15,
+   "name": "powPicked",
+   "data": {
+    "carried": 5,
+    "flash": false
+   }
+  },
+  {
+   "frame": 612,
+   "t_video": 20.4,
+   "t_game": 17.42,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 6,
+    "y": 52
+   }
+  },
+  {
+   "frame": 635,
+   "t_video": 21.167,
+   "t_game": 18.2,
+   "name": "checkpoint",
+   "data": {
+    "k": 1,
+    "name": "营地外",
+    "refill": false
+   }
+  },
+  {
+   "frame": 649,
+   "t_video": 21.633,
+   "t_game": 18.65,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "gate",
+    "id": 1,
+    "name": "营地大门"
+   }
+  },
+  {
+   "frame": 817,
+   "t_video": 27.233,
+   "t_game": 24.25,
+   "name": "checkpoint",
+   "data": {
+    "k": 2,
+    "name": "营地内",
+    "refill": false
+   }
+  },
+  {
+   "frame": 822,
+   "t_video": 27.4,
+   "t_game": 24.42,
+   "name": "kill",
+   "data": {
+    "type": "cannon",
+    "by": "rocket",
+    "x": -7,
+    "y": 62
+   }
+  },
+  {
+   "frame": 835,
+   "t_video": 27.833,
+   "t_game": 24.85,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -6.8,
+    "y": 64
+   }
+  },
+  {
+   "frame": 853,
+   "t_video": 28.433,
+   "t_game": 25.47,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 31,
+    "name": null
+   }
+  },
+  {
+   "frame": 855,
+   "t_video": 28.5,
+   "t_game": 25.52,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 30,
+    "name": null
+   }
+  },
+  {
+   "frame": 857,
+   "t_video": 28.567,
+   "t_game": 25.58,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 32,
+    "name": null
+   }
+  },
+  {
+   "frame": 858,
+   "t_video": 28.6,
+   "t_game": 25.63,
+   "name": "powFreed",
+   "data": {
+    "n": 3,
+    "flash": 0,
+    "x": -18,
+    "y": 68
+   }
+  },
+  {
+   "frame": 858,
+   "t_video": 28.6,
+   "t_game": 25.63,
+   "name": "kitDropped",
+   "data": {
+    "x": -15.8,
+    "y": 66.4
+   }
+  },
+  {
+   "frame": 858,
+   "t_video": 28.6,
+   "t_game": 25.63,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 17,
+    "name": "B1"
+   }
+  },
+  {
+   "frame": 879,
+   "t_video": 29.3,
+   "t_game": 26.32,
+   "name": "powPicked",
+   "data": {
+    "carried": 6,
+    "flash": false
+   }
+  },
+  {
+   "frame": 880,
+   "t_video": 29.333,
+   "t_game": 26.35,
+   "name": "powPicked",
+   "data": {
+    "carried": 7,
+    "flash": false
+   }
+  },
+  {
+   "frame": 881,
+   "t_video": 29.367,
+   "t_game": 26.4,
+   "name": "powPicked",
+   "data": {
+    "carried": 8,
+    "flash": false
+   }
+  },
+  {
+   "frame": 980,
+   "t_video": 32.667,
+   "t_game": 29.7,
+   "name": "kill",
+   "data": {
+    "type": "officer",
+    "by": "rocket",
+    "x": -0.9,
+    "y": 81.2
+   }
+  },
+  {
+   "frame": 999,
+   "t_video": 33.3,
+   "t_game": 30.33,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -4,
+    "y": 86.6
+   }
+  },
+  {
+   "frame": 1019,
+   "t_video": 33.967,
+   "t_game": 31,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 1,
+    "x": 18,
+    "y": 78
+   }
+  },
+  {
+   "frame": 1019,
+   "t_video": 33.967,
+   "t_game": 31,
+   "name": "kitDropped",
+   "data": {
+    "x": 15.8,
+    "y": 76.4
+   }
+  },
+  {
+   "frame": 1019,
+   "t_video": 33.967,
+   "t_game": 31,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 18,
+    "name": "B2"
+   }
+  },
+  {
+   "frame": 1065,
+   "t_video": 35.5,
+   "t_game": 32.52,
+   "name": "powPicked",
+   "data": {
+    "carried": 9,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1068,
+   "t_video": 35.6,
+   "t_game": 32.63,
+   "name": "upgrade",
+   "data": {
+    "weapon": 3
+   }
+  },
+  {
+   "frame": 1068,
+   "t_video": 35.6,
+   "t_game": 32.63,
+   "name": "powPicked",
+   "data": {
+    "carried": 10,
+    "flash": true
+   }
+  },
+  {
+   "frame": 1070,
+   "t_video": 35.667,
+   "t_game": 32.68,
+   "name": "powPicked",
+   "data": {
+    "carried": 11,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1119,
+   "t_video": 37.3,
+   "t_game": 34.33,
+   "name": "kill",
+   "data": {
+    "type": "mg",
+    "by": "bullet",
+    "x": 8,
+    "y": 86
+   }
+  },
+  {
+   "frame": 1257,
+   "t_video": 41.9,
+   "t_game": 38.92,
+   "name": "checkpoint",
+   "data": {
+    "k": 3,
+    "name": "南岸",
+    "refill": false
+   }
+  },
+  {
+   "frame": 1364,
+   "t_video": 45.467,
+   "t_game": 42.48,
+   "name": "checkpoint",
+   "data": {
+    "k": 4,
+    "name": "北岸",
+    "refill": false
+   }
+  },
+  {
+   "frame": 1419,
+   "t_video": 47.3,
+   "t_game": 44.33,
+   "name": "playerHit",
+   "data": {
+    "cause": "shell",
+    "armor": 2,
+    "x": -19.1,
+    "y": 133.1
+   }
+  },
+  {
+   "frame": 1474,
+   "t_video": 49.133,
+   "t_game": 46.15,
+   "name": "playerHit",
+   "data": {
+    "cause": "bullet",
+    "armor": 1,
+    "x": -19.1,
+    "y": 133.1
+   }
+  },
+  {
+   "frame": 1562,
+   "t_video": 52.067,
+   "t_game": 49.1,
+   "name": "playerDown",
+   "data": {
+    "cause": "bullet",
+    "x": -19.1,
+    "y": 133.1,
+    "dropped": 11,
+    "weaponWas": 3,
+    "deaths": 1
+   }
+  },
+  {
+   "frame": 1620,
+   "t_video": 54,
+   "t_game": 51.02,
+   "name": "respawn",
+   "data": {
+    "x": -21,
+    "y": 131,
+    "cp": 4
+   }
+  },
+  {
+   "frame": 1620,
+   "t_video": 54,
+   "t_game": 51.02,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1620,
+   "t_video": 54,
+   "t_game": 51.02,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1647,
+   "t_video": 54.9,
+   "t_game": 51.92,
+   "name": "powPicked",
+   "data": {
+    "carried": 3,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1648,
+   "t_video": 54.933,
+   "t_game": 51.97,
+   "name": "powPicked",
+   "data": {
+    "carried": 4,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1655,
+   "t_video": 55.167,
+   "t_game": 52.18,
+   "name": "powFreed",
+   "data": {
+    "n": 0,
+    "flash": 1,
+    "x": -12.5,
+    "y": 135.5
+   }
+  },
+  {
+   "frame": 1655,
+   "t_video": 55.167,
+   "t_game": 52.18,
+   "name": "kill",
+   "data": {
+    "type": "tank",
+    "by": "explosive",
+    "x": -12.5,
+    "y": 135.9
+   }
+  },
+  {
+   "frame": 1659,
+   "t_video": 55.3,
+   "t_game": 52.32,
+   "name": "powPicked",
+   "data": {
+    "carried": 5,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1662,
+   "t_video": 55.4,
+   "t_game": 52.42,
+   "name": "powPicked",
+   "data": {
+    "carried": 6,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1666,
+   "t_video": 55.533,
+   "t_game": 52.55,
+   "name": "powPicked",
+   "data": {
+    "carried": 7,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1671,
+   "t_video": 55.7,
+   "t_game": 52.73,
+   "name": "powPicked",
+   "data": {
+    "carried": 8,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1672,
+   "t_video": 55.733,
+   "t_game": 52.75,
+   "name": "powPicked",
+   "data": {
+    "carried": 9,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1673,
+   "t_video": 55.767,
+   "t_game": 52.8,
+   "name": "powPicked",
+   "data": {
+    "carried": 10,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1675,
+   "t_video": 55.833,
+   "t_game": 52.87,
+   "name": "powPicked",
+   "data": {
+    "carried": 11,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1690,
+   "t_video": 56.333,
+   "t_game": 53.37,
+   "name": "upgrade",
+   "data": {
+    "weapon": 2
+   }
+  },
+  {
+   "frame": 1690,
+   "t_video": 56.333,
+   "t_game": 53.37,
+   "name": "powPicked",
+   "data": {
+    "carried": 12,
+    "flash": true
+   }
+  },
+  {
+   "frame": 1787,
+   "t_video": 59.567,
+   "t_game": 56.6,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -6.4,
+    "y": 156.8
+   }
+  },
+  {
+   "frame": 1831,
+   "name": "timeLimit"
+  }
+ ]
+}

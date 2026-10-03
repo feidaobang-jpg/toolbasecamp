@@ -1,0 +1,1951 @@
+{
+ "seed": "41",
+ "fps": 30,
+ "frames": 6401,
+ "duration_s": 213.367,
+ "startFrame": 90,
+ "viewport": [
+  1280,
+  720
+ ],
+ "quality": "high",
+ "capture": "offline-render：手动时钟逐帧渲染 + page.screenshot（含 DOM HUD）；bot 通过真实键盘事件操作；音轨由游戏合成器按音效事件的游戏时间离线渲染",
+ "audio": {
+  "events": 2566,
+  "peak": 0.7091279029846191
+ },
+ "final": {
+  "mode": "clear",
+  "score": 69600,
+  "deaths": 4,
+  "delivered": 19,
+  "kills": {
+   "soldier": 23,
+   "officer": 2,
+   "mg": 2,
+   "cannon": 1,
+   "tank": 4,
+   "boat": 0,
+   "boss": 4,
+   "hut": 7
+  }
+ },
+ "errors": [],
+ "elapsed_s": 7119,
+ "timeline": [
+  {
+   "frame": 90,
+   "t_video": 3,
+   "name": "pressEnter"
+  },
+  {
+   "frame": 90,
+   "t_video": 3,
+   "t_game": 0,
+   "name": "newGame",
+   "data": {
+    "lives": "inf",
+    "demo": false,
+    "seed": 41,
+    "gameNo": 1
+   }
+  },
+  {
+   "frame": 141,
+   "t_video": 4.7,
+   "t_game": 1.72,
+   "name": "introDone",
+   "data": null
+  },
+  {
+   "frame": 222,
+   "t_video": 7.4,
+   "t_game": 4.43,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 0,
+    "x": -14.5,
+    "y": 34
+   }
+  },
+  {
+   "frame": 222,
+   "t_video": 7.4,
+   "t_game": 4.43,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 15,
+    "name": "H0"
+   }
+  },
+  {
+   "frame": 236,
+   "t_video": 7.867,
+   "t_game": 4.9,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": false
+   }
+  },
+  {
+   "frame": 238,
+   "t_video": 7.933,
+   "t_game": 4.95,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "frame": 351,
+   "t_video": 11.7,
+   "t_game": 8.72,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -10,
+    "y": 45.3
+   }
+  },
+  {
+   "frame": 372,
+   "t_video": 12.4,
+   "t_game": 9.43,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -6,
+    "y": 52
+   }
+  },
+  {
+   "frame": 417,
+   "t_video": 13.9,
+   "t_game": 10.92,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 6,
+    "y": 32.2
+   }
+  },
+  {
+   "frame": 435,
+   "t_video": 14.5,
+   "t_game": 11.53,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "explosive",
+    "x": 13.9,
+    "y": 25.1
+   }
+  },
+  {
+   "frame": 498,
+   "t_video": 16.6,
+   "t_game": 13.63,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 1,
+    "x": 26.5,
+    "y": 22
+   }
+  },
+  {
+   "frame": 498,
+   "t_video": 16.6,
+   "t_game": 13.63,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 16,
+    "name": "H1"
+   }
+  },
+  {
+   "frame": 514,
+   "t_video": 17.133,
+   "t_game": 14.15,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 21.8,
+    "y": 38
+   }
+  },
+  {
+   "frame": 518,
+   "t_video": 17.267,
+   "t_game": 14.3,
+   "name": "upgrade",
+   "data": {
+    "weapon": 2
+   }
+  },
+  {
+   "frame": 518,
+   "t_video": 17.267,
+   "t_game": 14.3,
+   "name": "powPicked",
+   "data": {
+    "carried": 3,
+    "flash": true
+   }
+  },
+  {
+   "frame": 520,
+   "t_video": 17.333,
+   "t_game": 14.37,
+   "name": "powPicked",
+   "data": {
+    "carried": 4,
+    "flash": false
+   }
+  },
+  {
+   "frame": 523,
+   "t_video": 17.433,
+   "t_game": 14.45,
+   "name": "powPicked",
+   "data": {
+    "carried": 5,
+    "flash": false
+   }
+  },
+  {
+   "frame": 611,
+   "t_video": 20.367,
+   "t_game": 17.4,
+   "name": "kill",
+   "data": {
+    "type": "mg",
+    "by": "rocket",
+    "x": 10,
+    "y": 34
+   }
+  },
+  {
+   "frame": 711,
+   "t_video": 23.7,
+   "t_game": 20.73,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 6,
+    "y": 52
+   }
+  },
+  {
+   "frame": 731,
+   "t_video": 24.367,
+   "t_game": 21.38,
+   "name": "checkpoint",
+   "data": {
+    "k": 1,
+    "name": "营地外"
+   }
+  },
+  {
+   "frame": 742,
+   "t_video": 24.733,
+   "t_game": 21.77,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "gate",
+    "id": 1,
+    "name": "营地大门"
+   }
+  },
+  {
+   "frame": 882,
+   "t_video": 29.4,
+   "t_game": 26.43,
+   "name": "checkpoint",
+   "data": {
+    "k": 2,
+    "name": "营地内"
+   }
+  },
+  {
+   "frame": 886,
+   "t_video": 29.533,
+   "t_game": 26.55,
+   "name": "kill",
+   "data": {
+    "type": "cannon",
+    "by": "rocket",
+    "x": -7,
+    "y": 62
+   }
+  },
+  {
+   "frame": 897,
+   "t_video": 29.9,
+   "t_game": 26.93,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -5.9,
+    "y": 64
+   }
+  },
+  {
+   "frame": 919,
+   "t_video": 30.633,
+   "t_game": 27.65,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 31,
+    "name": null
+   }
+  },
+  {
+   "frame": 919,
+   "t_video": 30.633,
+   "t_game": 27.67,
+   "name": "powFreed",
+   "data": {
+    "n": 3,
+    "flash": 0,
+    "x": -18,
+    "y": 68
+   }
+  },
+  {
+   "frame": 919,
+   "t_video": 30.633,
+   "t_game": 27.67,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 17,
+    "name": "B1"
+   }
+  },
+  {
+   "frame": 921,
+   "t_video": 30.7,
+   "t_game": 27.72,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 30,
+    "name": null
+   }
+  },
+  {
+   "frame": 922,
+   "t_video": 30.733,
+   "t_game": 27.77,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 32,
+    "name": null
+   }
+  },
+  {
+   "frame": 937,
+   "t_video": 31.233,
+   "t_game": 28.27,
+   "name": "powPicked",
+   "data": {
+    "carried": 6,
+    "flash": false
+   }
+  },
+  {
+   "frame": 939,
+   "t_video": 31.3,
+   "t_game": 28.32,
+   "name": "powPicked",
+   "data": {
+    "carried": 7,
+    "flash": false
+   }
+  },
+  {
+   "frame": 940,
+   "t_video": 31.333,
+   "t_game": 28.37,
+   "name": "powPicked",
+   "data": {
+    "carried": 8,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1026,
+   "t_video": 34.2,
+   "t_game": 31.22,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "sandbag",
+    "id": 39,
+    "name": null
+   }
+  },
+  {
+   "frame": 1026,
+   "t_video": 34.2,
+   "t_game": 31.22,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "sandbag",
+    "id": 40,
+    "name": null
+   }
+  },
+  {
+   "frame": 1052,
+   "t_video": 35.067,
+   "t_game": 32.08,
+   "name": "playerDown",
+   "data": {
+    "cause": "bullet",
+    "x": -6.1,
+    "y": 74.8,
+    "dropped": 8,
+    "weaponWas": 2,
+    "deaths": 1
+   }
+  },
+  {
+   "frame": 1109,
+   "t_video": 36.967,
+   "t_game": 34,
+   "name": "respawn",
+   "data": {
+    "x": 0,
+    "y": 60,
+    "cp": 2
+   }
+  },
+  {
+   "frame": 1155,
+   "t_video": 38.5,
+   "t_game": 35.53,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1162,
+   "t_video": 38.733,
+   "t_game": 35.75,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1169,
+   "t_video": 38.967,
+   "t_game": 36,
+   "name": "powPicked",
+   "data": {
+    "carried": 3,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1172,
+   "t_video": 39.067,
+   "t_game": 36.1,
+   "name": "powPicked",
+   "data": {
+    "carried": 4,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1177,
+   "t_video": 39.233,
+   "t_game": 36.27,
+   "name": "powPicked",
+   "data": {
+    "carried": 5,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1177,
+   "t_video": 39.233,
+   "t_game": 36.27,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -4,
+    "y": 85.6
+   }
+  },
+  {
+   "frame": 1178,
+   "t_video": 39.267,
+   "t_game": 36.3,
+   "name": "powPicked",
+   "data": {
+    "carried": 6,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1186,
+   "t_video": 39.533,
+   "t_game": 36.57,
+   "name": "powPicked",
+   "data": {
+    "carried": 7,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1188,
+   "t_video": 39.6,
+   "t_game": 36.62,
+   "name": "powPicked",
+   "data": {
+    "carried": 8,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1307,
+   "t_video": 43.567,
+   "t_game": 40.6,
+   "name": "kill",
+   "data": {
+    "type": "mg",
+    "by": "bullet",
+    "x": 8,
+    "y": 86
+   }
+  },
+  {
+   "frame": 1311,
+   "t_video": 43.7,
+   "t_game": 40.73,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 1,
+    "x": 18,
+    "y": 78
+   }
+  },
+  {
+   "frame": 1311,
+   "t_video": 43.7,
+   "t_game": 40.73,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 18,
+    "name": "B2"
+   }
+  },
+  {
+   "frame": 1340,
+   "t_video": 44.667,
+   "t_game": 41.7,
+   "name": "upgrade",
+   "data": {
+    "weapon": 2
+   }
+  },
+  {
+   "frame": 1340,
+   "t_video": 44.667,
+   "t_game": 41.7,
+   "name": "powPicked",
+   "data": {
+    "carried": 9,
+    "flash": true
+   }
+  },
+  {
+   "frame": 1370,
+   "t_video": 45.667,
+   "t_game": 42.68,
+   "name": "powPicked",
+   "data": {
+    "carried": 10,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1377,
+   "t_video": 45.9,
+   "t_game": 42.92,
+   "name": "powPicked",
+   "data": {
+    "carried": 11,
+    "flash": false
+   }
+  },
+  {
+   "frame": 1635,
+   "t_video": 54.5,
+   "t_game": 51.52,
+   "name": "checkpoint",
+   "data": {
+    "k": 3,
+    "name": "南岸"
+   }
+  },
+  {
+   "frame": 1742,
+   "t_video": 58.067,
+   "t_game": 55.1,
+   "name": "checkpoint",
+   "data": {
+    "k": 4,
+    "name": "北岸"
+   }
+  },
+  {
+   "frame": 1794,
+   "t_video": 59.8,
+   "t_game": 56.82,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 35,
+    "name": null
+   }
+  },
+  {
+   "frame": 1794,
+   "t_video": 59.8,
+   "t_game": 56.82,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 36,
+    "name": null
+   }
+  },
+  {
+   "frame": 1896,
+   "t_video": 63.2,
+   "t_game": 60.23,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": -27.3,
+    "y": 135.1
+   }
+  },
+  {
+   "frame": 2081,
+   "t_video": 69.367,
+   "t_game": 66.38,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "bluff",
+    "id": 65,
+    "name": null
+   }
+  },
+  {
+   "frame": 2081,
+   "t_video": 69.367,
+   "t_game": 66.38,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "bluff",
+    "id": 66,
+    "name": null
+   }
+  },
+  {
+   "frame": 2180,
+   "t_video": 72.667,
+   "t_game": 69.7,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "bluff",
+    "id": 62,
+    "name": null
+   }
+  },
+  {
+   "frame": 2189,
+   "t_video": 72.967,
+   "t_game": 69.98,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "bluff",
+    "id": 61,
+    "name": null
+   }
+  },
+  {
+   "frame": 2189,
+   "t_video": 72.967,
+   "t_game": 69.98,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "bluff",
+    "id": 63,
+    "name": null
+   }
+  },
+  {
+   "frame": 2288,
+   "t_video": 76.267,
+   "t_game": 73.3,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "bluff",
+    "id": 64,
+    "name": null
+   }
+  },
+  {
+   "frame": 3082,
+   "t_video": 102.733,
+   "t_game": 99.75,
+   "name": "playerDown",
+   "data": {
+    "cause": "bullet",
+    "x": -13.9,
+    "y": 143.5,
+    "dropped": 11,
+    "weaponWas": 2,
+    "deaths": 2
+   }
+  },
+  {
+   "frame": 3139,
+   "t_video": 104.633,
+   "t_game": 101.67,
+   "name": "respawn",
+   "data": {
+    "x": -21,
+    "y": 131,
+    "cp": 4
+   }
+  },
+  {
+   "frame": 3173,
+   "t_video": 105.767,
+   "t_game": 102.78,
+   "name": "powFreed",
+   "data": {
+    "n": 0,
+    "flash": 1,
+    "x": -12.6,
+    "y": 135.7
+   }
+  },
+  {
+   "frame": 3173,
+   "t_video": 105.767,
+   "t_game": 102.78,
+   "name": "kill",
+   "data": {
+    "type": "tank",
+    "by": "explosive",
+    "x": -12.6,
+    "y": 136.1
+   }
+  },
+  {
+   "frame": 3201,
+   "t_video": 106.7,
+   "t_game": 103.72,
+   "name": "upgrade",
+   "data": {
+    "weapon": 2
+   }
+  },
+  {
+   "frame": 3201,
+   "t_video": 106.7,
+   "t_game": 103.72,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": true
+   }
+  },
+  {
+   "frame": 3220,
+   "t_video": 107.333,
+   "t_game": 104.35,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3220,
+   "t_video": 107.333,
+   "t_game": 104.35,
+   "name": "powPicked",
+   "data": {
+    "carried": 3,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3228,
+   "t_video": 107.6,
+   "t_game": 104.62,
+   "name": "powPicked",
+   "data": {
+    "carried": 4,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3232,
+   "t_video": 107.733,
+   "t_game": 104.75,
+   "name": "powPicked",
+   "data": {
+    "carried": 5,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3232,
+   "t_video": 107.733,
+   "t_game": 104.75,
+   "name": "powPicked",
+   "data": {
+    "carried": 6,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3234,
+   "t_video": 107.8,
+   "t_game": 104.83,
+   "name": "powPicked",
+   "data": {
+    "carried": 7,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3242,
+   "t_video": 108.067,
+   "t_game": 105.08,
+   "name": "powPicked",
+   "data": {
+    "carried": 8,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3242,
+   "t_video": 108.067,
+   "t_game": 105.1,
+   "name": "powPicked",
+   "data": {
+    "carried": 9,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3247,
+   "t_video": 108.233,
+   "t_game": 105.27,
+   "name": "powPicked",
+   "data": {
+    "carried": 10,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3251,
+   "t_video": 108.367,
+   "t_game": 105.38,
+   "name": "powPicked",
+   "data": {
+    "carried": 11,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3253,
+   "t_video": 108.433,
+   "t_game": 105.45,
+   "name": "powPicked",
+   "data": {
+    "carried": 12,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3343,
+   "t_video": 111.433,
+   "t_game": 108.45,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -7.8,
+    "y": 159
+   }
+  },
+  {
+   "frame": 3455,
+   "t_video": 115.167,
+   "t_game": 112.2,
+   "name": "checkpoint",
+   "data": {
+    "k": 5,
+    "name": "崖顶"
+   }
+  },
+  {
+   "frame": 3490,
+   "t_video": 116.333,
+   "t_game": 113.37,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": -21.2,
+    "y": 177.2
+   }
+  },
+  {
+   "frame": 3523,
+   "t_video": 117.433,
+   "t_game": 114.47,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 0,
+    "x": -28.5,
+    "y": 184
+   }
+  },
+  {
+   "frame": 3523,
+   "t_video": 117.433,
+   "t_game": 114.47,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 19,
+    "name": "H2"
+   }
+  },
+  {
+   "frame": 3525,
+   "t_video": 117.5,
+   "t_game": 114.52,
+   "name": "kill",
+   "data": {
+    "type": "officer",
+    "by": "bullet",
+    "x": -21.9,
+    "y": 190.9
+   }
+  },
+  {
+   "frame": 3532,
+   "t_video": 117.733,
+   "t_game": 114.75,
+   "name": "powPicked",
+   "data": {
+    "carried": 13,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3533,
+   "t_video": 117.767,
+   "t_game": 114.78,
+   "name": "powPicked",
+   "data": {
+    "carried": 14,
+    "flash": false
+   }
+  },
+  {
+   "frame": 3745,
+   "t_video": 124.833,
+   "t_game": 121.85,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": 6.2,
+    "y": 198.9
+   }
+  },
+  {
+   "frame": 3789,
+   "t_video": 126.3,
+   "t_game": 123.32,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 6.8,
+    "y": 209.9
+   }
+  },
+  {
+   "frame": 3842,
+   "t_video": 128.067,
+   "t_game": 125.1,
+   "name": "starRevealed",
+   "data": null
+  },
+  {
+   "frame": 3868,
+   "t_video": 128.933,
+   "t_game": 125.97,
+   "name": "starPicked",
+   "data": null
+  },
+  {
+   "frame": 3934,
+   "t_video": 131.133,
+   "t_game": 128.15,
+   "name": "checkpoint",
+   "data": {
+    "k": 6,
+    "name": "丛林"
+   }
+  },
+  {
+   "frame": 4026,
+   "t_video": 134.2,
+   "t_game": 131.23,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": -6,
+    "y": 222
+   }
+  },
+  {
+   "frame": 4045,
+   "t_video": 134.833,
+   "t_game": 131.85,
+   "name": "kill",
+   "data": {
+    "type": "officer",
+    "by": "rocket",
+    "x": -12.4,
+    "y": 228.7
+   }
+  },
+  {
+   "frame": 4107,
+   "t_video": 136.9,
+   "t_game": 133.92,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": -16.5,
+    "y": 230.9
+   }
+  },
+  {
+   "frame": 4138,
+   "t_video": 137.933,
+   "t_game": 134.95,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 0,
+    "x": -26.5,
+    "y": 230
+   }
+  },
+  {
+   "frame": 4138,
+   "t_video": 137.933,
+   "t_game": 134.95,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 20,
+    "name": "H3"
+   }
+  },
+  {
+   "frame": 4166,
+   "t_video": 138.867,
+   "t_game": 135.88,
+   "name": "powPicked",
+   "data": {
+    "carried": 15,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4167,
+   "t_video": 138.9,
+   "t_game": 135.92,
+   "name": "powPicked",
+   "data": {
+    "carried": 16,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4303,
+   "t_video": 143.433,
+   "t_game": 140.47,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": -2.6,
+    "y": 240.7
+   }
+  },
+  {
+   "frame": 4394,
+   "t_video": 146.467,
+   "t_game": 143.5,
+   "name": "playerDown",
+   "data": {
+    "cause": "shell",
+    "x": -4.3,
+    "y": 238.8,
+    "dropped": 16,
+    "weaponWas": 2,
+    "deaths": 3
+   }
+  },
+  {
+   "frame": 4452,
+   "t_video": 148.4,
+   "t_game": 145.42,
+   "name": "respawn",
+   "data": {
+    "x": 7,
+    "y": 205,
+    "cp": 6
+   }
+  },
+  {
+   "frame": 4620,
+   "t_video": 154,
+   "t_game": 151.03,
+   "name": "powPicked",
+   "data": {
+    "carried": 1,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4624,
+   "t_video": 154.133,
+   "t_game": 151.17,
+   "name": "powPicked",
+   "data": {
+    "carried": 2,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4626,
+   "t_video": 154.2,
+   "t_game": 151.22,
+   "name": "powPicked",
+   "data": {
+    "carried": 3,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4626,
+   "t_video": 154.2,
+   "t_game": 151.23,
+   "name": "powPicked",
+   "data": {
+    "carried": 4,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4627,
+   "t_video": 154.233,
+   "t_game": 151.27,
+   "name": "powPicked",
+   "data": {
+    "carried": 5,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4629,
+   "t_video": 154.3,
+   "t_game": 151.33,
+   "name": "powPicked",
+   "data": {
+    "carried": 6,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4631,
+   "t_video": 154.367,
+   "t_game": 151.38,
+   "name": "powPicked",
+   "data": {
+    "carried": 7,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4671,
+   "t_video": 155.7,
+   "t_game": 152.73,
+   "name": "kill",
+   "data": {
+    "type": "tank",
+    "by": "explosive",
+    "x": 1.1,
+    "y": 242.4
+   }
+  },
+  {
+   "frame": 4674,
+   "t_video": 155.8,
+   "t_game": 152.83,
+   "name": "powPicked",
+   "data": {
+    "carried": 8,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4678,
+   "t_video": 155.933,
+   "t_game": 152.95,
+   "name": "powPicked",
+   "data": {
+    "carried": 9,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4681,
+   "t_video": 156.033,
+   "t_game": 153.07,
+   "name": "powPicked",
+   "data": {
+    "carried": 10,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4683,
+   "t_video": 156.1,
+   "t_game": 153.12,
+   "name": "powPicked",
+   "data": {
+    "carried": 11,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4683,
+   "t_video": 156.1,
+   "t_game": 153.13,
+   "name": "powPicked",
+   "data": {
+    "carried": 12,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4683,
+   "t_video": 156.1,
+   "t_game": 153.13,
+   "name": "powPicked",
+   "data": {
+    "carried": 13,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4688,
+   "t_video": 156.267,
+   "t_game": 153.3,
+   "name": "powPicked",
+   "data": {
+    "carried": 14,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4689,
+   "t_video": 156.3,
+   "t_game": 153.32,
+   "name": "powPicked",
+   "data": {
+    "carried": 15,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4697,
+   "t_video": 156.567,
+   "t_game": 153.6,
+   "name": "powPicked",
+   "data": {
+    "carried": 16,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4757,
+   "t_video": 158.567,
+   "t_game": 155.58,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 37,
+    "name": null
+   }
+  },
+  {
+   "frame": 4760,
+   "t_video": 158.667,
+   "t_game": 155.7,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "barrel",
+    "id": 38,
+    "name": null
+   }
+  },
+  {
+   "frame": 4764,
+   "t_video": 158.8,
+   "t_game": 155.83,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "explosive",
+    "x": 15.6,
+    "y": 252.1
+   }
+  },
+  {
+   "frame": 4813,
+   "t_video": 160.433,
+   "t_game": 157.47,
+   "name": "checkpoint",
+   "data": {
+    "k": 7,
+    "name": "最后阵地"
+   }
+  },
+  {
+   "frame": 4851,
+   "t_video": 161.7,
+   "t_game": 158.72,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 5.7,
+    "y": 275.2
+   }
+  },
+  {
+   "frame": 4971,
+   "t_video": 165.7,
+   "t_game": 162.73,
+   "name": "powFreed",
+   "data": {
+    "n": 2,
+    "flash": 1,
+    "x": -30.5,
+    "y": 280
+   }
+  },
+  {
+   "frame": 4971,
+   "t_video": 165.7,
+   "t_game": 162.73,
+   "name": "staticDestroyed",
+   "data": {
+    "kind": "hut",
+    "id": 21,
+    "name": "H4"
+   }
+  },
+  {
+   "frame": 4974,
+   "t_video": 165.8,
+   "t_game": 162.82,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": -23.7,
+    "y": 289.5
+   }
+  },
+  {
+   "frame": 4997,
+   "t_video": 166.567,
+   "t_game": 163.58,
+   "name": "powPicked",
+   "data": {
+    "carried": 17,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4998,
+   "t_video": 166.6,
+   "t_game": 163.63,
+   "name": "powPicked",
+   "data": {
+    "carried": 18,
+    "flash": false
+   }
+  },
+  {
+   "frame": 4999,
+   "t_video": 166.633,
+   "t_game": 163.67,
+   "name": "upgrade",
+   "data": {
+    "weapon": 2
+   }
+  },
+  {
+   "frame": 4999,
+   "t_video": 166.633,
+   "t_game": 163.67,
+   "name": "powPicked",
+   "data": {
+    "carried": 19,
+    "flash": true
+   }
+  },
+  {
+   "frame": 5076,
+   "t_video": 169.2,
+   "t_game": 166.23,
+   "name": "kill",
+   "data": {
+    "type": "tank",
+    "by": "rocket",
+    "x": -15.5,
+    "y": 278.2
+   }
+  },
+  {
+   "frame": 5206,
+   "t_video": 173.533,
+   "t_game": 170.55,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 2,
+    "y": 303.5
+   }
+  },
+  {
+   "frame": 5211,
+   "t_video": 173.7,
+   "t_game": 170.73,
+   "name": "kill",
+   "data": {
+    "type": "tank",
+    "by": "rocket",
+    "x": 11.9,
+    "y": 287.9
+   }
+  },
+  {
+   "frame": 5243,
+   "t_video": 174.767,
+   "t_game": 171.78,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 6,
+    "y": 303.5
+   }
+  },
+  {
+   "frame": 5270,
+   "t_video": 175.667,
+   "t_game": 172.68,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 1
+   }
+  },
+  {
+   "frame": 5273,
+   "t_video": 175.767,
+   "t_game": 172.8,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "bullet",
+    "x": 15.2,
+    "y": 298
+   }
+  },
+  {
+   "frame": 5278,
+   "t_video": 175.933,
+   "t_game": 172.97,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 2
+   }
+  },
+  {
+   "frame": 5287,
+   "t_video": 176.233,
+   "t_game": 173.25,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 3
+   }
+  },
+  {
+   "frame": 5295,
+   "t_video": 176.5,
+   "t_game": 173.53,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 4
+   }
+  },
+  {
+   "frame": 5304,
+   "t_video": 176.8,
+   "t_game": 173.82,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 5
+   }
+  },
+  {
+   "frame": 5312,
+   "t_video": 177.067,
+   "t_game": 174.1,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 6
+   }
+  },
+  {
+   "frame": 5321,
+   "t_video": 177.367,
+   "t_game": 174.38,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 7
+   }
+  },
+  {
+   "frame": 5329,
+   "t_video": 177.633,
+   "t_game": 174.67,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 8
+   }
+  },
+  {
+   "frame": 5338,
+   "t_video": 177.933,
+   "t_game": 174.95,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 9
+   }
+  },
+  {
+   "frame": 5346,
+   "t_video": 178.2,
+   "t_game": 175.23,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 10
+   }
+  },
+  {
+   "frame": 5355,
+   "t_video": 178.5,
+   "t_game": 175.52,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 11
+   }
+  },
+  {
+   "frame": 5363,
+   "t_video": 178.767,
+   "t_game": 175.8,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 12
+   }
+  },
+  {
+   "frame": 5372,
+   "t_video": 179.067,
+   "t_game": 176.08,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 13
+   }
+  },
+  {
+   "frame": 5380,
+   "t_video": 179.333,
+   "t_game": 176.37,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 14
+   }
+  },
+  {
+   "frame": 5389,
+   "t_video": 179.633,
+   "t_game": 176.65,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 15
+   }
+  },
+  {
+   "frame": 5397,
+   "t_video": 179.9,
+   "t_game": 176.93,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 16
+   }
+  },
+  {
+   "frame": 5406,
+   "t_video": 180.2,
+   "t_game": 177.22,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 17
+   }
+  },
+  {
+   "frame": 5414,
+   "t_video": 180.467,
+   "t_game": 177.5,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 18
+   }
+  },
+  {
+   "frame": 5423,
+   "t_video": 180.767,
+   "t_game": 177.78,
+   "name": "powDelivered",
+   "data": {
+    "delivered": 19
+   }
+  },
+  {
+   "frame": 5469,
+   "t_video": 182.3,
+   "t_game": 179.33,
+   "name": "checkpoint",
+   "data": {
+    "k": 8,
+    "name": "场地入口"
+   }
+  },
+  {
+   "frame": 5535,
+   "t_video": 184.5,
+   "t_game": 181.53,
+   "name": "kill",
+   "data": {
+    "type": "soldier",
+    "by": "rocket",
+    "x": -2,
+    "y": 303.5
+   }
+  },
+  {
+   "frame": 5587,
+   "t_video": 186.233,
+   "t_game": 183.25,
+   "name": "bossStart",
+   "data": null
+  },
+  {
+   "frame": 5647,
+   "t_video": 188.233,
+   "t_game": 185.25,
+   "name": "bossFight",
+   "data": null
+  },
+  {
+   "frame": 5647,
+   "t_video": 188.233,
+   "t_game": 185.27,
+   "name": "bossSpawn",
+   "data": {
+    "id": 1
+   }
+  },
+  {
+   "frame": 5709,
+   "t_video": 190.3,
+   "t_game": 187.33,
+   "name": "bossDamaged",
+   "data": {
+    "id": 1
+   }
+  },
+  {
+   "frame": 5716,
+   "t_video": 190.533,
+   "t_game": 187.57,
+   "name": "bossTankDown",
+   "data": {
+    "killed": 1
+   }
+  },
+  {
+   "frame": 5716,
+   "t_video": 190.533,
+   "t_game": 187.57,
+   "name": "kill",
+   "data": {
+    "type": "boss",
+    "by": "rocket",
+    "x": 0.3,
+    "y": 341.6
+   }
+  },
+  {
+   "frame": 5750,
+   "t_video": 191.667,
+   "t_game": 188.68,
+   "name": "bossSpawn",
+   "data": {
+    "id": 2
+   }
+  },
+  {
+   "frame": 5822,
+   "t_video": 194.067,
+   "t_game": 191.1,
+   "name": "bossDamaged",
+   "data": {
+    "id": 2
+   }
+  },
+  {
+   "frame": 5833,
+   "t_video": 194.433,
+   "t_game": 191.45,
+   "name": "playerDown",
+   "data": {
+    "cause": "shell",
+    "x": 0.5,
+    "y": 335.4,
+    "dropped": 0,
+    "weaponWas": 2,
+    "deaths": 4
+   }
+  },
+  {
+   "frame": 5852,
+   "t_video": 195.067,
+   "t_game": 192.1,
+   "name": "bossSpawn",
+   "data": {
+    "id": 3
+   }
+  },
+  {
+   "frame": 5890,
+   "t_video": 196.333,
+   "t_game": 193.37,
+   "name": "respawn",
+   "data": {
+    "x": 0,
+    "y": 309.5,
+    "cp": "boss"
+   }
+  },
+  {
+   "frame": 5930,
+   "t_video": 197.667,
+   "t_game": 194.68,
+   "name": "bossTankDown",
+   "data": {
+    "killed": 2
+   }
+  },
+  {
+   "frame": 5930,
+   "t_video": 197.667,
+   "t_game": 194.68,
+   "name": "kill",
+   "data": {
+    "type": "boss",
+    "by": "bullet",
+    "x": 0.5,
+    "y": 334.5
+   }
+  },
+  {
+   "frame": 5950,
+   "t_video": 198.333,
+   "t_game": 195.35,
+   "name": "bossDamaged",
+   "data": {
+    "id": 3
+   }
+  },
+  {
+   "frame": 5955,
+   "t_video": 198.5,
+   "t_game": 195.52,
+   "name": "bossSpawn",
+   "data": {
+    "id": 4
+   }
+  },
+  {
+   "frame": 6105,
+   "t_video": 203.5,
+   "t_game": 200.52,
+   "name": "bossTankDown",
+   "data": {
+    "killed": 3
+   }
+  },
+  {
+   "frame": 6105,
+   "t_video": 203.5,
+   "t_game": 200.52,
+   "name": "kill",
+   "data": {
+    "type": "boss",
+    "by": "bullet",
+    "x": -6.8,
+    "y": 330.6
+   }
+  },
+  {
+   "frame": 6127,
+   "t_video": 204.233,
+   "t_game": 201.25,
+   "name": "bossDamaged",
+   "data": {
+    "id": 4
+   }
+  },
+  {
+   "frame": 6139,
+   "t_video": 204.633,
+   "t_game": 201.67,
+   "name": "bossTankDown",
+   "data": {
+    "killed": 4
+   }
+  },
+  {
+   "frame": 6139,
+   "t_video": 204.633,
+   "t_game": 201.67,
+   "name": "kill",
+   "data": {
+    "type": "boss",
+    "by": "bullet",
+    "x": -5.5,
+    "y": 330.7
+   }
+  },
+  {
+   "frame": 6139,
+   "t_video": 204.633,
+   "t_game": 201.67,
+   "name": "stageClear",
+   "data": {
+    "t": 201.7
+   }
+  },
+  {
+   "frame": 6278,
+   "t_video": 209.267,
+   "t_game": 206.28,
+   "name": "end",
+   "data": {
+    "win": true,
+    "reason": "clear",
+    "score": 69600,
+    "hi": 69600,
+    "newHi": true,
+    "kills": {
+     "soldier": 23,
+     "officer": 2,
+     "mg": 2,
+     "cannon": 1,
+     "tank": 4,
+     "boat": 0,
+     "boss": 4,
+     "hut": 7
+    },
+    "delivered": 19,
+    "lateDeliver": 0,
+    "freed": 19,
+    "total": 19,
+    "powBonus": 38000,
+    "seconds": 206,
+    "deaths": 4,
+    "lives": "inf",
+    "demo": false
+   }
+  },
+  {
+   "frame": 6280,
+   "t_video": 209.333,
+   "name": "resultShown"
+  }
+ ]
+}

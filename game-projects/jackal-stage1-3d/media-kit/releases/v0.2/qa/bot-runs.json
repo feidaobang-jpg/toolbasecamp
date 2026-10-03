@@ -1,0 +1,690 @@
+{
+ "when": "2026-10-02",
+ "build": "v0.2-c71eea837c7f",
+ "method": "qa/botrun.js：手动时钟逐步推进逻辑（不逐帧渲染），bot 通过真实键盘事件操作，视口 1280×720；DODGE=0 关闭躲子弹，ARMOR=classic 预先把菜单「耐久」设为经典一发；bot 很笨，不代表真人水平",
+ "v01_reference": {
+  "seed11": 5,
+  "seed23": 4,
+  "seed67": 1,
+  "note": "v0.1 同一个会躲子弹的 bot 的阵亡次数（v0.1 qa/bot-runs.json）"
+ },
+ "runs": [
+  {
+   "label": "seed11",
+   "config": "会躲子弹 · 标准 3 格",
+   "seed": "11",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 199.5,
+   "deaths": 0,
+   "delivered": 19,
+   "freed": 19,
+   "score": 72050,
+   "kills": {
+    "soldier": 23,
+    "officer": 2,
+    "mg": 2,
+    "cannon": 3,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "std",
+   "dodge": null,
+   "hits": 3,
+   "kitsDropped": 7,
+   "kitsPicked": 1,
+   "refills": 1,
+   "errors": [],
+   "win": true,
+   "deathsAt": [],
+   "botLogTail": [
+    {
+     "t": 102,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 172.3,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 175.6,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "label": "seed23",
+   "config": "会躲子弹 · 标准 3 格",
+   "seed": "23",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 209.1,
+   "deaths": 0,
+   "delivered": 19,
+   "freed": 19,
+   "score": 71900,
+   "kills": {
+    "soldier": 18,
+    "officer": 3,
+    "mg": 1,
+    "cannon": 2,
+    "tank": 4,
+    "boat": 1,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "std",
+   "dodge": null,
+   "hits": 2,
+   "kitsDropped": 7,
+   "kitsPicked": 0,
+   "refills": 1,
+   "errors": [],
+   "win": true,
+   "deathsAt": [],
+   "botLogTail": [
+    {
+     "t": 172,
+     "msg": "stuck",
+     "x": 19.73,
+     "y": 292.58
+    },
+    {
+     "t": 174.9,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 178.1,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "label": "seed67",
+   "config": "会躲子弹 · 标准 3 格",
+   "seed": "67",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 170.3,
+   "deaths": 0,
+   "delivered": 19,
+   "freed": 19,
+   "score": 71450,
+   "kills": {
+    "soldier": 23,
+    "officer": 3,
+    "mg": 2,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "std",
+   "dodge": null,
+   "hits": 2,
+   "kitsDropped": 7,
+   "kitsPicked": 1,
+   "refills": 0,
+   "errors": [],
+   "win": true,
+   "deathsAt": [],
+   "botLogTail": [
+    {
+     "t": 97.8,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 136.7,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 139.2,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "label": "seed41",
+   "config": "会躲子弹 · 标准 3 格（结算截图 S10 来自这一局，?q=high）",
+   "seed": "41",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 148.5,
+   "deaths": 0,
+   "delivered": 19,
+   "freed": 19,
+   "score": 72200,
+   "kills": {
+    "soldier": 20,
+    "officer": 3,
+    "mg": 2,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "std",
+   "dodge": true,
+   "hits": 4,
+   "kitsDropped": 7,
+   "kitsPicked": 2,
+   "refills": 1,
+   "errors": [],
+   "win": true,
+   "deathsAt": [],
+   "botLogTail": [
+    {
+     "t": 119.2,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 119.3,
+     "msg": "stuck",
+     "x": 20.47,
+     "y": 293.08
+    },
+    {
+     "t": 122.9,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "label": "classic11",
+   "config": "会躲子弹 · 经典一发",
+   "seed": "11",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 311.7,
+   "deaths": 8,
+   "delivered": 0,
+   "freed": 19,
+   "score": 22550,
+   "kills": {
+    "soldier": 21,
+    "officer": 3,
+    "mg": 1,
+    "cannon": 1,
+    "tank": 3,
+    "boat": 1,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "classic",
+   "dodge": null,
+   "hits": 0,
+   "kitsDropped": 7,
+   "kitsPicked": 6,
+   "refills": 0,
+   "errors": [],
+   "win": true,
+   "deathsAt": [
+    {
+     "cause": "bullet",
+     "x": -5.2,
+     "y": 74.6,
+     "dropped": 8,
+     "weaponWas": 2,
+     "deaths": 1
+    },
+    {
+     "cause": "bullet",
+     "x": 1.8,
+     "y": 75.8,
+     "dropped": 8,
+     "weaponWas": 1,
+     "deaths": 2
+    },
+    {
+     "cause": "bullet",
+     "x": 6.3,
+     "y": 73.7,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 3
+    },
+    {
+     "cause": "shell",
+     "x": -7.6,
+     "y": 238.3,
+     "dropped": 16,
+     "weaponWas": 3,
+     "deaths": 4
+    },
+    {
+     "cause": "bullet",
+     "x": -8.6,
+     "y": 236.9,
+     "dropped": 14,
+     "weaponWas": 1,
+     "deaths": 5
+    },
+    {
+     "cause": "bullet",
+     "x": -21.8,
+     "y": 292.6,
+     "dropped": 19,
+     "weaponWas": 2,
+     "deaths": 6
+    },
+    {
+     "cause": "shell",
+     "x": 8.5,
+     "y": 345.1,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 7
+    },
+    {
+     "cause": "shell",
+     "x": -4,
+     "y": 338.9,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 8
+    }
+   ],
+   "botLogTail": [
+    {
+     "t": 147.4,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 257,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 267.4,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "label": "nododge-std11",
+   "config": "不躲子弹 · 标准 3 格",
+   "seed": "11",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 208,
+   "deaths": 6,
+   "delivered": 19,
+   "freed": 19,
+   "score": 68700,
+   "kills": {
+    "soldier": 21,
+    "officer": 3,
+    "mg": 2,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "std",
+   "dodge": false,
+   "hits": 19,
+   "kitsDropped": 7,
+   "kitsPicked": 4,
+   "refills": 2,
+   "errors": [],
+   "win": true,
+   "deathsAt": [
+    {
+     "cause": "bullet",
+     "x": -18.8,
+     "y": 132.8,
+     "dropped": 11,
+     "weaponWas": 3,
+     "deaths": 1
+    },
+    {
+     "cause": "shell",
+     "x": 4.8,
+     "y": 242.8,
+     "dropped": 16,
+     "weaponWas": 2,
+     "deaths": 2
+    },
+    {
+     "cause": "shell",
+     "x": -4.5,
+     "y": 238.9,
+     "dropped": 7,
+     "weaponWas": 1,
+     "deaths": 3
+    },
+    {
+     "cause": "shell",
+     "x": -4.9,
+     "y": 238.4,
+     "dropped": 7,
+     "weaponWas": 1,
+     "deaths": 4
+    },
+    {
+     "cause": "shell",
+     "x": 2.3,
+     "y": 285.5,
+     "dropped": 19,
+     "weaponWas": 2,
+     "deaths": 5
+    },
+    {
+     "cause": "shell",
+     "x": 1.6,
+     "y": 338.6,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 6
+    }
+   ],
+   "botLogTail": [
+    {
+     "t": 152.4,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 178.9,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 181.4,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  },
+  {
+   "label": "nododge-classic11",
+   "config": "不躲子弹 · 经典一发",
+   "seed": "11",
+   "mode": "clear",
+   "overlay": "result",
+   "t": 386,
+   "deaths": 28,
+   "delivered": 0,
+   "freed": 19,
+   "score": 23900,
+   "kills": {
+    "soldier": 26,
+    "officer": 2,
+    "mg": 3,
+    "cannon": 1,
+    "tank": 4,
+    "boat": 0,
+    "boss": 4,
+    "hut": 7
+   },
+   "armorMode": "classic",
+   "dodge": false,
+   "hits": 0,
+   "kitsDropped": 7,
+   "kitsPicked": 7,
+   "refills": 0,
+   "errors": [],
+   "win": true,
+   "deathsAt": [
+    {
+     "cause": "bullet",
+     "x": 0.1,
+     "y": 32.1,
+     "dropped": 2,
+     "weaponWas": 1,
+     "deaths": 1
+    },
+    {
+     "cause": "bullet",
+     "x": 10.1,
+     "y": 20.1,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 2
+    },
+    {
+     "cause": "shell",
+     "x": -3.2,
+     "y": 58.6,
+     "dropped": 5,
+     "weaponWas": 2,
+     "deaths": 3
+    },
+    {
+     "cause": "bullet",
+     "x": -18.2,
+     "y": 66.6,
+     "dropped": 8,
+     "weaponWas": 1,
+     "deaths": 4
+    },
+    {
+     "cause": "bullet",
+     "x": 6.8,
+     "y": 80.2,
+     "dropped": 3,
+     "weaponWas": 2,
+     "deaths": 5
+    },
+    {
+     "cause": "shell",
+     "x": -16.3,
+     "y": 135.2,
+     "dropped": 8,
+     "weaponWas": 1,
+     "deaths": 6
+    },
+    {
+     "cause": "shell",
+     "x": -19.2,
+     "y": 132.8,
+     "dropped": 1,
+     "weaponWas": 1,
+     "deaths": 7
+    },
+    {
+     "cause": "bullet",
+     "x": -8.8,
+     "y": 237.4,
+     "dropped": 13,
+     "weaponWas": 2,
+     "deaths": 8
+    },
+    {
+     "cause": "bullet",
+     "x": -6.9,
+     "y": 237.9,
+     "dropped": 13,
+     "weaponWas": 1,
+     "deaths": 9
+    },
+    {
+     "cause": "bullet",
+     "x": -6.3,
+     "y": 239.7,
+     "dropped": 10,
+     "weaponWas": 1,
+     "deaths": 10
+    },
+    {
+     "cause": "bullet",
+     "x": -6.1,
+     "y": 238.3,
+     "dropped": 7,
+     "weaponWas": 1,
+     "deaths": 11
+    },
+    {
+     "cause": "shell",
+     "x": 0,
+     "y": 240.7,
+     "dropped": 13,
+     "weaponWas": 1,
+     "deaths": 12
+    },
+    {
+     "cause": "shell",
+     "x": 4.3,
+     "y": 243.1,
+     "dropped": 9,
+     "weaponWas": 1,
+     "deaths": 13
+    },
+    {
+     "cause": "shell",
+     "x": -2.7,
+     "y": 240.3,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 14
+    },
+    {
+     "cause": "shell",
+     "x": -6.1,
+     "y": 239.5,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 15
+    },
+    {
+     "cause": "shell",
+     "x": -2.3,
+     "y": 240.7,
+     "dropped": 1,
+     "weaponWas": 1,
+     "deaths": 16
+    },
+    {
+     "cause": "shell",
+     "x": 3.8,
+     "y": 243,
+     "dropped": 4,
+     "weaponWas": 1,
+     "deaths": 17
+    },
+    {
+     "cause": "shell",
+     "x": -1.4,
+     "y": 240.7,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 18
+    },
+    {
+     "cause": "shell",
+     "x": -5,
+     "y": 238.9,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 19
+    },
+    {
+     "cause": "bullet",
+     "x": -30.5,
+     "y": 278.4,
+     "dropped": 16,
+     "weaponWas": 2,
+     "deaths": 20
+    },
+    {
+     "cause": "shell",
+     "x": -4.4,
+     "y": 269.2,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 21
+    },
+    {
+     "cause": "bullet",
+     "x": -8.1,
+     "y": 87.6,
+     "dropped": 16,
+     "weaponWas": 1,
+     "deaths": 22
+    },
+    {
+     "cause": "bullet",
+     "x": -10.1,
+     "y": 88.7,
+     "dropped": 6,
+     "weaponWas": 1,
+     "deaths": 23
+    },
+    {
+     "cause": "bullet",
+     "x": -8.1,
+     "y": 86.8,
+     "dropped": 8,
+     "weaponWas": 1,
+     "deaths": 24
+    },
+    {
+     "cause": "shell",
+     "x": 9.7,
+     "y": 276.8,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 25
+    },
+    {
+     "cause": "bullet",
+     "x": 1.1,
+     "y": 299,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 26
+    },
+    {
+     "cause": "shell",
+     "x": -0.1,
+     "y": 326,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 27
+    },
+    {
+     "cause": "shell",
+     "x": 0,
+     "y": 336.2,
+     "dropped": 0,
+     "weaponWas": 1,
+     "deaths": 28
+    }
+   ],
+   "botLogTail": [
+    {
+     "t": 251.8,
+     "goal": "pad",
+     "mi": 31
+    },
+    {
+     "t": 342,
+     "goal": "goto",
+     "mi": 32
+    },
+    {
+     "t": 357.1,
+     "goal": "boss",
+     "mi": 33
+    }
+   ]
+  }
+ ]
+}

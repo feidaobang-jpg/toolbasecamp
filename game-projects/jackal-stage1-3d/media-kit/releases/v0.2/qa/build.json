@@ -1,0 +1,33 @@
+{
+ "fingerprint": "sha256:c71eea837c7f87d6e9a06dbbbbb67a0f62e6daa6dfd95a45ec2e90ac80ad411b",
+ "method": "sha256 over sorted \"relative_path\\nfile_sha256\\n\" of every file in public/html/game/jackal-stage1-3d/",
+ "files": [
+  {
+   "path": "cover.jpg",
+   "sha256": "0f130a3796bcced81d38a030a87cbc180d9f3945bcfc6deb9d11056411932a57",
+   "bytes": 40689
+  },
+  {
+   "path": "css/style.css",
+   "sha256": "f4bf65cb0c5441fcc20b58bc80864873717747a63c6ff8d074fe3bcec9a41301",
+   "bytes": 15992
+  },
+  {
+   "path": "index.html",
+   "sha256": "268699f80004a6a77d09bff9d3123856e3d3065a4f5cce3228fe198f4ab7d231",
+   "bytes": 6859
+  },
+  {
+   "path": "js/THREE-LICENSE.txt",
+   "sha256": "a70d6dc2d2a6464ee9ee503b1881d5aa884abdec63b4c7064f0c5ad827a7d2b4",
+   "bytes": 1102
+  },
+  {
+   "path": "js/game.min.js",
+   "sha256": "9096d2e1d9cc3300e4239e50589e84162ea6b69e173a37a15af58a0a638d430b",
+   "bytes": 599466
+  }
+ ],
+ "device_fingerprint": "sha256:e22ce8c7afa1ecc82a260d9f6314e91be8c40bf8c5a2b37fb22a65ab99db5682",
+ "device_note": "本机 D:/project/claude/test 副本：cover.jpg 在 v0.1 写回时被附加了 C2PA（像素一致），其余 4 个文件与云端逐字节一致"
+}

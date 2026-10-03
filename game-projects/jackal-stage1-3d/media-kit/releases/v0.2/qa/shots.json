@@ -1,0 +1,76 @@
+{
+ "when": "2026-10-02T08:56:41.506Z",
+ "seed": 41,
+ "viewport": [
+  1280,
+  720
+ ],
+ "quality": "high",
+ "capture": "manual-clock render + page.screenshot",
+ "errors": [],
+ "shots": [
+  {
+   "name": "s-v02-title-armor-option",
+   "note": "主菜单新增「耐久：标准 3 格 / 经典一发」，焦点在该项",
+   "t": 0,
+   "armor": 3,
+   "toast": null
+  },
+  {
+   "name": "s-v02-hut-kit-drop",
+   "note": "手雷炸开营房 H0：放出俘虏，同时掉出黄色修理包",
+   "t": 3.3,
+   "armor": 3,
+   "toast": null
+  },
+  {
+   "name": "s-v02-hit-flash",
+   "note": "敌弹命中：吉普闪白、画面四周闪红，HUD 护甲 3 → 2（敌弹由测试钩子放置）",
+   "t": 3.68,
+   "armor": 2,
+   "toast": null
+  },
+  {
+   "name": "s-v02-armor1-smoke",
+   "note": "只剩 1 格护甲：HUD 护甲变红闪烁，车尾冒黑烟",
+   "t": 6.68,
+   "armor": 1,
+   "toast": null
+  },
+  {
+   "name": "s-v02-kit-ahead",
+   "note": "修理包在前方（测试钩子放置，外观与营房掉落的一致）",
+   "t": 7.2,
+   "armor": 1,
+   "toast": null
+  },
+  {
+   "name": "s-v02-kit-picked",
+   "note": "开过修理包：护甲 +1，提示「修理包：护甲 +1」",
+   "t": 7.88,
+   "armor": 2,
+   "toast": "修理包：护甲 +1"
+  },
+  {
+   "name": "s-v02-checkpoint-refill",
+   "note": "经过检查点「营地外」：护甲自动补满，提示「护甲已补满」",
+   "t": 8.73,
+   "armor": 3,
+   "toast": null
+  },
+  {
+   "name": "s-v02-title-classic",
+   "note": "主菜单切到「耐久：经典一发」",
+   "t": 8.73,
+   "armor": 3,
+   "toast": null
+  },
+  {
+   "name": "s-v02-classic-hud",
+   "note": "经典一发：HUD 只有 1 格（金色）并标注「一发」",
+   "t": 3.18,
+   "armor": 1,
+   "toast": null
+  }
+ ]
+}

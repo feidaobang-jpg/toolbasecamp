@@ -74,6 +74,7 @@ game-projects/*/media-kit/**/*.mov
 game-projects/*/media-kit/**/*.wav
 game-projects/*/media-kit/**/*.mp3
 game-projects/*/media-kit/**/*.m4a
+game-projects/*/media-kit/**/*.flac
 game-projects/*/video/**/*.png
 game-projects/*/video/**/*.jpg
 game-projects/*/video/**/*.jpeg
@@ -86,3 +87,4 @@ game-projects/*/video/**/*.mov
 game-projects/*/video/**/*.wav
 game-projects/*/video/**/*.mp3
 game-projects/*/video/**/*.m4a
+game-projects/*/video/**/*.flac
