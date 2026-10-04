@@ -1,0 +1,19 @@
+{
+  "version": "v0.1.0",
+  "source": "public/html/game/cadillacs-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "4d303a3f4a6702cf2b644fb38f87a215257acb3d3a3dba3437affd3dbdc3fbb3",
+    "index.html": "1edc7c7a61991bb18189e8c0aa667bfda2c43fbee0b3553bc275028c0413ed0a",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "1c5227d2b8ea3651ad2ddd74b027685cdc661d5d296c96a17630d856bd6cfbc1"
+  },
+  "files": {
+    "css/style.css": "4d303a3f4a6702cf2b644fb38f87a215257acb3d3a3dba3437affd3dbdc3fbb3",
+    "index.html": "a0b94e65e5e2784f9ce0a7391212170a97346a5073ee7f3f9e094d40f06cb661",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "1c5227d2b8ea3651ad2ddd74b027685cdc661d5d296c96a17630d856bd6cfbc1"
+  },
+  "status": "submitted_auditing",
+  "toy_id": 40412421031936,
+  "submitted_at": "2026-10-04T22:25:13.017Z"
+}
