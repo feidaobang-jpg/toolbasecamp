@@ -1,0 +1,37 @@
+{
+  "code_commit": "80d87eee",
+  "method": "SSH static sync after stale deployment",
+  "verified_at": "2026-10-04T08:53:40.295619+00:00",
+  "checks": [
+    {
+      "file": "index.html",
+      "match": true,
+      "sha256": "a0999c537bc0d54d76cc0cbd0351ccbf63e2a14a97857981dd18ff749814ffa4"
+    },
+    {
+      "file": "game.compat.js",
+      "match": true,
+      "sha256": "3a8c0d7c07fdc6ce69465f2584728df8284769275a416795d96b89685557e8bc"
+    },
+    {
+      "file": "wall-geometry.js",
+      "match": true,
+      "sha256": "72122c0fa6bedf2199d310eb32fadec763db09f61a10474d7f810e46517eb282"
+    },
+    {
+      "file": "fortress-layout.js",
+      "match": true,
+      "sha256": "3adc088ebb3f3844a011596c4781061abe055744904bc6096f5629e9b075c5c4"
+    },
+    {
+      "file": "fortress-world.js",
+      "match": true,
+      "sha256": "3a021eabcee75d52eebf80e675245d930cd7475c43a3a02ffc0451b25e73a504"
+    },
+    {
+      "file": "game.js",
+      "match": true,
+      "sha256": "9c358898f6af9a6a3cf500f119e4b1cf9c5e559ed6635a714d9cf503547f8c9a"
+    }
+  ]
+}

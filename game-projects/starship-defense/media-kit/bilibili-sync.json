@@ -7,9 +7,9 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-parapet-v0.17.7",
-      "last_public_verified_at": "2026-10-04T08:37:49.307Z",
-      "update_block_sha256": "de1de308bf16a1a4795fffb05a1d44750640d18d4b9dda84e5e01bc65858cad7",
+      "last_public_verified_version": "web-low-walls-v0.17.8",
+      "last_public_verified_at": "2026-10-04T09:00:52.241093+00:00",
+      "update_block_sha256": "18b99dfd48a3d6b2109f48f98afa6a8edf3fefab38e800a6cacf749dbe81a989",
       "status": "public_verified"
     },
     {
@@ -18,9 +18,12 @@
       "last_public_verified_version": "web-parapet-v0.17.7",
       "last_public_verified_at": "2026-10-04T08:35:56.661Z",
       "update_block_sha256": "de1de308bf16a1a4795fffb05a1d44750640d18d4b9dda84e5e01bc65858cad7",
-      "status": "public_verified"
+      "status": "pending_review",
+      "pending_version": "web-low-walls-v0.17.8"
     }
   ],
-  "latest_record": "releases/web-parapet-v0.17.7/bilibili-sync.json",
-  "pending": []
+  "latest_record": "releases/web-low-walls-v0.17.8/bilibili-sync.json",
+  "pending": [
+    "BV1Ujad6DEuf"
+  ]
 }
