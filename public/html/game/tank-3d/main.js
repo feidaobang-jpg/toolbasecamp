@@ -1,302 +1,750 @@
-import {installDemoControls} from '../../../js/game/demo-controls.js?v=single-view1';
-import { createWorld, startWorld, stepWorld, ENEMY_TYPES } from './world.js?v=collision-fix1';
-import { TOTAL_STAGES } from './stages.js?v=stages1';
-import { createScene } from './scene.js?v=collision-fix1';
-import { GameAudio } from './audio.js?v=stages1';
+// 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
+// （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
+import { createScene, PRESETS } from './scene.js?v=merge1';
+import { createRun, createWorld, step, turnPlayer, SCORE, TYPE_NAMES, qa } from './sim.js?v=merge1';
+import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
+import { GameAudio } from './audio.js?v=merge1';
 
+const VERSION = 'merge1';
+const STEP = 1 / 60;
+const params = new URLSearchParams(location.search);
+const TEST = params.get('test') === '1' || params.has('qa');
+const CLEAN = params.get('clean') === '1';
 const $ = id => document.getElementById(id);
-const tr = (k, p) => (typeof window.t === 'function' ? window.t(k, p) : k);
-let world = createWorld();
-const audio = new GameAudio();
-const view = createScene($('world'), world);
-const modes=installDemoControls(()=>world,view,true);
-const held = new Set(), pointerKeys = new Set(), tapped = new Set(), dirStack = [];   // tapped: presses shorter than a frame still count once
-const DIR_KEYS = { KeyW: 0, KeyD: 1, KeyS: 2, KeyA: 3 };
-const HOLD_ALIASES = {}; // Menu arrows remain available for navigation.
-let phase = 'title', paused = false, introT = 0, last = performance.now(), orientationBlocked = false, bigTimer = 0;
-const mobileDevice = (matchMedia('(any-pointer: coarse)').matches || navigator.maxTouchPoints > 0);
-const HI_KEY = 'tb-game-tank3d-hi', PROGRESS_KEY = 'tb-game-tank3d-progress';
-let hi = 0; try { hi = Number(localStorage.getItem(HI_KEY)) || 0; } catch (e) { /* storage unavailable */ }
-let stick = { id: null, x: 0, y: 0, axis: -1 };
-// Run state: stage 1..50, loop 1..n (each loop replays all 50 stages a little harder).
-let stage = 1, loop = 1, runScore = 0, lastOutcome = '', pendingBanner = '', continuePoint = false;
-const clampStage = n => Math.min(TOTAL_STAGES, Math.max(1, Math.round(Number(n) || 1)));
-const stageSeed = () => 5000 + stage * 7919 + loop * 6151;
-const stageTag = () => tr('tank3d.stageTag', { n: stage, loop });
-const savedRun = readProgress();
+const app = $('app'), stage = $('stage'), canvas = $('screen');
+const overlays = { menu: $('menu'), pause: $('pause'), tally: $('tally'), result: $('result') };
+const hud = $('hud'), touch = $('touch'), keyHint = $('keyhint'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt');
+const listUrl = app.getAttribute('data-list-url') || '../../../games.html';
+document.querySelectorAll('.list-link').forEach(a => { a.href = listUrl; });
 
-function readProgress() {
+// ---------- 本地保存（独立命名空间；读写失败用默认值） ----------
+const NS = 'tank3d-v2:';
+const store = {
+  get(k, def) { try { const v = localStorage.getItem(NS + k); return v === null ? def : JSON.parse(v); } catch (e) { return def; } },
+  set(k, v) { try { localStorage.setItem(NS + k, JSON.stringify(v)); } catch (e) { /* 隐私模式 */ } }
+};
+const pick = (v, list, def) => (list.indexOf(v) >= 0 ? v : def);
+const clampInt = (v, a, b) => Math.max(a, Math.min(b, Math.round(Number(v)) || a));
+// 旧版（50 关程序化）存档迁入魔改模式
+function legacy() {
   try {
-    const raw = localStorage.getItem(PROGRESS_KEY); if (!raw) return null;
-    const p = JSON.parse(raw); if (!p || !Number.isFinite(p.stage)) return null;
-    return { stage: clampStage(p.stage), loop: Math.max(1, Math.round(p.loop) || 1), runScore: Math.max(0, Math.round(p.runScore) || 0) };
-  } catch (e) { return null; }
+    const raw = localStorage.getItem('tb-game-tank3d-progress'), hiOld = Number(localStorage.getItem('tb-game-tank3d-hi')) || 0;
+    if (raw && store.get('remix.progress', null) === null) { const p = JSON.parse(raw); if (p && Number.isFinite(p.stage)) store.set('remix.progress', { level: clampInt(p.stage, 1, REMIX_LEVELS), cycle: Math.max(1, Math.round(p.loop) || 1), score: Math.max(0, Math.round(p.runScore) || 0) }); }
+    if (hiOld && store.get('hi.remix', null) === null) store.set('hi.remix', hiOld);
+  } catch (e) { /* 忽略 */ }
 }
-function writeProgress() { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify({ stage, loop, runScore })); } catch (e) { /* storage unavailable */ } }
-function resetProgress() { try { localStorage.removeItem(PROGRESS_KEY); } catch (e) { /* storage unavailable */ } }
+legacy();
+const MODES = ['classic', 'remix'];
+const settings = {
+  mode: pick(store.get('mode', 'classic'), MODES, 'classic'),
+  classicStage: clampInt(store.get('classicStage', 1), 1, CLASSIC_COUNT),
+  remixFrom: 'continue',
+  lives: { classic: pick(store.get('lives.classic', 'classic'), ['inf', 'classic'], 'classic'), remix: pick(store.get('lives.remix', 'inf'), ['inf', 'classic'], 'inf') },
+  armor: { classic: pick(store.get('armor.classic', 'classic'), ['std', 'classic'], 'classic'), remix: pick(store.get('armor.remix', 'std'), ['std', 'classic'], 'std') },
+  camera: { classic: clampInt(store.get('camera.classic', 1), 0, PRESETS.length - 1), remix: clampInt(store.get('camera.remix', 0), 0, PRESETS.length - 1) },
+  demo: false,
+  quality: pick(store.get('quality', 'auto'), ['auto', 'high', 'low'], 'auto'),
+  volume: Math.max(0, Math.min(1, Number(store.get('volume', .7)))),
+  touch: pick(store.get('touch', 'auto'), ['auto', 'show', 'hide'], 'auto'),
+  fps: store.get('fps', false) === true
+};
+if (Number.isNaN(settings.volume)) settings.volume = .7;
+if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');
+if (MODES.includes(params.get('mode'))) settings.mode = params.get('mode');
+if (params.get('stage')) settings.classicStage = clampInt(params.get('stage'), 1, CLASSIC_COUNT);
+const hiOf = mode => store.get('hi.' + mode, mode === 'classic' ? 20000 : 0) | 0;
+let remixProgress = store.get('remix.progress', null);
+let effQuality = settings.quality === 'low' ? 'low' : 'high';
+let autoProbe = { on: settings.quality === 'auto', frames: [], done: false, decided: null };
 
-function setText(id, v) { const el = $(id); if (el.textContent !== v) el.textContent = v; }
-function toast(text, ms = 1700) { const e = $('toast'); e.textContent = text; e.classList.add('visible'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('visible'), ms); }
-function pressed(code) { return held.has(code) || pointerKeys.has(code) || tapped.has(code); }
-function cameraQuarter() { const k = Math.round(view.yaw / (Math.PI / 2)); return ((k % 4) + 4) % 4; }
-function inputDir() {
-  let d = -1;
-  if (stick.id !== null && stick.axis >= 0) d = stick.axis;
-  else for (let i = dirStack.length - 1; i >= 0; i--) if (pressed(dirStack[i])) { d = DIR_KEYS[dirStack[i]]; break; }
-  if (d < 0) for (const code of tapped) if (code in DIR_KEYS) d = DIR_KEYS[code];
-  return d < 0 ? -1 : (d - cameraQuarter() + 4) % 4;   // WASD are relative to the (snapped) camera heading
+// ---------- 渲染与音频 ----------
+let view;
+try { view = createScene(canvas); }
+catch (e) {
+  const el = $('loading'); el.hidden = false;
+  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button><br><a href="' + listUrl + '" style="color:#fff">返回游戏列表</a>';
+  throw e;
+}
+view.setPreset(settings.camera[settings.mode]);
+const audio = new GameAudio();
+audio.setVolume(settings.volume);
+
+// ---------- 状态 ----------
+let uiMode = 'title';          // title | game
+let current = 'menu';          // 覆盖层：menu | pause | tally | result | null
+let paused = false, phase = 'curtain', phaseT = 0;
+let run = null, world = null, titleWorld = null, levelStart = null;
+let hurtFx = 0, gameClock = 0, toastTimer = 0, bannerT = 0, bossTipT = 0;
+const eventLog = [];
+const MODE_TEXT = {
+  classic: {
+    kicker: 'FC 原版 · 3D 完美复刻', sub: '经典 35 关 · 原版地图、敌军名单与数值',
+    rules: '按 FC《坦克大战》逐格还原 35 关：砖墙按 4 像素一块削掉，钢墙只有三颗星能打穿；每关 20 辆敌军按原版顺序从中、右、左三处出场，第 4、11、18 辆闪红色掉道具。移速、弹速、出生间隔、AI 和 6 种道具都照原版。默认原版 3 命、一发就坏，满 2 万分奖一命；打完 35 关进入 36～70 关的困难循环。'
+  },
+  remix: {
+    kicker: '魔改 · 自创地图 · 周目无限', sub: '100 关一周目 · 10 个章节 · 第 5 关小 Boss、第 10 关大 Boss',
+    rules: '每章 10 关自创战场，加入河道、树林、冰面：吃到「船」才能过河，船还能替你挡炮；「手枪」直升满级火力、装甲加厚，四星还能烧掉树林。精英重炮和火焰车混在敌军里，道具放久了会被敌军抢走。每章第 5 关小 Boss、第 10 关大 Boss，第 100 关终焉 Boss；打通进入下一周目，敌军更快更硬。默认无限命、3 格耐久，修理包固定在每关第 7、14 辆敌军处掉落。'
+  }
+};
+
+// ---------- 输入：键盘与触屏共用 ----------
+const keys = new Set(), touchHold = new Set(), dirStack = [];
+const DIR_KEYS = { KeyW: 0, ArrowUp: 0, KeyD: 1, ArrowRight: 1, KeyS: 2, ArrowDown: 2, KeyA: 3, ArrowLeft: 3 };
+const stick = { id: null, axis: -1 };
+let firePressed = false, latched = null;
+const isDown = name => name === 'fire' ? keys.has('KeyJ') || keys.has('Space') || touchHold.has('fire') : name === 'rotL' ? keys.has('KeyQ') || touchHold.has('rotL') : name === 'rotR' ? keys.has('KeyE') || touchHold.has('rotR') : false;
+function rawDir() {
+  if (stick.id !== null && stick.axis >= 0) return stick.axis;
+  for (let i = dirStack.length - 1; i >= 0; i--) if (keys.has(dirStack[i])) return DIR_KEYS[dirStack[i]];
+  return -1;
+}
+const quarter = yaw => ((Math.round(yaw / (Math.PI / 2)) % 4) + 4) % 4;
+// 屏幕方向 → 战场方向：按镜头朝向吸附四方向；第一人称镜头会跟着车头转，所以按下那一刻锁定
+function worldDir() {
+  const d = rawDir();
+  if (d < 0) { latched = null; return -1; }
+  const yaw = view.cameraYaw();
+  if (view.firstPerson()) { if (!latched || latched.d !== d) latched = { d, w: (d - quarter(yaw) + 4) % 4 }; return latched.w; }
+  latched = null;
+  return (d - quarter(yaw) + 4) % 4;
 }
 function clearInput() {
-  held.clear(); pointerKeys.clear(); tapped.clear(); dirStack.length = 0; stick = { id: null, x: 0, y: 0, axis: -1 };
-  $('knob').style.transform = 'translate(0,0)';
-  document.querySelectorAll('.held').forEach(el => el.classList.remove('held'));
-}
-function requestFull() {
-  const el = document.documentElement;
-  try { if (document.fullscreenElement !== el && el.requestFullscreen) el.requestFullscreen({ navigationUI: 'hide' }).then(() => { try { screen.orientation?.lock?.('landscape').catch(() => {}); } catch (e) { /* unsupported */ } }).catch(() => { if (mobileDevice) toast(tr('tank3d.fullFail'), 2600); }); } catch (e) { /* unsupported */ }
-}
-function refreshSoundLabel() { setText('sound', audio.enabled ? tr('tank3d.soundOn') : tr('tank3d.soundOff')); }
-function refreshPauseLabel() { setText('pause', paused ? tr('tank3d.resume') : tr('tank3d.pause')); }
-
-const TYPE_KEYS = ['basic', 'fast', 'power', 'armor'];
-const scorePer = k => Math.round(ENEMY_TYPES[k].score * world.spec.scoreMult / 10) * 10;
-function buildReserve() {
-  const r = $('reserve'); r.innerHTML = '';
-  for (let i = 0; i < world.roster.length; i++) { const icon = document.createElement('i'); if (world.roster[i] !== 'basic') icon.className = world.roster[i]; r.appendChild(icon); }
-}
-// Swap the world in place: main.js, scene.js and the QA harness all hold this same object.
-function loadStage() {
-  Object.assign(world, createWorld(stageSeed(), stage, loop));
-  view.reset(); view.relayout();
-  buildReserve();
-}
-function updateHud() {
-  modes.sync();
-  setText('stage-label', stageTag());
-  setText('score', String(runScore + world.score).padStart(6, '0'));
-  setText('hi', String(Math.max(hi, runScore + world.score)).padStart(6, '0'));
-  setText('lives', '∞');
-  setText('level', '★'.repeat(world.level) + '☆'.repeat(3 - world.level));
-  const icons = $('reserve').children, left = world.roster.length - world.rosterIndex;
-  for (let i = 0; i < icons.length; i++) { const on = i < left; if (icons[i].classList.contains('gone') === on) icons[i].classList.toggle('gone', !on); }
-  const chips = [];
-  if (world.freeze > 0) chips.push(tr('tank3d.chipFreeze') + ' ' + Math.ceil(world.freeze));
-  if (world.shovel > 0) chips.push(tr('tank3d.chipFort') + ' ' + Math.ceil(world.shovel));
-  if (world.player && world.player.shield > 0 && phase === 'playing') chips.push(tr('tank3d.chipShield') + ' ' + Math.ceil(world.player.shield));
-  if (world.spec.tier > 0) chips.push(tr('tank3d.chipTier') + ' ×' + world.spec.scoreMult.toFixed(1));
-  const html = chips.map(c => '<span>' + c + '</span>').join('');
-  if ($('chips').innerHTML !== html) $('chips').innerHTML = html;
-}
-// Stage-clear / game-over panel. Purely presentational so a language switch can re-render it.
-function showPanel(kind) {
-  $('bigtext').hidden = true; bigTimer = 0;
-  $('panel').hidden = false; document.body.classList.remove('playing');
-  const cleared = kind === 'clear';
-  lastOutcome = cleared ? 'clear' : 'lost';
-  // commitClear() already moved stage/loop forward, so quote the world for the stage just finished
-  // and the run state for the one coming next — otherwise the panel announces the wrong numbers.
-  const finished = world.stage, next = stage, nextLoop = loop;
-  $('panel-kicker').textContent = cleared ? tr('tank3d.clearKicker', { n: finished }) : tr('tank3d.gameOver');
-  $('panel-title').textContent = cleared ? tr('tank3d.winTitle', { n: finished })
-    : world.reason === 'base' ? (world.baseBy === 'player' ? tr('tank3d.ownGoalTitle') : tr('tank3d.baseTitle')) : tr('tank3d.deadTitle');
-  $('panel-copy').textContent = cleared
-    ? (finished >= TOTAL_STAGES ? tr('tank3d.loopCopy', { loop: nextLoop }) : tr('tank3d.winCopy', { n: next, total: TOTAL_STAGES }))
-    : tr('tank3d.deadCopy', { n: finished });
-  const rows = TYPE_KEYS.filter(k => world.tally[k]).map(k => `<div><span>${tr('tank3d.type_' + k)}</span><b>${world.tally[k]} × ${scorePer(k)}</b></div>`);
-  rows.push(`<div><span>${tr('tank3d.bonus')}</span><b>${world.pickups} × 500</b></div>`);
-  rows.push(`<div><span>${tr('tank3d.stageScore')}</span><b>${world.score}</b></div>`);
-  rows.push(`<div class="total"><span>${tr('tank3d.total')}</span><b>${runScore + world.score}</b></div>`);
-  $('tally').innerHTML = rows.join(''); $('tally').hidden = false;
-  $('instructions').hidden = true;
-  $('start').textContent = cleared
-    ? (finished >= TOTAL_STAGES ? tr('tank3d.nextStageLoop', { n: next, loop: nextLoop }) : tr('tank3d.nextStage', { n: next }))
-    : tr('tank3d.retryStage', { n: finished });
-  const total = runScore + world.score;
-  if (total > hi) { hi = total; try { localStorage.setItem(HI_KEY, String(hi)); } catch (e) { /* ignore */ } }
-  $('start').focus({ preventScroll: true });
-}
-function bigText(text, cls, seconds) { const b = $('bigtext'); b.textContent = text; b.className = cls; b.hidden = false; bigTimer = seconds; }
-// Title screen: offer to continue a saved run, plus a way back to stage 1.
-function refreshTitleLabels() {
-  if (phase !== 'title') return;
-  $('start').textContent = continuePoint ? tr('tank3d.continue', { n: stage, loop }) : tr('tank3d.start');
-  $('restart-run').hidden = !continuePoint;
-  setText('stage-label', stageTag());
+  keys.clear(); touchHold.clear(); dirStack.length = 0; firePressed = false; latched = null;
+  joyRelease();
+  document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
 }
 
-// Bank the cleared stage and step forward — looping back to stage 1 with a higher loop number.
-function commitClear() {
-  runScore += world.score;
-  const finishedLoop = stage >= TOTAL_STAGES;
-  stage = finishedLoop ? 1 : stage + 1;
-  if (finishedLoop) { loop++; pendingBanner = tr('tank3d.loopBanner', { loop }); }
-  writeProgress();
+// ---------- 设置菜单 ----------
+const modeName = m => m === 'classic' ? '经典复刻 · FC 原版 35 关' : '魔改 · 无限周目';
+function fromLabel() {
+  if (settings.mode === 'classic') return ['起始关卡', '第 ' + settings.classicStage + ' 关'];
+  if (remixProgress && settings.remixFrom === 'continue') return ['进度', '继续第 ' + remixProgress.level + ' 关' + (remixProgress.cycle > 1 ? '（第 ' + remixProgress.cycle + ' 周目）' : '')];
+  return ['进度', '从第 1 关开始'];
 }
+function optLabel(name) {
+  const m = settings.mode;
+  switch (name) {
+    case 'mode': return ['模式', modeName(m), false];
+    case 'from': { const l = fromLabel(); return [l[0], l[1], false]; }
+    case 'lives': return ['命数', settings.lives[m] === 'inf' ? '无限命' : '经典 3 命', false];
+    case 'armor': return ['耐久', settings.armor[m] === 'classic' ? '经典一发' : '标准 3 格', false];
+    case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
+    case 'camera': return ['视角（C）', PRESETS[view.presetIndex].name, false];
+    case 'quality': return ['画质', { auto: '自动', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
+    case 'volume': return ['音量', settings.volume <= 0 ? '静音' : Math.round(settings.volume * 100) + '%', false];
+    case 'touch': return ['触屏按键', { auto: '自动', show: '显示', hide: '隐藏' }[settings.touch], false];
+    case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
+  }
+  return [name, '', false];
+}
+function refreshOptions() {
+  document.querySelectorAll('[data-opt]').forEach(b => {
+    const l = optLabel(b.getAttribute('data-opt'));
+    const html = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
+    if (b.innerHTML !== html) b.innerHTML = html;
+  });
+  const t = MODE_TEXT[settings.mode];
+  $('mode-kicker').textContent = t.kicker; $('mode-sub').textContent = t.sub; $('mode-rules').textContent = t.rules;
+  $('hi-val').textContent = hiOf(settings.mode);
+  const fsOn = !!fsElement();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('cam-label').textContent = PRESETS[view.presetIndex].name;
+  $('demo-badge').hidden = !(uiMode === 'game' && run && run.demo);
+  $('fire-hint').textContent = settings.mode === 'classic' ? '开炮（每按一下一发）' : '开炮（可按住）';
+}
+function cycle(list, v, delta) { return list[(list.indexOf(v) + (delta < 0 ? list.length - 1 : 1)) % list.length]; }
+function adjust(name, delta) {
+  const m = settings.mode;
+  if (name === 'mode') { settings.mode = cycle(MODES, m, delta); store.set('mode', settings.mode); view.setPreset(settings.camera[settings.mode]); buildTitle(); }
+  else if (name === 'from') {
+    if (m === 'classic') { settings.classicStage = ((settings.classicStage - 1 + (delta < 0 ? CLASSIC_COUNT - 1 : 1)) % CLASSIC_COUNT) + 1; store.set('classicStage', settings.classicStage); }
+    else if (remixProgress) settings.remixFrom = settings.remixFrom === 'continue' ? 'new' : 'continue';
+    buildTitle();
+  }
+  else if (name === 'lives') { settings.lives[m] = cycle(['inf', 'classic'], settings.lives[m], delta); store.set('lives.' + m, settings.lives[m]); }
+  else if (name === 'armor') { settings.armor[m] = cycle(['std', 'classic'], settings.armor[m], delta); store.set('armor.' + m, settings.armor[m]); }
+  else if (name === 'demo') { settings.demo = !settings.demo; if (run) { run.demo = settings.demo; if (settings.demo) run.demoUsed = true; } }
+  else if (name === 'camera') { cycleCamera(delta); return; }
+  else if (name === 'quality') {
+    settings.quality = cycle(['auto', 'high', 'low'], settings.quality, delta); store.set('quality', settings.quality);
+    effQuality = settings.quality === 'low' ? 'low' : 'high'; autoProbe = { on: settings.quality === 'auto', frames: [], done: false, decided: null };
+    applyQuality();
+  } else if (name === 'volume') {
+    let v = Math.round(settings.volume * 10) + (delta < 0 ? -1 : 1); if (v > 10) v = 0; if (v < 0) v = 10;
+    settings.volume = v / 10; store.set('volume', settings.volume); audio.unlock(); audio.setVolume(settings.volume); if (v > 0) audio.tally();
+  } else if (name === 'touch') { settings.touch = cycle(['auto', 'show', 'hide'], settings.touch, delta); store.set('touch', settings.touch); layout(); }
+  else if (name === 'fps') { settings.fps = !settings.fps; store.set('fps', settings.fps); fpsEl.hidden = !settings.fps; }
+  refreshOptions();
+}
+function cycleCamera(delta = 1) {
+  const n = PRESETS.length;
+  view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
+  const m = run ? run.mode : settings.mode;
+  settings.camera[m] = view.presetIndex; store.set('camera.' + m, view.presetIndex);
+  latched = null;
+  showToast('视角：' + PRESETS[view.presetIndex].name + (PRESETS[view.presetIndex].fp ? '（W 前进，A/D 左右转向）' : ''));
+  refreshOptions();
+}
+function applyQuality() { view.setQuality(effQuality); layout(); }
 
-function startGame() {
-  if (phase === 'playing' || phase === 'intro') { if (paused) togglePause(); return; }
-  audio.unlock().then(() => audio.effect('start'));
-  loadStage();   // cleared → the next stage; lost → the same stage with the walls rebuilt
+// ---------- 覆盖层与菜单导航 ----------
+function show(name) {
+  Object.keys(overlays).forEach(k => { overlays[k].hidden = k !== name; });
+  current = name;
   clearInput();
-  phase = 'intro'; paused = false; introT = 0;
-  $('panel').hidden = true; $('tally').hidden = true; $('instructions').hidden = false; $('bigtext').hidden = true;
-  $('restart-run').hidden = true;
-  document.body.classList.add('playing');
-  $('curtain-text').textContent = loop > 1 ? tr('tank3d.curtainLoop', { n: stage, loop }) : tr('tank3d.curtain', { n: stage });
-  const c = $('curtain'); c.hidden = false; c.classList.remove('run'); void c.offsetWidth; c.classList.add('run');
-  refreshPauseLabel(); orientation(); $('game').focus({ preventScroll: true });
+  refreshOptions();
+  if (name && name !== 'tally') { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
+  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
+  layout();
 }
-// Start the whole run again from stage 1, loop 1 (the saved continue point is dropped).
-function restartRun() {
-  stage = 1; loop = 1; runScore = 0; lastOutcome = ''; pendingBanner = ''; continuePoint = false;
-  resetProgress();
-  startGame();
-}
-function togglePause() {
-  if (phase !== 'playing' && phase !== 'intro') return;
-  paused = !paused; refreshPauseLabel(); audio.effect('pause');
-  if (paused) { clearInput(); bigText(tr('tank3d.paused'), 'pause', 1e9); } else { $('bigtext').hidden = true; bigTimer = 0; }
-}
-
-const PICKUP_KEYS = { star: 'puStar', grenade: 'puGrenade', helmet: 'puHelmet', shovel: 'puShovel', timer: 'puTimer', tank: 'puTank' };
-function handleEvents() {
-  for (const e of world.events) {
-    view.effect(e); audio.effect(e);
-    switch (e.type) {
-      case 'powerup': toast(tr('tank3d.powerupAppear')); break;
-      case 'pickup': toast(tr('tank3d.' + PICKUP_KEYS[e.kind]), 2200); break;
-      case 'die': if (world.lives > 0) toast(tr('tank3d.lostLife')); break;
-      case 'baseboom': toast(e.by === 'player' ? tr('tank3d.ownGoal') : tr('tank3d.baseLost'), 2600); break;
-      case 'win': phase = 'over'; commitClear(); showPanel('clear'); break;
-      case 'gameover': phase = 'over'; lastOutcome = 'lost'; bigText('GAME OVER', 'over', 2.2); setTimeout(() => { if (phase === 'over') showPanel('lost'); }, 1500); break;
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > *'), el => !el.hidden) : []);
+const isTyping = e => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
+document.addEventListener('keydown', e => {
+  if (isTyping(e)) return;
+  audio.unlock(); setInputMode('key');
+  if (current === 'tally') { if (!e.repeat && ['Enter', 'NumpadEnter', 'KeyJ', 'Space', 'Escape'].includes(e.code)) { tallySkip(); e.preventDefault(); } return; }
+  if (current) {
+    const list = items(), i = list.indexOf(document.activeElement), el = list[i];
+    switch (e.code) {
+      case 'ArrowDown': case 'KeyS': if (list.length) list[(i + 1 + list.length) % list.length].focus(); e.preventDefault(); break;
+      case 'ArrowUp': case 'KeyW': if (list.length) list[(i - 1 + list.length) % list.length].focus(); e.preventDefault(); break;
+      case 'ArrowLeft': case 'KeyA': case 'ArrowRight': case 'KeyD':
+        if (el && el.hasAttribute('data-opt')) { adjust(el.getAttribute('data-opt'), /Left|KeyA/.test(e.code) ? -1 : 1); e.preventDefault(); }
+        break;
+      case 'Enter': case 'NumpadEnter': case 'KeyJ':
+        if (!e.repeat) { if (el) el.click(); else if (list[0]) list[0].click(); }
+        e.preventDefault(); break;
+      case 'Escape': if (current === 'pause') { resume(); e.preventDefault(); } break;
+      case 'KeyC': if (!e.repeat) { cycleCamera(); e.preventDefault(); } break;
     }
-  }
-  world.events.length = 0;
-}
-
-function frame(now) {
-  const dt = Math.min(.05, (now - last) / 1000); last = now;
-  if ((frame.n = (frame.n || 0) + 1) % 20 === 0) {   // resize/orientation events can arrive late or out of order on phones
-    const c = $('world'); if (c.clientWidth !== frame.w || c.clientHeight !== frame.h) { frame.w = c.clientWidth; frame.h = c.clientHeight; view.resize(); }
-    orientation();
-  }
-  const active = !paused && !orientationBlocked;
-  const cam = {};
-  // Intro: shutters close on the stage number (0–0.75 s), then the camera swoops from the eagle up to the overview.
-  if (phase === 'intro' && active) {
-    introT += dt;
-    if (introT >= 1.25) $('curtain').hidden = true;
-    if (introT >= 2.4) { phase = 'playing'; startWorld(world); }
-  }
-  if (phase === 'playing' && pendingBanner) { bigText(pendingBanner, 'loop', 2.8); pendingBanner = ''; }
-  if (phase === 'intro') cam.intro = Math.min(1, Math.max(0, (introT - .7) / 2.2));
-  else if (phase === 'playing' && introT < 2.9 && active) { introT += dt; cam.intro = Math.min(1, (introT - .7) / 2.2); }
-  if (phase === 'title') cam.attract = true;
-  if (phase === 'playing' && active) {
-    stepWorld(world, { dir: inputDir(), fire: pressed('KeyJ') }, dt);
-    handleEvents();
-  } else world.events.length = 0;
-  if (bigTimer > 0 && bigTimer < 1e8) { bigTimer -= dt; if (bigTimer <= 0 && phase !== 'over') $('bigtext').hidden = true; }
-  audio.tick(phase === 'playing' && active && !!world.player, !!(world.player && world.player.moving));
-  view.update(active || phase === 'title' || phase === 'over' ? dt : 0, active || phase !== 'playing' ? cam : { intro: cam.intro });
-  updateHud(); tapped.clear();
-  requestAnimationFrame(frame);
-}
-
-// --- Keyboard.
-addEventListener('keydown', e => {
-  if (e.target instanceof HTMLInputElement) return;
-  const code = HOLD_ALIASES[e.code] || e.code;
-  if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyJ'].includes(e.code) && document.body.classList.contains('playing')) e.preventDefault();
-  if (e.code === 'Enter') {
-    if (document.activeElement && document.activeElement.tagName === 'A') return;
-    if (phase === 'title' || phase === 'over' || paused) { e.preventDefault(); if (paused) togglePause(); else startGame(); }
     return;
   }
-  if (e.code === 'Escape') { togglePause(); return; }
-  if (e.repeat) return;
-  held.add(code); tapped.add(code);
-  if (code in DIR_KEYS) { const i = dirStack.indexOf(code); if (i >= 0) dirStack.splice(i, 1); dirStack.push(code); }
+  if (uiMode !== 'game') return;
+  const c = e.code;
+  if (c === 'Escape' || c === 'Enter' || c === 'NumpadEnter') { if (!e.repeat) pauseGame(); e.preventDefault(); return; }
+  if (c === 'KeyC') { if (!e.repeat) cycleCamera(); e.preventDefault(); return; }
+  if (c in DIR_KEYS || ['KeyJ', 'KeyQ', 'KeyE', 'Space'].includes(c)) {
+    if (!e.repeat) {
+      if (c === 'KeyJ' || c === 'Space') firePressed = true;
+      if (c in DIR_KEYS) { const i = dirStack.indexOf(c); if (i >= 0) dirStack.splice(i, 1); dirStack.push(c); }
+    }
+    keys.add(c); e.preventDefault();
+  }
 });
-addEventListener('keyup', e => { const code = HOLD_ALIASES[e.code] || e.code; held.delete(code); const i = dirStack.indexOf(code); if (i >= 0) dirStack.splice(i, 1); });
-addEventListener('blur', () => { clearInput(); if (phase === 'playing' && !paused) togglePause(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); if (phase === 'playing' && !paused) togglePause(); } last = performance.now(); });
+document.addEventListener('keyup', e => { keys.delete(e.code); const i = dirStack.indexOf(e.code); if (i >= 0) dirStack.splice(i, 1); });
+document.addEventListener('pointerdown', e => { audio.unlock(); if (e.pointerType === 'touch') setInputMode('touch'); }, { capture: true });
+document.addEventListener('click', e => {
+  if (current === 'tally') { tallySkip(); return; }
+  const t = e.target.closest('[data-act],[data-opt]');
+  if (!t) return;
+  if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), 1); return; }
+  switch (t.getAttribute('data-act')) {
+    case 'start': startGame(); break;
+    case 'retry': retryRun(); break;
+    case 'resume': resume(); break;
+    case 'restart': restartStage(); break;
+    case 'title': toTitle(); break;
+    case 'fullscreen': toggleFullscreen(); break;
+  }
+});
+$('btn-pause').addEventListener('click', () => { if (uiMode === 'game' && !current) pauseGame(); });
+$('btn-fs').addEventListener('click', () => toggleFullscreen());
+$('btn-cam').addEventListener('click', () => { if (uiMode === 'game' && !current) cycleCamera(); });
 
-// --- Buttons.
-$('start').onclick = startGame; $('pause').onclick = togglePause; $('full').onclick = requestFull;
-$('restart-run').onclick = restartRun;
-$('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSoundLabel(); };
-$('touch-toggle').onclick = () => { $('touch').hidden = !$('touch').hidden; document.body.classList.toggle('touch-mode', !$('touch').hidden); };
-$('rotate-go').onclick = () => { orientation(); if (!orientationBlocked && paused) togglePause(); };
+// ---------- 流程 ----------
+function startStageOf(mode) {
+  if (mode === 'classic') return { stage: settings.classicStage, cycle: 1, score: 0 };
+  if (remixProgress && settings.remixFrom === 'continue') return { stage: remixProgress.level, cycle: remixProgress.cycle, score: remixProgress.score };
+  return { stage: 1, cycle: 1, score: 0 };
+}
+function buildTitle() {
+  const s = startStageOf(settings.mode);
+  titleWorld = createWorld(createRun({ mode: settings.mode, stage: s.stage, cycle: s.cycle, seed: 7 }));
+  view.titleMode = true;
+  view.setWorld(titleWorld, { rise: true });
+}
+function startGame(from) {
+  audio.unlock();
+  const m = settings.mode, s = from || startStageOf(m);
+  if (m === 'remix' && !from && settings.remixFrom === 'new') { remixProgress = null; store.set('remix.progress', null); settings.remixFrom = 'continue'; }
+  run = createRun({ mode: m, lives: settings.lives[m], armor: settings.armor[m], demo: settings.demo, stage: s.stage, cycle: s.cycle, score: s.score });
+  run.startedAt = gameClock; run.startStage = s.stage; run.startCycle = s.cycle;
+  uiMode = 'game'; paused = false;
+  view.setPreset(settings.camera[m]);
+  beginStage();
+  show(null);
+}
+function beginStage() {
+  world = createWorld(run);
+  levelStart = { score: run.score, lives: run.lives, stars: run.stars, plate: run.plate, boats: run.boats, stats: Object.assign({}, run.stats), bonusGiven: run.bonusGiven, nextBonus: run.nextBonus };
+  phase = 'curtain'; phaseT = 0;
+  hurtFx = 0; bossTipT = 0; latched = null; firePressed = false;
+  const sp = world.spec;
+  $('curtain-stage').textContent = 'STAGE ' + sp.displayStage;
+  let sub = '';
+  if (run.mode === 'remix') {
+    sub = sp.theme.name + ' ' + sp.chapter + '-' + sp.chapterStage + (run.cycle > 1 ? ' · 第 ' + run.cycle + ' 周目' : '');
+    if (sp.role === 'mini') sub += ' · 小 Boss ' + sp.theme.mini;
+    if (sp.role === 'boss') sub += ' · 大 Boss ' + sp.theme.boss;
+    if (sp.role === 'final') sub += ' · 终焉 Boss';
+  } else if (sp.displayStage > 35) sub = '原版第二轮 · 第 ' + sp.mapNo + ' 关地图 · 敌军按第 35 关';
+  $('curtain-sub').textContent = sub;
+  const c = $('curtain'); c.hidden = false; c.classList.remove('closed'); void c.offsetWidth; c.classList.add('closed');
+  $('gameover-text').hidden = true;
+  buildReserve();
+}
+function restartStage() {
+  if (!run || !levelStart) return startGame();
+  Object.assign(run, { score: levelStart.score, lives: levelStart.lives, stars: levelStart.stars, plate: levelStart.plate, boats: levelStart.boats, stats: Object.assign({}, levelStart.stats), bonusGiven: levelStart.bonusGiven, nextBonus: levelStart.nextBonus });
+  paused = false; audio.pause(false);
+  beginStage(); show(null);
+}
+function pauseGame() {
+  if (uiMode !== 'game' || paused || current) return;
+  paused = true; audio.pause(true); audio.pauseSound();
+  show('pause');
+}
+function resume() { paused = false; audio.pause(false); show(null); last = performance.now(); acc = 0; }
+function toTitle() {
+  uiMode = 'title'; paused = false; run = null; world = null;
+  audio.pause(false); audio.stopMusic();
+  $('curtain').hidden = true; $('gameover-text').hidden = true; $('banner').hidden = true; hurtFx = 0;
+  remixProgress = store.get('remix.progress', null);
+  view.setPreset(settings.camera[settings.mode]);
+  buildTitle();
+  show('menu');
+}
+function retryRun() {
+  const m = run ? run.mode : settings.mode;
+  if (m !== settings.mode) { settings.mode = m; store.set('mode', m); }
+  const from = run ? { stage: run.stage, cycle: run.cycle, score: m === 'remix' ? (levelStart ? levelStart.score : 0) : 0 } : null;
+  startGame(from);
+}
+function saveRemix() {
+  if (run.mode !== 'remix') return;
+  remixProgress = { level: run.stage, cycle: run.cycle, score: run.score };
+  store.set('remix.progress', remixProgress);
+}
+function stageCleared() {
+  run.stats.stages++;
+  if (run.mode === 'classic') run.stage = run.stage >= 70 ? 1 : run.stage + 1;
+  else if (run.stage >= REMIX_LEVELS) { run.stage = 1; run.cycle++; showBanner('第 ' + run.cycle + ' 周目开始 · 敌军强化', 3); }
+  else run.stage++;
+  saveRemix();
+  updateHi();
+  beginStage();
+  show(null);
+}
+function updateHi() {
+  if (!run || run.demoUsed) return false;
+  if (run.score > hiOf(run.mode)) { store.set('hi.' + run.mode, run.score); return true; }
+  return false;
+}
+function finishRun() {
+  const newHi = updateHi(), r = run, secs = Math.max(0, Math.round(gameClock - r.startedAt));
+  audio.gameOverJingle();
+  $('res-title').textContent = 'GAME OVER';
+  const reached = r.mode === 'classic' ? '第 ' + r.stage + ' 关' : '第 ' + r.stage + ' 关' + (r.cycle > 1 ? '（第 ' + r.cycle + ' 周目）' : '');
+  const rows = [
+    ['模式', modeName(r.mode)],
+    ['倒在', reached + (world && world.result === 'eagle' ? ' · 老鹰被毁' : ' · 坦克打光')],
+    ['通过关卡', r.stats.stages + ' 关'],
+    ['击毁敌军', r.stats.kills + ' 辆'],
+  ];
+  if (r.mode === 'remix') rows.push(['击败 Boss', r.stats.bosses + ' 个']);
+  rows.push(['阵亡', r.stats.deaths + ' 次'], ['用时', Math.floor(secs / 60) + ' 分 ' + (secs % 60) + ' 秒']);
+  $('res-table').innerHTML = rows.map(x => '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>').join('') + '<tr class="total"><td>总分</td><td>' + r.score + '</td></tr>';
+  const extra = [(r.livesMode === 'inf' ? '无限命' : '经典 3 命') + ' · ' + (r.armor === 'classic' ? '经典一发' : '标准 3 格耐久（受击 ' + r.stats.hits + ' 次）')];
+  extra.push(r.demoUsed ? '本局用过演示模式（无敌），不计最高分' : newHi ? '新纪录！最高分 ' + r.score : '最高分 ' + hiOf(r.mode));
+  $('res-extra').textContent = extra.join(' · ');
+  const sl = overlays.result.querySelector('.sanlian');
+  sl.hidden = r.stats.stages < 1 && r.stats.kills < 10;
+  sl.textContent = r.mode === 'classic' ? '原版 35 关一张不少！喜欢这版 3D 坦克大战，也给开发者空投一个“三连补给”？' : '魔改战场还在继续扩建，喜欢的话给开发者空投一个“三连补给”，下一个 Boss 更凶！';
+  $('retry-btn').innerHTML = (r.mode === 'classic' ? '从第 ' + r.stage + ' 关再来' : '重打第 ' + r.stage + ' 关') + ' <kbd>Enter</kbd>';
+  phase = 'over';
+  show('result');
+}
 
-document.querySelectorAll('[data-hold]').forEach(btn => {
-  const code = btn.dataset.hold;
-  const down = e => { e.preventDefault(); btn.setPointerCapture?.(e.pointerId); pointerKeys.add(code); btn.classList.add('held'); if (code === 'KeyJ') audio.unlock(); };
-  const up = e => { e.preventDefault(); pointerKeys.delete(code); btn.classList.remove('held'); };
-  btn.addEventListener('pointerdown', down); btn.addEventListener('pointerup', up); btn.addEventListener('pointercancel', up); btn.addEventListener('lostpointercapture', up);
+// ---------- 原版计分页 ----------
+let tallyState = null;
+function startTally(result) {
+  const w = world, r = run, mode = r.mode;
+  const types = mode === 'classic' ? ['basic', 'fast', 'power', 'armor'] : ['basic', 'fast', 'power', 'armor', 'heavy', 'flame', 'escort', 'mini', 'boss', 'final'].filter(k => ['basic', 'fast', 'power', 'armor'].includes(k) || w.kills[k]);
+  const rows = types.map(k => ({ k, n: w.kills[k] || 0, pts: Math.round(SCORE[k] * w.diff.scoreMul / 10) * 10 }));
+  $('t-hi').textContent = Math.max(hiOf(mode), run.demoUsed ? 0 : r.score);
+  $('t-stage').textContent = 'STAGE ' + w.spec.displayStage;
+  $('t-score').textContent = r.score;
+  $('t-rows').innerHTML = rows.map((x, i) => '<div class="row" id="tr' + i + '"><span class="name">' + TYPE_NAMES[x.k] + '</span><span class="n" id="tn' + i + '">0</span><span class="pts" id="tp' + i + '">0 PTS</span></div>').join('');
+  $('t-total').textContent = '';
+  let note = '';
+  if (result === 'won' && mode === 'remix') {
+    const nextL = r.stage >= REMIX_LEVELS ? 1 : r.stage + 1, info = remixInfo(nextL);
+    note = '本关 ' + w.stageScore + ' 分 · 下一关：第 ' + nextL + ' 关 ' + info.theme.name + (info.role === 'mini' ? ' · 小 Boss ' + MINI_INFO[remixInfoKind(nextL)].name : info.role === 'boss' ? ' · 大 Boss ' + info.theme.boss : info.role === 'final' ? ' · 终焉 Boss' : '');
+  } else if (result === 'won' && mode === 'classic') note = r.stage === 35 ? '35 关全部通过！接下来是原版的第二轮：同样的地图，敌军按第 35 关的阵容' : '';
+  else note = world.result === 'eagle' ? (world.eagleBy === 'player' ? '自己的炮弹打中了老鹰……' : '老鹰被摧毁了') : '坦克全部打光了';
+  $('t-note').textContent = note;
+  // 节奏照原版：首行 32 帧后出现，每辆 9 帧并响计数音，行间 39 帧（空行 30 帧），TOTAL 前 47 帧，之后停 135 帧
+  const timeline = []; let t = 32 / 60;
+  rows.forEach((x, i) => {
+    timeline.push({ t, row: i, n: 0 });
+    for (let k = 1; k <= x.n; k++) { t += 9 / 60; timeline.push({ t, row: i, n: k, tick: true }); }
+    t += (x.n ? 39 : 30) / 60;
+  });
+  timeline.push({ t: t + 8 / 60, total: rows.reduce((s, x) => s + x.n, 0) });
+  tallyState = { result, rows, timeline, t: 0, end: t + 8 / 60 + 135 / 60, idx: 0 };
+  show('tally');
+}
+function remixInfoKind(level) { const ch = remixInfo(level).chapter; return ['flamecar', 'twin', 'miner', 'commander', 'sniper'][(ch - 1) % 5]; }
+function tallyApply(ev) {
+  if (ev.total !== undefined) { $('t-total').textContent = ev.total; return; }
+  const x = tallyState.rows[ev.row];
+  $('tr' + ev.row).classList.add('on'); $('tn' + ev.row).textContent = ev.n; $('tp' + ev.row).textContent = ev.n * x.pts + ' PTS';
+  if (ev.tick) audio.tally();
+}
+function tallyUpdate(dt) {
+  const s = tallyState; if (!s) return;
+  s.t += dt;
+  while (s.idx < s.timeline.length && s.timeline[s.idx].t <= s.t) tallyApply(s.timeline[s.idx++]);
+  if (s.t >= s.end) tallyDone();
+}
+function tallySkip() {
+  const s = tallyState; if (!s) return;
+  if (s.idx < s.timeline.length) { while (s.idx < s.timeline.length) { const ev = s.timeline[s.idx++]; tallyApply(Object.assign({}, ev, { tick: false })); } s.t = Math.max(s.t, s.end - .6); return; }
+  tallyDone();
+}
+function tallyDone() {
+  const s = tallyState; tallyState = null;
+  if (s.result === 'won') stageCleared(); else finishRun();
+}
+
+// ---------- 事件 ----------
+const PU_TEXT = { star: '星星：火力升级', grenade: '手雷：场上敌军全部炸毁', helmet: '头盔：无敌护盾', shovel: '铁锹：老鹰围墙变成钢墙', timer: '定时器：敌军全部冻结', tank: '坦克：生命 +1', gun: '手枪：火力直升、装甲加厚', boat: '船：可以过河，还能挡一发炮弹' };
+const LOOT_TEXT = { star: '敌军抢到星星，火力变强了！', gun: '敌军抢到手枪，能打穿钢墙了！', boat: '敌军抢到船，能过河了！', grenade: '敌军抢到手雷，你被炸了一下！', helmet: '敌军抢到头盔，全体护盾 8 秒！', shovel: '敌军抢到铁锹，老鹰围墙被挖空了！', timer: '敌军抢到定时器，你被冻住 3 秒！', tank: '敌军抢到坦克，增援 +1！' };
+function handleEvent(e) {
+  eventLog.push(e.type); if (eventLog.length > 80) eventLog.shift();
+  view.effect(e); audio.effect(e);
+  switch (e.type) {
+    case 'powerup': showToast('战场上出现了道具！' + (run.mode === 'remix' ? '（4 秒后敌军也会抢）' : '')); break;
+    case 'pickup': showToast(PU_TEXT[e.kind] || '道具'); break;
+    case 'enemyLoot': showToast(LOOT_TEXT[e.kind] || '敌军抢走了道具'); break;
+    case 'repair': showToast('修理包：耐久补满'); break;
+    case 'medal': showToast('奖章：+500 分'); break;
+    case 'item': showToast(e.kind === 'repair' ? '敌军掉下了修理包（扳手）' : '敌军掉下了奖章'); break;
+    case 'hurt': hurtFx = 1; showToast('被击中！耐久剩 ' + e.hp + ' 格'); break;
+    case 'plate': hurtFx = .6; showToast('装甲挡下一发！' + (e.left ? '还剩 ' + e.left + ' 层' : '装甲没了')); break;
+    case 'boatHit': hurtFx = .6; showToast('船体挡下一发！' + (e.left ? '还剩 ' + e.left + ' 层' : '船沉了')); break;
+    case 'die': hurtFx = 1; if (run.lives !== Infinity && run.lives > 1) showToast('坦克被击毁，备用坦克出动（剩 ' + (run.lives - 1) + '）'); break;
+    case 'life': showToast('奖励一条命！'); break;
+    case 'eagle': showToast(e.by === 'player' ? '误伤！自己的炮弹打中了老鹰' : '老鹰被摧毁了！'); break;
+    case 'gameover': $('gameover-text').hidden = false; break;
+    case 'bossSpawn': showBanner('⚠ ' + e.name + ' 出现！', 2.4); $('boss-tip').textContent = e.tip; bossTipT = 7; break;
+    case 'bossDown': showBanner(e.name + ' 被击破！', 2.2); break;
+    case 'enrage': showToast(e.name + ' 暴怒了：攻击更快！'); break;
+    case 'weakHit': showToast('打中 Boss 背后：伤害 ×2'); break;
+    case 'levelup': if (e.gun) showToast(e.level >= 4 ? '满级火力：能烧掉树林' : '手枪：三星火力，能打穿钢墙'); break;
+    case 'end': phase = 'tally'; startTally(e.result); break;
+  }
+}
+
+// ---------- 全屏 ----------
+const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+const fsLog = [];
+function toggleFullscreen() {
+  if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
+  const el = document.documentElement, req = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (!req) { fsLog.push('unsupported'); showToast('当前浏览器不支持全屏，可以继续在页面内游玩'); return; }
+  let p;
+  try { p = req.call(el, { navigationUI: 'hide' }); } catch (err) { fsLog.push('throw'); showToast('浏览器未允许全屏，可以继续在页面内游玩'); return; }
+  Promise.resolve(p).then(() => {
+    fsLog.push('ok');
+    try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').then(() => fsLog.push('lock-ok'), () => fsLog.push('lock-rejected')); } catch (err) { /* 不支持 */ }
+  }, () => { fsLog.push('rejected'); showToast('浏览器拒绝了全屏请求，可以继续在页面内游玩'); });
+}
+function onFsChange() { if (!fsElement() && uiMode === 'game' && !current && phase === 'play') pauseGame(); refreshOptions(); layout(); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+function showToast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 2200); }
+function showBanner(text, secs) { const b = $('banner'); b.textContent = text; b.hidden = false; bannerT = secs; }
+
+// ---------- 布局：填满视口；手机竖屏开始后旋转成横屏 ----------
+const probe = document.createElement('div');
+probe.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';
+document.body.appendChild(probe);
+const display = { rotated: false, W: 0, H: 0, vw: 0, vh: 0, dpr: 1, touchOn: false };
+const toLocal = (cx, cy) => (display.rotated ? { x: cy, y: display.vw - cx } : { x: cx, y: cy });
+const MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let inputMode = MOBILE_UA || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 'touch' : 'key';
+function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
+// Toy 宿主可能让页面以 0×0 启动且之后不发 resize：读不到尺寸时逐级回退，并定时复查
+function viewport() {
+  const de = document.documentElement, vv = window.visualViewport;
+  const vw = window.innerWidth || de.clientWidth || (vv && vv.width) || screen.width || 960;
+  const vh = window.innerHeight || de.clientHeight || (vv && vv.height) || screen.height || 540;
+  return { vw: Math.round(vw), vh: Math.round(vh) };
+}
+let lastOrient = null, lastSize = '';
+function layout() {
+  const { vw, vh } = viewport(), coarse = inputMode === 'touch';
+  const rotate = uiMode === 'game' && vh > vw && coarse;
+  const W = rotate ? vh : vw, H = rotate ? vw : vh;
+  stage.style.width = W + 'px'; stage.style.height = H + 'px';
+  stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
+  stage.classList.toggle('rotated', rotate);
+  stage.classList.toggle('compact', H < 520);
+  stage.classList.toggle('portrait', H > W);
+  stage.classList.toggle('narrow', W < 700);
+  stage.classList.toggle('short', H < 760);
+  const orient = rotate + ':' + (W > H);
+  if (lastOrient !== null && orient !== lastOrient) clearInput();
+  lastOrient = orient;
+  const cs = getComputedStyle(probe);
+  const sa = { t: parseFloat(cs.paddingTop) || 0, r: parseFloat(cs.paddingRight) || 0, b: parseFloat(cs.paddingBottom) || 0, l: parseFloat(cs.paddingLeft) || 0 };
+  const loc = rotate ? { l: sa.t, r: sa.b, t: sa.r, b: sa.l } : sa;
+  stage.style.setProperty('--sal', loc.l + 'px'); stage.style.setProperty('--sar', loc.r + 'px');
+  stage.style.setProperty('--sat', loc.t + 'px'); stage.style.setProperty('--sab', loc.b + 'px');
+  const touchOn = settings.touch === 'show' || (settings.touch === 'auto' && coarse);
+  document.body.classList.toggle('touch-on', touchOn);
+  const inGame = uiMode === 'game';
+  touch.hidden = !(inGame && touchOn);
+  hud.hidden = !inGame; $('hud-top').hidden = !inGame; $('side').hidden = !inGame; $('chips').hidden = !inGame; $('status').hidden = !inGame;
+  keyHint.hidden = !(inGame && !touchOn && !CLEAN);
+  const dpr = Math.min(window.devicePixelRatio || 1, effQuality === 'high' ? (coarse ? 1.5 : 2) : 1);
+  view.resize(W, H, dpr);
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  Object.assign(display, { rotated: rotate, W, H, vw, vh, dpr, touchOn, backing: [canvas.width, canvas.height] });
+  lastSize = vw + 'x' + vh;
+}
+window.addEventListener('resize', () => layout());
+window.addEventListener('orientationchange', () => setTimeout(layout, 60));
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => layout());
+setInterval(() => { const v = viewport(); if (v.vw + 'x' + v.vh !== lastSize) layout(); }, 500);
+window.addEventListener('blur', () => { clearInput(); if (uiMode === 'game' && !current && phase === 'play') pauseGame(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); if (uiMode === 'game' && !current && phase === 'play') pauseGame(); } last = performance.now(); });
+
+// ---------- 触屏：浮动摇杆（四方向，主轴带滞回）+ 按键 ----------
+const joyZone = $('joy-zone'), joyBase = $('joy-base'), joyKnob = $('joy-knob');
+let jox = 0, joy0 = 0;
+const JOY_R = 50, JOY_DEAD = 12;
+function joyRelease() { stick.id = null; stick.axis = -1; joyBase.style.transform = ''; joyKnob.style.transform = 'translate(-50%,-50%)'; joyBase.classList.remove('active'); }
+joyZone.addEventListener('pointerdown', e => {
+  if (stick.id !== null) return;
+  stick.id = e.pointerId;
+  try { joyZone.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  const p = toLocal(e.clientX, e.clientY), zr = { x: joyZone.offsetLeft, y: joyZone.offsetTop };
+  jox = p.x; joy0 = p.y;
+  const bx = joyBase.offsetLeft + joyBase.offsetWidth / 2, by = joyBase.offsetTop + joyBase.offsetHeight / 2;
+  joyBase.style.transform = 'translate(' + (jox - zr.x - bx) + 'px,' + (joy0 - zr.y - by) + 'px)';
+  joyBase.classList.add('active'); stick.axis = -1;
+  e.preventDefault();
+});
+joyZone.addEventListener('pointermove', e => {
+  if (e.pointerId !== stick.id) return;
+  const p = toLocal(e.clientX, e.clientY);
+  const dx = p.x - jox, dy = p.y - joy0, len = Math.hypot(dx, dy), k = len > JOY_R ? JOY_R / len : 1;
+  joyKnob.style.transform = 'translate(calc(-50% + ' + (dx * k) + 'px), calc(-50% + ' + (dy * k) + 'px))';
+  if (len < JOY_DEAD) { stick.axis = -1; e.preventDefault(); return; }
+  const bias = stick.axis === 0 || stick.axis === 2 ? .25 : stick.axis === 1 || stick.axis === 3 ? -.25 : 0;
+  const horiz = Math.abs(dx) > Math.abs(dy) * (1 + bias);
+  stick.axis = horiz ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0);
+  e.preventDefault();
+});
+const joyEnd = e => { if (e.pointerId === stick.id) joyRelease(); };
+joyZone.addEventListener('pointerup', joyEnd); joyZone.addEventListener('pointercancel', joyEnd); joyZone.addEventListener('lostpointercapture', joyEnd);
+document.querySelectorAll('#touch [data-hold]').forEach(btn => {
+  const name = btn.getAttribute('data-hold');
+  let id = null;
+  btn.addEventListener('pointerdown', e => {
+    id = e.pointerId;
+    try { btn.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    btn.classList.add('down'); touchHold.add(name);
+    if (name === 'fire') firePressed = true;
+    e.preventDefault();
+  });
+  const end = e => { if (e.pointerId !== id) return; id = null; btn.classList.remove('down'); touchHold.delete(name); };
+  btn.addEventListener('pointerup', end); btn.addEventListener('pointercancel', end); btn.addEventListener('lostpointercapture', end);
   btn.addEventListener('contextmenu', e => e.preventDefault());
 });
-// --- Virtual stick: 4-way, dominant axis with a little hysteresis so diagonals don't jitter.
-const stickEl = $('stick'), knob = $('knob');
-function moveStick(e) {
-  const r = stickEl.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, max = stickEl.clientWidth * .38;
-  let dx = e.clientX - cx, dy = e.clientY - cy;
-  if ($('game').classList.contains('portrait-play')) { const physicalX = dx; dx = dy; dy = -physicalX; }
-  const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; }
-  knob.style.transform = `translate(${dx}px,${dy}px)`;
-  const nx = dx / max, ny = dy / max, mag = Math.hypot(nx, ny);
-  if (mag < .3) { stick.axis = -1; return; }
-  const horiz = Math.abs(nx) > Math.abs(ny) + (stick.axis === 0 || stick.axis === 2 ? .18 : stick.axis === 1 || stick.axis === 3 ? -.18 : 0);
-  stick.axis = horiz ? (nx > 0 ? 1 : 3) : (ny > 0 ? 2 : 0);
-}
-stickEl.addEventListener('pointerdown', e => { e.preventDefault(); stick.id = e.pointerId; stickEl.setPointerCapture(e.pointerId); moveStick(e); audio.unlock(); });
-stickEl.addEventListener('pointermove', e => { if (e.pointerId === stick.id) moveStick(e); });
-const releaseStick = e => { if (e.pointerId !== stick.id) return; stick = { id: null, x: 0, y: 0, axis: -1 }; knob.style.transform = 'translate(0,0)'; };
-stickEl.addEventListener('pointerup', releaseStick); stickEl.addEventListener('pointercancel', releaseStick); stickEl.addEventListener('lostpointercapture', releaseStick);
+$('btn-cam-t').addEventListener('pointerdown', e => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
 
-function orientation() {
-  const width = document.documentElement.clientWidth, height = document.documentElement.clientHeight;
-  const rotate = mobileDevice && height > width && phase !== 'title';
-  const game = $('game');
-  if (rotate !== game.classList.contains('portrait-play')) clearInput();
-  game.classList.toggle('portrait-play', rotate);
-  if (rotate) { game.style.width = height + 'px'; game.style.height = width + 'px'; }
-  else { game.style.width = ''; game.style.height = ''; }
-  orientationBlocked = false; $('rotate').hidden = true;
+// ---------- HUD ----------
+function buildReserve() {
+  const r = $('reserve'); r.innerHTML = '';
+  for (let i = 0; i < world.roster.length; i++) {
+    const t = world.roster[i], el = document.createElement('i');
+    if (t === 'boss' || t === 'final') el.className = 'boss'; else if (t === 'mini') el.className = 'mini'; else if (t === 'heavy' || t === 'flame') el.className = 'elite';
+    r.appendChild(el);
+  }
 }
-document.addEventListener('tb:locale', () => {
-  refreshSoundLabel(); refreshPauseLabel(); refreshTitleLabels();
-  if (phase === 'over') showPanel(lastOutcome === 'clear' ? 'clear' : 'lost');
-});
-$('touch').hidden = !mobileDevice; document.body.classList.toggle('touch-mode', mobileDevice);
-addEventListener('resize', () => { clearInput(); orientation(); view.resize(); });
-document.addEventListener('fullscreenchange', () => { clearInput(); orientation(); view.resize(); });
-addEventListener('orientationchange', () => setTimeout(() => { view.resize(); orientation(); }, 120));
-// Resume where a saved run left off, so 50 stages stay playable across visits.
-if (savedRun) { stage = savedRun.stage; loop = savedRun.loop; runScore = savedRun.runScore; continuePoint = stage > 1 || loop > 1; loadStage(); }
-buildReserve(); refreshSoundLabel(); refreshPauseLabel(); refreshTitleLabels(); orientation(); updateHud();
-$('game').focus({ preventScroll: true });
-requestAnimationFrame(frame);
+let lastHud = '';
+function updateHud() {
+  if (!world) return;
+  const r = run, w = world, p = w.player;
+  const stars = p ? p.stars : r.stars, maxStars = r.mode === 'classic' ? 3 : 4;
+  const hp = r.armor === 'classic' ? -1 : r.hp;
+  const key = [r.score, r.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length].join('|');
+  if (key !== lastHud) {
+    lastHud = key;
+    $('h-mode').textContent = r.mode === 'classic' ? 'STAGE' : '魔改' + (r.cycle > 1 ? ' · ' + r.cycle + ' 周目' : '');
+    $('h-stage').textContent = r.mode === 'classic' ? String(w.spec.displayStage) : w.spec.displayStage + ' ' + w.spec.theme.name + ' ' + w.spec.chapter + '-' + w.spec.chapterStage;
+    $('h-score').textContent = String(r.score).padStart(6, '0');
+    $('h-hi').textContent = String(Math.max(hiOf(r.mode), r.demoUsed ? 0 : r.score)).padStart(6, '0');
+    $('h-lives').textContent = r.lives === Infinity ? '∞' : '×' + r.lives;
+    $('side-lives').textContent = r.lives === Infinity ? '∞' : String(r.lives);
+    $('side-stage').textContent = w.spec.displayStage;
+    $('h-hp-wrap').hidden = hp < 0;
+    if (hp >= 0) { let h = ''; for (let i = 1; i <= 3; i++) h += i <= hp ? '♥' : '<span class="off">♥</span>'; $('h-hp').innerHTML = h; }
+    $('h-stars').textContent = '★'.repeat(stars) + '☆'.repeat(Math.max(0, maxStars - stars));
+    const icons = $('reserve').children, left = w.roster.length - w.rosterIndex;
+    if (icons.length !== w.roster.length) buildReserve();
+    for (let i = 0; i < icons.length; i++) icons[i].style.visibility = i < left ? 'visible' : 'hidden';
+  }
+  const low = hp === 1 && phase === 'play';
+  hud.classList.toggle('low', low);
+  $('h-hp').style.opacity = low && Math.floor(gameClock * 4) % 2 ? '.45' : '1';
+  hurtEl.style.opacity = hurtFx > 0 ? hurtFx.toFixed(2) : '0';
+  $('demo-badge').hidden = !r.demo;
+  // 状态标签
+  const chips = [];
+  if (w.freeze > 0) chips.push(['敌军冻结 ' + Math.ceil(w.freeze / 60), '']);
+  if (w.shovel > 0) chips.push(['钢墙老鹰 ' + Math.ceil(w.shovel / 60), '']);
+  if (p && p.shield > 0 && phase === 'play') chips.push(['护盾 ' + Math.ceil(p.shield / 60), '']);
+  if (p && p.boats > 0) chips.push(['船 ×' + p.boats, '']);
+  if (p && p.plate > 0) chips.push(['装甲 ×' + p.plate, '']);
+  if (w.playerFrozen > 0) chips.push(['被冻住 ' + Math.ceil(w.playerFrozen / 60), 'warn']);
+  if (w.powerup && w.rules.enemyLoot && w.powerup.age > 240) chips.push(['道具会被敌军抢！', 'warn']);
+  const html = chips.map(c => '<span class="' + c[1] + '">' + c[0] + '</span>').join('');
+  if ($('chips').innerHTML !== html) $('chips').innerHTML = html;
+  const b = w.boss && w.boss.state === 'active' ? w.boss : null;
+  $('bossbar').hidden = !b;
+  if (b) {
+    $('boss-name').textContent = b.bossName + (b.model ? ' · ' + b.model : b.type === 'mini' ? ' · ' + MINI_INFO[b.kind].name : '') + (b.enraged ? ' · 暴怒' : '');
+    $('boss-fill').style.width = Math.max(0, b.hp / b.maxHp * 100).toFixed(1) + '%';
+    $('boss-tip').hidden = bossTipT <= 0;
+  }
+  $('crosshair').hidden = !(view.firstPerson() && phase === 'play');
+  // GAME OVER 字样从底部升到中央（原版每帧 1px，共 127 帧）
+  if (w.status === 'gameover' || w.status === 'over') {
+    const go = $('gameover-text'), H = display.H || 540, k = Math.min(1, w.overRise / 127);
+    go.style.transform = 'translate(-50%,' + ((H + 20) * (1 - k) + (H / 2 - 30) * k).toFixed(0) + 'px)';
+  }
+}
 
-// --- QA hook: only created when the page is opened with ?qa=1, so normal play exposes nothing new.
-// Lets the browser automation jump between stages, force a clear and read the run state back.
-if (new URLSearchParams(location.search).has('qa')) {
-  import('./world.js?v=collision-fix1').then(W => {
-    window.tankQa = {
-      world, view, W, TOTAL_STAGES,
-      get stage() { return stage; }, get loop() { return loop; }, get runScore() { return runScore; },
-      get phase() { return phase; }, get paused() { return paused; },
-      start: startGame, restart: restartRun,
-      jump(n, l = 1) {
-        stage = clampStage(n); loop = Math.max(1, Math.round(l) || 1); continuePoint = true;
-        lastOutcome = ''; pendingBanner = ''; loadStage(); phase = 'title'; paused = false;
-        document.body.classList.remove('playing'); $('panel').hidden = true; $('curtain').hidden = true;
-        refreshTitleLabels(); updateHud();
-      },
-      clear() {
-        world.rosterIndex = world.roster.length; world.enemies.length = 0; world.spawning.length = 0;
-        world.killed = world.roster.length; W.qa.endGame(world, 'won', 'clear', .1);
-      }
-    };
-  });
+// ---------- 主循环 ----------
+let last = performance.now(), acc = 0, realT = 0, fpsT = 0, manual = false;
+const fpsWin = [];
+const perf = { on: false, frames: [], work: [] };
+function simulate(dt) {
+  gameClock += dt;
+  const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
+  if (rot && !current) view.yawOffset -= rot * (Math.PI / 2) * dt;
+  if (uiMode !== 'game' || paused || !world) return;
+  if (current === 'tally') { tallyUpdate(dt); return; }
+  if (current) return;
+  if (phase === 'curtain') {
+    phaseT += dt;
+    if (phaseT >= .27 && !world.curtainSet) { world.curtainSet = true; view.titleMode = false; view.setWorld(world, { rise: true }); audio.startJingle(); }
+    if (phaseT >= 1.57 && $('curtain').classList.contains('closed')) $('curtain').classList.remove('closed');
+    if (phaseT >= 1.85) { phase = 'play'; phaseT = 0; $('curtain').hidden = true; }
+    return;
+  }
+  if (phase !== 'play') return;
+  phaseT += dt;
+  // 第一人称站着不动、Q/E 转过 45° 以上时，车头跟着视线转
+  if (view.firstPerson() && rawDir() < 0 && Math.abs(view.yawOffset) > Math.PI / 4 + .05) {
+    const p = world.player, want = (0 - quarter(view.cameraYaw()) + 4) % 4;
+    if (p && want !== p.dir) {
+      const before = p.dir; turnPlayer(world, want);
+      if (p.dir !== before) { let d = -(p.dir - before) * Math.PI / 2; while (d > Math.PI) d -= 2 * Math.PI; while (d <= -Math.PI) d += 2 * Math.PI; view.fpTurn(d); }
+    }
+  }
+  const input = { dir: worldDir(), fire: isDown('fire'), firePressed };
+  firePressed = false;
+  step(world, input);
+  hurtFx = Math.max(0, hurtFx - dt * 2.2);
+  if (bannerT > 0) { bannerT -= dt; if (bannerT <= 0) $('banner').hidden = true; }
+  if (bossTipT > 0) bossTipT -= dt;
+  const evs = world.events.splice(0);
+  for (const e of evs) { handleEvent(e); if (current === 'tally') break; }
+}
+function frame(now) {
+  if (manual) { last = now; requestAnimationFrame(frame); return; }
+  const dtReal = Math.min(.1, (now - last) / 1000);
+  if (perf.on) perf.frames.push(now - last);
+  last = now; realT += dtReal;
+  const t0 = performance.now();
+  acc += dtReal;
+  let n = 0;
+  while (acc >= STEP && n < 8) { simulate(STEP); acc -= STEP; n++; }
+  if (n >= 8) acc = 0;
+  if (autoProbe.on && !autoProbe.done && uiMode === 'game' && phase === 'play' && !current) {
+    autoProbe.frames.push(dtReal * 1000);
+    if (autoProbe.frames.length > 200) {
+      const s = autoProbe.frames.slice(20).sort((a, b) => a - b), med = s[Math.floor(s.length / 2)];
+      autoProbe.done = true; autoProbe.decided = { median: +med.toFixed(1), quality: med > 26 ? 'low' : 'high' };
+      if (med > 26 && effQuality !== 'low') { effQuality = 'low'; applyQuality(); refreshOptions(); showToast('帧率偏低，已自动切换到流畅画质'); }
+    }
+  }
+  present(dtReal);
+  if (settings.fps) {
+    fpsWin.push(dtReal * 1000);
+    if (realT - fpsT > .5) {
+      fpsT = realT;
+      const arr = fpsWin.splice(0), mean = arr.reduce((a, b) => a + b, 0) / Math.max(1, arr.length), worst = Math.max.apply(null, arr), st = view.stats();
+      fpsEl.textContent = (1000 / mean).toFixed(0) + ' FPS · ' + mean.toFixed(1) + 'ms · 最慢 ' + worst.toFixed(0) + 'ms · ' + canvas.width + '×' + canvas.height + ' · ' + (effQuality === 'high' ? '高' : '流畅') + ' · ' + st.calls + ' 次绘制';
+    }
+  }
+  if (perf.on) perf.work.push(performance.now() - t0);
+  requestAnimationFrame(frame);
+}
+function present(dt) {
+  const active = uiMode === 'game' && world && world.curtainSet;
+  view.titleMode = !active;
+  const playing = active && !paused && phase === 'play' && !current;
+  const intro = active && phase === 'curtain' ? Math.max(0, (phaseT - 1.3) / 1.6) : active && phase === 'play' && phaseT < 1.4 ? Math.min(1, (phaseT + .55) / 1.6) : -1;
+  if (active) { view.update(paused || current === 'pause' ? 0 : dt, playing ? Math.min(1, acc / STEP) : 1, { intro }); updateHud(); }
+  else { if (uiMode === 'title') view.yawOffset = Math.sin(realT * .22) * .35; view.update(dt, 1, {}); }
+  audio.tick(playing && !!world.player, !!(world && world.player && world.player.moving));
+}
+
+// ---------- 启动 ----------
+fpsEl.hidden = !settings.fps;
+buildTitle();
+layout();
+applyQuality();
+refreshOptions();
+show('menu');
+$('loading').hidden = true;
+window.__tankReady = true;
+requestAnimationFrame(t => { last = t; frame(t); });
+
+// ---------- 自动化测试钩子（仅 ?test=1） ----------
+if (TEST) {
+  window.__TANK_TEST__ = {
+    version: VERSION, qa, settings,
+    get world() { return world; }, get run() { return run; }, get view() { return view; },
+    state() {
+      const p = world && world.player;
+      return {
+        uiMode, overlay: current, paused, phase, display: Object.assign({}, display), camera: PRESETS[view.presetIndex].id, yawOffset: +view.yawOffset.toFixed(3), fp: view.firstPerson(),
+        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsLog: fsLog.slice(),
+        focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id),
+        toast: toastEl.hidden ? null : toastEl.textContent, touchHidden: touch.hidden, keys: Array.from(keys), touchHold: Array.from(touchHold), stick: Object.assign({}, stick),
+        mode: run ? run.mode : settings.mode, stage: run ? run.stage : null, cycle: run ? run.cycle : null, status: world ? world.status : null,
+        player: p ? { x: p.x, y: p.y, dir: p.dir, state: p.state, stars: p.stars, shield: p.shield, invuln: p.invuln, boats: p.boats, plate: p.plate } : null,
+        run: run ? { score: run.score, lives: run.lives === Infinity ? 'inf' : run.lives, hp: run.hp, armor: run.armor, livesMode: run.livesMode, demo: run.demo, demoUsed: run.demoUsed, stats: Object.assign({}, run.stats) } : null,
+        bots: world ? world.bots.map(b => ({ type: b.type, state: b.state, x: b.x, y: b.y, hp: b.hp })) : [], events: eventLog.slice(), remixProgress
+      };
+    },
+    manual(on) { manual = !!on; last = performance.now(); acc = 0; },
+    step(n, draw) { for (let i = 0; i < n; i++) simulate(STEP); realT += n * STEP; if (draw !== false) present(n * STEP); return this.state(); },
+    skipCurtain() { while (phase === 'curtain') simulate(STEP); },
+    skipTally() { while (current === 'tally') { tallySkip(); tallySkip(); } },
+    clearStage() { if (!world) return; world.rosterIndex = world.roster.length; world.remaining = world.bots.filter(b => !b.escort).length; for (const b of world.bots) qa.destroyBot(world, b, false); },
+    perfStart() { perf.frames = []; perf.work = []; perf.on = true; },
+    perfStop() { perf.on = false; return { frames: perf.frames.slice(1), work: perf.work.slice(1) }; },
+    renderInfo: () => view.stats(),
+    setQuality(q) { settings.quality = q; effQuality = q === 'low' ? 'low' : 'high'; autoProbe = { on: q === 'auto', frames: [], done: false, decided: null }; applyQuality(); refreshOptions(); },
+    toLocal, startGame, toTitle
+  };
 }

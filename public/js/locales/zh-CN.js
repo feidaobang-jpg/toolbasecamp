@@ -1354,16 +1354,6 @@ window.TB_LOCALES['zh-CN'] = {
         world: 'WORLD 1–1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏', fileWarning: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
         title: '超级玛丽\n进入新的 3D 维度', intro: '熟悉的第一关，现在可以在更大的空间里探索。', move: '移动', jump: '跳跃', run: '加速', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始冒险', restart: '重新开始', back: '返回游戏列表', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · K 跳跃 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的冒险会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '这次掉进了坑里', deadCopy: '第一关还在等你。按回车或重新开始再试一次。', winTitle: '第一关通关！', winCopy: '旗杆、城堡和一段新的 3D 路线都完成了。', grow: '蘑菇让你变大了', checkpoint: '到达中途检查点', hurt: '被撞到了，但还能继续', mushroom: '砖块里有东西！', paused: '游戏已暂停', continued: '继续前进', soundOn: '静音', soundOff: '打开声音'
     },
-    tank3d: {
-        stageTag: '第 {n} 关 · 第 {loop} 周目', curtain: '第 {n} 关', curtainLoop: '第 {n} 关 · 第 {loop} 周目', score: '分数', hi: '最高', lives: '生命', power: '火力', enemies: '敌军', pause: '暂停', resume: '继续', full: '全屏',
-        title: '坦克大战\n进入新的 3D 维度', intro: '50 关战场逐关不同：守住老鹰、轰开砖墙、清空场上所有敌方坦克。打通第 50 关就回到第 1 关进入下一周目，敌军更快更硬。', move: '行驶（四方向）', fire: '开炮（可按住）', fireShort: '开炮', camera: '旋转 · 俯仰 · 镜头回正', startPause: '开始 · 暂停', start: '回车 · 开始战斗', continue: '回车 · 继续第 {n} 关（第 {loop} 周目）', restartRun: '从第 1 关重新开始', nextStage: '回车 · 进入第 {n} 关', nextStageLoop: '回车 · 进入第 {loop} 周目第 {n} 关', retryStage: '回车 · 再来第 {n} 关', back: '游戏中心', touch: '触屏操作', note: '同人 50 关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 行驶 · J 开炮 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '老鹰会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
-        chipFreeze: '敌军冻结', chipFort: '钢墙基地', chipShield: '护盾', chipTier: '分数加成',
-        clearKicker: '第 {n} 关通关', gameOver: '本关失败', loopBanner: '第 {loop} 周目 · 敌军强化',
-        winTitle: '第 {n} 关通关！', winCopy: '老鹰安然无恙，下一关是第 {n} 关（共 {total} 关）。', loopCopy: '50 关全部打通！第 {loop} 周目从第 1 关重来，敌军更快、更硬、更会找老鹰。', deadTitle: '坦克全部阵亡', deadCopy: '第 {n} 关失败：按回车或点按钮，砖墙会重新砌好，再来本关。', baseTitle: '老鹰被摧毁了', ownGoalTitle: '你打中了自己的老鹰……',
-        type_basic: '普通坦克', type_fast: '快速坦克', type_power: '火力坦克', type_armor: '重甲坦克', bonus: '道具奖励', stageScore: '本关得分', total: '累计总分',
-        powerupAppear: '战场上出现了道具！', puStar: '星星：火力升级', puGrenade: '手雷：屏幕上的敌人全部炸毁', puHelmet: '头盔：10 秒护盾', puShovel: '铁锹：老鹰围墙变成钢墙', puTimer: '定时器：敌人全部冻结', puTank: '坦克：生命 +1',
-        lostLife: '坦克被击毁，备用坦克出动', ownGoal: '误伤！自己的炮弹打中了老鹰', baseLost: '老鹰被摧毁了！'
-    },
     hopfox3d: {
         stage: '第一关 · 草原', score: '分数', acorns: '橡果', lives: '生命', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
         title: '跳跳狐\n草原 3D 冒险', intro: '跑、跳、踩，一路穿过草原：顶木箱拿橡果，踩扁甲虫，踢飞蜗牛壳，最后敲响终点的铃铛。', move: '移动', jump: '跳跃（按住跳更高）', run: '奔跑 · 拿到灯笼后发射火花', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始', restart: '回车 · 再玩一次', back: '游戏中心', touch: '触屏操作', note: '原创角色、关卡、美术与音乐 · 程序化 3D · 横版闯关演示', runShort: '奔跑', jumpShort: '跳跃', help: 'A/D 移动 · K 跳跃 · J 奔跑/发射 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '草原会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
@@ -1626,7 +1616,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         tank3d: {
             title: '坦克大战 3D',
-            desc: '50 张程序化战场，打通第 50 关后回到第 1 关进入更高难度周目：可打碎的砖墙、老鹰基地、四类敌方坦克与六种道具。键盘与手机横屏都能玩。'
+            desc: '两种玩法：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式 100 关一周目，有船、手枪、精英怪、小 Boss 与大 Boss，周目无限。五种视角含第一人称，键盘与手机横屏都能玩。'
         },
         hopfox3d: {
             title: '跳跳狐 3D：第一关',

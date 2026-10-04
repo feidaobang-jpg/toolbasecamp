@@ -1,11 +1,115 @@
 [
-  {"id": "stage1-map", "purpose": "第一关 26×26 格地图（砖墙列、钢块、钢柱、老鹰围墙）", "source_type": "procedural", "tool": "手写字符串地图", "input": "public/html/game/tank-3d/stages.js（STAGE1 手写字符串地图）", "processing": "按经典第一关的结构原创绘制，未复制原版数据", "usage": "public/html/game/tank-3d/stages.js（STAGE1）", "conditions": "同人致敬，非官方"},
-  {"id": "stage2-50-maps", "purpose": "第 2–50 关战场布局", "source_type": "procedural", "tool": "种子化程序化生成（10 套主题 × 13×13 超级格，镜像对称）", "input": "public/html/game/tank-3d/stages.js（layoutFor/themeFor/applyBaseBand）", "processing": "由关号确定性生成，鹰区固定保留， BFS + 代价走廊 carving 保证出生点可达玩家与老鹰掩体；周目只改难度不改布局", "usage": "public/html/game/tank-3d/stages.js", "conditions": "原创生成，未复制原版关卡数据"},
-  {"id": "wall-textures", "purpose": "砖墙、钢墙、履带、地面、混凝土边框、草地贴图", "source_type": "procedural", "tool": "Canvas 2D", "input": "scene.js（brickTex/steelTex/treadTex/groundTex/concreteTex/grassTex）", "processing": "运行时绘制 + 固定种子噪点", "usage": "public/html/game/tank-3d/scene.js"},
-  {"id": "tank-models", "purpose": "玩家金色坦克（含四级外观）、普通/快速敌军坦克", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（tankModel/applyPlayerLevel）", "processing": "盒体/圆柱组合，履带贴图随行驶滚动，负轮旋转", "usage": "public/html/game/tank-3d/scene.js"},
-  {"id": "eagle-model", "purpose": "老鹰基地雕像与被毁后的碎石 + 白旗", "source_type": "procedural", "tool": "Three.js 基础几何", "input": "scene.js（eagleModel）", "processing": "v1 身形像鸭子（见 assets/dev-stages/02-eagle-v1-before.jpg），v2 改为白头、钩喙、三层展翅（03-eagle-v2-after.jpg）", "usage": "public/html/game/tank-3d/scene.js"},
-  {"id": "fx-icons", "purpose": "道具图标、出生星光、炮口闪光、飘分数字", "source_type": "procedural", "tool": "Canvas 2D + Three.js Sprite", "input": "scene.js（iconTex/starTex/flashTex/textTex）", "processing": "运行时绘制", "usage": "public/html/game/tank-3d/scene.js"},
-  {"id": "sound-original", "purpose": "开炮、砖碎、钢墙、爆炸、道具、护盾、冻结、铁锹、开场/通关/失败短句、引擎声", "source_type": "procedural", "tool": "Web Audio API", "input": "audio.js", "processing": "振荡器 + 噪声缓冲，原创旋律，无采样", "usage": "public/html/game/tank-3d/audio.js"},
-  {"id": "three-vendor", "purpose": "WebGL 渲染", "source_type": "licensed", "tool": "Three.js 0.170.0（MIT）", "input": "public/vendor/three/0.170.0/build/three.module.js", "processing": "仓库已固定版本，同源加载", "usage": "public/html/game/tank-3d/scene.js"},
-  {"id": "thumb-capture", "purpose": "游戏中心卡片封面", "source_type": "procedural", "tool": "离线逐帧采集的实机画面 + Pillow 裁切", "input": "releases/v0.1.0/captures/grenade-frame.jpg（种子 275 通关局第 1001 帧，手雷冲击波）", "processing": "裁切战场区域 580×580 缩放为 512×512 并 JPEG 压缩", "usage": "public/assets/game/thumbs/tank-3d.jpg"}
+ {
+  "id": "classic-stages",
+  "purpose": "经典模式原版 35 关地图（13×13 方块，砖 / 钢 / 河 / 树林 / 冰 / 老鹰）与每关 20 辆敌军出场名单",
+  "source_type": "licensed",
+  "tool": "feichao93/battle-city（MIT）src/stages/stage-1..35.json",
+  "input": "https://github.com/feichao93/battle-city/tree/master/src/stages",
+  "processing": "脚本转写为 public/html/game/tank-3d/classic.js（保留原方块写法，名单顺序不变）；未与 ROM 关卡表逐字节核对，名单顺序以该仓库为准",
+  "usage": "public/html/game/tank-3d/classic.js、levels.js（parseClassicMap/classicStage）",
+  "conditions": "MIT；原作版权归 Namco，粉丝向非官方作品"
+ },
+ {
+  "id": "nes-values",
+  "purpose": "经典模式数值：移速、弹速、砖块削除、子弹上限与互撞、出生调度、AI、道具计时与掉落、流程计时、36～70 关规则",
+  "source_type": "licensed",
+  "tool": "feichao93/battle-city resources/nes-values（基于 cyneprepou4uk/NES-Games-Disassembly 的 ROM 反汇编调研）",
+  "input": "https://github.com/feichao93/battle-city/tree/master/resources/nes-values",
+  "processing": "按文档中的 ROM 数值实现 sim.js；与原版的已知差异写在 releases/merge1/notes.md",
+  "usage": "public/html/game/tank-3d/sim.js",
+  "conditions": "调研文档 MIT；数值本身为原作行为"
+ },
+ {
+  "id": "fc-sounds",
+  "purpose": "开炮、打砖、打钢、敌军爆炸、玩家 / 老鹰爆炸、道具出现、拾取、开场曲、计分、GAME OVER、暂停、冰面滑行",
+  "source_type": "supplied",
+  "tool": "feichao93/battle-city src/audio/sounds/*.ogg（原作 FC 音效）",
+  "input": "https://github.com/feichao93/battle-city/tree/master/src/audio/sounds",
+  "processing": "ffmpeg 转单声道 22050 Hz 48 kbps mp3（public/html/game/tank-3d/sounds/）",
+  "usage": "public/html/game/tank-3d/audio.js",
+  "conditions": "原作音效，用户 2026-10-04 前已明确复刻不考虑版权顾虑；解码失败时回退合成音"
+ },
+ {
+  "id": "synth-sounds",
+  "purpose": "引擎声、奖命、装甲 / 受伤、Boss 预警 / 登场 / 击破 / 暴怒、召唤、地雷、炮击、敌军抢道具",
+  "source_type": "procedural",
+  "tool": "Web Audio API",
+  "input": "audio.js",
+  "processing": "振荡器 + 噪声缓冲",
+  "usage": "public/html/game/tank-3d/audio.js"
+ },
+ {
+  "id": "remix-maps",
+  "purpose": "魔改模式 100 关战场与 Boss 竞技场",
+  "source_type": "procedural",
+  "tool": "关号种子生成（10 套砖钢布局 × 10 章节地形点缀）",
+  "input": "public/html/game/tank-3d/levels.js（remixLayout/decorate/arena/guardCenter）",
+  "processing": "BFS 连通性校验 + 最少拆墙开路（不拆老鹰阵地与中路护卫）；同一关号每次相同",
+  "usage": "public/html/game/tank-3d/levels.js",
+  "conditions": "原创生成"
+ },
+ {
+  "id": "chapter-themes",
+  "purpose": "魔改 10 个章节名、小 Boss / 大 Boss 名与配色",
+  "source_type": "procedural",
+  "tool": "沿用 2D 版 public/js/game/game-progress.js 的章节主题",
+  "input": "game-progress.js CHAPTER_THEMES",
+  "processing": "取前 9 章 + 第 12 章「终焉虚空」，补天空 / 地面 / 地形偏好",
+  "usage": "public/html/game/tank-3d/levels.js（CHAPTERS）"
+ },
+ {
+  "id": "wall-textures",
+  "purpose": "砖（4px 砖块面）、钢、水、冰、履带、地面、混凝土、草地贴图",
+  "source_type": "procedural",
+  "tool": "Canvas 2D",
+  "input": "scene.js（brickTex/steelTex/waterTex/iceTex/treadTex/groundTex/concreteTex/grassTex）",
+  "processing": "运行时绘制 + 固定种子噪点",
+  "usage": "public/html/game/tank-3d/scene.js"
+ },
+ {
+  "id": "tank-models",
+  "purpose": "玩家（5 档火力外观、装甲侧板、船）、4 种原版敌军、精英重炮、火焰车、护卫、5 种小 Boss、10 档大 Boss 与终焉 Boss",
+  "source_type": "procedural",
+  "tool": "Three.js 基础几何",
+  "input": "scene.js（tankModel/applyPlayerGear/BOSS_COLORS）",
+  "processing": "盒体 / 圆柱组合；Boss 放大 2 倍并按档位加炮管、侧条和独眼",
+  "usage": "public/html/game/tank-3d/scene.js"
+ },
+ {
+  "id": "eagle-model",
+  "purpose": "老鹰基地与被毁后的碎石白旗",
+  "source_type": "procedural",
+  "tool": "Three.js 基础几何",
+  "input": "scene.js（eagleModel）",
+  "processing": "沿用前版模型",
+  "usage": "public/html/game/tank-3d/scene.js"
+ },
+ {
+  "id": "fx-icons",
+  "purpose": "8 种道具 + 修理包 / 奖章图标、出生光柱、炮口闪光、飘分、地雷、炮击红圈、狙击激光",
+  "source_type": "procedural",
+  "tool": "Canvas 2D + Three.js",
+  "input": "scene.js（iconTex/starTex/flashTex/textTex）",
+  "processing": "运行时绘制",
+  "usage": "public/html/game/tank-3d/scene.js"
+ },
+ {
+  "id": "three-vendor",
+  "purpose": "WebGL 渲染",
+  "source_type": "licensed",
+  "tool": "Three.js 0.170.0（MIT）",
+  "input": "public/vendor/three/0.170.0/build/three.module.js",
+  "processing": "仓库已固定版本，同源加载",
+  "usage": "public/html/game/tank-3d/scene.js"
+ },
+ {
+  "id": "thumb-capture",
+  "purpose": "游戏中心卡片封面（merge1）",
+  "source_type": "procedural",
+  "tool": "实机画面（Playwright + Edge，测试钩子布置场面）+ Pillow 裁切",
+  "input": "releases/merge1/captures/cover-source-remix70.png（魔改第 70 关深渊礁 Boss 竞技场，斜俯视，隐藏 HUD）",
+  "processing": "裁切 920×920 缩放为 512×512 JPEG",
+  "usage": "public/assets/game/thumbs/tank-3d.jpg",
+  "conditions": "测试钩子摆放了玩家、Boss 与两辆敌军位置并触发一次爆炸特效，画面为当前版本实时渲染"
+ }
 ]

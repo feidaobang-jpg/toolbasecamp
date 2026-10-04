@@ -1,73 +1,159 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#9fb9cc">
-  <title>坦克大战 3D · 50 关无限周目</title>
-  <meta name="description" content="坦克大战 3D：50 关程序化战场，通关后进入难度更高的下一周目无限循环。打砖墙、守老鹰、吃道具，键盘与手机横屏都能玩。">
-  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=single-view1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#1b2433">
+<meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
+<title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
+<link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./style.css?v=merge1">
 </head>
 <body>
-<main id="game" tabindex="-1">
-  <canvas id="world" aria-label="3D tank battle"></canvas>
-  <div id="hud">
-    <div class="brand"><span class="eyebrow">TANK BATTLE / 3D</span><strong id="stage-label">STAGE 1 · LOOP 1</strong></div>
-    <div class="stats">
-      <span><small data-i18n="tank3d.score">分数</small><b id="score">000000</b></span>
-      <span><small data-i18n="tank3d.hi">最高</small><b id="hi">000000</b></span>
-      <span><small data-i18n="tank3d.lives">生命</small><b id="lives">×3</b></span>
-      <span><small data-i18n="tank3d.power">火力</small><b id="level" class="stars">☆☆☆</b></span>
+<div id="app" data-list-url="../../../games.html" data-coop-url="../tank_battle.html" tabindex="-1">
+  <div id="stage">
+    <canvas id="screen" aria-label="坦克大战 3D 游戏画面"></canvas>
+    <div id="hurt"></div>
+    <div id="crosshair" hidden></div>
+
+    <div id="hud" hidden>
+      <div class="h-item h-stage"><b id="h-mode">STAGE</b><span id="h-stage">1</span></div>
+      <div class="h-item"><b>1P</b><span id="h-score">000000</span></div>
+      <div class="h-item"><b>最高</b><span id="h-hi">020000</span></div>
+      <div class="h-item"><b>命</b><span id="h-lives">×3</span></div>
+      <div class="h-item" id="h-hp-wrap"><b>耐久</b><span id="h-hp" class="hearts"></span></div>
+      <div class="h-item"><b>火力</b><span id="h-stars" class="stars">☆☆☆</span></div>
     </div>
-    <div class="action-row toolbar"><button class="tb-btn" id="pause" data-i18n="tank3d.pause">暂停</button><button class="tb-btn" id="full" data-i18n="tank3d.full">全屏</button></div>
+    <aside id="side" hidden aria-label="敌军剩余">
+      <div id="reserve"></div>
+      <div class="side-ip"><b>IP</b><span id="side-lives">2</span></div>
+      <div class="side-flag"><i></i><span id="side-stage">1</span></div>
+    </aside>
+    <div id="status">
+      <div id="bossbar" hidden><div class="boss-name" id="boss-name">Boss</div><div class="boss-track"><i id="boss-fill"></i></div><div class="boss-tip" id="boss-tip"></div></div>
+      <div id="chips" hidden></div>
+    </div>
+
+    <div id="hud-top" hidden>
+      <span id="demo-badge" hidden>演示模式 · 无敌（含老鹰）</span>
+      <button id="btn-cam" tabindex="-1" aria-label="切换视角"><b>C</b> <span id="cam-label">斜俯视</span></button>
+      <button id="btn-pause" tabindex="-1" aria-label="暂停"><b>Esc</b> 暂停</button>
+      <button id="btn-fs" tabindex="-1" aria-label="全屏"><b>⛶</b> <span class="fs-label">全屏</span></button>
+    </div>
+
+    <div id="keyhint" hidden>
+      <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 行驶</span>
+      <span><kbd>J</kbd> <span id="fire-hint">开炮</span></span>
+      <span><kbd>Q</kbd><kbd>E</kbd> 转视角</span>
+      <span><kbd>C</kbd> 切换视角</span>
+      <span><kbd>Esc</kbd> 暂停</span>
+    </div>
+
+    <div id="touch" hidden>
+      <div id="joy-zone" aria-label="移动摇杆">
+        <div id="joy-base"><div id="joy-knob"></div><span class="joy-tip">行驶</span></div>
+      </div>
+      <div class="cam-keys">
+        <button class="act small" data-hold="rotL" tabindex="-1" aria-label="Q 左转视角"><b>Q</b><span>左转</span></button>
+        <button class="act small" id="btn-cam-t" tabindex="-1" aria-label="C 切换视角"><b>C</b><span>视角</span></button>
+        <button class="act small" data-hold="rotR" tabindex="-1" aria-label="E 右转视角"><b>E</b><span>右转</span></button>
+      </div>
+      <div class="act-keys">
+        <button class="act big" data-hold="fire" tabindex="-1" aria-label="J 开炮"><b>J</b><span>开炮</span></button>
+      </div>
+    </div>
+
+    <div id="curtain" hidden><i class="shutter top"></i><i class="shutter bottom"></i><div class="curtain-text"><strong id="curtain-stage">STAGE 1</strong><span id="curtain-sub"></span></div></div>
+    <div id="gameover-text" hidden><span>GAME</span><span>OVER</span></div>
+    <div id="banner" hidden></div>
+
+    <div id="menu" class="overlay title-screen">
+      <div class="panel">
+        <div class="brand">
+          <div class="kicker" id="mode-kicker">FC 原版 · 3D 完美复刻</div>
+          <h1 class="logo">坦克大战 <span>3D</span></h1>
+          <div class="sub" id="mode-sub">经典 35 关 · 原版地图、敌军名单与数值</div>
+          <p class="rules" id="mode-rules"></p>
+          <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 行驶 · <kbd>J</kbd> 开炮 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切换视角 · <kbd>Esc</kbd> 暂停<br><kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
+          <p class="help help-touch">左侧摇杆行驶 · 右侧 <b>J</b> 开炮 · <b>Q</b>/<b>E</b> 转视角、<b>C</b> 切换视角</p>
+          <p class="hi">最高分 <span id="hi-val">20000</span></p>
+          <p class="legal">粉丝向非官方作品：经典模式地图与数值按 FC《坦克大战》（Namco 1985）还原，音效取自原作；3D 模型与贴图为程序化重新制作。</p>
+        </div>
+        <nav class="items" aria-label="主菜单">
+          <button data-act="start" class="primary" id="start-btn">开始游戏 <kbd>Enter</kbd></button>
+          <button data-opt="mode"></button>
+          <button data-opt="from"></button>
+          <button data-opt="lives"></button>
+          <button data-opt="armor"></button>
+          <button data-opt="demo"></button>
+          <button data-opt="camera"></button>
+          <button data-opt="quality"></button>
+          <button data-opt="volume"></button>
+          <button data-opt="touch"></button>
+          <button data-opt="fps"></button>
+          <button data-act="fullscreen" class="fs-btn">全屏</button>
+          <a data-act="coop" class="coop-link" href="../tank_battle.html">多人联机合作（2D 版）</a>
+          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="pause" class="overlay" hidden>
+      <div class="panel small">
+        <h2>暂停</h2>
+        <nav class="items" aria-label="暂停菜单">
+          <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
+          <button data-act="restart">从本关开头重来</button>
+          <button data-opt="demo"></button>
+          <button data-opt="camera"></button>
+          <button data-opt="quality"></button>
+          <button data-opt="volume"></button>
+          <button data-opt="fps"></button>
+          <button data-act="fullscreen" class="fs-btn">全屏</button>
+          <button data-act="title">返回主菜单</button>
+          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="tally" class="overlay" hidden>
+      <div class="tally-box">
+        <div class="t-hi"><span>HI-SCORE</span><b id="t-hi">20000</b></div>
+        <div class="t-stage" id="t-stage">STAGE 1</div>
+        <div class="t-player"><span>1-PLAYER</span><b id="t-score">0</b></div>
+        <div id="t-rows"></div>
+        <div class="t-total"><span>TOTAL</span><b id="t-total"></b></div>
+        <div class="t-note" id="t-note"></div>
+        <div class="t-skip">Enter / J / 点按 继续</div>
+      </div>
+    </div>
+
+    <div id="result" class="overlay" hidden>
+      <div class="panel small">
+        <h2 id="res-title">GAME OVER</h2>
+        <table id="res-table"></table>
+        <p id="res-extra"></p>
+        <p class="sanlian" hidden></p>
+        <nav class="items" aria-label="结算菜单">
+          <button data-act="retry" class="primary" id="retry-btn">再来一次 <kbd>Enter</kbd></button>
+          <button data-act="title">返回主菜单</button>
+          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
+        </nav>
+      </div>
+    </div>
+
+    <div id="fps" hidden></div>
+    <div id="toast" role="status" hidden></div>
   </div>
-  <aside id="side" aria-label="Enemy reserve">
-    <small data-i18n="tank3d.enemies">敌军</small>
-    <div id="reserve"></div>
-    <div id="chips"></div>
-  </aside>
-  <div id="toast" role="status"></div>
-  <div id="curtain" hidden><i class="shutter top"></i><i class="shutter bottom"></i><strong id="curtain-text">STAGE 1</strong></div>
-  <div id="bigtext" hidden></div>
-  <section id="panel" class="panel" aria-labelledby="panel-title">
-    <span class="eyebrow" id="panel-kicker">CLASSIC TANK BATTLE · 50 STAGES IN 3D</span>
-    <h1 id="panel-title" data-i18n="tank3d.title">坦克大战
-进入新的 3D 维度</h1>
-    <p id="panel-copy" data-i18n="tank3d.intro">50 关战场逐关不同：守住老鹰、轰开砖墙、清空场上所有敌方坦克。打通第 50 关就回到第 1 关进入下一周目，敌军更快更硬。</p>
-    <p id="file-warning" class="file-warning" hidden>本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。</p>
-    <div id="tally" class="tally" hidden></div>
-    <div id="instructions" class="instructions"><div><kbd>W A S D</kbd><span data-i18n="tank3d.move">行驶（四方向）</span></div><div><kbd>J</kbd><span data-i18n="tank3d.fire">开炮（可按住）</span></div><div><kbd>C</kbd><span data-i18n="tank3d.camera">旋转 · 俯仰 · 镜头回正</span></div><div><kbd>Enter · Esc</kbd><span data-i18n="tank3d.startPause">开始 · 暂停</span></div></div>
-    <div class="action-row"><button id="start" class="tb-btn" data-i18n="tank3d.start">回车 · 开始战斗</button><button id="restart-run" class="tb-btn" data-i18n="tank3d.restartRun" hidden>从第 1 关重新开始</button><a class="tb-btn" href="../../../games.html" data-i18n="tank3d.back">游戏中心</a></div>
-    <div class="action-row options"><button id="sound" class="tb-btn">Sound</button><button id="touch-toggle" class="tb-btn" data-i18n="tank3d.touch">触屏操作</button></div>
-    <small class="footnote" data-i18n="tank3d.note">同人 50 关演示 · 程序化美术与音效 · 非官方作品</small>
-  </section>
-  <div id="touch" hidden>
-    <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>W A S D</span></div>
-    <div class="camera-pad action-row"><button class="tb-btn" id="recenter">C</button></div>
-    <div class="action-row touch-actions"><button class="tb-btn fire-btn" data-hold="KeyJ"><b>J</b><span data-i18n="tank3d.fireShort">开炮</span></button></div>
-  </div>
-  <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="tank3d.rotate">请将手机横过来</h2><p data-i18n="tank3d.rotateHint">老鹰会在这里等你。</p><button class="tb-btn" id="rotate-go" data-i18n="tank3d.resume">继续</button></div>
-  <div id="keyboard-help" data-i18n="tank3d.help">WASD 行驶 · J 开炮 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停</div>
-</main>
-<script src="../../../js/locales/zh-CN.js?v=stages1"></script>
-<script src="../../../js/i18n.js?v=nosTW1"></script>
+  <div id="loading">正在铺设砖墙…</div>
+</div>
 <script>
-  if (location.protocol === 'file:') {
-    document.getElementById('file-warning').hidden = false;
-    document.getElementById('start').disabled = true;
-    document.getElementById('panel-copy').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
-  }
-</script>
-<script type="module">
-  import('./main.js?v=collision-fix1').catch(err => {
-    console.error(err);
-    if (location.protocol !== 'file:') {
-      document.getElementById('panel-copy').textContent = t('tank3d.loadError');
-      const b = document.getElementById('start'); b.textContent = t('tank3d.retry'); b.onclick = () => location.reload();
-    }
+  window.addEventListener('error', function (e) {
+    var el = document.getElementById('loading');
+    if (el && !window.__tankReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
+  if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
+<script type="module" src="./main.js?v=merge1"></script>
 </body>
 </html>

@@ -1,0 +1,1084 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "merge1",
+  "base_version": "collision-fix1",
+  "created_at": "2026-10-04",
+  "build": {
+    "id": "tank-3d-merge1-5d19e5782048",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "5d19e5782048b00abddbf8e1d94b8ab561f954abb28228ff0cb53d3150016802",
+    "files": {
+      "audio.js": "f6c7e85f3def866e2d5ee94cb55e3703f7971ac7f6cc2e82b454a40322b91bcd",
+      "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+      "index.html": "84ed9ba29bd1b513c7b58c34637a7fb38dc8a183500c8e26161066cb6705e6ce",
+      "levels.js": "eb4186901bd6e7ec3e06516d310fd50fe2db8dc0690c2feb7bc169f74ea29733",
+      "main.js": "f3127162f6542830a297dc6f32a91c799bdf952612c31a0eea0eddf0596ab9ee",
+      "scene.js": "4fadf61104186cb9b748021ba439e0feeb5ac96e19f9891c20fe0b7288a2395d",
+      "sim.js": "d14fcbe874c72e634aa320128e32c377c403d34ae9d174c8a6d22a63852cf01a",
+      "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
+      "sounds/bullet_hit_2.mp3": "76004f25187fd2898cecbf657aa9d3aed46685b2d61d2e6ff7825ec137638937",
+      "sounds/bullet_shot.mp3": "cee289b8b5cfb42c4772a3a7a8072da7ef626470ffbe0d390720cdc25b11679d",
+      "sounds/explosion_1.mp3": "34df0f75fd4e65b67a82269fe2fe502c5c2a0136154b8ff875b51a88236ba2bf",
+      "sounds/explosion_2.mp3": "3502c677ec9d318015be16739150c1afc5487a8e9301a835e2e2d92052bc90c8",
+      "sounds/game_over.mp3": "d23197bd8ab662160ecba3d8fa9926f6c0c2e2431c0d327fc97275578a40375e",
+      "sounds/pause.mp3": "9308b7bcd60c7adb6fefd23e398d4e899e432212deb6297733e7d9227cc20f5e",
+      "sounds/powerup_appear.mp3": "608dd494f5cb66baded7f1bcab33acb34dcc2b136856a19c13de0c11218d8fda",
+      "sounds/powerup_pick.mp3": "786c9f41ab03438e7ba23a6878ee9d09bc03d0f18ae28c47f503914dfd8da80c",
+      "sounds/snow_slide.mp3": "10462c41c3c32a84196e4b4b18972e31c0b23f380fd9d5fc4a5ef4987e5b1d8c",
+      "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
+      "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
+      "style.css": "3f83e4f39a0133a90b791e27b3033feebcb9511582a0d792ebbc0a857e869fd2"
+    },
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "F-classic-35",
+      "description": "经典复刻：FC 原版 35 关地图、敌军名单、数值、道具、流程、36～70 关循环，起始关卡 1～35 可选",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-classic-top.png",
+        "desktop-menu-stage33.png",
+        "desktop-tally.png",
+        "play-classic-stage1.webm"
+      ]
+    },
+    {
+      "id": "F-remix-100",
+      "description": "魔改：100 关一周目自创地图（10 章节主题、河道 / 树林 / 冰面）、无限周目、过关存档",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-menu-remix.png",
+        "perf-remix27.png",
+        "play-remix-boss10.webm"
+      ]
+    },
+    {
+      "id": "F-bosses",
+      "description": "5 种小 Boss、10 档大 Boss + 终焉 Boss：预警、招式、暴怒、背后弱点、血条",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-boss10.png",
+        "play-remix-boss10.webm"
+      ]
+    },
+    {
+      "id": "F-2d-gameplay",
+      "description": "船、手枪、装甲层、精英重炮 / 火焰车、敌军抢道具、修理包（迁自 2D 版）",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-remix-hurt.png"
+      ]
+    },
+    {
+      "id": "F-views",
+      "description": "斜俯视 / 正俯视 / 近景 / 正视 / 第一人称 + Q/E 无极旋转",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-view-front.png",
+        "desktop-view-fp.png",
+        "desktop-rotated.png",
+        "play-classic-stage1.webm"
+      ]
+    },
+    {
+      "id": "F-options",
+      "description": "模式、起始关卡 / 进度、命数、耐久、演示、视角、画质、音量、触屏、帧率、全屏、返回列表",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-menu-classic.png",
+        "desktop-pause.png",
+        "desktop-result.png"
+      ]
+    },
+    {
+      "id": "F-controls",
+      "description": "键盘全程；手机摇杆 + J/Q/C/E，竖屏自动横置",
+      "status": "implemented",
+      "evidence_ids": [
+        "phone-portrait-rotated.png",
+        "phone-landscape.png"
+      ]
+    },
+    {
+      "id": "F-coop",
+      "description": "多人联机合作（目前只在 2D 版，菜单有入口）",
+      "status": "planned",
+      "evidence_ids": []
+    }
+  ],
+  "changes": [
+    {
+      "id": "merge-modes",
+      "feature_ids": [
+        "F-classic-35",
+        "F-remix-100",
+        "F-options"
+      ],
+      "before": "3D 版只有第 1 关是经典结构，第 2～50 关程序化；2D 版另有 Boss / 章节玩法，游戏中心两张卡片",
+      "after": "一款 3D 游戏，开局选经典复刻（原版 35 关）或魔改无限周目；游戏中心只留一张卡",
+      "result": "想玩原版的能完整玩到 35 关原图，想玩新内容的进魔改",
+      "evidence_ids": [
+        "desktop-menu-classic.png",
+        "desktop-menu-remix.png"
+      ],
+      "verification": "pass"
+    },
+    {
+      "id": "classic-faithful",
+      "feature_ids": [
+        "F-classic-35"
+      ],
+      "before": "连续单位移动、砖块 1 格粒度、自定数值",
+      "after": "固定 60 帧 FC 像素模拟：4px 砖块、原版移速 / 弹速 / 出生间隔 / AI / 道具计时 / 计分 / 奖命 / 36～70 关",
+      "result": "手感按原版，经典默认 3 命一发",
+      "evidence_ids": [
+        "desktop-classic-top.png",
+        "play-classic-stage1.webm"
+      ],
+      "verification": "pass"
+    },
+    {
+      "id": "remix-content",
+      "feature_ids": [
+        "F-remix-100",
+        "F-bosses",
+        "F-2d-gameplay"
+      ],
+      "before": "没有 Boss、水 / 树 / 冰、船和手枪",
+      "after": "100 关一周目：第 5 关小 Boss、第 10 关大 Boss、第 100 关终焉 Boss；船、手枪、装甲、精英怪、敌军抢道具、修理包",
+      "result": "魔改模式有 Boss 战和 2D 版玩法",
+      "evidence_ids": [
+        "desktop-boss10.png",
+        "play-remix-boss10.webm"
+      ],
+      "verification": "pass"
+    },
+    {
+      "id": "views-five",
+      "feature_ids": [
+        "F-views"
+      ],
+      "before": "斜俯视、俯视两档",
+      "after": "五档视角，正视剖面、第一人称驾驶舱，Q/E 无极旋转",
+      "result": "可以从车后和驾驶舱重玩原版关卡",
+      "evidence_ids": [
+        "desktop-view-front.png",
+        "desktop-view-fp.png"
+      ],
+      "verification": "pass"
+    },
+    {
+      "id": "fc-audio",
+      "feature_ids": [
+        "F-classic-35"
+      ],
+      "before": "全部合成音",
+      "after": "原版 FC 音效 + 合成引擎声",
+      "result": "开炮、打砖、爆炸、开场曲、计分音用原作音效",
+      "evidence_ids": [],
+      "verification": "partial"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "boss-heavy-shells-hq",
+      "found_in": "merge1-dev",
+      "repro": "魔改第 100 关或第 5 关，玩家不动",
+      "observed": "终焉 Boss 约 6.7 秒、火焰战车两炮打穿老鹰",
+      "joke_angle": "Boss 一出场就直奔你家",
+      "cause": "2～4 格宽重型弹整格清砖，Boss 可同时 6 发",
+      "status": "fixed",
+      "fix": "重型弹打不穿老鹰围墙；Boss 普通弹同时最多 1 发（暴怒 2 发）",
+      "before_media_ids": [
+        "bug-before-final-boss-hq.png",
+        "bug-before-mini-boss-hq.png"
+      ],
+      "after_media_ids": [
+        "desktop-boss10.png"
+      ],
+      "retest": "sim-check「boss heavy shells cannot breach the HQ fort」通过；6 个种子的自动驾驶老鹰撑 30～70 秒"
+    },
+    {
+      "id": "remix-open-center",
+      "found_in": "merge1-dev",
+      "repro": "魔改第 1 关，自动驾驶不防守",
+      "observed": "6 局全输，老鹰 10～17 秒被打掉",
+      "joke_angle": "",
+      "cause": "生成地图中路直通老鹰，开局第一辆敌军朝下几炮打穿",
+      "status": "fixed",
+      "fix": "中路固定钢块护卫，开路不拆",
+      "before_media_ids": [
+        "dev-first-remix-level1.png"
+      ],
+      "after_media_ids": [
+        "perf-remix27.png"
+      ],
+      "retest": "同 6 个种子 4/6 局通关，老鹰撑 1～2.5 分钟"
+    },
+    {
+      "id": "stale-fov",
+      "found_in": "merge1-dev",
+      "repro": "第一人称切回斜俯视",
+      "observed": "第一帧只看到半张地图",
+      "joke_angle": "",
+      "cause": "取景距离用了旧视野",
+      "status": "fixed",
+      "fix": "先更新视野再算距离",
+      "before_media_ids": [
+        "bug-before-stale-fov.png"
+      ],
+      "after_media_ids": [
+        "desktop-view-overview.png"
+      ],
+      "retest": "browser-check 视角循环截图"
+    },
+    {
+      "id": "bossbar-overlap",
+      "found_in": "merge1-dev",
+      "repro": "大 Boss 关",
+      "observed": "血条盖住 Boss 出场位置",
+      "joke_angle": "",
+      "cause": "血条在顶部中央",
+      "status": "fixed",
+      "fix": "挪到左侧状态栏",
+      "before_media_ids": [
+        "bug-before-bossbar-overlap.png"
+      ],
+      "after_media_ids": [
+        "desktop-boss10.png"
+      ],
+      "retest": "browser-check 截图"
+    },
+    {
+      "id": "title-sway-leak",
+      "found_in": "merge1-dev",
+      "repro": "开局幕布阶段",
+      "observed": "进关后视角是歪的",
+      "joke_angle": "",
+      "cause": "标题画面的镜头摇摆在幕布前 0.27 秒仍执行",
+      "status": "fixed",
+      "fix": "只在标题画面摇摆",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "desktop-boss10.png"
+      ],
+      "retest": "browser-check Boss 截图朝向正"
+    }
+  ],
+  "media": [
+    {
+      "id": "bug-before-bossbar-overlap.png",
+      "file": "releases/merge1/captures/bug-before-bossbar-overlap.png",
+      "sha256": "a706913c91bfcdc74c8e751c37f30279ea2530f10beeaaefffad5409db6e51b8",
+      "kind": "screenshot",
+      "version": "merge1-dev",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "修复前：Boss 血条挡住顶部出场位置",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "bug-before-final-boss-hq.png",
+      "file": "releases/merge1/captures/bug-before-final-boss-hq.png",
+      "sha256": "ff830dbc34207d07301c9f5974a1bc287b90803fa8d885b4cf859fe6321fcda5",
+      "kind": "screenshot",
+      "version": "merge1-dev",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "修复前：终焉 Boss 出场约 6.7 秒打穿老鹰（玩家不动）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "bug-before-mini-boss-hq.png",
+      "file": "releases/merge1/captures/bug-before-mini-boss-hq.png",
+      "sha256": "406bf112e202974dbd134b017d59621f8aa4062f2b83460fa859552ad303fa14",
+      "kind": "screenshot",
+      "version": "merge1-dev",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "修复前：第 5 关火焰战车两炮打穿老鹰",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "bug-before-stale-fov.png",
+      "file": "releases/merge1/captures/bug-before-stale-fov.png",
+      "sha256": "c2790309f1432d6dd451823c64eced3054dc1eef72163bff595828dd4eadc92a",
+      "kind": "screenshot",
+      "version": "merge1-dev",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "修复前：切回斜俯视第一帧取景过近",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "cover-source-remix70.png",
+      "file": "releases/merge1/captures/cover-source-remix70.png",
+      "sha256": "284132ea859997051b89e6e0889c1caf20c1af68f79f67c06a1e552bc5704db7",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "游戏中心封面原图：魔改第 70 关深渊礁 Boss 竞技场（测试钩子摆位）",
+      "width": 1024,
+      "height": 1024,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-boss10.png",
+      "file": "releases/merge1/captures/desktop-boss10.png",
+      "sha256": "65e3ce9a7c78f934a9470bdf107d481cf3403e480c3bad09dcbf024cf903e16e",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "魔改第 10 关大 Boss 锈湾堡垒与左侧血条（修复后）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-classic-top.png",
+      "file": "releases/merge1/captures/desktop-classic-top.png",
+      "sha256": "7a1609f6e1f0576cfb47a5993e8db140060eeb5bb7a0c84cdccec776ffac1fe5",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "经典第 1 关正俯视实机",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-curtain.png",
+      "file": "releases/merge1/captures/desktop-curtain.png",
+      "sha256": "bdbf69de2d1c5f1655e8c788a299e57b9c30b28ba05570a9b0a4982c9b4a7a6e",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "灰色幕布 STAGE 1",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-gameover.png",
+      "file": "releases/merge1/captures/desktop-gameover.png",
+      "sha256": "62756dd839759424aa2e0614a9baff3adbf387d7a6022e387aee52a8e9966e56",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "GAME OVER 字样从底部升起",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-menu-classic.png",
+      "file": "releases/merge1/captures/desktop-menu-classic.png",
+      "sha256": "491fe62e05d257da161232e716f865cb2060f79b8b218c0d68e3df42677359e0",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "主菜单：经典复刻模式（默认 3 命、一发、正俯视）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-menu-remix.png",
+      "file": "releases/merge1/captures/desktop-menu-remix.png",
+      "sha256": "ee80d2ad87de1183e3fdca981d0330a0b0b1664a1875b3a0a6ae9d96a484f060",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "主菜单切到魔改模式（无限命、3 格、斜俯视）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-menu-stage33.png",
+      "file": "releases/merge1/captures/desktop-menu-stage33.png",
+      "sha256": "d5792ede0d4a2a6c8fc77043b7717403b42117f3ed70bc829d1d9e850f4dcc31",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "经典选关：起始第 33 关，背景换成该关原版地图",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-pause.png",
+      "file": "releases/merge1/captures/desktop-pause.png",
+      "sha256": "f5ae963989e932e4102bd291f927452426740138636ed62daceb86d78590fe64",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "暂停菜单",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-remix-hurt.png",
+      "file": "releases/merge1/captures/desktop-remix-hurt.png",
+      "sha256": "198152d050b34dc280aa6001c4df9729d99f6d897f9d5d22abe7f103c03dc094",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "魔改 3 格耐久受击后剩 2 格",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-result.png",
+      "file": "releases/merge1/captures/desktop-result.png",
+      "sha256": "c57b56a3688c0c53883f8e94d85220ff76d7385a7270703925b87da29db3e0ea",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "结算：经典 3 命打光后「从第 2 关再来」",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-rotated.png",
+      "file": "releases/merge1/captures/desktop-rotated.png",
+      "sha256": "575f8addb689806e9b4593e203adfaf4ca31089bbba015268fb584a71e882b4c",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "按住 E 转一整圈后的画面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-tally.png",
+      "file": "releases/merge1/captures/desktop-tally.png",
+      "sha256": "b1f9cc6f7e72462108f0a7f9e24db573f5b2603b48b421bca479224720cdb693",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "原版黑底计分页",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-view-close.png",
+      "file": "releases/merge1/captures/desktop-view-close.png",
+      "sha256": "edae0b4cd287cd233ab904bc4f4869bc5c62eee7b1c4dbab2d310fa0c5fcc9a8",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "近景（测试清空地图）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-view-fp.png",
+      "file": "releases/merge1/captures/desktop-view-fp.png",
+      "sha256": "f908f4cf4c2f34c98ae0968e6399cb07b85ebf5500724863ee3cb32a16b96add",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称（测试清空地图）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-view-front.png",
+      "file": "releases/merge1/captures/desktop-view-front.png",
+      "sha256": "f81a99130639aa4d817a712abe02d5eb7b9761a5261bfd3752aafb146a768933",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "正视（测试清空地图）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-view-overview.png",
+      "file": "releases/merge1/captures/desktop-view-overview.png",
+      "sha256": "c97710bef5555670f361d95a5de8d7745ab79fce78361736d2728e62ac8e21c0",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "斜俯视（测试清空了地图用于方向检查）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "desktop-view-top.png",
+      "file": "releases/merge1/captures/desktop-view-top.png",
+      "sha256": "d70d3bae74cae68bb639baba14efcb50ee458976dae5f4ed67b79e7e6064bb7a",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "正俯视（测试清空地图）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "dev-first-classic-stage1.png",
+      "file": "releases/merge1/captures/dev-first-classic-stage1.png",
+      "sha256": "b9f3dcfc4d8f276633106037f70f9d5e89e1ac908357a6c44c86a4e642b6d9f2",
+      "kind": "screenshot",
+      "version": "merge1-dev",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "开发中第一次渲染出原版第 1 关",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "dev-first-remix-level1.png",
+      "file": "releases/merge1/captures/dev-first-remix-level1.png",
+      "sha256": "00e8a46a549bca0de985f0748c54b5a4633b269c7cadc5e4f20040ddcbcf3e0d",
+      "kind": "screenshot",
+      "version": "merge1-dev",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "开发中第一次渲染出魔改第 1 关（中路护卫加入前）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "perf-classic35.png",
+      "file": "releases/merge1/captures/perf-classic35.png",
+      "sha256": "f0a179d71f88c5075810378b5ea59bb0226a7c659109d2b43edecd5b8500464e",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "性能测量时经典第 35 关",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "perf-remix10.png",
+      "file": "releases/merge1/captures/perf-remix10.png",
+      "sha256": "19114d414bd33345bfd75271076bda4a406aeaf2241a907b1d1c432e2452c981",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "性能测量时魔改第 10 关",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "perf-remix27.png",
+      "file": "releases/merge1/captures/perf-remix27.png",
+      "sha256": "b39a977e53daeda9f4f9f8781d7e6feddc5cb20b13e93838187f7fb4ad3d066e",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "性能测量时魔改第 27 关（熔岩脊）第一人称",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-landscape.png",
+      "file": "releases/merge1/captures/phone-landscape.png",
+      "sha256": "606e53860c183fa2775aeca9232052120ed566b0717c59f95d0e76867b7aadfb",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "手机横屏 844×390 布局",
+      "width": 1688,
+      "height": 780,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait-close.png",
+      "file": "releases/merge1/captures/phone-portrait-close.png",
+      "sha256": "ac52d581a45649f9a0912fccbe0a38b6acfdba24ddf6337872fe28c51c829eb5",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏旋转布局下按 C 切到近景、按住 Q 转视角",
+      "width": 780,
+      "height": 1688,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait-menu.png",
+      "file": "releases/merge1/captures/phone-portrait-menu.png",
+      "sha256": "777fd49e314b1b86d3190071f0eaa5cf6f34680ec25912279f182e06ce12b5eb",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏主菜单",
+      "width": 780,
+      "height": 1688,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait-rotated.png",
+      "file": "releases/merge1/captures/phone-portrait-rotated.png",
+      "sha256": "2c2613f7f7bd9073e053db89c4143e939727253b382c05035e90f23385163563",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏开局自动横置 + 触屏按键",
+      "width": 780,
+      "height": 1688,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-classic-close.png",
+      "file": "releases/merge1/captures/play-classic-close.png",
+      "sha256": "634731f493090d753fa19a538e17cd6d1a333f6822d983b0ecc301eeea06f727",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：近景",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-classic-fp.png",
+      "file": "releases/merge1/captures/play-classic-fp.png",
+      "sha256": "bd49f4c843922dd0e07b817b084d62fee4c21727ad16094918c2015eafacee40",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：第一人称",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-classic-front.png",
+      "file": "releases/merge1/captures/play-classic-front.png",
+      "sha256": "75d17d0aeea6e9baf70cbc259052cba373522394d4d1905d69f283521f3099ff",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：正视",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-classic-overview.png",
+      "file": "releases/merge1/captures/play-classic-overview.png",
+      "sha256": "a1c699adedf82954ac677156ff87f7e2f4e254c3844d5d2fd581c0caa2e427c1",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：斜俯视",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-classic-stage1.webm",
+      "file": "releases/merge1/captures/play-classic-stage1.webm",
+      "sha256": "ace3504265d07d8102e77e1f49840b11b127b1fde324c438e71c2fc1d09f75e4",
+      "kind": "video",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "实机录像：经典第 1 关，页面内自动驾驶用键盘事件操作，依次切正俯视 / 近景 / 正视 / 第一人称 / 斜俯视（演示模式开）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 36.88,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 2.4,
+          "description": "幕布 STAGE 1",
+          "facts": [
+            "F-classic-35"
+          ]
+        },
+        {
+          "in_seconds": 2.4,
+          "out_seconds": 11.5,
+          "description": "正俯视原版第 1 关开打",
+          "facts": [
+            "F-classic-35"
+          ]
+        },
+        {
+          "in_seconds": 11.5,
+          "out_seconds": 17.5,
+          "description": "近景",
+          "facts": [
+            "F-views"
+          ]
+        },
+        {
+          "in_seconds": 17.5,
+          "out_seconds": 23.5,
+          "description": "正视（车后）",
+          "facts": [
+            "F-views"
+          ]
+        },
+        {
+          "in_seconds": 23.5,
+          "out_seconds": 29.5,
+          "description": "第一人称驾驶舱",
+          "facts": [
+            "F-views"
+          ]
+        },
+        {
+          "in_seconds": 29.5,
+          "out_seconds": 36.8,
+          "description": "斜俯视",
+          "facts": [
+            "F-views"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "play-classic-top.png",
+      "file": "releases/merge1/captures/play-classic-top.png",
+      "sha256": "e0739f87c09550b68df8454adafd97035bbe8e9802f0f50bd83aea605aec4850",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：经典第 1 关正俯视",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-remix-boss10-a.png",
+      "file": "releases/merge1/captures/play-remix-boss10-a.png",
+      "sha256": "cb948a9cdbe425a8c13eb6abd329d4b31e847079ddaf1313bd6c98dd77ee97af",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：大 Boss 登场",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-remix-boss10-b.png",
+      "file": "releases/merge1/captures/play-remix-boss10-b.png",
+      "sha256": "9c01145328f29c26716502a37f789de574249700aeb692e5dd186a6a170a23a8",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：斜俯视 Boss 战",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-remix-boss10-front.png",
+      "file": "releases/merge1/captures/play-remix-boss10-front.png",
+      "sha256": "d452acf68a35af579c5496ce71318d146856035977fd1ff1f47958946689c87b",
+      "kind": "screenshot",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "录像截帧：正视对决 Boss",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "play-remix-boss10.webm",
+      "file": "releases/merge1/captures/play-remix-boss10.webm",
+      "sha256": "8ca43c797e08daa3c27abf18eec568416de1308d150a1183a3cc4334094664c6",
+      "kind": "video",
+      "version": "merge1",
+      "build_id": "tank-3d-merge1-5d19e5782048",
+      "capture_mode": "realtime-automation",
+      "description": "实机录像：魔改第 10 关大 Boss 战，自动驾驶，斜俯视 → 正视 → 斜俯视（演示模式开）",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 28.08,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 2.4,
+          "description": "幕布 STAGE 10 · 大 Boss 锈湾堡垒",
+          "facts": [
+            "F-remix-100",
+            "F-bosses"
+          ]
+        },
+        {
+          "in_seconds": 2.4,
+          "out_seconds": 12.4,
+          "description": "Boss 登场、血条、斜俯视交战",
+          "facts": [
+            "F-bosses"
+          ]
+        },
+        {
+          "in_seconds": 12.4,
+          "out_seconds": 20.4,
+          "description": "正视近距离对决 Boss",
+          "facts": [
+            "F-bosses",
+            "F-views"
+          ]
+        },
+        {
+          "in_seconds": 20.4,
+          "out_seconds": 28.0,
+          "description": "斜俯视继续交战",
+          "facts": [
+            "F-bosses"
+          ]
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "devices": [
+      "Edge 154 headless，Windows 11，RTX 4060 Ti（ANGLE D3D11），1280×720 DPR1",
+      "手机视口模拟 390×844 / 844×390 DPR2 触控（Playwright isMobile + CDP 触摸）"
+    ],
+    "methods": [
+      "node game-projects/tank-3d/qa/sim-check.mjs（16 项）",
+      "node game-projects/tank-3d/qa/browser-check.cjs（18 项）",
+      "node game-projects/tank-3d/qa/capture-play.cjs（录像）"
+    ],
+    "results": "全部通过；性能约 170 FPS，中位 5.9ms，P95 6ms，无超过 50ms 的帧（headless 不锁帧）",
+    "evidence": [
+      "releases/merge1/captures/browser.json"
+    ],
+    "untested": [
+      "真机手机帧率与触感",
+      "声音主观试听",
+      "真人通关全部关卡"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像无声（Playwright 录屏不含音轨），需要时按 game-video 流程补录带游戏声音的素材",
+      "录像为自动驾驶 + 演示模式，不是真人操作",
+      "缺手机真机录像"
+    ]
+  }
+}
