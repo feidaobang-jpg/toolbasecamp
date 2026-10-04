@@ -2707,7 +2707,7 @@ function renderBuild(){
 }
 /* ================= 建造虚影：先看位置再放 =================
    选中设施后关闭面板，角色面前出现半透明 3D 虚影（绿=可放，红=不行并写明原因）；
-   走动或 Q/E/鼠标转视角调整位置和朝向（虚影跟着视角转），J/回车/左键/「放置」确认（此时才扣钱），Esc/L/「取消」退出。 */
+   走动或 Q/E/鼠标转视角调整位置和朝向（虚影跟着视角转），J/回车/左键/「放置」确认（此时才扣钱），Esc/「取消」退出，L 返回建造菜单。 */
 const place={mode:null,target:null,kind:null,ghost:null,ring:null,mat:null,x:0,z:0,yaw:0,valid:false,reason:'',free:false,lastMouse:false};
 function startPlacement(kind,free=false){
   cancelPlacement(true);
@@ -2718,7 +2718,7 @@ function startPlacement(kind,free=false){
   const cfg=BUILDINGS[kind];let ring=null;
   if(cfg.range){ring=new THREE.Mesh(new THREE.RingGeometry(cfg.range-.25,cfg.range,72),new THREE.MeshBasicMaterial({color:0x7fd7ff,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);}
   Object.assign(place,{mode:'build',target:null,kind,ghost,ring,mat,valid:false,reason:'',free,lastMouse:Input.mouseFire});
-  $('placeTip').textContent='走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 放置 · Esc/L 取消（放下时才扣钱）';
+  $('placeTip').textContent='走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 放置 · L 返回建造菜单 · Esc 取消（放下时才扣钱）';
   stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent=cfg.name+(free||Game.testMode?'':' · 💰'+cfg.price);
   AudioSys.sfx('click');updPlacement();
 }
@@ -2751,7 +2751,7 @@ function placementCheck(kind,x,z,yaw){
   }
   return '';
 }
-/* 拆除模式：面朝的最近设施显示红圈，J/回车/左键/「拆除」拆掉并返还一半造价；可连续拆，Esc/L 退出 */
+/* 拆除模式：面朝的最近设施显示红圈，J/回车/左键/「拆除」拆掉并返还一半造价；可连续拆，L 返回建造菜单 · Esc 退出 */
 function startDemolish(){
   cancelPlacement(true);closePanels();
   const ring=new THREE.Mesh(new THREE.RingGeometry(1,1.3,48),new THREE.MeshBasicMaterial({color:0xff4d4d,transparent:true,opacity:.85,depthWrite:false,side:THREE.DoubleSide}));
@@ -2759,7 +2759,7 @@ function startDemolish(){
   const ghost=new THREE.Group();scene.add(ghost);
   Object.assign(place,{mode:'demolish',kind:'demolish',ghost,ring,mat:new THREE.MeshBasicMaterial(),target:null,valid:false,reason:'',free:false,lastMouse:Input.mouseFire});
   stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent='🔨 拆除模式';$('placeOk').textContent='🔨 拆除 J';
-  $('placeTip').textContent='走动或 Q/E 转向要拆的设施（红圈）· J/回车/左键 拆除并返还一半造价 · 可连续拆 · Esc/L 退出';
+  $('placeTip').textContent='走动或 Q/E 转向要拆的设施（红圈）· J/回车/左键 拆除并返还一半造价 · 可连续拆 · L 返回建造菜单 · Esc 退出';
   AudioSys.sfx('click');updPlacement();
 }
 function demolishTarget(){
@@ -3329,7 +3329,7 @@ let panelOpenedAt=-1e9;
 const markPanelOpen=()=>{panelOpenedAt=performance.now()-(Input.lastTouchT||-1e9)<500?performance.now():-1e9;};
 for(const id of ['shopPanel','buildPanel'])$(id).addEventListener('click',e=>{if(performance.now()-panelOpenedAt<250&&!e.target.closest('.closeX')){e.stopPropagation();e.preventDefault();}},true);
 function openShop(){Input.reset();markPanelOpen();shopTab='weapon';document.querySelectorAll('#shopTabs .tab').forEach(e=>e.classList.toggle('on',e.dataset.t==='weapon'));renderShop();$('shopPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
-function openBuild(){Input.reset();markPanelOpen();renderBuild();$('buildPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
+function openBuild(){cancelPlacement(true);Input.reset();markPanelOpen();renderBuild();$('buildPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
 function loop(){
   requestAnimationFrame(loop);
   navTick();
@@ -3337,7 +3337,7 @@ function loop(){
   let dt=Math.min(.05,(now-lastT)/1000);lastT=now;
   if((Game.state==='prep'||Game.state==='battle')&&!panelOpen){
     if(Input.pop('O')){cancelPlacement(true);openShop();}
-    else if(Input.pop('L')){if(place.kind)cancelPlacement();else openBuild();}
+    else if(Input.pop('L'))openBuild();
   }else if(panelOpen&&(Input.pop('O')||Input.pop('L'))){closePanels();}
   const playing=(Game.state==='prep'||Game.state==='battle')&&!panelOpen;
   if(playing){

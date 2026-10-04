@@ -43,7 +43,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .dmgNum.big{font-size:19px;color:#ffd84d}
 #readyBtn{position:absolute;left:50%;top:14px;transform:translateX(-50%);pointer-events:auto;font-size:14px;cursor:pointer;padding:9px 18px;font-weight:bold;z-index:13}
 #readyBtn:active{transform:translateX(-50%) scale(.95);}
-#placeBar{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);pointer-events:auto;z-index:14;padding:8px 14px;border-radius:10px;text-align:center;font-size:13px;min-width:380px}
+#placeBar{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);pointer-events:auto;z-index:30;padding:8px 14px;border-radius:10px;text-align:center;font-size:13px;min-width:380px}
 #placeBar .small{font-size:10px;max-width:none;margin:2px 0}#placeBar .btnRow{justify-content:center;margin:4px 0 0}#placeBar .mbtn{font-size:12px;padding:6px 12px}
 #placeState{color:#5dff9d;font-weight:bold}#placeState.bad{color:#ff6b6b}
 .touch-mode #placeBar{bottom:250px;left:42%}
@@ -225,12 +225,13 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div id="weaponBar" aria-label="武器栏"></div>
     <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
+  </div>
+  <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
-      <div class="small" id="placeTip">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 确认 · Esc/L 退出（放下时才扣钱，拆除返还一半）</div>
+      <div class="small" id="placeTip">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 确认 · L 返回建造菜单 · Esc 退出（放下时才扣钱，拆除返还一半）</div>
       <div class="btnRow"><button class="mbtn green" id="placeOk">✔ 放置 J</button><button class="mbtn red" id="placeCancel">✖ 取消</button></div>
     </div>
-  </div>
 
   <!-- 虚拟触控 -->
   <div id="touchUI" class="overlay hidden">
@@ -389,6 +390,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=jump173" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=buildreturn174" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>
