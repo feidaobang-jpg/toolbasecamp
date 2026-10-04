@@ -186,7 +186,7 @@ const gamesConfig = {
             titleKey: 'games.groups.action',
             items: [
                 { titleKey: 'tools.tank3d.title', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-3d/index.html', url: 'html/game/tank-3d/index.html?v=1', thumb: 'assets/game/thumbs/tank-3d.jpg?v=1' },
-                { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=2', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' },
+                { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=3', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' },
                 { titleKey: 'tools.jackal3d.title', url: 'html/game/jackal-stage1-3d/index.html?v=1', thumb: 'assets/game/thumbs/jackal-stage1-3d.jpg?v=1' },
                 { titleKey: 'tools.journeyWest.title', toyUrl: 'https://www.bilibili.com/toy/feidao-journey-west/index.html', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
                 { titleKey: 'tools.tankBattle.title', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-battle/index.html', url: 'html/game/tank_battle.html?v=54' },

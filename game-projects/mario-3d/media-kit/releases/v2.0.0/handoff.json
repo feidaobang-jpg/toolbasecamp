@@ -1,0 +1,939 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.0.0",
+  "base_version": "single-view1",
+  "created_at": "2026-10-04",
+  "build": {
+    "id": "mario-3d-v2.0.0-fa7a599fa834",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "fa7a599fa834efe48d5d3e634b8c3821430f77831ea746d068ff30184f237b1d",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "level-1-1",
+      "description": "FC 原作 1-1 逐格地图：问号砖、砖块、4 根水管、断崖、台阶、旗杆城堡、地下奖励房间",
+      "status": "implemented",
+      "evidence_ids": [
+        "11-blocks-side",
+        "11-pipes-oblique",
+        "11-flag-side",
+        "run-1-1-to-1-2"
+      ]
+    },
+    {
+      "id": "level-1-2",
+      "description": "FC 原作 1-2 地下关：石柱、砖墙迷宫、食人花水管、奖励房间、升降台、横管出口与地面出口区",
+      "status": "implemented",
+      "evidence_ids": [
+        "12-pillars-side",
+        "12-piranha-side",
+        "12-lifts-oblique"
+      ]
+    },
+    {
+      "id": "warp-zone",
+      "description": "1-2 天花板上方通往传送区，三根传送水管 4/3/2，钻入后结算",
+      "status": "implemented",
+      "evidence_ids": [
+        "12-ceilingtop-side",
+        "12-warpzone-side",
+        "warp-result"
+      ]
+    },
+    {
+      "id": "powerups",
+      "description": "蘑菇变大、大玛丽顶出火焰花、J 发射火球、无敌星 10 秒、隐藏 1UP 与金币 100 枚奖命",
+      "status": "implemented",
+      "evidence_ids": [
+        "11-blocks-side"
+      ]
+    },
+    {
+      "id": "pipe-travel",
+      "description": "按 L 钻竖管进奖励房间，向右走进横管回主线",
+      "status": "implemented",
+      "evidence_ids": [
+        "11-pipes-depth"
+      ]
+    },
+    {
+      "id": "crouch",
+      "description": "大玛丽按 L 下蹲",
+      "status": "implemented",
+      "evidence_ids": []
+    },
+    {
+      "id": "lane-3d",
+      "description": "所有地形沿纵深铺满跑道，水管纵向并排 3 根，不能从旁边绕过",
+      "status": "implemented",
+      "evidence_ids": [
+        "11-pipes-oblique",
+        "11-stairs-oblique"
+      ]
+    },
+    {
+      "id": "enemies",
+      "description": "栗宝宝、绿/红乌龟（踩成壳、踢壳连杀）、食人花（玛丽靠近时不出）",
+      "status": "implemented",
+      "evidence_ids": [
+        "12-piranha-side"
+      ]
+    },
+    {
+      "id": "options",
+      "description": "起始关卡、命数（无限/经典 3 命）、耐久（标准 3 格护心/原作）、演示模式、视角、画质（自动/高/流畅）、音量、触屏按键、帧率显示、全屏、返回游戏列表",
+      "status": "implemented",
+      "evidence_ids": [
+        "title-menu"
+      ]
+    },
+    {
+      "id": "cameras",
+      "description": "侧视/斜视/纵深 3 个预设（C），Q/E 无极旋转，遮挡淡化，地下关镜头高于天花板时切掉天花板层",
+      "status": "implemented",
+      "evidence_ids": [
+        "rot-090",
+        "rot-180",
+        "rot-270",
+        "rot-360",
+        "12-walltop-oblique"
+      ]
+    },
+    {
+      "id": "mobile",
+      "description": "手机左摇杆 + L/J/K 动作键 + Q/C/E 视角键，竖屏开始后自动旋转横屏，Toy 0×0 启动自恢复",
+      "status": "implemented",
+      "evidence_ids": [
+        "phone-portrait-menu",
+        "phone-rotated-play",
+        "phone-landscape-play"
+      ]
+    },
+    {
+      "id": "flow",
+      "description": "WORLD 卡片、中途点复活、时间耗尽死亡、1-1 过关自动进 1-2、通关/传送/GAME OVER 结算、最高分（演示局不计）",
+      "status": "implemented",
+      "evidence_ids": [
+        "world-card",
+        "gameover",
+        "warp-result"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "second-tier-jump",
+      "feature_ids": [
+        "level-1-1"
+      ],
+      "before": "玩家反馈：原作能跳上去的砖块（特别是第二层）跳不上去",
+      "after": "按原作每帧数值重写跳跃：起跳初速随跑速分三档，按住 K 上升重力更小，可从第一层砖（顶 y=4）跳上第二层（顶 y=8）",
+      "result": "自动测试最高点 8.26 格并站上第二层",
+      "evidence_ids": [
+        "11-blocks-side"
+      ],
+      "validation": "pass（t1 T1/T1b）"
+    },
+    {
+      "id": "flower-star",
+      "feature_ids": [
+        "powerups"
+      ],
+      "before": "只有蘑菇可吃",
+      "after": "大玛丽顶问号砖出火焰花，吃后 J 发火球；1-1 第 101 列砖块和 1-2 砖块里有无敌星",
+      "result": "蘑菇→大、花→火、火球、无敌星 10 秒均实测",
+      "evidence_ids": [],
+      "validation": "pass（t1 T2–T4）"
+    },
+    {
+      "id": "hidden-1up",
+      "feature_ids": [
+        "powerups"
+      ],
+      "before": "没有隐藏奖命",
+      "after": "1-1 第 4 根水管后的隐藏 1UP 砖、1-2 天花板 1UP 砖",
+      "result": "从下方顶出 1UP 并吃到，1UP 计数 +1",
+      "evidence_ids": [],
+      "validation": "pass（t1 T3、t3 T15）"
+    },
+    {
+      "id": "stairs-full-depth",
+      "feature_ids": [
+        "lane-3d"
+      ],
+      "before": "台阶上走动会掉下来",
+      "after": "台阶、砖块、地面沿纵深铺满整条跑道（跑道半宽 3 格），玛丽活动范围限制在跑道内",
+      "result": "站在台阶顶上按住 W/S 走到跑道边缘也不掉",
+      "evidence_ids": [
+        "11-stairs-oblique"
+      ],
+      "validation": "pass（t2 T6）"
+    },
+    {
+      "id": "pipe-rows",
+      "feature_ids": [
+        "lane-3d"
+      ],
+      "before": "水管单根，可以从旁边绕过",
+      "after": "每根水管纵向并排 3 根且碰撞铺满跑道",
+      "result": "z=±2.55 与 0 三条线都被第 1 根水管挡住",
+      "evidence_ids": [
+        "11-pipes-oblique"
+      ],
+      "validation": "pass（t2 T5）"
+    },
+    {
+      "id": "pipe-dive",
+      "feature_ids": [
+        "pipe-travel",
+        "crouch"
+      ],
+      "before": "不能钻水管",
+      "after": "L 键：大玛丽下蹲；站在可钻水管上按 L 钻进奖励房间，走进横管回主线",
+      "result": "1-1：57 号水管→奖励房间→163 号水管；1-2：103 号→奖励房间→115 号；横管 166→地面出口区",
+      "evidence_ids": [
+        "11-pipes-depth"
+      ],
+      "validation": "pass（t2 T7/T7b、t3 T11/T11b/T13）"
+    },
+    {
+      "id": "level-1-2",
+      "feature_ids": [
+        "level-1-2",
+        "warp-zone",
+        "flow"
+      ],
+      "before": "只有第一关",
+      "after": "新增 1-2 地下关、奖励房间、升降台、出口区与传送区；1-1 拔旗后自动进 1-2",
+      "result": "1-1 过旗→1-2 卡片；1-2 横管出口→旗杆→结算；天花板上方→传送区→结算",
+      "evidence_ids": [
+        "run-1-1-to-1-2",
+        "12-ceilingtop-side",
+        "warp-result"
+      ],
+      "validation": "pass（t2 T9、t3、t4）"
+    },
+    {
+      "id": "faithful-remake",
+      "feature_ids": [
+        "level-1-1",
+        "level-1-2",
+        "enemies"
+      ],
+      "before": "程序化原创风格的“经典第一关”路线",
+      "after": "按原作地图逐格录入砖块、问号砖、水管与敌人位置，计分、时间 400 与踩敌连击分按原作；模型与音乐为程序化重新制作",
+      "result": "菜单、HUD 与结算改为原作式流程",
+      "evidence_ids": [
+        "title-menu",
+        "world-card"
+      ],
+      "validation": "pass（截图审查）"
+    },
+    {
+      "id": "standard-options",
+      "feature_ids": [
+        "options",
+        "cameras",
+        "mobile"
+      ],
+      "before": "旧版选项少，Q/E 旋转 + R/F 俯仰 + C 回正",
+      "after": "接入统一选项组并本地保存；C 循环 3 个预设，Q/E 无极旋转，无俯仰键",
+      "result": "刷新后视角、音量等保留，演示模式每次载入为关",
+      "evidence_ids": [
+        "title-menu",
+        "phone-portrait-menu"
+      ],
+      "validation": "pass（t5）"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "camera-hugs-stairs",
+      "found_in": "v2.0.0 开发中",
+      "repro": "纵深视角走到 1-1 终点 8 级台阶旁",
+      "observed": "镜头贴着台阶侧面，屏幕左边一大块纯黑",
+      "humor_angle": null,
+      "cause": "纵深预设镜头离跑道边缘只有约 0.7 格",
+      "status": "fixed",
+      "fix": "贴近镜头的地形网点溶解，纵深预设改为 yaw -1.1 / 距离 12",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "11-flag-depth"
+      ],
+      "retest": "pass"
+    },
+    {
+      "id": "ceiling-blocks-view",
+      "found_in": "v2.0.0 开发中",
+      "repro": "1-2 斜视/纵深视角爬到砖墙高处",
+      "observed": "镜头升到天花板以上或卡进天花板，画面被天花板顶面和放大的砖块盖住",
+      "humor_angle": null,
+      "cause": "地下关天花板高 10 格，斜视镜头高度超过它",
+      "status": "fixed",
+      "fix": "镜头高于天花板且玛丽在下面时，把天花板高度以上的地形整层切掉（剖面）",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "12-walltop-oblique"
+      ],
+      "retest": "pass"
+    },
+    {
+      "id": "first-sight-stutter",
+      "found_in": "v2.0.0 开发中",
+      "repro": "跑动中按 E 转镜头或第一次出现特效",
+      "observed": "实测 8 秒内有 1～3 帧 94～147ms 卡顿",
+      "humor_angle": null,
+      "cause": "镜头外物体、敌人、道具、特效第一次上屏时才编译着色器",
+      "status": "fixed",
+      "fix": "每次换区域时预编译全部材质（含之后才出现的敌人、道具、特效）",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "pass：同样路线最慢帧 6.1～11.7ms"
+    },
+    {
+      "id": "rotated-pause-overflow",
+      "found_in": "v2.0.0 开发中",
+      "repro": "手机竖屏开始后暂停",
+      "observed": "暂停菜单比 390 高，最后两项跑出屏幕",
+      "humor_angle": null,
+      "cause": "单列 10 个选项",
+      "status": "fixed",
+      "fix": "紧凑横屏时菜单改两列、主按钮占满一行；小屏竖屏标题区收紧；起始关卡的值缩短",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "phone-rotated-pause",
+        "phone-small-menu",
+        "phone-small-portrait-menu"
+      ],
+      "retest": "pass：844×390、390×844、667×375、375×667 所有按钮都在屏幕内"
+    }
+  ],
+  "media": [
+    {
+      "id": "title-menu",
+      "file": "releases/v2.0.0/captures/title-menu.png",
+      "sha256": "a09a23859c9d7b96a44e8225b834e1b3814b6ccb9f825090f0d8a88df161ee5c",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "主菜单：起始关卡、命数、耐久、演示、视角、画质、音量、触屏、帧率、全屏、返回列表。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "world-card",
+      "file": "releases/v2.0.0/captures/world-card.png",
+      "sha256": "b8c8df499bf062144e91f26ad3adb06ff66847709ccb7743c4a5272f05bd7cb3",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "进关黑屏 WORLD 卡片：剩余命数与本关提示。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-blocks-side",
+      "file": "releases/v2.0.0/captures/11-blocks-side.png",
+      "sha256": "6f70945a2eb660696a80700c0c2587fce68ebe58617fdd57eb4609f4dee8663a",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "1-1 第一组问号砖与砖块，侧视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-blocks-oblique",
+      "file": "releases/v2.0.0/captures/11-blocks-oblique.png",
+      "sha256": "84c723aa5cb426d6b947368abd41ec4da14616116f40bd491c53db999225e3eb",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "同处斜视：砖块沿纵深铺满跑道。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-blocks-depth",
+      "file": "releases/v2.0.0/captures/11-blocks-depth.png",
+      "sha256": "ff037561fc2539dfe622ade4d63f17347800da7e295501594645519e3fb0ad0f",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "同处纵深视角。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-pipes-side",
+      "file": "releases/v2.0.0/captures/11-pipes-side.png",
+      "sha256": "493b6a94261e25cb379a909d045bb13f562ba6d059716cef8835f33c5d40aba7",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "第 4 根可钻水管（纵向并排 3 根），侧视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-pipes-oblique",
+      "file": "releases/v2.0.0/captures/11-pipes-oblique.png",
+      "sha256": "a5dff89e886c0a4c96891a6b6d2d3c789502f50f61615c288f7fdfcd39b4fec4",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "水管一排 3 根，斜视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-pipes-depth",
+      "file": "releases/v2.0.0/captures/11-pipes-depth.png",
+      "sha256": "f11aa4a24cc37f2a4631977693095f47332aef9c64c7ef2e718eec3fed8fb4ff",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "站在可钻水管上，纵深视角。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-stairs-oblique",
+      "file": "releases/v2.0.0/captures/11-stairs-oblique.png",
+      "sha256": "93f783795dd97b4851486bf051c462b4b501458e3be4d64dd1d2f043ae9439b4",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "整条跑道宽的台阶，斜视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-flag-side",
+      "file": "releases/v2.0.0/captures/11-flag-side.png",
+      "sha256": "6225edbf3191a428eea9da729e9ee54d91d025e355bd368805b0946d5f71caeb",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "终点 8 级台阶、旗杆与城堡，侧视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "11-flag-depth",
+      "file": "releases/v2.0.0/captures/11-flag-depth.png",
+      "sha256": "d22e27020ec2517b5173274bd8663253364afdf79890f9178445587a9d5c78f6",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "终点纵深视角（修复前此处镜头贴着台阶出现大黑块）。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rot-090",
+      "file": "releases/v2.0.0/captures/rot-090.png",
+      "sha256": "d1060e689830617878ee2792f25d5d2c4a6889f134d0e6aa962bda7e7c4946a9",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "E 键旋转 90°。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rot-180",
+      "file": "releases/v2.0.0/captures/rot-180.png",
+      "sha256": "ec64947f1fd36fccfcb0475dedbc01e693e324da9fa5944e01ad4c74e171b2d6",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "旋转 180°（跑道背面）。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rot-270",
+      "file": "releases/v2.0.0/captures/rot-270.png",
+      "sha256": "a70e78df86688b8d22c8b0e0fef756afc8f6a2a274db6ce3ce30e96ca3391af1",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "旋转 270°。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rot-360",
+      "file": "releases/v2.0.0/captures/rot-360.png",
+      "sha256": "2191a4c0aa8b8bbb8b503cbb285cdecd325814e0a637e810698c57ad23fd831f",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "转满一圈回到侧视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "12-pillars-side",
+      "file": "releases/v2.0.0/captures/12-pillars-side.png",
+      "sha256": "da04b587fb6c310506c0de8d6a6d30ab7f396534353b39a56cd4bd511042f26f",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "1-2 起点后的蓝色石柱，侧视。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "12-walltop-oblique",
+      "file": "releases/v2.0.0/captures/12-walltop-oblique.png",
+      "sha256": "733b060b5f45c0aa204d3203c8a761e1b3d69b915ee76dd325da99070b3314a1",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "1-2 砖墙区斜视：镜头高于天花板时天花板层切掉。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "12-piranha-side",
+      "file": "releases/v2.0.0/captures/12-piranha-side.png",
+      "sha256": "b245fe1d513bf10f15cd4da47fa255584a7ecdf5aeff63f8a9beea5000b1678d",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "1-2 三根食人花水管（每根纵向 3 朵）。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "12-lifts-oblique",
+      "file": "releases/v2.0.0/captures/12-lifts-oblique.png",
+      "sha256": "2bdf2567b114de97ba1ce5faeef7ecc3e7f3ff720f503e47f9198ab8e4aa6858",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "1-2 升降台区。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "12-ceilingtop-side",
+      "file": "releases/v2.0.0/captures/12-ceilingtop-side.png",
+      "sha256": "8a4b463a2d6b4c9d7acd3362306d633994aa2dffecda653565a59f186a3244cc",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "在天花板上面奔跑，前方是 WELCOME TO WARP ZONE。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "12-warpzone-side",
+      "file": "releases/v2.0.0/captures/12-warpzone-side.png",
+      "sha256": "40b3cfc51679515e33c494e8261be0bd8e87680c897b05932db2dfa424caee0a",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "传送区三根水管 4/3/2。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "warp-result",
+      "file": "releases/v2.0.0/captures/warp-result.png",
+      "sha256": "cb307d27b58ded5b6d8b0e5c2c0395ee653cdd972ec094637f7d3ff1c7f82022",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "钻进 2 号传送水管后的结算。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "gameover",
+      "file": "releases/v2.0.0/captures/gameover.png",
+      "sha256": "4151e5beaa0dcad0c633edf5582ba19733767a5a960e8d37dbc07e172b735f0b",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "经典 3 命 + 原作耐久用完后的 GAME OVER。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait-menu",
+      "file": "releases/v2.0.0/captures/phone-portrait-menu.png",
+      "sha256": "f2cdf0442c69baba786f3b5047a0539fb32c327380d16ef1bd9d99270bb1d08a",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏 390×844 主菜单（触控模拟）。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1170,
+      "height": 2532,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-rotated-play",
+      "file": "releases/v2.0.0/captures/phone-rotated-play.png",
+      "sha256": "4586d89cce63a7529b356cd9cff36d7e5c638624aced53f0c42407fa3b9f5171",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏开始后自动旋转为横屏布局。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1170,
+      "height": 2532,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-rotated-pause",
+      "file": "releases/v2.0.0/captures/phone-rotated-pause.png",
+      "sha256": "1042aa1728c9532c0bbf04270f49d6d90861fde40a1c80b102d94e6a346b0017",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "旋转布局下的暂停菜单（两列）。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1170,
+      "height": 2532,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-landscape-play",
+      "file": "releases/v2.0.0/captures/phone-landscape-play.png",
+      "sha256": "b7cd551c9b228d551954251ea2b064d7c7d96cbc967d89f60ca9b9d43234805b",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "手机横屏 844×390 游玩与触控按键。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 2532,
+      "height": 1170,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-small-menu",
+      "file": "releases/v2.0.0/captures/phone-small-menu.png",
+      "sha256": "ef66f39c8ec163c904cb199b0fa5a15b697f982b6b6cae54d2c36141870aa3b7",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "小屏横屏 667×375 主菜单。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1334,
+      "height": 750,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-small-portrait-menu",
+      "file": "releases/v2.0.0/captures/phone-small-portrait-menu.png",
+      "sha256": "41ee907f529cd621177b023519fd6dc0d3f706c04a890f7fe93213bffac43a2e",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "小屏竖屏 375×667 主菜单。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 750,
+      "height": 1334,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "card-thumb",
+      "file": "releases/v2.0.0/captures/card-thumb.png",
+      "sha256": "b0b6720e1835d85e45f76b482fce339304f2e17886c1bb987f4aa319872c22fb",
+      "kind": "screenshot",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "网站游戏列表新封面原图（1024×1024 实机，隐藏 HUD）。Edge 无头浏览器（RTX 4060 Ti），测试钩子把玛丽放到指定位置后逐帧推进渲染；手机为视口与触控模拟。",
+      "width": 1024,
+      "height": 1024,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "run-1-1-to-1-2",
+      "file": "releases/v2.0.0/captures/run-1-1-to-1-2.webm",
+      "sha256": "d5ab2a193502dd32d676d613c13bb7840eb8d8d76d62685655c3dc19a97c4dbd",
+      "kind": "video",
+      "version": "v2.0.0",
+      "build_id": "mario-3d-v2.0.0-fa7a599fa834",
+      "capture_mode": "realtime-automation",
+      "description": "实时 1280×720 录屏：键盘脚本按住 D+J 奔跑、遇墙/坑/敌人按 K 跳；默认无限命 + 标准护心，侧视。从标题进 1-1，过旗杆进 1-2。录屏只有画面没有游戏声音。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 67.6,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 1.6,
+          "description": "主菜单（时间码按脚本时钟估算，与视频起点约有 1 秒偏差）",
+          "facts": [
+            "title-menu"
+          ]
+        },
+        {
+          "in_seconds": 1.6,
+          "out_seconds": 4.3,
+          "description": "WORLD 1-1 卡片",
+          "facts": [
+            "world-card"
+          ]
+        },
+        {
+          "in_seconds": 4.3,
+          "out_seconds": 41.4,
+          "description": "脚本跑完 1-1：途中受击 3 次、阵亡 1 次后按无限命复活，最后拔旗进城堡",
+          "facts": [
+            "level-1-1",
+            "checkpoint-respawn",
+            "flagpole"
+          ]
+        },
+        {
+          "in_seconds": 41.4,
+          "out_seconds": 66.4,
+          "description": "WORLD 1-2 卡片与地下关开头",
+          "facts": [
+            "level-1-2"
+          ]
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "device": "Windows 11 + RTX 4060 Ti，Edge（Playwright 无头，ANGLE D3D11）",
+      "viewport": "1280×720、1920×1080",
+      "method": "测试钩子逐帧推进 + 真实键盘事件；关键段落把玛丽放到指定位置",
+      "result": "23 项通过：跳上第二层、蘑菇/花/火球/隐藏 1UP/无敌星、水管一排挡路、台阶边缘不掉、钻管与横管、下蹲、旗杆进 1-2、1-2 奖励房间/升降台/出口/旗杆/传送区、掉坑与受击扣护心、复活无敌、演示模式、暂停与重来、设置保存、经典 3 命 GAME OVER",
+      "evidence": [
+        "run-1-1-to-1-2"
+      ],
+      "untested": [
+        "真实手机",
+        "声音主观试听"
+      ]
+    },
+    {
+      "device": "同上",
+      "viewport": "1920×1080",
+      "method": "实时 8 秒跑跳 + E 旋转 + C 切视角，记录帧间隔",
+      "result": "1-1/1-2 高画质与 1-1 流畅档：平均约 5.9ms，p99 6.1ms，最慢 6.1～11.7ms；133～221 次绘制",
+      "evidence": [],
+      "untested": [
+        "手机性能"
+      ]
+    },
+    {
+      "device": "同上，手机为视口与触控模拟（Android UA）",
+      "viewport": "390×844、844×390、667×375、375×667",
+      "method": "CDP 触控：摇杆、边走边跳多点触控、C、暂停、继续；菜单越界与溢出检查；0×0 iframe 启动并屏蔽 resize 后改尺寸",
+      "result": "通过：竖屏自动旋转、触控坐标逆变换正确、四种尺寸菜单都在屏幕内、0×0 启动后 0.5 秒内自动重排",
+      "evidence": [
+        "phone-rotated-play",
+        "phone-landscape-play"
+      ],
+      "untested": [
+        "真机全屏与横屏锁定"
+      ]
+    },
+    {
+      "device": "同上",
+      "viewport": "1280×720",
+      "method": "键盘脚本实时从标题打到 1-2（默认无限命）；另用逐帧脚本从 1-2 起点走到升降台",
+      "result": "1-1 约 40 秒通关并自动进入 1-2；1-2 地面路线可走通",
+      "evidence": [
+        "run-1-1-to-1-2"
+      ],
+      "untested": [
+        "真人完整通关录像"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像只有画面没有游戏声音，音乐音效未做主观试听",
+      "没有真机录像与真机性能结论",
+      "没有修复前的对照录像（旧版问题来自用户描述）",
+      "录像是脚本操作，不是真人游玩"
+    ]
+  }
+}

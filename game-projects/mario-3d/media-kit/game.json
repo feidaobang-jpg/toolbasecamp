@@ -1,20 +1,29 @@
 {
   "game_id": "mario-3d-world-1-1",
-  "name": "超级玛丽 3D：第一关",
-  "engine": "Three.js 0.170.0 + 原生 JavaScript",
-  "current_version": "single-view1",
-  "handoff": "releases/single-view1/handoff.json",
+  "name": "超级玛丽 3D：1-1 与 1-2",
+  "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
+  "current_version": "v2.0.0",
+  "handoff": "releases/v2.0.0/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
-  "launch": "在仓库根目录运行本地 HTTP 服务后打开 /public/html/game/mario-3d/index.html",
-  "controls": "电脑 WASD 移动，C 单键循环视角，Esc 暂停；坦克 J 开炮，玛丽奥 J 加速/K 跳跃。手机左摇杆、右动作键、一个 C 视角按钮；竖屏开始自动横屏布局。",
+  "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
+  "controls": "电脑 WASD 移动（相对镜头）、K 跳（按住跳更高）、J 跑/火球、L 下蹲/钻水管、Q/E 转镜头、C 切视角（侧视/斜视/纵深）、Esc 暂停；手机左摇杆，右侧 L/J/K 与 Q/C/E 键，竖屏开始自动横屏。",
   "release_intent": "web_demo",
-  "public_play_url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?v=manual-fullscreen",
-  "development_model": "GPT-6 Astra",
+  "public_play_url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+  "development_model": "Claude Opus 5.5（v2.0.0）；更早版本为 GPT-6 Astra",
   "tools": [
     "Three.js 0.170.0",
-    "原生 Canvas/WebGL",
-    "程序化几何与 Canvas 纹理",
-    "Web Audio API"
+    "WebGL 程序化几何、InstancedMesh 与 Canvas 像素纹理",
+    "Web Audio API 方波/三角波重新合成",
+    "Playwright + Edge 自动化测试与录屏"
   ],
-  "notes": "同人风格的第一关 3D 网页实验，不使用任天堂原始美术、音乐或音效。"
+  "toy": {
+    "id": 39043286960128,
+    "slug": "feidao-mario-3d",
+    "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+    "visibility": null,
+    "review_status": null,
+    "verified_at": null,
+    "video_bindings": []
+  },
+  "notes": "粉丝向非官方复刻：关卡布局按原作地图，3D 模型、贴图与音乐音效为程序化重新制作，不使用原作素材文件。"
 }
