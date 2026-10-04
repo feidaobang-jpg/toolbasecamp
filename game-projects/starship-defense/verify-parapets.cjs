@@ -26,7 +26,7 @@ try{for(const mobile of [false,true]){
   q.player.reset(q.Game.cls);reset(20,-13);q.player.mesh.position.copy(q.player.pos);q.Game.shake=0;q.camState.init=false;q.updCamera(1);q.renderer.render(q.scene,q.camera);return c;
  });
  assert.deepEqual(checks.migration.walls,[['wall',0,44]]);assert.equal(checks.migration.gold,987);assert.equal(checks.migration.score,321);assert.equal(checks.migration.revision,1);assert.ok(checks.migration.newPlayerWallRetained);
- assert.equal(checks.parapets.length,5);assert.ok(checks.parapets.every(s=>Math.abs(s.top-s.bottom-1.35)<1e-6));
+ assert.equal(checks.parapets.length,5);assert.ok(checks.parapets.every(s=>Math.abs(s.top-s.bottom-1.1)<1e-6));
  assert.ok(checks.front[2]<-10.8&&checks.front[1]===9.6);assert.ok(checks.side[0]<37&&checks.rear[2]>-61);
  assert.ok(checks.jump[2]>-5&&checks.jump[1]<2);assert.ok(checks.inner[0]>-24&&checks.inner[1]<6);assert.ok(checks.ramp[1]>9);
  assert.ok(checks.wallFootDamage>0&&checks.keyboardWallFootDamage>0,'can hit enemies directly below wall with normal player aim/fire');assert.equal(checks.coverDamage,0,'parapet stops fast acid before player damage');assert.ok(checks.exposedDamage>0,'exposed upper body still takes fire');

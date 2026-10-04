@@ -1,0 +1,11 @@
+{
+  "version": "web-low-walls-v0.17.8",
+  "website": "pending",
+  "toy": "pending",
+  "bilibili": "pending",
+  "qa": [
+    "local/qa.json",
+    "parapet-regression/qa.json",
+    "edge-regression/qa.json"
+  ]
+}
