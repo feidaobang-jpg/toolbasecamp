@@ -407,12 +407,10 @@
 .gvb-note {
     display: block;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     color: #64748b;
     font-size: 0.75rem;
     line-height: 1.5;
+    word-break: break-word;
 }
 
 .gvb-votes {

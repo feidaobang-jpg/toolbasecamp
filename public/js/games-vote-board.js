@@ -25,8 +25,11 @@
             html += '<li class="gvb-row">' +
                 '<span class="gvb-rank gvb-rank--' + (index + 1) + '">' + (index + 1) + '</span>' +
                 renderer(item) +
-                '<span class="gvb-votes">' + item.votes +
-                    (item.weekVotes ? '<i class="gvb-week">+' + item.weekVotes + '</i>' : '') +
+                '<span class="gvb-votes"' +
+                    (item.weekVotes ? ' title="本周新增 ' + item.weekVotes + ' 票"' : '') + '>' +
+                    item.votes +
+                    // 总数与周增一样时 +n 只是重复，仅在有历史票时才显示
+                    (item.weekVotes && item.weekVotes < item.votes ? '<i class="gvb-week">+' + item.weekVotes + '</i>' : '') +
                 '</span>' +
             '</li>';
         });
@@ -54,10 +57,11 @@
         }, favorites.length);
 
         var wishHtml = rankRows(board.wishlist, function (item) {
-            return '<span class="gvb-row-main">' +
+            // 整行可点，跳去投票页看完整愿望详情
+            return '<a class="gvb-link gvb-row-main" href="game-vote.html">' +
                 '<span class="gvb-name">' + esc(item.name) + '</span>' +
                 (item.note ? '<span class="gvb-note">' + esc(item.note) + '</span>' : '') +
-            '</span>';
+            '</a>';
         });
 
         var totals = board.totals || {};
