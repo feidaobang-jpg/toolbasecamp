@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Install daily Baidu URL push cron (10:20 Asia/Shanghai ≈ 02:20 UTC if server is UTC).
-# Uses /etc/cron.d; server local time — VPS is typically UTC, so 02:20 UTC ≈ 10:20 CST.
+# Install daily Baidu URL push cron (02:20 server local time; the VPS runs Asia/Shanghai).
+# Cron calls the script via /bin/bash: CI rsync resets deploy/ files to their git mode, so never rely on +x.
 set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
 CRON_FILE="/etc/cron.d/toolbasecamp-baidu-push"
-# 02:20 UTC ≈ 10:20 Beijing if host TZ is UTC
-CRON_LINE="20 2 * * * root $DEPLOY/baidu-push-daily.sh >> /var/log/toolbasecamp-baidu-push.log 2>&1"
+# 02:20 server local time (host TZ is Asia/Shanghai)
+CRON_LINE="20 2 * * * root /bin/bash $DEPLOY/baidu-push-daily.sh >> /var/log/toolbasecamp-baidu-push.log 2>&1"
 
 mkdir -p /var/lib/toolbasecamp
 chmod 755 /var/lib/toolbasecamp

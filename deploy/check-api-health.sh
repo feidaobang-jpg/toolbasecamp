@@ -52,7 +52,7 @@ if [[ "$ok" -eq 1 ]]; then
   if [[ "$PREV" == "fail" ]]; then
     MSG="[toolbasecamp] API recovered on ${HOST}"
     echo "$MSG"
-    if [[ -x "$DEPLOY_DIR/notify-alert.sh" ]]; then
+    if [[ -f "$DEPLOY_DIR/notify-alert.sh" ]]; then
       bash "$DEPLOY_DIR/notify-alert.sh" "$MSG" || true
     fi
   fi
@@ -64,7 +64,7 @@ echo fail > "$STATE_FILE"
 if [[ "$PREV" != "fail" ]]; then
   MSG="[toolbasecamp] API health FAIL on ${HOST}: ${detail}url=${HEALTH_URL}"
   echo "$MSG" >&2
-  if [[ -x "$DEPLOY_DIR/notify-alert.sh" ]]; then
+  if [[ -f "$DEPLOY_DIR/notify-alert.sh" ]]; then
     bash "$DEPLOY_DIR/notify-alert.sh" "$MSG" || true
   fi
 fi
