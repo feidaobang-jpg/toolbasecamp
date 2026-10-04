@@ -1371,6 +1371,8 @@ function updMonsters(dt){
       }
     }
     mo.fly=mo.flightAfterExit&&!mo.route&&!isFinite(fortress.ceilingAt(mo.mesh.position.x,mo.mesh.position.z,groundY(mo.mesh.position.x,mo.mesh.position.z)+.5));
+    // Take off even when a nearby target makes the insect attack in place.
+    if(mo.fly)mo.mesh.position.y+=(flyHeight(mo.mesh.position.x,mo.mesh.position.z)+Math.sin(mo.anim*.5)*.5-mo.mesh.position.y)*Math.min(1,dt*5);
     let tgt;
     if(mo.home){ // 老巢护卫/母皇：只在巢穴范围内迎战，玩家离开就回家并回血
       const h=mo.home,p=mo.mesh.position,dh=Math.hypot(p.x-h.x,p.z-h.z);
