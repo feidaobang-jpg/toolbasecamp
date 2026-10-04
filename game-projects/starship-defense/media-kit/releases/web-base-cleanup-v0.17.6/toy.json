@@ -1,0 +1,17 @@
+{
+  "id": 38678478981120,
+  "version": "web-base-cleanup-v0.17.6",
+  "zip_sha256": "b10acf9b61ad7faf291428833c9133bcd568245dbf42a418b7445f1c2b84a5c4",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_h8qtZrGT/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_YliFQ6LX/index.html",
+  "submission_status": "auditing",
+  "submitted_at": "2026-10-04T08:13:38.778679+00:00",
+  "status": "published",
+  "verified_at": "2026-10-04T08:18:58.452498+00:00",
+  "public_qa": "toy-public/qa.json",
+  "visibility": "PUBLIC",
+  "video_bindings": [
+    "BV1Ujad6DEuf",
+    "BV1WbHq6eEBt"
+  ]
+}

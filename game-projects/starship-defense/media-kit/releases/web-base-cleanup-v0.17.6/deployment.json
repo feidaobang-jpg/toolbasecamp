@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-04T08:12:12.340937+00:00",
+  "files": [
+    {
+      "file": "index.html",
+      "match": false,
+      "sha256": "a3b4d2fe4156d28788304c3f41a9d264dadc80b0f7c293c686d56c791b77f7a7"
+    },
+    {
+      "file": "game.compat.js",
+      "match": true,
+      "sha256": "f7ee72164fe3dd3a777d9f1fc3fb1beb0c2dd020d3051e22ec8496e04363c4df"
+    },
+    {
+      "file": "game.js",
+      "match": false,
+      "sha256": "765072eec43970ea1096956ae488e208a4a02fa591d288239185b1d359552c51"
+    },
+    {
+      "file": "fortress-world.js",
+      "match": false,
+      "sha256": "33d89f687441c58c7dbd53338e2a080d1b4c6eeac2734cfcaf607711393f443d"
+    }
+  ],
+  "text_normalization": [
+    {
+      "file": "index.html",
+      "normalized_match": false
+    },
+    {
+      "file": "game.js",
+      "normalized_match": true
+    },
+    {
+      "file": "fortress-world.js",
+      "normalized_match": true
+    }
+  ],
+  "status": "verified",
+  "code_commit": "b1f08394",
+  "html_difference": "Existing deployment pipeline rewrites resource query versions to commit b1f08394; bundle SHA256 exactly matches. Source JS matches after CRLF normalization.",
+  "browser_qa": "website/qa.json"
+}

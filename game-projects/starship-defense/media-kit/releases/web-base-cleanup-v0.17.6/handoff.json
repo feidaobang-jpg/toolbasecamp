@@ -12,13 +12,53 @@
   ],
   "qa": "qa.json",
   "jump_regression": "jump-regression/qa.json",
-  "website_status": "pending",
-  "toy_status": "pending",
-  "bilibili_status": "pending",
+  "website_status": "verified",
+  "toy_status": "published",
+  "bilibili_status": "public_verified",
   "media_readiness": "partial",
   "gaps": [
     "未在真实手机/B站App内核测试",
     "录制无游戏声音"
   ],
-  "media": []
+  "media": [
+    {
+      "file": "releases/web-base-cleanup-v0.17.6/after-desktop.jpg",
+      "sha256": "100fd42e3e3a407c47f4e312029bd2a5f735d6b8fc301c0052bd4b2593878cc2",
+      "kind": "screenshot",
+      "version": "web-base-cleanup-v0.17.6",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-base-cleanup-v0.17.6/toy-preview/after-mobile.jpg",
+      "sha256": "8794e82763c34309d31f613b34f8717ff49bdaa2367fe4ca2508abe47f5ca642",
+      "kind": "screenshot",
+      "version": "web-base-cleanup-v0.17.6",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-base-cleanup-v0.17.6/video-contact.jpg",
+      "sha256": "a49ff59e593b0dbcdaf304b8bf3cb60b20fe16f8cb6c10d9345a60d3588463bb",
+      "kind": "screenshot",
+      "version": "web-base-cleanup-v0.17.6",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-base-cleanup-v0.17.6/video/page@2483853c1e841bcc9d4e447fa5b59c5e.webm",
+      "sha256": "465fede5ce15c810cbf59d31615aaae9990ddc1036cc503cf25a6aa065933913",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "duration_seconds": 4.2,
+      "visual_review": "contact-sheet-reviewed"
+    }
+  ],
+  "code_commit": "b1f08394",
+  "website_qa": "website/qa.json",
+  "toy_qa": "toy-preview/qa.json",
+  "toy_public_qa": "toy-public/qa.json",
+  "performance": "performance.json",
+  "visual_review": "Desktop and mobile cleared ramps plus video contact sheet reviewed; no clipping or missing geometry in checked scenes."
 }
