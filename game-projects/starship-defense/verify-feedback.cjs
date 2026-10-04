@@ -202,7 +202,7 @@ async function open(b,opts={},query=''){
  // 19. phone whose browser reports hover:hover still gets touch UI, rotation and shop
  const m=await open(b,{viewport:{width:390,height:844},isMobile:true,hasTouch:true,hoverLies:true,userAgent:'Mozilla/5.0 (Linux; Android 12; Phone) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile Safari/537.36 BiliApp'});
  await m.evaluate(()=>__gameQA.newGame(false));await m.waitForTimeout(500);
- const touch=await m.evaluate(()=>({touchUI:!document.getElementById('touchUI').classList.contains('hidden'),rotated:/rotate/.test(document.getElementById('stage').style.transform),buttons:['vO','vH','vX','vV','vG','vP'].every(id=>getComputedStyle(document.getElementById(id)).display!=='none')}));
+ const touch=await m.evaluate(()=>({touchUI:!document.getElementById('touchUI').classList.contains('hidden'),rotated:/rotate/.test(document.getElementById('stage').style.transform),buttons:['vO','vH','vX','vC','vP'].every(id=>getComputedStyle(document.getElementById(id)).display!=='none')}));
  await m.screenshot({path:path.join(captures,'phone-portrait-touch.jpg'),quality:80});
  const box=await m.locator('#vO').boundingBox();await m.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);await m.waitForTimeout(200);
  touch.shopOpens=await m.evaluate(()=>!document.getElementById('shopPanel').classList.contains('hidden'));

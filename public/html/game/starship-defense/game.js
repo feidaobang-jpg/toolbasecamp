@@ -242,7 +242,7 @@ const Input={
       const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    ['J','K','U','I','H','O','L','V','X','C','SPRINT'].forEach(k=>bind('v'+k,k));
+    ['J','K','U','I','H','O','L','X','C','SPRINT'].forEach(k=>bind('v'+k,k));
     $('vP').addEventListener('pointerdown',e=>{e.preventDefault();if(this.onPause)this.onPause();});
     // 触屏按钮按下会打开商店/建造面板，同一次点击随后合成的 click 会落到面板里手指下的卡片上
     // （曾误买物品/误选建筑）。取消触摸的默认点击合成。
@@ -287,7 +287,7 @@ scene.fog=new THREE.Fog(PAL.fog,PAL.fogNear,PAL.fogFar);
 const camera=new THREE.PerspectiveCamera(62,BASE_W/BASE_H,.1,950);
 scene.add(camera); // first-person weapon model is parented to the camera
 window.addEventListener('resize',()=>{renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();});
-/* 镜头：第三人称（默认，三档距离）与第一人称（V 切换）；鼠标/触屏拖动或 Q/E 自由转向 */
+/* 镜头：第三人称（默认，五档预设）与第一人称；C 循环全部视角，V 直接切第一/第三人称；鼠标/触屏拖动或 Q/E 自由转向 */
 let camYaw=0,camPitch=0,camView=0,camMode='third',camYawVel=0;
 const CAMERA_VIEWS=[{d:8.6,h:3.9,name:'近身跟随'},{d:13.5,h:8.2,name:'高位跟随'},{d:9,h:24,name:'战术俯视'},{d:5.5,h:1.8,name:'低位跟随'},{d:20,h:15,name:'战术远景'}];
 const camState={target:new THREE.Vector3(),dist:8.6,init:false,inTunnel:0};
@@ -303,13 +303,18 @@ function setCamMode(mode,notify=true){
   camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
   if(camMode==='third'&&document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
-  if(notify)showMsg(camMode==='first'?'第一人称（V 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
+  if(notify)showMsg(camMode==='first'?'第一人称（C/V 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
+}
+/* C 循环：各第三人称预设 → 第一人称 → 回到第一个预设；V 仍可直接切换第一/第三人称 */
+function cycleCamView(){
+  if(camMode==='first')setCameraView(0);
+  else if(camView+1>=CAMERA_VIEWS.length)setCamMode('first');
+  else setCameraView(camView+1);
 }
 function syncViewLabels(){
   const label=camMode==='first'?'第一人称':'第三人称';
   for(const id of ['personBtn','personBtnMenu'])if($(id))$(id).textContent='人称：'+label+' V';
-  if($('vV'))$('vV').textContent=camMode==='first'?'三人称':'一人称';
   if($('crosshair'))$('crosshair').classList.toggle('hidden',camMode!=='first');
 }
 
@@ -2148,7 +2153,7 @@ function updPlayer(dt){
   if(Input.pop('U'))throwGrenade();
   const t=performance.now()/1000;
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
-  if(Input.pop('C'))setCameraView(camView+1);
+  if(Input.pop('C'))cycleCamView();
   if(Input.pop('V'))setCamMode(camMode==='first'?'third':'first');
   for(let n=1;n<=9;n++)if(Input.pop('N'+n)){if(Game.weapons[n-1])selectWeapon(Game.weapons[n-1]);else showMsg('第'+n+'格还没有武器',1);}
   if(Input.pop('X'))cycleWeapon(1);
@@ -3399,7 +3404,6 @@ function loop(){
 const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMsg,showHint,findFreeSpot,groundY,exitVehicle,clearEntities,autoSave,closePanels,collectAllGold,startPrep,showHUD,spawnMonster,playerDamage,getYaw:()=>camYaw,canWalk:(x,z,r)=>!collideWalls(x,z,r)&&!tooSteep(x,z),
   resetCamera(){camState.init=false;},openPanel(){closePanels();Input.reset();panelOpen=true;$('operationsPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();}});
 function syncKeyLabels(){
-  for(const el of document.querySelectorAll('.vbtn')){const a=el.id.slice(1);if(KEY_ACTIONS[a])el.dataset.key=keyBindings.label(a);}
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
   $('menuButton').textContent='☰ 菜单 '+keyBindings.label('P')+' / Esc';
   $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
@@ -3491,7 +3495,6 @@ function setupWebControls(){
     open:()=>{closePanels();Input.reset();panelOpen=true;$('platformPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();},close:closePanels,
     validate:d=>validateNormalSave(d,{weapons:{...WEAPONS,...LEGACY_WEAPONS},buildings:BUILDINGS,vehicles:VEHICLES})
   });
-  document.querySelectorAll('.vbtn').forEach(el=>{el.dataset.key=el.id==='vSPRINT'?'Shift':el.id.slice(1);});
   let muted=false;
   let quality=isTouch?'smooth':'high';try{quality=localStorage.getItem('chongchao-quality')||quality;}catch(_e){}
   const applyPixelRatio=value=>renderer.setPixelRatio(value==='high'?Math.min(stageScale*(devicePixelRatio||1),2):Math.min(stageScale,1.2));
