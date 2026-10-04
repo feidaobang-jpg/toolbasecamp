@@ -1,0 +1,38 @@
+{
+  "version": "web-grenades-v0.17.1",
+  "base_version": "web-insects-v0.17.0",
+  "code_commit": "7684d09a",
+  "changes": [
+    "无限手雷，无需补充，保留0.8秒间隔",
+    "移除商店手雷与有限库存限制"
+  ],
+  "targets": [
+    {
+      "bv": "BV1WbHq6eEBt",
+      "old_description": "【游戏更新记录】\n2026年10月4日 · v0.17\n• 虫族改回甲壳、长节肢和獠牙造型，去掉大眼短脚与花瓣母皇。\n• 恢复手雷：电脑默认 U，手机有独立按钮；普通模式开局3枚，商店可补充。\n• 修复地堡墙角绕路、地图边界转向和虫群拥挤卡住的问题。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日09:57提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "new_description": "【游戏更新记录】\n2026年10月4日 · v0.17.1\n• 手雷恢复无限使用：电脑默认 U，手机有独立按钮；普通模式也无需购买或补充，投掷间隔0.8秒。\n• 移除商店手雷补给，旧存档即使显示0枚也能继续投掷。\n• 保留上版甲壳、长节肢和獠牙虫族，以及地堡墙角、地图边界与拥挤卡住的修复。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日11:52提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "status": "public_verified",
+      "prepared_at": "2026-10-04T03:53:10.642Z",
+      "submitted_at": "2026-10-04T03:54:35.856Z",
+      "public_verified_at": "2026-10-04T03:55:19.582Z",
+      "evidence": "bilibili-new-public.jpg",
+      "update_block_sha256": "80ce9401ce04e78865ddff9cacc287c53a44520e67ef518d670621413cd0fe8d",
+      "original_outside_block_preserved": true
+    },
+    {
+      "bv": "BV1Ujad6DEuf",
+      "old_description": "【游戏更新记录】\n2026年10月4日 · v0.17\n• 虫族改回甲壳、长节肢和獠牙造型，去掉大眼短脚与花瓣母皇。\n• 恢复手雷：电脑默认 U，手机有独立按钮；普通模式开局3枚，商店可补充。\n• 修复地堡墙角绕路、地图边界转向和虫群拥挤卡住的问题。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日09:57提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "new_description": "【游戏更新记录】\n2026年10月4日 · v0.17.1\n• 手雷恢复无限使用：电脑默认 U，手机有独立按钮；普通模式也无需购买或补充，投掷间隔0.8秒。\n• 移除商店手雷补给，旧存档即使显示0枚也能继续投掷。\n• 保留上版甲壳、长节肢和獠牙虫族，以及地堡墙角、地图边界与拥挤卡住的修复。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日11:52提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "status": "public_verified",
+      "prepared_at": "2026-10-04T03:55:00.014Z",
+      "submitted_at": "2026-10-04T03:55:19.582Z",
+      "public_verified_at": "2026-10-04T03:55:47.947Z",
+      "evidence": "bilibili-old-public.jpg",
+      "update_block_sha256": "80ce9401ce04e78865ddff9cacc287c53a44520e67ef518d670621413cd0fe8d",
+      "original_outside_block_preserved": true
+    }
+  ],
+  "status": "public_verified",
+  "comment_action": "none: description update sufficient; no duplicated comments",
+  "runtime_sha256": "0a9df76bca9113b0fabf39b979b6c13458230ed07f556f2836d2a412c11dd7cf"
+}

@@ -1,0 +1,45 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_sMT6V97r/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "hit": {
+        "hp": [
+          340,
+          340,
+          340
+        ],
+        "remaining": 0
+      },
+      "save": {
+        "loadedZero": true,
+        "cooldownBlocked": true,
+        "throws": 20,
+        "afterReload": true,
+        "hasFiniteSupply": false,
+        "hasSavedAmmo": false
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "hit": {
+        "hp": [
+          340,
+          340,
+          340
+        ],
+        "remaining": 0
+      },
+      "save": {
+        "loadedZero": true,
+        "cooldownBlocked": true,
+        "throws": 20,
+        "afterReload": true,
+        "hasFiniteSupply": false,
+        "hasSavedAmmo": false
+      },
+      "errors": []
+    }
+  ]
+}

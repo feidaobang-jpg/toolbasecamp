@@ -5,7 +5,9 @@
   "base_version": "web-insects-v0.17.0",
   "created_at": "2026-10-04T03:50:24.057241+00:00",
   "build": {
-    "runtime_sha256": "0a9df76bca9113b0fabf39b979b6c13458230ed07f556f2836d2a412c11dd7cf"
+    "runtime_sha256": "0a9df76bca9113b0fabf39b979b6c13458230ed07f556f2836d2a412c11dd7cf",
+    "commit": "7684d09a",
+    "dirty": false
   },
   "changes": [
     "恢复所有模式无限手雷，无需购买或补充",
@@ -21,7 +23,12 @@
     "limitations": [
       "手机为触控与视口模拟，未测实体手机",
       "QA录像无音轨，使用定位、无敌与确定性测试"
-    ]
+    ],
+    "deployment": "deployment.json",
+    "online_functional": [
+      "live/grenades.json"
+    ],
+    "toy": "toy/grenades.json"
   },
   "media": [
     {
@@ -56,5 +63,14 @@
       "无实体手机测试"
     ]
   },
-  "thumbnail": "Unchanged; this patch only changes ammo rules and labels"
+  "thumbnail": "Unchanged; this patch only changes ammo rules and labels",
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_HeN7NXYi/index.html",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_sMT6V97r/index.html",
+    "zip_sha256": "8040968b0f4496e5cdecf7430babb499f7e044501c65aff14dfbaf1b324668b5",
+    "submitted_at": "2026-10-04T11:52:43.227199+08:00"
+  },
+  "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
 }
