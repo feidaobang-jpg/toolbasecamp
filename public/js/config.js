@@ -158,13 +158,6 @@ const toolsConfig = {
             ]
         },
         {
-            titleKey: 'tools.groups.diagram',
-            items: [
-                { titleKey: 'tools.mindmap.title', url: 'html/diagram/mindmap.html' },
-                { titleKey: 'tools.spreadsheet.title', url: 'html/diagram/spreadsheet.html' }
-            ]
-        },
-        {
             titleKey: 'tools.groups.ladder',
             items: [
                 { titleKey: 'tools.pcBuilds.title', url: 'html/ladder/pc-builds.html' },
