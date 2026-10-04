@@ -1,0 +1,14 @@
+{
+  "toy_id": 38678478981120,
+  "version": "web-continuous-build-v0.17.5",
+  "archive": "dist/toy/chongchao-qianshao/releases/web-continuous-build-v0.17.5.zip",
+  "zip_sha256": "aa7aaf8aa941e4281f94e0d28047b8a863ce4a34164f12d1ce121b09d2e57d29",
+  "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_denzE7Dm/index.html",
+  "submitted": true,
+  "status": "published",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_EY5gJ8Bo/index.html",
+  "submitted_before": "2026-10-04T15:33:00+08:00",
+  "recorded_at": "2026-10-04T15:38:10.058459+08:00",
+  "public_verified_at": "2026-10-04T15:40:30.799330+08:00",
+  "public_qa": "toy-public/qa.json"
+}

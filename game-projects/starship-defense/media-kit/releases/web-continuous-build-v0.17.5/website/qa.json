@@ -1,0 +1,38 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "results": [
+    {
+      "mode": "desktop",
+      "placements": 3,
+      "overlapBlocked": true,
+      "fundsChecked": true,
+      "capChecked": true,
+      "cancel": true,
+      "switchKind": true,
+      "shop": true,
+      "errors": []
+    },
+    {
+      "mode": "mobile",
+      "placements": 3,
+      "overlapBlocked": true,
+      "fundsChecked": true,
+      "capChecked": true,
+      "cancel": true,
+      "switchKind": true,
+      "shop": true,
+      "errors": []
+    },
+    {
+      "mode": "portrait",
+      "placements": 3,
+      "overlapBlocked": true,
+      "fundsChecked": true,
+      "capChecked": true,
+      "cancel": true,
+      "switchKind": true,
+      "shop": true,
+      "errors": []
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "version": "web-continuous-build-v0.17.5",
   "base_version": "web-build-return-v0.17.4",
   "created_at": "2026-10-04T15:29:32.365080+08:00",
-  "build_sha256": "7cded5cece8551855516d080082a51b3fc38b617e5b6f869bac7adff4935db77",
+  "build_sha256": "fbfa894bfefa43b84ea3270b8f1e2d160d32b334573463e90bf051f3a0c05558",
   "changes": [
     {
       "id": "continuous-building",
@@ -14,12 +14,67 @@
     }
   ],
   "qa": "qa.json",
-  "website_status": "pending",
-  "toy_status": "pending",
-  "bilibili_status": "pending",
+  "website_status": "verified",
+  "toy_status": "published",
+  "bilibili_status": "public_verified",
   "media_readiness": "partial",
   "gaps": [
     "无真机B站App验证",
     "录像无游戏声音"
-  ]
+  ],
+  "code_commit": "4f2d5fa8",
+  "website_qa": "website/qa.json",
+  "toy_qa": "toy-preview/qa.json",
+  "media": [
+    {
+      "id": "desktop-continuous",
+      "file": "releases/web-continuous-build-v0.17.5/toy-preview/desktop-continuous.png",
+      "sha256": "95d9c5ae96975d2b0b856e57d5fe4bc12320c4f7c37a4a0733bcd7055aa3a89c",
+      "kind": "screenshot",
+      "version": "web-continuous-build-v0.17.5",
+      "capture_mode": "realtime-automation",
+      "description": "真实游戏运行，测试脚本输入与位置跳转；无音轨",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "mobile-continuous",
+      "file": "releases/web-continuous-build-v0.17.5/toy-preview/mobile-continuous.png",
+      "sha256": "5cf176d19600c86012373759527b5913057520be12026efd722477a883bc8615",
+      "kind": "screenshot",
+      "version": "web-continuous-build-v0.17.5",
+      "capture_mode": "realtime-automation",
+      "description": "真实游戏运行，测试脚本输入与位置跳转；无音轨",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "page@0004a8992fba2b4bc7270ba05214360d",
+      "file": "releases/web-continuous-build-v0.17.5/toy-preview/page@0004a8992fba2b4bc7270ba05214360d.webm",
+      "sha256": "23caf0e0a7f3b39e65b43beaf447f99f90b33389d22c53ac40de18bc4843860d",
+      "kind": "video",
+      "version": "web-continuous-build-v0.17.5",
+      "capture_mode": "realtime-automation",
+      "description": "真实游戏运行，测试脚本输入与位置跳转；无音轨",
+      "audio": "none",
+      "visual_review": "not-run",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 9.84,
+      "fps": "25/1"
+    },
+    {
+      "id": "portrait-continuous",
+      "file": "releases/web-continuous-build-v0.17.5/toy-preview/portrait-continuous.png",
+      "sha256": "d5756557cc61be8dbd83f97dd7d478b83381b9be3550350c962cb554c743b439",
+      "kind": "screenshot",
+      "version": "web-continuous-build-v0.17.5",
+      "capture_mode": "realtime-automation",
+      "description": "真实游戏运行，测试脚本输入与位置跳转；无音轨",
+      "audio": "none",
+      "visual_review": "not-run"
+    }
+  ],
+  "comment_replies": "comment-replies.json",
+  "toy_public_qa": "toy-public/qa.json"
 }
