@@ -63,7 +63,7 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
     joyId = e.pointerId;
     try { zone.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
     const p = toLocal(e.clientX, e.clientY);
-    ox = p.x; oy = p.y;
+    ox = Math.max(zone.offsetLeft + base.offsetWidth / 2 + 4, p.x); oy = p.y;
     const bx = base.offsetLeft + base.offsetWidth / 2, by = base.offsetTop + base.offsetHeight / 2;
     base.style.transform = 'translate(' + (ox - zone.offsetLeft - bx) + 'px,' + (oy - zone.offsetTop - by) + 'px)';
     base.classList.add('active');

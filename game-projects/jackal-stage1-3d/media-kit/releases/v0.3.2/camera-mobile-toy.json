@@ -1,0 +1,39 @@
+{
+  "version": "v0.3.2",
+  "toy_id": "39863936092160",
+  "package": "game-projects/jackal-stage1-3d/dist/toy-v0.3.2/package",
+  "files_sha256": {
+    "css/style.css": "23c0aaa82b23037b3b3c4dc143cc47d0efa39a23fb2050e8d60480625e207c2b",
+    "index.html": "a61cb2402bee2770245bdae0648f690228f2a180390996280a3c260c63f897bb",
+    "js/game.min.js": "dc4d1d21533083bae1e8bd70cd9b0f99fed8b740a5424953f61643bdfbd3d647",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "package_sha256": "ee83febe4535b8445d263072a9134767b87da626a9de1369846500e507369e86",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_52UEStAw/index.html",
+  "preview_tests": {
+    "desktop": "started, preset cycling (Starship camera poses tested locally)",
+    "mobile_viewport": "844x390 loaded, local mobile device regression passed",
+    "errors": []
+  },
+  "status": "published",
+  "website_commit": "0368039a",
+  "submitted_at": "2026-10-04T19:57:48.787034+08:00",
+  "response": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_vDs3djow/index.html"
+  },
+  "published_verified_at": "2026-10-04T12:11:54.416Z",
+  "published_check": {
+    "game": "jackal-stage1-3d",
+    "src": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22206/index.html",
+    "cameras": [
+      "视角（C）\n◂ 斜俯视 ▸",
+      "视角（C）\n◂ 俯视 ▸",
+      "视角（C）\n◂ 近景斜视 ▸",
+      "视角（C）\n◂ 战术远景 ▸",
+      "视角（C）\n◂ 低位正视 ▸"
+    ],
+    "left": "4px",
+    "status": "public_verified"
+  }
+}

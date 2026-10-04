@@ -1,0 +1,12 @@
+{
+  "game": "tank-3d",
+  "version": "camera-mobile1",
+  "bvid": "BV1Wqaz6AEJb",
+  "old_description": "【游戏更新记录】\n2026-10-04｜坦克大战 3D 合并版（2D 玩法已并入）\n开局选模式：「经典复刻」按 FC 原版完整还原 35 关地图、敌军出场顺序和数值，用原版音效，可从任意一关开始，打完进入原版 36～70 关循环。\n「魔改无限周目」100 关一周目：每章第 5 关小 Boss、第 10 关大 Boss，第 100 关终焉 Boss；加入船、手枪、精英怪、敌军抢道具，周目无限。\n新增正视（车后）和第一人称视角：C 切换视角，Q/E 转视角。\n网站试玩：https://www.zhengxiaohui.cn/html/game/tank-3d/index.html\nToy 试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n截至 2026-10-04 15:37（北京时间），网站已更新；Toy 新版已提交审核，审核通过前 Toy 里可能仍是旧版。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】\n\n开坦克、打砖墙、守住老鹰基地！这次从正常实战里讲操作，以及时钟、铲子、头盔、手雷、坦克和星星六种道具。这轮守过了前两关，第三关基地失守后重试。\n\n当前版本有50关和周目挑战，WASD或方向键移动，J开火，Esc暂停。普通模式可无限复活，基地被打掉仍会失败。支持横屏触屏操作。\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/feidao-tank-3d/index.html\n\n你会先清敌人，还是优先回防？欢迎试试。关注我，持续更新游戏。",
+  "new_description": "【游戏更新记录】\n2026-10-04 · camera-mobile1\n1. 移除手机上的全屏入口，直接横屏游玩。\n2. 横屏摇杆移到左侧近边缘；靠左触摸时摇杆底座保持在画面内，旋转屏幕后位置仍保持。\n3. 保留五种视角：斜俯视、正俯视、近景、正视、第一人称；C切换，Q/E旋转。\n经典复刻为FC原版35关及困难循环；魔改模式为100关一周目、周目无限。\n网站试玩：https://www.zhengxiaohui.cn/html/game/tank-3d/index.html\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n截至北京时间2026-10-04 19:58，网站已更新；Toy camera-mobile1已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】\n\n开坦克、打砖墙、守住老鹰基地！这次从正常实战里讲操作，以及时钟、铲子、头盔、手雷、坦克和星星六种道具。这轮守过了前两关，第三关基地失守后重试。\n\n当前版本有50关和周目挑战，WASD或方向键移动，J开火，Esc暂停。普通模式可无限复活，基地被打掉仍会失败。支持横屏触屏操作。\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/feidao-tank-3d/index.html\n\n你会先清敌人，还是优先回防？欢迎试试。关注我，持续更新游戏。",
+  "status": "public_verified",
+  "submitted_at": "2026-10-04T12:00:33.249Z",
+  "public_verified_at": "2026-10-04T12:04:10.504Z",
+  "update_block_sha256": "34143e8291c751c758677fef50fbe44604cfa6c360069d21d665e478af68a6aa",
+  "original_outside_block_preserved": true
+}

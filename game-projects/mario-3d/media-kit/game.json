@@ -2,7 +2,7 @@
   "game_id": "mario-3d-world-1-1",
   "name": "超级玛丽 3D：1-1 与 1-2",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.1.0",
+  "current_version": "v2.2.0",
   "handoff": "releases/v2.1.0/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
@@ -21,9 +21,17 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "v2.1.0（正视与第一人称）2026-10-04 12:10 提交，auditing；标题与封面已于 10:29 更新",
-    "verified_at": "2026-10-04T12:10:52+08:00",
-    "video_bindings": []
+    "review_status": "published",
+    "verified_at": "2026-10-04T12:11:54.416Z",
+    "video_bindings": [],
+    "submitted_version": "v2.2.0",
+    "submitted_at": "2026-10-04T19:57:49.860312+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Ccb9vl6y/index.html",
+    "release_record": "releases/v2.2.0/camera-mobile-toy.json",
+    "published_version": "v2.2.0",
+    "published_entry": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v22207/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_JChtYxAw/index.html",
+    "note": "本次五视角与手机控件更新已发布；保留原ID、slug、可见性和视频绑定。"
   },
   "notes": "粉丝向非官方复刻：关卡布局按原作地图，3D 模型、贴图与音乐音效为程序化重新制作，不使用原作素材文件。"
 }

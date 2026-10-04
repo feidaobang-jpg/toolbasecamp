@@ -1,0 +1,15 @@
+{
+  "game": "mario-3d",
+  "owner_mid": 16214353,
+  "videos": [],
+  "status": "pending_association",
+  "reason": "无已确认的本人对应游戏视频映射；未改动其他游戏视频",
+  "version": "v2.2.0",
+  "excluded_candidates": [
+    {
+      "bvid": "BV1guep6NELt",
+      "reason": "本人旧2D像素玛丽游戏视频，画面与本次3D项目不同；未改动"
+    }
+  ],
+  "mapping_audit": "已查看本人稿件前两页20条，未确认当前3D玛丽、跳跃狐狸或西游的视频"
+}

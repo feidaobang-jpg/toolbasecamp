@@ -287,7 +287,7 @@ scene.add(camera); // first-person weapon model is parented to the camera
 window.addEventListener('resize',()=>{renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();});
 /* 镜头：第三人称（默认，三档距离）与第一人称（V 切换）；鼠标/触屏拖动或 Q/E 自由转向 */
 let camYaw=0,camPitch=0,camView=0,camMode='third',camYawVel=0;
-const CAMERA_VIEWS=[{d:8.6,h:3.9,name:'近身跟随'},{d:13.5,h:8.2,name:'高位跟随'},{d:9,h:24,name:'战术俯视'}];
+const CAMERA_VIEWS=[{d:8.6,h:3.9,name:'近身跟随'},{d:13.5,h:8.2,name:'高位跟随'},{d:9,h:24,name:'战术俯视'},{d:5.5,h:1.8,name:'低位跟随'},{d:20,h:15,name:'战术远景'}];
 const camState={target:new THREE.Vector3(),dist:8.6,init:false,inTunnel:0};
 function behindYaw(){return player.inVehicle?player.inVehicle.yaw:player.yaw;}
 function setCameraView(index,notify=true){
@@ -3501,7 +3501,7 @@ function setupWebControls(){
   applyQuality(quality);$('qualityBtn').onclick=$('qualityBtnMenu').onclick=()=>applyQuality($('qualityBtn').dataset.quality==='high'?'smooth':'high');
   $('muteBtn').onclick=$('muteBtnMenu').onclick=()=>{muted=!muted;AudioSys.init();AudioSys.master.gain.value=muted?0:.5;$('muteBtn').textContent=muted?'静音 M':'声音 M';syncPauseOptions();};
   const full=$('fullBtn');
-  const fullscreenAllowed=()=>!!document.documentElement.requestFullscreen&&(typeof document.fullscreenEnabled==='boolean'?document.fullscreenEnabled:document.webkitFullscreenEnabled===true);
+  const fullscreenAllowed=()=>!isTouch&&!!document.documentElement.requestFullscreen&&(typeof document.fullscreenEnabled==='boolean'?document.fullscreenEnabled:document.webkitFullscreenEnabled===true);
   full.hidden=!fullscreenAllowed();
   full.onclick=async()=>{if(full.hidden)return;try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){full.hidden=true;}};
   window.addEventListener('keydown',e=>{

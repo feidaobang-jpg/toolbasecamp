@@ -1,0 +1,51 @@
+{
+  "verified_at": "2026-10-04T12:11:54.416Z",
+  "checks": [
+    {
+      "game": "jackal-stage1-3d",
+      "src": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22206/index.html",
+      "cameras": [
+        "视角（C）\n◂ 斜俯视 ▸",
+        "视角（C）\n◂ 俯视 ▸",
+        "视角（C）\n◂ 近景斜视 ▸",
+        "视角（C）\n◂ 战术远景 ▸",
+        "视角（C）\n◂ 低位正视 ▸"
+      ],
+      "left": "4px",
+      "status": "public_verified"
+    },
+    {
+      "game": "mario-3d",
+      "src": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v22207/index.html",
+      "cameras": [
+        "视角（C）\n◂ 侧视 ▸",
+        "视角（C）\n◂ 斜视 ▸",
+        "视角（C）\n◂ 正视 ▸",
+        "视角（C）\n◂ 第一人称 ▸",
+        "视角（C）\n◂ 俯视 ▸"
+      ],
+      "left": "4px",
+      "status": "public_verified"
+    },
+    {
+      "game": "tank-3d",
+      "src": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v22208/index.html",
+      "cameras": [
+        "视角（C）\n◂ 正俯视 ▸",
+        "视角（C）\n◂ 近景 ▸",
+        "视角（C）\n◂ 正视 ▸",
+        "视角（C）\n◂ 第一人称 ▸",
+        "视角（C）\n◂ 斜俯视 ▸"
+      ],
+      "left": "4px",
+      "status": "public_verified"
+    },
+    {
+      "game": "starship-defense",
+      "src": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v22209/index.html",
+      "left": "4px",
+      "status": "public_verified",
+      "camera_validation": "五种第三人称及第一人称已在相同包的本地与预览实测"
+    }
+  ]
+}

@@ -6,7 +6,9 @@ const D = Math.PI / 180;
 export const PRESETS = [
   { id: 'oblique', name: '斜俯视', pitch: 56 * D, dist: 34, fov: 40, ahead: 4 },
   { id: 'top', name: '俯视', pitch: 84 * D, dist: 42, fov: 40, ahead: 2 },
-  { id: 'low', name: '近景斜视', pitch: 40 * D, dist: 24, fov: 46, ahead: 7 }
+  { id: 'low', name: '近景斜视', pitch: 40 * D, dist: 24, fov: 46, ahead: 7 },
+  { id: 'wide', name: '战术远景', pitch: 64 * D, dist: 48, fov: 40, ahead: 6 },
+  { id: 'front', name: '低位正视', pitch: 32 * D, dist: 18, fov: 48, ahead: 5 }
 ];
 
 export function createCamera() {

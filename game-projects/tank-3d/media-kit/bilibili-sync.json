@@ -6,9 +6,9 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "merge1",
-      "blockHash": "ea5b15c4ad8d81ded8473537c85e896e50414b7574b9c0705bc985905a0e8b52",
-      "release": "releases/merge1/bilibili-sync.json"
+      "lastPublicVerifiedVersion": "camera-mobile1",
+      "blockHash": "34143e8291c751c758677fef50fbe44604cfa6c360069d21d665e478af68a6aa",
+      "release": "releases/camera-mobile1/bilibili-sync.json"
     }
   ],
   "pending": []

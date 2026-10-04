@@ -6,7 +6,7 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.3.1",
+  "current_version": "v0.3.2",
   "handoff": "releases/v0.3.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
@@ -30,7 +30,7 @@
       "W/A/S/D（或方向键）": "8 向移动（按相机水平轴映射）",
       "J（或空格）": "机枪，按住连发；默认跟随车头，可在菜单切换为固定朝前",
       "K": "手雷 / 火箭：朝车头方向发射",
-      "C": "循环切换视角：斜俯视 → 俯视 → 近景斜视",
+      "C": "循环切换五种视角：斜俯视、俯视、近景斜视、战术远景、低位正视",
       "Esc / Enter": "暂停；菜单里 Enter 确认",
       "F": "全屏（独立操作，开始游戏不会自动全屏）",
       "↑↓ / ←→": "菜单选择 / 调整选项（命数、耐久「标准 3 格 / 经典一发」、视角、画质、音量等）"
@@ -40,7 +40,7 @@
       "右侧 J": "机枪，按住连发",
       "右侧 K": "手雷 / 火箭",
       "右侧 C": "切换视角",
-      "右上角": "暂停、全屏按钮"
+      "右上角": "暂停按钮"
     }
   },
   "release_intent": "web_demo",
@@ -94,16 +94,21 @@
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
     "review_status": "published",
-    "verified_at": "2026-10-04T14:17:37.651922+08:00",
+    "verified_at": "2026-10-04T12:11:54.416Z",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_CBW1bohi/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_52UEStAw/index.html",
     "preview_verified_at": "2026-10-04T14:17:37.651922+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.3.1近距离破门修复已通过审核；正式页版本v22047、游戏脚本?v=6已核验。保留原ID、slug、可见性与视频绑定。",
-    "submitted_at": "2026-10-04T14:13:45.186500+08:00",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html"
+    "note": "本次五视角与手机控件更新已发布；保留原ID、slug、可见性和视频绑定。",
+    "submitted_at": "2026-10-04T19:57:48.787034+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html",
+    "submitted_version": "v0.3.2",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vDs3djow/index.html",
+    "release_record": "releases/v0.3.2/camera-mobile-toy.json",
+    "published_version": "v0.3.2",
+    "published_entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22206/index.html"
   }
 }

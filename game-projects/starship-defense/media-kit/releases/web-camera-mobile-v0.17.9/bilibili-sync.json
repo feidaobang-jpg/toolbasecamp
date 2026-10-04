@@ -1,0 +1,30 @@
+{
+  "version": "web-camera-mobile-v0.17.9",
+  "records": [
+    {
+      "game": "starship-defense",
+      "version": "web-camera-mobile-v0.17.9",
+      "bvid": "BV1WbHq6eEBt",
+      "old_description": "【游戏更新记录】\n2026年10月4日 · v0.17.8\n• 合金围墙、城顶护墙及野外掩体低墙统一为腰胸高度，站在墙后能观察和射击；承重柱和基地台体保留原高度。\n• 修复斜放合金围墙的碰撞方向，墙身、端点与接缝按实际轮廓阻挡，减少穿墙和墙外隐形阻挡。\n• 合金墙挡住低处弹道，近战虫隔墙先破墙；主角可越墙射击墙脚虫子，跳跃可翻过或落在矮墙顶。高处攻击仍可命中露出的身体。\n此前更新：修复旧存档默认高墙残留，保留关卡、金币和其他建筑；清理基地杂物，支持连续建造，每座放下才扣钱。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，C切换视角预设，U无限手雷（间隔0.8秒）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n截至10月4日16:54，网站v0.17.8已更新并验证；同版本Toy电脑和手机视口预览已验证，正式更新已提交审核，提交返回审核中。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "new_description": "【游戏更新记录】\n2026-10-04 · v0.17.9（web-camera-mobile-v0.17.9）\n1. C键循环五种第三人称视角：近身跟随、高位跟随、战术俯视、低位跟随、战术远景；V仍可切换第一人称，手机保留对应按钮。\n2. 移除手机全屏按钮，直接横屏游玩。\n3. 横屏左摇杆移到屏幕左侧近边缘；旋转回横屏后保持布局。\n此前v0.17.8：合金围墙、护墙和掩体改为腰胸高度；修复斜墙碰撞及旧存档高墙残留，保留关卡与建筑，支持连续建造。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（间隔0.8秒）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n截至北京时间2026-10-04 19:58，网站v0.17.9已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "status": "public_verified",
+      "submitted_at": "2026-10-04T12:01:35.623Z",
+      "public_verified_at": "2026-10-04T12:04:10.527Z",
+      "update_block_sha256": "53f6d7bd6aa6f9656c6f1a7805b867ec23d4f6d1c5a67067fe9d45980705ee1d",
+      "original_outside_block_preserved": true
+    },
+    {
+      "game": "starship-defense",
+      "version": "web-camera-mobile-v0.17.9",
+      "bvid": "BV1Ujad6DEuf",
+      "old_description": "【游戏更新记录】\n2026年10月4日 · v0.17.8\n• 合金围墙、城顶护墙及野外掩体低墙统一为腰胸高度，站在墙后能观察和射击；承重柱和基地台体保留原高度。\n• 修复斜放合金围墙的碰撞方向，墙身、端点与接缝按实际轮廓阻挡，减少穿墙和墙外隐形阻挡。\n• 合金墙挡住低处弹道，近战虫隔墙先破墙；主角可越墙射击墙脚虫子，跳跃可翻过或落在矮墙顶。高处攻击仍可命中露出的身体。\n此前更新：修复旧存档默认高墙残留，保留关卡、金币和其他建筑；清理基地杂物，支持连续建造，每座放下才扣钱。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，C切换视角预设，U无限手雷（间隔0.8秒）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n截至10月4日16:54，网站v0.17.8已更新并验证；同版本Toy电脑和手机视口预览已验证，正式更新已提交审核，提交返回审核中。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "new_description": "【游戏更新记录】\n2026-10-04 · v0.17.9（web-camera-mobile-v0.17.9）\n1. C键循环五种第三人称视角：近身跟随、高位跟随、战术俯视、低位跟随、战术远景；V仍可切换第一人称，手机保留对应按钮。\n2. 移除手机全屏按钮，直接横屏游玩。\n3. 横屏左摇杆移到屏幕左侧近边缘；旋转回横屏后保持布局。\n此前v0.17.8：合金围墙、护墙和掩体改为腰胸高度；修复斜墙碰撞及旧存档高墙残留，保留关卡与建筑，支持连续建造。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（间隔0.8秒）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n截至北京时间2026-10-04 19:58，网站v0.17.9已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "status": "pending_review",
+      "submitted_at": "2026-10-04T12:02:41.751Z",
+      "public_checked_at": "2026-10-04T12:06:51.318Z",
+      "public_current_version": "v0.17.8",
+      "update_block_sha256": "53f6d7bd6aa6f9656c6f1a7805b867ec23d4f6d1c5a67067fe9d45980705ee1d",
+      "original_outside_block_preserved": true
+    }
+  ]
+}

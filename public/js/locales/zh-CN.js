@@ -1356,7 +1356,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     hopfox3d: {
         stage: '第一关 · 草原', score: '分数', acorns: '橡果', lives: '生命', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
-        title: '跳跳狐\n草原 3D 冒险', intro: '跑、跳、踩，一路穿过草原：顶木箱拿橡果，踩扁甲虫，踢飞蜗牛壳，最后敲响终点的铃铛。', move: '移动', jump: '跳跃（按住跳更高）', run: '奔跑 · 拿到灯笼后发射火花', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始', restart: '回车 · 再玩一次', back: '游戏中心', touch: '触屏操作', note: '原创角色、关卡、美术与音乐 · 程序化 3D · 横版闯关演示', runShort: '奔跑', jumpShort: '跳跃', help: 'A/D 移动 · K 跳跃 · J 奔跑/发射 · Q/E 旋转 · R/F 俯仰 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '草原会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
+        title: '跳跳狐\n草原 3D 冒险', intro: '跑、跳、踩，一路穿过草原：顶木箱拿橡果，踩扁甲虫，踢飞蜗牛壳，最后敲响终点的铃铛。', move: '移动', jump: '跳跃（按住跳更高）', run: '奔跑 · 拿到灯笼后发射火花', camera: '旋转 · 俯仰 · 五种视角', start: '回车 · 开始', restart: '回车 · 再玩一次', back: '游戏中心', touch: '触屏操作', note: '原创角色、关卡、美术与音乐 · 程序化 3D · 横版闯关演示', runShort: '奔跑', jumpShort: '跳跃', help: 'A/D 移动 · K 跳跃 · J 奔跑/发射 · Q/E 旋转 · R/F 俯仰 · C 切换视角 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '草原会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
         winTitle: '第一关通关！', winCopy: '铃声响彻草原。再来一次，试试抓得更高、跑得更快。', deadTitle: '生命用完了', deadCopy: '按回车或点按钮，从草原起点重新出发。', bell: '铃铛高度奖励', total: '总分',
         gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
     },

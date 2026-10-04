@@ -1,5 +1,5 @@
 import { createWorld, startWorld, stepWorld, LEVEL_END } from './world.js';
-import { createScene } from './scene.js?v=1';
+import { createScene } from './scene.js?v=camera-mobile1';
 import { GameAudio } from './audio.js?v=1';
 
 const $ = id => document.getElementById(id);
@@ -9,6 +9,7 @@ const audio = new GameAudio();
 const view = createScene($('world'), world);
 const held = new Set(), pointerKeys = new Set(), tapped = new Set();   // tapped: presses shorter than a frame still count once
 const ALIASES = { ArrowLeft: 'KeyQ', ArrowRight: 'KeyE', ArrowUp: 'KeyR', ArrowDown: 'KeyF', Space: 'KeyK' };
+let prevCamera = false;
 let phase = 'title', paused = false, introT = 0, last = performance.now(), orientationBlocked = false, bigTimer = 0, prevJump = false, prevAction = false, stickX = 0, stickId = null;
 const mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
 const HI_KEY = 'tb-game-hopfox3d-hi';
@@ -27,7 +28,9 @@ function readInput() {
   prevJump = jump; prevAction = action;
   return input;
 }
+document.body.classList.toggle('mobile-device', mobileDevice);
 function requestFull() {
+  if (mobileDevice) return;
   const el = $('game');
   try { if (document.fullscreenElement !== el && el.requestFullscreen) el.requestFullscreen({ navigationUI: 'hide' }).then(() => { try { screen.orientation?.lock?.('landscape').catch(() => {}); } catch (e) { /* unsupported */ } }).catch(() => { if (mobileDevice) toast(tr('hopfox3d.fullFail'), 2600); }); } catch (e) { /* unsupported */ }
 }
@@ -106,7 +109,9 @@ function frame(now) {
     orientation();
   }
   const active = !paused && !orientationBlocked;
-  const cam = { yaw: (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0), pitch: (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0), reset: pressed('KeyC') };
+  const cameraPressed = pressed('KeyC');
+  const cam = { yaw: (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0), pitch: (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0), reset: cameraPressed && !prevCamera };
+  prevCamera = cameraPressed;
   if (phase === 'intro' && active) { introT += dt; if (introT >= 2.2) { phase = 'playing'; startWorld(world); } }
   if (phase === 'intro') cam.intro = Math.min(1, Math.max(0, (introT - .8) / 1.9));
   else if (phase === 'playing' && introT < 2.7 && active) { introT += dt; cam.intro = Math.min(1, (introT - .8) / 1.9); }
@@ -116,6 +121,7 @@ function frame(now) {
   if (bigTimer > 0 && bigTimer < 1e8) { bigTimer -= dt; if (bigTimer <= 0 && phase !== 'over') $('bigtext').hidden = true; }
   audio.tick(phase === 'playing' && active && world.status === 'playing');
   view.update(active || phase === 'title' || phase === 'over' ? dt : 0, active || phase !== 'playing' ? cam : { intro: cam.intro });
+  if (cam.reset && active) toast('视角：' + view.cameraName);
   updateHud(); tapped.clear();
   requestAnimationFrame(frame);
 }
@@ -175,3 +181,5 @@ addEventListener('orientationchange', () => setTimeout(() => { view.resize(); or
 refreshSoundLabel(); refreshPauseLabel(); orientation(); updateHud();
 $('game').focus({ preventScroll: true });
 requestAnimationFrame(frame);
+
+if(new URLSearchParams(location.search).get("test")==="1"){window.__CAMERA_QA__={view,world,begin(){startWorld(world);phase='playing';introT=3;view.update(0,{},true);},state:()=>({index:view.cameraIndex,name:view.cameraName,count:view.cameraCount})};}

@@ -1,0 +1,453 @@
+{
+  "at": "2026-10-04",
+  "browser": "Edge headless, desktop 1280x720 and touch 844x390, portrait 390x844",
+  "checks": [
+    {
+      "name": "tank-3d desktop five distinct cameras",
+      "ok": true,
+      "detail": [
+        "top",
+        "close",
+        "front",
+        "fp",
+        "overview"
+      ]
+    },
+    {
+      "name": "tank-3d desktop camera cycle returns",
+      "ok": true,
+      "detail": "top"
+    },
+    {
+      "name": "tank-3d desktop fullscreen UI",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "tank-3d desktop no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "mario-3d desktop five distinct cameras",
+      "ok": true,
+      "detail": [
+        "side",
+        "oblique",
+        "front",
+        "fp",
+        "top"
+      ]
+    },
+    {
+      "name": "mario-3d desktop camera cycle returns",
+      "ok": true,
+      "detail": "side"
+    },
+    {
+      "name": "mario-3d desktop fullscreen UI",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "mario-3d desktop no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "starship-defense desktop five distinct cameras",
+      "ok": true,
+      "detail": [
+        "0,10.8,-28.6",
+        "0,15.1,-33.5",
+        "0,30.9,-29",
+        "0,8.7,-25.5",
+        "0,21.9,-40"
+      ]
+    },
+    {
+      "name": "starship-defense desktop fullscreen UI",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "starship-defense desktop no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "tank-3d mobile five distinct cameras",
+      "ok": true,
+      "detail": [
+        "top",
+        "close",
+        "front",
+        "fp",
+        "overview"
+      ]
+    },
+    {
+      "name": "tank-3d mobile camera cycle returns",
+      "ok": true,
+      "detail": "top"
+    },
+    {
+      "name": "tank-3d mobile fullscreen UI",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "tank-3d mobile no automatic fullscreen",
+      "ok": true
+    },
+    {
+      "name": "tank-3d mobile joystick near left",
+      "ok": true,
+      "detail": {
+        "x": 4,
+        "y": 260,
+        "width": 110,
+        "height": 110
+      }
+    },
+    {
+      "name": "tank-3d mobile portrait fullscreen stays hidden",
+      "ok": true
+    },
+    {
+      "name": "tank-3d mobile rotate back keeps joystick near edge",
+      "ok": true
+    },
+    {
+      "name": "tank-3d mobile no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "mario-3d mobile five distinct cameras",
+      "ok": true,
+      "detail": [
+        "side",
+        "oblique",
+        "front",
+        "fp",
+        "top"
+      ]
+    },
+    {
+      "name": "mario-3d mobile camera cycle returns",
+      "ok": true,
+      "detail": "side"
+    },
+    {
+      "name": "mario-3d mobile fullscreen UI",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "mario-3d mobile no automatic fullscreen",
+      "ok": true
+    },
+    {
+      "name": "mario-3d mobile joystick near left",
+      "ok": true,
+      "detail": {
+        "x": 4,
+        "y": 260,
+        "width": 110,
+        "height": 110
+      }
+    },
+    {
+      "name": "mario-3d mobile portrait fullscreen stays hidden",
+      "ok": true
+    },
+    {
+      "name": "mario-3d mobile rotate back keeps joystick near edge",
+      "ok": true
+    },
+    {
+      "name": "mario-3d mobile no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "starship-defense mobile five distinct cameras",
+      "ok": true,
+      "detail": [
+        "0,10.8,-28.6",
+        "0,15.1,-33.5",
+        "0,30.9,-29",
+        "0,8.7,-25.5",
+        "0,21.9,-40"
+      ]
+    },
+    {
+      "name": "starship-defense mobile fullscreen UI",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "starship-defense mobile no automatic fullscreen",
+      "ok": true
+    },
+    {
+      "name": "starship-defense mobile joystick near left",
+      "ok": true,
+      "detail": {
+        "x": 3.5166666507720947,
+        "y": 259.8797607421875,
+        "width": 109.01666617393494,
+        "height": 109.01666259765625
+      }
+    },
+    {
+      "name": "starship-defense mobile portrait fullscreen stays hidden",
+      "ok": true
+    },
+    {
+      "name": "starship-defense mobile rotate back keeps joystick near edge",
+      "ok": true
+    },
+    {
+      "name": "starship-defense mobile no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "journey-west-3d desktop five distinct cameras",
+      "ok": true,
+      "detail": [
+        "oblique",
+        "east",
+        "top",
+        "close",
+        "front"
+      ]
+    },
+    {
+      "name": "journey-west-3d desktop camera cycle returns",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "journey-west-3d desktop fullscreen UI",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "journey-west-3d desktop no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "hop-fox-3d desktop five distinct cameras",
+      "ok": true,
+      "detail": [
+        "侧视",
+        "斜俯视",
+        "俯视",
+        "近景",
+        "远景"
+      ]
+    },
+    {
+      "name": "hop-fox-3d desktop camera cycle returns",
+      "ok": true,
+      "detail": "侧视"
+    },
+    {
+      "name": "hop-fox-3d desktop fullscreen UI",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "hop-fox-3d desktop no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "journey-west-3d mobile five distinct cameras",
+      "ok": true,
+      "detail": [
+        "oblique",
+        "east",
+        "top",
+        "close",
+        "front"
+      ]
+    },
+    {
+      "name": "journey-west-3d mobile camera cycle returns",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "journey-west-3d mobile fullscreen UI",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "journey-west-3d mobile no automatic fullscreen",
+      "ok": true
+    },
+    {
+      "name": "journey-west-3d mobile joystick near left",
+      "ok": true,
+      "detail": {
+        "x": 4,
+        "y": 270,
+        "width": 102,
+        "height": 102
+      }
+    },
+    {
+      "name": "journey-west-3d mobile portrait fullscreen stays hidden",
+      "ok": true
+    },
+    {
+      "name": "journey-west-3d mobile rotate back keeps joystick near edge",
+      "ok": true
+    },
+    {
+      "name": "journey-west-3d mobile no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "hop-fox-3d mobile five distinct cameras",
+      "ok": true,
+      "detail": [
+        "侧视",
+        "斜俯视",
+        "俯视",
+        "近景",
+        "远景"
+      ]
+    },
+    {
+      "name": "hop-fox-3d mobile camera cycle returns",
+      "ok": true,
+      "detail": "侧视"
+    },
+    {
+      "name": "hop-fox-3d mobile fullscreen UI",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "hop-fox-3d mobile no automatic fullscreen",
+      "ok": true
+    },
+    {
+      "name": "hop-fox-3d mobile joystick near left",
+      "ok": true,
+      "detail": {
+        "x": 4,
+        "y": 264,
+        "width": 112,
+        "height": 112
+      }
+    },
+    {
+      "name": "hop-fox-3d mobile portrait fullscreen stays hidden",
+      "ok": true
+    },
+    {
+      "name": "hop-fox-3d mobile rotate back keeps joystick near edge",
+      "ok": true
+    },
+    {
+      "name": "hop-fox-3d mobile no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "jackal-stage1-3d desktop five distinct cameras",
+      "ok": true,
+      "detail": [
+        "oblique",
+        "top",
+        "low",
+        "wide",
+        "front"
+      ]
+    },
+    {
+      "name": "jackal-stage1-3d desktop camera cycle returns",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "jackal-stage1-3d desktop fullscreen UI",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "jackal-stage1-3d desktop no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "jackal-stage1-3d mobile five distinct cameras",
+      "ok": true,
+      "detail": [
+        "oblique",
+        "top",
+        "low",
+        "wide",
+        "front"
+      ]
+    },
+    {
+      "name": "jackal-stage1-3d mobile camera cycle returns",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "jackal-stage1-3d mobile fullscreen UI",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "jackal-stage1-3d mobile no automatic fullscreen",
+      "ok": true
+    },
+    {
+      "name": "jackal-stage1-3d mobile joystick near left",
+      "ok": true,
+      "detail": {
+        "x": 4,
+        "y": 236,
+        "width": 128,
+        "height": 128
+      }
+    },
+    {
+      "name": "jackal-stage1-3d mobile portrait fullscreen stays hidden",
+      "ok": true
+    },
+    {
+      "name": "jackal-stage1-3d mobile rotate back keeps joystick near edge",
+      "ok": true
+    },
+    {
+      "name": "jackal-stage1-3d mobile no runtime errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "jackal_desktop": {
+    "passed": 85,
+    "total": 85
+  },
+  "jackal_mobile": {
+    "passed": 33,
+    "total": 33
+  },
+  "jackal_gates": {
+    "passed": 24,
+    "total": 24
+  },
+  "real_phone": false
+}

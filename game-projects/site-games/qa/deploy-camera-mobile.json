@@ -1,0 +1,105 @@
+{
+  "commit": "ef72840b19ef3d82130a2bb88364d5c64e5bca85",
+  "checks": [
+    {
+      "path": "public/html/game/hop-fox-3d/index.html",
+      "matches": true,
+      "deployment_version_rewrite": true
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/main.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/scene.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/style.css",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/css/style.css",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/index.html",
+      "matches": true,
+      "deployment_version_rewrite": true
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/journey-west-3d/index.html",
+      "matches": true,
+      "deployment_version_rewrite": true
+    },
+    {
+      "path": "public/html/game/journey-west-3d/locale.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/journey-west-3d/main.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/journey-west-3d/scene.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/journey-west-3d/style.css",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/mario-3d/index.html",
+      "matches": true,
+      "deployment_version_rewrite": true
+    },
+    {
+      "path": "public/html/game/mario-3d/main.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/mario-3d/scene.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/mario-3d/style.css",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/starship-defense/game.compat.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/starship-defense/game.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/starship-defense/index.html",
+      "matches": true,
+      "deployment_version_rewrite": true
+    },
+    {
+      "path": "public/html/game/tank-3d/index.html",
+      "matches": true,
+      "deployment_version_rewrite": true
+    },
+    {
+      "path": "public/html/game/tank-3d/main.js",
+      "matches": true
+    },
+    {
+      "path": "public/html/game/tank-3d/style.css",
+      "matches": true
+    },
+    {
+      "path": "public/js/locales/zh-CN.js",
+      "matches": true
+    }
+  ],
+  "latest_runtime_commit": "0368039a",
+  "jackal_mobile_help_verified": true
+}
