@@ -11,5 +11,8 @@
       "release": "releases/camera-mobile1/bilibili-sync.json"
     }
   ],
-  "pending": []
+  "pending": [
+    "BV1Wqaz6AEJb"
+  ],
+  "pending_note": "简介去重+旧文案修正已备好未提交：创作中心需扫码登录；prepared: description-fixes/2026-10-05-dedupe-link.json"
 }
