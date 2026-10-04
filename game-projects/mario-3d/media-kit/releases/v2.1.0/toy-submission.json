@@ -1,0 +1,23 @@
+{
+  "toy_id": 39043286960128,
+  "slug": "feidao-mario-3d",
+  "title_on_platform": "超级玛丽 3D：1-1 与 1-2",
+  "version": "v2.1.0",
+  "source_commit": "a2fc1df1",
+  "package": "game-projects/mario-3d/dist/toy-v2.1.0/package",
+  "package_sha256": "b737ca75da0885c055cacc867e806357f0c67b913d96a7e25c93b0ecca537fa7",
+  "preflight": {
+    "tool": "toy_doctor.py",
+    "ok": true,
+    "warnings": [
+      "产物文件名不含内容指纹（仅建议）"
+    ]
+  },
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_RGjznN5u/index.html",
+  "preview_check": "Edge 电脑：菜单、1-1 跑跳、C 三次依次到正视与第一人称、1-2 开局正常；手机 390×844 模拟：竖屏开始自动旋转横屏、触控按键显示；无脚本错误、无 4xx/5xx。非真机。",
+  "submitted_at": "2026-10-04T12:10:52+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_Y4ghuEWd/index.html",
+  "status": "auditing",
+  "note": "10:04 提交的 v2.0.0 状态未单独查询到（CLI 无版本状态命令）；本次提交未被“已有审核中的版本”拦截。审核通过前正式页内容以平台为准。",
+  "authorization": "用户 2026-10-04 长期授权：网站游戏改动验证部署后自动同步已有 Toy 并提交审核"
+}
