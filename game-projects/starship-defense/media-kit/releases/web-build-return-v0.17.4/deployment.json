@@ -1,0 +1,10 @@
+{
+  "code_commit": "7c5be56f",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "status": "verified",
+  "bundle_sha256": "4e034b8c15b61933b89ca13db78f633575e5a00d98242648dd210be2a981440d",
+  "online_bundle_matches_local": true,
+  "online_bundle_query": "v=7c5be56f",
+  "verified_before": "2026-10-04T05:22:15.464095+00:00",
+  "qa": "website/qa.json"
+}

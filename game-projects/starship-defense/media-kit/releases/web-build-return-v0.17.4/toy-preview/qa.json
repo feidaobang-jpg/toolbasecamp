@@ -1,0 +1,23 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_N8KK2Hig/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "reopened": true,
+      "demolished": 3,
+      "refund": 450,
+      "rebuilt": true,
+      "cancelButton": true,
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "reopened": true,
+      "demolished": 3,
+      "refund": 450,
+      "rebuilt": true,
+      "cancelButton": true,
+      "errors": []
+    }
+  ]
+}

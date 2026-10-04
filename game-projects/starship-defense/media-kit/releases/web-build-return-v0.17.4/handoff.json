@@ -4,9 +4,15 @@
   "scope": "拆除后建造入口及手机放置工具栏交互",
   "qa": "qa.json",
   "baseline": "baseline.json",
-  "website_status": "pending",
-  "toy_status": "pending",
-  "bilibili_status": "pending",
+  "website_status": "verified",
+  "toy_status": "auditing",
+  "bilibili_status": "public_verified",
   "media_readiness": "screenshots-only",
-  "build_sha256": "4e034b8c15b61933b89ca13db78f633575e5a00d98242648dd210be2a981440d"
+  "build_sha256": "4e034b8c15b61933b89ca13db78f633575e5a00d98242648dd210be2a981440d",
+  "code_commit": "7c5be56f",
+  "website_qa": "website/qa.json",
+  "toy_qa": "toy-preview/qa.json",
+  "deployment": "deployment.json",
+  "toy": "toy.json",
+  "bilibili": "bilibili-sync.json"
 }

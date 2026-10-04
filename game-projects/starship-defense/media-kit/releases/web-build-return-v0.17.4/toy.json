@@ -1,0 +1,21 @@
+{
+  "toy_id": "38678478981120",
+  "version": "web-build-return-v0.17.4",
+  "archive": "dist/toy/chongchao-qianshao/releases/web-build-return-v0.17.4.zip",
+  "zip_sha256": "b2ca0c0f4c1fc42ad4551cc9e82a68cbc53076d3031a8512081e1ce0830e2f5d",
+  "bytes": 256131,
+  "doctor": "passed; 3 advisory filename fingerprint warnings",
+  "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_N8KK2Hig/index.html",
+  "preview_qa": "toy-preview/qa.json",
+  "submitted": true,
+  "submitted_date": "2026-10-04",
+  "submitted_before": "2026-10-04T13:18:00+08:00",
+  "status_recorded_at": "2026-10-04T05:22:15.464095+00:00",
+  "status": "auditing",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_VfCIucE4/index.html",
+  "same_tested_archive_submitted": true,
+  "video_bindings": [
+    "BV1Ujad6DEuf",
+    "BV1WbHq6eEBt"
+  ]
+}
