@@ -6,13 +6,11 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "camera-mobile1",
+      "lastPublicVerifiedVersion": "camera-mobile1-dedupe-fix",
       "blockHash": "34143e8291c751c758677fef50fbe44604cfa6c360069d21d665e478af68a6aa",
-      "release": "releases/camera-mobile1/bilibili-sync.json"
+      "release": "releases/camera-mobile1/bilibili-sync.json",
+      "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00"
     }
   ],
-  "pending": [
-    "BV1Wqaz6AEJb"
-  ],
-  "pending_note": "简介去重+旧文案修正已备好未提交：创作中心需扫码登录；prepared: description-fixes/2026-10-05-dedupe-link.json"
+  "pending": []
 }

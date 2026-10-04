@@ -8,7 +8,8 @@
     "更新区块内移除 Toy试玩 行（区块外正文已有同一链接，避免重复）",
     "区块外旧文案「当前版本有50关和周目挑战」改为「当前版本有经典35关和魔改100关一周目挑战」，与当前版本一致"
   ],
-  "status": "blocked_not_submitted",
-  "blocker": "创作中心跳转passport扫码登录，需用户扫码后重试（2026-10-05 复核仍跳登录）",
-  "public_check_before": "线上简介为 camera-mobile1 区块（2026-10-04 12:04 public_verified）"
+  "status": "public_verified",
+  "public_check_before": "线上简介为 camera-mobile1 区块（2026-10-04 12:04 public_verified）",
+  "public_verified_at": "2026-10-05T00:48:03+08:00",
+  "submit_toast": "稿件投递成功"
 }

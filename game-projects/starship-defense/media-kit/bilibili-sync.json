@@ -7,26 +7,30 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-input-flight-v0.17.10",
-      "last_public_verified_at": "2026-10-04T14:48:14.213Z",
+      "last_public_verified_version": "web-grenade-nocd-v0.17.11",
+      "last_public_verified_at": "2026-10-05T00:48:00+08:00",
       "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "pending_review",
-      "pending_version": "web-grenade-nocd-v0.17.11"
+      "status": "submitted_pending_review",
+      "pending_version": "web-touch-ui-v0.17.12",
+      "submitted_at": "2026-10-05 00:47:53",
+      "submit_toast": "稿件投递成功"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-input-flight-v0.17.10",
-      "last_public_verified_at": "2026-10-04T14:48:14.214Z",
+      "last_public_verified_version": "web-grenade-nocd-v0.17.11",
+      "last_public_verified_at": "2026-10-05T00:48:00+08:00",
       "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "pending_review",
-      "pending_version": "web-grenade-nocd-v0.17.11"
+      "status": "submitted_pending_review",
+      "pending_version": "web-touch-ui-v0.17.12",
+      "submitted_at": "2026-10-05 00:47:53",
+      "submit_toast": "稿件投递成功"
     }
   ],
   "latest_record": "releases/web-touch-ui-v0.17.12/bilibili-descriptions.json",
   "pending": [
-    "BV1WbHq6eEBt",
-    "BV1Ujad6DEuf"
+    "BV1Ujad6DEuf",
+    "BV1WbHq6eEBt"
   ],
-  "pending_note": "v0.17.11简介已投递，公开生效待审核；上次v0.17.10约2小时内公开"
+  "pending_note": "v0.17.12简介已提交（编辑框覆盖了此前待审核的v0.17.11版本），稿件审核中未公开；提交前公开区块已自行更新为v0.17.11。登录态已恢复（~/.bili-playwright-profile）"
 }
