@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "account_mid": 16214353,
+  "mode": "description_update_block",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+      "last_public_verified_version": "web-insects-v0.17.0",
+      "last_public_verified_at": "2026-10-04T02:18:47.433651+00:00",
+      "update_block_sha256": "53acdf427af1301d4bb610e2abc945c358b1a795253f8eeaf21292a5bdcbd692",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
+      "last_public_verified_version": "web-insects-v0.17.0",
+      "last_public_verified_at": "2026-10-04T02:18:47.433651+00:00",
+      "update_block_sha256": "53acdf427af1301d4bb610e2abc945c358b1a795253f8eeaf21292a5bdcbd692",
+      "status": "public_verified"
+    }
+  ],
+  "latest_record": "releases/web-insects-v0.17.0/bilibili-sync.json",
+  "pending": []
+}

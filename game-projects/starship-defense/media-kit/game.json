@@ -82,5 +82,6 @@
     ],
     "saved": true,
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
-  }
+  },
+  "bilibili_sync": "bilibili-sync.json"
 }

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-insects-v0.17.0",
+  "build_commit": "c2ac5d91",
+  "baseline": "first automatic sync; v0.15/v0.16 summary from verified release records",
+  "update_block": "【游戏更新记录】\n2026年10月4日 · v0.17\n• 虫族改回甲壳、长节肢和獠牙造型，去掉大眼短脚与花瓣母皇。\n• 恢复手雷：电脑默认 U，手机有独立按钮；普通模式开局3枚，商店可补充。\n• 修复地堡墙角绕路、地图边界转向和虫群拥挤卡住的问题。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日09:57提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "status": "public_verified",
+      "original_description": "《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "proposed_description": "【游戏更新记录】\n2026年10月4日 · v0.17\n• 虫族改回甲壳、长节肢和獠牙造型，去掉大眼短脚与花瓣母皇。\n• 恢复手雷：电脑默认 U，手机有独立按钮；普通模式开局3枚，商店可补充。\n• 修复地堡墙角绕路、地图边界转向和虫群拥挤卡住的问题。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日09:57提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "submission_evidence": "创作中心：稿件投递成功；随后公开视频页面读回完整更新区块及保留的原简介",
+      "submitted_at": "2026-10-04T02:16:38.783135+00:00",
+      "public_verified_at": "2026-10-04T02:18:47.433651+00:00",
+      "update_block_sha256": "53acdf427af1301d4bb610e2abc945c358b1a795253f8eeaf21292a5bdcbd692",
+      "screenshot": "bilibili-new-description.jpg",
+      "screenshot_sha256": "3d623ffda8cfd4d6e5f1e28310e74c62b50817e89a173154cbde3bd7a0bdeebd",
+      "comment_action": "Existing accurate pinned guidance preserved; no new comment",
+      "title_cover_video_preserved": true
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "status": "public_verified",
+      "original_description": "【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "proposed_description": "【游戏更新记录】\n2026年10月4日 · v0.17\n• 虫族改回甲壳、长节肢和獠牙造型，去掉大眼短脚与花瓣母皇。\n• 恢复手雷：电脑默认 U，手机有独立按钮；普通模式开局3枚，商店可补充。\n• 修复地堡墙角绕路、地图边界转向和虫群拥挤卡住的问题。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日09:57提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "public_verified_at": "2026-10-04T02:18:47.433651+00:00",
+      "submission_evidence": "创作中心：稿件投递成功；随后公开视频页面读回完整更新区块及保留的原简介",
+      "update_block_sha256": "53acdf427af1301d4bb610e2abc945c358b1a795253f8eeaf21292a5bdcbd692",
+      "screenshot": "bilibili-old-description.jpg",
+      "screenshot_sha256": "9bbda78bb20ad937cb9fa1f6833bc8530071d5e006065639606a26138c7d3d71",
+      "comment_action": "Existing accurate pinned guidance preserved; no new comment",
+      "title_cover_video_preserved": true
+    }
+  ],
+  "prepared_at": "2026-10-04T02:15:33.971320+00:00",
+  "status": "completed",
+  "completed_at": "2026-10-04T02:18:47.433651+00:00",
+  "account_mid": 16214353,
+  "account_name": "飞刀班长",
+  "mapping_evidence": "同一账号稿件管理的两条虫潮Toy视频与已有publication-result.json；不包含旧原生裂隙防线或网站合集介绍",
+  "composition_validation": "Preserved description outside update block; idempotent replacement and malformed boundary checks passed"
+}
