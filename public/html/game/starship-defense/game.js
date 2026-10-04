@@ -2718,8 +2718,8 @@ function startPlacement(kind,free=false){
   const cfg=BUILDINGS[kind];let ring=null;
   if(cfg.range){ring=new THREE.Mesh(new THREE.RingGeometry(cfg.range-.25,cfg.range,72),new THREE.MeshBasicMaterial({color:0x7fd7ff,transparent:true,opacity:.28,depthWrite:false,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;scene.add(ring);}
   Object.assign(place,{mode:'build',target:null,kind,ghost,ring,mat,valid:false,reason:'',free,lastMouse:Input.mouseFire});
-  $('placeTip').textContent='走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 放置 · L 返回建造菜单 · Esc 取消（放下时才扣钱）';
-  stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent=cfg.name+(free||Game.testMode?'':' · 💰'+cfg.price);
+  $('placeTip').textContent='可连续摆放 · 走动移动虚影 · Q/E 或鼠标转视角调整朝向 · J/回车/左键/射击键 放置一座 · L 换建筑 · Esc/取消 结束（每座放下才扣钱）';
+  stage.classList.add('placing');$('placeBar').classList.remove('hidden');$('placeName').textContent=cfg.name+' · 连续建造'+(free||Game.testMode?'':' · 💰'+cfg.price);
   AudioSys.sfx('click');updPlacement();
 }
 function cancelPlacement(quiet=false){
@@ -2730,7 +2730,7 @@ function cancelPlacement(quiet=false){
   scene.remove(place.ghost);place.ghost.traverse(o=>{if(o.isMesh&&o.geometry&&!cached.has(o.geometry))o.geometry.dispose();});place.mat.dispose();
   if(place.ring){scene.remove(place.ring);place.ring.geometry.dispose();place.ring.material.dispose();}
   place.kind=place.ghost=place.ring=place.mode=place.target=null;$('placeBar').classList.add('hidden');stage.classList.remove('placing');$('placeOk').textContent='✔ 放置 J';
-  if(!quiet)showMsg(wasDemolish?'已退出拆除模式':'已取消建造（没有扣钱）',1.2);
+  if(!quiet)showMsg(wasDemolish?'已退出拆除模式':'已结束建造（未放置的虚影不扣钱）',1.2);
 }
 function placementCheck(kind,x,z,yaw){
   const cfg=BUILDINGS[kind];
@@ -2809,8 +2809,10 @@ function confirmPlacement(){
   if(!place.free&&!Game.testMode)Game.gold-=cfg.price;
   placeBuilding(kind,place.x,place.z,place.yaw);
   AudioSys.sfx('build');spawnParticles(new THREE.Vector3(place.x,groundY(place.x,place.z)+.5,place.z),0xffcc66,10,5,.5);
-  cancelPlacement(true);
-  showMsg('🏗 '+cfg.name+' 建造完成！L 继续建造',1.6);autoSave();
+  // Keep the selected building and preview for the next position. Recheck the
+  // budget, facility cap and collisions before every placement, including here.
+  updPlacement();
+  showMsg('🏗 '+cfg.name+' 已建好！移到空位可继续放置 · L 换建筑 · Esc/取消 结束',1.8);autoSave();
 }
 // 放置模式下 J/左键/射击键确认，不再开火
 function placementInput(){

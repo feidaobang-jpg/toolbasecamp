@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-continuous-build-v0.17.5",
+  "base_version": "web-build-return-v0.17.4",
+  "created_at": "2026-10-04T15:29:32.365080+08:00",
+  "build_sha256": "7cded5cece8551855516d080082a51b3fc38b617e5b6f869bac7adff4935db77",
+  "changes": [
+    {
+      "id": "continuous-building",
+      "before": "每放置一座结束建造模式",
+      "after": "保留虚影，可持续逐座摆放；每座校验费用与位置",
+      "validation": "passed"
+    }
+  ],
+  "qa": "qa.json",
+  "website_status": "pending",
+  "toy_status": "pending",
+  "bilibili_status": "pending",
+  "media_readiness": "partial",
+  "gaps": [
+    "无真机B站App验证",
+    "录像无游戏声音"
+  ]
+}
