@@ -942,7 +942,7 @@ function updHUDItem(){
 const player={
   mesh:null,bar:null,hp:120,maxHp:120,speed:9.5,
   pos:new THREE.Vector3(0,0,-24),vy:0,onGround:true,yaw:0,
-  fireCd:0,grenadeCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
+  fireCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
   muzzle:null,shield:0,buffT:0,heat:0,moveZ:0,
   reset(cls){
     const c=CLASSES[cls];
@@ -950,7 +950,6 @@ const player={
     this.pos.set(0,0,-20);this.vy=0;this.dead=false;this.inVehicle=null;this.yaw=0;
     this.shield=0;this.buffT=0;this.respawnT=0;this.invulnerable=0;this.heat=0;this.moveZ=0;
     this.onGround=true;
-    this.grenadeCd=0;
     if(this.mesh){visuals.release(this.mesh);scene.remove(this.mesh);}
     this.mesh=makeSoldier(c.color);this.mesh.rotation.order='YXZ';
     this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=3;this.mesh.add(this.bar);updHPBar(this.bar,1);
@@ -2101,14 +2100,14 @@ function useMedkit(){
   selfFx(0x66ff99,10,3,.7,1.5);healFlash=1;
 }
 function throwGrenade(){
-  if(player.dead||player.grenadeCd>0||place.kind)return false;
+  if(player.dead||place.kind)return false;
   if(player.inVehicle){showMsg('下车后可投掷手雷',1.2);return false;}
   const from=player.pos.clone();from.y+=1.45;
   const facing=camForward(false),aim=CombatControls.autoAim?autoAim(from,facing,26,.65):{mo:null};
   const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,22);
   target.y=groundY(target.x,target.z)+.2;
   fireBullet(from,facing,{arc:true,grenade:true,dmg:160,explode:6,speed:20,range:26,spread:0,color:0x96a85a},true,target);
-  player.grenadeCd=.8;updHUDItem();AudioSys.sfx('shoot');return true;
+  updHUDItem();AudioSys.sfx('shoot');return true;
 }
 function selectWeapon(id,quiet=false){
   if(!Game.weapons.includes(id))return;
@@ -2146,7 +2145,6 @@ function playerCanMove(x,z){
 }
 function updPlayer(dt){
   if(player.dead)return;
-  player.grenadeCd=Math.max(0,player.grenadeCd-dt);
   if(Input.pop('U'))throwGrenade();
   const t=performance.now()/1000;
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
