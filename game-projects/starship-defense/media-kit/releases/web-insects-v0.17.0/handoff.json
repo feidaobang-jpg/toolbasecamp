@@ -6,8 +6,8 @@
   "created_at": "2026-10-04T01:54:08.982781+00:00",
   "build": {
     "id": "web-insects-v0.17.0",
-    "commit": null,
-    "dirty": true,
+    "commit": "c2ac5d91",
+    "dirty": false,
     "fingerprint": "05ccbce5835a34a862078282b7103e75f551432a8dec52bfd1b4ee2faec93f21",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -54,7 +54,13 @@
       "桌面 RTX4060Ti Edge headless；手机仅视口与触控模拟",
       "录像无音轨",
       "自动化采集使用QA定位、无敌与补充弹药"
-    ]
+    ],
+    "deployment": "deployment.json",
+    "online_functional": [
+      "live/grenades.json",
+      "live/navigation.json"
+    ],
+    "toy": "toy/grenades.json"
   },
   "media": [
     {
@@ -164,5 +170,14 @@
       "无实体手机测试"
     ]
   },
-  "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+  "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_xve20Grb/index.html",
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_wshurcjj/index.html",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_xve20Grb/index.html",
+    "zip_sha256": "0b3200ae5b60d510ab056eeb0f1cf138af4abbdda3423a63cfcbce5d6c4692c3",
+    "submitted_at": "2026-10-04T01:57:43.653861+00:00"
+  }
 }

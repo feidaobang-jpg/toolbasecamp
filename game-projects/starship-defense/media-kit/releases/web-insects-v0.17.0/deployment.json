@@ -1,0 +1,41 @@
+{
+  "verified_at": "2026-10-04T01:56:10.934163+00:00",
+  "files": [
+    {
+      "path": "html/game/starship-defense/game.compat.js",
+      "match": true,
+      "exact": true,
+      "local_sha256": "05ccbce5835a34a862078282b7103e75f551432a8dec52bfd1b4ee2faec93f21",
+      "remote_sha256": "05ccbce5835a34a862078282b7103e75f551432a8dec52bfd1b4ee2faec93f21"
+    },
+    {
+      "path": "html/game/starship-defense/index.html",
+      "match": true,
+      "exact": false,
+      "local_sha256": "e48a8f64a1ddd1f2ef2c1a023de7ca34b503447f030fa57a1aae4794094868f6",
+      "remote_sha256": "81f9cdd7771c906daa0d15c6f36307f1c21f778a84552e8bb012f9d5fcf41b9b"
+    },
+    {
+      "path": "assets/game/thumbs/starship_defense.jpg",
+      "match": true,
+      "exact": true,
+      "local_sha256": "58f536dc6e93eae8d2594251d60c72d750576a0e07965bc308f9efd6b4e2508b",
+      "remote_sha256": "58f536dc6e93eae8d2594251d60c72d750576a0e07965bc308f9efd6b4e2508b"
+    },
+    {
+      "path": "js/config.js",
+      "match": true,
+      "exact": true,
+      "local_sha256": "62ba2cb7e09ca9fb0ccee58e6ed2926b78d400160a7664116e4ac1fbd36b872c",
+      "remote_sha256": "62ba2cb7e09ca9fb0ccee58e6ed2926b78d400160a7664116e4ac1fbd36b872c"
+    },
+    {
+      "path": "games.html",
+      "match": true,
+      "exact": false,
+      "local_sha256": "f442704314a0a1e62e1377aa4c89397582869dfde56990873adea4957c625650",
+      "remote_sha256": "14f158997625996b2f384190bcc45430788012bce7330b7cd8964366b56a8619"
+    }
+  ],
+  "all_match": true
+}
