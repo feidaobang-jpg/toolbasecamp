@@ -1,0 +1,85 @@
+{
+  "status": "published_complete",
+  "account": {
+    "name": "飞刀班长",
+    "uid": 16214353
+  },
+  "approval": {
+    "quote": "没问题，发布吧",
+    "record": "qa/user-approval.json",
+    "video_sha256": "82dd0ac77d251df58a24f0de76a0b67f66e2c533bbd61fab24052403400181e6"
+  },
+  "bvid": "BV1EyHz6wE5u",
+  "video_url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+  "published_at": "2026-10-04T09:33:41+08:00",
+  "audit_status": "passed",
+  "title": "小吉普，大救援！赤色要塞3D双关卡已上线，直接开玩",
+  "category": "游戏",
+  "tags": [
+    "bilibilitoy",
+    "赤色要塞",
+    "独立游戏",
+    "游戏开发",
+    "射击游戏",
+    "AI"
+  ],
+  "tag_note": "Claude被平台提示为话题专用，普通标签无法添加；保留简介开发说明和AI标签。",
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected_in_platform": true
+  },
+  "creation_statement": "含AI生成内容",
+  "covers": {
+    "home": "4:3 custom image",
+    "space": "16:9 custom image",
+    "verified": true
+  },
+  "toy_binding": {
+    "toy_id": 39863936092160,
+    "slug": "feidao-jackal-3d",
+    "bvid": "BV1EyHz6wE5u",
+    "aid": 117380046919398,
+    "verified_via": "toy video list --json",
+    "verified": true
+  },
+  "comment": {
+    "posted": true,
+    "pinned": true,
+    "verified_after_reload": true,
+    "text": "先炸营房救人，闪光俘虏会升级武器，记得送到直升机坪！你更想打磨吉普转向，还是手雷手感？\nToy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）去",
+    "note": "发布后末尾出现多余“去”字；平台无编辑入口，保留原评论避免删除与重复发送。试玩链接与引导均正确。"
+  },
+  "dynamic": {
+    "automatic_video_post_verified": true,
+    "separate_post_sent": false,
+    "profile_url": "https://space.bilibili.com/16214353/dynamic"
+  },
+  "push_application": {
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "worksheet": "【进行中】日常推流",
+    "range": "A259:E259",
+    "values": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+      "是",
+      "是",
+      "是"
+    ],
+    "deduplication": "BV搜索无结果；A259:F275空白且计数0",
+    "saved_ui": "最近保存 09:39",
+    "operator_feedback": "待运营处理，F列留空",
+    "status": "submitted"
+  },
+  "evidence": [
+    "qa/submission-success.png",
+    "qa/publish-covers.png",
+    "qa/publish-form.txt",
+    "qa/automatic-dynamic.png",
+    "qa/pinned-comment.png",
+    "qa/push-application.png",
+    "qa/published-video.png"
+  ],
+  "completed_at": "2026-10-04T09:41:30.260194+08:00",
+  "remaining_items": []
+}

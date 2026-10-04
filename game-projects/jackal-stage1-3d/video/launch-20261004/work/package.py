@@ -2,6 +2,9 @@
 import json,hashlib,subprocess,datetime
 from pathlib import Path
 R=Path(__file__).resolve().parent;F=R.parent/'final/bilibili-zh';P=R/'publish/bilibili-zh';P.mkdir(parents=True,exist_ok=True)
+# Published episodes are immutable: a new cut must use a new episode directory.
+if (R/'publication-result.json').exists():
+    raise SystemExit('本期已有发布记录，停止重建以免覆盖发布状态；新剪辑请创建新一期目录。')
 def write(p,t):p.write_text(t,encoding='utf-8-sig')
 def js(p,v):p.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 video=F/'赤色要塞-双关卡上架介绍.mp4'

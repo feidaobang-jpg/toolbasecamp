@@ -9,11 +9,15 @@
     {
       "variant_id": "bilibili-zh",
       "manifest_file": "publish/bilibili-zh/publish.json",
-      "ready_to_upload": false,
-      "blocking_issues": [
-        "等待本期最终视频人工审片（含人声听感）"
-      ]
+      "ready_to_upload": true,
+      "blocking_issues": [],
+      "uploaded": true,
+      "published": true,
+      "video_url": "https://www.bilibili.com/video/BV1EyHz6wE5u/"
     }
   ],
-  "ready_to_upload": false
+  "ready_to_upload": true,
+  "uploaded": true,
+  "published": true,
+  "video_url": "https://www.bilibili.com/video/BV1EyHz6wE5u/"
 }

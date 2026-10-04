@@ -1,0 +1,198 @@
+- generic: 
+- link " 主站":
+  - /url: //www.bilibili.com/
+  - generic: 
+  - text: 主站
+- generic: 试试更多AI创作工具吧
+- generic: 
+- generic: "5"
+- link "":
+  - /url: //message.bilibili.com/
+  - generic: 
+- generic: 成为UP主的第499天
+- link:
+  - /url: //space.bilibili.com/
+- region "scrollable content":
+  - link "投稿":
+    - /url: /platform/upload?page_from=creative_home_top_upload
+    - generic: 
+    - text: 投稿
+  - list:
+    - generic: 
+    - generic: 首页
+    - generic: 
+    - generic: 内容管理
+    - generic: 
+    - generic: 
+    - generic: 数据中心
+    - generic: 
+    - generic: 粉丝管理
+    - generic: 
+    - generic: 互动管理
+    - generic: 
+    - generic: 
+    - generic: 收益管理
+    - generic: 
+    - generic: 花生
+    - generic: updream
+    - generic: Toy
+    - generic: 
+    - generic: 创作成长
+    - generic: 
+    - generic: 任务中心
+    - generic: 必火推广
+    - link "创作学院":
+      - /url: https://member.bilibili.com/academy
+      - generic: 创作学院
+    - generic: 
+    - generic: 创作权益
+    - generic: 
+    - generic: 
+    - generic: 社区公约
+    - generic: 
+    - generic: 创作设置
+- text:   
+- text: 
+- generic: 发布视频
+- button "批量操作"
+- generic "赤色要塞-双关卡上架介绍":
+  - generic: 赤色要塞-双关卡上架介绍
+  - generic: 上传完成
+- generic: 添加视频
+- button "添加分P":
+  - text: 添加分P
+- generic "赤色要塞-双关卡上架介绍"
+- generic: 上传完成
+- generic: 更换视频
+- generic: 基本设置
+- generic: 一键填写
+- paragraph: "*"
+- heading "封面" [level=3]
+- generic: 以下为系统推荐封面，使用AI生成可获取更优质封面
+- generic: AI生成
+- paragraph: "*"
+- heading "标题" [level=3]
+- textbox "请输入稿件标题": 小吉普，大救援！赤色要塞3D双关卡已上线，直接开玩
+- paragraph: 25/80
+- paragraph: "*"
+- heading "创作声明" [level=3]
+- textbox "请选择符合您视频内容的创作声明": 含AI生成内容
+- generic: 
+- text:      
+- paragraph: "*"
+- heading "分区" [level=3]
+- paragraph: 游戏
+- img: 
+- paragraph: "*"
+- heading "标签" [level=3]
+- paragraph: 哔哩哔哩Toy创意挑战
+- paragraph: bilibilitoy
+- paragraph: 赤色要塞
+- paragraph: 独立游戏
+- paragraph: 游戏开发
+- paragraph: 射击游戏
+- paragraph: AI
+- textbox "按回车键Enter创建标签"
+- paragraph: 还可以添加3个标签
+- paragraph: 推荐标签：
+- generic: 童年回忆
+- generic: 童年
+- generic: 演示
+- generic: 要塞
+- generic: 吉普
+- generic: 赤色要塞
+- generic: 3D
+- paragraph: 参与话题：
+- generic: EPL S24赛季
+- generic: 蛋仔惊魂趣玩杯
+- generic: 绝区零UP主激励计划
+- generic: 崩坏：星穹铁道创作者激励计划
+- generic: 蛋仔奇思妙想计划
+- generic: 三角洲欢乐剧场
+- generic: 搜索更多话题 >
+- paragraph
+- heading "简介" [level=3]
+- paragraph: 驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。海滩登陆与废墟城两关现已上线：本期录了两关实战，第二关翻车一次后重新整备，最终完成救援与关底挑战。
+- paragraph
+- paragraph: 本作使用 Claude 辅助开发，是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。
+- paragraph
+- paragraph: 哔哩哔哩 Toy 试玩：
+- paragraph: https://www.bilibili.com/toy/feidao-jackal-3d/index.html
+- paragraph: 百宝箱试玩（复制到浏览器打开）：
+- paragraph: https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html
+- paragraph
+- paragraph: 想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）
+- textbox: aaaaaaaa
+- generic: "407"
+- text: /2000
+- paragraph
+- heading "定时发布" [level=3]
+- generic: (可选择距离当前最早≥5分钟/最晚≤15天的时间，花火、预约、互动视频稿件不可修改/取消)
+- paragraph
+- heading "加入合集" [level=3]
+- generic: 合集功能可用于收集整理系列性稿件
+- generic: 开通合集功能需满足权益中心等级达Lv2，您可前往创作中心-权益中心查看相关数据
+- paragraph
+- heading "商业推广" [level=3]
+- article:
+  - checkbox
+  - generic: 增加商业推广信息
+- text: 更多设置 （含声明与权益、视频元素、互动管理等）
+- generic: 添加水印
+- generic: 
+- checkbox [checked]
+- generic: 开启
+- generic: 仅对此次上传的视频生效
+- generic: 可见范围
+- article:
+  - article:
+    - generic: 公开可见
+  - article:
+    - generic: 仅自己可见
+    - generic: 将不支持分享、商业推广和充电设置
+- generic: 必火推广
+- text: 增加稿件播放量
+- button "去推广":
+  - text: 去推广
+- generic: 视频元素
+- generic: 卡片配置
+- button "个性化卡片":
+  - text: 个性化卡片
+- generic: 章节管理
+- button "编辑章节":
+  - text: 编辑章节
+- generic: 智能章节上线啦，快去试试吧～
+- text: 字幕设置
+- button "上传字幕":
+  - text: 上传字幕
+- generic: 高级设置
+- checkbox
+- text: 杜比音效
+- checkbox
+- text: Hi-Res无损音质
+- generic: 互动管理
+- text: 互动设置
+- checkbox
+- generic: 关闭弹幕
+- checkbox
+- generic: 关闭评论
+- checkbox
+- generic: 开启精选评论
+- generic: 粉丝动态
+- text: 有趣的动态描述，会增加被小编捕捉为热门动态的机会哟 (=ﾟωﾟ)ﾉ
+- paragraph
+- textbox: aaaaaaaa
+- generic: "0"
+- text: /233
+- generic: 在个人空间-投稿中隐藏
+- generic: 存草稿
+- generic: 立即投稿
+- text: ...
+- text: 
+- button "Choose File"
+- button "Choose File"
+- button "Choose File"
+- generic: 
+- text:      
+- generic: 遇到问题
+- text:      

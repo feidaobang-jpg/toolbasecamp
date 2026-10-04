@@ -1,5 +1,5 @@
 {
-  "status": "rendered_awaiting_user_review",
+  "status": "published_complete",
   "mode": "overview",
   "requested_variants": [
     "bilibili-zh"
@@ -13,6 +13,15 @@
   "capture_permission": "用户2026-10-04明确长期允许Playwright脚本录制，已写入.claude/skills/game-video/SKILL.md",
   "cover_stage": "completed",
   "render_entry": "render.py",
-  "video_uploaded": false,
-  "next_step": "用户审核本期最终视频通过后，按game-video发布、绑定Toy、置顶评论与填写推流申请；配音实际为云希。"
+  "video_uploaded": true,
+  "next_step": "发布流程完成；推流申请待运营处理，无需重复投稿。",
+  "video_url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+  "bvid": "BV1EyHz6wE5u",
+  "user_review": "approved",
+  "user_review_quote": "没问题，发布吧",
+  "toy_video_binding": "verified",
+  "pinned_comment": "verified",
+  "automatic_dynamic": "verified",
+  "push_application_range": "A259:E259",
+  "completed_at": "2026-10-04T09:41:30.260194+08:00"
 }
