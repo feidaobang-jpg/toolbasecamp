@@ -1,0 +1,534 @@
+[
+  {
+    "start": 0.35,
+    "end": 1.5074999999999998,
+    "text": "一台小吉普，",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 1.6125,
+    "end": 2.845,
+    "text": "十九个人要救，",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 3.0375,
+    "end": 4.72,
+    "text": "前面还堵着四辆坦克。",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 5.175,
+    "end": 6.12,
+    "text": "赤色要塞，",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 6.275,
+    "end": 7.0325,
+    "text": "开打！",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 8.536,
+    "end": 10.081,
+    "text": "先用手雷炸开营房，",
+    "id": "02-rescue",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 10.2735,
+    "end": 11.7685,
+    "text": "再靠过去接人上车。",
+    "id": "02-rescue",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 12.2235,
+    "end": 13.6185,
+    "text": "车后座越来越挤，",
+    "id": "02-rescue",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 13.836,
+    "end": 15.593499999999999,
+    "text": "这趟救援可不能白跑。",
+    "id": "02-rescue",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 17.106,
+    "end": 19.526,
+    "text": "闪光俘虏就是关键补给。",
+    "id": "03-upgrade",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 19.981,
+    "end": 20.8385,
+    "text": "接上车，",
+    "id": "03-upgrade",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 21.0185,
+    "end": 22.7635,
+    "text": "手雷直接升级成火箭，",
+    "id": "03-upgrade",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 22.9685,
+    "end": 24.238500000000002,
+    "text": "火力终于跟上了。",
+    "id": "03-upgrade",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 25.748,
+    "end": 27.4555,
+    "text": "营地大门也能炸开。",
+    "id": "04-camp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 27.9105,
+    "end": 29.368000000000002,
+    "text": "冲进去继续救人，",
+    "id": "04-camp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 29.548,
+    "end": 31.468,
+    "text": "武器还能升到双向，",
+    "id": "04-camp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 31.610500000000002,
+    "end": 32.805499999999995,
+    "text": "再到四向火箭。",
+    "id": "04-camp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 34.318000000000005,
+    "end": 36.3255,
+    "text": "过桥先处理守桥坦克，",
+    "id": "05-bridge",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 36.4305,
+    "end": 37.7505,
+    "text": "接走闪光俘虏。",
+    "id": "05-bridge",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 38.2055,
+    "end": 39.3255,
+    "text": "看左上角，",
+    "id": "05-bridge",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 39.4055,
+    "end": 40.838,
+    "text": "四向火箭到手，",
+    "id": "05-bridge",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 40.968,
+    "end": 42.7005,
+    "text": "救人和变强是一条线。",
+    "id": "05-bridge",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 44.184000000000005,
+    "end": 45.579,
+    "text": "找到直升机坪，",
+    "id": "06-heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 45.6465,
+    "end": 46.654,
+    "text": "停稳交接。",
+    "id": "06-heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 47.109,
+    "end": 48.7415,
+    "text": "车上的人数往下减，",
+    "id": "06-heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 48.934000000000005,
+    "end": 50.229,
+    "text": "已送达往上加，",
+    "id": "06-heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 50.3215,
+    "end": 51.3415,
+    "text": "十九个人，",
+    "id": "06-heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 51.471500000000006,
+    "end": 52.2165,
+    "text": "一个不少。",
+    "id": "06-heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 53.73800000000001,
+    "end": 55.670500000000004,
+    "text": "最后是四辆蓝色坦克。",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 56.1255,
+    "end": 57.4455,
+    "text": "先对准再开火，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 57.65050000000001,
+    "end": 59.508,
+    "text": "贴太近就往侧面拉。",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 59.950500000000005,
+    "end": 62.2205,
+    "text": "挨炮后护甲确实会掉，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 62.48800000000001,
+    "end": 64.00800000000001,
+    "text": "无限命可不是无敌。",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 65.524,
+    "end": 66.98150000000001,
+    "text": "最后一辆也解决了。",
+    "id": "08-result",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 67.424,
+    "end": 68.81900000000002,
+    "text": "第一关救援完成，",
+    "id": "08-result",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 68.9865,
+    "end": 70.44400000000002,
+    "text": "接下来进废墟城。",
+    "id": "08-result",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 75.524,
+    "end": 77.19400000000002,
+    "text": "第二关换成废墟城，",
+    "id": "09-stage2",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 77.274,
+    "end": 80.41900000000001,
+    "text": "石柱、窄路和敌人的交叉火力，",
+    "id": "09-stage2",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 80.63650000000001,
+    "end": 82.35650000000001,
+    "text": "路线一下变得紧张了。",
+    "id": "09-stage2",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 83.854,
+    "end": 85.1615,
+    "text": "这一下没躲开，",
+    "id": "10-death",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 85.354,
+    "end": 86.5365,
+    "text": "吉普被打爆了。",
+    "id": "10-death",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 86.979,
+    "end": 88.1615,
+    "text": "复活能继续，",
+    "id": "10-death",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 88.32900000000001,
+    "end": 89.74900000000001,
+    "text": "但武器回到手雷，",
+    "id": "10-death",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 89.854,
+    "end": 91.2865,
+    "text": "还是得重新救人，",
+    "id": "10-death",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 91.429,
+    "end": 92.549,
+    "text": "把火力补起来。",
+    "id": "10-death",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 94.056,
+    "end": 95.90100000000001,
+    "text": "绕进营地再炸营房，",
+    "id": "11-recover",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 96.031,
+    "end": 97.33850000000001,
+    "text": "接回闪光俘虏，",
+    "id": "11-recover",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 97.4935,
+    "end": 98.876,
+    "text": "武器重新升级。",
+    "id": "11-recover",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 99.331,
+    "end": 100.8635,
+    "text": "后面还有修理补给，",
+    "id": "11-recover",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 101.131,
+    "end": 102.676,
+    "text": "掉血也有机会救回来。",
+    "id": "11-recover",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 104.18599999999999,
+    "end": 105.48100000000001,
+    "text": "废墟城这一趟，",
+    "id": "12-stage2heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 105.6485,
+    "end": 107.4685,
+    "text": "十五个人也全部送到了。",
+    "id": "12-stage2heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 107.911,
+    "end": 108.91850000000001,
+    "text": "穿过石桥，",
+    "id": "12-stage2heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 109.0235,
+    "end": 110.081,
+    "text": "继续往北打。",
+    "id": "12-stage2heli",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 111.58,
+    "end": 114.12500000000001,
+    "text": "第二关的关底换成四座石像。",
+    "id": "13-statues",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 114.58,
+    "end": 115.92500000000001,
+    "text": "对准石像开火，",
+    "id": "13-statues",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 116.155,
+    "end": 118.275,
+    "text": "还要留意追过来的导弹和坦克。",
+    "id": "13-statues",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 118.73,
+    "end": 119.86250000000001,
+    "text": "最后一座打掉，",
+    "id": "13-statues",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 120.1175,
+    "end": 121.025,
+    "text": "两关通了！",
+    "id": "13-statues",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 126.58,
+    "end": 127.62500000000001,
+    "text": "方向键移动，",
+    "id": "14-controls",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 127.8925,
+    "end": 129.275,
+    "text": "机枪跟着车头转，",
+    "id": "14-controls",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 129.48000000000002,
+    "end": 131.0,
+    "text": "手雷也朝车头扔。",
+    "id": "14-controls",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 131.4425,
+    "end": 132.3375,
+    "text": "按一下 C，",
+    "id": "14-controls",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 132.43,
+    "end": 134.275,
+    "text": "还能切换俯视和近景。",
+    "id": "14-controls",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 135.798,
+    "end": 140.40550000000002,
+    "text": "这一版已经把救人、升级和两关战斗串起来了。",
+    "id": "15-summary",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 140.848,
+    "end": 143.03050000000002,
+    "text": "你更想继续打磨吉普转向，",
+    "id": "15-summary",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 143.2105,
+    "end": 144.59300000000002,
+    "text": "还是手雷手感？",
+    "id": "15-summary",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 146.096,
+    "end": 148.97850000000003,
+    "text": "双关卡版本已在哔哩哔哩 Toy 上线，",
+    "id": "16-play",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 149.10850000000002,
+    "end": 150.691,
+    "text": "试玩入口放简介。",
+    "id": "16-play",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 151.1335,
+    "end": 152.366,
+    "text": "喜欢这趟救援，",
+    "id": "16-play",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 152.571,
+    "end": 154.45350000000002,
+    "text": "顺手给小吉普补个三连。",
+    "id": "16-play",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 155.96200000000002,
+    "end": 157.34450000000004,
+    "text": "还想玩哪款复刻，",
+    "id": "17-vote",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 157.437,
+    "end": 159.58200000000002,
+    "text": "去百宝箱游戏页顶部的投票榜，",
+    "id": "17-vote",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 159.7495,
+    "end": 160.80700000000002,
+    "text": "写进愿望单。",
+    "id": "17-vote",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 161.26200000000003,
+    "end": 163.13200000000003,
+    "text": "也可以给喜欢的作品投票，",
+    "id": "17-vote",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 163.41200000000003,
+    "end": 166.35700000000003,
+    "text": "榜单决定接下来优先优化哪几款。",
+    "id": "17-vote",
+    "timing_source": "Edge WordBoundary"
+  }
+]

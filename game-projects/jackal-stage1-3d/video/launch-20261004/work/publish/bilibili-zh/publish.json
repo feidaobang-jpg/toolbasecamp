@@ -1,0 +1,70 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "content_type": "overview",
+  "language": "zh-CN",
+  "game_name": "赤色要塞 3D",
+  "game_version": "v0.3",
+  "video_file": "../../../final/bilibili-zh/赤色要塞-双关卡上架介绍.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "82dd0ac77d251df58a24f0de76a0b67f66e2c533bbd61fab24052403400181e6",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 168.904,
+  "title": "小吉普，大救援！赤色要塞3D双关卡已上线，直接开玩",
+  "description": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。海滩登陆与废墟城两关现已上线：本期录了两关实战，第二关翻车一次后重新整备，最终完成救援与关底挑战。\n\n本作使用 Claude 辅助开发，是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/feidao-jackal-3d/index.html\n百宝箱试玩（复制到浏览器打开）：\nhttps://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html\n\n想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "tags": [
+    "bilibilitoy",
+    "赤色要塞",
+    "独立游戏",
+    "游戏开发",
+    "射击游戏",
+    "Claude",
+    "AI"
+  ],
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected_in_platform": false
+  },
+  "pinned_comment_draft": "先炸营房救人，闪光俘虏会升级武器，记得送到直升机坪！你更想打磨吉普转向，还是手雷手感？\nToy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "cover_text": "小吉普，大救援 / 赤色要塞 3D / 双关卡·已上线",
+  "cover_selection_source": "本期实机参考的AI封面重构；双比例独立构图",
+  "cover_upload_mode": "custom_image",
+  "subtitle_mode": "burned_in",
+  "copyright_type": "original",
+  "category": null,
+  "credits": "credits.txt",
+  "disclosures": [
+    "解说为Edge云希预置合成音色",
+    "封面为AI重构",
+    "游戏正常规则下使用Playwright键盘录制"
+  ],
+  "platform_requirements_checked_at": "2026-10-04",
+  "platform_sources": [
+    "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "https://www.bilibili.com/v/topic/detail?topic_id=1346285"
+  ],
+  "unverified_fields": [
+    "实际投稿时核对当期分类、话题资格、封面上传入口"
+  ],
+  "blocking_issues": [
+    "等待本期最终视频人工审片（含人声听感）"
+  ],
+  "ready_to_upload": false,
+  "uploaded": false
+}

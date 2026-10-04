@@ -1,0 +1,15 @@
+{
+  "copy": [
+    "小吉普，大救援",
+    "赤色要塞 3D",
+    "双关卡·已上线"
+  ],
+  "method": "内置imagegen，两张独立生成，FFmpeg等比缩放与不足1px补边",
+  "reference": "../../../qa/cover-reference.png",
+  "originals": [
+    "home-original.png",
+    "space-original.png"
+  ],
+  "prompt": "参照实机低多边形绿吉普、蓝坦克、沙土地与多边形树木。绿底奶油色大字，右侧吉普带获救乘客，坦克与爆炸置后。文字：小吉普，大救援；赤色要塞3D；双关卡·已上线。分别4:3与16:9独立构图。禁止模型名、写实画质和HUD。",
+  "ai_generated": true
+}

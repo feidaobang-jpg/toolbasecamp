@@ -1,0 +1,290 @@
+[
+  {
+    "id": "01-hook",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 115,
+        "duration_actual": 8.186
+      }
+    ],
+    "start": 0,
+    "end": 8.186,
+    "duration": 8.186,
+    "text": "一台小吉普，十九个人要救，前面还堵着四辆坦克。赤色要塞，开打！",
+    "audio": "audio\\shared-zh\\01-hook.mp3"
+  },
+  {
+    "id": "02-rescue",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 2.3,
+        "duration_actual": 8.57
+      }
+    ],
+    "start": 8.186,
+    "end": 16.756,
+    "duration": 8.57,
+    "text": "先用手雷炸开营房，再靠过去接人上车。车后座越来越挤，这趟救援可不能白跑。",
+    "audio": "audio\\shared-zh\\02-rescue.mp3"
+  },
+  {
+    "id": "03-upgrade",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 8.8,
+        "duration_actual": 8.642
+      }
+    ],
+    "start": 16.756,
+    "end": 25.398,
+    "duration": 8.642,
+    "text": "闪光俘虏就是关键补给。接上车，手雷直接升级成火箭，火力终于跟上了。",
+    "audio": "audio\\shared-zh\\03-upgrade.mp3"
+  },
+  {
+    "id": "04-camp",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 17.8,
+        "duration": 4,
+        "duration_actual": 4
+      },
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 28.1,
+        "duration_actual": 4.57
+      }
+    ],
+    "start": 25.398,
+    "end": 33.968,
+    "duration": 8.57,
+    "text": "营地大门也能炸开。冲进去继续救人，武器还能升到双向，再到四向火箭。",
+    "audio": "audio\\shared-zh\\04-camp.mp3"
+  },
+  {
+    "id": "05-bridge",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 39.0,
+        "duration_actual": 9.866
+      }
+    ],
+    "start": 33.968,
+    "end": 43.834,
+    "duration": 9.866,
+    "text": "过桥先处理守桥坦克，接走闪光俘虏。看左上角，四向火箭到手，救人和变强是一条线。",
+    "audio": "audio\\shared-zh\\05-bridge.mp3"
+  },
+  {
+    "id": "06-heli",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 100.0,
+        "duration_actual": 9.554
+      }
+    ],
+    "start": 43.834,
+    "end": 53.388000000000005,
+    "duration": 9.554,
+    "text": "找到直升机坪，停稳交接。车上的人数往下减，已送达往上加，十九个人，一个不少。",
+    "audio": "audio\\shared-zh\\06-heli.mp3"
+  },
+  {
+    "id": "07-boss",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 114.0,
+        "duration_actual": 11.786
+      }
+    ],
+    "start": 53.388000000000005,
+    "end": 65.174,
+    "duration": 11.786,
+    "text": "最后是四辆蓝色坦克。先对准再开火，贴太近就往侧面拉。挨炮后护甲确实会掉，无限命可不是无敌。",
+    "audio": "audio\\shared-zh\\07-boss.mp3"
+  },
+  {
+    "id": "08-result",
+    "min_duration": 10,
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 130.5,
+        "duration_actual": 10
+      }
+    ],
+    "start": 65.174,
+    "end": 75.174,
+    "duration": 10,
+    "text": "最后一辆也解决了。第一关救援完成，接下来进废墟城。",
+    "audio": "audio\\shared-zh\\08-result.mp3"
+  },
+  {
+    "id": "09-stage2",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 6,
+        "duration_actual": 8.33
+      }
+    ],
+    "start": 75.174,
+    "end": 83.504,
+    "duration": 8.33,
+    "text": "第二关换成废墟城，石柱、窄路和敌人的交叉火力，路线一下变得紧张了。",
+    "audio": "audio\\shared-zh\\09-stage2.mp3"
+  },
+  {
+    "id": "10-death",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 19.7,
+        "duration_actual": 10.202
+      }
+    ],
+    "start": 83.504,
+    "end": 93.706,
+    "duration": 10.202,
+    "text": "这一下没躲开，吉普被打爆了。复活能继续，但武器回到手雷，还是得重新救人，把火力补起来。",
+    "audio": "audio\\shared-zh\\10-death.mp3"
+  },
+  {
+    "id": "11-recover",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 49.4,
+        "duration": 5.6,
+        "duration_actual": 5.6
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 62.8,
+        "duration_actual": 4.530000000000001
+      }
+    ],
+    "start": 93.706,
+    "end": 103.836,
+    "duration": 10.13,
+    "text": "绕进营地再炸营房，接回闪光俘虏，武器重新升级。后面还有修理补给，掉血也有机会救回来。",
+    "audio": "audio\\shared-zh\\11-recover.mp3"
+  },
+  {
+    "id": "12-stage2heli",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 101,
+        "duration": 5.4,
+        "duration_actual": 5.4
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 114,
+        "duration_actual": 1.9939999999999998
+      }
+    ],
+    "start": 103.836,
+    "end": 111.23,
+    "duration": 7.394,
+    "text": "废墟城这一趟，十五个人也全部送到了。穿过石桥，继续往北打。",
+    "audio": "audio\\shared-zh\\12-stage2heli.mp3"
+  },
+  {
+    "id": "13-statues",
+    "min_duration": 15,
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 129.3,
+        "duration": 4,
+        "duration_actual": 4
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 138,
+        "duration": 7,
+        "duration_actual": 7
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 145,
+        "duration_actual": 4
+      }
+    ],
+    "start": 111.23,
+    "end": 126.23,
+    "duration": 15,
+    "text": "第二关的关底换成四座石像。对准石像开火，还要留意追过来的导弹和坦克。最后一座打掉，两关通了！",
+    "audio": "audio\\shared-zh\\13-statues.mp3"
+  },
+  {
+    "id": "14-controls",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072756624/raw.mp4",
+        "in": 0.6,
+        "duration_actual": 9.218
+      }
+    ],
+    "start": 126.23,
+    "end": 135.448,
+    "duration": 9.218,
+    "text": "方向键移动，机枪跟着车头转，手雷也朝车头扔。按一下 C，还能切换俯视和近景。",
+    "audio": "audio\\shared-zh\\14-controls.mp3"
+  },
+  {
+    "id": "15-summary",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 76,
+        "duration_actual": 10.298
+      }
+    ],
+    "start": 135.448,
+    "end": 145.746,
+    "duration": 10.298,
+    "text": "这一版已经把救人、升级和两关战斗串起来了。你更想继续打磨吉普转向，还是手雷手感？",
+    "audio": "audio\\shared-zh\\15-summary.mp3"
+  },
+  {
+    "id": "16-play",
+    "shots": [
+      {
+        "source": "qa/toy-published.png",
+        "in": 0,
+        "duration_actual": 9.866
+      }
+    ],
+    "start": 145.746,
+    "end": 155.61200000000002,
+    "duration": 9.866,
+    "text": "双关卡版本已在哔哩哔哩 Toy 上线，试玩入口放简介。喜欢这趟救援，顺手给小吉普补个三连。",
+    "audio": "audio\\shared-zh\\16-play.mp3"
+  },
+  {
+    "id": "17-vote",
+    "min_duration": 13,
+    "shots": [
+      {
+        "source": "card",
+        "in": 0,
+        "duration_actual": 13
+      }
+    ],
+    "start": 155.61200000000002,
+    "end": 168.61200000000002,
+    "duration": 13,
+    "text": "还想玩哪款复刻，去百宝箱游戏页顶部的投票榜，写进愿望单。也可以给喜欢的作品投票，榜单决定接下来优先优化哪几款。",
+    "audio": "audio\\shared-zh\\17-vote.mp3"
+  }
+]

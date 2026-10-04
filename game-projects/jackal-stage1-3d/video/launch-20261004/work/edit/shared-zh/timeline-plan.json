@@ -1,0 +1,183 @@
+[
+  {
+    "id": "01-hook",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 115
+      }
+    ]
+  },
+  {
+    "id": "02-rescue",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 2.3
+      }
+    ]
+  },
+  {
+    "id": "03-upgrade",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 8.8
+      }
+    ]
+  },
+  {
+    "id": "04-camp",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 17.8,
+        "duration": 4
+      },
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 28.1
+      }
+    ]
+  },
+  {
+    "id": "05-bridge",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 39.0
+      }
+    ]
+  },
+  {
+    "id": "06-heli",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 100.0
+      }
+    ]
+  },
+  {
+    "id": "07-boss",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 114.0
+      }
+    ]
+  },
+  {
+    "id": "08-result",
+    "min_duration": 10,
+    "shots": [
+      {
+        "source": "capture/stage1-1791072082728/raw.mp4",
+        "in": 130.5
+      }
+    ]
+  },
+  {
+    "id": "09-stage2",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 6
+      }
+    ]
+  },
+  {
+    "id": "10-death",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 19.7
+      }
+    ]
+  },
+  {
+    "id": "11-recover",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 49.4,
+        "duration": 5.6
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 62.8
+      }
+    ]
+  },
+  {
+    "id": "12-stage2heli",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 101,
+        "duration": 5.4
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 114
+      }
+    ]
+  },
+  {
+    "id": "13-statues",
+    "min_duration": 15,
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 129.3,
+        "duration": 4
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 138,
+        "duration": 7
+      },
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 145
+      }
+    ]
+  },
+  {
+    "id": "14-controls",
+    "shots": [
+      {
+        "source": "capture/stage1-1791072756624/raw.mp4",
+        "in": 0.6
+      }
+    ]
+  },
+  {
+    "id": "15-summary",
+    "shots": [
+      {
+        "source": "capture/stage2-1791072612455/raw.mp4",
+        "in": 76
+      }
+    ]
+  },
+  {
+    "id": "16-play",
+    "shots": [
+      {
+        "source": "qa/toy-published.png",
+        "in": 0
+      }
+    ]
+  },
+  {
+    "id": "17-vote",
+    "min_duration": 13,
+    "shots": [
+      {
+        "source": "card",
+        "in": 0
+      }
+    ]
+  }
+]

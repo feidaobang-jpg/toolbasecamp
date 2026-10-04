@@ -1,0 +1,32 @@
+﻿【标题】
+小吉普，大救援！赤色要塞3D双关卡已上线，直接开玩
+
+【标签】
+bilibilitoy
+赤色要塞
+独立游戏
+游戏开发
+射击游戏
+Claude
+AI
+
+【话题】
+哔哩哔哩Toy创意挑战
+https://www.bilibili.com/v/topic/detail?topic_id=1346285
+
+【简介】
+驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。海滩登陆与废墟城两关现已上线：本期录了两关实战，第二关翻车一次后重新整备，最终完成救援与关底挑战。
+
+本作使用 Claude 辅助开发，是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。
+
+哔哩哔哩 Toy 试玩：
+https://www.bilibili.com/toy/feidao-jackal-3d/index.html
+百宝箱试玩（复制到浏览器打开）：
+https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html
+
+想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）
+
+【置顶评论】
+先炸营房救人，闪光俘虏会升级武器，记得送到直升机坪！你更想打磨吉普转向，还是手雷手感？
+Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html
+投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）
