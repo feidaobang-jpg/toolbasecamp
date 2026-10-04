@@ -179,18 +179,18 @@ async function open(b,opts={},query=''){
  await p.keyboard.down('KeyQ');await p.waitForTimeout(1000);await p.keyboard.up('KeyQ');cam.qTurn=await p.evaluate(()=>__gameQA.getCamYaw());
  const y0=await p.evaluate(()=>__gameQA.getCamYaw());await p.mouse.move(800,400);await p.mouse.down({button:'right'});await p.mouse.move(600,400,{steps:8});await p.mouse.up({button:'right'});
  cam.dragTurn=+(await p.evaluate(y=>{let d=__gameQA.getCamYaw()-y;return Math.atan2(Math.sin(d),Math.cos(d));},y0)).toFixed(2);
- await p.keyboard.press('KeyV');await p.waitForTimeout(120);cam.first=await p.evaluate(()=>__gameQA.getCamMode());await p.keyboard.press('KeyV');await p.waitForTimeout(120);cam.back=await p.evaluate(()=>__gameQA.getCamMode());
+ await p.keyboard.press('KeyV');await p.waitForTimeout(120);cam.vRemoved=await p.evaluate(()=>__gameQA.getCamMode()==='third');
  await p.keyboard.press('KeyC');await p.waitForTimeout(120);cam.preset=await p.evaluate(()=>document.getElementById('msg').textContent);
  await p.evaluate(()=>{__gameQA.setCameraView(0,false);__gameQA.setCamYaw(0);});await p.keyboard.down('KeyW');await p.waitForTimeout(400);
  cam.jitter=await p.evaluate(async()=>{const q=__gameQA,d=[];for(let i=0;i<40;i++){await new Promise(r=>requestAnimationFrame(r));d.push(q.camera.position.distanceTo(q.player.pos));}const mean=d.reduce((a,b)=>a+b)/d.length;return +Math.sqrt(d.reduce((a,b)=>a+(b-mean)**2,0)/d.length).toFixed(3);});
  await p.keyboard.up('KeyW');
  check('Q turns at least 100 degrees per second',Math.abs(cam.qTurn)>1.7,cam);
  check('mouse drag rotates the view',Math.abs(cam.dragTurn)>.5,cam);
- check('V toggles first / third person',cam.first==='first'&&cam.back==='third',cam);
+ check('V no longer bound; first / third person only via C and 人称 button',cam.vRemoved,cam);
  check('C cycles camera presets',cam.preset.includes('视角'),cam);
  check('follow camera distance stable while running (no stutter)',cam.jitter<.25,cam);
  await p.evaluate(()=>{const q=__gameQA;q.clearEntities(false);q.player.pos.set(0,0,32);q.player.mesh.position.copy(q.player.pos);q.setCamYaw(0);q.player.yaw=0;for(let i=0;i<5;i++){const m=q.spawnMonster('mob',-5+i*2.5,44,{ch:q.CHAPTERS[i]});m.hp=1e6;m.emerge=0;}});
- await p.keyboard.press('KeyV');await p.waitForTimeout(120);await p.keyboard.down('KeyJ');await p.waitForTimeout(700);await p.screenshot({path:path.join(captures,'first-person.jpg'),quality:82});await p.keyboard.up('KeyJ');await p.keyboard.press('KeyV');
+ for(let i=0;i<5;i++)await p.keyboard.press('KeyC');await p.waitForTimeout(120);await p.keyboard.down('KeyJ');await p.waitForTimeout(700);await p.screenshot({path:path.join(captures,'first-person.jpg'),quality:82});await p.keyboard.up('KeyJ');await p.keyboard.press('KeyC');
  check('damage numbers shown when hitting',await p.evaluate(()=>[...document.querySelectorAll('.dmgNum')].some(e=>e.style.display!=='none'))||true);
 
  // 18. saves: new structure validates in cloud validator, old v0.8 save still loads

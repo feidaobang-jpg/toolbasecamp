@@ -287,7 +287,7 @@ scene.fog=new THREE.Fog(PAL.fog,PAL.fogNear,PAL.fogFar);
 const camera=new THREE.PerspectiveCamera(62,BASE_W/BASE_H,.1,950);
 scene.add(camera); // first-person weapon model is parented to the camera
 window.addEventListener('resize',()=>{renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();});
-/* 镜头：第三人称（默认，五档预设）与第一人称；C 循环全部视角，V 直接切第一/第三人称；鼠标/触屏拖动或 Q/E 自由转向 */
+/* 镜头：第三人称（默认，五档预设）与第一人称；C 循环全部视角；鼠标/触屏拖动或 Q/E 自由转向 */
 let camYaw=0,camPitch=0,camView=0,camMode='third',camYawVel=0;
 const CAMERA_VIEWS=[{d:8.6,h:3.9,name:'近身跟随'},{d:13.5,h:8.2,name:'高位跟随'},{d:9,h:24,name:'战术俯视'},{d:5.5,h:1.8,name:'低位跟随'},{d:20,h:15,name:'战术远景'}];
 const camState={target:new THREE.Vector3(),dist:8.6,init:false,inTunnel:0};
@@ -296,17 +296,17 @@ function setCameraView(index,notify=true){
   camView=((index%CAMERA_VIEWS.length)+CAMERA_VIEWS.length)%CAMERA_VIEWS.length;
   if(camMode==='first')setCamMode('third',false);
   camYaw=behindYaw();camPitch=0;camState.init=false;
-  if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（C 切换 · V 第一人称）',1.4);
+  if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（C 切换视角）',1.4);
   syncViewLabels();
 }
 function setCamMode(mode,notify=true){
   camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
   if(camMode==='third'&&document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
-  if(notify)showMsg(camMode==='first'?'第一人称（C/V 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
+  if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
 }
-/* C 循环：各第三人称预设 → 第一人称 → 回到第一个预设；V 仍可直接切换第一/第三人称 */
+/* C 循环：各第三人称预设 → 第一人称 → 回到第一个预设 */
 function cycleCamView(){
   if(camMode==='first')setCameraView(0);
   else if(camView+1>=CAMERA_VIEWS.length)setCamMode('first');
@@ -314,7 +314,7 @@ function cycleCamView(){
 }
 function syncViewLabels(){
   const label=camMode==='first'?'第一人称':'第三人称';
-  for(const id of ['personBtn','personBtnMenu'])if($(id))$(id).textContent='人称：'+label+' V';
+  for(const id of ['personBtn','personBtnMenu'])if($(id))$(id).textContent='人称：'+label;
   if($('crosshair'))$('crosshair').classList.toggle('hidden',camMode!=='first');
 }
 
@@ -938,7 +938,7 @@ function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textCont
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
   $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
-    +` · 手雷∞(${keyBindings.label('U')})`
+    +` · 手雷(${keyBindings.label('U')})`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
 }
@@ -2154,7 +2154,6 @@ function updPlayer(dt){
   const t=performance.now()/1000;
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
   if(Input.pop('C'))cycleCamView();
-  if(Input.pop('V'))setCamMode(camMode==='first'?'third':'first');
   for(let n=1;n<=9;n++)if(Input.pop('N'+n)){if(Game.weapons[n-1])selectWeapon(Game.weapons[n-1]);else showMsg('第'+n+'格还没有武器',1);}
   if(Input.pop('X'))cycleWeapon(1);
   if(Input.wheel){cycleWeapon(Input.wheel>0?1:-1);Input.wheel=0;}
@@ -3070,7 +3069,7 @@ function updJumpUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
   const txt=v?'':player.onGround?'跳跃 就绪（'+(isTouch?'跳跃':keyBindings.label('K'))+'）':'跳跃 腾空中';
   $('vSPRINT').classList.toggle('hidden',!!v);
-  $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷∞';
+  $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷';
   const el=$('jumpTxt');if(el.textContent!==txt)el.textContent=txt;
   const k=$('vK'),h=$('vH'),kl=fly?'升':'跳跃',hl=fly?'降':'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
@@ -3410,7 +3409,7 @@ function syncKeyLabels(){
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
   const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['SPRINT','J','K','U','I','H','O','L','V','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+['SPRINT','J','K','U','I','H','O','L','C','Q','E','P'].map(a=>keyBindings.label(a)+' '+KEY_ACTIONS[a][0]).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();

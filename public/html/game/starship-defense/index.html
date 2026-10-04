@@ -190,7 +190,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
 <div id="stage">
   <canvas id="c3d"></canvas>
 <div id="assetLoad" role="status">正在部署前哨基地…</div>
-<div id="webTools"><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">☰ 菜单 P / Esc</button><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="personBtn" class="mbtn">人称 V</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
+<div id="webTools"><button class="mbtn" id="menuButton" aria-label="打开游戏菜单，P 或 Esc">☰ 菜单 P / Esc</button><button class="mbtn" id="opsButton">⚑ 副本</button><button class="mbtn" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="personBtn" class="mbtn">人称</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button><button id="fullBtn" class="mbtn">全屏 F</button></div>
 
   <!-- HUD -->
   <div id="hud" class="overlay hidden">
@@ -221,7 +221,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
   </div>
   <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
@@ -240,7 +240,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div class="vbtn" id="vSPRINT" aria-label="按住跑步">跑步</div>
     <div class="vbtn" id="vI">互动</div>
     <div class="vbtn" id="vH">医疗</div>
-    <div class="vbtn" id="vU" aria-label="投掷手雷">手雷∞</div>
+    <div class="vbtn" id="vU" aria-label="投掷手雷">手雷</div>
     <div class="vbtn" id="vX">换枪</div>
     <div class="vbtn sm" id="vO">商店</div>
     <div class="vbtn sm" id="vL">建造</div>
@@ -387,6 +387,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=touchui1711" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=touchui1712" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>
