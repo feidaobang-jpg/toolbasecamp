@@ -1,0 +1,46 @@
+{
+  "versions": {
+    "tank-3d": "camera-mobile1",
+    "mario-3d": "v2.2.0",
+    "jackal-stage1-3d": "v0.3.2",
+    "journey-west-3d": "v0.2.0",
+    "hop-fox-3d": "v0.2.0",
+    "starship-defense": "web-camera-mobile-v0.17.9"
+  },
+  "website_commits": [
+    "ef72840b",
+    "0368039a"
+  ],
+  "summary": "六款至少五种视角，手机全屏入口移除，横屏摇杆距左边缘约4px；狐狸保持归档",
+  "qa": {
+    "camera_mobile_passed": 70,
+    "jackal_desktop_passed": 85,
+    "jackal_mobile_passed": 33,
+    "jackal_gates_passed": 24,
+    "live_resources_verified": 23,
+    "phone_device": "Edge触屏模拟，未在实体手机测试"
+  },
+  "toy": {
+    "published": 4,
+    "unmapped": [
+      "journey-west-3d",
+      "hop-fox-3d"
+    ]
+  },
+  "bilibili": {
+    "public_verified": [
+      "BV1EyHz6wE5u",
+      "BV1Wqaz6AEJb",
+      "BV1WbHq6eEBt"
+    ],
+    "pending_review": [
+      "BV1Ujad6DEuf"
+    ],
+    "unmapped": [
+      "mario-3d",
+      "journey-west-3d",
+      "hop-fox-3d"
+    ]
+  },
+  "other_video_artifacts": "原工作区其他视频文件未改动，未重传或替换历史成片"
+}

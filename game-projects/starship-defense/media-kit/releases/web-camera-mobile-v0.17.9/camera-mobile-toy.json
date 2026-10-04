@@ -1,0 +1,35 @@
+{
+  "version": "web-camera-mobile-v0.17.9",
+  "toy_id": "38678478981120",
+  "package": "dist/toy/chongchao-qianshao/package",
+  "files_sha256": {
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "combat-controls.css": "f73a3425305011beb029dd09850cc25d57afabd6b2a6514bffb1ef399f614bba",
+    "game.compat.js": "bae7716f58a4554e146c403dd07e95b9052c7651f67d169b28c811d5028b7bd0",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "index.html": "85c80b57ef4f9ff5fab1dcdc39f665c0fb5e6b8697c258c75dd3b08d190f3f9d",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "package_sha256": "47f5efdba1a911a8ec8b0fceaf0d66d6c851d776dc4f2cb477ae958043a427eb",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_aF0O6Rg2/index.html",
+  "preview_tests": {
+    "desktop": "started, preset cycling (Starship camera poses tested locally)",
+    "mobile_viewport": "844x390 loaded, local mobile device regression passed",
+    "errors": []
+  },
+  "status": "published",
+  "website_commit": "0368039a",
+  "submitted_at": "2026-10-04T19:57:52.110335+08:00",
+  "response": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_imHJ9CCG/index.html"
+  },
+  "published_verified_at": "2026-10-04T12:11:54.416Z",
+  "published_check": {
+    "game": "starship-defense",
+    "src": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v22209/index.html",
+    "left": "4px",
+    "status": "public_verified",
+    "camera_validation": "五种第三人称及第一人称已在相同包的本地与预览实测"
+  }
+}

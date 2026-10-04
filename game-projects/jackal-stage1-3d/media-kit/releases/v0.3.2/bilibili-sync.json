@@ -1,0 +1,12 @@
+{
+  "game": "jackal-stage1-3d",
+  "version": "v0.3.2",
+  "bvid": "BV1EyHz6wE5u",
+  "old_description": "【游戏更新记录】\n2026-10-04 · v0.3.1\n1. 修复贴着大门扔手雷会飞过门、无法造成伤害的问题；车头对准射程内的大门时，手雷会缩短落点。\n2. 第一关营地大门、第二关营地前后门均已验证，两颗手雷即可炸开；键盘与手机触控都适用。\n截至北京时间2026-10-04 14:13，网站已更新；Toy v0.3.1已提交审核。\n视频保留录制时画面，当前游戏以试玩为准。试玩入口见下方。\n【游戏更新记录结束】\n\n驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。海滩登陆与废墟城两关现已上线：本期录了两关实战，第二关翻车一次后重新整备，最终完成救援与关底挑战。\n\n本作使用 Claude 辅助开发，是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/feidao-jackal-3d/index.html\n百宝箱试玩（复制到浏览器打开）：\nhttps://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html\n\n想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "new_description": "【游戏更新记录】\n2026-10-04 · v0.3.2\n1. 现在有五种视角：斜俯视、俯视、近景斜视、战术远景、低位正视；C键或手机视角按钮循环切换。\n2. 移除手机上的全屏入口；横屏摇杆移到左侧近边缘，旋转屏幕后继续保持。\n3. 保留v0.3.1的贴门投弹修复：第一关及第二关营地大门已通过键盘、触控回归验证。\n截至北京时间2026-10-04 19:58，网站已更新；Toy v0.3.2已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。试玩入口见下方。\n【游戏更新记录结束】\n\n驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。海滩登陆与废墟城两关现已上线：本期录了两关实战，第二关翻车一次后重新整备，最终完成救援与关底挑战。\n\n本作使用 Claude 辅助开发，是《赤色要塞》的粉丝向非官方重置。方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/feidao-jackal-3d/index.html\n百宝箱试玩（复制到浏览器打开）：\nhttps://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html\n\n想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "status": "public_verified",
+  "submitted_at": "2026-10-04T11:59:02.059Z",
+  "public_verified_at": "2026-10-04T12:04:10.476Z",
+  "update_block_sha256": "2a5cbac087d799407138a99d465f872fd339e6b06e122419404a134bff94615f",
+  "original_outside_block_preserved": true
+}

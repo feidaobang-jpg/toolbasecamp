@@ -5,10 +5,10 @@
       "bvid": "BV1EyHz6wE5u",
       "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
       "owner_uid": 16214353,
-      "last_public_verified_version": "v0.3.1",
-      "block_sha256": "22ec5bc51cfb9d9275b7c63594884676e8e586399827be865017f216cf5bc029",
-      "verified_at": "2026-10-04T14:17:37.651922+08:00",
-      "release_record": "releases/v0.3.1/bilibili-sync.json"
+      "last_public_verified_version": "v0.3.2",
+      "block_sha256": "2a5cbac087d799407138a99d465f872fd339e6b06e122419404a134bff94615f",
+      "verified_at": "2026-10-04T12:04:10.476Z",
+      "release_record": "releases/v0.3.2/bilibili-sync.json"
     }
   ],
   "pending": [],
