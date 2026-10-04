@@ -4,7 +4,7 @@ set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
 CRON_FILE="/etc/cron.d/toolbasecamp-api-health"
-CRON_LINE="*/5 * * * * root $DEPLOY/check-api-health.sh >> /var/log/toolbasecamp-api-health.log 2>&1"
+CRON_LINE="*/5 * * * * root /bin/bash $DEPLOY/check-api-health.sh >> /var/log/toolbasecamp-api-health.log 2>&1"
 
 chmod +x "$DEPLOY/check-api-health.sh" "$DEPLOY/notify-alert.sh" 2>/dev/null || true
 sudo chmod +x "$DEPLOY/check-api-health.sh" "$DEPLOY/notify-alert.sh" 2>/dev/null || true

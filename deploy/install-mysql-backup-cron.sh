@@ -4,7 +4,7 @@ set -euo pipefail
 
 DEPLOY="/opt/toolbasecamp-deploy"
 CRON_FILE="/etc/cron.d/toolbasecamp-mysql-backup"
-CRON_LINE="15 3 * * * root $DEPLOY/backup-mysql.sh >> /var/log/toolbasecamp-mysql-backup.log 2>&1"
+CRON_LINE="15 3 * * * root /bin/bash $DEPLOY/backup-mysql.sh >> /var/log/toolbasecamp-mysql-backup.log 2>&1"
 
 chmod +x "$DEPLOY/backup-mysql.sh" "$DEPLOY/notify-alert.sh" 2>/dev/null || true
 sudo chmod +x "$DEPLOY/backup-mysql.sh" "$DEPLOY/notify-alert.sh" 2>/dev/null || true
