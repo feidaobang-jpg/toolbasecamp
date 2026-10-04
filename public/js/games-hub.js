@@ -166,6 +166,9 @@
 
     function renderGameCard(item, kind) {
         var label = gameCardLabel(item);
+        var subtitle = item.subtitleKey ? tr(item.subtitleKey) : '';
+        var tags = (item.tagKeys || []).map(tr);
+        var note = item.noteKey ? tr(item.noteKey) : '';
         var thumb = gameThumbSrc(item);
         var external = kind === 'external';
         var card = document.createElement(external ? 'a' : 'article');
@@ -176,7 +179,7 @@
             card.rel = 'noopener noreferrer';
             card.title = label + ' · ' + tr('games.externalOpenTip');
         }
-        card.dataset.search = label + ' ' + kindLabel(kind);
+        card.dataset.search = [label, subtitle, tags.join(' '), note, kindLabel(kind)].join(' ');
         card.dataset.kind = kind;
         card.innerHTML =
             (thumb
@@ -184,30 +187,39 @@
                     '<img src="' + escapeAttr(thumb) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' +
                   '</span>'
                 : '') +
-            '<span class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3>' +
-                '<span class="hub-game-kind hub-game-kind--' + kind + '">' + escapeHtml(kindLabel(kind)) + '</span>' +
-            '</span>';
+            '<div class="hub-game-card-body"><h3>' + escapeHtml(label) + '</h3>' +
+                '<div class="hub-game-badges"><span class="hub-game-kind hub-game-kind--' + kind + '">' + escapeHtml(kindLabel(kind)) + '</span>' +
+                    tags.map(function (tag) { return '<span class="hub-game-tag">' + escapeHtml(tag) + '</span>'; }).join('') + '</div>' +
+                (subtitle ? '<p class="hub-game-subtitle">' + escapeHtml(subtitle) + '</p>' : '') +
+                (note ? '<p class="hub-game-note">' + escapeHtml(note) + '</p>' : '') +
+            '</div>';
         if (!external) {
             var gameKeyMatch = (item.url || '').match(/(?:^|\/)html\/game\/([a-z0-9_-]+)(?:\.html|\/index\.html)(?:[?#]|$)/i);
             var gameKey = gameKeyMatch ? gameKeyMatch[1].toLowerCase() : '';
+            var primaryIsToy = !!item.toyUrl && item.primaryPlay !== 'site';
+            var toyLabel = tr(item.toyLabelKey || 'games.playToy');
+            var siteLabel = tr(item.siteLabelKey || 'games.playHere');
             var mainLink = document.createElement('a');
             mainLink.className = 'hub-game-main';
-            mainLink.href = item.toyUrl || item.url;
-            if (item.toyUrl) {
+            mainLink.href = primaryIsToy ? item.toyUrl : item.url;
+            mainLink.setAttribute('aria-label', label + ' · ' + (primaryIsToy ? toyLabel : siteLabel));
+            if (primaryIsToy) {
                 mainLink.target = '_blank';
                 mainLink.rel = 'noopener noreferrer';
             }
-            if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.' + (item.toyUrl ? 'toy.' : 'site.') + gameKey);
+            if (gameKey) mainLink.setAttribute('data-tb-track', 'game.play.' + (primaryIsToy ? 'toy.' : 'site.') + gameKey);
             while (card.firstChild) mainLink.appendChild(card.firstChild);
             card.appendChild(mainLink);
 
             var actions = document.createElement('div');
             actions.className = 'hub-game-actions';
-            [{ url: item.toyUrl, label: tr('games.playToy'), external: true },
-                { url: item.url, label: tr('games.playHere'), external: false }].forEach(function (entry) {
+            var entries = [{ url: item.toyUrl, label: toyLabel, external: true },
+                { url: item.url, label: siteLabel, external: false }];
+            if (!primaryIsToy) entries.reverse();
+            entries.forEach(function (entry) {
                 if (!entry.url) return;
                 var link = document.createElement('a');
-                link.className = 'tb-btn' + (!entry.external && item.toyUrl ? ' hub-game-play-secondary' : '');
+                link.className = 'tb-btn' + (item.toyUrl && entry.external !== primaryIsToy ? ' hub-game-play-secondary' : '');
                 link.href = entry.url;
                 link.textContent = entry.label;
                 link.setAttribute('aria-label', label + ' · ' + entry.label);
@@ -264,12 +276,20 @@
                     headerEl.textContent = groupLabel;
                     sectionEl.appendChild(headerEl);
                 }
+                if (group.descriptionKey) {
+                    var descriptionEl = document.createElement('p');
+                    descriptionEl.className = 'hub-group-desc';
+                    descriptionEl.textContent = tr(group.descriptionKey);
+                    sectionEl.appendChild(descriptionEl);
+                }
 
                 var gridEl = document.createElement('div');
                 gridEl.className = 'hub-games-grid';
                 var kind0 = groupKind(group);
                 group.items.forEach(function (item) {
-                    gridEl.appendChild(renderGameCard(item, kind0));
+                    var card = renderGameCard(item, kind0);
+                    card.dataset.search += ' ' + groupLabel;
+                    gridEl.appendChild(card);
                 });
                 sectionEl.appendChild(gridEl);
                 blockEl.appendChild(sectionEl);
