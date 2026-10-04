@@ -1,0 +1,36 @@
+{
+  "version": "web-controls-v0.17.2",
+  "base_version": "web-grenades-v0.17.1",
+  "code_commit": "3129c9cb",
+  "changes": [
+    "明确转视角与切换视角的名称和用途"
+  ],
+  "targets": [
+    {
+      "bv": "BV1WbHq6eEBt",
+      "old_description": "【游戏更新记录】\n2026年10月4日 · v0.17.1\n• 手雷恢复无限使用：电脑默认 U，手机有独立按钮；普通模式也无需购买或补充，投掷间隔0.8秒。\n• 移除商店手雷补给，旧存档即使显示0枚也能继续投掷。\n• 保留上版甲壳、长节肢和獠牙虫族，以及地堡墙角、地图边界与拥挤卡住的修复。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日11:52提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "new_description": "【游戏更新记录】\n2026年10月4日 · v0.17.2\n• 视角操作名称统一：Q/E 为左转视角／右转视角，手机拖动转视角；C 按钮改为“切换视角”，用于切换预设。\n• 手雷恢复无限使用：电脑默认 U，手机有独立按钮；普通模式也无需购买或补充，投掷间隔0.8秒。\n• 移除商店手雷补给，旧存档即使显示0枚也能继续投掷。\n• 保留上版甲壳、长节肢和獠牙虫族，以及地堡墙角、地图边界与拥挤卡住的修复。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日12:03提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "status": "public_verified",
+      "prepared_at": "2026-10-04T04:04:04.415Z",
+      "submitted_at": "2026-10-04T04:04:31.936Z",
+      "public_verified_at": "2026-10-04T04:06:09.436Z",
+      "evidence": "bilibili-new-public.jpg",
+      "original_outside_block_preserved": true,
+      "update_block_sha256": "15cfe81c1f3c7eb7cd2f51941d796e193b88bbcbc8ad38ba3cb313e749e67fc1"
+    },
+    {
+      "bv": "BV1Ujad6DEuf",
+      "old_description": "【游戏更新记录】\n2026年10月4日 · v0.17.1\n• 手雷恢复无限使用：电脑默认 U，手机有独立按钮；普通模式也无需购买或补充，投掷间隔0.8秒。\n• 移除商店手雷补给，旧存档即使显示0枚也能继续投掷。\n• 保留上版甲壳、长节肢和獠牙虫族，以及地堡墙角、地图边界与拥挤卡住的修复。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日11:52提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "new_description": "【游戏更新记录】\n2026年10月4日 · v0.17.2\n• 视角操作名称统一：Q/E 为左转视角／右转视角，手机拖动转视角；C 按钮改为“切换视角”，用于切换预设。\n• 手雷恢复无限使用：电脑默认 U，手机有独立按钮；普通模式也无需购买或补充，投掷间隔0.8秒。\n• 移除商店手雷补给，旧存档即使显示0枚也能继续投掷。\n• 保留上版甲壳、长节肢和獠牙虫族，以及地堡墙角、地图边界与拥挤卡住的修复。\n此前更新：三个洞口逐渐下坡并汇入地下母巢；加厚基地城墙与两侧坡道，Shift/手机跑步键持续加速；地表可选白天或夜晚，洞内自动开启手电。\n网站版已更新。Toy版于10月4日12:03提交审核，提交时状态为审核中；是否已生效以试玩页面为准。\n本视频保留录制时画面，当前游戏内容和操作以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "status": "public_verified",
+      "prepared_at": "2026-10-04T04:05:14.971Z",
+      "submitted_at": "2026-10-04T04:06:09.436Z",
+      "public_verified_at": "2026-10-04T04:06:19.855Z",
+      "evidence": "public page text verified",
+      "original_outside_block_preserved": true,
+      "update_block_sha256": "15cfe81c1f3c7eb7cd2f51941d796e193b88bbcbc8ad38ba3cb313e749e67fc1"
+    }
+  ],
+  "status": "public_verified",
+  "comment_action": "none: existing comments retained"
+}

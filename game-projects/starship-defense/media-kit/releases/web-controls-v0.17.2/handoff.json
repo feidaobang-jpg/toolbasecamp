@@ -10,12 +10,59 @@
   "runtime_sha256": "35adde2c502f74f83b54879c333382a8eb97c2c56f76fac19bf2ba3b55fbc83b",
   "qa": {
     "syntax": "pass",
-    "skill_validation": "pass"
+    "skill_validation": "pass",
+    "functional": "qa.json",
+    "deployment": "deployment.json",
+    "visual": "手机横屏/竖屏按钮清晰，无截字或遮挡；桌面预设切换通过"
   },
   "media_readiness": "partial",
   "thumbnail": "沿用：仅操作文案变化，无场景或美术变化",
   "limitations": [
     "本次未修改相机行为，未重跑性能测试",
-    "手机仅模拟视口和触控"
+    "手机仅模拟视口和触控",
+    "4.48秒短录像无音轨，仅控件验证，不作实战成片"
+  ],
+  "code_commit": "3129c9cb",
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_qHhnNrzg/index.html",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_ir2aTsJZ/index.html",
+    "zip_sha256": "3f2bb87157aa407d1365fd643024cf4abf9699d02b5cd4b44bd4ebf07e97c254",
+    "submitted_at": "2026-10-04T12:03:37.648089+08:00"
+  },
+  "media": [
+    {
+      "file": "mobile-controls.jpg",
+      "sha256": "e525e6fc5b5e22210b3c8501a2cc493f19ff9b2587f7fc11b5ecdde734e01bf4",
+      "version": "web-controls-v0.17.2",
+      "capture_mode": "automated real keyboard/touch",
+      "audio": "none",
+      "duration_seconds": null
+    },
+    {
+      "file": "portrait-controls.jpg",
+      "sha256": "1d75a67c2ac4afc18f9bfa364e8a55968910ff94bbf757c0ad4d01dfe96c14e8",
+      "version": "web-controls-v0.17.2",
+      "capture_mode": "automated real keyboard/touch",
+      "audio": "none",
+      "duration_seconds": null
+    },
+    {
+      "file": "desktop-controls.jpg",
+      "sha256": "3b9079639efdce20766d8e13e302c1f20513945837203d6696d4d4d768c2a46c",
+      "version": "web-controls-v0.17.2",
+      "capture_mode": "automated real keyboard/touch",
+      "audio": "none",
+      "duration_seconds": null
+    },
+    {
+      "file": "video/page@937f8bf2cf73565c9b9fbf41dc070dc8.webm",
+      "sha256": "908e16f1170d7ef9ff059f7c88765a6bb34d2b5fc6c39ce69a0bde949a049ae2",
+      "version": "web-controls-v0.17.2",
+      "capture_mode": "automated real keyboard/touch",
+      "audio": "none",
+      "duration_seconds": 4.48
+    }
   ]
 }

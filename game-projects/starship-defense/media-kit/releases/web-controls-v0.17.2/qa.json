@@ -1,0 +1,15 @@
+{
+  "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_ir2aTsJZ/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "message": "视角：高位跟随（C 切换 · V 第一人称）",
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "message": "视角：高位跟随（C 切换 · V 第一人称）",
+      "errors": []
+    }
+  ]
+}
