@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-base-cleanup-v0.17.6",
+  "base_version": "web-continuous-build-v0.17.5",
+  "created_at": "2026-10-04T08:10:07.058993+00:00",
+  "build_sha256": "f7ee72164fe3dd3a777d9f1fc3fb1beb0c2dd020d3051e22ec8496e04363c4df",
+  "changes": [
+    "基地装饰清理",
+    "无实体墙的边缘允许人物跳落",
+    "地图越界下落后回基地"
+  ],
+  "qa": "qa.json",
+  "jump_regression": "jump-regression/qa.json",
+  "website_status": "pending",
+  "toy_status": "pending",
+  "bilibili_status": "pending",
+  "media_readiness": "partial",
+  "gaps": [
+    "未在真实手机/B站App内核测试",
+    "录制无游戏声音"
+  ],
+  "media": []
+}

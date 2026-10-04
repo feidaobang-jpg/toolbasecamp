@@ -1,0 +1,61 @@
+{
+  "scene": "Base ramp rotating view; headless Edge desktop / mobile viewport emulation, not physical phone.",
+  "results": [
+    {
+      "mobile": false,
+      "result": {
+        "samples": 746,
+        "averageFPS": 165.78514600714797,
+        "medianMs": 5.9000000059604645,
+        "p95Ms": 6.0999999940395355,
+        "over50ms": 1,
+        "drawCalls": 21,
+        "triangles": 185238,
+        "memory": {
+          "geometries": 77,
+          "textures": 3
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark"
+      }
+    },
+    {
+      "mobile": true,
+      "result": {
+        "samples": 759,
+        "averageFPS": 168.23299937959987,
+        "medianMs": 5.9000000059604645,
+        "p95Ms": 6.100000023841858,
+        "over50ms": 1,
+        "drawCalls": 20,
+        "triangles": 185376,
+        "memory": {
+          "geometries": 74,
+          "textures": 2
+        },
+        "viewport": [
+          915,
+          412
+        ],
+        "dpr": 0.953125,
+        "drawingBuffer": [
+          915,
+          412
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark"
+      }
+    }
+  ]
+}

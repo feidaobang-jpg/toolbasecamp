@@ -823,7 +823,7 @@ const base={hp:2000,maxHp:2000,mesh:null,pos:new THREE.Vector3(-12,0,-42),bar:nu
   base.bar=makeHPBar(6,'#fc0');base.bar.position.set(0,10.5,0);grp.add(base.bar);updHPBar(base.bar,1);
 })();
 
-/* ---------- 基地内部设施：医疗平台 + 装饰 ---------- */
+/* ---------- 基地内部设施：医疗平台 ---------- */
 const healPad={pos:new THREE.Vector3(-2,0,-32),r:3};
 (function buildBaseProps(){
   const py=PLAT.H;
@@ -839,39 +839,8 @@ const healPad={pos:new THREE.Vector3(-2,0,-32),r:3};
   const padLight=new THREE.PointLight(0x44ff88,.8,10);padLight.position.y=2;padG.add(padLight);
   padG.position.set(healPad.pos.x,py,healPad.pos.z);
   scene.add(padG);
-  // 探照灯×2
-  for(const [lx,lz] of [[-24,-26],[16,-30]]){
-    const g=new THREE.Group();
-    const pole=new THREE.Mesh(new THREE.CylinderGeometry(.12,.16,5,6),new THREE.MeshLambertMaterial({color:0x556677}));
-    pole.position.y=2.5;pole.castShadow=true;g.add(pole);
-    const head=new THREE.Mesh(new THREE.BoxGeometry(.9,.5,.6),new THREE.MeshLambertMaterial({color:0x778899}));
-    head.position.y=5.1;head.rotation.y=rand(0,TAU);g.add(head);
-    const bulb=new THREE.Mesh(new THREE.SphereGeometry(.22,6,5),new THREE.MeshBasicMaterial({color:0xfff2cc}));
-    bulb.position.y=5.1;g.add(bulb);
-    const pl=new THREE.PointLight(0xfff2cc,.9,26);pl.position.y=5;g.add(pl);
-    g.position.set(lx,py,lz);scene.add(g);
-  }
-  // 补给箱堆×2
-  for(const [cx,cz,n] of [[6,-28,4],[-18,-22,3]]){
-    for(let i=0;i<n;i++){
-      const s=rand(.8,1.3);
-      const box=new THREE.Mesh(new THREE.BoxGeometry(s,s,s),new THREE.MeshLambertMaterial({color:i%2?0x8a6d3b:0x6d5a35}));
-      box.position.set(cx+rand(-1.6,1.6),py+s/2,cz+rand(-1.6,1.6));
-      box.rotation.y=rand(0,TAU);box.castShadow=true;scene.add(box);
-    }
-  }
-  // 雷达站
-  const radar=new THREE.Group();
-  const rp=new THREE.Mesh(new THREE.CylinderGeometry(.18,.24,4.4,6),new THREE.MeshLambertMaterial({color:0x667788}));
-  rp.position.y=2.2;radar.add(rp);
-  const dish=new THREE.Mesh(new THREE.SphereGeometry(1.5,12,8,0,TAU,0,Math.PI/2.6),new THREE.MeshLambertMaterial({color:0x99aabb,side:THREE.DoubleSide}));
-  dish.position.y=4.6;dish.rotation.x=-Math.PI/3;radar.add(dish);
-  radar.position.set(-22,py,-33);radar.rotation.y=.7;scene.add(radar);
-  // 旗杆
-  const fp=new THREE.Mesh(new THREE.CylinderGeometry(.08,.1,6,5),new THREE.MeshLambertMaterial({color:0x8899aa}));
-  fp.position.set(4,py+3,-26);scene.add(fp);
-  const flag=new THREE.Mesh(new THREE.PlaneGeometry(2,1.1),new THREE.MeshBasicMaterial({color:0x33bb66,side:THREE.DoubleSide}));
-  flag.position.set(5,py+5.4,-26);scene.add(flag);
+  // Keep functional healing only; the old radar, lamps, crates and flag cluttered the ramps.
+
 })();
 
 /* ---------- 城门（唯一正门，可开关）与四周城墙 ---------- */
@@ -2140,6 +2109,16 @@ function playerMuzzle(dir){
   }
   return player.pos.clone().add(new THREE.Vector3(dir.x*.55,1.35,dir.z*.55));
 }
+// A ledge is not a wall: test solids at the actual feet height, and only
+// limit upward terrain steps. Downward movement stays airborne until landing.
+function playerCanMove(x,z){
+  if(x<WORLD.minX||x>WORLD.maxX||z<WORLD.minZ||z>WORLD.maxZ)return !collideWalls(x,z,.5,player.pos.y);
+  const p=player.pos,next=groundY(x,z),current=groundY(p.x,p.z);
+  const distance=Math.hypot(x-p.x,z-p.z);
+  if(next>p.y+.5)return false;
+  if(player.onGround&&next>current+.001&&(next-current)/Math.max(distance,.001)>.75)return false;
+  return !collideWalls(x,z,.5,Math.max(p.y,next));
+}
 function updPlayer(dt){
   if(player.dead)return;
   player.grenadeCd=Math.max(0,player.grenadeCd-dt);
@@ -2226,8 +2205,8 @@ function updPlayer(dt){
     }
     const sp=player.speed*(player.sprinting?1.65:1)*(player.buffT>0?1.4:1)*(player.onGround?slopeSpeed(groundY,player.pos.x,player.pos.z,mvx,mvz):1);
     const nx=player.pos.x+mvx*sp*dt,nz=player.pos.z+mvz*sp*dt;
-    if(!collideWalls(nx,player.pos.z,.5)&&!tooSteep(nx,player.pos.z))player.pos.x=clamp(nx,WORLD.minX+1,WORLD.maxX-1);
-    if(!collideWalls(player.pos.x,nz,.5)&&!tooSteep(player.pos.x,nz))player.pos.z=clamp(nz,WORLD.minZ+1,WORLD.maxZ-1);
+    if(playerCanMove(nx,player.pos.z))player.pos.x=nx;
+    if(playerCanMove(player.pos.x,nz))player.pos.z=nz;
     player.anim+=dt*(player.sprinting?15:10);
     player.mesh.userData.legs.forEach((l,i)=>l.rotation.x=Math.sin(player.anim+i*Math.PI)*.7);
   }else{
@@ -2235,17 +2214,23 @@ function updPlayer(dt){
   }
   if(camMode==='first')player.yaw=camYaw;
   // 兜底脱困：任何原因卡在实体里（载具残骸、城门关在身上等）超过 0.5 秒，移到最近的空地
-  if(player.onGround&&collideWalls(player.pos.x,player.pos.z,.5)){
+  if(player.onGround&&collideWalls(player.pos.x,player.pos.z,.5,player.pos.y)){
     player.stuckT=(player.stuckT||0)+dt;
     if(player.stuckT>.5){const f=findFreeSpot(player.pos.x,player.pos.z)||{x:0,z:-20};player.pos.set(f.x,groundY(f.x,f.z),f.z);player.stuckT=0;showMsg('已从卡住的位置脱困',1.4);}
   }else player.stuckT=0;
   // 跳跃、下坡与下车共用重力；落地才允许下一次起跳。
-  const gy=groundY(player.pos.x,player.pos.z);
+  const insideMap=player.pos.x>=WORLD.minX&&player.pos.x<=WORLD.maxX&&player.pos.z>=WORLD.minZ&&player.pos.z<=WORLD.maxZ;
+  const gy=insideMap?groundY(player.pos.x,player.pos.z):-Infinity;
   player.vy-=24*dt;
   player.pos.y+=player.vy*dt;
-  const headLimit=fortress.ceilingAt(player.pos.x,player.pos.z,gy+.1)-2.6;
+  const headLimit=insideMap?fortress.ceilingAt(player.pos.x,player.pos.z,Math.max(gy,player.pos.y)+.1)-2.6:Infinity;
   if(player.vy>0&&headLimit>=gy&&player.pos.y>headLimit){player.pos.y=headLimit;player.vy=0;}
   if(player.pos.y<=gy){player.pos.y=gy;player.vy=0;player.onGround=true;}else player.onGround=false;
+  if(player.pos.y<-35){
+    const safe=findFreeSpot(0,-24)||{x:0,z:-20};
+    player.pos.set(safe.x,groundY(safe.x,safe.z),safe.z);player.vy=0;player.onGround=true;player.stuckT=0;camState.init=false;
+    showMsg('已从地图边缘返回基地',2);
+  }
   player.mesh.position.copy(player.pos);
   player.mesh.rotation.y=player.yaw;
   player.mesh.rotation.x=0;

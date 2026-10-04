@@ -29,13 +29,7 @@ export class FortressWorld {
       add('rock',P.mountainB,x,h*.5,z,17,h,16);
       this.solids.push({x,z,r:13,bottom:0,top:h});
     }
-    // Two broad, continuous rear ramps lead onto the front firing platforms.
-    for(const side of [-1,1]){
-      for(let i=0;i<24;i++){const z=-45.5+i,y=height(side*24,z);add('box',i%3?teal:P.amber,side*24,y+.035,z,7.7,.07,.16);}
-      // Low outer parapets provide a readable edge without blocking outward fire.
-      for(let x=10;x<38;x+=4)add('box',stone,side*x,10.1,-10.3,2,.95,.65);
-      for(let z=-55;z<-12;z+=4)add('box',stone,side*37.6,10.1,z,.65,.95,2);
-    }
+    // Ramp surfaces and wall walks stay bare: no decorative stripes or parapets.
     // Rear-entry field shelter: walls provide cover and the interior heals.
     wall(25,34,1,12,4.4,cream,0);wall(35,34,1,12,4.4,cream,0);
     wall(30,39.5,11,1,4.4,cream,0);
