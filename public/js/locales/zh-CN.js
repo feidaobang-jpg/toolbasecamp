@@ -3995,22 +3995,6 @@ window.TB_LOCALES['zh-CN'] = {
             noMatch: '无匹配结果',
             scoreLabel: '分数'
         },
-        mindmap: {
-            title: '思维导图',
-            desc: '可视化思维导图 — 双击编辑，用工具栏或快捷键添加节点。',
-            privacy: '导图仅在浏览器中编辑，不会上传到服务器。',
-            tipsTitle: '操作提示：',
-            tip1: '双击节点可编辑文字',
-            tip2: 'Tab 添加子节点 · Enter 添加同级 · Delete 删除',
-            tip3: '使用浮动工具栏缩放、展开/折叠或导出 PNG',
-            newMap: '新建导图',
-            exportPng: '导出 PNG',
-            exportJson: '导出 JSON',
-            importJson: '导入 JSON',
-            newConfirm: '新建导图？未保存的内容将丢失。',
-            exportError: '导出失败',
-            importError: 'JSON 文件无效'
-        },
         spreadsheet: {
             title: '在线表格',
             desc: '点击单元格编辑 — 工具栏支持格式、合并与公式。',
