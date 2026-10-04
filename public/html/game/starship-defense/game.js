@@ -480,7 +480,6 @@ const BUILDINGS={
   bunker:{name:'重型堡垒',hp:1200,price:1200,dmg:12,rate:.12,range:30,desc:'超高血量+双联机枪'},
 };
 const ITEMS={
-  grenade:{name:'手雷×3',price:100,desc:'U 投掷；前方范围伤害，不占枪械栏',count:3},
   medkit:{name:'医疗包',price:120,desc:'按H回复60生命(按最大生命比例增强)',heal:60},
   shield:{name:'护盾电池',price:300,desc:'获得60点能量护盾(上限150)',shield:60},
   adren:{name:'肾上腺素',price:250,desc:'20秒内移速+40%、射速+40%',buff:20},
@@ -792,7 +791,7 @@ const Game={
   loop:1,chapter:1,level:1,
   gold:0,score:0,cls:'gunner',testMode:false,
   weapons:['lmg'],curWeapon:'lmg',weaponLv:{},
-  items:{medkit:2,grenade:3},
+  items:{medkit:2},
   hpBonus:0,
   vehiclesOwned:[],squadCount:0,squadGear:[],opsCompleted:{},squadOrder:'follow',
   hive:{loop:1,chapter:1,queen:1,killed:false},
@@ -962,7 +961,7 @@ function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textCont
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
   $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
-    +` · 手雷×${Game.testMode?'∞':Game.items.grenade}(${keyBindings.label('U')})`
+    +` · 手雷∞(${keyBindings.label('U')})`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
 }
@@ -2111,13 +2110,12 @@ function useMedkit(){
 function throwGrenade(){
   if(player.dead||player.grenadeCd>0||place.kind)return false;
   if(player.inVehicle){showMsg('下车后可投掷手雷',1.2);return false;}
-  if(!Game.testMode&&Game.items.grenade<=0){showMsg('手雷用完了，O 商店补充',1.5);return false;}
   const from=player.pos.clone();from.y+=1.45;
   const facing=camForward(false),aim=CombatControls.autoAim?autoAim(from,facing,26,.65):{mo:null};
   const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,22);
   target.y=groundY(target.x,target.z)+.2;
   fireBullet(from,facing,{arc:true,grenade:true,dmg:160,explode:6,speed:20,range:26,spread:0,color:0x96a85a},true,target);
-  player.grenadeCd=.8;if(!Game.testMode)Game.items.grenade--;updHUDItem();AudioSys.sfx('shoot');return true;
+  player.grenadeCd=.8;updHUDItem();AudioSys.sfx('shoot');return true;
 }
 function selectWeapon(id,quiet=false){
   if(!Game.weapons.includes(id))return;
@@ -2686,7 +2684,6 @@ if(it.type==='weapon'){if(!Game.weapons.includes(it.id))Game.weapons.push(it.id)
       else if(it.type==='item'){
         const c=ITEMS[it.id];
         if(it.id==='medkit')Game.items.medkit++;
-        else if(it.id==='grenade')Game.items.grenade+=c.count;
         else if(it.id==='shield'){player.shield=Math.min(150,player.shield+c.shield);updHUDItem();}
         else if(it.id==='adren'){player.buffT=Math.max(player.buffT,c.buff);}
         else if(it.id==='hpUp'){if(player.maxHp<10000){Game.hpBonus+=40;player.maxHp+=40;player.hp+=40;}updHPBar(player.bar,player.hp/player.maxHp);}
@@ -2877,7 +2874,7 @@ function applySave(d){
   const mig=migrateWeapons(d);
   Game.weapons=mig.weapons;Game.curWeapon=mig.cur;Game.weaponLv=mig.lv;Game.gold+=mig.refund;
   Game.migrationNote=mig.note;
-  Game.items={medkit:d.items&&Number.isFinite(d.items.medkit)?d.items.medkit:2,grenade:d.items&&Number.isFinite(d.items.grenade)?Math.max(0,Math.floor(d.items.grenade)):3};
+  Game.items={medkit:d.items&&Number.isFinite(d.items.medkit)?d.items.medkit:2};
   Game.hpBonus=d.hpBonus||0;
   Game.magnet=!!(d.perks&&d.perks.magnet);Game.regen=!!(d.perks&&d.perks.regen);
   Game.squadOrder=d.squadOrder==='defend'?'defend':'follow';Game.squadAlert=0;
@@ -3023,7 +3020,7 @@ function newGame(test){
   Game.hpBonus=0;
   Game.weapons=test?Object.keys(WEAPONS):[...CLASSES[Game.cls].weapons];
   Game.curWeapon=CLASSES[Game.cls].weapon;Game.weaponLv={};
-  Game.items={medkit:test?99:2,grenade:test?99:3};
+  Game.items={medkit:test?99:2};
   Game.vehiclesOwned=[];Game.squadCount=0;Game.squadOrder='follow';Game.squadAlert=0;Game.squadGear=[];Game.opsCompleted={};operations.clear();
   Game.hive={loop:1,chapter:1,queen:1,killed:false};
   Game.magnet=false;Game.regen=false;
@@ -3081,7 +3078,7 @@ function updDashUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
   const txt=v?'':player.dashCd>0?'💨 闪避 '+player.dashCd.toFixed(1)+'s':'💨 闪避 就绪（'+(isTouch?'闪避':keyBindings.label('K'))+'）';
   $('vSPRINT').classList.toggle('hidden',!!v);
-  $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷'+(Game.testMode?'∞':Game.items.grenade);
+  $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷∞';
   const el=$('dashTxt');if(el.textContent!==txt)el.textContent=txt;
   const k=$('vK'),h=$('vH'),kl=fly?'升':'闪避',hl=fly?'降':'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;

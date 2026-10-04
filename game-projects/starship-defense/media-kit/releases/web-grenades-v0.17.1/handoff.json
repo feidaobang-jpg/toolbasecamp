@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-grenades-v0.17.1",
+  "base_version": "web-insects-v0.17.0",
+  "created_at": "2026-10-04T03:50:24.057241+00:00",
+  "build": {
+    "runtime_sha256": "0a9df76bca9113b0fabf39b979b6c13458230ed07f556f2836d2a412c11dd7cf"
+  },
+  "changes": [
+    "恢复所有模式无限手雷，无需购买或补充",
+    "移除手雷库存及商店补给；旧存档0枚不再限制投掷",
+    "保留U/手机独立按钮与0.8秒投掷间隔，HUD显示手雷∞"
+  ],
+  "qa": {
+    "functional": [
+      "grenades.json"
+    ],
+    "visual": "Reviewed mobile infinite-grenade HUD and final 6.08 second video contact sheet",
+    "performance": "No new rendering change or benchmark; previous v0.17.0 benchmark remains historical evidence",
+    "limitations": [
+      "手机为触控与视口模拟，未测实体手机",
+      "QA录像无音轨，使用定位、无敌与确定性测试"
+    ]
+  },
+  "media": [
+    {
+      "file": "releases/web-grenades-v0.17.1/mobile-grenade.jpg",
+      "sha256": "c3b196871183c6bf71fe9b6b01418b3f0ea1fc5116a9795f15721f078fc44c2d",
+      "visual_review": "pass",
+      "audio": "none",
+      "duration_seconds": null,
+      "capture_mode": "automated QA positioning/invulnerability; real keyboard and touch throws; deterministic repeated-throw checks"
+    },
+    {
+      "file": "releases/web-grenades-v0.17.1/video-review.jpg",
+      "sha256": "09c7773eed86461dea65f2ff78fb7f1719768664fff773a6b813ff2a13758064",
+      "visual_review": "pass",
+      "audio": "none",
+      "duration_seconds": null,
+      "capture_mode": "automated QA positioning/invulnerability; real keyboard and touch throws; deterministic repeated-throw checks"
+    },
+    {
+      "file": "releases/web-grenades-v0.17.1/video/page@0d0188ce8b5d6336aba6a15158db211b.webm",
+      "sha256": "109b656ecbe2fc1c9436c78e7bab31527fdc9bc5dcf35d1e7fcdb7ce4cd3b13f",
+      "visual_review": "pass",
+      "audio": "none",
+      "duration_seconds": 6.08,
+      "capture_mode": "automated QA positioning/invulnerability; real keyboard and touch throws; deterministic repeated-throw checks"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "无音轨",
+      "无实体手机测试"
+    ]
+  },
+  "thumbnail": "Unchanged; this patch only changes ammo rules and labels"
+}
