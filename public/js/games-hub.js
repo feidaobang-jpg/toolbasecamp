@@ -286,7 +286,9 @@
                 var gridEl = document.createElement('div');
                 gridEl.className = 'hub-games-grid';
                 var kind0 = groupKind(group);
-                group.items.forEach(function (item) {
+                group.items.slice().sort(function (a, b) {
+                    return String(b.firstProducedAt || '').localeCompare(String(a.firstProducedAt || ''));
+                }).forEach(function (item) {
                     var card = renderGameCard(item, kind0);
                     card.dataset.search += ' ' + groupLabel;
                     gridEl.appendChild(card);
