@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.1.0",
+  "base_version": "v2.0.0",
+  "created_at": "2026-10-04",
+  "build": {
+    "id": "mario-3d-v2.1.0-f29d02ada013",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "f29d02ada01358b5846198398113fab49b6c27c60d6567e9d114888aad26bd41",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "cameras",
+      "description": "C 循环：侧视（默认）/ 斜视 / 正视 / 第一人称；Q/E 无极旋转",
+      "status": "implemented",
+      "evidence_ids": [
+        "front-11-start",
+        "fp-11-start",
+        "front-to-fp-run"
+      ]
+    },
+    {
+      "id": "front-view",
+      "description": "正视：镜头在玛丽身后肩上，看向关卡前进方向；高度跟地面不跟跳跃，跳高时抬头；被方块挡住时先抬高、再沿视线拉近",
+      "status": "implemented",
+      "evidence_ids": [
+        "front-11-blocks",
+        "front-11-flag",
+        "front-to-fp-run"
+      ]
+    },
+    {
+      "id": "first-person",
+      "description": "第一人称：玛丽眼睛高度（下蹲变矮），不画自己，Q/E 转头，W 朝看的方向走，站着不动时火球朝视线飞；死亡时暂回身后视角",
+      "status": "implemented",
+      "evidence_ids": [
+        "fp-11-blocks",
+        "fp-12-maze",
+        "front-to-fp-run"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "front-view",
+      "feature_ids": [
+        "cameras",
+        "front-view"
+      ],
+      "before": "第三个视角“纵深”在玛丽左后方斜着看，看不到正前方；用户问“怎么没有正视”",
+      "after": "改为正视：镜头在身后肩上（脚下约 2.6 格高，正好从 3 格高的砖块层下面看过去），看向前进方向；W 前进、A/D 左右",
+      "result": "1-1、1-2 各处截图与实时录像",
+      "evidence_ids": [
+        "front-11-start",
+        "front-11-blocks",
+        "front-12-start"
+      ],
+      "validation": "pass（tfp：W→+x、D→+z）"
+    },
+    {
+      "id": "first-person",
+      "feature_ids": [
+        "cameras",
+        "first-person"
+      ],
+      "before": "没有第一人称",
+      "after": "正视再按 C 进入第一人称，再按 C 回侧视",
+      "result": "代入感最强的视角，Q/E 转 90° 后移动与火球方向跟着视线",
+      "evidence_ids": [
+        "fp-11-blocks",
+        "fp-12-maze",
+        "front-to-fp-run"
+      ],
+      "validation": "pass（tfp 全部通过）"
+    },
+    {
+      "id": "camera-avoid",
+      "feature_ids": [
+        "front-view"
+      ],
+      "before": "镜头在玛丽身后时会卡进台阶、砖块或贴着方块，满屏半透明方块",
+      "after": "镜头落进方块或视线被挡时先抬高、再沿视线拉近到玛丽身后；关卡两端的高墙在镜头外时切掉；贴着镜头的方块和金币溶解",
+      "result": "终点台阶后、1-2 起点、奖励房间画面干净",
+      "evidence_ids": [
+        "front-11-flag",
+        "front-12-start"
+      ],
+      "validation": "pass（截图审查）"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "front-jump-out-of-frame",
+      "found_in": "v2.1.0 开发中",
+      "repro": "正视下跳高",
+      "observed": "镜头高度不跟跳跃，玛丽跳出画面上方",
+      "humor_angle": null,
+      "cause": "低机位视角向下看",
+      "status": "fixed",
+      "fix": "镜头位置不动，看点随玛丽抬高（抬头看）",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "front-to-fp-run"
+      ],
+      "retest": "pass：录像里跳过水管、站上第二层砖都在画面内"
+    }
+  ],
+  "media": [
+    {
+      "id": "front-11-start",
+      "file": "releases/v2.1.0/captures/front-11-start.png",
+      "sha256": "57c970b282108e0a05f1371e4dca99708e248c00296e5a00843bb0f305314dd3",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：1-1 起点，镜头在玛丽身后肩上看向前进方向。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-11-blocks",
+      "file": "releases/v2.1.0/captures/front-11-blocks.png",
+      "sha256": "6baff9db18423b22625bce7df252879cb643c6816345a879e77d3e9d11e1611a",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：从第一层问号砖下面看过去。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-11-pipes",
+      "file": "releases/v2.1.0/captures/front-11-pipes.png",
+      "sha256": "85224510cd3b22aa1ff7f2fd0ca91faacfe20f5e71dc492af302c498508f6f4a",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：前方水管一排 3 根。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-11-tier",
+      "file": "releases/v2.1.0/captures/front-11-tier.png",
+      "sha256": "0118a0d4c93f3e696064e935081489ae5b2ae3dc1ea1a5215d8eb26c19decd40",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：站在第一层砖上，前方第二层砖。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-11-flag",
+      "file": "releases/v2.1.0/captures/front-11-flag.png",
+      "sha256": "c1911410b95c430b20b5f9949e6a476de6a14f85bab5dd34719b5a3b2662151f",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：终点 8 级台阶后，镜头避让拉近到玛丽身后。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-12-start",
+      "file": "releases/v2.1.0/captures/front-12-start.png",
+      "sha256": "0f5bd41843530c462bbdb05a685ccae6281eaa0878895172d9f16d6450b9a8ef",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：1-2 起点，左墙在镜头外时切掉。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-12-pillars",
+      "file": "releases/v2.1.0/captures/front-12-pillars.png",
+      "sha256": "2a58380d89b739fc38139200012599c5da1ba71df317fe6fa412a58487db111a",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：1-2 石柱。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-12-piranha",
+      "file": "releases/v2.1.0/captures/front-12-piranha.png",
+      "sha256": "1e144b135518e81ec157fc3e2abd14857d90175c42940d73b7f07188b24e2276",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "正视：1-2 食人花水管。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fp-11-start",
+      "file": "releases/v2.1.0/captures/fp-11-start.png",
+      "sha256": "30aac33ef827a3e76b988e48fbc3852386bb5c4c6246c3ebbb20351ba37c244c",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称：1-1 起点。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fp-11-blocks",
+      "file": "releases/v2.1.0/captures/fp-11-blocks.png",
+      "sha256": "533035335b6117d408ee3b98af3d406bbf2248e8a4ec10910b8cacf033c3824a",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称：栗宝宝迎面走来。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fp-11-stairs",
+      "file": "releases/v2.1.0/captures/fp-11-stairs.png",
+      "sha256": "3256eea450c31ab220bef0903ec3a3e89e940e967a3ad09da32eb4c26d7736eb",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称：台阶金字塔。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fp-12-maze",
+      "file": "releases/v2.1.0/captures/fp-12-maze.png",
+      "sha256": "8316f49a70a4e944587b5acb4a1464f1764f62891d71bbfffd5ce9d9aa318409",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称：1-2 砖墙区迎面的乌龟。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fp-12-piranha",
+      "file": "releases/v2.1.0/captures/fp-12-piranha.png",
+      "sha256": "9793e53878d5d85090c8c747648533d0a37fde1594015f1e086122638a0c314f",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称：1-2 食人花水管。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "fp-12-bonus",
+      "file": "releases/v2.1.0/captures/fp-12-bonus.png",
+      "sha256": "cd3c44a68f6d8daa890446840d78fe78855ae5760264dec10ac965a1c9dcb502",
+      "kind": "screenshot",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称：1-2 奖励房间的金币。Edge 无头浏览器，测试钩子把玛丽放到指定位置后逐帧渲染。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front-to-fp-run",
+      "file": "releases/v2.1.0/captures/front-to-fp-run.webm",
+      "sha256": "ad537d711404d1adfa1b736cbf294d857a1d7d41ed0d7043ee387c90e4de3d7a",
+      "kind": "video",
+      "version": "v2.1.0",
+      "build_id": "mario-3d-v2.1.0-f29d02ada013",
+      "capture_mode": "realtime-automation",
+      "description": "实时 1280×720 录屏：开局按两下 C 切到正视，键盘脚本按住 W+J 前进、遇障碍按 K 跳；约 19 秒再按 C 切第一人称继续跑。无游戏声音。时间码按脚本时钟，与视频起点约差 1 秒。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 37.2,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 4.2,
+          "out_seconds": 19.0,
+          "description": "正视：跳过水管、站上第二层砖，跳高时镜头抬头",
+          "facts": [
+            "front-view"
+          ]
+        },
+        {
+          "in_seconds": 19.0,
+          "out_seconds": 36.0,
+          "description": "第一人称：沿跑道奔跑、台阶与城堡",
+          "facts": [
+            "first-person"
+          ]
+        }
+      ]
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "v2-run",
+      "handoff": "releases/v2.0.0/handoff.json",
+      "media_id": "run-1-1-to-1-2",
+      "reason": "关卡与玩法未变，完整一轮仍引用 v2.0.0 录像"
+    }
+  ],
+  "qa": [
+    {
+      "device": "Windows 11 + RTX 4060 Ti，Edge（Playwright 无头）",
+      "viewport": "1280×720、1920×1080",
+      "method": "回归 t1–t6 + 新视角 tfp + 16 处正视/第一人称截图 + 实时录像",
+      "result": "回归 25 项通过；C 四个视角循环、正视与第一人称 W/D 方向、E 转 90° 后移动与火球方向、死亡回身后视角、标题画面不用第一人称都通过；四种视角下最慢帧 6.1～6.5ms",
+      "evidence": [
+        "front-to-fp-run"
+      ],
+      "untested": [
+        "真实手机",
+        "真人试玩手感"
+      ]
+    },
+    {
+      "device": "同上，手机为视口与触控模拟",
+      "viewport": "844×390、390×844、667×375、375×667",
+      "method": "菜单越界检查",
+      "result": "视角项显示“第一人称”后四种尺寸菜单仍都在屏幕内",
+      "evidence": [],
+      "untested": [
+        "真机"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像无游戏声音",
+      "没有真机录像",
+      "录像为脚本操作"
+    ]
+  }
+}

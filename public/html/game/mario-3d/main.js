@@ -1,10 +1,10 @@
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=2.0.0';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.0.0';
-import { LEVEL_ORDER } from './levels.js?v=2.0.0';
-import { GameAudio } from './audio.js?v=2.0.0';
+import { createView, PRESETS } from './scene.js?v=2.1.0';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.1.0';
+import { LEVEL_ORDER } from './levels.js?v=2.1.0';
+import { GameAudio } from './audio.js?v=2.1.0';
 
-const VERSION = 'v2.0.0';
+const VERSION = 'v2.1.0';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -543,6 +543,11 @@ function simulate(dt) {
   if (uiMode !== 'game' || paused || current || !w) return;
   if (phase === 'card') { cardT += dt; if (cardT >= 2.2) endCard(); return; }
   const input = buildInput();
+  // 第一人称站着不动时，玛丽朝向跟着视线走，火球往看的方向飞
+  if (view.firstPerson(w) && w.mode === 'play' && Math.hypot(input.mx, input.mz) < 0.2) {
+    const yaw = view.cameraYaw();
+    w.player.facing = Math.atan2(-Math.sin(yaw), -Math.cos(yaw));
+  }
   const before = w;
   step(w, input, dt);
   latch.jump = false; latch.fire = false;
@@ -584,6 +589,7 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 function present(dt) {
+  view.titleMode = !(uiMode === 'game' && w);
   if (uiMode === 'game' && w) {
     view.update(w, paused || current ? 0 : dt);
     updateHud();

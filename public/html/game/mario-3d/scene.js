@@ -1,38 +1,41 @@
 // 渲染：把当前区域的网格地形沿纵深铺成 6 格厚的体素跑道，水管纵向并排 3 根；
 // 角色、道具、特效与镜头（C 预设 + Q/E 无极旋转），遮挡主角的物体做网点淡化。
-import * as THREE from './three.js?v=2.0.0';
-import { tex, textTexture } from './textures.js?v=2.0.0';
-import * as M from './models.js?v=2.0.0';
-import { LANE } from './levels.js?v=2.0.0';
-import { heightOf } from './world.js?v=2.0.0';
+import * as THREE from './three.js?v=2.1.0';
+import { tex, textTexture } from './textures.js?v=2.1.0';
+import * as M from './models.js?v=2.1.0';
+import { LANE, SOLID, tileKey } from './levels.js?v=2.1.0';
+import { heightOf } from './world.js?v=2.1.0';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
   { id: 'oblique', name: '斜视', yaw: -0.62, pitch: 0.42, dist: 15.5, fov: 42, ahead: 3.2 },
-  { id: 'depth', name: '纵深', yaw: -1.1, pitch: 0.5, dist: 12, fov: 50, ahead: 4.2 }
+  { id: 'front', name: '正视', yaw: -Math.PI / 2, pitch: 0.2, dist: 9, fov: 60, ahead: 3 },  // 在玛丽身后肩上，看向关卡前进方向
+  { id: 'fp', name: '第一人称', yaw: -Math.PI / 2, pitch: -0.05, dist: 0, fov: 75, ahead: 0, fp: true }   // 正视再按 C：玛丽的眼睛
 ];
+const FRONT = PRESETS.find(p => p.id === 'front');
 const ZS = [-2.5, -1.5, -0.5, 0.5, 1.5, 2.5];       // 每格方块沿纵深 6 块
 const PIPE_Z = [-2, 0, 2];                          // 每根水管沿纵深 3 根
 
 // ---------- 遮挡淡化（网点透明，不需要排序） ----------
 // 另有两条：镜头贴近的方块网点溶解（防止镜头贴着台阶 / 钻进天花板时满屏大色块）；
 // 地下关镜头升到天花板以上而玛丽在下面时，把天花板高度以上的地形整层切掉（剖面视图）。
-const FADE = { cam: { value: new THREE.Vector3() }, player: { value: new THREE.Vector3() }, feet: { value: 0 }, on: { value: 1 }, cut: { value: 1e5 } };
+// 镜头在关卡两端墙外（正视从身后看、或 Q/E 转到背面）时，同样把墙切掉。
+const FADE = { cam: { value: new THREE.Vector3() }, player: { value: new THREE.Vector3() }, feet: { value: 0 }, on: { value: 1 }, cut: { value: 1e5 }, cutX: { value: new THREE.Vector2(-1e5, 1e5) } };
 function fadeable(material) {
   material.onBeforeCompile = (sh) => {
-    sh.uniforms.uFadeCam = FADE.cam; sh.uniforms.uFadePlayer = FADE.player; sh.uniforms.uFadeFeet = FADE.feet; sh.uniforms.uFadeOn = FADE.on; sh.uniforms.uFadeCut = FADE.cut;
+    sh.uniforms.uFadeCam = FADE.cam; sh.uniforms.uFadePlayer = FADE.player; sh.uniforms.uFadeFeet = FADE.feet; sh.uniforms.uFadeOn = FADE.on; sh.uniforms.uFadeCut = FADE.cut; sh.uniforms.uFadeCutX = FADE.cutX;
     sh.vertexShader = 'varying vec3 vFadeW;\n' + sh.vertexShader.replace('#include <project_vertex>', `#include <project_vertex>
       vec4 fadeW = vec4(transformed, 1.0);
       #ifdef USE_INSTANCING
         fadeW = instanceMatrix * fadeW;
       #endif
       vFadeW = (modelMatrix * fadeW).xyz;`);
-    sh.fragmentShader = 'varying vec3 vFadeW;\nuniform vec3 uFadeCam;\nuniform vec3 uFadePlayer;\nuniform float uFadeFeet;\nuniform float uFadeOn;\nuniform float uFadeCut;\n' +
+    sh.fragmentShader = 'varying vec3 vFadeW;\nuniform vec3 uFadeCam;\nuniform vec3 uFadePlayer;\nuniform float uFadeFeet;\nuniform float uFadeOn;\nuniform float uFadeCut;\nuniform vec2 uFadeCutX;\n' +
       sh.fragmentShader.replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
       if (uFadeOn > 0.5) {
-        if (vFadeW.y > uFadeCut) discard;
+        if (vFadeW.y > uFadeCut || vFadeW.x < uFadeCutX.x || vFadeW.x > uFadeCutX.y) discard;
         vec3 rel = vFadeW - uFadeCam;
-        float a = 1.0 - smoothstep(1.3, 2.6, length(rel));
+        float a = 1.0 - smoothstep(0.5, 1.3, length(rel));
         if (vFadeW.y > uFadeFeet + 0.25) {
           vec3 seg = uFadePlayer - uFadeCam; float L = length(seg); vec3 d = seg / max(L, 0.001);
           float t = dot(rel, d);
@@ -45,6 +48,7 @@ function fadeable(material) {
   material.customProgramCacheKey = () => 'tbfade';
   return material;
 }
+fadeable(M.coinMat);                                // 金币贴着镜头时也溶解
 const matCache = new Map();
 function tileMat(name, theme) {
   const k = name + ':' + theme;
@@ -87,7 +91,8 @@ export function createView(canvas) {
   const player = M.mario(); scene.add(player.root);
   const view = {
     renderer, scene, camera, presetIndex: 0, yawOffset: 0, quality: 'high',
-    followX: 0, followY: 4, area: null, theme: 'overworld', shake: 0
+    followX: 0, followY: 4, area: null, theme: 'overworld', shake: 0,
+    camLift: 0, camPull: 0, titleMode: false, wallL: null, wallR: null
   };
   let areaGroup = null, areaDispose = [];
   let tileRecs = new Map(), meshes = {}, animRecs = new Set();
@@ -117,6 +122,11 @@ export function createView(canvas) {
     clearArea();
     const a = w.area, theme = a.theme;
     view.area = a; view.theme = theme;
+    // 两端高墙（地下关左墙、右墙或出口竖管）：x 方向切墙用
+    const tall = c => { const t = a.tiles.get(tileKey(c, 4)); return !!t && SOLID.has(t.t); };
+    view.wallL = tall(0) ? 1 : null;
+    let r = a.width - 1;
+    if (tall(r)) { while (r > 0 && tall(r - 1)) r--; view.wallR = r; } else view.wallR = null;
     areaGroup = new THREE.Group(); scene.add(areaGroup);
     const under = theme === 'underground';
     scene.background = new THREE.Color(under ? '#000000' : '#6d9cff');
@@ -331,7 +341,7 @@ export function createView(canvas) {
     }
   }
 
-  view.build = (w) => { buildArea(w); view.followX = w.player.x; view.followY = camTargetY(w, PRESETS[view.presetIndex]); view.snap = true; warmUp(); };
+  view.build = (w) => { buildArea(w); view.groundY = w.player.y; view.followX = w.player.x; view.followY = camTargetY(w, PRESETS[view.presetIndex]); view.snap = true; warmUp(); };
 
   // 预编译：镜头外的景物、之后才出现的敌人 / 道具 / 特效第一次上屏时编译着色器会卡一下，换区域时一次编完
   function warmUp() {
@@ -411,6 +421,8 @@ export function createView(canvas) {
   // ---------- 镜头 ----------
   function camTargetY(w, preset) {
     const p = w.player, a = w.area;
+    // 正视：高度跟玛丽站的地面走、不跟跳跃，镜头约在脚下 2.6 格高——正好从 3 格高的砖块层下面看过去
+    if (preset.id === 'front') { if (p.grounded || p.y < view.groundY || view.groundY === undefined) view.groundY = p.y; return view.groundY + 0.8; }
     if (preset.id !== 'side') return p.y + 1.2;
     if (a.ceiling && p.y < 10) return 5.3;
     return Math.max(4.6, p.y - 2.2);
@@ -419,31 +431,114 @@ export function createView(canvas) {
   view.cyclePreset = () => { view.presetIndex = (view.presetIndex + 1) % PRESETS.length; view.yawOffset = 0; return PRESETS[view.presetIndex]; };
   view.setPreset = (i) => { view.presetIndex = i; view.yawOffset = 0; };
   view.cameraYaw = () => PRESETS[view.presetIndex].yaw + view.yawOffset;
+  // 第一人称只在游玩时生效：标题画面换成正视，死亡动画时退到身后看清发生了什么
+  view.firstPerson = (w) => !!PRESETS[view.presetIndex].fp && !view.titleMode && !!w && w.mode !== 'dying';
+
+  // 镜头避让：第三人称镜头落进或贴着方块时，先往上抬过障碍；上面没空间（天花板下）就沿视线往玛丽方向拉近
+  // 已被剖面切掉的墙和天花板不算障碍（view.cutNow 每帧按未避让的镜头位置算出）
+  const solidAt = (a, c, h) => {
+    const k = view.cutNow;
+    if (k && ((k.l !== null && c < k.l) || (k.r !== null && c >= k.r) || (k.top !== null && h >= k.top))) return false;
+    const t = a.tiles.get(tileKey(c, h)); return !!t && SOLID.has(t.t) && !t.hidden;
+  };
+  function cutsFor(a, p, pos) {
+    const ceil = a.ceiling ? (a.ceilY || 10) : null;
+    return {
+      top: ceil !== null && pos.y > ceil - 0.6 && p.y < ceil - 0.5 ? ceil : null,
+      l: view.wallL !== null && pos.x < view.wallL ? view.wallL : null,
+      r: view.wallR !== null && pos.x > view.wallR ? view.wallR : null
+    };
+  }
+  function camBlocked(a, x, y, z) {
+    if (Math.abs(z) > LANE + 0.35) return false;
+    for (let c = Math.floor(x - 0.35); c <= Math.floor(x + 0.35); c++)
+      for (let h = Math.floor(y - 0.35); h <= Math.floor(y + 0.35); h++) if (solidAt(a, c, h)) return true;
+    return false;
+  }
+  // 镜头到玛丽胸口的视线有没有被方块挡住（只在镜头位于跑道上方时检查：正视、或 Q/E 转到身后）
+  function sightBlocked(a, x, y, z, e) {
+    const dx = e.x - x, dy = e.y - y, dz = e.z - z, n = Math.ceil(Math.hypot(dx, dy, dz) / 0.25);
+    for (let i = 1; i < n - 1; i++) {
+      const t = i / n, px = x + dx * t, py = y + dy * t, pz = z + dz * t;
+      if (Math.abs(pz) < LANE && solidAt(a, Math.floor(px), Math.floor(py))) return true;
+    }
+    return false;
+  }
+  const pullTo = new THREE.Vector3();
+  function avoid(a, pos, target, p, dt, snap) {
+    const eye = { x: p.x, y: p.y + heightOf(p) * 0.6, z: p.z }, inLane = Math.abs(pos.z) < LANE + 1.5;
+    const ok = (x, y, z) => !camBlocked(a, x, y, z) && !(inLane && sightBlocked(a, x, y, z, eye));
+    // 拉近时朝玛丽头顶后上方靠，最多拉到离她约 1.3 格，不会越过她
+    pullTo.set(p.x, p.y + heightOf(p) + 0.6, p.z);
+    const sMax = Math.max(0, 1 - 1.3 / Math.max(0.01, pos.distanceTo(pullTo)));
+    let lift = 0, pull = 0;
+    if (!ok(pos.x, pos.y, pos.z)) {
+      let found = false;
+      for (let dy = 0.25; dy <= 2.01 && !found; dy += 0.25) if (ok(pos.x, pos.y + dy, pos.z)) { lift = dy; found = true; }
+      if (!found) {
+        pull = sMax;
+        for (let s = 0.05; s < sMax; s += 0.05) if (ok(pos.x + (pullTo.x - pos.x) * s, pos.y + (pullTo.y - pos.y) * s, pos.z + (pullTo.z - pos.z) * s)) { pull = s; break; }
+      }
+    }
+    const up = 1 - Math.exp(-14 * dt), down = 1 - Math.exp(-3 * dt);
+    view.camLift = snap ? lift : view.camLift + (lift - view.camLift) * (lift > view.camLift ? up : down);
+    view.camPull = snap ? pull : view.camPull + (pull - view.camPull) * (pull > view.camPull ? up : down);
+    pos.y += view.camLift;
+    pos.lerp(pullTo, Math.min(view.camPull, sMax));
+  }
 
   function updateCamera(w, dt) {
-    const pr = PRESETS[view.presetIndex], p = w.player, a = w.area;
+    let pr = PRESETS[view.presetIndex];
+    const p = w.player, a = w.area, fp = view.firstPerson(w);
+    if (pr.fp && !fp) pr = FRONT;
     const yaw = pr.yaw + view.yawOffset;
     let tx = p.x;
-    const k = view.snap ? 1 : 1 - Math.exp(-6 * dt);
+    const snap = view.snap;
+    const k = snap ? 1 : 1 - Math.exp(-6 * dt);
     view.followX += (tx - view.followX) * k;
-    view.followY += (camTargetY(w, pr) - view.followY) * (view.snap ? 1 : 1 - Math.exp(-3.5 * dt));
+    view.followY += (camTargetY(w, pr) - view.followY) * (snap ? 1 : 1 - Math.exp(-3.5 * dt));
     view.snap = false;
-    let cx = view.followX + pr.ahead;
-    if (pr.id === 'side') { const half = 9; cx = a.width < half * 2 ? a.width / 2 : Math.max(half, Math.min(a.width - half, cx)); }
-    const target = tmpP.set(cx, view.followY, pr.id === 'side' ? 0 : p.z * 0.5);
-    const cp = Math.cos(pr.pitch) * pr.dist;
-    camera.position.set(target.x + Math.sin(yaw) * cp, target.y + Math.sin(pr.pitch) * pr.dist, target.z + Math.cos(yaw) * cp);
-    if (view.shake > 0) { view.shake = Math.max(0, view.shake - dt); camera.position.y += (Math.random() - 0.5) * view.shake; }
-    camera.lookAt(target);
-    if (camera.fov !== pr.fov) { camera.fov = pr.fov; camera.updateProjectionMatrix(); }
-    sun.position.set(target.x - 10, target.y + 24, 14); sun.target.position.set(target.x, 0, 0);
+    let target;
+    if (fp) {
+      // 第一人称：眼睛在头部高度（下蹲会变矮），沿镜头朝向看；Q/E 转头
+      const eye = p.y + heightOf(p) * 0.86;
+      camera.position.set(p.x, eye, p.z);
+      const fx = -Math.sin(yaw) * Math.cos(pr.pitch), fz = -Math.cos(yaw) * Math.cos(pr.pitch);
+      target = tmpP.set(p.x + fx * 10, eye + Math.sin(pr.pitch) * 10, p.z + fz * 10);
+      camera.lookAt(target);
+      view.camLift = view.camPull = 0;
+    } else {
+      let cx = view.followX + pr.ahead;
+      if (pr.id === 'side') { const half = 9; cx = a.width < half * 2 ? a.width / 2 : Math.max(half, Math.min(a.width - half, cx)); }
+      target = tmpP.set(cx, view.followY, pr.id === 'side' ? 0 : p.z * 0.5);
+      const cp = Math.cos(pr.pitch) * pr.dist;
+      camera.position.set(target.x + Math.sin(yaw) * cp, target.y + Math.sin(pr.pitch) * pr.dist, target.z + Math.cos(yaw) * cp);
+      view.cutNow = cutsFor(a, p, camera.position);
+      avoid(a, camera.position, target, p, dt, snap);
+      if (view.shake > 0) { view.shake = Math.max(0, view.shake - dt); camera.position.y += (Math.random() - 0.5) * view.shake; }
+      // 正视镜头高度不跟跳跃，跳高时改为抬头看，玛丽不会跳出画面上方
+      if (pr.id === 'front') {
+        const want = Math.max(target.y, p.y + 0.9);
+        view.lookY = snap || view.lookY === undefined ? want : view.lookY + (want - view.lookY) * (1 - Math.exp(-8 * dt));
+        target.y = view.lookY;
+      }
+      camera.lookAt(target);
+    }
+    const near = fp ? 0.06 : 0.3;
+    if (camera.fov !== pr.fov || camera.near !== near) { camera.fov = pr.fov; camera.near = near; camera.updateProjectionMatrix(); }
+    FADE.on.value = fp ? 0 : 1;
+    // 阴影范围有限，跟着镜头朝向往前挪，正视时前方的砖块和水管也有影子
+    const fwdX = -Math.sin(yaw) * 10;
+    sun.position.set(target.x + fwdX - 10, target.y + 24, 14); sun.target.position.set(target.x + fwdX, 0, 0);
     lamp.position.set(p.x, p.y + 2.2, p.z + 2);
     FADE.cam.value.copy(camera.position);
     FADE.player.value.set(p.x, p.y + heightOf(p) * 0.55, p.z);
     FADE.feet.value = p.y;
-    // 地下关：镜头在天花板高度以上、玛丽在下面时切掉天花板层
-    const ceil = a.ceiling ? (a.ceilY || 10) : null;
-    FADE.cut.value = ceil !== null && camera.position.y > ceil - 0.6 && p.y < ceil - 0.5 ? ceil - 0.02 : 1e5;
+    // 剖面：地下关镜头在天花板以上而玛丽在下面时切掉天花板层；镜头在关卡两端墙外时切掉墙
+    const cut = fp ? { top: null, l: null, r: null } : cutsFor(a, p, camera.position);
+    FADE.cut.value = cut.top !== null ? cut.top - 0.02 : 1e5;
+    FADE.cutX.value.set(cut.l !== null ? cut.l + 0.02 : -1e5, cut.r !== null ? cut.r - 0.02 : 1e5);
+    view.cutNow = null;
   }
 
   // ---------- 每帧同步 ----------
@@ -534,7 +629,7 @@ export function createView(canvas) {
     if (p.growT > 0) showBig = Math.floor(p.growT / 0.08) % 2 === 0 ? bigNow : !bigNow;
     player.small.visible = !showBig; player.big.visible = showBig;
     const blink = p.inv > 0 && w.mode === 'play' && Math.floor(time * 16) % 2 === 0;
-    root.visible = p.visible && !blink;
+    root.visible = p.visible && !blink && !view.firstPerson(w);   // 第一人称不画自己
     root.position.set(p.x, p.y, p.z);
     root.rotation.y = w.mode === 'dying' ? 0 : p.facing;
     const col = p.power === 'fire' ? M.MARIO_COLORS.fire : M.MARIO_COLORS.normal;

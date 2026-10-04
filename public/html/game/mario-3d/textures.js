@@ -1,5 +1,5 @@
 // 16×16 像素风贴图，按原作配色用 Canvas 程序化绘制（不使用任天堂原始素材文件）。
-import * as THREE from './three.js?v=2.0.0';
+import * as THREE from './three.js?v=2.1.0';
 
 const PAL = {
   overworld: { brick: '#c84c0c', mortar: '#000000', light: '#fcbcb0', mid: '#e45c10', ground: '#c84c0c', groundLine: '#000000', groundLight: '#fcbcb0' },

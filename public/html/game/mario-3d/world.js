@@ -1,5 +1,5 @@
 // 玩法模拟：与渲染无关。地形整条跑道纵深一致，碰撞按 (x,y) 网格计算，z 只用于跑道边界和实体之间的接触。
-import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.0.0';
+import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.1.0';
 
 export const STEP = 1 / 120;
 export const PW = 0.36;                       // 玛丽半宽

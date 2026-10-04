@@ -1,5 +1,5 @@
 // 角色与道具的程序化低模：按原作造型与配色搭建（球体/方块/圆柱组合，不使用原作素材文件）。
-import * as THREE from './three.js?v=2.0.0';
+import * as THREE from './three.js?v=2.1.0';
 
 const sphere = new THREE.SphereGeometry(1, 18, 12);
 const halfSphere = new THREE.SphereGeometry(1, 18, 9, 0, Math.PI * 2, 0, Math.PI / 2);
