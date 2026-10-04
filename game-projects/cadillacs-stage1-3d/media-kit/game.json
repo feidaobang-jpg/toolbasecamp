@@ -1,0 +1,59 @@
+{
+  "game_id": "cadillacs-stage1-3d",
+  "name": {
+    "zh": "恐龙快打 · 第一关 3D 重置版",
+    "en": "Cadillacs and Dinosaurs · Stage 1 3D remake (fan-made)"
+  },
+  "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
+  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
+  "current_version": "v0.1.0",
+  "handoff": "releases/v0.1.0/handoff.json",
+  "launch": {
+    "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
+    "device_root": "D:/project/toolbasecamp",
+    "device_entry": "D:/project/toolbasecamp/public/html/game/cadillacs-stage1-3d/index.html",
+    "game_list": "D:/project/toolbasecamp/public/games.html（public/js/config.js 的游戏动作组，标题 tools.cadillacs3d）",
+    "site_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "source": "D:/project/toolbasecamp/game-projects/cadillacs-stage1-3d/src",
+    "build": "在 game-projects/cadillacs-stage1-3d 运行 npm i 后 node tools/build.mjs",
+    "serve": "在 game-projects/cadillacs-stage1-3d 运行 node qa/serve.mjs 8777，然后打开 http://127.0.0.1:8777/html/game/cadillacs-stage1-3d/index.html",
+    "url_params": {
+      "seed": "固定随机种子",
+      "test": "=1 时暴露自动化测试钩子 window.__CD_TEST__（玩家界面不暴露）",
+      "clean": "=1 时隐藏桌面键位提示，用于录制",
+      "q": "high / low：测试用强制画质",
+      "area": "0 / 1 / 2：测试用直接从某个区域开始"
+    }
+  },
+  "controls": {
+    "keyboard": {
+      "W/A/S/D（或方向键）": "移动（按相机水平轴映射；侧视下 W 走向纵深）",
+      "J（或空格）": "攻击：连打四下击倒；脚下有物品时捡起；拿武器时使用；冲刺中为冲刺攻击；空中为跳踢 / 飞踢；抓住后膝撞，第四下投摔；贴着油桶时举起 / 扔出",
+      "K": "跳跃",
+      "L（或 Shift / 双击方向）": "冲刺",
+      "J+K 同按 或 U": "必杀（命中扣少量体力）",
+      "C": "循环切换视角：侧视 → 斜视 → 正视 → 第一人称",
+      "Q / E": "按住左右转视角",
+      "Esc / Enter / P": "暂停；菜单里 Enter 确认",
+      "↑↓ / ←→": "菜单选择 / 调整选项；选人画面 ←→ 换英雄"
+    },
+    "touch": {
+      "左侧浮动摇杆": "移动（模拟量；连推两下 = 冲刺）",
+      "J": "攻击", "K": "跳跃", "L": "按住冲刺", "U": "必杀",
+      "C": "切换视角", "Q / E": "按住左 / 右转视角",
+      "右上角": "暂停"
+    }
+  },
+  "release_intent": "web_demo",
+  "verified_public_links": [],
+  "toy": null,
+  "toy_note": "新作品，尚无 B 站 Toy 映射；按授权规则不擅自新建 Toy",
+  "bilibili": "media-kit/bilibili-sync.json（暂无视频，待关联）",
+  "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一关；模型与贴图为程序化重新制作，音乐按原作风格重新编写（非转录），音效为合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
+  "dev": {
+    "model": "claude-opus-5-5（Claude Code 会话模型标识）",
+    "tools": ["Claude Code 桌面版（Windows 本机）", "Three.js r170", "esbuild 0.28.2", "Playwright + 系统 Edge（ANGLE D3D11，RTX 4060 Ti）", "yt-dlp / ffmpeg（参考录像截帧）", "Python Pillow"],
+    "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md"
+  },
+  "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git"
+}

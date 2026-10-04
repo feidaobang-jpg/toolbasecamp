@@ -1,0 +1,13 @@
+{
+  "name": "cadillacs-stage1-3d",
+  "private": true,
+  "version": "0.1.0",
+  "description": "恐龙快打（Cadillacs and Dinosaurs）第一关 3D 重置版：源码与构建",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "build:dev": "node tools/build.mjs --dev"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

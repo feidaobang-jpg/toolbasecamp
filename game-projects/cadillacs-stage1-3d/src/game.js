@@ -1,0 +1,1719 @@
+// 玩法核心：角色、连招、抓投、武器、敌人 AI、Boss 维斯·T 与岩跳龙、卷轴锁屏波次、计时、过场与结算。
+// 固定 60Hz 逻辑步长；坐标 x = 关卡前进方向，z = 纵深，y = 高度。
+import * as THREE from 'three';
+import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
+import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, ENTER_DX } from './level.js';
+import { buildHuman, buildRaptor, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
+import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
+import { propMesh } from './world.js';
+import A from './audio.js';
+import IN from './input.js';
+
+export const G = {
+  mode: 'title', t: 0, score: 0, hi: store.get('hi', 50000) | 0, lives: 0, settings: {}, hero: 0,
+  area: 0, focusX: 7, lockX: null, wave: 0, waveOn: false, timer: 120, timeScale: 1,
+  actors: [], items: [], props: [], projs: [], player: null, boss: null, raptor: null,
+  banner: null, toast: null, dialog: null, fade: 0, hurtFx: 0, flash: 0, go: 0,
+  events: [], kills: {}, stats: null, script: null, onEnd: null, cont: null, demoUsed: false, ended: false
+};
+let scene, world, fx, camCtl, nextId = 1, bannerId = 0, toastId = 0;
+const GRAV = 24;
+const DUR_MUL = { easy: 0.45, std: 0.7, classic: 1.0 };   // 耐久：敌人伤害倍率
+export const DUR_NAME = { easy: '宽松', std: '标准', classic: '经典' };
+
+function ev(type, data) { G.events.push(Object.assign({ t: +G.t.toFixed(2), type }, data || {})); if (G.events.length > 400) G.events.shift(); }
+function banner(text, sub, dur) { G.banner = { id: ++bannerId, text, sub, until: G.t + (dur || 2) }; }
+function toast(text) { G.toast = { id: ++toastId, text }; }
+function addScore(n, x, y, z, show) {
+  if (!n) return;
+  const before = G.score;
+  G.score += n;
+  if (show !== false && x !== undefined) fx.text(x, y, z, String(n), '#ffffff', 0.55);
+  // 原作：50 万、100 万分各奖一条命（经典命数时有效）
+  for (const th of [500000, 1000000]) if (before < th && G.score >= th && G.settings.lives === 'classic') { G.lives++; A.play('oneup'); toast('奖励一条命！'); }
+}
+
+// ---------- 招式表 ----------
+// hits：t0..t1 判定时间、reach 前方距离、r 判定半径、y0..y1 高度、dmg 伤害、kb 受击类型（hit 硬直 / down 击倒 / launch 挑飞）
+const H = (t0, t1, reach, r, y0, y1, dmg, kb, pts, sfx, big) => ({ t0, t1, reach, r, y0, y1, dmg, kb, pts, sfx, big });
+const MOVES = {
+  jab1: { clip: 'jab1', dur: 0.26, cancel: 0.12, lunge: 0.7, hits: [H(0.05, 0.12, 0.8, 0.5, 0.9, 1.75, 5, 'hit', 100, 'punch')] },
+  jab2: { clip: 'jab2', dur: 0.28, cancel: 0.13, lunge: 0.7, hits: [H(0.06, 0.13, 0.84, 0.5, 0.9, 1.75, 5, 'hit', 100, 'punch')] },
+  hook: { clip: 'hook', dur: 0.32, cancel: 0.16, lunge: 0.9, hits: [H(0.07, 0.16, 0.82, 0.58, 0.9, 1.85, 7, 'hit', 100, 'punch')] },
+  kickMid: { clip: 'kickMid', dur: 0.36, cancel: 0.19, lunge: 0.6, hits: [H(0.11, 0.2, 0.98, 0.5, 0.55, 1.45, 7, 'hit', 200, 'kick')] },
+  upper: { clip: 'upper', dur: 0.5, lunge: 1.1, hits: [H(0.13, 0.24, 0.8, 0.58, 0.7, 2.1, 12, 'launch', 200, 'punchHeavy', true)] },
+  kickHi: { clip: 'kickHi', dur: 0.5, lunge: 0.7, hits: [H(0.14, 0.25, 1.02, 0.55, 0.9, 2.0, 11, 'down', 200, 'kick', true)] },
+  kickSide: { clip: 'kickSide', dur: 0.48, lunge: 0.9, hits: [H(0.13, 0.24, 1.08, 0.55, 0.7, 1.7, 11, 'down', 200, 'kick', true)] },
+  // 冲刺攻击（各角色不同）
+  slide: { dash: true, dur: 0.62, speed: 7.5, decel: 9, hits: [H(0.04, 0.42, 0.7, 0.62, 0.0, 0.9, 12, 'down', 500, 'kick', true)], pose: 'slide' },
+  flyKick: { dash: true, dur: 0.62, speed: 7.2, decel: 3, air: 5.2, hits: [H(0.06, 0.26, 0.9, 0.62, 0.4, 1.7, 8, 'hit', 500, 'kick'), H(0.27, 0.5, 0.9, 0.62, 0.4, 1.7, 8, 'down', 500, 'kick', true)], pose: 'flyKick' },
+  kneeFly: { dash: true, dur: 0.56, speed: 6.8, decel: 4, air: 4.6, hits: [H(0.05, 0.4, 0.62, 0.6, 0.6, 1.8, 11, 'down', 500, 'kick', true)], pose: 'kneeFly' },
+  tackle: { dash: true, dur: 0.6, speed: 6.6, decel: 6, hits: [H(0.04, 0.42, 0.75, 0.66, 0.4, 1.9, 14, 'down', 500, 'punchHeavy', true)], pose: 'tackle' },
+  mega: { dur: 0.62, invul: true, hits: [H(0.1, 0.42, 0, 2.1, 0.0, 2.2, 18, 'down', 0, 'punchHeavy', true)] },
+  knee: { clip: 'knee', dur: 0.24, hits: [] },
+  // 武器
+  swing: { clip: 'swing', dur: 0.42, lunge: 0.4, hits: [H(0.13, 0.24, 1.15, 0.6, 0.6, 1.9, 12, 'down', 400, 'punchHeavy', true)] },
+  stab: { clip: 'jab2', dur: 0.3, lunge: 0.5, hits: [H(0.06, 0.14, 0.95, 0.5, 0.8, 1.7, 10, 'hit', 400, 'slash')] }
+};
+// 敌人招式：windup 前摇（摆出蓄力姿势），再播动作；判定时间为绝对时间
+const EM = {
+  punch: { clip: 'jab2', dur: 0.6, windup: 0.24, wind: 'guard2', hits: [H(0.29, 0.37, 0.95, 0.5, 0.9, 1.75, 1, 'hit', 0, 'punch')] },
+  punch2: { clip: 'jab1', dur: 0.42, windup: 0.08, hits: [H(0.13, 0.2, 0.95, 0.5, 0.9, 1.75, 1, 'hit', 0, 'punch')] },
+  kick: { clip: 'kickMid', dur: 0.66, windup: 0.26, wind: 'guard2', hits: [H(0.37, 0.46, 1.0, 0.5, 0.5, 1.4, 1.3, 'down', 0, 'kick')] },
+  slash: { clip: 'slash', dur: 0.85, windup: 0.3, wind: 'slash0', hits: [H(0.42, 0.54, 1.3, 0.62, 0.6, 1.9, 1, 'down', 0, 'slash')] },
+  eSwing: { clip: 'swing', dur: 0.8, windup: 0.3, wind: 'swing0', hits: [H(0.42, 0.54, 1.2, 0.6, 0.6, 1.9, 1.5, 'down', 0, 'punchHeavy')] },
+  fatPunch: { clip: 'hook', dur: 0.7, windup: 0.3, wind: 'guard2', hits: [H(0.37, 0.47, 1.05, 0.62, 0.8, 1.8, 1, 'hit', 0, 'punchHeavy')] },
+  vJab: { clip: 'jab1', dur: 0.3, windup: 0.06, hits: [H(0.1, 0.17, 1.0, 0.5, 0.9, 1.9, 1, 'hit', 0, 'punch')] },
+  vJab2: { clip: 'jab2', dur: 0.3, windup: 0.04, hits: [H(0.09, 0.16, 1.0, 0.5, 0.9, 1.9, 1, 'hit', 0, 'punch')] },
+  vLong: { clip: 'longPunch', dur: 0.85, windup: 0.12, hits: [H(0.46, 0.6, 1.95, 0.55, 0.9, 1.9, 1.75, 'down', 0, 'punchHeavy', true)] }
+};
+
+// ---------- 初始化 ----------
+export function init(sc, w, f, cam) { scene = sc; world = w; fx = f; camCtl = cam; }
+export const HERO_DATA = HEROES;
+export const player = () => G.player;
+
+function heroStats(h) {
+  return { walk: 2.65 + h.speed * 0.24, run: 4.9 + h.speed * 0.42, dmg: 0.7 + h.power * 0.12, rec: 1.12 - h.skill * 0.04 };
+}
+
+// ---------- 角色创建 ----------
+const blobGeo = new THREE.CircleGeometry(0.42, 20);
+const blobMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false });
+function makeActor(type, side, opts) {
+  const a = {
+    id: nextId++, type, side, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, face: FACE_LEFT, alive: true,
+    state: 'idle', st: 0, sub: {}, invul: 0, flash: 0, hitstop: 0, stun: 0, stunT: 0, removeMe: false,
+    pose: new Float32Array(POSE_LEN), walkPh: 0, move: null, weapon: null, grab: null, grabbedBy: null,
+    token: false, cd: rand() * 0.6, radius: 0.32, height: 1.8, lastHitBy: null
+  };
+  Object.assign(a, opts || {});
+  if (type === 'raptor') {
+    a.model = buildRaptor(); a.isRaptor = true; a.pose = new Float32Array(R_LEN); a.pose.set(RPOSE.idle); a.radius = 0.5; a.height = 1.5;
+  } else {
+    a.model = buildHuman(SPECS[type]); a.pose.set(HP.guard); a.height = a.model.H * 0.95;
+    if (SPECS[type] && SPECS[type].build === 'fat') a.radius = 0.45;
+    if (type === 'vice' || type === 'mess') a.radius = 0.4;
+  }
+  a.blob = new THREE.Mesh(blobGeo, blobMat); a.blob.rotation.x = -Math.PI / 2; a.blob.renderOrder = 1;
+  a.blob.scale.setScalar(a.radius / 0.32 * 0.85);
+  scene.add(a.model.root, a.blob);
+  G.actors.push(a);
+  return a;
+}
+function removeActor(a) {
+  scene.remove(a.model.root, a.blob);
+  a.model.root.traverse(o => { if (o.isMesh && o.material && o.material.dispose && o.material !== blobMat && !o.userData.outline) { /* 材质按角色独立，几何共享不释放 */ } });
+  if (a.model.mat) a.model.mat.dispose();
+  a.removed = true;
+}
+function spawnEnemy(type, x, z, opts) {
+  const def = ENEMY[type];
+  const e = makeActor(type, 'enemy', { def, x, z, hp: def.hp, maxHp: def.hp, face: x > G.player.x ? FACE_LEFT : FACE_RIGHT });
+  Object.assign(e, opts || {});
+  if (def.knife) e.weapon = { kind: 'knife', ammo: 1 };
+  if (opts && opts.weapon) e.weapon = { kind: opts.weapon, ammo: 99 };
+  if (e.weapon) attachWeapon(e);
+  ev('spawn', { enemy: type, id: e.id, x: +x.toFixed(1), z: +z.toFixed(1) });
+  return e;
+}
+function attachWeapon(a) {
+  const g = a.model.bones.grip;
+  if (a.wmesh) { g.remove(a.wmesh); a.wmesh = null; }
+  if (!a.weapon) return;
+  const k = a.weapon.kind;
+  const m = meshFrom(itemGeo(k), { thin: true, shadow: false });
+  if (k === 'gun') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.04); }
+  else if (k === 'shotgun') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, 0.05, 0.05); }
+  else if (k === 'pipe' || k === 'knife') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.0); }
+  else { m.position.set(0, -0.04, 0.03); }
+  g.add(m); a.wmesh = m;
+}
+
+// ---------- 新游戏 / 区域 ----------
+export function newGame(opts) {
+  reseed(opts.seed !== undefined ? opts.seed : (seed + Date.now()) >>> 0);
+  clearAll();
+  G.settings = { lives: opts.lives || 'inf', dur: opts.dur || 'std', demo: !!opts.demo, hero: opts.hero || 0 };
+  G.hero = G.settings.hero;
+  G.score = 0; G.lives = G.settings.lives === 'inf' ? Infinity : 3; G.demoUsed = !!opts.demo; G.ended = false;
+  G.kills = {}; G.stats = { hits: 0, deaths: 0, food: 0, t0: 0, contCount: 0, maxCombo: 0, damage: 0 };
+  G.events = []; G.t = 0; G.frames = 0; G.timeScale = 1; G.cont = null; G.vitality = 0; G.lastTarget = null;
+  const h = HEROES[G.hero];
+  const p = makeActor(h.id, 'player', { hero: h, stats: heroStats(h), hp: 100, maxHp: 100, face: FACE_RIGHT, comboN: 0, lastHitT: -9, radius: 0.34 });
+  G.player = p;
+  loadArea(opts.area || 0, true);
+  ev('start', { hero: h.id, lives: G.settings.lives, dur: G.settings.dur });
+}
+function clearAll() {
+  for (const a of G.actors) if (!a.removed) removeActor(a);
+  G.actors = []; G.player = null; G.boss = null; G.raptor = null;
+  for (const it of G.items) scene.remove(it.mesh);
+  for (const p of G.props) if (p.mesh) scene.remove(p.mesh);
+  for (const pr of G.projs) scene.remove(pr.mesh);
+  G.items = []; G.props = []; G.projs = []; G.script = null; G.dialog = null; G.banner = null; G.go = 0; G.fade = 0;
+  if (G.chain) { scene.remove(G.chain); G.chain = null; }
+  if (fx) fx.clear();
+}
+function loadArea(i, first) {
+  // 清掉上一区域的敌人与物品，保留玩家
+  for (const a of G.actors) if (a !== G.player && !a.removed) removeActor(a);
+  G.actors = G.player ? [G.player] : [];
+  for (const it of G.items) scene.remove(it.mesh);
+  for (const p of G.props) if (p.mesh) scene.remove(p.mesh);
+  for (const pr of G.projs) scene.remove(pr.mesh);
+  G.items = []; G.props = []; G.projs = []; G.boss = null; G.raptor = null;
+  if (G.player && G.player.carryMesh) { scene.remove(G.player.carryMesh); G.player.carryMesh = null; G.player.carryItem = null; }
+  G.area = i; const AR = AREAS[i];
+  world.setArea(i);
+  G.focusX = AR.x0 + HALF_W; G.lockX = null; G.wave = 0; G.waveOn = false; G.pending = []; G.waveEnemies = [];
+  G.timer = AR.timer; G.timerShow = 2.5; G.go = 0;
+  const p = G.player;
+  p.x = AR.start.x; p.z = AR.start.z; p.y = 0; p.vx = p.vy = p.vz = 0; p.face = FACE_RIGHT; setState(p, 'idle');
+  for (const pd of AR.props) {
+    const pr = { kind: pd.kind, x: pd.x, z: pd.z, item: pd.item, points: pd.points || (pd.kind === 'statue' ? 1000 : 0), hp: pd.kind === 'statue' ? 4 : pd.kind === 'pipes' ? 2 : 3, r: pd.kind === 'statue' ? 0.45 : pd.kind === 'pipes' ? 0.5 : 0.36, mesh: propMesh(pd.kind), shake: 0, broken: false };
+    pr.mesh.position.set(pd.x, 0, pd.z);
+    if (pd.kind === 'statue') pr.mesh.rotation.y = 0;
+    scene.add(pr.mesh); G.props.push(pr);
+  }
+  const W0 = world.area();
+  if (W0.doors) W0.doors.forEach(d => { d.open = false; d.k = 0; });
+  if (W0.hutDoor) { W0.hutDoor.rotation.set(0, 0, 0); W0.hutDoor.position.set(44.98, 0, -0.68); }
+  if (W0.window) { W0.window.glass.visible = true; W0.window.frame.visible = true; }
+  if (W0.facadePlanks) W0.facadePlanks.forEach((pk, k) => { pk.visible = true; pk.position.set(-0.96 + k * 0.48, 0, 0); pk.rotation.set(0, 0, 0); });
+  if (i === 0 && first) banner('第一关 · 海上都市', 'EPISODE 1 · CITY IN THE SEA', 2.6);
+  else banner(AR.name, AR.title, 2.2);
+  ev('area', { area: AR.id });
+  if (i === 0) {
+    // 楼顶开场：维斯带着四个手下
+    const v = makeActor('vice', 'enemy', { def: ENEMY.vice, x: 12.9, z: 0.5, hp: 400, maxHp: 400, face: FACE_LEFT, cine: true });
+    setState(v, 'cut'); v.sub.pose = 'crossArms';
+    G.introVice = v;
+    G.mode = 'cut';
+    triggerWave(0);
+    runScript([
+      { wait: 0.6 },
+      { say: 'vice', text: '你们老是来碍事，我们受够了！', dur: 2.6 },
+      { say: 'vice', text: '小的们，给他们点教训！', dur: 2.2 },
+      { fn: () => { v.sub.pose = 'gunUp'; A.play('gun'); fx.muzzle(v.x, 3.6, v.z); } },
+      { wait: 0.5 },
+      { fn: () => { setState(v, 'leave'); v.vy = 9; v.vx = 3.5; v.vz = -2.6; A.play('jump'); } },
+      { wait: 0.9 },
+      { fn: () => { if (!v.removed) removeActor(v); G.actors = G.actors.filter(a => a !== v); G.introVice = null; for (const e of G.waveEnemies) if (e.state === 'cut') setState(e, 'idle'); G.mode = 'play'; A.music('stage'); } }
+    ]);
+  } else {
+    G.mode = 'play';
+    A.music('stage');
+    if (i === 2) { p.y = 1.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 2; }
+  }
+}
+
+// ---------- 状态 ----------
+function setState(a, s, data) {
+  a.state = s; a.st = 0; a.sub = data || {};
+  if (s !== 'attack') a.move = null;
+}
+function startMove(a, id, move) {
+  const m = move || MOVES[id] || EM[id];
+  a.move = { id, def: m, t: 0, hit: new Set(), connected: false, next: null };
+  a.state = 'attack'; a.st = 0;
+  if (m.dash) { a.vx = Math.sin(a.face) * m.speed; a.vz = Math.cos(a.face) * m.speed; if (m.air) { a.vy = m.air; a.y = Math.max(a.y, 0.01); } }
+  if (m.invul) a.invul = Math.max(a.invul, m.dur);
+}
+
+// ---------- 主更新 ----------
+export function update() {
+  const dt = STEP * G.timeScale;
+  G.t += dt; G.frames = (G.frames || 0) + 1;
+  if (G.mode === 'title') return;
+  if (G.banner && G.t > G.banner.until) G.banner = null;
+  if (G.script) stepScript(dt);
+  if (G.mode === 'cont') { updateContinue(dt); return; }
+  // 玩家输入
+  const p = G.player;
+  if (G.mode === 'play') handleInput(p, dt);
+  else IN.flush();
+  // 角色
+  for (const a of G.actors) {
+    if (a.removed) continue;
+    if (a.hitstop > 0) { a.hitstop -= dt; if (a.flash > 0) a.flash -= dt * 0.5; continue; }
+    a.st += dt;
+    if (a.invul > 0) a.invul -= dt;
+    if (a.flash > 0) a.flash -= dt;
+    if (a.stunT > 0) { a.stunT -= dt; if (a.stunT <= 0) a.stun = 0; }
+    if (a === p) updatePlayer(a, dt);
+    else if (a.isRaptor) updateRaptor(a, dt);
+    else if (a.type === 'vice') updateVice(a, dt);
+    else updateEnemy(a, dt);
+    physics(a, dt);
+  }
+
+  separate();
+  updateProjectiles(dt);
+  updateItems(dt);
+  updateProps(dt);
+  G.actors = G.actors.filter(a => !a.removed);
+  if (G.mode === 'play' || G.mode === 'cut') updateWaves(dt);
+  updateCameraFocus(dt);
+  if (G.mode === 'play') updateTimer(dt);
+  if (G.hurtFx > 0) G.hurtFx = Math.max(0, G.hurtFx - dt * 2.2);
+  if (G.go > 0) G.go -= dt;
+  if (G.flash > 0) G.flash = Math.max(0, G.flash - dt * 3);
+  if (G.timerShow > 0) G.timerShow -= dt;
+}
+
+// ---------- 玩家输入 ----------
+function moveVec() {
+  const m = IN.move();
+  if (!m.x && !m.y) return { x: 0, z: 0, len: 0, sx: 0, sy: 0 };
+  const ax = camCtl.axes();
+  let x = ax.right.x * m.x + ax.fwd.x * m.y, z = ax.right.z * m.x + ax.fwd.z * m.y;
+  const len = Math.min(1, Math.hypot(m.x, m.y));
+  const l = Math.hypot(x, z) || 1;
+  return { x: x / l * len, z: z / l * len, len, sx: m.x, sy: m.y };
+}
+function laneMode() { const pr = camCtl.preset(); return (pr.id === 'side' || pr.id === 'oblique') && Math.abs(camCtl.yawOff) < 0.7; }
+let lastJumpT = -9, lastAtkT = -9;
+function handleInput(p, dt) {
+  const canAct = ['idle', 'walk', 'run'].indexOf(p.state) >= 0;
+  // 必杀：J+K 同时按（或 U）
+  const atkE = IN.take('atk'), jumpE = IN.take('jump'), megaE = IN.take('mega'), dashE = IN.take('dash');
+  if (atkE) lastAtkT = G.t;
+  if (jumpE) lastJumpT = G.t;
+  const megaNow = megaE || (atkE && jumpE) || (atkE && G.t - lastJumpT < 0.09 && p.state === 'jump' && p.st < 0.1) || (jumpE && G.t - lastAtkT < 0.09 && p.state === 'attack' && p.st < 0.1 && p.move && !p.move.def.dash);
+  if (megaNow && (canAct || p.state === 'attack' || (p.state === 'jump' && p.st < 0.12) || p.state === 'grab' || p.state === 'hurt')) {
+    if (p.grab) releaseGrab(p);
+    p.y = 0; p.vy = 0; p.vx = p.vz = 0;
+    startMove(p, 'mega');
+    A.play('mega'); fx.ring(p.x, 0.15, p.z);
+    ev('mega');
+    return;
+  }
+  if (dashE && canAct) { const mv = moveVec(); setState(p, 'run', { dirX: mv.len ? mv.x : Math.sin(p.face), dirZ: mv.len ? mv.z : Math.cos(p.face), tap: true }); }
+  if (jumpE) {
+    if (canAct) {
+      const mv = moveVec(), spd = p.state === 'run' ? p.stats.run : p.stats.walk * 0.95;
+      p.vx = mv.x * spd; p.vz = mv.z * spd; p.vy = p.state === 'run' ? 7.4 : 7.8; p.y = 0.01;
+      setState(p, 'jump', { run: p.state === 'run' }); A.play('jump');
+    } else if (p.state === 'grab') { releaseGrab(p); }
+  }
+  if (atkE) playerAttack(p);
+}
+function playerAttack(p) {
+  const s = p.state;
+  if (s === 'run') { if (p.weapon && ['dynamite', 'grenade', 'knife'].indexOf(p.weapon.kind) >= 0) return useWeapon(p); return startMove(p, p.hero.dash); }
+  if (s === 'jump') {
+    if (p.sub.atk || p.sub.noAtk) return;
+    p.sub.atk = true; p.sub.atkT = p.st;
+    p.sub.fly = Math.hypot(p.vx, p.vz) > 1.6;
+    A.play('whoosh');
+    return;
+  }
+  if (s === 'grab') return grabStrike(p);
+  if (s === 'carry') return throwDrum(p);
+  if (s === 'attack' && p.move && !p.move.def.dash && p.move.id !== 'mega') {
+    // 连招缓冲：本招打中后可接下一招
+    p.move.next = true; return;
+  }
+  if (['idle', 'walk'].indexOf(s) < 0) return;
+  // 脚下有东西且面前没有敌人 → 捡起
+  const it = itemUnder(p);
+  if (it && !enemyInFront(p, 0.95)) return pickUp(p, it);
+  if (p.weapon) return useWeapon(p);
+  // 原作可以把油桶举起来扔：面前贴着油桶、身前没有敌人时举桶
+  const drum = drumInFront(p);
+  if (drum && !enemyInFront(p, 1.0)) return liftDrum(p, drum);
+  autoAim(p);
+  const combo = p.hero.combo;
+  const chain = G.t - p.lastHitT < 0.6 && p.comboN < combo.length - 1;
+  p.comboN = chain ? p.comboN + 1 : 0;
+  startMove(p, combo[p.comboN]);
+  A.play('whoosh', 0.6);
+}
+function autoAim(p) {
+  // 自由视角（正视 / 第一人称 / 转过的镜头）下给出软锁定：转向身前最近的敌人；侧视保持原作的左右朝向
+  if (laneMode()) return;
+  let best = null, bd = 2.3;
+  for (const e of G.actors) {
+    if (e.side === 'player' || !hittable(e)) continue;
+    const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz);
+    if (d < bd && Math.abs(angDiff(p.face, faceOf(dx, dz))) < 1.35) { bd = d; best = e; }
+  }
+  if (best) p.face = faceOf(best.x - p.x, best.z - p.z);
+}
+function enemyInFront(p, dist) {
+  for (const e of G.actors) {
+    if (e.side === 'player' || !hittable(e)) continue;
+    const dx = e.x - p.x, dz = e.z - p.z;
+    if (Math.hypot(dx, dz) < dist && (dx * Math.sin(p.face) + dz * Math.cos(p.face)) > 0) return e;
+  }
+  return null;
+}
+function hittable(e) { return e.alive && !e.removed && ['down', 'dead', 'getup', 'enter', 'cut', 'leave', 'flee'].indexOf(e.state) < 0 && !(e.state === 'grabbed' && false); }
+
+// ---------- 玩家更新 ----------
+function updatePlayer(p, dt) {
+  const st = p.stats;
+  const fp = camCtl.fp();
+  switch (p.state) {
+    case 'idle': case 'walk': {
+      const mv = G.mode === 'play' ? moveVec() : { x: 0, z: 0, len: 0 };
+      if (G.mode === 'play' && IN.down('run') && mv.len > 0.2) { setState(p, 'run', { dirX: mv.x, dirZ: mv.z }); break; }
+      if (mv.len > 0.05) {
+        p.vx = mv.x * st.walk; p.vz = mv.z * st.walk;
+        faceMove(p, mv, dt);
+        if (p.state !== 'walk') setState(p, 'walk');
+        // 走进敌人 = 抓住
+        tryGrab(p, mv);
+      } else {
+        p.vx = p.vz = 0;
+        if (p.state !== 'idle') setState(p, 'idle');
+        if (fp) p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 12);
+      }
+      break;
+    }
+    case 'run': {
+      const mv = G.mode === 'play' ? moveVec() : { x: 0, z: 0, len: 0 };
+      const hold = IN.down('run') || (p.sub.tap && mv.len > 0.3);
+      if (!hold || G.mode !== 'play') { setState(p, mv.len > 0.05 ? 'walk' : 'idle'); p.vx *= 0.5; p.vz *= 0.5; break; }
+      let dx = mv.len > 0.2 ? mv.x : p.sub.dirX, dz = mv.len > 0.2 ? mv.z : p.sub.dirZ;
+      const l = Math.hypot(dx, dz) || 1; dx /= l; dz /= l;
+      p.sub.dirX = dx; p.sub.dirZ = dz;
+      p.vx = dx * st.run; p.vz = dz * st.run;
+      faceMove(p, { x: dx, z: dz, len: 1 }, dt);
+      if (Math.floor(p.st * 6) !== Math.floor((p.st - dt) * 6)) fx.dust(p.x, 0, p.z, 1, 0.22);
+      break;
+    }
+    case 'jump': {
+      // 空中可微调
+      const mv = G.mode === 'play' ? moveVec() : { x: 0, z: 0, len: 0 };
+      p.vx += mv.x * dt * 3; p.vz += mv.z * dt * 3;
+      if (p.sub.atk) {
+        const t = p.st - p.sub.atkT;
+        if (t > 0.05 && t < 0.55 && !p.sub.hitDone) {
+          const fly = p.sub.fly || p.hero.id === 'mustapha';
+          const h = fly ? H(0, 9, 0.95, 0.62, 0.0, 1.5, 12, 'down', 200, 'kick', true) : H(0, 9, 0.78, 0.58, 0.0, 1.4, 10, 'down', 200, 'kick', true);
+          const hit = tryHit(p, h, true);
+          if (hit) p.sub.hitDone = true;
+        }
+      }
+      break;
+    }
+    case 'attack': updateMove(p, dt); break;
+    case 'grab': {
+      const e = p.grab;
+      if (!e || e.state !== 'grabbed' || e.removed) { releaseGrab(p); setState(p, 'idle'); break; }
+      p.vx = p.vz = 0;
+      const dx = Math.sin(p.face), dz = Math.cos(p.face);
+      e.x = p.x + dx * 0.66; e.z = p.z + dz * 0.66; e.face = p.face + Math.PI;
+      if (p.st > (e.type === 'vice' ? 0.7 : 1.5)) { breakFree(p, e); }
+      if (p.sub.anim && p.st - p.sub.animT > p.sub.animDur) p.sub.anim = null;
+      break;
+    }
+    case 'throwing': {
+      p.vx = p.vz = 0;
+      if (p.st > p.sub.dur) setState(p, 'idle');
+      break;
+    }
+    case 'hurt': p.vx *= 0.85; p.vz *= 0.85; if (p.st > 0.36) setState(p, 'idle'); break;
+    case 'down': updateDown(p, dt); break;
+    case 'getup': p.vx = p.vz = 0; if (p.st > 0.5) { setState(p, 'idle'); p.invul = Math.max(p.invul, 0.6); } break;
+    case 'pickup': p.vx = p.vz = 0; if (p.st > 0.3) setState(p, 'idle'); break;
+    case 'carry': {
+      const mv = G.mode === 'play' ? moveVec() : { x: 0, z: 0, len: 0 };
+      const k = { mess: 0.85, hannah: 0.45 }[p.hero.id] || 0.6;
+      p.vx = mv.x * st.walk * k; p.vz = mv.z * st.walk * k;
+      if (mv.len > 0.05) faceMove(p, mv, dt);
+      if (p.carryMesh) { p.carryMesh.position.set(p.x, p.y + p.model.H + 0.12, p.z); p.carryMesh.rotation.y = p.face; }
+      break;
+    }
+    case 'shoot': p.vx = p.vz = 0; if (p.st > p.sub.dur) setState(p, 'idle'); break;
+    case 'dead': p.vx = p.vz = 0; updatePlayerDead(p, dt); break;
+    case 'respawn': {
+      if (p.y <= 0.001 && p.st > 0.2) { setState(p, 'idle'); fx.ring(p.x, 0.2, p.z); fx.dust(p.x, 0, p.z, 8, 0.5); A.play('slam'); shockwave(p); }
+      break;
+    }
+    case 'cutwalk': {
+      const tx = p.sub.x, tz = p.sub.z;
+      const dx = tx - p.x, dz = tz - p.z, d = Math.hypot(dx, dz);
+      if (d < 0.08) { p.vx = p.vz = 0; setState(p, 'idle'); if (p.sub.face !== undefined) p.face = p.sub.face; }
+      else { p.vx = dx / d * p.stats.walk; p.vz = dz / d * p.stats.walk; p.face = approachAng(p.face, faceOf(dx, dz), dt * 12); }
+      break;
+    }
+    case 'victory': p.vx = p.vz = 0; break;
+    case 'door': p.vx = p.vz = 0; break;
+  }
+  if (G.settings.demo) p.invul = Math.max(p.invul, 0.05);
+}
+function faceMove(p, mv, dt) {
+  if (camCtl.fp()) { p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 14); return; }
+  if (laneMode()) {
+    if (Math.abs(mv.x) > 0.3) p.face = mv.x > 0 ? FACE_RIGHT : FACE_LEFT;
+  } else p.face = approachAng(p.face, faceOf(mv.x, mv.z), dt * 16);
+}
+function updateMove(a, dt) {
+  const m = a.move, d = m.def;
+  m.t += dt;
+  const recMul = a.stats ? a.stats.rec : 1;
+  // 前冲
+  if (d.dash) {
+    const sp = Math.max(0, Math.hypot(a.vx, a.vz) - d.decel * dt);
+    a.vx = Math.sin(a.face) * sp; a.vz = Math.cos(a.face) * sp;
+  } else if (d.lunge && m.t < 0.12) { a.vx = Math.sin(a.face) * d.lunge; a.vz = Math.cos(a.face) * d.lunge; }
+  else { a.vx *= 0.7; a.vz *= 0.7; }
+  // 判定
+  for (let i = 0; i < d.hits.length; i++) {
+    const h = d.hits[i];
+    if (m.t >= h.t0 && m.t <= h.t1) {
+      const hh = a.side === 'enemy' ? Object.assign({}, h, { dmg: h.dmg * (a.def ? a.def.dmg : 6), reach: h.reach * (a.reachMul || 1) }) : Object.assign({}, h, { dmg: h.dmg * (a.stats ? a.stats.dmg : 1) });
+      if (m.id === 'mega') megaHits(a, hh, m);
+      else if (tryHit(a, hh, false, m, i)) m.connected = true;
+    }
+  }
+  if (m.id === 'mega' && m.t > 0.5 && m.megaHit && !m.paid) { m.paid = true; if (!G.settings.demo) a.hp = Math.max(1, a.hp - 6); }
+  // 连招：打中且按了攻击 → 提前接下一招
+  const cancelT = d.cancel !== undefined ? d.cancel * recMul : 9;
+  if (a === G.player && m.next && m.connected && m.t >= cancelT) {
+    a.lastHitT = G.t;
+    const combo = a.hero.combo;
+    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); A.play('whoosh', 0.6); return; }
+  }
+  if (m.connected && a === G.player) a.lastHitT = G.t;
+  if (m.t >= d.dur * (d.dash ? 1 : recMul)) {
+    if (d.air && a.y > 0.02) return;   // 空中招式等落地
+    setState(a, 'idle');
+    if (d.dash) { a.vx *= 0.2; a.vz *= 0.2; }
+  }
+}
+function megaHits(a, h, m) {
+  for (const e of G.actors) {
+    if (e === a || e.side === a.side || !hittable(e) || m.hit.has(e.id)) continue;
+    const d = Math.hypot(e.x - a.x, e.z - a.z);
+    if (d < h.r + e.radius && e.y < 2) { m.hit.add(e.id); m.megaHit = true; applyHit(a, e, h, faceOf(e.x - a.x, e.z - a.z)); }
+  }
+  for (const pr of G.props) if (!pr.broken && Math.hypot(pr.x - a.x, pr.z - a.z) < h.r + pr.r && !m.hit.has('p' + pr.x)) { m.hit.add('p' + pr.x); hitProp(pr, 2); }
+}
+
+// ---------- 抓投 ----------
+function tryGrab(p, mv) {
+  if (p.weapon && (p.weapon.kind === 'gun' || p.weapon.kind === 'shotgun')) return;
+  for (const e of G.actors) {
+    if (e.side === 'player' || e.isRaptor || !hittable(e) || e.y > 0.1) continue;
+    if (['idle', 'walk', 'hurt', 'hover'].indexOf(e.state) < 0) continue;
+    const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz);
+    if (d > 0.8 || d < 0.01) continue;
+    if ((dx * mv.x + dz * mv.z) / d < 0.6) continue;
+    if (laneMode() && Math.abs(dz) > 0.38) continue;
+    p.sub.grabT = (p.sub.grabT || 0) + STEP;
+    if (p.sub.grabT < 0.1) return;
+    p.face = laneMode() ? (dx > 0 ? FACE_RIGHT : FACE_LEFT) : faceOf(dx, dz);
+    setState(p, 'grab', { strikes: 0 });
+    p.grab = e; e.grabbedBy = p;
+    releaseToken(e);
+    setState(e, 'grabbed');
+    A.play('blip');
+    ev('grab', { id: e.id, enemy: e.type });
+    return;
+  }
+  p.sub.grabT = 0;
+}
+function grabStrike(p) {
+  const e = p.grab;
+  if (!e) return;
+  const mv = moveVec();
+  const away = mv.len > 0.4 && (mv.x * Math.sin(p.face) + mv.z * Math.cos(p.face)) < -0.4;
+  if (away || p.sub.strikes >= 3) return throwEnemy(p, e, away);
+  p.sub.strikes++;
+  p.sub.anim = 'knee'; p.sub.animT = p.st; p.sub.animDur = 0.24;
+  const dmg = (p.hero.id === 'mess' ? 8 : 6) * p.stats.dmg;
+  damage(p, e, dmg, 'hit', faceOf(e.x - p.x, e.z - p.z), 100, false);
+  e.state = 'grabbed'; e.st = 0;
+  fx.hit(e.x, 1.1, e.z, false); A.play('punch');
+  p.st = Math.min(p.st, 0.4);
+}
+function throwEnemy(p, e, back) {
+  releaseGrab(p, true);
+  const slam = p.hero.id === 'mess' && !back;
+  setState(p, 'throwing', { dur: slam ? 0.6 : 0.5, clip: slam ? 'slam' : 'throw' });
+  const dir = back ? p.face + Math.PI : p.face;
+  const dmg = (slam ? 22 : 16) * p.stats.dmg;
+  e.hp -= G.settings.demo && e.side === 'player' ? 0 : dmg;
+  addScore(400, e.x, 2, e.z, false);
+  e.lastHitBy = p;
+  if (slam) {
+    // 梅斯：原地抱摔
+    setState(e, 'down', { phase: 'air', thrown: true, bounce: 1 });
+    e.x = p.x + Math.sin(p.face) * 0.5; e.z = p.z + Math.cos(p.face) * 0.5;
+    e.y = 1.8; e.vy = -4; e.vx = Math.sin(p.face) * 1.0; e.vz = Math.cos(p.face) * 1.0;
+    A.play('slam');
+  } else {
+    setState(e, 'down', { phase: 'air', thrown: true });
+    e.y = 1.2; e.vy = 5.5; e.vx = Math.sin(dir) * 6.2; e.vz = Math.cos(dir) * 6.2;
+    e.face = dir + Math.PI;
+    A.play('whoosh');
+  }
+  ev('throw', { id: e.id, back: !!back, slam });
+}
+function releaseGrab(p, keep) {
+  const e = p.grab;
+  p.grab = null;
+  if (e) { e.grabbedBy = null; if (!keep && e.state === 'grabbed') setState(e, 'idle'); }
+  if (p.state === 'grab') setState(p, 'idle');
+}
+function breakFree(p, e) {
+  releaseGrab(p);
+  const dx = Math.sin(p.face), dz = Math.cos(p.face);
+  p.vx = -dx * 3; p.vz = -dz * 3; e.vx = dx * 3; e.vz = dz * 3;
+  setState(p, 'hurt'); setState(e, 'idle'); e.cd = 0.4;
+}
+
+// ---------- 油桶：举起与投掷 ----------
+function drumInFront(p) {
+  let best = null, bd = 1.0;
+  for (const pr of G.props) {
+    if (pr.broken || pr.kind !== 'drum') continue;
+    const dx = pr.x - p.x, dz = pr.z - p.z, d = Math.hypot(dx, dz);
+    if (d < bd && (dx * Math.sin(p.face) + dz * Math.cos(p.face)) > 0.1) { bd = d; best = pr; }
+  }
+  return best;
+}
+function liftDrum(p, pr) {
+  pr.broken = true;
+  G.props = G.props.filter(x => x !== pr);
+  p.carryMesh = pr.mesh; p.carryItem = pr.item;
+  setState(p, 'carry');
+  A.play('metal', 0.6);
+  ev('lift');
+}
+function dropCarry(p, thrown) {
+  const m = p.carryMesh;
+  if (!m) return;
+  p.carryMesh = null;
+  if (!thrown) {
+    // 被打中时油桶掉地上摔破
+    scene.remove(m);
+    fx.debris(p.x, 1.2, p.z, '#c8662c', 10, 0.14, 3); A.play('metal');
+    if (p.carryItem) spawnItem(p.carryItem, p.x, p.z, { pop: true, life: ITEMS[p.carryItem].weapon ? 14 : 0 });
+    p.carryItem = null;
+  }
+}
+function throwDrum(p) {
+  const m = p.carryMesh;
+  if (!m) { setState(p, 'idle'); return; }
+  p.carryMesh = null;
+  autoAim(p);
+  const f = { x: Math.sin(p.face), z: Math.cos(p.face) };
+  const pr = { kind: 'drum', owner: p, side: 'player', x: p.x + f.x * 0.4, y: p.model.H, z: p.z + f.z * 0.4, vx: f.x * 7.5, vz: f.z * 7.5, vy: 2.2, t: 0, mesh: m, dmg: 30, face: p.face, hits: new Set(), item: p.carryItem };
+  p.carryItem = null;
+  G.projs.push(pr);
+  setState(p, 'throwing', { dur: 0.4, clip: 'throwItem' });
+  A.play('whoosh');
+  ev('drumThrow');
+}
+
+// ---------- 物品 / 武器 ----------
+function itemUnder(p) {
+  let best = null, bd = 0.75;
+  for (const it of G.items) { if (it.y > 0.3) continue; const d = Math.hypot(it.x - p.x, it.z - p.z); if (d < bd) { bd = d; best = it; } }
+  return best;
+}
+function pickUp(p, it) {
+  const def = ITEMS[it.kind];
+  setState(p, 'pickup');
+  removeItem(it);
+  if (def.food) {
+    if (p.hp < p.maxHp) { const heal = Math.round(p.maxHp * def.heal / 100); p.hp = Math.min(p.maxHp, p.hp + heal); fx.text(p.x, 2.3, p.z, '+' + def.cn, '#8dff7a', 0.6); }
+    else addScore(def.points, p.x, 2.2, p.z);
+    A.play('eat'); G.stats.food++;
+    ev('eat', { kind: it.kind, hp: p.hp });
+  } else if (def.weapon) {
+    if (p.weapon) dropWeapon(p);
+    p.weapon = { kind: it.kind, ammo: it.ammo !== undefined ? it.ammo : def.ammo };
+    attachWeapon(p);
+    A.play('pickup'); toast(def.cn + (def.ammo > 1 ? ' × ' + p.weapon.ammo : ''));
+    ev('weapon', { kind: it.kind });
+  } else {
+    addScore(def.points, p.x, 2.2, p.z); A.play('coin');
+    ev('treasure', { kind: it.kind });
+  }
+}
+function dropWeapon(a) {
+  if (!a.weapon) return;
+  if (a.weapon.ammo > 0 && ['gun', 'shotgun', 'pipe', 'knife', 'dynamite', 'grenade'].indexOf(a.weapon.kind) >= 0) spawnItem(a.weapon.kind, a.x, a.z, { ammo: a.weapon.ammo, pop: true, life: 10 });
+  a.weapon = null; attachWeapon(a);
+}
+function useWeapon(p) {
+  const w = p.weapon, k = w.kind;
+  autoAim(p);
+  const fwd = { x: Math.sin(p.face), z: Math.cos(p.face) };
+  if (k === 'gun' || k === 'shotgun') {
+    if (w.ammo <= 0) { throwProj(p, k, { dmg: 8, dizzy: true }); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); return; }
+    w.ammo--;
+    const sg = k === 'shotgun';
+    setState(p, 'shoot', { dur: sg ? 0.55 : 0.3, clip: sg ? 'shotgun' : 'shoot' });
+    const mx = p.x + fwd.x * 0.9, mz = p.z + fwd.z * 0.9;
+    fx.muzzle(mx, 1.35, mz); A.play(sg ? 'shotgun' : 'gun');
+    if (sg) fx.shake = Math.max(fx.shake, 0.12);
+    let firstD = sg ? 5.6 : 12, hitAny = false;
+    const cands = G.actors.filter(e => e.side !== 'player' && hittable(e)).map(e => {
+      const dx = e.x - p.x, dz = e.z - p.z, along = dx * fwd.x + dz * fwd.z, perp = Math.abs(dx * fwd.z - dz * fwd.x);
+      return { e, along, perp };
+    }).filter(o => o.along > 0.2 && o.along < firstD && o.perp < (sg ? 0.55 + o.along * 0.18 : 0.5)).sort((a, b) => a.along - b.along);
+    for (const o of cands) {
+      const dmg = sg ? Math.max(14, 36 - o.along * 3.5) : 16;
+      const kb = sg ? 'down' : (o.e.stun >= 2 ? 'down' : 'hit');
+      applyHit(p, o.e, H(0, 0, 0, 0, 0, 2, dmg * p.stats.dmg, kb, 400, sg ? 'punchHeavy' : 'punch', sg), p.face);
+      hitAny = true;
+      if (!sg) break;
+    }
+    for (const pr of G.props) { if (pr.broken) continue; const dx = pr.x - p.x, dz = pr.z - p.z, along = dx * fwd.x + dz * fwd.z, perp = Math.abs(dx * fwd.z - dz * fwd.x); if (along > 0 && along < firstD && perp < 0.6) { hitProp(pr, sg ? 3 : 1); if (!sg) break; } }
+    ev('shoot', { kind: k, ammo: w.ammo, hit: hitAny });
+    if (w.ammo <= 0) toast('子弹打光了，再按攻击把枪扔出去');
+    return;
+  }
+  if (k === 'pipe') {
+    startMove(p, 'swing'); w.ammo--; A.play('whoosh');
+    if (w.ammo <= 0) { p.weapon = null; attachWeapon(p); fx.debris(p.x, 1.2, p.z, '#8c9098', 4, 0.1, 2); toast('铁管断了'); }
+    return;
+  }
+  if (k === 'knife') {
+    const near = enemyInFront(p, 1.0);
+    if (near) { startMove(p, 'stab'); A.play('slash'); return; }
+    throwProj(p, 'knife', { dmg: 14 }); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); A.play('knifeThrow'); return;
+  }
+  if (k === 'dynamite' || k === 'grenade') {
+    throwProj(p, k, {}); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); A.play('whoosh'); return;
+  }
+}
+function spawnItem(kind, x, z, opts) {
+  const o = opts || {};
+  const mesh = itemMesh(kind);
+  scene.add(mesh);
+  const it = { kind, x, z, y: o.pop ? 0.6 : 0, vy: o.pop ? 4.2 : 0, vx: o.pop ? randRange(-0.8, 0.8) : 0, vz: o.pop ? randRange(-0.5, 0.8) : 0, t: 0, life: o.life || 0, ammo: o.ammo, mesh, spin: rand() * 6 };
+  G.items.push(it);
+  return it;
+}
+function removeItem(it) { scene.remove(it.mesh); G.items = G.items.filter(i => i !== it); }
+function updateItems(dt) {
+  const AR = AREAS[G.area];
+  for (const it of G.items.slice()) {
+    it.t += dt;
+    if (it.vy || it.y > 0) {
+      it.vy -= GRAV * dt; it.y += it.vy * dt; it.x += it.vx * dt; it.z += it.vz * dt;
+      it.z = clamp(it.z, AR.z0, AR.z1);
+      if (it.y <= 0) { it.y = 0; it.vy = Math.abs(it.vy) > 2 ? -it.vy * 0.3 : 0; it.vx *= 0.5; it.vz *= 0.5; if (!it.vy) { it.vx = it.vz = 0; } }
+    }
+    if (it.life && it.t > it.life) { removeItem(it); continue; }
+    const blink = it.life && it.t > it.life - 2.5 ? (Math.floor(it.t * 10) % 2 === 0) : true;
+    it.mesh.visible = blink;
+    it.mesh.position.set(it.x, it.y + 0.02 + (it.y === 0 ? Math.abs(Math.sin(G.t * 3 + it.spin)) * 0.03 : 0), it.z);
+    it.mesh.rotation.y = it.spin + G.t * 0.8;
+  }
+}
+
+// ---------- 道具（油桶 / 雕像 / 管道） ----------
+function hitProp(pr, power) {
+  if (pr.broken) return;
+  pr.hp -= power || 1; pr.shake = 0.25;
+  A.play(pr.kind === 'drum' ? 'metal' : pr.kind === 'statue' ? 'breakStatue' : 'metal', 0.8);
+  fx.hit(pr.x, 0.8, pr.z, false);
+  if (pr.hp <= 0) {
+    pr.broken = true; scene.remove(pr.mesh);
+    const col = pr.kind === 'drum' ? '#c8662c' : pr.kind === 'statue' ? '#d6ae3e' : '#a6aab4';
+    fx.debris(pr.x, 0.6, pr.z, col, pr.kind === 'statue' ? 16 : 10, pr.kind === 'statue' ? 0.18 : 0.14, 3.5);
+    if (pr.points) addScore(pr.points, pr.x, 1.8, pr.z);
+    if (pr.item) spawnItem(pr.item, pr.x, pr.z + 0.5, { pop: true, life: ITEMS[pr.item].weapon ? 14 : 0 });
+    ev('prop', { kind: pr.kind, item: pr.item });
+  }
+}
+function updateProps(dt) {
+  for (const pr of G.props) {
+    if (pr.broken) continue;
+    if (pr.shake > 0) { pr.shake -= dt; pr.mesh.position.x = pr.x + Math.sin(pr.shake * 80) * 0.05; } else pr.mesh.position.x = pr.x;
+  }
+}
+
+// ---------- 投射物 ----------
+function throwProj(a, kind, o) {
+  const f = { x: Math.sin(a.face), z: Math.cos(a.face) };
+  const mesh = meshFrom(itemGeo(kind === 'gun' || kind === 'shotgun' ? kind : kind), { thin: true, shadow: false });
+  scene.add(mesh);
+  const flat = kind === 'knife' || kind === 'gun' || kind === 'shotgun';
+  const spd = kind === 'knife' ? 11 : flat ? 9 : 6.5;
+  const pr = { kind, owner: a, side: a.side, x: a.x + f.x * 0.5, y: 1.4, z: a.z + f.z * 0.5, vx: f.x * spd, vz: f.z * spd, vy: flat ? 0.4 : 4.2, t: 0, mesh, fuse: kind === 'dynamite' ? 1.4 : 0, landed: false, dmg: o.dmg || 0, dizzy: o.dizzy, face: a.face };
+  G.projs.push(pr);
+  return pr;
+}
+function explode(x, z, r, dmg, owner) {
+  fx.boom(x, 0, z, r / 2); A.play('boom');
+  for (const e of G.actors) {
+    if (!e.alive || e.removed || ['dead', 'enter', 'cut', 'leave'].indexOf(e.state) >= 0) continue;
+    const d = Math.hypot(e.x - x, e.z - z);
+    if (d < r + e.radius) {
+      let k = 1 - d / (r + e.radius) * 0.5;
+      if (e.side === 'player') k *= 0.5;
+      applyHit(owner, e, H(0, 0, 0, 0, 0, 3, dmg * k, 'launch', owner && owner.side === 'player' ? 400 : 0, 'punchHeavy', true), faceOf(e.x - x, e.z - z), true);
+    }
+  }
+  for (const pr of G.props) if (!pr.broken && Math.hypot(pr.x - x, pr.z - z) < r + pr.r) hitProp(pr, 4);
+}
+function updateProjectiles(dt) {
+  const AR = AREAS[G.area];
+  for (const pr of G.projs.slice()) {
+    pr.t += dt;
+    if (!pr.landed) {
+      pr.vy -= (pr.kind === 'knife' ? 4 : GRAV * 0.8) * dt;
+      pr.x += pr.vx * dt; pr.y += pr.vy * dt; pr.z += pr.vz * dt;
+      if (pr.kind === 'drum') {
+        for (const e of G.actors) {
+          if (e.side === 'player' || !hittable(e) || pr.hits.has(e.id)) continue;
+          if (Math.hypot(e.x - pr.x, e.z - pr.z) < e.radius + 0.45 && pr.y < e.y + e.height + 0.3) { pr.hits.add(e.id); applyHit(pr.owner, e, H(0, 0, 0, 0, 0, 2, pr.dmg * pr.owner.stats.dmg, 'down', 1000, 'punchHeavy', true), pr.face); }
+        }
+        const outD = pr.x < G.focusX - HALF_W - 2 || pr.x > G.focusX + HALF_W + 2 || pr.z < AR.z0 - 1 || pr.z > AR.z1 + 1;
+        if (pr.y <= 0.45 || outD) {
+          fx.debris(pr.x, 0.6, clamp(pr.z, AR.z0, AR.z1), '#c8662c', 12, 0.15, 3.5); A.play('metal');
+          if (pr.item) spawnItem(pr.item, clamp(pr.x, G.focusX - HALF_W + 0.5, G.focusX + HALF_W - 0.5), clamp(pr.z, AR.z0, AR.z1), { pop: true, life: ITEMS[pr.item].weapon ? 14 : 0 });
+          killProj(pr); continue;
+        }
+        pr.mesh.position.set(pr.x, pr.y - 0.45, pr.z); pr.mesh.rotation.set(pr.t * 9, pr.face, 0);
+        continue;
+      }
+      // 命中角色
+      for (const e of G.actors) {
+        if (e.side === pr.side || !hittable(e) || e === pr.owner) continue;
+        if (Math.hypot(e.x - pr.x, e.z - pr.z) < e.radius + 0.25 && pr.y > e.y && pr.y < e.y + e.height) {
+          if (pr.kind === 'grenade') { explode(pr.x, pr.z, 2.0, 36, pr.owner); killProj(pr); break; }
+          if (pr.kind === 'dynamite') { applyHit(pr.owner, e, H(0, 0, 0, 0, 0, 2, 6, 'down', 200, 'punch'), pr.face); pr.vx *= -0.3; pr.vz *= -0.3; pr.vy = 2; continue; }
+          applyHit(pr.owner, e, H(0, 0, 0, 0, 0, 2, pr.dmg || 10, pr.dizzy ? 'down' : 'down', pr.side === 'player' ? 400 : 0, pr.kind === 'knife' ? 'slash' : 'punch'), pr.face);
+          if (pr.kind === 'knife') fx.blood(e.x, 1.3, e.z, Math.sign(pr.vx) || 1);
+          killProj(pr); break;
+        }
+      }
+      if (pr.removed) continue;
+      // 玩家用拳头打掉飞刀
+      if (pr.kind === 'knife' && pr.side === 'enemy') {
+        const p = G.player;
+        if (p.state === 'attack' && p.move && p.move.def.hits.length && Math.hypot(p.x + Math.sin(p.face) * 0.7 - pr.x, p.z + Math.cos(p.face) * 0.7 - pr.z) < 0.55) {
+          A.play('clink'); fx.hit(pr.x, pr.y, pr.z, false); spawnItem('knife', pr.x, pr.z, { pop: true, life: 10 }); killProj(pr); continue;
+        }
+      }
+      const out = pr.x < G.focusX - HALF_W - 3 || pr.x > G.focusX + HALF_W + 3 || pr.z < AR.z0 - 3 || pr.z > AR.z1 + 3;
+      if (pr.y <= 0 || out) {
+        if (pr.kind === 'grenade') { explode(pr.x, pr.z, 2.0, 36, pr.owner); killProj(pr); continue; }
+        if (pr.kind === 'dynamite' && !out) { pr.landed = true; pr.y = 0; pr.vx = pr.vz = pr.vy = 0; pr.fuseT = 0; A.play('fuse'); continue; }
+        if (!out && (pr.kind === 'knife')) spawnItem('knife', pr.x, clamp(pr.z, AR.z0, AR.z1), { life: 8 });
+        killProj(pr); continue;
+      }
+    } else {
+      pr.fuseT += dt;
+      if (Math.floor(pr.fuseT * 8) !== Math.floor((pr.fuseT - dt) * 8)) fx.muzzle(pr.x, 0.3, pr.z);
+      if (pr.fuseT > pr.fuse) { explode(pr.x, pr.z, 2.3, 42, pr.owner); killProj(pr); continue; }
+    }
+    pr.mesh.position.set(pr.x, pr.y, pr.z);
+    if (pr.kind === 'knife') pr.mesh.rotation.set(0, pr.face, 0);
+    else pr.mesh.rotation.set(pr.t * 12, pr.face, 0);
+  }
+}
+function killProj(pr) { pr.removed = true; scene.remove(pr.mesh); G.projs = G.projs.filter(p => p !== pr); }
+
+// ---------- 命中判定 ----------
+function tryHit(a, h, air, m, hi) {
+  const f = { x: Math.sin(a.face), z: Math.cos(a.face) };
+  const cx = a.x + f.x * h.reach, cz = a.z + f.z * h.reach;
+  const y0 = a.y + h.y0, y1 = a.y + h.y1;
+  let any = false;
+  for (const e of G.actors) {
+    if (e === a || !hittable(e)) continue;
+    if (a.side === e.side && !(a.isRaptor && a.angry)) continue;
+    if (a.isRaptor && e === a) continue;
+    if (e.state === 'grabbed' && a.side === 'player' && a.grab !== e) continue;
+    const key = e.id + ':' + (hi || 0);
+    if (m && m.hit.has(key)) continue;
+    const d = Math.hypot(e.x - cx, e.z - cz);
+    if (d > h.r + e.radius) continue;
+    if (y1 < e.y || y0 > e.y + e.height) continue;
+    if (m) m.hit.add(key);
+    applyHit(a, e, h, a.face);
+    any = true;
+    if (air) break;
+  }
+  if (a.side === 'player') {
+    for (const pr of G.props) {
+      if (pr.broken) continue;
+      const key = 'p' + pr.x + ':' + (hi || 0);
+      if (m && m.hit.has(key)) continue;
+      if (Math.hypot(pr.x - cx, pr.z - cz) < h.r + pr.r && y0 < 1.6) { if (m) m.hit.add(key); hitProp(pr, 1); any = true; }
+    }
+  }
+  return any;
+}
+function applyHit(a, e, h, dir, splash) {
+  if (e.invul > 0 && !(splash && e.side !== 'player')) return false;
+  if (e.side === 'player' && G.settings.demo) { fx.hit(e.x, e.y + 1.2, e.z, false); return false; }
+  let dmg = h.dmg;
+  if (e.side === 'player') dmg *= DUR_MUL[G.settings.dur];
+  const px = e.x - Math.sin(dir) * 0.2, pz = e.z - Math.cos(dir) * 0.2;
+  fx.hit(px, e.y + (h.y0 + h.y1) / 2 * 0.6 + 0.5, pz, h.big);
+  if (h.sfx) A.play(h.sfx);
+  if (h.sfx === 'slash') fx.blood(e.x, 1.3, e.z, Math.sin(dir) > 0 ? 1 : -1);
+  a && (a.hitstop = Math.max(a.hitstop, h.big ? 0.08 : 0.05));
+  e.hitstop = Math.max(e.hitstop, h.big ? 0.09 : 0.055);
+  if (a && a.side === 'player' && h.pts) addScore(h.pts, undefined, 0, 0, false);
+  if (a && a.side === 'player') { G.lastTarget = e; G.lastTargetT = G.t; }
+  if (e.side !== 'player' && a && a.side !== 'player' && a !== e) G.lastTarget = G.lastTarget;
+  damage(a, e, dmg, h.kb, dir, 0, true);
+  return true;
+}
+// 统一扣血与受击反应
+function damage(a, e, dmg, kb, dir, pts, react) {
+  e.hp -= dmg; e.flash = 0.08; e.lastHitBy = a;
+  if (e.side === 'player') {
+    G.hurtFx = Math.min(1, 0.55 + dmg / 30); G.stats.hits++; G.stats.damage += dmg;
+    A.play('hurtP'); fx.shake = Math.max(fx.shake, 0.15);
+    if (e.grab) releaseGrab(e);
+    if (e.carryMesh) { dropCarry(e, false); }
+    if (e.weapon && kb !== 'hit') dropWeapon(e);
+  } else if (e.grabbedBy && kb !== 'hit') releaseGrab(e.grabbedBy);
+  if (!react) return;
+  const dead = e.hp <= 0;
+  if (dead) { e.hp = 0; }
+  e.stun++; e.stunT = 1.0;
+  const armor = e.type === 'vice' && !dead && kb === 'hit' && chance(0.3);   // 原作维斯没有硬直动画：偶尔硬吃拳头继续出招
+  if (dead || kb === 'down' || kb === 'launch' || (e.side !== 'player' && e.stun >= (e.type === 'vice' ? 6 : 5))) knockdown(e, dir, kb === 'launch' ? 1.3 : 1, dead);
+  else if (!armor) {
+    if (e.state === 'grabbed') return;
+    if (e.grab) releaseGrab(e);
+    releaseToken(e);
+    const keepAttack = e.type === 'vice' && e.state === 'attack' && chance(0.2);
+    if (!keepAttack) { setState(e, 'hurt', { low: chance(0.4) }); e.vx = Math.sin(dir) * 1.2; e.vz = Math.cos(dir) * 1.2; }
+  }
+}
+function knockdown(e, dir, power, dead) {
+  if (e.grab) releaseGrab(e);
+  if (e.grabbedBy) releaseGrab(e.grabbedBy, true);
+  releaseToken(e);
+  if (e.weapon && e.side === 'enemy' && (e.weapon.kind === 'knife' || e.weapon.kind === 'pipe')) { spawnItem(e.weapon.kind, e.x, e.z, { pop: true, life: 10, ammo: e.weapon.kind === 'pipe' ? 8 : 1 }); e.weapon = null; attachWeapon(e); }
+  setState(e, 'down', { phase: 'air', dead, power });
+  e.vy = 4.6 * power; e.y = Math.max(e.y, 0.05);
+  const sp = 2.8 * power;
+  e.vx = Math.sin(dir) * sp; e.vz = Math.cos(dir) * sp * 0.6;
+  e.face = dir + Math.PI;
+  e.stun = 0;
+  if (dead) { e.alive = false; onDeath(e); }
+}
+function onDeath(e) {
+  if (e.side === 'player') return;
+  const def = e.def;
+  G.kills[e.type] = (G.kills[e.type] || 0) + 1;
+  if (e.type !== 'raptor') A.play(def && def.fat ? 'screamFat' : 'scream');
+  if (def) addScore(def.points, e.x, 2.4, e.z);
+  if (e.drop) spawnItem(e.drop, e.x, e.z, { pop: true, life: ITEMS[e.drop].weapon ? 14 : 0 });
+  ev('kill', { enemy: e.type, id: e.id });
+  if (e.type === 'vice') bossDefeated(e);
+}
+function updateDown(e, dt) {
+  const s = e.sub;
+  if (s.phase === 'air') {
+    // 被扔出去的人会砸到别人
+    if (s.thrown) {
+      for (const o of G.actors) {
+        if (o === e || o.side !== e.side || !hittable(o) || (s.hitIds && s.hitIds.has(o.id))) continue;
+        if (Math.hypot(o.x - e.x, o.z - e.z) < o.radius + 0.5 && e.y < 1.6) { (s.hitIds || (s.hitIds = new Set())).add(o.id); applyHit(G.player, o, H(0, 0, 0, 0, 0, 2, 12, 'down', 400, 'punchHeavy', true), faceOf(o.x - e.x, o.z - e.z)); }
+      }
+    }
+    if (e.y <= 0.001 && e.vy <= 0) {
+      if ((s.bounce || 0) < 1 && !s.thrownLand) { s.bounce = (s.bounce || 0) + 1; e.vy = 2.2; e.y = 0.01; e.vx *= 0.5; e.vz *= 0.5; fx.dust(e.x, 0, e.z, 4, 0.4); A.play(s.thrown ? 'slam' : 'land'); if (s.thrown && e.hp <= 0 && e.alive) { e.alive = false; onDeath(e); } return; }
+      s.phase = 'lie'; s.lieT = 0; e.vx = e.vz = 0; e.y = 0;
+      if (e.hp <= 0 && e.alive) { e.alive = false; onDeath(e); }
+    }
+  } else {
+    s.lieT += dt; e.vx = e.vz = 0;
+    const lieDur = e.side === 'player' ? 0.55 : e.type === 'vice' ? 0.7 : 0.9;
+    if (!e.alive) {
+      if (e.side === 'player') { setState(e, 'dead'); return; }
+      if (s.lieT > 0.9) { setState(e, 'dead'); }
+      return;
+    }
+    if (s.lieT > lieDur) { setState(e, 'getup'); e.invul = Math.max(e.invul, e.type === 'vice' ? 0.8 : 0.55); }
+  }
+}
+
+// ---------- 物理 ----------
+function physics(a, dt) {
+  const AR = AREAS[G.area];
+  if (a.state === 'grabbed') return;
+  a.x += a.vx * dt; a.z += a.vz * dt;
+  if (a.y > 0 || a.vy > 0) {
+    a.vy -= GRAV * dt; a.y += a.vy * dt;
+    if (a.y <= 0) {
+      a.y = 0;
+      const wasJump = a.state === 'jump';
+      if (a.state === 'down' || a.state === 'respawn') { /* 由 updateDown 处理 */ if (a.state === 'respawn') a.vy = 0; }
+      else { a.vy = 0; }
+      if (wasJump) { setState(a, 'idle'); a.vx *= 0.2; a.vz *= 0.2; fx.dust(a.x, 0, a.z, 2, 0.25); A.play('land', 0.6); }
+      if (a.state === 'attack' && a.move && a.move.def.air) { setState(a, 'idle'); a.vx *= 0.2; a.vz *= 0.2; A.play('land', 0.6); }
+      if (a.state === 'leap') { a.vx *= 0.2; a.vz *= 0.2; }
+    }
+  }
+  // 边界：纵深与区域两端；玩家受卷轴窗口限制，敌人可稍出屏
+  const free = ['enter', 'leave', 'flee', 'cut'].indexOf(a.state) >= 0;
+  if (!free) {
+    const zMin = AR.z0, zMax = AR.z1;
+    a.z = clamp(a.z, zMin, zMax);
+    if (a.side === 'player') a.x = clamp(a.x, Math.max(AR.x0 + 0.3, G.focusX - HALF_W + 0.35), Math.min(AR.x1, G.focusX + HALF_W - 0.35));
+    else a.x = clamp(a.x, Math.max(AR.x0 - 1, G.focusX - HALF_W - 2.2), Math.min(AR.x1 + 1, G.focusX + HALF_W + 2.2));
+  }
+  // 道具阻挡
+  for (const pr of G.props) {
+    if (pr.broken) continue;
+    const dx = a.x - pr.x, dz = a.z - pr.z, d = Math.hypot(dx, dz), min = pr.r + a.radius * 0.8;
+    if (d < min && d > 1e-4) { a.x = pr.x + dx / d * min; a.z = pr.z + dz / d * min; }
+  }
+}
+function separate() {
+  const L = G.actors;
+  for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
+    const a = L[i], b = L[j];
+    if (!a.alive || !b.alive || a.state === 'grabbed' || b.state === 'grabbed' || a.state === 'down' || b.state === 'down' || a.y > 0.4 || b.y > 0.4) continue;
+    if (['enter', 'cut', 'leave', 'flee'].indexOf(a.state) >= 0 || ['enter', 'cut', 'leave', 'flee'].indexOf(b.state) >= 0) continue;
+    const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), min = (a.radius + b.radius) * 0.85;
+    if (d < min && d > 1e-4) {
+      const push = (min - d) / 2, nx = dx / d, nz = dz / d;
+      const wa = a === G.player ? 0.35 : 1, wb = b === G.player ? 0.35 : 1;
+      a.x -= nx * push * wa; a.z -= nz * push * wa; b.x += nx * push * wb; b.z += nz * push * wb;
+    }
+  }
+}
+
+// ---------- 敌人 AI ----------
+function tokens() { return G.actors.filter(e => e.token && e.alive).length; }
+function releaseToken(e) { e.token = false; }
+function wantToken(e) { if (e.token) return true; if (tokens() < 2 || e.type === 'vice') { e.token = true; return true; } return false; }
+function updateEnemy(e, dt) {
+  const p = G.player, def = e.def;
+  switch (e.state) {
+    case 'cut': e.vx = e.vz = 0; e.face = approachAng(e.face, faceOf(p.x - e.x, p.z - e.z), dt * 6); break;
+    case 'enter': updateEnter(e, dt); break;
+    case 'idle': case 'walk': case 'hover': think(e, dt); break;
+    case 'attack': updateEnemyMove(e, dt); break;
+    case 'charge': updateCharge(e, dt); break;
+    case 'throwK': e.vx = e.vz = 0; if (e.st > 0.45 && !e.sub.thrown) { e.sub.thrown = true; const pr = throwProj(e, e.sub.kind, { dmg: e.sub.kind === 'knife' ? 10 * DUR1() : 0 }); if (e.sub.kind === 'knife') A.play('knifeThrow'); pr.side = 'enemy'; if (e.sub.kind === 'knife' && e.type === 'blade') { /* 布雷德刀不离手：投出的是第二把 */ } } if (e.st > 0.8) { setState(e, 'idle'); e.cd = randRange(0.8, 1.6); if (e.sub.run) { setState(e, 'flee'); } } break;
+    case 'hurt': e.vx *= 0.85; e.vz *= 0.85; if (e.st > 0.34) { setState(e, 'idle'); e.cd = Math.max(e.cd, randRange(0.1, 0.35)); } break;
+    case 'grabbed': e.vx = e.vz = 0; e.y = 0; break;
+    case 'down': updateDown(e, dt); break;
+    case 'getup': e.vx = e.vz = 0; if (e.st > 0.5) { setState(e, 'idle'); e.cd = randRange(0.2, 0.6); } break;
+    case 'dead': e.vx = e.vz = 0; if (e.st > 1.0) removeActor(e); break;
+    case 'flee': {
+      const dir = e.x > G.focusX ? 1 : -1;
+      e.vx = dir * 4.5; e.vz = 0; e.face = dir > 0 ? FACE_RIGHT : FACE_LEFT;
+      if (Math.abs(e.x - G.focusX) > HALF_W + 3) { if (e.sub.vanish) { e.alive = false; removeActor(e); } else { setState(e, 'enter', { kind: 'walk', tx: G.focusX + dir * (HALF_W - 1.2), tz: randRange(-1, 1.5) }); } }
+      break;
+    }
+    case 'jumpkick': {
+      if (e.y <= 0.001 && e.st > 0.1) { setState(e, 'idle'); e.cd = randRange(0.8, 1.4); e.vx *= 0.2; e.vz *= 0.2; break; }
+      if (!e.sub.hit && e.st > 0.1) { const h = H(0, 9, 0.9, 0.55, 0.0, 1.5, 9 * DUR1(), 'down', 0, 'kick', true); if (tryHit(e, h, true)) e.sub.hit = true; }
+      break;
+    }
+    case 'leave': break;
+  }
+}
+const DUR1 = () => 1;
+function think(e, dt) {
+  const p = G.player, def = e.def;
+  e.cd -= dt;
+  const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz);
+  const pDown = ['down', 'dead', 'respawn', 'getup'].indexOf(p.state) >= 0 || !p.alive || G.mode !== 'play';
+  e.face = approachAng(e.face, Math.abs(dz) < 0.6 || true ? (dx > 0 ? FACE_RIGHT : FACE_LEFT) : faceOf(dx, dz), dt * 10);
+  if (pDown) { hover(e, dt, 3.2); return; }
+  // 远程招式
+  if (def.knife && e.cd <= 0 && Math.abs(dz) < 0.35 && dist > 2.6 && dist < 7 && chance(0.02)) { setState(e, 'throwK', { kind: 'knife' }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
+  if (def.bomb && e.cd <= 0 && dist > 3 && dist < 6.5 && chance(0.006) && !e.threw) { e.threw = true; setState(e, 'throwK', { kind: def.bomb, run: true }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
+  if (def.fat && e.cd <= 0 && Math.abs(dz) < 0.4 && dist > 2.4 && dist < 6.5 && chance(0.03)) { setState(e, 'charge', { dir: dx > 0 ? 1 : -1 }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
+  if (!wantToken(e)) { hover(e, dt, 3.4); return; }
+  // 走到玩家同一纵深的左右侧
+  let side = Math.sign(e.x - p.x) || 1;
+  if (def.behind) side = -Math.sign(Math.sin(p.face)) || side;   // 朋克爱绕到背后
+  const tx = p.x + side * (def.reach * 0.88), tz = p.z;
+  const ex = tx - e.x, ez = tz - e.z, ed = Math.hypot(ex, ez);
+  if (ed > 0.12) {
+    const sp = def.speed * (ed > 2 ? 1 : 0.8);
+    e.vx = ex / ed * sp; e.vz = ez / ed * sp;
+    e.state = 'walk';
+    // 中距离飞踢
+    if (def.kick && e.cd <= 0 && Math.abs(dz) < 0.3 && dist > 2.0 && dist < 3.4 && chance(0.012 * (def.kick * 4))) {
+      setState(e, 'jumpkick'); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; e.vy = 6.2; e.y = 0.01; e.vx = Math.sign(dx) * 4.2; e.vz = 0; A.play('jump'); return;
+    }
+  } else { e.vx = e.vz = 0; e.state = 'idle'; }
+  if (e.cd <= 0 && Math.abs(dz) < 0.32 && Math.abs(Math.abs(dx) - def.reach * 0.88) < 0.4) {
+    e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT;
+    const r = rand();
+    let mv = 'punch';
+    if (def.knife) mv = 'slash';
+    else if (e.weapon && e.weapon.kind === 'pipe') mv = 'eSwing';
+    else if (def.fat) mv = 'fatPunch';
+    else if (r < 0.22) mv = 'kick';
+    startMove(e, mv);
+    e.combo = def.fat || def.knife ? 0 : (chance(def.aggr) ? 1 + (chance(0.4) ? 1 : 0) : 0);
+  }
+}
+function hover(e, dt, dist) {
+  const p = G.player;
+  if (!e.sub.hx || e.st - (e.sub.ht || 0) > 1.6) {
+    const side = Math.sign(e.x - p.x) || (chance(0.5) ? 1 : -1);
+    e.sub.hx = side * (dist + rand() * 1.2); e.sub.hz = randRange(-1.8, 1.8); e.sub.ht = e.st;
+  }
+  const AR = AREAS[G.area];
+  const tx = clamp(p.x + e.sub.hx, G.focusX - HALF_W + 0.8, G.focusX + HALF_W - 0.8), tz = clamp(p.z + e.sub.hz, AR.z0, AR.z1);
+  const ex = tx - e.x, ez = tz - e.z, ed = Math.hypot(ex, ez);
+  if (ed > 0.2) { e.vx = ex / ed * e.def.speed * 0.6; e.vz = ez / ed * e.def.speed * 0.6; e.state = 'walk'; }
+  else { e.vx = e.vz = 0; e.state = 'idle'; }
+}
+function updateEnemyMove(e, dt) {
+  const m = e.move;
+  updateMove(e, dt);
+  if (e.state !== 'attack') {
+    // 连击：前一拳收招后接第二拳
+    if (e.combo > 0 && m && m.id === 'punch' || (e.combo > 0 && m && m.id === 'punch2')) {
+      const p = G.player;
+      if (Math.abs(p.z - e.z) < 0.5 && Math.hypot(p.x - e.x, p.z - e.z) < 1.4 && p.state !== 'down') { e.combo--; startMove(e, 'punch2'); return; }
+    }
+    e.cd = randRange(0.7, 1.5) / (0.6 + e.def.aggr);
+    if (chance(0.35)) releaseToken(e);
+  }
+}
+function updateCharge(e, dt) {
+  // 胖子：抱头冲撞
+  const s = e.sub;
+  if (e.st < 0.4) { e.vx = e.vz = 0; return; }
+  if (!s.go) { s.go = true; A.play('whoosh'); }
+  e.vx = s.dir * 6.8; e.vz = 0;
+  if (!s.hit) { const h = H(0, 9, 0.5, 0.6, 0.6, 1.8, 12 * DUR1(), 'down', 0, 'punchHeavy', true); if (tryHit(e, h, true)) s.hit = true; }
+  if (e.st > 1.5 || Math.abs(e.x - G.focusX) > HALF_W + 1.5) { setState(e, 'idle'); e.cd = randRange(1.0, 2.0); e.vx = 0; }
+}
+function updateEnter(e, dt) {
+  const s = e.sub;
+  if (s.kind === 'walk') {
+    const ex = s.tx - e.x, ez = s.tz - e.z, d = Math.hypot(ex, ez);
+    if (d < 0.15) { setState(e, 'idle'); e.cd = randRange(0.3, 0.9); return; }
+    e.vx = ex / d * e.def.speed; e.vz = ez / d * e.def.speed; e.face = ex > 0 ? FACE_RIGHT : FACE_LEFT;
+  } else if (s.kind === 'door') {
+    if (e.st < 0.5) { e.vx = e.vz = 0; return; }
+    e.vz = 1.6; e.vx = 0; e.face = 0;
+    if (e.z > s.tz) { setState(e, 'idle'); e.cd = 0.3; const d = world.area().doors[s.door]; if (d) setTimeout(() => { d.open = false; }, 900); }
+  } else if (s.kind === 'facade') {
+    if (e.st < 0.25) { e.vx = e.vz = 0; return; }
+    if (!s.burst) { s.burst = true; burstFacade(); }
+    e.vz = 3.2; e.face = 0;
+    if (e.z > s.tz) { setState(e, 'idle'); e.cd = 0.2; }
+  } else if (s.kind === 'wall') {
+    if (e.st < 0.6) { e.vx = e.vz = 0; e.y = s.h; e.vy = 0; return; }
+    if (!s.jumped) { s.jumped = true; e.vy = 3.5; e.vz = 1.4; A.play('jump'); }
+    if (e.y <= 0.001 && e.st > 0.7) { setState(e, 'idle'); e.cd = 0.4; fx.dust(e.x, 0, e.z, 3, 0.3); A.play('land'); }
+  }
+}
+function burstFacade() {
+  const W0 = world.area();
+  if (!W0.facadePlanks) return;
+  W0.facadePlanks.forEach(pk => { pk.visible = false; });
+  fx.debris(5.3, 1.5, -3.0, '#6a4a2c', 14, 0.22, 4); A.play('door');
+  fx.shake = Math.max(fx.shake, 0.2);
+}
+
+// ---------- Boss：维斯·T ----------
+function updateVice(v, dt) {
+  const p = G.player;
+  switch (v.state) {
+    case 'cut': case 'leave': v.vx = v.vz = 0; if (v.state === 'leave' && v.y > 0) { v.vx = 3.5; v.vz = -2.6; } break;
+    case 'idle': case 'walk': viceThink(v, dt); break;
+    case 'attack': {
+      const m = v.move;
+      updateMove(v, dt);
+      if (v.state !== 'attack' && m) {
+        // 三连拳 + 长臂直拳
+        if (m.id === 'vJab' && v.sub2 && v.sub2.chain > 0) { v.sub2.chain--; startMove(v, v.sub2.chain === 0 ? 'vLong' : (v.sub2.chain % 2 ? 'vJab2' : 'vJab')); return; }
+        if (m.id === 'vJab2' && v.sub2 && v.sub2.chain > 0) { v.sub2.chain--; startMove(v, v.sub2.chain === 0 ? 'vLong' : 'vJab'); return; }
+        v.cd = randRange(0.5, 1.1);
+      }
+      break;
+    }
+    case 'flurry': {
+      // 贴身连打（原作会连打五六下）
+      v.vx = v.vz = 0;
+      const n = Math.floor(v.st / 0.11);
+      if (n !== v.sub.n && n < 6) { v.sub.n = n; v.sub.alt = !v.sub.alt; const h = H(0, 9, 0.95, 0.5, 0.9, 1.9, 4 * DUR1(), n === 5 ? 'down' : 'hit', 0, 'punch'); tryHit(v, h, true); }
+      if (v.st > 0.8) { setState(v, 'idle'); v.cd = randRange(0.6, 1.2); }
+      break;
+    }
+    case 'flykick': {
+      if (v.y <= 0.001 && v.st > 0.15) { setState(v, 'idle'); v.vx *= 0.2; v.vz *= 0.2; v.cd = randRange(0.5, 1.0); A.play('land'); break; }
+      if (!v.sub.hit && v.st > 0.12) { const h = H(0, 9, 0.95, 0.62, 0.0, 1.6, 12 * DUR1(), 'down', 0, 'kick', true); if (tryHit(v, h, true)) v.sub.hit = true; }
+      break;
+    }
+    case 'gun': {
+      // 拔左轮：长时间瞄准后开枪
+      v.vx = v.vz = 0;
+      if (v.st > 0.95 && !v.sub.fired) {
+        v.sub.fired = true;
+        const f = { x: Math.sin(v.face), z: Math.cos(v.face) };
+        fx.muzzle(v.x + f.x * 1.1, 1.5, v.z + f.z * 1.1); A.play('gun');
+        const dx = p.x - v.x, dz = p.z - v.z, along = dx * f.x + dz * f.z, perp = Math.abs(dx * f.z - dz * f.x);
+        if (along > 0 && along < 12 && perp < 0.45 && hittable(p) && p.y < 1.4) applyHit(v, p, H(0, 0, 0, 0, 0, 2, 16 * DUR1(), 'down', 0, 'punchHeavy', true), v.face);
+      }
+      if (v.st > 1.4) { setState(v, 'idle'); v.cd = randRange(0.6, 1.2); }
+      break;
+    }
+    case 'summon': {
+      v.vx = v.vz = 0;
+      if (v.st > 0.6 && !v.sub.fired) { v.sub.fired = true; v.pendingSummon = 0; fx.muzzle(v.x, 3.7, v.z); A.play('gun'); summonHenchmen(v.sub.n); }
+      if (v.st > 1.3) { setState(v, 'idle'); v.cd = 0.4; }
+      break;
+    }
+    case 'hurt': v.vx *= 0.85; v.vz *= 0.85; if (v.st > 0.24) { setState(v, 'idle'); v.cd = Math.min(v.cd, 0.25); } break;
+    case 'grabbed': v.vx = v.vz = 0; break;
+    case 'down': updateDown(v, dt); break;
+    case 'getup': v.vx = v.vz = 0; if (v.st > 0.5) { setState(v, 'idle'); v.cd = 0.15; } break;
+    case 'dead': v.vx = v.vz = 0; break;
+  }
+}
+function viceThink(v, dt) {
+  const p = G.player;
+  v.cd -= dt;
+  const dx = p.x - v.x, dz = p.z - v.z, dist = Math.hypot(dx, dz);
+  v.face = approachAng(v.face, dx > 0 ? FACE_RIGHT : FACE_LEFT, dt * 10);
+  // 血量阈值：朝天开枪叫手下（原作每掉到一定血量就叫一批）
+  const frac = v.hp / v.maxHp;
+  // 叫人被打断时（原作这时正是进攻机会），起身后照样把手下叫来
+  if (v.pendingSummon && G.mode === 'play') { summonHenchmen(v.pendingSummon); v.pendingSummon = 0; }
+  if (v.summons < 2 && frac < (v.summons === 0 ? 0.7 : 0.4) && G.mode === 'play') { v.summons++; v.pendingSummon = v.summons; setState(v, 'summon', { n: v.summons }); v.sub.pose = 'gunUp'; return; }
+  const pDown = ['down', 'dead', 'respawn', 'getup'].indexOf(p.state) >= 0 || G.mode !== 'play';
+  if (pDown) { hover(v, dt, 3.5); return; }
+  const aligned = Math.abs(dz) < 0.35;
+  if (v.cd <= 0) {
+    if (dist > 3.2 && chance(0.04)) {
+      if (aligned && chance(0.45)) { setState(v, 'gun'); v.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; A.play('chain', 0.5); return; }
+      // 飞身踢：从一边飞到另一边
+      setState(v, 'flykick'); v.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; v.vy = 7.2; v.y = 0.01;
+      const t = 0.62; v.vx = clamp(dx / t, -9, 9); v.vz = clamp(dz / t, -4, 4); A.play('jump'); return;
+    }
+    if (aligned && dist < 1.35) {
+      v.face = dx > 0 ? FACE_RIGHT : FACE_LEFT;
+      const r = rand();
+      if (r < 0.5) { v.sub2 = { chain: 3 }; startMove(v, 'vJab'); }
+      else if (r < 0.72) { setState(v, 'flurry', { n: -1 }); }
+      else startMove(v, 'vLong');
+      return;
+    }
+    if (aligned && dist >= 1.35 && dist < 2.3 && chance(0.06)) { v.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; startMove(v, 'vLong'); return; }
+  }
+  // 靠近玩家同一纵深
+  const side = Math.sign(v.x - p.x) || 1;
+  const tx = p.x + side * 1.05, tz = p.z;
+  const ex = tx - v.x, ez = tz - v.z, ed = Math.hypot(ex, ez);
+  if (ed > 0.15) { const sp = v.def.speed * (ed > 2.5 ? 1.05 : 0.8); v.vx = ex / ed * sp; v.vz = ez / ed * sp; v.state = 'walk'; }
+  else { v.vx = v.vz = 0; v.state = 'idle'; }
+}
+function summonHenchmen(n) {
+  const sets = [[['gneiss', 1], ['ferris', -1]], [['ferris', 1], ['elmer', -1]]];
+  const set = sets[(n - 1) % 2];
+  set.forEach(([type, side], k) => {
+    const e = spawnEnemy(type, G.focusX + side * ENTER_DX, randRange(-1.6, 1.8), { drop: type === 'elmer' ? 'donut' : null });
+    setState(e, 'enter', { kind: 'walk', tx: G.focusX + side * (HALF_W - 1.4 - k * 0.3), tz: e.z });
+  });
+  ev('summon', { n });
+}
+function bossDefeated(v) {
+  G.timeScale = 0.35;
+  ev('bossDown');
+  A.music(null);
+  // 剩下的杂兵逃走，岩跳龙跑开
+  for (const e of G.actors) {
+    if (e === v || e === G.player || !e.alive) continue;
+    if (e.isRaptor) { setState(e, 'flee', { vanish: true }); e.angry = false; }
+    else if (['down', 'dead'].indexOf(e.state) < 0) { setState(e, 'flee', { vanish: true }); }
+  }
+  G.mode = 'clear';
+  runScript([
+    { wait: 0.6 },
+    { fn: () => { G.timeScale = 1; } },
+    { wait: 1.0 },
+    { fn: () => { const p = G.player; if (p.alive && ['idle', 'walk', 'run', 'attack', 'hurt', 'jump', 'shoot', 'throwing', 'pickup', 'grab'].indexOf(p.state) >= 0) { if (p.grab) releaseGrab(p); setState(p, 'victory'); p.face = FACE_RIGHT; } A.music('clear'); } },
+    { say: 'player', text: HEROES[G.hero].win, dur: 2.2 },
+    { fn: () => { const p = G.player; const vit = Math.round(p.hp / p.maxHp * 100); G.vitality = vit; addScore(vit * 100, p.x, 2.6, p.z); A.play('coin'); banner('体力奖励 VITALITY', vit + ' × 100 = ' + vit * 100, 2.4); } },
+    { wait: 2.4 },
+    { say: 'vice', text: '屠夫在北边的森林里打猎……别去惹他……那家伙是个疯子！', dur: 3.4 },
+    { fn: () => finish(true) }
+  ]);
+}
+
+// ---------- 岩跳龙 ----------
+function updateRaptor(r, dt) {
+  const p = G.player;
+  switch (r.state) {
+    case 'chained': r.vx = r.vz = 0; if (G.boss) { r.face = approachAng(r.face, faceOf(p.x - r.x, p.z - r.z), dt * 3); } break;
+    case 'idle': case 'walk': {
+      r.cd -= dt;
+      // 选目标：一般追玩家，旁边有别人也会咬
+      let tgt = p;
+      if (!hittable(p) || p.state === 'respawn') tgt = null;
+      for (const e of G.actors) { if (e !== r && e !== p && hittable(e) && Math.hypot(e.x - r.x, e.z - r.z) < 1.6 && chance(0.02)) tgt = e; }
+      if (r.sub.tgt && hittable(r.sub.tgt) && r.st < 1.5) tgt = r.sub.tgt;
+      if (!tgt) { hover(r, dt, 3); break; }
+      r.sub.tgt = tgt;
+      const dx = tgt.x - r.x, dz = tgt.z - r.z, d = Math.hypot(dx, dz);
+      r.face = approachAng(r.face, faceOf(dx, dz), dt * 8);
+      if (r.cd <= 0 && d > 2.6 && d < 5.5 && chance(0.03)) { setState(r, 'leap'); r.face = faceOf(dx, dz); r.vy = 6.6; r.y = 0.01; const t = 0.55; r.vx = clamp(dx / t, -8, 8); r.vz = clamp(dz / t, -6, 6); A.play('roar', 0.6); break; }
+      if (r.cd <= 0 && d < 1.45) { r.face = faceOf(dx, dz); setState(r, chance(0.55) ? 'bite' : 'claw'); break; }
+      const sp = r.def.speed * (d > 3 ? 1 : 0.7);
+      if (d > 1.1) { r.vx = dx / d * sp; r.vz = dz / d * sp; r.state = 'walk'; } else { r.vx = r.vz = 0; r.state = 'idle'; }
+      break;
+    }
+    case 'bite': case 'claw': {
+      r.vx = r.vz = 0;
+      const bite = r.state === 'bite';
+      const t0 = bite ? 0.28 : 0.32;
+      if (r.st > t0 && r.st < t0 + 0.12 && !r.sub.hit) { const h = H(0, 9, bite ? 1.2 : 1.0, 0.58, 0.3, 1.6, (bite ? 9 : 11) * DUR1(), bite ? 'hit' : 'down', 0, bite ? 'slash' : 'kick', !bite); if (tryHit(r, h, true)) r.sub.hit = true; }
+      if (r.st > 0.7) { setState(r, 'idle'); r.cd = randRange(0.5, 1.1); }
+      break;
+    }
+    case 'leap': {
+      if (!r.sub.hit && r.st > 0.08) { const h = H(0, 9, 1.0, 0.65, 0.0, 1.8, 13 * DUR1(), 'down', 0, 'slash', true); if (tryHit(r, h, true)) r.sub.hit = true; }
+      if (r.y <= 0.001 && r.st > 0.15) { setState(r, 'idle'); r.cd = randRange(0.8, 1.5); r.vx = r.vz = 0; fx.dust(r.x, 0, r.z, 3, 0.35); }
+      break;
+    }
+    case 'hurt': r.vx *= 0.85; r.vz *= 0.85; if (r.st > 0.3) { setState(r, 'idle'); r.cd = 0.3; } break;
+    case 'down': updateDown(r, dt); if (r.state === 'dead') { setState(r, 'flee', { vanish: true }); r.alive = true; r.dazed = true; } break;
+    case 'getup': r.vx = r.vz = 0; if (r.st > 0.5) setState(r, 'idle'); break;
+    case 'flee': {
+      const dir = r.x > G.focusX ? 1 : -1;
+      r.vx = dir * 5.5; r.vz = 0; r.face = dir > 0 ? FACE_RIGHT : FACE_LEFT;
+      if (Math.abs(r.x - G.focusX) > HALF_W + 4) { r.alive = false; removeActor(r); }
+      break;
+    }
+  }
+}
+
+// ---------- 波次 / 卷轴 ----------
+function triggerWave(i) {
+  const AR = AREAS[G.area];
+  const wv = AR.waves[i];
+  G.waveOn = true; G.wave = i;
+  const maxF = AR.x1 - HALF_W;
+  G.lockX = Math.min(maxF, Math.max(wv.lock, G.focusX));
+  G.pending = wv.spawns.map(s => Object.assign({ at: G.t + (s.delay || 0) }, s));
+  G.waveEnemies = [];
+  ev('wave', { id: wv.id });
+  for (const s of G.pending.filter(s => s.stand)) { const e = doSpawn(s); setState(e, 'cut'); }
+  G.pending = G.pending.filter(s => !s.stand);
+}
+function doSpawn(s) {
+  const L = G.lockX !== null ? G.lockX : G.focusX;
+  let e;
+  const AR = AREAS[G.area];
+  switch (s.from) {
+    case 'right': e = spawnEnemy(s.type, L + ENTER_DX, s.z || 0, { drop: s.drop, weapon: s.weapon }); setState(e, 'enter', { kind: 'walk', tx: L + HALF_W - 1.4, tz: s.z || 0 }); break;
+    case 'left': e = spawnEnemy(s.type, L - ENTER_DX, s.z || 0, { drop: s.drop, weapon: s.weapon }); setState(e, 'enter', { kind: 'walk', tx: L - HALF_W + 1.4, tz: s.z || 0 }); break;
+    case 'door': {
+      const d = world.area().doors[s.door];
+      d.open = true; A.play('door', 0.6);
+      e = spawnEnemy(s.type, d.x, -2.75, { drop: s.drop, weapon: s.weapon }); setState(e, 'enter', { kind: 'door', door: s.door, tz: -1.4 });
+      break;
+    }
+    case 'facade': e = spawnEnemy(s.type, s.x, -3.1, { drop: s.drop }); setState(e, 'enter', { kind: 'facade', tz: -1.2 }); break;
+    case 'wall': e = spawnEnemy(s.type, s.x, -2.95, { drop: s.drop }); e.y = 2.75; setState(e, 'enter', { kind: 'wall', h: 2.75 }); break;
+    default: e = spawnEnemy(s.type, s.x, s.z, { drop: s.drop, weapon: s.weapon });
+  }
+  e.z = clamp(e.z, AR.z0 - 1.2, AR.z1);
+  G.waveEnemies.push(e);
+  return e;
+}
+function updateWaves(dt) {
+  const AR = AREAS[G.area], p = G.player;
+  for (const s of G.pending.slice()) if (G.t >= s.at) { G.pending = G.pending.filter(x => x !== s); doSpawn(s); }
+  if (G.waveOn) {
+    const alive = G.waveEnemies.some(e => e.alive && !e.removed);
+    if (!alive && G.pending.length === 0 && G.mode === 'play') {
+      G.waveOn = false; G.lockX = null; G.wave++;
+      const more = G.wave < AR.waves.length || AR.exit || AR.boss;
+      if (more) { G.go = 2.4; A.play('go'); }
+      ev('waveClear', { wave: G.wave });
+    }
+  } else if (G.mode === 'play') {
+    if (G.wave < AR.waves.length) {
+      if (p.x >= AR.waves[G.wave].trigger) triggerWave(G.wave);
+    } else if (AR.exit) {
+      const ex = AR.exit;
+      if (p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < 1.1 && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
+    } else if (AR.boss && !G.boss && p.x >= AR.boss.trigger) startBoss();
+  }
+}
+function updateCameraFocus(dt) {
+  const AR = AREAS[G.area], p = G.player;
+  const minF = AR.x0 + HALF_W, maxF = AR.x1 - HALF_W;
+  let target = clamp(p.x + 0.8, minF, maxF);
+  if (G.lockX !== null) target = G.lockX;
+  else target = Math.max(G.focusX, target);   // 原作不能往回卷
+  const k = 1 - Math.exp(-dt * (G.lockX !== null ? 3 : 6));
+  G.focusX += (target - G.focusX) * k;
+  if (G.lockX === null) G.focusX = Math.max(G.focusX, Math.min(target, p.x - HALF_W + 1.6));
+}
+function updateTimer(dt) {
+  const p = G.player;
+  if (!G.waveOn && !G.boss && G.lockX === null && G.wave === 0) { /* 开场还没触发也照样计时 */ }
+  const before = G.timer;
+  G.timer -= dt;
+  if (G.timer < 30 && Math.floor(before) !== Math.floor(G.timer) && G.timer > 0) { A.play('timer'); }
+  if (G.timer <= 0) {
+    G.timer = AREAS[G.area].timer;
+    if (p.alive && p.state !== 'dead') { banner('TIME OVER', '时间到！', 2); p.hp = 0; knockdownPlayerDeath(p); }
+  }
+}
+function knockdownPlayerDeath(p) { knockdown(p, p.face + Math.PI, 1, true); }
+
+// ---------- 区域切换 ----------
+function exitArea(type) {
+  const p = G.player;
+  G.mode = 'trans';
+  if (p.grab) releaseGrab(p);
+  const W0 = world.area();
+  if (type === 'door') {
+    p.face = FACE_RIGHT; p.x = Math.min(p.x, 43.9); setState(p, 'door', { kick: true });
+    runScript([
+      { wait: 0.15 },
+      { fn: () => { A.play('door'); fx.debris(45, 1.2, 0, '#6a4a2c', 10, 0.18, 3); fx.shake = 0.3; if (W0.hutDoor) { W0.hutDoor.rotation.z = -1.45; W0.hutDoor.position.x = 45.6; W0.hutDoor.position.y = 0.06; } } },
+      { wait: 0.45 },
+      { fn: () => { setState(p, 'cutwalk', { x: 46.5, z: 0 }); } },
+      { fade: 1, dur: 0.5 },
+      { fn: () => { loadArea(1); } },
+      { fade: 0, dur: 0.5 }
+    ]);
+  } else if (type === 'window') {
+    p.face = FACE_RIGHT;
+    runScript([
+      { fn: () => { setState(p, 'jump', { noAtk: true, atk: true, atkT: 0, fly: true, hitDone: true }); p.vy = 7; p.y = 0.01; p.vx = 3.5; p.vz = -p.z * 0.8; A.play('jump'); } },
+      { wait: 0.3 },
+      { fn: () => { A.play('glass'); if (W0.window) { W0.window.glass.visible = false; } fx.debris(63, 2.2, 0, '#bfe0f0', 18, 0.12, 4); fx.shake = 0.25; } },
+      { fade: 1, dur: 0.5 },
+      { fn: () => { loadArea(2); } },
+      { fade: 0, dur: 0.5 }
+    ]);
+  }
+  ev('exit', { kind: type });
+}
+function startBoss() {
+  const AR = AREAS[G.area], B = AR.boss, p = G.player;
+  G.mode = 'cut';
+  G.lockX = B.lock;
+  if (p.grab) releaseGrab(p);
+  const v = makeActor('vice', 'enemy', { def: ENEMY.vice, x: B.viceX, z: B.viceZ, hp: ENEMY.vice.hp, maxHp: ENEMY.vice.hp, face: FACE_LEFT, summons: 0, cd: 1 });
+  setState(v, 'cut'); v.sub.pose = 'stand';
+  const r = makeActor('raptor', 'enemy', { def: ENEMY.raptor, x: B.raptorX, z: B.raptorZ, hp: ENEMY.raptor.hp, maxHp: ENEMY.raptor.hp, face: FACE_LEFT, cd: 1 });
+  setState(r, 'chained');
+  G.boss = v; G.raptor = r; G.waveEnemies = [v];
+  // 锁链
+  const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1, 6), new THREE.MeshLambertMaterial({ color: '#8a8c94' }));
+  scene.add(chain); G.chain = chain;
+  A.music(null);
+  runScript([
+    { fn: () => { setState(p, 'cutwalk', { x: Math.max(p.x, 50.6), z: 0.3, face: FACE_RIGHT }); } },
+    { until: () => p.state !== 'cutwalk', max: 4 },
+    { say: 'player', text: '喂，混蛋！离那只恐龙远点！', dur: 2.4 },
+    { say: 'vice', text: '滚开，不然打掉你的牙！', dur: 2.2 },
+    { say: 'vice', text: '你的尸体正好拿来喂肥这只岩跳龙——然后我再剥了它的皮！', dur: 3.2 },
+    { fn: () => { v.sub.pose = 'whip'; v.st = 0; A.play('whip'); } },
+    { wait: 0.35 },
+    { fn: () => { r.angry = true; r.model.setPalette('angry'); A.play('roar'); fx.shake = 0.3; r.sub.roar = 0.9; } },
+    { wait: 0.9 },
+    { fn: () => { scene.remove(G.chain); G.chain = null; A.play('chain'); setState(v, 'idle'); setState(r, 'idle'); r.cd = 0.3; v.cd = 0.8; G.mode = 'play'; G.timer = 180; G.timerShow = 2.5; A.music('boss'); banner('BOSS', 'VICE T. 维斯·特修恩', 1.8); ev('bossStart'); } }
+  ]);
+}
+
+// ---------- 过场脚本 ----------
+function runScript(steps) { G.script = { steps, i: 0, t: 0 }; }
+function stepScript(dt) {
+  const S = G.script;
+  while (S && S.i < S.steps.length) {
+    const s = S.steps[S.i];
+    if (S.t === 0 && s.say) { G.dialog = { who: s.say, text: s.text, t: 0 }; A.play('blip'); }
+    S.t += dt;
+    let done = false;
+    if (s.wait !== undefined) done = S.t >= s.wait;
+    else if (s.fn) { s.fn(); done = true; }
+    else if (s.say) {
+      G.dialog.t = S.t;
+      const skip = S.t > 0.35 && (IN.take('atk') || IN.take('jump') || IN.take('pause'));
+      if (Math.floor(S.t * 18) !== Math.floor((S.t - dt) * 18) && S.t * 22 < s.text.length) A.play('blip', 0.5);
+      done = S.t >= s.dur || skip;
+      if (done) G.dialog = null;
+    } else if (s.until) done = s.until() || S.t > (s.max || 5);
+    else if (s.fade !== undefined) { G.fade = lerp(s.fade ? 0 : 1, s.fade, Math.min(1, S.t / s.dur)); done = S.t >= s.dur; }
+    if (!done) return;
+    if (G.script !== S) return;   // fn 里开了新脚本
+    S.i++; S.t = 0;
+  }
+  if (G.script === S) G.script = null;
+}
+
+// ---------- 死亡与复活 ----------
+function updatePlayerDead(p, dt) {
+  if (p.st < 1.2) return;
+  if (p.sub.handled) return;
+  p.sub.handled = true;
+  G.stats.deaths++;
+  ev('death', { lives: G.lives });
+  if (G.settings.lives === 'classic') {
+    G.lives--;
+    if (G.lives <= 0) { startContinue(); return; }
+  }
+  respawn(p);
+}
+function respawn(p) {
+  p.hp = p.maxHp; p.alive = true;
+  p.y = 4.5; p.vy = -2; p.vx = p.vz = 0;
+  p.x = clamp(p.x, G.focusX - HALF_W + 1.5, G.focusX + HALF_W - 1.5);
+  setState(p, 'respawn');
+  p.invul = 3.0;
+  if (p.weapon) { p.weapon = null; attachWeapon(p); }
+  ev('respawn');
+}
+function shockwave(p) {
+  // 复活落地时把身边的敌人震倒（不扣血），避免被围在复活点
+  for (const e of G.actors) {
+    if (e === p || e.side === 'player' || !hittable(e)) continue;
+    const d = Math.hypot(e.x - p.x, e.z - p.z);
+    if (d < 3.2 && !e.isRaptor) knockdown(e, faceOf(e.x - p.x, e.z - p.z), 0.8, false);
+  }
+  for (const pr of G.projs.slice()) if (pr.side === 'enemy' && Math.hypot(pr.x - p.x, pr.z - p.z) < 3) killProj(pr);
+}
+function startContinue() {
+  G.mode = 'cont';
+  G.cont = { t: 0, count: 9, shot: false };
+  A.music('cont');
+  ev('continue');
+}
+function updateContinue(dt) {
+  const C = G.cont;
+  C.t += dt;
+  const n = 9 - Math.floor(C.t);
+  if (n !== C.count && n >= 0) { C.count = n; A.play('timer'); }
+  if (IN.take('atk') || IN.take('pause')) {
+    G.stats.contCount++; G.score += 1; G.lives = 3;
+    G.mode = 'play'; G.cont = null; A.music(G.boss ? 'boss' : 'stage');
+    respawn(G.player);
+    ev('continued');
+    return;
+  }
+  if (C.t > 10 && !C.shot) { C.shot = true; A.play('gun'); G.flash = 1; }
+  if (C.t > 11.2) { G.cont = null; finish(false); }
+}
+
+// ---------- 结束 ----------
+function finish(win) {
+  if (G.ended) return;
+  G.ended = true;
+  G.mode = win ? 'clear' : 'over';
+  const newHi = !G.demoUsed && G.score > G.hi;
+  if (newHi) { G.hi = G.score; store.set('hi', G.hi); }
+  const res = { win, score: G.score, hi: G.hi, newHi, demo: G.demoUsed, kills: Object.assign({}, G.kills), seconds: Math.round(G.t), deaths: G.stats.deaths, hits: G.stats.hits, food: G.stats.food, vitality: G.vitality || 0, hero: HEROES[G.hero], lives: G.settings.lives, dur: G.settings.dur, conts: G.stats.contCount };
+  ev('end', { win, score: G.score });
+  if (G.onEnd) G.onEnd(res);
+}
+
+// ---------- 标题画面：四位主角站在楼顶 ----------
+export function toTitle() {
+  clearAll();
+  G.mode = 'title';
+  world.setArea(0);
+  G.focusX = 8; G.lockX = null;
+  G.titleActors = HEROES.map((h, i) => {
+    const a = makeActor(h.id, 'player', { x: 5.6 + i * 1.25, z: 1.0 - Math.abs(i - 1.5) * 0.35, face: 0.25 - i * 0.12, hero: h });
+    setState(a, 'title');
+    return a;
+  });
+}
+
+// ---------- 渲染：姿势与模型同步 ----------
+const tmpPose = new Float32Array(POSE_LEN);
+const GUN_POSE = mod(HP.guard, { rS: [-0.6, 0, -0.2], rE: [-1.2, 0, 0] });
+const SG_POSE = mod(HP.guard, { rS: [-0.5, -0.2, -0.2], rE: [-1.4, 0, 0], lS: [-0.9, -0.3, 0.3], lE: [-0.8, 0, 0] });
+export function render(dt, realT) {
+  for (const a of G.actors) {
+    if (a.removed) continue;
+    const frozen = a.hitstop > 0;
+    if (a.isRaptor) renderRaptor(a, frozen ? 0 : dt);
+    else renderHuman(a, frozen ? 0 : dt, realT);
+    a.model.root.position.set(a.x + (frozen && a.flash > 0 ? (Math.random() - 0.5) * 0.06 : 0), a.y, a.z);
+    a.model.root.rotation.y = a.face;
+    a.blob.position.set(a.x, 0.015, a.z);
+    const hs = Math.max(0.3, 1 - a.y * 0.25);
+    a.blob.scale.setScalar(a.radius / 0.32 * 0.85 * hs);
+    a.blob.visible = a.state !== 'dead' || Math.floor(a.st * 12) % 2 === 0;
+    // 闪烁：无敌 / 倒地消失
+    let vis = true;
+    if (a.state === 'dead' && a.side !== 'player') vis = Math.floor(a.st * 12) % 2 === 0;
+    else if (a.invul > 0 && a.side === 'player' && a.state !== 'attack' && !G.settings.demo) vis = Math.floor(G.t * 15) % 2 === 0;
+    if (a === G.player && G.fpActive) vis = false;
+    a.model.root.visible = vis;
+    // 受击闪白
+    const m = a.model.mat;
+    if (m) { const f = a.flash > 0 ? 0.3 * Math.min(1, a.flash / 0.08) : 0; m.emissive.setRGB(f, f * 0.95, f * 0.85); if (a === G.player && G.settings.demo) m.emissive.setRGB(0.15, 0.12 + Math.sin(G.t * 8) * 0.08, 0.02); }
+  }
+  // 锁链：维斯的手到岩跳龙脖子
+  if (G.chain && G.boss && G.raptor) {
+    const h = new THREE.Vector3(); G.boss.model.bones.rHand.getWorldPosition(h);
+    const n = new THREE.Vector3(); G.raptor.model.bones.head.getWorldPosition(n);
+    const mid = h.clone().add(n).multiplyScalar(0.5); mid.y -= 0.25;
+    G.chain.position.copy(mid);
+    G.chain.scale.y = h.distanceTo(n);
+    G.chain.lookAt(n); G.chain.rotateX(Math.PI / 2);
+  }
+}
+function targetPose(a, realT) {
+  const s = a.state, st = a.st;
+  const tP = (name) => HP[name] || HP.guard;
+  if (a.side === 'player' && a.weapon && ['idle', 'walk'].indexOf(s) >= 0) {
+    const k = a.weapon.kind;
+    if (k === 'gun') return s === 'walk' ? walkPose(a.walkPh, 0.8, GUN_POSE) : GUN_POSE;
+    if (k === 'shotgun') return s === 'walk' ? walkPose(a.walkPh, 0.8, SG_POSE) : SG_POSE;
+  }
+  switch (s) {
+    case 'title': return lerpPose(HP.guard, HP.crossArms, 0.5 + 0.5 * Math.sin(realT * 0.8 + a.id), tmpPose);
+    case 'idle': case 'hover': return lerpPose(HP.guard, HP.guard2, 0.5 + 0.5 * Math.sin(realT * 4 + a.id), tmpPose);
+    case 'walk': case 'cutwalk': return walkPose(a.walkPh, 1, HP.guard);
+    case 'enter': {
+      if (a.sub.kind === 'wall' && a.y > 0 && !a.sub.jumped) return HP.crouch;
+      if (a.y > 0) return HP.jumpUp;
+      if (a.sub.kind === 'facade') return HP.tackle;
+      return walkPose(a.walkPh, 1, HP.guard);
+    }
+    case 'run': case 'flee': return runPose(a.walkPh);
+    case 'jump': {
+      if (a.sub.atk && st - a.sub.atkT > 0.03) return a.sub.fly || a.hero && a.hero.id === 'mustapha' ? HP.flyKick : HP.jumpKick;
+      return HP.jumpUp;
+    }
+    case 'jumpkick': return HP.jumpKick;
+    case 'flykick': return HP.flyKick;
+    case 'attack': {
+      const m = a.move;
+      if (!m) return HP.guard;
+      const d = m.def;
+      if (m.id === 'mega') {
+        a.spin = (m.t / d.dur) * Math.PI * 4;
+        return HP.spinA;
+      }
+      if (d.pose) return HP[d.pose];
+      const clip = HC[d.clip];
+      if (!clip) return HP.guard;
+      if (d.windup) { if (m.t < d.windup) return tP(d.wind || 'guard2'); return sample(clip, m.t - d.windup); }
+      return sample(clip, m.t * (clip.dur / Math.max(0.01, d.dur)));
+    }
+    case 'grab': return a.sub.anim ? sample(HC.knee, a.st - a.sub.animT) : HP.grab;
+    case 'throwing': return sample(HC[a.sub.clip] || HC.throw, st);
+    case 'grabbed': return HP.held;
+    case 'hurt': return a.sub.low ? HP.hurt2 : HP.hurt;
+    case 'down': {
+      if (a.sub.phase === 'lie') return HP.lie;
+      if (a.sub.thrown) return HP.thrown;
+      return a.y > 0.3 || a.vy > 0 ? HP.fallBack : HP.lie;
+    }
+    case 'dead': return HP.lie;
+    case 'getup': return sample(HC.getup, st);
+    case 'pickup': return sample(HC.pickup, st);
+    case 'carry': return Math.hypot(a.vx, a.vz) > 0.2 ? walkPose(a.walkPh, 0.7, HP.throwUp) : HP.throwUp;
+    case 'shoot': return a.sub.clip === 'shotgun' ? HP.shotgun : HP.shoot;
+    case 'throwK': return st < 0.4 ? HP.throwBack : HP.throwFwd;
+    case 'charge': return st < 0.4 ? HP.guard2 : HP.headbutt;
+    case 'flurry': return a.sub.alt ? HP.jabL : HP.jabR;
+    case 'gun': return HP.shoot;
+    case 'summon': return st < 0.5 ? HP.stand : HP.gunUp;
+    case 'respawn': return HP.jumpUp;
+    case 'victory': return sample(HC.victory, Math.min(st, 1.2));
+    case 'door': return st < 0.4 ? sample(HC.kickMid, st) : HP.guard;
+    case 'leave': return HP.jumpUp;
+    case 'cut': {
+      const ps = a.sub.pose;
+      if (ps === 'whip') return sample(HC.whip, Math.min(st, 0.6));
+      if (ps && HP[ps]) return HP[ps];
+      return lerpPose(HP.guard, HP.guard2, 0.5 + 0.5 * Math.sin(realT * 4 + a.id), tmpPose);
+    }
+  }
+  return HP.guard;
+}
+function renderHuman(a, dt, realT) {
+  const sp = Math.hypot(a.vx, a.vz);
+  if (a.state === 'run' || a.state === 'flee') a.walkPh += dt * (8 + sp * 1.2);
+  else a.walkPh += dt * (3 + sp * 2.6);
+  const tp = targetPose(a, realT);
+  const sharp = ['attack', 'hurt', 'down', 'flurry', 'grab', 'throwing'].indexOf(a.state) >= 0;
+  const k = dt <= 0 ? 0 : 1 - Math.exp(-dt * (sharp ? 34 : 16));
+  for (let i = 0; i < POSE_LEN; i++) a.pose[i] += (tp[i] - a.pose[i]) * k;
+  applyPose(a.model, a.pose);
+  // 必杀旋转
+  if (a.state === 'attack' && a.move && a.move.id === 'mega') a.model.bones.body.rotation.y = a.spin || 0;
+}
+function renderRaptor(r, dt) {
+  const sp = Math.hypot(r.vx, r.vz);
+  r.walkPh += dt * (4 + sp * 2.4);
+  let tp;
+  switch (r.state) {
+    case 'chained': tp = r.angry ? RPOSE.roar : (r.sub.roar > 0 ? RPOSE.roar : RPOSE.crouch); break;
+    case 'idle': tp = r.sub.roar > 0 ? RPOSE.roar : RPOSE.idle; break;
+    case 'walk': case 'flee': tp = raptorRun(r.walkPh, Math.min(1.2, 0.5 + sp * 0.2)); break;
+    case 'bite': tp = r.st < 0.26 ? RPOSE.bite0 : RPOSE.bite1; break;
+    case 'claw': tp = r.st < 0.3 ? RPOSE.claw0 : RPOSE.claw1; break;
+    case 'leap': tp = RPOSE.leap; break;
+    case 'hurt': tp = RPOSE.hurt; break;
+    case 'down': tp = r.sub.phase === 'lie' ? RPOSE.lie : RPOSE.hurt; break;
+    case 'getup': tp = lerpR(RPOSE.lie, RPOSE.idle, Math.min(1, r.st / 0.5)); break;
+    default: tp = RPOSE.idle;
+  }
+  if (r.sub.roar > 0) r.sub.roar -= dt;
+  const k = dt <= 0 ? 0 : 1 - Math.exp(-dt * 16);
+  for (let i = 0; i < R_LEN; i++) r.pose[i] += (tp[i] - r.pose[i]) * k;
+  applyRaptor(r.model, r.pose);
+  if (r.flash > 0 && r.model.mat) r.model.mat.emissive.setRGB(0.3, 0.28, 0.25); else if (r.model.mat) r.model.mat.emissive.setRGB(0, 0, 0);
+}
+
+// ---------- HUD 数据 ----------
+export function hudState() {
+  const p = G.player;
+  let enemy = null;
+  const lt = G.lastTarget;
+  if (lt && !lt.removed && G.t - G.lastTargetT < 3) enemy = lt;
+  else if (G.boss && G.boss.alive && G.mode !== 'cut') enemy = G.boss;
+  return {
+    hp: p ? Math.max(0, p.hp) : 0, maxHp: p ? p.maxHp : 100, lives: G.settings.lives === 'inf' ? '∞' : Math.max(0, G.lives),
+    score: G.score, hi: Math.max(G.hi, G.score), hero: G.hero,
+    weapon: p && p.weapon ? { kind: p.weapon.kind, ammo: p.weapon.ammo, name: ITEMS[p.weapon.kind].cn } : null,
+    enemy: enemy ? { type: enemy.type, name: enemy.def ? enemy.def.name : enemy.type, cn: enemy.def ? enemy.def.cn : '', hp: Math.max(0, enemy.hp), maxHp: enemy.maxHp } : null,
+    timer: G.timer, timerBig: G.timerShow > 0 || G.timer < 30, go: G.go > 0, mode: G.mode
+  };
+}
+
+// ---------- 测试钩子 ----------
+export const _test = {
+  G,
+  tp(x, z) { const p = G.player; p.x = x; if (z !== undefined) p.z = z; },
+  hp(v) { G.player.hp = v; },
+  killAll() { for (const e of G.actors) if (e !== G.player && e.alive && e.side === 'enemy' && !e.isRaptor) { e.hp = 0; knockdown(e, FACE_RIGHT, 1, true); } },
+  hurtAll(d) { for (const e of G.actors) if (e !== G.player && e.alive && e.side === 'enemy') { e.hp -= d; if (e.hp <= 0) knockdown(e, FACE_RIGHT, 1, true); } },
+  area(i) { loadArea(i); },
+  give(kind, ammo) { const p = G.player; p.weapon = { kind, ammo: ammo || ITEMS[kind].ammo }; attachWeapon(p); },
+  item(kind, dx) { const p = G.player; return spawnItem(kind, p.x + (dx || 0.3), p.z); },
+  enemy(type, dx, dz) { const p = G.player; const e = spawnEnemy(type, p.x + (dx || 1.5), p.z + (dz || 0)); G.waveEnemies.push(e); return e.id; },
+  setTimer(t) { G.timer = t; },
+  bossHp(v) { if (G.boss) G.boss.hp = v; },
+  skipScript() { while (G.script) stepScript(10); },
+  actors: () => G.actors.map(a => ({ id: a.id, type: a.type, side: a.side, state: a.state, x: +a.x.toFixed(2), y: +a.y.toFixed(2), z: +a.z.toFixed(2), hp: +(a.hp || 0).toFixed(1), alive: a.alive, face: +a.face.toFixed(2), token: a.token })),
+  props: () => G.props.map(p => ({ kind: p.kind, x: p.x, z: p.z, broken: p.broken, hp: p.hp })),
+  items: () => G.items.map(i => ({ kind: i.kind, x: +i.x.toFixed(2), z: +i.z.toFixed(2) }))
+};
+export function snapshot() {
+  const p = G.player;
+  return {
+    mode: G.mode, t: +G.t.toFixed(2), area: G.area, focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
+    score: G.score, hi: G.hi, lives: G.settings.lives === 'inf' ? 'inf' : G.lives, settings: Object.assign({}, G.settings), demoUsed: G.demoUsed,
+    player: p ? { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), state: p.state, hp: +p.hp.toFixed(1), face: +p.face.toFixed(2), invul: +p.invul.toFixed(2), weapon: p.weapon ? Object.assign({}, p.weapon) : null, combo: p.comboN, visible: p.model.root.visible } : null,
+    enemies: G.actors.filter(a => a.side === 'enemy').length, boss: G.boss ? { hp: G.boss.hp, state: G.boss.state, summons: G.boss.summons } : null, raptor: G.raptor && !G.raptor.removed ? { state: G.raptor.state, angry: !!G.raptor.angry, hp: G.raptor.hp } : null,
+    dialog: G.dialog ? G.dialog.text : null, banner: G.banner ? G.banner.text : null, kills: Object.assign({}, G.kills), items: G.items.length, props: G.props.filter(p => !p.broken).length, script: !!G.script, cont: G.cont ? G.cont.count : null, fade: +G.fade.toFixed(2)
+  };
+}

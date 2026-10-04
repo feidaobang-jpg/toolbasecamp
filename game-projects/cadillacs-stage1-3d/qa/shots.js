@@ -1,0 +1,65 @@
+// 各区域 / 各视角截图（手动时钟 + bot 打一会儿）：node qa/shots.js [英雄] [前缀]
+const { launch, BASE, out, sleep } = require('./lib');
+const { BOT_SRC } = require('./bot');
+(async () => {
+  const hero = +(process.argv[2] || 2), pre = process.argv[3] || 'v01';
+  const W = +(process.env.W || 1280), Hh = +(process.env.H || 720);
+  const b = await launch();
+  const page = await b.newPage({ viewport: { width: W, height: Hh } });
+  const errs = [];
+  page.on('pageerror', e => errs.push('pageerror: ' + e.message));
+  page.on('console', m => { if (m.type() === 'error') errs.push('console: ' + m.text()); });
+  await page.goto(BASE + '?test=1&seed=11&clean=' + (process.env.CLEAN || 0), { waitUntil: 'load' });
+  await sleep(600);
+  await page.evaluate((h) => localStorage.setItem('cd3d-stage1:hero', String(h)), hero);
+  await page.reload({ waitUntil: 'load' }); await sleep(800);
+  await sleep(1500); await page.screenshot({ path: out(pre + '-title.png') });
+  await page.keyboard.press('Enter'); await sleep(400); await page.screenshot({ path: out(pre + '-select.png') });
+  await page.keyboard.press('Enter'); await sleep(300);
+  await page.evaluate(() => window.__CD_TEST__.manual(true));
+  await page.evaluate(BOT_SRC);
+  const T = (fn, arg) => page.evaluate(fn, arg);
+  const step = (n) => T((n) => window.__CD_TEST__.step(n, true), n);
+  const shot = async (name) => { await step(1); await page.screenshot({ path: out(pre + '-' + name + '.png') }); console.log('shot', name, JSON.stringify(await T(() => { const s = window.__CD_TEST__.snapshot(); return { mode: s.mode, area: s.area, p: s.player && [s.player.x, s.player.z, s.player.state], cam: s.ui.camera, en: s.enemies, dialog: s.dialog }; }))); };
+  const bot = (sec) => T((sec) => window.__bot.run(sec, { jumps: true }), sec);
+  const cam = (i, yaw) => T(([i, yaw]) => window.__CD_TEST__.setCamera(i, yaw), [i, yaw || 0]);
+  // 楼顶开场对话
+  await step(80); await shot('roof-intro');
+  await T(() => window.__CD_TEST__.cheat.skipScript());
+  await bot(2.2); await shot('roof-fight');
+  await cam(1); await step(20); await shot('roof-oblique');
+  await cam(2); await step(20); await shot('roof-front');
+  await cam(3); await step(20); await shot('roof-fp');
+  await cam(0, Math.PI); await step(30); await shot('roof-side-rot180');
+  await cam(0, Math.PI / 2); await step(30); await shot('roof-side-rot90');
+  await cam(0, 0);
+  await bot(6); await T(() => window.__CD_TEST__.cheat.tp(40, 0)); await bot(3); await shot('roof-end');
+  // 大楼内部
+  await T(() => window.__CD_TEST__.cheat.area(1)); await step(40); await shot('hall-start');
+  await bot(3); await shot('hall-fight');
+  await T(() => window.__CD_TEST__.cheat.killAll()); await step(40);
+  await T(() => window.__CD_TEST__.cheat.tp(15, 0)); await step(90); await shot('hall-door');
+  await cam(2); await step(20); await shot('hall-front');
+  await cam(3); await step(20); await shot('hall-fp');
+  await cam(0, Math.PI); await step(30); await shot('hall-rot180');
+  await cam(0, 0);
+  await T(() => window.__CD_TEST__.cheat.killAll()); await step(30);
+  await T(() => window.__CD_TEST__.cheat.tp(44, 0)); await step(120); await shot('hall-fat');
+  await T(() => window.__CD_TEST__.cheat.killAll()); await step(60);
+  await T(() => window.__CD_TEST__.cheat.tp(57, 0)); await step(60); await shot('hall-end');
+  // 47 街
+  await T(() => window.__CD_TEST__.cheat.area(2)); await step(70); await shot('street-start');
+  await step(50); await shot('street-wall');
+  await T(() => window.__CD_TEST__.cheat.killAll()); await step(60);
+  await T(() => { const C = window.__CD_TEST__.cheat, G = C.G; C.killAll(); G.pending = []; G.waveOn = false; G.wave = 9; G.lockX = null; G.focusX = 41; G.player.x = 45.6; G.player.z = 0.3; });
+  await step(150); await shot('boss-dialog');
+  await step(200); await shot('boss-dialog2');
+  await T(() => window.__CD_TEST__.cheat.skipScript()); await step(10);
+  await bot(2.5); await shot('boss-fight');
+  await cam(2); await step(10); await shot('boss-front');
+  await cam(1); await step(10); await shot('boss-oblique');
+  await cam(0, -Math.PI / 2); await step(30); await shot('boss-rot-90');
+  await cam(0, 0);
+  console.log(errs.slice(0, 10).join('\n'));
+  await b.close();
+})();

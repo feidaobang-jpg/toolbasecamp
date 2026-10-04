@@ -176,6 +176,7 @@ const gamesConfig = {
                 { titleKey: 'tools.tank3d.title', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-3d/index.html', url: 'html/game/tank-3d/index.html?v=2', thumb: 'assets/game/thumbs/tank-3d.jpg?v=2' },
                 { titleKey: 'tools.mario3d.title', url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=3', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' },
                 { titleKey: 'tools.jackal3d.title', url: 'html/game/jackal-stage1-3d/index.html?v=1', thumb: 'assets/game/thumbs/jackal-stage1-3d.jpg?v=1' },
+                { titleKey: 'tools.cadillacs3d.title', url: 'html/game/cadillacs-stage1-3d/index.html?v=1', thumb: 'assets/game/thumbs/cadillacs-stage1-3d.jpg?v=1' },
                 { titleKey: 'tools.journeyWest.title', toyUrl: 'https://www.bilibili.com/toy/feidao-journey-west/index.html', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' },
                 { titleKey: 'tools.starshipDefense.title', toyUrl: 'https://www.bilibili.com/toy/chongchao-qianshao/index.html', url: 'html/game/starship_defense.html?v=7', thumb: 'assets/game/thumbs/starship_defense.jpg?v=5' }
             ]
