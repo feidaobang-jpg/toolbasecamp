@@ -1,0 +1,21 @@
+{
+ "date": "2026-10-04T21:17:04.901Z",
+ "note": "Edge 设备模拟 844×390 DPR2 + CPU 降速 4 倍（RTX 4060 Ti 仍负责 GPU），不代表真机",
+ "quality": {
+  "setting": "auto",
+  "effective": "high",
+  "auto": {
+   "median": 11.8,
+   "quality": "high"
+  }
+ },
+ "fps": 104.1,
+ "median": 11.7,
+ "p95": 11.9,
+ "over50": 0,
+ "n": 1042,
+ "backing": [
+  1688,
+  780
+ ]
+}

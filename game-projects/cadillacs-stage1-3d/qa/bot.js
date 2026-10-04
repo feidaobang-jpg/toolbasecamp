@@ -20,7 +20,7 @@ module.exports.BOT_SRC = String.raw`
     const p = s.player;
     for (let i = pending.length - 1; i >= 0; i--) { pending[i][1]--; if (pending[i][1] <= 0) { key(pending[i][0], false); pending.splice(i, 1); } }
     tick++;
-    if (s.mode !== 'play') { releaseAll(); if (s.dialog && tick % 20 === 0) tap('KeyJ'); return s; }
+    if (s.mode !== 'play') { releaseAll(); if (s.dialog && !opts.noSkip && tick % 20 === 0) tap('KeyJ'); return s; }
     if (!p || ['down', 'dead', 'respawn', 'getup', 'hurt'].indexOf(p.state) >= 0) { releaseAll(); return s; }
     const enemies = acts.filter(a => a.side === 'enemy' && a.alive && ['down', 'dead', 'enter', 'cut', 'leave', 'flee'].indexOf(a.state) < 0);
     let move = { x: 0, z: 0 }, atk = false;

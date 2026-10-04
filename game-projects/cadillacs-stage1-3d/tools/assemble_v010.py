@@ -120,11 +120,12 @@ qa_dir = ROOT / 'qa' / 'out'
 def qa_json(name):
     p = REL / 'qa' / name
     return json.loads(p.read_text(encoding='utf-8')) if p.exists() else None
-desk = qa_json('desktop.json'); mob = qa_json('mobile.json'); perf = qa_json('perf-1280x720-high.json')
+desk = qa_json('desktop.json'); mob = qa_json('mobile.json'); perf = qa_json('perf-1280x720-high.json'); perfm = qa_json('perf-mobile-throttle4.json')
 QA = []
 if desk: QA.append({'id': 'qa-desktop', 'device': 'Windows 11 本机 · Microsoft Edge（Playwright 无头）· ANGLE D3D11 RTX 4060 Ti · 1280×720', 'method': '真实键盘事件逐项验收（qa/desktop.js）', 'result': f"{desk['pass']}/{desk['total']} 通过", 'evidence': 'releases/v0.1.0/qa/desktop.json', 'untested': ['真人手感试玩']})
 if mob: QA.append({'id': 'qa-mobile', 'device': 'Edge 设备模拟：Android UA、844×390 与 390×844、DPR2、hasTouch', 'method': 'CDP 多点触摸事件（qa/mobile.js），含竖屏旋转逆变换与 1×1 启动后重排', 'result': f"{mob['pass']}/{mob['total']} 通过", 'evidence': 'releases/v0.1.0/qa/mobile.json', 'untested': ['真机触控', '真机全屏 / 横屏锁定', '真机帧率']})
 if perf: QA.append({'id': 'qa-perf', 'device': 'Edge 无头 · RTX 4060 Ti · 1280×720 DPR1 · 高画质', 'method': 'bot 实时打斗，侧视 / 正视 / 第一人称 / 转视角 / Boss 各采样 8 秒帧间隔（qa/perf.js）', 'result': '; '.join(f"{r['name']} {r['frames']['fps']}fps p95 {r['frames']['p95']}ms >50ms:{r['frames']['over50']} draws {(r.get('drawCalls') or {}).get('calls')}" for r in perf['runs']), 'evidence': 'releases/v0.1.0/qa/perf-1280x720-high.json', 'untested': ['手机真机性能', '流畅档实测']})
+if perfm: QA.append({'id': 'qa-perf-mobile-sim', 'device': 'Edge 设备模拟 844×390 DPR2 + CDP CPU 降速 4 倍', 'method': 'bot 实时打斗 10 秒采样（qa/perf_mobile.js）', 'result': f"{perfm['fps']}fps 中位 {perfm['median']}ms p95 {perfm['p95']}ms >50ms:{perfm['over50']} 自动画质判定 {perfm['quality']['effective']}", 'evidence': 'releases/v0.1.0/qa/perf-mobile-throttle4.json', 'untested': ['真机 GPU 与发热']})
 bots = REL / 'qa' / 'bot-runs.json'
 if bots.exists(): QA.append({'id': 'qa-bot', 'device': '同上（手动时钟）', 'method': 'qa/botrun.js 让 bot 用四位英雄各打一整关，另跑一次经典耐久', 'result': '全部通关，见 bot-runs.json', 'evidence': 'releases/v0.1.0/qa/bot-runs.json', 'untested': ['真人难度评价']})
 
@@ -154,6 +155,8 @@ BUGS = [
     ('B8', '手机 J / L 键重叠 4px', '布局估算偏差', 'L 键左移', [], ['shot-mobile']),
     ('B9', '离线渲染音轨时报 AudioContext 节点不匹配', '渲染期间实时音乐调度还在跑', '渲染期间暂停实时调度', [], []),
     ('B10', '头像太近、帽檐挡眼', '头像相机距离与帽子高度', '拉远镜头、帽子上移', ['h-dev-bug-faces'], ['shot-select']),
+    ('B11', '整局音轨离线渲染十几分钟不出结果', '整局音符一次挂进同一张音频图，耗时随时长平方增长', '每 15 秒一段渲染再叠加尾音', [], ['full-run']),
+    ('B12', '爆炸等叠加时音频削波', '总线没有限幅', '压缩器后加 tanh 软限幅', [], ['full-run']),
 ]
 bugs = [{'id': i, 'found_version': 'v0.1.0-dev', 'repro': '开发验证中发现（见 notes.md）', 'observed': o, 'joke_angle': None, 'cause': c, 'status': 'fixed', 'fix': f, 'before_media_ids': [x for x in bf], 'after_media_ids': [x for x in af if x in have], 'retest': '修复后由 desktop / mobile / bot 脚本或截图复验'} for i, o, c, f, bf, af in BUGS]
 

@@ -1,0 +1,144 @@
+{
+ "build_game_min_js_sha256": "1c5227d2b8ea3651ad2ddd74b027685cdc661d5d296c96a17630d856bd6cfbc1",
+ "note": "qa/botrun.js：手动时钟 + 页面内 bot（真实键盘事件），hero 0 杰克 1 汉娜 2 穆斯塔法 3 梅斯；gameSeconds 为游戏内时间",
+ "runs": [
+  {
+   "date": "2026-10-04T20:55:06.662Z",
+   "hero": 0,
+   "seed": 31,
+   "dur": "std",
+   "win": true,
+   "gameSeconds": 258.53,
+   "score": 111500,
+   "deaths": 2,
+   "summons": 2,
+   "kills": {
+    "gneiss": 10,
+    "ferris": 12,
+    "punk": 2,
+    "blade": 1,
+    "hammer": 1,
+    "wrench": 1,
+    "elmer": 3,
+    "raptor": 1,
+    "vice": 1
+   },
+   "errors": 0
+  },
+  {
+   "date": "2026-10-04T20:55:15.159Z",
+   "hero": 1,
+   "seed": 31,
+   "dur": "std",
+   "win": true,
+   "gameSeconds": 279.87,
+   "score": 127500,
+   "deaths": 3,
+   "summons": 2,
+   "kills": {
+    "ferris": 12,
+    "gneiss": 10,
+    "punk": 2,
+    "blade": 1,
+    "hammer": 1,
+    "elmer": 3,
+    "wrench": 1,
+    "raptor": 1,
+    "vice": 1
+   },
+   "errors": 0
+  },
+  {
+   "date": "2026-10-04T20:55:23.440Z",
+   "hero": 2,
+   "seed": 31,
+   "dur": "std",
+   "win": true,
+   "gameSeconds": 234.55,
+   "score": 119000,
+   "deaths": 2,
+   "summons": 2,
+   "kills": {
+    "ferris": 12,
+    "gneiss": 10,
+    "punk": 2,
+    "blade": 1,
+    "hammer": 1,
+    "wrench": 1,
+    "elmer": 3,
+    "raptor": 1,
+    "vice": 1
+   },
+   "errors": 0
+  },
+  {
+   "date": "2026-10-04T20:55:31.746Z",
+   "hero": 3,
+   "seed": 31,
+   "dur": "std",
+   "win": true,
+   "gameSeconds": 231.2,
+   "score": 111400,
+   "deaths": 2,
+   "summons": 2,
+   "kills": {
+    "ferris": 12,
+    "gneiss": 10,
+    "punk": 2,
+    "blade": 1,
+    "hammer": 1,
+    "elmer": 3,
+    "wrench": 1,
+    "raptor": 1,
+    "vice": 1
+   },
+   "errors": 0
+  },
+  {
+   "date": "2026-10-04T20:55:39.969Z",
+   "hero": 2,
+   "seed": 31,
+   "dur": "classic",
+   "win": true,
+   "gameSeconds": 265.88,
+   "score": 112200,
+   "deaths": 4,
+   "summons": 2,
+   "kills": {
+    "gneiss": 10,
+    "ferris": 12,
+    "punk": 2,
+    "blade": 1,
+    "hammer": 1,
+    "elmer": 3,
+    "wrench": 1,
+    "raptor": 1,
+    "vice": 1
+   },
+   "errors": 0
+  },
+  {
+   "date": "2026-10-04T20:55:48.027Z",
+   "hero": 0,
+   "seed": 32,
+   "dur": "easy",
+   "win": true,
+   "gameSeconds": 225.88,
+   "score": 109900,
+   "deaths": 1,
+   "summons": 2,
+   "kills": {
+    "gneiss": 10,
+    "ferris": 12,
+    "punk": 2,
+    "blade": 1,
+    "hammer": 1,
+    "elmer": 2,
+    "wrench": 1,
+    "raptor": 1,
+    "vice": 1
+   },
+   "errors": 0
+  }
+ ]
+}

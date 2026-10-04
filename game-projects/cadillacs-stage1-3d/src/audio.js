@@ -11,17 +11,26 @@ function ensure() {
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return null;
   ctx = new AC();
-  comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
   master = ctx.createGain(); master.gain.value = volume;
   musicBus = ctx.createGain(); musicBus.gain.value = 0.42;
   sfxBus = ctx.createGain(); sfxBus.gain.value = 0.9;
-  musicBus.connect(comp); sfxBus.connect(comp); comp.connect(master); master.connect(ctx.destination);
+  comp = buildChain(ctx, musicBus, sfxBus, master); master.connect(ctx.destination);
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
   return ctx;
 }
 const now = () => ctx.currentTime;
+// 总线：压缩 → 软限幅（tanh，小信号增益约为 1，峰值不超过 0.98）→ 主音量。爆炸、霰弹枪叠在一起时不会硬削波
+let softCurve = null;
+function buildChain(c, mBus, sBus, out) {
+  const cp = c.createDynamicsCompressor(); cp.threshold.value = -18; cp.knee.value = 6; cp.ratio.value = 6; cp.attack.value = 0.003; cp.release.value = 0.2;
+  if (!softCurve) { softCurve = new Float32Array(2048); for (let i = 0; i < 2048; i++) { const x = i / 2047 * 2 - 1; softCurve[i] = 0.98 * Math.tanh(2 * x); } }
+  const pre = c.createGain(); pre.gain.value = 0.5;
+  const sh = c.createWaveShaper(); sh.curve = softCurve; sh.oversample = '2x';
+  mBus.connect(cp); sBus.connect(cp); cp.connect(pre); pre.connect(sh); sh.connect(out);
+  return cp;
+}
 function env(g, t, a, peak, d, sus, r, len) {
   g.gain.setValueAtTime(0.0001, t);
   g.gain.linearRampToValueAtTime(peak, t + a);
@@ -266,11 +275,10 @@ const A = {
         const len = Math.min(dur - s0, SEG + TAIL);
         const off = new OfflineAudioContext(2, Math.ceil(sr * len), sr);
         ctx = off;
-        comp = off.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
         master = off.createGain(); master.gain.value = 0.85;
         musicBus = off.createGain(); musicBus.gain.value = 0.42;
         sfxBus = off.createGain(); sfxBus.gain.value = 0.9;
-        musicBus.connect(comp); sfxBus.connect(comp); comp.connect(master); master.connect(off.destination);
+        comp = buildChain(off, musicBus, sfxBus, master); master.connect(off.destination);
         noiseBuf = off.createBuffer(1, sr, sr); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
         const dest = off.createGain(); dest.connect(musicBus);
         // 本段开始的音符：只排起点落在 [s0, s1) 的

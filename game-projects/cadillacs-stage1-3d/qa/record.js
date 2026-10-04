@@ -57,7 +57,7 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
     await idle(9.5);   // 看完开场对话
     mark('战斗开始');
     const seen = new Set();
-    await play(400, { jumps: true }, async () => {
+    await play(400, { jumps: true, noSkip: true }, async () => {
       if (frame % 15) return;
       const s = await page.evaluate(() => { const s = window.__CD_TEST__.snapshot(); return { area: s.area, boss: !!s.boss, mode: s.mode, dialog: s.dialog, waveOn: s.waveOn }; });
       const key = s.area + (s.boss ? 'b' : '') + s.mode;
@@ -84,6 +84,7 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
     const jz = await rectOf('#joy-zone'), atk = await rectOf('#btn-atk'), jump = await rectOf('#btn-jump');
     const rot = mode === 'portrait';
     const jx = rot ? jz.x : jz.x - jz.w * 0.2, jy = rot ? jz.y - jz.h * 0.1 : jz.y + jz.h * 0.15;
+    let atkDown = false, jumpDown = false;
     for (let i = 0; i < (rot ? 10 : 16) * fps; i++) {
       const s = await page.evaluate(() => { const s = window.__CD_TEST__.snapshot(); const e = window.__CD_TEST__.cheat.actors().filter(a => a.side === 'enemy' && a.alive && ['down', 'dead', 'cut', 'enter'].indexOf(a.state) < 0); return { p: s.player, e: e.map(a => [a.x, a.z]) }; });
       let dx = 1, dz = 0;
@@ -92,12 +93,14 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
       let mx = near ? Math.sign(dx) * 0.2 : Math.max(-1, Math.min(1, dx)), my = Math.abs(dz) > 0.2 ? -Math.sign(dz) : 0;
       if (near) my = 0;
       const ox = rot ? -my * 40 : mx * 40, oy = rot ? mx * 40 : my * -40;   // 旋转布局：横屏的右 = 屏幕下
-      const pts = [{ x: jx + ox, y: jy + oy, id: 1 }];
-      const press = near && i % 8 < 3;
-      if (press) pts.push({ x: atk.x, y: atk.y, id: 2 });
-      if (i % 120 === 60 && !near) pts.push({ x: jump.x, y: jump.y, id: 3 });
-      await touch(i === 0 ? 'touchStart' : (press ? 'touchStart' : 'touchMove'), pts);
-      if (!press) await touch('touchEnd', [pts[0]]).catch(() => {});
+      const joy = { x: jx + ox, y: jy + oy, id: 1 };
+      const wantAtk = near && i % 8 < 3, wantJump = !near && i % 120 >= 60 && i % 120 < 63;
+      const pts = [joy]; if (wantAtk) pts.push({ x: atk.x, y: atk.y, id: 2 }); if (wantJump) pts.push({ x: jump.x, y: jump.y, id: 3 });
+      if (i === 0) await touch('touchStart', pts);
+      else if ((wantAtk && !atkDown) || (wantJump && !jumpDown)) await touch('touchStart', pts);
+      else if ((!wantAtk && atkDown) || (!wantJump && jumpDown)) await touch('touchEnd', pts);
+      else await touch('touchMove', pts);
+      atkDown = wantAtk; jumpDown = wantJump;
       await page.evaluate(() => window.__CD_TEST__.step(2, true));
       await snapFrame();
     }
