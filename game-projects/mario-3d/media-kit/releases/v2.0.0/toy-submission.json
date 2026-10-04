@@ -1,0 +1,30 @@
+{
+  "toy_id": 39043286960128,
+  "slug": "feidao-mario-3d",
+  "title_on_platform": "超级玛丽 3D：第一关（本次未改标题）",
+  "version": "v2.0.0",
+  "source_commit": "e7687e54",
+  "package": "game-projects/mario-3d/dist/toy-v2.0.0/package",
+  "package_sha256": "f062fc3ce87a7eef8e9bc7810ad8584721c748959af849c883eaeabb176294f7",
+  "preflight": {
+    "tool": "toy_doctor.py",
+    "ok": true,
+    "warnings": [
+      "产物文件名不含内容指纹（仅建议，游戏用 ?v= 版本参数）"
+    ]
+  },
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_1PwgtbBG/index.html",
+  "preview_check": "Edge 电脑 1280×720：菜单、1-1 跑跳、C 切视角、1-2 开局正常；手机 390×844 模拟：竖屏开始自动旋转横屏、触控按键显示；无脚本错误、无 4xx/5xx 请求；Toy 包内已去掉返回本站游戏列表的链接。非真机。",
+  "submitted_at": "2026-10-04T10:04:45+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_xqyfwKs3/index.html",
+  "status": "auditing",
+  "before": {
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "video_bindings": []
+  },
+  "authorization": "用户 2026-10-04 长期授权：网站游戏改动验证部署后自动同步已有 Toy 并提交审核",
+  "public_url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+  "note": "审核通过前正式页仍是旧版（第一关）"
+}

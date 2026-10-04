@@ -1,0 +1,32 @@
+{
+  "version": "v2.0.0",
+  "source": "public/html/game/mario-3d",
+  "source_sha256": {
+    "audio.js": "27ea65a2b5de8348fb0199ab5d73bb2371756064fe44c525e4169440d93998b2",
+    "index.html": "e7afc7b4576174c6f8b7a224f5663132b2032d8b68b4e9edd9d13656686f0e80",
+    "levels.js": "4968ff6f5196628e0a20745096bc126d72c922b422300187b2e3903d21a23cae",
+    "main.js": "35178dd0168966b11a21b1a560811f9b7ced4c16820e5b2d7d53f03f31113ea7",
+    "models.js": "6dc4c15b1c13d535b02deead433195ce32343483632748eeb035bd15e9a8e072",
+    "scene.js": "02eb1017a479fda2f4f66965515fdb0fa3961bf3d14ad797cfa40a1977b4e2f4",
+    "style.css": "df6f1896c137ffa405589510d9216e4c9ac2fcfc03be3b62c4635603eacf10c6",
+    "textures.js": "05cc149e1f38dd72d46cf492cd85010b65a2ee424c2f85417cb7c10daa7481dd",
+    "three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+    "world.js": "f4d6b2962bae45509452a5e046424086ff93ad8a4ef104b778921216d61716da"
+  },
+  "files": {
+    "audio.js": "27ea65a2b5de8348fb0199ab5d73bb2371756064fe44c525e4169440d93998b2",
+    "index.html": "79fe076127d25309cf43ffb44350df2d6d7b822260a7d4a79f5f2f9711cbad0d",
+    "levels.js": "4968ff6f5196628e0a20745096bc126d72c922b422300187b2e3903d21a23cae",
+    "main.js": "0942fdc9b0aeddb70c01b4bf82eda6301604d03029bd0fd8ec11dd73bfea8af5",
+    "models.js": "6dc4c15b1c13d535b02deead433195ce32343483632748eeb035bd15e9a8e072",
+    "scene.js": "02eb1017a479fda2f4f66965515fdb0fa3961bf3d14ad797cfa40a1977b4e2f4",
+    "style.css": "df6f1896c137ffa405589510d9216e4c9ac2fcfc03be3b62c4635603eacf10c6",
+    "textures.js": "05cc149e1f38dd72d46cf492cd85010b65a2ee424c2f85417cb7c10daa7481dd",
+    "three.js": "59cc1d99fbfda58eafe899234f06492d75ef1b33aacd3075f534800918dcce68",
+    "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "world.js": "f4d6b2962bae45509452a5e046424086ff93ad8a4ef104b778921216d61716da"
+  },
+  "package_sha256": "f062fc3ce87a7eef8e9bc7810ad8584721c748959af849c883eaeabb176294f7",
+  "status": "submitted_auditing"
+}
