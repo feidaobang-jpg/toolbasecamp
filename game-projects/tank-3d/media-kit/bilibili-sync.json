@@ -1,0 +1,21 @@
+{
+  "game": "tank-3d",
+  "title": "坦克大战 3D",
+  "ownerMid": 16214353,
+  "videos": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "aid": 117364309890693,
+      "lastPublicVerifiedVersion": null,
+      "blockHash": null,
+      "release": "releases/merge1/bilibili-sync.json"
+    }
+  ],
+  "pending": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "merge1",
+      "status": "prepared_awaiting_user_confirmation"
+    }
+  ]
+}

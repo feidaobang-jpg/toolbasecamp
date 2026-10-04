@@ -30,15 +30,25 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "auditing",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_8NPUB2Yr/index.html",
-    "verified_at": "2026-10-02",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Mv69eLpV/index.html",
-    "submitted_version": "collision-fix1",
-    "submitted_at": "2026-10-02T02:21:08.656Z"
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_TIFf4hcZ/index.html",
+    "verified_at": "2026-10-04",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_07JPHsEh/index.html",
+    "submitted_version": "merge1",
+    "submitted_at": "2026-10-04T15:38:24+08:00",
+    "video_bindings": []
   },
   "merged_from": {
     "game": "tank-battle",
     "page": "public/html/game/tank_battle.html",
     "note": "2D 版页面保留（联机合作入口），游戏中心只留 3D 合并版卡片；2D 的船、手枪、装甲、精英怪、Boss、章节、敌军抢道具迁入魔改模式"
-  }
+  },
+  "bilibili_videos": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "aid": 117364309890693,
+      "title": "把坦克大战做成立体地图，这次能守住老鹰吗？",
+      "owner_mid": 16214353,
+      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；Toy 无视频绑定"
+    }
+  ]
 }

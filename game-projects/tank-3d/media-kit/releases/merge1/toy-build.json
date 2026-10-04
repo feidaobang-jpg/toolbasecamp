@@ -1,0 +1,48 @@
+{
+  "version": "merge1",
+  "toyId": 39043249461248,
+  "slug": "feidao-tank-3d",
+  "source": "public/html/game/tank-3d",
+  "package": "game-projects/tank-3d/dist/merge1/package",
+  "files": {
+    "audio.js": "f6c7e85f3def866e2d5ee94cb55e3703f7971ac7f6cc2e82b454a40322b91bcd",
+    "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+    "favicon.svg": "a6a197711cfa402bf5838aaddb16dd78a973e7f438724b17466e215d61741a07",
+    "index.html": "5e79268af6090e2e5cb2702431d01a6c383edb6460623ef05f8313244d73b560",
+    "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
+    "main.js": "214e5bf847c072f6802b1aa03a6416b1932d2d48d9b66fe782140d6a369e4cde",
+    "scene.js": "822c740614f2534ca6f48b53ca2ccf10e12c3ee2575409c924a77e70e88b1e51",
+    "sim.js": "09203e61e9d8eccb288a05b47fdc2434d4aa929a5592959a9ab3c76a16478e0f",
+    "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
+    "sounds/bullet_hit_2.mp3": "76004f25187fd2898cecbf657aa9d3aed46685b2d61d2e6ff7825ec137638937",
+    "sounds/bullet_shot.mp3": "cee289b8b5cfb42c4772a3a7a8072da7ef626470ffbe0d390720cdc25b11679d",
+    "sounds/explosion_1.mp3": "34df0f75fd4e65b67a82269fe2fe502c5c2a0136154b8ff875b51a88236ba2bf",
+    "sounds/explosion_2.mp3": "3502c677ec9d318015be16739150c1afc5487a8e9301a835e2e2d92052bc90c8",
+    "sounds/game_over.mp3": "d23197bd8ab662160ecba3d8fa9926f6c0c2e2431c0d327fc97275578a40375e",
+    "sounds/pause.mp3": "9308b7bcd60c7adb6fefd23e398d4e899e432212deb6297733e7d9227cc20f5e",
+    "sounds/powerup_appear.mp3": "608dd494f5cb66baded7f1bcab33acb34dcc2b136856a19c13de0c11218d8fda",
+    "sounds/powerup_pick.mp3": "786c9f41ab03438e7ba23a6878ee9d09bc03d0f18ae28c47f503914dfd8da80c",
+    "sounds/snow_slide.mp3": "10462c41c3c32a84196e4b4b18972e31c0b23f380fd9d5fc4a5ef4987e5b1d8c",
+    "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
+    "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
+    "style.css": "c5e78e3988f1251b6ce7b28abc0cbc6d249a28823ae1f184adfeebb290f8736d",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+  },
+  "packageHash": "43489616fa16a18a9c4cb942ebe40cf3fa538beafc7cedc3b417700d44776cc1",
+  "status": "submitted",
+  "testedPreview": "https://www.bilibili.com/toy/preview/preview_TIFf4hcZ/index.html",
+  "submittedPreview": "https://www.bilibili.com/toy/preview/preview_07JPHsEh/index.html",
+  "submittedAt": "2026-10-04T15:38:24+08:00",
+  "submissionStatus": "auditing",
+  "doctor": {
+    "errors": 0,
+    "warnings": [
+      "JS/CSS 文件名不带内容指纹（建议项，不影响运行）"
+    ]
+  },
+  "previewTests": {
+    "iframeSuite": "qa/browser-check.cjs 18 项在预览 iframe 内全部通过（桌面 1280×720、手机 390×844 竖屏自动横置 + 触控、844×390 横屏）",
+    "wrapper": "toy-captures/toy-wrapper-*.png：外壳页里桌面键盘开局行驶开炮、手机竖屏点开始后旋转与开炮，无报错",
+    "note": "headless 模拟里跨域 iframe 报告 devicePixelRatio=1，所以手机预览截图偏糊；游戏按浏览器报告的值渲染"
+  }
+}

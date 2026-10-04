@@ -1,0 +1,44 @@
+{
+  "version": "merge1",
+  "codeCommit": "51cbf0e9",
+  "baselineVersion": null,
+  "preparedAt": "2026-10-04T15:37:00+08:00",
+  "changes": [
+    "2D、3D 两版合并：开局选经典复刻或魔改无限周目",
+    "经典复刻：FC 原版 35 关地图、敌军名单、数值与音效，36～70 关循环，可选起始关",
+    "魔改：100 关一周目，小 Boss / 大 Boss / 终焉 Boss，船、手枪、精英怪、敌军抢道具",
+    "新增正视与第一人称视角，Q/E 转视角"
+  ],
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+    "verifiedAt": "2026-10-04 约 15:30（北京时间）",
+    "evidence": "HTTP 200（index 8666B、sim.js、classic.js、sounds/*.mp3、新封面 55851B）；games.html 不再含 tank_battle 卡片；线上跑 qa/browser-check.cjs 18 项通过（online-captures/browser.json）"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "auditing",
+    "testedPreview": "https://www.bilibili.com/toy/preview/preview_TIFf4hcZ/index.html",
+    "submittedPreview": "https://www.bilibili.com/toy/preview/preview_07JPHsEh/index.html"
+  },
+  "videos": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "aid": 117364309890693,
+      "title": "把坦克大战做成立体地图，这次能守住老鹰吗？",
+      "ownerMid": 16214353,
+      "mappingEvidence": "toy video mine 中本人稿件标题；旧简介含 feidao-tank-3d 试玩链接；创作中心编辑页登录账号 UID 16214353",
+      "oldDescriptionFile": "releases/merge1/bilibili/BV1Wqaz6AEJb-original.txt",
+      "newDescriptionFile": "releases/merge1/bilibili/BV1Wqaz6AEJb-new.txt",
+      "blockHash": "ea5b15c4ad8d81ded8473537c85e896e50414b7574b9c0705bc985905a0e8b52",
+      "status": "prepared_awaiting_user_confirmation",
+      "note": "浏览器内提交公开内容前需要用户在对话里明确确认"
+    }
+  ],
+  "notUpdated": [
+    {
+      "bvid": "BV1AKuZ6oEnX",
+      "reason": "2D 版代码本次未改动（页面、Toy 保持不变），今天已由另一任务同步 boss-clear-20261004 更新区块"
+    }
+  ]
+}
