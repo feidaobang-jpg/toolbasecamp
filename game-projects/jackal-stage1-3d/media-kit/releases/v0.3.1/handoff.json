@@ -8,9 +8,24 @@
   "validation": {
     "gate_cases": 24,
     "desktop": "83/83",
-    "mobile": "33/33"
+    "mobile": "33/33",
+    "site_gate_cases": "24/24",
+    "toy_preview": "1280x720/844x390实测加载、投弹、切视角、暂停通过，无脚本错误",
+    "method": "Edge/Playwright桌面及手机触控模拟，未用实体手机"
   },
-  "site_deploy": "pending",
-  "toy": "pending",
-  "bilibili": "pending"
+  "site_deploy": {
+    "status": "verified",
+    "commit": "ca498b3a",
+    "html_script": "js/game.min.js?v=ca498b3a",
+    "js_sha256": "88e66f35e3b9b90311b9ce6e49d2c3deadd693d6e7f19816a1432c1d4aac0a54"
+  },
+  "toy": {
+    "status": "published",
+    "record": "../toy-v0.3.1/sync.json"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "record": "bilibili-sync.json"
+  },
+  "completed_at": "2026-10-04T14:17:37.651922+08:00"
 }

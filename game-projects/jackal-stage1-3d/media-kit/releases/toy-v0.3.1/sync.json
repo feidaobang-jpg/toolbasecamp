@@ -1,0 +1,36 @@
+{
+  "id": 39863936092160,
+  "version": "v0.3.1",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_CBW1bohi/index.html",
+  "status": "published",
+  "package": "game-projects/jackal-stage1-3d/dist/toy-v0.3.1/package",
+  "manifest": "toy-build.json",
+  "package_sha256": "bcb9ca2a4f8a4d498c05c070c75cb83419c098326990629a4fa9c7a835de01ca",
+  "hash_method": "sorted relative path + newline + file SHA256 + newline",
+  "preflight": {
+    "ok": true,
+    "findings": []
+  },
+  "preview_validation": {
+    "status": "passed",
+    "viewports": [
+      "1280x720",
+      "844x390"
+    ],
+    "checks": [
+      "菜单加载",
+      "开始游戏",
+      "手雷按钮发射并获得击杀分数",
+      "切换视角",
+      "暂停"
+    ],
+    "script_errors": 0,
+    "note": "平台外壳不透传测试参数，匿名直访内容域不可用；平台预览用登录浏览器UI验证，详细破门矩阵已在本地和线上网站各通过24项。"
+  },
+  "submitted_at": "2026-10-04T14:13:45.186500+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html",
+  "public_verified_at": "2026-10-04T14:17:37.651922+08:00",
+  "public_content_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22047/index.html",
+  "public_script": "js/game.min.js?v=6",
+  "platform_mtime": 1791094536
+}

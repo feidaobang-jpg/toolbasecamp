@@ -1,0 +1,21 @@
+{
+  "game_id": "jackal-stage1-3d",
+  "videos": [
+    {
+      "bvid": "BV1EyHz6wE5u",
+      "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+      "owner_uid": 16214353,
+      "last_public_verified_version": "v0.3.1",
+      "block_sha256": "22ec5bc51cfb9d9275b7c63594884676e8e586399827be865017f216cf5bc029",
+      "verified_at": "2026-10-04T14:17:37.651922+08:00",
+      "release_record": "releases/v0.3.1/bilibili-sync.json"
+    }
+  ],
+  "pending": [],
+  "mapping_sources": [
+    "本人发布记录",
+    "toy video list: 1条",
+    "toy video mine --keyword 赤色要塞: 1条",
+    "本人稿件管理"
+  ]
+}
