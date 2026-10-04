@@ -1,0 +1,12 @@
+{
+  "version": "boss-clear-20261004",
+  "toyId": 39043362707456,
+  "slug": "feidao-tank-battle",
+  "package": "D:\\project\\toolbasecamp\\game-projects\\tank-battle\\dist\\boss-clear-20261004\\package",
+  "files": {
+    "index.html": "31fdecbf303f3a11db8154409b76a5d190984bdc476515b980401820d223802e",
+    "shared/game/game-progress.js": "18dc292299e7b4e976559d0bf6eeefc76b8a9badf6f71faa4532d514009ce7f2",
+    "shared/game/touch-ui.js": "d9d98121b88537af61c976e29242513abe24b98e9edeafc2eb5ad91cc64f7ead"
+  },
+  "packageHash": "ac5f732423cedeed58612697d54160de7b00b556688ddca053f3c80c3e5bb738"
+}

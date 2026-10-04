@@ -926,7 +926,9 @@ const Game = (() => {
     const keepSolo = !coopMode ? snapGear(player) : null;
     grid=Levels.build(level,endless);
     bullets=[]; powerups=[]; particles=[]; enemies=[];
-    enemyPlanObj = endless ? Levels.enemyPlan(level) : Levels.enemyPlan(level);
+    enemyPlanObj = Levels.enemyPlan(level);
+    // 大 Boss 关只生成一只；队列必须与实际刷怪一致，否则击破后仍会等待不存在的小怪。
+    if(!endless && !debugMode && stageRole(level)==="boss") enemyPlanObj.total = 1;
     enemyQueue = endless ? Infinity : enemyPlanObj.total;
     enemiesKilled=0; spawnTimer=0.5; freezeTimer=0; shovelTimer=0; baseAlive=true;
     bossSpawned=false;
