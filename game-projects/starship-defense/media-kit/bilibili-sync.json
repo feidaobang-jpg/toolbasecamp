@@ -27,10 +27,10 @@
       "submit_toast": "稿件投递成功"
     }
   ],
-  "latest_record": "releases/web-touch-ui-v0.17.12/bilibili-descriptions.json",
+  "latest_record": "releases/web-touch-ui-v0.17.13/bilibili-descriptions.json",
   "pending": [
     "BV1Ujad6DEuf",
     "BV1WbHq6eEBt"
   ],
-  "pending_note": "v0.17.12简介已提交（编辑框覆盖了此前待审核的v0.17.11版本），稿件审核中未公开；提交前公开区块已自行更新为v0.17.11。登录态已恢复（~/.bili-playwright-profile）"
+  "pending_note": "v0.17.12简介已提交（编辑框覆盖了此前待审核的v0.17.11版本），稿件审核中未公开；提交前公开区块已自行更新为v0.17.11。登录态已恢复（~/.bili-playwright-profile）。v0.17.13（网站+Toy已提交）的合并区块已按 v0.17.12 区块为基础准备好（releases/web-touch-ui-v0.17.13/update-block.txt，含 v0.17.12 全部条目），因并行会话 00:47 刚投递 v0.17.12 待审、且创作中心编辑页对 Playwright/IAB 深链均重定向 /platform/home 无法安全并发提交，待 v0.17.12 公开或下一会话重新投递（新投递会覆盖旧待审编辑）。"
 }

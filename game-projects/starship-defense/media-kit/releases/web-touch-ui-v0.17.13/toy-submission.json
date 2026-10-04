@@ -1,0 +1,26 @@
+{
+  "id": 38678478981120,
+  "version": "web-touch-ui-v0.17.13",
+  "status": "auditing",
+  "website_commit": "1dfd9a6c",
+  "zip_sha256": "fb7a2dba19c2489100ad8caca63975f51c36ce0e4172b3af82eee2a98323667b",
+  "package": "dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
+  "package_files": ["index.html", "boot.js", "game.compat.js", "combat-controls.css", "icon.svg", "vendor/LICENSE.txt"],
+  "preview_url_tested": "https://www.bilibili.com/toy/preview/preview_Cz6ileED/index.html",
+  "preview_tests": {
+    "desktop": "预览 iframe 正常启动进主菜单；工具栏按钮显示「人称：第三人称」（无 V 角字）；帮助区与全页文本无「手雷∞」「V第一/第三人称」「人称 V」；无页面错误",
+    "mobile_viewport": "390x844 触屏视口重载正常进主菜单，文案同样无 V/∞ 残留；进游戏后的触控层与 HUD 由本地 Playwright 覆盖（预览 iframe 跨域无法注入点击）",
+    "local_regression": "verify-feedback.cjs 34 项通过，11 项失败与改动前基线完全一致（既有差异，非本次引起）；新增断言「V 不再绑定」通过，包体 grep 无「手雷∞」「V第一/第三人称」"
+  },
+  "changes": [
+    "虚拟手雷按钮与 HUD 手雷标签去掉无限符号 ∞（帮助文字中「U 无限手雷」说明保留）",
+    "移除残留的 V 键绑定、Input.pop('V') 切视角逻辑及「V 第一/第三人称」提示；第一/第三人称统一走 C 键循环和「人称」按钮"
+  ],
+  "submitted_at": "2026-10-05 00:46:31",
+  "response": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_gAf6kxkR/index.html"
+  },
+  "published_version_at_submission": "web-input-flight-v0.17.10",
+  "notes": "build-toy.mjs（Node 等价脚本，本机无 Python）生成包，文件清单与 build-toy.py 一致；网站已上线核验（?v=1dfd9a6c 缓存穿透正常）。"
+}

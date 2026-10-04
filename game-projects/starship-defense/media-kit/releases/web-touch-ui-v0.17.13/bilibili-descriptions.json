@@ -1,0 +1,24 @@
+{
+  "version": "web-touch-ui-v0.17.13",
+  "update_block": "【游戏更新记录】\n2026-10-05 · v0.17.13（web-touch-ui-v0.17.13）\n1. 手雷按钮与界面提示去掉无限符号，更简洁。\n2. 移除残留的V键和「V第一/第三人称」提示；第一/第三人称统一用C键循环或「人称」按钮切换。\n3. 此前v0.17.12：手机跑步键移到射击键左侧，虚拟按键不再显示键位角标，移除独立一人称按钮。\n此前v0.17.11：手雷移除0.8秒投掷间隔，U键/手机手雷按钮可无CD连投。v0.17.10：修复飞虫出洞缺翅与部分飞虫一直步行、面板触摸状态残留导致建造失灵。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（无投掷间隔）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n网站：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n截至北京时间2026-10-05 00:50，网站v0.17.13已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】",
+  "block_sha256": "d73b689dac73baa14ba4e02311be66d562c3a459ea51f495aa58f520822a0822",
+  "covers": [
+    "web-touch-ui-v0.17.12（上次未投递，本次并入）",
+    "web-touch-ui-v0.17.13"
+  ],
+  "public_check_before": "公开简介均为v0.17.11区块（view API 核验，2026-10-05 00:49）",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "old_block": "【游戏更新记录】\n2026-10-04 · v0.17.11（web-grenade-nocd-v0.17.11）\n1. 手雷移除0.8秒投掷间隔，U键/手机手雷按钮可无CD连投。\n2. 无限手雷、投掷范围伤害与暂停时禁止投掷等逻辑保持不变。\n此前v0.17.10：修复飞虫出洞缺翅与部分飞虫一直步行、面板触摸状态残留导致建造失灵。v0.17.9：C键循环五种第三人称视角，V切第一人称；优化手机横屏摇杆和控件。v0.17.8：降低合金围墙、护墙和掩体，修复斜墙碰撞及旧存档高墙，支持连续建造。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（无投掷间隔）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n网站：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n截至北京时间2026-10-04 22:46，网站v0.17.11已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】",
+      "planned_new": "【游戏更新记录】\n2026-10-05 · v0.17.13（web-touch-ui-v0.17.13）\n1. 手雷按钮与界面提示去掉无限符号，更简洁。\n2. 移除残留的V键和「V第一/第三人称」提示；第一/第三人称统一用C键循环或「人称」按钮切换。\n3. 此前v0.17.12：手机跑步键移到射击键左侧，虚拟按键不再显示键位角标，移除独立一人称按钮。\n此前v0.17.11：手雷移除0.8秒投掷间隔，U键/手机手雷按钮可无CD连投。v0.17.10：修复飞虫出洞缺翅与部分飞虫一直步行、面板触摸状态残留导致建造失灵。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（无投掷间隔）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n网站：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n截至北京时间2026-10-05 00:50，网站v0.17.13已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】\n\n《虫潮前哨》现在叫《虫潮围城》了。这期从打补给、换武器、布置机枪塔开始，带队打精英巢穴，再沿虫洞反攻母皇。击破母皇后回防，第一波守住，基地满血。\n\n\n画面录于 2026 年 10 月 4 日凌晨，展示当时版本的电脑实战。游戏还在持续更新，试玩页面以实际版本为准。\n\n\n哔哩哔哩 Toy 试玩：\nhttps://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩：\nhttps://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "old_block": "【游戏更新记录】\n2026-10-04 · v0.17.11（web-grenade-nocd-v0.17.11）\n1. 手雷移除0.8秒投掷间隔，U键/手机手雷按钮可无CD连投。\n2. 无限手雷、投掷范围伤害与暂停时禁止投掷等逻辑保持不变。\n此前v0.17.10：修复飞虫出洞缺翅与部分飞虫一直步行、面板触摸状态残留导致建造失灵。v0.17.9：C键循环五种第三人称视角，V切第一人称；优化手机横屏摇杆和控件。v0.17.8：降低合金围墙、护墙和掩体，修复斜墙碰撞及旧存档高墙，支持连续建造。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（无投掷间隔）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n网站：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n截至北京时间2026-10-04 22:46，网站v0.17.11已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】",
+      "planned_new": "【游戏更新记录】\n2026-10-05 · v0.17.13（web-touch-ui-v0.17.13）\n1. 手雷按钮与界面提示去掉无限符号，更简洁。\n2. 移除残留的V键和「V第一/第三人称」提示；第一/第三人称统一用C键循环或「人称」按钮切换。\n3. 此前v0.17.12：手机跑步键移到射击键左侧，虚拟按键不再显示键位角标，移除独立一人称按钮。\n此前v0.17.11：手雷移除0.8秒投掷间隔，U键/手机手雷按钮可无CD连投。v0.17.10：修复飞虫出洞缺翅与部分飞虫一直步行、面板触摸状态残留导致建造失灵。\n操作：K/空格跳跃，Shift跑步，Q/E转视角，U无限手雷（无投掷间隔）；手机提供对应按钮。\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n网站：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n截至北京时间2026-10-05 00:50，网站v0.17.13已更新；同版本Toy已提交审核，当前审核中。\n视频保留录制时画面，当前游戏以试玩为准。\n【游戏更新记录结束】\n\n【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n【原视频介绍】\n用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n目前是可玩的试玩版，下一步想先打磨操作体验。"
+    }
+  ],
+  "submitted_at": null,
+  "results": []
+}
