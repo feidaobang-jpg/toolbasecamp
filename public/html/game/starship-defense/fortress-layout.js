@@ -1,5 +1,5 @@
 export const WALL_TOP=9.6;
-export const PARAPET_HEIGHT=1.35;
+export {COVER_HEIGHT as PARAPET_HEIGHT} from './wall-geometry.js';
 // Outside perimeter only; the front gate and courtyard ramps stay open.
 export const PARAPETS=[[-23,-10.3,30,.6],[23,-10.3,30,.6],[-37.7,-36,.6,52],[37.7,-36,.6,52],[0,-61.7,76,.6]];
 export function legacyRampartWall(b){

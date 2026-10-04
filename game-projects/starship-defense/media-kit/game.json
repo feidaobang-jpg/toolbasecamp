@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-parapet-v0.17.7",
+  "current_version": "web-low-walls-v0.17.8",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,7 +12,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_ithkDOMe/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-parapet-v0.17.7/qa.json",
+  "qa": "releases/web-low-walls-v0.17.8/local/qa.json",
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
@@ -34,7 +34,7 @@
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-parapet-v0.17.7",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
@@ -52,7 +52,7 @@
   "controls": "电脑默认自动攻击，可选纯键盘/手动瞄准/射击方式。菜单：方向键或WASD选择，J/回车确认，K/Esc返回。手机自动横屏和显示触控，空白处拖动视角；K/空格跳跃，I互动，H医疗；U/手机手雷键投掷，无限使用，无需补充，投掷间隔0.8秒。 按住Shift或手机跑步键加速65%，K/空格为跳跃，落地后可再次起跳，无冷却和无敌效果。 视角提示统一：Q/E 左转视角/右转视角，手机拖动转视角；C/手机切换视角按钮切换预设。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-parapet-v0.17.7/handoff.json",
+  "handoff": "releases/web-low-walls-v0.17.8/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",

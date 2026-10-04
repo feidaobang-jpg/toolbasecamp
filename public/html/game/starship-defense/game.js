@@ -9,6 +9,7 @@ import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefie
 import {ExplorationLight} from './exploration-light.js';
 import {monsterStep,clearMonsterSegment} from './monster-navigation.js';
 import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation,legacyRampartWall} from './fortress-layout.js';
+import {COVER_HEIGHT,WALL_WIDTH,WALL_DEPTH,wallTouches,wallSegment} from './wall-geometry.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=fb9';
 import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
@@ -745,9 +746,9 @@ function makeVehicleMesh(kind){
 function makeBuildingMesh(kind){
   const grp=new THREE.Group();
   if(kind==='wall'){
-    const m=new THREE.Mesh(new THREE.BoxGeometry(6,3,1),new THREE.MeshLambertMaterial({color:0x8899aa}));
-    m.position.y=1.5;m.castShadow=true;m.receiveShadow=true;grp.add(m);
-    const top=new THREE.Mesh(new THREE.BoxGeometry(6.4,.4,1.3),new THREE.MeshLambertMaterial({color:0x667788}));top.position.y=3.1;grp.add(top);
+    const m=new THREE.Mesh(new THREE.BoxGeometry(WALL_WIDTH,COVER_HEIGHT-.16,WALL_DEPTH),new THREE.MeshLambertMaterial({color:0x8899aa}));
+    m.position.y=(COVER_HEIGHT-.16)/2;m.castShadow=true;m.receiveShadow=true;grp.add(m);
+    const top=new THREE.Mesh(new THREE.BoxGeometry(WALL_WIDTH,.16,WALL_DEPTH),new THREE.MeshLambertMaterial({color:0x667788}));top.position.y=COVER_HEIGHT-.08;grp.add(top);
   }else if(kind==='antiAir'){
     const base=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.5,1.2,10),new THREE.MeshLambertMaterial({color:0xf6dfae}));base.position.y=.6;grp.add(base);
     const head=new THREE.Group();head.position.y=1.8;grp.add(head);
@@ -1051,13 +1052,22 @@ function shotCover(a,b,friendly=false,origin=null){
   }
   return 1;
 }
+function firstWallHit(a,b,friendly=false,origin=null){
+  let hit=null;
+  for(const wall of buildings)if(wall.isWall&&!wall.dead){
+    // Like rampart firing, lean over adjacent cover to aim down at its foot.
+    if(friendly&&origin&&origin.y>wall.mesh.position.y+COVER_HEIGHT&&wallTouches(wall,origin.x,origin.z,1.1))continue;
+    const t=wallSegment(wall,a,b);if(t!==null&&(!hit||t<hit.t))hit={wall,t};
+  }
+  return hit;
+}
 function targetHits(a,b,hitSet){
   return monsters.filter(m=>!m.dead&&!(hitSet&&hitSet.has(m))).map(m=>({m,t:segmentHit(a,b,m.mesh.position.clone().add(new THREE.Vector3(0,m.hitH,0)),m.radius+.4)})).filter(h=>h.t!==null).sort((a,b)=>a.t-b.t);
 }
 const beamPool=[];
 function fireBeam(from,dir,cfg){
   const end=from.clone().addScaledVector(dir.clone().normalize(),cfg.range);
-  let t=shotCover(from,end,true,from);
+  let t=Math.min(shotCover(from,end,true,from),firstWallHit(from,end,true,from)?.t??1);
   const hits=targetHits(from,end).filter(h=>h.t<t).slice(0,(cfg.pierce||0)+1);
   for(const h of hits)damageMonster(h.m,cfg.dmg);
   if(hits.length){AudioSys.sfx('hit');if(hits.length>(cfg.pierce||0))t=hits[hits.length-1].t;}
@@ -1093,7 +1103,9 @@ function updBullets(dt){
     if(b.gravity)b.vel.y-=b.gravity*dt;
     const p=b.mesh.position;
     let hit=false;
-    const cover=shotCover(previous,p,b.friendly,b.origin);
+    const wallHit=firstWallHit(previous,p,b.friendly,b.origin);
+    const sceneryCover=shotCover(previous,p,b.friendly,b.origin);
+    const cover=Math.min(sceneryCover,wallHit?.t??1);
     if(b.friendly){
       for(const {m:mo,t} of targetHits(previous,p,b.hitSet)){
         if(t<cover){
@@ -1115,8 +1127,8 @@ function updBullets(dt){
       if(!player.dead&&!player.inVehicle&&bodyHit(player.pos,1.2,.65)){playerDamage(b.dmg);hit=true;}
       if(!hit)for(const s of squad){if(!s.dead&&!s.vehicle&&bodyHit(s.mesh.position,1.1,.65)){damageSquad(s,b.dmg);hit=true;break;}}
       // Clip the remaining structure tests to the first obstacle, too.
-      if(!hit&&cover<1){p.lerpVectors(previous,p,cover);hit=true;}
-      if(!hit)for(const bd of buildings){if(!bd.dead&&dist2(p,bd.mesh.position)<bd.radius*bd.radius){damageBuilding(bd,b.dmg);hit=true;break;}}
+      if(!hit&&cover<1){if(wallHit&&wallHit.t<=sceneryCover)damageBuilding(wallHit.wall,b.dmg);p.lerpVectors(previous,p,cover);hit=true;}
+      if(!hit)for(const bd of buildings){if(!bd.dead&&!bd.isWall&&dist2(p,bd.mesh.position)<bd.radius*bd.radius){damageBuilding(bd,b.dmg);hit=true;break;}}
       if(!hit&&gateBlocked()&&Math.abs(p.x-gate.pos.x)<6.5&&Math.abs(p.z-gate.pos.z)<1.6&&p.y<terrainH(gate.pos.x,gate.pos.z)+5){damageGate(b.dmg);hit=true;}
       if(!hit&&dist2(p,base.pos)<16){damageBase(b.dmg);hit=true;}
       if(!hit)for(const v of vehicles){if(!v.dead&&(v.driver||player.inVehicle===v)&&dist2(p,v.mesh.position)<4&&Math.abs(p.y-v.mesh.position.y-1.5)<3){damageVehicle(v,b.dmg);hit=true;break;}}
@@ -1429,6 +1441,10 @@ function updMonsters(dt){
         AudioSys.sfx('shoot');
       }else{
         // 近战
+        const from=mo.mesh.position.clone().add(new THREE.Vector3(0,.55,0)),to=tgt.pos.clone().add(new THREE.Vector3(0,.55,0));
+        const cover=firstWallHit(from,to);
+        if(cover){damageBuilding(cover.wall,mo.dmg);continue;}
+        if(['player','squad','vehicle'].includes(tgt.kind)&&shotCover(from,to,false)<1)continue;
         AudioSys.sfx('hit');
         spawnParticles(tgt.pos.clone().setY(tgt.pos.y+1),0xffee66,4,3,.3);
         if(tgt.kind==='player')playerDamage(mo.dmg);
@@ -1499,7 +1515,7 @@ function placeBuilding(kind,x,z,rotY,hp){
   const bd={mesh,kind,hp:hp!=null?hp:maxHp,maxHp,radius:kind==='wall'?3:(kind==='bunker'?2.6:1.4),
     dmg:cfg.dmg,rate:cfg.rate,range:cfg.range,explode:cfg.explode,fireCd:0,dead:false,
     isWall:kind==='wall',rotY:rotY||0};
-  bd.bar=makeHPBar(kind==='wall'?4:2.6,'#6cf');bd.bar.position.y=kind==='wall'?4:3.6;mesh.add(bd.bar);updHPBar(bd.bar,bd.hp/maxHp);
+  bd.bar=makeHPBar(kind==='wall'?4:2.6,'#6cf');bd.bar.position.y=kind==='wall'?COVER_HEIGHT+.35:3.6;mesh.add(bd.bar);updHPBar(bd.bar,bd.hp/maxHp);
   buildings.push(bd);
   return bd;
 }
@@ -1524,15 +1540,12 @@ function damageBase(d){
 /* 墙体碰撞（旋转矩形近似） */
 function collideWalls(x,z,r,y=groundY(x,z)){
   if(fortress.blocked(x,z,r,y))return true;
-  if(y>groundY(x,z)+5)return false;
   for(const bd of buildings){
     if(bd.dead)continue;
-    if(y>bd.mesh.position.y+(bd.kind==='bunker'?4:3.5))continue;
+    if(y>=bd.mesh.position.y+(bd.isWall?COVER_HEIGHT:bd.kind==='bunker'?4:3.5)||y+2<=bd.mesh.position.y)continue;
     const dx=x-bd.mesh.position.x,dz=z-bd.mesh.position.z;
     if(bd.isWall){
-      const c=Math.cos(-bd.rotY),s=Math.sin(-bd.rotY);
-      const lx=dx*c-dz*s,lz=dx*s+dz*c;
-      if(Math.abs(lx)<3+r&&Math.abs(lz)<.6+r)return true;
+      if(wallTouches(bd,x,z,r))return true;
     }else{
       if(dx*dx+dz*dz<(bd.radius+r)**2)return true;
     }
@@ -2225,7 +2238,9 @@ function updPlayer(dt){
   }else player.stuckT=0;
   // 跳跃、下坡与下车共用重力；落地才允许下一次起跳。
   const insideMap=player.pos.x>=WORLD.minX&&player.pos.x<=WORLD.maxX&&player.pos.z>=WORLD.minZ&&player.pos.z<=WORLD.maxZ;
-  const gy=insideMap?groundY(player.pos.x,player.pos.z):-Infinity;
+  let gy=insideMap?groundY(player.pos.x,player.pos.z):-Infinity;
+  // A jump may clear a low wall; land on its cap instead of sinking through it.
+  for(const bd of buildings)if(bd.isWall&&!bd.dead&&wallTouches(bd,player.pos.x,player.pos.z)&&player.pos.y>=bd.mesh.position.y+COVER_HEIGHT-.05)gy=Math.max(gy,bd.mesh.position.y+COVER_HEIGHT);
   player.vy-=24*dt;
   player.pos.y+=player.vy*dt;
   const headLimit=insideMap?fortress.ceilingAt(player.pos.x,player.pos.z,Math.max(gy,player.pos.y)+.1)-2.6:Infinity;

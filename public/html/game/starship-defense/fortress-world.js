@@ -36,8 +36,9 @@ export class FortressWorld {
       Object.assign(this.solids[this.solids.length-1],{cover:true,parapet:true});
     }
     // Rear-entry field shelter: walls provide cover and the interior heals.
-    wall(25,34,1,12,4.4,cream,0);wall(35,34,1,12,4.4,cream,0);
-    wall(30,39.5,11,1,4.4,cream,0);
+    wall(25,34,1,12,PARAPET_HEIGHT,cream,0);wall(35,34,1,12,PARAPET_HEIGHT,cream,0);
+    wall(30,39.5,11,1,PARAPET_HEIGHT,cream,0);
+    for(const x of [25,35])for(const z of [28.5,39.5])wall(x,z,1,1,4.4,cream,0);
     add('box',teal,30,4.5,34,12,.5,13);
     for(const x of [27,33]){add('box',cream,x,.65,35,1.4,.3,3);add('box',P.mint,x,.84,35,1.25,.12,2.6);}
     const floorRing=new THREE.Mesh(new THREE.RingGeometry(3.35,3.5,48),new THREE.MeshBasicMaterial({color:P.mint,side:THREE.DoubleSide}));floorRing.rotation.x=-Math.PI/2;floorRing.position.set(30,.14,34);scene.add(floorRing);
@@ -51,9 +52,9 @@ export class FortressWorld {
     for(const f of HILL_FORTS){
       const y=height(f.x,f.z);
       // Rear doorway, low firing parapets and a roof: bullets really pass through the windows.
-      wall(f.x-5,f.z,1,11,.85,cream,y);wall(f.x+5,f.z,1,11,.85,cream,y);
-      wall(f.x,f.z+5,11,1,.85,cream,y);
-      for(const side of [-1,1])wall(f.x+side*3.4,f.z-5,3.2,1,.85,cream,y);
+      wall(f.x-5,f.z,1,11,PARAPET_HEIGHT,cream,y);wall(f.x+5,f.z,1,11,PARAPET_HEIGHT,cream,y);
+      wall(f.x,f.z+5,11,1,PARAPET_HEIGHT,cream,y);
+      for(const side of [-1,1])wall(f.x+side*3.4,f.z-5,3.2,1,PARAPET_HEIGHT,cream,y);
       for(const side of [-1,1])for(const end of [-1,1]){
         wall(f.x+side*5,f.z+end*5,1.35,1.35,4,cream,y);
         add('box',P.amber,f.x+side*5,y+4.2,f.z+end*5,1.7,.5,1.7);
