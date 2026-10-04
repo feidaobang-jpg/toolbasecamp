@@ -17,7 +17,7 @@ const baseline=process.env.BASELINE==='1';
    const reset=(x,z)=>{q.Input.reset();q.player.pos.set(x,q.groundY(x,z),z);q.player.vy=0;q.player.onGround=true;q.player.dead=false;q.player.inVehicle=null;q.player.stuckT=0;q.setCamYaw(0);};
    const run=(x,z,key,jump,seconds=1.3)=>{reset(x,z);q.Input.keys[key]=true;if(jump)q.Input.pressed.K=true;const start=q.player.pos.toArray(),trace=[];for(let i=0;i<seconds*120;i++){q.updPlayer(1/120);if(i%12===0)trace.push(q.player.pos.toArray());}q.Input.reset();return{start,end:q.player.pos.toArray(),landed:q.player.onGround,trace};};
    const tests={};
-   tests.frontWalk=run(20,-11,'up',false);tests.frontJump=run(20,-11,'up',true);
+   tests.frontWalk=run(20,-12,'up',false);tests.frontJump=run(20,-12,'up',true);
    tests.innerWalk=run(-31,-39,'left',false);tests.rampSide=run(-21,-33,'left',true);
    tests.outerJump=run(37,-30,'left',true);tests.rearJump=run(0,-61,'down',true);
    tests.cliffAscent=run(20,-7,'down',true);tests.rampAscent=run(-24,-45,'up',false,3);
@@ -29,7 +29,8 @@ const baseline=process.env.BASELINE==='1';
   });
   fs.writeFileSync(path.join(out,(baseline?'before-':'')+(mobile?'mobile':'desktop')+'-checks.json'),JSON.stringify(checks,null,2));
   if(!baseline){
-   for(const name of ['frontWalk','frontJump'])assert.ok(checks[name].end[2]>-5&&checks[name].end[1]<1,name+' must leave the open front edge');
+   assert.ok(checks.frontWalk.end[2]<-10.8&&checks.frontWalk.end[1]===9.6,'outer parapet prevents walking off');
+   assert.ok(checks.frontJump.end[2]>-5&&checks.frontJump.end[1]<1,'deliberate jump clears the low parapet');
    assert.ok(checks.innerWalk.end[0]>-24&&checks.innerWalk.end[1]<6,'inner edge must descend');
    assert.ok(checks.rampSide.end[0]>-17&&checks.rampSide.end[1]<6,'ramp side must descend');
    assert.ok(checks.outerJump.end[0]>40&&checks.outerJump.end[1]<1,'outer edge must descend');

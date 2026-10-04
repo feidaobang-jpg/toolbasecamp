@@ -1,0 +1,236 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "method": "Paused deterministic physics/projectiles and save migration; real keyboard, touch jump, pointer joystick; mobile viewport emulation.",
+  "results": [
+    {
+      "mobile": false,
+      "checks": {
+        "migration": {
+          "walls": [
+            [
+              "wall",
+              0,
+              44
+            ]
+          ],
+          "gold": 987,
+          "score": 321,
+          "revision": 1,
+          "newPlayerWallRetained": true
+        },
+        "parapets": [
+          {
+            "x": -23,
+            "z": -10.3,
+            "hw": 15,
+            "hd": 0.3,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": 23,
+            "z": -10.3,
+            "hw": 15,
+            "hd": 0.3,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": -37.7,
+            "z": -36,
+            "hw": 0.3,
+            "hd": 26,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": 37.7,
+            "z": -36,
+            "hw": 0.3,
+            "hd": 26,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": 0,
+            "z": -61.7,
+            "hw": 38,
+            "hd": 0.3,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          }
+        ],
+        "front": [
+          20,
+          9.6,
+          -11.129166666666658
+        ],
+        "side": [
+          36.87083333333332,
+          9.6,
+          -38
+        ],
+        "rear": [
+          0,
+          9.6,
+          -60.87083333333332
+        ],
+        "jump": [
+          20,
+          0.8900000000000128,
+          -0.20416666666663086
+        ],
+        "inner": [
+          -18.36500000000015,
+          5.956666666666667,
+          -39
+        ],
+        "ramp": [
+          -24,
+          9.6,
+          -20.665926546729093
+        ],
+        "wallFootDamage": 30,
+        "keyboardWallFootDamage": 80,
+        "coverDamage": 0,
+        "exposedDamage": 17,
+        "realWalk": [
+          20,
+          9.6,
+          -11.110449999943373
+        ],
+        "realJump": [
+          20,
+          0,
+          0.9051500001698702
+        ]
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "checks": {
+        "migration": {
+          "walls": [
+            [
+              "wall",
+              0,
+              44
+            ]
+          ],
+          "gold": 987,
+          "score": 321,
+          "revision": 1,
+          "newPlayerWallRetained": true
+        },
+        "parapets": [
+          {
+            "x": -23,
+            "z": -10.3,
+            "hw": 15,
+            "hd": 0.3,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": 23,
+            "z": -10.3,
+            "hw": 15,
+            "hd": 0.3,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": -37.7,
+            "z": -36,
+            "hw": 0.3,
+            "hd": 26,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": 37.7,
+            "z": -36,
+            "hw": 0.3,
+            "hd": 26,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          },
+          {
+            "x": 0,
+            "z": -61.7,
+            "hw": 38,
+            "hd": 0.3,
+            "bottom": 9.6,
+            "top": 10.95,
+            "cover": true,
+            "parapet": true
+          }
+        ],
+        "front": [
+          20,
+          9.6,
+          -11.129166666666658
+        ],
+        "side": [
+          36.87083333333332,
+          9.6,
+          -38
+        ],
+        "rear": [
+          0,
+          9.6,
+          -60.87083333333332
+        ],
+        "jump": [
+          20,
+          0.8900000000000128,
+          -0.20416666666663086
+        ],
+        "inner": [
+          -18.36500000000015,
+          5.956666666666667,
+          -39
+        ],
+        "ramp": [
+          -24,
+          9.6,
+          -20.665926546729093
+        ],
+        "wallFootDamage": 30,
+        "keyboardWallFootDamage": 80,
+        "coverDamage": 0,
+        "exposedDamage": 17,
+        "realWalk": [
+          20,
+          9.6,
+          -11.111400000169871
+        ],
+        "realJump": [
+          20,
+          0,
+          0.9488499998301283
+        ]
+      },
+      "errors": []
+    }
+  ]
+}

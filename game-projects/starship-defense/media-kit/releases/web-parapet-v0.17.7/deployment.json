@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-10-04T08:31:37.260491+00:00",
+  "files": [
+    {
+      "file": "index.html",
+      "byte_match": false,
+      "normalized_match": false,
+      "sha256": "e11c39bdaab778017a30a814729bd76ab59620e23a09725475f02f6a2ef56164",
+      "html_bundle_query": [
+        "1f41ab41"
+      ]
+    },
+    {
+      "file": "game.compat.js",
+      "byte_match": true,
+      "normalized_match": true,
+      "sha256": "74da3c31f770d09faeaf756d97cb396514718c0e988f896d9ecf941963fe3c7d",
+      "html_bundle_query": null
+    },
+    {
+      "file": "game.js",
+      "byte_match": false,
+      "normalized_match": true,
+      "sha256": "63eeadc50ef2070d811e3e943e76b54f66e9226f5c95d02c3acbaf9b5bd99737",
+      "html_bundle_query": null
+    },
+    {
+      "file": "fortress-world.js",
+      "byte_match": false,
+      "normalized_match": true,
+      "sha256": "d394237195bc8cfe81e90c84497da87a5e5a0f68e0bda9e3da04cdbc0e57ae3b",
+      "html_bundle_query": null
+    },
+    {
+      "file": "fortress-layout.js",
+      "byte_match": true,
+      "normalized_match": true,
+      "sha256": "e516305102f422833fc22c0f13f95f331a9efa5aaa2b7b8a671e5157edaa5607",
+      "html_bundle_query": null
+    }
+  ],
+  "status": "verified",
+  "code_commit": "1f41ab41",
+  "html_difference": "Existing deployment pipeline rewrites query versions to commit; bundle SHA256 matches exactly and source JS matches after CRLF normalization.",
+  "browser_qa": "website/qa.json"
+}

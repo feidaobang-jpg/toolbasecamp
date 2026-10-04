@@ -13,13 +13,62 @@
   ],
   "qa": "qa.json",
   "jump_regression": "jump-regression/qa.json",
-  "website_status": "pending",
-  "toy_status": "pending",
-  "bilibili_status": "pending",
+  "website_status": "verified",
+  "toy_status": "published",
+  "bilibili_status": "public_verified",
   "media_readiness": "partial",
   "gaps": [
     "未在真实手机/B站App内核测试",
     "录制无游戏声音"
   ],
-  "media": []
+  "media": [
+    {
+      "file": "releases/web-parapet-v0.17.7/desktop-parapet.jpg",
+      "sha256": "127bf1055b1fff660650429bfc81c67e64410d3576083601743167c46992cd3b",
+      "kind": "screenshot",
+      "version": "web-parapet-v0.17.7",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-parapet-v0.17.7/toy-preview/mobile-parapet.jpg",
+      "sha256": "7de44e501d72c13bed7501cbb7a058d829f762909a982a70046a999e82bc6994",
+      "kind": "screenshot",
+      "version": "web-parapet-v0.17.7",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-parapet-v0.17.7/desktop-view-3.jpg",
+      "sha256": "4bf63025f6057642fffb5b1e6ec3c6f83d1ca8c4eda16ad81d065211dc2e13d3",
+      "kind": "screenshot",
+      "version": "web-parapet-v0.17.7",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-parapet-v0.17.7/video-contact.jpg",
+      "sha256": "5f4b49659f6da8eb88acfc436a02fe3fa3997e6fdec5c26282fc974c91bfb662",
+      "kind": "screenshot",
+      "version": "web-parapet-v0.17.7",
+      "capture_mode": "realtime-automation",
+      "visual_review": "passed"
+    },
+    {
+      "file": "releases/web-parapet-v0.17.7/video/page@decb04f951e13a478bb7308d90d01b72.webm",
+      "sha256": "e38160e5ac02a4b482db9762a43dc560ba2ced10ec8384b6e75dc1258110f204",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "duration_seconds": 5.56,
+      "visual_review": "contact-sheet-reviewed"
+    }
+  ],
+  "code_commit": "1f41ab41",
+  "website_qa": "website/qa.json",
+  "toy_qa": "toy-preview/qa.json",
+  "toy_public_qa": "toy-public/qa.json",
+  "edge_regression": "edge-regression/qa.json",
+  "performance": "performance.json",
+  "visual_review": "Reviewed desktop/mobile wall height, first-person sightline, moving jump video contact sheet; four camera views measured under 48-insect load."
 }

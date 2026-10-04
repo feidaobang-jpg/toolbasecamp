@@ -1,0 +1,13 @@
+{
+  "id": 38678478981120,
+  "version": "web-parapet-v0.17.7",
+  "zip_sha256": "3c9be8707761ce89c9110c4367f067a163f39af11107e6e61f8370464fa99f66",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_ithkDOMe/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_eh2GiJSa/index.html",
+  "submission_status": "auditing",
+  "submitted_at": "2026-10-04T08:32:36.115501+00:00",
+  "status": "published",
+  "verified_at": "2026-10-04T08:36:30.607028+00:00",
+  "public_qa": "toy-public/qa.json",
+  "visibility": "PUBLIC"
+}
