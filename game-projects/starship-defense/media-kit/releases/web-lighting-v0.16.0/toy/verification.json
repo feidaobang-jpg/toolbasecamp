@@ -1,0 +1,489 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_CA2X7krQ/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "chapters": [
+        {
+          "ch": 1,
+          "time": "day",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.35,
+          "hemi": 0.95,
+          "stars": false,
+          "rebuilds": 1,
+          "programs": 30
+        },
+        {
+          "ch": 1,
+          "time": "night",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.22,
+          "hemi": 0.68,
+          "stars": true,
+          "rebuilds": 1,
+          "programs": 30
+        },
+        {
+          "ch": 4,
+          "time": "day",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.22,
+          "hemi": 0.95,
+          "stars": false,
+          "rebuilds": 2,
+          "programs": 28
+        },
+        {
+          "ch": 4,
+          "time": "night",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.08,
+          "hemi": 0.68,
+          "stars": true,
+          "rebuilds": 2,
+          "programs": 28
+        },
+        {
+          "ch": 7,
+          "time": "day",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.28,
+          "hemi": 0.95,
+          "stars": false,
+          "rebuilds": 3,
+          "programs": 29
+        },
+        {
+          "ch": 7,
+          "time": "night",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.17,
+          "hemi": 0.68,
+          "stars": true,
+          "rebuilds": 3,
+          "programs": 29
+        }
+      ],
+      "caves": [
+        {
+          "x": -68,
+          "z": 205,
+          "time": "night",
+          "blend": 0.9984389552964977,
+          "torch": 5.990633731778987,
+          "fill": 1.297970641885447,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12171714917385248,
+          "hemi": 0.4803122089407004,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 28
+        },
+        {
+          "x": 68,
+          "z": 205,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 29
+        },
+        {
+          "x": 0,
+          "z": 205,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 29
+        },
+        {
+          "x": 0,
+          "z": 250,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 29
+        },
+        {
+          "x": 0,
+          "z": 302,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511968,
+            0.9766444667050901
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 29
+        }
+      ],
+      "errors": [],
+      "turned": {
+        "time": "day",
+        "blend": 1,
+        "torch": 6,
+        "fill": 1.3,
+        "direction": [
+          0.9605881743178969,
+          -0.21486178267511988,
+          -0.1763654549685953
+        ],
+        "sun": 0.12,
+        "hemi": 0.48,
+        "stars": false,
+        "rebuilds": 4,
+        "programs": 33
+      },
+      "performance": {
+        "samples": 988,
+        "averageFPS": 164.5898580659089,
+        "medianMs": 5.9000000059604645,
+        "p95Ms": 6.700000017881393,
+        "over50ms": 1,
+        "drawCalls": 231,
+        "triangles": 384410,
+        "memory": {
+          "geometries": 136,
+          "textures": 7
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark",
+        "device": "desktop Edge headless"
+      }
+    },
+    {
+      "mobile": true,
+      "chapters": [
+        {
+          "ch": 1,
+          "time": "day",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.35,
+          "hemi": 0.95,
+          "stars": false,
+          "rebuilds": 1,
+          "programs": 24
+        },
+        {
+          "ch": 1,
+          "time": "night",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.22,
+          "hemi": 0.68,
+          "stars": true,
+          "rebuilds": 1,
+          "programs": 24
+        },
+        {
+          "ch": 4,
+          "time": "day",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.22,
+          "hemi": 0.95,
+          "stars": false,
+          "rebuilds": 2,
+          "programs": 21
+        },
+        {
+          "ch": 4,
+          "time": "night",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.08,
+          "hemi": 0.68,
+          "stars": true,
+          "rebuilds": 2,
+          "programs": 21
+        },
+        {
+          "ch": 7,
+          "time": "day",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.28,
+          "hemi": 0.95,
+          "stars": false,
+          "rebuilds": 3,
+          "programs": 22
+        },
+        {
+          "ch": 7,
+          "time": "night",
+          "blend": 0,
+          "torch": 0,
+          "fill": 0,
+          "direction": [
+            0,
+            -0.2148617826751197,
+            0.9766444667050899
+          ],
+          "sun": 1.17,
+          "hemi": 0.68,
+          "stars": true,
+          "rebuilds": 3,
+          "programs": 22
+        }
+      ],
+      "caves": [
+        {
+          "x": -68,
+          "z": 205,
+          "time": "night",
+          "blend": 0.9984649617811177,
+          "torch": 5.990789770686706,
+          "fill": 1.298004450315453,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12168854204077058,
+          "hemi": 0.4803070076437765,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 21
+        },
+        {
+          "x": 68,
+          "z": 205,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 21
+        },
+        {
+          "x": 0,
+          "z": 205,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 21
+        },
+        {
+          "x": 0,
+          "z": 250,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511985,
+            0.97664446670509
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 21
+        },
+        {
+          "x": 0,
+          "z": 302,
+          "time": "night",
+          "blend": 1,
+          "torch": 6,
+          "fill": 1.3,
+          "direction": [
+            0,
+            -0.21486178267511968,
+            0.9766444667050901
+          ],
+          "sun": 0.12,
+          "hemi": 0.48,
+          "stars": true,
+          "rebuilds": 4,
+          "programs": 21
+        }
+      ],
+      "errors": [],
+      "turned": {
+        "time": "day",
+        "blend": 1,
+        "torch": 6,
+        "fill": 1.3,
+        "direction": [
+          0.9584509660951644,
+          -0.21486178267511988,
+          -0.1876330459618345
+        ],
+        "sun": 0.12,
+        "hemi": 0.48,
+        "stars": false,
+        "rebuilds": 4,
+        "programs": 24
+      },
+      "performance": {
+        "samples": 1012,
+        "averageFPS": 168.34400731930467,
+        "medianMs": 5.9000000059604645,
+        "p95Ms": 6.0999999940395355,
+        "over50ms": 1,
+        "drawCalls": 300,
+        "triangles": 395356,
+        "memory": {
+          "geometries": 137,
+          "textures": 6
+        },
+        "viewport": [
+          412,
+          915
+        ],
+        "dpr": 0.953125,
+        "drawingBuffer": [
+          915,
+          412
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "device": "desktop GPU mobile viewport emulation"
+      }
+    }
+  ]
+}

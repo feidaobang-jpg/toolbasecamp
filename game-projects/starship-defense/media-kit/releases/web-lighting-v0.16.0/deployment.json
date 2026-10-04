@@ -1,0 +1,31 @@
+{
+  "verified_at": "2026-10-04T00:15:41.297284+00:00",
+  "results": [
+    {
+      "file": "html/game/starship-defense/index.html",
+      "match": true,
+      "sha256": "50cac35343f2f8e89a453ca4cf493d522e1e0a6eb3cca1587a9bfa7ab679923e"
+    },
+    {
+      "file": "html/game/starship-defense/game.compat.js",
+      "match": true,
+      "sha256": "57ed2a7e8bf4d972a21b25557a822a81cf0d1ab6a217150507aa0ac9ea82a3a0"
+    },
+    {
+      "file": "assets/game/thumbs/starship_defense.jpg",
+      "match": true,
+      "sha256": "b5d3cee656e056a1aa4e77aab7fcf70cf6bb72b03c060c450444703ec79b80a6"
+    },
+    {
+      "file": "js/config.js",
+      "match": true,
+      "sha256": "3fb95314c28e7d96306cd1bb1b4425fe67d6e12048414c403049fd4e8a6bd903"
+    },
+    {
+      "file": "games.html",
+      "match": true,
+      "sha256": "139058f794573e5c3ffb18302a0562335dd0326298ae19deb44ab5b56e6aee85"
+    }
+  ],
+  "normalization": "HTML cache queries and text CRLF only; game bundle and image exact bytes"
+}

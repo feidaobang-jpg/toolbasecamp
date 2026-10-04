@@ -6,8 +6,8 @@
   "created_at": "2026-10-04T00:13:52.259758+00:00",
   "build": {
     "id": "web-lighting-v0.16.0",
-    "commit": null,
-    "dirty": true,
+    "commit": "3e4887e9",
+    "dirty": false,
     "fingerprint": "57ed2a7e8bf4d972a21b25557a822a81cf0d1ab6a217150507aa0ac9ea82a3a0",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -36,12 +36,15 @@
   "qa": {
     "functional": "verification.json",
     "visual": "video-review.jpg连续采样已检查",
-    "performance": "verification.json results[].performance；以live/verification.json最终线上单独测量为准",
+    "performance": "live/verification.json; 48 insects and 4 squadmates, separate from capture",
     "limitations": [
       "桌面Edge headless RTX4060Ti；手机仅触控与视口模拟",
       "录像无音轨",
       "QA传送与录制无敌用于画面采集"
-    ]
+    ],
+    "deployment": "deployment.json",
+    "online_functional": "live/verification.json",
+    "toy": "toy/verification.json"
   },
   "media": [
     {
@@ -290,5 +293,15 @@
       "无音轨",
       "无实体手机测试"
     ]
+  },
+  "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_CA2X7krQ/index.html",
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_VZjC4UHc/index.html",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_CA2X7krQ/index.html",
+    "zip_sha256": "694af9863697ba95deccb302442bfa625b44cf0d68b030f9d4df85c84d8fc42a",
+    "submitted_at": "2026-10-04T00:18:17.649058+00:00"
   }
 }
