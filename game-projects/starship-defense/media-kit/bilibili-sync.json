@@ -7,25 +7,23 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-camera-mobile-v0.17.9",
-      "last_public_verified_at": "2026-10-04T12:04:10.527Z",
-      "update_block_sha256": "53f6d7bd6aa6f9656c6f1a7805b867ec23d4f6d1c5a67067fe9d45980705ee1d",
-      "status": "pending_review",
-      "pending_version": "web-input-flight-v0.17.10"
+      "last_public_verified_version": "web-input-flight-v0.17.10",
+      "last_public_verified_at": "2026-10-04T14:48:14.213Z",
+      "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
+      "status": "public_verified",
+      "pending_version": null
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-parapet-v0.17.7",
-      "last_public_verified_at": "2026-10-04T08:35:56.661Z",
-      "update_block_sha256": "de1de308bf16a1a4795fffb05a1d44750640d18d4b9dda84e5e01bc65858cad7",
-      "status": "pending_review",
-      "pending_version": "web-input-flight-v0.17.10"
+      "last_public_verified_version": "web-input-flight-v0.17.10",
+      "last_public_verified_at": "2026-10-04T14:48:14.214Z",
+      "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
+      "status": "public_verified",
+      "pending_version": null
     }
   ],
-  "latest_record": "releases/web-input-flight-v0.17.10/bilibili-descriptions.json",
-  "pending": [
-    "BV1WbHq6eEBt",
-    "BV1Ujad6DEuf"
-  ]
+  "latest_record": "releases/web-grenade-nocd-v0.17.11/bilibili-descriptions.json",
+  "pending": [],
+  "pending_note": "v0.17.11简介区块已备好未提交：创作中心未登录，需扫码后重试"
 }
