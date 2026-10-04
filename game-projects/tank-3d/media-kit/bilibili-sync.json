@@ -6,16 +6,10 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": null,
-      "blockHash": null,
+      "lastPublicVerifiedVersion": "merge1",
+      "blockHash": "ea5b15c4ad8d81ded8473537c85e896e50414b7574b9c0705bc985905a0e8b52",
       "release": "releases/merge1/bilibili-sync.json"
     }
   ],
-  "pending": [
-    {
-      "bvid": "BV1Wqaz6AEJb",
-      "version": "merge1",
-      "status": "prepared_awaiting_user_confirmation"
-    }
-  ]
+  "pending": []
 }
