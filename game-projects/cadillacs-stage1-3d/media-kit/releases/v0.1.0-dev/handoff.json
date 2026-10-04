@@ -1,0 +1,93 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.1.0-dev",
+ "base_version": null,
+ "created_at": "2026-10-05T05:18:10+08:00",
+ "build": {
+  "id": "cd3d-v0.1.0-dev-20261005",
+  "commit": null,
+  "dirty": true,
+  "fingerprint": "未留存（开发中多次重建的本地构建，产物已被 v0.1.0 覆盖）",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+ },
+ "feature_inventory": [],
+ "changes": [],
+ "bugs": [],
+ "media": [
+  {
+   "id": "dev-bug-dialog",
+   "file": "releases/v0.1.0/captures/bugs/bug-dialog-portrait-before.png",
+   "sha256": "4984d6bcc9270fa19374787d118e0a09b2ee64429c1722e95d304ab0ab7dffc3",
+   "kind": "screenshot",
+   "version": "v0.1.0-dev",
+   "build_id": "cd3d-v0.1.0-dev-20261005",
+   "capture_mode": "realtime-automation",
+   "description": "B3 修复前：对话框头像一片绿、名字为空（第一次冒烟测试截图）",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "dev-bug-floor",
+   "file": "releases/v0.1.0/captures/bugs/bug-hall-floor-void-before.png",
+   "sha256": "4df65118ddd0534c911e0a36ce9171c9446ca0005e8f2247c4d30ebc1f0e0f72",
+   "kind": "screenshot",
+   "version": "v0.1.0-dev",
+   "build_id": "cd3d-v0.1.0-dev-20261005",
+   "capture_mode": "offline-render",
+   "description": "B4 修复前：大楼内部地板下露出浅蓝色天空球",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "dev-bug-door",
+   "file": "releases/v0.1.0/captures/bugs/bug-door-frames-floating-before.png",
+   "sha256": "4aceb266732f1503924b6b8cd2b808e12fa8ccf1b3b1d9c3d0b00fa71ac15572",
+   "kind": "screenshot",
+   "version": "v0.1.0-dev",
+   "build_id": "cd3d-v0.1.0-dev-20261005",
+   "capture_mode": "offline-render",
+   "description": "B5 修复前：镜头转到后墙外，门框与门洞悬空",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "dev-bug-faces",
+   "file": "releases/v0.1.0/captures/bugs/bug-portraits-zoom-before.png",
+   "sha256": "a3fc601bfe56a7e886696ab83f0a0bc0b662941a43f9a839f7de808f92d0c6b8",
+   "kind": "screenshot",
+   "version": "v0.1.0-dev",
+   "build_id": "cd3d-v0.1.0-dev-20261005",
+   "capture_mode": "offline-render",
+   "description": "B10 修复前：头像镜头太近、帽檐挡住穆斯塔法眼睛",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "dev-skyline",
+   "file": "releases/v0.1.0/captures/bugs/skyline-before.png",
+   "sha256": "3af50329e61d29de99e53c6a5e1cf527423cec5310fe7a6b4bf40bfb009e429f",
+   "kind": "screenshot",
+   "version": "v0.1.0-dev",
+   "build_id": "cd3d-v0.1.0-dev-20261005",
+   "capture_mode": "offline-render",
+   "description": "远景调整前：楼顶背景高楼太近太高",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  }
+ ],
+ "historical_media": [],
+ "qa": [],
+ "readiness": {
+  "overview": "not_applicable",
+  "update": "not_applicable",
+  "gaps": [
+   "仅保存 v0.1.0 开发过程中的修复前证据，不作为可播放版本"
+  ]
+ }
+}

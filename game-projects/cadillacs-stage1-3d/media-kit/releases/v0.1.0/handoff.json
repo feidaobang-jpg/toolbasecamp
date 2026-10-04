@@ -1,0 +1,885 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.1.0",
+ "base_version": null,
+ "created_at": "2026-10-05T05:18:10+08:00",
+ "build": {
+  "id": "cd3d-v0.1.0-1c5227d2b8",
+  "commit": "053d36bfabb880b504d18f4c459a49869c1a3ae6",
+  "dirty": false,
+  "fingerprint": "011eb36afc11261ceee8e0ef8317cac30f3c19805348152989aeb4591e37f112",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "fingerprint_files": [
+   "public/html/game/cadillacs-stage1-3d/index.html",
+   "public/html/game/cadillacs-stage1-3d/css/style.css",
+   "public/html/game/cadillacs-stage1-3d/js/game.min.js"
+  ]
+ },
+ "feature_inventory": [
+  {
+   "id": "f-heroes",
+   "description": "四位英雄可选，原作能力值 / 口号 / 配色",
+   "status": "implemented",
+   "evidence_ids": [
+    "shot-select"
+   ]
+  },
+  {
+   "id": "f-roof",
+   "description": "楼顶：维斯开场、两只油桶、三波敌人、踹门进楼",
+   "status": "implemented",
+   "evidence_ids": [
+    "full-run",
+    "shot-roof-intro",
+    "shot-roof-fight"
+   ]
+  },
+  {
+   "id": "f-hall",
+   "description": "大楼内部：骑士像、双开门出敌、霰弹枪 / 左轮、三个胖子、跳窗",
+   "status": "implemented",
+   "evidence_ids": [
+    "full-run",
+    "shot-hall"
+   ]
+  },
+  {
+   "id": "f-street",
+   "description": "第 47 街：破门而出、跳下残墙、手雷油桶",
+   "status": "implemented",
+   "evidence_ids": [
+    "full-run",
+    "shot-street"
+   ]
+  },
+  {
+   "id": "f-boss",
+   "description": "Boss 维斯·T + 岩跳龙：锁链、抽鞭暴走、飞身踢、连拳长臂拳、左轮、叫手下、体力奖励与线索台词",
+   "status": "implemented",
+   "evidence_ids": [
+    "full-run",
+    "shot-boss-intro",
+    "shot-boss-fight"
+   ]
+  },
+  {
+   "id": "f-combat",
+   "description": "连招击倒、跳踢 / 飞踢、冲刺攻击、必杀、抓投、膝撞、梅斯抱摔、举桶扔桶、武器（左轮 / 霰弹 / 刀 / 铁管 / 炸药 / 手雷）、食物与宝物",
+   "status": "implemented",
+   "evidence_ids": [
+    "full-run"
+   ]
+  },
+  {
+   "id": "f-cameras",
+   "description": "侧视 / 斜视 / 正视 / 第一人称 + Q/E 转视角",
+   "status": "implemented",
+   "evidence_ids": [
+    "cameras",
+    "shot-roof-front",
+    "shot-roof-fp",
+    "shot-hall-front"
+   ]
+  },
+  {
+   "id": "f-options",
+   "description": "标准选项：命数、耐久三档、演示模式、视角、画质、音量、触屏按键、帧率、全屏、返回游戏列表",
+   "status": "implemented",
+   "evidence_ids": [
+    "shot-title"
+   ]
+  },
+  {
+   "id": "f-continue",
+   "description": "经典命数续关画面与 GAME OVER",
+   "status": "implemented",
+   "evidence_ids": [
+    "shot-continue"
+   ]
+  },
+  {
+   "id": "f-mobile",
+   "description": "手机触屏与竖屏自动旋转",
+   "status": "implemented",
+   "evidence_ids": [
+    "mobile-landscape",
+    "mobile-portrait",
+    "shot-mobile",
+    "shot-mobile-portrait"
+   ]
+  },
+  {
+   "id": "f-music",
+   "description": "关卡 / Boss / 过关 / 续关音乐（原作风格重新编写，非原曲）",
+   "status": "implemented",
+   "evidence_ids": [
+    "full-run"
+   ]
+  }
+ ],
+ "changes": [
+  {
+   "id": "c-new",
+   "feature_ids": [
+    "f-heroes",
+    "f-roof",
+    "f-hall",
+    "f-street",
+    "f-boss",
+    "f-combat",
+    "f-cameras",
+    "f-options",
+    "f-continue",
+    "f-mobile",
+    "f-music"
+   ],
+   "before": "无（新游戏）",
+   "after": "完整可玩的第一关 3D 重置版",
+   "player_visible": "新游戏上线网站游戏列表",
+   "evidence_ids": [
+    "full-run"
+   ],
+   "verified": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "B1",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "描边材质着色器编译失败（MeshBasicMaterial 没有 objectNormal）",
+   "joke_angle": null,
+   "cause": "WebGL 报错、描边不显示",
+   "status": "fixed",
+   "fix": "改用 normal 属性",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B2",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "开局报 resolveHits is not defined",
+   "joke_angle": null,
+   "cause": "游戏卡死",
+   "status": "fixed",
+   "fix": "删除未实现的调用",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B3",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "对话框头像与名字为空",
+   "joke_angle": null,
+   "cause": "过场脚本说话人写在 say 字段，HUD 读 who",
+   "status": "fixed",
+   "fix": "统一读 say",
+   "before_media_ids": [
+    "h-dev-bug-dialog"
+   ],
+   "after_media_ids": [
+    "shot-roof-intro"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B4",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "大楼内部地板下露出天空球",
+   "joke_angle": null,
+   "cause": "窗外用了包住场景的天空球、地板太薄",
+   "status": "fixed",
+   "fix": "加地基与木边，窗外改远景板",
+   "before_media_ids": [
+    "h-dev-bug-floor"
+   ],
+   "after_media_ids": [
+    "shot-hall"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B5",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "镜头转到后墙外时门框悬空",
+   "joke_angle": null,
+   "cause": "剖切只隐藏后墙",
+   "status": "fixed",
+   "fix": "门框、门洞、壁灯、蛛网与后墙一起剖切",
+   "before_media_ids": [
+    "h-dev-bug-door"
+   ],
+   "after_media_ids": [],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B6",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "飞踢 / 滑铲腿朝天",
+   "joke_angle": null,
+   "cause": "身体后仰与抬腿角度叠加",
+   "status": "fixed",
+   "fix": "重调髋关节",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "site-thumb"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B7",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "维斯叫人被打断后手下不来",
+   "joke_angle": null,
+   "cause": "只在开枪那一帧生成敌人",
+   "status": "fixed",
+   "fix": "记为待叫，起身后照样叫来",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "full-run"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B8",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "手机 J / L 键重叠 4px",
+   "joke_angle": null,
+   "cause": "布局估算偏差",
+   "status": "fixed",
+   "fix": "L 键左移",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "shot-mobile"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B9",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "离线渲染音轨时报 AudioContext 节点不匹配",
+   "joke_angle": null,
+   "cause": "渲染期间实时音乐调度还在跑",
+   "status": "fixed",
+   "fix": "渲染期间暂停实时调度",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B10",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "头像太近、帽檐挡眼",
+   "joke_angle": null,
+   "cause": "头像相机距离与帽子高度",
+   "status": "fixed",
+   "fix": "拉远镜头、帽子上移",
+   "before_media_ids": [
+    "h-dev-bug-faces"
+   ],
+   "after_media_ids": [
+    "shot-select"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B11",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "整局音轨离线渲染十几分钟不出结果",
+   "joke_angle": null,
+   "cause": "整局音符一次挂进同一张音频图，耗时随时长平方增长",
+   "status": "fixed",
+   "fix": "每 15 秒一段渲染再叠加尾音",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "full-run"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  },
+  {
+   "id": "B12",
+   "found_version": "v0.1.0-dev",
+   "repro": "开发验证中发现（见 notes.md）",
+   "observed": "爆炸等叠加时音频削波",
+   "joke_angle": null,
+   "cause": "总线没有限幅",
+   "status": "fixed",
+   "fix": "压缩器后加 tanh 软限幅",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "full-run"
+   ],
+   "retest": "修复后由 desktop / mobile / bot 脚本或截图复验"
+  }
+ ],
+ "media": [
+  {
+   "id": "full-run",
+   "file": "releases/v0.1.0/captures/full-run-16x9.mp4",
+   "sha256": "595059837d8eb35091395e84568dff97dd5138b1720660b33aa67b1a3aea697b",
+   "kind": "video",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "穆斯塔法打完整个第一关（标题 → 选人 → 楼顶开场 → 大楼内部 → 第 47 街 → Boss 维斯与岩跳龙 → 体力奖励 → 结算），16:9 1280×720 30fps，含 HUD；手动时钟逐帧截图，输入来自页面内 bot 派发的真实键盘事件；音轨按同局事件离线重新合成",
+   "duration_seconds": 315.033,
+   "width": 1280,
+   "height": 720,
+   "audio": "game",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 3,
+     "description": "标题画面（四位主角站在楼顶）",
+     "supports": []
+    },
+    {
+     "in_seconds": 3,
+     "out_seconds": 5,
+     "description": "选人画面",
+     "supports": []
+    },
+    {
+     "in_seconds": 5,
+     "out_seconds": 14.5,
+     "description": "开局：楼顶开场，维斯与手下",
+     "supports": []
+    },
+    {
+     "in_seconds": 14.5,
+     "out_seconds": 15,
+     "description": "战斗开始",
+     "supports": []
+    },
+    {
+     "in_seconds": 15,
+     "out_seconds": 50.5,
+     "description": "区域 楼顶 · play",
+     "supports": []
+    },
+    {
+     "in_seconds": 50.5,
+     "out_seconds": 52,
+     "description": "区域 楼顶 · trans",
+     "supports": []
+    },
+    {
+     "in_seconds": 52,
+     "out_seconds": 178,
+     "description": "区域 大楼内部 · play",
+     "supports": []
+    },
+    {
+     "in_seconds": 178,
+     "out_seconds": 179,
+     "description": "区域 大楼内部 · trans",
+     "supports": []
+    },
+    {
+     "in_seconds": 179,
+     "out_seconds": 214.5,
+     "description": "区域 第47街 · play",
+     "supports": []
+    },
+    {
+     "in_seconds": 214.5,
+     "out_seconds": 225,
+     "description": "区域 第47街 · Boss 战 · cut",
+     "supports": []
+    },
+    {
+     "in_seconds": 225,
+     "out_seconds": 297,
+     "description": "区域 第47街 · Boss 战 · play",
+     "supports": []
+    },
+    {
+     "in_seconds": 297,
+     "out_seconds": 308.03,
+     "description": "区域 第47街 · Boss 战 · clear",
+     "supports": []
+    },
+    {
+     "in_seconds": 308.03,
+     "out_seconds": 312.03,
+     "description": "过关 · 结算前演出",
+     "supports": []
+    },
+    {
+     "in_seconds": 312.03,
+     "out_seconds": 315.02,
+     "description": "结算画面",
+     "supports": []
+    }
+   ],
+   "visual_review": "pass",
+   "input": "bot（自动输入，非真人）",
+   "seed": 7
+  },
+  {
+   "id": "cameras",
+   "file": "releases/v0.1.0/captures/cameras-16x9.mp4",
+   "sha256": "9c3431f01ffee874454e3a8fdcf03aae19f98b28a7411ca2d08d3117af14f5e8",
+   "kind": "video",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "四种视角（侧视 / 斜视 / 正视 / 第一人称）与侧视下 Q/E 环绕，再到大楼内部的正视与第一人称；杰克，bot 输入",
+   "duration_seconds": 40.5,
+   "width": 1280,
+   "height": 720,
+   "audio": "game",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 1.5,
+     "description": "标题画面（四位主角站在楼顶）",
+     "supports": []
+    },
+    {
+     "in_seconds": 1.5,
+     "out_seconds": 2.5,
+     "description": "选人画面",
+     "supports": []
+    },
+    {
+     "in_seconds": 2.5,
+     "out_seconds": 8,
+     "description": "视角：侧视",
+     "supports": []
+    },
+    {
+     "in_seconds": 8,
+     "out_seconds": 13.5,
+     "description": "视角：斜视",
+     "supports": []
+    },
+    {
+     "in_seconds": 13.5,
+     "out_seconds": 19,
+     "description": "视角：正视",
+     "supports": []
+    },
+    {
+     "in_seconds": 19,
+     "out_seconds": 24.5,
+     "description": "视角：第一人称",
+     "supports": []
+    },
+    {
+     "in_seconds": 24.5,
+     "out_seconds": 30.5,
+     "description": "侧视下 Q/E 慢速环绕",
+     "supports": []
+    },
+    {
+     "in_seconds": 30.5,
+     "out_seconds": 35.5,
+     "description": "大楼内部 · 正视",
+     "supports": []
+    },
+    {
+     "in_seconds": 35.5,
+     "out_seconds": 40.49,
+     "description": "大楼内部 · 第一人称",
+     "supports": []
+    }
+   ],
+   "visual_review": "pass",
+   "input": "bot（自动输入，非真人）"
+  },
+  {
+   "id": "mobile-landscape",
+   "file": "releases/v0.1.0/captures/mobile-landscape.mp4",
+   "sha256": "2ea83dd1d9c8e8fdfc4e16a7caa7ac483466431cecaacf5f9b5b0d95fcb490c4",
+   "kind": "video",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "手机横屏 844×390（DPR2）设备模拟：触屏摇杆 + J 键实际触摸事件（CDP），显示虚拟按键",
+   "duration_seconds": 18.5,
+   "width": 1688,
+   "height": 780,
+   "audio": "game",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 1.5,
+     "description": "标题画面（四位主角站在楼顶）",
+     "supports": []
+    },
+    {
+     "in_seconds": 1.5,
+     "out_seconds": 2.5,
+     "description": "选人画面",
+     "supports": []
+    },
+    {
+     "in_seconds": 2.5,
+     "out_seconds": 18.49,
+     "description": "手机横屏 · 触屏摇杆与按键",
+     "supports": []
+    }
+   ],
+   "visual_review": "pass",
+   "input": "CDP 触摸事件脚本（模拟，非真机）"
+  },
+  {
+   "id": "mobile-portrait",
+   "file": "releases/v0.1.0/captures/mobile-portrait.mp4",
+   "sha256": "956b16e6df963620821f598aeda0ffb2defeb319ac045bd251d07207fef1d43f",
+   "kind": "video",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "手机竖屏 390×844 开局后舞台自动旋转为横屏布局，触控按逆变换操作（竖屏物理画面，不是 16:9 母版）",
+   "duration_seconds": 12.5,
+   "width": 780,
+   "height": 1688,
+   "audio": "game",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 1.5,
+     "description": "标题画面（四位主角站在楼顶）",
+     "supports": []
+    },
+    {
+     "in_seconds": 1.5,
+     "out_seconds": 2.5,
+     "description": "选人画面",
+     "supports": []
+    },
+    {
+     "in_seconds": 2.5,
+     "out_seconds": 12.49,
+     "description": "竖屏自动旋转为横屏布局 · 触屏操作",
+     "supports": []
+    }
+   ],
+   "visual_review": "pass",
+   "input": "CDP 触摸事件脚本（模拟，非真机）"
+  },
+  {
+   "id": "shot-title",
+   "file": "releases/v0.1.0/captures/shots/title.png",
+   "sha256": "a962c54b7385706e05956bab8b63089ac75dd4f996135860b7f10b63360bbe8b",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "标题画面：四位主角站在楼顶，主菜单含命数 / 耐久 / 演示模式 / 视角 / 画质 / 音量等选项",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-select",
+   "file": "releases/v0.1.0/captures/shots/select.png",
+   "sha256": "f449f9e0b59910c472128ed4f12a2a99285a85311112a22e133faab221f780f1",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "选人画面：四张角色卡（原作能力值与口号）",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-roof-intro",
+   "file": "releases/v0.1.0/captures/shots/roof-intro.png",
+   "sha256": "2bdefc1935ec02af2ad1736862cc8a6781d7f649462e53e5ed19ecf5e6f53812",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "楼顶开场：维斯与四个手下，对话框头像",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-roof-fight",
+   "file": "releases/v0.1.0/captures/shots/roof-fight.png",
+   "sha256": "87a3fda418608c949c9289d64a6d6f1b56ed3e2d13638347c8f52d71f039dcb5",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "楼顶战斗（侧视）",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-roof-front",
+   "file": "releases/v0.1.0/captures/shots/roof-front.png",
+   "sha256": "0c65b8d5183378897d0fdfe7699897756dd5dd64dfabf9987c18267bd9c773da",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "楼顶·正视（主角身后看向楼梯间）",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-roof-fp",
+   "file": "releases/v0.1.0/captures/shots/roof-fp.png",
+   "sha256": "c8017492eef426e933721a4b534feebd15a6d7f4d4e4f0f777ccb67d0bc78c7c",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "楼顶·第一人称",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-hall",
+   "file": "releases/v0.1.0/captures/shots/hall-start.png",
+   "sha256": "14f1a9c12dd3d3695ecc326af8596abc172a5b41ae2f7a442b84f123eb53a345",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "大楼内部：金色骑士像、双开门、拿铁管的费里斯",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-hall-front",
+   "file": "releases/v0.1.0/captures/shots/hall-front.png",
+   "sha256": "72e3e711a9a8a2ac545478bc769776e224ff2e56102d53dc62bd22bd5318e2a3",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "大楼内部·正视",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-street",
+   "file": "releases/v0.1.0/captures/shots/street-start.png",
+   "sha256": "8f2c3faeb80d2dbf4be44aa8d07ed9ae960b67b8ff1cebdc095c6aee9752cece",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "第 47 街：黑埃尔默破门而出",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-boss-intro",
+   "file": "releases/v0.1.0/captures/shots/boss-dialog.png",
+   "sha256": "5741b5edbb8b12eb20d95c7cadaba0adcb7f2a65c9e96e579bb43c87027fbc1d",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "Boss 登场：维斯用锁链拴着绿色岩跳龙",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-boss-fight",
+   "file": "releases/v0.1.0/captures/shots/boss-fight.png",
+   "sha256": "bf33c567b86a364538133ccd13a953d5e1aa81c2f7c57c758251bfcf4467216c",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "Boss 战（岩跳龙已变橙色）",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-result",
+   "file": "releases/v0.1.0/captures/shots/result.png",
+   "sha256": "fcc12a90b79660a77392344b87831dd60dfdbe46d061b16498188cc1f07fedf1",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "结算画面",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-continue",
+   "file": "releases/v0.1.0/captures/shots/continue.png",
+   "sha256": "09cee78a13e77622cd9325bc664d878455ef8bf51d5b8542b950039a77396e88",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "经典命数用完后的续关画面（维斯举枪倒数）",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-mobile",
+   "file": "releases/v0.1.0/captures/shots/mobile-game.png",
+   "sha256": "a0021eb28eae10be931ae7de914b96687c4a948a70bb9c09cf7b22fefe6fc666",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "手机横屏触屏布局",
+   "width": 1688,
+   "height": 780,
+   "visual_review": "pass"
+  },
+  {
+   "id": "shot-mobile-portrait",
+   "file": "releases/v0.1.0/captures/shots/mobile-portrait-game.png",
+   "sha256": "daa4f8cf7464fa9f578274c4e79ecb51a5053a8d60218761d5963a8cc8953857",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "offline-render",
+   "description": "手机竖屏开局后的旋转横屏布局",
+   "width": 780,
+   "height": 1688,
+   "visual_review": "pass"
+  },
+  {
+   "id": "site-thumb",
+   "file": "releases/v0.1.0/captures/shots/site-thumb.jpg",
+   "sha256": "0d273e14f8d3b3f5f58f435eee01a42a8bdfacad788e6a1a9d5c3b67b19b496d",
+   "kind": "asset",
+   "version": "v0.1.0",
+   "build_id": null,
+   "capture_mode": "generated-asset",
+   "description": "网站卡片封面：qa/cover.js 在 Boss 区摆拍的游戏内渲染（隐藏 HUD，2× 截图裁成 512×512）；渲染时为 v0.1.0 开发中构建（飞踢姿势已修正，命中闪白与标题镜头尚未调整，画面内容不受影响）",
+   "width": 512,
+   "height": 512,
+   "visual_review": "pass"
+  }
+ ],
+ "historical_media": [
+  {
+   "id": "h-dev-bug-dialog",
+   "handoff": "releases/v0.1.0-dev/handoff.json",
+   "media_id": "dev-bug-dialog",
+   "reason": "同一版本开发过程中的修复前画面（开发构建）"
+  },
+  {
+   "id": "h-dev-bug-floor",
+   "handoff": "releases/v0.1.0-dev/handoff.json",
+   "media_id": "dev-bug-floor",
+   "reason": "同一版本开发过程中的修复前画面（开发构建）"
+  },
+  {
+   "id": "h-dev-bug-door",
+   "handoff": "releases/v0.1.0-dev/handoff.json",
+   "media_id": "dev-bug-door",
+   "reason": "同一版本开发过程中的修复前画面（开发构建）"
+  },
+  {
+   "id": "h-dev-bug-faces",
+   "handoff": "releases/v0.1.0-dev/handoff.json",
+   "media_id": "dev-bug-faces",
+   "reason": "同一版本开发过程中的修复前画面（开发构建）"
+  },
+  {
+   "id": "h-dev-skyline",
+   "handoff": "releases/v0.1.0-dev/handoff.json",
+   "media_id": "dev-skyline",
+   "reason": "同一版本开发过程中的修复前画面（开发构建）"
+  }
+ ],
+ "qa": [
+  {
+   "id": "qa-desktop",
+   "device": "Windows 11 本机 · Microsoft Edge（Playwright 无头）· ANGLE D3D11 RTX 4060 Ti · 1280×720",
+   "method": "真实键盘事件逐项验收（qa/desktop.js）",
+   "result": "88/88 通过",
+   "evidence": "releases/v0.1.0/qa/desktop.json",
+   "untested": [
+    "真人手感试玩"
+   ]
+  },
+  {
+   "id": "qa-mobile",
+   "device": "Edge 设备模拟：Android UA、844×390 与 390×844、DPR2、hasTouch",
+   "method": "CDP 多点触摸事件（qa/mobile.js），含竖屏旋转逆变换与 1×1 启动后重排",
+   "result": "32/32 通过",
+   "evidence": "releases/v0.1.0/qa/mobile.json",
+   "untested": [
+    "真机触控",
+    "真机全屏 / 横屏锁定",
+    "真机帧率"
+   ]
+  },
+  {
+   "id": "qa-perf",
+   "device": "Edge 无头 · RTX 4060 Ti · 1280×720 DPR1 · 高画质",
+   "method": "bot 实时打斗，侧视 / 正视 / 第一人称 / 转视角 / Boss 各采样 8 秒帧间隔（qa/perf.js）",
+   "result": "side 170fps p95 6ms >50ms:0 draws 173; front 170fps p95 6ms >50ms:0 draws 80; fp 170fps p95 6ms >50ms:0 draws 52; side-rot 169.5fps p95 6ms >50ms:0 draws 76; boss-side 169.7fps p95 6ms >50ms:0 draws 115",
+   "evidence": "releases/v0.1.0/qa/perf-1280x720-high.json",
+   "untested": [
+    "手机真机性能",
+    "流畅档实测"
+   ]
+  },
+  {
+   "id": "qa-perf-mobile-sim",
+   "device": "Edge 设备模拟 844×390 DPR2 + CDP CPU 降速 4 倍",
+   "method": "bot 实时打斗 10 秒采样（qa/perf_mobile.js）",
+   "result": "104.1fps 中位 11.7ms p95 11.9ms >50ms:0 自动画质判定 high",
+   "evidence": "releases/v0.1.0/qa/perf-mobile-throttle4.json",
+   "untested": [
+    "真机 GPU 与发热"
+   ]
+  },
+  {
+   "id": "qa-bot",
+   "device": "同上（手动时钟）",
+   "method": "qa/botrun.js 让 bot 用四位英雄各打一整关，另跑一次经典耐久",
+   "result": "全部通关，见 bot-runs.json",
+   "evidence": "releases/v0.1.0/qa/bot-runs.json",
+   "untested": [
+    "真人难度评价"
+   ]
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "not_applicable",
+  "gaps": [
+   "音轨为同局事件离线重新合成，尚未人工听审（audio_review: not-run）",
+   "录像输入来自 bot，非真人试玩；手机录像为设备模拟",
+   "背景音乐不是原作曲（缺乐谱，按风格重新编写），视频文案需如实说明"
+  ]
+ }
+}
