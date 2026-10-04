@@ -92,7 +92,7 @@ SHOTS = [
 ]
 for id_, f, d in SHOTS:
     if (KIT / (CAP + 'shots/' + f)).exists(): M.append(media(id_, CAP + 'shots/' + f, 'screenshot', 'offline-render', d))
-M.append(media('site-thumb', CAP + 'shots/site-thumb.jpg', 'screenshot', 'offline-render', '网站卡片封面（Boss 区摆拍实机画面，隐藏 HUD，512×512）'))
+M.append(media('site-thumb', CAP + 'shots/site-thumb.jpg', 'asset', 'generated-asset', '网站卡片封面：qa/cover.js 在 Boss 区摆拍的游戏内渲染（隐藏 HUD，2× 截图裁成 512×512）；渲染时为 v0.1.0 开发中构建（飞踢姿势已修正，命中闪白与标题镜头尚未调整，画面内容不受影响）', build_id=None, visual_review='pass'))
 
 # 开发中构建的修复前证据（单独清单）
 DEV.mkdir(parents=True, exist_ok=True)

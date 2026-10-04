@@ -1,0 +1,11 @@
+{
+  "game_id": "cadillacs-stage1-3d",
+  "base_version": null,
+  "target_version": "v0.1.0",
+  "commit": "3bdd0e10",
+  "summary": "新游戏首发：恐龙快打第一关 3D 重置版上架网站",
+  "videos": [],
+  "status": "no_video",
+  "note": "本人账号暂无本游戏的视频，未修改任何简介；新视频发布并登记 BV 后再按 bili-game-update 接入",
+  "checked_at": "2026-10-05"
+}

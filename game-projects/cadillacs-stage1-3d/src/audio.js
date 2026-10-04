@@ -251,51 +251,63 @@ const A = {
   captureStream() { if (!ensure()) return null; if (!capDest) { capDest = ctx.createMediaStreamDestination(); master.connect(capDest); } return capDest.stream; },
   logStart() { log.on = true; log.events = []; },
   logStop() { log.on = false; return log.events.slice(); },
-  // 离线渲染同场音轨（逐帧录像用）：按事件时间重新合成音效与音乐，返回 16-bit WAV 的 base64
+  // 离线渲染同场音轨（逐帧录像用）：按事件时间重新合成音效与音乐，返回 16-bit WAV 的 base64。
+  // 分 15 秒一段渲染再叠加尾音：一次性把整局几千个音符挂进同一张音频图，渲染耗时会随时长平方增长
   async renderOffline(events, dur) {
-    const sr = 44100;
-    const off = new OfflineAudioContext(2, Math.ceil(sr * dur), sr);
+    const sr = 44100, SEG = 15, TAIL = 2.5;
+    const N = Math.ceil(sr * dur);
+    const outL = new Float32Array(N), outR = new Float32Array(N);
     const saved = { ctx, master, musicBus, sfxBus, comp, noiseBuf };
     offRendering = true;
-    ctx = off;
-    comp = off.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
-    master = off.createGain(); master.gain.value = 0.85;
-    musicBus = off.createGain(); musicBus.gain.value = 0.42;
-    sfxBus = off.createGain(); sfxBus.gain.value = 0.9;
-    musicBus.connect(comp); sfxBus.connect(comp); comp.connect(master); master.connect(off.destination);
-    noiseBuf = off.createBuffer(1, sr, sr); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
     try {
       const mus = events.filter(e => 'music' in e);
-      mus.forEach((m, k) => {
-        const S = SONGS[m.music]; if (!S) return;
-        const tEnd = k + 1 < mus.length ? mus[k + 1].t : dur;
-        const stepDur = 60 / S.bpm / 4, total = S.lead.length;
+      for (let s0 = 0; s0 < dur; s0 += SEG) {
+        const s1 = Math.min(dur, s0 + SEG);
+        const len = Math.min(dur - s0, SEG + TAIL);
+        const off = new OfflineAudioContext(2, Math.ceil(sr * len), sr);
+        ctx = off;
+        comp = off.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.attack.value = 0.004; comp.release.value = 0.2;
+        master = off.createGain(); master.gain.value = 0.85;
+        musicBus = off.createGain(); musicBus.gain.value = 0.42;
+        sfxBus = off.createGain(); sfxBus.gain.value = 0.9;
+        musicBus.connect(comp); sfxBus.connect(comp); comp.connect(master); master.connect(off.destination);
+        noiseBuf = off.createBuffer(1, sr, sr); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
         const dest = off.createGain(); dest.connect(musicBus);
-        for (let i = 0; ; i++) {
-          const t = m.t + 0.08 + i * stepDur;
-          if (t >= tEnd || t >= dur) break;
-          if (!S.loop && i >= total) break;
-          const j = i % total;
-          const L = S.lead[j], Bn = S.bass[j % S.bass.length], Ch = S.chord[j % S.chord.length], D = S.drum[j % S.drum.length];
-          if (L && L !== '-' && L !== '.') leadVoice(freq(L), t, Math.min(noteLen(S.lead, j, stepDur) * 0.95, tEnd - t), dest);
-          if (Bn && Bn !== '-' && Bn !== '.') bassVoice(freq(Bn), t, Math.min(noteLen(S.bass, j, stepDur), stepDur * 2) * 0.9, dest);
-          if (Ch && Ch !== '-' && Ch !== '.') chordVoice(freq(Ch), t, Math.min(noteLen(S.chord, j, stepDur) * 0.9, tEnd - t), dest);
-          if (D && D !== '.') drumVoice(D, t, dest);
-        }
-      });
-      for (const e of events) if (e.name && SFX[e.name] && e.t < dur) { try { SFX[e.name](e.t + 0.005, e.vol || 1); } catch (err) { /* ignore */ } }
-      const buf = await off.startRendering();
+        // 本段开始的音符：只排起点落在 [s0, s1) 的
+        mus.forEach((m, k) => {
+          const S = SONGS[m.music]; if (!S) return;
+          const tEnd = Math.min(k + 1 < mus.length ? mus[k + 1].t : dur, dur);
+          const stepDur = 60 / S.bpm / 4, total = S.lead.length, base = m.t + 0.08;
+          let i = Math.max(0, Math.ceil((s0 - base) / stepDur - 1e-9));
+          for (; ; i++) {
+            const t = base + i * stepDur;
+            if (t >= tEnd || t >= s1) break;
+            if (!S.loop && i >= total) break;
+            if (t < s0) continue;
+            const j = i % total, lt = t - s0;
+            const L = S.lead[j], Bn = S.bass[j % S.bass.length], Ch = S.chord[j % S.chord.length], D = S.drum[j % S.drum.length];
+            if (L && L !== '-' && L !== '.') leadVoice(freq(L), lt, Math.min(noteLen(S.lead, j, stepDur) * 0.95, tEnd - t), dest);
+            if (Bn && Bn !== '-' && Bn !== '.') bassVoice(freq(Bn), lt, Math.min(noteLen(S.bass, j, stepDur), stepDur * 2) * 0.9, dest);
+            if (Ch && Ch !== '-' && Ch !== '.') chordVoice(freq(Ch), lt, Math.min(noteLen(S.chord, j, stepDur) * 0.9, tEnd - t), dest);
+            if (D && D !== '.') drumVoice(D, lt, dest);
+          }
+        });
+        for (const e of events) if (e.name && SFX[e.name] && e.t >= s0 && e.t < s1) { try { SFX[e.name](e.t - s0 + 0.005, e.vol || 1); } catch (err) { /* ignore */ } }
+        const buf = await off.startRendering();
+        const a = buf.getChannelData(0), b = buf.getChannelData(1), o = Math.round(s0 * sr);
+        for (let i = 0; i < a.length && o + i < N; i++) { outL[o + i] += a[i]; outR[o + i] += b[i]; }
+      }
       // 编码 WAV
-      const ch = [buf.getChannelData(0), buf.getChannelData(1)], n = buf.length;
-      const bytes = new Uint8Array(44 + n * 4), dv = new DataView(bytes.buffer);
+      const bytes = new Uint8Array(44 + N * 4), dv = new DataView(bytes.buffer);
       const wr = (o, s) => { for (let i = 0; i < s.length; i++) bytes[o + i] = s.charCodeAt(i); };
-      wr(0, 'RIFF'); dv.setUint32(4, 36 + n * 4, true); wr(8, 'WAVE'); wr(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 2, true);
-      dv.setUint32(24, sr, true); dv.setUint32(28, sr * 4, true); dv.setUint16(32, 4, true); dv.setUint16(34, 16, true); wr(36, 'data'); dv.setUint32(40, n * 4, true);
+      wr(0, 'RIFF'); dv.setUint32(4, 36 + N * 4, true); wr(8, 'WAVE'); wr(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 2, true);
+      dv.setUint32(24, sr, true); dv.setUint32(28, sr * 4, true); dv.setUint16(32, 4, true); dv.setUint16(34, 16, true); wr(36, 'data'); dv.setUint32(40, N * 4, true);
       let o = 44;
-      for (let i = 0; i < n; i++) for (let c = 0; c < 2; c++) { const v = Math.max(-1, Math.min(1, ch[c][i])); dv.setInt16(o, v < 0 ? v * 0x8000 : v * 0x7fff, true); o += 2; }
-      let bin = ''; const CH = 0x8000;
-      for (let i = 0; i < bytes.length; i += CH) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
-      return btoa(bin);
+      for (let i = 0; i < N; i++) { for (const ch of [outL, outR]) { const v = Math.max(-1, Math.min(1, ch[i])); dv.setInt16(o, v < 0 ? v * 0x8000 : v * 0x7fff, true); o += 2; } }
+      // 按 3 字节对齐分块 btoa 再拼接，避免超长字符串
+      const parts = [], CH = 3 * 32768;
+      for (let i = 0; i < bytes.length; i += CH) { const sub = bytes.subarray(i, i + CH); let bin = ''; for (let k = 0; k < sub.length; k += 8192) bin += String.fromCharCode.apply(null, sub.subarray(k, k + 8192)); parts.push(btoa(bin)); }
+      return parts.join('');
     } finally {
       ({ ctx, master, musicBus, sfxBus, comp, noiseBuf } = saved);
       offRendering = false;
