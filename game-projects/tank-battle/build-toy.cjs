@@ -15,6 +15,12 @@ const start=html.indexOf('/* ---------------- 合作联机 WebSocket 大厅 ----
 const end=html.indexOf('/* ---------------- 画布缩放：',start);
 if(start<0||end<0) throw Error('Toy offline adapter markers missing');
 html=html.slice(0,start)+html.slice(end);
+// Toy embeds the game in an iframe; clicking the canvas must focus keyboard input.
+html=html.replace('</body>', `<script>
+const toyCanvas=document.getElementById('gameCanvas');
+toyCanvas.tabIndex=0;
+toyCanvas.addEventListener('pointerdown',()=>{window.focus();toyCanvas.focus({preventScroll:true});});
+</script>\n</body>`);
 fs.writeFileSync(path.join(out,'index.html'),html);
 const files=['index.html'];
 for(const name of ['game-progress.js','touch-ui.js']){

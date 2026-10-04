@@ -7,7 +7,7 @@ const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '../..');
 const html = fs.readFileSync(process.argv[2] || path.join(root, 'public/html/game/tank_battle.html'), 'utf8');
 let source = html.match(/<script>\s*"use strict";([\s\S]*?)<\/script>/)[1];
-source = source.split('/* ---------------- 合作联机 WebSocket 大厅 ---------------- */')[0];
+source = source.split(/\/\* ---------------- (?:合作联机 WebSocket 大厅|画布缩放：)/)[0];
 source = source.replace('beginCampaignFromCoop: function(opts){', `
     test: {
       start(lv, debug=false) {

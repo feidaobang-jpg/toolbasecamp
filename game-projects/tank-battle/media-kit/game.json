@@ -1,0 +1,12 @@
+{
+  "id": "tank-battle",
+  "title": "坦克大战 2D",
+  "version": "boss-clear-20261004",
+  "source": "public/html/game/tank_battle.html",
+  "website": "https://www.zhengxiaohui.cn/html/game/tank_battle.html",
+  "toyId": 39043362707456,
+  "toySlug": "feidao-tank-battle",
+  "bvids": [
+    "BV1AKuZ6oEnX"
+  ]
+}

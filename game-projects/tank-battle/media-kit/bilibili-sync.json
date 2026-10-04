@@ -1,0 +1,15 @@
+{
+  "game": "tank-battle",
+  "title": "坦克大战 2D",
+  "ownerMid": 16214353,
+  "videos": [
+    {
+      "bvid": "BV1AKuZ6oEnX",
+      "aid": 117071430032132,
+      "lastPublicVerifiedVersion": "boss-clear-20261004",
+      "blockHash": "a62909293f776f930159ec31f8f09386300e9419f91d993414774a5ef21a2fcc",
+      "release": "releases/boss-clear-20261004/bilibili-sync.json"
+    }
+  ],
+  "pending": []
+}
