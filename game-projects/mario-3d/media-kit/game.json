@@ -21,8 +21,8 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "v2.0.0 auditing（2026-10-04 10:04 提交）；正式页仍为旧版第一关",
-    "verified_at": "2026-10-04T10:04:45+08:00",
+    "review_status": "游戏内容 v2.0.0 于 10:04 送审（auditing）；10:29 标题改为「超级玛丽 3D：1-1 与 1-2」并换新封面，列表已显示",
+    "verified_at": "2026-10-04T10:29:06+08:00",
     "video_bindings": []
   },
   "notes": "粉丝向非官方复刻：关卡布局按原作地图，3D 模型、贴图与音乐音效为程序化重新制作，不使用原作素材文件。"

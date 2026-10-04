@@ -1,7 +1,7 @@
 {
   "toy_id": 39043286960128,
   "slug": "feidao-mario-3d",
-  "title_on_platform": "超级玛丽 3D：第一关（本次未改标题）",
+  "title_on_platform": "超级玛丽 3D：1-1 与 1-2",
   "version": "v2.0.0",
   "source_commit": "e7687e54",
   "package": "game-projects/mario-3d/dist/toy-v2.0.0/package",
@@ -26,5 +26,15 @@
   },
   "authorization": "用户 2026-10-04 长期授权：网站游戏改动验证部署后自动同步已有 Toy 并提交审核",
   "public_url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
-  "note": "审核通过前正式页仍是旧版（第一关）"
+  "note": "审核通过前正式页仍是旧版（第一关）",
+  "metadata_update": {
+    "requested_by": "用户 2026-10-04 明确要求：标题和封面都换成新的",
+    "submitted_at": "2026-10-04T10:29:06+08:00",
+    "title_before": "超级玛丽 3D：第一关",
+    "title_after": "超级玛丽 3D：1-1 与 1-2",
+    "poster": "releases/v2.0.0/toy/poster.png（1200×900，仅本机；1-1 斜视实机图 + 1-2 传送区小图 + 标题栏）",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/poster_21954.png",
+    "cli_status": "auditing",
+    "verified": "mylist 已显示新标题与新封面地址，线上封面与本地文件逐像素一致；图标未改（仍为旧版画风）"
+  }
 }
