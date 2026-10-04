@@ -173,7 +173,7 @@
   {
     "id": "toylook-procedural",
     "source_type": "procedural",
-    "active_in_web_toylook": true,
+    "active_in_web_toylook": false,
     "runtime_file": "public/html/game/starship-defense/toy-visuals.js",
     "tool": "Three.js r152 geometry factories assisted by Codex",
     "description": "Original round helmet troops, beetles, elite crowns, winged insects, enlarged mech, clouds and flowers; no Doraemon character assets used",
@@ -220,7 +220,8 @@
     "parameters": "Ten species silhouettes; short boots, two eyes, no teeth or spider limbs; species palette and rank topology in enemy-visuals.js. Animated body, two feet groups and optional two wings.",
     "processing": "Spheres, cylinders and small badge plates merged per animated part; geometries cached by species/rank/flight.",
     "placeholder": false,
-    "usage": "Original game models; no external images or downloads."
+    "usage": "Original game models; no external images or downloads.",
+    "active_in_web_toylook": false
   },
   {
     "id": "squad-role-identity-v014",
@@ -232,5 +233,15 @@
     ],
     "description": "角色专属装甲配色与编号/兵种名牌，驾驶时名牌转移到载具上；复用原有士兵和载具模型，无外部新素材。",
     "version": "web-squad-crew-v0.14.0"
+  },
+  {
+    "id": "chitin-insects-v017",
+    "source_type": "procedural",
+    "active_in_web_toylook": true,
+    "runtime_file": "../../../public/html/game/starship-defense/enemy-visuals.js",
+    "tool": "Three.js r152 shared vertex-colour geometry",
+    "source": "Restored project DarkVisuals.bug geometry from commit af5668d6; muted palettes and reduced emissive wings/queen abdomen.",
+    "processing": "Merged meshes cached per species/rank/flight; animated body, six jointed legs and optional wings.",
+    "usage": "Original project geometry; no external assets or movie models."
   }
 ]

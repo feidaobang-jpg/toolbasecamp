@@ -1,0 +1,39 @@
+{
+  "url": "http://127.0.0.1:8898/html/game/starship-defense/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "hit": {
+        "count": 2,
+        "hp": [
+          340,
+          340,
+          340
+        ],
+        "remaining": 0
+      },
+      "save": {
+        "migration": 3,
+        "restored": 7
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "hit": {
+        "count": 2,
+        "hp": [
+          340,
+          340,
+          340
+        ],
+        "remaining": 0
+      },
+      "save": {
+        "migration": 3,
+        "restored": 7
+      },
+      "errors": []
+    }
+  ]
+}

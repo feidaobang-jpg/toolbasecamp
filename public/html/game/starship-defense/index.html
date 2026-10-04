@@ -66,6 +66,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #vK{right:22px;bottom:24px;width:62px;height:62px;line-height:60px}
 #vSPRINT{left:168px;bottom:28px;width:62px;height:62px;line-height:60px}
 #vK.cd{background-image:conic-gradient(rgba(0,0,0,.55) calc(var(--cd)*360deg),transparent 0)}
+#vU{right:236px;bottom:88px}
 #vI{right:28px;bottom:100px}#vH{right:102px;bottom:106px}#vX{right:172px;bottom:88px}
 #vO{right:24px;bottom:172px}#vL{right:78px;bottom:172px}#vC{right:132px;bottom:172px}#vV{right:186px;bottom:172px}#vP{right:240px;bottom:172px}
 .touch-mode #keysHint{display:none}
@@ -222,7 +223,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div id="hint" class="hidden"></div>
     <div id="interactHint" class="hidden"></div>
     <div id="weaponBar" aria-label="武器栏"></div>
-    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格冲刺 · I互动(门/载具) · H医疗包 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
+    <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格冲刺 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · V第一/第三人称 · C镜头距离 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
@@ -240,6 +241,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div class="vbtn" id="vSPRINT" aria-label="按住跑步">跑步</div>
     <div class="vbtn" id="vI">互动</div>
     <div class="vbtn" id="vH">医疗</div>
+    <div class="vbtn" id="vU" aria-label="投掷手雷">手雷3</div>
     <div class="vbtn" id="vX">换枪</div>
     <div class="vbtn sm" id="vO">商店</div>
     <div class="vbtn sm" id="vL">建造</div>
@@ -280,8 +282,8 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div class="small">
       地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，无需按键、不耗电。<br>
       电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 点击画面用鼠标转视角 · 按住Shift跑步 · 空格闪避 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
-      按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 闪避（短暂无敌，冷却 2.5 秒；火枪兵 1.8 秒）· I 互动（开关城门、上下载具）· H 医疗包 · 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
-      手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
+      按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 闪避（短暂无敌，冷却 2.5 秒；火枪兵 1.8 秒）· I 互动（开关城门、上下载具）· H 医疗包 · U 手雷（开局3枚，商店补充）· 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
+      手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗、手雷都有按键<br>
       菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
       玩法：准备阶段去野外打怪攒钱 → 商店买枪/强化（每把武器可强化到 Lv10）、造炮塔、雇队友 → 开战守住基地。虫子从远处虫洞钻出；地图最深处是虫巢，母皇和护卫只守老巢，击杀母皇本章虫潮 -35%<br>
       城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和基地方向提示找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，三档难度分别领奖；右侧「菜单」或 P/Esc 暂停
@@ -387,6 +389,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=lighting160" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=insects170" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

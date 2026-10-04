@@ -3,7 +3,7 @@ import {UnitVisuals} from './unit-visuals.js';
 import {createEnemy} from './enemy-visuals.js';
 
 // Deep night battlefield look requested by players (closest to the first released
-// version): armoured troopers, rounded space fauna, steel base.
+// version): armoured troopers, jointed chitin insects, steel base.
 // Merged-part units: body + two limb meshes (+ wings) per unit.
 const SOLDIER_COLORS=new Map([[0x3a7bd5,0x3f74c4],[0xd58a3a,0xb8743a],[0x3ad57b,0x3f9a63],[0xd5d53a,0xb9a23c],[0xd53a8a,0xa8445f],[0x3ad5d5,0x3b9aa8],[0xff8833,0xc4682e],[0x4488ff,0x3f74c4]]);
 const shade=(c,k)=>new THREE.Color(c).multiplyScalar(k).getHex();
@@ -112,20 +112,9 @@ export class DarkVisuals extends UnitVisuals {
   }
   animate(root,dt,state,camera){
     super.animate(root,dt,state,camera);
-    const a=root&&root.userData.toy,e=root&&root.userData.enemy;if(!a||!e)return;
-    // Soft bob and short steps replace the skittering spider gait.
-    const moving=state==='Walk'||state==='Run',t=a.time;
-    if(e.motion==='hover'||a.fly){
-      a.body.position.y=.06+Math.sin(t*3)*.055;
-      a.feet.forEach(m=>m.rotation.x=.12);
-    }else{
-      const speed=e.motion==='march'?6:9;
-      a.feet.forEach((m,i)=>m.rotation.x=moving?Math.sin(t*speed+i*Math.PI)*.22:0);
-      a.body.rotation.z=moving?Math.sin(t*speed)*.026:0;
-    }
-    if(a.wings){const flap=Math.sin(t*9)*.18;a.wings.forEach((m,i)=>{m.rotation.z=(i?-1:1)*(.12+flap);m.castShadow=a.body.castShadow;});}
+    const a=root&&root.userData.toy;if(!a||!a.wings)return;
+    const flap=Math.sin(a.time*30)*.55;a.wings[0].rotation.z=.25+flap;a.wings[1].rotation.z=-.25-flap;
   }
-
   restyle(root){
     const colors=new Map([[0xf6dfae,0x7a8796],[0x53b4ae,0x3e8f96],[0xf5b957,0xc8953f],[0x8899aa,0x6d7b8c],[0x667788,0x4b5866],[0x88aacc,0x7f98b5],[0x77879a,0x5f6d7d],[0x5c6b7d,0x46525f],[0x7c8aa0,0x6a788a],[0x9aa8ba,0x7d8ea3],[0x2a5d3a,0x24442f],[0x222222,0x1c2228],[0x111111,0x161b20]]);
     root.traverse(o=>{if(!o.isMesh||!(o.material&&o.material.isMeshLambertMaterial)||o.material.vertexColors||o.userData.keepMaterial)return;

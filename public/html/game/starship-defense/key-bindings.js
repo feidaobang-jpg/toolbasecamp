@@ -1,5 +1,5 @@
 // Persist actions, never executable code. Touch controls keep their action identities.
-export const KEY_ACTIONS={SPRINT:['按住跑步','ShiftLeft'],up:['前进','KeyW'],down:['后退','KeyS'],left:['左移','KeyA'],right:['右移','KeyD'],J:['射击 / 放置','KeyJ'],K:['闪避 / 直升机升高','KeyK'],I:['互动 / 上下载具','KeyI'],H:['医疗 / 直升机降低','KeyH'],Y:['直升机升高','KeyY'],O:['商店','KeyO'],L:['建造','KeyL'],V:['第一 / 第三人称','KeyV'],X:['下一把武器','KeyX'],C:['镜头预设','KeyC'],Q:['左转视角','KeyQ'],E:['右转视角','KeyE'],P:['暂停','KeyP'],R:['开始虫潮','KeyR'],T:['自由测试','KeyT'],M:['声音','KeyM'],F:['全屏','KeyF']};
+export const KEY_ACTIONS={U:['投掷手雷','KeyU'],SPRINT:['按住跑步','ShiftLeft'],up:['前进','KeyW'],down:['后退','KeyS'],left:['左移','KeyA'],right:['右移','KeyD'],J:['射击 / 放置','KeyJ'],K:['闪避 / 直升机升高','KeyK'],I:['互动 / 上下载具','KeyI'],H:['医疗 / 直升机降低','KeyH'],Y:['直升机升高','KeyY'],O:['商店','KeyO'],L:['建造','KeyL'],V:['第一 / 第三人称','KeyV'],X:['下一把武器','KeyX'],C:['镜头预设','KeyC'],Q:['左转视角','KeyQ'],E:['右转视角','KeyE'],P:['暂停','KeyP'],R:['开始虫潮','KeyR'],T:['自由测试','KeyT'],M:['声音','KeyM'],F:['全屏','KeyF']};
 for(let i=1;i<=9;i++)KEY_ACTIONS['N'+i]=['武器栏 '+i,'Digit'+i];
 const STORE='chongchao-keybindings-v1';
 const allowed=code=>/^(Key[A-Z]|Digit[0-9]|Numpad[0-9]|Arrow(Up|Down|Left|Right)|Space|ShiftLeft|ShiftRight|ControlLeft|ControlRight|AltLeft|AltRight|BracketLeft|BracketRight|Semicolon|Quote|Comma|Period|Slash|Backslash|Minus|Equal|Backquote)$/.test(code);
@@ -10,9 +10,9 @@ export function createKeyBindings(){
   defaults();
   try{const saved=JSON.parse(localStorage.getItem(STORE)||'{}');const candidate={...keys};
     for(const a of Object.keys(KEY_ACTIONS))if(typeof saved[a]==='string'&&allowed(saved[a]))candidate[a]=saved[a];
-    // Adding sprint must not discard older custom controls that already used Shift.
-    if(!saved.SPRINT&&Object.keys(candidate).some(a=>a!=='SPRINT'&&candidate[a]===candidate.SPRINT)){
-      candidate.SPRINT=['ShiftLeft','ShiftRight','ControlLeft','ControlRight','AltLeft','AltRight',...Array.from({length:26},(_,i)=>'Key'+String.fromCharCode(65+i)),...Array.from({length:10},(_,i)=>'Digit'+i)].find(code=>!Object.keys(candidate).some(a=>a!=='SPRINT'&&candidate[a]===code))||'Backquote';
+    // New actions must not discard older custom controls using their default keys.
+    for(const added of ['SPRINT','U'])if(!saved[added]&&Object.keys(candidate).some(a=>a!==added&&candidate[a]===candidate[added])){
+      candidate[added]=['ShiftLeft','ShiftRight','ControlLeft','ControlRight','AltLeft','AltRight',...Array.from({length:26},(_,i)=>'Key'+String.fromCharCode(65+i)),...Array.from({length:10},(_,i)=>'Digit'+i)].find(code=>!Object.keys(candidate).some(a=>a!==added&&candidate[a]===code))||'Backquote';
     }
     if(new Set(Object.values(candidate)).size===Object.keys(candidate).length){keys=candidate;custom=saved;}
   }catch(_e){}

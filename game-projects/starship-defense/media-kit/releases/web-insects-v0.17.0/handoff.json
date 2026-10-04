@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-insects-v0.17.0",
+  "base_version": "web-lighting-v0.16.0",
+  "created_at": "2026-10-04T01:54:08.982781+00:00",
+  "build": {
+    "id": "web-insects-v0.17.0",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "05ccbce5835a34a862078282b7103e75f551432a8dec52bfd1b4ee2faec93f21",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "insect-models",
+      "before": "圆润短脚、大眼、花瓣母皇",
+      "after": "恢复项目旧版甲壳长节肢与獠牙，降低饱和度和自发光"
+    },
+    {
+      "id": "grenades",
+      "before": "精简武器时手雷与手机按钮被移除",
+      "after": "U/手机手雷键；初始3枚、商店补给、存档迁移、范围伤害"
+    },
+    {
+      "id": "navigation",
+      "before": "地堡墙角持续顶墙、游荡虫向地图外走",
+      "after": "碰撞采样的局部绕行路径、边界转向、限制拥挤推力和击退范围"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "shelter-stuck",
+      "status": "fixed",
+      "evidence": "before/navigation.json",
+      "cause": "原先侧向避障无法绕开地堡墙角",
+      "retest": "navigation.json: 16 cases within 2m, three routes complete, 48 insects all exit"
+    },
+    {
+      "id": "touch-grenade-binding",
+      "status": "fixed",
+      "cause": "初版手机按钮未加入显式输入绑定列表",
+      "retest": "grenades.json: real touchscreen tap consumes one grenade and damages three enemies"
+    }
+  ],
+  "qa": {
+    "functional": [
+      "navigation.json",
+      "grenades.json"
+    ],
+    "visual": "Reviewed final model gallery and continuous-video contact sheet",
+    "performance": "performance.json; separate from video; 48 insects and four squadmates",
+    "limitations": [
+      "桌面 RTX4060Ti Edge headless；手机仅视口与触控模拟",
+      "录像无音轨",
+      "自动化采集使用QA定位、无敌与补充弹药"
+    ]
+  },
+  "media": [
+    {
+      "id": "enemy-lineup",
+      "file": "releases/web-insects-v0.17.0/captures/enemy-lineup.png",
+      "sha256": "886f50e63cb3af4617fa580f31085d1271a4d1ceb6771f5b9b4089b65341c0e1",
+      "kind": "screenshot",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "model-gallery",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": null,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    },
+    {
+      "id": "cover-candidate",
+      "file": "releases/web-insects-v0.17.0/captures/cover-candidate.jpg",
+      "sha256": "58f536dc6e93eae8d2594251d60c72d750576a0e07965bc308f9efd6b4e2508b",
+      "kind": "screenshot",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": null,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    },
+    {
+      "id": "grenade-arc",
+      "file": "releases/web-insects-v0.17.0/grenade-arc.jpg",
+      "sha256": "792cb8deb9502c93c30d7582fb923535777f41bcf43525f48de82ee6c997f037",
+      "kind": "screenshot",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": null,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    },
+    {
+      "id": "insects-combat",
+      "file": "releases/web-insects-v0.17.0/insects-combat.jpg",
+      "sha256": "0566d340bdd8f2e06a519e3f805fea2b818df78a711b7142c94f0a5d2131483c",
+      "kind": "screenshot",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": null,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    },
+    {
+      "id": "queen-cave",
+      "file": "releases/web-insects-v0.17.0/queen-cave.jpg",
+      "sha256": "778b9261dd283ab96f5b23224ff9b87e4af028539de1186b40f875c406c37598",
+      "kind": "screenshot",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": null,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    },
+    {
+      "id": "video-review",
+      "file": "releases/web-insects-v0.17.0/video-review.jpg",
+      "sha256": "aab89e7bd86ed238db57bfbc6d8aa1904121f34553615bb8982b1af18ec9b48b",
+      "kind": "screenshot",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": null,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    },
+    {
+      "id": "page@e249f0dee447bcac3de7a631a9a940f7",
+      "file": "releases/web-insects-v0.17.0/video/page@e249f0dee447bcac3de7a631a9a940f7.webm",
+      "sha256": "f17c3409cafa1af17d12aca6f64faa271c393e779726b2253360e39e43b3880b",
+      "kind": "video",
+      "version": "web-insects-v0.17.0",
+      "build_id": "web-insects-v0.17.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": 22.64,
+      "description": "Gallery labelled non-combat; gameplay capture uses QA positioning, invulnerability and ammo. Actual keyboard throws/movement and camera rotation; no audio."
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "无音轨",
+      "无实体手机测试"
+    ]
+  },
+  "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+}

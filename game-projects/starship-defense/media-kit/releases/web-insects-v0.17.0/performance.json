@@ -1,0 +1,56 @@
+[
+  {
+    "mobileEmulation": false,
+    "scenario": "48 insects chase around field shelter, 4 squadmates, movement and camera rotation",
+    "samples": 1185,
+    "averageFPS": 169.28571428571428,
+    "medianMs": 5.9000000059604645,
+    "p95Ms": 6.200000017881393,
+    "over50ms": 0,
+    "drawCalls": 166,
+    "triangles": 283904,
+    "memory": {
+      "geometries": 161,
+      "textures": 8
+    },
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.3333333333333333,
+    "drawingBuffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "quality": "high",
+    "theme": "dark"
+  },
+  {
+    "mobileEmulation": true,
+    "scenario": "48 insects chase around field shelter, 4 squadmates, movement and camera rotation",
+    "samples": 1179,
+    "averageFPS": 168.43097758525064,
+    "medianMs": 5.9000000059604645,
+    "p95Ms": 6.0999999940395355,
+    "over50ms": 1,
+    "drawCalls": 181,
+    "triangles": 296978,
+    "memory": {
+      "geometries": 167,
+      "textures": 7
+    },
+    "viewport": [
+      915,
+      412
+    ],
+    "dpr": 0.953125,
+    "drawingBuffer": [
+      915,
+      412
+    ],
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "quality": "smooth",
+    "theme": "dark"
+  }
+]
