@@ -1,0 +1,33 @@
+{
+  "url": "http://127.0.0.1:8931/html/game/starship-defense/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "rapid": {
+        "inAir": 2,
+        "hasCd": false
+      },
+      "save": {
+        "throws": 20,
+        "afterReload": true,
+        "hasFiniteSupply": false,
+        "hasSavedAmmo": false
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "rapid": {
+        "inAir": 2,
+        "hasCd": false
+      },
+      "save": {
+        "throws": 20,
+        "afterReload": true,
+        "hasFiniteSupply": false,
+        "hasSavedAmmo": false
+      },
+      "errors": []
+    }
+  ]
+}

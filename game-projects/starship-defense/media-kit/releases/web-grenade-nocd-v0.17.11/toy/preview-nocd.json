@@ -1,0 +1,33 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_TpDX7GjR/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "rapid": {
+        "inAir": 2,
+        "hasCd": false
+      },
+      "save": {
+        "throws": 20,
+        "afterReload": true,
+        "hasFiniteSupply": false,
+        "hasSavedAmmo": false
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "rapid": {
+        "inAir": 2,
+        "hasCd": false
+      },
+      "save": {
+        "throws": 20,
+        "afterReload": true,
+        "hasFiniteSupply": false,
+        "hasSavedAmmo": false
+      },
+      "errors": []
+    }
+  ]
+}

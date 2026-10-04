@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-grenade-nocd-v0.17.11",
+  "base_version": "web-input-flight-v0.17.10",
+  "created_at": "2026-10-04T14:45:20.841Z",
+  "build": {
+    "commit": "739f3774",
+    "dirty": false,
+    "note": "包体从已提交HEAD导出；并行会话未提交的触屏改动未包含"
+  },
+  "changes": [
+    "移除手雷0.8秒投掷间隔，U/手雷按钮可无CD连投",
+    "保留无限手雷、范围伤害与暂停时禁止投掷等原有逻辑",
+    "帮助文案同步改为无投掷间隔；网站已上线核验"
+  ],
+  "qa": {
+    "functional": [
+      "local-nocd.json"
+    ],
+    "visual": " Reviewed local desktop/mobile screenshots cave-grenade.jpg / mobile-grenade.jpg",
+    "performance": "无渲染改动，沿用历史基准",
+    "limitations": [
+      "手机为触控与视口模拟，未测实体手机",
+      "QA使用定位与无敌，非普通玩家实战录像"
+    ],
+    "deployment": "commit 739f3774 push后公网核验：index.html ?v=739f3774、game.compat.js 无 grenadeCd、帮助文案已更新",
+    "online_functional": [
+      "公网 game.compat.js grenadeCd=0 核验"
+    ],
+    "toy": "toy/preview-nocd.json"
+  },
+  "media": [
+    {
+      "file": "releases/web-grenade-nocd-v0.17.11/cave-grenade.jpg",
+      "sha256": "24ebc5a074aafad104331c6daf1d231cf51f884c4ba651b0bbac5fa58075df59",
+      "visual_review": "pass",
+      "audio": "none",
+      "duration_seconds": null,
+      "capture_mode": "headless QA定位+无敌；键盘U键连投"
+    },
+    {
+      "file": "releases/web-grenade-nocd-v0.17.11/mobile-grenade.jpg",
+      "sha256": "21728ae68811d76e48e0e2e86b9ba8d0f6d420c41264e0b99add06464026509f",
+      "visual_review": "pass",
+      "audio": "none",
+      "duration_seconds": null,
+      "capture_mode": "headless QA移动视口触屏连投"
+    }
+  ],
+  "readiness": {
+    "update": "partial"
+  }
+}
