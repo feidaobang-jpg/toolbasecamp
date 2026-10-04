@@ -15,7 +15,10 @@
     "limitations": [
       "手机为触控视口模拟，非实体设备",
       "录像无音轨，使用QA定位和确定性碰撞测试，非普通实战成片"
-    ]
+    ],
+    "deployment": "deployment.json",
+    "toy_functional": "toy/qa.json",
+    "visual": "已检查手机跳跃按钮、腾空截图及短录像拼图"
   },
   "mobile_custom_layout": "未实现；当前只支持电脑改键与手机键名字母同步",
   "thumbnail": "沿用：场景、美术未变",
@@ -47,7 +50,17 @@
       "sha256": "fe2079684c5205e4dcd600100527193900cb7113e509b262bec703c9d8cd0021",
       "version": "web-jump-v0.17.3",
       "capture_mode": "realtime-automation",
-      "audio": "none"
+      "audio": "none",
+      "duration_seconds": 5.52
     }
-  ]
+  ],
+  "code_commit": "a4a69a38",
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_wH4EBbeQ/index.html",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_xbg96RSC/index.html",
+    "zip_sha256": "1647afc1aabb8b654ca8dead21458c6aae09133305c6bce93b21e1e341006e9c",
+    "submitted_at": "2026-10-04T13:09:41.071719+08:00"
+  }
 }

@@ -1,0 +1,41 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_xbg96RSC/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "up": {
+        "y": 0.9494853599998853,
+        "vy": 5.9159999999999995,
+        "z": 40
+      },
+      "damage": 8.5,
+      "physics": {
+        "cave": {
+          "peak": 1.6500000000000021,
+          "landed": true,
+          "belowRoof": true
+        },
+        "wallZ": 42.849999999999966
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "up": {
+        "y": 0.9884697600671913,
+        "vy": 5.7527999997139,
+        "z": 40
+      },
+      "damage": 8.5,
+      "physics": {
+        "cave": {
+          "peak": 1.6500000000000021,
+          "landed": true,
+          "belowRoof": true
+        },
+        "wallZ": 42.849999999999966
+      },
+      "errors": []
+    }
+  ]
+}

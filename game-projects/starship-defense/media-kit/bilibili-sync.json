@@ -7,20 +7,20 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-controls-v0.17.2",
-      "last_public_verified_at": "2026-10-04T04:06:09.436Z",
-      "update_block_sha256": "15cfe81c1f3c7eb7cd2f51941d796e193b88bbcbc8ad38ba3cb313e749e67fc1",
+      "last_public_verified_version": "web-jump-v0.17.3",
+      "last_public_verified_at": "2026-10-04T05:11:58.725Z",
+      "update_block_sha256": "d0efe51f1f3b02af44221461ec854f802688935d5dcbd1363a2b91dc5d359942",
       "status": "public_verified"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-controls-v0.17.2",
-      "last_public_verified_at": "2026-10-04T04:06:19.855Z",
-      "update_block_sha256": "15cfe81c1f3c7eb7cd2f51941d796e193b88bbcbc8ad38ba3cb313e749e67fc1",
+      "last_public_verified_version": "web-jump-v0.17.3",
+      "last_public_verified_at": "2026-10-04T05:12:13.885Z",
+      "update_block_sha256": "d0efe51f1f3b02af44221461ec854f802688935d5dcbd1363a2b91dc5d359942",
       "status": "public_verified"
     }
   ],
-  "latest_record": "releases/web-controls-v0.17.2/bilibili-sync.json",
+  "latest_record": "releases/web-jump-v0.17.3/bilibili-sync.json",
   "pending": []
 }
