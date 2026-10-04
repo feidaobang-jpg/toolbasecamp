@@ -46,8 +46,19 @@
   },
   "release_intent": "web_demo",
   "verified_public_links": [],
-  "toy": null,
-  "toy_note": "新作品，尚无 B 站 Toy 映射；按授权规则不擅自新建 Toy",
+  "toy": {
+    "id": 40412421031936,
+    "title": "恐龙快打 3D：第一关",
+    "slug": "feidao-cadillacs-3d",
+    "category": "GAME",
+    "visibility": "public",
+    "status": "auditing",
+    "submitted_at": "2026-10-05",
+    "package": "dist/toy-v0.1.0/package",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_yWKjnWCL/index.html",
+    "note": "分享地址 https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html，过审后才可访问"
+  },
+  "toy_note": "2026-10-05 用户明确授权后首发提交，审核中；slug feidao-cadillacs-3d，公开可见",
   "bilibili": "media-kit/bilibili-sync.json（暂无视频，待关联）",
   "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一关；模型与贴图为程序化重新制作，音乐按原作风格重新编写（非转录），音效为合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
   "dev": {
