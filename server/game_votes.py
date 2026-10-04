@@ -62,7 +62,7 @@ ORIGINAL_GAMES: List[Dict[str, str]] = [
     {"key": "journey-west-3d", "url": "html/game/journey-west-3d/index.html", "titleKey": "tools.journeyWest.title"},
     {"key": "worms", "url": "html/game/worms.html", "titleKey": "tools.worms.title"},
     {"key": "starship_defense", "url": "html/game/starship_defense.html", "titleKey": "tools.starshipDefense.title"},
-    {"key": "tank_battle", "url": "html/game/tank_battle.html", "titleKey": "tools.tankBattle.title"},
+    # tank_battle（坦克大战 2D）已下架并入 tank-3d，从榜单与投票选项中移除；历史票保留在库里。
     {"key": "sheepstack", "url": "html/game/sheepstack.html", "titleKey": "tools.sheepstack.title"},
     {"key": "gemswap", "url": "html/game/gemswap.html", "titleKey": "tools.gemswap.title"},
     {"key": "brick_breaker", "url": "html/game/brick_breaker.html", "titleKey": "tools.brickBreaker.title"},
