@@ -1,0 +1,15 @@
+{
+  "version": "web-low-walls-v0.17.8",
+  "id": "38678478981120",
+  "zip_sha256": "43cbe78f9d1ad1190e9c6c713f8f20c02080d0598ac23a868fa3430a84c28abf",
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_oXMXz70O/index.html"
+  },
+  "submission": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_kkiH24Ae/index.html"
+  },
+  "verified_at": "2026-10-04T08:57:47.161204+00:00",
+  "public_qa": "toy-public/qa.json",
+  "status": "published"
+}

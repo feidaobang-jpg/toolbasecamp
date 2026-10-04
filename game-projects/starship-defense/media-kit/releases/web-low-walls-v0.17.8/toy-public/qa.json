@@ -1,0 +1,198 @@
+{
+  "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "method": "Geometry in six rotations, seam, swept projectiles at 20 FPS, melee cover, wall-top landing; real keyboard and emulated mobile joystick.",
+  "results": [
+    {
+      "mobile": false,
+      "checks": {
+        "angles": [
+          {
+            "angle": 0,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 0.5235987755982988,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 0.7853981633974483,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 1.5707963267948966,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": -0.7853981633974483,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 2.356194490192345,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          }
+        ],
+        "seam": true,
+        "enemyLow": {
+          "hp": 480,
+          "playerHp": 120,
+          "bullets": 0
+        },
+        "enemyHigh": {
+          "hp": 500,
+          "playerHp": 103,
+          "bullets": 0
+        },
+        "friendlyHigh": {
+          "hp": 500,
+          "playerHp": 120,
+          "bullets": 1
+        },
+        "friendlyLow": {
+          "hp": 500,
+          "playerHp": 120,
+          "bullets": 0
+        },
+        "closeTargetDamage": 90,
+        "melee": {
+          "hp": 120,
+          "wallHp": 492,
+          "maxHp": 120
+        },
+        "landing": 1.1,
+        "parapets": [
+          1.0999999999999996,
+          1.0999999999999996,
+          1.0999999999999996,
+          1.0999999999999996,
+          1.0999999999999996
+        ],
+        "realInput": [
+          0,
+          0,
+          42.57925000028312
+        ]
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "checks": {
+        "angles": [
+          {
+            "angle": 0,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 0.5235987755982988,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 0.7853981633974483,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 1.5707963267948966,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": -0.7853981633974483,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          },
+          {
+            "angle": 2.356194490192345,
+            "inside": true,
+            "outside": true,
+            "end": true,
+            "cornerClear": true,
+            "height": 1.1
+          }
+        ],
+        "seam": true,
+        "enemyLow": {
+          "hp": 480,
+          "playerHp": 120,
+          "bullets": 0
+        },
+        "enemyHigh": {
+          "hp": 500,
+          "playerHp": 103,
+          "bullets": 0
+        },
+        "friendlyHigh": {
+          "hp": 500,
+          "playerHp": 120,
+          "bullets": 1
+        },
+        "friendlyLow": {
+          "hp": 500,
+          "playerHp": 120,
+          "bullets": 0
+        },
+        "closeTargetDamage": 90,
+        "melee": {
+          "hp": 120,
+          "wallHp": 492,
+          "maxHp": 120
+        },
+        "landing": 1.1,
+        "parapets": [
+          1.0999999999999996,
+          1.0999999999999996,
+          1.0999999999999996,
+          1.0999999999999996,
+          1.0999999999999996
+        ],
+        "realInput": [
+          0,
+          0,
+          42.57355000005663
+        ]
+      },
+      "errors": []
+    }
+  ]
+}

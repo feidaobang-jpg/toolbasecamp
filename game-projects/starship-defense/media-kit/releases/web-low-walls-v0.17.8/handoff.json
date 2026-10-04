@@ -1,11 +1,15 @@
 {
   "version": "web-low-walls-v0.17.8",
-  "website": "pending",
-  "toy": "pending",
-  "bilibili": "pending",
+  "website": "verified",
+  "toy": "published_and_verified",
+  "bilibili": {
+    "BV1WbHq6eEBt": "public_verified",
+    "BV1Ujad6DEuf": "pending_review"
+  },
   "qa": [
     "local/qa.json",
     "parapet-regression/qa.json",
     "edge-regression/qa.json"
-  ]
+  ],
+  "code_commit": "80d87eee"
 }
