@@ -328,6 +328,54 @@
       "reply_status": "public_verified",
       "note": "原楼UI核对回复可见，UI未暴露回复ID。连续建造已上线；入口偶发问题请求玩家补充设备及步骤。",
       "record": "releases/web-continuous-build-v0.17.5/comment-replies.json"
+    },
+    {
+      "feedback_key": "BV1WbHq6eEBt|我不是abbie|2026-10-04 20:50:15",
+      "rpid": null,
+      "video": "BV1WbHq6eEBt",
+      "comment_type": 1,
+      "user": "我不是abbie",
+      "date": "2026-10-04 20:50:15",
+      "text": "飞虫的贴图有问题，有的不会飞，有的会飞没有翅膀（只有开始虫潮的才会飞没有翅膀）",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-input-flight-v0.17.10",
+      "reply_rpid": null,
+      "reply_status": "visible_in_creator_user_visible_comments",
+      "record": "releases/web-input-flight-v0.17.10/comment-replies.json",
+      "note": "UI未暴露评论ID；保留用户名、原文、BV和北京时间用于去重。触屏延迟释放是模拟验证，尚无报告者真机复测。"
+    },
+    {
+      "feedback_key": "BV1Ujad6DEuf|188的史蒂夫|2026-10-04 20:45:55",
+      "rpid": null,
+      "video": "BV1Ujad6DEuf",
+      "comment_type": 1,
+      "user": "188的史蒂夫",
+      "date": "2026-10-04 20:45:55",
+      "text": "有个bug就是在走路的时候边走路按其他的东西，然后就建造不了东西了。得退出重进。",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-input-flight-v0.17.10",
+      "reply_rpid": null,
+      "reply_status": "visible_in_creator_user_visible_comments",
+      "record": "releases/web-input-flight-v0.17.10/comment-replies.json",
+      "note": "UI未暴露评论ID；保留用户名、原文、BV和北京时间用于去重。触屏延迟释放是模拟验证，尚无报告者真机复测。"
+    },
+    {
+      "feedback_key": "BV1WbHq6eEBt|我不是abbie|2026-10-04 20:44:53",
+      "rpid": null,
+      "video": "BV1WbHq6eEBt",
+      "comment_type": 1,
+      "user": "我不是abbie",
+      "date": "2026-10-04 20:44:53",
+      "text": "怎么迅猛飞虫有的是走在地上的？",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-input-flight-v0.17.10",
+      "reply_rpid": null,
+      "reply_status": "visible_in_creator_user_visible_comments",
+      "record": "releases/web-input-flight-v0.17.10/comment-replies.json",
+      "note": "UI未暴露评论ID；保留用户名、原文、BV和北京时间用于去重。触屏延迟释放是模拟验证，尚无报告者真机复测。"
     }
   ]
 }

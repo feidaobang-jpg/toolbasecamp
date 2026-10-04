@@ -6,8 +6,7 @@
       "routeWings": 2,
       "caveFly": false,
       "afterExitFly": true,
-      "afterExitWings": 2,
-      "stationaryTakeoff": true
+      "afterExitWings": 2
     },
     "reset": {
       "accepted": true,
@@ -24,8 +23,7 @@
       "routeWings": 2,
       "caveFly": false,
       "afterExitFly": true,
-      "afterExitWings": 2,
-      "stationaryTakeoff": true
+      "afterExitWings": 2
     },
     "reset": {
       "accepted": true,

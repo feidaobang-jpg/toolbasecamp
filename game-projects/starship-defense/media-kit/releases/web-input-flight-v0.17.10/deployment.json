@@ -1,0 +1,9 @@
+{
+  "version": "web-input-flight-v0.17.10",
+  "code_commit": "c5215785",
+  "verified_at": "2026-10-04T13:37:54.381971+00:00",
+  "method": "scp + sudo install after Actions had not deployed",
+  "js_sha256": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+  "public_hash_matches": true,
+  "qa": "final-website/qa.json"
+}

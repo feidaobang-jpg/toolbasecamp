@@ -10,7 +10,8 @@
       "last_public_verified_version": "web-camera-mobile-v0.17.9",
       "last_public_verified_at": "2026-10-04T12:04:10.527Z",
       "update_block_sha256": "53f6d7bd6aa6f9656c6f1a7805b867ec23d4f6d1c5a67067fe9d45980705ee1d",
-      "status": "public_verified"
+      "status": "pending_review",
+      "pending_version": "web-input-flight-v0.17.10"
     },
     {
       "bvid": "BV1Ujad6DEuf",
@@ -19,11 +20,12 @@
       "last_public_verified_at": "2026-10-04T08:35:56.661Z",
       "update_block_sha256": "de1de308bf16a1a4795fffb05a1d44750640d18d4b9dda84e5e01bc65858cad7",
       "status": "pending_review",
-      "pending_version": "web-camera-mobile-v0.17.9"
+      "pending_version": "web-input-flight-v0.17.10"
     }
   ],
-  "latest_record": "releases/web-camera-mobile-v0.17.9/bilibili-sync.json",
+  "latest_record": "releases/web-input-flight-v0.17.10/bilibili-descriptions.json",
   "pending": [
+    "BV1WbHq6eEBt",
     "BV1Ujad6DEuf"
   ]
 }

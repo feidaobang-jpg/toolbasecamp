@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-input-flight-v0.17.10",
+  "base_version": "web-camera-mobile-v0.17.9",
+  "created_at": "2026-10-04T13:33:53.722Z",
+  "build": {
+    "id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+    "commit": "c5215785",
+    "dirty": false,
+    "fingerprint": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "winged-flight",
+      "before": "路径飞虫创建时无翼，地表部分飞虫误判步行；原地攻击可能不起飞。",
+      "after": "按种类保留双翼，真实洞顶决定是否飞行，原地攻击也起飞。",
+      "verification": "pass"
+    },
+    {
+      "id": "touch-ownership",
+      "before": "reset依赖延迟lostpointercapture清空私有pointer。",
+      "after": "reset同步清空按钮指针归属，过期释放不会取消新手指。",
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "winged-flight",
+      "status": "fixed",
+      "before_evidence": "before/qa.json",
+      "after_evidence": "local/qa.json"
+    },
+    {
+      "id": "touch-ownership",
+      "status": "fixed",
+      "before_evidence": "before/qa.json",
+      "after_evidence": "local/qa.json",
+      "limitation": "延迟捕获释放使用确定性模拟，非报告者真机复现。"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop-flight.png",
+      "file": "releases/web-input-flight-v0.17.10/captures/desktop-flight.png",
+      "sha256": "6e78537a65dc4b13231e25aac4307ce1df084a5b7f05556a3d541ea70a435a71",
+      "kind": "screenshot",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "desktop.png",
+      "file": "releases/web-input-flight-v0.17.10/captures/desktop.png",
+      "sha256": "e5a0ea6b6d4a5eeeb2e7c114f2df8104c11a7e5b381bb9ffa180f7a6cd34f503",
+      "kind": "screenshot",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "flight-motion.png",
+      "file": "releases/web-input-flight-v0.17.10/captures/flight-motion.png",
+      "sha256": "119d410604adc956892a8f6f31ed7f34c0571df768a7795ec9e69fe844973252",
+      "kind": "screenshot",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "mobile-flight.png",
+      "file": "releases/web-input-flight-v0.17.10/captures/mobile-flight.png",
+      "sha256": "cbf2da2b3f897e66a38d5af5a5e319eab0b430fd25f08a88acc69cb804851833",
+      "kind": "screenshot",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "mobile.png",
+      "file": "releases/web-input-flight-v0.17.10/captures/mobile.png",
+      "sha256": "f6cae5ef68e27acaa63c4971fe0400b9e90fa3ff785bddec88a3e65fd02c7950",
+      "kind": "screenshot",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "page@029b25ce7f7aec11e14a1a6b8df34845.webm",
+      "file": "releases/web-input-flight-v0.17.10/captures/page@029b25ce7f7aec11e14a1a6b8df34845.webm",
+      "sha256": "cef0c6fec5c50506fd38aba541b42367bbb682811b7ab1052b8f6b128ea1bf3e",
+      "kind": "video",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "page@3ac899a66df7eedeb58f777d7b4138d1.webm",
+      "file": "releases/web-input-flight-v0.17.10/captures/page@3ac899a66df7eedeb58f777d7b4138d1.webm",
+      "sha256": "f6dc8cbf17ea1f334d954c52bed7cffddf11d725531b93b52ffc87d2b7909933",
+      "kind": "video",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "replies-verified.jpg",
+      "file": "releases/web-input-flight-v0.17.10/captures/replies-verified.jpg",
+      "sha256": "2584e80cb17c2a46d6842a7fc90e8235356084709789fe185f2aaf9550deaca7",
+      "kind": "screenshot",
+      "version": "web-input-flight-v0.17.10",
+      "build_id": "cb315b2b84d7062e2e39a5e93320463adc27fd0567579eddfa5eb36ccef94cc5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "final-desktop-flight.png",
+      "path": "final-captures/desktop-flight.png",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "23c1094829d79bd678a1ad2213cf639c2d66f32a569dedbbcf5645f259617437",
+      "audio_verified": null
+    },
+    {
+      "id": "final-desktop.png",
+      "path": "final-captures/desktop.png",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "009d748efde9a87ee9573ce9d1380cf7393534d86d2241cba9d5bf1ad3646b16",
+      "audio_verified": null
+    },
+    {
+      "id": "final-flight-motion.png",
+      "path": "final-captures/flight-motion.png",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "c3c67b9950d87798dc5c308a5c6822473321c90cc524327dfcd9afaf72051069",
+      "audio_verified": null
+    },
+    {
+      "id": "final-mobile-flight.png",
+      "path": "final-captures/mobile-flight.png",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "f2632ef052dbc92ee04ca35c3dc61b70b2791cb2f5398e4739513ba3bf068e34",
+      "audio_verified": null
+    },
+    {
+      "id": "final-mobile.png",
+      "path": "final-captures/mobile.png",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "e9a773530e44a9b603dc01943e89ff21639b644eedf170d1ad36a72887b0f7c9",
+      "audio_verified": null
+    },
+    {
+      "id": "final-page@16c308bb764cbf2765f2e193402ceb65.webm",
+      "path": "final-captures/page@16c308bb764cbf2765f2e193402ceb65.webm",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "01bae5af2bf6ba9b3db5fc6746399445a5d8debfbd193227c76e881d83c57629",
+      "audio_verified": false
+    },
+    {
+      "id": "final-page@dedfb4028a7d8ee2a96dc6f307385851.webm",
+      "path": "final-captures/page@dedfb4028a7d8ee2a96dc6f307385851.webm",
+      "build_id": "b6db794c1642f82c8af2f391753480806cb71670a9bb1cae279b57d2cc9505cf",
+      "sha256": "5541f351c7d174a0236dc9a21972c270e0a6f4b80871d923ab7146b09efd9932",
+      "audio_verified": false
+    }
+  ],
+  "qa": {
+    "browser": "Headless Microsoft Edge / RTX4060Ti D3D11",
+    "devices": "desktop and mobile viewport emulation; no physical phone",
+    "regressions": [
+      "continuous/qa.json",
+      "build-return/qa.json"
+    ],
+    "final_local": "local/qa.json",
+    "website": "final-website/qa.json",
+    "toy_preview": "final-toy-preview/qa.json",
+    "motion_review": "已检查手机视频连续8帧，飞虫双翼、悬空及转视角可见。",
+    "final_public_toy": "final-toy-public/qa.json"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "自动录制无游戏声音。",
+      "未验证报告者实际手机。"
+    ]
+  },
+  "cover": {
+    "action": "reuse",
+    "reason": "局部缺陷修复，不改变整体画风与场景。"
+  },
+  "final_motion_review": {
+    "contact_sheet": "final-captures/flight-motion.png",
+    "visually_verified": true,
+    "frames": 8
+  }
+}
