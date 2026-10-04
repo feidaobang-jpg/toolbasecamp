@@ -171,7 +171,7 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 #touch[hidden] { display: none; }
 #joy-zone { position: absolute; left: 0; bottom: 0; width: 45%; height: 76%; pointer-events: auto; touch-action: none; }
 #joy-base {
-  position: absolute; left: calc(var(--sal) + 28px); bottom: calc(var(--sab) + 26px); width: 128px; height: 128px; border-radius: 50%;
+  position: absolute; left: 4px; bottom: calc(var(--sab) + 26px); width: 128px; height: 128px; border-radius: 50%;
   background: radial-gradient(circle, rgba(255,246,223,.25) 0 40%, rgba(47,68,54,.22) 41% 100%); border: 3px solid rgba(255, 246, 223, .85); pointer-events: none;
 }
 #joy-base.active { border-color: var(--gold); }
@@ -251,3 +251,5 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 62px); }
 /* 内容比屏幕高时（手机竖屏主菜单）：用 margin:auto 居中，溢出部分可以滚动看到，不会被顶出屏幕 */
 .overlay { align-items: flex-start; }
 .overlay > .panel { margin: auto; }
+
+body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}

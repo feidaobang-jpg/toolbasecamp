@@ -51,20 +51,20 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   s = await snap(page);
   check('[横屏] 触屏控件显示、键位提示隐藏', !s.ui.touchHidden && !(await page.isVisible('#keyhint')), { touchHidden: s.ui.touchHidden });
   const J = await box(page, '#btn-fire'), K = await box(page, '#btn-bomb'), Cb = await box(page, '#btn-cam-t'), joy = await box(page, '#joy-base');
-  const pauseB = await box(page, '#btn-pause'), fsB = await box(page, '#btn-fs');
-  check('[横屏] J/K/C 与暂停/全屏按钮触控目标 ≥44px', [J, K, Cb, pauseB, fsB].every(b => b.w >= 44 && b.h >= 44), { J: J.w, K: K.w, C: Cb.w, pause: pauseB.h, fs: fsB.h });
+  const pauseB = await box(page, '#btn-pause');
+  check('[横屏] J/K/C 与暂停按钮触控目标 ≥44px', [J, K, Cb, pauseB].every(b => b.w >= 44 && b.h >= 44), { J: J.w, K: K.w, C: Cb.w, pause: pauseB.h });
   const labels = await page.evaluate(() => ['#btn-fire', '#btn-bomb', '#btn-cam-t'].map(q => document.querySelector(q).textContent.replace(/\s+/g, '')));
   check('[横屏] 按键同时显示字母与功能', labels[0] === 'J机枪' && /^K(手雷|火箭|强化火箭)$/.test(labels[1]) && labels[2] === 'C视角', labels);
   const overlap = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
   const hudA = await box(page, '#hc-armor');
   const pipsL = await page.$$eval('#h-armor i.on', els => els.length);
-  check('[横屏] HUD 显示 3 格护甲，且不压住右上角按钮', pipsL === 3 && !overlap(hudA, fsB) && !overlap(hudA, pauseB) && hudA.y0 >= 0, { pipsL, hud: [hudA.x0, hudA.y0, hudA.x1, hudA.y1], pause: [pauseB.x0, pauseB.y0] });
+  check('[横屏] HUD 显示 3 格护甲，且不压住右上角按钮', pipsL === 3 && !overlap(hudA, pauseB) && hudA.y0 >= 0, { pipsL, hud: [hudA.x0, hudA.y0, hudA.x1, hudA.y1], pause: [pauseB.x0, pauseB.y0] });
   check('[横屏] 视角键不遮挡 J/K 动作键', !overlap(Cb, J) && !overlap(Cb, K) && !overlap(J, K), { C: [Cb.x0, Cb.y0, Cb.x1, Cb.y1], J: [J.x0, J.y0, J.x1, J.y1], K: [K.x0, K.y0, K.x1, K.y1] });
   await page.evaluate(() => { __JK_TEST__.step(1, true); });
   await page.screenshot({ path: 'out/m_land_play.png' });
 
   // 摇杆：每个视角下拖向屏幕右/上
-  for (let v = 0; v < 3; v++) {
+  for (let v = 0; v < 5; v++) {
     s = await snap(page);
     await page.evaluate(() => { __JK_TEST__.cheat.teleport(-8, 22); __JK_TEST__.cheat.invuln(60); });
     let a = await snap(page);
@@ -111,18 +111,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   await T.tap(resume.x, resume.y);
   s = await snap(page);
   check('[横屏] 触屏「继续」', s.ui.overlay === null, s.ui.overlay);
-  // 全屏按钮（无头环境可能成功或被拒绝）
-  await page.evaluate(() => __JK_TEST__.manual(false));
-  await T.tap(fsB.x, fsB.y); await page.waitForTimeout(600);
-  s = await snap(page);
-  check('[横屏] 独立全屏按钮触发请求（有结果记录）', s.ui.fsLog.length >= 1, s.ui.fsLog);
-  if (s.ui.fs) {
-    const jvis = await page.isVisible('#btn-fire');
-    check('[横屏] 全屏时虚拟按键仍在（对整个文档请求全屏）', jvis);
-    await page.evaluate(() => document.exitFullscreen());
-    s = await waitFor(page, x => x.ui.overlay === 'pause', 5000, 150) || await snap(page);
-    check('[横屏] 退出全屏自动暂停', s.ui.overlay === 'pause', s.ui.overlay);
-  }
+  check('[横屏] 手机全屏入口均隐藏', !(await page.isVisible('#btn-fs')) && await page.locator('.fs-btn:visible').count() === 0);
   await context.close();
 
   // ---------- 竖屏 390×844：开始后自动旋转 ----------
@@ -146,8 +135,8 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   await page.screenshot({ path: 'out/m_port_play.png' });
   {
     const ov = (a, b) => !(a.x1 <= b.x0 || b.x1 <= a.x0 || a.y1 <= b.y0 || b.y1 <= a.y0);
-    const hA = await box(page, '#hc-armor'), fB = await box(page, '#btn-fs'), pB = await box(page, '#btn-pause'), sc = await box(page, '#hud .hud-score');
-    check('[竖屏] 旋转布局下护甲卡片完整可见、不与按钮重叠', hA.w > 30 && !ov(hA, fB) && !ov(hA, pB) && !ov(hA, sc), { hud: [hA.x0, hA.y0, hA.x1, hA.y1] });
+    const hA = await box(page, '#hc-armor'), pB = await box(page, '#btn-pause'), sc = await box(page, '#hud .hud-score');
+    check('[竖屏] 旋转布局下护甲卡片完整可见、不与按钮重叠', hA.w > 30 && !ov(hA, pB) && !ov(hA, sc), { hud: [hA.x0, hA.y0, hA.x1, hA.y1] });
   }
   const joy2 = await box(page, '#joy-base'), J2 = await box(page, '#btn-fire');
   // 旋转 90°：逻辑上 = 物理右；逻辑右 = 物理下

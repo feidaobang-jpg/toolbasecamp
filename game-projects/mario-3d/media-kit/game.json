@@ -2,7 +2,7 @@
   "game_id": "mario-3d-world-1-1",
   "name": "超级玛丽 3D：1-1 与 1-2",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.1.0",
+  "current_version": "v2.2.0",
   "handoff": "releases/v2.1.0/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",

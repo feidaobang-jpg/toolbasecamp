@@ -1,9 +1,9 @@
 import {createWorld,start,step,action,revive,WEAPONS} from './world.js?v=1';
-import {createScene,CAMERAS} from './scene.js?v=1';
-import {zh} from './locale.js?v=1';
+import {createScene,CAMERAS} from './scene.js?v=camera-mobile1';
+import {zh} from './locale.js?v=camera-mobile1';
 import {GameAudio} from './audio.js?v=1';
 const $=id=>document.getElementById(id);let language='zh';let text=zh;
-let world=createWorld();const view=createScene($('world')),audio=new GameAudio();const held=new Set(),pointers=new Map();let stickId=null,axis={x:0,z:0},paused=false,started=false,rotated=false,last=performance.now(),cameraIndex=0;const mobile=matchMedia('(any-pointer:coarse)').matches||navigator.maxTouchPoints>0;let touch=mobile;
+let world=createWorld();const view=createScene($('world')),audio=new GameAudio();const held=new Set(),pointers=new Map();let stickId=null,axis={x:0,z:0},paused=false,started=false,rotated=false,last=performance.now(),cameraIndex=0;const mobile=(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(matchMedia('(pointer:coarse)').matches&&!matchMedia('(hover:hover)').matches));let touch=mobile;document.body.classList.toggle('mobile-device',mobile);
 const actionKeys={KeyJ:'weapon',KeyK:'dash',KeyL:'ward',KeyU:'burst',KeyI:'heal'};
 function set(id,value){const e=$(id);if(e.textContent!==String(value))e.textContent=value;}
 function toast(value){set('toast',value);$('toast').classList.add('visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('visible'),1800);}
@@ -23,3 +23,5 @@ document.querySelectorAll('[data-action]').forEach(b=>{b.addEventListener('point
 function stickMove(e){const r=$('stick').getBoundingClientRect();const dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,x=rotated?dy:dx,z=rotated?-dx:dy,limit=r.width*.35,len=Math.hypot(x,z),scale=Math.min(1,limit/Math.max(1,len));axis={x:len>8?x*scale/limit:0,z:len>8?z*scale/limit:0};$('knob').style.transform=`translate(${x*scale}px,${z*scale}px)`;}
 $('stick').addEventListener('pointerdown',e=>{e.preventDefault();if(stickId!==null)return;stickId=e.pointerId;$('stick').setPointerCapture(e.pointerId);stickMove(e);});$('stick').addEventListener('pointermove',e=>{if(e.pointerId===stickId)stickMove(e);});for(const ev of ['pointerup','pointercancel','lostpointercapture'])$('stick').addEventListener(ev,e=>{if(e.pointerId===stickId){stickId=null;axis={x:0,z:0};$('knob').style.transform='';}});
 addEventListener('resize',display);document.addEventListener('fullscreenchange',display);$('touch').hidden=!touch;document.body.classList.toggle('touch-mode',touch);labels();display();$('loading').hidden=true;$('start').disabled=false;$('game').focus();requestAnimationFrame(frame);
+
+if(new URLSearchParams(location.search).get("test")==="1"){window.__CAMERA_QA__={view,get world(){return world;},state:()=>({index:cameraIndex,name:CAMERAS[cameraIndex].name,count:CAMERAS.length})};}

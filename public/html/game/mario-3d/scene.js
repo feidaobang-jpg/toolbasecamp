@@ -10,7 +10,8 @@ export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
   { id: 'oblique', name: '斜视', yaw: -0.62, pitch: 0.42, dist: 15.5, fov: 42, ahead: 3.2 },
   { id: 'front', name: '正视', yaw: -Math.PI / 2, pitch: 0.2, dist: 9, fov: 60, ahead: 3 },  // 在玛丽身后肩上，看向关卡前进方向
-  { id: 'fp', name: '第一人称', yaw: -Math.PI / 2, pitch: -0.05, dist: 0, fov: 75, ahead: 0, fp: true }   // 正视再按 C：玛丽的眼睛
+  { id: 'fp', name: '第一人称', yaw: -Math.PI / 2, pitch: -0.05, dist: 0, fov: 75, ahead: 0, fp: true },   // 正视再按 C：玛丽的眼睛
+  { id: 'top', name: '俯视', yaw: 0, pitch: 1.48, dist: 23, fov: 42, ahead: 2.4 }
 ];
 const FRONT = PRESETS.find(p => p.id === 'front');
 const ZS = [-2.5, -1.5, -0.5, 0.5, 1.5, 2.5];       // 每格方块沿纵深 6 块

@@ -1,11 +1,11 @@
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=merge1';
+import { createScene, PRESETS } from './scene.js?v=camera-mobile1';
 import { createRun, createWorld, step, turnPlayer, SCORE, TYPE_NAMES, qa } from './sim.js?v=merge1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=merge1';
 
-const VERSION = 'merge1';
+const VERSION = 'camera-mobile1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -505,6 +505,7 @@ function layout() {
   stage.style.setProperty('--sat', loc.t + 'px'); stage.style.setProperty('--sab', loc.b + 'px');
   const touchOn = settings.touch === 'show' || (settings.touch === 'auto' && coarse);
   document.body.classList.toggle('touch-on', touchOn);
+  document.body.classList.toggle('mobile-device', MOBILE_UA || matchMedia('(pointer: coarse)').matches);
   const inGame = uiMode === 'game';
   touch.hidden = !(inGame && touchOn);
   hud.hidden = !inGame; $('hud-top').hidden = !inGame; $('side').hidden = !inGame; $('chips').hidden = !inGame; $('status').hidden = !inGame;
@@ -532,7 +533,7 @@ joyZone.addEventListener('pointerdown', e => {
   stick.id = e.pointerId;
   try { joyZone.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
   const p = toLocal(e.clientX, e.clientY), zr = { x: joyZone.offsetLeft, y: joyZone.offsetTop };
-  jox = p.x; joy0 = p.y;
+  jox = Math.max(zr.x + joyBase.offsetWidth / 2 + 4, p.x); joy0 = p.y;
   const bx = joyBase.offsetLeft + joyBase.offsetWidth / 2, by = joyBase.offsetTop + joyBase.offsetHeight / 2;
   joyBase.style.transform = 'translate(' + (jox - zr.x - bx) + 'px,' + (joy0 - zr.y - by) + 'px)';
   joyBase.classList.add('active'); stick.axis = -1;

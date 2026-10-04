@@ -331,6 +331,7 @@ function layout() {
   stage.style.setProperty('--sat', loc.t + 'px'); stage.style.setProperty('--sab', loc.b + 'px');
   const touchOn = settings.touch === 'show' || (settings.touch === 'auto' && coarse);
   document.body.classList.toggle('touch-on', touchOn);
+  document.body.classList.toggle('mobile-device', MOBILE_UA || matchMedia('(pointer: coarse)').matches);
   const inGame = uiMode === 'game';
   touch.hidden = !(inGame && touchOn);
   hudTop.hidden = !inGame; hud.hidden = !inGame;

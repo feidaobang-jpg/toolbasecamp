@@ -53,8 +53,8 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   check('演示模式默认关闭', /关/.test(demoTxt), demoTxt);
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowRight'); s = await snap(page);
   check('菜单里 →/← 切换视角预设', s.ui.camera === 'top', s.ui.camera);
-  await page.keyboard.press('KeyC'); await page.keyboard.press('KeyC'); s = await snap(page);
-  check('菜单里 C 键循环视角（3 个预设回到斜俯视）', s.ui.camera === 'oblique', s.ui.camera);
+  for (let i=0;i<4;i++) await page.keyboard.press('KeyC'); s = await snap(page);
+  check('菜单里 C 键循环视角（5 个预设回到斜俯视）', s.ui.camera === 'oblique', s.ui.camera);
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowDown');
   const vol0 = await page.textContent('#menu [data-opt=volume]');
   await page.keyboard.press('ArrowLeft'); const vol1 = await page.textContent('#menu [data-opt=volume]');
@@ -91,7 +91,7 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
     const ax = (await snap(page)).cam.axes;
     return { out, ax };
   };
-  for (const name of ['oblique', 'top', 'low']) {
+  for (const name of ['oblique', 'top', 'low', 'wide', 'front']) {
     s = await snap(page);
     while (s.ui.camera !== name) { await page.keyboard.press('KeyC'); await steps(1); s = await snap(page); }
     const r = await moveTest(name);

@@ -288,12 +288,20 @@ export function createScene(canvas, world) {
   function acornPop(x, y) { const m = acornGeo.clone(); m.position.set(x, y, 0); addFx(m, { type: 'acorn', life: .55, vel: new THREE.Vector3(0, 9, 0), spin: 18 }); }
 
   // --- Camera: side view with look-ahead; Q/E orbit (clamped so left/right stays readable), R/F tilt, C reset.
+  const PRESETS = [
+    {name:'侧视',yaw:0,pitch:.17,dist:15.5},
+    {name:'斜俯视',yaw:-.62,pitch:.52,dist:18},
+    {name:'俯视',yaw:0,pitch:1.48,dist:23},
+    {name:'近景',yaw:0,pitch:.26,dist:11},
+    {name:'远景',yaw:.55,pitch:.48,dist:25}
+  ];
+  let cameraIndex = 0;
   const DEF_YAW = 0, DEF_PITCH = .17, YAW_LIM = .95;
   let yaw = DEF_YAW, pitch = DEF_PITCH, elapsed = 0, shake = 0, lookAhead = 2, camY = 3, camX = world.hero.x;
   const target = new THREE.Vector3();
   function cameraPose(dt, cam, snap) {
     const p = world.hero, aspect = canvas.clientWidth / Math.max(1, canvas.clientHeight);
-    const dist = (aspect < 1.5 ? 17.5 : 15.5) + Math.max(0, pitch - .3) * 6;
+    const dist = PRESETS[cameraIndex].dist + (aspect < 1.5 ? 2 : 0);
     lookAhead += ((p.facing || 1) * Math.min(3, 1 + Math.abs(p.vx) * .25) - lookAhead) * Math.min(1, dt * 2.2);
     const wantX = THREE.MathUtils.clamp(p.x + lookAhead, 7, LEVEL_END - 6);
     camX = snap ? wantX : camX + (wantX - camX) * Math.min(1, dt * 6);
@@ -338,8 +346,8 @@ export function createScene(canvas, world) {
   function update(dt, cam = {}, snap = false) {
     dt_ = dt; elapsed += dt;
     yaw = THREE.MathUtils.clamp(yaw + (cam.yaw || 0) * dt * 1.4, -YAW_LIM, YAW_LIM);
-    pitch = THREE.MathUtils.clamp(pitch + (cam.pitch || 0) * dt * .8, .02, .9);
-    if (cam.reset) { yaw = DEF_YAW; pitch = DEF_PITCH; }
+    pitch = THREE.MathUtils.clamp(pitch + (cam.pitch || 0) * dt * .8, .02, 1.48);
+    if (cam.reset) { cameraIndex = (cameraIndex + 1) % PRESETS.length; yaw = PRESETS[cameraIndex].yaw; pitch = PRESETS[cameraIndex].pitch; }
     shake = Math.max(0, shake - dt * 2.5);
     // Blocks (destruction, reveals, bump lifts).
     if (world.gridVersion !== gridVersion || bumps.size) {
@@ -419,5 +427,5 @@ export function createScene(canvas, world) {
   function reset() { for (const m of enemyModels.values()) scene.remove(m.group); enemyModels.clear(); for (const m of itemModels.values()) scene.remove(m); itemModels.clear(); for (const f of fx) { scene.remove(f.obj); if (f.dispose) f.obj.material.dispose(); } fx.length = 0; bumps.clear(); gridVersion = -1; acornProtos.forEach((o, i) => { o.a = world.acorns[i]; }); camX = world.hero.x; }
   function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   resize(); update(0, {}, true);
-  return { renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; } };
+  return { renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get cameraIndex() { return cameraIndex; }, get cameraName() { return PRESETS[cameraIndex].name; }, get cameraCount() { return PRESETS.length; } };
 }

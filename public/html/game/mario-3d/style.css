@@ -66,7 +66,7 @@ body:not(.touch-on) .help-touch{display:none}
 /* 触屏 */
 #touch{position:absolute;inset:0;pointer-events:none;z-index:10}
 #joy-zone{position:absolute;left:0;bottom:0;width:42%;height:62%;pointer-events:auto;touch-action:none}
-#joy-base{position:absolute;left:calc(34px + var(--sal));bottom:calc(30px + var(--sab));width:128px;height:128px;border-radius:50%;background:#ffffff1f;border:2px solid #ffffff66}
+#joy-base{position:absolute;left:4px;bottom:calc(30px + var(--sab));width:128px;height:128px;border-radius:50%;background:#ffffff1f;border:2px solid #ffffff66}
 #joy-base.active{background:#ffffff30}
 #joy-knob{position:absolute;left:50%;top:50%;width:56px;height:56px;border-radius:50%;background:#ffffffc0;transform:translate(-50%,-50%);box-shadow:0 2px 10px #0006}
 .joy-tip{position:absolute;bottom:-20px;width:100%;text-align:center;font-size:11px;color:#fffc;text-shadow:1px 1px 0 #000}
@@ -117,3 +117,6 @@ body:not(.touch-on) .help-touch{display:none}
 #stage.portrait.short .items{gap:5px}
 #stage.portrait.short .items>*{min-height:34px;padding:5px 11px;font-size:12.5px}
 .items>*>span:first-child{white-space:nowrap}
+
+/* Mobile browsers do not reliably support fullscreen; keep desktop controls. */
+body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}

@@ -2,7 +2,7 @@
   "game_id": "journey-west-3d",
   "name": "西游降魔 3D：第一关",
   "engine": "Three.js 0.170.0",
-  "current_version": "v0.1.0",
+  "current_version": "v0.2.0",
   "handoff": "releases/v0.1.0/handoff.json",
   "entrypoint": "public/html/game/journey-west-3d/index.html",
   "launch": "从仓库根目录运行 HTTP 服务，打开 /public/html/game/journey-west-3d/index.html",
