@@ -1383,7 +1383,7 @@ window.TB_LOCALES['zh-CN'] = {
         groups: {
             all: '游戏',
             recent: '近期作品',
-            early: '早期作品 / 实验作品',
+            early: '实验作品',
             action: '动作扮演',
             puzzle: '益智休闲',
             polished: '高完成度',
