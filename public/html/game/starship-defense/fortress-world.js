@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import {mergeGeometries} from './vendor/BufferGeometryUtils.js';
 import {HILL_FORTS} from './terrain-controls.js';
+import {WALL_TOP,PARAPET_HEIGHT,PARAPETS} from './fortress-layout.js';
 
 // Static scenery is merged by colour. Collision is independent of render detail.
 export class FortressWorld {
@@ -29,7 +30,11 @@ export class FortressWorld {
       add('rock',P.mountainB,x,h*.5,z,17,h,16);
       this.solids.push({x,z,r:13,bottom:0,top:h});
     }
-    // Ramp surfaces and wall walks stay bare: no decorative stripes or parapets.
+    // Chest-high, solid outer parapets. Friendly fire can be laid over the edge.
+    for(const [x,z,w,d] of PARAPETS){
+      wall(x,z,w,d,PARAPET_HEIGHT,stone,WALL_TOP);
+      Object.assign(this.solids[this.solids.length-1],{cover:true,parapet:true});
+    }
     // Rear-entry field shelter: walls provide cover and the interior heals.
     wall(25,34,1,12,4.4,cream,0);wall(35,34,1,12,4.4,cream,0);
     wall(30,39.5,11,1,4.4,cream,0);

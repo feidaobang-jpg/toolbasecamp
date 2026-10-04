@@ -1,4 +1,10 @@
 export const WALL_TOP=9.6;
+export const PARAPET_HEIGHT=1.35;
+// Outside perimeter only; the front gate and courtyard ramps stay open.
+export const PARAPETS=[[-23,-10.3,30,.6],[23,-10.3,30,.6],[-37.7,-36,.6,52],[37.7,-36,.6,52],[0,-61.7,76,.6]];
+export function legacyRampartWall(b){
+  return b.k==='wall'&&Math.abs(b.z+16)<.01&&Math.abs(Math.sin(b.r||0))<.01&&[-31,-25,-19,-13,13,19,25,31].some(x=>Math.abs(b.x-x)<.01);
+}
 // Eight-metre-wide side/rear walks, ten-metre-deep frontal firing platforms.
 export const RAMPARTS=[[-23,-16,15,6],[23,-16,15,6],[-34,-38,4,22],[34,-38,4,22],[0,-58,38,4]];
 export function rampartHeight(x,z){

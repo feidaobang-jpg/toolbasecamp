@@ -8,7 +8,7 @@ import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
 import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefieldGround} from './battlefield-environments.js';
 import {ExplorationLight} from './exploration-light.js';
 import {monsterStep,clearMonsterSegment} from './monster-navigation.js';
-import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation} from './fortress-layout.js';
+import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation,legacyRampartWall} from './fortress-layout.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=fb9';
 import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
@@ -1043,7 +1043,9 @@ function shotCover(a,b,friendly=false,origin=null){
   const n=Math.max(1,Math.ceil(a.distanceTo(b)/.4));
   for(let i=1;i<=n;i++){
     const p=a.clone().lerp(b,i/n);
-    const nearMuzzle=friendly&&origin&&p.distanceToSquared(origin)<2.6;
+    // Lean over nearby rampart edges when firing down at enemies at the wall foot.
+    const nearMuzzle=friendly&&origin&&(p.distanceToSquared(origin)<2.6||
+      origin.y>=WALL_TOP+1&&rampartHeight(origin.x,origin.z)>=WALL_TOP-.01&&Math.hypot(p.x-origin.x,p.z-origin.z)<1.6);
     if(!nearMuzzle&&p.y<=groundY(p.x,p.z)+(friendly?-.3:.05))return i/n;
     if(fortress.shotBlocked(p,friendly))return i/n;
   }
@@ -1108,9 +1110,12 @@ function updBullets(dt){
         }
       }
     }else{
-      // 敌方子弹
-      if(!player.dead&&!player.inVehicle&&dist2(p,player.pos)<2.2&&Math.abs(p.y-player.pos.y-1.2)<1.6){playerDamage(b.dmg);hit=true;}
-      if(!hit)for(const s of squad){if(!s.dead&&!s.vehicle&&dist2(p,s.mesh.position)<1.6&&Math.abs(p.y-s.mesh.position.y-1.1)<1.5){damageSquad(s,b.dmg);hit=true;break;}}
+      // Resolve swept body hits before cover; a fast shot must not damage through a parapet.
+      const bodyHit=(pos,h,r)=>{const t=segmentHit(previous,p,pos.clone().add(new THREE.Vector3(0,h,0)),r);return t!==null&&t<cover;};
+      if(!player.dead&&!player.inVehicle&&bodyHit(player.pos,1.2,.65)){playerDamage(b.dmg);hit=true;}
+      if(!hit)for(const s of squad){if(!s.dead&&!s.vehicle&&bodyHit(s.mesh.position,1.1,.65)){damageSquad(s,b.dmg);hit=true;break;}}
+      // Clip the remaining structure tests to the first obstacle, too.
+      if(!hit&&cover<1){p.lerpVectors(previous,p,cover);hit=true;}
       if(!hit)for(const bd of buildings){if(!bd.dead&&dist2(p,bd.mesh.position)<bd.radius*bd.radius){damageBuilding(bd,b.dmg);hit=true;break;}}
       if(!hit&&gateBlocked()&&Math.abs(p.x-gate.pos.x)<6.5&&Math.abs(p.z-gate.pos.z)<1.6&&p.y<terrainH(gate.pos.x,gate.pos.z)+5){damageGate(b.dmg);hit=true;}
       if(!hit&&dist2(p,base.pos)<16){damageBase(b.dmg);hit=true;}
@@ -2823,7 +2828,7 @@ function saveData(){
     perks:{magnet:Game.magnet,regen:Game.regen},hive:{...Game.hive},
     baseHp:base.hp,pendingDrops:airdrops.map(a=>a.it),
     buildings:buildings.map(b=>({k:b.kind,x:b.mesh.position.x,z:b.mesh.position.z,r:b.rotY,hp:b.hp})),
-    time:Date.now(),version:'0.9',
+    time:Date.now(),version:'0.9',rampartRevision:1,
   };
 }
 function applySave(d){
@@ -2847,7 +2852,9 @@ function applySave(d){
   clearEntities(true);
   player.reset(Game.cls);
   base.maxHp=baseMaxHp();base.hp=Math.min(base.maxHp,d.baseHp||base.maxHp);updHPBar(base.bar,base.hp/base.maxHp);
-  for(const b of (d.buildings||[]))placeBuilding(b.k,b.x,b.z,b.r,b.hp);
+  // Old default high walls survived the broad-rampart upgrade in saved games.
+  // Remove only the exact legacy positions once; retain player-built walls elsewhere.
+  for(const b of (d.buildings||[]))if(d.rampartRevision>=1||!legacyRampartWall(b))placeBuilding(b.k,b.x,b.z,b.r,b.hp);
   for(const vk of new Set(d.vehiclesOwned||[])){if(!VEHICLES[vk])continue;Game.vehiclesOwned.push(vk);spawnVehicle(vk);}
   Game.squadCount=clamp(d.squadCount||0,0,4);
   for(let i=0;i<Game.squadCount;i++)spawnSquad();
