@@ -1,0 +1,237 @@
+{
+  "text": "四位老熟人随便选：均衡的杰克、敏捷的汉娜、飞踢专家穆斯塔法、大力士梅斯，能力值跟原作选人画面一模一样。时间还是2513年，半沉进海里的旧曼哈顿，偷猎团伙在海上都市作乱，头目维斯开场放完话，直接跳楼跑路。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4000000,
+      "text": "四位"
+    },
+    {
+      "offset": 5125000,
+      "duration": 1750000,
+      "text": "老"
+    },
+    {
+      "offset": 6875000,
+      "duration": 2625000,
+      "text": "熟人"
+    },
+    {
+      "offset": 9750000,
+      "duration": 2750000,
+      "text": "随便"
+    },
+    {
+      "offset": 12625000,
+      "duration": 3125000,
+      "text": "选"
+    },
+    {
+      "offset": 18875000,
+      "duration": 4125000,
+      "text": "均衡"
+    },
+    {
+      "offset": 23000000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 23875000,
+      "duration": 4875000,
+      "text": "杰克"
+    },
+    {
+      "offset": 31250000,
+      "duration": 3375000,
+      "text": "敏捷"
+    },
+    {
+      "offset": 34625000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 35375000,
+      "duration": 5250000,
+      "text": "汉娜"
+    },
+    {
+      "offset": 43250000,
+      "duration": 3750000,
+      "text": "飞踢"
+    },
+    {
+      "offset": 47125000,
+      "duration": 3250000,
+      "text": "专家"
+    },
+    {
+      "offset": 50625000,
+      "duration": 8000000,
+      "text": "穆斯塔法"
+    },
+    {
+      "offset": 61125000,
+      "duration": 3875000,
+      "text": "大力士"
+    },
+    {
+      "offset": 65000000,
+      "duration": 4500000,
+      "text": "梅斯"
+    },
+    {
+      "offset": 72375000,
+      "duration": 4750000,
+      "text": "能力值"
+    },
+    {
+      "offset": 77125000,
+      "duration": 2750000,
+      "text": "跟原"
+    },
+    {
+      "offset": 80000000,
+      "duration": 4000000,
+      "text": "作选人"
+    },
+    {
+      "offset": 84125000,
+      "duration": 3500000,
+      "text": "画面"
+    },
+    {
+      "offset": 87875000,
+      "duration": 7000000,
+      "text": "一模一样"
+    },
+    {
+      "offset": 100625000,
+      "duration": 4375000,
+      "text": "时间"
+    },
+    {
+      "offset": 105125000,
+      "duration": 2875000,
+      "text": "还是"
+    },
+    {
+      "offset": 108250000,
+      "duration": 10125000,
+      "text": "2513"
+    },
+    {
+      "offset": 118375000,
+      "duration": 2875000,
+      "text": "年"
+    },
+    {
+      "offset": 123625000,
+      "duration": 2250000,
+      "text": "半"
+    },
+    {
+      "offset": 125875000,
+      "duration": 2750000,
+      "text": "沉进"
+    },
+    {
+      "offset": 128750000,
+      "duration": 2500000,
+      "text": "海里"
+    },
+    {
+      "offset": 131250000,
+      "duration": 1000000,
+      "text": "的"
+    },
+    {
+      "offset": 132500000,
+      "duration": 1625000,
+      "text": "旧"
+    },
+    {
+      "offset": 134125000,
+      "duration": 5375000,
+      "text": "曼哈顿"
+    },
+    {
+      "offset": 142625000,
+      "duration": 3250000,
+      "text": "偷猎"
+    },
+    {
+      "offset": 146000000,
+      "duration": 5250000,
+      "text": "团伙"
+    },
+    {
+      "offset": 151500000,
+      "duration": 1375000,
+      "text": "在"
+    },
+    {
+      "offset": 153000000,
+      "duration": 3750000,
+      "text": "海上"
+    },
+    {
+      "offset": 156875000,
+      "duration": 3250000,
+      "text": "都市"
+    },
+    {
+      "offset": 160250000,
+      "duration": 3750000,
+      "text": "作乱"
+    },
+    {
+      "offset": 167500000,
+      "duration": 3125000,
+      "text": "头目"
+    },
+    {
+      "offset": 170750000,
+      "duration": 4000000,
+      "text": "维斯"
+    },
+    {
+      "offset": 175000000,
+      "duration": 3500000,
+      "text": "开场"
+    },
+    {
+      "offset": 178625000,
+      "duration": 1500000,
+      "text": "放"
+    },
+    {
+      "offset": 180125000,
+      "duration": 1375000,
+      "text": "完"
+    },
+    {
+      "offset": 181500000,
+      "duration": 2500000,
+      "text": "话"
+    },
+    {
+      "offset": 186250000,
+      "duration": 3625000,
+      "text": "直接"
+    },
+    {
+      "offset": 190125000,
+      "duration": 3125000,
+      "text": "跳楼"
+    },
+    {
+      "offset": 193375000,
+      "duration": 3750000,
+      "text": "跑路"
+    }
+  ]
+}

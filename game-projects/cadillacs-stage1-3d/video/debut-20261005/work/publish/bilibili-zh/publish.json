@@ -1,0 +1,72 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "content_type": "overview",
+  "language": "zh-CN",
+  "game_name": "恐龙快打 3D",
+  "game_version": "v0.1.0",
+  "video_file": "../../../final/bilibili-zh/恐龙快打-第一关3D重置介绍.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "106491fcf880f48a0799f06ceff3629666f93942fb135b48c346de1733e47bf0",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 200.176,
+  "title": "恐龙快打第一关搬进3D，按C切到主角背后打",
+  "description": "街机厅的恐龙快打，第一关原样搬进 3D：楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T。本期重点是按 C 切视角——侧视就是原作画面，正视切到主角身后，第一人称整条街都在你眼里，出招距离和包围圈的判断全得重新学。\n\n四位英雄能力值与原作选人画面一致；连招、抓投、举油桶、武器、暴走的岩跳龙都在。电脑手机都能玩。\n\n如实说明：背景音乐按原作风格重新编写（原曲乐谱没找到），音效为合成；手机端尚未做真机帧率测试。本作使用 Claude（Opus 5.5）辅助开发，是《恐龙快打》的粉丝向非官方 3D 重置，原作版权归 Capcom 及原著方所有。\n\n百宝箱试玩（复制到浏览器打开）：\nhttps://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html\nB站 Toy 已提交审核，过审后可从主页 Toy 列表试玩。\n\n想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "tags": [
+    "bilibilitoy",
+    "恐龙快打",
+    "街机",
+    "独立游戏",
+    "游戏开发",
+    "Claude",
+    "AI"
+  ],
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected_in_platform": false
+  },
+  "pinned_comment_draft": "楼顶那两只油桶记得用：一只藏炸药，一桶砸人 1000 分。你会上选哪位英雄——杰克、汉娜、穆斯塔法还是梅斯？\n试玩：https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "cover_text": "恐龙快打 3D / 第一关 · 按C切到主角背后",
+  "cover_selection_source": "实机摆拍截图（Boss战飞踢+岩跳龙）程序排版，非AI生成",
+  "cover_upload_mode": "custom_image",
+  "subtitle_mode": "burned_in",
+  "copyright_type": "original",
+  "category": null,
+  "credits": "credits.txt",
+  "disclosures": [
+    "解说为Edge云希预置合成音色",
+    "封面为实机截图程序排版",
+    "录像为Playwright页面内bot按快照决策派发真实键盘事件、离线逐帧渲染与离线音轨合成，非真人实时操作"
+  ],
+  "platform_requirements_checked_at": "2026-10-05",
+  "platform_sources": [
+    "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "https://www.bilibili.com/v/topic/detail?topic_id=1346285"
+  ],
+  "unverified_fields": [
+    "投稿前核对 Toy（id 40412421031936）是否过审：过审则把 Toy 链接补进简介与置顶评论",
+    "实际投稿时核对当期分类、话题资格、封面上传入口"
+  ],
+  "blocking_issues": [
+    "等待本期最终视频人工审片（含人声听感）",
+    "Toy 40412421031936 审核中，发布时核对状态"
+  ],
+  "ready_to_upload": false,
+  "uploaded": false
+}

@@ -1,0 +1,13 @@
+{
+  "copy": [
+    "恐龙快打 3D",
+    "第一关 · 按C切到主角背后"
+  ],
+  "method": "Pillow程序排版：实机截图裁切/缩放 + 顶部渐变带 + 描边文字",
+  "reference": "qa/out/cover-a.png（2560x1440实机摆拍，HUD隐藏）",
+  "ai_generated": false,
+  "sizes": {
+    "home_4_3": "1440x1080",
+    "space_16_9": "1920x1080"
+  }
+}

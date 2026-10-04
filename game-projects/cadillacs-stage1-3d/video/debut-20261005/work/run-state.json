@@ -1,0 +1,20 @@
+{
+  "status": "rendered_awaiting_user_review",
+  "mode": "overview",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "files_complete": true,
+  "toy_sync_status": "auditing",
+  "toy_id": 40412421031936,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.1.0",
+  "video_sha256": "106491fcf880f48a0799f06ceff3629666f93942fb135b48c346de1733e47bf0",
+  "duration_seconds": 200.176,
+  "subjective_audio_review": "not-run",
+  "capture_permission": "用户2026-10-04明确长期允许Playwright脚本录制，已写入.claude/skills/game-video/SKILL.md",
+  "cover_stage": "completed",
+  "render_entry": "render.py（源素材复用v0.1.0 captures，未新录）",
+  "video_uploaded": false,
+  "next_step": "用户人工审片通过后，按game-video发布闭环执行：核对Toy过审状态→投稿→绑定Toy→置顶评论→填推流申请；配音实际为Edge云希。"
+}

@@ -1,0 +1,222 @@
+[
+  {
+    "id": "01-hook",
+    "min_duration": 11.5,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4",
+        "in": 2.5,
+        "duration": 5.5,
+        "desc": "侧视：楼顶开局，维斯放话",
+        "duration_actual": 5.5
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4",
+        "in": 13.5,
+        "duration": 6,
+        "desc": "按C切到正视：主角身后的楼顶",
+        "duration_actual": 7.798
+      }
+    ],
+    "start": 0,
+    "end": 13.298,
+    "duration": 13.298,
+    "text": "还记得街机厅那句「你们老是来碍事」吗？Capcom九三年的恐龙快打，第一关原样搬进了3D。先看这个——按一下C，镜头直接切到主角背后。",
+    "audio": "audio\\shared-zh\\01-hook.mp3"
+  },
+  {
+    "id": "02-hero",
+    "min_duration": 14.5,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 0,
+        "duration": 14.5,
+        "desc": "标题 → 选人 → 维斯开场放话跳楼",
+        "duration_actual": 21.241999999999997
+      }
+    ],
+    "start": 13.298,
+    "end": 34.54,
+    "duration": 21.241999999999997,
+    "text": "四位老熟人随便选：均衡的杰克、敏捷的汉娜、飞踢专家穆斯塔法、大力士梅斯，能力值跟原作选人画面一模一样。时间还是2513年，半沉进海里的旧曼哈顿，偷猎团伙在海上都市作乱，头目维斯开场放完话，直接跳楼跑路。",
+    "audio": "audio\\shared-zh\\02-hero.mp3"
+  },
+  {
+    "id": "03-roof",
+    "min_duration": 22,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 15,
+        "duration": 22,
+        "desc": "楼顶三波实战：连招、抓投、举油桶",
+        "duration_actual": 22
+      }
+    ],
+    "start": 34.54,
+    "end": 56.54,
+    "duration": 22,
+    "text": "楼顶先热身。连拳三下接上勾拳，贴身抓起来直接投摔；脚边的油桶也别浪费，举起来砸人，一桶一千分。清完三波，一脚踹开楼梯间的门。",
+    "audio": "audio\\shared-zh\\03-roof.mp3"
+  },
+  {
+    "id": "04-cams",
+    "min_duration": 22.5,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4",
+        "in": 8,
+        "duration": 5.5,
+        "desc": "斜视：战场更全",
+        "duration_actual": 5.5
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4",
+        "in": 13.5,
+        "duration": 5.5,
+        "desc": "正视：主角身后按纵深走位",
+        "duration_actual": 5.5
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4",
+        "in": 19,
+        "duration": 5.5,
+        "desc": "第一人称",
+        "duration_actual": 5.5
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4",
+        "in": 24.5,
+        "duration": 6,
+        "desc": "Q/E 慢速环绕看四周沉城",
+        "duration_actual": 6.0
+      }
+    ],
+    "start": 56.54,
+    "end": 79.03999999999999,
+    "duration": 22.5,
+    "text": "重点来了——这一版最大的变化是视角。侧视就是原作画面；斜视看得更全；正视切到主角身后，移动直接按纵深走位；第一人称更狠，整条街都在你眼前。视角一换，出招距离和包围圈的判断，全得重新学。",
+    "audio": "audio\\shared-zh\\04-cams.mp3"
+  },
+  {
+    "id": "05-hall",
+    "min_duration": 22,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 52,
+        "duration": 22,
+        "desc": "大楼内部：锁屏波次、骑士像、双开门",
+        "duration_actual": 22
+      }
+    ],
+    "start": 79.03999999999999,
+    "end": 101.03999999999999,
+    "duration": 22,
+    "text": "进楼是经典的卷轴锁屏，一波一波清。金色骑士像可以砸碎，掉武器和宝物；双开门里不断来人，侧身躲开刀子，抓住就是一套连打。",
+    "audio": "audio\\shared-zh\\05-hall.mp3"
+  },
+  {
+    "id": "06-street",
+    "min_duration": 24.5,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 179,
+        "duration": 17.5,
+        "desc": "第47街：黑埃尔默破门、油桶手雷",
+        "duration_actual": 17.5
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 216,
+        "duration": 7,
+        "desc": "Boss登场：维斯抽鞭，岩跳龙变橙色暴走",
+        "duration_actual": 7.0
+      }
+    ],
+    "start": 101.03999999999999,
+    "end": 125.53999999999999,
+    "duration": 24.5,
+    "text": "撞破窗户跳到第47街，黑埃尔默破门而出，路边油桶里藏着手雷。卷轴走到头，维斯牵着一只绿色岩跳龙堵路——注意看，他抽了恐龙一鞭。",
+    "audio": "audio\\shared-zh\\06-street.mp3"
+  },
+  {
+    "id": "07-boss",
+    "min_duration": 32,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 225,
+        "duration": 21,
+        "desc": "Boss战：飞身踢、叫人、投摔",
+        "duration_actual": 21
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4",
+        "in": 297,
+        "duration": 11,
+        "desc": "击倒维斯 → 过关演出 → 结算",
+        "duration_actual": 11
+      }
+    ],
+    "start": 125.53999999999999,
+    "end": 157.54,
+    "duration": 32,
+    "text": "暴走的岩跳龙六亲不认，连维斯本人都咬。他有三连拳接长臂直拳，还有飞身踢，血量一降就朝天开枪叫人。躲开冲刺，贴身一套投摔，再补一发冲刺攻击——维斯倒下，结算体力奖励，第一关过关。",
+    "audio": "audio\\shared-zh\\07-boss.mp3"
+  },
+  {
+    "id": "08-limits",
+    "min_duration": 18,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/mobile-landscape.mp4",
+        "in": 2.5,
+        "duration": 8,
+        "desc": "手机横屏触屏实玩",
+        "duration_actual": 8
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/shots/continue.png",
+        "duration": 8,
+        "desc": "续关画面：维斯拿左轮倒数",
+        "duration_actual": 8
+      },
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/shots/title.png",
+        "duration": 6,
+        "desc": "标题画面：音乐话题背景",
+        "duration_actual": 5.361999999999998
+      }
+    ],
+    "start": 157.54,
+    "end": 178.902,
+    "duration": 21.362,
+    "text": "电脑手机都能玩，链接在简介里。命数用完还有原作式续关：维斯拿着左轮指着你，倒数九秒，我是一次都不想体验。也得说实话：背景音乐是按原作风格重写的，原曲乐谱实在没找到；第二关沼泽森林，还在计划里。",
+    "audio": "audio\\shared-zh\\08-limits.mp3"
+  },
+  {
+    "id": "09-outro",
+    "min_duration": 12,
+    "shots": [
+      {
+        "source": "../../../media-kit/releases/v0.1.0/captures/shots/result.png",
+        "duration": 6,
+        "desc": "结算画面实拍",
+        "duration_actual": 6
+      },
+      {
+        "source": "card",
+        "desc": "尾卡：试玩入口与投票引导",
+        "duration_actual": 15.169999999999998
+      }
+    ],
+    "start": 178.902,
+    "end": 200.07199999999997,
+    "duration": 21.169999999999998,
+    "text": "第一关打完，手感还是那个味儿：抓投、油桶、暴走的恐龙都在。想自己上手打一遍，试玩链接在简介里。喜欢这份街机回忆，顺手空投个三连补给？也欢迎去百宝箱顶部的投票榜点一点，想玩哪款复刻，写进愿望单。",
+    "audio": "audio\\shared-zh\\09-outro.mp3"
+  }
+]

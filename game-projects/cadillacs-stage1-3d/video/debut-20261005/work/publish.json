@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "game_name": "恐龙快打 3D",
+  "game_version": "v0.1.0",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "等待本期最终视频人工审片（含人声听感）",
+        "Toy 40412421031936 审核中，发布时核对状态"
+      ]
+    }
+  ],
+  "ready_to_upload": false
+}

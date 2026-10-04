@@ -1,0 +1,262 @@
+{
+  "text": "重点来了——这一版最大的变化是视角。侧视就是原作画面；斜视看得更全；正视切到主角身后，移动直接按纵深走位；第一人称更狠，整条街都在你眼前。视角一换，出招距离和包围圈的判断，全得重新学。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4000000,
+      "text": "重点"
+    },
+    {
+      "offset": 5125000,
+      "duration": 2000000,
+      "text": "来"
+    },
+    {
+      "offset": 7125000,
+      "duration": 2750000,
+      "text": "了"
+    },
+    {
+      "offset": 12875000,
+      "duration": 1750000,
+      "text": "这"
+    },
+    {
+      "offset": 14625000,
+      "duration": 1125000,
+      "text": "一"
+    },
+    {
+      "offset": 15750000,
+      "duration": 1625000,
+      "text": "版"
+    },
+    {
+      "offset": 17625000,
+      "duration": 3375000,
+      "text": "最大"
+    },
+    {
+      "offset": 21000000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 21750000,
+      "duration": 3625000,
+      "text": "变化"
+    },
+    {
+      "offset": 25625000,
+      "duration": 1000000,
+      "text": "是"
+    },
+    {
+      "offset": 26750000,
+      "duration": 5375000,
+      "text": "视角"
+    },
+    {
+      "offset": 37875000,
+      "duration": 5750000,
+      "text": "侧视"
+    },
+    {
+      "offset": 43875000,
+      "duration": 1125000,
+      "text": "就"
+    },
+    {
+      "offset": 45000000,
+      "duration": 1000000,
+      "text": "是"
+    },
+    {
+      "offset": 46250000,
+      "duration": 2750000,
+      "text": "原作"
+    },
+    {
+      "offset": 49125000,
+      "duration": 4250000,
+      "text": "画面"
+    },
+    {
+      "offset": 56625000,
+      "duration": 4625000,
+      "text": "斜视"
+    },
+    {
+      "offset": 61500000,
+      "duration": 1500000,
+      "text": "看"
+    },
+    {
+      "offset": 63000000,
+      "duration": 750000,
+      "text": "得"
+    },
+    {
+      "offset": 63875000,
+      "duration": 1750000,
+      "text": "更"
+    },
+    {
+      "offset": 65625000,
+      "duration": 4000000,
+      "text": "全"
+    },
+    {
+      "offset": 73500000,
+      "duration": 5000000,
+      "text": "正视切"
+    },
+    {
+      "offset": 78625000,
+      "duration": 1375000,
+      "text": "到"
+    },
+    {
+      "offset": 80250000,
+      "duration": 2750000,
+      "text": "主角"
+    },
+    {
+      "offset": 83125000,
+      "duration": 4875000,
+      "text": "身后"
+    },
+    {
+      "offset": 90500000,
+      "duration": 3500000,
+      "text": "移动"
+    },
+    {
+      "offset": 94250000,
+      "duration": 3000000,
+      "text": "直接"
+    },
+    {
+      "offset": 97375000,
+      "duration": 1500000,
+      "text": "按"
+    },
+    {
+      "offset": 99125000,
+      "duration": 3625000,
+      "text": "纵深"
+    },
+    {
+      "offset": 102875000,
+      "duration": 4125000,
+      "text": "走位"
+    },
+    {
+      "offset": 110750000,
+      "duration": 6500000,
+      "text": "第一人称"
+    },
+    {
+      "offset": 117375000,
+      "duration": 1875000,
+      "text": "更"
+    },
+    {
+      "offset": 119250000,
+      "duration": 3000000,
+      "text": "狠"
+    },
+    {
+      "offset": 124375000,
+      "duration": 6000000,
+      "text": "整条街"
+    },
+    {
+      "offset": 130625000,
+      "duration": 1000000,
+      "text": "都"
+    },
+    {
+      "offset": 131625000,
+      "duration": 1000000,
+      "text": "在"
+    },
+    {
+      "offset": 132750000,
+      "duration": 1125000,
+      "text": "你"
+    },
+    {
+      "offset": 133875000,
+      "duration": 4875000,
+      "text": "眼前"
+    },
+    {
+      "offset": 144375000,
+      "duration": 5125000,
+      "text": "视角"
+    },
+    {
+      "offset": 149625000,
+      "duration": 1250000,
+      "text": "一"
+    },
+    {
+      "offset": 150875000,
+      "duration": 3250000,
+      "text": "换"
+    },
+    {
+      "offset": 157250000,
+      "duration": 3750000,
+      "text": "出招"
+    },
+    {
+      "offset": 161125000,
+      "duration": 3750000,
+      "text": "距离"
+    },
+    {
+      "offset": 165125000,
+      "duration": 1250000,
+      "text": "和"
+    },
+    {
+      "offset": 166500000,
+      "duration": 4250000,
+      "text": "包围圈"
+    },
+    {
+      "offset": 170750000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 171500000,
+      "duration": 4375000,
+      "text": "判断"
+    },
+    {
+      "offset": 177875000,
+      "duration": 2750000,
+      "text": "全"
+    },
+    {
+      "offset": 180625000,
+      "duration": 1125000,
+      "text": "得"
+    },
+    {
+      "offset": 182000000,
+      "duration": 4000000,
+      "text": "重新"
+    },
+    {
+      "offset": 186000000,
+      "duration": 3125000,
+      "text": "学"
+    }
+  ]
+}

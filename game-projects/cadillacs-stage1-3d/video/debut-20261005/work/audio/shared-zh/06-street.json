@@ -1,0 +1,182 @@
+{
+  "text": "撞破窗户跳到第47街，黑埃尔默破门而出，路边油桶里藏着手雷。卷轴走到头，维斯牵着一只绿色岩跳龙堵路——注意看，他抽了恐龙一鞭。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2500000,
+      "text": "撞"
+    },
+    {
+      "offset": 3500000,
+      "duration": 1125000,
+      "text": "破"
+    },
+    {
+      "offset": 4625000,
+      "duration": 5000000,
+      "text": "窗户"
+    },
+    {
+      "offset": 10750000,
+      "duration": 2250000,
+      "text": "跳"
+    },
+    {
+      "offset": 13000000,
+      "duration": 1375000,
+      "text": "到"
+    },
+    {
+      "offset": 14375000,
+      "duration": 1250000,
+      "text": "第"
+    },
+    {
+      "offset": 15750000,
+      "duration": 7375000,
+      "text": "47街"
+    },
+    {
+      "offset": 26750000,
+      "duration": 6250000,
+      "text": "黑埃尔默"
+    },
+    {
+      "offset": 33250000,
+      "duration": 6750000,
+      "text": "破门而出"
+    },
+    {
+      "offset": 42875000,
+      "duration": 2875000,
+      "text": "路边"
+    },
+    {
+      "offset": 45875000,
+      "duration": 2875000,
+      "text": "油桶"
+    },
+    {
+      "offset": 48750000,
+      "duration": 1500000,
+      "text": "里"
+    },
+    {
+      "offset": 50500000,
+      "duration": 2250000,
+      "text": "藏"
+    },
+    {
+      "offset": 52750000,
+      "duration": 625000,
+      "text": "着"
+    },
+    {
+      "offset": 53500000,
+      "duration": 4375000,
+      "text": "手雷"
+    },
+    {
+      "offset": 63625000,
+      "duration": 4125000,
+      "text": "卷轴"
+    },
+    {
+      "offset": 67875000,
+      "duration": 1250000,
+      "text": "走"
+    },
+    {
+      "offset": 69125000,
+      "duration": 5125000,
+      "text": "到头"
+    },
+    {
+      "offset": 77250000,
+      "duration": 4125000,
+      "text": "维斯"
+    },
+    {
+      "offset": 81500000,
+      "duration": 2250000,
+      "text": "牵"
+    },
+    {
+      "offset": 83750000,
+      "duration": 750000,
+      "text": "着"
+    },
+    {
+      "offset": 84625000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 85625000,
+      "duration": 1125000,
+      "text": "只"
+    },
+    {
+      "offset": 87000000,
+      "duration": 4000000,
+      "text": "绿色"
+    },
+    {
+      "offset": 91125000,
+      "duration": 2125000,
+      "text": "岩"
+    },
+    {
+      "offset": 93250000,
+      "duration": 3500000,
+      "text": "跳龙"
+    },
+    {
+      "offset": 96875000,
+      "duration": 3625000,
+      "text": "堵路"
+    },
+    {
+      "offset": 105125000,
+      "duration": 2250000,
+      "text": "注意"
+    },
+    {
+      "offset": 107500000,
+      "duration": 3000000,
+      "text": "看"
+    },
+    {
+      "offset": 114125000,
+      "duration": 1375000,
+      "text": "他"
+    },
+    {
+      "offset": 115625000,
+      "duration": 1750000,
+      "text": "抽"
+    },
+    {
+      "offset": 117375000,
+      "duration": 750000,
+      "text": "了"
+    },
+    {
+      "offset": 118250000,
+      "duration": 3375000,
+      "text": "恐龙"
+    },
+    {
+      "offset": 121750000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 122750000,
+      "duration": 2375000,
+      "text": "鞭"
+    }
+  ]
+}

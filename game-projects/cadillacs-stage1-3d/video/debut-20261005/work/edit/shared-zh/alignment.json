@@ -1,0 +1,499 @@
+[
+  {
+    "start": 0.35,
+    "end": 3.1825,
+    "text": "还记得街机厅那句「你们老是来碍事」吗？",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 3.6375,
+    "end": 5.695,
+    "text": "Capcom九三年的恐龙快打，",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 5.925,
+    "end": 7.6575,
+    "text": "第一关原样搬进了3D。",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 8.1,
+    "end": 10.069999999999999,
+    "text": "先看这个——按一下C，",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 10.2125,
+    "end": 12.132499999999999,
+    "text": "镜头直接切到主角背后。",
+    "id": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 13.648,
+    "end": 20.618000000000002,
+    "text": "四位老熟人随便选：均衡的杰克、敏捷的汉娜、飞踢专家穆斯塔法、大力士梅斯，",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 20.7855,
+    "end": 23.1555,
+    "text": "能力值跟原作选人画面一模一样。",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 23.610500000000002,
+    "end": 25.793000000000003,
+    "text": "时间还是2513年，",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 25.9105,
+    "end": 27.618,
+    "text": "半沉进海里的旧曼哈顿，",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 27.810499999999998,
+    "end": 30.068,
+    "text": "偷猎团伙在海上都市作乱，",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 30.298000000000002,
+    "end": 32.068,
+    "text": "头目维斯开场放完话，",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 32.173,
+    "end": 33.3805,
+    "text": "直接跳楼跑路。",
+    "id": "02-hero",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 34.89,
+    "end": 36.1725,
+    "text": "楼顶先热身。",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 36.615,
+    "end": 38.4225,
+    "text": "连拳三下接上勾拳，",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 38.515,
+    "end": 40.3475,
+    "text": "贴身抓起来直接投摔；",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 40.6025,
+    "end": 42.372499999999995,
+    "text": "脚边的油桶也别浪费，",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 42.54,
+    "end": 43.622499999999995,
+    "text": "举起来砸人，",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 43.7025,
+    "end": 44.747499999999995,
+    "text": "一桶一千分。",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 45.2025,
+    "end": 46.26,
+    "text": "清完三波，",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 46.415,
+    "end": 47.98499999999999,
+    "text": "一脚踹开楼梯间的门。",
+    "id": "03-roof",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 56.89,
+    "end": 60.122499999999995,
+    "text": "重点来了——这一版最大的变化是视角。",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 60.5775,
+    "end": 62.247499999999995,
+    "text": "侧视就是原作画面；",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 62.4525,
+    "end": 63.872499999999995,
+    "text": "斜视看得更全；",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 64.14,
+    "end": 65.71000000000001,
+    "text": "正视切到主角身后，",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 65.84,
+    "end": 67.61,
+    "text": "移动直接按纵深走位；",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 67.865,
+    "end": 69.135,
+    "text": "第一人称更狠，",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 69.22749999999999,
+    "end": 70.785,
+    "text": "整条街都在你眼前。",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 71.22749999999999,
+    "end": 72.3225,
+    "text": "视角一换，",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 72.515,
+    "end": 74.4975,
+    "text": "出招距离和包围圈的判断，",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 74.5775,
+    "end": 75.8225,
+    "text": "全得重新学。",
+    "id": "04-cams",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 79.38999999999999,
+    "end": 81.44749999999999,
+    "text": "进楼是经典的卷轴锁屏，",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 81.565,
+    "end": 82.63499999999999,
+    "text": "一波一波清。",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 83.07749999999999,
+    "end": 85.0475,
+    "text": "金色骑士像可以砸碎，",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 85.15249999999999,
+    "end": 86.38499999999999,
+    "text": "掉武器和宝物；",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 86.6275,
+    "end": 88.2725,
+    "text": "双开门里不断来人，",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 88.4275,
+    "end": 89.7475,
+    "text": "侧身躲开刀子，",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 89.82749999999999,
+    "end": 91.3725,
+    "text": "抓住就是一套连打。",
+    "id": "05-hall",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 101.38999999999999,
+    "end": 103.7225,
+    "text": "撞破窗户跳到第47街，",
+    "id": "06-street",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 103.96499999999999,
+    "end": 105.41,
+    "text": "黑埃尔默破门而出，",
+    "id": "06-street",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 105.57749999999999,
+    "end": 107.19749999999999,
+    "text": "路边油桶里藏着手雷。",
+    "id": "06-street",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 107.65249999999999,
+    "end": 108.835,
+    "text": "卷轴走到头，",
+    "id": "06-street",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 109.01499999999999,
+    "end": 112.46,
+    "text": "维斯牵着一只绿色岩跳龙堵路——注意看，",
+    "id": "06-street",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 112.70249999999999,
+    "end": 113.9225,
+    "text": "他抽了恐龙一鞭。",
+    "id": "06-street",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 125.88999999999999,
+    "end": 127.8725,
+    "text": "暴走的岩跳龙六亲不认，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 128.05249999999998,
+    "end": 129.4725,
+    "text": "连维斯本人都咬。",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 129.915,
+    "end": 131.9725,
+    "text": "他有三连拳接长臂直拳，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 132.19,
+    "end": 133.2225,
+    "text": "还有飞身踢，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 133.4525,
+    "end": 136.16,
+    "text": "血量一降就朝天开枪叫人。",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 136.6025,
+    "end": 137.585,
+    "text": "躲开冲刺，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 137.69,
+    "end": 138.9975,
+    "text": "贴身一套投摔，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 139.2025,
+    "end": 141.79749999999999,
+    "text": "再补一发冲刺攻击——维斯倒下，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 141.9525,
+    "end": 143.26,
+    "text": "结算体力奖励，",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 143.3525,
+    "end": 144.35999999999999,
+    "text": "第一关过关。",
+    "id": "07-boss",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 157.89,
+    "end": 159.31,
+    "text": "电脑手机都能玩，",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 159.5025,
+    "end": 160.6975,
+    "text": "链接在简介里。",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 161.14,
+    "end": 165.635,
+    "text": "命数用完还有原作式续关：维斯拿着左轮指着你，",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 165.84,
+    "end": 166.81,
+    "text": "倒数九秒，",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 166.9775,
+    "end": 168.71,
+    "text": "我是一次都不想体验。",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 169.165,
+    "end": 173.1975,
+    "text": "也得说实话：背景音乐是按原作风格重写的，",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 173.315,
+    "end": 175.1225,
+    "text": "原曲乐谱实在没找到；",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 175.34,
+    "end": 176.6975,
+    "text": "第二关沼泽森林，",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 176.765,
+    "end": 177.7475,
+    "text": "还在计划里。",
+    "id": "08-limits",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 179.25199999999998,
+    "end": 180.28449999999998,
+    "text": "第一关打完，",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 180.47699999999998,
+    "end": 184.8595,
+    "text": "手感还是那个味儿：抓投、油桶、暴走的恐龙都在。",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 185.302,
+    "end": 186.87199999999999,
+    "text": "想自己上手打一遍，",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 187.077,
+    "end": 188.7595,
+    "text": "试玩链接在简介里。",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 189.18949999999998,
+    "end": 190.772,
+    "text": "喜欢这份街机回忆，",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 190.93949999999998,
+    "end": 192.68449999999999,
+    "text": "顺手空投个三连补给？",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 193.1395,
+    "end": 196.172,
+    "text": "也欢迎去百宝箱顶部的投票榜点一点，",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 196.43949999999998,
+    "end": 197.72199999999998,
+    "text": "想玩哪款复刻，",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 197.8645,
+    "end": 198.90949999999998,
+    "text": "写进愿望单。",
+    "id": "09-outro",
+    "timing_source": "Edge WordBoundary"
+  }
+]

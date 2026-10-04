@@ -1,0 +1,12 @@
+{
+  "engine": "Edge TTS online",
+  "voice": "zh-CN-YunxiNeural",
+  "speed": 1,
+  "rate": "+0%",
+  "preferred_voice": "必剪曼波",
+  "fallback_reason": "本次未走必剪：曼波音色需人在必剪客户端手动生成，本期按默认偏好回退Edge云希，未冒称曼波。",
+  "timestamp_source": "actual service WordBoundary",
+  "subjective_listening": "not-run",
+  "subjective_reason": "当前模型无可接收音频的试听输入，未假称听审；已列为主要待审项。",
+  "python_runtime": "comfyui-api-server/.venv/Scripts/python.exe"
+}

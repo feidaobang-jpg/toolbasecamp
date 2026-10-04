@@ -1,0 +1,74 @@
+[
+  {
+    "id": "01-hook",
+    "min_duration": 11.5,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4", "in": 2.5, "duration": 5.5, "desc": "侧视：楼顶开局，维斯放话" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4", "in": 13.5, "duration": 6, "desc": "按C切到正视：主角身后的楼顶" }
+    ]
+  },
+  {
+    "id": "02-hero",
+    "min_duration": 14.5,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 0, "duration": 14.5, "desc": "标题 → 选人 → 维斯开场放话跳楼" }
+    ]
+  },
+  {
+    "id": "03-roof",
+    "min_duration": 22,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 15, "duration": 22, "desc": "楼顶三波实战：连招、抓投、举油桶" }
+    ]
+  },
+  {
+    "id": "04-cams",
+    "min_duration": 22.5,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4", "in": 8, "duration": 5.5, "desc": "斜视：战场更全" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4", "in": 13.5, "duration": 5.5, "desc": "正视：主角身后按纵深走位" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4", "in": 19, "duration": 5.5, "desc": "第一人称" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/cameras-16x9.mp4", "in": 24.5, "duration": 6, "desc": "Q/E 慢速环绕看四周沉城" }
+    ]
+  },
+  {
+    "id": "05-hall",
+    "min_duration": 22,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 52, "duration": 22, "desc": "大楼内部：锁屏波次、骑士像、双开门" }
+    ]
+  },
+  {
+    "id": "06-street",
+    "min_duration": 24.5,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 179, "duration": 17.5, "desc": "第47街：黑埃尔默破门、油桶手雷" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 216, "duration": 7, "desc": "Boss登场：维斯抽鞭，岩跳龙变橙色暴走" }
+    ]
+  },
+  {
+    "id": "07-boss",
+    "min_duration": 32,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 225, "duration": 21, "desc": "Boss战：飞身踢、叫人、投摔" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/full-run-16x9.mp4", "in": 297, "duration": 11, "desc": "击倒维斯 → 过关演出 → 结算" }
+    ]
+  },
+  {
+    "id": "08-limits",
+    "min_duration": 18,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/mobile-landscape.mp4", "in": 2.5, "duration": 8, "desc": "手机横屏触屏实玩" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/shots/continue.png", "duration": 8, "desc": "续关画面：维斯拿左轮倒数" },
+      { "source": "../../../media-kit/releases/v0.1.0/captures/shots/title.png", "duration": 6, "desc": "标题画面：音乐话题背景" }
+    ]
+  },
+  {
+    "id": "09-outro",
+    "min_duration": 12,
+    "shots": [
+      { "source": "../../../media-kit/releases/v0.1.0/captures/shots/result.png", "duration": 6, "desc": "结算画面实拍" },
+      { "source": "card", "desc": "尾卡：试玩入口与投票引导" }
+    ]
+  }
+]

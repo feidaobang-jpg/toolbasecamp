@@ -1,0 +1,182 @@
+{
+  "text": "还记得街机厅那句「你们老是来碍事」吗？Capcom九三年的恐龙快打，第一关原样搬进了3D。先看这个——按一下C，镜头直接切到主角背后。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2250000,
+      "text": "还"
+    },
+    {
+      "offset": 3375000,
+      "duration": 2000000,
+      "text": "记得"
+    },
+    {
+      "offset": 5625000,
+      "duration": 2375000,
+      "text": "街机"
+    },
+    {
+      "offset": 8000000,
+      "duration": 4125000,
+      "text": "厅"
+    },
+    {
+      "offset": 13250000,
+      "duration": 2125000,
+      "text": "那"
+    },
+    {
+      "offset": 15375000,
+      "duration": 875000,
+      "text": "句"
+    },
+    {
+      "offset": 16500000,
+      "duration": 1625000,
+      "text": "你们"
+    },
+    {
+      "offset": 18250000,
+      "duration": 3125000,
+      "text": "老是"
+    },
+    {
+      "offset": 21500000,
+      "duration": 1000000,
+      "text": "来"
+    },
+    {
+      "offset": 22625000,
+      "duration": 3250000,
+      "text": "碍事"
+    },
+    {
+      "offset": 26000000,
+      "duration": 2125000,
+      "text": "吗"
+    },
+    {
+      "offset": 33875000,
+      "duration": 5750000,
+      "text": "Capcom"
+    },
+    {
+      "offset": 39750000,
+      "duration": 4750000,
+      "text": "九三年"
+    },
+    {
+      "offset": 44500000,
+      "duration": 875000,
+      "text": "的"
+    },
+    {
+      "offset": 45500000,
+      "duration": 3000000,
+      "text": "恐龙"
+    },
+    {
+      "offset": 48625000,
+      "duration": 4625000,
+      "text": "快打"
+    },
+    {
+      "offset": 56750000,
+      "duration": 2375000,
+      "text": "第一"
+    },
+    {
+      "offset": 59250000,
+      "duration": 1500000,
+      "text": "关"
+    },
+    {
+      "offset": 60750000,
+      "duration": 4000000,
+      "text": "原样"
+    },
+    {
+      "offset": 65000000,
+      "duration": 2750000,
+      "text": "搬进"
+    },
+    {
+      "offset": 67750000,
+      "duration": 875000,
+      "text": "了"
+    },
+    {
+      "offset": 68750000,
+      "duration": 2250000,
+      "text": "3"
+    },
+    {
+      "offset": 71000000,
+      "duration": 1875000,
+      "text": "D"
+    },
+    {
+      "offset": 78500000,
+      "duration": 2375000,
+      "text": "先"
+    },
+    {
+      "offset": 80875000,
+      "duration": 1500000,
+      "text": "看"
+    },
+    {
+      "offset": 82500000,
+      "duration": 5125000,
+      "text": "这个"
+    },
+    {
+      "offset": 89625000,
+      "duration": 1375000,
+      "text": "按"
+    },
+    {
+      "offset": 91125000,
+      "duration": 2125000,
+      "text": "一下"
+    },
+    {
+      "offset": 93250000,
+      "duration": 3750000,
+      "text": "C"
+    },
+    {
+      "offset": 99625000,
+      "duration": 4250000,
+      "text": "镜头"
+    },
+    {
+      "offset": 104125000,
+      "duration": 3000000,
+      "text": "直接"
+    },
+    {
+      "offset": 107250000,
+      "duration": 1500000,
+      "text": "切"
+    },
+    {
+      "offset": 108750000,
+      "duration": 1375000,
+      "text": "到"
+    },
+    {
+      "offset": 110375000,
+      "duration": 3125000,
+      "text": "主角"
+    },
+    {
+      "offset": 113625000,
+      "duration": 4000000,
+      "text": "背后"
+    }
+  ]
+}

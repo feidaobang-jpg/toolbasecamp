@@ -1,0 +1,33 @@
+﻿【标题】
+恐龙快打第一关搬进3D，按C切到主角背后打
+
+【标签】
+bilibilitoy
+恐龙快打
+街机
+独立游戏
+游戏开发
+Claude
+AI
+
+【话题】
+哔哩哔哩Toy创意挑战
+https://www.bilibili.com/v/topic/detail?topic_id=1346285
+
+【简介】
+街机厅的恐龙快打，第一关原样搬进 3D：楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T。本期重点是按 C 切视角——侧视就是原作画面，正视切到主角身后，第一人称整条街都在你眼里，出招距离和包围圈的判断全得重新学。
+
+四位英雄能力值与原作选人画面一致；连招、抓投、举油桶、武器、暴走的岩跳龙都在。电脑手机都能玩。
+
+如实说明：背景音乐按原作风格重新编写（原曲乐谱没找到），音效为合成；手机端尚未做真机帧率测试。本作使用 Claude（Opus 5.5）辅助开发，是《恐龙快打》的粉丝向非官方 3D 重置，原作版权归 Capcom 及原著方所有。
+
+百宝箱试玩（复制到浏览器打开）：
+https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html
+B站 Toy 已提交审核，过审后可从主页 Toy 列表试玩。
+
+想玩哪款复刻，写进愿望单；投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）
+
+【置顶评论】
+楼顶那两只油桶记得用：一只藏炸药，一桶砸人 1000 分。你会上选哪位英雄——杰克、汉娜、穆斯塔法还是梅斯？
+试玩：https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html
+投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）

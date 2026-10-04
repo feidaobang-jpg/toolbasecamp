@@ -1,0 +1,172 @@
+{
+  "text": "进楼是经典的卷轴锁屏，一波一波清。金色骑士像可以砸碎，掉武器和宝物；双开门里不断来人，侧身躲开刀子，抓住就是一套连打。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4750000,
+      "text": "进楼"
+    },
+    {
+      "offset": 6000000,
+      "duration": 1375000,
+      "text": "是"
+    },
+    {
+      "offset": 7500000,
+      "duration": 2625000,
+      "text": "经典"
+    },
+    {
+      "offset": 10125000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 11125000,
+      "duration": 3125000,
+      "text": "卷轴"
+    },
+    {
+      "offset": 14375000,
+      "duration": 2000000,
+      "text": "锁"
+    },
+    {
+      "offset": 16375000,
+      "duration": 4000000,
+      "text": "屏"
+    },
+    {
+      "offset": 22750000,
+      "duration": 2000000,
+      "text": "一"
+    },
+    {
+      "offset": 24750000,
+      "duration": 1875000,
+      "text": "波"
+    },
+    {
+      "offset": 26750000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 27750000,
+      "duration": 1375000,
+      "text": "波"
+    },
+    {
+      "offset": 29125000,
+      "duration": 3125000,
+      "text": "清"
+    },
+    {
+      "offset": 37875000,
+      "duration": 4125000,
+      "text": "金色"
+    },
+    {
+      "offset": 42125000,
+      "duration": 5000000,
+      "text": "骑士"
+    },
+    {
+      "offset": 47375000,
+      "duration": 1625000,
+      "text": "像"
+    },
+    {
+      "offset": 49125000,
+      "duration": 2000000,
+      "text": "可以"
+    },
+    {
+      "offset": 51250000,
+      "duration": 5125000,
+      "text": "砸碎"
+    },
+    {
+      "offset": 58625000,
+      "duration": 2000000,
+      "text": "掉"
+    },
+    {
+      "offset": 60750000,
+      "duration": 3875000,
+      "text": "武器"
+    },
+    {
+      "offset": 64875000,
+      "duration": 875000,
+      "text": "和"
+    },
+    {
+      "offset": 65875000,
+      "duration": 3875000,
+      "text": "宝物"
+    },
+    {
+      "offset": 73375000,
+      "duration": 6125000,
+      "text": "双开门"
+    },
+    {
+      "offset": 79500000,
+      "duration": 1000000,
+      "text": "里"
+    },
+    {
+      "offset": 80750000,
+      "duration": 2875000,
+      "text": "不断"
+    },
+    {
+      "offset": 83750000,
+      "duration": 4875000,
+      "text": "来人"
+    },
+    {
+      "offset": 91375000,
+      "duration": 4750000,
+      "text": "侧身"
+    },
+    {
+      "offset": 96375000,
+      "duration": 2875000,
+      "text": "躲开"
+    },
+    {
+      "offset": 99375000,
+      "duration": 4000000,
+      "text": "刀子"
+    },
+    {
+      "offset": 105375000,
+      "duration": 4000000,
+      "text": "抓住"
+    },
+    {
+      "offset": 109625000,
+      "duration": 1250000,
+      "text": "就"
+    },
+    {
+      "offset": 110875000,
+      "duration": 1125000,
+      "text": "是"
+    },
+    {
+      "offset": 112125000,
+      "duration": 2750000,
+      "text": "一套"
+    },
+    {
+      "offset": 115000000,
+      "duration": 4625000,
+      "text": "连打"
+    }
+  ]
+}
