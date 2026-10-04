@@ -10,8 +10,8 @@
       "last_public_verified_version": "web-input-flight-v0.17.10",
       "last_public_verified_at": "2026-10-04T14:48:14.213Z",
       "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "public_verified",
-      "pending_version": null
+      "status": "pending_login",
+      "pending_version": "web-touch-ui-v0.17.12"
     },
     {
       "bvid": "BV1Ujad6DEuf",
@@ -19,11 +19,14 @@
       "last_public_verified_version": "web-input-flight-v0.17.10",
       "last_public_verified_at": "2026-10-04T14:48:14.214Z",
       "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "public_verified",
-      "pending_version": null
+      "status": "pending_login",
+      "pending_version": "web-touch-ui-v0.17.12"
     }
   ],
-  "latest_record": "releases/web-grenade-nocd-v0.17.11/bilibili-descriptions.json",
-  "pending": [],
-  "pending_note": "v0.17.11简介区块已备好未提交：创作中心未登录，需扫码后重试"
+  "latest_record": "releases/web-touch-ui-v0.17.12/bilibili-descriptions.json",
+  "pending": [
+    "BV1WbHq6eEBt",
+    "BV1Ujad6DEuf"
+  ],
+  "pending_note": "v0.17.11与v0.17.12区块已备好未提交（v0.17.12区块已并入v0.17.11内容）：创作中心跳转passport扫码登录，需用户扫码后重试；prepared: releases/web-touch-ui-v0.17.12/bilibili-descriptions.json"
 }

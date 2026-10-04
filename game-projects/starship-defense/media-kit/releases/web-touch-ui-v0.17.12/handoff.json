@@ -1,0 +1,17 @@
+{
+  "version": "web-touch-ui-v0.17.12",
+  "date": "2026-10-04",
+  "website_commit": "5ecbb75a",
+  "website_verified": "线上 index.html 引用 game.compat.js?v=5ecbb75a；vV 按钮已移除、#vSPRINT 右侧定位与 ::after 角标移除均已核对",
+  "toy_submission": "toy-submission.json",
+  "player_visible_changes": [
+    "手机跑步键移到屏幕右侧、射击键左边",
+    "虚拟按键去掉键盘键位角标",
+    "切换视角循环含第一/第三人称，移除手机独立一人称按钮（V 键保留）"
+  ],
+  "internal_changes": [
+    "syncKeyLabels/初始化中的 vbtn dataset.key 同步代码移除",
+    "verify-feedback.cjs 触屏按钮断言改为 vO/vH/vX/vC/vP"
+  ],
+  "tests": "verify-feedback.cjs 与基线一致；本地触屏跑步/视角循环实测通过；Toy 预览桌面+手机实测通过"
+}

@@ -1,0 +1,459 @@
+{
+ "version": "web-camera-mobile-v0.17.9",
+ "checked_at": "2026-10-04T14:42:30.353Z",
+ "passed": 34,
+ "failed": [
+  "every shop weapon beats starter DPS",
+  "all weapons deal damage: field14m",
+  "all weapons deal damage: gateTowerEdge",
+  "all weapons deal damage: behindCoverRock",
+  "laser damage ramps while held",
+  "laser pierces a second bug",
+  "space dashes after clicking a toolbar button",
+  "five tunnel mouths",
+  "tunnel walls block from outside",
+  "wave bugs emerge from tunnel mouths",
+  "mouse drag rotates the view"
+ ],
+ "results": {
+  "default theme is dark battlefield": {
+   "ok": true
+  },
+  "new game asks before replacing progress and keeps a backup": {
+   "ok": true,
+   "detail": {
+    "confirmShown": true,
+    "backup": {
+     "chapter": 4,
+     "gold": 8888
+    }
+   }
+  },
+  "backup listed in load panel": {
+   "ok": true
+  },
+  "parked vehicle cannot be destroyed": {
+   "ok": true
+  },
+  "wrecked vehicle stays owned and is repaired next prep": {
+   "ok": true,
+   "detail": {
+    "parkedHp": true,
+    "ownedAfterWreck": true,
+    "onFieldAfterWreck": 0,
+    "repairedNextPrep": true,
+    "blastSafe": true,
+    "blastHitsVehicle": true,
+    "split": {
+     "parentHp": 123,
+     "parentDmg": 17.4,
+     "kids": [
+      {
+       "hp": 37,
+       "dmg": 7.8
+      }
+     ]
+    },
+    "dps": {
+     "lmg": 125,
+     "shotgun": 124,
+     "launcher": 105,
+     "flamer": 140,
+     "laser": 200,
+     "plasma": 250
+    }
+   }
+  },
+  "enemy blast uses real vehicle position": {
+   "ok": true
+  },
+  "chapter 6 split: one weaker child": {
+   "ok": true,
+   "detail": {
+    "parentHp": 123,
+    "parentDmg": 17.4,
+    "kids": [
+     {
+      "hp": 37,
+      "dmg": 7.8
+     }
+    ]
+   }
+  },
+  "every shop weapon beats starter DPS": {
+   "ok": false,
+   "detail": {
+    "lmg": 125,
+    "shotgun": 124,
+    "launcher": 105,
+    "flamer": 140,
+    "laser": 200,
+    "plasma": 250
+   }
+  },
+  "all weapons deal damage: field14m": {
+   "ok": false,
+   "detail": {
+    "lmg": 0,
+    "shotgun": 0,
+    "launcher": 0,
+    "flamer": 0,
+    "laser": 0,
+    "plasma": 0
+   }
+  },
+  "all weapons deal damage: gateTowerEdge": {
+   "ok": false,
+   "detail": {
+    "lmg": 0,
+    "shotgun": 0,
+    "launcher": 0,
+    "flamer": 0,
+    "laser": 0,
+    "plasma": 0
+   }
+  },
+  "all weapons deal damage: behindCoverRock": {
+   "ok": false,
+   "detail": {
+    "lmg": 0,
+    "shotgun": 0,
+    "launcher": 0,
+    "flamer": 0,
+    "laser": 0,
+    "plasma": 0
+   }
+  },
+  "laser damage ramps while held": {
+   "ok": false,
+   "detail": {
+    "perHalfSecond": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "second": 0
+   }
+  },
+  "laser pierces a second bug": {
+   "ok": false,
+   "detail": {
+    "perHalfSecond": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "second": 0
+   }
+  },
+  "number keys / X / wheel switch between all bought guns": {
+   "ok": true,
+   "detail": [
+    "lmg",
+    "shotgun",
+    "launcher",
+    "flamer",
+    "laser",
+    "lmg",
+    "shotgun"
+   ]
+  },
+  "weapon bar lists every owned gun": {
+   "ok": true
+  },
+  "weapon upgrade raises level and damage multiplier": {
+   "ok": true,
+   "detail": {
+    "lv": 1,
+    "cost": 110,
+    "mul": 1.2
+   }
+  },
+  "space dashes after clicking a toolbar button": {
+   "ok": false,
+   "detail": {
+    "q0": "high",
+    "q1": "smooth",
+    "q2": "smooth",
+    "jumped": false
+   }
+  },
+  "I toggles gate without using a medkit; H heals": {
+   "ok": true,
+   "detail": {
+    "keys": {
+     "action": "gate"
+    },
+    "afterI": {
+     "gateOpen": false,
+     "hp": 30,
+     "medkit": 2
+    },
+    "afterH": {
+     "hp": 90,
+     "medkit": 1
+    }
+   }
+  },
+  "smart gate lets the player out and closes behind": {
+   "ok": true,
+   "detail": {
+    "opened": true,
+    "playerZ": 7.2,
+    "closedBehind": true
+   }
+  },
+  "map extended with a deep hive": {
+   "ok": true,
+   "detail": {
+    "mapDepth": 302,
+    "mouths": 3,
+    "laneRocks": 0,
+    "coverOnly": true,
+    "tunnel": {
+     "samples": 244,
+     "blockedInside": 0,
+     "roofed": 244
+    },
+    "wallBlocks": false,
+    "noLandmarkBeams": true
+   }
+  },
+  "five tunnel mouths": {
+   "ok": false,
+   "detail": {
+    "mapDepth": 302,
+    "mouths": 3,
+    "laneRocks": 0,
+    "coverOnly": true,
+    "tunnel": {
+     "samples": 244,
+     "blockedInside": 0,
+     "roofed": 244
+    },
+    "wallBlocks": false,
+    "noLandmarkBeams": true
+   }
+  },
+  "no blocking rocks left in the combat lanes; side rocks are cover only": {
+   "ok": true,
+   "detail": {
+    "mapDepth": 302,
+    "mouths": 3,
+    "laneRocks": 0,
+    "coverOnly": true,
+    "tunnel": {
+     "samples": 244,
+     "blockedInside": 0,
+     "roofed": 244
+    },
+    "wallBlocks": false,
+    "noLandmarkBeams": true
+   }
+  },
+  "tunnels walkable end to end (junctions open) and roofed": {
+   "ok": true,
+   "detail": {
+    "samples": 244,
+    "blockedInside": 0,
+    "roofed": 244
+   }
+  },
+  "tunnel walls block from outside": {
+   "ok": false
+  },
+  "base and hive no longer have tall light beams": {
+   "ok": true
+  },
+  "cover rocks: own shots pass, enemy acid blocked": {
+   "ok": true,
+   "detail": {
+    "friendlyThrough": true,
+    "enemyBlocked": true
+   }
+  },
+  "hive has queen and five home guards": {
+   "ok": true,
+   "detail": {
+    "queen": 1,
+    "guards": 5,
+    "guardsStayWild": true,
+    "spawnedNearMouth": 0,
+    "spawned": 8,
+    "emerging": 0,
+    "homeLeash": true,
+    "killed": true,
+    "totalAfterQueen": 7,
+    "totalBefore": 20
+   }
+  },
+  "guards do not join the wave": {
+   "ok": true,
+   "detail": {
+    "queen": 1,
+    "guards": 5,
+    "guardsStayWild": true,
+    "spawnedNearMouth": 0,
+    "spawned": 8,
+    "emerging": 0,
+    "homeLeash": true,
+    "killed": true,
+    "totalAfterQueen": 7,
+    "totalBefore": 20
+   }
+  },
+  "wave bugs emerge from tunnel mouths": {
+   "ok": false,
+   "detail": {
+    "queen": 1,
+    "guards": 5,
+    "guardsStayWild": true,
+    "spawnedNearMouth": 0,
+    "spawned": 8,
+    "emerging": 0,
+    "homeLeash": true,
+    "killed": true,
+    "totalAfterQueen": 7,
+    "totalBefore": 20
+   }
+  },
+  "killing the queen shrinks later waves": {
+   "ok": true,
+   "detail": {
+    "queen": 1,
+    "guards": 5,
+    "guardsStayWild": true,
+    "spawnedNearMouth": 0,
+    "spawned": 8,
+    "emerging": 0,
+    "homeLeash": true,
+    "killed": true,
+    "totalAfterQueen": 7,
+    "totalBefore": 20
+   }
+  },
+  "evacuated squad returns next level; pause tasks replace attack order": {
+   "ok": true,
+   "detail": {
+    "after": 1,
+    "back": 2,
+    "rejected": true,
+    "orders": [
+     "defend",
+     "follow"
+    ]
+   }
+  },
+  "field gold auto-collected at level end": {
+   "ok": true,
+   "detail": {
+    "bonus": 160,
+    "afterPrep": 360,
+    "state": "prep"
+   }
+  },
+  "P / Esc pause and resume from prep, battle and shop": {
+   "ok": true,
+   "detail": [
+    "paused",
+    "prep",
+    "paused",
+    "prep",
+    "paused",
+    "battle"
+   ]
+  },
+  "Q turns at least 100 degrees per second": {
+   "ok": true,
+   "detail": {
+    "qTurn": 1.9632255506781853,
+    "dragTurn": 0.1,
+    "first": "first",
+    "back": "third",
+    "preset": "视角：高位跟随（C 切换 · V 第一人称）",
+    "jitter": 0
+   }
+  },
+  "mouse drag rotates the view": {
+   "ok": false,
+   "detail": {
+    "qTurn": 1.9632255506781853,
+    "dragTurn": 0.1,
+    "first": "first",
+    "back": "third",
+    "preset": "视角：高位跟随（C 切换 · V 第一人称）",
+    "jitter": 0
+   }
+  },
+  "V toggles first / third person": {
+   "ok": true,
+   "detail": {
+    "qTurn": 1.9632255506781853,
+    "dragTurn": 0.1,
+    "first": "first",
+    "back": "third",
+    "preset": "视角：高位跟随（C 切换 · V 第一人称）",
+    "jitter": 0
+   }
+  },
+  "C cycles camera presets": {
+   "ok": true,
+   "detail": {
+    "qTurn": 1.9632255506781853,
+    "dragTurn": 0.1,
+    "first": "first",
+    "back": "third",
+    "preset": "视角：高位跟随（C 切换 · V 第一人称）",
+    "jitter": 0
+   }
+  },
+  "follow camera distance stable while running (no stutter)": {
+   "ok": true,
+   "detail": {
+    "qTurn": 1.9632255506781853,
+    "dragTurn": 0.1,
+    "first": "first",
+    "back": "third",
+    "preset": "视角：高位跟随（C 切换 · V 第一人称）",
+    "jitter": 0
+   }
+  },
+  "damage numbers shown when hitting": {
+   "ok": true
+  },
+  "old saves still load; new fields saved": {
+   "ok": true,
+   "detail": {
+    "newShape": true,
+    "loaded": true
+   }
+  },
+  "no page errors (desktop)": {
+   "ok": true,
+   "detail": []
+  },
+  "phone (hover misreported) gets touch UI, landscape rotation and shop": {
+   "ok": true,
+   "detail": {
+    "touchUI": true,
+    "rotated": true,
+    "buttons": true,
+    "shopOpens": true,
+    "pauseButton": "paused"
+   }
+  },
+  "no page errors (phone)": {
+   "ok": true,
+   "detail": []
+  },
+  "legacy Q theme link uses dark battlefield": {
+   "ok": true
+  },
+  "no page errors (legacy theme fallback)": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}

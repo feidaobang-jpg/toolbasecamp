@@ -1,0 +1,27 @@
+{
+  "id": 38678478981120,
+  "version": "web-touch-ui-v0.17.12",
+  "status": "auditing",
+  "website_commit": "5ecbb75a",
+  "zip_sha256": "452266cd997bd923eb98b0fce44108bb528f7809bdc9b2d8eca7077830b1c282",
+  "package": "dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
+  "package_files": ["index.html", "boot.js", "game.compat.js", "combat-controls.css", "icon.svg", "vendor/LICENSE.txt"],
+  "preview_url_tested": "https://www.bilibili.com/toy/preview/preview_Olc9wAc1/index.html",
+  "preview_tests": {
+    "desktop": "C 键循环 5 个第三人称预设后进入第一人称（准星出现），再按回到第三人称；无页面错误",
+    "mobile_viewport": "915x412 触屏：跑步键位于射击键左侧、无键位字母角标、独立一人称按钮已移除、切换视角按钮可达第一人称；无页面错误",
+    "local_regression": "verify-feedback.cjs 与基线完全一致（34 通过，11 项为旧套件对当前版本的既有差异，非本次引起）；触屏跑步实测 sprinting=true"
+  },
+  "changes": [
+    "手机跑步键从左侧移到屏幕右侧、射击键左边",
+    "虚拟按键不再显示键盘键位角标（data-key 机制移除）",
+    "「切换视角」按钮/ C 键循环扩展为五档第三人称预设 + 第一人称；移除手机独立一人称按钮（V 键保留）"
+  ],
+  "submitted_at": "2026-10-04 22:51:50",
+  "response": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_9bKFt3Hl/index.html"
+  },
+  "published_version_at_submission": "web-input-flight-v0.17.10",
+  "notes": "打包用 Node 等价脚本（本机无 Python），文件清单与 build-toy.py 一致；doctor 未跑，按清单人工核对（相对路径、入口、无 toy.yaml）。"
+}
