@@ -1,0 +1,16 @@
+{
+  "version": "v0.3.1",
+  "base_version": "v0.3",
+  "changes": [
+    "对准射程内的大门时缩短手雷落点，修复贴门投弹无法伤门。",
+    "覆盖第一关营地大门和第二关营地前后门；保留两发破门、火箭与机枪规则。"
+  ],
+  "validation": {
+    "gate_cases": 24,
+    "desktop": "83/83",
+    "mobile": "33/33"
+  },
+  "site_deploy": "pending",
+  "toy": "pending",
+  "bilibili": "pending"
+}

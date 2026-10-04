@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.3",
-  "handoff": "releases/v0.2.1/handoff.json",
+  "current_version": "v0.3.1",
+  "handoff": "releases/v0.3.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -80,6 +80,12 @@
       "handoff": "releases/v0.2.1/handoff.json",
       "base_version": "v0.2",
       "summary": "搬进 toolbasecamp 上架网站与 Toy；修复部分 Windows 台式机被误判为触屏（显示摇杆、隐藏键位提示）"
+    },
+    {
+      "version": "v0.3.1",
+      "handoff": "releases/v0.3.1/handoff.json",
+      "base_version": "v0.3",
+      "summary": "修复两关大门近距离手雷越过目标：对准射程内大门时缩短落点，两发破门。"
     }
   ],
   "toy": {

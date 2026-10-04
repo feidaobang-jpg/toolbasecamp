@@ -373,7 +373,13 @@ function fireBomb() {
   if (live >= max) return;
   const sx = P.x + d.x * 1.1, sy = P.y + d.y * 1.1;
   if (w === 1) {
-    const range = 9;
+    let range = 9;
+    // 对准射程内的大门时缩短落点，避免贴门投弹飞到门后、完全打不到门。
+    // 只调整仍存活的大门；空地、营房与崖顶继续使用原来的抛物线投掷。
+    for (let r = 1.1; r <= 9; r += 0.2) {
+      const target = L.staticAt(P.x + d.x * r, P.y + d.y * r);
+      if (target && target.alive && target.kind === 'gate') { range = r; break; }
+    }
     bombs.push({ own: true, kind: 'grenade', x: sx, y: sy, sx, sy, tx: P.x + d.x * range, ty: P.y + d.y * range, t: 0, dur: 0.62, h: 1.1, a: d.a });
     P.bombCd = 0.34; A.grenade();
   } else {
