@@ -1578,7 +1578,6 @@ window.TB_LOCALES['zh-CN'] = {
         groups: {
             calc: '计算',
             convert: '转换',
-            food: '美食',
             lifePlans: '生活计划',
             record: '记录',
             media: '媒体',

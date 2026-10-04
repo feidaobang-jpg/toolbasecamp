@@ -68,14 +68,9 @@ const toolsConfig = {
             ]
         },
         {
-            titleKey: 'tools.groups.food',
-            items: [
-                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html', dailyLimit: true }
-            ]
-        },
-        {
             titleKey: 'tools.groups.lifePlans',
             items: [
+                { titleKey: 'tools.aiRecipe.title', url: 'html/life/ai-recipe.html', dailyLimit: true },
                 { titleKey: 'tools.weightLossPlan.title', url: 'html/life/weight-loss-plan.html', dailyLimit: true },
                 { titleKey: 'tools.studyPlan.title', url: 'html/life/study-plan.html', dailyLimit: true },
                 { titleKey: 'tools.roadTripPlan.title', url: 'html/life/road-trip-plan.html', dailyLimit: true },
