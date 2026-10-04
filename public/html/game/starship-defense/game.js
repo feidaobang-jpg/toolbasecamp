@@ -6,6 +6,7 @@ import {setupToyPlatform} from './toy-platform.js?v=fb97';
 import {validateNormalSave} from './save-validation.js?v=fb9';
 import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
 import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefieldGround} from './battlefield-environments.js';
+import {ExplorationLight} from './exploration-light.js';
 import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation} from './fortress-layout.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=fb9';
 import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
@@ -3380,6 +3381,7 @@ function loop(){
     const cx=Math.sin(camYaw)*40,cz=-32+Math.cos(camYaw)*40;
     camera.position.set(cx,18,cz);
     camera.lookAt(0,2,-10);
+    explorationLight.update(dt,player.pos,camera,camForward(true),false,battlefield,false);
     AudioSys.bgm(dt,false);
     updParticles(dt);
     $('interactHint').classList.add('hidden');
@@ -3391,6 +3393,7 @@ function loop(){
   updParticles(dt);
   updDamageNumbers(playing?dt:0);updScreenFx(playing?dt:0);
   if(playing){updCamera(dt);updSun(camState.target);updPlacement();}
+  explorationLight.update(dt,player.inVehicle?player.inVehicle.mesh.position:player.pos,camera,camForward(true),camMode==='first',battlefield,!player.dead);
   frameStats(now);renderer.render(scene,camera);
   Input.clearFrame();
 }
@@ -3427,11 +3430,17 @@ function setupFeaturePanels(){
   },true);
 }
 const visuals=new DarkVisuals(THREE,scene,PAL);
+const explorationLight=new ExplorationLight(scene);
 let battlefield;
+function syncLightingLabels(){
+  const label='地表：'+(battlefield.timeOfDay==='day'?'白天':'夜晚');
+  $('daylightMain').textContent=$('daylightPause').textContent=label;
+  const p=battlefield.current;$('environmentName').textContent=(p.id==='desert'?'荒漠':p.name)+' · '+(battlefield.timeOfDay==='day'?'白天':'夜晚')+' · '+p.chapters;
+}
 function setBattlefieldEnvironment(profile){
   if(!battlefield)return;
   battlefield.apply(profile);
-  $('environmentName').textContent=profile.name+' · '+profile.chapters;
+  syncLightingLabels();
   $('testEnvironment').value=profile.id;
 }
 // 不用顶层 await：步步高学习平板等老内核（Chrome<89）遇到它会整份脚本解析失败，画面卡在“正在部署”。
@@ -3445,6 +3454,7 @@ function bootGame(){
 if(visualAssets)$('assetLoad').remove();
 visuals.environment(terrainH);
 battlefield=new BattlefieldEnvironment(scene,groundMesh,visuals.environmentObjects);
+try{battlefield.setTimeOfDay(localStorage.getItem('chongchao-daylight'));}catch(_e){}
 setBattlefieldEnvironment(environmentForChapter(Game.chapter));
 player.reset('gunner');
 player.mesh.visible=false; // 菜单时隐藏
@@ -3468,6 +3478,11 @@ window.addEventListener('beforeunload',()=>autoSave());
 function frameStats(now){if(measuring&&previousFrame)frameTimes.push(now-previousFrame);previousFrame=now;}
 function setupWebControls(){
   setupSandbox();setupFeaturePanels();
+  $('daylightMain').onclick=$('daylightPause').onclick=()=>{
+    battlefield.setTimeOfDay(battlefield.timeOfDay==='day'?'night':'day');
+    try{localStorage.setItem('chongchao-daylight',battlefield.timeOfDay);}catch(_e){}
+    syncLightingLabels();
+  };
   const combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
   $('keyPanel').insertBefore(combatSection,$('keyStatus'));
   setupToyPlatform({
@@ -3511,7 +3526,7 @@ function setupWebControls(){
   syncPauseOptions();syncKeyLabels();
   if(new URLSearchParams(location.search).get('qa')==='1'){
     window.__gameQA={hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
-      get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
+      explorationLight,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}
     };

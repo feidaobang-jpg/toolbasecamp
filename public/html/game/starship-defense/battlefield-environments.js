@@ -28,6 +28,12 @@ export function environmentForChapter(chapter){
   const n=((Math.max(1,Math.floor(Number(chapter)||1))-1)%10)+1;
   return ENVIRONMENTS[n<=3?'desert':n<=6?'frost':'hive'];
 }
+// Time of day only changes illumination. Geometry and chapter palettes are shared.
+const DAYLIGHT={
+  desert:{sky:0x969a99,fog:0xa99e8d,horizon:0xbeb4a1,zenith:0x728696,glow:0xd4c7a9,hemi:0xdce0df,groundLight:0x83735d,sun:0xffebce,intensity:1.35},
+  frost:{sky:0x97adb9,fog:0xb0c4cb,horizon:0xc9d4d5,zenith:0x7c9cab,glow:0xdae2df,hemi:0xe0ebef,groundLight:0x6f8895,sun:0xeaf4f7,intensity:1.22},
+  hive:{sky:0x8a959c,fog:0x929b9e,horizon:0xa8b0ad,zenith:0x697e8d,glow:0xc2c9c0,hemi:0xd2dfe3,groundLight:0x656b75,sun:0xe5e9dd,intensity:1.28}
+};
 const smooth=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
 const segmentDistance=(x,z,ax,az,bx,bz)=>{const vx=bx-ax,vz=bz-az,t=Math.max(0,Math.min(1,((x-ax)*vx+(z-az)*vz)/(vx*vx+vz*vz)));return Math.hypot(x-ax-vx*t,z-az-vz*t);};
 
@@ -64,7 +70,8 @@ export function paintBattlefieldGround(ground,palette){
 
 export class BattlefieldEnvironment{
   constructor(scene,ground,objects){
-    this.scene=scene;this.ground=ground;this.objects=objects;this.current=null;this.decor=null;this.elapsed=0;this.rebuilds=0;
+    this.scene=scene;this.ground=ground;this.objects=objects;this.current=null;this.decor=null;this.elapsed=0;this.rebuilds=0;this.timeOfDay='day';
+    this.hemi=[];this.sun=[];scene.traverse(o=>{if(o.isHemisphereLight)this.hemi.push(o);if(o.isDirectionalLight)this.sun.push(o);});
     // Reuse the original sky mesh and lights; no second scene or light stack.
     const m=objects.sky.material;
     m.uniforms={horizon:{value:new THREE.Color()},zenith:{value:new THREE.Color()},glow:{value:new THREE.Color()},aurora:{value:0}};
@@ -82,17 +89,32 @@ export class BattlefieldEnvironment{
     if(this.current===profile)return false;
     this.current=profile;this.rebuilds++;const p=profile,s=this.scene,o=this.objects;
     paintBattlefieldGround(this.ground,p);
-    s.background.set(p.sky);s.fog.color.set(p.fog);s.fog.near=130;s.fog.far=430;
     s.traverse(m=>{
-      if(m.isHemisphereLight){m.color.set(p.hemi);m.groundColor.set(p.groundLight);m.intensity=.68;}
-      if(m.isDirectionalLight){m.color.set(p.sun);m.intensity=p.intensity;}
       if(m.name==='battlefield-cover')m.material.color.set(p.rock);
       if(m.name==='battlefield-pebbles')m.material.color.set(p.pebble);
     });
-    const u=o.sky.material.uniforms;u.horizon.value.set(p.horizon);u.zenith.value.set(p.zenith);u.glow.value.set(p.glow);u.aurora.value=p.id==='frost'?1:0;
-    o.peaks.visible=false;o.stars.material.opacity=p.id==='desert'?.48:.75;o.stars.material.transparent=true;
-    o.moon.material.color.set(p.moon);
+    this.applyLighting();
     this.clearDecor();this.buildDecor(p);return true;
+  }
+  setTimeOfDay(value){this.timeOfDay=value==='night'?'night':'day';this.applyLighting();}
+  applyLighting(){
+    if(!this.current)return;
+    const p=this.current,day=this.timeOfDay==='day',light=day?DAYLIGHT[p.id]:p,o=this.objects,s=this.scene;
+    this.lightProfile=light;this.hemiIntensity=day?.95:.68;
+    s.background.set(light.sky);s.fog.color.set(light.fog);s.fog.near=130;s.fog.far=430;
+    for(const m of this.hemi){m.color.set(light.hemi);m.groundColor.set(light.groundLight);}
+    for(const m of this.sun)m.color.set(light.sun);
+    const u=o.sky.material.uniforms;u.horizon.value.set(light.horizon);u.zenith.value.set(light.zenith);u.glow.value.set(light.glow);u.aurora.value=!day&&p.id==='frost'?1:0;
+    o.peaks.visible=false;o.stars.visible=!day;o.stars.material.opacity=p.id==='desert'?.48:.75;o.stars.material.transparent=true;
+    o.moon.visible=!day;o.moon.material.color.set(p.moon);
+    this.setCaveBlend(this.caveBlend||0);
+  }
+  setCaveBlend(value){
+    this.caveBlend=value;if(!this.lightProfile)return;
+    // Keep a readable silhouette even when looking away from the torch. The
+    // underground brightness is independent of the selected surface lighting.
+    for(const m of this.hemi)m.intensity=this.hemiIntensity*(1-value)+.48*value;
+    for(const m of this.sun)m.intensity=this.lightProfile.intensity*(1-value)+.12*value;
   }
   clearDecor(){
     if(!this.decor)return;
@@ -149,7 +171,7 @@ export class BattlefieldEnvironment{
   }
   update(dt,player,quality){
     if(!this.weather)return;
-    this.elapsed+=dt;this.weather.visible=quality==='high';
+    this.elapsed+=dt;this.weather.visible=quality==='high'&&(this.caveBlend||0)<.1;
     this.weather.position.set(player.x,0,player.z);this.weather.material.uniforms.time.value=this.elapsed;
   }
 }

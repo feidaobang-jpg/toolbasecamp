@@ -197,7 +197,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   <div id="hud" class="overlay hidden">
     <div id="hudTop">
       <div id="statLine">周目1 第1章 第1关</div>
-      <div id="environmentName" style="color:#9fc8db;font-size:10px;letter-spacing:.5px">暮色荒漠 · 第 1–3 章</div>
+      <div id="environmentName" style="color:#9fc8db;font-size:10px;letter-spacing:.5px">荒漠 · 白天 · 第 1–3 章</div>
       <div>❤ 生命 <span id="hpTxt"></span></div>
       <div id="hpBarWrap"><div id="hpBar"></div></div>
       <div>🏰 基地 <span id="baseTxt"></span></div>
@@ -274,9 +274,11 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn" id="btnPlatformMenu">☁ 存档 / 排行 / 作者</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
+      <button class="mbtn" id="daylightMain">地表：白天</button>
       <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
     <div class="small">
+      地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，无需按键、不耗电。<br>
       电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 点击画面用鼠标转视角 · 按住Shift跑步 · 空格闪避 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
       按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 闪避（短暂无敌，冷却 2.5 秒；火枪兵 1.8 秒）· I 互动（开关城门、上下载具）· H 医疗包 · 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角，按钮上有对应字母；商店、建造、换枪、医疗都有按键<br>
@@ -301,6 +303,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     <div class="btnRow optRow">
       <button class="mbtn" id="personBtnMenu">人称</button>
       <button class="mbtn" id="qualityBtnMenu">画质</button>
+      <button class="mbtn" id="daylightPause">地表：白天</button>
       <button class="mbtn" id="muteBtnMenu">声音</button>
       <button class="mbtn" id="keysPause">⌨ 操作设置</button>
       <button class="mbtn" id="opsPause">⚑ 副本</button>
@@ -384,6 +387,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=underground150" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=lighting160" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-lighting-v0.16.0",
+  "base_version": "web-underground-v0.15.0",
+  "created_at": "2026-10-04T00:13:52.259758+00:00",
+  "build": {
+    "id": "web-lighting-v0.16.0",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "57ed2a7e8bf4d972a21b25557a822a81cf0d1ab6a217150507aa0ac9ea82a3a0",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "surface-lighting",
+      "before": "固定暮色/夜景",
+      "after": "默认白天，白天/夜晚可切换并保存，三个环境独立配色"
+    },
+    {
+      "id": "cave-torch",
+      "before": "深洞暗、没有玩家照明",
+      "after": "进洞自动渐亮手电，随视角照射，宽光束覆盖路面和近身补光，出洞熄灭"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "torch-floor",
+      "status": "fixed",
+      "cause": "初次光束偏水平，斜坡脚下覆盖不足",
+      "fix": "加宽并稍向下偏、扩大补光半径",
+      "before_media_ids": [],
+      "retest": "最终第一/第三人称截图与实时进洞录像"
+    }
+  ],
+  "qa": {
+    "functional": "verification.json",
+    "visual": "video-review.jpg连续采样已检查",
+    "performance": "verification.json results[].performance；以live/verification.json最终线上单独测量为准",
+    "limitations": [
+      "桌面Edge headless RTX4060Ti；手机仅触控与视口模拟",
+      "录像无音轨",
+      "QA传送与录制无敌用于画面采集"
+    ]
+  },
+  "media": [
+    {
+      "id": "cave-first",
+      "file": "releases/web-lighting-v0.16.0/cave-first.jpg",
+      "sha256": "377e1e143e23f762ae9810ff1db488ef53fcb232fb8a6f17ee84f4160c41cd45",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "cave-third",
+      "file": "releases/web-lighting-v0.16.0/cave-third.jpg",
+      "sha256": "6f4dc2b16aa9733e9a36b969475ee48677e82c15cf7884af598055017a69b12b",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "chapter-1-day",
+      "file": "releases/web-lighting-v0.16.0/chapter-1-day.jpg",
+      "sha256": "7634b73d7b33f2f962ea7a27a672a2272af0d43deeba9a8e12871f2715f6ecec",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "chapter-1-night",
+      "file": "releases/web-lighting-v0.16.0/chapter-1-night.jpg",
+      "sha256": "c8235665f5919210252f8a8efcc50dcd676ad645f32f043a5a3b496b78d88663",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "chapter-4-day",
+      "file": "releases/web-lighting-v0.16.0/chapter-4-day.jpg",
+      "sha256": "0d408d786005394ab6996a1a88edb5d5420e2f83ce9f081631c989a68ed58e5f",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "chapter-4-night",
+      "file": "releases/web-lighting-v0.16.0/chapter-4-night.jpg",
+      "sha256": "08da7543adecdf4251355a1395b2bf0fbceaefeadd435d7d589faf6800b4ff02",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "chapter-7-day",
+      "file": "releases/web-lighting-v0.16.0/chapter-7-day.jpg",
+      "sha256": "5c8d1e28530dd3e53faae0ba66735b0ab127665bef7fd9a76c45d8e72d9acb6b",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "chapter-7-night",
+      "file": "releases/web-lighting-v0.16.0/chapter-7-night.jpg",
+      "sha256": "5db6596ca303ab41b2e6e4054559e61562c454f6595941a76feaa7f41b3c3912",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "hive-first",
+      "file": "releases/web-lighting-v0.16.0/hive-first.jpg",
+      "sha256": "83e4a70fd81456ceb3afff1ffbffb0ea68a72f85c7e83540e6e6e261931d45bc",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "mobile-cave",
+      "file": "releases/web-lighting-v0.16.0/mobile-cave.jpg",
+      "sha256": "08ed2f0f181d7d7ddea7b211a37a5ec33fa1a6124f196fa3326118795812c98a",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "mobile-first",
+      "file": "releases/web-lighting-v0.16.0/mobile-first.jpg",
+      "sha256": "66f7d3097840c298f109b4b5a74cfb63a18e021388fab879862cb622ae42d519",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "mobile-menu",
+      "file": "releases/web-lighting-v0.16.0/mobile-menu.jpg",
+      "sha256": "b0d623a2dcb0e18cf53bda31dbda1cc39902bff248598c17f194afb9cb6b876f",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "mobile-portrait",
+      "file": "releases/web-lighting-v0.16.0/mobile-portrait.jpg",
+      "sha256": "82118a797ca987febb5feaf7fefe315facc60451354d45abd9b20f2d69771979",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "pause-menu",
+      "file": "releases/web-lighting-v0.16.0/pause-menu.jpg",
+      "sha256": "ce3aa0b197cd42979b6fcdde3a39853cc5fd542b7d7fbe255c98be671f5162b5",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "thumbnail",
+      "file": "releases/web-lighting-v0.16.0/thumbnail.jpg",
+      "sha256": "b5d3cee656e056a1aa4e77aab7fcf70cf6bb72b03c060c450444703ec79b80a6",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "video-review",
+      "file": "releases/web-lighting-v0.16.0/video-review.jpg",
+      "sha256": "ffd9d6273e6df4dc61419c46409d7e1ba7a9b9ee5920a84fd23ca1d2b8687b36",
+      "kind": "screenshot",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": null
+    },
+    {
+      "id": "page@73d4f62d45b3609c7cba242b9e543705",
+      "file": "releases/web-lighting-v0.16.0/video/page@73d4f62d45b3609c7cba242b9e543705.webm",
+      "sha256": "a65991f51612d0f3d2a4aa43208143c2502bb80a3994ea8a57e1665b1afa1c59",
+      "kind": "video",
+      "version": "web-lighting-v0.16.0",
+      "build_id": "web-lighting-v0.16.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "自动化实机；场景起点QA定位。录像覆盖昼夜切换、下坡、四视角转动和地下母巢。",
+      "duration_seconds": 29.68
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "无音轨",
+      "无实体手机测试"
+    ]
+  }
+}
