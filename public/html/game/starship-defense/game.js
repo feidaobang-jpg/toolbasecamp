@@ -231,15 +231,15 @@ const Input={
     const end=e=>{if(e.pointerId===this.joy.id){this.joy={active:false,id:-1,x:0,y:0};jk.style.left=jk.style.top='35px';}};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>jb.addEventListener(t,end));
     const bind=(id,key)=>{
-      const el=$(id);let pointer=null;
+      const el=$(id);el._pointer=null;
       el.setAttribute('role','button');el.setAttribute('tabindex','0');
       el.addEventListener('pointerdown',e=>{
-        if(pointer!==null)return;
-        e.preventDefault();pointer=e.pointerId;el._pointer=pointer;el.setPointerCapture(pointer);if(e.pointerType==='touch')this.lastTouchT=performance.now();
+        if(el._pointer!==null)return;
+        e.preventDefault();el._pointer=e.pointerId;el.setPointerCapture(e.pointerId);if(e.pointerType==='touch')this.lastTouchT=performance.now();
         if(!this.keys[key])this.pressed[key]=true;
         this.keys[key]=true;el.classList.add('on');AudioSys.init();AudioSys.resume();
       });
-      const up=e=>{if(e.pointerId!==pointer)return;pointer=null;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
+      const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
     ['J','K','U','I','H','O','L','V','X','C','SPRINT'].forEach(k=>bind('v'+k,k));
@@ -255,7 +255,9 @@ const Input={
     CombatControls.reset();
     this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
     $('joyKnob').style.left=$('joyKnob').style.top='35px';
-    document.querySelectorAll('.vbtn.on').forEach(el=>{if(el._pointer!=null&&el.hasPointerCapture(el._pointer))el.releasePointerCapture(el._pointer);el.classList.remove('on');});
+    // Clear ownership immediately: some webviews defer lostpointercapture until
+    // after a panel closes. A stale release must not cancel the next finger.
+    document.querySelectorAll('.vbtn').forEach(el=>{const id=el._pointer;el._pointer=null;if(id!=null&&el.hasPointerCapture(id))el.releasePointerCapture(id);el.classList.remove('on');});
   },
   mapKey(c){
     return keyBindings.action(c);
@@ -1150,7 +1152,8 @@ function flyHeight(x,z){const g=groundY(x,z),top=fortress.topAt(x,z);return Math
 function spawnMonster(kind,x,z,opts={}){
   const ch=opts.ch||chapterCfg();
   const mul=diffMul()*(1+(Game.level-1)*.04); // 同章内关卡递增
-  let hp,dmg,speed,scale,gold,ranged=ch.ranged,fly=ch.fly&&!opts.route&&z<182;
+  const winged=!!ch.fly&&kind!=='queen';
+  let hp,dmg,speed,scale,gold,ranged=ch.ranged,fly=winged&&!opts.route&&!isFinite(fortress.ceilingAt(x,z,groundY(x,z)+.5));
   if(kind==='mob'){
     hp=ch.mob.hp*mul;dmg=ch.mob.dmg*mul;speed=ch.mob.speed*(1+(Game.loop-1)*.08);scale=rand(.85,1.15);gold=Math.round(ch.mob.gold*(1+(Game.loop-1)*.3));
   }else if(kind==='miniboss'){
@@ -1171,12 +1174,13 @@ function spawnMonster(kind,x,z,opts={}){
     if(!found){x=0;z=clamp(z,15,130);}
   }
   const species=CHAPTERS.indexOf(ch);
-  const mesh=visuals.bug(scale,kind==='mob'&&opts.elite?'elite':kind,fly,species);
+  // Wings describe the species, even while it walks through a low tunnel.
+  const mesh=visuals.bug(scale,kind==='mob'&&opts.elite?'elite':kind,winged,species);
   const y=fly?flyHeight(x,z):groundY(x,z);
   mesh.position.set(x,y,z);
   scene.add(mesh);
   const mo={ch,mesh,kind,hp,maxHp:hp,dmg,speed,radius:.9*scale,hitH:.7*scale,gold,dead:false,
-    atkCd:0,ranged,fly,route:opts.route||null,routeIndex:0,flightAfterExit:!!(opts.route&&ch.fly),anim:rand(0,10),wild:opts.wild||false,guard:!!opts.home,home:opts.home||null,
+    atkCd:0,ranged,fly,route:opts.route||null,routeIndex:0,flightAfterExit:winged,anim:rand(0,10),wild:opts.wild||false,guard:!!opts.home,home:opts.home||null,
     explodeOnDie:ch.explodeOnDie,split:ch.split&&kind==='mob'&&!opts.isSplit,stealth:ch.stealth,
     target:null,spitCd:rand(1,3),chargeCd:5,emerge:opts.emerge?.9:0,
     bs:kind==='boss'?(ch.bs||['summon']):kind==='queen'?['barrage','summon']:(kind==='miniboss'?(ch.bs||[]).slice(0,1):null),
@@ -1360,12 +1364,13 @@ function updMonsters(dt){
     if(mo.route){
       let wp=mo.route[mo.routeIndex];
       while(wp&&Math.hypot(wp.x-mo.mesh.position.x,wp.z-mo.mesh.position.z)<2){mo.routeIndex++;wp=mo.route[mo.routeIndex];}
-      if(!wp){mo.route=null;mo.fly=mo.flightAfterExit;}
+      if(!wp){mo.route=null;}
       else {
         const close=monsterTargets(mo),engaged=close&&close.d2<18*18&&Math.abs(close.pos.y-mo.mesh.position.y)<6;
         if(!engaged){const d=new THREE.Vector3(wp.x-mo.mesh.position.x,0,wp.z-mo.mesh.position.z).normalize();mo.mesh.rotation.y=Math.atan2(d.x,d.z);moveMonster(mo,d,dt,2.2,wp);continue;}
       }
     }
+    mo.fly=mo.flightAfterExit&&!mo.route&&!isFinite(fortress.ceilingAt(mo.mesh.position.x,mo.mesh.position.z,groundY(mo.mesh.position.x,mo.mesh.position.z)+.5));
     let tgt;
     if(mo.home){ // 老巢护卫/母皇：只在巢穴范围内迎战，玩家离开就回家并回血
       const h=mo.home,p=mo.mesh.position,dh=Math.hypot(p.x-h.x,p.z-h.z);

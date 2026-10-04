@@ -1,0 +1,34 @@
+[
+  {
+    "mobile": false,
+    "flight": {
+      "surfaceFly": false,
+      "routeWings": 0,
+      "afterExitFly": true,
+      "afterExitWings": 0
+    },
+    "reset": {
+      "accepted": false,
+      "staleReleaseIgnored": false
+    },
+    "walkingBuild": true,
+    "switchShopAndBuild": true,
+    "errors": []
+  },
+  {
+    "mobile": true,
+    "flight": {
+      "surfaceFly": false,
+      "routeWings": 0,
+      "afterExitFly": true,
+      "afterExitWings": 0
+    },
+    "reset": {
+      "accepted": false,
+      "staleReleaseIgnored": false
+    },
+    "walkingBuild": true,
+    "switchShopAndBuild": true,
+    "errors": []
+  }
+]
