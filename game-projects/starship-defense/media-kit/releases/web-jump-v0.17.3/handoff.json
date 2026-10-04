@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "version": "web-jump-v0.17.3",
+  "base_version": "web-controls-v0.17.2",
+  "created_at": "2026-10-04T05:08:11.750914+00:00",
+  "runtime_sha256": "69f9341568c31d52fcb1a9be29e371336515d01078d0ad04921bc18d303797b9",
+  "changes": [
+    "K/空格/手机恢复跳跃，起跳速度9、重力24，落地后可再跳",
+    "移除闪避位移、无敌和冷却，保留Shift/手机跑步",
+    "同步按钮、HUD、键位设置、说明与火枪兵旧冷却介绍"
+  ],
+  "qa": {
+    "functional": "qa.json",
+    "result": "桌面与手机通过：起跳、空中禁止重复起跳、落地重跳、空格、暂停K返回不误跳、第一人称、墙体、洞顶和直升机升降按钮",
+    "limitations": [
+      "手机为触控视口模拟，非实体设备",
+      "录像无音轨，使用QA定位和确定性碰撞测试，非普通实战成片"
+    ]
+  },
+  "mobile_custom_layout": "未实现；当前只支持电脑改键与手机键名字母同步",
+  "thumbnail": "沿用：场景、美术未变",
+  "readiness": "partial",
+  "media": [
+    {
+      "file": "mobile-jump.jpg",
+      "sha256": "897f75fc658451c814c4e1b15fba7032fd85d0f4f2fa157dc1f5f9b065d59bcd",
+      "version": "web-jump-v0.17.3",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "desktop-jump.jpg",
+      "sha256": "9df07594474fa6c57b305621275ffbcf2c4e0dc0cd2d9fb1d42500244140f76f",
+      "version": "web-jump-v0.17.3",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "portrait-jump.jpg",
+      "sha256": "1f2e642f949e58916e70d93c5247cc25827de22b681c24ec90ffce7433d240ed",
+      "version": "web-jump-v0.17.3",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "video/page@4c4d785e967512e16fc56f9eee5aa9e9.webm",
+      "sha256": "fe2079684c5205e4dcd600100527193900cb7113e509b262bec703c9d8cd0021",
+      "version": "web-jump-v0.17.3",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    }
+  ]
+}

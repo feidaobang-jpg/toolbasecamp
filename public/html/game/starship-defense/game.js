@@ -112,7 +112,7 @@ const AudioSys={
       case 'mg':this.noise(.05,.10,2600);break;
       case 'sniper':this.noise(.18,.22,1800);this.tone(220,.15,'sawtooth',.12,-160);break;
       case 'cannon':this.noise(.3,.3,900);this.tone(90,.3,'sine',.3,-40);break;
-      case 'dash':this.noise(.16,.14,2200);this.tone(520,.12,'sine',.08,-260);break;
+      case 'jump':this.tone(300,.15,'sine',.15,260);break;
       case 'hit':this.tone(160,.08,'square',.14,-60);break;
       case 'hurt':this.tone(200,.2,'sawtooth',.2,-140);break;
       case 'boom':this.noise(.45,.35,700);this.tone(70,.4,'sine',.3,-30);break;
@@ -167,7 +167,7 @@ const Input={
   init(){
     window.addEventListener('keydown',e=>{
       if(e.target.closest&&e.target.closest('select,input,textarea'))return;
-      // During play a mouse-focused button must not swallow Space/Enter (dash/fire).
+      // During play a mouse-focused button must not swallow Space/Enter (jump/fire).
       const onButton=e.target.closest&&e.target.closest('button,[tabindex="0"]');
       if(onButton&&this.isPlaying()&&e.target!==document.body)e.target.blur();
       else if(onButton&&['Enter','Space'].includes(e.code))return;
@@ -461,7 +461,7 @@ function classDamage(id){const c=CLASSES[Game.cls];return c.specialty===id?c.dam
 function weaponDps(id){const w=WEAPONS[id];return Math.round(w.dmg*(w.pellets||1)/w.rate*weaponMul(id)*classDamage(id));}
 const CLASSES={
   gunner:{specialty:'lmg',damage:1.25,armor:.85,name:'机枪兵',hp:120,speed:9.5,weapon:'lmg',weapons:['lmg'],color:0x3a7bd5},
-  rifle:{specialty:'shotgun',damage:1.3,dashCd:1.8,name:'火枪兵',hp:100,speed:10.5,weapon:'shotgun',weapons:['lmg','shotgun'],color:0xd58a3a},
+  rifle:{specialty:'shotgun',damage:1.3,name:'火枪兵',hp:100,speed:10.5,weapon:'shotgun',weapons:['lmg','shotgun'],color:0xd58a3a},
   medic:{name:'医疗兵',hp:90,speed:10.5,weapon:'lmg',weapons:['lmg'],color:0x3ad57b,heal:4,aura:4,auraRange:12},
 };
 const VEHICLES={
@@ -971,16 +971,16 @@ const player={
   mesh:null,bar:null,hp:120,maxHp:120,speed:9.5,
   pos:new THREE.Vector3(0,0,-24),vy:0,onGround:true,yaw:0,
   fireCd:0,grenadeCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
-  muzzle:null,shield:0,buffT:0,heat:0,moveZ:0,dashT:0,dashCd:0,dashInv:0,dashDir:null,
+  muzzle:null,shield:0,buffT:0,heat:0,moveZ:0,
   reset(cls){
     const c=CLASSES[cls];
     this.maxHp=c.hp+Game.hpBonus;this.hp=this.maxHp;this.speed=c.speed;
     this.pos.set(0,0,-20);this.vy=0;this.dead=false;this.inVehicle=null;this.yaw=0;
     this.shield=0;this.buffT=0;this.respawnT=0;this.invulnerable=0;this.heat=0;this.moveZ=0;
-    this.dashT=0;this.dashCd=0;this.dashInv=0;
+    this.onGround=true;
     this.grenadeCd=0;
     if(this.mesh){visuals.release(this.mesh);scene.remove(this.mesh);}
-    this.mesh=makeSoldier(c.color);this.mesh.rotation.order='YXZ'; // 冲刺前倾绕身体自身横轴
+    this.mesh=makeSoldier(c.color);this.mesh.rotation.order='YXZ';
     this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=3;this.mesh.add(this.bar);updHPBar(this.bar,1);
     const ml=new THREE.PointLight(0xffaa44,0,6);ml.position.set(.32,1.15,1);this.mesh.add(ml);this.muzzle=ml;
     scene.add(this.mesh);
@@ -999,7 +999,7 @@ function updScreenFx(dt){
 }
 function playerDamage(d){
   if(Game.testMode)return;
-  if(player.dead||player.invulnerable>0||player.dashInv>0)return;
+  if(player.dead||player.invulnerable>0)return;
 
   d*=CLASSES[Game.cls].armor||1;
   if(player.shield>0){ // 护盾优先吸收
@@ -1140,8 +1140,7 @@ function updBullets(dt){
       }
     }else{
       // 敌方子弹
-      // 冲刺无敌中酸液从身上穿过去（不被吃掉），能明显看出躲开了
-      if(!player.dead&&!player.inVehicle&&!(player.dashInv>0)&&dist2(p,player.pos)<2.2&&Math.abs(p.y-player.pos.y-1.2)<1.6){playerDamage(b.dmg);hit=true;}
+      if(!player.dead&&!player.inVehicle&&dist2(p,player.pos)<2.2&&Math.abs(p.y-player.pos.y-1.2)<1.6){playerDamage(b.dmg);hit=true;}
       if(!hit)for(const s of squad){if(!s.dead&&!s.vehicle&&dist2(p,s.mesh.position)<1.6&&Math.abs(p.y-s.mesh.position.y-1.1)<1.5){damageSquad(s,b.dmg);hit=true;break;}}
       if(!hit)for(const bd of buildings){if(!bd.dead&&dist2(p,bd.mesh.position)<bd.radius*bd.radius){damageBuilding(bd,b.dmg);hit=true;break;}}
       if(!hit&&gateBlocked()&&Math.abs(p.x-gate.pos.x)<6.5&&Math.abs(p.z-gate.pos.z)<1.6&&p.y<terrainH(gate.pos.x,gate.pos.z)+5){damageGate(b.dmg);hit=true;}
@@ -1687,7 +1686,7 @@ function enterVehicle(v){
   let reassigned=false;
   for(let slot=0;slot<Game.squadCount;slot++)if(squadGear(slot).vehicle===v.kind){squadGear(slot).vehicle=null;reassigned=true;}
   if(v.driver)leaveSquadVehicle(v.driver);
-  player.inVehicle=v;player.mesh.visible=false;player.dashT=0;
+  player.inVehicle=v;player.mesh.visible=false;player.vy=0;player.onGround=false;
   if(reassigned)autoSave();
   AudioSys.sfx('vehicle');
   showMsg(v.cfg.fly?'🚁 驾驶 '+v.cfg.name+(isTouch?'（升 / 降 按钮调高度，互动下车）':'（Y 升高 / H 降低，再按I下车）'):'🚗 驾驶 '+v.cfg.name+'（再按I下车）',v.cfg.fly?2.4:1.6);
@@ -2141,37 +2140,10 @@ function playerMuzzle(dir){
   }
   return player.pos.clone().add(new THREE.Vector3(dir.x*.55,1.35,dir.z*.55));
 }
-/* 冲刺（K/空格，步行时）：朝移动方向冲出一段，不动时朝面向；
-   冲刺中短暂无敌（撕咬、爆炸不掉血，酸液穿身而过），用来从虫群包围里钻出来。
-   和走路用同一套碰撞，逐段检查，不会穿墙、穿过关着的城门或冲上悬崖。 */
-const DASH={dist:6.5,time:.18,inv:.3,cd:2.5};
-function startDash(moveDir){
-  const d=moveDir?moveDir.clone():camMode==='first'?camForward(false):new THREE.Vector3(Math.sin(player.yaw),0,Math.cos(player.yaw));
-  player.dashDir=d;player.dashT=DASH.time;player.dashCd=CLASSES[Game.cls].dashCd||DASH.cd;player.dashInv=DASH.inv;
-  if(camMode==='third')player.yaw=Math.atan2(d.x,d.z);
-  AudioSys.sfx('dash');
-  selfFx(0xcfd8e0,8,4,.35,.2);
-}
-function stepDash(dt){
-  let left=DASH.dist/DASH.time*Math.min(dt,player.dashT);
-  player.dashT-=dt;
-  const d=player.dashDir;
-  while(left>1e-4){
-    const s=Math.min(.35,left);left-=s;
-    const nx=player.pos.x+d.x*s,nz=player.pos.z+d.z*s;let moved=false;
-    if(!collideWalls(nx,player.pos.z,.5)&&!tooSteep(nx,player.pos.z)){player.pos.x=clamp(nx,WORLD.minX+1,WORLD.maxX-1);moved=true;}
-    if(!collideWalls(player.pos.x,nz,.5)&&!tooSteep(player.pos.x,nz)){player.pos.z=clamp(nz,WORLD.minZ+1,WORLD.maxZ-1);moved=true;}
-    if(!moved){player.dashT=0;break;} // 正面撞墙就停下
-  }
-  // 贴地冲：下坡不飘在半空
-  player.pos.y=groundY(player.pos.x,player.pos.z);player.vy=0;
-  selfFx(0x7fd8ff,2,1.5,.3,1);
-}
 function updPlayer(dt){
   if(player.dead)return;
   player.grenadeCd=Math.max(0,player.grenadeCd-dt);
   if(Input.pop('U'))throwGrenade();
-  player.dashCd=Math.max(0,player.dashCd-dt);player.dashInv=Math.max(0,player.dashInv-dt);
   const t=performance.now()/1000;
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
   if(Input.pop('C'))setCameraView(camView+1);
@@ -2186,7 +2158,7 @@ function updPlayer(dt){
   const f=-ax.y,r=ax.x;
   let mvx=f*sn-r*cs, mvz=f*cs+r*sn;
   const moving=Math.hypot(mvx,mvz)>.01;
-  player.sprinting=!!(moving&&Input.keys.SPRINT&&!player.inVehicle&&player.dashT<=0);
+  player.sprinting=!!(moving&&Input.keys.SPRINT&&!player.inVehicle);
   player.moveZ=moving?mvz/Math.hypot(mvx,mvz):0;
   const moveDir=moving?new THREE.Vector3(mvx,0,mvz).normalize():null;
   visuals.animate(player.mesh,dt,moving?'Run':'Idle',camera);
@@ -2245,9 +2217,8 @@ function updPlayer(dt){
     updHPBar(player.bar,player.hp/player.maxHp);
     if(Math.random()<.08)selfFx(0x66ff99,2,2,.5,1);
   }
-  if(Input.pop('K')&&player.dashCd<=0)startDash(moveDir);
-  if(player.dashT>0)stepDash(dt);
-  else if(moving){
+  if(Input.pop('K')&&player.onGround){player.vy=9;player.onGround=false;AudioSys.sfx('jump');}
+  if(moving){
     if(camMode==='third'){
       const probe=player.pos.clone();probe.y+=1.35;
       const range=WEAPONS[Game.curWeapon].range,aim=playerAim(probe,range,moveDir);
@@ -2268,14 +2239,16 @@ function updPlayer(dt){
     player.stuckT=(player.stuckT||0)+dt;
     if(player.stuckT>.5){const f=findFreeSpot(player.pos.x,player.pos.z)||{x:0,z:-20};player.pos.set(f.x,groundY(f.x,f.z),f.z);player.stuckT=0;showMsg('已从卡住的位置脱困',1.4);}
   }else player.stuckT=0;
-  // 重力（下坡、下车时落回地面）
+  // 跳跃、下坡与下车共用重力；落地才允许下一次起跳。
   const gy=groundY(player.pos.x,player.pos.z);
   player.vy-=24*dt;
   player.pos.y+=player.vy*dt;
-  if(player.pos.y<=gy){player.pos.y=gy;player.vy=0;player.onGround=true;}
+  const headLimit=fortress.ceilingAt(player.pos.x,player.pos.z,gy+.1)-2.6;
+  if(player.vy>0&&headLimit>=gy&&player.pos.y>headLimit){player.pos.y=headLimit;player.vy=0;}
+  if(player.pos.y<=gy){player.pos.y=gy;player.vy=0;player.onGround=true;}else player.onGround=false;
   player.mesh.position.copy(player.pos);
   player.mesh.rotation.y=player.yaw;
-  player.mesh.rotation.x+=((player.dashT>0?.32:0)-player.mesh.rotation.x)*Math.min(1,dt*18);
+  player.mesh.rotation.x=0;
   // 医疗兵自愈
   if(CLASSES[Game.cls].heal){
     player.hp=Math.min(player.maxHp,player.hp+CLASSES[Game.cls].heal*dt);
@@ -3073,17 +3046,16 @@ function pauseKey(fromEsc=false){
 }
 
 /* ================= HUD 更新 ================= */
-// 冲刺冷却（HUD 一行 + 手机按钮转圈）；坐直升机时手机 冲→升、医疗→降
-function updDashUI(){
+// 跳跃状态；坐直升机时手机 跳跃→升、医疗→降
+function updJumpUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
-  const txt=v?'':player.dashCd>0?'💨 闪避 '+player.dashCd.toFixed(1)+'s':'💨 闪避 就绪（'+(isTouch?'闪避':keyBindings.label('K'))+'）';
+  const txt=v?'':player.onGround?'跳跃 就绪（'+(isTouch?'跳跃':keyBindings.label('K'))+'）':'跳跃 腾空中';
   $('vSPRINT').classList.toggle('hidden',!!v);
   $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷∞';
-  const el=$('dashTxt');if(el.textContent!==txt)el.textContent=txt;
-  const k=$('vK'),h=$('vH'),kl=fly?'升':'闪避',hl=fly?'降':'医疗';
+  const el=$('jumpTxt');if(el.textContent!==txt)el.textContent=txt;
+  const k=$('vK'),h=$('vH'),kl=fly?'升':'跳跃',hl=fly?'降':'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
-  const cd=v?0:Math.round(player.dashCd/(CLASSES[Game.cls].dashCd||DASH.cd)*100)/100;
-  if(k._cd!==cd){k._cd=cd;k.style.setProperty('--cd',cd);k.classList.toggle('cd',cd>0);}
+
 }
 function updHUD(dt){
   $('statLine').textContent=Game.testMode?'🧪 自由测试 · 无限资源':levelName();
@@ -3101,7 +3073,7 @@ function updHUD(dt){
   $('scoreTxt').textContent=Game.score;
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name+' · I 下车';
   else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(weaponLv(Game.curWeapon)?' Lv'+weaponLv(Game.curWeapon):'')+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*50)+'%':'');
-  updHUDItem();updDashUI();
+  updHUDItem();updJumpUI();
   $('squadTxt').textContent=Game.squadCount||squad.length?`🪖 小队 ${squad.length}/${Math.max(Game.squadCount,squad.length)} · ${squadTaskLabel()} · 驾驶${squad.filter(s=>s.vehicle).length}`:'';
   $('hiveTxt').textContent=Game.testMode?'':Game.hive.killed?'👑 母皇已击杀 · 本章虫潮 -35%':`👑 虫巢母皇 ${Math.round(Game.hive.queen*100)}%`;
   if(Game.state==='prep'){
@@ -3172,8 +3144,8 @@ function camBlocked(p){
 // 旋转即时生效，只平滑跟随点与避障距离：不再“拖着走”，也不会在地形起伏时一顿一顿。
 function updCamera(dt){
   const v=player.inVehicle,tp=v?v.mesh.position:player.pos;
-  // 冲刺时视野略微拉宽，第一人称也能感觉到“冲出去”
-  const fovT=62+(player.dashT>0&&!v?8:player.sprinting&&!v?4:0);
+  // 跑步时视野略微拉宽
+  const fovT=62+(player.sprinting&&!v?4:0);
   if(camera.fov!==fovT){camera.fov=Math.abs(fovT-camera.fov)<.05?fovT:camera.fov+(fovT-camera.fov)*Math.min(1,dt*(fovT>camera.fov?20:8));camera.updateProjectionMatrix();}
   if(!camState.init){camState.target.copy(tp);camState.init=true;camState.dist=99;}
   camState.target.lerp(tp,1-Math.exp(-dt*(v?11:18)));

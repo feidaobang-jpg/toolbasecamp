@@ -1,0 +1,41 @@
+{
+  "url": "http://127.0.0.1:8898/html/game/starship-defense/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "up": {
+        "y": 1.0093694399745803,
+        "vy": 5.649600000143055,
+        "z": 40
+      },
+      "damage": 8.5,
+      "physics": {
+        "cave": {
+          "peak": 1.6500000000000021,
+          "landed": true,
+          "belowRoof": true
+        },
+        "wallZ": 42.849999999999966
+      },
+      "errors": []
+    },
+    {
+      "mobile": true,
+      "up": {
+        "y": 0.9890349600334312,
+        "vy": 5.750399999856948,
+        "z": 40
+      },
+      "damage": 8.5,
+      "physics": {
+        "cave": {
+          "peak": 1.6500000000000021,
+          "landed": true,
+          "belowRoof": true
+        },
+        "wallZ": 42.849999999999966
+      },
+      "errors": []
+    }
+  ]
+}
