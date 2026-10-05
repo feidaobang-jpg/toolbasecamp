@@ -1,0 +1,303 @@
+{
+  "assets": [
+    {
+      "game": "mario-3d",
+      "file": "sounds/overworld.mp3",
+      "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/super-mario-bros/1%20-%20Running%20About.mp3",
+      "bytes": 841224,
+      "sha256": "966c3997495f124b9b26cb61549315d2dea35b17137332366c3e83b4f4015fec",
+      "source_type": "original_game_recording",
+      "source_sha256": "1b5db03861ebe7eab6105454ffc49bb8e32fab93905e1bd17ef5947b4f6f60ab",
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/underground.mp3",
+      "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/super-mario-bros/3%20-%20Underground.mp3",
+      "bytes": 841224,
+      "sha256": "952af453468c725c57f8dc60c5f62040c468a9fff8a3db73ca88c897788818aa",
+      "source_type": "original_game_recording",
+      "source_sha256": "ff3742d20396bfd2e78ceb96324003a85be79a15938aa9dbd3641b2ab2cb7347",
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/star.mp3",
+      "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/super-mario-bros/9%20-%20Invincible.mp3",
+      "bytes": 841224,
+      "sha256": "bc387aa6f3bd53cfee72ff166f5511db9835e32d64790ba2cc8ada6262c4913e",
+      "source_type": "original_game_recording",
+      "source_sha256": "4e2f63be6112c36d7c28b55571b714b346a2b3f9a55619e2fb2b9d14d522d8e9",
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "file": "sounds/stage.mp3",
+      "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/jackal/3%20-%20Stage%202.mp3",
+      "bytes": 841215,
+      "sha256": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+      "source_type": "original_game_recording",
+      "source_sha256": "001d1882590e692dcf3ece2223e52745428c575f35cc092520afc4f01aa988e3",
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "file": "sounds/stage3.mp3",
+      "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/jackal/4%20-%20Stage%203.mp3",
+      "bytes": 841215,
+      "sha256": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e",
+      "source_type": "original_game_recording",
+      "source_sha256": "83ae26d1d45530497b20d1e771813a9523c0b29576a07bf9a5b9420d1b3da8f5",
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "file": "sounds/boss.mp3",
+      "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/jackal/5%20-%20%28Final%29%20Boss.mp3",
+      "bytes": 841215,
+      "sha256": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+      "source_type": "original_game_recording",
+      "source_sha256": "209136ee6f6437ba72d8fc1237f4f000f42f750c684401f0fd50b6fea309e0e2",
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_gameover.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_gameover.wav",
+      "bytes": 167408,
+      "sha256": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_mariodie.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_mariodie.wav",
+      "bytes": 120570,
+      "sha256": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_warning.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_warning.wav",
+      "bytes": 130232,
+      "sha256": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_stage_clear.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_stage_clear.wav",
+      "bytes": 249748,
+      "sha256": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_world_clear.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_world_clear.wav",
+      "bytes": 277206,
+      "sha256": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_1-up.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_1-up.wav",
+      "bytes": 38426,
+      "sha256": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_bowserfalls.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_bowserfalls.wav",
+      "bytes": 46466,
+      "sha256": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_bowserfire.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_bowserfire.wav",
+      "bytes": 51526,
+      "sha256": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_breakblock.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_breakblock.wav",
+      "bytes": 25090,
+      "sha256": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_bump.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_bump.wav",
+      "bytes": 10426,
+      "sha256": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_coin.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_coin.wav",
+      "bytes": 42654,
+      "sha256": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_flagpole.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_flagpole.wav",
+      "bytes": 52622,
+      "sha256": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_fireball.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_fireball.wav",
+      "bytes": 6756,
+      "sha256": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_fireworks.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_fireworks.wav",
+      "bytes": 19542,
+      "sha256": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_jump-small.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_jump-small.wav",
+      "bytes": 26982,
+      "sha256": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_jump-super.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_jump-super.wav",
+      "bytes": 26712,
+      "sha256": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_kick.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_kick.wav",
+      "bytes": 8948,
+      "sha256": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_pause.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_pause.wav",
+      "bytes": 31174,
+      "sha256": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_pipe.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_pipe.wav",
+      "bytes": 35538,
+      "sha256": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_powerup.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_powerup.wav",
+      "bytes": 44580,
+      "sha256": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_powerup_appears.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_powerup_appears.wav",
+      "bytes": 26728,
+      "sha256": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_stomp.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_stomp.wav",
+      "bytes": 13070,
+      "sha256": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "mario-3d",
+      "file": "sounds/smb_vine.wav",
+      "source": "https://themushroomkingdom.net/sounds/wav/smb/smb_vine.wav",
+      "bytes": 52108,
+      "sha256": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+      "source_type": "original_game_recording"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/roof.mp3",
+      "source": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/aqzagear/06.%20Cadillacs%20-The%20Four%20Heroes-%20%28Stage%201-1%2C%20Ending%202%29.mp3",
+      "source_type": "original_game_recording",
+      "source_sha256": "140178f57b4a6b8079869f65a89be585fff0db660a38ba464b807505a194bf1b",
+      "sha256": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+      "bytes": 841342,
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/hall.mp3",
+      "source": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/hmkrdquc/07.%20Trap%20of%20Silence%20%28Stage%201-2%2C%202-3%2C%206-1%29.mp3",
+      "source_type": "original_game_recording",
+      "source_sha256": "d135f95486688e2ad5ad8e5e55dd19d980d135793e30205b6cdfb6f46e37675a",
+      "sha256": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+      "bytes": 841330,
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/street.mp3",
+      "source": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/dgzdsfws/08.%20Pursuit%20%28Stage%201-3%2C%207-1%29.mp3",
+      "source_type": "original_game_recording",
+      "source_sha256": "150104c88ccdacc83a60adad2fdfb9caeb10dc62e0f1e27f0a794876c5156212",
+      "sha256": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+      "bytes": 841317,
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/boss.mp3",
+      "source": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/yxsuwzhl/10.%20Boss%201%20%28Stage%201%2C%205%29.mp3",
+      "source_type": "original_game_recording",
+      "source_sha256": "16925a2f229204347e1a3efd7c391ca86b4b5a95541bd243a5fc106bf7437069",
+      "sha256": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+      "bytes": 841312,
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/select.mp3",
+      "source": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/xxvmxeao/03.%20Player%20Select.mp3",
+      "source_type": "original_game_recording",
+      "source_sha256": "bacbe7c1bb9358b3fe7dc6cf953f2a20f238489fb5026d047f6f2020aca557cc",
+      "sha256": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+      "bytes": 254650,
+      "processing": "first 70 seconds, mono 32kHz MP3 96kbps; no musical changes"
+    }
+  ],
+  "fallback_search": {
+    "jackal": "Zophar原版音乐可用；未发现可核验的完整独立音效包。保留现有合成音效。",
+    "cadillacs": "原版街机音乐可用；Spriters/Sounds Resource asset 393809返回403，未拿到可核验完整音效包。保留现有合成音效。"
+  },
+  "notes": "原版录音压缩为本地文件；来源及原始/运行文件哈希逐项保留。原版素材的著作权不因下载而转移。"
+}

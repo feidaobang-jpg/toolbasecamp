@@ -316,3 +316,6 @@ body.touch-on #toast { bottom: calc(var(--sab) + 210px); }
 #stage.portrait .title-screen { justify-content: center; }
 #stage.portrait .cards { grid-template-columns: repeat(2, 1fr); }
 @media (prefers-reduced-motion: reduce) { #h-go, #hud.low .bar i { animation: none; } }
+
+/* Plain buttons: selection is shown by the border and fill. */
+button::before,button::after,.items>a::before{content:none!important}

@@ -1,0 +1,16 @@
+{
+  "task": "01a10e13-unified3d-20261006-2",
+  "source": "Codex",
+  "workspace": "D:/project/worktrees/unified3d-20261006",
+  "branch": "codex/unified3d-20261006",
+  "scope": "7 existing 3D games and shared game-maker skill",
+  "qa_passed": {
+    "body_audio_modes": 123,
+    "direction": 474,
+    "tank_logic": 17
+  },
+  "website": {
+    "status": "pending_deploy"
+  },
+  "artifact_dir": "D:\\project\\task-artifacts\\unified3d-20261006"
+}

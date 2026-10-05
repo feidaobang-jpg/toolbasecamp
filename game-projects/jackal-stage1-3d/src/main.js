@@ -84,7 +84,9 @@ function optLabel(name) {
   }
   return [name, '', false];
 }
+let refreshControlModes = () => {};
 function refreshOptions() {
+  refreshControlModes();
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
@@ -135,6 +137,7 @@ function adjust(name, delta) {
 function cycleCamera() {
   IN.clear();
   const p = camCtl.cycle();
+  const body = GM.player(); if (body) { delete body.lookHeading; body.lookRevision = camCtl.lookRevision; }
   showToast('视角：' + p.name);
   updateFog();
   const pl = GM.player();
@@ -373,11 +376,13 @@ const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' 
 IN.onClear(() => { dragLook.clear(); camCtl.clearLook(); });
 stage.addEventListener('pointercancel', () => camCtl.clearLook());
 function updateStep() {
-  camCtl.stepLook(STEP, (orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0));
+  const turn = camCtl.stepLook(STEP, (orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0));
+  const body = GM.player();
+  if (turn && body && !camCtl.fpNow) body.lookHeading = (body.lookHeading ?? body.ang) + turn;
   GM.update();
 }
 
-addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
+refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
 const hudEls = { score: $('h-score'), hi: $('h-hi'), wpn: $('h-wpn'), wlv: $('h-wlv'), carried: $('h-carried'), deliv: $('h-deliv'), lives: $('h-lives'), armor: $('h-armor'), armorCard: $('hc-armor'), bombLabel: $('bomb-label') };
@@ -504,6 +509,7 @@ requestAnimationFrame((t) => { last = t; frame(t); });
 if (TEST) {
   let rec = null, chunks = [];
   window.__JK_TEST__ = {
+    subjectHeading: () => GM.player()?.obj.body.rotation.y,
     version: VERSION, seed,
     snapshot() {
       const s = GM.snapshot();

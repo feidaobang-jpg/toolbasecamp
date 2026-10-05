@@ -34,6 +34,13 @@ export function bindDragLook({ element, active, toLocal, width, rotate }) {
 
 // 沿用各游戏既有的 auto/show/hide 存储值，升级操作模式而不丢失旧设置。
 export function addControlModeButtons({ containers, get, set }) {
+  if (!document.getElementById('game-control-selection')) {
+    const style = document.createElement('style'); style.id = 'game-control-selection';
+    style.textContent = `.control-modes button[data-control-mode]{flex:1;min-height:44px;padding:8px 10px;border:2px solid #718078;border-radius:10px;background:#243b32;color:#fff;font-family:inherit;font-size:14px;font-weight:700;box-shadow:none}
+      .control-modes button[data-control-mode][aria-pressed="true"]{background:#ffe09a;color:#24372c;border-color:#ffbe36;box-shadow:inset 0 0 0 1px #b57519;font-weight:900}
+      .control-modes button:focus-visible{outline:3px solid #fff;outline-offset:2px}`;
+    document.head.append(style);
+  }
   const groups = [];
   for (const container of containers) {
     if (!container) continue;
@@ -56,4 +63,22 @@ export function addControlModeButtons({ containers, get, set }) {
   }
   refresh();
   return refresh;
+}
+
+// Pointer events queue intent; the game clock consumes it at a bounded speed.
+export function createLookController({ turn, firstPerson = () => false }) {
+  let pending = 0;
+  return {
+    queue(delta) { pending = Math.max(-Math.PI / 6, Math.min(Math.PI / 6, pending + delta * .5)); },
+    clear() { pending = 0; },
+    step(dt, keys = 0) {
+      const limit = (firstPerson() ? Math.PI / 3 : Math.PI / 2) * Math.max(0, dt);
+      const drag = Math.max(-limit, Math.min(limit, pending * (1 - Math.exp(-12 * dt))));
+      pending -= drag; if (Math.abs(pending) < .00001) pending = 0;
+      const delta = Math.max(-limit, Math.min(limit, drag + keys * limit));
+      if (delta) turn(delta);
+      return delta;
+    },
+    get pending() { return pending; }
+  };
 }

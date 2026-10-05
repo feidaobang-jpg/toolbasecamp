@@ -211,6 +211,7 @@ function updatePlayer(w, input, dt) {
 
   // 火球（J 按下）
   p.fireT = Math.max(0, p.fireT - dt);
+  if (p.lookHeading !== undefined) p.facing = p.lookHeading;
   if (input.firePressed && p.power === 'fire' && !p.crouch && p.fireT <= 0 && w.rt.fireballs.length < 2) {
     const dx = Math.sin(p.facing), dz = Math.cos(p.facing);
     w.rt.fireballs.push({ x: p.x + dx * 0.45, y: p.y + 1.05, z: clamp(p.z + dz * 0.45, -LANE + 0.3, LANE - 0.3), vx: dx * 13, vz: dz * 13, vy: -4, life: 2.6, dead: 0 });

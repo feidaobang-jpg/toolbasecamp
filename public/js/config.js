@@ -196,7 +196,7 @@ const gamesConfig = {
             titleKey: 'games.groups.early',
             descriptionKey: 'games.earlyDesc',
             items: [
-                { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=3', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' }
+                { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=4', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' }
             ]
         }
     ]

@@ -198,8 +198,8 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 }
 .act b { font-size: 26px; font-family: ui-monospace, Consolas, monospace; }
 .act span { font-size: 12px; margin-top: 3px; font-weight: 800; }
-#btn-fire { right: calc(var(--sar) + 114px); bottom: calc(var(--sab) + 26px); width: 76px; height: 76px; background: radial-gradient(circle at 35% 30%, #ffb08f 0 12%, #e2573f 13% 70%, #a83a28 71%); }
-#btn-bomb { right: calc(var(--sar) + 26px); bottom: calc(var(--sab) + 26px); width: 76px; height: 76px; background: radial-gradient(circle at 35% 30%, #b9e39f 0 12%, #5d9a52 13% 70%, #3d6e37 71%); }
+#btn-fire { right: calc(var(--sar) + 114px); bottom: calc(var(--sab) + 26px); width: 76px; height: 76px; background: linear-gradient(180deg, #e2573f, #a83a28); }
+#btn-bomb { right: calc(var(--sar) + 26px); bottom: calc(var(--sab) + 26px); width: 76px; height: 76px; background: linear-gradient(180deg, #5d9a52, #3d6e37); }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.15); }
 .pause-touch { display: none; }
 body.touch-on .pause-key, body.touch-on kbd { display: none; }
@@ -264,3 +264,6 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 62px); }
 .overlay > .panel { margin: auto; }
 
 body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
+
+/* Plain buttons: selection is shown by the border and fill. */
+button::before,button::after,.items>a::before{content:none!important}

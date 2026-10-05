@@ -1,6 +1,8 @@
-// 音频：WebAudio 实时合成的打击音效与摇滚风背景音乐（未找到原作第一关可用乐谱，按原作风格重新编写，非逐音转录）。
-// 点击 / 按键后解锁；音量 0~1；暂停时音乐压低。
+import {SampleAudio} from "../../../public/js/game/sample-audio.js";
+// 音频：优先原作楼顶/内部/街道/Boss 音乐，未加载或不可用时合成回退。
+// 点击 / 按键后解锁；所有暂停冻结音频时钟。
 let ctx = null, master = null, musicBus = null, sfxBus = null, comp = null, capDest = null, noiseBuf = null, distCurve = null;
+let samples=null;
 let volume = 0.8;
 try { const v = parseFloat(localStorage.getItem('cd3d-stage1:volume')); if (!isNaN(v)) volume = Math.max(0, Math.min(1, v)); } catch (e) { /* ignore */ }
 let clockFn = () => 0;
@@ -18,6 +20,7 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3", "roof":"roof.mp3", "hall": "hall.mp3", "street": "street.mp3", "boss": "boss.mp3", "select": "select.mp3"});
   return ctx;
 }
 const now = () => ctx.currentTime;
@@ -215,7 +218,8 @@ function drumVoice(ch, t, dest) {
 function noteLen(track, i, stepDur) { let n = 1; while (track[(i + n) % track.length] === '-' && n < 32) n++; return n * stepDur; }
 let offRendering = false;
 function schedule() {
-  if (!seq.song || !ctx || offRendering) return;
+  if (!seq.song || !ctx || offRendering || ctx.state !== "running" || audioPaused) return;
+  if (samples?.has(seq.name)) { if(seq.gain)seq.gain.gain.value=0; samples.music(seq.name); return; }
   const S = seq.song, stepDur = 60 / S.bpm / 4, total = S.lead.length;
   while (seq.next < now() + 0.15) {
     const i = seq.step, t = seq.next;
@@ -232,7 +236,7 @@ function schedule() {
 const A = {
   get volume() { return volume; },
   setClock(fn) { clockFn = fn; },
-  unlock() { if (!ensure()) return; if (ctx.state === 'suspended') ctx.resume(); },
+  unlock() { if (!ensure()) return; syncAudioPause(); },
   setVolume(v) { volume = v; try { localStorage.setItem('cd3d-stage1:volume', String(v)); } catch (e) { /* ignore */ } if (master) master.gain.value = v; },
   tick() { if (ctx && ctx.state === 'running') SFX.select(now(), 1); },
   play(name, vol) {
@@ -242,21 +246,22 @@ const A = {
     try { f(now() + 0.005, vol === undefined ? 1 : vol); } catch (e) { /* 节点上限等 */ }
   },
   music(name) {
-    if (seq.name === name && seq.song) return;
+    if (seq.name === name && (seq.song || samples?.track)) return;
     if (log.on) log.events.push({ t: +clockFn().toFixed(3), music: name });
     seq.name = name;
     if (!ensure()) return;
+    samples?.music(name, name!=="clear");
     if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
     seq.gain = null; seq.song = null;
-    if (!name || !SONGS[name]) return;
+    if (!name || !(SONGS[name] || ["roof","hall","street"].includes(name))) return;
     seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
-    seq.song = SONGS[name]; seq.step = 0; seq.next = now() + 0.08;
+    seq.song = SONGS[name] || SONGS.stage; seq.step = 0; seq.next = now() + 0.08;
     if (!seq.timer) seq.timer = setInterval(schedule, 25);
   },
-  musicDuck(on) { seq.duck = on; if (seq.gain && ctx) seq.gain.gain.setTargetAtTime(on ? 0.25 : 1, now(), 0.05); },
+  musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
   pause() { /* 音效都很短，暂停时不需要单独处理 */ },
   state: () => ({ ctx: ctx ? ctx.state : 'none', volume }),
-  musicState: () => ({ name: seq.name, playing: !!seq.song }),
+  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden }),
   captureStream() { if (!ensure()) return null; if (!capDest) { capDest = ctx.createMediaStreamDestination(); master.connect(capDest); } return capDest.stream; },
   logStart() { log.on = true; log.events = []; },
   logStop() { log.on = false; return log.events.slice(); },
@@ -324,3 +329,12 @@ const A = {
   SFX_NAMES: Object.keys(SFX)
 };
 export default A;
+
+let audioPaused = false;
+function syncAudioPause() {
+  if (!ctx || ctx.state === 'closed') return;
+  const stop = audioPaused || document.hidden;
+  const op = stop ? ctx.suspend() : ctx.resume();
+  if (op && op.catch) op.catch(() => {});
+}
+document.addEventListener('visibilitychange', syncAudioPause);

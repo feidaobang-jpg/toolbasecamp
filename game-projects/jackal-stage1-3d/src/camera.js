@@ -35,6 +35,7 @@ export function createCamera() {
       if (Math.abs(this.lookPending) < 0.00001) this.lookPending = 0;
       const delta = clamp(drag + keys * limit, -limit, limit);
       if (delta) { this.turnRight(delta); this.lookRevision++; }
+      return delta;
     },
     setAspect(a) { cam.aspect = a; cam.updateProjectionMatrix(); judgeCam.aspect = a; judgeCam.updateProjectionMatrix(); },
     snap(px, py) { const p = PRESETS[PRESETS[this.idx].fp ? this.lastIdx : this.idx]; this.tx = px; this.ty = py + p.ahead; },

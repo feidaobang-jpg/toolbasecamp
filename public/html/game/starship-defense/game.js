@@ -1,6 +1,7 @@
+import {createLookController} from '../../../js/game/drag-look.js?v=unified3d1';
 import * as THREE from './vendor/three.module.js';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
-import {FortressWorld} from './fortress-world.js?v=fb9';
+import {FortressWorld} from './fortress-world.js?v=unified3d1';
 import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=fb97';
 import {validateNormalSave} from './save-validation.js?v=fb9';
@@ -10,7 +11,7 @@ import {ExplorationLight} from './exploration-light.js';
 import {monsterStep,clearMonsterSegment} from './monster-navigation.js';
 import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation,legacyRampartWall} from './fortress-layout.js';
 import {COVER_HEIGHT,WALL_WIDTH,WALL_DEPTH,wallTouches,wallSegment} from './wall-geometry.js';
-import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=fb9';
+import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=unified3d1';
 import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
@@ -89,7 +90,10 @@ const AudioSys={
       this.musicGain=this.ctx.createGain();this.musicGain.gain.value=.16;this.musicGain.connect(this.master);
     }catch(e){}
   },
-  resume(){if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume();},
+  paused:false,
+  syncPause(){if(!this.ctx)return;const op=this.paused||document.hidden?this.ctx.suspend():this.ctx.resume();op?.catch?.(()=>{});},
+  pause(on){this.paused=!!on;this.syncPause();},
+  resume(){this.syncPause();},
   tone(f,dur,type='square',vol=.2,slide=0,delay=0){
     if(!this.ctx)return;const t=this.ctx.currentTime+delay;
     const o=this.ctx.createOscillator(),g=this.ctx.createGain();
@@ -254,7 +258,7 @@ const Input={
   },
   reset(){
     CombatControls.reset();
-    this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
+    lookControl.clear();this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
     $('joyKnob').style.left=$('joyKnob').style.top='35px';
     // Clear ownership immediately: some webviews defer lostpointercapture until
     // after a panel closes. A stale release must not cancel the next finger.
@@ -296,12 +300,12 @@ function behindYaw(){return player.inVehicle?player.inVehicle.yaw:player.yaw;}
 function setCameraView(index,notify=true){
   camView=((index%CAMERA_VIEWS.length)+CAMERA_VIEWS.length)%CAMERA_VIEWS.length;
   if(camMode==='first')setCamMode('third',false);
-  camYaw=behindYaw();camPitch=0;camState.init=false;
+  camYaw=behindYaw();camPitch=0;camState.init=false;delete player.lookHeading;lookControl.clear();
   if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（C 切换视角）',1.4);
   syncViewLabels();
 }
 function setCamMode(mode,notify=true){
-  camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;
+  camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;lookControl.clear();
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
   if(camMode==='third'&&document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
   if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
@@ -2297,14 +2301,16 @@ function selectWeapon(id,quiet=false){
 }
 function cycleWeapon(step){if(Game.weapons.length<2){showMsg('只有一把枪：O 商店购买更多武器',1.6);return;}const i=Game.weapons.indexOf(Game.curWeapon);selectWeapon(Game.weapons[(i+step+Game.weapons.length)%Game.weapons.length]);}
 // 镜头转动：Q/E 带加减速，鼠标/触屏拖动即时生效
+const lookControl=createLookController({firstPerson:()=>camMode==='first',turn:delta=>{
+  camYaw-=delta;player.lookHeading=camYaw;
+  if(player.inVehicle){const v=player.inVehicle;if(v.mesh.userData.turret)v.mesh.userData.turret.rotation.y=camYaw-v.yaw;}
+}});
 function updLook(dt){
-  const want=((Input.keys.Q?1:0)-(Input.keys.E?1:0))*2.1;
-  camYawVel+=(want-camYawVel)*Math.min(1,dt*12);
-  camYaw+=camYawVel*dt;
-  if(Input.look.yaw||Input.look.pitch){camYaw+=Input.look.yaw;camPitch+=Input.look.pitch;Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
+  if(Input.look.yaw||Input.look.pitch){lookControl.queue(-Input.look.yaw);Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
+  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));
   camYaw=(camYaw%TAU+TAU)%TAU;
-  camPitch=camMode==='first'?clamp(camPitch,-1.2,1.15):clamp(camPitch,-.5,.7);
 }
+
 function playerMuzzle(dir){
   if(camMode==='first'){
     const f=camForward(true),right=new THREE.Vector3(-Math.cos(camYaw),0,Math.sin(camYaw));
@@ -2348,7 +2354,8 @@ function updPlayer(dt){
     // 驾驶载具
     const sp=v.cfg.speed*(v.cfg.fly?1:slopeSpeed(groundY,v.mesh.position.x,v.mesh.position.z,mvx,mvz));
     if(moving){
-      v.yaw=Math.atan2(mvx,mvz);
+      const targetYaw=Math.atan2(mvx,mvz), turn=Math.atan2(Math.sin(targetYaw-v.yaw),Math.cos(targetYaw-v.yaw));
+      v.yaw+=clamp(turn,-dt*2.1,dt*2.1);
       v.mesh.rotation.y=v.yaw;
       const nx=v.mesh.position.x+mvx*sp*dt,nz=v.mesh.position.z+mvz*sp*dt;
       if(!collideWalls(nx,nz,2,v.mesh.position.y)&&(v.cfg.fly||!tooSteep(nx,nz))){
@@ -2366,6 +2373,7 @@ function updPlayer(dt){
     }else{
       v.mesh.position.y=groundY(v.mesh.position.x,v.mesh.position.z);
     }
+    if(player.lookHeading!==undefined)vehicleAim(v,camForward(false));
     player.pos.set(v.mesh.position.x,v.mesh.position.y,v.mesh.position.z);
     player.mesh.position.copy(player.pos);
     // 载具开火：优先镜头前方目标，其次车头方向；弹从炮管口出，炮塔转向目标
@@ -2417,7 +2425,7 @@ function updPlayer(dt){
   }else{
     player.mesh.userData.legs.forEach(l=>l.rotation.x*=.8);
   }
-  if(camMode==='first')player.yaw=camYaw;
+  if(camMode==='first'||player.lookHeading!==undefined)player.yaw=camYaw;
   // 兜底脱困：任何原因卡在实体里（载具残骸、城门关在身上等）超过 0.5 秒，移到最近的空地
   if(player.onGround&&collideWalls(player.pos.x,player.pos.z,.5,player.pos.y)){
     player.stuckT=(player.stuckT||0)+dt;
@@ -2456,7 +2464,7 @@ function updPlayer(dt){
   if(firing&&player.fireCd<=0&&!place.kind){
     player.fireCd=wp.rate*(player.buffT>0?1/1.4:1);
     // Reuse the target sampled for this frame.
-    if(camMode==='third')player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
+    if(camMode==='third'&&player.lookHeading===undefined)player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
     const from=playerMuzzle(aim.dir);
     if(aim.target)aim.dir.subVectors(aim.target,from).normalize();
     fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*classDamage(Game.curWeapon)*(wp.beam?1+.5*player.heat:1),heat:player.heat,fp:camMode==='first'},true,aim.target);
@@ -3187,6 +3195,7 @@ function requestNewGame(){
   newGame(false);
 }
 function newGame(test){
+  AudioSys.pause(false);lookControl.clear();delete player.lookHeading;
   runGeneration++;
   resetSandboxWave();
   hideConfirm();
@@ -3228,13 +3237,13 @@ function newGame(test){
 function togglePause(){
   Input.reset();
   if(Game.state==='prep'||Game.state==='battle'){
-    Game.pausedFrom=Game.state;Game.state='paused';
+    Game.pausedFrom=Game.state;Game.state='paused';AudioSys.pause(true);lookControl.clear();
     if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
     syncPauseOptions();
     $('menuPause').classList.remove('hidden');
     AudioSys.sfx('click');autoSave();
   }else if(Game.state==='paused'){
-    Game.state=Game.pausedFrom;
+    Game.state=Game.pausedFrom;AudioSys.pause(false);
     $('menuPause').classList.add('hidden');
     closePanels();
     AudioSys.sfx('click');
@@ -3671,6 +3680,7 @@ setupWebControls();
 loop();window.__ccReady=true;
 /* 页面隐藏时自动暂停并保存（手机切后台可能直接被系统关闭） */
 document.addEventListener('visibilitychange',()=>{
+  AudioSys.syncPause();
   if(/[?&]thumb=1(?:&|$)/.test(location.search))return;
   if(document.hidden){if(Game.state==='prep'||Game.state==='battle')togglePause();else autoSave();}
 });
@@ -3730,7 +3740,7 @@ function setupWebControls(){
   syncPauseOptions();syncKeyLabels();
   setDeviceMode(deviceMode);
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       setDeviceMode,recallUnits,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

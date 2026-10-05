@@ -204,11 +204,11 @@ function loadArea(i, first) {
       { wait: 0.5 },
       { fn: () => { setState(v, 'leave'); v.vy = 9; v.vx = 3.5; v.vz = -2.6; A.play('jump'); } },
       { wait: 0.9 },
-      { fn: () => { if (!v.removed) removeActor(v); G.actors = G.actors.filter(a => a !== v); G.introVice = null; for (const e of G.waveEnemies) if (e.state === 'cut') setState(e, 'idle'); G.mode = 'play'; A.music('stage'); } }
+      { fn: () => { if (!v.removed) removeActor(v); G.actors = G.actors.filter(a => a !== v); G.introVice = null; for (const e of G.waveEnemies) if (e.state === 'cut') setState(e, 'idle'); G.mode = 'play'; A.music(AR.id); } }
     ]);
   } else {
     G.mode = 'play';
-    A.music('stage');
+    A.music(AR.id);
     if (i === 2) { p.y = 1.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 2; }
   }
 }
@@ -385,7 +385,7 @@ function updatePlayer(p, dt) {
       } else {
         p.vx = p.vz = 0;
         if (p.state !== 'idle') setState(p, 'idle');
-        if (fp) p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 12);
+        if (fp && p.lookHeading === undefined) p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 2.1);
       }
       break;
     }
@@ -465,7 +465,8 @@ function updatePlayer(p, dt) {
   if (G.settings.demo) p.invul = Math.max(p.invul, 0.05);
 }
 function faceMove(p, mv, dt) {
-  if (camCtl.fp()) { p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 14); return; }
+  if (p.lookHeading !== undefined) { p.face = approachAng(p.face, p.lookHeading, dt * 2.1); return; }
+  if (camCtl.fp()) { p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 2.1); return; }
   if (laneMode()) {
     if (Math.abs(mv.x) > 0.3) p.face = mv.x > 0 ? FACE_RIGHT : FACE_LEFT;
   } else p.face = approachAng(p.face, faceOf(mv.x, mv.z), dt * 16);
@@ -1561,7 +1562,7 @@ function updateContinue(dt) {
   if (n !== C.count && n >= 0) { C.count = n; A.play('timer'); }
   if (IN.take('atk') || IN.take('pause')) {
     G.stats.contCount++; G.score += 1; G.lives = 3;
-    G.mode = 'play'; G.cont = null; A.music(G.boss ? 'boss' : 'stage');
+    G.mode = 'play'; G.cont = null; A.music(G.boss ? 'boss' : AREAS[G.area].id);
     respawn(G.player);
     ev('continued');
     return;

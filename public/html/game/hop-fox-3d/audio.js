@@ -7,14 +7,16 @@ const BASS = m('53 . 60 . 53 . 60 . 50 . 57 . 50 . 57 . 46 . 53 . 46 . 53 . 48 .
 export class GameAudio {
   constructor() { this.enabled = true; this.ctx = null; this.step = 0; this.next = 0; this.tempo = .145; this.music = true; }
   async unlock() {
-    if (!this.ctx) {
+    if (!this.visibilityBound) { this.visibilityBound = true; document.addEventListener('visibilitychange', () => this.syncPause()); } if (!this.ctx) {
       const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       this.ctx = new AC(); this.gain = this.ctx.createGain(); this.gain.gain.value = this.enabled ? .22 : 0; this.gain.connect(this.ctx.destination);
       this.musicGain = this.ctx.createGain(); this.musicGain.gain.value = .55; this.musicGain.connect(this.gain);
       this.capture = this.ctx.createMediaStreamDestination(); this.gain.connect(this.capture);
     }
-    if (this.ctx.state !== 'running') await this.ctx.resume().catch(() => {});
+    this.syncPause();
   }
+ syncPause() { if (!this.ctx || this.ctx.state === 'closed') return; const op = this.paused || document.hidden ? this.ctx.suspend() : this.ctx.resume(); if (op?.catch) op.catch(() => {}); }
+ pause(on) { this.paused = !!on; this.syncPause(); }
   tone(freq, dur = .1, type = 'square', delay = 0, vol = .2, slide = 0, out) {
     if (!this.enabled || !this.ctx || !freq) return;
     const t = this.ctx.currentTime + delay, o = this.ctx.createOscillator(), g = this.ctx.createGain();

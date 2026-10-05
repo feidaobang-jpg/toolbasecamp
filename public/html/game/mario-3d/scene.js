@@ -1,10 +1,10 @@
 // 渲染：把当前区域的网格地形沿纵深铺成 6 格厚的体素跑道，水管纵向并排 3 根；
 // 角色、道具、特效与镜头（C 预设 + Q/E 无极旋转），遮挡主角的物体做网点淡化。
 import * as THREE from './three.js?v=2.1.0';
-import { tex, textTexture } from './textures.js?v=2.1.0';
-import * as M from './models.js?v=2.1.0';
+import { tex, textTexture } from './textures.js?v=unified3d1';
+import * as M from './models.js?v=unified3d1';
 import { LANE, SOLID, tileKey } from './levels.js?v=2.1.0';
-import { heightOf } from './world.js?v=2.1.0';
+import { heightOf } from './world.js?v=unified3d1';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -54,23 +54,23 @@ const matCache = new Map();
 function tileMat(name, theme) {
   const k = name + ':' + theme;
   if (!matCache.has(k)) {
-    const opts = { map: tex(name, theme), roughness: name === 'question' ? 0.45 : 0.85 };
-    if (name === 'question') { opts.emissive = new THREE.Color('#5a2a00'); opts.emissiveIntensity = 0.4; }
+    const opts = { map: tex(name, theme), roughness: 0.92, flatShading: true };
+    if (name === 'question') { opts.emissive = new THREE.Color('#5a2a00'); opts.emissiveIntensity = 0.08; }
     matCache.set(k, fadeable(new THREE.MeshStandardMaterial(opts)));
   }
   return matCache.get(k);
 }
 function plainMat(color, opts = {}) {
   const k = 'plain:' + color + JSON.stringify(opts);
-  if (!matCache.has(k)) matCache.set(k, fadeable(new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.85 }, opts))));
+  if (!matCache.has(k)) matCache.set(k, fadeable(new THREE.MeshStandardMaterial(Object.assign({ color, roughness: 0.92, flatShading: true }, opts))));
   return matCache.get(k);
 }
 
 const boxGeo = new THREE.BoxGeometry(1, 1, 1);
-const pipeBodyGeo = new THREE.CylinderGeometry(0.86, 0.86, 1, 28, 1, true);
-const pipeRimGeo = new THREE.CylinderGeometry(0.99, 0.99, 0.5, 28);
+const pipeBodyGeo = new THREE.CylinderGeometry(0.86, 0.86, 1, 10, 1, true);
+const pipeRimGeo = new THREE.CylinderGeometry(0.99, 0.99, 0.5, 10);
 const pipeHoleGeo = new THREE.CircleGeometry(0.8, 24);
-const ballGeo = new THREE.SphereGeometry(1, 20, 14);
+const ballGeo = new THREE.IcosahedronGeometry(1, 1);
 const debrisGeo = new THREE.BoxGeometry(0.42, 0.42, 0.42);
 const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3(), ZERO = new THREE.Vector3(0, 0, 0);
 
@@ -91,6 +91,7 @@ export function createView(canvas) {
 
   const player = M.mario(); scene.add(player.root);
   const view = {
+    subjectHeading: () => player.root.rotation.y,
     renderer, scene, camera, presetIndex: 0, yawOffset: 0, quality: 'high',
     followX: 0, followY: 4, area: null, theme: 'overworld', shake: 0,
     camLift: 0, camPull: 0, titleMode: false, wallL: null, wallR: null
@@ -130,8 +131,8 @@ export function createView(canvas) {
     if (tall(r)) { while (r > 0 && tall(r - 1)) r--; view.wallR = r; } else view.wallR = null;
     areaGroup = new THREE.Group(); scene.add(areaGroup);
     const under = theme === 'underground';
-    scene.background = new THREE.Color(under ? '#000000' : '#6d9cff');
-    scene.fog = under ? new THREE.Fog('#000000', 26, 70) : new THREE.Fog('#8ab4ff', 70, 200);
+    scene.background = new THREE.Color(under ? '#182c31' : '#c7ddd2');
+    scene.fog = under ? new THREE.Fog('#182c31', 26, 70) : new THREE.Fog('#c7ddd2', 70, 200);
     hemi.color.set(under ? '#a8c8ff' : '#eef8ff'); hemi.groundColor.set(under ? '#1c2430' : '#6c5a3a');
     hemi.intensity = under ? 1.45 : 1.9;
     sun.intensity = under ? 1.7 : 2.5; sun.color.set(under ? '#d8e6ff' : '#fff4dc');
@@ -199,8 +200,8 @@ export function createView(canvas) {
   }
 
   function buildPipes(a) {
-    const pm = matCache.get('pipe') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.42, side: THREE.DoubleSide })); matCache.set('pipe', m); return m; })();
-    const rimM = matCache.get('pipeRim') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.38 })); matCache.set('pipeRim', m); return m; })();
+    const pm = matCache.get('pipe') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.9, flatShading: true, side: THREE.DoubleSide })); matCache.set('pipe', m); return m; })();
+    const rimM = matCache.get('pipeRim') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.9, flatShading: true })); matCache.set('pipeRim', m); return m; })();
     const hole = matCache.get('pipeHole') || (() => { const m = new THREE.MeshBasicMaterial({ color: '#04140a' }); matCache.set('pipeHole', m); return m; })();
     const add = (geo, m, x, y, z, sy = 1, rotZ = 0, rotX = 0) => {
       const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.scale.y = sy; o.rotation.z = rotZ; o.rotation.x = rotX;
@@ -300,7 +301,7 @@ export function createView(canvas) {
     return runs;
   }
   function buildOverworld(a) {
-    const grass = plainMat('#5cb83c'), dirt = plainMat('#b8723a'), deep = plainMat('#3a2412');
+    const grass = plainMat('#80966b'), dirt = plainMat('#a08d6e'), deep = plainMat('#80966b');
     const mats = [dirt, dirt, grass, dirt, dirt, dirt];
     const runs = groundRuns(a);
     for (const [s, e] of runs) {
@@ -311,8 +312,29 @@ export function createView(canvas) {
       }
     }
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(a.width + 200, 200), deep); floor.rotation.x = -Math.PI / 2; floor.position.set(a.width / 2, -14, 0); areaGroup.add(floor); areaDispose.push(floor.geometry);
-    const hillM = plainMat('#2c9c3c'), hillDark = plainMat('#1a6a24'), bushM = plainMat('#86d840'), cloudM = plainMat('#fbfbff', { emissive: '#40485a' });
+    const hillM = plainMat('#7b9872'), hillDark = plainMat('#567453'), bushM = plainMat('#91aa76'), cloudM = plainMat('#e8eee3', { emissive: '#000000' });
     const inRun = x => runs.some(([s, e]) => x > s + 0.5 && x < e - 0.5);
+    // A small faceted grove uses two batches, outside the platform collision lane.
+    const trees = [];
+    for (let x = 5; x < a.width; x += 11) if (inRun(x)) {
+      for (const z of [-15, 19]) trees.push({ x, z, size: .85 + (Math.floor(x) % 3) * .16 });
+    }
+    if (trees.length) {
+      const trunkGeo = new THREE.CylinderGeometry(.16, .23, 1, 7);
+      const crownGeo = new THREE.IcosahedronGeometry(1, 1);
+      const trunks = new THREE.InstancedMesh(trunkGeo, plainMat('#6e6450'), trees.length);
+      const crowns = new THREE.InstancedMesh(crownGeo, plainMat('#577c61'), trees.length * 3);
+      trees.forEach((t, i) => {
+        tmpM.compose(tmpP.set(t.x, -.5 + t.size * 1.5, t.z), tmpQ.identity(), tmpS.set(t.size, 3 * t.size, t.size));
+        trunks.setMatrixAt(i, tmpM);
+        for (let k = 0; k < 3; k++) {
+          tmpM.compose(tmpP.set(t.x + (k - 1) * .65 * t.size, 2.7 * t.size + (k === 1 ? .7 : 0), t.z), tmpQ.identity(), tmpS.set(1.35 * t.size, 1.6 * t.size, 1.2 * t.size));
+          crowns.setMatrixAt(i * 3 + k, tmpM);
+        }
+      });
+      for (const m of [trunks, crowns]) { m.castShadow = true; m.receiveShadow = true; areaGroup.add(m); areaDispose.push({ dispose: () => m.dispose() }); }
+      areaDispose.push(trunkGeo, crownGeo);
+    }
     const blob = (m, x, y, z, sx, sy, sz, shadow = true) => { const o = new THREE.Mesh(ballGeo, m); o.position.set(x, y, z); o.scale.set(sx, sy, sz); o.castShadow = shadow; o.receiveShadow = true; areaGroup.add(o); return o; };
     for (let base = -48; base < a.width + 48; base += 48) {
       // 原作背景以 48 格为一组：大山、灌木、小山、三朵云

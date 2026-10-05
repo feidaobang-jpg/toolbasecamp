@@ -1,8 +1,9 @@
-// 程序化音效与原创 BGM（WebAudio 实时合成；旋律为本作原创，不取自原作）。
+import {SampleAudio} from "../../../public/js/game/sample-audio.js";
+// 原版关卡/Boss 音乐优先；程序化音效与合成音乐作为缺失/解码失败回退。
 import { store } from './core.js';
 
 let ctx = null, master = null, sfxBus = null, musicBus = null, noiseBuf = null, capDest = null;
-let eng = null;
+let eng = null, samples = null;
 let volume = store.get('volume', 0.7);
 if (typeof volume !== 'number' || !isFinite(volume)) volume = 0.7;
 
@@ -21,6 +22,7 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0);
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "stage.mp3", "ruins": "stage3.mp3", "boss": "boss.mp3"});
   return ctx;
 }
 let fakeNow = null;   // 离线渲染时用游戏时间代替音频时钟
@@ -91,7 +93,8 @@ for (const k in SONGS) {
 }
 let music = { song: null, idx: 0, nextT: 0, timer: 0 };
 function scheduleMusic(until) {
-  if (!ctx || !music.song) return;
+  if (!ctx || !music.song || fakeNow === null && (ctx.state !== 'running' || audioPaused)) return;
+  if (fakeNow === null && samples?.has(music.song)) { samples.music(music.song); return; }
   const p = parsed[music.song];
   const limit = until !== undefined ? until : now() + 0.25;
   while (music.nextT < limit) {
@@ -113,7 +116,7 @@ const A = {
   setClock(fn) { logClock = fn; },
   logStart() { logOn = true; logBuf = []; },
   logStop() { logOn = false; return logBuf.slice(); },
-  unlock() { if (!ensure()) return; if (ctx.state === 'suspended' && ctx.resume) ctx.resume(); },
+  unlock() { if (!ensure()) return; syncAudioPause(); },
   get volume() { return volume; },
   setVolume(v) {
     volume = Math.max(0, Math.min(1, Math.round(v * 10) / 10));
@@ -123,11 +126,12 @@ const A = {
   music(name) {
     if (!ensure()) return;
     if (music.song === name) return;
+    samples?.music(name);
     music.song = name; music.idx = 0; music.nextT = now() + 0.1;
     if (!music.timer) music.timer = setInterval(scheduleMusic, 60);
     if (!name) { clearInterval(music.timer); music.timer = 0; }
   },
-  musicDuck(on) { if (musicBus) musicBus.gain.setTargetAtTime(on ? 0.15 : MUSIC_LEVEL, now(), 0.05); },
+  musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
   mg() { tone('square', 900, 260, 0.05, 0.06); noise(0.05, 0.09, 5000, 1400); },
   grenade() { tone('triangle', 320, 120, 0.14, 0.22); noise(0.06, 0.08, 1500, 500); },
   rocket() { noise(0.35, 0.16, 800, 4000, null, null, 'bandpass'); tone('sawtooth', 180, 520, 0.25, 0.05); },
@@ -253,3 +257,12 @@ A.renderOffline = async function (events, duration) {
   }
 };
 export default A;
+
+let audioPaused = false;
+function syncAudioPause() {
+  if (!ctx || ctx.state === 'closed') return;
+  const stop = audioPaused || document.hidden;
+  const op = stop ? ctx.suspend() : ctx.resume();
+  if (op && op.catch) op.catch(() => {});
+}
+document.addEventListener('visibilitychange', syncAudioPause);

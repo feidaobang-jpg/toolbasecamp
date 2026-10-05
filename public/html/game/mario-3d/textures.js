@@ -1,4 +1,4 @@
-// 16×16 像素风贴图，按原作配色用 Canvas 程序化绘制（不使用任天堂原始素材文件）。
+// 赤色要塞式自然色哑光石材与木材面板，不使用原版像素画风。
 import * as THREE from './three.js?v=2.1.0';
 
 const PAL = {
@@ -14,7 +14,7 @@ function px(g, color, x, y, w = 1, h = 1) { g.fillStyle = color; g.fillRect(x, y
 export function pixelTexture(c) {
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
-  t.magFilter = THREE.NearestFilter;
+  t.magFilter = THREE.LinearFilter;
   t.minFilter = THREE.LinearMipmapLinearFilter;
   t.anisotropy = 4;
   return t;
@@ -129,6 +129,15 @@ export function tex(name, theme = 'overworld') {
   const k = name + ':' + theme;
   if (cache.has(k)) return cache.get(k);
   let t;
+  if (['brick','ground','hard','question','used','lift','pipe'].includes(name)) {
+    const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');
+    const under=theme==='underground';
+    const color=name==='question'?'#d8b56a':name==='pipe'?'#668c70':name==='ground'?(under?'#607981':'#a59378'):name==='lift'?'#bca16d':name==='used'?'#988c75':(under?'#78929a':'#b3a38a');
+    g.fillStyle=color;g.fillRect(0,0,128,128);g.strokeStyle=under?'#4e666d':'#867b66';g.lineWidth=3;g.strokeRect(3,3,122,122);
+    if(name==='brick'){g.beginPath();g.moveTo(0,64);g.lineTo(128,64);g.moveTo(64,0);g.lineTo(64,64);g.moveTo(32,64);g.lineTo(32,128);g.moveTo(96,64);g.lineTo(96,128);g.stroke();}
+    if(name==='question'){g.fillStyle='#fff1c7';g.font='bold 94px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('?',64,67);}
+    t=pixelTexture(c);cache.set(k,t);return t;
+  }
   switch (name) {
     case 'brick': t = pixelTexture(brick(theme)); break;
     case 'ground': t = pixelTexture(groundBlock(theme)); break;

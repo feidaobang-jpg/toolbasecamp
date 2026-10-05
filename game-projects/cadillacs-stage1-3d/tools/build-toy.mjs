@@ -16,7 +16,7 @@ mkdirSync(out, { recursive: true });
 
 const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]);
 const rel = (base, p) => relative(base, p).replaceAll('\\', '/');
-const expected = ['css/style.css', 'index.html', 'js/THREE-LICENSE.txt', 'js/game.min.js'];
+const expected = ["sounds/boss.mp3","sounds/hall.mp3","sounds/roof.mp3","sounds/select.mp3","sounds/street.mp3",'css/style.css', 'index.html', 'js/THREE-LICENSE.txt', 'js/game.min.js'].sort();
 const found = walk(source).map(p => rel(source, p)).sort();
 if (JSON.stringify(found) !== JSON.stringify(expected)) throw Error('Unexpected runtime files: ' + found.join(', '));
 

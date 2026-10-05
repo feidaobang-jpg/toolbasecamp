@@ -1,0 +1,27 @@
+{
+  "version": "v0.3.0",
+  "source": "public/html/game/cadillacs-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "e49e92bd26c26c79d7b6966f5c14c6f11729b52576508a51a4f651c3a4339a71",
+    "index.html": "705eb655f4413d242d4dd807389d255ab5dd164443741e1a0132ce014f044e58",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "91087df69875bc3b3d6435b2781f0bd379aa7f12a49d03afa75bd1f16aff9e0d",
+    "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+    "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+    "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+    "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+    "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056"
+  },
+  "files": {
+    "css/style.css": "e49e92bd26c26c79d7b6966f5c14c6f11729b52576508a51a4f651c3a4339a71",
+    "index.html": "7034dc620d357078b60436af8e286133cc4ef7ab22566a58988644fc901a6a56",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "91087df69875bc3b3d6435b2781f0bd379aa7f12a49d03afa75bd1f16aff9e0d",
+    "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+    "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+    "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+    "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+    "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056"
+  },
+  "status": "built_not_submitted"
+}

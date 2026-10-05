@@ -14,7 +14,7 @@ export class GameAudio {
     this.ctx.decodeAudioData(data).then(buf => { this.buffers[n] = buf; }).catch(() => {});
   }
   unlock() {
-    if (!this.ctx) {
+    if (!this.visibilityBound) { this.visibilityBound = true; document.addEventListener('visibilitychange', () => this.syncPause()); } if (!this.ctx) {
       const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       this.ctx = new AC(); this.master = this.ctx.createGain(); this.master.gain.value = this.volume * .55; this.master.connect(this.ctx.destination);
       for (const n of SAMPLES) this.decode(n);
@@ -26,10 +26,11 @@ export class GameAudio {
       for (const o of this.eng) { o.connect(lp); o.start(); }
       lp.connect(this.engGain); this.engGain.connect(this.master);
     }
-    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
+    this.syncPause();
   }
   setVolume(v) { this.volume = v; if (this.master) this.master.gain.value = v * .55; }
-  pause(on) { this.paused = on; if (this.engGain) this.engGain.gain.setTargetAtTime(0, this.ctx.currentTime, .02); }
+  syncPause() { if (!this.ctx || this.ctx.state === 'closed') return; const op = this.paused || document.hidden ? this.ctx.suspend() : this.ctx.resume(); if (op?.catch) op.catch(() => {}); }
+ pause(on) { this.paused = !!on; this.syncPause(); }
   play(name, vol = 1, rate = 1) {
     if (!this.ctx || this.volume <= 0) return false;
     const buf = this.buffers[name]; if (!buf) return false;

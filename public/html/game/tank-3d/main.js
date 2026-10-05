@@ -1,10 +1,10 @@
-import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
+import { bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=unified3d1';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=camera-mobile1';
+import { createScene, PRESETS } from './scene.js?v=unified3d1';
 import { createRun, createWorld, step, turnPlayer, SCORE, TYPE_NAMES, qa } from './sim.js?v=merge1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
-import { GameAudio } from './audio.js?v=merge1';
+import { GameAudio } from './audio.js?v=unified3d1';
 
 const VERSION = 'drag-look1';
 const STEP = 1 / 60;
@@ -110,7 +110,7 @@ function worldDir() {
   return (d - quarter(yaw) + 4) % 4;
 }
 function clearInput() {
-  dragLook.clear();
+  dragLook.clear(); lookControl.clear();
   keys.clear(); touchHold.clear(); dirStack.length = 0; firePressed = false; latched = null;
   joyRelease();
   document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
@@ -139,7 +139,9 @@ function optLabel(name) {
   }
   return [name, '', false];
 }
+let refreshControlModes = () => {};
 function refreshOptions() {
+  refreshControlModes();
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
@@ -181,8 +183,9 @@ function adjust(name, delta) {
   refreshOptions();
 }
 function cycleCamera(delta = 1) {
-  dragLook.clear();
+  dragLook.clear(); lookControl.clear();
   const n = PRESETS.length;
+  if (world?.player) delete world.player.lookHeading;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
   const m = run ? run.mode : settings.mode;
   settings.camera[m] = view.presetIndex; store.set('camera.' + m, view.presetIndex);
@@ -465,7 +468,7 @@ function toggleFullscreen() {
     try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').then(() => fsLog.push('lock-ok'), () => fsLog.push('lock-rejected')); } catch (err) { /* 不支持 */ }
   }, () => { fsLog.push('rejected'); showToast('浏览器拒绝了全屏请求，可以继续在页面内游玩'); });
 }
-function onFsChange() { if (!fsElement() && uiMode === 'game' && !current && phase === 'play') pauseGame(); refreshOptions(); layout(); }
+function onFsChange() { if (!fsElement() && uiMode === 'game' && !current) pauseGame(); refreshOptions(); layout(); }
 document.addEventListener('fullscreenchange', onFsChange);
 document.addEventListener('webkitfullscreenchange', onFsChange);
 function showToast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 2200); }
@@ -524,8 +527,8 @@ window.addEventListener('resize', () => layout());
 window.addEventListener('orientationchange', () => setTimeout(layout, 60));
 if (window.visualViewport) window.visualViewport.addEventListener('resize', () => layout());
 setInterval(() => { const v = viewport(); if (v.vw + 'x' + v.vh !== lastSize) layout(); }, 500);
-window.addEventListener('blur', () => { clearInput(); if (uiMode === 'game' && !current && phase === 'play') pauseGame(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); if (uiMode === 'game' && !current && phase === 'play') pauseGame(); } last = performance.now(); });
+window.addEventListener('blur', () => { clearInput(); if (uiMode === 'game' && !current) pauseGame(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); if (uiMode === 'game' && !current) pauseGame(); } last = performance.now(); });
 
 // ---------- 触屏：浮动摇杆（四方向，主轴带滞回）+ 按键 ----------
 const joyZone = $('joy-zone'), joyBase = $('joy-base'), joyKnob = $('joy-knob');
@@ -571,9 +574,15 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   btn.addEventListener('contextmenu', e => e.preventDefault());
 });
 $('btn-cam-t').addEventListener('pointerdown', e => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
+const lookControl = createLookController({ firstPerson: () => view.firstPerson(), turn: delta => {
+  view.yawOffset -= delta;
+  const p = world && world.player;
+  if (p) p.lookHeading = view.cameraYaw();
+  latched = null;
+} });
 const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
-  toLocal, width: () => display.W, rotate: delta => { view.yawOffset -= delta; } });
-addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
+  toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
+refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
   get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
@@ -646,7 +655,7 @@ const perf = { on: false, frames: [], work: [] };
 function simulate(dt) {
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (rot && !current) view.yawOffset -= rot * (Math.PI / 2) * dt;
+  if (uiMode === 'game' && !paused && !current) lookControl.step(dt, rot);
   if (uiMode !== 'game' || paused || !world) return;
   if (current === 'tally') { tallyUpdate(dt); return; }
   if (current) return;
@@ -659,14 +668,6 @@ function simulate(dt) {
   }
   if (phase !== 'play') return;
   phaseT += dt;
-  // 第一人称站着不动、Q/E 转过 45° 以上时，车头跟着视线转
-  if (view.firstPerson() && rawDir() < 0 && Math.abs(view.yawOffset) > Math.PI / 4 + .05) {
-    const p = world.player, want = (0 - quarter(view.cameraYaw()) + 4) % 4;
-    if (p && want !== p.dir) {
-      const before = p.dir; turnPlayer(world, want);
-      if (p.dir !== before) { let d = -(p.dir - before) * Math.PI / 2; while (d > Math.PI) d -= 2 * Math.PI; while (d <= -Math.PI) d += 2 * Math.PI; view.fpTurn(d); }
-    }
-  }
   const input = { dir: worldDir(), fire: isDown('fire'), firePressed };
   firePressed = false;
   step(world, input);

@@ -5,3 +5,7 @@
 body.mobile-device #full{display:none!important}
 
 #game{touch-action:none}
+
+button::before,button::after{content:none!important}
+
+.touch-actions{grid-template-columns:repeat(3,58px);grid-template-rows:repeat(2,58px);gap:10px}.touch-actions .action-row{display:contents}.touch-actions button,.touch-actions .secondary button{width:58px;height:58px}.touch-actions [data-action=burst]{grid-area:1/1}.touch-actions [data-action=heal]{grid-area:1/2}.touch-actions [data-action=weapon]{grid-area:2/1}.touch-actions [data-action=dash]{grid-area:2/2}.touch-actions [data-action=ward]{grid-area:2/3}#touch-camera{display:none}body.touch-mode #touch-camera{display:block}

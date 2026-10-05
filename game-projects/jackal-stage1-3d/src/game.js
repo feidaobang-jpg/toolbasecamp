@@ -344,8 +344,8 @@ function updatePlayer(dt) {
     if (P.moving) { P.wheelSpin += sp * 2.6; P.dust += dt; if (P.dust > 0.07) { P.dust = 0; const t = L.terrainAt(P.x, P.y); if (t === L.T.SAND || t === L.T.ROAD || t === L.T.DIRT || t === L.T.FLOOR || t === L.T.STONE) fx.dust(P.x - DIR8[d].x * 1.2, P.y - DIR8[d].y * 1.2); } }
   }
   const oldAng = P.ang;
-  const targetAng = camCtl.fpNow && d < 0 ? P.ang + camCtl.yaw : DIR8[P.dir].a;
-  P.ang = approachAng(P.ang, targetAng, dt * (camCtl.fpNow ? 2.1 : 14));
+  const targetAng = camCtl.fpNow ? P.ang + camCtl.yaw : P.lookHeading !== undefined ? P.lookHeading : DIR8[P.dir].a;
+  P.ang = approachAng(P.ang, targetAng, dt * 2.1);
   // 补偿实际模型转角，而非一次扣掉目标方向的 45°/90°：平移、倒车不会甩动玩家视线。
   if (camCtl.fpNow) camCtl.rotate(-angDiff(oldAng, P.ang));
   // 机枪：默认跟随车头；选「固定朝上（原作）」时一直向北（画面上方）
@@ -384,10 +384,10 @@ function updatePlayer(dt) {
   // Boss 触发
   if (G.boss.state === 'idle' && P.y > L.BOSS.trigger) startBoss();
 }
-export function gunAngle() { return G.settings.gun === 'up' ? 0 : camCtl.fpNow ? P.ang + camCtl.yaw : DIR8[P.dir].a; }
+export function gunAngle() { return G.settings.gun === 'up' ? 0 : camCtl.fpNow ? P.ang + camCtl.yaw : P.ang; }
 
 function fireBomb() {
-  const w = G.weapon, a = camCtl.fpNow ? P.ang + camCtl.yaw : DIR8[P.dir].a;
+  const w = G.weapon, a = camCtl.fpNow ? P.ang + camCtl.yaw : P.ang;
   const d = { x: Math.sin(a), y: Math.cos(a), a };
   const live = bombs.filter(b => b.own && b.kind !== 'shrap').length;
   const max = w <= 2 ? 2 : 3;
@@ -459,7 +459,7 @@ function respawn() {
     const a = k / 12 * PI * 2, tx = x + Math.cos(a) * r, ty = y + Math.sin(a) * r;
     if (!blockedFor(tx, ty, P.r, P)) { x = tx; y = ty; break outer; }
   }
-  P.x = x; P.y = y; P.alive = true; P.invuln = 2.6; P.dir = 0; P.ang = 0; P.armor = G.armorMax;
+  P.x = x; P.y = y; P.alive = true; P.invuln = 2.6; P.dir = 0; P.ang = 0; delete P.lookHeading; P.lookRevision = camCtl.lookRevision; P.armor = G.armorMax;
   P.obj.root.visible = true;
   // 清掉附近敌弹，避免复活即被击中
   for (let i = ebul.length - 1; i >= 0; i--) if ((ebul[i].x - x) ** 2 + (ebul[i].y - y) ** 2 < 14 * 14) ebul.splice(i, 1);

@@ -1,7 +1,7 @@
 // 逻辑模拟验收（Node）：经典 35 关数据、原版数值、魔改 100 关生成与 Boss 关可通关性、耐久与命数。
 // node game-projects/tank-3d/qa/sim-check.mjs
 import assert from 'node:assert/strict';
-import { createRun, createWorld, step, qa } from '../../../public/html/game/tank-3d/sim.js';
+import { createRun, createWorld, step, fire, qa } from '../../../public/html/game/tank-3d/sim.js';
 import { classicStage, remixStage, CLASSIC_COUNT, REMIX_LEVELS, brickCell, N } from '../../../public/html/game/tank-3d/levels.js';
 const results = [];
 const ok = (name, extra = '') => { results.push({ name, extra }); console.log('ok  ' + name + (extra ? '  ' + extra : '')); };
@@ -157,4 +157,18 @@ for (const L of [5, 10, 45, 100]) {
   assert.deepEqual([[11, 23], [12, 23], [13, 23], [14, 23]].map(([x, y]) => brickCell(w.terrain, x, y)), [1, 1, 1, 1], 'fort bricks intact');
   ok('boss heavy shells cannot breach the HQ fort');
 }
+// Dragged turret headings must also drive the projectile, including diagonals.
+for (const heading of [0, Math.PI / 4, Math.PI / 2, Math.PI, -Math.PI / 4]) {
+  const w = createWorld(createRun({ mode: 'classic', lives: 'classic', armor: 'classic', seed: 7 }));
+  for (let i = 0; i < 40; i++) step(w, { dir: -1 });
+  w.terrain.brick.fill(0); w.terrain.steel.fill(0); w.bots = []; w.bullets = [];
+  const p = w.player; p.x = 200; p.y = 200; p.lookHeading = heading;
+  assert.ok(fire(w, p, { force: true }));
+  const b = w.bullets[0], x = b.x, y = b.y;
+  assert.ok(Math.abs(b.vx + Math.sin(heading)) < 1e-10);
+  assert.ok(Math.abs(b.vy + Math.cos(heading)) < 1e-10);
+  step(w, { dir: -1 });
+  assert.ok(Math.abs((b.x - x) * b.vy - (b.y - y) * b.vx) < 1e-8);
+}
+ok('turret and projectile continuous headings agree');
 console.log(JSON.stringify({ passed: results.length }));

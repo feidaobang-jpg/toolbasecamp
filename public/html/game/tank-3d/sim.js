@@ -402,12 +402,14 @@ function liveBullets(w, t) { let n = 0; for (const b of w.bullets) if (b.owner =
 export function fire(w, t, o = {}) {
   if (t.state !== 'active') return false;
   if (!o.force && liveBullets(w, t) >= t.maxBullets) return false;
-  const dir = o.dir ?? t.dir, s = t.size, cx = t.x + s / 2, cy = t.y + s / 2;
+  const heading = t.team === 'player' ? t.lookHeading : undefined;
+  const dir = heading === undefined ? (o.dir ?? t.dir) : ((Math.round(-heading / (Math.PI / 2)) % 4) + 4) % 4, s = t.size, cx = t.x + s / 2, cy = t.y + s / 2;
   const off = o.offset || 0;
-  const x = cx + DX[dir] * s / 2 + (dir & 1 ? 0 : off), y = cy + DY[dir] * s / 2 + (dir & 1 ? off : 0);
+  const vx = heading === undefined ? DX[dir] : -Math.sin(heading), vy = heading === undefined ? DY[dir] : -Math.cos(heading);
+  const x = cx + vx * s / 2 + (dir & 1 ? 0 : off), y = cy + vy * s / 2 + (dir & 1 ? off : 0);
   const kind = o.kind || (t.weapon === 'flame' ? 'flame' : 'shell');
   const b = {
-    id: w.nextId++, owner: t, team: t.team, x, y, dir, speed: o.speed || (kind === 'flame' ? 2 : t.bulletSpeed), power: t.power, kind,
+    id: w.nextId++, owner: t, team: t.team, x, y, dir, vx, vy, heading, speed: o.speed || (kind === 'flame' ? 2 : t.bulletSpeed), power: t.power, kind,
     half: o.half || (kind === 'flame' ? 6 : 0), state: 'fly', st: 0, age: 0, pierce: kind === 'pierce'
   };
   w.bullets.push(b);
@@ -503,7 +505,7 @@ function updateBullets(w) {
     let dist = b.speed;
     while (dist > 0 && b.state === 'fly') {
       const st = Math.min(2, dist); dist -= st;
-      b.x += DX[b.dir] * st; b.y += DY[b.dir] * st;
+      b.x += (b.vx ?? DX[b.dir]) * st; b.y += (b.vy ?? DY[b.dir]) * st;
       if (bulletTerrain(w, b)) { b.state = 'boom'; b.st = 9; emit(w, 'pop', { x: b.x, y: b.y, kind: b.kind }); break; }
       if (bulletTanks(w, b)) break;
     }

@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.5.3",
-  "handoff": "releases/v0.5.3/handoff.json",
+  "current_version": "v0.6.0",
+  "handoff": "releases/unified3d-20261006/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -130,6 +130,15 @@
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
     "touch": "左摇杆和动作按钮保留；画面空白处拖动转视角，保留 C 切换预设，移除左右旋转虚拟键",
     "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
-    "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标"
+    "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标",
+    "coupling": "所有预设拖动/QE联动主角身体、头部或载具炮塔，世界不旋转；第一人称限速平滑转头",
+    "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
+    "action_layout": "等大对齐；U I O在J K L正上方；C位于右上暂停旁，保留旧键别名",
+    "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局"
+  },
+  "control_audio_camera_update": "2026-10-06: selected mode state, plain action buttons, pause freezes audio, bounded character-linked look",
+  "audio_assets": {
+    "policy": "original first; synthesis fallback",
+    "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
   }
 }

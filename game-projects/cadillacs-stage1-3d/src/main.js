@@ -1,4 +1,4 @@
-import { bindDragLook, addControlModeButtons } from '../../../public/js/game/drag-look.js';
+import { bindDragLook, addControlModeButtons, createLookController } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单 / 选人导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
 import { VERSION, STEP, TEST, CLEAN, store, seed, params, fmtTime, clamp } from './core.js';
@@ -100,7 +100,9 @@ function optLabel(name) {
   }
   return [name, '', false];
 }
+let refreshControlModes = () => {};
 function refreshOptions() {
+  refreshControlModes();
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
@@ -142,6 +144,7 @@ function adjust(name, delta) {
 function cycleCamera() {
   IN.clear();
   const p = camCtl.cycle();
+  if (G.player) delete G.player.lookHeading;
   store.set('camera', camCtl.idx);
   showToast('视角：' + p.name + (p.fp ? (coarsePointer() ? '（按住画面拖动）' : '（Q/E 转头）') : ''));
   refreshOptions();
@@ -221,7 +224,7 @@ document.addEventListener('click', (e) => {
   if (!t) return;
   if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), 1); return; }
   switch (t.getAttribute('data-act')) {
-    case 'select': A.play('select'); show('select'); break;
+    case 'select': A.music('select'); A.play('select'); show('select'); break;
     case 'start': startGame(); break;
     case 'restart': startGame(); break;
     case 'resume': resume(); break;
@@ -249,7 +252,7 @@ function startGame() {
   A.unlock(); A.play('start');
   uiMode = 'game'; paused = false;
   GM.newGame({ lives: settings.lives, dur: settings.dur, demo: settings.demo, hero: settings.hero, area: params.get('area') ? clamp(parseInt(params.get('area'), 10) || 0, 0, 2) : 0 });
-  camCtl.yawOff = 0;
+  camCtl.yawOff = 0; if (G.player) delete G.player.lookHeading;
   show(null);
   last = performance.now(); acc = 0;
   autoProbe.frames = [];
@@ -378,10 +381,14 @@ window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
 IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega') }, toLocal);   // 切换视角用右上角 #btn-cam
 // 与虫潮一致：所有预设均向右拖、向右看；镜头的水平前向量是 (-sin(yaw), -cos(yaw))。
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => { camCtl.yawOff -= delta; } });
-IN.onClear(() => dragLook.clear());
+const lookControl = createLookController({ firstPerson: () => camCtl.fp(), turn: delta => {
+  camCtl.yawOff -= delta;
+  if (G.player && G.mode === 'play') G.player.lookHeading = (G.player.lookHeading ?? G.player.face) - delta;
+} });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
+IN.onClear(() => { dragLook.clear(); lookControl.clear(); });
 
-addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
+refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
 const H_ = { face: $('h-face'), name: $('h-name'), lives: $('h-lives'), score: $('h-score'), hp: $('h-hp'), enemy: $('h-enemy'), eface: $('h-eface'), ename: $('h-ename'), ecn: $('h-ecn'), ehp: $('h-ehp'), ehp2: $('h-ehp2'), timer: $('h-timer'), weapon: $('h-weapon'), wammo: $('h-wammo'), wname: $('h-wname'), go: $('h-go'), dialog: $('dialog'), dface: $('d-face'), dname: $('d-name'), dtext: $('d-text'), fade: $('fade'), hurt: $('hurt') };
@@ -490,16 +497,16 @@ function presentFrame(dtReal, draw, instant) {
   if (uiMode === 'game') {
     const p = G.player;
     if (playing && G.mode === 'play') {
-      const rot = (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0);
-      if (rot) camCtl.yawOff -= rot * (Math.PI / 2) * dtReal;
-      if (IN.look.dx) { camCtl.yawOff -= IN.look.dx * 0.005; IN.look.dx = 0; }
+      lookControl.step(dtReal, (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0));
+      if (IN.look.dx) { lookControl.queue(IN.look.dx * .005); IN.look.dx = 0; }
+      if (p.lookHeading !== undefined && !G.script && ['idle','walk','run','jump','shoot'].includes(p.state)) p.face += Math.max(-dtReal*2.1,Math.min(dtReal*2.1,Math.atan2(Math.sin(p.lookHeading-p.face),Math.cos(p.lookHeading-p.face))));
     } else IN.look.dx = 0;
     const fpOff = camCtl.fp() && (['cut', 'trans', 'clear', 'over', 'cont'].indexOf(G.mode) >= 0 || ['down', 'dead', 'respawn', 'victory', 'door'].indexOf(p.state) >= 0);
     G.fpActive = camCtl.fp() && !fpOff;
     const AR = world.area().def;
     const zc = (AR.z0 + AR.z1) / 2 * 0.6 + p.z * 0.25;
     const fitDepth = AR.z1 - ((AR.z0 + AR.z1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
-    camCtl.update(dtReal, { focusX: G.focusX, zc, fitDepth, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) }, shake: fx.shake * 0.8, instant, fpOff });
+    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {
@@ -550,6 +557,7 @@ requestAnimationFrame((t) => { last = t; frame(t); });
 if (TEST) {
   let rec = null, chunks = [];
   window.__CD_TEST__ = {
+    subjectHeading: () => G.player?.model.root.rotation.y,
     version: VERSION, seed, HEROES,
     snapshot() {
       const s = GM.snapshot();

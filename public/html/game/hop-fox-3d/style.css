@@ -69,3 +69,7 @@ body.mobile-device #full{display:none!important}
 
 body.playing.paused .panel{display:block;z-index:8}
 body.touch-mode #instructions{display:none}
+
+button::before,button::after{content:none!important}
+
+.touch-actions{display:grid;grid-template-columns:repeat(2,64px);gap:10px;align-items:stretch}.touch-actions .run-btn,.touch-actions .jump-btn{width:64px;height:64px;margin:0}

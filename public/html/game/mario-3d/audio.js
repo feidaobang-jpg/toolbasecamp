@@ -1,5 +1,5 @@
-// 音乐与音效：用 Web Audio 方波/三角波按原作旋律重新合成（音符依据公开的乐谱转写，
-// 无敌星音乐为近似还原），不加载任何原始音频文件。
+import {SampleAudio} from "../../../js/game/sample-audio.js?v=unified3d1";
+// 原版 BGM/音效优先；尚未加载或解码失败时使用原有合成回退。
 const NOTE = {};
 (() => {
   const names = ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'];
@@ -40,15 +40,16 @@ export class GameAudio {
   }
   unlock() {
     try {
-      if (!this.ctx) {
+      if (!this.visibilityBound) { this.visibilityBound = true; document.addEventListener('visibilitychange', () => this.syncPause()); } if (!this.ctx) {
         const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
         this.ctx = new AC();
         this.master = this.ctx.createGain(); this.master.connect(this.ctx.destination);
         this.musicBus = this.ctx.createGain(); this.musicBus.connect(this.master);
         this.sfxBus = this.ctx.createGain(); this.sfxBus.connect(this.master);
+        this.samples=new SampleAudio(this.ctx,this.musicBus,this.sfxBus,{"overworld": "overworld.mp3", "underground": "underground.mp3", "star": "star.mp3", "smb_1-up": "smb_1-up.wav", "smb_bowserfalls": "smb_bowserfalls.wav", "smb_bowserfire": "smb_bowserfire.wav", "smb_breakblock": "smb_breakblock.wav", "smb_bump": "smb_bump.wav", "smb_coin": "smb_coin.wav", "smb_fireball": "smb_fireball.wav", "smb_fireworks": "smb_fireworks.wav", "smb_flagpole": "smb_flagpole.wav", "smb_gameover": "smb_gameover.wav", "smb_jump-small": "smb_jump-small.wav", "smb_jump-super": "smb_jump-super.wav", "smb_kick": "smb_kick.wav", "smb_mariodie": "smb_mariodie.wav", "smb_pause": "smb_pause.wav", "smb_pipe": "smb_pipe.wav", "smb_powerup": "smb_powerup.wav", "smb_powerup_appears": "smb_powerup_appears.wav", "smb_stage_clear": "smb_stage_clear.wav", "smb_stomp": "smb_stomp.wav", "smb_vine": "smb_vine.wav", "smb_warning": "smb_warning.wav", "smb_world_clear": "smb_world_clear.wav"});
         this.applyVolume();
       }
-      if (this.ctx.state === 'suspended') this.ctx.resume();
+      this.syncPause();
     } catch (e) { /* 无音频设备时静默 */ }
   }
   setVolume(v) { this.volume = Math.max(0, Math.min(1, v)); this.applyVolume(); }
@@ -78,6 +79,8 @@ export class GameAudio {
   }
   sfx(name, opt) {
     if (!this.ctx || this.volume <= 0) return;
+    const map={jump:opt?.big?'smb_jump-super':'smb_jump-small',coin:'smb_coin',bump:'smb_bump',break:'smb_breakblock',stomp:'smb_stomp',kick:'smb_kick',fireball:'smb_fireball',sprout:'smb_powerup_appears',grow:'smb_powerup',fire:'smb_powerup',powerup:'smb_powerup',oneup:'smb_1-up',pipe:'smb_pipe',shrink:'smb_pipe',hurt:'smb_pipe',flagpole:'smb_flagpole',firework:'smb_fireworks'};
+    if(this.samples?.sfx(map[name]))return;
     const t = this.ctx.currentTime + 0.005;
     switch (name) {
       case 'jump': opt && opt.big ? this.tone(170, t, 0.2, 'square', 0.16, this.sfxBus, 480) : this.tone(240, t, 0.17, 'square', 0.16, this.sfxBus, 640); break;
@@ -104,20 +107,25 @@ export class GameAudio {
   jingle(name) {
     if (!this.ctx) return;
     this.stopMusic();
+    const original={die:'smb_mariodie',gameover:'smb_gameover',clear:'smb_stage_clear',hurry:'smb_warning',oneup:'smb_1-up',sprout:'smb_powerup_appears'}[name];
+    if(this.samples?.sfx(original)){this.jingleUntil=this.ctx.currentTime+this.samples.duration(original);return;}
     const end = this.playSeq(JINGLES[name], 'square', 0.17, this.musicBus);
     this.jingleUntil = end;
   }
   music(name, restart = true) {
     if (!restart && this.track === TRACKS[name]) return;
+    this.samples?.music(name,true,restart);
     this.track = name ? TRACKS[name] : null; this.trackName = name;
     this.idx = 0; this.inIntro = !!(this.track && this.track.intro.length);
     this.next = this.ctx ? Math.max(this.ctx.currentTime + 0.05, this.jingleUntil) : 0;
   }
-  stopMusic() { this.track = null; this.trackName = null; }
+  stopMusic() { this.samples?.stop(); this.track = null; this.trackName = null; }
   setHurry(h) { this.hurry = h; }
-  pause(p) { this.paused = p; if (this.musicBus && this.ctx) this.musicBus.gain.setTargetAtTime(p ? 0.0001 : 1, this.ctx.currentTime, 0.03); }
+  syncPause() { if (!this.ctx || this.ctx.state === 'closed') return; const op = this.paused || document.hidden ? this.ctx.suspend() : this.ctx.resume(); if (op?.catch) op.catch(() => {}); }
+ pause(on) { this.paused = !!on; this.syncPause(); }
   tick() {
     if (!this.ctx || !this.track || this.paused) { if (this.ctx) this.next = Math.max(this.next, this.ctx.currentTime); return; }
+    if(this.samples?.has(this.trackName)){this.samples.music(this.trackName);if(this.samples.source)this.samples.source.playbackRate.value=this.hurry?1.45:1;return;}
     const tr = this.track, speed = this.hurry ? 1.45 : 1;
     if (this.next < this.ctx.currentTime - 0.3) this.next = this.ctx.currentTime + 0.02;
     while (this.next < this.ctx.currentTime + 0.25) {

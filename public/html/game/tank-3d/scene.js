@@ -332,7 +332,7 @@ export function createScene(canvas) {
   }
 
   // ---------- 镜头 ----------
-  const view = { presetIndex: 0, yawOffset: 0, snap: true, titleMode: true, shake: 0, quality: 'high' };
+  const view = { subjectHeading: () => { const m=tankModels.get(world?.player?.id); return m ? m.group.rotation.y+m.turret.rotation.y : null; }, presetIndex: 0, yawOffset: 0, snap: true, titleMode: true, shake: 0, quality: 'high' };
   let elapsed = 0, fpYaw = 0, introK = -1;
   const target = new THREE.Vector3(), follow = new THREE.Vector3(), camPos = new THREE.Vector3(), lookAt = new THREE.Vector3();
   view.preset = () => PRESETS[view.presetIndex];
@@ -365,7 +365,7 @@ export function createScene(canvas) {
     if (camera.fov !== fov || camera.near !== near) { camera.fov = fov; camera.near = near; camera.updateProjectionMatrix(); }
     const p = world && world.player;
     if (pr.fp) {
-      fpYaw = view.snap ? -p.dir * Math.PI / 2 : lerpAngle(fpYaw, -p.dir * Math.PI / 2, 1 - Math.exp(-9 * dt));
+      if (view.snap) fpYaw = -p.dir * Math.PI / 2;
       const yaw = fpYaw + view.yawOffset, fwd = [-Math.sin(yaw), -Math.cos(yaw)];
       camPos.set(pp.x + fwd[0] * .15, 1.16, pp.z + fwd[1] * .15);
       lookAt.set(pp.x + fwd[0] * 10, .55, pp.z + fwd[1] * 10);
@@ -431,6 +431,8 @@ export function createScene(canvas) {
     const s = t.size, x = P(lerpPx(t.ox ?? t.x, t.x) + s / 2), z = P(lerpPx(t.oy ?? t.y, t.y) + s / 2);
     m.group.position.set(x, 0, z);
     m.group.rotation.y = -t.dir * Math.PI / 2;
+    if (isPlayer && t.lookHeading !== undefined) m.turret.rotation.y = t.lookHeading - m.group.rotation.y;
+    else m.turret.rotation.y = 0;
     m.tread.offset.y = -t.travel * .07;
     m.wheels.forEach(w => { w.rotation.x = -t.travel * .4; });
     m.body.position.y = t.moving ? Math.abs(Math.sin(elapsed * 22 + t.id)) * .025 : 0;
@@ -503,7 +505,7 @@ export function createScene(canvas) {
     while (bulletPool.length < bs.length) { const g = new THREE.Group(); const core = new THREE.Mesh(bulletGeo, bulletMats.player); const tr = new THREE.Mesh(trailGeo, trailMats.player); g.add(core, tr); g.core = core; g.trail = tr; scene.add(g); bulletPool.push(g); }
     bulletPool.forEach((g, i) => {
       const b = bs[i]; g.visible = !!b && b.state === 'fly'; if (!g.visible) return;
-      g.position.set(P(lerpPx(b.ox ?? b.x, b.x)), .72, P(lerpPx(b.oy ?? b.y, b.y))); g.rotation.y = -b.dir * Math.PI / 2;
+      g.position.set(P(lerpPx(b.ox ?? b.x, b.x)), .72, P(lerpPx(b.oy ?? b.y, b.y))); g.rotation.y = b.heading ?? -b.dir * Math.PI / 2;
       const special = b.kind !== 'shell';
       g.core.material = special ? bulletMats[b.kind] || bulletMats.wide : bulletMats[b.team];
       g.trail.material = trailMats[b.team];

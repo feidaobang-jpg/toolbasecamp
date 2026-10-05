@@ -13,7 +13,7 @@ const PACKAGE = path.join(OUT, 'package');
 const GAME = JSON.parse(fs.readFileSync(path.join(HERE, 'media-kit/game.json'), 'utf-8'));
 const VERSION = GAME.current_version;
 
-const RUNTIME_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'icon.svg', 'vendor/LICENSE.txt'];
+const RUNTIME_FILES = ['index.html', 'boot.js', 'game.compat.js', 'combat-controls.css', 'base.css', 'icon.svg', 'vendor/LICENSE.txt'];
 const sha256 = p => createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 
 // Minimal zip writer: same result as Python's zipfile(ZIP_DEFLATED) with entries in list order.
@@ -52,11 +52,12 @@ export function build() {
   for (const name of RUNTIME_FILES) {
     const dest = path.join(PACKAGE, name);
     fs.mkdirSync(path.dirname(dest), {recursive: true});
-    fs.copyFileSync(path.join(SOURCE, name), dest);
+    fs.copyFileSync(name === 'base.css' ? path.join(ROOT, 'public/css/base.css') : path.join(SOURCE, name), dest);
   }
   const indexPath = path.join(PACKAGE, 'index.html');
   let text = fs.readFileSync(indexPath, 'utf-8');
-  text = text.replace('../../../games.html', 'https://www.zhengxiaohui.cn/games.html');
+  text = text.replaceAll('../../../games.html', 'https://www.zhengxiaohui.cn/games.html');
+  text = text.replaceAll('../../../css/base.css', './base.css');
   text = text.replace('<script src="../../../js/game/thumb-preview.js"></script>', '');
   fs.writeFileSync(indexPath, text, 'utf-8');
   const compatPath = path.join(PACKAGE, 'game.compat.js');

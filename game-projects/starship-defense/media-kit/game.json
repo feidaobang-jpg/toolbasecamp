@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-rescue-v0.18.0",
+  "current_version": "web-unified3d-v0.18.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -56,7 +56,7 @@
   "controls": "电脑默认自动攻击，可选纯键盘/手动瞄准/射击方式。菜单：方向键或WASD选择，J/回车确认，K/Esc返回。手机自动横屏和显示触控，空白处拖动视角；K/空格跳跃，I互动，H医疗；U/手机手雷键投掷，无限使用，无需补充，无投掷间隔。 按住Shift或手机跑步键加速65%，K/空格为跳跃，落地后可再次起跳，无冷却和无敌效果。 视角提示统一：Q/E 左转视角/右转视角，手机拖动转视角；C/手机切换视角按钮切换预设。 暂停菜单可立即切换自动/电脑/触屏；队友集合与载具救援各20秒冷却，保留血量。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-rescue-v0.18.0/handoff.json",
+  "handoff": "releases/unified3d-20261006/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -93,5 +93,12 @@
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
   },
   "bilibili_sync": "bilibili-sync.json",
-  "pending_release": null
+  "pending_release": null,
+  "control_audio_camera_update": "2026-10-06: selected mode state, plain action buttons, pause freezes audio, bounded character-linked look",
+  "drag_camera_controls": {
+    "coupling": "所有预设拖动/QE联动主角身体、头部或载具炮塔，世界不旋转；第一人称限速平滑转头",
+    "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
+    "action_layout": "等大对齐；U I O在J K L正上方；C位于右上暂停旁，保留旧键别名",
+    "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局"
+  }
 }

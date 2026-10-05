@@ -1,0 +1,18 @@
+{
+  "game": "tank-3d",
+  "version": "unified3d1",
+  "classification": "普通补丁",
+  "entrypoint": "public/html/game/tank-3d/index.html",
+  "summary": "统一角色视线转向、慢速第一人称、动作键布局、选中状态及全部暂停音频；玛丽另换自然哑光低模画风；三款复刻接入原版音乐。",
+  "qa_record": "../../../../site-games/releases/unified3d-20261006/qa.json",
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "status": "pending_verified_package"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通补丁累计到下一次有意义的说明更新"
+  }
+}

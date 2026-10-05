@@ -54,7 +54,7 @@ async function cycle(p, g) {
       await p.evaluate(g => {
         if (g === 'tank-3d') { __TANK_TEST__.manual(true); __TANK_TEST__.skipCurtain(); __TANK_TEST__.world.player.invuln = 9999; }
         if (g === 'mario-3d') { __MARIO_TEST__.manual(true); __MARIO_TEST__.skipCard(); __MARIO_TEST__.world.player.inv = 9999; }
-        if (g === 'cadillacs-stage1-3d') { __CD_TEST__.manual(true); __CD_TEST__.step(180); }
+        if (g === 'cadillacs-stage1-3d') { __CD_TEST__.manual(true); __CD_TEST__.cheat.skipScript(); __CD_TEST__.cheat.G.player.invul = 9999; __CD_TEST__.step(180); }
         if (g === 'jackal-stage1-3d') { __JK_TEST__.manual(true); __JK_TEST__.cheat.invuln(9999); __JK_TEST__.step(180); }
         if (g === 'hop-fox-3d') __CAMERA_QA__.begin();
         if (g === 'journey-west-3d') __CAMERA_QA__.world.player.invulnerable = 9999;

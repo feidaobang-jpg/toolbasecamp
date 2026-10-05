@@ -122,3 +122,14 @@ body:not(.touch-on) .help-touch{display:none}
 body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
 
 #stage{touch-action:none}
+
+button::before,button::after{content:none!important}
+
+/* Equal arcade action grid; camera remains beside pause. */
+#btn-cam-t{display:none}body.touch-on #btn-cam{display:none}body.touch-on #btn-cam-t{display:block}
+.act-keys{display:grid;grid-template-columns:repeat(2,68px);grid-template-rows:repeat(2,68px);gap:10px;align-items:stretch}
+.act-keys .act,.act-keys .act.big{width:68px;height:68px;margin:0}
+.act-keys [data-hold=run],.act-keys [data-hold=fire]{grid-column:1;grid-row:2}.act-keys [data-hold=jump]{grid-column:2;grid-row:2}.act-keys [data-hold=down]{grid-column:1;grid-row:1}
+#stage.compact .act-keys{grid-template-columns:repeat(2,58px);grid-template-rows:repeat(2,58px)}#stage.compact .act-keys .act,#stage.compact .act-keys .act.big{width:58px;height:58px}
+
+#hud-top #btn-cam-t{width:auto;height:auto;min-height:44px;flex-direction:row;gap:4px;border-radius:12px}body.touch-on #hud-top #btn-cam-t{display:flex}

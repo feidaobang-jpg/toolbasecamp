@@ -359,7 +359,7 @@ export function createScene(canvas, world) {
     const p = world.hero, g = world.goal;
     fox.group.visible = !(g && g.hidden) && !(p.invincible > 0 && !p.dead && Math.floor(elapsed * 16) % 2 === 0);
     fox.group.position.set(p.x, p.y, 0); fox.group.scale.setScalar(1.15);
-    const face = p.facing >= 0 ? 0 : Math.PI; fox.group.rotation.y += (face - fox.group.rotation.y) * Math.min(1, dt * 14);
+    const face = p.lookHeading !== undefined ? p.lookHeading : p.facing >= 0 ? 0 : Math.PI; fox.group.rotation.y += Math.atan2(Math.sin(face - fox.group.rotation.y), Math.cos(face - fox.group.rotation.y)) * Math.min(1, dt * 14);
     const speed = Math.abs(p.vx), air = !p.grounded && !p.dead;
     const cycle = elapsed * (6 + speed * 1.6);
     fox.legs.forEach((l, i) => { l.rotation.z = air ? (i < 2 ? -.9 : .8) : speed > .2 ? Math.sin(cycle + (i % 2 ? Math.PI : 0) + (i > 1 ? Math.PI / 2 : 0)) * Math.min(1, speed * .18) : 0; });
@@ -427,5 +427,5 @@ export function createScene(canvas, world) {
   function reset() { for (const m of enemyModels.values()) scene.remove(m.group); enemyModels.clear(); for (const m of itemModels.values()) scene.remove(m); itemModels.clear(); for (const f of fx) { scene.remove(f.obj); if (f.dispose) f.obj.material.dispose(); } fx.length = 0; bumps.clear(); gridVersion = -1; acornProtos.forEach((o, i) => { o.a = world.acorns[i]; }); camX = world.hero.x; }
   function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   resize(); update(0, {}, true);
-  return { rotate(delta) { yaw += delta; }, renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get cameraIndex() { return cameraIndex; }, get cameraName() { return PRESETS[cameraIndex].name; }, get cameraCount() { return PRESETS.length; } };
+  return { subjectHeading:()=>fox.group.rotation.y, rotate(delta) { yaw += delta; }, renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get cameraIndex() { return cameraIndex; }, get cameraName() { return PRESETS[cameraIndex].name; }, get cameraCount() { return PRESETS.length; } };
 }

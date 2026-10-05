@@ -1,0 +1,18 @@
+{
+  "game": "jackal-stage1-3d",
+  "version": "v0.6.0",
+  "classification": "正式版本",
+  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+  "summary": "统一角色视线转向、慢速第一人称、动作键布局、选中状态及全部暂停音频；玛丽另换自然哑光低模画风；三款复刻接入原版音乐。",
+  "qa_record": "../../../../site-games/releases/unified3d-20261006/qa.json",
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "status": "pending_verified_package"
+  },
+  "bilibili": {
+    "status": "pending_meaningful_update",
+    "reason": null
+  }
+}

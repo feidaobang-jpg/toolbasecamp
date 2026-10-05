@@ -15,12 +15,16 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'vendor'), { recursive: true });
 
 const runtime = ['audio.js', 'index.html', 'levels.js', 'main.js', 'models.js', 'scene.js', 'style.css', 'textures.js', 'three.js', 'world.js'];
-const ignored = ['file-warning.css'];   // 旧版遗留，新页面不引用
+const ignored = ['file-warning.css','sounds'];   // 旧版遗留，新页面不引用
 const found = readdirSync(source).sort();
 const unexpected = found.filter(n => !runtime.includes(n) && !ignored.includes(n));
 if (unexpected.length || runtime.some(n => !found.includes(n))) throw Error('Unexpected runtime files: ' + found.join(', '));
 
 for (const name of runtime.filter(n => n !== 'index.html' && n !== 'three.js' && n !== 'main.js')) cpSync(join(source, name), join(out, name));
+cpSync(join(source,'sounds'),join(out,'sounds'),{recursive:true});
+cpSync(join(root,'public/js/game/sample-audio.js'),join(out,'sample-audio.js'));
+const audioSource=readFileSync(join(out,'audio.js'),'utf8').replaceAll('../../../js/game/sample-audio.js','./sample-audio.js');
+writeFileSync(join(out,'audio.js'),audioSource);
 cpSync(join(root, 'public/js/game/drag-look.js'), join(out, 'drag-look.js'));
 const mainSrc = readFileSync(join(source, 'main.js'), 'utf8');
 const mainToy = mainSrc.replaceAll('../../../js/game/drag-look.js', './drag-look.js').replace("|| '../../../games.html'", "|| 'index.html'");

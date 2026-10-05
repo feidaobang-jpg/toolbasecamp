@@ -1,11 +1,11 @@
-import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
+import { bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=unified3d1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=camera-mobile1';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.1.0';
+import { createView, PRESETS } from './scene.js?v=unified3d1';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=unified3d1';
 import { LEVEL_ORDER } from './levels.js?v=2.1.0';
-import { GameAudio } from './audio.js?v=2.1.0';
+import { GameAudio } from './audio.js?v=unified3d1';
 
-const VERSION = 'v2.2.2';
+const VERSION = 'v2.3.0';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -79,7 +79,7 @@ const isDown = (name) => {
   switch (name) {
     case 'jump': return keys.has('KeyK') || keys.has('Space') || touchHold.has('jump');
     case 'run': return keys.has('KeyJ') || touchHold.has('run');
-    case 'down': return keys.has('KeyL') || touchHold.has('down');
+    case 'down': return keys.has('KeyU') || keys.has('KeyL') || touchHold.has('down');
     case 'rotL': return keys.has('KeyQ') || touchHold.has('rotL');
     case 'rotR': return keys.has('KeyE') || touchHold.has('rotR');
   }
@@ -96,7 +96,7 @@ function moveAxes() {
   return { x, y };
 }
 function clearInput() {
-  dragLook.clear();
+  dragLook.clear(); lookControl.clear();
   keys.clear(); touchHold.clear(); joy.x = joy.y = 0; latch.jump = latch.fire = false;
   joyRelease();
   document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
@@ -128,7 +128,9 @@ function optLabel(name) {
   }
   return [name, '', false];
 }
+let refreshControlModes = () => {};
 function refreshOptions() {
+  refreshControlModes();
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
@@ -166,9 +168,11 @@ function adjust(name, delta) {
   refreshOptions();
 }
 function cycleCamera(delta = 1) {
-  dragLook.clear();
+  dragLook.clear(); lookControl.clear();
   const n = PRESETS.length;
+  if (w?.player) delete w.player.lookHeading;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
+  if (w?.player && view.firstPerson(w)) w.player.lookHeading = view.cameraYaw() + Math.PI;
   settings.camera = view.presetIndex; store.set('camera', settings.camera);
   view.snap = true;
   showToast('视角：' + PRESETS[view.presetIndex].name);
@@ -216,7 +220,7 @@ document.addEventListener('keydown', (e) => {
   const c = e.code;
   if (c === 'Escape' || c === 'Enter' || c === 'NumpadEnter') { if (!e.repeat) pauseGame(); e.preventDefault(); return; }
   if (c === 'KeyC') { if (!e.repeat) cycleCamera(); e.preventDefault(); return; }
-  if (c in MOVE_KEYS || ['KeyJ', 'KeyK', 'KeyL', 'KeyQ', 'KeyE', 'Space'].indexOf(c) >= 0) {
+  if (c in MOVE_KEYS || ['KeyJ', 'KeyK', 'KeyU', 'KeyL', 'KeyQ', 'KeyE', 'Space'].indexOf(c) >= 0) {
     if (!e.repeat) {
       if (c === 'KeyK' || c === 'Space') latch.jump = true;
       if (c === 'KeyJ') latch.fire = true;
@@ -509,9 +513,15 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   btn.addEventListener('contextmenu', (e) => e.preventDefault());
 });
 $('btn-cam-t').addEventListener('pointerdown', (e) => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
+const lookControl = createLookController({ firstPerson: () => view.firstPerson(w), turn: delta => {
+  view.yawOffset -= delta;
+  const p = w && w.player;
+  if (p) p.lookHeading = view.firstPerson(w) ? view.cameraYaw()+Math.PI : (p.lookHeading ?? p.facing)-delta;
+
+} });
 const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
-  toLocal, width: () => display.W, rotate: delta => { view.yawOffset -= delta; } });
-addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
+  toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
+refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
   get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
@@ -548,17 +558,14 @@ function simulate(dt) {
   // 单步推进：Q/E 旋转、卡片计时、世界步进、事件
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (rot) view.yawOffset -= rot * (Math.PI / 2) * dt;
+  if (uiMode === 'game' && !paused && !current) lookControl.step(dt, rot);
   if (uiMode !== 'game' || paused || current || !w) return;
   if (phase === 'card') { cardT += dt; if (cardT >= 2.2) endCard(); return; }
   const input = buildInput();
-  // 第一人称站着不动时，玛丽朝向跟着视线走，火球往看的方向飞
-  if (view.firstPerson(w) && w.mode === 'play' && Math.hypot(input.mx, input.mz) < 0.2) {
-    const yaw = view.cameraYaw();
-    w.player.facing = Math.atan2(-Math.sin(yaw), -Math.cos(yaw));
-  }
+  if (w.player.lookHeading !== undefined) w.player.facing = w.player.lookHeading;
   const before = w;
   step(w, input, dt);
+  if (w.player.lookHeading !== undefined) w.player.facing = w.player.lookHeading;
   latch.jump = false; latch.fire = false;
   hurtFx = Math.max(0, hurtFx - dt * 2.2);
   while (w === before && w.events.length) {

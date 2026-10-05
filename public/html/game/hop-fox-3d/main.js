@@ -1,7 +1,7 @@
-import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
+import { bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=unified3d1';
 import { createWorld, startWorld, stepWorld, LEVEL_END } from './world.js';
-import { createScene } from './scene.js?v=drag-direction1';
-import { GameAudio } from './audio.js?v=1';
+import { createScene } from './scene.js?v=unified3d1';
+import { GameAudio } from './audio.js?v=unified3d1';
 
 const $ = id => document.getElementById(id);
 const tr = (k, p) => (typeof window.t === 'function' ? window.t(k, p) : k);
@@ -19,9 +19,9 @@ let hi = 0; try { hi = Number(localStorage.getItem(HI_KEY)) || 0; } catch (e) { 
 function setText(id, v) { const el = $(id); if (el.textContent !== v) el.textContent = v; }
 function toast(text, ms = 1700) { const e = $('toast'); e.textContent = text; e.classList.add('visible'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('visible'), ms); }
 function pressed(code) { return held.has(code) || pointerKeys.has(code) || tapped.has(code); }
-function clearInput() { dragLook.clear(); held.clear(); pointerKeys.clear(); tapped.clear(); stickX = 0; stickId = null; $('knob').style.transform = 'translate(0,0)'; document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
+function clearInput() { dragLook.clear(); lookControl.clear(); held.clear(); pointerKeys.clear(); tapped.clear(); stickX = 0; stickId = null; $('knob').style.transform = 'translate(0,0)'; document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
 function readInput() {
-  // Left/right follow the screen: with the orbit limited to ±55°, the camera's right vector always points toward +x.
+  // Project screen left/right onto the platform axis; retain the last sign near an edge-on view.
   let x = (pressed('KeyD') ? 1 : 0) - (pressed('KeyA') ? 1 : 0);
   if (stickId !== null && Math.abs(stickX) > .3) x = Math.sign(stickX);
   const jump = pressed('KeyK') || pressed('KeyW'), action = pressed('KeyJ');
@@ -83,7 +83,7 @@ function startGame() {
 }
 function togglePause() {
   if (phase !== 'playing' && phase !== 'intro') return;
-  paused = !paused; document.body.classList.toggle('paused',paused); $('panel').hidden = !paused; refreshPauseLabel(); audio.effect('tick');
+  paused = !paused; audio.pause(paused); document.body.classList.toggle('paused',paused); $('panel').hidden = !paused; refreshPauseLabel(); audio.effect('tick');
   if (paused) { clearInput(); bigText(tr('hopfox3d.paused'), 'pause', 1e9); } else { $('bigtext').hidden = true; bigTimer = 0; }
 }
 function handleEvents() {
@@ -114,7 +114,8 @@ function frame(now) {
   const active = !paused && !orientationBlocked;
   const cameraPressed = pressed('KeyC');
   const cam = { yaw: (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0), pitch: (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0), reset: cameraPressed && !prevCamera };
-  if (cam.reset) dragLook.clear();
+  if (cam.reset) { dragLook.clear(); lookControl.clear(); delete world.hero.lookHeading; }
+  if (active && phase === 'playing') lookControl.step(dt, cam.yaw); cam.yaw = 0;
   prevCamera = cameraPressed;
   if (phase === 'intro' && active) { introT += dt; if (introT >= 2.2) { phase = 'playing'; startWorld(world); } }
   if (phase === 'intro') cam.intro = Math.min(1, Math.max(0, (introT - .8) / 1.9));
@@ -144,8 +145,8 @@ addEventListener('keydown', e => {
   held.add(code); tapped.add(code);
 });
 addEventListener('keyup', e => held.delete(ALIASES[e.code] || e.code));
-addEventListener('blur', () => { clearInput(); if (phase === 'playing' && !paused) togglePause(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); if (phase === 'playing' && !paused) togglePause(); } last = performance.now(); });
+addEventListener('blur', () => { clearInput(); if (['playing','intro'].includes(phase) && !paused) togglePause(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); if (['playing','intro'].includes(phase) && !paused) togglePause(); } last = performance.now(); });
 
 $('start').onclick = startGame; $('pause').onclick = togglePause; $('full').onclick = requestFull;
 $('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSoundLabel(); };
@@ -184,7 +185,8 @@ function orientation() {
   }
 }
 let phoneRotated=false;
-const dragLook=bindDragLook({element:$('game'),active:()=>phase==='playing'&&!paused,toLocal:(x,y)=>phoneRotated?{x:y,y:innerWidth-x}:{x,y},width:()=>phoneRotated?innerHeight:innerWidth,rotate:delta=>view.rotate(-delta)});
+const lookControl = createLookController({ turn: delta => { view.rotate(-delta); world.hero.lookHeading = view.yaw; } });
+const dragLook=bindDragLook({element:$('game'),active:()=>phase==='playing'&&!paused,toLocal:(x,y)=>phoneRotated?{x:y,y:innerWidth-x}:{x,y},width:()=>phoneRotated?innerHeight:innerWidth,rotate:delta=>lookControl.queue(delta)});
 let controlMode='auto';
 addControlModeButtons({containers:[$('panel').querySelector('.options')],get:()=>controlMode,set:value=>{controlMode=value;clearInput();$('touch').hidden=value==='hide'||value==='auto'&&!mobileDevice;document.body.classList.toggle('touch-mode',!$('touch').hidden);orientation();}});
 document.addEventListener('tb:locale', () => { refreshSoundLabel(); refreshPauseLabel(); if (phase === 'over') showPanel(world.status === 'won' ? 'won' : 'lost'); });
