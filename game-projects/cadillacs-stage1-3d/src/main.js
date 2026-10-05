@@ -140,7 +140,7 @@ function adjust(name, delta) {
 function cycleCamera() {
   const p = camCtl.cycle();
   store.set('camera', camCtl.idx);
-  showToast('视角：' + p.name + (p.fp ? '（Q/E 转头）' : ''));
+  showToast('视角：' + p.name + (p.fp ? (coarsePointer() ? '（按住画面拖动）' : '（Q/E 转头）') : ''));
   refreshOptions();
 }
 
@@ -330,7 +330,7 @@ function viewport() {
 }
 function layout() {
   const { vw, vh } = viewport(), coarse = coarsePointer();
-  const rotate = uiMode === 'game' && vh > vw && coarse;
+  const rotate = (uiMode === 'game' || current === 'select') && vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';

@@ -124,10 +124,10 @@
     "min_duration": 18,
     "shots": [
       {
-        "source": "capture/mobile-landscape-v4.mp4",
+        "source": "capture/mobile-landscape-v5.mp4",
         "in": 2.5,
         "duration": 8,
-        "desc": "手机横屏触屏实玩（无Q/E按钮版）"
+        "desc": "手机横屏触屏实玩（J前K后布局）"
       },
       {
         "source": "../../../media-kit/releases/v0.1.0/captures/shots/continue.png",

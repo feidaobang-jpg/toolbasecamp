@@ -15,7 +15,7 @@
 | 06-street | 101.0-125.5 | full-run-16x9.mp4 | 216 | Boss登场：维斯抽鞭，岩跳龙变橙色暴走 |
 | 07-boss | 125.5-157.5 | full-run-16x9.mp4 | 225 | Boss战：飞身踢、叫人、投摔 |
 | 07-boss | 125.5-157.5 | full-run-16x9.mp4 | 297 | 击倒维斯 → 过关演出 → 结算 |
-| 08-limits | 157.5-178.9 | mobile-landscape-v4.mp4 | 2.5 | 手机横屏触屏实玩（无Q/E按钮版） |
+| 08-limits | 157.5-178.9 | mobile-landscape-v5.mp4 | 2.5 | 手机横屏触屏实玩（J前K后布局） |
 | 08-limits | 157.5-178.9 | continue.png | - | 续关画面：维斯拿左轮倒数 |
 | 08-limits | 157.5-178.9 | title.png | - | 标题画面：音乐话题背景 |
 | 09-outro | 178.9-200.1 | result.png | - | 结算画面实拍 |

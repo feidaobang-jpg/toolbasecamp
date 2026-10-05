@@ -222,9 +222,9 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 }
 .act b { font-size: 24px; font-family: ui-monospace, Consolas, monospace; }
 .act span { font-size: 11px; margin-top: 3px; font-weight: 800; white-space: nowrap; }
-#btn-atk { right: calc(var(--sar) + 24px); bottom: calc(var(--sab) + 28px); width: 92px; height: 92px; background: radial-gradient(circle at 35% 30%, #ffb09a 0 12%, #e5322b 13% 70%, #9a1e18 71%); }
-#btn-jump { right: calc(var(--sar) + 126px); bottom: calc(var(--sab) + 18px); width: 76px; height: 76px; background: radial-gradient(circle at 35% 30%, #a8f0ac 0 12%, #3fbf4a 13% 70%, #1f7a2a 71%); }
-#btn-run { right: calc(var(--sar) + 126px); bottom: calc(var(--sab) + 112px); width: 64px; height: 64px; background: radial-gradient(circle at 35% 30%, #a8c8ff 0 12%, #3a6ad8 13% 70%, #1e3a8a 71%); }
+#btn-atk { right: calc(var(--sar) + 24px); bottom: calc(var(--sab) + 16px); width: 92px; height: 92px; background: radial-gradient(circle at 35% 30%, #ffb09a 0 12%, #e5322b 13% 70%, #9a1e18 71%); }
+#btn-jump { right: calc(var(--sar) + 126px); bottom: calc(var(--sab) + 34px); width: 76px; height: 76px; background: radial-gradient(circle at 35% 30%, #a8f0ac 0 12%, #3fbf4a 13% 70%, #1f7a2a 71%); }
+#btn-run { right: calc(var(--sar) + 126px); bottom: calc(var(--sab) + 118px); width: 64px; height: 64px; background: radial-gradient(circle at 35% 30%, #a8c8ff 0 12%, #3a6ad8 13% 70%, #1e3a8a 71%); }
 #btn-mega { right: calc(var(--sar) + 30px); bottom: calc(var(--sab) + 132px); width: 66px; height: 66px; background: radial-gradient(circle at 35% 30%, #ffe8a0 0 12%, #e8a81a 13% 70%, #8a5a0a 71%); }
 #btn-cam-t { right: calc(var(--sar) + 196px); bottom: calc(var(--sab) + 120px); width: 56px; height: 56px; background: radial-gradient(circle at 35% 30%, #f4ecff 0 12%, #9a88c8 13% 70%, #5a4a8a 71%); }
 #btn-cam-t b { font-size: 18px; } #btn-cam-t span { font-size: 9px; }

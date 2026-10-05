@@ -9,7 +9,7 @@
   "toy_id": 40412421031936,
   "game_id": "cadillacs-stage1-3d",
   "version": "v0.1.0",
-  "video_sha256": "ffd11f59c08976850c6dc982761569f38d1fa6b6a26735ca72194f51a1faccf3",
+  "video_sha256": "7d5134debe1f9f1a1ddaee0b6d56bfe3919cef34ccbb5dcbbb2a0ba908333a40",
   "duration_seconds": 200.176,
   "subjective_audio_review": "not-run",
   "capture_permission": "用户2026-10-04明确长期允许Playwright脚本录制，已写入.claude/skills/game-video/SKILL.md",

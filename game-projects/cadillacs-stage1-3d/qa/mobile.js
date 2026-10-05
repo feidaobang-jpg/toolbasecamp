@@ -117,8 +117,16 @@ const fs = require('fs');
   await page.goto(BASE + '?test=1&seed=3', { waitUntil: 'load' }); await sleep(800);
   s = await S(page); ok('竖屏：菜单正常显示（不旋转）', s.ui.overlay === 'menu' && !s.ui.display.rotated);
   await page.screenshot({ path: out('mobile-portrait-menu.png') });
-  await tapSel(page, cdp, '[data-act=select]'); await tapSel(page, cdp, '#sel-go'); await sleep(400);
-  s = await S(page); ok('竖屏开局后舞台旋转为横屏布局', s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);
+  await tapSel(page, cdp, '[data-act=select]');
+  s = await S(page); ok('竖屏进入选人画面即旋转为横屏', s.ui.overlay === 'select' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);
+  await tapSel(page, cdp, '#sel-go'); await sleep(400);
+  s = await S(page); ok('竖屏开局后舞台保持横屏布局', s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);
+  // 街机按钮习惯：J 攻击在前（离右下角拇指位最近），K 跳跃在后
+  const order = await page.evaluate(() => {
+    const r = (id) => { const b = document.getElementById(id).getBoundingClientRect(); return Math.hypot(innerWidth - b.right, innerHeight - b.bottom); };
+    return { jDist: +r('btn-atk').toFixed(1), kDist: +r('btn-jump').toFixed(1), jFront: r('btn-atk') < r('btn-jump') };
+  });
+  ok('J 攻击键在 K 跳跃键前位（离右下角更近）', order.jFront, order);
   for (let i = 0; i < 12; i++) { s = await S(page); if (s.mode === 'play') break; await tapSel(page, cdp, '#btn-atk'); await sleep(250); }
   await page.evaluate(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500);
   await page.screenshot({ path: out('mobile-portrait-game.png') });

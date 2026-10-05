@@ -7,7 +7,7 @@
  "frames": 9167,
  "duration": 305.57,
  "gameStart": 4,
- "build_game_min_js_sha256": "3c1d0dbea3c369de8a891d2069484f622c9bf3f9994e3d4a7b7976d5185d73e0",
+ "build_game_min_js_sha256": "1c5227d2b8ea3651ad2ddd74b027685cdc661d5d296c96a17630d856bd6cfbc1",
  "input": "bot（页面内派发真实键盘事件，含 C 键切视角与 Q/E 转头），非真人",
  "views": [
   {
@@ -455,5 +455,6 @@
    "score": 122400,
    "video_t": 298.85
   }
- ]
+ ],
+ "build_note": "录制 10:53:40 开始时页面加载的是已提交的 v3（index.html ?v=3，sha256 1c5227d2…）；录制期间另一会话于 11:01:56 用未提交的「触屏按住拖动转视角」改动重建了 game.min.js（3c1d0dbe…），录像脚本结束时读到的是新文件，已更正。两者电脑键盘玩法与画面一致，差异只在手机触屏转视角。"
 }
