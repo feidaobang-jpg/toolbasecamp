@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>飞刀班长游戏合集</title>
+<script src="https://s1.hdslb.com/bfs/seed/toy/app/sdk/toy-sdk.js"></script>
+<style>
+  :root {
+    --ink: #3a3122; --ink-soft: #7a6f5c; --paper: #f7f1e3; --card: #fffaf0;
+    --line: #e8dcc2; --accent: #4f8a5b; --accent-2: #d8a13a; --chip: #efe6cf;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 40px; }
+  header { display: flex; align-items: center; gap: 14px; padding: 6px 2px 16px; }
+  .logo {
+    width: 52px; height: 52px; border-radius: 14px; background: var(--accent);
+    color: #fff; font-size: 26px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 0 #3a6b44; flex: none;
+  }
+  h1 { font-size: 24px; letter-spacing: 1px; }
+  .sub { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+  .sub a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; padding: 4px 2px 14px; }
+  .chip {
+    border: 2px solid var(--line); background: var(--chip); color: var(--ink-soft);
+    border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .chip.on { background: var(--ink); border-color: var(--ink); color: #fff8e6; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px;
+  }
+  .card {
+    background: var(--card); border: 2px solid var(--line); border-radius: 16px;
+    overflow: hidden; cursor: pointer; position: relative;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(58, 49, 34, .14); }
+  .cover { position: relative; aspect-ratio: 4 / 3; background: var(--chip); overflow: hidden; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cover img.err { visibility: hidden; }
+  .cover .ph {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    font-size: 34px; color: var(--ink-soft); background: var(--chip);
+  }
+  .play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(40, 32, 18, .35); opacity: 0; transition: opacity .15s ease;
+  }
+  .card:hover .play, .card:active .play { opacity: 1; }
+  .play b {
+    background: var(--accent-2); color: #3a2c10; border-radius: 999px; padding: 8px 18px;
+    font-size: 14px; box-shadow: 0 2px 0 #a97c22;
+  }
+  .meta { padding: 10px 12px 12px; }
+  .meta h3 { font-size: 15px; line-height: 1.3; }
+  .meta p { font-size: 12px; color: var(--ink-soft); margin-top: 4px; line-height: 1.5;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tag { background: var(--chip); color: var(--ink-soft); border-radius: 6px; padding: 2px 7px; font-size: 11px; font-weight: 700; }
+  .badge-video {
+    position: absolute; top: 8px; left: 8px; background: #fb7299; color: #fff;
+    font-size: 11px; font-weight: 700; border-radius: 7px; padding: 3px 8px; z-index: 2;
+  }
+  footer { margin-top: 26px; text-align: center; color: var(--ink-soft); font-size: 12px; line-height: 1.9; }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    background: rgba(58, 49, 34, .92); color: #fff8e6; border-radius: 10px;
+    padding: 9px 16px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .2s;
+    z-index: 9;
+  }
+  .toast.show { opacity: 1; }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    h1 { font-size: 20px; }
+    .meta h3 { font-size: 14px; }
+    .meta p { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">🎮</div>
+    <div>
+      <h1>飞刀班长游戏合集</h1>
+      <div class="sub">AI 把点子和建议做成能玩的游戏 · <a href="https://space.bilibili.com/16214353" target="_blank" rel="noopener">B站主页</a></div>
+    </div>
+  </header>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+  <footer>
+    想玩哪款复刻或新玩法？<a href="https://www.zhengxiaohui.cn/game-vote.html" target="_blank" rel="noopener">投票 / 愿望单</a>提名，票高的优先做。<br>
+    网页版与最新动态：<a href="https://www.zhengxiaohui.cn/games.html" target="_blank" rel="noopener">www.zhengxiaohui.cn/games.html</a>
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const GAMES = [
+  { slug: 'feidao-jackal-3d', title: '赤色要塞 3D', cat: '3d', tags: ['3D重置', '双关卡', '第一人称'], video: 'BV1EyHz6wE5u',
+    poster: './assets/feidao-jackal-3d.png',
+    desc: '驾驶武装吉普炸营房、救俘虏、送直升机，海滩与废墟两关，新增第一人称视角。' },
+  { slug: 'chongchao-qianshao', title: '虫潮围城', cat: 'str', tags: ['塔防', '建造防线', '指挥队友'], video: 'BV1WbHq6eEBt',
+    poster: './assets/chongchao-qianshao.jpg',
+    desc: '建造防线、指挥队友、抵御虫潮，还能钻进虫洞反攻母皇。' },
+  { slug: 'feidao-tank-3d', title: '坦克大战 3D', cat: '3d', tags: ['3D重置', '经典'], video: 'BV1Wqaz6AEJb',
+    poster: './assets/feidao-tank-3d.png',
+    desc: '立体地图上的坦克大战，守住老鹰基地。' },
+  { slug: 'feidao-mario-3d', title: '超级玛丽 3D', cat: '3d', tags: ['3D重置', '平台跳跃'], video: 'BV1guep6NELt',
+    poster: './assets/feidao-mario-3d.png',
+    desc: '3D 视角重现顶蘑菇，1-1 与 1-2 两关。' },
+  { slug: 'feidao-cadillacs-3d', title: '恐龙快打 3D', cat: '3d', tags: ['3D重置', '第一关'],
+    poster: './assets/feidao-cadillacs-3d.png',
+    desc: '横版闯关打架的经典，第一关 3D 重置版。' },
+  { slug: 'feidao-journey-west', title: '西游降魔', cat: '3d', tags: ['3D', '动作'],
+    poster: './assets/feidao-journey-west.png',
+    desc: '三维渲染的降妖之路。' },
+  { slug: 'feidao-worms', title: '百战天虫', cat: 'str', tags: ['回合制', '炮击'],
+    poster: './assets/feidao-worms.png',
+    desc: '回合制虫虫炮击对轰，算好抛物线一击制胜。' },
+  { slug: 'feidao-sheepstack', title: '叠叠乐', cat: 'cas', tags: ['休闲', '手稳'],
+    poster: './assets/feidao-sheepstack.png',
+    desc: '把羊羊叠得越高越好，手一抖就塌。' },
+  { slug: 'feidao-brick-breaker', title: '打砖块', cat: 'cas', tags: ['休闲', '经典'],
+    poster: './assets/feidao-brick-breaker.png',
+    desc: '弹球打砖块，清空一屏再来一屏。' },
+  { slug: 'feidao-frog-zuma', title: '青蛙祖玛', cat: 'cas', tags: ['消除', '经典'],
+    poster: './assets/feidao-frog-zuma.png',
+    desc: '吐珠凑三消，别让彩珠滚进洞里。' },
+  { slug: 'feidao-bubble-dragon', title: '泡泡龙', cat: 'cas', tags: ['消除', '经典'],
+    poster: './assets/feidao-bubble-dragon.png',
+    desc: '经典泡泡消除，一发入魂。' },
+  { slug: 'feidao-fly-bird', title: '飞行鸟', cat: 'cas', tags: ['休闲', '手速'],
+    poster: './assets/feidao-fly-bird.png',
+    desc: '扇翅膀穿过管道，手一抖就摔。' },
+  { slug: 'feidao-lianliankan', title: '连连看', cat: 'cas', tags: ['消除', '经典'],
+    poster: './assets/feidao-lianliankan.png',
+    desc: '两张相同的连一线，眼疾手快全消光。' },
+  { slug: 'feidao-gemswap', title: '宝石迷阵', cat: 'cas', tags: ['三消', '经典'],
+    poster: './assets/feidao-gemswap.png',
+    desc: '交换宝石凑三连消，连锁反应最爽。' }
+];
+const CATS = [ ['all', '全部'], ['3d', '3D 重置'], ['cas', '经典休闲'], ['str', '策略塔防'] ];
+
+const grid = document.getElementById('grid');
+const chips = document.getElementById('chips');
+const toast = document.getElementById('toast');
+let curCat = 'all';
+
+function showToast(msg) {
+  toast.textContent = msg; toast.classList.add('show');
+  clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// 优先用 Toy SDK 跳转（站内原生跳转）；本地预览/SDK 缺失时退回新开 Toy 链接
+async function openToy(slug) {
+  try {
+    if (globalThis.toy && typeof globalThis.toy.navigate === 'function') {
+      await globalThis.toy.navigate({ type: 'toy', id: slug, extra: { from: 'feidao-gamehub' } });
+      return;
+    }
+  } catch (e) { /* fallthrough */ }
+  window.open('https://www.bilibili.com/toy/' + encodeURIComponent(slug) + '/index.html', '_blank', 'noopener');
+}
+
+function render() {
+  grid.innerHTML = '';
+  for (const g of GAMES) {
+    if (curCat !== 'all' && g.cat !== curCat) continue;
+    const card = document.createElement('div');
+    card.className = 'card';
+    const videoBadge = g.video ? '<span class="badge-video">▶ 实机视频</span>' : '';
+    card.innerHTML =
+      '<div class="cover">' + videoBadge + '<img loading="lazy" alt="' + g.title + '"><div class="ph">🎮</div>' +
+      '<div class="play"><b>开玩 ▶</b></div></div>' +
+      '<div class="meta"><h3>' + g.title + '</h3><p>' + g.desc + '</p>' +
+      '<div class="tags">' + g.tags.map(t => '<span class="tag">' + t + '</span>').join('') + '</div></div>';
+    const img = card.querySelector('img');
+    img.addEventListener('error', () => { img.classList.add('err'); card.querySelector('.ph').style.display = 'flex'; });
+    img.src = g.poster;
+    card.addEventListener('click', () => { openToy(g.slug); });
+    if (g.video) {
+      card.querySelector('.badge-video').addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open('https://www.bilibili.com/video/' + g.video, '_blank', 'noopener');
+      });
+    }
+    grid.appendChild(card);
+  }
+  if (!grid.children.length) grid.innerHTML = '<p style="grid-column:1/-1;color:var(--ink-soft)">这个分类还没有游戏</p>';
+}
+
+function renderChips() {
+  chips.innerHTML = '';
+  for (const [id, name] of CATS) {
+    const b = document.createElement('button');
+    b.className = 'chip' + (curCat === id ? ' on' : '');
+    b.textContent = name;
+    b.addEventListener('click', () => { curCat = id; renderChips(); render(); });
+    chips.appendChild(b);
+  }
+}
+
+renderChips();
+render();
+if (!(globalThis.toy && typeof globalThis.toy.navigate === 'function')) {
+  showToast('预览模式：点击游戏会新开 Toy 链接');
+}
+</script>
+</body>
+</html>
