@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-05",
+  "timezone": "Asia/Shanghai",
+  "account_mid": 16214353,
+  "account_name": "飞刀班长",
+  "operation": "create_formal_collection",
+  "collection_id": 9248439,
+  "url": "https://space.bilibili.com/16214353/lists/9248439?type=season",
+  "title": "虫潮围城开发实录",
+  "description": "把有趣的点子和玩家建议做成能玩的游戏。记录《虫潮围城》从建造防线、抵御虫群，到深入虫洞反攻母皇的开发变化与实机挑战。欢迎试玩、反馈问题和提出建议，一起见证游戏成长。",
+  "videos": [
+    "BV1Ujad6DEuf",
+    "BV1WbHq6eEBt"
+  ],
+  "status": "public_verified",
+  "evidence": "collection-public.jpg",
+  "existing_series": {
+    "id": 5178167,
+    "status": "preserved",
+    "url": "https://space.bilibili.com/16214353/lists/5178167?type=series"
+  },
+  "rights": {
+    "evidence": "rights-rules.jpg",
+    "followers": 150,
+    "refresh": "每日北京时间12点按前一日粉丝量刷新",
+    "lv2_minimum_followers": 100,
+    "source": "https://member.bilibili.com/platform/railgun",
+    "credit_score": 100,
+    "level": 2
+  },
+  "verification": [
+    "创作中心合集及两集状态均为正常显示",
+    "首发公开视频页展示合集名称、两集目录及1/2",
+    "空间正式合集页显示2个视频及正确顺序"
+  ],
+  "video_files_modified": false,
+  "video_titles_descriptions_modified": false,
+  "future_uploads": "后续虫潮正式视频应加入合集9248439；原系列关键词规则仍单独保留，不能假定系列自动收录会加入正式合集"
+}
