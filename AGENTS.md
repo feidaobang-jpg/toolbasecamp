@@ -69,7 +69,7 @@ Git 安全底线仍然有效：不改 `git config`，不 force push `master`，�
 
 ## 新视频自动绑定 Toy（用户长期授权，2026-10-05）
 
-游戏视频在B站发布（过审可见）后，收尾时用 `toy video bind <BV号> --toy <ToyID>` 把该视频绑定到对应游戏的 Toy，即时生效、无预览审核；绑定后用 `toy video list <ToyID>` 核验。一个视频只能绑一个 Toy；视频对应的 Toy 映射不明时不擅自绑，先问用户；用户当次说不要绑定时遵从。这是发片任务的收尾步骤，不是后台监控或定时任务。已有基线：虫潮围城绑 BV1Ujad6DEuf、BV1WbHq6eEBt，赤色要塞 3D 绑 BV1EyHz6wE5u，坦克大战 3D 绑 BV1Wqaz6AEJb，超级玛丽 3D 绑 BV1guep6NELt（后两条为 2026-10-05 手工补绑）；恐龙快打 3D 视频过审发布后需补绑。
+游戏视频在B站发布（过审可见）后，收尾时用 `toy video bind <BV号> --toy <ToyID>` 把该视频绑定到对应游戏的 Toy，即时生效、无预览审核；绑定后用 `toy video list <ToyID>` 核验。一个视频只能绑一个 Toy；视频对应的 Toy 映射不明时不擅自绑，先问用户；用户当次说不要绑定时遵从。这是发片任务的收尾步骤，不是后台监控或定时任务。已有基线：虫潮围城绑 BV1Ujad6DEuf、BV1WbHq6eEBt，赤色要塞 3D 绑 BV1EyHz6wE5u，坦克大战 3D 绑 BV1Wqaz6AEJb，超级玛丽 3D 绑 BV1guep6NELt（后两条为 2026-10-05 手工补绑），恐龙快打 3D 绑 BV18XHW66E55（2026-10-05 发布后绑定）。
 
 ## 游戏更新自动同步B站视频说明（用户长期授权，2026-10-05 更新节奏）
 
