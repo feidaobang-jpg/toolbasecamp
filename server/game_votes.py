@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 import os
 import re
 from datetime import datetime, timedelta, timezone
@@ -26,6 +27,7 @@ try:  # Windows 精简环境可能缺 tzdata，退回固定 UTC+8
 except Exception:  # pragma: no cover - 环境相关兜底
     _CN_TZ = timezone(timedelta(hours=8))
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/game-votes", tags=["game-votes"])
 security = HTTPBearer(auto_error=False)
 
@@ -53,24 +55,34 @@ _SPAM_RE = re.compile(
 VOTE_FAVORITE = "favorite"
 VOTE_WISHLIST = "wishlist"
 
-# 自研（本站有源码）游戏白名单：key 取游戏页 slug，titleKey 交给前端 i18n 取中文名，
-# 后端不存文案，避免和 public/js/config.js、locales 双份维护。
-ORIGINAL_GAMES: List[Dict[str, str]] = [
-    {"key": "mario-3d", "url": "html/game/mario-3d/index.html", "titleKey": "tools.mario3d.title"},
-    {"key": "fly_bird", "url": "html/game/fly_bird.html", "titleKey": "tools.flyBird.title"},
-    {"key": "tank-3d", "url": "html/game/tank-3d/index.html", "titleKey": "tools.tank3d.title"},
-    {"key": "journey-west-3d", "url": "html/game/journey-west-3d/index.html", "titleKey": "tools.journeyWest.title"},
-    {"key": "worms", "url": "html/game/worms.html", "titleKey": "tools.worms.title"},
+# 自研游戏候选项的唯一来源是游戏页 public/js/config.js 的 gamesConfig：上了游戏页就自动可投票、
+# 可统计点击，从游戏页撤下即退出榜单（历史票保留在库里），后端不再手工维护名单。
+# key 与 games-hub.js 埋点一致，取 html/game/<slug>(.html|/index.html) 的 slug；titleKey 交给前端 i18n。
+_GAME_URL_RE = re.compile(
+    r"(?:^|/)html/game/([a-z0-9_-]{1,64})(?:\.html|/index\.html)(?:[?#]|$)", re.IGNORECASE
+)
+_JS_LEAF_OBJECT_RE = re.compile(r"\{[^{}]*\}")
+
+# 读不到 config.js 时的兜底（2026-10-05 游戏页快照），平时无需维护。
+_FALLBACK_GAMES: List[Dict[str, str]] = [
+    {"key": "cadillacs-stage1-3d", "url": "html/game/cadillacs-stage1-3d/index.html", "titleKey": "tools.cadillacs3d.title"},
+    {"key": "jackal-stage1-3d", "url": "html/game/jackal-stage1-3d/index.html", "titleKey": "tools.jackal3d.title"},
     {"key": "starship_defense", "url": "html/game/starship_defense.html", "titleKey": "tools.starshipDefense.title"},
-    # tank_battle（坦克大战 2D）已下架并入 tank-3d，从榜单与投票选项中移除；历史票保留在库里。
-    {"key": "sheepstack", "url": "html/game/sheepstack.html", "titleKey": "tools.sheepstack.title"},
+    {"key": "tank-3d", "url": "html/game/tank-3d/index.html", "titleKey": "tools.tank3d.title"},
     {"key": "gemswap", "url": "html/game/gemswap.html", "titleKey": "tools.gemswap.title"},
-    {"key": "brick_breaker", "url": "html/game/brick_breaker.html", "titleKey": "tools.brickBreaker.title"},
-    {"key": "frog_zuma", "url": "html/game/frog_zuma.html", "titleKey": "tools.frogZuma.title"},
-    {"key": "bubble_dragon", "url": "html/game/bubble_dragon.html", "titleKey": "tools.bubbleDragon.title"},
     {"key": "lianliankan", "url": "html/game/lianliankan.html", "titleKey": "tools.lianliankan.title"},
+    {"key": "bubble_dragon", "url": "html/game/bubble_dragon.html", "titleKey": "tools.bubbleDragon.title"},
+    {"key": "fly_bird", "url": "html/game/fly_bird.html", "titleKey": "tools.flyBird.title"},
+    {"key": "frog_zuma", "url": "html/game/frog_zuma.html", "titleKey": "tools.frogZuma.title"},
+    {"key": "worms", "url": "html/game/worms.html", "titleKey": "tools.worms.title"},
+    {"key": "brick_breaker", "url": "html/game/brick_breaker.html", "titleKey": "tools.brickBreaker.title"},
+    {"key": "sheepstack", "url": "html/game/sheepstack.html", "titleKey": "tools.sheepstack.title"},
+    {"key": "mario-3d", "url": "html/game/mario-3d/index.html", "titleKey": "tools.mario3d.title"},
+    {"key": "journey-west-3d", "url": "html/game/journey-west-3d/index.html", "titleKey": "tools.journeyWest.title"},
 ]
-_ORIGINAL_KEYS = {g["key"] for g in ORIGINAL_GAMES}
+# (文件签名, 解析结果)：整体替换，线程间读写不会看到半截状态。
+_catalog: tuple = (None, None)
+_fallback_warned = False
 
 # 空站时的预置愿望，让第一次进来的用户有得投；网友自填条目会排在这些之后。
 SEED_WISHES: List[Dict[str, str]] = [
@@ -82,6 +94,103 @@ SEED_WISHES: List[Dict[str, str]] = [
     {"name": "四人联机吃豆", "note": "房间码开局，手机也能凑一桌"},
     {"name": "像素牧场经营", "note": "轻量种田加订单，竖屏挂机"},
 ]
+
+
+def _games_config_path() -> Optional[str]:
+    env = (os.environ.get("TOOLBASECAMP_WEB_ROOT") or "").strip()
+    local = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "public"))
+    for root in (env, local, "/var/www/toolbasecamp"):
+        if root and os.path.isfile(os.path.join(root, "js", "config.js")):
+            return os.path.join(root, "js", "config.js")
+    return None
+
+
+def _games_config_block(text: str) -> str:
+    """截出 `gamesConfig = {...}` 对象源码；跳过字符串和注释里的括号。"""
+    m = re.search(r"\bgamesConfig\s*=\s*\{", text)
+    if not m:
+        return ""
+    start = i = m.end() - 1
+    depth, quote, n = 0, "", len(text)
+    while i < n:
+        ch = text[i]
+        if quote:
+            if ch == "\\":
+                i += 1
+            elif ch == quote:
+                quote = ""
+        elif text.startswith("//", i):
+            i = text.find("\n", i)
+            if i < 0:
+                return ""
+        elif text.startswith("/*", i):
+            i = text.find("*/", i)
+            if i < 0:
+                return ""
+            i += 1
+        elif ch in "'\"`":
+            quote = ch
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start:i + 1]
+        i += 1
+    return ""
+
+
+def _js_str(obj: str, field: str) -> str:
+    m = re.search(rf"\b{field}\s*:\s*(['\"])(.*?)\1", obj)
+    return m.group(2) if m else ""
+
+
+def parse_games_config(text: str) -> List[Dict[str, str]]:
+    """从 config.js 源码取游戏页里所有本站游戏（按页面顺序去重）。"""
+    games: List[Dict[str, str]] = []
+    seen = set()
+    for m in _JS_LEAF_OBJECT_RE.finditer(_games_config_block(text)):
+        url, title_key = _js_str(m.group(0), "url"), _js_str(m.group(0), "titleKey")
+        hit = _GAME_URL_RE.search(url)
+        if not hit or not title_key:
+            continue
+        key = hit.group(1).lower()
+        if key not in seen:
+            seen.add(key)
+            games.append({"key": key, "url": url, "titleKey": title_key})
+    return games
+
+
+def original_games() -> List[Dict[str, str]]:
+    """当前可投票、可统计点击的自研游戏；config.js 一更新就重读，读不到时退回兜底快照。"""
+    global _catalog, _fallback_warned
+    path = _games_config_path()
+    try:
+        st = os.stat(path) if path else None
+    except OSError:
+        st = None
+    sig = (path, st.st_mtime_ns, st.st_size) if st else None
+    cached_sig, cached_games = _catalog
+    if sig is not None and sig == cached_sig:
+        return cached_games
+    games: List[Dict[str, str]] = []
+    if sig is not None:
+        try:
+            with open(path, encoding="utf-8") as fh:
+                games = parse_games_config(fh.read())
+        except (OSError, UnicodeDecodeError):
+            games = []
+    if not games:
+        if not _fallback_warned:
+            logger.warning("game catalog unavailable (%s); using fallback list", path or "config.js not found")
+            _fallback_warned = True
+        return _FALLBACK_GAMES
+    _catalog, _fallback_warned = (sig, games), False
+    return games
+
+
+def _original_keys() -> List[str]:
+    return sorted(g["key"] for g in original_games())
 
 
 def wire(
@@ -192,7 +301,7 @@ def _check_vote_type(vote_type: str) -> str:
 def _normalize_target(vote_type: str, target: str) -> str:
     key = (target or "").strip()
     if vote_type == VOTE_FAVORITE:
-        if key not in _ORIGINAL_KEYS:
+        if key not in _original_keys():
             raise HTTPException(status_code=400, detail="Unknown game option")
         return key
     if not re.match(r"^w\d{1,9}$", key):
@@ -231,11 +340,12 @@ def _ip_device_guard(cur, ip_hash: str) -> None:
 
 
 def _device_count(cur, device_id: str, vote_type: str) -> int:
+    keys = _original_keys()
     cur.execute(
         f"""SELECT COUNT(*) AS c FROM game_vote_ballots b
         LEFT JOIN game_wishes w ON b.vote_type='wishlist' AND b.target_key=CONCAT('w', w.id)
-        WHERE b.device_id=%s AND b.vote_type=%s AND ({_active_ballots_sql()})""",
-        (device_id, vote_type, *sorted(_ORIGINAL_KEYS)),
+        WHERE b.device_id=%s AND b.vote_type=%s AND ({_active_ballots_sql(keys)})""",
+        (device_id, vote_type, *keys),
     )
     row = cur.fetchone()
     return int(row["c"] or 0) if row else 0
@@ -274,7 +384,7 @@ def get_board(
     finally:
         conn.close()
 
-    fav_map = {g["key"]: g for g in ORIGINAL_GAMES}
+    fav_map = {g["key"]: g for g in original_games()}
     favorite = [
         {
             "key": r["target_key"],
@@ -316,17 +426,18 @@ def get_board(
 def _favorite_counts(cur) -> List[dict]:
     """票数 + 近 7 天新增（用来把「最近有人玩」的游戏顶上去）。"""
     week_ago = _now_utc() - timedelta(days=7)
+    keys = _original_keys()
     cur.execute(
         f"""
         SELECT target_key,
                COUNT(*) AS votes,
                SUM(CASE WHEN created_at>=%s THEN 1 ELSE 0 END) AS week_votes
         FROM game_vote_ballots
-        WHERE vote_type=%s AND target_key IN ({','.join(['%s'] * len(_ORIGINAL_KEYS))})
+        WHERE vote_type=%s AND target_key IN ({','.join(['%s'] * len(keys))})
         GROUP BY target_key
         ORDER BY votes DESC, week_votes DESC, target_key ASC
         """,
-        (week_ago, VOTE_FAVORITE, *sorted(_ORIGINAL_KEYS)),
+        (week_ago, VOTE_FAVORITE, *keys),
     )
     return list(cur.fetchall())
 
@@ -354,20 +465,22 @@ def _wish_counts(cur, limit: int = 20, include_hidden: bool = False,
     return list(cur.fetchall())
 
 
-def _active_ballots_sql() -> str:
-    keys = ','.join(['%s'] * len(_ORIGINAL_KEYS))
-    return (f"(b.vote_type='favorite' AND b.target_key IN ({keys})) "
+def _active_ballots_sql(keys: List[str]) -> str:
+    """占位符个数取自调用方同一份 keys，避免目录中途更新导致参数对不上。"""
+    marks = ','.join(['%s'] * len(keys))
+    return (f"(b.vote_type='favorite' AND b.target_key IN ({marks})) "
             "OR (b.vote_type='wishlist' AND w.status=1)")
 
 
 def _totals(cur) -> dict:
+    keys = _original_keys()
     cur.execute(
         f"""
         SELECT COUNT(*) AS votes, COUNT(DISTINCT b.device_id) AS voters FROM game_vote_ballots b
         LEFT JOIN game_wishes w ON b.vote_type='wishlist' AND b.target_key=CONCAT('w', w.id)
-        WHERE {_active_ballots_sql()}
+        WHERE {_active_ballots_sql(keys)}
         """,
-        tuple(sorted(_ORIGINAL_KEYS)),
+        tuple(keys),
     )
     row = cur.fetchone() or {}
     cur.execute("SELECT COUNT(*) AS c FROM game_wishes WHERE status=1")
@@ -389,7 +502,7 @@ def get_options() -> dict:
     finally:
         conn.close()
     return {
-        "favorites": ORIGINAL_GAMES,
+        "favorites": original_games(),
         "limits": {
             "favorite": FAVORITE_LIMIT,
             "wishlist": WISHLIST_LIMIT,
@@ -425,6 +538,7 @@ def _ensure_seed_wishes(cur) -> List[int]:
 @router.get("/my-votes")
 def get_my_votes(device_id: str = Query(..., min_length=16, max_length=32)) -> dict:
     dev = _check_device(device_id)
+    keys = _original_keys()
     conn = _db()
     try:
         with conn.cursor() as cur:
@@ -432,9 +546,9 @@ def get_my_votes(device_id: str = Query(..., min_length=16, max_length=32)) -> d
                 f"""
                 SELECT b.vote_type, b.target_key FROM game_vote_ballots b
                 LEFT JOIN game_wishes w ON b.vote_type='wishlist' AND b.target_key=CONCAT('w', w.id)
-                WHERE b.device_id=%s AND ({_active_ballots_sql()}) ORDER BY b.id ASC
+                WHERE b.device_id=%s AND ({_active_ballots_sql(keys)}) ORDER BY b.id ASC
                 """,
-                (dev, *sorted(_ORIGINAL_KEYS)),
+                (dev, *keys),
             )
             rows = cur.fetchall()
             cur.execute(
@@ -502,7 +616,7 @@ def cancel_vote(body: VoteIn) -> dict:
     dev = _check_device(body.device_id)
     vote_type = _check_vote_type(body.vote_type)
     target = (body.target or "").strip()
-    if vote_type == VOTE_FAVORITE and target not in _ORIGINAL_KEYS:
+    if vote_type == VOTE_FAVORITE and target not in _original_keys():
         raise HTTPException(status_code=400, detail="Unknown game option")
 
     conn = _db()

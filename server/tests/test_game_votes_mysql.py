@@ -79,9 +79,9 @@ def run():
         assert page1["wishlistTotal"] == 24
         assert len(page1["wishlist"]) == 20 and len(page2["wishlist"]) == 4
         assert not ({w["id"] for w in page1["wishlist"]} & {w["id"] for w in page2["wishlist"]})
-        for game in votes.ORIGINAL_GAMES[:3]:
+        for game in votes.original_games()[:3]:
             votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=game["key"]), None)
-        rejected(lambda: votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=votes.ORIGINAL_GAMES[3]["key"]), None), 429)
+        rejected(lambda: votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=votes.original_games()[3]["key"]), None), 429)
         print("PASS: retired options and wishes hidden; quotas restored; cross-user votes, duplicate votes, cancellation, limits and pagination")
     finally:
         conn.close()

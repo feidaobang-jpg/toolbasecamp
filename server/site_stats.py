@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
-from game_votes import ORIGINAL_GAMES
+from game_votes import original_games
 
 router = APIRouter(prefix="/stats", tags=["stats"])
 security = HTTPBearer(auto_error=False)
@@ -35,7 +35,6 @@ _VISITOR_RE = re.compile(
 )
 _EVENT_RE = re.compile(r"^[a-z][a-z0-9._-]{1,95}$")
 _GAME_CLICK_RE = re.compile(r"^game\.play\.(toy|site)\.([a-z0-9_-]+)$")
-_GAME_KEYS = {game["key"] for game in ORIGINAL_GAMES}
 _CN_TZ = timezone(timedelta(hours=8))
 
 
@@ -414,7 +413,7 @@ def record_event(
     name = _normalize_event_name(body.name)
     today = _today_cn().isoformat()
     game_click = _GAME_CLICK_RE.fullmatch(name)
-    if name.startswith('game.play.') and (not game_click or game_click[2] not in _GAME_KEYS):
+    if name.startswith('game.play.') and (not game_click or game_click[2] not in {g["key"] for g in original_games()}):
         raise HTTPException(status_code=400, detail="Invalid game click")
     if _should_skip_count(request, creds):
         return {"ok": True, "name": name, "date": today, "skipped": True}
@@ -612,7 +611,7 @@ def _game_click_snapshot(cur, start: date, end: date) -> dict:
             "toy": {"clicks": 0, "visitors": 0},
             "site": {"clicks": 0, "visitors": 0},
         }
-        for game in ORIGINAL_GAMES
+        for game in original_games()
     }
     params = (start.isoformat(), end.isoformat())
     cur.execute(
