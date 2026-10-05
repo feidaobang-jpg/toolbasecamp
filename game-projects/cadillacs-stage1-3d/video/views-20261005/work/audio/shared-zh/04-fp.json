@@ -1,0 +1,122 @@
+{
+ "text": "再按一下C，第一人称。拳头就在眼前，敌人的脸也贴在眼前。最后一脚，踹开楼梯间的门。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 1875000,
+   "text": "再"
+  },
+  {
+   "offset": 2875000,
+   "duration": 1000000,
+   "text": "按"
+  },
+  {
+   "offset": 4000000,
+   "duration": 2125000,
+   "text": "一下"
+  },
+  {
+   "offset": 6125000,
+   "duration": 3250000,
+   "text": "C"
+  },
+  {
+   "offset": 11875000,
+   "duration": 7250000,
+   "text": "第一人称"
+  },
+  {
+   "offset": 24750000,
+   "duration": 3875000,
+   "text": "拳头"
+  },
+  {
+   "offset": 28875000,
+   "duration": 1000000,
+   "text": "就"
+  },
+  {
+   "offset": 29875000,
+   "duration": 1000000,
+   "text": "在"
+  },
+  {
+   "offset": 31000000,
+   "duration": 5875000,
+   "text": "眼前"
+  },
+  {
+   "offset": 40625000,
+   "duration": 2875000,
+   "text": "敌人"
+  },
+  {
+   "offset": 43500000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "offset": 44375000,
+   "duration": 4000000,
+   "text": "脸"
+  },
+  {
+   "offset": 49500000,
+   "duration": 1875000,
+   "text": "也"
+  },
+  {
+   "offset": 51500000,
+   "duration": 1625000,
+   "text": "贴"
+  },
+  {
+   "offset": 53125000,
+   "duration": 1000000,
+   "text": "在"
+  },
+  {
+   "offset": 54250000,
+   "duration": 4750000,
+   "text": "眼前"
+  },
+  {
+   "offset": 64750000,
+   "duration": 3750000,
+   "text": "最后"
+  },
+  {
+   "offset": 68625000,
+   "duration": 1250000,
+   "text": "一"
+  },
+  {
+   "offset": 69875000,
+   "duration": 3375000,
+   "text": "脚"
+  },
+  {
+   "offset": 75625000,
+   "duration": 3500000,
+   "text": "踹开"
+  },
+  {
+   "offset": 79375000,
+   "duration": 4125000,
+   "text": "楼梯间"
+  },
+  {
+   "offset": 83500000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "offset": 84375000,
+   "duration": 2625000,
+   "text": "门"
+  }
+ ]
+}

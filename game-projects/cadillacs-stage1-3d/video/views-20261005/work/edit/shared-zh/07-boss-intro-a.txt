@@ -1,0 +1,2 @@
+file '07-boss-intro-0.wav'
+file '07-boss-intro-1.wav'

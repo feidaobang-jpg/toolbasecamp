@@ -1,0 +1,15 @@
+{
+  "copy": [
+    "恐龙快打 · 第一关 3D",
+    "钻进主角眼睛里打",
+    "侧视 · 正视 · 第一人称"
+  ],
+  "source_frame": "capture/views-run-1080p.mp4 @221.0s（covers/src-221.0.jpg）",
+  "method": "Pillow：裁掉 HUD 后放大约 1.11 倍、局部暗角、描边文字（covers.py）",
+  "ai_generated": false,
+  "sizes": {
+    "home_4_3": "1440x1080",
+    "space_16_9": "1920x1080"
+  },
+  "thumb_check": "tmp/review/thumb-4x3.jpg 320x240、thumb-16x9.jpg 320x180 标题可读"
+}

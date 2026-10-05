@@ -1,0 +1,202 @@
+{
+ "text": "走廊里再切第一人称。拿刀的布雷德正面走过来，刀子就在眼前晃。打倒他会掉左轮，就是开头那几枪。等胖子们一起挤上来，满屏都是肚子。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 4625000,
+   "text": "走廊"
+  },
+  {
+   "offset": 5625000,
+   "duration": 2375000,
+   "text": "里"
+  },
+  {
+   "offset": 9125000,
+   "duration": 2375000,
+   "text": "再"
+  },
+  {
+   "offset": 11500000,
+   "duration": 2000000,
+   "text": "切"
+  },
+  {
+   "offset": 13750000,
+   "duration": 7500000,
+   "text": "第一人称"
+  },
+  {
+   "offset": 26875000,
+   "duration": 2500000,
+   "text": "拿"
+  },
+  {
+   "offset": 29375000,
+   "duration": 1125000,
+   "text": "刀"
+  },
+  {
+   "offset": 30500000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "offset": 31500000,
+   "duration": 5375000,
+   "text": "布雷德"
+  },
+  {
+   "offset": 38000000,
+   "duration": 4000000,
+   "text": "正面"
+  },
+  {
+   "offset": 42125000,
+   "duration": 1750000,
+   "text": "走"
+  },
+  {
+   "offset": 43875000,
+   "duration": 3250000,
+   "text": "过来"
+  },
+  {
+   "offset": 51000000,
+   "duration": 3125000,
+   "text": "刀子"
+  },
+  {
+   "offset": 54250000,
+   "duration": 1125000,
+   "text": "就"
+  },
+  {
+   "offset": 55375000,
+   "duration": 875000,
+   "text": "在"
+  },
+  {
+   "offset": 56375000,
+   "duration": 3375000,
+   "text": "眼前"
+  },
+  {
+   "offset": 59750000,
+   "duration": 2250000,
+   "text": "晃"
+  },
+  {
+   "offset": 67625000,
+   "duration": 4250000,
+   "text": "打倒"
+  },
+  {
+   "offset": 71875000,
+   "duration": 1500000,
+   "text": "他"
+  },
+  {
+   "offset": 73625000,
+   "duration": 1500000,
+   "text": "会"
+  },
+  {
+   "offset": 75125000,
+   "duration": 1375000,
+   "text": "掉"
+  },
+  {
+   "offset": 76625000,
+   "duration": 5750000,
+   "text": "左轮"
+  },
+  {
+   "offset": 86250000,
+   "duration": 1625000,
+   "text": "就"
+  },
+  {
+   "offset": 87875000,
+   "duration": 875000,
+   "text": "是"
+  },
+  {
+   "offset": 88875000,
+   "duration": 4000000,
+   "text": "开头"
+  },
+  {
+   "offset": 93000000,
+   "duration": 1250000,
+   "text": "那"
+  },
+  {
+   "offset": 94250000,
+   "duration": 1250000,
+   "text": "几"
+  },
+  {
+   "offset": 95500000,
+   "duration": 2625000,
+   "text": "枪"
+  },
+  {
+   "offset": 103625000,
+   "duration": 2000000,
+   "text": "等"
+  },
+  {
+   "offset": 105750000,
+   "duration": 2875000,
+   "text": "胖子"
+  },
+  {
+   "offset": 108625000,
+   "duration": 1625000,
+   "text": "们"
+  },
+  {
+   "offset": 110500000,
+   "duration": 3125000,
+   "text": "一起"
+  },
+  {
+   "offset": 113750000,
+   "duration": 1375000,
+   "text": "挤"
+  },
+  {
+   "offset": 115125000,
+   "duration": 4625000,
+   "text": "上来"
+  },
+  {
+   "offset": 123125000,
+   "duration": 2500000,
+   "text": "满"
+  },
+  {
+   "offset": 125625000,
+   "duration": 1500000,
+   "text": "屏"
+  },
+  {
+   "offset": 127250000,
+   "duration": 1125000,
+   "text": "都"
+  },
+  {
+   "offset": 128375000,
+   "duration": 875000,
+   "text": "是"
+  },
+  {
+   "offset": 129375000,
+   "duration": 3125000,
+   "text": "肚子"
+  }
+ ]
+}

@@ -1,0 +1,382 @@
+{
+ "source": "capture/views-run-1080p.mp4",
+ "fps": 30,
+ "lead": 0.25,
+ "total": 185.0,
+ "segments": [
+  {
+   "id": "01-hook",
+   "final_in": 0.0,
+   "final_out": 9.3,
+   "duration": 9.3,
+   "voice": "audio/shared-zh/01-hook.mp3",
+   "voice_last_word_end": 8.075,
+   "lines": [
+    "街机恐龙快打的第一关，这回能钻进主角的眼睛里打。",
+    "左轮在手，胖子迎面冲过来，连开几枪。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 124.0,
+     "source_out": 133.3,
+     "freeze_last_frame": 0.0,
+     "final_in": 0.0,
+     "final_out": 9.3
+    }
+   ]
+  },
+  {
+   "id": "02-side",
+   "final_in": 9.3,
+   "final_out": 21.3,
+   "duration": 12.0,
+   "voice": "audio/shared-zh/02-side.mp3",
+   "voice_last_word_end": 10.312,
+   "lines": [
+    "我把卡普空九三年的这一关，做成了3D重置版。",
+    "默认是侧视，跟当年街机厅里一样：维斯放完狠话跳楼跑路，手下围了上来。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 3.0,
+     "source_out": 15.0,
+     "freeze_last_frame": 0.0,
+     "final_in": 9.3,
+     "final_out": 21.3
+    }
+   ]
+  },
+  {
+   "id": "03-front",
+   "final_in": 21.3,
+   "final_out": 38.9,
+   "duration": 17.6,
+   "voice": "audio/shared-zh/03-front.mp3",
+   "voice_last_word_end": 16.387,
+   "lines": [
+    "按一下C，镜头转到主角身后，这就是正视。",
+    "W就是往前走，敌人从正前方迎上来，谁先走进拳头范围，一眼就看得出来。",
+    "代价是背后看不见。你看，后面上来一个，挨了一下才发现。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 15.0,
+     "source_out": 32.6,
+     "freeze_last_frame": 0.0,
+     "final_in": 21.3,
+     "final_out": 38.9
+    }
+   ]
+  },
+  {
+   "id": "04-fp",
+   "final_in": 38.9,
+   "final_out": 48.3,
+   "duration": 9.4,
+   "voice": "audio/shared-zh/04-fp.mp3",
+   "voice_last_word_end": 8.7,
+   "lines": [
+    "再按一下C，第一人称。",
+    "拳头就在眼前，敌人的脸也贴在眼前。最后一脚，踹开楼梯间的门。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 38.9,
+     "source_out": 48.3,
+     "freeze_last_frame": 0.0,
+     "final_in": 38.9,
+     "final_out": 48.3
+    }
+   ]
+  },
+  {
+   "id": "05-hall-front",
+   "final_in": 48.3,
+   "final_out": 65.7,
+   "duration": 17.4,
+   "voice": "audio/shared-zh/05-hall-front.mp3",
+   "voice_last_word_end": 16.288,
+   "lines": [
+    "进了大楼，正视看走廊特别有纵深，可两边的门会突然出人。",
+    "这一下被三个人夹在门边，背后那个根本看不见，血条直接见底。",
+    "好在默认是无限命，原地复活，落地还能把身边的人震倒。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 68.0,
+     "source_out": 74.6,
+     "freeze_last_frame": 0.0,
+     "final_in": 48.3,
+     "final_out": 54.9
+    },
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 84.6,
+     "source_out": 95.4,
+     "freeze_last_frame": 0.0,
+     "final_in": 54.9,
+     "final_out": 65.7
+    }
+   ]
+  },
+  {
+   "id": "06-hall-fp",
+   "final_in": 65.7,
+   "final_out": 80.6,
+   "duration": 14.9,
+   "voice": "audio/shared-zh/06-hall-fp.mp3",
+   "voice_last_word_end": 13.25,
+   "lines": [
+    "走廊里再切第一人称。拿刀的布雷德正面走过来，刀子就在眼前晃。",
+    "打倒他会掉左轮，就是开头那几枪。",
+    "等胖子们一起挤上来，满屏都是肚子。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 98.6,
+     "source_out": 105.6,
+     "freeze_last_frame": 0.0,
+     "final_in": 65.7,
+     "final_out": 72.7
+    },
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 133.3,
+     "source_out": 141.2,
+     "freeze_last_frame": 0.0,
+     "final_in": 72.7,
+     "final_out": 80.6
+    }
+   ]
+  },
+  {
+   "id": "07-boss-intro",
+   "final_in": 80.6,
+   "final_out": 94.4,
+   "duration": 13.8,
+   "voice": "audio/shared-zh/07-boss-intro.mp3",
+   "voice_last_word_end": 12.963,
+   "lines": [
+    "撞破窗户，跳到第47街。",
+    "一路打到尽头，维斯牵着锁住的岩跳龙，就堵在正前方。",
+    "他抽了恐龙一鞭，恐龙当场变成橙色，暴走了。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 151.0,
+     "source_out": 154.0,
+     "freeze_last_frame": 0.0,
+     "final_in": 80.6,
+     "final_out": 83.6
+    },
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 194.0,
+     "source_out": 204.8,
+     "freeze_last_frame": 0.0,
+     "final_in": 83.6,
+     "final_out": 94.4
+    }
+   ]
+  },
+  {
+   "id": "08-boss-front",
+   "final_in": 94.4,
+   "final_out": 104.6,
+   "duration": 10.2,
+   "voice": "audio/shared-zh/08-boss-front.mp3",
+   "voice_last_word_end": 8.5,
+   "lines": [
+    "正视打Boss，维斯和恐龙都在正前方，谁先扑过来看得很清楚。",
+    "当然，看清楚不代表躲得开。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 204.8,
+     "source_out": 215.0,
+     "freeze_last_frame": 0.0,
+     "final_in": 94.4,
+     "final_out": 104.6
+    }
+   ]
+  },
+  {
+   "id": "09-boss-fp",
+   "final_in": 104.6,
+   "final_out": 120.6,
+   "duration": 16.0,
+   "voice": "audio/shared-zh/09-boss-fp.mp3",
+   "voice_last_word_end": 15.25,
+   "lines": [
+    "切到第一人称，恐龙的牙直接怼到脸上。",
+    "再贴近一点，镜头干脆钻进了恐龙嘴里。这是个bug，已经记下了。",
+    "维斯一掉血就叫手下帮忙，这一拳砸过来，又倒了一次。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 217.3,
+     "source_out": 233.3,
+     "freeze_last_frame": 0.0,
+     "final_in": 104.6,
+     "final_out": 120.6
+    }
+   ]
+  },
+  {
+   "id": "10-boss-side",
+   "final_in": 120.6,
+   "final_out": 134.8,
+   "duration": 14.2,
+   "voice": "audio/shared-zh/10-boss-side.mp3",
+   "voice_last_word_end": 13.25,
+   "lines": [
+    "最后切回侧视收尾。",
+    "左右两边的人都看得见，飞踢什么时候出、往哪边躲，心里更有数。难怪原作用的是这个视角。",
+    "补上最后几下，维斯终于倒下。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 236.2,
+     "source_out": 240.6,
+     "freeze_last_frame": 0.0,
+     "final_in": 120.6,
+     "final_out": 125.0
+    },
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 247.6,
+     "source_out": 253.8,
+     "freeze_last_frame": 0.0,
+     "final_in": 125.0,
+     "final_out": 131.2
+    },
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 287.0,
+     "source_out": 290.6,
+     "freeze_last_frame": 0.0,
+     "final_in": 131.2,
+     "final_out": 134.8
+    }
+   ]
+  },
+  {
+   "id": "11-result",
+   "final_in": 134.8,
+   "final_out": 144.6,
+   "duration": 9.8,
+   "voice": "audio/shared-zh/11-result.mp3",
+   "voice_last_word_end": 8.762,
+   "lines": [
+    "体力奖励结算，第一关通关，十二万两千四百分。",
+    "这局穆斯塔法倒了三次，全靠默认的无限命。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 293.9,
+     "source_out": 296.7,
+     "freeze_last_frame": 0.0,
+     "final_in": 134.8,
+     "final_out": 137.6
+    },
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 300.6,
+     "source_out": 305.5,
+     "freeze_last_frame": 2.1,
+     "final_in": 137.6,
+     "final_out": 144.6
+    }
+   ]
+  },
+  {
+   "id": "12-bug",
+   "final_in": 144.6,
+   "final_out": 153.6,
+   "duration": 9.0,
+   "voice": "audio/shared-zh/12-bug.mp3",
+   "voice_last_word_end": 8.088,
+   "lines": [
+    "录像里还抓到一个问题：正视贴着墙打，镜头会钻进砖墙里。",
+    "这两个镜头问题，下次先修。"
+   ],
+   "shots": [
+    {
+     "source": "capture/views-run-1080p.mp4",
+     "source_in": 176.2,
+     "source_out": 185.2,
+     "freeze_last_frame": 0.0,
+     "final_in": 144.6,
+     "final_out": 153.6
+    }
+   ]
+  },
+  {
+   "id": "13-outro",
+   "final_in": 153.6,
+   "final_out": 185.0,
+   "duration": 31.4,
+   "voice": "audio/shared-zh/13-outro.mp3",
+   "voice_last_word_end": 29.6,
+   "lines": [
+    "总结一下：侧视看得最全，正视最有往前冲的感觉，第一人称临场感最强，视野也最窄。",
+    "第二关沼泽森林，还在计划里。",
+    "现在电脑和手机都能玩，B站Toy也能直接玩，链接在简介。",
+    "觉得好玩，就去百宝箱游戏页的投票榜投它一票；想玩哪款复刻，也能写进愿望单。",
+    "要是觉得第一人称挨揍的样子挺好笑，顺手给个三连，就当给穆斯塔法补个汉堡。"
+   ],
+   "shots": [
+    {
+     "source": "triptych",
+     "panes": {
+      "side": [
+       [
+        238.4,
+        29.4
+       ]
+      ],
+      "front": [
+       [
+        16.0,
+        22.4
+       ],
+       [
+        188.0,
+        7.0
+       ]
+      ],
+      "fp": [
+       [
+        41.4,
+        5.5
+       ],
+       [
+        124.0,
+        9.3
+       ],
+       [
+        133.3,
+        7.9
+       ],
+       [
+        219.6,
+        6.7
+       ]
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

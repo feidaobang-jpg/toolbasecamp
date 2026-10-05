@@ -1,0 +1,247 @@
+{
+ "text": "进了大楼，正视看走廊特别有纵深，可两边的门会突然出人。这一下被三个人夹在门边，背后那个根本看不见，血条直接见底。好在默认是无限命，原地复活，落地还能把身边的人震倒。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 1875000,
+   "text": "进"
+  },
+  {
+   "offset": 2875000,
+   "duration": 875000,
+   "text": "了"
+  },
+  {
+   "offset": 3875000,
+   "duration": 5125000,
+   "text": "大楼"
+  },
+  {
+   "offset": 12375000,
+   "duration": 3250000,
+   "text": "正视"
+  },
+  {
+   "offset": 15750000,
+   "duration": 1875000,
+   "text": "看"
+  },
+  {
+   "offset": 17625000,
+   "duration": 3250000,
+   "text": "走廊"
+  },
+  {
+   "offset": 21125000,
+   "duration": 3250000,
+   "text": "特别"
+  },
+  {
+   "offset": 24375000,
+   "duration": 1125000,
+   "text": "有"
+  },
+  {
+   "offset": 25625000,
+   "duration": 4375000,
+   "text": "纵深"
+  },
+  {
+   "offset": 34000000,
+   "duration": 1500000,
+   "text": "可"
+  },
+  {
+   "offset": 35625000,
+   "duration": 2875000,
+   "text": "两边"
+  },
+  {
+   "offset": 38500000,
+   "duration": 750000,
+   "text": "的"
+  },
+  {
+   "offset": 39250000,
+   "duration": 1250000,
+   "text": "门"
+  },
+  {
+   "offset": 40750000,
+   "duration": 875000,
+   "text": "会"
+  },
+  {
+   "offset": 41750000,
+   "duration": 2750000,
+   "text": "突然"
+  },
+  {
+   "offset": 44625000,
+   "duration": 3375000,
+   "text": "出人"
+  },
+  {
+   "offset": 53750000,
+   "duration": 1875000,
+   "text": "这"
+  },
+  {
+   "offset": 55625000,
+   "duration": 5125000,
+   "text": "一下"
+  },
+  {
+   "offset": 61875000,
+   "duration": 1500000,
+   "text": "被"
+  },
+  {
+   "offset": 63500000,
+   "duration": 2125000,
+   "text": "三"
+  },
+  {
+   "offset": 65625000,
+   "duration": 875000,
+   "text": "个"
+  },
+  {
+   "offset": 66500000,
+   "duration": 1000000,
+   "text": "人"
+  },
+  {
+   "offset": 67750000,
+   "duration": 1375000,
+   "text": "夹"
+  },
+  {
+   "offset": 69125000,
+   "duration": 875000,
+   "text": "在"
+  },
+  {
+   "offset": 70125000,
+   "duration": 4625000,
+   "text": "门边"
+  },
+  {
+   "offset": 78625000,
+   "duration": 3125000,
+   "text": "背后"
+  },
+  {
+   "offset": 81875000,
+   "duration": 1875000,
+   "text": "那个"
+  },
+  {
+   "offset": 84000000,
+   "duration": 3000000,
+   "text": "根本"
+  },
+  {
+   "offset": 87125000,
+   "duration": 2125000,
+   "text": "看"
+  },
+  {
+   "offset": 89250000,
+   "duration": 3250000,
+   "text": "不见"
+  },
+  {
+   "offset": 95250000,
+   "duration": 4875000,
+   "text": "血条"
+  },
+  {
+   "offset": 100375000,
+   "duration": 4125000,
+   "text": "直接"
+  },
+  {
+   "offset": 104625000,
+   "duration": 4625000,
+   "text": "见底"
+  },
+  {
+   "offset": 115000000,
+   "duration": 3250000,
+   "text": "好在"
+  },
+  {
+   "offset": 118375000,
+   "duration": 3250000,
+   "text": "默认"
+  },
+  {
+   "offset": 121875000,
+   "duration": 1125000,
+   "text": "是"
+  },
+  {
+   "offset": 123125000,
+   "duration": 1750000,
+   "text": "无"
+  },
+  {
+   "offset": 124875000,
+   "duration": 4500000,
+   "text": "限命"
+  },
+  {
+   "offset": 133125000,
+   "duration": 3625000,
+   "text": "原地"
+  },
+  {
+   "offset": 136875000,
+   "duration": 5750000,
+   "text": "复活"
+  },
+  {
+   "offset": 146375000,
+   "duration": 3625000,
+   "text": "落地"
+  },
+  {
+   "offset": 150250000,
+   "duration": 1250000,
+   "text": "还"
+  },
+  {
+   "offset": 151500000,
+   "duration": 875000,
+   "text": "能"
+  },
+  {
+   "offset": 152375000,
+   "duration": 875000,
+   "text": "把"
+  },
+  {
+   "offset": 153500000,
+   "duration": 2750000,
+   "text": "身边"
+  },
+  {
+   "offset": 156250000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "offset": 157125000,
+   "duration": 1125000,
+   "text": "人"
+  },
+  {
+   "offset": 158375000,
+   "duration": 4500000,
+   "text": "震倒"
+  }
+ ]
+}

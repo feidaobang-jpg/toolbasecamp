@@ -1,0 +1,14 @@
+{
+  "engine": "Edge TTS online（edge-tts 库）",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "speed": 1,
+  "preferred_voice": "必剪 朗读 → 特色 → 曼波（用户为 v2 选定）",
+  "fallback_reason": "2026-10-05 申请操作必剪（computer-use request_access）未获允许，未重复申请；改用 Edge 云希完成整包，未把云希称作曼波。允许后重配曼波，再按新音轨重跑 render.py。",
+  "timestamp_source": "服务返回的 WordBoundary（audio/shared-zh/<段>.json）",
+  "script": "../../narration.json",
+  "subjective_listening": "not-run",
+  "subjective_reason": "当前模型没有可接收音频的试听输入；未播放扬声器打扰用户。",
+  "python_runtime": "D:/project/toolbasecamp/comfyui-api-server/.venv/Scripts/python.exe",
+  "entry": "../../voice_edge.py"
+}

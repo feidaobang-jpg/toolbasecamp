@@ -1,0 +1,247 @@
+{
+ "text": "按一下C，镜头转到主角身后，这就是正视。W就是往前走，敌人从正前方迎上来，谁先走进拳头范围，一眼就看得出来。代价是背后看不见。你看，后面上来一个，挨了一下才发现。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 1375000,
+   "text": "按"
+  },
+  {
+   "offset": 2500000,
+   "duration": 2125000,
+   "text": "一下"
+  },
+  {
+   "offset": 4625000,
+   "duration": 4125000,
+   "text": "C"
+  },
+  {
+   "offset": 12250000,
+   "duration": 4000000,
+   "text": "镜头"
+  },
+  {
+   "offset": 16375000,
+   "duration": 2625000,
+   "text": "转到"
+  },
+  {
+   "offset": 19000000,
+   "duration": 2750000,
+   "text": "主角"
+  },
+  {
+   "offset": 21875000,
+   "duration": 5250000,
+   "text": "身后"
+  },
+  {
+   "offset": 29375000,
+   "duration": 1750000,
+   "text": "这"
+  },
+  {
+   "offset": 31125000,
+   "duration": 875000,
+   "text": "就"
+  },
+  {
+   "offset": 32000000,
+   "duration": 1000000,
+   "text": "是"
+  },
+  {
+   "offset": 33125000,
+   "duration": 4250000,
+   "text": "正视"
+  },
+  {
+   "offset": 43125000,
+   "duration": 6125000,
+   "text": "W"
+  },
+  {
+   "offset": 50375000,
+   "duration": 1625000,
+   "text": "就"
+  },
+  {
+   "offset": 52000000,
+   "duration": 875000,
+   "text": "是"
+  },
+  {
+   "offset": 53000000,
+   "duration": 3750000,
+   "text": "往前"
+  },
+  {
+   "offset": 56750000,
+   "duration": 2250000,
+   "text": "走"
+  },
+  {
+   "offset": 62625000,
+   "duration": 2625000,
+   "text": "敌人"
+  },
+  {
+   "offset": 65375000,
+   "duration": 1875000,
+   "text": "从"
+  },
+  {
+   "offset": 67250000,
+   "duration": 1750000,
+   "text": "正"
+  },
+  {
+   "offset": 69000000,
+   "duration": 2750000,
+   "text": "前方"
+  },
+  {
+   "offset": 72000000,
+   "duration": 1875000,
+   "text": "迎"
+  },
+  {
+   "offset": 73875000,
+   "duration": 4000000,
+   "text": "上来"
+  },
+  {
+   "offset": 79875000,
+   "duration": 3125000,
+   "text": "谁"
+  },
+  {
+   "offset": 83000000,
+   "duration": 1750000,
+   "text": "先"
+  },
+  {
+   "offset": 84875000,
+   "duration": 2250000,
+   "text": "走进"
+  },
+  {
+   "offset": 87375000,
+   "duration": 2250000,
+   "text": "拳头"
+  },
+  {
+   "offset": 89750000,
+   "duration": 4375000,
+   "text": "范围"
+  },
+  {
+   "offset": 96625000,
+   "duration": 1750000,
+   "text": "一"
+  },
+  {
+   "offset": 98375000,
+   "duration": 1375000,
+   "text": "眼"
+  },
+  {
+   "offset": 99875000,
+   "duration": 1000000,
+   "text": "就"
+  },
+  {
+   "offset": 100875000,
+   "duration": 1375000,
+   "text": "看"
+  },
+  {
+   "offset": 102250000,
+   "duration": 625000,
+   "text": "得"
+  },
+  {
+   "offset": 103000000,
+   "duration": 3500000,
+   "text": "出来"
+  },
+  {
+   "offset": 112250000,
+   "duration": 4000000,
+   "text": "代价"
+  },
+  {
+   "offset": 116250000,
+   "duration": 2375000,
+   "text": "是"
+  },
+  {
+   "offset": 119625000,
+   "duration": 3375000,
+   "text": "背后"
+  },
+  {
+   "offset": 123125000,
+   "duration": 1875000,
+   "text": "看"
+  },
+  {
+   "offset": 125000000,
+   "duration": 3625000,
+   "text": "不见"
+  },
+  {
+   "offset": 134250000,
+   "duration": 1500000,
+   "text": "你"
+  },
+  {
+   "offset": 135750000,
+   "duration": 3375000,
+   "text": "看"
+  },
+  {
+   "offset": 143500000,
+   "duration": 2625000,
+   "text": "后面"
+  },
+  {
+   "offset": 146250000,
+   "duration": 2500000,
+   "text": "上来"
+  },
+  {
+   "offset": 148875000,
+   "duration": 3625000,
+   "text": "一个"
+  },
+  {
+   "offset": 155000000,
+   "duration": 1625000,
+   "text": "挨"
+  },
+  {
+   "offset": 156625000,
+   "duration": 625000,
+   "text": "了"
+  },
+  {
+   "offset": 157375000,
+   "duration": 1625000,
+   "text": "一下"
+  },
+  {
+   "offset": 159125000,
+   "duration": 1000000,
+   "text": "才"
+  },
+  {
+   "offset": 160250000,
+   "duration": 3625000,
+   "text": "发现"
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+  "status": "rendered_awaiting_user_review",
+  "mode": "overview（视角重点，用户 2026-10-05 选“重做 v2”）",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "files_complete": true,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.1.0",
+  "toy_id": 40412421031936,
+  "toy_status": "published / PUBLIC",
+  "video_sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a",
+  "duration_seconds": 185.0,
+  "voice": "Edge zh-CN-YunxiNeural（兜底；用户选定的必剪曼波因操作授权未获允许未生成）",
+  "subjective_audio_review": "not-run",
+  "cover_stage": "completed",
+  "render_entry": "voice_edge.py → render.py（REUSE=1 复用已切片段）→ covers.py → package.py",
+  "capture_entry": "record_views.cjs",
+  "previous_episode": "../../debut-20261005（v1，保留不删，非当前投稿入口）",
+  "video_uploaded": false,
+  "next_step": "用户审片。若要曼波：允许操作必剪 → 生成曼波整段配音与识别字幕 → 替换 audio 与字幕时间来源后重跑 render.py → 重新审片。审片通过后按 game-video 发布闭环：投稿 → 绑定 Toy 40412421031936 → 置顶评论 → 填推流申请。"
+}

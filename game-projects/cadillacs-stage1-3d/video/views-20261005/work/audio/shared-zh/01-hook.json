@@ -1,0 +1,137 @@
+{
+ "text": "街机恐龙快打的第一关，这回能钻进主角的眼睛里打。左轮在手，胖子迎面冲过来，连开几枪。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 3625000,
+   "text": "街机"
+  },
+  {
+   "offset": 4750000,
+   "duration": 3000000,
+   "text": "恐龙"
+  },
+  {
+   "offset": 8000000,
+   "duration": 2500000,
+   "text": "快打"
+  },
+  {
+   "offset": 10500000,
+   "duration": 750000,
+   "text": "的"
+  },
+  {
+   "offset": 11375000,
+   "duration": 2375000,
+   "text": "第一"
+  },
+  {
+   "offset": 13750000,
+   "duration": 3250000,
+   "text": "关"
+  },
+  {
+   "offset": 20500000,
+   "duration": 2000000,
+   "text": "这"
+  },
+  {
+   "offset": 22500000,
+   "duration": 1250000,
+   "text": "回"
+  },
+  {
+   "offset": 23875000,
+   "duration": 1500000,
+   "text": "能"
+  },
+  {
+   "offset": 25500000,
+   "duration": 3500000,
+   "text": "钻进"
+  },
+  {
+   "offset": 29250000,
+   "duration": 2750000,
+   "text": "主角"
+  },
+  {
+   "offset": 32000000,
+   "duration": 750000,
+   "text": "的"
+  },
+  {
+   "offset": 32875000,
+   "duration": 3125000,
+   "text": "眼睛"
+  },
+  {
+   "offset": 36000000,
+   "duration": 875000,
+   "text": "里"
+  },
+  {
+   "offset": 37000000,
+   "duration": 2750000,
+   "text": "打"
+  },
+  {
+   "offset": 45500000,
+   "duration": 4125000,
+   "text": "左轮"
+  },
+  {
+   "offset": 49750000,
+   "duration": 1750000,
+   "text": "在"
+  },
+  {
+   "offset": 51500000,
+   "duration": 3625000,
+   "text": "手"
+  },
+  {
+   "offset": 57125000,
+   "duration": 3250000,
+   "text": "胖子"
+  },
+  {
+   "offset": 60625000,
+   "duration": 3000000,
+   "text": "迎面"
+  },
+  {
+   "offset": 63750000,
+   "duration": 2375000,
+   "text": "冲"
+  },
+  {
+   "offset": 66125000,
+   "duration": 3125000,
+   "text": "过来"
+  },
+  {
+   "offset": 72250000,
+   "duration": 2250000,
+   "text": "连"
+  },
+  {
+   "offset": 74500000,
+   "duration": 1875000,
+   "text": "开"
+  },
+  {
+   "offset": 76500000,
+   "duration": 1375000,
+   "text": "几"
+  },
+  {
+   "offset": 77875000,
+   "duration": 2875000,
+   "text": "枪"
+  }
+ ]
+}

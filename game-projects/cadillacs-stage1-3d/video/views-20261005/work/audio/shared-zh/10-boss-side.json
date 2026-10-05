@@ -1,0 +1,182 @@
+{
+ "text": "最后切回侧视收尾。左右两边的人都看得见，飞踢什么时候出、往哪边躲，心里更有数。难怪原作用的是这个视角。补上最后几下，维斯终于倒下。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 3875000,
+   "text": "最后"
+  },
+  {
+   "offset": 5000000,
+   "duration": 2125000,
+   "text": "切"
+  },
+  {
+   "offset": 7125000,
+   "duration": 1625000,
+   "text": "回"
+  },
+  {
+   "offset": 9000000,
+   "duration": 3000000,
+   "text": "侧视"
+  },
+  {
+   "offset": 12125000,
+   "duration": 4375000,
+   "text": "收尾"
+  },
+  {
+   "offset": 22250000,
+   "duration": 3625000,
+   "text": "左右"
+  },
+  {
+   "offset": 26000000,
+   "duration": 3125000,
+   "text": "两边"
+  },
+  {
+   "offset": 29125000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "offset": 30000000,
+   "duration": 1500000,
+   "text": "人"
+  },
+  {
+   "offset": 31750000,
+   "duration": 1000000,
+   "text": "都"
+  },
+  {
+   "offset": 32750000,
+   "duration": 1625000,
+   "text": "看"
+  },
+  {
+   "offset": 34375000,
+   "duration": 875000,
+   "text": "得"
+  },
+  {
+   "offset": 35250000,
+   "duration": 2875000,
+   "text": "见"
+  },
+  {
+   "offset": 41000000,
+   "duration": 2500000,
+   "text": "飞"
+  },
+  {
+   "offset": 43500000,
+   "duration": 1375000,
+   "text": "踢"
+  },
+  {
+   "offset": 45125000,
+   "duration": 4125000,
+   "text": "什么时候"
+  },
+  {
+   "offset": 49250000,
+   "duration": 3125000,
+   "text": "出"
+  },
+  {
+   "offset": 55000000,
+   "duration": 1875000,
+   "text": "往"
+  },
+  {
+   "offset": 57000000,
+   "duration": 3500000,
+   "text": "哪边"
+  },
+  {
+   "offset": 60500000,
+   "duration": 2250000,
+   "text": "躲"
+  },
+  {
+   "offset": 66500000,
+   "duration": 3500000,
+   "text": "心里"
+  },
+  {
+   "offset": 70250000,
+   "duration": 1875000,
+   "text": "更"
+  },
+  {
+   "offset": 72125000,
+   "duration": 3875000,
+   "text": "有数"
+  },
+  {
+   "offset": 81625000,
+   "duration": 4375000,
+   "text": "难怪"
+  },
+  {
+   "offset": 86250000,
+   "duration": 4125000,
+   "text": "原作用"
+  },
+  {
+   "offset": 90375000,
+   "duration": 1125000,
+   "text": "的"
+  },
+  {
+   "offset": 91500000,
+   "duration": 1250000,
+   "text": "是"
+  },
+  {
+   "offset": 93000000,
+   "duration": 1375000,
+   "text": "这个"
+  },
+  {
+   "offset": 94500000,
+   "duration": 5250000,
+   "text": "视角"
+  },
+  {
+   "offset": 105500000,
+   "duration": 4000000,
+   "text": "补上"
+  },
+  {
+   "offset": 109750000,
+   "duration": 2750000,
+   "text": "最后"
+  },
+  {
+   "offset": 112625000,
+   "duration": 4375000,
+   "text": "几下"
+  },
+  {
+   "offset": 119875000,
+   "duration": 4875000,
+   "text": "维斯"
+  },
+  {
+   "offset": 125000000,
+   "duration": 3125000,
+   "text": "终于"
+  },
+  {
+   "offset": 128250000,
+   "duration": 4250000,
+   "text": "倒下"
+  }
+ ]
+}

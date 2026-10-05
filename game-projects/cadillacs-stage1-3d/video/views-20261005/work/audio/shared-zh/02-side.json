@@ -1,0 +1,167 @@
+{
+ "text": "我把卡普空九三年的这一关，做成了3D重置版。默认是侧视，跟当年街机厅里一样：维斯放完狠话跳楼跑路，手下围了上来。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 1500000,
+   "text": "我"
+  },
+  {
+   "offset": 2500000,
+   "duration": 1000000,
+   "text": "把"
+  },
+  {
+   "offset": 3625000,
+   "duration": 2875000,
+   "text": "卡普"
+  },
+  {
+   "offset": 6500000,
+   "duration": 2000000,
+   "text": "空"
+  },
+  {
+   "offset": 8750000,
+   "duration": 4750000,
+   "text": "九三年"
+  },
+  {
+   "offset": 13500000,
+   "duration": 625000,
+   "text": "的"
+  },
+  {
+   "offset": 14250000,
+   "duration": 1000000,
+   "text": "这"
+  },
+  {
+   "offset": 15250000,
+   "duration": 1000000,
+   "text": "一"
+  },
+  {
+   "offset": 16250000,
+   "duration": 3125000,
+   "text": "关"
+  },
+  {
+   "offset": 21750000,
+   "duration": 3125000,
+   "text": "做成"
+  },
+  {
+   "offset": 24875000,
+   "duration": 1000000,
+   "text": "了"
+  },
+  {
+   "offset": 26125000,
+   "duration": 2500000,
+   "text": "3"
+  },
+  {
+   "offset": 28625000,
+   "duration": 1250000,
+   "text": "D"
+  },
+  {
+   "offset": 30000000,
+   "duration": 5250000,
+   "text": "重置版"
+  },
+  {
+   "offset": 41000000,
+   "duration": 3625000,
+   "text": "默认"
+  },
+  {
+   "offset": 44750000,
+   "duration": 1000000,
+   "text": "是"
+  },
+  {
+   "offset": 45875000,
+   "duration": 5375000,
+   "text": "侧视"
+  },
+  {
+   "offset": 54125000,
+   "duration": 1500000,
+   "text": "跟"
+  },
+  {
+   "offset": 55750000,
+   "duration": 2875000,
+   "text": "当年"
+  },
+  {
+   "offset": 58875000,
+   "duration": 2375000,
+   "text": "街机"
+  },
+  {
+   "offset": 61250000,
+   "duration": 2125000,
+   "text": "厅"
+  },
+  {
+   "offset": 63375000,
+   "duration": 875000,
+   "text": "里"
+  },
+  {
+   "offset": 64375000,
+   "duration": 2750000,
+   "text": "一样"
+  },
+  {
+   "offset": 71250000,
+   "duration": 3875000,
+   "text": "维斯"
+  },
+  {
+   "offset": 75125000,
+   "duration": 3125000,
+   "text": "放完"
+  },
+  {
+   "offset": 78375000,
+   "duration": 3625000,
+   "text": "狠话"
+  },
+  {
+   "offset": 82000000,
+   "duration": 2750000,
+   "text": "跳楼"
+  },
+  {
+   "offset": 84875000,
+   "duration": 4000000,
+   "text": "跑路"
+  },
+  {
+   "offset": 92500000,
+   "duration": 4125000,
+   "text": "手下"
+  },
+  {
+   "offset": 96875000,
+   "duration": 1875000,
+   "text": "围"
+  },
+  {
+   "offset": 98750000,
+   "duration": 625000,
+   "text": "了"
+  },
+  {
+   "offset": 99500000,
+   "duration": 3625000,
+   "text": "上来"
+  }
+ ]
+}

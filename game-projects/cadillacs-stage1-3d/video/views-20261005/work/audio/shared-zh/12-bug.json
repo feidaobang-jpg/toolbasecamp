@@ -1,0 +1,127 @@
+{
+ "text": "录像里还抓到一个问题：正视贴着墙打，镜头会钻进砖墙里。这两个镜头问题，下次先修。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 4125000,
+   "text": "录像"
+  },
+  {
+   "offset": 5125000,
+   "duration": 2500000,
+   "text": "里"
+  },
+  {
+   "offset": 7875000,
+   "duration": 1625000,
+   "text": "还"
+  },
+  {
+   "offset": 9625000,
+   "duration": 2125000,
+   "text": "抓到"
+  },
+  {
+   "offset": 11875000,
+   "duration": 1375000,
+   "text": "一个"
+  },
+  {
+   "offset": 13375000,
+   "duration": 4500000,
+   "text": "问题"
+  },
+  {
+   "offset": 22000000,
+   "duration": 4000000,
+   "text": "正视"
+  },
+  {
+   "offset": 26250000,
+   "duration": 1250000,
+   "text": "贴"
+  },
+  {
+   "offset": 27500000,
+   "duration": 875000,
+   "text": "着"
+  },
+  {
+   "offset": 28500000,
+   "duration": 3000000,
+   "text": "墙"
+  },
+  {
+   "offset": 31500000,
+   "duration": 2875000,
+   "text": "打"
+  },
+  {
+   "offset": 36875000,
+   "duration": 4500000,
+   "text": "镜头"
+  },
+  {
+   "offset": 41375000,
+   "duration": 1375000,
+   "text": "会"
+  },
+  {
+   "offset": 42875000,
+   "duration": 3125000,
+   "text": "钻进"
+  },
+  {
+   "offset": 46000000,
+   "duration": 1750000,
+   "text": "砖"
+  },
+  {
+   "offset": 47875000,
+   "duration": 4250000,
+   "text": "墙里"
+  },
+  {
+   "offset": 57875000,
+   "duration": 1625000,
+   "text": "这"
+  },
+  {
+   "offset": 59625000,
+   "duration": 1500000,
+   "text": "两"
+  },
+  {
+   "offset": 61125000,
+   "duration": 750000,
+   "text": "个"
+  },
+  {
+   "offset": 62125000,
+   "duration": 2750000,
+   "text": "镜头"
+  },
+  {
+   "offset": 65000000,
+   "duration": 5125000,
+   "text": "问题"
+  },
+  {
+   "offset": 72375000,
+   "duration": 3875000,
+   "text": "下次"
+  },
+  {
+   "offset": 76375000,
+   "duration": 1625000,
+   "text": "先"
+  },
+  {
+   "offset": 78000000,
+   "duration": 2875000,
+   "text": "修"
+  }
+ ]
+}

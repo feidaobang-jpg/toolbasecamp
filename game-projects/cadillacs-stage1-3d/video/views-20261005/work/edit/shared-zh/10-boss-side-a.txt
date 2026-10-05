@@ -1,0 +1,3 @@
+file '10-boss-side-0.wav'
+file '10-boss-side-1.wav'
+file '10-boss-side-2.wav'

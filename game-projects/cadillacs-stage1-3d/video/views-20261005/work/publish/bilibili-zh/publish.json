@@ -1,0 +1,85 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "content_type": "overview_views",
+  "language": "zh-CN",
+  "game_name": "恐龙快打 3D：第一关",
+  "game_version": "v0.1.0（录制构建 game.min.js?v=3，桌面玩法与线上 v=4 相同）",
+  "video_file": "../../../final/bilibili-zh/恐龙快打3D-第一人称打第一关.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 185.0,
+  "title": "恐龙快打第一关3D重置：按C钻进主角眼睛里打",
+  "description": "街机恐龙快打的第一关，我做成了 3D 重置版：楼顶 → 大楼内部 → 第 47 街，最后打倒牵着岩跳龙的维斯。默认侧视就是原作画面，按 C 能切到正视（主角身后）和第一人称（主角眼睛）。这期把三种视角都实打了一遍，也抓到两个镜头 bug：第一人称贴太近会钻进恐龙嘴里、正视贴墙会进墙，下次先修。\n\n实机画面为当前线上版本，由自动测试脚本按真实按键操作录制（默认规则、无限命、未开无敌）。使用 Claude（Opus 5.5）辅助开发；背景音乐按原作风格重新编写，音效为合成。粉丝向非官方重置，原作版权归 Capcom 及原著方所有。\n\nB站 Toy 试玩：\nhttps://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n百宝箱试玩（复制到浏览器打开）：\nhttps://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html\n\n给这款投票、想玩哪款复刻（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "tags": [
+    "bilibilitoy",
+    "恐龙快打",
+    "街机",
+    "第一人称",
+    "独立游戏",
+    "游戏开发",
+    "Claude",
+    "AI"
+  ],
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected_in_platform": false
+  },
+  "pinned_comment_draft": "电脑按 C 切视角、Q/E 转视角；手机点 C、按住画面拖动转视角。你更想用哪个视角打这一关：侧视、正视还是第一人称？\nToy 试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐（4:3）"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间（16:9）"
+    }
+  },
+  "cover_text": "恐龙快打 · 第一关 3D / 钻进主角眼睛里打 / 侧视 · 正视 · 第一人称",
+  "cover_selection_source": "实机第一人称截帧（views-run-1080p.mp4 第 221.0 秒，Boss 战岩跳龙与维斯）轻微放大裁掉 HUD + 程序排版，非 AI 生成",
+  "cover_upload_mode": "custom_image",
+  "subtitle_mode": "burned_in",
+  "copyright_type": "original",
+  "category": null,
+  "credits": "credits.txt",
+  "disclosures": [
+    "解说为 Edge 在线神经网络预置音色 zh-CN-YunxiNeural（非必剪曼波）",
+    "实机由 Playwright 页面内测试 bot 派发真实键盘事件操作、逐帧截图录制、同局声音事件离线合成音轨，非真人实时操作；简介已注明",
+    "封面为实机截帧程序排版"
+  ],
+  "toy": {
+    "id": 40412421031936,
+    "slug": "feidao-cadillacs-3d",
+    "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "status_checked": "published / PUBLIC（toy mylist，2026-10-05）",
+    "http_checked": "200（2026-10-05）"
+  },
+  "vote_checked": "2026-10-05 /api/game-votes/options 已含 cadillacs-stage1-3d，可投票",
+  "platform_requirements_checked_at": "2026-10-05",
+  "platform_sources": [
+    "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "https://www.zhengxiaohui.cn/game-vote.html",
+    "https://www.bilibili.com/v/topic/detail?topic_id=1346285"
+  ],
+  "unverified_fields": [
+    "实际投稿时核对分类、话题入口资格与封面上传位置",
+    "AI 内容声明按投稿页实际选项设置"
+  ],
+  "blocking_issues": [
+    "等待用户对本期最终成片人工审片（含人声听感）",
+    "配音为 Edge 云希兜底：用户为 v2 选定的必剪曼波因本次必剪操作授权未获允许而未生成；若审片要求曼波，需允许操作必剪后重配、重排并重新审片"
+  ],
+  "ready_to_upload": false,
+  "uploaded": false
+}

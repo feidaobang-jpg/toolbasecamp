@@ -1,0 +1,17 @@
+{
+ "final": "final\\bilibili-zh\\恐龙快打3D-第一人称打第一关.mp4",
+ "sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a",
+ "duration": 185.0,
+ "loudnorm_pass1": {
+  "input_i": "-24.18",
+  "input_tp": "-5.18",
+  "input_lra": "4.40",
+  "input_thresh": "-34.43",
+  "output_i": "-16.65",
+  "output_tp": "-1.50",
+  "output_lra": "3.90",
+  "output_thresh": "-26.85",
+  "normalization_type": "dynamic",
+  "target_offset": "0.65"
+ }
+}

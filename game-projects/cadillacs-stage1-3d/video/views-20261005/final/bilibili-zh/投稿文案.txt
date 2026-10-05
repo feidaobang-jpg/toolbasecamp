@@ -1,0 +1,33 @@
+﻿【标题】
+恐龙快打第一关3D重置：按C钻进主角眼睛里打
+
+【标签】
+bilibilitoy
+恐龙快打
+街机
+第一人称
+独立游戏
+游戏开发
+Claude
+AI
+
+【话题】
+哔哩哔哩Toy创意挑战
+https://www.bilibili.com/v/topic/detail?topic_id=1346285
+
+【简介】
+街机恐龙快打的第一关，我做成了 3D 重置版：楼顶 → 大楼内部 → 第 47 街，最后打倒牵着岩跳龙的维斯。默认侧视就是原作画面，按 C 能切到正视（主角身后）和第一人称（主角眼睛）。这期把三种视角都实打了一遍，也抓到两个镜头 bug：第一人称贴太近会钻进恐龙嘴里、正视贴墙会进墙，下次先修。
+
+实机画面为当前线上版本，由自动测试脚本按真实按键操作录制（默认规则、无限命、未开无敌）。使用 Claude（Opus 5.5）辅助开发；背景音乐按原作风格重新编写，音效为合成。粉丝向非官方重置，原作版权归 Capcom 及原著方所有。
+
+B站 Toy 试玩：
+https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html
+百宝箱试玩（复制到浏览器打开）：
+https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html
+
+给这款投票、想玩哪款复刻（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）
+
+【置顶评论】
+电脑按 C 切视角、Q/E 转视角；手机点 C、按住画面拖动转视角。你更想用哪个视角打这一关：侧视、正视还是第一人称？
+Toy 试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html
+投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）

@@ -1,0 +1,172 @@
+{
+ "text": "撞破窗户，跳到第四十七街。一路打到尽头，维斯牵着锁住的岩跳龙，就堵在正前方。他抽了恐龙一鞭，恐龙当场变成橙色，暴走了。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 4500000,
+   "text": "撞破"
+  },
+  {
+   "offset": 5625000,
+   "duration": 5375000,
+   "text": "窗户"
+  },
+  {
+   "offset": 12875000,
+   "duration": 2375000,
+   "text": "跳"
+  },
+  {
+   "offset": 15250000,
+   "duration": 2000000,
+   "text": "到"
+  },
+  {
+   "offset": 17500000,
+   "duration": 6250000,
+   "text": "第四十七"
+  },
+  {
+   "offset": 23750000,
+   "duration": 2750000,
+   "text": "街"
+  },
+  {
+   "offset": 32125000,
+   "duration": 3125000,
+   "text": "一路"
+  },
+  {
+   "offset": 35250000,
+   "duration": 2250000,
+   "text": "打到"
+  },
+  {
+   "offset": 37625000,
+   "duration": 5875000,
+   "text": "尽头"
+  },
+  {
+   "offset": 47500000,
+   "duration": 3625000,
+   "text": "维斯"
+  },
+  {
+   "offset": 51250000,
+   "duration": 2375000,
+   "text": "牵"
+  },
+  {
+   "offset": 53625000,
+   "duration": 1000000,
+   "text": "着"
+  },
+  {
+   "offset": 54875000,
+   "duration": 2250000,
+   "text": "锁"
+  },
+  {
+   "offset": 57125000,
+   "duration": 1000000,
+   "text": "住"
+  },
+  {
+   "offset": 58125000,
+   "duration": 750000,
+   "text": "的"
+  },
+  {
+   "offset": 59000000,
+   "duration": 7375000,
+   "text": "岩跳龙"
+  },
+  {
+   "offset": 68625000,
+   "duration": 2000000,
+   "text": "就"
+  },
+  {
+   "offset": 70750000,
+   "duration": 1375000,
+   "text": "堵"
+  },
+  {
+   "offset": 72125000,
+   "duration": 1250000,
+   "text": "在"
+  },
+  {
+   "offset": 73625000,
+   "duration": 1625000,
+   "text": "正"
+  },
+  {
+   "offset": 75250000,
+   "duration": 4625000,
+   "text": "前方"
+  },
+  {
+   "offset": 85500000,
+   "duration": 1625000,
+   "text": "他"
+  },
+  {
+   "offset": 87125000,
+   "duration": 1625000,
+   "text": "抽"
+  },
+  {
+   "offset": 88750000,
+   "duration": 750000,
+   "text": "了"
+  },
+  {
+   "offset": 89625000,
+   "duration": 3250000,
+   "text": "恐龙"
+  },
+  {
+   "offset": 93000000,
+   "duration": 1125000,
+   "text": "一"
+  },
+  {
+   "offset": 94125000,
+   "duration": 3125000,
+   "text": "鞭"
+  },
+  {
+   "offset": 101000000,
+   "duration": 6125000,
+   "text": "恐龙"
+  },
+  {
+   "offset": 108125000,
+   "duration": 4375000,
+   "text": "当场"
+  },
+  {
+   "offset": 112625000,
+   "duration": 2500000,
+   "text": "变成"
+  },
+  {
+   "offset": 115250000,
+   "duration": 5125000,
+   "text": "橙色"
+  },
+  {
+   "offset": 123125000,
+   "duration": 4500000,
+   "text": "暴走"
+  },
+  {
+   "offset": 127625000,
+   "duration": 2000000,
+   "text": "了"
+  }
+ ]
+}

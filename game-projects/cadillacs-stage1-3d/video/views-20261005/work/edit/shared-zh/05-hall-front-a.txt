@@ -1,0 +1,2 @@
+file '05-hall-front-0.wav'
+file '05-hall-front-1.wav'

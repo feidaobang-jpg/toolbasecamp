@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "game_name": "恐龙快打 3D：第一关",
+  "game_version": "v0.1.0",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "等待用户对本期最终成片人工审片（含人声听感）",
+        "配音为 Edge 云希兜底：用户为 v2 选定的必剪曼波因本次必剪操作授权未获允许而未生成；若审片要求曼波，需允许操作必剪后重配、重排并重新审片"
+      ]
+    }
+  ],
+  "ready_to_upload": false
+}

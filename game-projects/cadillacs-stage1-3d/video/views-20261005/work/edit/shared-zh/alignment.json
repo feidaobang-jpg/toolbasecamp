@@ -1,0 +1,802 @@
+[
+ {
+  "start": 0.35,
+  "end": 2.1,
+  "text": "街机恐龙快打的第一关",
+  "segment": "01-hook",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 2.3,
+  "end": 4.375,
+  "text": "这回能钻进主角的眼睛里打",
+  "segment": "01-hook",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 4.8,
+  "end": 5.9125000000000005,
+  "text": "左轮在手",
+  "segment": "01-hook",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 5.9625,
+  "end": 7.325,
+  "text": "胖子迎面冲过来",
+  "segment": "01-hook",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 7.475,
+  "end": 8.924999999999999,
+  "text": "连开几枪",
+  "segment": "01-hook",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 9.65,
+  "end": 11.637500000000001,
+  "text": "我把卡普空九三年的这一关",
+  "segment": "02-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 11.725000000000001,
+  "end": 13.225000000000001,
+  "text": "做成了3D重置版",
+  "segment": "02-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 13.65,
+  "end": 14.825000000000001,
+  "text": "默认是侧视",
+  "segment": "02-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 14.9625,
+  "end": 16.4125,
+  "text": "跟当年街机厅里一样",
+  "segment": "02-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 16.675,
+  "end": 18.5875,
+  "text": "维斯放完狠话跳楼跑路",
+  "segment": "02-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 18.8,
+  "end": 20.462500000000002,
+  "text": "手下围了上来",
+  "segment": "02-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 21.650000000000002,
+  "end": 22.575,
+  "text": "按一下C",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 22.775000000000002,
+  "end": 24.412499999999998,
+  "text": "镜头转到主角身后",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 24.4875,
+  "end": 25.4375,
+  "text": "这就是正视",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 25.8625,
+  "end": 27.6,
+  "text": "W就是往前走",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 27.8125,
+  "end": 29.487499999999997,
+  "text": "敌人从正前方迎上来",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 29.5375,
+  "end": 31.112499999999997,
+  "text": "谁先走进拳头范围",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 31.2125,
+  "end": 32.35,
+  "text": "一眼就看得出来",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 32.775,
+  "end": 34.5625,
+  "text": "代价是背后看不见",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 34.975,
+  "end": 35.6125,
+  "text": "你看",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 35.9,
+  "end": 36.949999999999996,
+  "text": "后面上来一个",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 37.05,
+  "end": 38.5375,
+  "text": "挨了一下才发现",
+  "segment": "03-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 39.25000000000001,
+  "end": 40.237500000000004,
+  "text": "再按一下C",
+  "segment": "04-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 40.337500000000006,
+  "end": 41.212500000000006,
+  "text": "第一人称",
+  "segment": "04-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 41.62500000000001,
+  "end": 42.987500000000004,
+  "text": "拳头就在眼前",
+  "segment": "04-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 43.212500000000006,
+  "end": 45.2,
+  "text": "敌人的脸也贴在眼前",
+  "segment": "04-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 45.62500000000001,
+  "end": 46.62500000000001,
+  "text": "最后一脚",
+  "segment": "04-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 46.712500000000006,
+  "end": 48.2,
+  "text": "踹开楼梯间的门",
+  "segment": "04-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 48.650000000000006,
+  "end": 49.6,
+  "text": "进了大楼",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 49.7875,
+  "end": 51.7,
+  "text": "正视看走廊特别有纵深",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 51.95,
+  "end": 53.5,
+  "text": "可两边的门会突然出人",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 53.925000000000004,
+  "end": 56.175000000000004,
+  "text": "这一下被三个人夹在门边",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 56.4125,
+  "end": 57.95,
+  "text": "背后那个根本看不见",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 58.075,
+  "end": 59.62500000000001,
+  "text": "血条直接见底",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 60.050000000000004,
+  "end": 61.6375,
+  "text": "好在默认是无限命",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 61.862500000000004,
+  "end": 62.9625,
+  "text": "原地复活",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 63.1875,
+  "end": 65.4375,
+  "text": "落地还能把身边的人震倒",
+  "segment": "05-hall-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 66.05,
+  "end": 68.22500000000001,
+  "text": "走廊里再切第一人称",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 68.6375,
+  "end": 70.81250000000001,
+  "text": "拿刀的布雷德正面走过来",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 71.05,
+  "end": 72.30000000000001,
+  "text": "刀子就在眼前晃",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 72.7125,
+  "end": 74.3375,
+  "text": "打倒他会掉左轮",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 74.575,
+  "end": 75.91250000000001,
+  "text": "就是开头那几枪",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 76.3125,
+  "end": 78.075,
+  "text": "等胖子们一起挤上来",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 78.2625,
+  "end": 79.8,
+  "text": "满屏都是肚子",
+  "segment": "06-hall-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 80.95,
+  "end": 82.10000000000001,
+  "text": "撞破窗户",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 82.1375,
+  "end": 83.65000000000002,
+  "text": "跳到第47街",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 84.06250000000001,
+  "end": 85.35000000000001,
+  "text": "一路打到尽头",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 85.60000000000001,
+  "end": 87.63750000000002,
+  "text": "维斯牵着锁住的岩跳龙",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 87.7125,
+  "end": 88.98750000000001,
+  "text": "就堵在正前方",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 89.4,
+  "end": 90.72500000000001,
+  "text": "他抽了恐龙一鞭",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 90.95,
+  "end": 93.03750000000001,
+  "text": "恐龙当场变成橙色",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 93.16250000000001,
+  "end": 94.30000000000001,
+  "text": "暴走了",
+  "segment": "07-boss-intro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 94.75,
+  "end": 95.8375,
+  "text": "正视打Boss",
+  "segment": "08-boss-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 95.97500000000001,
+  "end": 97.97500000000001,
+  "text": "维斯和恐龙都在正前方",
+  "segment": "08-boss-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 98.125,
+  "end": 100.18750000000001,
+  "text": "谁先扑过来看得很清楚",
+  "segment": "08-boss-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 100.60000000000001,
+  "end": 101.30000000000001,
+  "text": "当然",
+  "segment": "08-boss-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 101.625,
+  "end": 103.75,
+  "text": "看清楚不代表躲得开",
+  "segment": "08-boss-front",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 104.95,
+  "end": 106.20000000000002,
+  "text": "切到第一人称",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 106.41250000000001,
+  "end": 108.56250000000001,
+  "text": "恐龙的牙直接怼到脸上",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 108.97500000000001,
+  "end": 110.02500000000002,
+  "text": "再贴近一点",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 110.23750000000001,
+  "end": 112.28750000000001,
+  "text": "镜头干脆钻进了恐龙嘴里",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 112.7,
+  "end": 113.72500000000001,
+  "text": "这是个bug",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 113.86250000000001,
+  "end": 114.75000000000001,
+  "text": "已经记下了",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 115.16250000000001,
+  "end": 117.65000000000002,
+  "text": "维斯一掉血就叫手下帮忙",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 117.86250000000001,
+  "end": 119.13750000000002,
+  "text": "这一拳砸过来",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 119.2125,
+  "end": 120.50000000000001,
+  "text": "又倒了一次",
+  "segment": "09-boss-fp",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 120.95,
+  "end": 122.65000000000002,
+  "text": "最后切回侧视收尾",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 123.075,
+  "end": 124.81250000000001,
+  "text": "左右两边的人都看得见",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 124.95,
+  "end": 127.27500000000002,
+  "text": "飞踢什么时候出、往哪边躲",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 127.50000000000001,
+  "end": 128.60000000000002,
+  "text": "心里更有数",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 129.01250000000002,
+  "end": 130.97500000000002,
+  "text": "难怪原作用的是这个视角",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 131.4,
+  "end": 132.70000000000002,
+  "text": "补上最后几下",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 132.8375,
+  "end": 134.70000000000002,
+  "text": "维斯终于倒下",
+  "segment": "10-boss-side",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 135.15,
+  "end": 136.3625,
+  "text": "体力奖励结算",
+  "segment": "11-result",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 136.53750000000002,
+  "end": 137.525,
+  "text": "第一关通关",
+  "segment": "11-result",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 137.65,
+  "end": 139.525,
+  "text": "十二万两千四百分",
+  "segment": "11-result",
+  "timing_source": "Edge WordBoundary",
+  "y": 1010
+ },
+ {
+  "start": 139.9375,
+  "end": 142.03750000000002,
+  "text": "这局穆斯塔法倒了三次",
+  "segment": "11-result",
+  "timing_source": "Edge WordBoundary",
+  "y": 1010
+ },
+ {
+  "start": 142.25,
+  "end": 144.4125,
+  "text": "全靠默认的无限命",
+  "segment": "11-result",
+  "timing_source": "Edge WordBoundary",
+  "y": 1010
+ },
+ {
+  "start": 144.95000000000002,
+  "end": 146.78750000000002,
+  "text": "录像里还抓到一个问题",
+  "segment": "12-bug",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 147.05,
+  "end": 148.43750000000003,
+  "text": "正视贴着墙打",
+  "segment": "12-bug",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 148.53750000000002,
+  "end": 150.21250000000003,
+  "text": "镜头会钻进砖墙里",
+  "segment": "12-bug",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 150.63750000000002,
+  "end": 152.01250000000002,
+  "text": "这两个镜头问题",
+  "segment": "12-bug",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 152.08750000000003,
+  "end": 153.50000000000003,
+  "text": "下次先修",
+  "segment": "12-bug",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 153.95000000000002,
+  "end": 154.87500000000003,
+  "text": "总结一下",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 155.12500000000003,
+  "end": 156.50000000000003,
+  "text": "侧视看得最全",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 156.53750000000002,
+  "end": 158.42500000000004,
+  "text": "正视最有往前冲的感觉",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 158.62500000000003,
+  "end": 160.56750000000002,
+  "text": "第一人称临场感最强",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 160.58750000000003,
+  "end": 161.75000000000003,
+  "text": "视野也最窄",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 162.16250000000002,
+  "end": 163.62500000000003,
+  "text": "第二关沼泽森林",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 163.82500000000002,
+  "end": 164.83750000000003,
+  "text": "还在计划里",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 165.25000000000003,
+  "end": 167.10000000000002,
+  "text": "现在电脑和手机都能玩",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 167.31250000000003,
+  "end": 169.01250000000002,
+  "text": "B站Toy也能直接玩",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 169.05,
+  "end": 170.11250000000004,
+  "text": "链接在简介",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 170.53750000000002,
+  "end": 171.50000000000003,
+  "text": "觉得好玩",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 171.62500000000003,
+  "end": 174.33750000000003,
+  "text": "就去百宝箱游戏页的投票榜投它一票",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 174.56250000000003,
+  "end": 175.88750000000002,
+  "text": "想玩哪款复刻",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 175.925,
+  "end": 177.16250000000002,
+  "text": "也能写进愿望单",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 177.57500000000002,
+  "end": 180.17500000000004,
+  "text": "要是觉得第一人称挨揍的样子挺好笑",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 180.33750000000003,
+  "end": 181.66750000000002,
+  "text": "顺手给个三连",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ },
+ {
+  "start": 181.68750000000003,
+  "end": 184.05,
+  "text": "就当给穆斯塔法补个汉堡",
+  "segment": "13-outro",
+  "timing_source": "Edge WordBoundary",
+  "y": 800
+ }
+]

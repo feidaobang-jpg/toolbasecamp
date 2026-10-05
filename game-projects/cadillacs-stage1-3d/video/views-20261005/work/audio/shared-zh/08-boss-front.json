@@ -1,0 +1,137 @@
+{
+ "text": "正视打Boss，维斯和恐龙都在正前方，谁先扑过来看得很清楚。当然，看清楚不代表躲得开。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "marks": [
+  {
+   "offset": 1000000,
+   "duration": 3000000,
+   "text": "正视"
+  },
+  {
+   "offset": 4125000,
+   "duration": 1625000,
+   "text": "打"
+  },
+  {
+   "offset": 5750000,
+   "duration": 4625000,
+   "text": "Boss"
+  },
+  {
+   "offset": 13250000,
+   "duration": 3500000,
+   "text": "维斯"
+  },
+  {
+   "offset": 16875000,
+   "duration": 1125000,
+   "text": "和"
+  },
+  {
+   "offset": 18125000,
+   "duration": 4000000,
+   "text": "恐龙"
+  },
+  {
+   "offset": 22375000,
+   "duration": 1375000,
+   "text": "都"
+  },
+  {
+   "offset": 23750000,
+   "duration": 1000000,
+   "text": "在"
+  },
+  {
+   "offset": 24875000,
+   "duration": 1750000,
+   "text": "正"
+  },
+  {
+   "offset": 26625000,
+   "duration": 5125000,
+   "text": "前方"
+  },
+  {
+   "offset": 34750000,
+   "duration": 2750000,
+   "text": "谁"
+  },
+  {
+   "offset": 37500000,
+   "duration": 1500000,
+   "text": "先"
+  },
+  {
+   "offset": 39125000,
+   "duration": 1375000,
+   "text": "扑"
+  },
+  {
+   "offset": 40500000,
+   "duration": 3625000,
+   "text": "过来"
+  },
+  {
+   "offset": 45250000,
+   "duration": 2125000,
+   "text": "看"
+  },
+  {
+   "offset": 47375000,
+   "duration": 625000,
+   "text": "得"
+  },
+  {
+   "offset": 48125000,
+   "duration": 1375000,
+   "text": "很"
+  },
+  {
+   "offset": 49500000,
+   "duration": 4375000,
+   "text": "清楚"
+  },
+  {
+   "offset": 59500000,
+   "duration": 5500000,
+   "text": "当然"
+  },
+  {
+   "offset": 69750000,
+   "duration": 2250000,
+   "text": "看"
+  },
+  {
+   "offset": 72000000,
+   "duration": 4375000,
+   "text": "清楚"
+  },
+  {
+   "offset": 76625000,
+   "duration": 1000000,
+   "text": "不"
+  },
+  {
+   "offset": 77625000,
+   "duration": 2250000,
+   "text": "代表"
+  },
+  {
+   "offset": 80125000,
+   "duration": 1125000,
+   "text": "躲"
+  },
+  {
+   "offset": 81250000,
+   "duration": 1000000,
+   "text": "得"
+  },
+  {
+   "offset": 82250000,
+   "duration": 2750000,
+   "text": "开"
+  }
+ ]
+}
