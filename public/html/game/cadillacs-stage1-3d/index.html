@@ -66,8 +66,6 @@
       <button id="btn-run" class="act" tabindex="-1" aria-label="L 冲刺"><b>L</b><span>冲刺</span></button>
       <button id="btn-mega" class="act" tabindex="-1" aria-label="U 必杀"><b>U</b><span>必杀</span></button>
       <button id="btn-cam-t" class="act small" tabindex="-1" aria-label="C 切换视角"><b>C</b><span>切换视角</span></button>
-      <button id="btn-rotl" class="act tiny" tabindex="-1" aria-label="Q 左转视角"><b>Q</b><span>左转</span></button>
-      <button id="btn-rotr" class="act tiny" tabindex="-1" aria-label="E 右转视角"><b>E</b><span>右转</span></button>
     </div>
 
     <div id="menu" class="overlay title-screen">
@@ -78,7 +76,7 @@
           <div class="sub" id="menu-sub">第一关 · 海上都市</div>
           <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。选一位英雄，从大楼楼顶打进大楼内部，跳窗杀到第 47 街，打倒 Boss 维斯·T 和他的岩跳龙。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 攻击 · <kbd>K</kbd> 跳跃 · <kbd>L</kbd> 冲刺 · <kbd>J</kbd>+<kbd>K</kbd> 必杀<br><kbd>C</kbd> 切换视角 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
-          <p class="help help-touch">左侧摇杆移动 · 右侧 <b>J</b> 攻击、<b>K</b> 跳跃、<b>L</b> 冲刺、<b>U</b> 必杀 · <b>C</b> 切换视角 · <b>Q</b>/<b>E</b> 转视角 · 右上角暂停</p>
+          <p class="help help-touch">左侧摇杆移动 · 右侧 <b>J</b> 攻击、<b>K</b> 跳跃、<b>L</b> 冲刺、<b>U</b> 必杀 · <b>C</b> 切换视角 · 按住画面拖动转视角 · 右上角暂停</p>
           <p class="hi">最高分 <span id="hi-val">50000</span></p>
           <p class="legal">粉丝向非官方重置：3D 模型与音乐为程序化重新制作；《恐龙快打》（Cadillacs and Dinosaurs）原作版权归 Capcom 及原著方所有。</p>
         </div>
@@ -161,6 +159,6 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
 </script>
-<script src="js/game.min.js?v=3"></script>
+<script src="js/game.min.js?v=4"></script>
 </body>
 </html>

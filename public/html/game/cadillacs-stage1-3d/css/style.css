@@ -228,10 +228,6 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 #btn-mega { right: calc(var(--sar) + 30px); bottom: calc(var(--sab) + 132px); width: 66px; height: 66px; background: radial-gradient(circle at 35% 30%, #ffe8a0 0 12%, #e8a81a 13% 70%, #8a5a0a 71%); }
 #btn-cam-t { right: calc(var(--sar) + 196px); bottom: calc(var(--sab) + 120px); width: 56px; height: 56px; background: radial-gradient(circle at 35% 30%, #f4ecff 0 12%, #9a88c8 13% 70%, #5a4a8a 71%); }
 #btn-cam-t b { font-size: 18px; } #btn-cam-t span { font-size: 9px; }
-.act.tiny { width: 46px; height: 46px; background: radial-gradient(circle at 35% 30%, #f4ecff 0 12%, #7a6aa8 13% 70%, #4a3a7a 71%); }
-.act.tiny b { font-size: 15px; } .act.tiny span { font-size: 9px; margin-top: 1px; }
-#btn-rotl { right: calc(var(--sar) + 256px); bottom: calc(var(--sab) + 70px); }
-#btn-rotr { right: calc(var(--sar) + 205px); bottom: calc(var(--sab) + 40px); }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.2); }
 body.touch-on #hud-top #btn-cam { display: none; }
 body.mobile-device #btn-fs, body.mobile-device .fs-btn { display: none !important; }
