@@ -1,0 +1,112 @@
+{
+  "text": "方向键移动，机枪跟着车头转，手雷也朝车头扔。按一下 C，还能切换俯视和近景。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4125000,
+      "text": "方向"
+    },
+    {
+      "offset": 5125000,
+      "duration": 1250000,
+      "text": "键"
+    },
+    {
+      "offset": 6500000,
+      "duration": 3750000,
+      "text": "移动"
+    },
+    {
+      "offset": 14125000,
+      "duration": 4375000,
+      "text": "机枪"
+    },
+    {
+      "offset": 18750000,
+      "duration": 1625000,
+      "text": "跟着"
+    },
+    {
+      "offset": 20500000,
+      "duration": 3500000,
+      "text": "车头"
+    },
+    {
+      "offset": 24125000,
+      "duration": 2625000,
+      "text": "转"
+    },
+    {
+      "offset": 30000000,
+      "duration": 5125000,
+      "text": "手雷"
+    },
+    {
+      "offset": 35375000,
+      "duration": 1250000,
+      "text": "也"
+    },
+    {
+      "offset": 36625000,
+      "duration": 1875000,
+      "text": "朝"
+    },
+    {
+      "offset": 38625000,
+      "duration": 3250000,
+      "text": "车头"
+    },
+    {
+      "offset": 41875000,
+      "duration": 2125000,
+      "text": "扔"
+    },
+    {
+      "offset": 49625000,
+      "duration": 1750000,
+      "text": "按"
+    },
+    {
+      "offset": 51500000,
+      "duration": 2250000,
+      "text": "一下"
+    },
+    {
+      "offset": 53750000,
+      "duration": 3625000,
+      "text": "C"
+    },
+    {
+      "offset": 59500000,
+      "duration": 1875000,
+      "text": "还"
+    },
+    {
+      "offset": 61375000,
+      "duration": 1250000,
+      "text": "能"
+    },
+    {
+      "offset": 62750000,
+      "duration": 3500000,
+      "text": "切换"
+    },
+    {
+      "offset": 66500000,
+      "duration": 4375000,
+      "text": "俯视"
+    },
+    {
+      "offset": 71125000,
+      "duration": 1375000,
+      "text": "和"
+    },
+    {
+      "offset": 72625000,
+      "duration": 4125000,
+      "text": "近景"
+    }
+  ]
+}

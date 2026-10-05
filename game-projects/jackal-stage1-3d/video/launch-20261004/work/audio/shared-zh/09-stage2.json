@@ -1,0 +1,92 @@
+{
+  "text": "第二关换成废墟城，石柱、窄路和敌人的交叉火力，路线一下变得紧张了。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2750000,
+      "text": "第二"
+    },
+    {
+      "offset": 3750000,
+      "duration": 1625000,
+      "text": "关"
+    },
+    {
+      "offset": 5375000,
+      "duration": 3750000,
+      "text": "换成"
+    },
+    {
+      "offset": 9375000,
+      "duration": 3250000,
+      "text": "废墟"
+    },
+    {
+      "offset": 12625000,
+      "duration": 3875000,
+      "text": "城"
+    },
+    {
+      "offset": 18500000,
+      "duration": 6250000,
+      "text": "石柱"
+    },
+    {
+      "offset": 28500000,
+      "duration": 3250000,
+      "text": "窄"
+    },
+    {
+      "offset": 31750000,
+      "duration": 2375000,
+      "text": "路"
+    },
+    {
+      "offset": 35250000,
+      "duration": 1875000,
+      "text": "和"
+    },
+    {
+      "offset": 37250000,
+      "duration": 2750000,
+      "text": "敌人"
+    },
+    {
+      "offset": 40000000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 41000000,
+      "duration": 7750000,
+      "text": "交叉火力"
+    },
+    {
+      "offset": 52125000,
+      "duration": 3125000,
+      "text": "路线"
+    },
+    {
+      "offset": 55375000,
+      "duration": 4375000,
+      "text": "一下"
+    },
+    {
+      "offset": 60875000,
+      "duration": 2125000,
+      "text": "变得"
+    },
+    {
+      "offset": 63125000,
+      "duration": 3375000,
+      "text": "紧张"
+    },
+    {
+      "offset": 66500000,
+      "duration": 1625000,
+      "text": "了"
+    }
+  ]
+}

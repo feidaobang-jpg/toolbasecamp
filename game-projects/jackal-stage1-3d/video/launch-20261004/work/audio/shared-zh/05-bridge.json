@@ -1,0 +1,117 @@
+{
+  "text": "过桥先处理守桥坦克，接走闪光俘虏。看左上角，四向火箭到手，救人和变强是一条线。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4750000,
+      "text": "过桥"
+    },
+    {
+      "offset": 6000000,
+      "duration": 1875000,
+      "text": "先"
+    },
+    {
+      "offset": 8000000,
+      "duration": 2625000,
+      "text": "处理"
+    },
+    {
+      "offset": 10875000,
+      "duration": 3625000,
+      "text": "守桥"
+    },
+    {
+      "offset": 14500000,
+      "duration": 5375000,
+      "text": "坦克"
+    },
+    {
+      "offset": 22125000,
+      "duration": 4125000,
+      "text": "接走"
+    },
+    {
+      "offset": 26500000,
+      "duration": 3875000,
+      "text": "闪光"
+    },
+    {
+      "offset": 30500000,
+      "duration": 3625000,
+      "text": "俘虏"
+    },
+    {
+      "offset": 39875000,
+      "duration": 2750000,
+      "text": "看"
+    },
+    {
+      "offset": 42625000,
+      "duration": 1875000,
+      "text": "左"
+    },
+    {
+      "offset": 44625000,
+      "duration": 2000000,
+      "text": "上"
+    },
+    {
+      "offset": 46625000,
+      "duration": 3250000,
+      "text": "角"
+    },
+    {
+      "offset": 51875000,
+      "duration": 3125000,
+      "text": "四"
+    },
+    {
+      "offset": 55000000,
+      "duration": 1750000,
+      "text": "向"
+    },
+    {
+      "offset": 56875000,
+      "duration": 3625000,
+      "text": "火箭"
+    },
+    {
+      "offset": 60625000,
+      "duration": 4375000,
+      "text": "到手"
+    },
+    {
+      "offset": 67500000,
+      "duration": 4000000,
+      "text": "救人"
+    },
+    {
+      "offset": 71750000,
+      "duration": 875000,
+      "text": "和"
+    },
+    {
+      "offset": 72750000,
+      "duration": 4625000,
+      "text": "变强"
+    },
+    {
+      "offset": 77625000,
+      "duration": 1125000,
+      "text": "是"
+    },
+    {
+      "offset": 78875000,
+      "duration": 2250000,
+      "text": "一条"
+    },
+    {
+      "offset": 81125000,
+      "duration": 2500000,
+      "text": "线"
+    }
+  ]
+}

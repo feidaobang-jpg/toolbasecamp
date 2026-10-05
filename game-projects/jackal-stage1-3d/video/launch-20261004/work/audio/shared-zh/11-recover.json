@@ -1,0 +1,112 @@
+{
+  "text": "绕进营地再炸营房，接回闪光俘虏，武器重新升级。后面还有修理补给，掉血也有机会救回来。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2250000,
+      "text": "绕"
+    },
+    {
+      "offset": 3250000,
+      "duration": 1375000,
+      "text": "进"
+    },
+    {
+      "offset": 4750000,
+      "duration": 4000000,
+      "text": "营地"
+    },
+    {
+      "offset": 9000000,
+      "duration": 2250000,
+      "text": "再"
+    },
+    {
+      "offset": 11250000,
+      "duration": 1375000,
+      "text": "炸"
+    },
+    {
+      "offset": 12750000,
+      "duration": 5500000,
+      "text": "营房"
+    },
+    {
+      "offset": 20750000,
+      "duration": 4125000,
+      "text": "接回"
+    },
+    {
+      "offset": 25125000,
+      "duration": 3750000,
+      "text": "闪光"
+    },
+    {
+      "offset": 29000000,
+      "duration": 3625000,
+      "text": "俘虏"
+    },
+    {
+      "offset": 35375000,
+      "duration": 3500000,
+      "text": "武器"
+    },
+    {
+      "offset": 39125000,
+      "duration": 4000000,
+      "text": "重新"
+    },
+    {
+      "offset": 43250000,
+      "duration": 4750000,
+      "text": "升级"
+    },
+    {
+      "offset": 53750000,
+      "duration": 4750000,
+      "text": "后面"
+    },
+    {
+      "offset": 58625000,
+      "duration": 2250000,
+      "text": "还有"
+    },
+    {
+      "offset": 61125000,
+      "duration": 2500000,
+      "text": "修理"
+    },
+    {
+      "offset": 63750000,
+      "duration": 4125000,
+      "text": "补给"
+    },
+    {
+      "offset": 71750000,
+      "duration": 4000000,
+      "text": "掉血"
+    },
+    {
+      "offset": 75750000,
+      "duration": 2500000,
+      "text": "也有"
+    },
+    {
+      "offset": 78375000,
+      "duration": 2875000,
+      "text": "机会"
+    },
+    {
+      "offset": 81500000,
+      "duration": 1000000,
+      "text": "救"
+    },
+    {
+      "offset": 82500000,
+      "duration": 3500000,
+      "text": "回来"
+    }
+  ]
+}

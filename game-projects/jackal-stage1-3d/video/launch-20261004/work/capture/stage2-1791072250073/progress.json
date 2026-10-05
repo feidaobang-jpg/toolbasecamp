@@ -1,0 +1,909 @@
+{
+  "wall": 30.081,
+  "mode": "play",
+  "t": 30.12,
+  "frame": 1807,
+  "score": 1750,
+  "hi": 30000,
+  "deaths": 0,
+  "lives": 3,
+  "settings": {
+    "lives": "inf",
+    "demo": false,
+    "armor": "std",
+    "gun": "follow"
+  },
+  "demoUsed": false,
+  "stage": 1,
+  "stageCount": 2,
+  "stageNo": 1,
+  "weapon": 2,
+  "carried": 6,
+  "delivered": 0,
+  "freed": 6,
+  "powTotal": 19,
+  "cp": 2,
+  "kills": {
+    "soldier": 4,
+    "officer": 0,
+    "mg": 1,
+    "turret": 0,
+    "cannon": 0,
+    "tank": 0,
+    "brownTank": 0,
+    "bulltank": 0,
+    "ejeep": 0,
+    "bomber": 0,
+    "boat": 0,
+    "wstatue": 0,
+    "fallpillar": 0,
+    "boss": 0,
+    "bust": 0,
+    "hut": 2
+  },
+  "player": {
+    "x": -17.09,
+    "y": 67.17,
+    "dir": 2,
+    "alive": true,
+    "invuln": 0,
+    "shield": 0,
+    "moving": true,
+    "armor": 3,
+    "armorMax": 3
+  },
+  "kits": [
+    {
+      "x": -15.8,
+      "y": 66.4
+    }
+  ],
+  "enemies": [
+    {
+      "type": "soldier",
+      "x": -11.82,
+      "y": 17,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 6,
+      "y": 34.81,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 31.15,
+      "y": 29.05,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 21.82,
+      "y": 38,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -19.93,
+      "y": 32.35,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -6.91,
+      "y": 40.71,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "mg",
+      "x": -6,
+      "y": 28,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": 6,
+      "y": 52,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "cannon",
+      "x": -7,
+      "y": 62,
+      "hp": 8,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": 7,
+      "y": 62,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": 12.81,
+      "y": 70.06,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -4,
+      "y": 85.29,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -21.47,
+      "y": 78.7,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 21.48,
+      "y": 89.21,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "officer",
+      "x": -1.1,
+      "y": 78.37,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "mg",
+      "x": 8,
+      "y": 86,
+      "hp": 6,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -10,
+      "y": 104,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 8,
+      "y": 108,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -29,
+      "y": 106,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "mg",
+      "x": 2,
+      "y": 105,
+      "hp": 6,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "boat",
+      "x": 14.6,
+      "y": 119,
+      "hp": 6,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "boat",
+      "x": 19.4,
+      "y": 121,
+      "hp": 6,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "tank",
+      "x": -6,
+      "y": 140,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -28,
+      "y": 135,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 6,
+      "y": 134,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 15,
+      "y": 147,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "mg",
+      "x": 12,
+      "y": 142,
+      "hp": 6,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": -25,
+      "y": 160,
+      "hp": 8,
+      "active": false,
+      "elevated": true,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": 19,
+      "y": 164,
+      "hp": 8,
+      "active": false,
+      "elevated": true,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": -6,
+      "y": 186,
+      "hp": 8,
+      "active": false,
+      "elevated": true,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": 23,
+      "y": 194,
+      "hp": 8,
+      "active": false,
+      "elevated": true,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -6,
+      "y": 158,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 2,
+      "y": 171,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -24,
+      "y": 176,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 8,
+      "y": 197,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -31,
+      "y": 196,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "officer",
+      "x": -20,
+      "y": 191,
+      "hp": 2,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "mg",
+      "x": -3,
+      "y": 199.5,
+      "hp": 6,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": 8,
+      "y": 212,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -6,
+      "y": 222,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -17,
+      "y": 232,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 0,
+      "y": 242,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 15,
+      "y": 252,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "officer",
+      "x": -12,
+      "y": 229,
+      "hp": 2,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "tank",
+      "x": 12,
+      "y": 251,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": -14,
+      "y": 264,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "cannon",
+      "x": 24,
+      "y": 270,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "tank",
+      "x": 0,
+      "y": 284,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "tank",
+      "x": 15,
+      "y": 289,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "mg",
+      "x": -10,
+      "y": 291,
+      "hp": 6,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -26,
+      "y": 270,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -22,
+      "y": 289,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 8,
+      "y": 277,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 29,
+      "y": 286,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 17,
+      "y": 299,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -6,
+      "y": 303.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -2,
+      "y": 303.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 2,
+      "y": 303.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 6,
+      "y": 303.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    }
+  ],
+  "pows": [],
+  "huts": [
+    {
+      "name": "H0",
+      "alive": true,
+      "x": -14.5,
+      "y": 36,
+      "hp": 4
+    },
+    {
+      "name": "H1",
+      "alive": false,
+      "x": 26.5,
+      "y": 24,
+      "hp": 0
+    },
+    {
+      "name": "B1",
+      "alive": false,
+      "x": -18,
+      "y": 70,
+      "hp": 0
+    },
+    {
+      "name": "B2",
+      "alive": true,
+      "x": 18,
+      "y": 80,
+      "hp": 4
+    },
+    {
+      "name": "H2",
+      "alive": true,
+      "x": -28.5,
+      "y": 186,
+      "hp": 4
+    },
+    {
+      "name": "H3",
+      "alive": true,
+      "x": -26.5,
+      "y": 232,
+      "hp": 4
+    },
+    {
+      "name": "H4",
+      "alive": true,
+      "x": -30.5,
+      "y": 282,
+      "hp": 4
+    }
+  ],
+  "gate": {
+    "alive": false,
+    "hp": 0
+  },
+  "gates": [
+    {
+      "name": "营地大门",
+      "alive": false,
+      "x": 0,
+      "y": 56
+    }
+  ],
+  "star": {
+    "item": "bomb",
+    "hidden": true,
+    "x": 30,
+    "y": 205
+  },
+  "stars": [
+    {
+      "item": "bomb",
+      "hidden": true,
+      "x": 30,
+      "y": 205
+    }
+  ],
+  "boss": {
+    "type": "tanks",
+    "state": "idle",
+    "spawned": 0,
+    "killed": 0,
+    "pips": [
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+    ]
+  },
+  "eb": [
+    [
+      -19.41,
+      70.94,
+      2.87,
+      -7.47
+    ],
+    [
+      -13.45,
+      65.05,
+      -6.33,
+      2.99
+    ]
+  ],
+  "pbul": 3,
+  "mgShots": 243,
+  "pbVel": [
+    3.184081677783118e-15,
+    -26
+  ],
+  "ebul": 2,
+  "missiles": 0,
+  "arcs": [],
+  "bombs": [],
+  "banner": null,
+  "ui": {
+    "uiMode": "game",
+    "overlay": null,
+    "paused": false,
+    "display": {
+      "rotated": false,
+      "W": 1920,
+      "H": 1080,
+      "vw": 1920,
+      "vh": 1080,
+      "dpr": 1,
+      "touchOn": false,
+      "backing": [
+        1920,
+        1080
+      ]
+    },
+    "touchHidden": true,
+    "fs": false,
+    "fsLog": [],
+    "audio": "running",
+    "music": "stage",
+    "camera": "oblique",
+    "quality": {
+      "setting": "auto",
+      "effective": "high",
+      "auto": {
+        "median": 5.9,
+        "quality": "high"
+      }
+    },
+    "focus": "app",
+    "toast": "护甲已满：修理包先留着，受伤后再回来拿",
+    "banner": null
+  },
+  "input": {
+    "held": {
+      "u": false,
+      "d": false,
+      "l": false,
+      "r": true
+    },
+    "keyFire": true,
+    "keyBomb": false,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+  },
+  "cam": {
+    "tx": -17.08,
+    "ty": 71.18,
+    "axes": {
+      "fwd": {
+        "x": 0,
+        "y": 1
+      },
+      "right": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "quad": [
+      [
+        -34.7,
+        59.2
+      ],
+      [
+        0.6,
+        59.2
+      ],
+      [
+        12.1,
+        91
+      ],
+      [
+        -46.2,
+        91
+      ]
+    ]
+  },
+  "mission": 6
+}

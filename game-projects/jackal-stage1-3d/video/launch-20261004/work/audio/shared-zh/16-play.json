@@ -1,0 +1,132 @@
+{
+  "text": "双关卡版本已在哔哩哔哩 Toy 上线，试玩入口放简介。喜欢这趟救援，顺手给小吉普补个三连。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3000000,
+      "text": "双"
+    },
+    {
+      "offset": 4000000,
+      "duration": 3125000,
+      "text": "关卡"
+    },
+    {
+      "offset": 7250000,
+      "duration": 4875000,
+      "text": "版本"
+    },
+    {
+      "offset": 13125000,
+      "duration": 1375000,
+      "text": "已"
+    },
+    {
+      "offset": 14500000,
+      "duration": 1500000,
+      "text": "在"
+    },
+    {
+      "offset": 16250000,
+      "duration": 4750000,
+      "text": "哔哩哔哩"
+    },
+    {
+      "offset": 21000000,
+      "duration": 2750000,
+      "text": "Toy"
+    },
+    {
+      "offset": 23875000,
+      "duration": 4750000,
+      "text": "上线"
+    },
+    {
+      "offset": 31125000,
+      "duration": 2625000,
+      "text": "试"
+    },
+    {
+      "offset": 33750000,
+      "duration": 2000000,
+      "text": "玩"
+    },
+    {
+      "offset": 35750000,
+      "duration": 3625000,
+      "text": "入口"
+    },
+    {
+      "offset": 39625000,
+      "duration": 1875000,
+      "text": "放"
+    },
+    {
+      "offset": 41500000,
+      "duration": 4250000,
+      "text": "简介"
+    },
+    {
+      "offset": 51375000,
+      "duration": 3625000,
+      "text": "喜欢"
+    },
+    {
+      "offset": 55125000,
+      "duration": 875000,
+      "text": "这"
+    },
+    {
+      "offset": 56000000,
+      "duration": 1375000,
+      "text": "趟"
+    },
+    {
+      "offset": 57500000,
+      "duration": 5000000,
+      "text": "救援"
+    },
+    {
+      "offset": 65750000,
+      "duration": 4750000,
+      "text": "顺手"
+    },
+    {
+      "offset": 70625000,
+      "duration": 875000,
+      "text": "给"
+    },
+    {
+      "offset": 71625000,
+      "duration": 1750000,
+      "text": "小"
+    },
+    {
+      "offset": 73375000,
+      "duration": 3125000,
+      "text": "吉普"
+    },
+    {
+      "offset": 76750000,
+      "duration": 1125000,
+      "text": "补"
+    },
+    {
+      "offset": 77875000,
+      "duration": 625000,
+      "text": "个"
+    },
+    {
+      "offset": 78625000,
+      "duration": 2125000,
+      "text": "三"
+    },
+    {
+      "offset": 80750000,
+      "duration": 2625000,
+      "text": "连"
+    }
+  ]
+}

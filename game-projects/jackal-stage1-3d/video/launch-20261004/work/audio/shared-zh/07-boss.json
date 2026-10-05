@@ -1,0 +1,147 @@
+{
+  "text": "最后是四辆蓝色坦克。先对准再开火，贴太近就往侧面拉。挨炮后护甲确实会掉，无限命可不是无敌。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4625000,
+      "text": "最后"
+    },
+    {
+      "offset": 5875000,
+      "duration": 1375000,
+      "text": "是"
+    },
+    {
+      "offset": 7375000,
+      "duration": 2000000,
+      "text": "四"
+    },
+    {
+      "offset": 9375000,
+      "duration": 1375000,
+      "text": "辆"
+    },
+    {
+      "offset": 11000000,
+      "duration": 3000000,
+      "text": "蓝色"
+    },
+    {
+      "offset": 14125000,
+      "duration": 5000000,
+      "text": "坦克"
+    },
+    {
+      "offset": 24875000,
+      "duration": 2625000,
+      "text": "先"
+    },
+    {
+      "offset": 27500000,
+      "duration": 2500000,
+      "text": "对准"
+    },
+    {
+      "offset": 30250000,
+      "duration": 875000,
+      "text": "再"
+    },
+    {
+      "offset": 31125000,
+      "duration": 5750000,
+      "text": "开火"
+    },
+    {
+      "offset": 40125000,
+      "duration": 2000000,
+      "text": "贴"
+    },
+    {
+      "offset": 42250000,
+      "duration": 2375000,
+      "text": "太"
+    },
+    {
+      "offset": 44625000,
+      "duration": 2875000,
+      "text": "近"
+    },
+    {
+      "offset": 48625000,
+      "duration": 1625000,
+      "text": "就"
+    },
+    {
+      "offset": 50250000,
+      "duration": 1000000,
+      "text": "往"
+    },
+    {
+      "offset": 51375000,
+      "duration": 3375000,
+      "text": "侧面"
+    },
+    {
+      "offset": 54750000,
+      "duration": 2750000,
+      "text": "拉"
+    },
+    {
+      "offset": 63125000,
+      "duration": 3750000,
+      "text": "挨炮"
+    },
+    {
+      "offset": 66875000,
+      "duration": 3500000,
+      "text": "后"
+    },
+    {
+      "offset": 71625000,
+      "duration": 4500000,
+      "text": "护甲"
+    },
+    {
+      "offset": 76375000,
+      "duration": 3750000,
+      "text": "确实"
+    },
+    {
+      "offset": 80250000,
+      "duration": 1875000,
+      "text": "会"
+    },
+    {
+      "offset": 82125000,
+      "duration": 2500000,
+      "text": "掉"
+    },
+    {
+      "offset": 88500000,
+      "duration": 2250000,
+      "text": "无"
+    },
+    {
+      "offset": 90750000,
+      "duration": 3750000,
+      "text": "限命"
+    },
+    {
+      "offset": 94750000,
+      "duration": 1500000,
+      "text": "可"
+    },
+    {
+      "offset": 96250000,
+      "duration": 2000000,
+      "text": "不是"
+    },
+    {
+      "offset": 98375000,
+      "duration": 4125000,
+      "text": "无敌"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "text": "一台小吉普，十九个人要救，前面还堵着四辆坦克。赤色要塞，开打！",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1500000,
+      "text": "一"
+    },
+    {
+      "offset": 2500000,
+      "duration": 1250000,
+      "text": "台"
+    },
+    {
+      "offset": 3875000,
+      "duration": 2125000,
+      "text": "小"
+    },
+    {
+      "offset": 6000000,
+      "duration": 5375000,
+      "text": "吉普"
+    },
+    {
+      "offset": 13625000,
+      "duration": 4375000,
+      "text": "十九"
+    },
+    {
+      "offset": 18000000,
+      "duration": 875000,
+      "text": "个"
+    },
+    {
+      "offset": 18875000,
+      "duration": 1000000,
+      "text": "人"
+    },
+    {
+      "offset": 20000000,
+      "duration": 1625000,
+      "text": "要"
+    },
+    {
+      "offset": 21625000,
+      "duration": 3125000,
+      "text": "救"
+    },
+    {
+      "offset": 27875000,
+      "duration": 3500000,
+      "text": "前面"
+    },
+    {
+      "offset": 31500000,
+      "duration": 1500000,
+      "text": "还"
+    },
+    {
+      "offset": 33125000,
+      "duration": 1375000,
+      "text": "堵"
+    },
+    {
+      "offset": 34500000,
+      "duration": 875000,
+      "text": "着"
+    },
+    {
+      "offset": 35625000,
+      "duration": 1750000,
+      "text": "四"
+    },
+    {
+      "offset": 37375000,
+      "duration": 1250000,
+      "text": "辆"
+    },
+    {
+      "offset": 38750000,
+      "duration": 4750000,
+      "text": "坦克"
+    },
+    {
+      "offset": 49250000,
+      "duration": 3875000,
+      "text": "赤色"
+    },
+    {
+      "offset": 53250000,
+      "duration": 4250000,
+      "text": "要塞"
+    },
+    {
+      "offset": 60250000,
+      "duration": 6375000,
+      "text": "开打"
+    }
+  ]
+}

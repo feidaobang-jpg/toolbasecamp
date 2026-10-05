@@ -1,0 +1,107 @@
+{
+  "text": "先用手雷炸开营房，再靠过去接人上车。车后座越来越挤，这趟救援可不能白跑。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2250000,
+      "text": "先"
+    },
+    {
+      "offset": 3250000,
+      "duration": 1000000,
+      "text": "用"
+    },
+    {
+      "offset": 4375000,
+      "duration": 3375000,
+      "text": "手雷"
+    },
+    {
+      "offset": 7750000,
+      "duration": 2750000,
+      "text": "炸开"
+    },
+    {
+      "offset": 10625000,
+      "duration": 4625000,
+      "text": "营房"
+    },
+    {
+      "offset": 18375000,
+      "duration": 1750000,
+      "text": "再"
+    },
+    {
+      "offset": 20125000,
+      "duration": 1625000,
+      "text": "靠"
+    },
+    {
+      "offset": 21875000,
+      "duration": 3125000,
+      "text": "过去"
+    },
+    {
+      "offset": 25250000,
+      "duration": 2250000,
+      "text": "接人"
+    },
+    {
+      "offset": 27625000,
+      "duration": 4500000,
+      "text": "上车"
+    },
+    {
+      "offset": 37875000,
+      "duration": 2375000,
+      "text": "车"
+    },
+    {
+      "offset": 40250000,
+      "duration": 2375000,
+      "text": "后座"
+    },
+    {
+      "offset": 42875000,
+      "duration": 4375000,
+      "text": "越来越"
+    },
+    {
+      "offset": 47250000,
+      "duration": 3375000,
+      "text": "挤"
+    },
+    {
+      "offset": 54000000,
+      "duration": 2000000,
+      "text": "这"
+    },
+    {
+      "offset": 56000000,
+      "duration": 1625000,
+      "text": "趟"
+    },
+    {
+      "offset": 57750000,
+      "duration": 4500000,
+      "text": "救援"
+    },
+    {
+      "offset": 62500000,
+      "duration": 1250000,
+      "text": "可"
+    },
+    {
+      "offset": 63875000,
+      "duration": 2125000,
+      "text": "不能"
+    },
+    {
+      "offset": 66000000,
+      "duration": 4375000,
+      "text": "白跑"
+    }
+  ]
+}

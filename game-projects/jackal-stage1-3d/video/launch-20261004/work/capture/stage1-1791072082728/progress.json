@@ -1,0 +1,257 @@
+{
+  "wall": 135.513,
+  "mode": "clear",
+  "t": 135.58,
+  "frame": 8135,
+  "score": 27750,
+  "hi": 30000,
+  "deaths": 0,
+  "lives": 3,
+  "settings": {
+    "lives": "inf",
+    "demo": false,
+    "armor": "std",
+    "gun": "follow"
+  },
+  "demoUsed": false,
+  "stage": 1,
+  "stageCount": 2,
+  "stageNo": 1,
+  "weapon": 4,
+  "carried": 0,
+  "delivered": 19,
+  "freed": 19,
+  "powTotal": 19,
+  "cp": 8,
+  "kills": {
+    "soldier": 17,
+    "officer": 2,
+    "mg": 0,
+    "turret": 0,
+    "cannon": 1,
+    "tank": 4,
+    "brownTank": 0,
+    "bulltank": 0,
+    "ejeep": 0,
+    "bomber": 0,
+    "boat": 0,
+    "wstatue": 0,
+    "fallpillar": 0,
+    "boss": 4,
+    "bust": 0,
+    "hut": 7
+  },
+  "player": {
+    "x": 8.35,
+    "y": 343.96,
+    "dir": 2,
+    "alive": true,
+    "invuln": 0,
+    "shield": 0,
+    "moving": true,
+    "armor": 1,
+    "armorMax": 3
+  },
+  "kits": [
+    {
+      "x": -12.3,
+      "y": 32.4
+    },
+    {
+      "x": 24.3,
+      "y": 20.4
+    },
+    {
+      "x": -15.8,
+      "y": 66.4
+    },
+    {
+      "x": 15.8,
+      "y": 76.4
+    },
+    {
+      "x": -26.3,
+      "y": 182.4
+    },
+    {
+      "x": -24.3,
+      "y": 228.4
+    },
+    {
+      "x": -28.3,
+      "y": 278.4
+    }
+  ],
+  "enemies": [],
+  "pows": [],
+  "huts": [
+    {
+      "name": "H0",
+      "alive": false,
+      "x": -14.5,
+      "y": 36,
+      "hp": 0
+    },
+    {
+      "name": "H1",
+      "alive": false,
+      "x": 26.5,
+      "y": 24,
+      "hp": 0
+    },
+    {
+      "name": "B1",
+      "alive": false,
+      "x": -18,
+      "y": 70,
+      "hp": 0
+    },
+    {
+      "name": "B2",
+      "alive": false,
+      "x": 18,
+      "y": 80,
+      "hp": 0
+    },
+    {
+      "name": "H2",
+      "alive": false,
+      "x": -28.5,
+      "y": 186,
+      "hp": -1
+    },
+    {
+      "name": "H3",
+      "alive": false,
+      "x": -26.5,
+      "y": 232,
+      "hp": -1
+    },
+    {
+      "name": "H4",
+      "alive": false,
+      "x": -30.5,
+      "y": 282,
+      "hp": -1
+    }
+  ],
+  "gate": {
+    "alive": false,
+    "hp": 0
+  },
+  "gates": [
+    {
+      "name": "营地大门",
+      "alive": false,
+      "x": 0,
+      "y": 56
+    }
+  ],
+  "star": {
+    "picked": true
+  },
+  "stars": [],
+  "boss": {
+    "type": "tanks",
+    "state": "done",
+    "spawned": 4,
+    "killed": 4,
+    "pips": [
+      "dead",
+      "dead",
+      "dead",
+      "dead"
+    ]
+  },
+  "eb": [],
+  "pbul": 0,
+  "mgShots": 1109,
+  "pbVel": null,
+  "ebul": 0,
+  "missiles": 0,
+  "arcs": [],
+  "bombs": [],
+  "banner": null,
+  "ui": {
+    "uiMode": "game",
+    "overlay": null,
+    "paused": false,
+    "display": {
+      "rotated": false,
+      "W": 1920,
+      "H": 1080,
+      "vw": 1920,
+      "vh": 1080,
+      "dpr": 1,
+      "touchOn": false,
+      "backing": [
+        1920,
+        1080
+      ]
+    },
+    "touchHidden": true,
+    "fs": false,
+    "fsLog": [],
+    "audio": "running",
+    "music": null,
+    "camera": "oblique",
+    "quality": {
+      "setting": "auto",
+      "effective": "high",
+      "auto": {
+        "median": 5.9,
+        "quality": "high"
+      }
+    },
+    "focus": "app",
+    "toast": null,
+    "banner": null
+  },
+  "input": {
+    "held": {
+      "u": false,
+      "d": false,
+      "l": false,
+      "r": false
+    },
+    "keyFire": false,
+    "keyBomb": false,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+  },
+  "cam": {
+    "tx": 7,
+    "ty": 333,
+    "axes": {
+      "fwd": {
+        "x": 0,
+        "y": 1
+      },
+      "right": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "quad": [
+      [
+        -10.7,
+        321
+      ],
+      [
+        24.7,
+        321
+      ],
+      [
+        36.2,
+        352.8
+      ],
+      [
+        -22.2,
+        352.8
+      ]
+    ]
+  },
+  "mission": 33
+}

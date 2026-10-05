@@ -1,0 +1,77 @@
+{
+  "text": "最后一辆也解决了。第一关救援完成，接下来进废墟城。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4125000,
+      "text": "最后"
+    },
+    {
+      "offset": 5250000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 6250000,
+      "duration": 1125000,
+      "text": "辆"
+    },
+    {
+      "offset": 7625000,
+      "duration": 1000000,
+      "text": "也"
+    },
+    {
+      "offset": 8750000,
+      "duration": 3250000,
+      "text": "解决"
+    },
+    {
+      "offset": 12000000,
+      "duration": 2375000,
+      "text": "了"
+    },
+    {
+      "offset": 20000000,
+      "duration": 2875000,
+      "text": "第一"
+    },
+    {
+      "offset": 23000000,
+      "duration": 3250000,
+      "text": "关救"
+    },
+    {
+      "offset": 26250000,
+      "duration": 1125000,
+      "text": "援"
+    },
+    {
+      "offset": 27500000,
+      "duration": 5250000,
+      "text": "完成"
+    },
+    {
+      "offset": 35625000,
+      "duration": 4750000,
+      "text": "接下来"
+    },
+    {
+      "offset": 40625000,
+      "duration": 1875000,
+      "text": "进"
+    },
+    {
+      "offset": 42625000,
+      "duration": 3250000,
+      "text": "废墟"
+    },
+    {
+      "offset": 45875000,
+      "duration": 3125000,
+      "text": "城"
+    }
+  ]
+}

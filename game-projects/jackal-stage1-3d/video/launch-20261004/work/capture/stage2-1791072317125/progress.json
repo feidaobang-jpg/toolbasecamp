@@ -1,0 +1,907 @@
+{
+  "wall": 135.504,
+  "mode": "play",
+  "t": 279.23,
+  "frame": 16754,
+  "score": 70750,
+  "hi": 66950,
+  "deaths": 0,
+  "lives": 3,
+  "settings": {
+    "lives": "inf",
+    "demo": false,
+    "armor": "std",
+    "gun": "follow"
+  },
+  "demoUsed": false,
+  "stage": 2,
+  "stageCount": 2,
+  "stageNo": 2,
+  "weapon": 4,
+  "carried": 1,
+  "delivered": 0,
+  "freed": 1,
+  "powTotal": 15,
+  "cp": 1,
+  "kills": {
+    "soldier": 3,
+    "officer": 0,
+    "mg": 0,
+    "turret": 0,
+    "cannon": 0,
+    "tank": 0,
+    "brownTank": 0,
+    "bulltank": 0,
+    "ejeep": 1,
+    "bomber": 1,
+    "boat": 0,
+    "wstatue": 0,
+    "fallpillar": 0,
+    "boss": 0,
+    "bust": 0,
+    "hut": 1
+  },
+  "player": {
+    "x": 22.93,
+    "y": 80.14,
+    "dir": 0,
+    "alive": true,
+    "invuln": 0,
+    "shield": 0,
+    "moving": false,
+    "armor": 1,
+    "armorMax": 3
+  },
+  "kits": [
+    {
+      "x": -11.3,
+      "y": 20.4
+    }
+  ],
+  "enemies": [
+    {
+      "type": "soldier",
+      "x": -4.81,
+      "y": 14,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 8.24,
+      "y": 17.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 15.88,
+      "y": 32.85,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 2.5,
+      "y": 19.33,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "tank",
+      "x": -4.42,
+      "y": 23.88,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": -3,
+      "y": 36,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 7,
+      "y": 36,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "wstatue",
+      "x": -28,
+      "y": 65.5,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": -12,
+      "y": 66,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": -3,
+      "y": 66,
+      "hp": 3,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": 9.12,
+      "y": 90,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 21.11,
+      "y": 89.27,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 11.44,
+      "y": 101.37,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "officer",
+      "x": 6.33,
+      "y": 94.41,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 24.37,
+      "y": 89.67,
+      "hp": 1,
+      "active": true,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "bulltank",
+      "x": 14,
+      "y": 117,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 6,
+      "y": 122,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 25,
+      "y": 124,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -14,
+      "y": 136,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -20,
+      "y": 142,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -28,
+      "y": 132,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -10,
+      "y": 156,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 26,
+      "y": 134,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 28,
+      "y": 150,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "bomber",
+      "x": -20,
+      "y": 172,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "wait"
+    },
+    {
+      "type": "tank",
+      "x": -14,
+      "y": 168,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 2,
+      "y": 146,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 4,
+      "y": 182,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -5,
+      "y": 186,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 6,
+      "y": 192,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "fallpillar",
+      "x": -9,
+      "y": 191,
+      "hp": 7,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "stand"
+    },
+    {
+      "type": "turret",
+      "x": -2,
+      "y": 236,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 25,
+      "y": 235,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": -9,
+      "y": 218,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "tank",
+      "x": 6,
+      "y": 212,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "bulltank",
+      "x": -24,
+      "y": 240,
+      "hp": 8,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "bomber",
+      "x": 10,
+      "y": 238,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "wait"
+    },
+    {
+      "type": "soldier",
+      "x": -26,
+      "y": 214,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 0,
+      "y": 206,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 24,
+      "y": 222,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": -12,
+      "y": 238,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "ejeep",
+      "x": 8,
+      "y": 252,
+      "hp": 2,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "fallpillar",
+      "x": -8,
+      "y": 254,
+      "hp": 7,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "stand"
+    },
+    {
+      "type": "turret",
+      "x": 14,
+      "y": 260,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "fallpillar",
+      "x": 8,
+      "y": 265,
+      "hp": 7,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "stand"
+    },
+    {
+      "type": "ejeep",
+      "x": -12,
+      "y": 268,
+      "hp": 2,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "bomber",
+      "x": -6,
+      "y": 284,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "wait"
+    },
+    {
+      "type": "soldier",
+      "x": -3,
+      "y": 273.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 3,
+      "y": 273.5,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "wstatue",
+      "x": -12,
+      "y": 286,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "wstatue",
+      "x": -12,
+      "y": 298,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "wstatue",
+      "x": 12,
+      "y": 286,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "wstatue",
+      "x": 12,
+      "y": 298,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "soldier",
+      "x": -9,
+      "y": 312,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "soldier",
+      "x": 10,
+      "y": 313,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "idle"
+    },
+    {
+      "type": "ejeep",
+      "x": -14,
+      "y": 312,
+      "hp": 2,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "bomber",
+      "x": 8,
+      "y": 310,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "wait"
+    },
+    {
+      "type": "bomber",
+      "x": -8,
+      "y": 312,
+      "hp": 1,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": "wait"
+    },
+    {
+      "type": "turret",
+      "x": -11,
+      "y": 314,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    },
+    {
+      "type": "turret",
+      "x": 11,
+      "y": 314,
+      "hp": 4,
+      "active": false,
+      "elevated": false,
+      "id": null,
+      "stage": null,
+      "state": null
+    }
+  ],
+  "pows": [],
+  "huts": [
+    {
+      "name": "B1",
+      "alive": true,
+      "x": 21,
+      "y": 86,
+      "hp": 4
+    },
+    {
+      "name": "B2",
+      "alive": true,
+      "x": 3.5,
+      "y": 98,
+      "hp": 4
+    },
+    {
+      "name": "B3",
+      "alive": true,
+      "x": 21,
+      "y": 98,
+      "hp": 4
+    },
+    {
+      "name": "H1",
+      "alive": false,
+      "x": -13.5,
+      "y": 24,
+      "hp": -1
+    },
+    {
+      "name": "H2",
+      "alive": true,
+      "x": -24,
+      "y": 108,
+      "hp": 4
+    },
+    {
+      "name": "H3",
+      "alive": true,
+      "x": -19,
+      "y": 210.5,
+      "hp": 4
+    }
+  ],
+  "gate": {
+    "alive": false,
+    "hp": -1
+  },
+  "gates": [
+    {
+      "name": "营地前门",
+      "alive": false,
+      "x": 4,
+      "y": 82
+    },
+    {
+      "name": "营地后门",
+      "alive": true,
+      "x": 15,
+      "y": 109
+    }
+  ],
+  "star": {
+    "item": "max",
+    "hidden": true,
+    "x": -28,
+    "y": 125
+  },
+  "stars": [
+    {
+      "item": "max",
+      "hidden": true,
+      "x": -28,
+      "y": 125
+    },
+    {
+      "item": "up",
+      "hidden": true,
+      "x": 27,
+      "y": 306.5
+    }
+  ],
+  "boss": {
+    "type": "statues",
+    "state": "idle",
+    "spawned": 0,
+    "killed": 0,
+    "pips": []
+  },
+  "eb": [],
+  "pbul": 1,
+  "mgShots": 2321,
+  "pbVel": [
+    3.184081677783118e-15,
+    -26
+  ],
+  "ebul": 0,
+  "missiles": 0,
+  "arcs": [],
+  "bombs": [],
+  "banner": null,
+  "ui": {
+    "uiMode": "game",
+    "overlay": null,
+    "paused": false,
+    "display": {
+      "rotated": false,
+      "W": 1920,
+      "H": 1080,
+      "vw": 1920,
+      "vh": 1080,
+      "dpr": 1,
+      "touchOn": false,
+      "backing": [
+        1920,
+        1080
+      ]
+    },
+    "touchHidden": true,
+    "fs": false,
+    "fsLog": [],
+    "audio": "running",
+    "music": "ruins",
+    "camera": "oblique",
+    "quality": {
+      "setting": "auto",
+      "effective": "high",
+      "auto": {
+        "median": 5.9,
+        "quality": "high"
+      }
+    },
+    "focus": "app",
+    "toast": null,
+    "banner": null
+  },
+  "input": {
+    "held": {
+      "u": true,
+      "d": false,
+      "l": false,
+      "r": false
+    },
+    "keyFire": true,
+    "keyBomb": true,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+  },
+  "cam": {
+    "tx": 17.08,
+    "ty": 83.84,
+    "axes": {
+      "fwd": {
+        "x": 0,
+        "y": 1
+      },
+      "right": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    "quad": [
+      [
+        -0.6,
+        71.9
+      ],
+      [
+        34.7,
+        71.9
+      ],
+      [
+        46.2,
+        103.6
+      ],
+      [
+        -12.1,
+        103.6
+      ]
+    ]
+  },
+  "mission": 5
+}

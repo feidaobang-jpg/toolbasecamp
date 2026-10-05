@@ -84,6 +84,26 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   }
   s = await snap(page);
   check('[横屏] C 键（触屏）循环视角回到斜俯视', s.ui.camera === 'oblique', s.ui.camera);
+  // 拖动转视角：look-zone 拖动旋转镜头，旋转后摇杆方向跟着镜头走
+  await page.evaluate(() => { __JK_TEST__.cheat.teleport(-8, 22); __JK_TEST__.cheat.invuln(60); });
+  s = await snap(page);
+  const yaw0 = s.cam.yaw;
+  const lz = await box(page, '#look-zone');
+  await T.down(1, lz.x, lz.y0 + 30); await T.move(1, lz.x + 120, lz.y0 + 30); await T.up(1); await steps(1);
+  s = await snap(page);
+  check('[横屏] look-zone 右拖 → 镜头 yaw 减小', s.cam.yaw < yaw0 - 0.3, { yaw0, yaw1: s.cam.yaw });
+  const px = Math.round((Math.PI / 2 - s.cam.yaw) / 0.006);
+  await T.down(1, lz.x, lz.y0 + 30); await T.move(1, lz.x - px, lz.y0 + 30); await T.up(1); await steps(1);
+  s = await snap(page);
+  await page.evaluate(() => { __JK_TEST__.cheat.teleport(-8, 22); __JK_TEST__.cheat.invuln(60); });
+  let la = await snap(page);
+  await T.down(1, joy.x, joy.y); await T.move(1, joy.x + 2, joy.y - 55); await steps(20);
+  let lb = await snap(page);
+  await T.up(1); await steps(1);
+  check('[横屏] 镜头左转 90° 后摇杆上 → 世界东', Math.abs(s.cam.yaw - Math.PI / 2) < 0.2 && lb.player.x - la.player.x > 2, { yaw: s.cam.yaw, dx: +(lb.player.x - la.player.x).toFixed(2) });
+  for (let i = 0; i < 6; i++) { await T.tap(Cb.x, Cb.y); await steps(1); }   // 循环回斜俯视并复位 yaw
+  s = await snap(page);
+  check('[横屏] 循环后回到斜俯视且 yaw 复位', s.ui.camera === 'oblique' && Math.abs(s.cam.yaw) < 0.01, { camera: s.ui.camera, yaw: s.cam.yaw });
   // 多点：摇杆上 + 按住 J
   await page.evaluate(() => { __JK_TEST__.cheat.teleport(-20, 12); __JK_TEST__.cheat.invuln(60); });
   let a = await snap(page);

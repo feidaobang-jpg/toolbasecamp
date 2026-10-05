@@ -1,0 +1,97 @@
+{
+  "text": "闪光俘虏就是关键补给。接上车，手雷直接升级成火箭，火力终于跟上了。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 5250000,
+      "text": "闪光"
+    },
+    {
+      "offset": 6375000,
+      "duration": 5000000,
+      "text": "俘虏"
+    },
+    {
+      "offset": 12625000,
+      "duration": 1875000,
+      "text": "就"
+    },
+    {
+      "offset": 14500000,
+      "duration": 1125000,
+      "text": "是"
+    },
+    {
+      "offset": 15875000,
+      "duration": 3625000,
+      "text": "关键"
+    },
+    {
+      "offset": 19625000,
+      "duration": 4375000,
+      "text": "补给"
+    },
+    {
+      "offset": 29750000,
+      "duration": 3625000,
+      "text": "接上"
+    },
+    {
+      "offset": 33375000,
+      "duration": 3750000,
+      "text": "车"
+    },
+    {
+      "offset": 40125000,
+      "duration": 4250000,
+      "text": "手雷"
+    },
+    {
+      "offset": 44625000,
+      "duration": 2625000,
+      "text": "直接"
+    },
+    {
+      "offset": 47375000,
+      "duration": 2750000,
+      "text": "升级"
+    },
+    {
+      "offset": 50125000,
+      "duration": 1750000,
+      "text": "成"
+    },
+    {
+      "offset": 52000000,
+      "duration": 4375000,
+      "text": "火箭"
+    },
+    {
+      "offset": 59625000,
+      "duration": 3250000,
+      "text": "火力"
+    },
+    {
+      "offset": 63125000,
+      "duration": 2750000,
+      "text": "终于"
+    },
+    {
+      "offset": 66000000,
+      "duration": 1500000,
+      "text": "跟"
+    },
+    {
+      "offset": 67500000,
+      "duration": 1875000,
+      "text": "上"
+    },
+    {
+      "offset": 69375000,
+      "duration": 1750000,
+      "text": "了"
+    }
+  ]
+}

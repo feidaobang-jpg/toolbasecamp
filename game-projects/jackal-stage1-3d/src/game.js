@@ -320,14 +320,28 @@ function updatePlayer(dt) {
   }
   const d0 = IN.dir();
   let d = d0;
-  // 第一人称：输入方向按车头（镜头朝向）换算成世界方向；按住同一输入期间锁定换算结果
-  if (d0 >= 0 && camCtl.fpNow) {
-    const q = ((Math.round(P.ang / (Math.PI / 4)) % 8) + 8) % 8;
-    if (!fpLatch || fpLatch.d !== d0) fpLatch = { d: d0, w: (d0 + q) % 8 };
-    d = fpLatch.w;
+  // 方向换算：输入始终相对画面（镜头）。常规视角按镜头 yaw 换算；第一人称按车头+yaw 换算，
+  // 且按住同一输入期间锁定换算结果（镜头会随车头转，避免画圈）。
+  if (d0 >= 0) {
+    if (camCtl.fpNow) {
+      const q = ((Math.round((P.ang + camCtl.yaw) / (Math.PI / 4)) % 8) + 8) % 8;
+      if (!fpLatch || fpLatch.d !== d0) fpLatch = { d: d0, w: (d0 + q) % 8 };
+      d = fpLatch.w;
+    } else {
+      const q = ((Math.round(camCtl.yaw / (Math.PI / 4)) % 8) + 8) % 8;
+      d = (d0 + q) % 8;
+      fpLatch = null;
+    }
   } else fpLatch = null;
   P.moving = false;
   if (d >= 0) {
+    // 第一人称下转向时补偿镜头 yaw，保持画面朝向世界方向不变（车在镜头下方转）
+    if (camCtl.fpNow && d !== P.dir) {
+      let da = DIR8[d].a - DIR8[P.dir].a;
+      while (da > Math.PI) da -= 2 * Math.PI;
+      while (da <= -Math.PI) da += 2 * Math.PI;
+      camCtl.rotate(-da);
+    }
     P.dir = d;
     const sp = P.speed * dt, dx = DIR8[d].x * sp, dy = DIR8[d].y * sp;
     const ox = P.x, oy = P.y;
@@ -1397,7 +1411,7 @@ export const _test = {
   missileAt(x, y, a, homing) { const b = enemyFire({ x, y, h: 0 }, a, 'missile', { muzzle: 0.1, homing: homing !== false }); return !!b; },
   starAt(x, y, item) { const e = spawnEntity({ t: 'star', x, y, item: item || 'bomb', hidden: false }); return !!e; },
   invuln(v) { P.invuln = v; },
-  face(d) { if (!P) return; P.dir = d; P.ang = DIR8[d].a; fpLatch = null; },
+  face(d) { if (!P) return; P.dir = d; P.ang = DIR8[d].a; fpLatch = null; camCtl.yaw = 0; },
   nextStage() { return nextStage(); },
   bossReady() { _test.teleport(L.BOSS.respawn.x, L.BOSS.trigger - 1.5); },
   state: () => ({ P, ents, pows, ebul, earc })

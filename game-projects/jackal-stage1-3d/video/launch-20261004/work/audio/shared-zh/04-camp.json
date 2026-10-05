@@ -1,0 +1,107 @@
+{
+  "text": "营地大门也能炸开。冲进去继续救人，武器还能升到双向，再到四向火箭。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3375000,
+      "text": "营地"
+    },
+    {
+      "offset": 4500000,
+      "duration": 4000000,
+      "text": "大门"
+    },
+    {
+      "offset": 8750000,
+      "duration": 1500000,
+      "text": "也"
+    },
+    {
+      "offset": 10250000,
+      "duration": 1375000,
+      "text": "能"
+    },
+    {
+      "offset": 11750000,
+      "duration": 5125000,
+      "text": "炸开"
+    },
+    {
+      "offset": 22625000,
+      "duration": 2750000,
+      "text": "冲"
+    },
+    {
+      "offset": 25375000,
+      "duration": 2875000,
+      "text": "进去"
+    },
+    {
+      "offset": 28500000,
+      "duration": 2750000,
+      "text": "继续"
+    },
+    {
+      "offset": 31375000,
+      "duration": 4625000,
+      "text": "救人"
+    },
+    {
+      "offset": 39000000,
+      "duration": 5875000,
+      "text": "武器"
+    },
+    {
+      "offset": 46000000,
+      "duration": 1875000,
+      "text": "还"
+    },
+    {
+      "offset": 47875000,
+      "duration": 1000000,
+      "text": "能"
+    },
+    {
+      "offset": 49000000,
+      "duration": 1875000,
+      "text": "升"
+    },
+    {
+      "offset": 50875000,
+      "duration": 1125000,
+      "text": "到"
+    },
+    {
+      "offset": 52125000,
+      "duration": 4875000,
+      "text": "双向"
+    },
+    {
+      "offset": 59625000,
+      "duration": 1625000,
+      "text": "再"
+    },
+    {
+      "offset": 61250000,
+      "duration": 1125000,
+      "text": "到"
+    },
+    {
+      "offset": 62625000,
+      "duration": 2125000,
+      "text": "四"
+    },
+    {
+      "offset": 64750000,
+      "duration": 1625000,
+      "text": "向"
+    },
+    {
+      "offset": 66500000,
+      "duration": 3875000,
+      "text": "火箭"
+    }
+  ]
+}

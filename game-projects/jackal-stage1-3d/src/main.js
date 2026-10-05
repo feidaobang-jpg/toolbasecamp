@@ -215,6 +215,7 @@ function startGame(stageNo) {
   GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor, gun: settings.gun, stage: stageNo || settings.stage });
   show(null);
   camCtl.update(0, GM.player().x, GM.player().y, { instant: true });
+  if (!touch.hidden && !dragHintShown) { dragHintShown = true; showToast('拖动右侧空白区域或画面，可旋转视角'); }
   last = performance.now(); acc = 0;
   autoProbe.frames = [];
 }
@@ -352,6 +353,38 @@ window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
 IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { fire: $('btn-fire'), bomb: $('btn-bomb'), cam: $('btn-cam-t') }, toLocal);
 
+// ---------- 拖动转视角：触屏在动作键上方的空白区拖动，鼠标在画面上按住拖动 ----------
+const lookZone = $('look-zone');
+let lookDrag = null, dragHintShown = false;
+const canLook = () => uiMode === 'game' && !current && !paused;
+lookZone.addEventListener('pointerdown', (e) => {
+  if (!canLook() || lookDrag) return;
+  try { lookZone.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  lookDrag = { id: e.pointerId, x: toLocal(e.clientX, e.clientY).x };
+  e.preventDefault();
+});
+lookZone.addEventListener('pointermove', (e) => {
+  if (!lookDrag || lookDrag.id !== e.pointerId) return;
+  const x = toLocal(e.clientX, e.clientY).x;
+  camCtl.rotate(-(x - lookDrag.x) * 0.006);
+  lookDrag.x = x;
+  e.preventDefault();
+});
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => lookZone.addEventListener(t, (e) => { if (lookDrag && lookDrag.id === e.pointerId) lookDrag = null; }));
+let mouseLook = null;
+canvas.addEventListener('pointerdown', (e) => {
+  if (e.pointerType === 'touch' || e.button !== 0 || !canLook()) return;
+  mouseLook = { id: e.pointerId, x: e.clientX };
+  try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  e.preventDefault();
+});
+canvas.addEventListener('pointermove', (e) => {
+  if (!mouseLook || mouseLook.id !== e.pointerId) return;
+  camCtl.rotate(-(e.clientX - mouseLook.x) * 0.006);
+  mouseLook.x = e.clientX;
+});
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => canvas.addEventListener(t, (e) => { if (mouseLook && mouseLook.id === e.pointerId) mouseLook = null; }));
+
 // ---------- HUD ----------
 const hudEls = { score: $('h-score'), hi: $('h-hi'), wpn: $('h-wpn'), wlv: $('h-wlv'), carried: $('h-carried'), deliv: $('h-deliv'), lives: $('h-lives'), armor: $('h-armor'), armorCard: $('hc-armor'), bombLabel: $('bomb-label') };
 const hurtEl = $('hurt');
@@ -482,7 +515,7 @@ if (TEST) {
       const s = GM.snapshot();
       s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent };
       s.input = IN.debug();
-      s.cam = { tx: +camCtl.tx.toFixed(2), ty: +camCtl.ty.toFixed(2), axes: camCtl.axes(), quad: camCtl.quad.map(q => q.map(v => +v.toFixed(1))) };
+      s.cam = { tx: +camCtl.tx.toFixed(2), ty: +camCtl.ty.toFixed(2), yaw: +camCtl.yaw.toFixed(3), axes: camCtl.axes(), quad: camCtl.quad.map(q => q.map(v => +v.toFixed(1))) };
       return s;
     },
     events: () => G.events.slice(),

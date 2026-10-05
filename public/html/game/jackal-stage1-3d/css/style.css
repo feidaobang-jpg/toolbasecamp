@@ -179,6 +179,7 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 /* ---------- 触屏控件 ---------- */
 #touch { position: absolute; inset: 0; z-index: 12; pointer-events: none; }
 #touch[hidden] { display: none; }
+#look-zone { position: absolute; right: 0; bottom: 0; width: 55%; height: 76%; pointer-events: auto; touch-action: none; }
 #joy-zone { position: absolute; left: 0; bottom: 0; width: 45%; height: 76%; pointer-events: auto; touch-action: none; }
 #joy-base {
   position: absolute; left: 4px; bottom: calc(var(--sab) + 26px); width: 128px; height: 128px; border-radius: 50%;

@@ -113,6 +113,14 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   check('[第一人称] 显示准星', await page.isVisible('#crosshair'));
   while ((await snap(page)).ui.camera !== 'oblique') { await page.keyboard.press('KeyC'); await steps(1); }
   check('退出第一人称后准星隐藏', !(await page.isVisible('#crosshair')));
+  // 鼠标按住拖动旋转视角（参考虫潮）
+  await cheat('teleport', [-8, 22]); await cheat('invuln', [60]);
+  let y0 = (await snap(page)).cam.yaw;
+  await page.mouse.move(400, 300); await page.mouse.down(); await page.mouse.move(550, 300, { steps: 4 }); await page.mouse.up(); await steps(1);
+  let y1 = (await snap(page)).cam.yaw;
+  check('鼠标在画面上右拖 → 镜头 yaw 减小（约 -0.9）', y1 < y0 - 0.5 && y1 > y0 - 1.3, { y0, y1 });
+  await page.mouse.move(550, 300); await page.mouse.down(); await page.mouse.move(400, 300, { steps: 4 }); await page.mouse.up(); await steps(1);
+  check('拖回后 yaw 复位', Math.abs((await snap(page)).cam.yaw) < 0.25, null);
   // 对角
   let a = await snap(page);
   await page.keyboard.down('KeyW'); await page.keyboard.down('KeyD'); await steps(20); await page.keyboard.up('KeyW'); await page.keyboard.up('KeyD');
