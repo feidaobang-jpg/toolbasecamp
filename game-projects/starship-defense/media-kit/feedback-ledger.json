@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-05T05:27:49.174Z",
+  "updated_at": "2026-10-05T05:51:26.628Z",
   "items": [
     {
       "rpid": "319415014640",
@@ -388,10 +388,11 @@
       "kind": "bug",
       "status": "fixed",
       "fixed_in": "web-squad-follow-v0.17.14",
-      "reply_rpid": null,
-      "reply_status": "pending_login_not_posted",
+      "reply_rpid": "316097575969",
+      "reply_status": "posted",
       "record": "releases/web-squad-follow-v0.17.14/comment-replies.json",
-      "note": "编队跟随+脱队追赶+绕行+受击恢复窗口，verify-squad-follow.cjs 修复前6/12、修复后12/12。回复因内置浏览器未登录B站待发。"
+      "note": "编队跟随+脱队追赶+绕行+受击恢复窗口，verify-squad-follow.cjs 修复前6/12、修复后12/12。回复已发出并读回可见。",
+      "reply_date": "2026-10-05 13:56"
     },
     {
       "feedback_key": "opus:410772284|我也是我自己的问题|2026-10-05 12:01:49",
@@ -404,10 +405,11 @@
       "kind": "bug",
       "status": "fixed",
       "fixed_in": "web-squad-follow-v0.17.14",
-      "reply_rpid": null,
-      "reply_status": "pending_login_not_posted",
+      "reply_rpid": "316097699041",
+      "reply_status": "posted",
       "record": "releases/web-squad-follow-v0.17.14/comment-replies.json",
-      "note": "根因：弹丸起点固定为座位中心，距模型炮口1.40~6.32米；改为炮塔转向+炮口生成，实测误差0。动态评论可用 type=11 接口回复。回复待发（未登录）。"
+      "note": "根因：弹丸起点固定为座位中心，距模型炮口1.40~6.32米；改为炮塔转向+炮口生成，实测误差0。动态评论可用 type=11 接口回复。回复已发出并读回可见。",
+      "reply_date": "2026-10-05 13:56"
     }
   ]
 }

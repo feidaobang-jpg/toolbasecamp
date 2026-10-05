@@ -28,7 +28,7 @@
     "browser": "Headless Microsoft Edge / D3D11；手机为视口模拟，未做真机验证"
   },
   "channels": {
-    "website": {"version": "web-squad-follow-v0.17.14", "status": "publishing", "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"},
+    "website": {"version": "web-squad-follow-v0.17.14", "status": "published", "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html", "verified_marker": "game.compat.js?v=c1a62b2d 且线上 bundle 含 SQUAD_FORM/vehicleMuzzle", "verified_at": "2026-10-05T05:41:00Z"},
     "toy": {
       "id": 38678478981120,
       "status": "pending_merge",
@@ -36,7 +36,17 @@
       "public_version": "web-input-flight-v0.17.10",
       "reason": "AGENTS.md 2026-10-05 节奏：活跃开发期同一游戏按北京时间每天最多一批；今日 00:50 已提交 v0.17.13，v0.17.14 属普通补丁，与后续小修累计后一次送审。"
     },
-    "bilibili_description": {"status": "deferred", "reason": "普通补丁按节奏并入下一次有意义的说明更新；现有试玩入口与操作说明仍准确。"}
+    "bilibili_description": {"status": "deferred", "reason": "普通补丁按节奏并入下一次有意义的说明更新；现有试玩入口与操作说明仍准确。"},
+    "comment_replies": {
+      "status": "posted",
+      "account": "飞刀班长(mid 16214353)",
+      "posted_at_beijing": "2026-10-05 13:56",
+      "items": [
+        {"channel": "video_comment", "root": "316087423265", "reply_rpid": "316097575969", "readback_visible": true},
+        {"channel": "dynamic_comment", "root": "316085900561", "type": 11, "reply_rpid": "316097699041", "readback_visible": true}
+      ],
+      "record": "releases/web-squad-follow-v0.17.14/comment-replies.json"
+    }
   },
   "pending_merge": [
     {"version": "web-squad-follow-v0.17.14", "date": "2026-10-05", "summary": "队友编队跟随/追赶/绕行/受击恢复窗口；四载具炮塔转向与炮口开火；队友载具停门洞不再顶开城门"}
