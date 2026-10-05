@@ -468,5 +468,10 @@
    "未录真机手机；真人手感未试",
    "侧视取景拉远约 8% 属可见变化，只有本机 qa/out 截图对照，未单独剪辑"
   ]
+ },
+ "site_thumbnail": {
+  "decision": "沿用",
+  "reason": "只修镜头与锁屏边界，默认侧视画面、配色、场景都没变（侧视镜头约拉远 8%，缩到卡片尺寸看不出差别），现有封面仍是这款游戏",
+  "file": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg"
  }
 }
