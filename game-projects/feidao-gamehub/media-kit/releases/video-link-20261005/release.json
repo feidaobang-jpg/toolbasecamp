@@ -1,0 +1,101 @@
+{
+  "version": "video-link-20261005",
+  "changeType": "collection-content-correction",
+  "changes": [
+    "恐龙快打合集卡片新增已发布实机视频 BV18XHW66E55",
+    "西游降魔从网站游戏列表与投票候选暂撤，历史票保留，独立 Toy 与合集入口保留"
+  ],
+  "website": {
+    "commit": "eee464f3a156334b367f3cac6097ec3676fe2274",
+    "verifiedAt": "2026-10-05T14:05:00.219887+00:00",
+    "games": 13,
+    "voteOptions": 13,
+    "journeyOnBoard": false
+  },
+  "video": {
+    "bvid": "BV18XHW66E55",
+    "toyId": 40412421031936,
+    "bindingVerified": true
+  },
+  "toy": {
+    "id": 40495283951616,
+    "slug": "feidao-games",
+    "previewUrl": "https://www.bilibili.com/toy/preview/preview_d3Up6g2o/index.html",
+    "submissionPreviewUrl": "https://www.bilibili.com/toy/preview/preview_UCDfU0gP/index.html",
+    "status": "published",
+    "packageManifestSha256": "e6d3844b7d0fef9845d9285d9a3ef288338192ac70f154ac7b6df196de49c76b",
+    "packageFiles": [
+      {
+        "path": "assets/chongchao-qianshao.jpg",
+        "sha256": "7823309320ebef2cbc389e88b4c2b538ce4074a086349261fe31c3cf01f93518"
+      },
+      {
+        "path": "assets/feidao-brick-breaker.png",
+        "sha256": "79c6007d26144a3dc081034b245ef0d87615a3c38c5200927db3cb04f3e74764"
+      },
+      {
+        "path": "assets/feidao-bubble-dragon.png",
+        "sha256": "72dbde0c572142227c609113aabee9a24699926e7ed62242b3b15f1149d62712"
+      },
+      {
+        "path": "assets/feidao-cadillacs-3d.png",
+        "sha256": "23b187fdba0747a4e0a9217cefd0db46dad15410752d94ed613c7c852b8c5b62"
+      },
+      {
+        "path": "assets/feidao-fly-bird.png",
+        "sha256": "96397dcd1b03e74cd0ff837bccf13251fe806289c9650a5f8f7896ec2c1a5b57"
+      },
+      {
+        "path": "assets/feidao-frog-zuma.png",
+        "sha256": "e1690daf37a000e0d730818270ced3731e49db4a2201be34cc11f99e3890b885"
+      },
+      {
+        "path": "assets/feidao-gemswap.png",
+        "sha256": "f7b3781529ef5ede388123502f1de37bbbac411dd7444ba0c7e662a61f5aa2b4"
+      },
+      {
+        "path": "assets/feidao-jackal-3d.png",
+        "sha256": "d66115a17536485ee7c7ac32f6985623ceda2a95f6eaac3e8d5c3bd447327c34"
+      },
+      {
+        "path": "assets/feidao-journey-west.png",
+        "sha256": "323cba2587bbaf9f9874e90823ab495c1a418379f9c3c78c532a360ca635a88c"
+      },
+      {
+        "path": "assets/feidao-lianliankan.png",
+        "sha256": "3bf141b49f60fafa0aebd5a9aee57adff5ca97f76a41558c2bc065aceee047a6"
+      },
+      {
+        "path": "assets/feidao-mario-3d.png",
+        "sha256": "0c08b7387182a62f11551520ba4f40e99e2741f3b4c679a9b822f4292946cbad"
+      },
+      {
+        "path": "assets/feidao-sheepstack.png",
+        "sha256": "9f30dcbda1ba5aff1d575cbe95a90f025f8cf8b94e5547588fca9a045ffd5520"
+      },
+      {
+        "path": "assets/feidao-tank-3d.png",
+        "sha256": "2c7fc4057e46e587bf366ab32e3fdfedbf2061931a5983303795c101fe615b44"
+      },
+      {
+        "path": "assets/feidao-worms.png",
+        "sha256": "a839fdbb755f2e5661586215e99b67cd84abfb7db604660a72d322047275f7a4"
+      },
+      {
+        "path": "index.html",
+        "sha256": "2f84034eb5f1af7b79d6894bc48ea283b168775712d1c4a787a40618777134b5"
+      }
+    ],
+    "desktopPreviewVerified": true,
+    "mobileViewportPreviewVerified": true,
+    "videoNavigationVerified": true,
+    "publishedUrl": "https://www.bilibili.com/toy/feidao-games/index.html",
+    "publicBadgeVerified": true,
+    "lastSuccessfulSyncAt": "2026-10-05T14:06:07.116682+00:00",
+    "platformMtime": 1791209062
+  },
+  "biliDescription": {
+    "changed": false,
+    "reason": "仅列表下架与合集入口纠正，未改变游戏代码或恐龙视频已有说明"
+  }
+}
