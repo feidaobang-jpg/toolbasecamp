@@ -84,7 +84,8 @@ export function createFx(scene) {
         spark.spawn({ x, y, h: h + 0.5, vx: Math.cos(a) * sp * size, vy: Math.sin(a) * sp * size, vh: 3 + rand() * 4, g: 14, life: 0.4 + rand() * 0.25, size: 0.16, color: 0xffe07a, shrinkAt: 0.4 });
       }
       F.ring(x, y, h, 2.2 * size);
-      F.shake = Math.max(F.shake, 0.18 * size);
+      // 常规爆炸（含自己发射的手雷/火箭）只保留轻微震动；受击与 bigExplosion 另有更大值
+      F.shake = Math.max(F.shake, 0.08 * size);
     },
     bigExplosion(x, y, h, size) {
       F.explosion(x, y, h, size);

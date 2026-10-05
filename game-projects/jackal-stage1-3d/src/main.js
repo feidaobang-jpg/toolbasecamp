@@ -447,7 +447,8 @@ function frame(now) {
 function presentFrame(dtReal, draw) {
   if (uiMode === 'game') {
     const p = GM.player();
-    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), shake: fx.shake * 1.2, heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
+    // 第一人称下相机在眼睛位置，同等震动体感更强，乘 0.3 抑制
+    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), shake: fx.shake * (camCtl.fpNow ? 0.36 : 1.2), heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
     crosshairEl.hidden = !camCtl.fpNow;
     updateHud();
   } else {
