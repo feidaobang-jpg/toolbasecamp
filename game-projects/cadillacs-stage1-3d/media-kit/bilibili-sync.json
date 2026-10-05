@@ -1,8 +1,22 @@
 {
   "game_id": "cadillacs-stage1-3d",
   "account": "飞刀班长 / UID16214353",
-  "videos": [],
+  "videos": [
+    {
+      "bvid": "BV18XHW66E55",
+      "url": "https://www.bilibili.com/video/BV18XHW66E55/",
+      "owner_uid": 16214353,
+      "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
+      "last_public_verified_version": null,
+      "status": "auditing（2026-10-05 16:35 投稿）",
+      "publish_record": "video/views-20261005/work/publication-result.json"
+    }
+  ],
   "pending": [],
-  "status": "待关联：截至 v0.1.0 没有本游戏的 B 站视频，无需同步简介；新视频发布后登记 BV 再接入",
-  "updated_at": "2026-10-05"
+  "status": "已关联：BV18XHW66E55（v2 视角版，审核中）；简介本身已是当前版本说明，暂无需追加更新区块",
+  "updated_at": "2026-10-05",
+  "mapping_sources": [
+    "本期发布记录 video/views-20261005/work/publication-result.json",
+    "创作中心稿件列表（BV18XHW66E55 审核中）"
+  ]
 }

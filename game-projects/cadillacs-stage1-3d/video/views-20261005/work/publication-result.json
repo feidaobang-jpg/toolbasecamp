@@ -1,0 +1,77 @@
+{
+  "status": "submitted_auditing",
+  "account": {
+    "name": "飞刀班长",
+    "uid": 16214353,
+    "verified_via": "api.bilibili.com/x/web-interface/nav（投稿用独立 Edge 配置，用户扫码登录）"
+  },
+  "approval": {
+    "quote": "可以发布",
+    "record": "qa/user-approval.json",
+    "video_sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a"
+  },
+  "bvid": "BV18XHW66E55",
+  "aid": 117387378563693,
+  "video_url": "https://www.bilibili.com/video/BV18XHW66E55/",
+  "submitted_at": "2026-10-05T16:35:57+08:00",
+  "audit_status": "审核中",
+  "title": "恐龙快打第一关3D重置：按C钻进主角眼睛里打",
+  "category": "游戏（页面自动分区）",
+  "tags": [
+    "bilibilitoy",
+    "恐龙快打",
+    "街机",
+    "第一人称",
+    "独立游戏",
+    "游戏开发",
+    "AI"
+  ],
+  "tag_note": "Claude 被 B 站判为话题专用词，不能作普通标签（用户确认是平台规则）；简介已写明 Claude（Opus 5.5）。",
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected_in_platform": true
+  },
+  "creation_statement": "含AI生成内容",
+  "covers": {
+    "home": "4:3 cover-home-4x3.jpg",
+    "space": "16:9 cover-space-16x9.jpg",
+    "sync_off": true,
+    "verified": "qa/publish-covers.png"
+  },
+  "description_verified": true,
+  "upload_method": "Playwright 驱动的独立 Edge（持久配置，用户扫码登录），setInputFiles 上传；脚本 tmp/pilot/publish.cjs 自检全部通过后才提交",
+  "collection_membership": {
+    "status": "not_applicable",
+    "reason": "恐龙快打暂无正式合集映射，按规则不新建合集"
+  },
+  "toy_binding": {
+    "toy_id": 40412421031936,
+    "slug": "feidao-cadillacs-3d",
+    "status": "pending_audit_pass"
+  },
+  "comment": {
+    "status": "pending_audit_pass"
+  },
+  "dynamic": {
+    "status": "pending_audit_pass"
+  },
+  "push_application": {
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "status": "pending_audit_pass"
+  },
+  "previous_video_maintenance": {
+    "status": "not_applicable",
+    "reason": "恐龙快打此前没有 B 站视频（media-kit/bilibili-sync.json videos 为空）"
+  },
+  "evidence": [
+    "qa/submission-success.png",
+    "qa/publish-covers.png",
+    "qa/publish-form-top.png",
+    "qa/publish-form-bottom.png",
+    "qa/publish-topic.png"
+  ],
+  "remaining_items": [
+    "过审后：Toy 绑定、发布并置顶评论、核对自动动态、填推流申请"
+  ]
+}

@@ -16,7 +16,7 @@ toy = 'https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html'
 web = 'https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html'
 vote = 'https://www.zhengxiaohui.cn/game-vote.html'
 title = '恐龙快打第一关3D重置：按C钻进主角眼睛里打'
-tags = ['bilibilitoy', '恐龙快打', '街机', '第一人称', '独立游戏', '游戏开发', 'Claude', 'AI']
+tags = ['bilibilitoy', '恐龙快打', '街机', '第一人称', '独立游戏', '游戏开发', 'AI']  # Claude 被 B 站判为话题专用词，不能作普通标签；简介已写明 Claude（Opus 5.5）
 banned = ['3D游戏', '网页游戏', '童年游戏', '万物皆可游戏', '动作游戏', 'AI辅助开发']
 assert not set(tags) & set(banned) and 'bilibilitoy' in tags
 topic = '哔哩哔哩Toy创意挑战'; topicurl = 'https://www.bilibili.com/v/topic/detail?topic_id=1346285'
@@ -47,6 +47,7 @@ manifest = {'variant_id': 'bilibili-zh', 'platform': 'bilibili', 'content_type':
     'toy': {'id': 40412421031936, 'slug': 'feidao-cadillacs-3d', 'url': toy, 'status_checked': 'published / PUBLIC（toy mylist，2026-10-05）', 'http_checked': '200（2026-10-05）'},
     'vote_checked': '2026-10-05 /api/game-votes/options 已含 cadillacs-stage1-3d，可投票',
     'platform_requirements_checked_at': '2026-10-05', 'platform_sources': [toy, web, vote, topicurl],
+    'tag_note': 'Claude 被 B 站判为话题专用词，不能作为普通标签（2026-10-05 投稿页实测，用户确认）；简介写明 Claude（Opus 5.5）辅助开发，保留 AI 标签。',
     'unverified_fields': ['实际投稿时核对分类、话题入口资格与封面上传位置', 'AI 内容声明按投稿页实际选项设置'], 'blocking_issues': blocking, 'ready_to_upload': False, 'uploaded': False}
 js(P / 'publish.json', manifest)
 js(R / 'publish.json', {'schema_version': 2, 'game_name': manifest['game_name'], 'game_version': 'v0.1.0', 'requested_variants': ['bilibili-zh'], 'variants': [{'variant_id': 'bilibili-zh', 'manifest_file': 'publish/bilibili-zh/publish.json', 'ready_to_upload': False, 'blocking_issues': blocking}], 'ready_to_upload': False})
@@ -111,7 +112,7 @@ lines += ['', '与 v1（debut-20261005）的差异：v1 视角段是另一场次
  '| 关键 UI 与遮挡 | pass | 每 2 秒抽帧联系表检查（tmp/review/final-*.jpg），字幕不压结算面板、不压游戏对话框 |',
  '| 结尾 | pass | 总结三视角 → 第二关计划 → 试玩入口 → 投票/愿望单 → 三连，末句结束后约 1.4 s 淡出 |',
  '| 封面 | pass | 4:3 1440×1080、16:9 1920×1080，320 px 缩略图标题可读，画面为实机截帧 |',
- '| 文案 | pass | bilibilitoy、Claude、AI 在列，无禁用标签；话题独立一栏；简介与置顶评论各含完整 Toy /index.html 链接；网站与投票链接注明复制到浏览器打开 |',
+ '| 文案 | pass | bilibilitoy、AI 在列（Claude 被平台判为话题专用，不能作普通标签，简介已写明），无禁用标签；话题独立一栏；简介与置顶评论各含完整 Toy /index.html 链接；网站与投票链接注明复制到浏览器打开 |',
  '| 人声听感 | not-run | 无法试听；配音为 Edge 云希兜底（非用户选定的曼波），列为审片项 |', '',
  '## 已知问题（录像中发现，未改游戏）', '',
  '- 第 47 街正视贴墙时镜头进入砖墙（176.8、180.4–181.8 s）。',

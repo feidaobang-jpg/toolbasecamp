@@ -20,13 +20,12 @@
     "第一人称",
     "独立游戏",
     "游戏开发",
-    "Claude",
     "AI"
   ],
   "topic": {
     "name": "哔哩哔哩Toy创意挑战",
     "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
-    "selected_in_platform": false
+    "selected_in_platform": true
   },
   "pinned_comment_draft": "电脑按 C 切视角、Q/E 转视角；手机点 C、按住画面拖动转视角。你更想用哪个视角打这一关：侧视、正视还是第一人称？\nToy 试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
   "description_file": "../../../final/bilibili-zh/投稿文案.txt",
@@ -72,14 +71,13 @@
     "https://www.zhengxiaohui.cn/game-vote.html",
     "https://www.bilibili.com/v/topic/detail?topic_id=1346285"
   ],
+  "tag_note": "Claude 被 B 站判为话题专用词，不能作为普通标签（2026-10-05 投稿页实测，用户确认）；简介写明 Claude（Opus 5.5）辅助开发，保留 AI 标签。",
   "unverified_fields": [
     "实际投稿时核对分类、话题入口资格与封面上传位置",
     "AI 内容声明按投稿页实际选项设置"
   ],
-  "blocking_issues": [
-    "等待用户对本期最终成片人工审片（含人声听感）",
-    "配音为 Edge 云希兜底：用户为 v2 选定的必剪曼波因本次必剪操作授权未获允许而未生成；若审片要求曼波，需允许操作必剪后重配、重排并重新审片"
-  ],
-  "ready_to_upload": false,
-  "uploaded": false
+  "blocking_issues": [],
+  "ready_to_upload": true,
+  "uploaded": true,
+  "bvid": "BV18XHW66E55"
 }

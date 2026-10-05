@@ -1,5 +1,5 @@
 {
-  "status": "rendered_awaiting_user_review",
+  "status": "submitted_auditing",
   "mode": "overview（视角重点，用户 2026-10-05 选“重做 v2”）",
   "requested_variants": [
     "bilibili-zh"
@@ -17,6 +17,8 @@
   "render_entry": "voice_edge.py → render.py（REUSE=1 复用已切片段）→ covers.py → package.py",
   "capture_entry": "record_views.cjs",
   "previous_episode": "../../debut-20261005（v1，保留不删，非当前投稿入口）",
-  "video_uploaded": false,
-  "next_step": "用户审片。若要曼波：允许操作必剪 → 生成曼波整段配音与识别字幕 → 替换 audio 与字幕时间来源后重跑 render.py → 重新审片。审片通过后按 game-video 发布闭环：投稿 → 绑定 Toy 40412421031936 → 置顶评论 → 填推流申请。"
+  "video_uploaded": true,
+  "next_step": "用户审片。若要曼波：允许操作必剪 → 生成曼波整段配音与识别字幕 → 替换 audio 与字幕时间来源后重跑 render.py → 重新审片。审片通过后按 game-video 发布闭环：投稿 → 绑定 Toy 40412421031936 → 置顶评论 → 填推流申请。",
+  "bvid": "BV18XHW66E55",
+  "publication": "publication-result.json"
 }
