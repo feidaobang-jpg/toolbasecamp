@@ -161,6 +161,27 @@ def ensure_site_stats_tables(cur) -> None:
     cur.execute(
         "INSERT IGNORE INTO site_stats (id, site_pv, site_uv) VALUES (1, 0, 0)"
     )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS site_stats_daily_visitors (
+            stat_date DATE NOT NULL,
+            visitor_id CHAR(36) NOT NULL,
+            region VARCHAR(16) NOT NULL DEFAULT 'unknown',
+            PRIMARY KEY (stat_date, visitor_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS site_stats_tracking (
+            id TINYINT NOT NULL PRIMARY KEY,
+            active_visitors_since DATETIME NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """
+    )
+    cur.execute(
+        "INSERT IGNORE INTO site_stats_tracking (id, active_visitors_since) VALUES (1, UTC_TIMESTAMP())"
+    )
     _tables_ready = True
 
 
@@ -201,6 +222,54 @@ def _read_totals(cur) -> dict:
     return {
         "site_pv": int(row.get("site_pv") or 0),
         "site_uv": int(row.get("site_uv") or 0),
+    }
+
+
+def _record_active_visitor(cur, visitor_id: str, region: str) -> None:
+    cur.execute(
+        """
+        INSERT INTO site_stats_daily_visitors (stat_date, visitor_id, region)
+        VALUES (%s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            region = IF(region = 'unknown', VALUES(region), region)
+        """,
+        (_today_cn().isoformat(), visitor_id, region),
+    )
+
+
+def _active_visitor_snapshot(cur, start: date, end: date) -> dict:
+    # Clicks prove a browser was present even where legacy page hits were lost.
+    # Never add per-day UVs: a returning browser counts once for the whole range.
+    params = (start.isoformat(), end.isoformat())
+    cur.execute(
+        """
+        SELECT region, COUNT(*) AS uv FROM (
+            SELECT visitor_id,
+                   COALESCE(MAX(NULLIF(region, 'unknown')), 'unknown') AS region
+            FROM (
+                SELECT visitor_id, region FROM site_stats_daily_visitors
+                WHERE stat_date >= %s AND stat_date <= %s
+                UNION ALL
+                SELECT visitor_id, 'unknown' AS region FROM site_stats_game_clicks
+                WHERE stat_date >= %s AND stat_date <= %s AND visitor_id <> ''
+            ) AS observations
+            GROUP BY visitor_id
+        ) AS visitors GROUP BY region
+        """, params + params,
+    )
+    regions = {"cn": 0, "overseas": 0, "unknown": 0}
+    for row in cur.fetchall() or []:
+        key = row["region"] if row["region"] in regions else "unknown"
+        regions[key] += int(row["uv"] or 0)
+    cur.execute("SELECT active_visitors_since FROM site_stats_tracking WHERE id = 1")
+    since = (cur.fetchone() or {}).get("active_visitors_since")
+    since_cn = since.replace(tzinfo=timezone.utc).astimezone(_CN_TZ) if since else None
+    return {
+        "regions": regions,
+        "total": sum(regions.values()),
+        "since": since_cn.strftime("%Y-%m-%d %H:%M:%S") if since_cn else None,
+        # The deployment day itself has an unobserved prefix.
+        "partial": since_cn is None or start <= since_cn.date(),
     }
 
 
@@ -376,6 +445,7 @@ def record_hit(
                 region = "unknown"
             if region not in ("cn", "overseas", "unknown"):
                 region = "unknown"
+            _record_active_visitor(cur, visitor_id, region)
             cur.execute(
                 "INSERT IGNORE INTO site_stats (id, site_pv, site_uv) VALUES (1, 0, 0)"
             )
@@ -427,6 +497,8 @@ def record_event(
                 # Missing/invalid IDs count as clicks only, never invented visitors.
                 if not _VISITOR_RE.fullmatch(visitor):
                     visitor = ''
+                if visitor:
+                    _record_active_visitor(cur, visitor, 'unknown')
                 cur.execute(
                     """
                     INSERT INTO site_stats_game_clicks
@@ -550,7 +622,10 @@ def stats_overview(
                 geo_pv[key] = int(r.get("pv") or 0)
                 geo_uv[key] = int(r.get("uv") or 0)
             pv_total = sum(geo_pv.values()) or 0
-            uv_total = sum(geo_uv.values()) or 0
+            new_uv_total = sum(geo_uv.values()) or 0
+            active = _active_visitor_snapshot(cur, start, end)
+            geo_uv = active["regions"]
+            uv_total = active["total"]
 
             def _share(part: int, total: int) -> float:
                 if total <= 0:
@@ -588,7 +663,9 @@ def stats_overview(
             "day": {
                 "pv": pv_total,
                 "uv": uv_total,
+                "new_uv": new_uv_total,
             },
+            "visitor_tracking": {"since": active["since"], "partial": active["partial"]},
             "business": business,
             "game_clicks": game_clicks,
             "events_top": top,

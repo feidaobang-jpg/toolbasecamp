@@ -81,6 +81,8 @@
         </div>
       </div>
 
+      <p class="stats-note" id="visitor-stats-note">访客按所选日期内的浏览器标识去重；历史漏记数据可能不完整。</p>
+
       <section class="stats-section" id="game-click-stats">
         <h3 class="stats-section-title" data-i18n="gameClickStats.title">游戏入口点击</h3>
         <p class="stats-section-sub" data-i18n="gameClickStats.description">统计游戏列表中「B 站玩」「本站玩」两个按钮，按北京时间筛选；不含封面、标题点击。</p>
@@ -115,7 +117,7 @@
 
       <section class="stats-section">
         <h3 class="stats-section-title">国内 / 国外</h3>
-        <p class="stats-section-sub">按访问 IP / Cloudflare 国家头粗分（仅中国大陆计为国内）。管理员与排除 IP 不计入。访客按首次出现地区。</p>
+        <p class="stats-section-sub">按访问 IP / Cloudflare 国家头粗分（仅中国大陆计为国内）。管理员与排除 IP 不计入。访客按区间内已记录地区归类，无法确定的归入未知。</p>
         <p id="geo-empty-note" class="stats-warn hidden"></p>
         <div class="stats-geo-grid">
           <div>
@@ -157,9 +159,9 @@
   </main>
 
   <script src="../../js/locales/zh-CN.js?v=game-clicks1"></script>
-  <script src="../../js/i18n.js?v=nosTW1"></script>
+  <script src="../../js/i18n.js?v=visitor-stats2"></script>
   <script src="../../js/config.js?v=nosTW1"></script>
   <script src="../../js/admin/admin-gate.js?v=nosTW5"></script>
-  <script src="../../js/admin/site-stats.js?v=game-clicks1"></script>
+  <script src="../../js/admin/site-stats.js?v=visitor-stats2"></script>
 </body>
 </html>

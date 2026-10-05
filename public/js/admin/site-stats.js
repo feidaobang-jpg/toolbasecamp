@@ -370,7 +370,7 @@
       pvSum.textContent = '浏览合计 ' + fmt(pvTotal);
     }
     if (uvSum) {
-      uvSum.textContent = '访客合计 ' + fmt(geo.uv_total || 0) + '（按首次访客地区）';
+      uvSum.textContent = '访客合计 ' + fmt(geo.uv_total || 0) + '（按区间内已记录地区归类）';
     }
     if (emptyNote) {
       if (pvTotal <= 0 && (sitePv || 0) > 0) {
@@ -536,6 +536,14 @@
 
       document.getElementById('site-pv').textContent = fmt(data.site_pv);
       document.getElementById('site-uv').textContent = fmt(data.site_uv);
+
+      var tracking = data.visitor_tracking || {};
+      var note = document.getElementById('visitor-stats-note');
+      if (note) {
+        note.textContent = '访客按所选日期内的浏览器标识去重，回访也计入，跨天不重复累加；不是实名人数。累计数据含历史漏记，可能偏少。' +
+          (tracking.partial !== false ? ' 当前日期范围含历史漏记时段，访客仅为已记录人数（含游戏入口点击），浏览量和累计数据也可能偏少。' : '') +
+          (tracking.since ? ' 新访问记录起点：' + tracking.since + '（北京时间）。' : '');
+      }
 
       renderBusiness(data.business, isDay);
       renderGameClicks(data.game_clicks);

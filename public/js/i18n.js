@@ -152,13 +152,16 @@
     }
 
     window.tbGetVisitorId = getOrCreateVisitorId;
+    var visitorIdInMemory = '';
 
     function getOrCreateVisitorId() {
+        if (visitorIdInMemory) return visitorIdInMemory;
         var key = 'tb-visitor-id';
         try {
             var existing = localStorage.getItem(key);
             if (existing && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(existing)) {
-                return existing.toLowerCase();
+                visitorIdInMemory = existing.toLowerCase();
+                return visitorIdInMemory;
             }
         } catch (e) { /* ignore */ }
         var id = '';
@@ -175,6 +178,7 @@
             });
         }
         try { localStorage.setItem(key, id); } catch (e3) { /* ignore */ }
+        visitorIdInMemory = id;
         return id;
     }
 
@@ -190,18 +194,23 @@
     }
 
     function loadSiteStats() {
+        var excluded = false;
+        try {
+            excluded = localStorage.getItem('tb-stats-exclude') === '1';
+        } catch (e) { /* storage may be unavailable */ }
         var visitorId = getOrCreateVisitorId();
         var headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
         try {
             var token = localStorage.getItem('auth_token') || '';
             if (token) headers.Authorization = 'Bearer ' + token;
         } catch (e) { /* ignore */ }
-        fetch(apiBase() + '/stats/hit', {
-            method: 'POST',
+        fetch(apiBase() + (excluded ? '/stats' : '/stats/hit'), {
+            method: excluded ? 'GET' : 'POST',
             headers: headers,
-            body: JSON.stringify({ visitor_id: visitorId }),
+            body: excluded ? undefined : JSON.stringify({ visitor_id: visitorId }),
             credentials: 'same-origin',
-            cache: 'no-store'
+            cache: 'no-store',
+            keepalive: true
         })
             .then(function (res) {
                 if (!res.ok) throw new Error('stats ' + res.status);
@@ -218,7 +227,7 @@
 
     function injectSiteStats() {
         if (document.getElementById('tb-site-stats')) return;
-        var headerRow = document.querySelector('header .max-w-7xl');
+        var headerRow = document.querySelector('header .site-header-inner, header .max-w-7xl');
         if (!headerRow) return;
 
         var utils = ensureHeaderUtils(headerRow);
@@ -239,12 +248,11 @@
             '</span>';
 
         utils.insertBefore(stats, utils.firstChild);
-        loadSiteStats();
     }
 
     function injectLangSwitcher() {
         if (document.getElementById('tb-lang-switcher')) return;
-        var headerRow = document.querySelector('header .max-w-7xl');
+        var headerRow = document.querySelector('header .site-header-inner, header .max-w-7xl');
         if (!headerRow) return;
 
         var utils = ensureHeaderUtils(headerRow);
@@ -264,7 +272,11 @@
         syncLocaleCookie(currentLocale);
         document.documentElement.lang = currentLocale === 'zh-CN' ? 'zh-CN' : 'en';
         apply(document);
-        if (!isAdminPrivatePage()) injectLangSwitcher();
+        if (!isAdminPrivatePage()) {
+            injectLangSwitcher();
+            // Recording must also work on tool/game pages with no shared header.
+            if ((window.location.pathname || '').indexOf('/html/admin/') !== 0) loadSiteStats();
+        }
     }
 
     window.t = t;
