@@ -1,7 +1,7 @@
 {
   "id": 39863936092160,
   "version": "v0.5.3",
-  "status": "auditing",
+  "status": "published",
   "submitted_at": "2026-10-06T06:20:48+08:00",
   "verified_preview_url": "https://www.bilibili.com/toy/preview/preview_Ay6Bgrti/index.html",
   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_HTGNQFww/index.html",
@@ -13,9 +13,12 @@
     "result": "toy-preview-results.json"
   },
   "public_check": {
-    "status": "previous_version_still_served",
-    "entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22368/index.html",
-    "checked_at": "2026-10-06T06:22:19.263604+08:00"
+    "status": "published_verified",
+    "entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22703/index.html",
+    "checked_at": "2026-10-06T06:24:58.898535+08:00",
+    "runtime_sha256": "3f7cba7c7cc96e3572d369ca5d12e2bca95d0f789d6ca6963d02206b6e75c568",
+    "exact_match": true,
+    "method": "Edge actual network response body and test version; no session extraction"
   },
   "metadata": "原ID/slug/可见性/视频绑定保留；相同包未重复提交"
 }
