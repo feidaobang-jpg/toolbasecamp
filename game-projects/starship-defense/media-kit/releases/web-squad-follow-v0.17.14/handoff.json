@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-squad-follow-v0.17.14",
+  "base_version": "web-touch-ui-v0.17.13",
+  "kind": "player_feedback_patch",
+  "date": "2026-10-05",
+  "sources": [
+    {"channel": "video_comment", "bvid": "BV1WbHq6eEBt", "rpid": 316087423265, "summary": "队友跟随像傻子：要我一步一步带；突击兵先掉血、先卡住"},
+    {"channel": "dynamic_comment", "opus_id": 410772284, "rpid": 316085900561, "summary": "驾驶载具有 bug，射击不是从贴图（模型枪口）上射击"}
+  ],
+  "changes": [
+    {"id": "squad-formation-follow", "before": "跟随点3~5秒或19米才重算，玩家跑8秒后队友掉到33~45米外", "after": "按前进方向与兵种层次每帧重算编队点，脱队7/12/22米提速1.35/1.9/2.6倍归队", "verification": "pass"},
+    {"id": "squad-detour", "before": "只会直走或贴墙侧滑，一排围墙前9秒仍在墙外21米原地蹭", "after": "复用虫群monsterStep绕行，9秒内越线并贴近到6米", "verification": "pass"},
+    {"id": "squad-hit-recovery", "before": "同一瞬间多只虫近战全部结算，突击兵一次-30/110", "after": "受击0.5秒恢复窗口+重伤回编队位，同一瞬间只结算一次(-10)", "verification": "pass"},
+    {"id": "vehicle-muzzle", "before": "弹丸起点=座位中心，距炮口 jeep1.40/mech1.86/tank3.51/heli6.32 米，炮塔不转", "after": "枪管挂可转向turret，弹从炮管口出（误差0.00米）且枪口朝向与弹道一致", "verification": "pass"},
+    {"id": "gate-parked-vehicle", "before": "队友载具停在门洞岗位被判为占门，城门常开放虫进入（v0.17.13 同样存在）", "after": "只有移动中或要求过门的单位算占门，城门回防后自行关闭", "verification": "pass"}
+  ],
+  "qa": {
+    "script": "verify-squad-follow.cjs",
+    "before": "media-kit/releases/web-squad-follow-v0.17.14/evidence-before/squad-follow-qa.json",
+    "after": "media-kit/releases/web-squad-follow-v0.17.14/evidence/squad-follow-qa.json",
+    "before_result": "6/12",
+    "after_result": "12/12",
+    "screenshots": ["evidence/formation-follow.png", "evidence/muzzle-jeep.png", "evidence/muzzle-tank.png", "evidence/muzzle-mech.png", "evidence/muzzle-heli.png"],
+    "regressions": ["verify-squad-ops.cjs", "verify-squad-tasks.cjs", "verify-squad-crew.cjs", "verify-heli-stuck.cjs", "verify-operations-expansion.cjs", "verify-playthrough-v09.cjs"],
+    "threshold_updates": "verify-squad-tasks/verify-squad-crew 的守基地深度阈值（-20/-23）早于当前 squadAnchor 岗位 z=-18；已在线上 v0.17.13 复跑确认修复前同样 FAIL，改为断言城门以内+距岗位≤8米+城门自关。",
+    "browser": "Headless Microsoft Edge / D3D11；手机为视口模拟，未做真机验证"
+  },
+  "channels": {
+    "website": {"version": "web-squad-follow-v0.17.14", "status": "publishing", "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"},
+    "toy": {
+      "id": 38678478981120,
+      "status": "pending_merge",
+      "last_submitted": {"version": "web-touch-ui-v0.17.13", "date": "2026-10-05", "review_status": "auditing"},
+      "public_version": "web-input-flight-v0.17.10",
+      "reason": "AGENTS.md 2026-10-05 节奏：活跃开发期同一游戏按北京时间每天最多一批；今日 00:50 已提交 v0.17.13，v0.17.14 属普通补丁，与后续小修累计后一次送审。"
+    },
+    "bilibili_description": {"status": "deferred", "reason": "普通补丁按节奏并入下一次有意义的说明更新；现有试玩入口与操作说明仍准确。"}
+  },
+  "pending_merge": [
+    {"version": "web-squad-follow-v0.17.14", "date": "2026-10-05", "summary": "队友编队跟随/追赶/绕行/受击恢复窗口；四载具炮塔转向与炮口开火；队友载具停门洞不再顶开城门"}
+  ],
+  "readiness": {"overview": "partial", "gaps": ["未做真机触屏验证", "未录制实机视频片段，本次仅数值与截图证据"]}
+}

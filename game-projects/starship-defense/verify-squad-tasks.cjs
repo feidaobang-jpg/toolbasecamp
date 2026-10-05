@@ -42,8 +42,11 @@ const url=process.env.GAME_URL||'http://127.0.0.1:8881/html/game/starship-defens
    for(let i=0;i<1000;i++){q.updSquad(.02);q.updSmartGate(.02);opened ||= q.gate.open;}
    const out={opened,closed:!q.gate.open,z:s.mesh.position.z};q.setSquadTask('defend');let reopened=false;
    for(let i=0;i<1500;i++){q.updSquad(.02);q.updSmartGate(.02);reopened ||= q.gate.open;}
-   return{out,back:{reopened,closed:!q.gate.open,z:s.mesh.position.z}};
-  });assert.ok(gate.out.opened&&gate.out.closed&&gate.out.z>0,JSON.stringify(gate));assert.ok(gate.back.reopened&&gate.back.closed&&gate.back.z<-20,JSON.stringify(gate));console.log('PASS actual follow/defend gate traversal in both directions',gate);
+   return{out,back:(()=>{const a=q.squadAnchor(s);return{reopened,closed:!q.gate.open,z:+s.mesh.position.z.toFixed(2),nearPost:+Math.hypot(s.mesh.position.x-a.x,s.mesh.position.z-a.z).toFixed(2)};})()};
+  });assert.ok(gate.out.opened&&gate.out.closed&&gate.out.z>0,JSON.stringify(gate));
+  // 守基地岗位按 squadAnchor 设计在 z=-18（城门 z=-16 内侧），旧阈值 <-20 是更早的岗位布局；
+  // 这里校验的是"回城门以内并站到岗位上、城门能自己关上"，不是具体深度。
+  assert.ok(gate.back.reopened&&gate.back.closed&&gate.back.z<-17&&gate.back.nearPost<3,JSON.stringify(gate));console.log('PASS actual follow/defend gate traversal in both directions',gate);
   const op=await p.evaluate(()=>{
    const q=__gameQA;q.Game.state='prep';q.setSquadTask('defend');const started=q.operations.start('depot');q.Game.state='paused';q.updSquad(.02);
    const follows=q.squadBehavior()==='follow'&&q.Game.squadOrder==='defend';q.operations.finish(false);q.updSquad(.02);return{started,follows,restored:q.squadBehavior()==='defend'};

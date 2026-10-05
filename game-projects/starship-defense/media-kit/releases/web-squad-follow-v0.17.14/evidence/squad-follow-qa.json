@@ -1,0 +1,314 @@
+{
+  "at": "2026-10-05T05:18:01.984Z",
+  "url": "http://127.0.0.1:8878/html/game/starship-defense/index.html",
+  "vehicleRows": [
+    {
+      "kind": "jeep",
+      "shots": 26,
+      "worstDTip": 0,
+      "dSeat": 1.35,
+      "minAimDot": 1,
+      "err": null
+    },
+    {
+      "kind": "tank",
+      "shots": 2,
+      "worstDTip": 0,
+      "dSeat": 3.51,
+      "minAimDot": 1,
+      "err": null
+    },
+    {
+      "kind": "mech",
+      "shots": 14,
+      "worstDTip": 0,
+      "dSeat": 1.86,
+      "minAimDot": 0.97,
+      "err": null
+    },
+    {
+      "kind": "heli",
+      "shots": 22,
+      "worstDTip": 0,
+      "dSeat": 6.29,
+      "minAimDot": 1,
+      "err": null
+    }
+  ],
+  "checks": [
+    {
+      "name": "玩家持续奔跑时队友紧跟不掉队（移动中最大间距≤20m）",
+      "ok": true,
+      "detail": {
+        "worstMoving": 17.5,
+        "gapAtStop": [
+          {
+            "slot": 0,
+            "role": "gunner",
+            "d": 8.9
+          },
+          {
+            "slot": 1,
+            "role": "assault",
+            "d": 6.5
+          },
+          {
+            "slot": 2,
+            "role": "medic",
+            "d": 17.5
+          },
+          {
+            "slot": 3,
+            "role": "engineer",
+            "d": 16.5
+          }
+        ]
+      }
+    },
+    {
+      "name": "队友自行追上跑开的玩家（停步6秒后全部≤10m）",
+      "ok": true,
+      "detail": {
+        "worst": 6.5,
+        "gapAfter": [
+          {
+            "slot": 0,
+            "role": "gunner",
+            "d": 5.9
+          },
+          {
+            "slot": 1,
+            "role": "assault",
+            "d": 5
+          },
+          {
+            "slot": 2,
+            "role": "medic",
+            "d": 6.5
+          },
+          {
+            "slot": 3,
+            "role": "engineer",
+            "d": 5.4
+          }
+        ]
+      }
+    },
+    {
+      "name": "墙挡住去路时绕行到玩家一侧（9秒内越过防线并贴近）",
+      "ok": true,
+      "detail": {
+        "before": {
+          "x": 0,
+          "z": 10
+        },
+        "after": {
+          "x": -4.5,
+          "z": 35.7
+        },
+        "crossed": true,
+        "d": 6.2
+      }
+    },
+    {
+      "name": "同一瞬间的三发近战只结算约一发（受伤短无敌）",
+      "ok": true,
+      "detail": {
+        "maxHp": 110,
+        "lost": 10,
+        "after": 10
+      }
+    },
+    {
+      "name": "恢复窗口结束后仍能继续受伤",
+      "ok": true,
+      "detail": {
+        "maxHp": 110,
+        "lost": 10,
+        "after": 10
+      }
+    },
+    {
+      "name": "10秒混战伤害分摊（至少两名队友承伤，突击兵占比≤55%）",
+      "ok": true,
+      "detail": {
+        "total": 95.1,
+        "rows": [
+          {
+            "role": "gunner",
+            "name": "机枪兵",
+            "lost": 51.5,
+            "hpPct": 60,
+            "pct": 54.2
+          },
+          {
+            "role": "assault",
+            "name": "突击兵",
+            "lost": 43.6,
+            "hpPct": 60,
+            "pct": 45.8
+          },
+          {
+            "role": "medic",
+            "name": "医疗兵",
+            "lost": 0,
+            "hpPct": 100,
+            "pct": 0
+          },
+          {
+            "role": "engineer",
+            "name": "工程兵",
+            "lost": 0,
+            "hpPct": 100,
+            "pct": 0
+          }
+        ],
+        "alive": 4,
+        "monstersLeft": 7
+      }
+    },
+    {
+      "name": "突击兵没有先阵亡",
+      "ok": true,
+      "detail": {
+        "total": 95.1,
+        "rows": [
+          {
+            "role": "gunner",
+            "name": "机枪兵",
+            "lost": 51.5,
+            "hpPct": 60,
+            "pct": 54.2
+          },
+          {
+            "role": "assault",
+            "name": "突击兵",
+            "lost": 43.6,
+            "hpPct": 60,
+            "pct": 45.8
+          },
+          {
+            "role": "medic",
+            "name": "医疗兵",
+            "lost": 0,
+            "hpPct": 100,
+            "pct": 0
+          },
+          {
+            "role": "engineer",
+            "name": "工程兵",
+            "lost": 0,
+            "hpPct": 100,
+            "pct": 0
+          }
+        ],
+        "alive": 4,
+        "monstersLeft": 7
+      }
+    },
+    {
+      "name": "四类载具都从炮管口开火（有弹且起点=枪口，误差≤0.35m）",
+      "ok": true,
+      "detail": {
+        "vehicleRows": [
+          {
+            "kind": "jeep",
+            "shots": 26,
+            "worstDTip": 0,
+            "dSeat": 1.35,
+            "minAimDot": 1,
+            "err": null
+          },
+          {
+            "kind": "tank",
+            "shots": 2,
+            "worstDTip": 0,
+            "dSeat": 3.51,
+            "minAimDot": 1,
+            "err": null
+          },
+          {
+            "kind": "mech",
+            "shots": 14,
+            "worstDTip": 0,
+            "dSeat": 1.86,
+            "minAimDot": 0.97,
+            "err": null
+          },
+          {
+            "kind": "heli",
+            "shots": 22,
+            "worstDTip": 0,
+            "dSeat": 6.29,
+            "minAimDot": 1,
+            "err": null
+          }
+        ],
+        "misaligned": []
+      }
+    },
+    {
+      "name": "炮塔/枪架转向射击方向（枪口朝向与弹道一致，dot≥0.8）",
+      "ok": true,
+      "detail": [
+        {
+          "kind": "jeep",
+          "shots": 26,
+          "worstDTip": 0,
+          "dSeat": 1.35,
+          "minAimDot": 1,
+          "err": null
+        },
+        {
+          "kind": "tank",
+          "shots": 2,
+          "worstDTip": 0,
+          "dSeat": 3.51,
+          "minAimDot": 1,
+          "err": null
+        },
+        {
+          "kind": "mech",
+          "shots": 14,
+          "worstDTip": 0,
+          "dSeat": 1.86,
+          "minAimDot": 0.97,
+          "err": null
+        },
+        {
+          "kind": "heli",
+          "shots": 22,
+          "worstDTip": 0,
+          "dSeat": 6.29,
+          "minAimDot": 1,
+          "err": null
+        }
+      ]
+    },
+    {
+      "name": "队友驾驶坦克会跟上并射击（跟上玩家≤22m）",
+      "ok": true,
+      "detail": {
+        "shots": 5,
+        "dTip": 0,
+        "dSeat": 3.51,
+        "gap": 4.5
+      }
+    },
+    {
+      "name": "队友驾驶时弹丸同样出自炮管口（误差≤0.35m）",
+      "ok": true,
+      "detail": {
+        "shots": 5,
+        "dTip": 0,
+        "dSeat": 3.51,
+        "gap": 4.5
+      }
+    },
+    {
+      "name": "页面无脚本错误",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}
