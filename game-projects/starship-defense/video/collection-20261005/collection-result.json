@@ -16,8 +16,10 @@
   "evidence": "collection-public.jpg",
   "existing_series": {
     "id": 5178167,
-    "status": "preserved",
-    "url": "https://space.bilibili.com/16214353/lists/5178167?type=series"
+    "status": "deleted_on_user_confirmation",
+    "deleted_at": "2026-10-05",
+    "url": "https://space.bilibili.com/16214353/lists/5178167?type=series",
+    "evidence": "series-deleted-collection-kept.jpg"
   },
   "rights": {
     "evidence": "rights-rules.jpg",
@@ -35,5 +37,5 @@
   ],
   "video_files_modified": false,
   "video_titles_descriptions_modified": false,
-  "future_uploads": "后续虫潮正式视频应加入合集9248439；原系列关键词规则仍单独保留，不能假定系列自动收录会加入正式合集"
+  "future_uploads": "后续虫潮正式视频应加入合集9248439；重复系列已删除，不能假定其他列表或系列自动收录会加入正式合集"
 }
