@@ -8,6 +8,10 @@ alwaysApply: true
 `zhengxiaohui.cn` 静态文件在 VPS **`/var/www/toolbasecamp`**，靠 GitHub Actions `rsync public/`。  
 **git push 成功只表示 GitHub 有新代码**；Actions 失败/卡住时，线上仍是旧 HTML/JS（曾导致改名后侧栏仍显示「文字成片」）。
 
+## 多任务部署来源与互斥
+
+遵守 auto-commit-push 的合并/发布锁。网站只部署已合并主线的提交；补同步前重取最新主线并检查在途 Actions/其他部署，不从过期 worktree 上传文件。旧构建不能覆盖已上线的新提交；记录本次部署提交，公网核验完成后释放本任务的锁。本机锁不自动锁住 Actions，不能把规则写入等同已建立跨主机发布队列。
+
 ## 何时必须校验
 
 本次 commit **改了 `public/**`**（含 locales、HTML、CSS、JS），且用户可见文案/界面会受影响时：
