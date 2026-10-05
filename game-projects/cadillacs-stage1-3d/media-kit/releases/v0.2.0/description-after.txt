@@ -1,0 +1,7 @@
+把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。
+B站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html
+百宝箱试玩（复制到浏览器）：https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html
+操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。
+更新（2026-10-05·v0.2.0）：第一人称同向转头，手机冲刺松I可接J；新增冲锋枪、火箭筒和复活火箭雨，完善走廊。视频为录制时版本，以当前试玩为准。
+Claude Opus 5.5辅助开发，音乐与音效为重新编写及合成。粉丝向非官方重制，原作版权归Capcom及原著方。
+投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱→游戏→自研游戏投票榜）

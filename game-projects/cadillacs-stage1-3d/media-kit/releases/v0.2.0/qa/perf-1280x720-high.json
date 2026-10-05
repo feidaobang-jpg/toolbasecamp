@@ -1,0 +1,155 @@
+{
+ "date": "2026-10-05T12:34:53.694Z",
+ "viewport": [
+  1280,
+  720
+ ],
+ "quality": "high",
+ "runs": [
+  {
+   "name": "side",
+   "frames": {
+    "n": 1359,
+    "fps": 169.9,
+    "mean": 5.89,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 11.7
+   },
+   "work": {
+    "n": 1359,
+    "fps": 580.3,
+    "mean": 1.72,
+    "median": 1.7,
+    "p95": 2.3,
+    "over50": 0,
+    "max": 5
+   },
+   "drawCalls": {
+    "calls": 176,
+    "tris": 91020
+   },
+   "area": 0,
+   "x": 10.59,
+   "enemies": 3
+  },
+  {
+   "name": "front",
+   "frames": {
+    "n": 1360,
+    "fps": 170,
+    "mean": 5.88,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 6.1
+   },
+   "work": {
+    "n": 1360,
+    "fps": 670.8,
+    "mean": 1.49,
+    "median": 1.5,
+    "p95": 2,
+    "over50": 0,
+    "max": 4.2
+   },
+   "drawCalls": {
+    "calls": 120,
+    "tris": 56868
+   },
+   "area": 0,
+   "x": 29.62,
+   "enemies": 3
+  },
+  {
+   "name": "fp",
+   "frames": {
+    "n": 1351,
+    "fps": 168.6,
+    "mean": 5.93,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 17.6
+   },
+   "work": {
+    "n": 1351,
+    "fps": 753.7,
+    "mean": 1.33,
+    "median": 1.2,
+    "p95": 2,
+    "over50": 0,
+    "max": 4.1
+   },
+   "drawCalls": {
+    "calls": 14,
+    "tris": 7278
+   },
+   "area": 0,
+   "x": 28.35,
+   "enemies": 3
+  },
+  {
+   "name": "side-rot",
+   "frames": {
+    "n": 1314,
+    "fps": 164.3,
+    "mean": 6.09,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 29.4
+   },
+   "work": {
+    "n": 1314,
+    "fps": 559.2,
+    "mean": 1.79,
+    "median": 1.7,
+    "p95": 2.6,
+    "over50": 0,
+    "max": 30.8
+   },
+   "drawCalls": {
+    "calls": 142,
+    "tris": 72950
+   },
+   "area": 0,
+   "x": 37.78,
+   "enemies": 1
+  },
+  {
+   "name": "boss-side",
+   "frames": {
+    "n": 1361,
+    "fps": 170,
+    "mean": 5.88,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 6.1
+   },
+   "work": {
+    "n": 1361,
+    "fps": 579.6,
+    "mean": 1.73,
+    "median": 1.7,
+    "p95": 2.2,
+    "over50": 0,
+    "max": 4.6
+   },
+   "drawCalls": {
+    "calls": 116,
+    "tris": 56092
+   },
+   "enemies": 2
+  }
+ ],
+ "renderer": {
+  "calls": 208,
+  "tris": 114794,
+  "geometries": 324,
+  "textures": 9,
+  "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+ }
+}

@@ -1,0 +1,107 @@
+{
+ "preview": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+ "results": [
+  {
+   "name": "desktop：预览页载入游戏 iframe",
+   "pass": true,
+   "info": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v22576/index.html"
+  },
+  {
+   "name": "desktop：版本",
+   "pass": true,
+   "info": "v0.2.0"
+  },
+  {
+   "name": "desktop：键盘开局进入战斗",
+   "pass": true,
+   "info": "play"
+  },
+  {
+   "name": "desktop：电脑键鼠布局（不显示触屏键）",
+   "pass": true
+  },
+  {
+   "name": "desktop：按住 I + D 冲刺",
+   "pass": true,
+   "info": "run"
+  },
+  {
+   "name": "desktop：C 切换视角",
+   "pass": true,
+   "info": "oblique"
+  },
+  {
+   "name": "desktop：游戏 iframe 无报错 / 404",
+   "pass": true,
+   "info": {
+    "errs": [],
+    "failed": []
+   }
+  },
+  {
+   "name": "mobile：预览页载入游戏 iframe",
+   "pass": true,
+   "info": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v22576/index.html"
+  },
+  {
+   "name": "mobile：版本",
+   "pass": true,
+   "info": "v0.2.0"
+  },
+  {
+   "name": "mobile：触屏开局进入战斗",
+   "pass": true,
+   "info": "play"
+  },
+  {
+   "name": "mobile：显示触屏键",
+   "pass": true
+  },
+  {
+   "name": "mobile：2×2 方阵（下排 J K、上排 U I）、无 Esc 标签、无左右转键",
+   "pass": true,
+   "info": {
+    "J": [
+     700,
+     292,
+     76
+    ],
+    "K": [
+     788,
+     292,
+     76
+    ],
+    "U": [
+     700,
+     204,
+     76
+    ],
+    "I": [
+     788,
+     204,
+     76
+    ],
+    "esc": "none",
+    "qe": false
+   }
+  },
+  {
+   "name": "mobile：右上角 C 切换视角",
+   "pass": true,
+   "info": "oblique"
+  },
+  {
+   "name": "mobile：K 跳跃",
+   "pass": true,
+   "info": "jump"
+  },
+  {
+   "name": "mobile：游戏 iframe 无报错 / 404",
+   "pass": true,
+   "info": {
+    "errs": [],
+    "failed": []
+   }
+  }
+ ]
+}

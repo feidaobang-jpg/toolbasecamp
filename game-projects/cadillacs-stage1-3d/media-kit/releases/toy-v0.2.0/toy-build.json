@@ -2,16 +2,23 @@
   "version": "v0.2.0",
   "source": "public/html/game/cadillacs-stage1-3d",
   "source_sha256": {
-    "css/style.css": "da5715125f74a2f05232de860c7e5cacc2af5214849b60c3f07f7c3999bd0037",
-    "index.html": "520e99a58a1be7272397f7a79cbcbb6ea043580ef7162c6dcec4edbe890a545e",
+    "css/style.css": "b0a0f85f1eaa7a09c56ddb790ac8a45d6db02f35af6c3ce68e0d0ad72b138808",
+    "index.html": "89fe10467c5cbd05104032328e921080de5c8f80a1a65260ccf08a98745654e4",
     "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
     "js/game.min.js": "fa104bfc8b28538a45211c526878d199e9f26266c65986712a1f82c33201f8c9"
   },
   "files": {
-    "css/style.css": "da5715125f74a2f05232de860c7e5cacc2af5214849b60c3f07f7c3999bd0037",
-    "index.html": "fb61c2abd38f6c07902dccce8b8ac8df27bd4031197efc379af183e50c802807",
+    "css/style.css": "b0a0f85f1eaa7a09c56ddb790ac8a45d6db02f35af6c3ce68e0d0ad72b138808",
+    "index.html": "6640975f4e1fdd399062105d8b9916834a603f0d948e990c1bb1f7cd7c0be9de",
     "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
     "js/game.min.js": "fa104bfc8b28538a45211c526878d199e9f26266c65986712a1f82c33201f8c9"
   },
-  "status": "built_not_submitted"
+  "status": "published_verified",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_XROMmkYX/index.html",
+  "submitted_at": "2026-10-05T20:39:41.339246+08:00",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_zLcRlBK0/index.html",
+  "package_fingerprint": "a66f232f3a3d2cb2276dcabc77b81569748f682a974983ebc2647c003f67229a",
+  "verified_at": "2026-10-05T20:46:29.622579+08:00",
+  "public_test": "15/15",
+  "public_iframe": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v22576/index.html"
 }

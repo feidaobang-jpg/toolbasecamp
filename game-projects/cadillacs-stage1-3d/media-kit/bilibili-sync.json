@@ -12,13 +12,16 @@
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
       "pinned_comment_rpid": 316113740017,
-      "last_public_verified_at": "2026-10-05T18:14:47.797232+08:00",
+      "last_public_verified_at": "2026-10-05T20:47:10.702438+08:00",
       "block_sha256": "299f2588277d8b8c5c1976bf01b9b19eaff367f672542bd491b6e9937ba64f36",
-      "last_sync_record": "releases/v0.1.3/bilibili-sync.json"
+      "last_sync_record": "releases/v0.1.3/bilibili-sync.json",
+      "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
+      "pending_sync_record": "releases/v0.2.0/bilibili-sync.json",
+      "pending_version": "v0.2.0"
     }
   ],
-  "status": "v0.1.3 简介更新已公开核验；镜头修复、拖动与四键方阵累计项已合并",
-  "updated_at": "2026-10-05T18:14:47.797232+08:00",
+  "status": "简介已精简为7段且无空段；v0.2.0 更新说明已提交，平台审核中，保留v0.1.3公开版本基线",
+  "updated_at": "2026-10-05T20:47:10.702438+08:00",
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
     "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -45,5 +48,13 @@
     }
   ],
   "pending": [],
-  "pending_updates": []
+  "pending_updates": [
+    {
+      "version": "v0.2.0",
+      "status": "submitted_auditing",
+      "bvid": "BV18XHW66E55",
+      "record": "releases/v0.2.0/bilibili-sync.json",
+      "reason": "已提交同一稿件说明修改，等待平台审核；不重复投稿"
+    }
+  ]
 }

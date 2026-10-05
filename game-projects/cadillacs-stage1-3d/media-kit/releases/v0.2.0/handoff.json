@@ -8,10 +8,11 @@
   "build": {
     "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
     "files": {
-      "index.html": "520e99a58a1be7272397f7a79cbcbb6ea043580ef7162c6dcec4edbe890a545e",
-      "css/style.css": "da5715125f74a2f05232de860c7e5cacc2af5214849b60c3f07f7c3999bd0037",
+      "index.html": "89fe10467c5cbd05104032328e921080de5c8f80a1a65260ccf08a98745654e4",
+      "css/style.css": "b0a0f85f1eaa7a09c56ddb790ac8a45d6db02f35af6c3ce68e0d0ad72b138808",
       "js/game.min.js": "fa104bfc8b28538a45211c526878d199e9f26266c65986712a1f82c33201f8c9"
-    }
+    },
+    "commit": "ea06d1c8"
   },
   "changes_record": "notes.md",
   "qa": {
@@ -22,18 +23,46 @@
     "limits": [
       "桌面模拟多指触控，非手机真机",
       "测试钩子只用于确定场景与固定时钟；截图不可冒充无作弊通关录像"
-    ]
+    ],
+    "performance": "1280×720 high，Windows Edge / RTX 4060 Ti，五段平均164.3–170 fps，p95帧间隔6ms；非手机性能结论",
+    "production_feedback": "33/33",
+    "toy": "15/15 preview + 15/15 published"
   },
   "deployment": {
-    "status": "pending"
+    "status": "verified",
+    "verified_at": "2026-10-05T20:37:00.266392+08:00",
+    "files": {
+      "css/style.css": {
+        "sha256": "b0a0f85f1eaa7a09c56ddb790ac8a45d6db02f35af6c3ce68e0d0ad72b138808",
+        "matches": true,
+        "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/css/style.css?v=22b38f7b"
+      },
+      "js/game.min.js": {
+        "sha256": "fa104bfc8b28538a45211c526878d199e9f26266c65986712a1f82c33201f8c9",
+        "matches": true,
+        "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?v=22b38f7b"
+      }
+    },
+    "html_verified": "特殊技、触屏冲刺保持说明已上线；部署会改写页面 cache query"
   },
   "toy": {
     "id": 40412421031936,
-    "status": "built_not_submitted"
+    "version": "v0.2.0",
+    "status": "published_verified",
+    "submitted_at": "2026-10-05T20:39:41.339246+08:00",
+    "preview_test": "15/15",
+    "package_fingerprint": "a66f232f3a3d2cb2276dcabc77b81569748f682a974983ebc2647c003f67229a",
+    "record": "releases/toy-v0.2.0/toy-build.json",
+    "verified_at": "2026-10-05T20:46:29.622579+08:00",
+    "public_test": "15/15",
+    "public_iframe": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v22576/index.html"
   },
   "bilibili": {
     "bvid": "BV18XHW66E55",
-    "status": "compact_description_verified_release_update_pending"
+    "status": "submitted_auditing",
+    "record": "bilibili-sync.json",
+    "public_baseline": "v0.1.3 compact description",
+    "verified_at": "2026-10-05T20:47:10.702438+08:00"
   },
   "media": [
     {
