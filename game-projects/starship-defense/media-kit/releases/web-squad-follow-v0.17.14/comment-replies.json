@@ -1,0 +1,32 @@
+{
+  "version": "web-squad-follow-v0.17.14",
+  "prepared_at": "2026-10-05T05:30:00Z",
+  "status": "blocked_not_logged_in",
+  "note": "两条回复已按修复事实写好待发；当前内置浏览器 bilibili.com 未登录（nav 接口 isLogin=false、无 bili_jct），按技能要求不用 cookie 或私有会话绕过，等用户登录后用 scripts/post-replies.js 逐条发送并读回核对。",
+  "targets": [
+    {
+      "channel": "video_comment",
+      "bvid": "BV1Ujad6DEuf",
+      "oid": "117358521751388",
+      "type": 1,
+      "root": "316087423265",
+      "user": "黄milk龙",
+      "comment_date": "2026-10-05 12:15",
+      "comment_text": "那群队友跟个傻子一样,那个突击兵总是先掉血,先卡住,明明点了跟随我,但他们还是要我过去一步一步带他们走[吃瓜]",
+      "up_replied_before": false,
+      "message": "已按这条重做了队友跟随：编队点现在贴着你的前进方向，机枪兵在前、突击兵居中、医疗和工程殿后，每帧重算；你跑步或开车带队时掉队的会自动加速追上来（实测跑 8 秒，最大掉队距离从 45 米降到 17 米），被自家围墙挡住会绕路，不再原地顶墙。另外加了受击恢复窗口，同一瞬间被多只虫扑到只结算一次，血量低于 35% 会先退回队形，突击兵不会再第一个被秒。网站已更新到 v0.17.14：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html ，B站 Toy 版随下一个补丁包送审。还有谁原地不动的话，告诉我关卡和当时在做什么，我继续查。"
+    },
+    {
+      "channel": "dynamic_comment",
+      "opus_id": 410772284,
+      "oid": "410772284",
+      "type": 11,
+      "root": "316085900561",
+      "user": "我也是我自己的问题",
+      "comment_date": "2026-10-05 12:01",
+      "comment_text": "驾驶载具有bug，射击不是从贴图上面射",
+      "up_replied_before": false,
+      "message": "确认是真 bug：之前弹丸的生成点固定在车身座位中心，和模型上的炮管差 1.4~6.3 米（直升机最明显），所以看着像从车顶凭空开火。已改成开火时炮塔先转向目标、弹从炮管口射出，战车/坦克/机甲/直升机以及队友驾驶都一起修了，实测起点误差从最大 6.3 米降到 0。顺手还修了队友把车停在城门洞里会把城门顶成常开的问题。网站已更新到 v0.17.14：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html ，B站 Toy 版随下一个补丁包送审。"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-04T15:40:30.799330+08:00",
+  "updated_at": "2026-10-05T05:27:49.174Z",
   "items": [
     {
       "rpid": "319415014640",
@@ -376,6 +376,38 @@
       "reply_status": "visible_in_creator_user_visible_comments",
       "record": "releases/web-input-flight-v0.17.10/comment-replies.json",
       "note": "UI未暴露评论ID；保留用户名、原文、BV和北京时间用于去重。触屏延迟释放是模拟验证，尚无报告者真机复测。"
+    },
+    {
+      "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-05 12:15:20",
+      "rpid": "316087423265",
+      "video": "BV1Ujad6DEuf",
+      "comment_type": 1,
+      "user": "黄milk龙",
+      "date": "2026-10-05 12:15:20",
+      "text": "那群队友跟个傻子一样,那个突击兵总是先掉血,先卡住,明明点了跟随我,但他们还是要我过去一步一步带他们走",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-squad-follow-v0.17.14",
+      "reply_rpid": null,
+      "reply_status": "pending_login_not_posted",
+      "record": "releases/web-squad-follow-v0.17.14/comment-replies.json",
+      "note": "编队跟随+脱队追赶+绕行+受击恢复窗口，verify-squad-follow.cjs 修复前6/12、修复后12/12。回复因内置浏览器未登录B站待发。"
+    },
+    {
+      "feedback_key": "opus:410772284|我也是我自己的问题|2026-10-05 12:01:49",
+      "rpid": "316085900561",
+      "video": "opus:410772284",
+      "comment_type": 11,
+      "user": "我也是我自己的问题",
+      "date": "2026-10-05 12:01:49",
+      "text": "驾驶载具有bug，射击不是从贴图上面射",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-squad-follow-v0.17.14",
+      "reply_rpid": null,
+      "reply_status": "pending_login_not_posted",
+      "record": "releases/web-squad-follow-v0.17.14/comment-replies.json",
+      "note": "根因：弹丸起点固定为座位中心，距模型炮口1.40~6.32米；改为炮塔转向+炮口生成，实测误差0。动态评论可用 type=11 接口回复。回复待发（未登录）。"
     }
   ]
 }

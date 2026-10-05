@@ -6,8 +6,8 @@
   "kind": "player_feedback_patch",
   "date": "2026-10-05",
   "sources": [
-    {"channel": "video_comment", "bvid": "BV1WbHq6eEBt", "rpid": 316087423265, "summary": "队友跟随像傻子：要我一步一步带；突击兵先掉血、先卡住"},
-    {"channel": "dynamic_comment", "opus_id": 410772284, "rpid": 316085900561, "summary": "驾驶载具有 bug，射击不是从贴图（模型枪口）上射击"}
+    {"channel": "video_comment", "bvid": "BV1Ujad6DEuf", "aid": 117358521751388, "rpid": 316087423265, "user": "黄milk龙", "date": "2026-10-05 12:15", "summary": "队友跟随像傻子：要我一步一步带；突击兵先掉血、先卡住"},
+    {"channel": "dynamic_comment", "opus_id": 410772284, "rpid": 316085900561, "user": "我也是我自己的问题", "date": "2026-10-05 12:01", "summary": "驾驶载具有 bug，射击不是从贴图（模型枪口）上射击"}
   ],
   "changes": [
     {"id": "squad-formation-follow", "before": "跟随点3~5秒或19米才重算，玩家跑8秒后队友掉到33~45米外", "after": "按前进方向与兵种层次每帧重算编队点，脱队7/12/22米提速1.35/1.9/2.6倍归队", "verification": "pass"},

@@ -1,0 +1,13 @@
+{
+  "version": "web-squad-follow-v0.17.14",
+  "commit": "c1a62b2d",
+  "pushed_at": "2026-10-05T05:18:00Z",
+  "verified_at": "2026-10-05T05:23:00Z",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "checks": {
+    "index_version_query": "线上 index.html 引用 game.compat.js?v=c1a62b2d（部署链路把 ?v= 重写为上线 commit；本地写的是 ?v=squadfollow1714）",
+    "bundle_markers": {"squadFollowPoint": 1, "hitInvuln": 4, "vehicleMuzzle": 1},
+    "http_code": 200
+  },
+  "conclusion": "网站已上线 v0.17.14（队友编队跟随 + 载具炮口开火 + 城门占位修复），无需 SSH 补同步。"
+}
