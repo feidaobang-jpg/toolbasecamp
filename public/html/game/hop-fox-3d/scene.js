@@ -345,7 +345,7 @@ export function createScene(canvas, world) {
   let dt_ = 0;
   function update(dt, cam = {}, snap = false) {
     dt_ = dt; elapsed += dt;
-    yaw += (cam.yaw || 0) * dt * 1.4;
+    yaw -= (cam.yaw || 0) * dt * 1.4;
     pitch = THREE.MathUtils.clamp(pitch + (cam.pitch || 0) * dt * .8, .02, 1.48);
     if (cam.reset) { cameraIndex = (cameraIndex + 1) % PRESETS.length; yaw = PRESETS[cameraIndex].yaw; pitch = PRESETS[cameraIndex].pitch; }
     shake = Math.max(0, shake - dt * 2.5);

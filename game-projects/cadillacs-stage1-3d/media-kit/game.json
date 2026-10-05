@@ -6,8 +6,8 @@
   },
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.2.0",
-  "handoff": "releases/v0.2.0/handoff.json",
+  "current_version": "v0.2.1",
+  "handoff": "releases/drag-direction-20261005/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -45,7 +45,7 @@
       "K": "跳跃",
       "U": "必杀",
       "C": "切换视角",
-      "按住画面拖动": "第一人称右划右转头；侧视/斜视保留拖场景方向",
+      "按住画面拖动": "所有视角右拖右看、左拖左看，与虫潮一致",
       "右上角": "C 切换视角与暂停",
       "I": "点按启用冲刺，摇杆持续推动时保持；回中或松开摇杆停止，右手可转按 J",
       "排列": "下排 J / K，上排 U / I，等大 2×2 方阵",
@@ -77,7 +77,17 @@
     "version": "v0.2.0",
     "verified_at": "2026-10-05T20:46:29.622579+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-    "last_published_version": "v0.2.0"
+    "last_published_version": "v0.2.0",
+    "pending_updates": [
+      {
+        "version": "v0.2.1",
+        "classification": "普通补丁",
+        "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+        "status": "pending_merge",
+        "record": "releases/drag-direction-20261005/handoff.json",
+        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+      }
+    ]
   },
   "toy_note": "v0.2.0 已过审，正式入口15/15通过",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
@@ -102,7 +112,8 @@
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
     "touch": "左摇杆和动作按钮保留；画面空白处拖动转视角，保留 C 切换预设，移除左右旋转虚拟键",
-    "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留"
+    "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
+    "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标"
   },
   "resolved_changes": [
     {

@@ -1,0 +1,36 @@
+{
+  "game_id": "journey-west-3d",
+  "version": "v0.2.2",
+  "base_version": "v0.2.1",
+  "created_at": "2026-10-05T22:47:23.743439+08:00",
+  "classification": "普通补丁",
+  "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+  "website": {
+    "status": "validated_local_pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html"
+  },
+  "qa": {
+    "direction_checks": 474,
+    "passed": 474,
+    "evidence": "C:\\Users\\37818\\.codex\\visualizations\\2026\\10\\05\\01a10bec-4699-7940-ae33-26869c8095f8\\drag-direction",
+    "method": "Edge桌面与CDP触控模拟，逐预设比较实际相机水平右向量旋转；非实体手机验收",
+    "results": "game-projects/site-games/media-kit/releases/drag-direction-20261005/direction-results.json"
+  },
+  "toy": {
+    "status": "unmapped",
+    "last_recorded_successful_sync": null,
+    "pending": {
+      "version": "v0.2.2",
+      "classification": "普通补丁",
+      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+      "status": "pending_merge",
+      "record": "releases/drag-direction-20261005/handoff.json",
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+    }
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通操作补丁累计到下一次有意义的说明更新，保留最后公开核验基线；现有文案未写反向拖动，无需即时纠正"
+  },
+  "hidden_entry_preserved": true
+}

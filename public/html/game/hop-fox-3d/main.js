@@ -1,6 +1,6 @@
 import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
 import { createWorld, startWorld, stepWorld, LEVEL_END } from './world.js';
-import { createScene } from './scene.js?v=drag-look1';
+import { createScene } from './scene.js?v=drag-direction1';
 import { GameAudio } from './audio.js?v=1';
 
 const $ = id => document.getElementById(id);
@@ -184,7 +184,7 @@ function orientation() {
   }
 }
 let phoneRotated=false;
-const dragLook=bindDragLook({element:$('game'),active:()=>phase==='playing'&&!paused,toLocal:(x,y)=>phoneRotated?{x:y,y:innerWidth-x}:{x,y},width:()=>phoneRotated?innerHeight:innerWidth,rotate:delta=>view.rotate(delta)});
+const dragLook=bindDragLook({element:$('game'),active:()=>phase==='playing'&&!paused,toLocal:(x,y)=>phoneRotated?{x:y,y:innerWidth-x}:{x,y},width:()=>phoneRotated?innerHeight:innerWidth,rotate:delta=>view.rotate(-delta)});
 let controlMode='auto';
 addControlModeButtons({containers:[$('panel').querySelector('.options')],get:()=>controlMode,set:value=>{controlMode=value;clearInput();$('touch').hidden=value==='hide'||value==='auto'&&!mobileDevice;document.body.classList.toggle('touch-mode',!$('touch').hidden);orientation();}});
 document.addEventListener('tb:locale', () => { refreshSoundLabel(); refreshPauseLabel(); if (phase === 'over') showPanel(world.status === 'won' ? 'won' : 'lost'); });

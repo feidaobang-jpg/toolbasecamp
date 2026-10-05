@@ -20,6 +20,14 @@
       "status": "pending_merge",
       "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
       "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
+    },
+    {
+      "version": "v2.2.2",
+      "classification": "普通补丁",
+      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+      "status": "pending_merge",
+      "record": "releases/drag-direction-20261005/handoff.json",
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
     }
   ]
 }

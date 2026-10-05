@@ -361,7 +361,7 @@ window.addEventListener('keydown', e => { if (IN.active() && ['KeyQ','KeyE'].inc
 window.addEventListener('keyup', e => orbitKeys.delete(e.code));
 IN.onClear(() => orbitKeys.clear());
 let dragHintShown = false;
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => camCtl.rotate(-delta) });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => camCtl.turnRight(delta) });
 IN.onClear(() => dragLook.clear());
 
 addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
@@ -459,7 +459,7 @@ function frame(now) {
 }
 
 function presentFrame(dtReal, draw) {
-  if (IN.active()) camCtl.rotate(((orbitKeys.has('KeyQ') ? 1 : 0) - (orbitKeys.has('KeyE') ? 1 : 0)) * dtReal * Math.PI / 2);
+  if (IN.active()) camCtl.turnRight(((orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0)) * dtReal * Math.PI / 2);
   if (uiMode === 'game') {
     const p = GM.player();
     // 第一人称下相机在眼睛位置，同等震动体感更强，乘 0.3 抑制
@@ -530,7 +530,7 @@ if (TEST) {
       });
     },
     toLocal,
-    _scene: scene, _renderer: renderer,
+    _scene: scene, _renderer: renderer, _cam: camCtl,
     // 手动时钟：on=true 时停止实时推进，由 step() 推进 n 个 1/60 秒逻辑步并（可选）渲染一帧
     manual(on) { manual = !!on; last = performance.now(); acc = 0; },
     step(n, draw) {

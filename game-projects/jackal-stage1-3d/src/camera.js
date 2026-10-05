@@ -22,6 +22,8 @@ export function createCamera() {
     cycle() { this.idx = (this.idx + 1) % PRESETS.length; this.yaw = 0; if (!PRESETS[this.idx].fp) this.lastIdx = this.idx; return PRESETS[this.idx]; },
     // 拖动转视角：yaw 以北为 0、顺时针为正，夹到 (-π, π]
     rotate(d) { this.yaw = ((this.yaw + d + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; },
+    // 正数表示玩家向右看；驾驶舱与环绕镜头的 yaw 定义相反，按实际生效的镜头换算。
+    turnRight(d) { this.rotate(this.fpNow ? d : -d); },
     setAspect(a) { cam.aspect = a; cam.updateProjectionMatrix(); judgeCam.aspect = a; judgeCam.updateProjectionMatrix(); },
     snap(px, py) { const p = PRESETS[PRESETS[this.idx].fp ? this.lastIdx : this.idx]; this.tx = px; this.ty = py + p.ahead; },
     // 水平相机轴：给移动映射与测试使用（判定镜头恒朝北，因此右 = 东、前 = 北）

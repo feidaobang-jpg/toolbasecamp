@@ -1,0 +1,2846 @@
+[
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.3250172606071867,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.30744885237243974,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.7297891530865229,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.7354832914281973,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.3272637245169444,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.3073325230476743,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.729796330709305,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.735483275674299,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.33944725811185367,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.3349628095899555,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.7530417969436215,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.7554554155027015,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.343611696486384,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.3412633867175455,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.7568699148486949,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.7592182246175334,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop",
+    "action": "all presets covered",
+    "count": 4,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.35214220975810795,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.3712606011529923,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.3322611328728254,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.3701477956509923,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.35405285140628834,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.37135251158378746,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.332257727219305,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.37014753206839035,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.3677137104501682,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.37217632927915856,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.3628391750412796,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.37211334387452555,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.3675381295752747,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.37691510587254395,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape",
+    "action": "all presets covered",
+    "count": 4,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.35214220975810795,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.3712606011529923,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.33226113287282516,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.37014779565099254,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.35405285140628834,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.37135251158378785,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.33225772721930535,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.37014753206839035,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.3677137104501682,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.37217632927915856,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.3628391750412796,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.37211334387452555,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.37222582715956903,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait",
+    "action": "all presets covered",
+    "count": 4,
+    "ok": true
+  },
+  {
+    "tag": "cadillacs-stage1-3d-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.34361169648638434,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.34361169648638434,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.7853981633974494,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.7853981633974494,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.34361169648638423,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.34361169648638423,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.785398163397449,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.785398163397449,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.34361169648638423,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.34361169648638423,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.7853981633974492,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.7853981633974492,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.3436116964863842,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.3436116964863842,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.7853981633974491,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.7853981633974491,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset4",
+    "action": "mouse right",
+    "turn": 0.343611696486384,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset4",
+    "action": "mouse left",
+    "turn": -0.343611696486384,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset4",
+    "action": "KeyE",
+    "turn": 0.7853981633974488,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset4",
+    "action": "KeyQ",
+    "turn": -0.7853981633974488,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset5",
+    "action": "mouse right",
+    "turn": 0.3436116964863844,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset5",
+    "action": "mouse left",
+    "turn": -0.3436116964863844,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset5",
+    "action": "KeyE",
+    "turn": 0.7853981633974491,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop-preset5",
+    "action": "KeyQ",
+    "turn": -0.7853981633974491,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop",
+    "action": "all presets covered",
+    "count": 6,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.3722266177239087,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.37222661772390525,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.37222661772390886,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.37222661772390836,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.372226617723905,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239087,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.37222661772390536,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.3722266177239035,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.3722266177239051,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset4",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset4",
+    "action": "mouse left",
+    "turn": -0.37222661772390525,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset4",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset5",
+    "action": "mouse right",
+    "turn": 0.3722266177239035,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset5",
+    "action": "touch right",
+    "turn": 0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset5",
+    "action": "mouse left",
+    "turn": -0.372226617723905,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape-preset5",
+    "action": "touch left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape",
+    "action": "all presets covered",
+    "count": 6,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.3722266177239087,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.37222661772390525,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.37222661772390886,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.37222661772390836,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.372226617723905,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239087,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.37222661772390536,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.3722266177239035,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.3722266177239051,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239036,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset4",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset4",
+    "action": "mouse left",
+    "turn": -0.37222661772390525,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset4",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset5",
+    "action": "mouse right",
+    "turn": 0.3722266177239035,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset5",
+    "action": "touch right",
+    "turn": 0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset5",
+    "action": "mouse left",
+    "turn": -0.372226617723905,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait-preset5",
+    "action": "touch left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait",
+    "action": "all presets covered",
+    "count": 6,
+    "ok": true
+  },
+  {
+    "tag": "jackal-stage1-3d-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.2239999999999969,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.2239999999999969,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.5732266495483178,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.5399931305668063,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.22286943462293796,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.22410157411948006,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.5822216463839986,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.5361474732780669,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.22289653725547076,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.2241331136681275,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.4795946854334511,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.5520077573339317,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.22283957095969806,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.22408206255793173,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.5741054264500377,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.5321578676855409,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset4",
+    "action": "mouse right",
+    "turn": 0.2227960458712097,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset4",
+    "action": "mouse left",
+    "turn": -0.2240397253454738,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset4",
+    "action": "KeyE",
+    "turn": 0.5955684576468595,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset4",
+    "action": "KeyQ",
+    "turn": -0.5268112785070239,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset5",
+    "action": "mouse right",
+    "turn": 0.22361212642696832,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset5",
+    "action": "mouse left",
+    "turn": -0.2240204277381762,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset5",
+    "action": "KeyE",
+    "turn": 0.5599320233112713,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop-preset5",
+    "action": "KeyQ",
+    "turn": -0.5624069455757229,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop",
+    "action": "all presets covered",
+    "count": 6,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.5971563981042646,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.5971563981042659,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.5971563981042639,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.5971563981042664,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.5971563981042646,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.5971563981042658,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.5971563981042641,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.5971563981042646,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.5971563981042644,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.5971563981042661,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.5971563981042645,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.5971563981042658,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.5971563981042639,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset4",
+    "action": "mouse right",
+    "turn": 0.5971563981042644,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset4",
+    "action": "touch right",
+    "turn": 0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset4",
+    "action": "mouse left",
+    "turn": -0.5971563981042641,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset4",
+    "action": "touch left",
+    "turn": -0.5971563981042661,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset5",
+    "action": "mouse right",
+    "turn": 0.5971563981042648,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset5",
+    "action": "touch right",
+    "turn": 0.5971563981042673,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset5",
+    "action": "mouse left",
+    "turn": -0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape-preset5",
+    "action": "touch left",
+    "turn": -0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape",
+    "action": "all presets covered",
+    "count": 6,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.5971563981042664,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.5971563981042658,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.5971563981042641,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.5971563981042661,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.5971563981042642,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.5989321599307419,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.5971563981042642,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.5971563981042645,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset4",
+    "action": "mouse right",
+    "turn": 0.5971563981042661,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset4",
+    "action": "touch right",
+    "turn": 0.5971563981042662,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset4",
+    "action": "mouse left",
+    "turn": -0.5971563981042645,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset4",
+    "action": "touch left",
+    "turn": -0.5971563981042659,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset5",
+    "action": "mouse right",
+    "turn": 0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset5",
+    "action": "touch right",
+    "turn": 0.597156398104266,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset5",
+    "action": "mouse left",
+    "turn": -0.597156398104265,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait-preset5",
+    "action": "touch left",
+    "turn": -0.5971563981042651,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait",
+    "action": "all presets covered",
+    "count": 6,
+    "ok": true
+  },
+  {
+    "tag": "starship-defense-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.7853981633974484,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.7853981633974484,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.785398163397449,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.785398163397449,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.7853981633974484,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.7853981633974484,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset4",
+    "action": "mouse right",
+    "turn": 0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset4",
+    "action": "mouse left",
+    "turn": -0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset4",
+    "action": "KeyE",
+    "turn": 0.7853981633974484,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset4",
+    "action": "KeyQ",
+    "turn": -0.7853981633974484,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.7853981633974485,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.7853981633974485,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset4",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset4",
+    "action": "touch right",
+    "turn": 0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset4",
+    "action": "mouse left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset4",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset4",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset4",
+    "action": "touch right",
+    "turn": 0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset4",
+    "action": "mouse left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset4",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "tank-3d-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.39269908169872436,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.39269908169872425,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.392699081698724,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.392699081698724,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.39269908169872464,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.39269908169872464,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.34361169648638334,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.34361169648638334,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.3926990816987237,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.3926990816987237,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset4",
+    "action": "mouse right",
+    "turn": 0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset4",
+    "action": "mouse left",
+    "turn": -0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset4",
+    "action": "KeyE",
+    "turn": 0.39269908169872436,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop-preset4",
+    "action": "KeyQ",
+    "turn": -0.39269908169872436,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.37222661772390947,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390947,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.3722266177239085,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.3722266177239085,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset4",
+    "action": "touch right",
+    "turn": 0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset4",
+    "action": "mouse left",
+    "turn": -0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape-preset4",
+    "action": "touch left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.37222661772390947,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390947,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.3722266177239085,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.3722266177239085,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset4",
+    "action": "touch right",
+    "turn": 0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset4",
+    "action": "mouse left",
+    "turn": -0.37222661772390875,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait-preset4",
+    "action": "touch left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "mario-3d-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.4435928826868783,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.45286058101496907,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.3436116964863839,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.3436116964863839,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.4434358030541987,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.46197119971037853,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.3436116964863835,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.44343580305419966,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.4250574860306997,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.3436116964863837,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.4434358030541982,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.4434358030541983,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset4",
+    "action": "mouse right",
+    "turn": 0.34361169648638346,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset4",
+    "action": "mouse left",
+    "turn": -0.34361169648638346,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset4",
+    "action": "KeyE",
+    "turn": 0.44359288268687863,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop-preset4",
+    "action": "KeyQ",
+    "turn": -0.45270350138228777,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.37222661772390886,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset4",
+    "action": "touch right",
+    "turn": 0.37222661772390897,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset4",
+    "action": "mouse left",
+    "turn": -0.37222661772390897,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape-preset4",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239093,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.37222661772390886,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239091,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset4",
+    "action": "touch right",
+    "turn": 0.37222661772390897,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset4",
+    "action": "mouse left",
+    "turn": -0.37222661772390897,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait-preset4",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "journey-west-3d-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset0",
+    "action": "mouse right",
+    "turn": 0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset0",
+    "action": "mouse left",
+    "turn": -0.34361169648638357,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset0",
+    "action": "KeyE",
+    "turn": 0.3952199999999989,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset0",
+    "action": "KeyQ",
+    "turn": -0.3952200000000003,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset1",
+    "action": "mouse right",
+    "turn": 0.34361169648638323,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset1",
+    "action": "mouse left",
+    "turn": -0.34361169648638323,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset1",
+    "action": "KeyE",
+    "turn": 0.39535999999999827,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset1",
+    "action": "KeyQ",
+    "turn": -0.41173999999999955,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset2",
+    "action": "mouse right",
+    "turn": 0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset2",
+    "action": "mouse left",
+    "turn": -0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset2",
+    "action": "KeyE",
+    "turn": 0.3952200000000004,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset2",
+    "action": "KeyQ",
+    "turn": -0.4033399999999993,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset3",
+    "action": "mouse right",
+    "turn": 0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset3",
+    "action": "mouse left",
+    "turn": -0.34361169648638373,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset3",
+    "action": "KeyE",
+    "turn": 0.39521999999999885,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset3",
+    "action": "KeyQ",
+    "turn": -0.38709999999999983,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset4",
+    "action": "mouse right",
+    "turn": 0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset4",
+    "action": "mouse left",
+    "turn": -0.3436116964863836,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset4",
+    "action": "KeyE",
+    "turn": 0.38710000000000017,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop-preset4",
+    "action": "KeyQ",
+    "turn": -0.403619999999999,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-desktop",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset0",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset0",
+    "action": "touch right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset0",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset0",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset1",
+    "action": "mouse right",
+    "turn": 0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset1",
+    "action": "touch right",
+    "turn": 0.37222661772390936,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset1",
+    "action": "mouse left",
+    "turn": -0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239094,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset2",
+    "action": "mouse right",
+    "turn": 0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset3",
+    "action": "mouse right",
+    "turn": 0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset3",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset4",
+    "action": "touch right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset4",
+    "action": "mouse left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape-preset4",
+    "action": "touch left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-landscape",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset0",
+    "action": "mouse right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset0",
+    "action": "touch right",
+    "turn": 0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset0",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset0",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset1",
+    "action": "mouse right",
+    "turn": 0.372226617723909,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset1",
+    "action": "touch right",
+    "turn": 0.37222661772390936,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset1",
+    "action": "mouse left",
+    "turn": -0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset1",
+    "action": "touch left",
+    "turn": -0.3722266177239094,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset2",
+    "action": "mouse right",
+    "turn": 0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset2",
+    "action": "touch right",
+    "turn": 0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset2",
+    "action": "mouse left",
+    "turn": -0.3722266177239088,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset2",
+    "action": "touch left",
+    "turn": -0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset3",
+    "action": "mouse right",
+    "turn": 0.37222661772390925,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset3",
+    "action": "touch right",
+    "turn": 0.3722266177239089,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset3",
+    "action": "mouse left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset3",
+    "action": "touch left",
+    "turn": -0.37222661772390914,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset4",
+    "action": "mouse right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset4",
+    "action": "touch right",
+    "turn": 0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset4",
+    "action": "mouse left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait-preset4",
+    "action": "touch left",
+    "turn": -0.3722266177239092,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait",
+    "action": "all presets covered",
+    "count": 5,
+    "ok": true
+  },
+  {
+    "tag": "hop-fox-3d-portrait",
+    "action": "runtime errors",
+    "errors": [],
+    "ok": true
+  }
+]

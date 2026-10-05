@@ -46,5 +46,14 @@
     }
   ],
   "pending": [],
-  "pending_updates": []
+  "pending_updates": [
+    {
+      "version": "v0.2.1",
+      "classification": "普通补丁",
+      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+      "status": "pending_merge",
+      "record": "releases/drag-direction-20261005/handoff.json",
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+    }
+  ]
 }

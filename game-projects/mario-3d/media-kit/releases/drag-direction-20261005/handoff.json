@@ -1,0 +1,62 @@
+{
+  "game_id": "mario-3d",
+  "version": "v2.2.2",
+  "base_version": "v2.2.1",
+  "created_at": "2026-10-05T22:47:23.743439+08:00",
+  "classification": "普通补丁",
+  "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+  "website": {
+    "status": "validated_local_pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html"
+  },
+  "qa": {
+    "direction_checks": 474,
+    "passed": 474,
+    "evidence": "C:\\Users\\37818\\.codex\\visualizations\\2026\\10\\05\\01a10bec-4699-7940-ae33-26869c8095f8\\drag-direction",
+    "method": "Edge桌面与CDP触控模拟，逐预设比较实际相机水平右向量旋转；非实体手机验收",
+    "results": "game-projects/site-games/media-kit/releases/drag-direction-20261005/direction-results.json"
+  },
+  "toy": {
+    "status": "pending_merge",
+    "last_recorded_successful_sync": {
+      "id": 39043286960128,
+      "slug": "feidao-mario-3d",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "visibility": "PUBLIC",
+      "review_status": "published",
+      "verified_at": "2026-10-04T12:11:54.416Z",
+      "video_bindings": [],
+      "submitted_version": "v2.2.0",
+      "submitted_at": "2026-10-04T19:57:49.860312+08:00",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Ccb9vl6y/index.html",
+      "release_record": "releases/v2.2.0/camera-mobile-toy.json",
+      "published_version": "v2.2.0",
+      "published_entry": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v22207/index.html",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_JChtYxAw/index.html",
+      "note": "本次五视角与手机控件更新已发布；保留原ID、slug、可见性和视频绑定。",
+      "pending_updates": [
+        {
+          "version": "v2.2.2",
+          "classification": "普通补丁",
+          "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+          "status": "pending_merge",
+          "record": "releases/drag-direction-20261005/handoff.json",
+          "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+        }
+      ]
+    },
+    "pending": {
+      "version": "v2.2.2",
+      "classification": "普通补丁",
+      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+      "status": "pending_merge",
+      "record": "releases/drag-direction-20261005/handoff.json",
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+    }
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通操作补丁累计到下一次有意义的说明更新，保留最后公开核验基线；现有文案未写反向拖动，无需即时纠正"
+  },
+  "hidden_entry_preserved": false
+}

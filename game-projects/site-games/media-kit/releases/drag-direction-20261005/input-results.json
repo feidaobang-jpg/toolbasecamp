@@ -1,0 +1,1194 @@
+[
+  {
+    "game": "tank-3d landscape",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "progress": {
+        "score": 0,
+        "lives": 3,
+        "hp": 3,
+        "armor": "classic",
+        "livesMode": "classic",
+        "demo": false,
+        "demoUsed": false,
+        "stats": {
+          "kills": 0,
+          "deaths": 0,
+          "hits": 0,
+          "stages": 0,
+          "pickups": 0,
+          "repairs": 0,
+          "bosses": 0
+        }
+      },
+      "touch": true,
+      "rotated": false
+    }
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 1
+    }
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "64,192",
+      "after": "64,173",
+      "input": 3
+    }
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "tank-3d landscape",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "progress": {
+        "score": 0,
+        "lives": 3,
+        "hp": 3,
+        "armor": "classic",
+        "livesMode": "classic",
+        "demo": false,
+        "demoUsed": false,
+        "stats": {
+          "kills": 0,
+          "deaths": 0,
+          "hits": 0,
+          "stages": 0,
+          "pickups": 0,
+          "repairs": 0,
+          "bosses": 0
+        }
+      },
+      "touch": true,
+      "rotated": true
+    }
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "landscape transform",
+    "ok": true
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2
+    }
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "64,192",
+      "after": "64,173",
+      "input": 3
+    }
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "tank-3d portrait",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "progress": {
+        "score": 0,
+        "coins": 0,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "small",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 0,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 0.7583333333333331
+        }
+      },
+      "touch": true,
+      "rotated": false
+    }
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2.676
+    }
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "3,0",
+      "after": "2.219,0.706",
+      "input": {
+        "x": 1,
+        "y": 0
+      }
+    }
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "mario-3d landscape",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "progress": {
+        "score": 0,
+        "coins": 0,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "small",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 0,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 0.8416666666666661
+        }
+      },
+      "touch": true,
+      "rotated": true
+    }
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "landscape transform",
+    "ok": true
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2.753
+    }
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "3,0",
+      "after": "2.219,0.706",
+      "input": {
+        "x": 1,
+        "y": 0
+      }
+    }
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "mario-3d portrait",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "touch": true,
+      "rotated": false
+    }
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2
+    }
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "-19,10",
+      "after": "-19,13.73",
+      "input": {
+        "held": {
+          "u": false,
+          "d": false,
+          "l": false,
+          "r": false
+        },
+        "keyFire": false,
+        "keyBomb": false,
+        "touchDir": 2,
+        "touchFire": true,
+        "touchBomb": false,
+        "queue": []
+      }
+    }
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d landscape",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "touch": true,
+      "rotated": true
+    }
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "landscape transform",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2
+    }
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "-19,10",
+      "after": "-19,13.73",
+      "input": {
+        "held": {
+          "u": false,
+          "d": false,
+          "l": false,
+          "r": false
+        },
+        "keyFire": false,
+        "keyBomb": false,
+        "touchDir": 2,
+        "touchFire": true,
+        "touchBomb": false,
+        "queue": []
+      }
+    }
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d portrait",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "touch": true
+    }
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893343882537382
+    }
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 1.5707963267948966,
+      "after": 0.6774524442575147
+    }
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 1.2706000000000013
+    }
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "0,8",
+      "after": "4.722414691688445,9.23456966891769"
+    }
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -0.21589143827986712,
+      "after": -0.21589143827986712
+    }
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d landscape",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "touch": true
+    }
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "landscape transform",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893343882537382
+    }
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 1.5707963267948966,
+      "after": 0.6774524442575147
+    }
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 1.2765000000000006
+    }
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "0,8",
+      "after": "4.649079144537059,9.218486498167815"
+    }
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -0.21589143827986712,
+      "after": -0.21589143827986712
+    }
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "journey-west-3d portrait",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "touch": true
+    }
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893343882537382
+    }
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": -0.62,
+      "after": -1.5133438825373817
+    }
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2.474858450000002
+    }
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "3,0",
+      "after": "1.641359100000001,0"
+    }
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -2.406687765074764,
+      "after": -2.406687765074764
+    }
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d landscape",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "touch": true
+    }
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "landscape transform",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893343882537382
+    }
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": -0.62,
+      "after": -1.5133438825373817
+    }
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 2.431084690000001
+    }
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "3,0",
+      "after": "1.6059510000000023,0"
+    }
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -2.406687765074764,
+      "after": -2.406687765074764
+    }
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "hop-fox-3d portrait",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "touch": true,
+      "rotated": false
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 1.09
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "2.2,0.6",
+      "after": "1.97,0.78",
+      "input": {
+        "x": 1,
+        "y": 0
+      }
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d landscape",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "phone mode",
+    "ok": true,
+    "detail": {
+      "yaw": 0,
+      "paused": false,
+      "overlay": null,
+      "touch": true,
+      "rotated": true
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "landscape transform",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "drag rotates",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "mouse phone drag",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": -0.893
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "three touches rotate",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "action has game effect",
+    "ok": true,
+    "detail": {
+      "before": 0,
+      "after": 1.09
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "joystick moves player",
+    "ok": true,
+    "detail": {
+      "before": "2.2,0.6",
+      "after": "0.9,1.77",
+      "input": {
+        "x": 1,
+        "y": 0
+      }
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "pause cancels drag",
+    "ok": true,
+    "detail": {
+      "before": -1.787,
+      "after": -1.787
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "mode settings reachable while paused",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "switch phone to desktop",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "switch desktop to phone",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "restore auto",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d portrait",
+    "name": "no runtime errors",
+    "ok": true,
+    "detail": []
+  }
+]

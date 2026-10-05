@@ -1,7 +1,7 @@
 // Browser regression for blank-area drag, rotated coordinates and cancellation.
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),path=require('path');
-const root=process.cwd(), out=path.join(root,'game-projects/site-games/qa/out/drag-look1');fs.mkdirSync(out,{recursive:true});
+const root=process.cwd(), out=process.env.GAMES_OUT||path.join(root,'game-projects/site-games/qa/out/drag-look1');fs.mkdirSync(out,{recursive:true});
 const games=['tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d','journey-west-3d','hop-fox-3d'];
 const results=[];const check=(game,name,ok,detail)=>{results.push({game,name,ok,detail});console.log(`${ok?'PASS':'FAIL'} ${game} ${name} ${JSON.stringify(detail)||''}`)};
 async function read(p,g){return p.evaluate(g=>{
@@ -30,7 +30,7 @@ for(const g of (process.env.GAMES_ONLY?process.env.GAMES_ONLY.split(','):games))
  let before=s.yaw;await send('touchStart',[from]);await send('touchMove',[to]);await send('touchEnd',[]);await p.waitForTimeout(100);let after=await read(p,g);
  check(label,'drag rotates',Math.abs(after.yaw-before)>.2,{before,after:after.yaw});
  // Camera-button press must reset any captured drag, without requiring pointerup.
- const camera=g==='journey-west-3d'?'#touch-camera':g==='hop-fox-3d'?'#recenter':'#btn-cam-t';
+ const camera=g==='journey-west-3d'?'#touch-camera':g==='hop-fox-3d'?'#recenter':g==='cadillacs-stage1-3d'?'#btn-cam':'#btn-cam-t';
  before=after.yaw;await p.locator(camera).click();
  if(g==='jackal-stage1-3d')await p.evaluate(()=>__JK_TEST__.step(1));
  if(g==='cadillacs-stage1-3d')await p.evaluate(()=>__CD_TEST__.step(1));

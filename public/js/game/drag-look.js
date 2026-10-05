@@ -17,6 +17,7 @@ export function bindDragLook({ element, active, toLocal, width, rotate }) {
     if (!drag || e.pointerId !== drag.id) return;
     if (!active()) { clear(); return; }
     const x = toLocal(e.clientX, e.clientY).x;
+    // 正 delta 表示逻辑画面向右拖，调用方须换算为向右看（与虫潮一致），不能在不同预设反向。
     // 横向拖满一个逻辑屏宽转一周；横竖屏与屏幕尺寸保持一致。
     rotate((x - drag.x) / Math.max(1, width()) * Math.PI * 2);
     drag.x = x;

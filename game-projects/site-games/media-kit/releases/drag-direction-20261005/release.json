@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-10-05T22:47:23.743439+08:00",
+  "classification": "普通补丁",
+  "versions": {
+    "cadillacs-stage1-3d": "v0.2.1",
+    "jackal-stage1-3d": "v0.5.2",
+    "mario-3d": "v2.2.2",
+    "journey-west-3d": "v0.2.2",
+    "hop-fox-3d": "v0.2.2"
+  },
+  "reference": "starship-defense（未修改，五种第三人称＋第一人称）",
+  "already_correct_drag": [
+    "tank-3d",
+    "journey-west-3d"
+  ],
+  "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+  "direction_checks": 474,
+  "passed": 474,
+  "skill_files": [
+    "C:/Users/37818/.claude/skills/game-maker/SKILL.md",
+    "C:/Users/37818/.claude/skills/game-maker/references/controls-and-display.md",
+    "C:/Users/37818/.claude/skills/game-maker/references/game-options.md"
+  ],
+  "skill_validation": "quick_validate.py passed",
+  "evidence": "C:\\Users\\37818\\.codex\\visualizations\\2026\\10\\05\\01a10bec-4699-7940-ae33-26869c8095f8\\drag-direction",
+  "website_status": "pending_deploy",
+  "toy_status": "pending_merge",
+  "bilibili_status": "pending_merge",
+  "input_checks": 150,
+  "input_passed": 150,
+  "input_test_repair": "旧回归脚本恐龙快打相机按钮选择器已更新为现有#btn-cam，重跑该游戏通过。"
+}

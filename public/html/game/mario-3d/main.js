@@ -5,7 +5,7 @@ import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?
 import { LEVEL_ORDER } from './levels.js?v=2.1.0';
 import { GameAudio } from './audio.js?v=2.1.0';
 
-const VERSION = 'v2.2.1';
+const VERSION = 'v2.2.2';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -510,7 +510,7 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
 });
 $('btn-cam-t').addEventListener('pointerdown', (e) => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
 const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
-  toLocal, width: () => display.W, rotate: delta => { view.yawOffset += delta; } });
+  toLocal, width: () => display.W, rotate: delta => { view.yawOffset -= delta; } });
 addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
   get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
@@ -548,7 +548,7 @@ function simulate(dt) {
   // 单步推进：Q/E 旋转、卡片计时、世界步进、事件
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (rot) view.yawOffset += rot * (Math.PI / 2) * dt;
+  if (rot) view.yawOffset -= rot * (Math.PI / 2) * dt;
   if (uiMode !== 'game' || paused || current || !w) return;
   if (phase === 'card') { cardT += dt; if (cardT >= 2.2) endCard(); return; }
   const input = buildInput();
