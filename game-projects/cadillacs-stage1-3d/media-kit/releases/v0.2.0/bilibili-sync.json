@@ -2,11 +2,11 @@
   "bvid": "BV18XHW66E55",
   "version": "v0.2.0",
   "classification": "正式版本",
-  "status": "submitted_auditing",
+  "status": "published_verified",
   "submitted_at": "2026-10-05T20:41:00+08:00",
   "submission_time_precision": "minute",
-  "verified_at": "2026-10-05T20:47:10.702438+08:00",
-  "public_status": "公开页为已精简的 v0.1.3；v0.2.0 修改回执为稿件投递成功，处理进度显示稿件审核进行中",
+  "verified_at": "2026-10-05T20:51:28.502346+08:00",
+  "public_status": "创作中心审核已完成，公开视频页已显示完整v0.2.0简介，7段无空段",
   "before_file": "description-before.txt",
   "after_file": "description-after.txt",
   "description_sha256": "20cdce912a1deeadce221536ca377b4b359fa676f6e61850f3e1d44a3feb6f44",
@@ -27,6 +27,7 @@
   "proof_dir": "C:/Users/37818/.codex/visualizations/2026/10/05/01a10be9-783d-7b52-85dc-c3e2459f2461",
   "proof_files": [
     "description-compact-public.png",
-    "description-v020-auditing.png"
+    "description-v020-auditing.png",
+    "description-v020-public.png"
   ]
 }

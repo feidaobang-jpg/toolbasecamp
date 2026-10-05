@@ -59,10 +59,10 @@
   },
   "bilibili": {
     "bvid": "BV18XHW66E55",
-    "status": "submitted_auditing",
+    "status": "published_verified",
     "record": "bilibili-sync.json",
-    "public_baseline": "v0.1.3 compact description",
-    "verified_at": "2026-10-05T20:47:10.702438+08:00"
+    "public_baseline": "v0.2.0 compact description",
+    "verified_at": "2026-10-05T20:51:28.502346+08:00"
   },
   "media": [
     {
