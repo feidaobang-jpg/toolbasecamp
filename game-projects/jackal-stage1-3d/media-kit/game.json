@@ -45,7 +45,7 @@
   },
   "release_intent": "web_demo",
   "verified_public_links": [],
-  "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型、贴图、音乐、音效全部原创；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
+  "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
   "dev": {
     "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
     "tools": [

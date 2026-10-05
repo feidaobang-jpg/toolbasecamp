@@ -3,7 +3,7 @@
   "source": "public/html/game/cadillacs-stage1-3d",
   "source_sha256": {
     "css/style.css": "e49e92bd26c26c79d7b6966f5c14c6f11729b52576508a51a4f651c3a4339a71",
-    "index.html": "705eb655f4413d242d4dd807389d255ab5dd164443741e1a0132ce014f044e58",
+    "index.html": "344792c550c2f993d1462f3ff879a88ab5efa39c6fd6708ea4f76988633b888c",
     "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
     "js/game.min.js": "91087df69875bc3b3d6435b2781f0bd379aa7f12a49d03afa75bd1f16aff9e0d",
     "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
@@ -14,7 +14,7 @@
   },
   "files": {
     "css/style.css": "e49e92bd26c26c79d7b6966f5c14c6f11729b52576508a51a4f651c3a4339a71",
-    "index.html": "7034dc620d357078b60436af8e286133cc4ef7ab22566a58988644fc901a6a56",
+    "index.html": "20137846267b08ae8f3b1554703ed1db99f66ab2eb7f9a7298cc0459bb17aa04",
     "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
     "js/game.min.js": "91087df69875bc3b3d6435b2781f0bd379aa7f12a49d03afa75bd1f16aff9e0d",
     "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
