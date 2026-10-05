@@ -1,0 +1,753 @@
+{
+  "environment": "Windows Edge; GPU; CDP simulated multi-touch",
+  "base": "https://www.bilibili.com/toy/preview/preview_Ay6Bgrti/index.html",
+  "results": [
+    {
+      "name": "第一人称 a 横移/倒车视线稳定且车身缓转",
+      "ok": true,
+      "detail": {
+        "viewDrift": 5.995204332975845e-15,
+        "bodyStep": 0.03500000000000003
+      }
+    },
+    {
+      "name": "第一人称 s 横移/倒车视线稳定且车身缓转",
+      "ok": true,
+      "detail": {
+        "viewDrift": 3.9968028886505635e-15,
+        "bodyStep": 0.03500000000000014
+      }
+    },
+    {
+      "name": "第一人称 d 横移/倒车视线稳定且车身缓转",
+      "ok": true,
+      "detail": {
+        "viewDrift": 2.4492935982947064e-16,
+        "bodyStep": 0.03500000000000014
+      }
+    },
+    {
+      "name": "第一人称 w 横移/倒车视线稳定且车身缓转",
+      "ok": true,
+      "detail": {
+        "viewDrift": 0,
+        "bodyStep": 0.03500000000000014
+      }
+    },
+    {
+      "name": "快划屏不即时跳变，第一帧转头不超过1度",
+      "ok": true,
+      "detail": {
+        "before": 0,
+        "immediate": 0,
+        "one": 0.01745329251994221
+      }
+    },
+    {
+      "name": "拖动积压有界且平滑收敛，默认机枪沿视线瞄准",
+      "ok": true,
+      "detail": {
+        "tx": -8,
+        "ty": 27,
+        "yaw": 0,
+        "heading": 0.5235899582470829,
+        "bodyHeading": 0.5235899582470829,
+        "lookPending": 0,
+        "gunAngle": 0.5235899582470829,
+        "axes": {
+          "fwd": {
+            "x": 0,
+            "y": 1
+          },
+          "right": {
+            "x": 1,
+            "y": 0
+          }
+        },
+        "quad": [
+          [
+            -9.1,
+            25.3
+          ],
+          [
+            -4.4,
+            22.6
+          ],
+          [
+            -2.5,
+            28
+          ],
+          [
+            -9.4,
+            31.9
+          ]
+        ]
+      }
+    },
+    {
+      "name": "第一人称可连续转满360度并跨越角度边界",
+      "ok": true,
+      "detail": 7.330374041024545
+    },
+    {
+      "name": "视角 0 右拖向右看",
+      "ok": true,
+      "detail": 0.26670367890908
+    },
+    {
+      "name": "视角 0 左拖向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 0 E向右看",
+      "ok": true,
+      "detail": {
+        "x": 0.5000000000000024,
+        "z": -0.8660254037844373
+      }
+    },
+    {
+      "name": "视角 0 Q向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 0 转90度后W沿实际视线前进",
+      "ok": true,
+      "detail": {
+        "looking": {
+          "x": 1,
+          "z": 8.735771283989906e-15
+        },
+        "ahead": 1.1500000000000004
+      }
+    },
+    {
+      "name": "视角 1 右拖向右看",
+      "ok": true,
+      "detail": 0.2667036789090805
+    },
+    {
+      "name": "视角 1 左拖向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 1 E向右看",
+      "ok": true,
+      "detail": {
+        "x": 0.5000000000000018,
+        "z": -0.8660254037844375
+      }
+    },
+    {
+      "name": "视角 1 Q向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 1 转90度后W沿实际视线前进",
+      "ok": true,
+      "detail": {
+        "looking": {
+          "x": 1,
+          "z": 1.0621250804982564e-14
+        },
+        "ahead": 1.1500000000000004
+      }
+    },
+    {
+      "name": "视角 2 右拖向右看",
+      "ok": true,
+      "detail": 0.26670367890908
+    },
+    {
+      "name": "视角 2 左拖向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 2 E向右看",
+      "ok": true,
+      "detail": {
+        "x": 0.5000000000000024,
+        "z": -0.8660254037844373
+      }
+    },
+    {
+      "name": "视角 2 Q向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 2 转90度后W沿实际视线前进",
+      "ok": true,
+      "detail": {
+        "looking": {
+          "x": 1,
+          "z": 8.405900728955214e-15
+        },
+        "ahead": 1.1500000000000004
+      }
+    },
+    {
+      "name": "视角 3 右拖向右看",
+      "ok": true,
+      "detail": 0.26670367890908
+    },
+    {
+      "name": "视角 3 左拖向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 3 E向右看",
+      "ok": true,
+      "detail": {
+        "x": 0.5000000000000024,
+        "z": -0.8660254037844373
+      }
+    },
+    {
+      "name": "视角 3 Q向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 3 转90度后W沿实际视线前进",
+      "ok": true,
+      "detail": {
+        "looking": {
+          "x": 1,
+          "z": 9.11739496982366e-15
+        },
+        "ahead": 1.1500000000000004
+      }
+    },
+    {
+      "name": "视角 4 右拖向右看",
+      "ok": true,
+      "detail": 0.2667036789090799
+    },
+    {
+      "name": "视角 4 左拖向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 4 E向右看",
+      "ok": true,
+      "detail": {
+        "x": 0.5000000000000024,
+        "z": -0.8660254037844372
+      }
+    },
+    {
+      "name": "视角 4 Q向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 4 转90度后W沿实际视线前进",
+      "ok": true,
+      "detail": {
+        "looking": {
+          "x": 1,
+          "z": 8.640396689451975e-15
+        },
+        "ahead": 1.1500000000000004
+      }
+    },
+    {
+      "name": "视角 5 右拖向右看",
+      "ok": true,
+      "detail": 0.26670346282744656
+    },
+    {
+      "name": "视角 5 左拖向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 5 E向右看",
+      "ok": true,
+      "detail": {
+        "x": 0.3420201433256483,
+        "z": -0.9396926207859156
+      }
+    },
+    {
+      "name": "视角 5 Q向左看",
+      "ok": true,
+      "detail": {
+        "x": 0,
+        "z": -1
+      }
+    },
+    {
+      "name": "视角 5 转90度后W沿实际视线前进",
+      "ok": true,
+      "detail": {
+        "looking": {
+          "x": 1,
+          "z": -9.750698394109199e-14
+        },
+        "ahead": 1.1500000000000004
+      }
+    },
+    {
+      "name": "触控取消清空未消费的转头量",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "暂停丢弃尚未消费的视角输入",
+      "ok": true,
+      "detail": {
+        "tx": -8,
+        "ty": 27,
+        "yaw": 0,
+        "heading": 0,
+        "bodyHeading": 0,
+        "lookPending": 0,
+        "gunAngle": 0,
+        "axes": {
+          "fwd": {
+            "x": 0,
+            "y": 1
+          },
+          "right": {
+            "x": 1,
+            "y": 0
+          }
+        },
+        "quad": [
+          [
+            -10.7,
+            24.3
+          ],
+          [
+            -5.3,
+            24.3
+          ],
+          [
+            -4,
+            30.5
+          ],
+          [
+            -12,
+            30.5
+          ]
+        ]
+      }
+    },
+    {
+      "name": "844x390 J左K右、等大对齐、C在暂停旁",
+      "ok": true,
+      "detail": {
+        "j": {
+          "x": 654,
+          "y": 244,
+          "w": 76,
+          "h": 76
+        },
+        "k": {
+          "x": 742,
+          "y": 244,
+          "w": 76,
+          "h": 76
+        },
+        "cam": {
+          "x": 664.140625,
+          "y": 10,
+          "w": 92,
+          "h": 44
+        },
+        "pause": {
+          "x": 764.0625,
+          "y": 10,
+          "w": 70,
+          "h": 44
+        },
+        "oldCamera": false,
+        "display": {
+          "rotated": false,
+          "W": 844,
+          "H": 346,
+          "vw": 844,
+          "vh": 346,
+          "dpr": 1,
+          "touchOn": true,
+          "backing": [
+            844,
+            346
+          ]
+        }
+      }
+    },
+    {
+      "name": "844x390 摇杆+机枪+拖动三指并行有效",
+      "ok": true,
+      "detail": {
+        "from": {
+          "x": -8,
+          "y": 22,
+          "dir": 0,
+          "alive": true,
+          "invuln": 9999.9,
+          "shield": 0,
+          "moving": false,
+          "armor": 3,
+          "armorMax": 3
+        },
+        "to": {
+          "x": -6.99,
+          "y": 26.17,
+          "dir": 1,
+          "alive": true,
+          "invuln": 9999.23,
+          "shield": 0,
+          "moving": false,
+          "armor": 3,
+          "armorMax": 3
+        },
+        "shots": 6,
+        "heading": 0.4688544755335591
+      }
+    },
+    {
+      "name": "844x390 K实际投弹且动作区不转视角",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "844x390 拖动后首次按下C即切视角",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "844x390 切电脑模式保留进度并隐藏摇杆",
+      "ok": true,
+      "detail": {
+        "rotated": false,
+        "W": 844,
+        "H": 346,
+        "vw": 844,
+        "vh": 346,
+        "dpr": 1,
+        "touchOn": false,
+        "backing": [
+          844,
+          346
+        ]
+      }
+    },
+    {
+      "name": "844x390 切手机模式保留进度并恢复按钮",
+      "ok": true,
+      "detail": {
+        "rotated": false,
+        "W": 844,
+        "H": 346,
+        "vw": 844,
+        "vh": 346,
+        "dpr": 1,
+        "touchOn": true,
+        "backing": [
+          844,
+          346
+        ]
+      }
+    },
+    {
+      "name": "844x390 恢复自动识别触屏",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "name": "390x844 J左K右、等大对齐、C在暂停旁",
+      "ok": true,
+      "detail": {
+        "j": {
+          "x": 610,
+          "y": 288,
+          "w": 76,
+          "h": 76
+        },
+        "k": {
+          "x": 698,
+          "y": 288,
+          "w": 76,
+          "h": 76
+        },
+        "cam": {
+          "x": 620.140625,
+          "y": 10,
+          "w": 92,
+          "h": 44
+        },
+        "pause": {
+          "x": 720.0625,
+          "y": 10,
+          "w": 70,
+          "h": 44
+        },
+        "oldCamera": false,
+        "display": {
+          "rotated": true,
+          "W": 800,
+          "H": 390,
+          "vw": 390,
+          "vh": 800,
+          "dpr": 1,
+          "touchOn": true,
+          "backing": [
+            800,
+            390
+          ]
+        }
+      }
+    },
+    {
+      "name": "390x844 摇杆+机枪+拖动三指并行有效",
+      "ok": true,
+      "detail": {
+        "from": {
+          "x": -8,
+          "y": 22,
+          "dir": 0,
+          "alive": true,
+          "invuln": 9999.9,
+          "shield": 0,
+          "moving": false,
+          "armor": 3,
+          "armorMax": 3
+        },
+        "to": {
+          "x": -6.99,
+          "y": 26.17,
+          "dir": 1,
+          "alive": true,
+          "invuln": 9999.23,
+          "shield": 0,
+          "moving": false,
+          "armor": 3,
+          "armorMax": 3
+        },
+        "shots": 6,
+        "heading": 0.46885445343541
+      }
+    },
+    {
+      "name": "390x844 K实际投弹且动作区不转视角",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "390x844 拖动后首次按下C即切视角",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "390x844 切电脑模式保留进度并隐藏摇杆",
+      "ok": true,
+      "detail": {
+        "rotated": false,
+        "W": 390,
+        "H": 800,
+        "vw": 390,
+        "vh": 800,
+        "dpr": 1,
+        "touchOn": false,
+        "backing": [
+          390,
+          800
+        ]
+      }
+    },
+    {
+      "name": "390x844 切手机模式保留进度并恢复按钮",
+      "ok": true,
+      "detail": {
+        "rotated": true,
+        "W": 800,
+        "H": 390,
+        "vw": 390,
+        "vh": 800,
+        "dpr": 1,
+        "touchOn": true,
+        "backing": [
+          800,
+          390
+        ]
+      }
+    },
+    {
+      "name": "390x844 恢复自动识别触屏",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "name": "667x375 J左K右、等大对齐、C在暂停旁",
+      "ok": true,
+      "detail": {
+        "j": {
+          "x": 477,
+          "y": 229,
+          "w": 76,
+          "h": 76
+        },
+        "k": {
+          "x": 565,
+          "y": 229,
+          "w": 76,
+          "h": 76
+        },
+        "cam": {
+          "x": 487.140625,
+          "y": 10,
+          "w": 92,
+          "h": 44
+        },
+        "pause": {
+          "x": 587.0625,
+          "y": 10,
+          "w": 70,
+          "h": 44
+        },
+        "oldCamera": false,
+        "display": {
+          "rotated": false,
+          "W": 667,
+          "H": 331,
+          "vw": 667,
+          "vh": 331,
+          "dpr": 1,
+          "touchOn": true,
+          "backing": [
+            667,
+            331
+          ]
+        }
+      }
+    },
+    {
+      "name": "667x375 摇杆+机枪+拖动三指并行有效",
+      "ok": true,
+      "detail": {
+        "from": {
+          "x": -8,
+          "y": 22,
+          "dir": 0,
+          "alive": true,
+          "invuln": 9999.9,
+          "shield": 0,
+          "moving": false,
+          "armor": 3,
+          "armorMax": 3
+        },
+        "to": {
+          "x": -6.99,
+          "y": 26.17,
+          "dir": 1,
+          "alive": true,
+          "invuln": 9999.23,
+          "shield": 0,
+          "moving": false,
+          "armor": 3,
+          "armorMax": 3
+        },
+        "shots": 6,
+        "heading": 0.4688543975108721
+      }
+    },
+    {
+      "name": "667x375 K实际投弹且动作区不转视角",
+      "ok": true,
+      "detail": 1
+    },
+    {
+      "name": "667x375 拖动后首次按下C即切视角",
+      "ok": true,
+      "detail": "oblique"
+    },
+    {
+      "name": "667x375 切电脑模式保留进度并隐藏摇杆",
+      "ok": true,
+      "detail": {
+        "rotated": false,
+        "W": 667,
+        "H": 331,
+        "vw": 667,
+        "vh": 331,
+        "dpr": 1,
+        "touchOn": false,
+        "backing": [
+          667,
+          331
+        ]
+      }
+    },
+    {
+      "name": "667x375 切手机模式保留进度并恢复按钮",
+      "ok": true,
+      "detail": {
+        "rotated": false,
+        "W": 667,
+        "H": 331,
+        "vw": 667,
+        "vh": 331,
+        "dpr": 1,
+        "touchOn": true,
+        "backing": [
+          667,
+          331
+        ]
+      }
+    },
+    {
+      "name": "667x375 恢复自动识别触屏",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "name": "无运行脚本错误",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}

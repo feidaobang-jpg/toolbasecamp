@@ -105,33 +105,24 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-04T12:11:54.416Z",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_52UEStAw/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Ay6Bgrti/index.html",
     "preview_verified_at": "2026-10-04T14:17:37.651922+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "本次五视角与手机控件更新已发布；保留原ID、slug、可见性和视频绑定。",
-    "submitted_at": "2026-10-04T19:57:48.787034+08:00",
+    "note": "网站v0.5.3已核验；相同包预览61项通过并提交审核。公开仍为旧版，不把auditing说成published。",
+    "submitted_at": "2026-10-06T06:20:48+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html",
-    "submitted_version": "v0.3.2",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vDs3djow/index.html",
-    "release_record": "releases/v0.3.2/camera-mobile-toy.json",
+    "submitted_version": "v0.5.3",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_HTGNQFww/index.html",
+    "release_record": "releases/v0.5.3/toy-submission.json",
     "published_version": "v0.3.2",
     "published_entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22206/index.html",
-    "pending_updates": [
-      {
-        "version": "v0.5.2",
-        "classification": "普通补丁",
-        "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-        "status": "pending_merge",
-        "record": "releases/drag-direction-20261005/handoff.json",
-        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
-      }
-    ]
+    "pending_updates": []
   },
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",

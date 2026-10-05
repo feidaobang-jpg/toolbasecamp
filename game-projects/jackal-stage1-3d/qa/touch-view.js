@@ -5,6 +5,7 @@ const { BASE, launch } = require('./lib');
 const out = process.env.JK_QA_OUT || path.join(__dirname, 'out/touch-view-v0.5.3');
 fs.mkdirSync(out, { recursive: true });
 const results = [], errors = [];
+let activeBrowser;
 function check(name, ok, detail) {
   results.push({ name, ok: !!ok, detail });
   console.log((ok ? 'PASS ' : 'FAIL ') + name + ' ' + JSON.stringify(detail));
@@ -15,11 +16,21 @@ async function steps(p, n) { return p.evaluate(n => { for (let i = 0; i < n; i++
 async function setup(p) {
   p.on('pageerror', e => errors.push(e.message));
   await p.goto(BASE + (BASE.includes('?') ? '&' : '?') + 'test=1&seed=17&q=low');
+  // Toy 地址会跳到平台外壳，实际游戏及测试入口位于跨域 iframe。
+  let game = p;
+  if (p.url().includes('bilibili.com/toy/')) {
+    const hostPage = p;
+    game = await (await hostPage.waitForSelector('iframe')).contentFrame();
+    game.mouse = hostPage.mouse; game.keyboard = hostPage.keyboard; game.hostPage = hostPage;
+    game.screenshot = options => hostPage.screenshot(options);
+  }
+  p = game;
   await p.waitForFunction(() => window.__JK_TEST__);
   await p.evaluate(() => __JK_TEST__.manual(true));
   await p.locator('[data-act=start]').first().click();
   await steps(p, 150);
   await p.evaluate(() => __JK_TEST__.cheat.invuln(10000));
+  return p;
 }
 async function preset(p, idx) {
   for (let i = 0; i < 6 && await p.evaluate(() => __JK_TEST__._cam.idx) !== idx; i++) {
@@ -30,9 +41,9 @@ async function preset(p, idx) {
 async function forward(p) { return p.evaluate(() => { const e = __JK_TEST__._cam.cam.matrixWorld.elements, len = Math.hypot(e[8], e[10]); return { x: -e[8] / len, z: -e[10] / len }; }); }
 async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse.down(); await p.mouse.move(...end, { steps: 4 }); await p.mouse.up(); }
 (async () => {
-  const browser = await launch();
+  const browser = activeBrowser = await launch();
   let context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-  let p = await context.newPage(); await setup(p); await preset(p, 5);
+  let p = await context.newPage(); p = await setup(p); await preset(p, 5);
   // 真实键盘输入 + 固定时钟，逐帧检查横移/倒车/反向时镜头不甩动。
   for (const key of ['a', 's', 'd', 'w']) {
     const before = await state(p); await p.keyboard.down(key);
@@ -80,15 +91,16 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
   await context.close();
   for (const viewport of [{ width: 844, height: 390 }, { width: 390, height: 844 }, { width: 667, height: 375 }]) {
     context = await browser.newContext({ viewport, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/141.0 Mobile Safari/537.36', recordVideo: { dir: out, size: viewport } });
-    p = await context.newPage(); await setup(p); await preset(p, 5);
+    p = await context.newPage(); p = await setup(p); await preset(p, 5);
     const label = viewport.width + 'x' + viewport.height;
     const layout = await p.evaluate(() => {
       const box = id => { const e = document.getElementById(id), r = e.getBoundingClientRect(), c = __JK_TEST__.toLocal(r.x + r.width / 2, r.y + r.height / 2); return { x: c.x - e.offsetWidth / 2, y: c.y - e.offsetHeight / 2, w: e.offsetWidth, h: e.offsetHeight }; };
       return { j: box('btn-fire'), k: box('btn-bomb'), cam: box('btn-cam'), pause: box('btn-pause'), oldCamera: !!document.getElementById('btn-cam-t'), display: __JK_TEST__.snapshot().ui.display };
     });
     check(label + ' J左K右、等大对齐、C在暂停旁', layout.j.x < layout.k.x && layout.j.y === layout.k.y && layout.j.w === layout.k.w && layout.j.h === layout.k.h && layout.cam.y === layout.pause.y && !layout.oldCamera, layout);
-    const cdp = await context.newCDPSession(p), touches = new Map();
-    const physical = (x, y) => layout.display.rotated ? { x: viewport.width - y, y: x } : { x, y };
+    const cdp = await context.newCDPSession(p.hostPage || p), touches = new Map();
+    const frameBox = p.hostPage ? await p.hostPage.locator('iframe').boundingBox() : { x: 0, y: 0 };
+    const physical = (x, y) => layout.display.rotated ? { x: frameBox.x + layout.display.vw - y, y: frameBox.y + x } : { x: frameBox.x + x, y: frameBox.y + y };
     const send = async (type, id, x, y) => {
       if (type === 'touchEnd') touches.delete(id); else touches.set(id, { id, ...physical(x, y), radiusX: 5, radiusY: 5, force: 1 });
       await cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [...touches.values()] });
@@ -130,4 +142,4 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
   await browser.close();
   fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify({ environment: 'Windows Edge; GPU; CDP simulated multi-touch', base: BASE, results }, null, 2));
   if (results.some(r => !r.ok)) process.exitCode = 1;
-})().catch(e => { console.error(e); process.exitCode = 1; });
+})().catch(async e => { console.error(e); if (activeBrowser) await activeBrowser.close(); process.exitCode = 1; });
