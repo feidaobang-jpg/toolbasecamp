@@ -1,3 +1,4 @@
+import { bindDragLook, addControlModeButtons } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单 / 选人导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
 import { VERSION, STEP, TEST, CLEAN, store, seed, params, fmtTime, clamp } from './core.js';
@@ -93,13 +94,14 @@ function optLabel(name) {
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
     case 'quality': return ['画质', { auto: '自动（按实测帧率）', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', A.volume === 0 ? '静音' : Math.round(A.volume * 100) + '%', false];
-    case 'touch': return ['触屏按键', { auto: '自动', show: '显示', hide: '隐藏' }[settings.touch], false];
+    case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
     case 'camera': return ['视角（C）', camCtl.preset().name, false];
     case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
   }
   return [name, '', false];
 }
 function refreshOptions() {
+  document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
@@ -131,13 +133,14 @@ function adjust(name, delta) {
   } else if (name === 'touch') {
     const order = ['auto', 'show', 'hide'];
     settings.touch = order[(order.indexOf(settings.touch) + (delta < 0 ? 2 : 1)) % 3];
-    store.set('touch', settings.touch);
+    IN.clear(); store.set('touch', settings.touch);
     layout();
   } else if (name === 'camera') { cycleCamera(); }
   else if (name === 'fps') { settings.fps = !settings.fps; store.set('fps', settings.fps); fpsEl.hidden = !settings.fps; }
   refreshOptions();
 }
 function cycleCamera() {
+  IN.clear();
   const p = camCtl.cycle();
   store.set('camera', camCtl.idx);
   showToast('视角：' + p.name + (p.fp ? (coarsePointer() ? '（按住画面拖动）' : '（Q/E 转头）') : ''));
@@ -174,11 +177,11 @@ function show(name) {
   current = name;
   IN.clear();
   refreshOptions();
-  if (name && name !== 'cont') { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > *'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
+  if (name && name !== 'cont') { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
 }
-const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > *')).filter(el => !el.hidden) : [];
+const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');
@@ -317,8 +320,8 @@ const display = { rotated: false, W: 0, H: 0, vw: 0, vh: 0, dpr: 1, touchOn: fal
 const toLocal = (cx, cy) => display.rotated ? { x: cy, y: display.vw - cx } : { x: cx, y: cy };
 const MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 let inputMode = MOBILE_UA || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 'touch' : 'key';
-const coarsePointer = () => inputMode === 'touch';
-function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
+const coarsePointer = () => settings.touch === 'show' || settings.touch === 'auto' && inputMode === 'touch';
+function setInputMode(mode) { if (settings.touch === 'auto' && mode !== inputMode) { IN.clear(); inputMode = mode; layout(); } }
 let lastOrient = null, lastSize = '';
 function viewport() {
   // Toy 宿主 iframe 可能先给 0×0：依次回退
@@ -329,7 +332,7 @@ function viewport() {
   return { vw, vh };
 }
 function layout() {
-  const { vw, vh } = viewport(), coarse = coarsePointer();
+  const { vw, vh } = viewport(), coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
   const rotate = (uiMode === 'game' || current === 'select') && vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
@@ -368,7 +371,10 @@ setInterval(() => { const { vw, vh } = viewport(); if (vw + 'x' + vh !== lastSiz
 window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
 IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega'), cam: $('btn-cam-t') }, toLocal);
-IN.bindLook($('app'));
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => { camCtl.yawOff += delta; } });
+IN.onClear(() => dragLook.clear());
+
+addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
 const H_ = { face: $('h-face'), name: $('h-name'), lives: $('h-lives'), score: $('h-score'), hp: $('h-hp'), enemy: $('h-enemy'), eface: $('h-eface'), ename: $('h-ename'), ecn: $('h-ecn'), ehp: $('h-ehp'), ehp2: $('h-ehp2'), timer: $('h-timer'), weapon: $('h-weapon'), wammo: $('h-wammo'), wname: $('h-wname'), go: $('h-go'), dialog: $('dialog'), dface: $('d-face'), dname: $('d-name'), dtext: $('d-text'), fade: $('fade'), hurt: $('hurt') };

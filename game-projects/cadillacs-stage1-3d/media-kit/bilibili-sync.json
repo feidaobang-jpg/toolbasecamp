@@ -32,5 +32,15 @@
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
     "创作中心稿件列表（BV18XHW66E55 审核中）"
+  ],
+  "pending_updates": [
+    {
+      "version": "v0.1.2",
+      "release": "releases/v0.1.2/handoff.json",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
+      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
+    }
   ]
 }

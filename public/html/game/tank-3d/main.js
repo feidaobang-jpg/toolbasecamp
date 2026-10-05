@@ -1,3 +1,4 @@
+import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=camera-mobile1';
@@ -5,7 +6,7 @@ import { createRun, createWorld, step, turnPlayer, SCORE, TYPE_NAMES, qa } from 
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=merge1';
 
-const VERSION = 'camera-mobile1';
+const VERSION = 'drag-look1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -109,6 +110,7 @@ function worldDir() {
   return (d - quarter(yaw) + 4) % 4;
 }
 function clearInput() {
+  dragLook.clear();
   keys.clear(); touchHold.clear(); dirStack.length = 0; firePressed = false; latched = null;
   joyRelease();
   document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
@@ -132,12 +134,13 @@ function optLabel(name) {
     case 'camera': return ['视角（C）', PRESETS[view.presetIndex].name, false];
     case 'quality': return ['画质', { auto: '自动', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', settings.volume <= 0 ? '静音' : Math.round(settings.volume * 100) + '%', false];
-    case 'touch': return ['触屏按键', { auto: '自动', show: '显示', hide: '隐藏' }[settings.touch], false];
+    case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
     case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
   }
   return [name, '', false];
 }
 function refreshOptions() {
+  document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
     const html = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
@@ -173,11 +176,12 @@ function adjust(name, delta) {
   } else if (name === 'volume') {
     let v = Math.round(settings.volume * 10) + (delta < 0 ? -1 : 1); if (v > 10) v = 0; if (v < 0) v = 10;
     settings.volume = v / 10; store.set('volume', settings.volume); audio.unlock(); audio.setVolume(settings.volume); if (v > 0) audio.tally();
-  } else if (name === 'touch') { settings.touch = cycle(['auto', 'show', 'hide'], settings.touch, delta); store.set('touch', settings.touch); layout(); }
+  } else if (name === 'touch') { clearInput(); settings.touch = cycle(['auto', 'show', 'hide'], settings.touch, delta); store.set('touch', settings.touch); layout(); }
   else if (name === 'fps') { settings.fps = !settings.fps; store.set('fps', settings.fps); fpsEl.hidden = !settings.fps; }
   refreshOptions();
 }
 function cycleCamera(delta = 1) {
+  dragLook.clear();
   const n = PRESETS.length;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
   const m = run ? run.mode : settings.mode;
@@ -198,7 +202,7 @@ function show(name) {
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
 }
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > *'), el => !el.hidden) : []);
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden) : []);
 const isTyping = e => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', e => {
   if (isTyping(e)) return;
@@ -475,7 +479,7 @@ const display = { rotated: false, W: 0, H: 0, vw: 0, vh: 0, dpr: 1, touchOn: fal
 const toLocal = (cx, cy) => (display.rotated ? { x: cy, y: display.vw - cx } : { x: cx, y: cy });
 const MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 let inputMode = MOBILE_UA || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 'touch' : 'key';
-function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
+function setInputMode(mode) { if (settings.touch === 'auto' && mode !== inputMode) { clearInput(); inputMode = mode; layout(); } }
 // Toy 宿主可能让页面以 0×0 启动且之后不发 resize：读不到尺寸时逐级回退，并定时复查
 function viewport() {
   const de = document.documentElement, vv = window.visualViewport;
@@ -486,7 +490,7 @@ function viewport() {
 let lastOrient = null, lastSize = '';
 function layout() {
   const { vw, vh } = viewport(), coarse = inputMode === 'touch';
-  const rotate = uiMode === 'game' && vh > vw && coarse;
+  const rotate = uiMode === 'game' && vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
@@ -567,6 +571,10 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   btn.addEventListener('contextmenu', e => e.preventDefault());
 });
 $('btn-cam-t').addEventListener('pointerdown', e => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
+  toLocal, width: () => display.W, rotate: delta => { view.yawOffset -= delta; } });
+addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
+  get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
 function buildReserve() {

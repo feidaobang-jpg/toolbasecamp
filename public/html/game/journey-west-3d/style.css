@@ -3,3 +3,5 @@
 @media(orientation:portrait){body:not(.rotated) #hud{display:none}body:not(.rotated) #panel{left:5%;width:90%;max-height:88%;transform:translateY(-50%);padding:24px}body:not(.rotated) #panel h1{font-size:32px}}
 
 body.mobile-device #full{display:none!important}
+
+#game{touch-action:none}

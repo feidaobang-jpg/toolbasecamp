@@ -1,0 +1,56 @@
+[
+  {
+    "game": "tank-3d",
+    "keyboard": true,
+    "release": true,
+    "errors": [],
+    "a": 0,
+    "c": -0.419,
+    "d": -0.419
+  },
+  {
+    "game": "mario-3d",
+    "keyboard": true,
+    "release": true,
+    "errors": [],
+    "a": 0,
+    "c": 0.406,
+    "d": 0.406
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "keyboard": true,
+    "release": true,
+    "errors": [],
+    "a": 0,
+    "c": -0.416,
+    "d": -0.416
+  },
+  {
+    "game": "journey-west-3d",
+    "keyboard": true,
+    "release": true,
+    "errors": [],
+    "a": 0,
+    "c": 0.40652208937451967,
+    "d": 0.40652208937451967
+  },
+  {
+    "game": "hop-fox-3d",
+    "keyboard": true,
+    "release": true,
+    "errors": [],
+    "a": 0,
+    "c": 0.3623200000000003,
+    "d": 0.3623200000000003
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "keyboard": true,
+    "release": true,
+    "errors": [],
+    "a": 0,
+    "c": 0.416,
+    "d": 0.416
+  }
+]

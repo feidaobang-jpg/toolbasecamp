@@ -8,7 +8,7 @@
   <meta name="description" content="原创 3D 横版闯关第一关：小狐狸跑跳、顶箱子、踩甲虫、拿道具，终点敲响铃铛。键盘与手机横屏都能玩。">
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../../css/base.css?v=nosTW1">
-  <link rel="stylesheet" href="./style.css?v=camera-mobile1">
+  <link rel="stylesheet" href="./style.css?v=drag-look1">
 </head>
 <body>
 <main id="game" tabindex="-1">
@@ -41,7 +41,7 @@
   </section>
   <div id="touch" hidden>
     <div id="stick" role="group" aria-label="Move"><div class="stick-ring"></div><div id="knob"></div><span>A · D</span></div>
-    <div class="camera-pad"><button class="tb-btn" data-hold="KeyQ" aria-label="Rotate left">Q ↶</button><button class="tb-btn" data-hold="KeyE" aria-label="Rotate right">E ↷</button><button class="tb-btn" data-hold="KeyR" aria-label="Look up">R ↑</button><button class="tb-btn" data-hold="KeyF" aria-label="Look down">F ↓</button><button class="tb-btn" id="recenter" aria-label="切换视角">C 视角</button></div>
+    <div class="camera-pad"><button class="tb-btn" id="recenter" aria-label="切换视角">C 视角</button></div>
     <div class="action-row touch-actions"><button class="tb-btn run-btn" data-hold="KeyJ"><b>J</b><span data-i18n="hopfox3d.runShort">奔跑</span></button><button class="tb-btn jump-btn" data-hold="KeyK"><b>K</b><span data-i18n="hopfox3d.jumpShort">跳跃</span></button></div>
   </div>
   <div id="rotate" hidden><strong>↻</strong><h2 data-i18n="hopfox3d.rotate">请将手机横过来</h2><p data-i18n="hopfox3d.rotateHint">草原会在这里等你。</p><button class="tb-btn" id="rotate-go" data-i18n="hopfox3d.resume">继续</button></div>
@@ -57,7 +57,7 @@
   }
 </script>
 <script type="module">
-  import('./main.js?v=camera-mobile1').catch(err => {
+  import('./main.js?v=drag-look1').catch(err => {
     console.error(err);
     if (location.protocol !== 'file:') {
       document.getElementById('panel-copy').textContent = t('hopfox3d.loadError');

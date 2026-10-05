@@ -75,3 +75,7 @@
 
 - 网站：https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html （游戏列表 `games.html` 动作组）
 - B 站 Toy：slug `feidao-jackal-3d`，状态以 `game.json` 的 `toy` 字段为准（审核通过前不要对外宣传 Toy 链接）
+
+## v0.5.1 操作补丁（2026-10-05）
+
+手机在画面空白处拖动转视角，左侧摇杆与动作键可同时操作；C 切换视角预设。电脑仍可 Q/E 转视角，也可鼠标拖动。设置提供自动识别/电脑键鼠/手机触屏快捷切换。网站与其他渠道状态见本版 handoff；未改变作品定位、URL 或已有 Toy/视频绑定。

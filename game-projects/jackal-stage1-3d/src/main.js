@@ -1,3 +1,4 @@
+import { bindDragLook, addControlModeButtons } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
 import { VERSION, STEP, TEST, CLEAN, store, seed, params } from './core.js';
@@ -75,7 +76,7 @@ function optLabel(name) {
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
     case 'quality': return ['画质', { auto: '自动（按实测帧率）', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', A.volume === 0 ? '静音' : Math.round(A.volume * 100) + '%', false];
-    case 'touch': return ['触屏按键', { auto: '自动', show: '显示', hide: '隐藏' }[settings.touch], false];
+    case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
     case 'camera': return ['视角（C）', camCtl.preset().name, false];
     case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
     case 'gun': return ['机枪方向', settings.gun === 'up' ? '原作朝上' : '跟随车头', false];
@@ -84,6 +85,7 @@ function optLabel(name) {
   return [name, '', false];
 }
 function refreshOptions() {
+  document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
@@ -116,7 +118,7 @@ function adjust(name, delta) {
   } else if (name === 'touch') {
     const order = ['auto', 'show', 'hide'];
     settings.touch = order[(order.indexOf(settings.touch) + (delta < 0 ? 2 : 1)) % 3];
-    store.set('touch', settings.touch);
+    IN.clear(); store.set('touch', settings.touch);
     layout(true);
   } else if (name === 'camera') { cycleCamera(); }
   else if (name === 'fps') { settings.fps = !settings.fps; store.set('fps', settings.fps); fpsEl.hidden = !settings.fps; }
@@ -131,6 +133,7 @@ function adjust(name, delta) {
   refreshOptions();
 }
 function cycleCamera() {
+  IN.clear();
   const p = camCtl.cycle();
   showToast('视角：' + p.name);
   updateFog();
@@ -150,11 +153,11 @@ function show(name) {
   current = name;
   IN.clear();
   refreshOptions();
-  if (name) { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > *'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
+  if (name) { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout(true);
 }
-const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > *')).filter(el => !el.hidden) : [];
+const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');
@@ -311,11 +314,11 @@ const toLocal = (cx, cy) => display.rotated ? { x: cy, y: display.vw - cx } : { 
 // 不按触点数猜：部分 Windows 电脑报 10 个触点、any-pointer 也是 coarse，但主指针是鼠标，按它判断会把电脑当手机
 const MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 let inputMode = MOBILE_UA || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 'touch' : 'key';
-const coarsePointer = () => inputMode === 'touch';
-function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
+const coarsePointer = () => settings.touch === 'show' || settings.touch === 'auto' && inputMode === 'touch';
+function setInputMode(mode) { if (settings.touch === 'auto' && mode !== inputMode) { IN.clear(); inputMode = mode; layout(); } }
 let lastOrient = null;
 function layout() {
-  const vw = window.innerWidth, vh = window.innerHeight, coarse = coarsePointer();
+  const vw = window.innerWidth, vh = window.innerHeight, coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
   const rotate = uiMode === 'game' && vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
@@ -353,37 +356,15 @@ window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
 IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { fire: $('btn-fire'), bomb: $('btn-bomb'), cam: $('btn-cam-t') }, toLocal);
 
-// ---------- 拖动转视角：触屏在动作键上方的空白区拖动，鼠标在画面上按住拖动 ----------
-const lookZone = $('look-zone');
-let lookDrag = null, dragHintShown = false;
-const canLook = () => uiMode === 'game' && !current && !paused;
-lookZone.addEventListener('pointerdown', (e) => {
-  if (!canLook() || lookDrag) return;
-  try { lookZone.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-  lookDrag = { id: e.pointerId, x: toLocal(e.clientX, e.clientY).x };
-  e.preventDefault();
-});
-lookZone.addEventListener('pointermove', (e) => {
-  if (!lookDrag || lookDrag.id !== e.pointerId) return;
-  const x = toLocal(e.clientX, e.clientY).x;
-  camCtl.rotate(-(x - lookDrag.x) * 0.006);
-  lookDrag.x = x;
-  e.preventDefault();
-});
-['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => lookZone.addEventListener(t, (e) => { if (lookDrag && lookDrag.id === e.pointerId) lookDrag = null; }));
-let mouseLook = null;
-canvas.addEventListener('pointerdown', (e) => {
-  if (e.pointerType === 'touch' || e.button !== 0 || !canLook()) return;
-  mouseLook = { id: e.pointerId, x: e.clientX };
-  try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-  e.preventDefault();
-});
-canvas.addEventListener('pointermove', (e) => {
-  if (!mouseLook || mouseLook.id !== e.pointerId) return;
-  camCtl.rotate(-(e.clientX - mouseLook.x) * 0.006);
-  mouseLook.x = e.clientX;
-});
-['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => canvas.addEventListener(t, (e) => { if (mouseLook && mouseLook.id === e.pointerId) mouseLook = null; }));
+const orbitKeys = new Set();
+window.addEventListener('keydown', e => { if (IN.active() && ['KeyQ','KeyE'].includes(e.code)) { orbitKeys.add(e.code); e.preventDefault(); } });
+window.addEventListener('keyup', e => orbitKeys.delete(e.code));
+IN.onClear(() => orbitKeys.clear());
+let dragHintShown = false;
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => camCtl.rotate(-delta) });
+IN.onClear(() => dragLook.clear());
+
+addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
 const hudEls = { score: $('h-score'), hi: $('h-hi'), wpn: $('h-wpn'), wlv: $('h-wlv'), carried: $('h-carried'), deliv: $('h-deliv'), lives: $('h-lives'), armor: $('h-armor'), armorCard: $('hc-armor'), bombLabel: $('bomb-label') };
@@ -478,6 +459,7 @@ function frame(now) {
 }
 
 function presentFrame(dtReal, draw) {
+  if (IN.active()) camCtl.rotate(((orbitKeys.has('KeyQ') ? 1 : 0) - (orbitKeys.has('KeyE') ? 1 : 0)) * dtReal * Math.PI / 2);
   if (uiMode === 'game') {
     const p = GM.player();
     // 第一人称下相机在眼睛位置，同等震动体感更强，乘 0.3 抑制

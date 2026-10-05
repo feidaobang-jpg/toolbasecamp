@@ -345,7 +345,7 @@ export function createScene(canvas, world) {
   let dt_ = 0;
   function update(dt, cam = {}, snap = false) {
     dt_ = dt; elapsed += dt;
-    yaw = THREE.MathUtils.clamp(yaw + (cam.yaw || 0) * dt * 1.4, -YAW_LIM, YAW_LIM);
+    yaw += (cam.yaw || 0) * dt * 1.4;
     pitch = THREE.MathUtils.clamp(pitch + (cam.pitch || 0) * dt * .8, .02, 1.48);
     if (cam.reset) { cameraIndex = (cameraIndex + 1) % PRESETS.length; yaw = PRESETS[cameraIndex].yaw; pitch = PRESETS[cameraIndex].pitch; }
     shake = Math.max(0, shake - dt * 2.5);
@@ -427,5 +427,5 @@ export function createScene(canvas, world) {
   function reset() { for (const m of enemyModels.values()) scene.remove(m.group); enemyModels.clear(); for (const m of itemModels.values()) scene.remove(m); itemModels.clear(); for (const f of fx) { scene.remove(f.obj); if (f.dispose) f.obj.material.dispose(); } fx.length = 0; bumps.clear(); gridVersion = -1; acornProtos.forEach((o, i) => { o.a = world.acorns[i]; }); camX = world.hero.x; }
   function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   resize(); update(0, {}, true);
-  return { renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get cameraIndex() { return cameraIndex; }, get cameraName() { return PRESETS[cameraIndex].name; }, get cameraCount() { return PRESETS.length; } };
+  return { rotate(delta) { yaw += delta; }, renderer, scene, camera, update, effect, resize, reset, get yaw() { return yaw; }, get cameraIndex() { return cameraIndex; }, get cameraName() { return PRESETS[cameraIndex].name; }, get cameraCount() { return PRESETS.length; } };
 }

@@ -3,11 +3,11 @@
   "name": "坦克大战 3D：经典 35 关 + 魔改无限周目",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "camera-mobile1",
-  "handoff": "releases/merge1/handoff.json",
+  "current_version": "drag-look1",
+  "handoff": "releases/drag-look1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
-  "controls": "电脑 WASD 行驶、J 开炮（经典每按一发，魔改可按住）、Q/E 按住转视角、C 切换视角（斜俯视/正俯视/近景/正视/第一人称）、Esc/Enter 暂停；手机左摇杆、右侧 J 与 Q/C/E 按钮，竖屏自动横屏布局。",
+  "controls": "电脑 WASD 行驶、J 开炮（经典每按一发，魔改可按住）、Q/E 按住转视角、C 切换视角（斜俯视/正俯视/近景/正视/第一人称）、Esc/Enter 暂停；手机左摇杆、右侧 J 开炮和 C 切换视角；空白画面拖动转视角，竖屏自动横屏布局。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
   "public_play_url_note": "merge1：2D/3D 合并版，经典复刻 FC 原版 35 关 + 魔改 100 关无限周目。部署核验见 releases/merge1/handoff.json。",
@@ -54,5 +54,10 @@
       "owner_mid": 16214353,
       "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；Toy 无视频绑定"
     }
-  ]
+  ],
+  "drag_camera_controls": {
+    "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
+    "touch": "左摇杆和动作按钮保留；画面空白处拖动转视角，保留 C 切换预设，移除左右旋转虚拟键",
+    "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留"
+  }
 }

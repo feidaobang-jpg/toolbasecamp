@@ -11,5 +11,15 @@
       "reason": "本人旧2D像素玛丽游戏视频，画面与本次3D项目不同；未改动"
     }
   ],
-  "mapping_audit": "已查看本人稿件前两页20条，未确认当前3D玛丽、跳跃狐狸或西游的视频"
+  "mapping_audit": "已查看本人稿件前两页20条，未确认当前3D玛丽、跳跃狐狸或西游的视频",
+  "pending_updates": [
+    {
+      "version": "v2.2.1",
+      "release": "releases/v2.2.1/handoff.json",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
+      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
+    }
+  ]
 }

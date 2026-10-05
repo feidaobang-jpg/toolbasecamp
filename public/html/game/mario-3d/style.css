@@ -120,3 +120,5 @@ body:not(.touch-on) .help-touch{display:none}
 
 /* Mobile browsers do not reliably support fullscreen; keep desktop controls. */
 body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
+
+#stage{touch-action:none}

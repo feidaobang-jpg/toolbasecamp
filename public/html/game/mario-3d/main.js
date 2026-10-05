@@ -1,10 +1,11 @@
+import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createView, PRESETS } from './scene.js?v=camera-mobile1';
 import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.1.0';
 import { LEVEL_ORDER } from './levels.js?v=2.1.0';
 import { GameAudio } from './audio.js?v=2.1.0';
 
-const VERSION = 'v2.2.0';
+const VERSION = 'v2.2.1';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -95,6 +96,7 @@ function moveAxes() {
   return { x, y };
 }
 function clearInput() {
+  dragLook.clear();
   keys.clear(); touchHold.clear(); joy.x = joy.y = 0; latch.jump = latch.fire = false;
   joyRelease();
   document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
@@ -121,12 +123,13 @@ function optLabel(name) {
     case 'camera': return ['视角（C）', PRESETS[view.presetIndex].name, false];
     case 'quality': return ['画质', { auto: '自动', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', settings.volume <= 0 ? '静音' : Math.round(settings.volume * 100) + '%', false];
-    case 'touch': return ['触屏按键', { auto: '自动', show: '显示', hide: '隐藏' }[settings.touch], false];
+    case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
     case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
   }
   return [name, '', false];
 }
 function refreshOptions() {
+  document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
@@ -158,11 +161,12 @@ function adjust(name, delta) {
     settings.volume = v / 10; store.set('volume', settings.volume);
     audio.unlock(); audio.setVolume(settings.volume);
     if (v > 0) audio.sfx('coin');
-  } else if (name === 'touch') { settings.touch = cycle(['auto', 'show', 'hide'], settings.touch, delta); store.set('touch', settings.touch); layout(); }
+  } else if (name === 'touch') { clearInput(); settings.touch = cycle(['auto', 'show', 'hide'], settings.touch, delta); store.set('touch', settings.touch); layout(); }
   else if (name === 'fps') { settings.fps = !settings.fps; store.set('fps', settings.fps); fpsEl.hidden = !settings.fps; }
   refreshOptions();
 }
 function cycleCamera(delta = 1) {
+  dragLook.clear();
   const n = PRESETS.length;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
   settings.camera = view.presetIndex; store.set('camera', settings.camera);
@@ -185,7 +189,7 @@ function show(name) {
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
 }
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > *'), el => !el.hidden) : []);
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden) : []);
 
 const isTyping = (e) => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', (e) => {
@@ -412,7 +416,7 @@ const toLocal = (cx, cy) => (display.rotated ? { x: cy, y: display.vw - cx } : {
 // 触屏还是键盘：开局看手机 UA 或主指针，之后跟随玩家实际使用的输入
 const MOBILE_UA = /Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 let inputMode = MOBILE_UA || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ? 'touch' : 'key';
-function setInputMode(mode) { if (mode !== inputMode) { inputMode = mode; layout(); } }
+function setInputMode(mode) { if (settings.touch === 'auto' && mode !== inputMode) { clearInput(); inputMode = mode; layout(); } }
 // Toy 宿主可能让页面以 0×0 启动且之后不发 resize：读不到尺寸时逐级回退，并定时复查
 function viewport() {
   const de = document.documentElement, vv = window.visualViewport;
@@ -423,7 +427,7 @@ function viewport() {
 let lastOrient = null, lastSize = '';
 function layout() {
   const { vw, vh } = viewport(), coarse = inputMode === 'touch';
-  const rotate = uiMode === 'game' && vh > vw && coarse;
+  const rotate = uiMode === 'game' && vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
@@ -505,6 +509,10 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   btn.addEventListener('contextmenu', (e) => e.preventDefault());
 });
 $('btn-cam-t').addEventListener('pointerdown', (e) => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
+  toLocal, width: () => display.W, rotate: delta => { view.yawOffset += delta; } });
+addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
+  get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
 // ---------- HUD ----------
 let lastHud = '';

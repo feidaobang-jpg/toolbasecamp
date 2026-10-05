@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.1.2",
+  "base_version": "v0.1.1",
+  "created_at": "2026-10-05T17:12:28+08:00",
+  "classification": "普通操作体验补丁",
+  "build": {
+    "id": "v0.1.2-e015d333aa1c",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "e015d333aa1c519a88f2129d0ddd7f22701375deca77ad97fcd95c88f5ff014b",
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+    "files": {
+      "public/html/game/cadillacs-stage1-3d/index.html": "1ef216b786ed18028a9b135af633ca5605f210267bb4b28874416c4438870e58",
+      "public/html/game/cadillacs-stage1-3d/css/style.css": "fa6534b886c03c3086ca1ff6b274e6993c276273b7253ec6f53dc4e4f9724f83",
+      "public/html/game/cadillacs-stage1-3d/js/game.min.js": "3f3d7238ab4d04114569dd483575b7450fce145914dcc9a211f83afd8ea7fbcf",
+      "public/js/game/drag-look.js": "80386cd91f5f3c0be7f8a172a849a564b1246309c46198a245d77985067a2814"
+    }
+  },
+  "changes": [
+    {
+      "id": "drag-look",
+      "before": "旋转虚拟键或拖动覆盖/竖屏/释放不完整",
+      "after": "空白画面拖动，排除摇杆和按钮，按逻辑屏宽归一灵敏度，暂停/切预设/失焦释放",
+      "verification": "passed"
+    },
+    {
+      "id": "control-modes",
+      "after": "可点击自动识别/电脑键鼠/手机触屏切换，保留当前游戏",
+      "verification": "passed"
+    }
+  ],
+  "qa": {
+    "browser": "Microsoft Edge headless / D3D11",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "method": "CDP touch events + mouse; test hooks skip intro; real gameplay movement/action checks",
+    "results": [
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "touch": true,
+          "rotated": false
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 1.05
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "2.2,0.6",
+          "after": "3.04,-1.08",
+          "input": {
+            "x": 1,
+            "y": 0
+          }
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": 1.787,
+          "after": 1.787
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d landscape",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "touch": true,
+          "rotated": true
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "landscape transform",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 1.05
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "2.2,0.6",
+          "after": "2.97,-0.93",
+          "input": {
+            "x": 1,
+            "y": 0
+          }
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": 1.787,
+          "after": 1.787
+        }
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d portrait",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "not_tested": [
+      "实体手机多指触控与性能"
+    ],
+    "desktop_keyboard": {
+      "game": "cadillacs-stage1-3d",
+      "keyboard": true,
+      "release": true,
+      "errors": [],
+      "a": 0,
+      "c": 0.416,
+      "d": 0.416
+    }
+  },
+  "media": [
+    {
+      "id": "landscape-screenshot",
+      "file": "releases/v0.1.2/captures/cadillacs-stage1-3d-landscape.png",
+      "sha256": "767a1c2dfb394581fcc4911e8fcad8fe40ce68a83b1bff7a30f8dfceb0d60940",
+      "kind": "screenshot",
+      "version": "v0.1.2",
+      "build_id": "v0.1.2-e015d333aa1c",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "landscape-video",
+      "file": "releases/v0.1.2/captures/cadillacs-stage1-3d-landscape.webm",
+      "sha256": "f47177c599386b08bbaad68128fb278bee0bd0ca4f4011b36ffaa0d4d8106084",
+      "kind": "video",
+      "version": "v0.1.2",
+      "build_id": "v0.1.2-e015d333aa1c",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.640911
+    },
+    {
+      "id": "portrait-screenshot",
+      "file": "releases/v0.1.2/captures/cadillacs-stage1-3d-portrait.png",
+      "sha256": "6bf4d3d3f9e3bfb3742db2478690b783f2568ea5380cec84af7bada62cb738c5",
+      "kind": "screenshot",
+      "version": "v0.1.2",
+      "build_id": "v0.1.2-e015d333aa1c",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "portrait-video",
+      "file": "releases/v0.1.2/captures/cadillacs-stage1-3d-portrait.webm",
+      "sha256": "5b0ed5d38d7212975eb0c4ded946711c330f6ff5576f79dc5de47a23f31da81a",
+      "kind": "video",
+      "version": "v0.1.2",
+      "build_id": "v0.1.2-e015d333aa1c",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.605484
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次短片无音轨与DOM按钮层，正式视频需补拍"
+    ]
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "仅改操作与输入，未改变画风、主场景或默认视角"
+  },
+  "channels": {
+    "website": {
+      "version": "v0.1.2",
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "status": "pending_merge",
+      "reason": "普通操作体验补丁，待后续稳定批次累计；未因本次任务结束单独送审",
+      "include_prior": [
+        "releases/v0.1.1/handoff.json：镜头穿墙、第一人称贴身及出画修复"
+      ]
+    },
+    "bilibili": {
+      "status": "pending_merge",
+      "reason": "普通补丁并入下一次有意义的版本说明；本次不改变试玩入口，电脑Q/E仍有效，不替换原片"
+    }
+  },
+  "pending_cumulative": [
+    "releases/v0.1.1/handoff.json：镜头穿墙、第一人称贴身及出画修复"
+  ]
+}

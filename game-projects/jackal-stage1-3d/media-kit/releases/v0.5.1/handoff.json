@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.5.1",
+  "base_version": "v0.5.0",
+  "created_at": "2026-10-05T17:12:28+08:00",
+  "classification": "普通操作体验补丁",
+  "build": {
+    "id": "v0.5.1-6853b004b36f",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "6853b004b36f0aa0ca9a954331aba73bbdbf7d1753b7dc0fd3408046f232ff6e",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+    "files": {
+      "public/html/game/jackal-stage1-3d/index.html": "a8433281eb7cfed39f55a44eb5d8d194210e2fc1bc2d410f4830858a3ac58e49",
+      "public/html/game/jackal-stage1-3d/css/style.css": "05959f3060e1ffc2f5861a210182d9647db8b8d15013c071a612d1c9f403b603",
+      "public/html/game/jackal-stage1-3d/js/game.min.js": "66245e8ae2c536c3dc0bc10e464f87dc827da14e87a19d2e4343c8ae893afba4",
+      "public/js/game/drag-look.js": "80386cd91f5f3c0be7f8a172a849a564b1246309c46198a245d77985067a2814"
+    }
+  },
+  "changes": [
+    {
+      "id": "drag-look",
+      "before": "旋转虚拟键或拖动覆盖/竖屏/释放不完整",
+      "after": "空白画面拖动，排除摇杆和按钮，按逻辑屏宽归一灵敏度，暂停/切预设/失焦释放",
+      "verification": "passed"
+    },
+    {
+      "id": "control-modes",
+      "after": "可点击自动识别/电脑键鼠/手机触屏切换，保留当前游戏",
+      "verification": "passed"
+    }
+  ],
+  "qa": {
+    "browser": "Microsoft Edge headless / D3D11",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "method": "CDP touch events + mouse; test hooks skip intro; real gameplay movement/action checks",
+    "results": [
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "touch": true,
+          "rotated": false
+        }
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 2
+        }
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "-19,10",
+          "after": "-19,13.73",
+          "input": {
+            "held": {
+              "u": false,
+              "d": false,
+              "l": false,
+              "r": false
+            },
+            "keyFire": false,
+            "keyBomb": false,
+            "touchDir": 2,
+            "touchFire": true,
+            "touchBomb": false,
+            "queue": []
+          }
+        }
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": -1.787,
+          "after": -1.787
+        }
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d landscape",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "touch": true,
+          "rotated": true
+        }
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "landscape transform",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 2
+        }
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "-19,10",
+          "after": "-19,13.73",
+          "input": {
+            "held": {
+              "u": false,
+              "d": false,
+              "l": false,
+              "r": false
+            },
+            "keyFire": false,
+            "keyBomb": false,
+            "touchDir": 2,
+            "touchFire": true,
+            "touchBomb": false,
+            "queue": []
+          }
+        }
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": -1.787,
+          "after": -1.787
+        }
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d portrait",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "not_tested": [
+      "实体手机多指触控与性能"
+    ],
+    "desktop_keyboard": {
+      "game": "jackal-stage1-3d",
+      "keyboard": true,
+      "release": true,
+      "errors": [],
+      "a": 0,
+      "c": -0.416,
+      "d": -0.416
+    }
+  },
+  "media": [
+    {
+      "id": "landscape-screenshot",
+      "file": "releases/v0.5.1/captures/jackal-stage1-3d-landscape.png",
+      "sha256": "4d07856aec8fe2ce79e93b34258678141dd9e0fd844ab4a07082788d1e25f4a8",
+      "kind": "screenshot",
+      "version": "v0.5.1",
+      "build_id": "v0.5.1-6853b004b36f",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "landscape-video",
+      "file": "releases/v0.5.1/captures/jackal-stage1-3d-landscape.webm",
+      "sha256": "f25b9e18fed4873e216344d28e5f6884f99f6103f6f84908ed3073c621285513",
+      "kind": "video",
+      "version": "v0.5.1",
+      "build_id": "v0.5.1-6853b004b36f",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.682351
+    },
+    {
+      "id": "portrait-screenshot",
+      "file": "releases/v0.5.1/captures/jackal-stage1-3d-portrait.png",
+      "sha256": "a7d9207e67771c1777a41db2960f89f3c2e8fd592c592ac4790c8b1e02c606ae",
+      "kind": "screenshot",
+      "version": "v0.5.1",
+      "build_id": "v0.5.1-6853b004b36f",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "portrait-video",
+      "file": "releases/v0.5.1/captures/jackal-stage1-3d-portrait.webm",
+      "sha256": "bbd17f510a839511f80938f2c2a702aff95b9216dbb8e28f81901c2f11ee75e4",
+      "kind": "video",
+      "version": "v0.5.1",
+      "build_id": "v0.5.1-6853b004b36f",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.646528
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次短片无音轨与DOM按钮层，正式视频需补拍"
+    ]
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "仅改操作与输入，未改变画风、主场景或默认视角"
+  },
+  "channels": {
+    "website": {
+      "version": "v0.5.1",
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "status": "pending_merge",
+      "reason": "普通操作体验补丁，待后续稳定批次累计；未因本次任务结束单独送审",
+      "include_prior": [
+        "releases/pending-v0.4.1.json：减弱爆炸震动",
+        "v0.5.0：已上线的拖动和相机相对移动"
+      ]
+    },
+    "bilibili": {
+      "status": "pending_merge",
+      "reason": "普通补丁并入下一次有意义的版本说明；本次不改变试玩入口，电脑Q/E仍有效，不替换原片"
+    }
+  },
+  "pending_cumulative": [
+    "releases/pending-v0.4.1.json：减弱爆炸震动",
+    "v0.5.0：已上线的拖动和相机相对移动"
+  ]
+}

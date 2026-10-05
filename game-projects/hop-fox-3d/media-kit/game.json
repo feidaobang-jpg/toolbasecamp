@@ -3,11 +3,11 @@
   "name": "跳跳狐 3D：第一关",
   "name_en": "Hop Fox 3D: Stage 1",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤）",
-  "current_version": "v0.2.0",
-  "handoff": "releases/v0.1.0/handoff.json",
+  "current_version": "v0.2.1",
+  "handoff": "releases/v0.2.1/handoff.json",
   "entrypoint": "public/html/game/hop-fox-3d/index.html",
   "launch": "本地通过 HTTP 服务打开 /public/html/game/hop-fox-3d/index.html；已从网站游戏中心撤下入口。",
-  "controls": "电脑：A/D 移动、K 跳跃（按住跳更高，空格同 K）、J 奔跑（拿到萤火灯笼后按 J 发射火花）、Q/E 旋转视角、R/F 俯仰、C 循环五种视角、方向键为镜头备用、Enter 开始/继续/重玩、Esc 暂停；手机：横屏，左摇杆左右移动，右下 K 跳跃与 J 奔跑，右侧 Q/E/R/F/C 视角键。",
+  "controls": "电脑：A/D 移动、K 跳跃（按住跳更高，空格同 K）、J 奔跑（拿到萤火灯笼后按 J 发射火花）、Q/E 旋转视角、R/F 俯仰、C 循环五种视角、方向键为镜头备用、Enter 开始/继续/重玩、Esc 暂停；手机：横屏，左摇杆左右移动，右下 K 跳跃与 J 奔跑，空白画面拖动转视角和 C 切换视角，竖屏自动横屏。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/index.html",
   "public_play_url_note": "2026-10-02 用户决定从网站游戏中心及投票候选中下架；源码保留归档。",
@@ -21,5 +21,10 @@
     "Playwright + Chromium headless（SwiftShader 软件渲染）QA 与离线逐帧采集",
     "ffmpeg"
   ],
-  "notes": "原创角色（橙色小狐狸）、原创敌人（甲虫、蜗牛）、原创关卡、美术与音乐，全部程序化生成。"
+  "notes": "原创角色（橙色小狐狸）、原创敌人（甲虫、蜗牛）、原创关卡、美术与音乐，全部程序化生成。",
+  "drag_camera_controls": {
+    "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
+    "touch": "左摇杆和动作按钮保留；画面空白处拖动转视角，保留 C 切换预设，移除左右旋转虚拟键",
+    "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留"
+  }
 }

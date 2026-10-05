@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "drag-look1",
+  "base_version": "camera-mobile1",
+  "created_at": "2026-10-05T17:12:28+08:00",
+  "classification": "普通操作体验补丁",
+  "build": {
+    "id": "drag-look1-763452cedfc9",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "763452cedfc9343d1ee1701e10cd1e0177851488333df09ef1a3ae1bb31b0a3c",
+    "entrypoint": "public/html/game/tank-3d/index.html",
+    "files": {
+      "public/html/game/tank-3d/audio.js": "f6c7e85f3def866e2d5ee94cb55e3703f7971ac7f6cc2e82b454a40322b91bcd",
+      "public/html/game/tank-3d/classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+      "public/html/game/tank-3d/index.html": "30487cd30beef86b99e6a3949c611c083e37d7cd35629e26c2ad73a9af1b6ed6",
+      "public/html/game/tank-3d/levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
+      "public/html/game/tank-3d/main.js": "257265941721f2b1e81846fe1c350aab0f495761d824bf93a922ca875b497691",
+      "public/html/game/tank-3d/scene.js": "4fadf61104186cb9b748021ba439e0feeb5ac96e19f9891c20fe0b7288a2395d",
+      "public/html/game/tank-3d/sim.js": "09203e61e9d8eccb288a05b47fdc2434d4aa929a5592959a9ab3c76a16478e0f",
+      "public/html/game/tank-3d/style.css": "ee1fbb300cc01def6d153e3aa6b56cb477d421b46c1db1771f4ba20e2d56dfa1",
+      "public/js/game/drag-look.js": "80386cd91f5f3c0be7f8a172a849a564b1246309c46198a245d77985067a2814"
+    }
+  },
+  "changes": [
+    {
+      "id": "drag-look",
+      "before": "旋转虚拟键或拖动覆盖/竖屏/释放不完整",
+      "after": "空白画面拖动，排除摇杆和按钮，按逻辑屏宽归一灵敏度，暂停/切预设/失焦释放",
+      "verification": "passed"
+    },
+    {
+      "id": "control-modes",
+      "after": "可点击自动识别/电脑键鼠/手机触屏切换，保留当前游戏",
+      "verification": "passed"
+    }
+  ],
+  "qa": {
+    "browser": "Microsoft Edge headless / D3D11",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "method": "CDP touch events + mouse; test hooks skip intro; real gameplay movement/action checks",
+    "results": [
+      {
+        "game": "tank-3d landscape",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "progress": {
+            "score": 0,
+            "lives": 3,
+            "hp": 3,
+            "armor": "classic",
+            "livesMode": "classic",
+            "demo": false,
+            "demoUsed": false,
+            "stats": {
+              "kills": 0,
+              "deaths": 0,
+              "hits": 0,
+              "stages": 0,
+              "pickups": 0,
+              "repairs": 0,
+              "bosses": 0
+            }
+          },
+          "touch": true,
+          "rotated": false
+        }
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "64,192",
+          "after": "64,173",
+          "input": 3
+        }
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": -1.787,
+          "after": -1.787
+        }
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "tank-3d landscape",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "progress": {
+            "score": 0,
+            "lives": 3,
+            "hp": 3,
+            "armor": "classic",
+            "livesMode": "classic",
+            "demo": false,
+            "demoUsed": false,
+            "stats": {
+              "kills": 0,
+              "deaths": 0,
+              "hits": 0,
+              "stages": 0,
+              "pickups": 0,
+              "repairs": 0,
+              "bosses": 0
+            }
+          },
+          "touch": true,
+          "rotated": true
+        }
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "landscape transform",
+        "ok": true
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": -0.893
+        }
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "64,192",
+          "after": "64,173",
+          "input": 3
+        }
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": -1.787,
+          "after": -1.787
+        }
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "tank-3d portrait",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "not_tested": [
+      "实体手机多指触控与性能"
+    ],
+    "desktop_keyboard": {
+      "game": "tank-3d",
+      "keyboard": true,
+      "release": true,
+      "errors": [],
+      "a": 0,
+      "c": -0.419,
+      "d": -0.419
+    }
+  },
+  "media": [
+    {
+      "id": "landscape-screenshot",
+      "file": "releases/drag-look1/captures/tank-3d-landscape.png",
+      "sha256": "f7d13d170008592b00de28b68418f94a00fcde26a59ef565c34d4a9918767966",
+      "kind": "screenshot",
+      "version": "drag-look1",
+      "build_id": "drag-look1-763452cedfc9",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "landscape-video",
+      "file": "releases/drag-look1/captures/tank-3d-landscape.webm",
+      "sha256": "bfbc012f9a15c690d31a9ff0d77be28d31df9fcc4ecd6ed52546d18b08622ff9",
+      "kind": "video",
+      "version": "drag-look1",
+      "build_id": "drag-look1-763452cedfc9",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.641539
+    },
+    {
+      "id": "portrait-screenshot",
+      "file": "releases/drag-look1/captures/tank-3d-portrait.png",
+      "sha256": "5e55804e0a0ffe9ca73e9589d3d1ad586608f44f9251dc35d21e91ca27d91e5b",
+      "kind": "screenshot",
+      "version": "drag-look1",
+      "build_id": "drag-look1-763452cedfc9",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "portrait-video",
+      "file": "releases/drag-look1/captures/tank-3d-portrait.webm",
+      "sha256": "39cd66c7b04e20d13e8ac7337d89ad06dfb68c8cf2e77c84863d9afe18dc11bc",
+      "kind": "video",
+      "version": "drag-look1",
+      "build_id": "drag-look1-763452cedfc9",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.647221
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次短片无音轨与DOM按钮层，正式视频需补拍"
+    ]
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "仅改操作与输入，未改变画风、主场景或默认视角"
+  },
+  "channels": {
+    "website": {
+      "version": "drag-look1",
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "status": "pending_merge",
+      "reason": "普通操作体验补丁，待后续稳定批次累计；未因本次任务结束单独送审",
+      "include_prior": []
+    },
+    "bilibili": {
+      "status": "pending_merge",
+      "reason": "普通补丁并入下一次有意义的版本说明；本次不改变试玩入口，电脑Q/E仍有效，不替换原片"
+    }
+  },
+  "pending_cumulative": []
+}

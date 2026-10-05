@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.2.1",
+  "base_version": "v2.2.0",
+  "created_at": "2026-10-05T17:12:28+08:00",
+  "classification": "普通操作体验补丁",
+  "build": {
+    "id": "v2.2.1-033724e0082a",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "033724e0082a03840f22b5b41dfe94a51930afc843cbd9ff6248ce32c8fc3e05",
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "files": {
+      "public/html/game/mario-3d/audio.js": "27ea65a2b5de8348fb0199ab5d73bb2371756064fe44c525e4169440d93998b2",
+      "public/html/game/mario-3d/file-warning.css": "7a8c7eb9260df34bfd5f05098e60f817ce860c09f1a02c65a3a4b0e2d7bb923f",
+      "public/html/game/mario-3d/index.html": "c715a04b21e9ac9a811ea55fef1fece8267111c0e43cf67f8413ae5ce18b45f9",
+      "public/html/game/mario-3d/levels.js": "4968ff6f5196628e0a20745096bc126d72c922b422300187b2e3903d21a23cae",
+      "public/html/game/mario-3d/main.js": "b693e20b6c577605a09069d253e251a7634bdf4d7a7ac6d7fa70e668b771f26f",
+      "public/html/game/mario-3d/models.js": "ca0d6e071b483d6d5b6eeacc1730183077df285582d690ebc3549f9eb89f8fd6",
+      "public/html/game/mario-3d/scene.js": "dc813c5a629a55d7add635802f092ba5fe52834e490dbf14e1f190a6387a790b",
+      "public/html/game/mario-3d/style.css": "1deab749297da9ef3197853724bc7d458f3ff4cd1e44cf0d69821acd67433b5a",
+      "public/html/game/mario-3d/textures.js": "851e65e6104e8e9ef2078fb613bfbe51c82322d91188799793e37823fc2ebc01",
+      "public/html/game/mario-3d/three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+      "public/html/game/mario-3d/world.js": "d3f8d8dc8c7cec8cb1880f7ab8eb29776ff3dfd9b33a772192c68cc8b5fa9bd8",
+      "public/js/game/drag-look.js": "80386cd91f5f3c0be7f8a172a849a564b1246309c46198a245d77985067a2814"
+    }
+  },
+  "changes": [
+    {
+      "id": "drag-look",
+      "before": "旋转虚拟键或拖动覆盖/竖屏/释放不完整",
+      "after": "空白画面拖动，排除摇杆和按钮，按逻辑屏宽归一灵敏度，暂停/切预设/失焦释放",
+      "verification": "passed"
+    },
+    {
+      "id": "control-modes",
+      "after": "可点击自动识别/电脑键鼠/手机触屏切换，保留当前游戏",
+      "verification": "passed"
+    }
+  ],
+  "qa": {
+    "browser": "Microsoft Edge headless / D3D11",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "method": "CDP touch events + mouse; test hooks skip intro; real gameplay movement/action checks",
+    "results": [
+      {
+        "game": "mario-3d landscape",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "progress": {
+            "score": 0,
+            "coins": 0,
+            "lives": "inf",
+            "hearts": 3,
+            "power": "small",
+            "checkpoint": null,
+            "demoUsed": false,
+            "stats": {
+              "deaths": 0,
+              "oneups": 0,
+              "hits": 0,
+              "stomps": 0,
+              "coins": 0,
+              "secrets": 0,
+              "startTime": 0.7416666666666665
+            }
+          },
+          "touch": true,
+          "rotated": false
+        }
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 2.753
+        }
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "3,0",
+          "after": "3.433,-1.012",
+          "input": {
+            "x": 1,
+            "y": 0
+          }
+        }
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": 1.787,
+          "after": 1.787
+        }
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "mario-3d landscape",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "phone mode",
+        "ok": true,
+        "detail": {
+          "yaw": 0,
+          "paused": false,
+          "overlay": null,
+          "progress": {
+            "score": 0,
+            "coins": 0,
+            "lives": "inf",
+            "hearts": 3,
+            "power": "small",
+            "checkpoint": null,
+            "demoUsed": false,
+            "stats": {
+              "deaths": 0,
+              "oneups": 0,
+              "hits": 0,
+              "stomps": 0,
+              "coins": 0,
+              "secrets": 0,
+              "startTime": 0.8583333333333327
+            }
+          },
+          "touch": true,
+          "rotated": true
+        }
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "landscape transform",
+        "ok": true
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "drag rotates",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "mouse phone drag",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 0.893
+        }
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "three touches rotate",
+        "ok": true
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "action has game effect",
+        "ok": true,
+        "detail": {
+          "before": 0,
+          "after": 2.753
+        }
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "joystick moves player",
+        "ok": true,
+        "detail": {
+          "before": "3,0",
+          "after": "3.433,-1.012",
+          "input": {
+            "x": 1,
+            "y": 0
+          }
+        }
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "pause cancels drag",
+        "ok": true,
+        "detail": {
+          "before": 1.787,
+          "after": 1.787
+        }
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "mode settings reachable while paused",
+        "ok": true
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "switch phone to desktop",
+        "ok": true
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "switch desktop to phone",
+        "ok": true
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "restore auto",
+        "ok": true
+      },
+      {
+        "game": "mario-3d portrait",
+        "name": "no runtime errors",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "not_tested": [
+      "实体手机多指触控与性能"
+    ],
+    "desktop_keyboard": {
+      "game": "mario-3d",
+      "keyboard": true,
+      "release": true,
+      "errors": [],
+      "a": 0,
+      "c": 0.406,
+      "d": 0.406
+    }
+  },
+  "media": [
+    {
+      "id": "landscape-screenshot",
+      "file": "releases/v2.2.1/captures/mario-3d-landscape.png",
+      "sha256": "6a1b47b1e6d15643e569d4d23765f879afd2fdb8b012ef10be5469b07d3e74d5",
+      "kind": "screenshot",
+      "version": "v2.2.1",
+      "build_id": "v2.2.1-033724e0082a",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "landscape-video",
+      "file": "releases/v2.2.1/captures/mario-3d-landscape.webm",
+      "sha256": "384c4fd7c13b48a6064925b28ce1646165d441d2c993db24cf53011e6931554d",
+      "kind": "video",
+      "version": "v2.2.1",
+      "build_id": "v2.2.1-033724e0082a",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "landscape：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.682104
+    },
+    {
+      "id": "portrait-screenshot",
+      "file": "releases/v2.2.1/captures/mario-3d-portrait.png",
+      "sha256": "7ba04e6a0ee041c4851ac3d055ee6a3b9cdaf93eed8e1e811bb8bd992cb497d9",
+      "kind": "screenshot",
+      "version": "v2.2.1",
+      "build_id": "v2.2.1-033724e0082a",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音"
+    },
+    {
+      "id": "portrait-video",
+      "file": "releases/v2.2.1/captures/mario-3d-portrait.webm",
+      "sha256": "5afa2d8c0762f5405488fa03563b0a74da47f23799adbc0bdf867c7402cdb3c5",
+      "kind": "video",
+      "version": "v2.2.1",
+      "build_id": "v2.2.1-033724e0082a",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "description": "portrait：Edge 手机视口模拟；测试钩子跳过开场，CDP 三点触控；视频只含画布，无 HUD 和声音",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.640934
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次短片无音轨与DOM按钮层，正式视频需补拍"
+    ]
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "仅改操作与输入，未改变画风、主场景或默认视角"
+  },
+  "channels": {
+    "website": {
+      "version": "v2.2.1",
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "status": "pending_merge",
+      "reason": "普通操作体验补丁，待后续稳定批次累计；未因本次任务结束单独送审",
+      "include_prior": []
+    },
+    "bilibili": {
+      "status": "pending_merge",
+      "reason": "普通补丁并入下一次有意义的版本说明；本次不改变试玩入口，电脑Q/E仍有效，不替换原片"
+    }
+  },
+  "pending_cumulative": []
+}

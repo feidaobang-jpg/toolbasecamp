@@ -1,5 +1,6 @@
+import { bindDragLook, addControlModeButtons } from '../../../js/game/drag-look.js?v=drag-look1';
 import { createWorld, startWorld, stepWorld, LEVEL_END } from './world.js';
-import { createScene } from './scene.js?v=camera-mobile1';
+import { createScene } from './scene.js?v=drag-look1';
 import { GameAudio } from './audio.js?v=1';
 
 const $ = id => document.getElementById(id);
@@ -9,21 +10,23 @@ const audio = new GameAudio();
 const view = createScene($('world'), world);
 const held = new Set(), pointerKeys = new Set(), tapped = new Set();   // tapped: presses shorter than a frame still count once
 const ALIASES = { ArrowLeft: 'KeyQ', ArrowRight: 'KeyE', ArrowUp: 'KeyR', ArrowDown: 'KeyF', Space: 'KeyK' };
-let prevCamera = false;
+let prevCamera = false, moveSign = 1;
 let phase = 'title', paused = false, introT = 0, last = performance.now(), orientationBlocked = false, bigTimer = 0, prevJump = false, prevAction = false, stickX = 0, stickId = null;
-const mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
+let mobileDevice = matchMedia('(pointer: coarse) and (hover: none)').matches;
 const HI_KEY = 'tb-game-hopfox3d-hi';
 let hi = 0; try { hi = Number(localStorage.getItem(HI_KEY)) || 0; } catch (e) { /* storage unavailable */ }
 
 function setText(id, v) { const el = $(id); if (el.textContent !== v) el.textContent = v; }
 function toast(text, ms = 1700) { const e = $('toast'); e.textContent = text; e.classList.add('visible'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('visible'), ms); }
 function pressed(code) { return held.has(code) || pointerKeys.has(code) || tapped.has(code); }
-function clearInput() { held.clear(); pointerKeys.clear(); tapped.clear(); stickX = 0; stickId = null; $('knob').style.transform = 'translate(0,0)'; document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
+function clearInput() { dragLook.clear(); held.clear(); pointerKeys.clear(); tapped.clear(); stickX = 0; stickId = null; $('knob').style.transform = 'translate(0,0)'; document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
 function readInput() {
   // Left/right follow the screen: with the orbit limited to ±55°, the camera's right vector always points toward +x.
   let x = (pressed('KeyD') ? 1 : 0) - (pressed('KeyA') ? 1 : 0);
   if (stickId !== null && Math.abs(stickX) > .3) x = Math.sign(stickX);
   const jump = pressed('KeyK') || pressed('KeyW'), action = pressed('KeyJ');
+  if (Math.abs(Math.cos(view.yaw)) > .15) moveSign = Math.sign(Math.cos(view.yaw));
+  x *= moveSign;
   const input = { x, run: action, jump, jumpPressed: jump && !prevJump, action, actionPressed: action && !prevAction };
   prevJump = jump; prevAction = action;
   return input;
@@ -71,7 +74,7 @@ function startGame() {
   if (phase === 'playing' || phase === 'intro') { if (paused) togglePause(); return; }
   if (phase === 'over') { Object.assign(world, createWorld()); view.reset(); }
   audio.unlock().then(() => audio.effect('start'));
-  requestFull(); clearInput();
+  clearInput();
   phase = 'intro'; paused = false; introT = 0;
   $('panel').hidden = true; $('tally').hidden = true; $('instructions').hidden = false; $('bigtext').hidden = true;
   document.body.classList.add('playing');
@@ -80,7 +83,7 @@ function startGame() {
 }
 function togglePause() {
   if (phase !== 'playing' && phase !== 'intro') return;
-  paused = !paused; refreshPauseLabel(); audio.effect('tick');
+  paused = !paused; document.body.classList.toggle('paused',paused); $('panel').hidden = !paused; refreshPauseLabel(); audio.effect('tick');
   if (paused) { clearInput(); bigText(tr('hopfox3d.paused'), 'pause', 1e9); } else { $('bigtext').hidden = true; bigTimer = 0; }
 }
 function handleEvents() {
@@ -111,6 +114,7 @@ function frame(now) {
   const active = !paused && !orientationBlocked;
   const cameraPressed = pressed('KeyC');
   const cam = { yaw: (pressed('KeyE') ? 1 : 0) - (pressed('KeyQ') ? 1 : 0), pitch: (pressed('KeyF') ? 1 : 0) - (pressed('KeyR') ? 1 : 0), reset: cameraPressed && !prevCamera };
+  if (cam.reset) dragLook.clear();
   prevCamera = cameraPressed;
   if (phase === 'intro' && active) { introT += dt; if (introT >= 2.2) { phase = 'playing'; startWorld(world); } }
   if (phase === 'intro') cam.intro = Math.min(1, Math.max(0, (introT - .8) / 1.9));
@@ -145,7 +149,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) { cle
 
 $('start').onclick = startGame; $('pause').onclick = togglePause; $('full').onclick = requestFull;
 $('sound').onclick = async () => { await audio.unlock(); audio.mute(); refreshSoundLabel(); };
-$('touch-toggle').onclick = () => { $('touch').hidden = !$('touch').hidden; document.body.classList.toggle('touch-mode', !$('touch').hidden); };
+$('touch-toggle').hidden = true;
 $('rotate-go').onclick = () => { orientation(); if (!orientationBlocked && paused) togglePause(); };
 $('recenter').addEventListener('pointerdown', e => { e.preventDefault(); pointerKeys.add('KeyC'); setTimeout(() => pointerKeys.delete('KeyC'), 90); });
 document.querySelectorAll('[data-hold]').forEach(btn => {
@@ -159,6 +163,7 @@ const stickEl = $('stick'), knob = $('knob');
 function moveStick(e) {
   const r = stickEl.getBoundingClientRect(), max = r.width * .38;
   let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2); const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; }
+  if (phoneRotated) [dx,dy]=[dy,-dx];
   knob.style.transform = `translate(${dx}px,${dy}px)`; stickX = dx / max;
 }
 stickEl.addEventListener('pointerdown', e => { e.preventDefault(); stickId = e.pointerId; stickEl.setPointerCapture(e.pointerId); moveStick(e); audio.unlock(); });
@@ -167,12 +172,21 @@ const releaseStick = e => { if (e.pointerId !== stickId) return; stickId = null;
 stickEl.addEventListener('pointerup', releaseStick); stickEl.addEventListener('pointercancel', releaseStick); stickEl.addEventListener('lostpointercapture', releaseStick);
 
 function orientation() {
-  const blocked = mobileDevice && innerHeight > innerWidth;
+  const rotated = (phase === 'playing' || phase === 'intro') && !$('touch').hidden && innerHeight > innerWidth;
+  const game = $('game');
+  game.style.width = (rotated ? innerHeight : innerWidth)+'px'; game.style.height = (rotated ? innerWidth : innerHeight)+'px';
+  game.style.transformOrigin='0 0'; game.style.transform=rotated?'translate('+innerWidth+'px,0) rotate(90deg)':'none';
+  if (rotated !== phoneRotated) { phoneRotated=rotated; clearInput(); view.resize(); }
+  const blocked = false;
   if (blocked !== orientationBlocked) {
     orientationBlocked = blocked; $('rotate').hidden = !blocked;
     if (blocked) { clearInput(); if ((phase === 'playing' || phase === 'intro') && !paused) togglePause(); }
   }
 }
+let phoneRotated=false;
+const dragLook=bindDragLook({element:$('game'),active:()=>phase==='playing'&&!paused,toLocal:(x,y)=>phoneRotated?{x:y,y:innerWidth-x}:{x,y},width:()=>phoneRotated?innerHeight:innerWidth,rotate:delta=>view.rotate(delta)});
+let controlMode='auto';
+addControlModeButtons({containers:[$('panel').querySelector('.options')],get:()=>controlMode,set:value=>{controlMode=value;clearInput();$('touch').hidden=value==='hide'||value==='auto'&&!mobileDevice;document.body.classList.toggle('touch-mode',!$('touch').hidden);orientation();}});
 document.addEventListener('tb:locale', () => { refreshSoundLabel(); refreshPauseLabel(); if (phase === 'over') showPanel(world.status === 'won' ? 'won' : 'lost'); });
 $('touch').hidden = !mobileDevice; document.body.classList.toggle('touch-mode', mobileDevice);
 addEventListener('resize', () => { view.resize(); orientation(); });

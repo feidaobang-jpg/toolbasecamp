@@ -7,7 +7,7 @@
 <meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
 <title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=camera-mobile1">
+<link rel="stylesheet" href="./style.css?v=drag-look1">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" data-coop-url="../tank_battle.html" tabindex="-1">
@@ -54,9 +54,7 @@
         <div id="joy-base"><div id="joy-knob"></div><span class="joy-tip">行驶</span></div>
       </div>
       <div class="cam-keys">
-        <button class="act small" data-hold="rotL" tabindex="-1" aria-label="Q 左转视角"><b>Q</b><span>左转</span></button>
         <button class="act small" id="btn-cam-t" tabindex="-1" aria-label="C 切换视角"><b>C</b><span>视角</span></button>
-        <button class="act small" data-hold="rotR" tabindex="-1" aria-label="E 右转视角"><b>E</b><span>右转</span></button>
       </div>
       <div class="act-keys">
         <button class="act big" data-hold="fire" tabindex="-1" aria-label="J 开炮"><b>J</b><span>开炮</span></button>
@@ -75,7 +73,7 @@
           <div class="sub" id="mode-sub">经典 35 关 · 原版地图、敌军名单与数值</div>
           <p class="rules" id="mode-rules"></p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 行驶 · <kbd>J</kbd> 开炮 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切换视角 · <kbd>Esc</kbd> 暂停<br><kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
-          <p class="help help-touch">左侧摇杆行驶 · 右侧 <b>J</b> 开炮 · <b>Q</b>/<b>E</b> 转视角、<b>C</b> 切换视角</p>
+          <p class="help help-touch">左侧摇杆行驶 · 右侧 <b>J</b> 开炮 · 拖动画面空白处转视角、<b>C</b> 切换视角</p>
           <p class="hi">最高分 <span id="hi-val">20000</span></p>
           <p class="legal">粉丝向非官方作品：经典模式地图与数值按 FC《坦克大战》（Namco 1985）还原，音效取自原作；3D 模型与贴图为程序化重新制作。</p>
         </div>
@@ -154,6 +152,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=camera-mobile1"></script>
+<script type="module" src="./main.js?v=drag-look1"></script>
 </body>
 </html>

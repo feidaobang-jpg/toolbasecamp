@@ -1,0 +1,33 @@
+{
+  "version": "v2.2.1",
+  "source": "public/html/game/mario-3d",
+  "source_sha256": {
+    "audio.js": "27ea65a2b5de8348fb0199ab5d73bb2371756064fe44c525e4169440d93998b2",
+    "index.html": "c715a04b21e9ac9a811ea55fef1fece8267111c0e43cf67f8413ae5ce18b45f9",
+    "levels.js": "4968ff6f5196628e0a20745096bc126d72c922b422300187b2e3903d21a23cae",
+    "main.js": "b693e20b6c577605a09069d253e251a7634bdf4d7a7ac6d7fa70e668b771f26f",
+    "models.js": "ca0d6e071b483d6d5b6eeacc1730183077df285582d690ebc3549f9eb89f8fd6",
+    "scene.js": "dc813c5a629a55d7add635802f092ba5fe52834e490dbf14e1f190a6387a790b",
+    "style.css": "1deab749297da9ef3197853724bc7d458f3ff4cd1e44cf0d69821acd67433b5a",
+    "textures.js": "851e65e6104e8e9ef2078fb613bfbe51c82322d91188799793e37823fc2ebc01",
+    "three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+    "world.js": "d3f8d8dc8c7cec8cb1880f7ab8eb29776ff3dfd9b33a772192c68cc8b5fa9bd8"
+  },
+  "files": {
+    "audio.js": "27ea65a2b5de8348fb0199ab5d73bb2371756064fe44c525e4169440d93998b2",
+    "drag-look.js": "80386cd91f5f3c0be7f8a172a849a564b1246309c46198a245d77985067a2814",
+    "index.html": "e160582b8c2aba3e7816931e0e380bf08d536365fd5d94af6f75c9f3836add53",
+    "levels.js": "4968ff6f5196628e0a20745096bc126d72c922b422300187b2e3903d21a23cae",
+    "main.js": "6d2ad50bd3fa0a935ada1304161d3ba6e3922de08a34499672801d925c6903af",
+    "models.js": "ca0d6e071b483d6d5b6eeacc1730183077df285582d690ebc3549f9eb89f8fd6",
+    "scene.js": "dc813c5a629a55d7add635802f092ba5fe52834e490dbf14e1f190a6387a790b",
+    "style.css": "1deab749297da9ef3197853724bc7d458f3ff4cd1e44cf0d69821acd67433b5a",
+    "textures.js": "851e65e6104e8e9ef2078fb613bfbe51c82322d91188799793e37823fc2ebc01",
+    "three.js": "59cc1d99fbfda58eafe899234f06492d75ef1b33aacd3075f534800918dcce68",
+    "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "world.js": "d3f8d8dc8c7cec8cb1880f7ab8eb29776ff3dfd9b33a772192c68cc8b5fa9bd8"
+  },
+  "package_sha256": "0222c1b1c2c634566a64181a4f3588f3d17ab4c9421b2e29cceb6b03bae66a86",
+  "status": "built_not_submitted"
+}

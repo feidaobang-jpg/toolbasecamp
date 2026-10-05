@@ -4,5 +4,15 @@
   "videos": [],
   "status": "pending_association",
   "reason": "无已确认的本人对应游戏视频映射；未改动其他游戏视频",
-  "version": "v0.2.0"
+  "version": "v0.2.0",
+  "pending_updates": [
+    {
+      "version": "v0.2.1",
+      "release": "releases/v0.2.1/handoff.json",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
+      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
+    }
+  ]
 }

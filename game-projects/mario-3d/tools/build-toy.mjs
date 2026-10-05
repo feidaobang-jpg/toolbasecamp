@@ -21,8 +21,9 @@ const unexpected = found.filter(n => !runtime.includes(n) && !ignored.includes(n
 if (unexpected.length || runtime.some(n => !found.includes(n))) throw Error('Unexpected runtime files: ' + found.join(', '));
 
 for (const name of runtime.filter(n => n !== 'index.html' && n !== 'three.js' && n !== 'main.js')) cpSync(join(source, name), join(out, name));
+cpSync(join(root, 'public/js/game/drag-look.js'), join(out, 'drag-look.js'));
 const mainSrc = readFileSync(join(source, 'main.js'), 'utf8');
-const mainToy = mainSrc.replace("|| '../../../games.html'", "|| 'index.html'");
+const mainToy = mainSrc.replaceAll('../../../js/game/drag-look.js', './drag-look.js').replace("|| '../../../games.html'", "|| 'index.html'");
 if (mainToy === mainSrc) throw Error('main.js list-url fallback not found');
 writeFileSync(join(out, 'main.js'), mainToy, 'utf8');
 cpSync(join(root, 'public/vendor/three/0.170.0/build/three.module.js'), join(out, 'vendor/three.module.js'));

@@ -184,3 +184,5 @@ body.touch-on #hud-top{bottom:auto;top:calc(8px + var(--sat));right:calc(78px + 
 
 /* Mobile browsers do not reliably support fullscreen; keep desktop controls. */
 body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
+
+#stage{touch-action:none}
