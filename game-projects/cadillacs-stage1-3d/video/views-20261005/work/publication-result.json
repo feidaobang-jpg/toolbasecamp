@@ -1,5 +1,5 @@
 {
-  "status": "submitted_auditing",
+  "status": "published_complete",
   "account": {
     "name": "飞刀班长",
     "uid": 16214353,
@@ -14,7 +14,7 @@
   "aid": 117387378563693,
   "video_url": "https://www.bilibili.com/video/BV18XHW66E55/",
   "submitted_at": "2026-10-05T16:35:57+08:00",
-  "audit_status": "审核中",
+  "audit_status": "passed（2026-10-05 16:37 公开接口 code 0、state 0）",
   "title": "恐龙快打第一关3D重置：按C钻进主角眼睛里打",
   "category": "游戏（页面自动分区）",
   "tags": [
@@ -48,30 +48,61 @@
   "toy_binding": {
     "toy_id": 40412421031936,
     "slug": "feidao-cadillacs-3d",
-    "status": "pending_audit_pass"
+    "bvid": "BV18XHW66E55",
+    "aid": 117387378563693,
+    "verified_via": "toy video bind → toy video list --json（含本 BV）",
+    "verified": true
   },
   "comment": {
-    "status": "pending_audit_pass"
+    "posted": true,
+    "pinned": true,
+    "rpid": 316113740017,
+    "verified_after_reload": true,
+    "evidence": "qa/pinned-comment.png",
+    "text": "电脑按 C 切视角、Q/E 转视角；手机点 C、按住画面拖动转视角。你更想用哪个视角打这一关：侧视、正视还是第一人称？\nToy 试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+    "note": "第一次一次性填入多行，评论框只提交了首行（rpid 316113555473，只有玩法提示和提问，没有链接）；未删除，等用户决定。改为逐行键入、Shift+Enter 换行后重发完整内容并置顶；Toy 链接显示为可点击，网站链接为纯文本。"
   },
   "dynamic": {
-    "status": "pending_audit_pass"
+    "automatic_video_post_verified": true,
+    "dynamic_id": "1255637893796331523",
+    "separate_post_sent": false,
+    "evidence": "qa/automatic-dynamic.png"
   },
   "push_application": {
     "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
-    "status": "pending_audit_pass"
+    "worksheet": "【进行中】日常推流",
+    "range": "A281:E281",
+    "values": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV18XHW66E55/",
+      "是",
+      "是",
+      "是"
+    ],
+    "deduplication": "B220:B280 无本期 BV；A281:F281 及 A282:A284 写前为空",
+    "saved_ui": "最近保存；重新打开后回读 A281:F281 一致（F 空）",
+    "operator_feedback": "待运营在 F 列反馈",
+    "status": "submitted",
+    "login": "投稿用 Edge 独立配置，用户本人勾选协议并扫码登录腾讯文档",
+    "evidence": "qa/push-application.png"
   },
   "previous_video_maintenance": {
     "status": "not_applicable",
     "reason": "恐龙快打此前没有 B 站视频（media-kit/bilibili-sync.json videos 为空）"
   },
   "evidence": [
-    "qa/submission-success.png",
+    "qa/automatic-dynamic.png",
+    "qa/pinned-comment.png",
     "qa/publish-covers.png",
-    "qa/publish-form-top.png",
     "qa/publish-form-bottom.png",
-    "qa/publish-topic.png"
+    "qa/publish-form-top.png",
+    "qa/publish-topic.png",
+    "qa/push-application.png",
+    "qa/submission-success.png"
   ],
   "remaining_items": [
-    "过审后：Toy 绑定、发布并置顶评论、核对自动动态、填推流申请"
-  ]
+    "可选：首次发的不完整评论 rpid 316113555473（只有提问、没有链接）是否删除，由用户决定"
+  ],
+  "published_verified_at": "2026-10-05T16:37:21+08:00",
+  "completed_at": "2026-10-05T16:48:22+08:00"
 }

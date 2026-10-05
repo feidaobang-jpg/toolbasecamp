@@ -68,14 +68,18 @@
     "slug": "feidao-cadillacs-3d",
     "category": "GAME",
     "visibility": "public",
-    "status": "auditing",
+    "status": "published",
     "submitted_at": "2026-10-05",
     "package": "dist/toy-v0.1.0/package",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_yWKjnWCL/index.html",
-    "note": "分享地址 https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html，过审后才可访问"
+    "note": "分享地址 https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html，过审后才可访问",
+    "status_verified": "2026-10-05 toy mylist：published / PUBLIC；视频 BV18XHW66E55 已绑定（toy video list 核验）",
+    "bound_videos": [
+      "BV18XHW66E55"
+    ]
   },
   "toy_note": "2026-10-05 用户明确授权后首发提交，审核中；slug feidao-cadillacs-3d，公开可见",
-  "bilibili": "media-kit/bilibili-sync.json（暂无视频，待关联）",
+  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一关；模型与贴图为程序化重新制作，音乐按原作风格重新编写（非转录），音效为合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
   "dev": {
     "model": "claude-opus-5-5（Claude Code 会话模型标识）",

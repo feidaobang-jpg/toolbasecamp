@@ -8,12 +8,14 @@
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
       "last_public_verified_version": null,
-      "status": "auditing（2026-10-05 16:35 投稿）",
-      "publish_record": "video/views-20261005/work/publication-result.json"
+      "status": "published（2026-10-05 16:37 公开可见）",
+      "publish_record": "video/views-20261005/work/publication-result.json",
+      "toy_bound": true,
+      "pinned_comment_rpid": 316113740017
     }
   ],
   "pending": [],
-  "status": "已关联：BV18XHW66E55（v2 视角版，审核中）；简介本身已是当前版本说明，暂无需追加更新区块",
+  "status": "已关联：BV18XHW66E55（v2 视角版，已发布并绑定 Toy）；简介即当前版本说明，暂无需追加更新区块",
   "updated_at": "2026-10-05",
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
