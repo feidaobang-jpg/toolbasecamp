@@ -1,0 +1,17 @@
+{
+  "version": "v0.2.0",
+  "source": "public/html/game/cadillacs-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "da5715125f74a2f05232de860c7e5cacc2af5214849b60c3f07f7c3999bd0037",
+    "index.html": "520e99a58a1be7272397f7a79cbcbb6ea043580ef7162c6dcec4edbe890a545e",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "fa104bfc8b28538a45211c526878d199e9f26266c65986712a1f82c33201f8c9"
+  },
+  "files": {
+    "css/style.css": "da5715125f74a2f05232de860c7e5cacc2af5214849b60c3f07f7c3999bd0037",
+    "index.html": "fb61c2abd38f6c07902dccce8b8ac8df27bd4031197efc379af183e50c802807",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "fa104bfc8b28538a45211c526878d199e9f26266c65986712a1f82c33201f8c9"
+  },
+  "status": "built_not_submitted"
+}

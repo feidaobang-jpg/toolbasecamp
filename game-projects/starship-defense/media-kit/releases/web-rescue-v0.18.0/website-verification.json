@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-05T12:37:01.357604+00:00",
+  "checks": [
+    {
+      "path": "html/game/starship-defense/game.compat.js",
+      "ok": true,
+      "sha256": "7a8bea9e67dd917dabc8dfaa55246270247ad32d10343e8572707d7c6b438ecb"
+    },
+    {
+      "path": "html/game/starship-defense/hive-world.js",
+      "ok": true,
+      "sha256": "e5cf7120a958fda38c3f0366b9ddd217de0ea144bac7b04b63ffe36b51d6ca39"
+    },
+    {
+      "path": "html/game/starship-defense/game.js",
+      "ok": true,
+      "sha256": "7576e349e14e5e3e7fd8c6a82fd7f7d6f218b1720fc0362d5cf245fb758ca762"
+    },
+    {
+      "path": "js/config.js",
+      "ok": true,
+      "sha256": "e0200f92e50aa30d9b149264682ac5f5b8838219cb115fa9931cc60e53deac86"
+    },
+    {
+      "path": "js/games-hub.js",
+      "ok": true,
+      "sha256": "a94aebc417571adad91cbaf337ed3d6bc193780e38abac5f8d45a2e38ddbab44"
+    },
+    {
+      "path": "js/locales/zh-CN.js",
+      "ok": true,
+      "sha256": "b798a096945218d0b7c2347594d4203fe877cecd59731933688d5fadee45587d"
+    },
+    {
+      "path": "css/tools-hub.css",
+      "ok": true,
+      "sha256": "8d557de3eb48944431f3306dd8049b446b9762b618d2de5bc13b02eb800e455f"
+    },
+    {
+      "path": "games.html",
+      "ok": true,
+      "method": "HTML content and deployment script version (CI rewrites cache parameters)"
+    },
+    {
+      "path": "html/game/starship-defense/index.html",
+      "ok": true,
+      "method": "HTML content and deployment script version (CI rewrites cache parameters)"
+    }
+  ],
+  "all_passed": true
+}

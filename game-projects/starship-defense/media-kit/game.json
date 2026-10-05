@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-squad-follow-v0.17.14",
+  "current_version": "web-rescue-v0.18.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -20,6 +20,13 @@
       "record": "releases/web-squad-follow-v0.17.14/handoff.json",
       "summary": "队友编队跟随/脱队追赶/围墙绕行/受击恢复窗口；四类载具炮塔转向并从炮管口开火；队友载具停在门洞岗位不再把城门顶成常开。",
       "reason": "2026-10-05 00:50 已提交 v0.17.13（审核中）；按分渠道节奏，活跃开发期同一游戏每天最多一批，普通补丁累计后一次送审。"
+    },
+    {
+      "version": "web-rescue-v0.18.0",
+      "date": "2026-10-05",
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "summary": "队友集合与载具救援；修复母巢返程和载具洞道跟随；母皇每关补给；修复飞虫无法伤害基地并增加失败提示；电脑/触屏手动切换。",
+      "reason": "正式版本，网站部署核验后合并 v0.17.14 一并预览实测并提交；当前 Git 分叉处理选择待用户答复。"
     }
   ],
   "toy": {
@@ -100,5 +107,11 @@
     "saved": true,
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
   },
-  "bilibili_sync": "bilibili-sync.json"
+  "bilibili_sync": "bilibili-sync.json",
+  "pending_release": {
+    "version": "web-rescue-v0.18.0",
+    "status": "validated_local_awaiting_git_resolution",
+    "record": "releases/web-rescue-v0.18.0/handoff.json",
+    "summary": "队友集合与载具救援；修复母巢返程和载具洞道跟随；母皇每关补给；修复飞虫无法伤害基地并增加失败提示；电脑/触屏手动切换。"
+  }
 }

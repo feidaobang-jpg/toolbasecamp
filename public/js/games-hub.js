@@ -128,6 +128,11 @@
             });
             wrap.appendChild(chip);
         });
+        var voteLink = document.createElement('a');
+        voteLink.className = 'tb-btn';
+        voteLink.href = 'game-vote.html';
+        voteLink.textContent = tr('games.voteNav');
+        wrap.appendChild(voteLink);
         containerEl.insertBefore(wrap, containerEl.firstChild);
     }
 

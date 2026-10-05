@@ -1,0 +1,14 @@
+{
+  "ready": true,
+  "recall": "已集合 1 名队友；驾驶员下车，驾驶分配保留",
+  "buttonColor": "rgb(37, 99, 235)",
+  "supply": 140,
+  "level": 1,
+  "namespace": [
+    "toy-chongchao-v1-sst_save_auto"
+  ],
+  "errors": [],
+  "failed": [],
+  "url": "http://127.0.0.1:8901/index.html",
+  "at": "2026-10-05T12:24:23.347Z"
+}

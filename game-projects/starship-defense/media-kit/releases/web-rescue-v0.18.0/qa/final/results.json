@@ -1,0 +1,1172 @@
+{
+  "at": "2026-10-05T12:20:48.154Z",
+  "url": "http://127.0.0.1:8899/html/game/starship-defense/index.html",
+  "method": "Edge accelerated game simulation and real UI clicks; no physical phone test",
+  "checks": [
+    {
+      "name": "W洞四兵种进入母巢",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "pos": [
+            4.484006530475382,
+            -22,
+            303.9667827356236
+          ],
+          "gap": 5.986792115731713
+        },
+        {
+          "slot": 1,
+          "pos": [
+            -4.798828800643637,
+            -22,
+            301.9916165884223
+          ],
+          "gap": 5.195699615370936
+        },
+        {
+          "slot": 2,
+          "pos": [
+            1.617198025787557,
+            -22,
+            293.94083229547766
+          ],
+          "gap": 6.271271220903913
+        },
+        {
+          "slot": 3,
+          "pos": [
+            -1.9329496651559002,
+            -22,
+            295.11641983810557
+          ],
+          "gap": 5.252204261610084
+        }
+      ]
+    },
+    {
+      "name": "W洞四兵种返回洞外",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "pos": [
+            -73.8057212757976,
+            0,
+            177.90935336331341
+          ],
+          "gap": 5.954513836509602
+        },
+        {
+          "slot": 1,
+          "pos": [
+            -65.04140527862737,
+            0,
+            175.11139027820036
+          ],
+          "gap": 4.857422783833806
+        },
+        {
+          "slot": 2,
+          "pos": [
+            -66.82804398838826,
+            -0.011827756775209069,
+            185.31783419752634
+          ],
+          "gap": 6.416813885436143
+        },
+        {
+          "slot": 3,
+          "pos": [
+            -65.03384745920164,
+            -0.000027273177200877074,
+            184.06301081168007
+          ],
+          "gap": 5.84356688388967
+        }
+      ]
+    },
+    {
+      "name": "C洞四兵种进入母巢",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "pos": [
+            5.903502471584463,
+            -22,
+            301.18606451465536
+          ],
+          "gap": 6.021469128454326
+        },
+        {
+          "slot": 1,
+          "pos": [
+            -2.922362956302106,
+            -22,
+            304.03392386669447
+          ],
+          "gap": 4.981239505449825
+        },
+        {
+          "slot": 2,
+          "pos": [
+            -1.1169237601581432,
+            -22,
+            293.95125792329117
+          ],
+          "gap": 6.150999869659704
+        },
+        {
+          "slot": 3,
+          "pos": [
+            -3.9024775380241077,
+            -22,
+            296.4619423635013
+          ],
+          "gap": 5.267559470378053
+        }
+      ]
+    },
+    {
+      "name": "C洞四兵种返回洞外",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "pos": [
+            -4.581095987504233,
+            0,
+            175.1577913090029
+          ],
+          "gap": 5.979047421780582
+        },
+        {
+          "slot": 1,
+          "pos": [
+            4.564199120714238,
+            0,
+            176.85465642684431
+          ],
+          "gap": 5.04325417368677
+        },
+        {
+          "slot": 2,
+          "pos": [
+            -1.7101097454949734,
+            -0.007242402936784449,
+            185.03020253525412
+          ],
+          "gap": 6.268003702154489
+        },
+        {
+          "slot": 3,
+          "pos": [
+            1.7543408378632694,
+            -4.5195193312577485e-8,
+            184.0025645077768
+          ],
+          "gap": 5.301260551025863
+        }
+      ]
+    },
+    {
+      "name": "E洞四兵种进入母巢",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "pos": [
+            4.625904722715379,
+            -22,
+            303.8370504729076
+          ],
+          "gap": 6.010153977668204
+        },
+        {
+          "slot": 1,
+          "pos": [
+            -4.439783833619673,
+            -22,
+            301.96230509600827
+          ],
+          "gap": 4.854103602014548
+        },
+        {
+          "slot": 2,
+          "pos": [
+            1.8324562672869347,
+            -22,
+            293.7719359216894
+          ],
+          "gap": 6.492047299200907
+        },
+        {
+          "slot": 3,
+          "pos": [
+            -1.5194521265096612,
+            -22,
+            295.30244552266805
+          ],
+          "gap": 4.937180656230453
+        }
+      ]
+    },
+    {
+      "name": "E洞四兵种返回洞外",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "pos": [
+            65.88239778584615,
+            0,
+            173.36818796326924
+          ],
+          "gap": 6.0002580882252845
+        },
+        {
+          "slot": 1,
+          "pos": [
+            72.90844246178729,
+            0,
+            179.46427924165562
+          ],
+          "gap": 4.978132818771387
+        },
+        {
+          "slot": 2,
+          "pos": [
+            68.94249593505556,
+            -8.876264373234266e-7,
+            184.0113654336761
+          ],
+          "gap": 5.108090026050001
+        },
+        {
+          "slot": 3,
+          "pos": [
+            66.84140568210223,
+            -0.00003684483889996331,
+            184.0732403913097
+          ],
+          "gap": 5.193150926283324
+        }
+      ]
+    },
+    {
+      "name": "jeep沿弯曲洞道in",
+      "ok": true,
+      "detail": {
+        "pos": [
+          -2.1505019106305876,
+          -22,
+          304.06234182598934
+        ],
+        "gap": 4.596442056505029,
+        "safe": true
+      }
+    },
+    {
+      "name": "jeep沿弯曲洞道out",
+      "ok": true,
+      "detail": {
+        "pos": [
+          63.75007710587176,
+          0,
+          173.2328296862685
+        ],
+        "gap": 4.602687858607102,
+        "safe": true
+      }
+    },
+    {
+      "name": "tank沿弯曲洞道in",
+      "ok": true,
+      "detail": {
+        "pos": [
+          -2.4552595091247924,
+          -22,
+          303.96014276820154
+        ],
+        "gap": 4.659509631032716,
+        "safe": true
+      }
+    },
+    {
+      "name": "tank沿弯曲洞道out",
+      "ok": true,
+      "detail": {
+        "pos": [
+          63.63843195825257,
+          0,
+          173.51920079350745
+        ],
+        "gap": 4.606087501637534,
+        "safe": true
+      }
+    },
+    {
+      "name": "mech沿弯曲洞道in",
+      "ok": true,
+      "detail": {
+        "pos": [
+          -2.350242672529244,
+          -22,
+          303.8475854768406
+        ],
+        "gap": 4.508608945270388,
+        "safe": true
+      }
+    },
+    {
+      "name": "mech沿弯曲洞道out",
+      "ok": true,
+      "detail": {
+        "pos": [
+          63.7351467022464,
+          0,
+          173.47058517075658
+        ],
+        "gap": 4.530792797212141,
+        "safe": true
+      }
+    },
+    {
+      "name": "直升机在洞口待命，不追到洞顶",
+      "ok": true,
+      "detail": {
+        "pos": [
+          0,
+          12,
+          174.43333333333328
+        ],
+        "ceiling": null
+      }
+    },
+    {
+      "name": "洞顶/洞外队友集合落到同层安全空地，保留血量装备且不刷钱",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "second": false,
+        "positions": [
+          [
+            0,
+            -17.262135979162593,
+            252.65
+          ],
+          [
+            2.559703439666031,
+            -16.69683114378666,
+            250.6858704695217
+          ],
+          [
+            1.3249999999999997,
+            -15.803042104711112,
+            247.70503267997123
+          ],
+          [
+            -1.3249999999999993,
+            -15.803042104711112,
+            247.70503267997123
+          ]
+        ],
+        "health": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "healthBefore": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "vehicleHp": 217,
+        "gear": {
+          "weapon": 2,
+          "armor": 1,
+          "role": "gunner",
+          "vehicle": "tank"
+        },
+        "driver": null,
+        "goldUnchanged": true,
+        "safe": true
+      }
+    },
+    {
+      "name": "四类载具从洞顶救援到洞口，保留耐久和驾驶员",
+      "ok": true,
+      "detail": {
+        "ok": true,
+        "vehicles": [
+          {
+            "kind": "jeep",
+            "hp": 50,
+            "pos": [
+              1.2940952255126037,
+              0,
+              183.82962913144533
+            ],
+            "safe": true
+          },
+          {
+            "kind": "tank",
+            "hp": 51,
+            "pos": [
+              4.8296291314453415,
+              0,
+              177.7059047744874
+            ],
+            "safe": true
+          },
+          {
+            "kind": "mech",
+            "hp": 52,
+            "pos": [
+              -1.294095225512604,
+              0,
+              174.17037086855467
+            ],
+            "safe": true
+          },
+          {
+            "kind": "heli",
+            "hp": 53,
+            "pos": [
+              -4.829629131445342,
+              0,
+              180.2940952255126
+            ],
+            "safe": true
+          }
+        ],
+        "driver": true,
+        "cooldown": 20
+      }
+    },
+    {
+      "name": "不移动玩家正在驾驶的车，阵亡/副本时不能召回",
+      "ok": true,
+      "detail": {
+        "same": true,
+        "dead": false,
+        "operation": false,
+        "started": true
+      }
+    },
+    {
+      "name": "母皇补给每关一次，读档保留，跨章重置",
+      "ok": true,
+      "detail": {
+        "supply": 140,
+        "first": 300,
+        "level": 2,
+        "duplicate": 0,
+        "killedAfterLoad": true,
+        "afterLoad": 630,
+        "chapter": 2,
+        "reset": true,
+        "economy": [
+          {
+            "chapter": 1,
+            "earlySupply": 1400,
+            "lastLevelSupply": 140,
+            "estimatedRemovedNormalDrops": 828,
+            "excludes": "elites/bosses/guards"
+          },
+          {
+            "chapter": 4,
+            "earlySupply": 2600,
+            "lastLevelSupply": 260,
+            "estimatedRemovedNormalDrops": 1870,
+            "excludes": "elites/bosses/guards"
+          },
+          {
+            "chapter": 6,
+            "earlySupply": 3400,
+            "lastLevelSupply": 340,
+            "estimatedRemovedNormalDrops": 2784,
+            "excludes": "elites/bosses/guards"
+          },
+          {
+            "chapter": 10,
+            "earlySupply": 5000,
+            "lastLevelSupply": 500,
+            "estimatedRemovedNormalDrops": 5712,
+            "excludes": "elites/bosses/guards"
+          }
+        ]
+      }
+    },
+    {
+      "name": "第1章empty防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 1,
+        "mode": "empty",
+        "time": 70,
+        "state": "over",
+        "level": 5,
+        "base": 0,
+        "remaining": 27,
+        "stalled": [
+          {
+            "kind": "mob",
+            "pos": [
+              -6.701922932045285,
+              5,
+              -38.88190786842866
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false,
+            "nav": 2
+          },
+          {
+            "kind": "mob",
+            "pos": [
+              -9.82549456504372,
+              5,
+              -36.40174651140544
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "第1章starter防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 1,
+        "mode": "starter",
+        "time": 69,
+        "state": "over",
+        "level": 5,
+        "base": 0,
+        "remaining": 27,
+        "stalled": [
+          {
+            "kind": "mob",
+            "pos": [
+              -9.254539536870592,
+              5,
+              -36.714407255438864
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          },
+          {
+            "kind": "mob",
+            "pos": [
+              -8.951040740707434,
+              5,
+              -36.932927425496985
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "第1章squad防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 1,
+        "mode": "squad",
+        "time": 76,
+        "state": "battle",
+        "level": 6,
+        "base": 2000,
+        "remaining": 0,
+        "stalled": []
+      }
+    },
+    {
+      "name": "第4章empty防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 4,
+        "mode": "empty",
+        "time": 37,
+        "state": "over",
+        "level": 5,
+        "base": 0,
+        "remaining": 35,
+        "stalled": [
+          {
+            "kind": "mob",
+            "pos": [
+              -11.307605435726105,
+              9.253475551546188,
+              -35.909380051498296
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": true,
+            "nav": 1
+          },
+          {
+            "kind": "mob",
+            "pos": [
+              -8.574424387568271,
+              9.18677293829604,
+              -37.11824812517704
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "第4章starter防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 4,
+        "mode": "starter",
+        "time": 65,
+        "state": "battle",
+        "level": 6,
+        "base": 2600,
+        "remaining": 0,
+        "stalled": []
+      }
+    },
+    {
+      "name": "第4章squad防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 4,
+        "mode": "squad",
+        "time": 64,
+        "state": "battle",
+        "level": 6,
+        "base": 2600,
+        "remaining": 0,
+        "stalled": []
+      }
+    },
+    {
+      "name": "第6章empty防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 6,
+        "mode": "empty",
+        "time": 49,
+        "state": "over",
+        "level": 5,
+        "base": 0,
+        "remaining": 40,
+        "stalled": [
+          {
+            "kind": "mob",
+            "pos": [
+              -11.522269840074724,
+              5,
+              -35.848018189164215
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          },
+          {
+            "kind": "mob",
+            "pos": [
+              -9.23720227667705,
+              5,
+              -36.51476002938926
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "第6章starter防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 6,
+        "mode": "starter",
+        "time": 47,
+        "state": "over",
+        "level": 5,
+        "base": 0,
+        "remaining": 40,
+        "stalled": [
+          {
+            "kind": "mob",
+            "pos": [
+              -8.843525294340404,
+              5,
+              -36.730095029582394
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          },
+          {
+            "kind": "mob",
+            "pos": [
+              -8.989298728204393,
+              5,
+              -36.80793710239947
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "第6章squad防守压力有结果",
+      "ok": true,
+      "detail": {
+        "chapter": 6,
+        "mode": "squad",
+        "time": 60,
+        "state": "over",
+        "level": 5,
+        "base": 0,
+        "remaining": 20,
+        "stalled": [
+          {
+            "kind": "mob",
+            "pos": [
+              -8.341915875296356,
+              5,
+              -37.274087569606635
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          },
+          {
+            "kind": "mob",
+            "pos": [
+              -8.396464890499717,
+              5,
+              -37.15209036348336
+            ],
+            "target": "base",
+            "to": [
+              -12,
+              5,
+              -42
+            ],
+            "route": false,
+            "fly": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "基地受袭有明确警报，自由测试仍无敌",
+      "ok": true,
+      "detail": {
+        "alarm": "⚠ 基地受袭，立即回防！",
+        "before": 1990,
+        "immune": true,
+        "sandbox": "自由测试：基地无敌"
+      }
+    },
+    {
+      "name": "菜单救援点击 1280×720",
+      "ok": true,
+      "detail": {
+        "text": "没有可召回的单位或附近缺少安全空地",
+        "chapter": 3,
+        "level": 7,
+        "gold": 1234,
+        "color": "rgb(37, 99, 235)"
+      }
+    },
+    {
+      "name": "菜单救援点击 844×390",
+      "ok": true,
+      "detail": {
+        "text": "没有可召回的单位或附近缺少安全空地",
+        "chapter": 3,
+        "level": 7,
+        "gold": 1234,
+        "color": "rgb(37, 99, 235)"
+      }
+    },
+    {
+      "name": "菜单救援点击 390×844",
+      "ok": true,
+      "detail": {
+        "text": "没有可召回的单位或附近缺少安全空地",
+        "chapter": 3,
+        "level": 7,
+        "gold": 1234,
+        "color": "rgb(37, 99, 235)"
+      }
+    },
+    {
+      "name": "无页面脚本异常",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "pressures": [
+    {
+      "chapter": 1,
+      "mode": "empty",
+      "time": 70,
+      "state": "over",
+      "level": 5,
+      "base": 0,
+      "remaining": 27,
+      "stalled": [
+        {
+          "kind": "mob",
+          "pos": [
+            -6.701922932045285,
+            5,
+            -38.88190786842866
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false,
+          "nav": 2
+        },
+        {
+          "kind": "mob",
+          "pos": [
+            -9.82549456504372,
+            5,
+            -36.40174651140544
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        }
+      ]
+    },
+    {
+      "chapter": 1,
+      "mode": "starter",
+      "time": 69,
+      "state": "over",
+      "level": 5,
+      "base": 0,
+      "remaining": 27,
+      "stalled": [
+        {
+          "kind": "mob",
+          "pos": [
+            -9.254539536870592,
+            5,
+            -36.714407255438864
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        },
+        {
+          "kind": "mob",
+          "pos": [
+            -8.951040740707434,
+            5,
+            -36.932927425496985
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        }
+      ]
+    },
+    {
+      "chapter": 1,
+      "mode": "squad",
+      "time": 76,
+      "state": "battle",
+      "level": 6,
+      "base": 2000,
+      "remaining": 0,
+      "stalled": []
+    },
+    {
+      "chapter": 4,
+      "mode": "empty",
+      "time": 37,
+      "state": "over",
+      "level": 5,
+      "base": 0,
+      "remaining": 35,
+      "stalled": [
+        {
+          "kind": "mob",
+          "pos": [
+            -11.307605435726105,
+            9.253475551546188,
+            -35.909380051498296
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": true,
+          "nav": 1
+        },
+        {
+          "kind": "mob",
+          "pos": [
+            -8.574424387568271,
+            9.18677293829604,
+            -37.11824812517704
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": true
+        }
+      ]
+    },
+    {
+      "chapter": 4,
+      "mode": "starter",
+      "time": 65,
+      "state": "battle",
+      "level": 6,
+      "base": 2600,
+      "remaining": 0,
+      "stalled": []
+    },
+    {
+      "chapter": 4,
+      "mode": "squad",
+      "time": 64,
+      "state": "battle",
+      "level": 6,
+      "base": 2600,
+      "remaining": 0,
+      "stalled": []
+    },
+    {
+      "chapter": 6,
+      "mode": "empty",
+      "time": 49,
+      "state": "over",
+      "level": 5,
+      "base": 0,
+      "remaining": 40,
+      "stalled": [
+        {
+          "kind": "mob",
+          "pos": [
+            -11.522269840074724,
+            5,
+            -35.848018189164215
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        },
+        {
+          "kind": "mob",
+          "pos": [
+            -9.23720227667705,
+            5,
+            -36.51476002938926
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        }
+      ]
+    },
+    {
+      "chapter": 6,
+      "mode": "starter",
+      "time": 47,
+      "state": "over",
+      "level": 5,
+      "base": 0,
+      "remaining": 40,
+      "stalled": [
+        {
+          "kind": "mob",
+          "pos": [
+            -8.843525294340404,
+            5,
+            -36.730095029582394
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        },
+        {
+          "kind": "mob",
+          "pos": [
+            -8.989298728204393,
+            5,
+            -36.80793710239947
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        }
+      ]
+    },
+    {
+      "chapter": 6,
+      "mode": "squad",
+      "time": 60,
+      "state": "over",
+      "level": 5,
+      "base": 0,
+      "remaining": 20,
+      "stalled": [
+        {
+          "kind": "mob",
+          "pos": [
+            -8.341915875296356,
+            5,
+            -37.274087569606635
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        },
+        {
+          "kind": "mob",
+          "pos": [
+            -8.396464890499717,
+            5,
+            -37.15209036348336
+          ],
+          "target": "base",
+          "to": [
+            -12,
+            5,
+            -42
+          ],
+          "route": false,
+          "fly": false
+        }
+      ]
+    }
+  ]
+}

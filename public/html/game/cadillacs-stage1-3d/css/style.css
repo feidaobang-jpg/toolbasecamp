@@ -235,10 +235,10 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 .pad-a, .pad-c { right: calc(var(--pad-r) + var(--pad) + var(--pad-gap)); }
 .pad-a, .pad-b { bottom: var(--pad-b); }
 .pad-c, .pad-d { bottom: calc(var(--pad-b) + var(--pad) + var(--pad-gap)); }
-#btn-atk { background: radial-gradient(circle at 35% 30%, #ffb09a 0 12%, #e5322b 13% 70%, #9a1e18 71%); }
-#btn-jump { background: radial-gradient(circle at 35% 30%, #a8f0ac 0 12%, #3fbf4a 13% 70%, #1f7a2a 71%); }
-#btn-run { background: radial-gradient(circle at 35% 30%, #a8c8ff 0 12%, #3a6ad8 13% 70%, #1e3a8a 71%); }
-#btn-mega { background: radial-gradient(circle at 35% 30%, #ffe8a0 0 12%, #e8a81a 13% 70%, #8a5a0a 71%); }
+#btn-atk { background: linear-gradient(145deg, #e5322b, #9a1e18); }
+#btn-jump { background: linear-gradient(145deg, #3fbf4a, #1f7a2a); }
+#btn-run { background: linear-gradient(145deg, #3a6ad8, #1e3a8a); }
+#btn-mega { background: linear-gradient(145deg, #e8a81a, #8a5a0a); }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.2); }
 /* 触屏模式不显示只对键盘有意义的标签（Esc / Enter 键帽）；切换视角在右上角，和暂停放在一起 */
 .touch-only { display: none; }

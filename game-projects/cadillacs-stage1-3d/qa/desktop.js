@@ -83,16 +83,18 @@ const fs = require('fs');
   await hold('KeyD', 120);
   await clearEnemies();
   // 连招
+  // 清敌不会终止上一段移动的抓取/受击状态；给连招用例独立、确定的起点。
+  await C(() => { const T = window.__CD_TEST__, p = T.cheat.G.player; T.manual(true); Object.assign(p, { state: 'idle', st: 0, move: null, grab: null, sub: {}, face: Math.PI / 2, vx: 0, vz: 0, hitstop: 0 }); });
   let id = await C(() => window.__CD_TEST__.cheat.enemy('ferris', 0.85, 0));
-  await sleep(150);
   await C((id) => { const e = window.__CD_TEST__.cheat.G.actors.find(a => a.id === id); e.hp = 200; e.cd = 9; e.def = Object.assign({}, e.def, { aggr: 0 }); }, id);
   const hits = [];
-  for (let i = 0; i < 4; i++) { await K.press('KeyJ'); await sleep(170); hits.push((await C((id) => { const e = window.__CD_TEST__.cheat.G.actors.find(a => a.id === id); return e ? [+(e.hp).toFixed(1), e.state] : null; }, id))); }
-  await sleep(400);
+  for (let i = 0; i < 4; i++) { await K.press('KeyJ'); await C(() => window.__CD_TEST__.step(13)); hits.push((await C((id) => { const e = window.__CD_TEST__.cheat.G.actors.find(a => a.id === id); return e ? [+(e.hp).toFixed(1), e.state] : null; }, id))); }
+  await C(() => window.__CD_TEST__.step(24));
   const eState = await C((id) => { const e = window.__CD_TEST__.cheat.G.actors.find(a => a.id === id); return e ? e.state : 'gone'; }, id);
   ok('J 连打命中扣血', hits[0] && hits[0][0] < 200, hits);
   ok('四连击最后一下击倒', hits.some(h => h && h[1] === 'down') || eState === 'down' || eState === 'getup', [hits, eState]);
   s = await S(); ok('打中有分数', s.score > 0, s.score);
+  await C(() => window.__CD_TEST__.manual(false));
   await clearEnemies();
   // 跳跃 + 跳踢
   await K.down('KeyK'); await sleep(80); await K.up('KeyK');
@@ -191,7 +193,7 @@ const fs = require('fs');
   await hold('KeyW', 400); s = await S(); ok('正视下 W = 前进（+x）', s.player.x > xf + 0.5, [xf, s.player.x]);
   await press('KeyC'); s = await S(); ok('C 切到第一人称', s.ui.camera === 'fp' && s.ui.fpActive);
   await sleep(100); s = await S(); ok('第一人称隐藏主角模型', s.player.visible === false);
-  await hold('KeyE', 500); s = await S(); ok('按住 E 右转视角', s.ui.yawOff > 0.4, s.ui.yawOff);
+  await hold('KeyE', 500); s = await S(); ok('第一人称按住 E 向右转头', s.ui.yawOff < -0.4, s.ui.yawOff);
   await sleep(200); const y1 = (await S()).ui.yawOff; await sleep(200); ok('松开 E 停止转动', Math.abs((await S()).ui.yawOff - y1) < 0.001);
   await press('KeyC'); s = await S(); ok('C 循环回侧视并回正', s.ui.camera === 'side' && s.ui.yawOff === 0, [s.ui.camera, s.ui.yawOff]);
   await hold('KeyQ', 1000); s = await S(); ok('按住 Q 左转约 90°', s.ui.yawOff < -1.2, s.ui.yawOff);

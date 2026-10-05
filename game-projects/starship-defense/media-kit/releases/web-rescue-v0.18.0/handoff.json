@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "version": "web-rescue-v0.18.0",
+  "kind": "formal_release",
+  "status": "validated_local_awaiting_git_resolution",
+  "at": "2026-10-05T12:22:35.819312+00:00",
+  "summary": "队友集合与载具救援；修复母巢返程和载具洞道跟随；母皇每关补给；修复飞虫无法伤害基地并增加失败提示；电脑/触屏手动切换。",
+  "changes": [
+    {
+      "id": "cave-return",
+      "before": "大厅出口路点仍在大厅判定范围，队友40秒后仍距玩家117–119米",
+      "after": "按目标选洞口并把大厅出门路点放在大厅外，三洞双向四兵种验证通过"
+    },
+    {
+      "id": "vehicle-follow",
+      "after": "地面载具使用虫洞路线和车身/净空检查；直升机在洞口待命"
+    },
+    {
+      "id": "rescue",
+      "after": "菜单队友集合/载具救援，各20秒游戏时间冷却；不恢复血量、不新增/复活单位、不移动玩家正在驾驶的载具；洞内载具救援停在洞口；驾驶分配保留，队友集合时驾驶员下车；副本与阵亡期间不可用"
+    },
+    {
+      "id": "queen-economy",
+      "after": "击杀母皇后本章每次通关额外领取 round((100+40*chapter)*(1+0.3*(loop-1))) 金币；后续虫潮-35%保留，晚杀仍有更多普通/精英掉落；防重复结算、读档兼容、跨章清除"
+    },
+    {
+      "id": "base-pressure",
+      "before": "基地模型在地面5米，逻辑位置y=0，飞虫因高度差只在基地上方移动，空基地600秒仍未损血",
+      "after": "基地逻辑高度与模型一致；地面虫先破门，远程被掩体遮挡时寻路接近；基地受袭提示和耐久归零失败规则明确。未统一增加怪物血量/伤害"
+    },
+    {
+      "id": "device-mode",
+      "after": "自动识别/电脑键鼠/手机触屏，暂停菜单快捷切换并保存；鼠标可操作虚拟摇杆和按钮；切换清除按住状态及鼠标锁定，保留本局"
+    }
+  ],
+  "qa": {
+    "main_checks": "31/31",
+    "main": "qa/final/results.json",
+    "input_checks": "16/16",
+    "inputs": "qa/input-results.json",
+    "regressions": {
+      "squad_crew": "passed",
+      "platform_unit": "passed",
+      "squad_follow": "passed 12/12",
+      "underground": "passed"
+    },
+    "test_maintenance": "verify-underground 的K键断言从已删除的闪避冷却改为实际起跳；verify-squad-follow 按既有标题只要求突击兵占比≤55%，不再对前排机枪兵附加未命名的≤55%限制。未修改游戏兵种数值来迎合测试。",
+    "browser": "headless Microsoft Edge / D3D11",
+    "physical_phone": false,
+    "method": "导航与防守为加速游戏函数模拟；摇杆、手雷、救援和模式切换采用实际浏览器指针/点击；未录制成片",
+    "package_smoke": "qa/package-smoke.json",
+    "package_smoke_status": "passed: no missing resources or script errors; isolated Toy save namespace"
+  },
+  "channels": {
+    "website": {
+      "status": "not_deployed",
+      "pending_version": "web-rescue-v0.18.0",
+      "reason": "主工作区开工时已有无关改动，HEAD 与 origin/master 分叉。已询问独立工作区或合并方案，未自行合并/变基/覆盖。"
+    },
+    "toy": {
+      "id": 38678478981120,
+      "status": "not_submitted",
+      "merge_versions": [
+        "web-squad-follow-v0.17.14",
+        "web-rescue-v0.18.0"
+      ],
+      "reason": "网站核验前先准备并自检包体；之后用相同已验证包预览、实测、提交。保留ID/slug/可见性/绑定。",
+      "package_sha256": "53b755025a957b41abed350f690858f3a16ad69116c3935830818ec2ad67cf60",
+      "package_manifest": "package-manifest.json",
+      "doctor": "toy-doctor.json"
+    },
+    "bilibili_description": {
+      "status": "not_submitted",
+      "targets": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt"
+      ],
+      "reason": "本版有明显体验变化，部署后应同步；先回读现有全文并查重，不覆盖旧片和元信息。"
+    },
+    "comments": {
+      "status": "not_requested_not_posted"
+    }
+  },
+  "next_steps": [
+    "等待 Git 分叉处理选择；推荐基于 origin/master 的独立工作区，只带本次文件。",
+    "提交推送；公网比对本页、bundle、基础CSS并试玩。",
+    "合并既有待同步项完成 Toy 同包预览、实测、提交并准确记录审核状态。",
+    "读取两条视频当前简介，更新紧凑版本提示并公开核验；推进成功渠道的基线。"
+  ],
+  "package_source_sha256": "7a8bea9e67dd917dabc8dfaa55246270247ad32d10343e8572707d7c6b438ecb"
+}

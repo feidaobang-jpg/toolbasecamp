@@ -1431,6 +1431,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         externalOpenTip: '外链游戏，将在新标签页打开',
         voteCta: '去投票',
+        voteNav: '投票',
         kindOriginal: '自研',
         kindExternal: '外链',
         sectionOriginal: '自研原创',

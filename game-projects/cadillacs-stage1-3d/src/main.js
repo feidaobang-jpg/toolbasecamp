@@ -377,7 +377,7 @@ setInterval(() => { const { vw, vh } = viewport(); if (vw + 'x' + vh !== lastSiz
 window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
 IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega') }, toLocal);   // 切换视角用右上角 #btn-cam
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => { camCtl.yawOff += delta; } });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => { camCtl.yawOff += camCtl.fp() ? -delta : delta; } });
 IN.onClear(() => dragLook.clear());
 
 addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
@@ -490,8 +490,8 @@ function presentFrame(dtReal, draw, instant) {
     const p = G.player;
     if (playing && G.mode === 'play') {
       const rot = (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0);
-      if (rot) camCtl.yawOff += rot * (Math.PI / 2) * dtReal;
-      if (IN.look.dx) { camCtl.yawOff += IN.look.dx * 0.005; IN.look.dx = 0; }
+      if (rot) camCtl.yawOff += (camCtl.fp() ? -rot : rot) * (Math.PI / 2) * dtReal;
+      if (IN.look.dx) { camCtl.yawOff += IN.look.dx * (camCtl.fp() ? -0.005 : 0.005); IN.look.dx = 0; }
     } else IN.look.dx = 0;
     const fpOff = camCtl.fp() && (['cut', 'trans', 'clear', 'over', 'cont'].indexOf(G.mode) >= 0 || ['down', 'dead', 'respawn', 'victory', 'door'].indexOf(p.state) >= 0);
     G.fpActive = camCtl.fp() && !fpOff;
