@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "findings": [
+    {
+      "severity": "WARN",
+      "file": ".",
+      "message": "4 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+    }
+  ]
+}

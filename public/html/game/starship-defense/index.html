@@ -5,6 +5,7 @@
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>虫潮围城</title>
+<link rel="stylesheet" href="../../../css/base.css?v=rescue180">
 <link rel="stylesheet" href="./combat-controls.css?v=dark104">
 <style>
 /* ---------- 结构 ---------- */
@@ -23,6 +24,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #hpBarWrap.low{animation:lowhp .6s steps(2) infinite}
 @keyframes lowhp{50%{outline:2px solid #ff4b4b}}
 #baseGuide{font-size:11px;margin-top:2px}
+#baseAlert{font-size:11px;margin-top:3px;color:#ffd28c;max-width:205px}
+#baseBarWrap.low{outline:2px solid #ff5757;animation:base-warning 1s infinite alternate}
+@keyframes base-warning{to{filter:brightness(1.8)}}
+.rescue-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+#rescueStatus{max-width:620px;text-align:center}
+#menuPause{justify-content:flex-start;padding-top:22px}
+#menuPause>*{flex-shrink:0}
+#menuPause label{color:#e3edf4}
+.rescue-actions button[aria-pressed="true"]{outline:2px solid #fff;outline-offset:2px}
 #radar{position:absolute;left:10px;top:150px;width:112px;height:112px}
 #msg{position:absolute;left:50%;top:24%;transform:translateX(-50%);font-size:24px;text-align:center;white-space:nowrap;z-index:12}
 #hint{position:absolute;left:50%;bottom:66px;transform:translateX(-50%);font-size:11px;text-align:center;max-width:620px;padding:6px 14px;border-radius:8px}
@@ -202,6 +212,7 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
       <div>🏰 基地 <span id="baseTxt"></span></div>
       <div id="baseBarWrap"><div id="baseBar"></div></div>
       <div id="baseGuide"></div>
+      <div id="baseAlert" role="status">基地耐久归零即失败</div>
     </div>
     <canvas id="radar" width="224" height="224" aria-label="小地图"></canvas>
     <div id="hudRight">
@@ -283,7 +294,8 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
       按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 跳跃（落地后可再次起跳，无冷却）· I 互动（开关城门、上下载具）· H 医疗包 · U 无限手雷（无需补充，无投掷间隔）· 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角；「切换视角」在各第三人称预设与第一/第三人称间循环，无需记键盘；商店、建造、换枪、医疗、手雷都有对应按钮<br>
       菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
-      玩法：准备阶段去野外打怪攒钱 → 商店买枪/强化（每把武器可强化到 Lv10）、造炮塔、雇队友 → 开战守住基地。虫子从远处虫洞钻出；地图最深处是虫巢，母皇和护卫只守老巢，击杀母皇本章虫潮 -35%<br>
+      玩法：打怪攒钱 → 买枪强化、造炮塔、雇队友 → 开战守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。<br>
+      母皇：早杀可减少本章后续虫潮 35%，每次通关额外领补给；晚杀保留更多虫群掉落。菜单可「队友集合 / 载具救援」，各冷却 20 秒，保留血量；在虫洞内救援时载具停在洞口。<br>
       城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和基地方向提示找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，三档难度分别领奖；右侧「菜单」或 P/Esc 暂停
     </div>
   </div>
@@ -291,6 +303,8 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   <!-- 暂停 -->
   <div id="menuPause" class="overlay menu hidden">
     <h2>⏸ 游戏暂停</h2>
+    <div class="rescue-actions"><button class="tb-btn" data-device-mode="desktop">电脑键鼠</button><button class="tb-btn" data-device-mode="touch">手机触屏</button><button class="tb-btn" data-device-mode="auto">自动识别</button></div>
+    <label class="small" for="deviceMode">操作模式 <select id="deviceMode"><option value="auto">自动识别</option><option value="desktop">电脑键鼠</option><option value="touch">手机触屏</option></select> · 切换立即生效，保留本局进度</label>
     <div class="btnRow">
       <button class="mbtn green" id="btnResume">▶ 继续游戏</button>
       <button class="mbtn" id="btnSaveMenu">💾 存档</button>
@@ -300,6 +314,8 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
     </div>
     <div class="btnRow"><label for="squadTask">队友任务：<select id="squadTask" style="font:inherit;padding:8px 12px;background:#172b35;color:#fff;border:1px solid #8ca6b2;border-radius:6px"><option value="follow">跟随我</option><option value="defend">守基地</option></select></label></div>
     <p class="small" id="squadTaskHint">跟随时自动应战、就近拾取；虫潮逼近基地时自动回防。</p>
+    <div class="rescue-actions"><button class="tb-btn" id="recallSquad">队友集合</button><button class="tb-btn" id="rescueVehicles">载具救援</button></div>
+    <p class="small" id="rescueStatus" role="status">救援保留血量，各冷却 20 秒。队友集合时驾驶员下车、分配保留；洞内救援载具会送到洞口。直升机跟随到洞口待命。</p>
     <div class="btnRow optRow">
       <button class="mbtn" id="personBtnMenu">人称</button>
       <button class="mbtn" id="qualityBtnMenu">画质</button>
@@ -387,6 +403,6 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=squadfollow1714" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=rescue180" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

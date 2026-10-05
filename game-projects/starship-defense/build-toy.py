@@ -29,6 +29,8 @@ def build():
         shutil.copy2(source, dest)
     text = (PACKAGE / 'index.html').read_text('utf-8')
     text = text.replace('../../../games.html', 'https://www.zhengxiaohui.cn/games.html')
+    text = text.replace('../../../css/base.css', './base.css')
+    shutil.copy2(ROOT / 'public/css/base.css', PACKAGE / 'base.css')
     text = text.replace('<script src="../../../js/game/thumb-preview.js"></script>', '')
     (PACKAGE / 'index.html').write_text(text, 'utf-8')
     bundled = (PACKAGE / 'game.compat.js').read_text('utf-8')
@@ -37,6 +39,7 @@ def build():
     (PACKAGE / 'game.compat.js').write_text(bundled.replace('"sst_save_"', '"toy-chongchao-v1-sst_save_"'), 'utf-8')
     archive = OUT / 'chongchao-qianshao.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
+        z.write(PACKAGE / 'base.css', 'base.css')
         for source in runtime_files:
             rel = source.relative_to(SOURCE)
             z.write(PACKAGE / rel, str(rel).replace('\\', '/'))
@@ -47,6 +50,7 @@ def build():
         'files': {str(p.relative_to(SOURCE)).replace('\\', '/'): hashlib.sha256((PACKAGE / p.relative_to(SOURCE)).read_bytes()).hexdigest() for p in runtime_files},
         'status': 'built_not_submitted', 'published_toy_unchanged': True,
     }
+    manifest['files']['base.css'] = hashlib.sha256((PACKAGE / 'base.css').read_bytes()).hexdigest()
     (OUT / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), 'utf-8')
     print(json.dumps({'output': str(OUT), 'zip_bytes': archive.stat().st_size, 'status': 'built_not_submitted'}, ensure_ascii=False))
 

@@ -54,7 +54,14 @@ export function hiveNavigation(from,to){
     const aligned=Math.abs((from.x-m.x)*m.dz-(from.z-m.z)*m.dx)<3;
     return aligned&&Math.hypot(from.x-m.x,from.z-m.z)<11?t.samples[5]:m.out;
   }
-  if(inRoom(from)){if(to.z>=182&&!inRoom(to))return b.t.samples[b.t.samples.length-5];return a.t.samples[a.t.samples.length-5];}
+  if(inRoom(from)){
+    // Pick the exit toward the destination, and a waypoint OUTSIDE the room.
+    // The old last-5 sample was still in the room: units reached it then turned
+    // back to it forever, especially at the west/east gallery junctions.
+    const exit=b.t;
+    for(let i=exit.samples.length-1;i>=0;i--){const s=exit.samples[i];if(Math.hypot(s.x-HIVE.x,s.z-HIVE.z)>=26)return s;}
+    return exit.samples[0];
+  }
   const inward=to.z>=182&&(inRoom(to)||a.t!==b.t||b.i>a.i);
   if(a.t===b.t&&Math.hypot(from.x-to.x,from.z-to.z)<7)return null;
   if(inward&&a.i>=a.t.samples.length-4)return {x:HIVE.x,z:HIVE.z};
