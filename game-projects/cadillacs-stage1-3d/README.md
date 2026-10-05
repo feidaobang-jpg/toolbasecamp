@@ -1,6 +1,6 @@
 # 恐龙快打 · 第一关 3D 重置版（cadillacs-stage1-3d）
 
-Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）第一关「海上都市 CITY IN THE SEA」的 3D 网页重置版（当前 v0.1.0）。四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原，从大楼楼顶打进大楼内部、跳窗杀到第 47 街，最后打倒 Boss 维斯·T 和他的岩跳龙。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染，角色、场景是程序化低模（卡通着色 + 描边），音乐音效是 WebAudio 实时合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
+Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）第一关「海上都市 CITY IN THE SEA」的 3D 网页重置版（当前 v0.1.1）。四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原，从大楼楼顶打进大楼内部、跳窗杀到第 47 街，最后打倒 Boss 维斯·T 和他的岩跳龙。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染，角色、场景是程序化低模（卡通着色 + 描边），音乐音效是 WebAudio 实时合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
 
 ## 目录
 
@@ -36,7 +36,8 @@ URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `win
 先在 `public` 目录起服务（`node qa/serve.mjs 8777`），再运行（Playwright 默认取 `D:/project/godot/absurd-3d-daily/node_modules/playwright`，浏览器用系统 Edge + 真显卡；`CD_SWIFT=1` 改软件渲染）：
 
 - `node qa/desktop.js`：桌面纯键盘验收（88 项）
-- `node qa/mobile.js`：手机设备模拟 + 多点触控验收（32 项，含竖屏旋转、0×0 启动）
+- `node qa/mobile.js`：手机设备模拟 + 多点触控验收（34 项，含竖屏旋转、0×0 启动）
+- `node qa/camera.js [前缀]`：镜头回归（11 项）：正视贴第 47 街后墙 Q/E 转一圈不进墙、主角始终可见；第一人称贴身岩跳龙 / 维斯不黑屏不满屏；侧视锁屏 Boss 战（16:9 与 2.17:1）角色逐顶点投影不出画。`CD_BASE` 指向旧构建、`NO_ASSERT=1` 可得修复前对照
 - `node qa/botrun.js <英雄0-3> <种子> [std|easy|classic]`：手动时钟让 bot 打完整关
 - `node qa/perf.js [宽] [高] [high|low]`：实时测帧
 - `node qa/shots.js <英雄> <前缀>`：各区域、各视角截图

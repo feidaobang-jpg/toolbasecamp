@@ -1,7 +1,7 @@
 {
   "name": "cadillacs-stage1-3d",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "恐龙快打（Cadillacs and Dinosaurs）第一关 3D 重置版：源码与构建",
   "scripts": {
     "build": "node tools/build.mjs",

@@ -172,7 +172,7 @@ export function buildWorld(scene) {
   scene.fog = new THREE.Fog(0xccccdd, 60, 320);
   for (let i = 0; i < AREAS.length; i++) {
     const g = new THREE.Group(); g.visible = false; scene.add(g);
-    const A = { def: AREAS[i], group: g, cutters: [], fades: [], light: null };
+    const A = { def: AREAS[i], group: g, cutters: [], fades: [], camBoxes: [], light: null };
     W.areas.push(A);
     BUILDERS[AREAS[i].id](A, W);
   }
@@ -195,15 +195,28 @@ export function buildWorld(scene) {
     if (!A) return;
     // 剖切：镜头在墙外侧时隐藏该墙（玩偶屋视图）
     for (const c of A.cutters) {
-      const out = c.ceiling ? cam.position.y > c.p.y - 0.2 : (cam.position.x - c.p.x) * c.n.x + (cam.position.z - c.p.z) * c.n.z < 0.05;
+      const d = (cam.position.x - c.p.x) * c.n.x + (cam.position.z - c.p.z) * c.n.z;
+      const out = c.ceiling ? cam.position.y > c.p.y - 0.2 : d < 0.05;
       c.mesh.visible = !out;
+      // 镜头还在墙前、但贴着这面墙（near 米内、且在墙的横向范围里）时整面墙渐隐，避免侧面大片砖墙贴满画面；转到墙后再整层剖切
+      if (c.near && !out) {
+        const b = c.box, P = cam.position, by = P.x > b.min.x - 1 && P.x < b.max.x + 1 && P.z > b.min.z - 1 && P.z < b.max.z + 1;
+        const k = by ? Math.min(1, (d - 0.05) / c.near) : 1, op = 0.2 + 0.8 * k * k;
+        c.mesh.userData.nearOp = op;
+        if (c.mesh.userData.fade) continue;   // 同时有视线淡化的（楼体立面）在下面合并
+        const m = c.mesh.material, tr = op < 0.99;
+        if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; }
+        m.opacity = op; m.depthWrite = op > 0.6;
+      }
     }
     // 户外遮挡：镜头到主角的视线穿过建筑包围盒时半透明
     if (focus) for (const f of A.fades) {
       tmpA.copy(cam.position); tmpB.set(focus.x, focus.y + 1.0, focus.z);
       const hit = segBox(tmpA, tmpB, f.box);
       f.k += ((hit ? 0.22 : 1) - f.k) * Math.min(1, dt * 8);
-      for (const m of f.mats) { m.opacity = f.k; m.transparent = f.k < 0.99; m.depthWrite = f.k > 0.6; }
+      // transparent 切换必须 needsUpdate：opaque 材质编译时带 OPAQUE 宏（片元 alpha 固定为 1），只改标志不会变透明
+      const op = Math.min(f.k, f.mesh.userData.nearOp === undefined ? 1 : f.mesh.userData.nearOp);
+      for (const m of f.mats) { const tr = op < 0.99; if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; } m.opacity = op; m.depthWrite = op > 0.6; }
     }
     for (const w of A.waters || []) w.material.map.offset.set(t * 0.004, t * 0.002);
     for (const p of A.pteros || []) {
@@ -221,6 +234,8 @@ export function buildWorld(scene) {
     if (A.anim) A.anim(t, dt);
   };
   W.area = () => W.areas[W.active];
+  // 运行中会切换透明的材质（户外遮挡淡化、墙面贴近渐隐）：main.js 开局时预编译它们的透明着色器变体
+  W.fadeMats = () => { const s = new Set(); for (const A of W.areas) { for (const f of A.fades) f.mats.forEach(m => s.add(m)); for (const c of A.cutters) if (c.near) s.add(c.mesh.material); } return Array.from(s); };
   return W;
 }
 function segBox(a, b, box) {
@@ -238,10 +253,17 @@ function segBox(a, b, box) {
 }
 function addFade(A, mesh, box) {
   const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-  A.fades.push({ mesh, box, mats, k: 1 });
+  A.fades.push({ mesh, box, mats, k: 1 }); mesh.userData.fade = true;
 }
-function addCut(A, mesh, nx, nz, px, pz, ceiling, py) {
-  A.cutters.push({ mesh, n: new THREE.Vector3(nx, 0, nz), p: new THREE.Vector3(px, py || 0, pz), ceiling: !!ceiling });
+function addCut(A, mesh, nx, nz, px, pz, ceiling, py, near) {
+  A.cutters.push({ mesh, n: new THREE.Vector3(nx, 0, nz), p: new THREE.Vector3(px, py || 0, pz), ceiling: !!ceiling, near: near || 0, box: near ? new THREE.Box3().setFromObject(mesh) : null });
+}
+// 镜头避让用的实体包围盒：取 Parts 里每个零件变换后的轴对齐包围盒（camera.js 的 avoid 使用）
+function addSolids(A, parts) {
+  for (const it of parts.list) {
+    if (!it.geo.boundingBox) it.geo.computeBoundingBox();
+    A.camBoxes.push(it.geo.boundingBox.clone().applyMatrix4(it.m));
+  }
 }
 
 // 静态雕像（金色骑士）：烘焙为单网格
@@ -423,15 +445,18 @@ const BUILDERS = {
     const ground = new THREE.Mesh(texBox(130, 0.4, 70, 2.8), texMat('pave')); ground.position.set(33, -0.2, 0); ground.receiveShadow = true; g.add(ground);
     const brickMat = new THREE.MeshLambertMaterial({ map: T('brick'), vertexColors: true });
     const r = fixedRng(404);
-    // 后侧残墙：锯齿状墙头
-    const bp = new Parts();
+    // 后侧残墙：锯齿状墙头。单独成网格，镜头转到墙后时整层剖切（贴着走道的墙，靠拉近镜头躲不开）
+    const wp = new Parts();
     let x = 12.2;
     while (x < 70) {
       const w = 1.2 + r() * 1.6, h = x < 14 ? 2.6 : 1.4 + r() * 2.8 * (x > 44 && x < 64 ? 0.55 : 1);
-      bp.add(texBox(w, h, 0.5, 1.6), '#ffffff', mtx(x + w / 2, h / 2, -3.35));
-      if (r() < 0.4) bp.add(texBox(w * 0.6, 0.3, 0.5, 1.6), '#ffffff', mtx(x + w * 0.3, h + 0.15, -3.35));
+      wp.add(texBox(w, h, 0.5, 1.6), '#ffffff', mtx(x + w / 2, h / 2, -3.35));
+      if (r() < 0.4) wp.add(texBox(w * 0.6, 0.3, 0.5, 1.6), '#ffffff', mtx(x + w * 0.3, h + 0.15, -3.35));
       x += w;
     }
+    const wall = new THREE.Mesh(wp.build(), brickMat.clone()); wall.castShadow = true; wall.receiveShadow = true; g.add(wall);
+    addCut(A, wall, 0, 1, 0, -3.1, false, 0, 0.7);   // 0.7：主角站最里排（墙前 0.8 米）时正视 / 第一人称不受影响
+    const bp = new Parts();
     // 墙后的倒塌砖堆与第二道断墙
     for (let i = 0; i < 26; i++) { const xx = 8 + r() * 66, zz = -6 - r() * 16, w = 2 + r() * 5, h = 1 + r() * 5; bp.add(texBox(w, h, 0.6 + r() * 2, 1.6), '#f0e8e0', mtx(xx, h / 2 - 0.2, zz, 0, r() * 0.6 - 0.3, 0)); }
     // 前侧：低矮碎砖与路缘（不挡侧视镜头）
@@ -442,11 +467,13 @@ const BUILDERS = {
     // 尽头：倒塌的砖堆挡住去路
     bp.add(texBox(3, 3.2, 9, 1.6), '#e8dcd0', mtx(68.4, 1.4, 0, 0, 0, 0.12)); bp.add(texBox(2.4, 1.8, 6, 1.6), '#f0e4d8', mtx(66.6, 0.6, 1.5, 0, 0.3, -0.2));
     const bricks = new THREE.Mesh(bp.build(), brickMat); bricks.castShadow = true; bricks.receiveShadow = true; g.add(bricks);
+    addSolids(A, bp);
     // 藤蔓
     const vp = new Parts();
     for (let i = 0; i < 26; i++) { const xx = 12 + r() * 54; vp.add(GEO.sphLo, i % 2 ? '#4f8a3a' : '#6aa048', mtx(xx, 0.4 + r() * 1.8, -3.05, 0, 0, 0, 0.18 + r() * 0.25, 0.3 + r() * 0.6, 0.08)); }
     for (let i = 0; i < 18; i++) { const xx = 10 + r() * 56; vp.add(GEO.cone, '#7aa04a', mtx(xx, 0.15, -2.95 + r() * 0.3, 0, 0, (r() - 0.5) * 0.5, 0.05, 0.35 + r() * 0.3, 0.05)); }
-    g.add(new THREE.Mesh(vp.build(), toonMat()));
+    const vines = new THREE.Mesh(vp.build(), toonMat()); g.add(vines);
+    addCut(A, vines, 0, 1, 0, -3.1, false, 0, 0.7);   // 藤蔓贴在后墙上，随墙一起剖切
     // 起点的石砌楼角：墙面、拱门（黑埃尔默破门而出）、侧墙
     const stoneMat = new THREE.MeshLambertMaterial({ map: T('stone'), vertexColors: true });
     const fp = new Parts();
@@ -457,10 +484,12 @@ const BUILDERS = {
     for (const wx of [1.4, 10.0]) { fp.add(GEO.box, '#2a241c', mtx(wx, 6.2, -3.18, 0, 0, 0, 1.4, 2.0, 0.08)); fp.add(GEO.box, '#e6dcc8', mtx(wx, 5.15, -3.12, 0, 0, 0, 1.7, 0.16, 0.2)); }
     const facade = new THREE.Mesh(fp.build(), stoneMat); facade.castShadow = true; facade.receiveShadow = true; g.add(facade);
     addFade(A, facade, new THREE.Box3(new THREE.Vector3(-1.2, 0, -4.3), new THREE.Vector3(12.5, 10.5, -3.0)));
+    addCut(A, facade, 0, 1, 0, -3.0, false, 0, 0.6);   // 镜头转到楼体立面后面（楼里）时剖切；0.6：主角站最里排（立面前 0.7 米）时不受影响
     const sideW = new THREE.Mesh(texBox(1.0, 10, 9.0, 2.4), new THREE.MeshLambertMaterial({ map: T('stone') })); sideW.position.set(-1.5, 5, 0.3); sideW.receiveShadow = true; g.add(sideW);
     addCut(A, sideW, 1, 0, -1.9, 0);
     const doorDark = new THREE.Mesh(new THREE.BoxGeometry(2.4, 3.4, 0.1), new THREE.MeshBasicMaterial({ color: 0x0d0906 })); doorDark.position.set(5.3, 1.7, -3.2); g.add(doorDark);
     const planks = new THREE.Group(); planks.position.set(5.3, 0, -3.12); g.add(planks);
+    addCut(A, doorDark, 0, 1, 0, -3.0); addCut(A, planks, 0, 1, 0, -3.0);
     A.facadePlanks = [];
     for (let i = 0; i < 5; i++) { const pk = meshFrom(new Parts().add(texBox(0.46, 3.3, 0.1, 1), i % 2 ? '#7a5634' : '#6a4a2c', mtx(0, 1.65, 0)).build(), { mat: toonMat(), thin: true }); pk.position.x = -0.96 + i * 0.48; planks.add(pk); A.facadePlanks.push(pk); }
     // Boss 区：倒塌的铁丝网

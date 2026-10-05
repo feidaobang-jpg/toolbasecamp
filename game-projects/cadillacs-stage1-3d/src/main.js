@@ -7,7 +7,7 @@ import { buildWorld } from './world.js';
 import { createFx } from './fx.js';
 import { createCamera, PRESETS } from './camera.js';
 import { HEROES, ENEMY } from './level.js';
-import { buildHuman, buildRaptor, SPECS, portrait, outline, itemGeo, meshFrom } from './models.js';
+import { buildHuman, buildRaptor, SPECS, portrait, outline, itemGeo, meshFrom, toonMat } from './models.js';
 import { HP, applyPose, mod } from './anim.js';
 import * as GM from './game.js';
 
@@ -485,7 +485,8 @@ function presentFrame(dtReal, draw, instant) {
     G.fpActive = camCtl.fp() && !fpOff;
     const AR = world.area().def;
     const zc = (AR.z0 + AR.z1) / 2 * 0.6 + p.z * 0.25;
-    camCtl.update(dtReal, { focusX: G.focusX, zc, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) }, shake: fx.shake * 0.8, instant, fpOff });
+    const fitDepth = AR.z1 - ((AR.z0 + AR.z1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
+    camCtl.update(dtReal, { focusX: G.focusX, zc, fitDepth, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {
@@ -518,6 +519,16 @@ applyQuality();
 refreshOptions();
 fx.warm();
 try { renderer.compile(scene, camCtl.cam); } catch (e) { /* 旧浏览器跳过 */ }
+// 预编译「淡化」用的透明着色器变体（第一人称贴身淡化、墙面渐隐、户外遮挡淡化）：否则第一次触发时现编，卡一帧约 55 ms。
+// 角色材质各自独立但参数相同，共用这里留住的卡通透明程序（warmToon 不释放）
+const warmToon = toonMat();
+try {
+  const geo = new THREE.BoxGeometry(0.01, 0.01, 0.01), mats = world.fadeMats().concat([warmToon]), tmp = [];
+  for (const m of mats) { m.transparent = true; m.needsUpdate = true; const o = new THREE.Mesh(geo, m); scene.add(o); tmp.push(o); }
+  renderer.compile(scene, camCtl.cam);
+  for (const o of tmp) scene.remove(o);
+  for (const m of mats) { m.transparent = false; m.needsUpdate = true; }
+} catch (e) { /* 旧浏览器跳过 */ }
 show('menu');
 $('loading').hidden = true;
 requestAnimationFrame((t) => { last = t; frame(t); });
@@ -531,7 +542,7 @@ if (TEST) {
       const s = GM.snapshot();
       s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, yawOff: +camCtl.yawOff.toFixed(3), fpActive: !!G.fpActive, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.getAttribute('data-hero') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent, hero: settings.hero, settings: Object.assign({}, settings) };
       s.input = IN.debug();
-      s.cam = { pos: camCtl.cam.position.toArray().map(v => +v.toFixed(2)), axes: camCtl.axes() };
+      s.cam = { pos: camCtl.cam.position.toArray().map(v => +v.toFixed(2)), axes: camCtl.axes(), av: { s: +camCtl.av.s.toFixed(3), lift: +camCtl.av.lift.toFixed(3), blocked: camCtl.av.blocked } };
       s.hud = { hp: H_.hp.style.width, timer: H_.timer.hidden ? null : H_.timer.textContent, enemy: H_.enemy.hidden ? null : H_.ename.textContent, weapon: H_.weapon.hidden ? null : H_.wname.textContent, go: !H_.go.hidden, dialog: H_.dialog.hidden ? null : H_.dtext.textContent };
       return s;
     },

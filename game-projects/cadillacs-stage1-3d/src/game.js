@@ -2,7 +2,7 @@
 // 固定 60Hz 逻辑步长；坐标 x = 关卡前进方向，z = 纵深，y = 高度。
 import * as THREE from 'three';
 import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
-import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, ENTER_DX } from './level.js';
+import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX } from './level.js';
 import { buildHuman, buildRaptor, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
 import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
 import { propMesh } from './world.js';
@@ -406,6 +406,8 @@ function updatePlayer(p, dt) {
       p.vx = p.vz = 0;
       const dx = Math.sin(p.face), dz = Math.cos(p.face);
       e.x = p.x + dx * 0.66; e.z = p.z + dz * 0.66; e.face = p.face + Math.PI;
+      // 锁屏时在画面边缘朝外抓人：两人一起往里挪，被抓的敌人不出画
+      if (G.lockX !== null) { const m = HALF_W - EDGE - Math.max(0, e.radius - 0.34), o = e.x - clamp(e.x, G.focusX - m, G.focusX + m); if (o) { e.x -= o; p.x -= o; } }
       if (p.st > (e.type === 'vice' ? 0.7 : 1.5)) { breakFree(p, e); }
       if (p.sub.anim && p.st - p.sub.animT > p.sub.animDur) p.sub.anim = null;
       break;
@@ -955,12 +957,24 @@ function physics(a, dt) {
       if (a.state === 'leap') { a.vx *= 0.2; a.vz *= 0.2; }
     }
   }
-  // 边界：纵深与区域两端；玩家受卷轴窗口限制，敌人可稍出屏
+  // 边界：纵深与区域两端；玩家受卷轴窗口限制，卷轴时敌人可稍出屏，锁屏时敌人也不出画
   const free = ['enter', 'leave', 'flee', 'cut'].indexOf(a.state) >= 0;
   if (!free) {
     const zMin = AR.z0, zMax = AR.z1;
     a.z = clamp(a.z, zMin, zMax);
-    if (a.side === 'player') a.x = clamp(a.x, Math.max(AR.x0 + 0.3, G.focusX - HALF_W + 0.35), Math.min(AR.x1, G.focusX + HALF_W - 0.35));
+    if (a.side === 'player' || G.lockX !== null) {
+      // 原作锁屏：敌人、Boss、被打飞或摔出去的角色撞到画面边缘就停住；岩跳龙连尾巴长 3 米多，多留一些
+      const m = HALF_W - EDGE - (a.side === 'player' ? 0 : a.isRaptor ? 1.45 : Math.max(0, a.radius - 0.34));
+      const lo = a.side === 'player' ? Math.max(AR.x0 + 0.3, G.focusX - m) : G.focusX - m, hi = a.side === 'player' ? Math.min(AR.x1, G.focusX + m) : G.focusX + m;
+      if (a.x < lo) { a.x = lo; if (a.vx < 0) a.vx = 0; }
+      else if (a.x > hi) { a.x = hi; if (a.vx > 0) a.vx = 0; }
+      // 倒地横躺比站着多占半个身长：贴边倒下的再往里滑一点（不瞬移）
+      if (a.state === 'down' || a.state === 'dead') {
+        const lie = 0.45;
+        if (a.x < lo + lie) { a.x = Math.min(lo + lie, a.x + 3 * dt); if (a.vx < 0) a.vx = 0; }
+        else if (a.x > hi - lie) { a.x = Math.max(hi - lie, a.x - 3 * dt); if (a.vx > 0) a.vx = 0; }
+      }
+    }
     else a.x = clamp(a.x, Math.max(AR.x0 - 1, G.focusX - HALF_W - 2.2), Math.min(AR.x1 + 1, G.focusX + HALF_W + 2.2));
   }
   // 道具阻挡
@@ -1553,6 +1567,7 @@ export function render(dt, realT) {
     else if (a.invul > 0 && a.side === 'player' && a.state !== 'attack' && !G.settings.demo) vis = Math.floor(G.t * 15) % 2 === 0;
     if (a === G.player && G.fpActive) vis = false;
     a.model.root.visible = vis;
+    nearFade(a);
     // 受击闪白
     const m = a.model.mat;
     if (m) { const f = a.flash > 0 ? 0.3 * Math.min(1, a.flash / 0.08) : 0; m.emissive.setRGB(f, f * 0.95, f * 0.85); if (a === G.player && G.settings.demo) m.emissive.setRGB(0.15, 0.12 + Math.sin(G.t * 8) * 0.08, 0.02); }
@@ -1566,6 +1581,36 @@ export function render(dt, realT) {
     G.chain.scale.y = h.distanceTo(n);
     G.chain.lookAt(n); G.chain.rotateX(Math.PI / 2);
   }
+}
+// 第一人称：贴到镜头上的敌人 / 岩跳龙按「镜头到各部件包围球」的最近距离淡化，并隐藏描边与手持武器，
+// 避免近裁剪面切进模型（满屏贴图、露出牙齿和模型内部，或描边外壳把整屏盖黑）
+const _sph = new THREE.Sphere();
+function nearFade(a) {
+  let k = 1;
+  if (G.fpActive && a !== G.player) {
+    const c = camCtl.cam.position;
+    if (Math.hypot(a.x - c.x, a.z - c.z) < 3.2) {
+      a.model.root.updateMatrixWorld(true);
+      let gap = 9;
+      a.model.root.traverse(o => {
+        if (!o.isMesh || o.userData.outline) return;
+        const g = o.geometry;
+        if (!g.boundingSphere) g.computeBoundingSphere();
+        _sph.copy(g.boundingSphere).applyMatrix4(o.matrixWorld);
+        gap = Math.min(gap, c.distanceTo(_sph.center) - _sph.radius);
+      });
+      k = clamp((gap - 0.05) / 0.45, 0, 1);
+    }
+  }
+  const was = a.nearK === undefined ? 1 : a.nearK;
+  if (k === was || (k > 0 && k < 1 && Math.abs(k - was) < 0.02)) return;
+  a.nearK = k;
+  const m = a.model.mat, tr = k < 1;
+  if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; }   // 切换透明要重编着色器（OPAQUE 宏），否则透明度不生效
+  m.opacity = 0.15 + 0.85 * k; m.depthWrite = k > 0.6;
+  const ol = k > 0.97;
+  a.model.root.traverse(o => { if (o.userData.outline) o.visible = ol; });
+  if (a.wmesh) a.wmesh.visible = k > 0.5;
 }
 function targetPose(a, realT) {
   const s = a.state, st = a.st;
@@ -1703,7 +1748,7 @@ export const _test = {
   setTimer(t) { G.timer = t; },
   bossHp(v) { if (G.boss) G.boss.hp = v; },
   skipScript() { while (G.script) stepScript(10); },
-  actors: () => G.actors.map(a => ({ id: a.id, type: a.type, side: a.side, state: a.state, x: +a.x.toFixed(2), y: +a.y.toFixed(2), z: +a.z.toFixed(2), hp: +(a.hp || 0).toFixed(1), alive: a.alive, face: +a.face.toFixed(2), token: a.token })),
+  actors: () => G.actors.map(a => ({ id: a.id, type: a.type, side: a.side, state: a.state, x: +a.x.toFixed(2), y: +a.y.toFixed(2), z: +a.z.toFixed(2), hp: +(a.hp || 0).toFixed(1), alive: a.alive, face: +a.face.toFixed(2), token: a.token, nearK: a.nearK === undefined ? 1 : +a.nearK.toFixed(2), radius: a.radius, raptor: !!a.isRaptor })),
   props: () => G.props.map(p => ({ kind: p.kind, x: p.x, z: p.z, broken: p.broken, hp: p.hp })),
   items: () => G.items.map(i => ({ kind: i.kind, x: +i.x.toFixed(2), z: +i.z.toFixed(2) }))
 };
