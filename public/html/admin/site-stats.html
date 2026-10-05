@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../../css/base.css?v=nosTW1" />
   <link rel="stylesheet" href="../../css/admin-shell.css?v=nosTW4" />
   <link rel="stylesheet" href="../../css/site-mobile-nav.css?v=nosTW1" />
-  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=game-clicks1" />
+  <link rel="stylesheet" href="../../css/admin/site-stats.css?v=game-summary3" />
 </head>
 <body class="admin-page">
   <header class="admin-header">
@@ -84,25 +84,57 @@
       <p class="stats-note" id="visitor-stats-note">访客按所选日期内的浏览器标识去重；历史漏记数据可能不完整。</p>
 
       <section class="stats-section" id="game-click-stats">
-        <h3 class="stats-section-title" data-i18n="gameClickStats.title">游戏入口点击</h3>
+        <h3 class="stats-section-title" data-i18n="gameClickStats.title">游戏入口统计</h3>
         <p class="stats-section-sub" data-i18n="gameClickStats.description">统计游戏列表中「B 站玩」「本站玩」两个按钮，按北京时间筛选；不含封面、标题点击。</p>
+        <p id="game-click-range" class="game-click-range"></p>
         <div class="stats-grid" id="game-click-cards"></div>
-        <div class="stats-table-wrap game-click-table-wrap">
+        <div id="game-click-channels" class="game-click-channels"></div>
+        <div class="game-click-controls">
+          <div class="stats-field">
+            <label for="game-click-scope" data-i18n="gameClickStats.scope">榜单范围</label>
+            <select id="game-click-scope" class="stats-select">
+              <option value="selected" data-i18n="gameClickStats.selected">所选日期</option>
+              <option value="all_time" data-i18n="gameClickStats.allTime">累计至今</option>
+            </select>
+          </div>
+          <div class="stats-field">
+            <label for="game-click-sort" data-i18n="gameClickStats.sort">排序指标</label>
+            <select id="game-click-sort" class="stats-select">
+              <option value="combined.visitors" data-i18n="gameClickStats.totalPeople">合计人数</option>
+              <option value="combined.clicks" data-i18n="gameClickStats.totalClicks">合计点击</option>
+              <option value="toy.visitors" data-i18n="gameClickStats.toyVisitors">B 站玩 · 去重人数</option>
+              <option value="toy.clicks" data-i18n="gameClickStats.toyClicks">B 站玩 · 点击次数</option>
+              <option value="site.visitors" data-i18n="gameClickStats.siteVisitors">本站玩 · 去重人数</option>
+              <option value="site.clicks" data-i18n="gameClickStats.siteClicks">本站玩 · 点击次数</option>
+            </select>
+          </div>
+          <button id="game-click-direction" type="button" class="tb-btn" data-i18n="gameClickStats.desc">从高到低</button>
+          <div class="stats-field game-click-search">
+            <label for="game-click-search" data-i18n="gameClickStats.search">搜索游戏</label>
+            <input id="game-click-search" type="search" class="stats-input" />
+          </div>
+          <label class="game-click-zero"><input id="game-click-zero" type="checkbox" /> <span data-i18n="gameClickStats.showZero">显示零点击游戏</span></label>
+        </div>
+        <p id="game-click-result" class="stats-note" aria-live="polite"></p>
+        <div class="stats-table-wrap game-click-table-wrap" tabindex="0" role="region" aria-label="游戏入口排行榜">
           <table class="stats-table">
-            <thead>
-              <tr>
-                <th data-i18n="gameClickStats.game">游戏</th>
-                <th data-i18n="gameClickStats.toyClicks">B 站玩 · 点击次数</th>
-                <th data-i18n="gameClickStats.toyVisitors">B 站玩 · 去重人数</th>
-                <th data-i18n="gameClickStats.siteClicks">本站玩 · 点击次数</th>
-                <th data-i18n="gameClickStats.siteVisitors">本站玩 · 去重人数</th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th data-i18n="gameClickStats.rank">排名</th>
+              <th data-i18n="gameClickStats.game">游戏</th>
+              <th data-game-sort="combined.visitors"><button type="button" class="tb-btn" data-i18n="gameClickStats.totalPeople">合计人数</button></th>
+              <th data-game-sort="combined.clicks"><button type="button" class="tb-btn" data-i18n="gameClickStats.totalClicks">合计点击</button></th>
+              <th data-game-sort="toy.visitors"><button type="button" class="tb-btn" data-i18n="gameClickStats.toyPeopleShort">B 站人数</button></th>
+              <th data-game-sort="toy.clicks"><button type="button" class="tb-btn" data-i18n="gameClickStats.toyClicksShort">B 站点击</button></th>
+              <th data-game-sort="site.visitors"><button type="button" class="tb-btn" data-i18n="gameClickStats.sitePeopleShort">本站人数</button></th>
+              <th data-game-sort="site.clicks"><button type="button" class="tb-btn" data-i18n="gameClickStats.siteClicksShort">本站点击</button></th>
+            </tr></thead>
             <tbody id="game-click-body"></tbody>
+            <tfoot id="game-click-footer"></tfoot>
           </table>
         </div>
+        <p class="stats-note" data-i18n="gameClickStats.footer">合计行始终为当前榜单范围内的全部游戏，不受搜索和零点击筛选影响。</p>
         <p id="game-click-error" class="stats-warn" hidden data-i18n="gameClickStats.unavailable">游戏点击统计暂不可用，请稍后刷新。</p>
-        <p class="stats-note" data-i18n="gameClickStats.note">人数按浏览器标识在所选日期内去重，同一访客跨游戏、跨天不会在入口总人数中重复累加；两种入口分别去重。清除浏览器数据或换设备会另计。管理员与排除 IP 不计入。</p>
+        <p class="stats-note" data-i18n="gameClickStats.note">总人数跨入口、跨游戏、跨天去重，不是各列或各游戏人数相加；人数代表浏览器标识，不是实名人数。</p>
         <p class="stats-note" data-i18n="gameClickStats.history">从本功能上线后开始记录，历史点击无法补算。点击不等于实际游玩，也不等于 B 站 Toy 的已玩人数。</p>
       </section>
 
@@ -158,10 +190,11 @@
     </div>
   </main>
 
-  <script src="../../js/locales/zh-CN.js?v=game-clicks1"></script>
+  <script src="../../js/locales/zh-CN.js?v=game-summary3"></script>
   <script src="../../js/i18n.js?v=visitor-stats2"></script>
   <script src="../../js/config.js?v=nosTW1"></script>
   <script src="../../js/admin/admin-gate.js?v=nosTW5"></script>
-  <script src="../../js/admin/site-stats.js?v=visitor-stats2"></script>
+  <script src="../../js/admin/game-click-stats.js?v=game-summary3"></script>
+  <script src="../../js/admin/site-stats.js?v=game-summary3"></script>
 </body>
 </html>

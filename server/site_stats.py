@@ -686,6 +686,21 @@ def stats_overview(
 
 
 def _game_click_snapshot(cur, start: date, end: date) -> dict:
+    selected = _game_click_counts(cur, start, end)
+    today = _today_cn()
+    all_time = _game_click_counts(cur, date(1970, 1, 1), today)
+    cur.execute("SELECT MIN(stat_date) AS first_date FROM site_stats_game_clicks WHERE stat_date <= %s",
+                (today.isoformat(),))
+    first_date = (cur.fetchone() or {}).get("first_date")
+    all_time["from"] = str(first_date) if first_date else None
+    all_time["to"] = today.isoformat()
+    selected["from"] = start.isoformat()
+    selected["to"] = end.isoformat()
+    selected["all_time"] = all_time
+    return selected
+
+
+def _game_click_counts(cur, start: date, end: date) -> dict:
     """Count each browser once per channel over the entire selected CN date range."""
     totals = {channel: {"clicks": 0, "visitors": 0} for channel in ("toy", "site")}
     games = {
@@ -693,6 +708,7 @@ def _game_click_snapshot(cur, start: date, end: date) -> dict:
             "key": game["key"], "titleKey": game["titleKey"],
             "toy": {"clicks": 0, "visitors": 0},
             "site": {"clicks": 0, "visitors": 0},
+            "combined": {"clicks": 0, "visitors": 0},
         }
         for game in original_games()
     }
@@ -725,7 +741,31 @@ def _game_click_snapshot(cur, start: date, end: date) -> dict:
             games[row["game_key"]][row["channel"]] = {
                 "clicks": int(row["clicks"] or 0), "visitors": int(row["visitors"] or 0),
             }
-    return {"totals": totals, "games": list(games.values())}
+    cur.execute(
+        """
+        SELECT game_key, SUM(hit_count) AS clicks,
+               COUNT(DISTINCT NULLIF(visitor_id, '')) AS visitors
+        FROM site_stats_game_clicks
+        WHERE stat_date >= %s AND stat_date <= %s
+        GROUP BY game_key
+        """, params,
+    )
+    for row in cur.fetchall() or []:
+        if row["game_key"] in games:
+            games[row["game_key"]]["combined"] = {
+                "clicks": int(row["clicks"] or 0), "visitors": int(row["visitors"] or 0),
+            }
+    # Global distinct is intentionally not a sum of channels or game rows.
+    cur.execute(
+        """
+        SELECT SUM(hit_count) AS clicks,
+               COUNT(DISTINCT NULLIF(visitor_id, '')) AS visitors
+        FROM site_stats_game_clicks WHERE stat_date >= %s AND stat_date <= %s
+        """, params,
+    )
+    row = cur.fetchone() or {}
+    combined = {"clicks": int(row.get("clicks") or 0), "visitors": int(row.get("visitors") or 0)}
+    return {"totals": totals, "combined": combined, "games": list(games.values())}
 
 
 def _table_exists(cur, name: str) -> bool:
