@@ -1,0 +1,535 @@
+{
+ "date": "2026-10-05T12:34:46.964Z",
+ "pass": 89,
+ "total": 89,
+ "results": [
+  {
+   "name": "标题载入、主菜单获得焦点",
+   "pass": true,
+   "info": "select"
+  },
+  {
+   "name": "↓ 移动焦点到命数",
+   "pass": true,
+   "info": "lives"
+  },
+  {
+   "name": "→ 切换命数为经典",
+   "pass": true
+  },
+  {
+   "name": "命数写入本地",
+   "pass": true
+  },
+  {
+   "name": "← 切回无限命",
+   "pass": true
+  },
+  {
+   "name": "耐久 标准→宽松",
+   "pass": true
+  },
+  {
+   "name": "耐久 宽松→经典",
+   "pass": true
+  },
+  {
+   "name": "耐久 经典→标准",
+   "pass": true
+  },
+  {
+   "name": "Enter 打开演示模式",
+   "pass": true
+  },
+  {
+   "name": "再按关闭演示模式",
+   "pass": true
+  },
+  {
+   "name": "菜单「视角」切到斜视",
+   "pass": true
+  },
+  {
+   "name": "视角循环回侧视",
+   "pass": true
+  },
+  {
+   "name": "音量下调到 70%",
+   "pass": true
+  },
+  {
+   "name": "帧率显示开",
+   "pass": true
+  },
+  {
+   "name": "帧率显示关",
+   "pass": true
+  },
+  {
+   "name": "开始游戏 → 选人画面",
+   "pass": true,
+   "info": "select"
+  },
+  {
+   "name": "→ 换下一位英雄",
+   "pass": true,
+   "info": [
+    2,
+    3
+   ]
+  },
+  {
+   "name": "A 换回",
+   "pass": true
+  },
+  {
+   "name": "Enter 出发，进入楼顶开场",
+   "pass": true,
+   "info": [
+    "cut",
+    0
+   ]
+  },
+  {
+   "name": "开场维斯台词出现",
+   "pass": true
+  },
+  {
+   "name": "J 跳过对话后进入战斗",
+   "pass": true,
+   "info": "play"
+  },
+  {
+   "name": "关卡音乐开始",
+   "pass": true,
+   "info": {
+    "name": "stage",
+    "playing": true
+   }
+  },
+  {
+   "name": "D 向右走",
+   "pass": true,
+   "info": [
+    2.2,
+    3.88
+   ]
+  },
+  {
+   "name": "W 走向纵深（远离镜头）",
+   "pass": true,
+   "info": [
+    0.6,
+    -0.8
+   ]
+  },
+  {
+   "name": "A 转身朝左",
+   "pass": true,
+   "info": -1.57
+  },
+  {
+   "name": "J 连打命中扣血",
+   "pass": true,
+   "info": [
+    [
+     194.1,
+     "hurt"
+    ],
+    [
+     188.2,
+     "hurt"
+    ],
+    [
+     182.3,
+     "hurt"
+    ],
+    [
+     168.1,
+     "down"
+    ]
+   ]
+  },
+  {
+   "name": "四连击最后一下击倒",
+   "pass": true,
+   "info": [
+    [
+     [
+      194.1,
+      "hurt"
+     ],
+     [
+      188.2,
+      "hurt"
+     ],
+     [
+      182.3,
+      "hurt"
+     ],
+     [
+      168.1,
+      "down"
+     ]
+    ],
+    "down"
+   ]
+  },
+  {
+   "name": "打中有分数",
+   "pass": true,
+   "info": 6500
+  },
+  {
+   "name": "K 起跳",
+   "pass": true,
+   "info": [
+    0.65,
+    "jump"
+   ]
+  },
+  {
+   "name": "落地回到站立",
+   "pass": true,
+   "info": "idle"
+  },
+  {
+   "name": "跳踢命中击倒",
+   "pass": true,
+   "info": [
+    190,
+    "down"
+   ]
+  },
+  {
+   "name": "按住 I + D 冲刺",
+   "pass": true,
+   "info": "run"
+  },
+  {
+   "name": "冲刺中按 J 出冲刺攻击",
+   "pass": true,
+   "info": "attack"
+  },
+  {
+   "name": "按住 L + A 也能冲刺（旧键位保留）",
+   "pass": true,
+   "info": "run"
+  },
+  {
+   "name": "双击 A 冲刺",
+   "pass": true,
+   "info": "run"
+  },
+  {
+   "name": "J+K 同按放出必杀",
+   "pass": true,
+   "info": "mega"
+  },
+  {
+   "name": "必杀击倒周围敌人",
+   "pass": true,
+   "info": [
+    "down",
+    "down",
+    "down"
+   ]
+  },
+  {
+   "name": "必杀命中消耗少量体力",
+   "pass": true,
+   "info": [
+    100,
+    94
+   ]
+  },
+  {
+   "name": "U 键放必杀",
+   "pass": true,
+   "info": "mega"
+  },
+  {
+   "name": "走进敌人自动抓住",
+   "pass": true,
+   "info": "grab"
+  },
+  {
+   "name": "抓住后 J 膝撞扣血",
+   "pass": true,
+   "info": 178.75999999999996
+  },
+  {
+   "name": "第四下把敌人摔出去",
+   "pass": true,
+   "info": "down"
+  },
+  {
+   "name": "J 捡牛排回血",
+   "pass": true,
+   "info": 100
+  },
+  {
+   "name": "满血吃牛排加 10000 分",
+   "pass": true,
+   "info": [
+    14100,
+    24100
+   ]
+  },
+  {
+   "name": "捡起左轮手枪 6 发",
+   "pass": true,
+   "info": {
+    "kind": "gun",
+    "ammo": 6
+   }
+  },
+  {
+   "name": "HUD 显示武器",
+   "pass": true,
+   "info": "左轮手枪"
+  },
+  {
+   "name": "开枪：弹药 -1 且远处敌人中弹",
+   "pass": true,
+   "info": [
+    5,
+    181.12
+   ]
+  },
+  {
+   "name": "面前贴着油桶按 J 举起来",
+   "pass": true,
+   "info": "carry"
+  },
+  {
+   "name": "扔出油桶砸中敌人",
+   "pass": true,
+   "info": [
+    164.6,
+    "down"
+   ]
+  },
+  {
+   "name": "油桶摔破掉出炸药",
+   "pass": true
+  },
+  {
+   "name": "C 切到斜视",
+   "pass": true
+  },
+  {
+   "name": "C 切到正视",
+   "pass": true
+  },
+  {
+   "name": "HUD 视角按钮同步",
+   "pass": true
+  },
+  {
+   "name": "正视下 W = 前进（+x）",
+   "pass": true,
+   "info": [
+    14.75,
+    16.15
+   ]
+  },
+  {
+   "name": "C 切到第一人称",
+   "pass": true
+  },
+  {
+   "name": "第一人称隐藏主角模型",
+   "pass": true
+  },
+  {
+   "name": "第一人称按住 E 向右转头",
+   "pass": true,
+   "info": -0.804
+  },
+  {
+   "name": "松开 E 停止转动",
+   "pass": true
+  },
+  {
+   "name": "C 循环回侧视并回正",
+   "pass": true,
+   "info": [
+    "side",
+    0
+   ]
+  },
+  {
+   "name": "按住 Q 左转约 90°",
+   "pass": true,
+   "info": -1.58
+  },
+  {
+   "name": "转 90° 后 D 仍沿屏幕右方移动",
+   "pass": true,
+   "info": [
+    16.15,
+    -1.5,
+    15.86,
+    -0.36
+   ]
+  },
+  {
+   "name": "转回侧视",
+   "pass": true
+  },
+  {
+   "name": "Esc 暂停",
+   "pass": true
+  },
+  {
+   "name": "暂停时游戏时间停止",
+   "pass": true
+  },
+  {
+   "name": "Esc 继续",
+   "pass": true
+  },
+  {
+   "name": "体力耗尽倒下",
+   "pass": true,
+   "info": "dead"
+  },
+  {
+   "name": "无限命原地复活、满血",
+   "pass": true,
+   "info": [
+    100,
+    "inf"
+   ]
+  },
+  {
+   "name": "复活后有无敌时间",
+   "pass": true,
+   "info": 2.43
+  },
+  {
+   "name": "时间到显示 TIME OVER",
+   "pass": true
+  },
+  {
+   "name": "时间到后计时重置",
+   "pass": true,
+   "info": 117.7
+  },
+  {
+   "name": "楼顶三波都清完",
+   "pass": true,
+   "info": 3
+  },
+  {
+   "name": "清完出现 GO 提示",
+   "pass": true
+  },
+  {
+   "name": "踢门进入大楼内部",
+   "pass": true,
+   "info": 1
+  },
+  {
+   "name": "走到 Boss 区触发维斯登场",
+   "pass": true,
+   "info": {
+    "hp": 400,
+    "state": "cut",
+    "summons": 0
+   }
+  },
+  {
+   "name": "Boss 开场台词",
+   "pass": true,
+   "info": "喂，混蛋！离那只恐龙远点！"
+  },
+  {
+   "name": "Boss 战开始、岩跳龙暴怒",
+   "pass": true,
+   "info": {
+    "state": "claw",
+    "angry": true,
+    "hp": 150
+   }
+  },
+  {
+   "name": "Boss 音乐",
+   "pass": true
+  },
+  {
+   "name": "维斯掉血后叫手下",
+   "pass": true,
+   "info": {
+    "hp": 270,
+    "state": "walk",
+    "summons": 1
+   }
+  },
+  {
+   "name": "打倒维斯 → 过关",
+   "pass": true,
+   "info": "clear"
+  },
+  {
+   "name": "结算画面",
+   "pass": true
+  },
+  {
+   "name": "结算含 Boss 与体力奖励",
+   "pass": true,
+   "info": "费里斯 FERRIS× 1313000尼斯 GNEISS× 816000朋克 PUNK× 11000黑埃尔默 BLK ELMER× 13000Boss 维斯·T VICE T.× 110000体力奖励 VITALITY92 × 100920"
+  },
+  {
+   "name": "结算 Enter 再玩一次",
+   "pass": true,
+   "info": [
+    null,
+    0
+   ]
+  },
+  {
+   "name": "暂停菜单返回主菜单",
+   "pass": true
+  },
+  {
+   "name": "经典 3 命开局",
+   "pass": true,
+   "info": 3
+  },
+  {
+   "name": "命用完进入续关倒计时",
+   "pass": true,
+   "info": [
+    "cont",
+    "cont"
+   ]
+  },
+  {
+   "name": "续关后满命回到战斗",
+   "pass": true,
+   "info": [
+    "play",
+    3
+   ]
+  },
+  {
+   "name": "不续关倒计时结束 → GAME OVER",
+   "pass": true
+  },
+  {
+   "name": "演示模式标识",
+   "pass": true
+  },
+  {
+   "name": "演示模式不扣血",
+   "pass": true,
+   "info": [
+    100,
+    100
+   ]
+  }
+ ],
+ "errors": []
+}

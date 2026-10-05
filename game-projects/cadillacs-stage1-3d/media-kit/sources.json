@@ -1,17 +1,131 @@
 [
-  { "id": "ref-video-mustapha-1cc", "use": "第一关流程、敌人顺序、区域标题、Boss 演出、HUD 与配色参考", "source_type": "reference", "source": "https://www.youtube.com/watch?v=Y48MXUjtYwc", "notes": "只截帧看画面（本机 scratchpad，不入库、不进游戏）" },
-  { "id": "ref-video-hannah", "use": "汉娜配色、选人画面能力值", "source_type": "reference", "source": "https://www.youtube.com/watch?v=NkuO7wjBEcs", "notes": "截取前 90 秒看画面" },
-  { "id": "ref-video-jack", "use": "杰克配色、杰克选人能力值", "source_type": "reference", "source": "https://www.youtube.com/watch?v=RT5A4YulSVY", "notes": "截取前 90 秒看画面" },
-  { "id": "ref-video-mess", "use": "梅斯配色与能力值", "source_type": "reference", "source": "https://www.youtube.com/watch?v=qeHp2Au4rfQ", "notes": "截取前 90 秒看画面" },
-  { "id": "ref-namuwiki", "use": "关卡构成、敌人行为与分值、物品分值、角色性能", "source_type": "reference", "source": "https://en.namu.wiki/w/캐딜락&다이노소어 （及 /스테이지、/적군 일람、/아이템 일람、/등장인물 子页面）", "notes": "CC BY-NC-SA 2.0 KR；只取数据与描述，不搬运文字" },
-  { "id": "char-heroes", "use": "四位主角模型", "runtime": "src/models.js SPECS.jack/hannah/mustapha/mess", "source_type": "procedural", "tool": "Three.js 程序化拼装（胶囊 / 车床体 / 球体，按骨骼合并顶点色网格）+ MeshToonMaterial + 法线外扩描边", "process": "按原作实机截帧取色与发型、服装特征", "status": "正式" },
-  { "id": "char-enemies", "use": "费里斯、尼斯、朋克、布雷德、锤子·T、扳手·T、黑埃尔默、维斯·T", "runtime": "src/models.js SPECS", "source_type": "procedural", "tool": "同上", "process": "按原作实机截帧取色", "status": "正式" },
-  { "id": "char-raptor", "use": "岩跳龙（绿色 / 橙色两套配色）", "runtime": "src/models.js buildRaptor", "source_type": "procedural", "tool": "同上", "status": "正式" },
-  { "id": "prop-statue", "use": "金色骑士像（四座）", "runtime": "src/world.js statueMesh", "source_type": "procedural", "process": "人形骨架摆姿势后烘焙为单网格", "status": "正式" },
-  { "id": "props-items", "use": "油桶、通风管、食物、宝物、武器、锁链、翼龙", "runtime": "src/models.js", "source_type": "procedural", "status": "正式" },
-  { "id": "env-textures", "use": "楼顶石板、砖墙、石砌外墙、窗格、壁纸、木纹、红地毯、大理石、街面、铁丝网、蛛网、海面", "runtime": "src/world.js T()", "source_type": "procedural", "tool": "Canvas 2D 程序化贴图（固定种子）", "status": "正式" },
-  { "id": "portraits", "use": "HUD / 对话框 / 选人卡片头像、续关画面", "runtime": "src/main.js makePortraits → models.js portrait()", "source_type": "procedural", "process": "开局离屏渲染 3D 模型", "status": "正式" },
-  { "id": "music", "use": "关卡曲、Boss 曲、过关、续关", "runtime": "src/audio.js SONGS", "source_type": "procedural", "tool": "WebAudio 实时合成（失真锯齿主音、强力和弦、贝斯、鼓）", "process": "按原作摇滚风格重新编写，非逐音转录", "status": "替代（原作曲缺乐谱）" },
-  { "id": "sfx", "use": "拳脚、枪声、爆炸、惨叫、恐龙嘶吼、拾取等", "runtime": "src/audio.js SFX", "source_type": "procedural", "tool": "WebAudio 合成", "status": "替代（非原作采样）" },
-  { "id": "site-thumb", "use": "网站游戏列表卡片封面", "runtime": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg", "source_type": "procedural", "process": "qa/cover.js 在 Boss 区摆拍实机画面（隐藏 HUD），2× 截图后裁成 512×512", "status": "正式" }
+  {
+    "id": "ref-video-mustapha-1cc",
+    "use": "第一关流程、敌人顺序、区域标题、Boss 演出、HUD 与配色参考",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=Y48MXUjtYwc",
+    "notes": "只截帧看画面（本机 scratchpad，不入库、不进游戏）"
+  },
+  {
+    "id": "ref-video-hannah",
+    "use": "汉娜配色、选人画面能力值",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=NkuO7wjBEcs",
+    "notes": "截取前 90 秒看画面"
+  },
+  {
+    "id": "ref-video-jack",
+    "use": "杰克配色、杰克选人能力值",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=RT5A4YulSVY",
+    "notes": "截取前 90 秒看画面"
+  },
+  {
+    "id": "ref-video-mess",
+    "use": "梅斯配色与能力值",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=qeHp2Au4rfQ",
+    "notes": "截取前 90 秒看画面"
+  },
+  {
+    "id": "ref-namuwiki",
+    "use": "关卡构成、敌人行为与分值、物品分值、角色性能",
+    "source_type": "reference",
+    "source": "https://en.namu.wiki/w/캐딜락&다이노소어 （及 /스테이지、/적군 일람、/아이템 일람、/등장인물 子页面）",
+    "notes": "CC BY-NC-SA 2.0 KR；只取数据与描述，不搬运文字"
+  },
+  {
+    "id": "char-heroes",
+    "use": "四位主角模型",
+    "runtime": "src/models.js SPECS.jack/hannah/mustapha/mess",
+    "source_type": "procedural",
+    "tool": "Three.js 程序化拼装（胶囊 / 车床体 / 球体，按骨骼合并顶点色网格）+ MeshToonMaterial + 法线外扩描边",
+    "process": "按原作实机截帧取色与发型、服装特征",
+    "status": "正式"
+  },
+  {
+    "id": "char-enemies",
+    "use": "费里斯、尼斯、朋克、布雷德、锤子·T、扳手·T、黑埃尔默、维斯·T",
+    "runtime": "src/models.js SPECS",
+    "source_type": "procedural",
+    "tool": "同上",
+    "process": "按原作实机截帧取色",
+    "status": "正式"
+  },
+  {
+    "id": "char-raptor",
+    "use": "岩跳龙（绿色 / 橙色两套配色）",
+    "runtime": "src/models.js buildRaptor",
+    "source_type": "procedural",
+    "tool": "同上",
+    "status": "正式"
+  },
+  {
+    "id": "prop-statue",
+    "use": "金色骑士像（四座）",
+    "runtime": "src/world.js statueMesh",
+    "source_type": "procedural",
+    "process": "人形骨架摆姿势后烘焙为单网格",
+    "status": "正式"
+  },
+  {
+    "id": "props-items",
+    "use": "油桶、通风管、食物、宝物、武器、锁链、翼龙",
+    "runtime": "src/models.js",
+    "source_type": "procedural",
+    "status": "正式"
+  },
+  {
+    "id": "env-textures",
+    "use": "楼顶石板、砖墙、石砌外墙、窗格、壁纸、木纹、红地毯、大理石、街面、铁丝网、蛛网、海面",
+    "runtime": "src/world.js T()",
+    "source_type": "procedural",
+    "tool": "Canvas 2D 程序化贴图（固定种子）",
+    "status": "正式"
+  },
+  {
+    "id": "portraits",
+    "use": "HUD / 对话框 / 选人卡片头像、续关画面",
+    "runtime": "src/main.js makePortraits → models.js portrait()",
+    "source_type": "procedural",
+    "process": "开局离屏渲染 3D 模型",
+    "status": "正式"
+  },
+  {
+    "id": "music",
+    "use": "关卡曲、Boss 曲、过关、续关",
+    "runtime": "src/audio.js SONGS",
+    "source_type": "procedural",
+    "tool": "WebAudio 实时合成（失真锯齿主音、强力和弦、贝斯、鼓）",
+    "process": "按原作摇滚风格重新编写，非逐音转录",
+    "status": "替代（原作曲缺乐谱）"
+  },
+  {
+    "id": "sfx",
+    "use": "拳脚、枪声、爆炸、惨叫、恐龙嘶吼、拾取等",
+    "runtime": "src/audio.js SFX",
+    "source_type": "procedural",
+    "tool": "WebAudio 合成",
+    "status": "替代（非原作采样）"
+  },
+  {
+    "id": "site-thumb",
+    "use": "网站游戏列表卡片封面",
+    "runtime": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg",
+    "source_type": "procedural",
+    "process": "qa/cover.js 在 Boss 区摆拍实机画面（隐藏 HUD），2× 截图后裁成 512×512",
+    "status": "正式"
+  },
+  {
+    "id": "stage1-background-v020",
+    "source_type": "reference",
+    "source": "https://www.spriters-resource.com/arcade/cadillacsdinosaurs/asset/55293/",
+    "use": "已在浏览器查看原版第一关背景图；参考走廊灰绿拱券、低护墙线、墙皮破损；未复制贴图进游戏"
+  },
+  {
+    "id": "special-moves-v020",
+    "source_type": "reference",
+    "source": "https://rq87.flyingomelette.com/RQ/CAD/char.html",
+    "use": "四位角色下上攻击、跳跃下踢动作区分；时窗、伤害、弹量为本项目平衡值，非精确原版数值"
+  }
 ]

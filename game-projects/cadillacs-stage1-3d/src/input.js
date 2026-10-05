@@ -15,10 +15,22 @@ const queue = [];
 const listeners = [];
 const log = [];
 const lastTap = { u: -1e9, d: -1e9, l: -1e9, r: -1e9 };
+// 指令使用逻辑屏幕方向，键盘和旋转后的摇杆共用；不依赖浏览器按键重复。
+let motionDown = -1e9, motionReady = -1e9, motionDir = null, touchRun = false;
+function directionEdge(dir) {
+  if (dir === motionDir) return;
+  motionDir = dir;
+  const now = performance.now();
+  if (dir === 'd') { motionDown = now; motionReady = -1e9; }
+  else if (dir === 'u' && now - motionDown <= 600) { motionReady = now; motionDown = -1e9; }
+  else if (dir && dir !== 'u') { motionDown = motionReady = -1e9; }
+}
 let stickDir = -1, stickDirT = -1e9, stickWasNeutral = true;
 
 function clearAll() {
   held.u = held.d = held.l = held.r = false;
+  motionDown = motionReady = -1e9; motionDir = null; touchRun = false;
+  for (const d in lastTap) lastTap[d] = -1e9; stickDirT = -1e9;
   for (const k in keyBtn) keyBtn[k] = false;
   for (const k in touchBtn) touchBtn[k] = false;
   stick.x = stick.y = 0; stickWasNeutral = true;
@@ -36,7 +48,7 @@ const I = {
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
     return { x, y };
   },
-  down: (name) => keyBtn[name] || touchBtn[name],
+  down: (name) => keyBtn[name] || (name === 'run' ? (touchBtn.run || touchRun) && Math.hypot(stick.x, stick.y) > 0.3 : touchBtn[name]),
   look,
   // 手机端转视角：画面任意处（摇杆与按钮除外）按住拖动，无极旋转；游戏循环消费 look.dx
   bindLook(el) {
@@ -56,7 +68,12 @@ const I = {
   },
   take(name) { const i = queue.findIndex(e => e.name === name); if (i >= 0) { return queue.splice(i, 1)[0]; } return null; },
   peek(name) { return queue.some(e => e.name === name); },
-  push(name, data) { const e = { name, t: performance.now(), data }; queue.push(e); log.push(name); if (log.length > 60) log.shift(); if (queue.length > 24) queue.shift(); },
+  push(name, data) {
+    if (name === 'atk') {
+      data = { ...data, offensive: performance.now() - motionReady <= 380 };
+      motionReady = motionDown = -1e9;
+    }
+    const e = { name, t: performance.now(), data }; queue.push(e); log.push(name); if (log.length > 60) log.shift(); if (queue.length > 24) queue.shift(); },
   flush() { queue.length = 0; },
   clear: clearAll,
   onClear(fn) { listeners.push(fn); },
@@ -72,6 +89,7 @@ window.addEventListener('keydown', (e) => {
   if (c in KEY_DIR) {
     const d = KEY_DIR[c];
     if (!e.repeat && !held[d]) {
+      directionEdge(d);
       const now = performance.now();
       if (now - lastTap[d] < 260) { I.push('dash', { x: DIR_VEC[d][0], y: DIR_VEC[d][1] }); lastTap[d] = -1e9; }
       else lastTap[d] = now;
@@ -86,7 +104,7 @@ window.addEventListener('keydown', (e) => {
 });
 window.addEventListener('keyup', (e) => {
   const c = e.code;
-  if (c in KEY_DIR) held[KEY_DIR[c]] = false;
+  if (c in KEY_DIR) { held[KEY_DIR[c]] = false; if (motionDir === KEY_DIR[c]) motionDir = null; }
   else if (c in KEY_BTN) keyBtn[KEY_BTN[c]] = false;
 });
 window.addEventListener('blur', clearAll);
@@ -114,10 +132,11 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
     const p = toLocal(e.clientX, e.clientY);
     const dx = p.x - ox, dy = p.y - oy, len = Math.hypot(dx, dy), cl = len > R ? R / len : 1;
     knob.style.transform = 'translate(calc(-50% + ' + (dx * cl) + 'px), calc(-50% + ' + (dy * cl) + 'px))';
-    if (len < DEAD) { stick.x = stick.y = 0; stickWasNeutral = true; }
+    if (len < DEAD) { stick.x = stick.y = 0; stickWasNeutral = true; touchRun = false; directionEdge(null); }
     else {
       const m = Math.min(1, (len - DEAD) / (R * 0.55 - DEAD));
       stick.x = dx / len * Math.max(0.35, m); stick.y = -dy / len * Math.max(0.35, m);
+      directionEdge(Math.abs(stick.y) > Math.abs(stick.x) ? (stick.y > 0 ? 'u' : 'd') : (stick.x > 0 ? 'r' : 'l'));
       // 摇杆从中立连推两下同一方向 = 冲刺
       if (len > R * 0.6 && stickWasNeutral) {
         const dir = ((Math.round(Math.atan2(dx, -dy) / (Math.PI / 4)) % 8) + 8) % 8, now = performance.now();
@@ -128,7 +147,7 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
     }
     e.preventDefault();
   });
-  const joyEnd = (e) => { if (e.pointerId !== joyId) return; joyId = null; stick.x = stick.y = 0; stickWasNeutral = true; home(); };
+  const joyEnd = (e) => { if (e.pointerId !== joyId) return; joyId = null; stick.x = stick.y = 0; stickWasNeutral = true; touchRun = false; directionEdge(null); home(); };
   zone.addEventListener('pointerup', joyEnd); zone.addEventListener('pointercancel', joyEnd); zone.addEventListener('lostpointercapture', joyEnd);
 
   const ids = {};
@@ -144,7 +163,10 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
     el.addEventListener('contextmenu', (e) => e.preventDefault());
   }
   for (const b of ['atk', 'jump', 'mega']) bindBtn(btns[b], b, () => { touchBtn[b] = true; I.push(b); }, () => { touchBtn[b] = false; });
-  for (const b of ['run']) bindBtn(btns[b], b, () => { touchBtn[b] = true; }, () => { touchBtn[b] = false; });
+  for (const b of ['run']) {
+    bindBtn(btns[b], b, () => { touchBtn[b] = true; touchRun = true; }, () => { touchBtn[b] = false; });
+    btns[b]?.addEventListener('pointercancel', () => { touchRun = false; });
+  }
   bindBtn(btns.cam, 'cam', () => { I.push('camera'); });
   I.onClear(() => { joyId = null; home(); for (const k in ids) ids[k] = null; Object.values(btns).forEach(b => b && b.classList.remove('down')); });
 };

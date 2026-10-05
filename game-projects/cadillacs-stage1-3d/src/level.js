@@ -28,7 +28,7 @@ export const AREAS = [
     props: [
       { kind: 'statue', x: 5.6, z: -2.25, item: 'gold' },
       { kind: 'statue', x: 10.4, z: -2.25, item: 'shotgun' },
-      { kind: 'statue', x: 45.6, z: -2.25, item: 'diamond' },
+      { kind: 'statue', x: 45.6, z: -2.25, item: 'smg' },
       { kind: 'statue', x: 53.8, z: -2.25, item: 'barbecue' }
     ],
     waves: [
@@ -42,7 +42,7 @@ export const AREAS = [
   {
     id: 'street', name: '第47街', title: '47TH STREET', x0: 0, x1: 66, z0: -2.3, z1: 2.5, start: { x: 2.4, z: 0.5 }, timer: 120,
     props: [
-      { kind: 'drum', x: 23.0, z: -1.7, item: 'grenade' },
+      { kind: 'drum', x: 23.0, z: -1.7, item: 'bazooka' },
       { kind: 'drum', x: 50.2, z: -1.8, item: 'steak' }
     ],
     waves: [
@@ -75,6 +75,8 @@ export const ITEMS = {
   diamond: { cn: '钻石', points: 10000 },
   ring: { cn: '戒指', points: 3000 },
   gun: { cn: '左轮手枪', weapon: true, ammo: 6 },
+  smg: { cn: '冲锋枪', weapon: true, ammo: 48 },
+  bazooka: { cn: '火箭筒', weapon: true, ammo: 4 },
   shotgun: { cn: '霰弹枪', weapon: true, ammo: 6 },
   dynamite: { cn: '炸药', weapon: true, ammo: 1 },
   grenade: { cn: '手雷', weapon: true, ammo: 1 },

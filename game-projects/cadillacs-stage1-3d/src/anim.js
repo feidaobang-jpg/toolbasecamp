@@ -50,6 +50,7 @@ export const HP = {
   kneeUp: P({ spine: [0.25, 0, 0], rH: [-1.75, 0, 0], rK: [1.9, 0, 0], lK: [0.2, 0, 0], lS: [-1.1, 0, 0.25], lE: [-0.9, 0, 0], rS: [-1.1, 0, -0.25], rE: [-0.9, 0, 0] }),
   jumpUp: P({ lH: [-0.9, 0, 0.1], lK: [1.5, 0, 0], rH: [-0.5, 0, -0.1], rK: [1.2, 0, 0], lS: [-0.6, 0, 0.35], lE: [-1.6, 0, 0], rS: [-0.6, 0, -0.35], rE: [-1.6, 0, 0] }),
   jumpKick: P({ spine: [-0.15, -0.2, 0], rH: [-1.45, 0, 0], rK: [0.05, 0, 0], rA: [0.5, 0, 0], lH: [-0.9, 0, 0.1], lK: [1.8, 0, 0], lS: [-0.5, 0, 0.6], lE: [-1.4, 0, 0], rS: [0.2, 0, -0.5], rE: [-1.2, 0, 0] }),
+  diveKick: P({ body: [0.25, 0, 0], spine: [-0.25, 0, 0], rH: [-0.7, 0, -0.12], rK: [0.05, 0, 0], rA: [0.4, 0, 0], lH: [-1.3, 0, 0.12], lK: [2, 0, 0], lS: [-0.4, 0, 0.9], rS: [-0.4, 0, -0.9], lE: [-1.5, 0, 0], rE: [-1.5, 0, 0] }),
   flyKick: P({ body: [-0.8, 0, 0], spine: [0.3, 0, 0], head: [0.45, 0, 0], lH: [-0.62, 0, 0.1], lK: [0.12, 0, 0], rH: [-0.8, 0, -0.1], rK: [0.04, 0, 0], lA: [0.5, 0, 0], rA: [0.5, 0, 0], lS: [0.5, 0, 0.9], lE: [-0.6, 0, 0], rS: [0.5, 0, -0.9], rE: [-0.6, 0, 0], py: 0.3 }),
   slide: P({ body: [-1.1, 0, 0], spine: [0.75, 0, 0], head: [0.55, 0, 0], rH: [-0.5, 0, 0], rK: [0.05, 0, 0], lH: [-0.1, 0, 0], lK: [1.2, 0, 0], lS: [0.7, 0, 0.6], lE: [-0.3, 0, 0], rS: [0.5, 0, -0.5], rE: [-0.4, 0, 0], py: 0.22, pz: 0.35 }),
   tackle: P({ spine: [0.75, -0.3, 0], head: [-0.4, 0.2, 0], lS: [-1.4, 0, 0.5], lE: [-1.5, 0, 0], rS: [0.4, 0, -0.3], rE: [-1.2, 0, 0], lH: [-1.0, 0, 0], lK: [0.9, 0, 0], rH: [0.5, 0, 0], rK: [0.6, 0, 0], hy: -0.12 }),
@@ -93,6 +94,10 @@ HP.jabL2 = mirror(HP.jabR);
 
 // 片段：[时间, 姿势]；采样时用平滑插值
 export const HC = {
+  rollingElbow: { dur: 0.72, keys: [[0, HP.guard], [0.1, HP.crouch], [0.22, mod(HP.crouch, { body: [2.7, 0, 0], py: 0.55 })], [0.36, mod(HP.crouch, { body: [5.9, 0, 0], py: 0.2 })], [0.48, mod(HP.hook, { body: [6.283185, 0, 0] })], [0.72, mod(HP.guard, { body: [6.283185, 0, 0] })]] },
+  rollingJump: { dur: 0.78, keys: [[0, HP.guard], [0.12, HP.crouch], [0.26, mod(HP.upper1, { py: 0.7 })], [0.4, mod(HP.buttSit, { py: 0.85 })], [0.56, mod(HP.buttSit, { py: 0.1 })], [0.78, HP.guard]] },
+  risingKick: { dur: 0.62, keys: [[0, HP.guard], [0.1, HP.crouch], [0.2, HP.kickHi], [0.38, HP.kickHi], [0.62, HP.guard]] },
+  flipKick: { dur: 0.68, keys: [[0, HP.guard], [0.1, HP.crouch], [0.2, mod(HP.kickHi, { body: [-1.2, 0, 0], py: 0.65 })], [0.34, mod(HP.jumpKick, { body: [-3.1, 0, 0], py: 1.15 })], [0.49, mod(HP.crouch, { body: [-5.4, 0, 0], py: 0.65 })], [0.68, mod(HP.guard, { body: [-6.283185, 0, 0] })]] },
   jab1: { dur: 0.26, keys: [[0, HP.guard], [0.05, HP.jabL], [0.14, HP.jabL], [0.26, HP.guard]] },
   jab2: { dur: 0.28, keys: [[0, HP.guard], [0.06, HP.jabR], [0.15, HP.jabR], [0.28, HP.guard]] },
   hook: { dur: 0.32, keys: [[0, HP.guard], [0.07, HP.hook], [0.18, HP.hook], [0.32, HP.guard]] },

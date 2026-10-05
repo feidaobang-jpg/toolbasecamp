@@ -1,0 +1,181 @@
+{
+  "date": "2026-10-05T12:31:21.786Z",
+  "base": "http://127.0.0.1:8787/html/game/cadillacs-stage1-3d/index.html",
+  "results": [
+    {
+      "name": "英雄 0 下上拳触发独立招式",
+      "pass": true
+    },
+    {
+      "name": "英雄 0 特殊技实际伤害且不扣血",
+      "pass": true,
+      "info": 23.600000000000023
+    },
+    {
+      "name": "英雄 0 收招无反向翻转",
+      "pass": true
+    },
+    {
+      "name": "英雄 1 下上拳触发独立招式",
+      "pass": true
+    },
+    {
+      "name": "英雄 1 特殊技实际伤害且不扣血",
+      "pass": true,
+      "info": 18.80000000000001
+    },
+    {
+      "name": "英雄 1 收招无反向翻转",
+      "pass": true
+    },
+    {
+      "name": "英雄 2 下上拳触发独立招式",
+      "pass": true
+    },
+    {
+      "name": "英雄 2 特殊技实际伤害且不扣血",
+      "pass": true,
+      "info": 20.139999999999986
+    },
+    {
+      "name": "英雄 2 收招无反向翻转",
+      "pass": true
+    },
+    {
+      "name": "英雄 3 下上拳触发独立招式",
+      "pass": true
+    },
+    {
+      "name": "英雄 3 特殊技实际伤害且不扣血",
+      "pass": true,
+      "info": 31.19999999999999
+    },
+    {
+      "name": "英雄 3 收招无反向翻转",
+      "pass": true
+    },
+    {
+      "name": "过期下上输入不会误出特殊技",
+      "pass": true
+    },
+    {
+      "name": "K→右→J 成为斜下踢而非必杀",
+      "pass": true
+    },
+    {
+      "name": "斜下踢实际命中",
+      "pass": true,
+      "info": 285
+    },
+    {
+      "name": "gun 扣弹与命中",
+      "pass": true,
+      "info": {
+        "before": 6,
+        "after": 5,
+        "hp": 283.04
+      }
+    },
+    {
+      "name": "shotgun 扣弹与命中",
+      "pass": true,
+      "info": {
+        "before": 6,
+        "after": 5,
+        "hp": 272.97
+      }
+    },
+    {
+      "name": "smg 扣弹与命中",
+      "pass": true,
+      "info": {
+        "before": 48,
+        "after": 44,
+        "hp": 277.73999999999995
+      }
+    },
+    {
+      "name": "冲锋枪松开停止连射",
+      "pass": true
+    },
+    {
+      "name": "bazooka 扣弹与命中",
+      "pass": true,
+      "info": {
+        "before": 4,
+        "after": 3,
+        "hp": 262.30555555555554
+      }
+    },
+    {
+      "name": "死亡复活携带四发火箭筒并落下五枚火箭",
+      "pass": true
+    },
+    {
+      "name": "火箭雨伤敌、不伤复活玩家、弹体清除",
+      "pass": true
+    },
+    {
+      "name": "手机松开 I、摇杆持续推，仍在跑",
+      "pass": true
+    },
+    {
+      "name": "同一拇指从 I 移到 J 能发飞冲",
+      "pass": true,
+      "info": "flyKick"
+    },
+    {
+      "name": "摇杆回中立即停止奔跑",
+      "pass": true
+    },
+    {
+      "name": "摇杆回中取消保持，再推恢复走路",
+      "pass": true,
+      "info": {
+        "x": 10.06,
+        "y": 0,
+        "z": 0.6,
+        "state": "walk",
+        "hp": 100,
+        "face": 1.57,
+        "invul": 996.77,
+        "weapon": null,
+        "combo": 0,
+        "visible": false
+      }
+    },
+    {
+      "name": "手机摇杆下上 + J 触发特殊技",
+      "pass": true
+    },
+    {
+      "name": "第一人称右划，朝向朝屏幕右侧旋转",
+      "pass": true,
+      "info": 0.6775697891276468
+    },
+    {
+      "name": "侧视保留拖场景方向",
+      "pass": true
+    },
+    {
+      "name": "四个按钮无白色径向高光",
+      "pass": true
+    },
+    {
+      "name": "切电脑隐藏虚拟键",
+      "pass": true
+    },
+    {
+      "name": "切回手机保留本局且输入清空",
+      "pass": true
+    },
+    {
+      "name": "浏览器无运行错误",
+      "pass": true,
+      "info": []
+    }
+  ],
+  "errors": [],
+  "pass": 33,
+  "total": 33
+}

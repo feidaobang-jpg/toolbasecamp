@@ -44,6 +44,11 @@ const MOVES = {
   upper: { clip: 'upper', dur: 0.5, lunge: 1.1, hits: [H(0.13, 0.24, 0.8, 0.58, 0.7, 2.1, 12, 'launch', 200, 'punchHeavy', true)] },
   kickHi: { clip: 'kickHi', dur: 0.5, lunge: 0.7, hits: [H(0.14, 0.25, 1.02, 0.55, 0.9, 2.0, 11, 'down', 200, 'kick', true)] },
   kickSide: { clip: 'kickSide', dur: 0.48, lunge: 0.9, hits: [H(0.13, 0.24, 1.08, 0.55, 0.7, 1.7, 11, 'down', 200, 'kick', true)] },
+  // 下→上→攻击：独立特殊技，有前摇、判定与收招，不复用普通连击索引。
+  risingKick: { clip: 'risingKick', dur: 0.62, lunge: 1.3, hits: [H(0.16, 0.34, 0.95, 0.65, 0.2, 2.3, 20, 'launch', 500, 'kick', true)] },
+  flipKick: { clip: 'flipKick', dur: 0.68, lunge: 0.6, hits: [H(0.17, 0.39, 0.9, 0.7, 0.1, 2.5, 19, 'launch', 500, 'kick', true)] },
+  rollingElbow: { clip: 'rollingElbow', dur: 0.72, lunge: 3.4, hits: [H(0.2, 0.48, 0.95, 0.65, 0, 1.8, 20, 'launch', 500, 'punchHeavy', true)] },
+  rollingJump: { clip: 'rollingJump', dur: 0.78, lunge: 1.8, hits: [H(0.25, 0.58, 1.0, 0.75, 0, 2.5, 24, 'down', 600, 'punchHeavy', true)] },
   // 冲刺攻击（各角色不同）
   slide: { dash: true, dur: 0.62, speed: 7.5, decel: 9, hits: [H(0.04, 0.42, 0.7, 0.62, 0.0, 0.9, 12, 'down', 500, 'kick', true)], pose: 'slide' },
   flyKick: { dash: true, dur: 0.62, speed: 7.2, decel: 3, air: 5.2, hits: [H(0.06, 0.26, 0.9, 0.62, 0.4, 1.7, 8, 'hit', 500, 'kick'), H(0.27, 0.5, 0.9, 0.62, 0.4, 1.7, 8, 'down', 500, 'kick', true)], pose: 'flyKick' },
@@ -124,7 +129,7 @@ function attachWeapon(a) {
   const k = a.weapon.kind;
   const m = meshFrom(itemGeo(k), { thin: true, shadow: false });
   if (k === 'gun') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.04); }
-  else if (k === 'shotgun') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, 0.05, 0.05); }
+  else if (['shotgun', 'smg', 'bazooka'].includes(k)) { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, 0.05, 0.05); }
   else if (k === 'pipe' || k === 'knife') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.0); }
   else { m.position.set(0, -0.04, 0.03); }
   g.add(m); a.wmesh = m;
@@ -280,7 +285,8 @@ function handleInput(p, dt) {
   const atkE = IN.take('atk'), jumpE = IN.take('jump'), megaE = IN.take('mega'), dashE = IN.take('dash');
   if (atkE) lastAtkT = G.t;
   if (jumpE) lastJumpT = G.t;
-  const megaNow = megaE || (atkE && jumpE) || (atkE && G.t - lastJumpT < 0.09 && p.state === 'jump' && p.st < 0.1) || (jumpE && G.t - lastAtkT < 0.09 && p.state === 'attack' && p.st < 0.1 && p.move && !p.move.def.dash);
+  const directionalJump = moveVec().len > 0.2;
+  const megaNow = megaE || (atkE && jumpE) || (atkE && !directionalJump && G.t - lastJumpT < 0.09 && p.state === 'jump' && p.st < 0.1) || (jumpE && G.t - lastAtkT < 0.09 && p.state === 'attack' && p.st < 0.1 && p.move && !p.move.def.dash);
   if (megaNow && (canAct || p.state === 'attack' || (p.state === 'jump' && p.st < 0.12) || p.state === 'grab' || p.state === 'hurt')) {
     if (p.grab) releaseGrab(p);
     p.y = 0; p.vy = 0; p.vx = p.vz = 0;
@@ -289,6 +295,11 @@ function handleInput(p, dt) {
     ev('mega');
     return;
   }
+  if (atkE?.data?.offensive && canAct && !p.weapon) {
+    startMove(p, ['risingKick', 'rollingElbow', 'flipKick', 'rollingJump'][G.hero]);
+    A.play('whoosh'); ev('offensive', { hero: p.hero.id, move: p.move.id }); return;
+  }
+  if (!atkE && canAct && p.weapon?.kind === 'smg' && p.weapon.ammo > 0 && IN.down('atk')) { useWeapon(p); return; }
   if (dashE && canAct) { const mv = moveVec(); setState(p, 'run', { dirX: mv.len ? mv.x : Math.sin(p.face), dirZ: mv.len ? mv.z : Math.cos(p.face), tap: true }); }
   if (jumpE) {
     if (canAct) {
@@ -305,6 +316,12 @@ function playerAttack(p) {
   if (s === 'jump') {
     if (p.sub.atk || p.sub.noAtk) return;
     p.sub.atk = true; p.sub.atkT = p.st;
+    const mv = moveVec();
+    p.sub.dive = mv.len > 0.3;
+    if (p.sub.dive) {
+      p.face = faceOf(mv.x, mv.z); p.vx = mv.x / mv.len * 5.8; p.vz = mv.z / mv.len * 5.8;
+      p.vy = Math.min(p.vy, -3.5); ev('diveKick');
+    }
     p.sub.fly = Math.hypot(p.vx, p.vz) > 1.6;
     A.play('whoosh');
     return;
@@ -390,9 +407,9 @@ function updatePlayer(p, dt) {
       p.vx += mv.x * dt * 3; p.vz += mv.z * dt * 3;
       if (p.sub.atk) {
         const t = p.st - p.sub.atkT;
-        if (t > 0.05 && t < 0.55 && !p.sub.hitDone) {
+        if (t > (p.sub.dive ? 0 : 0.05) && t < 0.55 && !p.sub.hitDone) {
           const fly = p.sub.fly || p.hero.id === 'mustapha';
-          const h = fly ? H(0, 9, 0.95, 0.62, 0.0, 1.5, 12, 'down', 200, 'kick', true) : H(0, 9, 0.78, 0.58, 0.0, 1.4, 10, 'down', 200, 'kick', true);
+          const h = p.sub.dive ? H(0, 9, 0.7, 0.68, -0.45, 1.5, 15, 'down', 300, 'kick', true) : fly ? H(0, 9, 0.95, 0.62, 0.0, 1.5, 12, 'down', 200, 'kick', true) : H(0, 9, 0.78, 0.58, 0.0, 1.4, 10, 'down', 200, 'kick', true);
           const hit = tryHit(p, h, true);
           if (hit) p.sub.hitDone = true;
         }
@@ -498,7 +515,7 @@ function megaHits(a, h, m) {
 
 // ---------- 抓投 ----------
 function tryGrab(p, mv) {
-  if (p.weapon && (p.weapon.kind === 'gun' || p.weapon.kind === 'shotgun')) return;
+  if (p.weapon && ['gun', 'shotgun', 'smg', 'bazooka'].includes(p.weapon.kind)) return;
   for (const e of G.actors) {
     if (e.side === 'player' || e.isRaptor || !hittable(e) || e.y > 0.1) continue;
     if (['idle', 'walk', 'hurt', 'hover'].indexOf(e.state) < 0) continue;
@@ -641,18 +658,25 @@ function pickUp(p, it) {
 }
 function dropWeapon(a) {
   if (!a.weapon) return;
-  if (a.weapon.ammo > 0 && ['gun', 'shotgun', 'pipe', 'knife', 'dynamite', 'grenade'].indexOf(a.weapon.kind) >= 0) spawnItem(a.weapon.kind, a.x, a.z, { ammo: a.weapon.ammo, pop: true, life: 10 });
+  if (a.weapon.ammo > 0 && ['gun', 'shotgun', 'smg', 'bazooka', 'pipe', 'knife', 'dynamite', 'grenade'].indexOf(a.weapon.kind) >= 0) spawnItem(a.weapon.kind, a.x, a.z, { ammo: a.weapon.ammo, pop: true, life: 10 });
   a.weapon = null; attachWeapon(a);
 }
 function useWeapon(p) {
   const w = p.weapon, k = w.kind;
   autoAim(p);
   const fwd = { x: Math.sin(p.face), z: Math.cos(p.face) };
-  if (k === 'gun' || k === 'shotgun') {
+  if (k === 'bazooka') {
+    if (w.ammo <= 0) { throwProj(p, k, { dmg: 8 }); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); return; }
+    w.ammo--; setState(p, 'shoot', { dur: 0.7, clip: 'shotgun' });
+    fireRocket(p, p.x + fwd.x * 0.65, 1.35, p.z + fwd.z * 0.65, fwd.x * 11, 0, fwd.z * 11);
+    fx.muzzle(p.x + fwd.x, 1.35, p.z + fwd.z); A.play('shotgun');
+    ev('shoot', { kind: k, ammo: w.ammo }); return;
+  }
+  if (k === 'gun' || k === 'shotgun' || k === 'smg') {
     if (w.ammo <= 0) { throwProj(p, k, { dmg: 8, dizzy: true }); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); return; }
     w.ammo--;
     const sg = k === 'shotgun';
-    setState(p, 'shoot', { dur: sg ? 0.55 : 0.3, clip: sg ? 'shotgun' : 'shoot' });
+    setState(p, 'shoot', { dur: sg ? 0.55 : k === 'smg' ? 0.11 : 0.3, clip: sg ? 'shotgun' : 'shoot' });
     const mx = p.x + fwd.x * 0.9, mz = p.z + fwd.z * 0.9;
     fx.muzzle(mx, 1.35, mz); A.play(sg ? 'shotgun' : 'gun');
     if (sg) fx.shake = Math.max(fx.shake, 0.12);
@@ -662,7 +686,7 @@ function useWeapon(p) {
       return { e, along, perp };
     }).filter(o => o.along > 0.2 && o.along < firstD && o.perp < (sg ? 0.55 + o.along * 0.18 : 0.5)).sort((a, b) => a.along - b.along);
     for (const o of cands) {
-      const dmg = sg ? Math.max(14, 36 - o.along * 3.5) : 16;
+      const dmg = sg ? Math.max(14, 36 - o.along * 3.5) : k === 'smg' ? 7 : 16;
       const kb = sg ? 'down' : (o.e.stun >= 2 ? 'down' : 'hit');
       applyHit(p, o.e, H(0, 0, 0, 0, 0, 2, dmg * p.stats.dmg, kb, 400, sg ? 'punchHeavy' : 'punch', sg), p.face);
       hitAny = true;
@@ -746,10 +770,16 @@ function throwProj(a, kind, o) {
   G.projs.push(pr);
   return pr;
 }
-function explode(x, z, r, dmg, owner) {
+function fireRocket(owner, x, y, z, vx, vy, vz, rain = false) {
+  const mesh = itemMesh('rocket'); scene.add(mesh);
+  const pr = { kind: 'rocket', owner, side: owner.side, x, y, z, vx, vy, vz, t: 0, mesh, rain, face: owner.face };
+  G.projs.push(pr); return pr;
+}
+function explode(x, z, r, dmg, owner, friendlySafe = false) {
   fx.boom(x, 0, z, r / 2); A.play('boom');
   for (const e of G.actors) {
     if (!e.alive || e.removed || ['dead', 'enter', 'cut', 'leave'].indexOf(e.state) >= 0) continue;
+    if (friendlySafe && e.side === owner?.side) continue;
     const d = Math.hypot(e.x - x, e.z - z);
     if (d < r + e.radius) {
       let k = 1 - d / (r + e.radius) * 0.5;
@@ -763,6 +793,19 @@ function updateProjectiles(dt) {
   const AR = AREAS[G.area];
   for (const pr of G.projs.slice()) {
     pr.t += dt;
+    if (pr.kind === 'rocket') {
+      pr.x += pr.vx * dt; pr.y += pr.vy * dt; pr.z += pr.vz * dt;
+      const hit = G.actors.some(e => e.side !== pr.side && hittable(e) && Math.hypot(e.x - pr.x, e.z - pr.z) < e.radius + 0.3 && pr.y < e.y + e.height && pr.y > e.y);
+      const out = pr.x < G.focusX - HALF_W - 2 || pr.x > G.focusX + HALF_W + 2 || pr.z < AR.z0 - 0.5 || pr.z > AR.z1 + 0.5;
+      if (hit || pr.y <= 0.15 || out || pr.t > 2.5) {
+        explode(pr.x, pr.z, 2.2, pr.rain ? 20 : 42, pr.owner, true);
+        ev('rocketExplosion', { rain: pr.rain }); killProj(pr); continue;
+      }
+      pr.mesh.position.set(pr.x, pr.y, pr.z);
+      pr.mesh.rotation.set(pr.rain ? Math.PI / 2 : 0, pr.rain ? 0 : pr.face, 0);
+      if (Math.floor(pr.t * 14) !== Math.floor((pr.t - dt) * 14)) fx.dust(pr.x, pr.y, pr.z, 1, 0.14);
+      continue;
+    }
     if (!pr.landed) {
       pr.vy -= (pr.kind === 'knife' ? 4 : GRAV * 0.8) * dt;
       pr.x += pr.vx * dt; pr.y += pr.vy * dt; pr.z += pr.vz * dt;
@@ -1486,8 +1529,15 @@ function respawn(p) {
   p.x = clamp(p.x, G.focusX - HALF_W + 1.5, G.focusX + HALF_W - 1.5);
   setState(p, 'respawn');
   p.invul = 3.0;
-  if (p.weapon) { p.weapon = null; attachWeapon(p); }
-  ev('respawn');
+  IN.clear();
+  p.weapon = { kind: 'bazooka', ammo: ITEMS.bazooka.ammo }; attachWeapon(p);
+  const ar = AREAS[G.area];
+  for (let i = 0; i < 5; i++) {
+    const x = clamp(p.x + (i - 2) * 1.8, G.focusX - HALF_W + 0.5, G.focusX + HALF_W - 0.5);
+    fireRocket(p, x, 6 + i * 0.7, clamp(p.z + (i % 2 ? -0.65 : 0.65), ar.z0, ar.z1), 0, -8, 0, true);
+  }
+  toast('火箭支援！复活携带火箭筒');
+  ev('respawn', { weapon: 'bazooka', rain: 5 });
 }
 function shockwave(p) {
   // 复活落地时把身边的敌人震倒（不扣血），避免被围在复活点
@@ -1618,7 +1668,7 @@ function targetPose(a, realT) {
   if (a.side === 'player' && a.weapon && ['idle', 'walk'].indexOf(s) >= 0) {
     const k = a.weapon.kind;
     if (k === 'gun') return s === 'walk' ? walkPose(a.walkPh, 0.8, GUN_POSE) : GUN_POSE;
-    if (k === 'shotgun') return s === 'walk' ? walkPose(a.walkPh, 0.8, SG_POSE) : SG_POSE;
+    if (['shotgun', 'smg', 'bazooka'].includes(k)) return s === 'walk' ? walkPose(a.walkPh, 0.8, SG_POSE) : SG_POSE;
   }
   switch (s) {
     case 'title': return lerpPose(HP.guard, HP.crossArms, 0.5 + 0.5 * Math.sin(realT * 0.8 + a.id), tmpPose);
@@ -1632,6 +1682,7 @@ function targetPose(a, realT) {
     }
     case 'run': case 'flee': return runPose(a.walkPh);
     case 'jump': {
+      if (a.sub.dive) return a.hero.id === 'mess' ? HP.buttSit : HP.diveKick;
       if (a.sub.atk && st - a.sub.atkT > 0.03) return a.sub.fly || a.hero && a.hero.id === 'mustapha' ? HP.flyKick : HP.jumpKick;
       return HP.jumpUp;
     }
@@ -1690,7 +1741,11 @@ function renderHuman(a, dt, realT) {
   const tp = targetPose(a, realT);
   const sharp = ['attack', 'hurt', 'down', 'flurry', 'grab', 'throwing'].indexOf(a.state) >= 0;
   const k = dt <= 0 ? 0 : 1 - Math.exp(-dt * (sharp ? 34 : 16));
-  for (let i = 0; i < POSE_LEN; i++) a.pose[i] += (tp[i] - a.pose[i]) * k;
+  for (let i = 0; i < POSE_LEN; i++) {
+    // body 翻转角沿最近方向衔接，收招时不反转整圈。
+    const delta = i === 0 ? Math.atan2(Math.sin(tp[i] - a.pose[i]), Math.cos(tp[i] - a.pose[i])) : tp[i] - a.pose[i];
+    a.pose[i] += delta * k;
+  }
   applyPose(a.model, a.pose);
   // 必杀旋转
   if (a.state === 'attack' && a.move && a.move.id === 'mega') a.model.bones.body.rotation.y = a.spin || 0;

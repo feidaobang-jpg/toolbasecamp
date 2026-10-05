@@ -57,9 +57,11 @@ function T(name) {
     }); break;
     case 'wallpaper': t = mkTex(128, 128, 16, (g, w, h, r) => {   // 棕色菱格壁纸
       g.fillStyle = '#8c6c4a'; g.fillRect(0, 0, w, h);
-      g.strokeStyle = '#6a4e34'; g.lineWidth = 3;
+      g.strokeStyle = '#715438'; g.lineWidth = 1.2;
       for (let i = -2; i < 4; i++) { g.beginPath(); g.moveTo(i * 64, 0); g.lineTo(i * 64 + 128, 128); g.stroke(); g.beginPath(); g.moveTo(i * 64 + 128, 0); g.lineTo(i * 64, 128); g.stroke(); }
-      g.fillStyle = '#a8865e'; for (const [x, y] of [[32, 0], [96, 64], [32, 128], [0, 64], [128, 64]]) { g.beginPath(); g.ellipse(x, y, 7, 12, 0, 0, Math.PI * 2); g.fill(); }
+      g.fillStyle = '#ad8e65'; for (const [x, y] of [[32, 0], [96, 64], [32, 128], [0, 64], [128, 64]]) {
+        for (let a = 0; a < 4; a++) { g.save(); g.translate(x, y); g.rotate(a * Math.PI / 2); g.beginPath(); g.ellipse(0, 6, 3, 8, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+      }
       speckle(g, w, h, r, 200, 'rgba(50,30,15,0.18)', 2);
     }); break;
     case 'wood': t = mkTex(128, 128, 17, (g, w, h, r) => {
@@ -345,8 +347,8 @@ const BUILDERS = {
     fp.add(texBox(X1 - X0, 0.04, 0.5, 1), '#a07048', mtx((X0 + X1) / 2, 0.01, ZB + 0.25)); fp.add(texBox(X1 - X0, 0.04, 0.45, 1), '#a07048', mtx((X0 + X1) / 2, 0.01, ZF - 0.22));
     fp.add(texBox(X1 - X0, 0.03, 0.08, 1), '#d8a848', mtx((X0 + X1) / 2, 0.025, ZB + 0.55)); fp.add(texBox(X1 - X0, 0.03, 0.08, 1), '#d8a848', mtx((X0 + X1) / 2, 0.025, ZF - 0.5));
     // 护墙板
-    fp.add(texBox(X1 - X0, 1.15, 0.12, 1), '#c8a080', mtx((X0 + X1) / 2, 0.575, ZB + 0.1));
-    fp.add(texBox(X1 - X0, 0.08, 0.2, 1), '#e0b880', mtx((X0 + X1) / 2, 1.18, ZB + 0.12));
+    fp.add(texBox(X1 - X0, 0.48, 0.12, 1), '#a58b6a', mtx((X0 + X1) / 2, 0.24, ZB + 0.1));
+    fp.add(texBox(X1 - X0, 0.08, 0.2, 1), '#c0a581', mtx((X0 + X1) / 2, 0.51, ZB + 0.12));
     const fm = new THREE.Mesh(fp.build(), woodMat); fm.receiveShadow = true; g.add(fm);
     // 墙壳：后墙常显；前墙 / 两端 / 天花板按镜头位置剖切
     const wpMat = texMat('wallpaper', [1, 1]);
@@ -391,23 +393,47 @@ const BUILDERS = {
     const pp = new Parts();
     const PX = [2.4, 13.4, 26.6, 39.6, 49.2, 58.6];
     for (const x of PX) {
-      pp.add(GEO.cyl, '#d8d4ca', mtx(x, 3.0, ZB + 0.3, 0, 0, 0, 0.3, 5.0, 0.3));
+      pp.add(GEO.cyl, '#bacac1', mtx(x, 1.7, ZB + 0.3, 0, 0, 0, 0.35, 2.6, 0.35));
       pp.add(texBox(0.85, 0.55, 0.75, 1), '#bdb8ae', mtx(x, 0.28, ZB + 0.32));
-      pp.add(texBox(0.95, 0.5, 0.8, 1), '#cfcac0', mtx(x, 5.6, ZB + 0.32));
-      pp.add(GEO.cyl, '#a8a49a', mtx(x, 5.25, ZB + 0.3, 0, 0, 0, 0.38, 0.22, 0.38));
+      pp.add(texBox(1.05, 0.42, 0.8, 1), '#c8aa7d', mtx(x, 3.1, ZB + 0.32));
+      pp.add(GEO.cyl, '#8c9d92', mtx(x, 2.82, ZB + 0.3, 0, 0, 0, 0.42, 0.22, 0.42));
     }
     const pillars = new THREE.Mesh(pp.build(), marbleMat); pillars.castShadow = true; pillars.receiveShadow = true; g.add(pillars);
+    // 原作室内的浅灰绿拱券和破损墙皮；程序化重绘，不直接使用参考图。
+    const archMat = new THREE.MeshLambertMaterial({ color: '#82968b', side: THREE.DoubleSide });
+    const rimMat = new THREE.MeshLambertMaterial({ color: '#c0a77c', side: THREE.DoubleSide });
+    for (let i = 0; i < PX.length - 1; i++) {
+      const l = PX[i], r = PX[i + 1], mid = (l + r) / 2, radius = (r - l) / 2;
+      const arch = new THREE.Shape(); arch.moveTo(l, CEIL); arch.lineTo(r, CEIL);
+      for (let j = 0; j <= 24; j++) { const a = j / 24 * Math.PI; arch.lineTo(mid + Math.cos(a) * radius, 3.3 + Math.sin(a) * 1.25); }
+      arch.closePath();
+      const mesh = new THREE.Mesh(new THREE.ShapeGeometry(arch), archMat); mesh.position.z = ZB + 0.025; bg.add(mesh);
+      const rim = new THREE.Shape();
+      for (let j = 0; j <= 24; j++) { const a = j / 24 * Math.PI; const x = mid + Math.cos(a) * radius, y = 3.3 + Math.sin(a) * 1.25; j ? rim.lineTo(x, y) : rim.moveTo(x, y); }
+      for (let j = 24; j >= 0; j--) { const a = j / 24 * Math.PI; rim.lineTo(mid + Math.cos(a) * radius, 3.19 + Math.sin(a) * 1.25); }
+      const edge = new THREE.Mesh(new THREE.ShapeGeometry(rim), rimMat); edge.position.z = ZB + 0.04; bg.add(edge);
+    }
+    const damageTex = mkTex(256, 256, 51, (ctx, w, h, rand) => {
+      ctx.clearRect(0, 0, w, h); ctx.fillStyle = '#394642';
+      ctx.beginPath();
+      for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2, rr = 30 + rand() * 45; const x = 128 + Math.cos(a) * rr, y = 128 + Math.sin(a) * rr; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill();
+      for (let i = 0; i < 7; i++) crack(ctx, 128, 128, 80 + rand() * 60, rand, '#323b38');
+    });
+    const damageMat = new THREE.MeshLambertMaterial({ map: damageTex, transparent: true, alphaTest: 0.1, depthWrite: false });
+    for (const x of [3.3, 12.5, 25.5, 38.6, 48.3, 58]) for (const y of [0.85, 4.1]) {
+      const damage = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.5), damageMat); damage.position.set(x, y, ZB + 0.06); bg.add(damage);
+    }
     const dp = new Parts();
     for (let i = 0; i < PX.length - 1; i++) {
       const x = (PX[i] + PX[i + 1]) / 2;
       if ([8, 20, 34].some(d => Math.abs(d - x) < 2)) continue;
-      dp.add(GEO.hemi, '#d8c8a0', mtx(x, 3.3, ZB + 0.05, Math.PI / 2, 0, 0, 0.32, 0.18, 0.42));
-      dp.add(GEO.box, '#7a5a38', mtx(x, 3.3, ZB + 0.02, 0, 0, 0, 0.5, 0.7, 0.05));
+      dp.add(GEO.hemi, '#d8c8a0', mtx(x, 2.6, ZB + 0.05, Math.PI / 2, 0, 0, 0.32, 0.18, 0.42));
+      dp.add(GEO.box, '#7a5a38', mtx(x, 2.6, ZB + 0.02, 0, 0, 0, 0.5, 0.7, 0.05));
     }
     const decoM = new THREE.Mesh(dp.build(), toonMat()); bg.add(decoM);
     const webMat = new THREE.MeshBasicMaterial({ map: T('web'), transparent: true, alphaTest: 0.3, side: THREE.DoubleSide, depthWrite: false });
     for (const [x, flip] of [[13.4, 1], [26.6, -1], [39.6, 1], [49.2, -1], [2.4, 1]]) {
-      const w = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.6), webMat); w.position.set(x + flip * 1.1, 4.6, ZB + 0.06); w.scale.x = flip; w.rotation.z = flip > 0 ? Math.PI / 2 : 0; bg.add(w);
+      const w = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.6), webMat); w.position.set(x + flip * 1.1, 3.65, ZB + 0.06); w.scale.x = flip; w.rotation.z = flip > 0 ? Math.PI / 2 : 0; bg.add(w);
     }
     // 双开门（敌人从门里出来）
     A.doors = [];

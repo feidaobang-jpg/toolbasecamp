@@ -6,8 +6,8 @@
   },
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.1.3",
-  "handoff": "releases/v0.1.3/handoff.json",
+  "current_version": "v0.2.0",
+  "handoff": "releases/v0.2.0/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -35,7 +35,9 @@
       "Q / E": "按住左右转视角",
       "Esc / Enter / P": "暂停；菜单里 Enter 确认",
       "↑↓ / ←→": "菜单选择 / 调整选项；选人画面 ←→ 换英雄",
-      "I（或 L / Shift / 双击方向）": "冲刺"
+      "I（或 L / Shift / 双击方向）": "冲刺",
+      "S→W→J（下→上→攻击）": "空手角色特殊技，不扣体力；0.6 秒内下上，0.38 秒内攻击",
+      "K→方向→J": "空中斜下踢（梅斯为坐压），与同时 J+K 必杀分开"
     },
     "touch": {
       "左侧浮动摇杆": "移动（模拟量；连推两下 = 冲刺）",
@@ -43,10 +45,11 @@
       "K": "跳跃",
       "U": "必杀",
       "C": "切换视角",
-      "按住画面拖动": "无极转视角（2026-10-05 起不设 Q/E 按钮，摇杆与按钮区域除外）",
+      "按住画面拖动": "第一人称右划右转头；侧视/斜视保留拖场景方向",
       "右上角": "C 切换视角与暂停",
-      "I": "按住冲刺",
-      "排列": "下排 J / K，上排 U / I，等大 2×2 方阵"
+      "I": "点按启用冲刺，摇杆持续推动时保持；回中或松开摇杆停止，右手可转按 J",
+      "排列": "下排 J / K，上排 U / I，等大 2×2 方阵",
+      "下→上→J": "摇杆快速下上后点 J，发动角色特殊技"
     }
   },
   "release_intent": "web_demo",
@@ -91,8 +94,7 @@
     "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md",
     "continuation": {
       "tool": "Codex",
-      "worktree": "D:/project/toolbasecamp/.claude/worktrees/sharp-tesla-a5c0ac",
-      "scope": "接续 Claude 中断的 v0.1.3 样式验收与发布收尾"
+      "scope": "v0.2.0 玩家反馈：触控、特殊技、枪械与走廊细节"
     }
   },
   "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git",
