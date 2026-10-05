@@ -417,10 +417,12 @@
       "source": "user_supplied_comment_text",
       "text": "可以建一个召唤队友和召唤载具，队友和载具老卡虫洞外面和顶上",
       "kind": "bug+feature",
-      "status": "verified_local_pending_deploy",
+      "status": "fixed",
       "fixed_in": "web-rescue-v0.18.0",
       "reply_rpid": null,
-      "record": "releases/web-rescue-v0.18.0/handoff.json"
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "deployed_at": "2026-10-05T12:45:01.447845+00:00",
+      "reply_status": "not_requested_not_posted"
     },
     {
       "rpid": null,
@@ -428,10 +430,12 @@
       "source": "user_supplied_comment_text",
       "text": "别打母皇呀，这样收益更高 / 到最后再打。",
       "kind": "balance",
-      "status": "verified_local_pending_deploy",
+      "status": "fixed",
       "fixed_in": "web-rescue-v0.18.0",
       "reply_rpid": null,
-      "record": "releases/web-rescue-v0.18.0/handoff.json"
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "deployed_at": "2026-10-05T12:45:01.447845+00:00",
+      "reply_status": "not_requested_not_posted"
     },
     {
       "rpid": null,
@@ -439,10 +443,12 @@
       "source": "current_chat_user_observation",
       "text": "不知道怎么输。",
       "kind": "user_observation",
-      "status": "verified_local_pending_deploy",
+      "status": "fixed",
       "fixed_in": "web-rescue-v0.18.0",
       "reply_rpid": null,
-      "record": "releases/web-rescue-v0.18.0/handoff.json"
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "deployed_at": "2026-10-05T12:45:01.447845+00:00",
+      "reply_status": "not_requested_not_posted"
     }
   ]
 }

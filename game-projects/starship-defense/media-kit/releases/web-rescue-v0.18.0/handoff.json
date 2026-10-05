@@ -2,7 +2,7 @@
   "schema_version": 1,
   "version": "web-rescue-v0.18.0",
   "kind": "formal_release",
-  "status": "validated_local_awaiting_git_resolution",
+  "status": "released_and_public_verified",
   "at": "2026-10-05T12:22:35.819312+00:00",
   "summary": "队友集合与载具救援；修复母巢返程和载具洞道跟随；母皇每关补给；修复飞虫无法伤害基地并增加失败提示；电脑/触屏手动切换。",
   "changes": [
@@ -53,39 +53,54 @@
   },
   "channels": {
     "website": {
-      "status": "not_deployed",
-      "pending_version": "web-rescue-v0.18.0",
-      "reason": "主工作区开工时已有无关改动，HEAD 与 origin/master 分叉。已询问独立工作区或合并方案，未自行合并/变基/覆盖。"
+      "status": "public_verified",
+      "version": "web-rescue-v0.18.0",
+      "record": "website-verification.json",
+      "verified_at": "2026-10-05T12:37:01.357604+00:00"
     },
     "toy": {
       "id": 38678478981120,
-      "status": "not_submitted",
+      "status": "published",
       "merge_versions": [
         "web-squad-follow-v0.17.14",
         "web-rescue-v0.18.0"
       ],
-      "reason": "网站核验前先准备并自检包体；之后用相同已验证包预览、实测、提交。保留ID/slug/可见性/绑定。",
-      "package_sha256": "53b755025a957b41abed350f690858f3a16ad69116c3935830818ec2ad67cf60",
+      "reason": "同一已验证包预览后送审，正式页 bundle 与包体逐字节一致。",
+      "package_sha256": "25752847cd0d21b6b19687576b3434ce1e48b68f7f1669700c70f26118e8f3bb",
       "package_manifest": "package-manifest.json",
-      "doctor": "toy-doctor.json"
+      "doctor": "toy-doctor.json",
+      "version": "web-rescue-v0.18.0",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_AzraHxVY/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_jbJQ8zCt/index.html",
+      "verified_at": "2026-10-05T12:43:08.809743+00:00",
+      "record": "toy-public-verification.json"
     },
     "bilibili_description": {
-      "status": "not_submitted",
+      "status": "public_verified",
       "targets": [
         "BV1Ujad6DEuf",
         "BV1WbHq6eEBt"
       ],
-      "reason": "本版有明显体验变化，部署后应同步；先回读现有全文并查重，不覆盖旧片和元信息。"
+      "reason": "两条原简介写前重读，保留精简介绍并追加一行更新；公开全文一致且无空白行。",
+      "record": "bilibili-sync.json",
+      "verified_at": "2026-10-05T12:44:02.342Z"
     },
     "comments": {
       "status": "not_requested_not_posted"
     }
   },
-  "next_steps": [
-    "等待 Git 分叉处理选择；推荐基于 origin/master 的独立工作区，只带本次文件。",
-    "提交推送；公网比对本页、bundle、基础CSS并试玩。",
-    "合并既有待同步项完成 Toy 同包预览、实测、提交并准确记录审核状态。",
-    "读取两条视频当前简介，更新紧凑版本提示并公开核验；推进成功渠道的基线。"
-  ],
-  "package_source_sha256": "7a8bea9e67dd917dabc8dfaa55246270247ad32d10343e8572707d7c6b438ecb"
+  "next_steps": [],
+  "package_source_sha256": "7a8bea9e67dd917dabc8dfaa55246270247ad32d10343e8572707d7c6b438ecb",
+  "completed_at": "2026-10-05T12:45:01.447845+00:00",
+  "code_commit": "22b38f7b",
+  "list_update": {
+    "reason": "恐龙快打和赤色要塞 Toy 已公开，config 缺少 toyUrl",
+    "toy_ids": {
+      "cadillacs": 40412421031936,
+      "jackal": 39863936092160
+    },
+    "vote": "游戏/自研/外链旁增加投票，跳转现有 game-vote.html，不提交任何测试选票",
+    "qa": "1280 与 390 宽双入口、无横向溢出、实际跳转通过"
+  },
+  "git_resolution": "用户授权独立 worktree，仅迁入本任务提交；正常快进发布至 master，保留原共享目录。"
 }

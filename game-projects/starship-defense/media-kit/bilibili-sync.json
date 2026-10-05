@@ -7,40 +7,30 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-grenade-nocd-v0.17.11",
-      "last_public_verified_at": "2026-10-05T00:48:00+08:00",
+      "last_public_verified_version": "web-rescue-v0.18.0",
+      "last_public_verified_at": "2026-10-05T12:44:02.342Z",
       "status": "public_verified",
-      "submitted_at": "2026-10-05 00:47:53",
+      "submitted_at": "2026-10-05T12:44:02.342Z",
       "submit_toast": "稿件投递成功",
-      "description_revision": "description-compact-20261005",
-      "description_public_verified_at": "2026-10-05T12:30:12.722Z",
-      "description_sha256": "2384a70a11721ea1dbae2d5031d55d86e4940776e25c8987fa13aeb8db02fed2"
+      "description_revision": "web-rescue-v0.18.0",
+      "description_public_verified_at": "2026-10-05T12:44:02.342Z",
+      "description_sha256": "bd040a778e35fd9066eb888b08a6fa2575c988fc31956bac9411b98578e9d1ec"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-grenade-nocd-v0.17.11",
-      "last_public_verified_at": "2026-10-05T00:48:00+08:00",
+      "last_public_verified_version": "web-rescue-v0.18.0",
+      "last_public_verified_at": "2026-10-05T12:44:02.342Z",
       "status": "public_verified",
-      "submitted_at": "2026-10-05 00:47:53",
+      "submitted_at": "2026-10-05T12:44:02.342Z",
       "submit_toast": "稿件投递成功",
-      "description_revision": "description-compact-20261005",
-      "description_public_verified_at": "2026-10-05T12:30:12.722Z",
-      "description_sha256": "2be96eef60fd63ccf3118ae37f078975051c455a45ecc8079191c385e501faa1"
+      "description_revision": "web-rescue-v0.18.0",
+      "description_public_verified_at": "2026-10-05T12:44:02.342Z",
+      "description_sha256": "375728f98eb80766f741f1337ae843b3aab1226d51a36e37a8bfa0c0713c78a5"
     }
   ],
-  "latest_record": "releases/description-compact-20261005/bilibili-sync.json",
+  "latest_record": "releases/web-rescue-v0.18.0/bilibili-sync.json",
   "pending": [],
-  "pending_note": "两条简介已按用户要求精简并公开核验；旧v0.17.12待审核记录已结清。此次只改说明，不宣称pending_release的新玩法已同步；下一次更新先读线上精简全文，不恢复历史长区块。",
-  "pending_release": {
-    "version": "web-rescue-v0.18.0",
-    "status": "awaiting_website_deploy",
-    "record": "releases/web-rescue-v0.18.0/handoff.json",
-    "summary": "队友集合与载具救援；修复母巢返程和载具洞道跟随；母皇每关补给；修复飞虫无法伤害基地并增加失败提示；电脑/触屏手动切换。",
-    "targets": [
-      "BV1Ujad6DEuf",
-      "BV1WbHq6eEBt"
-    ],
-    "note": "正式版本达到同步条件；部署前不操作视频简介，不推进 public_verified 基线。提交前须重新读取平台全文，合并 v0.17.14 与本版。"
-  }
+  "pending_note": "v0.18.0 更新已合并现有精简简介，两条均公开核验；不新增评论。",
+  "pending_release": null
 }
