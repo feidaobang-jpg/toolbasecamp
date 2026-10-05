@@ -23,10 +23,12 @@
   ],
   "skill_validation": "quick_validate.py passed",
   "evidence": "C:\\Users\\37818\\.codex\\visualizations\\2026\\10\\05\\01a10bec-4699-7940-ae33-26869c8095f8\\drag-direction",
-  "website_status": "pending_deploy",
+  "website_status": "deployed_verified",
   "toy_status": "pending_merge",
   "bilibili_status": "pending_merge",
   "input_checks": 150,
   "input_passed": 150,
-  "input_test_repair": "旧回归脚本恐龙快打相机按钮选择器已更新为现有#btn-cam，重跑该游戏通过。"
+  "input_test_repair": "旧回归脚本恐龙快打相机按钮选择器已更新为现有#btn-cam，重跑该游戏通过。",
+  "website_commit": "9afb7ac8",
+  "deployment_record": "deployment.json"
 }

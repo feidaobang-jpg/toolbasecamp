@@ -1,0 +1,80 @@
+{
+  "commit": "9afb7ac83bff30c9af2362e5de0df60ba166088c",
+  "verified_at": "2026-10-05T22:52:22.333122+08:00",
+  "actions": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/37327908252",
+  "actions_status": "success",
+  "resources": [
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+      "ok": true,
+      "sha256": "7051cf67b2b3452f73581776719991435d74d36f8d2150a879ba5a7a215d60dd"
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "ok": true,
+      "sha256": "90560a8e516e30405128577c96cacbee4463a98065197b6644166d62cb06cc4a"
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/index.html",
+      "ok": true,
+      "sha256": "8a52f07c2e16e0a5ad0a23ff1e0b7d95902d1b81c2873810d8bea4751f455a98"
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/main.js",
+      "ok": true,
+      "sha256": "a9df6ccf8f435906099296dccaf5a99a2e618c347444f792cfabc473d244e6e3"
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/scene.js",
+      "ok": true,
+      "sha256": "9ebafcceb538bcc2f3febc46bde1f7196559dfcef3b62655a74bf68a442ec643"
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+      "ok": true,
+      "sha256": "6a6c30f1f7e34bf7dc6d6117ec925820a04d0e672367231dbbf44fb7476fad1a"
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js",
+      "ok": true,
+      "sha256": "a02a0506b42350e64c31c7e3988fbb4295cb6663b86def64fa4161df307ac71c"
+    },
+    {
+      "path": "public/html/game/journey-west-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html",
+      "ok": true,
+      "sha256": "77e808f879375570709acd089d825c29e0052bfe31baa89d7652f8f758765379"
+    },
+    {
+      "path": "public/html/game/journey-west-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/main.js",
+      "ok": true,
+      "sha256": "d7c244cf9309170ef901178258f3aebd5d014f66e87f355899530cbf99c66200"
+    },
+    {
+      "path": "public/html/game/mario-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+      "ok": true,
+      "sha256": "d1d850b2a9c74009b56405b1a7c55d0c27b425309949a56f141030b3b6c04eb7"
+    },
+    {
+      "path": "public/html/game/mario-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js",
+      "ok": true,
+      "sha256": "4a1bda7bee7bae7d81a755574ea7282ebbb121cd4153c188e3a75362c342b9c4"
+    },
+    {
+      "path": "public/js/game/drag-look.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js",
+      "ok": true,
+      "sha256": "af7dfbb2ecb61d3fda099246d1d32e41d8d948b75294491231fce36e7c911b24"
+    }
+  ]
+}

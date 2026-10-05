@@ -6,8 +6,9 @@
   "classification": "普通补丁",
   "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
   "website": {
-    "status": "validated_local_pending_deploy",
-    "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html"
+    "status": "deployed_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html",
+    "commit": "9afb7ac8"
   },
   "qa": {
     "direction_checks": 474,
