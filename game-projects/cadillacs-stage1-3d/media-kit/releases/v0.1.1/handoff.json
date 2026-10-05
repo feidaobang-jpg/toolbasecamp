@@ -1,0 +1,472 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.1.1",
+ "base_version": "v0.1.0",
+ "created_at": "2026-10-05",
+ "build": {
+  "id": "cd3d-v0.1.1-5fc92be23e",
+  "commit": "378dc004",
+  "dirty": false,
+  "fingerprint": "02c54bdb086984b4c3f7bbc1cffee94c991a301812cca6b2e69a16a955a4d281",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "fingerprint_files": [
+   "public/html/game/cadillacs-stage1-3d/index.html",
+   "public/html/game/cadillacs-stage1-3d/css/style.css",
+   "public/html/game/cadillacs-stage1-3d/js/game.min.js"
+  ],
+  "game_min_js_sha256": "5fc92be23e3e77053b78fc4e048e1a455fcf7f0ef62020e2d2d3b7b4046a8169",
+  "note": "线上部署后 index.html 的 ?v= 由部署脚本改写为提交号（?v=378dc004），仓库内为 ?v=6"
+ },
+ "feature_inventory": [
+  {
+   "id": "f-cameras",
+   "description": "C 循环侧视 / 斜视 / 正视 / 第一人称，Q/E 与手机拖动无极转视角；v0.1.1 起第 47 街后墙与楼体立面剖切 + 贴近渐隐、瓦砾实体避让（先抬高后拉近）、第一人称贴身角色按距离淡化",
+   "status": "implemented",
+   "evidence_ids": [
+    "fix-after-clip",
+    "after-front-wall-lookz",
+    "after-fp-vice-0.2"
+   ]
+  },
+  {
+   "id": "f-boss",
+   "description": "Boss 维斯·T 与岩跳龙；v0.1.1 起锁屏时所有角色不出画",
+   "status": "implemented",
+   "evidence_ids": [
+    "after-side-boss-kill"
+   ]
+  }
+ ],
+ "changes": [
+  {
+   "id": "c-front-avoid",
+   "feature_ids": [
+    "f-cameras"
+   ],
+   "before": "正视 / 侧视按 Q/E 转到第 47 街后墙一侧时镜头落到墙后或墙里，整屏砖墙，主角被挡",
+   "after": "镜头到墙后时后墙（连同藤蔓）、楼体立面（连同门洞木板）整层剖切；镜头还在墙前但贴近 0.6～0.7 米内时整面墙渐隐；墙后瓦砾、前侧碎砖、远处废墟、尽头砖堆登记为实体，挡住视线时正视先抬高 1～2 米、抬不开再沿视线拉近（最多拉到主角身后 1.3 米，拉近快回退慢）",
+   "player_visible": "正视在第 47 街转一整圈不再出现满屏砖墙，主角始终可见",
+   "evidence_ids": [
+    "fix-before-clip",
+    "fix-after-clip",
+    "before-run-176_8",
+    "before-old-front-worst",
+    "after-front-wall-lookz",
+    "after-front-wall-diag"
+   ],
+   "verified": "pass"
+  },
+  {
+   "id": "c-fp-fade",
+   "feature_ids": [
+    "f-cameras"
+   ],
+   "before": "第一人称眼睛在主角头部中心，岩跳龙 / 敌人贴身时近裁剪面切进模型：满屏模型面、露出牙齿与内部，或描边外壳罩住镜头整屏发黑",
+   "after": "第一人称下按「镜头到各部件包围球」的最近距离淡化贴身角色（0.5 米起渐隐，最低 15% 不透明），同时隐藏描边外壳与手持武器；开局预编译透明着色器变体，首次淡化不再卡约 55 ms",
+   "player_visible": "第一人称贴身打斗时敌人变成半透明虚影，不再黑屏或满屏模型",
+   "evidence_ids": [
+    "fix-before-clip",
+    "fix-after-clip",
+    "before-run-224_2",
+    "before-old-fp-vice-0.2",
+    "after-fp-raptor-0.5",
+    "after-fp-vice-0.2"
+   ],
+   "verified": "pass"
+  },
+  {
+   "id": "c-lock-clamp",
+   "feature_ids": [
+    "f-boss"
+   ],
+   "before": "锁屏时只限制主角（距焦点 HALF_W-0.35），敌人可到焦点 ±(HALF_W+2.2)，维斯被打飞后出画；透视下最前一排纵深画面更窄，主角贴边也会被切掉一部分",
+   "after": "锁屏时敌人、Boss、被打飞 / 被抓的角色与主角一样限制在焦点 ±(HALF_W-0.7) 内（岩跳龙再多留 1.45 米尾巴长度，倒地横躺再往里滑 0.45 米），撞到边缘就停；侧视取景按最前一排纵深保证这一窗口完整入画（16:9 镜头约拉远 8%）",
+   "player_visible": "Boss 战与各波锁屏时角色不再被打出画面",
+   "evidence_ids": [
+    "fix-before-clip",
+    "fix-after-clip",
+    "before-run-282_5",
+    "before-old-side-boss-kill",
+    "after-side-boss-kill"
+   ],
+   "verified": "pass"
+  },
+  {
+   "id": "c-fade-shader",
+   "feature_ids": [
+    "f-cameras"
+   ],
+   "before": "户外遮挡淡化（楼体立面、楼顶楼梯间）运行中只改 transparent 标志、没有 needsUpdate，opaque 着色器带 OPAQUE 宏，透明度从未生效",
+   "after": "切换透明时 needsUpdate，并在开局预编译透明变体",
+   "player_visible": "遮挡主角的楼体 / 楼梯间真正变半透明",
+   "evidence_ids": [],
+   "verified": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "bug-front-wall",
+   "found_version": "v0.1.0",
+   "repro": "第 47 街第二波，穆斯塔法 seed 7，正视下 bot 按 Q/E 把视线转向身后目标（原录像 176.8 s、180.4–181.8 s）；或 qa/camera.js 场景①",
+   "observed": "镜头进墙，整屏砖墙纹理",
+   "joke_angle": null,
+   "cause": "第 47 街后墙没有剖切也没有机位避让，正视镜头绕主角约 7.4 米转圈时落到墙后",
+   "status": "fixed",
+   "fix": "c-front-avoid",
+   "before_media_ids": [
+    "before-run-176_8",
+    "before-run-181_0",
+    "before-old-front-worst",
+    "fix-before-clip"
+   ],
+   "after_media_ids": [
+    "after-front-wall-lookz",
+    "after-front-wall-diag",
+    "fix-after-clip"
+   ],
+   "retest": "qa/camera.js 正视 5 个站位各转一整圈：满屏近物最大值 旧 0.556 → 新 0；主角被挡 旧 8 次以上 → 新 0"
+  },
+  {
+   "id": "bug-fp-clip",
+   "found_version": "v0.1.0",
+   "repro": "Boss 战第一人称与岩跳龙、维斯贴身（原录像 223.8–224.8 s）；或 qa/camera.js 场景②",
+   "observed": "画面变黑，或露出牙齿和模型内部",
+   "joke_angle": null,
+   "cause": "第一人称眼睛在主角头部中心，角色间分离距离只有 0.56～0.71 米，贴身时模型穿过近裁剪面；描边是背面外扩外壳，镜头进到外壳里看到的全是黑色背面",
+   "status": "fixed",
+   "fix": "c-fp-fade",
+   "before_media_ids": [
+    "before-run-224_2",
+    "before-run-224_6",
+    "before-old-fp-vice-0.2",
+    "fix-before-clip"
+   ],
+   "after_media_ids": [
+    "after-fp-raptor-0.5",
+    "after-fp-raptor-0.2",
+    "after-fp-vice-0.2",
+    "fix-after-clip"
+   ],
+   "retest": "维斯距 0.05 米：暗像素 旧 100% → 新 0%；0.2 米满屏实心面 旧 73% → 新 0%；实战 6 秒峰值暗像素 ≤ 8%"
+  },
+  {
+   "id": "bug-lock-offscreen",
+   "found_version": "v0.1.0",
+   "repro": "侧视 Boss 战尾段把维斯往右缘打（原录像 279–283 s、290 s）；或 qa/camera.js 场景③",
+   "observed": "维斯被打到画面右缘以外",
+   "joke_angle": null,
+   "cause": "锁屏只限制主角，敌人允许到焦点 ±(HALF_W+2.2)；侧视取景只保证观察点纵深看到 ±(HALF_W+0.9)，最前一排更窄",
+   "status": "fixed",
+   "fix": "c-lock-clamp",
+   "before_media_ids": [
+    "before-run-282_5",
+    "before-run-290_0",
+    "before-old-side-boss-kill",
+    "fix-before-clip"
+   ],
+   "after_media_ids": [
+    "after-side-boss-kill",
+    "fix-after-clip"
+   ],
+   "retest": "bot 实打 Boss 各 40 秒逐顶点投影：最大出画量 旧 +0.361 NDC（16:9）/ +0.336（2.17:1）→ 新 ≤ -0.008（全部在画内）"
+  }
+ ],
+ "media": [
+  {
+   "id": "after-front-wall-lookz",
+   "file": "releases/v0.1.1/captures/after-front-wall-lookz.png",
+   "sha256": "44122c2aaa8dafe305fa4137219b96946b2035251c394d20fa7202b7e0d689e4",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "正视镜头转到后墙那一侧：后墙整层剖切，看到街道与主角（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-front-wall-diag",
+   "file": "releases/v0.1.1/captures/after-front-wall-diag.png",
+   "sha256": "f05053e31ef437fddc897a048d2d2bfa53a532574c81ba38401c02c1853b0b4a",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "正视斜向转到墙后：墙剖切，瓦砾堆不挡主角（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-front-facade-lookz",
+   "file": "releases/v0.1.1/captures/after-front-facade-lookz.png",
+   "sha256": "2a6b668195cc09f42e6cf240d91f7a29151ce98c92d3d076029f1f41f7f20b45",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "起点楼体立面一侧：立面剖切（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-fp-raptor-0.5",
+   "file": "releases/v0.1.1/captures/after-fp-raptor-0.5.png",
+   "sha256": "f6be79970a46d0be453a6240ff58748e3792ca54d7ba9def9f1ab107a4f2fa93",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称岩跳龙距 0.5 米：按距离淡化为虚影，无黑屏（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-fp-raptor-0.2",
+   "file": "releases/v0.1.1/captures/after-fp-raptor-0.2.png",
+   "sha256": "6b4a04bc98228cb4e9a9b5e3cacdce87413667dd74317a61d1a2861757599ccb",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称岩跳龙距 0.2 米（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-fp-vice-0.2",
+   "file": "releases/v0.1.1/captures/after-fp-vice-0.2.png",
+   "sha256": "c8a320ac856b841695edb75895da4c6164d2d3ce78160c8d0f0d6fbab5400fd8",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称维斯距 0.2 米：淡化，描边隐藏（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-side-boss-kill",
+   "file": "releases/v0.1.1/captures/after-side-boss-kill.png",
+   "sha256": "732540cc1b928c5910d33524730601829c6500a26d738d8d5e6036bb58a28d35",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "侧视锁屏：维斯在右缘被打飞后停在画内（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "after-side-rot180",
+   "file": "releases/v0.1.1/captures/after-side-rot180.png",
+   "sha256": "1ad6e1043aaef4c122e40a215fe7615be7f97c228dd1515e3e177abd9d8a9237",
+   "kind": "screenshot",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "侧视转 180° 到墙后：墙剖切，画面无近物遮挡（qa/camera.js，测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "fix-after-clip",
+   "file": "releases/v0.1.1/captures/camera-fix-after-16x9.mp4",
+   "sha256": "0ea6b2ab7ea9499cb74d406ac35a56e1308e3778212102b69eae78e94d44de78",
+   "kind": "video",
+   "version": "v0.1.1",
+   "build_id": "cd3d-v0.1.1-5fc92be23e",
+   "capture_mode": "realtime-automation",
+   "description": "修复后：同一脚本、同一摆位录三段，可与 fix-before-clip 逐段并排对照。无声",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 11.167,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 4.67,
+     "description": "正视：第47街贴后墙站最里排，按 Q/E 速度转一整圈",
+     "supports": [
+      "c-front-avoid"
+     ]
+    },
+    {
+     "in_seconds": 4.67,
+     "out_seconds": 8.67,
+     "description": "第一人称：岩跳龙从 2 米贴到 0 米，再换维斯贴脸",
+     "supports": [
+      "c-fp-fade"
+     ]
+    },
+    {
+     "in_seconds": 8.67,
+     "out_seconds": 11.167,
+     "description": "侧视 Boss 战锁屏：维斯在画面右缘被打飞",
+     "supports": [
+      "c-lock-clamp"
+     ]
+    }
+   ]
+  }
+ ],
+ "historical_media": [
+  {
+   "id": "before-run-176_8",
+   "handoff": "releases/v0.1.1/before/v0.1.0-run.json",
+   "media_id": "ev-run-176_8",
+   "reason": "修复前证据（原视频录像抽帧，v0.1.0 录制构建）"
+  },
+  {
+   "id": "before-run-181_0",
+   "handoff": "releases/v0.1.1/before/v0.1.0-run.json",
+   "media_id": "ev-run-181_0",
+   "reason": "修复前证据（原视频录像抽帧，v0.1.0 录制构建）"
+  },
+  {
+   "id": "before-run-224_2",
+   "handoff": "releases/v0.1.1/before/v0.1.0-run.json",
+   "media_id": "ev-run-224_2",
+   "reason": "修复前证据（原视频录像抽帧，v0.1.0 录制构建）"
+  },
+  {
+   "id": "before-run-224_6",
+   "handoff": "releases/v0.1.1/before/v0.1.0-run.json",
+   "media_id": "ev-run-224_6",
+   "reason": "修复前证据（原视频录像抽帧，v0.1.0 录制构建）"
+  },
+  {
+   "id": "before-run-282_5",
+   "handoff": "releases/v0.1.1/before/v0.1.0-run.json",
+   "media_id": "ev-run-282_5",
+   "reason": "修复前证据（原视频录像抽帧，v0.1.0 录制构建）"
+  },
+  {
+   "id": "before-run-290_0",
+   "handoff": "releases/v0.1.1/before/v0.1.0-run.json",
+   "media_id": "ev-run-290_0",
+   "reason": "修复前证据（原视频录像抽帧，v0.1.0 录制构建）"
+  },
+  {
+   "id": "before-old-front-worst",
+   "handoff": "releases/v0.1.1/before/v0.1.0-web5.json",
+   "media_id": "ev-old-front-worst",
+   "reason": "修复前证据（同一 qa 脚本跑修复前线上构建 v=5）"
+  },
+  {
+   "id": "before-old-front-wall-lookz",
+   "handoff": "releases/v0.1.1/before/v0.1.0-web5.json",
+   "media_id": "ev-old-front-wall-lookz",
+   "reason": "修复前证据（同一 qa 脚本跑修复前线上构建 v=5）"
+  },
+  {
+   "id": "before-old-fp-raptor-0.5",
+   "handoff": "releases/v0.1.1/before/v0.1.0-web5.json",
+   "media_id": "ev-old-fp-raptor-0.5",
+   "reason": "修复前证据（同一 qa 脚本跑修复前线上构建 v=5）"
+  },
+  {
+   "id": "before-old-fp-vice-0.2",
+   "handoff": "releases/v0.1.1/before/v0.1.0-web5.json",
+   "media_id": "ev-old-fp-vice-0.2",
+   "reason": "修复前证据（同一 qa 脚本跑修复前线上构建 v=5）"
+  },
+  {
+   "id": "before-old-side-boss-kill",
+   "handoff": "releases/v0.1.1/before/v0.1.0-web5.json",
+   "media_id": "ev-old-side-boss-kill",
+   "reason": "修复前证据（同一 qa 脚本跑修复前线上构建 v=5）"
+  },
+  {
+   "id": "fix-before-clip",
+   "handoff": "releases/v0.1.1/before/v0.1.0-web5.json",
+   "media_id": "fix-ev-clip",
+   "reason": "修复前证据（同一 qa 脚本跑修复前线上构建 v=5）"
+  }
+ ],
+ "discovery_source": "视角版视频录像 video/views-20261005/work/capture/views-run-1080p.mp4（本机，构建 game.min.js sha256 1c5227d2…；不在 media-kit 清单内，before-run-* 为其抽帧）",
+ "qa": [
+  {
+   "id": "qa-camera",
+   "device": "Windows 11 · Edge（Playwright 无头，ANGLE D3D11，RTX 4060 Ti）· 1280×720 与 932×430",
+   "method": "qa/camera.js：手动时钟 + 测试钩子摆位，射线取样满屏近物、读像素暗区、逐顶点投影出画量；同脚本跑旧构建做对照",
+   "result": "本地最终构建 11/11；旧构建 4/11；线上 https://www.zhengxiaohui.cn 11/11",
+   "evidence": "releases/v0.1.1/qa/camera-final.json、camera-oldbuild.json、camera-live.json",
+   "untested": [
+    "真机手机（只做了宽屏视口模拟）",
+    "真人手感（第一人称贴身淡化的观感）"
+   ]
+  },
+  {
+   "id": "qa-desktop",
+   "device": "同上 1280×720",
+   "method": "qa/desktop.js 真实键盘事件、实时时钟",
+   "result": "88/88（第一轮 86/88：连打首下 170 ms 内未命中的实时时序抖动，当时本机另有 21 个 Edge 进程；重跑 88/88）",
+   "evidence": "releases/v0.1.1/qa/desktop.json",
+   "untested": []
+  },
+  {
+   "id": "qa-mobile",
+   "device": "Edge 设备模拟 Android UA 844×390 / 390×844 DPR2 hasTouch",
+   "method": "qa/mobile.js CDP 多点触控",
+   "result": "34/34",
+   "evidence": "releases/v0.1.1/qa/mobile.json",
+   "untested": [
+    "真机多指触控与性能"
+   ]
+  },
+  {
+   "id": "qa-perf",
+   "device": "Edge 有头 · RTX 4060 Ti · 1280×720 · 高画质",
+   "method": "qa/perf.js（楼顶四视角 + Boss 侧视）与 Boss 战正视 / 第一人称 bot 实时打斗各 8 秒",
+   "result": "各段 170 FPS（显示器上限）、p95 6 ms、无 >50 ms 长帧；第一人称每帧 CPU 约 +0.1～0.3 ms；首次淡化帧 2.5 ms（预编译前 55 ms）",
+   "evidence": "releases/v0.1.1/qa/perf-1280x720-high.json、perf-boss-front-fp.txt",
+   "untested": [
+    "手机性能"
+   ]
+  }
+ ],
+ "readiness": {
+  "overview": "not_applicable",
+  "update": "partial",
+  "gaps": [
+   "对照录像为测试钩子摆位 + 手动时钟逐帧截图，无声，不是真人连续游玩",
+   "未录真机手机；真人手感未试",
+   "侧视取景拉远约 8% 属可见变化，只有本机 qa/out 截图对照，未单独剪辑"
+  ]
+ }
+}

@@ -1,0 +1,2 @@
+boss-front {"fps":170,"p95":6,"over50":0,"workMean":0} work mean 1.71 p95 2.20 max 3.9
+boss-fp {"fps":170,"p95":6,"over50":0,"workMean":0} work mean 1.24 p95 1.70 max 2.8

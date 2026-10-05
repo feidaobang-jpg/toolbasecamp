@@ -6,8 +6,8 @@
   },
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.1.0",
-  "handoff": "releases/v0.1.0/handoff.json",
+  "current_version": "v0.1.1",
+  "handoff": "releases/v0.1.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -60,6 +60,19 @@
         "toy": "待合并：今日批次已用（v0.1.0 auditing），随下次 Toy 更新一起送审",
         "bilibili_videos": "无已有视频；新视频手机段已用最新布局重录（mobile-landscape-v5）"
       }
+    },
+    {
+      "date": "2026-10-05",
+      "version": "v0.1.1",
+      "kind": "普通补丁",
+      "change": "三处镜头修复：①正视在第 47 街贴后墙按 Q/E 转头不再进墙（后墙 / 楼体立面剖切 + 贴近渐隐，瓦砾实体先抬高后拉近）；②第一人称贴身岩跳龙 / 敌人时按距离淡化、隐藏描边，不再黑屏或露出模型内部；③锁屏时敌人、Boss、被打飞 / 被抓的角色不出画，侧视取景保证最前一排完整入画（16:9 约拉远 8%）。另修户外遮挡淡化从未生效。网站已部署（提交 378dc004，线上 game.min.js?v=378dc004，sha256 5fc92be2…），qa/camera.js 本地与线上 11/11、desktop 88/88、mobile 34/34。",
+      "reason": "做视角版视频时同一局实机录像里发现（views-run-1080p.mp4 176.8 s / 224 s / 280–290 s）",
+      "channels": {
+        "website": "deployed 2026-10-05 16:53（公网抽查 index.html 与 game.min.js 哈希一致）",
+        "toy": "待合并：普通补丁；本游戏北京时间 10-05 的 Toy 批次已用于 v0.1.0 首发（06:25 提交，现 published），与上一条手机端小修一起随下一批（10-06 起）送审",
+        "bilibili_videos": "待合并：普通补丁不单独改简介；BV18XHW66E55 简介与置顶仍准确（未写镜头相关的已知问题），下次有意义的说明更新时一并写入"
+      },
+      "handoff": "releases/v0.1.1/handoff.json"
     }
   ],
   "toy": {

@@ -1,0 +1,28 @@
+{
+ "base": "http://127.0.0.1:8791/html/game/cadillacs-stage1-3d/index.html",
+ "build_game_min_js_sha256": "5fc92be23e3e77053b78fc4e048e1a455fcf7f0ef62020e2d2d3b7b4046a8169",
+ "fps": 30,
+ "frames": 335,
+ "duration": 11.17,
+ "width": 1280,
+ "height": 720,
+ "audio": "none",
+ "input": "测试钩子摆位 + 手动时钟逐帧截图（自动化，非真人操作）",
+ "segments": [
+  {
+   "in_seconds": 0,
+   "out_seconds": 4.67,
+   "description": "正视：第47街贴后墙站最里排，按 Q/E 速度转一整圈"
+  },
+  {
+   "in_seconds": 4.67,
+   "out_seconds": 8.67,
+   "description": "第一人称：岩跳龙从 2 米贴到 0 米，再换维斯贴脸"
+  },
+  {
+   "in_seconds": 8.67,
+   "out_seconds": 11.17,
+   "description": "侧视 Boss 战锁屏：维斯在画面右缘被打飞"
+  }
+ ]
+}

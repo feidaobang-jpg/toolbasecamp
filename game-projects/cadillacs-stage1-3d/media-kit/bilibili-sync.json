@@ -14,7 +14,19 @@
       "pinned_comment_rpid": 316113740017
     }
   ],
-  "pending": [],
+  "pending": [
+    {
+      "version": "v0.1.1",
+      "date": "2026-10-05",
+      "kind": "普通补丁",
+      "summary": "正视贴墙不进墙、第一人称贴身不黑屏、锁屏角色不出画（视频里出现过的三处镜头问题）",
+      "targets": [
+        "BV18XHW66E55"
+      ],
+      "reason_deferred": "按 2026-10-05 分渠道节奏，普通补丁累计到下一次有意义的简介更新；现有简介未描述这些问题，无需立即纠正",
+      "release_record": "releases/v0.1.1/handoff.json"
+    }
+  ],
   "status": "已关联：BV18XHW66E55（v2 视角版，已发布并绑定 Toy）；简介即当前版本说明，暂无需追加更新区块",
   "updated_at": "2026-10-05",
   "mapping_sources": [

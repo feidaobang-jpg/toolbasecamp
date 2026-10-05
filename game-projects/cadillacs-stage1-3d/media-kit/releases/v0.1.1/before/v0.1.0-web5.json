@@ -1,0 +1,148 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.1.0-web5",
+ "base_version": null,
+ "created_at": "2026-10-05",
+ "kind": "evidence",
+ "note": "用 qa/camera.js 与对照录像脚本对修复前线上构建取得的截图与录像",
+ "build": {
+  "id": "cd3d-v0.1.0-v5-00554c3cf6",
+  "commit": "e97f0819",
+  "dirty": false,
+  "fingerprint": null,
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "game_min_js_sha256": "00554c3cf66775f5e599e866fcb8d74fc83e591fa98a56d39c25de6b1deb8006",
+  "note": "v0.1.1 之前的线上构建（v0.1.0 + 手机端小修，game.min.js?v=5，未单独建版本记录）"
+ },
+ "feature_inventory": [],
+ "changes": [],
+ "bugs": [],
+ "media": [
+  {
+   "id": "ev-old-front-worst",
+   "file": "releases/v0.1.1/before/captures/before-oldbuild-front-worst.png",
+   "sha256": "c23f6637fdc9002968c7cf12aacba17bfa6081c047d86e8adda33a5f9b15cc2b",
+   "kind": "screenshot",
+   "version": "v0.1.0-web5",
+   "build_id": "cd3d-v0.1.0-v5-00554c3cf6",
+   "capture_mode": "realtime-automation",
+   "description": "旧构建 qa/camera.js：正视贴墙转一圈中最差帧（满屏近物 55.6%）（测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-old-front-wall-lookz",
+   "file": "releases/v0.1.1/before/captures/before-oldbuild-front-wall-lookz.png",
+   "sha256": "1f3a4931f12d89e5a594918dfd1c854b60ba28e9cde4b01b5be0370ec541def0",
+   "kind": "screenshot",
+   "version": "v0.1.0-web5",
+   "build_id": "cd3d-v0.1.0-v5-00554c3cf6",
+   "capture_mode": "realtime-automation",
+   "description": "旧构建：正视镜头转到墙那一侧（朝 +z）（测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-old-fp-raptor-0.5",
+   "file": "releases/v0.1.1/before/captures/before-oldbuild-fp-raptor-0.5.png",
+   "sha256": "7524b305ba7bfcbfeca1979148782949830e48ab9008cd9369e9b24d00a644a6",
+   "kind": "screenshot",
+   "version": "v0.1.0-web5",
+   "build_id": "cd3d-v0.1.0-v5-00554c3cf6",
+   "capture_mode": "realtime-automation",
+   "description": "旧构建：第一人称岩跳龙距 0.5 米（测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-old-fp-vice-0.2",
+   "file": "releases/v0.1.1/before/captures/before-oldbuild-fp-vice-0.2.png",
+   "sha256": "4bb88fdf8f93ea00e16e22427402ef5a4eb10dd4df709936e78600c6d5bf2bd4",
+   "kind": "screenshot",
+   "version": "v0.1.0-web5",
+   "build_id": "cd3d-v0.1.0-v5-00554c3cf6",
+   "capture_mode": "realtime-automation",
+   "description": "旧构建：第一人称维斯距 0.2 米，满屏人脸与黑描边（测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-old-side-boss-kill",
+   "file": "releases/v0.1.1/before/captures/before-oldbuild-side-boss-kill.png",
+   "sha256": "555cc120da63ef2844f8716a3c2278f3bd1da873bb016872eb8304ed506d606b",
+   "kind": "screenshot",
+   "version": "v0.1.0-web5",
+   "build_id": "cd3d-v0.1.0-v5-00554c3cf6",
+   "capture_mode": "realtime-automation",
+   "description": "旧构建：侧视锁屏，维斯在右缘被打飞后出画（测试钩子摆位，手动时钟）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "fix-ev-clip",
+   "file": "releases/v0.1.1/before/captures/camera-fix-before-16x9.mp4",
+   "sha256": "102cbb220b38b6926156658671b91c2ae75aeca92a4817031e23392b1ff4b942",
+   "kind": "video",
+   "version": "v0.1.0-web5",
+   "build_id": "cd3d-v0.1.0-v5-00554c3cf6",
+   "capture_mode": "realtime-automation",
+   "description": "修复前对照：旧构建按同一脚本录三段——正视贴墙转一圈、第一人称岩跳龙/维斯从 2 米贴到脸上、侧视右缘击飞维斯。测试钩子摆位 + 手动时钟逐帧截图，无声",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 11.166,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 4.67,
+     "description": "正视：第47街贴后墙站最里排，按 Q/E 速度转一整圈",
+     "supports": []
+    },
+    {
+     "in_seconds": 4.67,
+     "out_seconds": 8.67,
+     "description": "第一人称：岩跳龙从 2 米贴到 0 米，再换维斯贴脸",
+     "supports": []
+    },
+    {
+     "in_seconds": 8.67,
+     "out_seconds": 11.166,
+     "description": "侧视 Boss 战锁屏：维斯在画面右缘被打飞",
+     "supports": []
+    }
+   ]
+  }
+ ],
+ "historical_media": [],
+ "qa": [],
+ "readiness": {
+  "overview": "not_applicable",
+  "update": "not_applicable",
+  "gaps": [
+   "仅作 v0.1.1 修复前证据，不是独立发布版本"
+  ]
+ }
+}

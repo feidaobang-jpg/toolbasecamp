@@ -1,0 +1,244 @@
+{
+ "base": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+ "results": [
+  {
+   "name": "正视转一圈：满屏近物（0.9 米内射线比例）最大值 < 0.2",
+   "pass": true,
+   "info": {
+    "worstFill": 0,
+    "worstAt": null
+   }
+  },
+  {
+   "name": "正视转一圈：主角始终可见",
+   "pass": true,
+   "info": []
+  },
+  {
+   "name": "侧视 / 斜视转到墙后：满屏近物 < 0.2",
+   "pass": true,
+   "info": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "Boss 战开始",
+   "pass": true
+  },
+  {
+   "name": "第一人称贴身：无黑屏（暗像素 ≤ 25%）、无满屏模型（0.3 米内实心面 ≤ 25%）",
+   "pass": true,
+   "info": []
+  },
+  {
+   "name": "第一人称：贴身时 FP 仍生效（没被退回正视）",
+   "pass": true
+  },
+  {
+   "name": "第一人称实战 6 秒：暗像素与满屏模型峰值 ≤ 25%",
+   "pass": true,
+   "info": {
+    "dark": 0.069,
+    "fill": 0
+   }
+  },
+  {
+   "name": "侧视 Boss 战 16:9（40 秒）：角色不出画",
+   "pass": true,
+   "info": {
+    "t": 46.25,
+    "focusX": 55,
+    "lockX": 55,
+    "type": "vice",
+    "state": "hurt",
+    "x": 61.04,
+    "z": 2.5,
+    "mn": 0.753,
+    "mx": 0.965,
+    "over": -0.035,
+    "samples": 582
+   }
+  },
+  {
+   "name": "侧视 Boss 战 手机宽屏 2.17:1（40 秒）：角色不出画",
+   "pass": true,
+   "info": {
+    "t": 67.95,
+    "focusX": 55,
+    "lockX": 55,
+    "type": "vice",
+    "state": "down",
+    "x": 49.41,
+    "z": 2.5,
+    "mn": -0.965,
+    "mx": -0.627,
+    "over": -0.035,
+    "samples": 786
+   }
+  },
+  {
+   "name": "维斯在右缘被打飞（同时清场）：所有角色不出画",
+   "pass": true,
+   "info": {
+    "worst": -0.064,
+    "at": {
+     "type": "vice",
+     "state": "down",
+     "x": 60.59,
+     "z": 1.8,
+     "mn": 0.616,
+     "mx": 0.936,
+     "over": -0.064
+    }
+   }
+  },
+  {
+   "name": "主角贴右缘最前排：完整入画",
+   "pass": true,
+   "info": [
+    {
+     "type": "mustapha",
+     "state": "idle",
+     "x": 61.1,
+     "z": 2.5,
+     "mn": 0.779,
+     "mx": 0.88,
+     "over": -0.12
+    }
+   ]
+  }
+ ],
+ "fpRows": [
+  {
+   "who": "raptor",
+   "d": 1.6,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.61
+  },
+  {
+   "who": "raptor",
+   "d": 1.2,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.24
+  },
+  {
+   "who": "raptor",
+   "d": 0.9,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.24
+  },
+  {
+   "who": "raptor",
+   "d": 0.7,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.39
+  },
+  {
+   "who": "raptor",
+   "d": 0.5,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.5
+  },
+  {
+   "who": "raptor",
+   "d": 0.35,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.47
+  },
+  {
+   "who": "raptor",
+   "d": 0.2,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.4
+  },
+  {
+   "who": "raptor",
+   "d": 0.05,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.4
+  },
+  {
+   "who": "vice",
+   "d": 1.6,
+   "dark": 0.014,
+   "fp": true,
+   "fill": 0,
+   "nearK": 1
+  },
+  {
+   "who": "vice",
+   "d": 1.2,
+   "dark": 0.042,
+   "fp": true,
+   "fill": 0,
+   "nearK": 1
+  },
+  {
+   "who": "vice",
+   "d": 0.9,
+   "dark": 0.014,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.85
+  },
+  {
+   "who": "vice",
+   "d": 0.7,
+   "dark": 0.007,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.45
+  },
+  {
+   "who": "vice",
+   "d": 0.5,
+   "dark": 0,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0.07
+  },
+  {
+   "who": "vice",
+   "d": 0.35,
+   "dark": 0,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0
+  },
+  {
+   "who": "vice",
+   "d": 0.2,
+   "dark": 0,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0
+  },
+  {
+   "who": "vice",
+   "d": 0.05,
+   "dark": 0,
+   "fp": true,
+   "fill": 0,
+   "nearK": 0
+  }
+ ],
+ "errs": []
+}

@@ -216,7 +216,7 @@ const PROBE_SRC = `(() => {
   // 主角与敌人站在锁屏窗口最外侧、最前排：也完整入画
   const edge = await E(() => {
     const T = window.__CD_TEST__, G = T.cheat.G;
-    G.player.state = 'idle'; G.player.x = G.focusX + 50; G.player.z = 2.5;
+    G.player.state = 'idle'; G.player.invul = 0; G.player.x = G.focusX + 50; G.player.z = 2.5;   // 清掉受击无敌，免得正好落在闪烁隐藏的帧
     T.step(2, true);
     return window.__probe.actorsNdc().filter(a => a.type === 'mustapha');
   });

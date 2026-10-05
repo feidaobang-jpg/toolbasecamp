@@ -1,0 +1,131 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.1.0",
+ "base_version": null,
+ "created_at": "2026-10-05",
+ "kind": "evidence",
+ "note": "视角版视频录像 video/views-20261005/work/capture/views-run-1080p.mp4（本机；录制构建即 v0.1.0 发布构建 game.min.js 1c5227d2…）里三处镜头问题的抽帧",
+ "build": {
+  "id": "cd3d-v0.1.0-1c5227d2b8",
+  "commit": "053d36bfabb880b504d18f4c459a49869c1a3ae6",
+  "dirty": false,
+  "fingerprint": "011eb36afc11261ceee8e0ef8317cac30f3c19805348152989aeb4591e37f112",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "fingerprint_files": [
+   "public/html/game/cadillacs-stage1-3d/index.html",
+   "public/html/game/cadillacs-stage1-3d/css/style.css",
+   "public/html/game/cadillacs-stage1-3d/js/game.min.js"
+  ]
+ },
+ "feature_inventory": [],
+ "changes": [],
+ "bugs": [],
+ "media": [
+  {
+   "id": "ev-run-176_8",
+   "file": "releases/v0.1.1/before/captures/before-views-run-176.8.jpg",
+   "sha256": "3e24daf7992ac10de9b409f10a6f83a19ec86620c263e5cbc302010f3699e97a",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "realtime-automation",
+   "description": "原视频录像 views-run-1080p.mp4 第 176.8 秒抽帧（穆斯塔法，seed 7，bot 实打，C/Q/E 真实按键事件）：正视：第 47 街贴左侧后墙按 Q/E 转头，镜头进墙，整屏砖墙",
+   "width": 1920,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-run-181_0",
+   "file": "releases/v0.1.1/before/captures/before-views-run-181.0.jpg",
+   "sha256": "49f404983ff9cc92e2c75cab04669dafa569d484643d58837bd36c2f949e934c",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "realtime-automation",
+   "description": "原视频录像 views-run-1080p.mp4 第 181.0 秒抽帧（穆斯塔法，seed 7，bot 实打，C/Q/E 真实按键事件）：同上，转头过程中砖墙贴满画面",
+   "width": 1920,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-run-224_2",
+   "file": "releases/v0.1.1/before/captures/before-views-run-224.2.jpg",
+   "sha256": "5c4e56f4729243e8d1c0cad281b953602f7781dfae007a7f462e5e63b7835384",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "realtime-automation",
+   "description": "原视频录像 views-run-1080p.mp4 第 224.2 秒抽帧（穆斯塔法，seed 7，bot 实打，C/Q/E 真实按键事件）：第一人称：岩跳龙贴身，近裁剪面切进模型，满屏黄色模型面",
+   "width": 1920,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-run-224_6",
+   "file": "releases/v0.1.1/before/captures/before-views-run-224.6.jpg",
+   "sha256": "35f2656c3f9845c6c2e4c69b09fc705168832477ff9139e6b0c1b9d1a999ceef",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "realtime-automation",
+   "description": "原视频录像 views-run-1080p.mp4 第 224.6 秒抽帧（穆斯塔法，seed 7，bot 实打，C/Q/E 真实按键事件）：同上，黑色描边外壳罩住镜头",
+   "width": 1920,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-run-282_5",
+   "file": "releases/v0.1.1/before/captures/before-views-run-282.5.jpg",
+   "sha256": "4ed7db8e993babe98142462a9bd75b5f18a4131c666eeea9ee63f2c8f6393d19",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "realtime-automation",
+   "description": "原视频录像 views-run-1080p.mp4 第 282.5 秒抽帧（穆斯塔法，seed 7，bot 实打，C/Q/E 真实按键事件）：侧视 Boss 战：维斯被打出画面右缘",
+   "width": 1920,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  },
+  {
+   "id": "ev-run-290_0",
+   "file": "releases/v0.1.1/before/captures/before-views-run-290.0.jpg",
+   "sha256": "bd84e19ac48eaceef012900fc300928eefdc79b2fe8bb25cf4e361c1d71cce88",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "cd3d-v0.1.0-1c5227d2b8",
+   "capture_mode": "realtime-automation",
+   "description": "原视频录像 views-run-1080p.mp4 第 290.0 秒抽帧（穆斯塔法，seed 7，bot 实打，C/Q/E 真实按键事件）：侧视 Boss 战尾段：维斯仍在右缘外",
+   "width": 1920,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "not-applicable",
+   "visual_review": "pass",
+   "audio_review": "not-applicable"
+  }
+ ],
+ "historical_media": [],
+ "qa": [],
+ "readiness": {
+  "overview": "not_applicable",
+  "update": "not_applicable",
+  "gaps": [
+   "仅作 v0.1.1 修复前证据，不是独立发布版本"
+  ]
+ }
+}
