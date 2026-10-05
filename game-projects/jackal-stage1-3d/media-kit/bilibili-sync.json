@@ -8,7 +8,9 @@
       "last_public_verified_version": "v0.3.2",
       "block_sha256": "2a5cbac087d799407138a99d465f872fd339e6b06e122419404a134bff94615f",
       "verified_at": "2026-10-04T12:04:10.476Z",
-      "release_record": "releases/v0.3.2/bilibili-sync.json"
+      "release_record": "releases/v0.4.0/bilibili-sync.json",
+      "pending_review_version": "v0.4.0",
+      "pending_since": "2026-10-05T01:18:49.636Z"
     }
   ],
   "pending": [],

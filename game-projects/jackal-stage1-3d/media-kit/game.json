@@ -6,7 +6,7 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.3.2",
+  "current_version": "v0.4.0",
   "handoff": "releases/v0.3.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
@@ -86,6 +86,11 @@
       "handoff": "releases/v0.3.1/handoff.json",
       "base_version": "v0.3",
       "summary": "修复两关大门近距离手雷越过目标：对准射程内大门时缩短落点，两发破门。"
+    },
+    {
+      "version": "v0.4.0",
+      "date": "2026-10-05",
+      "note": "新增第一人称视角，移动方向随车头自适应"
     }
   ],
   "toy": {
