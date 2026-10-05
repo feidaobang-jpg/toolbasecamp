@@ -2,37 +2,36 @@
   "schema_version": 1,
   "game_id": "chongchao-qianshao",
   "account_mid": 16214353,
-  "mode": "description_update_block",
+  "mode": "compact_description",
   "targets": [
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
       "last_public_verified_version": "web-grenade-nocd-v0.17.11",
       "last_public_verified_at": "2026-10-05T00:48:00+08:00",
-      "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "submitted_pending_review",
-      "pending_version": "web-touch-ui-v0.17.12",
+      "status": "public_verified",
       "submitted_at": "2026-10-05 00:47:53",
-      "submit_toast": "稿件投递成功"
+      "submit_toast": "稿件投递成功",
+      "description_revision": "description-compact-20261005",
+      "description_public_verified_at": "2026-10-05T12:30:12.722Z",
+      "description_sha256": "2384a70a11721ea1dbae2d5031d55d86e4940776e25c8987fa13aeb8db02fed2"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
       "last_public_verified_version": "web-grenade-nocd-v0.17.11",
       "last_public_verified_at": "2026-10-05T00:48:00+08:00",
-      "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "submitted_pending_review",
-      "pending_version": "web-touch-ui-v0.17.12",
+      "status": "public_verified",
       "submitted_at": "2026-10-05 00:47:53",
-      "submit_toast": "稿件投递成功"
+      "submit_toast": "稿件投递成功",
+      "description_revision": "description-compact-20261005",
+      "description_public_verified_at": "2026-10-05T12:30:12.722Z",
+      "description_sha256": "2be96eef60fd63ccf3118ae37f078975051c455a45ecc8079191c385e501faa1"
     }
   ],
-  "latest_record": "releases/web-touch-ui-v0.17.13/bilibili-descriptions.json",
-  "pending": [
-    "BV1Ujad6DEuf",
-    "BV1WbHq6eEBt"
-  ],
-  "pending_note": "v0.17.12简介已提交（编辑框覆盖了此前待审核的v0.17.11版本），稿件审核中未公开；提交前公开区块已自行更新为v0.17.11。登录态已恢复（~/.bili-playwright-profile）。v0.17.13（网站+Toy已提交）的合并区块已按 v0.17.12 区块为基础准备好（releases/web-touch-ui-v0.17.13/update-block.txt，含 v0.17.12 全部条目），因并行会话 00:47 刚投递 v0.17.12 待审、且创作中心编辑页对 Playwright/IAB 深链均重定向 /platform/home 无法安全并发提交，待 v0.17.12 公开或下一会话重新投递（新投递会覆盖旧待审编辑）。",
+  "latest_record": "releases/description-compact-20261005/bilibili-sync.json",
+  "pending": [],
+  "pending_note": "两条简介已按用户要求精简并公开核验；旧v0.17.12待审核记录已结清。此次只改说明，不宣称pending_release的新玩法已同步；下一次更新先读线上精简全文，不恢复历史长区块。",
   "pending_release": {
     "version": "web-rescue-v0.18.0",
     "status": "awaiting_website_deploy",
