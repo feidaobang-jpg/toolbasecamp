@@ -325,23 +325,17 @@ function updatePlayer(dt) {
   if (d0 >= 0) {
     if (camCtl.fpNow) {
       const q = ((Math.round((P.ang + camCtl.yaw) / (Math.PI / 4)) % 8) + 8) % 8;
-      if (!fpLatch || fpLatch.d !== d0) fpLatch = { d: d0, w: (d0 + q) % 8 };
+      if (!fpLatch || fpLatch.d !== d0 || fpLatch.revision !== camCtl.lookRevision) fpLatch = { d: d0, w: (d0 + q) % 8, revision: camCtl.lookRevision };
       d = fpLatch.w;
     } else {
       const q = ((Math.round(camCtl.yaw / (Math.PI / 4)) % 8) + 8) % 8;
-      d = (d0 + q) % 8;
+      // 环绕镜头从目标点向外的 yaw，与实际观察前向量的角度符号相反。
+      d = (d0 - q + 8) % 8;
       fpLatch = null;
     }
   } else fpLatch = null;
   P.moving = false;
   if (d >= 0) {
-    // 第一人称下转向时补偿镜头 yaw，保持画面朝向世界方向不变（车在镜头下方转）
-    if (camCtl.fpNow && d !== P.dir) {
-      let da = DIR8[d].a - DIR8[P.dir].a;
-      while (da > Math.PI) da -= 2 * Math.PI;
-      while (da <= -Math.PI) da += 2 * Math.PI;
-      camCtl.rotate(-da);
-    }
     P.dir = d;
     const sp = P.speed * dt, dx = DIR8[d].x * sp, dy = DIR8[d].y * sp;
     const ox = P.x, oy = P.y;
@@ -349,7 +343,11 @@ function updatePlayer(dt) {
     P.moving = (P.x !== ox || P.y !== oy);
     if (P.moving) { P.wheelSpin += sp * 2.6; P.dust += dt; if (P.dust > 0.07) { P.dust = 0; const t = L.terrainAt(P.x, P.y); if (t === L.T.SAND || t === L.T.ROAD || t === L.T.DIRT || t === L.T.FLOOR || t === L.T.STONE) fx.dust(P.x - DIR8[d].x * 1.2, P.y - DIR8[d].y * 1.2); } }
   }
-  P.ang = approachAng(P.ang, DIR8[P.dir].a, dt * 14);
+  const oldAng = P.ang;
+  const targetAng = camCtl.fpNow && d < 0 ? P.ang + camCtl.yaw : DIR8[P.dir].a;
+  P.ang = approachAng(P.ang, targetAng, dt * (camCtl.fpNow ? 2.1 : 14));
+  // 补偿实际模型转角，而非一次扣掉目标方向的 45°/90°：平移、倒车不会甩动玩家视线。
+  if (camCtl.fpNow) camCtl.rotate(-angDiff(oldAng, P.ang));
   // 机枪：默认跟随车头；选「固定朝上（原作）」时一直向北（画面上方）
   P.fireCd -= dt; P.bombCd -= dt;
   const mgCount = pbul.filter(b => b.kind === 'mg').length;
@@ -386,10 +384,11 @@ function updatePlayer(dt) {
   // Boss 触发
   if (G.boss.state === 'idle' && P.y > L.BOSS.trigger) startBoss();
 }
-export function gunAngle() { return G.settings.gun === 'up' ? 0 : DIR8[P.dir].a; }
+export function gunAngle() { return G.settings.gun === 'up' ? 0 : camCtl.fpNow ? P.ang + camCtl.yaw : DIR8[P.dir].a; }
 
 function fireBomb() {
-  const w = G.weapon, d = DIR8[P.dir];
+  const w = G.weapon, a = camCtl.fpNow ? P.ang + camCtl.yaw : DIR8[P.dir].a;
+  const d = { x: Math.sin(a), y: Math.cos(a), a };
   const live = bombs.filter(b => b.own && b.kind !== 'shrap').length;
   const max = w <= 2 ? 2 : 3;
   if (live >= max) return;

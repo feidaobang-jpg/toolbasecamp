@@ -36,6 +36,14 @@
       "status": "pending_merge",
       "record": "releases/drag-direction-20261005/handoff.json",
       "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+    },
+    {
+      "version": "v0.5.3",
+      "release": "releases/v0.5.3/handoff.json",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
+      "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。"
     }
   ]
 }

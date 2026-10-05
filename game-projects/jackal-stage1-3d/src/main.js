@@ -77,7 +77,7 @@ function optLabel(name) {
     case 'quality': return ['画质', { auto: '自动（按实测帧率）', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', A.volume === 0 ? '静音' : Math.round(A.volume * 100) + '%', false];
     case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
-    case 'camera': return ['视角（C）', camCtl.preset().name, false];
+    case 'camera': return [display.touchOn ? '切换视角' : '切换视角（C）', camCtl.preset().name, false];
     case 'fps': return ['帧率显示', settings.fps ? '开' : '关', false];
     case 'gun': return ['机枪方向', settings.gun === 'up' ? '原作朝上' : '跟随车头', false];
     case 'stage': return ['起始关卡', GM.STAGE_NAME[settings.stage], false];
@@ -204,9 +204,16 @@ document.addEventListener('click', (e) => {
     case 'list': A.engine('off'); A.music(null); break;
   }
 });
-$('btn-pause').addEventListener('click', () => { if (uiMode === 'game' && !current) pauseGame(); });
+function bindTopButton(id, action) {
+  const el = $(id);
+  el.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch') { e.preventDefault(); action(); }
+  });
+  el.addEventListener('click', e => { if (e.pointerType !== 'touch') action(); });
+}
+bindTopButton('btn-pause', () => { if (uiMode === 'game' && !current) pauseGame(); });
 $('btn-fs').addEventListener('click', () => toggleFullscreen());
-$('btn-cam').addEventListener('click', () => { if (uiMode === 'game' && !current) cycleCamera(); });
+bindTopButton('btn-cam', () => { if (uiMode === 'game' && !current) cycleCamera(); });
 
 // ---------- 流程 ----------
 const gameRunning = () => uiMode === 'game' && ['intro', 'play', 'over', 'clear'].indexOf(G.mode) >= 0;
@@ -218,7 +225,7 @@ function startGame(stageNo) {
   GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor, gun: settings.gun, stage: stageNo || settings.stage });
   show(null);
   camCtl.update(0, GM.player().x, GM.player().y, { instant: true });
-  if (!touch.hidden && !dragHintShown) { dragHintShown = true; showToast('拖动右侧空白区域或画面，可旋转视角'); }
+  if (!touch.hidden && !dragHintShown) { dragHintShown = true; showToast('拖动画面空白处转视角；右上角切换视角'); }
   last = performance.now(); acc = 0;
   autoProbe.frames = [];
 }
@@ -319,6 +326,7 @@ function setInputMode(mode) { if (settings.touch === 'auto' && mode !== inputMod
 let lastOrient = null;
 function layout() {
   const vw = window.innerWidth, vh = window.innerHeight, coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
+  if (display.vw && (vw !== display.vw || vh !== display.vh)) IN.clear();
   const rotate = uiMode === 'game' && vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
@@ -354,15 +362,20 @@ window.addEventListener('orientationchange', () => setTimeout(() => layout(), 60
 if (window.visualViewport) window.visualViewport.addEventListener('resize', () => layout());
 window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
-IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { fire: $('btn-fire'), bomb: $('btn-bomb'), cam: $('btn-cam-t') }, toLocal);
+IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { fire: $('btn-fire'), bomb: $('btn-bomb') }, toLocal);
 
 const orbitKeys = new Set();
 window.addEventListener('keydown', e => { if (IN.active() && ['KeyQ','KeyE'].includes(e.code)) { orbitKeys.add(e.code); e.preventDefault(); } });
 window.addEventListener('keyup', e => orbitKeys.delete(e.code));
 IN.onClear(() => orbitKeys.clear());
 let dragHintShown = false;
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => camCtl.turnRight(delta) });
-IN.onClear(() => dragLook.clear());
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => camCtl.queueLook(delta) });
+IN.onClear(() => { dragLook.clear(); camCtl.clearLook(); });
+stage.addEventListener('pointercancel', () => camCtl.clearLook());
+function updateStep() {
+  camCtl.stepLook(STEP, (orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0));
+  GM.update();
+}
 
 addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
@@ -431,7 +444,7 @@ function frame(now) {
       if (IN.take('camera')) cycleCamera();
       acc += dtReal;
       let n = 0;
-      while (acc >= STEP && n < 6) { GM.update(); acc -= STEP; n++; }
+      while (acc >= STEP && n < 6) { updateStep(); acc -= STEP; n++; }
       if (n === 6) acc = 0;
       // 自动画质：开局 3 秒后按实测帧间隔决定
       if (autoProbe.on && !autoProbe.done && G.mode === 'play') {
@@ -459,7 +472,6 @@ function frame(now) {
 }
 
 function presentFrame(dtReal, draw) {
-  if (IN.active()) camCtl.turnRight(((orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0)) * dtReal * Math.PI / 2);
   if (uiMode === 'game') {
     const p = GM.player();
     // 第一人称下相机在眼睛位置，同等震动体感更强，乘 0.3 抑制
@@ -497,10 +509,12 @@ if (TEST) {
       const s = GM.snapshot();
       s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent };
       s.input = IN.debug();
-      s.cam = { tx: +camCtl.tx.toFixed(2), ty: +camCtl.ty.toFixed(2), yaw: +camCtl.yaw.toFixed(3), axes: camCtl.axes(), quad: camCtl.quad.map(q => q.map(v => +v.toFixed(1))) };
+      const pl = GM.player();
+      s.cam = { tx: +camCtl.tx.toFixed(2), ty: +camCtl.ty.toFixed(2), yaw: +camCtl.yaw.toFixed(3), heading: pl ? pl.ang + camCtl.yaw : 0, bodyHeading: pl ? pl.ang : 0, lookPending: camCtl.lookPending, gunAngle: pl ? GM.gunAngle() : 0, axes: camCtl.axes(), quad: camCtl.quad.map(q => q.map(v => +v.toFixed(1))) };
       return s;
     },
     events: () => G.events.slice(),
+    clearInput: () => IN.clear(),
     cheat: GM._test,
     fx: () => fx.stats(),
     renderInfo: () => ({ calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, gl: (() => { const gl = renderer.getContext(); const ext = gl.getExtension('WEBGL_debug_renderer_info'); return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); })() }),
@@ -538,7 +552,7 @@ if (TEST) {
         if (uiMode === 'game' && !paused && !current) {
           if (IN.take('pause')) { pauseGame(); break; }
           if (IN.take('camera')) cycleCamera();
-          GM.update();
+          updateStep();
         }
       }
       realT += n * STEP;

@@ -7,7 +7,7 @@
 <meta name="description" content="FC 赤色要塞的 3D 重置版（第一、二关）：驾驶武装吉普炸开营房救出俘虏、送上直升机；第一关打 4 辆蓝色坦克，第二关闯废墟城、打北墙 4 座石像。电脑键盘与手机触屏均可游玩。">
 <title>赤色要塞 · 3D 重置版</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=touch-view053">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -46,7 +46,7 @@
     <div id="hud-top" hidden>
       <span id="demo-badge" hidden>演示模式 · 无敌</span>
       <button id="btn-cam" tabindex="-1" aria-label="切换视角"><b>C</b> <span id="cam-label">斜俯视</span></button>
-      <button id="btn-pause" tabindex="-1" aria-label="暂停"><b>Esc</b> 暂停</button>
+      <button id="btn-pause" tabindex="-1" aria-label="暂停"><b class="pause-key">Esc</b><b class="pause-touch">Ⅱ</b> 暂停</button>
       <button id="btn-fs" tabindex="-1" aria-label="全屏"><b>⛶</b> <span class="fs-label">全屏</span></button>
     </div>
 
@@ -56,7 +56,6 @@
       </div>
       <button id="btn-fire" class="act" tabindex="-1" aria-label="J 机枪"><b>J</b><span>机枪</span></button>
       <button id="btn-bomb" class="act" tabindex="-1" aria-label="K 手雷或火箭"><b>K</b><span id="bomb-label">手雷</span></button>
-      <button id="btn-cam-t" class="act small" tabindex="-1" aria-label="C 切换视角"><b>C</b><span>视角</span></button>
     </div>
 
     <div id="menu" class="overlay title-screen">
@@ -67,7 +66,7 @@
           <div class="sub" id="menu-sub">第一关 · 海滩登陆</div>
           <p class="rules">驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪；闪光俘虏让武器升级（手雷 → 火箭 → 双向 → 四向火箭）。第一关打 4 辆蓝色坦克，第二关打废墟北墙的 4 座石像。吉普有 3 格护甲，营房里会掉修理包；默认无限命，阵亡后从检查点继续。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪 · <kbd>K</kbd> 手雷 / 火箭（朝车头）<br><kbd>Q</kbd>/<kbd>E</kbd> 转视角 · <kbd>C</kbd> 视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
-          <p class="help help-touch">左侧摇杆移动 · 右侧 <b>J</b> 机枪、<b>K</b> 手雷 / 火箭、<b>C</b> 视角 · 拖动画面空白处转视角 · 右上角暂停</p>
+          <p class="help help-touch">左侧摇杆移动 · 右下 <b>J</b> 机枪、<b>K</b> 手雷 / 火箭 · 拖动画面空白处转视角 · 右上角切换视角与暂停</p>
           <p class="hi">最高分 <span id="hi-val">30000</span></p>
           <p class="legal">粉丝向非官方重置：3D 模型、画面与音乐均为原创；《赤色要塞》（Jackal）原作版权归 Konami 所有。</p>
         </div>
@@ -133,6 +132,6 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
 </script>
-<script src="js/game.min.js?v=drag-direction1"></script>
+<script src="js/game.min.js?v=touch-view053"></script>
 </body>
 </html>

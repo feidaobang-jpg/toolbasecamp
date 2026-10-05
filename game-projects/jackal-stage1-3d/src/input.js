@@ -95,8 +95,7 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
   }
   bindBtn(btns.fire, 'fire', () => { touchFire = true; I.push('fireTap'); }, () => { touchFire = false; });
   bindBtn(btns.bomb, 'bomb', () => { touchBomb = true; I.push('bombTap'); }, () => { touchBomb = false; });
-  bindBtn(btns.cam, 'cam', () => { I.push('camera'); });
-  I.onClear(() => { joyId = null; home(); for (const k in ids) ids[k] = null; [btns.fire, btns.bomb, btns.cam].forEach(b => b.classList.remove('down')); });
+  I.onClear(() => { joyId = null; home(); for (const k in ids) ids[k] = null; [btns.fire, btns.bomb].forEach(b => b.classList.remove('down')); });
 };
 
 export default I;

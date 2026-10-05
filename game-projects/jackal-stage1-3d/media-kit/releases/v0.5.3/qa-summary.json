@@ -1,0 +1,16 @@
+{
+  "desktop": {
+    "passed": 92,
+    "total": 92
+  },
+  "mobile": {
+    "passed": 37,
+    "total": 37
+  },
+  "touch_view": {
+    "passed": 61,
+    "total": 61
+  },
+  "environment": "Windows 11, Edge 154.0.4258.53 via Playwright 1.56, NVIDIA RTX4060Ti/D3D11; CDP simulated touch, not physical mobile",
+  "build_sha256": "3f7cba7c7cc96e3572d369ca5d12e2bca95d0f789d6ca6963d02206b6e75c568"
+}

@@ -17,13 +17,25 @@ export function createCamera() {
   const cam = new THREE.PerspectiveCamera(40, 16 / 9, 0.5, 420);
   const judgeCam = new THREE.PerspectiveCamera(40, 16 / 9, 0.5, 420); // 玩法判定镜头：始终朝北跟随
   const C = {
-    cam, judgeCam, idx: 0, lastIdx: 0, fpNow: false, yaw: 0, tx: -19, ty: 14, quad: [[0, 0], [0, 0], [0, 0], [0, 0]], aabb: { x0: 0, x1: 0, y0: 0, y1: 0 },
+    cam, judgeCam, idx: 0, lastIdx: 0, fpNow: false, yaw: 0, lookPending: 0, lookRevision: 0, tx: -19, ty: 14, quad: [[0, 0], [0, 0], [0, 0], [0, 0]], aabb: { x0: 0, x1: 0, y0: 0, y1: 0 },
     preset() { return PRESETS[this.idx]; },
     cycle() { this.idx = (this.idx + 1) % PRESETS.length; this.yaw = 0; if (!PRESETS[this.idx].fp) this.lastIdx = this.idx; return PRESETS[this.idx]; },
     // 拖动转视角：yaw 以北为 0、顺时针为正，夹到 (-π, π]
     rotate(d) { this.yaw = ((this.yaw + d + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; },
     // 正数表示玩家向右看；驾驶舱与环绕镜头的 yaw 定义相反，按实际生效的镜头换算。
     turnRight(d) { this.rotate(this.fpNow ? d : -d); },
+    // 拖动只积累输入；逻辑帧消费，避免事件频率或一次快速划动让驾驶舱瞬间掉头。
+    queueLook(d) { this.lookPending = clamp(this.lookPending + d * 0.5, -Math.PI / 6, Math.PI / 6); },
+    clearLook() { this.lookPending = 0; },
+    stepLook(dt, keys) {
+      const rate = this.fpNow ? Math.PI / 3 : Math.PI / 2;
+      const limit = rate * dt;
+      const drag = clamp(this.lookPending * (1 - Math.exp(-dt * 12)), -limit, limit);
+      this.lookPending -= drag;
+      if (Math.abs(this.lookPending) < 0.00001) this.lookPending = 0;
+      const delta = clamp(drag + keys * limit, -limit, limit);
+      if (delta) { this.turnRight(delta); this.lookRevision++; }
+    },
     setAspect(a) { cam.aspect = a; cam.updateProjectionMatrix(); judgeCam.aspect = a; judgeCam.updateProjectionMatrix(); },
     snap(px, py) { const p = PRESETS[PRESETS[this.idx].fp ? this.lastIdx : this.idx]; this.tx = px; this.ty = py + p.ahead; },
     // 水平相机轴：给移动映射与测试使用（判定镜头恒朝北，因此右 = 东、前 = 北）

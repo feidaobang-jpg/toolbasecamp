@@ -116,10 +116,10 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   // 鼠标按住拖动旋转视角（参考虫潮）
   await cheat('teleport', [-8, 22]); await cheat('invuln', [60]);
   let y0 = (await snap(page)).cam.yaw;
-  await page.mouse.move(400, 300); await page.mouse.down(); await page.mouse.move(550, 300, { steps: 4 }); await page.mouse.up(); await steps(1);
+  await page.mouse.move(400, 300); await page.mouse.down(); await page.mouse.move(550, 300, { steps: 4 }); await page.mouse.up(); await steps(90);
   let y1 = (await snap(page)).cam.yaw;
-  check('鼠标在画面上右拖 → 镜头 yaw 减小（约 -0.9）', y1 < y0 - 0.5 && y1 > y0 - 1.3, { y0, y1 });
-  await page.mouse.move(550, 300); await page.mouse.down(); await page.mouse.move(400, 300, { steps: 4 }); await page.mouse.up(); await steps(1);
+  check('鼠标在画面上右拖 → 镜头平滑右转（yaw减小）', y1 < y0 - 0.2 && y1 > y0 - 0.55, { y0, y1 });
+  await page.mouse.move(550, 300); await page.mouse.down(); await page.mouse.move(400, 300, { steps: 4 }); await page.mouse.up(); await steps(90);
   check('拖回后 yaw 复位', Math.abs((await snap(page)).cam.yaw) < 0.25, null);
   // 对角
   let a = await snap(page);
@@ -427,6 +427,7 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   check('全程无脚本错误', errors.length === 0, errors.slice(0, 5));
   const pass = results.filter(r => r.ok).length;
   console.log('\n' + pass + '/' + results.length + ' passed');
+  if (pass !== results.length) process.exitCode = 1;
   fs.mkdirSync('out', { recursive: true });
   fs.writeFileSync('out/desktop.json', JSON.stringify({ when: new Date().toISOString(), env: 'Playwright ' + require('playwright/package.json').version + ' Chromium headless, SwiftShader（软件渲染）, 1280×720, ?q=low', pass, total: results.length, results, warns: warns.slice(0, 10) }, null, 1));
   await browser.close();

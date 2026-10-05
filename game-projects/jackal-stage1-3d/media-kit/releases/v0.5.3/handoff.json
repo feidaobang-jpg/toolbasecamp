@@ -1,0 +1,58 @@
+{
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.5.3",
+  "base_version": "v0.5.2",
+  "created_at": "2026-10-06T06:14:52.209524+08:00",
+  "classification": "普通补丁",
+  "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
+  "build": {
+    "fingerprint": "3f7cba7c7cc96e3572d369ca5d12e2bca95d0f789d6ca6963d02206b6e75c568",
+    "entrypoint": "public\\html\\game\\jackal-stage1-3d\\index.html"
+  },
+  "website": {
+    "status": "pending_deployment"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "built_not_submitted",
+    "merged_pending": [
+      "v0.4.1",
+      "v0.5.1",
+      "v0.5.2"
+    ]
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。"
+  },
+  "qa": {
+    "method": "Windows Edge、硬件GPU、CDP多指触控模拟；固定时钟逐帧校验并辅以截图与浏览器录制",
+    "not_tested": [
+      "手机真机性能与真机多指触感"
+    ],
+    "test_shortcuts": "?test=1、固定时钟、测试传送及无敌，仅用于隔离输入/镜头回归",
+    "results": "qa-summary.json",
+    "total": 190,
+    "passed": 190
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "仅操作与镜头手感修复，画风、关卡和默认场景未变"
+  },
+  "skill": {
+    "files": [
+      "C:/Users/37818/.claude/skills/game-maker/SKILL.md",
+      "C:/Users/37818/.claude/skills/game-maker/references/controls-and-display.md",
+      "C:/Users/37818/.claude/skills/game-maker/references/game-options.md"
+    ],
+    "validated": true,
+    "summary": "明确所有3D游戏空白处拖动相机、第三人称环绕/第一人称转头，以及慢速平滑转向与实际转角补偿"
+  },
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "仅保存输入回归录屏，未制作带音轨正式解说素材；无旧版故障实机原片，不冒充历史Bug录制"
+    ]
+  },
+  "media_location": "D:/project/task-artifacts/jackal-touch-view-20261006/qa/touch-view-v0.5.3"
+}
