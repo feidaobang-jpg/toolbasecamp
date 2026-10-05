@@ -45,6 +45,7 @@ export const G = {
 };
 
 let scene, world, fx, camCtl;
+let fpLatch = null;   // 第一人称：同方向按住期间锁定世界方向，避免镜头跟着车头转导致画圈
 let P = null;                       // 玩家
 const ents = [];                    // 敌人 + 道具（星）
 const pows = [];
@@ -317,7 +318,14 @@ function updatePlayer(dt) {
     if (P.respawnT <= 0) respawn();
     return;
   }
-  const d = IN.dir();
+  const d0 = IN.dir();
+  let d = d0;
+  // 第一人称：输入方向按车头（镜头朝向）换算成世界方向；按住同一输入期间锁定换算结果
+  if (d0 >= 0 && camCtl.fpNow) {
+    const q = ((Math.round(P.ang / (Math.PI / 4)) % 8) + 8) % 8;
+    if (!fpLatch || fpLatch.d !== d0) fpLatch = { d: d0, w: (d0 + q) % 8 };
+    d = fpLatch.w;
+  } else fpLatch = null;
   P.moving = false;
   if (d >= 0) {
     P.dir = d;
@@ -1300,6 +1308,8 @@ function endGame(win, reason) {
 export function render(dt, realT) {
   if (!P) return;
   const o = P.obj;
+  // 第一人称时隐藏车体（相机在驾驶位内）；死亡隐藏逻辑保持不变
+  o.root.visible = !camCtl.fpNow && P.alive;
   o.root.position.set(P.x, 0, Z(P.y));
   o.body.rotation.y = -P.ang;
   o.turret.position.set(-Math.sin(P.ang) * 0.82, 0, Math.cos(P.ang) * 0.82);
@@ -1347,6 +1357,7 @@ export function render(dt, realT) {
 }
 
 export function player() { return P; }
+export function mode() { return G.mode; }
 export function bossLock() { const s = G.boss && G.boss.state; return s === 'intro' || s === 'fight' || s === 'done' ? L.BOSS : null; }
 export function heliCam() { return heliOut && heliOut.obj ? { x: heliOut.x, y: heliOut.cy } : null; }
 
@@ -1386,6 +1397,7 @@ export const _test = {
   missileAt(x, y, a, homing) { const b = enemyFire({ x, y, h: 0 }, a, 'missile', { muzzle: 0.1, homing: homing !== false }); return !!b; },
   starAt(x, y, item) { const e = spawnEntity({ t: 'star', x, y, item: item || 'bomb', hidden: false }); return !!e; },
   invuln(v) { P.invuln = v; },
+  face(d) { if (!P) return; P.dir = d; P.ang = DIR8[d].a; fpLatch = null; },
   nextStage() { return nextStage(); },
   bossReady() { _test.teleport(L.BOSS.respawn.x, L.BOSS.trigger - 1.5); },
   state: () => ({ P, ents, pows, ebul, earc })

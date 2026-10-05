@@ -63,15 +63,18 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   await page.evaluate(() => { __JK_TEST__.step(1, true); });
   await page.screenshot({ path: 'out/m_land_play.png' });
 
-  // 摇杆：每个视角下拖向屏幕右/上
-  for (let v = 0; v < 5; v++) {
+  // 摇杆：每个视角下拖向屏幕右/上（第一人称下先摆正车头，方向相对车头）
+  for (let v = 0; v < 6; v++) {
     s = await snap(page);
+    const isFp = s.ui.camera === 'fp';
     await page.evaluate(() => { __JK_TEST__.cheat.teleport(-8, 22); __JK_TEST__.cheat.invuln(60); });
+    if (isFp) await page.evaluate(() => { __JK_TEST__.cheat.face(0); });
     let a = await snap(page);
     await T.down(1, joy.x, joy.y); await T.move(1, joy.x + 30, joy.y + 3); await T.move(1, joy.x + 55, joy.y + 4);
     await steps(20);
     let b = await snap(page);
     const right = b.player.x - a.player.x;
+    if (isFp) await page.evaluate(() => { __JK_TEST__.cheat.face(0); });
     await T.move(1, joy.x + 3, joy.y - 55);
     a = await snap(page); await steps(20); b = await snap(page);
     const up = b.player.y - a.player.y;

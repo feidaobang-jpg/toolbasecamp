@@ -147,6 +147,16 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 #banner.pop { animation: pop .35s ease-out; }
 @keyframes pop { from { transform: translateX(-50%) scale(.6); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
 
+#crosshair {
+  position: absolute; left: 50%; top: 46%; width: 22px; height: 22px; margin: -11px 0 0 -11px; z-index: 12; pointer-events: none;
+}
+#crosshair::before, #crosshair::after {
+  content: ''; position: absolute; background: rgba(255, 246, 223, .9); box-shadow: 0 0 2px rgba(40, 30, 10, .8);
+}
+#crosshair::before { left: 50%; top: 0; width: 2px; height: 100%; margin-left: -1px; }
+#crosshair::after { top: 50%; left: 0; height: 2px; width: 100%; margin-top: -1px; }
+#crosshair[hidden] { display: none; }
+
 #keyhint {
   position: absolute; left: calc(var(--sal) + 10px); bottom: calc(var(--sab) + 10px); z-index: 14; pointer-events: none;
   display: flex; gap: 10px; flex-wrap: wrap; max-width: 70%; font-size: 12px; font-weight: 700; color: var(--ink);

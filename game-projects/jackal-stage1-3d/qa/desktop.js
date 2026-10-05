@@ -53,8 +53,8 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   check('演示模式默认关闭', /关/.test(demoTxt), demoTxt);
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowRight'); s = await snap(page);
   check('菜单里 →/← 切换视角预设', s.ui.camera === 'top', s.ui.camera);
-  for (let i=0;i<4;i++) await page.keyboard.press('KeyC'); s = await snap(page);
-  check('菜单里 C 键循环视角（5 个预设回到斜俯视）', s.ui.camera === 'oblique', s.ui.camera);
+  for (let i=0;i<5;i++) await page.keyboard.press('KeyC'); s = await snap(page);
+  check('菜单里 C 键循环视角（6 个预设回到斜俯视）', s.ui.camera === 'oblique', s.ui.camera);
   await page.keyboard.press('ArrowDown'); await page.keyboard.press('ArrowDown');
   const vol0 = await page.textContent('#menu [data-opt=volume]');
   await page.keyboard.press('ArrowLeft'); const vol1 = await page.textContent('#menu [data-opt=volume]');
@@ -98,6 +98,21 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
     check('[视角 ' + name + '] WASD 按相机水平轴移动（W 前进=北、D 右=东）', Object.values(r.out).every(v => v > 2) && Math.abs(r.ax.fwd.y - 1) < 0.01 && Math.abs(r.ax.right.x - 1) < 0.01, r);
   }
   while ((await snap(page)).ui.camera !== 'oblique') { await page.keyboard.press('KeyC'); await steps(1); }
+  // 第一人称：方向相对车头（镜头），按住期间锁定世界方向
+  while ((await snap(page)).ui.camera !== 'fp') { await page.keyboard.press('KeyC'); await steps(1); }
+  const fpTest = async (faceDir, code, axis, sign) => {
+    await cheat('teleport', [-8, 22]); await cheat('invuln', [60]); await cheat('face', [faceDir]);
+    const a = await snap(page);
+    await key(code, 20);
+    const b = await snap(page);
+    return +(b.player[axis] - a.player[axis]).toFixed(2) * sign;
+  };
+  check('[第一人称] 车头朝北时 W → 北', await fpTest(0, 'KeyW', 'y', 1) > 2);
+  check('[第一人称] 车头朝北时 D → 东', await fpTest(0, 'KeyD', 'x', 1) > 2);
+  check('[第一人称] 车头朝东时 W → 东（方向跟车头自适应）', await fpTest(2, 'KeyW', 'x', 1) > 2);
+  check('[第一人称] 显示准星', await page.isVisible('#crosshair'));
+  while ((await snap(page)).ui.camera !== 'oblique') { await page.keyboard.press('KeyC'); await steps(1); }
+  check('退出第一人称后准星隐藏', !(await page.isVisible('#crosshair')));
   // 对角
   let a = await snap(page);
   await page.keyboard.down('KeyW'); await page.keyboard.down('KeyD'); await steps(20); await page.keyboard.up('KeyW'); await page.keyboard.up('KeyD');

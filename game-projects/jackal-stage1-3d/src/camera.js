@@ -1,4 +1,5 @@
-// 镜头：固定朝北的预设（C 键循环、即时切换），跟随吉普；计算地面可视四边形供敌人激活/开火判定。
+// 镜头：固定朝北的预设（C 键循环、即时切换），跟随吉普；第一人称跟车头（仅渲染）。
+// 玩法判定（敌人激活/开火的可视四边形）始终用独立的朝北判定镜头，不随第一人称转。
 import * as THREE from 'three';
 import { clamp } from './core.js';
 
@@ -8,45 +9,62 @@ export const PRESETS = [
   { id: 'top', name: '俯视', pitch: 84 * D, dist: 42, fov: 40, ahead: 2 },
   { id: 'low', name: '近景斜视', pitch: 40 * D, dist: 24, fov: 46, ahead: 7 },
   { id: 'wide', name: '战术远景', pitch: 64 * D, dist: 48, fov: 40, ahead: 6 },
-  { id: 'front', name: '低位正视', pitch: 32 * D, dist: 18, fov: 48, ahead: 5 }
+  { id: 'front', name: '低位正视', pitch: 32 * D, dist: 18, fov: 48, ahead: 5 },
+  { id: 'fp', name: '第一人称', fov: 76, dist: 24, ahead: 4, fp: true }
 ];
 
 export function createCamera() {
   const cam = new THREE.PerspectiveCamera(40, 16 / 9, 0.5, 420);
+  const judgeCam = new THREE.PerspectiveCamera(40, 16 / 9, 0.5, 420); // 玩法判定镜头：始终朝北跟随
   const C = {
-    cam, idx: 0, tx: -19, ty: 14, quad: [[0, 0], [0, 0], [0, 0], [0, 0]], aabb: { x0: 0, x1: 0, y0: 0, y1: 0 },
+    cam, judgeCam, idx: 0, lastIdx: 0, fpNow: false, tx: -19, ty: 14, quad: [[0, 0], [0, 0], [0, 0], [0, 0]], aabb: { x0: 0, x1: 0, y0: 0, y1: 0 },
     preset() { return PRESETS[this.idx]; },
-    cycle() { this.idx = (this.idx + 1) % PRESETS.length; return PRESETS[this.idx]; },
-    setAspect(a) { cam.aspect = a; cam.updateProjectionMatrix(); },
-    snap(px, py) { const p = PRESETS[this.idx]; this.tx = px; this.ty = py + p.ahead; },
-    // 水平相机轴：给移动映射与测试使用（所有预设都朝北，因此右 = 东、前 = 北）
+    cycle() { this.idx = (this.idx + 1) % PRESETS.length; if (!PRESETS[this.idx].fp) this.lastIdx = this.idx; return PRESETS[this.idx]; },
+    setAspect(a) { cam.aspect = a; cam.updateProjectionMatrix(); judgeCam.aspect = a; judgeCam.updateProjectionMatrix(); },
+    snap(px, py) { const p = PRESETS[PRESETS[this.idx].fp ? this.lastIdx : this.idx]; this.tx = px; this.ty = py + p.ahead; },
+    // 水平相机轴：给移动映射与测试使用（判定镜头恒朝北，因此右 = 东、前 = 北）
     axes() {
-      const f = new THREE.Vector3(); cam.getWorldDirection(f); f.y = 0; f.normalize();
+      const f = new THREE.Vector3(); judgeCam.getWorldDirection(f); f.y = 0; f.normalize();
       const r = new THREE.Vector3(-f.z, 0, f.x);
       return { fwd: { x: f.x, y: -f.z }, right: { x: r.x, y: -r.z } };
     },
     update(dt, px, py, opt) {
       const p = PRESETS[this.idx];
-      let gx = px, gy = py + p.ahead;
-      const hfov = 2 * Math.atan(Math.tan(p.fov * D / 2) * cam.aspect);
-      const hw = Math.cos(p.pitch) * 0 + p.dist * Math.tan(hfov / 2) * 0.86;
+      const fp = !!p.fp && !!opt && !!opt.fpOK;
+      const gp = fp ? PRESETS[this.lastIdx] : p;   // 第一人称未生效（标题/阵亡）时按上一常规预设摆放
+      const switched = fp !== this.fpNow; this.fpNow = fp;
+      let gx = px, gy = py + gp.ahead;
+      const hfov = 2 * Math.atan(Math.tan(gp.fov * D / 2) * judgeCam.aspect);
+      const hw = gp.dist * Math.tan(hfov / 2) * 0.86;
       if (opt && opt.lock) {
         const L = opt.lock;
-        gx = clamp(px, L.cx - 7, L.cx + 7); gy = L.lockY ? L.cy : clamp(py + p.ahead * 0.5, L.cy - 8, L.cy + 8);
+        gx = clamp(px, L.cx - 7, L.cx + 7); gy = L.lockY ? L.cy : clamp(py + gp.ahead * 0.5, L.cy - 8, L.cy + 8);
       } else {
         gx = hw < 34 ? clamp(gx, -36 + hw, 36 - hw) : 0;
         gy = clamp(gy, 9, 342);
       }
       if (opt && opt.free) { gx = opt.free.x; gy = opt.free.y; }
-      const k = opt && opt.instant ? 1 : 1 - Math.exp(-dt * 5.5);
+      const k = (opt && opt.instant) || switched ? 1 : 1 - Math.exp(-dt * 5.5);
       this.tx += (gx - this.tx) * k; this.ty += (gy - this.ty) * k;
-      const pitch = opt && opt.pitch ? opt.pitch : p.pitch, dist = opt && opt.dist ? opt.dist : p.dist;
-      cam.fov = p.fov; cam.updateProjectionMatrix();
-      // 先用无抖动的镜头算可视区域（玩法判定），再叠加纯视觉的屏幕震动
-      cam.position.set(this.tx, Math.sin(pitch) * dist, -(this.ty) + Math.cos(pitch) * dist);
-      cam.lookAt(this.tx, 0, -(this.ty));
-      cam.updateMatrixWorld();
+      const pitch = !fp && opt && opt.pitch ? opt.pitch : gp.pitch, dist = !fp && opt && opt.dist ? opt.dist : gp.dist;
+      // 先用无抖动的判定镜头算可视区域（玩法判定）
+      judgeCam.fov = gp.fov; judgeCam.updateProjectionMatrix();
+      judgeCam.position.set(this.tx, Math.sin(pitch) * dist, -(this.ty) + Math.cos(pitch) * dist);
+      judgeCam.lookAt(this.tx, 0, -(this.ty));
+      judgeCam.updateMatrixWorld();
       this.computeQuad();
+      // 渲染镜头：第一人称贴着驾驶位朝车头看，其余视角与判定镜头同位
+      if (fp) {
+        const a = opt.heading || 0, fx = Math.sin(a), fz = Math.cos(a);
+        cam.fov = p.fov; cam.updateProjectionMatrix();
+        cam.position.set(px + fx * 0.7, 1.5, -(py + fz * 0.7));
+        cam.lookAt(px + fx * 14, 0.35, -(py + fz * 14));
+      } else {
+        cam.fov = gp.fov; cam.updateProjectionMatrix();
+        cam.position.copy(judgeCam.position);
+        cam.quaternion.copy(judgeCam.quaternion);
+      }
+      cam.updateMatrixWorld();
       if (opt && opt.shake) {
         const sx = (Math.random() - 0.5) * opt.shake, sy = (Math.random() - 0.5) * opt.shake;
         cam.position.x += sx; cam.position.z += sy;
@@ -54,7 +72,7 @@ export function createCamera() {
       }
     },
     computeQuad() {
-      const v = new THREE.Vector3(), o = cam.position;
+      const v = new THREE.Vector3(), o = judgeCam.position;
       const pts = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
       for (let k = 0; k < 4; k++) {

@@ -15,7 +15,7 @@ const app = $('app'), stage = $('stage'), canvas = $('screen');
 const overlays = { menu: $('menu'), pause: $('pause'), result: $('result') };
 const hud = $('hud'), hudTop = $('hud-top'), touch = $('touch'), toastEl = $('toast'), bannerEl = $('banner'), keyHint = $('keyhint'), bossBar = $('boss-bar');
 const listUrl = app.getAttribute('data-list-url') || '../index.html';
-const fpsEl = $('fps');
+const fpsEl = $('fps'), crosshairEl = $('crosshair');
 document.querySelectorAll('.list-link').forEach(a => { a.href = listUrl; });
 
 // ---------- 设置 ----------
@@ -134,7 +134,8 @@ function cycleCamera() {
   const p = camCtl.cycle();
   showToast('视角：' + p.name);
   updateFog();
-  if (GM.player()) camCtl.update(0, GM.player().x, GM.player().y, { instant: true, lock: GM.bossLock() });
+  const pl = GM.player();
+  if (pl) camCtl.update(0, pl.x, pl.y, { instant: true, lock: GM.bossLock(), heading: pl.ang, fpOK: pl.alive && GM.mode() === 'play' });
   refreshOptions();
 }
 function updateFog() {
@@ -446,10 +447,12 @@ function frame(now) {
 function presentFrame(dtReal, draw) {
   if (uiMode === 'game') {
     const p = GM.player();
-    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), shake: fx.shake * 1.2 });
+    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), shake: fx.shake * 1.2, heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
+    crosshairEl.hidden = !camCtl.fpNow;
     updateHud();
   } else {
     titleT += dtReal;
+    crosshairEl.hidden = true;
     const y = 18 + (titleT * 2.2) % 120;
     camCtl.update(dtReal, 0, 0, { free: { x: Math.sin(titleT * 0.15) * 6, y }, pitch: 0.92, dist: 32, instant: (titleT * 2.2) % 120 < 0.05 });
   }
