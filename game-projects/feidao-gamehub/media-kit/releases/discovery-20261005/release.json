@@ -21,7 +21,7 @@
     "oldSignature": "AI开发游戏 www.zhengxiaohui.cn",
     "newSignature": "AI把点子做成游戏｜全部Toy看置顶动态｜网站试玩与投票：www.zhengxiaohui.cn/games.html",
     "status": "public_verified",
-    "evidence": "space.jpg"
+    "evidence": "C:/Users/37818/.codex/visualizations/2026/10/05/01a10c62-34c6-7f52-aa9c-3d822b308d3a/game-entry-space.jpg"
   },
   "videos": [
     {
@@ -50,7 +50,7 @@
     },
     {
       "bvid": "BV1guep6NELt",
-      "status": "pending_review"
+      "status": "public_verified"
     }
   ],
   "verification": {
@@ -66,5 +66,17 @@
     "accountUid": 16214353,
     "followers": 178,
     "note": "同日现有活动台账显示创作激励尚未满足门槛；本次保留原Toy活动标签、不新投视频，不重复报名。每日19:00已有automation b复查。"
+  },
+  "website": {
+    "url": "https://www.zhengxiaohui.cn/games.html",
+    "deployedCommit": "11797734",
+    "status": "public_verified",
+    "checkedAt": "2026-10-05T14:21:40.393002+00:00",
+    "checks": [
+      "HTTP 200",
+      "game-collection-title in public HTML",
+      "collectionTitle in public locale",
+      "rendered collection link in browser"
+    ]
   }
 }

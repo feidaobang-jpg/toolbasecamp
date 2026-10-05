@@ -53,9 +53,9 @@
       "bvid": "BV1guep6NELt",
       "old_description": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。",
       "new_description": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n本视频为早期开发演示；当前试玩为3D平台跳跃实验，包含1-1与1-2，玩法与操作以试玩页面为准。",
-      "status": "pending_review",
-      "public_description": "教程制作不易，如果对你有帮助的话，可否给一个三连支持一下！\n\n⚡️点击即玩⚡️：\nhttps://www.bilibili.com/toy/liobOE4IfNmrWwQk/index.html\n\n游戏demo源文件：\nhttps://pan.quark.cn/s/8c5d6c2edb32",
-      "checkedAt": "2026-10-05T14:17:55.198Z"
+      "status": "public_verified",
+      "public_description": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n本视频为早期开发演示；当前试玩为3D平台跳跃实验，包含1-1与1-2，玩法与操作以试玩页面为准。",
+      "checkedAt": "2026-10-05T14:21:14.401Z"
     }
   ]
 }
