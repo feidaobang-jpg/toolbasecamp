@@ -1,0 +1,42 @@
+{
+  "fetched_at": "2026/10/5 18:09:10（北京时间）",
+  "source": "https://api.bilibili.com/x/web-interface/view?bvid=<BV>",
+  "videos": {
+    "BV1WbHq6eEBt": {
+      "title": "这次不只守城，我直接钻进虫洞反攻母皇！《虫潮围城》新版实战",
+      "published_beijing": "2026/10/4 05:31:51",
+      "duration_sec": 157,
+      "view": 1994,
+      "like": 24,
+      "coin": 14,
+      "favorite": 60,
+      "share": 2,
+      "reply": 38,
+      "danmaku": 0
+    },
+    "BV1Ujad6DEuf": {
+      "title": "虫潮来了，这座基地你能守住吗？我的小游戏上线B站Toy了",
+      "published_beijing": "2026/9/30 14:17:16",
+      "duration_sec": 33,
+      "view": 7388,
+      "like": 63,
+      "coin": 32,
+      "favorite": 151,
+      "share": 3,
+      "reply": 73,
+      "danmaku": 0
+    },
+    "BV1EyHz6wE5u": {
+      "title": "小吉普，大救援！赤色要塞3D双关卡已上线，直接开玩",
+      "published_beijing": "2026/10/4 09:33:41",
+      "duration_sec": 169,
+      "view": 1815,
+      "like": 22,
+      "coin": 6,
+      "favorite": 65,
+      "share": 1,
+      "reply": 7,
+      "danmaku": 0
+    }
+  }
+}
