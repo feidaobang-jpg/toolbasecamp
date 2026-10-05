@@ -385,7 +385,7 @@ const lookControl = createLookController({ firstPerson: () => camCtl.fp(), turn:
   camCtl.yawOff -= delta;
   if (G.player && G.mode === 'play') G.player.lookHeading = (G.player.lookHeading ?? G.player.face) - delta;
 } });
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && G.mode === 'play' && !G.script && !current && !paused, toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
 IN.onClear(() => { dragLook.clear(); lookControl.clear(); });
 
 refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
@@ -496,10 +496,10 @@ function presentFrame(dtReal, draw, instant) {
   const playing = uiMode === 'game' && !paused && (!current || current === 'cont');
   if (uiMode === 'game') {
     const p = G.player;
-    if (playing && G.mode === 'play') {
+    if (playing && G.mode === 'play' && !G.script) {
       lookControl.step(dtReal, (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0));
       if (IN.look.dx) { lookControl.queue(IN.look.dx * .005); IN.look.dx = 0; }
-      if (p.lookHeading !== undefined && !G.script && ['idle','walk','run','jump','shoot'].includes(p.state)) p.face += Math.max(-dtReal*2.1,Math.min(dtReal*2.1,Math.atan2(Math.sin(p.lookHeading-p.face),Math.cos(p.lookHeading-p.face))));
+      if (p.lookHeading !== undefined && p.state !== 'dead') p.face += Math.max(-dtReal*2.1,Math.min(dtReal*2.1,Math.atan2(Math.sin(p.lookHeading-p.face),Math.cos(p.lookHeading-p.face))));
     } else IN.look.dx = 0;
     const fpOff = camCtl.fp() && (['cut', 'trans', 'clear', 'over', 'cont'].indexOf(G.mode) >= 0 || ['down', 'dead', 'respawn', 'victory', 'door'].indexOf(p.state) >= 0);
     G.fpActive = camCtl.fp() && !fpOff;

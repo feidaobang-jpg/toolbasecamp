@@ -296,150 +296,6 @@
       }
     },
     {
-      "game": "cadillacs-stage1-3d",
-      "name": "visible selected mode",
-      "ok": true,
-      "detail": {
-        "count": 2,
-        "bg": "rgb(255, 224, 154)",
-        "other": "rgb(36, 59, 50)"
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "rendered subject turns preset 0",
-      "ok": true,
-      "detail": {
-        "before": 1.5707963267948966,
-        "after": 0.02617993877991451
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "rendered subject turns preset 1",
-      "ok": true,
-      "detail": {
-        "before": 0.02617993877991451,
-        "after": -1.5184364492350675
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "rendered subject turns preset 2",
-      "ok": true,
-      "detail": {
-        "before": -1.5184364492350675,
-        "after": -3.063052837250047
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "rendered subject turns preset 3",
-      "ok": true,
-      "detail": {
-        "before": 1.5707963267948966,
-        "after": 0.5410520681182407
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "audio unlocked",
-      "ok": true,
-      "detail": [
-        {
-          "state": "running",
-          "time": 7.341333333333333,
-          "decoded": 6,
-          "sources": 6
-        }
-      ]
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "manual pause freezes audio",
-      "ok": true,
-      "detail": {
-        "paused1": [
-          {
-            "state": "suspended",
-            "time": 7.341333333333333,
-            "decoded": 6,
-            "sources": 6
-          }
-        ],
-        "paused2": [
-          {
-            "state": "suspended",
-            "time": 7.341333333333333,
-            "decoded": 6,
-            "sources": 6
-          }
-        ]
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "paused menu stays silent",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "selected mode auto",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "selected mode hide",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "selected mode show",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "mode switch preserves current run",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "continue resumes audio",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "hidden screen freezes audio",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "return stays paused",
-      "ok": true
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "original recordings decoded and played",
-      "ok": true,
-      "detail": [
-        {
-          "state": "suspended",
-          "time": 7.850666666666666,
-          "decoded": 6,
-          "sources": 6
-        }
-      ]
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "name": "no runtime or resource errors",
-      "ok": true,
-      "detail": {
-        "errors": [],
-        "failed": []
-      }
-    },
-    {
       "game": "jackal-stage1-3d",
       "name": "visible selected mode",
       "ok": true,
@@ -1023,6 +879,160 @@
     },
     {
       "game": "starship-defense",
+      "name": "no runtime or resource errors",
+      "ok": true,
+      "detail": {
+        "errors": [],
+        "failed": []
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "visible selected mode",
+      "ok": true,
+      "detail": {
+        "count": 2,
+        "bg": "rgb(255, 224, 154)",
+        "other": "rgb(36, 59, 50)"
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "rendered subject turns preset 0",
+      "ok": true,
+      "detail": {
+        "before": 1.5707963267948966,
+        "after": 0.02617993877991451
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "rendered subject turns preset 1",
+      "ok": true,
+      "detail": {
+        "before": 0.02617993877991451,
+        "after": -1.5184364492350675
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "rendered subject turns preset 2",
+      "ok": true,
+      "detail": {
+        "before": -1.5184364492350675,
+        "after": -3.063052837250047
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "rendered subject turns preset 3",
+      "ok": true,
+      "detail": {
+        "before": 1.5707963267948966,
+        "after": 0.5410520681182407
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "attack animation also follows look",
+      "ok": true,
+      "detail": {
+        "state": "attack",
+        "before": 1.8229308936889002,
+        "after": 1.5779308936889
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "audio unlocked",
+      "ok": true,
+      "detail": [
+        {
+          "state": "running",
+          "time": 7.410666666666667,
+          "decoded": 6,
+          "sources": 9
+        }
+      ]
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "manual pause freezes audio",
+      "ok": true,
+      "detail": {
+        "paused1": [
+          {
+            "state": "suspended",
+            "time": 7.410666666666667,
+            "decoded": 6,
+            "sources": 9
+          }
+        ],
+        "paused2": [
+          {
+            "state": "suspended",
+            "time": 7.410666666666667,
+            "decoded": 6,
+            "sources": 9
+          }
+        ]
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "paused menu stays silent",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "selected mode auto",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "selected mode hide",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "selected mode show",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "mode switch preserves current run",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "continue resumes audio",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "hidden screen freezes audio",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "return stays paused",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "original recordings decoded and played",
+      "ok": true,
+      "detail": [
+        {
+          "state": "suspended",
+          "time": 7.952,
+          "decoded": 6,
+          "sources": 9
+        }
+      ]
+    },
+    {
+      "game": "cadillacs-stage1-3d",
       "name": "no runtime or resource errors",
       "ok": true,
       "detail": {

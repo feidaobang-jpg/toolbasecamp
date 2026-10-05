@@ -35,6 +35,13 @@ const delta=(a,b)=>Math.atan2(Math.sin(b-a),Math.cos(b-a));
  const before=await subject(p,g);await p.keyboard.down('KeyE');await settle(p);await p.waitForTimeout(400);await p.keyboard.up('KeyE');await settle(p);
  const after=await subject(p,g);check(g,'rendered subject turns preset '+i,Number.isFinite(after)&&Math.abs(delta(before,after))>.04,{before,after});
  }
+ if(g==='cadillacs-stage1-3d'){
+  await p.keyboard.down('KeyJ');await p.evaluate(()=>__CD_TEST__.step(1));await p.keyboard.up('KeyJ');
+  const before=await subject(p,g),state=await p.evaluate(()=>__CD_TEST__.cheat.G.player.state);
+  await p.keyboard.down('KeyE');await p.evaluate(()=>__CD_TEST__.step(8));await p.keyboard.up('KeyE');const after=await subject(p,g);
+  check(g,'attack animation also follows look',state==='attack'&&Math.abs(delta(before,after))>.04,{state,before,after});
+  await p.evaluate(()=>__CD_TEST__.step(60));
+ }
  const beforePause=await audio(p);check(g,'audio unlocked',beforePause.some(c=>c.state==='running'),beforePause);
  await p.keyboard.press('Escape');await settle(p);await p.waitForTimeout(200);const paused1=await audio(p);await p.waitForTimeout(350);const paused2=await audio(p);
  check(g,'manual pause freezes audio',paused1.length>0&&paused1.every((c,i)=>c.state==='suspended'&&Math.abs(c.time-paused2[i].time)<.005),{paused1,paused2});
