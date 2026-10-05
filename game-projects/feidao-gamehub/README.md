@@ -13,6 +13,8 @@ B站 Toy 平台的「游戏合集」入口页（仿 GameHub 形态）：一个�
 
 新增游戏时：在 `GAMES` 数组加一项（slug 用 `toy mylist --json` 里的 URL 路径），把该 Toy 的 poster 封面下载到 `package/assets/<slug>.png`（或 .jpg），重名保持一致。全部游戏绑定视频后可给 `video` 字段补 BV 号。
 
+2026-10-05：恐龙快打的已过审实机视频 `BV18XHW66E55` 已核验绑定到 Toy `40412421031936`，合集卡片补上同一 BV 的视频角标。网站按用户当次要求暂撤西游降魔卡片与投票选项；合集中的原 Toy 入口继续保留。
+
 ## 发布 / 更新
 
 ```powershell

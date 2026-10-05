@@ -31,6 +31,14 @@ def run():
     assert all(g["titleKey"].startswith("tools.") for g in games)
     # toolsConfig links outside gamesConfig never leak in; retired pages stay out.
     assert "tank_battle" not in keys and "hop-fox-3d" not in keys
+    assert "journey-west-3d" not in keys
+    assert "journey-west-3d" not in {g["key"] for g in votes._FALLBACK_GAMES}
+    try:
+        votes._normalize_target(votes.VOTE_FAVORITE, "journey-west-3d")
+    except votes.HTTPException as error:
+        assert error.status_code == 400
+    else:
+        raise AssertionError("Retired game must reject new votes")
 
     sample = """
     const toolsConfig = { groups: [{ items: [{ titleKey: 'x.title', url: 'html/game/not_a_game.html' }] }] };

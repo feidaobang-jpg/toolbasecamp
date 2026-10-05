@@ -196,8 +196,7 @@ const gamesConfig = {
             titleKey: 'games.groups.early',
             descriptionKey: 'games.earlyDesc',
             items: [
-                { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=3', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' },
-                { titleKey: 'tools.journeyWest.title', subtitleKey: 'games.content.firstStage', tagKeys: ['games.tags.threeD', 'games.tags.experimental'], noteKey: 'games.journeyVersions', primaryPlay: 'site', siteLabelKey: 'games.playSite3d', toyLabelKey: 'games.playToy2d', toyUrl: 'https://www.bilibili.com/toy/feidao-journey-west/index.html', url: 'html/game/journey-west-3d/index.html?v=1', thumb: 'assets/game/thumbs/journey-west-3d.jpg?v=1' }
+                { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=3', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' }
             ]
         }
     ]

@@ -78,7 +78,6 @@ _FALLBACK_GAMES: List[Dict[str, str]] = [
     {"key": "brick_breaker", "url": "html/game/brick_breaker.html", "titleKey": "tools.brickBreaker.title"},
     {"key": "sheepstack", "url": "html/game/sheepstack.html", "titleKey": "tools.sheepstack.title"},
     {"key": "mario-3d", "url": "html/game/mario-3d/index.html", "titleKey": "tools.mario3d.title"},
-    {"key": "journey-west-3d", "url": "html/game/journey-west-3d/index.html", "titleKey": "tools.journeyWest.title"},
 ]
 # (文件签名, 解析结果)：整体替换，线程间读写不会看到半截状态。
 _catalog: tuple = (None, None)
