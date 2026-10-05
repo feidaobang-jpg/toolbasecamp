@@ -97,6 +97,11 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 .items .val.warn { color: #ff7a6a; }
 .items kbd { font-size: 12px; }
 .items > button > span:first-child { white-space: nowrap; }
+/* 操作模式快捷切换（自动识别 / 电脑键鼠 / 手机触屏，按钮由 drag-look.js 生成） */
+.items > .control-modes { grid-column: 1 / -1; margin: 2px 0 0 !important; }
+.control-modes .tb-btn { flex: 1; min-height: 44px; padding: 4px 8px; border-radius: 10px; border: 2px solid rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .06); color: #ddd; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.control-modes .tb-btn[aria-pressed="true"] { color: #fff; border-color: var(--gold); background: rgba(255, 210, 63, .2); }
+.control-modes .tb-btn:focus { outline: none; border-color: var(--gold); }
 
 /* ---------- 选人 ---------- */
 .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
