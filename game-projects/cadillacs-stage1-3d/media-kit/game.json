@@ -6,8 +6,8 @@
   },
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.1.2",
-  "handoff": "releases/v0.1.2/handoff.json",
+  "current_version": "v0.1.3",
+  "handoff": "releases/v0.1.3/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -30,51 +30,31 @@
       "W/A/S/D（或方向键）": "移动（按相机水平轴映射；侧视下 W 走向纵深）",
       "J（或空格）": "攻击：连打四下击倒；脚下有物品时捡起；拿武器时使用；冲刺中为冲刺攻击；空中为跳踢 / 飞踢；抓住后膝撞，第四下投摔；贴着油桶时举起 / 扔出",
       "K": "跳跃",
-      "L（或 Shift / 双击方向）": "冲刺",
       "J+K 同按 或 U": "必杀（命中扣少量体力）",
       "C": "循环切换视角：侧视 → 斜视 → 正视 → 第一人称",
       "Q / E": "按住左右转视角",
       "Esc / Enter / P": "暂停；菜单里 Enter 确认",
-      "↑↓ / ←→": "菜单选择 / 调整选项；选人画面 ←→ 换英雄"
+      "↑↓ / ←→": "菜单选择 / 调整选项；选人画面 ←→ 换英雄",
+      "I（或 L / Shift / 双击方向）": "冲刺"
     },
     "touch": {
       "左侧浮动摇杆": "移动（模拟量；连推两下 = 冲刺）",
       "J": "攻击",
       "K": "跳跃",
-      "L": "按住冲刺",
       "U": "必杀",
       "C": "切换视角",
       "按住画面拖动": "无极转视角（2026-10-05 起不设 Q/E 按钮，摇杆与按钮区域除外）",
-      "右上角": "暂停"
+      "右上角": "C 切换视角与暂停",
+      "I": "按住冲刺",
+      "排列": "下排 J / K，上排 U / I，等大 2×2 方阵"
     }
   },
   "release_intent": "web_demo",
-  "verified_public_links": [],
-  "pending_changes": [
-    {
-      "date": "2026-10-05",
-      "change": "手机端两批小修：①移除 Q/E 左右转视角按钮，改为按住画面拖动无极转视角（电脑 Q/E 不变）；②选人画面竖屏即旋转横屏（不用等开局）；③右下按钮改街机习惯位（J 攻击离右下角最近且最大，K 跳跃斜后，环形布局）；④切视角 toast 触屏端不再显示 Q/E 文案（改为按住画面拖动）。网站已部署（game.min.js?v=5），手机触控 QA 34/34，桌面 QA 每轮随机 1 项时序抖动（并行负载，与改动无关，玩法代码未变）。",
-      "reason": "用户指示：选人界面应横屏、J 攻击在前 K 跳跃在后、去掉触屏 Q/E 提示",
-      "channels": {
-        "website": "deployed 2026-10-05",
-        "toy": "待合并：今日批次已用（v0.1.0 auditing），随下次 Toy 更新一起送审",
-        "bilibili_videos": "无已有视频；新视频手机段已用最新布局重录（mobile-landscape-v5）"
-      }
-    },
-    {
-      "date": "2026-10-05",
-      "version": "v0.1.1",
-      "kind": "普通补丁",
-      "change": "三处镜头修复：①正视在第 47 街贴后墙按 Q/E 转头不再进墙（后墙 / 楼体立面剖切 + 贴近渐隐，瓦砾实体先抬高后拉近）；②第一人称贴身岩跳龙 / 敌人时按距离淡化、隐藏描边，不再黑屏或露出模型内部；③锁屏时敌人、Boss、被打飞 / 被抓的角色不出画，侧视取景保证最前一排完整入画（16:9 约拉远 8%）。另修户外遮挡淡化从未生效。网站已部署（提交 378dc004，线上 game.min.js?v=378dc004，sha256 5fc92be2…），qa/camera.js 本地与线上 11/11、desktop 88/88、mobile 34/34。",
-      "reason": "做视角版视频时同一局实机录像里发现（views-run-1080p.mp4 176.8 s / 224 s / 280–290 s）",
-      "channels": {
-        "website": "deployed 2026-10-05 16:53（公网抽查 index.html 与 game.min.js 哈希一致）",
-        "toy": "待合并：普通补丁；本游戏北京时间 10-05 的 Toy 批次已用于 v0.1.0 首发（06:25 提交，现 published），与上一条手机端小修一起随下一批（10-06 起）送审",
-        "bilibili_videos": "待合并：普通补丁不单独改简介；BV18XHW66E55 简介与置顶仍准确（未写镜头相关的已知问题），下次有意义的说明更新时一并写入"
-      },
-      "handoff": "releases/v0.1.1/handoff.json"
-    }
+  "verified_public_links": [
+    "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
   ],
+  "pending_changes": [],
   "toy": {
     "id": 40412421031936,
     "title": "恐龙快打 3D：第一关",
@@ -82,16 +62,20 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-05",
-    "package": "dist/toy-v0.1.0/package",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_yWKjnWCL/index.html",
-    "note": "分享地址 https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html，过审后才可访问",
-    "status_verified": "2026-10-05 toy mylist：published / PUBLIC；视频 BV18XHW66E55 已绑定（toy video list 核验）",
+    "submitted_at": "2026-10-05T18:11:20+08:00",
+    "package": "dist/toy-v0.1.3/package",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_vHtbLvte/index.html",
+    "note": "v0.1.3 已过审上线，正式入口核验通过",
+    "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22528 显示新键位与操作模式，已点击切到手机触屏",
     "bound_videos": [
       "BV18XHW66E55"
-    ]
+    ],
+    "review_status": "published",
+    "version": "v0.1.3",
+    "verified_at": "2026-10-05T18:16:12.120057+08:00",
+    "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
   },
-  "toy_note": "2026-10-05 用户明确授权后首发提交，审核中；slug feidao-cadillacs-3d，公开可见",
+  "toy_note": "v0.1.3 已过审上线；ID、slug、PUBLIC 可见性与视频绑定保持不变",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一关；模型与贴图为程序化重新制作，音乐按原作风格重新编写（非转录），音效为合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
   "dev": {
@@ -104,12 +88,46 @@
       "yt-dlp / ffmpeg（参考录像截帧）",
       "Python Pillow"
     ],
-    "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md"
+    "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md",
+    "continuation": {
+      "tool": "Codex",
+      "worktree": "D:/project/toolbasecamp/.claude/worktrees/sharp-tesla-a5c0ac",
+      "scope": "接续 Claude 中断的 v0.1.3 样式验收与发布收尾"
+    }
   },
   "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git",
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
     "touch": "左摇杆和动作按钮保留；画面空白处拖动转视角，保留 C 切换预设，移除左右旋转虚拟键",
     "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留"
-  }
+  },
+  "resolved_changes": [
+    {
+      "date": "2026-10-05",
+      "change": "手机端两批小修：①移除 Q/E 左右转视角按钮，改为按住画面拖动无极转视角（电脑 Q/E 不变）；②选人画面竖屏即旋转横屏（不用等开局）；③右下按钮改街机习惯位（J 攻击离右下角最近且最大，K 跳跃斜后，环形布局）；④切视角 toast 触屏端不再显示 Q/E 文案（改为按住画面拖动）。网站已部署（game.min.js?v=5），手机触控 QA 34/34，桌面 QA 每轮随机 1 项时序抖动（并行负载，与改动无关，玩法代码未变）。",
+      "reason": "用户指示：选人界面应横屏、J 攻击在前 K 跳跃在后、去掉触屏 Q/E 提示",
+      "channels": {
+        "website": "deployed 2026-10-05",
+        "toy": "待合并：今日批次已用（v0.1.0 auditing），随下次 Toy 更新一起送审",
+        "bilibili_videos": "无已有视频；新视频手机段已用最新布局重录（mobile-landscape-v5）"
+      },
+      "resolved_in": "v0.1.3",
+      "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
+    },
+    {
+      "date": "2026-10-05",
+      "version": "v0.1.1",
+      "kind": "普通补丁",
+      "change": "三处镜头修复：①正视在第 47 街贴后墙按 Q/E 转头不再进墙（后墙 / 楼体立面剖切 + 贴近渐隐，瓦砾实体先抬高后拉近）；②第一人称贴身岩跳龙 / 敌人时按距离淡化、隐藏描边，不再黑屏或露出模型内部；③锁屏时敌人、Boss、被打飞 / 被抓的角色不出画，侧视取景保证最前一排完整入画（16:9 约拉远 8%）。另修户外遮挡淡化从未生效。网站已部署（提交 378dc004，线上 game.min.js?v=378dc004，sha256 5fc92be2…），qa/camera.js 本地与线上 11/11、desktop 88/88、mobile 34/34。",
+      "reason": "做视角版视频时同一局实机录像里发现（views-run-1080p.mp4 176.8 s / 224 s / 280–290 s）",
+      "channels": {
+        "website": "deployed 2026-10-05 16:53（公网抽查 index.html 与 game.min.js 哈希一致）",
+        "toy": "待合并：普通补丁；本游戏北京时间 10-05 的 Toy 批次已用于 v0.1.0 首发（06:25 提交，现 published），与上一条手机端小修一起随下一批（10-06 起）送审",
+        "bilibili_videos": "待合并：普通补丁不单独改简介；BV18XHW66E55 简介与置顶仍准确（未写镜头相关的已知问题），下次有意义的说明更新时一并写入"
+      },
+      "handoff": "releases/v0.1.1/handoff.json",
+      "resolved_in": "v0.1.3",
+      "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
+    }
+  ]
 }

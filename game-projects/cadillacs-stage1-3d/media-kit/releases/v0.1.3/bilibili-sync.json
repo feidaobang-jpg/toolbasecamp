@@ -1,0 +1,15 @@
+{
+  "version": "v0.1.3",
+  "baseline": null,
+  "bvid": "BV18XHW66E55",
+  "commit": "ee646b8e",
+  "status": "public_verified",
+  "reason": "纠正原简介仍称镜头问题下次先修及画面为当前线上版本，合并待同步补丁",
+  "old_description": "街机恐龙快打的第一关，我做成了 3D 重置版：楼顶 → 大楼内部 → 第 47 街，最后打倒牵着岩跳龙的维斯。默认侧视就是原作画面，按 C 能切到正视（主角身后）和第一人称（主角眼睛）。这期把三种视角都实打了一遍，也抓到两个镜头 bug：第一人称贴太近会钻进恐龙嘴里、正视贴墙会进墙，下次先修。\n\n\n\n\n实机画面为当前线上版本，由自动测试脚本按真实按键操作录制（默认规则、无限命、未开无敌）。使用 Claude（Opus 5.5）辅助开发；背景音乐按原作风格重新编写，音效为合成。粉丝向非官方重置，原作版权归 Capcom 及原著方所有。\n\n\n\n\nB站 Toy 试玩：\n\nhttps://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n\n百宝箱试玩（复制到浏览器打开）：\n\nhttps://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html\n\n\n\n\n给这款投票、想玩哪款复刻（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "new_description": "【游戏更新记录】\n2026-10-05 · v0.1.3\n• 修复正视贴墙穿墙、第一人称贴近敌人或岩跳龙时画面变黑，以及锁屏战斗中敌人和 Boss 被打出画面的问题。\n• 手机右侧改为四键方阵：下排 J 攻击 / K 跳跃，上排 U 必杀 / I 冲刺；C 切换视角放在右上角暂停旁。电脑 I 冲刺，L 仍可用。\n• 手机按住画面空白处拖动转视角，不再显示左右转按钮；设置可切换自动识别、电脑键鼠、手机触屏，切换保留本局。\n截至北京时间 2026-10-05 18:12，网站已更新；Toy v0.1.3 已提交审核。\n视频保留录制时画面，当前游戏以试玩为准。试玩入口见下方原介绍。\n【游戏更新记录结束】\n\n街机恐龙快打的第一关，我做成了 3D 重置版：楼顶 → 大楼内部 → 第 47 街，最后打倒牵着岩跳龙的维斯。默认侧视就是原作画面，按 C 能切到正视（主角身后）和第一人称（主角眼睛）。这期把三种视角都实打了一遍，也抓到两个镜头 bug：第一人称贴太近会钻进恐龙嘴里、正视贴墙会进墙，现已在 v0.1.3 中修复，视频保留当时的问题画面。\n\n\n\n\n实机画面为录制时版本，由自动测试脚本按真实按键操作录制（默认规则、无限命、未开无敌）。使用 Claude（Opus 5.5）辅助开发；背景音乐按原作风格重新编写，音效为合成。粉丝向非官方重置，原作版权归 Capcom 及原著方所有。\n\n\n\n\nB站 Toy 试玩：\n\nhttps://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n\n百宝箱试玩（复制到浏览器打开）：\n\nhttps://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html\n\n\n\n\n给这款投票、想玩哪款复刻（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "block_sha256": "299f2588277d8b8c5c1976bf01b9b19eaff367f672542bd491b6e9937ba64f36",
+  "prepared_at": "2026-10-05T18:12:35.133567+08:00",
+  "comments": "原置顶操作与链接仍准确，不另发评论",
+  "verified_at": "2026-10-05T18:14:47.797232+08:00",
+  "verification": "Codex 内置浏览器公开视频页读回完整更新区块、原介绍、三个入口与作者 UID16214353"
+}

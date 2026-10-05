@@ -7,14 +7,23 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": null,
+      "last_public_verified_version": "v0.1.3",
       "status": "published（2026-10-05 16:37 公开可见）",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
-      "pinned_comment_rpid": 316113740017
+      "pinned_comment_rpid": 316113740017,
+      "last_public_verified_at": "2026-10-05T18:14:47.797232+08:00",
+      "block_sha256": "299f2588277d8b8c5c1976bf01b9b19eaff367f672542bd491b6e9937ba64f36",
+      "last_sync_record": "releases/v0.1.3/bilibili-sync.json"
     }
   ],
-  "pending": [
+  "status": "v0.1.3 简介更新已公开核验；镜头修复、拖动与四键方阵累计项已合并",
+  "updated_at": "2026-10-05T18:14:47.797232+08:00",
+  "mapping_sources": [
+    "本期发布记录 video/views-20261005/work/publication-result.json",
+    "创作中心稿件列表（BV18XHW66E55 审核中）"
+  ],
+  "resolved_updates": [
     {
       "version": "v0.1.1",
       "date": "2026-10-05",
@@ -25,15 +34,7 @@
       ],
       "reason_deferred": "按 2026-10-05 分渠道节奏，普通补丁累计到下一次有意义的简介更新；现有简介未描述这些问题，无需立即纠正",
       "release_record": "releases/v0.1.1/handoff.json"
-    }
-  ],
-  "status": "已关联：BV18XHW66E55（v2 视角版，已发布并绑定 Toy）；简介即当前版本说明，暂无需追加更新区块",
-  "updated_at": "2026-10-05",
-  "mapping_sources": [
-    "本期发布记录 video/views-20261005/work/publication-result.json",
-    "创作中心稿件列表（BV18XHW66E55 审核中）"
-  ],
-  "pending_updates": [
+    },
     {
       "version": "v0.1.2",
       "release": "releases/v0.1.2/handoff.json",
@@ -42,5 +43,7 @@
       "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
       "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
     }
-  ]
+  ],
+  "pending": [],
+  "pending_updates": []
 }

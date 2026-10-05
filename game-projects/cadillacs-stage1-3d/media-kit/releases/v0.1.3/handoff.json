@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.1.3",
+  "base_version": "v0.1.2",
+  "created_at": "2026-10-05T18:14:47.797232+08:00",
+  "classification": "稳定操作体验补丁（合并 v0.1.1 镜头与 v0.1.2 输入修复）",
+  "build": {
+    "id": "v0.1.3-ee646b8e",
+    "commit": "ee646b8e",
+    "dirty": false,
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+    "files": {
+      "public/html/game/cadillacs-stage1-3d/index.html": "f799cb89fa9354c088a57ee9aca182e78164c5f8fd286e0347410066c67150ee",
+      "public/html/game/cadillacs-stage1-3d/css/style.css": "36e25118604a952b74c33e51287b2b1e098e0ff9f1771d28f3fcd5572cc287a4",
+      "public/html/game/cadillacs-stage1-3d/js/game.min.js": "10f1373f6a32631dc56861e088eb2459fe1c0a6a747e8a2e82324c117f68a97f"
+    },
+    "fingerprint": "01e049da0c2a4eb2c63ac46d9b6443093c9d32775ab968290542df4fde1060da"
+  },
+  "changes": [
+    {
+      "id": "four-key-pad",
+      "before": "右侧环形、大小不一的动作按钮，冲刺 L",
+      "after": "等大 2×2 方阵，下排 J/K、上排 U/I；键盘 I 冲刺，L 保留别名",
+      "verification": "Toy 预览实际操作与布局通过"
+    },
+    {
+      "id": "camera-hud",
+      "after": "C 切预设移至右上角暂停旁，触屏不再显示 Esc/Enter 键帽",
+      "verification": "Toy 预览触屏 C 切到斜视、K 跳跃通过"
+    },
+    {
+      "id": "mode-buttons",
+      "after": "自动/电脑/手机快捷按钮全宽排布、44px 最小高度与选中态",
+      "verification": "本地内置浏览器 844×390 / 390×844 核验；暂停下双向切换保留角色、计时与暂停"
+    }
+  ],
+  "historical_verification": [
+    "releases/v0.1.1/handoff.json：三处镜头复现、修复与线上 11/11 验证",
+    "releases/v0.1.2/handoff.json：拖动、横竖屏和输入释放验证"
+  ],
+  "qa": {
+    "inherited_desktop": "Claude 同一 JS 构建 89/89，见 qa/desktop-inherited.json",
+    "inherited_production_mobile": "Claude 线上 35/35，见 qa/mobile-production-inherited.json",
+    "resumed_toy": "15/15，见 qa/toy-preview-results.json；0 游戏报错 / 404",
+    "resumed_local": "正确工作区端口 8793：四键 76×76 等大对齐；C 实际切斜视；电脑隐藏虚拟键，手机恢复，暂停计时 1:54 保留；竖屏暂停面板落在 390×844 内，模式按钮最小边 44px",
+    "excluded_run": "端口 8792 已被另一旧静态服务占用，错误加载旧版后 30/35；该轮不作为本构建证据。原服务未终止。",
+    "limits": [
+      "设备模拟不代表真机多指与性能验收",
+      "接续阶段未重新跑全部桌面/镜头用例，沿用同一 JS 构建已保存的验收记录"
+    ]
+  },
+  "deployment": {
+    "status": "verified",
+    "verified_at": "2026-10-05T18:14:47.797232+08:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "js_sha256": "10f1373f6a32631dc56861e088eb2459fe1c0a6a747e8a2e82324c117f68a97f",
+    "css_sha256": "36e25118604a952b74c33e51287b2b1e098e0ff9f1771d28f3fcd5572cc287a4",
+    "evidence": "公网 CSS/JS 哈希与本地一致，HTML 引用 ?v=ee646b8e 且包含下排/上排说明"
+  },
+  "toy": {
+    "id": 40412421031936,
+    "version": "v0.1.3",
+    "status": "published",
+    "package_manifest_sha256": "01e049da0c2a4eb2c63ac46d9b6443093c9d32775ab968290542df4fde1060da",
+    "record": "releases/toy-v0.1.3/toy-build.json",
+    "verified_at": "2026-10-05T18:16:12.120057+08:00",
+    "live_iframe": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v22528/index.html",
+    "verification": "CLI 状态 published，正式页面已显示四键新操作说明与三个操作模式，点击手机模式生效"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvid": "BV18XHW66E55",
+    "record": "releases/v0.1.3/bilibili-sync.json"
+  },
+  "media": [
+    {
+      "id": "toy-preview-desktop-game",
+      "file": "releases/v0.1.3/captures/toy-preview-desktop-game.png",
+      "sha256": "9a924e439165e1ad9d97649cc7bcf93f14396453f9748d32c536d1cea44da94b",
+      "kind": "screenshot",
+      "version": "v0.1.3",
+      "capture_mode": "realtime-automation",
+      "description": "Toy 预览电脑或手机视口实际画面；测试钩子清敌用于操作验收",
+      "visual_review": "not-run",
+      "audio": "none",
+      "width": 1280,
+      "height": 720,
+      "build_id": "v0.1.3-ee646b8e"
+    },
+    {
+      "id": "toy-preview-mobile-game",
+      "file": "releases/v0.1.3/captures/toy-preview-mobile-game.png",
+      "sha256": "d809910c06e2a4868e7a5c774eabdfeb9fd9bf487fa2fbc8b54bffb2957f408e",
+      "kind": "screenshot",
+      "version": "v0.1.3",
+      "capture_mode": "realtime-automation",
+      "description": "Toy 预览电脑或手机视口实际画面；测试钩子清敌用于操作验收",
+      "visual_review": "pass",
+      "audio": "none",
+      "width": 1688,
+      "height": 780,
+      "build_id": "v0.1.3-ee646b8e"
+    },
+    {
+      "id": "toy-preview-mobile-title",
+      "file": "releases/v0.1.3/captures/toy-preview-mobile-title.png",
+      "sha256": "b6525caa243b6de7b16ff79164b158279e1268a44c10e36b99ca145dee4b1a04",
+      "kind": "screenshot",
+      "version": "v0.1.3",
+      "capture_mode": "realtime-automation",
+      "description": "Toy 预览电脑或手机视口实际画面；测试钩子清敌用于操作验收",
+      "visual_review": "not-run",
+      "audio": "none",
+      "width": 1688,
+      "height": 780,
+      "build_id": "v0.1.3-ee646b8e"
+    }
+  ],
+  "readiness": {
+    "overview": "not_applicable",
+    "update": "partial",
+    "gaps": [
+      "此版本未新录完整玩法视频，保留前版镜头修复证据；不自动重制成片"
+    ]
+  },
+  "site_thumbnail": {
+    "decision": "沿用",
+    "reason": "操作布局与镜头补丁，核心场景、画风与角色未变",
+    "file": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg"
+  }
+}
