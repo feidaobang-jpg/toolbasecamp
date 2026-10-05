@@ -79,6 +79,19 @@ def run():
         with conn.cursor() as cur:
             assert stats._active_visitor_snapshot(cur, day2, day2)['total'] == 1
             assert stats._read_totals(cur)['site_pv'] == 3
+            # Preserve historical first-seen evidence and honor CN midnight,
+            # irrespective of the database session timezone.
+            from datetime import datetime, timezone
+            legacy_ts = int(datetime(2026, 9, 29, 16, 30, tzinfo=timezone.utc).timestamp())
+            for zone in ['+00:00', '+08:00']:
+                cur.execute('SET time_zone=%s', (zone,))
+                cur.execute("INSERT INTO site_stats_visitors (visitor_id, first_seen, region) "
+                            "VALUES (%s, FROM_UNIXTIME(%s), 'overseas') "
+                            "ON DUPLICATE KEY UPDATE first_seen=VALUES(first_seen)",
+                            ('33333333-3333-4333-8333-333333333333', legacy_ts))
+                old = stats._active_visitor_snapshot(cur, date(2026, 9, 30), date(2026, 9, 30))
+                assert old['total'] == 1 and old['regions']['overseas'] == 1, old
+                assert stats._active_visitor_snapshot(cur, date(2026, 9, 29), date(2026, 9, 29))['total'] == 0
         print('PASS: returning visitors, cross-day/channel deduplication, historical evidence, '
               'coverage boundary, region sums, overview API, excluded admins/IPs, unchanged PV')
     finally:

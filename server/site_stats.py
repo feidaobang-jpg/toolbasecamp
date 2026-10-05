@@ -241,6 +241,8 @@ def _active_visitor_snapshot(cur, start: date, end: date) -> dict:
     # Clicks prove a browser was present even where legacy page hits were lost.
     # Never add per-day UVs: a returning browser counts once for the whole range.
     params = (start.isoformat(), end.isoformat())
+    start_ts = int(datetime.combine(start, datetime.min.time(), _CN_TZ).timestamp())
+    end_ts = int(datetime.combine(end + timedelta(days=1), datetime.min.time(), _CN_TZ).timestamp())
     cur.execute(
         """
         SELECT region, COUNT(*) AS uv FROM (
@@ -252,10 +254,14 @@ def _active_visitor_snapshot(cur, start: date, end: date) -> dict:
                 UNION ALL
                 SELECT visitor_id, 'unknown' AS region FROM site_stats_game_clicks
                 WHERE stat_date >= %s AND stat_date <= %s AND visitor_id <> ''
+                UNION ALL
+                SELECT visitor_id, COALESCE(region, 'unknown') AS region
+                FROM site_stats_visitors
+                WHERE UNIX_TIMESTAMP(first_seen) >= %s AND UNIX_TIMESTAMP(first_seen) < %s
             ) AS observations
             GROUP BY visitor_id
         ) AS visitors GROUP BY region
-        """, params + params,
+        """, params + params + (start_ts, end_ts),
     )
     regions = {"cn": 0, "overseas": 0, "unknown": 0}
     for row in cur.fetchall() or []:
