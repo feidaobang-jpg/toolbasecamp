@@ -1,0 +1,20 @@
+{
+  "version": "web-rescue-v0.18.0",
+  "id": 38678478981120,
+  "status": "published",
+  "verified_at": "2026-10-05T12:43:08.809743+00:00",
+  "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "runtime_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v22577/game.compat.js",
+  "bundle_sha256": "97dc4aa0ee454b54bd257efb2707ace827a7e319ca7e2b8da30c2bbbd5566e9a",
+  "matches_tested_package": true,
+  "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_AzraHxVY/index.html",
+  "preview_checks": [
+    "自由测试（不存档）",
+    "集合4名队友",
+    "救援4辆载具",
+    "电脑与触屏双向切换",
+    "844x390横屏、390x844竖屏旋转",
+    "点击跳跃显示腾空中，手雷按钮可操作"
+  ],
+  "physical_phone": false
+}

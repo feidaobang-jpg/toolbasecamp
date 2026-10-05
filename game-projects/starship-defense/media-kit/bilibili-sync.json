@@ -2,35 +2,35 @@
   "schema_version": 1,
   "game_id": "chongchao-qianshao",
   "account_mid": 16214353,
-  "mode": "description_update_block",
+  "mode": "compact_description",
   "targets": [
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-grenade-nocd-v0.17.11",
-      "last_public_verified_at": "2026-10-05T00:48:00+08:00",
-      "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "submitted_pending_review",
-      "pending_version": "web-touch-ui-v0.17.12",
-      "submitted_at": "2026-10-05 00:47:53",
-      "submit_toast": "稿件投递成功"
+      "last_public_verified_version": "web-rescue-v0.18.0",
+      "last_public_verified_at": "2026-10-05T12:44:02.342Z",
+      "status": "public_verified",
+      "submitted_at": "2026-10-05T12:44:02.342Z",
+      "submit_toast": "稿件投递成功",
+      "description_revision": "web-rescue-v0.18.0",
+      "description_public_verified_at": "2026-10-05T12:44:02.342Z",
+      "description_sha256": "bd040a778e35fd9066eb888b08a6fa2575c988fc31956bac9411b98578e9d1ec"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-grenade-nocd-v0.17.11",
-      "last_public_verified_at": "2026-10-05T00:48:00+08:00",
-      "update_block_sha256": "725999dbc7b4ce91d9f9c37440a3170491eb62f2dce9d31e93ed5c47b0ba99ec",
-      "status": "submitted_pending_review",
-      "pending_version": "web-touch-ui-v0.17.12",
-      "submitted_at": "2026-10-05 00:47:53",
-      "submit_toast": "稿件投递成功"
+      "last_public_verified_version": "web-rescue-v0.18.0",
+      "last_public_verified_at": "2026-10-05T12:44:02.342Z",
+      "status": "public_verified",
+      "submitted_at": "2026-10-05T12:44:02.342Z",
+      "submit_toast": "稿件投递成功",
+      "description_revision": "web-rescue-v0.18.0",
+      "description_public_verified_at": "2026-10-05T12:44:02.342Z",
+      "description_sha256": "375728f98eb80766f741f1337ae843b3aab1226d51a36e37a8bfa0c0713c78a5"
     }
   ],
-  "latest_record": "releases/web-touch-ui-v0.17.13/bilibili-descriptions.json",
-  "pending": [
-    "BV1Ujad6DEuf",
-    "BV1WbHq6eEBt"
-  ],
-  "pending_note": "v0.17.12简介已提交（编辑框覆盖了此前待审核的v0.17.11版本），稿件审核中未公开；提交前公开区块已自行更新为v0.17.11。登录态已恢复（~/.bili-playwright-profile）。v0.17.13（网站+Toy已提交）的合并区块已按 v0.17.12 区块为基础准备好（releases/web-touch-ui-v0.17.13/update-block.txt，含 v0.17.12 全部条目），因并行会话 00:47 刚投递 v0.17.12 待审、且创作中心编辑页对 Playwright/IAB 深链均重定向 /platform/home 无法安全并发提交，待 v0.17.12 公开或下一会话重新投递（新投递会覆盖旧待审编辑）。"
+  "latest_record": "releases/web-rescue-v0.18.0/bilibili-sync.json",
+  "pending": [],
+  "pending_note": "v0.18.0 更新已合并现有精简简介，两条均公开核验；不新增评论。",
+  "pending_release": null
 }

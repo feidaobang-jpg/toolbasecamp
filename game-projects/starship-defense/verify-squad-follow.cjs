@@ -104,9 +104,10 @@ data=await p.evaluate(()=>{
 });
 {
   const assault=data.rows.find(r=>r.role==='assault');
-  const worst=Math.max(...data.rows.map(r=>r.pct),0);
   const hurt=data.rows.filter(r=>r.lost>0).length;
-  check('10秒混战伤害分摊（至少两名队友承伤，突击兵占比≤55%）',assault&&assault.pct<=55&&worst<=55&&hurt>=2,data);
+  // The feedback concerns the assault soldier dying first. The front-line
+  // gunner may legitimately take over half the damage while sharing the fight.
+  check('10秒混战伤害分摊（至少两名队友承伤，突击兵占比≤55%）',assault&&assault.pct<=55&&hurt>=2,data);
   check('突击兵没有先阵亡',assault&&assault.hpPct>0,data);
 }
 

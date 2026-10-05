@@ -475,7 +475,8 @@
 .hub-kind-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 12px;
     margin: 0 0 1.125rem;
 }
 

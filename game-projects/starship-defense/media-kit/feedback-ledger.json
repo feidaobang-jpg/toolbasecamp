@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-05T05:51:26.628Z",
+  "updated_at": "2026-10-05T12:22:35.819312+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -410,6 +410,45 @@
       "record": "releases/web-squad-follow-v0.17.14/comment-replies.json",
       "note": "根因：弹丸起点固定为座位中心，距模型炮口1.40~6.32米；改为炮塔转向+炮口生成，实测误差0。动态评论可用 type=11 接口回复。回复已发出并读回可见。",
       "reply_date": "2026-10-05 13:56"
+    },
+    {
+      "rpid": null,
+      "video": "BV1WbHq6eEBt",
+      "source": "user_supplied_comment_text",
+      "text": "可以建一个召唤队友和召唤载具，队友和载具老卡虫洞外面和顶上",
+      "kind": "bug+feature",
+      "status": "fixed",
+      "fixed_in": "web-rescue-v0.18.0",
+      "reply_rpid": null,
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "deployed_at": "2026-10-05T12:45:01.447845+00:00",
+      "reply_status": "not_requested_not_posted"
+    },
+    {
+      "rpid": null,
+      "video": "BV1WbHq6eEBt",
+      "source": "user_supplied_comment_text",
+      "text": "别打母皇呀，这样收益更高 / 到最后再打。",
+      "kind": "balance",
+      "status": "fixed",
+      "fixed_in": "web-rescue-v0.18.0",
+      "reply_rpid": null,
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "deployed_at": "2026-10-05T12:45:01.447845+00:00",
+      "reply_status": "not_requested_not_posted"
+    },
+    {
+      "rpid": null,
+      "video": "BV1WbHq6eEBt",
+      "source": "current_chat_user_observation",
+      "text": "不知道怎么输。",
+      "kind": "user_observation",
+      "status": "fixed",
+      "fixed_in": "web-rescue-v0.18.0",
+      "reply_rpid": null,
+      "record": "releases/web-rescue-v0.18.0/handoff.json",
+      "deployed_at": "2026-10-05T12:45:01.447845+00:00",
+      "reply_status": "not_requested_not_posted"
     }
   ]
 }

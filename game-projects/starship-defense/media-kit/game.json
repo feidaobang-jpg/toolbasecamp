@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-squad-follow-v0.17.14",
+  "current_version": "web-rescue-v0.18.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -13,39 +13,31 @@
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
   "qa": "releases/web-squad-follow-v0.17.14/handoff.json",
-  "pending_toy_merge": [
-    {
-      "version": "web-squad-follow-v0.17.14",
-      "date": "2026-10-05",
-      "record": "releases/web-squad-follow-v0.17.14/handoff.json",
-      "summary": "队友编队跟随/脱队追赶/围墙绕行/受击恢复窗口；四类载具炮塔转向并从炮管口开火；队友载具停在门洞岗位不再把城门顶成常开。",
-      "reason": "2026-10-05 00:50 已提交 v0.17.13（审核中）；按分渠道节奏，活跃开发期同一游戏每天最多一批，普通补丁累计后一次送审。"
-    }
-  ],
+  "pending_toy_merge": [],
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "verified_at": "2026-10-04T13:37:54.381971+00:00",
+    "review_status": "published",
+    "verified_at": "2026-10-05T12:43:08.809743+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_gAf6kxkR/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_jbJQ8zCt/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "fb7a2dba19c2489100ad8caca63975f51c36ce0e4172b3af82eee2a98323667b",
+    "zip_sha256": "25752847cd0d21b6b19687576b3434ce1e48b68f7f1669700c70f26118e8f3bb",
     "submitted_date": "2026-10-05",
-    "release_record": "releases/web-touch-ui-v0.17.13/toy-submission.json",
-    "submitted_version": "web-touch-ui-v0.17.13",
-    "published_version": "web-input-flight-v0.17.10",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_gAf6kxkR/index.html",
-    "note": "手雷虚拟按钮与 HUD 去掉无限符号；移除残留 V 键绑定与「V 第一/第三人称」「人称 V」提示，视角切换统一为 C 键循环 + 人称按钮。网站已上线，Toy v0.17.13 已提交审核（线上公开版本仍为 v0.17.10）。"
+    "release_record": "releases/web-rescue-v0.18.0/toy-public-verification.json",
+    "submitted_version": "web-rescue-v0.18.0",
+    "published_version": "web-rescue-v0.18.0",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_AzraHxVY/index.html",
+    "note": "网站与 Toy v0.18.0 已同步，正式包核验通过，ID/slug/可见性/视频绑定保持。"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-input-flight-v0.17.10",
+  "published_toy_version": "web-rescue-v0.18.0",
   "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -56,15 +48,15 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
-  "preview_version": "web-input-flight-v0.17.10",
-  "submitted_toy_version": "web-input-flight-v0.17.10",
-  "website_version": "web-input-flight-v0.17.10",
-  "website_verified_at": "2026-10-04T13:37:54.381971+00:00",
+  "preview_version": "web-rescue-v0.18.0",
+  "submitted_toy_version": "web-rescue-v0.18.0",
+  "website_version": "web-rescue-v0.18.0",
+  "website_verified_at": "2026-10-05T12:37:01.357604+00:00",
   "site_list_name": "虫潮围城",
-  "controls": "电脑默认自动攻击，可选纯键盘/手动瞄准/射击方式。菜单：方向键或WASD选择，J/回车确认，K/Esc返回。手机自动横屏和显示触控，空白处拖动视角；K/空格跳跃，I互动，H医疗；U/手机手雷键投掷，无限使用，无需补充，投掷间隔0.8秒。 按住Shift或手机跑步键加速65%，K/空格为跳跃，落地后可再次起跳，无冷却和无敌效果。 视角提示统一：Q/E 左转视角/右转视角，手机拖动转视角；C/手机切换视角按钮切换预设。",
+  "controls": "电脑默认自动攻击，可选纯键盘/手动瞄准/射击方式。菜单：方向键或WASD选择，J/回车确认，K/Esc返回。手机自动横屏和显示触控，空白处拖动视角；K/空格跳跃，I互动，H医疗；U/手机手雷键投掷，无限使用，无需补充，无投掷间隔。 按住Shift或手机跑步键加速65%，K/空格为跳跃，落地后可再次起跳，无冷却和无敌效果。 视角提示统一：Q/E 左转视角/右转视角，手机拖动转视角；C/手机切换视角按钮切换预设。 暂停菜单可立即切换自动/电脑/触屏；队友集合与载具救援各20秒冷却，保留血量。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-squad-follow-v0.17.14/handoff.json",
+  "handoff": "releases/web-rescue-v0.18.0/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -100,5 +92,6 @@
     "saved": true,
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
   },
-  "bilibili_sync": "bilibili-sync.json"
+  "bilibili_sync": "bilibili-sync.json",
+  "pending_release": null
 }

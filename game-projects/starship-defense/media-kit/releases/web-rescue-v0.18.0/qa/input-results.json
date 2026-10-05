@@ -1,0 +1,179 @@
+{
+  "url": "http://127.0.0.1:8899/html/game/starship-defense/index.html",
+  "at": "2026-10-05T12:18:34.460Z",
+  "checks": [
+    {
+      "name": "电脑→触屏 1280",
+      "ok": true,
+      "detail": {
+        "touch": true,
+        "gold": 2345,
+        "level": 3,
+        "rotated": false,
+        "keys": false
+      }
+    },
+    {
+      "name": "鼠标拖动触屏摇杆可移动且松手停止 1280",
+      "ok": true,
+      "detail": {
+        "before": [
+          0,
+          0,
+          30
+        ],
+        "pos": [
+          -19.3037466665685,
+          0,
+          30
+        ],
+        "joy": false
+      }
+    },
+    {
+      "name": "鼠标点击手机手雷按钮实际投掷 1280",
+      "ok": true,
+      "detail": {
+        "grenadeBefore": 0,
+        "grenadeAfter": 1
+      }
+    },
+    {
+      "name": "触屏→电脑清理输入且手动优先 1280",
+      "ok": true,
+      "detail": {
+        "touch": false,
+        "keys": false,
+        "joy": false,
+        "lock": false,
+        "gold": 2345,
+        "level": 3
+      }
+    },
+    {
+      "name": "恢复自动识别 1280",
+      "ok": true,
+      "detail": {
+        "touch": false,
+        "saved": "auto"
+      }
+    },
+    {
+      "name": "电脑→触屏 844",
+      "ok": true,
+      "detail": {
+        "touch": true,
+        "gold": 2345,
+        "level": 3,
+        "rotated": false,
+        "keys": false
+      }
+    },
+    {
+      "name": "鼠标拖动触屏摇杆可移动且松手停止 844",
+      "ok": true,
+      "detail": {
+        "before": [
+          -19.3037466665685,
+          0,
+          30
+        ],
+        "pos": [
+          -23.787194376015137,
+          0,
+          30
+        ],
+        "joy": false
+      }
+    },
+    {
+      "name": "鼠标点击手机手雷按钮实际投掷 844",
+      "ok": true,
+      "detail": {
+        "grenadeBefore": 0,
+        "grenadeAfter": 1
+      }
+    },
+    {
+      "name": "触屏→电脑清理输入且手动优先 844",
+      "ok": true,
+      "detail": {
+        "touch": false,
+        "keys": false,
+        "joy": false,
+        "lock": false,
+        "gold": 2345,
+        "level": 3
+      }
+    },
+    {
+      "name": "恢复自动识别 844",
+      "ok": true,
+      "detail": {
+        "touch": false,
+        "saved": "auto"
+      }
+    },
+    {
+      "name": "电脑→触屏 390",
+      "ok": true,
+      "detail": {
+        "touch": true,
+        "gold": 2345,
+        "level": 3,
+        "rotated": true,
+        "keys": false
+      }
+    },
+    {
+      "name": "鼠标拖动触屏摇杆可移动且松手停止 390",
+      "ok": true,
+      "detail": {
+        "before": [
+          -23.787194376015137,
+          0,
+          30
+        ],
+        "pos": [
+          -23.787194376015137,
+          0,
+          34.34936113737208
+        ],
+        "joy": false
+      }
+    },
+    {
+      "name": "鼠标点击手机手雷按钮实际投掷 390",
+      "ok": true,
+      "detail": {
+        "grenadeBefore": 1,
+        "grenadeAfter": 2
+      }
+    },
+    {
+      "name": "触屏→电脑清理输入且手动优先 390",
+      "ok": true,
+      "detail": {
+        "touch": false,
+        "keys": false,
+        "joy": false,
+        "lock": false,
+        "gold": 2345,
+        "level": 3
+      }
+    },
+    {
+      "name": "恢复自动识别 390",
+      "ok": true,
+      "detail": {
+        "touch": false,
+        "saved": "auto"
+      }
+    },
+    {
+      "name": "手动操作模式刷新后保留",
+      "ok": true
+    }
+  ],
+  "physicalPhone": false
+}

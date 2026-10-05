@@ -1,0 +1,36 @@
+const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-rescue-v0.18.0/qa');
+const url=process.env.GAME_URL||'http://127.0.0.1:8899/html/game/starship-defense/index.html';
+(async()=>{fs.mkdirSync(out,{recursive:true});const b=await chromium.launch({channel:'msedge',headless:true});const checks=[];
+const check=(name,ok,detail)=>{checks.push({name,ok:!!ok,detail});console.log((ok?'PASS ':'FAIL ')+name+' '+JSON.stringify(detail));};
+try{const p=await b.newPage({viewport:{width:1280,height:720}});await p.goto(url+'?qa=1');await p.waitForFunction(()=>window.__gameQA&&window.__ccReady);
+await p.evaluate(()=>{const q=__gameQA;q.newGame(false);q.clearEntities(false);q.player.pos.set(0,q.groundY(0,30),30);q.player.mesh.position.copy(q.player.pos);q.Game.gold=2345;q.Game.level=3;q.togglePause();});
+for(const viewport of [{width:1280,height:720},{width:844,height:390},{width:390,height:844}]){
+ await p.setViewportSize(viewport);
+ await p.locator('[data-device-mode="touch"]').click();
+ let state=await p.evaluate(()=>({touch:__gameQA.isTouch,gold:__gameQA.Game.gold,level:__gameQA.Game.level,rotated:document.getElementById('stage').style.transform.includes('rotate(90deg)'),keys:Object.values(__gameQA.Input.keys).some(Boolean)}));
+ check('电脑→触屏 '+viewport.width,state.touch&&state.gold===2345&&state.level===3&&!state.keys&&state.rotated===(viewport.height>viewport.width),state);
+ await p.locator('#btnResume').click();
+ const joy=await p.locator('#joyBase').boundingBox(),x=joy.x+joy.width/2,y=joy.y+joy.height/2;
+ const before=await p.evaluate(()=>__gameQA.player.pos.toArray());
+ await p.mouse.move(x,y);await p.mouse.down();await p.mouse.move(x+32,y,{steps:8});await p.waitForTimeout(450);await p.mouse.up();
+ const after=await p.evaluate(()=>({pos:__gameQA.player.pos.toArray(),joy:__gameQA.Input.joy.active}));
+ check('鼠标拖动触屏摇杆可移动且松手停止 '+viewport.width,Math.hypot(after.pos[0]-before[0],after.pos[2]-before[2])>1&&!after.joy,{before,...after});
+ const grenadeBefore=await p.evaluate(()=>__gameQA.bullets.filter(b=>b.grenade).length);
+ await p.locator('#vU').click();await p.waitForTimeout(100);
+ const grenadeAfter=await p.evaluate(()=>__gameQA.bullets.filter(b=>b.grenade).length);
+ check('鼠标点击手机手雷按钮实际投掷 '+viewport.width,grenadeAfter>grenadeBefore,{grenadeBefore,grenadeAfter});
+ await p.locator('#vP').click();
+ await p.evaluate(()=>{__gameQA.Input.keys.J=true;__gameQA.Input.joy.active=true;__gameQA.Input.joy.x=1;});
+ await p.locator('[data-device-mode="desktop"]').click();
+ state=await p.evaluate(()=>{document.getElementById('c3d').dispatchEvent(new PointerEvent('pointerdown',{pointerType:'touch',bubbles:true}));return{touch:__gameQA.isTouch,keys:Object.values(__gameQA.Input.keys).some(Boolean),joy:__gameQA.Input.joy.active,lock:!!document.pointerLockElement,gold:__gameQA.Game.gold,level:__gameQA.Game.level};});
+ check('触屏→电脑清理输入且手动优先 '+viewport.width,!state.touch&&!state.keys&&!state.joy&&!state.lock&&state.gold===2345&&state.level===3,state);
+ await p.locator('#deviceMode').selectOption('auto');
+ state=await p.evaluate(()=>({touch:__gameQA.isTouch,saved:localStorage.getItem('chongchao-device-mode')}));
+ check('恢复自动识别 '+viewport.width,!state.touch&&state.saved==='auto',state);
+}
+await p.locator('[data-device-mode="touch"]').click();await p.reload();await p.waitForFunction(()=>window.__gameQA&&window.__ccReady);
+check('手动操作模式刷新后保留',await p.evaluate(()=>__gameQA.isTouch));
+fs.writeFileSync(path.join(out,'input-results.json'),JSON.stringify({url,at:new Date().toISOString(),checks,physicalPhone:false},null,2));assert.ok(checks.every(c=>c.ok));
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -88,6 +88,11 @@ def run():
                 "site": {"clicks": 3, "visitors": 1},
             }, total
             games = {game["key"]: game for game in total["games"]}
+            assert total["combined"] == {"clicks": 8, "visitors": 2}
+            assert total["all_time"]["combined"] == total["combined"]
+            assert total["all_time"]["from"] == day1.isoformat()
+            assert games["tank-3d"]["combined"] == {"clicks": 5, "visitors": 2}
+            assert games["mario-3d"]["combined"] == {"clicks": 3, "visitors": 1}
             assert games["tank-3d"]["toy"] == {"clicks": 4, "visitors": 2}
             assert games["mario-3d"]["site"] == {"clicks": 2, "visitors": 0}
             assert games["worms"]["toy"] == {"clicks": 0, "visitors": 0}
@@ -96,6 +101,16 @@ def run():
             }
             cur.execute("SELECT event_name, hit_count FROM site_stats_events")
             assert cur.fetchall() == [{"event_name": "page.games", "hit_count": 1}]
+        stats._today_cn = lambda: date(2026, 10, 3)
+        click("site", "tank-3d", "33333333-3333-4333-8333-333333333333")
+        with conn.cursor() as cur:
+            historical = stats._game_click_snapshot(cur, day1, day1)
+            assert historical["combined"] == {"clicks": 7, "visitors": 2}
+            assert historical["all_time"]["combined"] == {"clicks": 9, "visitors": 3}
+            assert historical["all_time"]["to"] == '2026-10-03'
+            empty = stats._game_click_snapshot(cur, date(2026, 9, 1), date(2026, 9, 1))
+            assert empty["combined"] == {"clicks": 0, "visitors": 0}
+            assert empty["all_time"]["combined"] == historical["all_time"]["combined"]
         print("PASS: repeated/cross-game/cross-day visitor deduplication, separate channels, "
               "missing IDs, empty games, excluded admins/IPs, input validation and page counters")
     finally:

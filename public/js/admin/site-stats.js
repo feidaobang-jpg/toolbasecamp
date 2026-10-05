@@ -13,6 +13,7 @@
   var refreshBtn = document.getElementById('refresh-btn');
   var errorBox = document.getElementById('error-box');
   var labelMaps = null;
+  var overviewRequest = 0;
 
   /** @type {'day'|'range'} */
   var mode = 'day';
@@ -455,26 +456,7 @@
   }
 
   function renderGameClicks(data) {
-    var cards = document.getElementById('game-click-cards');
-    var body = document.getElementById('game-click-body');
-    var error = document.getElementById('game-click-error');
-    if (!cards || !body) return;
-    if (error) error.hidden = !!data;
-    var totals = data && data.totals || {};
-    var metrics = [
-      ['toy', 'clicks', 'toyClicks'], ['toy', 'visitors', 'toyVisitors'],
-      ['site', 'clicks', 'siteClicks'], ['site', 'visitors', 'siteVisitors']
-    ];
-    cards.innerHTML = metrics.map(function (metric) {
-      var count = (totals[metric[0]] || {})[metric[1]];
-      return bizCard(trKey('gameClickStats.' + metric[2]), data ? fmt(count) : '—');
-    }).join('');
-    body.innerHTML = ((data && data.games) || []).map(function (game) {
-      return '<tr><td>' + escapeHtml(trKey(game.titleKey) || trKey('gameClickStats.unknownGame')) + '</td>' +
-        metrics.map(function (metric) {
-          return '<td>' + fmt((game[metric[0]] || {})[metric[1]]) + '</td>';
-        }).join('') + '</tr>';
-    }).join('');
+    if (window.TBGameClickStats) window.TBGameClickStats.render(data);
   }
 
   function syncDayChips() {
@@ -502,6 +484,7 @@
   }
 
   function loadOverview() {
+    var requestId = ++overviewRequest;
     showError('');
     labelMaps = null;
     var q;
@@ -525,6 +508,7 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     }).then(function (data) {
+      if (requestId !== overviewRequest) return;
       var isDay = (data.mode || mode) === 'day';
       var day = data.day || {};
       document.getElementById('day-pv').textContent = fmt(day.pv);
@@ -566,6 +550,7 @@
       renderTop(data.events_top || []);
       syncDayChips();
     }).catch(function (err) {
+      if (requestId !== overviewRequest) return;
       renderGameClicks(null);
       if (err && err.message === 'forbidden') {
         showError('统计数据加载被拒绝，请刷新重试');
