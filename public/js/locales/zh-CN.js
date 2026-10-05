@@ -4120,7 +4120,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     about: {
         title: '关于百宝箱',
-        lead: '面向全球用户的效率工具集 — 文档转换、AI 出图、生活内容、休闲游戏与开发小工具，中英文可用。',
+        lead: '面向全球用户的效率工具集 — 文档转换、AI 出图、生活内容、休闲游戏与开发小工具。',
         documentTitle: '文档工具',
         documentDesc: 'PDF 转 Word、Word 转 PDF、图片转 PDF 等，快速简洁。',
         aiTitle: 'AI 出图',
@@ -4133,8 +4133,6 @@ window.TB_LOCALES['zh-CN'] = {
         developerDesc: '二维码生成、性能跑分榜与装机清单等日常实用小工具。',
         privacyTitle: '注重隐私',
         privacyDesc: '本地工具在浏览器运行；需上传的服务处理完即丢弃，不另存你的文件。',
-        builtTitle: '中英双语',
-        builtDesc: '界面支持中文 / English，简洁无干扰，专注好用。',
         topUpHint: '新用户注册送 ¥5。需要继续充值请到「充值」页：微信扫码付款后联系管理员，或使用咸鱼兑换码。',
         goTopUp: '去充值',
         questions: '账号、充值或建议可私聊管理员（仅双方可见）。',
