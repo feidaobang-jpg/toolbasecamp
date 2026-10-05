@@ -106,12 +106,15 @@ const fs = require('fs');
   const jk = await C((id) => { const e = window.__CD_TEST__.cheat.G.actors.find(a => a.id === id); return e ? [e.hp, e.state] : null; }, id);
   ok('跳踢命中击倒', jk && jk[0] < 200, jk);
   await clearEnemies();
-  // 冲刺：按住 L
-  await K.down('KeyL'); await K.down('KeyD'); await sleep(250);
-  s = await S(); ok('按住 L + D 冲刺', s.player.state === 'run', s.player.state);
+  // 冲刺：按住 I（与触屏方阵上排右键对应）；L 保留为同一动作
+  await K.down('KeyI'); await K.down('KeyD'); await sleep(250);
+  s = await S(); ok('按住 I + D 冲刺', s.player.state === 'run', s.player.state);
   await K.press('KeyJ'); await sleep(60);
   s = await S(); ok('冲刺中按 J 出冲刺攻击', s.player.state === 'attack', s.player.state);
-  await K.up('KeyD'); await K.up('KeyL'); await sleep(700);
+  await K.up('KeyD'); await K.up('KeyI'); await sleep(700);
+  await K.down('KeyL'); await K.down('KeyA'); await sleep(250);
+  s = await S(); ok('按住 L + A 也能冲刺（旧键位保留）', s.player.state === 'run', s.player.state);
+  await K.up('KeyA'); await K.up('KeyL'); await sleep(700);
   // 双击方向冲刺
   await K.press('KeyA'); await sleep(60); await K.down('KeyA'); await sleep(200);
   s = await S(); ok('双击 A 冲刺', s.player.state === 'run', s.player.state);

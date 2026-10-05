@@ -79,17 +79,17 @@ const fs = require('fs');
   await touch(cdp, 'touchStart', [{ x: run.x, y: run.y, id: 4 }, { x: jx, y: jy, id: 5 }]); await sleep(30);
   for (let k = 1; k <= 6; k++) { await touch(cdp, 'touchMove', [{ x: run.x, y: run.y, id: 4 }, { x: jx + k * 10, y: jy, id: 5 }]); await sleep(16); }
   await sleep(250);
-  s = await S(page); ok('按住 L + 摇杆 = 冲刺', s.player.state === 'run', s.player.state);
+  s = await S(page); ok('按住 I + 摇杆 = 冲刺', s.player.state === 'run', s.player.state);
   await touch(cdp, 'touchEnd', []); await sleep(300);
-  // C 视角、拖动转视角（手机不设 Q/E 按钮）
-  await tapSel(page, cdp, '#btn-cam-t'); s = await S(page); ok('C 键切换视角', s.ui.camera === 'oblique', s.ui.camera);
+  // C 视角（右上角，和暂停在一起）、拖动转视角（手机不设 Q/E 按钮）
+  await tapSel(page, cdp, '#btn-cam'); s = await S(page); ok('C 键切换视角', s.ui.camera === 'oblique', s.ui.camera);
   const lx = 450, ly = 100;
   await touch(cdp, 'touchStart', [{ x: lx, y: ly, id: 6 }]);
   for (let k = 1; k <= 8; k++) { await touch(cdp, 'touchMove', [{ x: lx + k * 15, y: ly, id: 6 }]); await sleep(16); }
   await touch(cdp, 'touchEnd', []);
   s = await S(page); ok('按住画面右拖 = 转视角', s.ui.yawOff > 0.4, s.ui.yawOff);
-  for (let i = 0; i < 3; i++) await tapSel(page, cdp, '#btn-cam-t');
-  s = await S(page); ok('C 循环回侧视', s.ui.camera === 'side' && s.ui.yawOff === 0);
+  for (let i = 0; i < 3; i++) await tapSel(page, cdp, '#btn-cam');
+  s = await S(page); ok('C 循环回侧视', s.ui.camera === 'side' && s.ui.yawOff === 0, [s.ui.camera, s.ui.yawOff]);
   // 暂停
   await tapSel(page, cdp, '#btn-pause'); s = await S(page); ok('暂停按钮', s.ui.overlay === 'pause');
   const pausedFits = await page.evaluate(() => { const r = document.querySelector('#pause .panel').getBoundingClientRect(); return r.top >= -1 && r.bottom <= innerHeight + 1; });
@@ -100,10 +100,16 @@ const fs = require('fs');
   const hudOk = await page.evaluate(() => { const a = document.getElementById('hud').getBoundingClientRect(), b = document.getElementById('hud-top').getBoundingClientRect(); return a.right < b.left; });
   ok('HUD 与右上角按钮不重叠', hudOk);
   // 触屏按键互不重叠
-  const overlap = await page.evaluate(() => { const ids = ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam-t']; const R = ids.map(i => document.getElementById(i).getBoundingClientRect()); const bad = []; for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) { const a = R[i], b = R[j]; if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) bad.push(ids[i] + '/' + ids[j]); } return bad; });
+  const overlap = await page.evaluate(() => { const ids = ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam', 'btn-pause']; const R = ids.map(i => document.getElementById(i).getBoundingClientRect()); const bad = []; for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) { const a = R[i], b = R[j]; if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) bad.push(ids[i] + '/' + ids[j]); } return bad; });
   ok('触屏按键互不重叠', overlap.length === 0, overlap);
-  const sizes = await page.evaluate(() => ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam-t', 'btn-pause'].map(i => Math.min(document.getElementById(i).getBoundingClientRect().width, document.getElementById(i).getBoundingClientRect().height)));
+  const sizes = await page.evaluate(() => ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam', 'btn-pause'].map(i => Math.min(document.getElementById(i).getBoundingClientRect().width, document.getElementById(i).getBoundingClientRect().height)));
   ok('触控目标不小于 44px', sizes.every(v => v >= 44), sizes);
+  // 触屏模式不显示键盘专用标签：暂停键不写 Esc，菜单按钮不带 Enter / Esc 键帽
+  const kbHidden = await page.evaluate(() => {
+    const vis = (el) => !!el && getComputedStyle(el).display !== 'none' && el.getClientRects().length > 0;
+    return { pauseEsc: vis(document.querySelector('#btn-pause .kb-only')), pauseIcon: vis(document.querySelector('#btn-pause .touch-only')), menuKbd: Array.from(document.querySelectorAll('.overlay kbd')).filter(k => getComputedStyle(k).display !== 'none').length };
+  });
+  ok('触屏模式隐藏 Esc / Enter 键盘标签', !kbHidden.pauseEsc && kbHidden.pauseIcon && kbHidden.menuKbd === 0, kbHidden);
   // 失焦清空输入
   await touch(cdp, 'touchStart', [{ x: jx, y: jy, id: 7 }]); for (let k = 1; k <= 5; k++) { await touch(cdp, 'touchMove', [{ x: jx + k * 10, y: jy, id: 7 }]); await sleep(16); }
   await page.evaluate(() => window.dispatchEvent(new Event('blur')));
@@ -121,12 +127,13 @@ const fs = require('fs');
   s = await S(page); ok('竖屏进入选人画面即旋转为横屏', s.ui.overlay === 'select' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);
   await tapSel(page, cdp, '#sel-go'); await sleep(400);
   s = await S(page); ok('竖屏开局后舞台保持横屏布局', s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);
-  // 街机按钮习惯：J 攻击在前（离右下角拇指位最近），K 跳跃在后
-  const order = await page.evaluate(() => {
-    const r = (id) => { const b = document.getElementById(id).getBoundingClientRect(); return Math.hypot(innerWidth - b.right, innerHeight - b.bottom); };
-    return { jDist: +r('btn-atk').toFixed(1), kDist: +r('btn-jump').toFixed(1), jFront: r('btn-atk') < r('btn-jump') };
+  // 小霸王 / 街机式 2×2 方阵（旋转布局下按逻辑坐标判断）：下排 J 左、K 右，上排 U 左、I 右，四键等大、横平竖直
+  const pad = await page.evaluate(() => {
+    const toL = window.__CD_TEST__.toLocal, c = (id) => { const b = document.getElementById(id).getBoundingClientRect(); const p = toL(b.left + b.width / 2, b.top + b.height / 2); return { x: Math.round(p.x), y: Math.round(p.y), s: Math.round(Math.min(b.width, b.height)) }; };
+    return { J: c('btn-atk'), K: c('btn-jump'), U: c('btn-mega'), I: c('btn-run') };
   });
-  ok('J 攻击键在 K 跳跃键前位（离右下角更近）', order.jFront, order);
+  const near = (a, b) => Math.abs(a - b) <= 2;
+  ok('触屏 2×2 方阵：下排 J K、上排 U I，等大对齐', near(pad.J.y, pad.K.y) && near(pad.U.y, pad.I.y) && near(pad.J.x, pad.U.x) && near(pad.K.x, pad.I.x) && pad.J.x < pad.K.x && pad.U.y < pad.J.y && new Set([pad.J.s, pad.K.s, pad.U.s, pad.I.s]).size === 1, pad);
   for (let i = 0; i < 12; i++) { s = await S(page); if (s.mode === 'play') break; await tapSel(page, cdp, '#btn-atk'); await sleep(250); }
   await page.evaluate(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500);
   await page.screenshot({ path: out('mobile-portrait-game.png') });

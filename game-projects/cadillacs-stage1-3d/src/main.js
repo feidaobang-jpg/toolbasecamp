@@ -231,9 +231,15 @@ document.addEventListener('click', (e) => {
   }
 });
 overlays.cont.addEventListener('pointerdown', () => IN.push('atk'));
-$('btn-pause').addEventListener('click', () => { if (uiMode === 'game' && !current) pauseGame(); });
+// 右上角按钮：触屏按下即触发（拖动转视角后紧接着的一下点击会被浏览器当作「停止惯性滑动」吞掉 click），鼠标仍走 click
+function hudButton(el, fn) {
+  let touchT = -1e9;
+  el.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'touch') return; e.preventDefault(); touchT = performance.now(); fn(); });
+  el.addEventListener('click', () => { if (performance.now() - touchT > 800) fn(); });
+}
+hudButton($('btn-pause'), () => { if (uiMode === 'game' && !current) pauseGame(); });
 $('btn-fs').addEventListener('click', () => toggleFullscreen());
-$('btn-cam').addEventListener('click', () => { if (uiMode === 'game' && !current) cycleCamera(); });
+hudButton($('btn-cam'), () => { if (uiMode === 'game' && !current) cycleCamera(); });
 
 // ---------- 流程 ----------
 const gameRunning = () => uiMode === 'game' && ['play', 'cut', 'trans', 'clear', 'cont'].indexOf(G.mode) >= 0;
@@ -370,7 +376,7 @@ if (window.visualViewport) window.visualViewport.addEventListener('resize', () =
 setInterval(() => { const { vw, vh } = viewport(); if (vw + 'x' + vh !== lastSize) layout(); }, 500);
 window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
-IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega'), cam: $('btn-cam-t') }, toLocal);
+IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega') }, toLocal);   // 切换视角用右上角 #btn-cam
 const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => { camCtl.yawOff += delta; } });
 IN.onClear(() => dragLook.clear());
 

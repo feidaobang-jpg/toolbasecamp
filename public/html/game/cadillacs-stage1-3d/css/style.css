@@ -222,14 +222,23 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 }
 .act b { font-size: 24px; font-family: ui-monospace, Consolas, monospace; }
 .act span { font-size: 11px; margin-top: 3px; font-weight: 800; white-space: nowrap; }
-#btn-atk { right: calc(var(--sar) + 24px); bottom: calc(var(--sab) + 16px); width: 92px; height: 92px; background: radial-gradient(circle at 35% 30%, #ffb09a 0 12%, #e5322b 13% 70%, #9a1e18 71%); }
-#btn-jump { right: calc(var(--sar) + 126px); bottom: calc(var(--sab) + 34px); width: 76px; height: 76px; background: radial-gradient(circle at 35% 30%, #a8f0ac 0 12%, #3fbf4a 13% 70%, #1f7a2a 71%); }
-#btn-run { right: calc(var(--sar) + 126px); bottom: calc(var(--sab) + 118px); width: 64px; height: 64px; background: radial-gradient(circle at 35% 30%, #a8c8ff 0 12%, #3a6ad8 13% 70%, #1e3a8a 71%); }
-#btn-mega { right: calc(var(--sar) + 30px); bottom: calc(var(--sab) + 132px); width: 66px; height: 66px; background: radial-gradient(circle at 35% 30%, #ffe8a0 0 12%, #e8a81a 13% 70%, #8a5a0a 71%); }
-#btn-cam-t { right: calc(var(--sar) + 196px); bottom: calc(var(--sab) + 120px); width: 56px; height: 56px; background: radial-gradient(circle at 35% 30%, #f4ecff 0 12%, #9a88c8 13% 70%, #5a4a8a 71%); }
-#btn-cam-t b { font-size: 18px; } #btn-cam-t span { font-size: 9px; }
+/* 动作键：小霸王 / 街机式 2×2 方阵，等大、横平竖直。下排 A=J 攻击、B=K 跳跃，上排 C=U 必杀、D=I 冲刺；
+   多于 4 个动作时往右加一列（O 在上、L 在下），与键盘 U I O / J K L 一一对应 */
+#touch { --pad: 76px; --pad-gap: 12px; --pad-r: calc(var(--sar) + 18px); --pad-b: calc(var(--sab) + 16px); }
+.act.pad-a, .act.pad-b, .act.pad-c, .act.pad-d { width: var(--pad); height: var(--pad); }
+.pad-b, .pad-d { right: var(--pad-r); }
+.pad-a, .pad-c { right: calc(var(--pad-r) + var(--pad) + var(--pad-gap)); }
+.pad-a, .pad-b { bottom: var(--pad-b); }
+.pad-c, .pad-d { bottom: calc(var(--pad-b) + var(--pad) + var(--pad-gap)); }
+#btn-atk { background: radial-gradient(circle at 35% 30%, #ffb09a 0 12%, #e5322b 13% 70%, #9a1e18 71%); }
+#btn-jump { background: radial-gradient(circle at 35% 30%, #a8f0ac 0 12%, #3fbf4a 13% 70%, #1f7a2a 71%); }
+#btn-run { background: radial-gradient(circle at 35% 30%, #a8c8ff 0 12%, #3a6ad8 13% 70%, #1e3a8a 71%); }
+#btn-mega { background: radial-gradient(circle at 35% 30%, #ffe8a0 0 12%, #e8a81a 13% 70%, #8a5a0a 71%); }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.2); }
-body.touch-on #hud-top #btn-cam { display: none; }
+/* 触屏模式不显示只对键盘有意义的标签（Esc / Enter 键帽）；切换视角在右上角，和暂停放在一起 */
+.touch-only { display: none; }
+body.touch-on .kb-only, body.touch-on .overlay kbd { display: none; }
+body.touch-on .touch-only { display: inline; }
 body.mobile-device #btn-fs, body.mobile-device .fs-btn { display: none !important; }
 
 /* 续关画面：维斯举枪 */

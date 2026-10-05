@@ -1,9 +1,10 @@
 // 统一动作输入：键盘与触屏共用一张动作表（不派发伪键盘事件）。
-// 按住：移动（模拟量）、atk（J 攻击）、jump（K 跳跃）、run（L 冲刺）、mega（U 必杀）、rotL/rotR（Q/E 转视角，仅键盘）
+// 按住：移动（模拟量）、atk（J 攻击）、jump（K 跳跃）、run（I 冲刺，L 保留）、mega（U 必杀）、rotL/rotR（Q/E 转视角，仅键盘）
+// 动作键位与触屏 2×2 方阵对应：下排 J K，上排 U I（键盘上 U I 正好在 J K 上方）
 // 单次：atk / jump / mega / camera / pause / dash（双击方向键或摇杆连推两下）
 // 触屏转视角：画面任意处按住拖动（look.dx 累积，游戏循环消费），不设左转/右转虚拟键
 const KEY_DIR = { KeyW: 'u', ArrowUp: 'u', KeyS: 'd', ArrowDown: 'd', KeyA: 'l', ArrowLeft: 'l', KeyD: 'r', ArrowRight: 'r' };
-const KEY_BTN = { KeyJ: 'atk', Space: 'atk', KeyK: 'jump', KeyL: 'run', ShiftLeft: 'run', ShiftRight: 'run', KeyU: 'mega', KeyQ: 'rotL', KeyE: 'rotR' };
+const KEY_BTN = { KeyJ: 'atk', Space: 'atk', KeyK: 'jump', KeyI: 'run', KeyL: 'run', ShiftLeft: 'run', ShiftRight: 'run', KeyU: 'mega', KeyQ: 'rotL', KeyE: 'rotR' };
 const DIR_VEC = { u: [0, 1], d: [0, -1], l: [-1, 0], r: [1, 0] };
 const held = { u: false, d: false, l: false, r: false };
 const keyBtn = { atk: false, jump: false, run: false, mega: false, rotL: false, rotR: false };
