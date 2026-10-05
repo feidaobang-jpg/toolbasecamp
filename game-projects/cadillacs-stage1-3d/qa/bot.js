@@ -9,6 +9,7 @@ module.exports.BOT_SRC = String.raw`
     if (down) held.add(code); else held.delete(code);
     window.dispatchEvent(new KeyboardEvent(down ? 'keydown' : 'keyup', { code, key: code, bubbles: true }));
   }
+  function angDiff(a, b) { let d = b - a; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2; return d; }
   function tap(code) { key(code, false); key(code, true); pending.push([code, 2]); }
   const pending = [];
   function releaseAll() { for (const c of Array.from(held)) key(c, false); }
@@ -23,7 +24,8 @@ module.exports.BOT_SRC = String.raw`
     if (s.mode !== 'play') { releaseAll(); if (s.dialog && !opts.noSkip && tick % 20 === 0) tap('KeyJ'); return s; }
     if (!p || ['down', 'dead', 'respawn', 'getup', 'hurt'].indexOf(p.state) >= 0) { releaseAll(); return s; }
     const enemies = acts.filter(a => a.side === 'enemy' && a.alive && ['down', 'dead', 'enter', 'cut', 'leave', 'flee'].indexOf(a.state) < 0);
-    let move = { x: 0, z: 0 }, atk = false;
+    let move = { x: 0, z: 0 }, atk = false, lookAt = null;
+    const free = !((s.ui.camera === 'side' || s.ui.camera === 'oblique') && Math.abs(s.ui.yawOff) < 0.7);
     // 回血：血少时去吃食物
     const items = T.cheat.items();
     const food = items.filter(i => ['steak', 'barbecue', 'hamburger', 'donut'].indexOf(i.kind) >= 0);
@@ -35,6 +37,19 @@ module.exports.BOT_SRC = String.raw`
       const dx = want.x - p.x, dz = want.z - p.z;
       if (Math.hypot(dx, dz) < 0.5) { atk = true; stats.picks++; }
       else move = { x: dx, z: dz };
+    } else if (target && free) {
+      // 自由视角（正视 / 第一人称 / 转过的镜头）：直接朝目标走，贴近后面向目标出拳
+      const dx = target.x - p.x, dz = target.z - p.z, dist = Math.hypot(dx, dz);
+      const near = enemies.filter(e => Math.hypot(e.x - p.x, e.z - p.z) < 1.4).length;
+      if (near >= 3 && p.hp > 35 && opts.mega !== false && Math.random() < 0.06) { tap('KeyU'); stats.megas++; return s; }
+      const gun = p.weapon && (p.weapon.kind === 'gun' || p.weapon.kind === 'shotgun');
+      const want = gun ? 2.4 : 0.85;
+      const tf = Math.atan2(dx, dz), off = Math.abs(angDiff(p.face, tf));
+      if (dist > want + 0.25) move = { x: dx / dist, z: dz / dist };
+      else if (dist < want - 0.35) move = { x: -dx / dist * 0.6, z: -dz / dist * 0.6 };
+      if (dist < want + 0.5 && (off < 0.75 || s.ui.camera !== 'fp')) { atk = true; if (dist > want - 0.35) move = { x: 0, z: 0 }; }
+      lookAt = tf;
+      if (opts.jumps && jumpCd <= 0 && dist > 1.4 && dist < 2.1 && off < 0.4 && Math.random() < 0.04) { tap('KeyK'); jumpCd = 40; pending.push(['KeyJ', 1]); }
     } else if (target) {
       const dx = target.x - p.x, dz = target.z - p.z;
       const near = enemies.filter(e => Math.hypot(e.x - p.x, e.z - p.z) < 1.4).length;
@@ -58,7 +73,18 @@ module.exports.BOT_SRC = String.raw`
     if (Math.abs(p.x - lastX) < 0.01 && (move.x || move.z) && !atk) stuckT++; else stuckT = 0;
     lastX = p.x;
     if (stuckT > 90) { move.z = (Math.random() - 0.5) * 2; stuckT = 0; }
-    key('KeyD', move.x > 0.2); key('KeyA', move.x < -0.2); key('KeyS', move.z > 0.2); key('KeyW', move.z < -0.2);
+    // 世界方向 → 屏幕按键（按当前镜头的水平轴换算，任何视角都正确）
+    const ax = s.cam.axes, sx = move.x * ax.right.x + move.z * ax.right.z, sy = move.x * ax.fwd.x + move.z * ax.fwd.z;
+    key('KeyD', sx > 0.2); key('KeyA', sx < -0.2); key('KeyW', sy > 0.2); key('KeyS', sy < -0.2);
+    // 自由视角下转头：第一人称把视线转向目标；正视只在目标绕到身后时才转；没目标就看向前进方向
+    if (free && opts.turn !== false) {
+      const viewFace = Math.atan2(ax.fwd.x, ax.fwd.z);
+      const goal = lookAt !== null ? lookAt : Math.PI / 2;
+      const d = angDiff(viewFace, goal), th = s.ui.camera === 'fp' ? 0.28 : (lookAt !== null ? 1.7 : 0.25);
+      const turning = held.has('KeyE') || held.has('KeyQ');
+      const need = Math.abs(d) > (turning ? 0.08 : th);
+      key('KeyE', need && d > 0); key('KeyQ', need && d < 0);
+    } else { key('KeyE', false); key('KeyQ', false); }
     if (atk && tick % 6 === 0) { tap('KeyJ'); stats.taps++; }
     return s;
   }
@@ -77,6 +103,8 @@ module.exports.BOT_SRC = String.raw`
       return T.snapshot();
     },
     releaseAll,
+    // 只做一次决策（由外部推进时钟，录像用）
+    tick(opts) { return decide(opts || {}); },
     // 实时模式：按真实时钟每 33ms 决策一次（测帧、实时录屏用）
     live(on, opts) { if (this._iv) { clearInterval(this._iv); this._iv = null; releaseAll(); } if (on) this._iv = setInterval(() => decide(opts || {}), 33); }
   };

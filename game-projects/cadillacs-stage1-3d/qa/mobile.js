@@ -81,11 +81,13 @@ const fs = require('fs');
   await sleep(250);
   s = await S(page); ok('按住 L + 摇杆 = 冲刺', s.player.state === 'run', s.player.state);
   await touch(cdp, 'touchEnd', []); await sleep(300);
-  // C 视角、Q/E 转视角
+  // C 视角、拖动转视角（手机不设 Q/E 按钮）
   await tapSel(page, cdp, '#btn-cam-t'); s = await S(page); ok('C 键切换视角', s.ui.camera === 'oblique', s.ui.camera);
-  const rl = await rectOf(page, '#btn-rotl');
-  await touch(cdp, 'touchStart', [{ x: rl.x, y: rl.y, id: 6 }]); await sleep(600); await touch(cdp, 'touchEnd', []);
-  s = await S(page); ok('按住 Q 键左转视角', s.ui.yawOff < -0.4, s.ui.yawOff);
+  const lx = 450, ly = 100;
+  await touch(cdp, 'touchStart', [{ x: lx, y: ly, id: 6 }]);
+  for (let k = 1; k <= 8; k++) { await touch(cdp, 'touchMove', [{ x: lx + k * 15, y: ly, id: 6 }]); await sleep(16); }
+  await touch(cdp, 'touchEnd', []);
+  s = await S(page); ok('按住画面右拖 = 转视角', s.ui.yawOff > 0.4, s.ui.yawOff);
   for (let i = 0; i < 3; i++) await tapSel(page, cdp, '#btn-cam-t');
   s = await S(page); ok('C 循环回侧视', s.ui.camera === 'side' && s.ui.yawOff === 0);
   // 暂停
@@ -98,9 +100,9 @@ const fs = require('fs');
   const hudOk = await page.evaluate(() => { const a = document.getElementById('hud').getBoundingClientRect(), b = document.getElementById('hud-top').getBoundingClientRect(); return a.right < b.left; });
   ok('HUD 与右上角按钮不重叠', hudOk);
   // 触屏按键互不重叠
-  const overlap = await page.evaluate(() => { const ids = ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam-t', 'btn-rotl', 'btn-rotr']; const R = ids.map(i => document.getElementById(i).getBoundingClientRect()); const bad = []; for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) { const a = R[i], b = R[j]; if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) bad.push(ids[i] + '/' + ids[j]); } return bad; });
+  const overlap = await page.evaluate(() => { const ids = ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam-t']; const R = ids.map(i => document.getElementById(i).getBoundingClientRect()); const bad = []; for (let i = 0; i < R.length; i++) for (let j = i + 1; j < R.length; j++) { const a = R[i], b = R[j]; if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) bad.push(ids[i] + '/' + ids[j]); } return bad; });
   ok('触屏按键互不重叠', overlap.length === 0, overlap);
-  const sizes = await page.evaluate(() => ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam-t', 'btn-rotl', 'btn-rotr', 'btn-pause'].map(i => Math.min(document.getElementById(i).getBoundingClientRect().width, document.getElementById(i).getBoundingClientRect().height)));
+  const sizes = await page.evaluate(() => ['btn-atk', 'btn-jump', 'btn-run', 'btn-mega', 'btn-cam-t', 'btn-pause'].map(i => Math.min(document.getElementById(i).getBoundingClientRect().width, document.getElementById(i).getBoundingClientRect().height)));
   ok('触控目标不小于 44px', sizes.every(v => v >= 44), sizes);
   // 失焦清空输入
   await touch(cdp, 'touchStart', [{ x: jx, y: jy, id: 7 }]); for (let k = 1; k <= 5; k++) { await touch(cdp, 'touchMove', [{ x: jx + k * 10, y: jy, id: 7 }]); await sleep(16); }

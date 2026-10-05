@@ -1,0 +1,459 @@
+{
+ "seed": 7,
+ "hero": 2,
+ "fps": 30,
+ "width": 1920,
+ "height": 1080,
+ "frames": 9167,
+ "duration": 305.57,
+ "gameStart": 4,
+ "build_game_min_js_sha256": "3c1d0dbea3c369de8a891d2069484f622c9bf3f9994e3d4a7b7976d5185d73e0",
+ "input": "bot（页面内派发真实键盘事件，含 C 键切视角与 Q/E 转头），非真人",
+ "views": [
+  {
+   "frame": 354,
+   "from": "side",
+   "to": "front",
+   "presses": 2,
+   "why": "楼顶第一波打到一半：切到主角身后",
+   "t": 15.8
+  },
+  {
+   "frame": 1055,
+   "from": "front",
+   "to": "fp",
+   "presses": 1,
+   "why": "楼顶第三波：第一人称",
+   "t": 39.17
+  },
+  {
+   "frame": 1331,
+   "from": "fp",
+   "to": "side",
+   "presses": 1,
+   "why": "进楼：侧视看骑士像与双开门",
+   "t": 48.37
+  },
+  {
+   "frame": 1921,
+   "from": "side",
+   "to": "front",
+   "presses": 2,
+   "why": "开门出敌：正视看走廊",
+   "t": 68.03
+  },
+  {
+   "frame": 2911,
+   "from": "front",
+   "to": "fp",
+   "presses": 1,
+   "why": "飞刀与胖子冲撞：第一人称",
+   "t": 101.03
+  },
+  {
+   "frame": 4463,
+   "from": "fp",
+   "to": "side",
+   "presses": 1,
+   "why": "47街：侧视看破门而出",
+   "t": 152.77
+  },
+  {
+   "frame": 5103,
+   "from": "side",
+   "to": "front",
+   "presses": 2,
+   "why": "47街第二波：正视",
+   "t": 174.1
+  },
+  {
+   "frame": 6441,
+   "from": "front",
+   "to": "fp",
+   "presses": 1,
+   "why": "Boss 战：第一人称面对岩跳龙",
+   "t": 218.7
+  },
+  {
+   "frame": 6981,
+   "from": "fp",
+   "to": "side",
+   "presses": 1,
+   "why": "Boss 战收尾：回到侧视",
+   "t": 236.7
+  }
+ ],
+ "timeline": [
+  {
+   "t": 0,
+   "desc": "标题画面"
+  },
+  {
+   "t": 2.5,
+   "desc": "选人画面"
+  },
+  {
+   "t": 4,
+   "desc": "开局"
+  },
+  {
+   "t": 4.03,
+   "desc": "楼顶 · cut · 视角 side"
+  },
+  {
+   "t": 10.83,
+   "desc": "楼顶 · play · 视角 side"
+  },
+  {
+   "t": 15.87,
+   "desc": "楼顶 · play · 视角 oblique"
+  },
+  {
+   "t": 16.3,
+   "desc": "楼顶 · play · 视角 front"
+  },
+  {
+   "t": 39.23,
+   "desc": "楼顶 · play · 视角 fp"
+  },
+  {
+   "t": 47.3,
+   "desc": "楼顶 · trans · 视角 fp"
+  },
+  {
+   "t": 48.4,
+   "desc": "大楼内部 · play · 视角 fp"
+  },
+  {
+   "t": 48.43,
+   "desc": "大楼内部 · play · 视角 side"
+  },
+  {
+   "t": 68.1,
+   "desc": "大楼内部 · play · 视角 oblique"
+  },
+  {
+   "t": 68.53,
+   "desc": "大楼内部 · play · 视角 front"
+  },
+  {
+   "t": 101.1,
+   "desc": "大楼内部 · play · 视角 fp"
+  },
+  {
+   "t": 152,
+   "desc": "大楼内部 · trans · 视角 fp"
+  },
+  {
+   "t": 152.8,
+   "desc": "第47街 · play · 视角 fp"
+  },
+  {
+   "t": 152.83,
+   "desc": "第47街 · play · 视角 side"
+  },
+  {
+   "t": 174.17,
+   "desc": "第47街 · play · 视角 oblique"
+  },
+  {
+   "t": 174.6,
+   "desc": "第47街 · play · 视角 front"
+  },
+  {
+   "t": 194.23,
+   "desc": "第47街 · Boss · cut · 视角 front"
+  },
+  {
+   "t": 204.73,
+   "desc": "第47街 · Boss · play · 视角 front"
+  },
+  {
+   "t": 218.77,
+   "desc": "第47街 · Boss · play · 视角 fp"
+  },
+  {
+   "t": 236.77,
+   "desc": "第47街 · Boss · play · 视角 side"
+  },
+  {
+   "t": 289.3,
+   "desc": "第47街 · Boss · clear · 视角 side"
+  },
+  {
+   "t": 300.03,
+   "desc": "游戏结束事件"
+  },
+  {
+   "t": 302.57,
+   "desc": "结算画面"
+  }
+ ],
+ "gameEvents": [
+  {
+   "t": 0,
+   "type": "area",
+   "area": "roof",
+   "video_t": 4
+  },
+  {
+   "t": 0,
+   "type": "wave",
+   "id": "r1",
+   "video_t": 4
+  },
+  {
+   "t": 14.9,
+   "type": "waveClear",
+   "wave": 1,
+   "video_t": 18.9
+  },
+  {
+   "t": 17.6,
+   "type": "wave",
+   "id": "r2",
+   "video_t": 21.6
+  },
+  {
+   "t": 33.1,
+   "type": "waveClear",
+   "wave": 2,
+   "video_t": 37.1
+  },
+  {
+   "t": 35.17,
+   "type": "wave",
+   "id": "r3",
+   "video_t": 39.17
+  },
+  {
+   "t": 42.58,
+   "type": "waveClear",
+   "wave": 3,
+   "video_t": 46.58
+  },
+  {
+   "t": 43.27,
+   "type": "exit",
+   "kind": "door",
+   "video_t": 47.27
+  },
+  {
+   "t": 44.37,
+   "type": "area",
+   "area": "hall",
+   "video_t": 48.37
+  },
+  {
+   "t": 44.37,
+   "type": "wave",
+   "id": "h1",
+   "video_t": 48.37
+  },
+  {
+   "t": 48.18,
+   "type": "weapon",
+   "kind": "pipe",
+   "video_t": 52.18
+  },
+  {
+   "t": 61.9,
+   "type": "waveClear",
+   "wave": 1,
+   "video_t": 65.9
+  },
+  {
+   "t": 64.02,
+   "type": "wave",
+   "id": "h2",
+   "video_t": 68.02
+  },
+  {
+   "t": 88.15,
+   "type": "death",
+   "lives": null,
+   "video_t": 92.15
+  },
+  {
+   "t": 94.78,
+   "type": "waveClear",
+   "wave": 2,
+   "video_t": 98.78
+  },
+  {
+   "t": 97.03,
+   "type": "wave",
+   "id": "h3",
+   "video_t": 101.03
+  },
+  {
+   "t": 100.98,
+   "type": "weapon",
+   "kind": "knife",
+   "video_t": 104.98
+  },
+  {
+   "t": 121.18,
+   "type": "waveClear",
+   "wave": 3,
+   "video_t": 125.18
+  },
+  {
+   "t": 121.98,
+   "type": "weapon",
+   "kind": "gun",
+   "video_t": 125.98
+  },
+  {
+   "t": 123.43,
+   "type": "wave",
+   "id": "h4",
+   "video_t": 127.43
+  },
+  {
+   "t": 125.18,
+   "type": "shoot",
+   "kind": "gun",
+   "ammo": 5,
+   "hit": false,
+   "video_t": 129.18
+  },
+  {
+   "t": 125.58,
+   "type": "shoot",
+   "kind": "gun",
+   "ammo": 4,
+   "hit": true,
+   "video_t": 129.58
+  },
+  {
+   "t": 125.98,
+   "type": "shoot",
+   "kind": "gun",
+   "ammo": 3,
+   "hit": true,
+   "video_t": 129.98
+  },
+  {
+   "t": 126.38,
+   "type": "shoot",
+   "kind": "gun",
+   "ammo": 2,
+   "hit": true,
+   "video_t": 130.38
+  },
+  {
+   "t": 128.18,
+   "type": "shoot",
+   "kind": "gun",
+   "ammo": 1,
+   "hit": false,
+   "video_t": 132.18
+  },
+  {
+   "t": 128.58,
+   "type": "shoot",
+   "kind": "gun",
+   "ammo": 0,
+   "hit": true,
+   "video_t": 132.58
+  },
+  {
+   "t": 130.98,
+   "type": "eat",
+   "kind": "hamburger",
+   "hp": 95.49999999999999,
+   "video_t": 134.98
+  },
+  {
+   "t": 143.58,
+   "type": "eat",
+   "kind": "steak",
+   "hp": 100,
+   "video_t": 147.58
+  },
+  {
+   "t": 145.1,
+   "type": "waveClear",
+   "wave": 4,
+   "video_t": 149.1
+  },
+  {
+   "t": 147.97,
+   "type": "exit",
+   "kind": "window",
+   "video_t": 151.97
+  },
+  {
+   "t": 148.77,
+   "type": "area",
+   "area": "street",
+   "video_t": 152.77
+  },
+  {
+   "t": 148.77,
+   "type": "wave",
+   "id": "s1",
+   "video_t": 152.77
+  },
+  {
+   "t": 165.45,
+   "type": "waveClear",
+   "wave": 1,
+   "video_t": 169.45
+  },
+  {
+   "t": 170.1,
+   "type": "wave",
+   "id": "s2",
+   "video_t": 174.1
+  },
+  {
+   "t": 185.45,
+   "type": "waveClear",
+   "wave": 2,
+   "video_t": 189.45
+  },
+  {
+   "t": 200.68,
+   "type": "bossStart",
+   "video_t": 204.68
+  },
+  {
+   "t": 225.88,
+   "type": "summon",
+   "n": 1,
+   "video_t": 229.88
+  },
+  {
+   "t": 228.88,
+   "type": "death",
+   "lives": null,
+   "video_t": 232.88
+  },
+  {
+   "t": 253.88,
+   "type": "summon",
+   "n": 2,
+   "video_t": 257.88
+  },
+  {
+   "t": 272.58,
+   "type": "death",
+   "lives": null,
+   "video_t": 276.58
+  },
+  {
+   "t": 285.25,
+   "type": "bossDown",
+   "video_t": 289.25
+  },
+  {
+   "t": 294.85,
+   "type": "end",
+   "win": true,
+   "score": 122400,
+   "video_t": 298.85
+  }
+ ]
+}

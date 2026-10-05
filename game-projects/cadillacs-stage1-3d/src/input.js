@@ -1,12 +1,14 @@
 // 统一动作输入：键盘与触屏共用一张动作表（不派发伪键盘事件）。
-// 按住：移动（模拟量）、atk（J 攻击）、jump（K 跳跃）、run（L 冲刺）、mega（U 必杀）、rotL/rotR（Q/E 转视角）
+// 按住：移动（模拟量）、atk（J 攻击）、jump（K 跳跃）、run（L 冲刺）、mega（U 必杀）、rotL/rotR（Q/E 转视角，仅键盘）
 // 单次：atk / jump / mega / camera / pause / dash（双击方向键或摇杆连推两下）
+// 触屏转视角：画面任意处按住拖动（look.dx 累积，游戏循环消费），不设左转/右转虚拟键
 const KEY_DIR = { KeyW: 'u', ArrowUp: 'u', KeyS: 'd', ArrowDown: 'd', KeyA: 'l', ArrowLeft: 'l', KeyD: 'r', ArrowRight: 'r' };
 const KEY_BTN = { KeyJ: 'atk', Space: 'atk', KeyK: 'jump', KeyL: 'run', ShiftLeft: 'run', ShiftRight: 'run', KeyU: 'mega', KeyQ: 'rotL', KeyE: 'rotR' };
 const DIR_VEC = { u: [0, 1], d: [0, -1], l: [-1, 0], r: [1, 0] };
 const held = { u: false, d: false, l: false, r: false };
 const keyBtn = { atk: false, jump: false, run: false, mega: false, rotL: false, rotR: false };
-const touchBtn = { atk: false, jump: false, run: false, mega: false, rotL: false, rotR: false };
+const touchBtn = { atk: false, jump: false, run: false, mega: false };
+const look = { dx: 0, id: null, lx: 0 };
 const stick = { x: 0, y: 0 };
 const queue = [];
 const listeners = [];
@@ -19,6 +21,7 @@ function clearAll() {
   for (const k in keyBtn) keyBtn[k] = false;
   for (const k in touchBtn) touchBtn[k] = false;
   stick.x = stick.y = 0; stickWasNeutral = true;
+  look.id = null; look.dx = 0;
   queue.length = 0;
   listeners.forEach(fn => fn('clear'));
 }
@@ -33,6 +36,23 @@ const I = {
     return { x, y };
   },
   down: (name) => keyBtn[name] || touchBtn[name],
+  look,
+  // 手机端转视角：画面任意处（摇杆与按钮除外）按住拖动，无极旋转；游戏循环消费 look.dx
+  bindLook(el) {
+    el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'touch' || look.id !== null) return;
+      if (e.target.closest('#joy-zone, button, .act')) return;
+      look.id = e.pointerId; look.lx = e.clientX;
+      try { el.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== look.id) return;
+      look.dx += e.clientX - look.lx; look.lx = e.clientX;
+    });
+    const end = (e) => { if (e.pointerId !== look.id) return; look.id = null; };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('lostpointercapture', end);
+    I.onClear(() => { look.id = null; look.dx = 0; });
+  },
   take(name) { const i = queue.findIndex(e => e.name === name); if (i >= 0) { return queue.splice(i, 1)[0]; } return null; },
   peek(name) { return queue.some(e => e.name === name); },
   push(name, data) { const e = { name, t: performance.now(), data }; queue.push(e); log.push(name); if (log.length > 60) log.shift(); if (queue.length > 24) queue.shift(); },
@@ -123,7 +143,7 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
     el.addEventListener('contextmenu', (e) => e.preventDefault());
   }
   for (const b of ['atk', 'jump', 'mega']) bindBtn(btns[b], b, () => { touchBtn[b] = true; I.push(b); }, () => { touchBtn[b] = false; });
-  for (const b of ['run', 'rotL', 'rotR']) bindBtn(btns[b], b, () => { touchBtn[b] = true; }, () => { touchBtn[b] = false; });
+  for (const b of ['run']) bindBtn(btns[b], b, () => { touchBtn[b] = true; }, () => { touchBtn[b] = false; });
   bindBtn(btns.cam, 'cam', () => { I.push('camera'); });
   I.onClear(() => { joyId = null; home(); for (const k in ids) ids[k] = null; Object.values(btns).forEach(b => b && b.classList.remove('down')); });
 };

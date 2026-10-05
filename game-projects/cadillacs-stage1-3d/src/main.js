@@ -367,7 +367,8 @@ if (window.visualViewport) window.visualViewport.addEventListener('resize', () =
 setInterval(() => { const { vw, vh } = viewport(); if (vw + 'x' + vh !== lastSize) layout(); }, 500);
 window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
-IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega'), cam: $('btn-cam-t'), rotL: $('btn-rotl'), rotR: $('btn-rotr') }, toLocal);
+IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega'), cam: $('btn-cam-t') }, toLocal);
+IN.bindLook($('app'));
 
 // ---------- HUD ----------
 const H_ = { face: $('h-face'), name: $('h-name'), lives: $('h-lives'), score: $('h-score'), hp: $('h-hp'), enemy: $('h-enemy'), eface: $('h-eface'), ename: $('h-ename'), ecn: $('h-ecn'), ehp: $('h-ehp'), ehp2: $('h-ehp2'), timer: $('h-timer'), weapon: $('h-weapon'), wammo: $('h-wammo'), wname: $('h-wname'), go: $('h-go'), dialog: $('dialog'), dface: $('d-face'), dname: $('d-name'), dtext: $('d-text'), fade: $('fade'), hurt: $('hurt') };
@@ -475,7 +476,11 @@ function presentFrame(dtReal, draw, instant) {
   const playing = uiMode === 'game' && !paused && (!current || current === 'cont');
   if (uiMode === 'game') {
     const p = G.player;
-    if (playing && G.mode === 'play') { const rot = (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0); if (rot) camCtl.yawOff += rot * (Math.PI / 2) * dtReal; }
+    if (playing && G.mode === 'play') {
+      const rot = (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0);
+      if (rot) camCtl.yawOff += rot * (Math.PI / 2) * dtReal;
+      if (IN.look.dx) { camCtl.yawOff += IN.look.dx * 0.005; IN.look.dx = 0; }
+    } else IN.look.dx = 0;
     const fpOff = camCtl.fp() && (['cut', 'trans', 'clear', 'over', 'cont'].indexOf(G.mode) >= 0 || ['down', 'dead', 'respawn', 'victory', 'door'].indexOf(p.state) >= 0);
     G.fpActive = camCtl.fp() && !fpOff;
     const AR = world.area().def;
