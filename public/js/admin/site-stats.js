@@ -23,6 +23,7 @@
     'page.home': { zh: '首页', en: 'Home' },
     'page.life': { zh: '内容中心', en: 'Content hub' },
     'page.games': { zh: '游戏中心', en: 'Games hub' },
+    'page.game-vote': { zh: '游戏投票榜' },
     'page.guestbook': { zh: '留言', en: 'Messages' },
     'page.cool-sites': { zh: '导航', en: 'Directory' },
     'page.about': { zh: '关于', en: 'About' },
@@ -57,6 +58,7 @@
 
   /** Pages not in toolsConfig / gamesConfig (private or classmates). */
   var EXTRA_EVENT_LABELS = {
+    'tool.life.view': { zh: '趣文内容' },
     'tool.classmates.hub': { zh: '同学专区', en: 'Classmates hub' },
     'tool.classmates.mark-six': { zh: '号码统计', en: 'Number stats' },
     'tool.classmates.mark-six-list': { zh: '统计列表', en: 'Stats list' },
@@ -144,8 +146,8 @@
         });
       });
     }
-    if (window.toolsConfig) addTools(toolsConfig.groups);
-    if (window.gamesConfig) addTools(gamesConfig.groups);
+    if (typeof toolsConfig !== 'undefined') addTools(toolsConfig.groups);
+    if (typeof gamesConfig !== 'undefined') addTools(gamesConfig.groups);
     return { toolByFile: toolByFile, groupByFolder: groupByFolder };
   }
 
@@ -173,7 +175,7 @@
       var parts = name.split('.');
       var portalKey = 'portal.' + (parts[1] || '');
       if (PORTAL_LABELS[portalKey]) return pickLocale(PORTAL_LABELS[portalKey]);
-      return langIsZh() ? '子站 · ' + parts.slice(1).join(' · ') : name;
+      return langIsZh() ? '其他子站页面' : name;
     }
 
     var m = /^tool\.([a-z0-9_-]+)\.([a-z0-9_-]+)$/i.exec(name);
@@ -186,7 +188,7 @@
       if (AUTH_LABELS[authKey]) return pickLocale(AUTH_LABELS[authKey]);
       if (EXTRA_EVENT_LABELS[authKey]) return pickLocale(EXTRA_EVENT_LABELS[authKey]);
       if (m[1] === 'auth') {
-        return langIsZh() ? ('账户 · ' + m[2]) : ('Auth · ' + m[2]);
+        return langIsZh() ? '账户 · 其他页面' : ('Auth · ' + m[2]);
       }
       // Never dump raw English slug (e.g. "mark six") into the Chinese admin UI.
       var folderLabel = '';
@@ -196,13 +198,12 @@
         var mod = MODULE_LABELS['tool.' + m[1]];
         if (mod) folderLabel = pickLocale(mod);
       }
-      if (!folderLabel) folderLabel = m[1];
-      return folderLabel + ' · ' + m[2].replace(/-/g, ' ');
+      if (!folderLabel) folderLabel = langIsZh() ? '工具' : m[1];
+      return folderLabel + ' · ' + (langIsZh() ? '其他页面' : m[2].replace(/-/g, ' '));
     }
 
     if (name.indexOf('page.') === 0) {
-      var pageFile = name.slice(5).replace(/-/g, ' ');
-      return langIsZh() ? ('页面 · ' + pageFile) : name;
+      return langIsZh() ? '其他站点页面' : name;
     }
 
     if (name.indexOf('tool.') === 0) {
@@ -214,7 +215,7 @@
       if (mod2) return pickLocale(mod2);
     }
 
-    return name;
+    return langIsZh() ? '其他功能' : name;
   }
 
   function showError(msg) {

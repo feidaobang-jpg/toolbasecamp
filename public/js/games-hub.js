@@ -128,11 +128,6 @@
             });
             wrap.appendChild(chip);
         });
-        var voteLink = document.createElement('a');
-        voteLink.className = 'tb-btn';
-        voteLink.href = 'game-vote.html';
-        voteLink.textContent = tr('games.voteNav');
-        wrap.appendChild(voteLink);
         containerEl.insertBefore(wrap, containerEl.firstChild);
     }
 
@@ -218,6 +213,7 @@
 
             var actions = document.createElement('div');
             actions.className = 'hub-game-actions';
+            var sitePlayLink;
             var entries = [{ url: item.toyUrl, label: toyLabel, external: true },
                 { url: item.url, label: siteLabel, external: false }];
             if (!primaryIsToy) entries.reverse();
@@ -234,8 +230,26 @@
                     link.rel = 'noopener noreferrer';
                 }
                 actions.appendChild(link);
+                if (!entry.external) sitePlayLink = link;
             });
+            if (gameKey) {
+                var vote = document.createElement('button');
+                vote.type = 'button';
+                vote.className = 'tb-btn hub-game-vote';
+                vote.dataset.voteGame = gameKey;
+                vote.dataset.gameLabel = label;
+                vote.disabled = true;
+                vote.textContent = tr('games.cardVoteLoading');
+                sitePlayLink.insertAdjacentElement('afterend', vote);
+            }
             card.appendChild(actions);
+            if (gameKey) {
+                var status = document.createElement('p');
+                status.className = 'hub-game-vote-status';
+                status.setAttribute('role', 'status');
+                status.hidden = true;
+                card.appendChild(status);
+            }
         }
         return card;
     }
@@ -331,6 +345,7 @@
         renderKindChips(centerEl);
         if (kindFilter !== 'all') applyKindFilter();
         if (searchQuery) applySearchFilter(searchQuery);
+        if (window.initGameCardVotes) window.initGameCardVotes();
     }
 
     window.renderGamesHub = renderGamesHub;
