@@ -1393,6 +1393,10 @@ window.TB_LOCALES['zh-CN'] = {
         gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
     },
     games: {
+        collectionTitle: '飞刀班长的游戏 · 选一款直接开玩',
+        collectionDesc: '虫潮围城、恐龙快打、赤色要塞和经典休闲游戏。B站合集集中展示全部 Toy，下面也可选择本站试玩。',
+        collectionOpen: 'B站全部游戏合集',
+        collectionVote: '投票与愿望单',
         playHere: '本站玩',
         playToy: 'B 站玩',
         playSite3d: '本站 3D',

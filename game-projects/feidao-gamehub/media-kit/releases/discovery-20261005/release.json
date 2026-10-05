@@ -1,0 +1,70 @@
+{
+  "taskId": "01a10c62-game-hub-01",
+  "changeType": "game-entry-discovery",
+  "collection": {
+    "toyId": 40495283951616,
+    "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+    "status": "published",
+    "gameCount": 14,
+    "verifiedBy": "toy mylist and public collection UI"
+  },
+  "entryPolicy": {
+    "space": "置顶已有合集动态，公告与签名引导合集",
+    "video": "保留本期Toy直达，增加全部游戏合集；网站深链与独立投票链接合并为games.html",
+    "website": "游戏页首屏增加B站合集和投票入口",
+    "newToySubmission": false,
+    "reason": "已有合集覆盖全部14款公开游戏，本任务仅优化发现入口"
+  },
+  "space": {
+    "oldNotice": "我的网站地址：www.zhengxiaohui.cn 扣扣群691386237",
+    "newNotice": "全部游戏：看置顶动态「飞刀班长游戏合集」\nB站合集：https://www.bilibili.com/toy/feidao-games/index.html\n网站试玩与投票：www.zhengxiaohui.cn/games.html\n扣扣群691386237",
+    "oldSignature": "AI开发游戏 www.zhengxiaohui.cn",
+    "newSignature": "AI把点子做成游戏｜全部Toy看置顶动态｜网站试玩与投票：www.zhengxiaohui.cn/games.html",
+    "status": "public_verified",
+    "evidence": "space.jpg"
+  },
+  "videos": [
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV18XHW66E55",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1EyHz6wE5u",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1F1aD64EGf",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1guep6NELt",
+      "status": "pending_review"
+    }
+  ],
+  "verification": {
+    "desktopLayout": true,
+    "mobileViewport": "not_verified: viewport override did not change the in-app browser width",
+    "utf8": true,
+    "noTailwind": true,
+    "changedGameCode": false
+  },
+  "activityCheck": {
+    "checkedAt": "2026-10-05T14:18:48.323939+00:00",
+    "state": "C:/Users/37818/.claude/state/bili-activities/state.json",
+    "accountUid": 16214353,
+    "followers": 178,
+    "note": "同日现有活动台账显示创作激励尚未满足门槛；本次保留原Toy活动标签、不新投视频，不重复报名。每日19:00已有automation b复查。"
+  }
+}
