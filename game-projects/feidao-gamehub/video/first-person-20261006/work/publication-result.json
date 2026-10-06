@@ -1,0 +1,117 @@
+{
+  "task_id": "01a11023-five-games-video-20261006-3",
+  "video_sha256": "768f99d64c05a361b5a859909af27f34ea9f38ce73ac8e8b84b81340f74ec904",
+  "human_review": {
+    "quote": "看了，可以",
+    "approved_at": "2026-10-06T20:30:56.689791+08:00",
+    "video_sha256": "768f99d64c05a361b5a859909af27f34ea9f38ce73ac8e8b84b81340f74ec904",
+    "scope": "最终第二版成片审片通过，按长期流程继续发布"
+  },
+  "account": {
+    "uid": 16214353,
+    "name": "飞刀班长",
+    "verification": "本期创作中心个人入口自动跳转本人空间16214353，显示视角我自己；Toy whoami一致",
+    "verified_at": "2026-10-06T20:30:56.689791+08:00"
+  },
+  "title": "按下C，钻进游戏里：五款游戏的第一人称实战",
+  "video_url": null,
+  "bvid": null,
+  "submission_status": "not_uploaded",
+  "current_stage": "awaiting_browser_terms_confirmation",
+  "terms": {
+    "notice": "上传视频，即表示您已同意哔哩哔哩使用协议与哔哩哔哩社区公约",
+    "agreement_url": "https://www.bilibili.com/protocal/licence.html",
+    "agreement_version": "2025.04.30",
+    "community_url": "https://member.bilibili.com/studio/convention/?navhide=1",
+    "confirmation": "requested",
+    "evidence": "publish/bilibili-zh/evidence/upload-agreement-notice.jpg"
+  },
+  "deduplication": {
+    "checked_at": "2026-10-06T20:30:56.689791+08:00",
+    "total_videos": 21,
+    "in_progress": 0,
+    "same_episode_found": false
+  },
+  "toy_preflight": [
+    {
+      "id": 40495283951616,
+      "title": "飞刀班长游戏合集",
+      "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+      "status": "published",
+      "visibility": "PUBLIC",
+      "mtime": 1791209062
+    },
+    {
+      "id": 40412421031936,
+      "title": "恐龙快打 3D：第一关",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "status": "published",
+      "visibility": "PUBLIC",
+      "mtime": 1791281106
+    },
+    {
+      "id": 39863936092160,
+      "title": "赤色要塞 3D",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "status": "published",
+      "visibility": "PUBLIC",
+      "mtime": 1791282459
+    },
+    {
+      "id": 39043286960128,
+      "title": "超级玛丽 3D：1-1 与 1-2",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "status": "published",
+      "visibility": "PUBLIC",
+      "mtime": 1791256309
+    },
+    {
+      "id": 39043249461248,
+      "title": "坦克大战 3D",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "status": "published",
+      "visibility": "PUBLIC",
+      "mtime": 1791287606
+    },
+    {
+      "id": 38678478981120,
+      "title": "虫潮围城",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "status": "published",
+      "visibility": "PUBLIC",
+      "mtime": 1791281789
+    }
+  ],
+  "toy_binding": {
+    "toy_id": 40495283951616,
+    "title": "飞刀班长游戏合集",
+    "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+    "status": "pending_after_publication",
+    "current_bound_videos": []
+  },
+  "collection_membership": {
+    "status": "not_applicable",
+    "reason": "五款综合主题，不归入仅虫潮专题合集；没有已确认的本期正式合集映射"
+  },
+  "traffic_reward": {
+    "amount": 1000,
+    "type": "exposures",
+    "obtained_at": "2026-10-06T19:05:00+08:00",
+    "expires_at": "2026-10-12T23:59:00+08:00",
+    "eligible_publish_time": "2026-10-06T19:05:00+08:00以后首次发布的新视频",
+    "status": "available_not_used",
+    "evidence": "publish/bilibili-zh/evidence/traffic-reward-before.jpg"
+  },
+  "promotion_application": {
+    "status": "not_submitted_no_bv",
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw"
+  },
+  "comments": {
+    "status": "not_posted"
+  },
+  "updated_at": "2026-10-06T20:30:56.689791+08:00",
+  "previous_video_maintenance": {
+    "status": "not_applicable_first_five_game_camera_episode",
+    "reason": "综合介绍对应游戏合集Toy，当前无已确认属于同一期系列的上一条主要宣传片；不批量改动五款独立游戏的历史稿件。"
+  }
+}

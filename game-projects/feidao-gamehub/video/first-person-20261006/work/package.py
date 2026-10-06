@@ -4,6 +4,7 @@ from pathlib import Path
 from PIL import Image
 R=Path(__file__).resolve().parent;ROOT=R.parents[4];F=R.parent/'final/bilibili-zh';P=R/'publish/bilibili-zh';P.mkdir(parents=True,exist_ok=True)
 def save(p,d):p.write_text(json.dumps(d,ensure_ascii=False,indent=2),encoding='utf-8')
+existing_manifest=json.loads((P/'publish.json').read_text(encoding='utf-8')) if (P/'publish.json').exists() else {}
 render=json.loads((R/'qa-render.json').read_text(encoding='utf-8'));title='按下C，钻进游戏里：五款游戏的第一人称实战'
 link='https://www.bilibili.com/toy/feidao-games/index.html'
 vote='https://www.zhengxiaohui.cn/game-vote.html'
@@ -19,7 +20,9 @@ for name,purpose in [('home_4_3','首页推荐'),('space_16_9','个人空间')]:
     assert w*3==h*4 if name=='home_4_3' else w*9==h*16
     covers[name]={'file':'../../../final/bilibili-zh/'+file,'width':w,'height':h,'purpose':purpose}
 manifest={'variant_id':'bilibili-zh','platform':'bilibili','content_type':'gameplay-update','language':'zh-CN','game_name':'五款游戏第一人称专题','video_file':'../../../final/bilibili-zh/gameplay-zh-final-v2.mp4','media_id':'shared-zh','video_sha256':render['sha256'],'width':1920,'height':1080,'fps':60,'duration_seconds':render['duration'],'title':title,'description':description,'tags':tags,'topic':topic,'pinned_comment_draft':comment,'description_file':'../../../final/bilibili-zh/投稿文案.txt','cover_file':covers['home_4_3']['file'],'cover_files':covers,'cover_text':'换个视角，亲自上场','cover_selection_source':'本期坦克与虫潮实机帧','cover_upload_mode':'custom_image','subtitle_mode':'burned_in','disclosures':['含AI生成内容'],'ready_to_upload':False,'blocking_issues':['待本期用户人工审片通过；当前工具未完成主观听审'],'unverified_fields':['发布时话题入口与平台设置'],'publication_status':'not_uploaded'}
-save(P/'publish.json',manifest);save(R/'publish.json',{'schema_version':2,'requested_variants':['bilibili-zh'],'variants':[{'variant_id':'bilibili-zh','manifest_file':'publish/bilibili-zh/publish.json','ready_to_upload':False,'blocking_issues':manifest['blocking_issues']}],'ready_to_upload':False})
+if existing_manifest.get('video_sha256')==render['sha256'] and (existing_manifest.get('human_review') or existing_manifest.get('publication_status')!='not_uploaded'):
+    manifest=existing_manifest
+save(P/'publish.json',manifest);save(R/'publish.json',{'schema_version':2,'requested_variants':['bilibili-zh'],'variants':[{'variant_id':'bilibili-zh','manifest_file':'publish/bilibili-zh/publish.json','ready_to_upload':manifest['ready_to_upload'],'blocking_issues':manifest['blocking_issues']}],'ready_to_upload':manifest['ready_to_upload']})
 sources=[]
 for game in ['tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d','starship-defense']:
     cap=json.loads((R/'capture'/game/'capture.json').read_text(encoding='utf-8'))
@@ -27,6 +30,7 @@ for game in ['tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d','star
     sources.append({'game':game,'version':data['current_version'],'source_commit':cap['buildCommit'],'normal_gameplay':cap['normalGameplay'],'page_errors':cap['errors'],'toy':data.get('toy'),'model':data.get('development_model',data.get('dev',{}).get('model'))})
 save(R/'sources.json',sources)
 (R/'sources.md').write_text('# 素材来源\n\n全部画面为2026-10-06本期新录制的本机浏览器实机，运行构建见sources.json中的固定提交，正常模式自动试玩；没有生成动画、原作视频或旧成片。游戏版本及已发布Toy映射见sources.json。\n\n游戏原音从当前构建Web Audio实际输出采集；原作音乐来源见各作media-kit及site-games/releases/unified3d-20261006/audio-sources.json。不另加曲库音乐。\n\n中文配音：Edge在线神经合成zh-CN-YunxiNeural，正常语速；请求和时间戳保留。没有克隆私人音色。\n\n字体：本机Microsoft YaHei，用于栅格化字幕和封面，字体文件不再分发。封面是本期实机帧裁切与排版，没有生成新模型细节。\n\n现有游戏素材许可与原作音频授权记录不在本任务改写；平台声明与素材授权条件在实际发布时继续核对。\n',encoding='utf-8')
-(R/'交付清单.txt').write_text('本期投稿入口：../final/bilibili-zh/\n中文16:9 1920×1080，60帧/秒，时长 '+str(round(render['duration'],2))+' 秒，中文字幕已烧录。\n成片：gameplay-zh-final-v2.mp4\n首页封面：cover-home-4x3.jpg\n空间封面：cover-space-16x9.jpg\n投稿文案：投稿文案.txt\n状态：成片已生成，待用户人工审片；尚未投稿。当前工具未完成主观听审，客观音频检查与画面验收见qa.md。\n续接：修改narration.json后运行voice.py；清除受影响edit/shared-zh片段后运行render.py；covers.py重新输出双封面，package.py更新文案与清单。\n',encoding='utf-8-sig')
+delivery_status='状态：用户已审片通过，尚未投稿；当前待本次上传所附协议确认。' if manifest.get('human_review') and manifest.get('publication_status')=='not_uploaded' else '状态：以publication-result.json中的实际发布状态为准。' if manifest.get('publication_status')!='not_uploaded' else '状态：成片已生成，待用户人工审片；尚未投稿。'
+(R/'交付清单.txt').write_text('本期投稿入口：../final/bilibili-zh/\n中文16:9 1920×1080，60帧/秒，时长 '+str(round(render['duration'],2))+' 秒，中文字幕已烧录。\n成片：gameplay-zh-final-v2.mp4\n首页封面：cover-home-4x3.jpg\n空间封面：cover-space-16x9.jpg\n投稿文案：投稿文案.txt\n'+delivery_status+' 当前工具未完成主观听审，客观音频检查与画面验收见qa.md。\n续接：修改narration.json后运行voice.py；清除受影响edit/shared-zh片段后运行render.py；covers.py重新输出双封面，package.py更新文案与清单。\n',encoding='utf-8-sig')
 for ref in [manifest['video_file'],manifest['description_file'],*(x['file'] for x in covers.values())]:assert (P/ref).resolve().is_file(),ref
 print('PACKAGE COMPLETE',title)

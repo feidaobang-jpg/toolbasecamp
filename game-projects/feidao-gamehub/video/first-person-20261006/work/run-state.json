@@ -1,6 +1,6 @@
 {
-  "task_id": "01a11023-five-games-video-20261006-2",
-  "status": "awaiting_human_review",
+  "task_id": "01a11023-five-games-video-20261006-3",
+  "status": "awaiting_browser_terms_confirmation",
   "production_assets_complete": true,
   "mode": "five-game-camera-special",
   "requested_variants": [
@@ -11,9 +11,9 @@
   "voice": "Edge TTS zh-CN-YunxiNeural +0%",
   "audio_subjective_listening": "not-run",
   "publication": "not_uploaded",
-  "next_step": "新版人工审片通过后核对Toy最新状态并按game-video投稿流程与免费流量奖励规则执行；当前尚无新BV。",
+  "next_step": "用户确认本次上传附带协议后，持共用账号锁上传同一已审片SHA，不重复制作或投稿。",
   "final_dir": "../final/bilibili-zh",
-  "updated_at": "2026-10-06T20:10:24.186316+08:00",
+  "updated_at": "2026-10-06T20:30:56.689791+08:00",
   "video_sha256": "768f99d64c05a361b5a859909af27f34ea9f38ce73ac8e8b84b81340f74ec904",
   "duration_seconds": 157.783333,
   "technical_qa": "pass",
@@ -22,5 +22,6 @@
   "user_feedback": "重录上一版卡顿的五款游戏，保留旧版",
   "output_fps": 60,
   "historical_revision": "history/revision-1",
-  "video_file": "../final/bilibili-zh/gameplay-zh-final-v2.mp4"
+  "video_file": "../final/bilibili-zh/gameplay-zh-final-v2.mp4",
+  "human_review": "approved"
 }

@@ -7,11 +7,9 @@
     {
       "variant_id": "bilibili-zh",
       "manifest_file": "publish/bilibili-zh/publish.json",
-      "ready_to_upload": false,
-      "blocking_issues": [
-        "待本期用户人工审片通过；当前工具未完成主观听审"
-      ]
+      "ready_to_upload": true,
+      "blocking_issues": []
     }
   ],
-  "ready_to_upload": false
+  "ready_to_upload": true
 }
