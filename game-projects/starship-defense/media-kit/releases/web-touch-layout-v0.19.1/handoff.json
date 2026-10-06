@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-touch-layout-v0.19.1",
+  "base_version": "web-difficulty-v0.19.0",
+  "classification": "正式版本（操作自定义功能）",
+  "created_at": "2026-10-06T09:59:17.193063+00:00",
+  "source_comment": {
+    "url": "https://www.bilibili.com/opus/1253705235842465792#reply316226527777",
+    "rpid": "316226527777",
+    "user": "bili_59253225804",
+    "date": "2026-10-06 15:58",
+    "text": "主播，你在这里面加上一个来随意摆放那些按键的那个设置，这样的话我就是比较那个，我才喜欢现在的这个样子"
+  },
+  "build": {
+    "id": "39621a31e72f1179e69674d6e41cbe80d9fb9f8183ed49d5833892f50d5a147b",
+    "fingerprint": "39621a31e72f1179e69674d6e41cbe80d9fb9f8183ed49d5833892f50d5a147b",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "files": {
+      "game.js": "3865279fe75be566c0f97019edf9b3abb0eeb81a0c4e0e98fbaa5c133b08d45e",
+      "game.compat.js": "39621a31e72f1179e69674d6e41cbe80d9fb9f8183ed49d5833892f50d5a147b",
+      "index.html": "a727493a01485b013031848dd9507e473f82b44fad480c9140028a55684962e4",
+      "combat-controls.css": "a5613c1659ba92cee0c4d5681ba86947fba8d4f362bfe5bbcc592bfca42cfef1",
+      "touch-layout.js": "3bd2e7360f01c04ccd752429957188390985100952d7890d9f2ee961422d2546"
+    }
+  },
+  "changes": [
+    {
+      "id": "touch-layout",
+      "before": "只能改电脑键位，手机按键位置固定",
+      "after": "编辑手机摇杆及每个功能键的位置，保存/取消/恢复默认；横竖屏逆变换与画面内限制",
+      "verification": "pass",
+      "evidence_ids": [
+        "edit-landscape",
+        "edit-portrait"
+      ]
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "edit-landscape",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/edit-landscape.png",
+      "sha256": "3fb2a47fbe907f2720438c1c97bef207d5e3b7e58dbab85fbef2ee4a7218c2a9",
+      "kind": "screenshot",
+      "version": "web-touch-layout-v0.19.1",
+      "capture_mode": "realtime-automation",
+      "description": "真实布局编辑及回归输入；脚本初始化游戏局面",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "edit-portrait",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/edit-portrait.png",
+      "sha256": "167ab64042b527681ba6ba39b81bc2a0dcbe7fcfa2025781e41d098b5b2fefcd",
+      "kind": "screenshot",
+      "version": "web-touch-layout-v0.19.1",
+      "capture_mode": "realtime-automation",
+      "description": "真实布局编辑及回归输入；脚本初始化游戏局面",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "page@cc8134b9e7dc32cb3c787d53c8908ffd",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/page@cc8134b9e7dc32cb3c787d53c8908ffd.webm",
+      "sha256": "b6c34aa27407cd67a6b680e19517b040dfe30bd308edb00d5a3a63494d7cb459",
+      "kind": "video",
+      "version": "web-touch-layout-v0.19.1",
+      "capture_mode": "realtime-automation",
+      "description": "真实布局编辑及回归输入；脚本初始化游戏局面",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "results": "qa/results.json",
+    "method": "Microsoft Edge headless 实际鼠标输入及手机横竖视口模拟；电脑操作现有回归12项通过",
+    "not_tested": [
+      "实体手机多指触控与性能"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次录像待视频任务动态审看；没有真机性能证据，不自动制作或发布新成片"
+    ]
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "操作设置功能不改变战场画风与场景"
+  },
+  "web": {
+    "status": "pending_deployment"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "pending_web_deployment"
+  },
+  "bilibili": {
+    "status": "pending",
+    "reason": "新增可操作的布局功能，网站与Toy验证后同步已确认两条简介"
+  },
+  "comment_reply": {
+    "status": "pending_verified_release",
+    "rpid": "316226527777"
+  }
+}

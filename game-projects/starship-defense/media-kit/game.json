@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-difficulty-v0.19.0",
+  "current_version": "web-touch-layout-v0.19.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,8 +12,14 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_GJqShxfS/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-difficulty-v0.19.0/qa/results.json",
-  "pending_toy_merge": [],
+  "qa": "releases/web-touch-layout-v0.19.1/qa/results.json",
+  "pending_toy_merge": [
+    {
+      "version": "web-touch-layout-v0.19.1",
+      "summary": "自定义手机按键位置：拖动摇杆和各功能键、保存、取消、恢复默认",
+      "status": "verified_waiting_web_deploy"
+    }
+  ],
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
