@@ -138,16 +138,10 @@ function cycleCamera() {
   const p = camCtl.cycle();
   const body = GM.player(); if (body) { delete body.lookHeading; body.lookRevision = camCtl.lookRevision; }
   showToast('视角：' + p.name);
-  updateFog();
   const pl = GM.player();
   if (pl) camCtl.update(0, pl.x, pl.y, { instant: true, lock: GM.bossLock(), heading: pl.ang, fpOK: pl.alive && GM.mode() === 'play' });
   refreshOptions();
 }
-function updateFog() {
-  const p = camCtl.preset();
-  scene.fog.near = p.dist * 1.25; scene.fog.far = p.dist * 3.6;
-}
-updateFog();
 
 // ---------- 覆盖层与菜单导航 ----------
 function show(name) {
@@ -490,7 +484,7 @@ function presentFrame(dtReal, draw) {
   if (uiMode === 'game') {
     const p = GM.player();
     // 第一人称下相机在眼睛位置，同等震动体感更强，乘 0.3 抑制
-    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), viewportHeight: display.H, shake: fx.shake * (camCtl.fpNow ? 0.36 : 1.2), heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
+    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), shake: fx.shake * (camCtl.fpNow ? 0.36 : 1.2), heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
     crosshairEl.hidden = !camCtl.fpNow;
     updateHud();
   } else {

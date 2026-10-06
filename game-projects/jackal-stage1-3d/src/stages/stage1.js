@@ -158,7 +158,7 @@ export default function build(B) {
 
   return {
     n: 1, code: 'Alpha', title: '海滩登陆', sub: '救出俘虏，送上直升机', music: 'stage',
-    sky: 0xbfe8ec, fog: 0xcdeee4, palette: {}, outerGround: 0x6fae5a,
+    sky: 0xbfe8ec, palette: {}, outerGround: 0x6fae5a,
     intro: 'craft',
     start: { x: -19, y: 10, dir: 2, introFrom: { x: -26, y: 2.2 } },
     pad: PAD,

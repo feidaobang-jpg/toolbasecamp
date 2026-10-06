@@ -4,3 +4,11 @@
 .combatSettingRow select{font:inherit;max-width:76%;padding:6px;border:1px solid #68778a;border-radius:5px;background:#152439;color:#eef6ff}
 .combatSettings .small{margin:10px 0 0;max-width:none;line-height:1.6;font-size:12px}
 .combatSettingRow select:focus-visible{outline:3px solid #ffd75e;outline-offset:2px}
+#touchLayoutEditor{position:absolute;z-index:95;left:50%;top:24%;transform:translateX(-50%);width:max-content;max-width:76%;padding:12px 16px;background:#152439;border:2px solid #ffd75e;border-radius:12px;text-align:center;color:#eef6ff;pointer-events:auto;touch-action:none}
+#touchLayoutEditor strong,#touchLayoutEditor [role="status"]{display:block;font-size:14px;line-height:1.6}
+#touchLayoutEditor .btnRow{margin-top:8px;justify-content:center;gap:12px}
+#touchLayoutEditor .mbtn{min-height:44px;margin:0}
+.editing-touch-layout #touchUI{z-index:90;display:block!important}
+.editing-touch-layout #lookZone{pointer-events:none}
+.editing-touch-layout #touchUI .vbtn,.editing-touch-layout #joyBase{cursor:move;outline:2px dashed #ffd75e;outline-offset:3px;touch-action:none}
+.editing-touch-layout #menuMain,.editing-touch-layout #menuPause,.editing-touch-layout #keyPanel{visibility:hidden}

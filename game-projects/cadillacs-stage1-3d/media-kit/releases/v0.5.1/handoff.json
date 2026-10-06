@@ -1,0 +1,51 @@
+{
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.5.1",
+  "classification": "普通补丁",
+  "summary": "修复演示无敌仍因时间到而死亡；暂停计时并明确显示无限时间；关闭无敌恢复剩余时间。",
+  "verification": {
+    "test": "qa/timer.js",
+    "coverage": "桌面与触屏菜单双向切换、两关六区域、零剩余时间、普通超时死亡、demoUsed保留",
+    "status": "passed",
+    "real_device": false,
+    "checks": 26
+  },
+  "website": {
+    "status": "deployed_verified",
+    "commit": "110c0421596dabee86cb7885f2d77e34be9c00b7",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "bundle_sha256": "608953e4a79ac846604285f276bb241cba338d36d1c7b24a982bc92f63ca3c5d",
+    "verified_at": "2026-10-06T10:01:00.170832+00:00",
+    "actions_run": 37446589086,
+    "actions_conclusion": "success"
+  },
+  "toy": {
+    "id": 40412421031936,
+    "status": "auditing",
+    "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_nsYqUnzL/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
+    "submitted_at": "2026-10-06T10:01:00.170832+00:00",
+    "preview_checks_passed": 26,
+    "last_public_verified_version": "v0.5.0"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "targets": [
+      "BV18XHW66E55"
+    ],
+    "reason": "普通补丁合并到下次有意义的说明更新，现有说明仍准确。"
+  },
+  "activities": {
+    "status": "partial_check",
+    "incentive": "权益LV3未达标；创作信用80分达标",
+    "weekly_checkin": "本周发布1个自制视频已完成，可领取1000曝光奖励",
+    "play_task": "累计播放720/10000，80推广金未达标",
+    "no_new_registration": true,
+    "sources": [
+      "https://member.bilibili.com/platform/allowance/excitation/pc",
+      "https://member.bilibili.com/platform/growingUp/taskManage/main"
+    ],
+    "note": "仅检查两个官方页面，不推进全面检查时间。"
+  }
+}
