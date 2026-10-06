@@ -7,8 +7,8 @@
   "classification": "普通补丁",
   "build": {
     "id": "v0.5.6-bgmfull1",
-    "commit": null,
-    "dirty": true,
+    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+    "dirty": false,
     "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
     "fingerprint": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee"
   },
@@ -109,11 +109,37 @@
   ],
   "channels": {
     "website": {
-      "status": "pending"
+      "status": "deployed_verified",
+      "version": "v0.5.6-bgmfull1",
+      "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+      "verification": "17 public audio/runtime assets and 3 entrypoint script revisions checked",
+      "verified_at": "2026-10-07T06:49:45.870220+08:00"
     },
     "toy": {
       "id": 40412421031936,
-      "status": "pending"
+      "version": "v0.5.6-bgmfull1",
+      "status": "published",
+      "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_ZdQQ5x9D/index.html"
+      },
+      "preview_verified": {
+        "checks": 10,
+        "desktop": true,
+        "mobile_viewport": [
+          844,
+          390
+        ],
+        "physical_phone": false,
+        "audio_full_duration": true,
+        "same_package": true
+      },
+      "submission": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_icldmorp/index.html"
+      },
+      "submitted_at": "2026-10-07T06:54:47.946386+08:00",
+      "public_verified": true
     },
     "bilibili": {
       "status": "deferred",
@@ -124,5 +150,10 @@
     "status": "retained",
     "reason": "只修BGM，无画面变化。"
   },
-  "media_status": "Final merged build screenshots captured; pre-merge 75s audio evidence retained in original release."
+  "media_status": "Final merged build screenshots captured; pre-merge 75s audio evidence retained in original release.",
+  "local_artifacts": {
+    "packages": "D:\\project\\task-artifacts\\game-bgm-20261007\\packages\\cadillacs-stage1-3d",
+    "captures": "D:/project/task-artifacts/game-bgm-20261007/media/cadillacs-stage1-3d",
+    "original_audio": "D:/project/task-artifacts/game-bgm-20261007/originals"
+  }
 }

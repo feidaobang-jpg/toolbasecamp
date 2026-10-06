@@ -1,0 +1,164 @@
+{
+  "at": "2026-10-07T06:49:45.870220+08:00",
+  "results": [
+    {
+      "file": "public/html/game/mario-3d/sounds/overworld.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/overworld.mp3?verify=bgmfull1-5dd59213",
+      "expected": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+      "actual": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+      "bytes": 2161416,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/mario-3d/sounds/underground.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/underground.mp3?verify=bgmfull1-6d86e322",
+      "expected": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+      "actual": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+      "bytes": 2161416,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/mario-3d/sounds/star.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/star.mp3?verify=bgmfull1-05dd67fd",
+      "expected": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+      "actual": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+      "bytes": 2161416,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/sounds/stage.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/sounds/stage.mp3?verify=bgmfull1-4dd286a7",
+      "expected": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+      "actual": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+      "bytes": 2161407,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/sounds/stage3.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/sounds/stage3.mp3?verify=bgmfull1-780427f4",
+      "expected": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949",
+      "actual": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949",
+      "bytes": 2161407,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/sounds/boss.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/sounds/boss.mp3?verify=bgmfull1-cdc0eaaf",
+      "expected": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+      "actual": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+      "bytes": 2161407,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/roof.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/roof.mp3?verify=bgmfull1-93b9d288",
+      "expected": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+      "actual": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+      "bytes": 4078318,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/hall.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/hall.mp3?verify=bgmfull1-ca283f15",
+      "expected": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+      "actual": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+      "bytes": 1423234,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/street.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/street.mp3?verify=bgmfull1-dece2e8d",
+      "expected": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+      "actual": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+      "bytes": 1383045,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/boss.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/boss.mp3?verify=bgmfull1-1e64e6b2",
+      "expected": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+      "actual": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+      "bytes": 1069408,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/forest.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/forest.mp3?verify=bgmfull1-649e60c5",
+      "expected": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+      "actual": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+      "bytes": 2393509,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/swamp.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/swamp.mp3?verify=bgmfull1-61f074b6",
+      "expected": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
+      "actual": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
+      "bytes": 994251,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/boss2.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/boss2.mp3?verify=bgmfull1-24ca408f",
+      "expected": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+      "actual": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+      "bytes": 1245667,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js?verify=bgmfull1-672be424",
+      "expected": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751",
+      "actual": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751",
+      "bytes": 656373,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?verify=bgmfull1-1ab56a96",
+      "expected": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee",
+      "actual": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee",
+      "bytes": 773522,
+      "ok": true
+    },
+    {
+      "file": "public/html/game/mario-3d/audio.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/audio.js?verify=bgmfull1-8b243158",
+      "expected": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
+      "actual": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
+      "bytes": 11081,
+      "ok": true,
+      "workspace_sha256": "8b243158200c0ca3160cffe8bcc70c3a5feb32012f9a941ec295dfe940edb286",
+      "comparison": "Canonical committed Git blob (working tree uses CRLF)"
+    },
+    {
+      "file": "public/html/game/mario-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js?verify=bgmfull1-cbe5e21f",
+      "expected": "fd68e48198477baa4e80ee8ad8b118613e1d535de125b6cba8334ced101dff8b",
+      "actual": "fd68e48198477baa4e80ee8ad8b118613e1d535de125b6cba8334ced101dff8b",
+      "bytes": 38790,
+      "ok": true,
+      "workspace_sha256": "cbe5e21fdd742bfd8676e03785016de4e736397d321c084095c49fb996069623",
+      "comparison": "Canonical committed Git blob (working tree uses CRLF)"
+    }
+  ],
+  "ok": true,
+  "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+  "entrypoints": [
+    {
+      "game": "jackal-stage1-3d",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+      "script": "js/game.min.js?v=21970a0f"
+    },
+    {
+      "game": "mario-3d",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+      "script": "./main.js?v=21970a0f"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+      "script": "js/game.min.js?v=21970a0f"
+    }
+  ]
+}
