@@ -96,8 +96,8 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": "2026-10-06T12:29:05.253398+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-06T12:30:53.469813+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
@@ -105,13 +105,13 @@
     "preview_verified_at": "2026-10-06T12:29:05.253398+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.7.2预览实测通过，已提交审核；公开入口仍为旧HUD，待新版公开核验。",
+    "note": "v0.7.2已公开上线，公开入口133项验收通过，与网站同版本。",
     "submitted_at": "2026-10-06T12:29:05.253398+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
     "submitted_version": "v0.7.2",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
     "release_record": "releases/v0.7.2/handoff.json",
-    "published_version": "v0.7.0",
+    "published_version": "v0.7.2",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -125,23 +125,26 @@
       {
         "version": "v0.7.1",
         "classification": "普通补丁",
-        "status": "included_in_v0.7.2",
+        "status": "published",
         "record": "releases/v0.7.1/handoff.json",
         "summary": "右上贴边单行按钮，HUD避让。",
-        "included_version": "v0.7.2"
+        "included_version": "v0.7.2",
+        "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
       },
       {
         "version": "v0.7.2",
         "classification": "普通补丁",
-        "status": "auditing",
+        "status": "published",
         "record": "releases/v0.7.2/handoff.json",
-        "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。"
+        "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。",
+        "included_version": "v0.7.2",
+        "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
       }
     ],
-    "last_successful_sync_at": "2026-10-06T06:24:58.898535+08:00",
-    "last_successful_sync_version": "v0.5.3",
+    "last_successful_sync_at": "2026-10-06T12:30:53.469813+08:00",
+    "last_successful_sync_version": "v0.7.2",
     "package_sha256": "3e6384490286d43b61bd324a4106643a1e0b7ad4569b940da6d44a8d8ffffda4",
-    "published_verified_at": "2026-10-06T01:38:02.208Z",
+    "published_verified_at": "2026-10-06T12:30:53.469813+08:00",
     "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
   },
   "drag_camera_controls": {
@@ -165,5 +168,5 @@
   "website_version": "v0.7.2",
   "website_verified_at": "2026-10-06T12:29:05.253398+08:00",
   "website_commit": "929f54d2",
-  "web_toy_versions_match": false
+  "web_toy_versions_match": true
 }
