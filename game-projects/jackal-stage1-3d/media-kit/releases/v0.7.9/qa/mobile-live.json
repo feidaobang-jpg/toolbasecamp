@@ -1,0 +1,690 @@
+{
+ "when": "2026-10-06T21:29:00.619Z",
+ "env": "Chromium 设备模拟（isMobile/hasTouch，DPR3，Pixel 8 UA）+ CDP 触摸事件；SwiftShader；非真机",
+ "pass": 58,
+ "total": 58,
+ "results": [
+  {
+   "name": "[横屏] 打开即显示菜单（不旋转）",
+   "ok": true,
+   "detail": "menu"
+  },
+  {
+   "name": "[横屏] 触屏设备显示触控说明",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[横屏] 菜单完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 33,
+    "bottom": 357,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 390
+   }
+  },
+  {
+   "name": "[横屏] Toy 外壳顶栏下（844×346）菜单仍完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 11,
+    "bottom": 335,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 346
+   }
+  },
+  {
+   "name": "[横屏] 菜单有「返回游戏列表」且可点（≥40px）",
+   "ok": true,
+   "detail": {
+    "x": 716.8359375,
+    "y": 281,
+    "w": 196.296875,
+    "h": 40,
+    "x0": 618.6875,
+    "y0": 261,
+    "x1": 814.984375,
+    "y1": 301
+   }
+  },
+  {
+   "name": "[横屏] 点「耐久」在经典一发 / 标准 3 格之间切换（≥40px）",
+   "ok": true,
+   "detail": {
+    "h": 40,
+    "armT1": "耐久◂ 经典一发 ▸",
+    "armT2": "耐久◂ 标准 3 格 ▸"
+   }
+  },
+  {
+   "name": "[横屏] 点开始进入游戏且未自动全屏",
+   "ok": true,
+   "detail": {
+    "mode": "intro",
+    "fs": false
+   }
+  },
+  {
+   "name": "[横屏] 触屏控件显示、键位提示隐藏",
+   "ok": true,
+   "detail": {
+    "touchHidden": false
+   }
+  },
+  {
+   "name": "[横屏] J/K/C 与暂停按钮触控目标 ≥44px",
+   "ok": true,
+   "detail": {
+    "J": 60,
+    "K": 60,
+    "C": 78.96875,
+    "pause": 44
+   }
+  },
+  {
+   "name": "[横屏] 按键同时显示字母与功能",
+   "ok": true,
+   "detail": [
+    "J机枪",
+    "K手雷",
+    "C斜俯视"
+   ]
+  },
+  {
+   "name": "[横屏] HUD 显示 3 格护甲，且不压住右上角按钮",
+   "ok": true,
+   "detail": {
+    "pipsL": 3,
+    "hud": [
+     61,
+     10.890625,
+     184.53125,
+     35.28125
+    ],
+    "pause": [
+     687.90625,
+     10
+    ]
+   }
+  },
+  {
+   "name": "[横屏] 视角键不遮挡 J/K 动作键",
+   "ok": true,
+   "detail": {
+    "C": [
+     600.9375,
+     10,
+     679.90625,
+     54
+    ],
+    "J": [
+     674,
+     294,
+     734,
+     354
+    ],
+    "K": [
+     744,
+     294,
+     804,
+     354
+    ]
+   }
+  },
+  {
+   "name": "[横屏 · oblique] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · top] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · low] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · wide] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · front] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏 · fp] 摇杆右 → 东、上 → 北",
+   "ok": true,
+   "detail": {
+    "right": 2.87,
+    "up": 2.87
+   }
+  },
+  {
+   "name": "[横屏] C 键（触屏）循环视角回到斜俯视",
+   "ok": true,
+   "detail": "oblique"
+  },
+  {
+   "name": "[横屏] look-zone 右拖 → 镜头 yaw 减小",
+   "ok": true,
+   "detail": {
+    "yaw0": 0,
+    "yaw1": -0.447
+   }
+  },
+  {
+   "name": "[横屏] 镜头左转 90° 后摇杆上 → 视线前方（世界西）",
+   "ok": true,
+   "detail": {
+    "yaw": 1.571,
+    "dx": -2.87
+   }
+  },
+  {
+   "name": "[横屏] 循环后回到斜俯视且 yaw 复位",
+   "ok": true,
+   "detail": {
+    "camera": "oblique",
+    "yaw": 0
+   }
+  },
+  {
+   "name": "[横屏] 多点触控：边移动边按住 J 连发",
+   "ok": true,
+   "detail": {
+    "shots": 5,
+    "dy": 4.3,
+    "input": {
+     "held": {
+      "u": false,
+      "d": false,
+      "l": false,
+      "r": false
+     },
+     "keyFire": false,
+     "keyBomb": false,
+     "touchDir": 0,
+     "touchFire": true,
+     "touchBomb": false,
+     "queue": []
+    }
+   }
+  },
+  {
+   "name": "[横屏] 三指同时：K 抛出手雷",
+   "ok": true,
+   "detail": [
+    "grenade"
+   ]
+  },
+  {
+   "name": "[横屏] 松手后无持续移动/连发",
+   "ok": true,
+   "detail": {
+    "held": {
+     "u": false,
+     "d": false,
+     "l": false,
+     "r": false
+    },
+    "keyFire": false,
+    "keyBomb": false,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+   }
+  },
+  {
+   "name": "[横屏] touchcancel 清空方向",
+   "ok": true,
+   "detail": {
+    "held": {
+     "u": false,
+     "d": false,
+     "l": false,
+     "r": false
+    },
+    "keyFire": false,
+    "keyBomb": false,
+    "touchDir": -1,
+    "touchFire": false,
+    "touchBomb": false,
+    "queue": []
+   }
+  },
+  {
+   "name": "[横屏] 右上角暂停按钮",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "[横屏] 暂停菜单完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 33,
+    "bottom": 357,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 390
+   }
+  },
+  {
+   "name": "[横屏] 暂停菜单「全屏」按浏览器能力显示",
+   "ok": true,
+   "detail": {
+    "fsCapable": true
+   }
+  },
+  {
+   "name": "[横屏] 触屏「继续」",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[横屏] 右上全屏按钮按能力显示，与视角/暂停同排贴右上角",
+   "ok": true,
+   "detail": [
+    {
+     "id": "btn-cam",
+     "vis": true,
+     "x0": 601,
+     "x1": 680,
+     "y0": 10,
+     "h": 44,
+     "wrap": false
+    },
+    {
+     "id": "btn-pause",
+     "vis": true,
+     "x0": 688,
+     "x1": 758,
+     "y0": 10,
+     "h": 44,
+     "wrap": false
+    },
+    {
+     "id": "btn-fs",
+     "vis": true,
+     "x0": 766,
+     "x1": 834,
+     "y0": 10,
+     "h": 44,
+     "wrap": false
+    }
+   ]
+  },
+  {
+   "name": "[横屏] 点全屏按钮请求全屏（成功或被拒都有记录，本局继续）",
+   "ok": true,
+   "detail": {
+    "fs": true,
+    "fsLog": [
+     "ok",
+     "lock-rejected"
+    ],
+    "toast": "视角：斜俯视"
+   }
+  },
+  {
+   "name": "[横屏] 退出全屏自动暂停",
+   "ok": true,
+   "detail": {
+    "overlay": "pause",
+    "fs": false
+   }
+  },
+  {
+   "name": "[横屏] 退出全屏后点「继续」回到本局",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[竖屏] 菜单正常显示（未旋转、无横屏阻断提示）",
+   "ok": true,
+   "detail": {
+    "rotated": false,
+    "W": 390,
+    "H": 844,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 1.25,
+    "touchOn": true,
+    "backing": [
+     487,
+     1055
+    ]
+   }
+  },
+  {
+   "name": "[竖屏] 开始后自动旋转为横屏布局（逻辑 844×390）",
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "W": 844,
+    "H": 390,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 1.25,
+    "touchOn": true,
+    "backing": [
+     1055,
+     487
+    ]
+   }
+  },
+  {
+   "name": "[竖屏] 旋转布局下护甲卡片完整可见、不与按钮和武器卡重叠",
+   "ok": true,
+   "detail": {
+    "hud": [
+     354.71875,
+     61,
+     379.109375,
+     184.53125
+    ],
+    "wpn": [
+     353.8125,
+     190.53125,
+     380,
+     291.15625
+    ]
+   }
+  },
+  {
+   "name": "[竖屏] 触控逆变换：物理向右拖 = 画面上方（北），物理向下拖 = 画面右（东）",
+   "ok": true,
+   "detail": {
+    "upLocal": 2.87,
+    "rightLocal": 2.87
+   }
+  },
+  {
+   "name": "[竖屏] 旋转布局下 J 键开火",
+   "ok": true,
+   "detail": 3
+  },
+  {
+   "name": "[竖屏] 旋转布局下暂停按钮可用",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "[竖屏] 旋转布局（逻辑 844×390）暂停菜单完整落在屏幕内",
+   "ok": true,
+   "detail": {
+    "top": 12,
+    "bottom": 832,
+    "left": 33,
+    "right": 357,
+    "vw": 390,
+    "vh": 844
+   }
+  },
+  {
+   "name": "[切换] 竖屏 → 横屏：取消旋转并清空按住的方向",
+   "ok": true,
+   "detail": {
+    "rotated": false,
+    "input": {
+     "held": {
+      "u": false,
+      "d": false,
+      "l": false,
+      "r": false
+     },
+     "keyFire": false,
+     "keyBomb": false,
+     "touchDir": -1,
+     "touchFire": false,
+     "touchBomb": false,
+     "queue": []
+    }
+   }
+  },
+  {
+   "name": "[切换] 横屏 → 竖屏：重新旋转布局",
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "W": 844,
+    "H": 390,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 1.25,
+    "touchOn": true,
+    "backing": [
+     1055,
+     487
+    ]
+   }
+  },
+  {
+   "name": "[窄横屏] 主菜单不横向溢出、选项文字不被裁、触控高度 ≥40px",
+   "ok": true,
+   "detail": {
+    "scrollTop": 0,
+    "max": 259,
+    "panel": [
+     12,
+     556
+    ],
+    "vw": 568,
+    "first": true,
+    "last": false,
+    "lastName": "show",
+    "clipped": [],
+    "minH": 40
+   }
+  },
+  {
+   "name": "[窄横屏] 主菜单打开时「开始游戏」完整可见",
+   "ok": true,
+   "detail": {
+    "scrollTop": 0,
+    "max": 259,
+    "panel": [
+     12,
+     556
+    ],
+    "vw": 568,
+    "first": true,
+    "last": false,
+    "lastName": "show",
+    "clipped": [],
+    "minH": 40
+   }
+  },
+  {
+   "name": "[窄横屏] 手指上滑到底：最后一项（操作模式「手机触屏」）完整可见可点",
+   "ok": true,
+   "detail": {
+    "scrollTop": 259,
+    "max": 259,
+    "panel": [
+     12,
+     556
+    ],
+    "vw": 568,
+    "first": false,
+    "last": true,
+    "lastName": "show",
+    "clipped": [],
+    "minH": 40
+   }
+  },
+  {
+   "name": "[窄横屏] 滚到底后点「手机触屏」生效，再点回「自动识别」",
+   "ok": true,
+   "detail": {
+    "pressed": "true"
+   }
+  },
+  {
+   "name": "[窄横屏] 手指下滑回顶：「开始游戏」重新完整可见",
+   "ok": true,
+   "detail": {
+    "scrollTop": 0,
+    "max": 259,
+    "panel": [
+     12,
+     556
+    ],
+    "vw": 568,
+    "first": true,
+    "last": false,
+    "lastName": "show",
+    "clipped": [],
+    "minH": 40
+   }
+  },
+  {
+   "name": "[窄横屏] 点开始进入游戏",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[窄横屏] 暂停菜单「继续」完整可见，选项不被裁",
+   "ok": true,
+   "detail": {
+    "scrollTop": 0,
+    "max": 161,
+    "panel": [
+     12,
+     556
+    ],
+    "vw": 568,
+    "first": true,
+    "last": false,
+    "lastName": "show",
+    "clipped": [],
+    "minH": 40
+   }
+  },
+  {
+   "name": "[窄横屏] 暂停菜单上滑到底：最后一项完整可见",
+   "ok": true,
+   "detail": {
+    "scrollTop": 161,
+    "max": 161,
+    "panel": [
+     12,
+     556
+    ],
+    "vw": 568,
+    "first": true,
+    "last": true,
+    "lastName": "show",
+    "clipped": [],
+    "minH": 40
+   }
+  },
+  {
+   "name": "[窄横屏] 键盘 ↑/↓ 绕到首尾时焦点项滚入视口",
+   "ok": true,
+   "detail": {
+    "last": true,
+    "first": true,
+    "focus": "resume"
+   }
+  },
+  {
+   "name": "[窄横屏] Esc 继续本局",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[不支持全屏] 主菜单隐藏「全屏」，键盘 ↓ 逐项走完不卡住、不落到隐藏项",
+   "ok": true,
+   "detail": {
+    "fsCapable": false,
+    "nItems": 14,
+    "seen": [
+     "stage",
+     "lives",
+     "armor",
+     "gun",
+     "demo",
+     "camera",
+     "quality",
+     "volume",
+     "fps",
+     "list",
+     "mode:auto",
+     "mode:hide",
+     "mode:show",
+     "start"
+    ]
+   }
+  },
+  {
+   "name": "[不支持全屏] 主菜单仍完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 33,
+    "bottom": 357,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 390
+   }
+  },
+  {
+   "name": "[不支持全屏] 右上隐藏全屏，暂停按钮贴右上角、与视角键同排",
+   "ok": true,
+   "detail": {
+    "pause": [
+     764.125,
+     10,
+     834
+    ],
+    "cam": [
+     677.15625,
+     10,
+     756.125
+    ]
+   }
+  },
+  {
+   "name": "[不支持全屏] F 键提示不支持并继续本局",
+   "ok": true,
+   "detail": {
+    "fsLog": [
+     "unsupported"
+    ],
+    "toast": "当前浏览器不支持全屏，已使用页面内横屏布局继续"
+   }
+  },
+  {
+   "name": "全程无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}
