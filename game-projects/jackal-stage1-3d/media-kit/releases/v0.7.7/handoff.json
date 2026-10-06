@@ -6,14 +6,42 @@
   "qa_record": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
   "physical_phone_test": false,
   "website": {
-    "status": "pending_deployment"
+    "status": "public_verified",
+    "commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
+    "verified_at": "2026-10-06T15:15:43.601094+00:00"
   },
   "toy": {
-    "status": "pending_sync",
-    "reason": "网站部署核验后打包预览实测并提交"
+    "toy_id": 39863936092160,
+    "version": "v0.7.7",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\jackal-stage1-3d",
+    "package_hash": "34c450239084208aba336e96254e8d7ffe672dfc17a2026a50f30abb2c2cfcd9",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_AVATPJMI/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "mtime": 1791282459
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:53.288348+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_pGlLp0I2/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:06.847110+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00",
+    "public_package_verified": false,
+    "qa_record": "../../../../site-games/releases/controls-inset-20261006/toy-preview/qa.json"
   },
   "bilibili": {
     "status": "pending_merge",
     "reason": "普通布局补丁累计至下次有意义的说明更新；入口和操作键位未变"
+  },
+  "qa_records": {
+    "local": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
+    "safe_area": "../../../../site-games/releases/controls-inset-20261006/safe-area/qa.json",
+    "website": "../../../../site-games/releases/controls-inset-20261006/website/qa.json"
   }
 }

@@ -23,25 +23,25 @@
     "ffmpeg、Pillow"
   ],
   "notes": "经典模式地图、敌军名单取自 MIT 许可的 feichao93/battle-city 关卡数据，数值按该仓库 resources/nes-values 的 ROM 反汇编调研；魔改模式地图由关号确定性生成。3D 模型与贴图程序化制作，音效采用原作 FC 音效（用户已明确不考虑版权顾虑），引擎声等为合成。",
-  "version": "lobby1",
+  "version": "controls-inset1",
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "auditing",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_m2s9VZi8/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_XD4t508R/index.html",
     "verified_at": "2026-10-06T18:48:28.119681+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_VcHp5WoD/index.html",
-    "submitted_version": "lobby1",
-    "submitted_at": "2026-10-06T11:40:48.423653+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_UL1GjmCR/index.html",
+    "submitted_version": "controls-inset1",
+    "submitted_at": "2026-10-06T15:18:01.563978+00:00",
     "video_bindings": [
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/lobby1/handoff.json",
+    "release_record": "releases/controls-inset1/handoff.json",
     "published_version": "coop1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "lobby1预览实测及包哈希核验通过，已提交审核；公开版本待核验。",
+    "note": "本版预览实测通过，已提交；尚未核验公开包版本。",
     "package_sha256": "5a00449153c2bc0d42ef6537ea2f7d11f7472f49060ffd2ae70cd2d7c1408de8",
     "pending_updates": [
       {
@@ -89,10 +89,18 @@
         "status": "auditing",
         "record": "releases/lobby1/handoff.json",
         "summary": "2–4人大厅、可选密码、服务端分页筛选及菜单按钮反馈。"
+      },
+      {
+        "version": "controls-inset1",
+        "classification": "普通补丁",
+        "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+        "status": "auditing",
+        "record": "releases/controls-inset1/handoff.json"
       }
     ],
     "published_verified_at": "2026-10-06T18:48:28.119681+08:00",
-    "status": "auditing"
+    "status": "auditing",
+    "package_hash": "36d5c97fd4afaacb96c3ad69c4ec106dc539d97bd275739d0fbb8b719381b442"
   },
   "merged_from": {
     "game": "tank-battle",
@@ -120,9 +128,9 @@
   },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "lobby1",
-  "website_verified_at": "2026-10-06T11:40:48.423653+00:00",
-  "website_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
+  "website_version": "controls-inset1",
+  "website_verified_at": "2026-10-06T15:15:43.601094+00:00",
+  "website_commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
   "web_toy_versions_match": false,
   "coop": {
     "protocol": "tank3d-v2",

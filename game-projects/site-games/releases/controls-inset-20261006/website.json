@@ -1,0 +1,103 @@
+{
+  "status": "public_verified",
+  "commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
+  "verified_at": "2026-10-06T15:15:43.601094+00:00",
+  "files": [
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/css/style.css",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/css/style.css?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/index.html",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/css/style.css",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/css/style.css?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/index.html",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/journey-west-3d/index.html",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/journey-west-3d/main.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/main.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/journey-west-3d/style.css",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/style.css?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/mario-3d/index.html",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/mario-3d/main.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/mario-3d/style.css",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/style.css?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/starship-defense/game.compat.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/starship-defense/game.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/starship-defense/index.html",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/tank-3d/index.html",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/tank-3d/main.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js?verify=controls-inset1"
+    },
+    {
+      "file": "public/html/game/tank-3d/style.css",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/style.css?verify=controls-inset1"
+    },
+    {
+      "file": "public/js/game/drag-look.js",
+      "matches": true,
+      "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js?verify=controls-inset1"
+    }
+  ],
+  "html_comparison": "Ignore deployment-managed cache query parameters only"
+}

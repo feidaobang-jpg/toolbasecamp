@@ -133,16 +133,16 @@
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_kJ3TqqXA/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_AVATPJMI/index.html",
     "preview_verified_at": "2026-10-06T15:54:07.223+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.7.6 炮管方向与散射炮口修复已提交审核；包含v0.7.5原作模型修正，网站已核验。",
-    "submitted_at": "2026-10-06T18:25:49.073071+08:00",
+    "note": "本版预览实测通过，已提交；尚未核验公开包版本。",
+    "submitted_at": "2026-10-06T15:18:06.847110+00:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
-    "submitted_version": "v0.7.6",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sYDyiyJu/index.html",
-    "release_record": "releases/v0.7.6/handoff.json",
+    "submitted_version": "v0.7.7",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pGlLp0I2/index.html",
+    "release_record": "releases/v0.7.7/handoff.json",
     "published_version": "v0.7.5",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
@@ -196,13 +196,22 @@
         "status": "auditing",
         "record": "releases/v0.7.6/handoff.json",
         "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。"
+      },
+      {
+        "version": "v0.7.7",
+        "classification": "普通补丁",
+        "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+        "status": "auditing",
+        "record": "releases/v0.7.7/handoff.json"
       }
     ],
     "last_successful_sync_at": "2026-10-06T10:16:04.314128+00:00",
     "last_successful_sync_version": "v0.7.5",
     "package_sha256": "31857d63b68ae6ca1b5dca3aac773d241b3eec7aadb01aff9aebf3c8e0e1d01b",
     "published_verified_at": "2026-10-06T10:16:04.314128+00:00",
-    "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
+    "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+    "status": "auditing",
+    "package_hash": "34c450239084208aba336e96254e8d7ffe672dfc17a2026a50f30abb2c2cfcd9"
   },
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
@@ -222,9 +231,9 @@
   },
   "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v0.7.6",
-  "website_verified_at": "2026-10-06T18:25:49.073071+08:00",
-  "website_commit": "9ac7fdea162bfdf22518ed77925fab4201e53c95",
+  "website_version": "v0.7.7",
+  "website_verified_at": "2026-10-06T15:15:43.601094+00:00",
+  "website_commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
   "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
