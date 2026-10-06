@@ -119,19 +119,50 @@
       "checks_passed": 45
     },
     "toy": {
+      "status": "published_verified",
+      "verified_at": "2026-10-06T23:18:57.080Z",
+      "version": "web-tactics-v0.20.0",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "runtime_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v23221/index.html",
+      "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+      "checks": [
+        "公开版继续旧进度第1章第2关、金币478、基地2000",
+        "已显示新战术部署/建立防线预告、13只虫、中央与西侧洞口、新兵补给220",
+        "面板可打开且按钮可达"
+      ],
+      "evidence": "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/toy-public.jpg",
       "id": 38678478981120,
       "slug": "chongchao-qianshao",
-      "status": "pending_website_verification"
+      "submission": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
+        "submitted_at": "2026-10-07T07:09:30.748598+08:00",
+        "time_basis": "CLI响应保存时间",
+        "id": 38678478981120,
+        "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a"
+      },
+      "preview": "toy-preview.json",
+      "record": "toy-status.json"
     },
     "bilibili_description": {
-      "status": "pending_website_verification",
+      "status": "public_verified",
+      "version": "web-tactics-v0.20.0",
       "targets": [
-        "BV1Ujad6DEuf",
-        "BV1WbHq6eEBt"
-      ]
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "record": "bilibili-sync.json"
     },
     "activities": {
-      "status": "pending_check"
+      "source": "Codex",
+      "task_id": "01a11338-bd0d-7791-bc91-920d85942b43-tactics-20261007-01",
+      "game": "虫潮围城",
+      "checked_at": "2026-10-07T07:15:46.418212+08:00",
+      "status": "skipped_recent_completed_check",
+      "baseline": "2026-10-06T19:18:03.077+08:00",
+      "new_video_published": false,
+      "ordinary_pending_for_this_game": false,
+      "note": "收尾时读取共用活动及通知台账；最近12小时已有全面成功检查，无本游戏新增可办普通报名。另一个合辑视频的流量券仍等待新服务协议确认，保留原待办、不重复通知；本次没有新发视频，不用券。"
     }
   },
   "pending_merge": [],
@@ -142,5 +173,6 @@
     "merged_commit": "1e7aad40751d461493a7c3a188e079c8e0608b99",
     "swarm_shared_changes_from_merge": false
   },
-  "website_bundle_sha256": "87e96d929cf0082e25e9f97542c8279969de6725434e40d4931bda8e492bf549"
+  "website_bundle_sha256": "87e96d929cf0082e25e9f97542c8279969de6725434e40d4931bda8e492bf549",
+  "completed_at": "2026-10-07T07:20:01.485036+08:00"
 }

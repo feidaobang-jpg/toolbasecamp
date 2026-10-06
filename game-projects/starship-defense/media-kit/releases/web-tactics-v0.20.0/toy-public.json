@@ -1,0 +1,14 @@
+{
+  "status": "published_verified",
+  "verified_at": "2026-10-06T23:18:57.080Z",
+  "version": "web-tactics-v0.20.0",
+  "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "runtime_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v23221/index.html",
+  "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+  "checks": [
+    "公开版继续旧进度第1章第2关、金币478、基地2000",
+    "已显示新战术部署/建立防线预告、13只虫、中央与西侧洞口、新兵补给220",
+    "面板可打开且按钮可达"
+  ],
+  "evidence": "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/toy-public.jpg"
+}

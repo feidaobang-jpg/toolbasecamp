@@ -9,7 +9,7 @@
  "development_model": null,
  "toy_id": "38678478981120",
  "publication_status": "published",
- "preview_url": "https://www.bilibili.com/toy/preview/preview_ytj70Vv3/index.html",
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
  "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
  "media_readiness": "partial",
  "qa": "releases/web-tactics-v0.20.0/qa/website/results.json",
@@ -20,23 +20,23 @@
   "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "visibility": "PUBLIC",
   "review_status": "published",
-  "verified_at": "2026-10-06T23:42:12+08:00",
+  "verified_at": "2026-10-06T23:18:57.080Z",
   "video_bindings": [
    "BV1Ujad6DEuf",
    "BV1WbHq6eEBt"
   ],
   "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_t7S2J6U5/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
   "title": "虫潮围城",
-  "zip_sha256": "2c8ba4074db8c39b007315b52002d7d1f28beeca2db04cfaf5ca20d4f393d977",
-  "submitted_date": "2026-10-06",
-  "release_record": "releases/web-controls-inset-v0.19.3/handoff.json",
-  "submitted_version": "web-controls-inset-v0.19.3",
-  "published_version": "web-live-adapter-v0.19.2",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_0ceQzhba/index.html",
-  "note": "本版预览实测通过，已提交；尚未核验公开包版本。",
-  "submitted_at": "2026-10-06T15:18:12.285665+00:00",
-  "package_sha256": "67d89eebc87b05f34d6418e7f27d1fd1995f3ab86af4fe291b2a52414393f034",
+  "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+  "submitted_date": "2026-10-07",
+  "release_record": "releases/web-tactics-v0.20.0/handoff.json",
+  "submitted_version": "web-tactics-v0.20.0",
+  "published_version": "web-tactics-v0.20.0",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
+  "note": "网站运行与同包Toy预览通过；审核已通过，公开入口已核验战术部署、双洞口预告与新兵补给。",
+  "submitted_at": "2026-10-07T07:09:30.748598+08:00",
+  "package_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
   "pending_updates": [
    {
     "version": "web-controls-v0.18.2",
@@ -64,18 +64,19 @@
     "version": "web-controls-inset-v0.19.3",
     "classification": "普通补丁",
     "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
-    "status": "auditing",
-    "record": "releases/web-controls-inset-v0.19.3/handoff.json"
+    "status": "included",
+    "record": "releases/web-controls-inset-v0.19.3/handoff.json",
+    "included_version": "web-tactics-v0.20.0"
    }
   ],
   "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-  "published_verified_at": "2026-10-06T14:37:48.142705+00:00",
-  "status": "auditing",
-  "package_hash": "4bc44dbd80fb238eecca336a266132ee2a9f2accc3b21809057a0b42069db61a"
+  "published_verified_at": "2026-10-06T23:18:57.080Z",
+  "status": "published",
+  "package_hash": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a"
  },
  "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
- "published_toy_version": "web-restart-audio-v0.19.4",
- "web_toy_versions_match": false,
+ "published_toy_version": "web-tactics-v0.20.0",
+ "web_toy_versions_match": true,
  "migration": {
   "source": "D:/project/gpt/worlds/breachline",
   "mode": "asset-and-presentation-merge",
@@ -85,8 +86,8 @@
  "skill_updated": true,
  "steam_status": "Optional possibility only; Toy/video response determines any future decision",
  "extension_review_status": "published",
- "preview_version": "web-restart-audio-v0.19.4",
- "submitted_toy_version": "web-restart-audio-v0.19.4",
+ "preview_version": "web-tactics-v0.20.0",
+ "submitted_toy_version": "web-tactics-v0.20.0",
  "website_version": "web-tactics-v0.20.0",
  "website_verified_at": "2026-10-07T07:04:42.608681+08:00",
  "site_list_name": "虫潮围城",
@@ -130,11 +131,7 @@
   "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
  },
  "bilibili_sync": "bilibili-sync.json",
- "pending_release": {
-  "version": "web-tactics-v0.20.0",
-  "classification": "formal_release",
-  "status": "website_verified_pending_toy"
- },
+ "pending_release": null,
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "drag_camera_controls": {
   "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
