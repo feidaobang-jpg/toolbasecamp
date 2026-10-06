@@ -1,0 +1,326 @@
+{
+ "when": "2026-10-06T21:10:44.023Z",
+ "env": "Playwright 1.63.0 msedge 真显卡, 1280×720 / 844×390 手机模拟, ?q=low",
+ "pass": 31,
+ "total": 31,
+ "results": [
+  {
+   "name": "?stage=2 主菜单副标题是「第二关 · 废墟城」",
+   "ok": true,
+   "detail": "第二关 · 废墟城"
+  },
+  {
+   "name": "第二关开局：废墟城 BGM、6 座营房、15 名俘虏、HUD 显示「第二关」",
+   "ok": true,
+   "detail": {
+    "stage": 2,
+    "mode": "play",
+    "music": "ruins",
+    "huts": 6,
+    "pow": 15
+   }
+  },
+  {
+   "name": "Boss 是 4 座石像（开战前不刷出）",
+   "ok": true,
+   "detail": {
+    "type": "statues",
+    "state": "idle",
+    "spawned": 0,
+    "killed": 0,
+    "pips": []
+   }
+  },
+  {
+   "name": "三级「双向火箭」爆炸后向左右溅射 2 发，四级「四向火箭」溅射 4 发",
+   "ok": true,
+   "detail": {
+    "sh3": 2,
+    "sh4": 4
+   }
+  },
+  {
+   "name": "四级武器按 K 发射火箭",
+   "ok": true,
+   "detail": [
+    {
+     "weapon": 4,
+     "dir": 0
+    }
+   ]
+  },
+  {
+   "name": "机枪方向：跟随车头时朝东打；暂停菜单切到「原作朝上（原作）」后朝北打",
+   "ok": true,
+   "detail": {
+    "velFollow": [
+     22.765475715060663,
+     12.559184506447194
+    ],
+    "velUp": [
+     0,
+     26
+    ],
+    "gunTxt": "机枪方向◂ 原作朝上 ▸"
+   }
+  },
+  {
+   "name": "护甲满时开过修理包：提示「护甲已满」，修理包留在原地",
+   "ok": true,
+   "detail": {
+    "kits": 1,
+    "toast": "护甲已满：修理包先留着，受伤后再回来拿"
+   }
+  },
+  {
+   "name": "闪光星：武器直接升到四级",
+   "ok": true,
+   "detail": {
+    "weapon": 4,
+    "banner": "闪光星！"
+   }
+  },
+  {
+   "name": "绿色星（无限命模式）：护甲补满 +3000 分",
+   "ok": true,
+   "detail": {
+    "armor": 3,
+    "ds": 3000
+   }
+  },
+  {
+   "name": "水中石像机枪打不动（只吃手雷 / 火箭）",
+   "ok": true,
+   "detail": {
+    "hp0": 4,
+    "hp1": 4
+   }
+  },
+  {
+   "name": "机枪能把迎面飞来的导弹打掉",
+   "ok": true,
+   "detail": 1
+  },
+  {
+   "name": "水中石像一发爆炸物就沉没",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "越过触发线：轰炸机从北面飞来",
+   "ok": true,
+   "detail": {
+    "ev": 1,
+    "bomber": {
+     "type": "bomber",
+     "x": -6.12,
+     "y": 168.75,
+     "hp": 1,
+     "active": true,
+     "elevated": false,
+     "id": null,
+     "stage": null,
+     "state": "fly"
+    }
+   }
+  },
+  {
+   "name": "轰炸机沿途投下炸弹（抛物线落地爆炸）",
+   "ok": true,
+   "detail": {
+    "maxArcs": 2
+   }
+  },
+  {
+   "name": "火箭能打下轰炸机",
+   "ok": true,
+   "detail": {
+    "type": "bomber",
+    "x": -6.12,
+    "y": 156.25,
+    "hp": 1,
+    "active": true,
+    "elevated": false,
+    "id": null,
+    "stage": null,
+    "state": "fly"
+   }
+  },
+  {
+   "name": "敌方吉普靠近后抛手雷（抛物线投掷物）",
+   "ok": true,
+   "detail": {
+    "arcs": [
+     [
+      -0.6,
+      256.6,
+      0.37
+     ]
+    ],
+    "jeeps": 4
+   }
+  },
+  {
+   "name": "靠近时石柱朝路中倒下，横在路上",
+   "ok": true,
+   "detail": {
+    "fall": 1,
+    "fp": {
+     "type": "fallpillar",
+     "x": -8,
+     "y": 254,
+     "hp": 7,
+     "active": true,
+     "elevated": false,
+     "id": null,
+     "stage": null,
+     "state": "down"
+    }
+   }
+  },
+  {
+   "name": "倒下的石柱一发爆炸物就能炸开",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "进入庭院：路障升起，4 座石像开战",
+   "ok": true,
+   "detail": {
+    "type": "statues",
+    "state": "fight",
+    "spawned": 4,
+    "killed": 0,
+    "pips": [
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   }
+  },
+  {
+   "name": "Boss 音乐与 Boss 血条（4 格）",
+   "ok": true,
+   "detail": "boss"
+  },
+  {
+   "name": "石像眼睛闪光后张嘴发射追踪导弹",
+   "ok": true,
+   "detail": 1
+  },
+  {
+   "name": "机枪打不动石像",
+   "ok": true,
+   "detail": {
+    "type": "bust",
+    "x": -10.5,
+    "y": 347,
+    "hp": 12,
+    "active": true,
+    "elevated": false,
+    "id": 1,
+    "stage": null,
+    "state": "open"
+   }
+  },
+  {
+   "name": "爆炸物命中石像扣血（3 发爆炸物击毁一座）",
+   "ok": true,
+   "detail": {
+    "type": "bust",
+    "x": -10.5,
+    "y": 347,
+    "hp": 8,
+    "active": true,
+    "elevated": false,
+    "id": 1,
+    "stage": null,
+    "state": "open"
+   }
+  },
+  {
+   "name": "第 3 发击毁石像，血条少一格",
+   "ok": true,
+   "detail": {
+    "type": "statues",
+    "state": "fight",
+    "spawned": 4,
+    "killed": 1,
+    "pips": [
+     "dead",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   }
+  },
+  {
+   "name": "4 座石像全部击毁 → 第二关完成",
+   "ok": true,
+   "detail": {
+    "type": "statues",
+    "state": "done",
+    "spawned": 4,
+    "killed": 4,
+    "pips": [
+     "dead",
+     "dead",
+     "dead",
+     "dead"
+    ]
+   }
+  },
+  {
+   "name": "第二关结算：标题、Boss 石像击毁数、「后续关卡制作中」、主按钮「从第一关再玩一次」",
+   "ok": true,
+   "detail": {
+    "resTitle": "第二关完成！",
+    "resExtra": "本关用时 0 分 24 秒 · 阵亡 0 次 · 已打通目前全部 2 关，后续关卡制作中 · 无限命 · 标准 3 格护甲 · 受击 0 次 · 修理包 0 个 · 最高分 30000",
+    "nextHidden": true,
+    "restartTxt": "从第一关再玩一次 Enter",
+    "focus": "restart"
+   }
+  },
+  {
+   "name": "打通最后一关的结算不显示「进入下一关」按钮",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "第二关结算面板在 844×390 横屏下完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 23,
+    "bottom": 367,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 390,
+    "rows": 11
+   }
+  },
+  {
+   "name": "打通第一关后，主菜单「起始关卡」可以切到第二关，背景换成废墟城",
+   "ok": true,
+   "detail": {
+    "st2": "起始关卡◂ 第二关 ▸",
+    "sub2": "第二关 · 废墟城"
+   }
+  },
+  {
+   "name": "手机横屏：第二关触屏按键显示，摇杆向上开车向北",
+   "ok": true,
+   "detail": {
+    "stage": 2,
+    "touchHidden": false,
+    "dy": 4.44
+   }
+  },
+  {
+   "name": "全程无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

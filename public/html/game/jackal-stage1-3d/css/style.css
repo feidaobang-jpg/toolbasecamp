@@ -263,8 +263,6 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 62px); }
 .overlay { align-items: flex-start; }
 .overlay > .panel { margin: auto; }
 
-body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
-
 /* Plain buttons: selection is shown by the border and fill. */
 button::before,button::after,.items>a::before{content:none!important}
 
@@ -296,3 +294,37 @@ button::before,button::after,.items>a::before{content:none!important}
 #stage.boss-fight #banner span { font-size:12px; }
 #stage #pause-stats { font-size:13px; line-height:1.7; text-align:center; }
 #stage #pause .help { text-align:center; margin:0; }
+
+/* ---------- 隐藏属性与全屏入口（v0.7.9） ---------- */
+/* .items > button 与 #stage #hud 的 display 会盖过浏览器默认的 [hidden]：结算页「进入下一关」、标题页 HUD 因此误显示 */
+#stage #hud[hidden], #stage .items > [hidden] { display: none !important; }
+/* 全屏按钮由脚本按浏览器能力设置 hidden；需压过公共界面里 body.mobile-device 的 display:block!important */
+html body #btn-fs[hidden], html body .items > .fs-btn[hidden] { display: none !important; }
+
+/* ---------- 手机横屏紧凑菜单（v0.7.9）：844×390 起主菜单、暂停、结算完整落在视口内；
+   更矮或更窄（如 568×320）时整层滚动，首尾都能到达 ---------- */
+#stage.compact .overlay { padding-top: calc(var(--sat) + 8px); padding-bottom: calc(var(--sab) + 8px); }
+#stage.compact .panel { padding: 10px 14px; }
+#stage.compact .items > button, #stage.compact .items > a { padding-left: 14px; padding-right: 10px; }
+#stage.compact .control-modes { margin: 0 !important; gap: 6px !important; }
+#stage.compact .control-modes button[data-control-mode] { min-height: 40px; padding: 4px 8px; font-size: 13px; }
+/* 暂停：左列标题、得分与操作提示，右列两列选项 */
+#stage.compact:not(.narrow) #pause .panel {
+  max-width: 820px; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto 1fr;
+  column-gap: 18px; row-gap: 8px; align-items: start;
+}
+#stage.compact:not(.narrow) #pause .panel > * { grid-column: 1; }
+#stage.compact:not(.narrow) #pause .panel > .items { grid-column: 2; grid-row: 1 / -1; }
+#stage.compact:not(.narrow) #pause h2, #stage.compact:not(.narrow) #pause #pause-stats, #stage.compact:not(.narrow) #pause .help { text-align: left; }
+/* 结算：左列标题与计分表，右列总结与按钮 */
+#stage.compact:not(.narrow) #result .panel {
+  max-width: 820px; grid-template-columns: minmax(0, 1.2fr) minmax(220px, 1fr); grid-template-rows: auto 1fr;
+  column-gap: 18px; row-gap: 8px; align-items: start;
+}
+#stage.compact:not(.narrow) #result h2 { grid-column: 1; grid-row: 1; text-align: left; }
+#stage.compact:not(.narrow) #result #tally { grid-column: 1; grid-row: 2; }
+#stage.compact:not(.narrow) #result #res-extra { grid-column: 2; grid-row: 1; text-align: left; }
+#stage.compact:not(.narrow) #result .items { grid-column: 2; grid-row: 2; grid-template-columns: 1fr; }
+/* 窄横屏：主菜单上下排列（选项保持两列），面板从顶部开始，整层滚动 */
+#stage.compact.narrow .title-screen .panel { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+#stage.compact.narrow .rules { margin: 4px 0 2px; }

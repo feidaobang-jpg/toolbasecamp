@@ -92,9 +92,10 @@ function refreshOptions() {
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
   });
   $('hi-val').textContent = G.hi;
-  const fsOn = !!fsElement();
-  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  const fsOn = !!fsElement(), fsShow = fsOn || fsCapable();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; b.hidden = !fsShow; });
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('btn-fs').hidden = !fsShow;
   $('demo-badge').hidden = !(uiMode === 'game' && settings.demo);
   $('cam-label').textContent = camCtl.preset().name;
   if (uiMode === 'title' && L.STAGE) $('menu-sub').textContent = GM.STAGE_NAME[L.STAGE_NO] + ' · ' + L.STAGE.title;
@@ -289,6 +290,14 @@ function showResult(res) {
 
 // ---------- 全屏 ----------
 const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+// 全屏入口按浏览器实际能力显示，不按手机/电脑分类隐藏：iPhone Safari 没有元素全屏、未授权全屏的 iframe 报 fullscreenEnabled=false，
+// 这些情况隐藏按钮；能请求但被拒绝时由 toggleFullscreen 提示并继续页面内游玩
+function fsCapable() {
+  const el = document.documentElement;
+  if (!(el.requestFullscreen || el.webkitRequestFullscreen)) return false;
+  const enabled = document.fullscreenEnabled !== undefined ? document.fullscreenEnabled : document.webkitFullscreenEnabled;
+  return enabled !== false;
+}
 const fsLog = [];
 function toggleFullscreen() {
   if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
@@ -335,6 +344,7 @@ function layout() {
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
   stage.classList.toggle('rotated', rotate);
   stage.classList.toggle('compact', H < 520);
+  stage.classList.toggle('narrow', W < 640);   // 568×320 一类窄横屏：菜单改为上下排列、整层滚动
   stage.classList.toggle('portrait', H > W);
   const orient = rotate + ':' + (W > H);
   if (lastOrient !== null && orient !== lastOrient) IN.clear();
@@ -519,7 +529,7 @@ if (TEST) {
     version: VERSION, seed,
     snapshot() {
       const s = GM.snapshot();
-      s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent };
+      s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsCapable: fsCapable(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent };
       s.input = IN.debug();
       const pl = GM.player();
       s.cam = { tx: +camCtl.tx.toFixed(2), ty: +camCtl.ty.toFixed(2), yaw: +camCtl.yaw.toFixed(3), heading: pl ? pl.ang + camCtl.yaw : 0, bodyHeading: pl ? pl.ang : 0, lookPending: camCtl.lookPending, gunAngle: pl ? GM.gunAngle() : 0, axes: camCtl.axes(), quad: camCtl.quad.map(q => q.map(v => +v.toFixed(1))) };

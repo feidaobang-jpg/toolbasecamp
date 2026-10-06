@@ -362,6 +362,11 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   check('用过演示模式的局不计最高分', end && end.data.demo === true && end.data.newHi === false, end && end.data);
   s = await snap(page);
   check('第一关结算首焦点「进入第二关」', s.ui.focus === 'next' && /进入第二关/.test(nextTxt), { focus: s.ui.focus, nextTxt });
+  // 同一张真实结算单在手机横屏尺寸下：左列计分表、右列按钮，整块落在视口内
+  await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(300);
+  const rfit = await page.evaluate(() => { const p = document.querySelector('#result .panel').getBoundingClientRect(); return { top: Math.round(p.top), bottom: Math.round(p.bottom), left: Math.round(p.left), right: Math.round(p.right), vw: innerWidth, vh: innerHeight, rows: document.querySelectorAll('#tally tr').length }; });
+  check('第一关结算面板在 844×390 横屏下完整落在视口内', rfit.top >= 0 && rfit.bottom <= rfit.vh && rfit.left >= 0 && rfit.right <= rfit.vw, rfit);
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.waitForTimeout(300);
   const scoreBefore = s.score, weaponBefore = s.weapon;
   await page.keyboard.press('Enter'); await steps(5);
   s = await snap(page);
@@ -402,6 +407,7 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   for (let k = 0; k < 3; k++) { await page.evaluate(() => { __JK_TEST__.cheat.state().P.shield = 0; }); await cheat('hurt'); await steps(150); await steps(170); }
   await steps(200); await page.waitForTimeout(800); s = await snap(page);
   check('经典模式命数用完 → 失败结算', s.ui.overlay === 'result' && /任务失败/.test(await page.textContent('#res-title')), { overlay: s.ui.overlay, lives: s.lives, mode: s.mode });
+  check('失败结算不显示「进入下一关」（hidden 不被按钮样式盖掉）', !(await page.isVisible('#res-next')) && s.ui.focus === 'restart', { focus: s.ui.focus });
   const resExtra = await page.textContent('#res-extra');
   check('结算注明「经典 3 命 · 经典一发」', /经典 3 命/.test(resExtra) && /经典一发/.test(resExtra), resExtra);
   // 复原无限命 + 标准 3 格设置

@@ -1,0 +1,101 @@
+{
+ "schema_version": 1,
+ "game_id": "jackal-stage1-3d",
+ "version": "v0.7.9",
+ "base_version": "v0.7.8",
+ "created_at": "2026-10-07T05:15:00+08:00",
+ "classification": "普通补丁",
+ "changes": [
+  "手机横屏紧凑菜单：844×390 起主菜单、暂停、结算完整落在视口内（暂停改左列标题/得分、右列两列选项；结算改左列计分表、右列按钮）；568×320 等窄横屏改为上下排列、整层滑动，首尾都能用手指与键盘到达。",
+  "全屏入口按浏览器实际能力显示，不再按手机分类处理：支持 Fullscreen API 时菜单与右上角显示，iPhone Safari、未授权全屏的 iframe 等不支持时隐藏，键盘导航跳过；被拒绝时仍提示并继续页面内游玩。",
+  "修正 hidden 被样式盖掉：失败结算或打通最后一关后不再显示「进入下一关」，标题页不再从菜单后漏出战斗 HUD。",
+  "QA：mobile.js 断言改为全屏按能力显示，修复已删除得分卡导致的超时，新增窄横屏滚动可达、暂停/结算适配与不支持全屏场景；desktop.js / stage2.js 新增结算按钮与横屏结算面板检查。"
+ ],
+ "bugs": [
+  {
+   "id": "landscape-menu-overflow",
+   "reported_by": "v0.7.8 回归（2026-10-06 夜）",
+   "found_version": "线上 v0.7.8 及更早",
+   "reproduction": "qa/mobile.js，844×390 手机横屏打开主菜单",
+   "observed": "主菜单底部 401 > 390，超出 11px；暂停菜单 499、568×320 下主菜单 432 且右列选项横向溢出面板",
+   "cause": "公共界面新增的三键操作模式行（44px + 上下 8px 外边距）让紧凑菜单多出一行；暂停层在紧凑横屏仍是标题、提示、选项上下堆叠；窄屏两列网格放不下选项最小宽度",
+   "fix": "紧凑模式压缩操作模式行与面板内边距，暂停/结算改为左右两列，宽度 < 640 时主菜单改上下排列并整层滚动",
+   "status": "fixed",
+   "retest": "mobile.js 57/57：844×390 主菜单 11.5→378.5、暂停 33→357、旋转布局暂停完整；568×320 主菜单/暂停手指滑到底与回顶、键盘绕首尾均可达；desktop.js/stage2.js 真实结算单 844×390 下 23→367"
+  },
+  {
+   "id": "fullscreen-assert-vs-rule",
+   "reported_by": "v0.7.8 回归",
+   "observed": "mobile.js 断言手机全屏入口必须隐藏，与 2026-10-06「全屏按实际浏览器能力检测，不因手机分类隐藏」矛盾；游戏 CSS 也留着按手机隐藏的旧规则（被公共界面强制显示盖住）",
+   "fix": "main.js 新增 fsCapable()（元素全屏方法存在且 fullscreenEnabled 不为 false）设置按钮 hidden；删除旧的按手机隐藏 CSS；断言改为与能力一致，并实测点全屏、退出全屏自动暂停",
+   "status": "fixed"
+  },
+  {
+   "id": "mobile-qa-timeout",
+   "observed": "mobile.js 在竖屏段 locator('#hud .hud-score') 等待 30 秒后 TimeoutError，整套中断",
+   "cause": "v0.6 精简战斗面板时得分卡移入暂停菜单，脚本仍找旧卡片",
+   "fix": "改为检查护甲卡片与相邻武器卡、暂停按钮不重叠且在屏幕内",
+   "status": "fixed"
+  },
+  {
+   "id": "hidden-overridden-by-css",
+   "reported_by": "本次排查中发现",
+   "found_version": "线上 v0.7.8 及更早",
+   "observed": "#res-next 设 hidden 后计算样式仍为 flex：失败结算、最后一关结算仍显示「进入下一关」，鼠标/触屏可点；#hud 在标题页 hidden 仍显示（1280×720 等宽屏可见菜单后露出 HUD）",
+   "cause": ".items > button 与 #stage #hud 的 display 优先级高于浏览器默认 [hidden]",
+   "fix": "#stage #hud[hidden]、#stage .items > [hidden] 强制 display:none",
+   "status": "fixed",
+   "retest": "desktop.js「失败结算不显示进入下一关」、stage2.js「打通最后一关的结算不显示进入下一关按钮」通过"
+  }
+ ],
+ "build": {
+  "bundle_sha256": "cce26f0a95be4fb81c145bc9b4f4efc44500826afb57d1e4c49c1e7b83181cbb",
+  "style_sha256": "732783a0b33e225cb439300f7db50516151fec643d791f63b41596b256a0509f",
+  "esbuild": "0.28.2",
+  "cache_tags": "index.html css/js ?v=menu-fit1"
+ },
+ "qa": [
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 57/57",
+   "evidence": "qa/mobile.json"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 94/94",
+   "evidence": "qa/desktop.json"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 31/31",
+   "evidence": "qa/stage2.json"
+  },
+  {
+   "method": "qa/touch-view.js",
+   "result": "pass（全部 PASS，无脚本错误）"
+  },
+  {
+   "method": "qa/hud-visibility.cjs",
+   "result": "pass 134/134"
+  },
+  {
+   "method": "临时视口测量（14 种视口：手机横竖、平板、桌面）",
+   "result": "手机横屏 844×390、932×430 三种菜单均完整；667×375、740×360 暂停与结算完整、主菜单整层滚动；桌面/平板与修改前一致（高度不足时仍整层滚动）"
+  }
+ ],
+ "env_note": "Edge 设备模拟 + CDP 触摸（JK_CHANNEL=msedge JK_GPU=1），非真机；多指与真机全屏行为未在真机验证",
+ "notes_for_record": [
+  "hud-visibility.cjs 回归时未设 JK_OUT，覆盖了 D:/project/task-artifacts/boss-hud-20261006/qa 里 v0.7.2 留下的截图与 results.json（v0.7.2 handoff 引用该目录；git 记录不受影响，原文件无法恢复）。脚本默认输出已改为 qa/out/hud-visibility。"
+ ],
+ "site": {
+  "status": "pending_deploy"
+ },
+ "toy": {
+  "id": 39863936092160,
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "普通补丁累计"
+ }
+}

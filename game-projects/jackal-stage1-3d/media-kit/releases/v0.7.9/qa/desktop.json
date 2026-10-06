@@ -1,0 +1,961 @@
+{
+ "when": "2026-10-06T21:10:17.483Z",
+ "env": "Playwright 1.63.0 Chromium headless, SwiftShader（软件渲染）, 1280×720, ?q=low",
+ "pass": 94,
+ "total": 94,
+ "results": [
+  {
+   "name": "加载完成并显示主菜单，WebGL 正常",
+   "ok": true,
+   "detail": {
+    "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+   }
+  },
+  {
+   "name": "首个焦点在「开始游戏」",
+   "ok": true,
+   "detail": "start"
+  },
+  {
+   "name": "菜单/暂停/结算都有「返回游戏列表」普通链接",
+   "ok": true,
+   "detail": [
+    "../../../games.html",
+    "../../../games.html",
+    "../../../games.html"
+   ]
+  },
+  {
+   "name": "↓ 到「起始关卡」，未过关时只有第一关",
+   "ok": true,
+   "detail": {
+    "focus": "stage",
+    "stageTxt": "起始关卡◂ 第一关 ▸"
+   }
+  },
+  {
+   "name": "↓ 移动焦点到「命数」",
+   "ok": true,
+   "detail": "lives"
+  },
+  {
+   "name": "→ 切换为经典 3 命",
+   "ok": true,
+   "detail": "命数◂ 经典 3 命 ▸"
+  },
+  {
+   "name": "← 切回无限命（默认）",
+   "ok": true,
+   "detail": "命数◂ 无限命 ▸"
+  },
+  {
+   "name": "↓ 到「耐久」，默认标准 3 格",
+   "ok": true,
+   "detail": {
+    "focus": "armor",
+    "armTxt0": "耐久◂ 标准 3 格 ▸"
+   }
+  },
+  {
+   "name": "←/→ 在「标准 3 格 / 经典一发」之间切换",
+   "ok": true,
+   "detail": {
+    "armTxt1": "耐久◂ 经典一发 ▸",
+    "armTxt2": "耐久◂ 标准 3 格 ▸"
+   }
+  },
+  {
+   "name": "「机枪方向」默认跟随车头，可切换为原作朝上（原作）",
+   "ok": true,
+   "detail": {
+    "gunTxt0": "机枪方向◂ 跟随车头 ▸",
+    "gunTxt1": "机枪方向◂ 原作朝上 ▸",
+    "gunTxt2": "机枪方向◂ 跟随车头 ▸"
+   }
+  },
+  {
+   "name": "演示模式默认关闭",
+   "ok": true,
+   "detail": "演示模式（无敌）◂ 关 ▸"
+  },
+  {
+   "name": "菜单里 →/← 切换视角预设",
+   "ok": true,
+   "detail": "top"
+  },
+  {
+   "name": "菜单里 C 键循环视角（6 个预设回到斜俯视）",
+   "ok": true,
+   "detail": "oblique"
+  },
+  {
+   "name": "音量可用 ←/→ 调节",
+   "ok": true,
+   "detail": {
+    "vol0": "音量◂ 70% ▸",
+    "vol1": "音量◂ 60% ▸"
+   }
+  },
+  {
+   "name": "↑ 回到「开始游戏」",
+   "ok": true,
+   "detail": "start"
+  },
+  {
+   "name": "Enter 开始游戏，不自动全屏",
+   "ok": true,
+   "detail": {
+    "mode": "intro",
+    "fs": false
+   }
+  },
+  {
+   "name": "桌面显示键位提示、隐藏触屏按键",
+   "ok": true,
+   "detail": {
+    "hintVisible": true,
+    "touchHidden": true
+   }
+  },
+  {
+   "name": "开场 BGM 开始播放",
+   "ok": true,
+   "detail": "stage"
+  },
+  {
+   "name": "标准模式开局 3 格护甲，HUD 显示 3 格",
+   "ok": true,
+   "detail": {
+    "armor": 3,
+    "pipsStart": 3
+   }
+  },
+  {
+   "name": "登陆艇开场约 1.7 秒后进入操作",
+   "ok": true,
+   "detail": {
+    "mode": "play",
+    "t": 2.43,
+    "overlay": null,
+    "x": -19,
+    "y": 10,
+    "alive": true
+   }
+  },
+  {
+   "name": "[视角 oblique] WASD 按相机水平轴移动（W 前进=北、D 右=东）",
+   "ok": true,
+   "detail": {
+    "out": {
+     "KeyD": 2.87,
+     "KeyA": 2.87,
+     "KeyW": 2.87,
+     "KeyS": 2.87
+    },
+    "ax": {
+     "fwd": {
+      "x": 0,
+      "y": 1
+     },
+     "right": {
+      "x": 1,
+      "y": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "[视角 top] WASD 按相机水平轴移动（W 前进=北、D 右=东）",
+   "ok": true,
+   "detail": {
+    "out": {
+     "KeyD": 2.87,
+     "KeyA": 2.87,
+     "KeyW": 2.87,
+     "KeyS": 2.87
+    },
+    "ax": {
+     "fwd": {
+      "x": 0,
+      "y": 1
+     },
+     "right": {
+      "x": 1,
+      "y": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "[视角 low] WASD 按相机水平轴移动（W 前进=北、D 右=东）",
+   "ok": true,
+   "detail": {
+    "out": {
+     "KeyD": 2.87,
+     "KeyA": 2.87,
+     "KeyW": 2.87,
+     "KeyS": 2.87
+    },
+    "ax": {
+     "fwd": {
+      "x": 0,
+      "y": 0.9999999999999999
+     },
+     "right": {
+      "x": 0.9999999999999999,
+      "y": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "[视角 wide] WASD 按相机水平轴移动（W 前进=北、D 右=东）",
+   "ok": true,
+   "detail": {
+    "out": {
+     "KeyD": 2.87,
+     "KeyA": 2.87,
+     "KeyW": 2.87,
+     "KeyS": 2.87
+    },
+    "ax": {
+     "fwd": {
+      "x": 0,
+      "y": 1
+     },
+     "right": {
+      "x": 1,
+      "y": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "[视角 front] WASD 按相机水平轴移动（W 前进=北、D 右=东）",
+   "ok": true,
+   "detail": {
+    "out": {
+     "KeyD": 2.87,
+     "KeyA": 2.87,
+     "KeyW": 2.87,
+     "KeyS": 2.87
+    },
+    "ax": {
+     "fwd": {
+      "x": 0,
+      "y": 1
+     },
+     "right": {
+      "x": 1,
+      "y": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "[第一人称] 车头朝北时 W → 北",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[第一人称] 车头朝北时 D → 东",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[第一人称] 车头朝东时 W → 东（方向跟车头自适应）",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "[第一人称] 显示准星",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "退出第一人称后准星隐藏",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "鼠标在画面上右拖 → 镜头平滑右转（yaw减小）",
+   "ok": true,
+   "detail": {
+    "y0": 0,
+    "y1": -0.368
+   }
+  },
+  {
+   "name": "拖回后 yaw 复位",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "W+D 斜向移动且速度归一化",
+   "ok": true,
+   "detail": {
+    "dx": 2.03,
+    "dy": 2.03,
+    "dir": 1
+   }
+  },
+  {
+   "name": "按住 J 机枪连发（默认跟随车头：朝东时子弹向东飞）",
+   "ok": true,
+   "detail": {
+    "shots": 4,
+    "vel": [
+     26,
+     1.592040838891559e-15
+    ],
+    "dir": 2
+   }
+  },
+  {
+   "name": "K 手雷朝车头（东）抛出约 9 米",
+   "ok": true,
+   "detail": {
+    "from": [
+     -19.71,
+     26
+    ],
+    "land": {
+     "x": -10.7,
+     "y": 26
+    }
+   }
+  },
+  {
+   "name": "手雷炸毁营房 H0 并放出 2 名俘虏",
+   "ok": true,
+   "detail": {
+    "h0": {
+     "name": "H0",
+     "alive": false,
+     "x": -14.5,
+     "y": 36,
+     "hp": 0
+    },
+    "freed": [
+     {
+      "n": 2,
+      "flash": 0,
+      "x": -14.5,
+      "y": 34
+     }
+    ]
+   }
+  },
+  {
+   "name": "开过去接上俘虏，HUD 车上人数增加",
+   "ok": true,
+   "detail": {
+    "carried": 2
+   }
+  },
+  {
+   "name": "HUD 显示车上俘虏数",
+   "ok": true,
+   "detail": "2"
+  },
+  {
+   "name": "营房 H0 炸开时掉出一个修理包",
+   "ok": true,
+   "detail": {
+    "drops": [
+     {
+      "x": -12.3,
+      "y": 32.4
+     }
+    ],
+    "kits": [
+     {
+      "x": -12.3,
+      "y": 32.4
+     }
+    ]
+   }
+  },
+  {
+   "name": "护甲满时修理包留在原地（之后可回来拿）",
+   "ok": true,
+   "detail": {
+    "kits": [
+     {
+      "x": -12.3,
+      "y": 32.4
+     }
+    ],
+    "armor": 3
+   }
+  },
+  {
+   "name": "敌弹命中：护甲 3 → 2，吉普不毁，进入约 1.2 秒闪烁无敌",
+   "ok": true,
+   "detail": {
+    "armor": 2,
+    "invuln": 1.03,
+    "hit": {
+     "cause": "bullet",
+     "armor": 2,
+     "x": -19,
+     "y": 14
+    }
+   }
+  },
+  {
+   "name": "HUD 护甲同步减为 2 格，画面四周闪红",
+   "ok": true,
+   "detail": {
+    "pips": 2,
+    "hurtOpacity": 0.63
+   }
+  },
+  {
+   "name": "无敌时间内再中弹不扣护甲",
+   "ok": true,
+   "detail": {
+    "armor": 2,
+    "invuln": 0.63
+   }
+  },
+  {
+   "name": "第 2 次中弹剩 1 格：HUD 变红闪烁",
+   "ok": true,
+   "detail": {
+    "armor": 1,
+    "lowCls": true
+   }
+  },
+  {
+   "name": "红边约 0.45 秒后褪去",
+   "ok": true,
+   "detail": 0
+  },
+  {
+   "name": "第 3 次中弹才被击毁",
+   "ok": true,
+   "detail": {
+    "alive": false,
+    "deaths": 1,
+    "evs": [
+     "playerDown"
+    ]
+   }
+  },
+  {
+   "name": "复活后护甲补满 3 格",
+   "ok": true,
+   "detail": {
+    "alive": true,
+    "armor": 3
+   }
+  },
+  {
+   "name": "护甲不满时开过修理包：护甲 +1，修理包消失",
+   "ok": true,
+   "detail": {
+    "before": 2,
+    "after": 3,
+    "toast": "修理包：护甲 +1"
+   }
+  },
+  {
+   "name": "经过检查点自动补满护甲",
+   "ok": true,
+   "detail": {
+    "armor": 3,
+    "cp": {
+     "k": 1,
+     "name": "营地外",
+     "refill": true
+    },
+    "toast": "检查点：营地外 · 护甲已补满"
+   }
+  },
+  {
+   "name": "闪光俘虏让武器升级为火箭（Lv2）",
+   "ok": true,
+   "detail": {
+    "weapon": 2,
+    "flash": true
+   }
+  },
+  {
+   "name": "K 发射火箭（直线飞行）",
+   "ok": true,
+   "detail": [
+    "rocket"
+   ]
+  },
+  {
+   "name": "开到直升机坪：俘虏逐个送上直升机，每名 +500",
+   "ok": true,
+   "detail": {
+    "delivered": 3,
+    "carried": 0,
+    "score": 1500
+   }
+  },
+  {
+   "name": "炸林角露出隐藏的棕色星",
+   "ok": true,
+   "detail": {
+    "item": "bomb",
+    "hidden": false,
+    "x": 30,
+    "y": 205
+   }
+  },
+  {
+   "name": "拾取棕色星：消灭画面上的敌人（原作智能炸弹），画面内不剩敌人",
+   "ok": true,
+   "detail": {
+    "killed": 0,
+    "before": 0,
+    "after": 0,
+    "banner": "棕色星！"
+   }
+  },
+  {
+   "name": "连续 3 次阵亡都能在检查点复活（无限命）",
+   "ok": true,
+   "detail": [
+    {
+     "hurt": true,
+     "alive2": false,
+     "alive": true,
+     "inv": 2.32,
+     "w": 1
+    },
+    {
+     "hurt": true,
+     "alive2": false,
+     "alive": true,
+     "inv": 2.32,
+     "w": 1
+    },
+    {
+     "hurt": true,
+     "alive2": false,
+     "alive": true,
+     "inv": 2.32,
+     "w": 1
+    }
+   ]
+  },
+  {
+   "name": "阵亡后武器回到手雷、车上俘虏散落在原地",
+   "ok": true,
+   "detail": {
+    "weapon": 1,
+    "pows": 7
+   }
+  },
+  {
+   "name": "复活保护约 2.6 秒后结束",
+   "ok": true,
+   "detail": -0.02
+  },
+  {
+   "name": "复活时显示无敌闪烁并清掉附近敌弹（respawn 事件）",
+   "ok": true,
+   "detail": [
+    {
+     "t": 42.67,
+     "f": 2560,
+     "name": "respawn",
+     "data": {
+      "x": 12,
+      "y": 258,
+      "cp": 7
+     }
+    }
+   ]
+  },
+  {
+   "name": "Esc 暂停并打开暂停菜单",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "暂停菜单首焦点「继续」",
+   "ok": true,
+   "detail": "resume"
+  },
+  {
+   "name": "暂停菜单里开启演示模式（无敌）",
+   "ok": true,
+   "detail": {
+    "lives": "inf",
+    "demo": true,
+    "armor": "std",
+    "gun": "follow"
+   }
+  },
+  {
+   "name": "Esc 继续游戏",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "演示模式右上角显示红色标识",
+   "ok": true,
+   "detail": true
+  },
+  {
+   "name": "演示模式下敌弹不会击毁吉普",
+   "ok": true,
+   "detail": {
+    "alive": true,
+    "block": 1
+   }
+  },
+  {
+   "name": "关闭演示模式后恢复正常",
+   "ok": true,
+   "detail": {
+    "lives": "inf",
+    "demo": false,
+    "armor": "std",
+    "gun": "follow"
+   }
+  },
+  {
+   "name": "火箭两发炸开营地大门",
+   "ok": true,
+   "detail": {
+    "alive": false,
+    "hp": 0
+   }
+  },
+  {
+   "name": "穿过大门进入营地并记录检查点",
+   "ok": true,
+   "detail": {
+    "y": 62.55,
+    "cp": 7
+   }
+  },
+  {
+   "name": "手雷不破坏岩崖、火箭能炸毁岩崖",
+   "ok": true,
+   "detail": {
+    "b0": 0,
+    "b1": 0,
+    "b2": 4
+   }
+  },
+  {
+   "name": "页面失焦自动暂停并清空按住的方向",
+   "ok": true,
+   "detail": {
+    "overlay": "pause",
+    "held": {
+     "u": false,
+     "d": false,
+     "l": false,
+     "r": false
+    }
+   }
+  },
+  {
+   "name": "进入 Boss 场地：路障升起、BOSS 战开始、切换 Boss 音乐",
+   "ok": true,
+   "detail": {
+    "boss": {
+     "type": "tanks",
+     "state": "intro",
+     "spawned": 0,
+     "killed": 0,
+     "pips": [
+      "wait",
+      "wait",
+      "wait",
+      "wait"
+     ]
+    },
+    "music": "boss"
+   }
+  },
+  {
+   "name": "Boss 音乐",
+   "ok": true,
+   "detail": "boss"
+  },
+  {
+   "name": "蓝色坦克依次开进（不是一次全部出现）",
+   "ok": true,
+   "detail": {
+    "type": "tanks",
+    "state": "fight",
+    "spawned": 2,
+    "killed": 0,
+    "pips": [
+     "ok",
+     "ok",
+     "wait",
+     "wait"
+    ]
+   }
+  },
+  {
+   "name": "Boss 坦克：4 发机枪子弹打掉一段（蓝 → 棕）",
+   "ok": true,
+   "detail": {
+    "before": {
+     "hp": 8,
+     "stage": 1,
+     "id": 1,
+     "x": 0.49914524531398596,
+     "y": 331.09815175678546
+    },
+    "after": {
+     "hp": 4,
+     "stage": 2,
+     "alive": true
+    }
+   }
+  },
+  {
+   "name": "再一发爆炸物直接命中击毁该坦克",
+   "ok": true,
+   "detail": {
+    "hp": 0,
+    "alive": false
+   }
+  },
+  {
+   "name": "Boss 只吃直接命中，溅射不扣血",
+   "ok": true,
+   "detail": {
+    "before": 8,
+    "after": 8
+   }
+  },
+  {
+   "name": "4 辆全部击毁后第一关完成",
+   "ok": true,
+   "detail": {
+    "type": "tanks",
+    "state": "done",
+    "spawned": 4,
+    "killed": 4,
+    "pips": [
+     "dead",
+     "dead",
+     "dead",
+     "dead"
+    ]
+   }
+  },
+  {
+   "name": "救援直升机降落后显示结算",
+   "ok": true,
+   "detail": "result"
+  },
+  {
+   "name": "结算含击毁统计、送达俘虏与总分",
+   "ok": true,
+   "detail": "第一关完成！"
+  },
+  {
+   "name": "用过演示模式的局不计最高分",
+   "ok": true,
+   "detail": {
+    "win": true,
+    "reason": "clear",
+    "stage": 1,
+    "stageCount": 2,
+    "hasNext": true,
+    "finalStage": false,
+    "startStage": 1,
+    "score": 33150,
+    "hi": 30000,
+    "newHi": false,
+    "kills": {
+     "soldier": 40,
+     "officer": 3,
+     "mg": 7,
+     "turret": 0,
+     "cannon": 8,
+     "tank": 4,
+     "brownTank": 0,
+     "bulltank": 0,
+     "ejeep": 0,
+     "bomber": 0,
+     "boat": 2,
+     "wstatue": 0,
+     "fallpillar": 0,
+     "boss": 4,
+     "bust": 0,
+     "hut": 2
+    },
+    "delivered": 3,
+    "lateDeliver": 0,
+    "freed": 6,
+    "total": 19,
+    "powBonus": 6000,
+    "seconds": 78,
+    "totalSeconds": 78,
+    "deaths": 4,
+    "totalDeaths": 4,
+    "lives": "inf",
+    "armor": "std",
+    "gun": "follow",
+    "hits": 3,
+    "kitsPicked": 1,
+    "demo": true,
+    "totalDelivered": 3
+   }
+  },
+  {
+   "name": "第一关结算首焦点「进入第二关」",
+   "ok": true,
+   "detail": {
+    "focus": "next",
+    "nextTxt": "进入第二关 Enter"
+   }
+  },
+  {
+   "name": "第一关结算面板在 844×390 横屏下完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 23,
+    "bottom": 367,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 390,
+    "rows": 11
+   }
+  },
+  {
+   "name": "Enter 进入第二关：换成废墟城，分数和武器保留，营房与大门是新的",
+   "ok": true,
+   "detail": {
+    "stage": 2,
+    "mode": "intro",
+    "score": 33150,
+    "scoreBefore": 33150,
+    "weapon": 2,
+    "weaponBefore": 2,
+    "huts": 6
+   }
+  },
+  {
+   "name": "第二关开场换成废墟城 BGM",
+   "ok": true,
+   "detail": "ruins"
+  },
+  {
+   "name": "暂停菜单「返回主菜单」",
+   "ok": true,
+   "detail": {
+    "uiMode": "title",
+    "overlay": "menu",
+    "paused": false,
+    "display": {
+     "rotated": false,
+     "W": 1280,
+     "H": 720,
+     "vw": 1280,
+     "vh": 720,
+     "dpr": 1,
+     "touchOn": false,
+     "backing": [
+      1280,
+      720
+     ]
+    },
+    "touchHidden": true,
+    "fs": false,
+    "fsCapable": true,
+    "fsLog": [],
+    "audio": "running",
+    "music": null,
+    "camera": "oblique",
+    "quality": {
+     "setting": "low",
+     "effective": "low",
+     "auto": null
+    },
+    "focus": "start",
+    "toast": null,
+    "banner": "第二关 · 废墟城石柱后面藏着闪光星"
+   }
+  },
+  {
+   "name": "经典模式开局 3 命，HUD 显示 ×3",
+   "ok": true,
+   "detail": {
+    "lives": 3
+   }
+  },
+  {
+   "name": "经典一发：护甲上限 1，HUD 标「一发」",
+   "ok": true,
+   "detail": {
+    "armor": 1,
+    "max": 1,
+    "clsCls": true
+   }
+  },
+  {
+   "name": "经典一发：修理包改为 +300 分",
+   "ok": true,
+   "detail": {
+    "ds": 300,
+    "armor": 1
+   }
+  },
+  {
+   "name": "经典一发：一颗子弹就被击毁",
+   "ok": true,
+   "detail": {
+    "alive": false,
+    "deaths": 1
+   }
+  },
+  {
+   "name": "经典模式命数用完 → 失败结算",
+   "ok": true,
+   "detail": {
+    "overlay": "result",
+    "lives": -1,
+    "mode": "over"
+   }
+  },
+  {
+   "name": "失败结算不显示「进入下一关」（hidden 不被按钮样式盖掉）",
+   "ok": true,
+   "detail": {
+    "focus": "restart"
+   }
+  },
+  {
+   "name": "结算注明「经典 3 命 · 经典一发」",
+   "ok": true,
+   "detail": "本关用时 0 分 24 秒 · 阵亡 4 次 · 经典 3 命 · 经典一发 · 最高分 30000"
+  },
+  {
+   "name": "F 键独立请求全屏（成功或被拒绝都有记录且可继续）",
+   "ok": true,
+   "detail": [
+    "ok",
+    "lock-rejected"
+   ]
+  },
+  {
+   "name": "退出全屏自动暂停",
+   "ok": true,
+   "detail": "pause"
+  },
+  {
+   "name": "全程无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "warns": []
+}

@@ -2,7 +2,8 @@
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 const fs = require('node:fs'), path = require('node:path');
 const BASE = process.env.JK_BASE || 'http://127.0.0.1:8926/html/game/jackal-stage1-3d/index.html';
-const OUT = process.env.JK_OUT || 'D:/project/task-artifacts/boss-hud-20261006/qa';
+// 默认写到不入库的 qa/out/，避免覆盖 v0.7.2 任务留在 task-artifacts 的历史截图
+const OUT = process.env.JK_OUT || path.join(__dirname, 'out/hud-visibility');
 const results = [];
 function check(name, ok, data) { results.push({ name, ok: !!ok, data }); console.log(ok ? 'PASS' : 'FAIL', name, JSON.stringify(data ?? '')); }
 async function measure(page) {
