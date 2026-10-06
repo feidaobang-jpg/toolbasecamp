@@ -39,7 +39,7 @@
    "channels": {
     "website": "deployed_verified",
     "toy": "published",
-    "bilibili": "pending_merge"
+    "bilibili": "merged_into_v0.5.2"
    },
    "record": "releases/v0.5.1/handoff.json"
   },
@@ -49,9 +49,9 @@
    "summary": "画风改回旧版硬派写实（第一关回到 v0.4.1，第二关同款）；封面恢复。",
    "record": "releases/v0.5.2/handoff.json",
    "channels": {
-    "website": "pending",
-    "toy": "pending",
-    "bilibili": "pending"
+    "website": "deployed_verified",
+    "toy": "published",
+    "bilibili": "public_verified"
    }
   }
  ],
@@ -62,19 +62,19 @@
   "category": "GAME",
   "visibility": "public",
   "status": "published",
-  "submitted_at": "2026-10-06T10:01:00.170832+00:00",
-  "package": "dist/toy-v0.5.1/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
-  "note": "v0.5.1 已过审，公开入口已显示无敌不限时设置。",
-  "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
+  "submitted_at": "2026-10-06T21:23:05+08:00",
+  "package": "dist/toy-v0.5.2/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_9iIciGlb/index.html",
+  "note": "v0.5.2（画风改回旧版、第二关同款）已过审，公开入口版本号已核验。",
+  "status_verified": "toy mylist published / PUBLIC；正式入口 iframe 40412421031936-v23096 显示 v0.5.2，桌面和触屏 20/20 通过",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.5.1",
-  "verified_at": "2026-10-06T10:13:04.838269+00:00",
+  "version": "v0.5.2",
+  "verified_at": "2026-10-06T21:25:58+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.5.1",
+  "last_published_version": "v0.5.2",
   "pending_updates": [
    {
     "version": "v0.2.1",

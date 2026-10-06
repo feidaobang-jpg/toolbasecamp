@@ -1,0 +1,189 @@
+{
+  "target": "https://www.bilibili.com/toy/preview/preview_RUoKI7nB/index.html",
+  "results": [
+    {
+      "name": "电脑：普通模式倒计时",
+      "pass": true,
+      "info": 0.9
+    },
+    {
+      "name": "电脑：本局开启无敌保留血量与时间",
+      "pass": true,
+      "info": 0.9
+    },
+    {
+      "name": "电脑：无限时间显示且无警告",
+      "pass": true,
+      "info": "无限时间"
+    },
+    {
+      "name": "电脑：区域0无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "电脑：区域1无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "电脑：区域2无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "电脑：区域3无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "电脑：区域4无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "电脑：区域5无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "电脑：零时间开启无敌不死",
+      "pass": true,
+      "info": 100
+    },
+    {
+      "name": "电脑：关闭恢复剩余时间且本局记为演示",
+      "pass": true,
+      "info": {
+        "timer": 1,
+        "demoUsed": true
+      }
+    },
+    {
+      "name": "电脑：普通模式仍会超时死亡",
+      "pass": true,
+      "info": 0
+    },
+    {
+      "name": "电脑：无运行异常",
+      "pass": true,
+      "info": []
+    },
+    {
+      "name": "触屏：普通模式倒计时",
+      "pass": true,
+      "info": 0.9
+    },
+    {
+      "name": "触屏：本局开启无敌保留血量与时间",
+      "pass": true,
+      "info": 0.9
+    },
+    {
+      "name": "触屏：无限时间显示且无警告",
+      "pass": true,
+      "info": "无限时间"
+    },
+    {
+      "name": "触屏：区域0无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "触屏：区域1无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "触屏：区域2无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "触屏：区域3无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "触屏：区域4无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "触屏：区域5无敌不超时、不扣血",
+      "pass": true,
+      "info": {
+        "mode": "play",
+        "timer": 0.1,
+        "hp": 100
+      }
+    },
+    {
+      "name": "触屏：零时间开启无敌不死",
+      "pass": true,
+      "info": 100
+    },
+    {
+      "name": "触屏：关闭恢复剩余时间且本局记为演示",
+      "pass": true,
+      "info": {
+        "timer": 1,
+        "demoUsed": true
+      }
+    },
+    {
+      "name": "触屏：普通模式仍会超时死亡",
+      "pass": true,
+      "info": 0
+    },
+    {
+      "name": "触屏：无运行异常",
+      "pass": true,
+      "info": []
+    }
+  ]
+}
