@@ -2,7 +2,7 @@
 // 以及 5 个视角预设（斜俯视 / 正俯视 / 近景 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
 // 美术全部程序化：基础几何体 + Canvas 纹理。1 个 8px 格 = 1 个世界单位，战场中心在原点。
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer } from './sim.js?v=pickup-clean1';
+import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer } from './sim.js?v=hit-audio1';
 
 const C = N / 2, TAU = Math.PI * 2;
 const P = v => v / 8 - C;                       // FC 像素 → 世界坐标

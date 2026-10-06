@@ -1,0 +1,38 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "results": [
+    {
+      "viewport": "desktop",
+      "mode": "classic",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "basic"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": false
+    }
+  ],
+  "physicalPhoneTest": false
+}

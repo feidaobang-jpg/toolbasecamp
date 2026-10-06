@@ -56,7 +56,7 @@ export function createWorld(run) {
   }
   return w;
 }
-export const emit = (w, type, d = {}) => { w.events.push({ type, ...(w.activeSlot === undefined ? {} : { slot: w.activeSlot }), ...d }); };
+export const emit = (w, type, d = {}) => { w.events.push({ ...d, ...(w.activeSlot === undefined ? {} : { slot: w.activeSlot }), type }); };
 
 // Each player owns lives / equipment; score, enemies and base remain shared.
 const PLAYER_FIELDS = ['lives', 'hp', 'stars', 'plate', 'boats'];
@@ -608,7 +608,7 @@ export function destroyBot(w, t, byGrenade) {
     const pts = Math.round(SCORE[key] * w.diff.scoreMul / 10) * 10;
     addScore(w, pts);
   }
-  emit(w, 'boom', { x: t.x + t.size / 2, y: t.y + t.size / 2, big: true, huge: t.size > 16, team: 'bot', type: t.type });
+  emit(w, 'boom', { x: t.x + t.size / 2, y: t.y + t.size / 2, big: true, huge: t.size > 16, team: 'bot', enemyType: t.type });
   if (t === w.boss || t.type === 'mini' || t.size > 16) {
     w.run.stats.bosses++;
     emit(w, 'bossDown', { name: t.bossName, x: t.x + t.size / 2, y: t.y + t.size / 2 });

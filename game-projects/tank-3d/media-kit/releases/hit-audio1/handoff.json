@@ -1,0 +1,43 @@
+{
+  "version": "hit-audio1",
+  "classification": "普通补丁",
+  "task_id": "01a110d2-tank-hit-audio-20261006-02",
+  "branch": "codex/tank-pickup-clean-20261006",
+  "changes": [
+    "修复敌人击毁事件被坦克种类覆盖，恢复原版爆炸声和爆炸效果",
+    "重甲未击毁时播放现有原版金属命中音，解码失败保留合成回退",
+    "保护事件类型字段，防止携带数据再次覆盖"
+  ],
+  "reproduction": {
+    "actualProjectile": true,
+    "before": {
+      "enemyState": "boom",
+      "eventTypes": [
+        "basic"
+      ],
+      "audioCalls": []
+    },
+    "browser_before": "before/verification.json"
+  },
+  "validation": {
+    "combat_audio_cases": 24,
+    "sim_cases": 19,
+    "coop_sim": "passed",
+    "audio_graph": "captures/verification.json",
+    "actualOutputSignal": true,
+    "physicalPhoneTest": false
+  },
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "slug": "feidao-tank-3d",
+    "status": "pending_preview"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通音效补丁并入下次有意义的说明更新；当前入口和操作说明未改变"
+  },
+  "created_at": "2026-10-06T11:12:11.992033+00:00"
+}
