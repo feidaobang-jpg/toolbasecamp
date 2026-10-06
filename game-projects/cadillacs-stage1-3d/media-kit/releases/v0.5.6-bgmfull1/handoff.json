@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.5.6-bgmfull1",
+  "base_version": "v0.5.6",
+  "created_at": "2026-10-07T06:16:58.972305+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "v0.5.6-bgmfull1",
+    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+    "dirty": false,
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+    "fingerprint": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee"
+  },
+  "changes": [
+    {
+      "id": "complete-original-bgm",
+      "before": "所有循环录音被截为前70秒；听到完整乐段前就重头开始。",
+      "after": "恢复所下载原录音完整时长，保持原有按曲结束循环与暂停续播。",
+      "tracks": [
+        {
+          "file": "sounds/roof.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 339.758531,
+          "sha256": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa"
+        },
+        {
+          "file": "sounds/hall.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 118.496063,
+          "sha256": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c"
+        },
+        {
+          "file": "sounds/street.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 115.153406,
+          "sha256": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9"
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 89.010438,
+          "sha256": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced"
+        },
+        {
+          "file": "sounds/forest.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 199.3415,
+          "sha256": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a"
+        },
+        {
+          "file": "sounds/swamp.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 82.737594,
+          "sha256": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93"
+        },
+        {
+          "file": "sounds/boss2.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 103.697219,
+          "sha256": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d"
+        }
+      ],
+      "verification": "passed after merge: complete browser decode, 70s boundary, pause/continue, restart with measured output"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "fixed-70s-truncation",
+      "status": "fixed",
+      "cause": "资源压缩时使用固定70秒时长上限。",
+      "before_media_ids": [],
+      "after_media_ids": []
+    }
+  ],
+  "media": [
+    {
+      "id": "cadillacs-stage1-3d-desktop",
+      "file": "releases/v0.5.6-bgmfull1/captures/cadillacs-stage1-3d-desktop.png",
+      "sha256": "07f238ea930584bd49ee935c185aa9791d297aae0e67c5eea510244dba8d5ea2",
+      "kind": "screenshot",
+      "version": "v0.5.6-bgmfull1",
+      "build_id": "v0.5.6-bgmfull1",
+      "capture_mode": "realtime-automation",
+      "description": "最终合并版本实际截图；手机为视口模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "cadillacs-stage1-3d-mobile",
+      "file": "releases/v0.5.6-bgmfull1/captures/cadillacs-stage1-3d-mobile.png",
+      "sha256": "90728189c5a58d23956d801d16dfde7649cf0d864383d34353d53d2720be3f55",
+      "kind": "screenshot",
+      "version": "v0.5.6-bgmfull1",
+      "build_id": "v0.5.6-bgmfull1",
+      "capture_mode": "realtime-automation",
+      "description": "最终合并版本实际截图；手机为视口模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [
+    {
+      "handoff": "../v0.5.6/handoff.json",
+      "reason": "Parallel gameplay changes retained"
+    }
+  ],
+  "channels": {
+    "website": {
+      "status": "deployed_verified",
+      "version": "v0.5.6-bgmfull1",
+      "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+      "verification": "17 public audio/runtime assets and 3 entrypoint script revisions checked",
+      "verified_at": "2026-10-07T06:49:45.870220+08:00"
+    },
+    "toy": {
+      "id": 40412421031936,
+      "version": "v0.5.6-bgmfull1",
+      "status": "published",
+      "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_ZdQQ5x9D/index.html"
+      },
+      "preview_verified": {
+        "checks": 10,
+        "desktop": true,
+        "mobile_viewport": [
+          844,
+          390
+        ],
+        "physical_phone": false,
+        "audio_full_duration": true,
+        "same_package": true
+      },
+      "submission": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_icldmorp/index.html"
+      },
+      "submitted_at": "2026-10-07T06:54:47.946386+08:00",
+      "public_verified": true
+    },
+    "bilibili": {
+      "status": "deferred",
+      "reason": "普通音频补丁并入下一次有意义的说明更新；试玩入口与操作未改变。"
+    }
+  },
+  "cover": {
+    "status": "retained",
+    "reason": "只修BGM，无画面变化。"
+  },
+  "media_status": "Final merged build screenshots captured; pre-merge 75s audio evidence retained in original release.",
+  "local_artifacts": {
+    "packages": "D:\\project\\task-artifacts\\game-bgm-20261007\\packages\\cadillacs-stage1-3d",
+    "captures": "D:/project/task-artifacts/game-bgm-20261007/media/cadillacs-stage1-3d",
+    "original_audio": "D:/project/task-artifacts/game-bgm-20261007/originals"
+  }
+}

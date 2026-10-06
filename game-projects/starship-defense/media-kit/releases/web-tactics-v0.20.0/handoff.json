@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-tactics-v0.20.0",
+  "base_version": "web-restart-audio-v0.19.4",
+  "classification": "formal_release",
+  "date": "2026-10-07",
+  "task_id": "01a11338-bd0d-7791-bc91-920d85942b43-tactics-20261007-01",
+  "changes": [
+    "逐人留守/跟随，手动指令优先，自动回防可选",
+    "预告与出兵共用计划，首章前五关混合虫潮",
+    "前五关一次性新兵补给",
+    "工程兵主动接近基地附近受损设施",
+    "战报保存设施/队友/载具损失及本关收支"
+  ],
+  "qa": {
+    "status": "passed",
+    "checks": 45,
+    "results": "qa/results.json",
+    "combat": "qa/combat.json",
+    "performance": "qa/performance.json",
+    "scripts": [
+      "verify-tactics.cjs",
+      "verify-tactics-combat.cjs",
+      "capture-tactics.cjs"
+    ],
+    "regressions": {
+      "verify-squad-tasks.cjs": "passed",
+      "verify-squad-crew.cjs": "passed",
+      "verify-squad-follow.cjs": "12/12 passed",
+      "verify-platform-unit.mjs": "passed"
+    },
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        568,
+        320
+      ]
+    ],
+    "combat_limits": "正常生命/赚取金币，真实战斗与寻路函数，固定玩家站位的加速夹具；不是真人平衡或虫洞突袭验收",
+    "physical_phone_test": false,
+    "post_merge_results": "qa/integrated/results.json"
+  },
+  "media": {
+    "capture": "qa/capture.json",
+    "video": "qa/captures/tactics-realtime.webm",
+    "format": "VP8, 1280x720, 22.92秒",
+    "audio": "none",
+    "readiness": "partial",
+    "gaps": [
+      "后续视频需补录带游戏声音的普通模式母版",
+      "未完成真机多指触控/性能验证"
+    ],
+    "new_video": "not_requested",
+    "persistent_directory": "D:/project/game-media/starship-defense/web-tactics-v0.20.0"
+  },
+  "channels": {
+    "website": {
+      "status": "pending_deploy",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+    },
+    "toy": {
+      "id": 38678478981120,
+      "slug": "chongchao-qianshao",
+      "status": "pending_website_verification"
+    },
+    "bilibili_description": {
+      "status": "pending_website_verification",
+      "targets": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt"
+      ]
+    },
+    "activities": {
+      "status": "pending_check"
+    }
+  },
+  "pending_merge": [],
+  "notes": "notes.md",
+  "integration": {
+    "branch": "codex/chongchao-tactics-20261007",
+    "upstream_before_push": "9bb790fa648ff66d165649ffba31cb1d49fccd66",
+    "merged_commit": "1e7aad40751d461493a7c3a188e079c8e0608b99",
+    "swarm_shared_changes_from_merge": false
+  },
+  "website_bundle_sha256": "87e96d929cf0082e25e9f97542c8279969de6725434e40d4931bda8e492bf549"
+}

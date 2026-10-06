@@ -244,7 +244,6 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 .touch-only { display: none; }
 body.touch-on .kb-only, body.touch-on .overlay kbd { display: none; }
 body.touch-on .touch-only { display: inline; }
-body.mobile-device #btn-fs, body.mobile-device .fs-btn { display: none !important; }
 
 /* 续关画面：维斯举枪 */
 .cont { background: rgba(0, 0, 0, .78); }
@@ -319,3 +318,9 @@ body.touch-on #toast { bottom: calc(var(--sab) + 210px); }
 
 /* Plain buttons: selection is shown by the border and fill. */
 button::before,button::after,.items>a::before{content:none!important}
+
+/* ---------- 隐藏属性与全屏入口 ---------- */
+/* .items > button 的 display:flex 会盖过浏览器默认的 [hidden] */
+#app .items > [hidden] { display: none !important; }
+/* 全屏按钮由脚本按浏览器能力设置 hidden；需压过公共界面里 body.mobile-device 的 display:block!important */
+html body #btn-fs[hidden], html body .items > .fs-btn[hidden] { display: none !important; }

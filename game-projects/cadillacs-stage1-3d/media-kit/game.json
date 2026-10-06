@@ -95,17 +95,17 @@
   "category": "GAME",
   "visibility": "public",
   "status": "published",
-  "submitted_at": "2026-10-07T01:41:33+08:00",
+  "submitted_at": "2026-10-07T06:54:47.946386+08:00",
   "package": "dist/toy-v0.5.5/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_W1LO12Oh/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_ZdQQ5x9D/index.html",
   "note": "v0.5.5（开枪有子弹拖光、火花在枪口）已过审。",
   "status_verified": "toy mylist published；正式入口 iframe 40412421031936-v23181 显示 v0.5.5",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.5.5",
-  "verified_at": "2026-10-07T01:47:48+08:00",
+  "version": "v0.5.6-bgmfull1",
+  "verified_at": "2026-10-06T22:58:30.502Z",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "last_published_version": "v0.5.5",
   "pending_updates": [
@@ -147,11 +147,18 @@
     "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
     "status": "auditing",
     "record": "releases/v0.5.3/handoff.json"
+   },
+   {
+    "version": "v0.5.6",
+    "classification": "普通补丁",
+    "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+    "status": "pending_submit",
+    "record": "releases/v0.5.6/handoff.json"
    }
   ],
-  "submitted_version": "v0.5.3",
-  "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_QeYcnmuI/index.html",
+  "submitted_version": "v0.5.6-bgmfull1",
+  "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_icldmorp/index.html",
   "release_record": "releases/v0.5.3/handoff.json",
   "published_version": "v0.5.1",
   "published_verified_at": "2026-10-06T10:13:04.838269+00:00",
@@ -167,7 +174,8 @@
    "submitted_at": "2026-10-06T22:44:10+08:00",
    "status": "published",
    "verified_at": "2026-10-06T23:38:00+08:00"
-  }
+  },
+  "public_verified_version": "v0.5.6-bgmfull1"
  },
  "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
@@ -230,27 +238,58 @@
   }
  ],
  "website": {
-  "version": "v0.5.1",
+  "version": "v0.5.6-bgmfull1",
   "status": "deployed_verified",
-  "verified_at": "2026-10-06T10:01:00.170832+00:00",
-  "commit": "110c0421596dabee86cb7885f2d77e34be9c00b7"
+  "verified_at": "2026-10-07T06:49:45.870220+08:00",
+  "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
  },
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "audio_assets": {
   "policy": "original first; synthesis fallback",
-  "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+  "revision": "bgmfull1",
+  "processing": "完整音源压缩，不截取前70秒"
  },
  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.5.3",
- "website_verified_at": "2026-10-06T15:15:43.601094+00:00",
- "website_commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
- "web_toy_versions_match": false,
+ "website_version": "v0.5.6-bgmfull1",
+ "website_verified_at": "2026-10-07T06:49:45.870220+08:00",
+ "website_commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+ "web_toy_versions_match": true,
  "touch_control_inset": {
   "side_css_px": 40,
   "bottom_css_px": 36,
   "safe_area_added": true,
   "previous_version": "v0.5.2",
   "physical_phone_test": false
- }
+ },
+ "versions": [
+  {
+   "version": "v0.5.6-bgmfull1",
+   "base_version": "v0.5.6",
+   "date": "2026-10-07",
+   "classification": "普通补丁",
+   "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+   "handoff": "releases/v0.5.6-bgmfull1/handoff.json"
+  },
+  {
+   "version": "v0.6.0",
+   "base_version": "v0.5.6-bgmfull1",
+   "date": "2026-10-07",
+   "classification": "正式版本",
+   "summary": "打击感重做：出招到位、轻重分档的停顿/震屏/火花/音效、方向受击、挥空不吞键、波末慢动作。",
+   "handoff": "releases/v0.6.0/handoff.json"
+  }
+ ],
+ "pending_channel_changes": [
+  {
+   "version": "v0.5.6-bgmfull1",
+   "classification": "普通补丁",
+   "changes": [
+    "完整原版BGM取消70秒截取"
+   ],
+   "bilibili": "待合并至下一次有意义的简介更新",
+   "toy": "public_verified"
+  }
+ ]
 }
