@@ -25,7 +25,15 @@
     "toy video mine --keyword 赤色要塞: 1条",
     "本人稿件管理"
   ],
-  "pending_updates": [],
+  "pending_updates": [
+    {
+      "version": "v0.7.1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+      "record": "releases/v0.7.1/handoff.json"
+    }
+  ],
   "resolved_updates": [
     {
       "version": "v0.5.1",

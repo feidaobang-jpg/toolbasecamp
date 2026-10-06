@@ -32,6 +32,13 @@
       "record": "releases/unified3d-20261006/handoff.json",
       "reason": "普通操作音频修复并入下一次有意义的说明更新；无确认视频映射时待关联",
       "included_version": "toy3dui2"
+    },
+    {
+      "version": "toy3dui3",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+      "record": "releases/toy3dui3/handoff.json"
     }
   ],
   "history": [

@@ -1,0 +1,30 @@
+{
+  "version": "web-controls-v0.18.3",
+  "base_version": "web-rescue-v0.18.0",
+  "reason": "用户明确要求补同步虫潮已有两条视频简介",
+  "account_uid": 16214353,
+  "code_commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
+  "targets": [
+    {
+      "bv": "BV1Ujad6DEuf",
+      "old": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-05·v0.18.0）：菜单新增队友集合、载具救援，修复虫洞跟随卡住；击杀母皇后本章每次通关领额外补给，修复飞虫无法攻击基地。菜单可随时切换电脑/触屏操作。网站与Toy已同步。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "new": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-06·v0.18.3）：画面可上下左右拖动，第一人称慢速转头；自动/电脑/触屏可用键盘切换并显示选中状态，暂停同步停止音乐。右上切换视角、菜单、全屏贴边排列，按钮文字完整显示；原有商店、建造和队友操作保留。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "public_text": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-06·v0.18.3）：画面可上下左右拖动，第一人称慢速转头；自动/电脑/触屏可用键盘切换并显示选中状态，暂停同步停止音乐。右上切换视角、菜单、全屏贴边排列，按钮文字完整显示；原有商店、建造和队友操作保留。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "submitted_at": "2026-10-06T03:06:26.748Z",
+      "public_verified_at": "2026-10-06T03:08:10.396Z",
+      "status": "public_verified",
+      "description_sha256": "4420c1ada5ac12ffb933ce1f8b5a3df2f7a88ccbc3d2be4a11f231fb8a9d590e"
+    },
+    {
+      "bv": "BV1WbHq6eEBt",
+      "old": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-05·v0.18.0）：菜单新增队友集合、载具救援，修复虫洞跟随卡住；击杀母皇后本章每次通关领额外补给，修复飞虫无法攻击基地。菜单可随时切换电脑/触屏操作。网站与Toy已同步。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "new": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-06·v0.18.3）：画面可上下左右拖动，第一人称慢速转头；自动/电脑/触屏可用键盘切换并显示选中状态，暂停同步停止音乐。右上切换视角、菜单、全屏贴边排列，按钮文字完整显示；原有商店、建造和队友操作保留。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "public_text": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-06·v0.18.3）：画面可上下左右拖动，第一人称慢速转头；自动/电脑/触屏可用键盘切换并显示选中状态，暂停同步停止音乐。右上切换视角、菜单、全屏贴边排列，按钮文字完整显示；原有商店、建造和队友操作保留。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "submitted_at": "2026-10-06T03:06:27.111Z",
+      "public_verified_at": "2026-10-06T03:08:10.396Z",
+      "status": "public_verified",
+      "description_sha256": "5c7e989a08a7fdb34dcce6a6e2785aefa6f22147bf9d02b6042e5b54de3e4947"
+    }
+  ],
+  "public_evidence": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006\\bili-starship-public.jpg"
+}

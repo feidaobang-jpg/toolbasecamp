@@ -3,15 +3,35 @@
   "classification": "普通补丁",
   "summary": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
   "website": {
-    "status": "pending"
+    "status": "live_verified",
+    "commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
+    "files_verified": 13
   },
   "toy": {
-    "status": "pending"
+    "status": "partially_public_verified",
+    "games": {
+      "tank-3d": "published",
+      "mario-3d": "published",
+      "jackal-stage1-3d": "auditing",
+      "cadillacs-stage1-3d": "published",
+      "starship-defense": "published"
+    },
+    "verified_games": [
+      "starship-defense",
+      "tank-3d",
+      "mario-3d",
+      "cadillacs-stage1-3d"
+    ]
   },
   "bilibili": {
-    "starship": "user_requested_cumulative_sync",
+    "starship": "both_public_verified",
+    "targets": [
+      "BV1Ujad6DEuf",
+      "BV1WbHq6eEBt"
+    ],
     "remakes": "ordinary_patch_deferred"
   },
   "local_artifacts": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006",
-  "rules": "skill-snapshot/controls-and-display.md"
+  "rules": "skill-snapshot/controls-and-display.md",
+  "media": "screenshots/videos retained in local delivery"
 }

@@ -1,0 +1,294 @@
+{
+  "at": "2026-10-06T11:09:58.228517+08:00",
+  "previews": [
+    {
+      "game": "tank-3d",
+      "id": 39043249461248,
+      "version": "toy3dui3",
+      "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "at": "2026-10-06T11:00:41.599915+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_hQqbwFeC/index.html"
+      }
+    },
+    {
+      "game": "mario-3d",
+      "id": 39043286960128,
+      "version": "v2.4.1",
+      "package_sha256": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+      "at": "2026-10-06T11:00:45.166203+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_nNHxDqsW/index.html"
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "id": 39863936092160,
+      "version": "v0.7.1",
+      "package_sha256": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+      "at": "2026-10-06T11:00:47.354153+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_rDvEuI0b/index.html"
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "id": 40412421031936,
+      "version": "v0.4.1",
+      "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
+      "at": "2026-10-06T11:00:50.302777+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html"
+      }
+    },
+    {
+      "game": "starship-defense",
+      "id": 38678478981120,
+      "version": "web-controls-v0.18.3",
+      "package_sha256": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+      "at": "2026-10-06T11:00:51.067233+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_bJAyhJXq/index.html"
+      }
+    }
+  ],
+  "preview_qa": [
+    {
+      "game": "tank-3d",
+      "desktop": {
+        "height": 44,
+        "right": 10.000022888183594,
+        "top": 10,
+        "width": 68.2750015258789
+      },
+      "desktop_pause_mode_switch": "pass",
+      "mobile": {
+        "height": 44,
+        "right": 9.999988555908203,
+        "top": 10,
+        "viewport": [
+          844,
+          390
+        ],
+        "width": 59.11249923706055
+      },
+      "mobile_pause": true
+    },
+    {
+      "game": "mario-3d",
+      "desktop": {
+        "height": 44,
+        "right": 10.000022888183594,
+        "top": 10,
+        "width": 68.2750015258789
+      },
+      "desktop_pause_mode_switch": "pass",
+      "mobile": {
+        "height": 44,
+        "right": 9.999988555908203,
+        "top": 10,
+        "viewport": [
+          844,
+          390
+        ],
+        "width": 59.11249923706055
+      },
+      "mobile_pause": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "desktop": {
+        "height": 44,
+        "right": 9.999977111816406,
+        "top": 10,
+        "width": 67.4124984741211
+      },
+      "desktop_pause_mode_switch": "pass",
+      "mobile": {
+        "height": 44,
+        "right": 9.999977111816406,
+        "top": 10,
+        "viewport": [
+          844,
+          390
+        ],
+        "width": 67.4124984741211
+      },
+      "mobile_pause": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "desktop": {
+        "height": 44,
+        "right": 9.999977111816406,
+        "top": 10,
+        "width": 67.4124984741211
+      },
+      "desktop_pause_mode_switch": "pass",
+      "mobile": {
+        "height": 44,
+        "right": 9.999977111816406,
+        "top": 10,
+        "viewport": [
+          844,
+          390
+        ],
+        "width": 67.4124984741211
+      },
+      "mobile_pause": true
+    },
+    {
+      "game": "starship-defense",
+      "desktop": {
+        "height": 58.66666793823242,
+        "right": 10,
+        "top": 10,
+        "width": 96
+      },
+      "desktop_pause_mode_switch": "pass",
+      "mobile": {
+        "height": 43.991302490234375,
+        "right": 9.989551544189451,
+        "top": 10.19036102294922,
+        "viewport": [
+          844,
+          390
+        ],
+        "width": 63.29999923706055
+      },
+      "mobile_pause": true
+    }
+  ],
+  "submissions": [
+    {
+      "game": "tank-3d",
+      "id": 39043249461248,
+      "version": "toy3dui3",
+      "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "submitted_at": "2026-10-06T11:06:48.109893+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html"
+      },
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "tank-3d",
+        "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "verified_at": "2026-10-06T03:14:57.493Z",
+        "marker": "#stage.compact #hud-top",
+        "pass": true
+      }
+    },
+    {
+      "game": "mario-3d",
+      "id": 39043286960128,
+      "version": "v2.4.1",
+      "package_sha256": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+      "submitted_at": "2026-10-06T11:06:50.864023+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_rmPBAMYy/index.html"
+      },
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "mario-3d",
+        "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+        "verified_at": "2026-10-06T03:14:57.517Z",
+        "marker": "#stage.compact #hud-top",
+        "pass": true
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "id": 39863936092160,
+      "version": "v0.7.1",
+      "package_sha256": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+      "submitted_at": "2026-10-06T11:06:52.914176+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_2M7bsrfO/index.html"
+      },
+      "platform_status": "auditing",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": false
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "id": 40412421031936,
+      "version": "v0.4.1",
+      "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
+      "submitted_at": "2026-10-06T11:06:55.476749+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html"
+      },
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "cadillacs-stage1-3d",
+        "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "verified_at": "2026-10-06T03:14:57.544Z",
+        "marker": "#stage.compact #hud-top",
+        "pass": true
+      }
+    },
+    {
+      "game": "starship-defense",
+      "id": 38678478981120,
+      "version": "web-controls-v0.18.3",
+      "package_sha256": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+      "submitted_at": "2026-10-06T11:06:56.559843+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_aMDNFAyx/index.html"
+      },
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "starship-defense",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "verified_at": "2026-10-06T03:14:57.456Z",
+        "marker": "cornerTools and single-line vC; game.compat.js?toy3dui3",
+        "pass": true
+      }
+    }
+  ],
+  "note": "包哈希与预览一致，审中不等于新包上线。",
+  "final_checked_at": "2026-10-06T11:15:46.661482+08:00",
+  "public_proofs": [
+    {
+      "game": "starship-defense",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "verified_at": "2026-10-06T03:14:57.456Z",
+      "marker": "cornerTools and single-line vC; game.compat.js?toy3dui3",
+      "pass": true
+    },
+    {
+      "game": "tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.493Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    },
+    {
+      "game": "mario-3d",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.517Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.544Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    }
+  ]
+}

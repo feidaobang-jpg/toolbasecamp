@@ -7,8 +7,8 @@
   "classification": "普通补丁",
   "build": {
     "id": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
-    "commit": null,
-    "dirty": true,
+    "commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
+    "dirty": false,
     "fingerprint": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
     "fingerprint_algorithm": "sha256 of sorted JSON relative-path/file-sha256 manifest",
     "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
@@ -94,6 +94,29 @@
       "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
+    },
+    {
+      "id": "corner-interaction",
+      "file": "releases/v0.4.1/captures/corner-interaction.webm",
+      "sha256": "80981a34ab6c88a42a7a309fa557a59a253b17bc04450bc20ced4ea809bfa990",
+      "kind": "video",
+      "version": "v0.4.1",
+      "build_id": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
+      "capture_mode": "realtime-automation",
+      "description": "本版桌面、横屏、旋转竖屏布局与角落按钮连续操作；QA跳过开场或使用虫潮自由测试，非通关录像。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 4.52,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 4.52,
+          "description": "当前版本角落按钮和模式、视口切换。"
+        }
+      ]
     }
   ],
   "historical_media": [],
@@ -115,15 +138,30 @@
     ]
   },
   "website": {
-    "status": "pending"
+    "status": "live_verified",
+    "commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
+    "verified_at": "2026-10-06T11:09:58.228517+08:00"
   },
   "toy": {
     "id": 40412421031936,
-    "status": "pending_preview",
-    "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb"
+    "status": "published",
+    "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html",
+    "submitted_at": "2026-10-06T11:06:55.476749+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html",
+    "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+    "public_verified_at": "2026-10-06T03:14:57.544Z",
+    "public_evidence": {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.544Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    }
   },
   "bilibili": {
-    "status": "ordinary_patch_deferred"
+    "status": "ordinary_patch_deferred",
+    "reason": "原简介操作仍准确，本次边距小修累计到下次有意义的说明更新。"
   },
   "local_artifacts": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006"
 }
