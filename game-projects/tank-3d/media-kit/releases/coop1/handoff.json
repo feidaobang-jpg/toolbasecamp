@@ -174,7 +174,7 @@
       "physicalPhoneTest": false
     },
     "single_player": "17 simulation checks and complete existing desktop/mobile browser suite passed",
-    "server": "2 pytest protocol tests passed",
+    "server": "3 pytest tests passed, including real-ASGI disconnect/close exception regression",
     "toy_public": {
       "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
       "results": [
@@ -244,5 +244,9 @@
     "toy_public_lobby": "D:/project/artifacts/tank-coop-20261006/proof/toy-public-lobby.png",
     "bilibili_saved_description": "D:/project/artifacts/tank-coop-20261006/proof/bilibili-description-saved.png"
   },
-  "release_records_commit": "45ff1f335e44ca21c6119c6d469c6a644b45fb09"
+  "release_records_commit": "45ff1f335e44ca21c6119c6d469c6a644b45fb09",
+  "server_patch": {
+    "status": "pending_deploy",
+    "summary": "关闭已断开的WebSocket时兼容WebSocketDisconnect，避免退出后的异常日志；Toy前端包未变化。"
+  }
 }
