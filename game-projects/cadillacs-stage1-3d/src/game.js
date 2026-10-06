@@ -250,7 +250,12 @@ export function update() {
     else if (a.isRaptor) updateRaptor(a, dt);
     else if (a.type === 'vice') updateVice(a, dt);
     else updateEnemy(a, dt);
+    const beforeX=a.x,beforeZ=a.z;
     physics(a, dt);
+    if(a===p&&!camCtl.fp()&&['walk','run','carry'].includes(a.state)) {
+      const dx=a.x-beforeX,dz=a.z-beforeZ;
+      if(Math.hypot(dx,dz)>.0001){delete a.lookHeading;a.face=approachAng(a.face,faceOf(dx,dz),dt*16);}
+    }
   }
 
   separate();
@@ -465,11 +470,10 @@ function updatePlayer(p, dt) {
   if (G.settings.demo) p.invul = Math.max(p.invul, 0.05);
 }
 function faceMove(p, mv, dt) {
+  if (!camCtl.fp()) { delete p.lookHeading; return; }
   if (p.lookHeading !== undefined) { p.face = approachAng(p.face, p.lookHeading, dt * 2.1); return; }
   if (camCtl.fp()) { p.face = approachAng(p.face, camCtl.yaw() + Math.PI, dt * 2.1); return; }
-  if (laneMode()) {
-    if (Math.abs(mv.x) > 0.3) p.face = mv.x > 0 ? FACE_RIGHT : FACE_LEFT;
-  } else p.face = approachAng(p.face, faceOf(mv.x, mv.z), dt * 16);
+  p.face = approachAng(p.face, faceOf(mv.x, mv.z), dt * 16);
 }
 function updateMove(a, dt) {
   const m = a.move, d = m.def;

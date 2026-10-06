@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-controls-v0.18.2",
+  "base_version": "web-unified3d-v0.18.1",
+  "created_at": "2026-10-06T09:25:36.441111+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "d04e4673253f0b680028e209babc210f3cabab365cb26ebd7554ff498d7ebea9",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "d04e4673253f0b680028e209babc210f3cabab365cb26ebd7554ff498d7ebea9",
+    "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "controls",
+      "description": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
+      "status": "implemented",
+      "evidence_ids": [
+        "menu",
+        "mobile"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "controls-unification",
+      "feature_ids": [
+        "controls"
+      ],
+      "before": "各游戏菜单/视角/移动转身语义不一致，赤色要塞第二关需解锁",
+      "after": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+      "user_visible_result": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
+      "evidence_ids": [
+        "mobile"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "walking-backwards",
+      "found_version": "web-unified3d-v0.18.1",
+      "reproduction": "普通视角手动转头后朝另一方向移动",
+      "observed": "身体保持手动朝向，出现倒着走",
+      "impact": "操作直觉不一致",
+      "status": "fixed",
+      "cause": "慢速手动视线覆盖正常移动转身；恐龙快打预物理与后物理转身曾相互抵消",
+      "fix": "仅第一人称保留慢速；非第一人称按真实移动方向及时转身，坦克独立炮塔/虫潮自动射击保留",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "实际渲染主体朝向与位移方向比对通过；旋转竖屏方向回归通过"
+    }
+  ],
+  "media": [
+    {
+      "id": "mobile",
+      "file": "releases/toy3d-controls-20261006/captures/starship-defense-mobile.png",
+      "sha256": "36240a3f21990eccb2e5bfc12fe9f47d3c69206f99a119c780f07036c45618b3",
+      "kind": "screenshot",
+      "version": "web-controls-v0.18.2",
+      "build_id": "d04e4673253f0b680028e209babc210f3cabab365cb26ebd7554ff498d7ebea9",
+      "capture_mode": "realtime-automation",
+      "description": "实际当前游戏UI；跳过开场，低画质，模拟手机视口。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Desktop + simulated touch, keyboard and pointer, actual render camera/body, pause audio-clock, fullscreen, stage selection",
+      "result": "pass",
+      "evidence": "../../../../site-games/releases/toy3d-controls-20261006/qa.json",
+      "unmeasured": [
+        "real-phone multi-touch/performance"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "当前截图可用于UI展示，动态QA原片本机保存但未做成片视听审查；没有新解说或完整通关片，视频仍须人工审片。"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "pending_preview",
+    "package_sha256": "d04e4673253f0b680028e209babc210f3cabab365cb26ebd7554ff498d7ebea9"
+  },
+  "bilibili": {
+    "status": "ordinary_patch_deferred"
+  },
+  "local_artifacts": "D:\\project\\task-artifacts\\toy3d-controls-20261006"
+}

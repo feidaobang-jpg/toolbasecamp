@@ -1,0 +1,21 @@
+{
+  "task_id": "01a10e13-toy3d-controls-20261006-3",
+  "at": "2026-10-06T09:25:36.441111+08:00",
+  "scope": "5 Toy-published 3D games",
+  "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+  "website": {
+    "status": "pending_deployment"
+  },
+  "toy": {
+    "status": "pending_preview_and_test"
+  },
+  "bilibili": {
+    "status": "4 remakes pending, starship ordinary patch deferred"
+  },
+  "persistent_rules": [
+    "AGENTS.md",
+    "C:/Users/37818/.claude/CLAUDE.md",
+    "C:/Users/37818/.claude/skills/game-maker/SKILL.md"
+  ],
+  "qa": "qa.json"
+}

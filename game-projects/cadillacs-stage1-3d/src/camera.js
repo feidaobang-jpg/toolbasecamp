@@ -38,12 +38,13 @@ function firstHit(boxes, ax, ay, az, bx, by, bz) {
 export function createCamera() {
   const cam = new THREE.PerspectiveCamera(36, 16 / 9, 0.1, 1600);
   const C = {
-    cam, idx: 0, yawOff: 0, aspect: 16 / 9,
+    cam, idx: 0, pitchOff: 0, yawOff: 0, aspect: 16 / 9,
     tgt: new THREE.Vector3(4, 1, 0), pos: new THREE.Vector3(4, 4, 13),
     av: { s: 1, lift: 0, blocked: false },   // 避让状态：s = 镜头到观察点距离的比例，lift = 抬高量
     preset() { return PRESETS[this.idx]; },
-    cycle() { this.idx = (this.idx + 1) % PRESETS.length; this.yawOff = 0; return PRESETS[this.idx]; },
-    setIndex(i) { this.idx = ((i % PRESETS.length) + PRESETS.length) % PRESETS.length; this.yawOff = 0; },
+    turnPitch(d) { const p=this.preset(), a=p.pitch+this.pitchOff+(p.fp?-d:d); this.pitchOff=clamp(a,p.fp?-1:.12,p.fp?1:1.48)-p.pitch; },
+    cycle() { this.idx = (this.idx + 1) % PRESETS.length; this.yawOff = 0; this.pitchOff = 0; return PRESETS[this.idx]; },
+    setIndex(i) { this.idx = ((i % PRESETS.length) + PRESETS.length) % PRESETS.length; this.yawOff = 0; this.pitchOff = 0; },
     setAspect(a) { this.aspect = a; cam.aspect = a; cam.updateProjectionMatrix(); },
     yaw() { return PRESETS[this.idx].yaw + this.yawOff; },
     fp() { return !!PRESETS[this.idx].fp; },
@@ -64,7 +65,8 @@ export function createCamera() {
     },
     // opt: { focusX, zc, fitDepth, player:{x,y,z,eye,face}, instant, shake, override:{pos,tgt}, blocks:[Box3] }
     update(dt, opt) {
-      const p = opt.fpOff ? PRESETS[2] : PRESETS[this.idx];
+      const base = opt.fpOff ? PRESETS[2] : PRESETS[this.idx];
+      const p = {...base,pitch:base.pitch+(opt.fpOff?0:this.pitchOff)};
       const yaw = p.yaw + this.yawOff;
       const k = opt.instant ? 1 : damp(p.follow ? 9 : 6, dt);
       let tx, ty, tz, px, py, pz;

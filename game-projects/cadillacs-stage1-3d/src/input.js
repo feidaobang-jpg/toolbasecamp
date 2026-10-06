@@ -97,6 +97,7 @@ window.addEventListener('keydown', (e) => {
     held[d] = true; e.preventDefault();
   } else if (c in KEY_BTN) {
     const b = KEY_BTN[c];
+    if (!e.repeat && b === 'run') I.push('dash');
     if (!e.repeat && !keyBtn[b] && b !== 'rotL' && b !== 'rotR' && b !== 'run') I.push(b);
     keyBtn[b] = true; e.preventDefault();
   } else if (c === 'KeyC') { if (!e.repeat) I.push('camera'); e.preventDefault(); }

@@ -1,11 +1,11 @@
-import { bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=unified3d1';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=toy3dui2';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=unified3d1';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=unified3d1';
+import { createView, PRESETS } from './scene.js?v=toy3dui2';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=toy3dui2';
 import { LEVEL_ORDER } from './levels.js?v=2.1.0';
-import { GameAudio } from './audio.js?v=unified3d1';
+import { GameAudio } from './audio.js?v=toy3dui2';
 
-const VERSION = 'v2.3.0';
+const VERSION = 'v2.4.0';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -65,7 +65,7 @@ const cleared = [];
 const eventLog = [];
 
 const LEVEL_TIPS = {
-  '1-1': '顶问号砖拿蘑菇、火焰花和无敌星；第 4 根水管上按 L 能钻进奖励房间',
+  '1-1': '顶问号砖拿蘑菇、火焰花和无敌星；第 4 根水管上按 U（L兼容） 能钻进奖励房间',
   '1-2': '地下关：砖墙顶上也能走；出口水管旁边的天花板上面藏着传送区'
 };
 
@@ -74,11 +74,12 @@ const keys = new Set();                 // 键盘按住
 const touchHold = new Set();            // 触屏按住：jump / run / down / rotL / rotR
 const joy = { x: 0, y: 0 };             // 触屏摇杆（右 +x，上 +y）
 const latch = { jump: false, fire: false };
+let sprintArmed = false, sprintMoved = false;
 const MOVE_KEYS = { KeyW: 'u', ArrowUp: 'u', KeyS: 'd', ArrowDown: 'd', KeyA: 'l', ArrowLeft: 'l', KeyD: 'r', ArrowRight: 'r' };
 const isDown = (name) => {
   switch (name) {
     case 'jump': return keys.has('KeyK') || keys.has('Space') || touchHold.has('jump');
-    case 'run': return keys.has('KeyJ') || touchHold.has('run');
+    case 'run': return keys.has('KeyJ') || sprintArmed;
     case 'down': return keys.has('KeyU') || keys.has('KeyL') || touchHold.has('down');
     case 'rotL': return keys.has('KeyQ') || touchHold.has('rotL');
     case 'rotR': return keys.has('KeyE') || touchHold.has('rotR');
@@ -96,7 +97,8 @@ function moveAxes() {
   return { x, y };
 }
 function clearInput() {
-  dragLook.clear(); lookControl.clear();
+  dragLook.clear(); lookControl.clear(); pitchControl.clear();
+  sprintArmed = sprintMoved = false;
   keys.clear(); touchHold.clear(); joy.x = joy.y = 0; latch.jump = latch.fire = false;
   joyRelease();
   document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
@@ -104,6 +106,8 @@ function clearInput() {
 // 相机相对移动：W 沿镜头水平前方，D 沿镜头右方
 function buildInput() {
   const a = moveAxes(), yaw = view.cameraYaw();
+  if (Math.hypot(a.x,a.y)>.05) { if(sprintArmed)sprintMoved=true; }
+  else if(sprintMoved) sprintArmed=sprintMoved=false;
   const cx = Math.cos(yaw), sx = Math.sin(yaw);
   const input = {
     mx: cx * a.x - sx * a.y, mz: -sx * a.x - cx * a.y,
@@ -120,7 +124,7 @@ function optLabel(name) {
     case 'lives': return ['命数', settings.lives === 'inf' ? '无限命' : '经典 3 命', false];
     case 'armor': return ['耐久', settings.armor === 'classic' ? '原作（小玛丽一碰就输）' : '标准 3 格护心', false];
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
-    case 'camera': return ['视角（C）', PRESETS[view.presetIndex].name, false];
+    case 'camera': return [display.touchOn ? '切换视角' : '切换视角（C）', PRESETS[view.presetIndex].name, false];
     case 'quality': return ['画质', { auto: '自动', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', settings.volume <= 0 ? '静音' : Math.round(settings.volume * 100) + '%', false];
     case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
@@ -168,7 +172,7 @@ function adjust(name, delta) {
   refreshOptions();
 }
 function cycleCamera(delta = 1) {
-  dragLook.clear(); lookControl.clear();
+  dragLook.clear(); lookControl.clear(); pitchControl.clear();
   const n = PRESETS.length;
   if (w?.player) delete w.player.lookHeading;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
@@ -220,10 +224,11 @@ document.addEventListener('keydown', (e) => {
   const c = e.code;
   if (c === 'Escape' || c === 'Enter' || c === 'NumpadEnter') { if (!e.repeat) pauseGame(); e.preventDefault(); return; }
   if (c === 'KeyC') { if (!e.repeat) cycleCamera(); e.preventDefault(); return; }
-  if (c in MOVE_KEYS || ['KeyJ', 'KeyK', 'KeyU', 'KeyL', 'KeyQ', 'KeyE', 'Space'].indexOf(c) >= 0) {
+  if (c in MOVE_KEYS || ['KeyJ', 'KeyK', 'KeyU', 'KeyL', 'KeyI', 'ShiftLeft', 'ShiftRight', 'KeyQ', 'KeyE', 'Space'].indexOf(c) >= 0) {
     if (!e.repeat) {
       if (c === 'KeyK' || c === 'Space') latch.jump = true;
       if (c === 'KeyJ') latch.fire = true;
+      if (['KeyI','ShiftLeft','ShiftRight'].includes(c)) { sprintArmed = true; sprintMoved = Math.hypot(moveAxes().x,moveAxes().y)>.05; }
     }
     keys.add(c); e.preventDefault();
   }
@@ -505,14 +510,16 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
     try { btn.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
     btn.classList.add('down'); touchHold.add(name);
     if (name === 'jump') latch.jump = true;
-    if (name === 'run') latch.fire = true;
+    if (name === 'fire') latch.fire = true;
+    if (name === 'sprint') { sprintArmed = true; sprintMoved = Math.hypot(moveAxes().x,moveAxes().y)>.05; }
     e.preventDefault();
   });
-  const end = (e) => { if (e.pointerId !== id) return; id = null; btn.classList.remove('down'); touchHold.delete(name); };
+  const end = (e) => { if (e.pointerId !== id) return; id = null; btn.classList.remove('down'); touchHold.delete(name); if(name==='sprint'&&e.type!=='pointerup') sprintArmed=sprintMoved=false; };
   btn.addEventListener('pointerup', end); btn.addEventListener('pointercancel', end); btn.addEventListener('lostpointercapture', end);
   btn.addEventListener('contextmenu', (e) => e.preventDefault());
 });
 $('btn-cam-t').addEventListener('pointerdown', (e) => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
+const pitchControl = createPitchController({turn:d=>view.turnPitch(d)});
 const lookControl = createLookController({ firstPerson: () => view.firstPerson(w), turn: delta => {
   view.yawOffset -= delta;
   const p = w && w.player;
@@ -520,7 +527,7 @@ const lookControl = createLookController({ firstPerson: () => view.firstPerson(w
 
 } });
 const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
-  toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
+  toLocal, width: () => display.W, pitch: delta => pitchControl.queue(delta), rotate: delta => lookControl.queue(delta) });
 refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
   get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
@@ -540,7 +547,8 @@ function updateHud() {
     $('h-lives').textContent = s.lives === Infinity ? '∞' : '×' + s.lives;
     $('h-hearts-wrap').hidden = hearts < 0;
     if (hearts >= 0) { let h = ''; for (let i = 1; i <= 3; i++) h += i <= hearts ? '♥' : '<span class="off">♥</span>'; $('h-hearts').innerHTML = h; }
-    $('run-label').textContent = w.player.power === 'fire' ? '跑/火球' : '跑';
+    $('run-label').textContent = '火球';
+    document.querySelector('#touch [data-hold=fire]').disabled = w.player.power !== 'fire';
   }
   // 只剩 1 格护心：护心按游戏时间闪烁变红
   const low = hearts === 1 && w.mode === 'play';
@@ -558,10 +566,11 @@ function simulate(dt) {
   // 单步推进：Q/E 旋转、卡片计时、世界步进、事件
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (uiMode === 'game' && !paused && !current) lookControl.step(dt, rot);
+  if (uiMode === 'game' && !paused && !current) { lookControl.step(dt, rot); pitchControl.step(dt); }
   if (uiMode !== 'game' || paused || current || !w) return;
   if (phase === 'card') { cardT += dt; if (cardT >= 2.2) endCard(); return; }
   const input = buildInput();
+  if (!view.firstPerson(w) && Math.hypot(input.mx,input.mz) > .05) delete w.player.lookHeading;
   if (w.player.lookHeading !== undefined) w.player.facing = w.player.lookHeading;
   const before = w;
   step(w, input, dt);
@@ -662,3 +671,5 @@ if (TEST) {
     toLocal
   };
 }
+
+installRemakeUI();

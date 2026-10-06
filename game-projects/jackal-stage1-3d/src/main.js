@@ -1,4 +1,4 @@
-import { bindDragLook, addControlModeButtons } from '../../../public/js/game/drag-look.js';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
 import { VERSION, STEP, TEST, CLEAN, store, seed, params } from './core.js';
@@ -30,8 +30,7 @@ const settings = {
   gun: store.get('gun', 'follow') === 'up' ? 'up' : 'follow',
   stage: 1
 };
-const unlocked = () => Math.max(1, Math.min(L.STAGE_COUNT, store.get('unlocked', 1) | 0));
-settings.stage = Math.max(1, Math.min(unlocked(), store.get('stage', 1) | 0));
+settings.stage = Math.max(1, Math.min(L.STAGE_COUNT, store.get('stage', 1) | 0));
 if (params.get('stage')) settings.stage = Math.max(1, Math.min(L.STAGE_COUNT, parseInt(params.get('stage'), 10) || 1));   // 测试用：直接从某关开始
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');   // 测试/录制用：强制画质
 let effQuality = settings.quality === 'low' ? 'low' : 'high';
@@ -128,7 +127,7 @@ function adjust(name, delta) {
     settings.gun = settings.gun === 'up' ? 'follow' : 'up'; store.set('gun', settings.gun);
     if (uiMode === 'game') G.settings.gun = settings.gun;
   } else if (name === 'stage') {
-    const n = unlocked();
+    const n = L.STAGE_COUNT;
     settings.stage = ((settings.stage - 1 + (delta < 0 ? n - 1 : 1)) % n) + 1; store.set('stage', settings.stage);
     if (uiMode === 'title' && L.STAGE_NO !== settings.stage) { GM.toTitle(settings.stage); titleT = 0; }
   }
@@ -372,10 +371,12 @@ window.addEventListener('keydown', e => { if (IN.active() && ['KeyQ','KeyE'].inc
 window.addEventListener('keyup', e => orbitKeys.delete(e.code));
 IN.onClear(() => orbitKeys.clear());
 let dragHintShown = false;
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, rotate: delta => camCtl.queueLook(delta) });
-IN.onClear(() => { dragLook.clear(); camCtl.clearLook(); });
+const pitchControl = createPitchController({turn:d=>camCtl.turnPitch(d)});
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused, toLocal, width: () => display.W, pitch: delta => pitchControl.queue(delta), rotate: delta => camCtl.queueLook(delta) });
+IN.onClear(() => { dragLook.clear(); camCtl.clearLook(); pitchControl.clear(); });
 stage.addEventListener('pointercancel', () => camCtl.clearLook());
 function updateStep() {
+  pitchControl.step(STEP);
   const turn = camCtl.stepLook(STEP, (orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0));
   const body = GM.player();
   if (turn && body && !camCtl.fpNow) body.lookHeading = (body.lookHeading ?? body.ang) + turn;
@@ -602,3 +603,5 @@ if (TEST) {
     audioOffline: (events, dur) => A.renderOffline(events, dur)
   };
 }
+
+installRemakeUI();

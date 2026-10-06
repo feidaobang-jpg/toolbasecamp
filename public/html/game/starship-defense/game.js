@@ -1,7 +1,7 @@
-import {createLookController} from '../../../js/game/drag-look.js?v=unified3d1';
+import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=toy3dui2';
 import * as THREE from './vendor/three.module.js';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
-import {FortressWorld} from './fortress-world.js?v=unified3d1';
+import {FortressWorld} from './fortress-world.js?v=toy3dui2';
 import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=fb97';
 import {validateNormalSave} from './save-validation.js?v=fb9';
@@ -11,7 +11,7 @@ import {ExplorationLight} from './exploration-light.js';
 import {monsterStep,clearMonsterSegment} from './monster-navigation.js';
 import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation,legacyRampartWall} from './fortress-layout.js';
 import {COVER_HEIGHT,WALL_WIDTH,WALL_DEPTH,wallTouches,wallSegment} from './wall-geometry.js';
-import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=unified3d1';
+import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=toy3dui2';
 import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
@@ -196,7 +196,6 @@ const Input={
       this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');
       if(document.pointerLockElement===cv)return;
       this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};cv.setPointerCapture(e.pointerId);
-      try{const r=cv.requestPointerLock&&cv.requestPointerLock();if(r&&r.catch)r.catch(()=>{});}catch(_e){}
     });
     cv.addEventListener('pointermove',e=>{
       if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
@@ -258,7 +257,7 @@ const Input={
   },
   reset(){
     CombatControls.reset();
-    lookControl.clear();this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
+    lookControl.clear();pitchControl.clear();this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
     $('joyKnob').style.left=$('joyKnob').style.top='35px';
     // Clear ownership immediately: some webviews defer lostpointercapture until
     // after a panel closes. A stale release must not cancel the next finger.
@@ -300,12 +299,12 @@ function behindYaw(){return player.inVehicle?player.inVehicle.yaw:player.yaw;}
 function setCameraView(index,notify=true){
   camView=((index%CAMERA_VIEWS.length)+CAMERA_VIEWS.length)%CAMERA_VIEWS.length;
   if(camMode==='first')setCamMode('third',false);
-  camYaw=behindYaw();camPitch=0;camState.init=false;delete player.lookHeading;lookControl.clear();
+  camYaw=behindYaw();camPitch=0;camState.init=false;delete player.lookHeading;lookControl.clear();pitchControl.clear();
   if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（C 切换视角）',1.4);
   syncViewLabels();
 }
 function setCamMode(mode,notify=true){
-  camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;lookControl.clear();
+  camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;lookControl.clear();pitchControl.clear();
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
   if(camMode==='third'&&document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
   if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
@@ -2300,14 +2299,15 @@ function selectWeapon(id,quiet=false){
   renderWeaponBar();updViewModel();
 }
 function cycleWeapon(step){if(Game.weapons.length<2){showMsg('只有一把枪：O 商店购买更多武器',1.6);return;}const i=Game.weapons.indexOf(Game.curWeapon);selectWeapon(Game.weapons[(i+step+Game.weapons.length)%Game.weapons.length]);}
-// 镜头转动：Q/E 带加减速，鼠标/触屏拖动即时生效
+// 镜头转动：Q/E 带加减速，鼠标/触屏拖动按游戏时钟平滑消费
+const pitchControl=createPitchController({turn:d=>{camPitch=clamp(camPitch+d,-1,1);}});
 const lookControl=createLookController({firstPerson:()=>camMode==='first',turn:delta=>{
   camYaw-=delta;player.lookHeading=camYaw;
   if(player.inVehicle){const v=player.inVehicle;if(v.mesh.userData.turret)v.mesh.userData.turret.rotation.y=camYaw-v.yaw;}
 }});
 function updLook(dt){
-  if(Input.look.yaw||Input.look.pitch){lookControl.queue(-Input.look.yaw);Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
-  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));
+  if(Input.look.yaw||Input.look.pitch){lookControl.queue(-Input.look.yaw);pitchControl.queue(Input.look.pitch);Input.look.yaw=Input.look.pitch=0;Input.lastLook=performance.now();}
+  lookControl.step(dt,(Input.keys.E?1:0)-(Input.keys.Q?1:0));pitchControl.step(dt);
   camYaw=(camYaw%TAU+TAU)%TAU;
 }
 
@@ -2425,6 +2425,7 @@ function updPlayer(dt){
   }else{
     player.mesh.userData.legs.forEach(l=>l.rotation.x*=.8);
   }
+  if(camMode==='third'&&moving)delete player.lookHeading;
   if(camMode==='first'||player.lookHeading!==undefined)player.yaw=camYaw;
   // 兜底脱困：任何原因卡在实体里（载具残骸、城门关在身上等）超过 0.5 秒，移到最近的空地
   if(player.onGround&&collideWalls(player.pos.x,player.pos.z,.5,player.pos.y)){
@@ -3195,7 +3196,7 @@ function requestNewGame(){
   newGame(false);
 }
 function newGame(test){
-  AudioSys.pause(false);lookControl.clear();delete player.lookHeading;
+  AudioSys.pause(false);lookControl.clear();pitchControl.clear();delete player.lookHeading;
   runGeneration++;
   resetSandboxWave();
   hideConfirm();
@@ -3237,7 +3238,7 @@ function newGame(test){
 function togglePause(){
   Input.reset();
   if(Game.state==='prep'||Game.state==='battle'){
-    Game.pausedFrom=Game.state;Game.state='paused';AudioSys.pause(true);lookControl.clear();
+    Game.pausedFrom=Game.state;Game.state='paused';AudioSys.pause(true);lookControl.clear();pitchControl.clear();
     if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
     syncPauseOptions();
     $('menuPause').classList.remove('hidden');

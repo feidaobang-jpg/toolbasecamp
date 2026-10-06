@@ -17,9 +17,10 @@ export function createCamera() {
   const cam = new THREE.PerspectiveCamera(40, 16 / 9, 0.5, 420);
   const judgeCam = new THREE.PerspectiveCamera(40, 16 / 9, 0.5, 420); // 玩法判定镜头：始终朝北跟随
   const C = {
-    cam, judgeCam, idx: 0, lastIdx: 0, fpNow: false, yaw: 0, lookPending: 0, lookRevision: 0, tx: -19, ty: 14, quad: [[0, 0], [0, 0], [0, 0], [0, 0]], aabb: { x0: 0, x1: 0, y0: 0, y1: 0 },
+    cam, judgeCam, idx: 0, lastIdx: 0, fpNow: false, pitchOff: 0, yaw: 0, lookPending: 0, lookRevision: 0, tx: -19, ty: 14, quad: [[0, 0], [0, 0], [0, 0], [0, 0]], aabb: { x0: 0, x1: 0, y0: 0, y1: 0 },
     preset() { return PRESETS[this.idx]; },
-    cycle() { this.idx = (this.idx + 1) % PRESETS.length; this.yaw = 0; if (!PRESETS[this.idx].fp) this.lastIdx = this.idx; return PRESETS[this.idx]; },
+    turnPitch(d) { const p=this.preset(), base=p.fp?-.082:p.pitch; this.pitchOff=clamp(base+this.pitchOff+(p.fp?-d:d),p.fp?-1:.12,p.fp?1:1.48)-base; },
+    cycle() { this.idx = (this.idx + 1) % PRESETS.length; this.yaw = 0; this.pitchOff = 0; if (!PRESETS[this.idx].fp) this.lastIdx = this.idx; return PRESETS[this.idx]; },
     // 拖动转视角：yaw 以北为 0、顺时针为正，夹到 (-π, π]
     rotate(d) { this.yaw = ((this.yaw + d + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI; },
     // 正数表示玩家向右看；驾驶舱与环绕镜头的 yaw 定义相反，按实际生效的镜头换算。
@@ -76,11 +77,12 @@ export function createCamera() {
         const a = (opt.heading || 0) + this.yaw, fx = Math.sin(a), fz = Math.cos(a);
         cam.fov = p.fov; cam.updateProjectionMatrix();
         cam.position.set(px + fx * 0.7, 1.5, -(py + fz * 0.7));
-        cam.lookAt(px + fx * 14, 0.35, -(py + fz * 14));
+        cam.lookAt(px + fx * 14, 1.5+Math.tan(-.082+this.pitchOff)*14, -(py + fz * 14));
       } else {
         cam.fov = gp.fov; cam.updateProjectionMatrix();
-        cam.position.copy(judgeCam.position);
-        cam.quaternion.copy(judgeCam.quaternion);
+        const pch=clamp(pitch+this.pitchOff,.12,1.48), radius=Math.cos(pch)*dist;
+        cam.position.set(this.tx+Math.sin(this.yaw)*radius,Math.sin(pch)*dist,-this.ty+Math.cos(this.yaw)*radius);
+        cam.lookAt(this.tx,0,-this.ty);
       }
       cam.updateMatrixWorld();
       if (opt && opt.shake) {
@@ -94,7 +96,7 @@ export function createCamera() {
       const pts = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
       for (let k = 0; k < 4; k++) {
-        v.set(pts[k][0], pts[k][1], 0.5).unproject(cam).sub(o).normalize();
+        v.set(pts[k][0], pts[k][1], 0.5).unproject(judgeCam).sub(o).normalize();
         let t = v.y < -1e-3 ? -o.y / v.y : 400;
         t = Math.min(t, 400);
         const gx = o.x + v.x * t, gy = -(o.z + v.z * t);

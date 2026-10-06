@@ -1,12 +1,12 @@
-import { bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=unified3d1';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=toy3dui2';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=unified3d1';
+import { createScene, PRESETS } from './scene.js?v=toy3dui2';
 import { createRun, createWorld, step, turnPlayer, SCORE, TYPE_NAMES, qa } from './sim.js?v=merge1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
-import { GameAudio } from './audio.js?v=unified3d1';
+import { GameAudio } from './audio.js?v=toy3dui2';
 
-const VERSION = 'drag-look1';
+const VERSION = 'toy3dui2';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -110,7 +110,7 @@ function worldDir() {
   return (d - quarter(yaw) + 4) % 4;
 }
 function clearInput() {
-  dragLook.clear(); lookControl.clear();
+  dragLook.clear(); lookControl.clear(); pitchControl.clear();
   keys.clear(); touchHold.clear(); dirStack.length = 0; firePressed = false; latched = null;
   joyRelease();
   document.querySelectorAll('.act.down').forEach(b => b.classList.remove('down'));
@@ -131,7 +131,7 @@ function optLabel(name) {
     case 'lives': return ['命数', settings.lives[m] === 'inf' ? '无限命' : '经典 3 命', false];
     case 'armor': return ['耐久', settings.armor[m] === 'classic' ? '经典一发' : '标准 3 格', false];
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
-    case 'camera': return ['视角（C）', PRESETS[view.presetIndex].name, false];
+    case 'camera': return [display.touchOn ? '切换视角' : '切换视角（C）', PRESETS[view.presetIndex].name, false];
     case 'quality': return ['画质', { auto: '自动', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', settings.volume <= 0 ? '静音' : Math.round(settings.volume * 100) + '%', false];
     case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
@@ -183,7 +183,7 @@ function adjust(name, delta) {
   refreshOptions();
 }
 function cycleCamera(delta = 1) {
-  dragLook.clear(); lookControl.clear();
+  dragLook.clear(); lookControl.clear(); pitchControl.clear();
   const n = PRESETS.length;
   if (world?.player) delete world.player.lookHeading;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
@@ -574,6 +574,7 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   btn.addEventListener('contextmenu', e => e.preventDefault());
 });
 $('btn-cam-t').addEventListener('pointerdown', e => { e.preventDefault(); if (uiMode === 'game' && !current) cycleCamera(); });
+const pitchControl = createPitchController({turn:d=>view.turnPitch(d)});
 const lookControl = createLookController({ firstPerson: () => view.firstPerson(), turn: delta => {
   view.yawOffset -= delta;
   const p = world && world.player;
@@ -581,7 +582,7 @@ const lookControl = createLookController({ firstPerson: () => view.firstPerson()
   latched = null;
 } });
 const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && !current && !paused,
-  toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
+  toLocal, width: () => display.W, pitch: delta => pitchControl.queue(delta), rotate: delta => lookControl.queue(delta) });
 refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')],
   get: () => settings.touch, set: value => { clearInput(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
@@ -655,7 +656,7 @@ const perf = { on: false, frames: [], work: [] };
 function simulate(dt) {
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (uiMode === 'game' && !paused && !current) lookControl.step(dt, rot);
+  if (uiMode === 'game' && !paused && !current) { lookControl.step(dt, rot); pitchControl.step(dt); }
   if (uiMode !== 'game' || paused || !world) return;
   if (current === 'tally') { tallyUpdate(dt); return; }
   if (current) return;
@@ -758,3 +759,5 @@ if (TEST) {
     toLocal, startGame, toTitle
   };
 }
+
+installRemakeUI();

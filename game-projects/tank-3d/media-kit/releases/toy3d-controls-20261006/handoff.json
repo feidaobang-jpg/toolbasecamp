@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "toy3dui2",
+  "base_version": "unified3d1",
+  "created_at": "2026-10-06T09:25:36.441111+08:00",
+  "classification": "正式版本",
+  "build": {
+    "id": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+    "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "controls",
+      "description": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
+      "status": "implemented",
+      "evidence_ids": [
+        "menu",
+        "mobile"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "controls-unification",
+      "feature_ids": [
+        "controls"
+      ],
+      "before": "各游戏菜单/视角/移动转身语义不一致，赤色要塞第二关需解锁",
+      "after": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+      "user_visible_result": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
+      "evidence_ids": [
+        "menu",
+        "mobile"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "walking-backwards",
+      "found_version": "unified3d1",
+      "reproduction": "普通视角手动转头后朝另一方向移动",
+      "observed": "身体保持手动朝向，出现倒着走",
+      "impact": "操作直觉不一致",
+      "status": "fixed",
+      "cause": "慢速手动视线覆盖正常移动转身；恐龙快打预物理与后物理转身曾相互抵消",
+      "fix": "仅第一人称保留慢速；非第一人称按真实移动方向及时转身，坦克独立炮塔/虫潮自动射击保留",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "实际渲染主体朝向与位移方向比对通过；旋转竖屏方向回归通过"
+    }
+  ],
+  "media": [
+    {
+      "id": "menu",
+      "file": "releases/toy3d-controls-20261006/captures/tank-3d-menu.png",
+      "sha256": "82c8156ff27dcccc9539ef9aede0c0e348ab0b96284286f2aa0dddf8d6d2adc9",
+      "kind": "screenshot",
+      "version": "toy3dui2",
+      "build_id": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+      "capture_mode": "realtime-automation",
+      "description": "实际当前游戏UI；跳过开场，低画质，模拟手机视口。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile",
+      "file": "releases/toy3d-controls-20261006/captures/tank-3d-mobile.png",
+      "sha256": "91d536d6eaf32dee95780eac8315e49dc71a10062a1a4758de3bb0fc55cf90f2",
+      "kind": "screenshot",
+      "version": "toy3dui2",
+      "build_id": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+      "capture_mode": "realtime-automation",
+      "description": "实际当前游戏UI；跳过开场，低画质，模拟手机视口。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Desktop + simulated touch, keyboard and pointer, actual render camera/body, pause audio-clock, fullscreen, stage selection",
+      "result": "pass",
+      "evidence": "../../../../site-games/releases/toy3d-controls-20261006/qa.json",
+      "unmeasured": [
+        "real-phone multi-touch/performance"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "当前截图可用于UI展示，动态QA原片本机保存但未做成片视听审查；没有新解说或完整通关片，视频仍须人工审片。"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "pending_preview",
+    "package_sha256": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee"
+  },
+  "bilibili": {
+    "status": "pending"
+  },
+  "local_artifacts": "D:\\project\\task-artifacts\\toy3d-controls-20261006"
+}

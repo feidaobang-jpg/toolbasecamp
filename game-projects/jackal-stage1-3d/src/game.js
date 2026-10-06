@@ -337,6 +337,7 @@ function updatePlayer(dt) {
   P.moving = false;
   if (d >= 0) {
     P.dir = d;
+    if (!camCtl.fpNow) delete P.lookHeading;
     const sp = P.speed * dt, dx = DIR8[d].x * sp, dy = DIR8[d].y * sp;
     const ox = P.x, oy = P.y;
     moveBody(P, Math.abs(dx) < 1e-6 ? 0 : dx, Math.abs(dy) < 1e-6 ? 0 : dy, P.r, P, true);
@@ -345,7 +346,7 @@ function updatePlayer(dt) {
   }
   const oldAng = P.ang;
   const targetAng = camCtl.fpNow ? P.ang + camCtl.yaw : P.lookHeading !== undefined ? P.lookHeading : DIR8[P.dir].a;
-  P.ang = approachAng(P.ang, targetAng, dt * 2.1);
+  P.ang = approachAng(P.ang, targetAng, dt * (camCtl.fpNow ? 2.1 : 16));
   // 补偿实际模型转角，而非一次扣掉目标方向的 45°/90°：平移、倒车不会甩动玩家视线。
   if (camCtl.fpNow) camCtl.rotate(-angDiff(oldAng, P.ang));
   // 机枪：默认跟随车头；选「固定朝上（原作）」时一直向北（画面上方）

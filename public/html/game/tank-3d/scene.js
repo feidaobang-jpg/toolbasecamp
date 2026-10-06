@@ -335,8 +335,14 @@ export function createScene(canvas) {
   const view = { subjectHeading: () => { const m=tankModels.get(world?.player?.id); return m ? m.group.rotation.y+m.turret.rotation.y : null; }, presetIndex: 0, yawOffset: 0, snap: true, titleMode: true, shake: 0, quality: 'high' };
   let elapsed = 0, fpYaw = 0, introK = -1;
   const target = new THREE.Vector3(), follow = new THREE.Vector3(), camPos = new THREE.Vector3(), lookAt = new THREE.Vector3();
+  view.pitchOffset = 0;
+  view.turnPitch = d => {
+    const p=PRESETS[view.presetIndex], base=p.pitch || 0, fp=!!p.fp;
+    const pitch=base+view.pitchOffset+(fp?-d:d);
+    view.pitchOffset=Math.max(fp?-1:.12,Math.min(fp?1:1.48,pitch))-base;
+  };
   view.preset = () => PRESETS[view.presetIndex];
-  view.setPreset = i => { view.presetIndex = i; view.yawOffset = 0; view.snap = true; };
+  view.setPreset = i => { view.presetIndex = i; view.yawOffset = 0; view.pitchOffset = 0; view.snap = true; };
   const fpActive = () => !!PRESETS[view.presetIndex].fp && !view.titleMode && !!world && !!world.player && world.player.state === 'active';
   view.firstPerson = fpActive;
   view.cameraYaw = () => (fpActive() ? fpYaw : 0) + view.yawOffset;
@@ -368,7 +374,7 @@ export function createScene(canvas) {
       if (view.snap) fpYaw = -p.dir * Math.PI / 2;
       const yaw = fpYaw + view.yawOffset, fwd = [-Math.sin(yaw), -Math.cos(yaw)];
       camPos.set(pp.x + fwd[0] * .15, 1.16, pp.z + fwd[1] * .15);
-      lookAt.set(pp.x + fwd[0] * 10, .55, pp.z + fwd[1] * 10);
+      lookAt.set(pp.x + fwd[0] * 10, 1.16 + Math.tan(Math.max(-1,Math.min(1,-.061+view.pitchOffset)))*10, pp.z + fwd[1] * 10);
       camera.up.set(0, 1, 0); camera.position.copy(camPos); camera.lookAt(lookAt); target.copy(pp);
     } else {
       const yaw = view.yawOffset;
@@ -376,7 +382,7 @@ export function createScene(canvas) {
       else if (pr.front) follow.set(pp.x - Math.sin(yaw) * 3.2, .5, pp.z - Math.cos(yaw) * 3.2);
       else follow.set(pp.x * .8, 0, pp.z * .8 + 1);
       target.lerp(follow, k);
-      let dist = pr.fit ? fitDistance(pr.pitch) : pr.dist, pitch = pr.pitch, yw = yaw, tg = target;
+      let dist = pr.fit ? fitDistance(pr.pitch+view.pitchOffset) : pr.dist, pitch = pr.pitch+view.pitchOffset, yw = yaw, tg = target;
       if (introK >= 0 && pr.fit) {
         const t = Math.min(1, introK), e = t * t * (3 - 2 * t), start = new THREE.Vector3(P(104), .6, P(192));
         tg = start.lerp(target, e); dist = THREE.MathUtils.lerp(6, dist, e); pitch = THREE.MathUtils.lerp(.22, pitch, e); yw = THREE.MathUtils.lerp(-.9, yaw, e);
@@ -386,7 +392,7 @@ export function createScene(canvas) {
       const sh = view.shake;
       if (sh > 0) camera.position.add(new THREE.Vector3((Math.random() - .5) * sh, (Math.random() - .5) * sh, (Math.random() - .5) * sh));
       lookAt.copy(tg);
-      if (pr.pitch > 1.3) { camera.up.set(-Math.sin(yw), 0, -Math.cos(yw)); } else camera.up.set(0, 1, 0);
+      if (pitch > 1.3) { camera.up.set(-Math.sin(yw), 0, -Math.cos(yw)); } else camera.up.set(0, 1, 0);
       camera.lookAt(lookAt);
     }
     view.snap = false;

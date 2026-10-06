@@ -1,4 +1,4 @@
-import { bindDragLook, addControlModeButtons, createLookController } from '../../../public/js/game/drag-look.js';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单 / 选人导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
 import { VERSION, STEP, TEST, CLEAN, store, seed, params, fmtTime, clamp } from './core.js';
@@ -381,12 +381,13 @@ window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
 IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { atk: $('btn-atk'), jump: $('btn-jump'), run: $('btn-run'), mega: $('btn-mega') }, toLocal);   // 切换视角用右上角 #btn-cam
 // 与虫潮一致：所有预设均向右拖、向右看；镜头的水平前向量是 (-sin(yaw), -cos(yaw))。
+const pitchControl = createPitchController({turn:d=>camCtl.turnPitch(d)});
 const lookControl = createLookController({ firstPerson: () => camCtl.fp(), turn: delta => {
   camCtl.yawOff -= delta;
   if (G.player && G.mode === 'play') G.player.lookHeading = (G.player.lookHeading ?? G.player.face) - delta;
 } });
-const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && G.mode === 'play' && !G.script && !current && !paused, toLocal, width: () => display.W, rotate: delta => lookControl.queue(delta) });
-IN.onClear(() => { dragLook.clear(); lookControl.clear(); });
+const dragLook = bindDragLook({ element: stage, active: () => uiMode === 'game' && G.mode === 'play' && !G.script && !current && !paused, toLocal, width: () => display.W, pitch: delta => pitchControl.queue(delta), rotate: delta => lookControl.queue(delta) });
+IN.onClear(() => { dragLook.clear(); lookControl.clear(); pitchControl.clear(); });
 
 refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
 
@@ -498,7 +499,9 @@ function presentFrame(dtReal, draw, instant) {
     const p = G.player;
     if (playing && G.mode === 'play' && !G.script) {
       lookControl.step(dtReal, (IN.down('rotR') ? 1 : 0) - (IN.down('rotL') ? 1 : 0));
+      pitchControl.step(dtReal);
       if (IN.look.dx) { lookControl.queue(IN.look.dx * .005); IN.look.dx = 0; }
+      if (!camCtl.fp() && ['walk','run','carry'].includes(p.state)) delete p.lookHeading;
       if (p.lookHeading !== undefined && p.state !== 'dead') p.face += Math.max(-dtReal*2.1,Math.min(dtReal*2.1,Math.atan2(Math.sin(p.lookHeading-p.face),Math.cos(p.lookHeading-p.face))));
     } else IN.look.dx = 0;
     const fpOff = camCtl.fp() && (['cut', 'trans', 'clear', 'over', 'cont'].indexOf(G.mode) >= 0 || ['down', 'dead', 'respawn', 'victory', 'door'].indexOf(p.state) >= 0);
@@ -617,3 +620,5 @@ if (TEST) {
     }
   };
 }
+
+installRemakeUI();

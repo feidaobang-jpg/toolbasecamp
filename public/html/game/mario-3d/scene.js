@@ -1,10 +1,10 @@
 // 渲染：把当前区域的网格地形沿纵深铺成 6 格厚的体素跑道，水管纵向并排 3 根；
 // 角色、道具、特效与镜头（C 预设 + Q/E 无极旋转），遮挡主角的物体做网点淡化。
 import * as THREE from './three.js?v=2.1.0';
-import { tex, textTexture } from './textures.js?v=unified3d1';
-import * as M from './models.js?v=unified3d1';
+import { tex, textTexture } from './textures.js?v=toy3dui2';
+import * as M from './models.js?v=toy3dui2';
 import { LANE, SOLID, tileKey } from './levels.js?v=2.1.0';
-import { heightOf } from './world.js?v=unified3d1';
+import { heightOf } from './world.js?v=toy3dui2';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -450,9 +450,15 @@ export function createView(canvas) {
     if (a.ceiling && p.y < 10) return 5.3;
     return Math.max(4.6, p.y - 2.2);
   }
+  view.pitchOffset = 0;
+  view.turnPitch = d => {
+    const p=PRESETS[view.presetIndex], base=p.pitch || 0, fp=!!p.fp;
+    const pitch=base+view.pitchOffset+(fp?-d:d);
+    view.pitchOffset=Math.max(fp?-1:.12,Math.min(fp?1:1.48,pitch))-base;
+  };
   view.preset = () => PRESETS[view.presetIndex];
-  view.cyclePreset = () => { view.presetIndex = (view.presetIndex + 1) % PRESETS.length; view.yawOffset = 0; return PRESETS[view.presetIndex]; };
-  view.setPreset = (i) => { view.presetIndex = i; view.yawOffset = 0; };
+  view.cyclePreset = () => { view.presetIndex = (view.presetIndex + 1) % PRESETS.length; view.yawOffset = 0; view.pitchOffset = 0; return PRESETS[view.presetIndex]; };
+  view.setPreset = (i) => { view.presetIndex = i; view.yawOffset = 0; view.pitchOffset = 0; };
   view.cameraYaw = () => PRESETS[view.presetIndex].yaw + view.yawOffset;
   // 第一人称只在游玩时生效：标题画面换成正视，死亡动画时退到身后看清发生了什么
   view.firstPerson = (w) => !!PRESETS[view.presetIndex].fp && !view.titleMode && !!w && w.mode !== 'dying';
@@ -514,6 +520,7 @@ export function createView(canvas) {
     let pr = PRESETS[view.presetIndex];
     const p = w.player, a = w.area, fp = view.firstPerson(w);
     if (pr.fp && !fp) pr = FRONT;
+    const pitch=pr.pitch+view.pitchOffset;
     const yaw = pr.yaw + view.yawOffset;
     let tx = p.x;
     const snap = view.snap;
@@ -526,16 +533,16 @@ export function createView(canvas) {
       // 第一人称：眼睛在头部高度（下蹲会变矮），沿镜头朝向看；Q/E 转头
       const eye = p.y + heightOf(p) * 0.86;
       camera.position.set(p.x, eye, p.z);
-      const fx = -Math.sin(yaw) * Math.cos(pr.pitch), fz = -Math.cos(yaw) * Math.cos(pr.pitch);
-      target = tmpP.set(p.x + fx * 10, eye + Math.sin(pr.pitch) * 10, p.z + fz * 10);
+      const fx = -Math.sin(yaw) * Math.cos(pitch), fz = -Math.cos(yaw) * Math.cos(pitch);
+      target = tmpP.set(p.x + fx * 10, eye + Math.sin(pitch) * 10, p.z + fz * 10);
       camera.lookAt(target);
       view.camLift = view.camPull = 0;
     } else {
       let cx = view.followX + pr.ahead;
       if (pr.id === 'side') { const half = 9; cx = a.width < half * 2 ? a.width / 2 : Math.max(half, Math.min(a.width - half, cx)); }
       target = tmpP.set(cx, view.followY, pr.id === 'side' ? 0 : p.z * 0.5);
-      const cp = Math.cos(pr.pitch) * pr.dist;
-      camera.position.set(target.x + Math.sin(yaw) * cp, target.y + Math.sin(pr.pitch) * pr.dist, target.z + Math.cos(yaw) * cp);
+      const cp = Math.cos(pitch) * pr.dist;
+      camera.position.set(target.x + Math.sin(yaw) * cp, target.y + Math.sin(pitch) * pr.dist, target.z + Math.cos(yaw) * cp);
       view.cutNow = cutsFor(a, p, camera.position);
       avoid(a, camera.position, target, p, dt, snap);
       if (view.shake > 0) { view.shake = Math.max(0, view.shake - dt); camera.position.y += (Math.random() - 0.5) * view.shake; }

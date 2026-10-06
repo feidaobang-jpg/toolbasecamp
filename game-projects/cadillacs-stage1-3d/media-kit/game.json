@@ -6,8 +6,8 @@
   },
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.3.0",
-  "handoff": "releases/unified3d-20261006/handoff.json",
+  "current_version": "v0.4.0",
+  "handoff": "releases/toy3d-controls-20261006/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -25,33 +25,7 @@
       "area": "0 / 1 / 2：测试用直接从某个区域开始"
     }
   },
-  "controls": {
-    "keyboard": {
-      "W/A/S/D（或方向键）": "移动（按相机水平轴映射；侧视下 W 走向纵深）",
-      "J（或空格）": "攻击：连打四下击倒；脚下有物品时捡起；拿武器时使用；冲刺中为冲刺攻击；空中为跳踢 / 飞踢；抓住后膝撞，第四下投摔；贴着油桶时举起 / 扔出",
-      "K": "跳跃",
-      "J+K 同按 或 U": "必杀（命中扣少量体力）",
-      "C": "循环切换视角：侧视 → 斜视 → 正视 → 第一人称",
-      "Q / E": "按住左右转视角",
-      "Esc / Enter / P": "暂停；菜单里 Enter 确认",
-      "↑↓ / ←→": "菜单选择 / 调整选项；选人画面 ←→ 换英雄",
-      "I（或 L / Shift / 双击方向）": "冲刺",
-      "S→W→J（下→上→攻击）": "空手角色特殊技，不扣体力；0.6 秒内下上，0.38 秒内攻击",
-      "K→方向→J": "空中斜下踢（梅斯为坐压），与同时 J+K 必杀分开"
-    },
-    "touch": {
-      "左侧浮动摇杆": "移动（模拟量；连推两下 = 冲刺）",
-      "J": "攻击",
-      "K": "跳跃",
-      "U": "必杀",
-      "C": "切换视角",
-      "按住画面拖动": "所有视角右拖右看、左拖左看，与虫潮一致",
-      "右上角": "C 切换视角与暂停",
-      "I": "点按启用冲刺，摇杆持续推动时保持；回中或松开摇杆停止，右手可转按 J",
-      "排列": "下排 J / K，上排 U / I，等大 2×2 方阵",
-      "下→上→J": "摇杆快速下上后点 J，发动角色特殊技"
-    }
-  },
+  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
   "release_intent": "web_demo",
   "verified_public_links": [
     "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
@@ -87,6 +61,13 @@
         "record": "releases/drag-direction-20261005/handoff.json",
         "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
         "included_version": "v0.3.0"
+      },
+      {
+        "version": "v0.4.0",
+        "classification": "正式版本",
+        "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+        "status": "pending_preview",
+        "record": "releases/toy3d-controls-20261006/handoff.json"
       }
     ],
     "submitted_version": "v0.3.0",
@@ -116,13 +97,14 @@
   "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git",
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
-    "touch": "左摇杆和动作按钮保留；画面空白处拖动转视角，保留 C 切换预设，移除左右旋转虚拟键",
+    "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
     "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
     "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标",
-    "coupling": "所有预设拖动/QE联动主角身体、头部或载具炮塔，世界不旋转；第一人称限速平滑转头",
+    "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
     "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
-    "action_layout": "等大对齐；U I O在J K L正上方；C位于右上暂停旁，保留旧键别名",
-    "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局"
+    "action_layout": "复刻以赤色要塞样式，J红/K绿/U金/I蓝等大2×2，无装饰点；C/暂停/全屏右上；原创按玩法保留必要动作",
+    "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局",
+    "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "resolved_changes": [
     {
@@ -158,9 +140,10 @@
     "status": "deployed_verified",
     "verified_at": "2026-10-05T20:39:41.339246+08:00"
   },
-  "control_audio_camera_update": "2026-10-06: selected mode state, plain action buttons, pause freezes audio, bounded character-linked look",
+  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
     "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
-  }
+  },
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
 }

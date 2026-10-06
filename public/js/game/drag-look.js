@@ -1,5 +1,5 @@
 // 空白画面拖动；游戏提供逻辑坐标（含竖屏旋转）与运行状态。
-export function bindDragLook({ element, active, toLocal, width, rotate }) {
+export function bindDragLook({ element, active, toLocal, width, rotate, pitch = () => {} }) {
   let drag = null;
   function clear() {
     const old = drag;
@@ -9,18 +9,20 @@ export function bindDragLook({ element, active, toLocal, width, rotate }) {
   element.addEventListener('pointerdown', e => {
     if (!active() || drag || (e.pointerType === 'mouse' && e.button !== 0)) return;
     if (e.target.closest('button,a,input,select,textarea,[role="dialog"],#joy-zone,#stick,#joyBase,.overlay,#panel')) return;
-    drag = { id: e.pointerId, x: toLocal(e.clientX, e.clientY).x };
+    const point = toLocal(e.clientX, e.clientY);
+    drag = { id: e.pointerId, x: point.x, y: point.y };
     try { element.setPointerCapture(e.pointerId); } catch (_) { /* detached pointer */ }
     e.preventDefault();
   });
   element.addEventListener('pointermove', e => {
     if (!drag || e.pointerId !== drag.id) return;
     if (!active()) { clear(); return; }
-    const x = toLocal(e.clientX, e.clientY).x;
+    const point = toLocal(e.clientX, e.clientY), x = point.x;
     // 正 delta 表示逻辑画面向右拖，调用方须换算为向右看（与虫潮一致），不能在不同预设反向。
     // 横向拖满一个逻辑屏宽转一周；横竖屏与屏幕尺寸保持一致。
     rotate((x - drag.x) / Math.max(1, width()) * Math.PI * 2);
-    drag.x = x;
+    pitch((point.y - drag.y) / Math.max(1, width()) * Math.PI * 2);
+    drag.x = x; drag.y = point.y;
     e.preventDefault();
   });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
@@ -54,6 +56,17 @@ export function addControlModeButtons({ containers, get, set }) {
       button.addEventListener('click', () => { set(value); refresh(); });
       group.append(button);
     }
+    group.addEventListener('keydown', e => {
+      const buttons = [...group.children], i = buttons.indexOf(document.activeElement);
+      if (i < 0) return;
+      if (['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code)) {
+        buttons[(i + (['ArrowLeft','KeyA'].includes(e.code) ? 2 : 1)) % 3].focus();
+        e.preventDefault(); e.stopPropagation();
+      } else if (['Enter','NumpadEnter','Space','KeyJ'].includes(e.code)) {
+        if (!e.repeat) buttons[i].click();
+        e.preventDefault(); e.stopPropagation();
+      }
+    });
     container.append(group); groups.push(group);
   }
   function refresh() {
@@ -81,4 +94,20 @@ export function createLookController({ turn, firstPerson = () => false }) {
     },
     get pending() { return pending; }
   };
+}
+
+export function createPitchController({ turn }) {
+  let pending = 0;
+  return {
+    queue(d) { pending = Math.max(-.45, Math.min(.45, pending + d * .5)); },
+    clear() { pending = 0; },
+    step(dt) { const d = Math.max(-dt, Math.min(dt, pending * (1-Math.exp(-12*dt)))); pending -= d; if (Math.abs(pending)<.00001) pending=0; if(d)turn(d); }
+  };
+}
+
+export function installRemakeUI() {
+  if(document.getElementById('remake-interface'))return;
+  const style=document.createElement('style'); style.id='remake-interface';
+  style.textContent="\n.pause-touch{display:none}body.touch-on .pause-key,body.touch-on kbd{display:none}body.touch-on .pause-touch{display:inline}\n:root{--ink:#2f4436;--cream:#fff6df;--gold:#d59b37;--red:#d85a42;--green:#5d9d54}\n#stage{--action:76px;--gap:12px;--edge:22px}\n#stage.compact{--action:60px;--gap:10px;--edge:16px}\n.overlay{background:rgba(34,47,37,.36);align-items:flex-start}.overlay>.panel{margin:auto}\n.panel,.panel.small,.panel.wide{background:#fff6df;color:#2f4436;border:3px solid #dfca91;border-radius:24px;box-shadow:0 6px 0 #a99262,0 18px 40px #0004}\n.title-screen .panel{max-width:1080px}\n.panel .rules,.panel .help,.panel p,.panel h2,.panel .sub,.panel .kicker{color:#2f4436}.panel .legal{color:#7c826b}\n.panel .logo{color:#d85a42;text-shadow:0 4px 0 #813a2b}\n.panel .items>button,.panel .items>a{background:#fffaf0;color:#2f4436;border:2px solid transparent;border-radius:14px;box-shadow:none;min-height:44px;text-shadow:none}\n.panel .items>.primary{background:#5d9d54;color:white}.panel .items .val{color:#a77522}\n.panel .items>button:focus-visible,.panel .items>a:focus-visible{outline:3px solid #e6a32b;outline-offset:0;border-color:#e6a32b}\n.control-modes{grid-column:1/-1}\n#hud-top{top:calc(var(--sat) + 10px);right:calc(var(--sar) + 10px);gap:8px}\n#hud-top button{min-width:44px;min-height:44px;padding:0 12px;border-radius:14px;background:rgba(255,246,223,.92);border:2px solid #dcc790;color:#2f4436;font-family:inherit;font-size:13px;font-weight:800;box-shadow:0 3px 0 #785a2838}\n#hud-top button b{color:#d85a42}#hud-top button:active{transform:translateY(2px);box-shadow:none}\nbody.mobile-device #btn-fs,body.mobile-device .fs-btn{display:block!important}\n#hud{max-width:calc(100% - 270px)}\n#joy-base{left:8px;bottom:calc(var(--sab) + 26px);width:128px;height:128px;border:3px solid #fff6dfd9;background:radial-gradient(circle,#fff6df40 0 40%,#2f443638 41% 100%);border-radius:50%}\n#joy-knob{width:58px;height:58px;background:#fff0c4;border:2px solid #b48f4a;box-shadow:0 3px 0 #503c1459;border-radius:50%}\n#touch .act-keys{inset:0;width:auto;height:auto;display:block;pointer-events:none}\n#touch .act{position:absolute;width:var(--action)!important;height:var(--action)!important;border:3px solid #fff;border-radius:50%;color:#fff;box-shadow:0 4px 0 #0005;pointer-events:auto}\n#touch .act b{font:800 26px ui-monospace,Consolas,monospace}#touch .act span{font-size:12px;font-weight:800}\n#btn-fire,#btn-atk,#touch [data-hold=fire]{right:calc(var(--sar) + var(--edge) + var(--action) + var(--gap))!important;bottom:calc(var(--sab) + 26px)!important;background:linear-gradient(#e2573f,#a83a28)!important}\n#btn-bomb,#btn-jump,#touch [data-hold=jump]{right:calc(var(--sar) + var(--edge))!important;bottom:calc(var(--sab) + 26px)!important;background:linear-gradient(#5d9a52,#3d6e37)!important}\n#btn-mega,#touch [data-hold=down]{right:calc(var(--sar) + var(--edge) + var(--action) + var(--gap))!important;bottom:calc(var(--sab) + 26px + var(--action) + var(--gap))!important;background:linear-gradient(#d8ac42,#986b25)!important}\n#btn-run,#btn-sprint{right:calc(var(--sar) + var(--edge))!important;bottom:calc(var(--sab) + 26px + var(--action) + var(--gap))!important;background:linear-gradient(#5484bd,#315682)!important}\n#touch .act:disabled{opacity:.45;filter:grayscale(.3);box-shadow:none}\n#touch .act.down{transform:translateY(3px) scale(.95);filter:brightness(1.15);box-shadow:0 1px 0 #0005}\n#stage.compact #joy-base{width:112px;height:112px}button::before,button::after{content:none!important}\n";
+  document.head.append(style);
 }
