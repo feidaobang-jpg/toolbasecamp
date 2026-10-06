@@ -150,11 +150,12 @@ function show(name) {
   current = name;
   IN.clear();
   refreshOptions();
-  if (name) { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
-  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout(true);
+  if (name) { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
+  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
 }
-const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden) : [];
+// 只取实际显示的项：hidden 属性之外，紧凑横屏还会用样式收起重复项，focus() 到不显示的元素会让 ↑↓ 卡住
+const items = () => current ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden && el.getClientRects().length > 0) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');

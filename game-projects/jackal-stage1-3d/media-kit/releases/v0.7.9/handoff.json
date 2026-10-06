@@ -7,6 +7,7 @@
  "classification": "普通补丁",
  "changes": [
   "手机横屏紧凑菜单：844×390 起主菜单、暂停、结算完整落在视口内（暂停改左列标题/得分、右列两列选项；结算改左列计分表、右列按钮）；568×320 等窄横屏改为上下排列、整层滑动，首尾都能用手指与键盘到达。",
+  "紧凑横屏主菜单收起与三键操作模式行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，网站与 Toy 版都只占 7 行：Toy 手机外壳顶栏下的 844×346、740×360、667×375 也能完整显示；键盘导航改为跳过样式隐藏项。",
   "全屏入口按浏览器实际能力显示，不再按手机分类处理：支持 Fullscreen API 时菜单与右上角显示，iPhone Safari、未授权全屏的 iframe 等不支持时隐藏，键盘导航跳过；被拒绝时仍提示并继续页面内游玩。",
   "修正 hidden 被样式盖掉：失败结算或打通最后一关后不再显示「进入下一关」，标题页不再从菜单后漏出战斗 HUD。",
   "QA：mobile.js 断言改为全屏按能力显示，修复已删除得分卡导致的超时，新增窄横屏滚动可达、暂停/结算适配与不支持全屏场景；desktop.js / stage2.js 新增结算按钮与横屏结算面板检查。"
@@ -46,18 +47,27 @@
    "fix": "#stage #hud[hidden]、#stage .items > [hidden] 强制 display:none",
    "status": "fixed",
    "retest": "desktop.js「失败结算不显示进入下一关」、stage2.js「打通最后一关的结算不显示进入下一关按钮」通过"
+  },
+  {
+   "id": "toy-shell-menu-scroll",
+   "reported_by": "本次 Toy 预览实测",
+   "found_version": "v0.7.9 首次部署（1953197d）",
+   "observed": "Toy 手机外壳顶栏占 44px，844×390 手机上游戏 iframe 只有 844×346，主菜单需滚动 37px 才看到操作模式行",
+   "fix": "紧凑横屏主菜单去掉重复项、开始键与起始关卡同排，由 8 行减为 7 行（面板约 324px）",
+   "status": "fixed",
+   "retest": "mobile.js「Toy 外壳顶栏下（844×346）菜单仍完整落在视口内」11→335；临时测量 844×390/346、740×360、667×375、932×430 主菜单均完整"
   }
  ],
  "build": {
-  "bundle_sha256": "cce26f0a95be4fb81c145bc9b4f4efc44500826afb57d1e4c49c1e7b83181cbb",
-  "style_sha256": "732783a0b33e225cb439300f7db50516151fec643d791f63b41596b256a0509f",
+  "bundle_sha256": "453b159293de1e5a3bc26e30b1db2e95d1de941ea472c5028be89339d1b7d6e3",
+  "style_sha256": "e33d82dcea74652ddf25dbfbe6217376d6e8ca3a12a126e78a452fdcd84aa93e",
   "esbuild": "0.28.2",
-  "cache_tags": "index.html css/js ?v=menu-fit1"
+  "cache_tags": "index.html css/js ?v=menu-fit2"
  },
  "qa": [
   {
    "method": "qa/mobile.js",
-   "result": "pass 57/57",
+   "result": "pass 58/58",
    "evidence": "qa/mobile.json"
   },
   {
@@ -72,15 +82,15 @@
   },
   {
    "method": "qa/touch-view.js",
-   "result": "pass（全部 PASS，无脚本错误）"
+   "result": "pass 61/61"
   },
   {
    "method": "qa/hud-visibility.cjs",
    "result": "pass 134/134"
   },
   {
-   "method": "临时视口测量（14 种视口：手机横竖、平板、桌面）",
-   "result": "手机横屏 844×390、932×430 三种菜单均完整；667×375、740×360 暂停与结算完整、主菜单整层滚动；桌面/平板与修改前一致（高度不足时仍整层滚动）"
+   "method": "临时视口测量（手机横竖、Toy 外壳 844×346、平板、桌面）",
+   "result": "手机横屏 844×390、844×346、740×360、667×375、932×430 三种菜单均完整；568×320 整层滚动首尾可达；桌面/平板与修改前一致（高度不足时仍整层滚动）"
   }
  ],
  "env_note": "Edge 设备模拟 + CDP 触摸（JK_CHANNEL=msedge JK_GPU=1），非真机；多指与真机全屏行为未在真机验证",
@@ -88,7 +98,12 @@
   "hud-visibility.cjs 回归时未设 JK_OUT，覆盖了 D:/project/task-artifacts/boss-hud-20261006/qa 里 v0.7.2 留下的截图与 results.json（v0.7.2 handoff 引用该目录；git 记录不受影响，原文件无法恢复）。脚本默认输出已改为 qa/out/hud-visibility。"
  ],
  "site": {
-  "status": "pending_deploy"
+  "status": "pending_deploy",
+  "first_deploy": {
+   "commit": "1953197d",
+   "verified": "Actions success；线上 JS cce26f0a…/CSS 732783a0… 与提交一致；线上 mobile.js 57/57",
+   "note": "Toy 预览发现外壳顶栏下需滚动，补改后重新部署"
+  }
  },
  "toy": {
   "id": 39863936092160,
