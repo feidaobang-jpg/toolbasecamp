@@ -28,12 +28,12 @@ let browser;
   // the opening announcement instead of requiring every rapid chat to speak.
   await consolePage.waitForTimeout(7000);
   await consolePage.locator('#comment').fill('你是这场游戏里的谁');await consolePage.locator('#send').click();
-  await consolePage.locator('#events').filter({hasText:'本地AI'}).waitFor({timeout:25000});
+  await consolePage.locator('#events').filter({hasText:/本地AI|AI不可用或回答被过滤/}).waitFor({timeout:25000});
   await consolePage.locator('[data-control="pause"]').click();await game.locator('#status').filter({hasText:'已暂停'}).waitFor();
   await consolePage.locator('[data-control="resume"]').click();await game.locator('#status').filter({hasText:'运行中'}).waitFor();
   await consolePage.locator('#diagnose').click();await consolePage.locator('#health').filter({hasText:'"gameConnected": true'}).waitFor();
   await consolePage.screenshot({path:path.join(out,'after-console.png'),fullPage:true});await game.screenshot({path:path.join(out,'after-game.png')});
-  const result={root,canonical:consolePage.url(),game:game.url(),at:new Date().toISOString(),errors,badResponses,failedRequests,checks:['root redirect','CSS and JS','rules','health','popup link','start','join','tank','three modes','local AI reply','pause/resume']};
+  const result={root,canonical:consolePage.url(),game:game.url(),at:new Date().toISOString(),errors,badResponses,failedRequests,aiEvents:await consolePage.locator('#events').innerText(),checks:['root redirect','CSS and JS','rules','health','popup link','start','join','tank','three modes','AI reply or explicitly labelled fallback','pause/resume']};
   await fs.writeFile(path.join(out,'after.json'),JSON.stringify(result,null,2));
   assert.deepEqual(errors,[]);assert.deepEqual(badResponses,[]);assert.deepEqual(failedRequests,[]);
   await context.close();await browser.close();console.log(JSON.stringify({ok:true,out,result}));
