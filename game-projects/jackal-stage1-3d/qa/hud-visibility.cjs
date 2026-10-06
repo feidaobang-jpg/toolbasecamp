@@ -26,9 +26,14 @@ async function measure(page) {
       const xs=points.map(p=>p.x),ys=points.map(p=>p.y);
       return { id:e.bossId, x:Math.min(...xs),y:Math.min(...ys),w:Math.max(...xs)-Math.min(...xs),h:Math.max(...ys)-Math.min(...ys),clipped:points.some(p=>p.z>1||p.z< -1) };
     });
-    return { W,H,blocks,projected,state:s,armor:rect(document.getElementById('hc-armor')), rescue:getComputedStyle(document.querySelector('.hud-rescue')).display };
+    const center=camera.position.clone().set(q._cam.tx,0,-q._cam.ty);
+    const cameraState={id:q._cam.preset().id,distance:camera.position.distanceTo(center),height:camera.position.y,fog:q._scene.fog===null};
+    return { W,H,blocks,projected,state:s,cameraState,armor:rect(document.getElementById('hc-armor')), rescue:getComputedStyle(document.querySelector('.hud-rescue')).display };
   });
 }
+// 用户要求恢复旧预设距离；不再用完整庭院适配来强制拉远。
+const distances={oblique:34,top:42,low:24,wide:48,front:18};
+const fixedDistance=m=>m.cameraState.id==='fp'?Math.abs(m.cameraState.height-1.5)<.001:Math.abs(m.cameraState.distance-distances[m.cameraState.id])<.1;
 const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
 (async()=>{
   fs.mkdirSync(OUT,{recursive:true});
@@ -48,7 +53,9 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     await page.locator('[data-control-mode=hide]').first().click();
     await page.locator('[data-act=start]').click();
     await page.evaluate(()=>{const q=__JK_TEST__;q.manual(true);q.step(240);q.cheat.invuln(999);q.cheat.carry(3);q.step(1);});
-    check('ordinary rescue stays visible',(await measure(page)).rescue!=='none');
+    const ordinary=await measure(page);
+    check('ordinary rescue stays visible',ordinary.rescue!=='none');
+    check('ordinary stage2 also has no fog',ordinary.cameraState.fog);
     await page.evaluate(()=>{const q=__JK_TEST__;q.cheat.teleport(0,325);q.step(180);});
     const presets=['oblique','top','low','wide','front','fp'];
     for(const viewport of [{width:1280,height:720},{width:844,height:390},{width:667,height:375},{width:390,height:844}]) {
@@ -61,8 +68,8 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
         check(label+' boss fight and four targets',m.state.boss.state==='fight'&&m.projected.length===4,m.projected);
         check(label+' armor and toolbar do not overlap',!overlap(m.armor,m.blocks.find(b=>b.id==='hud-top'))&&m.armor.w>0);
         check(label+' rescue folds',m.rescue==='none');
-        check(label+' boss models stay on screen',m.projected.every(b=>!b.clipped&&b.x>=0&&b.y>=0&&b.x+b.w<=m.W&&b.y+b.h<=m.H));
-        check(label+' boss models clear UI',m.projected.every(b=>m.blocks.every(u=>!overlap(b,u))),m.blocks);
+        check(label+' keeps original preset distance',fixedDistance(m),m.cameraState);
+        check(label+' has no distance fog',m.cameraState.fog,{camera:m.cameraState,targets:m.projected,blocks:m.blocks});
         if(i===0)await browserPage.screenshot({path:path.join(OUT,label.replaceAll(' ','-')+'.png')});
         await browserPage.keyboard.press('KeyC');await page.evaluate(()=>__JK_TEST__.step(120));
       }
@@ -71,7 +78,7 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     for (let i=0;i<4;i++) {
       await browserPage.keyboard.down('KeyE');await page.evaluate(()=>__JK_TEST__.step(60));await browserPage.keyboard.up('KeyE');
       const m=await measure(page);
-      check('rotated arena '+i+' keeps bosses clear',m.projected.every(b=>!b.clipped&&b.x>=0&&b.y>=0&&b.x+b.w<=m.W&&b.y+b.h<=m.H&&m.blocks.every(u=>!overlap(b,u))),{blocks:m.blocks,projected:m.projected});
+      check('rotated arena '+i+' does not auto zoom or restore fog',fixedDistance(m)&&m.cameraState.fog,{camera:m.cameraState,projected:m.projected});
     }
     // Reset the preset after a full Q/E turn through the real pause option.
     await page.locator('#btn-pause').click();await page.locator('[data-opt=camera]:visible').click();await page.locator('[data-act=resume]').click();await page.evaluate(()=>__JK_TEST__.step(1));
@@ -92,7 +99,7 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     await page.evaluate(()=>{const q=__JK_TEST__;q.step(240);q.cheat.invuln(999);q.cheat.teleport(0,310);q.step(900);});
     const first=await measure(page);
     check('first stage tank boss remains playable',first.state.stage===1&&first.state.boss.state==='fight'&&first.state.boss.spawned===4);
-    check('first stage armor remains visible',first.armor.w>0&&!overlap(first.armor,first.blocks.find(b=>b.id==='hud-top')));
+    check('first stage armor remains visible and fixed camera has no fog',first.armor.w>0&&!overlap(first.armor,first.blocks.find(b=>b.id==='hud-top'))&&fixedDistance(first)&&first.cameraState.fog);
     await browserPage.screenshot({path:path.join(OUT,'stage1-boss.png')});
     check('no runtime errors',errors.length===0,errors);
   } finally { await browser.close();fs.writeFileSync(path.join(OUT,'results.json'),JSON.stringify(results,null,2)); }
