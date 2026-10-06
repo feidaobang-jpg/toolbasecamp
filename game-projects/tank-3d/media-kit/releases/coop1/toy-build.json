@@ -31,5 +31,9 @@
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
   },
   "packageHash": "56772e8171dac97a8bc988d661ab28256feb7108950b9640102782038ddcc4c9",
-  "status": "built_not_submitted"
+  "status": "published",
+  "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_H4gIKMgO/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_PDHYHMqy/index.html",
+  "submitted_at": "2026-10-06T18:41:49+08:00",
+  "published_verified_at": "2026-10-06T18:48:28.119681+08:00"
 }

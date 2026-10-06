@@ -10,7 +10,7 @@
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
-  "public_play_url_note": "merge1：2D/3D 合并版，经典复刻 FC 原版 35 关 + 魔改 100 关无限周目。部署核验见 releases/merge1/handoff.json。",
+  "public_play_url_note": "coop1：经典35关、魔改100关无限周目，新增房间码邀请双人合作守基地。线上双浏览器与手机视口验证通过；B站App真机未验收。",
   "preview_url": "https://claude.ai/artifact/24AYVoSJXaPXLF9KLsKNtp",
   "preview_url_note": "claude.ai 私有预览副本（扁平目录 + 按 ` 显示帧时间浮层），仅所有者可见，不是公开试玩链接。",
   "development_model": "本版 merge1：claude-opus-5-5（Claude Code）；collision-fix1 等：GPT-6 Codex；初版：claude-opus-5-5",
@@ -23,26 +23,26 @@
     "ffmpeg、Pillow"
   ],
   "notes": "经典模式地图、敌军名单取自 MIT 许可的 feichao93/battle-city 关卡数据，数值按该仓库 resources/nes-values 的 ROM 反汇编调研；魔改模式地图由关号确定性生成。3D 模型与贴图程序化制作，音效采用原作 FC 音效（用户已明确不考虑版权顾虑），引擎声等为合成。",
-  "version": "camera-mobile1",
+  "version": "coop1",
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_hQqbwFeC/index.html",
-    "verified_at": "2026-10-06T11:15:46.661482+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html",
-    "submitted_version": "toy3dui3",
-    "submitted_at": "2026-10-06T11:06:48.109893+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_H4gIKMgO/index.html",
+    "verified_at": "2026-10-06T18:48:28.119681+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_PDHYHMqy/index.html",
+    "submitted_version": "coop1",
+    "submitted_at": "2026-10-06T18:41:49+08:00",
     "video_bindings": [
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/toy3dui3/handoff.json",
-    "published_version": "toy3dui3",
+    "release_record": "releases/coop1/handoff.json",
+    "published_version": "coop1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "公开新版已核验。",
-    "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+    "note": "coop1公开新版已通过两浏览器和手机视口的完整联机流程验收。",
+    "package_sha256": "56772e8171dac97a8bc988d661ab28256feb7108950b9640102782038ddcc4c9",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -58,9 +58,16 @@
         "status": "published",
         "record": "releases/toy3dui3/handoff.json",
         "summary": "右上贴边单行按钮，HUD避让。"
+      },
+      {
+        "version": "coop1",
+        "classification": "正式版本",
+        "status": "published",
+        "record": "releases/coop1/handoff.json",
+        "summary": "房间码邀请、两坦克合作守基地，同步暂停/换关/断线。"
       }
     ],
-    "published_verified_at": "2026-10-06T03:14:57.493Z"
+    "published_verified_at": "2026-10-06T18:48:28.119681+08:00"
   },
   "merged_from": {
     "game": "tank-battle",
@@ -88,8 +95,18 @@
   },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "toy3dui3",
-  "website_verified_at": "2026-10-06T11:09:58.228517+08:00",
-  "website_commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
-  "web_toy_versions_match": true
+  "website_version": "coop1",
+  "website_verified_at": "2026-10-06T18:42:07.331292+08:00",
+  "website_commit": "99720e516ab9d75a79adae300ab72f3b1725b011",
+  "web_toy_versions_match": true,
+  "coop": {
+    "protocol": "tank3d-v1",
+    "endpoint": "wss://www.zhengxiaohui.cn/api/game/tank-coop/ws?game=tank3d-v1",
+    "players": 2,
+    "mode": "room-code invitation, cooperative base defense",
+    "model": "host-authoritative simulation",
+    "persistence": "single-player saves and records untouched",
+    "disconnect": "either player leaves ends room; no host migration",
+    "physical_app_test": false
+  }
 }
