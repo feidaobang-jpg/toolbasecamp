@@ -163,5 +163,5 @@ async def tank3d_ws(socket: WebSocket):
             await asyncio.gather(*(p.socket.close(code=1000) for p in room.peers.values()), return_exceptions=True)
         try:
             await socket.close()
-        except RuntimeError:
+        except (RuntimeError, WebSocketDisconnect):
             pass

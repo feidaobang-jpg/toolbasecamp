@@ -1,17 +1,37 @@
 """Connection-local rooms only; run with pytest server/tests/test_tank3d_rooms.py."""
 import sys
+import asyncio
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi import WebSocketDisconnect
 from fastapi.testclient import TestClient
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from game_rooms_api import router
-from tank3d_rooms import rooms
+from tank3d_rooms import rooms, tank3d_ws
 
 app = FastAPI()
 app.include_router(router)
 URL = '/game/tank-coop/ws?game=tank3d-v1'
+
+
+def test_already_disconnected_socket_closes_without_error():
+    # Real ASGI adapters may raise on close after a client has disconnected.
+    class DisconnectedSocket:
+        async def accept(self):
+            pass
+
+        async def send_json(self, data):
+            pass
+
+        async def receive_text(self):
+            raise WebSocketDisconnect(code=1006)
+
+        async def close(self):
+            raise WebSocketDisconnect(code=1006)
+
+    asyncio.run(tank3d_ws(DisconnectedSocket()))
 
 
 def until(ws, kind):

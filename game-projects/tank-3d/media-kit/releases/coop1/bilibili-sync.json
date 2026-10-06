@@ -1,0 +1,30 @@
+{
+  "game": "tank-3d",
+  "baseline_version": "toy3dui2",
+  "target_version": "coop1",
+  "classification": "正式版本",
+  "code_commit": "99720e516ab9d75a79adae300ab72f3b1725b011",
+  "package_sha256": "56772e8171dac97a8bc988d661ab28256feb7108950b9640102782038ddcc4c9",
+  "summary": "六位房间码邀请双人合作守基地；同步战场、暂停、换关与离线提示，保留单机。合并toy3dui3普通补丁说明。",
+  "videos": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "aid": 117364309890693,
+      "owner_mid": 16214353,
+      "status": "pending_review",
+      "old_description": "bilibili/BV1Wqaz6AEJb-original.txt",
+      "new_description": "bilibili/BV1Wqaz6AEJb-new.txt",
+      "description_sha256": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b",
+      "prepared_at": "2026-10-06T18:45:26.109142+08:00",
+      "submitted_at": "2026-10-06T18:48:28.119681+08:00",
+      "state_correction": "首次提交时Toy审核中；公开版本核验通过后移除过期审核提示，保留首次文案记录。",
+      "platform_result": "稿件投递成功；编辑页重读为最新联机说明。稿件管理明确显示坦克稿件审核中，处理进度页显示稿件审核进行中；公开旧说明暂保留。",
+      "evidence": [
+        "D:/project/artifacts/tank-coop-20261006/proof/bilibili-description-saved.png",
+        "D:/project/artifacts/tank-coop-20261006/proof/bilibili-review-status.png"
+      ],
+      "last_public_check_at": "2026-10-06T18:52:01.368423+08:00"
+    }
+  ],
+  "activity_check": "官方成长任务部分检查已写共享台账，无新符合条件报名；未推进全面检查时间。"
+}

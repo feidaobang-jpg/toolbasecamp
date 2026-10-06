@@ -5,15 +5,27 @@
   "branch": "codex/tank-3d-coop-20261006",
   "scope": "坦克大战3D双人合作守基地",
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "version": "coop1",
+    "commit": "99720e516ab9d75a79adae300ab72f3b1725b011",
+    "verified_at": "2026-10-06T18:42:07.331292+08:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+    "actions_run": 37450687633
   },
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
-    "status": "pending_preview"
+    "status": "published",
+    "package_hash": "56772e8171dac97a8bc988d661ab28256feb7108950b9640102782038ddcc4c9",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_H4gIKMgO/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_PDHYHMqy/index.html",
+    "submitted_at": "2026-10-06T18:41:49+08:00",
+    "published_version": "coop1",
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "public_verified_at": "2026-10-06T18:48:28.119681+08:00"
   },
   "bilibili": {
-    "BV1Wqaz6AEJb": "pending_update"
+    "BV1Wqaz6AEJb": "pending_review"
   },
   "validation": {
     "url": "http://127.0.0.1:8792/public/html/game/tank-3d/index.html",
@@ -62,7 +74,156 @@
         "ok": true
       }
     ],
-    "physicalPhoneTest": false
+    "physicalPhoneTest": false,
+    "production": {
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+      "results": [
+        {
+          "name": "bad room reports useful error",
+          "ok": true
+        },
+        {
+          "name": "two seats join/ready/start on identical stage",
+          "data": {
+            "code": "703041"
+          },
+          "ok": true
+        },
+        {
+          "name": "both players move and guest receives host motion",
+          "ok": true
+        },
+        {
+          "name": "guest fire executes on host",
+          "ok": true
+        },
+        {
+          "name": "guest pause freezes both simulations",
+          "ok": true
+        },
+        {
+          "name": "input mode switches without leaving room",
+          "ok": true
+        },
+        {
+          "name": "portrait rotates gameplay while preserving room",
+          "ok": true
+        },
+        {
+          "name": "shared clear/tally/next-stage",
+          "ok": true
+        },
+        {
+          "name": "guest disconnect ends room clearly",
+          "ok": true
+        },
+        {
+          "name": "single-player still works after networking",
+          "ok": true
+        }
+      ],
+      "physicalPhoneTest": false
+    },
+    "toy_preview": {
+      "url": "https://www.bilibili.com/toy/preview/preview_H4gIKMgO/index.html",
+      "results": [
+        {
+          "name": "bad room reports useful error",
+          "ok": true
+        },
+        {
+          "name": "two seats join/ready/start on identical stage",
+          "data": {
+            "code": "177797"
+          },
+          "ok": true
+        },
+        {
+          "name": "both players move and guest receives host motion",
+          "ok": true
+        },
+        {
+          "name": "guest fire executes on host",
+          "ok": true
+        },
+        {
+          "name": "guest pause freezes both simulations",
+          "ok": true
+        },
+        {
+          "name": "input mode switches without leaving room",
+          "ok": true
+        },
+        {
+          "name": "portrait rotates gameplay while preserving room",
+          "ok": true
+        },
+        {
+          "name": "shared clear/tally/next-stage",
+          "ok": true
+        },
+        {
+          "name": "guest disconnect ends room clearly",
+          "ok": true
+        },
+        {
+          "name": "single-player still works after networking",
+          "ok": true
+        }
+      ],
+      "physicalPhoneTest": false
+    },
+    "single_player": "17 simulation checks and complete existing desktop/mobile browser suite passed",
+    "server": "3 pytest tests passed, including real-ASGI disconnect/close exception regression",
+    "toy_public": {
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "results": [
+        {
+          "name": "bad room reports useful error",
+          "ok": true
+        },
+        {
+          "name": "two seats join/ready/start on identical stage",
+          "data": {
+            "code": "675839"
+          },
+          "ok": true
+        },
+        {
+          "name": "both players move and guest receives host motion",
+          "ok": true
+        },
+        {
+          "name": "guest fire executes on host",
+          "ok": true
+        },
+        {
+          "name": "guest pause freezes both simulations",
+          "ok": true
+        },
+        {
+          "name": "input mode switches without leaving room",
+          "ok": true
+        },
+        {
+          "name": "portrait rotates gameplay while preserving room",
+          "ok": true
+        },
+        {
+          "name": "shared clear/tally/next-stage",
+          "ok": true
+        },
+        {
+          "name": "guest disconnect ends room clearly",
+          "ok": true
+        },
+        {
+          "name": "single-player still works after networking",
+          "ok": true
+        }
+      ],
+      "physicalPhoneTest": false
+    }
   },
   "limits": [
     "未完成B站App真机与多指触控验收",
@@ -77,5 +238,20 @@
     "real-stage-host.png": "750a92a10b88681dc09f0425f9079e5e31f8f073c27151e415c19d4b42c9e272",
     "real-stage-mobile.png": "c76ab634163f228e8ba935602809c78f20ed5ffcb228437f703d16e2458583d5"
   },
-  "cover": "沿用现有实机封面：同一地图、坦克与画风"
+  "cover": "沿用现有实机封面：同一地图、坦克与画风",
+  "artifacts": "D:/project/artifacts/tank-coop-20261006",
+  "proof": {
+    "toy_public_lobby": "D:/project/artifacts/tank-coop-20261006/proof/toy-public-lobby.png",
+    "bilibili_saved_description": "D:/project/artifacts/tank-coop-20261006/proof/bilibili-description-saved.png",
+    "bilibili_review_status": "D:/project/artifacts/tank-coop-20261006/proof/bilibili-review-status.png"
+  },
+  "release_records_commit": "45ff1f335e44ca21c6119c6d469c6a644b45fb09",
+  "server_patch": {
+    "status": "public_verified",
+    "summary": "关闭已断开的WebSocket时兼容WebSocketDisconnect，避免退出后的异常日志；Toy前端包未变化。",
+    "commit": "569fc48dbb3eb3dde5551856671d9bb783b2af7b",
+    "actions_run": 37452709379,
+    "verified_at": "2026-10-06T18:57:58.389189+08:00",
+    "validation": "Service healthy, deploy_sha matches; 3 public create/disconnect cycles passed; no tank3d_rooms traceback since new service restart."
+  }
 }
