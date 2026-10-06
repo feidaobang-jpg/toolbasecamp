@@ -1,0 +1,25 @@
+{
+  "test": "same tank raw JPEGs from source 2.0 to 3.0 seconds; only image2 time base changed",
+  "viewport": [
+    1920,
+    1080
+  ],
+  "delivery_fps": 60,
+  "comparison": {
+    "default_25fps_image_timebase": {
+      "decoded_frames": 60,
+      "meaningful_changed_frames": 24,
+      "near_duplicate_transitions": 35,
+      "threshold_mean_gray_change": 0.01
+    },
+    "millisecond_image_timebase": {
+      "decoded_frames": 59,
+      "meaningful_changed_frames": 52,
+      "near_duplicate_transitions": 6,
+      "threshold_mean_gray_change": 0.01
+    }
+  },
+  "result": "pass",
+  "interpolation": false,
+  "note": "Difference threshold used only to detect repeated whole frames; ordinary still scenes can be legitimately static."
+}

@@ -2,7 +2,7 @@
 import json,subprocess,hashlib,re
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont
-R=Path(__file__).resolve().parent;Q=R/'qa';Q.mkdir(exist_ok=True);V=R.parent/'final/bilibili-zh/gameplay-zh-final.mp4'
+R=Path(__file__).resolve().parent;Q=R/'qa';Q.mkdir(exist_ok=True);V=R.parent/'final/bilibili-zh/gameplay-zh-final-v2.mp4'
 timeline=json.loads((R/'edit/shared-zh/timeline.json').read_text(encoding='utf-8'))
 align=json.loads((R/'edit/shared-zh/alignment.json').read_text(encoding='utf-8'))
 assert all(x['start']<x['end']<=timeline['duration'] for x in align)
@@ -10,13 +10,14 @@ assert all(a['end']<=b['start']+.001 for a,b in zip(align,align[1:]))
 probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_format','-show_streams','-of','json',str(V)],encoding='utf-8'))
 v=next(s for s in probe['streams'] if s['codec_type']=='video');a=next(s for s in probe['streams'] if s['codec_type']=='audio')
 assert (v['width'],v['height'],v['codec_name'],v['pix_fmt'])==(1920,1080,'h264','yuv420p')
-assert a['codec_name']=='aac';assert abs(float(probe['format']['duration'])-timeline['duration'])<.1
-p=subprocess.run(['ffmpeg','-hide_banner','-threads','4','-i',str(V),'-vf','blackdetect=d=0.08:pix_th=0.08','-af','ebur128=peak=true','-f','null','-'],capture_output=True,encoding='utf-8',errors='replace')
+assert v['r_frame_rate']=='60/1';assert a['codec_name']=='aac';assert abs(float(probe['format']['duration'])-timeline['duration'])<.1
+p=subprocess.run(['ffmpeg','-hide_banner','-threads','4','-i',str(V),'-vf','blackdetect=d=0.08:pix_th=0.08,freezedetect=n=-85dB:d=0.15','-af','ebur128=peak=true','-f','null','-'],capture_output=True,encoding='utf-8',errors='replace')
 assert p.returncode==0,p.stderr[-2000:]
 (Q/'decode-audio-black.log').write_text(p.stderr,encoding='utf-8')
 black=re.findall(r'black_start:([\d.]+) black_end:([\d.]+) black_duration:([\d.]+)',p.stderr)
+freeze=re.findall(r'freeze_(start|end|duration): ([\d.]+)',p.stderr)
 summary=p.stderr[p.stderr.rfind('Summary:'):];print(summary,flush=True)
-result={'complete_decode':'pass','subtitle_order':'pass','codec':'pass','black_intervals':black,'loudness_summary':summary,'duration':probe['format']['duration'],'video_sha256':hashlib.sha256(V.read_bytes()).hexdigest(),'audio_subjective_listening':'not-run'}
+result={'complete_decode':'pass','subtitle_order':'pass','codec':'pass','black_intervals':black,'freeze_events':freeze,'fps':v['r_frame_rate'],'loudness_summary':summary,'duration':probe['format']['duration'],'video_sha256':hashlib.sha256(V.read_bytes()).hexdigest(),'audio_subjective_listening':'not-run'}
 (Q/'technical.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
 font=ImageFont.truetype('C:/Windows/Fonts/msyhbd.ttc',18)
 points=[]

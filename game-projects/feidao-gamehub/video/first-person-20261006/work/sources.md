@@ -1,6 +1,6 @@
 # 素材来源
 
-全部画面为2026-10-06本期新录制的本机浏览器实机，固定主线cc0e8e27，正常模式自动试玩；没有生成动画、原作视频或旧成片。游戏版本及已发布Toy映射见sources.json。
+全部画面为2026-10-06本期新录制的本机浏览器实机，运行构建见sources.json中的固定提交，正常模式自动试玩；没有生成动画、原作视频或旧成片。游戏版本及已发布Toy映射见sources.json。
 
 游戏原音从当前构建Web Audio实际输出采集；原作音乐来源见各作media-kit及site-games/releases/unified3d-20261006/audio-sources.json。不另加曲库音乐。
 

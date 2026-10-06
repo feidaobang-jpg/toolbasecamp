@@ -1,8 +1,8 @@
 [
   {
     "game": "tank-3d",
-    "version": "toy3dui3",
-    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "version": "lobby1",
+    "source_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
     "normal_gameplay": true,
     "page_errors": [],
     "toy": {
@@ -10,20 +10,20 @@
       "slug": "feidao-tank-3d",
       "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
       "visibility": "PUBLIC",
-      "review_status": "published",
-      "preview_url": "https://www.bilibili.com/toy/preview/preview_hQqbwFeC/index.html",
-      "verified_at": "2026-10-06T11:15:46.661482+08:00",
-      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html",
-      "submitted_version": "toy3dui3",
-      "submitted_at": "2026-10-06T11:06:48.109893+08:00",
+      "review_status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+      "verified_at": "2026-10-06T18:48:28.119681+08:00",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_gnM2F1oY/index.html",
+      "submitted_version": "hit-audio1",
+      "submitted_at": "2026-10-06T11:16:46.505145+00:00",
       "video_bindings": [
         "BV1Wqaz6AEJb"
       ],
-      "release_record": "releases/toy3dui3/handoff.json",
-      "published_version": "toy3dui3",
+      "release_record": "releases/hit-audio1/handoff.json",
+      "published_version": "coop1",
       "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-      "note": "公开新版已核验。",
-      "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "note": "hit-audio1预览声音验证通过；待前一版过审后已提交，当前审核中。",
+      "package_sha256": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
       "pending_updates": [
         {
           "version": "toy3dui2",
@@ -39,16 +39,40 @@
           "status": "published",
           "record": "releases/toy3dui3/handoff.json",
           "summary": "右上贴边单行按钮，HUD避让。"
+        },
+        {
+          "version": "coop1",
+          "classification": "正式版本",
+          "status": "published",
+          "record": "releases/coop1/handoff.json",
+          "summary": "房间码邀请、两坦克合作守基地，同步暂停/换关/断线。"
+        },
+        {
+          "version": "pickup-clean1",
+          "classification": "普通补丁",
+          "status": "platform_published_pending_public_verification",
+          "record": "releases/pickup-clean1/handoff.json",
+          "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。"
+        },
+        {
+          "version": "hit-audio1",
+          "classification": "普通补丁",
+          "status": "auditing",
+          "record": "releases/hit-audio1/handoff.json",
+          "summary": "修复敌军击毁事件覆盖导致无爆炸声，重甲命中改用现有原版金属音。",
+          "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
+          "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+          "submitted_at": "2026-10-06T11:16:46.505145+00:00"
         }
       ],
-      "published_verified_at": "2026-10-06T03:14:57.493Z"
+      "published_verified_at": "2026-10-06T18:48:28.119681+08:00"
     },
     "model": "本版 merge1：claude-opus-5-5（Claude Code）；collision-fix1 等：GPT-6 Codex；初版：claude-opus-5-5"
   },
   {
     "game": "mario-3d",
     "version": "v2.4.1",
-    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "source_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
     "normal_gameplay": true,
     "page_errors": [],
     "toy": {
@@ -102,8 +126,8 @@
   },
   {
     "game": "jackal-stage1-3d",
-    "version": "v0.7.2",
-    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "version": "v0.7.6",
+    "source_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
     "normal_gameplay": true,
     "page_errors": [],
     "toy": {
@@ -111,22 +135,22 @@
       "slug": "feidao-jackal-3d",
       "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
       "visibility": "public",
-      "review_status": "published",
-      "verified_at": "2026-10-06T12:30:53.469813+08:00",
+      "review_status": "auditing",
+      "verified_at": "2026-10-06T18:25:49.073071+08:00",
       "video_bindings": [
         "BV1EyHz6wE5u"
       ],
-      "preview_url": "https://www.bilibili.com/toy/preview/preview_r5cbAsaD/index.html",
-      "preview_verified_at": "2026-10-06T12:29:05.253398+08:00",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_kJ3TqqXA/index.html",
+      "preview_verified_at": "2026-10-06T15:54:07.223+08:00",
       "title": "赤色要塞 3D",
       "category": "GAME",
-      "note": "v0.7.2已公开上线，公开入口133项验收通过，与网站同版本。",
-      "submitted_at": "2026-10-06T12:29:05.253398+08:00",
-      "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
-      "submitted_version": "v0.7.2",
-      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
-      "release_record": "releases/v0.7.2/handoff.json",
-      "published_version": "v0.7.2",
+      "note": "v0.7.6 炮管方向与散射炮口修复已提交审核；包含v0.7.5原作模型修正，网站已核验。",
+      "submitted_at": "2026-10-06T18:25:49.073071+08:00",
+      "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
+      "submitted_version": "v0.7.6",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sYDyiyJu/index.html",
+      "release_record": "releases/v0.7.6/handoff.json",
+      "published_version": "v0.7.5",
       "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
       "pending_updates": [
         {
@@ -154,20 +178,45 @@
           "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。",
           "included_version": "v0.7.2",
           "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
+        },
+        {
+          "version": "v0.7.3",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/v0.7.3/handoff.json",
+          "summary": "第二关炮塔/营房/围墙/大门统一复用第一关模型外观。",
+          "included_version": "v0.7.3",
+          "published_verified_at": "2026-10-06T17:52:35.090868+08:00"
+        },
+        {
+          "version": "v0.7.5",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/v0.7.5/handoff.json",
+          "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。",
+          "included_version": "v0.7.5",
+          "published_verified_at": "2026-10-06T10:16:04.314128+00:00"
+        },
+        {
+          "version": "v0.7.6",
+          "classification": "普通补丁",
+          "status": "auditing",
+          "record": "releases/v0.7.6/handoff.json",
+          "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。"
         }
       ],
-      "last_successful_sync_at": "2026-10-06T12:30:53.469813+08:00",
-      "last_successful_sync_version": "v0.7.2",
-      "package_sha256": "3e6384490286d43b61bd324a4106643a1e0b7ad4569b940da6d44a8d8ffffda4",
-      "published_verified_at": "2026-10-06T12:30:53.469813+08:00",
+      "last_successful_sync_at": "2026-10-06T10:16:04.314128+00:00",
+      "last_successful_sync_version": "v0.7.5",
+      "package_sha256": "31857d63b68ae6ca1b5dca3aac773d241b3eec7aadb01aff9aebf3c8e0e1d01b",
+      "published_verified_at": "2026-10-06T10:16:04.314128+00:00",
       "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
     },
     "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）"
   },
   {
     "game": "cadillacs-stage1-3d",
-    "version": "v0.4.1",
-    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "version": "v0.5.1",
+    "source_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
     "normal_gameplay": true,
     "page_errors": [],
     "toy": {
@@ -177,19 +226,19 @@
       "category": "GAME",
       "visibility": "public",
       "status": "published",
-      "submitted_at": "2026-10-06T11:06:55.476749+08:00",
-      "package": "dist/toy-v0.2.0/package",
-      "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html",
-      "note": "公开新版已核验。",
+      "submitted_at": "2026-10-06T10:01:00.170832+00:00",
+      "package": "dist/toy-v0.5.1/package",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
+      "note": "v0.5.1 已过审，公开入口已显示无敌不限时设置。",
       "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
       "bound_videos": [
         "BV18XHW66E55"
       ],
       "review_status": "published",
-      "version": "v0.2.0",
-      "verified_at": "2026-10-06T11:15:46.661482+08:00",
+      "version": "v0.5.1",
+      "verified_at": "2026-10-06T10:13:04.838269+00:00",
       "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-      "last_published_version": "v0.2.0",
+      "last_published_version": "v0.5.1",
       "pending_updates": [
         {
           "version": "v0.2.1",
@@ -214,14 +263,22 @@
           "status": "published",
           "record": "releases/v0.4.1/handoff.json",
           "summary": "右上贴边单行按钮，HUD避让。"
+        },
+        {
+          "version": "v0.5.0",
+          "classification": "正式版本",
+          "summary": "画风与赤色要塞统一；新增第二关沼泽森林；起始关卡可选。",
+          "status": "published",
+          "record": "releases/v0.5.0/handoff.json",
+          "included_version": "v0.5.0"
         }
       ],
-      "submitted_version": "v0.4.1",
-      "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
-      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html",
-      "release_record": "releases/v0.4.1/handoff.json",
-      "published_version": "v0.4.1",
-      "published_verified_at": "2026-10-06T03:14:57.544Z",
+      "submitted_version": "v0.5.1",
+      "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_dbULGLJR/index.html",
+      "release_record": "releases/v0.5.1/handoff.json",
+      "published_version": "v0.5.1",
+      "published_verified_at": "2026-10-06T10:13:04.838269+00:00",
       "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
       "video_bindings": [
         "BV18XHW66E55"
@@ -231,8 +288,8 @@
   },
   {
     "game": "starship-defense",
-    "version": "web-difficulty-v0.19.0",
-    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "version": "web-touch-layout-v0.19.1",
+    "source_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
     "normal_gameplay": true,
     "page_errors": [],
     "toy": {
@@ -241,23 +298,23 @@
       "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
       "visibility": "PUBLIC",
       "review_status": "published",
-      "verified_at": "2026-10-06T03:34:08.708445+00:00",
+      "verified_at": "2026-10-06T10:21:57.239728+00:00",
       "video_bindings": [
         "BV1Ujad6DEuf",
         "BV1WbHq6eEBt"
       ],
       "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GJqShxfS/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pwTXVLCC/index.html",
       "title": "虫潮围城",
-      "zip_sha256": "ea92516b02bf41a975d888911698d6fb87aac0d99de8811e487d2d6b9372ddaa",
+      "zip_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
       "submitted_date": "2026-10-06",
-      "release_record": "releases/web-difficulty-v0.19.0/handoff.json",
-      "submitted_version": "web-difficulty-v0.19.0",
-      "published_version": "web-difficulty-v0.19.0",
-      "preview_url": "https://www.bilibili.com/toy/preview/preview_GJqShxfS/index.html",
-      "note": "三档难度公开版已通过电脑及模拟手机横竖屏、存档兼容与独立副本难度核验。",
-      "submitted_at": "2026-10-06T03:22:11.066298+00:00",
-      "package_sha256": "ea92516b02bf41a975d888911698d6fb87aac0d99de8811e487d2d6b9372ddaa",
+      "release_record": "releases/web-touch-layout-v0.19.1/handoff.json",
+      "submitted_version": "web-touch-layout-v0.19.1",
+      "published_version": "web-touch-layout-v0.19.1",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_pwTXVLCC/index.html",
+      "note": "网站/Toy均已上线手机按键自由摆放；同包实际拖动与平台电脑、手机横竖视口模拟通过。未做实体手机多指性能验证。",
+      "submitted_at": "2026-10-06T10:14:22.667416+00:00",
+      "package_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
       "pending_updates": [
         {
           "version": "web-controls-v0.18.2",
