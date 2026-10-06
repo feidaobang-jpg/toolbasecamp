@@ -157,7 +157,8 @@ export function buildWorld(scene) {
     sun.target.position.set(sx, 0, Z(sy));
   };
   scene.background = new THREE.Color(0xbfe8ec);
-  scene.fog = new THREE.Fog(0xcdeee4, 60, 150);
+  // 原作无距离迷雾；两关与Boss战均保持清晰，不用雾遮远景。
+  scene.fog = null;
 
   // 水面材质（常驻，顶点波动）
   const water = new THREE.MeshPhongMaterial({ color: 0x35a6c6, transparent: true, opacity: 0.86, shininess: 90, specular: 0xe8ffff, depthWrite: false });
@@ -184,7 +185,6 @@ export function buildWorld(scene) {
     const pal = Object.assign({}, BASE_COLOR, cfg.palette || {});
     const COLOR = {}; for (const k in pal) COLOR[k] = new THREE.Color(pal[k]);
     scene.background.setHex(cfg.sky || 0xbfe8ec);
-    scene.fog.color.setHex(cfg.fog || 0xcdeee4);
     hemi.color.setHex(cfg.hemiSky || 0xe8f7ff); hemi.groundColor.setHex(cfg.hemiGround || 0x9a9070);
     water.color.setHex(cfg.waterColor || 0x35a6c6);
 

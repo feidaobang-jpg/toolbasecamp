@@ -174,7 +174,7 @@ export default function build(B) {
 
   return {
     n: 2, code: 'Baker', title: '废墟城', sub: '石柱后面藏着闪光星', music: 'ruins',
-    sky: 0xc8dcc2, fog: 0xc9d8b8, hemiGround: 0x8f8a62, outerGround: 0x8f9a4e,
+    sky: 0xc8dcc2, hemiGround: 0x8f8a62, outerGround: 0x8f9a4e,
     palette: { [T.GRASS]: 0x96a052, [T.STONE]: 0xcbc3a8, [T.FLOOR]: 0x6fae55, [T.DIRT]: 0xbba675, [T.ROAD]: 0xcabd96 },
     // 建筑与围墙样式统一复用第一关默认（石墙、木屋红顶、木门），不再单独换皮
     tuftTint: 0x7f9a4a, hedgeTint: 0x4f8a46,

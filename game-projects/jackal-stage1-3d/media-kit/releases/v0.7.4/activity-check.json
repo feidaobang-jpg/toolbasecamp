@@ -1,0 +1,19 @@
+{
+  "task_id": "01a10f50-hud-02",
+  "source": "Codex",
+  "checked_at": "2026-10-06T10:02:37.209604+00:00",
+  "status": "partial",
+  "uid": "16214353",
+  "scope": [
+    "官方活动列表首屏",
+    "创作激励资格"
+  ],
+  "credit": 80,
+  "credit_requirement_met": true,
+  "video_incentive_lv3_requirement_met": false,
+  "sources": [
+    "https://www.bilibili.com/blackboard/era/reward-activity-list-page.html#/list",
+    "https://member.bilibili.com/platform/allowance/excitation/pc"
+  ],
+  "note": "本次无新投稿；首屏活动围绕特定其他游戏/动画/生活内容，未确认适用于赤色要塞现有稿件的新免费报名；非全面检查，不推进last_completed_check_at。"
+}
