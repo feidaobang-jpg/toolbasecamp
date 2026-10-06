@@ -19,5 +19,11 @@
     "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
     "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
   },
-  "status": "built_not_submitted"
+  "status": "included_in_v0.7.5",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_l8Szh0mu/index.html",
+  "preview_qa": {
+    "passed": 134,
+    "failed": 0
+  },
+  "submission_result": "307013: newer version already auditing; old package not submitted"
 }

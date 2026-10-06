@@ -91,7 +91,7 @@
   },
   "toy": {
     "id": 39863936092160,
-    "status": "auditing",
+    "status": "published",
     "submitted_at": "2026-10-06T18:09:28.575721+08:00",
     "version": "v0.7.5",
     "package_sha256": "e12ffe219b6b03487f28ecd7c9ca069d7ae266e2e1fd7885b84020f0688c0f34",
@@ -132,7 +132,11 @@
           "height": 844
         }
       }
-    ]
+    ],
+    "published_verified_at": "2026-10-06T10:16:04.314128+00:00",
+    "published_version": "v0.7.5",
+    "published_runtime": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22991/index.html",
+    "script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df"
   },
   "bilibili": {
     "action": "pending_merge",
@@ -229,5 +233,13 @@
       "visual_review": "pass",
       "audio_review": "not-applicable"
     }
-  ]
+  ],
+  "hud_camera_followup": {
+    "qa_record": "../v0.7.4/handoff.json",
+    "fixed_distance_and_no_fog": true,
+    "website_checks": 134,
+    "toy_public_checks": 134,
+    "failed": 0,
+    "verified_at": "2026-10-06T10:16:04.314128+00:00"
+  }
 }
