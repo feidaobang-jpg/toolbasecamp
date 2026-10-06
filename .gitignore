@@ -97,3 +97,5 @@ game-projects/*/video/**/*.flac
 game-projects/*/video/**/work/tmp/
 game-projects/*/video/**/work/build-current/
 game-projects/*/video/**/*.ffconcat
+# Raw per-frame capture logs; retain compact capture manifests instead.
+game-projects/*/video/**/work/capture/**/capture.json
