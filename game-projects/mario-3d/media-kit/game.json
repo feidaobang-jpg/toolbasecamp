@@ -78,7 +78,7 @@
         "version": "v2.4.5",
         "classification": "普通补丁",
         "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
-        "status": "pending_submit",
+        "status": "included_in_v2.4.5-bgmfull1_submission",
         "record": "releases/v2.4.5/handoff.json"
       }
     ],
@@ -106,9 +106,9 @@
     "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v2.4.3",
-  "website_verified_at": "2026-10-06T21:31:39.632832+00:00",
-  "website_commit": "5c92ea0beb426f3136adc29c0216d8bd4c66c620",
+  "website_version": "v2.4.5",
+  "website_verified_at": "2026-10-07T06:35:00+08:00",
+  "website_commit": "9e4b9b72",
   "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,

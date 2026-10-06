@@ -59,8 +59,30 @@
   "screenshots": "只留本机 qa/out/"
  },
  "channels": {
-  "website": "pending_deploy",
-  "toy": "pending_submit",
+  "website": {
+   "commit": "9e4b9b72",
+   "verified_at": "2026-10-07T06:35:00+08:00",
+   "method": "Actions Deploy 成功；线上 game.min.js / main.js / style.css 与仓库 sha256 一致；线上手机模拟 capable/incapable 各一遍，按钮显隐正确",
+   "status": "deployed_verified"
+  },
+  "toy": {
+   "id": 40412421031936,
+   "status": "superseded_in_audit",
+   "preview_url": "https://www.bilibili.com/toy/preview/preview_ZQL4LtJi/index.html",
+   "preview_qa": {
+    "fullscreen-toy-preview.json": "64/64",
+    "toy-preview.json": "20/20"
+   },
+   "submitted_at": "2026-10-07T06:41:01+08:00",
+   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_yYNLYlwJ/index.html",
+   "package": "dist/toy-v0.5.6/package（game.min.js 与网站逐字节相同）",
+   "superseded_by": {
+    "version": "v0.5.6-bgmfull1",
+    "task": "Codex game-bgm-20261007",
+    "submitted_at": "2026-10-07T06:54:59+08:00",
+    "note": "该包基于含本改动的主线构建（包内已有 fsCapable 与 #btn-fs[hidden] 规则），另恢复完整原版 BGM；审核与公开核验由该任务跟进"
+   }
+  },
   "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
  }
 }

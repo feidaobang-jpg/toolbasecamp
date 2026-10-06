@@ -53,8 +53,17 @@
   "screenshots": "只留本机 qa/out/"
  },
  "channels": {
-  "website": "pending_deploy",
-  "toy": "pending_submit",
+  "website": {
+   "commit": "9e4b9b72",
+   "verified_at": "2026-10-07T06:35:00+08:00",
+   "method": "Actions Deploy 成功；线上 game.min.js / main.js / style.css 与仓库 sha256 一致；线上手机模拟 capable/incapable 各一遍，按钮显隐正确",
+   "status": "deployed_verified"
+  },
+  "toy": {
+   "id": 39043286960128,
+   "status": "not_submitted_by_this_task",
+   "reason": "并行 Codex 任务正在为 v2.4.4 做 Toy 预览；随后 BGM 任务以含本改动的 v2.4.5-bgmfull1 包于 06:54:47 送审（包内已有 fsCapable 与 #btn-fs[hidden] 规则），不重复提交同一目标"
+  },
   "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
  },
  "merge_note": "并行任务（Codex mario-pipes-buttons-20261007）已占用 v2.4.4（过关中断与水管修复），本改动整合主线后顺延为 v2.4.5，包含其改动。"

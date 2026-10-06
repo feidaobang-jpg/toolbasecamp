@@ -141,8 +141,9 @@
     "version": "v0.5.6",
     "classification": "普通补丁",
     "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
-    "status": "pending_submit",
-    "record": "releases/v0.5.6/handoff.json"
+    "status": "included_in_v0.5.6-bgmfull1_submission",
+    "record": "releases/v0.5.6/handoff.json",
+    "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换"
    }
   ],
   "submitted_version": "v0.5.3",
@@ -238,9 +239,9 @@
  },
  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.5.3",
- "website_verified_at": "2026-10-06T15:15:43.601094+00:00",
- "website_commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
+ "website_version": "v0.5.6",
+ "website_verified_at": "2026-10-07T06:35:00+08:00",
+ "website_commit": "9e4b9b72",
  "web_toy_versions_match": false,
  "touch_control_inset": {
   "side_css_px": 40,
