@@ -3,9 +3,9 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 import { createView, PRESETS } from './scene.js?v=2.4.4';
 import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.4.4';
 import { LEVEL_ORDER } from './levels.js?v=2.4.4';
-import { GameAudio } from './audio.js?v=toy3dui2';
+import { GameAudio } from './audio.js?v=bgmfull1';
 
-const VERSION = 'v2.4.4';
+const VERSION = 'v2.4.4-bgmfull1';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示

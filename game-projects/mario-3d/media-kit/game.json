@@ -2,8 +2,8 @@
   "game_id": "mario-3d-world-1-1",
   "name": "超级玛丽 3D：1-1 与 1-2",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.4.4",
-  "handoff": "releases/v2.4.4/handoff.json",
+  "current_version": "v2.4.4-bgmfull1",
+  "handoff": "releases/v2.4.4-bgmfull1/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J实体红键，未获得时显示需火焰花并提示，获得后发射火球，键盘J旧跑/火球别名兼容。",
@@ -96,7 +96,9 @@
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
-    "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+    "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+    "revision": "bgmfull1",
+    "processing": "完整音源压缩，不截取前70秒"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
   "website_version": "v2.4.3",
@@ -109,5 +111,15 @@
     "safe_area_added": true,
     "previous_version": "v2.4.1",
     "physical_phone_test": false
-  }
+  },
+  "versions": [
+    {
+      "version": "v2.4.4-bgmfull1",
+      "base_version": "v2.4.4",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+      "handoff": "releases/v2.4.4-bgmfull1/handoff.json"
+    }
+  ]
 }

@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d",
+  "version": "v2.4.4-bgmfull1",
+  "base_version": "v2.4.4",
+  "created_at": "2026-10-07T06:16:58.972305+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "v2.4.4-bgmfull1",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "fingerprint": "8fa0588cddb5ca5593d3fd077cee3558a814377bac5a28111f48980023771e95"
+  },
+  "changes": [
+    {
+      "id": "complete-original-bgm",
+      "before": "所有循环录音被截为前70秒；听到完整乐段前就重头开始。",
+      "after": "恢复所下载原录音完整时长，保持原有按曲结束循环与暂停续播。",
+      "tracks": [
+        {
+          "file": "sounds/overworld.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 180.001469,
+          "sha256": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0"
+        },
+        {
+          "file": "sounds/underground.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 180.001469,
+          "sha256": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc"
+        },
+        {
+          "file": "sounds/star.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 180.001469,
+          "sha256": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea"
+        }
+      ],
+      "verification": "passed: complete browser decode; desktop/mobile viewport cross 70s without restart; pause and continue"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "fixed-70s-truncation",
+      "status": "fixed",
+      "cause": "资源压缩时使用固定70秒时长上限。",
+      "before_media_ids": [],
+      "after_media_ids": []
+    }
+  ],
+  "media": [
+    {
+      "id": "mario-3d-desktop",
+      "file": "releases/v2.4.4-bgmfull1/captures/mario-3d-desktop.png",
+      "sha256": "e69934623d200842985422a27bc44e78491ea5e24574fabb0b7600ad90226111",
+      "kind": "screenshot",
+      "version": "v2.4.4-bgmfull1",
+      "build_id": "v2.4.4-bgmfull1",
+      "capture_mode": "realtime-automation",
+      "description": "当前BGM版本实际游戏截图；手机为视口模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "mario-3d-mobile",
+      "file": "releases/v2.4.4-bgmfull1/captures/mario-3d-mobile.png",
+      "sha256": "a2c80bd68aaf4ff5e6124a9d3f830beab80c49f0a43642f554249b74c784ee0a",
+      "kind": "screenshot",
+      "version": "v2.4.4-bgmfull1",
+      "build_id": "v2.4.4-bgmfull1",
+      "capture_mode": "realtime-automation",
+      "description": "当前BGM版本实际游戏截图；手机为视口模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [],
+  "channels": {
+    "website": {
+      "status": "pending"
+    },
+    "toy": {
+      "id": 39043286960128,
+      "status": "pending"
+    },
+    "bilibili": {
+      "status": "deferred",
+      "reason": "普通音频补丁并入下一次有意义的说明更新；试玩入口与操作未改变。"
+    }
+  },
+  "cover": {
+    "status": "retained",
+    "reason": "只修BGM，无画面变化。"
+  }
+}

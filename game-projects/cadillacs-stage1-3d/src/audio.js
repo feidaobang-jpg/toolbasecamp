@@ -21,7 +21,7 @@ function ensure() {
   const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3", "roof":"roof.mp3", "hall": "hall.mp3", "street": "street.mp3", "boss": "boss.mp3", "select": "select.mp3", "forest": "forest.mp3", "swamp": "swamp.mp3", "grave": "hall.mp3", "boss2": "boss2.mp3"});
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3?v=bgmfull1", "roof":"roof.mp3?v=bgmfull1", "hall": "hall.mp3?v=bgmfull1", "street": "street.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1", "select": "select.mp3", "forest": "forest.mp3?v=bgmfull1", "swamp": "swamp.mp3?v=bgmfull1", "grave": "hall.mp3?v=bgmfull1", "boss2": "boss2.mp3?v=bgmfull1"});
   return ctx;
 }
 const now = () => ctx.currentTime;

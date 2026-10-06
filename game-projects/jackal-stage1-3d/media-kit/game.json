@@ -6,8 +6,8 @@
  },
  "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
  "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.7.9",
- "handoff": "releases/v0.7.9/handoff.json",
+ "current_version": "v0.7.9-bgmfull1",
+ "handoff": "releases/v0.7.9-bgmfull1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/jackal-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -129,6 +129,14 @@
    "classification": "普通补丁",
    "handoff": "releases/v0.7.9/handoff.json",
    "summary": "手机横屏 844×390 起菜单/暂停/结算完整显示，568×320 整层滚动首尾可达；全屏按浏览器能力显示；修复失败结算误显示「进入下一关」与标题页漏出 HUD。"
+  },
+  {
+   "version": "v0.7.9-bgmfull1",
+   "base_version": "v0.7.9",
+   "date": "2026-10-07",
+   "classification": "普通补丁",
+   "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+   "handoff": "releases/v0.7.9-bgmfull1/handoff.json"
   }
  ],
  "toy": {
@@ -248,7 +256,9 @@
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "audio_assets": {
   "policy": "original first; synthesis fallback",
-  "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+  "revision": "bgmfull1",
+  "processing": "完整音源压缩，不截取前70秒"
  },
  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
