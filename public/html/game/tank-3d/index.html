@@ -104,12 +104,12 @@
         <fieldset id="coop-create-fields"><legend>创建房间</legend>
           <label>房间名 <input id="coop-room-name" maxlength="32" placeholder="不填则使用昵称" autocomplete="off"></label>
           <label>人数上限 <select id="coop-capacity"><option value="2">2人</option><option value="3">3人</option><option value="4" selected>4人</option></select></label>
-          <label>房间密码 <input id="coop-create-password" type="password" maxlength="32" placeholder="留空：所有玩家可加入" autocomplete="off"></label>
+          <label>房间密码 <input id="coop-create-password" type="password" maxlength="32" placeholder="留空：所有玩家可加入" autocomplete="new-password"></label>
           <nav class="items"><button id="coop-create" class="primary">创建房间</button></nav>
         </fieldset>
         <fieldset id="coop-join-fields"><legend>房间码加入好友</legend>
         <label>好友的房间码 <input id="coop-code" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="六位数字" autocomplete="off"></label>
-        <label>加入密码 <input id="coop-password" type="password" maxlength="32" placeholder="无密码房间留空" autocomplete="off"></label>
+        <label>加入密码 <input id="coop-password" type="password" maxlength="32" placeholder="无密码房间留空" autocomplete="new-password"></label>
         <nav class="items"><button id="coop-join">加入选中的房间</button></nav>
         </fieldset>
         <p class="coop-room-line">房间码：<strong id="coop-room">尚未加入</strong></p>
