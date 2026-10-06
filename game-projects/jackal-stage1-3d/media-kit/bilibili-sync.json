@@ -5,17 +5,17 @@
    "bvid": "BV1EyHz6wE5u",
    "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
    "owner_uid": 16214353,
-   "last_public_verified_version": "v0.6.0",
-   "block_sha256": "2a5cbac087d799407138a99d465f872fd339e6b06e122419404a134bff94615f",
-   "verified_at": "2026-10-04T12:04:10.476Z",
-   "release_record": "releases/v0.4.0/bilibili-sync.json",
-   "last_public_verified_at": "2026-10-05T23:58:29.215Z",
-   "last_sync_record": "releases/unified3d-20261006/handoff.json",
-   "description_sha256": "f45ff23e8edfe81376762b2bedfc86d54f05798f67023ae9a56d50726f6cf6ba",
-   "lastPublicVerifiedVersion": "v0.7.0",
-   "descriptionHash": "ba996aebf90e6d19ce1a31be860acd11eae9bb025dc172e634d63c8c2630552b",
-   "release": "releases/v0.7.0/handoff.json",
-   "publicVerifiedAt": "2026-10-06T01:35:49.352Z"
+   "last_public_verified_version": "v0.8.0",
+   "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
+   "verified_at": "2026-10-06T22:35:15.869180+00:00",
+   "release_record": "releases/v0.8.0/bilibili-sync.json",
+   "last_public_verified_at": "2026-10-06T22:35:15.869180+00:00",
+   "last_sync_record": "releases/v0.8.0/bilibili-sync.json",
+   "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
+   "lastPublicVerifiedVersion": "v0.8.0",
+   "descriptionHash": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
+   "release": "releases/v0.8.0/bilibili-sync.json",
+   "publicVerifiedAt": "2026-10-06T22:35:15.869180+00:00"
   }
  ],
  "pending": [],
@@ -25,68 +25,7 @@
   "toy video mine --keyword 赤色要塞: 1条",
   "本人稿件管理"
  ],
- "pending_updates": [
-  {
-   "version": "v0.7.1",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-   "record": "releases/v0.7.1/handoff.json"
-  },
-  {
-   "version": "v0.7.2",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "summary": "精简HUD并修正二关石像Boss遮挡，保留现有操作与入口。",
-   "record": "releases/v0.7.2/handoff.json"
-  },
-  {
-   "version": "v0.7.3",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "summary": "第二关模型统一复用第一关外观；原视频说明仍准确。",
-   "record": "releases/v0.7.3/handoff.json"
-  },
-  {
-   "version": "v0.7.4",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "release": "releases/v0.7.4/handoff.json",
-   "summary": "全去距离雾；Boss取消自动拉远，恢复固定镜头；操作与入口不变。"
-  },
-  {
-   "version": "v0.7.5",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "record": "releases/v0.7.5/handoff.json",
-   "summary": "同型固定炮台复用，第二关铁皮囚室/浅色棚保留原作区别；专属敌人不合并造型。",
-   "reason": "现有简介未提及被纠正的外观；普通补丁合并到下一次有意义说明更新。"
-  },
-  {
-   "version": "v0.7.6",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "record": "releases/v0.7.6/handoff.json",
-   "summary": "固定炮管对准实际子弹，第二关散射炮口对齐。",
-   "reason": "普通视觉和发射起点纠正，公开说明未写相关错误，累计到下一次有意义更新。"
-  },
-  {
-   "version": "v0.7.8",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "summary": "暂停后重新开始恢复声音。",
-   "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
-   "record": "releases/v0.7.8/handoff.json"
-  },
-  {
-   "version": "v0.7.9",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "record": "releases/v0.7.9/handoff.json",
-   "summary": "手机横屏菜单完整显示、全屏按浏览器能力显示、失败结算不再误显示进入下一关。",
-   "reason": "普通补丁累计；现有简介未写全屏/菜单布局，仍准确。"
-  }
- ],
+ "pending_updates": [],
  "resolved_updates": [
   {
    "version": "v0.5.1",
@@ -114,11 +53,83 @@
    "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
    "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。",
    "resolved_version": "v0.6.0"
+  },
+  {
+   "version": "v0.7.1",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+   "record": "releases/v0.7.1/handoff.json",
+   "resolved_version": "v0.8.0",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+  },
+  {
+   "version": "v0.7.2",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "summary": "精简HUD并修正二关石像Boss遮挡，保留现有操作与入口。",
+   "record": "releases/v0.7.2/handoff.json",
+   "resolved_version": "v0.8.0",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+  },
+  {
+   "version": "v0.7.3",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "summary": "第二关模型统一复用第一关外观；原视频说明仍准确。",
+   "record": "releases/v0.7.3/handoff.json",
+   "resolved_version": "v0.8.0",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+  },
+  {
+   "version": "v0.7.4",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "release": "releases/v0.7.4/handoff.json",
+   "summary": "全去距离雾；Boss取消自动拉远，恢复固定镜头；操作与入口不变。",
+   "resolved_version": "v0.8.0",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+  },
+  {
+   "version": "v0.7.5",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "record": "releases/v0.7.5/handoff.json",
+   "summary": "同型固定炮台复用，第二关铁皮囚室/浅色棚保留原作区别；专属敌人不合并造型。",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+   "resolved_version": "v0.8.0"
+  },
+  {
+   "version": "v0.7.6",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "record": "releases/v0.7.6/handoff.json",
+   "summary": "固定炮管对准实际子弹，第二关散射炮口对齐。",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+   "resolved_version": "v0.8.0"
+  },
+  {
+   "version": "v0.7.8",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "summary": "暂停后重新开始恢复声音。",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+   "record": "releases/v0.7.8/handoff.json",
+   "resolved_version": "v0.8.0"
+  },
+  {
+   "version": "v0.7.9",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "record": "releases/v0.7.9/handoff.json",
+   "summary": "手机横屏菜单完整显示、全屏按浏览器能力显示、失败结算不再误显示进入下一关。",
+   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+   "resolved_version": "v0.8.0"
   }
  ],
  "status": "public_verified",
- "version": "v0.6.0",
- "updated_at": "2026-10-06T08:00:16.643786+08:00",
+ "version": "v0.8.0",
+ "updated_at": "2026-10-06T22:35:15.869180+00:00",
  "history": [
   {
    "bvid": "BV1EyHz6wE5u",
@@ -126,12 +137,19 @@
    "status": "public_verified",
    "record": "releases/v0.7.0/handoff.json",
    "checked_at": "2026-10-06T01:35:49.352Z"
+  },
+  {
+   "bvid": "BV1EyHz6wE5u",
+   "version": "v0.8.0",
+   "status": "public_verified",
+   "record": "releases/v0.8.0/bilibili-sync.json",
+   "checked_at": "2026-10-06T22:35:15.869180+00:00"
   }
  ],
  "last_public_verified": {
   "bvid": "BV1EyHz6wE5u",
-  "version": "v0.7.0",
-  "at": "2026-10-06T01:35:49.352Z",
-  "description_sha256": "ba996aebf90e6d19ce1a31be860acd11eae9bb025dc172e634d63c8c2630552b"
+  "version": "v0.8.0",
+  "at": "2026-10-06T22:35:15.869180+00:00",
+  "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be"
  }
 }

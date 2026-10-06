@@ -1,0 +1,360 @@
+{
+  "base": "http://127.0.0.1:8779/html/game/jackal-stage1-3d/index.html",
+  "version": "v0.8.0",
+  "method": "Edge keyboard + CDP touch emulation; explicit manual clock for combat timing; no physical phone",
+  "results": [
+    {
+      "name": "全新设置默认原作朝上",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "开局实际采用固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "快速点按 U 仍同时触发两种武器",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "U 同帧发射机枪与 Lv1 爆炸武器",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv1 联合开火机枪保持向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv1 按住联合键沿用独立冷却",
+      "ok": true,
+      "detail": {
+        "mg": 9,
+        "bomb": 3
+      }
+    },
+    {
+      "name": "Lv1 松开 U 后两种武器停止",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "U 同帧发射机枪与 Lv2 爆炸武器",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv2 联合开火机枪保持向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv2 按住联合键沿用独立冷却",
+      "ok": true,
+      "detail": {
+        "mg": 9,
+        "bomb": 4
+      }
+    },
+    {
+      "name": "Lv2 松开 U 后两种武器停止",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "U 同帧发射机枪与 Lv3 爆炸武器",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv3 联合开火机枪保持向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv3 按住联合键沿用独立冷却",
+      "ok": true,
+      "detail": {
+        "mg": 9,
+        "bomb": 4
+      }
+    },
+    {
+      "name": "Lv3 松开 U 后两种武器停止",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "U 同帧发射机枪与 Lv4 爆炸武器",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv4 联合开火机枪保持向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "Lv4 按住联合键沿用独立冷却",
+      "ok": true,
+      "detail": {
+        "mg": 9,
+        "bomb": 4
+      }
+    },
+    {
+      "name": "Lv4 松开 U 后两种武器停止",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "U 松开后仍按住 J：只继续机枪",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "U 松开后仍按住 K：只继续手雷",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "J/K 松开后仍按住 U：两种武器继续",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "暂停清除联合开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "暂停内切换跟随车头立即生效且本局保留",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "失焦后恢复无残留联合输入",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "手动选择跟随车头刷新后保留",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "手动切回原作朝上刷新后保留",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "oblique 转镜头后原作朝上仍固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "top 转镜头后原作朝上仍固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "low 转镜头后原作朝上仍固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "wide 转镜头后原作朝上仍固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "front 转镜头后原作朝上仍固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "fp 转镜头后原作朝上仍固定向北",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "844×390 U 在 J 正上方且三键等大",
+      "ok": true,
+      "detail": [
+        {
+          "id": "btn-fire",
+          "x": 674,
+          "y": 294,
+          "w": 60,
+          "h": 60,
+          "left": 674,
+          "top": 294,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40))"
+        },
+        {
+          "id": "btn-bomb",
+          "x": 744,
+          "y": 294,
+          "w": 60,
+          "h": 60,
+          "left": 744,
+          "top": 294,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55))"
+        },
+        {
+          "id": "btn-combo",
+          "x": 674,
+          "y": 224,
+          "w": 60,
+          "h": 60,
+          "left": 674,
+          "top": 224,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(216, 172, 66), rgb(152, 107, 37))"
+        }
+      ]
+    },
+    {
+      "name": "844×390 摇杆移动+U 多指同时开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "844×390 多指抬起后停止移动和两种开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "568×320 U 在 J 正上方且三键等大",
+      "ok": true,
+      "detail": [
+        {
+          "id": "btn-fire",
+          "x": 398,
+          "y": 224,
+          "w": 60,
+          "h": 60,
+          "left": 398,
+          "top": 224,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40))"
+        },
+        {
+          "id": "btn-bomb",
+          "x": 468,
+          "y": 224,
+          "w": 60,
+          "h": 60,
+          "left": 468,
+          "top": 224,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55))"
+        },
+        {
+          "id": "btn-combo",
+          "x": 398,
+          "y": 154,
+          "w": 60,
+          "h": 60,
+          "left": 398,
+          "top": 154,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(216, 172, 66), rgb(152, 107, 37))"
+        }
+      ]
+    },
+    {
+      "name": "568×320 摇杆移动+U 多指同时开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "568×320 多指抬起后停止移动和两种开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "390×844 U 在 J 正上方且三键等大",
+      "ok": true,
+      "detail": [
+        {
+          "id": "btn-fire",
+          "x": 36,
+          "y": 674,
+          "w": 60,
+          "h": 60,
+          "left": 674,
+          "top": 294,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40))"
+        },
+        {
+          "id": "btn-bomb",
+          "x": 36,
+          "y": 744,
+          "w": 60,
+          "h": 60,
+          "left": 744,
+          "top": 294,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55))"
+        },
+        {
+          "id": "btn-combo",
+          "x": 106,
+          "y": 674,
+          "w": 60,
+          "h": 60,
+          "left": 674,
+          "top": 224,
+          "width": 60,
+          "height": 60,
+          "bg": "linear-gradient(rgb(216, 172, 66), rgb(152, 107, 37))"
+        }
+      ]
+    },
+    {
+      "name": "390×844 摇杆移动+U 多指同时开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "390×844 多指抬起后停止移动和两种开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "触控取消清除联合输入及按下外观",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "按住触屏 U 后暂停释放输入",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "手机切电脑保留本局且无残留开火",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "name": "游戏无脚本异常",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}
