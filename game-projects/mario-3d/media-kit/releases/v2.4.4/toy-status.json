@@ -1,16 +1,18 @@
 {
   "id": 39043286960128,
   "title": "超级玛丽 3D：1-1 与 1-2",
+  "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/poster_21954.png",
   "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
   "user_info": {
     "mid": 16214353,
     "name": "飞刀班长",
     "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
   },
-  "status": "auditing",
+  "status": "published",
   "visibility": "PUBLIC",
   "category": "GAME",
+  "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/icon_20780_upload",
   "watermark_enabled": false,
-  "ctime": 1791325361,
-  "mtime": 1791325361
+  "ctime": 1790826424,
+  "mtime": 1791325558
 }

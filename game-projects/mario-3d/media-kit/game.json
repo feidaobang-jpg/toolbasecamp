@@ -21,8 +21,8 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "verified_at": "2026-10-06T22:25:35.193188+00:00",
+    "review_status": "published",
+    "verified_at": "2026-10-06T22:29:37.492572+00:00",
     "video_bindings": [
       "BV1guep6NELt"
     ],
@@ -30,10 +30,10 @@
     "submitted_at": "2026-10-06T22:22:41+00:00",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_WFRQqFXp/index.html",
     "release_record": "releases/v2.4.4/handoff.json",
-    "published_version": "v2.4.3",
+    "published_version": "v2.4.4",
     "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_HO5JCmCy/index.html",
-    "note": "v2.4.4同包预览实测并提交审核；published_version保留最后公开核验版本",
+    "note": "同包预览实测并通过审核；公开UI及main.js?v=2.4.4核验通过，HTTP逐文件比对受412限制。",
     "pending_updates": [
       {
         "version": "v2.2.2",
@@ -77,15 +77,15 @@
       {
         "version": "v2.4.4",
         "classification": "严重过关修复 + 普通水管/按钮补丁",
-        "status": "auditing",
+        "status": "published",
         "record": "releases/v2.4.4/handoff.json"
       }
     ],
     "package_sha256": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
-    "published_verified_at": "2026-10-06T21:39:01.172522+00:00",
-    "status": "auditing",
+    "published_verified_at": "2026-10-06T22:29:37.492572+00:00",
+    "status": "published",
     "package_hash": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23208/index.html"
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23212/index.html"
   },
   "notes": "粉丝向非官方重制：保留原作关卡布局，采用赤色要塞式自然配色、哑光低模；BGM和常用音效采用原版录音，缺项或加载失败保留合成回退。",
   "drag_camera_controls": {
@@ -108,7 +108,7 @@
   "website_version": "v2.4.4",
   "website_verified_at": "2026-10-06T22:19:17.380462+00:00",
   "website_commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
-  "web_toy_versions_match": false,
+  "web_toy_versions_match": true,
   "touch_control_inset": {
     "side_css_px": 40,
     "bottom_css_px": 36,
