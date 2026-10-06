@@ -1,0 +1,620 @@
+{
+  "method": "Edge WebGL + actual button/keyboard input; accelerated behavior fixtures",
+  "physical_phone": false,
+  "results": [
+    {
+      "name": "desktop逐人指令与选中态",
+      "ok": true
+    },
+    {
+      "name": "desktop部署时冻结本局",
+      "ok": true
+    },
+    {
+      "name": "desktop自动回防开关",
+      "ok": true
+    },
+    {
+      "name": "desktop关闭回到本局",
+      "ok": true
+    },
+    {
+      "name": "desktop暂停菜单键盘进入",
+      "ok": true
+    },
+    {
+      "name": "desktop键盘更改逐人指令",
+      "ok": false
+    },
+    {
+      "name": "desktop返回保留暂停",
+      "ok": true
+    },
+    {
+      "name": "desktop可滚动与触控目标",
+      "ok": true,
+      "detail": {
+        "width": 658,
+        "height": 473,
+        "scrollHeight": 577,
+        "minTarget": 58.66652,
+        "overflow": "auto"
+      }
+    },
+    {
+      "name": "desktop无脚本错误",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "landscape逐人指令与选中态",
+      "ok": true
+    },
+    {
+      "name": "landscape部署时冻结本局",
+      "ok": true
+    },
+    {
+      "name": "landscape自动回防开关",
+      "ok": true
+    },
+    {
+      "name": "landscape关闭回到本局",
+      "ok": true
+    },
+    {
+      "name": "landscape暂停菜单键盘进入",
+      "ok": true
+    },
+    {
+      "name": "landscape键盘更改逐人指令",
+      "ok": false
+    },
+    {
+      "name": "landscape返回保留暂停",
+      "ok": true
+    },
+    {
+      "name": "landscape可滚动与触控目标",
+      "ok": true,
+      "detail": {
+        "width": 862,
+        "height": 415,
+        "scrollHeight": 607,
+        "minTarget": 47.475018,
+        "overflow": "auto"
+      }
+    },
+    {
+      "name": "landscape无脚本错误",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "portrait逐人指令与选中态",
+      "ok": true
+    },
+    {
+      "name": "portrait部署时冻结本局",
+      "ok": true
+    },
+    {
+      "name": "portrait自动回防开关",
+      "ok": true
+    },
+    {
+      "name": "portrait关闭回到本局",
+      "ok": true
+    },
+    {
+      "name": "portrait暂停菜单键盘进入",
+      "ok": true
+    },
+    {
+      "name": "portrait键盘更改逐人指令",
+      "ok": true
+    },
+    {
+      "name": "portrait返回保留暂停",
+      "ok": true
+    },
+    {
+      "name": "portrait可滚动与触控目标",
+      "ok": true,
+      "detail": {
+        "width": 862,
+        "height": 415,
+        "scrollHeight": 592,
+        "minTarget": 47.475018,
+        "overflow": "auto"
+      }
+    },
+    {
+      "name": "portrait无脚本错误",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "compact逐人指令与选中态",
+      "ok": true
+    },
+    {
+      "name": "compact部署时冻结本局",
+      "ok": true
+    },
+    {
+      "name": "compact自动回防开关",
+      "ok": true
+    },
+    {
+      "name": "compact关闭回到本局",
+      "ok": true
+    },
+    {
+      "name": "compact暂停菜单键盘进入",
+      "ok": true
+    },
+    {
+      "name": "compact键盘更改逐人指令",
+      "ok": true
+    },
+    {
+      "name": "compact返回保留暂停",
+      "ok": true
+    },
+    {
+      "name": "compact可滚动与触控目标",
+      "ok": false,
+      "detail": {
+        "width": 862,
+        "height": 506,
+        "scrollHeight": 592,
+        "minTarget": 31.950018000000004,
+        "overflow": "auto"
+      }
+    },
+    {
+      "name": "compact无脚本错误",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "手动分工不被基地警报覆盖",
+      "ok": true,
+      "detail": {
+        "manual": [
+          "defend",
+          "follow",
+          "follow",
+          "defend"
+        ],
+        "positions": [
+          {
+            "slot": 0,
+            "z": -18.037583345868736,
+            "gap": 138.9003386751064
+          },
+          {
+            "slot": 1,
+            "z": 121.993860000205,
+            "gap": 5.008863762678996
+          },
+          {
+            "slot": 2,
+            "z": 113.9060958162958,
+            "gap": 6.354045153759955
+          },
+          {
+            "slot": 3,
+            "z": -18.244710955396318,
+            "gap": 138.3934255934889
+          }
+        ],
+        "valid": true,
+        "restored": [
+          "defend",
+          "follow",
+          "follow",
+          "defend"
+        ],
+        "rejects": true,
+        "legacy": true,
+        "global": true
+      }
+    },
+    {
+      "name": "留守与出击实际分离",
+      "ok": true,
+      "detail": [
+        {
+          "slot": 0,
+          "z": -18.037583345868736,
+          "gap": 138.9003386751064
+        },
+        {
+          "slot": 1,
+          "z": 121.993860000205,
+          "gap": 5.008863762678996
+        },
+        {
+          "slot": 2,
+          "z": 113.9060958162958,
+          "gap": 6.354045153759955
+        },
+        {
+          "slot": 3,
+          "z": -18.244710955396318,
+          "gap": 138.3934255934889
+        }
+      ]
+    },
+    {
+      "name": "云存档验证、分工恢复与旧档迁移",
+      "ok": true,
+      "detail": {
+        "manual": [
+          "defend",
+          "follow",
+          "follow",
+          "defend"
+        ],
+        "positions": [
+          {
+            "slot": 0,
+            "z": -18.037583345868736,
+            "gap": 138.9003386751064
+          },
+          {
+            "slot": 1,
+            "z": 121.993860000205,
+            "gap": 5.008863762678996
+          },
+          {
+            "slot": 2,
+            "z": 113.9060958162958,
+            "gap": 6.354045153759955
+          },
+          {
+            "slot": 3,
+            "z": -18.244710955396318,
+            "gap": 138.3934255934889
+          }
+        ],
+        "valid": true,
+        "restored": [
+          "defend",
+          "follow",
+          "follow",
+          "defend"
+        ],
+        "rejects": true,
+        "legacy": true,
+        "global": true
+      }
+    },
+    {
+      "name": "全队快捷指令统一分工",
+      "ok": true
+    },
+    {
+      "name": "三档难度前五关预告与实际出兵一致",
+      "ok": true,
+      "detail": [
+        {
+          "difficulty": "casual",
+          "level": 1,
+          "preview": "虫族小兵 11只\n入口：中央主洞",
+          "expected": 11,
+          "actual": 11,
+          "match": true,
+          "types": [
+            0
+          ],
+          "mouths": [
+            "C"
+          ],
+          "supply": 180
+        },
+        {
+          "difficulty": "casual",
+          "level": 2,
+          "preview": "虫族小兵 11只\n入口：中央主洞",
+          "expected": 13,
+          "actual": 13,
+          "match": true,
+          "types": [
+            0
+          ],
+          "mouths": [
+            "C",
+            "W"
+          ],
+          "supply": 220
+        },
+        {
+          "difficulty": "casual",
+          "level": 3,
+          "preview": "虫族小兵 13只\n入口：中央主洞、西侧虫洞",
+          "expected": 16,
+          "actual": 16,
+          "match": true,
+          "types": [
+            0,
+            1
+          ],
+          "mouths": [
+            "C",
+            "E"
+          ],
+          "supply": 240
+        },
+        {
+          "difficulty": "casual",
+          "level": 4,
+          "preview": "虫族小兵 12只 · 酸液虫 3只 · 小首领 1只\n入口：中央主洞、东侧虫洞",
+          "expected": 17,
+          "actual": 17,
+          "match": true,
+          "types": [
+            0,
+            3
+          ],
+          "mouths": [
+            "W",
+            "C"
+          ],
+          "supply": 260
+        },
+        {
+          "difficulty": "casual",
+          "level": 5,
+          "preview": "虫族小兵 14只 · 迅猛飞虫 3只\n入口：西侧虫洞、中央主洞",
+          "expected": 19,
+          "actual": 19,
+          "match": true,
+          "types": [
+            0,
+            1,
+            3
+          ],
+          "mouths": [
+            "W",
+            "C",
+            "E"
+          ],
+          "supply": 300
+        },
+        {
+          "difficulty": "normal",
+          "level": 1,
+          "preview": "虫族小兵 13只 · 酸液虫 3只 · 迅猛飞虫 3只\n入口：西侧虫洞、中央主洞、东侧虫洞",
+          "expected": 11,
+          "actual": 11,
+          "match": true,
+          "types": [
+            0
+          ],
+          "mouths": [
+            "C"
+          ],
+          "supply": 180
+        },
+        {
+          "difficulty": "normal",
+          "level": 2,
+          "preview": "虫族小兵 11只\n入口：中央主洞",
+          "expected": 13,
+          "actual": 13,
+          "match": true,
+          "types": [
+            0
+          ],
+          "mouths": [
+            "C",
+            "W"
+          ],
+          "supply": 220
+        },
+        {
+          "difficulty": "normal",
+          "level": 3,
+          "preview": "虫族小兵 13只\n入口：中央主洞、西侧虫洞",
+          "expected": 16,
+          "actual": 16,
+          "match": true,
+          "types": [
+            0,
+            1
+          ],
+          "mouths": [
+            "C",
+            "E"
+          ],
+          "supply": 240
+        },
+        {
+          "difficulty": "normal",
+          "level": 4,
+          "preview": "虫族小兵 12只 · 酸液虫 3只 · 小首领 1只\n入口：中央主洞、东侧虫洞",
+          "expected": 17,
+          "actual": 17,
+          "match": true,
+          "types": [
+            0,
+            3
+          ],
+          "mouths": [
+            "W",
+            "C"
+          ],
+          "supply": 260
+        },
+        {
+          "difficulty": "normal",
+          "level": 5,
+          "preview": "虫族小兵 14只 · 迅猛飞虫 3只\n入口：西侧虫洞、中央主洞",
+          "expected": 19,
+          "actual": 19,
+          "match": true,
+          "types": [
+            0,
+            1,
+            3
+          ],
+          "mouths": [
+            "W",
+            "C",
+            "E"
+          ],
+          "supply": 300
+        },
+        {
+          "difficulty": "hard",
+          "level": 1,
+          "preview": "虫族小兵 13只 · 酸液虫 3只 · 迅猛飞虫 3只\n入口：西侧虫洞、中央主洞、东侧虫洞",
+          "expected": 14,
+          "actual": 14,
+          "match": true,
+          "types": [
+            0
+          ],
+          "mouths": [
+            "C"
+          ],
+          "supply": 180
+        },
+        {
+          "difficulty": "hard",
+          "level": 2,
+          "preview": "虫族小兵 14只\n入口：中央主洞",
+          "expected": 16,
+          "actual": 16,
+          "match": true,
+          "types": [
+            0
+          ],
+          "mouths": [
+            "C",
+            "W"
+          ],
+          "supply": 220
+        },
+        {
+          "difficulty": "hard",
+          "level": 3,
+          "preview": "虫族小兵 16只\n入口：中央主洞、西侧虫洞",
+          "expected": 20,
+          "actual": 20,
+          "match": true,
+          "types": [
+            0,
+            1
+          ],
+          "mouths": [
+            "C",
+            "E"
+          ],
+          "supply": 240
+        },
+        {
+          "difficulty": "hard",
+          "level": 4,
+          "preview": "虫族小兵 16只 · 酸液虫 3只 · 小首领 1只\n入口：中央主洞、东侧虫洞",
+          "expected": 21,
+          "actual": 21,
+          "match": true,
+          "types": [
+            0,
+            3
+          ],
+          "mouths": [
+            "W",
+            "C"
+          ],
+          "supply": 260
+        },
+        {
+          "difficulty": "hard",
+          "level": 5,
+          "preview": "虫族小兵 17只 · 迅猛飞虫 4只\n入口：西侧虫洞、中央主洞",
+          "expected": 24,
+          "actual": 24,
+          "match": true,
+          "types": [
+            0,
+            1,
+            3
+          ],
+          "mouths": [
+            "W",
+            "C",
+            "E"
+          ],
+          "supply": 300
+        }
+      ]
+    },
+    {
+      "name": "第三关酸液、第四关飞虫、第五关三路混合",
+      "ok": true
+    },
+    {
+      "name": "后续章节虫种与母皇减压兼容",
+      "ok": true
+    },
+    {
+      "name": "战报记录真实损失与支出且奖励幂等",
+      "ok": true,
+      "detail": {
+        "report": {
+          "label": "普通 · 周目1 第1章「虫族小兵」 第1关",
+          "won": true,
+          "baseHp": 2000,
+          "baseMaxHp": 2000,
+          "gateHp": 2500,
+          "gateMaxHp": 2500,
+          "buildingLosses": 1,
+          "squadLosses": 1,
+          "vehicleLosses": 0,
+          "income": 1340,
+          "spent": 110,
+          "seconds": 0
+        },
+        "valid": true,
+        "noDouble": true,
+        "bonus": 340
+      }
+    },
+    {
+      "name": "第二关后固定收入足够两名不同兵种队友",
+      "ok": true,
+      "detail": [
+        {
+          "level": 1,
+          "gold": 622,
+          "firstTwo": false
+        },
+        {
+          "level": 2,
+          "gold": 1188,
+          "firstTwo": true
+        },
+        {
+          "level": 3,
+          "gold": 1837,
+          "firstTwo": true
+        },
+        {
+          "level": 4,
+          "gold": 2581,
+          "firstTwo": true
+        },
+        {
+          "level": 5,
+          "gold": 3428,
+          "firstTwo": true
+        }
+      ]
+    }
+  ]
+}

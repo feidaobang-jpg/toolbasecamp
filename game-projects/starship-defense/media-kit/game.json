@@ -2,7 +2,7 @@
  "game_id": "chongchao-qianshao",
  "name": "虫潮围城",
  "engine": "Three.js r152",
- "current_version": "web-restart-audio-v0.19.4",
+ "current_version": "web-tactics-v0.20.0",
  "entrypoint": "public/html/game/starship-defense/index.html",
  "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
  "release_intent": "web_demo",
@@ -93,7 +93,7 @@
  "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
  "default_theme": "dark",
  "feedback_ledger": "feedback-ledger.json",
- "handoff": "releases/web-controls-inset-v0.19.3/handoff.json",
+ "handoff": "releases/web-tactics-v0.20.0/handoff.json",
  "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
  "environments": {
   "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -130,7 +130,11 @@
   "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
  },
  "bilibili_sync": "bilibili-sync.json",
- "pending_release": null,
+ "pending_release": {
+  "version": "web-tactics-v0.20.0",
+  "classification": "formal_release",
+  "status": "verified_pending_deploy"
+ },
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "drag_camera_controls": {
   "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
@@ -184,5 +188,19 @@
   "record": "releases/web-restart-audio-v0.19.4/handoff.json",
   "website": "deployed_verified",
   "toy": "published"
+ },
+ "tactical_update": {
+  "individual_orders": true,
+  "auto_defense_optional": true,
+  "wave_preview": true,
+  "opening_rounds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "battle_report": true,
+  "physical_phone_test": false
  }
 }
