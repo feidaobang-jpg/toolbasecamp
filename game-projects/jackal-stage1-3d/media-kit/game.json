@@ -120,8 +120,8 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": "2026-10-06T18:09:28.575721+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-06T10:16:04.314128+00:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
@@ -129,13 +129,13 @@
     "preview_verified_at": "2026-10-06T15:54:07.223+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.7.5 原作模型区别修正已提交审核；包含v0.7.4镜头修复，网站已核验。",
+    "note": "合并版公开包v22991已核验SHA256及无雾/固定镜头134项通过，与网站同版。",
     "submitted_at": "2026-10-06T18:09:28.575721+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
     "submitted_version": "v0.7.5",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sjekpcmz/index.html",
     "release_record": "releases/v0.7.5/handoff.json",
-    "published_version": "v0.7.3",
+    "published_version": "v0.7.5",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -176,15 +176,17 @@
       {
         "version": "v0.7.5",
         "classification": "普通补丁",
-        "status": "auditing",
+        "status": "published",
         "record": "releases/v0.7.5/handoff.json",
-        "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。"
+        "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。",
+        "included_version": "v0.7.5",
+        "published_verified_at": "2026-10-06T10:16:04.314128+00:00"
       }
     ],
-    "last_successful_sync_at": "2026-10-06T17:52:35.090868+08:00",
-    "last_successful_sync_version": "v0.7.3",
+    "last_successful_sync_at": "2026-10-06T10:16:04.314128+00:00",
+    "last_successful_sync_version": "v0.7.5",
     "package_sha256": "e12ffe219b6b03487f28ecd7c9ca069d7ae266e2e1fd7885b84020f0688c0f34",
-    "published_verified_at": "2026-10-06T17:52:35.090868+08:00",
+    "published_verified_at": "2026-10-06T10:16:04.314128+00:00",
     "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
   },
   "drag_camera_controls": {
@@ -208,5 +210,5 @@
   "website_version": "v0.7.5",
   "website_verified_at": "2026-10-06T18:09:28.575721+08:00",
   "website_commit": "7f341c73910c0d08303f7d03872e6700c11d35a0",
-  "web_toy_versions_match": false
+  "web_toy_versions_match": true
 }
