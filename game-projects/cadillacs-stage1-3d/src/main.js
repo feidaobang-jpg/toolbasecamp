@@ -367,6 +367,7 @@ function layout() {
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
   stage.classList.toggle('rotated', rotate);
   stage.classList.toggle('compact', H < 520);
+  stage.classList.toggle('narrow', W < 760);   // 667×375 一类窄横屏：主菜单上下排列、整层滚动，选项值不被截断
   stage.classList.toggle('portrait', H > W);
   const orient = rotate + ':' + (W > H);
   if (lastOrient !== null && orient !== lastOrient) IN.clear();
