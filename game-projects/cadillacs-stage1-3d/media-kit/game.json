@@ -6,8 +6,8 @@
  },
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.5.7",
- "handoff": "releases/v0.5.7/handoff.json",
+ "current_version": "v0.6.1",
+ "handoff": "releases/v0.6.1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -77,10 +77,21 @@
    }
   },
   {
-   "version": "v0.5.7",
+   "version": "v0.6.0",
+   "classification": "正式版本",
+   "summary": "打击感：出招蓄力-爆发-停住，命中定格在拳脚到位；受击按方向反应；轻/重/终结三档停顿、震屏、火花与音效；三层打击声与砸地声；挥空不吞键；波末慢动作。",
+   "record": "releases/v0.6.0/handoff.json",
+   "channels": {
+    "website": "pending",
+    "toy": "pending",
+    "bilibili": "pending"
+   }
+  },
+  {
+   "version": "v0.6.1",
    "classification": "普通补丁",
-   "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩。",
-   "record": "releases/v0.5.7/handoff.json",
+   "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩，完整操作说明移入暂停。",
+   "record": "releases/v0.6.1/handoff.json",
    "channels": {
     "website": "pending_deploy",
     "toy": "pending",
@@ -95,17 +106,17 @@
   "category": "GAME",
   "visibility": "public",
   "status": "published",
-  "submitted_at": "2026-10-07T01:41:33+08:00",
+  "submitted_at": "2026-10-07T06:54:47.946386+08:00",
   "package": "dist/toy-v0.5.5/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_W1LO12Oh/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_ZdQQ5x9D/index.html",
   "note": "v0.5.5（开枪有子弹拖光、火花在枪口）已过审。",
   "status_verified": "toy mylist published；正式入口 iframe 40412421031936-v23181 显示 v0.5.5",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.5.5",
-  "verified_at": "2026-10-07T01:47:48+08:00",
+  "version": "v0.5.6-bgmfull1",
+  "verified_at": "2026-10-06T22:58:30.502Z",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "last_published_version": "v0.5.5",
   "pending_updates": [
@@ -152,13 +163,15 @@
     "version": "v0.5.6",
     "classification": "普通补丁",
     "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
-    "status": "pending_submit",
-    "record": "releases/v0.5.6/handoff.json"
+    "status": "published",
+    "record": "releases/v0.5.6/handoff.json",
+    "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换",
+    "included_version": "v0.5.6-bgmfull1"
    }
   ],
-  "submitted_version": "v0.5.3",
-  "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_QeYcnmuI/index.html",
+  "submitted_version": "v0.5.6-bgmfull1",
+  "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_icldmorp/index.html",
   "release_record": "releases/v0.5.3/handoff.json",
   "published_version": "v0.5.1",
   "published_verified_at": "2026-10-06T10:13:04.838269+00:00",
@@ -174,7 +187,8 @@
    "submitted_at": "2026-10-06T22:44:10+08:00",
    "status": "published",
    "verified_at": "2026-10-06T23:38:00+08:00"
-  }
+  },
+  "public_verified_version": "v0.5.6-bgmfull1"
  },
  "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
@@ -237,10 +251,10 @@
   }
  ],
  "website": {
-  "version": "v0.5.1",
+  "version": "v0.5.6-bgmfull1",
   "status": "deployed_verified",
-  "verified_at": "2026-10-06T10:01:00.170832+00:00",
-  "commit": "110c0421596dabee86cb7885f2d77e34be9c00b7"
+  "verified_at": "2026-10-07T06:49:45.870220+08:00",
+  "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
  },
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "audio_assets": {
@@ -251,10 +265,10 @@
  },
  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.5.3",
- "website_verified_at": "2026-10-06T15:15:43.601094+00:00",
- "website_commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
- "web_toy_versions_match": false,
+ "website_version": "v0.5.6-bgmfull1",
+ "website_verified_at": "2026-10-07T06:49:45.870220+08:00",
+ "website_commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+ "web_toy_versions_match": true,
  "touch_control_inset": {
   "side_css_px": 40,
   "bottom_css_px": 36,
@@ -272,12 +286,23 @@
    "handoff": "releases/v0.5.6-bgmfull1/handoff.json"
   },
   {
-   "version": "v0.5.7",
+   "version": "v0.6.0",
    "base_version": "v0.5.6-bgmfull1",
    "date": "2026-10-07",
+   "classification": "正式版本",
+   "summary": "打击感重做：出招到位、轻重分档的停顿/震屏/火花/音效、方向受击、挥空不吞键、波末慢动作。",
+   "handoff": "releases/v0.6.0/handoff.json"
+  }
+ ],
+ "pending_channel_changes": [
+  {
+   "version": "v0.5.6-bgmfull1",
    "classification": "普通补丁",
-   "handoff": "releases/v0.5.7/handoff.json",
-   "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+   "changes": [
+    "完整原版BGM取消70秒截取"
+   ],
+   "bilibili": "待合并至下一次有意义的简介更新",
+   "toy": "public_verified"
   }
  ]
 }

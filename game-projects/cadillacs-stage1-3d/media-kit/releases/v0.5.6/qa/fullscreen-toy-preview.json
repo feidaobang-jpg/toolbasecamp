@@ -1,0 +1,667 @@
+{
+ "date": "2026-10-06T22:39:00.545Z",
+ "base": "https://www.bilibili.com/toy/preview/preview_ZQL4LtJi/index.html",
+ "pass": 64,
+ "total": 64,
+ "results": [
+  {
+   "name": "desktop·支持全屏：fsCapable 与环境一致",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "desktop·支持全屏：主菜单全屏项显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "flex",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "desktop·支持全屏：主菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
+   "pass": true,
+   "info": {
+    "want": 14,
+    "distinct": 14,
+    "ids": [
+     "stage",
+     "lives",
+     "dur",
+     "demo",
+     "camera",
+     "quality",
+     "volume",
+     "touch",
+     "fps",
+     "fullscreen",
+     "auto",
+     "hide",
+     "show",
+     "select",
+     "stage",
+     "select",
+     "show"
+    ]
+   }
+  },
+  {
+   "name": "desktop·支持全屏：开局进入游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null,
+    "play"
+   ]
+  },
+  {
+   "name": "desktop·支持全屏：右上全屏按钮显示且在视口内",
+   "pass": true,
+   "info": {
+    "hidden": false,
+    "display": "block",
+    "shown": true,
+    "inView": true
+   }
+  },
+  {
+   "name": "desktop·支持全屏：右上其他按钮仍显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    },
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "desktop·支持全屏：点右上全屏进入全屏、游戏不暂停",
+   "pass": true,
+   "info": [
+    true,
+    null,
+    [
+     "ok",
+     "lock-rejected"
+    ]
+   ]
+  },
+  {
+   "name": "desktop·支持全屏：退出全屏后自动暂停（原行为）",
+   "pass": true,
+   "info": [
+    false,
+    "pause"
+   ]
+  },
+  {
+   "name": "desktop·支持全屏：暂停菜单全屏项显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "flex",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "desktop·支持全屏：暂停菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
+   "pass": true,
+   "info": {
+    "want": 12,
+    "distinct": 12,
+    "ids": [
+     "restart",
+     "demo",
+     "camera",
+     "quality",
+     "volume",
+     "fps",
+     "fullscreen",
+     "title",
+     "auto",
+     "hide",
+     "show",
+     "resume",
+     "restart",
+     "resume",
+     "show"
+    ]
+   }
+  },
+  {
+   "name": "desktop·支持全屏：继续游戏",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "desktop·不支持全屏：fsCapable 与环境一致",
+   "pass": true,
+   "info": false
+  },
+  {
+   "name": "desktop·不支持全屏：主菜单全屏项隐藏",
+   "pass": true,
+   "info": [
+    {
+     "hidden": true,
+     "display": "none",
+     "shown": false,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "desktop·不支持全屏：主菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
+   "pass": true,
+   "info": {
+    "want": 13,
+    "distinct": 13,
+    "ids": [
+     "stage",
+     "lives",
+     "dur",
+     "demo",
+     "camera",
+     "quality",
+     "volume",
+     "touch",
+     "fps",
+     "auto",
+     "hide",
+     "show",
+     "select",
+     "stage",
+     "select",
+     "show"
+    ]
+   }
+  },
+  {
+   "name": "desktop·不支持全屏：开局进入游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null,
+    "play"
+   ]
+  },
+  {
+   "name": "desktop·不支持全屏：右上全屏按钮隐藏",
+   "pass": true,
+   "info": {
+    "hidden": true,
+    "display": "none",
+    "shown": false,
+    "inView": true
+   }
+  },
+  {
+   "name": "desktop·不支持全屏：右上其他按钮仍显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    },
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "desktop·不支持全屏：F 键给出提示、不暂停",
+   "pass": true,
+   "info": [
+    "当前浏览器不支持全屏，已使用页面内横屏布局继续",
+    null,
+    [
+     "unsupported"
+    ]
+   ]
+  },
+  {
+   "name": "desktop·不支持全屏：F 之后照常游玩（按方向角色移动）",
+   "pass": true,
+   "info": [
+    2.2,
+    5.02
+   ]
+  },
+  {
+   "name": "desktop·不支持全屏：打开暂停菜单",
+   "pass": true,
+   "info": "pause"
+  },
+  {
+   "name": "desktop·不支持全屏：暂停菜单全屏项隐藏",
+   "pass": true,
+   "info": [
+    {
+     "hidden": true,
+     "display": "none",
+     "shown": false,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "desktop·不支持全屏：暂停菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
+   "pass": true,
+   "info": {
+    "want": 11,
+    "distinct": 11,
+    "ids": [
+     "restart",
+     "demo",
+     "camera",
+     "quality",
+     "volume",
+     "fps",
+     "title",
+     "auto",
+     "hide",
+     "show",
+     "resume",
+     "restart",
+     "resume",
+     "show"
+    ]
+   }
+  },
+  {
+   "name": "desktop·不支持全屏：继续游戏",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "landscape·支持全屏：fsCapable 与环境一致",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "landscape·支持全屏：主菜单全屏项显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": false
+    }
+   ]
+  },
+  {
+   "name": "landscape·支持全屏：开局进入游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null,
+    "play"
+   ]
+  },
+  {
+   "name": "landscape·支持全屏：保持触屏模式",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "landscape·支持全屏：右上全屏按钮显示且在视口内",
+   "pass": true,
+   "info": {
+    "hidden": false,
+    "display": "block",
+    "shown": true,
+    "inView": true
+   }
+  },
+  {
+   "name": "landscape·支持全屏：右上其他按钮仍显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    },
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "landscape·支持全屏：点右上全屏进入全屏、游戏不暂停",
+   "pass": true,
+   "info": [
+    true,
+    null,
+    [
+     "ok",
+     "lock-rejected"
+    ]
+   ]
+  },
+  {
+   "name": "landscape·支持全屏：退出全屏后自动暂停（原行为）",
+   "pass": true,
+   "info": [
+    false,
+    "pause"
+   ]
+  },
+  {
+   "name": "landscape·支持全屏：暂停菜单全屏项显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "landscape·支持全屏：继续游戏",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "landscape·不支持全屏：fsCapable 与环境一致",
+   "pass": true,
+   "info": false
+  },
+  {
+   "name": "landscape·不支持全屏：主菜单全屏项隐藏",
+   "pass": true,
+   "info": [
+    {
+     "hidden": true,
+     "display": "none",
+     "shown": false,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "landscape·不支持全屏：开局进入游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null,
+    "play"
+   ]
+  },
+  {
+   "name": "landscape·不支持全屏：保持触屏模式",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "landscape·不支持全屏：右上全屏按钮隐藏",
+   "pass": true,
+   "info": {
+    "hidden": true,
+    "display": "none",
+    "shown": false,
+    "inView": true
+   }
+  },
+  {
+   "name": "landscape·不支持全屏：右上其他按钮仍显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    },
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "landscape·不支持全屏：打开暂停菜单",
+   "pass": true,
+   "info": "pause"
+  },
+  {
+   "name": "landscape·不支持全屏：暂停菜单全屏项隐藏",
+   "pass": true,
+   "info": [
+    {
+     "hidden": true,
+     "display": "none",
+     "shown": false,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "landscape·不支持全屏：继续游戏",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "portrait·支持全屏：fsCapable 与环境一致",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "portrait·支持全屏：主菜单全屏项显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": false
+    }
+   ]
+  },
+  {
+   "name": "portrait·支持全屏：开局进入游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null,
+    "play"
+   ]
+  },
+  {
+   "name": "portrait·支持全屏：竖屏开局自动旋转为横屏布局",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "portrait·支持全屏：保持触屏模式",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "portrait·支持全屏：右上全屏按钮显示且在视口内",
+   "pass": true,
+   "info": {
+    "hidden": false,
+    "display": "block",
+    "shown": true,
+    "inView": true
+   }
+  },
+  {
+   "name": "portrait·支持全屏：右上其他按钮仍显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    },
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "portrait·支持全屏：点右上全屏进入全屏、游戏不暂停",
+   "pass": true,
+   "info": [
+    true,
+    null,
+    [
+     "ok",
+     "lock-rejected"
+    ]
+   ]
+  },
+  {
+   "name": "portrait·支持全屏：退出全屏后自动暂停（原行为）",
+   "pass": true,
+   "info": [
+    false,
+    "pause"
+   ]
+  },
+  {
+   "name": "portrait·支持全屏：暂停菜单全屏项显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "portrait·支持全屏：继续游戏",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "portrait·不支持全屏：fsCapable 与环境一致",
+   "pass": true,
+   "info": false
+  },
+  {
+   "name": "portrait·不支持全屏：主菜单全屏项隐藏",
+   "pass": true,
+   "info": [
+    {
+     "hidden": true,
+     "display": "none",
+     "shown": false,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "portrait·不支持全屏：开局进入游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null,
+    "play"
+   ]
+  },
+  {
+   "name": "portrait·不支持全屏：竖屏开局自动旋转为横屏布局",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "portrait·不支持全屏：保持触屏模式",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "portrait·不支持全屏：右上全屏按钮隐藏",
+   "pass": true,
+   "info": {
+    "hidden": true,
+    "display": "none",
+    "shown": false,
+    "inView": true
+   }
+  },
+  {
+   "name": "portrait·不支持全屏：右上其他按钮仍显示",
+   "pass": true,
+   "info": [
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    },
+    {
+     "hidden": false,
+     "display": "block",
+     "shown": true,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "portrait·不支持全屏：打开暂停菜单",
+   "pass": true,
+   "info": "pause"
+  },
+  {
+   "name": "portrait·不支持全屏：暂停菜单全屏项隐藏",
+   "pass": true,
+   "info": [
+    {
+     "hidden": true,
+     "display": "none",
+     "shown": false,
+     "inView": true
+    }
+   ]
+  },
+  {
+   "name": "portrait·不支持全屏：继续游戏",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "无页面错误",
+   "pass": true,
+   "info": []
+  }
+ ],
+ "errors": [],
+ "physicalPhone": false
+}

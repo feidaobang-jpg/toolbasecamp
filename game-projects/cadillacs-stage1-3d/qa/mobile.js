@@ -148,7 +148,9 @@ const fs = require('fs');
   for (let k = 1; k <= 6; k++) { await touch(cdp, 'touchMove', [{ x: px, y: py + k * 10, id: 1 }]); await sleep(16); }
   await sleep(500); await touch(cdp, 'touchEnd', []); await sleep(100);
   s = await S(page); ok('旋转布局触控逆变换：屏幕向下拖 → 角色向右走', s.player.x > x0 + 0.5, [x0, s.player.x]);
-  await tapSel(page, cdp, '#btn-atk'); s = await S(page); ok('旋转布局下 J 键可用', s.player.state === 'attack' || s.player.state === 'pickup', s.player.state);
+  // 按下后立即读状态：刺拳挥空约 0.2 秒就收招，等松手再读会碰上收招
+  { const r = await rectOf(page, '#btn-atk'); await touch(cdp, 'touchStart', [{ x: r.x, y: r.y, id: 9 }]); await sleep(60); s = await S(page); await touch(cdp, 'touchEnd', []); await sleep(120); }
+  ok('旋转布局下 J 键可用', s.player.state === 'attack' || s.player.state === 'pickup', s.player.state);
   await ctx.close();
 
   // ---------- Toy 宿主 0×0 启动后才给尺寸 ----------

@@ -1,0 +1,10 @@
+{
+  "capture_mode": "realtime-automation",
+  "audio": "none",
+  "hud": "included",
+  "gap": "需要在后续视频制作时补录带游戏音轨的母版；本次 WebGL captureStream 在本机返回空媒体，已用有效浏览器录像替代",
+  "test_shortcuts": "free test mode, fixed positions and nearby mixed-species spawns",
+  "file": "captures/tactics-realtime.webm",
+  "sha256": "2ef0aa626e2fc9bcd261673a59daa61a9685851f7f721674bf21a38a7ad5dfa4",
+  "errors": []
+}

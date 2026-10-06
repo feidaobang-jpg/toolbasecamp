@@ -7,8 +7,8 @@
   "classification": "普通补丁",
   "build": {
     "id": "v0.8.0-bgmfull1",
-    "commit": null,
-    "dirty": true,
+    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+    "dirty": false,
     "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
     "fingerprint": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751"
   },
@@ -85,11 +85,37 @@
   ],
   "channels": {
     "website": {
-      "status": "pending"
+      "status": "deployed_verified",
+      "version": "v0.8.0-bgmfull1",
+      "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+      "verification": "17 public audio/runtime assets and 3 entrypoint script revisions checked",
+      "verified_at": "2026-10-07T06:49:45.870220+08:00"
     },
     "toy": {
       "id": 39863936092160,
-      "status": "pending"
+      "version": "v0.8.0-bgmfull1",
+      "status": "published",
+      "package_sha256": "3bfb4e5539d91b7a5657ffe85dc334d250844c96b79fc44a3375803c0cfb1670",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_ByEgdybR/index.html"
+      },
+      "preview_verified": {
+        "checks": 10,
+        "desktop": true,
+        "mobile_viewport": [
+          844,
+          390
+        ],
+        "physical_phone": false,
+        "audio_full_duration": true,
+        "same_package": true
+      },
+      "submission": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_vgTOSfTz/index.html"
+      },
+      "submitted_at": "2026-10-07T06:54:30.495280+08:00",
+      "public_verified": true
     },
     "bilibili": {
       "status": "deferred",
@@ -100,5 +126,10 @@
     "status": "retained",
     "reason": "只修BGM，无画面变化。"
   },
-  "media_status": "Final merged build screenshots captured; pre-merge 75s audio evidence retained in original release."
+  "media_status": "Final merged build screenshots captured; pre-merge 75s audio evidence retained in original release.",
+  "local_artifacts": {
+    "packages": "D:\\project\\task-artifacts\\game-bgm-20261007\\packages\\jackal-stage1-3d",
+    "captures": "D:/project/task-artifacts/game-bgm-20261007/media/jackal-stage1-3d",
+    "original_audio": "D:/project/task-artifacts/game-bgm-20261007/originals"
+  }
 }
