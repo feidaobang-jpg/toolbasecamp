@@ -7,31 +7,31 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-touch-layout-v0.19.1",
-      "last_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+      "last_public_verified_version": "web-tactics-v0.20.0",
+      "last_public_verified_at": "2026-10-06T23:17:22.931Z",
       "status": "public_verified",
-      "submitted_at": "2026-10-06T10:21:57.239728+00:00",
+      "submitted_at": "2026-10-06T23:15:54.187Z",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-touch-layout-v0.19.1",
-      "description_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
-      "description_sha256": "76888ef5197009e9a9de5fa84cc8b4c31551f483969af5c82f67b0d12534b73d"
+      "description_revision": "web-tactics-v0.20.0",
+      "description_public_verified_at": "2026-10-06T23:17:22.931Z",
+      "description_sha256": "fd161f600fc80b5153779bf811f3e35bbf11b6c318fe8755f7b14fa4a088c264"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-touch-layout-v0.19.1",
-      "last_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+      "last_public_verified_version": "web-tactics-v0.20.0",
+      "last_public_verified_at": "2026-10-06T23:18:05.260Z",
       "status": "public_verified",
-      "submitted_at": "2026-10-06T10:21:57.239728+00:00",
+      "submitted_at": "2026-10-06T23:16:55.966Z",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-touch-layout-v0.19.1",
-      "description_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
-      "description_sha256": "d4480b40f6c846bae9ac5af0b08f2c550c42b5661c9773b78c2d76f3bbbb21ac"
+      "description_revision": "web-tactics-v0.20.0",
+      "description_public_verified_at": "2026-10-06T23:18:05.260Z",
+      "description_sha256": "50c9b1c4c6f334ac4aa8b7cd0cb0662cbc1cb7abf55f467ddf3e2a3de25bf433"
     }
   ],
-  "latest_record": "releases/web-touch-layout-v0.19.1/bilibili-sync.json",
+  "latest_record": "releases/web-tactics-v0.20.0/bilibili-sync.json",
   "pending": [],
-  "pending_note": "手机按键自由摆放已公开核验网站与Toy，两条已确认视频简介同步并公开核验；仅回复指定原留言，不新增公告。",
+  "pending_note": "小队战术正式升级已核验网站及Toy，两条已确认虫潮视频简介均公开生效；未新增评论或视频。",
   "pending_release": null,
   "pending_updates": [
     {
