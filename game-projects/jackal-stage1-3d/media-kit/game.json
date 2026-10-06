@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.7.5",
-  "handoff": "releases/v0.7.5/handoff.json",
+  "current_version": "v0.7.6",
+  "handoff": "releases/v0.7.6/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -113,6 +113,14 @@
       "date": "2026-10-06",
       "handoff": "releases/v0.7.5/handoff.json",
       "summary": "按原作身份复用：第二关普通炮台改用同型炮台模型；闪光俘虏囚室用灰绿铁皮房、普通营房用浅色帆布棚，保留专属敌人。"
+    },
+    {
+      "version": "v0.7.6",
+      "base_version": "v0.7.5",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.6/handoff.json",
+      "summary": "修正固定炮台/机枪巢父子节点叠加180度导致炮管反向，第二关三发散射从共用炮口发出。"
     }
   ],
   "toy": {
@@ -121,21 +129,21 @@
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
     "review_status": "auditing",
-    "verified_at": "2026-10-06T18:09:28.575721+08:00",
+    "verified_at": "2026-10-06T18:25:49.073071+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_ZFvkOcCq/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_kJ3TqqXA/index.html",
     "preview_verified_at": "2026-10-06T15:54:07.223+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.7.5 原作模型区别修正已提交审核；包含v0.7.4镜头修复，网站已核验。",
-    "submitted_at": "2026-10-06T18:09:28.575721+08:00",
+    "note": "v0.7.6 炮管方向与散射炮口修复已提交审核；包含v0.7.5原作模型修正，网站已核验。",
+    "submitted_at": "2026-10-06T18:25:49.073071+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
-    "submitted_version": "v0.7.5",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sjekpcmz/index.html",
-    "release_record": "releases/v0.7.5/handoff.json",
-    "published_version": "v0.7.3",
+    "submitted_version": "v0.7.6",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sYDyiyJu/index.html",
+    "release_record": "releases/v0.7.6/handoff.json",
+    "published_version": "v0.7.5",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -176,15 +184,24 @@
       {
         "version": "v0.7.5",
         "classification": "普通补丁",
-        "status": "auditing",
+        "status": "published",
         "record": "releases/v0.7.5/handoff.json",
-        "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。"
+        "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。",
+        "included_version": "v0.7.5",
+        "published_verified_at": "2026-10-06T10:16:04.314128+00:00"
+      },
+      {
+        "version": "v0.7.6",
+        "classification": "普通补丁",
+        "status": "auditing",
+        "record": "releases/v0.7.6/handoff.json",
+        "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。"
       }
     ],
-    "last_successful_sync_at": "2026-10-06T17:52:35.090868+08:00",
-    "last_successful_sync_version": "v0.7.3",
-    "package_sha256": "e12ffe219b6b03487f28ecd7c9ca069d7ae266e2e1fd7885b84020f0688c0f34",
-    "published_verified_at": "2026-10-06T17:52:35.090868+08:00",
+    "last_successful_sync_at": "2026-10-06T10:16:04.314128+00:00",
+    "last_successful_sync_version": "v0.7.5",
+    "package_sha256": "31857d63b68ae6ca1b5dca3aac773d241b3eec7aadb01aff9aebf3c8e0e1d01b",
+    "published_verified_at": "2026-10-06T10:16:04.314128+00:00",
     "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
   },
   "drag_camera_controls": {
@@ -205,8 +222,8 @@
   },
   "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v0.7.5",
-  "website_verified_at": "2026-10-06T18:09:28.575721+08:00",
-  "website_commit": "7f341c73910c0d08303f7d03872e6700c11d35a0",
+  "website_version": "v0.7.6",
+  "website_verified_at": "2026-10-06T18:25:49.073071+08:00",
+  "website_commit": "9ac7fdea162bfdf22518ed77925fab4201e53c95",
   "web_toy_versions_match": false
 }

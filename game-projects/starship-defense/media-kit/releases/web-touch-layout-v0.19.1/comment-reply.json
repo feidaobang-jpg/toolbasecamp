@@ -1,0 +1,20 @@
+{
+  "rpid": "316226527777",
+  "comment_type": 11,
+  "video": "opus:1253705235842465792",
+  "url": "https://www.bilibili.com/opus/1253705235842465792#reply316226527777",
+  "user": "bili_59253225804",
+  "date": "2026-10-06 15:58",
+  "text": "主播，你在这里面加上一个来随意摆放那些按键的那个设置，这样的话我就是比较那个，我才喜欢现在的这个样子",
+  "kind": "feature",
+  "status": "fixed",
+  "fixed_in": "web-touch-layout-v0.19.1",
+  "reply_text": "我理解你是想按自己的习惯摆放手机按键，这个建议已经加上啦！进入「操作设置 → 自定义按键位置」，拖动摇杆和各功能键，再点「保存布局」就能记住；也可以恢复默认，原来的样式保留。网站和Toy版都已更新，重新打开试试。谢谢建议！",
+  "reply_rpid": null,
+  "reply_status": "public_verified",
+  "public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+  "record": "releases/web-touch-layout-v0.19.1/comment-reply.json",
+  "note": "原楼可见本人回复，UI未提供回复ID；以原评论rpid和回复哈希去重。",
+  "reply_sha256": "17296b3c7da17e19bca8b499f68e6db37d9e935e353fca737c6a7e96731bf57d",
+  "screenshot": "qa/captures/comment-reply.jpg"
+}

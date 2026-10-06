@@ -1,0 +1,21 @@
+{
+  "version": "v0.7.6",
+  "frames": 681,
+  "avgFPS": 169.50418160095577,
+  "p95Ms": 6,
+  "over50ms": 0,
+  "renderInfo": {
+    "calls": 75,
+    "tris": 138140,
+    "geometries": 55,
+    "textures": 2,
+    "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "quality": "high",
+  "method": "Edge headless / RTX4060Ti; realtime keyboard movement and turning, teleport/invulnerability hooks; recording measured separately",
+  "physicalPhone": false
+}

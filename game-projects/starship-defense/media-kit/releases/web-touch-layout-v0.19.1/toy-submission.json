@@ -1,0 +1,13 @@
+{
+  "id": 38678478981120,
+  "status": "published",
+  "submitted_at": "2026-10-06T10:14:22.667416+00:00",
+  "version": "web-touch-layout-v0.19.1",
+  "package_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
+  "verified_preview_url": "https://www.bilibili.com/toy/preview/preview_FsAwtrhJ/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pwTXVLCC/index.html",
+  "public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "public_version_path": "38678478981120-v23000",
+  "public_verification": "公开入口实际打开操作设置，显示新增手机按键位置和自定义按键入口"
+}
