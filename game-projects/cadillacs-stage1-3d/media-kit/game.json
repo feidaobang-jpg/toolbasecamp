@@ -31,15 +31,7 @@
   "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
   "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
  ],
- "pending_changes": [
-  {
-   "version": "v0.5.0",
-   "classification": "正式版本",
-   "summary": "画风与赤色要塞 3D 统一（哑光低模、无描边、玩具比例、柔和光照）；新增第二关沼泽森林三个区域与屠夫；起始关卡可选；第一关打完接第二关。",
-   "record": "releases/v0.5.0/handoff.json",
-   "status": "website_pending"
-  }
- ],
+ "pending_changes": [],
  "toy": {
   "id": 40412421031936,
   "title": "恐龙快打 3D：第一关",
@@ -50,16 +42,16 @@
   "submitted_at": "2026-10-06T11:06:55.476749+08:00",
   "package": "dist/toy-v0.2.0/package",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html",
-  "note": "公开新版已核验。",
+  "note": "v0.5.0 公开新版已核验（正式入口 20/20）。平台标题仍为「恐龙快打 3D：第一关」，未自动改元信息。",
   "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.2.0",
+  "version": "v0.5.0",
   "verified_at": "2026-10-06T11:15:46.661482+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.2.0",
+  "last_published_version": "v0.5.0",
   "pending_updates": [
    {
     "version": "v0.2.1",
@@ -84,20 +76,28 @@
     "status": "published",
     "record": "releases/v0.4.1/handoff.json",
     "summary": "右上贴边单行按钮，HUD避让。"
+   },
+   {
+    "version": "v0.5.0",
+    "classification": "正式版本",
+    "summary": "画风与赤色要塞统一；新增第二关沼泽森林；起始关卡可选。",
+    "status": "published",
+    "record": "releases/v0.5.0/handoff.json",
+    "included_version": "v0.5.0"
    }
   ],
-  "submitted_version": "v0.4.1",
-  "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html",
-  "release_record": "releases/v0.4.1/handoff.json",
-  "published_version": "v0.4.1",
-  "published_verified_at": "2026-10-06T03:14:57.544Z",
+  "submitted_version": "v0.5.0",
+  "package_sha256": "18b947ebb5bed6d568a2a523519d4b407f5095816f5cc6f04161345e40052c8f",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_dbULGLJR/index.html",
+  "release_record": "releases/v0.5.0/handoff.json",
+  "published_version": "v0.5.0",
+  "published_verified_at": "2026-10-06T09:17:30Z",
   "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "video_bindings": [
    "BV18XHW66E55"
   ]
  },
- "toy_note": "v0.2.0 已过审，正式入口15/15通过",
+ "toy_note": "v0.5.0 已过审公开（2026-10-06），正式入口 20/20",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
  "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（v0.5.0 起与赤色要塞同款哑光低模），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
  "dev": {

@@ -1,52 +1,273 @@
 {
-  "schema_version": 1,
-  "game_id": "cadillacs-stage1-3d",
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.5.0",
+ "base_version": "v0.4.1",
+ "created_at": "2026-10-06T17:20:00+08:00",
+ "classification": "正式版本",
+ "build": {
+  "id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
+  "commit": "c5df556e",
+  "dirty": false,
+  "fingerprint": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
+  "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "art-style",
+   "description": "与赤色要塞 3D 同款画风：哑光 Phong 顶点色低模、无描边、玩具比例角色、大色块场景、柔和天光与软阴影",
+   "status": "implemented",
+   "evidence_ids": [
+    "style-compare"
+   ]
+  },
+  {
+   "id": "stage2",
+   "description": "第二关沼泽森林：偷猎者森林（凯迪拉克开场、三角龙哈克、步枪兵、熟睡的霸王龙希瓦特）→ 泥沼（齐腰减速、格特水中冒出、链锤兵拉什·T）→ 黄昏恐龙尸骸地（油桶、Boss 屠夫）",
+   "status": "implemented",
+   "evidence_ids": [
+    "stage2-highlights",
+    "swamp-mobile-landscape",
+    "swamp-mobile-portrait"
+   ]
+  },
+  {
+   "id": "stage-select",
+   "description": "主菜单起始关卡（第一关 / 第二关），保存在本地；第一关打完街机式接第二关，第二关打完结算",
+   "status": "implemented",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "style-unify",
+   "feature_ids": [
+    "art-style"
+   ],
+   "before": "卡通色阶着色 + 黑描边 + 写实砖纹壁纸裂缝贴图、写实比例、白色强光",
+   "after": "赤色要塞 MAT.toy 同参数哑光材质、无描边、头约 1.5 倍的玩具比例、大色块贴图、偏冷天光 + 暖太阳；选人卡片与结算面板改深绿字",
+   "user_visible_result": "整体画面与赤色要塞同一套清爽哑光低模风格",
+   "evidence_ids": [
+    "style-compare"
+   ],
+   "verification": "pass"
+  },
+  {
+   "id": "stage2-add",
+   "feature_ids": [
+    "stage2",
+    "stage-select"
+   ],
+   "before": "只有第一关，打完维斯即结算",
+   "after": "新增第二关三个区域与屠夫、9 种新敌人 / 恐龙、砍刀与步枪、泥沼机制、原版 2-1 / 2-2 / Boss 2 音乐；起始关卡可选",
+   "user_visible_result": "打完第一关接着开凯迪拉克进沼泽森林，或在菜单直接选第二关",
+   "evidence_ids": [
+    "stage2-highlights"
+   ],
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "select-card-contrast",
+   "found_version": "v0.4.0",
+   "reproduction": "主菜单 → 开始游戏 → 选人画面；或任意结算画面",
+   "observed": "奶油色卡片上英雄名白字、能力值浅紫字、结算总分与统计行几乎看不清",
+   "impact": "选人与结算信息难读",
+   "status": "fixed",
+   "cause": "统一奶油色面板时沿用了原深色面板的文字颜色",
+   "fix": "改为深绿字、灰绿说明、金色重点",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "选人与第二关结算截图复核可读"
+  },
+  {
+   "id": "edge-frame-overshoot",
+   "found_version": "v0.1.1",
+   "reproduction": "qa/camera.js：Boss 锁屏时主角贴右缘最前排",
+   "observed": "出拳手臂出画约 11.8%（新比例下 4.2%）",
+   "impact": "画面边缘裁到手臂",
+   "status": "fixed",
+   "cause": "侧视取景只给身体留 0.55 米",
+   "fix": "侧视取景边距改 0.75 米",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "qa/camera.js 11/11"
+  }
+ ],
+ "media": [
+  {
+   "id": "stage2-highlights",
+   "file": "releases/v0.5.0/captures/stage2-highlights-16x9.mp4",
+   "sha256": "d53d82788a9b027b0aacd2cd84911ce570eaee83646cf4dd219cf56249f0492c",
+   "kind": "video",
+   "version": "v0.5.0",
+   "build_id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
+   "capture_mode": "offline-frame-stepping",
+   "description": "第二关精华：标题/选人 → 凯迪拉克开场 → 三角龙冲撞 → 胖子捶霸王龙 / 霸王龙醒 → 泥沼格特 → 拉什·T → 尸骸地 → 屠夫登场与战斗。bot 操作，分段之间用测试钩子跳到下一段；时间轴见同名 timeline.json。录制时 core.js 版本号仍为 v0.4.1，其余代码与发布构建相同。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 116.7,
+   "audio": "offline-render（合成回退音乐 + 合成音效，非网页里的原版录音）",
+   "visual_review": "pass",
+   "audio_review": "not-reviewed",
+   "segments": []
+  },
+  {
+   "id": "style-compare",
+   "file": "releases/v0.5.0/captures/style-compare.png",
+   "sha256": "3f0d96cbe8fbdb29d16878755548be273a1dac89fefd905e7b7195f1083cd74d",
+   "kind": "screenshot",
+   "version": "v0.5.0",
+   "build_id": "pre-final（楼顶 / 街道改后图为最终调色前一版）",
+   "capture_mode": "offline-frame-stepping",
+   "description": "改前 / 改后 / 赤色要塞 / 第二关 六格对照",
+   "width": 1280,
+   "height": 1080,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "swamp-mobile-landscape",
+   "file": "releases/v0.5.0/captures/swamp-mobile-landscape.png",
+   "sha256": "413a0757e3a369dbad36586833cb3bb5e6e1b1919f6b5758b586e21199be44cf",
+   "kind": "screenshot",
+   "version": "v0.5.0",
+   "build_id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
+   "capture_mode": "offline-frame-stepping",
+   "description": "844×390 DPR2 触屏模拟，泥沼里格特举枪，左摇杆 + 2×2 动作键",
+   "width": 1688,
+   "height": 780,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "swamp-mobile-portrait",
+   "file": "releases/v0.5.0/captures/swamp-mobile-portrait.png",
+   "sha256": "4b6b916580d61f0ef7a607c7c0fa485f8718cc6a94e3bc72160f352f38dbbc30",
+   "kind": "screenshot",
+   "version": "v0.5.0",
+   "build_id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
+   "capture_mode": "offline-frame-stepping",
+   "description": "390×844 竖屏开局后自动旋转为横屏布局（物理竖屏图，不是 16:9 母版）",
+   "width": 780,
+   "height": 1688,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "method": "qa/stage2.js 第二关验收（手动时钟 + 真实键盘事件）",
+   "result": "pass 55/55",
+   "evidence": "qa/stage2.json",
+   "unmeasured": [
+    "real-phone multi-touch/performance"
+   ]
+  },
+  {
+   "method": "qa/desktop.js 第一关桌面纯键盘回归（起始关卡、第一关打完接第二关）",
+   "result": "pass 90/90",
+   "evidence": "qa/desktop.json",
+   "unmeasured": []
+  },
+  {
+   "method": "qa/mobile.js 触屏模拟回归",
+   "result": "pass 35/35",
+   "evidence": "qa/mobile.json",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/camera.js 镜头回归",
+   "result": "pass 11/11",
+   "evidence": "qa/cam-results.json",
+   "unmeasured": []
+  },
+  {
+   "method": "bot 自动通关（第二关开局 / 第一关一路打到第二关）",
+   "result": "pass（两局都通关）",
+   "evidence": "qa/bot-runs.json",
+   "unmeasured": []
+  },
+  {
+   "method": "实时测帧 RTX 4060 Ti 1280×720 高画质，第二关三区域四视角；手机视口 + CPU 降速 4 倍模拟",
+   "result": "pass（CPU 1.1–1.5 ms/帧，无 >50 ms 长帧）",
+   "evidence": "qa/perf-stage2-1280x720-high.json；qa/perf-mobile-throttle4.json",
+   "unmeasured": [
+    "real phone GPU"
+   ]
+  },
+  {
+   "method": "Toy 预览与正式入口实测（电脑 + 手机视口，iframe 内 test=1）",
+   "result": "pass 20/20",
+   "evidence": "qa/toy-public-results.json",
+   "unmeasured": [
+    "physical device"
+   ]
+  }
+ ],
+ "readiness": {
+  "overview": "ready",
+  "update": "partial",
+  "gaps": [
+   "精华录像音轨为离线合成回退音乐，正式成片需要另录网页实际原版音乐或在剪辑时替换；新视频仍须人工审片。"
+  ]
+ },
+ "website": {
+  "status": "public_verified",
+  "source_commit": "16225442",
+  "verified_at": "2026-10-06T17:03:00+08:00",
+  "verified_files": [
+   "html/game/cadillacs-stage1-3d/js/game.min.js",
+   "css/style.css（与提交的 LF 版本一致）",
+   "sounds/forest.mp3",
+   "sounds/swamp.mp3",
+   "sounds/boss2.mp3",
+   "assets/game/thumbs/cadillacs-stage1-3d.jpg",
+   "index.html 标题与起始关卡选项",
+   "js/locales/zh-CN.js 副标题",
+   "js/config.js 卡片",
+   "games.html 版本号"
+  ],
+  "deploy": "GitHub Actions Deploy Treasure Box success"
+ },
+ "toy": {
+  "id": 40412421031936,
   "version": "v0.5.0",
-  "base_version": "v0.4.1",
-  "created_at": "2026-10-06T17:20:00+08:00",
-  "classification": "正式版本",
-  "build": {
-    "id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
-    "commit": null,
-    "dirty": true,
-    "fingerprint": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce",
-    "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
-    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  "package": "dist/toy-v0.5.0/package（不入库）",
+  "package_sha256": "18b947ebb5bed6d568a2a523519d4b407f5095816f5cc6f04161345e40052c8f",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_nOOpq2wY/index.html",
+  "preview_test": "qa/toy-preview-check.js 桌面 1280×720 + 手机 844×390 20/20（含第二关三区域、原版音乐文件），非真机",
+  "submitted_at": "2026-10-06T17:11:33+08:00",
+  "submission_response": {
+   "status": "auditing",
+   "preview_url": "https://www.bilibili.com/toy/preview/preview_dbULGLJR/index.html"
   },
-  "feature_inventory": [
-    { "id": "art-style", "description": "与赤色要塞 3D 同款画风：哑光 Phong 顶点色低模、无描边、玩具比例角色、大色块场景、柔和天光与软阴影", "status": "implemented", "evidence_ids": ["style-compare"] },
-    { "id": "stage2", "description": "第二关沼泽森林：偷猎者森林（凯迪拉克开场、三角龙哈克、步枪兵、熟睡的霸王龙希瓦特）→ 泥沼（齐腰减速、格特水中冒出、链锤兵拉什·T）→ 黄昏恐龙尸骸地（油桶、Boss 屠夫）", "status": "implemented", "evidence_ids": ["stage2-highlights", "swamp-mobile-landscape", "swamp-mobile-portrait"] },
-    { "id": "stage-select", "description": "主菜单起始关卡（第一关 / 第二关），保存在本地；第一关打完街机式接第二关，第二关打完结算", "status": "implemented", "evidence_ids": [] }
-  ],
-  "changes": [
-    { "id": "style-unify", "feature_ids": ["art-style"], "before": "卡通色阶着色 + 黑描边 + 写实砖纹壁纸裂缝贴图、写实比例、白色强光", "after": "赤色要塞 MAT.toy 同参数哑光材质、无描边、头约 1.5 倍的玩具比例、大色块贴图、偏冷天光 + 暖太阳；选人卡片与结算面板改深绿字", "user_visible_result": "整体画面与赤色要塞同一套清爽哑光低模风格", "evidence_ids": ["style-compare"], "verification": "pass" },
-    { "id": "stage2-add", "feature_ids": ["stage2", "stage-select"], "before": "只有第一关，打完维斯即结算", "after": "新增第二关三个区域与屠夫、9 种新敌人 / 恐龙、砍刀与步枪、泥沼机制、原版 2-1 / 2-2 / Boss 2 音乐；起始关卡可选", "user_visible_result": "打完第一关接着开凯迪拉克进沼泽森林，或在菜单直接选第二关", "evidence_ids": ["stage2-highlights"], "verification": "pass" }
-  ],
-  "bugs": [
-    { "id": "select-card-contrast", "found_version": "v0.4.0", "reproduction": "主菜单 → 开始游戏 → 选人画面；或任意结算画面", "observed": "奶油色卡片上英雄名白字、能力值浅紫字、结算总分与统计行几乎看不清", "impact": "选人与结算信息难读", "status": "fixed", "cause": "统一奶油色面板时沿用了原深色面板的文字颜色", "fix": "改为深绿字、灰绿说明、金色重点", "before_media_ids": [], "after_media_ids": [], "retest": "选人与第二关结算截图复核可读" },
-    { "id": "edge-frame-overshoot", "found_version": "v0.1.1", "reproduction": "qa/camera.js：Boss 锁屏时主角贴右缘最前排", "observed": "出拳手臂出画约 11.8%（新比例下 4.2%）", "impact": "画面边缘裁到手臂", "status": "fixed", "cause": "侧视取景只给身体留 0.55 米", "fix": "侧视取景边距改 0.75 米", "before_media_ids": [], "after_media_ids": [], "retest": "qa/camera.js 11/11" }
-  ],
-  "media": [
-    { "id": "stage2-highlights", "file": "releases/v0.5.0/captures/stage2-highlights-16x9.mp4", "sha256": "d53d82788a9b027b0aacd2cd84911ce570eaee83646cf4dd219cf56249f0492c", "kind": "video", "version": "v0.5.0", "build_id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce", "capture_mode": "offline-frame-stepping", "description": "第二关精华：标题/选人 → 凯迪拉克开场 → 三角龙冲撞 → 胖子捶霸王龙 / 霸王龙醒 → 泥沼格特 → 拉什·T → 尸骸地 → 屠夫登场与战斗。bot 操作，分段之间用测试钩子跳到下一段；时间轴见同名 timeline.json。录制时 core.js 版本号仍为 v0.4.1，其余代码与发布构建相同。", "width": 1280, "height": 720, "duration_seconds": 116.7, "audio": "offline-render（合成回退音乐 + 合成音效，非网页里的原版录音）", "visual_review": "pass", "audio_review": "not-reviewed", "segments": [] },
-    { "id": "style-compare", "file": "releases/v0.5.0/captures/style-compare.png", "sha256": "3f0d96cbe8fbdb29d16878755548be273a1dac89fefd905e7b7195f1083cd74d", "kind": "screenshot", "version": "v0.5.0", "build_id": "pre-final（楼顶 / 街道改后图为最终调色前一版）", "capture_mode": "offline-frame-stepping", "description": "改前 / 改后 / 赤色要塞 / 第二关 六格对照", "width": 1280, "height": 1080, "duration_seconds": null, "audio": "none", "visual_review": "pass", "audio_review": "not-applicable", "segments": [] },
-    { "id": "swamp-mobile-landscape", "file": "releases/v0.5.0/captures/swamp-mobile-landscape.png", "sha256": "413a0757e3a369dbad36586833cb3bb5e6e1b1919f6b5758b586e21199be44cf", "kind": "screenshot", "version": "v0.5.0", "build_id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce", "capture_mode": "offline-frame-stepping", "description": "844×390 DPR2 触屏模拟，泥沼里格特举枪，左摇杆 + 2×2 动作键", "width": 1688, "height": 780, "duration_seconds": null, "audio": "none", "visual_review": "pass", "audio_review": "not-applicable", "segments": [] },
-    { "id": "swamp-mobile-portrait", "file": "releases/v0.5.0/captures/swamp-mobile-portrait.png", "sha256": "4b6b916580d61f0ef7a607c7c0fa485f8718cc6a94e3bc72160f352f38dbbc30", "kind": "screenshot", "version": "v0.5.0", "build_id": "1841d9897ce04ccc46e38c5d6cd89d6633b997dd93131d5d7b18924cf13bd4ce", "capture_mode": "offline-frame-stepping", "description": "390×844 竖屏开局后自动旋转为横屏布局（物理竖屏图，不是 16:9 母版）", "width": 780, "height": 1688, "duration_seconds": null, "audio": "none", "visual_review": "pass", "audio_review": "not-applicable", "segments": [] }
-  ],
-  "historical_media": [],
-  "qa": [
-    { "method": "qa/stage2.js 第二关验收（手动时钟 + 真实键盘事件）", "result": "pass 55/55", "evidence": "qa/stage2.json", "unmeasured": ["real-phone multi-touch/performance"] },
-    { "method": "qa/desktop.js 第一关桌面纯键盘回归（起始关卡、第一关打完接第二关）", "result": "pass 90/90", "evidence": "qa/desktop.json", "unmeasured": [] },
-    { "method": "qa/mobile.js 触屏模拟回归", "result": "pass 35/35", "evidence": "qa/mobile.json", "unmeasured": ["physical device"] },
-    { "method": "qa/camera.js 镜头回归", "result": "pass 11/11", "evidence": "qa/cam-results.json", "unmeasured": [] },
-    { "method": "bot 自动通关（第二关开局 / 第一关一路打到第二关）", "result": "pass（两局都通关）", "evidence": "qa/bot-runs.json", "unmeasured": [] },
-    { "method": "实时测帧 RTX 4060 Ti 1280×720 高画质，第二关三区域四视角；手机视口 + CPU 降速 4 倍模拟", "result": "pass（CPU 1.1–1.5 ms/帧，无 >50 ms 长帧）", "evidence": "qa/perf-stage2-1280x720-high.json；qa/perf-mobile-throttle4.json", "unmeasured": ["real phone GPU"] }
-  ],
-  "readiness": {
-    "overview": "ready",
-    "update": "partial",
-    "gaps": ["精华录像音轨为离线合成回退音乐，正式成片需要另录网页实际原版音乐或在剪辑时替换；新视频仍须人工审片。"]
-  },
-  "website": { "status": "pending" },
-  "toy": { "status": "pending" },
-  "bilibili": { "status": "pending" }
+  "status": "published",
+  "published_verified_at": "2026-10-06T17:17:30+08:00",
+  "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+  "public_test": "qa/toy-public-results.json 20/20，版本 v0.5.0",
+  "title_note": "平台标题仍为「恐龙快打 3D：第一关」：按项目规则不自动改平台元信息，待用户决定是否改名"
+ },
+ "bilibili": {
+  "status": "public_verified",
+  "bvid": "BV18XHW66E55",
+  "version": "v0.5.0",
+  "submitted_at": "2026-10-06T09:17:58Z",
+  "verified_at": "2026-10-06T09:19:44Z",
+  "record": "releases/v0.5.0/bilibili-sync.json"
+ }
 }

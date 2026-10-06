@@ -45,6 +45,15 @@ const { launch, out, sleep } = require('./lib');
       await page.keyboard.up('KeyD'); await page.keyboard.up('KeyI'); await sleep(600);
       await page.keyboard.press('KeyC'); await sleep(200);
       s = await S(); ok('desktop：C 切换视角', s.ui.camera === 'oblique', s.ui.camera);
+      // 第二关（v0.5.0）：起始关卡选项、三个区域能载入、原版音乐文件都在包里
+      ok('desktop：菜单有起始关卡选项', await frame.evaluate(() => !!document.querySelector('[data-opt=stage]')));
+      const music = await frame.evaluate(async () => { const r = {}; for (const f of ['forest', 'swamp', 'boss2', 'hall']) { const x = await fetch('sounds/' + f + '.mp3'); r[f] = x.status; } return r; });
+      ok('desktop：第二关原版音乐文件可取', Object.values(music).every(v => v === 200), music);
+      for (const [a, id] of [[3, 'forest'], [4, 'swamp'], [5, 'grave']]) {
+        await frame.evaluate((a) => { window.__CD_TEST__.cheat.area(a); window.__CD_TEST__.cheat.skipScript(); }, a); await sleep(1500);
+        s = await S(); ok('desktop：第二关区域 ' + id + ' 载入', s.areaId === id && s.mode === 'play', [s.areaId, s.mode, s.ui.music.name]);
+        await page.screenshot({ path: out('toy-preview-desktop-' + id + '.png') });
+      }
     } else {
       await tap('[data-act=select]'); await tap('#sel-go'); await sleep(600);
       for (let i = 0; i < 14; i++) { s = await S(); if (s.mode === 'play') break; await tap('#btn-atk'); }
