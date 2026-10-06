@@ -53,6 +53,14 @@
       "status": "pending_merge",
       "release": "releases/v0.7.4/handoff.json",
       "summary": "全去距离雾；Boss取消自动拉远，恢复固定镜头；操作与入口不变。"
+    },
+    {
+      "version": "v0.7.5",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "record": "releases/v0.7.5/handoff.json",
+      "summary": "同型固定炮台复用，第二关铁皮囚室/浅色棚保留原作区别；专属敌人不合并造型。",
+      "reason": "现有简介未提及被纠正的外观；普通补丁合并到下一次有意义说明更新。"
     }
   ],
   "resolved_updates": [
