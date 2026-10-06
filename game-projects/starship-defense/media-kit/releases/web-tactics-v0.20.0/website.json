@@ -1,0 +1,52 @@
+{
+  "status": "deployed_verified",
+  "version": "web-tactics-v0.20.0",
+  "commit": "ac026d4ef5c407052ea256288f22f982bb478a35",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "verified_at": "2026-10-07T07:04:42.608681+08:00",
+  "files": [
+    {
+      "file": "index.html",
+      "sha256": "4b2153befd0d3457698eb7811d1851158d383ea8e2778903053f1b7bbc0417e9",
+      "verified_at": "2026-10-07T07:04:36.648872+08:00",
+      "tactics_panel": true,
+      "tactics_button": true,
+      "script": [
+        "game.compat.js?v=ac026d4e"
+      ],
+      "note": "Actions按部署提交替换页面资源查询键"
+    },
+    {
+      "file": "game.compat.js",
+      "sha256": "87e96d929cf0082e25e9f97542c8279969de6725434e40d4931bda8e492bf549",
+      "verified_at": "2026-10-07T07:04:38.757042+08:00",
+      "match": true
+    },
+    {
+      "file": "game.js",
+      "sha256": "177111309552dae2643c3deedd99d2bba39f0d6ad0374156b4e4fd252f5dfc62",
+      "verified_at": "2026-10-07T07:04:40.893613+08:00",
+      "match": true
+    },
+    {
+      "file": "tactical-waves.js",
+      "sha256": "fd3c8fefa1895f76ba706ad9d0beca159d65bcf98e0ffaf1ea893cb409bb8899",
+      "verified_at": "2026-10-07T07:04:42.013769+08:00",
+      "match": true
+    },
+    {
+      "file": "tactical-panel.js",
+      "sha256": "d51f998370dddcdba45bb66720006164b6d1f57d1d3dc1b7f8e1f9646ffd628a",
+      "verified_at": "2026-10-07T07:04:42.115484+08:00",
+      "match": true
+    },
+    {
+      "file": "save-validation.js",
+      "sha256": "1f775b1b2103378ef318ff9fa09386cca56421fc23ea7b77e10b5d74b0df460c",
+      "verified_at": "2026-10-07T07:04:42.265651+08:00",
+      "match": true
+    }
+  ],
+  "qa": "qa/website/results.json",
+  "checks_passed": 45
+}
