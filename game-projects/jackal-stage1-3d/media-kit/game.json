@@ -104,8 +104,8 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": "2026-10-06T15:54:07.223+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-06T17:52:35.090868+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
@@ -113,13 +113,13 @@
     "preview_verified_at": "2026-10-06T15:54:07.223+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.7.3 已提交审核（模型统一）；上一版 v0.7.2 仍为公开版本。",
+    "note": "v0.7.3 模型统一已过审；公开 Toy 脚本与网站、本地主线构建 SHA256 一致。",
     "submitted_at": "2026-10-06T15:54:07.223+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
     "submitted_version": "v0.7.3",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
     "release_record": "releases/v0.7.3/handoff.json",
-    "published_version": "v0.7.2",
+    "published_version": "v0.7.3",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -151,15 +151,17 @@
       {
         "version": "v0.7.3",
         "classification": "普通补丁",
-        "status": "auditing",
+        "status": "published",
         "record": "releases/v0.7.3/handoff.json",
-        "summary": "第二关炮塔/营房/围墙/大门统一复用第一关模型外观。"
+        "summary": "第二关炮塔/营房/围墙/大门统一复用第一关模型外观。",
+        "included_version": "v0.7.3",
+        "published_verified_at": "2026-10-06T17:52:35.090868+08:00"
       }
     ],
-    "last_successful_sync_at": "2026-10-06T12:30:53.469813+08:00",
-    "last_successful_sync_version": "v0.7.2",
+    "last_successful_sync_at": "2026-10-06T17:52:35.090868+08:00",
+    "last_successful_sync_version": "v0.7.3",
     "package_sha256": "3e6384490286d43b61bd324a4106643a1e0b7ad4569b940da6d44a8d8ffffda4",
-    "published_verified_at": "2026-10-06T12:30:53.469813+08:00",
+    "published_verified_at": "2026-10-06T17:52:35.090868+08:00",
     "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
   },
   "drag_camera_controls": {
