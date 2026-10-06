@@ -1,0 +1,172 @@
+{
+  "text": "换到第一人称，虫群变成迎面而来的威胁。转头找目标，开火，再用手雷拉开战斗节奏。这种临场感，也是这次最想让大家亲自试的。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "换到"
+    },
+    {
+      "offset": 4750000,
+      "duration": 7500000,
+      "text": "第一人称"
+    },
+    {
+      "offset": 14750000,
+      "duration": 2750000,
+      "text": "虫"
+    },
+    {
+      "offset": 17500000,
+      "duration": 2250000,
+      "text": "群"
+    },
+    {
+      "offset": 19875000,
+      "duration": 3000000,
+      "text": "变成"
+    },
+    {
+      "offset": 23125000,
+      "duration": 3500000,
+      "text": "迎面"
+    },
+    {
+      "offset": 26750000,
+      "duration": 1500000,
+      "text": "而"
+    },
+    {
+      "offset": 28250000,
+      "duration": 1125000,
+      "text": "来"
+    },
+    {
+      "offset": 29375000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 30250000,
+      "duration": 4875000,
+      "text": "威胁"
+    },
+    {
+      "offset": 40875000,
+      "duration": 4250000,
+      "text": "转头"
+    },
+    {
+      "offset": 45250000,
+      "duration": 1625000,
+      "text": "找"
+    },
+    {
+      "offset": 46875000,
+      "duration": 4375000,
+      "text": "目标"
+    },
+    {
+      "offset": 53375000,
+      "duration": 6625000,
+      "text": "开火"
+    },
+    {
+      "offset": 62125000,
+      "duration": 1750000,
+      "text": "再"
+    },
+    {
+      "offset": 63875000,
+      "duration": 1125000,
+      "text": "用"
+    },
+    {
+      "offset": 65125000,
+      "duration": 4250000,
+      "text": "手雷"
+    },
+    {
+      "offset": 69625000,
+      "duration": 3125000,
+      "text": "拉开"
+    },
+    {
+      "offset": 73000000,
+      "duration": 3250000,
+      "text": "战斗"
+    },
+    {
+      "offset": 76375000,
+      "duration": 3875000,
+      "text": "节奏"
+    },
+    {
+      "offset": 86000000,
+      "duration": 3625000,
+      "text": "这种"
+    },
+    {
+      "offset": 89750000,
+      "duration": 8625000,
+      "text": "临场感"
+    },
+    {
+      "offset": 101750000,
+      "duration": 1375000,
+      "text": "也"
+    },
+    {
+      "offset": 103125000,
+      "duration": 1000000,
+      "text": "是"
+    },
+    {
+      "offset": 104250000,
+      "duration": 1375000,
+      "text": "这"
+    },
+    {
+      "offset": 105625000,
+      "duration": 1500000,
+      "text": "次"
+    },
+    {
+      "offset": 107375000,
+      "duration": 2250000,
+      "text": "最"
+    },
+    {
+      "offset": 109625000,
+      "duration": 1625000,
+      "text": "想"
+    },
+    {
+      "offset": 111250000,
+      "duration": 1000000,
+      "text": "让"
+    },
+    {
+      "offset": 112375000,
+      "duration": 2500000,
+      "text": "大家"
+    },
+    {
+      "offset": 115125000,
+      "duration": 4000000,
+      "text": "亲自"
+    },
+    {
+      "offset": 119250000,
+      "duration": 2125000,
+      "text": "试"
+    },
+    {
+      "offset": 121375000,
+      "duration": 1500000,
+      "text": "的"
+    }
+  ]
+}

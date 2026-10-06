@@ -1,0 +1,24 @@
+{
+  "copy": "换个视角，亲自上场",
+  "source_frames": [
+    {
+      "game": "tank-3d",
+      "time": 6
+    },
+    {
+      "game": "starship-defense",
+      "time": 82
+    }
+  ],
+  "method": "Pillow typography and crop of actual episode frames; no AI reconstruction",
+  "sizes": [
+    [
+      1440,
+      1080
+    ],
+    [
+      1920,
+      1080
+    ]
+  ]
+}

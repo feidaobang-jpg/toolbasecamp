@@ -1,0 +1,36 @@
+{
+  "version": "v0.7.3",
+  "date": "2026-10-06",
+  "classification": "普通补丁",
+  "changes": [
+    "第二关炮塔模型复用第一关沙袋机枪巢（makeNest），删除独立混凝土炮塔建模；射击行为不变（三发扇形）",
+    "第二关营房/俘虏屋恢复第一关木屋红顶默认样式（含去掉 B3 帐篷覆盖）",
+    "第二关围墙与大门恢复第一关默认石墙/木门样式",
+    "网站与 Toy 同步 index.html 资源参数 ?v=model-unify1"
+  ],
+  "site": {
+    "version": "v0.7.3",
+    "commit": "c51f2091",
+    "verified_at": "2026-10-06T15:54:07.223+08:00",
+    "verification": "线上 game.min.js 已无 turretBox 旧模型指纹，体积 656170 与新构建一致"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "slug": "feidao-jackal-3d",
+    "status": "auditing",
+    "submitted_at": "2026-10-06T15:54:07.223+08:00",
+    "package_sha256": "f6a0d23e90cd337d56286ec3f01713b9f0d890f16660da9de19f7e96ce3cbc6f",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_GONbLg90/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
+    "preview_qa": "桌面+手机 iframe 实测：第二关可玩、出生点附近 2 座炮塔均为沙袋机枪巢外观、无页面报错"
+  },
+  "qa": {
+    "local": "第二关 29/29、第一关桌面 92/92 全过；预览桌面+手机 6/6 通过",
+    "screenshots": "出生点炮塔、营地木屋、Boss 庭院石墙均已与第一关一致"
+  },
+  "bilibili": {
+    "classification": "普通补丁",
+    "action": "pending_merge",
+    "note": "简介未提及被替换的旧模型，现有描述仍准确；并入下一次有意义的简介更新"
+  }
+}

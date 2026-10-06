@@ -59,7 +59,7 @@ export default function build(B) {
   for (let y = 82; y < 108; y++) { addStatic('wall', -4, y, -3, y + 1); addStatic('wall', 29, y, 30, y + 1); }
   addStatic('hut', 18, 84, 24, 88, { n: 3, flash: 0, name: 'B1' });
   addStatic('hut', 1, 96, 6, 100, { n: 4, flash: 0, name: 'B2' });
-  addStatic('hut', 18, 96, 24, 100, { n: 3, flash: 1, name: 'B3', style: 'tent' });
+  addStatic('hut', 18, 96, 24, 100, { n: 3, flash: 1, name: 'B3' });
   for (const [x, y] of [[-0.5, 90.5], [0.5, 90.5], [26.5, 104.5], [26.5, 103.5]]) addStatic('crate', x - 0.5, y - 0.5, x + 0.5, y + 0.5);
   for (const [x, y] of [[10.5, 86.5], [11.5, 87.5], [-1.5, 104.5]]) addStatic('barrel', x - 0.5, y - 0.5, x + 0.5, y + 0.5);
   B.sandbags(8, 100, 14);
@@ -176,7 +176,8 @@ export default function build(B) {
     n: 2, code: 'Baker', title: '废墟城', sub: '石柱后面藏着闪光星', music: 'ruins',
     sky: 0xc8dcc2, fog: 0xc9d8b8, hemiGround: 0x8f8a62, outerGround: 0x8f9a4e,
     palette: { [T.GRASS]: 0x96a052, [T.STONE]: 0xcbc3a8, [T.FLOOR]: 0x6fae55, [T.DIRT]: 0xbba675, [T.ROAD]: 0xcabd96 },
-    wallStyle: 'ruin', gateStyle: 'green', hutStyle: 'stone', tuftTint: 0x7f9a4a, hedgeTint: 0x4f8a46,
+    // 建筑与围墙样式统一复用第一关默认（石墙、木屋红顶、木门），不再单独换皮
+    tuftTint: 0x7f9a4a, hedgeTint: 0x4f8a46,
     intro: 'drive',
     start: { x: 0, y: 6, dir: 0, introFrom: { x: 0, y: -6 } },
     pad: PAD,

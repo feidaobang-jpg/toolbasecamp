@@ -1,0 +1,112 @@
+{
+  "text": "这次把五款游戏放在一起实打。从看清全局，到亲自上场，看看视角到底改变了什么。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 5000000,
+      "text": "这次"
+    },
+    {
+      "offset": 6250000,
+      "duration": 1000000,
+      "text": "把"
+    },
+    {
+      "offset": 7375000,
+      "duration": 1250000,
+      "text": "五"
+    },
+    {
+      "offset": 8625000,
+      "duration": 1375000,
+      "text": "款"
+    },
+    {
+      "offset": 10125000,
+      "duration": 3750000,
+      "text": "游戏"
+    },
+    {
+      "offset": 14125000,
+      "duration": 1500000,
+      "text": "放"
+    },
+    {
+      "offset": 15625000,
+      "duration": 750000,
+      "text": "在"
+    },
+    {
+      "offset": 16500000,
+      "duration": 1875000,
+      "text": "一起"
+    },
+    {
+      "offset": 18500000,
+      "duration": 5000000,
+      "text": "实打"
+    },
+    {
+      "offset": 29250000,
+      "duration": 2625000,
+      "text": "从"
+    },
+    {
+      "offset": 32125000,
+      "duration": 3750000,
+      "text": "看清"
+    },
+    {
+      "offset": 36000000,
+      "duration": 6250000,
+      "text": "全局"
+    },
+    {
+      "offset": 44000000,
+      "duration": 2000000,
+      "text": "到"
+    },
+    {
+      "offset": 46250000,
+      "duration": 3750000,
+      "text": "亲自"
+    },
+    {
+      "offset": 50125000,
+      "duration": 5375000,
+      "text": "上场"
+    },
+    {
+      "offset": 59000000,
+      "duration": 3125000,
+      "text": "看看"
+    },
+    {
+      "offset": 62250000,
+      "duration": 5000000,
+      "text": "视角"
+    },
+    {
+      "offset": 67500000,
+      "duration": 2750000,
+      "text": "到底"
+    },
+    {
+      "offset": 70375000,
+      "duration": 3375000,
+      "text": "改变"
+    },
+    {
+      "offset": 73750000,
+      "duration": 750000,
+      "text": "了"
+    },
+    {
+      "offset": 74625000,
+      "duration": 3125000,
+      "text": "什么"
+    }
+  ]
+}

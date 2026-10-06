@@ -1,0 +1,87 @@
+{
+  "text": "赤色要塞，俯视方便规划吉普车的路线。开车、投弹、救人，先把战场看明白。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "赤色"
+    },
+    {
+      "offset": 4625000,
+      "duration": 4625000,
+      "text": "要塞"
+    },
+    {
+      "offset": 12625000,
+      "duration": 4625000,
+      "text": "俯视"
+    },
+    {
+      "offset": 17375000,
+      "duration": 3125000,
+      "text": "方便"
+    },
+    {
+      "offset": 20625000,
+      "duration": 3875000,
+      "text": "规划"
+    },
+    {
+      "offset": 24750000,
+      "duration": 3625000,
+      "text": "吉普车"
+    },
+    {
+      "offset": 28375000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 29125000,
+      "duration": 3875000,
+      "text": "路线"
+    },
+    {
+      "offset": 38750000,
+      "duration": 5000000,
+      "text": "开车"
+    },
+    {
+      "offset": 46500000,
+      "duration": 4000000,
+      "text": "投弹"
+    },
+    {
+      "offset": 54625000,
+      "duration": 4625000,
+      "text": "救人"
+    },
+    {
+      "offset": 62625000,
+      "duration": 2000000,
+      "text": "先"
+    },
+    {
+      "offset": 64625000,
+      "duration": 750000,
+      "text": "把"
+    },
+    {
+      "offset": 65500000,
+      "duration": 2875000,
+      "text": "战场"
+    },
+    {
+      "offset": 68625000,
+      "duration": 1375000,
+      "text": "看"
+    },
+    {
+      "offset": 70000000,
+      "duration": 3625000,
+      "text": "明白"
+    }
+  ]
+}

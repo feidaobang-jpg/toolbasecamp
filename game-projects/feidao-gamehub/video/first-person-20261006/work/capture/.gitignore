@@ -1,0 +1,3 @@
+# Preserve bulky original acquisition logs locally; compact manifest is versioned.
+/*/capture.json
+/*/frames.ffconcat
