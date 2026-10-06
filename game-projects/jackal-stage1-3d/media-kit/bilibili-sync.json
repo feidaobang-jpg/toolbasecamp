@@ -1,91 +1,98 @@
 {
-  "game_id": "jackal-stage1-3d",
-  "videos": [
-    {
-      "bvid": "BV1EyHz6wE5u",
-      "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
-      "owner_uid": 16214353,
-      "last_public_verified_version": "v0.6.0",
-      "block_sha256": "2a5cbac087d799407138a99d465f872fd339e6b06e122419404a134bff94615f",
-      "verified_at": "2026-10-04T12:04:10.476Z",
-      "release_record": "releases/v0.4.0/bilibili-sync.json",
-      "last_public_verified_at": "2026-10-05T23:58:29.215Z",
-      "last_sync_record": "releases/unified3d-20261006/handoff.json",
-      "description_sha256": "f45ff23e8edfe81376762b2bedfc86d54f05798f67023ae9a56d50726f6cf6ba",
-      "lastPublicVerifiedVersion": "v0.7.0",
-      "descriptionHash": "ba996aebf90e6d19ce1a31be860acd11eae9bb025dc172e634d63c8c2630552b",
-      "release": "releases/v0.7.0/handoff.json",
-      "publicVerifiedAt": "2026-10-06T01:35:49.352Z"
-    }
-  ],
-  "pending": [],
-  "mapping_sources": [
-    "本人发布记录",
-    "toy video list: 1条",
-    "toy video mine --keyword 赤色要塞: 1条",
-    "本人稿件管理"
-  ],
-  "pending_updates": [
-    {
-      "version": "v0.7.1",
-      "classification": "普通补丁",
-      "status": "pending_merge",
-      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-      "record": "releases/v0.7.1/handoff.json"
-    },
-    {
-      "version": "v0.7.2",
-      "classification": "普通补丁",
-      "status": "pending_merge",
-      "summary": "精简HUD并修正二关石像Boss遮挡，保留现有操作与入口。",
-      "record": "releases/v0.7.2/handoff.json"
-    }
-  ],
-  "resolved_updates": [
-    {
-      "version": "v0.5.1",
-      "release": "releases/v0.5.1/handoff.json",
-      "classification": "普通补丁",
-      "status": "resolved",
-      "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
-      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介",
-      "resolved_version": "v0.6.0"
-    },
-    {
-      "version": "v0.5.2",
-      "classification": "普通补丁",
-      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-      "status": "resolved",
-      "record": "releases/drag-direction-20261005/handoff.json",
-      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
-      "resolved_version": "v0.6.0"
-    },
-    {
-      "version": "v0.5.3",
-      "release": "releases/v0.5.3/handoff.json",
-      "classification": "普通补丁",
-      "status": "resolved",
-      "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
-      "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。",
-      "resolved_version": "v0.6.0"
-    }
-  ],
-  "status": "public_verified",
-  "version": "v0.6.0",
-  "updated_at": "2026-10-06T08:00:16.643786+08:00",
-  "history": [
-    {
-      "bvid": "BV1EyHz6wE5u",
-      "version": "v0.7.0",
-      "status": "public_verified",
-      "record": "releases/v0.7.0/handoff.json",
-      "checked_at": "2026-10-06T01:35:49.352Z"
-    }
-  ],
-  "last_public_verified": {
-    "bvid": "BV1EyHz6wE5u",
-    "version": "v0.7.0",
-    "at": "2026-10-06T01:35:49.352Z",
-    "description_sha256": "ba996aebf90e6d19ce1a31be860acd11eae9bb025dc172e634d63c8c2630552b"
+ "game_id": "jackal-stage1-3d",
+ "videos": [
+  {
+   "bvid": "BV1EyHz6wE5u",
+   "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+   "owner_uid": 16214353,
+   "last_public_verified_version": "v0.6.0",
+   "block_sha256": "2a5cbac087d799407138a99d465f872fd339e6b06e122419404a134bff94615f",
+   "verified_at": "2026-10-04T12:04:10.476Z",
+   "release_record": "releases/v0.4.0/bilibili-sync.json",
+   "last_public_verified_at": "2026-10-05T23:58:29.215Z",
+   "last_sync_record": "releases/unified3d-20261006/handoff.json",
+   "description_sha256": "f45ff23e8edfe81376762b2bedfc86d54f05798f67023ae9a56d50726f6cf6ba",
+   "lastPublicVerifiedVersion": "v0.7.0",
+   "descriptionHash": "ba996aebf90e6d19ce1a31be860acd11eae9bb025dc172e634d63c8c2630552b",
+   "release": "releases/v0.7.0/handoff.json",
+   "publicVerifiedAt": "2026-10-06T01:35:49.352Z"
   }
+ ],
+ "pending": [],
+ "mapping_sources": [
+  "本人发布记录",
+  "toy video list: 1条",
+  "toy video mine --keyword 赤色要塞: 1条",
+  "本人稿件管理"
+ ],
+ "pending_updates": [
+  {
+   "version": "v0.7.1",
+   "classification": "普通补丁",
+   "status": "pending_merge",
+   "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+   "record": "releases/v0.7.1/handoff.json"
+  },
+  {
+   "version": "v0.7.2",
+   "classification": "普通补丁",
+   "status": "pending_merge",
+   "summary": "精简HUD并修正二关石像Boss遮挡，保留现有操作与入口。",
+   "record": "releases/v0.7.2/handoff.json"
+  },
+  {
+   "version": "v0.7.3",
+   "classification": "普通补丁",
+   "status": "pending_merge",
+   "summary": "第二关模型统一复用第一关外观；原视频说明仍准确。",
+   "record": "releases/v0.7.3/handoff.json"
+  }
+ ],
+ "resolved_updates": [
+  {
+   "version": "v0.5.1",
+   "release": "releases/v0.5.1/handoff.json",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
+   "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介",
+   "resolved_version": "v0.6.0"
+  },
+  {
+   "version": "v0.5.2",
+   "classification": "普通补丁",
+   "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+   "status": "resolved",
+   "record": "releases/drag-direction-20261005/handoff.json",
+   "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+   "resolved_version": "v0.6.0"
+  },
+  {
+   "version": "v0.5.3",
+   "release": "releases/v0.5.3/handoff.json",
+   "classification": "普通补丁",
+   "status": "resolved",
+   "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
+   "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。",
+   "resolved_version": "v0.6.0"
+  }
+ ],
+ "status": "public_verified",
+ "version": "v0.6.0",
+ "updated_at": "2026-10-06T08:00:16.643786+08:00",
+ "history": [
+  {
+   "bvid": "BV1EyHz6wE5u",
+   "version": "v0.7.0",
+   "status": "public_verified",
+   "record": "releases/v0.7.0/handoff.json",
+   "checked_at": "2026-10-06T01:35:49.352Z"
+  }
+ ],
+ "last_public_verified": {
+  "bvid": "BV1EyHz6wE5u",
+  "version": "v0.7.0",
+  "at": "2026-10-06T01:35:49.352Z",
+  "description_sha256": "ba996aebf90e6d19ce1a31be860acd11eae9bb025dc172e634d63c8c2630552b"
+ }
 }
