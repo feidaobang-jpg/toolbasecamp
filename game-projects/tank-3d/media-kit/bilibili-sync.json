@@ -6,12 +6,12 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "toy3dui2",
+      "lastPublicVerifiedVersion": "coop1",
       "blockHash": "34143e8291c751c758677fef50fbe44604cfa6c360069d21d665e478af68a6aa",
-      "release": "releases/toy3dui2/handoff.json",
+      "release": "releases/coop1/handoff.json",
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
-      "descriptionHash": "ae5cd09624f36150698e85579ee78a2211a32a2645219744a94116dc0446c62d",
-      "publicVerifiedAt": "2026-10-06T01:46:06.156Z"
+      "descriptionHash": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b",
+      "publicVerifiedAt": "2026-10-06T11:40:48.423653+00:00"
     }
   ],
   "pending_updates": [
@@ -43,7 +43,7 @@
     {
       "version": "coop1",
       "classification": "正式版本",
-      "status": "pending_review",
+      "status": "public_verified",
       "summary": "房间码邀请双人合作守基地、同步暂停、换关与离线提示。Toy已公开核验。",
       "record": "releases/coop1/bilibili-sync.json",
       "reason": "新版简介已保存，稿件管理与处理进度页明确显示审核中；保留成功基线，不重复提交。"
@@ -63,6 +63,14 @@
       "record": "releases/hit-audio1/handoff.json",
       "summary": "恢复子弹击毁敌人的爆炸声与重甲命中声。",
       "reason": "普通音效补丁并入下次有意义的说明更新；保留公开成功基线。"
+    },
+    {
+      "version": "lobby1",
+      "classification": "正式版本",
+      "status": "pending_review",
+      "record": "releases/lobby1/bilibili-sync.json",
+      "summary": "公开/密码房间大厅、2–4人合作、离线规则和按钮反馈",
+      "reason": "平台已保存，公开页面暂为旧版；保留coop1成功基线，不重复提交。"
     }
   ],
   "history": [
@@ -72,12 +80,18 @@
       "status": "public_verified",
       "record": "releases/toy3dui2/handoff.json",
       "checked_at": "2026-10-06T01:46:06.156Z"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "coop1",
+      "status": "public_verified",
+      "checked_at": "2026-10-06T11:40:48.423653+00:00"
     }
   ],
   "last_public_verified": {
     "bvid": "BV1Wqaz6AEJb",
-    "version": "toy3dui2",
-    "at": "2026-10-06T01:46:06.156Z",
-    "description_sha256": "ae5cd09624f36150698e85579ee78a2211a32a2645219744a94116dc0446c62d"
+    "version": "coop1",
+    "at": "2026-10-06T11:40:48.423653+00:00",
+    "description_sha256": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b"
   }
 }

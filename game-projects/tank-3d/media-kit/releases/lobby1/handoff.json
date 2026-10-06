@@ -11,14 +11,27 @@
     "保留v1兼容路由和单机存档"
   ],
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "version": "lobby1",
+    "commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
+    "verified_at": "2026-10-06T11:40:48.423653+00:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+    "actions_runs": [
+      37457333773,
+      37457785068
+    ],
+    "ci": "both deployment runs completed successfully"
   },
   "toy": {
     "id": 39043249461248,
-    "status": "pending_sync"
+    "status": "auditing",
+    "package_hash": "5a00449153c2bc0d42ef6537ea2f7d11f7472f49060ffd2ae70cd2d7c1408de8",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_m2s9VZi8/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_VcHp5WoD/index.html",
+    "submitted_at": "2026-10-06T11:40:11+00:00"
   },
   "bilibili": {
-    "BV1Wqaz6AEJb": "pending_sync"
+    "BV1Wqaz6AEJb": "pending_review"
   },
   "validation": {
     "server_pytest": 6,
@@ -29,15 +42,67 @@
       "wrong/correct password feedback",
       "guest leave then shared pause/restart",
       "volume arrows decrease/increase, keyboard left/right",
-      "390x844 portrait and 844x390 landscape, document width matches viewport; mobile directory first"
+      "390x844 portrait and 844x390 landscape, document width matches viewport; mobile directory first",
+      "Final Toy package: single-player start, pause, desktop↔touch controls toggle, resume with same stage/lives"
     ],
     "physical_phone_test": false,
-    "eight_player_test": false
+    "eight_player_test": false,
+    "combat_audio": 24,
+    "production_protocol": {
+      "url": "wss://www.zhengxiaohui.cn/api/game/tank-coop/ws?game=tank3d-v2",
+      "at": "2026-10-06T11:37:21.847897+00:00",
+      "passed": true,
+      "checks": [
+        "directory/password secrecy",
+        "wrong/correct password",
+        "four seats ready/start",
+        "slot spoof prevention",
+        "state fanout to three guests",
+        "guest leave continues",
+        "host leave ends"
+      ]
+    },
+    "cross_channel_ui": "Toy preview host / production website guest: same directory, unlocked direct join, ready/start verified",
+    "four_connection_relay": {
+      "players": 4,
+      "snapshot_hz": 20,
+      "snapshots_per_guest": 100,
+      "received": 300,
+      "median_relay_ms": 24.3,
+      "p95_relay_ms": 28.5,
+      "note": "本机到自有VPS四连接短时转发；不代表跨地区、弱网、真机渲染或8人容量"
+    },
+    "network_estimate": {
+      "players": 4,
+      "seconds": 10,
+      "sim_ms": 85.3928,
+      "mean_snapshot_bytes": 4815,
+      "largest_snapshot_bytes": 15738,
+      "relay_outbound_kilobytes_sec": 289,
+      "note": "Node逻辑及未压缩JSON估计；不含浏览器渲染、TCP/TLS开销，不是8人/手机压力验收"
+    },
+    "autofill": "Room password fields use new-password; production UI blank room name/password confirmed",
+    "screenshots": [
+      "lobby-desktop.png",
+      "lobby-mobile.png",
+      "lobby-landscape.png",
+      "four-roster.png",
+      "four-game.png",
+      "buttons-desktop.png",
+      "website-lobby.png",
+      "toy-preview-desktop.png",
+      "toy-preview-mobile.png"
+    ],
+    "local_servers_stopped": true
   },
   "artifacts": "D:/project/artifacts/tank-lobby-20261006",
   "capture_gap": "本次保存真实浏览器截图；未录制新实机视频，不据此发布新成片。",
   "included_versions": [
     "pickup-clean1",
     "hit-audio1"
-  ]
+  ],
+  "activity_check": {
+    "status": "skipped_recent_completed_check",
+    "baseline": "2026-10-06T19:18:03.077+08:00"
+  }
 }
