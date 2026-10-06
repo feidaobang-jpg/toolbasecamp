@@ -207,7 +207,7 @@ function spawnEntity(s) {
     e.obj = M.makeSoldier(type); e.goal = null; e.state = 'idle'; e.aimT = 0; e.speed = 2.1;
     if (s.guard) { e.fireT = randRange(0.8, 1.6); }
   } else if (type === 'mg') { e.obj = M.makeNest(); e.burst = 0; }
-  else if (type === 'turret') { e.obj = M2.makeTurret(); e.fireT = randRange(1.5, 2.6); }
+  else if (type === 'turret') { e.obj = M.makeNest(); e.fireT = randRange(1.5, 2.6); } // 第二关炮塔复用第一关沙袋机枪巢外观，仅射击行为不同
   else if (type === 'cannon') { e.obj = M.makeCannon(); e.h = s.elevated ? 2.6 : 0; e.elevated = !!s.elevated; e.fireT = randRange(1.5, 2.5); }
   else if (type === 'tank') {
     const brown = s.paint === 'brown';

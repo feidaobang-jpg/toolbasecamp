@@ -1,0 +1,38 @@
+{
+  "version": "v0.7.3",
+  "source": "public/html/game/jackal-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "ec1b2dce06c7004909ca99f1056b31df9701cb4ab0e513ddb9c79f15e9c9a600",
+    "index.html": "d8e93a9f3ddeb341a8a6f82156608c40832060a8028bf3616da8c5ad383022fe",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "js/game.min.js": "404f0034b47424e1b5f12713da7fda3161fb357603f4d6411d3d8769b2250e53",
+    "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+    "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+    "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+  },
+  "files": {
+    "css/style.css": "ec1b2dce06c7004909ca99f1056b31df9701cb4ab0e513ddb9c79f15e9c9a600",
+    "index.html": "7c2cbbe94a40b71b514645c2b25ef0f19fb26ac121c1f40fb316281c4d7dfeec",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "js/game.min.js": "404f0034b47424e1b5f12713da7fda3161fb357603f4d6411d3d8769b2250e53",
+    "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+    "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+    "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+  },
+  "status": "submitted",
+  "package_sha256": "f6a0d23e90cd337d56286ec3f01713b9f0d890f16660da9de19f7e96ce3cbc6f",
+  "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+  "submitted_at": "2026-10-06T15:54:07.223+08:00",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_GONbLg90/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
+  "preview_qa": {
+    "passed": 6,
+    "failed": 0,
+    "record": "releases/v0.7.3/handoff.json",
+    "note": "桌面+手机 iframe 实测：第二关可玩、出生点附近 2 座炮塔均为沙袋机枪巢外观、无页面报错"
+  },
+  "doctor": {
+    "warnings": 0
+  },
+  "package_artifact": "D:/project/toolbasecamp/.qoder/worktrees/jackal-model-unify/game-projects/jackal-stage1-3d/dist/toy-v0.7.3/package"
+}

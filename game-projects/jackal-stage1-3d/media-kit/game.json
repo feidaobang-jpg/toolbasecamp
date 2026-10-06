@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.7.2",
-  "handoff": "releases/v0.7.2/handoff.json",
+  "current_version": "v0.7.3",
+  "handoff": "releases/v0.7.3/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -89,6 +89,14 @@
       "classification": "普通补丁",
       "handoff": "releases/v0.7.2/handoff.json",
       "summary": "精简半透明状态行、暂停详情、Boss条下移；Boss镜头保证模型可见且不改战斗判定。"
+    },
+    {
+      "version": "v0.7.3",
+      "base_version": "v0.7.2",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.3/handoff.json",
+      "summary": "第二关模型统一复用第一关：炮塔改用沙袋机枪巢外观，营房/围墙/大门恢复木屋红顶与石墙木门（用户反馈第一关更好看，各关同类敌人外观需一致）。"
     }
   ],
   "toy": {
@@ -96,21 +104,21 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "published",
-    "verified_at": "2026-10-06T12:30:53.469813+08:00",
+    "review_status": "auditing",
+    "verified_at": "2026-10-06T15:54:07.223+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_r5cbAsaD/index.html",
-    "preview_verified_at": "2026-10-06T12:29:05.253398+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_GONbLg90/index.html",
+    "preview_verified_at": "2026-10-06T15:54:07.223+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.7.2已公开上线，公开入口133项验收通过，与网站同版本。",
-    "submitted_at": "2026-10-06T12:29:05.253398+08:00",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
-    "submitted_version": "v0.7.2",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
-    "release_record": "releases/v0.7.2/handoff.json",
+    "note": "v0.7.3 已提交审核（模型统一）；上一版 v0.7.2 仍为公开版本。",
+    "submitted_at": "2026-10-06T15:54:07.223+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
+    "submitted_version": "v0.7.3",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
+    "release_record": "releases/v0.7.3/handoff.json",
     "published_version": "v0.7.2",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
@@ -139,6 +147,13 @@
         "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。",
         "included_version": "v0.7.2",
         "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
+      },
+      {
+        "version": "v0.7.3",
+        "classification": "普通补丁",
+        "status": "auditing",
+        "record": "releases/v0.7.3/handoff.json",
+        "summary": "第二关炮塔/营房/围墙/大门统一复用第一关模型外观。"
       }
     ],
     "last_successful_sync_at": "2026-10-06T12:30:53.469813+08:00",
@@ -165,8 +180,8 @@
   },
   "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v0.7.2",
-  "website_verified_at": "2026-10-06T12:29:05.253398+08:00",
-  "website_commit": "929f54d2",
+  "website_version": "v0.7.3",
+  "website_verified_at": "2026-10-06T15:54:07.223+08:00",
+  "website_commit": "c51f2091",
   "web_toy_versions_match": true
 }
