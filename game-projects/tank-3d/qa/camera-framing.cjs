@@ -1,4 +1,4 @@
-// 实际浏览器检查斜俯视跟随、全图、真实输入及横竖布局；可复用于网站和 Toy 预览。
+// 实际浏览器检查斜俯视/正俯视全图、真实输入及横竖布局；可复用于网站和 Toy 预览。
 // TANK_URL / TANK_OUT / PLAYWRIGHT_MODULE；TANK_BASELINE_SCENE 可注入已保存的旧构建做同局面对照。
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
@@ -49,6 +49,7 @@ function measurement() {
       await page.screenshot({ path: path.join(out, `${viewport.width}x${viewport.height}-oblique.png`) });
       record('oblique', { viewport, ...start });
       if (!baseline) {
+        assert.ok(start.corners.every(p=>p.x>=0 && p.x<=start.W && p.y>=0 && p.y<=start.H),'oblique retains full battlefield');
         // 通过测试传送覆盖四角和中心，检查旋转后主角不落到屏幕外。
         for (const [x, y] of [[0, 0], [192, 0], [0, 192], [192, 192], [96, 96]]) {
           for (const yaw of [0, Math.PI / 2, Math.PI, Math.PI * 1.5]) {
@@ -57,6 +58,7 @@ function measurement() {
             assert.ok(m.feet.x > 0 && m.feet.x < m.W && m.head.y > 0 && m.feet.y < m.H, 'tank stays visible');
           }
         }
+        await game.evaluate(() => { __TANK_TEST__.view.yawOffset=0; });
         await game.evaluate(pose.toString() + '(__TANK_TEST__)');
         const oldCamera = await game.evaluate(() => __TANK_TEST__.view.camera.position.toArray());
         await game.evaluate(() => { const q=__TANK_TEST__; q.world.terrain.brick.fill(0);q.world.terrain.steel.fill(0);q.world.terrain.water.fill(0);q.world.bots.length=0;q.world.rosterIndex=q.world.roster.length;q.world.remaining=99;q.view.yawOffset=0; });
@@ -66,7 +68,7 @@ function measurement() {
         await game.evaluate(() => document.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW',bubbles:true})));
         const moved = await game.evaluate(measurement);
         assert.ok(moved.state.player.y < 96, 'actual movement');
-        assert.ok(Math.abs(moved.camera[2]-oldCamera[2]) > .1, 'camera follows actual movement');
+        assert.ok(moved.camera.every((n,i)=>Math.abs(n-oldCamera[i])<.001), 'full-map camera stays fixed during movement');
         await game.evaluate(() => document.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyJ',bubbles:true})));
         await game.evaluate(() => __TANK_TEST__.step(1));
         await game.evaluate(() => document.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyJ',bubbles:true})));

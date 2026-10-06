@@ -1,13 +1,13 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=camera-follow1';
+import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
 import { CoopConnection, snapshot, hydrate } from './coop.js?v=lobby1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'camera-follow1';
+const VERSION = 'camera-fullmap1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
