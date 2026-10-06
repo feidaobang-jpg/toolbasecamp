@@ -11,4 +11,5 @@
 .editing-touch-layout #touchUI{z-index:90;display:block!important}
 .editing-touch-layout #lookZone{pointer-events:none}
 .editing-touch-layout #touchUI .vbtn,.editing-touch-layout #joyBase{cursor:move;outline:2px dashed #ffd75e;outline-offset:3px;touch-action:none}
+.editing-touch-layout #touchUI .layout-selected{outline-style:solid;outline-width:4px}
 .editing-touch-layout #menuMain,.editing-touch-layout #menuPause,.editing-touch-layout #keyPanel{visibility:hidden}

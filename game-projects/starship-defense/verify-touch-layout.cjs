@@ -17,7 +17,7 @@ const out=path.join(__dirname,'media-kit/releases/web-touch-layout-v0.19.1/qa');
     const drag=async(id,x,y)=>{const b=await box(id),p=await point(x,y);await page.mouse.move(b.x+b.width/2,b.y+b.height/2);await page.mouse.down();await page.mouse.move(p.x,p.y,{steps:12});await page.mouse.up();};
     await page.locator('#vP').click();await page.locator('#keysPause').click();await page.locator('#touchLayoutOpen').click();
     assert.equal(await page.evaluate(()=>__gameQA.Game.state),'paused');
-    const before=await box('vJ');await drag('vJ',340,280);const after=await box('vJ');assert.ok(Math.abs(before.x-after.x)>80);
+    const before=await box('vJ');await drag('vJ',340,280);const dragged=await box('vJ');await page.keyboard.press('ArrowLeft');const after=await box('vJ');assert.ok(Math.abs(before.x-after.x)>80);assert.ok(after.x<dragged.x-3);
     await drag('joyBase',140,215);await page.keyboard.press('KeyU');
     assert.deepEqual(await page.evaluate(()=>({keys:__gameQA.Input.keys,look:__gameQA.Input.look,joy:__gameQA.Input.joy.active})),{keys:{},look:{yaw:0,pitch:0},joy:false});
     assert.deepEqual(await page.evaluate(()=>({chapter:__gameQA.Game.chapter,level:__gameQA.Game.level,hp:__gameQA.player.hp,gold:__gameQA.Game.gold})),progress);

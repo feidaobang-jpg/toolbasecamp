@@ -1,5 +1,5 @@
 {
-  "url": "http://127.0.0.1:8893/html/game/starship-defense/index.html",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "method": "Headless Microsoft Edge; real mouse input, touch-capable viewport simulation; no physical-phone test",
   "passed": [
     "Mouse drag moves individual buttons and joystick; editing freezes progress and consumes game input",
