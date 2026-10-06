@@ -6,8 +6,8 @@
  },
  "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
  "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.8.0-bgmfull1",
- "handoff": "releases/v0.8.0-bgmfull1/handoff.json",
+ "current_version": "v0.8.1",
+ "handoff": "releases/v0.8.1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/jackal-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -149,6 +149,14 @@
    "classification": "普通补丁",
    "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
    "handoff": "releases/v0.8.0-bgmfull1/handoff.json"
+  },
+  {
+   "version": "v0.8.1",
+   "base_version": "v0.8.0-bgmfull1",
+   "date": "2026-10-07",
+   "classification": "普通补丁",
+   "handoff": "releases/v0.8.1/handoff.json",
+   "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
   }
  ],
  "toy": {
@@ -335,6 +343,17 @@
     "bilibili": "public_verified"
    },
    "bilibili_included_version": "v0.8.0"
+  },
+  {
+   "version": "v0.8.1",
+   "classification": "普通补丁",
+   "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩。",
+   "record": "releases/v0.8.1/handoff.json",
+   "channels": {
+    "website": "pending_deploy",
+    "toy": "pending",
+    "bilibili": "pending_merge"
+   }
   }
  ],
  "website": {

@@ -214,7 +214,7 @@ export function newGame(opts) {
   G.hero = G.settings.hero;
   G.score = 0; G.lives = G.settings.lives === 'inf' ? Infinity : 3; G.demoUsed = !!opts.demo; G.ended = false;
   G.kills = {}; G.stats = { hits: 0, deaths: 0, food: 0, t0: 0, contCount: 0, maxCombo: 0, damage: 0 };
-  G.events = []; G.t = 0; G.frames = 0; G.timeScale = 1; G.cont = null; G.vitality = 0; G.vitalityTotal = 0; G.lastTarget = null; G.cleared = []; G.areaLoaded = false;
+  G.events = []; G.t = 0; G.frames = 0; G.timeScale = 1; G.slowT = 0; G.cont = null; G.vitality = 0; G.vitalityTotal = 0; G.lastTarget = null; G.cleared = []; G.areaLoaded = false;
   const h = HEROES[G.hero];
   const p = makeActor(h.id, 'player', { hero: h, stats: heroStats(h), hp: 100, maxHp: 100, face: FACE_RIGHT, comboN: 0, lastHitT: -9, radius: 0.34 });
   G.player = p;
@@ -349,6 +349,7 @@ function startMove(a, id, move) {
 
 // ---------- 主更新 ----------
 export function update() {
+  if (G.slowT > 0) { G.slowT -= STEP; if (G.slowT <= 0 && G.timeScale === 0.3) G.timeScale = 1; }
   const dt = STEP * G.timeScale;
   G.t += dt; G.frames = (G.frames || 0) + 1;
   if (G.mode === 'title') return;
@@ -429,7 +430,7 @@ function handleInput(p, dt) {
   }
   if (atkE?.data?.offensive && canAct && !p.weapon) {
     startMove(p, ['risingKick', 'rollingElbow', 'flipKick', 'rollingJump'][G.hero]);
-    A.play('whoosh'); ev('offensive', { hero: p.hero.id, move: p.move.id }); return;
+    ev('offensive', { hero: p.hero.id, move: p.move.id }); return;
   }
   if (!atkE && canAct && p.weapon?.kind === 'smg' && p.weapon.ammo > 0 && IN.down('atk')) { useWeapon(p); return; }
   if (dashE && canAct) { const mv = moveVec(); setState(p, 'run', { dirX: mv.len ? mv.x : Math.sin(p.face), dirZ: mv.len ? mv.z : Math.cos(p.face), tap: true }); }
@@ -477,7 +478,6 @@ function playerAttack(p) {
   const chain = G.t - p.lastHitT < 0.6 && p.comboN < combo.length - 1;
   p.comboN = chain ? p.comboN + 1 : 0;
   startMove(p, combo[p.comboN]);
-  A.play('whoosh', 0.6);
 }
 function autoAim(p) {
   // 自由视角（正视 / 第一人称 / 转过的镜头）下给出软锁定：转向身前最近的敌人；侧视保持原作的左右朝向
@@ -612,6 +612,13 @@ function updateMove(a, dt) {
     a.vx = Math.sin(a.face) * sp; a.vz = Math.cos(a.face) * sp;
   } else if (d.lunge && m.t < 0.12) { a.vx = Math.sin(a.face) * d.lunge; a.vz = Math.cos(a.face) * d.lunge; }
   else { a.vx *= 0.7; a.vz *= 0.7; }
+  // 挥空声与挥击残影：在打出那一下（第一段判定前一点）响，而不是一按键就响
+  if (a === G.player && !m.swung && d.hits.length && m.id !== 'mega' && m.t >= d.hits[0].t0 - 0.025) {
+    m.swung = true;
+    const heavy = isHeavyMove(a, m);
+    A.play(heavy ? 'whooshHeavy' : 'whoosh', heavy ? 0.9 : 0.75);
+    if (heavy && !d.dash) swingArc(a, d.hits[0]);
+  }
   // 判定
   for (let i = 0; i < d.hits.length; i++) {
     const h = d.hits[i];
@@ -627,12 +634,14 @@ function updateMove(a, dt) {
   if (a === G.player && m.next && m.connected && m.t >= cancelT) {
     a.lastHitT = G.t;
     const combo = a.hero.combo;
-    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); A.play('whoosh', 0.6); return; }
+    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); return; }
   }
   if (m.connected && a === G.player) a.lastHitT = G.t;
   if (m.t >= d.dur * (d.dash ? 1 : recMul)) {
     if (d.air && a.y > 0.02) return;   // 空中招式等落地
     setState(a, 'idle');
+    // 挥空时按的攻击不丢：收招后立刻再出一拳（连打不会“吞键”）
+    if (a === G.player && m.next && !m.connected && !d.dash && G.mode === 'play') { playerAttack(a); return; }
     if (d.dash) { a.vx *= 0.2; a.vz *= 0.2; }
   }
 }
@@ -643,6 +652,21 @@ function megaHits(a, h, m) {
     if (d < h.r + e.radius && e.y < 2) { m.hit.add(e.id); m.megaHit = true; applyHit(a, e, h, faceOf(e.x - a.x, e.z - a.z)); }
   }
   for (const pr of G.props) if (!pr.broken && Math.hypot(pr.x - a.x, pr.z - a.z) < h.r + pr.r && !m.hit.has('p' + pr.x)) { m.hit.add('p' + pr.x); hitProp(pr, 2); }
+}
+
+// 重招：连招最后一下、踢、勾拳、上勾拳、特殊技与武器挥击（挥空声更沉、带挥击残影）
+function isHeavyMove(a, m) {
+  if (!m) return false;
+  const c = a.hero && a.hero.combo;
+  if (c && a.comboN === c.length - 1 && m.id === c[a.comboN]) return true;
+  return ['hook', 'upper', 'kickMid', 'kickHi', 'kickSide', 'risingKick', 'flipKick', 'rollingElbow', 'rollingJump', 'swing', 'swordSlash'].includes(m.id);
+}
+function swingArc(a, h) {
+  const r = camCtl.axes().right, fx0 = Math.sin(a.face), fz0 = Math.cos(a.face);
+  const side = fx0 * r.x + fz0 * r.z;   // 朝画面右还是左
+  if (Math.abs(side) < 0.25) return;   // 正对 / 背对镜头时残影看不出方向，不画
+  const reach = Math.min(1.0, h.reach) * 0.85;
+  fx.swoosh(a.x + fx0 * reach, a.y + (h.y0 + h.y1) / 2, a.z + fz0 * reach, side < 0, h.y1 - h.y0 > 1.2 ? 1.25 : 1.0);
 }
 
 // ---------- 抓投 ----------
@@ -679,7 +703,9 @@ function grabStrike(p) {
   const dmg = (p.hero.id === 'mess' ? 8 : 6) * p.stats.dmg;
   damage(p, e, dmg, 'hit', faceOf(e.x - p.x, e.z - p.z), 100, false);
   e.state = 'grabbed'; e.st = 0;
-  fx.hit(e.x, 1.1, e.z, false); A.play('punch');
+  fx.hit(e.x, 1.1, e.z, 1, p.face); A.play('kick');
+  p.hitstop = Math.max(p.hitstop, 0.07); e.hitstop = Math.max(e.hitstop, 0.08); e.hsMax = 0.08; e.hsDir = p.face; e.hsAmp = 0.06;
+  fx.shake = Math.max(fx.shake, 0.05);
   p.st = Math.min(p.st, 0.4);
 }
 function throwEnemy(p, e, back) {
@@ -1035,12 +1061,23 @@ function applyHit(a, e, h, dir, splash) {
   if (e.type === 'shivat' && e.state === 'sleep') wakeShivat(e);   // 打熟睡的霸王龙会把它打醒
   let dmg = h.dmg;
   if (e.side === 'player') dmg *= DUR_MUL[G.settings.dur];
+  // 打击分量：0 轻（刺拳）、1 重（踢、击倒、武器）、2 终结（连招最后一下、挑飞）。停顿、震屏、火花、音效都按分量加码
+  const fin = a && a.side === 'player' && a.move && a.hero && a.comboN === a.hero.combo.length - 1 && a.move.id === a.hero.combo[a.comboN];
+  const w = h.kb === 'launch' || fin ? 2 : h.big || h.kb === 'down' ? 1 : 0;
   const px = e.x - Math.sin(dir) * 0.2, pz = e.z - Math.cos(dir) * 0.2;
-  fx.hit(px, e.y + (h.y0 + h.y1) / 2 * 0.6 + 0.5, pz, h.big);
-  if (h.sfx) A.play(h.sfx);
+  fx.hit(px, e.y + (h.y0 + h.y1) / 2 * 0.6 + 0.5, pz, e.side === 'player' ? Math.min(w, 1) : w, dir);
+  let sfx = h.sfx;
+  if (w >= 1 && sfx === 'punch') sfx = 'punchHeavy';
+  if (w >= 1 && sfx === 'kick') sfx = 'kickHeavy';
+  if (sfx) A.play(sfx);
   if (h.sfx === 'slash') fx.blood(e.x, 1.3, e.z, Math.sin(dir) > 0 ? 1 : -1);
-  a && (a.hitstop = Math.max(a.hitstop, h.big ? 0.08 : 0.05));
-  e.hitstop = Math.max(e.hitstop, h.big ? 0.09 : 0.055);
+  const hs = [0.065, 0.1, 0.14][w];
+  // 远处飞来的子弹 / 爆炸不让开枪的人跟着定格
+  if (a && Math.hypot(a.x - e.x, a.z - e.z) < 2.6) a.hitstop = Math.max(a.hitstop, hs - 0.012);
+  // 被打的人通常在同一帧稍后才更新、会立刻少掉一帧，补上 STEP，让他比出手方多定格一点
+  e.hitstop = Math.max(e.hitstop, hs + STEP); e.hsMax = e.hitstop; e.hsDir = dir; e.hsAmp = [0.05, 0.08, 0.11][w];
+  e.hurtVar = h.y1 < 1.5 ? 'body' : (G.hurtAlt = !G.hurtAlt) ? 'head' : 'headM';
+  if (e.side !== 'player') fx.shake = Math.max(fx.shake, [0.035, 0.09, 0.17][w]);
   if (a && a.side === 'player' && h.pts) addScore(h.pts, undefined, 0, 0, false);
   if (a && a.side === 'player') { G.lastTarget = e; G.lastTargetT = G.t; }
   if (e.side !== 'player' && a && a.side !== 'player' && a !== e) G.lastTarget = G.lastTarget;
@@ -1078,7 +1115,7 @@ function damage(a, e, dmg, kb, dir, pts, react) {
     if (e.grab) releaseGrab(e);
     releaseToken(e);
     const keepAttack = tough && e.state === 'attack' && chance(0.2);
-    if (!keepAttack) { setState(e, 'hurt', { low: chance(0.4) }); e.vx = Math.sin(dir) * 1.2; e.vz = Math.cos(dir) * 1.2; }
+    if (!keepAttack) { const hv = e.hurtVar || (chance(0.4) ? 'body' : 'head'); setState(e, 'hurt', { low: hv === 'body', hv }); e.vx = Math.sin(dir) * 2.1; e.vz = Math.cos(dir) * 2.1; }
   }
 }
 function knockdown(e, dir, power, dead) {
@@ -1092,8 +1129,8 @@ function knockdown(e, dir, power, dead) {
     e.swords = 0; attachSwords(e); toast('屠夫的砍刀脱手了！'); ev('swordsDrop'); A.play('clink');
   }
   setState(e, 'down', { phase: 'air', dead, power });
-  e.vy = 4.6 * power; e.y = Math.max(e.y, 0.05);
-  const sp = 2.8 * power;
+  e.vy = 4.8 * power; e.y = Math.max(e.y, 0.05);
+  const sp = 3.3 * power;
   e.vx = Math.sin(dir) * sp; e.vz = Math.cos(dir) * sp * 0.6;
   e.face = dir + Math.PI;
   e.stun = 0;
@@ -1109,6 +1146,10 @@ function onDeath(e) {
   if (e.drop) spawnItem(e.drop, e.x, e.z, { pop: true, life: ITEMS[e.drop].weapon ? 14 : 0 });
   ev('kill', { enemy: e.type, id: e.id });
   if (e.type === 'vice' || e.type === 'butcher') bossDefeated(e);
+  // 一波最后一个敌人被主角打倒：短暂慢动作，收尾更有分量
+  else if (e.lastHitBy === G.player && G.mode === 'play' && G.waveOn && !G.pending.length && G.timeScale === 1 && !G.waveEnemies.some(o => o !== e && o.alive && !o.removed)) {
+    G.timeScale = 0.3; G.slowT = 0.42; fx.shake = Math.max(fx.shake, 0.2); ev('finishSlow');
+  }
 }
 function updateDown(e, dt) {
   const s = e.sub;
@@ -1121,7 +1162,7 @@ function updateDown(e, dt) {
       }
     }
     if (e.y <= 0.001 && e.vy <= 0) {
-      if ((s.bounce || 0) < 1 && !s.thrownLand) { s.bounce = (s.bounce || 0) + 1; e.vy = 2.2; e.y = 0.01; e.vx *= 0.5; e.vz *= 0.5; fx.dust(e.x, 0, e.z, 4, 0.4); A.play(s.thrown ? 'slam' : 'land'); if (s.thrown && e.hp <= 0 && e.alive) { e.alive = false; onDeath(e); } return; }
+      if ((s.bounce || 0) < 1 && !s.thrownLand) { s.bounce = (s.bounce || 0) + 1; e.vy = 2.2; e.y = 0.01; e.vx *= 0.5; e.vz *= 0.5; fx.dust(e.x, 0, e.z, s.thrown || e.isDino ? 8 : 6, s.thrown ? 0.55 : 0.45); A.play(s.thrown ? 'slam' : 'bodyfall'); fx.shake = Math.max(fx.shake, s.thrown ? 0.16 : 0.06); if (s.thrown && e.hp <= 0 && e.alive) { e.alive = false; onDeath(e); } return; }
       s.phase = 'lie'; s.lieT = 0; e.vx = e.vz = 0; e.y = 0;
       if (e.hp <= 0 && e.alive) { e.alive = false; onDeath(e); }
     }
@@ -2194,7 +2235,10 @@ export function render(dt, realT) {
     const sk = G.water ? sinkK(a.x) * SINK : 0;
     let vy = a.y - sk;
     if (a.state === 'enter' && a.sub.kind === 'rise') vy -= 1.9 * Math.max(0, 1 - a.st / 0.75);
-    a.model.root.position.set(a.x + (frozen && a.flash > 0 ? (Math.random() - 0.5) * 0.06 : 0), vy, a.z);
+    // 命中停顿：被打的人沿受力方向来回抖，越到后面越小
+    let jx = 0, jz = 0;
+    if (frozen && a.hsDir !== undefined && a.hsMax > 0) { const k = Math.min(1, a.hitstop / a.hsMax) * a.hsAmp * (Math.floor(G.frames / 2) % 2 ? 1 : -1); jx = Math.sin(a.hsDir) * k; jz = Math.cos(a.hsDir) * k; }
+    a.model.root.position.set(a.x + jx, vy, a.z + jz);
     a.model.root.rotation.y = a.face;
     if (a.fxQ && !a.isDino) flushFx(a);
     a.blob.position.set(a.x, 0.015, a.z);
@@ -2312,13 +2356,15 @@ function targetPose(a, realT) {
       if (d.pose) return HP[d.pose];
       const clip = HC[d.clip];
       if (!clip) return HP.guard;
-      if (d.windup) { if (m.t < d.windup) return tP(d.wind || 'guard2'); return sample(clip, m.t - d.windup); }
-      return sample(clip, m.t * (clip.dur / Math.max(0.01, d.dur)));
+      // 命中停顿时定格在打到位的那一帧（拳脚完全伸出），不停在半路
+      const imp = a.hitstop > 0 && clip.imp ? clip.imp : 0;
+      if (d.windup) { if (m.t < d.windup) return tP(d.wind || 'guard2'); return sample(clip, Math.max(imp, m.t - d.windup)); }
+      return sample(clip, Math.max(imp, m.t * (clip.dur / Math.max(0.01, d.dur))));
     }
-    case 'grab': return a.sub.anim ? sample(HC.knee, a.st - a.sub.animT) : HP.grab;
+    case 'grab': return a.sub.anim ? sample(HC.knee, Math.max(a.hitstop > 0 ? HC.knee.imp : 0, a.st - a.sub.animT)) : HP.grab;
     case 'throwing': return sample(HC[a.sub.clip] || HC.throw, st);
     case 'grabbed': return HP.held;
-    case 'hurt': return a.sub.low ? HP.hurt2 : HP.hurt;
+    case 'hurt': return sample(HC[a.sub.hv === 'headM' ? 'hurtHeadM' : a.sub.hv === 'body' || (!a.sub.hv && a.sub.low) ? 'hurtBody' : 'hurtHead'], st);
     case 'down': {
       if (a.sub.phase === 'lie') return HP.lie;
       if (a.sub.thrown) return HP.thrown;
@@ -2363,8 +2409,10 @@ function renderHuman(a, dt, realT) {
   if (a.type === 'vice') viceGun(a);
   const tp = targetPose(a, realT);
   const sharp = ['attack', 'hurt', 'down', 'flurry', 'grab', 'throwing'].indexOf(a.state) >= 0;
-  const snap = a.fxQ && a.fxQ.some(r => r.type === 'shot');   // 开枪那一帧手臂直接举到位，火花和子弹才会在枪口
-  const k = snap ? 1 : dt <= 0 ? 0 : 1 - Math.exp(-dt * (sharp ? 34 : 16));
+  // 开枪那一帧手臂直接举到位，火花和子弹才会在枪口；命中停顿里攻防双方直接摆到打中 / 受击姿势
+  const snap = (a.fxQ && a.fxQ.some(r => r.type === 'shot')) || (a.hitstop > 0 && sharp);
+  // 出招片段本身已经连续，平滑只用来衔接进出招；太软会让拳头总是伸不到位
+  const k = snap ? 1 : dt <= 0 ? 0 : 1 - Math.exp(-dt * (a.state === 'attack' || a.state === 'grab' ? 60 : sharp ? 40 : 16));
   for (let i = 0; i < POSE_LEN; i++) {
     // body 翻转角沿最近方向衔接，收招时不反转整圈。
     const delta = i === 0 ? Math.atan2(Math.sin(tp[i] - a.pose[i]), Math.cos(tp[i] - a.pose[i])) : tp[i] - a.pose[i];

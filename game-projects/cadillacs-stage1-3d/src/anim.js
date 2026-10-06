@@ -97,34 +97,55 @@ HP.aim = P({ spine: [0.05, 0.35, 0], head: [0.05, -0.3, 0], rS: [-1.1, -0.45, -0
 HP.maceUp = P({ spine: [-0.15, 0.3, 0], head: [-0.1, -0.2, 0], rS: [-3.0, 0, -0.35], rE: [-0.3, 0, 0], lS: [-0.5, 0, 0.4], lE: [-1.4, 0, 0], lH: [-0.3, 0, 0.1], lK: [0.35, 0, 0], rH: [0.25, 0, -0.1], rK: [0.3, 0, 0] });
 HP.maceOut = P({ spine: [0.3, -0.35, 0], head: [0.1, 0.3, 0], rS: [-1.55, 0, 0.05], rE: [-0.05, 0, 0], lS: [-0.3, 0, 0.5], lE: [-1.3, 0, 0], lH: [-0.55, 0, 0.1], lK: [0.55, 0, 0], rH: [0.45, 0, -0.1], rK: [0.2, 0, 0], hy: -0.1 });
 
-// 片段：[时间, 姿势]；采样时用平滑插值
+// 出招三段：蓄力（拉回）→ 极快打出并略微过头 → 停住 → 收招。X 结尾为过头的击中姿势
+HP.jabL0 = mod(HP.guard, { spine: [0.06, 0.12, 0], lS: [-0.2, 0, 0.26], lE: [-2.35, 0, 0] });
+HP.jabLx = mod(HP.jabL, { spine: [0.2, -0.62, 0], head: [0.05, 0.45, 0], hy: -0.09 });
+HP.jabR0 = mod(HP.guard, { spine: [0.06, -0.42, 0], rS: [-0.2, 0, -0.26], rE: [-2.35, 0, 0] });
+HP.jabRx = mod(HP.jabR, { spine: [0.22, 0.58, 0], head: [0.05, -0.4, 0], hy: -0.1 });
+HP.hook0 = mod(HP.guard, { spine: [0.05, -0.55, 0], rS: [-0.9, 0.2, -1.05], rE: [-1.6, 0, 0], hy: -0.08 });
+HP.hookX = mod(HP.hook, { spine: [0.16, 0.9, 0], head: [0, -0.6, 0], hy: -0.1 });
+HP.upper1x = mod(HP.upper1, { spine: [-0.35, 0.32, 0], rS: [-2.85, 0, -0.15], hy: 0.1 });
+HP.kickMidX = mod(HP.kickMid, { spine: [-0.32, -0.2, 0], rH: [-1.68, 0, 0], hy: 0.02 });
+HP.kickHiX = mod(HP.kickHi, { spine: [-0.42, -0.25, 0], rH: [-1.9, 0, -0.15] });
+HP.kickSideX = mod(HP.kickSide, { spine: [-0.25, 0, 0.45], rH: [-1.55, 0, -0.6] });
+HP.kneeX = mod(HP.kneeUp, { spine: [0.38, 0, 0], rH: [-1.95, 0, 0] });
+HP.swing1x = mod(HP.swing1, { spine: [0.45, -0.55, 0] });
+// 受击：先被打得猛一歪（重），再缓回去；头部受击按左右手镜像，踢中身体是弯腰
+HP.hurtHard = mod(HP.hurt, { spine: [-0.6, 0.35, 0], head: [-0.75, 0.3, 0], hy: -0.06 });
+HP.hurtM = mirror(HP.hurt); HP.hurtHardM = mirror(HP.hurtHard);
+HP.hurt2Hard = mod(HP.hurt2, { spine: [0.95, 0, 0], head: [0.45, 0, 0], hy: -0.14 });
+
+// 片段：[时间, 姿势, 缓动]；缓动缺省为平滑，'o' 为先快后慢（出拳打出那一下），'l' 为匀速。imp 为击中姿势的时间（命中停顿时定格在这一帧）
 export const HC = {
   rollingElbow: { dur: 0.72, keys: [[0, HP.guard], [0.1, HP.crouch], [0.22, mod(HP.crouch, { body: [2.7, 0, 0], py: 0.55 })], [0.36, mod(HP.crouch, { body: [5.9, 0, 0], py: 0.2 })], [0.48, mod(HP.hook, { body: [6.283185, 0, 0] })], [0.72, mod(HP.guard, { body: [6.283185, 0, 0] })]] },
   rollingJump: { dur: 0.78, keys: [[0, HP.guard], [0.12, HP.crouch], [0.26, mod(HP.upper1, { py: 0.7 })], [0.4, mod(HP.buttSit, { py: 0.85 })], [0.56, mod(HP.buttSit, { py: 0.1 })], [0.78, HP.guard]] },
-  risingKick: { dur: 0.62, keys: [[0, HP.guard], [0.1, HP.crouch], [0.2, HP.kickHi], [0.38, HP.kickHi], [0.62, HP.guard]] },
+  risingKick: { dur: 0.62, imp: 0.19, keys: [[0, HP.guard], [0.1, HP.crouch], [0.19, HP.kickHiX, 'o'], [0.38, HP.kickHi], [0.62, HP.guard]] },
   flipKick: { dur: 0.68, keys: [[0, HP.guard], [0.1, HP.crouch], [0.2, mod(HP.kickHi, { body: [-1.2, 0, 0], py: 0.65 })], [0.34, mod(HP.jumpKick, { body: [-3.1, 0, 0], py: 1.15 })], [0.49, mod(HP.crouch, { body: [-5.4, 0, 0], py: 0.65 })], [0.68, mod(HP.guard, { body: [-6.283185, 0, 0] })]] },
-  jab1: { dur: 0.26, keys: [[0, HP.guard], [0.05, HP.jabL], [0.14, HP.jabL], [0.26, HP.guard]] },
-  jab2: { dur: 0.28, keys: [[0, HP.guard], [0.06, HP.jabR], [0.15, HP.jabR], [0.28, HP.guard]] },
-  hook: { dur: 0.32, keys: [[0, HP.guard], [0.07, HP.hook], [0.18, HP.hook], [0.32, HP.guard]] },
-  upper: { dur: 0.46, keys: [[0, HP.guard], [0.08, HP.upper0], [0.16, HP.upper1], [0.3, HP.upper1], [0.46, HP.guard]] },
-  kickMid: { dur: 0.36, keys: [[0, HP.guard], [0.07, HP.kickMid0], [0.13, HP.kickMid], [0.24, HP.kickMid], [0.36, HP.guard]] },
-  kickHi: { dur: 0.46, keys: [[0, HP.guard], [0.08, HP.kickMid0], [0.16, HP.kickHi], [0.3, HP.kickHi], [0.46, HP.guard]] },
-  kickSide: { dur: 0.44, keys: [[0, HP.guard], [0.08, HP.kickMid0], [0.15, HP.kickSide], [0.3, HP.kickSide], [0.44, HP.guard]] },
-  knee: { dur: 0.24, keys: [[0, HP.grab], [0.06, HP.kneeUp], [0.14, HP.kneeUp], [0.24, HP.grab]] },
-  throw: { dur: 0.5, keys: [[0, HP.grab], [0.15, HP.throwUp], [0.3, HP.throwDown], [0.5, HP.guard]] },
+  jab1: { dur: 0.26, imp: 0.055, keys: [[0, HP.guard], [0.025, HP.jabL0], [0.055, HP.jabLx, 'o'], [0.14, HP.jabL], [0.26, HP.guard]] },
+  jab2: { dur: 0.28, imp: 0.065, keys: [[0, HP.guard], [0.03, HP.jabR0], [0.065, HP.jabRx, 'o'], [0.15, HP.jabR], [0.28, HP.guard]] },
+  hook: { dur: 0.32, imp: 0.09, keys: [[0, HP.guard], [0.045, HP.hook0], [0.09, HP.hookX, 'o'], [0.19, HP.hook], [0.32, HP.guard]] },
+  upper: { dur: 0.46, imp: 0.15, keys: [[0, HP.guard], [0.08, HP.upper0], [0.15, HP.upper1x, 'o'], [0.3, HP.upper1], [0.46, HP.guard]] },
+  kickMid: { dur: 0.36, imp: 0.12, keys: [[0, HP.guard], [0.07, HP.kickMid0], [0.12, HP.kickMidX, 'o'], [0.24, HP.kickMid], [0.36, HP.guard]] },
+  kickHi: { dur: 0.46, imp: 0.15, keys: [[0, HP.guard], [0.08, HP.kickMid0], [0.15, HP.kickHiX, 'o'], [0.3, HP.kickHi], [0.46, HP.guard]] },
+  kickSide: { dur: 0.44, imp: 0.14, keys: [[0, HP.guard], [0.08, HP.kickMid0], [0.14, HP.kickSideX, 'o'], [0.3, HP.kickSide], [0.44, HP.guard]] },
+  knee: { dur: 0.24, imp: 0.05, keys: [[0, HP.grab], [0.05, HP.kneeX, 'o'], [0.14, HP.kneeUp], [0.24, HP.grab]] },
+  throw: { dur: 0.5, keys: [[0, HP.grab], [0.15, HP.throwUp], [0.27, HP.throwDown, 'o'], [0.5, HP.guard]] },
   slam: { dur: 0.6, keys: [[0, HP.grab], [0.2, HP.throwUp], [0.34, HP.throwDown], [0.48, HP.throwDown], [0.6, HP.guard]] },
   pickup: { dur: 0.3, keys: [[0, HP.guard], [0.1, HP.crouch], [0.2, HP.crouch], [0.3, HP.guard]] },
-  throwItem: { dur: 0.34, keys: [[0, HP.guard], [0.08, HP.throwBack], [0.16, HP.throwFwd], [0.34, HP.guard]] },
-  swing: { dur: 0.42, keys: [[0, HP.guard], [0.1, HP.swing0], [0.2, HP.swing1], [0.3, HP.swing1], [0.42, HP.guard]] },
+  throwItem: { dur: 0.34, keys: [[0, HP.guard], [0.08, HP.throwBack], [0.14, HP.throwFwd, 'o'], [0.34, HP.guard]] },
+  swing: { dur: 0.42, imp: 0.17, keys: [[0, HP.guard], [0.1, HP.swing0], [0.17, HP.swing1x, 'o'], [0.3, HP.swing1], [0.42, HP.guard]] },
   shoot: { dur: 0.3, keys: [[0, HP.shoot], [0.3, HP.shoot]] },
   shotgun: { dur: 0.5, keys: [[0, HP.shotgun], [0.5, HP.shotgun]] },
   getup: { dur: 0.5, keys: [[0, HP.lie], [0.2, HP.sit], [0.38, HP.crouch], [0.5, HP.guard]] },
-  slash: { dur: 0.5, keys: [[0, HP.guard], [0.16, HP.slash0], [0.26, HP.slash1], [0.38, HP.slash1], [0.5, HP.guard]] },
+  slash: { dur: 0.5, imp: 0.24, keys: [[0, HP.guard], [0.16, HP.slash0], [0.24, HP.slash1, 'o'], [0.38, HP.slash1], [0.5, HP.guard]] },
   whip: { dur: 0.6, keys: [[0, HP.stand], [0.25, HP.whip0], [0.35, HP.whip1], [0.6, HP.stand]] },
   longPunch: { dur: 0.7, keys: [[0, HP.guard], [0.24, HP.hurt2 && HP.guard2], [0.34, HP.longPunch], [0.52, HP.longPunch], [0.7, HP.guard]] },
   headbutt: { dur: 0.6, keys: [[0, HP.guard], [0.15, HP.headbutt], [0.6, HP.headbutt]] },
-  slashL: { dur: 0.5, keys: [[0, HP.guard], [0.16, HP.slash0L], [0.26, HP.slash1L], [0.38, HP.slash1L], [0.5, HP.guard]] },
+  slashL: { dur: 0.5, imp: 0.24, keys: [[0, HP.guard], [0.16, HP.slash0L], [0.24, HP.slash1L, 'o'], [0.38, HP.slash1L], [0.5, HP.guard]] },
   chop: { dur: 0.9, keys: [[0, HP.stand], [0.35, mod(HP.slash0, { spine: [0.1, 0.2, 0] })], [0.5, mod(HP.slash1, { spine: [0.6, -0.2, 0], hy: -0.2 })], [0.9, HP.stand]] },
+  hurtHead: { dur: 0.34, keys: [[0, HP.hurtHard], [0.1, HP.hurt], [0.34, HP.guard2]] },
+  hurtHeadM: { dur: 0.34, keys: [[0, HP.hurtHardM], [0.1, HP.hurtM], [0.34, HP.guard2]] },
+  hurtBody: { dur: 0.34, keys: [[0, HP.hurt2Hard], [0.12, HP.hurt2], [0.34, HP.guard2]] },
   victory: { dur: 1.2, keys: [[0, HP.guard], [0.25, HP.victory2], [0.7, HP.victory2], [0.95, HP.victory], [1.2, HP.victory]] }
 };
 
@@ -133,7 +154,8 @@ export function sample(clip, t) {
   if (t <= k[0][0]) return k[0][1];
   for (let i = 1; i < k.length; i++) {
     if (t <= k[i][0]) {
-      const a = k[i - 1], b = k[i], u = smooth((t - a[0]) / Math.max(1e-4, b[0] - a[0]));
+      const a = k[i - 1], b = k[i], x = Math.min(1, (t - a[0]) / Math.max(1e-4, b[0] - a[0]));
+      const u = b[2] === 'o' ? 1 - (1 - x) * (1 - x) * (1 - x) : b[2] === 'l' ? x : smooth(x);
       return lerpPose(a[1], b[1], u, TMP[i % 2]);
     }
   }

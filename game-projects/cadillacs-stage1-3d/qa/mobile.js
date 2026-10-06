@@ -121,7 +121,10 @@ const fs = require('fs');
   // ---------- 竖屏 390×844：开局后自动旋转 ----------
   ({ ctx, page, cdp } = await device(390, 844));
   await page.goto(BASE + '?test=1&seed=3', { waitUntil: 'load' }); await sleep(800);
-  s = await S(page); ok('竖屏：菜单正常显示（不旋转）', s.ui.overlay === 'menu' && !s.ui.display.rotated);
+  // 2026-10-07：手机竖着拿时标题菜单也直接旋转成横屏，免得菜单竖屏、开局又变横屏
+  s = await S(page);
+  const pm = await page.evaluate(() => { const r = document.querySelector('#menu .panel').getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom), vw: innerWidth, vh: innerHeight }; });
+  ok('竖屏：菜单打开即旋转为横屏（逻辑 844×390）且完整显示', s.ui.overlay === 'menu' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390 && pm.l >= 0 && pm.t >= 0 && pm.r <= pm.vw && pm.b <= pm.vh, { display: s.ui.display, pm });
   await page.screenshot({ path: out('mobile-portrait-menu.png') });
   await tapSel(page, cdp, '[data-act=select]');
   s = await S(page); ok('竖屏进入选人画面即旋转为横屏', s.ui.overlay === 'select' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);
@@ -145,7 +148,9 @@ const fs = require('fs');
   for (let k = 1; k <= 6; k++) { await touch(cdp, 'touchMove', [{ x: px, y: py + k * 10, id: 1 }]); await sleep(16); }
   await sleep(500); await touch(cdp, 'touchEnd', []); await sleep(100);
   s = await S(page); ok('旋转布局触控逆变换：屏幕向下拖 → 角色向右走', s.player.x > x0 + 0.5, [x0, s.player.x]);
-  await tapSel(page, cdp, '#btn-atk'); s = await S(page); ok('旋转布局下 J 键可用', s.player.state === 'attack' || s.player.state === 'pickup', s.player.state);
+  // 按下后立即读状态：刺拳挥空约 0.2 秒就收招，等松手再读会碰上收招
+  { const r = await rectOf(page, '#btn-atk'); await touch(cdp, 'touchStart', [{ x: r.x, y: r.y, id: 9 }]); await sleep(60); s = await S(page); await touch(cdp, 'touchEnd', []); await sleep(120); }
+  ok('旋转布局下 J 键可用', s.player.state === 'attack' || s.player.state === 'pickup', s.player.state);
   await ctx.close();
 
   // ---------- Toy 宿主 0×0 启动后才给尺寸 ----------

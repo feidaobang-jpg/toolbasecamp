@@ -1,0 +1,148 @@
+{
+ "preview": "https://www.bilibili.com/toy/preview/preview_ZQL4LtJi/index.html",
+ "results": [
+  {
+   "name": "desktop：预览页载入游戏 iframe",
+   "pass": true,
+   "info": "https://www.bilibilitoy.com/toy/preview/preview_ZQL4LtJi/index.html"
+  },
+  {
+   "name": "desktop：版本",
+   "pass": true,
+   "info": "v0.5.6"
+  },
+  {
+   "name": "desktop：键盘开局进入战斗",
+   "pass": true,
+   "info": "play"
+  },
+  {
+   "name": "desktop：电脑键鼠布局（不显示触屏键）",
+   "pass": true
+  },
+  {
+   "name": "desktop：按住 I + D 冲刺",
+   "pass": true,
+   "info": "run"
+  },
+  {
+   "name": "desktop：C 切换视角",
+   "pass": true,
+   "info": "oblique"
+  },
+  {
+   "name": "desktop：菜单有起始关卡选项",
+   "pass": true
+  },
+  {
+   "name": "desktop：第二关原版音乐文件可取",
+   "pass": true,
+   "info": {
+    "forest": 200,
+    "swamp": 200,
+    "boss2": 200,
+    "hall": 200
+   }
+  },
+  {
+   "name": "desktop：第二关区域 forest 载入",
+   "pass": true,
+   "info": [
+    "forest",
+    "play",
+    "forest"
+   ]
+  },
+  {
+   "name": "desktop：第二关区域 swamp 载入",
+   "pass": true,
+   "info": [
+    "swamp",
+    "play",
+    "swamp"
+   ]
+  },
+  {
+   "name": "desktop：第二关区域 grave 载入",
+   "pass": true,
+   "info": [
+    "grave",
+    "play",
+    "grave"
+   ]
+  },
+  {
+   "name": "desktop：游戏 iframe 无报错 / 404",
+   "pass": true,
+   "info": {
+    "errs": [],
+    "failed": []
+   }
+  },
+  {
+   "name": "mobile：预览页载入游戏 iframe",
+   "pass": true,
+   "info": "https://www.bilibilitoy.com/toy/preview/preview_ZQL4LtJi/index.html"
+  },
+  {
+   "name": "mobile：版本",
+   "pass": true,
+   "info": "v0.5.6"
+  },
+  {
+   "name": "mobile：触屏开局进入战斗",
+   "pass": true,
+   "info": "play"
+  },
+  {
+   "name": "mobile：显示触屏键",
+   "pass": true
+  },
+  {
+   "name": "mobile：2×2 方阵（下排 J K、上排 U I）、无 Esc 标签、无左右转键",
+   "pass": true,
+   "info": {
+    "J": [
+     704,
+     280,
+     60
+    ],
+    "K": [
+     774,
+     280,
+     60
+    ],
+    "U": [
+     704,
+     210,
+     60
+    ],
+    "I": [
+     774,
+     210,
+     60
+    ],
+    "esc": "none",
+    "qe": false
+   }
+  },
+  {
+   "name": "mobile：右上角 C 切换视角",
+   "pass": true,
+   "info": "oblique"
+  },
+  {
+   "name": "mobile：K 跳跃",
+   "pass": true,
+   "info": "jump"
+  },
+  {
+   "name": "mobile：游戏 iframe 无报错 / 404",
+   "pass": true,
+   "info": {
+    "errs": [],
+    "failed": []
+   }
+  }
+ ]
+}
