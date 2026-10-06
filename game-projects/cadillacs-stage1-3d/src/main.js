@@ -189,7 +189,8 @@ function show(name) {
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
 }
-const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden) : [];
+// 只取实际显示的项：紧凑横屏会用样式收起重复项，focus() 到不显示的元素会让 ↑↓ 卡住
+const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden && el.getClientRects().length > 0) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');
@@ -349,7 +350,8 @@ function viewport() {
 }
 function layout() {
   const { vw, vh } = viewport(), coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
-  const rotate = (uiMode === 'game' || current === 'select') && vh > vw && coarse;
+  // 手机触屏竖着拿时，标题菜单也直接旋转成横屏（2026-10-07 用户确认，原先到选人画面才旋转）
+  const rotate = vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';

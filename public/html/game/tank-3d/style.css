@@ -258,3 +258,10 @@ button::before,button::after{content:none!important}
 #lobby .coop-panel .lobby-footer,#lobby #coop-settings{display:block}
 #app #lobby .coop-panel.in-room{max-width:600px!important;width:min(94vw,600px)!important;grid-template-columns:1fr}
 @media(max-width:650px){#app #lobby .coop-panel{grid-template-columns:1fr}#lobby #coop-directory{grid-row:3}#lobby #coop-rooms{max-height:300px}}
+
+/* 手机横屏紧凑主菜单（2026-10-07）：手机竖着拿时菜单也直接旋转成横屏，菜单要在逻辑 844×390 一类横屏里少占一行：
+   收起与三键操作模式行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，三键行去掉外边距 */
+#stage.compact .title-screen .items>[data-opt=touch]{display:none}
+#stage.compact:not(.narrow) .title-screen .items>.primary{grid-column:auto}
+#stage.compact .control-modes{margin:0!important;gap:6px!important}
+#stage.compact .control-modes button[data-control-mode]{min-height:40px;padding:4px 8px;font-size:13px}

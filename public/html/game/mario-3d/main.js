@@ -5,7 +5,7 @@ import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?
 import { LEVEL_ORDER } from './levels.js?v=2.4.3';
 import { GameAudio } from './audio.js?v=toy3dui2';
 
-const VERSION = 'v2.4.3';
+const VERSION = 'v2.4.4';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -197,7 +197,8 @@ function show(name) {
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
 }
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden) : []);
+// 只取实际显示的项：紧凑横屏会用样式收起重复项，focus() 到不显示的元素会让 ↑↓ 卡住
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden && el.getClientRects().length > 0) : []);
 
 const isTyping = (e) => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', (e) => {
@@ -436,7 +437,8 @@ function viewport() {
 let lastOrient = null, lastSize = '';
 function layout() {
   const { vw, vh } = viewport(), coarse = inputMode === 'touch';
-  const rotate = uiMode === 'game' && vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
+  // 手机触屏竖着拿时，菜单也直接旋转成横屏（2026-10-07 用户确认）：免得菜单竖屏、开局又变横屏
+  const rotate = vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
