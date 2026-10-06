@@ -1,0 +1,446 @@
+{
+  "durationSeconds": 360.687,
+  "samples": [
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 285,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 0,
+      "playerHP": 120,
+      "position": [
+        -3.7216748419647065,
+        8.023294629075426
+      ],
+      "wallSeconds": 30.026
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 255,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 1,
+      "playerHP": 120,
+      "position": [
+        -7.2564834020443225,
+        12.976582471803448
+      ],
+      "wallSeconds": 60.035
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 225,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 1,
+      "playerHP": 120,
+      "position": [
+        4.715201048839776,
+        16.977917069854204
+      ],
+      "wallSeconds": 90.039
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 195,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 2,
+      "playerHP": 120,
+      "position": [
+        -12.66452732440385,
+        26.709823285711376
+      ],
+      "wallSeconds": 120.055
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 165,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 0,
+      "playerHP": 120,
+      "position": [
+        -6.326627865123767,
+        31.922052208512603
+      ],
+      "wallSeconds": 150.179
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 135,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 2,
+      "playerHP": 120,
+      "position": [
+        4.117666163546222,
+        23.683469207861872
+      ],
+      "wallSeconds": 180.192
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 105,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 1,
+      "playerHP": 120,
+      "position": [
+        -8.442813627822524,
+        33.03065200689214
+      ],
+      "wallSeconds": 210.202
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 75,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 3,
+      "playerHP": 120,
+      "position": [
+        -5.3280120631515135,
+        38.811732085431125
+      ],
+      "wallSeconds": 240.213
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 45,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "先锋首领登场，最后一分钟！"
+          },
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 1,
+      "playerHP": 120,
+      "position": [
+        -1.7472575081087858,
+        43.15226472482427
+      ],
+      "wallSeconds": 270.215
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 1,
+        "phase": "battle",
+        "remaining": 15,
+        "running": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "先锋首领登场，最后一分钟！"
+          },
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 2,
+      "playerHP": 120,
+      "position": [
+        4.129386554480997,
+        47.57772671682701
+      ],
+      "wallSeconds": 300.222
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 2,
+        "phase": "prep",
+        "remaining": 12,
+        "running": true,
+        "won": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "第2场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 0,
+      "playerHP": 120,
+      "position": [
+        0,
+        -11.95039322795166
+      ],
+      "wallSeconds": 330.36
+    },
+    {
+      "session": {
+        "version": "live-v0.1.0",
+        "mode": "auto",
+        "round": 2,
+        "phase": "battle",
+        "remaining": 282,
+        "running": true,
+        "won": true,
+        "viewers": 0,
+        "votes": {
+          "defend": 0,
+          "follow": 0
+        },
+        "roster": [],
+        "log": [
+          {
+            "name": "战地副官",
+            "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+          },
+          {
+            "name": "战地副官",
+            "text": "第2场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+          }
+        ]
+      },
+      "baseHP": 2000,
+      "enemies": 0,
+      "playerHP": 120,
+      "position": [
+        -4.670850763967742,
+        21.198152070593345
+      ],
+      "wallSeconds": 360.372
+    }
+  ],
+  "perf": {
+    "samples": 61199,
+    "averageFPS": 169.82367186423664,
+    "medianMs": 5.899999976158142,
+    "p95Ms": 6.100000023841858,
+    "over50ms": 1,
+    "drawCalls": 40,
+    "triangles": 220598,
+    "memory": {
+      "geometries": 471,
+      "textures": 8
+    },
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.3333333333333333,
+    "drawingBuffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "quality": "high",
+    "theme": "dark"
+  },
+  "errors": [],
+  "method": "Real wall-clock 6 minutes, original 300-second battle; Edge headless, no accelerated clock; no real B站 stream"
+}
