@@ -3,8 +3,8 @@
 import * as THREE from './three.js?v=2.1.0';
 import { tex, textTexture } from './textures.js?v=toy3dui2';
 import * as M from './models.js?v=toy3dui2';
-import { LANE, SOLID, tileKey } from './levels.js?v=2.1.0';
-import { heightOf } from './world.js?v=toy3dui2';
+import { LANE, SOLID, tileKey } from './levels.js?v=2.4.3';
+import { heightOf } from './world.js?v=2.4.3';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -108,7 +108,10 @@ export function createView(canvas) {
     if (areaGroup) scene.remove(areaGroup);
     for (const d of areaDispose) d.dispose();
     areaDispose = []; tileRecs = new Map(); meshes = {}; animRecs = new Set();
-    for (const map of [enemyModels, itemModels, fireModels, piranhaModels]) { for (const m of map.values()) scene.remove(m); map.clear(); }
+    for (const map of [enemyModels, itemModels, fireModels]) { for (const m of map.values()) scene.remove(m); map.clear(); }
+    // 每根管对应一组三个模型，必须逐个移除；把数组传给 remove 会留下旧食人花。
+    for (const models of piranhaModels.values()) scene.remove(...models);
+    piranhaModels.clear();
     for (const e of effects) fx.remove(e.obj); effects.length = 0;
     coinInst = null; coinRecs = []; liftGroups = []; flagMesh = null; castleFlag = null;
   }

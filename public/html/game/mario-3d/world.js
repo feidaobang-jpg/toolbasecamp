@@ -1,5 +1,5 @@
 // 玩法模拟：与渲染无关。地形整条跑道纵深一致，碰撞按 (x,y) 网格计算，z 只用于跑道边界和实体之间的接触。
-import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.1.0';
+import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.3';
 
 export const STEP = 1 / 120;
 export const PW = 0.36;                       // 玛丽半宽
@@ -38,16 +38,11 @@ export function createWorld(session, opts = {}) {
   if (session.settings.armor !== 'classic') session.hearts = 3;
   enterArea(w, cp ? cp.area : level.startArea);
   const p = w.player, a = w.area;
-  if (cp) { p.x = cp.x; p.y = groundTopAt(w, cp.x); }
+  // 检查点明确记录站立高度；地下关同一列的天花板不能当作复活地面。
+  if (cp) { p.x = cp.x; p.y = cp.y; }
   else { p.x = a.start.x; p.y = a.start.y; }
   p.lastSafe = { x: p.x, y: p.y, z: 0 };
   return w;
-}
-
-function groundTopAt(w, x) {
-  const c = Math.floor(x);
-  for (let h = 12; h >= -2; h--) if (solidAt(w, c, h)) return h + 1;
-  return 0;
 }
 
 export function emit(w, type, data) { w.events.push(Object.assign({ type }, data || {})); }

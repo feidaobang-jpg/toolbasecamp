@@ -80,7 +80,7 @@ function build11() {
   for (let c = 4; c <= 10; c++) column(b, c, 0, 2, 'B');
   coins(b, 4, 10, 3); coins(b, 4, 10, 5); coins(b, 5, 9, 7);
   sidePipe(b, 13, 0, 11, { to: { area: 'main', mode: 'rise', pipe: 'bonusExit' } });
-  return { id: '1-1', name: 'WORLD 1-1', time: 400, theme: 'overworld', areas: { main: m, bonus: b }, startArea: 'main', checkpoint: { area: 'main', x: 89.5 } };
+  return { id: '1-1', name: 'WORLD 1-1', time: 400, theme: 'overworld', areas: { main: m, bonus: b }, startArea: 'main', checkpoint: { area: 'main', x: 89.5, y: 0 } };
 }
 
 // ---------------- 1-2 ----------------
@@ -155,7 +155,7 @@ function build12() {
   stairs(e, 15, [1, 2, 3, 4, 5, 6, 7, 8, 8]);
   set(e, 32, 0, 'F'); e.flag = { x: 32.5, top: 9.6 };
   e.castle = { x: 36, big: false };
-  return { id: '1-2', name: 'WORLD 1-2', time: 400, theme: 'underground', areas: { main: m, bonus: b, exit: e }, startArea: 'main', checkpoint: { area: 'main', x: 91.5 } };
+  return { id: '1-2', name: 'WORLD 1-2', time: 400, theme: 'underground', areas: { main: m, bonus: b, exit: e }, startArea: 'main', checkpoint: { area: 'main', x: 91.5, y: 0 } };
 }
 
 const BUILDERS = { '1-1': build11, '1-2': build12 };
