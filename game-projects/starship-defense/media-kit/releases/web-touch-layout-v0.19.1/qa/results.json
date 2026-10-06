@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8893/html/game/starship-defense/index.html",
+  "method": "Headless Microsoft Edge; real mouse input, touch-capable viewport simulation; no physical-phone test",
+  "passed": [
+    "Mouse drag moves individual buttons and joystick; editing freezes progress and consumes game input",
+    "Saved position still fires and releases; returning from editing leaves no held input",
+    "Reload restores device layout; cancel discards draft",
+    "Rotated portrait drag uses logical coordinates; saved controls stay inside narrow and desktop viewports",
+    "Restore default can be cancelled or saved; preset CSS layout is retained",
+    "Device mode round trip keeps progress; corrupt storage falls back safely",
+    "Editor works from main menu with keyboard navigation and Escape cancellation"
+  ],
+  "errors": []
+}
