@@ -144,11 +144,20 @@
   },
   "toy": {
     "id": 39043249461248,
-    "status": "auditing",
+    "status": "published",
     "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_hQqbwFeC/index.html",
     "submitted_at": "2026-10-06T11:06:48.109893+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html"
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html",
+    "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+    "public_verified_at": "2026-10-06T03:14:57.493Z",
+    "public_evidence": {
+      "game": "tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.493Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    }
   },
   "bilibili": {
     "status": "ordinary_patch_deferred",

@@ -9,7 +9,7 @@
   "development_model": null,
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_U42a5Zf3/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_bJAyhJXq/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
   "qa": "releases/web-squad-follow-v0.17.14/handoff.json",
@@ -20,7 +20,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-06T11:09:58.228517+08:00",
+    "verified_at": "2026-10-06T11:15:46.661482+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt"
@@ -32,9 +32,9 @@
     "submitted_date": "2026-10-05",
     "release_record": "releases/web-controls-v0.18.3/handoff.json",
     "submitted_version": "web-controls-v0.18.3",
-    "published_version": "web-controls-v0.18.2",
+    "published_version": "web-controls-v0.18.3",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_bJAyhJXq/index.html",
-    "note": "新包已经按预览验收并提交；公开新包待核验。",
+    "note": "公开新版已核验。",
     "submitted_at": "2026-10-06T11:06:56.559843+08:00",
     "package_sha256": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
     "pending_updates": [
@@ -55,11 +55,11 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-06T01:42:08.847Z"
+    "published_verified_at": "2026-10-06T03:14:57.456Z"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-rescue-v0.18.0",
-  "web_toy_versions_match": false,
+  "published_toy_version": "web-controls-v0.18.3",
+  "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
@@ -69,8 +69,8 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
-  "preview_version": "web-rescue-v0.18.0",
-  "submitted_toy_version": "web-rescue-v0.18.0",
+  "preview_version": "web-controls-v0.18.3",
+  "submitted_toy_version": "web-controls-v0.18.3",
   "website_version": "web-controls-v0.18.3",
   "website_verified_at": "2026-10-06T11:09:58.228517+08:00",
   "site_list_name": "虫潮围城",

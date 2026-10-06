@@ -170,8 +170,16 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html"
       },
-      "platform_status": "auditing",
-      "status_checked_at": "2026-10-06T11:09:58.228517+08:00"
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "tank-3d",
+        "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "verified_at": "2026-10-06T03:14:57.493Z",
+        "marker": "#stage.compact #hud-top",
+        "pass": true
+      }
     },
     {
       "game": "mario-3d",
@@ -183,8 +191,16 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_rmPBAMYy/index.html"
       },
-      "platform_status": "auditing",
-      "status_checked_at": "2026-10-06T11:09:58.228517+08:00"
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "mario-3d",
+        "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+        "verified_at": "2026-10-06T03:14:57.517Z",
+        "marker": "#stage.compact #hud-top",
+        "pass": true
+      }
     },
     {
       "game": "jackal-stage1-3d",
@@ -197,7 +213,8 @@
         "preview_url": "https://www.bilibili.com/toy/preview/preview_2M7bsrfO/index.html"
       },
       "platform_status": "auditing",
-      "status_checked_at": "2026-10-06T11:09:58.228517+08:00"
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": false
     },
     {
       "game": "cadillacs-stage1-3d",
@@ -209,8 +226,16 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html"
       },
-      "platform_status": "auditing",
-      "status_checked_at": "2026-10-06T11:09:58.228517+08:00"
+      "platform_status": "published",
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "cadillacs-stage1-3d",
+        "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "verified_at": "2026-10-06T03:14:57.544Z",
+        "marker": "#stage.compact #hud-top",
+        "pass": true
+      }
     },
     {
       "game": "starship-defense",
@@ -223,8 +248,47 @@
         "preview_url": "https://www.bilibili.com/toy/preview/preview_aMDNFAyx/index.html"
       },
       "platform_status": "published",
-      "status_checked_at": "2026-10-06T11:09:58.228517+08:00"
+      "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+      "public_verified": true,
+      "public_evidence": {
+        "game": "starship-defense",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "verified_at": "2026-10-06T03:14:57.456Z",
+        "marker": "cornerTools and single-line vC; game.compat.js?toy3dui3",
+        "pass": true
+      }
     }
   ],
-  "note": "包哈希与预览一致，审中不等于新包上线。"
+  "note": "包哈希与预览一致，审中不等于新包上线。",
+  "final_checked_at": "2026-10-06T11:15:46.661482+08:00",
+  "public_proofs": [
+    {
+      "game": "starship-defense",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "verified_at": "2026-10-06T03:14:57.456Z",
+      "marker": "cornerTools and single-line vC; game.compat.js?toy3dui3",
+      "pass": true
+    },
+    {
+      "game": "tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.493Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    },
+    {
+      "game": "mario-3d",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.517Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.544Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    }
+  ]
 }

@@ -89,7 +89,7 @@
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
     "review_status": "auditing",
-    "verified_at": "2026-10-06T11:09:58.228517+08:00",
+    "verified_at": "2026-10-06T11:15:46.661482+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
@@ -97,7 +97,7 @@
     "preview_verified_at": "2026-10-04T14:17:37.651922+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "新包已经按预览验收并提交；公开新包待核验。",
+    "note": "新包已提交，公开新版待核验。",
     "submitted_at": "2026-10-06T11:06:52.914176+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html",
     "submitted_version": "v0.7.1",

@@ -148,7 +148,8 @@
     "package_sha256": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_rDvEuI0b/index.html",
     "submitted_at": "2026-10-06T11:06:52.914176+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_2M7bsrfO/index.html"
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_2M7bsrfO/index.html",
+    "status_checked_at": "2026-10-06T11:15:46.661482+08:00"
   },
   "bilibili": {
     "status": "ordinary_patch_deferred",

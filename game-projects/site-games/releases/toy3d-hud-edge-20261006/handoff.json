@@ -8,14 +8,20 @@
     "files_verified": 13
   },
   "toy": {
-    "status": "submitted",
+    "status": "partially_public_verified",
     "games": {
-      "tank-3d": "auditing",
-      "mario-3d": "auditing",
+      "tank-3d": "published",
+      "mario-3d": "published",
       "jackal-stage1-3d": "auditing",
-      "cadillacs-stage1-3d": "auditing",
+      "cadillacs-stage1-3d": "published",
       "starship-defense": "published"
-    }
+    },
+    "verified_games": [
+      "starship-defense",
+      "tank-3d",
+      "mario-3d",
+      "cadillacs-stage1-3d"
+    ]
   },
   "bilibili": {
     "starship": "both_public_verified",

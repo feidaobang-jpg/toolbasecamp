@@ -144,11 +144,20 @@
   },
   "toy": {
     "id": 40412421031936,
-    "status": "auditing",
+    "status": "published",
     "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html",
     "submitted_at": "2026-10-06T11:06:55.476749+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html"
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html",
+    "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+    "public_verified_at": "2026-10-06T03:14:57.544Z",
+    "public_evidence": {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "verified_at": "2026-10-06T03:14:57.544Z",
+      "marker": "#stage.compact #hud-top",
+      "pass": true
+    }
   },
   "bilibili": {
     "status": "ordinary_patch_deferred",

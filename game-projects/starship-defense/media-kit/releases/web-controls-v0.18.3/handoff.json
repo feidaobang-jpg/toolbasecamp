@@ -148,7 +148,16 @@
     "package_sha256": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_bJAyhJXq/index.html",
     "submitted_at": "2026-10-06T11:06:56.559843+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_aMDNFAyx/index.html"
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_aMDNFAyx/index.html",
+    "status_checked_at": "2026-10-06T11:15:46.661482+08:00",
+    "public_verified_at": "2026-10-06T03:14:57.456Z",
+    "public_evidence": {
+      "game": "starship-defense",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "verified_at": "2026-10-06T03:14:57.456Z",
+      "marker": "cornerTools and single-line vC; game.compat.js?toy3dui3",
+      "pass": true
+    }
   },
   "bilibili": {
     "status": "public_verified",
