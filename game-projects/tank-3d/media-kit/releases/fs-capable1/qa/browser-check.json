@@ -1,0 +1,257 @@
+{
+  "url": "http://127.0.0.1:8847/html/game/tank-3d/index.html",
+  "at": "2026-10-06T22:11:31.655Z",
+  "results": [
+    {
+      "name": "menu options keyboard/click/persist",
+      "ok": true,
+      "data": {
+        "before": {
+          "vol": "‹\n80%\n›",
+          "fps": "‹\n开\n›",
+          "q": "‹\n高\n›",
+          "touch": "‹\n手机触屏\n›",
+          "demo": "‹\n开\n›"
+        },
+        "after": {
+          "vol": "‹\n80%\n›",
+          "fps": "‹\n开\n›",
+          "q": "‹\n高\n›",
+          "touch": "‹\n手机触屏\n›",
+          "demo": "‹\n关\n›"
+        }
+      }
+    },
+    {
+      "name": "classic stage select wraps 1..35",
+      "ok": true
+    },
+    {
+      "name": "classic realtime drive + single shot per press",
+      "ok": true,
+      "data": {
+        "y": 144,
+        "fires": 1
+      }
+    },
+    {
+      "name": "every view: D = screen right",
+      "ok": true,
+      "data": {
+        "top": 1,
+        "close": 1,
+        "front": 1,
+        "fp": 1,
+        "overview": 1
+      }
+    },
+    {
+      "name": "Q/E rotation maps WASD",
+      "ok": true,
+      "data": {
+        "wAt90": 1,
+        "wAt180": 2,
+        "yawAfterCircle": -6.49
+      }
+    },
+    {
+      "name": "first person latched steering",
+      "ok": true,
+      "data": {
+        "fpD": 1,
+        "fpHeld": {
+          "x": 164,
+          "y": 64,
+          "dir": 1,
+          "state": "active",
+          "stars": 0,
+          "shield": 0,
+          "invuln": 0,
+          "boats": 0,
+          "plate": 0
+        }
+      }
+    },
+    {
+      "name": "pause / resume",
+      "ok": true
+    },
+    {
+      "name": "stage clear -> tally -> stage 2",
+      "ok": true
+    },
+    {
+      "name": "classic 3 lives -> game over -> result -> retry stage 2",
+      "ok": true
+    },
+    {
+      "name": "eagle destroyed -> game over tally",
+      "ok": true
+    },
+    {
+      "name": "legacy 50-stage save migrated into remix",
+      "ok": true
+    },
+    {
+      "name": "std durability + infinite lives respawn",
+      "ok": true,
+      "data": {
+        "hp": 3,
+        "deaths": 1
+      }
+    },
+    {
+      "name": "demo mode badge + invulnerable",
+      "ok": true
+    },
+    {
+      "name": "remix progress saved on clear",
+      "ok": true
+    },
+    {
+      "name": "boss level shows boss + HP bar",
+      "ok": true
+    },
+    {
+      "name": "phone portrait rotation + stick/fire/C/drag",
+      "ok": true,
+      "data": {
+        "rotated": true,
+        "y": 154
+      }
+    },
+    {
+      "name": "phone landscape layout",
+      "ok": true
+    },
+    {
+      "name": "realtime perf",
+      "ok": true,
+      "data": {
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "perf": {
+          "classic35:overview": {
+            "fps": 160.4,
+            "median": 5.9,
+            "p95": 11.7,
+            "over50": 0,
+            "calls": 146,
+            "tris": 93836
+          },
+          "classic35:top": {
+            "fps": 160.1,
+            "median": 5.9,
+            "p95": 6.2,
+            "over50": 0,
+            "calls": 152,
+            "tris": 94094
+          },
+          "classic35:close": {
+            "fps": 162.4,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 46,
+            "tris": 90286
+          },
+          "classic35:front": {
+            "fps": 155.8,
+            "median": 5.9,
+            "p95": 11.7,
+            "over50": 1,
+            "calls": 102,
+            "tris": 92080
+          },
+          "classic35:fp": {
+            "fps": 166.1,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 15,
+            "tris": 89302
+          },
+          "remix10:overview": {
+            "fps": 159.7,
+            "median": 5.9,
+            "p95": 11.7,
+            "over50": 0,
+            "calls": 72,
+            "tris": 91142
+          },
+          "remix10:top": {
+            "fps": 163.4,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 67,
+            "tris": 91046
+          },
+          "remix10:close": {
+            "fps": 165.4,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 52,
+            "tris": 90358
+          },
+          "remix10:front": {
+            "fps": 167,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 61,
+            "tris": 90870
+          },
+          "remix10:fp": {
+            "fps": 169,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 15,
+            "tris": 89302
+          },
+          "remix27:overview": {
+            "fps": 140.8,
+            "median": 5.9,
+            "p95": 11.8,
+            "over50": 0,
+            "calls": 234,
+            "tris": 95378
+          },
+          "remix27:top": {
+            "fps": 160.4,
+            "median": 5.9,
+            "p95": 6.1,
+            "over50": 0,
+            "calls": 214,
+            "tris": 95558
+          },
+          "remix27:close": {
+            "fps": 163.7,
+            "median": 5.9,
+            "p95": 6,
+            "over50": 0,
+            "calls": 101,
+            "tris": 92064
+          },
+          "remix27:front": {
+            "fps": 163.1,
+            "median": 5.9,
+            "p95": 6.1,
+            "over50": 0,
+            "calls": 158,
+            "tris": 93842
+          },
+          "remix27:fp": {
+            "fps": 160.7,
+            "median": 5.9,
+            "p95": 6.1,
+            "over50": 0,
+            "calls": 15,
+            "tris": 89302
+          }
+        }
+      }
+    }
+  ]
+}

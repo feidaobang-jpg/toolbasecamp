@@ -29,6 +29,14 @@
       "status": "pending_merge",
       "record": "releases/unified3d-20261006/handoff.json",
       "reason": "普通操作音频修复并入下一次有意义的说明更新；无确认视频映射时待关联"
+    },
+    {
+      "version": "action-state1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "动作冷却/气力/丹药不足时保留实体按钮，状态文字解释限制",
+      "record": "releases/action-state1/handoff.json",
+      "reason": "普通小修累计；没有确认的本站3D对应视频和Toy映射"
     }
   ]
 }

@@ -118,8 +118,6 @@ body:not(.touch-on) .help-touch{display:none}
 #stage.portrait.short .items>*{min-height:34px;padding:5px 11px;font-size:12.5px}
 .items>*>span:first-child{white-space:nowrap}
 
-/* Mobile browsers do not reliably support fullscreen; keep desktop controls. */
-body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
 
 #stage{touch-action:none}
 
@@ -133,6 +131,8 @@ button::before,button::after{content:none!important}
 #stage.compact .act-keys{grid-template-columns:repeat(2,58px);grid-template-rows:repeat(2,58px)}#stage.compact .act-keys .act,#stage.compact .act-keys .act.big{width:58px;height:58px}
 
 #hud-top #btn-cam-t{width:auto;height:auto;min-height:44px;flex-direction:row;gap:4px;border-radius:12px}body.touch-on #hud-top #btn-cam-t{display:flex}
+/* 全屏按钮由脚本按浏览器能力设置 hidden；需压过公共界面里 body.mobile-device 的 display:block!important */
+html body #btn-fs[hidden],html body .items>.fs-btn[hidden]{display:none!important}
 
 /* 手机横屏紧凑主菜单（2026-10-07）：手机竖着拿时菜单也直接旋转成横屏，菜单要在逻辑 844×390 一类横屏里少占一行：
    收起与三键操作模式行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，三键行去掉外边距 */

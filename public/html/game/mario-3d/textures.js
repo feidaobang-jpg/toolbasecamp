@@ -129,6 +129,12 @@ export function tex(name, theme = 'overworld') {
   const k = name + ':' + theme;
   if (cache.has(k)) return cache.get(k);
   let t;
+  if (name === 'pipe') {
+    // 管身只用绿色底色；圆周明暗交给真实灯光，不能套石块的棕色边框。
+    const c = document.createElement('canvas'); c.width = c.height = 16;
+    const g = c.getContext('2d'); g.fillStyle = '#4db457'; g.fillRect(0, 0, 16, 16);
+    t = pixelTexture(c); cache.set(k, t); return t;
+  }
   if (['brick','ground','hard','question','used','lift','pipe'].includes(name)) {
     const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');
     const under=theme==='underground';

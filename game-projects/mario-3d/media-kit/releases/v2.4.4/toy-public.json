@@ -1,0 +1,37 @@
+{
+  "version": "v2.4.4",
+  "content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23212/index.html",
+  "verified_at": "2026-10-06T22:29:37.492572+00:00",
+  "status": "public_verified_UI",
+  "checks": [
+    {
+      "file": "index.html",
+      "match": false,
+      "error": "HTTP Error 412: Precondition Failed"
+    },
+    {
+      "file": "main.js",
+      "match": false,
+      "error": "HTTP Error 412: Precondition Failed"
+    },
+    {
+      "file": "world.js",
+      "match": false,
+      "error": "HTTP Error 412: Precondition Failed"
+    },
+    {
+      "file": "scene.js",
+      "match": false,
+      "error": "HTTP Error 412: Precondition Failed"
+    },
+    {
+      "file": "textures.js",
+      "match": false,
+      "error": "HTTP Error 412: Precondition Failed"
+    }
+  ],
+  "ui": "公开菜单开始1-1，J显示需火焰花且为实体红键；截图toy-published.jpg",
+  "package_sha256": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
+  "main_script": "./main.js?v=2.4.4",
+  "limits": "公开UI、平台published状态和版本资源已核验；HTTP取文件受412限制，未宣称在线逐文件哈希相等。"
+}

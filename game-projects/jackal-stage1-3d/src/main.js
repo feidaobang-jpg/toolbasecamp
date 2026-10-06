@@ -27,7 +27,7 @@ const settings = {
   quality: ['auto', 'high', 'low'].indexOf(store.get('quality', 'auto')) >= 0 ? store.get('quality', 'auto') : 'auto',
   touch: ['auto', 'show', 'hide'].indexOf(store.get('touch', 'auto')) >= 0 ? store.get('touch', 'auto') : 'auto',
   fps: store.get('fps', false) === true,
-  gun: store.get('gun', 'follow') === 'up' ? 'up' : 'follow',
+  gun: store.get('gun', 'up') === 'follow' ? 'follow' : 'up',
   stage: 1
 };
 settings.stage = Math.max(1, Math.min(L.STAGE_COUNT, store.get('stage', 1) | 0));
@@ -377,7 +377,7 @@ window.addEventListener('orientationchange', () => setTimeout(() => layout(), 60
 if (window.visualViewport) window.visualViewport.addEventListener('resize', () => layout());
 window.addEventListener('blur', () => { if (gameRunning() && !current) pauseGame(); });
 document.addEventListener('visibilitychange', () => { if (document.hidden && gameRunning() && !current) pauseGame(); });
-IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { fire: $('btn-fire'), bomb: $('btn-bomb') }, toLocal);
+IN.bindTouch($('joy-zone'), $('joy-base'), $('joy-knob'), { fire: $('btn-fire'), bomb: $('btn-bomb'), combo: $('btn-combo') }, toLocal);
 
 const orbitKeys = new Set();
 window.addEventListener('keydown', e => { if (IN.active() && ['KeyQ','KeyE'].includes(e.code)) { orbitKeys.add(e.code); e.preventDefault(); } });

@@ -2,18 +2,17 @@
  "schema_version": 1,
  "game_id": "tank-3d",
  "version": "landscape-menu1",
- "base_version": "camera-fullmap1",
- "created_at": "2026-10-07T07:40:00+08:00",
+ "base_version": "fs-capable1",
+ "created_at": "2026-10-07T08:20:00+08:00",
  "classification": "普通补丁",
  "changes": [
   "手机触屏竖着拿时，标题菜单打开就旋转为横屏布局（原先开局后才旋转），免得菜单竖屏、开局又变横屏；电脑、横着拿的手机和「电脑键鼠」模式不旋转（用户 2026-10-07 确认）。",
-  "紧凑横屏主菜单同样收起重复的「操作模式」循环项、开始键与模式同排、三键行去外边距；选项较多，844×390 下仍需在面板内滑动约 128px 到底（首尾可达）。",
-  "菜单键盘导航跳过样式收起的项。"
+  "紧凑横屏主菜单同样收起重复的「操作模式」循环项、开始键与模式同排、三键行去外边距；选项较多，844×390 下仍需在面板内滑动到底（首尾可达）。"
  ],
  "build": {
   "files_sha256_prefix": {
-   "main.js": "8a0406243203",
-   "style.css": "00880a646920"
+   "main.js": "aae8529cab6d",
+   "style.css": "ca67cabfb679"
   }
  },
  "qa": [
@@ -22,16 +21,12 @@
    "result": "19 项全部 ok（新增竖屏菜单打开即旋转断言）"
   },
   {
-   "method": "site-games/qa/drag-look.cjs（tank-3d 横竖屏）",
-   "result": "全部 PASS"
-  },
-  {
    "method": "临时脚本 portrait-check（四款：竖屏打开即旋转、菜单首尾可达/必要时手指滑动、旋转菜单里点开始生效、横屏和电脑窄窗口不旋转、紧凑横屏键盘↓不卡并跳过收起项）",
-   "result": "32/32"
+   "result": "32/32（合并主线后）"
   },
   {
    "method": "site-games/qa/drag-look.cjs",
-   "result": "赤色要塞、恐龙快打的失败项（找不到 #btn-cam-t 等）在改动前版本完全相同，属脚本过时，非本次回归"
+   "result": "超级玛丽、坦克大战全部 PASS；赤色要塞、恐龙快打的失败项（找不到 #btn-cam-t 等）在改动前版本完全相同，属脚本过时"
   }
  ],
  "env_note": "Edge 设备模拟 + CDP 触摸，非真机",

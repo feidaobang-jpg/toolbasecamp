@@ -2,11 +2,11 @@
   "game_id": "mario-3d-world-1-1",
   "name": "超级玛丽 3D：1-1 与 1-2",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.4.4",
-  "handoff": "releases/v2.4.4/handoff.json",
+  "current_version": "v2.4.6",
+  "handoff": "releases/v2.4.6/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
-  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J仅火球(吃火焰花后可用)，键盘J旧跑/火球别名兼容。",
+  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J实体红键，未获得时显示需火焰花并提示，获得后发射火球，键盘J旧跑/火球别名兼容。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
   "development_model": "Claude Opus 5.5（v2.0.0）；更早版本为 GPT-6 Astra",
@@ -22,18 +22,18 @@
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-06T21:39:01.172522+00:00",
+    "verified_at": "2026-10-06T22:29:37.492572+00:00",
     "video_bindings": [
       "BV1guep6NELt"
     ],
-    "submitted_version": "v2.4.3",
-    "submitted_at": "2026-10-06T21:34:15.115028+00:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiZ6KIi/index.html",
-    "release_record": "releases/v2.4.3/handoff.json",
-    "published_version": "v2.4.3",
+    "submitted_version": "v2.4.4",
+    "submitted_at": "2026-10-06T22:22:41+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_WFRQqFXp/index.html",
+    "release_record": "releases/v2.4.4/handoff.json",
+    "published_version": "v2.4.4",
     "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_3nVKa6vU/index.html",
-    "note": "同包预览实测36项通过；Toy审核通过，公开包四个核心文件哈希匹配v2.4.3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_HO5JCmCy/index.html",
+    "note": "同包预览实测并通过审核；公开UI及main.js?v=2.4.4核验通过，HTTP逐文件比对受412限制。",
     "pending_updates": [
       {
         "version": "v2.2.2",
@@ -73,13 +73,26 @@
         "summary": "修复地下关检查点坠崖后复活到天花板；清理重开/切区后的食人花残留",
         "status": "published",
         "record": "releases/v2.4.3/handoff.json"
+      },
+      {
+        "version": "v2.4.4",
+        "classification": "严重过关修复 + 普通水管/按钮补丁",
+        "status": "published",
+        "record": "releases/v2.4.4/handoff.json"
+      },
+      {
+        "version": "v2.4.5",
+        "classification": "普通补丁",
+        "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+        "status": "pending_submit",
+        "record": "releases/v2.4.5/handoff.json"
       }
     ],
-    "package_sha256": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
-    "published_verified_at": "2026-10-06T21:39:01.172522+00:00",
+    "package_sha256": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
+    "published_verified_at": "2026-10-06T22:29:37.492572+00:00",
     "status": "published",
-    "package_hash": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23208/index.html"
+    "package_hash": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23212/index.html"
   },
   "notes": "粉丝向非官方重制：保留原作关卡布局，采用赤色要塞式自然配色、哑光低模；BGM和常用音效采用原版录音，缺项或加载失败保留合成回退。",
   "drag_camera_controls": {
@@ -96,18 +109,38 @@
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
-    "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+    "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+    "revision": "bgmfull1",
+    "processing": "完整音源压缩，不截取前70秒"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v2.4.3",
-  "website_verified_at": "2026-10-06T21:31:39.632832+00:00",
-  "website_commit": "5c92ea0beb426f3136adc29c0216d8bd4c66c620",
-  "web_toy_versions_match": true,
+  "website_version": "v2.4.5",
+  "website_verified_at": "2026-10-06T22:37:03.895437+00:00",
+  "website_commit": "9e4b9b723f7c02d4d299b5ce16dfc84c1e5c97b3",
+  "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
     "bottom_css_px": 36,
     "safe_area_added": true,
     "previous_version": "v2.4.1",
     "physical_phone_test": false
-  }
+  },
+  "versions": [
+    {
+      "version": "v2.4.5-bgmfull1",
+      "base_version": "v2.4.5",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+      "handoff": "releases/v2.4.5-bgmfull1/handoff.json"
+    },
+    {
+      "version": "v2.4.6",
+      "base_version": "v2.4.5-bgmfull1",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "handoff": "releases/v2.4.6/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+    }
+  ]
 }

@@ -1,0 +1,204 @@
+{
+ "base": "http://127.0.0.1:8897/html/game/",
+ "at": "2026-10-06T22:22:32.262Z",
+ "results": [
+  {
+   "name": "jackal-stage1-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     7.29
+    ],
+    "starts": 4,
+    "rms": 0.2116
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     9.42
+    ],
+    "starts": 10
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      11.1
+     ],
+     "starts": 10
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      12.16
+     ],
+     "starts": 10,
+     "rms": 0.244
+    }
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.244,
+    "startsPaused": 10,
+    "startsAfter": 10
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "mario-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     4.82
+    ],
+    "starts": 1,
+    "rms": 0.0791
+   }
+  },
+  {
+   "name": "mario-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.41
+    ],
+    "starts": 1
+   }
+  },
+  {
+   "name": "mario-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      8.39
+     ],
+     "starts": 1
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.42
+     ],
+     "starts": 2,
+     "rms": 0.077
+    }
+   }
+  },
+  {
+   "name": "mario-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.077,
+    "startsPaused": 1,
+    "startsAfter": 2
+   }
+  },
+  {
+   "name": "mario-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "cadillacs-stage1-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     4.58
+    ],
+    "starts": 28,
+    "rms": 0.1263
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.3
+    ],
+    "starts": 31
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      8.07
+     ],
+     "starts": 43
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.09
+     ],
+     "starts": 43,
+     "rms": 0.1283
+    }
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.1283,
+    "startsPaused": 31,
+    "startsAfter": 43
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

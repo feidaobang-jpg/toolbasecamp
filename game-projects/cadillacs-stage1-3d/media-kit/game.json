@@ -6,8 +6,8 @@
  },
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.5.6",
- "handoff": "releases/v0.5.6/handoff.json",
+ "current_version": "v0.5.7",
+ "handoff": "releases/v0.5.7/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -77,10 +77,10 @@
    }
   },
   {
-   "version": "v0.5.6",
+   "version": "v0.5.7",
    "classification": "普通补丁",
    "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩。",
-   "record": "releases/v0.5.6/handoff.json",
+   "record": "releases/v0.5.7/handoff.json",
    "channels": {
     "website": "pending_deploy",
     "toy": "pending",
@@ -147,6 +147,13 @@
     "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
     "status": "auditing",
     "record": "releases/v0.5.3/handoff.json"
+   },
+   {
+    "version": "v0.5.6",
+    "classification": "普通补丁",
+    "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+    "status": "pending_submit",
+    "record": "releases/v0.5.6/handoff.json"
    }
   ],
   "submitted_version": "v0.5.3",
@@ -238,7 +245,9 @@
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "audio_assets": {
   "policy": "original first; synthesis fallback",
-  "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+  "revision": "bgmfull1",
+  "processing": "完整音源压缩，不截取前70秒"
  },
  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
@@ -252,5 +261,23 @@
   "safe_area_added": true,
   "previous_version": "v0.5.2",
   "physical_phone_test": false
- }
+ },
+ "versions": [
+  {
+   "version": "v0.5.6-bgmfull1",
+   "base_version": "v0.5.6",
+   "date": "2026-10-07",
+   "classification": "普通补丁",
+   "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+   "handoff": "releases/v0.5.6-bgmfull1/handoff.json"
+  },
+  {
+   "version": "v0.5.7",
+   "base_version": "v0.5.6-bgmfull1",
+   "date": "2026-10-07",
+   "classification": "普通补丁",
+   "handoff": "releases/v0.5.7/handoff.json",
+   "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+  }
+ ]
 }

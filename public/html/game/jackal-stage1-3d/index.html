@@ -7,7 +7,7 @@
 <meta name="description" content="FC 赤色要塞的 3D 重置版（第一、二关）：驾驶武装吉普炸开营房救出俘虏、送上直升机；第一关打 4 辆蓝色坦克，第二关闯废墟城、打北墙 4 座石像。电脑键盘与手机触屏均可游玩。">
 <title>赤色要塞 · 3D 重置版</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=menu-fit2">
+<link rel="stylesheet" href="css/style.css?v=combo-v080">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -35,6 +35,7 @@
       <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动</span>
       <span><kbd>J</kbd> 机枪</span>
       <span><kbd>K</kbd> 手雷/火箭（朝车头）</span>
+      <span><kbd>U</kbd> 联合开火</span>
       <span><kbd>C</kbd> 视角</span>
       <span><kbd>Esc</kbd> 暂停</span>
     </div>
@@ -52,6 +53,7 @@
       </div>
       <button id="btn-fire" class="act" tabindex="-1" aria-label="J 机枪"><b>J</b><span>机枪</span></button>
       <button id="btn-bomb" class="act" tabindex="-1" aria-label="K 手雷或火箭"><b>K</b><span id="bomb-label">手雷</span></button>
+      <button id="btn-combo" class="act" tabindex="-1" aria-label="U 联合开火，同时发射机枪和手雷或火箭"><b>U</b><span>联合开火</span></button>
     </div>
 
     <div id="menu" class="overlay title-screen">
@@ -61,8 +63,8 @@
           <h1 class="logo">赤色要塞</h1>
           <div class="sub" id="menu-sub">第一关 · 海滩登陆</div>
           <p class="rules">驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪；闪光俘虏让武器升级（手雷 → 火箭 → 双向 → 四向火箭）。第一关打 4 辆蓝色坦克，第二关打废墟北墙的 4 座石像。吉普有 3 格护甲，营房里会掉修理包；默认无限命，阵亡后从检查点继续。</p>
-          <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪 · <kbd>K</kbd> 手雷 / 火箭（朝车头）<br><kbd>Q</kbd>/<kbd>E</kbd> 转视角 · <kbd>C</kbd> 视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
-          <p class="help help-touch">左侧摇杆移动 · 右下 <b>J</b> 机枪、<b>K</b> 手雷 / 火箭 · 拖动画面空白处转视角 · 右上角切换视角与暂停</p>
+          <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪（默认固定向北） · <kbd>K</kbd> 手雷 / 火箭（朝车头） · <kbd>U</kbd> 联合开火<br><kbd>Q</kbd>/<kbd>E</kbd> 转视角 · <kbd>C</kbd> 视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
+          <p class="help help-touch">左侧摇杆移动 · <b>J</b> 机枪（默认固定向北）、<b>K</b> 手雷 / 火箭、<b>U</b> 联合开火 · 拖动画面空白处转视角 · 右上角切换视角与暂停</p>
           <p class="hi">最高分 <span id="hi-val">30000</span></p>
           <p class="legal">粉丝向非官方重置：3D 模型与画面重新制作，音乐采用原版录音，缺项音效保留合成；《赤色要塞》（Jackal）原作版权归 Konami 所有。</p>
         </div>
@@ -88,8 +90,8 @@
       <div class="panel small">
         <h2>暂停</h2>
         <div id="pause-stats">得分 <b id="h-score">0</b> · 最高 <b id="h-hi">0</b><br>救援：车上 <b id="p-carried">0</b> · 已送达 <b id="p-deliv">0/19</b></div>
-        <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪 · <kbd>K</kbd> 手雷 / 火箭<br><kbd>Q</kbd>/<kbd>E</kbd> 转视角 · 拖动画面观察 · <kbd>C</kbd> 切换视角</p>
-        <p class="help help-touch">左下摇杆移动 · J 机枪 · K 手雷 / 火箭<br>拖动画面空白处观察 · 右上切换视角</p>
+        <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪 · <kbd>K</kbd> 手雷 / 火箭 · <kbd>U</kbd> 联合开火<br>机枪可选原作朝上 / 跟随车头 · <kbd>Q</kbd>/<kbd>E</kbd> 转视角 · <kbd>C</kbd> 切换视角</p>
+        <p class="help help-touch">左下摇杆移动 · J 机枪 · K 手雷 / 火箭 · U 联合开火<br>机枪可选原作朝上 / 跟随车头 · 拖动转视角</p>
         <nav class="items" aria-label="暂停菜单">
           <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
           <button data-act="restart">重新开始</button>

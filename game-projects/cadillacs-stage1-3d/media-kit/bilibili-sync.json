@@ -100,6 +100,14 @@
    "summary": "开枪看得见子弹、火花在枪口。",
    "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
    "record": "releases/v0.5.5/handoff.json"
+  },
+  {
+   "version": "v0.5.6",
+   "classification": "普通补丁",
+   "status": "pending_merge",
+   "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+   "record": "releases/v0.5.6/handoff.json",
+   "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
   }
  ],
  "version": "v0.3.0",

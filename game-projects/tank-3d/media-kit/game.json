@@ -23,7 +23,7 @@
     "ffmpeg、Pillow"
   ],
   "notes": "经典模式地图、敌军名单取自 MIT 许可的 feichao93/battle-city 关卡数据，数值按该仓库 resources/nes-values 的 ROM 反汇编调研；魔改模式地图由关号确定性生成。3D 模型与贴图程序化制作，音效采用原作 FC 音效（用户已明确不考虑版权顾虑），引擎声等为合成。",
-  "version": "camera-fullmap1",
+  "version": "fs-capable1",
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
@@ -96,6 +96,13 @@
         "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
         "status": "auditing",
         "record": "releases/controls-inset1/handoff.json"
+      },
+      {
+        "version": "fs-capable1",
+        "classification": "普通补丁",
+        "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+        "status": "pending_submit",
+        "record": "releases/fs-capable1/handoff.json"
       }
     ],
     "published_verified_at": "2026-10-06T18:48:28.119681+08:00",

@@ -3,51 +3,64 @@
  "game_id": "cadillacs-stage1-3d",
  "version": "v0.5.6",
  "base_version": "v0.5.5",
- "created_at": "2026-10-07T07:40:00+08:00",
+ "created_at": "2026-10-07T06:19:13+08:00",
  "classification": "普通补丁",
- "changes": [
-  "手机触屏竖着拿时，标题菜单打开就旋转为横屏布局（原先开局（选人画面）才旋转），免得菜单竖屏、开局又变横屏；电脑、横着拿的手机和「电脑键鼠」模式不旋转（用户 2026-10-07 确认）。",
-  "紧凑横屏主菜单收起与三键行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，副标题压成一行，长触屏说明换成一行提示：844×390、Toy 外壳 844×346 / 800×390、667×375 完整显示（740×360 差 5px 可滚动）。",
-  "暂停菜单补上完整操作说明与特殊技（紧凑横屏时左列说明、右列两列选项），标题页紧凑时只留一行触屏提示。",
-  "菜单键盘导航跳过样式收起的项。"
- ],
+ "reason": "AGENTS.md「2026-10-06 右上按钮布局补充」：全屏按实际浏览器能力检测，不因手机分类隐藏，拒绝时保留可玩回退；参考赤色要塞 v0.7.9（0e6bdb8a / a37f8377）。",
  "build": {
-  "files_sha256_prefix": {
-   "game.min.js": "7ba256701dc2",
-   "style.css": "3484d4588bd0"
+  "id": "v0.5.6",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "source_sha256": {
+   "game-projects/cadillacs-stage1-3d/src/main.js": "ae00b3b2dbf230671b3d863a595ff097633f724a2a4cf0352d55a695a36dbbe9",
+   "public/html/game/cadillacs-stage1-3d/css/style.css": "03de507a52943d0d719e253da67f3fa102131497cd9a5cdfe7c2ff958e33eedf",
+   "public/html/game/cadillacs-stage1-3d/index.html": "27167fc516f972c3327442b9dd354d8ad7752af85a53ddba992d3ce0f75791e2",
+   "public/html/game/cadillacs-stage1-3d/js/game.min.js": "0bb0996d5ce7c9fdb0805506ffbd297b9ccb8707e0be17275d1e2b58df5d9f9f"
   }
  },
- "qa": [
+ "changes": [
   {
-   "method": "qa/mobile.js",
-   "result": "pass 35/35（竖屏断言改为打开即旋转且菜单完整）"
+   "id": "fs-capable",
+   "before": "CSS 按 body.mobile-device 隐藏全屏，但公共 drag-look.js 注入 display:block!important，结果手机上总显示——iPhone Safari、未授权全屏的 iframe 也显示一个点了无效的按钮",
+   "after": "fsCapable()（元素有 requestFullscreen/webkitRequestFullscreen 且 fullscreenEnabled 不为 false）决定 #btn-fs 与菜单「全屏」的 hidden；已在全屏时总显示以便退出；html body #btn-fs[hidden] 压过公共样式"
   },
   {
-   "method": "qa/stage2.js",
-   "result": "pass 55/55"
+   "id": "menu-nav-visible",
+   "before": "菜单 ↑↓ 列表只排除 hidden 属性",
+   "after": "同时排除无布局盒（样式隐藏）的项，首焦点在布局完成后设置，避免焦点落到看不见的项"
   },
   {
-   "method": "qa/desktop.js",
-   "result": "89/90 ×3 次；每次失败的都是依赖真实时间的单项（「不续关倒计时结束 → GAME OVER」两次、「A 转身朝左」一次）。改动前 origin/master 版本同脚本两次：一次 90/90、一次同样 GAME OVER 项失败，判定为原有的时序偶发，与本次改动无关"
-  },
-  {
-   "method": "临时脚本 portrait-check（四款：竖屏打开即旋转、菜单首尾可达/必要时手指滑动、旋转菜单里点开始生效、横屏和电脑窄窗口不旋转、紧凑横屏键盘↓不卡并跳过收起项）",
-   "result": "32/32"
-  },
-  {
-   "method": "site-games/qa/drag-look.cjs",
-   "result": "赤色要塞、恐龙快打的失败项（找不到 #btn-cam-t 等）在改动前版本完全相同，属脚本过时，非本次回归"
+   "id": "items-hidden-guard",
+   "note": ".items > button 的 display:flex 会盖过 UA [hidden]；加 #app .items > [hidden]{display:none!important}（本游戏当前没有其他用 hidden 的菜单项）"
   }
  ],
- "env_note": "Edge 设备模拟 + CDP 触摸，非真机",
- "site": {
-  "status": "pending_deploy"
+ "bugs": [
+  {
+   "id": "fs-shown-unsupported",
+   "status": "fixed",
+   "cause": "旧规则按设备分类隐藏，又被公共界面的 !important 规则反向覆盖，与 10-06 按能力检测的规则矛盾"
+  }
+ ],
+ "qa": {
+  "script": "game-projects/cadillacs-stage1-3d/qa/fullscreen.js",
+  "results": {
+   "fullscreen.json": "73/73",
+   "desktop.json": "90/90",
+   "mobile.json": "35/35",
+   "stage2.json": "55/55"
+  },
+  "viewports": [
+   "desktop 1280×720",
+   "手机横屏 844×390",
+   "手机竖屏 390×844（开局自动旋转）"
+  ],
+  "method": "Playwright + Edge（RTX 4060 Ti），capable 原样 / incapable 用 addInitScript 删掉 requestFullscreen 并令 fullscreenEnabled=false；手机段全程触摸、不按键盘",
+  "f_key": "恐龙快打 F 键在不支持时提示「当前浏览器不支持全屏，已使用页面内横屏布局继续」并继续游玩（按方向角色移动）",
+  "exit_fullscreen": "退出全屏后自动暂停（原行为保持）",
+  "physical_phone_test": false,
+  "screenshots": "只留本机 qa/out/"
  },
- "toy": {
-  "status": "pending"
- },
- "bilibili": {
-  "status": "pending_merge",
-  "reason": "普通补丁累计；现有简介未写菜单方向，仍准确"
+ "channels": {
+  "website": "pending_deploy",
+  "toy": "pending_submit",
+  "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
  }
 }
