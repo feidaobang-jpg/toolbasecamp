@@ -1,0 +1,33 @@
+{
+  "version": "v0.5.6",
+  "source": "public/html/game/cadillacs-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "03de507a52943d0d719e253da67f3fa102131497cd9a5cdfe7c2ff958e33eedf",
+    "index.html": "27167fc516f972c3327442b9dd354d8ad7752af85a53ddba992d3ce0f75791e2",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "0bb0996d5ce7c9fdb0805506ffbd297b9ccb8707e0be17275d1e2b58df5d9f9f",
+    "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+    "sounds/boss2.mp3": "b74295d4adbbb2b6f3bda66612f8157298d24616b69a731d1a8e3eeb24b05291",
+    "sounds/forest.mp3": "d635c99fd83098c2115ddb136d36c47907009a38d16b1fa06603c87e6b22883e",
+    "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+    "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+    "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+    "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+    "sounds/swamp.mp3": "1c0c30167670107e590c4cbe6254d485f5faca717ff3d20cdb373e146b95724e"
+  },
+  "files": {
+    "css/style.css": "03de507a52943d0d719e253da67f3fa102131497cd9a5cdfe7c2ff958e33eedf",
+    "index.html": "cc008d9ca94c90186bf86fee78ce8aac5eea20c1c650a223a3ec911e2930186c",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "0bb0996d5ce7c9fdb0805506ffbd297b9ccb8707e0be17275d1e2b58df5d9f9f",
+    "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+    "sounds/boss2.mp3": "b74295d4adbbb2b6f3bda66612f8157298d24616b69a731d1a8e3eeb24b05291",
+    "sounds/forest.mp3": "d635c99fd83098c2115ddb136d36c47907009a38d16b1fa06603c87e6b22883e",
+    "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+    "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+    "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+    "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+    "sounds/swamp.mp3": "1c0c30167670107e590c4cbe6254d485f5faca717ff3d20cdb373e146b95724e"
+  },
+  "status": "built_not_submitted"
+}

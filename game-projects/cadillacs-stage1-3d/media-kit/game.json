@@ -152,8 +152,10 @@
     "version": "v0.5.6",
     "classification": "普通补丁",
     "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
-    "status": "pending_submit",
-    "record": "releases/v0.5.6/handoff.json"
+    "status": "published",
+    "record": "releases/v0.5.6/handoff.json",
+    "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换",
+    "included_version": "v0.5.6-bgmfull1"
    }
   ],
   "submitted_version": "v0.5.6-bgmfull1",

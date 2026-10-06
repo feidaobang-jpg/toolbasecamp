@@ -39,15 +39,18 @@ const SIZES = [
     if (!cap) await ctx.addInitScript(INCAPABLE);
     const page = await ctx.newPage();
     page.on('pageerror', e => errs.push(tag + 'pageerror: ' + e.message));
-    page.on('console', m => { if (m.type() === 'error') errs.push(tag + 'console: ' + m.text()); });
+    page.on('console', m => { if (m.type() === 'error' && !/hdslb|reporter|toy-host|addon|bilibili\.com\/x\//.test(m.text() + (m.location() || {}).url)) errs.push(tag + 'console: ' + m.text()); });
     let r = page;
     if (process.env.TOY_PREVIEW) {
-      await page.goto(process.env.TOY_PREVIEW, { waitUntil: 'load' }); await sleep(4000);
-      r = page.frames().find(f => /bilibilitoy\.com/.test(f.url()));
+      // 手机外壳有长连接资源，等不到 load；DOM 就绪后轮询游戏 iframe
+      await page.goto(process.env.TOY_PREVIEW, { waitUntil: 'domcontentloaded' });
+      r = null;
+      for (let i = 0; i < 40 && !(r = page.frames().find(f => /bilibilitoy\.com/.test(f.url()))); i++) await sleep(500);
       if (!r) { ok(tag + '找到 Toy 预览 iframe', false, page.frames().map(f => f.url())); await ctx.close(); continue; }
       await r.goto(r.url().split('?')[0] + '?test=1&seed=3', { waitUntil: 'load' });
     } else await page.goto(GAME.base + '?test=1&seed=3', { waitUntil: 'load' });
-    await r.evaluate(() => localStorage.clear()); await r.evaluate(() => location.reload()); await sleep(600);
+    // 清存档后用 goto 重新载入并等到 load：location.reload() 是异步的，Toy 上较慢，会在测试中途才换文档、焦点落回 BODY
+    await r.evaluate(() => localStorage.clear()); await r.goto(r.url(), { waitUntil: 'load' }); await sleep(600);
     await r.waitForFunction(() => document.querySelector('#loading') ? document.querySelector('#loading').hidden : true, null, { timeout: 30000 }).catch(() => {});
     await sleep(800);
     const S = () => r.evaluate(GAME.state);

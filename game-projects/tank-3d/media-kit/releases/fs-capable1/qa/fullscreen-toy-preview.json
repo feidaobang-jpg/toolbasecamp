@@ -1,8 +1,8 @@
 {
- "date": "2026-10-06T23:03:36.162Z",
- "base": "http://127.0.0.1:8847/html/game/tank-3d/index.html",
- "pass": 71,
- "total": 71,
+ "date": "2026-10-06T22:54:54.998Z",
+ "base": "https://www.bilibili.com/toy/preview/preview_uRq0Uxsb/index.html",
+ "pass": 62,
+ "total": 62,
  "results": [
   {
    "name": "desktop·支持全屏：fsCapable 与环境一致",
@@ -25,8 +25,8 @@
    "name": "desktop·支持全屏：主菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
    "pass": true,
    "info": {
-    "want": 17,
-    "distinct": 17,
+    "want": 16,
+    "distinct": 16,
     "ids": [
      "mode",
      "from",
@@ -40,7 +40,6 @@
      "fps",
      "fullscreen",
      "coop",
-     "list",
      "auto",
      "hide",
      "show",
@@ -50,28 +49,6 @@
      "show"
     ]
    }
-  },
-  {
-   "name": "desktop·支持全屏：点主菜单「全屏」进入全屏",
-   "pass": true,
-   "info": [
-    "ok",
-    "lock-rejected"
-   ]
-  },
-  {
-   "name": "desktop·支持全屏：全屏后文字为「退出全屏」",
-   "pass": true,
-   "info": "退出全屏"
-  },
-  {
-   "name": "desktop·支持全屏：退出全屏回到菜单、不误开局",
-   "pass": true,
-   "info": [
-    false,
-    "menu",
-    "title"
-   ]
   },
   {
    "name": "desktop·支持全屏：开局进入游戏",
@@ -124,8 +101,6 @@
     null,
     [
      "ok",
-     "lock-rejected",
-     "ok",
      "lock-rejected"
     ]
    ]
@@ -154,8 +129,8 @@
    "name": "desktop·支持全屏：暂停菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
    "pass": true,
    "info": {
-    "want": 13,
-    "distinct": 13,
+    "want": 12,
+    "distinct": 12,
     "ids": [
      "restart",
      "demo",
@@ -165,7 +140,6 @@
      "fps",
      "fullscreen",
      "title",
-     "list",
      "auto",
      "hide",
      "show",
@@ -202,8 +176,8 @@
    "name": "desktop·不支持全屏：主菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
    "pass": true,
    "info": {
-    "want": 16,
-    "distinct": 16,
+    "want": 15,
+    "distinct": 15,
     "ids": [
      "mode",
      "from",
@@ -216,7 +190,6 @@
      "touch",
      "fps",
      "coop",
-     "list",
      "auto",
      "hide",
      "show",
@@ -291,8 +264,8 @@
    "name": "desktop·不支持全屏：暂停菜单键盘 ↓↑ 走一圈焦点都在可见项上、不卡",
    "pass": true,
    "info": {
-    "want": 12,
-    "distinct": 12,
+    "want": 11,
+    "distinct": 11,
     "ids": [
      "restart",
      "demo",
@@ -301,7 +274,6 @@
      "volume",
      "fps",
      "title",
-     "list",
      "auto",
      "hide",
      "show",
@@ -330,30 +302,8 @@
      "hidden": false,
      "display": "block",
      "shown": true,
-     "inView": true
+     "inView": false
     }
-   ]
-  },
-  {
-   "name": "landscape·支持全屏：点主菜单「全屏」进入全屏",
-   "pass": true,
-   "info": [
-    "ok",
-    "lock-rejected"
-   ]
-  },
-  {
-   "name": "landscape·支持全屏：全屏后文字为「退出全屏」",
-   "pass": true,
-   "info": "退出全屏"
-  },
-  {
-   "name": "landscape·支持全屏：退出全屏回到菜单、不误开局",
-   "pass": true,
-   "info": [
-    false,
-    "menu",
-    "title"
    ]
   },
   {
@@ -411,8 +361,6 @@
     true,
     null,
     [
-     "ok",
-     "lock-rejected",
      "ok",
      "lock-rejected"
     ]
@@ -548,28 +496,6 @@
    ]
   },
   {
-   "name": "portrait·支持全屏：点主菜单「全屏」进入全屏",
-   "pass": true,
-   "info": [
-    "ok",
-    "lock-rejected"
-   ]
-  },
-  {
-   "name": "portrait·支持全屏：全屏后文字为「退出全屏」",
-   "pass": true,
-   "info": "退出全屏"
-  },
-  {
-   "name": "portrait·支持全屏：退出全屏回到菜单、不误开局",
-   "pass": true,
-   "info": [
-    false,
-    "menu",
-    "title"
-   ]
-  },
-  {
    "name": "portrait·支持全屏：开局进入游戏",
    "pass": true,
    "info": [
@@ -629,8 +555,6 @@
     true,
     null,
     [
-     "ok",
-     "lock-rejected",
      "ok",
      "lock-rejected"
     ]

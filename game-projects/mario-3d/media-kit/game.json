@@ -84,8 +84,9 @@
         "version": "v2.4.5",
         "classification": "普通补丁",
         "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
-        "status": "pending_submit",
-        "record": "releases/v2.4.5/handoff.json"
+        "status": "published",
+        "record": "releases/v2.4.5/handoff.json",
+        "included_version": "v2.4.5-bgmfull1"
       }
     ],
     "package_sha256": "07c32cb62fd99ab084aec2458df271920e87d4cff733fb2d08a6faa67e36f832",
