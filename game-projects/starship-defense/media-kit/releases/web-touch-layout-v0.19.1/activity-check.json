@@ -1,0 +1,26 @@
+{
+  "source": "Codex",
+  "task_id": "01a1109f-712e-7572-a2e0-04c646ba61d7-controls-01",
+  "checked_at": "2026-10-06T10:10:07.434885+00:00",
+  "account_uid": 16214353,
+  "status": "partial",
+  "source_url": "https://member.bilibili.com/platform/growingUp/taskManage/main",
+  "observations": [
+    {
+      "title": "稿件累计播放量≥1万",
+      "period": "2026-10-05~2026-10-18",
+      "progress": 720,
+      "target": 10000,
+      "reward": "80推广金",
+      "status": "not_eligible"
+    },
+    {
+      "title": "每周打卡挑战：发布1个视频",
+      "period": "2026-10-05~2026-10-11",
+      "reward": "1000曝光奖励",
+      "status": "reward_claimable",
+      "note": "既有台账已记录，不重复通知；曝光不是现金"
+    }
+  ],
+  "note": "本次无新投稿，仅相关官方任务页检查，没有全面检查所有活动，不推进last_completed_check_at、不新增报名、不改签约"
+}
