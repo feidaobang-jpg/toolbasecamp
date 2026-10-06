@@ -6,8 +6,8 @@
  },
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；画风与赤色要塞统一为哑光低模。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.5.0",
- "handoff": "releases/v0.5.0/handoff.json",
+ "current_version": "v0.5.1",
+ "handoff": "releases/v0.5.1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -31,7 +31,19 @@
   "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
   "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
  ],
- "pending_changes": [],
+ "pending_changes": [
+  {
+   "version": "v0.5.1",
+   "classification": "普通补丁",
+   "summary": "演示无敌暂停倒计时；显示无限时间；关闭后从原剩余时间继续，普通模式超时规则不变。",
+   "channels": {
+    "website": "pending_deploy",
+    "toy": "pending_sync",
+    "bilibili": "pending_merge"
+   },
+   "record": "releases/v0.5.1/handoff.json"
+  }
+ ],
  "toy": {
   "id": 40412421031936,
   "title": "恐龙快打 3D：第一关",
