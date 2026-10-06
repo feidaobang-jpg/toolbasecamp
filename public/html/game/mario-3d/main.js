@@ -3,9 +3,9 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 import { createView, PRESETS } from './scene.js?v=2.4.4';
 import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.4.4';
 import { LEVEL_ORDER } from './levels.js?v=2.4.4';
-import { GameAudio } from './audio.js?v=toy3dui2';
+import { GameAudio } from './audio.js?v=bgmfull1';
 
-const VERSION = 'v2.4.4';
+const VERSION = 'v2.4.5-bgmfull1';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -141,9 +141,10 @@ function refreshOptions() {
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
   });
   $('hi-val').textContent = hi;
-  const fsOn = !!fsElement();
-  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  const fsOn = !!fsElement(), fsShow = fsOn || fsCapable();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; b.hidden = !fsShow; });
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('btn-fs').hidden = !fsShow;
   $('cam-label').textContent = PRESETS[view.presetIndex].name;
   $('demo-badge').hidden = !(uiMode === 'game' && session && session.settings.demo);
 }
@@ -193,11 +194,12 @@ function show(name) {
   current = name;
   clearInput();
   refreshOptions();
+  layout();
   if (name) { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
-  layout();
 }
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden) : []);
+// 只取实际显示的项：hidden 属性之外，样式收起的元素 focus() 后会让 ↑↓ 卡住
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden && el.getClientRects().length > 0) : []);
 
 const isTyping = (e) => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', (e) => {
@@ -394,6 +396,14 @@ function onClear() {
 
 // ---------- 全屏 ----------
 const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+// 全屏入口按浏览器实际能力显示，不按手机/电脑分类隐藏：iPhone Safari 没有元素全屏、未授权全屏的 iframe 报 fullscreenEnabled=false，
+// 这些情况隐藏按钮；能请求但被拒绝时由 toggleFullscreen 提示并继续页面内游玩
+function fsCapable() {
+  const el = document.documentElement;
+  if (!(el.requestFullscreen || el.webkitRequestFullscreen)) return false;
+  const enabled = document.fullscreenEnabled !== undefined ? document.fullscreenEnabled : document.webkitFullscreenEnabled;
+  return enabled !== false;
+}
 const fsLog = [];
 function toggleFullscreen() {
   if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
@@ -657,7 +667,7 @@ if (TEST) {
       const p = w && w.player;
       return {
         uiMode, overlay: current, paused, phase, display: Object.assign({}, display), camera: PRESETS[view.presetIndex].id, yawOffset: +view.yawOffset.toFixed(3),
-        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsLog: fsLog.slice(),
+        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsCapable: fsCapable(), fsLog: fsLog.slice(),
         focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id),
         toast: toastEl.hidden ? null : toastEl.textContent, card: card.hidden ? null : $('card-world').textContent,
         touchHidden: touch.hidden, keys: Array.from(keys), touchHold: Array.from(touchHold), joy: Object.assign({}, joy),

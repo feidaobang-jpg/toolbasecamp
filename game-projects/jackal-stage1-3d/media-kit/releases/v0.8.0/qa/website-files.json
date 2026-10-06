@@ -1,0 +1,21 @@
+{
+ "commit": "aa54b6df4a56cd9510658e738a229174b794f5ef",
+ "verified_at": "2026-10-06T22:20:12.270891+00:00",
+ "checks": [
+  {
+   "file": "index.html",
+   "pass": true,
+   "sha256": "b3b25b71b7875a9ff1cef68bc20a04f21a40ea11eb43565875a9c54e79dd6b51"
+  },
+  {
+   "file": "css/style.css",
+   "pass": true,
+   "sha256": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab"
+  },
+  {
+   "file": "js/game.min.js",
+   "pass": true,
+   "sha256": "6c198f1bc6ba2e351460a5f6ccac456c57346611352ed4064879c828511a6a3f"
+  }
+ ]
+}

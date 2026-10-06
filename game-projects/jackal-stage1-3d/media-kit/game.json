@@ -4,10 +4,10 @@
   "zh": "赤色要塞 · 3D 重置版",
   "en": "Jackal · 3D remake (fan-made)"
  },
- "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
+ "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
  "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.7.9",
- "handoff": "releases/v0.7.9/handoff.json",
+ "current_version": "v0.8.0-bgmfull1",
+ "handoff": "releases/v0.8.0-bgmfull1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/jackal-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -25,9 +25,13 @@
    "q": "high / low：测试用强制画质"
   }
  },
- "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
+ "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
  "release_intent": "web_demo",
- "verified_public_links": [],
+ "verified_public_links": [
+  "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+  "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+  "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
+ ],
  "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
  "dev": {
   "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
@@ -129,6 +133,22 @@
    "classification": "普通补丁",
    "handoff": "releases/v0.7.9/handoff.json",
    "summary": "手机横屏 844×390 起菜单/暂停/结算完整显示，568×320 整层滚动首尾可达；全屏按浏览器能力显示；修复失败结算误显示「进入下一关」与标题页漏出 HUD。"
+  },
+  {
+   "version": "v0.8.0",
+   "base_version": "v0.7.9",
+   "date": "2026-10-07",
+   "classification": "正式版本",
+   "handoff": "releases/v0.8.0/handoff.json",
+   "summary": "新增U联合开火，保留J/K独立输入与各自冷却；机枪默认恢复原作朝上，保留跟随车头选项及已保存选择。"
+  },
+  {
+   "version": "v0.8.0-bgmfull1",
+   "base_version": "v0.8.0",
+   "date": "2026-10-07",
+   "classification": "普通补丁",
+   "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+   "handoff": "releases/v0.8.0-bgmfull1/handoff.json"
   }
  ],
  "toy": {
@@ -137,21 +157,21 @@
   "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
   "visibility": "public",
   "review_status": "published",
-  "verified_at": "2026-10-07T05:31:42+08:00",
+  "verified_at": "2026-10-06T22:58:11.778Z",
   "video_bindings": [
    "BV1EyHz6wE5u"
   ],
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_uc5X2nxI/index.html",
-  "preview_verified_at": "2026-10-07T05:27:00+08:00",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_ByEgdybR/index.html",
+  "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
   "title": "赤色要塞 3D",
   "category": "GAME",
-  "note": "v0.7.9 预览实测 18/18 后提交，审核通过；公开入口实测 18/18。",
-  "submitted_at": "2026-10-07T05:29:17+08:00",
-  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_we71Mp1Y/index.html",
-  "submitted_version": "v0.7.9",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pGlLp0I2/index.html",
-  "release_record": "releases/v0.7.9/handoff.json",
-  "published_version": "v0.7.9",
+  "note": "同包预检、预览玩法检查与CUA实测后一次送审；已过审，公开入口46/46。预览外层COLS超时保留原始记录。",
+  "submitted_at": "2026-10-07T06:54:30.495280+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_QsrcrXba/index.html",
+  "submitted_version": "v0.8.0-bgmfull1",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vgTOSfTz/index.html",
+  "release_record": "releases/v0.8.0/handoff.json",
+  "published_version": "v0.8.0",
   "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
   "pending_updates": [
    {
@@ -201,16 +221,20 @@
    {
     "version": "v0.7.6",
     "classification": "普通补丁",
-    "status": "auditing",
+    "status": "published",
     "record": "releases/v0.7.6/handoff.json",
-    "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。"
+    "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。",
+    "included_version": "v0.8.0",
+    "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
    },
    {
     "version": "v0.7.7",
     "classification": "普通补丁",
     "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
-    "status": "auditing",
-    "record": "releases/v0.7.7/handoff.json"
+    "status": "published",
+    "record": "releases/v0.7.7/handoff.json",
+    "included_version": "v0.8.0",
+    "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
    },
    {
     "version": "v0.7.9",
@@ -220,19 +244,29 @@
     "summary": "手机横屏菜单完整显示（Toy 外壳 844×346）、全屏按 iframe 能力显示、失败结算不再显示进入下一关。",
     "included_version": "v0.7.9",
     "published_verified_at": "2026-10-07T05:31:42+08:00"
+   },
+   {
+    "version": "v0.8.0",
+    "classification": "正式版本",
+    "status": "published",
+    "record": "releases/v0.8.0/handoff.json",
+    "summary": "U联合开火，机枪默认固定世界北，可选跟随车头",
+    "included_version": "v0.8.0",
+    "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
    }
   ],
-  "last_successful_sync_at": "2026-10-07T05:31:42+08:00",
-  "last_successful_sync_version": "v0.7.9",
-  "package_sha256": "31857d63b68ae6ca1b5dca3aac773d241b3eec7aadb01aff9aebf3c8e0e1d01b",
-  "published_verified_at": "2026-10-07T05:31:42+08:00",
-  "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+  "last_successful_sync_at": "2026-10-06T22:37:42.986820+00:00",
+  "last_successful_sync_version": "v0.8.0",
+  "package_sha256": "3bfb4e5539d91b7a5657ffe85dc334d250844c96b79fc44a3375803c0cfb1670",
+  "published_verified_at": "2026-10-06T22:37:42.986820+00:00",
+  "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
   "status": "published",
-  "package_hash": "fe99ac10164c4faac117242fea3aaf034819a0694ac65f2539e687dce3c6288d",
-  "version": "v0.7.9",
-  "package": "dist/toy-v0.7.9/package",
-  "last_published_version": "v0.7.9",
-  "status_verified": "toy mylist published；正式入口 iframe 载入 v0.7.9"
+  "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
+  "version": "v0.8.0-bgmfull1",
+  "package": "dist/toy-v0.8.0/package",
+  "last_published_version": "v0.8.0",
+  "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
+  "public_verified_version": "v0.8.0-bgmfull1"
  },
  "drag_camera_controls": {
   "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
@@ -248,13 +282,15 @@
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "audio_assets": {
   "policy": "original first; synthesis fallback",
-  "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+  "revision": "bgmfull1",
+  "processing": "完整音源压缩，不截取前70秒"
  },
  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.7.9",
- "website_verified_at": "2026-10-07T05:29:01+08:00",
- "website_commit": "40ec2d13",
+ "website_version": "v0.8.0-bgmfull1",
+ "website_verified_at": "2026-10-07T06:49:45.870220+08:00",
+ "website_commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
  "web_toy_versions_match": true,
  "touch_control_inset": {
   "side_css_px": 40,
@@ -272,8 +308,9 @@
    "channels": {
     "website": "deployed_verified",
     "toy": "published",
-    "bilibili": "pending_merge"
-   }
+    "bilibili": "public_verified"
+   },
+   "bilibili_included_version": "v0.8.0"
   },
   {
    "version": "v0.7.9",
@@ -283,8 +320,38 @@
    "channels": {
     "website": "deployed_verified",
     "toy": "published",
-    "bilibili": "pending_merge"
-   }
+    "bilibili": "public_verified"
+   },
+   "bilibili_included_version": "v0.8.0"
+  },
+  {
+   "version": "v0.8.0",
+   "classification": "正式版本",
+   "summary": "联合开火及机枪默认固定向北",
+   "record": "releases/v0.8.0/handoff.json",
+   "channels": {
+    "website": "deployed_verified",
+    "toy": "published",
+    "bilibili": "public_verified"
+   },
+   "bilibili_included_version": "v0.8.0"
+  }
+ ],
+ "website": {
+  "version": "v0.8.0-bgmfull1",
+  "status": "deployed_verified",
+  "verified_at": "2026-10-07T06:49:45.870220+08:00",
+  "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
+ },
+ "pending_channel_changes": [
+  {
+   "version": "v0.8.0-bgmfull1",
+   "classification": "普通补丁",
+   "changes": [
+    "完整原版BGM取消70秒截取"
+   ],
+   "bilibili": "待合并至下一次有意义的简介更新",
+   "toy": "public_verified"
   }
  ]
 }

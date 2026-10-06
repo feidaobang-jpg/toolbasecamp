@@ -1,0 +1,199 @@
+{
+ "schema_version": 1,
+ "game_id": "jackal-stage1-3d",
+ "version": "v0.8.0",
+ "base_version": "v0.7.9",
+ "created_at": "2026-10-06T22:13:38.812699+00:00",
+ "classification": "正式版本",
+ "build": {
+  "id": "jackal-v080-combo",
+  "commit": "aa54b6df4a56cd9510658e738a229174b794f5ef",
+  "dirty": false,
+  "fingerprint": "6c198f1bc6ba2e351460a5f6ccac456c57346611352ed4064879c828511a6a3f",
+  "entrypoint": "public\\html\\game\\jackal-stage1-3d\\index.html",
+  "style_sha256": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab"
+ },
+ "changes": [
+  {
+   "id": "combo-fire",
+   "before": "J与K只能分别按下",
+   "after": "键盘及触屏U联合开火；J/K保留；四级爆炸武器各自冷却、弹数上限不变",
+   "evidence_ids": [
+    "combo-local"
+   ]
+  },
+  {
+   "id": "gun-default",
+   "before": "新玩家默认机枪跟随车头",
+   "after": "新玩家默认原作朝上（世界北）；跟随车头仍可选并保存；保留已有手动选择",
+   "evidence_ids": [
+    "combo-local"
+   ]
+  }
+ ],
+ "bugs": [],
+ "qa": [
+  {
+   "id": "combo-local",
+   "method": "Edge keyboard + CDP touch emulation; explicit manual clock for combat timing; no physical phone",
+   "result": "pass 46/46",
+   "evidence": "qa/combo-local/results.json"
+  },
+  {
+   "method": "desktop.js",
+   "result": "pass 94/94",
+   "evidence": "qa/desktop.json"
+  },
+  {
+   "method": "mobile.js",
+   "result": "pass 58/58",
+   "evidence": "qa/mobile.json"
+  },
+  {
+   "method": "stage2.js",
+   "result": "pass 31/31",
+   "evidence": "qa/stage2.json"
+  },
+  {
+   "method": "实时录制独立6秒开火负载测量",
+   "result": "已记录原始帧时间；不外推真机性能",
+   "evidence": "captures/capture.json"
+  },
+  {
+   "method": "整合最新主线后 combo-fire.cjs",
+   "result": "pass 46/46（含最后CSS单行按钮文案）",
+   "evidence": "qa/combo-integrated.json"
+  },
+  {
+   "method": "公开网站combo-fire.cjs",
+   "result": "pass 46/46",
+   "evidence": "qa/combo-live/results.json"
+  },
+  {
+   "id": "combo-toy",
+   "method": "同包Toy预览Edge键盘+CDP触控；CUA正常时钟启动并点击U",
+   "result": "45/45玩法检查通过；第46项外层COLS统计请求超时，原始结果保留",
+   "evidence": "qa/combo-toy/results.json"
+  },
+  {
+   "method": "Toy doctor",
+   "result": "ok true; findings []",
+   "evidence": "../toy-v0.8.0/toy-build.json"
+  },
+  {
+   "id": "combo-toy-public",
+   "method": "Edge keyboard + CDP touch emulation; explicit manual clock for combat timing; no physical phone",
+   "result": "pass 46/46（正式入口v0.8.0，无脚本异常）",
+   "evidence": "qa/combo-toy-public/results.json"
+  }
+ ],
+ "media": [
+  {
+   "id": "combo-realtime",
+   "file": "releases/v0.8.0/captures/combo-realtime.mp4",
+   "sha256": "1b2281277103aa19d4b31e798bf8acdd6cf7c4f48e629cfb05e868020aa79f40",
+   "kind": "video",
+   "version": "v0.8.0",
+   "build_id": "jackal-v080-combo",
+   "capture_mode": "realtime-automation",
+   "description": "真实浏览器键盘输入；录制使用传送、临时无敌、升级测试钩子；截图为CDP触控＋手动时钟后的真实渲染；已审看录像连续帧，车辆在测试无敌中正常闪烁，机枪北向与手雷东向同时可见，未改材质或渲染。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 8.192,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 8.192,
+     "description": "U联合开火：手雷到火箭，车头朝东时机枪向北，转镜头后继续"
+    }
+   ]
+  },
+  {
+   "id": "layout-844",
+   "file": "releases/v0.8.0/qa/combo-local/layout-844.png",
+   "sha256": "b793418abbe68e6c281810e36b55af51cba17debbc32a112334ef6facbefe36f",
+   "kind": "screenshot",
+   "version": "v0.8.0",
+   "build_id": "jackal-v080-combo",
+   "capture_mode": "realtime-automation",
+   "description": "真实浏览器键盘输入；录制使用传送、临时无敌、升级测试钩子；截图为CDP触控＋手动时钟后的真实渲染",
+   "width": 844,
+   "height": 390,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "layout-390",
+   "file": "releases/v0.8.0/qa/combo-local/layout-390.png",
+   "sha256": "9e0acb9a6e7a50db4c9fcf9bb6c262ccccf1e89b6edda896f6cd9b2cf41e79d8",
+   "kind": "screenshot",
+   "version": "v0.8.0",
+   "build_id": "jackal-v080-combo",
+   "capture_mode": "realtime-automation",
+   "description": "真实浏览器键盘输入；录制使用传送、临时无敌、升级测试钩子；截图为CDP触控＋手动时钟后的真实渲染",
+   "width": 390,
+   "height": 844,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "录像音轨未人工听审；非真机多指或手机性能验收；本版不重录完整两关"
+  ]
+ },
+ "site": {
+  "status": "deployed_verified",
+  "commit": "aa54b6df4a56cd9510658e738a229174b794f5ef",
+  "verified_at": "2026-10-06T22:20:12.270891+00:00",
+  "verification": "GitHub Actions success；公开HTML包含联合键，CSS与JS哈希和已合并产物一致；qa/website-files.json",
+  "functional_check": "combo-live 46/46"
+ },
+ "toy": {
+  "id": 39863936092160,
+  "status": "published",
+  "version": "v0.8.0",
+  "package_tree_sha256": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
+  "hash_method": "UTF-8 sorted relative path:sha256 LF",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_KZ4HZ8sN/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_QsrcrXba/index.html",
+  "submitted_at": "2026-10-06T22:32:35+00:00",
+  "public_version_last_verified": "v0.8.0",
+  "record": "../toy-v0.8.0/toy-build.json",
+  "published_verified_at": "2026-10-06T22:37:42.986820+00:00",
+  "public_qa": "qa/combo-toy-public/results.json",
+  "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
+ },
+ "bilibili": {
+  "status": "public_verified",
+  "version": "v0.8.0",
+  "bvids": [
+   "BV1EyHz6wE5u"
+  ],
+  "verified_at": "2026-10-06T22:35:15.869180+00:00",
+  "record": "bilibili-sync.json",
+  "screenshot": "bili-public.jpg"
+ },
+ "cover": {
+  "decision": "keep",
+  "reason": "仅按键与默认射击规则变化，场景和画风不变，原卡片封面仍对应当前实机"
+ },
+ "qa_environment": "Microsoft Edge headless，ANGLE NVIDIA RTX4060Ti，1280×720；手机844×390、568×320、390×844为CDP触控模拟。desktop/mobile历史QA模板的SwiftShader标签不适用于本次，实际启用JK_GPU=1。",
+ "activities": {
+  "status": "recent_check_reused",
+  "last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
+  "reason": "本次无新视频；读取共用台账，距已成功检查不足12小时，不重复报名或推进检查时间；既有流量服务协议待用户确认属于其他发片任务。"
+ },
+ "durable_artifacts": "D:/project/task-artifacts/jackal-combo-20261007"
+}
