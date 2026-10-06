@@ -41,10 +41,22 @@
  ],
  "env_note": "Edge 设备模拟 + CDP 触摸，非真机",
  "site": {
-  "status": "pending_deploy"
+  "status": "deployed_verified",
+  "commit": "3576fc8d",
+  "verified_at": "2026-10-07T07:30:00+08:00",
+  "verification": "Actions 部署后线上运行文件 sha256 与提交一致；对线上地址跑 portrait-check 四款 32/32"
  },
  "toy": {
-  "status": "pending"
+  "id": 39863936092160,
+  "status": "published",
+  "package": "dist/toy-v0.8.1/package",
+  "package_tree_sha256_prefix": "355f4486b6355d2b",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_HGesbD0I/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_wZxCVZzI/index.html",
+  "submitted_at": "2026-10-07T07:35:44+08:00",
+  "preview_checks": "Toy 预览外壳 portrait-check 24/24（竖屏打开即旋转、菜单首尾可达、点开始生效、横屏不旋转）",
+  "verified_at": "2026-10-07T07:50:06+08:00",
+  "public_check": "toy mylist published；公开入口 portrait-check 四款 24/24（竖屏菜单即旋转，旧版不会）"
  },
  "bilibili": {
   "status": "pending_merge",

@@ -165,21 +165,21 @@
   "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
   "visibility": "public",
   "review_status": "published",
-  "verified_at": "2026-10-06T22:58:11.778Z",
+  "verified_at": "2026-10-07T07:50:06+08:00",
   "video_bindings": [
    "BV1EyHz6wE5u"
   ],
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_ByEgdybR/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_HGesbD0I/index.html",
   "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
   "title": "赤色要塞 3D",
   "category": "GAME",
   "note": "同包预检、预览玩法检查与CUA实测后一次送审；已过审，公开入口46/46。预览外层COLS超时保留原始记录。",
-  "submitted_at": "2026-10-07T06:54:30.495280+08:00",
-  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_QsrcrXba/index.html",
-  "submitted_version": "v0.8.0-bgmfull1",
+  "submitted_at": "2026-10-07T07:35:44+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_wZxCVZzI/index.html",
+  "submitted_version": "v0.8.1",
   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vgTOSfTz/index.html",
-  "release_record": "releases/v0.8.0/handoff.json",
-  "published_version": "v0.8.0",
+  "release_record": "releases/v0.8.1/handoff.json",
+  "published_version": "v0.8.1",
   "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
   "pending_updates": [
    {
@@ -263,16 +263,16 @@
     "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
    }
   ],
-  "last_successful_sync_at": "2026-10-06T22:37:42.986820+00:00",
-  "last_successful_sync_version": "v0.8.0",
+  "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+  "last_successful_sync_version": "v0.8.1",
   "package_sha256": "3bfb4e5539d91b7a5657ffe85dc334d250844c96b79fc44a3375803c0cfb1670",
-  "published_verified_at": "2026-10-06T22:37:42.986820+00:00",
+  "published_verified_at": "2026-10-07T07:50:06+08:00",
   "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
   "status": "published",
   "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
   "version": "v0.8.0-bgmfull1",
   "package": "dist/toy-v0.8.0/package",
-  "last_published_version": "v0.8.0",
+  "last_published_version": "v0.8.1",
   "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
   "public_verified_version": "v0.8.0-bgmfull1"
  },
@@ -296,9 +296,9 @@
  },
  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.8.0-bgmfull1",
- "website_verified_at": "2026-10-07T06:49:45.870220+08:00",
- "website_commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+ "website_version": "v0.8.1",
+ "website_verified_at": "2026-10-07T07:30:00+08:00",
+ "website_commit": "3576fc8d",
  "web_toy_versions_match": true,
  "touch_control_inset": {
   "side_css_px": 40,
@@ -350,8 +350,8 @@
    "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩。",
    "record": "releases/v0.8.1/handoff.json",
    "channels": {
-    "website": "pending_deploy",
-    "toy": "pending",
+    "website": "deployed_verified",
+    "toy": "published",
     "bilibili": "pending_merge"
    }
   }
