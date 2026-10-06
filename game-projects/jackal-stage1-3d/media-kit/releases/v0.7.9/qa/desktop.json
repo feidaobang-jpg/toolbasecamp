@@ -1,5 +1,5 @@
 {
- "when": "2026-10-06T21:10:17.483Z",
+ "when": "2026-10-06T21:22:09.408Z",
  "env": "Playwright 1.63.0 Chromium headless, SwiftShader（软件渲染）, 1280×720, ?q=low",
  "pass": 94,
  "total": 94,
@@ -135,7 +135,7 @@
    "ok": true,
    "detail": {
     "mode": "play",
-    "t": 2.43,
+    "t": 2.42,
     "overlay": null,
     "x": -19,
     "y": 10,
@@ -562,8 +562,8 @@
    "ok": true,
    "detail": [
     {
-     "t": 42.67,
-     "f": 2560,
+     "t": 42.65,
+     "f": 2559,
      "name": "respawn",
      "data": {
       "x": 12,
@@ -881,7 +881,7 @@
      "auto": null
     },
     "focus": "start",
-    "toast": null,
+    "toast": "2 名俘虏散落在阵亡处，回去把他们接上车",
     "banner": "第二关 · 废墟城石柱后面藏着闪光星"
    }
   },

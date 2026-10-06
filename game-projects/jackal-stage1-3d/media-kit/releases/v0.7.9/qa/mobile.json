@@ -1,8 +1,8 @@
 {
- "when": "2026-10-06T21:09:51.005Z",
+ "when": "2026-10-06T21:21:57.490Z",
  "env": "Chromium 设备模拟（isMobile/hasTouch，DPR3，Pixel 8 UA）+ CDP 触摸事件；SwiftShader；非真机",
- "pass": 57,
- "total": 57,
+ "pass": 58,
+ "total": 58,
  "results": [
   {
    "name": "[横屏] 打开即显示菜单（不旋转）",
@@ -18,8 +18,8 @@
    "name": "[横屏] 菜单完整落在视口内",
    "ok": true,
    "detail": {
-    "top": 11.5,
-    "bottom": 378.5,
+    "top": 33,
+    "bottom": 357,
     "left": 12,
     "right": 832,
     "vw": 844,
@@ -27,17 +27,29 @@
    }
   },
   {
+   "name": "[横屏] Toy 外壳顶栏下（844×346）菜单仍完整落在视口内",
+   "ok": true,
+   "detail": {
+    "top": 11,
+    "bottom": 335,
+    "left": 12,
+    "right": 832,
+    "vw": 844,
+    "vh": 346
+   }
+  },
+  {
    "name": "[横屏] 菜单有「返回游戏列表」且可点（≥40px）",
    "ok": true,
    "detail": {
-    "x": 723.8359375,
-    "y": 302.5,
-    "w": 182.296875,
+    "x": 716.8359375,
+    "y": 281,
+    "w": 196.296875,
     "h": 40,
-    "x0": 632.6875,
-    "y0": 282.5,
+    "x0": 618.6875,
+    "y0": 261,
     "x1": 814.984375,
-    "y1": 322.5
+    "y1": 301
    }
   },
   {
@@ -612,7 +624,7 @@
    "ok": true,
    "detail": {
     "fsCapable": false,
-    "nItems": 15,
+    "nItems": 14,
     "seen": [
      "stage",
      "lives",
@@ -622,7 +634,6 @@
      "camera",
      "quality",
      "volume",
-     "touch",
      "fps",
      "list",
      "mode:auto",
@@ -636,8 +647,8 @@
    "name": "[不支持全屏] 主菜单仍完整落在视口内",
    "ok": true,
    "detail": {
-    "top": 12,
-    "bottom": 379,
+    "top": 33,
+    "bottom": 357,
     "left": 12,
     "right": 832,
     "vw": 844,

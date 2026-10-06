@@ -58,6 +58,11 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   check('[横屏] 触屏设备显示触控说明', await page.isVisible('#menu .help-touch'));
   const fits = await page.evaluate(() => { const p = document.querySelector('#menu .panel').getBoundingClientRect(); return { top: p.top, bottom: p.bottom, left: p.left, right: p.right, vw: innerWidth, vh: innerHeight }; });
   check('[横屏] 菜单完整落在视口内', fits.top >= 0 && fits.bottom <= fits.vh && fits.left >= 0 && fits.right <= fits.vw, fits);
+  // Toy 手机外壳顶栏占 44px，游戏 iframe 实际是 844×346
+  await page.setViewportSize({ width: 844, height: 346 }); await page.waitForTimeout(300);
+  const fitsToy = await panelFits(page, '#menu');
+  check('[横屏] Toy 外壳顶栏下（844×346）菜单仍完整落在视口内', inside(fitsToy), fitsToy);
+  await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(300);
   const listLink = await box(page, '#menu .list-link');
   check('[横屏] 菜单有「返回游戏列表」且可点（≥40px）', listLink.h >= 40, listLink);
   await page.screenshot({ path: 'out/m_land_menu.png' });
@@ -316,7 +321,8 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   const nItems = await page.evaluate(() => [...document.querySelectorAll('#menu .items > button, #menu .items > a, #menu .control-modes > button')].filter(e => e.getClientRects().length).length);
   // 操作模式三键没有 data-act/opt/id，按 data-control-mode 区分
   for (let k = 0; k < nItems; k++) { await page.keyboard.press('ArrowDown'); seen.push(await page.evaluate(() => { const e = document.activeElement; return e.dataset.act || e.dataset.opt || (e.dataset.controlMode ? 'mode:' + e.dataset.controlMode : e.id); })); }
-  check('[不支持全屏] 主菜单隐藏「全屏」，键盘 ↓ 逐项走完不卡住、不落到隐藏项', !s.ui.fsCapable && !(await page.isVisible('#menu .fs-btn')) && !seen.includes('fullscreen') && new Set(seen).size === nItems, { fsCapable: s.ui.fsCapable, nItems, seen });
+  // 紧凑横屏还用样式收起了与三键行重复的「操作模式」循环项，导航同样要跳过
+  check('[不支持全屏] 主菜单隐藏「全屏」，键盘 ↓ 逐项走完不卡住、不落到隐藏项', !s.ui.fsCapable && !(await page.isVisible('#menu .fs-btn')) && !seen.includes('fullscreen') && !seen.includes('touch') && new Set(seen).size === nItems, { fsCapable: s.ui.fsCapable, nItems, seen });
   const ff = await panelFits(page, '#menu');
   check('[不支持全屏] 主菜单仍完整落在视口内', inside(ff), ff);
   const st4 = await box(page, '#menu [data-act=start]');

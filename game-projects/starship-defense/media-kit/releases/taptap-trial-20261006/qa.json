@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "tested_at": "2026-10-06T13:28:12.287Z",
+  "package_sha256": "8070bb971464d96dc496d833823a3a40b35829913e2a77d82eccfafe27be2251",
+  "version": "web-touch-layout-v0.19.1",
+  "results": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1920,
+        "height": 1080
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    },
+    {
+      "viewport": {
+        "name": "phone-landscape",
+        "width": 844,
+        "height": 390
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    },
+    {
+      "viewport": {
+        "name": "phone-portrait",
+        "width": 390,
+        "height": 844
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    }
+  ],
+  "real_phone_test": false
+}
