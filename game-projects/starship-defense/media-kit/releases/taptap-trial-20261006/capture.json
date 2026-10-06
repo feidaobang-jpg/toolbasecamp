@@ -1,0 +1,19 @@
+{
+  "package_sha256": "8070bb971464d96dc496d833823a3a40b35829913e2a77d82eccfafe27be2251",
+  "method": "Normal new-game button, camera presets, movement and grenade keyboard input; no QA scene mutation or invulnerability.",
+  "device": "desktop Edge, 1920x1080",
+  "video": "gameplay.mp4",
+  "audio": false,
+  "video_trim": {
+    "start_seconds": 6,
+    "duration_seconds": 30
+  },
+  "screenshots": [
+    "gameplay-01.jpg",
+    "gameplay-02.jpg",
+    "gameplay-03.jpg"
+  ],
+  "icon_source": "Existing game icon.svg rasterized at 1024px with square opaque corners",
+  "banner_status": "not_prepared",
+  "captured_at": "2026-10-06T13:38:09.703Z"
+}
