@@ -1,4 +1,4 @@
-import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=toy3dui3';
+import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=controls-inset1';
 import * as THREE from './vendor/three.module.js';
 import {createLiveController} from './live-controller.js';
 const LIVE_MODE=new URLSearchParams(location.search).get('live')==='1';
@@ -75,6 +75,9 @@ function fitStage(){
   stage.style.setProperty('--corner-right',(10+(parseFloat(rotated?safe.paddingBottom:safe.paddingRight)||0))/stageScale+'px');
   stage.style.setProperty('--corner-height',Math.max(44,44/stageScale)+'px');
   stage.style.setProperty('--corner-gap',8/stageScale+'px');
+  stage.style.setProperty('--touch-left',(40+(parseFloat(rotated?safe.paddingTop:safe.paddingLeft)||0))/stageScale+'px');
+  stage.style.setProperty('--touch-right',(40+(parseFloat(rotated?safe.paddingBottom:safe.paddingRight)||0))/stageScale+'px');
+  stage.style.setProperty('--touch-bottom',(36+(parseFloat(rotated?safe.paddingLeft:safe.paddingBottom)||0))/stageScale+'px');
   stage.style.transform='translate(-50%,-50%) '+(rotated?'rotate(90deg) ':'')+'scale('+stageScale+')';
 }
 window.addEventListener('resize',fitStage);window.addEventListener('orientationchange',()=>setTimeout(()=>window.dispatchEvent(new Event('resize')),120));

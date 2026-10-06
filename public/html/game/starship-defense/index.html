@@ -70,7 +70,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 /* 虚拟触控 */
 #touchUI{pointer-events:none;z-index:20;}
 #lookZone{position:absolute;left:44%;right:0;top:80px;bottom:0;pointer-events:auto}
-#joyBase{position:absolute;left:4px;bottom:24px;width:124px;height:124px;border-radius:50%;pointer-events:auto;}
+#joyBase{position:absolute;left:var(--touch-left,40px);bottom:var(--touch-bottom,36px);width:124px;height:124px;border-radius:50%;pointer-events:auto;}
 #joyKnob{position:absolute;left:37px;top:37px;width:50px;height:50px;border-radius:50%;}
 .vbtn{position:absolute;width:54px;height:54px;border-radius:50%;font-size:12px;font-weight:bold;text-align:center;line-height:52px;pointer-events:auto;}
 .vbtn:active,.vbtn.on{filter:brightness(1.5);transform:scale(.92);}
@@ -203,9 +203,9 @@ button::before,button::after{content:none!important}
 
 /* Arcade rows: U I O directly above J K L; utilities remain separate. */
 #touchUI .vbtn:not(#vC):not(#vP){width:58px;height:58px;line-height:56px;font-size:12px}
-#vJ{right:154px;bottom:18px}#vK{right:86px;bottom:18px}#vL{right:18px;bottom:18px}
-#vU{right:154px;bottom:86px}#vI{right:86px;bottom:86px}#vO{right:18px;bottom:86px}
-#vSPRINT{right:154px;bottom:154px}#vH{right:86px;bottom:154px}#vX{right:18px;bottom:154px}
+#vJ{right:calc(var(--touch-right,40px) + 136px);bottom:var(--touch-bottom,36px)}#vK{right:calc(var(--touch-right,40px) + 68px);bottom:var(--touch-bottom,36px)}#vL{right:var(--touch-right,40px);bottom:var(--touch-bottom,36px)}
+#vU{right:calc(var(--touch-right,40px) + 136px);bottom:calc(var(--touch-bottom,36px) + 68px)}#vI{right:calc(var(--touch-right,40px) + 68px);bottom:calc(var(--touch-bottom,36px) + 68px)}#vO{right:var(--touch-right,40px);bottom:calc(var(--touch-bottom,36px) + 68px)}
+#vSPRINT{right:calc(var(--touch-right,40px) + 136px);bottom:calc(var(--touch-bottom,36px) + 136px)}#vH{right:calc(var(--touch-right,40px) + 68px);bottom:calc(var(--touch-bottom,36px) + 136px)}#vX{right:var(--touch-right,40px);bottom:calc(var(--touch-bottom,36px) + 136px)}
 /* Corner utilities share one compact row; action controls keep their own theme. */
 #cornerTools{position:absolute;top:var(--corner-top);right:var(--corner-right);z-index:35;display:flex;gap:var(--corner-gap);align-items:center}
 #cornerTools .mbtn,#vC,#vP{height:var(--corner-height);min-width:72px;white-space:nowrap;line-height:normal;display:flex;align-items:center;justify-content:center;padding:0 12px;border-radius:14px;background:rgba(255,246,223,.92);border:2px solid #dcc790;color:#2f4436;font:800 13px "Microsoft YaHei",sans-serif;text-shadow:none;box-shadow:0 3px 0 #785a2838}
@@ -431,6 +431,6 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=live101" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=controls-inset1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

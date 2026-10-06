@@ -129,11 +129,11 @@ body:not(.touch-on) .help-touch{display:none}
 /* 触屏 */
 #touch{position:absolute;inset:0;pointer-events:none;z-index:10}
 #joy-zone{position:absolute;left:0;bottom:0;width:42%;height:62%;pointer-events:auto;touch-action:none}
-#joy-base{position:absolute;left:4px;bottom:calc(30px + var(--sab));width:128px;height:128px;border-radius:50%;background:#ffffff1f;border:2px solid #ffffff66}
+#joy-base{position:absolute;left:calc(40px + var(--sal));bottom:calc(36px + var(--sab));width:128px;height:128px;border-radius:50%;background:#ffffff1f;border:2px solid #ffffff66}
 #joy-base.active{background:#ffffff30}
 #joy-knob{position:absolute;left:50%;top:50%;width:56px;height:56px;border-radius:50%;background:#ffffffc0;transform:translate(-50%,-50%);box-shadow:0 2px 10px #0006}
 .joy-tip{position:absolute;bottom:-20px;width:100%;text-align:center;font-size:11px;color:#fffc;text-shadow:1px 1px 0 #000}
-.act-keys{position:absolute;right:calc(22px + var(--sar));bottom:calc(58px + var(--sab));display:flex;gap:12px;align-items:flex-end;pointer-events:auto}
+.act-keys{position:absolute;right:calc(40px + var(--sar));bottom:calc(36px + var(--sab));display:flex;gap:12px;align-items:flex-end;pointer-events:auto}
 .cam-keys{position:absolute;right:calc(18px + var(--sar));bottom:calc(166px + var(--sab));display:flex;gap:8px;pointer-events:auto}
 .act{width:68px;height:68px;border-radius:50%;border:2px solid #ffffffaa;background:#00000052;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;touch-action:none;padding:0;font-family:inherit}
 .act b{font:900 22px Consolas,monospace;color:#ffd23a}
@@ -180,7 +180,7 @@ body.touch-on #hud-top{bottom:auto;top:calc(8px + var(--sat));right:calc(10px + 
 #stage.compact .act.small{width:44px;height:44px}
 #stage.compact .cam-keys{bottom:calc(128px + var(--sab))}
 #stage.compact .act-keys{bottom:calc(36px + var(--sab))}
-#stage.compact #joy-base{width:110px;height:110px;bottom:calc(20px + var(--sab))}
+#stage.compact #joy-base{width:110px;height:110px;bottom:calc(36px + var(--sab))}
 #stage.compact .tally-box{font-size:14px;line-height:1.35}
 #stage.compact #t-rows .row{margin:2px 0}
 #stage.compact #keyhint{font-size:11px;gap:10px}
