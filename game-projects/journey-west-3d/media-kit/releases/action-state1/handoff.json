@@ -91,7 +91,12 @@
     }
   ],
   "release_channels": {
-    "website": "awaiting_verification",
+    "website": {
+      "status": "public_verified",
+      "commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
+      "verified_at": "2026-10-06T22:19:17.380462+00:00",
+      "evidence": "../../../../mario-3d/media-kit/releases/v2.4.4/website.json"
+    },
     "toy": "not_applicable：现有西游Toy是2D旧版，本站3D无对应映射",
     "bilibili": "普通按钮小修累计，现有介绍未误导"
   },

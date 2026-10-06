@@ -16,7 +16,7 @@ function check(name, ok, data) { checks.push({ name, ok, data }); if (!ok) throw
     if (baseline) {
       const { execFileSync } = require('node:child_process');
       for (const n of ['main.js', 'world.js', 'scene.js', 'textures.js']) {
-        const body = execFileSync('git', ['show', 'HEAD:public/html/game/mario-3d/' + n], { encoding: 'utf8' });
+        const body = execFileSync('git', ['show', (process.env.QA_BASELINE_REF || '63a09c05') + ':public/html/game/mario-3d/' + n], { encoding: 'utf8' });
         await p.route('**/' + n + '*', r => r.fulfill({ contentType: 'application/javascript', body }));
       }
     }

@@ -88,6 +88,14 @@
       "summary": "按用户反馈恢复斜俯视全图取景，取消跟随；正俯视和按钮内移保留",
       "record": "releases/camera-fullmap1/handoff.json",
       "reason": "普通镜头补丁累计，下次有意义的简介更新合并；现有操作说明仍准确"
+    },
+    {
+      "version": "fs-capable1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+      "record": "releases/fs-capable1/handoff.json",
+      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
     }
   ],
   "history": [
