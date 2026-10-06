@@ -2,7 +2,7 @@
 // 以及 5 个视角预设（斜俯视 / 正俯视 / 近景 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
 // 美术全部程序化：基础几何体 + Canvas 纹理。1 个 8px 格 = 1 个世界单位，战场中心在原点。
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer } from './sim.js?v=coop1';
+import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer } from './sim.js?v=pickup-clean1';
 
 const C = N / 2, TAU = Math.PI * 2;
 const P = v => v / 8 - C;                       // FC 像素 → 世界坐标
@@ -286,8 +286,6 @@ export function createScene(canvas) {
   function puSprite() { const s = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); s.scale.set(1.9, 1.9, 1); return s; }
   const puGroup = new THREE.Group(); puGroup.visible = false; scene.add(puGroup);
   const puIcon = puSprite(); puIcon.position.y = 1.5; puGroup.add(puIcon);
-  const puRing = new THREE.Mesh(new THREE.RingGeometry(1, 1.25, 32), new THREE.MeshBasicMaterial({ color: '#ffe27a', transparent: true, opacity: .7, side: THREE.DoubleSide, depthWrite: false })); puRing.rotation.x = -Math.PI / 2; puRing.position.y = .04; puGroup.add(puRing);
-  const puBeam = new THREE.Mesh(new THREE.CylinderGeometry(.9, .9, 3, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#fff2a0', transparent: true, opacity: .14, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); puBeam.position.y = 1.5; puGroup.add(puBeam);
   const itemPool = [];
   const mineGeo = new THREE.CylinderGeometry(.42, .5, .2, 14), mineMat = mat('#30343a', .5, .5), mineLight = new THREE.MeshBasicMaterial({ color: '#ff2a2a' });
   const minePool = [], markPool = [], laserPool = [];
@@ -542,7 +540,7 @@ export function createScene(canvas) {
     if (pu) {
       if (!puTex[pu.type]) puTex[pu.type] = iconTex(pu.type);
       if (puIcon.material.map !== puTex[pu.type]) { puIcon.material.map = puTex[pu.type]; puIcon.material.needsUpdate = true; }
-      puGroup.position.set(P(pu.x + 8), 0, P(pu.y + 8)); puIcon.position.y = 1.5 + Math.sin(elapsed * 3) * .18; puRing.rotation.z = elapsed * 1.5;
+      puGroup.position.set(P(pu.x + 8), 0, P(pu.y + 8)); puIcon.position.y = 1.5 + Math.sin(elapsed * 3) * .18;
     }
     while (itemPool.length < world.items.length) { const s = puSprite(); s.scale.set(1.5, 1.5, 1); scene.add(s); itemPool.push(s); }
     itemPool.forEach((s, i) => {

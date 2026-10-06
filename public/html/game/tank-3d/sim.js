@@ -268,7 +268,12 @@ function updatePlayer(w, input) {
   for (let i = w.items.length - 1; i >= 0; i--) {
     const it = w.items[i];
     if (Math.abs(it.x - p.x - 8) >= 12 || Math.abs(it.y - p.y - 8) >= 12) continue;
-    if (it.type === 'repair') { if (w.run.hp >= 3) continue; w.run.hp = 3; w.run.stats.repairs++; emit(w, 'repair', { x: it.x, y: it.y }); }
+    if (it.type === 'repair') {
+      if (w.run.hp >= 3 && w.classic) continue;
+      const repaired = w.run.hp < 3;
+      if (repaired) { w.run.hp = 3; w.run.stats.repairs++; }
+      emit(w, 'repair', { x: it.x, y: it.y, repaired });
+    }
     else { addScore(w, 500, it.x, it.y); emit(w, 'medal', { x: it.x, y: it.y }); }
     w.items.splice(i, 1);
   }
@@ -601,7 +606,7 @@ export function destroyBot(w, t, byGrenade) {
     w.kills[key] = (w.kills[key] || 0) + 1;
     w.run.stats.kills++;
     const pts = Math.round(SCORE[key] * w.diff.scoreMul / 10) * 10;
-    addScore(w, pts, t.x + t.size / 2, t.y + t.size / 2, true);
+    addScore(w, pts);
   }
   emit(w, 'boom', { x: t.x + t.size / 2, y: t.y + t.size / 2, big: true, huge: t.size > 16, team: 'bot', type: t.type });
   if (t === w.boss || t.type === 'mini' || t.size > 16) {

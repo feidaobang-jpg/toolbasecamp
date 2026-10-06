@@ -1,0 +1,30 @@
+{
+  "version": "pickup-clean1",
+  "classification": "普通补丁",
+  "task_id": "01a110d2-tank-pickup-20261006-01",
+  "branch": "codex/tank-pickup-clean-20261006",
+  "changes": [
+    "移除击杀分数浮字，保留正常分数、结算与奖命",
+    "移除道具地面外圈与柱状光圈，保留图标和闪烁",
+    "魔改版满护甲也消耗修理包，不额外增加护甲；仅实际修复计入修复统计"
+  ],
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "slug": "feidao-tank-3d",
+    "status": "pending_preview"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通补丁并入下次有意义的说明更新；当前入口和操作说明无变化"
+  },
+  "validation": {
+    "sim_checks": 19,
+    "coop_sim": "passed",
+    "browser": "captures/verification.json",
+    "physicalPhoneTest": false
+  },
+  "created_at": "2026-10-06T10:50:33.741758+00:00"
+}
