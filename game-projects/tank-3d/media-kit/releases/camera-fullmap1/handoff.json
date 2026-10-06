@@ -1,0 +1,466 @@
+{
+  "game": "tank-3d",
+  "version": "camera-fullmap1",
+  "base_version": "camera-follow1",
+  "classification": "普通补丁",
+  "summary": "按用户反馈恢复斜俯视全图取景，取消跟随；正俯视和按钮内移保留",
+  "evidence_directory": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5",
+  "physical_phone_test": false,
+  "website": {
+    "status": "public_verified",
+    "commit": "91631600a10393f1a64ecf7ec45b72609c335a98",
+    "verified_at": "2026-10-06T15:55:16.221735+00:00",
+    "qa": "website-qa.json"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "auditing",
+    "platform_status": "auditing",
+    "checked_at": "2026-10-06T15:56:54.216947+00:00",
+    "package": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\package",
+    "package_sha256": "33beb6289bf5b88730955bad5456209ba3690b446dbe856642e2cf95671847d7",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_P07nRFPD/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Dt86VZ6Y/index.html",
+    "submitted_at": "2026-10-06T15:56:54.216947+00:00",
+    "qa": "toy-preview-qa.json",
+    "public_package_verified": false
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通镜头补丁累计，下次有意义的简介更新合并；现有操作说明仍准确"
+  },
+  "media": [
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\1280x720-oblique.png",
+      "sha256": "5e628f7561228c2fac8019ba47862d57e5de749c836a762a0af89c2a8d4176f3",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\1280x720-preset2.png",
+      "sha256": "e625e59d5685594e2c7df9be7ef4badc592d5315dcb76bfcb8111e71b73e0404",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\1280x720-preset3.png",
+      "sha256": "e0f74f386649e36cb486fdc018d7d4989e7496c3ee1ab5c69818e597219e4c46",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\1280x720-preset4.png",
+      "sha256": "e863a528db6b74e4a58d7d6a8f3ed1bc5d6c2188892b9ad5a152d9bd66ae0ab2",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\1280x720-top.png",
+      "sha256": "bb5154b62aa693dcaf5770f6715487d96cf821fd7d4b96859ac4f8562eb92cf3",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\390x844-oblique.png",
+      "sha256": "0ffcf6ebc9039716f96d5c42206fce80f6edb1f307024419529f8ae8aec6c01d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\390x844-preset2.png",
+      "sha256": "8505f293049ae3c857bf5ca109594ca901d08d373b0652ffa89230fd2c675381",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\390x844-preset3.png",
+      "sha256": "7e4e971907eccbd16303f8004f7c09ac2c7c85b8ae2878828e123c8ef3a1d66d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\390x844-preset4.png",
+      "sha256": "581c2297ce531037fe35bf55000f223a2459b299d302c79602fc51be72aefd57",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\390x844-top.png",
+      "sha256": "44eb84e4fa7421a05bcc44bd1b96c515a0f29a002407c0ed4c520a0d746fcb31",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\568x320-oblique.png",
+      "sha256": "8ef049746dd43a91e89fb5ff324448b2e508c0045441a13b525eef15224602b5",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\568x320-preset2.png",
+      "sha256": "b2f6a5aba4f496efaafc4ce86a464f9019128dd1091b4658863f999780a9f97d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\568x320-preset3.png",
+      "sha256": "ba158556b597495190da5df221be616de1be8837e25720a2ff9783bacdb486bc",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\568x320-preset4.png",
+      "sha256": "4d3d261e0b98dbcd411c0b69f96f0f038da6b400a1bf0af6919f287ef33b9f78",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\568x320-top.png",
+      "sha256": "818bc03d5579f9bfd681f0f94ffac8014e33b767cb8a9e904d72b1f760f4f723",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\844x390-oblique.png",
+      "sha256": "567d0a0522bfa8dc653eeeb822866d351be85114f6e9d25b7e041722b6bb0993",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\844x390-preset2.png",
+      "sha256": "ef55433803abae701217a5338de111e729824db4f62551d38bc90873b2479fef",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\844x390-preset3.png",
+      "sha256": "5160770c8e8cd3869307cd0306b455ee18a772393e566f5cb4359f4f4ab3c88f",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\844x390-preset4.png",
+      "sha256": "404e4b9f7778979110f56cc1b7f042c577091ddf5b1eb3043d2f0aaf270eaa9e",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\844x390-top.png",
+      "sha256": "0c65880f01d71b9ef12c3a4dbed5a03e2119e2ba4ea68fa39906986585ed8bc3",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\page@3968711c3b2ccf78a62c1fa297ba3a61.webm",
+      "sha256": "d5be8aa68e4329d3b30784c076d855c5e25a8024aceadbd0109e52bc51bd5515",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\page@625b9f502dabf18a2ae7939266b515b7.webm",
+      "sha256": "86f6a6d05e4f87cd234fd761f101659f7453726f030acd93c15a910efe3e1fd2",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\page@b3412e4e285531d1e7c1aa27ee6aaf53.webm",
+      "sha256": "c6f1292d5de2bcc84cf59cb69117f7b5b717dfc60bcffcee2987c40e1dfc5992",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\local\\page@cdc6c3ad373902dc45ce487073ab79c6.webm",
+      "sha256": "1f572add516f9f6b7cfe93e8a1a527f5549149941951297c63e0a4f4dd8622ce",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\1280x720-oblique.png",
+      "sha256": "b1a73237482d17b96c782a4568a0b5d3d281c01972b522a80dab3d696cfc8368",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\1280x720-preset2.png",
+      "sha256": "9a1eb0f720f4176df9a0427485ea5a27d595140d7041e5807d18d6aa5fe6a6ef",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\1280x720-preset3.png",
+      "sha256": "cebd6b1afdf22d4c6df640d71263797c5949a107fe3a081e9c47514dff6bf785",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\1280x720-preset4.png",
+      "sha256": "e863a528db6b74e4a58d7d6a8f3ed1bc5d6c2188892b9ad5a152d9bd66ae0ab2",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\1280x720-top.png",
+      "sha256": "92fd1f4f490df17196b42c0337566d2d7b9d14833ebcd00021ed339007d53b67",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\390x844-oblique.png",
+      "sha256": "8c79f2f41a3cde341d8b8d0e35e71871259a3d3373c9b6d38192d1b903eecf19",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\390x844-preset2.png",
+      "sha256": "78644cb223bafcd1ecfcc1024dcdbfc2fefb208aea8e62036c068ed924e3d27d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\390x844-preset3.png",
+      "sha256": "52752f9e39208b5e58b177ece3cf642025745d448c3f48751ecb5f1207f0f309",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\390x844-preset4.png",
+      "sha256": "008d141871122cc75346bd9e776acb9c8d0a4aa1d6d411ee73bd05136c0b101d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\390x844-top.png",
+      "sha256": "d4188708de2e3f59b529635b91971b97a722d46d721b843fb1c75ab620a47cec",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\568x320-oblique.png",
+      "sha256": "93ef84a7d6184c531ca7567138a10ccc9eac07127647397872248f590445a258",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\568x320-preset2.png",
+      "sha256": "c8d752050e4c000790e3b86579ead3fbe41a05a0df40bc602b4c250f242658a7",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\568x320-preset3.png",
+      "sha256": "61c4375281b6575ddc8c2810c50e9dbf1b5aa1cc575267d759307b301417e0be",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\568x320-preset4.png",
+      "sha256": "4d3d261e0b98dbcd411c0b69f96f0f038da6b400a1bf0af6919f287ef33b9f78",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\568x320-top.png",
+      "sha256": "b95f2e5a7c9e02c57b23dd3143b70f324a8041a5ebdbee977ced6b85599c5b45",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\844x390-oblique.png",
+      "sha256": "8919ed09ea43907df122d6e09e871d1e31cd3d9f5b2e78582c10e3487ad2062f",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\844x390-preset2.png",
+      "sha256": "ef55433803abae701217a5338de111e729824db4f62551d38bc90873b2479fef",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\844x390-preset3.png",
+      "sha256": "5160770c8e8cd3869307cd0306b455ee18a772393e566f5cb4359f4f4ab3c88f",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\844x390-preset4.png",
+      "sha256": "404e4b9f7778979110f56cc1b7f042c577091ddf5b1eb3043d2f0aaf270eaa9e",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\844x390-top.png",
+      "sha256": "b0af1247fbffaea339842390743c2161edca65d318853f44f43c6ed9ff989a3e",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\page@2525727705ff375f3dec4bf48c7256cc.webm",
+      "sha256": "b232416e0e471843c04459870e077cf211e858cc62b4c9ff5245ed90d4cb9fc6",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\page@5592c51f0a4e53336205877a332c6645.webm",
+      "sha256": "3cbe10620ac7937a20aaa3a7c8a2822383685d48225044408d7fd726ee04d2e1",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\page@5aacdc7203b9c6059e005471829a95aa.webm",
+      "sha256": "bcd60ee1b135012dc0010f923316eb7cc6746e759eadce4fc9cbe380b6d36f59",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\website\\page@bbfe20727438ecf7c9475d4ee1d62b1a.webm",
+      "sha256": "2fa0fd70fb199aab92bce3e21521a8738ffa449800329efbb1ed6db8fdc133f9",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\1280x720-oblique.png",
+      "sha256": "f461a88d141ee13ff3d19755316f02d04fb34772b6bd34d6982cdcf22ce05a78",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\1280x720-preset2.png",
+      "sha256": "4ac6142802e47511051e3184413d3ebd325b7d03964d152e369ed63cceacb078",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\1280x720-preset3.png",
+      "sha256": "34ee29c1baf310803afe922b021dc0cd4d6f9b1365821c0f6f45dba3b8740dab",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\1280x720-preset4.png",
+      "sha256": "4abcf1417aa4badc453234dd395247b53a23366c57a60edef002d7935b38a15d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\1280x720-top.png",
+      "sha256": "f22f79f7fc46e8d868044993aaecfe811e64024941d0e67bfdb1b4dc28367cba",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\390x844-oblique.png",
+      "sha256": "9e856b9aef982de23a35d8cc5cb896ec591beb5588c36aa4219d6854d07af4a8",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\390x844-preset2.png",
+      "sha256": "b04b08c35742ca9136bcb19cf39f75574eb5ab64aee3daf4e427930261b31669",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\390x844-preset3.png",
+      "sha256": "c7d3220aae2990f3471cbd7a3c51ec84b2c68985777cc0e0e805bd9f65eec871",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\390x844-preset4.png",
+      "sha256": "e3cb1886c4ed4c7ae0191b89ae7ed2cbfd274a1465d00d17bcee5b6aa0fbb446",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\390x844-top.png",
+      "sha256": "279ded8a216d6a3c795ccaa60185824e32ab992afab06f9a66c467718c455ce4",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\568x320-oblique.png",
+      "sha256": "77ef4026fa900f0e21f4771bf7b9bdc3dbc73ce03ac44b6c6569bb0d55a41ceb",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\568x320-preset2.png",
+      "sha256": "f57f1716cce6c69192e434d3b4fc28c5d6cb0fc53fcf4259f942bb2bc53f178d",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\568x320-preset3.png",
+      "sha256": "933aa02d85e0c251b5836a8ccd08cccadd383e9242f3c3997362e6c6209680c2",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\568x320-preset4.png",
+      "sha256": "b87f4f4a59338b8894efa88aac31c4bcce4054de646b48343c04e7da69bbcbab",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\568x320-top.png",
+      "sha256": "a6b96414659a469b2aead671123a0f9b4dc4d1c3cdb56d621bc7b00751eb0094",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\844x390-oblique.png",
+      "sha256": "b4534505b9642a2f23f246f609210ad3f5f7da5a888f8afc6d404804fef0d796",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\844x390-preset2.png",
+      "sha256": "0bb03830a4e22da1338e1824152862aaefb0b80edd34c75ff6d3d53c56a06b4f",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\844x390-preset3.png",
+      "sha256": "f216dfe1a016cf4b02b419ba2655c3ff344271dbf03b6e016085fe949003ffec",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\844x390-preset4.png",
+      "sha256": "bf4b8ed272220f9b048942fe1b2e14e7857874e409f62a14f4e5ef5eb8ff4ec2",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\844x390-top.png",
+      "sha256": "d32f5033ba56ac965605c3ac96edff530b4944a8ddfb888663bd9816f1c34ab5",
+      "capture_mode": "realtime-automation",
+      "audio": null
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\page@21396694bf88bca171a12962f4f733e6.webm",
+      "sha256": "5d3f30f5c1b2c51fb96e8ecf23eb273330bfe70894670bb4f190c8f02306f504",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\page@6a8f4cf81ad680389feb003f603bce5b.webm",
+      "sha256": "c246c425bd7410cfa1be4970dd2a1e67c49c9fbc13d50cd4de5ae582e83aabff",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\page@a0501392e46d5e502fded7f57a8c4977.webm",
+      "sha256": "e0eba9fcf8908fce93a39448896029da9fef6d9e464e9327355ccb2d985946a1",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-fullmap-20261006-01a111b5\\toy-preview\\page@ba9ae1e9544707b2fa13d3e78225ee25.webm",
+      "sha256": "859ad1bacda8a650acfa3eb7beae5b939ad0b56cc549f18a386d4e0ef45664bc",
+      "capture_mode": "realtime-automation",
+      "audio": "none"
+    }
+  ]
+}

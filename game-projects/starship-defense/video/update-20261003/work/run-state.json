@@ -1,0 +1,112 @@
+{
+  "status": "published",
+  "mode": "update",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "files_complete": true,
+  "subjective_audio_review": "user-approved",
+  "next_step": null,
+  "render_entry": "edit/shared-zh/render.py",
+  "source_build": "build-current",
+  "video_sha256": "e1403349512ad4c44ff1db7614d858f299bc65cbb552a5b879c25b0165853645",
+  "cover_stage": "completed",
+  "uploaded": true,
+  "user_review": {
+    "reviewer": "user",
+    "review_result": "approved",
+    "statement": "我看了视频，没问题，你能帮我发布吗",
+    "recorded_at": "2026-10-04T05:17:00.363922+08:00",
+    "video_sha256": "e1403349512ad4c44ff1db7614d858f299bc65cbb552a5b879c25b0165853645",
+    "publication_authorized": true
+  },
+  "publication": {
+    "status": "published",
+    "bvid": "BV1WbHq6eEBt",
+    "aid": 117379107393594,
+    "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+    "account_name": "飞刀班长",
+    "account_mid": 16214353,
+    "published_at": "2026-10-04T05:31:51+08:00",
+    "verified_at": "2026-10-04T05:34:43.5564033+08:00",
+    "review": "passed",
+    "visibility": "public",
+    "category": "游戏",
+    "ai_declaration": "含AI生成内容",
+    "dual_covers_uploaded": true,
+    "topic_selected": true,
+    "toy_id": 38678478981120,
+    "toy_bound": true,
+    "toy_binding_verified": true,
+    "comment_published": true,
+    "comment_pinned": true,
+    "pin_evidence": "B站返回置顶成功",
+    "screenshot": "qa/published.png",
+    "comment_screenshot": "qa/published-comment.png",
+    "promotion_application_submitted": true,
+    "promotion_application": {
+      "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+      "sheet": "【进行中】日常推流",
+      "range": "A258:E258",
+      "values": [
+        "飞刀班长",
+        "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+        "是",
+        "是",
+        "是"
+      ],
+      "duplicate_check": "精确BV查找无结果后填写",
+      "cloud_save": "已自动保存",
+      "recorded_at": "2026-10-04T06:02:44.6697917+08:00",
+      "operator_feedback": null,
+      "screenshot": "qa/promotion-application.png"
+    },
+    "automatic_video_dynamic": {
+      "verified": true,
+      "source_url": "https://space.bilibili.com/16214353/dynamic",
+      "text": "飞刀班长 · 投稿了视频",
+      "bvid": "BV1WbHq6eEBt",
+      "screenshot": "qa/automatic-video-dynamic.png",
+      "separate_promotional_post_created": false
+    },
+    "previous_video_maintenance": {
+      "status": "completed",
+      "old_bvid": "BV1Ujad6DEuf",
+      "new_bvid": "BV1WbHq6eEBt",
+      "recorded_at": "2026-10-04T09:42:18.958999+08:00",
+      "authorization": "用户要求按建议执行，并将审片通过后发布、填写推流表及旧视频维护纳入game-video长期流程。",
+      "old_description": "用AI辅助做了一个低多边形基地防守小游戏《虫潮前哨》。这次录了第一波实战：出门迎敌、机枪扫射、投掷手雷，再退回基地。\n\n试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n目前是可玩的试玩版，下一步想先打磨操作体验。",
+      "description_addition": "【版本更新】游戏现名《虫潮围城》，本视频为2026年9月30日的早期版本实录，部分画面和操作已调整，以当前游戏为准。\n新版实战（2026年10月4日）：钻进虫洞反攻母皇\nhttps://www.bilibili.com/video/BV1WbHq6eEBt/\n\n【原视频介绍】",
+      "description_submitted": true,
+      "description_publicly_verified": true,
+      "prior_pinned_comment": {
+        "title": "【虫潮前哨 v0.9 更新｜你们提的问题都改了】",
+        "created_at": "2026-10-03 07:11",
+        "preserved": true,
+        "now_unpinned": true,
+        "outdated_details": "明亮Q版切换、G队令、蓝色光柱等旧操作与画面描述，保留为历史记录。"
+      },
+      "new_comment": "【虫潮围城·新版实战】这条视频是9月30日的早期实录，部分画面和操作已调整，以当前游戏提示为准。10月4日新版：钻进虫洞反攻母皇！https://www.bilibili.com/video/BV1WbHq6eEBt/ ；Toy试玩（同一入口持续更新）：https://www.bilibili.com/toy/chongchao-qianshao/index.html ；电脑用鼠标转视角，手机拖动右侧空白处。还有哪里不好操作？欢迎留言。投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "comment_published": true,
+      "comment_pinned": true,
+      "pin_evidence": "页面提示置顶成功；重新加载后完整评论带置顶标记，新BV与Toy链接可点击。",
+      "toy_binding_before": [
+        "BV1WbHq6eEBt"
+      ],
+      "toy_binding_after": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt"
+      ],
+      "toy_id": 38678478981120,
+      "toy_binding_verified": true,
+      "screenshot": "qa/previous-video-pinned.png",
+      "video_deleted": false,
+      "video_reuploaded": false,
+      "original_title_cover_preserved": true,
+      "promotion_application_repeated": false,
+      "existing_application_range": "A258:E258",
+      "incident": "首次使用多行typeText时评论实际仅发出首行【新版入口｜虫潮围城】；核验后改用单段paste补发完整内容并置顶。标题短评保留且未置顶，未删除任何历史评论。",
+      "unfinished": []
+    }
+  }
+}

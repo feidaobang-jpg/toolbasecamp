@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-04",
+  "timezone": "Asia/Shanghai",
+  "account_mid": 16214353,
+  "account_name": "飞刀班长",
+  "operation": "create_series",
+  "series_id": 5178167,
+  "url": "https://space.bilibili.com/16214353/lists/5178167?type=series",
+  "title": "虫潮围城开发实录",
+  "keyword": "虫潮",
+  "automatic_inclusion": "Platform form states future uploads whose titles contain the keyword will be included; verify after each future publication.",
+  "videos": ["BV1WbHq6eEBt", "BV1Ujad6DEuf"],
+  "status": "saved_and_verified_in_space",
+  "evidence": "series-created.jpg",
+  "formal_collection_status": "unavailable: video editing UI explicitly requires creator benefits Lv2",
+  "video_files_modified": false,
+  "video_metadata_modified": false
+}

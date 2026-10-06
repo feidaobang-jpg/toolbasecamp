@@ -1,0 +1,953 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "baseline": false,
+  "results": [
+    {
+      "name": "oblique",
+      "data": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ],
+        "feet": {
+          "x": 640,
+          "y": 327.1205198247619,
+          "z": 0.9885116409237663
+        },
+        "head": {
+          "x": 640,
+          "y": 307.8708137618121,
+          "z": 0.9881387869897736
+        },
+        "tankHeight": 19.249706062949826,
+        "corners": [
+          {
+            "x": 365.391857299977,
+            "y": 103.86957151926384,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 251.802269095898,
+            "y": 642.717540008738,
+            "z": 0.9855707762352695
+          },
+          {
+            "x": 914.608142700023,
+            "y": 103.86957151926384,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 1028.197730904102,
+            "y": 642.717540008738,
+            "z": 0.9855707762352695
+          }
+        ],
+        "W": 1280,
+        "H": 720,
+        "state": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "phase": "play",
+          "coop": {
+            "room": null,
+            "slot": -1,
+            "host": false,
+            "states": 0,
+            "rtt": 0,
+            "epoch": 1
+          },
+          "display": {
+            "rotated": false,
+            "W": 1280,
+            "H": 720,
+            "vw": 1280,
+            "vh": 720,
+            "dpr": 1,
+            "touchOn": false,
+            "backing": [
+              1280,
+              720
+            ]
+          },
+          "camera": "overview",
+          "yawOffset": 0,
+          "fp": false,
+          "quality": {
+            "setting": "auto",
+            "effective": "high",
+            "auto": null
+          },
+          "fs": false,
+          "fsLog": [],
+          "focus": "app",
+          "toast": null,
+          "touchHidden": true,
+          "keys": [],
+          "touchHold": [],
+          "stick": {
+            "id": null,
+            "axis": -1
+          },
+          "mode": "classic",
+          "stage": 1,
+          "cycle": 1,
+          "status": "play",
+          "player": {
+            "x": 96,
+            "y": 96,
+            "dir": 0,
+            "state": "active",
+            "stars": 0,
+            "shield": 0,
+            "invuln": 0,
+            "boats": 0,
+            "plate": 0
+          },
+          "run": {
+            "score": 0,
+            "lives": 3,
+            "hp": 3,
+            "armor": "classic",
+            "livesMode": "classic",
+            "demo": false,
+            "demoUsed": false,
+            "stats": {
+              "kills": 0,
+              "deaths": 0,
+              "hits": 0,
+              "stages": 0,
+              "pickups": 0,
+              "repairs": 0,
+              "bosses": 0
+            }
+          },
+          "bots": [
+            {
+              "type": "basic",
+              "state": "active",
+              "x": 96,
+              "y": 27,
+              "hp": 1
+            }
+          ],
+          "events": [
+            "spawn",
+            "spawn",
+            "playerSpawn",
+            "fire",
+            "brick",
+            "pop"
+          ],
+          "remixProgress": null
+        },
+        "stats": {
+          "calls": 66,
+          "triangles": 91070,
+          "geometries": 13,
+          "textures": 10
+        }
+      }
+    },
+    {
+      "name": "movement-and-shooting",
+      "data": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "player": {
+          "x": 96,
+          "y": 74,
+          "dir": 0,
+          "state": "active",
+          "stars": 0,
+          "shield": 0,
+          "invuln": 0,
+          "boats": 0,
+          "plate": 0
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ]
+      }
+    },
+    {
+      "name": "top-full-map",
+      "data": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "camera": [
+          0,
+          47.126008985800176,
+          1.923635376167877
+        ],
+        "corners": [
+          {
+            "x": 338.0098421018663,
+            "y": 58.26111444071333,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 331.143043718585,
+            "y": 668.5999703905038,
+            "z": 0.9898475684493055
+          },
+          {
+            "x": 941.9901578981337,
+            "y": 58.26111444071333,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 948.856956281415,
+            "y": 668.5999703905038,
+            "z": 0.9898475684493055
+          }
+        ]
+      }
+    },
+    {
+      "name": "continuous-orbit-performance",
+      "data": {
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "frames": 764,
+        "averageFps": 169.33750027705744,
+        "medianMs": 5.899999999999636,
+        "p95Ms": 6,
+        "over50ms": 0,
+        "renderer": "WebKit WebGL",
+        "stats": {
+          "calls": 26,
+          "triangles": 89502,
+          "geometries": 15,
+          "textures": 11
+        }
+      }
+    },
+    {
+      "name": "oblique",
+      "data": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ],
+        "feet": {
+          "x": 422,
+          "y": 177.19028157174603,
+          "z": 0.9885116409237663
+        },
+        "head": {
+          "x": 422,
+          "y": 166.7633574543149,
+          "z": 0.9881387869897736
+        },
+        "tankHeight": 10.426924117431128,
+        "corners": [
+          {
+            "x": 273.25392270415426,
+            "y": 56.26268457293458,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 211.7262290936114,
+            "y": 348.13866750473306,
+            "z": 0.9855707762352695
+          },
+          {
+            "x": 570.7460772958458,
+            "y": 56.26268457293458,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 632.2737709063886,
+            "y": 348.13866750473306,
+            "z": 0.9855707762352695
+          }
+        ],
+        "W": 844,
+        "H": 390,
+        "state": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "phase": "play",
+          "coop": {
+            "room": null,
+            "slot": -1,
+            "host": false,
+            "states": 0,
+            "rtt": 0,
+            "epoch": 1
+          },
+          "display": {
+            "rotated": false,
+            "W": 844,
+            "H": 390,
+            "vw": 844,
+            "vh": 390,
+            "dpr": 1,
+            "touchOn": true,
+            "backing": [
+              844,
+              390
+            ]
+          },
+          "camera": "overview",
+          "yawOffset": 0,
+          "fp": false,
+          "quality": {
+            "setting": "auto",
+            "effective": "high",
+            "auto": null
+          },
+          "fs": false,
+          "fsLog": [],
+          "focus": "app",
+          "toast": null,
+          "touchHidden": false,
+          "keys": [],
+          "touchHold": [],
+          "stick": {
+            "id": null,
+            "axis": -1
+          },
+          "mode": "classic",
+          "stage": 1,
+          "cycle": 1,
+          "status": "play",
+          "player": {
+            "x": 96,
+            "y": 96,
+            "dir": 0,
+            "state": "active",
+            "stars": 0,
+            "shield": 0,
+            "invuln": 0,
+            "boats": 0,
+            "plate": 0
+          },
+          "run": {
+            "score": 0,
+            "lives": 3,
+            "hp": 3,
+            "armor": "classic",
+            "livesMode": "classic",
+            "demo": false,
+            "demoUsed": false,
+            "stats": {
+              "kills": 0,
+              "deaths": 0,
+              "hits": 0,
+              "stages": 0,
+              "pickups": 0,
+              "repairs": 0,
+              "bosses": 0
+            }
+          },
+          "bots": [
+            {
+              "type": "basic",
+              "state": "active",
+              "x": 103,
+              "y": 0,
+              "hp": 1
+            }
+          ],
+          "events": [
+            "spawn",
+            "spawn",
+            "playerSpawn",
+            "fire",
+            "steel",
+            "pop",
+            "fire",
+            "border",
+            "pop"
+          ],
+          "remixProgress": null
+        },
+        "stats": {
+          "calls": 66,
+          "triangles": 91070,
+          "geometries": 14,
+          "textures": 10
+        }
+      }
+    },
+    {
+      "name": "movement-and-shooting",
+      "data": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "player": {
+          "x": 96,
+          "y": 74,
+          "dir": 0,
+          "state": "active",
+          "stars": 0,
+          "shield": 0,
+          "invuln": 0,
+          "boats": 0,
+          "plate": 0
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ]
+      }
+    },
+    {
+      "name": "top-full-map",
+      "data": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "camera": [
+          0,
+          47.126008985800176,
+          1.923635376167877
+        ],
+        "corners": [
+          {
+            "x": 258.42199780517757,
+            "y": 31.558103655386386,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 254.70248201423348,
+            "y": 362.15831729485626,
+            "z": 0.9898475684493055
+          },
+          {
+            "x": 585.5780021948225,
+            "y": 31.558103655386386,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 589.2975179857665,
+            "y": 362.15831729485626,
+            "z": 0.9898475684493055
+          }
+        ]
+      }
+    },
+    {
+      "name": "continuous-orbit-performance",
+      "data": {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "frames": 765,
+        "averageFps": 170.0037778617304,
+        "medianMs": 5.899999999999636,
+        "p95Ms": 6,
+        "over50ms": 0,
+        "renderer": "WebKit WebGL",
+        "stats": {
+          "calls": 26,
+          "triangles": 89502,
+          "geometries": 16,
+          "textures": 11
+        }
+      }
+    },
+    {
+      "name": "oblique",
+      "data": {
+        "viewport": {
+          "width": 568,
+          "height": 320
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ],
+        "feet": {
+          "x": 284,
+          "y": 145.38689769989418,
+          "z": 0.9885116409237663
+        },
+        "head": {
+          "x": 284,
+          "y": 136.8314727830276,
+          "z": 0.9881387869897736
+        },
+        "tankHeight": 8.55542491686657,
+        "corners": [
+          {
+            "x": 161.95193657776755,
+            "y": 46.16425400856171,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 111.46767515373243,
+            "y": 285.65224000388355,
+            "z": 0.9855707762352695
+          },
+          {
+            "x": 406.0480634222325,
+            "y": 46.16425400856171,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 456.5323248462676,
+            "y": 285.65224000388355,
+            "z": 0.9855707762352695
+          }
+        ],
+        "W": 568,
+        "H": 320,
+        "state": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "phase": "play",
+          "coop": {
+            "room": null,
+            "slot": -1,
+            "host": false,
+            "states": 0,
+            "rtt": 0,
+            "epoch": 1
+          },
+          "display": {
+            "rotated": false,
+            "W": 568,
+            "H": 320,
+            "vw": 568,
+            "vh": 320,
+            "dpr": 1,
+            "touchOn": true,
+            "backing": [
+              568,
+              320
+            ]
+          },
+          "camera": "overview",
+          "yawOffset": 0,
+          "fp": false,
+          "quality": {
+            "setting": "auto",
+            "effective": "high",
+            "auto": null
+          },
+          "fs": false,
+          "fsLog": [],
+          "focus": "app",
+          "toast": null,
+          "touchHidden": false,
+          "keys": [],
+          "touchHold": [],
+          "stick": {
+            "id": null,
+            "axis": -1
+          },
+          "mode": "classic",
+          "stage": 1,
+          "cycle": 1,
+          "status": "play",
+          "player": {
+            "x": 96,
+            "y": 96,
+            "dir": 0,
+            "state": "active",
+            "stars": 0,
+            "shield": 0,
+            "invuln": 0,
+            "boats": 0,
+            "plate": 0
+          },
+          "run": {
+            "score": 0,
+            "lives": 3,
+            "hp": 3,
+            "armor": "classic",
+            "livesMode": "classic",
+            "demo": false,
+            "demoUsed": false,
+            "stats": {
+              "kills": 0,
+              "deaths": 0,
+              "hits": 0,
+              "stages": 0,
+              "pickups": 0,
+              "repairs": 0,
+              "bosses": 0
+            }
+          },
+          "bots": [
+            {
+              "type": "basic",
+              "state": "active",
+              "x": 96,
+              "y": 17,
+              "hp": 1
+            }
+          ],
+          "events": [
+            "spawn",
+            "spawn",
+            "playerSpawn",
+            "fire",
+            "steel",
+            "pop",
+            "fire",
+            "steel",
+            "pop"
+          ],
+          "remixProgress": null
+        },
+        "stats": {
+          "calls": 66,
+          "triangles": 91070,
+          "geometries": 14,
+          "textures": 10
+        }
+      }
+    },
+    {
+      "name": "movement-and-shooting",
+      "data": {
+        "viewport": {
+          "width": 568,
+          "height": 320
+        },
+        "player": {
+          "x": 96,
+          "y": 74,
+          "dir": 0,
+          "state": "active",
+          "stars": 0,
+          "shield": 0,
+          "invuln": 0,
+          "boats": 0,
+          "plate": 0
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ]
+      }
+    },
+    {
+      "name": "top-full-map",
+      "data": {
+        "viewport": {
+          "width": 568,
+          "height": 320
+        },
+        "camera": [
+          0,
+          47.126008985800176,
+          1.923635376167877
+        ],
+        "corners": [
+          {
+            "x": 149.78215204527393,
+            "y": 25.893828640317036,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 146.7302416527044,
+            "y": 297.1555423957795,
+            "z": 0.9898475684493055
+          },
+          {
+            "x": 418.2178479547261,
+            "y": 25.893828640317036,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 421.2697583472956,
+            "y": 297.1555423957795,
+            "z": 0.9898475684493055
+          }
+        ]
+      }
+    },
+    {
+      "name": "continuous-orbit-performance",
+      "data": {
+        "viewport": {
+          "width": 568,
+          "height": 320
+        },
+        "frames": 763,
+        "averageFps": 169.55932354052314,
+        "medianMs": 5.899999999999636,
+        "p95Ms": 6,
+        "over50ms": 0,
+        "renderer": "WebKit WebGL",
+        "stats": {
+          "calls": 26,
+          "triangles": 89502,
+          "geometries": 16,
+          "textures": 11
+        }
+      }
+    },
+    {
+      "name": "oblique",
+      "data": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ],
+        "feet": {
+          "x": 422,
+          "y": 177.19028157174603,
+          "z": 0.9885116409237663
+        },
+        "head": {
+          "x": 422,
+          "y": 166.7633574543149,
+          "z": 0.9881387869897736
+        },
+        "tankHeight": 10.426924117431128,
+        "corners": [
+          {
+            "x": 273.25392270415426,
+            "y": 56.26268457293458,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 211.7262290936114,
+            "y": 348.13866750473306,
+            "z": 0.9855707762352695
+          },
+          {
+            "x": 570.7460772958458,
+            "y": 56.26268457293458,
+            "z": 0.9905919863914211
+          },
+          {
+            "x": 632.2737709063886,
+            "y": 348.13866750473306,
+            "z": 0.9855707762352695
+          }
+        ],
+        "W": 844,
+        "H": 390,
+        "state": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "phase": "play",
+          "coop": {
+            "room": null,
+            "slot": -1,
+            "host": false,
+            "states": 0,
+            "rtt": 0,
+            "epoch": 1
+          },
+          "display": {
+            "rotated": true,
+            "W": 844,
+            "H": 390,
+            "vw": 390,
+            "vh": 844,
+            "dpr": 1,
+            "touchOn": true,
+            "backing": [
+              844,
+              390
+            ]
+          },
+          "camera": "overview",
+          "yawOffset": 0,
+          "fp": false,
+          "quality": {
+            "setting": "auto",
+            "effective": "high",
+            "auto": null
+          },
+          "fs": false,
+          "fsLog": [],
+          "focus": "app",
+          "toast": null,
+          "touchHidden": false,
+          "keys": [],
+          "touchHold": [],
+          "stick": {
+            "id": null,
+            "axis": -1
+          },
+          "mode": "classic",
+          "stage": 1,
+          "cycle": 1,
+          "status": "play",
+          "player": {
+            "x": 96,
+            "y": 96,
+            "dir": 0,
+            "state": "active",
+            "stars": 0,
+            "shield": 0,
+            "invuln": 0,
+            "boats": 0,
+            "plate": 0
+          },
+          "run": {
+            "score": 0,
+            "lives": 3,
+            "hp": 3,
+            "armor": "classic",
+            "livesMode": "classic",
+            "demo": false,
+            "demoUsed": false,
+            "stats": {
+              "kills": 0,
+              "deaths": 0,
+              "hits": 0,
+              "stages": 0,
+              "pickups": 0,
+              "repairs": 0,
+              "bosses": 0
+            }
+          },
+          "bots": [
+            {
+              "type": "basic",
+              "state": "active",
+              "x": 54,
+              "y": 0,
+              "hp": 1
+            }
+          ],
+          "events": [
+            "spawn",
+            "spawn",
+            "playerSpawn",
+            "fire",
+            "border",
+            "pop",
+            "fire",
+            "border",
+            "pop",
+            "fire"
+          ],
+          "remixProgress": null
+        },
+        "stats": {
+          "calls": 69,
+          "triangles": 91282,
+          "geometries": 16,
+          "textures": 10
+        }
+      }
+    },
+    {
+      "name": "movement-and-shooting",
+      "data": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "player": {
+          "x": 96,
+          "y": 74,
+          "dir": 0,
+          "state": "active",
+          "stars": 0,
+          "shield": 0,
+          "invuln": 0,
+          "boats": 0,
+          "plate": 0
+        },
+        "camera": [
+          0,
+          34.35135334280049,
+          24.63978194721803
+        ]
+      }
+    },
+    {
+      "name": "top-full-map",
+      "data": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "camera": [
+          0,
+          47.126008985800176,
+          1.923635376167877
+        ],
+        "corners": [
+          {
+            "x": 258.42199780517757,
+            "y": 31.558103655386386,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 254.70248201423348,
+            "y": 362.15831729485626,
+            "z": 0.9898475684493055
+          },
+          {
+            "x": 585.5780021948225,
+            "y": 31.558103655386386,
+            "z": 0.9901340049477086
+          },
+          {
+            "x": 589.2975179857665,
+            "y": 362.15831729485626,
+            "z": 0.9898475684493055
+          }
+        ]
+      }
+    },
+    {
+      "name": "continuous-orbit-performance",
+      "data": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "frames": 746,
+        "averageFps": 164.91654692163146,
+        "medianMs": 5.899999999999636,
+        "p95Ms": 6,
+        "over50ms": 0,
+        "renderer": "WebKit WebGL",
+        "stats": {
+          "calls": 26,
+          "triangles": 89502,
+          "geometries": 16,
+          "textures": 11
+        }
+      }
+    }
+  ],
+  "physicalPhone": false
+}

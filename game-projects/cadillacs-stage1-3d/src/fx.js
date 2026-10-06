@@ -1,4 +1,4 @@
-// 特效：命中火花（漫画星形）、尘土、爆炸、碎片、枪口火光、得分飘字、必杀冲击环。全部按游戏时间推进。
+// 特效：命中火花（漫画星形）、尘土、爆炸、碎片、枪口火光、子弹拖光、得分飘字、必杀冲击环。全部按游戏时间推进。
 import * as THREE from 'three';
 import { GEO } from './models.js';
 
@@ -67,7 +67,24 @@ export function createFx(scene) {
   F.pow = (x, y, z) => sprite(textTex('POW!', '#ffd84a'), { x, y, z, life: 0.35, s0: 0.6, s1: 1.1, order: 9, depthTest: false });
   F.dust = (x, y, z, n, size) => { for (let i = 0; i < (n || 4); i++) { const a = Math.random() * Math.PI * 2; sprite(puffTex, { x: x + Math.cos(a) * 0.2, y: y + 0.1, z: z + Math.sin(a) * 0.2, vx: Math.cos(a) * 1.2, vz: Math.sin(a) * 1.2, vy: 0.4, life: 0.5, s0: (size || 0.35), s1: (size || 0.35) * 2.2, color: 0xd8ccb4 }); } };
   F.blood = (x, y, z, dir) => { for (let i = 0; i < 4; i++) sprite(puffTex, { x, y, z, vx: dir * (0.8 + Math.random()) , vy: 1 + Math.random() * 1.5, vz: (Math.random() - 0.5) * 1.5, grav: 9, life: 0.4, s0: 0.12, s1: 0.06, color: 0xc81e1e }); };
-  F.muzzle = (x, y, z) => sprite(fireTex, { x, y, z, life: 0.07, s0: 0.45, s1: 0.65, blend: 'add', order: 7 });
+  F.muzzle = (x, y, z, big) => sprite(fireTex, { x, y, z, life: 0.07, s0: big ? 0.42 : 0.28, s1: big ? 0.7 : 0.46, blend: 'add', order: 7 });
+  // 子弹拖光：亮芯 + 橙色光晕的细长条，从枪口飞向终点；头到终点后尾巴收拢消失。o = { speed 米/秒, len 拖光长度, w 粗细 }
+  const tracerGeo = new THREE.BoxGeometry(1, 1, 1);
+  const tracerCore = new THREE.MeshBasicMaterial({ color: 0xfff8d8, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
+  const tracerGlow = new THREE.MeshBasicMaterial({ color: 0xffa030, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
+  const tracers = [];
+  F.tracer = (x0, y0, z0, x1, y1, z1, o) => {
+    let t = tracers.find(q => !q.alive);
+    if (!t) {
+      const m = new THREE.Mesh(tracerGeo, tracerCore), glow = new THREE.Mesh(tracerGeo, tracerGlow);
+      glow.scale.set(2.8, 2.8, 1.15); m.add(glow); m.renderOrder = 7; glow.renderOrder = 6; group.add(m);
+      t = { m, a: new THREE.Vector3(), d: new THREE.Vector3(), alive: false }; tracers.push(t);
+    }
+    t.a.set(x0, y0, z0); t.d.set(x1 - x0, y1 - y0, z1 - z0); t.L = t.d.length() || 0.01; t.d.multiplyScalar(1 / t.L);
+    t.speed = (o && o.speed) || 70; t.len = (o && o.len) || 0.5; t.w = (o && o.w) || 0.045; t.t = 0; t.alive = true;
+    t.m.position.copy(t.a); t.m.lookAt(x1, y1, z1); t.m.visible = false;
+    return t;
+  };
   F.boom = (x, y, z, size) => {
     const S = size || 1;
     for (let i = 0; i < 9; i++) { const a = Math.random() * Math.PI * 2, r = Math.random() * 0.6 * S; sprite(fireTex, { x: x + Math.cos(a) * r, y: y + 0.4 + Math.random() * 0.8 * S, z: z + Math.sin(a) * r, vy: 0.6, life: 0.45 + Math.random() * 0.2, s0: 0.8 * S, s1: 2.0 * S, blend: 'add', order: 7 }); }
@@ -91,6 +108,16 @@ export function createFx(scene) {
     }
   };
   F.update = (dt) => {
+    for (const t of tracers) {
+      if (!t.alive) continue;
+      t.t += dt;
+      const run = t.speed * t.t, head = Math.min(t.L, run), tail = Math.max(0, run - t.len);
+      if (tail >= t.L) { t.alive = false; t.m.visible = false; continue; }
+      const seg = head - tail;
+      t.m.visible = seg > 0.01;
+      t.m.position.copy(t.a).addScaledVector(t.d, tail + seg / 2);
+      t.m.scale.set(t.w, t.w, Math.max(0.01, seg));
+    }
     for (const s of sprites) {
       if (!s.alive) continue;
       s.t += dt;
@@ -113,10 +140,10 @@ export function createFx(scene) {
     }
     F.shake = Math.max(0, F.shake - dt * 1.4);
   };
-  F.clear = () => { sprites.forEach(s => { s.alive = false; s.sp.visible = false; }); debris.forEach(d => { d.alive = false; d.m.visible = false; }); F.shake = 0; };
-  F.stats = () => ({ sprites: sprites.length, live: sprites.filter(s => s.alive).length, debris: debris.length });
+  F.clear = () => { tracers.forEach(t => { t.alive = false; t.m.visible = false; }); sprites.forEach(s => { s.alive = false; s.sp.visible = false; }); debris.forEach(d => { d.alive = false; d.m.visible = false; }); F.shake = 0; };
+  F.stats = () => ({ sprites: sprites.length, live: sprites.filter(s => s.alive).length, debris: debris.length, tracers: tracers.filter(t => t.alive).length });
   // 预热：让各类纹理都先上屏一次
-  F.warm = () => { F.glint(0, -50, 0); F.splash(0, -50, 0, 1); F.hit(0, -50, 0); F.text(0, -50, 0, '100'); F.boom(0, -50, 0, 0.1); F.dust(0, -50, 0, 1); F.ring(0, -50, 0); F.muzzle(0, -50, 0); F.debris(0, -50, 0, '#888', 1); };
+  F.warm = () => { F.glint(0, -50, 0); F.splash(0, -50, 0, 1); F.hit(0, -50, 0); F.text(0, -50, 0, '100'); F.boom(0, -50, 0, 0.1); F.dust(0, -50, 0, 1); F.ring(0, -50, 0); F.muzzle(0, -50, 0); F.tracer(0, -50, 0, 1, -50, 0); F.debris(0, -50, 0, '#888', 1); };
   F.GEO = GEO;
   return F;
 }

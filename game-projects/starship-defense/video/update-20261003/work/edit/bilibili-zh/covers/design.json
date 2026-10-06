@@ -1,0 +1,30 @@
+{
+  "copy": [
+    "这次，反攻母皇",
+    "虫潮围城",
+    "新版实机介绍"
+  ],
+  "reference_frames": [
+    "../../../qa/cover-queen.png",
+    "../../../qa/queen-result.png"
+  ],
+  "prompt_summary": "基于实机的低多边形母皇、护卫与绿色医疗兵；深色战场、金色大标题、青绿色游戏名；各画幅独立排版，保留游戏外观，不虚构写实玩法。",
+  "home_source": [
+    1448,
+    1086
+  ],
+  "space_source": [
+    1672,
+    941
+  ],
+  "home_output": [
+    1440,
+    1080
+  ],
+  "space_output": [
+    1920,
+    1080
+  ],
+  "processing": "等比缩放/不足处补边，JPEG高质量导出",
+  "ai_generated": true
+}

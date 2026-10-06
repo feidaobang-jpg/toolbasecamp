@@ -1,0 +1,6 @@
+投稿材料唯一入口：../final/bilibili-zh/
+中文横屏 1920×1080 / 30fps / 156.70秒。
+已生成：gameplay-zh-final.mp4、cover-home-4x3.jpg、cover-space-16x9.jpg、投稿文案.txt。
+字幕已烧录，无需另传SRT。
+状态：文件制作完成；人声主观听审尚未执行，上传前请试听确认。未上传或发布，旧视频未修改。
+可编辑工程：edit/shared-zh/render.py 与 timeline.json。原片、干声、最终混音、ASS/SRT均保留。

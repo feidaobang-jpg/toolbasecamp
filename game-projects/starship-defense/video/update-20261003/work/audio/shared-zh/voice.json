@@ -1,0 +1,16 @@
+{
+  "engine": "必剪桌面朗读",
+  "category": "特色",
+  "voice": "曼波",
+  "speed": 1,
+  "audio": "narration-mambo.mp3",
+  "duration_seconds": 154.703688,
+  "script": "../../narration.txt",
+  "asr": "asr-original.json",
+  "asr_provider": "Groq",
+  "asr_model": "whisper-large-v3",
+  "asr_docs": "https://console.groq.com/docs/speech-to-text",
+  "alignment": "../../edit/shared-zh/alignment.json",
+  "subjective_listening": "not-run",
+  "reason": "当前模型没有可接收音频的试听输入；未播放扬声器打扰用户。"
+}

@@ -1,0 +1,8 @@
+UP主昵称 | 视频链接（BV长链） | tag与话题实际设置 | Toy链接是否置顶 | 视频中是否宣传Toy | 运营反馈
+飞刀班长 | https://www.bilibili.com/video/BV1WbHq6eEBt/ | 已设置bilibilitoy及哔哩哔哩Toy创意挑战（1346285） | 是 | 是，成片约140秒 | 待运营反馈（线上反馈列留空）
+已于2026-10-04填写腾讯文档，云端显示已自动保存。
+https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw
+工作表：【进行中】日常推流；范围：A258:E258；已按BV查重。
+截图：../../qa/promotion-application.png
+视频已公开发布并通过审核，Toy 38678478981120 已绑定。已有自动投稿动态，无需重复发布。
+旧视频 BV1Ujad6DEuf 保留未修改。填写申请不代表运营已推流。
