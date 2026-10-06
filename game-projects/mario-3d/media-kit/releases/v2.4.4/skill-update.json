@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-07T06:05:56.017884+08:00",
+  "source": "Codex",
+  "files": {
+    "C:\\Users\\37818\\.claude\\skills\\game-maker\\SKILL.md": "ca192ac94650d576f6feb363bf287b6e7e46d8844de3aa7f0363bcdc4d67496e",
+    "C:\\Users\\37818\\.claude\\skills\\game-maker\\references\\controls-and-display.md": "133e833b542133b0584cf5c0c8a92a7a481d10d0c7dd93b03c5827ba803c5f98"
+  },
+  "summary": "动作未获得/冷却/无资源时保持实体同组外观，文字与aria-disabled说明，阻止真实无效动作；菜单禁用项不扩展",
+  "validation": "quick_validate.py通过"
+}

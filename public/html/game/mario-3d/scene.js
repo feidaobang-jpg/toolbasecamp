@@ -1,10 +1,10 @@
 // 渲染：把当前区域的网格地形沿纵深铺成 6 格厚的体素跑道，水管纵向并排 3 根；
 // 角色、道具、特效与镜头（C 预设 + Q/E 无极旋转），遮挡主角的物体做网点淡化。
 import * as THREE from './three.js?v=2.1.0';
-import { tex, textTexture } from './textures.js?v=toy3dui2';
+import { tex, textTexture } from './textures.js?v=2.4.4';
 import * as M from './models.js?v=toy3dui2';
-import { LANE, SOLID, tileKey } from './levels.js?v=2.4.3';
-import { heightOf } from './world.js?v=2.4.3';
+import { LANE, SOLID, tileKey } from './levels.js?v=2.4.4';
+import { heightOf } from './world.js?v=2.4.4';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -67,9 +67,14 @@ function plainMat(color, opts = {}) {
 }
 
 const boxGeo = new THREE.BoxGeometry(1, 1, 1);
-const pipeBodyGeo = new THREE.CylinderGeometry(0.86, 0.86, 1, 10, 1, true);
-const pipeRimGeo = new THREE.CylinderGeometry(0.99, 0.99, 0.5, 10);
-const pipeHoleGeo = new THREE.CircleGeometry(0.8, 24);
+const pipeBodyGeo = new THREE.CylinderGeometry(0.86, 0.86, 1, 32, 1, true);
+// 圆润管沿保留真实内壁，避免实心顶盖和黑色圆片贴在同一平面。
+const pipeRimGeo = new THREE.LatheGeometry([
+  [0.86, -0.25], [0.94, -0.25], [0.985, -0.205], [0.99, -0.16],
+  [0.99, 0.16], [0.985, 0.205], [0.94, 0.25], [0.82, 0.25],
+  [0.78, 0.21], [0.78, -0.25]
+].map(([x, y]) => new THREE.Vector2(x, y)), 32);
+const pipeHoleGeo = new THREE.CircleGeometry(0.78, 32);
 const ballGeo = new THREE.IcosahedronGeometry(1, 1);
 const debrisGeo = new THREE.BoxGeometry(0.42, 0.42, 0.42);
 const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3(), ZERO = new THREE.Vector3(0, 0, 0);
@@ -203,9 +208,9 @@ export function createView(canvas) {
   }
 
   function buildPipes(a) {
-    const pm = matCache.get('pipe') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.9, flatShading: true, side: THREE.DoubleSide })); matCache.set('pipe', m); return m; })();
-    const rimM = matCache.get('pipeRim') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.9, flatShading: true })); matCache.set('pipeRim', m); return m; })();
-    const hole = matCache.get('pipeHole') || (() => { const m = new THREE.MeshBasicMaterial({ color: '#04140a' }); matCache.set('pipeHole', m); return m; })();
+    const pm = matCache.get('pipe') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ map: tex('pipe'), roughness: 0.85, emissive: '#195421', emissiveIntensity: 0.12, side: THREE.DoubleSide })); matCache.set('pipe', m); return m; })();
+    const rimM = matCache.get('pipeRim') || (() => { const m = fadeable(new THREE.MeshStandardMaterial({ color: '#56bc60', roughness: 0.85, emissive: '#195421', emissiveIntensity: 0.12, side: THREE.DoubleSide })); matCache.set('pipeRim', m); return m; })();
+    const hole = matCache.get('pipeHole') || (() => { const m = new THREE.MeshBasicMaterial({ color: '#173d20' }); matCache.set('pipeHole', m); return m; })();
     const add = (geo, m, x, y, z, sy = 1, rotZ = 0, rotX = 0) => {
       const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.scale.y = sy; o.rotation.z = rotZ; o.rotation.x = rotX;
       o.castShadow = true; o.receiveShadow = true; areaGroup.add(o); return o;
@@ -215,7 +220,7 @@ export function createView(canvas) {
         const bodyH = p.h - 0.5;
         if (bodyH > 0) add(pipeBodyGeo, pm, p.x + 1, bodyH / 2, z, bodyH);
         add(pipeRimGeo, rimM, p.x + 1, p.h - 0.25, z);
-        add(pipeHoleGeo, hole, p.x + 1, p.h + 0.004, z, 1, 0, -Math.PI / 2);
+        add(pipeHoleGeo, hole, p.x + 1, p.h - 0.18, z, 1, 0, -Math.PI / 2);
       }
     }
     for (const s of a.sidePipes) {
@@ -223,7 +228,7 @@ export function createView(canvas) {
       for (const z of PIPE_Z) {
         add(pipeBodyGeo, pm, s.x + 1.25, cy, z, 1.5, Math.PI / 2);
         add(pipeRimGeo, rimM, s.x + 0.25, cy, z, 1, Math.PI / 2);
-        const h = add(pipeHoleGeo, hole, s.x - 0.004, cy, z); h.rotation.y = -Math.PI / 2;
+        const h = add(pipeHoleGeo, hole, s.x + 0.18, cy, z); h.rotation.y = -Math.PI / 2;
         const vh = s.upTo + 1 - s.y;
         add(pipeBodyGeo, pm, s.x + 3, s.y + vh / 2, z, vh);
       }
