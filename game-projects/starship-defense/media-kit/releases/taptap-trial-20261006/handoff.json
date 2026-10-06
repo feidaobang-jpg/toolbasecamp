@@ -79,5 +79,12 @@
     "self_test_qr_generated": true,
     "tap_client_test": false,
     "browser_entry": "QR链接在普通桌面浏览器跳转到TapTap首页，不能当作客户端测试通过"
+  },
+  "repository": {
+    "branch": "codex/chongchao-taptap-trial",
+    "backed_up": true,
+    "merged_to_master": false,
+    "pending_reason": "共享发布锁由仍在运行的虫潮直播任务持有，等待释放；未改动或删除他人锁",
+    "resume_command": "获锁后fetch、merge origin/master、构建及三视口复验、正常push HEAD:master"
   }
 }
