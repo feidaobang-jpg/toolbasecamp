@@ -8,6 +8,8 @@ Node.js 22+；在本目录 `npm ci` 后运行 `node server.mjs`，或执行 `sta
 
 `node install-local.mjs` 将验证过的运行文件安装到 `%LOCALAPPDATA%/ChongchaoLive/app`，不依赖开发worktree。双击其中的「启动虫潮AI直播.cmd」。已有本机配置不会被安装覆盖。
 
+桌面入口使用Windows PowerShell 5.1；中文PowerShell脚本保持UTF-8 BOM与CRLF，安装器会统一处理编码。冷启动探测使用`UseBasicParsing`，无需Internet Explorer初始化；服务启动失败会明确提示日志位置。
+
 配置在 `%LOCALAPPDATA%/ChongchaoLive/config.json`，不在Git或静态目录。修改后退出服务再启动。事件回执在同目录 `events.jsonl`、礼物查重为 `gift-receipts.json`；未确认生效的礼物不自动重放。
 
 ## 已实现玩法

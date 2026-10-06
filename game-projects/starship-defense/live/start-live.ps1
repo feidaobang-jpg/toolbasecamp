@@ -1,4 +1,4 @@
-param([switch]$NoBrowser)
+﻿param([switch]$NoBrowser)
 $ErrorActionPreference='Stop'
 $taskRoot=Split-Path -Parent $MyInvocation.MyCommand.Path
 $nodeCommand=Get-Command node.exe -ErrorAction SilentlyContinue
@@ -11,8 +11,10 @@ if(Test-Path -LiteralPath $liveConfigFile){$liveConfig=Get-Content -LiteralPath 
 $liveUrl='http://127.0.0.1:'+$livePort
 $listener=Get-NetTCPConnection -LocalPort $livePort -State Listen -ErrorAction SilentlyContinue
 if(!$listener){
-  Start-Process -FilePath $nodeCommand.Source -ArgumentList @((Join-Path $taskRoot 'server.mjs')) -WorkingDirectory $taskRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $liveState 'runtime.log') -RedirectStandardError (Join-Path $liveState 'runtime-error.log') | Out-Null
-  for($i=0;$i -lt 30;$i++){try{$probe=Invoke-WebRequest -Uri $liveUrl -TimeoutSec 1;if($probe.StatusCode -eq 200){break}}catch{Start-Sleep -Milliseconds 300}}
+  Start-Process -FilePath $nodeCommand.Source -ArgumentList @(('"'+(Join-Path $taskRoot 'server.mjs')+'"')) -WorkingDirectory $taskRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $liveState 'runtime.log') -RedirectStandardError (Join-Path $liveState 'runtime-error.log') | Out-Null
+  $liveReady=$false
+  for($i=0;$i -lt 30;$i++){try{$probe=Invoke-WebRequest -UseBasicParsing -Uri $liveUrl -TimeoutSec 1;if($probe.StatusCode -eq 200){$liveReady=$true;break}}catch{Start-Sleep -Milliseconds 300}}
+  if(!$liveReady){throw '直播服务没有成功启动，请查看本机runtime-error.log。'}
 } else {
   $liveOwner=Get-CimInstance Win32_Process -Filter ('ProcessId='+$listener[0].OwningProcess)
   if($liveOwner.CommandLine -notlike '*starship-defense*live*server.mjs*'){throw '直播端口被其他程序占用，未修改其他程序。'}
