@@ -16,7 +16,7 @@
   },
   "bilibili": {
     "submitted": 4,
-    "public_verified": 3,
+    "public_verified": 4,
     "record": "bilibili-sync.json"
   },
   "persistent_rules": [

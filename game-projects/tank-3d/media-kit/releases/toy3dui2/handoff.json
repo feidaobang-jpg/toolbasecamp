@@ -119,11 +119,11 @@
     "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
   },
   "bilibili": {
-    "status": "submitted_pending_public",
+    "status": "public_verified",
     "bvid": "BV1Wqaz6AEJb",
     "version": "toy3dui2",
     "submitted_at": "2026-10-06T01:35:17.818Z",
-    "verified_at": "2026-10-06T01:41:17.481Z",
+    "verified_at": "2026-10-06T01:46:06.156Z",
     "record": "../../../../site-games/releases/toy3d-controls-20261006/bilibili-sync.json",
     "editor_saved_verified": true
   },
