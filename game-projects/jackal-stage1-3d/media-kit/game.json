@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.7.0",
-  "handoff": "releases/v0.7.0/handoff.json",
+  "current_version": "v0.7.1",
+  "handoff": "releases/v0.7.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -136,5 +136,6 @@
     "policy": "original first; synthesis fallback",
     "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
   },
-  "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。"
 }

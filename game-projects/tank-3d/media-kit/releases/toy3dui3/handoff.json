@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "toy3dui3",
+  "base_version": "toy3dui2",
+  "created_at": "2026-10-06T10:57:56.471245+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+    "fingerprint_algorithm": "sha256 of sorted JSON relative-path/file-sha256 manifest",
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "corner-utilities",
+      "description": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "corner-layout",
+      "feature_ids": [
+        "corner-utilities"
+      ],
+      "before": "坦克右上内缩78px，玛丽紧凑顶部42px，虫潮标签有br强制换行",
+      "after": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "user_visible_result": "一行清楚可达、HUD不挡按钮",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop",
+      "file": "releases/toy3dui3/captures/tank-3d-desktop.png",
+      "sha256": "751205f2cb589b703c469a69ff9cf3743d3c6d6ffe98bff5047e520c9d68cc2a",
+      "kind": "screenshot",
+      "version": "toy3dui3",
+      "build_id": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile",
+      "file": "releases/toy3dui3/captures/tank-3d-mobile.png",
+      "sha256": "4c727e0315ba23056faf219a588798863267b7adf13fdfb7617890ec56635bd1",
+      "kind": "screenshot",
+      "version": "toy3dui3",
+      "build_id": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "portrait",
+      "file": "releases/toy3dui3/captures/tank-3d-portrait.png",
+      "sha256": "7d5b0c2e29ce84bd3a694c10a4b4701e49c3c5e5fd346ac344d544ac16af5743",
+      "kind": "screenshot",
+      "version": "toy3dui3",
+      "build_id": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge/Playwright desktop and simulated mobile/rotated portrait; actual utility clicks",
+      "result": "pass",
+      "evidence": "../../../../site-games/releases/toy3d-hud-edge-20261006/qa.json",
+      "unmeasured": [
+        "physical phone multi-touch and fullscreen compatibility"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅本次按钮交互录像；无新解说，视频仍需人工审片。"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "pending_preview",
+    "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1"
+  },
+  "bilibili": {
+    "status": "ordinary_patch_deferred"
+  },
+  "local_artifacts": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006"
+}

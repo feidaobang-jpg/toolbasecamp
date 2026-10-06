@@ -1,4 +1,4 @@
-import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=toy3dui2';
+import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=toy3dui3';
 import * as THREE from './vendor/three.module.js';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
 import {FortressWorld} from './fortress-world.js?v=toy3dui2';
@@ -42,6 +42,9 @@ let isTouch=deviceMode==='touch'||deviceMode==='auto'&&autoTouch();
 
 /* ---------- 画布缩放 + 手机自动横屏 ---------- */
 const stage=$('stage');
+const cornerSafeProbe=document.createElement('div');
+cornerSafeProbe.style.cssText='position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';
+document.body.appendChild(cornerSafeProbe);
 stage.classList.toggle('touch-mode',isTouch);
 let rotated=false,stageScale=1,fitW=0,fitH=0;
 // App 内嵌页（如 B 站 App 的 Toy 容器）启动时可能报 0×0 的窗口尺寸，之后拿到真实尺寸却不发 resize：
@@ -59,6 +62,12 @@ function fitStage(){
   let vw=rotated?h:w, vh=rotated?w:h;
   BASE_H=BASE_W*vh/vw;stage.style.height=BASE_H+'px';
   stageScale=Math.min(vw/BASE_W,vh/BASE_H);
+  // Keep utility targets and edge spacing in CSS pixels even when the stage scales.
+  const safe=getComputedStyle(cornerSafeProbe);
+  stage.style.setProperty('--corner-top',(10+(parseFloat(rotated?safe.paddingRight:safe.paddingTop)||0))/stageScale+'px');
+  stage.style.setProperty('--corner-right',(10+(parseFloat(rotated?safe.paddingBottom:safe.paddingRight)||0))/stageScale+'px');
+  stage.style.setProperty('--corner-height',Math.max(44,44/stageScale)+'px');
+  stage.style.setProperty('--corner-gap',8/stageScale+'px');
   stage.style.transform='translate(-50%,-50%) '+(rotated?'rotate(90deg) ':'')+'scale('+stageScale+')';
 }
 window.addEventListener('resize',fitStage);window.addEventListener('orientationchange',()=>setTimeout(()=>window.dispatchEvent(new Event('resize')),120));
@@ -3616,8 +3625,9 @@ function loop(){
 const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMsg,showHint,findFreeSpot,groundY,exitVehicle,clearEntities,autoSave,closePanels,collectAllGold,startPrep,showHUD,spawnMonster,playerDamage,getYaw:()=>camYaw,canWalk:(x,z,r)=>!collideWalls(x,z,r)&&!tooSteep(x,z),
   resetCamera(){camState.init=false;},openPanel(){closePanels();Input.reset();panelOpen=true;$('operationsPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();}});
 function syncKeyLabels(){
+  $('fullBtn').textContent=isTouch?'全屏':'全屏 F';
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
-  $('menuButton').textContent='☰ 菜单 '+keyBindings.label('P')+' / Esc';
+  $('menuButton').textContent='Ⅱ 暂停';
   $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
@@ -3722,9 +3732,9 @@ function setupWebControls(){
   applyQuality(quality);$('qualityBtn').onclick=$('qualityBtnMenu').onclick=()=>applyQuality($('qualityBtn').dataset.quality==='high'?'smooth':'high');
   $('muteBtn').onclick=$('muteBtnMenu').onclick=()=>{muted=!muted;AudioSys.init();AudioSys.master.gain.value=muted?0:.5;$('muteBtn').textContent=muted?'静音 M':'声音 M';syncPauseOptions();};
   const full=$('fullBtn');
-  const fullscreenAllowed=()=>!isTouch&&!!document.documentElement.requestFullscreen&&(typeof document.fullscreenEnabled==='boolean'?document.fullscreenEnabled:document.webkitFullscreenEnabled===true);
+  const fullscreenAllowed=()=>!!document.documentElement.requestFullscreen&&(typeof document.fullscreenEnabled==='boolean'?document.fullscreenEnabled:document.webkitFullscreenEnabled===true);
   full.hidden=!fullscreenAllowed();
-  full.onclick=async()=>{if(full.hidden)return;try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){full.hidden=true;}};
+  full.onclick=async()=>{if(full.hidden)return;try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch(e){showMsg('当前浏览器未允许全屏，可继续横屏游玩');}};
   window.addEventListener('keydown',e=>{
     if(e.repeat)return;
     if(e.code!=='Escape'&&(e.target.closest&&e.target.closest('select,input')||(!Input.isPlaying()&&['Enter','Space'].includes(e.code)&&e.target.closest&&e.target.closest('button,[tabindex="0"]'))))return;

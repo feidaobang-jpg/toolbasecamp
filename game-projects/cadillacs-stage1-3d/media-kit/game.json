@@ -6,8 +6,8 @@
   },
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.4.0",
-  "handoff": "releases/v0.4.0/handoff.json",
+  "current_version": "v0.4.1",
+  "handoff": "releases/v0.4.1/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -149,5 +149,6 @@
     "policy": "original first; synthesis fallback",
     "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
   },
-  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。"
 }

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-controls-v0.18.3",
+  "base_version": "web-controls-v0.18.2",
+  "created_at": "2026-10-06T10:57:56.471245+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+    "fingerprint_algorithm": "sha256 of sorted JSON relative-path/file-sha256 manifest",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "corner-utilities",
+      "description": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "corner-layout",
+      "feature_ids": [
+        "corner-utilities"
+      ],
+      "before": "坦克右上内缩78px，玛丽紧凑顶部42px，虫潮标签有br强制换行",
+      "after": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "user_visible_result": "一行清楚可达、HUD不挡按钮",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop",
+      "file": "releases/web-controls-v0.18.3/captures/starship-defense-desktop.png",
+      "sha256": "80e83d3587894f02e8acf59f4bc3232fc6477ad05fbc4391041e2d080c912b8a",
+      "kind": "screenshot",
+      "version": "web-controls-v0.18.3",
+      "build_id": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile",
+      "file": "releases/web-controls-v0.18.3/captures/starship-defense-mobile.png",
+      "sha256": "dfc08688760a53a2e45c7cffea9f7e824e9696a5edb1d760062c584aa5d96b61",
+      "kind": "screenshot",
+      "version": "web-controls-v0.18.3",
+      "build_id": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "portrait",
+      "file": "releases/web-controls-v0.18.3/captures/starship-defense-portrait.png",
+      "sha256": "f4393182194e768c867679f241c586091acccaa1179e08acff477637d746c53d",
+      "kind": "screenshot",
+      "version": "web-controls-v0.18.3",
+      "build_id": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge/Playwright desktop and simulated mobile/rotated portrait; actual utility clicks",
+      "result": "pass",
+      "evidence": "../../../../site-games/releases/toy3d-hud-edge-20261006/qa.json",
+      "unmeasured": [
+        "physical phone multi-touch and fullscreen compatibility"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅本次按钮交互录像；无新解说，视频仍需人工审片。"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "pending_preview",
+    "package_sha256": "cc5780ac618bc6f13a9af9e85dc0fe6a6752d44b9bc848061c29fd1a7b4886e6"
+  },
+  "bilibili": {
+    "status": "pending_sync"
+  },
+  "local_artifacts": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006"
+}

@@ -1,0 +1,978 @@
+{
+  "at": "2026-10-06T10:57:56.471245+08:00",
+  "results": [
+    {
+      "game": "tank-3d",
+      "name": "desktop corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1026.828125,
+          "y": 10,
+          "w": 243.171875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          69.078125,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "tank-3d",
+      "name": "desktop readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1026.828125,
+          "y": 10,
+          "w": 243.171875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          69.078125,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "tank-3d",
+      "name": "corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "tank-3d",
+      "name": "mobile corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 641.703125,
+          "y": 10,
+          "w": 192.296875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          59.921875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "tank-3d",
+      "name": "mobile readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 641.703125,
+          "y": 10,
+          "w": 192.296875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          59.921875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "tank-3d",
+      "name": "touch corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "tank-3d",
+      "name": "touch fullscreen includes controls",
+      "ok": true
+    },
+    {
+      "game": "tank-3d",
+      "name": "portrait corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 641.703125,
+          "w": 44,
+          "h": 192.296875
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          59.921875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "tank-3d",
+      "name": "portrait readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 641.703125,
+          "w": 44,
+          "h": 192.296875
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          59.921875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "tank-3d",
+      "name": "no JavaScript errors",
+      "ok": true,
+      "details": []
+    },
+    {
+      "game": "mario-3d",
+      "name": "desktop corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1039.828125,
+          "y": 10,
+          "w": 230.171875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          69.078125,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "mario-3d",
+      "name": "desktop readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1039.828125,
+          "y": 10,
+          "w": 230.171875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          69.078125,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "mario-3d",
+      "name": "corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "mario-3d",
+      "name": "mobile corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 641.703125,
+          "y": 10,
+          "w": 192.296875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          59.921875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "mario-3d",
+      "name": "mobile readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 641.703125,
+          "y": 10,
+          "w": 192.296875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          59.921875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "mario-3d",
+      "name": "touch corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "mario-3d",
+      "name": "touch fullscreen includes controls",
+      "ok": true
+    },
+    {
+      "game": "mario-3d",
+      "name": "portrait corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 641.703125,
+          "w": 44,
+          "h": 192.296875
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          59.921875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "mario-3d",
+      "name": "portrait readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 641.703125,
+          "w": 44,
+          "h": 192.296875
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          59.921875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "mario-3d",
+      "name": "no JavaScript errors",
+      "ok": true,
+      "details": []
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "desktop corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1029.953125,
+          "y": 10,
+          "w": 240.046875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "desktop readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1029.953125,
+          "y": 10,
+          "w": 240.046875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "mobile corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 613.9375,
+          "y": 10,
+          "w": 220.0625,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "mobile readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 613.9375,
+          "y": 10,
+          "w": 220.0625,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "touch corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "touch fullscreen includes controls",
+      "ok": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "portrait corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 587.9375,
+          "w": 44,
+          "h": 246.0625
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          68.21875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "portrait readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 587.9375,
+          "w": 44,
+          "h": 246.0625
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          68.21875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "name": "no JavaScript errors",
+      "ok": true,
+      "details": []
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "desktop corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1042.953125,
+          "y": 10,
+          "w": 227.046875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "desktop readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 1042.953125,
+          "y": 10,
+          "w": 227.046875,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "mobile corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 613.9375,
+          "y": 10,
+          "w": 220.0625,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "mobile readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 613.9375,
+          "y": 10,
+          "w": 220.0625,
+          "h": 44
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          68.21875,
+          44
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          844,
+          390
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "touch corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "touch fullscreen includes controls",
+      "ok": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "portrait corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 613.9375,
+          "w": 44,
+          "h": 220.0625
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          68.21875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "portrait readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336,
+          "y": 613.9375,
+          "w": 44,
+          "h": 220.0625
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          44,
+          68.21875
+        ],
+        "sideOverlap": false,
+        "br": false,
+        "stage": [
+          390,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "name": "no JavaScript errors",
+      "ok": true,
+      "details": []
+    },
+    {
+      "game": "starship-defense",
+      "name": "desktop corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 903.3333740234375,
+          "y": 10,
+          "w": 366.6666259765625,
+          "h": 58.66667175292969
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          96,
+          58.66667175292969
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "desktop readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 903.3333740234375,
+          "y": 10,
+          "w": 366.6666259765625,
+          "h": 58.66667175292969
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          96,
+          58.66667175292969
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "desktop camera label is one line",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 903.3333740234375,
+          "y": 10,
+          "w": 366.6666259765625,
+          "h": 58.66667175292969
+        },
+        "edgeRight": 10,
+        "edgeTop": 10,
+        "buttonSize": [
+          96,
+          58.66667175292969
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          1280,
+          720
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "starship-defense",
+      "name": "mobile corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 770.7131958007812,
+          "y": 9.99036979675293,
+          "w": 63.29998779296875,
+          "h": 43.999542236328125
+        },
+        "edgeRight": 9.98681640625,
+        "edgeTop": 9.99036979675293,
+        "buttonSize": [
+          63.29998779296875,
+          43.999542236328125
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          844,
+          389.9927978515625
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "mobile readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 770.7131958007812,
+          "y": 9.99036979675293,
+          "w": 63.29998779296875,
+          "h": 43.999542236328125
+        },
+        "edgeRight": 9.98681640625,
+        "edgeTop": 9.99036979675293,
+        "buttonSize": [
+          63.29998779296875,
+          43.999542236328125
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          844,
+          389.9927978515625
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "mobile camera label is one line",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 770.7131958007812,
+          "y": 9.99036979675293,
+          "w": 63.29998779296875,
+          "h": 43.999542236328125
+        },
+        "edgeRight": 9.98681640625,
+        "edgeTop": 9.99036979675293,
+        "buttonSize": [
+          63.29998779296875,
+          43.999542236328125
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          844,
+          389.9927978515625
+        ],
+        "rotated": false
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "touch corner pause opens menu",
+      "ok": true
+    },
+    {
+      "game": "starship-defense",
+      "name": "touch fullscreen includes controls",
+      "ok": true
+    },
+    {
+      "game": "starship-defense",
+      "name": "portrait corner edge",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336.0101013183594,
+          "y": 770.7131958007812,
+          "w": 43.999542236328125,
+          "h": 63.300048828125
+        },
+        "edgeRight": 9.98675537109375,
+        "edgeTop": 9.9903564453125,
+        "buttonSize": [
+          43.999542236328125,
+          63.300048828125
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          389.99285888671875,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "portrait readable buttons and HUD",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336.0101013183594,
+          "y": 770.7131958007812,
+          "w": 43.999542236328125,
+          "h": 63.300048828125
+        },
+        "edgeRight": 9.98675537109375,
+        "edgeTop": 9.9903564453125,
+        "buttonSize": [
+          43.999542236328125,
+          63.300048828125
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          389.99285888671875,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "portrait camera label is one line",
+      "ok": true,
+      "details": {
+        "rect": {
+          "x": 336.0101013183594,
+          "y": 770.7131958007812,
+          "w": 43.999542236328125,
+          "h": 63.300048828125
+        },
+        "edgeRight": 9.98675537109375,
+        "edgeTop": 9.9903564453125,
+        "buttonSize": [
+          43.999542236328125,
+          63.300048828125
+        ],
+        "sideOverlap": false,
+        "label": "切换视角",
+        "br": false,
+        "stage": [
+          389.99285888671875,
+          844
+        ],
+        "rotated": true
+      }
+    },
+    {
+      "game": "starship-defense",
+      "name": "no JavaScript errors",
+      "ok": true,
+      "details": []
+    }
+  ],
+  "method": "Edge/Playwright actual utility input, 1280x720 / 844x390 / 390x844. Local browser simulation, not physical phone."
+}

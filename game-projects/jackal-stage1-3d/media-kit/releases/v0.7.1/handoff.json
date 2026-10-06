@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.7.1",
+  "base_version": "v0.7.0",
+  "created_at": "2026-10-06T10:57:56.471245+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+    "fingerprint_algorithm": "sha256 of sorted JSON relative-path/file-sha256 manifest",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "corner-utilities",
+      "description": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "corner-layout",
+      "feature_ids": [
+        "corner-utilities"
+      ],
+      "before": "坦克右上内缩78px，玛丽紧凑顶部42px，虫潮标签有br强制换行",
+      "after": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "user_visible_result": "一行清楚可达、HUD不挡按钮",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop",
+      "file": "releases/v0.7.1/captures/jackal-stage1-3d-desktop.png",
+      "sha256": "98a4002eb9aa7beba347e288059c8c02dccc84b1195128badf452198369e643b",
+      "kind": "screenshot",
+      "version": "v0.7.1",
+      "build_id": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile",
+      "file": "releases/v0.7.1/captures/jackal-stage1-3d-mobile.png",
+      "sha256": "f0486013cd9fe0546499f6dbea56ce45aa114fd5eeb44df8266cb58b45324a45",
+      "kind": "screenshot",
+      "version": "v0.7.1",
+      "build_id": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "portrait",
+      "file": "releases/v0.7.1/captures/jackal-stage1-3d-portrait.png",
+      "sha256": "35faff344de6624b71f0894e320e2ded87207cfb855b373daf6ad13052e74917",
+      "kind": "screenshot",
+      "version": "v0.7.1",
+      "build_id": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge/Playwright desktop and simulated mobile/rotated portrait; actual utility clicks",
+      "result": "pass",
+      "evidence": "../../../../site-games/releases/toy3d-hud-edge-20261006/qa.json",
+      "unmeasured": [
+        "physical phone multi-touch and fullscreen compatibility"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅本次按钮交互录像；无新解说，视频仍需人工审片。"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "pending_preview",
+    "package_sha256": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877"
+  },
+  "bilibili": {
+    "status": "ordinary_patch_deferred"
+  },
+  "local_artifacts": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006"
+}

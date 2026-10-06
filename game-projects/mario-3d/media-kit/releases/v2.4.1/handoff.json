@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.4.1",
+  "base_version": "v2.4.0",
+  "created_at": "2026-10-06T10:57:56.471245+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+    "fingerprint_algorithm": "sha256 of sorted JSON relative-path/file-sha256 manifest",
+    "entrypoint": "public/html/game/mario-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "corner-utilities",
+      "description": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "corner-layout",
+      "feature_ids": [
+        "corner-utilities"
+      ],
+      "before": "坦克右上内缩78px，玛丽紧凑顶部42px，虫潮标签有br强制换行",
+      "after": "右上视角/暂停/全屏贴逻辑角落，保留10px边距；坦克敌军计数下移防重叠；玛丽紧凑样式回到顶部；虫潮切换视角单行、恢复触屏全屏并保留原动作布局。",
+      "user_visible_result": "一行清楚可达、HUD不挡按钮",
+      "evidence_ids": [
+        "desktop",
+        "mobile",
+        "portrait"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop",
+      "file": "releases/v2.4.1/captures/mario-3d-desktop.png",
+      "sha256": "4ee9262f61efd72692a3b0fe63891b6a433ad02d61200f61cb2841c081e4e4f2",
+      "kind": "screenshot",
+      "version": "v2.4.1",
+      "build_id": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "mobile",
+      "file": "releases/v2.4.1/captures/mario-3d-mobile.png",
+      "sha256": "effbc4c30079e07e74722b6d5bd83e75d8a888f6a7cd5605df8427acb3ed76c7",
+      "kind": "screenshot",
+      "version": "v2.4.1",
+      "build_id": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "portrait",
+      "file": "releases/v2.4.1/captures/mario-3d-portrait.png",
+      "sha256": "34dfed7df304c8065c5fa73c696665383af75e34e786a3b4d5aa6399becff020",
+      "kind": "screenshot",
+      "version": "v2.4.1",
+      "build_id": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+      "capture_mode": "realtime-automation",
+      "description": "当前构建实机UI，浏览器视口模拟；测试台/开场跳过仅用于快速验收布局。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "Edge/Playwright desktop and simulated mobile/rotated portrait; actual utility clicks",
+      "result": "pass",
+      "evidence": "../../../../site-games/releases/toy3d-hud-edge-20261006/qa.json",
+      "unmeasured": [
+        "physical phone multi-touch and fullscreen compatibility"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅本次按钮交互录像；无新解说，视频仍需人工审片。"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39043286960128,
+    "status": "pending_preview",
+    "package_sha256": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd"
+  },
+  "bilibili": {
+    "status": "ordinary_patch_deferred"
+  },
+  "local_artifacts": "D:\\project\\task-artifacts\\toy3d-hud-edge-20261006"
+}
