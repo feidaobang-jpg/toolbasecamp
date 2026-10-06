@@ -8,18 +8,748 @@
   "qa_records": [
     "before-qa.json",
     "after-qa.json",
-    "other-games-audit.json"
+    "other-games-audit.json",
+    "merged-qa.json",
+    "website-qa.json",
+    "toy-preview-qa.json"
   ],
   "physical_phone_test": false,
   "website": {
-    "status": "not_deployed"
+    "status": "public_verified",
+    "commit": "4ed1477712d28f905b4ef3149ece531e93411977",
+    "verified_at": "2026-10-06T15:46:08.981771+00:00",
+    "runtime_files": [
+      {
+        "path": "html/game/tank-3d/index.html",
+        "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html?qa=camera-follow1",
+        "match": true,
+        "sha256": "70caa74d521f3ac2c1ef6f0a04c09febbf5046a5bbb7e918c237bfa8484b7fe5"
+      },
+      {
+        "path": "html/game/tank-3d/main.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js?qa=camera-follow1",
+        "match": true,
+        "sha256": "6ec534145b5cbb7edfe260eaabe1923edd154602da6d68e2a0f44e3b7dba71da"
+      },
+      {
+        "path": "html/game/tank-3d/scene.js",
+        "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/scene.js?qa=camera-follow1",
+        "match": true,
+        "sha256": "3da5cb18e7f5628857ab78e5152287b1929af24917f329e640b5216b7ac4da94"
+      }
+    ],
+    "qa": "website-qa.json"
   },
   "toy": {
     "id": 39043249461248,
-    "status": "not_submitted"
+    "status": "auditing",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:48:33.883910+00:00",
+    "package": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\package",
+    "package_sha256": "6d6253c97de20c4e43475398c4ee014a92db978a46e962a891c9aaa45f760fbf",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_YdoT2sFp/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_6d7ciYPL/index.html",
+    "submitted_at": "2026-10-06T15:48:33.883910+00:00",
+    "public_package_verified": false,
+    "qa": "toy-preview-qa.json"
   },
   "bilibili": {
     "status": "pending_merge",
     "reason": "普通体验补丁累计，下次正式说明更新合并；操作入口仍准确"
+  },
+  "media": [
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\1280x720-oblique.png",
+      "sha256": "76c67a9e1a802b1429750e73a67f422e4f3c8769b4cebfc870d8c8d74a976324",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\1280x720-top.png",
+      "sha256": "9c20e0ec2fe95791c985542ce7c7039d8ae5ca575c6eb441d8205a8706e08a92",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\390x844-oblique.png",
+      "sha256": "d324bc72b0ab368640120ee5903ecb8fd8c857e4faac906d36265c4848f82cf4",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\390x844-top.png",
+      "sha256": "e753432ba8c216c48d9ec5b31e942c7526b22d2a7274bd4a17708ca1996f45d2",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\568x320-oblique.png",
+      "sha256": "214021d0089a6bda56c26106a568326e4f7feba1c751cdf7ade196efbf169dce",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\568x320-top.png",
+      "sha256": "a08f16fef2427f92fa1e337c6a6cf276297d32fde009f1214df4074eeaad36f1",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\844x390-oblique.png",
+      "sha256": "548bf56b369dbfca8d96b0d014075465c91ba8e4695b545c1aa00b7b08321668",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\844x390-top.png",
+      "sha256": "ab42908d4e2fe3ed78ef54acc87895b9df768a7048995630a3b3bcf46e3f6836",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\page@0b9476f2b0659e72189ab15753420128.webm",
+      "sha256": "e656d30f883f98518c62185d3ae1a2a8990d278d27195266b0ba75466c8ca779",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\page@2d4d926a8b3b12cde9524e10dba15a19.webm",
+      "sha256": "7ef880730931f7b278ab22cf86098e7404bf2f1d7aa9849d7c8ee9f487d3de78",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\page@7ad4cba6867484a33b1a6035716d7c49.webm",
+      "sha256": "165c2a77b5bce2673acf7df2b03049cd8dfc5bee6ecb2bac757ee159306c40da",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\before\\page@887cd5644c915db3dcf2ae4b857970a3.webm",
+      "sha256": "12d3fcc39df8b726fe5a123433ac8d66686a54722bc0dee769c9a432ba38ce39",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "controls-inset1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\1280x720-oblique.png",
+      "sha256": "cdebcf70e3b5ffcbf84a3ccd20b46b135fcfcec2fd7394324a436754a6a2214e",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\1280x720-preset2.png",
+      "sha256": "e625e59d5685594e2c7df9be7ef4badc592d5315dcb76bfcb8111e71b73e0404",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\1280x720-preset3.png",
+      "sha256": "e0f74f386649e36cb486fdc018d7d4989e7496c3ee1ab5c69818e597219e4c46",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\1280x720-preset4.png",
+      "sha256": "e863a528db6b74e4a58d7d6a8f3ed1bc5d6c2188892b9ad5a152d9bd66ae0ab2",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\1280x720-top.png",
+      "sha256": "9058716f173c06c4409fb25b80c0ae9991db45413332d35ea39fe6fec75f46ca",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\390x844-oblique.png",
+      "sha256": "3ef21384f7d3e35c84a3612905cd2556b5a5e5f13565e030e271f0c2a2459650",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\390x844-preset2.png",
+      "sha256": "ac970f20b25ad682b6c3c45b2484301be72168858a4dba75c0a03846b7c128ce",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\390x844-preset3.png",
+      "sha256": "52752f9e39208b5e58b177ece3cf642025745d448c3f48751ecb5f1207f0f309",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\390x844-preset4.png",
+      "sha256": "581c2297ce531037fe35bf55000f223a2459b299d302c79602fc51be72aefd57",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\390x844-top.png",
+      "sha256": "5e614ecaac400fff44e64111b502915696b6475e0f18fd9fd50bca9bde9f6861",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\568x320-oblique.png",
+      "sha256": "2736f419e132c99765ffd9d94b3d322a4b4a841593b7cb6f0ec7d79ac478aca8",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\568x320-preset2.png",
+      "sha256": "c8d752050e4c000790e3b86579ead3fbe41a05a0df40bc602b4c250f242658a7",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\568x320-preset3.png",
+      "sha256": "61c4375281b6575ddc8c2810c50e9dbf1b5aa1cc575267d759307b301417e0be",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\568x320-preset4.png",
+      "sha256": "f9b03001b37e38657a4734bc5d00f697f631e4c463858ffe021587c5c21c1658",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\568x320-top.png",
+      "sha256": "337f81d93af7443a73ffd8a8ff4aa6d699c9549c28d9678aae97c25096292fec",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\844x390-oblique.png",
+      "sha256": "cd7b630a4e0d030c927c991b13a9b541cd192769e8607408e0d03e823cc504aa",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\844x390-preset2.png",
+      "sha256": "ef8e012bb3132a71250a330d8fd70cdc3d2b8b69456156ecf4c8c26e1b8ae2f3",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\844x390-preset3.png",
+      "sha256": "5160770c8e8cd3869307cd0306b455ee18a772393e566f5cb4359f4f4ab3c88f",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\844x390-preset4.png",
+      "sha256": "6141269e8233e7804603435f3f80e437f39fd2016bc2461a70046bb7ca7bd66b",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\844x390-top.png",
+      "sha256": "69322ada16d900b82c5f712e16cc6a7d30d28808563a8fcbac3661f3c3b8eadc",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\page@33eb6e226f5db1518c0930daa5fa1d26.webm",
+      "sha256": "62d9ecde2855d967d12d505c9d635a4bca562162131eb2303df89e0e8c0e284e",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\page@452d0d38136859e7ecfed2c6ce1503f7.webm",
+      "sha256": "715c81c1bbc8e16dee15ae166e0a2a3ca0f45d7c41529c50232a7d089f492cd0",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\page@70020585b6b0b838f103d7d65a24aee1.webm",
+      "sha256": "ab4bb9839006a035073dfb0d3161dd2a3dace9cd305f7d90d0202c4af67baa41",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\after\\page@efeeeeee5d5234f01d1c15ae30f35594.webm",
+      "sha256": "42ca5da3f54499d46afc57eb1c8cb990c1c4e6b70ffa327186adc0e45ef509e3",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\1280x720-oblique.png",
+      "sha256": "21756e7d2e1878712c17fba5dd370e85ced1dd265a7c6f33bdb81e024f849612",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\1280x720-preset2.png",
+      "sha256": "e625e59d5685594e2c7df9be7ef4badc592d5315dcb76bfcb8111e71b73e0404",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\1280x720-preset3.png",
+      "sha256": "e0f74f386649e36cb486fdc018d7d4989e7496c3ee1ab5c69818e597219e4c46",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\1280x720-preset4.png",
+      "sha256": "e863a528db6b74e4a58d7d6a8f3ed1bc5d6c2188892b9ad5a152d9bd66ae0ab2",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\1280x720-top.png",
+      "sha256": "962306fbef4f258b7dc3aee81c5ce3c0c4875180fc263816efb71cdac7930168",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\390x844-oblique.png",
+      "sha256": "fb061cbc852900436b00b10467001b4fe27df13c555b7e0adaff59dfd752bcd0",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\390x844-preset2.png",
+      "sha256": "ac970f20b25ad682b6c3c45b2484301be72168858a4dba75c0a03846b7c128ce",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\390x844-preset3.png",
+      "sha256": "52752f9e39208b5e58b177ece3cf642025745d448c3f48751ecb5f1207f0f309",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\390x844-preset4.png",
+      "sha256": "581c2297ce531037fe35bf55000f223a2459b299d302c79602fc51be72aefd57",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\390x844-top.png",
+      "sha256": "bbf1b214dde179fdc16682336afbf075ec50918fe2ca955fbdb1e20258010ebd",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\568x320-oblique.png",
+      "sha256": "a46972a5ac814e42c8ba3bb8f6c7c4c728ee111dd46110f974dc69d863f9a256",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\568x320-preset2.png",
+      "sha256": "d008dd8fdcb9813c2559f043dfb999c743a8231b7b2a47e7229add4c57429b4c",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\568x320-preset3.png",
+      "sha256": "5c85d39c2ad599afdb635579554ff7553987977c8f3f436d7e354e42aea12b98",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\568x320-preset4.png",
+      "sha256": "4d3d261e0b98dbcd411c0b69f96f0f038da6b400a1bf0af6919f287ef33b9f78",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\568x320-top.png",
+      "sha256": "841ed23d7cef7e2fe1152c8f6c737803465ac0004555f85df1bde4d9c37aa29e",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\844x390-oblique.png",
+      "sha256": "7d8e0a686fd2b0f669f89e7379030a7ad088925a10a89cd23bfc0fbdfd7b1256",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\844x390-preset2.png",
+      "sha256": "ef8e012bb3132a71250a330d8fd70cdc3d2b8b69456156ecf4c8c26e1b8ae2f3",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\844x390-preset3.png",
+      "sha256": "5160770c8e8cd3869307cd0306b455ee18a772393e566f5cb4359f4f4ab3c88f",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\844x390-preset4.png",
+      "sha256": "404e4b9f7778979110f56cc1b7f042c577091ddf5b1eb3043d2f0aaf270eaa9e",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\844x390-top.png",
+      "sha256": "5f836fb42f7f91d3d9f4cce4e4c5bde413474ef892b2542a5a22d16ef6211129",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\page@6902bb7394b87f760027d898f6f10930.webm",
+      "sha256": "7ecb95b61b7aae5ba56bf65574fd26ad0b53215001c20aa140e1f660367d294f",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\page@7fe9cf68741e9666f5de3834c97a57fd.webm",
+      "sha256": "1f77863e47b4f4fc44e5442dd0a38a08301c8f13858c9eba359f819d846a2a52",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\page@8a7108c96c3261fb567014392d1c5244.webm",
+      "sha256": "92d3d347f0bc6f71963c9cff413ed8757e9534713ab995319bbb1187ac10bc3e",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\website\\page@9bb8227ac7fa3a5fc6100f145ee1e1d0.webm",
+      "sha256": "a3ad3ef5c193e36aa6117b29a546c982e656dc14f672eadec827bdfed367d114",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\1280x720-oblique.png",
+      "sha256": "29a2e06cd7c2d489aa4c1ffe6f0a47789135a008fc4375ed9b6c9bcea1ccb1a3",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\1280x720-preset2.png",
+      "sha256": "4ac6142802e47511051e3184413d3ebd325b7d03964d152e369ed63cceacb078",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\1280x720-preset3.png",
+      "sha256": "34ee29c1baf310803afe922b021dc0cd4d6f9b1365821c0f6f45dba3b8740dab",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\1280x720-preset4.png",
+      "sha256": "4abcf1417aa4badc453234dd395247b53a23366c57a60edef002d7935b38a15d",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\1280x720-top.png",
+      "sha256": "a739279f1c9ab4a51918078f64704ca4da2bf66e7c55fa81f6e3dd8bbad80d49",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\390x844-oblique.png",
+      "sha256": "5b7f7c0249c872d64e5c550952c9910c6ad1f2f49a9ee24874792ca00f166cba",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\390x844-preset2.png",
+      "sha256": "b5e7036a1e9fad09ba6957bfd934f95dac63890116ce31bf3019f0d4a217c380",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\390x844-preset3.png",
+      "sha256": "a49e1af448d48a77f6b03c7128f9267c0ff50b9ff4dbdcc579a4a671a82075ed",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\390x844-preset4.png",
+      "sha256": "e3cb1886c4ed4c7ae0191b89ae7ed2cbfd274a1465d00d17bcee5b6aa0fbb446",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\390x844-top.png",
+      "sha256": "9c81b5b4afe7ea9d70dbba59d23e8ec4e64efe462b9f1f2b8a9272474fcd5be9",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\568x320-oblique.png",
+      "sha256": "35e78bb650ad8aa461fec0fc54bb35cacaa285ea4147a25f3ed1349fa6db989e",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\568x320-preset2.png",
+      "sha256": "f57f1716cce6c69192e434d3b4fc28c5d6cb0fc53fcf4259f942bb2bc53f178d",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\568x320-preset3.png",
+      "sha256": "933aa02d85e0c251b5836a8ccd08cccadd383e9242f3c3997362e6c6209680c2",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\568x320-preset4.png",
+      "sha256": "b87f4f4a59338b8894efa88aac31c4bcce4054de646b48343c04e7da69bbcbab",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\568x320-top.png",
+      "sha256": "4b3539cff00a8767104c7ae36917e2fcbf82ab5e442321ed720a9702ccfc0ee8",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\844x390-oblique.png",
+      "sha256": "33fe5cf5d325492940046353d71c51fb39256137852d8728c766e00cc5093edf",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\844x390-preset2.png",
+      "sha256": "ddf72c61d1b34ce2e2bfc91f1f64418647be367b62527b1065b841c87d1f7591",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\844x390-preset3.png",
+      "sha256": "4e5611c194b8b4f96042fc847a056b99da9b89a6173c4f8e3d0d5fea49a20dc6",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\844x390-preset4.png",
+      "sha256": "3e6bc6ca30c5d1e9dfb1a1d532be64c40fb0a560e441e2ec7c81b87b08182f43",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\844x390-top.png",
+      "sha256": "09d5e48f46a4cfc3cfade847abc627faba8dc78a3f6f7065b82275b38b990269",
+      "kind": "screenshot",
+      "capture_mode": "realtime-automation",
+      "note": "实际DOM与WebGL，测试传送/逐帧建立固定站位，不是完整真人游玩",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\page@370d384d2e192afd9cd104a9f187256d.webm",
+      "sha256": "746134b01b4876a2bbe42cd9679545d394396051ac72cdcee13de2ba00ac2014",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\page@9846ecd76decdcb728e28e9fae48f062.webm",
+      "sha256": "db3df8a9f9b76fa03da4eed8df75ea6bc483d2dcd7e2fd378ab835111e41a61e",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\page@ab6f2d6708167dbd50a0fcf9642706ef.webm",
+      "sha256": "762e5cba01b8dbb6b247caa4991fb0e7e6c86b5e8d0f0f52db28d4c7bc03c8b9",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5\\toy-preview\\page@d96dab2c6350591ca1adf634d8eee54a.webm",
+      "sha256": "90e39b8cb955bb2169577c5428cae596a2be6c6e98388019ab525bd857d7b9b4",
+      "kind": "video",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "note": "Playwright静默录像，含QA建立局面及实时按键转镜头",
+      "version": "camera-follow1"
+    }
+  ],
+  "activities": {
+    "status": "skipped_recent_complete_check",
+    "last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
+    "reason": "过去12小时已有完整检查，本次无新视频或活动相关变化，按共用台账去重规则安静跳过"
   }
 }
