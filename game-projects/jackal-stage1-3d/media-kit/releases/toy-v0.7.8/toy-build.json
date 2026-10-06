@@ -1,0 +1,28 @@
+{
+ "version": "v0.7.8",
+ "source": "public/html/game/jackal-stage1-3d",
+ "source_sha256": {
+  "css/style.css": "128c05661f9a2aff813be03242c059d23611d6addc3a8eb6a00f550ec935eb0e",
+  "index.html": "839ec7cdfee73bfa5dee1f0a3b8b2c9a073472e5338d746326f3a0fb540f54ab",
+  "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+  "js/game.min.js": "7c18a9ba9de01007821a613c28ea6670c0728b99642f3915796cac980b699109",
+  "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+  "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+  "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+ },
+ "files": {
+  "css/style.css": "128c05661f9a2aff813be03242c059d23611d6addc3a8eb6a00f550ec935eb0e",
+  "index.html": "77e48f2d407961a3da935f93ef5d304bbe4f20481e0f956017dd0dc2c17d58c6",
+  "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+  "js/game.min.js": "7c18a9ba9de01007821a613c28ea6670c0728b99642f3915796cac980b699109",
+  "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+  "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+  "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+ },
+ "status": "published",
+ "package_tree_sha256": "989fe49686c0f42f2218de85ba15bddb49b07893b19a59e869c305b7e2d61544",
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_W1UQGwvC/index.html",
+ "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_HpvYXW9E/index.html",
+ "submitted_at": "2026-10-06T23:37:21+08:00",
+ "status_verified_at": "2026-10-06T23:42:12+08:00"
+}

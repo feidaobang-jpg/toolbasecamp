@@ -2,6 +2,7 @@
 // 每个游戏：真实点击开始 → 玩一会 → 暂停（确认音频挂起）→ 点暂停菜单里的重开 → 等 2 秒，
 // 检查页面里所有 AudioContext 都是 running 且时钟在走，并在扬声器出口挂分析器量实际音量（BGM 用 mp3 长样本的游戏重开后不会新建声源）。
 // GAMES_BASE 默认本地 no-store 服务；GAMES_ONLY=cadillacs-stage1-3d,tank-3d 只跑部分；结果写 GAMES_OUT/results.json
+// GAMES_URLS='{"jackal-stage1-3d":"https://www.bilibili.com/toy/preview/xxx/index.html"}' 单独指定入口；B 站 Toy 链接会先取出里面的游戏 iframe 再测
 let pw; try { pw = require('playwright'); } catch (e) { pw = require('D:/project/godot/absurd-3d-daily/node_modules/playwright'); }
 const fs = require('fs'), path = require('path');
 const BASE = process.env.GAMES_BASE || 'http://127.0.0.1:8791/html/game/';
@@ -17,6 +18,7 @@ const GAMES = {
   'journey-west-3d': { start: '#start', pause: '#pause', restart: null }
 };
 const only = process.env.GAMES_ONLY ? process.env.GAMES_ONLY.split(',') : Object.keys(GAMES);
+const URLS = process.env.GAMES_URLS ? JSON.parse(process.env.GAMES_URLS) : {};
 const results = [];
 const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); console.log((ok ? 'PASS ' : 'FAIL ') + name + ' ' + JSON.stringify(detail)); };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -48,23 +50,35 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       }
       try { localStorage.clear(); } catch (e) { /* 无痕 */ }
     });
-    const audio = () => p.evaluate(() => ({ states: window.__acs.map(c => c.state), times: window.__acs.map(c => +c.currentTime.toFixed(2)), starts: window.__starts }));
-    const loud = async () => { let m = 0; for (let i = 0; i < 12; i++) { m = Math.max(m, await p.evaluate(() => window.__level())); await sleep(100); } return +m.toFixed(4); };
+    let F = p.mainFrame();   // 游戏所在的 frame：网站是主页面，Toy 外壳里是游戏 iframe
+    const audio = () => F.evaluate(() => ({ states: window.__acs.map(c => c.state), times: window.__acs.map(c => +c.currentTime.toFixed(2)), starts: window.__starts }));
+    const loud = async () => { let m = 0; for (let i = 0; i < 12; i++) { m = Math.max(m, await F.evaluate(() => window.__level())); await sleep(100); } return +m.toFixed(4); };
     try {
-      await p.goto(BASE + g + '/index.html?test=1&seed=5', { waitUntil: 'load' });
+      const url = URLS[g] || BASE + g + '/index.html';
+      if (/bilibili[.]com[/]toy/.test(url)) {   // Toy 外壳：在外壳里的游戏 iframe 上加测试参数重新载入，之后的操作都在这个 frame 里
+        await p.goto(url, { waitUntil: 'load' });
+        await p.waitForFunction(() => [...document.querySelectorAll('iframe')].some(f => /bilibilitoy[.]com/.test(f.src)), null, { timeout: 30000 });
+        F = p.frames().find(f => /bilibilitoy[.]com/.test(f.url()));
+        const inner = new URL(F.url()); inner.searchParams.set('test', '1'); inner.searchParams.set('seed', '5');
+        await F.goto(inner.href, { waitUntil: 'load' });
+        check(g + '：Toy 外壳里载入游戏 iframe', true, inner.origin + inner.pathname);
+      } else {
+        const u = new URL(url); u.searchParams.set('test', '1'); u.searchParams.set('seed', '5');
+        await p.goto(u.href, { waitUntil: 'load' });
+      }
       await sleep(1500);
-      await p.locator(G.start).first().click();
-      if (G.start2) { await sleep(600); await p.locator(G.start2).first().click(); }
+      await F.locator(G.start).first().click();
+      if (G.start2) { await sleep(600); await F.locator(G.start2).first().click(); }
       await sleep(5000);   // 超级玛丽开局先显示 WORLD 卡片，几秒后才起音乐
       const before = await audio(); before.rms = await loud();
       check(g + '：开局有声音', before.states.length && before.states.every(s => s === 'running') && before.rms > 0.002, before);
-      if (G.pause) await p.locator(G.pause).first().click(); else await p.keyboard.press(G.pauseKey);
+      if (G.pause) await F.locator(G.pause).first().click(); else await p.keyboard.press(G.pauseKey);
       await sleep(600);
       const paused = await audio();
       check(g + '：暂停时音频挂起', paused.states.some(s => s === 'suspended'), paused);
       if (!G.restart) { check(g + '：暂停面板无重开按钮（不适用）', true, null); }
       else {
-        await p.locator(G.restart).first().click();
+        await F.locator(G.restart).first().click();
         await sleep(2000);
         const a1 = await audio(); await sleep(1000); const a2 = await audio(); a2.rms = await loud();
         await p.screenshot({ path: path.join(OUT, g + '-after-restart.png') });

@@ -3,7 +3,7 @@
  "game_id": "chongchao-qianshao",
  "version": "web-restart-audio-v0.19.4",
  "base_version": "web-controls-inset-v0.19.3",
- "created_at": "2026-10-06T23:40:00+08:00",
+ "created_at": "2026-10-06T23:20:00+08:00",
  "classification": "普通补丁",
  "changes": [
   "暂停后点「重开本关」，背景音乐和音效正常（restartLevel 先解除暂停挂起的音频）。"
@@ -26,12 +26,22 @@
   "game.compat.js": "b305abaae507f8ec1534f084a60e7e0283e4dd2d53bd55291341b9346a37721a"
  },
  "website": {
-  "status": "pending"
+  "status": "deployed_verified",
+  "commit": "aab2f902",
+  "verified_at": "2026-10-06T23:31:00+08:00",
+  "verification": "线上脚本与提交逐字节一致；线上 restart-audio 29/29"
  },
  "toy": {
   "id": 38678478981120,
-  "status": "pending",
-  "note": "另一任务的 v0.19.3 Toy 仍在审核，过审后再提交本版"
+  "status": "published",
+  "package_tree_sha256": "0f7d563557912159f655ebee315700cce97eda88aaffd66ac68c1573accb1a74",
+  "package": "dist/toy/chongchao-qianshao/package（zip 2c8ba407…）",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_PCu3NQfB/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_t7S2J6U5/index.html",
+  "submitted_at": "2026-10-06T23:37:21+08:00",
+  "preview_checks": "restart-audio Toy 外壳 6/6",
+  "verified_at": "2026-10-06T23:42:12+08:00",
+  "public_check": "toy mylist published；正式入口 iframe 38678478981120-v23143，Toy 外壳里暂停重开有声音"
  },
  "bilibili": {
   "status": "pending_merge",

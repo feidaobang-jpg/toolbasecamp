@@ -60,8 +60,8 @@
    "summary": "暂停后「重新开始」恢复 BGM 和音效；第二关可走到画面下方（约 83% 高），外沿放边界物。",
    "record": "releases/v0.5.4/handoff.json",
    "channels": {
-    "website": "pending",
-    "toy": "pending",
+    "website": "deployed_verified",
+    "toy": "published",
     "bilibili": "pending_merge"
    }
   }
@@ -72,20 +72,20 @@
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
-  "status": "auditing",
-  "submitted_at": "2026-10-06T15:18:11.332427+00:00",
-  "package": "dist/toy-v0.5.2/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_NatOPTBw/index.html",
-  "note": "本版预览实测通过，已提交；尚未核验公开包版本。",
-  "status_verified": "toy mylist published / PUBLIC；正式入口 iframe 40412421031936-v23096 显示 v0.5.2，桌面和触屏 20/20 通过",
+  "status": "published",
+  "submitted_at": "2026-10-06T23:37:21+08:00",
+  "package": "dist/toy-v0.5.4/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_kZmnSbz3/index.html",
+  "note": "v0.5.4（暂停重开有声音、第二关下半屏能走）已过审；标题已改为「恐龙快打 3D：第一、二关」。",
+  "status_verified": "toy mylist published；正式入口 iframe 40412421031936-v23141 显示 v0.5.4，toy-preview-check 通过，Toy 外壳里暂停重开有声音",
   "bound_videos": [
    "BV18XHW66E55"
   ],
-  "review_status": "auditing",
-  "version": "v0.5.2",
-  "verified_at": "2026-10-06T21:25:58+08:00",
+  "review_status": "published",
+  "version": "v0.5.4",
+  "verified_at": "2026-10-06T23:42:12+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.5.2",
+  "last_published_version": "v0.5.4",
   "pending_updates": [
    {
     "version": "v0.2.1",
