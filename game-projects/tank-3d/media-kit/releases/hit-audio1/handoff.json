@@ -37,16 +37,29 @@
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
-    "status": "pending_existing_review",
+    "status": "auditing",
     "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
     "preview_verified_at": "2026-10-06T11:14:56.511127+00:00",
     "browser_record": "toy-preview-captures/verification.json",
-    "submission_attempted_at": "2026-10-06T11:15:37.112465+00:00",
-    "platform_code": 307013,
-    "reason": "同 toy 已有审核中的版本",
-    "submitted": false,
-    "retry_rule": "下次相关任务先查询上一版审核结果，放行后使用已验证包同步；未创建定时任务。"
+    "submitted": true,
+    "submission_attempts": [
+      {
+        "at": "2026-10-06T11:15:37.112465+00:00",
+        "status": "rejected_existing_review",
+        "code": 307013,
+        "message": "同 toy 已有审核中的版本"
+      },
+      {
+        "at": "2026-10-06T11:16:46.505145+00:00",
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_gnM2F1oY/index.html",
+        "preceding_status_checked": "published"
+      }
+    ],
+    "submitted_at": "2026-10-06T11:16:46.505145+00:00",
+    "submitted_version": "hit-audio1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_gnM2F1oY/index.html"
   },
   "bilibili": {
     "status": "pending_merge",
