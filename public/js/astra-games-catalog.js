@@ -1,9 +1,10 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-01T08:16:16Z */
+/** generated_at: 2026-10-06T08:31:01Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
+      { title: "MoxRide", url: "https://www.moxride.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/moxride/gameplay.png", external: true },
       { title: "中途岛海战·空中突击 / MIDWAY 1942: Air Strike", url: "https://ihca.cn/midway/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/midway-1942/gameplay.png", external: true },
       { title: "沙线行动 / SANDLINE", url: "https://ihca.cn/sandline/", thumb: "https://github.com/user-attachments/assets/0443c8e4-4060-49f2-af31-175138c4e6ab", external: true },
       { title: "SURGE for Oinja", url: "https://oinja-game.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/surge-for-oinja/cover.png", external: true },
@@ -183,8 +184,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-01T08:16:16Z",
-    count: 165,
+    generatedAt: "2026-10-06T08:31:01Z",
+    count: 166,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
