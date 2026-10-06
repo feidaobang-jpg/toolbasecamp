@@ -75,7 +75,7 @@
     {
       "id": "desktop-difficulty",
       "file": "releases/web-difficulty-v0.19.0/qa/captures/desktop-difficulty.png",
-      "sha256": "8150e5399fb78d5bb40c1c39caeeed33f691f39cfb6d0bd52984d69a48d2bbed",
+      "sha256": "b775715c3721c7bd7bdb7271d458d410c1ecac771cb57259df60d32db582275f",
       "kind": "screenshot",
       "version": "web-difficulty-v0.19.0",
       "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
@@ -83,7 +83,9 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "pass",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 1280,
+      "height": 720
     },
     {
       "id": "desktop-hard-pressure",
@@ -96,12 +98,14 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "not-run",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 1280,
+      "height": 720
     },
     {
       "id": "desktop-hud",
       "file": "releases/web-difficulty-v0.19.0/qa/captures/desktop-hud.png",
-      "sha256": "41ef6bd2e41873549854ff880112e0652b4843ab1b190e2d1270337d8635000b",
+      "sha256": "fe488bd5a3d53ff41b5345210d6c728e8892d29c7b5dc2242a1d2cfba9ac37d7",
       "kind": "screenshot",
       "version": "web-difficulty-v0.19.0",
       "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
@@ -109,12 +113,14 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "not-run",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 1280,
+      "height": 720
     },
     {
       "id": "landscape-difficulty",
       "file": "releases/web-difficulty-v0.19.0/qa/captures/landscape-difficulty.png",
-      "sha256": "4f700867d6a7d03fc0b83af4ea3eeab58066a5fef4b2a7915ead1925259738f8",
+      "sha256": "468e7f307c419b4fe886e5b02a032e7170d649dd11784212d852660ef8eb91c8",
       "kind": "screenshot",
       "version": "web-difficulty-v0.19.0",
       "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
@@ -122,7 +128,9 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "pass",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 844,
+      "height": 390
     },
     {
       "id": "landscape-hard-pressure",
@@ -135,12 +143,14 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "not-run",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 844,
+      "height": 390
     },
     {
       "id": "landscape-hud",
       "file": "releases/web-difficulty-v0.19.0/qa/captures/landscape-hud.png",
-      "sha256": "6264e56c0d477e16bf9a36cbb74683e29bc6eb3d6657e989f34d66a17c85421c",
+      "sha256": "0ec48e70bc137a6068529d849f9c7c5de75bf865e229576b2e077f751b1d7241",
       "kind": "screenshot",
       "version": "web-difficulty-v0.19.0",
       "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
@@ -148,25 +158,14 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "not-run",
-      "audio_review": "not-applicable"
-    },
-    {
-      "id": "pause-overlap-before",
-      "file": "releases/web-difficulty-v0.19.0/qa/captures/pause-overlap-before.png",
-      "sha256": "e074d6131945ec98cda77bc3fdd68d7c5ecf05b31cb0ec7e8e51384e8951f062",
-      "kind": "screenshot",
-      "version": "web-difficulty-v0.19.0",
-      "build_id": null,
-      "capture_mode": "realtime-automation",
-      "description": "本任务修复前的实时自动化截图：暂停菜单返回按钮被工具栏拦截；菜单层级调整前",
-      "audio": "none",
-      "visual_review": "not-run",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 844,
+      "height": 390
     },
     {
       "id": "portrait-difficulty",
       "file": "releases/web-difficulty-v0.19.0/qa/captures/portrait-difficulty.png",
-      "sha256": "db8cb522279e77e9d2dc086e265f09b0ca50d5905b027e0d41c851e5f443b414",
+      "sha256": "bf2a2203dded67762c02d64090b37ca30b400cfd827b31d24f2ccc94b00b4f25",
       "kind": "screenshot",
       "version": "web-difficulty-v0.19.0",
       "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
@@ -174,12 +173,14 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "pass",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 390,
+      "height": 844
     },
     {
       "id": "portrait-hud",
       "file": "releases/web-difficulty-v0.19.0/qa/captures/portrait-hud.png",
-      "sha256": "57813c83358a650ffe010496fed2631bdd36dc2367c0d5a3a3e8105880b821ea",
+      "sha256": "565488e51953b99e269388c1d6795a8e7d000923a66bd450c3e5752433f0ceae",
       "kind": "screenshot",
       "version": "web-difficulty-v0.19.0",
       "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
@@ -187,7 +188,9 @@
       "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
       "audio": "none",
       "visual_review": "not-run",
-      "audio_review": "not-applicable"
+      "audio_review": "not-applicable",
+      "width": 390,
+      "height": 844
     },
     {
       "id": "campaign-difficulty-video",
@@ -205,24 +208,78 @@
       "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
+    },
+    {
+      "id": "bili-new-public",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/bili-new-public.jpg",
+      "sha256": "211b29baffa091db4abcdf723b947a3df4815ea150e322c02d7d265119ae625b",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "新版视频最终简介，三档难度更新，无审核中旧提示；为此构建版本的渠道状态证据",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "width": 1265,
+      "height": 712
+    },
+    {
+      "id": "bili-old-public",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/bili-old-public.jpg",
+      "sha256": "5d503d044572e23e56e5ccb88b1c0ce285176257e37b3c138cda6980467cc32f",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "旧版视频最终简介，保留历史版本说明与全部原链接；为此构建版本的渠道状态证据",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "width": 1265,
+      "height": 712
+    },
+    {
+      "id": "bili-comment-correction",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/bili-comment-correction.jpg",
+      "sha256": "e1a6fae83e1fbb25b1d9325f65e7cd7dbbebf38f486b3360628da406130b8243",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "原置顶第二页回复公开核验：更正旧V切视角、空格冲刺为当前C/Shift/空格或K操作；为此构建版本的渠道状态证据",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "width": 1265,
+      "height": 712
     }
   ],
-  "historical_media": [],
-  "qa": {
-    "results": "qa/results.json",
-    "performance": "qa/performance.json",
-    "devices": [
-      "Windows Edge + RTX 4060 Ti",
-      "844×390及390×844触控/视口模拟"
-    ],
-    "method": "真实WebGL页面、键盘/触控菜单与带标记的qa战斗夹具；每视口800组普通曲线/困难压力/金币期望比较",
-    "result": "pass",
-    "not_tested": [
-      "真实手机多指与性能",
-      "Toy云存档实际读写（本次测试载荷验证和迁移，未覆盖用户云档）",
-      "真人难度平衡试玩"
-    ]
-  },
+  "historical_media": [
+    {
+      "id": "pause-overlap-before",
+      "handoff": "releases/web-difficulty-v0.19.0-before-fix/handoff.json",
+      "media_id": "pause-overlap-before",
+      "reason": "本任务修复前的真实截图，与最终构建分开绑定"
+    }
+  ],
+  "qa": [
+    {
+      "results": "qa/results.json",
+      "performance": "qa/performance.json",
+      "devices": [
+        "Windows Edge + RTX 4060 Ti",
+        "844×390及390×844触控/视口模拟"
+      ],
+      "method": "真实WebGL页面、键盘/触控菜单与带标记的qa战斗夹具；每视口800组普通曲线/困难压力/金币期望比较",
+      "result": "pass",
+      "not_tested": [
+        "真实手机多指与性能",
+        "Toy云存档实际读写（本次测试载荷验证和迁移，未覆盖用户云档）",
+        "真人难度平衡试玩"
+      ]
+    }
+  ],
   "readiness": {
     "overview": "partial",
     "update": "partial",
@@ -238,19 +295,26 @@
   "channels": {
     "website": {
       "version": "web-difficulty-v0.19.0",
-      "status": "pending_deploy"
+      "status": "public_verified",
+      "record": "deployment.json",
+      "qa": "website/results.json"
     },
     "toy": {
       "id": "38678478981120",
-      "status": "pending_sync"
+      "version": "web-difficulty-v0.19.0",
+      "status": "published",
+      "record": "toy-sync.json",
+      "qa": "toy-public/results.json"
     },
     "bilibili": {
-      "trigger": "正式版本新增玩家可选难度",
-      "status": "pending_sync",
+      "version": "web-difficulty-v0.19.0",
+      "status": "public_verified",
       "targets": [
         "BV1WbHq6eEBt",
         "BV1Ujad6DEuf"
-      ]
+      ],
+      "record": "bilibili-sync.json",
+      "comment_correction": "原置顶保留，在原评论下回复一次纠正过期操作，公开核验"
     }
   }
 }

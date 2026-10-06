@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-difficulty-v0.19.0-before-fix",
+  "base_version": "web-controls-v0.18.3",
+  "created_at": "2026-10-06T03:17:19.060531+00:00",
+  "build": {
+    "id": "931a84d4f62ce4c346bf735d2bb37195f0751b2d4ebdcad8da6c4a036169e029",
+    "fingerprint": "931a84d4f62ce4c346bf735d2bb37195f0751b2d4ebdcad8da6c4a036169e029",
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "commit": null,
+    "dirty": true,
+    "files": {
+      "campaign-difficulty.js": "01b85ea4d0c8052844281fdf18f6f7ac5d62f9a0fabb85a52a14789e4543eb6e",
+      "game.js": "33cadc2c174e0cb0d363c1ca594f09ab767237d9f4a890f669e94a47c3ae1d3c",
+      "game.compat.js": "a6fe018dac56283f98e1c8d8b2e7c3e8fe81bf452e11e6b6b095344756a026ee",
+      "index.html": "990c54f8331162047b2dde29a510963789fd58497175ff3828058aa152d9e204",
+      "save-validation.js": "1966ab081a26343a01d251fcf34ef4e74b21782872aba7b2012b0c3642685dd5",
+      "toy-platform.js": "b14583cff0c8e1c1dc9b35407c3ad3521c49b2b9764cc18784bfa3ae89b497d9"
+    },
+    "note": "本任务暂停遮挡修复前的实际截图。index.html源指纹由已记录的两处后续CSS修改逆算，其余代码/构建未改。"
+  },
+  "media": [
+    {
+      "id": "pause-overlap-before",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/pause-overlap-before.png",
+      "sha256": "e074d6131945ec98cda77bc3fdd68d7c5ecf05b31cb0ec7e8e51384e8951f062",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0-before-fix",
+      "build_id": "931a84d4f62ce4c346bf735d2bb37195f0751b2d4ebdcad8da6c4a036169e029",
+      "capture_mode": "realtime-automation",
+      "description": "本任务修复前的实时自动化截图：暂停菜单返回按钮被工具栏拦截；菜单层级调整前",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [],
+  "feature_inventory": [],
+  "changes": [],
+  "bugs": [],
+  "qa": [
+    {
+      "method": "Edge桌面，打开自由测试并暂停",
+      "result": "返回主菜单被webTools拦截，修复前保存截图"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅保留真实问题截图，不是发布版本"
+    ]
+  }
+}

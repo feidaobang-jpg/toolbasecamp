@@ -1,0 +1,21 @@
+{
+  "id": "38678478981120",
+  "version": "web-difficulty-v0.19.0",
+  "status": "published",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_zDTtimxs/index.html",
+  "package_sha256": "ea92516b02bf41a975d888911698d6fb87aac0d99de8811e487d2d6b9372ddaa",
+  "created_at": "2026-10-06T03:20:57.455443+00:00",
+  "preflight": {
+    "errors": 0,
+    "warnings": [
+      "固定资源名不带内容指纹，更新需重新下载；沿用构建配置"
+    ]
+  },
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GJqShxfS/index.html",
+  "submitted_at": "2026-10-06T03:22:11.066298+00:00",
+  "preview_verification": "toy-preview/results.json",
+  "published_verified_at": "2026-10-06T03:34:08.708445+00:00",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "public_verification": "toy-public/results.json",
+  "package_unchanged": true
+}
