@@ -10,7 +10,11 @@
       "last_public_verified_version": "v2.3.0",
       "last_public_verified_at": "2026-10-05T23:58:29.234Z",
       "last_sync_record": "releases/unified3d-20261006/handoff.json",
-      "description_sha256": "e2ccda0d7effe34ddaae28f554ad2dcccdec9a4a30474bed6a9e32347ebcc76e"
+      "description_sha256": "e2ccda0d7effe34ddaae28f554ad2dcccdec9a4a30474bed6a9e32347ebcc76e",
+      "lastPublicVerifiedVersion": "v2.4.0",
+      "descriptionHash": "779d25127cce7f489380280c4eefbfeb2425c6b920f75bbe49ddb53e8bba8809",
+      "release": "releases/v2.4.0/handoff.json",
+      "publicVerifiedAt": "2026-10-06T01:41:18.361Z"
     }
   ],
   "status": "public_verified",
@@ -45,5 +49,20 @@
       "resolved_version": "v2.3.0"
     }
   ],
-  "updated_at": "2026-10-06T08:00:16.643786+08:00"
+  "updated_at": "2026-10-06T08:00:16.643786+08:00",
+  "history": [
+    {
+      "bvid": "BV1guep6NELt",
+      "version": "v2.4.0",
+      "status": "public_verified",
+      "record": "releases/v2.4.0/handoff.json",
+      "checked_at": "2026-10-06T01:41:18.361Z"
+    }
+  ],
+  "last_public_verified": {
+    "bvid": "BV1guep6NELt",
+    "version": "v2.4.0",
+    "at": "2026-10-06T01:41:18.361Z",
+    "description_sha256": "779d25127cce7f489380280c4eefbfeb2425c6b920f75bbe49ddb53e8bba8809"
+  }
 }

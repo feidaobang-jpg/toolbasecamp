@@ -7,7 +7,7 @@
   "one_liner": "Capcom 街机恐龙快打第一关搬进 3D：四位英雄任选，楼顶 → 大楼内部 → 第 47 街，打倒牵着岩跳龙的维斯·T；可切正视与第一人称。",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "current_version": "v0.4.0",
-  "handoff": "releases/toy3d-controls-20261006/handoff.json",
+  "handoff": "releases/v0.4.0/handoff.json",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -39,17 +39,17 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-06T07:57:47.171338+08:00",
+    "submitted_at": "2026-10-06T09:34:03.285502+08:00",
     "package": "dist/toy-v0.2.0/package",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_XROMmkYX/index.html",
-    "note": "已用桌面和手机视口实测同一包并提交审核；审核中不代表新版已上线。",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_yn8D8ggD/index.html",
+    "note": "平台published，当前新UI/拖动提示已在公开入口核验。",
     "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
     "bound_videos": [
       "BV18XHW66E55"
     ],
-    "review_status": "auditing",
+    "review_status": "published",
     "version": "v0.2.0",
-    "verified_at": "2026-10-06T08:00:16.643786+08:00",
+    "verified_at": "2026-10-06T09:43:35.531737+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "last_published_version": "v0.2.0",
     "pending_updates": [
@@ -66,14 +66,18 @@
         "version": "v0.4.0",
         "classification": "正式版本",
         "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
-        "status": "pending_preview",
-        "record": "releases/toy3d-controls-20261006/handoff.json"
+        "status": "published",
+        "record": "releases/v0.4.0/handoff.json",
+        "included_version": "v0.4.0"
       }
     ],
-    "submitted_version": "v0.3.0",
-    "package_sha256": "bac9996fd5f6bd25f0f83783526f540ca8159739520806b96fefa603fa5aa495",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_9Tfk6RcR/index.html",
-    "release_record": "releases/unified3d-20261006/handoff.json"
+    "submitted_version": "v0.4.0",
+    "package_sha256": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Bmsfk2UR/index.html",
+    "release_record": "releases/v0.4.0/handoff.json",
+    "published_version": "v0.4.0",
+    "published_verified_at": "2026-10-06T01:38:03.020Z",
+    "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
   },
   "toy_note": "v0.2.0 已过审，正式入口15/15通过",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",

@@ -15,7 +15,11 @@
       "last_public_verified_at": "2026-10-05T23:58:29.195Z",
       "last_sync_record": "releases/unified3d-20261006/handoff.json",
       "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-      "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3"
+      "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3",
+      "lastPublicVerifiedVersion": "v0.4.0",
+      "descriptionHash": "e574e49fccda92e936909f841de1204c4bb81a6f8850de28cbcfff8873178495",
+      "release": "releases/v0.4.0/handoff.json",
+      "publicVerifiedAt": "2026-10-06T01:41:19.279Z"
     }
   ],
   "status": "public_verified",
@@ -54,7 +58,21 @@
       "resolved_version": "v0.3.0"
     }
   ],
-  "pending": [],
   "pending_updates": [],
-  "version": "v0.3.0"
+  "version": "v0.3.0",
+  "history": [
+    {
+      "bvid": "BV18XHW66E55",
+      "version": "v0.4.0",
+      "status": "public_verified",
+      "record": "releases/v0.4.0/handoff.json",
+      "checked_at": "2026-10-06T01:41:19.279Z"
+    }
+  ],
+  "last_public_verified": {
+    "bvid": "BV18XHW66E55",
+    "version": "v0.4.0",
+    "at": "2026-10-06T01:41:19.279Z",
+    "description_sha256": "e574e49fccda92e936909f841de1204c4bb81a6f8850de28cbcfff8873178495"
+  }
 }

@@ -1,0 +1,132 @@
+{
+  "commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+  "at": 1791250077.5673482,
+  "results": [
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?verify=toy3dui2",
+      "status": 200,
+      "expected": "0e057eb7f8386bfc39944020ed631f4a32a56d8ceb14fecbcc7b5eea8f52db0b",
+      "actual": "f8937c1494aaa3d512b733835db869834523e7808ada8b3e59be5effb8fdd10d",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "6d6a9e9520b8cfd9d971e19b928b390a8c64340bd47a7824b701d0adc58717e8",
+      "actual": "6d6a9e9520b8cfd9d971e19b928b390a8c64340bd47a7824b701d0adc58717e8",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html?verify=toy3dui2",
+      "status": 200,
+      "expected": "45e677b956d914946c4a0e1377640112c2824ec462b35aefffd9913b9b62a29c",
+      "actual": "9782bc22aaa45f324ad2fe5993b580a0e71e0aa84130495d7fa76200503e6d4b",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "b4ab28a2e87e2865752b9b3281ff343e33699cd822cc11406e1a11ff3cf1b7ce",
+      "actual": "b4ab28a2e87e2865752b9b3281ff343e33699cd822cc11406e1a11ff3cf1b7ce",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?verify=toy3dui2",
+      "status": 200,
+      "expected": "6b447c2ab94b367638a5a2f5e63d09e99c78036b2465e01d75e06424729326e2",
+      "actual": "9eb285df9fbbaf4c1eeb511dfd2038bcad245fb7b3d2fe9974503320b262ad35",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/mario-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "0271067b08623d52816fe035ab5e2c8bafb23b76e08d8311ec058910a29b7246",
+      "actual": "0271067b08623d52816fe035ab5e2c8bafb23b76e08d8311ec058910a29b7246",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/scene.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "892b913dce2a2fb9037b1990d3f9b12eee04dbbce3c3802f945b72b9f56b3cf7",
+      "actual": "892b913dce2a2fb9037b1990d3f9b12eee04dbbce3c3802f945b72b9f56b3cf7",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/starship-defense/game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "bc5312bad8de88d69dc714c5b0e02e298de8cfbe7eb797f20b4e7fa10202e101",
+      "actual": "bc5312bad8de88d69dc714c5b0e02e298de8cfbe7eb797f20b4e7fa10202e101",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/starship-defense/game.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "58f667254b900533647140f47c8b8ae5223a354aa46c122eda878fbc01131cd5",
+      "actual": "58f667254b900533647140f47c8b8ae5223a354aa46c122eda878fbc01131cd5",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/starship-defense/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?verify=toy3dui2",
+      "status": 200,
+      "expected": "5567654e316a1236018607bc9109c0603334c2a6d65431ca9b8321dc45ea1253",
+      "actual": "5ac31bfe10583c8b6f726161212ca7850c86cd5ebb87cab749fdcd51722cab00",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/tank-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html?verify=toy3dui2",
+      "status": 200,
+      "expected": "4df18c40a7ec418e83c6df3369c4bcc0b8cab61e73415def698bd30e396208c9",
+      "actual": "0903b60ee6168b6c47048c1509117c1f3bed252fa7264c56b1921206738256b3",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/tank-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "b9995b744585646d9d01281f6fc7262135fe7f68c57e2f9fecc29835a841ca3c",
+      "actual": "b9995b744585646d9d01281f6fc7262135fe7f68c57e2f9fecc29835a841ca3c",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/tank-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/scene.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "c528b269ac487cb016ebff60433663c90c1d7da1f6bc30f519e56df2a6fe6c86",
+      "actual": "c528b269ac487cb016ebff60433663c90c1d7da1f6bc30f519e56df2a6fe6c86",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/js/game/drag-look.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js?verify=toy3dui2",
+      "status": 200,
+      "expected": "503993b6296a39e581ddade0f54fe27fb2a1d2fa9fb56196a60da5eb009dc09b",
+      "actual": "503993b6296a39e581ddade0f54fe27fb2a1d2fa9fb56196a60da5eb009dc09b",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    }
+  ]
+}

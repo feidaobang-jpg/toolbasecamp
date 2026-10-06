@@ -7,8 +7,8 @@
   "classification": "正式版本",
   "build": {
     "id": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
-    "commit": null,
-    "dirty": true,
+    "commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+    "dirty": false,
     "fingerprint": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
     "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
     "entrypoint": "public/html/game/tank-3d/index.html"
@@ -40,25 +40,11 @@
       "verification": "pass"
     }
   ],
-  "bugs": [
-    {
-      "id": "walking-backwards",
-      "found_version": "unified3d1",
-      "reproduction": "普通视角手动转头后朝另一方向移动",
-      "observed": "身体保持手动朝向，出现倒着走",
-      "impact": "操作直觉不一致",
-      "status": "fixed",
-      "cause": "慢速手动视线覆盖正常移动转身；恐龙快打预物理与后物理转身曾相互抵消",
-      "fix": "仅第一人称保留慢速；非第一人称按真实移动方向及时转身，坦克独立炮塔/虫潮自动射击保留",
-      "before_media_ids": [],
-      "after_media_ids": [],
-      "retest": "实际渲染主体朝向与位移方向比对通过；旋转竖屏方向回归通过"
-    }
-  ],
+  "bugs": [],
   "media": [
     {
       "id": "menu",
-      "file": "releases/toy3d-controls-20261006/captures/tank-3d-menu.png",
+      "file": "releases/toy3dui2/captures/tank-3d-menu.png",
       "sha256": "82c8156ff27dcccc9539ef9aede0c0e348ab0b96284286f2aa0dddf8d6d2adc9",
       "kind": "screenshot",
       "version": "toy3dui2",
@@ -69,24 +55,24 @@
       "height": 720,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "mobile",
-      "file": "releases/toy3d-controls-20261006/captures/tank-3d-mobile.png",
-      "sha256": "91d536d6eaf32dee95780eac8315e49dc71a10062a1a4758de3bb0fc55cf90f2",
+      "file": "releases/toy3dui2/captures/toy-tank-mobile.jpg",
+      "sha256": "e747381d816b361ed017506c79026a2e062b63d63c7211eb59e75f8af82a4e79",
       "kind": "screenshot",
       "version": "toy3dui2",
       "build_id": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
       "capture_mode": "realtime-automation",
-      "description": "实际当前游戏UI；跳过开场，低画质，模拟手机视口。",
+      "description": "相同内容哈希的Toy预览包，844×390模拟触屏视口，实际菜单切换；虫潮使用原有自由测试避免改普通存档。",
       "width": 844,
       "height": 390,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
     }
@@ -110,15 +96,36 @@
     ]
   },
   "website": {
-    "status": "pending"
+    "status": "public_verified",
+    "source_commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/website.json",
+    "verified_files": 14
   },
   "toy": {
+    "game": "tank-3d",
     "id": 39043249461248,
-    "status": "pending_preview",
-    "package_sha256": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee"
+    "version": "toy3dui2",
+    "package_sha256": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+    "submitted_at": "2026-10-06T09:33:54.775793+08:00",
+    "response": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_efUx7xiu/index.html"
+    },
+    "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone",
+    "status": "published",
+    "verified_at": "2026-10-06T01:38:00.551Z",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/toy-sync.json",
+    "public_verified": true,
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
   },
   "bilibili": {
-    "status": "pending"
+    "status": "submitted_pending_public",
+    "bvid": "BV1Wqaz6AEJb",
+    "version": "toy3dui2",
+    "submitted_at": "2026-10-06T01:35:17.818Z",
+    "verified_at": "2026-10-06T01:41:17.481Z",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/bilibili-sync.json",
+    "editor_saved_verified": true
   },
   "local_artifacts": "D:\\project\\task-artifacts\\toy3d-controls-20261006"
 }

@@ -7,8 +7,8 @@
   "classification": "正式版本",
   "build": {
     "id": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
-    "commit": null,
-    "dirty": true,
+    "commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+    "dirty": false,
     "fingerprint": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
     "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
     "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
@@ -58,7 +58,7 @@
   "media": [
     {
       "id": "menu",
-      "file": "releases/toy3d-controls-20261006/captures/cadillacs-stage1-3d-menu.png",
+      "file": "releases/v0.4.0/captures/cadillacs-stage1-3d-menu.png",
       "sha256": "25eb13972db12149b474475ab2671f0375f927a56e843381f5a42e778ced6875",
       "kind": "screenshot",
       "version": "v0.4.0",
@@ -69,24 +69,24 @@
       "height": 720,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "mobile",
-      "file": "releases/toy3d-controls-20261006/captures/cadillacs-stage1-3d-mobile.png",
-      "sha256": "489c648245f238079e3f94b2058f6c88359df2bbf1a56827d8ecc8e493b03fab",
+      "file": "releases/v0.4.0/captures/toy-dino-mobile.jpg",
+      "sha256": "0e4f66a31d5a8ef66ae2e0c4212fea84deefa30ab0f1eb740782bbba985ca99d",
       "kind": "screenshot",
       "version": "v0.4.0",
       "build_id": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
       "capture_mode": "realtime-automation",
-      "description": "实际当前游戏UI；跳过开场，低画质，模拟手机视口。",
+      "description": "相同内容哈希的Toy预览包，844×390模拟触屏视口，实际菜单切换；虫潮使用原有自由测试避免改普通存档。",
       "width": 844,
       "height": 390,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
     }
@@ -110,15 +110,36 @@
     ]
   },
   "website": {
-    "status": "pending"
+    "status": "public_verified",
+    "source_commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/website.json",
+    "verified_files": 14
   },
   "toy": {
+    "game": "cadillacs-stage1-3d",
     "id": 40412421031936,
-    "status": "pending_preview",
-    "package_sha256": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e"
+    "version": "v0.4.0",
+    "package_sha256": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
+    "submitted_at": "2026-10-06T09:34:03.285502+08:00",
+    "response": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_Bmsfk2UR/index.html"
+    },
+    "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone",
+    "status": "published",
+    "verified_at": "2026-10-06T01:38:03.020Z",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/toy-sync.json",
+    "public_verified": true,
+    "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
   },
   "bilibili": {
-    "status": "pending"
+    "status": "public_verified",
+    "bvid": "BV18XHW66E55",
+    "version": "v0.4.0",
+    "submitted_at": "2026-10-06T01:35:18.945Z",
+    "verified_at": "2026-10-06T01:41:19.279Z",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/bilibili-sync.json",
+    "editor_saved_verified": false
   },
   "local_artifacts": "D:\\project\\task-artifacts\\toy3d-controls-20261006"
 }

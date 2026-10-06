@@ -1,0 +1,187 @@
+{
+  "at": "2026-10-06T09:43:35.531737+08:00",
+  "previews": [
+    {
+      "game": "tank-3d",
+      "id": 39043249461248,
+      "version": "toy3dui2",
+      "package_sha256": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+      "at": "2026-10-06T09:28:40.633437+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_bmZJ83mS/index.html"
+      }
+    },
+    {
+      "game": "mario-3d",
+      "id": 39043286960128,
+      "version": "v2.4.0",
+      "package_sha256": "29f211d101aaeb6ae350abfd53dd932c6e87e6db2b2d134f1fe01aa0cc3db97a",
+      "at": "2026-10-06T09:28:42.559574+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_Fqx2VcND/index.html"
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "id": 39863936092160,
+      "version": "v0.7.0",
+      "package_sha256": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
+      "at": "2026-10-06T09:28:43.638296+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_LLtYD31o/index.html"
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "id": 40412421031936,
+      "version": "v0.4.0",
+      "package_sha256": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
+      "at": "2026-10-06T09:28:45.677185+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_yn8D8ggD/index.html"
+      }
+    },
+    {
+      "game": "starship-defense",
+      "id": 38678478981120,
+      "version": "web-controls-v0.18.2",
+      "package_sha256": "d04e4673253f0b680028e209babc210f3cabab365cb26ebd7554ff498d7ebea9",
+      "at": "2026-10-06T09:28:46.440024+08:00",
+      "response": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_WFs0oonT/index.html"
+      }
+    }
+  ],
+  "submissions": [
+    {
+      "game": "tank-3d",
+      "id": 39043249461248,
+      "version": "toy3dui2",
+      "package_sha256": "babdfc050cb04b035b796d17799bc920227084ceb4030553f79ac6556f4e94ee",
+      "submitted_at": "2026-10-06T09:33:54.775793+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_efUx7xiu/index.html"
+      },
+      "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone"
+    },
+    {
+      "game": "mario-3d",
+      "id": 39043286960128,
+      "version": "v2.4.0",
+      "package_sha256": "29f211d101aaeb6ae350abfd53dd932c6e87e6db2b2d134f1fe01aa0cc3db97a",
+      "submitted_at": "2026-10-06T09:33:57.900336+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_gIedgXvX/index.html"
+      },
+      "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "id": 39863936092160,
+      "version": "v0.7.0",
+      "package_sha256": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
+      "submitted_at": "2026-10-06T09:34:00.319609+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_4sCM0ctL/index.html"
+      },
+      "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "id": 40412421031936,
+      "version": "v0.4.0",
+      "package_sha256": "52d63ccb700ea39c56abe7a077e1792f0b4cb6a80a25cccd3940d4d475552b1e",
+      "submitted_at": "2026-10-06T09:34:03.285502+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_Bmsfk2UR/index.html"
+      },
+      "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone"
+    },
+    {
+      "game": "starship-defense",
+      "id": 38678478981120,
+      "version": "web-controls-v0.18.2",
+      "package_sha256": "d04e4673253f0b680028e209babc210f3cabab365cb26ebd7554ff498d7ebea9",
+      "submitted_at": "2026-10-06T09:34:04.334373+08:00",
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_CIEn6Jee/index.html"
+      },
+      "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone"
+    }
+  ],
+  "public_proof": [
+    {
+      "game": "tank-3d",
+      "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "new_ui_present": true,
+      "verified_at": "2026-10-06T01:38:00.551Z"
+    },
+    {
+      "game": "mario-3d",
+      "public_url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "new_ui_present": true,
+      "verified_at": "2026-10-06T01:38:01.406Z"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "new_ui_present": true,
+      "verified_at": "2026-10-06T01:38:02.208Z"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "new_ui_present": true,
+      "verified_at": "2026-10-06T01:38:03.020Z"
+    },
+    {
+      "game": "starship-defense",
+      "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "new_drag_hint": true,
+      "verified_at": "2026-10-06T01:42:08.847Z"
+    }
+  ],
+  "status_checks": [
+    {
+      "id": 40412421031936,
+      "title": "恐龙快打 3D：第一关",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "status": "published",
+      "mtime": 1791250535
+    },
+    {
+      "id": 39863936092160,
+      "title": "赤色要塞 3D",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "status": "published",
+      "mtime": 1791250579
+    },
+    {
+      "id": 39043286960128,
+      "title": "超级玛丽 3D：1-1 与 1-2",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "status": "published",
+      "mtime": 1791250559
+    },
+    {
+      "id": 39043249461248,
+      "title": "坦克大战 3D",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "status": "published",
+      "mtime": 1791250576
+    },
+    {
+      "id": 38678478981120,
+      "title": "虫潮围城",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "status": "published",
+      "mtime": 1791250604
+    }
+  ],
+  "warning": "auditing does not mean published; no physical-device test; retained posters because game art/main content unchanged"
+}

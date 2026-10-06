@@ -12,7 +12,15 @@
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00"
     }
   ],
-  "pending": [],
+  "pending": {
+    "bvid": "BV1Wqaz6AEJb",
+    "version": "toy3dui2",
+    "status": "submitted_pending_public",
+    "editor_saved_verified": true,
+    "record": "releases/toy3dui2/handoff.json",
+    "submitted_at": "2026-10-06T01:35:17.818Z",
+    "last_checked_at": "2026-10-06T01:41:17.481Z"
+  },
   "pending_updates": [
     {
       "version": "drag-look1",
@@ -29,6 +37,15 @@
       "status": "pending_merge",
       "record": "releases/unified3d-20261006/handoff.json",
       "reason": "普通操作音频修复并入下一次有意义的说明更新；无确认视频映射时待关联"
+    }
+  ],
+  "history": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "toy3dui2",
+      "status": "submitted_pending_public",
+      "record": "releases/toy3dui2/handoff.json",
+      "checked_at": "2026-10-06T01:41:17.481Z"
     }
   ]
 }

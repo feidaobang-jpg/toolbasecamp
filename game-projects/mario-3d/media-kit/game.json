@@ -3,7 +3,7 @@
   "name": "超级玛丽 3D：1-1 与 1-2",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
   "current_version": "v2.4.0",
-  "handoff": "releases/toy3d-controls-20261006/handoff.json",
+  "handoff": "releases/v2.4.0/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J仅火球(吃火焰花后可用)，键盘J旧跑/火球别名兼容。",
@@ -21,19 +21,19 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "verified_at": "2026-10-06T08:00:16.643786+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-06T09:43:35.531737+08:00",
     "video_bindings": [
       "BV1guep6NELt"
     ],
-    "submitted_version": "v2.3.0",
-    "submitted_at": "2026-10-06T07:57:40.783185+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DewCx8zQ/index.html",
-    "release_record": "releases/unified3d-20261006/handoff.json",
-    "published_version": "v2.2.0",
-    "published_entry": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v22207/index.html",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_JChtYxAw/index.html",
-    "note": "已用桌面和手机视口实测同一包并提交审核；审核中不代表新版已上线。",
+    "submitted_version": "v2.4.0",
+    "submitted_at": "2026-10-06T09:33:57.900336+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_gIedgXvX/index.html",
+    "release_record": "releases/v2.4.0/handoff.json",
+    "published_version": "v2.4.0",
+    "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Fqx2VcND/index.html",
+    "note": "平台published，当前新UI/拖动提示已在公开入口核验。",
     "pending_updates": [
       {
         "version": "v2.2.2",
@@ -48,11 +48,13 @@
         "version": "v2.4.0",
         "classification": "正式版本",
         "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
-        "status": "pending_preview",
-        "record": "releases/toy3d-controls-20261006/handoff.json"
+        "status": "published",
+        "record": "releases/v2.4.0/handoff.json",
+        "included_version": "v2.4.0"
       }
     ],
-    "package_sha256": "27ac4cc4d39e8b3fb151753dca44a511034fb9e8b7993a6de3e645c2360aa7fd"
+    "package_sha256": "29f211d101aaeb6ae350abfd53dd932c6e87e6db2b2d134f1fe01aa0cc3db97a",
+    "published_verified_at": "2026-10-06T01:38:01.406Z"
   },
   "notes": "粉丝向非官方重制：保留原作关卡布局，采用赤色要塞式自然配色、哑光低模；BGM和常用音效采用原版录音，缺项或加载失败保留合成回退。",
   "drag_camera_controls": {

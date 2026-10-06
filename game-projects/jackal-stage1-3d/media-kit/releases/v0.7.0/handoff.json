@@ -7,8 +7,8 @@
   "classification": "正式版本",
   "build": {
     "id": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
-    "commit": null,
-    "dirty": true,
+    "commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+    "dirty": false,
     "fingerprint": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
     "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
     "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
@@ -48,7 +48,7 @@
       "observed": "身体保持手动朝向，出现倒着走",
       "impact": "操作直觉不一致",
       "status": "fixed",
-      "cause": "慢速手动视线覆盖正常移动转身；恐龙快打预物理与后物理转身曾相互抵消",
+      "cause": "手动视线覆盖正常移动转身，第一人称与普通视角混用同一慢速跟随。",
       "fix": "仅第一人称保留慢速；非第一人称按真实移动方向及时转身，坦克独立炮塔/虫潮自动射击保留",
       "before_media_ids": [],
       "after_media_ids": [],
@@ -58,7 +58,7 @@
   "media": [
     {
       "id": "menu",
-      "file": "releases/toy3d-controls-20261006/captures/jackal-stage1-3d-menu.png",
+      "file": "releases/v0.7.0/captures/jackal-stage1-3d-menu.png",
       "sha256": "486d8ead93ac5319e8d340dbd0d6eec3abfc4f52de04da0a756f922bdcb801be",
       "kind": "screenshot",
       "version": "v0.7.0",
@@ -69,24 +69,24 @@
       "height": 720,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "mobile",
-      "file": "releases/toy3d-controls-20261006/captures/jackal-stage1-3d-mobile.png",
-      "sha256": "a9a9d36354b4745627c7b306c3dfa0fa525f06544b55818072279fc69321b725",
+      "file": "releases/v0.7.0/captures/toy-jackal-mobile.jpg",
+      "sha256": "fc628a35d546defc31691fcd7b363e4c9e98e8236427e93ae3a9090076e110e3",
       "kind": "screenshot",
       "version": "v0.7.0",
       "build_id": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
       "capture_mode": "realtime-automation",
-      "description": "实际当前游戏UI；跳过开场，低画质，模拟手机视口。",
+      "description": "相同内容哈希的Toy预览包，844×390模拟触屏视口，实际菜单切换；虫潮使用原有自由测试避免改普通存档。",
       "width": 844,
       "height": 390,
       "duration_seconds": null,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
     }
@@ -110,15 +110,36 @@
     ]
   },
   "website": {
-    "status": "pending"
+    "status": "public_verified",
+    "source_commit": "377ceef242149f0705a2201b2dd60660b3e0c785",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/website.json",
+    "verified_files": 14
   },
   "toy": {
+    "game": "jackal-stage1-3d",
     "id": 39863936092160,
-    "status": "pending_preview",
-    "package_sha256": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a"
+    "version": "v0.7.0",
+    "package_sha256": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
+    "submitted_at": "2026-10-06T09:34:00.319609+08:00",
+    "response": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_4sCM0ctL/index.html"
+    },
+    "preview_test": "desktop1280x720 and mobile844x390 passed; screenshots recorded; actual mode switching and buttons; not physical phone",
+    "status": "published",
+    "verified_at": "2026-10-06T01:38:02.208Z",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/toy-sync.json",
+    "public_verified": true,
+    "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
   },
   "bilibili": {
-    "status": "pending"
+    "status": "public_verified",
+    "bvid": "BV1EyHz6wE5u",
+    "version": "v0.7.0",
+    "submitted_at": "2026-10-06T01:35:18.558Z",
+    "verified_at": "2026-10-06T01:35:49.352Z",
+    "record": "../../../../site-games/releases/toy3d-controls-20261006/bilibili-sync.json",
+    "editor_saved_verified": false
   },
   "local_artifacts": "D:\\project\\task-artifacts\\toy3d-controls-20261006"
 }

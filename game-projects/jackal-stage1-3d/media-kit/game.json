@@ -7,7 +7,7 @@
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "current_version": "v0.7.0",
-  "handoff": "releases/toy3d-controls-20261006/handoff.json",
+  "handoff": "releases/v0.7.0/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -88,35 +88,37 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": "2026-10-06T08:00:16.643786+08:00",
+    "review_status": "published",
+    "verified_at": "2026-10-06T09:43:35.531737+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_Ay6Bgrti/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_LLtYD31o/index.html",
     "preview_verified_at": "2026-10-04T14:17:37.651922+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "已用桌面和手机视口实测同一包并提交审核；审核中不代表新版已上线。",
-    "submitted_at": "2026-10-06T07:57:44.194339+08:00",
+    "note": "平台published，当前新UI/拖动提示已在公开入口核验。",
+    "submitted_at": "2026-10-06T09:34:00.319609+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html",
-    "submitted_version": "v0.6.0",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_h1nYVgUx/index.html",
-    "release_record": "releases/unified3d-20261006/handoff.json",
-    "published_version": "v0.5.3",
-    "published_entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22703/index.html",
+    "submitted_version": "v0.7.0",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_4sCM0ctL/index.html",
+    "release_record": "releases/v0.7.0/handoff.json",
+    "published_version": "v0.7.0",
+    "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
         "version": "v0.7.0",
         "classification": "正式版本",
         "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
-        "status": "pending_preview",
-        "record": "releases/toy3d-controls-20261006/handoff.json"
+        "status": "published",
+        "record": "releases/v0.7.0/handoff.json",
+        "included_version": "v0.7.0"
       }
     ],
     "last_successful_sync_at": "2026-10-06T06:24:58.898535+08:00",
     "last_successful_sync_version": "v0.5.3",
-    "package_sha256": "502d3d0dfb5b2d10bcd050c75e4f5add4f95dcb499db846c96443360cf46e79d"
+    "package_sha256": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
+    "published_verified_at": "2026-10-06T01:38:02.208Z"
   },
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
