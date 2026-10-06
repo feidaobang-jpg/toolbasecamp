@@ -38,7 +38,7 @@ const ENEMY_STATS = {
 const emptyKills = () => ({ soldier: 0, officer: 0, mg: 0, turret: 0, cannon: 0, tank: 0, brownTank: 0, bulltank: 0, ejeep: 0, bomber: 0, boat: 0, wstatue: 0, fallpillar: 0, boss: 0, bust: 0, hut: 0 });
 
 export const G = {
-  mode: 'title', t: 0, frame: 0, settings: { lives: 'inf', demo: false, armor: 'std', gun: 'follow' }, armorMax: 3, hitId: 0,
+  mode: 'title', t: 0, frame: 0, settings: { lives: 'inf', demo: false, armor: 'std', gun: 'up' }, armorMax: 3, hitId: 0,
   score: 0, hi: store.get('hi', 30000), deaths: 0, lives: 3, demoUsed: false, stage: 1, startStage: 1,
   weapon: 1, carried: 0, delivered: 0, freed: 0, cp: 0,
   kills: emptyKills(), events: [], banner: null, toast: null, boss: null, endT: 0, onEnd: null, nextLife: 20000
@@ -152,7 +152,7 @@ export function newGame(opts) {
   Object.assign(G, {
     t: 0, frame: 0, score: 0, deaths: 0, lives: 3, demoUsed: !!opts.demo, weapon: 1, nextLife: 20000, stage: n, startStage: n,
     totalDelivered: 0, totalFreed: 0, cleared: 0,
-    settings: { lives: opts.lives, demo: !!opts.demo, armor: opts.armor === 'classic' ? 'classic' : 'std', gun: opts.gun === 'up' ? 'up' : 'follow' }, armorMax: opts.armor === 'classic' ? 1 : 3
+    settings: { lives: opts.lives, demo: !!opts.demo, armor: opts.armor === 'classic' ? 'classic' : 'std', gun: opts.gun === 'follow' ? 'follow' : 'up' }, armorMax: opts.armor === 'classic' ? 1 : 3
   });
   resetStageState();
   G.events.length = 0;
@@ -349,7 +349,7 @@ function updatePlayer(dt) {
   P.ang = approachAng(P.ang, targetAng, dt * (camCtl.fpNow ? 2.1 : 16));
   // 补偿实际模型转角，而非一次扣掉目标方向的 45°/90°：平移、倒车不会甩动玩家视线。
   if (camCtl.fpNow) camCtl.rotate(-angDiff(oldAng, P.ang));
-  // 机枪：默认跟随车头；选「固定朝上（原作）」时一直向北（画面上方）
+  // 机枪：默认固定向北（原作朝上）；可选跟随车头。U 共用两种武器原有冷却与弹数上限。
   P.fireCd -= dt; P.bombCd -= dt;
   const mgCount = pbul.filter(b => b.kind === 'mg').length;
   if ((IN.take('fireTap') || IN.fire()) && P.fireCd <= 0 && mgCount < 6) {

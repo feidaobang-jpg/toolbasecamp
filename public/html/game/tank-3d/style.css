@@ -195,8 +195,6 @@ body.touch-on #hud-top{bottom:auto;top:calc(8px + var(--sat));right:calc(10px + 
 #stage.portrait.short .items>*{min-height:34px;padding:5px 11px;font-size:12.5px}
 .items>*>span:first-child{white-space:nowrap}
 
-/* Mobile browsers do not reliably support fullscreen; keep desktop controls. */
-body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
 
 #stage{touch-action:none}
 
@@ -258,3 +256,5 @@ button::before,button::after{content:none!important}
 #lobby .coop-panel .lobby-footer,#lobby #coop-settings{display:block}
 #app #lobby .coop-panel.in-room{max-width:600px!important;width:min(94vw,600px)!important;grid-template-columns:1fr}
 @media(max-width:650px){#app #lobby .coop-panel{grid-template-columns:1fr}#lobby #coop-directory{grid-row:3}#lobby #coop-rooms{max-height:300px}}
+/* 全屏按钮由脚本按浏览器能力设置 hidden；需压过公共界面里 body.mobile-device 的 display:block!important */
+html body #btn-fs[hidden],html body .items>.fs-btn[hidden]{display:none!important}

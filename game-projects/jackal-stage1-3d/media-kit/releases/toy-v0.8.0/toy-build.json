@@ -1,0 +1,42 @@
+{
+ "version": "v0.8.0",
+ "source": "public/html/game/jackal-stage1-3d",
+ "source_sha256": {
+  "css/style.css": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab",
+  "index.html": "b2d7945727ca0ccda5b3c9be1b2e8b01a404dc85143786f6565f2e288e46e7ed",
+  "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+  "js/game.min.js": "6c198f1bc6ba2e351460a5f6ccac456c57346611352ed4064879c828511a6a3f",
+  "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+  "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+  "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+ },
+ "files": {
+  "css/style.css": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab",
+  "index.html": "d5b3122efa1b5b26a783b711fff7b08273c2bb8f1a313e8c5f78057dcf7dfaef",
+  "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+  "js/game.min.js": "6c198f1bc6ba2e351460a5f6ccac456c57346611352ed4064879c828511a6a3f",
+  "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+  "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+  "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+ },
+ "status": "published",
+ "package_tree_sha256": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
+ "hash_method": "UTF-8 sorted relative path:sha256 LF",
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_KZ4HZ8sN/index.html",
+ "preview_gameplay_checks_passed": 45,
+ "preview_total_checks": 46,
+ "preview_platform_warning": "COLS: response timeout (Bilibili outer page)",
+ "toy_id": 39863936092160,
+ "submitted_at": "2026-10-06T22:32:35+00:00",
+ "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_QsrcrXba/index.html",
+ "doctor": {
+  "ok": true,
+  "findings": []
+ },
+ "preview_screenshot": "../v0.8.0/toy-preview.jpg",
+ "preview_qa": "../v0.8.0/qa/combo-toy/results.json",
+ "published_verified_at": "2026-10-06T22:37:42.986820+00:00",
+ "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+ "public_qa": "../v0.8.0/qa/combo-toy-public/results.json",
+ "public_checks_passed": 46
+}

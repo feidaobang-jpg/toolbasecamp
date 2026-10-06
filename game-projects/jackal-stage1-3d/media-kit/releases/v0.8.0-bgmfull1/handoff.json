@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.8.0-bgmfull1",
+  "base_version": "v0.8.0",
+  "created_at": "2026-10-07T06:16:58.972305+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "v0.8.0-bgmfull1",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+    "fingerprint": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751"
+  },
+  "changes": [
+    {
+      "id": "complete-original-bgm",
+      "before": "所有循环录音被截为前70秒；听到完整乐段前就重头开始。",
+      "after": "恢复所下载原录音完整时长，保持原有按曲结束循环与暂停续播。",
+      "tracks": [
+        {
+          "file": "sounds/stage.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 180.001469,
+          "sha256": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca"
+        },
+        {
+          "file": "sounds/stage3.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 180.001469,
+          "sha256": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "before_seconds": 70.0,
+          "after_seconds": 180.001469,
+          "sha256": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675"
+        }
+      ],
+      "verification": "passed after merge: complete browser decode, 70s boundary, pause/continue, restart with measured output"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "fixed-70s-truncation",
+      "status": "fixed",
+      "cause": "资源压缩时使用固定70秒时长上限。",
+      "before_media_ids": [],
+      "after_media_ids": []
+    }
+  ],
+  "media": [
+    {
+      "id": "jackal-stage1-3d-desktop",
+      "file": "releases/v0.8.0-bgmfull1/captures/jackal-stage1-3d-desktop.png",
+      "sha256": "5f6b4fdba788481ac5b092a5506eb00d304e2d3cac9c62aba9dd589b188f18c1",
+      "kind": "screenshot",
+      "version": "v0.8.0-bgmfull1",
+      "build_id": "v0.8.0-bgmfull1",
+      "capture_mode": "realtime-automation",
+      "description": "最终合并版本实际截图；手机为视口模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "jackal-stage1-3d-mobile",
+      "file": "releases/v0.8.0-bgmfull1/captures/jackal-stage1-3d-mobile.png",
+      "sha256": "d062357a723f40a56fa3c691e51efd00f882d22191c2311887e26523331c6dde",
+      "kind": "screenshot",
+      "version": "v0.8.0-bgmfull1",
+      "build_id": "v0.8.0-bgmfull1",
+      "capture_mode": "realtime-automation",
+      "description": "最终合并版本实际截图；手机为视口模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [
+    {
+      "handoff": "../v0.8.0/handoff.json",
+      "reason": "Parallel gameplay changes retained"
+    }
+  ],
+  "channels": {
+    "website": {
+      "status": "pending"
+    },
+    "toy": {
+      "id": 39863936092160,
+      "status": "pending"
+    },
+    "bilibili": {
+      "status": "deferred",
+      "reason": "普通音频补丁并入下一次有意义的说明更新；试玩入口与操作未改变。"
+    }
+  },
+  "cover": {
+    "status": "retained",
+    "reason": "只修BGM，无画面变化。"
+  },
+  "media_status": "Final merged build screenshots captured; pre-merge 75s audio evidence retained in original release."
+}

@@ -108,5 +108,6 @@
   "cover": {
     "status": "retained",
     "reason": "只修BGM，无画面变化。"
-  }
+  },
+  "superseded_by_merge": "v0.8.0-bgmfull1"
 }

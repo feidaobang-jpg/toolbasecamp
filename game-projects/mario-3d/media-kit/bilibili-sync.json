@@ -7,19 +7,33 @@
       "url": "https://www.bilibili.com/video/BV1guep6NELt/",
       "owner_uid": 16214353,
       "toy_bound": true,
-      "last_public_verified_version": "v2.3.0",
-      "last_public_verified_at": "2026-10-05T23:58:29.234Z",
-      "last_sync_record": "releases/unified3d-20261006/handoff.json",
-      "description_sha256": "e2ccda0d7effe34ddaae28f554ad2dcccdec9a4a30474bed6a9e32347ebcc76e",
-      "lastPublicVerifiedVersion": "v2.4.0",
-      "descriptionHash": "779d25127cce7f489380280c4eefbfeb2425c6b920f75bbe49ddb53e8bba8809",
-      "release": "releases/v2.4.0/handoff.json",
-      "publicVerifiedAt": "2026-10-06T01:41:18.361Z"
+      "last_public_verified_version": "v2.4.4",
+      "last_public_verified_at": "2026-10-06T22:19:35.956Z",
+      "last_sync_record": "releases/v2.4.4/bili-updates.json",
+      "description_sha256": "91d49374615571250ea041a342b296bdf7750567d8f5e10403a3c46ebaae25a7",
+      "lastPublicVerifiedVersion": "v2.4.4",
+      "descriptionHash": "91d49374615571250ea041a342b296bdf7750567d8f5e10403a3c46ebaae25a7",
+      "release": "releases/v2.4.4/handoff.json",
+      "publicVerifiedAt": "2026-10-06T22:19:35.956Z"
+    },
+    {
+      "bvid": "BV1Fwpw6FEFx",
+      "url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
+      "owner_uid": 16214353,
+      "mapping_evidence": "本人五款游戏实战视频，公开简介明确包含超级玛丽；只追加玛丽修复段落，不新增或改变视频绑定",
+      "last_public_verified_version": "v2.4.4",
+      "last_public_verified_at": "2026-10-06T22:19:35.956Z",
+      "last_sync_record": "releases/v2.4.4/bili-updates.json",
+      "description_sha256": "6ea756bcb3ce4f83cca480c28a809594106f2f607374e0eb300e88cab105cfc1",
+      "lastPublicVerifiedVersion": "v2.4.4",
+      "descriptionHash": "6ea756bcb3ce4f83cca480c28a809594106f2f607374e0eb300e88cab105cfc1",
+      "release": "releases/v2.4.4/handoff.json",
+      "publicVerifiedAt": "2026-10-06T22:19:35.956Z"
     }
   ],
   "status": "public_verified",
   "reason": null,
-  "version": "v2.3.0",
+  "version": "v2.4.4",
   "excluded_candidates": [
     {
       "bvid": "BV1guep6NELt",
@@ -30,11 +44,12 @@
   "mapping_audit": "2026-10-06重新核验：用户2026-10-05确认与toy video list均绑定BV1guep6NELt；公开简介已有当前3D试玩。保留历史视频并注明早期演示。",
   "pending_updates": [
     {
-      "version": "v2.4.1",
+      "version": "v2.4.5",
       "classification": "普通补丁",
       "status": "pending_merge",
-      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-      "record": "releases/v2.4.1/handoff.json"
+      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+      "record": "releases/v2.4.5/handoff.json",
+      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
     }
   ],
   "resolved_updates": [
@@ -55,9 +70,18 @@
       "record": "releases/drag-direction-20261005/handoff.json",
       "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
       "resolved_version": "v2.3.0"
+    },
+    {
+      "version": "v2.4.1",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+      "record": "releases/v2.4.1/handoff.json",
+      "resolved_version": "v2.4.4",
+      "reason": "累计补丁随本次严重过关修复合并说明；公开核验成功"
     }
   ],
-  "updated_at": "2026-10-06T08:00:16.643786+08:00",
+  "updated_at": "2026-10-06T22:25:35.193188+00:00",
   "history": [
     {
       "bvid": "BV1guep6NELt",
@@ -65,12 +89,28 @@
       "status": "public_verified",
       "record": "releases/v2.4.0/handoff.json",
       "checked_at": "2026-10-06T01:41:18.361Z"
+    },
+    {
+      "bvid": "BV1guep6NELt",
+      "version": "v2.4.4",
+      "status": "public_verified",
+      "record": "releases/v2.4.4/bili-updates.json",
+      "checked_at": "2026-10-06T22:19:35.956Z"
+    },
+    {
+      "bvid": "BV1Fwpw6FEFx",
+      "version": "v2.4.4",
+      "status": "public_verified",
+      "record": "releases/v2.4.4/bili-updates.json",
+      "checked_at": "2026-10-06T22:19:35.956Z"
     }
   ],
   "last_public_verified": {
-    "bvid": "BV1guep6NELt",
-    "version": "v2.4.0",
-    "at": "2026-10-06T01:41:18.361Z",
-    "description_sha256": "779d25127cce7f489380280c4eefbfeb2425c6b920f75bbe49ddb53e8bba8809"
+    "version": "v2.4.4",
+    "at": "2026-10-06T22:19:35.956Z",
+    "videos": [
+      "BV1guep6NELt",
+      "BV1Fwpw6FEFx"
+    ]
   }
 }

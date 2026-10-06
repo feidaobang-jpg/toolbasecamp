@@ -29,7 +29,8 @@ let server, browser;
   }
   const base = process.env.GAMES_BASE || `http://127.0.0.1:${server.address().port}/html/game/`;
   browser = await pw.chromium.launch({ executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', args:['--autoplay-policy=no-user-gesture-required', '--enable-gpu', '--ignore-gpu-blocklist', '--use-angle=d3d11'] });
-  for (const [game, selectors] of Object.entries(GAMES)) for (const mobile of [false, true]) {
+  const only = process.env.GAMES_ONLY?.split(',');
+  for (const [game, selectors] of Object.entries(GAMES).filter(([g]) => !only || only.includes(g))) for (const mobile of [false, true]) {
     const context = await browser.newContext({ viewport:mobile ? { width:844, height:390 } : { width:1280, height:720 }, isMobile:mobile, hasTouch:mobile });
     const page = await context.newPage(), errors = [];
     page.on('pageerror', e => errors.push(e.message));
@@ -79,7 +80,10 @@ let server, browser;
       const paused = await frame.evaluate(() => window.__bgmState()); await sleep(500);
       const paused2 = await frame.evaluate(() => window.__bgmState());
       check(game + ' pause freezes BGM', paused.contexts.some(c => c.state === 'suspended') && paused.sources.every((s,i) => Math.abs(s.elapsed-paused2.sources[i].elapsed) < 0.1), paused2);
-      await frame.locator(selectors.resume).click(); await sleep(600);
+      await frame.locator(selectors.resume).click();
+      // AudioContext.resume() is asynchronous. Wait for its clock to advance,
+      // instead of assuming a busy host has resumed within a fixed 600ms.
+      await frame.waitForFunction(before => window.__bgmState().sources.some((s,i) => !s.stopped && s.elapsed > before.sources[i].elapsed + 5), paused, { timeout:5000 });
       const resumed = await frame.evaluate(() => window.__bgmState());
       check(game + ' continue preserves source', resumed.sources.length === paused.sources.length && resumed.sources.some((s,i) => !s.stopped && s.elapsed > paused.sources[i].elapsed+5), resumed);
       await page.screenshot({ path:path.join(OUT, `${game}-${mobile?'mobile':'desktop'}.png`) });
