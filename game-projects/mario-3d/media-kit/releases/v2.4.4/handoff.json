@@ -220,5 +220,15 @@
     "checked_at": "2026-10-06T22:25:35.193188+00:00",
     "shared_last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
     "reason": "过去12小时已有全面检查；本任务修复现有游戏/简介，无新视频及已满足而未办理的待办。保留共用台账成功检查时间，不宣称本次完成全面检查。"
+  },
+  "integrated_latest": {
+    "version": "v2.4.5",
+    "mainline_commit": "9e4b9b723f7c02d4d299b5ce16dfc84c1e5c97b3",
+    "merged_head": "a7e3bd42e53b3de26e673993635db6cba830b532",
+    "qa": "final-integration-qa.json",
+    "website": "final-integration-website.json",
+    "website_verified_at": "2026-10-06T22:37:03.895437+00:00",
+    "toy_published_version": "v2.4.4",
+    "note": "最新主线由另一任务增加全屏能力检测并顺延v2.4.5；本次水管、J和过关修复保留，Toy已公开v2.4.4，全屏补丁保留其原任务待同步记录。"
   }
 }
