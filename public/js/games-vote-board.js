@@ -4,8 +4,8 @@
 
     var TOP_N = 5;
 
-    function tr(k) {
-        return typeof window.t === 'function' ? window.t(k) : k;
+    function tr(k, params) {
+        return typeof window.t === 'function' ? window.t(k, params) : k;
     }
 
     function esc(s) {
@@ -16,12 +16,12 @@
             });
     }
 
-    function rankRows(items, renderer, limit) {
+    function rankRows(items, renderer) {
         if (!items || !items.length) {
             return '<li class="gvb-empty">' + esc(tr('gameVote.emptyBoard')) + '</li>';
         }
         var html = '';
-        items.slice(0, limit == null ? TOP_N : limit).forEach(function (item, index) {
+        items.slice(0, TOP_N).forEach(function (item, index) {
             html += '<li class="gvb-row">' +
                 '<span class="gvb-rank gvb-rank--' + (index + 1) + '">' + (index + 1) + '</span>' +
                 renderer(item) +
@@ -34,6 +34,18 @@
             '</li>';
         });
         return html;
+    }
+
+    function previewFooter(total, shown, kind, target) {
+        return '<div class="gvb-col-footer">' +
+            '<span class="gvb-preview-count">' + esc(tr('gameVote.previewCount', {
+                shown: shown, total: total, kind: tr(kind)
+            })) + '</span>' +
+            '<a class="tb-btn gvb-all" href="game-vote.html#' + target + '" aria-label="' +
+                esc(tr(target === 'gv-original-games' ? 'gameVote.boardTitle' : 'gameVote.wishBoardTitle') +
+                    ' · ' + tr('gameVote.viewAll')) + '">' +
+                esc(tr('gameVote.viewAll')) + '</a>' +
+        '</div>';
     }
 
     function renderBoard(el, board, options) {
@@ -54,17 +66,20 @@
             return '<span class="gvb-row-main">' +
                 (url ? '<a class="gvb-link" href="' + esc(url) + '">' + inner + '</a>' : inner) +
             '</span>';
-        }, favorites.length);
+        });
 
         var wishHtml = rankRows(board.wishlist, function (item) {
             // 整行可点，跳去投票页看完整愿望详情
-            return '<a class="gvb-link gvb-row-main" href="game-vote.html">' +
+            return '<a class="gvb-link gvb-row-main" href="game-vote.html#gv-wish-board" title="' +
+                esc(item.name + (item.note ? '：' + item.note : '')) + '">' +
                 '<span class="gvb-name">' + esc(item.name) + '</span>' +
                 (item.note ? '<span class="gvb-note">' + esc(item.note) + '</span>' : '') +
             '</a>';
         });
 
         var totals = board.totals || {};
+        var wishes = board.wishlist || [];
+        var wishTotal = board.wishlistTotal != null ? board.wishlistTotal : (totals.wishes || wishes.length);
         el.className = 'gvb';
         el.innerHTML =
             '<div class="gvb-head">' +
@@ -80,10 +95,14 @@
                 '<section class="gvb-col">' +
                     '<h3 class="gvb-col-title">' + esc(tr('gameVote.boardTitle')) + '</h3>' +
                     '<ol class="gvb-list">' + favHtml + '</ol>' +
+                    previewFooter(favorites.length, Math.min(TOP_N, favorites.length),
+                        'gameVote.previewGames', 'gv-original-games') +
                 '</section>' +
                 '<section class="gvb-col">' +
                     '<h3 class="gvb-col-title">' + esc(tr('gameVote.wishBoardTitle')) + '</h3>' +
                     '<ol class="gvb-list">' + wishHtml + '</ol>' +
+                    previewFooter(wishTotal, Math.min(TOP_N, wishes.length),
+                        'gameVote.previewWishes', 'gv-wish-board') +
                 '</section>' +
             '</div>';
     }
