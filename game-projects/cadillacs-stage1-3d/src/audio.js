@@ -1,7 +1,7 @@
 import {SampleAudio} from "../../../public/js/game/sample-audio.js";
 // 音频：优先原作各区域与 Boss 音乐（第一、二关），未加载或不可用时合成回退。
 // 点击 / 按键后解锁；所有暂停冻结音频时钟。
-let ctx = null, master = null, musicBus = null, sfxBus = null, comp = null, capDest = null, noiseBuf = null, distCurve = null;
+let ctx = null, master = null, musicBus = null, sfxBus = null, comp = null, capDest = null, noiseBuf = null, distCurve = null, roomIn = null;
 let samples=null;
 let volume = 0.8;
 try { const v = parseFloat(localStorage.getItem('cd3d-stage1:volume')); if (!isNaN(v)) volume = Math.max(0, Math.min(1, v)); } catch (e) { /* ignore */ }
@@ -20,6 +20,7 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
+  roomIn = buildRoom(ctx, sfxBus);
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
   samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3", "roof":"roof.mp3", "hall": "hall.mp3", "street": "street.mp3", "boss": "boss.mp3", "select": "select.mp3", "forest": "forest.mp3", "swamp": "swamp.mp3", "grave": "hall.mp3", "boss2": "boss2.mp3"});
   return ctx;
@@ -35,6 +36,26 @@ function buildChain(c, mBus, sBus, out) {
   mBus.connect(cp); sBus.connect(cp); cp.connect(pre); pre.connect(sh); sh.connect(out);
   return cp;
 }
+// 打击用的短混响：0.32 秒衰减的噪声脉冲，让拳脚声有“在场”的空间感
+function buildRoom(c, out) {
+  const len = Math.floor(c.sampleRate * 0.32), ir = c.createBuffer(2, len, c.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+  const cv = c.createConvolver(); cv.buffer = ir;
+  const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200;
+  const g = c.createGain(); g.gain.value = 0.22;
+  const inp = c.createGain(); inp.connect(cv); cv.connect(lp); lp.connect(g); g.connect(out);
+  return inp;
+}
+// 打击的“肉感”：正弦急速降调 + 失真，dest 可额外送进混响
+function thump(t, f0, f1, dur, peak, slide) {
+  const o = ctx.createOscillator(), sh = ctx.createWaveShaper(), g = ctx.createGain(), pre = ctx.createGain();
+  o.type = 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + (slide || dur * 0.7));
+  sh.curve = distCurve; pre.gain.value = 1.6;
+  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(pre); pre.connect(sh); sh.connect(g); g.connect(sfxBus); if (roomIn) g.connect(roomIn);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+const vary = () => 0.92 + Math.random() * 0.16;   // 每一下音高略有不同，连打不机械
 function env(g, t, a, peak, d, sus, r, len) {
   g.gain.setValueAtTime(0.0001, t);
   g.gain.linearRampToValueAtTime(peak, t + a);
@@ -59,16 +80,23 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
   g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gainPeak, t + (opts && opts.a || 0.003));
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   s.connect(fl); fl.connect(g); g.connect(dest || sfxBus);
+  if (opts && opts.room && roomIn) g.connect(roomIn);
   s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.05);
 }
 
 // ---------- 音效 ----------
 const SFX = {
-  punch(t, v) { noise(t, 0.09, 0.9 * v, 'lowpass', 2200, 1, null, { to: 500 }); osc('sine', 160, t, 0.12, 0.8 * v, null, { to: 60 }); },
-  punchHeavy(t, v) { noise(t, 0.16, 1.0 * v, 'lowpass', 1800, 1, null, { to: 300 }); osc('sine', 120, t, 0.2, 1.0 * v, null, { to: 40 }); osc('square', 90, t, 0.06, 0.15 * v); },
-  kick(t, v) { noise(t, 0.12, 0.9 * v, 'bandpass', 900, 0.8, null, { to: 300 }); osc('sine', 130, t, 0.16, 0.9 * v, null, { to: 45 }); },
-  whoosh(t, v) { noise(t, 0.12, 0.28 * v, 'bandpass', 900, 2, null, { to: 2600, a: 0.04 }); },
-  slam(t, v) { noise(t, 0.35, 1.0 * v, 'lowpass', 900, 1, null, { to: 120 }); osc('sine', 90, t, 0.4, 1.1 * v, null, { to: 30 }); },
+  // 拳：高频“啪”的瞬态 + 中频皮肉拍击 + 失真的降调闷响；重拳再叠低频冲击与碎裂感
+  punch(t, v) { const r = vary(); noise(t, 0.022, 0.75 * v, 'highpass', 2600 * r, 0.8); noise(t, 0.075, 0.95 * v, 'bandpass', 1500 * r, 0.9, null, { to: 650, room: true }); thump(t, 200 * r, 62, 0.13, 0.75 * v); },
+  punchHeavy(t, v) { const r = vary(); noise(t, 0.03, 0.9 * v, 'highpass', 2200 * r, 0.8); noise(t, 0.13, 1.05 * v, 'bandpass', 1100 * r, 0.8, null, { to: 380, room: true }); thump(t, 165 * r, 44, 0.26, 1.05 * v, 0.16); osc('sine', 62, t, 0.32, 0.7 * v, null, { to: 32 }); noise(t + 0.008, 0.06, 0.4 * v, 'lowpass', 3400, 1); },
+  kick(t, v) { const r = vary(); noise(t, 0.025, 0.65 * v, 'highpass', 1900 * r, 0.8); noise(t, 0.1, 0.95 * v, 'bandpass', 950 * r, 0.8, null, { to: 360, room: true }); thump(t, 160 * r, 50, 0.17, 0.9 * v); },
+  kickHeavy(t, v) { const r = vary(); noise(t, 0.032, 0.85 * v, 'highpass', 1700 * r, 0.8); noise(t, 0.16, 1.1 * v, 'bandpass', 800 * r, 0.8, null, { to: 260, room: true }); thump(t, 140 * r, 38, 0.3, 1.1 * v, 0.18); osc('sine', 55, t, 0.34, 0.75 * v, null, { to: 30 }); },
+  // 挥空：轻招短促偏高，重招更长更沉（带一点低频“呼”）
+  whoosh(t, v) { const r = vary(); noise(t, 0.11, 0.5 * v, 'bandpass', 1300 * r, 1.4, null, { to: 3400 * r, a: 0.035 }); },
+  whooshHeavy(t, v) { const r = vary(); noise(t, 0.2, 0.6 * v, 'bandpass', 600 * r, 1.2, null, { to: 2200 * r, a: 0.07 }); noise(t, 0.18, 0.3 * v, 'lowpass', 500, 1, null, { a: 0.06 }); },
+  // 倒地：身体砸地的闷响 + 尘土沙沙声
+  bodyfall(t, v) { const r = vary(); thump(t, 110 * r, 40, 0.22, 0.85 * v); noise(t, 0.2, 0.75 * v, 'lowpass', 700 * r, 1, null, { to: 180, room: true }); noise(t + 0.02, 0.22, 0.18 * v, 'highpass', 3500, 0.7); },
+  slam(t, v) { noise(t, 0.35, 1.0 * v, 'lowpass', 900, 1, null, { to: 120, room: true }); thump(t, 120, 32, 0.42, 1.1 * v, 0.25); noise(t, 0.04, 0.6 * v, 'highpass', 2000, 0.8); },
   land(t, v) { noise(t, 0.08, 0.35 * v, 'lowpass', 700, 1); },
   slash(t, v) { noise(t, 0.16, 0.5 * v, 'highpass', 3000, 1, null, { to: 6000 }); osc('sawtooth', 1400, t, 0.1, 0.06 * v, null, { to: 600 }); },
   clink(t, v) { osc('triangle', 2400, t, 0.25, 0.3 * v); osc('triangle', 3600, t, 0.18, 0.18 * v); },
@@ -100,7 +128,7 @@ const SFX = {
     env(g, t, 0.01, 0.45 * v, 0.6, 0.2, 0.1, 0.6);
     o.connect(f1); f1.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + 0.9);
   },
-  hurtP(t, v) { osc('sawtooth', 300, t, 0.18, 0.18 * v, null, { to: 180 }); },
+  hurtP(t, v) { const r = vary(); osc('sawtooth', 300 * r, t, 0.18, 0.18 * v, null, { to: 180 }); thump(t, 150 * r, 55, 0.12, 0.5 * v); },
   roar(t, v) {   // 迅猛龙嘶吼
     const o = ctx.createOscillator(), g = ctx.createGain(), f1 = ctx.createBiquadFilter(), lfo = ctx.createOscillator(), lg = ctx.createGain();
     o.type = 'sawtooth'; o.frequency.setValueAtTime(380, t); o.frequency.linearRampToValueAtTime(520, t + 0.2); o.frequency.exponentialRampToValueAtTime(160, t + 0.9);
@@ -294,7 +322,7 @@ const A = {
     const sr = 44100, SEG = 15, TAIL = 2.5;
     const N = Math.ceil(sr * dur);
     const outL = new Float32Array(N), outR = new Float32Array(N);
-    const saved = { ctx, master, musicBus, sfxBus, comp, noiseBuf };
+    const saved = { ctx, master, musicBus, sfxBus, comp, noiseBuf, roomIn };
     offRendering = true;
     try {
       const mus = events.filter(e => 'music' in e);
@@ -308,6 +336,7 @@ const A = {
         sfxBus = off.createGain(); sfxBus.gain.value = 0.9;
         comp = buildChain(off, musicBus, sfxBus, master); master.connect(off.destination);
         noiseBuf = off.createBuffer(1, sr, sr); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+        roomIn = buildRoom(off, sfxBus);
         const dest = off.createGain(); dest.connect(musicBus);
         // 本段开始的音符：只排起点落在 [s0, s1) 的
         mus.forEach((m, k) => {
@@ -345,7 +374,7 @@ const A = {
       for (let i = 0; i < bytes.length; i += CH) { const sub = bytes.subarray(i, i + CH); let bin = ''; for (let k = 0; k < sub.length; k += 8192) bin += String.fromCharCode.apply(null, sub.subarray(k, k + 8192)); parts.push(btoa(bin)); }
       return parts.join('');
     } finally {
-      ({ ctx, master, musicBus, sfxBus, comp, noiseBuf } = saved);
+      ({ ctx, master, musicBus, sfxBus, comp, noiseBuf, roomIn } = saved);
       offRendering = false;
     }
   },

@@ -56,6 +56,7 @@ const camCtl = createCamera();
 camCtl.setIndex(clamp(store.get('camera', 0) | 0, 0, PRESETS.length - 1));
 const world = buildWorld(scene);
 const fx = createFx(scene);
+fx.cam = camCtl.cam; Object.defineProperty(fx, 'aspect', { get: () => camCtl.cam.aspect });
 GM.init(scene, world, fx, camCtl);
 A.setClock(() => (G.frames || 0) * STEP);
 

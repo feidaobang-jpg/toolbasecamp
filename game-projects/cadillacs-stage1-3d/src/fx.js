@@ -25,6 +25,25 @@ const fireTex = canvasSprite(64, 64, (g) => {
   g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
 });
 const ringTex = canvasSprite(128, 128, (g) => { g.strokeStyle = 'rgba(255,240,180,1)'; g.lineWidth = 10; g.beginPath(); g.arc(64, 64, 52, 0, Math.PI * 2); g.stroke(); g.strokeStyle = 'rgba(255,160,60,0.8)'; g.lineWidth = 4; g.beginPath(); g.arc(64, 64, 40, 0, Math.PI * 2); g.stroke(); });
+// 命中闪光：白热核心（加色混合，一两帧就收）
+const flashTex = canvasSprite(64, 64, (g) => {
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 31); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,250,220,0.95)'); gr.addColorStop(0.6, 'rgba(255,200,90,0.35)'); gr.addColorStop(1, 'rgba(255,160,40,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+});
+// 火星：细长亮条（贴图朝右，靠旋转对准飞行方向）
+const sparkTex = canvasSprite(64, 16, (g, w, h) => {
+  const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, 'rgba(255,170,40,0)'); gr.addColorStop(0.6, 'rgba(255,230,140,0.9)'); gr.addColorStop(1, 'rgba(255,255,255,1)');
+  g.fillStyle = gr; g.beginPath(); g.ellipse(w / 2, h / 2, w / 2, h / 4, 0, 0, Math.PI * 2); g.fill();
+});
+// 挥击残影：一道月牙形的白色弧光（朝右挥），朝左时水平翻转
+const arcTex = canvasSprite(256, 256, (g, w, h) => {
+  g.translate(w * 0.32, h / 2);
+  for (let i = 0; i < 26; i++) {
+    const a0 = -1.25 + i * 0.1, a1 = a0 + 0.12, k = i / 25;
+    g.beginPath(); g.arc(0, 0, 100, a0, a1); g.arc(0, 0, 100 - 6 - 34 * Math.sin(k * Math.PI), a1, a0, true); g.closePath();
+    g.fillStyle = `rgba(255,255,255,${(0.08 + 0.85 * k * k).toFixed(3)})`; g.fill();
+  }
+});
 const textCache = new Map();
 function textTex(txt, color) {
   const key = txt + '|' + color;
@@ -53,16 +72,29 @@ export function createFx(scene) {
     s.alive = true; s.t = 0; s.life = opts.life || 0.3; s.s0 = opts.s0 || 0.5; s.s1 = opts.s1 === undefined ? s.s0 : opts.s1;
     s.vx = opts.vx || 0; s.vy = opts.vy || 0; s.vz = opts.vz || 0; s.grav = opts.grav || 0; s.fade = opts.fade !== false; s.rot = opts.rot || 0; s.spin = opts.spin || 0;
     s.sp.material.color.set(opts.color || 0xffffff); s.sp.material.opacity = 1; s.sp.material.rotation = s.rot;
-    s.sp.position.set(opts.x, opts.y, opts.z); s.sp.scale.setScalar(s.s0); s.sp.visible = true; s.sp.renderOrder = opts.order || 5;
+    s.flip = opts.flip ? -1 : 1; s.aim = !!opts.aim;
+    s.sp.position.set(opts.x, opts.y, opts.z); s.sp.scale.set(s.s0 * s.flip, s.s0, 1); s.sp.visible = true; s.sp.renderOrder = opts.order || 5;
     return s;
   }
   const debrisGeo = new THREE.BoxGeometry(1, 1, 1);
   const debrisMats = new Map();
   function debrisMat(c) { let m = debrisMats.get(c); if (!m) { m = new THREE.MeshLambertMaterial({ color: c }); debrisMats.set(c, m); } return m; }
-  F.hit = (x, y, z, big) => {
-    sprite(starTex, { x, y, z, life: big ? 0.2 : 0.14, s0: big ? 0.5 : 0.32, s1: big ? 1.15 : 0.75, rot: Math.random() * 3, order: 8, depthTest: false });
-    if (big) F.shake = Math.max(F.shake, 0.12);
+  // w：0 轻 / 1 重 / 2 终结（也接受旧的 true / false）；dir 受力方向（弧度，火星朝这边飞）
+  F.hit = (x, y, z, w, dir) => {
+    if (w === true) { w = 1; F.shake = Math.max(F.shake, 0.12); } else if (!w) w = 0;
+    const S = [1, 1.35, 1.8][w];
+    sprite(starTex, { x, y, z, life: [0.14, 0.18, 0.22][w], s0: 0.32 * S, s1: 0.75 * S, rot: Math.random() * 3, order: 8, depthTest: false });
+    sprite(flashTex, { x, y, z, life: [0.06, 0.08, 0.11][w], s0: 0.4 * S, s1: 0.7 * S, blend: 'add', order: 9, depthTest: false });
+    const n = [3, 5, 8][w], dx = dir === undefined ? 0 : Math.sin(dir), dz = dir === undefined ? 0 : Math.cos(dir);
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, sp = (3.5 + Math.random() * 3.5) * (0.8 + 0.2 * w);
+      const vx = Math.cos(a) * sp * 0.6 + dx * sp * 0.8, vy = Math.sin(a) * sp * 0.7 + 1.2, vz = dz * sp * 0.8 + (Math.random() - 0.5) * sp * 0.4;
+      sprite(sparkTex, { x, y, z, vx, vy, vz, grav: 14, life: 0.12 + Math.random() * 0.1, s0: 0.2 + 0.06 * w, s1: 0.08, blend: 'add', order: 9, depthTest: false, aim: true });
+    }
+    if (w >= 2) sprite(ringTex, { x, y, z, life: 0.22, s0: 0.3, s1: 2.0, blend: 'add', order: 6, depthTest: false });
   };
+  // 挥击残影：x,y,z 弧心；flip 朝画面左挥；size 大小
+  F.swoosh = (x, y, z, flip, size) => sprite(arcTex, { x, y, z, life: 0.13, s0: 1.05 * (size || 1), s1: 1.25 * (size || 1), flip, blend: 'add', order: 7, color: 0xfff2d0 });
   F.text = (x, y, z, txt, color, size) => sprite(textTex(txt, color || '#fff36a'), { x, y, z, life: 0.9, s0: size || 0.9, s1: (size || 0.9) * 1.05, vy: 1.0, order: 9, depthTest: false });
   F.pow = (x, y, z) => sprite(textTex('POW!', '#ffd84a'), { x, y, z, life: 0.35, s0: 0.6, s1: 1.1, order: 9, depthTest: false });
   F.dust = (x, y, z, n, size) => { for (let i = 0; i < (n || 4); i++) { const a = Math.random() * Math.PI * 2; sprite(puffTex, { x: x + Math.cos(a) * 0.2, y: y + 0.1, z: z + Math.sin(a) * 0.2, vx: Math.cos(a) * 1.2, vz: Math.sin(a) * 1.2, vy: 0.4, life: 0.5, s0: (size || 0.35), s1: (size || 0.35) * 2.2, color: 0xd8ccb4 }); } };
@@ -107,6 +139,7 @@ export function createFx(scene) {
       d.t = 0; d.life = 1.2 + Math.random() * 0.5; d.alive = true; d.m.visible = true;
     }
   };
+  const _v = new THREE.Vector3(), _p = new THREE.Vector3(), _q = new THREE.Vector3();
   F.update = (dt) => {
     for (const t of tracers) {
       if (!t.alive) continue;
@@ -125,7 +158,13 @@ export function createFx(scene) {
       const u = s.t / s.life;
       s.vy -= s.grav * dt;
       s.sp.position.x += s.vx * dt; s.sp.position.y += s.vy * dt; s.sp.position.z += s.vz * dt;
-      s.sp.scale.setScalar(s.s0 + (s.s1 - s.s0) * u);
+      const sc = s.s0 + (s.s1 - s.s0) * u;
+      if (s.aim) {
+        // 火星：拉长并对准飞行方向（屏幕空间）
+        _v.set(s.vx, s.vy, s.vz); _p.copy(s.sp.position); _q.copy(_p).add(_v.multiplyScalar(0.02));
+        if (F.cam) { _p.project(F.cam); _q.project(F.cam); s.sp.material.rotation = Math.atan2(_q.y - _p.y, (_q.x - _p.x) * (F.aspect || 1.78)); }
+        s.sp.scale.set(sc * 3, sc * 0.75, 1);
+      } else s.sp.scale.set(sc * s.flip, sc, 1);
       if (s.fade) s.sp.material.opacity = u < 0.6 ? 1 : 1 - (u - 0.6) / 0.4;
       if (s.spin) s.sp.material.rotation += s.spin * dt;
     }
@@ -143,7 +182,7 @@ export function createFx(scene) {
   F.clear = () => { tracers.forEach(t => { t.alive = false; t.m.visible = false; }); sprites.forEach(s => { s.alive = false; s.sp.visible = false; }); debris.forEach(d => { d.alive = false; d.m.visible = false; }); F.shake = 0; };
   F.stats = () => ({ sprites: sprites.length, live: sprites.filter(s => s.alive).length, debris: debris.length, tracers: tracers.filter(t => t.alive).length });
   // 预热：让各类纹理都先上屏一次
-  F.warm = () => { F.glint(0, -50, 0); F.splash(0, -50, 0, 1); F.hit(0, -50, 0); F.text(0, -50, 0, '100'); F.boom(0, -50, 0, 0.1); F.dust(0, -50, 0, 1); F.ring(0, -50, 0); F.muzzle(0, -50, 0); F.tracer(0, -50, 0, 1, -50, 0); F.debris(0, -50, 0, '#888', 1); };
+  F.warm = () => { F.glint(0, -50, 0); F.splash(0, -50, 0, 1); F.hit(0, -50, 0); F.text(0, -50, 0, '100'); F.boom(0, -50, 0, 0.1); F.dust(0, -50, 0, 1); F.ring(0, -50, 0); F.swoosh(0, -50, 0); F.muzzle(0, -50, 0); F.tracer(0, -50, 0, 1, -50, 0); F.debris(0, -50, 0, '#888', 1); };
   F.GEO = GEO;
   return F;
 }
