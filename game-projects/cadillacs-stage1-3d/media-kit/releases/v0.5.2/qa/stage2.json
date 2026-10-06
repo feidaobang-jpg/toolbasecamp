@@ -1,5 +1,5 @@
 {
- "date": "2026-10-06T12:47:51.286Z",
+ "date": "2026-10-06T13:06:50.183Z",
  "pass": 55,
  "total": 55,
  "results": [
@@ -129,7 +129,7 @@
    "name": "偷猎者举枪瞄准后开枪",
    "pass": true,
    "info": {
-    "t": 12.88,
+    "t": 16.17,
     "type": "rifleShot",
     "id": 8,
     "hit": true
@@ -147,7 +147,7 @@
    "pass": true,
    "info": [
     {
-     "t": 13.6,
+     "t": 16.88,
      "type": "rifleShot",
      "id": 8,
      "hit": false
@@ -199,7 +199,7 @@
   {
    "name": "霸王龙会咬 / 跺脚",
    "pass": true,
-   "info": "bite"
+   "info": "stomp"
   },
   {
    "name": "霸王龙醒着时锁屏",

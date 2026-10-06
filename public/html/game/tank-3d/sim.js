@@ -8,6 +8,7 @@ const DX = [0, 1, 0, -1], DY = [-1, 0, 1, 0];
 export const DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
 export const EAGLE = { x: 96, y: 192, w: 16 };
 export const PLAYER_SPAWN = { x: 64, y: 192 };
+export const playerSpawn = slot => ({ x: [64, 128, 32, 160][slot] ?? 64, y: 192 });
 export const BOT_SPAWNS = [{ x: 96, y: 0 }, { x: 192, y: 0 }, { x: 0, y: 0 }];   // 中 → 右 → 左
 export const SCORE = { basic: 100, fast: 200, power: 300, armor: 400, heavy: 500, flame: 600, escort: 100, mini: 2000, boss: 5000, final: 20000 };
 export const TYPE_NAMES = { basic: '普通坦克', fast: '快速坦克', power: '火力坦克', armor: '重甲坦克', heavy: '精英重炮', flame: '火焰车', escort: '护卫', mini: '小 Boss', boss: '大 Boss', final: '终焉 Boss' };
@@ -18,8 +19,9 @@ const BOSS_NAMES = ['侦察型', '巡猎型', '重装型', '裂甲型', '赤焰�
 
 export function createRun(o = {}) {
   return {
-    mode: o.mode || 'classic', livesMode: o.lives || 'classic', armor: o.armor || 'classic', demo: !!o.demo, demoUsed: !!o.demo,
+    mode: o.mode || 'classic', livesMode: o.lives || 'classic', armor: o.armor || 'classic', demo: !!o.demo, demoUsed: !!o.demo, coop: !!o.coop,
     lives: o.lives === 'inf' ? Infinity : 3, stage: o.stage || 1, cycle: o.cycle || 1, score: o.score || 0,
+    playerCount: Math.max(2, Math.min(4, o.playerCount || 2)), playerSlots: o.playerSlots,
     stars: 0, plate: 0, boats: 0, hp: 3, bonusGiven: false, nextBonus: 20000,
     stats: { kills: 0, deaths: 0, hits: 0, stages: 0, pickups: 0, repairs: 0, bosses: 0 },
     seed: o.seed ?? Math.floor(Math.random() * 1e6)
@@ -48,9 +50,38 @@ export function createWorld(run) {
   };
   w.diff = spec.diff;
   spawnPlayer(w, 0);
+  if (run.coop) {
+    const fields = () => Object.fromEntries(PLAYER_FIELDS.map(k => [k, run[k]]));
+    run.coopPlayers ||= Array.from({ length: run.playerCount || 2 }, (_, slot) => ({ ...fields(), ...(run.playerSlots && !run.playerSlots.includes(slot) ? { lives: 0 } : {}) }));
+    w.seats = run.coopPlayers.map((state, slot) => ({ slot, state, tank: null, spawnT: state.lives > 0 ? 37 : 0 }));
+    w.localSlot = 0;
+  }
   return w;
 }
-export const emit = (w, type, d = {}) => { w.events.push({ type, ...d }); };
+export const emit = (w, type, d = {}) => { w.events.push({ ...d, ...(w.activeSlot === undefined ? {} : { slot: w.activeSlot }), type }); };
+
+// Each player owns lives / equipment; score, enemies and base remain shared.
+const PLAYER_FIELDS = ['lives', 'hp', 'stars', 'plate', 'boats'];
+export const localPlayer = w => w?.seats ? w.seats[w.localSlot || 0].tank : w?.player;
+export const localStats = w => w?.seats ? w.seats[w.localSlot || 0].state : w?.run;
+const playerTanks = w => w.seats ? w.seats.map(s => s.tank).filter(Boolean) : w.player ? [w.player] : [];
+const targetPlayer = (w, t) => playerTanks(w).filter(p => p.state === 'active').sort((a, b) => Math.abs(a.x - t.x) + Math.abs(a.y - t.y) - Math.abs(b.x - t.x) - Math.abs(b.y - t.y))[0];
+function withSeat(w, seat, fn) {
+  if (!w.seats) return fn();
+  const saved = Object.fromEntries(PLAYER_FIELDS.map(k => [k, w.run[k]]));
+  const tank = w.player, spawnT = w.playerSpawnT, slot = w.activeSlot;
+  Object.assign(w.run, seat.state); w.player = seat.tank; w.playerSpawnT = seat.spawnT; w.activeSlot = seat.slot;
+  try { return fn(); }
+  finally {
+    for (const k of PLAYER_FIELDS) seat.state[k] = w.run[k];
+    seat.tank = w.player; seat.spawnT = w.playerSpawnT;
+    Object.assign(w.run, saved); w.player = tank; w.playerSpawnT = spawnT; w.activeSlot = slot;
+  }
+}
+function forPlayers(w, fn) {
+  if (w.seats) { for (const seat of w.seats) withSeat(w, seat, fn); }
+  else fn();
+}
 
 // ---------------- 地形查询 ----------------
 const cellIdx = (cx, cy) => cy * N + cx;
@@ -84,10 +115,13 @@ function makeTank(w, team, type, x, y, size = 16) {
 }
 function spawnPlayer(w, delay) {
   w.player = null; w.playerSpawnT = delay + 37;   // 玩家出生星星约 37 帧
-  emit(w, 'spawn', { team: 'player', x: PLAYER_SPAWN.x + 8, y: PLAYER_SPAWN.y + 8 });
+  const p = playerSpawn(w.activeSlot || 0);
+  emit(w, 'spawn', { team: 'player', x: p.x + 8, y: p.y + 8 });
 }
 function activatePlayer(w) {
-  const r = w.run, p = makeTank(w, 'player', 'player', PLAYER_SPAWN.x, PLAYER_SPAWN.y);
+  const spawn = playerSpawn(w.activeSlot || 0);
+  const r = w.run, p = makeTank(w, 'player', 'player', spawn.x, spawn.y);
+  p.slot = w.activeSlot || 0;
   clearArea(w, p.x, p.y, 16);
   p.state = 'active'; p.speed = .75; p.stars = r.stars; p.plate = r.plate; p.boats = r.boats;
   p.shield = w.classic ? unitsToFrames(3, w.f) : 180;   // 出生 / 复活自带头盔
@@ -173,7 +207,7 @@ function blockedBy(w, t, nx, ny) {
     return 'wall';
   }
   // 坦克之间互相阻挡；出生星星中和爆炸中的坦克不挡路（原版）；已经重叠时允许分开
-  const all = w.player ? [w.player, ...w.bots] : w.bots;
+  const all = [...playerTanks(w), ...w.bots];
   for (const o of all) {
     if (o === t || o.state !== 'active') continue;
     if (!rectsOverlap(nx, ny, s, o.x, o.y, o.size)) continue;
@@ -199,11 +233,13 @@ const onIce = (w, t) => w.terrain.ice[cellIdx((t.x + 8) >> 3, (t.y + 8) >> 3)] =
 // ---------------- 玩家 ----------------
 function updatePlayer(w, input) {
   const p = w.player; if (!p || p.state !== 'active') return;
+  if (Number.isFinite(input.look)) p.lookHeading = input.look;
+  else if (input.look === null) delete p.lookHeading;
   if (p.shield > 0) p.shield--;
   if (p.invuln > 0) p.invuln--;
   p.recoil = Math.max(0, p.recoil - 1); p.hitFlash = Math.max(0, p.hitFlash - 1);
   const controllable = w.status !== 'gameover' && !(w.playerFrozen > 0);
-  if (w.playerFrozen > 0) w.playerFrozen--;
+  if (!w.seats && w.playerFrozen > 0) w.playerFrozen--;
   const dir = controllable ? input.dir : -1;
   const turn = want => {
     if (want === p.dir) return;
@@ -236,7 +272,12 @@ function updatePlayer(w, input) {
   for (let i = w.items.length - 1; i >= 0; i--) {
     const it = w.items[i];
     if (Math.abs(it.x - p.x - 8) >= 12 || Math.abs(it.y - p.y - 8) >= 12) continue;
-    if (it.type === 'repair') { if (w.run.hp >= 3) continue; w.run.hp = 3; w.run.stats.repairs++; emit(w, 'repair', { x: it.x, y: it.y }); }
+    if (it.type === 'repair') {
+      if (w.run.hp >= 3 && w.classic) continue;
+      const repaired = w.run.hp < 3;
+      if (repaired) { w.run.hp = 3; w.run.stats.repairs++; }
+      emit(w, 'repair', { x: it.x, y: it.y, repaired });
+    }
     else { addScore(w, 500, it.x, it.y); emit(w, 'medal', { x: it.x, y: it.y }); }
     w.items.splice(i, 1);
   }
@@ -248,7 +289,7 @@ function decide(w, t) {
   const hunt = w.diff.hunt;   // 魔改：越往后越早开始追玩家、攻老鹰
   let tx = null, ty = null;
   if (k > Math.floor(S / 4 / hunt)) { tx = 96; ty = 192; }
-  else if (k > Math.floor(S / 8 / hunt) && w.player && w.player.state === 'active') { tx = w.player.x; ty = w.player.y; }
+  else if (k > Math.floor(S / 8 / hunt)) { const p = targetPlayer(w, t); if (p) { tx = p.x; ty = p.y; } }
   if (tx === null) { t.dir = Math.floor(R() * 4); return; }
   const dx = tx - t.x, dy = ty - t.y;
   if (R() < .5) t.dir = dx !== 0 ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0);
@@ -283,14 +324,14 @@ function updateBot(w, t) {
 
 // ---------------- Boss ----------------
 function alignedWithPlayer(w, t, tol = 6) {
-  const p = w.player; if (!p || p.state !== 'active') return -1;
+  const p = targetPlayer(w, t); if (!p) return -1;
   const cx = t.x + t.size / 2, cy = t.y + t.size / 2, px = p.x + 8, py = p.y + 8;
   if (Math.abs(cx - px) <= tol + t.size / 2 - 8) return py < cy ? 0 : 2;
   if (Math.abs(cy - py) <= tol + t.size / 2 - 8) return px > cx ? 1 : 3;
   return -1;
 }
 function bossBrain(w, t) {
-  const R = w.rng, p = w.player, big = t.size > 16, enraged = t.hp <= t.maxHp / 2;
+  const R = w.rng, p = targetPlayer(w, t), big = t.size > 16, enraged = t.hp <= t.maxHp / 2;
   if (enraged && !t.enraged) { t.enraged = true; emit(w, 'enrage', { name: t.bossName }); }
   // 移动：小 Boss 追玩家；大 Boss 在上半场横移对准玩家所在列，偶尔下压
   if (t.dash > 0) t.dash--;
@@ -375,7 +416,7 @@ function bossAttack(w, t) {
   else if (kind === 'barrage') { t.burst = t.barrels + 1; t.burstT = 0; }
   else if (kind === 'summon') summon(w, t, enraged ? 3 : 2);
   else if (kind === 'mortar') {
-    const p = w.player, spots = [];
+    const p = targetPlayer(w, t), spots = [];
     if (p) spots.push({ x: p.x + 8, y: p.y + 8 });
     for (let i = spots.length; i < (enraged ? 5 : 3); i++) spots.push({ x: 16 + Math.floor(R() * 176), y: 40 + Math.floor(R() * 150) });
     for (const s of spots) w.mortars.push({ x: s.x, y: s.y, t: 75 });
@@ -515,6 +556,7 @@ function updateBullets(w) {
     if (a.state !== 'fly' || a.team !== 'player') continue;
     for (const c of w.bullets) {
       if (c === a || c.state !== 'fly' || c.owner === a.owner) continue;
+      if (w.seats && c.team === 'player') continue;
       const r = 6 + (c.half || 0);
       if (Math.abs(a.x - c.x) < r && Math.abs(a.y - c.y) < r) {
         a.state = 'gone';
@@ -538,15 +580,15 @@ function bulletTanks(w, b) {
     }
     return false;
   }
-  const p = w.player;
-  if (!p || p.state !== 'active') return false;
-  const r = 10 + (b.half || 0);
-  if (Math.abs(b.x - p.x - 8) >= r || Math.abs(b.y - p.y - 8) >= r) return false;
-  // 头盔、演示模式、受击后的短暂无敌：子弹直接消失
-  if (p.shield > 0 || w.run.demo || p.invuln > 0) { b.state = 'gone'; emit(w, 'deflect', { x: b.x, y: b.y }); return true; }
-  b.state = 'boom'; b.st = 9;
-  hurtPlayer(w, 1);
-  return true;
+  let hit = false;
+  forPlayers(w, () => {
+    const p = w.player, r = 10 + (b.half || 0);
+    if (hit || !p || p.state !== 'active' || Math.abs(b.x - p.x - 8) >= r || Math.abs(b.y - p.y - 8) >= r) return;
+    hit = true;
+    if (p.shield > 0 || w.run.demo || p.invuln > 0) { b.state = 'gone'; emit(w, 'deflect', { x: b.x, y: b.y }); }
+    else { b.state = 'boom'; b.st = 9; hurtPlayer(w, 1); }
+  });
+  return hit;
 }
 function hitBot(w, t, b) {
   if (t.shield > 0 || (t.kind === 'commander' && t.escorts > 0)) { emit(w, 'deflect', { x: b.x, y: b.y }); return; }
@@ -568,9 +610,9 @@ export function destroyBot(w, t, byGrenade) {
     w.kills[key] = (w.kills[key] || 0) + 1;
     w.run.stats.kills++;
     const pts = Math.round(SCORE[key] * w.diff.scoreMul / 10) * 10;
-    addScore(w, pts, t.x + t.size / 2, t.y + t.size / 2, true);
+    addScore(w, pts);
   }
-  emit(w, 'boom', { x: t.x + t.size / 2, y: t.y + t.size / 2, big: true, huge: t.size > 16, team: 'bot', type: t.type });
+  emit(w, 'boom', { x: t.x + t.size / 2, y: t.y + t.size / 2, big: true, huge: t.size > 16, team: 'bot', enemyType: t.type });
   if (t === w.boss || t.type === 'mini' || t.size > 16) {
     w.run.stats.bosses++;
     emit(w, 'bossDown', { name: t.bossName, x: t.x + t.size / 2, y: t.y + t.size / 2 });
@@ -592,8 +634,19 @@ function addScore(w, pts, x, y, delayed) {
   if (x !== undefined) emit(w, 'score', { x, y, value: pts, delayed });
   if (r.lives === Infinity || !w.eagle.alive) return;
   // 奖命：经典整局只在首次到 20000 分时 +1；魔改每 20000 分 +1
-  if (w.rules.bonusEvery) { while (r.score >= r.nextBonus) { r.nextBonus += 20000; r.lives++; emit(w, 'life'); } }
-  else if (!r.bonusGiven && before < 20000 && r.score >= 20000) { r.bonusGiven = true; r.lives++; emit(w, 'life'); }
+  const awardLife = () => {
+    if (!w.seats) r.lives++;
+    else {
+      for (const s of w.seats) {
+        if (s.slot === w.activeSlot) r.lives++;
+        else if (s.state.lives > 0 && s.state.lives !== Infinity) s.state.lives++;
+      }
+      if (w.activeSlot === undefined) r.lives = w.seats[0].state.lives;
+    }
+    emit(w, 'life');
+  };
+  if (w.rules.bonusEvery) { while (r.score >= r.nextBonus) { r.nextBonus += 20000; awardLife(); } }
+  else if (!r.bonusGiven && before < 20000 && r.score >= 20000) { r.bonusGiven = true; awardLife(); }
 }
 
 // ---------------- 玩家受伤 / 阵亡 ----------------
@@ -638,7 +691,7 @@ function updatePlayerLife(w) {
     w.player = null;
     const r = w.run;
     if (r.lives !== Infinity) r.lives--;
-    if (r.lives <= 0) { r.lives = 0; if (w.status === 'play') startGameOver(w, 'lives'); }
+    if (r.lives <= 0) { r.lives = 0; if (!w.seats && w.status === 'play') startGameOver(w, 'lives'); }
     else spawnPlayer(w, 0);
   }
   if (!w.player && w.playerSpawnT > 0 && --w.playerSpawnT <= 0 && w.status !== 'over') activatePlayer(w);
@@ -713,7 +766,7 @@ function enemyLoot(w, t, type, at) {
   switch (type) {
     case 'star': case 'gun': t.stars = (t.stars || 0) + (type === 'gun' ? 2 : 1); t.bulletSpeed = 4; if (t.stars >= 2) t.maxBullets = 2; if (t.stars >= 3) t.power = 1; t.hp++; t.maxHp++; t.elite = true; break;
     case 'boat': t.boats = 3; break;
-    case 'grenade': if (p && p.state === 'active') hurtPlayer(w, 1); break;
+    case 'grenade': forPlayers(w, () => hurtPlayer(w, 1)); break;
     case 'helmet': for (const o of w.bots) if (o.state === 'active') o.shield = 480; break;
     case 'shovel': if (w.eagle.alive) { w.shovel = 0; setBaseWall(w, 'none'); } break;
     case 'timer': w.playerFrozen = 180; break;
@@ -724,7 +777,7 @@ function updateHazards(w) {
   const p = w.player;
   for (let i = w.mines.length - 1; i >= 0; i--) {
     const m = w.mines[i]; m.t++;
-    const near = p && p.state === 'active' && Math.abs(p.x + 8 - m.x) < 14 && Math.abs(p.y + 8 - m.y) < 14 && m.t > 30;
+    const near = playerTanks(w).some(p => p.state === 'active' && Math.abs(p.x + 8 - m.x) < 14 && Math.abs(p.y + 8 - m.y) < 14 && m.t > 30);
     const shot = w.bullets.some(b => b.team === 'player' && b.state === 'fly' && Math.abs(b.x - m.x) < 6 && Math.abs(b.y - m.y) < 6);
     if (near || shot || m.t >= m.life) { blast(w, m.x, m.y, 16, !shot); w.mines.splice(i, 1); }
   }
@@ -742,8 +795,9 @@ function blast(w, x, y, r, hurts) {
     if (w.terrain.brick[qy * Q + qx]) { w.terrain.brick[qy * Q + qx] = 0; broken.push({ qx, qy }); markCell(w, qx >> 1, qy >> 1); }
   }
   emit(w, 'blast', { x, y, r, cells: broken });
-  const p = w.player;
-  if (hurts && p && p.state === 'active' && Math.abs(p.x + 8 - x) < r + 6 && Math.abs(p.y + 8 - y) < r + 6) hurtPlayer(w, 1);
+  forPlayers(w, () => { const p = w.player;
+    if (hurts && p && p.state === 'active' && Math.abs(p.x + 8 - x) < r + 6 && Math.abs(p.y + 8 - y) < r + 6) hurtPlayer(w, 1);
+  });
 }
 
 // ---------------- 胜负流程 ----------------
@@ -763,11 +817,19 @@ export function step(w, input = { dir: -1, fire: false, firePressed: false }) {
   if (w.status === 'won' || w.status === 'over') return;
   w.f++; w.t++;
   // 记录上一帧位置，渲染时在两帧之间插值（高刷新率屏幕不抖）
-  if (w.player) { w.player.ox = w.player.x; w.player.oy = w.player.y; }
+  for (const p of playerTanks(w)) { p.ox = p.x; p.oy = p.y; }
   for (const t of w.bots) { t.ox = t.x; t.oy = t.y; }
   for (const b of w.bullets) { b.ox = b.x; b.oy = b.y; }
-  updatePlayerLife(w);
-  updatePlayer(w, w.status === 'gameover' ? { dir: -1 } : input);
+  if (w.seats) {
+    for (const seat of w.seats) withSeat(w, seat, () => {
+      updatePlayerLife(w);
+      updatePlayer(w, w.status === 'gameover' ? { dir: -1 } : (input.players?.[seat.slot] || { dir: -1 }));
+    });
+    w.player = w.seats[0].tank; w.playerSpawnT = w.seats[0].spawnT;
+    Object.assign(w.run, w.seats[0].state);
+    if (w.playerFrozen > 0) w.playerFrozen--;
+    if (w.status === 'play' && w.seats.every(s => s.state.lives <= 0 && !s.tank)) startGameOver(w, 'lives');
+  } else { updatePlayerLife(w); updatePlayer(w, w.status === 'gameover' ? { dir: -1 } : input); }
   updateSpawning(w);
   for (const t of w.bots) updateBot(w, t);
   updateBursts(w);

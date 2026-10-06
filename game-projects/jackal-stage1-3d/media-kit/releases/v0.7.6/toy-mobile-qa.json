@@ -1,0 +1,334 @@
+{
+  "version": "v0.7.6",
+  "viewport": {
+    "width": 844,
+    "height": 390
+  },
+  "mobileSimulation": true,
+  "expectedReversed": false,
+  "pass": 32,
+  "total": 32,
+  "errors": [],
+  "results": [
+    {
+      "type": "mg",
+      "dir": 0,
+      "dot": 0.9989417980762311,
+      "muzzleError": null,
+      "angle": 0.04600844723172486,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 1,
+      "dot": 0.9988061483639785,
+      "muzzleError": null,
+      "angle": 0.7365291699838139,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 2,
+      "dot": 0.9995326334246534,
+      "muzzleError": null,
+      "angle": 1.540221729981948,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 3,
+      "dot": 0.9999244892015345,
+      "muzzleError": null,
+      "angle": 2.343905328398457,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 4,
+      "dot": 0.9998202030801376,
+      "muzzleError": null,
+      "angle": 3.1226294097774705,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 5,
+      "dot": 0.9999784898737156,
+      "muzzleError": null,
+      "angle": -2.349635495848841,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 6,
+      "dot": 0.9994381682774152,
+      "muzzleError": null,
+      "angle": -1.604318985985827,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "mg",
+      "dir": 7,
+      "dot": 0.9988295871386864,
+      "muzzleError": null,
+      "angle": -0.7370113626426333,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 0,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 0,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 1,
+      "dot": 0.9999999999999999,
+      "muzzleError": null,
+      "angle": 0.7853981633974485,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 2,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 1.5707963267948966,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 3,
+      "dot": 1.0000000000000002,
+      "muzzleError": null,
+      "angle": 2.356194490192345,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 4,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 3.141592653589793,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 5,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": -2.3561944901923453,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 6,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": -1.5707963267948966,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "cannon",
+      "dir": 7,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": -0.7853981633974487,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 0,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 0,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 1,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 0.7853981633974485,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 2,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 1.5707963267948966,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 3,
+      "dot": 1.0000000000000002,
+      "muzzleError": null,
+      "angle": 2.356194490192345,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 4,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": 3.141592653589793,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 5,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": -2.3561944901923453,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 6,
+      "dot": 1,
+      "muzzleError": null,
+      "angle": -1.5707963267948966,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "tank",
+      "dir": 7,
+      "dot": 1.0000000000000002,
+      "muzzleError": null,
+      "angle": -0.7853981633974487,
+      "shots": 1,
+      "ok": true,
+      "stage": 1
+    },
+    {
+      "type": "turret",
+      "dir": 0,
+      "dot": 1,
+      "muzzleError": 4.440892098500626e-16,
+      "angle": 0,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 1,
+      "dot": 1,
+      "muzzleError": 1.0778315928076987e-15,
+      "angle": 0.7853981633974485,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 2,
+      "dot": 1,
+      "muzzleError": 5.828670879282072e-16,
+      "angle": 1.5707963267948966,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 3,
+      "dot": 1,
+      "muzzleError": 1.0408340855860843e-15,
+      "angle": 2.356194490192345,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 4,
+      "dot": 1,
+      "muzzleError": 4.440892098500626e-16,
+      "angle": 3.141592653589793,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 5,
+      "dot": 1,
+      "muzzleError": 9.992007221626409e-16,
+      "angle": -2.3561944901923453,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 6,
+      "dot": 1,
+      "muzzleError": 5.828670879282072e-16,
+      "angle": -1.5707963267948966,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    },
+    {
+      "type": "turret",
+      "dir": 7,
+      "dot": 1,
+      "muzzleError": 1.0914154436343227e-15,
+      "angle": -0.7853981633974487,
+      "shots": 3,
+      "ok": true,
+      "stage": 2
+    }
+  ]
+}

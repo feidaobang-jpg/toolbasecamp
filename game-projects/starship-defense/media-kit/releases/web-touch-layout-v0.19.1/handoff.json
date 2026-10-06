@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-touch-layout-v0.19.1",
+  "base_version": "web-difficulty-v0.19.0",
+  "classification": "正式版本（操作自定义功能）",
+  "created_at": "2026-10-06T09:59:17.193063+00:00",
+  "source_comment": {
+    "url": "https://www.bilibili.com/opus/1253705235842465792#reply316226527777",
+    "rpid": "316226527777",
+    "user": "bili_59253225804",
+    "date": "2026-10-06 15:58",
+    "text": "主播，你在这里面加上一个来随意摆放那些按键的那个设置，这样的话我就是比较那个，我才喜欢现在的这个样子"
+  },
+  "build": {
+    "id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+    "fingerprint": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+    "commit": "ff026844cbe9db2de4009783cdff69e698a38451",
+    "dirty": false,
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "files": {
+      "game.js": "3865279fe75be566c0f97019edf9b3abb0eeb81a0c4e0e98fbaa5c133b08d45e",
+      "game.compat.js": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+      "index.html": "a727493a01485b013031848dd9507e473f82b44fad480c9140028a55684962e4",
+      "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+      "touch-layout.js": "ce17f968cc339d088a7c037f3f6be2bb583976e9732596c3fa3f01a9e9d9e666"
+    }
+  },
+  "changes": [
+    {
+      "id": "touch-layout",
+      "before": "只能改电脑键位，手机按键位置固定",
+      "after": "编辑手机摇杆及每个功能键的位置，保存/取消/恢复默认；横竖屏逆变换与画面内限制",
+      "verification": "pass",
+      "evidence_ids": [
+        "edit-landscape",
+        "edit-portrait"
+      ]
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "edit-landscape",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/edit-landscape.png",
+      "sha256": "c96bfbb427ba228384bc81cb660ea9662ca0d63bf1d61b12ded13be22e0e8907",
+      "kind": "screenshot",
+      "version": "web-touch-layout-v0.19.1",
+      "build_id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+      "capture_mode": "realtime-automation",
+      "description": "同包实际布局编辑；脚本初始化游戏局面",
+      "audio": "none",
+      "visual_review": "pass",
+      "width": 844,
+      "height": 390
+    },
+    {
+      "id": "edit-portrait",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/edit-portrait.png",
+      "sha256": "db41972e3c936ca21de359f103835d0c1a13688659e6658bcdea81c347dbfa5a",
+      "kind": "screenshot",
+      "version": "web-touch-layout-v0.19.1",
+      "build_id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+      "capture_mode": "realtime-automation",
+      "description": "同包实际布局编辑；脚本初始化游戏局面",
+      "audio": "none",
+      "visual_review": "pass",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "id": "layout-browser-recording",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/page@16dc27213c66dd904beb295e8683d721.webm",
+      "sha256": "daff800aa5d5060308f2a7c469f350fc86a4eb22de0aa256a64021aba8438096",
+      "kind": "video",
+      "version": "web-touch-layout-v0.19.1",
+      "build_id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+      "capture_mode": "realtime-automation",
+      "description": "同包真实编辑输入/手机视口模拟原始录像，未作成片审看",
+      "audio": "none",
+      "visual_review": "not-run",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 9.52
+    },
+    {
+      "id": "comment-reply",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/comment-reply.jpg",
+      "sha256": "9268d29e928d6877c1f801f79e0dff2b90aede41f2ac0596993d4c07080aecf7",
+      "kind": "screenshot",
+      "version": "web-touch-layout-v0.19.1",
+      "capture_mode": "realtime-automation",
+      "description": "原楼报告者及本人已公开回复",
+      "width": 598,
+      "height": 258,
+      "audio": "none",
+      "visual_review": "pass"
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "results": "qa/results.json",
+    "method": "网站及自包含Toy包Microsoft Edge实际鼠标拖动；平台预览真实菜单/按键微调，横竖视口模拟",
+    "not_tested": [
+      "实体手机多指触控与性能"
+    ],
+    "package_results": "qa/package-results.json"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本次录像待视频任务动态审看；没有真机性能证据，不自动制作或发布新成片"
+    ]
+  },
+  "cover": {
+    "decision": "沿用",
+    "reason": "操作设置功能不改变战场画风与场景"
+  },
+  "web": {
+    "status": "public_verified",
+    "commit": "ff026844cbe9db2de4009783cdff69e698a38451",
+    "verified_at": "2026-10-06T10:13:53.216366+00:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "bundle_matches_local": true,
+    "stylesheet_matches_local": true,
+    "html_cache_version": "ff026844"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "published",
+    "submitted_at": "2026-10-06T10:14:22.667416+00:00",
+    "version": "web-touch-layout-v0.19.1",
+    "package_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
+    "verified_preview_url": "https://www.bilibili.com/toy/preview/preview_FsAwtrhJ/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pwTXVLCC/index.html",
+    "public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_version_path": "38678478981120-v23000",
+    "public_verification": "公开入口实际打开操作设置，显示新增手机按键位置和自定义按键入口"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "record": "bilibili-sync.json",
+    "targets": [
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf"
+    ]
+  },
+  "comment_reply": {
+    "status": "public_verified",
+    "rpid": "316226527777",
+    "record": "comment-reply.json"
+  },
+  "toy_preview": {
+    "url": "https://www.bilibili.com/toy/preview/preview_FsAwtrhJ/index.html",
+    "package_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
+    "status": "verified",
+    "checks": [
+      "电脑预览真实选择与方向微调",
+      "保存重载位置保留",
+      "手机844x390横屏布局与恢复默认",
+      "390x844竖屏旋转与取消调整",
+      "同包自包含内容7组真实拖动及输入回归通过"
+    ],
+    "limitations": [
+      "Toy iframe 原生拖动受自动化工具坐标限制；预览用真实按键微调核验位置与保存，同包本地用实际鼠标拖动验收",
+      "未做实体手机多指性能测试"
+    ]
+  }
+}

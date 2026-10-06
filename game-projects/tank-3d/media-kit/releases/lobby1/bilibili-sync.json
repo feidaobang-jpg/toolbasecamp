@@ -1,0 +1,16 @@
+{
+  "bvid": "BV1Wqaz6AEJb",
+  "ownerMid": 16214353,
+  "base_version": "coop1",
+  "target_version": "lobby1",
+  "code_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
+  "package_hash": "5a00449153c2bc0d42ef6537ea2f7d11f7472f49060ffd2ae70cd2d7c1408de8",
+  "description_before": "开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前版本：经典复刻35关及困难循环；魔改模式100关一周目、周目无限。WASD/方向键移动，J开火，Esc暂停；可选无限命，基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-06·双人联机）：主菜单选择“双人联机”，用六位房间码邀请好友，各控一辆坦克合作守基地；暂停同步全队，任意一人离线结束房间。支持空白处拖动观察、设置中切换电脑/触屏操作。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+  "description_after": "开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前版本：经典复刻35关及困难循环；魔改模式100关一周目、周目无限。WASD/方向键移动，J开火，Esc暂停；可选无限命，基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-06·联机大厅）：网站新版支持2–4人合作，可从房间列表加入陌生玩家，也可用六位房间码邀请好友；房间可设密码。各控一辆不同颜色的坦克，暂停同步全队；队友离线其余人继续，房主离线结束房间，暂不支持中途加入。菜单按钮与调整箭头更清晰，保留空白处拖动观察和电脑/触屏切换。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+  "description_sha256": "bdc1cff77624dab5e0718c7623d3596fd4ccb50d43a52fb809b3feeefa1b5664",
+  "submitted_at": "2026-10-06T11:48:28.783702+00:00",
+  "status": "pending_review",
+  "platform_result": "稿件投递成功；处理进度页稿件审核进行中；公开页仍为coop1说明",
+  "empty_editor_paragraphs": 0,
+  "screenshots": "D:/project/artifacts/tank-lobby-20261006/bili-submitted.png"
+}

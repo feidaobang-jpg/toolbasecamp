@@ -19,7 +19,7 @@ AI
 坦克大战、超级玛丽、赤色要塞、恐龙快打、虫潮围城：在同一局里切换视角，看看驾驶、跳跃和贴身交战变成第一人称后是什么感觉。
 五款Toy试玩合集：https://www.bilibili.com/toy/feidao-games/index.html
 电脑按C切换视角，Q/E转头；手机可点切换视角、拖动画面观察。第一人称更贴近现场，俯视和侧视方便看清全局。
-各作由GPT、Claude等AI辅助开发，本轮由Codex辅助更新。视频为录制时版本，以当前试玩为准。
+各作由GPT、Claude等AI辅助开发，本期由Codex辅助制作。视频为录制时版本，以当前试玩为准。
 投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱→游戏→自研游戏投票榜）
 
 【置顶评论】

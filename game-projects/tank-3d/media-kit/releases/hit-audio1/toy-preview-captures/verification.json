@@ -1,0 +1,537 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+  "results": [
+    {
+      "viewport": "desktop",
+      "mode": "classic",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "boom"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "mode": "classic",
+      "type": "armor",
+      "hp": 2,
+      "expectedSample": "bullet_hit_1",
+      "expectedDuration": 0.08416666666666667,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.08416666666666667,
+          "rms": 0.03636731990748545,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "armor"
+      ],
+      "enemy": {
+        "type": "armor",
+        "state": "active",
+        "x": 96,
+        "y": 102,
+        "hp": 1
+      },
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "mode": "remix",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "boom",
+        "fire"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "desktop",
+      "mode": "remix",
+      "type": "armor",
+      "hp": 2,
+      "expectedSample": "bullet_hit_1",
+      "expectedDuration": 0.08416666666666667,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.08416666666666667,
+          "rms": 0.03636731990748545,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "fire",
+        "armor",
+        "fire",
+        "boom"
+      ],
+      "enemy": {
+        "type": "armor",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-landscape",
+      "mode": "classic",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "boom"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-landscape",
+      "mode": "classic",
+      "type": "armor",
+      "hp": 2,
+      "expectedSample": "bullet_hit_1",
+      "expectedDuration": 0.08416666666666667,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.08416666666666667,
+          "rms": 0.03636731990748545,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "armor"
+      ],
+      "enemy": {
+        "type": "armor",
+        "state": "active",
+        "x": 96,
+        "y": 102,
+        "hp": 1
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-landscape",
+      "mode": "remix",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "boom",
+        "fire"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-landscape",
+      "mode": "remix",
+      "type": "armor",
+      "hp": 2,
+      "expectedSample": "bullet_hit_1",
+      "expectedDuration": 0.08416666666666667,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.08416666666666667,
+          "rms": 0.03636731990748545,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "fire",
+        "armor",
+        "fire",
+        "boom"
+      ],
+      "enemy": {
+        "type": "armor",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-portrait",
+      "mode": "classic",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "boom"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-portrait",
+      "mode": "classic",
+      "type": "armor",
+      "hp": 2,
+      "expectedSample": "bullet_hit_1",
+      "expectedDuration": 0.08416666666666667,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.08416666666666667,
+          "rms": 0.03636731990748545,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "armor"
+      ],
+      "enemy": {
+        "type": "armor",
+        "state": "active",
+        "x": 96,
+        "y": 102,
+        "hp": 1
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-portrait",
+      "mode": "remix",
+      "type": "basic",
+      "hp": 1,
+      "expectedSample": "explosion_1",
+      "expectedDuration": 0.2975,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "playerSpawn",
+        "spawn",
+        "fire",
+        "boom",
+        "fire"
+      ],
+      "enemy": {
+        "type": "basic",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    },
+    {
+      "viewport": "phone-portrait",
+      "mode": "remix",
+      "type": "armor",
+      "hp": 2,
+      "expectedSample": "bullet_hit_1",
+      "expectedDuration": 0.08416666666666667,
+      "started": [
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.08416666666666667,
+          "rms": 0.03636731990748545,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.09939583333333334,
+          "rms": 0.14303504855061613,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        },
+        {
+          "duration": 0.2975,
+          "rms": 0.11016455412767646,
+          "state": "running",
+          "output": true,
+          "rate": 1
+        }
+      ],
+      "events": [
+        "spawn",
+        "fire",
+        "armor",
+        "fire",
+        "boom"
+      ],
+      "enemy": {
+        "type": "armor",
+        "state": "boom",
+        "x": 96,
+        "y": 102,
+        "hp": 0
+      },
+      "passed": true
+    }
+  ],
+  "physicalPhoneTest": false
+}

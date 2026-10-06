@@ -95,7 +95,7 @@ function optLabel(name) {
     case 'stage': { const S = STAGES[settings.stage]; return ['起始关卡', '第' + '一二三四五六七八'[S.no - 1] + '关 · ' + S.name, false]; }
     case 'lives': return ['命数', settings.lives === 'inf' ? '无限命' : '经典 3 命', false];
     case 'dur': return ['耐久', { std: '标准（受伤 ×0.7）', easy: '宽松（受伤 ×0.45）', classic: '经典（原作伤害）' }[settings.dur], false];
-    case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
+    case 'demo': return ['演示模式（无敌不限时）', settings.demo ? '开' : '关', settings.demo];
     case 'quality': return ['画质', { auto: '自动（按实测帧率）', high: '高', low: '流畅' }[settings.quality] + (settings.quality === 'auto' ? ' · 当前' + (effQuality === 'high' ? '高' : '流畅') : ''), false];
     case 'volume': return ['音量', A.volume === 0 ? '静音' : Math.round(A.volume * 100) + '%', false];
     case 'touch': return ['操作模式', { auto: '自动识别', show: '手机触屏', hide: '电脑键鼠' }[settings.touch], false];
@@ -428,7 +428,7 @@ function updateHud() {
   } else H_.enemy.hidden = true;
   const showTimer = ['play', 'cut'].indexOf(h.mode) >= 0;
   H_.timer.hidden = !showTimer;
-  if (showTimer) { setText(H_.timer, 'timer', fmtTime(h.timer)); H_.timer.classList.toggle('big', h.timerBig); H_.timer.classList.toggle('warn', h.timer < 20); }
+  if (showTimer) { setText(H_.timer, 'timer', h.timerUnlimited ? '无限时间' : fmtTime(h.timer)); H_.timer.classList.toggle('big', !h.timerUnlimited && h.timerBig); H_.timer.classList.toggle('warn', !h.timerUnlimited && h.timer < 20); }
   if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || ['gun', 'shotgun', 'rifle'].includes(h.weapon.kind) ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
   else H_.weapon.hidden = true;
   H_.go.hidden = !h.go;

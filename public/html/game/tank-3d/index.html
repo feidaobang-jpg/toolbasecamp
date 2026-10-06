@@ -7,10 +7,10 @@
 <meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
 <title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=toy3dui3">
+<link rel="stylesheet" href="./style.css?v=lobby1">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" data-coop-url="../tank_battle.html" tabindex="-1">
+<div id="app" data-list-url="../../../games.html" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="坦克大战 3D 游戏画面"></canvas>
     <div id="hurt"></div>
@@ -89,12 +89,51 @@
           <button data-opt="touch"></button>
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
-          <a data-act="coop" class="coop-link" href="../tank_battle.html">多人联机合作（2D 版）</a>
+          <button data-act="coop" class="coop-link"><svg class="button-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="9" cy="7" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-4-5.65"/></svg><span>联机大厅 · 2–4人合作</span></button>
           <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
 
+    <div id="lobby" class="overlay" hidden>
+      <div class="panel small coop-panel">
+        <h2>联机大厅 · 合作守基地</h2>
+        <p id="coop-settings" class="rules"></p>
+        <div class="coop-controls">
+        <label>昵称 <input id="coop-name" maxlength="12" value="坦克手" autocomplete="off"></label>
+        <fieldset id="coop-create-fields"><legend>创建房间</legend>
+          <label>房间名 <input id="coop-room-name" maxlength="32" placeholder="不填则使用昵称" autocomplete="off"></label>
+          <label>人数上限 <select id="coop-capacity"><option value="2">2人</option><option value="3">3人</option><option value="4" selected>4人</option></select></label>
+          <label>房间密码 <input id="coop-create-password" type="password" maxlength="32" placeholder="留空：所有玩家可加入" autocomplete="new-password"></label>
+          <nav class="items"><button id="coop-create" class="primary">创建房间</button></nav>
+        </fieldset>
+        <fieldset id="coop-join-fields"><legend>房间码加入好友</legend>
+        <label>好友的房间码 <input id="coop-code" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="六位数字" autocomplete="off"></label>
+        <label>加入密码 <input id="coop-password" type="password" maxlength="32" placeholder="无密码房间留空" autocomplete="new-password"></label>
+        <nav class="items"><button id="coop-join">加入选中的房间</button></nav>
+        </fieldset>
+        <p class="coop-room-line">房间码：<strong id="coop-room">尚未加入</strong></p>
+        <p id="coop-roster"></p>
+        <p id="coop-message" role="status" aria-live="polite">建房后，把六位房间码告诉好友。</p>
+        <nav class="items" aria-label="联机房间">
+          <button id="coop-copy" disabled>复制房间码</button>
+          <button id="coop-ready" hidden>准备好了</button>
+          <button id="coop-start" class="primary" hidden>全队开始</button>
+          <button data-act="coop-back">退出房间 · 返回主菜单</button>
+        </nav>
+        </div>
+        <section id="coop-directory" aria-label="公开房间列表">
+          <div class="directory-heading"><h3>所有房间</h3><button id="coop-refresh" class="lobby-action">刷新列表</button></div>
+          <p>无密码可直接加入；有密码房间先输入密码。满员或已开局的房间暂不可加入。</p>
+          <p id="coop-empty">暂无房间，可以创建第一个房间。</p>
+          <nav id="coop-rooms" class="items" aria-label="可加入的房间"></nav>
+          <label>密码筛选 <select id="coop-filter"><option value="all">所有房间</option><option value="open">无密码</option><option value="locked">有密码</option></select></label>
+          <div class="directory-heading"><button id="coop-prev" class="lobby-action" disabled>上一页</button><span id="coop-page" aria-live="polite">第 1 / 1 页 · 0 个房间</span><button id="coop-next" class="lobby-action" disabled>下一页</button></div>
+        </section>
+        <p class="help lobby-footer">每人控制一辆坦克，合作守住老鹰；暂停同步全队。队友离线，其余玩家可继续；房主离线则结束房间，暂无房主迁移和中途加入。联机不覆盖单机存档。</p>
+      </div>
+    </div>
+    <div id="coop-status" role="status" hidden></div>
     <div id="pause" class="overlay" hidden>
       <div class="panel small">
         <h2>暂停</h2>
@@ -151,6 +190,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=toy3dui3"></script>
+<script type="module" src="./main.js?v=lobby1"></script>
 </body>
 </html>

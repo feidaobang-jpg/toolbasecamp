@@ -39,7 +39,7 @@
   "use": "四位主角模型",
   "runtime": "src/models.js SPECS.jack/hannah/mustapha/mess",
   "source_type": "procedural",
-  "tool": "Three.js 程序化拼装（胶囊 / 车床体 / 球体，按骨骼合并顶点色网格）+ MeshToonMaterial + 法线外扩描边（v0.5.0 曾改哑光，v0.5.1 改回）",
+  "tool": "Three.js 程序化拼装（胶囊 / 车床体 / 球体，按骨骼合并顶点色网格）+ MeshToonMaterial + 法线外扩描边（v0.5.0 曾改哑光，v0.5.2 改回）",
   "process": "按原作实机截帧取色与发型、服装特征",
   "status": "正式"
  },
@@ -77,7 +77,7 @@
  },
  {
   "id": "env-textures",
-  "use": "楼顶石板、砖墙、石砌外墙、窗格、壁纸、木纹、红地毯、大理石、街面、铁丝网、蛛网、海面；第二关林地泥土、泥沼烂泥、植物斑驳纹理（v0.5.1 起与第一关同为写实噪点风格）",
+  "use": "楼顶石板、砖墙、石砌外墙、窗格、壁纸、木纹、红地毯、大理石、街面、铁丝网、蛛网、海面；第二关林地泥土、泥沼烂泥、植物斑驳纹理（v0.5.2 起与第一关同为写实噪点风格）",
   "runtime": "src/world.js T()",
   "source_type": "procedural",
   "tool": "Canvas 2D 程序化贴图（固定种子）",
@@ -113,7 +113,7 @@
   "use": "网站游戏列表卡片封面",
   "runtime": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg",
   "source_type": "procedural",
-  "process": "qa/cover.js 在 Boss 区摆拍实机画面（隐藏 HUD），2× 截图后裁成 512×512；v0.5.0 曾按哑光画风重拍（?v=2），v0.5.1 画风改回后恢复原图（?v=3）",
+  "process": "qa/cover.js 在 Boss 区摆拍实机画面（隐藏 HUD），2× 截图后裁成 512×512；v0.5.0 曾按哑光画风重拍（?v=2），v0.5.2 画风改回后恢复原图（?v=3）",
   "status": "正式"
  },
  {

@@ -18,7 +18,7 @@ for width,height,purpose in [(1440,1080,'home-4x3'),(1920,1080,'space-16x9')]:
     for x,name,lab in [(pad,'overview','看清全局'),(pad+pw+gap,'first','第一人称')]:
         src=Image.open(E/(name+'.jpg')).convert('RGB')
         # Remove the small HUD; crop the real gameplay without synthesizing detail.
-        src=src.crop((140,90,1780,1040))
+        src=src.crop((310,175,1490,870) if name=='first' else (140,90,1780,1040))
         pane=ImageOps.fit(src,(pw,ph),method=Image.Resampling.LANCZOS)
         im.paste(pane,(x,top));d.rounded_rectangle((x-2,top-2,x+pw+2,top+ph+2),radius=4,outline='#60D0C9',width=4)
         d.rounded_rectangle((x+16,top+16,x+270,top+77),radius=12,fill='#0B202A')

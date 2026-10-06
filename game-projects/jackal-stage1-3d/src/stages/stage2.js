@@ -57,15 +57,15 @@ export default function build(B) {
   const GATE_N = addStatic('gate', 12, 108, 18, 110, { name: '营地后门' });
   for (let x = -4; x < 30; x++) if (x < 12 || x >= 18) addStatic('wall', x, 108, x + 1, 109);
   for (let y = 82; y < 108; y++) { addStatic('wall', -4, y, -3, y + 1); addStatic('wall', 29, y, 30, y + 1); }
-  addStatic('hut', 18, 84, 24, 88, { n: 3, flash: 0, name: 'B1' });
-  addStatic('hut', 1, 96, 6, 100, { n: 4, flash: 0, name: 'B2' });
+  addStatic('hut', 18, 84, 24, 88, { n: 3, flash: 0, name: 'B1', style: 'canvas' });
+  addStatic('hut', 1, 96, 6, 100, { n: 4, flash: 0, name: 'B2', style: 'canvas' });
   addStatic('hut', 18, 96, 24, 100, { n: 3, flash: 1, name: 'B3' });
   for (const [x, y] of [[-0.5, 90.5], [0.5, 90.5], [26.5, 104.5], [26.5, 103.5]]) addStatic('crate', x - 0.5, y - 0.5, x + 0.5, y + 0.5);
   for (const [x, y] of [[10.5, 86.5], [11.5, 87.5], [-1.5, 104.5]]) addStatic('barrel', x - 0.5, y - 0.5, x + 0.5, y + 0.5);
   B.sandbags(8, 100, 14);
   // 起点军官俘虏屋、营地西侧俘虏屋
   addStatic('hut', -16, 22, -11, 26, { n: 0, flash: 1, name: 'H1' });
-  addStatic('hut', -27, 106, -21, 110, { n: 2, flash: 0, name: 'H2' });
+  addStatic('hut', -27, 106, -21, 110, { n: 2, flash: 0, name: 'H2', style: 'canvas' });
   rowY(-19.5, 52.5, 78.5); rowX(-34.5, -20.5, 78.5);
 
   // C 区：西侧柱廊迷宫
@@ -174,9 +174,10 @@ export default function build(B) {
 
   return {
     n: 2, code: 'Baker', title: '废墟城', sub: '石柱后面藏着闪光星', music: 'ruins',
-    sky: 0xc8dcc2, fog: 0xc9d8b8, hemiGround: 0x8f8a62, outerGround: 0x8f9a4e,
+    sky: 0xc8dcc2, hemiGround: 0x8f8a62, outerGround: 0x8f9a4e,
     palette: { [T.GRASS]: 0x96a052, [T.STONE]: 0xcbc3a8, [T.FLOOR]: 0x6fae55, [T.DIRT]: 0xbba675, [T.ROAD]: 0xcabd96 },
-    // 建筑与围墙样式统一复用第一关默认（石墙、木屋红顶、木门），不再单独换皮
+    // 原作两关共有炮台/步兵复用；第二关囚室与帐篷按原作保留区别，围墙共用。
+    hutStyle: 'tin',
     tuftTint: 0x7f9a4a, hedgeTint: 0x4f8a46,
     intro: 'drive',
     start: { x: 0, y: 6, dir: 0, introFrom: { x: 0, y: -6 } },

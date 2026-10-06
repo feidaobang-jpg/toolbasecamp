@@ -171,4 +171,36 @@ for (const heading of [0, Math.PI / 4, Math.PI / 2, Math.PI, -Math.PI / 4]) {
   assert.ok(Math.abs((b.x - x) * b.vy - (b.y - y) * b.vx) < 1e-8);
 }
 ok('turret and projectile continuous headings agree');
+// 击杀照常计分，但不在战场弹出分数字样。
+for (const mode of ['classic', 'remix']) {
+  const w = createWorld(createRun({ mode, seed: 24, score: 19950 }));
+  const b = qa.spawnBot(w, 'basic', 96, 32, 16, false);
+  b.state = 'active'; w.events.length = 0;
+  qa.destroyBot(w, b, false);
+  assert.equal(w.run.score, 20050);
+  assert.equal(w.stageScore, 100);
+  assert.equal(w.run.stats.kills, 1);
+  assert.equal(w.run.lives, 4, 'score bonus still awards a life');
+  assert.ok(!w.events.some(e => e.type === 'score'), 'no kill score popup');
+}
+ok('kill scores and bonus lives retained without floating text');
+// 魔改满护甲仍消耗修理包；受伤时修复，双人各自护甲互不影响。
+for (const coop of [false, true]) for (const hp of [1, 2, 3]) {
+  const w = createWorld(createRun({ mode: 'remix', armor: 'std', seed: 25, coop }));
+  const idle = coop ? { players: [{ dir: -1 }, { dir: -1 }] } : { dir: -1 };
+  for (let i = 0; i < 40; i++) step(w, idle);
+  w.bots = []; w.rosterIndex = w.roster.length; w.remaining = 99;
+  const p = coop ? w.seats[1].tank : w.player;
+  const state = coop ? w.seats[1].state : w.run;
+  state.hp = hp;
+  w.items = [{ type: 'repair', x: p.x + 8, y: p.y + 8 }];
+  step(w, idle);
+  assert.equal(w.items.length, 0);
+  assert.equal(state.hp, 3);
+  assert.equal(w.run.stats.repairs, hp < 3 ? 1 : 0, 'only actual repairs count');
+  if (coop) assert.equal(w.seats[0].state.hp, 3);
+  step(w, idle);
+  assert.equal(state.hp, 3, 'no armor overflow or repeat repair');
+}
+ok('remix repair consumed at full armor for solo and coop');
 console.log(JSON.stringify({ passed: results.length }));

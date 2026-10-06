@@ -1920,6 +1920,8 @@ function updateCameraFocus(dt) {
   if (G.lockX === null) G.focusX = Math.max(G.focusX, Math.min(target, p.x - HALF_W + 1.6));
 }
 function updateTimer(dt) {
+  // 无敌演示不受限时约束；保留剩余时间，关闭后继续原倒计时。
+  if (G.settings.demo) return;
   const p = G.player;
   if (!G.waveOn && !G.boss && G.lockX === null && G.wave === 0) { /* 开场还没触发也照样计时 */ }
   const before = G.timer;
@@ -2387,7 +2389,7 @@ export function hudState() {
     score: G.score, hi: Math.max(G.hi, G.score), hero: G.hero,
     weapon: p && p.weapon ? { kind: p.weapon.kind, ammo: p.weapon.ammo, name: ITEMS[p.weapon.kind].cn } : null,
     enemy: enemy ? { type: enemy.type, name: enemy.def ? enemy.def.name : enemy.type, cn: enemy.def ? enemy.def.cn : '', hp: Math.max(0, enemy.hp), maxHp: enemy.maxHp } : null,
-    timer: G.timer, timerBig: G.timerShow > 0 || G.timer < 30, go: G.go > 0, mode: G.mode
+    timer: G.timer, timerUnlimited: G.settings.demo, timerBig: G.timerShow > 0 || G.timer < 30, go: G.go > 0, mode: G.mode
   };
 }
 

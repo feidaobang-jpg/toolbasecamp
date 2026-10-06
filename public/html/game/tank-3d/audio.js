@@ -65,7 +65,7 @@ export class GameAudio {
       case 'fire': if (p) this.play('bullet_shot') || this.tone(420, .07, 'square', 0, .16, 180); else if (e.big) this.noise(.25, 0, .25, 700); break;
       case 'brick': if (p) this.play('bullet_hit_2') || this.noise(.16, 0, .3, 1300); else if (e.flame) this.noise(.3, 0, .2, 900); break;
       case 'steel': case 'border': if (p) this.play('bullet_hit_1') || this.tone(1560, .09, 'square', 0, .12, 1200); break;
-      case 'armor': this.tone(e.big ? 520 : 900, .08, 'square', 0, .14, e.big ? 300 : 600); break;
+      case 'armor': this.play('bullet_hit_1', .9, e.big ? .8 : 1) || this.tone(e.big ? 520 : 900, .12, 'square', 0, .22, e.big ? 300 : 600); break;
       case 'boom': if (e.team === 'player') this.play('explosion_2') || this.noise(.6, 0, .5, 600); else this.play('explosion_1', e.huge ? 1 : .9, e.huge ? .7 : 1) || this.noise(.5, 0, .45, 700); if (e.huge) this.noise(1.2, .1, .5, 400); break;
       case 'eagle': this.play('explosion_2', 1, .8) || this.noise(1.2, 0, .6, 500); this.noise(1, .15, .4, 400); break;
       case 'powerup': this.play('powerup_appear') || this.arp([988, 1319, 988, 1319], .06, 'triangle', .16, .1); break;

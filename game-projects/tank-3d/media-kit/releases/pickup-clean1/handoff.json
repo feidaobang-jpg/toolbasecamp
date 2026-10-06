@@ -1,0 +1,55 @@
+{
+  "version": "pickup-clean1",
+  "classification": "普通补丁",
+  "task_id": "01a110d2-tank-pickup-20261006-01",
+  "branch": "codex/tank-pickup-clean-20261006",
+  "changes": [
+    "移除击杀分数浮字，保留正常分数、结算与奖命",
+    "移除道具地面外圈与柱状光圈，保留图标和闪烁",
+    "魔改版满护甲也消耗修理包，不额外增加护甲；仅实际修复计入修复统计"
+  ],
+  "website": {
+    "status": "public_verified",
+    "commit": "4e0bd33c",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+    "verified_at": "2026-10-06T11:02:00.823019+00:00",
+    "workflow": "success",
+    "browser_record": "website-captures/verification.json",
+    "coop_record": "website-coop/results.json"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "slug": "feidao-tank-3d",
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_LjaZcLn3/index.html",
+    "package_hash": "08c91f933c019284a3ed53c4fd268fbb7e3047239e6de7f10c05e327af11837c",
+    "preview_verified_at": "2026-10-06T11:02:00.823019+00:00",
+    "browser_record": "toy-preview-captures/verification.json",
+    "coop_record": "toy-preview-coop/results.json",
+    "submitted_at": "2026-10-06T11:02:49.019189+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_zkVAvaWr/index.html",
+    "submitted_version": "pickup-clean1",
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通补丁并入下次有意义的说明更新；当前入口和操作说明无变化"
+  },
+  "validation": {
+    "sim_checks": 19,
+    "coop_sim": "passed",
+    "browser": "captures/verification.json",
+    "physicalPhoneTest": false
+  },
+  "created_at": "2026-10-06T10:50:33.741758+00:00",
+  "activity_check": {
+    "status": "partial",
+    "source": "https://member.bilibili.com/platform/growingUp/taskManage/main",
+    "account_uid": 16214353,
+    "observations": [
+      "累计有效播放746/10000，80推广金任务未达标",
+      "每周投稿挑战已有1000曝光奖励可领取，台账已记录"
+    ],
+    "note": "本次普通补丁无新投稿、没有确认新适用报名；共用台账被另一任务锁定，未覆盖或推进全面检查时间。"
+  }
+}

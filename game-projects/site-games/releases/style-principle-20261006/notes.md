@@ -8,4 +8,4 @@
 
 - 项目规则：`AGENTS.md`「画风原则」一节。
 - 本机技能：`~/.claude/skills/game-maker/SKILL.md`「美术」条及相关条目、`references/assets-and-capture.md`；写入时持有 `skill-write.lock`，快照见 `skill-snapshot/`（仅审计）。
-- 落地：恐龙快打 v0.5.1 改回旧版硬派写实画风，第二关同款。
+- 落地：恐龙快打 v0.5.2 改回旧版硬派写实画风，第二关同款。

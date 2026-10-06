@@ -1,0 +1,150 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_LjaZcLn3/index.html",
+  "results": [
+    {
+      "viewport": "desktop",
+      "mode": "classic",
+      "version": "pickup-clean1",
+      "score": 20050,
+      "noPopup": true,
+      "full": {
+        "hp": 3,
+        "items": 1,
+        "repairs": 0
+      },
+      "pickupEffectRings": 0,
+      "after": {
+        "hp": 3,
+        "items": 1
+      },
+      "ringCount": 0,
+      "render": {
+        "calls": 49,
+        "triangles": 90290,
+        "geometries": 12,
+        "textures": 12
+      }
+    },
+    {
+      "viewport": "desktop",
+      "mode": "remix",
+      "version": "pickup-clean1",
+      "score": 20050,
+      "noPopup": true,
+      "full": {
+        "hp": 3,
+        "items": 0,
+        "repairs": 0
+      },
+      "pickupEffectRings": 0,
+      "after": {
+        "hp": 3,
+        "items": 0
+      },
+      "ringCount": 0,
+      "render": {
+        "calls": 50,
+        "triangles": 90292,
+        "geometries": 14,
+        "textures": 13
+      }
+    },
+    {
+      "viewport": "mobile-landscape",
+      "mode": "classic",
+      "version": "pickup-clean1",
+      "score": 20050,
+      "noPopup": true,
+      "full": {
+        "hp": 3,
+        "items": 1,
+        "repairs": 0
+      },
+      "pickupEffectRings": 0,
+      "after": {
+        "hp": 3,
+        "items": 1
+      },
+      "ringCount": 0,
+      "render": {
+        "calls": 49,
+        "triangles": 90290,
+        "geometries": 12,
+        "textures": 12
+      }
+    },
+    {
+      "viewport": "mobile-landscape",
+      "mode": "remix",
+      "version": "pickup-clean1",
+      "score": 20050,
+      "noPopup": true,
+      "full": {
+        "hp": 3,
+        "items": 0,
+        "repairs": 0
+      },
+      "pickupEffectRings": 0,
+      "after": {
+        "hp": 3,
+        "items": 0
+      },
+      "ringCount": 0,
+      "render": {
+        "calls": 50,
+        "triangles": 90292,
+        "geometries": 14,
+        "textures": 13
+      }
+    },
+    {
+      "viewport": "mobile-portrait",
+      "mode": "classic",
+      "version": "pickup-clean1",
+      "score": 20050,
+      "noPopup": true,
+      "full": {
+        "hp": 3,
+        "items": 1,
+        "repairs": 0
+      },
+      "pickupEffectRings": 0,
+      "after": {
+        "hp": 3,
+        "items": 1
+      },
+      "ringCount": 0,
+      "render": {
+        "calls": 49,
+        "triangles": 90290,
+        "geometries": 12,
+        "textures": 12
+      }
+    },
+    {
+      "viewport": "mobile-portrait",
+      "mode": "remix",
+      "version": "pickup-clean1",
+      "score": 20050,
+      "noPopup": true,
+      "full": {
+        "hp": 3,
+        "items": 0,
+        "repairs": 0
+      },
+      "pickupEffectRings": 0,
+      "after": {
+        "hp": 3,
+        "items": 0
+      },
+      "ringCount": 0,
+      "render": {
+        "calls": 50,
+        "triangles": 90292,
+        "geometries": 14,
+        "textures": 13
+      }
+    }
+  ],
+  "physicalPhoneTest": false
+}

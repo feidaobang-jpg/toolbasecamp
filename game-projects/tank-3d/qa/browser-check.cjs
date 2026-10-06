@@ -121,8 +121,8 @@ async function dirAfter(p, code) {
       await g.evaluate(T('T.manual(true); T.world.player.x = 96; T.world.player.y = 64;'));
       await key(g, 'KeyD'); const mid = await g.evaluate(T('T.step(45); return T.state().player.dir')); await g.evaluate(T('T.step(45)')); await key(g, 'KeyD', 'keyup');
       const fpHeld = await g.evaluate(T('return T.state().player'));
-      // 再按一次 D：车头朝东时右转 = 向南；按住期间方向锁定，不会跟着镜头一直打转
-      assert.equal(fpD, 1); assert.equal(mid, 2); assert.equal(fpHeld.dir, 2); assert.ok(fpHeld.y > 120, 'fp keeps driving south ' + fpHeld.y);
+      // 当前第一人称独立转头，行驶不带着视线跳转；再次 D 仍相对同一视线向右。
+      assert.equal(fpD, 1); assert.equal(mid, 1); assert.equal(fpHeld.dir, 1); assert.ok(fpHeld.x > 120, 'fp keeps driving east ' + fpHeld.x);
       ok('first person latched steering', { fpD, fpHeld });
       // 暂停菜单（Esc）→ 继续
       await g.evaluate(T('T.manual(false); T.view.setPreset(1)'));
@@ -243,11 +243,12 @@ async function dirAfter(p, code) {
       await touchAt('touchStart', cam.x + cam.width / 2, cam.y + cam.height / 2, 3); await touchAt('touchEnd');
       await p.waitForTimeout(100);
       assert.equal(await g.evaluate(T('return T.state().camera')), 'close');
-      const qBtn = await g.locator('[data-hold="rotL"]').boundingBox();
-      await touchAt('touchStart', qBtn.x + qBtn.width / 2, qBtn.y + qBtn.height / 2, 4); await p.waitForTimeout(600); await touchAt('touchEnd');
-      assert.ok(await g.evaluate(T('return T.state().yawOffset')) > .5, 'Q held rotates');
+      const beforeDrag = await g.evaluate(T('return T.state().yawOffset'));
+      await touchAt('touchStart', 195, 450, 4); await touchAt('touchMove', 195, 380, 4); await touchAt('touchMove', 195, 300, 4); await touchAt('touchEnd');
+      await p.waitForTimeout(350);
+      assert.ok(Math.abs(await g.evaluate(T('return T.state().yawOffset')) - beforeDrag) > .25, 'blank-area drag rotates in portrait');
       await p.screenshot({ path: path.join(out, 'phone-portrait-close.png') });
-      ok('phone portrait rotation + stick/fire/C/Q', { rotated: s0.display.rotated, y: s1.player.y });
+      ok('phone portrait rotation + stick/fire/C/drag', { rotated: s0.display.rotated, y: s1.player.y });
       // 横屏
       await p.setViewportSize({ width: 844, height: 390 }); await p.waitForTimeout(700);
       const s2 = await g.evaluate(T('return T.state()'));

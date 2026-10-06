@@ -4,28 +4,6 @@ import * as THREE from 'three';
 import { clamp } from './core.js';
 
 const D = Math.PI / 180;
-
-// 仅调整渲染构图，保留敌人激活、射程等判定镜头，避免修界面时改变战斗规则。
-function bossFrameDistance(lock, x, y, pitch, yaw, fov, aspect, height, minimum) {
-  const sin = Math.sin(yaw), cos = Math.cos(yaw), sp = Math.sin(pitch), cp = Math.cos(pitch);
-  const tan = Math.tan(fov * D / 2);
-  const top = 1 - 2 * Math.min(.28, 64 / Math.max(240, height));
-  const bottom = 1 - 2 * Math.min(.24, 52 / Math.max(240, height));
-  let distance = minimum;
-  const points = [];
-  for (const bx of [lock.x0, lock.x1]) for (const by of [lock.y0, lock.y1]) points.push([bx, by, 0]);
-  if (lock.statues) for (const [bx, by] of lock.statues) for (const side of [-1, 1]) points.push([bx + side * 1.8, by, 5.5]);
-  else for (const bx of [lock.x0, lock.x1]) for (const by of [lock.y0, lock.y1]) points.push([bx, by, 3]);
-  for (const [bx, by, h] of points) {
-    const dx = bx - x, dy = h - 2.5, dz = y - by;
-    const outward = dx * sin * cp + dy * sp + dz * cos * cp;
-    const up = -dx * sin * sp + dy * cp - dz * cos * sp;
-    const right = dx * cos - dz * sin;
-    const depth = Math.max(Math.abs(right) / (tan * aspect * .88), Math.abs(up) / (tan * (up >= 0 ? top : bottom)));
-    distance = Math.max(distance, outward + depth + 1);
-  }
-  return distance;
-}
 export const PRESETS = [
   { id: 'oblique', name: '斜俯视', pitch: 56 * D, dist: 34, fov: 40, ahead: 4 },
   { id: 'top', name: '俯视', pitch: 84 * D, dist: 42, fov: 40, ahead: 2 },
@@ -102,12 +80,9 @@ export function createCamera() {
         cam.lookAt(px + fx * 14, 1.5+Math.tan(-.082+this.pitchOff)*14, -(py + fz * 14));
       } else {
         cam.fov = gp.fov; cam.updateProjectionMatrix();
-        const pch = clamp(pitch + this.pitchOff, .12, 1.48);
-        const lock = opt && opt.lock;
-        const renderDist = lock ? bossFrameDistance(lock, this.tx, this.ty, pch, this.yaw, gp.fov, cam.aspect, opt.viewportHeight || 720, dist) : dist;
-        const aimHeight = lock ? 2.5 : 0, radius = Math.cos(pch) * renderDist;
-        cam.position.set(this.tx + Math.sin(this.yaw) * radius, aimHeight + Math.sin(pch) * renderDist, -this.ty + Math.cos(this.yaw) * radius);
-        cam.lookAt(this.tx, aimHeight, -this.ty);
+        const pch=clamp(pitch+this.pitchOff,.12,1.48), radius=Math.cos(pch)*dist;
+        cam.position.set(this.tx+Math.sin(this.yaw)*radius,Math.sin(pch)*dist,-this.ty+Math.cos(this.yaw)*radius);
+        cam.lookAt(this.tx,0,-this.ty);
       }
       cam.updateMatrixWorld();
       if (opt && opt.shake) {

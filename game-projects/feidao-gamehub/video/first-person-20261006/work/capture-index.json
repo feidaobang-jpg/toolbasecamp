@@ -1,200 +1,327 @@
 {
-  "raw_evidence_location": "work/capture; full local raw logs and frame lists retained outside Git",
+  "raw_evidence_location": "work/capture; complete local logs retained outside Git",
+  "revision": 2,
   "takes": [
     {
-      "game": "cadillacs-stage1-3d",
+      "game": "tank-3d",
       "seconds": 65,
-      "frames": 3238,
-      "firstTimestamp": 1791274877.79457,
+      "frames": 5171,
+      "firstTimestamp": 1791286870.296453,
       "events": [
         {
-          "t": 14.674,
+          "t": 14.66,
           "action": "C camera",
-          "from": "side",
+          "from": "top",
           "to": "fp"
         },
         {
-          "t": 53.274,
+          "t": 53.282,
           "action": "C camera",
           "from": "fp",
-          "to": "side"
+          "to": "overview"
         }
       ],
       "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+      "buildCommit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
       "errors": [],
-      "take": "cadillacs-stage1-3d",
-      "used_in_final": true,
-      "raw_log": "capture/cadillacs-stage1-3d/capture.json",
-      "raw_log_sha256": "2339d91a37d0e8d0723f833ab460776c851bd4f3018c3e0d233638981fc606e3",
+      "cadence": {
+        "capture": {
+          "count": 5170,
+          "fps": 79.48183501778072,
+          "p95_ms": 24.636030197143555,
+          "max_ms": 249.57895278930664,
+          "over_100ms": 3
+        },
+        "animation": {
+          "count": 11439,
+          "fps": 160.09214500242118,
+          "p95_ms": 6.099999999998545,
+          "max_ms": 382.29999999998836,
+          "over_100ms": 1
+        }
+      },
+      "recording": {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "jpegQuality": 85,
+        "everyNthFrame": 1,
+        "encoder": "h264_nvenc",
+        "fps": 60
+      },
+      "raw_log": "capture/tank-3d/capture.json",
+      "raw_log_sha256": "96887ee03161a30e9f36f9dd3f7b725479d400debe03b6bcbcda390cba9036a9",
+      "source_movie_sha256": "2a8b4d19b511685db80e143bef3b212f20cd3e19d24c6df9b2027caf32f7d7f1",
       "state_sample_count": 32,
       "end_summary": {
-        "mode": "play",
-        "area": 1,
-        "score": 27200,
-        "lives": "inf",
-        "settings": {
-          "lives": "inf",
-          "dur": "std",
-          "demo": false,
-          "hero": 2
-        },
-        "demoUsed": false
-      }
+        "mode": "classic"
+      },
+      "encoding_image_timebase": "1/1000"
     },
     {
-      "game": "cadillacs-stage1-3d",
+      "game": "mario-3d",
       "seconds": 65,
-      "frames": 3185,
-      "firstTimestamp": 1791273191.711867,
+      "frames": 5510,
+      "firstTimestamp": 1791286970.707385,
       "events": [
         {
-          "t": 14.721,
+          "t": 2.645,
+          "action": "jump",
+          "x": 16.926527777777697
+        },
+        {
+          "t": 4.559,
+          "action": "jump",
+          "x": 27.6399
+        },
+        {
+          "t": 6.495,
+          "action": "jump",
+          "x": 36.351774999999925
+        },
+        {
+          "t": 7.793,
+          "action": "jump",
+          "x": 42.12427499999997
+        },
+        {
+          "t": 10.076,
+          "action": "jump",
+          "x": 55.13927499999981
+        },
+        {
+          "t": 12.577,
+          "action": "jump",
+          "x": 67.21760833333323
+        },
+        {
+          "t": 14.695,
           "action": "C camera",
           "from": "side",
           "to": "fp"
         },
         {
-          "t": 53.305,
+          "t": 16.197,
+          "action": "jump",
+          "x": 84.08010833333306
+        },
+        {
+          "t": 17.499,
+          "action": "jump",
+          "x": 91.44260833333297
+        },
+        {
+          "t": 19.457,
+          "action": "jump",
+          "x": 101.16344166666659
+        },
+        {
+          "t": 21.008,
+          "action": "jump",
+          "x": 108.3551083333333
+        },
+        {
+          "t": 23.211,
+          "action": "jump",
+          "x": 118.06010833333326
+        },
+        {
+          "t": 25.67,
+          "action": "jump",
+          "x": 132.12010833333431
+        },
+        {
+          "t": 26.468,
+          "action": "jump",
+          "x": 136.63989999999998
+        },
+        {
+          "t": 28.431,
+          "action": "jump",
+          "x": 146.01677500000224
+        },
+        {
+          "t": 29.281,
+          "action": "jump",
+          "x": 150.63989999999998
+        },
+        {
+          "t": 36.888,
+          "action": "jump",
+          "x": 93.72930555555551
+        },
+        {
+          "t": 38.28,
+          "action": "jump",
+          "x": 101.66180555555542
+        },
+        {
+          "t": 39.699,
+          "action": "jump",
+          "x": 107.83260833333331
+        },
+        {
+          "t": 42.037,
+          "action": "jump",
+          "x": 118.15844166666656
+        },
+        {
+          "t": 43.226,
+          "action": "jump",
+          "x": 124.95094166666648
+        },
+        {
+          "t": 44.732,
+          "action": "jump",
+          "x": 133.500941666668
+        },
+        {
+          "t": 45.51,
+          "action": "jump",
+          "x": 136.2717750000003
+        },
+        {
+          "t": 47.54,
+          "action": "jump",
+          "x": 146.34927500000234
+        },
+        {
+          "t": 48.352,
+          "action": "jump",
+          "x": 150.63989999999998
+        },
+        {
+          "t": 53.213,
           "action": "C camera",
           "from": "fp",
-          "to": "side"
+          "to": "top"
+        },
+        {
+          "t": 55.951,
+          "action": "jump",
+          "x": 93.72930555555551
+        },
+        {
+          "t": 57.38,
+          "action": "jump",
+          "x": 101.89930555555542
+        },
+        {
+          "t": 58.686,
+          "action": "jump",
+          "x": 109.30930555555533
+        },
+        {
+          "t": 60.516,
+          "action": "jump",
+          "x": 118.4509416666666
+        },
+        {
+          "t": 62.885,
+          "action": "jump",
+          "x": 131.9409416666676
+        },
+        {
+          "t": 63.736,
+          "action": "jump",
+          "x": 136.63989999999998
         }
       ],
       "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+      "buildCommit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
       "errors": [],
-      "take": "cadillacs-stage1-3d-unused-take1",
-      "used_in_final": false,
-      "raw_log": "capture/cadillacs-stage1-3d-unused-take1/capture.json",
-      "raw_log_sha256": "78825f853728b1738fb32755c87a190cc0a8dc39b81c49189b4a48c92c0ec62f",
-      "state_sample_count": 31,
-      "end_summary": {
-        "mode": "play",
-        "area": 0,
-        "score": 12600,
-        "lives": "inf",
-        "settings": {
-          "lives": "inf",
-          "dur": "std",
-          "demo": false,
-          "hero": 2
+      "cadence": {
+        "capture": {
+          "count": 5509,
+          "fps": 84.81258879264148,
+          "p95_ms": 20.92909812927246,
+          "max_ms": 145.00093460083008,
+          "over_100ms": 2
         },
-        "demoUsed": false
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "seconds": 65,
-      "frames": 3247,
-      "firstTimestamp": 1791274398.94244,
-      "events": [
-        {
-          "t": 14.687,
-          "action": "C camera",
-          "from": "side",
-          "to": "fp"
-        },
-        {
-          "t": 53.205,
-          "action": "C camera",
-          "from": "fp",
-          "to": "side"
+        "animation": {
+          "count": 10942,
+          "fps": 154.58732446102115,
+          "p95_ms": 11.799999999995634,
+          "max_ms": 341.1000000000058,
+          "over_100ms": 1
         }
-      ],
-      "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
-      "errors": [],
-      "take": "cadillacs-stage1-3d-unused-take2",
-      "used_in_final": false,
-      "raw_log": "capture/cadillacs-stage1-3d-unused-take2/capture.json",
-      "raw_log_sha256": "5f54f0f69c391245693bfaf5f04f1d705cf6e723ae217a950e8326fb8aa6d424",
+      },
+      "recording": {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "jpegQuality": 85,
+        "everyNthFrame": 1,
+        "encoder": "h264_nvenc",
+        "fps": 60
+      },
+      "raw_log": "capture/mario-3d/capture.json",
+      "raw_log_sha256": "ef81c2c7fe23f4f5289c437c36c8ce0fbbb350c93ce1f8b753b63af667d9730c",
+      "source_movie_sha256": "bdfa3e4b1a8700f05eef61604a83725a842273008449924bd2edf84e5ddd37ef",
       "state_sample_count": 32,
       "end_summary": {
-        "mode": "play",
-        "area": 0,
-        "score": 11100,
-        "lives": "inf",
-        "settings": {
-          "lives": "inf",
-          "dur": "std",
-          "demo": false,
-          "hero": 2
-        },
-        "demoUsed": false
-      }
-    },
-    {
-      "game": "cadillacs-stage1-3d",
-      "seconds": 65,
-      "frames": 3237,
-      "firstTimestamp": 1791274613.291666,
-      "events": [
-        {
-          "t": 14.72,
-          "action": "C camera",
-          "from": "side",
-          "to": "fp"
-        },
-        {
-          "t": 53.321,
-          "action": "C camera",
-          "from": "fp",
-          "to": "side"
-        }
-      ],
-      "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
-      "errors": [],
-      "take": "cadillacs-stage1-3d-unused-take3",
-      "used_in_final": false,
-      "raw_log": "capture/cadillacs-stage1-3d-unused-take3/capture.json",
-      "raw_log_sha256": "395da3012769ba174f9b8a73e61b1a25aa826b0f50cdb05eab1efbd3d0680c5f",
-      "state_sample_count": 32,
-      "end_summary": {
-        "mode": "play",
-        "area": 0,
-        "score": 11000,
-        "lives": "inf",
-        "settings": {
-          "lives": "inf",
-          "dur": "std",
-          "demo": false,
-          "hero": 2
-        },
-        "demoUsed": false
-      }
+        "area": "main",
+        "mode": "play"
+      },
+      "encoding_image_timebase": "1/1000"
     },
     {
       "game": "jackal-stage1-3d",
       "seconds": 65,
-      "frames": 3053,
-      "firstTimestamp": 1791272958.998815,
+      "frames": 5419,
+      "firstTimestamp": 1791287067.653579,
       "events": [
         {
-          "t": 15.149,
+          "t": 15.222,
           "action": "C camera",
           "from": "oblique",
           "to": "fp"
         },
         {
-          "t": 53.243,
+          "t": 53.287,
           "action": "C camera",
           "from": "fp",
           "to": "oblique"
         }
       ],
       "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+      "buildCommit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
       "errors": [],
-      "take": "jackal-stage1-3d",
-      "used_in_final": true,
+      "cadence": {
+        "capture": {
+          "count": 5418,
+          "fps": 83.30438628895307,
+          "p95_ms": 21.850109100341797,
+          "max_ms": 118.68405342102051,
+          "over_100ms": 1
+        },
+        "animation": {
+          "count": 10843,
+          "fps": 152.8205489588105,
+          "p95_ms": 11.799999999995634,
+          "max_ms": 376.3999999999942,
+          "over_100ms": 1
+        }
+      },
+      "recording": {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "jpegQuality": 85,
+        "everyNthFrame": 1,
+        "encoder": "h264_nvenc",
+        "fps": 60
+      },
       "raw_log": "capture/jackal-stage1-3d/capture.json",
-      "raw_log_sha256": "9ac5c2a1d79cda3b9e69b5cd7cd9bb6d6acaf5b4fcce1df8317cab7013938ff3",
+      "raw_log_sha256": "0982ddcc22dd7865d81850c34f2a89485adc5345b9cbe6e89eb196c1c3c3ec80",
+      "source_movie_sha256": "e2c9199784eb7dbbde21968df51257ed2f8ba8dbd0e1b76dcaa1f74478cd50d1",
       "state_sample_count": 32,
       "end_summary": {
         "mode": "play",
-        "score": 3500,
+        "score": 3450,
         "lives": 3,
         "settings": {
           "lives": "inf",
@@ -203,320 +330,186 @@
           "gun": "follow"
         },
         "demoUsed": false
-      }
+      },
+      "encoding_image_timebase": "1/1000"
     },
     {
-      "game": "mario-3d",
+      "game": "cadillacs-stage1-3d",
       "seconds": 65,
-      "frames": 3238,
-      "firstTimestamp": 1791272851.20557,
+      "frames": 5336,
+      "firstTimestamp": 1791287165.426393,
       "events": [
         {
-          "t": 2.629,
-          "action": "jump",
-          "x": 16.7840277777777
-        },
-        {
-          "t": 4.547,
-          "action": "jump",
-          "x": 27.6399
-        },
-        {
-          "t": 6.46,
-          "action": "jump",
-          "x": 36.20927499999993
-        },
-        {
-          "t": 7.501,
-          "action": "jump",
-          "x": 42.146774999999856
-        },
-        {
-          "t": 9.826,
-          "action": "jump",
-          "x": 55.3992749999997
-        },
-        {
-          "t": 12.342,
-          "action": "jump",
-          "x": 67.39344166666655
-        },
-        {
-          "t": 14.639,
+          "t": 14.715,
           "action": "C camera",
           "from": "side",
           "to": "fp"
         },
         {
-          "t": 15.894,
-          "action": "jump",
-          "x": 84.11344166666638
-        },
-        {
-          "t": 17.2,
-          "action": "jump",
-          "x": 91.52344166666629
-        },
-        {
-          "t": 19.213,
-          "action": "jump",
-          "x": 101.44844166666658
-        },
-        {
-          "t": 20.752,
-          "action": "jump",
-          "x": 108.4501083333333
-        },
-        {
-          "t": 22.984,
-          "action": "jump",
-          "x": 118.15510833333326
-        },
-        {
-          "t": 25.481,
-          "action": "jump",
-          "x": 132.35760833333438
-        },
-        {
-          "t": 26.303,
-          "action": "jump",
-          "x": 136.63989999999998
-        },
-        {
-          "t": 28.359,
-          "action": "jump",
-          "x": 146.49177500000238
-        },
-        {
-          "t": 29.142,
-          "action": "jump",
-          "x": 150.63989999999998
-        },
-        {
-          "t": 36.659,
-          "action": "jump",
-          "x": 93.25430555555552
-        },
-        {
-          "t": 38.158,
-          "action": "jump",
-          "x": 101.80430555555542
-        },
-        {
-          "t": 39.669,
-          "action": "jump",
-          "x": 108.2601083333333
-        },
-        {
-          "t": 41.795,
-          "action": "jump",
-          "x": 117.77510833333326
-        },
-        {
-          "t": 44.28,
-          "action": "jump",
-          "x": 131.93010833333426
-        },
-        {
-          "t": 45.077,
-          "action": "jump",
-          "x": 136.49010833333557
-        },
-        {
-          "t": 47.101,
-          "action": "jump",
-          "x": 146.30177500000232
-        },
-        {
-          "t": 47.891,
-          "action": "jump",
-          "x": 150.63989999999998
-        },
-        {
-          "t": 53.274,
+          "t": 53.449,
           "action": "C camera",
           "from": "fp",
-          "to": "top"
-        },
-        {
-          "t": 55.413,
-          "action": "jump",
-          "x": 93.34930555555552
-        },
-        {
-          "t": 56.828,
-          "action": "jump",
-          "x": 101.37680555555542
-        },
-        {
-          "t": 58.317,
-          "action": "jump",
-          "x": 108.02260833333331
-        },
-        {
-          "t": 60.486,
-          "action": "jump",
-          "x": 118.14962222222216
-        },
-        {
-          "t": 62.951,
-          "action": "jump",
-          "x": 132.16212222222325
-        },
-        {
-          "t": 63.752,
-          "action": "jump",
-          "x": 136.63989999999998
+          "to": "side"
         }
       ],
       "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+      "buildCommit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
       "errors": [],
-      "take": "mario-3d",
-      "used_in_final": true,
-      "raw_log": "capture/mario-3d/capture.json",
-      "raw_log_sha256": "5695500ee0ed9bffc24680cce941be02f76f27789c2b9f5927f7c21b0e3e0f64",
+      "cadence": {
+        "capture": {
+          "count": 5335,
+          "fps": 82.08409607045387,
+          "p95_ms": 22.20606803894043,
+          "max_ms": 133.12602043151855,
+          "over_100ms": 1
+        },
+        "animation": {
+          "count": 11464,
+          "fps": 161.14544838608558,
+          "p95_ms": 6.099999999998545,
+          "max_ms": 511.70000000001164,
+          "over_100ms": 1
+        }
+      },
+      "recording": {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "jpegQuality": 85,
+        "everyNthFrame": 1,
+        "encoder": "h264_nvenc",
+        "fps": 60
+      },
+      "raw_log": "capture/cadillacs-stage1-3d/capture.json",
+      "raw_log_sha256": "da3941e95d436a7f3d0b0bd5cc59b943ed74769bff777e58c06c4b85c6b0cc73",
+      "source_movie_sha256": "703080ef9168868e1c7f09d6c81e88fc10c42d20f7210a6cb3fd85788c889a34",
       "state_sample_count": 32,
       "end_summary": {
-        "area": "main",
-        "mode": "play"
-      }
+        "mode": "play",
+        "area": 0,
+        "score": 21100,
+        "lives": "inf",
+        "settings": {
+          "lives": "inf",
+          "dur": "std",
+          "demo": false,
+          "hero": 2
+        },
+        "demoUsed": false
+      },
+      "encoding_image_timebase": "1/1000"
     },
     {
       "game": "starship-defense",
       "seconds": 95,
-      "frames": 4732,
-      "firstTimestamp": 1791273507.575459,
+      "frames": 8312,
+      "firstTimestamp": 1791287268.211193,
       "events": [
         {
-          "t": 15.131,
+          "t": 7.833,
+          "action": "grenade",
+          "target": "mob"
+        },
+        {
+          "t": 15.413,
           "action": "C camera",
           "from": "third",
           "to": "first"
         },
         {
-          "t": 16.529,
+          "t": 21.033,
           "action": "grenade",
           "target": "mob"
         },
         {
-          "t": 23.776,
+          "t": 28.118,
           "action": "grenade",
           "target": "mob"
         },
         {
-          "t": 30.788,
+          "t": 35.162,
           "action": "grenade",
           "target": "mob"
         },
         {
-          "t": 37.819,
+          "t": 42.179,
+          "action": "grenade",
+          "target": "miniboss"
+        },
+        {
+          "t": 49.227,
+          "action": "grenade",
+          "target": "miniboss"
+        },
+        {
+          "t": 58.612,
           "action": "grenade",
           "target": "mob"
         },
         {
-          "t": 54.989,
+          "t": 65.642,
           "action": "grenade",
           "target": "mob"
         },
         {
-          "t": 77.458,
+          "t": 75.565,
           "action": "grenade",
           "target": "mob"
         },
         {
-          "t": 83.28,
+          "t": 82.575,
+          "action": "grenade",
+          "target": "queen"
+        },
+        {
+          "t": 83.226,
           "action": "C camera",
           "from": "first",
           "to": "third"
-        },
-        {
-          "t": 84.505,
-          "action": "grenade",
-          "target": "queen"
         }
       ],
       "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+      "buildCommit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
       "errors": [],
-      "take": "starship-defense",
-      "used_in_final": true,
+      "cadence": {
+        "capture": {
+          "count": 8311,
+          "fps": 87.51679539232259,
+          "p95_ms": 20.71404457092285,
+          "max_ms": 283.9329242706299,
+          "over_100ms": 2
+        },
+        "animation": {
+          "count": 13182,
+          "fps": 127.4933845034896,
+          "p95_ms": 11.89999999999418,
+          "max_ms": 576.5,
+          "over_100ms": 3
+        }
+      },
+      "recording": {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "jpegQuality": 85,
+        "everyNthFrame": 1,
+        "encoder": "h264_nvenc",
+        "fps": 60
+      },
       "raw_log": "capture/starship-defense/capture.json",
-      "raw_log_sha256": "82f2eb5724fa74129c3e327fa04d2b168350eeeb68da21fb35a5a9286bd5aea6",
+      "raw_log_sha256": "372b6f3b77e91f54cdd91ff57cb1f8e8e2fab7647e9ddba9a804eb2f8f1f05c6",
+      "source_movie_sha256": "3c4080aa1084db5b615b50b8328bb8718734376c43c34e90250f49de95a6fc24",
       "state_sample_count": 46,
       "end_summary": {
         "state": "prep",
         "hp": 120,
         "base": 2000,
-        "score": 2760,
+        "score": 2940,
         "test": false
-      }
-    },
-    {
-      "game": "starship-defense",
-      "seconds": 95,
-      "frames": 4749,
-      "firstTimestamp": 1791273317.076239,
-      "events": [
-        {
-          "t": 15.039,
-          "action": "C camera",
-          "from": "third",
-          "to": "first"
-        },
-        {
-          "t": 83.325,
-          "action": "C camera",
-          "from": "first",
-          "to": "third"
-        }
-      ],
-      "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
-      "errors": [],
-      "take": "starship-defense-unused-take1",
-      "used_in_final": false,
-      "raw_log": "capture/starship-defense-unused-take1/capture.json",
-      "raw_log_sha256": "0c63ca30d5007f6998512dc4e23ee949f3f2b73beabf6eedcd50c638b93f2116",
-      "state_sample_count": 46,
-      "end_summary": {
-        "state": "over",
-        "hp": 120,
-        "base": 0,
-        "score": 120,
-        "test": false
-      }
-    },
-    {
-      "game": "tank-3d",
-      "seconds": 65,
-      "frames": 1917,
-      "firstTimestamp": 1791272754.443923,
-      "events": [
-        {
-          "t": 15.345,
-          "action": "C camera",
-          "from": "top",
-          "to": "fp"
-        },
-        {
-          "t": 53.298,
-          "action": "C camera",
-          "from": "fp",
-          "to": "overview"
-        }
-      ],
-      "normalGameplay": true,
-      "buildCommit": "cc0e8e27a934931cb32149a94695d1214348ed06",
-      "errors": [],
-      "take": "tank-3d",
-      "used_in_final": true,
-      "raw_log": "capture/tank-3d/capture.json",
-      "raw_log_sha256": "466dd5cd88de1e561ac373271f33778de99f8c20406a36786710a27a032107b1",
-      "state_sample_count": 31,
-      "end_summary": {
-        "mode": "classic"
-      }
+      },
+      "encoding_image_timebase": "1/1000"
     }
   ]
 }

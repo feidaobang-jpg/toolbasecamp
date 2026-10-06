@@ -7,31 +7,31 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-difficulty-v0.19.0",
-      "last_public_verified_at": "2026-10-06T03:33:03.453Z",
+      "last_public_verified_version": "web-touch-layout-v0.19.1",
+      "last_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
       "status": "public_verified",
-      "submitted_at": "2026-10-06T03:33:03.453Z",
+      "submitted_at": "2026-10-06T10:21:57.239728+00:00",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-difficulty-v0.19.0",
-      "description_public_verified_at": "2026-10-06T03:33:03.453Z",
-      "description_sha256": "9d7dea511062ef4bb7e1a859d4df46687eef4a4cab4d5fc08ab0157c0784c0a9"
+      "description_revision": "web-touch-layout-v0.19.1",
+      "description_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+      "description_sha256": "76888ef5197009e9a9de5fa84cc8b4c31551f483969af5c82f67b0d12534b73d"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-difficulty-v0.19.0",
-      "last_public_verified_at": "2026-10-06T03:33:03.454Z",
+      "last_public_verified_version": "web-touch-layout-v0.19.1",
+      "last_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
       "status": "public_verified",
-      "submitted_at": "2026-10-06T03:33:03.454Z",
+      "submitted_at": "2026-10-06T10:21:57.239728+00:00",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-difficulty-v0.19.0",
-      "description_public_verified_at": "2026-10-06T03:33:03.454Z",
-      "description_sha256": "da1a6183ab95400038d0ecd8af43574c61fb6480f5a8f93ea6ae36cf43dc02af"
+      "description_revision": "web-touch-layout-v0.19.1",
+      "description_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+      "description_sha256": "d4480b40f6c846bae9ac5af0b08f2c550c42b5661c9773b78c2d76f3bbbb21ac"
     }
   ],
-  "latest_record": "releases/web-difficulty-v0.19.0/bilibili-sync.json",
+  "latest_record": "releases/web-touch-layout-v0.19.1/bilibili-sync.json",
   "pending": [],
-  "pending_note": "三档战役难度已同步两条简介且公开核验；Toy已上线，已移除临时审核说明。原置顶保留，在其下回复一次纠正旧V/空格提示。",
+  "pending_note": "手机按键自由摆放已公开核验网站与Toy，两条已确认视频简介同步并公开核验；仅回复指定原留言，不新增公告。",
   "pending_release": null,
   "pending_updates": [
     {

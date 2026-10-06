@@ -1,0 +1,355 @@
+{
+  "revision": 2,
+  "output_fps": 60,
+  "interpolation": false,
+  "all_gameplay_newly_recorded": true,
+  "comparison": [
+    {
+      "game": "tank-3d",
+      "old_source_fps": 23.952185337509732,
+      "old_max_gap_ms": 3211.602,
+      "new_source_cadence": {
+        "count": 5170,
+        "fps": 79.48183501778072,
+        "p95_ms": 24.636030197143555,
+        "max_ms": 249.57895278930664,
+        "over_100ms": 3
+      }
+    },
+    {
+      "game": "mario-3d",
+      "old_source_fps": 49.7865400174196,
+      "old_max_gap_ms": 100.82900000000001,
+      "new_source_cadence": {
+        "count": 5509,
+        "fps": 84.81258879264148,
+        "p95_ms": 20.92909812927246,
+        "max_ms": 145.00093460083008,
+        "over_100ms": 2
+      }
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "old_source_fps": 45.91150524269676,
+      "old_max_gap_ms": 339.148,
+      "new_source_cadence": {
+        "count": 5418,
+        "fps": 83.30438628895307,
+        "p95_ms": 21.850109100341797,
+        "max_ms": 118.68405342102051,
+        "over_100ms": 1
+      }
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "old_source_fps": 49.774468760570066,
+      "old_max_gap_ms": 96.63,
+      "new_source_cadence": {
+        "count": 5335,
+        "fps": 82.08409607045387,
+        "p95_ms": 22.20606803894043,
+        "max_ms": 133.12602043151855,
+        "over_100ms": 1
+      }
+    },
+    {
+      "game": "starship-defense",
+      "old_source_fps": 49.78812631800147,
+      "old_max_gap_ms": 163.04,
+      "new_source_cadence": {
+        "count": 8311,
+        "fps": 87.51679539232259,
+        "p95_ms": 20.71404457092285,
+        "max_ms": 283.9329242706299,
+        "over_100ms": 2
+      }
+    }
+  ],
+  "selected_shots": [
+    {
+      "segment": "01-hook",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 18.4,
+      "source_out": 21.9,
+      "max_gap_ms": 34.250000000000114,
+      "p95_gap_ms": 20.652999999999366,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "01-hook",
+      "game": "starship-defense",
+      "source_in": 77.5,
+      "source_out": 82.7,
+      "max_gap_ms": 36.293000000000575,
+      "p95_gap_ms": 20.069000000006554,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "02-intro",
+      "game": "tank-3d",
+      "source_in": 6,
+      "source_out": 7.5,
+      "max_gap_ms": 46.021999999999785,
+      "p95_gap_ms": 34.98000000000001,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "02-intro",
+      "game": "mario-3d",
+      "source_in": 7,
+      "source_out": 8.5,
+      "max_gap_ms": 28.999999999999915,
+      "p95_gap_ms": 20.311000000000412,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "02-intro",
+      "game": "jackal-stage1-3d",
+      "source_in": 8,
+      "source_out": 9.5,
+      "max_gap_ms": 37.16099999999933,
+      "p95_gap_ms": 21.30099999999935,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "02-intro",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 8,
+      "source_out": 9.5,
+      "max_gap_ms": 55.0840000000008,
+      "p95_gap_ms": 20.913999999999433,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "02-intro",
+      "game": "starship-defense",
+      "source_in": 8,
+      "source_out": 11.416666666666666,
+      "max_gap_ms": 56.18800000000057,
+      "p95_gap_ms": 21.126000000000644,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "03-tank-wide",
+      "game": "tank-3d",
+      "source_in": 1.8,
+      "source_out": 10.383333333333335,
+      "max_gap_ms": 81.08099999999929,
+      "p95_gap_ms": 32.30100000000036,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "04-tank-fp",
+      "game": "tank-3d",
+      "source_in": 13.7,
+      "source_out": 17.7,
+      "max_gap_ms": 70.66799999999951,
+      "p95_gap_ms": 21.376999999999313,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "04-tank-fp",
+      "game": "tank-3d",
+      "source_in": 32.2,
+      "source_out": 39.56666666666667,
+      "max_gap_ms": 40.2079999999998,
+      "p95_gap_ms": 19.832999999998435,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "05-mario-wide",
+      "game": "mario-3d",
+      "source_in": 5.8,
+      "source_out": 14.55,
+      "max_gap_ms": 67.0819999999992,
+      "p95_gap_ms": 21.99300000000015,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "06-mario-fp",
+      "game": "mario-3d",
+      "source_in": 13.8,
+      "source_out": 19.3,
+      "max_gap_ms": 49.877999999999645,
+      "p95_gap_ms": 21.332999999998492,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "06-mario-fp",
+      "game": "mario-3d",
+      "source_in": 22,
+      "source_out": 27.383333333333333,
+      "max_gap_ms": 47.01700000000031,
+      "p95_gap_ms": 20.257000000000858,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "07-jackal-wide",
+      "game": "jackal-stage1-3d",
+      "source_in": 5,
+      "source_out": 13.983333333333333,
+      "max_gap_ms": 43.33399999999976,
+      "p95_gap_ms": 22.705000000000197,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "08-jackal-fp",
+      "game": "jackal-stage1-3d",
+      "source_in": 13.8,
+      "source_out": 24.46666666666667,
+      "max_gap_ms": 67.06900000000005,
+      "p95_gap_ms": 21.440999999999377,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "09-cadillacs-wide",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 5,
+      "source_out": 13.75,
+      "max_gap_ms": 55.0840000000008,
+      "p95_gap_ms": 21.53000000000027,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "10-cadillacs-fp",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 13.8,
+      "source_out": 14.950000000000001,
+      "max_gap_ms": 33.789999999999765,
+      "p95_gap_ms": 24.881000000000597,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "10-cadillacs-fp",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 17.3,
+      "source_out": 27.9,
+      "max_gap_ms": 34.250000000000114,
+      "p95_gap_ms": 19.960999999998563,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "11-insects-wide",
+      "game": "starship-defense",
+      "source_in": 3,
+      "source_out": 13.533333333333333,
+      "max_gap_ms": 93.81899999999987,
+      "p95_gap_ms": 20.706000000000557,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "12-insects-fp",
+      "game": "starship-defense",
+      "source_in": 13.8,
+      "source_out": 15.15,
+      "max_gap_ms": 39.48100000000032,
+      "p95_gap_ms": 24.490999999999374,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "12-insects-fp",
+      "game": "starship-defense",
+      "source_in": 15.7,
+      "source_out": 17.9,
+      "max_gap_ms": 25.507999999998532,
+      "p95_gap_ms": 20.080000000000098,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "12-insects-fp",
+      "game": "starship-defense",
+      "source_in": 32.1,
+      "source_out": 36.6,
+      "max_gap_ms": 34.215000000003215,
+      "p95_gap_ms": 20.060000000000855,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "12-insects-fp",
+      "game": "starship-defense",
+      "source_in": 75.9,
+      "source_out": 81.76666666666668,
+      "max_gap_ms": 30.0189999999958,
+      "p95_gap_ms": 20.650000000003388,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "13-tradeoff",
+      "game": "tank-3d",
+      "source_in": 6,
+      "source_out": 8.1,
+      "max_gap_ms": 46.021999999999785,
+      "p95_gap_ms": 35.944999999999894,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "13-tradeoff",
+      "game": "tank-3d",
+      "source_in": 36,
+      "source_out": 38.1,
+      "max_gap_ms": 27.19499999999897,
+      "p95_gap_ms": 21.768000000001564,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "13-tradeoff",
+      "game": "mario-3d",
+      "source_in": 10,
+      "source_out": 12.1,
+      "max_gap_ms": 39.061000000000234,
+      "p95_gap_ms": 23.82799999999996,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "13-tradeoff",
+      "game": "mario-3d",
+      "source_in": 21,
+      "source_out": 23.1,
+      "max_gap_ms": 29.906000000000432,
+      "p95_gap_ms": 19.950000000001467,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "13-tradeoff",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 55,
+      "source_out": 58.666666666666664,
+      "max_gap_ms": 86.97699999999742,
+      "p95_gap_ms": 21.202000000002386,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "14-outro",
+      "game": "jackal-stage1-3d",
+      "source_in": 57.5,
+      "source_out": 63.0,
+      "max_gap_ms": 33.71400000000335,
+      "p95_gap_ms": 20.679000000001224,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "14-outro",
+      "game": "cadillacs-stage1-3d",
+      "source_in": 58,
+      "source_out": 63.5,
+      "max_gap_ms": 50.44900000000041,
+      "p95_gap_ms": 27.08499999999958,
+      "gaps_over_100ms": []
+    },
+    {
+      "segment": "14-outro",
+      "game": "starship-defense",
+      "source_in": 36,
+      "source_out": 48.41666666666667,
+      "max_gap_ms": 96.99899999999673,
+      "p95_gap_ms": 19.927000000002693,
+      "gaps_over_100ms": []
+    }
+  ],
+  "selected_max_capture_gap_ms": 96.99899999999673,
+  "selected_over_100ms": 0,
+  "capture_gap_check": "pass",
+  "cause_note": "New recording conditions and reduced capture overhead both changed; external CPU occupation is not isolated as the cause.",
+  "encoding_timebase": "1/1000",
+  "timebase_regression": "timebase-regression.json"
+}

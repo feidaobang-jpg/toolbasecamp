@@ -40,7 +40,7 @@
    "name": "第一人称实战 6 秒：暗像素与满屏模型峰值 ≤ 25%",
    "pass": true,
    "info": {
-    "dark": 0.076,
+    "dark": 0.063,
     "fill": 0
    }
   },
@@ -48,49 +48,49 @@
    "name": "侧视 Boss 战 16:9（40 秒）：角色不出画",
    "pass": true,
    "info": {
-    "t": 47.53,
+    "t": 47.35,
     "focusX": 55,
     "lockX": 55,
     "type": "vice",
     "state": "down",
-    "x": 60.57,
+    "x": 60.82,
     "z": 2.45,
-    "mn": 0.616,
-    "mx": 0.94,
-    "over": -0.06,
-    "samples": 589
+    "mn": 0.658,
+    "mx": 0.951,
+    "over": -0.049,
+    "samples": 594
    }
   },
   {
    "name": "侧视 Boss 战 手机宽屏 2.17:1（40 秒）：角色不出画",
    "pass": true,
    "info": {
-    "t": 68.03,
+    "t": 67.25,
     "focusX": 55,
     "lockX": 55,
     "type": "vice",
-    "state": "down",
-    "x": 49.43,
-    "z": 2.39,
-    "mn": -0.936,
-    "mx": -0.597,
-    "over": -0.064,
-    "samples": 894
+    "state": "attack",
+    "x": 48.98,
+    "z": 2.5,
+    "mn": -0.874,
+    "mx": -0.573,
+    "over": -0.126,
+    "samples": 753
    }
   },
   {
    "name": "维斯在右缘被打飞（同时清场）：所有角色不出画",
    "pass": true,
    "info": {
-    "worst": -0.029,
+    "worst": -0.046,
     "at": {
      "type": "vice",
      "state": "down",
      "x": 60.57,
      "z": 1.8,
-     "mn": 0.633,
-     "mx": 0.971,
-     "over": -0.029
+     "mn": 0.626,
+     "mx": 0.954,
+     "over": -0.046
     }
    }
   },
@@ -103,9 +103,9 @@
      "state": "idle",
      "x": 61.1,
      "z": 2.5,
-     "mn": 0.795,
-     "mx": 0.938,
-     "over": -0.062
+     "mn": 0.717,
+     "mx": 0.891,
+     "over": -0.109
     }
    ]
   }
@@ -114,10 +114,10 @@
   {
    "who": "raptor",
    "d": 1.6,
-   "dark": 0.007,
+   "dark": 0.014,
    "fp": true,
    "fill": 0,
-   "nearK": 0.61
+   "nearK": 1
   },
   {
    "who": "raptor",
@@ -125,15 +125,15 @@
    "dark": 0.007,
    "fp": true,
    "fill": 0,
-   "nearK": 0.24
+   "nearK": 0.21
   },
   {
    "who": "raptor",
    "d": 0.9,
-   "dark": 0.007,
+   "dark": 0,
    "fp": true,
    "fill": 0,
-   "nearK": 0.24
+   "nearK": 0
   },
   {
    "who": "raptor",
@@ -141,7 +141,7 @@
    "dark": 0.007,
    "fp": true,
    "fill": 0,
-   "nearK": 0.39
+   "nearK": 0
   },
   {
    "who": "raptor",
@@ -149,7 +149,7 @@
    "dark": 0.007,
    "fp": true,
    "fill": 0,
-   "nearK": 0.5
+   "nearK": 0
   },
   {
    "who": "raptor",
@@ -157,7 +157,7 @@
    "dark": 0.007,
    "fp": true,
    "fill": 0,
-   "nearK": 0.47
+   "nearK": 0.39
   },
   {
    "who": "raptor",
@@ -165,7 +165,7 @@
    "dark": 0.007,
    "fp": true,
    "fill": 0,
-   "nearK": 0.4
+   "nearK": 0.39
   },
   {
    "who": "raptor",
@@ -173,7 +173,7 @@
    "dark": 0.007,
    "fp": true,
    "fill": 0,
-   "nearK": 0.4
+   "nearK": 0.39
   },
   {
    "who": "vice",

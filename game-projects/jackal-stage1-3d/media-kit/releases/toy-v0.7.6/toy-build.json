@@ -1,0 +1,23 @@
+{
+  "version": "v0.7.6",
+  "source": "public/html/game/jackal-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "ec1b2dce06c7004909ca99f1056b31df9701cb4ab0e513ddb9c79f15e9c9a600",
+    "index.html": "cfc64d5f4b5bea597e36f1b1a512ced203089c0620b64458dc86dabf4e71f348",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "js/game.min.js": "cb8393345db39eef5674a47da3788a280516ec28b91da33f7b8851344ab69eb0",
+    "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+    "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+    "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+  },
+  "files": {
+    "css/style.css": "ec1b2dce06c7004909ca99f1056b31df9701cb4ab0e513ddb9c79f15e9c9a600",
+    "index.html": "70b46e59f81470b2600def19452a9501ea808d47cfab73e9dc664536219f8543",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "js/game.min.js": "cb8393345db39eef5674a47da3788a280516ec28b91da33f7b8851344ab69eb0",
+    "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+    "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+    "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+  },
+  "status": "built_not_submitted"
+}

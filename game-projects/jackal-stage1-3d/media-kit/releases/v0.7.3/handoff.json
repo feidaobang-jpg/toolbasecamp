@@ -17,12 +17,16 @@
   "toy": {
     "id": 39863936092160,
     "slug": "feidao-jackal-3d",
-    "status": "auditing",
+    "status": "published",
     "submitted_at": "2026-10-06T15:54:07.223+08:00",
     "package_sha256": "f6a0d23e90cd337d56286ec3f01713b9f0d890f16660da9de19f7e96ce3cbc6f",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_GONbLg90/index.html",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DX1QieDE/index.html",
-    "preview_qa": "桌面+手机 iframe 实测：第二关可玩、出生点附近 2 座炮塔均为沙袋机枪巢外观、无页面报错"
+    "preview_qa": "桌面+手机 iframe 实测：第二关可玩、出生点附近 2 座炮塔均为沙袋机枪巢外观、无页面报错",
+    "published_verified_at": "2026-10-06T17:52:35.090868+08:00",
+    "published_version": "v0.7.3",
+    "published_runtime_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22926/index.html",
+    "published_script_sha256": "404f0034b47424e1b5f12713da7fda3161fb357603f4d6411d3d8769b2250e53"
   },
   "qa": {
     "local": "第二关 29/29、第一关桌面 92/92 全过；预览桌面+手机 6/6 通过",
@@ -32,5 +36,64 @@
     "classification": "普通补丁",
     "action": "pending_merge",
     "note": "简介未提及被替换的旧模型，现有描述仍准确；并入下一次有意义的简介更新"
+  },
+  "verification_followup": {
+    "verified_at": "2026-10-06T17:52:35.090868+08:00",
+    "source": "Codex",
+    "scope": "已有模型修改已进入远端主线，本次复核部署与已过审包，未重复修改运行代码或送审。",
+    "website_script_sha256": "404f0034b47424e1b5f12713da7fda3161fb357603f4d6411d3d8769b2250e53",
+    "toy_script_matches_website": true,
+    "qa": {
+      "stage2": {
+        "pass": 29,
+        "total": 29,
+        "environment": "Edge headless / RTX 4060 Ti / desktop and mobile viewport simulation; test hooks"
+      },
+      "desktop": {
+        "pass": 92,
+        "total": 92,
+        "environment": "Edge headless / RTX 4060 Ti / desktop and mobile viewport simulation; test hooks"
+      }
+    },
+    "visual_review": "实机截图与转视角短片连续帧已检查；红顶木屋、木门、石墙、沙袋机枪巢一致。",
+    "artifacts": "D:\\project\\task-artifacts\\jackal-models-20261006",
+    "performance": {
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html?test=1&stage=2&q=high&seed=3",
+      "renderInfo": {
+        "calls": 80,
+        "tris": 181166,
+        "geometries": 59,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "quality": "high",
+      "capture": "realtime-automation; invulnerability and teleport test hooks",
+      "performance": {
+        "frames": 841,
+        "avgFPS": 167.22009027101186,
+        "medianMs": 5.899999999999636,
+        "p95Ms": 6,
+        "over50Ms": 0
+      },
+      "mobile": "desktop viewport simulation tested in stage2 suite; physical phone not tested"
+    },
+    "physical_phone_tested": false,
+    "thumbnail": "沿用：第一关美术未改变，第二关恢复同套模型。",
+    "bilibili": "普通补丁，沿用原待合并判断，不重复修改简介。",
+    "media_sha256": {
+      "rotation-01.png": "296f6cb78e9962e61fc3496db33e47cd3d6e5af9ab3611910224a8d12e759ca1",
+      "rotation-02.png": "2977552623b3c927dae9098352164c765fb32c80ce05f84aed86b28de8e9b8cb",
+      "rotation-03.png": "3452e89bd5653cb664e034f79c5936057c474125469945794f23f6b72a69b080",
+      "rotation-04.png": "6b6fd3af2ce83bbc4ed48aecc9803b5876ead226d90f1ca339b97da84e34987a",
+      "rotation-05.png": "4c7fc58276abb17c49dce2a056c89fa4e19e542e8075a48b676913e799ca38e3",
+      "rotation-06.png": "e720d5f566c73fda4ea4e07faaf523c2466fc4717c9e98d22728ce5710afc2df",
+      "stage2-houses.png": "25e0ad8fee30d747f276b7cc0a229e2422cfe3b01fa75528e6dd30e85e71e9e4",
+      "stage2-models.webm": "6f693973383383f7f0b006c37b1002f1865e474759a3c2cf492224c3a56ebf25",
+      "stage2-turrets.png": "bb0d3dbc5e96fd4940037216ab5ed873e2680513d8b2ed7d3fec8fd9902738b0"
+    }
   }
 }

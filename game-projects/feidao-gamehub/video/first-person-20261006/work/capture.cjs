@@ -8,6 +8,16 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const mime={'.html':'text/html','.js':'application/javascript','.css':'text/css','.mp3':'audio/mpeg','.ogg':'audio/ogg','.wav':'audio/wav','.png':'image/png','.jpg':'image/jpeg'};
 const server=http.createServer((req,res)=>{const f=path.resolve(PUB,'.'+decodeURIComponent(req.url.split('?')[0]));if(!f.startsWith(PUB+path.sep)){res.statusCode=403;return res.end();}fs.readFile(f,(e,b)=>{if(e){res.statusCode=404;return res.end();}res.setHeader('Content-Type',mime[path.extname(f)]||'application/octet-stream');res.end(b);});});
 function ff(args){return new Promise((ok,no)=>{const p=cp.spawn('ffmpeg',['-hide_banner','-y',...args],{windowsHide:true});let log='';p.stderr.on('data',d=>log+=d);p.on('exit',c=>c?no(Error(log.slice(-2000))):ok());});}
+async function encode(game){
+ const dir=path.join(W,'capture',game),list=path.join(dir,'frames.ffconcat');
+ // Image2 defaults to a 1/25 time base. Preserve millisecond acquisition times
+ // before selecting real frames for CFR delivery; no motion interpolation.
+ const rows=fs.readFileSync(list,'utf8').split('\n').filter(x=>!x.startsWith('option framerate'));
+ const precise=rows.flatMap(x=>x.startsWith('file ')?[x,'option framerate 1000']:[x]).join('\n');fs.writeFileSync(list,precise);
+ const duration=rows.filter(x=>x.startsWith('duration ')).reduce((s,x)=>s+Number(x.split(' ')[1]),0),audio=fs.existsSync(path.join(dir,'audio.webm'));
+ await ff(['-threads','2','-safe','0','-f','concat','-i',list,...(audio?['-i',path.join(dir,'audio.webm')]:[]),'-vf','fps=60,format=yuv420p','-c:v','h264_nvenc','-preset','p4','-cq','18','-b:v','0',...(audio?['-c:a','aac','-b:a','192k']:['-an']),'-t',String(duration),'-movflags','+faststart',path.join(W,'capture',game+'.mp4')]);
+ console.log(game,'encoded with millisecond frame timestamps');
+}
 async function run(game,seconds){
  const dir=path.join(W,'capture',game);fs.mkdirSync(dir,{recursive:true});
  const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',headless:true,args:['--use-angle=d3d11','--enable-gpu','--ignore-gpu-blocklist','--autoplay-policy=no-user-gesture-required','--disable-background-timer-throttling']});
@@ -23,10 +33,12 @@ async function run(game,seconds){
   const currentBot=BOT_SRC.replace("key('KeyE', need && d > 0); key('KeyQ', need && d < 0);","key('KeyE', need && d < 0); key('KeyQ', need && d > 0);");
   await p.evaluate(currentBot);await p.evaluate(()=>__bot.live(true,{jumps:true,noSkip:true}));
  }
- const cdp=await context.newCDPSession(p),frames=[],events=[],states=[];let recording=true;
- cdp.on('Page.screencastFrame',async e=>{if(recording){const file=String(frames.length).padStart(6,'0')+'.jpg';fs.writeFileSync(path.join(dir,file),Buffer.from(e.data,'base64'));frames.push({file,timestamp:e.metadata.timestamp});}await cdp.send('Page.screencastFrameAck',{sessionId:e.sessionId}).catch(()=>{});});
+ const cdp=await context.newCDPSession(p),frames=[],events=[],states=[],writes=[];let recording=true;
+ // Acknowledge immediately; JPEG persistence must not block the browser frame producer.
+ cdp.on('Page.screencastFrame',e=>{cdp.send('Page.screencastFrameAck',{sessionId:e.sessionId}).catch(()=>{});if(recording){const file=String(frames.length).padStart(6,'0')+'.jpg';frames.push({file,timestamp:e.metadata.timestamp});writes.push(fs.promises.writeFile(path.join(dir,file),Buffer.from(e.data,'base64')));}});
+ await p.evaluate(()=>{window.__recordRaf={last:0,gaps:[]};function tick(t){const a=__recordRaf;if(a.last)a.gaps.push(t-a.last);a.last=t;requestAnimationFrame(tick);}requestAnimationFrame(tick);});
  await p.evaluate(()=>{if(!window.__audioDest)return;window.__chunks=[];window.__rec=new MediaRecorder(__audioDest.stream,{mimeType:'audio/webm;codecs=opus',audioBitsPerSecond:192000});__rec.ondataavailable=e=>__chunks.push(e.data);__rec.start(250);});
- const start=Date.now();await cdp.send('Page.startScreencast',{format:'jpeg',quality:96,maxWidth:1920,maxHeight:1080,everyNthFrame:2});
+ const start=Date.now();await cdp.send('Page.startScreencast',{format:'jpeg',quality:85,maxWidth:1920,maxHeight:1080,everyNthFrame:1});
  const held=new Set();async function keys(want){for(const k of [...held])if(!want.includes(k)){await p.keyboard.up(k);held.delete(k);}for(const k of want)if(!held.has(k)){await p.keyboard.down(k);held.add(k);}}
  const camera=s=>s.camera||s.ui?.camera;
  async function switchTo(target){if(game==='cadillacs-stage1-3d')await p.evaluate(()=>__bot.live(false));await keys([]);const from=camera(await snapshot());for(let i=0;i<7;i++){const now=camera(await snapshot());if(target==='fp'?(now==='fp'||now==='first'):(now!=='fp'&&now!=='first'))break;await p.keyboard.press('KeyC');await delay(180);}events.push({t:(Date.now()-start)/1000,action:'C camera',from,to:camera(await snapshot())});if(game==='cadillacs-stage1-3d'){if(target==='fp'){for(let i=0;i<25;i++){const s=await snapshot(),f=s.cam.axes.fwd,goal=Math.atan2(f.x,f.z);if(Math.abs(Math.atan2(Math.sin(s.player.face-goal),Math.cos(s.player.face-goal)))<.12)break;await delay(100);}}await p.evaluate(()=>__bot.live(true,{jumps:true,noSkip:true}));}}
@@ -49,13 +61,14 @@ async function run(game,seconds){
   }
   await delay(game==='cadillacs-stage1-3d'?160:100);
  }
- await keys([]);if(game==='cadillacs-stage1-3d')await p.evaluate(()=>__bot.live(false));await cdp.send('Page.stopScreencast');recording=false;
+ await keys([]);if(game==='cadillacs-stage1-3d')await p.evaluate(()=>__bot.live(false));await cdp.send('Page.stopScreencast');recording=false;await Promise.all(writes);
  const audio=await p.evaluate(async()=>{if(!window.__rec)return null;await new Promise(ok=>{__rec.onstop=ok;__rec.stop();});return Array.from(new Uint8Array(await new Blob(__chunks).arrayBuffer()));});if(audio)fs.writeFileSync(path.join(dir,'audio.webm'),Buffer.from(audio));
- const end=await snapshot();await browser.close();
+ const end=await snapshot();const raf=await p.evaluate(()=>__recordRaf.gaps);await browser.close();
+ const gapStats=a=>{const sorted=[...a].sort((a,b)=>a-b);return {count:a.length,fps:a.length*1000/a.reduce((s,x)=>s+x,0),p95_ms:sorted[Math.floor(a.length*.95)],max_ms:sorted.at(-1),over_100ms:a.filter(x=>x>100).length};};const gaps=frames.slice(1).map((x,i)=>(x.timestamp-frames[i].timestamp)*1000);const cadence={capture:gapStats(gaps),animation:gapStats(raf)};
  let concat='ffconcat version 1.0\n';for(let i=0;i<frames.length;i++){concat+=`file '${frames[i].file}'\n`;if(i+1<frames.length)concat+=`duration ${Math.max(.001,frames[i+1].timestamp-frames[i].timestamp).toFixed(6)}\n`;}
- fs.writeFileSync(path.join(dir,'frames.ffconcat'),concat);fs.writeFileSync(path.join(dir,'capture.json'),JSON.stringify({game,seconds,frames:frames.length,firstTimestamp:frames[0]?.timestamp,events,states,end,errors,normalGameplay:true,buildCommit:cp.execFileSync('git',['rev-parse','HEAD'],{cwd:ROOT}).toString().trim()},null,2));
+ fs.writeFileSync(path.join(dir,'frames.ffconcat'),concat);fs.writeFileSync(path.join(dir,'capture.json'),JSON.stringify({game,seconds,frames:frames.length,firstTimestamp:frames[0]?.timestamp,events,states,end,errors,normalGameplay:true,cadence,recording:{viewport:[1920,1080],jpegQuality:85,everyNthFrame:1,encoder:'h264_nvenc',fps:60,imageTimebase:'1/1000'},buildCommit:cp.execFileSync('git',['rev-parse','HEAD'],{cwd:ROOT}).toString().trim()},null,2));
+ console.log(game,'CADENCE',JSON.stringify(cadence));
  console.log(game,'captured',frames.length,'frames',JSON.stringify(end).slice(0,300));
- await ff(['-safe','0','-f','concat','-i',path.join(dir,'frames.ffconcat'),...(audio?['-i',path.join(dir,'audio.webm')]:[]),'-vf','fps=30,format=yuv420p','-c:v','libx264','-preset','fast','-crf','16',...(audio?['-c:a','aac','-b:a','192k']:['-an']),'-t',String(frames.at(-1).timestamp-frames[0].timestamp),'-movflags','+faststart',path.join(W,'capture',game+'.mp4')]);
- console.log(game,'encoded');
+ await encode(game);
 }
-server.listen(8916,'127.0.0.1',async()=>{try{const games=process.argv.slice(2);for(const game of (games.length?games:['tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d','starship-defense']))await run(game,game==='starship-defense'?95:65);}catch(e){console.error(e);process.exitCode=1;}finally{server.close();}});
+server.listen(8916,'127.0.0.1',async()=>{try{const encodeOnly=process.argv.includes('--encode-only'),games=process.argv.slice(2).filter(x=>x!=='--encode-only');for(const game of (games.length?games:['tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d','starship-defense'])){if(encodeOnly)await encode(game);else await run(game,Number(process.env.CAPTURE_SECONDS)||(game==='starship-defense'?95:65));}}catch(e){console.error(e);process.exitCode=1;}finally{server.close();}});

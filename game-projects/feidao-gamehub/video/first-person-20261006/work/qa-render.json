@@ -1,6 +1,6 @@
 {
-  "sha256": "9abbbb92ba52dfea45c1a9a83087f40854a9e3f78f9c40d76a689f499eafaef9",
-  "duration": 157.93333333333334,
+  "sha256": "768f99d64c05a361b5a859909af27f34ea9f38ce73ac8e8b84b81340f74ec904",
+  "duration": 157.78333333333333,
   "probe": {
     "streams": [
       {
@@ -11,7 +11,7 @@
         "codec_type": "video",
         "codec_tag_string": "avc1",
         "codec_tag": "0x31637661",
-        "mime_codec_string": "avc1.640028",
+        "mime_codec_string": "avc1.64002a",
         "width": 1920,
         "height": 1080,
         "coded_width": 1920,
@@ -20,7 +20,7 @@
         "sample_aspect_ratio": "1:1",
         "display_aspect_ratio": "16:9",
         "pix_fmt": "yuv420p",
-        "level": 40,
+        "level": 42,
         "color_range": "tv",
         "color_space": "bt709",
         "color_transfer": "bt709",
@@ -30,17 +30,17 @@
         "is_avc": "true",
         "nal_length_size": "4",
         "id": "0x1",
-        "r_frame_rate": "30/1",
-        "avg_frame_rate": "47280/1579",
+        "r_frame_rate": "60/1",
+        "avg_frame_rate": "60/1",
         "time_base": "1/15360",
-        "start_pts": 512,
-        "start_time": "0.033333",
-        "duration_ts": 2425344,
-        "duration": "157.900000",
-        "bit_rate": "8596013",
+        "start_pts": 768,
+        "start_time": "0.050000",
+        "duration_ts": 2422784,
+        "duration": "157.733333",
+        "bit_rate": "17938362",
         "bits_per_raw_sample": "8",
-        "nb_frames": "4728",
-        "extradata_size": 62,
+        "nb_frames": "9464",
+        "extradata_size": 65,
         "disposition": {
           "default": 1,
           "dub": 0,
@@ -89,10 +89,10 @@
         "time_base": "1/48000",
         "start_pts": 0,
         "start_time": "0.000000",
-        "duration_ts": 7580800,
-        "duration": "157.933333",
-        "bit_rate": "193691",
-        "nb_frames": "7405",
+        "duration_ts": 7573600,
+        "duration": "157.783333",
+        "bit_rate": "194214",
+        "nb_frames": "7398",
         "extradata_size": 5,
         "disposition": {
           "default": 1,
@@ -122,16 +122,16 @@
       }
     ],
     "format": {
-      "filename": "D:\\project\\worktrees\\five-games-video-20261006\\game-projects\\feidao-gamehub\\video\\first-person-20261006\\final\\bilibili-zh\\gameplay-zh-final.mp4",
+      "filename": "D:\\project\\worktrees\\five-games-video-20261006\\game-projects\\feidao-gamehub\\video\\first-person-20261006\\final\\bilibili-zh\\gameplay-zh-final-v2.mp4",
       "nb_streams": 2,
       "nb_programs": 0,
       "nb_stream_groups": 0,
       "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
       "format_long_name": "QuickTime / MOV",
       "start_time": "0.000000",
-      "duration": "157.933333",
-      "size": "173663524",
-      "bit_rate": "8796801",
+      "duration": "157.783333",
+      "size": "357769064",
+      "bit_rate": "18139764",
       "probe_score": 100,
       "tags": {
         "major_brand": "isom",
@@ -142,5 +142,5 @@
     }
   },
   "audio_listening": "not-run",
-  "status": "pending_visual_qa"
+  "status": "technical_and_visual_pass_human_listening_pending"
 }

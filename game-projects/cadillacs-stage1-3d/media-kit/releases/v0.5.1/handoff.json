@@ -1,122 +1,75 @@
 {
- "schema_version": 1,
- "game_id": "cadillacs-stage1-3d",
- "version": "v0.5.1",
- "base_version": "v0.5.0",
- "created_at": "2026-10-06T21:30:00+08:00",
- "classification": "正式版本",
- "build": {
-  "id": "b3cbfc64a4c3929d7833e0394795bb3ad96738f2ac6ab1d05c612237c78599f8",
-  "commit": null,
-  "dirty": true,
-  "fingerprint": "b3cbfc64a4c3929d7833e0394795bb3ad96738f2ac6ab1d05c612237c78599f8",
-  "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
-  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
- },
- "feature_inventory": [
-  {
-   "id": "art-style",
-   "description": "硬派写实画风：写实比例 + 卡通色阶着色 + 黑描边 + 写实贴图、偏暗；第一、二关一致",
-   "status": "implemented",
-   "evidence_ids": [
-    "revert-check",
-    "three-way"
-   ]
-  }
- ],
- "changes": [
-  {
-   "id": "style-revert",
-   "feature_ids": [
-    "art-style"
-   ],
-   "before": "v0.5.0 赤色要塞式哑光 Q 版",
-   "after": "第一关回到 v0.4.1 画风，第二关同款；封面恢复",
-   "user_visible_result": "画面更暗更写实，人物恢复原作硬派比例与黑描边",
-   "evidence_ids": [
-    "revert-check"
-   ],
-   "verification": "pass"
-  }
- ],
- "bugs": [
-  {
-   "id": "foliage-stripes",
-   "found_version": "v0.5.1-dev",
-   "reproduction": "第二关森林侧视",
-   "observed": "植物通用纹理的纵向纹路让树冠像西瓜条纹",
-   "impact": "观感怪",
-   "status": "fixed",
-   "cause": "树皮纹路与叶簇共用一张带纵纹的贴图",
-   "fix": "改成纯斑块纹理",
-   "before_media_ids": [],
-   "after_media_ids": [],
-   "retest": "森林截图复核"
-  }
- ],
- "media": [
-  {
-   "id": "three-way",
-   "file": "releases/v0.5.1/captures/style-old-cur-hyb.png",
-   "kind": "screenshot",
-   "version": "v0.4.1/v0.5.0/hybrid",
-   "capture_mode": "offline-frame-stepping",
-   "description": "旧版 / Q 版 / 折中三版同站位对比（第一关）",
-   "visual_review": "pass",
-   "audio": "none"
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.5.1",
+  "classification": "普通补丁",
+  "summary": "修复演示无敌仍因时间到而死亡；暂停计时并明确显示无限时间；关闭无敌恢复剩余时间。",
+  "verification": {
+    "test": "qa/timer.js",
+    "coverage": "桌面与触屏菜单双向切换、两关六区域、零剩余时间、普通超时死亡、demoUsed保留",
+    "status": "passed",
+    "real_device": false,
+    "checks": 26
   },
-  {
-   "id": "revert-check",
-   "file": "releases/v0.5.1/captures/revert-check.png",
-   "kind": "screenshot",
-   "version": "v0.5.1",
-   "build_id": "pre-final（森林纹理修正前）",
-   "capture_mode": "offline-frame-stepping",
-   "description": "旧版 v0.4.1 与改回后同站位对照",
-   "visual_review": "pass",
-   "audio": "none"
+  "website": {
+    "status": "deployed_verified",
+    "commit": "110c0421596dabee86cb7885f2d77e34be9c00b7",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "bundle_sha256": "608953e4a79ac846604285f276bb241cba338d36d1c7b24a982bc92f63ca3c5d",
+    "verified_at": "2026-10-06T10:01:00.170832+00:00",
+    "actions_run": 37446589086,
+    "actions_conclusion": "success"
+  },
+  "toy": {
+    "id": 40412421031936,
+    "status": "published",
+    "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_nsYqUnzL/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
+    "submitted_at": "2026-10-06T10:01:00.170832+00:00",
+    "preview_checks_passed": 26,
+    "last_public_verified_version": "v0.5.1",
+    "public_verified_at": "2026-10-06T10:13:04.838269+00:00",
+    "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "public_iframe_version": "v22987",
+    "evidence": "官方mylist为published；公开iframe菜单显示演示模式（无敌不限时）"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "targets": [
+      "BV18XHW66E55"
+    ],
+    "reason": "普通补丁合并到下次有意义的说明更新，现有说明仍准确。"
+  },
+  "activities": {
+    "status": "partial_check",
+    "incentive": "权益LV3未达标；创作信用80分达标",
+    "weekly_checkin": "本周发布1个自制视频已完成，可领取1000曝光奖励",
+    "play_task": "累计播放720/10000，80推广金未达标",
+    "no_new_registration": true,
+    "sources": [
+      "https://member.bilibili.com/platform/allowance/excitation/pc",
+      "https://member.bilibili.com/platform/growingUp/taskManage/main"
+    ],
+    "note": "仅检查两个官方页面，不推进全面检查时间。"
+  },
+  "feedback_reply": {
+    "rpid": 319834688688,
+    "video": "opus:1255480955666169860",
+    "comment_type": "动态",
+    "user": "恐龙戴诺",
+    "user_mid": 284239309,
+    "date": "2026-10-06 17:49 Asia/Shanghai",
+    "text": "改一下呗，无敌对时间结束没用",
+    "kind": "bug",
+    "status": "fixed",
+    "fixed_in": "v0.5.1",
+    "reply_rpid": null,
+    "reply": "感谢反馈，已修复！现在开启演示无敌就不限时，关闭后从原来的剩余时间继续。网站和Toy都已更新，重新打开试玩就能用。",
+    "reply_sha256": "b40b9471e81369a4fee799bb42bb7f0f590eb3c1e6090d138c6bea2d61f78a90",
+    "reply_status": "public_verified",
+    "reply_verified_at": "2026-10-06T10:13:04.838269+00:00",
+    "url": "https://www.bilibili.com/opus/1255480955666169860#reply319834688688",
+    "evidence": "D:/project/task-artifacts/cadillacs-invincible-timeout-20261006-01a110a0/reply-verified.jpg",
+    "note": "通过浏览器在原楼回复，刷新后可见；公开DOM未提供回复ID，按原楼ID与正文哈希查重。"
   }
- ],
- "historical_media": [],
- "qa": [
-  {
-   "method": "qa/stage2.js",
-   "result": "pass 55/55",
-   "evidence": "qa/stage2.json"
-  },
-  {
-   "method": "qa/desktop.js",
-   "result": "pass 90/90（首次 89/90 计时抖动，单独重跑通过）",
-   "evidence": "qa/desktop.json"
-  },
-  {
-   "method": "qa/mobile.js",
-   "result": "pass 35/35",
-   "evidence": "qa/mobile.json",
-   "unmeasured": [
-    "physical device"
-   ]
-  },
-  {
-   "method": "qa/camera.js",
-   "result": "pass 11/11",
-   "evidence": "qa/cam-results.json"
-  }
- ],
- "readiness": {
-  "overview": "ready",
-  "update": "partial",
-  "gaps": [
-   "v0.5.0 精华录像是哑光 Q 版画面，已不代表当前画风；做视频前需按 v0.5.1 重录。"
-  ]
- },
- "website": {
-  "status": "pending"
- },
- "toy": {
-  "status": "pending"
- },
- "bilibili": {
-  "status": "pending"
- }
 }
