@@ -1,0 +1,39 @@
+{
+  "version": "lobby1",
+  "classification": "正式版本",
+  "task_id": "01a110a7-dc48-7553-bb31-24a1a07bc56a-tank-buttons-03",
+  "branch": "codex/tank-buttons-20261006",
+  "base_version": "pickup-clean1",
+  "scope": [
+    "按钮边框阴影、值选项箭头、键盘焦点与按下反馈",
+    "2–4人房间目录、可选密码、20条服务端分页、密码筛选",
+    "每人独立坦克、多人输入及状态广播，队友离线继续，房主离线结束",
+    "保留v1兼容路由和单机存档"
+  ],
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "pending_sync"
+  },
+  "bilibili": {
+    "BV1Wqaz6AEJb": "pending_sync"
+  },
+  "validation": {
+    "server_pytest": 6,
+    "single_player_sim_checks": 19,
+    "coop_sim": "2/4 player movement/fire, snapshot ownership, independent damage/lives, absent-slot stage/retry",
+    "ui": [
+      "four browser tabs joined/ready/start, four colored tanks rendered",
+      "wrong/correct password feedback",
+      "guest leave then shared pause/restart",
+      "volume arrows decrease/increase, keyboard left/right",
+      "responsive verification in progress"
+    ],
+    "physical_phone_test": false,
+    "eight_player_test": false
+  },
+  "artifacts": "D:/project/artifacts/tank-lobby-20261006",
+  "capture_gap": "本次保存真实浏览器截图；未录制新实机视频，不据此发布新成片。"
+}

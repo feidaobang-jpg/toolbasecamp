@@ -210,3 +210,51 @@ button::before,button::after{content:none!important}
 #stage.compact .act-keys{grid-template-columns:repeat(2,58px);grid-template-rows:repeat(2,58px)}#stage.compact .act-keys .act,#stage.compact .act-keys .act.big{width:58px;height:58px}
 
 #hud-top #btn-cam-t{width:auto;height:auto;min-height:44px;flex-direction:row;gap:4px;border-radius:12px}body.touch-on #hud-top #btn-cam-t{display:flex}
+
+/* Visible button edges and working option arrows, scoped to Tank Battle. */
+#app .panel .items>button,#app .panel .items>a{border:2px solid #b8a476;background:#fffdf6;box-shadow:0 3px 0 #a18b5d;min-height:48px;transition:background .12s,border-color .12s,box-shadow .12s,transform .12s}
+#app .panel .items>[data-opt]{flex-wrap:wrap;column-gap:12px;row-gap:6px}
+#app .items .opt-label{flex-shrink:0}
+#app .items .val{display:inline-flex;align-items:center;gap:0;min-width:0;max-width:100%;border:1px solid #c9a35c;border-radius:9px;background:#fff3d3;color:#73501c;overflow:hidden}
+#app .items .opt-value{min-width:0;overflow:hidden;text-overflow:ellipsis;padding:0 9px;text-align:center}
+#app .items .opt-arrow{display:inline-flex;flex:0 0 34px;align-items:center;justify-content:center;min-height:32px;font:800 25px/1 Arial,sans-serif;background:#f7deb0;color:#6c4917;cursor:pointer}
+#app .items .opt-arrow:first-child{border-right:1px solid #c9a35c}
+#app .items .opt-arrow:last-child{border-left:1px solid #c9a35c}
+#app .items .val.warn{color:#a7432c;border-color:#bd7459}
+#app .panel .items>.primary{background:#477f3f;border-color:#315f2b;color:#fff;box-shadow:0 3px 0 #2c5328}
+#app .panel .items>.coop-link{justify-content:center;gap:10px;background:#ffdda1;border-color:#ab7629;color:#493918;box-shadow:0 3px 0 #92672b;font-weight:800;grid-column:1/-1}
+#app .items .button-icon{flex:0 0 24px}
+#app .panel kbd{background:#eee1bf;border-color:#b7a16b;color:#2f4436}
+#app .panel .primary kbd{background:#ffffff24;border-color:#ffffff70;color:#fff}
+#app .panel .items>button:focus-visible,#app .panel .items>a:focus-visible{outline:3px solid #b97410;outline-offset:3px;border-color:#b97410}
+#app .panel .items>button:active:not(:disabled),#app .panel .items>a:active{transform:translateY(3px);box-shadow:none}
+#app .items .opt-arrow:active{background:#e4bb75}
+#app .panel .items>button:disabled{box-shadow:none;border-color:#c8c0aa;background:#eee9dc;color:#837d6c;transform:none}
+#app #stage.compact .items>button,#app #stage.compact .items>a{min-height:40px}
+#app #stage.compact .items .opt-arrow{flex-basis:28px;min-height:28px;font-size:23px}
+#app #stage.compact .items .opt-value{padding:0 6px}
+@media(hover:hover){
+  #app .panel .items>button:hover:not(:disabled),#app .panel .items>a:hover{background:#fff1ce;border-color:#967137}
+  #app .panel .items>.primary:hover:not(:disabled){background:#3a6c34;border-color:#244920}
+  #app .panel .items>.coop-link:hover{background:#ffd083;border-color:#8d5d18}
+  #app .items .opt-arrow:hover{background:#edc887}
+}
+@media(prefers-reduced-motion:reduce){#app .panel .items>button,#app .panel .items>a{transition:none}}
+
+#app #lobby .coop-panel{max-width:960px!important;width:min(96vw,960px)!important;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px}
+#lobby .coop-panel h2,#lobby #coop-settings,#lobby .lobby-footer{grid-column:1/-1}
+#lobby .coop-panel fieldset{min-width:0;margin:12px 0;padding:10px;border:1px solid #b8a476;border-radius:12px}
+#lobby .coop-panel legend{font-weight:800;padding:0 6px}
+#lobby .coop-panel select{width:62%;min-height:42px;font:inherit;border:1px solid #8a9c84;border-radius:8px;background:#fffdf4;padding:8px}
+#lobby .directory-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
+#lobby .directory-heading h3{margin:0;font-size:18px}
+#lobby .directory-heading .lobby-action{flex-shrink:0;white-space:nowrap}
+#lobby #coop-page{font-size:12px;text-align:center}
+#lobby .lobby-action{min-height:40px;border:2px solid #b8a476;border-radius:10px;background:#fffdf6;color:#2f4436;font-family:inherit;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer}
+#lobby #coop-rooms{max-height:410px;overflow:auto;padding:4px}
+#app #lobby .room-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;text-align:left;white-space:normal}
+#lobby .room-card strong,#lobby .room-card span{white-space:normal;overflow-wrap:anywhere}
+#lobby .room-card span{font-size:12px;line-height:1.6}
+#lobby .coop-panel .lobby-footer,#lobby #coop-settings{display:block}
+#app #lobby .coop-panel.in-room{max-width:600px!important;width:min(94vw,600px)!important;grid-template-columns:1fr}
+@media(max-width:650px){#app #lobby .coop-panel{grid-template-columns:1fr}#lobby #coop-directory{grid-row:3}#lobby #coop-rooms{max-height:300px}}

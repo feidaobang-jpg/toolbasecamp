@@ -1,5 +1,5 @@
-// Two-player relay and render snapshots. The guest never runs enemy AI or damage.
-const PROTOCOL = 'tank3d-v1';
+// Lobby relay and render snapshots. Guests never run enemy AI or damage.
+const PROTOCOL = 'tank3d-v2';
 export function endpoint() {
   if (typeof location !== 'undefined' && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
     return 'ws://127.0.0.1:8792/game/tank-coop/ws?game=' + PROTOCOL;
@@ -18,7 +18,7 @@ export class CoopConnection {
     if (this.socket?.readyState !== 1 || this.socket.bufferedAmount > 200000) return false;
     this.socket.send(JSON.stringify(data)); return true;
   }
-  connect(type, name, code) {
+  connect(type, name, code, options = {}) {
     this.disconnect(); this.intentional = false;
     const socket = this.socket = new WebSocket(endpoint());
     this.onStatus('正在连接联机服务…');
@@ -30,7 +30,7 @@ export class CoopConnection {
       if (msg.type === 'hello') {
         clearTimeout(timeout);
         if (msg.protocol !== PROTOCOL) { this.disconnect(); this.onStatus('联机服务正在更新，请稍后重试；单机仍可玩'); return; }
-        this.send({ type, name, code });
+        this.send({ type, name, code, ...options });
       }
       if (msg.type === 'joined') { this.slot = msg.slot; this.room = msg.room; }
       if (msg.type === 'roster') this.room = msg.room;

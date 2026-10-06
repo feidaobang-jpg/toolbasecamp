@@ -8,6 +8,7 @@ const DX = [0, 1, 0, -1], DY = [-1, 0, 1, 0];
 export const DIRS = [[0, -1], [1, 0], [0, 1], [-1, 0]];
 export const EAGLE = { x: 96, y: 192, w: 16 };
 export const PLAYER_SPAWN = { x: 64, y: 192 };
+export const playerSpawn = slot => ({ x: [64, 128, 32, 160][slot] ?? 64, y: 192 });
 export const BOT_SPAWNS = [{ x: 96, y: 0 }, { x: 192, y: 0 }, { x: 0, y: 0 }];   // 中 → 右 → 左
 export const SCORE = { basic: 100, fast: 200, power: 300, armor: 400, heavy: 500, flame: 600, escort: 100, mini: 2000, boss: 5000, final: 20000 };
 export const TYPE_NAMES = { basic: '普通坦克', fast: '快速坦克', power: '火力坦克', armor: '重甲坦克', heavy: '精英重炮', flame: '火焰车', escort: '护卫', mini: '小 Boss', boss: '大 Boss', final: '终焉 Boss' };
@@ -20,6 +21,7 @@ export function createRun(o = {}) {
   return {
     mode: o.mode || 'classic', livesMode: o.lives || 'classic', armor: o.armor || 'classic', demo: !!o.demo, demoUsed: !!o.demo, coop: !!o.coop,
     lives: o.lives === 'inf' ? Infinity : 3, stage: o.stage || 1, cycle: o.cycle || 1, score: o.score || 0,
+    playerCount: Math.max(2, Math.min(4, o.playerCount || 2)), playerSlots: o.playerSlots,
     stars: 0, plate: 0, boats: 0, hp: 3, bonusGiven: false, nextBonus: 20000,
     stats: { kills: 0, deaths: 0, hits: 0, stages: 0, pickups: 0, repairs: 0, bosses: 0 },
     seed: o.seed ?? Math.floor(Math.random() * 1e6)
@@ -50,8 +52,8 @@ export function createWorld(run) {
   spawnPlayer(w, 0);
   if (run.coop) {
     const fields = () => Object.fromEntries(PLAYER_FIELDS.map(k => [k, run[k]]));
-    run.coopPlayers ||= [fields(), fields()];
-    w.seats = run.coopPlayers.map((state, slot) => ({ slot, state, tank: null, spawnT: 37 }));
+    run.coopPlayers ||= Array.from({ length: run.playerCount || 2 }, (_, slot) => ({ ...fields(), ...(run.playerSlots && !run.playerSlots.includes(slot) ? { lives: 0 } : {}) }));
+    w.seats = run.coopPlayers.map((state, slot) => ({ slot, state, tank: null, spawnT: state.lives > 0 ? 37 : 0 }));
     w.localSlot = 0;
   }
   return w;
@@ -113,10 +115,12 @@ function makeTank(w, team, type, x, y, size = 16) {
 }
 function spawnPlayer(w, delay) {
   w.player = null; w.playerSpawnT = delay + 37;   // 玩家出生星星约 37 帧
-  emit(w, 'spawn', { team: 'player', x: (w.activeSlot === 1 ? 128 : PLAYER_SPAWN.x) + 8, y: PLAYER_SPAWN.y + 8 });
+  const p = playerSpawn(w.activeSlot || 0);
+  emit(w, 'spawn', { team: 'player', x: p.x + 8, y: p.y + 8 });
 }
 function activatePlayer(w) {
-  const r = w.run, p = makeTank(w, 'player', 'player', w.activeSlot === 1 ? 128 : PLAYER_SPAWN.x, PLAYER_SPAWN.y);
+  const spawn = playerSpawn(w.activeSlot || 0);
+  const r = w.run, p = makeTank(w, 'player', 'player', spawn.x, spawn.y);
   p.slot = w.activeSlot || 0;
   clearArea(w, p.x, p.y, 16);
   p.state = 'active'; p.speed = .75; p.stars = r.stars; p.plate = r.plate; p.boats = r.boats;

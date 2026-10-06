@@ -133,6 +133,10 @@ async def tank_coop_ws(websocket: WebSocket):
     if websocket.query_params.get("game") == "tank3d-v1":
         await tank3d_ws(websocket)
         return
+    if websocket.query_params.get("game") == "tank3d-v2":
+        from tank3d_lobby import tank3d_lobby_ws
+        await tank3d_lobby_ws(websocket)
+        return
     await websocket.accept()
     pid = secrets.token_hex(4)
     room: Optional[Room] = None

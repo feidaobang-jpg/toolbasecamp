@@ -1,13 +1,13 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=toy3dui3';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=pickup-clean1';
-import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=pickup-clean1';
-import { CoopConnection, snapshot, hydrate } from './coop.js?v=coop1';
+import { createScene, PRESETS } from './scene.js?v=lobby1';
+import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
+import { CoopConnection, snapshot, hydrate } from './coop.js?v=lobby1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=toy3dui2';
 
-const VERSION = 'pickup-clean1';
+const VERSION = 'lobby1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -79,15 +79,26 @@ let run = null, world = null, titleWorld = null, levelStart = null;
 let hurtFx = 0, gameClock = 0, toastTimer = 0, bannerT = 0, bossTipT = 0;
 const eventLog = [];
 let applyingNetworkAction = false, epoch = 0, remoteEpoch = -1, lastStateAt = 0, sentTerrain = -1, fullTerrainAt = 0;
-let remoteInput = { dir: -1 }, remoteInputAt = 0, lastInputAt = 0;
+let remoteInputs = {}, lastInputAt = 0;
 let pendingEvents = [], networkStarted = false, snapshotReceivedAt = 0;
 const coop = new CoopConnection(onCoopMessage, text => { $('coop-message').textContent = text; });
-$('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim() || '坦克手'); });
+const roomConfig = () => ({ mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] });
+$('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim() || '坦克手', undefined, { roomName: $('coop-room-name').value.trim(), password: $('coop-create-password').value, maxPlayers: Number($('coop-capacity').value), config: roomConfig() }); });
+function joinRoom() { coop.connect('join', $('coop-name').value.trim() || '坦克手', $('coop-code').value.trim(), { password: $('coop-password').value }); }
 $('coop-join').addEventListener('click', () => {
   const code = $('coop-code').value.trim();
   if (!/^\d{6}$/.test(code)) { $('coop-message').textContent = '请填写好友的六位数字房间码'; return; }
-  coop.connect('join', $('coop-name').value.trim() || '坦克手', code);
+  joinRoom();
 });
+let directoryPage = 1;
+function requestDirectory(page = directoryPage) {
+  const options = { page, passwordFilter: $('coop-filter').value };
+  if (!coop.send({ type: 'list', ...options })) coop.connect('list', '', undefined, options);
+}
+$('coop-refresh').addEventListener('click', () => requestDirectory());
+$('coop-prev').addEventListener('click', () => requestDirectory(directoryPage - 1));
+$('coop-next').addEventListener('click', () => requestDirectory(directoryPage + 1));
+$('coop-filter').addEventListener('change', () => requestDirectory(1));
 $('coop-ready').addEventListener('click', () => { const ready = coop.room?.players.find(p => p.slot === coop.slot)?.ready; coop.send({ type: 'ready', ready: !ready }); });
 $('coop-start').addEventListener('click', () => coop.send({ type: 'start', config: { mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] } }));
 $('coop-copy').addEventListener('click', async () => {
@@ -105,11 +116,40 @@ function renderLobby() {
   $('coop-ready').hidden = !room || coop.host;
   $('coop-start').hidden = !room || !coop.host;
   $('coop-copy').disabled = !room;
-  $('coop-start').disabled = !room || room.players.length !== 2 || !room.players.every(p => p.ready);
+  $('coop-start').disabled = !room || room.players.length < 2 || !room.players.every(p => p.ready);
   $('coop-ready').textContent = room?.players.find(p => p.slot === coop.slot)?.ready ? '取消准备' : '准备好了';
-  $('coop-settings').textContent = `开局：${modeName(settings.mode)} · 第 ${startStageOf(settings.mode).stage} 关 · 每人${settings.lives[settings.mode] === 'inf' ? '无限命' : '3命'}。房主在主菜单调整后建房；两人共用战场与得分，各自拾取道具。`;
+  const cfg = room?.settings || roomConfig();
+  $('coop-settings').textContent = `开局：${modeName(cfg.mode)} · 第 ${cfg.stage} 关 · 每人${cfg.lives === 'inf' ? '无限命' : '3命'}。最多${room?.maxPlayers || $('coop-capacity').value}人；至少两人准备后开局。`;
+  $('coop-directory').hidden = !!room;
+  $('coop-create-fields').hidden = !!room;
+  $('coop-join-fields').hidden = !!room;
+  $('coop-name').disabled = !!room;
+  $('lobby').querySelector('.coop-panel').classList.toggle('in-room', !!room);
 }
-function openLobby() { show('lobby'); renderLobby(); }
+function renderDirectory(message) {
+  const list = message.rooms || [];
+  directoryPage = message.page || 1;
+  const pages = Math.max(1, Math.ceil((message.total || 0) / 20));
+  $('coop-page').textContent = `第 ${directoryPage} / ${pages} 页 · ${message.total || 0} 个房间`;
+  $('coop-prev').disabled = directoryPage <= 1;
+  $('coop-next').disabled = directoryPage >= pages;
+  const root = $('coop-rooms'); root.replaceChildren();
+  $('coop-empty').hidden = list.length > 0;
+  for (const room of list) {
+    const card = document.createElement('button'); card.className = 'room-card'; card.type = 'button';
+    const title = document.createElement('strong'); title.textContent = room.name;
+    const details = document.createElement('span');
+    details.textContent = `${room.hasPassword ? '有密码' : '无密码'} · ${room.players.length}/${room.maxPlayers}人 · ${room.started ? '已开局' : '等待中'} · ${modeName(room.settings.mode)} 第${room.settings.stage}关 · 房主 ${room.players.find(p => p.slot === 0)?.name || ''}`;
+    card.append(title, details); card.disabled = room.started || room.players.length >= room.maxPlayers;
+    card.addEventListener('click', () => {
+      $('coop-code').value = room.code; $('coop-password').value = '';
+      if (room.hasPassword) { $('coop-message').textContent = `已选择“${room.name}”，请填写房间密码后加入。`; $('coop-password').focus(); }
+      else joinRoom();
+    });
+    root.append(card);
+  }
+}
+function openLobby() { show('lobby'); renderLobby(); if (!coop.room) requestDirectory(1); }
 function networkAction(action) {
   if (!coop.active || applyingNetworkAction) return false;
   clearInput();
@@ -117,18 +157,24 @@ function networkAction(action) {
   return true;
 }
 function onCoopMessage(msg) {
-  if (msg.type === 'joined' || msg.type === 'roster') { renderLobby(); $('coop-message').textContent = '把房间码告诉好友，加入后点准备；由房主开始。'; }
+  if (msg.type === 'rooms') { renderDirectory(msg); if (!coop.room) $('coop-message').textContent = '大厅已连接，选择房间或创建自己的房间。'; }
+  else if (msg.type === 'joined' || msg.type === 'roster') { renderLobby(); $('coop-message').textContent = '加入后点准备；至少两人、所有队友准备后由房主开始。'; }
   else if (msg.type === 'start') {
     settings.mode = msg.config.mode;
     run = createRun(msg.config); run.coop = true;
     run.startedAt = gameClock; run.startStage = run.stage; run.startCycle = run.cycle;
     uiMode = 'game'; paused = false; networkStarted = true;
-    remoteInput = { dir: -1 }; pendingEvents = []; sentTerrain = -1; remoteEpoch = -1;
+    remoteInputs = {}; pendingEvents = []; sentTerrain = -1; remoteEpoch = -1;
     view.setPreset(settings.camera[run.mode]); beginStage(); show(null);
     showToast(`${coop.slot + 1}P · 房间 ${coop.room.code} · ${coop.host ? '你是房主' : '好友是房主'}`);
   } else if (msg.type === 'input' && coop.host) {
-    remoteInput = { ...msg.input, firePressed: !!(remoteInput.firePressed || msg.input.firePressed) };
-    remoteInputAt = performance.now();
+    const previous = remoteInputs[msg.slot];
+    remoteInputs[msg.slot] = { ...msg.input, firePressed: !!(previous?.firePressed || msg.input.firePressed), at: performance.now() };
+  } else if (msg.type === 'player_left') {
+    if (coop.room) coop.room.players = coop.room.players.filter(p => p.slot !== msg.slot);
+    if (run?.coop) run.playerSlots = coop.room.players.map(p => p.slot);
+    if (coop.host && world?.seats[msg.slot]) { const seat = world.seats[msg.slot]; seat.state.lives = 0; seat.tank = null; seat.spawnT = 0; delete remoteInputs[msg.slot]; lastStateAt = 0; }
+    showToast(msg.message);
   } else if (msg.type === 'action' && coop.host) {
     applyingNetworkAction = true;
     try {
@@ -146,7 +192,7 @@ function onCoopMessage(msg) {
   }
 }
 function receiveState(data) {
-  if (!data?.world || !data.run || !Array.isArray(data.world.seats) || data.world.seats.length !== 2) return;
+  if (!data?.world || !data.run || !Array.isArray(data.world.seats) || data.world.seats.length < 2 || data.world.seats.length > 4 || !data.world.seats[coop.slot]) return;
   if (!MODES.includes(data.run.mode) || !Number.isFinite(data.run.score) || !Number.isFinite(data.run.stage) || data.run.stage < 1 || data.run.stage > 100 || !Number.isFinite(data.run.cycle) || !data.run.stats || !Object.values(data.run.stats).every(Number.isFinite) || !data.world.kills || !Object.values(data.world.kills).every(Number.isFinite) || ![null, 'pause', 'tally', 'result'].includes(data.overlay)) return;
   const fresh = data.epoch !== remoteEpoch;
   run = data.run;
@@ -162,7 +208,7 @@ function receiveState(data) {
   if (fresh) { view.setWorld(world, { rise: true }); buildReserve(); lastHud = ''; }
   $('curtain').hidden = phase !== 'curtain';
   $('curtain-stage').textContent = 'STAGE ' + world.spec.displayStage;
-  $('curtain-sub').textContent = '双人合作守基地';
+  $('curtain-sub').textContent = '多人合作守基地';
   $('curtain').classList.toggle('closed', phase === 'curtain' && phaseT < 1.57);
   $('gameover-text').hidden = !['gameover', 'over'].includes(world.status);
   for (const e of data.events || []) { if (e.type !== 'end') handleEvent(e); }
@@ -252,8 +298,9 @@ function refreshOptions() {
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
-    const html = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
+    const html = '<span class="opt-label">' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '"><span class="opt-arrow" data-step="-1" aria-hidden="true">‹</span><span class="opt-value">' + l[1] + '</span><span class="opt-arrow" data-step="1" aria-hidden="true">›</span></span>';
     if (b.innerHTML !== html) b.innerHTML = html;
+    b.setAttribute('aria-label', l[0] + '：' + l[1]);
   });
   const t = MODE_TEXT[settings.mode];
   $('mode-kicker').textContent = t.kicker; $('mode-sub').textContent = t.sub; $('mode-rules').textContent = t.rules;
@@ -352,7 +399,7 @@ document.addEventListener('click', e => {
   if (current === 'tally') { tallySkip(); return; }
   const t = e.target.closest('[data-act],[data-opt]');
   if (!t) return;
-  if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), 1); return; }
+  if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), e.target.closest('[data-step]')?.dataset.step === '-1' ? -1 : 1); return; }
   switch (t.getAttribute('data-act')) {
     case 'start': startGame(); break;
     case 'coop': openLobby(); break;
@@ -394,6 +441,11 @@ function startGame(from) {
 }
 function beginStage() {
   epoch++;
+  if (run.coop && coop.host && run.coopPlayers) {
+    const connected = coop.room.players.map(p => p.slot);
+    run.playerSlots = connected;
+    run.coopPlayers.forEach((state, slot) => { if (!connected.includes(slot)) state.lives = 0; });
+  }
   world = createWorld(run);
   if (run.coop) world.localSlot = coop.slot;
   levelStart = { score: run.score, lives: run.lives, stars: run.stars, plate: run.plate, boats: run.boats, stats: Object.assign({}, run.stats), bonusGiven: run.bonusGiven, nextBonus: run.nextBonus, coopPlayers: run.coopPlayers?.map(p => ({ ...p })) };
@@ -440,7 +492,7 @@ function toTitle() {
 }
 function retryRun() {
   if (networkAction('retry')) return;
-  if (run?.coop) { run = createRun({ mode: run.mode, lives: run.livesMode, armor: run.armor, stage: run.stage }); run.coop = true; run.startedAt = gameClock; beginStage(); paused = false; audio.pause(false); show(null); return; }
+  if (run?.coop) { run = createRun({ coop: true, playerCount: run.playerCount, playerSlots: coop.room.players.map(p => p.slot), mode: run.mode, lives: run.livesMode, armor: run.armor, stage: run.stage, cycle: run.cycle }); run.startedAt = gameClock; beginStage(); paused = false; audio.pause(false); show(null); return; }
   const m = run ? run.mode : settings.mode;
   if (m !== settings.mode) { settings.mode = m; store.set('mode', m); }
   const from = run ? { stage: run.stage, cycle: run.cycle, score: m === 'remix' ? (levelStart ? levelStart.score : 0) : 0 } : null;
@@ -481,7 +533,7 @@ function finishRun() {
   rows.push(['阵亡', r.stats.deaths + ' 次'], ['用时', Math.floor(secs / 60) + ' 分 ' + (secs % 60) + ' 秒']);
   $('res-table').innerHTML = rows.map(x => '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>').join('') + '<tr class="total"><td>总分</td><td>' + r.score + '</td></tr>';
   const extra = [(r.livesMode === 'inf' ? '无限命' : '经典 3 命') + ' · ' + (r.armor === 'classic' ? '经典一发' : '标准 3 格耐久（受击 ' + r.stats.hits + ' 次）')];
-  extra.push(r.coop ? '双人联机：团队得分，不改动单机最高分和进度' : r.demoUsed ? '本局用过演示模式（无敌），不计最高分' : newHi ? '新纪录！最高分 ' + r.score : '最高分 ' + hiOf(r.mode));
+  extra.push(r.coop ? '多人联机：团队得分，不改动单机最高分和进度' : r.demoUsed ? '本局用过演示模式（无敌），不计最高分' : newHi ? '新纪录！最高分 ' + r.score : '最高分 ' + hiOf(r.mode));
   $('res-extra').textContent = extra.join(' · ');
   const sl = overlays.result.querySelector('.sanlian');
   sl.hidden = r.stats.stages < 1 && r.stats.kills < 10;
@@ -802,8 +854,9 @@ function simulate(dt) {
   const input = { dir: worldDir(), fire: isDown('fire'), firePressed };
   firePressed = false;
   if (run.coop) {
-    const remote = performance.now() - remoteInputAt < 600 ? remoteInput : { dir: -1 };
-    step(world, { players: [input, remote] }); remoteInput.firePressed = false;
+    const inputs = world.seats.map(s => s.slot === 0 ? input : performance.now() - (remoteInputs[s.slot]?.at || 0) < 600 ? remoteInputs[s.slot] : { dir: -1 });
+    step(world, { players: inputs });
+    for (const remote of Object.values(remoteInputs)) remote.firePressed = false;
   } else step(world, input);
   hurtFx = Math.max(0, hurtFx - dt * 2.2);
   if (bannerT > 0) { bannerT -= dt; if (bannerT <= 0) $('banner').hidden = true; }
@@ -825,7 +878,7 @@ function frame(now) {
   publishState(now);
   if (coop.active && networkStarted) {
     $('coop-status').hidden = false;
-    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.rtt ? coop.rtt + 'ms' : '双人合作'}${paused ? ' · 全队暂停' : ''}`;
+    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.rtt ? coop.rtt + 'ms' : '多人合作'}${paused ? ' · 全队暂停' : ''}`;
     if (!coop.host && coop.stateCount && now - snapshotReceivedAt > 3000 && !paused) { clearInput(); coop.send({ type: 'action', action: 'pause' }); showToast('同步暂时中断，正在暂停战场'); }
   } else $('coop-status').hidden = true;
   if (autoProbe.on && !autoProbe.done && uiMode === 'game' && phase === 'play' && !current) {

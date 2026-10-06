@@ -2,7 +2,7 @@
 // 以及 5 个视角预设（斜俯视 / 正俯视 / 近景 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
 // 美术全部程序化：基础几何体 + Canvas 纹理。1 个 8px 格 = 1 个世界单位，战场中心在原点。
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer } from './sim.js?v=pickup-clean1';
+import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer, playerSpawn } from './sim.js?v=lobby1';
 
 const C = N / 2, TAU = Math.PI * 2;
 const P = v => v / 8 - C;                       // FC 像素 → 世界坐标
@@ -446,7 +446,7 @@ export function createScene(canvas) {
       applyPlayerGear(m, t.stars, t.plate || 0, t.boats || 0);
       const blink = t.invuln > 0 && Math.floor(t.invuln / 4) % 2 === 0;
       m.group.visible = !blink && !(fpActive() && localPlayer(world)?.id === t.id);
-      if (world.seats) { m.bodyMat.color.set(t.slot === 1 ? '#72c4dd' : '#e6be56'); m.turretMat.color.set(t.slot === 1 ? '#418ba7' : '#ba923a'); }
+      if (world.seats) { m.bodyMat.color.set(['#e6be56','#72c4dd','#de816b','#88b767'][t.slot]); m.turretMat.color.set(['#ba923a','#418ba7','#a54f3c','#507b39'][t.slot]); }
       m.bodyMat.emissive.set(t.hitFlash > 0 ? '#ff4040' : '#000000'); m.bodyMat.emissiveIntensity = t.hitFlash > 0 ? .9 : 0;
       return m;
     }
@@ -521,7 +521,7 @@ export function createScene(canvas) {
     // 出生光柱
     const spawns = [];
     for (const t of world.bots) if (t.state === 'spawn') spawns.push({ x: t.x + t.size / 2, y: t.y + t.size / 2, k: t.st / (t.size > 16 ? 100 : 56), big: t.size > 16 });
-    if (world.seats) { for (const s of world.seats) if (!s.tank && s.spawnT > 0) spawns.push({ x: s.slot === 1 ? 136 : 72, y: 200, k: s.spawnT / 37, player: true }); }
+    if (world.seats) { for (const s of world.seats) if (!s.tank && s.spawnT > 0) { const p = playerSpawn(s.slot); spawns.push({ x: p.x + 8, y: p.y + 8, k: s.spawnT / 37, player: true }); } }
     else if (!world.player && world.playerSpawnT > 0) spawns.push({ x: 72, y: 200, k: world.playerSpawnT / 37, player: true });
     while (sparkles.length < spawns.length) {
       const g = new THREE.Group(); const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: sparkleTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); s.position.y = .9; g.add(s);
