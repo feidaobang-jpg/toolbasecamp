@@ -25,7 +25,7 @@
     "public_verified_at": "2026-10-06T18:48:28.119681+08:00"
   },
   "bilibili": {
-    "BV1Wqaz6AEJb": "pending_public_verification"
+    "BV1Wqaz6AEJb": "pending_review"
   },
   "validation": {
     "url": "http://127.0.0.1:8792/public/html/game/tank-3d/index.html",
@@ -242,11 +242,16 @@
   "artifacts": "D:/project/artifacts/tank-coop-20261006",
   "proof": {
     "toy_public_lobby": "D:/project/artifacts/tank-coop-20261006/proof/toy-public-lobby.png",
-    "bilibili_saved_description": "D:/project/artifacts/tank-coop-20261006/proof/bilibili-description-saved.png"
+    "bilibili_saved_description": "D:/project/artifacts/tank-coop-20261006/proof/bilibili-description-saved.png",
+    "bilibili_review_status": "D:/project/artifacts/tank-coop-20261006/proof/bilibili-review-status.png"
   },
   "release_records_commit": "45ff1f335e44ca21c6119c6d469c6a644b45fb09",
   "server_patch": {
-    "status": "pending_deploy",
-    "summary": "关闭已断开的WebSocket时兼容WebSocketDisconnect，避免退出后的异常日志；Toy前端包未变化。"
+    "status": "public_verified",
+    "summary": "关闭已断开的WebSocket时兼容WebSocketDisconnect，避免退出后的异常日志；Toy前端包未变化。",
+    "commit": "569fc48dbb3eb3dde5551856671d9bb783b2af7b",
+    "actions_run": 37452709379,
+    "verified_at": "2026-10-06T18:57:58.389189+08:00",
+    "validation": "Service healthy, deploy_sha matches; 3 public create/disconnect cycles passed; no tank3d_rooms traceback since new service restart."
   }
 }

@@ -107,6 +107,8 @@
     "model": "host-authoritative simulation",
     "persistence": "single-player saves and records untouched",
     "disconnect": "either player leaves ends room; no host migration",
-    "physical_app_test": false
+    "physical_app_test": false,
+    "server_commit": "569fc48dbb3eb3dde5551856671d9bb783b2af7b",
+    "server_verified_at": "2026-10-06T18:57:58.389189+08:00"
   }
 }

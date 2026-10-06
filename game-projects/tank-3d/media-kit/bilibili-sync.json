@@ -43,10 +43,10 @@
     {
       "version": "coop1",
       "classification": "正式版本",
-      "status": "pending_public_verification",
+      "status": "pending_review",
       "summary": "房间码邀请双人合作守基地、同步暂停、换关与离线提示。Toy已公开核验。",
       "record": "releases/coop1/bilibili-sync.json",
-      "reason": "说明已提交，公开页尚未显示；保留最后成功基线，不重复提交。"
+      "reason": "新版简介已保存，稿件管理与处理进度页明确显示审核中；保留成功基线，不重复提交。"
     }
   ],
   "history": [
