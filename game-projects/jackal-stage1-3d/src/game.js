@@ -598,7 +598,8 @@ function enemyFire(e, a, kind, opts) {
   const o = opts || {};
   const sp = kind === 'shell' ? (o.speed || 7.5) : kind === 'missile' ? (o.speed || 6) : (o.speed || 8.0);
   const h = (e.h || 0) + (o.h0 !== undefined ? o.h0 : kind === 'shell' ? 1.2 : 0.9);
-  const ox = e.x + Math.sin(a) * (o.muzzle || 0.6), oy = e.y + Math.cos(a) * (o.muzzle || 0.6);
+  const muzzleAngle = o.muzzleAngle !== undefined ? o.muzzleAngle : a;
+  const ox = e.x + Math.sin(muzzleAngle) * (o.muzzle || 0.6), oy = e.y + Math.cos(muzzleAngle) * (o.muzzle || 0.6);
   const b = { kind, x: ox, y: oy, h, a, vx: Math.sin(a) * sp, vy: Math.cos(a) * sp, life: o.life || (kind === 'shell' ? 2.6 : kind === 'missile' ? 5.5 : 1.8), r: kind === 'shell' ? 0.34 : kind === 'missile' ? 0.32 : 0.2, high: !!e.elevated || !!o.high, trail: 0 };
   if (kind === 'missile') { b.homing = o.homing ? 2.6 : 0; b.sp = sp; b.hp = 1; }
   ebul.push(b);
@@ -648,7 +649,7 @@ function updateEnts(dt) {
         const want = angTo(e.x, e.y, P.x, P.y);
         e.tAng = approachAng(e.tAng, want, dt * 2.2);
         e.fireT -= dt;
-        if (e.fireT <= 0 && canShoot && d2p < 15 * 15 && Math.abs(angDiff(e.tAng, want)) < 0.25) { for (const s of [-0.22, 0, 0.22]) enemyFire(e, e.tAng + s, 'bullet', { muzzle: 1.2, speed: 7.5 }); e.fireT = randRange(2.4, 3.2); }
+        if (e.fireT <= 0 && canShoot && d2p < 15 * 15 && Math.abs(angDiff(e.tAng, want)) < 0.25) { for (const s of [-0.22, 0, 0.22]) enemyFire(e, e.tAng + s, 'bullet', { muzzle: 2.06, muzzleAngle: e.tAng, h0: 1.2, speed: 7.5 }); e.fireT = randRange(2.4, 3.2); }
         break;
       }
       case 'cannon': {
@@ -817,8 +818,11 @@ function syncEnt(e, dt) {
     o.body.position.y = e.moving ? Math.abs(Math.sin(e.t * 12)) * 0.06 : 0;
     o.body.rotation.x = e.aimT > 0 ? -0.15 : 0;
   } else if (e.type === 'mg' || e.type === 'turret') {
+    // 固定底座不继承出生时的车身朝向，内层炮管使用世界射击角。
+    root.rotation.y = 0;
     o.turret.rotation.y = -e.tAng;
   } else if (e.type === 'cannon') {
+    root.rotation.y = 0;
     root.position.y = e.h;
     o.turret.rotation.y = -e.tAng;
     if (e.recoil > 0) { e.recoil -= dt; o.turret.position.set(-Math.sin(e.tAng) * e.recoil, 0, Math.cos(e.tAng) * e.recoil); } else o.turret.position.set(0, 0, 0);

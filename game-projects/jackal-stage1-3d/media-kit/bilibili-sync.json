@@ -61,6 +61,14 @@
       "record": "releases/v0.7.5/handoff.json",
       "summary": "同型固定炮台复用，第二关铁皮囚室/浅色棚保留原作区别；专属敌人不合并造型。",
       "reason": "现有简介未提及被纠正的外观；普通补丁合并到下一次有意义说明更新。"
+    },
+    {
+      "version": "v0.7.6",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "record": "releases/v0.7.6/handoff.json",
+      "summary": "固定炮管对准实际子弹，第二关散射炮口对齐。",
+      "reason": "普通视觉和发射起点纠正，公开说明未写相关错误，累计到下一次有意义更新。"
     }
   ],
   "resolved_updates": [

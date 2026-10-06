@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.7.6",
+  "base_version": "v0.7.5",
+  "created_at": "2026-10-06T18:20:59.902364+08:00",
+  "classification": "普通补丁",
+  "changes": [
+    "固定炮台/机枪巢底座取消出生时遗留的180度朝向，内层炮管直接跟随世界射击角；坦克与炮艇仍保留车体/炮塔相对转向。",
+    "第二关三发扇形子弹从炮管末端同一个位置/高度发出，中心弹沿炮管前方，左右散射与原速率保留。"
+  ],
+  "bugs": [
+    {
+      "id": "fixed-barrel-reversed",
+      "reported_by": "user",
+      "cause": "spawnEntity为所有实体设置root.rotation.y=-PI，syncEnt固定炮台只改内层turret，父节点180度未清除。",
+      "status": "fixed",
+      "before": "第一关机枪巢/炮台及第二关炮台的可见炮管与子弹反向。",
+      "after": "炮管随瞄准旋转并对准实际弹道，散射子弹从炮口生成。",
+      "verification": "实际浏览器世界矩阵/实际子弹方向对照，两关八方向加坦克检查，共32项。"
+    }
+  ],
+  "site": {
+    "status": "deployed_verified",
+    "version": "v0.7.6",
+    "verified_at": "2026-10-06T18:25:49.073071+08:00",
+    "script_sha256": "cb8393345db39eef5674a47da3788a280516ec28b91da33f7b8851344ab69eb0",
+    "commit": "9ac7fdea162bfdf22518ed77925fab4201e53c95",
+    "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "auditing",
+    "version": "v0.7.6",
+    "submitted_at": "2026-10-06T18:25:49.073071+08:00",
+    "package_sha256": "31857d63b68ae6ca1b5dca3aac773d241b3eec7aadb01aff9aebf3c8e0e1d01b",
+    "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_kJ3TqqXA/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sYDyiyJu/index.html",
+    "preview_qa": "电脑/手机视口各32项方向与三发炮口检查通过；测试钩子，无实体手机。"
+  },
+  "bilibili": {
+    "action": "pending_merge",
+    "reason": "普通视觉/发射起点补丁，现有简介无相关错误；保留累计。"
+  },
+  "thumbnail": "沿用，主场景/第一关外观未改变。",
+  "qa": {
+    "status": "passed",
+    "direction": {
+      "pass": 32,
+      "total": 32,
+      "method": "真实浏览器矩阵变换与实际产生的子弹对照，两关八方向，包含坦克保持正常；三发散射炮口误差核验。"
+    },
+    "desktop": {
+      "pass": 92,
+      "total": 92
+    },
+    "stage2": {
+      "pass": 29,
+      "total": 29
+    },
+    "physical_phone": false,
+    "toy_desktop": {
+      "pass": 32,
+      "total": 32
+    },
+    "toy_mobile": {
+      "pass": 32,
+      "total": 32
+    },
+    "visual_review": "已检查当前构建移动/跟踪/转视角录像连续帧及前后截图，炮管指向与弹道一致，无明显闪烁条纹。",
+    "performance": {
+      "version": "v0.7.6",
+      "frames": 681,
+      "avgFPS": 169.50418160095577,
+      "p95Ms": 6,
+      "over50ms": 0,
+      "renderInfo": {
+        "calls": 75,
+        "tris": 138140,
+        "geometries": 55,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "quality": "high",
+      "method": "Edge headless / RTX4060Ti; realtime keyboard movement and turning, teleport/invulnerability hooks; recording measured separately",
+      "physicalPhone": false
+    }
+  },
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "短片含游戏音轨，尚未人工审听；不作为已审片成片。"
+    ]
+  },
+  "build": {
+    "script_sha256": "cb8393345db39eef5674a47da3788a280516ec28b91da33f7b8851344ab69eb0",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+    "commit": "9ac7fdea162bfdf22518ed77925fab4201e53c95"
+  },
+  "media": [
+    {
+      "id": "before.png",
+      "file": "releases/v0.7.6/captures/before.png",
+      "sha256": "b1a60b0a4684171945a429d1d75da8cbc51ac2de566ef49dd4ec75cb248d77fa",
+      "version": "v0.7.5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "after.png",
+      "file": "releases/v0.7.6/captures/after.png",
+      "sha256": "7ba1ac0d5438ec26be4b704554f64f760f79257cb664fb345d03941921497657",
+      "version": "v0.7.6",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "tracking.webm",
+      "file": "releases/v0.7.6/captures/tracking.webm",
+      "sha256": "b851dbe88b8411e7ebacd2e652d65a46484cc1dff7650f86c5753efd7ff067f0",
+      "version": "v0.7.6",
+      "capture_mode": "realtime-automation",
+      "kind": "video",
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run"
+    },
+    {
+      "id": "toy-desktop.png",
+      "file": "releases/v0.7.6/captures/toy-desktop.png",
+      "sha256": "5b93cdb19b2d85e1b48c54f82162da75472b0195810435f71482fa1ce432ea1a",
+      "version": "v0.7.6",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "toy-mobile.png",
+      "file": "releases/v0.7.6/captures/toy-mobile.png",
+      "sha256": "bb37fe524a21a710c003627850a6dd6a1367e6ca5007c1c374cc8479941b42b1",
+      "version": "v0.7.6",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "activity_check": {
+    "status": "partial_recent_reference",
+    "record": "../v0.7.4/activity-check.json",
+    "note": "无新稿件，沿用同日原作关联活动首屏/激励资格结果；未发现新的适用免费报名，非全面检查，不推进共享台账成功时间。"
+  }
+}

@@ -38,7 +38,7 @@
    "summary": "演示无敌暂停倒计时；显示无限时间；关闭后从原剩余时间继续，普通模式超时规则不变。",
    "channels": {
     "website": "deployed_verified",
-    "toy": "auditing",
+    "toy": "published",
     "bilibili": "pending_merge"
    },
    "record": "releases/v0.5.1/handoff.json"
@@ -50,20 +50,20 @@
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
-  "status": "auditing",
+  "status": "published",
   "submitted_at": "2026-10-06T10:01:00.170832+00:00",
   "package": "dist/toy-v0.5.1/package",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
-  "note": "v0.5.1 无敌不限时补丁已提交审核，最后公开核验版本仍为 v0.5.0。",
+  "note": "v0.5.1 已过审，公开入口已显示无敌不限时设置。",
   "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
   "bound_videos": [
    "BV18XHW66E55"
   ],
-  "review_status": "auditing",
-  "version": "v0.5.0",
-  "verified_at": "2026-10-06T11:15:46.661482+08:00",
+  "review_status": "published",
+  "version": "v0.5.1",
+  "verified_at": "2026-10-06T10:13:04.838269+00:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.5.0",
+  "last_published_version": "v0.5.1",
   "pending_updates": [
    {
     "version": "v0.2.1",
@@ -102,14 +102,14 @@
   "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_dbULGLJR/index.html",
   "release_record": "releases/v0.5.1/handoff.json",
-  "published_version": "v0.5.0",
-  "published_verified_at": "2026-10-06T09:17:30Z",
+  "published_version": "v0.5.1",
+  "published_verified_at": "2026-10-06T10:13:04.838269+00:00",
   "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "video_bindings": [
    "BV18XHW66E55"
   ]
  },
- "toy_note": "v0.5.0 已过审公开（2026-10-06），正式入口 20/20",
+ "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
  "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（v0.5.0 起与赤色要塞同款哑光低模），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
  "dev": {
@@ -185,5 +185,5 @@
  "website_version": "v0.5.1",
  "website_verified_at": "2026-10-06T11:09:58.228517+08:00",
  "website_commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
- "web_toy_versions_match": false
+ "web_toy_versions_match": true
 }

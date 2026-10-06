@@ -21,13 +21,17 @@
   },
   "toy": {
     "id": 40412421031936,
-    "status": "auditing",
+    "status": "published",
     "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_nsYqUnzL/index.html",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
     "submitted_at": "2026-10-06T10:01:00.170832+00:00",
     "preview_checks_passed": 26,
-    "last_public_verified_version": "v0.5.0"
+    "last_public_verified_version": "v0.5.1",
+    "public_verified_at": "2026-10-06T10:13:04.838269+00:00",
+    "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "public_iframe_version": "v22987",
+    "evidence": "官方mylist为published；公开iframe菜单显示演示模式（无敌不限时）"
   },
   "bilibili": {
     "status": "pending_merge",
@@ -47,5 +51,25 @@
       "https://member.bilibili.com/platform/growingUp/taskManage/main"
     ],
     "note": "仅检查两个官方页面，不推进全面检查时间。"
+  },
+  "feedback_reply": {
+    "rpid": 319834688688,
+    "video": "opus:1255480955666169860",
+    "comment_type": "动态",
+    "user": "恐龙戴诺",
+    "user_mid": 284239309,
+    "date": "2026-10-06 17:49 Asia/Shanghai",
+    "text": "改一下呗，无敌对时间结束没用",
+    "kind": "bug",
+    "status": "fixed",
+    "fixed_in": "v0.5.1",
+    "reply_rpid": null,
+    "reply": "感谢反馈，已修复！现在开启演示无敌就不限时，关闭后从原来的剩余时间继续。网站和Toy都已更新，重新打开试玩就能用。",
+    "reply_sha256": "b40b9471e81369a4fee799bb42bb7f0f590eb3c1e6090d138c6bea2d61f78a90",
+    "reply_status": "public_verified",
+    "reply_verified_at": "2026-10-06T10:13:04.838269+00:00",
+    "url": "https://www.bilibili.com/opus/1255480955666169860#reply319834688688",
+    "evidence": "D:/project/task-artifacts/cadillacs-invincible-timeout-20261006-01a110a0/reply-verified.jpg",
+    "note": "通过浏览器在原楼回复，刷新后可见；公开DOM未提供回复ID，按原楼ID与正文哈希查重。"
   }
 }
