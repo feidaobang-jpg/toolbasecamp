@@ -7,23 +7,23 @@
    "url": "https://www.bilibili.com/video/BV18XHW66E55/",
    "owner_uid": 16214353,
    "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-   "last_public_verified_version": "v0.5.2",
+   "last_public_verified_version": "v0.6.0",
    "status": "published（2026-10-05 16:37 公开可见）",
    "publish_record": "video/views-20261005/work/publication-result.json",
    "toy_bound": true,
    "pinned_comment_rpid": 316113740017,
-   "last_public_verified_at": "2026-10-06T21:25:28+08:00",
-   "last_sync_record": "releases/v0.5.2/bilibili-sync.json",
+   "last_public_verified_at": "2026-10-07T07:21:07+08:00",
+   "last_sync_record": "releases/v0.6.0/bilibili-sync.json",
    "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
    "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3",
-   "lastPublicVerifiedVersion": "v0.5.2",
-   "descriptionHash": "bf3a971cd566dd9af9e28d4f12289ad2081d61c058301c047a962a1fdb2e36d9",
-   "release": "releases/v0.5.2/handoff.json",
-   "publicVerifiedAt": "2026-10-06T21:25:28+08:00"
+   "lastPublicVerifiedVersion": "v0.6.0",
+   "descriptionHash": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001",
+   "release": "releases/v0.6.0/handoff.json",
+   "publicVerifiedAt": "2026-10-07T07:21:07+08:00"
   }
  ],
  "status": "public_verified",
- "updated_at": "2026-10-06T21:25:28+08:00",
+ "updated_at": "2026-10-07T07:21:07+08:00",
  "mapping_sources": [
   "本期发布记录 video/views-20261005/work/publication-result.json",
   "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -82,34 +82,45 @@
    "record": "releases/v0.5.2/bilibili-sync.json",
    "resolved_version": "v0.5.2",
    "public_verified_at": "2026-10-06T21:25:28+08:00"
-  }
- ],
- "pending_updates": [
+  },
   {
    "version": "v0.5.4",
    "classification": "普通补丁",
-   "status": "pending_merge",
+   "status": "resolved",
    "summary": "暂停后重新开始恢复声音；第二关可走到画面下方。",
    "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
-   "record": "releases/v0.5.4/handoff.json"
+   "record": "releases/v0.5.4/handoff.json",
+   "resolved_version": "v0.6.0"
   },
   {
    "version": "v0.5.5",
    "classification": "普通补丁",
-   "status": "pending_merge",
+   "status": "resolved",
    "summary": "开枪看得见子弹、火花在枪口。",
    "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
-   "record": "releases/v0.5.5/handoff.json"
+   "record": "releases/v0.5.5/handoff.json",
+   "resolved_version": "v0.6.0"
   },
   {
    "version": "v0.5.6",
    "classification": "普通补丁",
-   "status": "pending_merge",
+   "status": "resolved",
    "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
    "record": "releases/v0.5.6/handoff.json",
-   "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
+   "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。",
+   "resolved_version": "v0.6.0"
+  },
+  {
+   "version": "v0.6.0",
+   "classification": "正式版本",
+   "status": "resolved",
+   "summary": "更新行改为 v0.6.0：打击感重做；并入开枪看得见子弹、完整原曲 BGM。",
+   "record": "releases/v0.6.0/bilibili-sync.json",
+   "resolved_version": "v0.6.0",
+   "public_verified_at": "2026-10-07T07:21:07+08:00"
   }
  ],
+ "pending_updates": [],
  "version": "v0.3.0",
  "history": [
   {
@@ -122,8 +133,8 @@
  ],
  "last_public_verified": {
   "bvid": "BV18XHW66E55",
-  "version": "v0.5.2",
-  "at": "2026-10-06T21:25:28+08:00",
-  "description_sha256": "bf3a971cd566dd9af9e28d4f12289ad2081d61c058301c047a962a1fdb2e36d9"
+  "version": "v0.6.0",
+  "at": "2026-10-07T07:21:07+08:00",
+  "description_sha256": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001"
  }
 }
