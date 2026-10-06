@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-difficulty-v0.19.0",
+  "base_version": "web-controls-v0.18.3",
+  "created_at": "2026-10-06T03:17:19.060531+00:00",
+  "classification": "正式版本",
+  "build": {
+    "id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+    "commit": "1794bc1a3cefed0418ec8ebfc55203453f704df5",
+    "dirty": false,
+    "fingerprint": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "files": {
+      "campaign-difficulty.js": "01b85ea4d0c8052844281fdf18f6f7ac5d62f9a0fabb85a52a14789e4543eb6e",
+      "game.js": "33cadc2c174e0cb0d363c1ca594f09ab767237d9f4a890f669e94a47c3ae1d3c",
+      "game.compat.js": "a6fe018dac56283f98e1c8d8b2e7c3e8fe81bf452e11e6b6b095344756a026ee",
+      "index.html": "e853be3910fd74278a375be2f2bbbec8aeb1d3b16ccd646350807a5d7a7da96e",
+      "save-validation.js": "1966ab081a26343a01d251fcf34ef4e74b21782872aba7b2012b0c3642685dd5",
+      "toy-platform.js": "b14583cff0c8e1c1dc9b35407c3ad3521c49b2b9764cc18784bfa3ae89b497d9"
+    }
+  },
+  "feature_inventory": [
+    {
+      "id": "campaign-difficulty",
+      "description": "新局休闲/普通/困难三档；本局固定，旧档普通，本地/云存档携带难度；副本独立难度不叠加",
+      "status": "implemented",
+      "evidence_ids": [
+        "desktop-difficulty",
+        "landscape-difficulty",
+        "portrait-difficulty"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "campaign-difficulty",
+      "feature_ids": [
+        "campaign-difficulty"
+      ],
+      "before": "战役仅有关卡/章节/周目递增，没有玩家可选难度",
+      "after": "休闲降低伤害并提高基地容错；普通保留旧数值；困难主要提升增援节奏及精英压力，限制额外金币增长",
+      "user_visible_result": "新局可选挑战强度，菜单/存档/HUD/结算/云档标识一致",
+      "evidence_ids": [
+        "desktop-difficulty",
+        "desktop-hud",
+        "landscape-difficulty",
+        "portrait-difficulty"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "pause-toolbar-overlap",
+      "found_version": "web-difficulty-v0.19.0开发测试",
+      "reproduction": [
+        "打开自由测试",
+        "暂停",
+        "点击返回主菜单"
+      ],
+      "observed": "webTools覆盖按钮并拦截点击",
+      "impact": "暂停菜单返回受阻",
+      "cause": "菜单z-index30低于工具栏35",
+      "status": "fixed",
+      "fix": "菜单层级36，保留40层以上面板及确认框",
+      "before_media_ids": [
+        "pause-overlap-before"
+      ],
+      "after_media_ids": [],
+      "verification": "电脑及模拟触屏均正常返回主菜单"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop-difficulty",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/desktop-difficulty.png",
+      "sha256": "8150e5399fb78d5bb40c1c39caeeed33f691f39cfb6d0bd52984d69a48d2bbed",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop-hard-pressure",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/desktop-hard-pressure.png",
+      "sha256": "7719bb6164ae66f13a1814a6d6d1c3e9cd84b36f2e208aeb51ad4a60256da7d1",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop-hud",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/desktop-hud.png",
+      "sha256": "41ef6bd2e41873549854ff880112e0652b4843ab1b190e2d1270337d8635000b",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "landscape-difficulty",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/landscape-difficulty.png",
+      "sha256": "4f700867d6a7d03fc0b83af4ea3eeab58066a5fef4b2a7915ead1925259738f8",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "landscape-hard-pressure",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/landscape-hard-pressure.png",
+      "sha256": "ce13d2410b80b51cabf4133b678f0c7977cfee01ce3cf19d23d330f927b5d9f5",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "landscape-hud",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/landscape-hud.png",
+      "sha256": "6264e56c0d477e16bf9a36cbb74683e29bc6eb3d6657e989f34d66a17c85421c",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "pause-overlap-before",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/pause-overlap-before.png",
+      "sha256": "e074d6131945ec98cda77bc3fdd68d7c5ecf05b31cb0ec7e8e51384e8951f062",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": null,
+      "capture_mode": "realtime-automation",
+      "description": "本任务修复前的实时自动化截图：暂停菜单返回按钮被工具栏拦截；菜单层级调整前",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "portrait-difficulty",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/portrait-difficulty.png",
+      "sha256": "db8cb522279e77e9d2dc086e265f09b0ca50d5905b027e0d41c851e5f443b414",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "portrait-hud",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/portrait-hud.png",
+      "sha256": "57813c83358a650ffe010496fed2631bdd36dc2367c0d5a3a3e8105880b821ea",
+      "kind": "screenshot",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "当前三档难度菜单、存档或受控战斗场景；手机为浏览器触控模拟",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "campaign-difficulty-video",
+      "file": "releases/web-difficulty-v0.19.0/qa/captures/campaign-difficulty.webm",
+      "sha256": "9c9d15ccbea3f142a919145369f017b300217c85a0ecf047ae71db27dae9c938",
+      "kind": "video",
+      "version": "web-difficulty-v0.19.0",
+      "build_id": "329210a23c4968cfc7a7f5d66c90c749225249014ae46a90ac8aaec32078739a",
+      "capture_mode": "realtime-automation",
+      "description": "桌面三档选择、受控规则检查、存档及返回菜单的自动化WebGL录像；含测试定位",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 5.88,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "results": "qa/results.json",
+    "performance": "qa/performance.json",
+    "devices": [
+      "Windows Edge + RTX 4060 Ti",
+      "844×390及390×844触控/视口模拟"
+    ],
+    "method": "真实WebGL页面、键盘/触控菜单与带标记的qa战斗夹具；每视口800组普通曲线/困难压力/金币期望比较",
+    "result": "pass",
+    "not_tested": [
+      "真实手机多指与性能",
+      "Toy云存档实际读写（本次测试载荷验证和迁移，未覆盖用户云档）",
+      "真人难度平衡试玩"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "测试录像无游戏音轨；正式解说视频应补录声音",
+      "难度体验仍需玩家反馈，自动化仅验证规则与压力变化"
+    ]
+  },
+  "thumbnail": {
+    "decision": "reuse",
+    "reason": "规则与菜单更新，不改变游戏美术、场景或主要视觉身份"
+  },
+  "channels": {
+    "website": {
+      "version": "web-difficulty-v0.19.0",
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "id": "38678478981120",
+      "status": "pending_sync"
+    },
+    "bilibili": {
+      "trigger": "正式版本新增玩家可选难度",
+      "status": "pending_sync",
+      "targets": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ]
+    }
+  }
+}
