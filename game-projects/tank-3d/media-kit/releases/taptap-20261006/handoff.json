@@ -1,0 +1,120 @@
+{
+  "task_id": "01a11130-2c01-7462-af30-a19a99a2c2c9-taptap-tank-02",
+  "classification": "channel_launch_preparation",
+  "source_version": "lobby1",
+  "source_commit": "4cb9281a7d439791d12accf50fc5b5e315eadf0e",
+  "artifact_directory": "D:/project/toolbasecamp-artifacts/taptap/tank-3d/20261006",
+  "package": {
+    "name": "tank-3d.zip",
+    "sha256": "7466827208743fed47995cea929d102ddc1a7ed8129bc763d81a834751ec91f5",
+    "bytes": 410039,
+    "h5_version_id": 269855,
+    "package_id": 71521,
+    "upload_task_id": "6957a7a5-84f2-4e91-b95f-b72bffaace55",
+    "slot": "main"
+  },
+  "new_game": {
+    "title": "坦克大战 3D",
+    "developer_id": 100726,
+    "app_id": 962376,
+    "version_name": "V-20261006",
+    "version_id": 1039983,
+    "status": "reviewing",
+    "review_submitted": true,
+    "release_schedule": "immediate_after_approval",
+    "remaining_blockers": [],
+    "listing": "https://developer.taptap.cn/v3/100726/app/962376/store/update",
+    "materials": {
+      "icon": 348330,
+      "banner": 348331,
+      "vertical_cover": 348332,
+      "screenshots": [
+        348333,
+        348334,
+        348338
+      ],
+      "gameplay_video": 5945529
+    }
+  },
+  "verification": {
+    "desktop": "passed: 1920x1080, real game controls, camera and movement/fire captures",
+    "mobile_landscape_simulation": "passed: 844x390",
+    "mobile_portrait_simulation": "passed: 390x844",
+    "control_mode_switch": "passed: touch/desktop both ways, current stage and mode preserved",
+    "co_op": "passed: two browser clients, password room, ready/start, production relay state synchronization",
+    "javascript_errors": 0,
+    "http_failures": 0,
+    "real_mobile_test": false,
+    "taptap_client_test": false,
+    "report": "qa.json"
+  },
+  "old_games": [
+    {
+      "title": "坦克大战",
+      "app_id": 927863,
+      "version_id": 1039885,
+      "status": "close_entry_version_published_detail_downlisting_ticket_processing",
+      "draft_platform_flags": {
+        "android": 1,
+        "ios": 1,
+        "pc": 1
+      },
+      "live_entry_closed": true,
+      "support_ticket_submitted": true,
+      "next": "Wait for detail-page downlisting support ticket 109777.",
+      "support_ticket": {
+        "id": "6ac504a55d5418353054fbac",
+        "status": "processing",
+        "url": "https://developer.taptap.cn/v3/tickets/6ac504a55d5418353054fbac",
+        "number": 109777
+      }
+    },
+    {
+      "title": "合成太阳",
+      "app_id": 225630,
+      "published_version_id": 177221,
+      "cloned_draft_version_id": 1040005,
+      "status": "download_closed_detail_downlisting_ticket_processing",
+      "draft_platform_flags": {
+        "android": 1,
+        "ios": 1
+      },
+      "support_ticket_submitted": true,
+      "next": "Wait for detail-page downlisting support ticket 109776.",
+      "support_ticket": {
+        "id": "6ac504072576f7135627307f",
+        "status": "processing",
+        "url": "https://developer.taptap.cn/v3/tickets/6ac504072576f7135627307f",
+        "number": 109776
+      }
+    },
+    {
+      "title": "公路防守",
+      "app_id": 933938,
+      "status": "absent_from_fresh_account_inventory",
+      "deleted": false,
+      "deletion_warning": "Deletion cannot be reversed and the associated TapTap Maker project cannot be published again.",
+      "note": "After user confirmed irreversible deletion, fresh UI and complete CLI inventory contained four games and no 933938. No delete call was performed in this continuation because the game was already absent.",
+      "resource_query": "Official analyze-app-status returned not_found/404; no matching title in complete four-game account inventory."
+    }
+  ],
+  "legal": {
+    "sce_url": "https://www.taptap.cn/doc/ugcgame-agreement/",
+    "user_consent": "explicitly_confirmed_in_current_chat_2026-10-06",
+    "signed_this_task": true,
+    "source_note": "Game metadata identifies original Battle City sound effects; do not claim all uploaded content is wholly original."
+  },
+  "channel_baselines": {
+    "taptap_last_successful_publication": null,
+    "website_change_this_task": false,
+    "toy_update_this_task": false,
+    "bilibili_description_update_this_task": false
+  },
+  "coordination": {
+    "branch": "codex/tank-taptap-20261006",
+    "main_integration": "merged_and_remote_main_verified",
+    "external_account_lock": "release_before_user_approval_pause_and_reacquire_before_further_writes",
+    "integrated_commit": "e36c49ff",
+    "verification": "Merged newest origin/master under shared lock, checked script syntax, rebuilt exact same SHA256 archive, normally pushed master and verified remote."
+  }
+}

@@ -1,0 +1,39 @@
+{
+ "version": "v0.5.2",
+ "source": "public/html/game/cadillacs-stage1-3d",
+ "source_sha256": {
+  "css/style.css": "9c87caddd17daf38548d76eebf939d38aa8e65bbf75d45838d760d0f80380558",
+  "index.html": "d1411cea7e18e2ff9e054be6a2f55ab7679aaf7df011e2a065701d75207dee5d",
+  "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+  "js/game.min.js": "dc27f0ed35d4342df06f4f50fd4761bf61abe375072a73555c3787a8de0739fd",
+  "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+  "sounds/boss2.mp3": "b74295d4adbbb2b6f3bda66612f8157298d24616b69a731d1a8e3eeb24b05291",
+  "sounds/forest.mp3": "d635c99fd83098c2115ddb136d36c47907009a38d16b1fa06603c87e6b22883e",
+  "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+  "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+  "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+  "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+  "sounds/swamp.mp3": "1c0c30167670107e590c4cbe6254d485f5faca717ff3d20cdb373e146b95724e"
+ },
+ "files": {
+  "css/style.css": "9c87caddd17daf38548d76eebf939d38aa8e65bbf75d45838d760d0f80380558",
+  "index.html": "4532f9256c5ef1c451e751fc2bb8320e4b4077e02ea77fb95af9d5e040a3c485",
+  "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+  "js/game.min.js": "dc27f0ed35d4342df06f4f50fd4761bf61abe375072a73555c3787a8de0739fd",
+  "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+  "sounds/boss2.mp3": "b74295d4adbbb2b6f3bda66612f8157298d24616b69a731d1a8e3eeb24b05291",
+  "sounds/forest.mp3": "d635c99fd83098c2115ddb136d36c47907009a38d16b1fa06603c87e6b22883e",
+  "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+  "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+  "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+  "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+  "sounds/swamp.mp3": "1c0c30167670107e590c4cbe6254d485f5faca717ff3d20cdb373e146b95724e"
+ },
+ "status": "published",
+ "package_tree_sha256": "bb20d9b0602f74539810088564ca05acee2ddfc18fcf51709fc6d42fadde3f61",
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_RUoKI7nB/index.html",
+ "preview_checks": "qa/toy-preview-check.js 20/20，qa/timer.js 26/26（预览链接）",
+ "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_9iIciGlb/index.html",
+ "submitted_at": "2026-10-06T21:23:05+08:00",
+ "status_verified_at": "2026-10-06T21:25:58+08:00"
+}
