@@ -7,23 +7,23 @@
    "url": "https://www.bilibili.com/video/BV18XHW66E55/",
    "owner_uid": 16214353,
    "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-   "last_public_verified_version": "v0.5.0",
+   "last_public_verified_version": "v0.5.2",
    "status": "published（2026-10-05 16:37 公开可见）",
    "publish_record": "video/views-20261005/work/publication-result.json",
    "toy_bound": true,
    "pinned_comment_rpid": 316113740017,
-   "last_public_verified_at": "2026-10-06T09:19:44Z",
-   "last_sync_record": "releases/v0.5.0/bilibili-sync.json",
+   "last_public_verified_at": "2026-10-06T21:25:28+08:00",
+   "last_sync_record": "releases/v0.5.2/bilibili-sync.json",
    "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
    "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3",
-   "lastPublicVerifiedVersion": "v0.5.0",
-   "descriptionHash": "8a494738ec22faed16a76f41412da246b53b182a17afa4b67c3d7bf313513049",
-   "release": "releases/v0.5.0/handoff.json",
-   "publicVerifiedAt": "2026-10-06T09:19:44Z"
+   "lastPublicVerifiedVersion": "v0.5.2",
+   "descriptionHash": "bf3a971cd566dd9af9e28d4f12289ad2081d61c058301c047a962a1fdb2e36d9",
+   "release": "releases/v0.5.2/handoff.json",
+   "publicVerifiedAt": "2026-10-06T21:25:28+08:00"
   }
  ],
  "status": "public_verified",
- "updated_at": "2026-10-06T17:20:20+08:00",
+ "updated_at": "2026-10-06T21:25:28+08:00",
  "mapping_sources": [
   "本期发布记录 video/views-20261005/work/publication-result.json",
   "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -56,25 +56,35 @@
    "record": "releases/drag-direction-20261005/handoff.json",
    "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
    "resolved_version": "v0.3.0"
-  }
- ],
- "pending_updates": [
+  },
   {
    "version": "v0.4.1",
    "classification": "普通补丁",
-   "status": "pending_merge",
+   "status": "resolved",
    "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-   "record": "releases/v0.4.1/handoff.json"
+   "record": "releases/v0.4.1/handoff.json",
+   "resolved_version": "v0.5.2"
   },
   {
    "version": "v0.5.1",
    "classification": "普通补丁",
-   "status": "pending_merge",
+   "status": "resolved",
    "summary": "无敌模式不限时，倒计时在关闭无敌后从剩余时间继续。",
    "reason": "普通补丁累计到下一次有意义的简介更新；现有简介未描述无敌限时规则，入口和操作仍准确。",
-   "record": "releases/v0.5.1/handoff.json"
+   "record": "releases/v0.5.1/handoff.json",
+   "resolved_version": "v0.5.2"
+  },
+  {
+   "version": "v0.5.2",
+   "classification": "正式版本",
+   "status": "resolved",
+   "summary": "简介删去不准确的画风句，更新行改为 v0.5.2 并注明演示无敌不再限时。",
+   "record": "releases/v0.5.2/bilibili-sync.json",
+   "resolved_version": "v0.5.2",
+   "public_verified_at": "2026-10-06T21:25:28+08:00"
   }
  ],
+ "pending_updates": [],
  "version": "v0.3.0",
  "history": [
   {
@@ -87,8 +97,8 @@
  ],
  "last_public_verified": {
   "bvid": "BV18XHW66E55",
-  "version": "v0.4.0",
-  "at": "2026-10-06T01:41:19.279Z",
-  "description_sha256": "e574e49fccda92e936909f841de1204c4bb81a6f8850de28cbcfff8873178495"
+  "version": "v0.5.2",
+  "at": "2026-10-06T21:25:28+08:00",
+  "description_sha256": "bf3a971cd566dd9af9e28d4f12289ad2081d61c058301c047a962a1fdb2e36d9"
  }
 }

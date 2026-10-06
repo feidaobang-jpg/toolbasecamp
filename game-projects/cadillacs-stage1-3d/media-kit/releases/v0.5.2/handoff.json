@@ -3,7 +3,7 @@
  "game_id": "cadillacs-stage1-3d",
  "version": "v0.5.2",
  "base_version": "v0.5.1",
- "created_at": "2026-10-06T21:30:00+08:00",
+ "created_at": "2026-10-06T21:00:00+08:00",
  "classification": "正式版本",
  "build": {
   "id": "00ee256f5169fb89c4c17ad422770d5670f9f8a919caf808b8a2981cd93c4e70",
@@ -76,6 +76,17 @@
    "description": "旧版 v0.4.1 与改回后同站位对照",
    "visual_review": "pass",
    "audio": "none"
+  },
+  {
+   "id": "live-v052",
+   "file": "releases/v0.5.2/captures/live-v052.png",
+   "kind": "screenshot",
+   "version": "v0.5.2",
+   "build_id": "00ee256f5169fb89c4c17ad422770d5670f9f8a919caf808b8a2981cd93c4e70",
+   "capture_mode": "offline-frame-stepping（线上网站）",
+   "description": "线上楼顶 / 森林 / 屠夫区固定站位，确认描边与写实贴图已上线",
+   "visual_review": "pass",
+   "audio": "none"
   }
  ],
  "historical_media": [],
@@ -117,13 +128,29 @@
   ]
  },
  "website": {
-  "status": "pending"
+  "status": "deployed_verified",
+  "commit": "c39a60d6",
+  "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+  "bundle_sha256": "dc27f0ed35d4342df06f4f50fd4761bf61abe375072a73555c3787a8de0739fd",
+  "verification": "线上 game.min.js / style.css / 封面 / config.js 与提交逐字节一致，index.html 与 games.html 仅 ?v= 改写为提交号",
+  "verified_at": "2026-10-06T21:18:00+08:00"
  },
  "toy": {
-  "status": "pending"
+  "id": 40412421031936,
+  "status": "published",
+  "package_tree_sha256": "bb20d9b0602f74539810088564ca05acee2ddfc18fcf51709fc6d42fadde3f61",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_RUoKI7nB/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_9iIciGlb/index.html",
+  "submitted_at": "2026-10-06T21:23:05+08:00",
+  "preview_checks": "20/20 + timer 26/26",
+  "record": "releases/toy-v0.5.2/toy-build.json",
+  "verified_at": "2026-10-06T21:25:58+08:00",
+  "public_check": "正式入口 iframe 40412421031936-v23096：版本 v0.5.2，桌面 + 触屏 20/20"
  },
  "bilibili": {
-  "status": "pending"
+  "bvid": "BV18XHW66E55",
+  "status": "public_verified",
+  "record": "releases/v0.5.2/bilibili-sync.json"
  },
  "includes": [
   "v0.5.1 演示无敌不限时补丁（另一任务，已上线网站与 Toy）"
