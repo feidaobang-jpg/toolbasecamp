@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "live-v0.1.0",
+  "base_version": "web-touch-layout-v0.19.1",
+  "created_at": "2026-10-06T13:36:03.543Z",
+  "build": {
+    "id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+    "commit": "8a1d64b8",
+    "dirty": false,
+    "fingerprint": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+    "entrypoint": "public/html/game/starship-defense/live.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "live-modes",
+      "description": "AI独播、我操作AI辅助、我主持AI操作，保留本局切换",
+      "status": "implemented",
+      "evidence_ids": [
+        "live-image-0",
+        "live-image-1"
+      ]
+    },
+    {
+      "id": "live-rounds",
+      "description": "五分钟守城、胜负结算、自动下一场",
+      "status": "implemented",
+      "evidence_ids": [
+        "live-image-2"
+      ]
+    },
+    {
+      "id": "live-support",
+      "description": "免费兵种组/投票和四种支援，真实事件接入代码就绪，B站账号接入待核验",
+      "status": "implemented",
+      "evidence_ids": [
+        "live-image-1"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "live-entry",
+      "feature_ids": [
+        "live-modes",
+        "live-rounds",
+        "live-support"
+      ],
+      "before": "仅普通试玩",
+      "after": "共用核心的独立直播画面、本机服务与控制台",
+      "evidence_ids": [
+        "live-image-0",
+        "live-image-1"
+      ],
+      "verification": "local_verified"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "zero-round-clock",
+      "status": "fixed",
+      "observed": "整备结束后立即判胜",
+      "fix": "切换阶段初始化剩余战斗时长",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "live-image-2"
+      ],
+      "retest": "八项单元/协议/服务检查与浏览器实测通过"
+    },
+    {
+      "id": "pickup-gpu-lifetime",
+      "status": "fixed",
+      "observed": "持续运行拾取物GPU几何数量增长",
+      "fix": "拾取、超时、清场、关间回收释放专属几何与材质",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "retest": "100次渲染拾取压力检查无持续几何增长"
+    }
+  ],
+  "media": [
+    {
+      "id": "live-image-0",
+      "file": "qa/desktop-live.png",
+      "sha256": "56d311a92673fd2c609b7c782446655b1f2865566b8a092a0923ac48809ad296",
+      "kind": "screenshot",
+      "version": "live-v0.1.0",
+      "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+      "capture_mode": "realtime-automation",
+      "description": "desktop-live.png：桌面自动操作或手机视口模拟；轮次切换使用加速时钟",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "live-image-1",
+      "file": "qa/console.png",
+      "sha256": "ccb4ff0eb9e2ba7fb767f90f7b89553878fe1c5714909f3fe311792ca7da4a1f",
+      "kind": "screenshot",
+      "version": "live-v0.1.0",
+      "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+      "capture_mode": "realtime-automation",
+      "description": "console.png：桌面自动操作或手机视口模拟；轮次切换使用加速时钟",
+      "width": 1280,
+      "height": 1139,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "live-image-2",
+      "file": "qa/result.png",
+      "sha256": "b2ab44747706f98bd12c97e9362e970073c57e0feb5643bb579d8a1792422775",
+      "kind": "screenshot",
+      "version": "live-v0.1.0",
+      "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+      "capture_mode": "realtime-automation",
+      "description": "result.png：桌面自动操作或手机视口模拟；轮次切换使用加速时钟",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "live-image-3",
+      "file": "qa/normal-844.png",
+      "sha256": "8e83f1268789e8fc7d88471f556f7a830cbfc2ac463dcccb8f025edf100a6abc",
+      "kind": "screenshot",
+      "version": "live-v0.1.0",
+      "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+      "capture_mode": "realtime-automation",
+      "description": "normal-844.png：桌面自动操作或手机视口模拟；轮次切换使用加速时钟",
+      "width": 844,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "live-image-4",
+      "file": "qa/normal-390.png",
+      "sha256": "bc1ff2c2b1342731e62e1508ec07062d83e2ad3acf83b8ddf0b5559c25216ca9",
+      "kind": "screenshot",
+      "version": "live-v0.1.0",
+      "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+      "capture_mode": "realtime-automation",
+      "description": "normal-390.png：桌面自动操作或手机视口模拟；轮次切换使用加速时钟",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "live-video",
+      "file": "qa/page@c28e285980f75d0b4e36c9d9d3ef34aa.webm",
+      "sha256": "de08e4b8366db5f1d410fda14f6dd8f96ec0476af4027c7de09ed8b048288a23",
+      "kind": "video",
+      "version": "live-v0.1.0",
+      "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
+      "capture_mode": "realtime-automation",
+      "description": "浏览器自动化验收原片，含加速轮次或普通入口回归；未作为B站实播",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "browser": "Edge headless",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "viewport": [
+      1280,
+      720
+    ],
+    "method": "真实浏览器桌面自动化、手机横竖视口模拟；轮次测试加速，另有360秒真实时钟运行",
+    "results": {
+      "smoke": "pass",
+      "unit_and_protocol_checks": 8,
+      "soak_seconds": 360.687,
+      "soak_rounds": 2,
+      "soak_errors": [],
+      "soak_scope": "最终直播规则/模式/波次；拾取GPU释放随后独立压力复测",
+      "performance": {
+        "samples": 935,
+        "averageFPS": 155.0477580250821,
+        "medianMs": 5.899999976158142,
+        "p95Ms": 8.799999952316284,
+        "over50ms": 1,
+        "drawCalls": 45,
+        "triangles": 229424,
+        "memory": {
+          "geometries": 87,
+          "textures": 8
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark"
+      }
+    },
+    "untested": [
+      "真实手机多指触控与性能",
+      "真实B站鉴权、礼物与推流",
+      "平台对本项目AI独播的许可",
+      "24小时持续运行",
+      "录像游戏音频采集"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "正式账号权限和项目审核未完成",
+      "当前视频是无音频自动化验收原片，未制作发布视频"
+    ]
+  },
+  "channels": {
+    "website": "pending_deployment",
+    "toy": "pending_core_compatibility_update",
+    "bilibili_description": "deferred_until_live_project_is_approved_and_verified",
+    "live_stream": "not_started"
+  }
+}

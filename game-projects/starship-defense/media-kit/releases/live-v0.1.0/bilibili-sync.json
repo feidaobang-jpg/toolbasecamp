@@ -1,0 +1,11 @@
+{
+  "version": "live-v0.1.0",
+  "status": "deferred",
+  "reason": "直播准备版尚未审核开播；普通试玩介绍仍准确，不向旧视频宣称已无人直播。保留原基线，正式直播可用后合并说明。",
+  "account_uid": 16214353,
+  "existing_videos": [
+    "BV1Ujad6DEuf",
+    "BV1WbHq6eEBt"
+  ],
+  "live_verified": false
+}

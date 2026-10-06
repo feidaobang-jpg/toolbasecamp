@@ -1,0 +1,81 @@
+{
+  "before": {
+    "state": "battle",
+    "hp": 2000,
+    "pos": [
+      12.740022127166375,
+      15.508396520797623
+    ],
+    "enemies": 3,
+    "squad": 4,
+    "session": {
+      "version": "live-v0.1.0",
+      "mode": "auto",
+      "round": 1,
+      "phase": "battle",
+      "remaining": 12,
+      "running": true,
+      "viewers": 0,
+      "votes": {
+        "defend": 0,
+        "follow": 0
+      },
+      "roster": [],
+      "log": [
+        {
+          "name": "战地副官",
+          "text": "先锋首领登场，最后一分钟！"
+        },
+        {
+          "name": "战地副官",
+          "text": "虫潮来袭！守住基地五分钟，免费弹幕也能参与。"
+        },
+        {
+          "name": "战地副官",
+          "text": "第1场守城开始整备。弹幕加入、选兵种，守城或跟随可投票。"
+        }
+      ]
+    }
+  },
+  "after": {
+    "round": 1,
+    "hp": 2000
+  },
+  "perf": {
+    "samples": 935,
+    "averageFPS": 155.0477580250821,
+    "medianMs": 5.899999976158142,
+    "p95Ms": 8.799999952316284,
+    "over50ms": 1,
+    "drawCalls": 45,
+    "triangles": 229424,
+    "memory": {
+      "geometries": 87,
+      "textures": 8
+    },
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.3333333333333333,
+    "drawingBuffer": [
+      1280,
+      720
+    ],
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "quality": "high",
+    "theme": "dark"
+  },
+  "controllerChecks": {
+    "a": {
+      "ok": true,
+      "detail": "护盾已补充（上限150）"
+    },
+    "b": {
+      "ok": false,
+      "reason": "重复事件"
+    }
+  },
+  "errors": [],
+  "method": "Edge headless; accelerated clock for round transitions; desktop/mobile viewport simulation"
+}
