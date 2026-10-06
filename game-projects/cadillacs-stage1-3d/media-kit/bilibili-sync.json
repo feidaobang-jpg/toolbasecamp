@@ -65,6 +65,14 @@
    "status": "pending_merge",
    "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
    "record": "releases/v0.4.1/handoff.json"
+  },
+  {
+   "version": "v0.5.1",
+   "classification": "普通补丁",
+   "status": "pending_merge",
+   "summary": "无敌模式不限时，倒计时在关闭无敌后从剩余时间继续。",
+   "reason": "普通补丁累计到下一次有意义的简介更新；现有简介未描述无敌限时规则，入口和操作仍准确。",
+   "record": "releases/v0.5.1/handoff.json"
   }
  ],
  "version": "v0.3.0",
