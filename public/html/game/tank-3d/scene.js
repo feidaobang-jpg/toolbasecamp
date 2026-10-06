@@ -2,7 +2,7 @@
 // 以及 5 个视角预设（斜俯视 / 正俯视 / 近景 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
 // 美术全部程序化：基础几何体 + Canvas 纹理。1 个 8px 格 = 1 个世界单位，战场中心在原点。
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, Q, FIELD, DIRS, BASE_WALL } from './sim.js?v=merge1';
+import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer } from './sim.js?v=coop1';
 
 const C = N / 2, TAU = Math.PI * 2;
 const P = v => v / 8 - C;                       // FC 像素 → 世界坐标
@@ -332,7 +332,7 @@ export function createScene(canvas) {
   }
 
   // ---------- 镜头 ----------
-  const view = { subjectHeading: () => { const m=tankModels.get(world?.player?.id); return m ? m.group.rotation.y+m.turret.rotation.y : null; }, presetIndex: 0, yawOffset: 0, snap: true, titleMode: true, shake: 0, quality: 'high' };
+  const view = { subjectHeading: () => { const m=tankModels.get(localPlayer(world)?.id); return m ? m.group.rotation.y+m.turret.rotation.y : null; }, presetIndex: 0, yawOffset: 0, snap: true, titleMode: true, shake: 0, quality: 'high' };
   let elapsed = 0, fpYaw = 0, introK = -1;
   const target = new THREE.Vector3(), follow = new THREE.Vector3(), camPos = new THREE.Vector3(), lookAt = new THREE.Vector3();
   view.pitchOffset = 0;
@@ -343,7 +343,7 @@ export function createScene(canvas) {
   };
   view.preset = () => PRESETS[view.presetIndex];
   view.setPreset = i => { view.presetIndex = i; view.yawOffset = 0; view.pitchOffset = 0; view.snap = true; };
-  const fpActive = () => !!PRESETS[view.presetIndex].fp && !view.titleMode && !!world && !!world.player && world.player.state === 'active';
+  const fpActive = () => !!PRESETS[view.presetIndex].fp && !view.titleMode && localPlayer(world)?.state === 'active';
   view.firstPerson = fpActive;
   view.cameraYaw = () => (fpActive() ? fpYaw : 0) + view.yawOffset;
   view.facingYaw = () => fpYaw;
@@ -355,7 +355,7 @@ export function createScene(canvas) {
   }
   const lerpAngle = (a, b, k) => { let d = (b - a) % TAU; if (d > Math.PI) d -= TAU; if (d < -Math.PI) d += TAU; return a + d * k; };
   function playerPos(out) {
-    const p = world && world.player;
+    const p = localPlayer(world);
     if (p) return out.set(P(lerpPx(p.ox ?? p.x, p.x) + 8), 0, P(lerpPx(p.oy ?? p.y, p.y) + 8));
     return out.set(P(72), 0, P(200));
   }
@@ -369,7 +369,7 @@ export function createScene(canvas) {
     const k = view.snap ? 1 : 1 - Math.exp(-5 * dt);
     const fov = pr.fov, near = pr.fp ? .06 : .3;
     if (camera.fov !== fov || camera.near !== near) { camera.fov = fov; camera.near = near; camera.updateProjectionMatrix(); }
-    const p = world && world.player;
+    const p = localPlayer(world);
     if (pr.fp) {
       if (view.snap) fpYaw = -p.dir * Math.PI / 2;
       const yaw = fpYaw + view.yawOffset, fwd = [-Math.sin(yaw), -Math.cos(yaw)];
@@ -447,7 +447,8 @@ export function createScene(canvas) {
     if (isPlayer) {
       applyPlayerGear(m, t.stars, t.plate || 0, t.boats || 0);
       const blink = t.invuln > 0 && Math.floor(t.invuln / 4) % 2 === 0;
-      m.group.visible = !blink && !fpActive();
+      m.group.visible = !blink && !(fpActive() && localPlayer(world)?.id === t.id);
+      if (world.seats) { m.bodyMat.color.set(t.slot === 1 ? '#72c4dd' : '#e6be56'); m.turretMat.color.set(t.slot === 1 ? '#418ba7' : '#ba923a'); }
       m.bodyMat.emissive.set(t.hitFlash > 0 ? '#ff4040' : '#000000'); m.bodyMat.emissiveIntensity = t.hitFlash > 0 ? .9 : 0;
       return m;
     }
@@ -501,8 +502,8 @@ export function createScene(canvas) {
     // 坦克
     for (const m of tankModels.values()) m.seen = false;
     let si = 0;
-    const p = world.player;
-    if (p && p.state === 'active') { syncTank(p, true); if (p.shield > 0 && !fpActive()) shieldAt(si++, p, '#6fe7ff'); }
+    const players = world.seats ? world.seats.map(s => s.tank).filter(Boolean) : world.player ? [world.player] : [];
+    for (const p of players) if (p.state === 'active') { syncTank(p, true); if (p.shield > 0 && !(fpActive() && localPlayer(world)?.id === p.id)) shieldAt(si++, p, p.slot === 1 ? '#74d6ff' : '#ffe099'); }
     for (const t of world.bots) if (t.state === 'active') { syncTank(t, false); if (t.shield > 0 || (t.kind === 'commander' && t.escorts > 0)) shieldAt(si++, t, '#ff7aa0'); }
     for (let i = si; i < shields.length; i++) shields[i].visible = false;
     for (const [id, m] of tankModels) if (!m.seen) { scene.remove(m.group); m.bodyMat.dispose(); m.turretMat.dispose(); m.tread.dispose(); m.glow.material.dispose(); tankModels.delete(id); }
@@ -522,7 +523,8 @@ export function createScene(canvas) {
     // 出生光柱
     const spawns = [];
     for (const t of world.bots) if (t.state === 'spawn') spawns.push({ x: t.x + t.size / 2, y: t.y + t.size / 2, k: t.st / (t.size > 16 ? 100 : 56), big: t.size > 16 });
-    if (!world.player && world.playerSpawnT > 0) spawns.push({ x: 72, y: 200, k: world.playerSpawnT / 37, player: true });
+    if (world.seats) { for (const s of world.seats) if (!s.tank && s.spawnT > 0) spawns.push({ x: s.slot === 1 ? 136 : 72, y: 200, k: s.spawnT / 37, player: true }); }
+    else if (!world.player && world.playerSpawnT > 0) spawns.push({ x: 72, y: 200, k: world.playerSpawnT / 37, player: true });
     while (sparkles.length < spawns.length) {
       const g = new THREE.Group(); const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: sparkleTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); s.position.y = .9; g.add(s);
       const beam = new THREE.Mesh(new THREE.CylinderGeometry(.75, .95, 7, 20, 1, true), new THREE.MeshBasicMaterial({ color: '#bfe9ff', transparent: true, opacity: .2, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); beam.position.y = 3.5; g.add(beam);

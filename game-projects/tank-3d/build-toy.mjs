@@ -1,5 +1,5 @@
 // 生成 B 站 Toy 独立包（只打包，不发布）：node game-projects/tank-3d/build-toy.mjs
-// 网站版引用的 ../../../vendor 等路径改成包内相对路径；Toy 里没有本站游戏列表和 2D 联机版，去掉这两类外链。
+// 网站版引用的 ../../../vendor 等路径改成包内相对路径；保留 3D 联机，移除本站列表外链。
 import { readFileSync, writeFileSync, mkdirSync, cpSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { resolve, dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -26,7 +26,7 @@ for (const name of readdirSync(source)) {
     .replaceAll('../../../vendor/three/0.170.0/build/three.module.js', './vendor/three.module.js')
     .replaceAll('../../../favicon.svg', './favicon.svg').replaceAll('../../../js/game/drag-look.js', './drag-look.js');
   if (name === 'index.html') {
-    text = text.replace(/\s*<a data-act="coop"[^>]*>[\s\S]*?<\/a>/g, '').replace(/\s*<a data-act="list"[^>]*>[\s\S]*?<\/a>/g, '')
+    text = text.replace(/\s*<a data-act="list"[^>]*>[\s\S]*?<\/a>/g, '')
       .replaceAll('data-list-url="../../../games.html"', 'data-list-url="./index.html"').replace(' data-coop-url="../tank_battle.html"', '')
       .replaceAll('href="../../../games.html"', 'href="./index.html"').replaceAll('返回游戏列表</a>', '重新载入</a>');
   }

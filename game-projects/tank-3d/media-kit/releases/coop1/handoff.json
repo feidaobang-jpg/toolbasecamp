@@ -1,0 +1,81 @@
+{
+  "version": "coop1",
+  "classification": "正式版本",
+  "task_id": "01a110a7-dc48-7553-bb31-24a1a07bc56a-tank-coop-02",
+  "branch": "codex/tank-3d-coop-20261006",
+  "scope": "坦克大战3D双人合作守基地",
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "slug": "feidao-tank-3d",
+    "status": "pending_preview"
+  },
+  "bilibili": {
+    "BV1Wqaz6AEJb": "pending_update"
+  },
+  "validation": {
+    "url": "http://127.0.0.1:8792/public/html/game/tank-3d/index.html",
+    "results": [
+      {
+        "name": "bad room reports useful error",
+        "ok": true
+      },
+      {
+        "name": "two seats join/ready/start on identical stage",
+        "data": {
+          "code": "970721"
+        },
+        "ok": true
+      },
+      {
+        "name": "both players move and guest receives host motion",
+        "ok": true
+      },
+      {
+        "name": "guest fire executes on host",
+        "ok": true
+      },
+      {
+        "name": "guest pause freezes both simulations",
+        "ok": true
+      },
+      {
+        "name": "input mode switches without leaving room",
+        "ok": true
+      },
+      {
+        "name": "portrait rotates gameplay while preserving room",
+        "ok": true
+      },
+      {
+        "name": "shared clear/tally/next-stage",
+        "ok": true
+      },
+      {
+        "name": "guest disconnect ends room clearly",
+        "ok": true
+      },
+      {
+        "name": "single-player still works after networking",
+        "ok": true
+      }
+    ],
+    "physicalPhoneTest": false
+  },
+  "limits": [
+    "未完成B站App真机与多指触控验收",
+    "房主权威模拟，无中途加入或房主迁移"
+  ],
+  "captures": {
+    "host-lobby.png": "7cc2c0e63b0d2db5ae4629abb672f64129adc2b9c2dbd2d856ebc8928ed335d6",
+    "host-two-tanks.png": "31b653100597cdfbc5f72f071d40879045e42ab04c51a4320d26ecd36d32754b",
+    "mobile-lobby.png": "e12b17d51254b9fef752f105374a4295f46462cb105962b68aa7f9364fc36696",
+    "mobile-two-tanks.png": "a9acaebfd1172256d2ce5306b9902d3b4b644962ab7c2b38013b1957e9b16913",
+    "portrait-coop.png": "b8cbc9659b7efc7d9678e1b47be51a57e3d2bea9f9b6c0a3f537957933478d92",
+    "real-stage-host.png": "750a92a10b88681dc09f0425f9079e5e31f8f073c27151e415c19d4b42c9e272",
+    "real-stage-mobile.png": "c76ab634163f228e8ba935602809c78f20ed5ffcb228437f703d16e2458583d5"
+  },
+  "cover": "沿用现有实机封面：同一地图、坦克与画风"
+}

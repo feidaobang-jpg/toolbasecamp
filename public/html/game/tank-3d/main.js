@@ -1,19 +1,20 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=toy3dui3';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=toy3dui2';
-import { createRun, createWorld, step, turnPlayer, SCORE, TYPE_NAMES, qa } from './sim.js?v=merge1';
+import { createScene, PRESETS } from './scene.js?v=coop1';
+import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop1';
+import { CoopConnection, snapshot, hydrate } from './coop.js?v=coop1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=toy3dui2';
 
-const VERSION = 'toy3dui3';
+const VERSION = 'coop1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
 const CLEAN = params.get('clean') === '1';
 const $ = id => document.getElementById(id);
 const app = $('app'), stage = $('stage'), canvas = $('screen');
-const overlays = { menu: $('menu'), pause: $('pause'), tally: $('tally'), result: $('result') };
+const overlays = { menu: $('menu'), pause: $('pause'), tally: $('tally'), result: $('result'), lobby: $('lobby') };
 const hud = $('hud'), touch = $('touch'), keyHint = $('keyhint'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt');
 const listUrl = app.getAttribute('data-list-url') || '../../../games.html';
 document.querySelectorAll('.list-link').forEach(a => { a.href = listUrl; });
@@ -77,6 +78,112 @@ let paused = false, phase = 'curtain', phaseT = 0;
 let run = null, world = null, titleWorld = null, levelStart = null;
 let hurtFx = 0, gameClock = 0, toastTimer = 0, bannerT = 0, bossTipT = 0;
 const eventLog = [];
+let applyingNetworkAction = false, epoch = 0, remoteEpoch = -1, lastStateAt = 0, sentTerrain = -1, fullTerrainAt = 0;
+let remoteInput = { dir: -1 }, remoteInputAt = 0, lastInputAt = 0;
+let pendingEvents = [], networkStarted = false, snapshotReceivedAt = 0;
+const coop = new CoopConnection(onCoopMessage, text => { $('coop-message').textContent = text; });
+$('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim() || '坦克手'); });
+$('coop-join').addEventListener('click', () => {
+  const code = $('coop-code').value.trim();
+  if (!/^\d{6}$/.test(code)) { $('coop-message').textContent = '请填写好友的六位数字房间码'; return; }
+  coop.connect('join', $('coop-name').value.trim() || '坦克手', code);
+});
+$('coop-ready').addEventListener('click', () => { const ready = coop.room?.players.find(p => p.slot === coop.slot)?.ready; coop.send({ type: 'ready', ready: !ready }); });
+$('coop-start').addEventListener('click', () => coop.send({ type: 'start', config: { mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] } }));
+$('coop-copy').addEventListener('click', async () => {
+  if (!coop.room) return;
+  try { await navigator.clipboard.writeText(coop.room.code); $('coop-message').textContent = '房间码已复制，把它发给好友即可。'; }
+  catch { $('coop-message').textContent = '房间码：' + coop.room.code + '（可手动复制）'; }
+});
+window.addEventListener('pagehide', () => coop.disconnect());
+
+function renderLobby() {
+  const room = coop.room;
+  $('coop-room').textContent = room ? room.code : '尚未加入';
+  $('coop-roster').textContent = room ? room.players.map(p => `${p.slot + 1}P ${p.name} · ${p.slot === 0 ? '房主' : p.ready ? '已准备' : '未准备'}`).join('　 /　 ') : '输入昵称后建房，或填写好友的六位房间码。';
+  $('coop-create').disabled = $('coop-join').disabled = !!room;
+  $('coop-ready').hidden = !room || coop.host;
+  $('coop-start').hidden = !room || !coop.host;
+  $('coop-copy').disabled = !room;
+  $('coop-start').disabled = !room || room.players.length !== 2 || !room.players.every(p => p.ready);
+  $('coop-ready').textContent = room?.players.find(p => p.slot === coop.slot)?.ready ? '取消准备' : '准备好了';
+  $('coop-settings').textContent = `开局：${modeName(settings.mode)} · 第 ${startStageOf(settings.mode).stage} 关 · 每人${settings.lives[settings.mode] === 'inf' ? '无限命' : '3命'}。房主在主菜单调整后建房；两人共用战场与得分，各自拾取道具。`;
+}
+function openLobby() { show('lobby'); renderLobby(); }
+function networkAction(action) {
+  if (!coop.active || applyingNetworkAction) return false;
+  clearInput();
+  coop.send({ type: 'action', action });
+  return true;
+}
+function onCoopMessage(msg) {
+  if (msg.type === 'joined' || msg.type === 'roster') { renderLobby(); $('coop-message').textContent = '把房间码告诉好友，加入后点准备；由房主开始。'; }
+  else if (msg.type === 'start') {
+    settings.mode = msg.config.mode;
+    run = createRun(msg.config); run.coop = true;
+    run.startedAt = gameClock; run.startStage = run.stage; run.startCycle = run.cycle;
+    uiMode = 'game'; paused = false; networkStarted = true;
+    remoteInput = { dir: -1 }; pendingEvents = []; sentTerrain = -1; remoteEpoch = -1;
+    view.setPreset(settings.camera[run.mode]); beginStage(); show(null);
+    showToast(`${coop.slot + 1}P · 房间 ${coop.room.code} · ${coop.host ? '你是房主' : '好友是房主'}`);
+  } else if (msg.type === 'input' && coop.host) {
+    remoteInput = { ...msg.input, firePressed: !!(remoteInput.firePressed || msg.input.firePressed) };
+    remoteInputAt = performance.now();
+  } else if (msg.type === 'action' && coop.host) {
+    applyingNetworkAction = true;
+    try {
+      if (msg.action === 'pause') pauseGame();
+      if (msg.action === 'resume' && paused) resume();
+      if (msg.action === 'restart' && paused) restartStage();
+      if (msg.action === 'retry' && current === 'result') retryRun();
+      if (msg.action === 'tally' && current === 'tally') tallySkip();
+    } finally { applyingNetworkAction = false; }
+    lastStateAt = 0;
+  } else if (msg.type === 'state' && !coop.host && networkStarted) receiveState(msg.state);
+  else if (msg.type === 'ended') {
+    coop.disconnect(); networkStarted = false; pendingEvents = [];
+    toTitle(); openLobby(); $('coop-message').textContent = msg.message;
+  }
+}
+function receiveState(data) {
+  if (!data?.world || !data.run || !Array.isArray(data.world.seats) || data.world.seats.length !== 2) return;
+  if (!MODES.includes(data.run.mode) || !Number.isFinite(data.run.score) || !Number.isFinite(data.run.stage) || data.run.stage < 1 || data.run.stage > 100 || !Number.isFinite(data.run.cycle) || !data.run.stats || !Object.values(data.run.stats).every(Number.isFinite) || !data.world.kills || !Object.values(data.world.kills).every(Number.isFinite) || ![null, 'pause', 'tally', 'result'].includes(data.overlay)) return;
+  const fresh = data.epoch !== remoteEpoch;
+  run = data.run;
+  if (run.livesMode === 'inf') run.lives = Infinity;
+  if (fresh) {
+    if (!data.world.terrain) return;
+    world = createWorld(run); remoteEpoch = data.epoch;
+  }
+  hydrate(world, data.world, coop.slot); world.run = run;
+  snapshotReceivedAt = performance.now();
+  phase = data.phase; phaseT = data.phaseT; gameClock = data.clock;
+  paused = data.paused;
+  if (fresh) { view.setWorld(world, { rise: true }); buildReserve(); lastHud = ''; }
+  $('curtain').hidden = phase !== 'curtain';
+  $('curtain-stage').textContent = 'STAGE ' + world.spec.displayStage;
+  $('curtain-sub').textContent = '双人合作守基地';
+  $('curtain').classList.toggle('closed', phase === 'curtain' && phaseT < 1.57);
+  $('gameover-text').hidden = !['gameover', 'over'].includes(world.status);
+  for (const e of data.events || []) { if (e.type !== 'end') handleEvent(e); }
+  if (data.overlay === 'tally') {
+    if (current !== 'tally') startTally(world.status === 'won' ? 'won' : 'lost');
+    const progress = data.tally;
+    if (progress) while (tallyState.idx < Math.min(progress.idx, tallyState.timeline.length)) tallyApply(tallyState.timeline[tallyState.idx++]);
+  } else if (data.overlay === 'result') { if (current !== 'result') finishRun(); }
+  else if (current !== data.overlay) show(data.overlay);
+  audio.pause(paused);
+}
+function publishState(now) {
+  if (!coop.active || !networkStarted || !coop.host || !world || now - lastStateAt < 50) return;
+  const full = sentTerrain !== world.terrainVersion || now - fullTerrainAt > 2000;
+  const state = { epoch, run, world: snapshot(world, full), phase, phaseT, clock: gameClock,
+    paused, overlay: current, tally: tallyState && { idx: tallyState.idx }, events: pendingEvents };
+  if (coop.send({ type: 'state', state })) {
+    lastStateAt = now; pendingEvents = [];
+    if (full) { sentTerrain = world.terrainVersion; fullTerrainAt = now; }
+  }
+}
 const MODE_TEXT = {
   classic: {
     kicker: 'FC 原版 · 3D 完美复刻', sub: '经典 35 关 · 原版地图、敌军名单与数值',
@@ -169,7 +276,7 @@ function adjust(name, delta) {
   }
   else if (name === 'lives') { settings.lives[m] = cycle(['inf', 'classic'], settings.lives[m], delta); store.set('lives.' + m, settings.lives[m]); }
   else if (name === 'armor') { settings.armor[m] = cycle(['std', 'classic'], settings.armor[m], delta); store.set('armor.' + m, settings.armor[m]); }
-  else if (name === 'demo') { settings.demo = !settings.demo; if (run) { run.demo = settings.demo; if (settings.demo) run.demoUsed = true; } }
+  else if (name === 'demo') { if (run?.coop) { showToast('联机模式不启用演示无敌'); return; } settings.demo = !settings.demo; if (run) { run.demo = settings.demo; if (settings.demo) run.demoUsed = true; } }
   else if (name === 'camera') { cycleCamera(delta); return; }
   else if (name === 'quality') {
     settings.quality = cycle(['auto', 'high', 'low'], settings.quality, delta); store.set('quality', settings.quality);
@@ -185,7 +292,7 @@ function adjust(name, delta) {
 function cycleCamera(delta = 1) {
   dragLook.clear(); lookControl.clear(); pitchControl.clear();
   const n = PRESETS.length;
-  if (world?.player) delete world.player.lookHeading;
+  if (localPlayer(world)) delete localPlayer(world).lookHeading;
   view.setPreset((view.presetIndex + (delta < 0 ? n - 1 : 1)) % n);
   const m = run ? run.mode : settings.mode;
   settings.camera[m] = view.presetIndex; store.set('camera.' + m, view.presetIndex);
@@ -248,6 +355,8 @@ document.addEventListener('click', e => {
   if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), 1); return; }
   switch (t.getAttribute('data-act')) {
     case 'start': startGame(); break;
+    case 'coop': openLobby(); break;
+    case 'coop-back': coop.disconnect(); networkStarted = false; show('menu'); break;
     case 'retry': retryRun(); break;
     case 'resume': resume(); break;
     case 'restart': restartStage(); break;
@@ -272,6 +381,7 @@ function buildTitle() {
   view.setWorld(titleWorld, { rise: true });
 }
 function startGame(from) {
+  if (!applyingNetworkAction) { coop.disconnect(); networkStarted = false; }
   audio.unlock();
   const m = settings.mode, s = from || startStageOf(m);
   if (m === 'remix' && !from && settings.remixFrom === 'new') { remixProgress = null; store.set('remix.progress', null); settings.remixFrom = 'continue'; }
@@ -283,8 +393,10 @@ function startGame(from) {
   show(null);
 }
 function beginStage() {
+  epoch++;
   world = createWorld(run);
-  levelStart = { score: run.score, lives: run.lives, stars: run.stars, plate: run.plate, boats: run.boats, stats: Object.assign({}, run.stats), bonusGiven: run.bonusGiven, nextBonus: run.nextBonus };
+  if (run.coop) world.localSlot = coop.slot;
+  levelStart = { score: run.score, lives: run.lives, stars: run.stars, plate: run.plate, boats: run.boats, stats: Object.assign({}, run.stats), bonusGiven: run.bonusGiven, nextBonus: run.nextBonus, coopPlayers: run.coopPlayers?.map(p => ({ ...p })) };
   phase = 'curtain'; phaseT = 0;
   hurtFx = 0; bossTipT = 0; latched = null; firePressed = false;
   const sp = world.spec;
@@ -302,18 +414,22 @@ function beginStage() {
   buildReserve();
 }
 function restartStage() {
+  if (networkAction('restart')) return;
   if (!run || !levelStart) return startGame();
   Object.assign(run, { score: levelStart.score, lives: levelStart.lives, stars: levelStart.stars, plate: levelStart.plate, boats: levelStart.boats, stats: Object.assign({}, levelStart.stats), bonusGiven: levelStart.bonusGiven, nextBonus: levelStart.nextBonus });
   paused = false; audio.pause(false);
+  if (run.coop) run.coopPlayers = levelStart.coopPlayers.map(p => ({ ...p }));
   beginStage(); show(null);
 }
 function pauseGame() {
+  if (networkAction('pause')) return;
   if (uiMode !== 'game' || paused || current) return;
   paused = true; audio.pause(true); audio.pauseSound();
   show('pause');
 }
-function resume() { paused = false; audio.pause(false); show(null); last = performance.now(); acc = 0; }
+function resume() { if (networkAction('resume')) return; paused = false; audio.pause(false); show(null); last = performance.now(); acc = 0; }
 function toTitle() {
+  coop.disconnect(); networkStarted = false;
   uiMode = 'title'; paused = false; run = null; world = null;
   audio.pause(false); audio.stopMusic();
   $('curtain').hidden = true; $('gameover-text').hidden = true; $('banner').hidden = true; hurtFx = 0;
@@ -323,13 +439,15 @@ function toTitle() {
   show('menu');
 }
 function retryRun() {
+  if (networkAction('retry')) return;
+  if (run?.coop) { run = createRun({ mode: run.mode, lives: run.livesMode, armor: run.armor, stage: run.stage }); run.coop = true; run.startedAt = gameClock; beginStage(); paused = false; audio.pause(false); show(null); return; }
   const m = run ? run.mode : settings.mode;
   if (m !== settings.mode) { settings.mode = m; store.set('mode', m); }
   const from = run ? { stage: run.stage, cycle: run.cycle, score: m === 'remix' ? (levelStart ? levelStart.score : 0) : 0 } : null;
   startGame(from);
 }
 function saveRemix() {
-  if (run.mode !== 'remix') return;
+  if (run.mode !== 'remix' || run.coop) return;
   remixProgress = { level: run.stage, cycle: run.cycle, score: run.score };
   store.set('remix.progress', remixProgress);
 }
@@ -344,7 +462,7 @@ function stageCleared() {
   show(null);
 }
 function updateHi() {
-  if (!run || run.demoUsed) return false;
+  if (!run || run.demoUsed || run.coop) return false;
   if (run.score > hiOf(run.mode)) { store.set('hi.' + run.mode, run.score); return true; }
   return false;
 }
@@ -363,7 +481,7 @@ function finishRun() {
   rows.push(['阵亡', r.stats.deaths + ' 次'], ['用时', Math.floor(secs / 60) + ' 分 ' + (secs % 60) + ' 秒']);
   $('res-table').innerHTML = rows.map(x => '<tr><td>' + x[0] + '</td><td>' + x[1] + '</td></tr>').join('') + '<tr class="total"><td>总分</td><td>' + r.score + '</td></tr>';
   const extra = [(r.livesMode === 'inf' ? '无限命' : '经典 3 命') + ' · ' + (r.armor === 'classic' ? '经典一发' : '标准 3 格耐久（受击 ' + r.stats.hits + ' 次）')];
-  extra.push(r.demoUsed ? '本局用过演示模式（无敌），不计最高分' : newHi ? '新纪录！最高分 ' + r.score : '最高分 ' + hiOf(r.mode));
+  extra.push(r.coop ? '双人联机：团队得分，不改动单机最高分和进度' : r.demoUsed ? '本局用过演示模式（无敌），不计最高分' : newHi ? '新纪录！最高分 ' + r.score : '最高分 ' + hiOf(r.mode));
   $('res-extra').textContent = extra.join(' · ');
   const sl = overlays.result.querySelector('.sanlian');
   sl.hidden = r.stats.stages < 1 && r.stats.kills < 10;
@@ -416,6 +534,7 @@ function tallyUpdate(dt) {
   if (s.t >= s.end) tallyDone();
 }
 function tallySkip() {
+  if (networkAction('tally')) return;
   const s = tallyState; if (!s) return;
   if (s.idx < s.timeline.length) { while (s.idx < s.timeline.length) { const ev = s.timeline[s.idx++]; tallyApply(Object.assign({}, ev, { tick: false })); } s.t = Math.max(s.t, s.end - .6); return; }
   tallyDone();
@@ -431,6 +550,7 @@ const LOOT_TEXT = { star: '敌军抢到星星，火力变强了！', gun: '敌�
 function handleEvent(e) {
   eventLog.push(e.type); if (eventLog.length > 80) eventLog.shift();
   view.effect(e); audio.effect(e);
+  if (run?.coop && e.slot !== undefined && e.slot !== coop.slot && ['pickup', 'repair', 'medal', 'hurt', 'plate', 'boatHit', 'die', 'levelup'].includes(e.type)) return;
   switch (e.type) {
     case 'powerup': showToast('战场上出现了道具！' + (run.mode === 'remix' ? '（4 秒后敌军也会抢）' : '')); break;
     case 'pickup': showToast(PU_TEXT[e.kind] || '道具'); break;
@@ -577,7 +697,7 @@ $('btn-cam-t').addEventListener('pointerdown', e => { e.preventDefault(); if (ui
 const pitchControl = createPitchController({turn:d=>view.turnPitch(d)});
 const lookControl = createLookController({ firstPerson: () => view.firstPerson(), turn: delta => {
   view.yawOffset -= delta;
-  const p = world && world.player;
+  const p = localPlayer(world);
   if (p) p.lookHeading = view.cameraYaw();
   latched = null;
 } });
@@ -598,18 +718,18 @@ function buildReserve() {
 let lastHud = '';
 function updateHud() {
   if (!world) return;
-  const r = run, w = world, p = w.player;
-  const stars = p ? p.stars : r.stars, maxStars = r.mode === 'classic' ? 3 : 4;
-  const hp = r.armor === 'classic' ? -1 : r.hp;
-  const key = [r.score, r.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length].join('|');
+  const r = run, w = world, p = localPlayer(w), personal = localStats(w);
+  const stars = p ? p.stars : personal.stars, maxStars = r.mode === 'classic' ? 3 : 4;
+  const hp = r.armor === 'classic' ? -1 : personal.hp;
+  const key = [r.score, personal.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length].join('|');
   if (key !== lastHud) {
     lastHud = key;
     $('h-mode').textContent = r.mode === 'classic' ? 'STAGE' : '魔改' + (r.cycle > 1 ? ' · ' + r.cycle + ' 周目' : '');
     $('h-stage').textContent = r.mode === 'classic' ? String(w.spec.displayStage) : w.spec.displayStage + ' ' + w.spec.theme.name + ' ' + w.spec.chapter + '-' + w.spec.chapterStage;
     $('h-score').textContent = String(r.score).padStart(6, '0');
     $('h-hi').textContent = String(Math.max(hiOf(r.mode), r.demoUsed ? 0 : r.score)).padStart(6, '0');
-    $('h-lives').textContent = r.lives === Infinity ? '∞' : '×' + r.lives;
-    $('side-lives').textContent = r.lives === Infinity ? '∞' : String(r.lives);
+    $('h-lives').textContent = personal.lives === Infinity ? '∞' : '×' + personal.lives;
+    $('side-lives').textContent = personal.lives === Infinity ? '∞' : String(personal.lives);
     $('side-stage').textContent = w.spec.displayStage;
     $('h-hp-wrap').hidden = hp < 0;
     if (hp >= 0) { let h = ''; for (let i = 1; i <= 3; i++) h += i <= hp ? '♥' : '<span class="off">♥</span>'; $('h-hp').innerHTML = h; }
@@ -623,6 +743,7 @@ function updateHud() {
   $('h-hp').style.opacity = low && Math.floor(gameClock * 4) % 2 ? '.45' : '1';
   hurtEl.style.opacity = hurtFx > 0 ? hurtFx.toFixed(2) : '0';
   $('demo-badge').hidden = !r.demo;
+  $('h-score').previousElementSibling.textContent = r.coop ? '团队' : '1P';
   // 状态标签
   const chips = [];
   if (w.freeze > 0) chips.push(['敌军冻结 ' + Math.ceil(w.freeze / 60), '']);
@@ -657,6 +778,15 @@ function simulate(dt) {
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
   if (uiMode === 'game' && !paused && !current) { lookControl.step(dt, rot); pitchControl.step(dt); }
+  if (coop.active && !coop.host && world) {
+    const now = performance.now();
+    if (now - lastInputAt >= 33 || firePressed) {
+      const p = localPlayer(world), enabled = !paused && !current && phase === 'play';
+      coop.send({ type: 'input', input: { dir: enabled ? worldDir() : -1, fire: enabled && isDown('fire'), firePressed: enabled && firePressed, look: p?.lookHeading } });
+      firePressed = false; lastInputAt = now;
+    }
+    return;
+  }
   if (uiMode !== 'game' || paused || !world) return;
   if (current === 'tally') { tallyUpdate(dt); return; }
   if (current) return;
@@ -671,11 +801,15 @@ function simulate(dt) {
   phaseT += dt;
   const input = { dir: worldDir(), fire: isDown('fire'), firePressed };
   firePressed = false;
-  step(world, input);
+  if (run.coop) {
+    const remote = performance.now() - remoteInputAt < 600 ? remoteInput : { dir: -1 };
+    step(world, { players: [input, remote] }); remoteInput.firePressed = false;
+  } else step(world, input);
   hurtFx = Math.max(0, hurtFx - dt * 2.2);
   if (bannerT > 0) { bannerT -= dt; if (bannerT <= 0) $('banner').hidden = true; }
   if (bossTipT > 0) bossTipT -= dt;
   const evs = world.events.splice(0);
+  if (coop.active) pendingEvents.push(...evs);
   for (const e of evs) { handleEvent(e); if (current === 'tally') break; }
 }
 function frame(now) {
@@ -688,6 +822,12 @@ function frame(now) {
   let n = 0;
   while (acc >= STEP && n < 8) { simulate(STEP); acc -= STEP; n++; }
   if (n >= 8) acc = 0;
+  publishState(now);
+  if (coop.active && networkStarted) {
+    $('coop-status').hidden = false;
+    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.rtt ? coop.rtt + 'ms' : '双人合作'}${paused ? ' · 全队暂停' : ''}`;
+    if (!coop.host && coop.stateCount && now - snapshotReceivedAt > 3000 && !paused) { clearInput(); coop.send({ type: 'action', action: 'pause' }); showToast('同步暂时中断，正在暂停战场'); }
+  } else $('coop-status').hidden = true;
   if (autoProbe.on && !autoProbe.done && uiMode === 'game' && phase === 'play' && !current) {
     autoProbe.frames.push(dtReal * 1000);
     if (autoProbe.frames.length > 200) {
@@ -713,9 +853,10 @@ function present(dt) {
   view.titleMode = !active;
   const playing = active && !paused && phase === 'play' && !current;
   const intro = active && phase === 'curtain' ? Math.max(0, (phaseT - 1.3) / 1.6) : active && phase === 'play' && phaseT < 1.4 ? Math.min(1, (phaseT + .55) / 1.6) : -1;
-  if (active) { view.update(paused || current === 'pause' ? 0 : dt, playing ? Math.min(1, acc / STEP) : 1, { intro }); updateHud(); }
+  const blend = coop.active && !coop.host ? Math.min(1, (performance.now() - snapshotReceivedAt) / 50) : Math.min(1, acc / STEP);
+  if (active) { view.update(paused || current === 'pause' ? 0 : dt, playing ? blend : 1, { intro }); updateHud(); }
   else { if (uiMode === 'title') view.yawOffset = Math.sin(realT * .22) * .35; view.update(dt, 1, {}); }
-  audio.tick(playing && !!world.player, !!(world && world.player && world.player.moving));
+  audio.tick(playing && !!localPlayer(world), !!localPlayer(world)?.moving);
 }
 
 // ---------- 启动 ----------
@@ -732,12 +873,12 @@ requestAnimationFrame(t => { last = t; frame(t); });
 // ---------- 自动化测试钩子（仅 ?test=1） ----------
 if (TEST) {
   window.__TANK_TEST__ = {
-    version: VERSION, qa, settings,
+    version: VERSION, qa, settings, coop,
     get world() { return world; }, get run() { return run; }, get view() { return view; },
     state() {
-      const p = world && world.player;
+      const p = localPlayer(world);
       return {
-        uiMode, overlay: current, paused, phase, display: Object.assign({}, display), camera: PRESETS[view.presetIndex].id, yawOffset: +view.yawOffset.toFixed(3), fp: view.firstPerson(),
+        uiMode, overlay: current, paused, phase, coop: { room: coop.room, slot: coop.slot, host: coop.host, states: coop.stateCount, rtt: coop.rtt, epoch }, players: world?.seats?.map(s => ({ slot: s.slot, lives: s.state.lives, tank: s.tank && { x: s.tank.x, y: s.tank.y, id: s.tank.id } })), display: Object.assign({}, display), camera: PRESETS[view.presetIndex].id, yawOffset: +view.yawOffset.toFixed(3), fp: view.firstPerson(),
         quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsLog: fsLog.slice(),
         focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id),
         toast: toastEl.hidden ? null : toastEl.textContent, touchHidden: touch.hidden, keys: Array.from(keys), touchHold: Array.from(touchHold), stick: Object.assign({}, stick),

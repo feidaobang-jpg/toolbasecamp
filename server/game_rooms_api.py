@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional, Set
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
+from tank3d_rooms import tank3d_ws
 
 router = APIRouter(prefix="/game/tank-coop", tags=["tank-coop"])
 
@@ -129,6 +130,9 @@ async def health():
 
 @router.websocket("/ws")
 async def tank_coop_ws(websocket: WebSocket):
+    if websocket.query_params.get("game") == "tank3d-v1":
+        await tank3d_ws(websocket)
+        return
     await websocket.accept()
     pid = secrets.token_hex(4)
     room: Optional[Room] = None

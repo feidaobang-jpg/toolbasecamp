@@ -7,10 +7,10 @@
 <meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
 <title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=toy3dui3">
+<link rel="stylesheet" href="./style.css?v=coop1">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" data-coop-url="../tank_battle.html" tabindex="-1">
+<div id="app" data-list-url="../../../games.html" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="坦克大战 3D 游戏画面"></canvas>
     <div id="hurt"></div>
@@ -89,12 +89,33 @@
           <button data-opt="touch"></button>
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
-          <a data-act="coop" class="coop-link" href="../tank_battle.html">多人联机合作（2D 版）</a>
+          <button data-act="coop" class="coop-link">双人联机 · 合作守基地</button>
           <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
 
+    <div id="lobby" class="overlay" hidden>
+      <div class="panel small coop-panel">
+        <h2>双人联机 · 合作守基地</h2>
+        <p id="coop-settings" class="rules"></p>
+        <label>昵称 <input id="coop-name" maxlength="12" value="坦克手" autocomplete="off"></label>
+        <label>好友的房间码 <input id="coop-code" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="六位数字" autocomplete="off"></label>
+        <p class="coop-room-line">房间码：<strong id="coop-room">尚未加入</strong></p>
+        <p id="coop-roster"></p>
+        <p id="coop-message" role="status" aria-live="polite">建房后，把六位房间码告诉好友。</p>
+        <nav class="items" aria-label="联机房间">
+          <button id="coop-create" class="primary">创建房间</button>
+          <button id="coop-join">加入好友房间</button>
+          <button id="coop-copy" disabled>复制房间码</button>
+          <button id="coop-ready" hidden>准备好了</button>
+          <button id="coop-start" class="primary" hidden>两人开始</button>
+          <button data-act="coop-back">退出房间 · 返回主菜单</button>
+        </nav>
+        <p class="help">两人各自控制一辆坦克，一起守住老鹰。暂停会暂停全队；任意一人离线，本房间结束。联机得分和进度独立于单机存档。</p>
+      </div>
+    </div>
+    <div id="coop-status" role="status" hidden></div>
     <div id="pause" class="overlay" hidden>
       <div class="panel small">
         <h2>暂停</h2>
@@ -151,6 +172,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=toy3dui3"></script>
+<script type="module" src="./main.js?v=coop1"></script>
 </body>
 </html>
