@@ -14,6 +14,11 @@
     "gameplay-03.jpg"
   ],
   "icon_source": "Existing game icon.svg rasterized at 1024px with square opaque corners",
-  "banner_status": "not_prepared",
-  "captured_at": "2026-10-06T13:38:09.703Z"
+  "banner_status": "uploaded_and_bound",
+  "captured_at": "2026-10-06T13:38:09.703Z",
+  "poster_method": "Original SVG promotional art, separately rasterized; gameplay screenshots are actual in-game captures",
+  "poster_files": [
+    "banner.svg",
+    "cover-vertical.svg"
+  ]
 }
