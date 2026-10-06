@@ -1,0 +1,72 @@
+{
+ "base": "http://127.0.0.1:8937/html/game/",
+ "at": "2026-10-06T21:24:20.696Z",
+ "results": [
+  {
+   "name": "mario-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5
+    ],
+    "starts": 1,
+    "rms": 0.0819
+   }
+  },
+  {
+   "name": "mario-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.32
+    ],
+    "starts": 1
+   }
+  },
+  {
+   "name": "mario-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      8.36
+     ],
+     "starts": 1
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.36
+     ],
+     "starts": 2,
+     "rms": 0.0883
+    }
+   }
+  },
+  {
+   "name": "mario-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.0883,
+    "startsPaused": 1,
+    "startsAfter": 2
+   }
+  },
+  {
+   "name": "mario-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

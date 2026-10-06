@@ -3,7 +3,7 @@
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs = require('node:fs'), path = require('node:path'), http = require('node:http');
 const out = path.resolve(process.env.MARIO_OUT || 'game-projects/mario-3d/media-kit/releases/v2.4.3/captures');
-const root = path.resolve(__dirname, '../../..', 'public');
+const root = process.env.MARIO_ROOT ? path.resolve(process.env.MARIO_ROOT) : path.resolve(__dirname, '../../..', 'public');
 const results = [];
 const check = (name, ok, detail) => { results.push({ name, ok: !!ok, detail }); console.log(ok ? 'PASS' : 'FAIL', name, JSON.stringify(detail)); };
 const server = http.createServer((req, res) => {
@@ -16,14 +16,15 @@ const server = http.createServer((req, res) => {
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   await new Promise(r => server.listen(0, '127.0.0.1', r));
-  const url = process.env.MARIO_URL || `http://127.0.0.1:${server.address().port}/html/game/mario-3d/index.html`;
+  const url = process.env.MARIO_URL || `http://127.0.0.1:${server.address().port}${process.env.MARIO_ROOT ? '/index.html' : '/html/game/mario-3d/index.html'}`;
+  const entry = new URL(url); entry.searchParams.set('test', '1'); entry.searchParams.set('level', '1-2'); entry.searchParams.set('q', 'high');
   const browser = await chromium.launch({ channel: 'msedge', headless: true, args: ['--enable-gpu', '--ignore-gpu-blocklist', '--use-angle=d3d11'] });
   try {
     for (const viewport of [{ width: 1280, height: 720 }, { width: 844, height: 390 }, { width: 390, height: 844 }]) {
       const context = await browser.newContext({ viewport, recordVideo: { dir: out, size: viewport } });
       const page = await context.newPage(), errors = [];
       page.on('pageerror', e => errors.push(e.message));
-      await page.goto(url + '?test=1&level=1-2&q=high');
+      await page.goto(entry.href);
       await page.waitForFunction(() => window.__MARIO_TEST__);
       await page.locator('[data-control-mode=show]').first().click();
       await page.locator('[data-act=start]').first().click();
@@ -69,7 +70,7 @@ const server = http.createServer((req, res) => {
     }
     // Separate frame-time sampling from recording overhead; real-time movement and turn.
     const context = await browser.newContext({ viewport: { width: 1280, height: 720 } }); const page = await context.newPage();
-    await page.goto(url + '?test=1&level=1-2&q=high'); await page.waitForFunction(() => window.__MARIO_TEST__);
+    await page.goto(entry.href); await page.waitForFunction(() => window.__MARIO_TEST__);
     await page.locator('[data-act=start]').first().click(); await page.evaluate(() => __MARIO_TEST__.skipCard()); await page.waitForTimeout(1500);
     const timings = [];
     for (let i = 0; i < 5; i++) {
