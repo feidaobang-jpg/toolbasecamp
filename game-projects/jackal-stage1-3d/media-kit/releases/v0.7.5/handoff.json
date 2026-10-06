@@ -39,7 +39,7 @@
       "total": 29
     },
     "model_identity": {
-      "version": "v0.7.4 (本任务合并前实测构建，版本号顺延为v0.7.5，待合并后复测)",
+      "version": "v0.7.5",
       "sharedCannon": true,
       "ruinAndRestartRestore": true,
       "errors": [],
@@ -49,8 +49,8 @@
       },
       "quality": "high",
       "renderInfo": {
-        "calls": 85,
-        "tris": 176704,
+        "calls": 78,
+        "tris": 173100,
         "geometries": 72,
         "textures": 2,
         "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
@@ -58,16 +58,15 @@
       "capture": "real time browser gameplay with teleport/invulnerability test hooks",
       "physical_phone": false
     },
-    "limitation": "桌面Edge无头/RTX4060Ti；手机视口模拟，未做实体手机验收。",
-    "premerge_performance": {
-      "n": 683,
-      "avgFPS": 169.39064011309242,
+    "realtime_performance": {
+      "n": 685,
+      "avgFPS": 170.00471545926086,
       "medianMs": 5.899999999999636,
       "p95Ms": 6,
       "over50ms": 0,
       "renderInfo": {
-        "calls": 79,
-        "tris": 173920,
+        "calls": 76,
+        "tris": 171200,
         "geometries": 61,
         "textures": 2,
         "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
@@ -76,14 +75,64 @@
         "mode": "play",
         "paused": false
       }
-    }
+    },
+    "limitation": "Edge无头/RTX4060Ti，1280x720高画质；手机横竖视口模拟，未做实体手机验收。",
+    "visual_review": "已检查当前构建转视角短片连续帧，炮台与铁皮囚室/浅色棚外观正确；没有观察到明显闪烁条纹。"
   },
   "site": {
-    "status": "pending"
+    "status": "deployed_verified",
+    "version": "v0.7.5",
+    "commit": "7f341c73910c0d08303f7d03872e6700c11d35a0",
+    "verified_at": "2026-10-06T18:09:28.575721+08:00",
+    "script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+    "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+    "actions_status": "success",
+    "resource_parameter": "7f341c73"
   },
   "toy": {
     "id": 39863936092160,
-    "status": "pending"
+    "status": "auditing",
+    "submitted_at": "2026-10-06T18:09:28.575721+08:00",
+    "version": "v0.7.5",
+    "package_sha256": "e12ffe219b6b03487f28ecd7c9ca069d7ae266e2e1fd7885b84020f0688c0f34",
+    "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_ZFvkOcCq/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_sjekpcmz/index.html",
+    "preview_qa": [
+      {
+        "name": "desktop",
+        "stage": "第二关",
+        "touchVisible": false,
+        "script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+        "errors": [],
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        }
+      },
+      {
+        "name": "mobile-landscape",
+        "stage": "第二关",
+        "touchVisible": true,
+        "script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+        "errors": [],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        }
+      },
+      {
+        "name": "mobile-portrait",
+        "stage": "第二关",
+        "touchVisible": true,
+        "script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+        "errors": [],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    ]
   },
   "bilibili": {
     "action": "pending_merge",
@@ -92,13 +141,93 @@
   "readiness": {
     "update": "partial",
     "gaps": [
-      "原作对照地图只作参考，不作为当前游戏实机素材。"
+      "原作地图只作参考；短片保留游戏音轨，尚未人工审听，非成片。"
     ]
   },
   "thumbnail": "沿用第一关画面：第一关画风与主入口未变化。",
   "build": {
-    "script_sha256": "630de7ed772af34f672691a5d82b1d7701a6caf3b4643aaea47fd44fd97052cc",
-    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+    "script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+    "commit": "7f341c73910c0d08303f7d03872e6700c11d35a0"
   },
-  "evidence_location": "D:\\project\\task-artifacts\\jackal-original-models-20261006"
+  "evidence_location": "D:\\project\\task-artifacts\\jackal-original-models-20261006",
+  "activity_check": {
+    "status": "partial_recent_reference",
+    "record": "../v0.7.4/activity-check.json",
+    "note": "本次没有新稿件；参考同日18:02原作关联活动首屏与创作激励资格检查，未发现新的适用免费报名；并非全面检查，不推进共享last_completed_check_at。"
+  },
+  "media": [
+    {
+      "id": "after-houses.png",
+      "file": "releases/v0.7.5/captures/after-houses.png",
+      "sha256": "aaa5b5fdcc7c957b79875966416d3a387fbd1fd017ac30b548143fa1289b4e1f",
+      "version": "v0.7.5",
+      "build_id": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "after-turrets.png",
+      "file": "releases/v0.7.5/captures/after-turrets.png",
+      "sha256": "c2eadae4d470599f98bedb31a13e28eb6e0008f5af1fcd19ff0a2e2dbb86ebe8",
+      "version": "v0.7.5",
+      "build_id": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "after-models.webm",
+      "file": "releases/v0.7.5/captures/after-models.webm",
+      "sha256": "5e3eb71bb015ede2d375509e0dd1b42e55037aca6fe659dedfddd47d4326a007",
+      "version": "v0.7.5",
+      "build_id": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+      "capture_mode": "realtime-automation",
+      "kind": "video",
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run"
+    },
+    {
+      "id": "toy-desktop.png",
+      "file": "releases/v0.7.5/captures/toy-desktop.png",
+      "sha256": "885fdabb1dec23eef4c69ecdc16d79028e74a79b6c1014d99e7417197f5e966f",
+      "version": "v0.7.5",
+      "build_id": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "toy-mobile-landscape.png",
+      "file": "releases/v0.7.5/captures/toy-mobile-landscape.png",
+      "sha256": "5cea687b171b4149fc22c99ad5ac94289df56ef7b8ddd3bffd76ef5d50f549c4",
+      "version": "v0.7.5",
+      "build_id": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "toy-mobile-portrait.png",
+      "file": "releases/v0.7.5/captures/toy-mobile-portrait.png",
+      "sha256": "aec18170f90af90d22f9aa7f9dfa01a6c549a478d163a733d42d40029f5909bc",
+      "version": "v0.7.5",
+      "build_id": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    }
+  ]
 }
