@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "channel": "taptap-h5",
+  "classification": "渠道试投准备",
+  "game": "虫潮围城",
+  "version": "web-touch-layout-v0.19.1",
+  "developer_id": 100726,
+  "developer_name": "飞刀帮工作室",
+  "app_id": 962354,
+  "admin_url": "https://developer.taptap.cn/v3/100726/app/962354/store/update",
+  "create_idempotency_key": "codex-chongchao-h5-trial-20261006-create",
+  "status": "reviewing",
+  "package_sha256": "8070bb971464d96dc496d833823a3a40b35829913e2a77d82eccfafe27be2251",
+  "package_bytes": 265102,
+  "package_uploaded": true,
+  "package_bound": true,
+  "review_submitted": true,
+  "published": false,
+  "monetization": "none",
+  "automatic_sync_enabled": false,
+  "local_validation": "qa.json",
+  "official_package_inspection": {
+    "passed": true,
+    "dry_run": true,
+    "archive_root": "chongchao-qianshao/",
+    "file_count": 7,
+    "violations": [],
+    "warnings": []
+  },
+  "agreement": {
+    "title": "创意工坊内容授权协议",
+    "url": "https://www.taptap.cn/doc/ugcgame-agreement/",
+    "effective_date": "2026-03-11",
+    "signed_by_this_task": true,
+    "user_confirmation": "用户明确回复已阅读并同意协议，继续试投",
+    "official_terms_observed": "第一条第2款：向上海创巴科技有限公司授予全球独占、免费、可多层次再许可的权利，涵盖复制、改编、衍生品、推广、机器学习等；第3款允许撤回但须提前30日书面告知。",
+    "agent_assessment": "需由用户决定是否接受；可能影响网站、Toy等渠道继续运营同一内容的安排，未经明确同意不签署或推进发布。"
+  },
+  "remaining": [
+    "等待平台审核结果",
+    "客户端真机试玩未验证"
+  ],
+  "resume_rule": "先读取本记录和平台最新状态，按app_id复用草稿；不重复创建、不把草稿当已上线。",
+  "artifact_directory": "D:/project/toolbasecamp-artifacts/taptap/chongchao-qianshao/20261006",
+  "h5_version_id": 269751,
+  "h5_package_id": 71482,
+  "audit_id": "1039884",
+  "draft_version_id": "1039884",
+  "release_schedule": {
+    "kind": "immediate"
+  },
+  "distribution": {
+    "android": "提供游玩",
+    "ios": "提供游玩",
+    "pc": "提供游玩"
+  },
+  "submitted_at": "2026-10-06T13:47:25.184553+00:00",
+  "source_commit": "c39a60d6d416d19c2426f60b871ea7834e2a07cf",
+  "materials": {
+    "icon": "icon.png",
+    "screenshots": [
+      "gameplay-01.jpg",
+      "gameplay-02.jpg",
+      "gameplay-03.jpg"
+    ],
+    "banner": "banner.png",
+    "cover_vertical": "cover-vertical.png",
+    "gameplay_video": "gameplay.mp4",
+    "video_id": 5945458,
+    "promotion_material_type": "GAMEPLAY_DEMO"
+  },
+  "package_upload_task_id": "27d45b30-de2b-4191-a989-78101d3f8e64",
+  "precheck": {
+    "blockers": [],
+    "warnings": [],
+    "passed": true
+  },
+  "platform_runtime_test": {
+    "self_test_qr_generated": true,
+    "tap_client_test": false,
+    "browser_entry": "QR链接在普通桌面浏览器跳转到TapTap首页，不能当作客户端测试通过"
+  },
+  "repository": {
+    "branch": "codex/chongchao-taptap-trial",
+    "backed_up": true,
+    "merged_to_master": false,
+    "pending_reason": "共享发布锁由仍在运行的虫潮直播任务持有，等待释放；未改动或删除他人锁",
+    "resume_command": "获锁后fetch、merge origin/master、构建及三视口复验、正常push HEAD:master"
+  }
+}
