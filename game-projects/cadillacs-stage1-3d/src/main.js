@@ -113,9 +113,10 @@ function refreshOptions() {
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
   });
   $('hi-val').textContent = G.hi;
-  const fsOn = !!fsElement();
-  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  const fsOn = !!fsElement(), fsShow = fsOn || fsCapable();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; b.hidden = !fsShow; });
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('btn-fs').hidden = !fsShow;
   $('demo-badge').hidden = !(uiMode === 'game' && settings.demo);
   $('cam-label').textContent = camCtl.preset().name;
 }
@@ -185,11 +186,12 @@ function show(name) {
   current = name;
   IN.clear();
   refreshOptions();
-  if (name && name !== 'cont') { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
-  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
+  if (name && name !== 'cont') { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
+  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
 }
-const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden) : [];
+// 只取实际显示的项：hidden 属性之外，样式收起的元素 focus() 后会让 ↑↓ 卡住
+const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden && el.getClientRects().length > 0) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');
@@ -306,6 +308,14 @@ function showResult(res) {
 
 // ---------- 全屏 ----------
 const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+// 全屏入口按浏览器实际能力显示，不按手机/电脑分类隐藏：iPhone Safari 没有元素全屏、未授权全屏的 iframe 报 fullscreenEnabled=false，
+// 这些情况隐藏按钮；能请求但被拒绝时由 toggleFullscreen 提示并继续页面内游玩
+function fsCapable() {
+  const el = document.documentElement;
+  if (!(el.requestFullscreen || el.webkitRequestFullscreen)) return false;
+  const enabled = document.fullscreenEnabled !== undefined ? document.fullscreenEnabled : document.webkitFullscreenEnabled;
+  return enabled !== false;
+}
 const fsLog = [];
 function toggleFullscreen() {
   if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
@@ -574,7 +584,7 @@ if (TEST) {
     version: VERSION, seed, HEROES,
     snapshot() {
       const s = GM.snapshot();
-      s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, yawOff: +camCtl.yawOff.toFixed(3), fpActive: !!G.fpActive, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.getAttribute('data-hero') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent, hero: settings.hero, settings: Object.assign({}, settings) };
+      s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsCapable: fsCapable(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, yawOff: +camCtl.yawOff.toFixed(3), fpActive: !!G.fpActive, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.getAttribute('data-hero') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent, hero: settings.hero, settings: Object.assign({}, settings) };
       s.input = IN.debug();
       s.cam = { pos: camCtl.cam.position.toArray().map(v => +v.toFixed(2)), axes: camCtl.axes(), av: { s: +camCtl.av.s.toFixed(3), lift: +camCtl.av.lift.toFixed(3), blocked: camCtl.av.blocked } };
       s.hud = { hp: H_.hp.style.width, timer: H_.timer.hidden ? null : H_.timer.textContent, enemy: H_.enemy.hidden ? null : H_.ename.textContent, weapon: H_.weapon.hidden ? null : H_.wname.textContent, go: !H_.go.hidden, dialog: H_.dialog.hidden ? null : H_.dtext.textContent };

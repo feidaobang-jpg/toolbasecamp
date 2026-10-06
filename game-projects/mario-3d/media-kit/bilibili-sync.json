@@ -42,7 +42,16 @@
     }
   ],
   "mapping_audit": "2026-10-06重新核验：用户2026-10-05确认与toy video list均绑定BV1guep6NELt；公开简介已有当前3D试玩。保留历史视频并注明早期演示。",
-  "pending_updates": [],
+  "pending_updates": [
+    {
+      "version": "v2.4.5",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+      "record": "releases/v2.4.5/handoff.json",
+      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
+    }
+  ],
   "resolved_updates": [
     {
       "version": "v2.2.1",

@@ -48,7 +48,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   // ---------- 机枪方向选项 ----------
   await page.keyboard.down('KeyD'); await steps(3); await page.keyboard.up('KeyD');
   await page.keyboard.down('KeyJ'); await steps(2); s = await snap(page); await page.keyboard.up('KeyJ'); await steps(60);
-  const velFollow = s.pbVel;
+  const velUp = s.pbVel;
   await page.keyboard.press('Escape'); await steps(1);
   const pitems = await page.$$eval('#pause .items > *', els => els.map(x => x.getAttribute('data-act') || x.getAttribute('data-opt')));
   for (let k = 0; k < pitems.indexOf('gun'); k++) await page.keyboard.press('ArrowDown');
@@ -56,8 +56,8 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   const gunTxt = await page.textContent('#pause [data-opt=gun]');
   await page.keyboard.press('Escape'); await steps(1);
   await page.keyboard.down('KeyJ'); await steps(2); s = await snap(page); await page.keyboard.up('KeyJ'); await steps(60);
-  const velUp = s.pbVel;
-  check('机枪方向：跟随车头时朝东打；暂停菜单切到「原作朝上（原作）」后朝北打', velFollow && velFollow[0] > 20 && velUp && Math.abs(velUp[0]) < 0.01 && velUp[1] > 20 && /原作朝上/.test(gunTxt) && s.settings.gun === 'up', { velFollow, velUp, gunTxt });
+  const velFollow = s.pbVel;
+  check('机枪方向：默认原作朝上时朝北打；暂停菜单切到「跟随车头」后朝东打', velFollow && velFollow[0] > 20 && velUp && Math.abs(velUp[0]) < 0.01 && velUp[1] > 20 && /跟随车头/.test(gunTxt) && s.settings.gun === 'follow', { velFollow, velUp, gunTxt });
   await page.keyboard.press('Escape'); await steps(1);
   for (let k = 0; k < pitems.indexOf('gun'); k++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowRight'); await page.keyboard.press('Escape'); await steps(1);
