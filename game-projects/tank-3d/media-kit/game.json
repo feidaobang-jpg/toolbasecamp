@@ -23,7 +23,7 @@
     "ffmpeg、Pillow"
   ],
   "notes": "经典模式地图、敌军名单取自 MIT 许可的 feichao93/battle-city 关卡数据，数值按该仓库 resources/nes-values 的 ROM 反汇编调研；魔改模式地图由关号确定性生成。3D 模型与贴图程序化制作，音效采用原作 FC 音效（用户已明确不考虑版权顾虑），引擎声等为合成。",
-  "version": "pickup-clean1",
+  "version": "hit-audio1",
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
@@ -72,6 +72,16 @@
         "status": "auditing",
         "record": "releases/pickup-clean1/handoff.json",
         "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。"
+      },
+      {
+        "version": "hit-audio1",
+        "classification": "普通补丁",
+        "status": "pending_existing_review",
+        "record": "releases/hit-audio1/handoff.json",
+        "summary": "修复敌军击毁事件覆盖导致无爆炸声，重甲命中改用现有原版金属音。",
+        "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+        "reason": "307013：同Toy已有审核中的版本；网站已核验，修复包预览验证通过。"
       }
     ],
     "published_verified_at": "2026-10-06T18:48:28.119681+08:00"
@@ -102,9 +112,9 @@
   },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "pickup-clean1",
-  "website_verified_at": "2026-10-06T11:02:00.823019+00:00",
-  "website_commit": "4e0bd33c",
+  "website_version": "hit-audio1",
+  "website_verified_at": "2026-10-06T11:14:56.511127+00:00",
+  "website_commit": "d92e6e26",
   "web_toy_versions_match": false,
   "coop": {
     "protocol": "tank3d-v1",

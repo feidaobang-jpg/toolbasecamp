@@ -31,5 +31,7 @@
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
   },
   "packageHash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
-  "status": "built_not_submitted"
+  "status": "preview_verified_pending_existing_review",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+  "platform_code": 307013
 }
