@@ -7,7 +7,7 @@
 <meta name="description" content="FC 赤色要塞的 3D 重置版（第一、二关）：驾驶武装吉普炸开营房救出俘虏、送上直升机；第一关打 4 辆蓝色坦克，第二关闯废墟城、打北墙 4 座石像。电脑键盘与手机触屏均可游玩。">
 <title>赤色要塞 · 3D 重置版</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=toy3dui3">
+<link rel="stylesheet" href="css/style.css?v=hud-safe1">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -15,19 +15,15 @@
     <canvas id="screen" aria-label="赤色要塞 3D 游戏画面"></canvas>
 
     <div id="hud" hidden>
-      <div class="hud-card hud-score">
-        <div class="stage-tag" id="h-stage">第一关</div>
-        <div><b>得分</b><span id="h-score">0</span></div>
-        <div class="sub"><b>最高</b><span id="h-hi">0</span></div>
+      <span class="stage-tag" id="h-stage">第一关</span>
+      <div class="hud-card hud-lives" id="hc-armor">
+        <span class="lrow"><span class="ico-jeep"></span><span id="h-lives">∞</span></span>
+        <span class="arow"><b>护甲</b><span id="h-armor" class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></span>
       </div>
       <div class="hud-card hud-wpn">
         <div class="wrow"><span class="ico-wpn"></span><span id="h-wpn">手雷</span><span id="h-wlv" class="lv lv1">Lv1</span></div>
-        <div class="sub"><span class="ico-pow"></span>车上 <b id="h-carried">0</b> · 已送达 <b id="h-deliv">0/19</b></div>
       </div>
-      <div class="hud-card hud-lives" id="hc-armor">
-        <div class="lrow"><span class="ico-jeep"></span><span id="h-lives">∞</span></div>
-        <div class="arow"><b>护甲</b><span id="h-armor" class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
-      </div>
+      <div class="hud-card hud-rescue"><span class="ico-pow"></span>车上 <b id="h-carried">0</b> · 已送达 <b id="h-deliv">0/19</b></div>
     </div>
 
     <div id="crosshair" hidden aria-hidden="true"></div>
@@ -91,6 +87,9 @@
     <div id="pause" class="overlay" hidden>
       <div class="panel small">
         <h2>暂停</h2>
+        <div id="pause-stats">得分 <b id="h-score">0</b> · 最高 <b id="h-hi">0</b><br>救援：车上 <b id="p-carried">0</b> · 已送达 <b id="p-deliv">0/19</b></div>
+        <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪 · <kbd>K</kbd> 手雷 / 火箭<br><kbd>Q</kbd>/<kbd>E</kbd> 转视角 · 拖动画面观察 · <kbd>C</kbd> 切换视角</p>
+        <p class="help help-touch">左下摇杆移动 · J 机枪 · K 手雷 / 火箭<br>拖动画面空白处观察 · 右上切换视角</p>
         <nav class="items" aria-label="暂停菜单">
           <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
           <button data-act="restart">重新开始</button>
@@ -132,6 +131,6 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
 </script>
-<script src="js/game.min.js?v=toy3dui3"></script>
+<script src="js/game.min.js?v=hud-safe1"></script>
 </body>
 </html>

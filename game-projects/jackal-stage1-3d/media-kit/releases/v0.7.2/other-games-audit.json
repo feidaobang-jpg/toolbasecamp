@@ -1,0 +1,32 @@
+{
+  "scope": "其他已发布Toy的3D动作游戏代表性手机横屏画面；不是所有关卡/镜头完整验收",
+  "files": "D:/project/task-artifacts/boss-hud-20261006",
+  "results": [
+    {
+      "game": "tank-3d",
+      "status": "no_same_boss_issue_confirmed_in_sample",
+      "note": "状态以小字为主，本轮未复现同类Boss遮挡。"
+    },
+    {
+      "game": "mario-3d",
+      "status": "no_same_boss_issue_confirmed_in_sample",
+      "note": "顶部状态较简洁，本轮未复现同类目标遮挡。"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "status": "no_same_boss_issue_confirmed_in_sample",
+      "note": "开场对话期间画面被冻结，不能把开场对白遮挡当作战斗Boss故障；未改对白。"
+    },
+    {
+      "game": "starship-defense",
+      "status": "no_same_boss_issue_confirmed_in_sample",
+      "note": "信息较多，但有建造/小队/基地等实际玩法；本轮没有确认同类Boss遮挡，不机械套用赤色要塞布局。"
+    },
+    {
+      "game": "journey-west-3d",
+      "status": "no_same_boss_issue_confirmed_in_sample",
+      "note": "界面已有半透明状态块，代表性画面未确认同类Boss遮挡。"
+    }
+  ],
+  "runtime_changes": []
+}

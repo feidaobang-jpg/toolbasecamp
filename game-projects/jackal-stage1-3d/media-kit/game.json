@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.7.1",
-  "handoff": "releases/v0.7.1/handoff.json",
+  "current_version": "v0.7.2",
+  "handoff": "releases/v0.7.2/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -39,7 +39,7 @@
       "ffmpeg / ffprobe",
       "Python Pillow"
     ],
-    "skill": "web-game-maker（用户 ~/.codex/skills），交接协议来自 game-video/references/development-handoff.md"
+    "skill": "C:/Users/37818/.claude/skills/game-maker/SKILL.md"
   },
   "hosted_copy": {
     "url": "https://claude.ai/artifact/CkhWeEfGUhWgtxd1xAAwXF",
@@ -81,6 +81,14 @@
       "base_version": "v0.5.2",
       "handoff": "releases/v0.5.3/handoff.json",
       "summary": "对齐恐龙快打动作布局、第一人称视线稳定/慢速转头、修正环绕视角移动映射并让第一人称跟随射击沿视线"
+    },
+    {
+      "version": "v0.7.2",
+      "base_version": "v0.7.1",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.2/handoff.json",
+      "summary": "精简半透明状态行、暂停详情、Boss条下移；Boss镜头保证模型可见且不改战斗判定。"
     }
   ],
   "toy": {

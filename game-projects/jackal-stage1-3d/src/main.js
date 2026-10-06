@@ -224,6 +224,7 @@ let paused = false;
 function startGame(stageNo) {
   A.unlock();
   uiMode = 'game'; paused = false;
+  stage.classList.remove('boss-fight');
   GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor, gun: settings.gun, stage: stageNo || settings.stage });
   show(null);
   camCtl.update(0, GM.player().x, GM.player().y, { instant: true });
@@ -251,6 +252,7 @@ function resume() {
 }
 function toTitle() {
   uiMode = 'title'; paused = false;
+  stage.classList.remove('boss-fight');
   A.musicDuck(false);
   GM.toTitle(settings.stage);
   titleT = 0;
@@ -309,6 +311,8 @@ document.addEventListener('webkitfullscreenchange', onFsChange);
 
 let toastTimer = 0;
 function showToast(msg) {
+  // 当前预设已在右上按钮显示，Boss 战无需再用浮层重复提示。
+  if (GM.bossLock() && /^(视角：|拖动画面)/.test(msg)) return;
   toastEl.textContent = msg; toastEl.hidden = false;
   clearTimeout(toastTimer); toastTimer = setTimeout(() => { toastEl.hidden = true; }, 2400);
 }
@@ -350,7 +354,8 @@ function layout() {
   const inGame = uiMode === 'game';
   touch.hidden = !(inGame && touchOn);
   hudTop.hidden = !inGame; hud.hidden = !inGame;
-  keyHint.hidden = !(inGame && !touchOn && !CLEAN);
+  keyHint.hidden = !(inGame && !touchOn && !CLEAN && G.t < 8 && !GM.bossLock());
+  stage.style.setProperty('--hud-tools-width', (hudTop.offsetWidth + loc.r + loc.l + 30) + 'px');
   const dprCap = effQuality === 'high' ? 2 : 1.25;
   const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
   renderer.setPixelRatio(dpr);
@@ -399,6 +404,7 @@ function updateHud() {
     hudEls.wpn.textContent = GM.WEAPON_NAME[G.weapon]; hudEls.wlv.textContent = 'Lv' + G.weapon;
     hudEls.wlv.className = 'lv lv' + G.weapon;
     hudEls.carried.textContent = G.carried; hudEls.deliv.textContent = G.delivered + '/' + L.POW_TOTAL;
+    $('p-carried').textContent = G.carried; $('p-deliv').textContent = G.delivered + '/' + L.POW_TOTAL;
     hudEls.lives.textContent = G.settings.lives === 'inf' ? '∞' : '×' + Math.max(0, G.lives);
     hudEls.bombLabel.textContent = GM.WEAPON_NAME[G.weapon];
     $('h-stage').textContent = GM.STAGE_NAME[G.stage];
@@ -423,11 +429,14 @@ function updateHud() {
   if (G.toast && G.toast.id !== lastToast) { lastToast = G.toast.id; showToast(G.toast.text); }
   const b = G.boss;
   const bossOn = b && (b.state === 'fight' || b.state === 'intro');
+  if (bossOn && /^(视角：|拖动画面)/.test(toastEl.textContent)) toastEl.hidden = true;
+  stage.classList.toggle('boss-fight', !!GM.bossLock());
+  keyHint.hidden = !(uiMode === 'game' && !display.touchOn && !CLEAN && G.t < 8 && !bossOn);
   bossBar.hidden = !bossOn;
   if (bossOn) {
     const pips = GM.bossPips().map(v => '<i class="' + v + '"></i>');
     bossBar.dataset.type = b.type || '';
-    const html = '<b>BOSS</b>' + pips.join('');
+    const html = '<b>BOSS</b>' + pips.join('') + (b.type === 'statues' ? '<span class="boss-tip">K 手雷 / 火箭</span>' : '');
     if (bossBar.innerHTML !== html) bossBar.innerHTML = html;
   }
   $('demo-badge').hidden = !(uiMode === 'game' && G.settings.demo);
@@ -481,7 +490,7 @@ function presentFrame(dtReal, draw) {
   if (uiMode === 'game') {
     const p = GM.player();
     // 第一人称下相机在眼睛位置，同等震动体感更强，乘 0.3 抑制
-    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), shake: fx.shake * (camCtl.fpNow ? 0.36 : 1.2), heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
+    camCtl.update(dtReal, p.x, p.y, { lock: GM.bossLock(), viewportHeight: display.H, shake: fx.shake * (camCtl.fpNow ? 0.36 : 1.2), heading: p.ang, fpOK: p.alive && GM.mode() === 'play' });
     crosshairEl.hidden = !camCtl.fpNow;
     updateHud();
   } else {

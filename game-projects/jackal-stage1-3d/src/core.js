@@ -1,5 +1,5 @@
 // 公共常量与工具。逻辑坐标：x 向东，y 向北（单位≈米）；渲染时 three 的 Z = -y。
-export const VERSION = 'v0.7.1';
+export const VERSION = 'v0.7.2';
 export const STEP = 1 / 60;            // 固定 60Hz 逻辑步长
 
 export const params = new URLSearchParams(location.search);
