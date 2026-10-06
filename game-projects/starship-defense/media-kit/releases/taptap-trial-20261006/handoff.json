@@ -83,8 +83,10 @@
   "repository": {
     "branch": "codex/chongchao-taptap-trial",
     "backed_up": true,
-    "merged_to_master": false,
-    "pending_reason": "共享发布锁由仍在运行的虫潮直播任务持有，等待释放；未改动或删除他人锁",
-    "resume_command": "获锁后fetch、merge origin/master、构建及三视口复验、正常push HEAD:master"
-  }
+    "merged_to_master": true,
+    "pending_reason": null,
+    "resume_command": "此任务Git成果已补并主线；后续平台操作先核对当前app_id状态，勿重复创建或提交旧包。",
+    "integrated_commit": "45f4545a89d554d322e9e9befc69f084b37e2f77"
+  },
+  "record_scope": "2026-10-06试投时的历史平台状态；2026-10-07仅补并遗漏的Git成果，未重新上传或修改平台元信息。"
 }
