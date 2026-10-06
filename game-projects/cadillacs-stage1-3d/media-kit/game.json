@@ -37,8 +37,8 @@
    "classification": "普通补丁",
    "summary": "演示无敌暂停倒计时；显示无限时间；关闭后从原剩余时间继续，普通模式超时规则不变。",
    "channels": {
-    "website": "pending_deploy",
-    "toy": "pending_sync",
+    "website": "deployed_verified",
+    "toy": "auditing",
     "bilibili": "pending_merge"
    },
    "record": "releases/v0.5.1/handoff.json"
@@ -50,16 +50,16 @@
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
-  "status": "published",
-  "submitted_at": "2026-10-06T11:06:55.476749+08:00",
-  "package": "dist/toy-v0.2.0/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html",
-  "note": "v0.5.0 公开新版已核验（正式入口 20/20）。平台标题仍为「恐龙快打 3D：第一关」，未自动改元信息。",
+  "status": "auditing",
+  "submitted_at": "2026-10-06T10:01:00.170832+00:00",
+  "package": "dist/toy-v0.5.1/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_GvYH2Zhq/index.html",
+  "note": "v0.5.1 无敌不限时补丁已提交审核，最后公开核验版本仍为 v0.5.0。",
   "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
   "bound_videos": [
    "BV18XHW66E55"
   ],
-  "review_status": "published",
+  "review_status": "auditing",
   "version": "v0.5.0",
   "verified_at": "2026-10-06T11:15:46.661482+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -98,10 +98,10 @@
     "included_version": "v0.5.0"
    }
   ],
-  "submitted_version": "v0.5.0",
-  "package_sha256": "18b947ebb5bed6d568a2a523519d4b407f5095816f5cc6f04161345e40052c8f",
+  "submitted_version": "v0.5.1",
+  "package_sha256": "8790baddb7d4c55740ebe83bcf58eda0f3061146446ff10efc7e7f497fe71af3",
   "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_dbULGLJR/index.html",
-  "release_record": "releases/v0.5.0/handoff.json",
+  "release_record": "releases/v0.5.1/handoff.json",
   "published_version": "v0.5.0",
   "published_verified_at": "2026-10-06T09:17:30Z",
   "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -170,9 +170,10 @@
   }
  ],
  "website": {
-  "version": "v0.2.0",
+  "version": "v0.5.1",
   "status": "deployed_verified",
-  "verified_at": "2026-10-05T20:39:41.339246+08:00"
+  "verified_at": "2026-10-06T10:01:00.170832+00:00",
+  "commit": "110c0421596dabee86cb7885f2d77e34be9c00b7"
  },
  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
  "audio_assets": {
@@ -181,8 +182,8 @@
  },
  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.4.1",
+ "website_version": "v0.5.1",
  "website_verified_at": "2026-10-06T11:09:58.228517+08:00",
  "website_commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
- "web_toy_versions_match": true
+ "web_toy_versions_match": false
 }
