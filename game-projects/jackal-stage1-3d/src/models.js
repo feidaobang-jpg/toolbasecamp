@@ -374,10 +374,12 @@ export function makeBoat() {
   return { root, turret, wake };
 }
 
-// 营房 / 俘虏屋（带铁栏窗）。style：wood 木屋红顶（第 1 关）/ stone 石屋（第 2 关）/ tent 帆布棚（第 3、6 关）/ cabin 原木屋（第 4 关）/ brick 砖房（第 5 关）
+// 营房 / 俘虏屋（带铁栏窗）。wood 木屋红顶；tin 铁皮囚室 / canvas 浅色棚（第二关）；stone / tent / cabin / brick 保留其他建筑样式。
 const HUT_STYLE = {
   wood:  { wall: C.wood, trim: C.woodD, roof: C.red, roofD: C.redD, door: 0x5a3a22, roofShape: 'cone4' },
   stone: { wall: 0xa7a59c, trim: 0x77756d, roof: 0x5a5d61, roofD: 0x3f4246, door: 0x3b3a36, roofShape: 'flat' },
+  tin:   { wall: 0x919b96, trim: 0x65736c, roof: 0xa7ada8, roofD: 0x737d77, door: 0x38483e, roofShape: 'tin' },
+  canvas:{ wall: 0xd6c597, trim: 0xa9976e, roof: 0xe8d9ae, roofD: 0xbbaa80, door: 0x655b42, roofShape: 'tent' },
   tent:  { wall: 0xe0a24a, trim: 0xb07428, roof: 0xd98a2e, roofD: 0x9a5c1c, door: 0x6b4420, roofShape: 'tent' },
   cabin: { wall: 0x8a5a36, trim: 0x5e3b22, roof: 0x7d6a3a, roofD: 0x56482a, door: 0x3a2a1c, roofShape: 'cone4' },
   brick: { wall: 0xd06a3a, trim: 0x8f4224, roof: 0x7a3a24, roofD: 0x552616, door: 0x3a2a1c, roofShape: 'flat' }
@@ -393,6 +395,11 @@ export function hutGeo(w, d, ruined, style) {
       if (st.roofShape === 'cone4') part(b, 'cone4', st.roof, [0, 2.35, 0], [w * 1.38, 1.2, d * 1.38], [0, Math.PI / 4, 0]);
       else if (st.roofShape === 'tent') { part(b, 'cone4', st.roof, [0, 2.25, 0], [w * 1.42, 1.0, d * 1.42], [0, Math.PI / 4, 0]); for (let k = 0; k < 5; k++) part(b, 'box', st.roofD, [(k - 2) * w * 0.22, 1.86, 0], [0.08, 0.06, d + 0.3]); }
       else { part(b, 'rbox', st.roof, [0, 2.0, 0], [w + 0.3, 0.36, d + 0.3]); part(b, 'box', st.roofD, [0, 2.22, 0], [w * 0.5, 0.2, d * 0.4]); }
+      if (st.roofShape === 'tin') {
+        // 第二关原作铁皮囚室：用几何屋顶肋与墙板表达薄板，不使用写实纹理。
+        for (let x = -w / 2 + 0.3; x < w / 2; x += 0.65) part(b, 'box', st.roofD, [x, 2.22, 0], [0.06, 0.1, d + 0.2]);
+        for (const s of [-1, 1]) for (let z = -d / 2 + 0.4; z < d / 2; z += 0.7) part(b, 'box', st.trim, [s * (w / 2 + 0.01), 0.95, z], [0.04, 1.55, 0.04]);
+      }
       part(b, 'box', st.roofD, [0, 1.82, 0], [w + 0.4, 0.14, d + 0.4]);
       part(b, 'rbox', st.door, [0, 0.65, -d / 2 - 0.03], [0.9, 1.2, 0.08]);
       for (const s of [-1, 1]) {
