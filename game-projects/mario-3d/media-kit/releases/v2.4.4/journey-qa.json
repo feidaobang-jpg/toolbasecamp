@@ -1,0 +1,82 @@
+[
+  {
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "blocked": [
+      {
+        "key": "weapon",
+        "opacity": "1",
+        "label": "J\n换武器",
+        "aria": null
+      },
+      {
+        "key": "dash",
+        "opacity": "1",
+        "label": "K\n冷却 29.8秒",
+        "aria": "true"
+      },
+      {
+        "key": "ward",
+        "opacity": "1",
+        "label": "L\n冷却 29.8秒",
+        "aria": "true"
+      },
+      {
+        "key": "burst",
+        "opacity": "1",
+        "label": "U\n需40气力",
+        "aria": "true"
+      },
+      {
+        "key": "heal",
+        "opacity": "1",
+        "label": "I\n无丹药",
+        "aria": "true"
+      }
+    ],
+    "actions": "energy consumed, potion consumed, dash cooldown started",
+    "pass": true
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "blocked": [
+      {
+        "key": "weapon",
+        "opacity": "1",
+        "label": "J\n换武器",
+        "aria": null
+      },
+      {
+        "key": "dash",
+        "opacity": "1",
+        "label": "K\n冷却 29.8秒",
+        "aria": "true"
+      },
+      {
+        "key": "ward",
+        "opacity": "1",
+        "label": "L\n冷却 29.8秒",
+        "aria": "true"
+      },
+      {
+        "key": "burst",
+        "opacity": "1",
+        "label": "U\n需40气力",
+        "aria": "true"
+      },
+      {
+        "key": "heal",
+        "opacity": "1",
+        "label": "I\n无丹药",
+        "aria": "true"
+      }
+    ],
+    "actions": "energy consumed, potion consumed, dash cooldown started",
+    "pass": true
+  }
+]

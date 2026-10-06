@@ -1,0 +1,321 @@
+[
+  {
+    "game": "tank-3d",
+    "buttons": [
+      {
+        "text": "J\n开炮",
+        "id": "",
+        "action": "fire",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      }
+    ],
+    "errors": []
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "buttons": [
+      {
+        "text": "J\n机枪",
+        "id": "btn-fire",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "text": "K\n手雷",
+        "id": "btn-bomb",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      }
+    ],
+    "errors": []
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "buttons": [
+      {
+        "text": "U\n必杀",
+        "id": "btn-mega",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(216, 172, 66), rgb(152, 107, 37)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "text": "I\n冲刺",
+        "id": "btn-run",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(84, 132, 189), rgb(49, 86, 130)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "text": "J\n攻击",
+        "id": "btn-atk",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "text": "K\n跳跃",
+        "id": "btn-jump",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(0, 0, 0, 0.333) 0px 4px 0px 0px",
+        "width": 60,
+        "height": 60
+      }
+    ],
+    "errors": []
+  },
+  {
+    "game": "starship-defense",
+    "buttons": [
+      {
+        "text": "射击",
+        "id": "vJ",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(0, 0, 0, 0) linear-gradient(rgba(210, 80, 60, 0.85), rgba(170, 40, 30, 0.75)) repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.99169921875
+      },
+      {
+        "text": "跳跃",
+        "id": "vK",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.99169921875
+      },
+      {
+        "text": "跑步",
+        "id": "vSPRINT",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.991668701171875
+      },
+      {
+        "text": "关门",
+        "id": "vI",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.99168395996094
+      },
+      {
+        "text": "医疗",
+        "id": "vH",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.991668701171875
+      },
+      {
+        "text": "手雷",
+        "id": "vU",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.99168395996094
+      },
+      {
+        "text": "换枪",
+        "id": "vX",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.991668701171875
+      },
+      {
+        "text": "商店",
+        "id": "vO",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.99168395996094
+      },
+      {
+        "text": "建造",
+        "id": "vL",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(14, 30, 48, 0.72) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 50.99169921875,
+        "height": 50.99169921875
+      },
+      {
+        "text": "切换视角",
+        "id": "vC",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(255, 246, 223, 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(120, 90, 40, 0.22) 0px 3px 0px 0px",
+        "width": 75.60833740234375,
+        "height": 43.999542236328125
+      },
+      {
+        "text": "菜单",
+        "id": "vP",
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgba(255, 246, 223, 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "rgba(120, 90, 40, 0.22) 0px 3px 0px 0px",
+        "width": 63.29998779296875,
+        "height": 43.999542236328125
+      }
+    ],
+    "errors": []
+  },
+  {
+    "game": "journey-west-3d",
+    "buttons": [
+      {
+        "text": "J\n换武器",
+        "id": "",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgb(37, 99, 235) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 58,
+        "height": 58
+      },
+      {
+        "text": "K\n闪避",
+        "id": "",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgb(37, 99, 235) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 58,
+        "height": 58
+      },
+      {
+        "text": "L\n护体",
+        "id": "",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgb(37, 99, 235) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 58,
+        "height": 58
+      },
+      {
+        "text": "U\n爆气",
+        "id": "",
+        "disabled": false,
+        "aria": null,
+        "opacity": "0.55",
+        "effectiveOpacity": 0.55,
+        "filter": "none",
+        "background": "rgb(37, 99, 235) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 58,
+        "height": 58
+      },
+      {
+        "text": "I\n丹药",
+        "id": "",
+        "disabled": false,
+        "aria": null,
+        "opacity": "1",
+        "effectiveOpacity": 1,
+        "filter": "none",
+        "background": "rgb(37, 99, 235) none repeat scroll 0% 0% / auto padding-box border-box",
+        "shadow": "none",
+        "width": 58,
+        "height": 58
+      }
+    ],
+    "errors": []
+  }
+]
