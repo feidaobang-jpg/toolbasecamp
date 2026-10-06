@@ -6,8 +6,8 @@
   },
   "one_liner": "驾驶武装吉普炸开营房救人、升级武器、送上直升机；目前有海滩登陆和废墟城两关，支持机枪跟随车头，默认3格护甲与无限命。",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "current_version": "v0.7.4",
-  "handoff": "releases/v0.7.4/handoff.json",
+  "current_version": "v0.7.5",
+  "handoff": "releases/v0.7.5/handoff.json",
   "launch": {
     "public_entry": "public/html/game/jackal-stage1-3d/index.html",
     "device_root": "D:/project/toolbasecamp",
@@ -99,11 +99,11 @@
       "summary": "第二关模型统一复用第一关：炮塔改用沙袋机枪巢外观，营房/围墙/大门恢复木屋红顶与石墙木门（用户反馈第一关更好看，各关同类敌人外观需一致）。"
     },
     {
-      "version": "v0.7.4",
-      "base_version": "v0.7.3",
+      "version": "v0.7.5",
+      "base_version": "v0.7.4",
       "classification": "普通补丁",
       "date": "2026-10-06",
-      "handoff": "releases/v0.7.4/handoff.json",
+      "handoff": "releases/v0.7.5/handoff.json",
       "summary": "按原作身份复用：第二关普通炮台改用同型炮台模型；闪光俘虏囚室用灰绿铁皮房、普通营房用浅色帆布棚，保留专属敌人。"
     }
   ],

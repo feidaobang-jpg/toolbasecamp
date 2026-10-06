@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "game_id": "jackal-stage1-3d",
-  "version": "v0.7.4",
-  "base_version": "v0.7.3",
+  "version": "v0.7.5",
+  "base_version": "v0.7.4",
   "created_at": "2026-10-06T17:58:15.734172+08:00",
   "classification": "普通补丁",
   "changes": [
@@ -39,7 +39,7 @@
       "total": 29
     },
     "model_identity": {
-      "version": "v0.7.4",
+      "version": "v0.7.4 (本任务合并前实测构建，版本号顺延为v0.7.5，待合并后复测)",
       "sharedCannon": true,
       "ruinAndRestartRestore": true,
       "errors": [],
@@ -55,17 +55,28 @@
         "textures": 2,
         "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
       },
-      "performance": {
-        "frames": 682,
-        "avgFPS": 169.88840175368674,
-        "medianMs": 5.899999999999636,
-        "p95Ms": 6,
-        "over50Ms": 0
-      },
       "capture": "real time browser gameplay with teleport/invulnerability test hooks",
       "physical_phone": false
     },
-    "limitation": "桌面Edge无头/RTX4060Ti；手机视口模拟，未做实体手机验收。"
+    "limitation": "桌面Edge无头/RTX4060Ti；手机视口模拟，未做实体手机验收。",
+    "premerge_performance": {
+      "n": 683,
+      "avgFPS": 169.39064011309242,
+      "medianMs": 5.899999999999636,
+      "p95Ms": 6,
+      "over50ms": 0,
+      "renderInfo": {
+        "calls": 79,
+        "tris": 173920,
+        "geometries": 61,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "gameState": {
+        "mode": "play",
+        "paused": false
+      }
+    }
   },
   "site": {
     "status": "pending"
