@@ -1,5 +1,5 @@
 // 第二关新增的原创 Q 版低模：敌方吉普、轰炸机、水中石像、Boss 石像、会倒的石柱。模型正面朝 -Z（= 北）。
-// 注：第二关「炮塔」不再单独建模，统一复用第一关 models.js 的沙袋机枪巢（makeNest），保持各关同类敌人外观一致。
+// 第二关普通固定炮台与第一关同型，复用 models.js 的 makeCannon；本文件只放本关新增敌人，统一材质而不混淆身份。
 import * as THREE from 'three';
 import { part, merged, mesh, MAT, C, blob, cached, chibiHead } from './models.js';
 

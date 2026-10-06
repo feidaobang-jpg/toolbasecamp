@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.7.4",
+  "base_version": "v0.7.3",
+  "created_at": "2026-10-06T17:58:15.734172+08:00",
+  "classification": "普通补丁",
+  "changes": [
+    "第二关普通固定炮台复用第一关 makeCannon，撤销错误的 makeNest 沙袋机枪巢外观；保留第二关三发扇形射击与现有关卡数值。",
+    "第二关闪光俘虏囚室单独用灰绿铁皮屋（几何屋顶肋、墙板），普通俘虏营房用浅色帆布棚；统一共享哑光材质和比例。",
+    "同型步兵/坦克仍走共享模型，敌方吉普、轰炸机、水中石像、倒塌石柱、石像Boss保留独立造型。",
+    "围墙共用，第二关废墟柱廊与石桥仍保留；不改关卡、敌人数量、救援人数或战斗规则。"
+  ],
+  "original_references": [
+    {
+      "url": "https://vgmaps.de/maps/view?m=3040",
+      "type": "original_game_map_rip",
+      "finding": "第一关地图上的固定炮台为灰色机械炮台；营房与第二关铁皮屋不同。"
+    },
+    {
+      "url": "https://vgmaps.de/maps/view?m=3041",
+      "type": "original_game_map_rip",
+      "finding": "第二关普通固定炮台仍是同型灰色机械炮台；灰色囚室、浅色帐篷、水中石像和柱廊均有独立轮廓。"
+    },
+    {
+      "url": "https://gamefaqs.gamespot.com/nes/563425-jackal/faqs/13675",
+      "type": "walkthrough",
+      "finding": "第二关普通炮台射击更快；新增吉普/飞机/水中石像/倒塌石柱，Boss为四座石像。"
+    }
+  ],
+  "qa": {
+    "status": "passed",
+    "desktop": {
+      "passed": 92,
+      "total": 92
+    },
+    "stage2": {
+      "passed": 29,
+      "total": 29
+    },
+    "model_identity": {
+      "version": "v0.7.4",
+      "sharedCannon": true,
+      "ruinAndRestartRestore": true,
+      "errors": [],
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "quality": "high",
+      "renderInfo": {
+        "calls": 85,
+        "tris": 176704,
+        "geometries": 72,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "performance": {
+        "frames": 682,
+        "avgFPS": 169.88840175368674,
+        "medianMs": 5.899999999999636,
+        "p95Ms": 6,
+        "over50Ms": 0
+      },
+      "capture": "real time browser gameplay with teleport/invulnerability test hooks",
+      "physical_phone": false
+    },
+    "limitation": "桌面Edge无头/RTX4060Ti；手机视口模拟，未做实体手机验收。"
+  },
+  "site": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "pending"
+  },
+  "bilibili": {
+    "action": "pending_merge",
+    "reason": "普通外观纠正补丁；现有介绍仍准确，合并到下一次有意义更新。"
+  },
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "原作对照地图只作参考，不作为当前游戏实机素材。"
+    ]
+  },
+  "thumbnail": "沿用第一关画面：第一关画风与主入口未变化。",
+  "build": {
+    "script_sha256": "630de7ed772af34f672691a5d82b1d7701a6caf3b4643aaea47fd44fd97052cc",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+  },
+  "evidence_location": "D:\\project\\task-artifacts\\jackal-original-models-20261006"
+}
