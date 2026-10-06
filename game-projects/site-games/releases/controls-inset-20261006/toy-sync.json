@@ -1,0 +1,117 @@
+{
+  "tank-3d": {
+    "toy_id": 39043249461248,
+    "version": "controls-inset1",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\tank-3d",
+    "package_hash": "36d5c97fd4afaacb96c3ad69c4ec106dc539d97bd275739d0fbb8b719381b442",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_XD4t508R/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "mtime": 1791287606
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:49.203646+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_UL1GjmCR/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:01.563978+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00"
+  },
+  "mario-3d": {
+    "toy_id": 39043286960128,
+    "version": "v2.4.2",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\mario-3d",
+    "package_hash": "2dfcd3db2abc24c02adb8f81167e827592f93e506e2ab0630e17a9b146af0ff8",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_3nVKa6vU/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "mtime": 1791256309
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:51.545393+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_Fvqk4WAv/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:04.419364+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00"
+  },
+  "jackal-stage1-3d": {
+    "toy_id": 39863936092160,
+    "version": "v0.7.7",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\jackal-stage1-3d",
+    "package_hash": "34c450239084208aba336e96254e8d7ffe672dfc17a2026a50f30abb2c2cfcd9",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_AVATPJMI/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "mtime": 1791282459
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:53.288348+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_pGlLp0I2/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:06.847110+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00"
+  },
+  "cadillacs-stage1-3d": {
+    "toy_id": 40412421031936,
+    "version": "v0.5.3",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\cadillacs-stage1-3d",
+    "package_hash": "df8f27eee40763cb2f373f8005e72ca9de3b380d22ab7e784913b70f2235aad9",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_NatOPTBw/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "mtime": 1791297850
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:56.714902+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_QeYcnmuI/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:11.332427+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00"
+  },
+  "starship-defense": {
+    "toy_id": 38678478981120,
+    "version": "web-controls-inset-v0.19.3",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\starship-defense",
+    "package_hash": "4bc44dbd80fb238eecca336a266132ee2a9f2accc3b21809057a0b42069db61a",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_0ceQzhba/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "mtime": 1791296936
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:57.465158+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_Zrr8gzbo/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:12.285665+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00"
+  }
+}

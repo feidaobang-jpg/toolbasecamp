@@ -6,14 +6,42 @@
   "qa_record": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
   "physical_phone_test": false,
   "website": {
-    "status": "pending_deployment"
+    "status": "public_verified",
+    "commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
+    "verified_at": "2026-10-06T15:15:43.601094+00:00"
   },
   "toy": {
-    "status": "pending_sync",
-    "reason": "网站部署核验后打包预览实测并提交"
+    "toy_id": 40412421031936,
+    "version": "v0.5.3",
+    "package": "D:\\project\\task-artifacts\\controls-inset-20261006-01a111b5\\packages\\cadillacs-stage1-3d",
+    "package_hash": "df8f27eee40763cb2f373f8005e72ca9de3b380d22ab7e784913b70f2235aad9",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_NatOPTBw/index.html"
+    },
+    "before": {
+      "status": "published",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "mtime": 1791297850
+    },
+    "status": "auditing",
+    "preview_at": "2026-10-06T15:13:56.714902+00:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_QeYcnmuI/index.html"
+    },
+    "submitted_at": "2026-10-06T15:18:11.332427+00:00",
+    "platform_status": "auditing",
+    "platform_checked_at": "2026-10-06T15:19:26.782729+00:00",
+    "public_package_verified": false,
+    "qa_record": "../../../../site-games/releases/controls-inset-20261006/toy-preview/qa.json"
   },
   "bilibili": {
     "status": "pending_merge",
     "reason": "普通布局补丁累计至下次有意义的说明更新；入口和操作键位未变"
+  },
+  "qa_records": {
+    "local": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
+    "safe_area": "../../../../site-games/releases/controls-inset-20261006/safe-area/qa.json",
+    "website": "../../../../site-games/releases/controls-inset-20261006/website/qa.json"
   }
 }

@@ -6,7 +6,9 @@
   "qa_record": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
   "physical_phone_test": false,
   "website": {
-    "status": "pending_deployment"
+    "status": "public_verified",
+    "commit": "d47a620b5dc89431281b6976a6aefee168a48bcf",
+    "verified_at": "2026-10-06T15:15:43.601094+00:00"
   },
   "toy": {
     "status": "pending_association",
@@ -15,5 +17,10 @@
   "bilibili": {
     "status": "pending_merge",
     "reason": "普通布局补丁累计至下次有意义的说明更新；入口和操作键位未变"
+  },
+  "qa_records": {
+    "local": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
+    "safe_area": "../../../../site-games/releases/controls-inset-20261006/safe-area/qa.json",
+    "website": "../../../../site-games/releases/controls-inset-20261006/website/qa.json"
   }
 }
