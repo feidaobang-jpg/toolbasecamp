@@ -1,0 +1,93 @@
+{
+  "task_id": "01a11130-2c01-7462-af30-a19a99a2c2c9-taptap-tank-02",
+  "classification": "channel_launch_preparation",
+  "source_version": "lobby1",
+  "source_commit": "4cb9281a7d439791d12accf50fc5b5e315eadf0e",
+  "artifact_directory": "D:/project/toolbasecamp-artifacts/taptap/tank-3d/20261006",
+  "package": {
+    "name": "tank-3d.zip",
+    "sha256": "7466827208743fed47995cea929d102ddc1a7ed8129bc763d81a834751ec91f5",
+    "bytes": 410039,
+    "h5_version_id": 269855,
+    "package_id": 71521,
+    "upload_task_id": "6957a7a5-84f2-4e91-b95f-b72bffaace55",
+    "slot": "main"
+  },
+  "new_game": {
+    "title": "坦克大战 3D",
+    "developer_id": 100726,
+    "app_id": 962376,
+    "version_name": "V-20261006",
+    "version_id": 1039983,
+    "status": "draft_complete_awaiting_sce_consent",
+    "review_submitted": false,
+    "release_schedule": "immediate_after_approval",
+    "remaining_blockers": ["SCE_AGREEMENT_REQUIRED"],
+    "listing": "https://developer.taptap.cn/v3/100726/app/962376/store/update",
+    "materials": {
+      "icon": 348330,
+      "banner": 348331,
+      "vertical_cover": 348332,
+      "screenshots": [348333, 348334, 348338],
+      "gameplay_video": 5945529
+    }
+  },
+  "verification": {
+    "desktop": "passed: 1920x1080, real game controls, camera and movement/fire captures",
+    "mobile_landscape_simulation": "passed: 844x390",
+    "mobile_portrait_simulation": "passed: 390x844",
+    "control_mode_switch": "passed: touch/desktop both ways, current stage and mode preserved",
+    "co_op": "passed: two browser clients, password room, ready/start, production relay state synchronization",
+    "javascript_errors": 0,
+    "http_failures": 0,
+    "real_mobile_test": false,
+    "taptap_client_test": false,
+    "report": "qa.json"
+  },
+  "old_games": [
+    {
+      "title": "坦克大战",
+      "app_id": 927863,
+      "version_id": 1039885,
+      "status": "close_play_entry_draft_saved_awaiting_sce_consent",
+      "draft_platform_flags": {"android": 1, "ios": 1, "pc": 1},
+      "live_entry_closed": false,
+      "support_ticket_submitted": false,
+      "next": "Approve SCE, submit close-entry review, verify live entry closed, then request detail-page downlisting."
+    },
+    {
+      "title": "合成太阳",
+      "app_id": 225630,
+      "published_version_id": 177221,
+      "cloned_draft_version_id": 1040005,
+      "status": "public_android_page_has_follow_only_no_download_control",
+      "draft_platform_flags": {"android": 1, "ios": 1},
+      "support_ticket_submitted": false,
+      "next": "After explicit authorization, request detail-page downlisting through support ticket."
+    },
+    {
+      "title": "公路防守",
+      "app_id": 933938,
+      "status": "unpublished_awaiting_irreversible_deletion_confirmation",
+      "deleted": false,
+      "deletion_warning": "Deletion cannot be reversed and the associated TapTap Maker project cannot be published again."
+    }
+  ],
+  "legal": {
+    "sce_url": "https://www.taptap.cn/doc/ugcgame-agreement/",
+    "user_consent": "requested_for_new_and_old_tank_separately_from_previous_chongchao_consent",
+    "signed_this_task": false,
+    "source_note": "Game metadata identifies original Battle City sound effects; do not claim all uploaded content is wholly original."
+  },
+  "channel_baselines": {
+    "taptap_last_successful_publication": null,
+    "website_change_this_task": false,
+    "toy_update_this_task": false,
+    "bilibili_description_update_this_task": false
+  },
+  "coordination": {
+    "branch": "codex/tank-taptap-20261006",
+    "main_integration": "pending_shared_integration_lock",
+    "external_account_lock": "release_before_user_approval_pause_and_reacquire_before_further_writes"
+  }
+}
