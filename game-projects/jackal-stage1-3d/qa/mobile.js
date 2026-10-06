@@ -197,7 +197,9 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   await page.waitForTimeout(900);
   T = await touchApi(page, context);
   s = await snap(page);
-  check('[竖屏] 菜单正常显示（未旋转、无横屏阻断提示）', s.ui.overlay === 'menu' && !s.ui.display.rotated, s.ui.display);
+  // 2026-10-07：手机竖着拿时菜单也直接旋转成横屏，免得菜单竖屏、开局又变横屏
+  const pmenu = await panelFits(page, '#menu');
+  check('[竖屏] 打开即旋转为横屏布局（逻辑 844×390），菜单完整显示、无横屏阻断提示', s.ui.overlay === 'menu' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390 && inside(pmenu), { display: s.ui.display, menu: pmenu });
   await page.screenshot({ path: 'out/m_port_menu.png' });
   const st2 = await box(page, '#menu [data-act=start]');
   await T.tap(st2.x, st2.y);

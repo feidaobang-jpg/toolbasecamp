@@ -339,7 +339,8 @@ let lastOrient = null;
 function layout() {
   const vw = window.innerWidth, vh = window.innerHeight, coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
   if (display.vw && (vw !== display.vw || vh !== display.vh)) IN.clear();
-  const rotate = uiMode === 'game' && vh > vw && coarse;
+  // 手机触屏竖着拿时，菜单也直接旋转成横屏（2026-10-07 用户确认）：免得菜单竖屏、开局又变横屏
+  const rotate = vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';

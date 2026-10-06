@@ -360,12 +360,14 @@ function viewport() {
 }
 function layout() {
   const { vw, vh } = viewport(), coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
-  const rotate = (uiMode === 'game' || current === 'select') && vh > vw && coarse;
+  // 手机触屏竖着拿时，标题菜单也直接旋转成横屏（2026-10-07 用户确认，原先到选人画面才旋转）
+  const rotate = vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
   stage.classList.toggle('rotated', rotate);
   stage.classList.toggle('compact', H < 520);
+  stage.classList.toggle('narrow', W < 760);   // 667×375 一类窄横屏：主菜单上下排列、整层滚动，选项值不被截断
   stage.classList.toggle('portrait', H > W);
   const orient = rotate + ':' + (W > H);
   if (lastOrient !== null && orient !== lastOrient) IN.clear();

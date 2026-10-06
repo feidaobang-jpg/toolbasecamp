@@ -133,3 +133,10 @@ button::before,button::after{content:none!important}
 #hud-top #btn-cam-t{width:auto;height:auto;min-height:44px;flex-direction:row;gap:4px;border-radius:12px}body.touch-on #hud-top #btn-cam-t{display:flex}
 /* 全屏按钮由脚本按浏览器能力设置 hidden；需压过公共界面里 body.mobile-device 的 display:block!important */
 html body #btn-fs[hidden],html body .items>.fs-btn[hidden]{display:none!important}
+
+/* 手机横屏紧凑主菜单（2026-10-07）：手机竖着拿时菜单也直接旋转成横屏，菜单要在逻辑 844×390 一类横屏里少占一行：
+   收起与三键操作模式行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，三键行去掉外边距 */
+#stage.compact .title-screen .items>[data-opt=touch]{display:none}
+#stage.compact:not(.narrow) .title-screen .items>.primary{grid-column:auto}
+#stage.compact .control-modes{margin:0!important;gap:6px!important}
+#stage.compact .control-modes button[data-control-mode]{min-height:40px;padding:4px 8px;font-size:13px}

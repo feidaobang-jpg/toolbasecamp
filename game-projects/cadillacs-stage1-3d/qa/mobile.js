@@ -121,7 +121,10 @@ const fs = require('fs');
   // ---------- 竖屏 390×844：开局后自动旋转 ----------
   ({ ctx, page, cdp } = await device(390, 844));
   await page.goto(BASE + '?test=1&seed=3', { waitUntil: 'load' }); await sleep(800);
-  s = await S(page); ok('竖屏：菜单正常显示（不旋转）', s.ui.overlay === 'menu' && !s.ui.display.rotated);
+  // 2026-10-07：手机竖着拿时标题菜单也直接旋转成横屏，免得菜单竖屏、开局又变横屏
+  s = await S(page);
+  const pm = await page.evaluate(() => { const r = document.querySelector('#menu .panel').getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom), vw: innerWidth, vh: innerHeight }; });
+  ok('竖屏：菜单打开即旋转为横屏（逻辑 844×390）且完整显示', s.ui.overlay === 'menu' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390 && pm.l >= 0 && pm.t >= 0 && pm.r <= pm.vw && pm.b <= pm.vh, { display: s.ui.display, pm });
   await page.screenshot({ path: out('mobile-portrait-menu.png') });
   await tapSel(page, cdp, '[data-act=select]');
   s = await S(page); ok('竖屏进入选人画面即旋转为横屏', s.ui.overlay === 'select' && s.ui.display.rotated && s.ui.display.W === 844 && s.ui.display.H === 390, s.ui.display);

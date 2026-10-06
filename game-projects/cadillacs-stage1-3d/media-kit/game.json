@@ -6,8 +6,8 @@
  },
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.6.0",
- "handoff": "releases/v0.6.0/handoff.json",
+ "current_version": "v0.6.1",
+ "handoff": "releases/v0.6.1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -85,6 +85,17 @@
     "website": "deployed_verified",
     "toy": "published",
     "bilibili": "public_verified"
+   }
+  },
+  {
+   "version": "v0.6.1",
+   "classification": "普通补丁",
+   "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩，完整操作说明移入暂停。",
+   "record": "releases/v0.6.1/handoff.json",
+   "channels": {
+    "website": "pending_deploy",
+    "toy": "pending",
+    "bilibili": "pending_merge"
    }
   }
  ],

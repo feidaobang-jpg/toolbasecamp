@@ -216,6 +216,10 @@ async function dirAfter(p, code) {
     {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 390, height: 844 }, mobile: true, dpr: 2, video: true });
       await g.evaluate(() => localStorage.clear()); await reload();
+      // 2026-10-07：手机竖着拿时菜单也直接旋转成横屏，免得菜单竖屏、开局又变横屏
+      const m0 = await g.evaluate(T('return T.state()'));
+      assert.equal(m0.display.rotated, true, 'portrait menu is rotated to landscape');
+      ok('phone portrait menu opens in rotated landscape layout', m0.display);
       await p.screenshot({ path: path.join(out, 'phone-portrait-menu.png') });
       await g.locator('#start-btn').tap();
       await g.waitForFunction(() => window.__TANK_TEST__.state().phase === 'play', null, { timeout: 5000 });

@@ -3,19 +3,33 @@
   "game_id": "chongchao-qianshao",
   "target_version": "web-tactics-v0.20.0",
   "account_mid": 16214353,
-  "status": "prepared",
+  "status": "public_verified",
   "items": [
     {
       "bvid": "BV1WbHq6eEBt",
       "old_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\n\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n更新（2026-10-06·v0.19.1）：新局可选休闲/普通/困难（旧档普通，副本难度独立）；新增手机按键自由摆放：操作设置→自定义按键位置，拖动摇杆和各功能键后保存，可取消或恢复默认，不影响本局进度。\n\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
       "new_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-07·v0.20.0）：可逐人安排留守/出击，自动回防可选；新增虫潮预告、第一章前五关混合进攻与通关补给，战报记录防线损失和收支。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
-      "status": "prepared"
+      "status": "public_verified",
+      "submitted_at": "2026-10-06T23:15:54.187Z",
+      "submit_toast": "稿件投递成功",
+      "public_verified_at": "2026-10-06T23:17:22.931Z",
+      "public_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-07·v0.20.0）：可逐人安排留守/出击，自动回防可选；新增虫潮预告、第一章前五关混合进攻与通关补给，战报记录防线损失和收支。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "evidence": "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/bili-new-public.jpg",
+      "description_sha256": "fd161f600fc80b5153779bf811f3e35bbf11b6c318fe8755f7b14fa4a088c264",
+      "version": "web-tactics-v0.20.0"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "old_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\n\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n\n更新（2026-10-06·v0.19.1）：新局可选休闲/普通/困难（旧档普通，副本难度独立）；新增手机按键自由摆放：操作设置→自定义按键位置，拖动摇杆和各功能键后保存，可取消或恢复默认，不影响本局进度。\n\n本视频为早期版本，玩法与操作以当前试玩为准。",
       "new_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-07·v0.20.0）：可逐人安排留守/出击，自动回防可选；新增虫潮预告、第一章前五关混合进攻与通关补给，战报记录防线损失和收支。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
-      "status": "prepared"
+      "status": "public_verified",
+      "submitted_at": "2026-10-06T23:16:55.966Z",
+      "submit_toast": "稿件投递成功",
+      "public_verified_at": "2026-10-06T23:18:05.260Z",
+      "public_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-07·v0.20.0）：可逐人安排留守/出击，自动回防可选；新增虫潮预告、第一章前五关混合进攻与通关补给，战报记录防线损失和收支。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "evidence": "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/bili-first-public.jpg",
+      "description_sha256": "50c9b1c4c6f334ac4aa8b7cd0cb0662cbc1cb7abf55f467ddf3e2a3de25bf433",
+      "version": "web-tactics-v0.20.0"
     }
   ]
 }
