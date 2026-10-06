@@ -1,10 +1,27 @@
-// 程序化低模角色与道具：保留原作角色身份与配色辨识，画风统一为赤色要塞 3D 的玩具感低模——
-// 哑光 Phong 顶点色、无描边、自然柔和配色、头稍大的 Q 版比例。每个骨骼节点的零件合并成一个带顶点色的网格。
+// 程序化低模角色与道具：按原作配色还原造型。每个骨骼节点的零件合并成一个带顶点色的网格，
+// 角色用卡通着色（MeshToonMaterial）+ 法线外扩描边，接近 CPS 街机像素画的粗轮廓。
 // 模型本地 +Z 为正面、+X 为角色左手侧、+Y 向上；脚底在原点。
 import * as THREE from 'three';
 
-// ---------- 公共材质（与赤色要塞 MAT.toy 相同：低高光哑光） ----------
-export function toyMat(opts) { return new THREE.MeshPhongMaterial(Object.assign({ color: 0xffffff, vertexColors: true, shininess: 28, specular: 0x2a2a2a }, opts || {})); }
+// ---------- 公共材质 ----------
+const grad = new THREE.DataTexture(new Uint8Array([90, 90, 90, 255, 175, 175, 175, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat);
+grad.minFilter = grad.magFilter = THREE.NearestFilter; grad.needsUpdate = true;
+export const TOON_GRAD = grad;
+export function toonMat(opts) { return new THREE.MeshToonMaterial(Object.assign({ color: 0xffffff, vertexColors: true, gradientMap: grad }, opts || {})); }
+export const outline = { on: true, mats: [] };
+export function outlineMat(width) {
+  const m = new THREE.MeshBasicMaterial({ color: 0x1c1310, side: THREE.BackSide });
+  m.userData.w = { value: width || 0.018 };
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uOutW = m.userData.w;
+    sh.vertexShader = 'uniform float uOutW;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  transformed += normalize(normal) * uOutW;');
+  };
+  outline.mats.push(m);
+  return m;
+}
+const OUTLINE = outlineMat(0.017);
+const OUTLINE_THIN = outlineMat(0.011);
+export function setOutlines(on) { outline.on = on; }
 
 // ---------- 几何拼装：带颜色的零件合并为一个 BufferGeometry ----------
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _s = new THREE.Vector3(), _p = new THREE.Vector3();
@@ -104,16 +121,13 @@ export function buildHuman(spec) {
   const H = spec.H || 1.85, s = H / 1.85;
   const B = Object.assign({}, BUILD[spec.build || 'normal']);
   for (const k of ['cw', 'cd', 'arm', 'fore', 'thigh', 'shin', 'hipW', 'neck', 'hand', 'belly']) if (B[k]) B[k] *= s;
-  // 玩具感比例：四肢略粗、手脚更圆（与赤色要塞的 Q 版小兵同一系；格斗动作仍需要能看清的手臂和腿）
-  for (const k of ['arm', 'fore', 'thigh', 'shin']) B[k] *= 1.16;
-  B.hand *= 1.3;
   const gold = spec.gold;
   const C = (c) => gold ? (typeof gold === 'string' ? gold : '#d9b241') : c;
   const skin = C(spec.skin || '#e0a878');
   const fat = spec.build === 'fat';
-  const hipH = H * (fat ? 0.42 : 0.45);
-  const torsoH = H * 0.27, neckH = H * 0.022, headR = H * 0.098;   // 头约为写实比例的 1.5 倍，总身高不变
-  const ua = H * 0.15, fa = H * 0.14;
+  const hipH = H * (fat ? 0.46 : 0.5);
+  const torsoH = H * 0.29, neckH = H * 0.035, headR = H * 0.064;
+  const ua = H * 0.168, fa = H * 0.155;
   const th = hipH * 0.5, sh = hipH * 0.43, footH = hipH * 0.07;
   const prof = fat ? PROFILE.fat : spec.build === 'female' ? PROFILE.female : PROFILE.base;
   const profKey = fat ? 'fat' : spec.build === 'female' ? 'female' : 'base';
@@ -204,20 +218,17 @@ export function buildHuman(spec) {
 
   // --- 头 ---
   const hr = headR;
-  P('head').add(GEO.sph, skin, mtx(0, 0, 0, 0, 0, 0, hr * 0.94, hr * 0.98, hr * 0.92));
-  P('head').add(GEO.sph, skin, mtx(0, -hr * 0.36, hr * 0.14, 0, 0, 0, hr * 0.72, hr * 0.56, hr * 0.74));    // 圆下巴
-  P('head').add(GEO.sph, darker(skin, 0.92), mtx(0, -hr * 0.1, hr * 0.9, 0, 0, 0, hr * 0.13, hr * 0.12, hr * 0.12));   // 圆鼻头
+  P('head').add(GEO.sph, skin, mtx(0, 0, 0, 0, 0, 0, hr * 0.86, hr, hr * 0.92));
+  P('head').add(GEO.sph, skin, mtx(0, -hr * 0.45, hr * 0.18, 0, 0, 0, hr * 0.62, hr * 0.5, hr * 0.7));    // 下颌
+  P('head').add(GEO.box, darker(skin, 0.88), mtx(0, -hr * 0.08, hr * 0.92, -0.2, 0, 0, hr * 0.2, hr * 0.32, hr * 0.22));   // 鼻
   if (!gold) {
-    const eyeC = spec.eyes || '#2b2b2b';
-    const cheek = col(skin).lerp(col('#ff9f8a'), 0.45);
+    const eyeC = spec.eyes || '#1d1a22';
     for (const sx of [-1, 1]) {
-      // Q 版椭圆黑眼（同赤色要塞小兵），眉毛用发色
-      P('head').add(GEO.sph, eyeC, mtx(sx * hr * 0.34, hr * 0.1, hr * 0.84, 0, 0, 0, hr * 0.12, hr * 0.18, hr * 0.08));
-      P('head').add(GEO.box, spec.hair && spec.hair.color ? spec.hair.color : '#3a2a20', mtx(sx * hr * 0.34, hr * 0.36, hr * 0.84, 0, sx * 0.3, sx * -0.14, hr * 0.32, hr * 0.08, hr * 0.08));
-      P('head').add(GEO.sph, cheek, mtx(sx * hr * 0.56, -hr * 0.16, hr * 0.7, 0, 0, 0, hr * 0.16, hr * 0.08, hr * 0.06));   // 腮红
-      P('head').add(GEO.sph, skin, mtx(sx * hr * 0.92, 0, -hr * 0.05, 0, 0, 0, hr * 0.13, hr * 0.22, hr * 0.12));   // 耳
+      P('head').add(GEO.box, eyeC, mtx(sx * hr * 0.36, hr * 0.12, hr * 0.84, 0, sx * 0.25, 0, hr * 0.2, hr * 0.13, hr * 0.06));
+      P('head').add(GEO.box, spec.hair && spec.hair.color ? spec.hair.color : '#3a2a20', mtx(sx * hr * 0.36, hr * 0.32, hr * 0.86, 0, sx * 0.25, sx * -0.12, hr * 0.3, hr * 0.07, hr * 0.06));
+      P('head').add(GEO.sph, skin, mtx(sx * hr * 0.86, 0, -hr * 0.05, 0, 0, 0, hr * 0.14, hr * 0.24, hr * 0.12));   // 耳
     }
-    P('head').add(GEO.box, '#8a4a3a', mtx(0, -hr * 0.42, hr * 0.84, 0, 0, 0, hr * 0.3, hr * 0.06, hr * 0.06));   // 嘴
+    P('head').add(GEO.box, '#7a3a30', mtx(0, -hr * 0.52, hr * 0.78, 0, 0, 0, hr * 0.34, hr * 0.06, hr * 0.06));   // 嘴
   }
   // 原作头像的特征
   const hair = spec.hair || { style: 'short', color: '#3a2a20' };
@@ -311,11 +322,14 @@ export function buildHuman(spec) {
 
   // --- 生成网格 ---
   const meshes = [];
-  const mat = toyMat();
+  const mat = toonMat();
   for (const name in parts) {
     const geo = parts[name].build();
     const mesh = new THREE.Mesh(geo, mat);
     mesh.castShadow = true; mesh.receiveShadow = false;
+    const ol = new THREE.Mesh(geo, H > 1.2 ? OUTLINE : OUTLINE_THIN);
+    ol.userData.outline = true;
+    mesh.add(ol);
     bones[name].add(mesh);
     meshes.push(mesh);
   }
@@ -328,20 +342,20 @@ export function buildHuman(spec) {
 // ---------- 角色表（按原作配色） ----------
 export const SPECS = {
   // 玩家
-  jack: { H: 1.86, build: 'muscle', skin: '#efbf98', hair: { style: 'messy', color: '#74492a' }, shirt: { color: '#f3efe4', sleeves: 'short', open: true, collar: true }, pants: { color: '#4d6ca6' }, belt: '#4a3018', boots: { color: '#6b4426' } },
-  hannah: { H: 1.74, build: 'female', skin: '#f2c8a2', hair: { style: 'long', color: '#353b5e' }, shirt: { color: '#df7040', crop: true }, pants: { color: '#f4f1e8' }, belt: '#7a4a26', boots: { color: '#7c4a28', high: true } },
-  mustapha: { H: 1.95, build: 'muscle', skin: '#b0764a', hair: { style: 'short', color: '#2e2016' }, cap: { color: '#e6c254', logo: '#4f8f3a' }, shirt: { color: '#8cc464', sleeves: 'short', open: true, collar: true }, pants: { color: '#e0c25a' }, belt: '#4a3018', boots: { color: '#6c4628', high: true } },
-  mess: { H: 2.04, build: 'huge', skin: '#e2a379', hair: { style: 'short', color: '#4a2b16' }, shirt: { color: '#e07c3c', sleeves: 'none', open: true }, abs: true, pants: { color: '#a6cfb0' }, belt: '#5a3a1c', boots: { color: '#6a4424', high: true } },
+  jack: { H: 1.86, build: 'muscle', skin: '#e9b48a', hair: { style: 'messy', color: '#74492a' }, shirt: { color: '#eef2f6', sleeves: 'short', open: true, collar: true }, pants: { color: '#3d5fa6' }, belt: '#4a3018', boots: { color: '#6b4426' } },
+  hannah: { H: 1.74, build: 'female', skin: '#f2c8a2', hair: { style: 'long', color: '#242a4c' }, shirt: { color: '#e8622c', crop: true }, pants: { color: '#f4f1e8' }, belt: '#7a4a26', boots: { color: '#7c4a28', high: true } },
+  mustapha: { H: 1.95, build: 'muscle', skin: '#a9693d', hair: { style: 'short', color: '#24160e' }, cap: { color: '#e4ba3c', logo: '#3c8c2a' }, shirt: { color: '#7fd257', sleeves: 'short', open: true, collar: true }, pants: { color: '#e8c33a' }, belt: '#4a3018', boots: { color: '#6c4628', high: true } },
+  mess: { H: 2.04, build: 'huge', skin: '#e2a379', hair: { style: 'short', color: '#4a2b16' }, shirt: { color: '#e8742a', sleeves: 'none', open: true }, abs: true, pants: { color: '#a9dcb6' }, belt: '#5a3a1c', boots: { color: '#6a4424', high: true } },
   // 杂兵（原作第一关出场的几种）
-  ferris: { H: 1.82, build: 'thin', skin: '#d79e6e', hair: { style: 'spiky', color: '#8c5a2a' }, vest: { color: '#5e6852', chevron: '#e6dcc0' }, abs: true, pants: { color: '#c46e46' }, boots: { color: '#5a3a22' }, wrist: '#3a3a3a' },
-  gneiss: { H: 1.8, build: 'thin', skin: '#d8a072', hair: { style: 'bandana', color: '#47a8ac' }, vest: { color: '#6d726b', chevron: '#d8d8d0' }, abs: true, pants: { color: '#4796a8' }, boots: { color: '#5a3a22' }, wrist: '#2f6f78' },
-  punk: { H: 1.64, build: 'thin', skin: '#c98d60', hair: { style: 'short', color: '#26180f' }, shirt: { color: '#c8503f', sleeves: 'short' }, overalls: '#4a64a6', pants: { color: '#4a64a6' }, boots: { color: '#4a3020' } },
-  blade: { H: 1.96, build: 'thin', skin: '#e3b08a', hair: { style: 'ponytail', color: '#efd26a' }, shirt: { color: '#4470b8', sleeves: 'none', tank: true }, pants: { color: '#4470b8' }, belt: '#24324e', boots: { color: '#38384a', high: true } },
-  elmer: { H: 1.86, build: 'fat', skin: '#d39b6c', hair: { style: 'bald' }, beard: '#1d1410', longBeard: true, shirt: { color: '#c896c6', sleeves: 'short' }, pants: { color: '#4c76ac' }, belt: '#5a3a1c', boots: { color: '#6a4426' } },
-  hammer: { H: 1.84, build: 'fat', skin: '#dba272', hair: { style: 'bald' }, beard: '#b8462a', shirt: { color: '#e8ae46', sleeves: 'none' }, pants: { color: '#b0503e' }, belt: '#4a2a18', boots: { color: '#4a2e1c' } },
-  wrench: { H: 1.88, build: 'fat', skin: '#d8a070', hair: { style: 'long', color: '#7a4a24' }, beard: '#7a4a24', longBeard: true, shirt: { color: '#eadfba', sleeves: 'short' }, pants: { color: '#6a9048' }, belt: '#4a2e18', boots: { color: '#5a3a22' } },
+  ferris: { H: 1.82, build: 'thin', skin: '#d79e6e', hair: { style: 'spiky', color: '#8c5a2a' }, vest: { color: '#5e6852', chevron: '#e6dcc0' }, abs: true, pants: { color: '#c96639' }, boots: { color: '#5a3a22' }, wrist: '#3a3a3a' },
+  gneiss: { H: 1.8, build: 'thin', skin: '#d8a072', hair: { style: 'bandana', color: '#36b2b8' }, vest: { color: '#6d726b', chevron: '#d8d8d0' }, abs: true, pants: { color: '#3a9cb0' }, boots: { color: '#5a3a22' }, wrist: '#2f6f78' },
+  punk: { H: 1.64, build: 'thin', skin: '#c98d60', hair: { style: 'short', color: '#26180f' }, shirt: { color: '#c63c30', sleeves: 'short' }, overalls: '#3554a8', pants: { color: '#3554a8' }, boots: { color: '#4a3020' } },
+  blade: { H: 1.96, build: 'thin', skin: '#e3b08a', hair: { style: 'ponytail', color: '#efd26a' }, shirt: { color: '#2f63c6', sleeves: 'none', tank: true }, pants: { color: '#2f63c6' }, belt: '#24324e', boots: { color: '#38384a', high: true } },
+  elmer: { H: 1.86, build: 'fat', skin: '#d39b6c', hair: { style: 'bald' }, beard: '#1d1410', longBeard: true, shirt: { color: '#cf90d2', sleeves: 'short' }, pants: { color: '#3d72b6' }, belt: '#5a3a1c', boots: { color: '#6a4426' } },
+  hammer: { H: 1.84, build: 'fat', skin: '#dba272', hair: { style: 'bald' }, beard: '#b8462a', shirt: { color: '#f2a92a', sleeves: 'none' }, pants: { color: '#b0402c' }, belt: '#4a2a18', boots: { color: '#4a2e1c' } },
+  wrench: { H: 1.88, build: 'fat', skin: '#d8a070', hair: { style: 'long', color: '#7a4a24' }, beard: '#7a4a24', longBeard: true, shirt: { color: '#eadfba', sleeves: 'short' }, pants: { color: '#5f903c' }, belt: '#4a2e18', boots: { color: '#5a3a22' } },
   // Boss：维斯·特修恩
-  vice: { H: 2.1, build: 'huge', skin: '#e7ad82', hair: { style: 'spikyBlond', color: '#f3d566' }, vest: { color: '#25252c', fur: '#8d8d94' }, abs: true, pants: { color: '#9a6dbc' }, straps: '#4a3460', boots: { color: '#bcc0cc', high: true }, wrist: '#76767e', eyes: '#2a3a7a' },
+  vice: { H: 2.1, build: 'huge', skin: '#e7ad82', hair: { style: 'spikyBlond', color: '#f3d566' }, vest: { color: '#25252c', fur: '#8d8d94' }, abs: true, pants: { color: '#9b63c8' }, straps: '#4a3460', boots: { color: '#bcc0cc', high: true }, wrist: '#76767e', eyes: '#2a3a7a' },
   // 第二关（按原作实机录像取色；与原作头像对不上的细节为推测）
   poacher: { H: 1.8, build: 'normal', skin: '#dcaa7c', hair: { style: 'short', color: '#4a3020' }, cap: { color: '#6b8450' }, shirt: { color: '#748c56', sleeves: 'long', collar: true }, pants: { color: '#5b7048' }, belt: '#4a3420', boots: { color: '#4c3a26', high: true } },
   skinner: { H: 1.84, build: 'normal', skin: '#d29870', hair: { style: 'short', color: '#2e2018' }, beard: '#2e2018', shirt: { color: '#c8b48a', sleeves: 'long' }, vest: { color: '#7a5636' }, pants: { color: '#8a7a58' }, belt: '#3e2a18', boots: { color: '#4a3422', high: true } },
@@ -356,8 +370,8 @@ export const SPECS = {
 
 // ---------- 迅猛龙（岩跳龙 Rock Hopper） ----------
 const RAPTOR_COL = {
-  calm: { base: '#80ae58', dark: '#557a3c', belly: '#e3d896', claw: '#f2ecd8' },
-  angry: { base: '#e88e3e', dark: '#b2622a', belly: '#f2d482', claw: '#fff4dc' }
+  calm: { base: '#79b04a', dark: '#46772c', belly: '#e3d68c', claw: '#f2ecd8' },
+  angry: { base: '#ee8a2a', dark: '#b75816', belly: '#f6d47a', claw: '#fff4dc' }
 };
 const raptorGeoCache = {};
 function raptorParts(pal) {
@@ -466,16 +480,17 @@ export function buildRaptor(kind) {
   const inner = new THREE.Group(); inner.scale.setScalar(SCALE);
   while (root.children.length) inner.add(root.children[0]);
   root.add(inner);
-  const mat = toyMat();
+  const mat = toonMat();
   const meshes = {};
   for (const n in cache.calm) {
     const m = new THREE.Mesh(cache.calm[n], mat);
     m.castShadow = true;
+    const ol = new THREE.Mesh(cache.calm[n], trex ? OUTLINE_THIN : OUTLINE); ol.userData.outline = true; m.add(ol);   // 霸王龙放大 2 倍，用细描边保持线宽
     bones[n].add(m); meshes[n] = m;
   }
   function setPalette(p) {
     const set = cache[p];
-    for (const n in meshes) meshes[n].geometry = set[n];
+    for (const n in meshes) { meshes[n].geometry = set[n]; meshes[n].children[0].geometry = set[n]; }
   }
   return { root, bones, mat, setPalette, H: trex ? 3.4 : 1.6, scale: SCALE };
 }
@@ -532,8 +547,8 @@ export function buildTrike() {
     const u = mk(k + 'U', body, x, -0.22, z);
     mk(k + 'L', u, 0, -0.4, 0);
   }
-  const mat = toyMat();
-  for (const n in trikeGeo.base) { const m = new THREE.Mesh(trikeGeo.base[n], mat); m.castShadow = true; bones[n].add(m); }
+  const mat = toonMat();
+  for (const n in trikeGeo.base) { const m = new THREE.Mesh(trikeGeo.base[n], mat); m.castShadow = true; const ol = new THREE.Mesh(trikeGeo.base[n], OUTLINE); ol.userData.outline = true; m.add(ol); bones[n].add(m); }
   return { root, bones, mat, H: 1.6 };
 }
 
@@ -572,9 +587,9 @@ export function buildCar() {
     carWheelGeo = w.build();
   }
   const root = new THREE.Group(); root.name = 'cadillac';
-  const bodyM = new THREE.Mesh(carBodyGeo, propMat); bodyM.castShadow = true; root.add(bodyM);
+  const bodyM = meshFrom(carBodyGeo, {}); root.add(bodyM);
   const wheels = [];
-  for (const [x, z] of [[0.86, 1.62], [-0.86, 1.62], [0.86, -1.62], [-0.86, -1.62]]) { const m = new THREE.Mesh(carWheelGeo, propMat); m.position.set(x, 0.36, z); m.castShadow = true; root.add(m); wheels.push(m); }
+  for (const [x, z] of [[0.86, 1.62], [-0.86, 1.62], [0.86, -1.62], [-0.86, -1.62]]) { const m = meshFrom(carWheelGeo, { thin: true }); m.position.set(x, 0.36, z); root.add(m); wheels.push(m); }
   root.userData.wheels = wheels;
   return root;
 }
@@ -590,13 +605,14 @@ export function maceGeo() {
 }
 
 // ---------- 道具 / 物品 / 武器 ----------
-const propMat = toyMat();
+const propMat = toonMat();
 const propCache = new Map();
 function cachedGeo(key, fn) { let g = propCache.get(key); if (!g) { const p = new Parts(); fn(p); g = p.build(); propCache.set(key, g); } return g; }
 export function meshFrom(geo, opts) {
   const o = opts || {};
   const m = new THREE.Mesh(geo, o.mat || propMat);
   m.castShadow = o.shadow !== false; m.receiveShadow = !!o.receive;
+  if (o.outline !== false) { const ol = new THREE.Mesh(geo, o.thin ? OUTLINE_THIN : OUTLINE); ol.userData.outline = true; m.add(ol); }
   return m;
 }
 export function drumGeo() {
@@ -712,7 +728,7 @@ export function bakeModel(root) {
   const inv = new THREE.Matrix4().copy(root.matrixWorld).invert();
   const list = [];
   root.traverse((o) => {
-    if (!o.isMesh) return;
+    if (!o.isMesh || o.userData.outline) return;
     const m = new THREE.Matrix4().multiplyMatrices(inv, o.matrixWorld);
     list.push({ geo: o.geometry, m, colorAttr: true });
   });

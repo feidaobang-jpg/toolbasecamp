@@ -14,17 +14,18 @@
     "verified_at": "2026-10-06T20:30:56.689791+08:00"
   },
   "title": "按下C，钻进游戏里：五款游戏的第一人称实战",
-  "video_url": null,
-  "bvid": null,
-  "submission_status": "not_uploaded",
-  "current_stage": "awaiting_browser_terms_confirmation",
+  "video_url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
+  "bvid": "BV1Fwpw6FEFx",
+  "submission_status": "submitted",
+  "current_stage": "awaiting_traffic_terms_confirmation",
   "terms": {
     "notice": "上传视频，即表示您已同意哔哩哔哩使用协议与哔哩哔哩社区公约",
     "agreement_url": "https://www.bilibili.com/protocal/licence.html",
     "agreement_version": "2025.04.30",
     "community_url": "https://member.bilibili.com/studio/convention/?navhide=1",
-    "confirmation": "requested",
-    "evidence": "publish/bilibili-zh/evidence/upload-agreement-notice.jpg"
+    "confirmation": "confirmed",
+    "evidence": "publish/bilibili-zh/evidence/upload-agreement-notice.jpg",
+    "user_quote": "同意，继续"
   },
   "deduplication": {
     "checked_at": "2026-10-06T20:30:56.689791+08:00",
@@ -86,8 +87,13 @@
     "toy_id": 40495283951616,
     "title": "飞刀班长游戏合集",
     "url": "https://www.bilibili.com/toy/feidao-games/index.html",
-    "status": "pending_after_publication",
-    "current_bound_videos": []
+    "status": "bound_verified",
+    "current_bound_videos": [
+      "BV1Fwpw6FEFx"
+    ],
+    "bvid": "BV1Fwpw6FEFx",
+    "verified_at": "2026-10-06T20:58:57.996476+08:00",
+    "verification": "toy video bind succeeded; toy video list returns exact BV and title"
   },
   "collection_membership": {
     "status": "not_applicable",
@@ -99,19 +105,65 @@
     "obtained_at": "2026-10-06T19:05:00+08:00",
     "expires_at": "2026-10-12T23:59:00+08:00",
     "eligible_publish_time": "2026-10-06T19:05:00+08:00以后首次发布的新视频",
-    "status": "available_not_used",
-    "evidence": "publish/bilibili-zh/evidence/traffic-reward-before.jpg"
+    "status": "awaiting_new_service_agreement_confirmation",
+    "evidence": "publish/bilibili-zh/evidence/traffic-service-agreement.jpg",
+    "bvid": "BV1Fwpw6FEFx",
+    "eligible_video_visible": true,
+    "service_agreement_url": "https://www.bilibili.com/blackboard/activity-98Vl0cx1u5.html",
+    "notice_url": "https://www.bilibili.com/blackboard/activity-N31LnCpku5.html"
   },
   "promotion_application": {
-    "status": "not_submitted_no_bv",
-    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw"
+    "status": "submitted_cloud_saved",
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "sheet": "【进行中】日常推流",
+    "range": "A297:E297",
+    "operator_feedback": "blank",
+    "deduplication": "exact BV search no results before write",
+    "cloud_save": "最近保存 20:57",
+    "submitted_at": "2026-10-06T20:58:57.996476+08:00",
+    "readback": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
+      "是",
+      "是",
+      "是"
+    ],
+    "evidence": "publish/bilibili-zh/evidence/toy-promotion-application-row297.jpg"
   },
   "comments": {
-    "status": "not_posted"
+    "status": "posted_pinned_public_verified",
+    "verified_at": "2026-10-06T20:58:57.996476+08:00",
+    "count": 1,
+    "evidence": "publish/bilibili-zh/evidence/public-video-pinned.jpg"
   },
-  "updated_at": "2026-10-06T20:30:56.689791+08:00",
+  "updated_at": "2026-10-06T20:58:57.996476+08:00",
   "previous_video_maintenance": {
     "status": "not_applicable_first_five_game_camera_episode",
     "reason": "综合介绍对应游戏合集Toy，当前无已确认属于同一期系列的上一条主要宣传片；不批量改动五款独立游戏的历史稿件。"
+  },
+  "submission_gate": "browser_terms_confirmed",
+  "browser_terms_confirmation": {
+    "quote": "同意，继续",
+    "confirmed_at": "2026-10-06T20:52:36.646868+08:00",
+    "scope": "current reviewed v2 upload to Bilibili usage agreement and community convention"
+  },
+  "publication_status": "published",
+  "submitted_at": "2026-10-06T20:55:22.860235+08:00",
+  "published_at": "2026-10-06T20:55:27+08:00",
+  "public_verified_at": "2026-10-06T20:58:57.996476+08:00",
+  "automatic_dynamic": {
+    "status": "verified",
+    "url": "https://space.bilibili.com/16214353/dynamic",
+    "bvid": "BV1Fwpw6FEFx",
+    "evidence": "publish/bilibili-zh/evidence/automatic-video-dynamic.jpg"
+  },
+  "packaging_verification": {
+    "topic_id": 1346285,
+    "topic_selected_in_picker": true,
+    "ai_declaration": "含AI生成内容",
+    "partition": "游戏",
+    "covers": "4:3 and 16:9 individually uploaded; sync unchecked",
+    "description": "5 paragraphs, no empty paragraph, public single line breaks verified",
+    "video_transcode": "1080P 60帧 已完成"
   }
 }

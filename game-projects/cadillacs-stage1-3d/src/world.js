@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { fixedRng } from './core.js';
 import { AREAS } from './level.js';
-import { Parts, mtx, GEO, toyMat, meshFrom, drumGeo, barrelGeo, pipesGeo, buildHuman, SPECS, bakeModel, buildPtero, capsule } from './models.js';
+import { Parts, mtx, GEO, toonMat, meshFrom, drumGeo, barrelGeo, pipesGeo, buildHuman, SPECS, bakeModel, buildPtero, capsule } from './models.js';
 import { applyPose, HP, mod } from './anim.js';
 
 // ---------- 程序化贴图 ----------
@@ -17,87 +17,111 @@ function mkTex(w, h, seed, fn) {
   return t;
 }
 const rgb = (r, g, b) => 'rgb(' + (r | 0) + ',' + (g | 0) + ',' + (b | 0) + ')';
-// 赤色要塞式低模画风：贴图只保留大色块和低对比接缝（像顶点色地块），不画噪点、裂缝、青苔或写实纹理
-function soft(g, w, h, r, n, col, rMin, rMax) {   // 柔和的大色斑，模拟赤色要塞地面的顶点色起伏
-  for (let i = 0; i < n; i++) {
-    const x = r() * w, y = r() * h, rr = rMin + r() * (rMax - rMin);
-    for (const ox of [-w, 0, w]) for (const oy of [-h, 0, h]) {
-      const gr = g.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, rr);
-      gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
-      g.fillStyle = gr; g.fillRect(x + ox - rr, y + oy - rr, rr * 2, rr * 2);
-    }
-  }
-}
-function grid(g, w, h, nx, ny, col, lw, stagger) {
-  g.strokeStyle = col; g.lineWidth = lw;
-  for (let j = 0; j <= ny; j++) { g.beginPath(); g.moveTo(0, j * h / ny); g.lineTo(w, j * h / ny); g.stroke(); }
-  for (let j = 0; j < ny; j++) for (let i = 0; i <= nx; i++) {
-    const x = i * w / nx + (stagger && j % 2 ? w / nx / 2 : 0);
-    g.beginPath(); g.moveTo(x % (w + 1), j * h / ny); g.lineTo(x % (w + 1), (j + 1) * h / ny); g.stroke();
-  }
-}
+function speckle(g, w, h, r, n, col, size) { g.fillStyle = col; for (let i = 0; i < n; i++) { const s = (size || 2) * (0.5 + r()); g.fillRect(r() * w, r() * h, s, s); } }
+function crack(g, x, y, len, r, col) { g.strokeStyle = col; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x, y); let a = r() * Math.PI * 2; for (let i = 0; i < 6; i++) { a += (r() - 0.5) * 1.2; x += Math.cos(a) * len / 6; y += Math.sin(a) * len / 6; g.lineTo(x, y); } g.stroke(); }
 const TEX = {};
 function T(name) {
   if (TEX[name]) return TEX[name];
   let t;
   switch (name) {
-    case 'roof': t = mkTex(256, 256, 11, (g, w, h, r) => {   // 楼顶：两色大石板
-      g.fillStyle = '#d6c8a6'; g.fillRect(0, 0, w, h);
-      for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) if ((x + y) % 2) { g.fillStyle = '#cfc09c'; g.fillRect(x * 128, y * 128, 128, 128); }
-      soft(g, w, h, r, 5, 'rgba(150,170,110,0.16)', 30, 70);
-      grid(g, w, h, 2, 2, 'rgba(150,132,100,0.35)', 2);
+    case 'roof': t = mkTex(256, 256, 11, (g, w, h, r) => {   // 楼顶：米色石板 + 裂缝 + 青苔
+      g.fillStyle = '#d6c7a6'; g.fillRect(0, 0, w, h);
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) { const v = 200 + r() * 26; g.fillStyle = rgb(v + 14, v + 4, v - 26); g.fillRect(x * 64 + 2, y * 64 + 2, 60, 60); }
+      g.strokeStyle = '#a8977a'; g.lineWidth = 3; for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * 64, 0); g.lineTo(i * 64, h); g.stroke(); g.beginPath(); g.moveTo(0, i * 64); g.lineTo(w, i * 64); g.stroke(); }
+      speckle(g, w, h, r, 600, 'rgba(120,100,70,0.25)', 2); speckle(g, w, h, r, 140, 'rgba(96,130,60,0.55)', 3);
+      for (let i = 0; i < 7; i++) crack(g, r() * w, r() * h, 40 + r() * 50, r, 'rgba(90,76,58,0.7)');
     }); break;
-    case 'brick': t = mkTex(256, 256, 12, (g, w, h, r) => {   // 砖墙：大块、低对比
-      g.fillStyle = '#c99872'; g.fillRect(0, 0, w, h);
-      for (let row = 0; row < 4; row++) for (let i = -1; i < 3; i++) { const v = r() * 10; g.fillStyle = rgb(196 + v, 148 + v, 112 + v * 0.6); g.fillRect(i * 128 + (row % 2) * 64 + 2, row * 64 + 2, 124, 60); }
-      soft(g, w, h, r, 3, 'rgba(120,150,90,0.15)', 40, 80);
+    case 'brick': t = mkTex(256, 256, 12, (g, w, h, r) => {
+      g.fillStyle = '#6e5c48'; g.fillRect(0, 0, w, h);
+      for (let row = 0; row < 11; row++) for (let i = -1; i < 5; i++) {
+        const x = i * 64 + (row % 2) * 32, y = row * 24, v = r();
+        g.fillStyle = rgb(150 + v * 40, 112 + v * 30, 76 + v * 20); g.fillRect(x + 2, y + 2, 60, 20);
+        g.fillStyle = 'rgba(255,240,210,0.12)'; g.fillRect(x + 2, y + 2, 60, 4);
+      }
+      speckle(g, w, h, r, 300, 'rgba(60,40,20,0.3)', 2);
     }); break;
     case 'stone': t = mkTex(256, 256, 13, (g, w, h, r) => {   // 大块石砌外墙
-      g.fillStyle = '#b6aa92'; g.fillRect(0, 0, w, h);
-      for (let row = 0; row < 3; row++) for (let i = -1; i < 2; i++) { const v = r() * 10; g.fillStyle = rgb(206 + v, 196 + v, 172 + v); g.fillRect(i * 256 + (row % 2) * 128 + 3, row * 86 + 3, 250, 80); }
-      soft(g, w, h, r, 3, 'rgba(130,160,100,0.14)', 40, 80);
+      g.fillStyle = '#8f8270'; g.fillRect(0, 0, w, h);
+      for (let row = 0; row < 6; row++) for (let i = -1; i < 3; i++) { const x = i * 128 + (row % 2) * 64, y = row * 43, v = r(); g.fillStyle = rgb(178 + v * 30, 164 + v * 26, 138 + v * 20); g.fillRect(x + 3, y + 3, 122, 37); }
+      speckle(g, w, h, r, 500, 'rgba(70,60,48,0.25)', 2); speckle(g, w, h, r, 90, 'rgba(90,120,60,0.4)', 3);
     }); break;
-    case 'tower': t = mkTex(128, 256, 14, (g, w, h, r) => {   // 摩天楼窗格（顶点色染色），窗口为成排的柔和色块
-      g.fillStyle = '#f4f2f2'; g.fillRect(0, 0, w, h);
-      for (let y = 0; y < 8; y++) { g.fillStyle = 'rgba(120,130,150,0.32)'; g.fillRect(8, 10 + y * 32, w - 16, 14); }
+    case 'tower': t = mkTex(128, 256, 14, (g, w, h, r) => {   // 摩天楼窗格（顶点色染成淡紫 / 铜绿）
+      g.fillStyle = '#f2f0f2'; g.fillRect(0, 0, w, h);
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 6; x++) { const d = r(); g.fillStyle = d < 0.12 ? '#54506a' : rgb(150 + d * 40, 150 + d * 40, 172 + d * 30); g.fillRect(6 + x * 20, 6 + y * 16, 12, 10); }
+      g.fillStyle = 'rgba(255,255,255,0.35)'; for (let x = 0; x < 6; x++) g.fillRect(4 + x * 20, 0, 2, h);
     }); break;
-    case 'facade': t = mkTex(256, 256, 15, (g, w, h, r) => {   // 楼体外立面（石墙 + 简洁窗洞）
-      g.fillStyle = '#d6c8a6'; g.fillRect(0, 0, w, h);
-      for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) { g.fillStyle = '#7a7266'; g.fillRect(36 + x * 128, 28 + y * 128, 56, 72); g.fillStyle = '#ece2c8'; g.fillRect(30 + x * 128, 100 + y * 128, 68, 8); }
+    case 'facade': t = mkTex(256, 256, 15, (g, w, h, r) => {   // 楼体外立面（石墙 + 窗）
+      g.fillStyle = '#c9b894'; g.fillRect(0, 0, w, h);
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) { g.fillStyle = '#5e5446'; g.fillRect(14 + x * 64, 12 + y * 64, 34, 44); g.fillStyle = '#8a8070'; g.fillRect(14 + x * 64, 12 + y * 64, 34, 4); g.fillStyle = '#e8dcc0'; g.fillRect(10 + x * 64, 58 + y * 64, 42, 4); }
+      speckle(g, w, h, r, 400, 'rgba(90,76,58,0.25)', 2); speckle(g, w, h, r, 60, 'rgba(90,120,60,0.45)', 4);
     }); break;
-    case 'wallpaper': t = mkTex(128, 128, 16, (g, w, h) => {   // 暖棕壁纸：宽竖条
-      g.fillStyle = '#a8845e'; g.fillRect(0, 0, w, h);
-      g.fillStyle = '#b08c66'; g.fillRect(0, 0, 32, h); g.fillRect(64, 0, 32, h);
+    case 'wallpaper': t = mkTex(128, 128, 16, (g, w, h, r) => {   // 棕色菱格壁纸
+      g.fillStyle = '#8c6c4a'; g.fillRect(0, 0, w, h);
+      g.strokeStyle = '#715438'; g.lineWidth = 1.2;
+      for (let i = -2; i < 4; i++) { g.beginPath(); g.moveTo(i * 64, 0); g.lineTo(i * 64 + 128, 128); g.stroke(); g.beginPath(); g.moveTo(i * 64 + 128, 0); g.lineTo(i * 64, 128); g.stroke(); }
+      g.fillStyle = '#ad8e65'; for (const [x, y] of [[32, 0], [96, 64], [32, 128], [0, 64], [128, 64]]) {
+        for (let a = 0; a < 4; a++) { g.save(); g.translate(x, y); g.rotate(a * Math.PI / 2); g.beginPath(); g.ellipse(0, 6, 3, 8, 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+      }
+      speckle(g, w, h, r, 200, 'rgba(50,30,15,0.18)', 2);
     }); break;
-    case 'wood': t = mkTex(128, 128, 17, (g, w, h, r) => {   // 木板：四条宽板，接缝很淡
-      g.fillStyle = '#8a6244'; g.fillRect(0, 0, w, h);
-      for (let i = 0; i < 4; i++) { const v = r() * 8; g.fillStyle = rgb(146 + v, 106 + v, 74 + v); g.fillRect(i * 32 + 1, 0, 30, h); }
+    case 'wood': t = mkTex(128, 128, 17, (g, w, h, r) => {
+      g.fillStyle = '#4e3020'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 4; i++) { g.fillStyle = rgb(86 + r() * 16, 54 + r() * 10, 34); g.fillRect(i * 32 + 2, 0, 28, h); }
+      g.strokeStyle = 'rgba(40,22,12,0.5)'; for (let i = 0; i < 30; i++) { const x = r() * w; g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + 4, 40, x - 4, 80, x + 2, 128); g.stroke(); }
     }); break;
-    case 'carpet': t = mkTex(256, 256, 18, (g, w, h, r) => {   // 红地毯：纯色 + 很淡的大菱格
-      g.fillStyle = '#a8483c'; g.fillRect(0, 0, w, h);
-      g.strokeStyle = 'rgba(80,20,14,0.14)'; g.lineWidth = 3;
-      for (let i = -2; i < 4; i++) { g.beginPath(); g.moveTo(i * 128, 0); g.lineTo(i * 128 + 256, 256); g.stroke(); g.beginPath(); g.moveTo(i * 128 + 256, 0); g.lineTo(i * 128, 256); g.stroke(); }
+    case 'carpet': t = mkTex(256, 256, 18, (g, w, h, r) => {   // 红地毯（深红 + 暗纹）
+      g.fillStyle = '#7c2b22'; g.fillRect(0, 0, w, h);
+      g.fillStyle = '#6a2018'; for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) if ((x + y) % 2) { g.beginPath(); g.arc(16 + x * 32, 16 + y * 32, 9, 0, Math.PI * 2); g.fill(); }
+      speckle(g, w, h, r, 1600, 'rgba(160,70,50,0.25)', 1.5); speckle(g, w, h, r, 900, 'rgba(40,10,6,0.25)', 1.5);
     }); break;
-    case 'marble': t = mkTex(64, 256, 19, (g, w, h) => { g.fillStyle = '#d4d0c6'; g.fillRect(0, 0, w, h); }); break;
-    case 'pave': t = mkTex(256, 256, 20, (g, w, h, r) => {   // 街道：大石板 + 草色斑
-      g.fillStyle = '#c2b694'; g.fillRect(0, 0, w, h);
-      for (let y = 0; y < 2; y++) for (let x = 0; x < 2; x++) { const v = r() * 10; g.fillStyle = rgb(196 + v, 184 + v, 156 + v); g.fillRect(x * 128 + 2, y * 128 + 2, 124, 124); }
-      soft(g, w, h, r, 4, 'rgba(140,170,100,0.18)', 30, 70);
+    case 'marble': t = mkTex(64, 256, 19, (g, w, h, r) => {
+      g.fillStyle = '#b7b4aa'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 9; i++) crack(g, r() * w, r() * h, 60 + r() * 80, r, 'rgba(60,58,54,0.75)');
+      speckle(g, w, h, r, 200, 'rgba(120,118,110,0.4)', 2);
+    }); break;
+    case 'pave': t = mkTex(256, 256, 20, (g, w, h, r) => {   // 街道：裂开的灰石板 + 尘土
+      g.fillStyle = '#b3a68c'; g.fillRect(0, 0, w, h);
+      for (let y = 0; y < 3; y++) for (let x = 0; x < 3; x++) { const v = r() * 18; g.fillStyle = rgb(182 + v, 170 + v, 146 + v); g.fillRect(x * 85 + 2, y * 85 + 2, 81, 81); }
+      g.strokeStyle = '#8a7e66'; g.lineWidth = 2; for (let i = 0; i <= 3; i++) { g.beginPath(); g.moveTo(i * 85, 0); g.lineTo(i * 85, h); g.stroke(); g.beginPath(); g.moveTo(0, i * 85); g.lineTo(w, i * 85); g.stroke(); }
+      for (let i = 0; i < 9; i++) crack(g, r() * w, r() * h, 50 + r() * 60, r, 'rgba(90,80,60,0.7)');
+      speckle(g, w, h, r, 700, 'rgba(120,100,70,0.3)', 2); speckle(g, w, h, r, 120, 'rgba(100,130,60,0.5)', 3);
     }); break;
     case 'chain': t = mkTex(64, 64, 21, (g, w, h) => {   // 铁丝网（透明）
-      g.clearRect(0, 0, w, h); g.strokeStyle = 'rgba(96,100,104,1)'; g.lineWidth = 4;
+      g.clearRect(0, 0, w, h); g.strokeStyle = 'rgba(70,74,80,1)'; g.lineWidth = 3;
       g.beginPath(); g.moveTo(0, 32); g.lineTo(32, 0); g.lineTo(64, 32); g.lineTo(32, 64); g.closePath(); g.stroke();
     }); break;
-    case 'water': t = mkTex(256, 256, 23, (g, w, h, r) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h); soft(g, w, h, r, 8, 'rgba(170,190,215,0.35)', 20, 50); }); break;
-    case 'plaster': t = mkTex(128, 128, 24, (g, w, h, r) => { g.fillStyle = '#ddd2b6'; g.fillRect(0, 0, w, h); soft(g, w, h, r, 2, 'rgba(140,160,110,0.16)', 20, 40); }); break;
-    case 'dirt': t = mkTex(256, 256, 25, (g, w, h, r) => {   // 林地泥土：暖土色 + 草色斑
-      g.fillStyle = '#b89a6e'; g.fillRect(0, 0, w, h);
-      soft(g, w, h, r, 6, 'rgba(120,150,80,0.32)', 30, 80); soft(g, w, h, r, 5, 'rgba(150,118,80,0.3)', 20, 60);
+    case 'web': t = mkTex(128, 128, 22, (g, w, h, r) => {
+      g.clearRect(0, 0, w, h); g.strokeStyle = 'rgba(235,235,230,0.85)'; g.lineWidth = 1.2;
+      for (let i = 0; i < 7; i++) { const a = i / 6 * Math.PI / 2; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(a) * 128, Math.sin(a) * 128); g.stroke(); }
+      for (let k = 1; k < 7; k++) { g.beginPath(); for (let i = 0; i < 7; i++) { const a = i / 6 * Math.PI / 2, rr = k * 18 + r() * 4; const x = Math.cos(a) * rr, y = Math.sin(a) * rr; if (i) g.lineTo(x, y); else g.moveTo(x, y); } g.stroke(); }
     }); break;
-    case 'mud': t = mkTex(256, 256, 26, (g, w, h, r) => {   // 泥沼：深褐色 + 水光
-      g.fillStyle = '#7c6446'; g.fillRect(0, 0, w, h);
-      soft(g, w, h, r, 7, 'rgba(150,130,96,0.35)', 24, 70); soft(g, w, h, r, 4, 'rgba(90,110,70,0.3)', 30, 70);
+    case 'water': t = mkTex(256, 256, 23, (g, w, h, r) => {
+      g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
+      g.strokeStyle = 'rgba(150,160,200,0.45)'; g.lineWidth = 2;
+      for (let i = 0; i < 70; i++) { const x = r() * w, y = r() * h, l = 10 + r() * 26; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + l / 2, y - 3, x + l, y); g.stroke(); }
     }); break;
+    case 'plaster': t = mkTex(128, 128, 24, (g, w, h, r) => {
+      g.fillStyle = '#c8bb9c'; g.fillRect(0, 0, w, h); speckle(g, w, h, r, 500, 'rgba(110,96,72,0.25)', 2); speckle(g, w, h, r, 80, 'rgba(90,120,60,0.5)', 4);
+      for (let i = 0; i < 4; i++) crack(g, r() * w, r() * h, 40, r, 'rgba(90,76,58,0.6)');
+    }); break;
+    case 'dirt': t = mkTex(256, 256, 25, (g, w, h, r) => {   // 林地泥土：褐土 + 碎石 + 草屑 + 裂纹
+      g.fillStyle = '#7a6040'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 40; i++) { const x = r() * w, y = r() * h, rr = 10 + r() * 30, v = r() * 30; g.fillStyle = rgb(110 + v, 88 + v * 0.8, 60 + v * 0.5); g.beginPath(); g.ellipse(x, y, rr, rr * 0.6, r() * 3, 0, Math.PI * 2); g.fill(); }
+      speckle(g, w, h, r, 900, 'rgba(50,36,20,0.35)', 2); speckle(g, w, h, r, 260, 'rgba(170,150,120,0.5)', 2.5);
+      speckle(g, w, h, r, 220, 'rgba(80,120,50,0.6)', 3);
+      g.strokeStyle = 'rgba(90,130,60,0.7)'; g.lineWidth = 1; for (let i = 0; i < 160; i++) { const x = r() * w, y = r() * h; g.beginPath(); g.moveTo(x, y); g.lineTo(x + (r() - 0.5) * 6, y - 4 - r() * 6); g.stroke(); }
+      for (let i = 0; i < 6; i++) crack(g, r() * w, r() * h, 40 + r() * 40, r, 'rgba(50,36,20,0.6)');
+    }); break;
+    case 'mud': t = mkTex(256, 256, 26, (g, w, h, r) => {   // 泥沼底：深褐绿烂泥
+      g.fillStyle = '#3e3a26'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 50; i++) { const x = r() * w, y = r() * h, rr = 8 + r() * 26, v = r() * 20; g.fillStyle = rgb(70 + v, 64 + v, 40 + v * 0.5); g.beginPath(); g.ellipse(x, y, rr, rr * 0.7, r() * 3, 0, Math.PI * 2); g.fill(); }
+      speckle(g, w, h, r, 700, 'rgba(20,18,10,0.4)', 2); speckle(g, w, h, r, 200, 'rgba(90,110,60,0.45)', 3);
+    }); break;
+    case 'grain': t = mkTex(256, 256, 27, (g, w, h, r) => {   // 植物的通用纹理：白底上的深浅斑块，乘顶点色出叶簇和树皮的斑驳质感
+      g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
+      for (let i = 0; i < 260; i++) { const x = r() * w, y = r() * h, rr = 2 + r() * 5; g.fillStyle = r() < 0.6 ? 'rgba(30,36,20,0.28)' : 'rgba(255,255,225,0.3)'; g.beginPath(); g.ellipse(x, y, rr, rr * (0.5 + r() * 0.5), r() * 3, 0, Math.PI * 2); g.fill(); }   // 叶簇 / 树皮斑块
+      speckle(g, w, h, r, 1200, 'rgba(40,40,30,0.22)', 2); speckle(g, w, h, r, 400, 'rgba(255,255,230,0.3)', 1.5);
+    }); break
   }
   TEX[name] = t;
   return t;
@@ -156,8 +180,8 @@ function skyDome(group, top, mid, bot) {
   return m;
 }
 
-// ---------- 第二关：低模植物、岩石、远山（顶点色合并，同赤色要塞的树与草丛） ----------
-const GREENS = ['#5f9a4c', '#6fab58', '#4f8644', '#7cb460'];
+// ---------- 第二关：植物、岩石、远山（顶点色合并 + 斑驳纹理，画风与第一关的写实贴图一致） ----------
+const GREENS = ['#4e7c3a', '#5e8e46', '#3e6a32', '#6a9a4a'];
 function tree(p, x, z, s, r, o) {
   const h = (3.4 + r() * 2.6) * s, trunk = (o && o.trunk) || '#8c6e52';
   p.add(GEO.cyl6, trunk, mtx(x, h / 2, z, 0, r() * 3, 0, 0.3 * s, h, 0.3 * s));
@@ -178,7 +202,7 @@ function flowers(p, x, z, r) { for (let i = 0; i < 4; i++) p.add(GEO.sphLo, i % 
 function tufts(p, x, z, r, col) { for (let k = 0; k < 4; k++) p.add(GEO.cone, col || (k % 2 ? '#7ea85c' : '#8fb86a'), mtx(x + (r() - 0.5) * 0.35, 0.12, z + (r() - 0.5) * 0.25, (r() - 0.5) * 0.4, 0, (r() - 0.5) * 0.4, 0.04, 0.3 + r() * 0.15, 0.04)); }
 function rock(p, x, z, s, r, col) { p.add(GEO.oct, col || '#a39f92', mtx(x, 0.25 * s, z, r(), r() * 3, r() * 0.5, 0.8 * s, 0.5 * s, 0.7 * s)); }
 function mountain(p, x, z, w, h, col) { p.add(GEO.cone, col, mtx(x, h / 2 - 1, z, 0, 0, 0, w, h, w * 0.8)); }
-const vegMat = () => toyMat();
+const vegMat = () => new THREE.MeshLambertMaterial({ map: T('grain'), vertexColors: true });   // 每个网格单独一份（淡化时互不影响），纹理共用
 // 远景树环：背后 / 镜头一侧 / 区域两端各成一个网格，镜头转进树林时挡在视线上的那一片整体淡化
 function ringMesh(A, g, parts, box) {
   const m = new THREE.Mesh(parts.build(), vegMat()); g.add(m);
@@ -201,9 +225,9 @@ function carcass(p, x, z, s, ry, plates) {
   if (plates) for (let i = 0; i < 6; i++) p.add(GEO.cone, '#b58260', at(-0.15 * s, (0.95 + Math.sin(i / 5 * Math.PI) * 0.15) * s, (-1.0 + i * 0.4) * s, 0, 0.5, 0.16 * s, 0.5 * s, 0.06 * s));
   p.add(GEO.cyl, '#7a4a44', at(0.4 * s, 0.015, 0.2 * s, 0, 0, 1.1 * s, 0.01, 1.4 * s));   // 地上的暗色血迹
 }
-// 赤色要塞同款水面：半透明、顶点轻微起伏
+// 泥沼水面：半透明、顶点轻微起伏
 function swampWater(A) {
-  const mat = new THREE.MeshPhongMaterial({ color: 0x5a8478, transparent: true, opacity: 0.8, shininess: 80, specular: 0xb8d0c8, depthWrite: false });
+  const mat = new THREE.MeshPhongMaterial({ color: 0x4a5e44, transparent: true, opacity: 0.88, shininess: 70, specular: 0x8a9a80, depthWrite: false });
   const uni = { uTime: { value: 0 } };
   mat.onBeforeCompile = (sh) => {
     sh.uniforms.uTime = uni.uTime;
@@ -217,15 +241,14 @@ function swampWater(A) {
 // ---------- 世界 ----------
 export function buildWorld(scene) {
   const W = { areas: [], active: -1, doors: [], cutters: [], fades: [], pteros: [], waters: [] };
-  // 灯光按赤色要塞：偏冷的天光 + 暖色太阳、柔和软阴影（three r170 物理光照下的强度约为 r152 旧版的 π 倍）
-  const hemi = new THREE.HemisphereLight(0xe8f7ff, 0x9a9070, 2.2);
-  const sun = new THREE.DirectionalLight(0xfff0d8, 3.0);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x777777, 1.4);
+  const sun = new THREE.DirectionalLight(0xffffff, 1.8);
   sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
   const sc = sun.shadow.camera; sc.left = -13; sc.right = 13; sc.top = 10; sc.bottom = -10; sc.near = 1; sc.far = 60;
   sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.03;
   scene.add(hemi, sun, sun.target);
   W.sun = sun; W.hemi = hemi;
-  scene.fog = new THREE.Fog(0xd4e2e6, 60, 320);
+  scene.fog = new THREE.Fog(0xccccdd, 60, 320);
   for (let i = 0; i < AREAS.length; i++) {
     const g = new THREE.Group(); g.visible = false; scene.add(g);
     const A = { def: AREAS[i], group: g, cutters: [], fades: [], camBoxes: [], light: null };
@@ -332,12 +355,12 @@ export function statueMesh() {
     const p = new Parts();
     p.add(GEO.cyl, '#c8a03a', mtx(0, 0, 0, 0, 0, 0, 0.025, 2.6, 0.025));
     p.add(GEO.cone, '#e8c860', mtx(0, 1.42, 0, 0, 0, 0, 0.07, 0.3, 0.03));
-    const spear = new THREE.Mesh(p.build(), toyMat()); spear.position.set(0, 0.6, 0.06);
+    const spear = new THREE.Mesh(p.build(), toonMat()); spear.position.set(0, 0.6, 0.06);
     h.bones.grip.add(spear);
     const sh = new Parts(); sh.add(GEO.cyl, '#c9a238', mtx(0, 0, 0, Math.PI / 2, 0, 0, 0.28, 0.05, 0.36)); sh.add(GEO.sph, '#e6c45a', mtx(0, 0, 0.03, 0, 0, 0, 0.08, 0.08, 0.05));
-    const shield = new THREE.Mesh(sh.build(), toyMat()); shield.position.set(0.08, -0.1, 0.12); h.bones.lgrip.add(shield);
+    const shield = new THREE.Mesh(sh.build(), toonMat()); shield.position.set(0.08, -0.1, 0.12); h.bones.lgrip.add(shield);
     const ped = new Parts(); ped.add(texBox(0.9, 0.3, 0.8, 1), '#6a5a48', mtx(0, -0.15, 0));
-    const pedM = new THREE.Mesh(ped.build(), toyMat()); h.root.add(pedM);
+    const pedM = new THREE.Mesh(ped.build(), toonMat()); h.root.add(pedM);
     h.root.position.y = 0.3;
     const holder = new THREE.Group(); holder.add(h.root);
     statueGeo = bakeModel(holder);
@@ -350,10 +373,10 @@ const BUILDERS = {
   // 楼顶：EASTCOAST 2513，海上城市的高楼楼顶
   roof(A) {
     const g = A.group;
-    A.light = { sky: '#eaf0ff', ground: '#9a9070', hemi: 1.85, sun: '#fff0d8', sunI: 2.8, dir: [-0.35, 1, 0.75], fog: '#c9d0ea', fogNear: 140, fogFar: 760, bg: '#c9d0ea' };
-    skyDome(g, '#8ea4d8', '#dcdff0', '#b9c0e0');
-    A.waters = [seaPlane(g, -34, '#6f98c4', 1800)];
-    skyline(g, { seed: 101, cx: 22, cz: 0, waterY: -34, count: 80, rMin: 120, rMax: 420, hMin: 22, hMax: 78, palette: ['#e8e4f2', '#d0cce6', '#bfbadb', '#eeedf6', '#b2aed2'], dome: '#c4bfe4', spire: '#d0ccea', keepOut: (x, z) => Math.abs(z) < 90 && x > -60 && x < 100 });
+    A.light = { sky: '#e6dcff', ground: '#8a7a68', hemi: 1.25, sun: '#fff1dc', sunI: 1.9, dir: [-0.35, 1, 0.75], fog: '#cfc4ea', fogNear: 70, fogFar: 520, bg: '#cfc4ea' };
+    skyDome(g, '#8f7fd0', '#e6dcf4', '#b8acd8');
+    A.waters = [seaPlane(g, -34, '#8e8cc8', 1800)];
+    skyline(g, { seed: 101, cx: 22, cz: 0, waterY: -34, count: 80, rMin: 120, rMax: 420, hMin: 22, hMax: 78, palette: ['#ece8f6', '#d8d2ee', '#c8c0e6', '#f4f0fa', '#bdb6dc'], dome: '#c9c2ea', spire: '#d4cff0', keepOut: (x, z) => Math.abs(z) < 90 && x > -60 && x < 100 });
     // 楼顶石板与楼体
     const roofMat = texMat('roof', [1, 1]);
     const slab = new THREE.Mesh(texBox(64, 0.6, 7.8, 2.2), roofMat); slab.position.set(21, -0.3, 0.1); slab.receiveShadow = true; g.add(slab);
@@ -378,7 +401,7 @@ const BUILDERS = {
     const hut = new THREE.Mesh(hp.build(), hutMat); hut.castShadow = true; hut.receiveShadow = true; g.add(hut);
     addFade(A, hut, new THREE.Box3(new THREE.Vector3(45, 0, -4), new THREE.Vector3(52.3, 4.1, 4.2)));
     const doorway = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.4, 1.4), new THREE.MeshBasicMaterial({ color: 0x120c08 })); doorway.position.set(45.42, 1.2, 0); g.add(doorway);
-    const door = meshFrom(new Parts().add(texBox(0.12, 2.4, 1.36, 1), '#6a4a2c', mtx(0, 1.2, 0.68)).add(GEO.box, '#3a2a1a', mtx(-0.07, 1.2, 1.1, 0, 0, 0, 0.04, 0.12, 0.12)).build(), { mat: toyMat() });
+    const door = meshFrom(new Parts().add(texBox(0.12, 2.4, 1.36, 1), '#6a4a2c', mtx(0, 1.2, 0.68)).add(GEO.box, '#3a2a1a', mtx(-0.07, 1.2, 1.1, 0, 0, 0, 0.04, 0.12, 0.12)).build(), { mat: toonMat() });
     door.position.set(44.98, 0, -0.68); g.add(door); A.hutDoor = door;
     const tank = new Parts();
     tank.add(GEO.cyl, '#8c7a62', mtx(49, 6.0, -1.0, 0, 0, 0, 1.3, 2.2, 1.3)); tank.add(GEO.cone, '#6a5a48', mtx(49, 7.6, -1.0, 0, 0, 0, 1.45, 1.0, 1.45));
@@ -392,7 +415,7 @@ const BUILDERS = {
   // 大楼内部：壁纸、大理石柱、双开门、金色骑士像、楼梯与尽头的窗户
   hall(A) {
     const g = A.group;
-    A.light = { sky: '#fff2e0', ground: '#6a5444', hemi: 1.9, sun: '#ffe6c0', sunI: 2.4, dir: [-0.3, 1, 0.8], fog: '#3c2e24', fogNear: 40, fogFar: 140, bg: '#3c2e24' };
+    A.light = { sky: '#ffe2c0', ground: '#3a2418', hemi: 1.1, sun: '#ffd7a0', sunI: 1.5, dir: [-0.3, 1, 0.8], fog: '#1c120c', fogNear: 40, fogFar: 140, bg: '#1c120c' };
     const X0 = -2.2, X1 = 63, ZB = -3.0, ZF = 3.5, CEIL = 6.2;
     // 地面：红地毯 + 两侧木地板
     const floor = new THREE.Mesh(texBox(X1 - X0, 0.2, ZF - ZB, 3), texMat('carpet')); floor.position.set((X0 + X1) / 2, -0.1, (ZB + ZF) / 2); floor.receiveShadow = true; g.add(floor);
@@ -406,7 +429,7 @@ const BUILDERS = {
     const fm = new THREE.Mesh(fp.build(), woodMat); fm.receiveShadow = true; g.add(fm);
     // 墙壳：后墙常显；前墙 / 两端 / 天花板按镜头位置剖切
     const wpMat = texMat('wallpaper', [1, 1]);
-    const base = new THREE.Mesh(texBox(X1 - X0 + 2, 6, ZF - ZB + 0.6, 2), new THREE.MeshLambertMaterial({ color: '#4a3628' })); base.position.set((X0 + X1) / 2, -3.2, (ZB + ZF) / 2); g.add(base);
+    const base = new THREE.Mesh(texBox(X1 - X0 + 2, 6, ZF - ZB + 0.6, 2), new THREE.MeshLambertMaterial({ color: '#2a1a12' })); base.position.set((X0 + X1) / 2, -3.2, (ZB + ZF) / 2); g.add(base);
     const lip = new THREE.Mesh(texBox(X1 - X0 + 2, 0.5, 0.2, 1), new THREE.MeshLambertMaterial({ map: T('wood'), color: '#9a7050' })); lip.position.set((X0 + X1) / 2, -0.25, ZF + 0.3); g.add(lip);
     // 后墙连同贴在墙上的门框、门洞、壁灯、蜘蛛网一起剖切（镜头转到墙后时不留下悬空的门框）
     const bg = new THREE.Group(); g.add(bg);
@@ -425,14 +448,14 @@ const BUILDERS = {
     endP.add(texBox(0.3, 8 - wy1, wz1 - wz0, 1.6), '#ffffff', mtx(X1 + 0.15, (8 + wy1) / 2, 0));
     const endW = new THREE.Mesh(endP.build(), new THREE.MeshLambertMaterial({ map: T('wallpaper'), vertexColors: true })); g.add(endW);
     addCut(A, endW, -1, 0, X1 + 0.3, 0);
-    const ceil = new THREE.Mesh(texBox(X1 - X0, 0.3, ZF - ZB, 1.2), new THREE.MeshLambertMaterial({ map: T('wood'), color: '#d8c0a4', emissive: '#2a1a10' })); ceil.position.set((X0 + X1) / 2, CEIL + 0.15, (ZB + ZF) / 2); g.add(ceil);
+    const ceil = new THREE.Mesh(texBox(X1 - X0, 0.3, ZF - ZB, 1.2), new THREE.MeshLambertMaterial({ map: T('wood'), color: '#c8a888', emissive: '#2a1a10' })); ceil.position.set((X0 + X1) / 2, CEIL + 0.15, (ZB + ZF) / 2); g.add(ceil);
     addCut(A, ceil, 0, 0, 0, 0, true, CEIL);
     // 窗：木框 + 玻璃（可击碎）
     const win = new THREE.Group(); win.position.set(X1, 0, 0); g.add(win);
     const frame = new Parts();
     for (const z of [wz0, 0, wz1]) frame.add(GEO.box, '#e8e0d0', mtx(0.02, (wy0 + wy1) / 2, z, 0, 0, 0, 0.12, wy1 - wy0, 0.1));
     for (const y of [wy0, (wy0 + wy1) / 2, wy1]) frame.add(GEO.box, '#e8e0d0', mtx(0.02, y, 0, 0, 0, 0, 0.12, 0.1, wz1 - wz0));
-    const frameM = meshFrom(frame.build(), { mat: toyMat(), thin: true }); win.add(frameM);
+    const frameM = meshFrom(frame.build(), { mat: toonMat(), thin: true }); win.add(frameM);
     const glass = new THREE.Mesh(new THREE.BoxGeometry(0.03, wy1 - wy0, wz1 - wz0), new THREE.MeshLambertMaterial({ color: '#bfe0f0', transparent: true, opacity: 0.45 }));
     glass.position.set(0.02, (wy0 + wy1) / 2, 0); win.add(glass);
     A.window = { group: win, frame: frameM, glass };
@@ -467,6 +490,16 @@ const BUILDERS = {
       for (let j = 24; j >= 0; j--) { const a = j / 24 * Math.PI; rim.lineTo(mid + Math.cos(a) * radius, 3.19 + Math.sin(a) * 1.25); }
       const edge = new THREE.Mesh(new THREE.ShapeGeometry(rim), rimMat); edge.position.z = ZB + 0.04; bg.add(edge);
     }
+    const damageTex = mkTex(256, 256, 51, (ctx, w, h, rand) => {
+      ctx.clearRect(0, 0, w, h); ctx.fillStyle = '#394642';
+      ctx.beginPath();
+      for (let i = 0; i < 18; i++) { const a = i / 18 * Math.PI * 2, rr = 30 + rand() * 45; const x = 128 + Math.cos(a) * rr, y = 128 + Math.sin(a) * rr; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill();
+      for (let i = 0; i < 7; i++) crack(ctx, 128, 128, 80 + rand() * 60, rand, '#323b38');
+    });
+    const damageMat = new THREE.MeshLambertMaterial({ map: damageTex, transparent: true, alphaTest: 0.1, depthWrite: false });
+    for (const x of [3.3, 12.5, 25.5, 38.6, 48.3, 58]) for (const y of [0.85, 4.1]) {
+      const damage = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.5), damageMat); damage.position.set(x, y, ZB + 0.06); bg.add(damage);
+    }
     const dp = new Parts();
     for (let i = 0; i < PX.length - 1; i++) {
       const x = (PX[i] + PX[i + 1]) / 2;
@@ -474,20 +507,24 @@ const BUILDERS = {
       dp.add(GEO.hemi, '#d8c8a0', mtx(x, 2.6, ZB + 0.05, Math.PI / 2, 0, 0, 0.32, 0.18, 0.42));
       dp.add(GEO.box, '#7a5a38', mtx(x, 2.6, ZB + 0.02, 0, 0, 0, 0.5, 0.7, 0.05));
     }
-    const decoM = new THREE.Mesh(dp.build(), toyMat()); bg.add(decoM);
+    const decoM = new THREE.Mesh(dp.build(), toonMat()); bg.add(decoM);
+    const webMat = new THREE.MeshBasicMaterial({ map: T('web'), transparent: true, alphaTest: 0.3, side: THREE.DoubleSide, depthWrite: false });
+    for (const [x, flip] of [[13.4, 1], [26.6, -1], [39.6, 1], [49.2, -1], [2.4, 1]]) {
+      const w = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.6), webMat); w.position.set(x + flip * 1.1, 3.65, ZB + 0.06); w.scale.x = flip; w.rotation.z = flip > 0 ? Math.PI / 2 : 0; bg.add(w);
+    }
     // 双开门（敌人从门里出来）
     A.doors = [];
     for (const dd of A.def.doors) {
       const fr = new Parts();
       fr.add(GEO.box, '#5a3a22', mtx(dd.x - 1.15, 1.6, ZB + 0.12, 0, 0, 0, 0.18, 3.2, 0.25)); fr.add(GEO.box, '#5a3a22', mtx(dd.x + 1.15, 1.6, ZB + 0.12, 0, 0, 0, 0.18, 3.2, 0.25));
       fr.add(GEO.box, '#5a3a22', mtx(dd.x, 3.25, ZB + 0.12, 0, 0, 0, 2.5, 0.25, 0.25)); fr.add(GEO.box, '#e0b060', mtx(dd.x, 3.45, ZB + 0.1, 0, 0, 0, 1.6, 0.14, 0.18));
-      bg.add(meshFrom(fr.build(), { mat: toyMat(), thin: true }));
+      bg.add(meshFrom(fr.build(), { mat: toonMat(), thin: true }));
       const dark = new THREE.Mesh(new THREE.BoxGeometry(2.2, 3.1, 0.1), new THREE.MeshBasicMaterial({ color: 0x0d0805 })); dark.position.set(dd.x, 1.55, ZB + 0.02); bg.add(dark);
       const panel = new Parts().add(texBox(1.08, 3.0, 0.08, 1), '#7a5232', mtx(0.54, 1.5, 0)).add(GEO.box, '#5a3a22', mtx(0.54, 2.2, 0.05, 0, 0, 0, 0.8, 0.9, 0.03)).add(GEO.box, '#5a3a22', mtx(0.54, 0.9, 0.05, 0, 0, 0, 0.8, 0.9, 0.03)).add(GEO.sph, '#e0b060', mtx(0.95, 1.4, 0.07, 0, 0, 0, 0.04, 0.04, 0.04)).build();
       const l = new THREE.Group(), r = new THREE.Group();
       l.position.set(dd.x - 1.1, 0, ZB + 0.1); r.position.set(dd.x + 1.1, 0, ZB + 0.1);
-      const lm = meshFrom(panel, { mat: toyMat(), thin: true }); l.add(lm);
-      const rm = meshFrom(panel, { mat: toyMat(), thin: true }); rm.scale.x = -1; r.add(rm);
+      const lm = meshFrom(panel, { mat: toonMat(), thin: true }); l.add(lm);
+      const rm = meshFrom(panel, { mat: toonMat(), thin: true }); rm.scale.x = -1; r.add(rm);
       bg.add(l, r);
       A.doors.push({ x: dd.x, l, r, k: 0, open: false });
     }
@@ -503,10 +540,10 @@ const BUILDERS = {
   // 第 47 街：石砌楼角（木门）+ 残破砖墙 + 铜绿色摩天楼；尽头 Boss 区有倒塌的铁丝网
   street(A) {
     const g = A.group;
-    A.light = { sky: '#e8f7ff', ground: '#9a9070', hemi: 1.95, sun: '#fff0d8', sunI: 2.8, dir: [-0.3, 1, 0.8], fog: '#d6e6e6', fogNear: 70, fogFar: 520, bg: '#d6e6e6' };
-    skyDome(g, '#a2c6dc', '#e8f0f0', '#c2d6dc');
-    A.waters = [seaPlane(g, -1.2, '#8fb2c4', 1600)];
-    skyline(g, { seed: 303, cx: 33, cz: 0, waterY: -1.2, count: 64, rMin: 55, rMax: 300, hMin: 28, hMax: 120, palette: ['#d8e6d4', '#c4d8c4', '#e4eae0', '#b6cfba', '#e0dcd4'], dome: '#94c0a6', spire: '#acd0b4', keepOut: (x, z) => Math.abs(z) < 34 && x > -26 && x < 92 });
+    A.light = { sky: '#e2ecf6', ground: '#7a705c', hemi: 1.3, sun: '#fff4e2', sunI: 1.9, dir: [-0.3, 1, 0.8], fog: '#cdd8e0', fogNear: 70, fogFar: 520, bg: '#cdd8e0' };
+    skyDome(g, '#8ea6c8', '#e4eaee', '#a6b8c8');
+    A.waters = [seaPlane(g, -1.2, '#7f9ab0', 1600)];
+    skyline(g, { seed: 303, cx: 33, cz: 0, waterY: -1.2, count: 64, rMin: 55, rMax: 300, hMin: 28, hMax: 120, palette: ['#cfe0cc', '#b8d0bc', '#e0e6dc', '#a6c4ae', '#d8d4cc'], dome: '#7fb89a', spire: '#9cc8a8', keepOut: (x, z) => Math.abs(z) < 34 && x > -26 && x < 92 });
     // 地面（向四周延伸成废墟空地）
     const ground = new THREE.Mesh(texBox(130, 0.4, 70, 2.8), texMat('pave')); ground.position.set(33, -0.2, 0); ground.receiveShadow = true; g.add(ground);
     const brickMat = new THREE.MeshLambertMaterial({ map: T('brick'), vertexColors: true });
@@ -538,7 +575,7 @@ const BUILDERS = {
     const vp = new Parts();
     for (let i = 0; i < 26; i++) { const xx = 12 + r() * 54; vp.add(GEO.sphLo, i % 2 ? '#4f8a3a' : '#6aa048', mtx(xx, 0.4 + r() * 1.8, -3.05, 0, 0, 0, 0.18 + r() * 0.25, 0.3 + r() * 0.6, 0.08)); }
     for (let i = 0; i < 18; i++) { const xx = 10 + r() * 56; vp.add(GEO.cone, '#7aa04a', mtx(xx, 0.15, -2.95 + r() * 0.3, 0, 0, (r() - 0.5) * 0.5, 0.05, 0.35 + r() * 0.3, 0.05)); }
-    const vines = new THREE.Mesh(vp.build(), toyMat()); g.add(vines);
+    const vines = new THREE.Mesh(vp.build(), toonMat()); g.add(vines);
     addCut(A, vines, 0, 1, 0, -3.1, false, 0, 0.7);   // 藤蔓贴在后墙上，随墙一起剖切
     // 起点的石砌楼角：墙面、拱门（黑埃尔默破门而出）、侧墙
     const stoneMat = new THREE.MeshLambertMaterial({ map: T('stone'), vertexColors: true });
@@ -557,7 +594,7 @@ const BUILDERS = {
     const planks = new THREE.Group(); planks.position.set(5.3, 0, -3.12); g.add(planks);
     addCut(A, doorDark, 0, 1, 0, -3.0); addCut(A, planks, 0, 1, 0, -3.0);
     A.facadePlanks = [];
-    for (let i = 0; i < 5; i++) { const pk = meshFrom(new Parts().add(texBox(0.46, 3.3, 0.1, 1), i % 2 ? '#7a5634' : '#6a4a2c', mtx(0, 1.65, 0)).build(), { mat: toyMat(), thin: true }); pk.position.x = -0.96 + i * 0.48; planks.add(pk); A.facadePlanks.push(pk); }
+    for (let i = 0; i < 5; i++) { const pk = meshFrom(new Parts().add(texBox(0.46, 3.3, 0.1, 1), i % 2 ? '#7a5634' : '#6a4a2c', mtx(0, 1.65, 0)).build(), { mat: toonMat(), thin: true }); pk.position.x = -0.96 + i * 0.48; planks.add(pk); A.facadePlanks.push(pk); }
     // Boss 区：倒塌的铁丝网
     const chainMat = new THREE.MeshLambertMaterial({ map: T('chain').clone(), transparent: true, alphaTest: 0.4, side: THREE.DoubleSide });
     chainMat.map.needsUpdate = true; chainMat.map.repeat.set(12, 6);
@@ -576,8 +613,8 @@ const BUILDERS = {
   // 2-1 偷猎者森林：林间土路、粗大的树干和藤蔓、蕨类和紫色小花；尽头是山崖，下面就是泥沼
   forest(A) {
     const g = A.group, r = fixedRng(505);
-    A.light = { sky: '#eaf6e0', ground: '#7a7050', hemi: 2.0, sun: '#fff0d0', sunI: 2.8, dir: [-0.35, 1, 0.7], fog: '#cfe0c4', fogNear: 45, fogFar: 230, bg: '#cfe0c4' };
-    skyDome(g, '#9cc8d6', '#e4efdc', '#c2d8b6');
+    A.light = { sky: '#eef6dc', ground: '#5a5a3a', hemi: 1.2, sun: '#fff2d8', sunI: 1.8, dir: [-0.35, 1, 0.7], fog: '#9fb890', fogNear: 40, fogFar: 230, bg: '#9fb890' };
+    skyDome(g, '#7fa8b8', '#c8dcc0', '#9fb890');
     const ground = new THREE.Mesh(texBox(112.5, 0.4, 90, 3.2), texMat('dirt')); ground.position.set(16.25, -0.2, 0); ground.receiveShadow = true; g.add(ground);
     const gp = new Parts();
     for (let x = -10; x < 72; x += 0.9 + r() * 1.2) { tufts(gp, x, -2.6 - r() * 0.6, r); if (r() < 0.6) tufts(gp, x + 0.4, 2.9 + r() * 0.6, r); }   // 路边草丛
@@ -615,8 +652,8 @@ const BUILDERS = {
   // 2-2 泥沼 MUD SWAMP：齐腰深的泥水、睡莲叶、芦苇、泡在水里的老树；右边上岸进林子，远处紫色的山
   swamp(A) {
     const g = A.group, r = fixedRng(606), W = A.def.water;
-    A.light = { sky: '#e6f2e2', ground: '#6a6a50', hemi: 2.0, sun: '#fff0d4', sunI: 2.6, dir: [-0.3, 1, 0.8], fog: '#c6d8c8', fogNear: 35, fogFar: 210, bg: '#c6d8c8' };
-    skyDome(g, '#a8c6d0', '#e4eee6', '#c6d8ca');
+    A.light = { sky: '#e0ecd8', ground: '#4a4a34', hemi: 1.1, sun: '#fff0d0', sunI: 1.55, dir: [-0.3, 1, 0.8], fog: '#8ea48c', fogNear: 30, fogFar: 200, bg: '#8ea48c' };
+    skyDome(g, '#7a98a0', '#c0d0c4', '#8ea48c');
     // 水底与水面：水只铺到 x=W.x1 附近，岸边斜坡接到地面
     const bed = new THREE.Mesh(texBox(80, 0.3, 90, 3), texMat('mud')); bed.position.set(W.x1 - 40 + 1.5, -SINK_DEPTH - 0.15, 0); g.add(bed);
     const water = new THREE.Mesh(new THREE.PlaneGeometry(84, 90, 42, 45), swampWater(A)); water.rotation.x = -Math.PI / 2; water.position.set(W.x1 - 42 + 1.2, -0.02, 0); g.add(water);
@@ -667,20 +704,20 @@ const BUILDERS = {
   // 2-3 黄昏的恐龙尸骸地：木栅栏、满地死恐龙、轮胎和火堆；尽头屠夫在肢解一头剑龙
   grave(A) {
     const g = A.group, r = fixedRng(707);
-    A.light = { sky: '#ffdcbc', ground: '#5a4a40', hemi: 1.75, sun: '#ffb880', sunI: 2.6, dir: [-0.75, 0.55, 0.45], fog: '#d6a68c', fogNear: 45, fogFar: 240, bg: '#d6a68c' };
-    skyDome(g, '#6f6aa8', '#f2b48a', '#e0a07e');
-    const ground = new THREE.Mesh(texBox(150, 0.4, 90, 3.2), texMat('dirt', null, { color: '#e2c4a8' })); ground.position.set(33, -0.2, 0); ground.receiveShadow = true; g.add(ground);
+    A.light = { sky: '#ffcca0', ground: '#3a2418', hemi: 1.0, sun: '#ffa868', sunI: 1.7, dir: [-0.75, 0.55, 0.45], fog: '#7a4a3a', fogNear: 40, fogFar: 220, bg: '#7a4a3a' };
+    skyDome(g, '#3a2e5a', '#d0805a', '#7a4a3a');
+    const ground = new THREE.Mesh(texBox(150, 0.4, 90, 3.2), texMat('dirt', null, { color: '#c89a78' })); ground.position.set(33, -0.2, 0); ground.receiveShadow = true; g.add(ground);
     // 后侧木栅栏（尖头圆木）：贴着走道，镜头转到墙后时整排剖切
     const pal = new Parts();
     for (let x = -4; x < 70; x += 0.42) {
       if ((x > 21 && x < 22.4) || (x > 44 && x < 45.4)) continue;   // 两处豁口
       const h = 2.5 + r() * 0.6;
-      pal.add(GEO.cyl6, r() < 0.5 ? '#8c6648' : '#7e5c40', mtx(x, h / 2, -3.45, 0, r() * 3, 0, 0.21, h, 0.21));
-      pal.add(GEO.cone, '#9a7454', mtx(x, h + 0.18, -3.45, 0, 0, 0, 0.21, 0.36, 0.21));
+      pal.add(GEO.cyl6, r() < 0.5 ? '#f2dcc4' : '#e2c8ac', mtx(x, h / 2, -3.45, 0, r() * 3, 0, 0.21, h, 0.21));
+      pal.add(GEO.cone, '#f6e2cc', mtx(x, h + 0.18, -3.45, 0, 0, 0, 0.21, 0.36, 0.21));
     }
-    pal.add(GEO.box, '#6e5038', mtx(33, 1.6, -3.2, 0, 0, 0, 74, 0.16, 0.12));   // 横撑
-    pal.add(GEO.box, '#6e5038', mtx(33, 0.6, -3.2, 0, 0, 0, 74, 0.16, 0.12));
-    const palM = new THREE.Mesh(pal.build(), vegMat()); palM.castShadow = true; palM.receiveShadow = true; g.add(palM);
+    pal.add(GEO.box, '#c8ac90', mtx(33, 1.6, -3.2, 0, 0, 0, 74, 0.16, 0.12));   // 横撑
+    pal.add(GEO.box, '#c8ac90', mtx(33, 0.6, -3.2, 0, 0, 0, 74, 0.16, 0.12));
+    const palM = new THREE.Mesh(pal.build(), new THREE.MeshLambertMaterial({ map: T('wood'), vertexColors: true })); palM.castShadow = true; palM.receiveShadow = true; g.add(palM);
     addCut(A, palM, 0, 1, 0, -3.2, false, 0, 0.7);
     // 栅栏外：暗下来的林子与远山
     const farB = new Parts(), farF = new Parts(), farL = new Parts(), hills = new Parts();
@@ -708,7 +745,7 @@ const BUILDERS = {
     for (let i = 0; i < 9; i++) { const x = 3 + r() * 60, z = r() < 0.5 ? -2.9 : 3.6 + r() * 0.8; dead.add(GEO.tor, '#3c3636', mtx(x, 0.12, z, Math.PI / 2 - 0.1, 0, r(), 0.3, 0.3, 0.45)); }
     for (let i = 0; i < 5; i++) { const x = 6 + r() * 56; dead.add(GEO.box, '#9a7450', mtx(x, 0.35, -2.9, 0, r(), 0, 0.7, 0.7, 0.7)); }
     for (let i = 0; i < 12; i++) dead.add(capsule(0.05, 0.5), '#efe6d6', mtx(2 + r() * 62, 0.04, (r() < 0.5 ? -2.7 : 3.4 + r()), Math.PI / 2, r() * 3, 0));   // 散落的骨头
-    const deadM = new THREE.Mesh(dead.build(), vegMat()); deadM.castShadow = true; deadM.receiveShadow = true; g.add(deadM);
+    const deadM = meshFrom(dead.build(), { receive: true }); g.add(deadM);   // 死恐龙与道具：与角色一样卡通着色 + 描边
     // 火堆（暖光闪动）
     const fireMat = new THREE.MeshBasicMaterial({ color: '#ffb054', transparent: true, opacity: 0.9 });
     A.fires = [];

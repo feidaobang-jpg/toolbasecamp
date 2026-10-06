@@ -11,5 +11,8 @@
       "blocking_issues": []
     }
   ],
-  "ready_to_upload": true
+  "ready_to_upload": false,
+  "status": "published_traffic_terms_pending",
+  "bvid": "BV1Fwpw6FEFx",
+  "publication_status": "published"
 }

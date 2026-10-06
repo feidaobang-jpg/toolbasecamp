@@ -54,12 +54,12 @@
   "disclosures": [
     "含AI生成内容"
   ],
-  "ready_to_upload": true,
+  "ready_to_upload": false,
   "blocking_issues": [],
   "unverified_fields": [
     "发布时话题入口与平台设置"
   ],
-  "publication_status": "not_uploaded",
+  "publication_status": "published",
   "human_review": {
     "quote": "看了，可以",
     "approved_at": "2026-10-06T20:30:56.689791+08:00",
@@ -67,5 +67,21 @@
     "scope": "最终第二版成片审片通过，按长期流程继续发布"
   },
   "audio_subjective_listening": "user_review_approved_agent_not_run",
-  "submission_gate": "awaiting_browser_terms_confirmation"
+  "submission_gate": "browser_terms_confirmed",
+  "current_stage": "awaiting_traffic_terms_confirmation",
+  "browser_terms_confirmation": {
+    "quote": "同意，继续",
+    "confirmed_at": "2026-10-06T20:52:36.646868+08:00",
+    "scope": "current reviewed v2 upload to Bilibili usage agreement and community convention"
+  },
+  "bvid": "BV1Fwpw6FEFx",
+  "video_url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
+  "submitted_at": "2026-10-06T20:55:22.860235+08:00",
+  "submission_status": "submitted",
+  "published_at": "2026-10-06T20:55:27+08:00",
+  "publication_result": "publication-result.json",
+  "pending": [
+    "traffic_reward_new_terms_confirmation"
+  ],
+  "status": "published_traffic_terms_pending"
 }
