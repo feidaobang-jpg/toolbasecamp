@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.7.6",
+  "base_version": "v0.7.5",
+  "created_at": "2026-10-06T18:20:59.902364+08:00",
+  "classification": "普通补丁",
+  "changes": [
+    "固定炮台/机枪巢底座取消出生时遗留的180度朝向，内层炮管直接跟随世界射击角；坦克与炮艇仍保留车体/炮塔相对转向。",
+    "第二关三发扇形子弹从炮管末端同一个位置/高度发出，中心弹沿炮管前方，左右散射与原速率保留。"
+  ],
+  "bugs": [
+    {
+      "id": "fixed-barrel-reversed",
+      "reported_by": "user",
+      "cause": "spawnEntity为所有实体设置root.rotation.y=-PI，syncEnt固定炮台只改内层turret，父节点180度未清除。",
+      "status": "fixed",
+      "before": "第一关机枪巢/炮台及第二关炮台的可见炮管与子弹反向。",
+      "after": "炮管随瞄准旋转并对准实际弹道，散射子弹从炮口生成。",
+      "verification": "实际浏览器世界矩阵/实际子弹方向对照，两关八方向加坦克检查，共32项。"
+    }
+  ],
+  "site": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "pending"
+  },
+  "bilibili": {
+    "action": "pending_merge",
+    "reason": "普通视觉/发射起点补丁，现有简介无相关错误；保留累计。"
+  },
+  "thumbnail": "沿用，主场景/第一关外观未改变。",
+  "qa": {
+    "status": "passed",
+    "direction": {
+      "pass": 32,
+      "total": 32,
+      "method": "真实浏览器矩阵变换与实际产生的子弹对照，两关八方向，包含坦克保持正常；三发散射炮口误差核验。"
+    },
+    "desktop": {
+      "pass": 92,
+      "total": 92
+    },
+    "stage2": {
+      "pass": 29,
+      "total": 29
+    },
+    "physical_phone": false
+  },
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "动态素材正在采集。"
+    ]
+  },
+  "build": {
+    "script_sha256": "cb8393345db39eef5674a47da3788a280516ec28b91da33f7b8851344ab69eb0",
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+  }
+}
