@@ -30,19 +30,19 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "auditing",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_m2s9VZi8/index.html",
     "verified_at": "2026-10-06T18:48:28.119681+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_gnM2F1oY/index.html",
-    "submitted_version": "hit-audio1",
-    "submitted_at": "2026-10-06T11:16:46.505145+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_VcHp5WoD/index.html",
+    "submitted_version": "lobby1",
+    "submitted_at": "2026-10-06T11:40:48.423653+00:00",
     "video_bindings": [
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/hit-audio1/handoff.json",
+    "release_record": "releases/lobby1/handoff.json",
     "published_version": "coop1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "hit-audio1预览声音验证通过；待前一版过审后已提交，当前审核中。",
-    "package_sha256": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
+    "note": "lobby1预览实测及包哈希核验通过，已提交审核；公开版本待核验。",
+    "package_sha256": "5a00449153c2bc0d42ef6537ea2f7d11f7472f49060ffd2ae70cd2d7c1408de8",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -82,9 +82,17 @@
         "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
         "submitted_at": "2026-10-06T11:16:46.505145+00:00"
+      },
+      {
+        "version": "lobby1",
+        "classification": "正式版本",
+        "status": "auditing",
+        "record": "releases/lobby1/handoff.json",
+        "summary": "2–4人大厅、可选密码、服务端分页筛选及菜单按钮反馈。"
       }
     ],
-    "published_verified_at": "2026-10-06T18:48:28.119681+08:00"
+    "published_verified_at": "2026-10-06T18:48:28.119681+08:00",
+    "status": "auditing"
   },
   "merged_from": {
     "game": "tank-battle",
@@ -112,9 +120,9 @@
   },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "hit-audio1",
-  "website_verified_at": "2026-10-06T11:14:56.511127+00:00",
-  "website_commit": "d92e6e26",
+  "website_version": "lobby1",
+  "website_verified_at": "2026-10-06T11:40:48.423653+00:00",
+  "website_commit": "274f0d7d7f585fbb1c6efbbdfc1e1cfb3c8457df",
   "web_toy_versions_match": false,
   "coop": {
     "protocol": "tank3d-v2",
@@ -125,7 +133,7 @@
     "persistence": "single-player saves and records untouched",
     "disconnect": "guest departure lets remaining players continue; host departure ends room; no host migration or mid-game join",
     "physical_app_test": false,
-    "server_commit": "569fc48dbb3eb3dde5551856671d9bb783b2af7b",
-    "server_verified_at": "2026-10-06T18:57:58.389189+08:00"
+    "server_commit": "c3a2431d0f266939dc4f3cff71c11bc08480cf7e",
+    "server_verified_at": "2026-10-06T11:40:48.423653+00:00"
   }
 }
