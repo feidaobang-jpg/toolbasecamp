@@ -39,4 +39,3 @@ $('controls').onclick=()=>window.open('./live-console.html','chongchao-control')
 if(local)connect();
 if(new URLSearchParams(location.search).get('capture')==='1')document.body.classList.add('capturing');
 setInterval(()=>{if(!local&&snapshot?.running&&Date.now()-lastCaption>25000)caption('当前基地耐久'+snapshot.baseHP+'，场上'+snapshot.enemies+'只虫。弹幕加入，参与这场守城。');},5000);
-
