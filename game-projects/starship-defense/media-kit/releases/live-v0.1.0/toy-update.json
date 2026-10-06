@@ -1,0 +1,34 @@
+{
+  "toy_id": "38678478981120",
+  "owner_uid": 16214353,
+  "version": "web-live-adapter-v0.19.2",
+  "zip_sha256": "67d89eebc87b05f34d6418e7f27d1fd1995f3ab86af4fe291b2a52414393f034",
+  "zip_bytes": 273396,
+  "tested_preview": "https://www.bilibili.com/toy/preview/preview_OtskeuS1/index.html",
+  "submission_preview": "https://www.bilibili.com/toy/preview/preview_ytj70Vv3/index.html",
+  "submitted_at": "2026-09-30T03:36:37+00:00",
+  "verified_at": "2026-10-06T14:37:48.142705+00:00",
+  "state": "published",
+  "platform": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+    "watermark_enabled": false,
+    "ctime": 1790739397,
+    "mtime": 1791296936
+  },
+  "scope": "ordinary entry; common adapter and pickup disposal; no local service, credentials or live UI",
+  "doctor_warnings": [
+    "资源文件名未带内容指纹，可能增加更新时重新下载量"
+  ]
+}

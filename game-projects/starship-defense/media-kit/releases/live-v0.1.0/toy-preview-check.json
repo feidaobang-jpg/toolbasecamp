@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "at": "2026-10-06T14:25:55.243Z",
+  "preview": "https://www.bilibili.com/toy/preview/preview_OtskeuS1/index.html",
+  "results": [
+    {
+      "size": {
+        "width": 1280,
+        "height": 720
+      },
+      "check": {
+        "canvas": {
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "right": 1280,
+          "bottom": 720,
+          "left": 0
+        },
+        "live": false,
+        "ready": true
+      }
+    },
+    {
+      "size": {
+        "width": 844,
+        "height": 390
+      },
+      "check": {
+        "canvas": {
+          "x": 0,
+          "y": 0.0035858154296875,
+          "width": 844,
+          "height": 389.9927978515625,
+          "top": 0.0035858154296875,
+          "right": 844,
+          "bottom": 389.9963836669922,
+          "left": 0
+        },
+        "live": false,
+        "ready": true
+      }
+    },
+    {
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "check": {
+        "canvas": {
+          "x": 0,
+          "y": 0.00146484375,
+          "width": 390,
+          "height": 843.9970703125,
+          "top": 0.00146484375,
+          "right": 390,
+          "bottom": 843.99853515625,
+          "left": 0
+        },
+        "live": false,
+        "ready": true
+      }
+    }
+  ],
+  "errors": [],
+  "method": "Edge headless actual preview boot/start; desktop and horizontal/portrait viewport simulation",
+  "touchMode": {
+    "ok": true,
+    "via": "existing menu buttons",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "realPhone": false
+  }
+}

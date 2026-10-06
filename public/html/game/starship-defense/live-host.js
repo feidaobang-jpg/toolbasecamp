@@ -9,7 +9,9 @@ function control(m){
   if(!owner)return;
   if(m.type==='voice'){voice=!!m.data;if(!voice){audio.pause();speechSynthesis?.cancel();}return;}
   if(m.type==='hold'){holdUntil=Date.now()+10000;audio.pause();if('speechSynthesis'in window)speechSynthesis.cancel();return;}
-  if(m.type==='start'){started=true;$('startPanel').hidden=true;frame.contentWindow.focus();}
+  if(m.type==='start'){started=true;$('startPanel').hidden=true;$('status').textContent='互动运行中';frame.contentWindow.focus();}
+  if(m.type==='pause')$('status').textContent='互动已暂停';
+  if(m.type==='resume'||m.type==='restart')$('status').textContent='互动运行中';
   sendGame(m.type,m.data);
 }
 function status(data){$('source').textContent=data.bili==='connected'?'B站真实互动已连接':'本地演示 · 未连接B站';$('status').textContent=data.warning||'';}

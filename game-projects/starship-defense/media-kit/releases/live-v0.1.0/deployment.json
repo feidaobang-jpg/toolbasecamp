@@ -1,0 +1,10 @@
+{
+  "verified_at": "2026-10-06T14:37:48.142705+00:00",
+  "commit": "4cb9281a7d439791d12accf50fc5b5e315eadf0e",
+  "live_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/live.html",
+  "ordinary_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "browser_check": "deployment-browser.json",
+  "local_install": "C:/Users/37818/AppData/Local/ChongchaoLive/app",
+  "note": "公共页面可演示；AI模型、TTS及真实B站连接使用本机服务。公开开播未启动。",
+  "compat_sha256": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a"
+}
