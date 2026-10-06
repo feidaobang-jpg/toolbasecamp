@@ -18,7 +18,11 @@
       "prepared_at": "2026-10-06T18:45:26.109142+08:00",
       "submitted_at": "2026-10-06T18:48:28.119681+08:00",
       "state_correction": "首次提交时Toy审核中；公开版本核验通过后移除过期审核提示，保留首次文案记录。",
-      "platform_result": "稿件投递成功；编辑页重读已保存。公开页仍为上次操作升级说明，尚未核验生效。"
+      "platform_result": "稿件投递成功；编辑页重读已保存。公开页仍为上次操作升级说明，尚未核验生效。",
+      "evidence": [
+        "D:/project/artifacts/tank-coop-20261006/proof/bilibili-description-saved.png"
+      ],
+      "last_public_check_at": "2026-10-06T18:52:01.368423+08:00"
     }
   ],
   "activity_check": "官方成长任务部分检查已写共享台账，无新符合条件报名；未推进全面检查时间。"
