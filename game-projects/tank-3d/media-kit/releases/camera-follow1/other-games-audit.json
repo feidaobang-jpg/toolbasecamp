@@ -1,0 +1,45 @@
+{
+  "scope": "五款已发布Toy 3D游戏的默认镜头，补查网站西游3D；844×390代表画面与代码历史，未称全部关卡或真机验收",
+  "baseline_commit": "aab2f9026f54ee63bac1bbb3c470e088aae339d1",
+  "evidence_directory": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5",
+  "boss_hud_change": {
+    "commit": "929f54d2",
+    "runtime_scope": [
+      "jackal-stage1-3d"
+    ],
+    "rollback_commit": "689a30c0",
+    "other_games_runtime_changes": []
+  },
+  "games": [
+    {
+      "slug": "tank-3d",
+      "finding": "斜俯视整图fit公式来自caaab539初版，非Boss修复引入；按用户确认改为拉近跟随；正俯视仍全图",
+      "action": "camera-follow1"
+    },
+    {
+      "slug": "mario-3d",
+      "finding": "默认侧视dist18源自e7687e54原作地图重做；代表画面角色约原作屏高比例，无HUD避让自动拉远",
+      "action": "keep"
+    },
+    {
+      "slug": "jackal-stage1-3d",
+      "finding": "Boss自动拉远已于689a30c0撤回；当前dist34斜俯视、其余预设原距离；HUD保持半透明",
+      "action": "keep"
+    },
+    {
+      "slug": "cadillacs-stage1-3d",
+      "finding": "侧视按锁屏横宽fit，第二关放宽纵深时已保留取景距离；无同类HUD拉远",
+      "action": "keep"
+    },
+    {
+      "slug": "starship-defense",
+      "finding": "默认近身跟随d8.6/h3.9，远景是主动选择的战术预设；无同类HUD拉远",
+      "action": "keep"
+    },
+    {
+      "slug": "journey-west-3d",
+      "finding": "网站实验版默认整场庭院镜头，未由Boss修改影响；独立近景可选；无已确认3D Toy映射",
+      "action": "keep"
+    }
+  ]
+}

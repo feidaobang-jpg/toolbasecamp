@@ -1,0 +1,25 @@
+{
+  "game": "tank-3d",
+  "version": "camera-follow1",
+  "base_version": "controls-inset1",
+  "classification": "普通补丁",
+  "summary": "斜俯视拉近并跟随本地坦克，正俯视保留全图；其他游戏核查无同类统一拉远",
+  "evidence_directory": "D:\\project\\task-artifacts\\camera-distance-20261006-01a111b5",
+  "qa_records": [
+    "before-qa.json",
+    "after-qa.json",
+    "other-games-audit.json"
+  ],
+  "physical_phone_test": false,
+  "website": {
+    "status": "not_deployed"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "not_submitted"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通体验补丁累计，下次正式说明更新合并；操作入口仍准确"
+  }
+}

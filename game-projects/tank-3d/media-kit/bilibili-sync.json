@@ -71,6 +71,14 @@
       "record": "releases/lobby1/bilibili-sync.json",
       "summary": "公开/密码房间大厅、2–4人合作、离线规则和按钮反馈",
       "reason": "平台已保存，公开页面暂为旧版；保留coop1成功基线，不重复提交。"
+    },
+    {
+      "version": "camera-follow1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "record": "releases/camera-follow1/handoff.json",
+      "summary": "斜俯视拉近并跟随本地坦克，正俯视保留全图；其他游戏核查无同类统一拉远",
+      "reason": "普通体验补丁累计，下次正式说明更新合并；操作入口仍准确"
     }
   ],
   "history": [

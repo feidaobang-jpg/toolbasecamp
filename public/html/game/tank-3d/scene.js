@@ -7,7 +7,7 @@ import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer, playerSpawn } from './sim.js
 const C = N / 2, TAU = Math.PI * 2;
 const P = v => v / 8 - C;                       // FC 像素 → 世界坐标
 export const PRESETS = [
-  { id: 'overview', name: '斜俯视', pitch: .98, fov: 38, fit: true },
+  { id: 'overview', name: '斜俯视', pitch: .98, fov: 38, dist: 26, follow: true, overview: true },
   { id: 'top', name: '正俯视', pitch: 1.53, fov: 36, fit: true },
   { id: 'close', name: '近景', pitch: .82, fov: 42, dist: 15, follow: true },
   { id: 'front', name: '正视', pitch: .36, fov: 58, dist: 7.4, follow: true, front: true },
@@ -376,12 +376,14 @@ export function createScene(canvas) {
       camera.up.set(0, 1, 0); camera.position.copy(camPos); camera.lookAt(lookAt); target.copy(pp);
     } else {
       const yaw = view.yawOffset;
-      if (pr.fit) follow.set(0, 0, pr.pitch > 1.3 ? 0 : 1.6);
+      if (view.titleMode || pr.fit) follow.set(0, 0, pr.pitch > 1.3 ? 0 : 1.6);
+      else if (pr.overview) follow.set(pp.x - Math.sin(yaw) * 3, 0, pp.z - Math.cos(yaw) * 3);
       else if (pr.front) follow.set(pp.x - Math.sin(yaw) * 3.2, .5, pp.z - Math.cos(yaw) * 3.2);
       else follow.set(pp.x * .8, 0, pp.z * .8 + 1);
       target.lerp(follow, k);
-      let dist = pr.fit ? fitDistance(pr.pitch+view.pitchOffset) : pr.dist, pitch = pr.pitch+view.pitchOffset, yw = yaw, tg = target;
-      if (introK >= 0 && pr.fit) {
+      // 斜俯视靠近并跟随本地坦克；全图留给正俯视，标题仍展示整张地图。
+      let dist = pr.fit || view.titleMode ? fitDistance(pr.pitch+view.pitchOffset) : pr.dist, pitch = pr.pitch+view.pitchOffset, yw = yaw, tg = target;
+      if (introK >= 0 && (pr.fit || pr.overview)) {
         const t = Math.min(1, introK), e = t * t * (3 - 2 * t), start = new THREE.Vector3(P(104), .6, P(192));
         tg = start.lerp(target, e); dist = THREE.MathUtils.lerp(6, dist, e); pitch = THREE.MathUtils.lerp(.22, pitch, e); yw = THREE.MathUtils.lerp(-.9, yaw, e);
       }
