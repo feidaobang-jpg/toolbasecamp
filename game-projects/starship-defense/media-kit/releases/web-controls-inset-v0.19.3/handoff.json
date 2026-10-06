@@ -1,0 +1,19 @@
+{
+  "game": "starship-defense",
+  "version": "web-controls-inset-v0.19.3",
+  "classification": "普通补丁",
+  "summary": "左右下角摇杆与实际动作按钮向内移，左右至少40 CSS像素、底部36 CSS像素，加逻辑安全区；虫潮按舞台缩放换算，不覆盖自定义按键布局。",
+  "qa_record": "../../../../site-games/releases/controls-inset-20261006/local/qa.json",
+  "physical_phone_test": false,
+  "website": {
+    "status": "pending_deployment"
+  },
+  "toy": {
+    "status": "pending_sync",
+    "reason": "网站部署核验后打包预览实测并提交"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通布局补丁累计至下次有意义的说明更新；入口和操作键位未变"
+  }
+}

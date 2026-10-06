@@ -8,6 +8,12 @@ const destination=path.join(process.env.LOCALAPPDATA,'ChongchaoLive','app');
 const liveDestination=path.join(destination,'game-projects/starship-defense/live');
 await mkdir(liveDestination,{recursive:true});
 for(const file of ['server.mjs','bilibili.mjs','host-ai.mjs','tts.ps1','package.json','package-lock.json','config.example.json','start-live.ps1','README.md'])await cp(path.join(import.meta.dirname,file),path.join(liveDestination,file));
+// Windows PowerShell 5.1 otherwise decodes Chinese UTF-8 source as the ANSI
+// code page. Keep exactly one BOM and CRLF even after a Git checkout/editor save.
+for(const file of ['start-live.ps1','tts.ps1']){
+  const text=(await readFile(path.join(import.meta.dirname,file),'utf8')).replace(/^\uFEFF/,'').replace(/\r?\n/g,'\r\n');
+  await writeFile(path.join(liveDestination,file),'\uFEFF'+text,'utf8');
+}
 await cp(path.join(source,'public/html/game/starship-defense'),path.join(destination,'public/html/game/starship-defense'),{recursive:true});
 for(const file of ['public/css/base.css','public/js/game/thumb-preview.js']){await mkdir(path.dirname(path.join(destination,file)),{recursive:true});await cp(path.join(source,file),path.join(destination,file));}
 // Use the task's verified dependency lock and modules; the installed app starts offline.

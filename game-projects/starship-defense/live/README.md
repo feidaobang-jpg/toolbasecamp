@@ -8,7 +8,11 @@ Node.js 22+；在本目录 `npm ci` 后运行 `node server.mjs`，或执行 `sta
 
 `node install-local.mjs` 将验证过的运行文件安装到 `%LOCALAPPDATA%/ChongchaoLive/app`，不依赖开发worktree。双击其中的「启动虫潮AI直播.cmd」。已有本机配置不会被安装覆盖。
 
+桌面入口使用Windows PowerShell 5.1；中文PowerShell脚本保持UTF-8 BOM与CRLF，安装器会统一处理编码。冷启动探测使用`UseBasicParsing`，无需Internet Explorer初始化；服务启动失败会明确提示日志位置。
+
 配置在 `%LOCALAPPDATA%/ChongchaoLive/config.json`，不在Git或静态目录。修改后退出服务再启动。事件回执在同目录 `events.jsonl`、礼物查重为 `gift-receipts.json`；未确认生效的礼物不自动重放。
+
+桌面启动地址`http://127.0.0.1:18765/`会跳转到完整控制台路径，让相对样式、脚本与直播链接正确加载。`/live.html`短入口也可用；OBS仍使用前述完整直播地址。浏览器入口回归运行`node tests/browser-entry.cjs`，覆盖真实根入口、弹出直播画面、互动与错误日志。
 
 ## 已实现玩法
 
@@ -34,10 +38,8 @@ Node.js 22+；在本目录 `npm ci` 后运行 `node server.mjs`，或执行 `sta
 2. 在本机config的 `bilibili` 中填写官方 `appId/accessKeyId/accessKeySecret`。不要粘贴密钥到聊天或Git。项目支持的专用互动礼物审核后，按正式gift ID填写 `giftMappings`（字段id/name/action；action仅repair/shield/tank/strike）。例如 `[{"id":"实际礼物ID","name":"审核后的名称","action":"repair"}]`，不要直接使用示例字符串。
 3. 确认获准AI独播后才设 `approvedForUnattended:true`。这个字段只是本机防误操作开关，不是平台批准证明。未确认时可本地演示；正式连接选择人工辅助或本人主持。
 4. 在B站取得自己的主播身份码，在控制台连接。代码会核对UID16214353，不连接其他账号。
-5. OBS导入安装目录的 `OBS-虫潮AI直播.json`（场景集合→导入），或在控制台连接OBS WebSocket后「建立专用场景」。OBS通常需要在工具→WebSocket服务器设置开启，并把密码填写到本机config；不用把密码发给AI。浏览器源1920×1080、控制音频通过OBS，确认游戏与AI语音均进入混音器。
+5. OBS「场景集合」选择已安装的「虫潮AI直播」。若列表里没有，导入安装目录的 `OBS-虫潮AI直播.json`（场景集合→导入），或在控制台连接OBS WebSocket后「建立专用场景」。在工具→WebSocket服务器设置开启服务，并把密码填写到本机config，以便故障停播与本地录制控制。浏览器源1920×1080、控制音频通过OBS，确认游戏与AI语音均进入混音器；本人声音另加麦克风输入，麦克风避让开关本身不替代OBS收音。
 6. 本人设置B站推流地址/密钥，先本地录制检查，随后手动开播。程序不自动开播；普通预览和控制台不是推流画面。真人接管用OBS浏览器源「交互」或专门游戏窗口；避免同时打开两个执行窗口争抢。
-
-## 验证
 
 ## 首批真人直播安排
 

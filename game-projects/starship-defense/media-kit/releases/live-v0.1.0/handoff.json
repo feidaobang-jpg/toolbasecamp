@@ -6,7 +6,7 @@
   "created_at": "2026-10-06T13:36:03.543Z",
   "build": {
     "id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
-    "commit": "8a1d64b8",
+    "commit": "12db1673b3f141daa73ae15adf03576f0c798573",
     "dirty": false,
     "fingerprint": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
     "entrypoint": "public/html/game/starship-defense/live.html"
@@ -81,7 +81,7 @@
     {
       "id": "live-image-0",
       "file": "qa/desktop-live.png",
-      "sha256": "56d311a92673fd2c609b7c782446655b1f2865566b8a092a0923ac48809ad296",
+      "sha256": "997efd2239448e42387f32a731509c862e5590222b8729aa4e14067e3af07b8f",
       "kind": "screenshot",
       "version": "live-v0.1.0",
       "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
@@ -90,14 +90,14 @@
       "width": 1280,
       "height": 720,
       "audio": "none",
-      "visual_review": "pass",
+      "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "live-image-1",
       "file": "qa/console.png",
-      "sha256": "ccb4ff0eb9e2ba7fb767f90f7b89553878fe1c5714909f3fe311792ca7da4a1f",
+      "sha256": "96458cfed41dd61ec3e6679d30dd33303a73e221735ae468cb99b757d1856a63",
       "kind": "screenshot",
       "version": "live-v0.1.0",
       "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
@@ -106,14 +106,14 @@
       "width": 1280,
       "height": 1139,
       "audio": "none",
-      "visual_review": "pass",
+      "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "live-image-2",
       "file": "qa/result.png",
-      "sha256": "b2ab44747706f98bd12c97e9362e970073c57e0feb5643bb579d8a1792422775",
+      "sha256": "07c9749297001ec4f893b8b1b878eb4fcbdca5504f66da89d62899d3157fc2a1",
       "kind": "screenshot",
       "version": "live-v0.1.0",
       "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
@@ -122,14 +122,14 @@
       "width": 1280,
       "height": 720,
       "audio": "none",
-      "visual_review": "pass",
+      "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "live-image-3",
       "file": "qa/normal-844.png",
-      "sha256": "8e83f1268789e8fc7d88471f556f7a830cbfc2ac463dcccb8f025edf100a6abc",
+      "sha256": "5c7a0db6d7d91f5c4cb1fae15762769d472089dc9dbb42943486328c8bc159e4",
       "kind": "screenshot",
       "version": "live-v0.1.0",
       "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
@@ -138,14 +138,14 @@
       "width": 844,
       "height": 390,
       "audio": "none",
-      "visual_review": "pass",
+      "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
     },
     {
       "id": "live-image-4",
       "file": "qa/normal-390.png",
-      "sha256": "bc1ff2c2b1342731e62e1508ec07062d83e2ad3acf83b8ddf0b5559c25216ca9",
+      "sha256": "baa576e930f0ebc7c24988de7c96d85505f16295fac52761acc7c3b1f0e99865",
       "kind": "screenshot",
       "version": "live-v0.1.0",
       "build_id": "70580581e40d8d9eba060de8c7499d33c05b66852d17f0452a0565122956d66a",
@@ -154,7 +154,7 @@
       "width": 390,
       "height": 844,
       "audio": "none",
-      "visual_review": "pass",
+      "visual_review": "not-run",
       "audio_review": "not-applicable",
       "segments": []
     },
@@ -236,5 +236,12 @@
     "toy": "pending_core_compatibility_update",
     "bilibili_description": "deferred_until_live_project_is_approved_and_verified",
     "live_stream": "not_started"
+  },
+  "final_validation": {
+    "installed_browser_smoke": "qa/results.json",
+    "published_toy": "toy-public-check.json",
+    "real_time_soak": "qa/soak.json",
+    "bilibili_real_events": "not-verified-pending-owner-permissions",
+    "live_stream": "not-started"
   }
 }

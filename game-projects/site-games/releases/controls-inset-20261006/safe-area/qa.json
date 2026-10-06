@@ -1,0 +1,836 @@
+[
+  {
+    "game": "tank-3d",
+    "name": "landscape",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": false,
+      "joy": {
+        "id": "joy-base",
+        "left": 52,
+        "right": 680,
+        "bottom": 70,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "",
+          "left": 654,
+          "right": 130,
+          "bottom": 140,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 24.64px), calc(-50% + 2.23999px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act big down",
+    "released": "act big",
+    "errors": []
+  },
+  {
+    "game": "tank-3d",
+    "name": "portrait",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": true,
+      "joy": {
+        "id": "joy-base",
+        "left": 64,
+        "right": 668,
+        "bottom": 48,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "",
+          "left": 640,
+          "right": 144,
+          "bottom": 96,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 2.24px), calc(-50% - 24.64px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act big down",
+    "released": "act big",
+    "errors": []
+  },
+  {
+    "game": "mario-3d",
+    "name": "landscape",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": false,
+      "joy": {
+        "id": "joy-base",
+        "left": 52,
+        "right": 680,
+        "bottom": 70,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "",
+          "left": 654,
+          "right": 130,
+          "bottom": 140,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 654,
+          "right": 130,
+          "bottom": 70,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 724,
+          "right": 60,
+          "bottom": 70,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-sprint",
+          "left": 724,
+          "right": 60,
+          "bottom": 140,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 24.64px), calc(-50% + 2.23999px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act down",
+    "released": "act",
+    "errors": []
+  },
+  {
+    "game": "mario-3d",
+    "name": "portrait",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": true,
+      "joy": {
+        "id": "joy-base",
+        "left": 64,
+        "right": 668,
+        "bottom": 48,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "",
+          "left": 640,
+          "right": 144,
+          "bottom": 118,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 640,
+          "right": 144,
+          "bottom": 48,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 710,
+          "right": 74,
+          "bottom": 48,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-sprint",
+          "left": 710,
+          "right": 74,
+          "bottom": 118,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 2.24px), calc(-50% - 24.64px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act down",
+    "released": "act",
+    "errors": []
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "landscape",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": false,
+      "joy": {
+        "id": "joy-base",
+        "left": 52,
+        "right": 680,
+        "bottom": 70,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "btn-fire",
+          "left": 654,
+          "right": 130,
+          "bottom": 70,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-bomb",
+          "left": 724,
+          "right": 60,
+          "bottom": 70,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 24.64px), calc(-50% + 2.23999px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act down",
+    "released": "act",
+    "errors": []
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "portrait",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": true,
+      "joy": {
+        "id": "joy-base",
+        "left": 64,
+        "right": 668,
+        "bottom": 48,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "btn-fire",
+          "left": 640,
+          "right": 144,
+          "bottom": 48,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-bomb",
+          "left": 710,
+          "right": 74,
+          "bottom": 48,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 2.24px), calc(-50% - 24.64px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act down",
+    "released": "act",
+    "errors": []
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "landscape",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": false,
+      "joy": {
+        "id": "joy-base",
+        "left": 52,
+        "right": 680,
+        "bottom": 70,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "btn-mega",
+          "left": 654,
+          "right": 130,
+          "bottom": 140,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-run",
+          "left": 724,
+          "right": 60,
+          "bottom": 140,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-atk",
+          "left": 654,
+          "right": 130,
+          "bottom": 70,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-jump",
+          "left": 724,
+          "right": 60,
+          "bottom": 70,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 24.64px), calc(-50% + 2.23999px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act pad-c down",
+    "released": "act pad-c",
+    "errors": []
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "portrait",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": true,
+      "joy": {
+        "id": "joy-base",
+        "left": 64,
+        "right": 668,
+        "bottom": 48,
+        "width": 112,
+        "height": 112,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "btn-mega",
+          "left": 640,
+          "right": 144,
+          "bottom": 118,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-run",
+          "left": 710,
+          "right": 74,
+          "bottom": 118,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-atk",
+          "left": 640,
+          "right": 144,
+          "bottom": 48,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        },
+        {
+          "id": "btn-jump",
+          "left": 710,
+          "right": 74,
+          "bottom": 48,
+          "width": 60,
+          "height": 60,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": true,
+      "transform": "translate(calc(-50% + 2.24px), calc(-50% - 24.64px))",
+      "left": "",
+      "top": ""
+    },
+    "held": "act pad-c down",
+    "released": "act pad-c",
+    "errors": []
+  },
+  {
+    "game": "journey-west-3d",
+    "name": "landscape",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": false,
+      "joy": {
+        "id": "stick",
+        "left": 52,
+        "right": 690,
+        "bottom": 70,
+        "width": 102,
+        "height": 102,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "",
+          "left": 590,
+          "right": 196,
+          "bottom": 70,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 658,
+          "right": 128,
+          "bottom": 70,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 726,
+          "right": 60,
+          "bottom": 70,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 590,
+          "right": 196,
+          "bottom": 138,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 658,
+          "right": 128,
+          "bottom": 138,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": false,
+      "transform": "translate(22.44px, 2.04001px)",
+      "left": "",
+      "top": ""
+    },
+    "held": "tb-btn held",
+    "released": "tb-btn",
+    "errors": []
+  },
+  {
+    "game": "journey-west-3d",
+    "name": "portrait",
+    "pass": true,
+    "measured": {
+      "width": 844,
+      "height": 390,
+      "scale": 1,
+      "rotated": true,
+      "joy": {
+        "id": "stick",
+        "left": 64,
+        "right": 678,
+        "bottom": 48,
+        "width": 102,
+        "height": 102,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "",
+          "left": 576,
+          "right": 210,
+          "bottom": 48,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 644,
+          "right": 142,
+          "bottom": 48,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 712,
+          "right": 74,
+          "bottom": 48,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 576,
+          "right": 210,
+          "bottom": 116,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        },
+        {
+          "id": "",
+          "left": 644,
+          "right": 142,
+          "bottom": 116,
+          "width": 58,
+          "height": 58,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": false,
+      "transform": "translate(2.04px, -22.44px)",
+      "left": "",
+      "top": ""
+    },
+    "held": "tb-btn held",
+    "released": "tb-btn",
+    "errors": []
+  },
+  {
+    "game": "starship-defense",
+    "name": "landscape",
+    "pass": true,
+    "measured": {
+      "width": 960,
+      "height": 444,
+      "scale": 0.8791666666666667,
+      "rotated": false,
+      "joy": {
+        "id": "joyBase",
+        "left": 51.99446487426758,
+        "right": 682.9888572692871,
+        "bottom": 69.98985290527344,
+        "width": 109.01666666666667,
+        "height": 109.01666666666667,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "vJ",
+          "left": 613.4522705078125,
+          "right": 179.5560302734375,
+          "bottom": 69.98985290527344,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vK",
+          "left": 673.235595703125,
+          "right": 119.772705078125,
+          "bottom": 69.98985290527344,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vSPRINT",
+          "left": 613.4522705078125,
+          "right": 179.5560302734375,
+          "bottom": 189.55653381347656,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vI",
+          "left": 673.235595703125,
+          "right": 119.772705078125,
+          "bottom": 129.77317810058594,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vH",
+          "left": 673.235595703125,
+          "right": 119.772705078125,
+          "bottom": 189.55653381347656,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vU",
+          "left": 613.4522705078125,
+          "right": 179.5560302734375,
+          "bottom": 129.77317810058594,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vX",
+          "left": 733.0189208984375,
+          "right": 59.9893798828125,
+          "bottom": 189.55653381347656,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vO",
+          "left": 733.0189208984375,
+          "right": 59.9893798828125,
+          "bottom": 129.77317810058594,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vL",
+          "left": 733.0189208984375,
+          "right": 59.9893798828125,
+          "bottom": 69.98985290527344,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": false,
+      "transform": "",
+      "left": "56.2178px",
+      "top": "36.9289px"
+    },
+    "held": "vbtn on",
+    "released": "vbtn",
+    "errors": []
+  },
+  {
+    "game": "starship-defense",
+    "name": "portrait",
+    "pass": true,
+    "measured": {
+      "width": 960,
+      "height": 444,
+      "scale": 0.8791666666666667,
+      "rotated": true,
+      "joy": {
+        "id": "joyBase",
+        "left": 63.98684883117676,
+        "right": 670.996488571167,
+        "bottom": 47.99700585287064,
+        "width": 109.01666666666667,
+        "height": 109.01666666666667,
+        "visible": true
+      },
+      "actions": [
+        {
+          "id": "vJ",
+          "left": 599.4542827606201,
+          "right": 193.55401802062988,
+          "bottom": 47.99700585287064,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vK",
+          "left": 659.2376079559326,
+          "right": 133.77069282531738,
+          "bottom": 47.99700585287064,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vSPRINT",
+          "left": 599.4542827606201,
+          "right": 193.55401802062988,
+          "bottom": 167.56366387289017,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vI",
+          "left": 659.2376079559326,
+          "right": 133.77069282531738,
+          "bottom": 107.78033867757767,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vH",
+          "left": 659.2376079559326,
+          "right": 133.77069282531738,
+          "bottom": 167.56366387289017,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vU",
+          "left": 599.4542827606201,
+          "right": 193.55401802062988,
+          "bottom": 107.78033867757767,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vX",
+          "left": 719.0209331512451,
+          "right": 73.98736763000488,
+          "bottom": 167.56366387289017,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vO",
+          "left": 719.0209331512451,
+          "right": 73.98736763000488,
+          "bottom": 107.78033867757767,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        },
+        {
+          "id": "vL",
+          "left": 719.0209331512451,
+          "right": 73.98736763000488,
+          "bottom": 47.99700585287064,
+          "width": 50.99166666666667,
+          "height": 50.99166666666667,
+          "visible": true
+        }
+      ],
+      "scroll": false
+    },
+    "joystickHeld": {
+      "active": false,
+      "transform": "",
+      "left": "36.9289px",
+      "top": "13.7822px"
+    },
+    "held": "vbtn on",
+    "released": "vbtn",
+    "errors": []
+  }
+]

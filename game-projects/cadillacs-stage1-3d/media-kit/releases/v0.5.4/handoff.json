@@ -1,0 +1,111 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.5.4",
+ "base_version": "v0.5.3",
+ "created_at": "2026-10-06T23:40:00+08:00",
+ "classification": "普通补丁（玩家反馈修复）",
+ "build": {
+  "bundle_sha256": "4fcdcf96859b71b5c0f0dae0826da4cb54d6df44477936c1f318332e7961f089",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+ },
+ "changes": [
+  {
+   "id": "restart-audio",
+   "user_visible_result": "暂停后点「重新开始」，新的一局 BGM 和音效正常",
+   "verification": "pass"
+  },
+  {
+   "id": "stage2-depth",
+   "before": "第二关只能走到画面约 60% 高，下半屏地面进不去",
+   "after": "第二关可走到画面约 83% 高，外沿灌丛 / 芦苇 / 碎石标出边界；第一关不变",
+   "verification": "pass"
+  },
+  {
+   "id": "toy-title",
+   "after": "Toy 标题改为「恐龙快打 3D：第一、二关」",
+   "verification": "published"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "restart-after-pause-silent",
+   "reported_by": "user（恐龙快打）",
+   "found_version": "线上",
+   "reproduction": "开局 → 暂停 → 点暂停菜单「重新开始 / 重开本关」",
+   "observed": "新的一局没有 BGM，音效也没有（AudioContext 一直 suspended）",
+   "cause": "暂停时挂起整个 AudioContext，「继续」会恢复，但重开直接开新局没有清掉暂停标志",
+   "fix": "startGame() 先 A.musicDuck(false)",
+   "status": "fixed",
+   "retest": "game-projects/site-games/qa/restart-audio.cjs：修复前线上该游戏重开后 suspended、音量 0；修复后 running、时钟在走、扬声器出口有音量"
+  },
+  {
+   "id": "stage2-lower-half-unreachable",
+   "reported_by": "user",
+   "observed": "第二关只有上半屏能走，下半屏地面进不去",
+   "cause": "第二关与第一关同一纵深，但地面铺到画面底部且没有边界物",
+   "fix": "可走纵深加到 z 4.0，取景按 camZ1 2.5 不拉远并抬高 1 米，前排左右边界按透视收窄，外沿放边界物",
+   "status": "fixed",
+   "retest": "qa/depth.js"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/depth.js",
+   "result": "pass 31/31",
+   "evidence": "qa/depth.json"
+  },
+  {
+   "method": "site-games/qa/restart-audio.cjs",
+   "result": "pass 29/29（六款）",
+   "evidence": "../../../../site-games/releases/restart-audio-20261006/qa/after-local.json"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55",
+   "evidence": "qa/stage2.json"
+  },
+  {
+   "method": "qa/camera.js",
+   "result": "pass 11/11",
+   "evidence": "qa/cam-results.json"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 90/90",
+   "evidence": "qa/desktop.json"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "evidence": "qa/mobile.json",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/timer.js",
+   "result": "pass（无 FAIL）"
+  }
+ ],
+ "media": [
+  {
+   "id": "depth-front",
+   "file": "releases/v0.5.4/captures/depth-front.png",
+   "kind": "screenshot",
+   "version": "v0.5.4",
+   "description": "第二关森林 / 泥沼 / 尸骸地最前排站位",
+   "visual_review": "pass"
+  }
+ ],
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "普通补丁累计到下一次有意义的简介更新；现有简介没有写暂停重开和可走范围，入口与操作仍准确"
+ }
+}

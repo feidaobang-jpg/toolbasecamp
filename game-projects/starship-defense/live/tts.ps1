@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$InputPath)
+﻿param([Parameter(Mandatory=$true)][string]$InputPath)
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Speech
 $data=Get-Content -LiteralPath $InputPath -Raw -Encoding UTF8 | ConvertFrom-Json

@@ -1,0 +1,255 @@
+{
+ "version": "web-restart-audio-v0.19.3/qa-keyboard",
+ "checked_at": "2026-10-06T15:17:53.724Z",
+ "passed": 16,
+ "failed": [
+  "arrows move across class cards, Enter picks 火枪兵",
+  "down to a start button and Enter starts the game",
+  "Enter places the ghost"
+ ],
+ "results": {
+  "main menu preselects 开始新游戏 with a visible frame": {
+   "ok": true,
+   "detail": {
+    "id": "btnStart",
+    "cls": "mbtn green",
+    "text": "🚀 开始新游戏",
+    "outline": "solid 3px"
+   }
+  },
+  "arrows move across class cards, Enter picks 火枪兵": {
+   "ok": false,
+   "detail": {
+    "f1": {
+     "id": "",
+     "cls": "tb-btn",
+     "text": "困难",
+     "outline": "solid 3px"
+    },
+    "f2": {
+     "id": "btnLoadMenu",
+     "cls": "mbtn",
+     "text": "📂 读取存档",
+     "outline": "solid 3px"
+    },
+    "f2b": {
+     "id": "btnStart",
+     "cls": "mbtn green",
+     "text": "🚀 开始新游戏",
+     "outline": "solid 3px"
+    },
+    "cls": "gunner"
+   }
+  },
+  "down to a start button and Enter starts the game": {
+   "ok": false,
+   "detail": {
+    "f3": {
+     "id": "",
+     "cls": "",
+     "text": "人称：第三人称Ⅱ 暂停全屏 ",
+     "outline": "none 3px"
+    },
+    "started": {
+     "state": "prep",
+     "weapons": [
+      "lmg"
+     ]
+    }
+   }
+  },
+  "shop preselects first weapon card": {
+   "ok": true,
+   "detail": {
+    "id": "",
+    "cls": "shopItem own",
+    "text": "机枪秒伤125 射程32初始",
+    "outline": "solid 3px"
+   }
+  },
+  "arrows + Enter buy 榴弹炮; selection stays in place after the shop redraws": {
+   "ok": true,
+   "detail": {
+    "s1": {
+     "id": "",
+     "cls": "shopItem",
+     "text": "榴弹炮秒伤105 射程42 ",
+     "outline": "solid 3px"
+    },
+    "bought": {
+     "weapons": [
+      "lmg",
+      "launcher"
+     ],
+     "gold": 4100
+    },
+    "s2": {
+     "id": "",
+     "cls": "shopItem own",
+     "text": "榴弹炮秒伤105 射程42 ",
+     "outline": "solid 3px"
+    }
+   }
+  },
+  "arrow up reaches the tab row, left + Enter switches to 道具": {
+   "ok": true,
+   "detail": {
+    "t0": {
+     "id": "",
+     "cls": "tab",
+     "text": "队友",
+     "outline": "solid 3px"
+    },
+    "tab": "道具"
+   }
+  },
+  "Tab cycles inside the shop only": {
+   "ok": true,
+   "detail": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  "Esc closes the shop": {
+   "ok": true
+  },
+  "build panel preselects cheapest card; arrows + Enter start the ghost": {
+   "ok": true,
+   "detail": {
+    "b0": {
+     "id": "",
+     "cls": "shopItem",
+     "text": "合金围墙阻挡虫群前进耐久50",
+     "outline": "solid 3px"
+    },
+    "b1": {
+     "id": "",
+     "cls": "shopItem",
+     "text": "自动机枪塔自动扫射敌人耐久2",
+     "outline": "solid 3px"
+    },
+    "g": {
+     "kind": "mgTurret",
+     "yaw": 0
+    }
+   }
+  },
+  "Q/E turn the ghost with the camera": {
+   "ok": true,
+   "detail": {
+    "before": 0,
+    "after": 0.794665861781719
+   }
+  },
+  "no separate R-rotate any more": {
+   "ok": true
+  },
+  "Enter places the ghost": {
+   "ok": false
+  },
+  "pause menu preselects 继续游戏": {
+   "ok": true,
+   "detail": {
+    "id": "btnResume",
+    "cls": "mbtn green",
+    "text": "▶ 继续游戏",
+    "outline": "solid 3px"
+   }
+  },
+  "pause → 存档 → first slot preselected → Enter saves": {
+   "ok": true,
+   "detail": {
+    "p1": {
+     "id": "btnSaveMenu",
+     "cls": "mbtn",
+     "text": "💾 存档",
+     "outline": "solid 3px"
+    },
+    "sv": {
+     "id": "",
+     "cls": "mbtn",
+     "text": "保存",
+     "outline": "solid 3px"
+    },
+    "saved": true
+   }
+  },
+  "Esc returns to the pause menu; option row reachable by arrows": {
+   "ok": true,
+   "detail": {
+    "p2": {
+     "id": "btnResume",
+     "cls": "mbtn green",
+     "text": "▶ 继续游戏",
+     "outline": "solid 3px"
+    },
+    "opts": [
+     "qualityBtnMenu",
+     "",
+     "",
+     "",
+     "",
+     ""
+    ]
+   }
+  },
+  "Esc resumes the game": {
+   "ok": true
+  },
+  "with progress the menu preselects 继续上次": {
+   "ok": true,
+   "detail": {
+    "m0": {
+     "id": "btnContinue",
+     "cls": "mbtn green",
+     "text": "▶ 继续上次（普通 · 第3",
+     "outline": "solid 3px"
+    },
+    "m1": {
+     "id": "daylightMain",
+     "cls": "mbtn",
+     "text": "地表：白天",
+     "outline": "solid 3px"
+    }
+   }
+  },
+  "confirm dialog: 取消 preselected, arrow to 确认, Enter starts new game": {
+   "ok": true,
+   "detail": {
+    "c0": {
+     "id": "confirmCancel",
+     "cls": "mbtn",
+     "text": "继续上次进度",
+     "outline": "solid 3px"
+    },
+    "c1": {
+     "id": "confirmOk",
+     "cls": "mbtn green",
+     "text": "仍然开始新游戏",
+     "outline": "solid 3px"
+    },
+    "ng": {
+     "state": "prep",
+     "chapter": 1,
+     "backup": true
+    }
+   }
+  },
+  "no page errors": {
+   "ok": true,
+   "detail": []
+  }
+ }
+}

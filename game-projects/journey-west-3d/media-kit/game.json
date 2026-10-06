@@ -2,8 +2,8 @@
   "game_id": "journey-west-3d",
   "name": "西游降魔 3D：第一关",
   "engine": "Three.js 0.170.0",
-  "current_version": "unified3d1",
-  "handoff": "releases/unified3d-20261006/handoff.json",
+  "current_version": "controls-inset1",
+  "handoff": "releases/controls-inset1/handoff.json",
   "entrypoint": "public/html/game/journey-west-3d/index.html",
   "launch": "从仓库根目录运行 HTTP 服务，打开 /public/html/game/journey-west-3d/index.html",
   "controls": "WASD 相机相对移动；J换武器，K闪避，L护体，U爆气，I丹药，C循环视角，Enter开始/重试，Esc暂停。手机虚拟摇杆及动作按钮。",
@@ -29,5 +29,12 @@
     "action_layout": "等大对齐；U I O在J K L正上方；C位于右上暂停旁，保留旧键别名",
     "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局"
   },
-  "control_audio_camera_update": "2026-10-06: selected mode state, plain action buttons, pause freezes audio, bounded character-linked look"
+  "control_audio_camera_update": "2026-10-06: selected mode state, plain action buttons, pause freezes audio, bounded character-linked look",
+  "touch_control_inset": {
+    "side_css_px": 40,
+    "bottom_css_px": 36,
+    "safe_area_added": true,
+    "previous_version": "unified3d1",
+    "physical_phone_test": false
+  }
 }

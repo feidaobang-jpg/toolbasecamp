@@ -1,0 +1,373 @@
+{
+ "base": "https://www.zhengxiaohui.cn/html/game/",
+ "at": "2026-10-06T15:03:18.291Z",
+ "results": [
+  {
+   "name": "cadillacs-stage1-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5.67
+    ],
+    "starts": 27,
+    "rms": 0.1077
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.97
+    ],
+    "starts": 30
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": false,
+   "detail": {
+    "a1": {
+     "states": [
+      "suspended"
+     ],
+     "times": [
+      6.97
+     ],
+     "starts": 30
+    },
+    "a2": {
+     "states": [
+      "suspended"
+     ],
+     "times": [
+      6.97
+     ],
+     "starts": 30,
+     "rms": 0
+    }
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：重开后实际有声音输出",
+   "ok": false,
+   "detail": {
+    "rms": 0,
+    "startsPaused": 30,
+    "startsAfter": 30
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "jackal-stage1-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     7.28
+    ],
+    "starts": 9,
+    "rms": 0.2029
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     8.63
+    ],
+    "starts": 14
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": false,
+   "detail": {
+    "a1": {
+     "states": [
+      "suspended"
+     ],
+     "times": [
+      8.63
+     ],
+     "starts": 14
+    },
+    "a2": {
+     "states": [
+      "suspended"
+     ],
+     "times": [
+      8.63
+     ],
+     "starts": 14,
+     "rms": 0.1583
+    }
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.1583,
+    "startsPaused": 14,
+    "startsAfter": 14
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "mario-3d：开局有声音",
+   "ok": false,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5.05
+    ],
+    "starts": 0,
+    "rms": 0
+   }
+  },
+  {
+   "name": "mario-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.37
+    ],
+    "starts": 0
+   }
+  },
+  {
+   "name": "mario-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      8.39
+     ],
+     "starts": 0
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.4
+     ],
+     "starts": 1,
+     "rms": 0.0838
+    }
+   }
+  },
+  {
+   "name": "mario-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.0838,
+    "startsPaused": 0,
+    "startsAfter": 1
+   }
+  },
+  {
+   "name": "mario-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "tank-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5.03
+    ],
+    "starts": 3,
+    "rms": 0.0324
+   }
+  },
+  {
+   "name": "tank-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.34
+    ],
+    "starts": 4
+   }
+  },
+  {
+   "name": "tank-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      8.34
+     ],
+     "starts": 5
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.35
+     ],
+     "starts": 5,
+     "rms": 0.0629
+    }
+   }
+  },
+  {
+   "name": "tank-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.0629,
+    "startsPaused": 4,
+    "startsAfter": 5
+   }
+  },
+  {
+   "name": "tank-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "starship-defense：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5.87
+    ],
+    "starts": 18,
+    "rms": 0.0246
+   }
+  },
+  {
+   "name": "starship-defense：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     7.18
+    ],
+    "starts": 24
+   }
+  },
+  {
+   "name": "starship-defense：重开后音频恢复（running 且时钟在走）",
+   "ok": false,
+   "detail": {
+    "a1": {
+     "states": [
+      "suspended"
+     ],
+     "times": [
+      7.18
+     ],
+     "starts": 31
+    },
+    "a2": {
+     "states": [
+      "suspended"
+     ],
+     "times": [
+      7.18
+     ],
+     "starts": 34,
+     "rms": 0.0023
+    }
+   }
+  },
+  {
+   "name": "starship-defense：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.0023,
+    "startsPaused": 24,
+    "startsAfter": 34
+   }
+  },
+  {
+   "name": "starship-defense：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "journey-west-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     4.99
+    ],
+    "starts": 26,
+    "rms": 0.0343
+   }
+  },
+  {
+   "name": "journey-west-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     6.31
+    ],
+    "starts": 40
+   }
+  },
+  {
+   "name": "journey-west-3d：暂停面板无重开按钮（不适用）",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "journey-west-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

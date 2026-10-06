@@ -1,0 +1,58 @@
+{
+ "schema_version": 1,
+ "game_id": "jackal-stage1-3d",
+ "version": "v0.7.8",
+ "base_version": "v0.7.7",
+ "created_at": "2026-10-06T23:40:00+08:00",
+ "classification": "普通补丁",
+ "changes": [
+  "暂停后点「重新开始」，新的一局 BGM 和音效正常（startGame / nextStage 解除暂停挂起的音频）。"
+ ],
+ "bugs": [
+  {
+   "id": "restart-after-pause-silent",
+   "reported_by": "user（恐龙快打）",
+   "found_version": "线上",
+   "reproduction": "开局 → 暂停 → 点暂停菜单「重新开始 / 重开本关」",
+   "observed": "新的一局没有 BGM，音效也没有（AudioContext 一直 suspended）",
+   "cause": "暂停时挂起整个 AudioContext，「继续」会恢复，但重开直接开新局没有清掉暂停标志",
+   "fix": "startGame() / nextStage() 先 A.musicDuck(false)",
+   "status": "fixed",
+   "retest": "game-projects/site-games/qa/restart-audio.cjs：修复前线上该游戏重开后 suspended、音量 0；修复后 running、时钟在走、扬声器出口有音量"
+  }
+ ],
+ "build": {
+  "bundle_sha256": "7c18a9ba9de01007821a613c28ea6670c0728b99642f3915796cac980b699109",
+  "diff_vs_v0.7.7": "仅多两处 musicDuck(!1) 调用与版本号（去掉后与 v0.7.7 构建 md5 相同）"
+ },
+ "known_preexisting": [
+  "qa/mobile.js 横屏菜单底部超出视口 11px",
+  "qa/mobile.js 断言手机隐藏全屏入口，与新规则矛盾"
+ ],
+ "site": {
+  "status": "pending"
+ },
+ "toy": {
+  "id": 39863936092160,
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "普通补丁累计"
+ },
+ "qa": [
+  {
+   "method": "site-games/qa/restart-audio.cjs",
+   "result": "pass（重开后 running、有声音输出）"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 92/92",
+   "evidence": "qa/desktop.json"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 29/29"
+  }
+ ]
+}

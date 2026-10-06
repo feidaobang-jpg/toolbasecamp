@@ -6,8 +6,8 @@
  },
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.5.2",
- "handoff": "releases/v0.5.2/handoff.json",
+ "current_version": "v0.5.4",
+ "handoff": "releases/v0.5.4/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -53,11 +53,22 @@
     "toy": "published",
     "bilibili": "public_verified"
    }
+  },
+  {
+   "version": "v0.5.4",
+   "classification": "普通补丁",
+   "summary": "暂停后「重新开始」恢复 BGM 和音效；第二关可走到画面下方（约 83% 高），外沿放边界物。",
+   "record": "releases/v0.5.4/handoff.json",
+   "channels": {
+    "website": "pending",
+    "toy": "pending",
+    "bilibili": "pending_merge"
+   }
   }
  ],
  "toy": {
   "id": 40412421031936,
-  "title": "恐龙快打 3D：第一关",
+  "title": "恐龙快打 3D：第一、二关",
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
@@ -118,7 +129,15 @@
   "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "video_bindings": [
    "BV18XHW66E55"
-  ]
+  ],
+  "title_changed": {
+   "from": "恐龙快打 3D：第一关",
+   "to": "恐龙快打 3D：第一、二关",
+   "requested_by": "user",
+   "submitted_at": "2026-10-06T22:44:10+08:00",
+   "status": "published",
+   "verified_at": "2026-10-06T23:38:00+08:00"
+  }
  },
  "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
@@ -196,5 +215,12 @@
  "website_version": "v0.5.1",
  "website_verified_at": "2026-10-06T11:09:58.228517+08:00",
  "website_commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
- "web_toy_versions_match": true
+ "web_toy_versions_match": true,
+ "touch_control_inset": {
+  "side_css_px": 40,
+  "bottom_css_px": 36,
+  "safe_area_added": true,
+  "previous_version": "v0.5.2",
+  "physical_phone_test": false
+ }
 }

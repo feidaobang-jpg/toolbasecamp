@@ -1,0 +1,40 @@
+{
+ "schema_version": 1,
+ "game_id": "chongchao-qianshao",
+ "version": "web-restart-audio-v0.19.4",
+ "base_version": "web-controls-inset-v0.19.3",
+ "created_at": "2026-10-06T23:40:00+08:00",
+ "classification": "普通补丁",
+ "changes": [
+  "暂停后点「重开本关」，背景音乐和音效正常（restartLevel 先解除暂停挂起的音频）。"
+ ],
+ "bugs": [
+  {
+   "id": "restart-after-pause-silent",
+   "reported_by": "user（恐龙快打）",
+   "found_version": "线上",
+   "reproduction": "开局 → 暂停 → 点暂停菜单「重新开始 / 重开本关」",
+   "observed": "新的一局没有 BGM，音效也没有（AudioContext 一直 suspended）",
+   "cause": "暂停时挂起整个 AudioContext，「继续」会恢复，但重开直接开新局没有清掉暂停标志",
+   "fix": "restartLevel() 开头 AudioSys.pause(false)",
+   "status": "fixed",
+   "retest": "game-projects/site-games/qa/restart-audio.cjs：修复前线上该游戏重开后 suspended、音量 0；修复后 running、时钟在走、扬声器出口有音量"
+  }
+ ],
+ "build": {
+  "game.js": "b769eeeb1b66a9470cf5d4374f95308ee776eb14f2d7a56661238689d4fbe461",
+  "game.compat.js": "b305abaae507f8ec1534f084a60e7e0283e4dd2d53bd55291341b9346a37721a"
+ },
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "id": 38678478981120,
+  "status": "pending",
+  "note": "另一任务的 v0.19.3 Toy 仍在审核，过审后再提交本版"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "普通补丁累计"
+ }
+}

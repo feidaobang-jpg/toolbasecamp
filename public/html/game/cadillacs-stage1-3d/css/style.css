@@ -211,7 +211,7 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 #touch[hidden] { display: none; }
 #joy-zone { position: absolute; left: 0; bottom: 0; width: 42%; height: 72%; pointer-events: auto; touch-action: none; }
 #joy-base {
-  position: absolute; left: 6px; bottom: calc(var(--sab) + 24px); width: 128px; height: 128px; border-radius: 50%;
+  position: absolute; left: calc(var(--sal) + 40px); bottom: calc(var(--sab) + 36px); width: 128px; height: 128px; border-radius: 50%;
   background: radial-gradient(circle, rgba(255,255,255,.12) 0 40%, rgba(20,14,36,.35) 41% 100%); border: 3px solid rgba(255, 255, 255, .7); pointer-events: none;
 }
 #joy-base.active { border-color: var(--gold); }
@@ -229,7 +229,7 @@ body.touch-on #dialog { bottom: calc(var(--sab) + 150px); }
 .act span { font-size: 11px; margin-top: 3px; font-weight: 800; white-space: nowrap; }
 /* 动作键：小霸王 / 街机式 2×2 方阵，等大、横平竖直。下排 A=J 攻击、B=K 跳跃，上排 C=U 必杀、D=I 冲刺；
    多于 4 个动作时往右加一列（O 在上、L 在下），与键盘 U I O / J K L 一一对应 */
-#touch { --pad: 76px; --pad-gap: 12px; --pad-r: calc(var(--sar) + 18px); --pad-b: calc(var(--sab) + 16px); }
+#touch { --pad: 76px; --pad-gap: 12px; --pad-r: calc(var(--sar) + 40px); --pad-b: calc(var(--sab) + 36px); }
 .act.pad-a, .act.pad-b, .act.pad-c, .act.pad-d { width: var(--pad); height: var(--pad); }
 .pad-b, .pad-d { right: var(--pad-r); }
 .pad-a, .pad-c { right: calc(var(--pad-r) + var(--pad) + var(--pad-gap)); }

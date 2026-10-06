@@ -182,7 +182,7 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 #look-zone { position: absolute; right: 0; bottom: 0; width: 55%; height: 76%; pointer-events: auto; touch-action: none; }
 #joy-zone { position: absolute; left: 0; bottom: 0; width: 45%; height: 76%; pointer-events: auto; touch-action: none; }
 #joy-base {
-  position: absolute; left: 4px; bottom: calc(var(--sab) + 26px); width: 128px; height: 128px; border-radius: 50%;
+  position: absolute; left: calc(var(--sal) + 40px); bottom: calc(var(--sab) + 36px); width: 128px; height: 128px; border-radius: 50%;
   background: radial-gradient(circle, rgba(255,246,223,.25) 0 40%, rgba(47,68,54,.22) 41% 100%); border: 3px solid rgba(255, 246, 223, .85); pointer-events: none;
 }
 #joy-base.active { border-color: var(--gold); }
@@ -198,8 +198,8 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 }
 .act b { font-size: 26px; font-family: ui-monospace, Consolas, monospace; }
 .act span { font-size: 12px; margin-top: 3px; font-weight: 800; }
-#btn-fire { right: calc(var(--sar) + 114px); bottom: calc(var(--sab) + 26px); width: 76px; height: 76px; background: linear-gradient(180deg, #e2573f, #a83a28); }
-#btn-bomb { right: calc(var(--sar) + 26px); bottom: calc(var(--sab) + 26px); width: 76px; height: 76px; background: linear-gradient(180deg, #5d9a52, #3d6e37); }
+#btn-fire { right: calc(var(--sar) + 128px); bottom: calc(var(--sab) + 36px); width: 76px; height: 76px; background: linear-gradient(180deg, #e2573f, #a83a28); }
+#btn-bomb { right: calc(var(--sar) + 40px); bottom: calc(var(--sab) + 36px); width: 76px; height: 76px; background: linear-gradient(180deg, #5d9a52, #3d6e37); }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.15); }
 .pause-touch { display: none; }
 body.touch-on .pause-key, body.touch-on kbd { display: none; }
