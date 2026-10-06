@@ -1,0 +1,22 @@
+{
+  "root": "http://127.0.0.1:18765",
+  "canonical": "http://127.0.0.1:18765/html/game/starship-defense/live-console.html",
+  "game": "http://127.0.0.1:18765/html/game/starship-defense/live.html",
+  "at": "2026-10-06T15:03:49.111Z",
+  "errors": [],
+  "badResponses": [],
+  "failedRequests": [],
+  "checks": [
+    "root redirect",
+    "CSS and JS",
+    "rules",
+    "health",
+    "popup link",
+    "start",
+    "join",
+    "tank",
+    "three modes",
+    "local AI reply",
+    "pause/resume"
+  ]
+}

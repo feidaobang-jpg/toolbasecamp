@@ -1,0 +1,33 @@
+{
+  "classification": "普通补丁：本机直播入口",
+  "reason": "根URL直接返回子目录HTML，相对样式/模块和直播链接解析到根目录，产生404。",
+  "fix": "根URL及直播短入口重定向到真实目录，保留查询参数；本机默认图标返回204。",
+  "verified_at": "2026-10-06T15:04:49.119867+00:00",
+  "before": "before.json",
+  "after": "after.json",
+  "media": [
+    {
+      "file": "before-console.png",
+      "sha256": "d068f2b9cd917d4fba9190bae23ce56fcac1f41afe10a9ad1ff772cbd676a733",
+      "visual_review": "before-reproduction"
+    },
+    {
+      "file": "after-console.png",
+      "sha256": "2ffe099aa9e9ee23b9f42bf5fe976e0799a151234cbc55b2d783ec2e0d7dbd60",
+      "visual_review": "pass"
+    },
+    {
+      "file": "after-game.png",
+      "sha256": "d32dc46150e3f9237730572662a5d42d3191b4c724efac332ce217dc467e4ca7",
+      "visual_review": "pass"
+    }
+  ],
+  "runtime_error_log_bytes": 0,
+  "native_launcher": "实际CMD入口Windows PowerShell 5.1执行成功",
+  "channels": {
+    "local": "已安装并重启验证",
+    "website": "本次无public改动",
+    "toy": "本次无Toy包改动",
+    "bilibili_description": "本机入口修复不影响已有试玩说明"
+  }
+}
