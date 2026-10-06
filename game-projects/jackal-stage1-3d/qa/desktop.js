@@ -47,7 +47,7 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   const gunTxt0 = await page.textContent('#menu [data-opt=gun]');
   await page.keyboard.press('ArrowRight'); const gunTxt1 = await page.textContent('#menu [data-opt=gun]');
   await page.keyboard.press('ArrowLeft'); const gunTxt2 = await page.textContent('#menu [data-opt=gun]');
-  check('「机枪方向」默认跟随车头，可切换为原作朝上（原作）', /跟随车头/.test(gunTxt0) && /原作朝上/.test(gunTxt1) && /跟随车头/.test(gunTxt2), { gunTxt0, gunTxt1, gunTxt2 });
+  check('「机枪方向」默认原作朝上，可切换为跟随车头', /原作朝上/.test(gunTxt0) && /跟随车头/.test(gunTxt1) && /原作朝上/.test(gunTxt2), { gunTxt0, gunTxt1, gunTxt2 });
   await page.keyboard.press('ArrowDown');
   const demoTxt = await page.textContent('#menu [data-opt=demo]');
   check('演示模式默认关闭', /关/.test(demoTxt), demoTxt);
@@ -127,13 +127,13 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   let b = await snap(page);
   const dx = b.player.x - a.player.x, dy = b.player.y - a.player.y;
   check('W+D 斜向移动且速度归一化', b.player.dir === 1 && dx > 1 && dy > 1 && Math.hypot(dx, dy) > 2.2 && Math.hypot(dx, dy) < 3.0, { dx: +dx.toFixed(2), dy: +dy.toFixed(2), dir: b.player.dir });
-  // 机枪默认跟随车头
+  // 机枪默认固定向北，侧向移动不改变弹道
   await page.keyboard.down('KeyD'); await steps(3); await page.keyboard.up('KeyD');   // 车头朝东
   a = await snap(page);
   await page.keyboard.down('KeyJ'); await steps(2);
   s = await snap(page); const vel = s.pbVel;
   await steps(20); b = await snap(page);
-  check('按住 J 机枪连发（默认跟随车头：朝东时子弹向东飞）', b.mgShots - a.mgShots >= 3 && vel && vel[0] > 20 && Math.abs(vel[1]) < 0.01 && s.player.dir === 2, { shots: b.mgShots - a.mgShots, vel, dir: s.player.dir });
+  check('按住 J 机枪连发（默认原作朝上：车头朝东时子弹仍向北飞）', b.mgShots - a.mgShots >= 3 && vel && Math.abs(vel[0]) < 0.01 && vel[1] > 20 && s.player.dir === 2, { shots: b.mgShots - a.mgShots, vel, dir: s.player.dir });
   await page.keyboard.up('KeyJ');
   // 手雷朝车头方向
   await cheat('teleport', [-20, 26]); await cheat('invuln', [60]); await page.keyboard.down('KeyD'); await steps(2); await page.keyboard.up('KeyD');

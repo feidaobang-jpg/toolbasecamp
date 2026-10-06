@@ -1,5 +1,5 @@
 // 玩法模拟：与渲染无关。地形整条跑道纵深一致，碰撞按 (x,y) 网格计算，z 只用于跑道边界和实体之间的接触。
-import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.3';
+import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.4';
 
 export const STEP = 1 / 120;
 export const PW = 0.36;                       // 玛丽半宽
@@ -671,9 +671,9 @@ function updateFlag(w, dt) {
     if (fl.t > 0.35) { fl.phase = 'walk'; fl.t = 0; p.vy = 0; emit(w, 'clearTune'); }
   } else if (fl.phase === 'walk') {
     p.facing = Math.PI / 2;
-    p.vy -= 40 * dt; p.y += p.vy * dt;
-    if (p.y <= groundTopAt(w, p.x)) { p.y = groundTopAt(w, p.x); p.vy = 0; p.grounded = true; }
-    p.x += 3.2 * dt; p.vx = 3.2; p.walkT += 3.2 * dt;
+    p.vx = 3.2; p.vy -= 40 * dt;
+    const contact = moveBody(w, p, dt, PW, heightOf(p));
+    p.grounded = contact.landed; p.walkT += 3.2 * dt;
     const door = castle ? castle.x + 2.5 : f.x + 6;
     if (p.x >= door) { p.visible = false; p.vx = 0; fl.phase = 'tally'; fl.t = 0; }
   } else if (fl.phase === 'tally') {

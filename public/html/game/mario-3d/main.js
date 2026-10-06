@@ -1,11 +1,11 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=2.4.3';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.4.3';
-import { LEVEL_ORDER } from './levels.js?v=2.4.3';
+import { createView, PRESETS } from './scene.js?v=2.4.4';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.4.4';
+import { LEVEL_ORDER } from './levels.js?v=2.4.4';
 import { GameAudio } from './audio.js?v=toy3dui2';
 
-const VERSION = 'v2.4.4';
+const VERSION = 'v2.4.5';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -516,6 +516,10 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   const name = btn.getAttribute('data-hold');
   let id = null;
   btn.addEventListener('pointerdown', (e) => {
+    if (name === 'fire' && btn.getAttribute('aria-disabled') === 'true') {
+      if (uiMode === 'game' && !current) showToast('吃到火焰花后可发射火球');
+      e.preventDefault(); return;
+    }
     id = e.pointerId;
     try { btn.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
     btn.classList.add('down'); touchHold.add(name);
@@ -557,8 +561,11 @@ function updateHud() {
     $('h-lives').textContent = s.lives === Infinity ? '∞' : '×' + s.lives;
     $('h-hearts-wrap').hidden = hearts < 0;
     if (hearts >= 0) { let h = ''; for (let i = 1; i <= 3; i++) h += i <= hearts ? '♥' : '<span class="off">♥</span>'; $('h-hearts').innerHTML = h; }
-    $('run-label').textContent = '火球';
-    document.querySelector('#touch [data-hold=fire]').disabled = w.player.power !== 'fire';
+    const fireReady = w.player.power === 'fire';
+    const fireButton = document.querySelector('#touch [data-hold=fire]');
+    $('run-label').textContent = fireReady ? '火球' : '需火焰花';
+    fireButton.setAttribute('aria-disabled', String(!fireReady));
+    fireButton.setAttribute('aria-label', fireReady ? 'J 火球' : 'J 火球（吃到火焰花后可用）');
   }
   // 只剩 1 格护心：护心按游戏时间闪烁变红
   const low = hearts === 1 && w.mode === 'play';

@@ -200,6 +200,8 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 .act span { font-size: 12px; margin-top: 3px; font-weight: 800; }
 #btn-fire { right: calc(var(--sar) + 128px); bottom: calc(var(--sab) + 36px); width: 76px; height: 76px; background: linear-gradient(180deg, #e2573f, #a83a28); }
 #btn-bomb { right: calc(var(--sar) + 40px); bottom: calc(var(--sab) + 36px); width: 76px; height: 76px; background: linear-gradient(180deg, #5d9a52, #3d6e37); }
+#btn-combo { right: calc(var(--sar) + var(--edge) + var(--action) + var(--gap)); bottom: calc(var(--sab) + var(--bottom-edge) + var(--action) + var(--gap)); width: 76px; height: 76px; padding: 0; background: linear-gradient(180deg, #d8ac42, #986b25); }
+#btn-combo span { white-space: nowrap; }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.15); }
 .pause-touch { display: none; }
 body.touch-on .pause-key, body.touch-on kbd { display: none; }

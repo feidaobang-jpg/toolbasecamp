@@ -37,11 +37,11 @@
       "record": "releases/v2.4.1/handoff.json"
     },
     {
-      "version": "v2.4.4",
+      "version": "v2.4.5",
       "classification": "普通补丁",
       "status": "pending_merge",
       "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
-      "record": "releases/v2.4.4/handoff.json",
+      "record": "releases/v2.4.5/handoff.json",
       "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
     }
   ],
