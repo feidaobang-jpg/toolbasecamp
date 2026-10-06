@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
 import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX, STAGES } from './level.js';
-import { buildHuman, buildRaptor, buildTrike, buildCar, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toyMat } from './models.js';
+import { buildHuman, buildRaptor, buildTrike, buildCar, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
 import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
 import { propMesh } from './world.js';
 import A from './audio.js';
@@ -100,15 +100,8 @@ function heroStats(h) {
 }
 
 // ---------- 角色创建 ----------
-// 接地软阴影：与赤色要塞相同的径向渐变贴片（不是实心黑圆）
-const blobGeo = new THREE.PlaneGeometry(0.95, 0.95);
-const blobMat = (() => {
-  const c = document.createElement('canvas'); c.width = c.height = 64;
-  const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 2, 32, 32, 31);
-  gr.addColorStop(0, 'rgba(30,36,30,0.5)'); gr.addColorStop(0.55, 'rgba(30,36,30,0.3)'); gr.addColorStop(1, 'rgba(30,36,30,0)');
-  x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
-  return new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false });
-})();
+const blobGeo = new THREE.CircleGeometry(0.42, 20);
+const blobMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false });
 function makeActor(type, side, opts) {
   const a = {
     id: nextId++, type, side, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, face: FACE_LEFT, alive: true,
@@ -2194,8 +2187,8 @@ function renderMace(a, sk) {
   a.ball.visible = a.rope.visible = a.model.root.visible && a.alive;
 }
 const _up = new THREE.Vector3(0, 1, 0), _dir = new THREE.Vector3();
-// 第一人称：贴到镜头上的敌人 / 岩跳龙按「镜头到各部件包围球」的最近距离淡化，并隐藏手持武器，
-// 避免近裁剪面切进模型（满屏贴图、露出牙齿和模型内部）
+// 第一人称：贴到镜头上的敌人 / 岩跳龙按「镜头到各部件包围球」的最近距离淡化，并隐藏描边与手持武器，
+// 避免近裁剪面切进模型（满屏贴图、露出牙齿和模型内部，或描边外壳把整屏盖黑）
 const _sph = new THREE.Sphere();
 function nearFade(a) {
   let k = 1;
@@ -2205,7 +2198,7 @@ function nearFade(a) {
       a.model.root.updateMatrixWorld(true);
       let gap = 9;
       a.model.root.traverse(o => {
-        if (!o.isMesh) return;
+        if (!o.isMesh || o.userData.outline) return;
         const g = o.geometry;
         if (!g.boundingSphere) g.computeBoundingSphere();
         _sph.copy(g.boundingSphere).applyMatrix4(o.matrixWorld);
@@ -2220,6 +2213,8 @@ function nearFade(a) {
   const m = a.model.mat, tr = k < 1;
   if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; }   // 切换透明要重编着色器（OPAQUE 宏），否则透明度不生效
   m.opacity = 0.15 + 0.85 * k; m.depthWrite = k > 0.6;
+  const ol = k > 0.97;
+  a.model.root.traverse(o => { if (o.userData.outline) o.visible = ol; });
   if (a.wmesh) a.wmesh.visible = k > 0.5;
 }
 function targetPose(a, realT) {

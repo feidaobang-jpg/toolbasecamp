@@ -1,11 +1,11 @@
 # 恐龙快打 · 第一、二关 3D 重置版（cadillacs-stage1-3d）
 
-Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重置版（当前 v0.5.0，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
+Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重置版（当前 v0.5.1，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
 
 - 第一关「海上都市 CITY IN THE SEA」：楼顶 → 大楼内部 → 第 47 街，Boss 维斯·T 和岩跳龙。
 - 第二关「沼泽森林 THE SWAMP FOREST」：凯迪拉克开进偷猎者森林，三角龙哈克冲撞、胖子想吵醒熟睡的霸王龙希瓦特 → 跳崖落进齐腰深的泥沼 MUD SWAMP，格特从水里冒出、上岸遇链锤兵拉什·T → 黄昏的恐龙尸骸地，Boss 屠夫（双刀、满屏乱跳、屁股坐、不断叫手下）。
 
-四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原。打完第一关会像街机一样直接接第二关；主菜单「起始关卡」也能直接选第二关。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染。v0.5.0 起画风与赤色要塞 3D 统一：哑光 Phong 顶点色低模、无描边、头稍大的玩具比例、柔和天光与软阴影，场景贴图只保留大色块。音乐采用原版录音（第二关：In the Poachers' Forest / Ancient Earth / Trap of Silence / Boss 2），缺项音效 WebAudio 合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
+四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原。打完第一关会像街机一样直接接第二关；主菜单「起始关卡」也能直接选第二关。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染。画风是这款自己的硬派写实路线（v0.5.1 按用户选择改回，第二关同款）：写实比例角色、卡通色阶着色（MeshToonMaterial）+ 黑色法线外扩描边、带噪点 / 裂缝 / 青苔的程序化写实贴图、偏暗的对比光照。v0.5.0 曾短暂改成赤色要塞式哑光 Q 版，用户对比后认为旧版「更暗更写实」更好。音乐采用原版录音（第二关：In the Poachers' Forest / Ancient Earth / Trap of Silence / Boss 2），缺项音效 WebAudio 合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
 
 ## 目录
 
@@ -49,6 +49,7 @@ URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `win
 - `node qa/botrun.js <英雄0-3> <种子> [std|easy|classic] [起始关卡 1|2]`：手动时钟让 bot 打完整关（从第一关开始会一路打到第二关结算）
 - `node qa/perf.js [宽] [高] [high|low]`：实时测帧
 - `node qa/shots.js <英雄> <前缀>`：各区域、各视角截图
+- `node qa/style-shots.js <前缀>`：固定站位摆拍六个场景（选人、楼顶、大楼内部、47 街 Boss、森林、屠夫），新旧画风并排对比用；旧版只有第一关时加 `SCENES=roof,hall,street`
 - `node qa/record.js full|cams|mobile|portrait|stage2 <输出.mp4>`：逐帧录像 + 离线渲染同场音轨（离线音轨只有合成回退音乐；stage2 为第二关精华段）
 - `node qa/cover.js`：网站卡片封面
 

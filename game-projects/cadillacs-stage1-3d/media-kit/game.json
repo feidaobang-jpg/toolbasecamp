@@ -4,10 +4,10 @@
   "zh": "恐龙快打 · 第一、二关 3D 重置版",
   "en": "Cadillacs and Dinosaurs · Stages 1-2 3D remake (fan-made)"
  },
- "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；画风与赤色要塞统一为哑光低模。",
+ "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.5.0",
- "handoff": "releases/v0.5.0/handoff.json",
+ "current_version": "v0.5.1",
+ "handoff": "releases/v0.5.1/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -31,7 +31,15 @@
   "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
   "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
  ],
- "pending_changes": [],
+ "pending_changes": [
+  {
+   "version": "v0.5.1",
+   "classification": "正式版本",
+   "summary": "画风改回旧版硬派写实（第一关回到 v0.4.1，第二关同款）；封面恢复。",
+   "record": "releases/v0.5.1/handoff.json",
+   "status": "website_pending"
+  }
+ ],
  "toy": {
   "id": 40412421031936,
   "title": "恐龙快打 3D：第一关",
@@ -99,7 +107,7 @@
  },
  "toy_note": "v0.5.0 已过审公开（2026-10-06），正式入口 20/20",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
- "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（v0.5.0 起与赤色要塞同款哑光低模），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
+ "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.1 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
  "dev": {
   "model": "claude-opus-5-5（Claude Code 会话模型标识）",
   "tools": [

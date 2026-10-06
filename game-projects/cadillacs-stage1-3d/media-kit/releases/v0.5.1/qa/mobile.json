@@ -1,0 +1,266 @@
+{
+ "date": "2026-10-06T12:51:09.663Z",
+ "pass": 35,
+ "total": 35,
+ "results": [
+  {
+   "name": "手机横屏：主菜单可见",
+   "pass": true
+  },
+  {
+   "name": "触屏说明显示、键盘说明隐藏",
+   "pass": true
+  },
+  {
+   "name": "手机也提供全屏按钮（2026-10-06 起按浏览器能力检测，不按手机分类隐藏）",
+   "pass": true
+  },
+  {
+   "name": "主菜单宽度落在视口内",
+   "pass": true
+  },
+  {
+   "name": "点开始游戏 → 选人",
+   "pass": true
+  },
+  {
+   "name": "点卡片选梅斯",
+   "pass": true,
+   "info": 3
+  },
+  {
+   "name": "点出发开始游戏",
+   "pass": true,
+   "info": [
+    "game",
+    null
+   ]
+  },
+  {
+   "name": "触屏按键显示、键位提示隐藏",
+   "pass": true
+  },
+  {
+   "name": "未自动请求全屏",
+   "pass": true
+  },
+  {
+   "name": "点 J 跳过对话进入战斗",
+   "pass": true,
+   "info": "play"
+  },
+  {
+   "name": "摇杆右推：角色向右走",
+   "pass": true,
+   "info": [
+    2.2,
+    4.23
+   ]
+  },
+  {
+   "name": "多点触控：边推摇杆边按 J 出拳",
+   "pass": true,
+   "info": "attack"
+  },
+  {
+   "name": "松手后不再移动（无卡键）",
+   "pass": true,
+   "info": {
+    "x": 0,
+    "y": 0
+   }
+  },
+  {
+   "name": "摇杆上推：走向纵深",
+   "pass": true,
+   "info": [
+    0.6,
+    -1
+   ]
+  },
+  {
+   "name": "K 键跳跃",
+   "pass": true,
+   "info": [
+    "jump",
+    1
+   ]
+  },
+  {
+   "name": "U 键必杀",
+   "pass": true,
+   "info": "mega"
+  },
+  {
+   "name": "按住 I + 摇杆 = 冲刺",
+   "pass": true,
+   "info": "run"
+  },
+  {
+   "name": "C 键切换视角",
+   "pass": true,
+   "info": "oblique"
+  },
+  {
+   "name": "按住画面右拖 = 向右转视角（与 E 同向）",
+   "pass": true,
+   "info": -0.321
+  },
+  {
+   "name": "C 循环回侧视",
+   "pass": true,
+   "info": [
+    "side",
+    0
+   ]
+  },
+  {
+   "name": "暂停按钮",
+   "pass": true
+  },
+  {
+   "name": "暂停菜单完整落在视口内",
+   "pass": true
+  },
+  {
+   "name": "点继续",
+   "pass": true
+  },
+  {
+   "name": "HUD 与右上角按钮不重叠",
+   "pass": true
+  },
+  {
+   "name": "触屏按键互不重叠",
+   "pass": true,
+   "info": []
+  },
+  {
+   "name": "触控目标不小于 44px",
+   "pass": true,
+   "info": [
+    60,
+    60,
+    60,
+    60,
+    44,
+    44
+   ]
+  },
+  {
+   "name": "触屏模式隐藏 Esc / Enter 键盘标签",
+   "pass": true,
+   "info": {
+    "pauseEsc": false,
+    "pauseIcon": true,
+    "menuKbd": 0
+   }
+  },
+  {
+   "name": "失焦：清空按住并自动暂停",
+   "pass": true,
+   "info": [
+    {
+     "x": 0,
+     "y": 0
+    },
+    "pause"
+   ]
+  },
+  {
+   "name": "竖屏：菜单正常显示（不旋转）",
+   "pass": true
+  },
+  {
+   "name": "竖屏进入选人画面即旋转为横屏",
+   "pass": true,
+   "info": {
+    "rotated": true,
+    "W": 844,
+    "H": 390,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 2,
+    "touchOn": true,
+    "backing": [
+     1688,
+     780
+    ]
+   }
+  },
+  {
+   "name": "竖屏开局后舞台保持横屏布局",
+   "pass": true,
+   "info": {
+    "rotated": true,
+    "W": 844,
+    "H": 390,
+    "vw": 390,
+    "vh": 844,
+    "dpr": 2,
+    "touchOn": true,
+    "backing": [
+     1688,
+     780
+    ]
+   }
+  },
+  {
+   "name": "触屏 2×2 方阵：下排 J K、上排 U I，等大对齐",
+   "pass": true,
+   "info": {
+    "J": {
+     "x": 728,
+     "y": 334,
+     "s": 60
+    },
+    "K": {
+     "x": 798,
+     "y": 334,
+     "s": 60
+    },
+    "U": {
+     "x": 728,
+     "y": 264,
+     "s": 60
+    },
+    "I": {
+     "x": 798,
+     "y": 264,
+     "s": 60
+    }
+   }
+  },
+  {
+   "name": "旋转布局触控逆变换：屏幕向下拖 → 角色向右走",
+   "pass": true,
+   "info": [
+    2.2,
+    4.75
+   ]
+  },
+  {
+   "name": "旋转布局下 J 键可用",
+   "pass": true,
+   "info": "attack"
+  },
+  {
+   "name": "先 1×1 启动、之后变大：自动重排到 844×390",
+   "pass": true,
+   "info": {
+    "rotated": false,
+    "W": 844,
+    "H": 390,
+    "vw": 844,
+    "vh": 390,
+    "dpr": 2,
+    "touchOn": true,
+    "backing": [
+     1688,
+     780
+    ]
+   }
+  }
+ ],
+ "errors": []
+}

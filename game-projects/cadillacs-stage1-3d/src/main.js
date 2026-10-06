@@ -8,7 +8,7 @@ import { buildWorld } from './world.js';
 import { createFx } from './fx.js';
 import { createCamera, PRESETS } from './camera.js';
 import { HEROES, ENEMY, STAGES, AREAS } from './level.js';
-import { buildHuman, buildRaptor, buildTrike, SPECS, portrait, itemGeo, meshFrom, toyMat } from './models.js';
+import { buildHuman, buildRaptor, buildTrike, SPECS, portrait, outline, itemGeo, meshFrom, toonMat } from './models.js';
 import { HP, applyPose, mod } from './anim.js';
 import * as GM from './game.js';
 
@@ -84,6 +84,7 @@ function applyQuality() {
   const high = effQuality === 'high';
   renderer.shadowMap.enabled = high;
   world.sun.castShadow = high;
+  outline.mats.forEach(m => { m.visible = high; });
   scene.traverse(o => { if (o.isMesh && o.material && !Array.isArray(o.material)) o.material.needsUpdate = true; });
   layout();
 }
@@ -548,10 +549,10 @@ refreshOptions();
 fx.warm();
 try { renderer.compile(scene, camCtl.cam); } catch (e) { /* 旧浏览器跳过 */ }
 // 预编译「淡化」用的透明着色器变体（第一人称贴身淡化、墙面渐隐、户外遮挡淡化）：否则第一次触发时现编，卡一帧约 55 ms。
-// 角色材质各自独立但参数相同，共用这里留住的哑光透明程序（warmToy 不释放）
-const warmToy = toyMat();
+// 角色材质各自独立但参数相同，共用这里留住的卡通透明程序（warmToon 不释放）
+const warmToon = toonMat();
 try {
-  const geo = new THREE.BoxGeometry(0.01, 0.01, 0.01), mats = world.fadeMats().concat([warmToy]), tmp = [];
+  const geo = new THREE.BoxGeometry(0.01, 0.01, 0.01), mats = world.fadeMats().concat([warmToon]), tmp = [];
   for (const m of mats) { m.transparent = true; m.needsUpdate = true; const o = new THREE.Mesh(geo, m); scene.add(o); tmp.push(o); }
   renderer.compile(scene, camCtl.cam);
   for (const o of tmp) scene.remove(o);

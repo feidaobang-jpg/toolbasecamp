@@ -1,0 +1,122 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.5.1",
+ "base_version": "v0.5.0",
+ "created_at": "2026-10-06T21:30:00+08:00",
+ "classification": "正式版本",
+ "build": {
+  "id": "b3cbfc64a4c3929d7833e0394795bb3ad96738f2ac6ab1d05c612237c78599f8",
+  "commit": null,
+  "dirty": true,
+  "fingerprint": "b3cbfc64a4c3929d7833e0394795bb3ad96738f2ac6ab1d05c612237c78599f8",
+  "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "art-style",
+   "description": "硬派写实画风：写实比例 + 卡通色阶着色 + 黑描边 + 写实贴图、偏暗；第一、二关一致",
+   "status": "implemented",
+   "evidence_ids": [
+    "revert-check",
+    "three-way"
+   ]
+  }
+ ],
+ "changes": [
+  {
+   "id": "style-revert",
+   "feature_ids": [
+    "art-style"
+   ],
+   "before": "v0.5.0 赤色要塞式哑光 Q 版",
+   "after": "第一关回到 v0.4.1 画风，第二关同款；封面恢复",
+   "user_visible_result": "画面更暗更写实，人物恢复原作硬派比例与黑描边",
+   "evidence_ids": [
+    "revert-check"
+   ],
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "foliage-stripes",
+   "found_version": "v0.5.1-dev",
+   "reproduction": "第二关森林侧视",
+   "observed": "植物通用纹理的纵向纹路让树冠像西瓜条纹",
+   "impact": "观感怪",
+   "status": "fixed",
+   "cause": "树皮纹路与叶簇共用一张带纵纹的贴图",
+   "fix": "改成纯斑块纹理",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "森林截图复核"
+  }
+ ],
+ "media": [
+  {
+   "id": "three-way",
+   "file": "releases/v0.5.1/captures/style-old-cur-hyb.png",
+   "kind": "screenshot",
+   "version": "v0.4.1/v0.5.0/hybrid",
+   "capture_mode": "offline-frame-stepping",
+   "description": "旧版 / Q 版 / 折中三版同站位对比（第一关）",
+   "visual_review": "pass",
+   "audio": "none"
+  },
+  {
+   "id": "revert-check",
+   "file": "releases/v0.5.1/captures/revert-check.png",
+   "kind": "screenshot",
+   "version": "v0.5.1",
+   "build_id": "pre-final（森林纹理修正前）",
+   "capture_mode": "offline-frame-stepping",
+   "description": "旧版 v0.4.1 与改回后同站位对照",
+   "visual_review": "pass",
+   "audio": "none"
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55",
+   "evidence": "qa/stage2.json"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 90/90（首次 89/90 计时抖动，单独重跑通过）",
+   "evidence": "qa/desktop.json"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "evidence": "qa/mobile.json",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/camera.js",
+   "result": "pass 11/11",
+   "evidence": "qa/cam-results.json"
+  }
+ ],
+ "readiness": {
+  "overview": "ready",
+  "update": "partial",
+  "gaps": [
+   "v0.5.0 精华录像是哑光 Q 版画面，已不代表当前画风；做视频前需按 v0.5.1 重录。"
+  ]
+ },
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending"
+ }
+}
