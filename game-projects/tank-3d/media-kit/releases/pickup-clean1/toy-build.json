@@ -13,7 +13,7 @@
     "index.html": "140068f8fe2fbd5c18b98a3a827b008f6ee72a5ef3c8ce8576c101a461adb761",
     "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
     "main.js": "662dea32654e9e013878480fac324a9ae2c1d079a5c498bd3f08b6ab0ea9f434",
-    "scene.js": "f87491556d2d0a7a8931dc376f15d9a0007be501e89cc893071fbeb8cfa8d275",
+    "scene.js": "8723c95557385b66d8ee2cec3d87aaf3479855d1545329c8459843fe32dd2e08",
     "sim.js": "507fd07de7567d7d2b5391a0a8eab48e93147bdcbf9dcb0d498652c7961705a4",
     "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
     "sounds/bullet_hit_2.mp3": "76004f25187fd2898cecbf657aa9d3aed46685b2d61d2e6ff7825ec137638937",
@@ -30,6 +30,6 @@
     "style.css": "908741c7f611fab8786c4d85c03eafd83dcf372e530583df36f899fa85e7f71b",
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
   },
-  "packageHash": "b7b119d0c543dfcc98b9113f388025104e92a26c3f6e15812dd21ddf0b1ca6f0",
+  "packageHash": "08c91f933c019284a3ed53c4fd268fbb7e3047239e6de7f10c05e327af11837c",
   "status": "built_not_submitted"
 }

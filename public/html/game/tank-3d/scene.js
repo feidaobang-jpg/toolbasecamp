@@ -615,8 +615,8 @@ export function createScene(canvas) {
         ring(x, z, e.huge ? 6 : 3.2); view.shake = Math.max(view.shake, e.huge ? .5 : .15); break;
       case 'eagle': fireball(P(104), 1, P(200), 3.4, 10); smoke(P(104), 1, P(200), 2.6, 8, 2.4); debris(P(104), 1, P(200), 'gold', 16, 1.4); debris(P(104), .8, P(200), 'dirt', 12, 1.2); ring(P(104), P(200), 5, '#ff9a4a'); view.shake = .6; break;
       case 'score': popScore(x, z, e.value, e.delayed ? .6 : 0); break;
-      case 'pickup': ring(x, z, 2.4, '#ffe27a'); flashAt(x, 1.2, z, 2.4, .25); break;
-      case 'repair': case 'medal': ring(x, z, 2, '#7ef0a0'); break;
+      case 'pickup': flashAt(x, 1.2, z, 2.4, .25); break;
+      case 'repair': case 'medal': flashAt(x, 1.2, z, 2, .2); break;
       case 'grenade': for (let i = 0; i < 3; i++) ring(0, 0, 14 + i * 3, '#ffb13b', .8); view.shake = .5; break;
       case 'shovel': for (const [cx, cz] of BASE_WALL) debris(cx - C + .5, .4, cz - C + .5, 'dirt', 2, .6); break;
       case 'freeze': ring(0, 0, 16, '#8fd8ff', .9); break;
@@ -626,7 +626,7 @@ export function createScene(canvas) {
       case 'summon': ring(x, z, 5, '#c080ff', .8); break;
       case 'bossSpawn': ring(x, z, 8, '#ffd24a', 1); view.shake = .4; break;
       case 'eject': ring(x, z, 1.6, '#7ad0ff'); break;
-      case 'enemyLoot': ring(x, z, 2.4, '#ff5a5a'); flashAt(x, 1.2, z, 2.2, .25); break;
+      case 'enemyLoot': flashAt(x, 1.2, z, 2.2, .25); break;
     }
   }
 

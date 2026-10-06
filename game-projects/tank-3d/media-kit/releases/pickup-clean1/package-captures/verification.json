@@ -12,6 +12,7 @@
         "items": 1,
         "repairs": 0
       },
+      "pickupEffectRings": 0,
       "after": {
         "hp": 3,
         "items": 1
@@ -35,16 +36,17 @@
         "items": 0,
         "repairs": 0
       },
+      "pickupEffectRings": 0,
       "after": {
         "hp": 3,
         "items": 0
       },
       "ringCount": 0,
       "render": {
-        "calls": 52,
-        "triangles": 90608,
-        "geometries": 15,
-        "textures": 12
+        "calls": 50,
+        "triangles": 90292,
+        "geometries": 14,
+        "textures": 13
       }
     },
     {
@@ -58,6 +60,7 @@
         "items": 1,
         "repairs": 0
       },
+      "pickupEffectRings": 0,
       "after": {
         "hp": 3,
         "items": 1
@@ -81,16 +84,17 @@
         "items": 0,
         "repairs": 0
       },
+      "pickupEffectRings": 0,
       "after": {
         "hp": 3,
         "items": 0
       },
       "ringCount": 0,
       "render": {
-        "calls": 52,
-        "triangles": 90608,
-        "geometries": 15,
-        "textures": 12
+        "calls": 50,
+        "triangles": 90292,
+        "geometries": 14,
+        "textures": 13
       }
     },
     {
@@ -104,6 +108,7 @@
         "items": 1,
         "repairs": 0
       },
+      "pickupEffectRings": 0,
       "after": {
         "hp": 3,
         "items": 1
@@ -127,16 +132,17 @@
         "items": 0,
         "repairs": 0
       },
+      "pickupEffectRings": 0,
       "after": {
         "hp": 3,
         "items": 0
       },
       "ringCount": 0,
       "render": {
-        "calls": 52,
-        "triangles": 90608,
-        "geometries": 15,
-        "textures": 12
+        "calls": 50,
+        "triangles": 90292,
+        "geometries": 14,
+        "textures": 13
       }
     }
   ],
