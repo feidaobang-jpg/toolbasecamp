@@ -1,25 +1,7 @@
-// 第二关新增的原创 Q 版低模：混凝土炮塔、敌方吉普、轰炸机、水中石像、Boss 石像、会倒的石柱。模型正面朝 -Z（= 北）。
+// 第二关新增的原创 Q 版低模：敌方吉普、轰炸机、水中石像、Boss 石像、会倒的石柱。模型正面朝 -Z（= 北）。
+// 注：第二关「炮塔」不再单独建模，统一复用第一关 models.js 的沙袋机枪巢（makeNest），保持各关同类敌人外观一致。
 import * as THREE from 'three';
 import { part, merged, mesh, MAT, C, blob, cached, chibiHead } from './models.js';
-
-// 混凝土炮塔（第二关的「炮台」：一次打出一组子弹）
-export function makeTurret() {
-  const g = cached('turretBox', () => {
-    const base = [], tur = [];
-    part(base, 'rbox', 0x9a9d98, [0, 0.45, 0], [2.2, 0.9, 2.2]);
-    part(base, 'box', 0x7a7d78, [0, 0.92, 0], [2.3, 0.08, 2.3]);
-    for (const [dx, dz] of [[-0.8, -0.8], [0.8, -0.8], [-0.8, 0.8], [0.8, 0.8]]) part(base, 'box', 0x6a6d68, [dx, 0.5, dz], [0.3, 0.9, 0.3]);
-    part(tur, 'rbox2', 0x6f7d84, [0, 1.25, 0], [1.3, 0.7, 1.3]);
-    for (const s of [-0.22, 0.22]) part(tur, 'cyl', 0x2b2b2b, [s, 1.3, -0.95], [0.16, 1.1, 0.16], [Math.PI / 2, 0, 0]);
-    part(tur, 'box', C.red, [0, 1.62, 0.2], [0.5, 0.06, 0.5]);
-    return { base: merged(base), tur: merged(tur) };
-  });
-  const root = new THREE.Group();
-  root.add(mesh(g.base));
-  const turret = new THREE.Group(); root.add(turret); turret.add(mesh(g.tur));
-  root.add(blob(2.6, 2.6));
-  return { root, turret };
-}
 
 // 敌方灰色吉普（副驾驶扔手雷）
 export function makeEJeep() {
