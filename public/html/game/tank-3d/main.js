@@ -5,7 +5,7 @@ import { createScene, PRESETS } from './scene.js?v=lobby1';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
 import { CoopConnection, snapshot, hydrate } from './coop.js?v=lobby1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
-import { GameAudio } from './audio.js?v=toy3dui2';
+import { GameAudio } from './audio.js?v=hit-audio1';
 
 const VERSION = 'lobby1';
 const STEP = 1 / 60;

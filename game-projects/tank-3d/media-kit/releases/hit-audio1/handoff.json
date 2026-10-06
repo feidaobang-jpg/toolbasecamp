@@ -1,0 +1,69 @@
+{
+  "version": "hit-audio1",
+  "classification": "普通补丁",
+  "task_id": "01a110d2-tank-hit-audio-20261006-02",
+  "branch": "codex/tank-pickup-clean-20261006",
+  "changes": [
+    "修复敌人击毁事件被坦克种类覆盖，恢复原版爆炸声和爆炸效果",
+    "重甲未击毁时播放现有原版金属命中音，解码失败保留合成回退",
+    "保护事件类型字段，防止携带数据再次覆盖"
+  ],
+  "reproduction": {
+    "actualProjectile": true,
+    "before": {
+      "enemyState": "boom",
+      "eventTypes": [
+        "basic"
+      ],
+      "audioCalls": []
+    },
+    "browser_before": "before/verification.json"
+  },
+  "validation": {
+    "combat_audio_cases": 24,
+    "sim_cases": 19,
+    "coop_sim": "passed",
+    "audio_graph": "captures/verification.json",
+    "actualOutputSignal": true,
+    "physicalPhoneTest": false
+  },
+  "website": {
+    "status": "public_verified",
+    "commit": "d92e6e26",
+    "verified_at": "2026-10-06T11:14:56.511127+00:00",
+    "workflow": "success",
+    "browser_record": "website-captures/verification.json"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "slug": "feidao-tank-3d",
+    "status": "auditing",
+    "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
+    "preview_verified_at": "2026-10-06T11:14:56.511127+00:00",
+    "browser_record": "toy-preview-captures/verification.json",
+    "submitted": true,
+    "submission_attempts": [
+      {
+        "at": "2026-10-06T11:15:37.112465+00:00",
+        "status": "rejected_existing_review",
+        "code": 307013,
+        "message": "同 toy 已有审核中的版本"
+      },
+      {
+        "at": "2026-10-06T11:16:46.505145+00:00",
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_gnM2F1oY/index.html",
+        "preceding_status_checked": "published"
+      }
+    ],
+    "submitted_at": "2026-10-06T11:16:46.505145+00:00",
+    "submitted_version": "hit-audio1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_gnM2F1oY/index.html"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通音效补丁并入下次有意义的说明更新；当前入口和操作说明未改变"
+  },
+  "created_at": "2026-10-06T11:12:11.992033+00:00"
+}

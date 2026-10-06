@@ -29,11 +29,15 @@
       "wrong/correct password feedback",
       "guest leave then shared pause/restart",
       "volume arrows decrease/increase, keyboard left/right",
-      "responsive verification in progress"
+      "390x844 portrait and 844x390 landscape, document width matches viewport; mobile directory first"
     ],
     "physical_phone_test": false,
     "eight_player_test": false
   },
   "artifacts": "D:/project/artifacts/tank-lobby-20261006",
-  "capture_gap": "本次保存真实浏览器截图；未录制新实机视频，不据此发布新成片。"
+  "capture_gap": "本次保存真实浏览器截图；未录制新实机视频，不据此发布新成片。",
+  "included_versions": [
+    "pickup-clean1",
+    "hit-audio1"
+  ]
 }
