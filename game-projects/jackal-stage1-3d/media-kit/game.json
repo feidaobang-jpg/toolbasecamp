@@ -88,21 +88,21 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "published",
-    "verified_at": "2026-10-06T09:46:45.679258+08:00",
+    "review_status": "auditing",
+    "verified_at": "2026-10-06T11:09:58.228517+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_LLtYD31o/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_rDvEuI0b/index.html",
     "preview_verified_at": "2026-10-04T14:17:37.651922+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "平台published，当前新UI/拖动提示已在公开入口核验。",
-    "submitted_at": "2026-10-06T09:34:00.319609+08:00",
+    "note": "新包已经按预览验收并提交；公开新包待核验。",
+    "submitted_at": "2026-10-06T11:06:52.914176+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_H9QM1bov/index.html",
-    "submitted_version": "v0.7.0",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_4sCM0ctL/index.html",
-    "release_record": "releases/v0.7.0/handoff.json",
+    "submitted_version": "v0.7.1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_2M7bsrfO/index.html",
+    "release_record": "releases/v0.7.1/handoff.json",
     "published_version": "v0.7.0",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
@@ -113,11 +113,18 @@
         "status": "published",
         "record": "releases/v0.7.0/handoff.json",
         "included_version": "v0.7.0"
+      },
+      {
+        "version": "v0.7.1",
+        "classification": "普通补丁",
+        "status": "auditing",
+        "record": "releases/v0.7.1/handoff.json",
+        "summary": "右上贴边单行按钮，HUD避让。"
       }
     ],
     "last_successful_sync_at": "2026-10-06T06:24:58.898535+08:00",
     "last_successful_sync_version": "v0.5.3",
-    "package_sha256": "b1a37e3fcf6fa1b842eac723e9ee3393cd3946d31d47fb94ebf144cc252a176a",
+    "package_sha256": "c463cb71d69b75803f6fccbab4e5f1cb3708acbc05aade8cba493bc4de618877",
     "published_verified_at": "2026-10-06T01:38:02.208Z"
   },
   "drag_camera_controls": {
@@ -137,5 +144,9 @@
     "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
   },
   "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
-  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。"
+  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
+  "website_version": "v0.7.1",
+  "website_verified_at": "2026-10-06T11:09:58.228517+08:00",
+  "website_commit": "7511ce5c6939a9c0cc761093ff9ca02c76b945ca",
+  "web_toy_versions_match": false
 }
