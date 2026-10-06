@@ -1,3 +1,4 @@
+import {campaignDifficulty} from './campaign-difficulty.js';
 const CLOUD_KEY='chongchao_normal_v1';
 const PLAY_URL='https://www.bilibili.com/toy/chongchao-qianshao/index.html';
 const AUTHOR='16214353',VIDEO='BV1Ujad6DEuf';
@@ -35,7 +36,7 @@ export function setupToyPlatform(game,{sdkPromise}={}){
   const $=id=>document.getElementById(id),status=text=>{$('platformStatus').textContent=text;};
   const sdkReady=sdkPromise||loadSdk();let sdk=null,bridge=new ToyBridge(null),cloud=null,pendingSave=null,rankAt=0;
   const support=new Set();let cloudAt=0;
-  const describe=d=>d?`周目${d.loop} · 第${d.chapter}章第${d.level}关 · ${Math.floor(d.score)}分 · ${new Date(d.time).toLocaleString('zh-CN')}`:'尚无存档';
+  const describe=d=>d?`${campaignDifficulty(d.difficulty).name} · 周目${d.loop} · 第${d.chapter}章第${d.level}关 · ${Math.floor(d.score)}分 · ${new Date(d.time).toLocaleString('zh-CN')}`:'尚无存档';
   const error=e=>{
     const message=e&&e.message||'';
     if(/toy id not available|toy_context_unavailable/i.test(message))status('Toy 预览暂不提供作品身份，云存档和排行榜请在审核后的正式试玩页使用');

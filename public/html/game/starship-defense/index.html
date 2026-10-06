@@ -32,6 +32,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #menuPause{justify-content:flex-start;padding-top:22px}
 #menuPause>*{flex-shrink:0}
 #menuPause label{color:#e3edf4}
+.difficulty-options .tb-btn{min-height:44px;min-width:84px}
+.difficulty-options .tb-btn[aria-pressed="true"]{outline:3px solid #ffe066;outline-offset:2px;box-shadow:0 0 12px rgba(255,224,102,.55)}
+.touch-mode .difficulty-options .tb-btn{min-height:58px;min-width:104px;font-size:18px}
+#difficultyHint{margin-top:8px}
 .rescue-actions button[aria-pressed="true"]{outline:2px solid #fff;outline-offset:2px}
 #radar{position:absolute;left:10px;top:150px;width:112px;height:112px}
 #msg{position:absolute;left:50%;top:24%;transform:translateX(-50%);font-size:24px;text-align:center;white-space:nowrap;z-index:12}
@@ -91,7 +95,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .touch-mode .shopGrid{grid-template-columns:repeat(3,1fr)}
 .touch-mode #msg{top:30%;font-size:20px}
 /* 菜单 */
-.menu{z-index:30;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;overflow-y:auto;padding:22px 40px}
+.menu{z-index:36;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;overflow-y:auto;padding:22px 40px}
 .menu h1{font-size:40px;letter-spacing:5px;margin:4px 0 2px;font-weight:900}
 .menu .subtitle{font-size:13px;letter-spacing:6px;margin-bottom:4px}
 .menu h2{font-size:18px;margin:10px 0 8px}
@@ -296,6 +300,13 @@ button::before,button::after{content:none!important}
       <div class="classCard" tabindex="0" role="button" data-c="rifle"><b>火枪兵</b><br>霰弹伤害 +30%<br>移动速度 10.5<br>生命 100 · 近战突围</div>
       <div class="classCard" tabindex="0" role="button" data-c="medic"><b>医疗兵</b><br>自身每秒回血 4<br>12 米内队友每秒回血 4<br>生命 90 · 小队续航</div>
     </div>
+    <h2 id="difficultyTitle">战役难度</h2>
+    <div class="rescue-actions difficulty-options" role="group" aria-labelledby="difficultyTitle">
+      <button type="button" class="tb-btn" data-campaign-difficulty="casual" aria-pressed="false">休闲</button>
+      <button type="button" class="tb-btn" data-campaign-difficulty="normal" aria-pressed="true">普通</button>
+      <button type="button" class="tb-btn" data-campaign-difficulty="hard" aria-pressed="false">困难</button>
+    </div>
+    <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
     <div class="btnRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
@@ -313,7 +324,7 @@ button::before,button::after{content:none!important}
       菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
       玩法：打怪攒钱 → 买枪强化、造炮塔、雇队友 → 开战守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。<br>
       母皇：早杀可减少本章后续虫潮 35%，每次通关额外领补给；晚杀保留更多虫群掉落。菜单可「队友集合 / 载具救援」，各冷却 20 秒，保留血量；在虫洞内救援时载具停在洞口。<br>
-      城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和基地方向提示找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，三档难度分别领奖；右侧「菜单」或 P/Esc 暂停
+      城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和基地方向提示找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，副本三档难度分别领奖（独立于战役难度）；右侧「菜单」或 P/Esc 暂停
     </div>
   </div>
 
@@ -401,7 +412,7 @@ button::before,button::after{content:none!important}
     <div class="btnRow"><button class="mbtn" id="cloudRead">查看云存档</button><button class="mbtn" id="cloudWrite">上传普通进度</button><button class="mbtn green hidden" id="cloudConfirm">确认上传并覆盖云档</button><button class="mbtn green hidden" id="cloudLoad">读取这份云档</button></div>
     <p id="cloudInfo" class="small">先查看云档，再选择上传或读取；读取前会自动保留一份本地备份。测试模式独立保存。换手机或清理浏览器前，建议先上传一次云档。</p><button class="mbtn" id="cloudBackup">恢复读取云档前的本地备份</button>
     <div class="btnRow"><button class="mbtn" id="rankRead">普通通关积分榜</button><button class="mbtn" id="rankSubmit">提交最佳通关成绩</button></div>
-    <p class="small">只计普通模式已过关时的累计积分，自由测试与调试不参与。自愿提交后展示 B站昵称；这是休闲榜单。</p><ol id="rankList"></ol>
+    <p class="small">各战役难度共用休闲积分总榜；只计已过关累计积分，自由测试与调试不参与。自愿提交后展示 B站昵称；这是休闲榜单。</p><ol id="rankList"></ol>
     <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
     <div class="btnRow"><button class="mbtn" id="authorVisit">支持作者</button><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
     <p class="small">守住这座前哨的话，顺手去视频给开发者空投个三连补给？玩得开心就好！云存档与排行榜失败不会影响本地游玩。</p>
@@ -420,6 +431,6 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=toy3dui3" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=difficulty190" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 </body></html>

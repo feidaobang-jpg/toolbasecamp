@@ -1,3 +1,4 @@
+import {CAMPAIGN_DIFFICULTIES} from './campaign-difficulty.js';
 import {SQUAD_ROLES} from './squad-roles.js';
 import {OP_COMPLETION_KEYS} from './operations.js';
 // Cloud data is untrusted input. Keep legacy normal saves compatible; reject broken structures.
@@ -7,6 +8,7 @@ export function validateNormalSave(d,{weapons,buildings,vehicles}){
   const list=(v,max,test)=>v===undefined||Array.isArray(v)&&v.length<=max&&v.every(test);
   const plain=v=>v&&typeof v==='object'&&!Array.isArray(v);
   return !!(d&&typeof d==='object'&&!d.testMode&&['gunner','rifle','medic'].includes(d.cls)&&
+    (d.difficulty===undefined||typeof d.difficulty==='string'&&Object.hasOwn(CAMPAIGN_DIFFICULTIES,d.difficulty))&&
     int(d.loop,1,100000)&&int(d.chapter,1,10)&&int(d.level,1,10)&&num(d.gold,0,1e12)&&num(d.score,0,1e12)&&
     Array.isArray(d.weapons)&&d.weapons.length>0&&d.weapons.length<=30&&d.weapons.every(k=>Object.hasOwn(weapons,k))&&Object.hasOwn(weapons,d.curWeapon)&&
     (d.items===undefined||d.items&&num(d.items.medkit,0,100000)&&(d.items.grenade===undefined||num(d.items.grenade,0,100000)))&&

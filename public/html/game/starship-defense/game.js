@@ -16,6 +16,9 @@ import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
 import {createCombatControls,mountCombatSettings} from './combat-controls.js';
+import {CAMPAIGN_DIFFICULTIES,campaignDifficultyId,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval} from './campaign-difficulty.js';
+let selectedDifficulty='normal';
+try{selectedDifficulty=campaignDifficultyId(localStorage.getItem('chongchao-campaign-difficulty'));}catch(_e){}
 let combatStorage;try{combatStorage=localStorage;}catch(_e){}
 const CombatControls=createCombatControls(combatStorage);
 const keyBindings=createKeyBindings();
@@ -816,7 +819,7 @@ function makeBuildingMesh(kind){
 const Game={
   state:'menu', // menu / prep / battle / paused / over / win
   loop:1,chapter:1,level:1,
-  gold:0,score:0,cls:'gunner',testMode:false,
+  gold:0,score:0,cls:'gunner',testMode:false,difficulty:'normal',
   weapons:['lmg'],curWeapon:'lmg',weaponLv:{},
   items:{medkit:2},
   hpBonus:0,
@@ -1183,6 +1186,7 @@ function diffMul(){ // 周目与章节难度倍率（放缓后的曲线）
 function flyHeight(x,z){const g=groundY(x,z),top=fortress.topAt(x,z);return Math.max(g+4,top+1.6);}
 function spawnMonster(kind,x,z,opts={}){
   const ch=opts.ch||chapterCfg();
+  const rules=campaignDifficulty(Game.testMode||operations.active?'normal':Game.difficulty);
   const mul=diffMul()*(1+(Game.level-1)*.04); // 同章内关卡递增
   const winged=!!ch.fly&&kind!=='queen';
   let hp,dmg,speed,scale,gold,ranged=ch.ranged,fly=winged&&!opts.route&&!isFinite(fortress.ceilingAt(x,z,groundY(x,z)+.5));
@@ -1195,6 +1199,8 @@ function spawnMonster(kind,x,z,opts={}){
   }else{ // boss
     hp=ch.mob.hp*mul*24;dmg=ch.mob.dmg*mul*2.4;speed=ch.mob.speed*.7;scale=3.6;gold=Math.round(ch.mob.gold*mul*25);ranged=true;
   }
+  hp*=rules.hp;dmg*=rules.damage;
+  if(kind==='mob')gold=Math.max(1,Math.round(gold*rules.mobGold));
   const color=kind==='mob'?ch.color:ch.bossColor;
   const spawnClear=(px,pz)=>!collideWalls(px,pz,.9*scale,fly?flyHeight(px,pz):groundY(px,pz))&&(fly||!tooSteep(px,pz));
   if(!spawnClear(x,z)){
@@ -1223,7 +1229,7 @@ function spawnMonster(kind,x,z,opts={}){
   if(opts.elite&&kind==='mob'){
     const keys=Object.keys(ELITES);
     const picks=opts.affix&&ELITES[opts.affix]?[opts.affix]:[keys[Math.floor(rand(0,keys.length))]];
-    if(!opts.affix&&Math.random()<.35)picks.push(keys[Math.floor(rand(0,keys.length))]);
+    if(!opts.affix&&Math.random()<rules.doubleAffix)picks.push(keys[Math.floor(rand(0,keys.length))]);
     const affixes=[...new Set(picks)];
     let hpM=1,dmgM=1,spM=1,scM=1;
     for(const k of affixes){
@@ -2591,11 +2597,11 @@ function isBossLevel(){return Game.level===10;}
 function isMiniBossLevel(){return Game.level===3||Game.level===6||Game.level===9;}
 function levelName(){
   const ch=chapterCfg();
-  let t=`周目${Game.loop} 第${Game.chapter}章「${ch.name}」 第${Game.level}关`;
+  let t=`${campaignDifficulty(Game.difficulty).name} · 周目${Game.loop} 第${Game.chapter}章「${ch.name}」 第${Game.level}关`;
   if(isBossLevel())t+=' 💀BOSS';else if(isMiniBossLevel())t+=' ⚔小BOSS';
   return t;
 }
-function baseMaxHp(){return Math.round(2000*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.3));}
+function baseMaxHp(){return Math.round(2000*(1+(Game.chapter-1)*.1)*(1+(Game.loop-1)*.3)*campaignDifficulty(Game.testMode?'normal':Game.difficulty).baseHp);}
 function waveMonsters(){return monsters.filter(m=>!m.dead&&!m.home);}
 /* 虫巢：母皇与护卫只守老巢。母皇血量在同一章内保留，击杀后本章剩余关卡虫潮规模 -35%。 */
 function syncHive(){
@@ -2641,7 +2647,7 @@ function startPrep(){
   const n=6+Math.min(10,Game.chapter+Game.loop);
   for(let i=0;i<n;i++){
     let x,z,k=0;do{x=rand(WORLD.minX+12,WORLD.maxX-12);z=rand(50,240);}while((tunnelDistance(x,z)<9||Math.hypot(x-HIVE.x,z-HIVE.z)<HIVE.r+12||HILL_FORTS.some(f=>Math.hypot(x-f.x,z-f.z)<f.top+5))&&++k<30);
-    const ec=Game.loop>1||Game.chapter>3?.12:.05;
+    const ec=campaignEliteChance(Game.testMode?'normal':Game.difficulty,Game.chapter,Game.loop,true);
     spawnMonster('mob',x,z,{wild:true,elite:Math.random()<ec?true:undefined,quiet:true});
   }
   if(Math.random()<.5)spawnMonster('miniboss',rand(-40,40),rand(130,170),{wild:true});
@@ -2663,8 +2669,7 @@ function startBattle(){
   for(const mo of monsters){if(!mo.home)mo.wild=false;}
   const w=Game.wave,current=waveMonsters().length;
   w.killed=0;w.spawned=current;w.timer=1.5;w.bossSpawned=false;w.done=false;w.mouth=Math.floor(rand(0,MOUTHS.length));
-  let n=Math.round((8+Game.level*1.8+Game.chapter*1.6)*(1+(Game.loop-1)*.3));
-  if(Game.hive.killed)n=Math.round(n*.65);
+  const n=campaignWaveCount(Game.difficulty,Game.chapter,Game.level,Game.loop,Game.hive.killed);
   // 大首领关：先来一波护卫虫潮（原来只有首领一只，几秒就结束），首领最后从主洞钻出
   if(isBossLevel())w.total=current+Math.round(n*.6)+1;
   else w.total=current+n+(isMiniBossLevel()?1:0);
@@ -2706,10 +2711,10 @@ function updWave(dt){
         w.spawned++;
         // 从虫洞口钻出；随进度提升精英概率
         const p=mouthSpawn();
-        const ec=Math.min(.28,.04+(Game.loop-1)*.05+(Game.chapter-1)*.012);
+        const ec=campaignEliteChance(Game.difficulty,Game.chapter,Game.loop);
         spawnMonster('mob',p.x,p.z,{elite:Math.random()<ec,route:p.route});
       }
-      w.timer=Math.max(.45,2.2-Game.level*.1-Game.chapter*.05-(Game.loop-1)*.25);
+      w.timer=campaignSpawnInterval(Game.difficulty,Game.chapter,Game.level,Game.loop);
     }
   }
   const live=waveMonsters();
@@ -3047,7 +3052,7 @@ let panelOpen=false;
 const SAVE_PREFIX='sst_save_';
 function saveData(){
   return{
-    testMode:Game.testMode,loop:Game.loop,chapter:Game.chapter,level:Game.level,
+    testMode:Game.testMode,difficulty:Game.difficulty,loop:Game.loop,chapter:Game.chapter,level:Game.level,
     gold:Math.floor(Game.gold),score:Game.score,cls:Game.cls,
     weapons:Game.weapons,curWeapon:Game.curWeapon,weaponLv:Game.weaponLv,items:Game.items,hpBonus:Game.hpBonus,
     vehiclesOwned:[...new Set(Game.vehiclesOwned)],squadCount:Game.squadCount,squadOrder:Game.squadOrder,squadGear:Game.squadGear.map(g=>({...g})),opsCompleted:{...Game.opsCompleted},
@@ -3060,6 +3065,7 @@ function saveData(){
 function applySave(d){
   runGeneration++;
   Game.testMode=d.testMode===true;
+  Game.difficulty=Game.testMode?'normal':campaignDifficultyId(d.difficulty);
   Game.loop=d.loop;Game.chapter=d.chapter;Game.level=d.level;
   Game.gold=d.gold;Game.score=d.score;Game.cls=d.cls;
   const mig=migrateWeapons(d);
@@ -3133,7 +3139,7 @@ let saveMode='save'; // save / load
 function renderSlots(){
   const list=$('slotList');list.innerHTML='';
   $('saveTitle').textContent=saveMode==='save'?'💾 选择存档位':'📂 选择要读取的存档';
-  const describe=d=>`周目${d.loop} 第${d.chapter}章 第${d.level}关 · ${(CLASSES[d.cls]||{}).name||''} · 💰${Math.floor(d.gold)} · ${new Date(d.time).toLocaleString()}`;
+  const describe=d=>`${d.testMode?'自由测试':campaignDifficulty(d.difficulty).name} · 周目${d.loop} 第${d.chapter}章 第${d.level}关 · ${(CLASSES[d.cls]||{}).name||''} · 💰${Math.floor(d.gold)} · ${new Date(d.time).toLocaleString()}`;
   if(saveMode==='load')for(const [key,label] of [[savePrefix()+'auto','自动存档'],[SAVE_PREFIX+'auto-backup','开新局前的备份']]){
     const d=slotInfo(key);if(!d)continue;
     const div=document.createElement('div');div.className='saveSlot auto';div.innerHTML=`<span>${label}：${describe(d)}</span>`;
@@ -3143,7 +3149,7 @@ function renderSlots(){
     const key=savePrefix()+i;
     const d=slotInfo(key);
     const div=document.createElement('div');div.className='saveSlot';
-    const info=d?`周目${d.loop} 第${d.chapter}章 第${d.level}关 · ${CLASSES[d.cls].name} · 💰${d.gold} · ${new Date(d.time).toLocaleString()}`:'— 空存档位 —';
+    const info=d?describe(d):'— 空存档位 —';
     div.innerHTML=`<span>存档${i}：${info}</span>`;
     const btns=document.createElement('span');
     if(saveMode==='save'){
@@ -3210,6 +3216,7 @@ function newGame(test){
   resetSandboxWave();
   hideConfirm();
   Game.testMode=!!test;
+  Game.difficulty=test?'normal':selectedDifficulty;
   Game.loop=1;Game.chapter=1;Game.level=1;
   Game.gold=test?99999:150;Game.score=0;
   Game.hpBonus=0;
@@ -3410,6 +3417,16 @@ document.querySelectorAll('#classRow .classCard').forEach(el=>{
     el.classList.add('sel');Game.cls=el.dataset.c;AudioSys.init();AudioSys.sfx('click');
   };
 });
+function syncDifficultySelection(){
+  for(const el of document.querySelectorAll('[data-campaign-difficulty]'))el.setAttribute('aria-pressed',String(el.dataset.campaignDifficulty===selectedDifficulty));
+  $('difficultyHint').textContent=campaignDifficulty(selectedDifficulty).hint+' 仅用于新游戏；继续和读档沿用存档难度。';
+}
+for(const el of document.querySelectorAll('[data-campaign-difficulty]'))el.onclick=()=>{
+  selectedDifficulty=campaignDifficultyId(el.dataset.campaignDifficulty);
+  try{localStorage.setItem('chongchao-campaign-difficulty',selectedDifficulty);}catch(_e){}
+  syncDifficultySelection();
+};
+syncDifficultySelection();
 $('btnStart').onclick=requestNewGame;
 $('btnTest').onclick=()=>{AudioSys.init();AudioSys.resume();newGame(true);};
 $('btnContinue').onclick=()=>{
@@ -3419,7 +3436,7 @@ $('btnContinue').onclick=()=>{
 };
 function refreshContinue(){
   const d=slotInfo(SAVE_PREFIX+'auto'),btn=$('btnContinue');
-  btn.textContent=d?`▶ 继续上次（第${d.chapter}章第${d.level}关 · 💰${Math.floor(d.gold)}）`:'▶ 继续上次';
+  btn.textContent=d?`▶ 继续上次（${campaignDifficulty(d.difficulty).name} · 第${d.chapter}章第${d.level}关）`:'▶ 继续上次';
   btn.classList.toggle('green',hasProgress(d));$('btnStart').classList.toggle('green',!hasProgress(d));
 }
 refreshContinue();
@@ -3751,7 +3768,7 @@ function setupWebControls(){
   syncPauseOptions();syncKeyLabels();
   setDeviceMode(deviceMode);
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       setDeviceMode,recallUnits,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}
