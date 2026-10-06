@@ -254,6 +254,7 @@ const gameRunning = () => uiMode === 'game' && ['play', 'cut', 'trans', 'clear',
 IN.active = () => uiMode === 'game' && !paused && (!current || current === 'cont');
 let paused = false;
 function startGame() {
+  A.musicDuck(false);   // 从暂停菜单「重新开始」：先解除暂停时挂起的音频，否则新的一局没有 BGM 和音效
   A.unlock(); A.play('start');
   uiMode = 'game'; paused = false;
   GM.newGame({ lives: settings.lives, dur: settings.dur, demo: settings.demo, hero: settings.hero, area: params.get('area') ? clamp(parseInt(params.get('area'), 10) || 0, 0, AREAS.length - 1) : STAGES[settings.stage].first });
@@ -513,9 +514,10 @@ function presentFrame(dtReal, draw, instant) {
     const fpOff = camCtl.fp() && (['cut', 'trans', 'clear', 'over', 'cont'].indexOf(G.mode) >= 0 || ['down', 'dead', 'respawn', 'victory', 'door'].indexOf(p.state) >= 0);
     G.fpActive = camCtl.fp() && !fpOff;
     const AR = world.area().def;
-    const zc = (AR.z0 + AR.z1) / 2 * 0.6 + p.z * 0.25;
-    const fitDepth = AR.z1 - ((AR.z0 + AR.z1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
-    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
+    const cz1 = AR.camZ1 === undefined ? AR.z1 : AR.camZ1;   // 取景按这一排算；第二关可走范围比它更靠前（见 level.js camZ1）
+    const zc = (AR.z0 + cz1) / 2 * 0.6 + p.z * 0.25;
+    const fitDepth = cz1 - ((AR.z0 + cz1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
+    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {
@@ -567,6 +569,8 @@ if (TEST) {
   let rec = null, chunks = [];
   window.__CD_TEST__ = {
     subjectHeading: () => G.player?.model.root.rotation.y,
+    project: (x, y, z) => { const v = new THREE.Vector3(x, y, z).project(camCtl.cam); return [+((v.x + 1) / 2).toFixed(4), +((1 - v.y) / 2).toFixed(4)]; },   // 世界点 → 画面比例坐标（0..1，左上为原点）
+    areaDef: () => Object.assign({}, AREAS[G.area], { props: undefined, waves: undefined }),
     version: VERSION, seed, HEROES,
     snapshot() {
       const s = GM.snapshot();

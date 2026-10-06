@@ -84,7 +84,7 @@ export function createCamera() {
         const P = opt.player;
         let dist = p.fit ? this.fitDist(p, opt.fitDepth) : p.dist;
         if (p.follow) { tx = P.x; tz = P.z; ty = P.ground + p.ty; }
-        else { tx = opt.focusX; tz = opt.zc; ty = p.ty; }
+        else { tx = opt.focusX; tz = opt.zc; ty = p.ty + (p.fit ? opt.tyOff || 0 : 0); }
         // 正视：看点稍微前移，能看到前方来敌
         if (p.follow) { tx += -Math.sin(yaw) * 2.2; tz += -Math.cos(yaw) * 2.2; dist += 2.2; }
         const cp = Math.cos(p.pitch);

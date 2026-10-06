@@ -11,6 +11,8 @@ export const STAGES = [
   { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 }
 ];
 // 区域：x0..x1 为可走范围，z0..z1 为纵深；timer 为该区域的倒计时（秒）；exit.to 为下一个区域
+// 第二关地面一直铺到画面底部，可走纵深加到 z1 = 4.0（前排到画面约八成高处）；侧视取景仍按 camZ1 那一排算（不因纵深加大而拉远），
+// 观察点抬高 camTy 米让地面整体下移；比 camZ1 更靠前时左右边界随透视收窄（game.js nearInset）
 export const AREAS = [
   {
     id: 'roof', stage: 1, name: '大楼楼顶', title: 'TOP OF THE BUILDING', x0: 0, x1: 44.7, z0: -2.3, z1: 2.5, start: { x: 2.2, z: 0.6 }, timer: 120,
@@ -60,7 +62,7 @@ export const AREAS = [
   // ---------- 第二关 ----------
   {
     // 2-1：下了凯迪拉克就被两头发怒的三角龙哈克冲撞；偷猎者端着步枪；熟睡的霸王龙希瓦特，胖子们想把它打醒
-    id: 'forest', stage: 2, name: '偷猎者森林', title: 'IN THE POACHERS\' FOREST', x0: 0, x1: 72, z0: -2.3, z1: 2.5, start: { x: 4.6, z: 0.7 }, timer: 120,
+    id: 'forest', stage: 2, name: '偷猎者森林', title: 'IN THE POACHERS\' FOREST', x0: 0, x1: 72, z0: -2.3, z1: 4.0, camZ1: 2.5, camTy: 1.0, start: { x: 4.6, z: 0.7 }, timer: 120,
     props: [
       { kind: 'barrel', x: 12.6, z: -1.7, item: 'sunglass' },
       { kind: 'barrel', x: 13.6, z: -1.0, item: 'hamburger' },
@@ -77,7 +79,7 @@ export const AREAS = [
   },
   {
     // 2-2：跳下山崖落进泥沼（齐腰深，走不快），格特从水里冒出来；上岸后链锤兵拉什·T
-    id: 'swamp', stage: 2, name: '泥沼', title: 'MUD SWAMP', x0: 0, x1: 70, z0: -2.3, z1: 2.5, start: { x: 2.6, z: 0.4 }, timer: 120,
+    id: 'swamp', stage: 2, name: '泥沼', title: 'MUD SWAMP', x0: 0, x1: 70, z0: -2.3, z1: 4.0, camZ1: 2.5, camTy: 1.0, start: { x: 2.6, z: 0.4 }, timer: 120,
     water: { x1: 34, bank: 37 },
     props: [
       { kind: 'barrel', x: 47.6, z: -1.8, item: 'grenade' },
@@ -93,7 +95,7 @@ export const AREAS = [
   },
   {
     // 2-3：天色转暗，满地恐龙尸体；一排油桶都藏着东西；屠夫正在肢解一头死恐龙
-    id: 'grave', stage: 2, name: '恐龙尸骸地', title: 'LOOK AT ALL THE DEAD BODIES!', x0: 0, x1: 66, z0: -2.3, z1: 2.5, start: { x: 2.4, z: 0.4 }, timer: 120,
+    id: 'grave', stage: 2, name: '恐龙尸骸地', title: 'LOOK AT ALL THE DEAD BODIES!', x0: 0, x1: 66, z0: -2.3, z1: 4.0, camZ1: 2.5, camTy: 1.0, start: { x: 2.4, z: 0.4 }, timer: 120,
     props: [
       { kind: 'drum', x: 14.2, z: -1.8, item: 'gold' },
       { kind: 'drum', x: 15.4, z: -1.8, item: 'steak' },

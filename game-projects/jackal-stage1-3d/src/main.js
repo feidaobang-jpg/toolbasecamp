@@ -216,6 +216,7 @@ const gameRunning = () => uiMode === 'game' && ['intro', 'play', 'over', 'clear'
 IN.active = () => gameRunning() && !current && !paused;
 let paused = false;
 function startGame(stageNo) {
+  A.musicDuck(false);   // 从暂停菜单「重新开始」：先解除暂停时挂起的音频，否则新的一局没有 BGM 和音效
   A.unlock();
   uiMode = 'game'; paused = false;
   stage.classList.remove('boss-fight');
@@ -227,6 +228,7 @@ function startGame(stageNo) {
   autoProbe.frames = [];
 }
 function nextStage() {
+  A.musicDuck(false);
   A.unlock();
   uiMode = 'game'; paused = false;
   if (!GM.nextStage()) return toTitle();

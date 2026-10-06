@@ -640,9 +640,10 @@ const BUILDERS = {
     for (let i = 0; i < 50; i++) tree(farF, -30 + r() * 102, 14 + r() * 20, 1.1 + r() * 0.7, r);
     for (let i = 0; i < 16; i++) tree(farL, -42 + r() * 28, -9 + r() * 22, 1.1 + r() * 0.5, r);   // 起点左侧（车开进来的路两边）
     ringMesh(A, g, farB, [-45, -60, 110, -9.8]); ringMesh(A, g, farF, [-45, 13, 110, 45]); ringMesh(A, g, farL, [-46, -12, -10, 14]);
-    // 前景低矮的蕨类、石头、小花（不挡侧视镜头）
+    // 前景低矮的蕨类、石头、小花（不挡侧视镜头），排在可走范围外沿
     const front = new Parts();
-    for (let x = -6; x < 74; x += 2.2 + r() * 2.4) { if (r() < 0.6) fern(front, x, 3.4 + r() * 1.0, 0.7 + r() * 0.3, r); else if (r() < 0.5) rock(front, x, 3.6 + r() * 0.8, 0.35 + r() * 0.2, r); else flowers(front, x, 3.4 + r() * 0.6, r); }
+    for (let x = -6; x < 74; x += 0.9 + r() * 1.1) { if (r() < 0.7) fern(front, x, 4.55 + r() * 0.7, 0.75 + r() * 0.35, r); else if (r() < 0.5) rock(front, x, 4.65 + r() * 0.5, 0.35 + r() * 0.25, r); else flowers(front, x, 4.5 + r() * 0.5, r); }   // 可走范围（到 z 4.0）外沿一排灌丛，标出边界
+    for (let x = -5; x < 74; x += 2.6 + r() * 2.4) bush(front, x, 5.4 + r() * 0.5, 0.55 + r() * 0.25, r);
     for (let x = -6; x < 74; x += 5 + r() * 4) bush(front, x, 12 + r() * 4, 1 + r() * 0.6, r);
     g.add(new THREE.Mesh(front.build(), vegMat()));
     A.camBoxes.push(new THREE.Box3(new THREE.Vector3(-2.8, 0, -2.6), new THREE.Vector3(3.2, 1.6, -0.5)));   // 停着的凯迪拉克
@@ -669,15 +670,16 @@ const BUILDERS = {
     const ct = new THREE.Mesh(cliffTop.build(), vegMat()); ct.position.y = 6.2; g.add(ct);
     // 水里：睡莲叶、芦苇、老树和枯木
     const sw = new Parts();
-    for (let i = 0; i < 70; i++) { const x = -5 + r() * (W.x1 + 4), z = -14 + r() * 26; if (z > -2.6 && z < 2.8 && r() < 0.6) continue; if (z > 3.2 && z < 9) continue; sw.add(GEO.cyl, i % 3 ? '#6f9e52' : '#7fae5e', mtx(x, 0.01, z, 0, r() * 3, 0, 0.22 + r() * 0.22, 0.02, 0.22 + r() * 0.22)); if (r() < 0.15) sw.add(GEO.sphLo, '#f2e6f0', mtx(x + 0.1, 0.08, z, 0, 0, 0, 0.08, 0.06, 0.08)); }
-    for (let i = 0; i < 40; i++) { const x = -5 + r() * (W.x1 + 6), back = r() < 0.6, z = back ? -3.1 - r() * 2.5 : 3.2 + r() * 2.2, h = back ? 1.0 + r() * 0.8 : 0.4 + r() * 0.35; for (let k = 0; k < 4; k++) sw.add(GEO.cone, k % 2 ? '#8aa060' : '#9ab06c', mtx(x + (r() - 0.5) * 0.4, h / 2 - 0.1, z + (r() - 0.5) * 0.3, (r() - 0.5) * 0.2, 0, (r() - 0.5) * 0.2, 0.05, h, 0.05)); }
+    for (let i = 0; i < 70; i++) { const x = -5 + r() * (W.x1 + 4), z = -14 + r() * 26; if (z > -2.6 && z < 4.2 && r() < 0.6) continue; if (z > 4.4 && z < 9) continue; sw.add(GEO.cyl, i % 3 ? '#6f9e52' : '#7fae5e', mtx(x, 0.01, z, 0, r() * 3, 0, 0.22 + r() * 0.22, 0.02, 0.22 + r() * 0.22)); if (r() < 0.15) sw.add(GEO.sphLo, '#f2e6f0', mtx(x + 0.1, 0.08, z, 0, 0, 0, 0.08, 0.06, 0.08)); }
+    for (let i = 0; i < 40; i++) { const x = -5 + r() * (W.x1 + 6), back = r() < 0.6, z = back ? -3.1 - r() * 2.5 : 4.5 + r() * 1.6, h = back ? 1.0 + r() * 0.8 : 0.4 + r() * 0.35; for (let k = 0; k < 4; k++) sw.add(GEO.cone, k % 2 ? '#8aa060' : '#9ab06c', mtx(x + (r() - 0.5) * 0.4, h / 2 - 0.1, z + (r() - 0.5) * 0.3, (r() - 0.5) * 0.2, 0, (r() - 0.5) * 0.2, 0.05, h, 0.05)); }
     for (let x = -4; x < W.x1 + 2; x += 5 + r() * 4) {
       const z = -4.4 - r() * 3.5;
       tree(sw, x, z, 1.15 + r() * 0.4, r, { trunk: '#7a6650', greens: ['#5f8a4c', '#6e9a58', '#557a44'], vines: true });
       for (let k = 0; k < 4; k++) { const a = k / 4 * Math.PI * 2 + r(); sw.add(GEO.tor, '#7a6650', mtx(x + Math.cos(a) * 0.5, 0.2, z + Math.sin(a) * 0.5, 0, -a, 0, 0.5, 0.6, 0.5)); }   // 气根
     }
+    for (let x = -5; x < W.x1 + 4; x += 1.0 + r() * 1.3) { const z = 4.55 + r() * 0.8, h = 0.45 + r() * 0.35; for (let k = 0; k < 5; k++) sw.add(GEO.cone, k % 2 ? '#8aa060' : '#9ab06c', mtx(x + (r() - 0.5) * 0.5, h / 2 - 0.1, z + (r() - 0.5) * 0.3, (r() - 0.5) * 0.25, 0, (r() - 0.5) * 0.25, 0.05, h, 0.05)); }   // 可走范围外沿一排芦苇
     sw.add(capsule(0.35, 6), '#7a6650', mtx(14, 0.05, -3.4, 0, 0.2, Math.PI / 2));   // 泡在水里的倒木
-    sw.add(capsule(0.3, 4), '#7a6650', mtx(26, 0.0, 3.9, 0, -0.3, Math.PI / 2));
+    sw.add(capsule(0.3, 4), '#7a6650', mtx(26, 0.0, 5.0, 0, -0.3, Math.PI / 2));   // 前景倒木在可走范围外
     const swM = new THREE.Mesh(sw.build(), vegMat()); swM.castShadow = true; g.add(swM);
     addFade(A, swM, new THREE.Box3(new THREE.Vector3(-8, 0, -9.5), new THREE.Vector3(W.x1 + 6, 12, -3.0)));
     // 远处的沼泽树林
@@ -742,9 +744,10 @@ const BUILDERS = {
     carcass(dead, 36.5, -2.8, 1.0, Math.PI / 2 - 0.1, true);
     carcass(dead, 50, 11, 0.85, Math.PI / 2 + 0.3, false);
     const C = A.def.boss.carcass; carcass(dead, C.x, C.z, 1.15, Math.PI / 2, true);   // 屠夫正在肢解的剑龙
-    for (let i = 0; i < 9; i++) { const x = 3 + r() * 60, z = r() < 0.5 ? -2.9 : 3.6 + r() * 0.8; dead.add(GEO.tor, '#3c3636', mtx(x, 0.12, z, Math.PI / 2 - 0.1, 0, r(), 0.3, 0.3, 0.45)); }
+    for (let i = 0; i < 9; i++) { const x = 3 + r() * 60, z = r() < 0.5 ? -2.9 : 4.5 + r() * 0.7; dead.add(GEO.tor, '#3c3636', mtx(x, 0.12, z, Math.PI / 2 - 0.1, 0, r(), 0.3, 0.3, 0.45)); }
     for (let i = 0; i < 5; i++) { const x = 6 + r() * 56; dead.add(GEO.box, '#9a7450', mtx(x, 0.35, -2.9, 0, r(), 0, 0.7, 0.7, 0.7)); }
-    for (let i = 0; i < 12; i++) dead.add(capsule(0.05, 0.5), '#efe6d6', mtx(2 + r() * 62, 0.04, (r() < 0.5 ? -2.7 : 3.4 + r()), Math.PI / 2, r() * 3, 0));   // 散落的骨头
+    for (let i = 0; i < 12; i++) dead.add(capsule(0.05, 0.5), '#efe6d6', mtx(2 + r() * 62, 0.04, (r() < 0.5 ? -2.7 : 4.4 + r()), Math.PI / 2, r() * 3, 0));   // 散落的骨头
+    for (let x = -4; x < 70; x += 1.1 + r() * 1.3) { if (r() < 0.6) rock(dead, x, 4.6 + r() * 0.6, 0.3 + r() * 0.25, r, r() < 0.5 ? '#8e8478' : '#7a6e64'); else dead.add(capsule(0.05, 0.5), '#efe6d6', mtx(x, 0.04, 4.6 + r() * 0.6, Math.PI / 2, r() * 3, 0)); }   // 可走范围外沿一排碎石、骨头
     const deadM = meshFrom(dead.build(), { receive: true }); g.add(deadM);   // 死恐龙与道具：与角色一样卡通着色 + 描边
     // 火堆（暖光闪动）
     const fireMat = new THREE.MeshBasicMaterial({ color: '#ffb054', transparent: true, opacity: 0.9 });

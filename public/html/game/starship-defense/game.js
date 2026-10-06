@@ -2771,6 +2771,7 @@ function gameOver(reason){
   $('hud').classList.add('hidden');$('touchUI').classList.add('hidden');
 }
 function restartLevel(){
+  AudioSys.pause(false);// 从暂停菜单「重开本关」：先解除暂停时挂起的音频，否则重开后没有背景音乐和音效
   if(operations.active){operations.finish(false);return;}
   runGeneration++;
   if(Game.testMode){newGame(true);return;}

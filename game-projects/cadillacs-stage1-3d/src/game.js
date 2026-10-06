@@ -514,7 +514,7 @@ function updatePlayer(p, dt) {
       const dx = Math.sin(p.face), dz = Math.cos(p.face);
       e.x = p.x + dx * 0.66; e.z = p.z + dz * 0.66; e.face = p.face + Math.PI;
       // 锁屏时在画面边缘朝外抓人：两人一起往里挪，被抓的敌人不出画
-      if (G.lockX !== null) { const m = HALF_W - EDGE - Math.max(0, e.radius - 0.34), o = e.x - clamp(e.x, G.focusX - m, G.focusX + m); if (o) { e.x -= o; p.x -= o; } }
+      if (G.lockX !== null) { const m = HALF_W - EDGE - Math.max(0, e.radius - 0.34) - nearInset(e.z), o = e.x - clamp(e.x, G.focusX - m, G.focusX + m); if (o) { e.x -= o; p.x -= o; } }
       if (p.st > (e.type === 'vice' || e.type === 'butcher' || e.type === 'lash' ? 0.7 : 1.5)) { breakFree(p, e); }
       if (p.sub.anim && p.st - p.sub.animT > p.sub.animDur) p.sub.anim = null;
       break;
@@ -1118,7 +1118,7 @@ function physics(a, dt) {
     a.z = clamp(a.z, zMin, zMax);
     if (a.side === 'player' || G.lockX !== null) {
       // 原作锁屏：敌人、Boss、被打飞或摔出去的角色撞到画面边缘就停住；岩跳龙连尾巴长 3 米多，多留一些
-      const m = HALF_W - EDGE - (a.side === 'player' ? 0 : a.type === 'shivat' ? 2.4 : a.isTrike ? 1.25 : a.isRaptor ? 1.45 : Math.max(0, a.radius - 0.34));
+      const m = HALF_W - EDGE - (a.side === 'player' ? 0 : a.type === 'shivat' ? 2.4 : a.isTrike ? 1.25 : a.isRaptor ? 1.45 : Math.max(0, a.radius - 0.34)) - nearInset(a.z);
       const lo = a.side === 'player' ? Math.max(AR.x0 + 0.3, G.focusX - m) : G.focusX - m, hi = a.side === 'player' ? (G.mode === 'trans' ? AR.x1 + 3 : Math.min(AR.x1, G.focusX + m)) : G.focusX + m;
       if (a.x < lo) { a.x = lo; if (a.vx < 0) a.vx = 0; }
       else if (a.x > hi) { a.x = hi; if (a.vx > 0) a.vx = 0; }
@@ -1919,6 +1919,8 @@ function updateCameraFocus(dt) {
   G.focusX += (target - G.focusX) * k;
   if (G.lockX === null) G.focusX = Math.max(G.focusX, Math.min(target, p.x - HALF_W + 1.6));
 }
+// 第二关可走到取景排（camZ1）前面：每往镜头靠近 1 米，侧视画面左右各窄约 0.62 米
+function nearInset(z) { const AR = AREAS[G.area]; return AR.camZ1 === undefined ? 0 : Math.max(0, z - AR.camZ1) * 0.62; }
 function updateTimer(dt) {
   // 无敌演示不受限时约束；保留剩余时间，关闭后继续原倒计时。
   if (G.settings.demo) return;
