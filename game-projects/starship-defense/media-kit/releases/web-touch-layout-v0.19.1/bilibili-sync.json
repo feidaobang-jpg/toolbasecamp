@@ -1,0 +1,21 @@
+{
+  "baseline": "web-difficulty-v0.19.0",
+  "version": "web-touch-layout-v0.19.1",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "old_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-06·v0.19.0）：新局可选休闲/普通/困难；普通保留原体验，困难增援更紧凑、精英更多。难度随存档保存，旧档默认普通，副本难度独立。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "new_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-06·v0.19.1）：新局可选休闲/普通/困难（旧档普通，副本难度独立）；新增手机按键自由摆放：操作设置→自定义按键位置，拖动摇杆和各功能键后保存，可取消或恢复默认，不影响本局进度。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "description_sha256": "76888ef5197009e9a9de5fa84cc8b4c31551f483969af5c82f67b0d12534b73d",
+      "status": "prepared_not_submitted"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "old_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-06·v0.19.0）：新局可选休闲/普通/困难；普通保留原体验，困难增援更紧凑、精英更多。难度随存档保存，旧档默认普通，副本难度独立。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "new_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-06·v0.19.1）：新局可选休闲/普通/困难（旧档普通，副本难度独立）；新增手机按键自由摆放：操作设置→自定义按键位置，拖动摇杆和各功能键后保存，可取消或恢复默认，不影响本局进度。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "description_sha256": "d4480b40f6c846bae9ac5af0b08f2c550c42b5661c9773b78c2d76f3bbbb21ac",
+      "status": "prepared_not_submitted"
+    }
+  ],
+  "reason": "新增手机按键布局功能，按正式体验更新同步；保留原片与链接"
+}

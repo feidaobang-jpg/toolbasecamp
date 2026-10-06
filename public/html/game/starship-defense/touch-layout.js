@@ -4,7 +4,7 @@ const IDS=['joyBase','vJ','vK','vU','vI','vH','vO','vL','vX','vC','vP','vSPRINT'
 const clamp=v=>Math.max(0,Math.min(1,v));
 export function mountTouchLayout({stage,storage,toStage,resetInput,onOpen,onClose}){
   const controls=IDS.map(id=>document.getElementById(id));
-  let saved={},draft={},active=false,drag=null;
+  let saved={},draft={},active=false,drag=null,selected=null;
   try{const data=JSON.parse(storage.getItem(STORE)||'{}');
     for(const id of IDS){const p=data&&data[id];if(p&&Number.isFinite(p.x)&&Number.isFinite(p.y))saved[id]={x:clamp(p.x),y:clamp(p.y)};}
   }catch(_e){}
@@ -23,7 +23,7 @@ export function mountTouchLayout({stage,storage,toStage,resetInput,onOpen,onClos
     if(!active)return false;
     release();
     if(commit){try{storage.setItem(STORE,JSON.stringify(draft));}catch(_e){status.textContent='当前浏览器无法保存设置，请允许本地存储后重试；也可取消';return false;}saved=JSON.parse(JSON.stringify(draft));}
-    active=false;stage.classList.remove('editing-touch-layout');toolbar.classList.add('hidden');apply(saved);onClose(commit);return true;
+    active=false;selected=null;controls.forEach(el=>el.classList.remove('layout-selected'));stage.classList.remove('editing-touch-layout');toolbar.classList.add('hidden');apply(saved);onClose(commit);return true;
   }
   function open(){
     if(active)return;resetInput();onOpen();active=true;draft=JSON.parse(JSON.stringify(saved));
@@ -34,6 +34,7 @@ export function mountTouchLayout({stage,storage,toStage,resetInput,onOpen,onClos
     if(!active||toolbar.contains(e.target))return;
     e.preventDefault();e.stopImmediatePropagation();
     const el=e.target.closest('#joyBase,.vbtn');if(!el||drag||e.button!==0)return;
+    selected=el;controls.forEach(item=>item.classList.toggle('layout-selected',item===el));status.textContent='正在调整：'+(el.id==='joyBase'?'摇杆':el.textContent||el.getAttribute('aria-label'));
     const p=toStage(e.clientX,e.clientY);drag={el,id:e.pointerId,dx:p.x-el.offsetLeft,dy:p.y-el.offsetTop};el.setPointerCapture(e.pointerId);
   },true);
   stage.addEventListener('pointermove',e=>{
@@ -48,6 +49,9 @@ export function mountTouchLayout({stage,storage,toStage,resetInput,onOpen,onClos
   window.addEventListener('keydown',e=>{
     if(!active)return;e.stopImmediatePropagation();
     if(e.code==='Escape'){e.preventDefault();finish(false);}
+    else if(selected&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code)){
+      e.preventDefault();const step=e.shiftKey?1:8;place(selected,{x:selected.offsetLeft+(e.code==='ArrowRight'?step:e.code==='ArrowLeft'?-step:0),y:selected.offsetTop+(e.code==='ArrowDown'?step:e.code==='ArrowUp'?-step:0)});
+    }
     else if(e.code==='Tab'){
       e.preventDefault();const buttons=[...toolbar.querySelectorAll('button')],i=buttons.indexOf(document.activeElement);buttons[(i+(e.shiftKey?-1:1)+buttons.length)%buttons.length].focus();
     }else if(!toolbar.contains(e.target)||!['Enter','Space'].includes(e.code))e.preventDefault();

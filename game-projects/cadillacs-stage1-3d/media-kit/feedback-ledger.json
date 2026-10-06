@@ -1,0 +1,25 @@
+{
+  "game_id": "cadillacs-stage1-3d",
+  "items": [
+    {
+      "rpid": 319834688688,
+      "video": "opus:1255480955666169860",
+      "comment_type": "动态",
+      "user": "恐龙戴诺",
+      "user_mid": 284239309,
+      "date": "2026-10-06 17:49 Asia/Shanghai",
+      "text": "改一下呗，无敌对时间结束没用",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "v0.5.1",
+      "reply_rpid": null,
+      "reply": "感谢反馈，已修复！现在开启演示无敌就不限时，关闭后从原来的剩余时间继续。网站和Toy都已更新，重新打开试玩就能用。",
+      "reply_sha256": "b40b9471e81369a4fee799bb42bb7f0f590eb3c1e6090d138c6bea2d61f78a90",
+      "reply_status": "public_verified",
+      "reply_verified_at": "2026-10-06T10:13:04.838269+00:00",
+      "url": "https://www.bilibili.com/opus/1255480955666169860#reply319834688688",
+      "evidence": "D:/project/task-artifacts/cadillacs-invincible-timeout-20261006-01a110a0/reply-verified.jpg",
+      "note": "通过浏览器在原楼回复，刷新后可见；公开DOM未提供回复ID，按原楼ID与正文哈希查重。"
+    }
+  ]
+}

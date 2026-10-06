@@ -13,17 +13,17 @@
     "text": "主播，你在这里面加上一个来随意摆放那些按键的那个设置，这样的话我就是比较那个，我才喜欢现在的这个样子"
   },
   "build": {
-    "id": "39621a31e72f1179e69674d6e41cbe80d9fb9f8183ed49d5833892f50d5a147b",
-    "fingerprint": "39621a31e72f1179e69674d6e41cbe80d9fb9f8183ed49d5833892f50d5a147b",
-    "commit": null,
-    "dirty": true,
+    "id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+    "fingerprint": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
+    "commit": "5efa2c41d97d4bd26002b39d9705dddd2c03b01c",
+    "dirty": false,
     "entrypoint": "public/html/game/starship-defense/index.html",
     "files": {
       "game.js": "3865279fe75be566c0f97019edf9b3abb0eeb81a0c4e0e98fbaa5c133b08d45e",
-      "game.compat.js": "39621a31e72f1179e69674d6e41cbe80d9fb9f8183ed49d5833892f50d5a147b",
+      "game.compat.js": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
       "index.html": "a727493a01485b013031848dd9507e473f82b44fad480c9140028a55684962e4",
-      "combat-controls.css": "a5613c1659ba92cee0c4d5681ba86947fba8d4f362bfe5bbcc592bfca42cfef1",
-      "touch-layout.js": "3bd2e7360f01c04ccd752429957188390985100952d7890d9f2ee961422d2546"
+      "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+      "touch-layout.js": "ce17f968cc339d088a7c037f3f6be2bb583976e9732596c3fa3f01a9e9d9e666"
     }
   },
   "changes": [
@@ -43,47 +43,48 @@
     {
       "id": "edit-landscape",
       "file": "releases/web-touch-layout-v0.19.1/qa/captures/edit-landscape.png",
-      "sha256": "3fb2a47fbe907f2720438c1c97bef207d5e3b7e58dbab85fbef2ee4a7218c2a9",
+      "sha256": "c96bfbb427ba228384bc81cb660ea9662ca0d63bf1d61b12ded13be22e0e8907",
       "kind": "screenshot",
       "version": "web-touch-layout-v0.19.1",
+      "build_id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
       "capture_mode": "realtime-automation",
-      "description": "真实布局编辑及回归输入；脚本初始化游戏局面",
+      "description": "同包实际布局编辑；脚本初始化游戏局面",
       "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable"
+      "visual_review": "pass"
     },
     {
       "id": "edit-portrait",
       "file": "releases/web-touch-layout-v0.19.1/qa/captures/edit-portrait.png",
-      "sha256": "167ab64042b527681ba6ba39b81bc2a0dcbe7fcfa2025781e41d098b5b2fefcd",
+      "sha256": "db41972e3c936ca21de359f103835d0c1a13688659e6658bcdea81c347dbfa5a",
       "kind": "screenshot",
       "version": "web-touch-layout-v0.19.1",
+      "build_id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
       "capture_mode": "realtime-automation",
-      "description": "真实布局编辑及回归输入；脚本初始化游戏局面",
+      "description": "同包实际布局编辑；脚本初始化游戏局面",
       "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable"
+      "visual_review": "pass"
     },
     {
-      "id": "page@cc8134b9e7dc32cb3c787d53c8908ffd",
-      "file": "releases/web-touch-layout-v0.19.1/qa/captures/page@cc8134b9e7dc32cb3c787d53c8908ffd.webm",
-      "sha256": "b6c34aa27407cd67a6b680e19517b040dfe30bd308edb00d5a3a63494d7cb459",
+      "id": "layout-browser-recording",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/page@16dc27213c66dd904beb295e8683d721.webm",
+      "sha256": "daff800aa5d5060308f2a7c469f350fc86a4eb22de0aa256a64021aba8438096",
       "kind": "video",
       "version": "web-touch-layout-v0.19.1",
+      "build_id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
       "capture_mode": "realtime-automation",
-      "description": "真实布局编辑及回归输入；脚本初始化游戏局面",
+      "description": "同包真实编辑输入/手机视口模拟原始录像，未作成片审看",
       "audio": "none",
-      "visual_review": "not-run",
-      "audio_review": "not-applicable"
+      "visual_review": "not-run"
     }
   ],
   "historical_media": [],
   "qa": {
     "results": "qa/results.json",
-    "method": "Microsoft Edge headless 实际鼠标输入及手机横竖视口模拟；电脑操作现有回归12项通过",
+    "method": "网站及自包含Toy包Microsoft Edge实际鼠标拖动；平台预览真实菜单/按键微调，横竖视口模拟",
     "not_tested": [
       "实体手机多指触控与性能"
-    ]
+    ],
+    "package_results": "qa/results.json"
   },
   "readiness": {
     "overview": "partial",
@@ -97,7 +98,16 @@
     "reason": "操作设置功能不改变战场画风与场景"
   },
   "web": {
-    "status": "pending_deployment"
+    "status": "initial_public_verified_final_microadjust_pending",
+    "commit": "5efa2c41d97d4bd26002b39d9705dddd2c03b01c",
+    "verified_at": "2026-10-06T10:02:26.458650+00:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "evidence": "qa/results.json",
+    "bundle_matches_local": true,
+    "stylesheet_matches_local": true,
+    "html_cache_version": "5efa2c41",
+    "initial_deployment_commit": "5efa2c41d97d4bd26002b39d9705dddd2c03b01c",
+    "note": "初始拖动功能已公网核验；最终选中反馈/键盘微调正在等待共享合并锁，尚未发布"
   },
   "toy": {
     "id": 38678478981120,
@@ -110,5 +120,21 @@
   "comment_reply": {
     "status": "pending_verified_release",
     "rpid": "316226527777"
+  },
+  "toy_preview": {
+    "url": "https://www.bilibili.com/toy/preview/preview_FsAwtrhJ/index.html",
+    "package_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
+    "status": "verified",
+    "checks": [
+      "电脑预览真实选择与方向微调",
+      "保存重载位置保留",
+      "手机844x390横屏布局与恢复默认",
+      "390x844竖屏旋转与取消调整",
+      "同包自包含内容7组真实拖动及输入回归通过"
+    ],
+    "limitations": [
+      "Toy iframe 原生拖动受自动化工具坐标限制；预览用真实按键微调核验位置与保存，同包本地用实际鼠标拖动验收",
+      "未做实体手机多指性能测试"
+    ]
   }
 }
