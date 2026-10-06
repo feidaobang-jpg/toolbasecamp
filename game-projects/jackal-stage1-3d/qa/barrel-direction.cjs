@@ -11,12 +11,21 @@ const { BASE, launch } = require('./lib');
   const results = [];
   const errors = [];
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
-    page.on('pageerror', e => errors.push(e.message));
+    const mobile = process.env.JK_MOBILE === '1';
+    const viewport = mobile ? { width: 844, height: 390 } : { width: 1280, height: 720 };
+    const host = await browser.newPage({ viewport, ...(mobile ? { isMobile: true, hasTouch: true } : {}) });
+    host.on('pageerror', e => errors.push(e.message));
+    let page = host;
+    if (process.env.JK_TOY_WRAPPER) {
+      await host.goto(process.env.JK_TOY_WRAPPER);
+      await host.locator('iframe').waitFor();
+      page = host.frames().find(f => /bilibilitoy/.test(f.url()));
+      if (!page) throw Error('Missing Toy game frame');
+    }
     for (const stage of [1, 2]) {
       await page.goto(BASE + '?test=1&stage=' + stage + '&seed=3&q=high');
       await page.waitForFunction(() => window.__JK_TEST__);
-      await page.keyboard.press('Enter');
+      await page.locator('#menu [data-act=start]').click();
       await page.evaluate(() => {
         __JK_TEST__.manual(true);
         __JK_TEST__.cheat.invuln(999);
@@ -59,11 +68,11 @@ const { BASE, launch } = require('./lib');
           result.ok = reversed ? result.dot < -0.995 : result.dot > 0.995 && (result.muzzleError === null || result.muzzleError < 0.1 && result.shots === 3);
           result.stage = stage;
           results.push(result);
-          if (type === 'turret' && dir === 4) await page.screenshot({ path: path.join(out, 'turret-south.png') });
+          if (type === 'turret' && dir === 4) await host.screenshot({ path: path.join(out, 'turret-south.png') });
         }
       }
     }
-    const report = { version: await page.evaluate(() => __JK_TEST__.version), expectedReversed: process.env.JK_EXPECT_REVERSED === '1', pass: results.filter(r => r.ok).length, total: results.length, errors, results };
+    const report = { version: await page.evaluate(() => __JK_TEST__.version), viewport, mobileSimulation: mobile, expectedReversed: process.env.JK_EXPECT_REVERSED === '1', pass: results.filter(r => r.ok).length, total: results.length, errors, results };
     fs.writeFileSync(path.join(out, 'results.json'), JSON.stringify(report, null, 2));
     console.log(JSON.stringify({ version: report.version, pass: report.pass, total: report.total, errors, failures: results.filter(r => !r.ok) }));
     if (report.pass !== report.total || errors.length) process.exitCode = 1;
