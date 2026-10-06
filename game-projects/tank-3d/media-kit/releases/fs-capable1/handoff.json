@@ -1,0 +1,63 @@
+{
+ "schema_version": 1,
+ "game_id": "tank-3d",
+ "version": "fs-capable1",
+ "base_version": "camera-fullmap1",
+ "created_at": "2026-10-07T06:19:13+08:00",
+ "classification": "普通补丁",
+ "reason": "AGENTS.md「2026-10-06 右上按钮布局补充」：全屏按实际浏览器能力检测，不因手机分类隐藏，拒绝时保留可玩回退；参考赤色要塞 v0.7.9（0e6bdb8a / a37f8377）。",
+ "build": {
+  "id": "fs-capable1",
+  "entrypoint": "public/html/game/tank-3d/index.html",
+  "source_sha256": {
+   "public/html/game/tank-3d/main.js": "7a4ff45614e072a10936ac8cc060472b85e4de167a57acdcd8f54ad12011fd33",
+   "public/html/game/tank-3d/style.css": "10b1e374e2d9796270cfbafac7fdbcacbcd0f1a7967e3bd6ae5349dcbba46c0f",
+   "public/html/game/tank-3d/index.html": "89c22c879a8088a61b1334fbc4c404034fc511239951b469c49ba8d031fd37ee"
+  }
+ },
+ "changes": [
+  {
+   "id": "fs-capable",
+   "before": "CSS 按 body.mobile-device 隐藏全屏，但公共 drag-look.js 注入 display:block!important，结果手机上总显示——iPhone Safari、未授权全屏的 iframe 也显示一个点了无效的按钮",
+   "after": "fsCapable()（元素有 requestFullscreen/webkitRequestFullscreen 且 fullscreenEnabled 不为 false）决定 #btn-fs 与菜单「全屏」的 hidden；已在全屏时总显示以便退出；html body #btn-fs[hidden] 压过公共样式"
+  },
+  {
+   "id": "menu-nav-visible",
+   "before": "菜单 ↑↓ 列表只排除 hidden 属性",
+   "after": "同时排除无布局盒（样式隐藏）的项，首焦点在布局完成后设置，避免焦点落到看不见的项"
+  },
+  {
+   "id": "coop-hidden-check",
+   "note": "#coop-ready/#coop-start 的 hidden 由全局 [hidden]{display:none!important} 保证，大厅实测桌面与手机均为 display:none，无需改动"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "fs-shown-unsupported",
+   "status": "fixed",
+   "cause": "旧规则按设备分类隐藏，又被公共界面的 !important 规则反向覆盖，与 10-06 按能力检测的规则矛盾"
+  }
+ ],
+ "qa": {
+  "script": "game-projects/tank-3d/qa/fullscreen.cjs",
+  "results": {
+   "fullscreen.json": "71/71",
+   "browser-check.json": "18/18"
+  },
+  "viewports": [
+   "desktop 1280×720",
+   "手机横屏 844×390",
+   "手机竖屏 390×844（开局自动旋转）"
+  ],
+  "method": "Playwright + Edge（RTX 4060 Ti），capable 原样 / incapable 用 addInitScript 删掉 requestFullscreen 并令 fullscreenEnabled=false；手机段全程触摸、不按键盘",
+  "f_key": "本游戏没有 F 全屏快捷键，未新增；只测按钮与菜单",
+  "exit_fullscreen": "退出全屏后自动暂停（原行为保持）",
+  "physical_phone_test": false,
+  "screenshots": "只留本机 qa/out/"
+ },
+ "channels": {
+  "website": "pending_deploy",
+  "toy": "pending_submit",
+  "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
+ }
+}

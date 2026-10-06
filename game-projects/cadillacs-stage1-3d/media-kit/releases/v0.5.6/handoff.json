@@ -1,0 +1,66 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.5.6",
+ "base_version": "v0.5.5",
+ "created_at": "2026-10-07T06:19:13+08:00",
+ "classification": "普通补丁",
+ "reason": "AGENTS.md「2026-10-06 右上按钮布局补充」：全屏按实际浏览器能力检测，不因手机分类隐藏，拒绝时保留可玩回退；参考赤色要塞 v0.7.9（0e6bdb8a / a37f8377）。",
+ "build": {
+  "id": "v0.5.6",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "source_sha256": {
+   "game-projects/cadillacs-stage1-3d/src/main.js": "ae00b3b2dbf230671b3d863a595ff097633f724a2a4cf0352d55a695a36dbbe9",
+   "public/html/game/cadillacs-stage1-3d/css/style.css": "03de507a52943d0d719e253da67f3fa102131497cd9a5cdfe7c2ff958e33eedf",
+   "public/html/game/cadillacs-stage1-3d/index.html": "27167fc516f972c3327442b9dd354d8ad7752af85a53ddba992d3ce0f75791e2",
+   "public/html/game/cadillacs-stage1-3d/js/game.min.js": "0bb0996d5ce7c9fdb0805506ffbd297b9ccb8707e0be17275d1e2b58df5d9f9f"
+  }
+ },
+ "changes": [
+  {
+   "id": "fs-capable",
+   "before": "CSS 按 body.mobile-device 隐藏全屏，但公共 drag-look.js 注入 display:block!important，结果手机上总显示——iPhone Safari、未授权全屏的 iframe 也显示一个点了无效的按钮",
+   "after": "fsCapable()（元素有 requestFullscreen/webkitRequestFullscreen 且 fullscreenEnabled 不为 false）决定 #btn-fs 与菜单「全屏」的 hidden；已在全屏时总显示以便退出；html body #btn-fs[hidden] 压过公共样式"
+  },
+  {
+   "id": "menu-nav-visible",
+   "before": "菜单 ↑↓ 列表只排除 hidden 属性",
+   "after": "同时排除无布局盒（样式隐藏）的项，首焦点在布局完成后设置，避免焦点落到看不见的项"
+  },
+  {
+   "id": "items-hidden-guard",
+   "note": ".items > button 的 display:flex 会盖过 UA [hidden]；加 #app .items > [hidden]{display:none!important}（本游戏当前没有其他用 hidden 的菜单项）"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "fs-shown-unsupported",
+   "status": "fixed",
+   "cause": "旧规则按设备分类隐藏，又被公共界面的 !important 规则反向覆盖，与 10-06 按能力检测的规则矛盾"
+  }
+ ],
+ "qa": {
+  "script": "game-projects/cadillacs-stage1-3d/qa/fullscreen.js",
+  "results": {
+   "fullscreen.json": "73/73",
+   "desktop.json": "90/90",
+   "mobile.json": "35/35",
+   "stage2.json": "55/55"
+  },
+  "viewports": [
+   "desktop 1280×720",
+   "手机横屏 844×390",
+   "手机竖屏 390×844（开局自动旋转）"
+  ],
+  "method": "Playwright + Edge（RTX 4060 Ti），capable 原样 / incapable 用 addInitScript 删掉 requestFullscreen 并令 fullscreenEnabled=false；手机段全程触摸、不按键盘",
+  "f_key": "恐龙快打 F 键在不支持时提示「当前浏览器不支持全屏，已使用页面内横屏布局继续」并继续游玩（按方向角色移动）",
+  "exit_fullscreen": "退出全屏后自动暂停（原行为保持）",
+  "physical_phone_test": false,
+  "screenshots": "只留本机 qa/out/"
+ },
+ "channels": {
+  "website": "pending_deploy",
+  "toy": "pending_submit",
+  "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
+ }
+}
