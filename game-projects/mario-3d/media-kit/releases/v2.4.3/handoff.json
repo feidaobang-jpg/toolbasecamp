@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.4.3",
+  "base_version": "v2.4.2",
+  "created_at": "2026-10-07T05:23:28.767007+08:00",
+  "classification": "普通补丁",
+  "source": {
+    "url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/#reply319881634192",
+    "user": "为啥呀鸭",
+    "feedback": [
+      "马里奥在第2关坠崖之后,会卡bug来到上方平台",
+      "然后食人花会留下重影"
+    ],
+    "pictures_viewed": 2
+  },
+  "build": {
+    "id": "v2.4.3",
+    "dirty": true,
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "source_sha256": {
+      "index.html": "94c5d2ec6ec3107612c773694b9874a08ae9f5a753961e1e54a9dc201ee4e0ab",
+      "levels.js": "f4663d71f8d2a50e9cf472a13a1818b00f896a42485032348c9dd9f3bc4475d6",
+      "main.js": "73317fb6d030f1ec73355256b534512eec23136f29ef90da9d7cd0d27536a237",
+      "scene.js": "d1c50e95c8fad98d10fdb2783b474d0bf64f6e7f4896a6e6ac36cf8a709f20e7",
+      "world.js": "7a97515f458129cb6d6d9520af24ca6e7bf324e4766b8425753c7aeceb846608"
+    }
+  },
+  "changes": [
+    {
+      "id": "checkpoint-floor",
+      "before": "1-2死亡后复活在y=11天花板上方",
+      "after": "显式检查点高度y=0，保留初次落入关卡动画、复活保护与补满护心",
+      "validation": "desktop/landscape/portrait passed"
+    },
+    {
+      "id": "plant-cleanup",
+      "before": "食人花数组不能由scene.remove(array)移除，重开及切区残留模型",
+      "after": "逐个移除三根水管模型，奖励房间/标题/1-1无旧食人花",
+      "validation": "three restarts and both pipe transitions passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "checkpoint-roof",
+      "status": "fixed",
+      "cause": "从最高砖块向下扫描，错误取到地下关天花板",
+      "before_y": 11,
+      "after_y": 0
+    },
+    {
+      "id": "ghost-plants",
+      "status": "fixed",
+      "cause": "将模型数组当成单个Object3D移除",
+      "before_model_counts": [
+        27,
+        36,
+        45,
+        54,
+        63
+      ],
+      "after_model_counts": [
+        9,
+        9,
+        9,
+        9,
+        0
+      ]
+    }
+  ],
+  "qa": {
+    "script": "game-projects/mario-3d/qa/comment-regressions.cjs",
+    "artifact_directory": "D:/project/task-artifacts/mario-comment-fix-20261007",
+    "physical_phone_test": false,
+    "method": "Edge GPU headless, test-only teleports/manual logic plus actual death/pipe/restart UI paths; 1280x720,844x390,390x844",
+    "results": "after/results.json",
+    "performance": "after/performance.json"
+  },
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "自动化录像无游戏音轨；本次未做手机真机验收"
+    ]
+  },
+  "cover": {
+    "action": "keep",
+    "reason": "修复碰撞/区域模型清理，题材画风与主画面未改"
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39043286960128,
+    "status": "pending"
+  },
+  "bilibili": {
+    "status": "pending_merge",
+    "reason": "普通错误修复累计入下次有意义的简介更新；当前入口/操作说明准确",
+    "comment_reply": "pending after web/Toy verification"
+  }
+}
