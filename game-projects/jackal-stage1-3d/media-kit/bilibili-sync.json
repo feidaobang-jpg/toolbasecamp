@@ -77,6 +77,14 @@
    "summary": "暂停后重新开始恢复声音。",
    "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
    "record": "releases/v0.7.8/handoff.json"
+  },
+  {
+   "version": "v0.7.9",
+   "classification": "普通补丁",
+   "status": "pending_merge",
+   "record": "releases/v0.7.9/handoff.json",
+   "summary": "手机横屏菜单完整显示、全屏按浏览器能力显示、失败结算不再误显示进入下一关。",
+   "reason": "普通补丁累计；现有简介未写全屏/菜单布局，仍准确。"
   }
  ],
  "resolved_updates": [

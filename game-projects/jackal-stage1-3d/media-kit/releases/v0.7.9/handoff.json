@@ -91,6 +91,16 @@
   {
    "method": "临时视口测量（手机横竖、Toy 外壳 844×346、平板、桌面）",
    "result": "手机横屏 844×390、844×346、740×360、667×375、932×430 三种菜单均完整；568×320 整层滚动首尾可达；桌面/平板与修改前一致（高度不足时仍整层滚动）"
+  },
+  {
+   "method": "线上 mobile.js（https://www.zhengxiaohui.cn/...）",
+   "result": "pass 58/58",
+   "evidence": "qa/mobile-live.json"
+  },
+  {
+   "method": "Toy 预览外壳实测（临时脚本，Edge 设备模拟）",
+   "result": "pass 18/18",
+   "evidence": "qa/toy-preview.json"
   }
  ],
  "env_note": "Edge 设备模拟 + CDP 触摸（JK_CHANNEL=msedge JK_GPU=1），非真机；多指与真机全屏行为未在真机验证",
@@ -98,7 +108,10 @@
   "hud-visibility.cjs 回归时未设 JK_OUT，覆盖了 D:/project/task-artifacts/boss-hud-20261006/qa 里 v0.7.2 留下的截图与 results.json（v0.7.2 handoff 引用该目录；git 记录不受影响，原文件无法恢复）。脚本默认输出已改为 qa/out/hud-visibility。"
  ],
  "site": {
-  "status": "pending_deploy",
+  "status": "deployed_verified",
+  "commit": "40ec2d13",
+  "verified_at": "2026-10-07T05:29:01+08:00",
+  "verification": "Actions success；线上 game.min.js 453b1592…、style.css e33d82dc… 与提交一致；对线上地址跑 mobile.js 58/58（qa/mobile-live.json）",
   "first_deploy": {
    "commit": "1953197d",
    "verified": "Actions success；线上 JS cce26f0a…/CSS 732783a0… 与提交一致；线上 mobile.js 57/57",
@@ -107,10 +120,21 @@
  },
  "toy": {
   "id": 39863936092160,
-  "status": "pending"
+  "status": "published",
+  "package": "dist/toy-v0.7.9/package",
+  "package_tree_sha256": "fe99ac10164c4faac117242fea3aaf034819a0694ac65f2539e687dce3c6288d",
+  "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_uc5X2nxI/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_we71Mp1Y/index.html",
+  "submitted_at": "2026-10-07T05:29:17+08:00",
+  "preview_checks": "Toy 预览外壳 18/18（电脑 1280×720；手机横屏外壳内 844×346 主菜单/暂停完整、摇杆开车、全屏按钮与 iframe 能力一致（allowfullscreen）；窄横屏 568×276 滑动首尾可达；竖屏旋转暂停完整；无脚本错误），见 qa/toy-preview.json",
+  "doctor": "toy_doctor.py 0 warning",
+  "earlier_preview": "preview_vZGwZogp（首版包，外壳内主菜单需滚动 37px，未提交）",
+  "verified_at": "2026-10-07T05:31:42+08:00",
+  "public_check": "toy mylist published；正式入口 feidao-jackal-3d iframe 载入 v0.7.9，公开入口实测 18/18（qa/toy-public.json）"
  },
  "bilibili": {
   "status": "pending_merge",
-  "reason": "普通补丁累计"
+  "reason": "普通补丁累计；现有简介未写全屏/菜单布局，仍准确"
  }
 }

@@ -1,0 +1,265 @@
+{
+ "when": "2026-10-06T21:27:29.952Z",
+ "url": "https://www.bilibili.com/toy/preview/preview_uc5X2nxI/index.html",
+ "env": "Edge 设备模拟 + CDP 触摸，Toy 预览外壳 iframe（?test=1），非真机",
+ "pass": 18,
+ "total": 18,
+ "results": [
+  {
+   "name": "[Toy 电脑] 游戏 iframe 载入 v0.7.9，显示主菜单",
+   "ok": true,
+   "detail": {
+    "overlay": "menu",
+    "allow": {
+     "allow": "pointer-lock",
+     "allowfullscreen": true
+    }
+   }
+  },
+  {
+   "name": "[Toy 电脑] 菜单无「返回游戏列表」，首项可见",
+   "ok": true,
+   "detail": {
+    "vw": 1280,
+    "vh": 720,
+    "panel": [
+     100,
+     10,
+     1180,
+     716
+    ],
+    "fits": true,
+    "scroll": [
+     0,
+     6
+    ],
+    "first": true,
+    "last": true,
+    "clipped": 0,
+    "list": false
+   }
+  },
+  {
+   "name": "[Toy 电脑] 键盘 W 开车向北",
+   "ok": true,
+   "detail": {
+    "dy": 4.3
+   }
+  },
+  {
+   "name": "[Toy 电脑] 右上全屏按钮与 iframe 全屏能力一致",
+   "ok": true,
+   "detail": {
+    "fsCapable": true,
+    "visible": true
+   }
+  },
+  {
+   "name": "[Toy 电脑] Esc 暂停，菜单首项可见、可滚动到末项",
+   "ok": true,
+   "detail": {
+    "vw": 1280,
+    "vh": 720,
+    "panel": [
+     420,
+     10,
+     860,
+     789
+    ],
+    "fits": false,
+    "scroll": [
+     0,
+     79
+    ],
+    "first": true,
+    "last": false,
+    "clipped": 0,
+    "list": false
+   }
+  },
+  {
+   "name": "[Toy 电脑] Esc 继续，无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[Toy 手机横屏] 主菜单完整落在 iframe 视口内或可滚动且首项可见",
+   "ok": true,
+   "detail": {
+    "vw": 844,
+    "vh": 346,
+    "panel": [
+     12,
+     11,
+     832,
+     335
+    ],
+    "fits": true,
+    "scroll": [
+     0,
+     0
+    ],
+    "first": true,
+    "last": true,
+    "clipped": 0,
+    "list": false
+   }
+  },
+  {
+   "name": "[Toy 手机横屏] 点开始进入游戏，触屏控件显示",
+   "ok": true,
+   "detail": {
+    "touchHidden": false,
+    "display": {
+     "rotated": false,
+     "W": 844,
+     "H": 346,
+     "vw": 844,
+     "vh": 346,
+     "dpr": 1,
+     "touchOn": true,
+     "backing": [
+      844,
+      346
+     ]
+    }
+   }
+  },
+  {
+   "name": "[Toy 手机横屏] 摇杆上推开车向北",
+   "ok": true,
+   "detail": {
+    "dy": 4.3
+   }
+  },
+  {
+   "name": "[Toy 手机横屏] 全屏按钮按 iframe 能力显示",
+   "ok": true,
+   "detail": {
+    "fsCapable": true,
+    "visible": true,
+    "allow": {
+     "allow": "pointer-lock",
+     "allowfullscreen": true
+    }
+   }
+  },
+  {
+   "name": "[Toy 手机横屏] 暂停菜单完整显示或可滚动首尾可达",
+   "ok": true,
+   "detail": {
+    "vw": 844,
+    "vh": 346,
+    "panel": [
+     12,
+     33,
+     832,
+     314
+    ],
+    "fits": true,
+    "scroll": [
+     0,
+     0
+    ],
+    "first": true,
+    "last": true,
+    "clipped": 0,
+    "list": false
+   }
+  },
+  {
+   "name": "[Toy 手机横屏] 点继续回到本局，无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[Toy 窄横屏] 主菜单不横向溢出，首项可见",
+   "ok": true,
+   "detail": {
+    "vw": 568,
+    "vh": 276,
+    "panel": [
+     12,
+     8,
+     556,
+     528
+    ],
+    "fits": false,
+    "scroll": [
+     0,
+     260
+    ],
+    "first": true,
+    "last": false,
+    "clipped": 0,
+    "list": false
+   }
+  },
+  {
+   "name": "[Toy 窄横屏] 手指上滑到底，末项完整可见",
+   "ok": true,
+   "detail": {
+    "vw": 568,
+    "vh": 276,
+    "panel": [
+     12,
+     -252,
+     556,
+     268
+    ],
+    "fits": false,
+    "scroll": [
+     260,
+     260
+    ],
+    "first": false,
+    "last": true,
+    "clipped": 0,
+    "list": false
+   }
+  },
+  {
+   "name": "[Toy 窄横屏] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[Toy 竖屏] 开局旋转为横屏布局",
+   "ok": true,
+   "detail": {
+    "rotated": true,
+    "W": 800,
+    "H": 390,
+    "vw": 390,
+    "vh": 800,
+    "dpr": 1,
+    "touchOn": true,
+    "backing": [
+     800,
+     390
+    ]
+   }
+  },
+  {
+   "name": "[Toy 竖屏] 旋转布局暂停菜单完整显示或可滚动",
+   "ok": true,
+   "detail": {
+    "r": [
+     55,
+     12,
+     336,
+     788
+    ],
+    "vw": 390,
+    "vh": 800,
+    "fits": true,
+    "scroll": 0
+   }
+  },
+  {
+   "name": "[Toy 竖屏] 无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}
