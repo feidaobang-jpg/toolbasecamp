@@ -1,0 +1,102 @@
+{
+  "text": "超级玛丽，侧视能看清前面的水管和落脚位置。这一段先用熟悉的角度跳过去。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 8750000,
+      "text": "超级玛丽"
+    },
+    {
+      "offset": 13125000,
+      "duration": 3500000,
+      "text": "侧视"
+    },
+    {
+      "offset": 16750000,
+      "duration": 1250000,
+      "text": "能"
+    },
+    {
+      "offset": 18125000,
+      "duration": 4000000,
+      "text": "看清"
+    },
+    {
+      "offset": 22375000,
+      "duration": 2375000,
+      "text": "前面"
+    },
+    {
+      "offset": 24750000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 25500000,
+      "duration": 5500000,
+      "text": "水管"
+    },
+    {
+      "offset": 32125000,
+      "duration": 1875000,
+      "text": "和"
+    },
+    {
+      "offset": 34125000,
+      "duration": 3500000,
+      "text": "落脚"
+    },
+    {
+      "offset": 37750000,
+      "duration": 3625000,
+      "text": "位置"
+    },
+    {
+      "offset": 47125000,
+      "duration": 1625000,
+      "text": "这"
+    },
+    {
+      "offset": 48750000,
+      "duration": 5000000,
+      "text": "一段"
+    },
+    {
+      "offset": 54750000,
+      "duration": 2000000,
+      "text": "先"
+    },
+    {
+      "offset": 56750000,
+      "duration": 1250000,
+      "text": "用"
+    },
+    {
+      "offset": 58250000,
+      "duration": 3625000,
+      "text": "熟悉"
+    },
+    {
+      "offset": 61875000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 62750000,
+      "duration": 3250000,
+      "text": "角度"
+    },
+    {
+      "offset": 66250000,
+      "duration": 2000000,
+      "text": "跳"
+    },
+    {
+      "offset": 68250000,
+      "duration": 3000000,
+      "text": "过去"
+    }
+  ]
+}

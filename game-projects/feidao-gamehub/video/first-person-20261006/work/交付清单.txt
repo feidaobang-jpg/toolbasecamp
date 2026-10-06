@@ -1,0 +1,8 @@
+﻿本期投稿入口：../final/bilibili-zh/
+中文16:9 1920×1080，时长 157.93 秒，中文字幕已烧录。
+成片：gameplay-zh-final.mp4
+首页封面：cover-home-4x3.jpg
+空间封面：cover-space-16x9.jpg
+投稿文案：投稿文案.txt
+状态：成片已生成，待用户人工审片；尚未投稿。当前工具未完成主观听审，客观音频检查与画面验收见qa.md。
+续接：修改narration.json后运行voice.py；清除受影响edit/shared-zh片段后运行render.py；covers.py重新输出双封面，package.py更新文案与清单。

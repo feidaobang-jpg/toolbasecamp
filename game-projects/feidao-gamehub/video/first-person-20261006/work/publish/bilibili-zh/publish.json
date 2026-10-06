@@ -1,0 +1,64 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "content_type": "gameplay-update",
+  "language": "zh-CN",
+  "game_name": "五款游戏第一人称专题",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "9abbbb92ba52dfea45c1a9a83087f40854a9e3f78f9c40d76a689f499eafaef9",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 157.93333333333334,
+  "title": "按下C，钻进游戏里：五款游戏的第一人称实战",
+  "description": "坦克大战、超级玛丽、赤色要塞、恐龙快打、虫潮围城：在同一局里切换视角，看看驾驶、跳跃和贴身交战变成第一人称后是什么感觉。\n五款Toy试玩合集：https://www.bilibili.com/toy/feidao-games/index.html\n电脑按C切换视角，Q/E转头；手机可点切换视角、拖动画面观察。第一人称更贴近现场，俯视和侧视方便看清全局。\n各作由GPT、Claude等AI辅助开发，本轮由Codex辅助更新。视频为录制时版本，以当前试玩为准。\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱→游戏→自研游戏投票榜）",
+  "tags": [
+    "bilibilitoy",
+    "第一人称",
+    "游戏开发",
+    "独立游戏",
+    "坦克大战",
+    "恐龙快打",
+    "虫潮围城",
+    "GPT",
+    "AI"
+  ],
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected_in_platform": false,
+    "note": "发布阶段核对当前话题入口；历史实测Claude普通标签被平台拒绝，制作来源保留简介"
+  },
+  "pinned_comment_draft": "你最想用第一人称玩哪款？电脑按C切视角，手机点切换视角并拖动画面观察。\n五款Toy试玩合集：https://www.bilibili.com/toy/feidao-games/index.html\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱→游戏→自研游戏投票榜）",
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间"
+    }
+  },
+  "cover_text": "换个视角，亲自上场",
+  "cover_selection_source": "本期坦克与虫潮实机帧",
+  "cover_upload_mode": "custom_image",
+  "subtitle_mode": "burned_in",
+  "disclosures": [
+    "含AI生成内容"
+  ],
+  "ready_to_upload": false,
+  "blocking_issues": [
+    "待本期用户人工审片通过；当前工具未完成主观听审"
+  ],
+  "unverified_fields": [
+    "发布时话题入口与平台设置"
+  ],
+  "publication_status": "not_uploaded"
+}

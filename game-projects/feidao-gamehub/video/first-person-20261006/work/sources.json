@@ -1,0 +1,290 @@
+[
+  {
+    "game": "tank-3d",
+    "version": "toy3dui3",
+    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "normal_gameplay": true,
+    "page_errors": [],
+    "toy": {
+      "id": 39043249461248,
+      "slug": "feidao-tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "visibility": "PUBLIC",
+      "review_status": "published",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_hQqbwFeC/index.html",
+      "verified_at": "2026-10-06T11:15:46.661482+08:00",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kthKt5RG/index.html",
+      "submitted_version": "toy3dui3",
+      "submitted_at": "2026-10-06T11:06:48.109893+08:00",
+      "video_bindings": [
+        "BV1Wqaz6AEJb"
+      ],
+      "release_record": "releases/toy3dui3/handoff.json",
+      "published_version": "toy3dui3",
+      "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "note": "公开新版已核验。",
+      "package_sha256": "1f35ab5bdaa35e89f2007e6f0358b88d011d26d08a78baf7c1534c6fea6d8ea1",
+      "pending_updates": [
+        {
+          "version": "toy3dui2",
+          "classification": "正式版本",
+          "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+          "status": "published",
+          "record": "releases/toy3dui2/handoff.json",
+          "included_version": "toy3dui2"
+        },
+        {
+          "version": "toy3dui3",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/toy3dui3/handoff.json",
+          "summary": "右上贴边单行按钮，HUD避让。"
+        }
+      ],
+      "published_verified_at": "2026-10-06T03:14:57.493Z"
+    },
+    "model": "本版 merge1：claude-opus-5-5（Claude Code）；collision-fix1 等：GPT-6 Codex；初版：claude-opus-5-5"
+  },
+  {
+    "game": "mario-3d",
+    "version": "v2.4.1",
+    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "normal_gameplay": true,
+    "page_errors": [],
+    "toy": {
+      "id": 39043286960128,
+      "slug": "feidao-mario-3d",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "visibility": "PUBLIC",
+      "review_status": "published",
+      "verified_at": "2026-10-06T11:15:46.661482+08:00",
+      "video_bindings": [
+        "BV1guep6NELt"
+      ],
+      "submitted_version": "v2.4.1",
+      "submitted_at": "2026-10-06T11:06:50.864023+08:00",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_rmPBAMYy/index.html",
+      "release_record": "releases/v2.4.1/handoff.json",
+      "published_version": "v2.4.1",
+      "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_nNHxDqsW/index.html",
+      "note": "公开新版已核验。",
+      "pending_updates": [
+        {
+          "version": "v2.2.2",
+          "classification": "普通补丁",
+          "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+          "status": "included_in_submitted_package",
+          "record": "releases/drag-direction-20261005/handoff.json",
+          "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+          "included_version": "v2.3.0"
+        },
+        {
+          "version": "v2.4.0",
+          "classification": "正式版本",
+          "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+          "status": "published",
+          "record": "releases/v2.4.0/handoff.json",
+          "included_version": "v2.4.0"
+        },
+        {
+          "version": "v2.4.1",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/v2.4.1/handoff.json",
+          "summary": "右上贴边单行按钮，HUD避让。"
+        }
+      ],
+      "package_sha256": "72c6ed6f31d97743cd69f102fb5e4e3ea300451af10691564792dd21ad56b0bd",
+      "published_verified_at": "2026-10-06T03:14:57.517Z"
+    },
+    "model": "Claude Opus 5.5（v2.0.0）；更早版本为 GPT-6 Astra"
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "version": "v0.7.2",
+    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "normal_gameplay": true,
+    "page_errors": [],
+    "toy": {
+      "id": 39863936092160,
+      "slug": "feidao-jackal-3d",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "visibility": "public",
+      "review_status": "published",
+      "verified_at": "2026-10-06T12:30:53.469813+08:00",
+      "video_bindings": [
+        "BV1EyHz6wE5u"
+      ],
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_r5cbAsaD/index.html",
+      "preview_verified_at": "2026-10-06T12:29:05.253398+08:00",
+      "title": "赤色要塞 3D",
+      "category": "GAME",
+      "note": "v0.7.2已公开上线，公开入口133项验收通过，与网站同版本。",
+      "submitted_at": "2026-10-06T12:29:05.253398+08:00",
+      "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
+      "submitted_version": "v0.7.2",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
+      "release_record": "releases/v0.7.2/handoff.json",
+      "published_version": "v0.7.2",
+      "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "pending_updates": [
+        {
+          "version": "v0.7.0",
+          "classification": "正式版本",
+          "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+          "status": "published",
+          "record": "releases/v0.7.0/handoff.json",
+          "included_version": "v0.7.0"
+        },
+        {
+          "version": "v0.7.1",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/v0.7.1/handoff.json",
+          "summary": "右上贴边单行按钮，HUD避让。",
+          "included_version": "v0.7.2",
+          "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
+        },
+        {
+          "version": "v0.7.2",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/v0.7.2/handoff.json",
+          "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。",
+          "included_version": "v0.7.2",
+          "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
+        }
+      ],
+      "last_successful_sync_at": "2026-10-06T12:30:53.469813+08:00",
+      "last_successful_sync_version": "v0.7.2",
+      "package_sha256": "3e6384490286d43b61bd324a4106643a1e0b7ad4569b940da6d44a8d8ffffda4",
+      "published_verified_at": "2026-10-06T12:30:53.469813+08:00",
+      "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))"
+    },
+    "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）"
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "version": "v0.4.1",
+    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "normal_gameplay": true,
+    "page_errors": [],
+    "toy": {
+      "id": 40412421031936,
+      "title": "恐龙快打 3D：第一关",
+      "slug": "feidao-cadillacs-3d",
+      "category": "GAME",
+      "visibility": "public",
+      "status": "published",
+      "submitted_at": "2026-10-06T11:06:55.476749+08:00",
+      "package": "dist/toy-v0.2.0/package",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_FS60APdM/index.html",
+      "note": "公开新版已核验。",
+      "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
+      "bound_videos": [
+        "BV18XHW66E55"
+      ],
+      "review_status": "published",
+      "version": "v0.2.0",
+      "verified_at": "2026-10-06T11:15:46.661482+08:00",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "last_published_version": "v0.2.0",
+      "pending_updates": [
+        {
+          "version": "v0.2.1",
+          "classification": "普通补丁",
+          "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+          "status": "included_in_submitted_package",
+          "record": "releases/drag-direction-20261005/handoff.json",
+          "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+          "included_version": "v0.3.0"
+        },
+        {
+          "version": "v0.4.0",
+          "classification": "正式版本",
+          "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+          "status": "published",
+          "record": "releases/v0.4.0/handoff.json",
+          "included_version": "v0.4.0"
+        },
+        {
+          "version": "v0.4.1",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/v0.4.1/handoff.json",
+          "summary": "右上贴边单行按钮，HUD避让。"
+        }
+      ],
+      "submitted_version": "v0.4.1",
+      "package_sha256": "14c985c1d3ce51ab4eaafd803483a55942fc5634862bca77598b03e689f453fb",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GEQxLBrF/index.html",
+      "release_record": "releases/v0.4.1/handoff.json",
+      "published_version": "v0.4.1",
+      "published_verified_at": "2026-10-06T03:14:57.544Z",
+      "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "video_bindings": [
+        "BV18XHW66E55"
+      ]
+    },
+    "model": "claude-opus-5-5（Claude Code 会话模型标识）"
+  },
+  {
+    "game": "starship-defense",
+    "version": "web-difficulty-v0.19.0",
+    "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+    "normal_gameplay": true,
+    "page_errors": [],
+    "toy": {
+      "id": 38678478981120,
+      "slug": "chongchao-qianshao",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "visibility": "PUBLIC",
+      "review_status": "published",
+      "verified_at": "2026-10-06T03:34:08.708445+00:00",
+      "video_bindings": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt"
+      ],
+      "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GJqShxfS/index.html",
+      "title": "虫潮围城",
+      "zip_sha256": "ea92516b02bf41a975d888911698d6fb87aac0d99de8811e487d2d6b9372ddaa",
+      "submitted_date": "2026-10-06",
+      "release_record": "releases/web-difficulty-v0.19.0/handoff.json",
+      "submitted_version": "web-difficulty-v0.19.0",
+      "published_version": "web-difficulty-v0.19.0",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_GJqShxfS/index.html",
+      "note": "三档难度公开版已通过电脑及模拟手机横竖屏、存档兼容与独立副本难度核验。",
+      "submitted_at": "2026-10-06T03:22:11.066298+00:00",
+      "package_sha256": "ea92516b02bf41a975d888911698d6fb87aac0d99de8811e487d2d6b9372ddaa",
+      "pending_updates": [
+        {
+          "version": "web-controls-v0.18.2",
+          "classification": "普通补丁",
+          "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+          "status": "published",
+          "record": "releases/web-controls-v0.18.2/handoff.json",
+          "included_version": "web-controls-v0.18.2"
+        },
+        {
+          "version": "web-controls-v0.18.3",
+          "classification": "普通补丁",
+          "status": "published",
+          "record": "releases/web-controls-v0.18.3/handoff.json",
+          "summary": "右上贴边单行按钮，HUD避让。"
+        },
+        {
+          "version": "web-difficulty-v0.19.0",
+          "classification": "正式版本",
+          "status": "published",
+          "record": "releases/web-difficulty-v0.19.0/handoff.json",
+          "summary": "新局可选休闲/普通/困难，难度随存档保存，普通保留原体验，困难增援与精英压力更强。"
+        }
+      ],
+      "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "published_verified_at": "2026-10-06T03:34:08.708445+00:00"
+    },
+    "model": null
+  }
+]

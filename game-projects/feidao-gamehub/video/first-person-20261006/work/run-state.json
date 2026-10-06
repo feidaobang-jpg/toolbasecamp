@@ -1,0 +1,21 @@
+{
+  "task_id": "01a11023-five-games-video-20261006-1",
+  "status": "awaiting_human_review",
+  "production_assets_complete": true,
+  "mode": "five-game-camera-special",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "source_commit": "cc0e8e27a934931cb32149a94695d1214348ed06",
+  "workspace": "D:\\project\\worktrees\\five-games-video-20261006",
+  "voice": "Edge TTS zh-CN-YunxiNeural +0%",
+  "audio_subjective_listening": "not-run",
+  "publication": "not_uploaded",
+  "next_step": "用户人工审片明确通过后，按game-video流程投稿并绑定合集Toy；当前没有新BV，不做账号写操作。",
+  "final_dir": "../final/bilibili-zh",
+  "updated_at": "2026-10-06T16:27:27.154210+08:00",
+  "video_sha256": "9abbbb92ba52dfea45c1a9a83087f40854a9e3f78f9c40d76a689f499eafaef9",
+  "duration_seconds": 157.93333333333334,
+  "technical_qa": "pass",
+  "visual_qa": "pass"
+}

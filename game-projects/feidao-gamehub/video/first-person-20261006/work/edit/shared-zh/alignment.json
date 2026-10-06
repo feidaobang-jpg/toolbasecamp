@@ -1,0 +1,471 @@
+[
+  {
+    "start": 0.30000000000000004,
+    "end": 1.2125,
+    "text": "按一下C",
+    "segment": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 1.25,
+    "end": 3.1125000000000003,
+    "text": "镜头就钻进了主角眼睛里",
+    "segment": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 3.5250000000000004,
+    "end": 4.6625000000000005,
+    "text": "同一款游戏",
+    "segment": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 4.95,
+    "end": 5.95,
+    "text": "换个视角",
+    "segment": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 6.075,
+    "end": 7.425000000000001,
+    "text": "打起来是什么感觉？",
+    "segment": "01-hook",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 8.999999999999998,
+    "end": 11.399999999999999,
+    "text": "这次把五款游戏放在一起实打",
+    "segment": "02-intro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 11.825,
+    "end": 13.274999999999999,
+    "text": "从看清全局",
+    "segment": "02-intro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 13.299999999999999,
+    "end": 14.6,
+    "text": "到亲自上场",
+    "segment": "02-intro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 14.799999999999999,
+    "end": 16.824999999999996,
+    "text": "看看视角到底改变了什么",
+    "segment": "02-intro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 18.433333333333334,
+    "end": 19.92083333333333,
+    "text": "先看坦克大战",
+    "segment": "03-tank-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 20.34583333333333,
+    "end": 23.02083333333333,
+    "text": "俯视能看清砖墙和敌车的位置",
+    "segment": "03-tank-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 23.145833333333332,
+    "end": 25.43333333333333,
+    "text": "守老鹰时方便判断路线",
+    "segment": "03-tank-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 27.033333333333335,
+    "end": 28.48333333333333,
+    "text": "切进第一人称",
+    "segment": "04-tank-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 28.645833333333332,
+    "end": 30.53333333333333,
+    "text": "砖墙变成了眼前的掩体",
+    "segment": "04-tank-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 30.695833333333333,
+    "end": 32.18333333333333,
+    "text": "敌车从路口出现",
+    "segment": "04-tank-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 32.608333333333334,
+    "end": 34.170833333333334,
+    "text": "开炮更有现场感",
+    "segment": "04-tank-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 34.44583333333333,
+    "end": 35.67583333333333,
+    "text": "不过两边的动静",
+    "segment": "04-tank-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 35.69583333333333,
+    "end": 36.795833333333334,
+    "text": "也得自己留心",
+    "segment": "04-tank-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 38.400000000000006,
+    "end": 39.425000000000004,
+    "text": "超级玛丽",
+    "segment": "05-mario-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 39.612500000000004,
+    "end": 42.587500000000006,
+    "text": "侧视能看清前面的水管和落脚位置",
+    "segment": "05-mario-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 43.0125,
+    "end": 45.575,
+    "text": "这一段先用熟悉的角度跳过去",
+    "segment": "05-mario-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 47.16666666666667,
+    "end": 48.55416666666667,
+    "text": "再切到第一人称",
+    "segment": "06-mario-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 48.69166666666667,
+    "end": 50.204166666666666,
+    "text": "同样的方块和水管",
+    "segment": "06-mario-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 50.40416666666667,
+    "end": 52.391666666666666,
+    "text": "现在要从眼前判断距离",
+    "segment": "06-mario-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 52.81666666666667,
+    "end": 54.141666666666666,
+    "text": "新鲜感很强",
+    "segment": "06-mario-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 54.34166666666667,
+    "end": 56.46666666666667,
+    "text": "跳跃也更考验落点判断",
+    "segment": "06-mario-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 58.06666666666667,
+    "end": 59.041666666666664,
+    "text": "赤色要塞",
+    "segment": "07-jackal-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 59.22916666666667,
+    "end": 61.416666666666664,
+    "text": "俯视方便规划吉普车的路线",
+    "segment": "07-jackal-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 61.84166666666667,
+    "end": 64.04166666666667,
+    "text": "开车、投弹、救人",
+    "segment": "07-jackal-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 64.22916666666667,
+    "end": 65.47916666666667,
+    "text": "先把战场看明白",
+    "segment": "07-jackal-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 67.06666666666666,
+    "end": 68.22916666666667,
+    "text": "切到驾驶位",
+    "segment": "08-jackal-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 68.42916666666667,
+    "end": 70.27916666666667,
+    "text": "路口和营房就在眼前",
+    "segment": "08-jackal-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 70.70416666666667,
+    "end": 73.55416666666667,
+    "text": "现在转头和驾驶都要看准方向",
+    "segment": "08-jackal-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 73.75416666666666,
+    "end": 76.15416666666667,
+    "text": "像是自己开着吉普上前线",
+    "segment": "08-jackal-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 77.73333333333333,
+    "end": 78.74583333333335,
+    "text": "恐龙快打",
+    "segment": "09-cadillacs-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 78.92083333333333,
+    "end": 81.70833333333334,
+    "text": "侧视方便看清敌人从哪边围过来",
+    "segment": "09-cadillacs-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 82.12083333333334,
+    "end": 83.13333333333334,
+    "text": "先打起来",
+    "segment": "09-cadillacs-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 83.22083333333335,
+    "end": 84.88333333333334,
+    "text": "再在同一局里换个角度",
+    "segment": "09-cadillacs-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 86.5,
+    "end": 87.70000000000002,
+    "text": "第一人称一开",
+    "segment": "10-cadillacs-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 87.8875,
+    "end": 89.57500000000002,
+    "text": "对手直接站在面前",
+    "segment": "10-cadillacs-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 89.6375,
+    "end": 92.23750000000001,
+    "text": "贴身格斗的距离感马上变了",
+    "segment": "10-cadillacs-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 92.6375,
+    "end": 94.57500000000002,
+    "text": "但身后的敌人更难观察",
+    "segment": "10-cadillacs-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 94.825,
+    "end": 96.67500000000001,
+    "text": "转头和走位就更重要",
+    "segment": "10-cadillacs-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 98.26666666666667,
+    "end": 99.74166666666667,
+    "text": "最后是虫潮围城",
+    "segment": "11-insects-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 100.16666666666667,
+    "end": 103.96666666666668,
+    "text": "第三人称能同时观察自己、虫群和基地",
+    "segment": "11-insects-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 104.39166666666667,
+    "end": 105.42916666666667,
+    "text": "守线时",
+    "segment": "11-insects-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 105.52916666666667,
+    "end": 107.21666666666668,
+    "text": "先知道敌人从哪里来",
+    "segment": "11-insects-wide",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 108.8,
+    "end": 110.075,
+    "text": "换到第一人称",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 110.175,
+    "end": 112.36250000000001,
+    "text": "虫群变成迎面而来的威胁",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 112.78750000000001,
+    "end": 113.97500000000001,
+    "text": "转头找目标",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 114.03750000000001,
+    "end": 114.85000000000001,
+    "text": "开火",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 114.91250000000001,
+    "end": 116.87500000000001,
+    "text": "再用手雷拉开战斗节奏",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 117.3,
+    "end": 118.68750000000001,
+    "text": "这种临场感",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 118.875,
+    "end": 121.1375,
+    "text": "也是这次最想让大家亲自试的",
+    "segment": "12-insects-fp",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 122.73333333333333,
+    "end": 125.53333333333335,
+    "text": "这五款都能在本局里切换视角",
+    "segment": "13-tradeoff",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 125.63333333333334,
+    "end": 126.78333333333335,
+    "text": "不用重新开始",
+    "segment": "13-tradeoff",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 127.20833333333334,
+    "end": 129.12083333333334,
+    "text": "第一人称更贴近现场",
+    "segment": "13-tradeoff",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 129.34583333333333,
+    "end": 132.07083333333335,
+    "text": "俯视和侧视更方便掌握全局",
+    "segment": "13-tradeoff",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 132.12083333333334,
+    "end": 133.20833333333334,
+    "text": "各有各的用处",
+    "segment": "13-tradeoff",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 134.79999999999998,
+    "end": 137.225,
+    "text": "五款都可以在哔哩哔哩Toy试玩",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 137.45,
+    "end": 139.625,
+    "text": "入口放在简介里的游戏合集",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 140.04999999999998,
+    "end": 143.4125,
+    "text": "下一步继续打磨近身视野和转头手感",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 143.83749999999998,
+    "end": 146.1,
+    "text": "你最想用第一人称玩哪款？",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 146.5125,
+    "end": 147.725,
+    "text": "喜欢这个方向",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 147.77499999999998,
+    "end": 149.625,
+    "text": "顺手空投个三连补给",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 150.04999999999998,
+    "end": 153.0125,
+    "text": "也可以去百宝箱游戏页的投票榜和愿望单",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  },
+  {
+    "start": 153.325,
+    "end": 155.225,
+    "text": "告诉我接下来想看什么",
+    "segment": "14-outro",
+    "timing_source": "Edge WordBoundary"
+  }
+]

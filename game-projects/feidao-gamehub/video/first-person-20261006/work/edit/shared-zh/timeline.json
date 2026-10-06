@@ -1,0 +1,386 @@
+{
+  "duration": 157.93333333333334,
+  "fps": 30,
+  "segments": [
+    {
+      "id": "01-hook",
+      "final_in": 0,
+      "final_out": 8.7,
+      "lines": [
+        "按一下C，镜头就钻进了主角眼睛里。",
+        "同一款游戏，换个视角，打起来是什么感觉？"
+      ],
+      "shots": [
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 35.5,
+          "source_out": 39.0,
+          "final_in": 0,
+          "final_out": 3.5,
+          "game": "cadillacs-stage1-3d"
+        },
+        {
+          "source": "capture/starship-defense.mp4",
+          "source_in": 80,
+          "source_out": 85.2,
+          "final_in": 3.5,
+          "final_out": 8.7,
+          "game": "starship-defense"
+        }
+      ]
+    },
+    {
+      "id": "02-intro",
+      "final_in": 8.7,
+      "final_out": 18.133333333333333,
+      "lines": [
+        "这次把五款游戏放在一起实打。",
+        "从看清全局，到亲自上场，看看视角到底改变了什么。"
+      ],
+      "shots": [
+        {
+          "source": "capture/tank-3d.mp4",
+          "source_in": 6,
+          "source_out": 7.5,
+          "final_in": 8.7,
+          "final_out": 10.2,
+          "game": "tank-3d"
+        },
+        {
+          "source": "capture/mario-3d.mp4",
+          "source_in": 7,
+          "source_out": 8.5,
+          "final_in": 10.2,
+          "final_out": 11.7,
+          "game": "mario-3d"
+        },
+        {
+          "source": "capture/jackal-stage1-3d.mp4",
+          "source_in": 8,
+          "source_out": 9.5,
+          "final_in": 11.7,
+          "final_out": 13.2,
+          "game": "jackal-stage1-3d"
+        },
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 8,
+          "source_out": 9.5,
+          "final_in": 13.2,
+          "final_out": 14.7,
+          "game": "cadillacs-stage1-3d"
+        },
+        {
+          "source": "capture/starship-defense.mp4",
+          "source_in": 8,
+          "source_out": 11.433333333333334,
+          "final_in": 14.7,
+          "final_out": 18.133333333333333,
+          "game": "starship-defense"
+        }
+      ]
+    },
+    {
+      "id": "03-tank-wide",
+      "final_in": 18.133333333333333,
+      "final_out": 26.733333333333334,
+      "lines": [
+        "先看坦克大战。俯视能看清砖墙和敌车的位置，守老鹰时方便判断路线。"
+      ],
+      "shots": [
+        {
+          "source": "capture/tank-3d.mp4",
+          "source_in": 4,
+          "source_out": 12.6,
+          "final_in": 18.133333333333333,
+          "final_out": 26.733333333333334,
+          "game": "tank-3d"
+        }
+      ]
+    },
+    {
+      "id": "04-tank-fp",
+      "final_in": 26.733333333333334,
+      "final_out": 38.1,
+      "lines": [
+        "切进第一人称，砖墙变成了眼前的掩体，敌车从路口出现。",
+        "开炮更有现场感，不过两边的动静，也得自己留心。"
+      ],
+      "shots": [
+        {
+          "source": "capture/tank-3d.mp4",
+          "source_in": 18.8,
+          "source_out": 22.8,
+          "final_in": 26.733333333333334,
+          "final_out": 30.733333333333334,
+          "game": "tank-3d"
+        },
+        {
+          "source": "capture/tank-3d.mp4",
+          "source_in": 25.4,
+          "source_out": 32.766666666666666,
+          "final_in": 30.733333333333334,
+          "final_out": 38.1,
+          "game": "tank-3d"
+        }
+      ]
+    },
+    {
+      "id": "05-mario-wide",
+      "final_in": 38.1,
+      "final_out": 46.86666666666667,
+      "lines": [
+        "超级玛丽，侧视能看清前面的水管和落脚位置。",
+        "这一段先用熟悉的角度跳过去。"
+      ],
+      "shots": [
+        {
+          "source": "capture/mario-3d.mp4",
+          "source_in": 5.8,
+          "source_out": 14.566666666666666,
+          "final_in": 38.1,
+          "final_out": 46.86666666666667,
+          "game": "mario-3d"
+        }
+      ]
+    },
+    {
+      "id": "06-mario-fp",
+      "final_in": 46.86666666666667,
+      "final_out": 57.766666666666666,
+      "lines": [
+        "再切到第一人称，同样的方块和水管，现在要从眼前判断距离。",
+        "新鲜感很强，跳跃也更考验落点判断。"
+      ],
+      "shots": [
+        {
+          "source": "capture/mario-3d.mp4",
+          "source_in": 13.8,
+          "source_out": 24.700000000000003,
+          "final_in": 46.86666666666667,
+          "final_out": 57.766666666666666,
+          "game": "mario-3d"
+        }
+      ]
+    },
+    {
+      "id": "07-jackal-wide",
+      "final_in": 57.766666666666666,
+      "final_out": 66.76666666666667,
+      "lines": [
+        "赤色要塞，俯视方便规划吉普车的路线。",
+        "开车、投弹、救人，先把战场看明白。"
+      ],
+      "shots": [
+        {
+          "source": "capture/jackal-stage1-3d.mp4",
+          "source_in": 5,
+          "source_out": 14.0,
+          "final_in": 57.766666666666666,
+          "final_out": 66.76666666666667,
+          "game": "jackal-stage1-3d"
+        }
+      ]
+    },
+    {
+      "id": "08-jackal-fp",
+      "final_in": 66.76666666666667,
+      "final_out": 77.43333333333334,
+      "lines": [
+        "切到驾驶位，路口和营房就在眼前。",
+        "现在转头和驾驶都要看准方向，像是自己开着吉普上前线。"
+      ],
+      "shots": [
+        {
+          "source": "capture/jackal-stage1-3d.mp4",
+          "source_in": 13.8,
+          "source_out": 24.46666666666667,
+          "final_in": 66.76666666666667,
+          "final_out": 77.43333333333334,
+          "game": "jackal-stage1-3d"
+        }
+      ]
+    },
+    {
+      "id": "09-cadillacs-wide",
+      "final_in": 77.43333333333334,
+      "final_out": 86.2,
+      "lines": [
+        "恐龙快打，侧视方便看清敌人从哪边围过来。",
+        "先打起来，再在同一局里换个角度。"
+      ],
+      "shots": [
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 5,
+          "source_out": 13.766666666666667,
+          "final_in": 77.43333333333334,
+          "final_out": 86.2,
+          "game": "cadillacs-stage1-3d"
+        }
+      ]
+    },
+    {
+      "id": "10-cadillacs-fp",
+      "final_in": 86.2,
+      "final_out": 97.96666666666667,
+      "lines": [
+        "第一人称一开，对手直接站在面前，贴身格斗的距离感马上变了。",
+        "但身后的敌人更难观察，转头和走位就更重要。"
+      ],
+      "shots": [
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 13.8,
+          "source_out": 17.0,
+          "final_in": 86.2,
+          "final_out": 89.4,
+          "game": "cadillacs-stage1-3d"
+        },
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 35,
+          "source_out": 43.56666666666666,
+          "final_in": 89.4,
+          "final_out": 97.96666666666667,
+          "game": "cadillacs-stage1-3d"
+        }
+      ]
+    },
+    {
+      "id": "11-insects-wide",
+      "final_in": 97.96666666666667,
+      "final_out": 108.5,
+      "lines": [
+        "最后是虫潮围城。第三人称能同时观察自己、虫群和基地。",
+        "守线时，先知道敌人从哪里来。"
+      ],
+      "shots": [
+        {
+          "source": "capture/starship-defense.mp4",
+          "source_in": 3,
+          "source_out": 13.533333333333333,
+          "final_in": 97.96666666666667,
+          "final_out": 108.5,
+          "game": "starship-defense"
+        }
+      ]
+    },
+    {
+      "id": "12-insects-fp",
+      "final_in": 108.5,
+      "final_out": 122.43333333333334,
+      "lines": [
+        "换到第一人称，虫群变成迎面而来的威胁。",
+        "转头找目标，开火，再用手雷拉开战斗节奏。",
+        "这种临场感，也是这次最想让大家亲自试的。"
+      ],
+      "shots": [
+        {
+          "source": "capture/starship-defense.mp4",
+          "source_in": 13.8,
+          "source_out": 19.3,
+          "final_in": 108.5,
+          "final_out": 114.0,
+          "game": "starship-defense"
+        },
+        {
+          "source": "capture/starship-defense.mp4",
+          "source_in": 76,
+          "source_out": 84.43333333333334,
+          "final_in": 114.0,
+          "final_out": 122.43333333333334,
+          "game": "starship-defense"
+        }
+      ]
+    },
+    {
+      "id": "13-tradeoff",
+      "final_in": 122.43333333333334,
+      "final_out": 134.5,
+      "lines": [
+        "这五款都能在本局里切换视角，不用重新开始。",
+        "第一人称更贴近现场，俯视和侧视更方便掌握全局，各有各的用处。"
+      ],
+      "shots": [
+        {
+          "source": "capture/tank-3d.mp4",
+          "source_in": 6,
+          "source_out": 8.1,
+          "final_in": 122.43333333333334,
+          "final_out": 124.53333333333333,
+          "game": "tank-3d"
+        },
+        {
+          "source": "capture/tank-3d.mp4",
+          "source_in": 36,
+          "source_out": 38.1,
+          "final_in": 124.53333333333333,
+          "final_out": 126.63333333333333,
+          "game": "tank-3d"
+        },
+        {
+          "source": "capture/mario-3d.mp4",
+          "source_in": 10,
+          "source_out": 12.1,
+          "final_in": 126.63333333333334,
+          "final_out": 128.73333333333335,
+          "game": "mario-3d"
+        },
+        {
+          "source": "capture/mario-3d.mp4",
+          "source_in": 21,
+          "source_out": 23.1,
+          "final_in": 128.73333333333335,
+          "final_out": 130.83333333333334,
+          "game": "mario-3d"
+        },
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 55,
+          "source_out": 58.666666666666664,
+          "final_in": 130.83333333333334,
+          "final_out": 134.5,
+          "game": "cadillacs-stage1-3d"
+        }
+      ]
+    },
+    {
+      "id": "14-outro",
+      "final_in": 134.5,
+      "final_out": 157.93333333333334,
+      "lines": [
+        "五款都可以在哔哩哔哩Toy试玩，入口放在简介里的游戏合集。",
+        "下一步继续打磨近身视野和转头手感。",
+        "你最想用第一人称玩哪款？喜欢这个方向，顺手空投个三连补给。",
+        "也可以去百宝箱游戏页的投票榜和愿望单，告诉我接下来想看什么。"
+      ],
+      "shots": [
+        {
+          "source": "capture/jackal-stage1-3d.mp4",
+          "source_in": 30,
+          "source_out": 35.5,
+          "final_in": 134.5,
+          "final_out": 140.0,
+          "game": "jackal-stage1-3d"
+        },
+        {
+          "source": "capture/cadillacs-stage1-3d.mp4",
+          "source_in": 33,
+          "source_out": 38.5,
+          "final_in": 140.0,
+          "final_out": 145.5,
+          "game": "cadillacs-stage1-3d"
+        },
+        {
+          "source": "capture/starship-defense.mp4",
+          "source_in": 36,
+          "source_out": 48.43333333333334,
+          "final_in": 145.5,
+          "final_out": 157.93333333333334,
+          "game": "starship-defense"
+        }
+      ]
+    }
+  ]
+}

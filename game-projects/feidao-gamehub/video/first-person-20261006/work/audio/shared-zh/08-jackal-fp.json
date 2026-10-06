@@ -1,0 +1,127 @@
+{
+  "text": "切到驾驶位，路口和营房就在眼前。现在转头和驾驶都要看准方向，像是自己开着吉普上前线。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4875000,
+      "text": "切到驾"
+    },
+    {
+      "offset": 5875000,
+      "duration": 5250000,
+      "text": "驶位"
+    },
+    {
+      "offset": 14625000,
+      "duration": 4375000,
+      "text": "路口"
+    },
+    {
+      "offset": 19250000,
+      "duration": 750000,
+      "text": "和"
+    },
+    {
+      "offset": 20125000,
+      "duration": 4250000,
+      "text": "营房"
+    },
+    {
+      "offset": 24625000,
+      "duration": 1250000,
+      "text": "就"
+    },
+    {
+      "offset": 25875000,
+      "duration": 875000,
+      "text": "在"
+    },
+    {
+      "offset": 26875000,
+      "duration": 4750000,
+      "text": "眼前"
+    },
+    {
+      "offset": 37375000,
+      "duration": 3875000,
+      "text": "现在"
+    },
+    {
+      "offset": 41500000,
+      "duration": 3750000,
+      "text": "转头"
+    },
+    {
+      "offset": 45375000,
+      "duration": 1125000,
+      "text": "和"
+    },
+    {
+      "offset": 46625000,
+      "duration": 5375000,
+      "text": "驾驶"
+    },
+    {
+      "offset": 53125000,
+      "duration": 1375000,
+      "text": "都"
+    },
+    {
+      "offset": 54500000,
+      "duration": 1000000,
+      "text": "要"
+    },
+    {
+      "offset": 55625000,
+      "duration": 2375000,
+      "text": "看"
+    },
+    {
+      "offset": 58000000,
+      "duration": 1625000,
+      "text": "准"
+    },
+    {
+      "offset": 59750000,
+      "duration": 4625000,
+      "text": "方向"
+    },
+    {
+      "offset": 67875000,
+      "duration": 4250000,
+      "text": "像是"
+    },
+    {
+      "offset": 72250000,
+      "duration": 4375000,
+      "text": "自己"
+    },
+    {
+      "offset": 76875000,
+      "duration": 2000000,
+      "text": "开"
+    },
+    {
+      "offset": 78875000,
+      "duration": 1000000,
+      "text": "着"
+    },
+    {
+      "offset": 80000000,
+      "duration": 4000000,
+      "text": "吉普"
+    },
+    {
+      "offset": 84250000,
+      "duration": 1750000,
+      "text": "上"
+    },
+    {
+      "offset": 86000000,
+      "duration": 4375000,
+      "text": "前线"
+    }
+  ]
+}

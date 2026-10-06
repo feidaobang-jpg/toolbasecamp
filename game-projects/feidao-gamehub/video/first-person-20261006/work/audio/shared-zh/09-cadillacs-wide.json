@@ -1,0 +1,122 @@
+{
+  "text": "恐龙快打，侧视方便看清敌人从哪边围过来。先打起来，再在同一局里换个角度。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "恐龙"
+    },
+    {
+      "offset": 4625000,
+      "duration": 1875000,
+      "text": "快"
+    },
+    {
+      "offset": 6500000,
+      "duration": 3125000,
+      "text": "打"
+    },
+    {
+      "offset": 12875000,
+      "duration": 4750000,
+      "text": "侧视"
+    },
+    {
+      "offset": 17875000,
+      "duration": 2625000,
+      "text": "方便"
+    },
+    {
+      "offset": 20625000,
+      "duration": 5500000,
+      "text": "看清"
+    },
+    {
+      "offset": 27125000,
+      "duration": 2750000,
+      "text": "敌人"
+    },
+    {
+      "offset": 30125000,
+      "duration": 1500000,
+      "text": "从"
+    },
+    {
+      "offset": 31750000,
+      "duration": 3000000,
+      "text": "哪边"
+    },
+    {
+      "offset": 34875000,
+      "duration": 1125000,
+      "text": "围"
+    },
+    {
+      "offset": 36000000,
+      "duration": 3250000,
+      "text": "过来"
+    },
+    {
+      "offset": 44875000,
+      "duration": 2625000,
+      "text": "先"
+    },
+    {
+      "offset": 47500000,
+      "duration": 1625000,
+      "text": "打"
+    },
+    {
+      "offset": 49125000,
+      "duration": 4375000,
+      "text": "起来"
+    },
+    {
+      "offset": 55875000,
+      "duration": 1625000,
+      "text": "再"
+    },
+    {
+      "offset": 57500000,
+      "duration": 1125000,
+      "text": "在"
+    },
+    {
+      "offset": 58750000,
+      "duration": 1750000,
+      "text": "同"
+    },
+    {
+      "offset": 60500000,
+      "duration": 1125000,
+      "text": "一"
+    },
+    {
+      "offset": 61625000,
+      "duration": 1500000,
+      "text": "局"
+    },
+    {
+      "offset": 63125000,
+      "duration": 1375000,
+      "text": "里"
+    },
+    {
+      "offset": 64750000,
+      "duration": 1875000,
+      "text": "换"
+    },
+    {
+      "offset": 66625000,
+      "duration": 625000,
+      "text": "个"
+    },
+    {
+      "offset": 67375000,
+      "duration": 3625000,
+      "text": "角度"
+    }
+  ]
+}

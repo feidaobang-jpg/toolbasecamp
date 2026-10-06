@@ -1,0 +1,16 @@
+{
+  "complete_decode": "pass",
+  "subtitle_order": "pass",
+  "codec": "pass",
+  "black_intervals": [
+    [
+      "98.1",
+      "98.233333",
+      "0.133333"
+    ]
+  ],
+  "loudness_summary": "Summary:\n\n  Integrated loudness:\n    I:         -16.7 LUFS\n    Threshold: -27.5 LUFS\n\n  Loudness range:\n    LRA:         4.7 LU\n    Threshold: -37.5 LUFS\n    LRA low:   -20.3 LUFS\n    LRA high:  -15.6 LUFS\n\n  True peak:\n    Peak:       -1.5 dBFS\n[out#0/null @ 00000142d4d69140] video:1958KiB audio:29612KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\nframe= 4728 fps=414 q=-0.0 Lsize=N/A time=00:02:37.93 bitrate=N/A speed=13.8x elapsed=0:00:11.41    \n",
+  "duration": "157.933333",
+  "video_sha256": "9abbbb92ba52dfea45c1a9a83087f40854a9e3f78f9c40d76a689f499eafaef9",
+  "audio_subjective_listening": "not-run"
+}

@@ -1,0 +1,92 @@
+{
+  "text": "先看坦克大战。俯视能看清砖墙和敌车的位置，守老鹰时方便判断路线。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3000000,
+      "text": "先"
+    },
+    {
+      "offset": 4000000,
+      "duration": 2375000,
+      "text": "看"
+    },
+    {
+      "offset": 6625000,
+      "duration": 7750000,
+      "text": "坦克大战"
+    },
+    {
+      "offset": 20125000,
+      "duration": 4750000,
+      "text": "俯视"
+    },
+    {
+      "offset": 25125000,
+      "duration": 1375000,
+      "text": "能"
+    },
+    {
+      "offset": 26625000,
+      "duration": 4250000,
+      "text": "看清"
+    },
+    {
+      "offset": 31125000,
+      "duration": 4500000,
+      "text": "砖墙"
+    },
+    {
+      "offset": 35875000,
+      "duration": 1000000,
+      "text": "和"
+    },
+    {
+      "offset": 37000000,
+      "duration": 3125000,
+      "text": "敌车"
+    },
+    {
+      "offset": 40125000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 41000000,
+      "duration": 4375000,
+      "text": "位置"
+    },
+    {
+      "offset": 48125000,
+      "duration": 2875000,
+      "text": "守"
+    },
+    {
+      "offset": 51000000,
+      "duration": 3500000,
+      "text": "老鹰"
+    },
+    {
+      "offset": 54500000,
+      "duration": 3625000,
+      "text": "时"
+    },
+    {
+      "offset": 59250000,
+      "duration": 3250000,
+      "text": "方便"
+    },
+    {
+      "offset": 62625000,
+      "duration": 3125000,
+      "text": "判断"
+    },
+    {
+      "offset": 65875000,
+      "duration": 3625000,
+      "text": "路线"
+    }
+  ]
+}

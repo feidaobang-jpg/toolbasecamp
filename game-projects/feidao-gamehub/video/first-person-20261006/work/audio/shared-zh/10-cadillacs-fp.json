@@ -1,0 +1,147 @@
+{
+  "text": "第一人称一开，对手直接站在面前，贴身格斗的距离感马上变了。但身后的敌人更难观察，转头和走位就更重要。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 5875000,
+      "text": "第一人称"
+    },
+    {
+      "offset": 7000000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 8000000,
+      "duration": 3500000,
+      "text": "开"
+    },
+    {
+      "offset": 14875000,
+      "duration": 3625000,
+      "text": "对手"
+    },
+    {
+      "offset": 18750000,
+      "duration": 3125000,
+      "text": "直接"
+    },
+    {
+      "offset": 22000000,
+      "duration": 1750000,
+      "text": "站"
+    },
+    {
+      "offset": 23750000,
+      "duration": 750000,
+      "text": "在"
+    },
+    {
+      "offset": 24625000,
+      "duration": 5625000,
+      "text": "面前"
+    },
+    {
+      "offset": 32375000,
+      "duration": 4625000,
+      "text": "贴身"
+    },
+    {
+      "offset": 37125000,
+      "duration": 3000000,
+      "text": "格斗"
+    },
+    {
+      "offset": 40125000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 41000000,
+      "duration": 2750000,
+      "text": "距离"
+    },
+    {
+      "offset": 43750000,
+      "duration": 2875000,
+      "text": "感"
+    },
+    {
+      "offset": 47750000,
+      "duration": 5125000,
+      "text": "马上"
+    },
+    {
+      "offset": 53000000,
+      "duration": 2000000,
+      "text": "变"
+    },
+    {
+      "offset": 55000000,
+      "duration": 1875000,
+      "text": "了"
+    },
+    {
+      "offset": 62375000,
+      "duration": 1625000,
+      "text": "但"
+    },
+    {
+      "offset": 64125000,
+      "duration": 3125000,
+      "text": "身后"
+    },
+    {
+      "offset": 67250000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 68125000,
+      "duration": 3000000,
+      "text": "敌人"
+    },
+    {
+      "offset": 71375000,
+      "duration": 3125000,
+      "text": "更难"
+    },
+    {
+      "offset": 74625000,
+      "duration": 5625000,
+      "text": "观察"
+    },
+    {
+      "offset": 84250000,
+      "duration": 4125000,
+      "text": "转头"
+    },
+    {
+      "offset": 88625000,
+      "duration": 1000000,
+      "text": "和"
+    },
+    {
+      "offset": 89750000,
+      "duration": 4250000,
+      "text": "走位"
+    },
+    {
+      "offset": 94250000,
+      "duration": 1250000,
+      "text": "就"
+    },
+    {
+      "offset": 95625000,
+      "duration": 1750000,
+      "text": "更"
+    },
+    {
+      "offset": 97375000,
+      "duration": 3875000,
+      "text": "重要"
+    }
+  ]
+}

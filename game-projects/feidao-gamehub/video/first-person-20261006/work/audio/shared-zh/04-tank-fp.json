@@ -1,0 +1,132 @@
+{
+  "text": "切进第一人称，砖墙变成了眼前的掩体，敌车从路口出现。开炮更有现场感，不过两边的动静，也得自己留心。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4750000,
+      "text": "切进"
+    },
+    {
+      "offset": 6000000,
+      "duration": 8000000,
+      "text": "第一人称"
+    },
+    {
+      "offset": 17125000,
+      "duration": 5250000,
+      "text": "砖墙"
+    },
+    {
+      "offset": 22625000,
+      "duration": 2500000,
+      "text": "变成"
+    },
+    {
+      "offset": 25125000,
+      "duration": 750000,
+      "text": "了"
+    },
+    {
+      "offset": 26125000,
+      "duration": 2875000,
+      "text": "眼前"
+    },
+    {
+      "offset": 29000000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 29875000,
+      "duration": 4625000,
+      "text": "掩体"
+    },
+    {
+      "offset": 37625000,
+      "duration": 4500000,
+      "text": "敌车"
+    },
+    {
+      "offset": 42375000,
+      "duration": 1750000,
+      "text": "从"
+    },
+    {
+      "offset": 44250000,
+      "duration": 2750000,
+      "text": "路口"
+    },
+    {
+      "offset": 47125000,
+      "duration": 3875000,
+      "text": "出现"
+    },
+    {
+      "offset": 56750000,
+      "duration": 4500000,
+      "text": "开炮"
+    },
+    {
+      "offset": 61500000,
+      "duration": 1125000,
+      "text": "更"
+    },
+    {
+      "offset": 62625000,
+      "duration": 1000000,
+      "text": "有"
+    },
+    {
+      "offset": 63750000,
+      "duration": 4625000,
+      "text": "现场"
+    },
+    {
+      "offset": 68375000,
+      "duration": 2500000,
+      "text": "感"
+    },
+    {
+      "offset": 75125000,
+      "duration": 2375000,
+      "text": "不过"
+    },
+    {
+      "offset": 77750000,
+      "duration": 2625000,
+      "text": "两边"
+    },
+    {
+      "offset": 80375000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 81250000,
+      "duration": 4750000,
+      "text": "动静"
+    },
+    {
+      "offset": 87625000,
+      "duration": 1250000,
+      "text": "也"
+    },
+    {
+      "offset": 88875000,
+      "duration": 1000000,
+      "text": "得"
+    },
+    {
+      "offset": 90125000,
+      "duration": 2500000,
+      "text": "自己"
+    },
+    {
+      "offset": 92750000,
+      "duration": 4375000,
+      "text": "留心"
+    }
+  ]
+}
