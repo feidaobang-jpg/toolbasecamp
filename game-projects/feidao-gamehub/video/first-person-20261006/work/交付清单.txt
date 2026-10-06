@@ -1,8 +1,6 @@
-﻿本期投稿入口：../final/bilibili-zh/
-中文16:9 1920×1080，60帧/秒，时长 157.78 秒，中文字幕已烧录。
-成片：gameplay-zh-final-v2.mp4
-首页封面：cover-home-4x3.jpg
-空间封面：cover-space-16x9.jpg
-投稿文案：投稿文案.txt
-状态：用户已审片通过，尚未投稿；当前待本次上传所附协议确认。 当前工具未完成主观听审，客观音频检查与画面验收见qa.md。
-续接：修改narration.json后运行voice.py；清除受影响edit/shared-zh片段后运行render.py；covers.py重新输出双封面，package.py更新文案与清单。
+﻿已发布过审：https://www.bilibili.com/video/BV1Fwpw6FEFx/
+成片：final/bilibili-zh/gameplay-zh-final-v2.mp4（用户审片通过，2分38秒，1080P60）
+合集Toy绑定、置顶试玩评论、自动动态已核验。
+Toy推流申请表A297:E297已云端保存，运营反馈尚空白。
+1000免费曝光券：符合本期稿件条件，另附新推广协议，等待本次确认后使用。
+完整证据：work/publication-result.json。

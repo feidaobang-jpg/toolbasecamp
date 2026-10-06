@@ -1,6 +1,6 @@
 {
   "task_id": "01a11023-five-games-video-20261006-3",
-  "status": "awaiting_browser_terms_confirmation",
+  "status": "published_traffic_terms_pending",
   "production_assets_complete": true,
   "mode": "five-game-camera-special",
   "requested_variants": [
@@ -23,5 +23,23 @@
   "output_fps": 60,
   "historical_revision": "history/revision-1",
   "video_file": "../final/bilibili-zh/gameplay-zh-final-v2.mp4",
-  "human_review": "approved"
+  "human_review": "approved",
+  "current_stage": "awaiting_traffic_terms_confirmation",
+  "submission_gate": "browser_terms_confirmed",
+  "browser_terms_confirmation": {
+    "quote": "同意，继续",
+    "confirmed_at": "2026-10-06T20:52:36.646868+08:00",
+    "scope": "current reviewed v2 upload to Bilibili usage agreement and community convention"
+  },
+  "bvid": "BV1Fwpw6FEFx",
+  "video_url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
+  "publication_status": "published",
+  "submitted_at": "2026-10-06T20:55:22.860235+08:00",
+  "submission_status": "submitted",
+  "published_at": "2026-10-06T20:55:27+08:00",
+  "publication_result": "publication-result.json",
+  "pending": [
+    "traffic_reward_new_terms_confirmation"
+  ],
+  "ready_to_upload": false
 }
