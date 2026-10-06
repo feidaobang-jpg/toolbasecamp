@@ -3,7 +3,7 @@
  "game_id": "jackal-stage1-3d",
  "version": "v0.7.8",
  "base_version": "v0.7.7",
- "created_at": "2026-10-06T23:40:00+08:00",
+ "created_at": "2026-10-06T23:20:00+08:00",
  "classification": "普通补丁",
  "changes": [
   "暂停后点「重新开始」，新的一局 BGM 和音效正常（startGame / nextStage 解除暂停挂起的音频）。"
@@ -30,11 +30,22 @@
   "qa/mobile.js 断言手机隐藏全屏入口，与新规则矛盾"
  ],
  "site": {
-  "status": "pending"
+  "status": "deployed_verified",
+  "commit": "aab2f902",
+  "verified_at": "2026-10-06T23:31:00+08:00",
+  "verification": "线上脚本与提交逐字节一致；线上 restart-audio 29/29"
  },
  "toy": {
   "id": 39863936092160,
-  "status": "pending"
+  "status": "published",
+  "package_tree_sha256": "989fe49686c0f42f2218de85ba15bddb49b07893b19a59e869c305b7e2d61544",
+  "package": "dist/toy-v0.7.8/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_W1UQGwvC/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_HpvYXW9E/index.html",
+  "submitted_at": "2026-10-06T23:37:21+08:00",
+  "preview_checks": "restart-audio Toy 外壳 6/6（载入、开局有声、暂停挂起、重开恢复、有声音输出、无异常）",
+  "verified_at": "2026-10-06T23:42:12+08:00",
+  "public_check": "toy mylist published；正式入口 iframe 39863936092160-v23142，Toy 外壳里暂停重开有声音"
  },
  "bilibili": {
   "status": "pending_merge",

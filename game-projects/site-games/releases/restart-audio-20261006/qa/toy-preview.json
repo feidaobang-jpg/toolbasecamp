@@ -1,0 +1,219 @@
+{
+ "base": "http://127.0.0.1:8791/html/game/",
+ "at": "2026-10-06T15:35:56.688Z",
+ "results": [
+  {
+   "name": "cadillacs-stage1-3d：Toy 外壳里载入游戏 iframe",
+   "ok": true,
+   "detail": "https://www.bilibilitoy.com/toy/preview/preview_AyEYz0eF/index.html"
+  },
+  {
+   "name": "cadillacs-stage1-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5.71
+    ],
+    "starts": 28,
+    "rms": 0.1354
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     7.04
+    ],
+    "starts": 31
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.07
+     ],
+     "starts": 43
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      10.08
+     ],
+     "starts": 43,
+     "rms": 0.1275
+    }
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.1275,
+    "startsPaused": 31,
+    "startsAfter": 43
+   }
+  },
+  {
+   "name": "cadillacs-stage1-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "jackal-stage1-3d：Toy 外壳里载入游戏 iframe",
+   "ok": true,
+   "detail": "https://www.bilibilitoy.com/toy/preview/preview_W1UQGwvC/index.html"
+  },
+  {
+   "name": "jackal-stage1-3d：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     6.71
+    ],
+    "starts": 4,
+    "rms": 0.2403
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     8.04
+    ],
+    "starts": 9
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      10.04
+     ],
+     "starts": 9
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      11.05
+     ],
+     "starts": 9,
+     "rms": 0.2386
+    }
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.2386,
+    "startsPaused": 9,
+    "startsAfter": 9
+   }
+  },
+  {
+   "name": "jackal-stage1-3d：无运行异常",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "starship-defense：Toy 外壳里载入游戏 iframe",
+   "ok": true,
+   "detail": "https://www.bilibilitoy.com/toy/preview/preview_PCu3NQfB/index.html"
+  },
+  {
+   "name": "starship-defense：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     5.79
+    ],
+    "starts": 18,
+    "rms": 0.0241
+   }
+  },
+  {
+   "name": "starship-defense：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     7.11
+    ],
+    "starts": 24
+   }
+  },
+  {
+   "name": "starship-defense：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.13
+     ],
+     "starts": 31
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      10.14
+     ],
+     "starts": 34,
+     "rms": 0.0092
+    }
+   }
+  },
+  {
+   "name": "starship-defense：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.0092,
+    "startsPaused": 24,
+    "startsAfter": 34
+   }
+  },
+  {
+   "name": "starship-defense：无运行异常",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}
