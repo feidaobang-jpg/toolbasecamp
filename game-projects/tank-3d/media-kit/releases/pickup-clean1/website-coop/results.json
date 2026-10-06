@@ -1,0 +1,49 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+  "results": [
+    {
+      "name": "bad room reports useful error",
+      "ok": true
+    },
+    {
+      "name": "two seats join/ready/start on identical stage",
+      "data": {
+        "code": "409489"
+      },
+      "ok": true
+    },
+    {
+      "name": "both players move and guest receives host motion",
+      "ok": true
+    },
+    {
+      "name": "guest fire executes on host",
+      "ok": true
+    },
+    {
+      "name": "guest pause freezes both simulations",
+      "ok": true
+    },
+    {
+      "name": "input mode switches without leaving room",
+      "ok": true
+    },
+    {
+      "name": "portrait rotates gameplay while preserving room",
+      "ok": true
+    },
+    {
+      "name": "shared clear/tally/next-stage",
+      "ok": true
+    },
+    {
+      "name": "guest disconnect ends room clearly",
+      "ok": true
+    },
+    {
+      "name": "single-player still works after networking",
+      "ok": true
+    }
+  ],
+  "physicalPhoneTest": false
+}

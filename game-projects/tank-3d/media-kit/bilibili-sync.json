@@ -47,6 +47,14 @@
       "summary": "房间码邀请双人合作守基地、同步暂停、换关与离线提示。Toy已公开核验。",
       "record": "releases/coop1/bilibili-sync.json",
       "reason": "新版简介已保存，稿件管理与处理进度页明确显示审核中；保留成功基线，不重复提交。"
+    },
+    {
+      "version": "pickup-clean1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "record": "releases/pickup-clean1/handoff.json",
+      "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。",
+      "reason": "普通补丁并入下一次有意义的说明更新；已有入口与操作说明无变化，保留公开核验基线。"
     }
   ],
   "history": [
