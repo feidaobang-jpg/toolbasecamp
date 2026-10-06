@@ -1,9 +1,10 @@
-// 玩法核心：角色、连招、抓投、武器、敌人 AI、Boss 维斯·T 与岩跳龙、卷轴锁屏波次、计时、过场与结算。
+// 玩法核心：角色、连招、抓投、武器、敌人 AI、卷轴锁屏波次、计时、过场与结算。
+// 第一关 Boss 维斯·T 与岩跳龙；第二关三角龙哈克、熟睡的霸王龙希瓦特、步枪偷猎者、链锤兵拉什·T、泥沼减速与 Boss 屠夫。
 // 固定 60Hz 逻辑步长；坐标 x = 关卡前进方向，z = 纵深，y = 高度。
 import * as THREE from 'three';
 import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
-import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX } from './level.js';
-import { buildHuman, buildRaptor, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
+import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX, STAGES } from './level.js';
+import { buildHuman, buildRaptor, buildTrike, buildCar, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toyMat } from './models.js';
 import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
 import { propMesh } from './world.js';
 import A from './audio.js';
@@ -14,8 +15,19 @@ export const G = {
   area: 0, focusX: 7, lockX: null, wave: 0, waveOn: false, timer: 120, timeScale: 1,
   actors: [], items: [], props: [], projs: [], player: null, boss: null, raptor: null,
   banner: null, toast: null, dialog: null, fade: 0, hurtFx: 0, flash: 0, go: 0,
-  events: [], kills: {}, stats: null, script: null, onEnd: null, cont: null, demoUsed: false, ended: false
+  events: [], kills: {}, stats: null, script: null, onEnd: null, cont: null, demoUsed: false, ended: false,
+  sleeper: null, car: null, carAnim: null, blockers: [], water: null, cleared: [], extraWave: false
 };
+const CN_NUM = ['', '一', '二', '三', '四', '五', '六', '七', '八'];
+export const SINK = 0.62;   // 泥沼齐腰：站在水里的角色整体下沉的深度（只影响画面，判定高度不变）
+// 0..1：当前区域 x 处的泥沼深浅（水里 1，岸边斜坡渐变到 0）
+export function sinkK(x) {
+  const w = G.water;
+  if (!w) return 0;
+  if (x < w.x1) return 1;
+  if (x < w.bank) return (w.bank - x) / (w.bank - w.x1);
+  return 0;
+}
 let scene, world, fx, camCtl, nextId = 1, bannerId = 0, toastId = 0;
 const GRAV = 24;
 const DUR_MUL = { easy: 0.45, std: 0.7, classic: 1.0 };   // 耐久：敌人伤害倍率
@@ -58,6 +70,7 @@ const MOVES = {
   knee: { clip: 'knee', dur: 0.24, hits: [] },
   // 武器
   swing: { clip: 'swing', dur: 0.42, lunge: 0.4, hits: [H(0.13, 0.24, 1.15, 0.6, 0.6, 1.9, 12, 'down', 400, 'punchHeavy', true)] },
+  swordSlash: { clip: 'slash', dur: 0.44, lunge: 0.6, hits: [H(0.14, 0.27, 1.25, 0.64, 0.5, 2.0, 17, 'down', 400, 'slash', true)] },
   stab: { clip: 'jab2', dur: 0.3, lunge: 0.5, hits: [H(0.06, 0.14, 0.95, 0.5, 0.8, 1.7, 10, 'hit', 400, 'slash')] }
 };
 // 敌人招式：windup 前摇（摆出蓄力姿势），再播动作；判定时间为绝对时间
@@ -70,7 +83,11 @@ const EM = {
   fatPunch: { clip: 'hook', dur: 0.7, windup: 0.3, wind: 'guard2', hits: [H(0.37, 0.47, 1.05, 0.62, 0.8, 1.8, 1, 'hit', 0, 'punchHeavy')] },
   vJab: { clip: 'jab1', dur: 0.3, windup: 0.06, hits: [H(0.1, 0.17, 1.0, 0.5, 0.9, 1.9, 1, 'hit', 0, 'punch')] },
   vJab2: { clip: 'jab2', dur: 0.3, windup: 0.04, hits: [H(0.09, 0.16, 1.0, 0.5, 0.9, 1.9, 1, 'hit', 0, 'punch')] },
-  vLong: { clip: 'longPunch', dur: 0.85, windup: 0.12, hits: [H(0.46, 0.6, 1.95, 0.55, 0.9, 1.9, 1.75, 'down', 0, 'punchHeavy', true)] }
+  vLong: { clip: 'longPunch', dur: 0.85, windup: 0.12, hits: [H(0.46, 0.6, 1.95, 0.55, 0.9, 1.9, 1.75, 'down', 0, 'punchHeavy', true)] },
+  // 第二关
+  butt: { clip: 'swing', dur: 0.78, windup: 0.3, wind: 'swing0', hits: [H(0.42, 0.54, 1.15, 0.6, 0.6, 1.9, 1.3, 'down', 0, 'punchHeavy')] },   // 步枪枪托
+  bSlash: { clip: 'slash', dur: 0.62, windup: 0.2, wind: 'slash0', hits: [H(0.3, 0.42, 1.35, 0.66, 0.5, 2.1, 1.3, 'hit', 0, 'slash')] },   // 屠夫右手刀
+  bSlash2: { clip: 'slashL', dur: 0.66, windup: 0.06, wind: 'slash0L', hits: [H(0.18, 0.3, 1.4, 0.7, 0.5, 2.1, 1.5, 'down', 0, 'slash', true)] }   // 接左手刀
 };
 
 // ---------- 初始化 ----------
@@ -83,8 +100,15 @@ function heroStats(h) {
 }
 
 // ---------- 角色创建 ----------
-const blobGeo = new THREE.CircleGeometry(0.42, 20);
-const blobMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false });
+// 接地软阴影：与赤色要塞相同的径向渐变贴片（不是实心黑圆）
+const blobGeo = new THREE.PlaneGeometry(0.95, 0.95);
+const blobMat = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 2, 32, 32, 31);
+  gr.addColorStop(0, 'rgba(30,36,30,0.5)'); gr.addColorStop(0.55, 'rgba(30,36,30,0.3)'); gr.addColorStop(1, 'rgba(30,36,30,0)');
+  x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
+  return new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false });
+})();
 function makeActor(type, side, opts) {
   const a = {
     id: nextId++, type, side, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, face: FACE_LEFT, alive: true,
@@ -93,12 +117,17 @@ function makeActor(type, side, opts) {
     token: false, cd: rand() * 0.6, radius: 0.32, height: 1.8, lastHitBy: null
   };
   Object.assign(a, opts || {});
-  if (type === 'raptor') {
-    a.model = buildRaptor(); a.isRaptor = true; a.pose = new Float32Array(R_LEN); a.pose.set(RPOSE.idle); a.radius = 0.5; a.height = 1.5;
+  if (type === 'raptor' || type === 'shivat') {
+    const trex = type === 'shivat';
+    a.model = buildRaptor(trex ? 'trex' : undefined); a.isRaptor = true; a.isDino = true; a.pose = new Float32Array(R_LEN); a.pose.set(trex ? RPOSE.sleep : RPOSE.idle);
+    a.radius = trex ? 1.05 : 0.5; a.height = trex ? 3.1 : 1.5;
+  } else if (type === 'hack') {
+    a.model = buildTrike(); a.isTrike = true; a.isDino = true; a.wild = true; a.radius = 0.78; a.height = 1.7;
   } else {
     a.model = buildHuman(SPECS[type]); a.pose.set(HP.guard); a.height = a.model.H * 0.95;
     if (SPECS[type] && SPECS[type].build === 'fat') a.radius = 0.45;
-    if (type === 'vice' || type === 'mess') a.radius = 0.4;
+    if (type === 'vice' || type === 'mess' || type === 'lash') a.radius = 0.42;
+    if (type === 'butcher') a.radius = 0.52;
   }
   a.blob = new THREE.Mesh(blobGeo, blobMat); a.blob.rotation.x = -Math.PI / 2; a.blob.renderOrder = 1;
   a.blob.scale.setScalar(a.radius / 0.32 * 0.85);
@@ -108,7 +137,7 @@ function makeActor(type, side, opts) {
 }
 function removeActor(a) {
   scene.remove(a.model.root, a.blob);
-  a.model.root.traverse(o => { if (o.isMesh && o.material && o.material.dispose && o.material !== blobMat && !o.userData.outline) { /* 材质按角色独立，几何共享不释放 */ } });
+  if (a.ball) scene.remove(a.ball, a.rope);
   if (a.model.mat) a.model.mat.dispose();
   a.removed = true;
 }
@@ -117,8 +146,10 @@ function spawnEnemy(type, x, z, opts) {
   const e = makeActor(type, 'enemy', { def, x, z, hp: def.hp, maxHp: def.hp, face: x > G.player.x ? FACE_LEFT : FACE_RIGHT });
   Object.assign(e, opts || {});
   if (def.knife) e.weapon = { kind: 'knife', ammo: 1 };
+  if (def.rifle) e.weapon = { kind: 'rifle', ammo: 99 };
   if (opts && opts.weapon) e.weapon = { kind: opts.weapon, ammo: 99 };
   if (e.weapon) attachWeapon(e);
+  if (type === 'butcher') { e.swords = 2; attachSwords(e); }
   ev('spawn', { enemy: type, id: e.id, x: +x.toFixed(1), z: +z.toFixed(1) });
   return e;
 }
@@ -129,10 +160,17 @@ function attachWeapon(a) {
   const k = a.weapon.kind;
   const m = meshFrom(itemGeo(k), { thin: true, shadow: false });
   if (k === 'gun') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.04); }
-  else if (['shotgun', 'smg', 'bazooka'].includes(k)) { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, 0.05, 0.05); }
-  else if (k === 'pipe' || k === 'knife') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.0); }
+  else if (['shotgun', 'smg', 'bazooka', 'rifle'].includes(k)) { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, 0.05, 0.05); }
+  else if (k === 'pipe' || k === 'knife' || k === 'sword') { m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.0); }
   else { m.position.set(0, -0.04, 0.03); }
   g.add(m); a.wmesh = m;
+}
+// 屠夫双手各一把砍刀；被打倒时掉在地上，可以被玩家捡走，他也会回去捡
+function attachSwords(b) {
+  if (!b.swordMeshes) {
+    b.swordMeshes = ['grip', 'lgrip'].map(k => { const m = meshFrom(itemGeo('sword'), { shadow: false }); m.rotation.set(Math.PI / 2, 0, 0); m.scale.setScalar(1.3); b.model.bones[k].add(m); return m; });
+  }
+  b.swordMeshes[0].visible = b.swords >= 1; b.swordMeshes[1].visible = b.swords >= 2;
 }
 
 // ---------- 新游戏 / 区域 ----------
@@ -143,7 +181,7 @@ export function newGame(opts) {
   G.hero = G.settings.hero;
   G.score = 0; G.lives = G.settings.lives === 'inf' ? Infinity : 3; G.demoUsed = !!opts.demo; G.ended = false;
   G.kills = {}; G.stats = { hits: 0, deaths: 0, food: 0, t0: 0, contCount: 0, maxCombo: 0, damage: 0 };
-  G.events = []; G.t = 0; G.frames = 0; G.timeScale = 1; G.cont = null; G.vitality = 0; G.lastTarget = null;
+  G.events = []; G.t = 0; G.frames = 0; G.timeScale = 1; G.cont = null; G.vitality = 0; G.vitalityTotal = 0; G.lastTarget = null; G.cleared = []; G.areaLoaded = false;
   const h = HEROES[G.hero];
   const p = makeActor(h.id, 'player', { hero: h, stats: heroStats(h), hp: 100, maxHp: 100, face: FACE_RIGHT, comboN: 0, lastHitT: -9, radius: 0.34 });
   G.player = p;
@@ -158,9 +196,13 @@ function clearAll() {
   for (const pr of G.projs) scene.remove(pr.mesh);
   G.items = []; G.props = []; G.projs = []; G.script = null; G.dialog = null; G.banner = null; G.go = 0; G.fade = 0;
   if (G.chain) { scene.remove(G.chain); G.chain = null; }
+  if (G.car) { scene.remove(G.car); G.car = null; }
+  G.carAnim = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false;
   if (fx) fx.clear();
 }
+function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'butcher' ? 'boss2' : 'boss') : AREAS[G.area].id; }
 function loadArea(i, first) {
+  const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
   // 清掉上一区域的敌人与物品，保留玩家
   for (const a of G.actors) if (a !== G.player && !a.removed) removeActor(a);
   G.actors = G.player ? [G.player] : [];
@@ -168,17 +210,21 @@ function loadArea(i, first) {
   for (const p of G.props) if (p.mesh) scene.remove(p.mesh);
   for (const pr of G.projs) scene.remove(pr.mesh);
   G.items = []; G.props = []; G.projs = []; G.boss = null; G.raptor = null;
+  if (G.car) { scene.remove(G.car); G.car = null; }
+  G.carAnim = null; G.sleeper = null; G.blockers = []; G.extraWave = false;
   if (G.player && G.player.carryMesh) { scene.remove(G.player.carryMesh); G.player.carryMesh = null; G.player.carryItem = null; }
-  G.area = i; const AR = AREAS[i];
+  G.area = i; G.areaLoaded = true; const AR = AREAS[i];
+  G.water = AR.water || null;
   world.setArea(i);
   G.focusX = AR.x0 + HALF_W; G.lockX = null; G.wave = 0; G.waveOn = false; G.pending = []; G.waveEnemies = [];
   G.timer = AR.timer; G.timerShow = 2.5; G.go = 0;
   const p = G.player;
   p.x = AR.start.x; p.z = AR.start.z; p.y = 0; p.vx = p.vy = p.vz = 0; p.face = FACE_RIGHT; setState(p, 'idle');
   for (const pd of AR.props) {
-    const pr = { kind: pd.kind, x: pd.x, z: pd.z, item: pd.item, points: pd.points || (pd.kind === 'statue' ? 1000 : 0), hp: pd.kind === 'statue' ? 4 : pd.kind === 'pipes' ? 2 : 3, r: pd.kind === 'statue' ? 0.45 : pd.kind === 'pipes' ? 0.5 : 0.36, mesh: propMesh(pd.kind), shake: 0, broken: false };
+    const big = pd.kind === 'statue', pipes = pd.kind === 'pipes';
+    const pr = { kind: pd.kind, x: pd.x, z: pd.z, item: pd.item, points: pd.points || (big ? 1000 : 0), hp: big ? 4 : pipes ? 2 : pd.kind === 'barrel' ? 2 : 3, r: big ? 0.45 : pipes ? 0.5 : 0.36, mesh: propMesh(pd.kind), shake: 0, broken: false };
     pr.mesh.position.set(pd.x, 0, pd.z);
-    if (pd.kind === 'statue') pr.mesh.rotation.y = 0;
+    if (big) pr.mesh.rotation.y = 0;
     scene.add(pr.mesh); G.props.push(pr);
   }
   const W0 = world.area();
@@ -186,9 +232,16 @@ function loadArea(i, first) {
   if (W0.hutDoor) { W0.hutDoor.rotation.set(0, 0, 0); W0.hutDoor.position.set(44.98, 0, -0.68); }
   if (W0.window) { W0.window.glass.visible = true; W0.window.frame.visible = true; }
   if (W0.facadePlanks) W0.facadePlanks.forEach((pk, k) => { pk.visible = true; pk.position.set(-0.96 + k * 0.48, 0, 0); pk.rotation.set(0, 0, 0); });
-  if (i === 0 && first) banner('第一关 · 海上都市', 'EPISODE 1 · CITY IN THE SEA', 2.6);
+  const ST = STAGES[AR.stage - 1];
+  if (ST.first === i && (first || AR.stage !== prevStage)) banner('第' + CN_NUM[AR.stage] + '关 · ' + ST.name, 'EPISODE ' + AR.stage + ' · ' + ST.en, 2.6);
+  else if (AR.id === 'grave') banner('看看这些恐龙尸体！', AR.title, 2.6);   // 原作这一段的画面字幕
   else banner(AR.name, AR.title, 2.2);
-  ev('area', { area: AR.id });
+  ev('area', { area: AR.id, stage: AR.stage });
+  if (AR.sleeper) {
+    // 熟睡的霸王龙：不算进波次；被吵醒或被打才会加入战斗
+    const sh = makeActor('shivat', 'enemy', { def: ENEMY.shivat, x: AR.sleeper.x, z: AR.sleeper.z, hp: ENEMY.shivat.hp, maxHp: ENEMY.shivat.hp, face: FACE_LEFT, wakeN: 0, cd: 1 });
+    setState(sh, 'sleep'); G.sleeper = sh;
+  }
   if (i === 0) {
     // 楼顶开场：维斯带着四个手下
     const v = makeActor('vice', 'enemy', { def: ENEMY.vice, x: 12.9, z: 0.5, hp: 400, maxHp: 400, face: FACE_LEFT, cine: true });
@@ -206,11 +259,45 @@ function loadArea(i, first) {
       { wait: 0.9 },
       { fn: () => { if (!v.removed) removeActor(v); G.actors = G.actors.filter(a => a !== v); G.introVice = null; for (const e of G.waveEnemies) if (e.state === 'cut') setState(e, 'idle'); G.mode = 'play'; A.music(AR.id); } }
     ]);
+  } else if (AR.car) {
+    carIntro(AR);
   } else {
     G.mode = 'play';
     A.music(AR.id);
-    if (i === 2) { p.y = 1.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 2; }
+    if (AR.id === 'street') { p.y = 1.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 2; }
+    if (AR.id === 'swamp') { p.y = 2.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 1.6; }   // 从山崖上跳进泥沼
   }
+}
+// 第二关开场：凯迪拉克开进森林停下，主角从驾驶座跳出来
+function carIntro(AR) {
+  const p = G.player, c = buildCar();
+  c.rotation.y = Math.PI / 2;   // 车头（模型 +Z）朝前进方向 +X
+  c.position.set(AR.car.x - 15, 0, AR.car.z);
+  scene.add(c); G.car = c;
+  G.carAnim = { t: 0, dur: 2.0, x0: AR.car.x - 15, x1: AR.car.x };
+  G.blockers = [{ x: AR.car.x - 1.5, z: AR.car.z, r: 1.0 }, { x: AR.car.x + 0.1, z: AR.car.z, r: 1.0 }, { x: AR.car.x + 1.6, z: AR.car.z, r: 1.0 }];
+  G.mode = 'cut';
+  setState(p, 'incar');
+  A.play('engine');
+  const steps = [
+    { until: () => !G.carAnim, max: 3.5 },
+    { fn: () => { setState(p, 'jump', { noAtk: true }); p.y = 1.0; p.vy = 6.4; const ft = (6.4 + Math.sqrt(6.4 * 6.4 + 2 * GRAV * 1.0)) / GRAV; p.vx = (AR.start.x - p.x) / ft; p.vz = (AR.start.z - p.z) / ft; A.play('jump'); ev('carExit'); } },
+    { until: () => p.state !== 'jump', max: 2 },
+    { fn: () => { p.vx = p.vz = 0; G.mode = 'play'; A.music(AR.id); } }
+  ];
+  if (G.fade > 0) steps.unshift({ fade: 0, dur: 0.6 });   // 从上一关淡入（loadArea 里开的脚本会替换掉外层的淡入步骤）
+  runScript(steps);
+}
+function stepCar(dt) {
+  const C = G.carAnim, p = G.player;
+  C.t += dt;
+  const u = Math.min(1, C.t / C.dur), e = 1 - Math.pow(1 - u, 2.4);
+  const x = C.x0 + (C.x1 - C.x0) * e;
+  G.car.position.x = x;
+  const spd = (1 - e) * 9;
+  for (const w of G.car.userData.wheels) w.rotation.x += spd * dt / 0.36;
+  if (p.state === 'incar') { p.x = x + 0.1; p.z = G.car.position.z - 0.42; p.y = 0.55; p.face = FACE_RIGHT; }
+  if (u >= 1) { G.carAnim = null; A.play('brake'); fx.dust(x - 1.6, 0, G.car.position.z + 0.9, 4, 0.5); }
 }
 
 // ---------- 状态 ----------
@@ -233,6 +320,7 @@ export function update() {
   if (G.mode === 'title') return;
   if (G.banner && G.t > G.banner.until) G.banner = null;
   if (G.script) stepScript(dt);
+  if (G.carAnim) stepCar(dt);
   if (G.mode === 'cont') { updateContinue(dt); return; }
   // 玩家输入
   const p = G.player;
@@ -247,11 +335,15 @@ export function update() {
     if (a.flash > 0) a.flash -= dt;
     if (a.stunT > 0) { a.stunT -= dt; if (a.stunT <= 0) a.stun = 0; }
     if (a === p) updatePlayer(a, dt);
+    else if (a.type === 'shivat') updateShivat(a, dt);
+    else if (a.isTrike) updateTrike(a, dt);
     else if (a.isRaptor) updateRaptor(a, dt);
     else if (a.type === 'vice') updateVice(a, dt);
+    else if (a.type === 'butcher') updateButcher(a, dt);
     else updateEnemy(a, dt);
     const beforeX=a.x,beforeZ=a.z;
     physics(a, dt);
+    if (G.water) waterFx(a, dt);
     if(a===p&&!camCtl.fp()&&['walk','run','carry'].includes(a.state)) {
       const dx=a.x-beforeX,dz=a.z-beforeZ;
       if(Math.hypot(dx,dz)>.0001){delete a.lookHeading;a.face=approachAng(a.face,faceOf(dx,dz),dt*16);}
@@ -371,7 +463,7 @@ function enemyInFront(p, dist) {
   }
   return null;
 }
-function hittable(e) { return e.alive && !e.removed && ['down', 'dead', 'getup', 'enter', 'cut', 'leave', 'flee'].indexOf(e.state) < 0 && !(e.state === 'grabbed' && false); }
+function hittable(e) { return e.alive && !e.removed && ['down', 'dead', 'getup', 'enter', 'cut', 'leave', 'flee', 'knocked', 'incar'].indexOf(e.state) < 0; }
 
 // ---------- 玩家更新 ----------
 function updatePlayer(p, dt) {
@@ -430,7 +522,7 @@ function updatePlayer(p, dt) {
       e.x = p.x + dx * 0.66; e.z = p.z + dz * 0.66; e.face = p.face + Math.PI;
       // 锁屏时在画面边缘朝外抓人：两人一起往里挪，被抓的敌人不出画
       if (G.lockX !== null) { const m = HALF_W - EDGE - Math.max(0, e.radius - 0.34), o = e.x - clamp(e.x, G.focusX - m, G.focusX + m); if (o) { e.x -= o; p.x -= o; } }
-      if (p.st > (e.type === 'vice' ? 0.7 : 1.5)) { breakFree(p, e); }
+      if (p.st > (e.type === 'vice' || e.type === 'butcher' || e.type === 'lash' ? 0.7 : 1.5)) { breakFree(p, e); }
       if (p.sub.anim && p.st - p.sub.animT > p.sub.animDur) p.sub.anim = null;
       break;
     }
@@ -520,9 +612,9 @@ function megaHits(a, h, m) {
 
 // ---------- 抓投 ----------
 function tryGrab(p, mv) {
-  if (p.weapon && ['gun', 'shotgun', 'smg', 'bazooka'].includes(p.weapon.kind)) return;
+  if (p.weapon && ['gun', 'shotgun', 'smg', 'bazooka', 'rifle'].includes(p.weapon.kind)) return;
   for (const e of G.actors) {
-    if (e.side === 'player' || e.isRaptor || !hittable(e) || e.y > 0.1) continue;
+    if (e.side === 'player' || e.isDino || !hittable(e) || e.y > 0.1) continue;
     if (['idle', 'walk', 'hurt', 'hover'].indexOf(e.state) < 0) continue;
     const dx = e.x - p.x, dz = e.z - p.z, d = Math.hypot(dx, dz);
     if (d > 0.8 || d < 0.01) continue;
@@ -595,7 +687,7 @@ function breakFree(p, e) {
 function drumInFront(p) {
   let best = null, bd = 1.0;
   for (const pr of G.props) {
-    if (pr.broken || pr.kind !== 'drum') continue;
+    if (pr.broken || (pr.kind !== 'drum' && pr.kind !== 'barrel')) continue;
     const dx = pr.x - p.x, dz = pr.z - p.z, d = Math.hypot(dx, dz);
     if (d < bd && (dx * Math.sin(p.face) + dz * Math.cos(p.face)) > 0.1) { bd = d; best = pr; }
   }
@@ -604,7 +696,7 @@ function drumInFront(p) {
 function liftDrum(p, pr) {
   pr.broken = true;
   G.props = G.props.filter(x => x !== pr);
-  p.carryMesh = pr.mesh; p.carryItem = pr.item;
+  p.carryMesh = pr.mesh; p.carryItem = pr.item; p.carryWood = pr.kind === 'barrel';
   setState(p, 'carry');
   A.play('metal', 0.6);
   ev('lift');
@@ -616,7 +708,7 @@ function dropCarry(p, thrown) {
   if (!thrown) {
     // 被打中时油桶掉地上摔破
     scene.remove(m);
-    fx.debris(p.x, 1.2, p.z, '#c8662c', 10, 0.14, 3); A.play('metal');
+    fx.debris(p.x, 1.2, p.z, p.carryWood ? '#b07c4a' : '#c8662c', 10, 0.14, 3); A.play(p.carryWood ? 'wood' : 'metal');
     if (p.carryItem) spawnItem(p.carryItem, p.x, p.z, { pop: true, life: ITEMS[p.carryItem].weapon ? 14 : 0 });
     p.carryItem = null;
   }
@@ -627,7 +719,7 @@ function throwDrum(p) {
   p.carryMesh = null;
   autoAim(p);
   const f = { x: Math.sin(p.face), z: Math.cos(p.face) };
-  const pr = { kind: 'drum', owner: p, side: 'player', x: p.x + f.x * 0.4, y: p.model.H, z: p.z + f.z * 0.4, vx: f.x * 7.5, vz: f.z * 7.5, vy: 2.2, t: 0, mesh: m, dmg: 30, face: p.face, hits: new Set(), item: p.carryItem };
+  const pr = { kind: 'drum', wood: p.carryWood, owner: p, side: 'player', x: p.x + f.x * 0.4, y: p.model.H, z: p.z + f.z * 0.4, vx: f.x * 7.5, vz: f.z * 7.5, vy: 2.2, t: 0, mesh: m, dmg: 30, face: p.face, hits: new Set(), item: p.carryItem };
   p.carryItem = null;
   G.projs.push(pr);
   setState(p, 'throwing', { dur: 0.4, clip: 'throwItem' });
@@ -663,7 +755,7 @@ function pickUp(p, it) {
 }
 function dropWeapon(a) {
   if (!a.weapon) return;
-  if (a.weapon.ammo > 0 && ['gun', 'shotgun', 'smg', 'bazooka', 'pipe', 'knife', 'dynamite', 'grenade'].indexOf(a.weapon.kind) >= 0) spawnItem(a.weapon.kind, a.x, a.z, { ammo: a.weapon.ammo, pop: true, life: 10 });
+  if (a.weapon.ammo > 0 && ['gun', 'shotgun', 'smg', 'bazooka', 'pipe', 'knife', 'dynamite', 'grenade', 'rifle', 'sword'].indexOf(a.weapon.kind) >= 0) spawnItem(a.weapon.kind, a.x, a.z, { ammo: a.weapon.ammo, pop: true, life: 10 });
   a.weapon = null; attachWeapon(a);
 }
 function useWeapon(p) {
@@ -677,22 +769,22 @@ function useWeapon(p) {
     fx.muzzle(p.x + fwd.x, 1.35, p.z + fwd.z); A.play('shotgun');
     ev('shoot', { kind: k, ammo: w.ammo }); return;
   }
-  if (k === 'gun' || k === 'shotgun' || k === 'smg') {
+  if (k === 'gun' || k === 'shotgun' || k === 'smg' || k === 'rifle') {
     if (w.ammo <= 0) { throwProj(p, k, { dmg: 8, dizzy: true }); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); return; }
     w.ammo--;
-    const sg = k === 'shotgun';
-    setState(p, 'shoot', { dur: sg ? 0.55 : k === 'smg' ? 0.11 : 0.3, clip: sg ? 'shotgun' : 'shoot' });
+    const sg = k === 'shotgun', rf = k === 'rifle';
+    setState(p, 'shoot', { dur: sg ? 0.55 : k === 'smg' ? 0.11 : rf ? 0.42 : 0.3, clip: sg || rf ? 'shotgun' : 'shoot' });
     const mx = p.x + fwd.x * 0.9, mz = p.z + fwd.z * 0.9;
-    fx.muzzle(mx, 1.35, mz); A.play(sg ? 'shotgun' : 'gun');
-    if (sg) fx.shake = Math.max(fx.shake, 0.12);
-    let firstD = sg ? 5.6 : 12, hitAny = false;
+    fx.muzzle(mx, 1.35, mz); A.play(sg ? 'shotgun' : rf ? 'rifle' : 'gun');
+    if (sg || rf) fx.shake = Math.max(fx.shake, 0.1);
+    let firstD = sg ? 5.6 : rf ? 13 : 12, hitAny = false;
     const cands = G.actors.filter(e => e.side !== 'player' && hittable(e)).map(e => {
       const dx = e.x - p.x, dz = e.z - p.z, along = dx * fwd.x + dz * fwd.z, perp = Math.abs(dx * fwd.z - dz * fwd.x);
       return { e, along, perp };
     }).filter(o => o.along > 0.2 && o.along < firstD && o.perp < (sg ? 0.55 + o.along * 0.18 : 0.5)).sort((a, b) => a.along - b.along);
     for (const o of cands) {
-      const dmg = sg ? Math.max(14, 36 - o.along * 3.5) : k === 'smg' ? 7 : 16;
-      const kb = sg ? 'down' : (o.e.stun >= 2 ? 'down' : 'hit');
+      const dmg = sg ? Math.max(14, 36 - o.along * 3.5) : k === 'smg' ? 7 : rf ? 24 : 16;
+      const kb = sg || rf ? 'down' : (o.e.stun >= 2 ? 'down' : 'hit');
       applyHit(p, o.e, H(0, 0, 0, 0, 0, 2, dmg * p.stats.dmg, kb, 400, sg ? 'punchHeavy' : 'punch', sg), p.face);
       hitAny = true;
       if (!sg) break;
@@ -702,9 +794,9 @@ function useWeapon(p) {
     if (w.ammo <= 0) toast('子弹打光了，再按攻击把枪扔出去');
     return;
   }
-  if (k === 'pipe') {
-    startMove(p, 'swing'); w.ammo--; A.play('whoosh');
-    if (w.ammo <= 0) { p.weapon = null; attachWeapon(p); fx.debris(p.x, 1.2, p.z, '#8c9098', 4, 0.1, 2); toast('铁管断了'); }
+  if (k === 'pipe' || k === 'sword') {
+    startMove(p, k === 'sword' ? 'swordSlash' : 'swing'); w.ammo--; A.play(k === 'sword' ? 'slash' : 'whoosh');
+    if (w.ammo <= 0) { p.weapon = null; attachWeapon(p); fx.debris(p.x, 1.2, p.z, k === 'sword' ? '#d6dade' : '#8c9098', 4, 0.1, 2); toast(k === 'sword' ? '砍刀卷刃了' : '铁管断了'); }
     return;
   }
   if (k === 'knife') {
@@ -746,11 +838,11 @@ function updateItems(dt) {
 function hitProp(pr, power) {
   if (pr.broken) return;
   pr.hp -= power || 1; pr.shake = 0.25;
-  A.play(pr.kind === 'drum' ? 'metal' : pr.kind === 'statue' ? 'breakStatue' : 'metal', 0.8);
+  A.play(pr.kind === 'drum' ? 'metal' : pr.kind === 'barrel' ? 'wood' : pr.kind === 'statue' ? 'breakStatue' : 'metal', 0.8);
   fx.hit(pr.x, 0.8, pr.z, false);
   if (pr.hp <= 0) {
     pr.broken = true; scene.remove(pr.mesh);
-    const col = pr.kind === 'drum' ? '#c8662c' : pr.kind === 'statue' ? '#d6ae3e' : '#a6aab4';
+    const col = pr.kind === 'drum' ? '#c8662c' : pr.kind === 'barrel' ? '#b07c4a' : pr.kind === 'statue' ? '#d6ae3e' : '#a6aab4';
     fx.debris(pr.x, 0.6, pr.z, col, pr.kind === 'statue' ? 16 : 10, pr.kind === 'statue' ? 0.18 : 0.14, 3.5);
     if (pr.points) addScore(pr.points, pr.x, 1.8, pr.z);
     if (pr.item) spawnItem(pr.item, pr.x, pr.z + 0.5, { pop: true, life: ITEMS[pr.item].weapon ? 14 : 0 });
@@ -821,7 +913,7 @@ function updateProjectiles(dt) {
         }
         const outD = pr.x < G.focusX - HALF_W - 2 || pr.x > G.focusX + HALF_W + 2 || pr.z < AR.z0 - 1 || pr.z > AR.z1 + 1;
         if (pr.y <= 0.45 || outD) {
-          fx.debris(pr.x, 0.6, clamp(pr.z, AR.z0, AR.z1), '#c8662c', 12, 0.15, 3.5); A.play('metal');
+          fx.debris(pr.x, 0.6, clamp(pr.z, AR.z0, AR.z1), pr.wood ? '#b07c4a' : '#c8662c', 12, 0.15, 3.5); A.play(pr.wood ? 'wood' : 'metal');
           if (pr.item) spawnItem(pr.item, clamp(pr.x, G.focusX - HALF_W + 0.5, G.focusX + HALF_W - 0.5), clamp(pr.z, AR.z0, AR.z1), { pop: true, life: ITEMS[pr.item].weapon ? 14 : 0 });
           killProj(pr); continue;
         }
@@ -874,7 +966,7 @@ function tryHit(a, h, air, m, hi) {
   let any = false;
   for (const e of G.actors) {
     if (e === a || !hittable(e)) continue;
-    if (a.side === e.side && !(a.isRaptor && a.angry)) continue;
+    if (a.side === e.side && !a.wild && !(a.isRaptor && a.angry)) continue;   // 发怒的恐龙谁都咬
     if (a.isRaptor && e === a) continue;
     if (e.state === 'grabbed' && a.side === 'player' && a.grab !== e) continue;
     const key = e.id + ':' + (hi || 0);
@@ -900,6 +992,7 @@ function tryHit(a, h, air, m, hi) {
 function applyHit(a, e, h, dir, splash) {
   if (e.invul > 0 && !(splash && e.side !== 'player')) return false;
   if (e.side === 'player' && G.settings.demo) { fx.hit(e.x, e.y + 1.2, e.z, false); return false; }
+  if (e.type === 'shivat' && e.state === 'sleep') wakeShivat(e);   // 打熟睡的霸王龙会把它打醒
   let dmg = h.dmg;
   if (e.side === 'player') dmg *= DUR_MUL[G.settings.dur];
   const px = e.x - Math.sin(dir) * 0.2, pz = e.z - Math.cos(dir) * 0.2;
@@ -928,13 +1021,23 @@ function damage(a, e, dmg, kb, dir, pts, react) {
   const dead = e.hp <= 0;
   if (dead) { e.hp = 0; }
   e.stun++; e.stunT = 1.0;
-  const armor = e.type === 'vice' && !dead && kb === 'hit' && chance(0.3);   // 原作维斯没有硬直动画：偶尔硬吃拳头继续出招
-  if (dead || kb === 'down' || kb === 'launch' || (e.side !== 'player' && e.stun >= (e.type === 'vice' ? 6 : 5))) knockdown(e, dir, kb === 'launch' ? 1.3 : 1, dead);
+  if (e.isDino && e.type !== 'raptor') {
+    // 三角龙、霸王龙体型大：轻攻击不硬直；冲锋、苏醒时完全不吃硬直
+    if (dead) { knockdown(e, dir, 0.25, true); return; }
+    if ((e.type === 'hack' && (e.state === 'charge' || e.state === 'paw')) || e.state === 'waking' || e.state === 'sleep') return;
+    const heavy = kb === 'launch' || kb === 'down';
+    if (e.type === 'hack' && heavy && e.stun >= 3) { knockdown(e, dir, 0.3, false); return; }
+    if (e.stun >= (e.type === 'shivat' ? 5 : 3)) { e.stun = 0; setState(e, 'hurt'); }
+    return;
+  }
+  const tough = e.type === 'vice' || e.type === 'butcher' || e.type === 'lash';
+  const armor = tough && !dead && kb === 'hit' && chance(e.type === 'lash' ? 0.2 : 0.3);   // 原作维斯、屠夫几乎没有硬直：偶尔硬吃拳头继续出招
+  if (dead || kb === 'down' || kb === 'launch' || (e.side !== 'player' && e.stun >= (tough ? 6 : 5))) knockdown(e, dir, kb === 'launch' ? 1.3 : 1, dead);
   else if (!armor) {
     if (e.state === 'grabbed') return;
     if (e.grab) releaseGrab(e);
     releaseToken(e);
-    const keepAttack = e.type === 'vice' && e.state === 'attack' && chance(0.2);
+    const keepAttack = tough && e.state === 'attack' && chance(0.2);
     if (!keepAttack) { setState(e, 'hurt', { low: chance(0.4) }); e.vx = Math.sin(dir) * 1.2; e.vz = Math.cos(dir) * 1.2; }
   }
 }
@@ -943,6 +1046,11 @@ function knockdown(e, dir, power, dead) {
   if (e.grabbedBy) releaseGrab(e.grabbedBy, true);
   releaseToken(e);
   if (e.weapon && e.side === 'enemy' && (e.weapon.kind === 'knife' || e.weapon.kind === 'pipe')) { spawnItem(e.weapon.kind, e.x, e.z, { pop: true, life: 10, ammo: e.weapon.kind === 'pipe' ? 8 : 1 }); e.weapon = null; attachWeapon(e); }
+  if (e.type === 'butcher' && e.swords > 0) {
+    // 原作：屠夫被打倒时两把刀脱手，玩家可以捡起来用
+    for (let i = 0; i < e.swords; i++) spawnItem('sword', e.x + (i ? 0.45 : -0.45), e.z + 0.2, { pop: true, ammo: ITEMS.sword.ammo });
+    e.swords = 0; attachSwords(e); toast('屠夫的砍刀脱手了！'); ev('swordsDrop'); A.play('clink');
+  }
   setState(e, 'down', { phase: 'air', dead, power });
   e.vy = 4.6 * power; e.y = Math.max(e.y, 0.05);
   const sp = 2.8 * power;
@@ -955,11 +1063,12 @@ function onDeath(e) {
   if (e.side === 'player') return;
   const def = e.def;
   G.kills[e.type] = (G.kills[e.type] || 0) + 1;
-  if (e.type !== 'raptor') A.play(def && def.fat ? 'screamFat' : 'scream');
+  if (e.isDino) A.play('roar', e.type === 'raptor' ? 0 : 0.8);
+  else A.play(def && def.fat ? 'screamFat' : 'scream');
   if (def) addScore(def.points, e.x, 2.4, e.z);
   if (e.drop) spawnItem(e.drop, e.x, e.z, { pop: true, life: ITEMS[e.drop].weapon ? 14 : 0 });
   ev('kill', { enemy: e.type, id: e.id });
-  if (e.type === 'vice') bossDefeated(e);
+  if (e.type === 'vice' || e.type === 'butcher') bossDefeated(e);
 }
 function updateDown(e, dt) {
   const s = e.sub;
@@ -978,21 +1087,24 @@ function updateDown(e, dt) {
     }
   } else {
     s.lieT += dt; e.vx = e.vz = 0;
-    const lieDur = e.side === 'player' ? 0.55 : e.type === 'vice' ? 0.7 : 0.9;
+    const lieDur = e.side === 'player' ? 0.55 : e.type === 'vice' || e.type === 'butcher' ? 0.7 : e.isDino ? 1.2 : 0.9;
     if (!e.alive) {
       if (e.side === 'player') { setState(e, 'dead'); return; }
       if (s.lieT > 0.9) { setState(e, 'dead'); }
       return;
     }
-    if (s.lieT > lieDur) { setState(e, 'getup'); e.invul = Math.max(e.invul, e.type === 'vice' ? 0.8 : 0.55); }
+    if (s.lieT > lieDur) { setState(e, 'getup'); e.invul = Math.max(e.invul, e.type === 'vice' || e.type === 'butcher' ? 0.8 : 0.55); }
   }
 }
 
 // ---------- 物理 ----------
 function physics(a, dt) {
   const AR = AREAS[G.area];
-  if (a.state === 'grabbed') return;
-  a.x += a.vx * dt; a.z += a.vz * dt;
+  if (a.state === 'grabbed' || a.state === 'incar') return;
+  // 泥沼齐腰深：在水里走、跑、冲刺都慢一截
+  const wf = G.water && a.y < 0.4 ? 1 - 0.3 * sinkK(a.x) : 1;
+  a.x += a.vx * dt * wf; a.z += a.vz * dt * wf;
+  const wasAir = a.y > 0.05;
   if (a.y > 0 || a.vy > 0) {
     a.vy -= GRAV * dt; a.y += a.vy * dt;
     if (a.y <= 0) {
@@ -1003,17 +1115,18 @@ function physics(a, dt) {
       if (wasJump) { setState(a, 'idle'); a.vx *= 0.2; a.vz *= 0.2; fx.dust(a.x, 0, a.z, 2, 0.25); A.play('land', 0.6); }
       if (a.state === 'attack' && a.move && a.move.def.air) { setState(a, 'idle'); a.vx *= 0.2; a.vz *= 0.2; A.play('land', 0.6); }
       if (a.state === 'leap') { a.vx *= 0.2; a.vz *= 0.2; }
+      if (wasAir && G.water && sinkK(a.x) > 0.4) { fx.splash(a.x, 0.05, a.z, 10, 0.5); A.play('splash'); }
     }
   }
   // 边界：纵深与区域两端；玩家受卷轴窗口限制，卷轴时敌人可稍出屏，锁屏时敌人也不出画
-  const free = ['enter', 'leave', 'flee', 'cut'].indexOf(a.state) >= 0;
+  const free = ['enter', 'leave', 'flee', 'cut', 'sleep', 'knocked', 'waking'].indexOf(a.state) >= 0;   // 熟睡的霸王龙不跟着卷轴窗口挪位置
   if (!free) {
     const zMin = AR.z0, zMax = AR.z1;
     a.z = clamp(a.z, zMin, zMax);
     if (a.side === 'player' || G.lockX !== null) {
       // 原作锁屏：敌人、Boss、被打飞或摔出去的角色撞到画面边缘就停住；岩跳龙连尾巴长 3 米多，多留一些
-      const m = HALF_W - EDGE - (a.side === 'player' ? 0 : a.isRaptor ? 1.45 : Math.max(0, a.radius - 0.34));
-      const lo = a.side === 'player' ? Math.max(AR.x0 + 0.3, G.focusX - m) : G.focusX - m, hi = a.side === 'player' ? Math.min(AR.x1, G.focusX + m) : G.focusX + m;
+      const m = HALF_W - EDGE - (a.side === 'player' ? 0 : a.type === 'shivat' ? 2.4 : a.isTrike ? 1.25 : a.isRaptor ? 1.45 : Math.max(0, a.radius - 0.34));
+      const lo = a.side === 'player' ? Math.max(AR.x0 + 0.3, G.focusX - m) : G.focusX - m, hi = a.side === 'player' ? (G.mode === 'trans' ? AR.x1 + 3 : Math.min(AR.x1, G.focusX + m)) : G.focusX + m;
       if (a.x < lo) { a.x = lo; if (a.vx < 0) a.vx = 0; }
       else if (a.x > hi) { a.x = hi; if (a.vx > 0) a.vx = 0; }
       // 倒地横躺比站着多占半个身长：贴边倒下的再往里滑一点（不瞬移）
@@ -1031,6 +1144,25 @@ function physics(a, dt) {
     const dx = a.x - pr.x, dz = a.z - pr.z, d = Math.hypot(dx, dz), min = pr.r + a.radius * 0.8;
     if (d < min && d > 1e-4) { a.x = pr.x + dx / d * min; a.z = pr.z + dz / d * min; }
   }
+  // 停着的凯迪拉克、趴着睡的霸王龙：几个圆挡住身体
+  if (a.y < 0.5 && !a.isDino) for (const b of blockers()) {
+    const dx = a.x - b.x, dz = a.z - b.z, d = Math.hypot(dx, dz), min = b.r + a.radius * 0.8;
+    if (d < min && d > 1e-4) { a.x = b.x + dx / d * min; a.z = b.z + dz / d * min; }
+  }
+}
+function blockers() {
+  const S = G.sleeper;
+  if (!S || (S.state !== 'sleep' && S.state !== 'knocked' && S.state !== 'waking')) return G.blockers;
+  const f = Math.sin(S.face) || -1;
+  return G.blockers.concat([{ x: S.x + f * 1.6, z: S.z + 0.1, r: 0.62 }, { x: S.x, z: S.z, r: 0.85 }, { x: S.x - f * 1.4, z: S.z, r: 0.6 }]);
+}
+// 泥沼里走动时水花
+function waterFx(a, dt) {
+  if (a.removed || a.y > 0.05 || sinkK(a.x) < 0.5) return;
+  const sp = Math.hypot(a.vx, a.vz);
+  if (sp < 0.6) return;
+  a.splashT = (a.splashT || 0) + dt * Math.min(2, sp / 2.5);
+  if (a.splashT > 0.28) { a.splashT = 0; fx.splash(a.x - Math.sign(a.vx) * 0.2, 0.05, a.z + 0.15, 3, 0.28); }
 }
 function separate() {
   const L = G.actors;
@@ -1077,7 +1209,72 @@ function updateEnemy(e, dt) {
       break;
     }
     case 'leave': break;
+    case 'aim': {
+      // 步枪兵：举枪瞄准 → 枪口闪一下（提示）→ 开枪；跳起来或换纵深就能躲开
+      e.vx = e.vz = 0;
+      if (!e.sub.glint && e.st > 0.3) { e.sub.glint = true; fx.glint(e.x + Math.sin(e.face) * 1.05, 1.42, e.z + Math.cos(e.face) * 1.05); A.play('clink', 0.35); }
+      if (!e.sub.fired && e.st > 0.62) { e.sub.fired = true; rifleShot(e); }
+      if (e.st > 1.0) { setState(e, 'idle'); e.cd = randRange(1.8, 3.0); }
+      break;
+    }
+    case 'mace': updateMace(e, dt); break;
+    case 'poke': {
+      // 胖子去捶熟睡的霸王龙
+      e.vx = e.vz = 0;
+      const S = G.sleeper;
+      if (S) e.face = approachAng(e.face, faceOf(S.x - 0.9 - e.x, S.z - e.z), dt * 10);
+      if (!e.sub.hit && e.st > 0.3) { e.sub.hit = true; if (S && S.state === 'sleep') pokeSleeper(e, S); }
+      if (e.st > 0.8) { setState(e, 'idle'); e.cd = 0.55; }
+      break;
+    }
   }
+}
+function rifleShot(e) {
+  const f = { x: Math.sin(e.face), z: Math.cos(e.face) };
+  fx.muzzle(e.x + f.x * 1.05, 1.42, e.z + f.z * 1.05); A.play('rifle');
+  const p = G.player;
+  const dx = p.x - e.x, dz = p.z - e.z, along = dx * f.x + dz * f.z, perp = Math.abs(dx * f.z - dz * f.x);
+  const hit = along > 0.3 && along < 10 && perp < 0.45 && hittable(p) && p.y < 0.55;   // 起跳就能躲过子弹
+  if (hit) applyHit(e, p, H(0, 0, 0, 0, 0, 2, 11, 'down', 0, 'punchHeavy', true), e.face);
+  else fx.dust(e.x + f.x * Math.min(10, Math.max(2, along + 1.5)), 0, e.z + f.z * Math.min(10, Math.max(2, along + 1.5)), 2, 0.25);
+  ev('rifleShot', { id: e.id, hit });
+}
+// 拉什·T：链锤过顶抡两圈后甩出约 3.6 米，再收回
+function updateMace(e, dt) {
+  e.vx = e.vz = 0;
+  const s = e.sub, T0 = 0.6, T1 = 0.82, T2 = 1.02, T3 = 1.38;
+  if (e.st < T0) s.ext = -1;
+  else if (e.st < T1) s.ext = (e.st - T0) / (T1 - T0);
+  else if (e.st < T2) s.ext = 1;
+  else s.ext = Math.max(0, 1 - (e.st - T2) / (T3 - T2));
+  if (!s.thrown && e.st >= T0) { s.thrown = true; A.play('whoosh'); A.play('chain', 0.6); }
+  if (s.ext > 0.25 && e.st < T2 && !s.hit) { const h = H(0, 9, 0.7 + s.ext * 2.9, 0.5, 0.5, 1.8, 13, 'down', 0, 'punchHeavy', true); if (tryHit(e, h, true)) s.hit = true; }
+  if (e.st > T3) { setState(e, 'idle'); e.cd = randRange(1.2, 2.0); }
+}
+function wakerThink(e, dt) {
+  const S = G.sleeper;
+  const tx = S.x - 1.5, tz = S.z + 1.15;   // 站到霸王龙脖子前面
+  const ex = tx - e.x, ez = tz - e.z, ed = Math.hypot(ex, ez);
+  if (ed > 0.25) { e.vx = ex / ed * e.def.speed; e.vz = ez / ed * e.def.speed; e.state = 'walk'; e.face = approachAng(e.face, faceOf(ex, ez), dt * 10); return; }
+  e.vx = e.vz = 0; e.state = 'idle';
+  e.face = approachAng(e.face, faceOf(S.x - 0.9 - e.x, S.z - e.z), dt * 10);
+  if (e.cd <= 0) setState(e, 'poke');
+}
+function pokeSleeper(e, S) {
+  S.wakeN++;
+  fx.hit(S.x - 1.1, 0.7, S.z + 0.5, false); A.play('punch');
+  fx.text(S.x - 1.8, 2.3, S.z, '!', '#ffd84a', 0.7);
+  ev('poke', { n: S.wakeN, by: e.type });
+  if (S.wakeN >= 3) wakeShivat(S);
+}
+function wakeShivat(S) {
+  if (S.state !== 'sleep') return;
+  setState(S, 'waking'); S.wild = true; S.angry = true; S.cd = 1.2;
+  A.play('roarBig'); fx.shake = Math.max(fx.shake, 0.45);
+  toast('霸王龙希瓦特被吵醒了！'); ev('shivatWake', { pokes: S.wakeN });
+  if (!G.waveOn) { G.waveOn = true; G.extraWave = true; G.lockX = clamp(Math.max(G.focusX, S.x - 3), AREAS[G.area].x0 + HALF_W, AREAS[G.area].x1 - HALF_W); G.pending = []; G.waveEnemies = []; }
+  if (G.waveEnemies.indexOf(S) < 0) G.waveEnemies.push(S);
+  for (const e of G.actors) if (e.waker) e.waker = false;   // 叫醒以后胖子们回头打玩家
 }
 const DUR1 = () => 1;
 function think(e, dt) {
@@ -1086,12 +1283,15 @@ function think(e, dt) {
   const dx = p.x - e.x, dz = p.z - e.z, dist = Math.hypot(dx, dz);
   const pDown = ['down', 'dead', 'respawn', 'getup'].indexOf(p.state) >= 0 || !p.alive || G.mode !== 'play';
   e.face = approachAng(e.face, Math.abs(dz) < 0.6 || true ? (dx > 0 ? FACE_RIGHT : FACE_LEFT) : faceOf(dx, dz), dt * 10);
-  if (pDown) { hover(e, dt, 3.2); return; }
+  if (pDown) { hover(e, dt, def.rifle ? 4.4 : 3.2); return; }
+  if (e.waker && G.sleeper && G.sleeper.state === 'sleep') { wakerThink(e, dt); return; }
+  if (def.rifle && e.cd <= 0 && Math.abs(dz) < 0.45 && dist > 2.6 && dist < 9 && chance(0.045)) { setState(e, 'aim'); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
+  if (def.mace && e.cd <= 0 && Math.abs(dz) < 0.5 && dist > 1.8 && dist < 3.9 && chance(0.05)) { setState(e, 'mace', { ext: -1 }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; A.play('chain', 0.7); return; }
   // 远程招式
   if (def.knife && e.cd <= 0 && Math.abs(dz) < 0.35 && dist > 2.6 && dist < 7 && chance(0.02)) { setState(e, 'throwK', { kind: 'knife' }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
   if (def.bomb && e.cd <= 0 && dist > 3 && dist < 6.5 && chance(0.006) && !e.threw) { e.threw = true; setState(e, 'throwK', { kind: def.bomb, run: true }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
   if (def.fat && e.cd <= 0 && Math.abs(dz) < 0.4 && dist > 2.4 && dist < 6.5 && chance(0.03)) { setState(e, 'charge', { dir: dx > 0 ? 1 : -1 }); e.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
-  if (!wantToken(e)) { hover(e, dt, 3.4); return; }
+  if (!wantToken(e)) { hover(e, dt, def.rifle ? 4.6 : 3.4); return; }
   // 走到玩家同一纵深的左右侧
   let side = Math.sign(e.x - p.x) || 1;
   if (def.behind) side = -Math.sign(Math.sin(p.face)) || side;   // 朋克爱绕到背后
@@ -1111,11 +1311,13 @@ function think(e, dt) {
     const r = rand();
     let mv = 'punch';
     if (def.knife) mv = 'slash';
+    else if (def.rifle) mv = r < 0.6 ? 'butt' : 'punch';
+    else if (def.mace) mv = r < 0.5 ? 'eSwing' : r < 0.75 ? 'kick' : 'punch';
     else if (e.weapon && e.weapon.kind === 'pipe') mv = 'eSwing';
     else if (def.fat) mv = 'fatPunch';
     else if (r < 0.22) mv = 'kick';
     startMove(e, mv);
-    e.combo = def.fat || def.knife ? 0 : (chance(def.aggr) ? 1 + (chance(0.4) ? 1 : 0) : 0);
+    e.combo = def.fat || def.knife || def.rifle ? 0 : (chance(def.aggr) ? 1 + (chance(0.4) ? 1 : 0) : 0);
   }
 }
 function hover(e, dt, dist) {
@@ -1167,6 +1369,11 @@ function updateEnter(e, dt) {
     if (!s.burst) { s.burst = true; burstFacade(); }
     e.vz = 3.2; e.face = 0;
     if (e.z > s.tz) { setState(e, 'idle'); e.cd = 0.2; }
+  } else if (s.kind === 'rise') {
+    // 格特等人从泥水里冒出来
+    e.vx = e.vz = 0;
+    if (!s.sp) { s.sp = true; fx.splash(e.x, 0.05, e.z, 12, 0.55); A.play('splash'); }
+    if (e.st > 0.75) { setState(e, 'idle'); e.cd = 0.4; fx.splash(e.x, 0.05, e.z, 6, 0.4); }
   } else if (s.kind === 'wall') {
     if (e.st < 0.6) { e.vx = e.vz = 0; e.y = s.h; e.vy = 0; return; }
     if (!s.jumped) { s.jumped = true; e.vy = 3.5; e.vz = 1.4; A.play('jump'); }
@@ -1285,25 +1492,37 @@ function summonHenchmen(n) {
 }
 function bossDefeated(v) {
   G.timeScale = 0.35;
-  ev('bossDown');
+  ev('bossDown', { boss: v.type });
   A.music(null);
-  // 剩下的杂兵逃走，岩跳龙跑开
+  // 剩下的杂兵逃走，恐龙跑开
   for (const e of G.actors) {
     if (e === v || e === G.player || !e.alive) continue;
-    if (e.isRaptor) { setState(e, 'flee', { vanish: true }); e.angry = false; }
-    else if (['down', 'dead'].indexOf(e.state) < 0) { setState(e, 'flee', { vanish: true }); }
+    if (e.isRaptor && e.type === 'raptor') { setState(e, 'flee', { vanish: true }); e.angry = false; }
+    else if (['down', 'dead', 'knocked', 'sleep'].indexOf(e.state) < 0) { setState(e, 'flee', { vanish: true }); }
   }
   G.mode = 'clear';
-  runScript([
+  const stage = AREAS[G.area].stage;
+  if (G.cleared.indexOf(stage) < 0) G.cleared.push(stage);
+  const steps = [
     { wait: 0.6 },
     { fn: () => { G.timeScale = 1; } },
     { wait: 1.0 },
     { fn: () => { const p = G.player; if (p.alive && ['idle', 'walk', 'run', 'attack', 'hurt', 'jump', 'shoot', 'throwing', 'pickup', 'grab'].indexOf(p.state) >= 0) { if (p.grab) releaseGrab(p); setState(p, 'victory'); p.face = FACE_RIGHT; } A.music('clear'); } },
     { say: 'player', text: HEROES[G.hero].win, dur: 2.2 },
-    { fn: () => { const p = G.player; const vit = Math.round(p.hp / p.maxHp * 100); G.vitality = vit; addScore(vit * 100, p.x, 2.6, p.z); A.play('coin'); banner('体力奖励 VITALITY', vit + ' × 100 = ' + vit * 100, 2.4); } },
-    { wait: 2.4 },
-    { say: 'vice', text: '屠夫在北边的森林里打猎……别去惹他……那家伙是个疯子！', dur: 3.4 },
-    { fn: () => finish(true) }
+    { fn: () => { const p = G.player; const vit = Math.round(p.hp / p.maxHp * 100); G.vitality = vit; G.vitalityTotal = (G.vitalityTotal || 0) + vit; addScore(vit * 100, p.x, 2.6, p.z); A.play('coin'); banner('体力奖励 VITALITY', vit + ' × 100 = ' + vit * 100, 2.4); } },
+    { wait: 2.4 }
+  ];
+  if (v.type === 'vice') steps.push({ say: 'vice', text: '屠夫在北边的森林里打猎……别去惹他……那家伙是个疯子！', dur: 3.4 });
+  const next = STAGES[stage];   // STAGES 按关号从 1 排：下标 stage 就是下一关
+  steps.push({ fn: () => { if (next) toNextStage(next); else finish(true); } });
+  runScript(steps);
+}
+// 过关后接着打下一关（街机一样连续）：体力回满，换下手里的武器
+function toNextStage(ST) {
+  runScript([
+    { fade: 1, dur: 0.9 },
+    { fn: () => { const p = G.player; p.hp = p.maxHp; p.invul = 0; if (p.weapon) { p.weapon = null; attachWeapon(p); } setState(p, 'idle'); G.timeScale = 1; ev('stageClear', { next: ST.no }); loadArea(ST.first); } },
+    { fade: 0, dur: 0.7 }
   ]);
 }
 
@@ -1354,6 +1573,290 @@ function updateRaptor(r, dt) {
   }
 }
 
+// ---------- 霸王龙希瓦特 ----------
+function updateShivat(S, dt) {
+  switch (S.state) {
+    case 'sleep': case 'knocked':
+      S.vx = S.vz = 0;
+      S.zzT = (S.zzT || 0) + dt;
+      if (S.zzT > 1.1) { S.zzT = 0; fx.text(S.x + Math.sin(S.face) * 2.3, 1.6, S.z + 0.2, 'Z', '#dff2ff', 0.42); }
+      break;
+    case 'waking': S.vx = S.vz = 0; if (S.st > 1.5) { setState(S, 'idle'); S.cd = 0.5; } break;
+    case 'idle': case 'walk': shivatThink(S, dt); break;
+    case 'bite': {
+      S.vx = S.vz = 0;
+      if (!S.sub.hit && S.st > 0.5 && S.st < 0.68) { const h = H(0, 9, 2.25, 0.85, 0.5, 2.8, 15, 'down', 0, 'slash', true); if (tryHit(S, h, true)) S.sub.hit = true; }
+      if (S.st > 1.05) { setState(S, 'idle'); S.cd = randRange(0.9, 1.5); }
+      break;
+    }
+    case 'stomp': {
+      S.vx = S.vz = 0;
+      if (!S.sub.hit && S.st > 0.6) { S.sub.hit = true; stompAoE(S); }
+      if (S.st > 1.15) { setState(S, 'idle'); S.cd = randRange(1.0, 1.6); }
+      break;
+    }
+    case 'hurt': S.vx *= 0.8; S.vz *= 0.8; if (S.st > 0.45) { setState(S, 'idle'); S.cd = 0.3; } break;
+    case 'down': updateDown(S, dt); if (S.state === 'dead') { setState(S, 'knocked'); fx.dust(S.x, 0, S.z, 10, 0.8); fx.shake = Math.max(fx.shake, 0.3); } break;
+    case 'getup': S.vx = S.vz = 0; if (S.st > 0.8) setState(S, 'idle'); break;
+  }
+}
+function shivatThink(S, dt) {
+  const p = G.player;
+  S.cd -= dt;
+  let tgt = hittable(p) && p.state !== 'respawn' && G.mode === 'play' ? p : null;
+  for (const e of G.actors) if (e !== S && e !== p && e.side === 'enemy' && !e.isDino && hittable(e) && Math.hypot(e.x - S.x, e.z - S.z) < 3 && chance(0.008)) tgt = e;
+  if (S.sub.tgt && hittable(S.sub.tgt) && S.st < 2.5) tgt = S.sub.tgt;
+  if (!tgt) { S.vx = S.vz = 0; S.state = 'idle'; return; }
+  S.sub.tgt = tgt;
+  const dx = tgt.x - S.x, dz = tgt.z - S.z, d = Math.hypot(dx, dz), want = faceOf(dx, dz);
+  S.face = approachAng(S.face, want, dt * 2.4);   // 大块头转身慢
+  const facing = Math.abs(angDiff(S.face, want)) < 0.45;
+  if (S.cd <= 0 && d < 1.9 && chance(0.05)) { setState(S, 'stomp'); A.play('roarBig', 0.5); return; }
+  if (S.cd <= 0 && d < 3.1 && d > 1.2 && facing) { setState(S, 'bite'); A.play('roar', 0.6); return; }
+  if (d > 2.3) { const sp = S.def.speed; S.vx = dx / d * sp; S.vz = dz / d * sp; S.state = 'walk'; }
+  else { S.vx = S.vz = 0; S.state = 'idle'; }
+  // 走路时地面轻微震动
+  if (S.state === 'walk') { S.stepT = (S.stepT || 0) + dt; if (S.stepT > 0.6) { S.stepT = 0; fx.shake = Math.max(fx.shake, 0.07); A.play('land', 0.9); fx.dust(S.x, 0, S.z, 2, 0.4); } }
+}
+function stompAoE(S) {
+  fx.shake = Math.max(fx.shake, 0.45); A.play('slam'); fx.dust(S.x, 0, S.z, 10, 0.6); fx.ring(S.x, 0.15, S.z);
+  for (const e of G.actors) {
+    if (e === S || !hittable(e) || e.y > 0.5 || e.isDino) continue;
+    const d = Math.hypot(e.x - S.x, e.z - S.z);
+    if (d < 2.5 + e.radius) applyHit(S, e, H(0, 0, 0, 0, 0, 2, 9, 'down', 0, 'punchHeavy', true), faceOf(e.x - S.x, e.z - S.z));
+  }
+  ev('stomp');
+}
+
+// ---------- 三角龙哈克 ----------
+function updateTrike(t, dt) {
+  switch (t.state) {
+    case 'enter': updateEnter(t, dt); break;
+    case 'idle': case 'walk': trikeThink(t, dt); break;
+    case 'paw': {
+      // 刨地预警：低头、刨两下前脚
+      t.vx = t.vz = 0;
+      if (Math.floor(t.st * 5) !== Math.floor((t.st - dt) * 5)) fx.dust(t.x + Math.sin(t.face) * 0.8, 0, t.z + 0.4, 2, 0.3);
+      if (t.st > 0.8) { setState(t, 'charge', { dir: t.sub.dir, tz: t.sub.tz, hits: new Set() }); A.play('roar', 0.7); }
+      break;
+    }
+    case 'charge': {
+      const s = t.sub;
+      t.vx = s.dir * 8.4; t.vz = clamp((s.tz - t.z) * 2, -1.0, 1.0); t.face = s.dir > 0 ? FACE_RIGHT : FACE_LEFT;
+      for (const e of G.actors) {
+        if (e === t || e.isDino || !hittable(e) || s.hits.has(e.id) || e.y > 1.1) continue;
+        const ax = e.x - (t.x + s.dir * 1.0), az = e.z - t.z;
+        if (Math.abs(ax) < 0.85 + e.radius && Math.abs(az) < 0.55 + e.radius * 0.6) { s.hits.add(e.id); applyHit(t, e, H(0, 0, 0, 0, 0, 2, 12, 'launch', 0, 'punchHeavy', true), t.face); }
+      }
+      if (Math.floor(t.st * 8) !== Math.floor((t.st - dt) * 8)) { fx.dust(t.x - s.dir * 0.9, 0, t.z, 2, 0.35); fx.shake = Math.max(fx.shake, 0.05); }
+      const L = G.lockX !== null ? G.lockX : G.focusX, edge = L + s.dir * (HALF_W - EDGE - 1.3);
+      if ((s.dir > 0 ? t.x >= edge - 0.05 : t.x <= edge + 0.05) || t.st > 2.2) setState(t, 'skid', { dir: s.dir });
+      break;
+    }
+    case 'skid': t.vx = t.sub.dir * Math.max(0, 5 - t.st * 12); t.vz = 0; if (t.st > 0.5) { setState(t, 'idle'); t.cd = randRange(0.6, 1.2); } break;
+    case 'gore': {
+      t.vx = t.vz = 0;
+      if (!t.sub.hit && t.st > 0.3 && t.st < 0.46) { const h = H(0, 9, 1.5, 0.62, 0.0, 1.8, 11, 'launch', 0, 'punchHeavy', true); if (tryHit(t, h, true)) t.sub.hit = true; }
+      if (t.st > 0.78) { setState(t, 'idle'); t.cd = randRange(0.8, 1.3); }
+      break;
+    }
+    case 'hurt': t.vx *= 0.8; t.vz *= 0.8; if (t.st > 0.35) { setState(t, 'idle'); t.cd = 0.4; } break;
+    case 'down': updateDown(t, dt); if (t.state === 'dead') { setState(t, 'flee', { vanish: true }); t.alive = true; t.dazed = true; t.wild = false; } break;
+    case 'getup': t.vx = t.vz = 0; if (t.st > 0.6) { setState(t, 'idle'); t.cd = 0.5; } break;
+    case 'flee': {
+      // 被打败的三角龙晕乎乎地跑开（不打死恐龙，与岩跳龙相同）
+      const dir = t.x > G.focusX ? 1 : -1;
+      t.vx = dir * 4.4; t.vz = 0; t.face = dir > 0 ? FACE_RIGHT : FACE_LEFT;
+      if (Math.abs(t.x - G.focusX) > HALF_W + 4) { t.alive = false; removeActor(t); }
+      break;
+    }
+  }
+}
+function trikeThink(t, dt) {
+  t.cd -= dt;
+  const p = G.player;
+  if (G.mode !== 'play' || !hittable(p) || p.state === 'respawn') { t.vx = t.vz = 0; t.state = 'idle'; return; }
+  const dx = p.x - t.x, dz = p.z - t.z, dist = Math.hypot(dx, dz);
+  if (t.cd <= 0 && dist < 2.3 && Math.abs(dz) < 0.6) { t.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; setState(t, 'gore'); A.play('snort'); return; }
+  // 退到与玩家同一纵深、相隔 4～5 米的一侧，再刨地冲锋（玩家换纵深就能躲开）
+  const L = G.lockX !== null ? G.lockX : G.focusX;
+  const minX = L - HALF_W + EDGE + 1.3, maxX = L + HALF_W - EDGE - 1.3;
+  const side = Math.sign(t.x - p.x) || 1;
+  let tx = clamp(p.x + side * 4.6, minX, maxX);
+  if (Math.abs(tx - p.x) < 2.6) tx = clamp(p.x - side * 4.6, minX, maxX);
+  const ex = tx - t.x, ez = p.z - t.z, ed = Math.hypot(ex, ez);
+  if (ed > 0.35) { const sp = t.def.speed * 1.25; t.vx = ex / ed * sp; t.vz = ez / ed * sp; t.state = 'walk'; t.face = approachAng(t.face, faceOf(ex, ez), dt * 5); }
+  else { t.vx = t.vz = 0; t.state = 'idle'; t.face = approachAng(t.face, dx > 0 ? FACE_RIGHT : FACE_LEFT, dt * 6); }
+  if (t.cd <= 0 && Math.abs(dz) < 0.5 && Math.abs(dx) > 2.6 && (ed < 1.0 || chance(0.012))) {
+    t.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; setState(t, 'paw', { dir: Math.sign(dx) || 1, tz: p.z }); A.play('snort');
+  }
+}
+
+// ---------- Boss：屠夫 ----------
+const BUTCHER_GANG = ['gutter', 'razor', 'thug', 'gneiss', 'blade', 'elmer'];
+function updateButcher(b, dt) {
+  const p = G.player;
+  switch (b.state) {
+    case 'cut': {
+      b.vx = b.vz = 0;
+      if (b.sub.chop) {
+        // 原作登场：背对玩家在肢解一头死恐龙
+        const ph = b.st % 0.9;
+        if (ph < 0.5 && ph + dt >= 0.5) { A.play('slash', 0.6); fx.blood(b.x + 1.3, 0.5, b.z - 0.3, 1); }
+      }
+      break;
+    }
+    case 'idle': case 'walk': butcherThink(b, dt); break;
+    case 'attack': {
+      const m = b.move;
+      updateMove(b, dt);
+      if (b.state !== 'attack' && m) {
+        if (m.id === 'bSlash' && b.swords > 1 && b.sub2 && b.sub2.chain) { b.sub2.chain = 0; startMove(b, 'bSlash2'); return; }
+        b.cd = randRange(0.45, 0.9);
+      }
+      break;
+    }
+    case 'dash': {
+      // 冲刺斩（有刀）/ 冲撞（没刀）
+      const s = b.sub;
+      if (b.st < 0.34) { b.vx = b.vz = 0; break; }
+      if (!s.go) { s.go = true; A.play(b.swords ? 'slash' : 'whoosh'); }
+      if (b.st < 0.8) {
+        b.vx = s.dir * 9.4; b.vz = 0;
+        if (!s.hit) { const h = b.swords ? H(0, 9, 0.9, 0.72, 0.4, 2.0, 16, 'down', 0, 'slash', true) : H(0, 9, 0.7, 0.66, 0.4, 2.0, 12, 'down', 0, 'punchHeavy', true); if (tryHit(b, h, true)) s.hit = true; }
+        if (Math.floor(b.st * 10) !== Math.floor((b.st - dt) * 10)) fx.dust(b.x - s.dir * 0.5, 0, b.z, 1, 0.3);
+      } else { b.vx *= 0.8; if (b.st > 1.05) { setState(b, 'idle'); b.cd = randRange(0.6, 1.1); } }
+      break;
+    }
+    case 'leap': if (b.y <= 0.001 && b.st > 0.15) { setState(b, 'idle'); b.vx *= 0.2; b.vz *= 0.2; b.cd = randRange(0.3, 0.7); fx.dust(b.x, 0, b.z, 4, 0.4); A.play('land'); } break;
+    case 'butt': {
+      // 屁股坐：高高跳起追着玩家落下，原作会连坐好几下，被打断才停
+      const s = b.sub;
+      if (s.phase === 'up') {
+        if (b.vy > 0) { b.vx = clamp((p.x - b.x) * 2.4, -7, 7); b.vz = clamp((p.z - b.z) * 2.4, -4, 4); }
+        else { s.phase = 'down'; b.vx *= 0.3; b.vz *= 0.3; b.vy = -4; }
+      } else if (s.phase === 'down') {
+        b.vy -= dt * 22;
+        if (b.y <= 0.001) { s.phase = 'land'; s.lt = b.st; b.vx = b.vz = 0; buttImpact(b); }
+      } else if (s.phase === 'land') {
+        if (b.st - s.lt > 0.4) {
+          if (s.n > 1 && G.mode === 'play') { s.n--; s.phase = 'up'; b.vy = 10; b.y = 0.01; A.play('jump'); }
+          else { setState(b, 'idle'); b.cd = randRange(0.7, 1.2); }
+        }
+      }
+      break;
+    }
+    case 'summon': {
+      b.vx = b.vz = 0;
+      if (b.st > 0.55 && !b.sub.fired) { b.sub.fired = true; b.pendingSummon = 0; A.play('roarMan'); fx.shake = Math.max(fx.shake, 0.2); butcherHenchmen(2); }
+      if (b.st > 1.2) { setState(b, 'idle'); b.cd = 0.4; }
+      break;
+    }
+    case 'pickSword': {
+      b.vx = b.vz = 0;
+      if (b.st > 0.35 && !b.sub.done) { b.sub.done = true; const it = b.sub.it; if (it && G.items.indexOf(it) >= 0) { removeItem(it); b.swords = Math.min(2, b.swords + 1); attachSwords(b); A.play('clink'); ev('swordPick', { by: 'butcher' }); } }
+      if (b.st > 0.6) { setState(b, 'idle'); b.cd = 0.3; }
+      break;
+    }
+    case 'hurt': b.vx *= 0.85; b.vz *= 0.85; if (b.st > 0.24) { setState(b, 'idle'); b.cd = Math.min(b.cd, 0.25); } break;
+    case 'grabbed': b.vx = b.vz = 0; break;
+    case 'down': updateDown(b, dt); break;
+    case 'getup': b.vx = b.vz = 0; if (b.st > 0.5) { setState(b, 'idle'); b.cd = 0.15; } break;
+    case 'dead': b.vx = b.vz = 0; break;
+  }
+}
+function buttImpact(b) {
+  fx.shake = Math.max(fx.shake, 0.4); A.play('slam'); fx.dust(b.x, 0, b.z, 8, 0.55); fx.ring(b.x, 0.15, b.z);
+  const p = G.player;
+  if (hittable(p) && p.y < 0.6 && Math.hypot(p.x - b.x, p.z - b.z) < 1.45 + p.radius) applyHit(b, p, H(0, 0, 0, 0, 0, 2, 14, 'down', 0, 'punchHeavy', true), faceOf(p.x - b.x, p.z - b.z));
+  ev('buttDrop');
+}
+function butcherThink(b, dt) {
+  const p = G.player;
+  b.cd -= dt; b.henchT = (b.henchT || 0) + dt;
+  const dx = p.x - b.x, dz = p.z - b.z, dist = Math.hypot(dx, dz);
+  b.face = approachAng(b.face, dx > 0 ? FACE_RIGHT : FACE_LEFT, dt * 10);
+  const frac = b.hp / b.maxHp;
+  if (b.pendingSummon && G.mode === 'play') { butcherHenchmen(b.pendingSummon); b.pendingSummon = 0; }
+  if (b.summons < 2 && frac < (b.summons === 0 ? 0.7 : 0.4) && G.mode === 'play') { b.summons++; b.pendingSummon = 2; setState(b, 'summon'); return; }
+  // 原作：小喽啰会不断出来帮忙。场上杂兵少于 2 个时每 12 秒补一个
+  if (b.henchT > 12 && G.mode === 'play') {
+    b.henchT = 0;
+    if (G.actors.filter(e => e.side === 'enemy' && e !== b && e.alive && !e.removed).length < 2) butcherHenchmen(1);
+  }
+  const pDown = ['down', 'dead', 'respawn', 'getup'].indexOf(p.state) >= 0 || G.mode !== 'play';
+  if (pDown) { hover(b, dt, 3.6); return; }
+  // 没刀时会回去捡地上的砍刀
+  if (b.swords < 2 && !b.sub.goSword && b.cd <= 0 && chance(0.015)) {
+    const it = G.items.find(i => i.kind === 'sword' && i.y < 0.3 && Math.abs(i.x - G.focusX) < HALF_W - 0.6);
+    if (it) b.sub.goSword = it;
+  }
+  if (b.sub.goSword) {
+    const it = b.sub.goSword;
+    if (G.items.indexOf(it) < 0) b.sub.goSword = null;
+    else {
+      const ex = it.x - b.x, ez = it.z - b.z, ed = Math.hypot(ex, ez);
+      if (ed < 0.55) { setState(b, 'pickSword', { it }); return; }
+      b.vx = ex / ed * b.def.speed * 1.2; b.vz = ez / ed * b.def.speed * 1.2; b.state = 'walk'; b.face = ex > 0 ? FACE_RIGHT : FACE_LEFT;
+      return;
+    }
+  }
+  const aligned = Math.abs(dz) < 0.4;
+  if (b.cd <= 0) {
+    if (dist > 2.8 && chance(0.04)) {
+      const r = rand();
+      if (r < 0.4) { setState(b, 'butt', { phase: 'up', n: 1 + (chance(0.6) ? 1 : 0) + (frac < 0.5 && chance(0.5) ? 1 : 0) }); b.vy = 10; b.y = 0.01; A.play('jump'); return; }
+      if (aligned && r < 0.8) { setState(b, 'dash', { dir: Math.sign(dx) || 1 }); b.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
+      // 原作像维斯一样满屏乱跳：跳到玩家另一侧
+      setState(b, 'leap'); b.vy = 8.2; b.y = 0.01;
+      const tx = clamp(p.x - (Math.sign(b.x - p.x) || 1) * 1.6, G.focusX - HALF_W + 1.4, G.focusX + HALF_W - 1.4), tt = 0.68;
+      b.vx = clamp((tx - b.x) / tt, -10, 10); b.vz = clamp((p.z - b.z) / tt, -4, 4); b.face = tx > b.x ? FACE_RIGHT : FACE_LEFT; A.play('jump');
+      return;
+    }
+    if (aligned && dist < 1.5) {
+      b.face = dx > 0 ? FACE_RIGHT : FACE_LEFT;
+      if (b.swords) { b.sub2 = { chain: chance(0.65) ? 1 : 0 }; startMove(b, 'bSlash'); }
+      else startMove(b, chance(0.5) ? 'fatPunch' : 'kick');
+      return;
+    }
+    if (aligned && dist >= 1.5 && dist < 3.2 && chance(0.03)) { setState(b, 'dash', { dir: Math.sign(dx) || 1 }); b.face = dx > 0 ? FACE_RIGHT : FACE_LEFT; return; }
+  }
+  const side = Math.sign(b.x - p.x) || 1;
+  const tx = p.x + side * 1.15, tz = p.z;
+  const ex = tx - b.x, ez = tz - b.z, ed = Math.hypot(ex, ez);
+  if (ed > 0.15) { const sp = b.def.speed * (ed > 2.5 ? 1.05 : 0.8); b.vx = ex / ed * sp; b.vz = ez / ed * sp; b.state = 'walk'; }
+  else { b.vx = b.vz = 0; b.state = 'idle'; }
+}
+function butcherHenchmen(n) {
+  for (let k = 0; k < n; k++) {
+    G.gangI = ((G.gangI || 0) + 1) % BUTCHER_GANG.length;
+    const type = BUTCHER_GANG[G.gangI], side = (G.gangI + k) % 2 ? 1 : -1;
+    const e = spawnEnemy(type, G.focusX + side * ENTER_DX, randRange(-1.6, 1.8), { drop: type === 'elmer' ? 'donut' : null });
+    setState(e, 'enter', { kind: 'walk', tx: G.focusX + side * (HALF_W - 1.4 - k * 0.3), tz: e.z });
+  }
+  ev('summon', { n, boss: 'butcher' });
+}
+function startButcher(B) {
+  const p = G.player;
+  G.mode = 'cut';
+  G.lockX = B.lock;
+  if (p.grab) releaseGrab(p);
+  const b = makeActor('butcher', 'enemy', { def: ENEMY.butcher, x: B.x, z: B.z, hp: ENEMY.butcher.hp, maxHp: ENEMY.butcher.hp, face: FACE_RIGHT, summons: 0, cd: 1, swords: 2 });
+  attachSwords(b);
+  setState(b, 'cut', { chop: true });
+  G.boss = b; G.waveEnemies = [b];
+  A.music(null);
+  // 原作：屠夫回过头来，一句话不说就动手
+  runScript([
+    { fn: () => { setState(p, 'cutwalk', { x: Math.max(p.x, 47.4), z: 0.2, face: FACE_RIGHT }); } },
+    { until: () => p.state !== 'cutwalk', max: 4 },
+    { wait: 1.3 },
+    { fn: () => { b.sub.chop = false; b.face = FACE_LEFT; b.sub.pose = 'taunt'; b.st = 0; A.play('roarMan'); fx.shake = 0.22; } },
+    { wait: 1.0 },
+    { fn: () => { setState(b, 'idle'); b.cd = 0.8; G.mode = 'play'; G.timer = 180; G.timerShow = 2.5; A.music('boss2'); banner('BOSS', 'BUTCHER 屠夫', 1.8); ev('bossStart', { boss: 'butcher' }); } }
+  ]);
+}
+
 // ---------- 波次 / 卷轴 ----------
 function triggerWave(i) {
   const AR = AREAS[G.area];
@@ -1382,9 +1885,12 @@ function doSpawn(s) {
     }
     case 'facade': e = spawnEnemy(s.type, s.x, -3.1, { drop: s.drop }); setState(e, 'enter', { kind: 'facade', tz: -1.2 }); break;
     case 'wall': e = spawnEnemy(s.type, s.x, -2.95, { drop: s.drop }); e.y = 2.75; setState(e, 'enter', { kind: 'wall', h: 2.75 }); break;
+    case 'water': e = spawnEnemy(s.type, s.x, s.z || 0, { drop: s.drop }); setState(e, 'enter', { kind: 'rise' }); break;
     default: e = spawnEnemy(s.type, s.x, s.z, { drop: s.drop, weapon: s.weapon });
   }
   e.z = clamp(e.z, AR.z0 - 1.2, AR.z1);
+  if (s.wake && G.sleeper && G.sleeper.state === 'sleep') e.waker = true;
+  if (e.isTrike) { e.sub.kind = 'walk'; }
   G.waveEnemies.push(e);
   return e;
 }
@@ -1394,7 +1900,8 @@ function updateWaves(dt) {
   if (G.waveOn) {
     const alive = G.waveEnemies.some(e => e.alive && !e.removed);
     if (!alive && G.pending.length === 0 && G.mode === 'play') {
-      G.waveOn = false; G.lockX = null; G.wave++;
+      G.waveOn = false; G.lockX = null;
+      if (G.extraWave) G.extraWave = false; else G.wave++;   // 霸王龙被打醒时临时锁的屏不占波次
       const more = G.wave < AR.waves.length || AR.exit || AR.boss;
       if (more) { G.go = 2.4; A.play('go'); }
       ev('waveClear', { wave: G.wave });
@@ -1404,7 +1911,8 @@ function updateWaves(dt) {
       if (p.x >= AR.waves[G.wave].trigger) triggerWave(G.wave);
     } else if (AR.exit) {
       const ex = AR.exit;
-      if (p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < 1.1 && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
+      const wide = ex.type === 'cliff' || ex.type === 'dusk';
+      if (p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < (wide ? 9 : 1.1) && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
     } else if (AR.boss && !G.boss && p.x >= AR.boss.trigger) startBoss();
   }
 }
@@ -1433,7 +1941,7 @@ function knockdownPlayerDeath(p) { knockdown(p, p.face + Math.PI, 1, true); }
 
 // ---------- 区域切换 ----------
 function exitArea(type) {
-  const p = G.player;
+  const p = G.player, AR = AREAS[G.area], to = AR.exit.to;
   G.mode = 'trans';
   if (p.grab) releaseGrab(p);
   const W0 = world.area();
@@ -1445,7 +1953,7 @@ function exitArea(type) {
       { wait: 0.45 },
       { fn: () => { setState(p, 'cutwalk', { x: 46.5, z: 0 }); } },
       { fade: 1, dur: 0.5 },
-      { fn: () => { loadArea(1); } },
+      { fn: () => { loadArea(to); } },
       { fade: 0, dur: 0.5 }
     ]);
   } else if (type === 'window') {
@@ -1455,14 +1963,35 @@ function exitArea(type) {
       { wait: 0.3 },
       { fn: () => { A.play('glass'); if (W0.window) { W0.window.glass.visible = false; } fx.debris(63, 2.2, 0, '#bfe0f0', 18, 0.12, 4); fx.shake = 0.25; } },
       { fade: 1, dur: 0.5 },
-      { fn: () => { loadArea(2); } },
+      { fn: () => { loadArea(to); } },
       { fade: 0, dur: 0.5 }
+    ]);
+  } else if (type === 'cliff') {
+    // 2-1 → 2-2：从山崖跳进泥沼
+    p.face = FACE_RIGHT;
+    runScript([
+      { fn: () => { setState(p, 'cutwalk', { x: Math.min(AR.x1 - 0.3, p.x + 0.8), z: p.z, face: FACE_RIGHT }); } },
+      { until: () => p.state !== 'cutwalk', max: 1.5 },
+      { fn: () => { setState(p, 'jump', { noAtk: true }); p.vy = 6.2; p.y = 0.01; p.vx = 3.4; p.vz = 0; A.play('jump'); } },
+      { wait: 0.35 },
+      { fade: 1, dur: 0.45 },
+      { fn: () => { loadArea(to); } },
+      { fade: 0, dur: 0.5 }
+    ]);
+  } else if (type === 'dusk') {
+    // 2-2 → 2-3：走出沼泽，天色转暗
+    runScript([
+      { fn: () => { setState(p, 'cutwalk', { x: Math.min(AR.x1 + 2, p.x + 2.6), z: p.z, face: FACE_RIGHT }); } },
+      { fade: 1, dur: 1.0 },
+      { fn: () => { loadArea(to); } },
+      { fade: 0, dur: 0.8 }
     ]);
   }
   ev('exit', { kind: type });
 }
 function startBoss() {
   const AR = AREAS[G.area], B = AR.boss, p = G.player;
+  if (B.type === 'butcher') return startButcher(B);
   G.mode = 'cut';
   G.lockX = B.lock;
   if (p.grab) releaseGrab(p);
@@ -1485,7 +2014,7 @@ function startBoss() {
     { wait: 0.35 },
     { fn: () => { r.angry = true; r.model.setPalette('angry'); A.play('roar'); fx.shake = 0.3; r.sub.roar = 0.9; } },
     { wait: 0.9 },
-    { fn: () => { scene.remove(G.chain); G.chain = null; A.play('chain'); setState(v, 'idle'); setState(r, 'idle'); r.cd = 0.3; v.cd = 0.8; G.mode = 'play'; G.timer = 180; G.timerShow = 2.5; A.music('boss'); banner('BOSS', 'VICE T. 维斯·特修恩', 1.8); ev('bossStart'); } }
+    { fn: () => { scene.remove(G.chain); G.chain = null; A.play('chain'); setState(v, 'idle'); setState(r, 'idle'); r.cd = 0.3; v.cd = 0.8; G.mode = 'play'; G.timer = 180; G.timerShow = 2.5; A.music('boss'); banner('BOSS', 'VICE T. 维斯·特修恩', 1.8); ev('bossStart', { boss: 'vice' }); } }
   ]);
 }
 
@@ -1566,7 +2095,7 @@ function updateContinue(dt) {
   if (n !== C.count && n >= 0) { C.count = n; A.play('timer'); }
   if (IN.take('atk') || IN.take('pause')) {
     G.stats.contCount++; G.score += 1; G.lives = 3;
-    G.mode = 'play'; G.cont = null; A.music(G.boss ? 'boss' : AREAS[G.area].id);
+    G.mode = 'play'; G.cont = null; A.music(areaMusic());
     respawn(G.player);
     ev('continued');
     return;
@@ -1582,7 +2111,7 @@ function finish(win) {
   G.mode = win ? 'clear' : 'over';
   const newHi = !G.demoUsed && G.score > G.hi;
   if (newHi) { G.hi = G.score; store.set('hi', G.hi); }
-  const res = { win, score: G.score, hi: G.hi, newHi, demo: G.demoUsed, kills: Object.assign({}, G.kills), seconds: Math.round(G.t), deaths: G.stats.deaths, hits: G.stats.hits, food: G.stats.food, vitality: G.vitality || 0, hero: HEROES[G.hero], lives: G.settings.lives, dur: G.settings.dur, conts: G.stats.contCount };
+  const res = { win, score: G.score, hi: G.hi, newHi, demo: G.demoUsed, kills: Object.assign({}, G.kills), seconds: Math.round(G.t), deaths: G.stats.deaths, hits: G.stats.hits, food: G.stats.food, vitality: G.vitality || 0, vitalityTotal: G.vitalityTotal || G.vitality || 0, cleared: G.cleared.slice(), stage: AREAS[G.area].stage, hero: HEROES[G.hero], lives: G.settings.lives, dur: G.settings.dur, conts: G.stats.contCount };
   ev('end', { win, score: G.score });
   if (G.onEnd) G.onEnd(res);
 }
@@ -1609,13 +2138,19 @@ export function render(dt, realT) {
     if (a.removed) continue;
     const frozen = a.hitstop > 0;
     if (a.isRaptor) renderRaptor(a, frozen ? 0 : dt);
+    else if (a.isTrike) renderTrike(a, frozen ? 0 : dt);
     else renderHuman(a, frozen ? 0 : dt, realT);
-    a.model.root.position.set(a.x + (frozen && a.flash > 0 ? (Math.random() - 0.5) * 0.06 : 0), a.y, a.z);
+    // 泥沼里整个人下沉到齐腰；从水里冒出来的敌人从水下升起（只改画面，判定高度不变）
+    const sk = G.water ? sinkK(a.x) * SINK : 0;
+    let vy = a.y - sk;
+    if (a.state === 'enter' && a.sub.kind === 'rise') vy -= 1.9 * Math.max(0, 1 - a.st / 0.75);
+    a.model.root.position.set(a.x + (frozen && a.flash > 0 ? (Math.random() - 0.5) * 0.06 : 0), vy, a.z);
     a.model.root.rotation.y = a.face;
     a.blob.position.set(a.x, 0.015, a.z);
     const hs = Math.max(0.3, 1 - a.y * 0.25);
-    a.blob.scale.setScalar(a.radius / 0.32 * 0.85 * hs);
-    a.blob.visible = a.state !== 'dead' || Math.floor(a.st * 12) % 2 === 0;
+    if (a.isDino) { const r = a.radius / 0.32 * 0.85 * hs; a.blob.scale.set(r * 1.1, r * (a.type === 'shivat' ? 2.6 : 1.9), 1); a.blob.rotation.z = -a.face; }
+    else a.blob.scale.setScalar(a.radius / 0.32 * 0.85 * hs);
+    a.blob.visible = sk < 0.05 && (a.state !== 'dead' || Math.floor(a.st * 12) % 2 === 0);
     // 闪烁：无敌 / 倒地消失
     let vis = true;
     if (a.state === 'dead' && a.side !== 'player') vis = Math.floor(a.st * 12) % 2 === 0;
@@ -1623,6 +2158,7 @@ export function render(dt, realT) {
     if (a === G.player && G.fpActive) vis = false;
     a.model.root.visible = vis;
     nearFade(a);
+    if (a.def && a.def.mace) renderMace(a, sk);
     // 受击闪白
     const m = a.model.mat;
     if (m) { const f = a.flash > 0 ? 0.3 * Math.min(1, a.flash / 0.08) : 0; m.emissive.setRGB(f, f * 0.95, f * 0.85); if (a === G.player && G.settings.demo) m.emissive.setRGB(0.15, 0.12 + Math.sin(G.t * 8) * 0.08, 0.02); }
@@ -1637,8 +2173,29 @@ export function render(dt, realT) {
     G.chain.lookAt(n); G.chain.rotateX(Math.PI / 2);
   }
 }
-// 第一人称：贴到镜头上的敌人 / 岩跳龙按「镜头到各部件包围球」的最近距离淡化，并隐藏描边与手持武器，
-// 避免近裁剪面切进模型（满屏贴图、露出牙齿和模型内部，或描边外壳把整屏盖黑）
+// 拉什·T 的链锤：平时垂在手边，出招时过顶抡圈、甩出、收回；绳子连到手
+const ropeGeo = new THREE.CylinderGeometry(0.018, 0.018, 1, 5);
+const ropeMat = new THREE.MeshLambertMaterial({ color: '#7a6448' });
+const _hand = new THREE.Vector3();
+function renderMace(a, sk) {
+  if (!a.ball) { a.ball = meshFrom(maceGeo(), {}); a.rope = new THREE.Mesh(ropeGeo, ropeMat); scene.add(a.ball, a.rope); }
+  a.model.root.updateMatrixWorld(true);
+  a.model.bones.rHand.getWorldPosition(_hand);
+  const f = { x: Math.sin(a.face), z: Math.cos(a.face) }, s = a.state === 'mace' ? a.sub : null;
+  let bx, by, bz;
+  if (s && s.ext < 0) { const ang = a.st * 15; bx = _hand.x + Math.cos(ang) * 0.75; by = _hand.y + 0.35; bz = _hand.z + Math.sin(ang) * 0.75; }
+  else if (s) { const r = 0.6 + s.ext * 2.9; bx = a.x + f.x * r; by = 1.1 - sk; bz = a.z + f.z * r; }
+  else { const sw = Math.sin(G.t * 3 + a.id) * 0.12; bx = _hand.x + f.x * (0.12 + sw); by = Math.max(0.18 - sk, _hand.y - 0.55); bz = _hand.z + f.z * (0.12 + sw); }
+  a.ball.position.set(bx, by, bz); a.ball.rotation.y = G.t * 3;
+  const dx = bx - _hand.x, dy = by - _hand.y, dz = bz - _hand.z, len = Math.max(0.01, Math.hypot(dx, dy, dz));
+  a.rope.position.set((bx + _hand.x) / 2, (by + _hand.y) / 2, (bz + _hand.z) / 2);
+  a.rope.scale.set(1, len, 1);
+  a.rope.quaternion.setFromUnitVectors(_up, _dir.set(dx / len, dy / len, dz / len));
+  a.ball.visible = a.rope.visible = a.model.root.visible && a.alive;
+}
+const _up = new THREE.Vector3(0, 1, 0), _dir = new THREE.Vector3();
+// 第一人称：贴到镜头上的敌人 / 岩跳龙按「镜头到各部件包围球」的最近距离淡化，并隐藏手持武器，
+// 避免近裁剪面切进模型（满屏贴图、露出牙齿和模型内部）
 const _sph = new THREE.Sphere();
 function nearFade(a) {
   let k = 1;
@@ -1648,7 +2205,7 @@ function nearFade(a) {
       a.model.root.updateMatrixWorld(true);
       let gap = 9;
       a.model.root.traverse(o => {
-        if (!o.isMesh || o.userData.outline) return;
+        if (!o.isMesh) return;
         const g = o.geometry;
         if (!g.boundingSphere) g.computeBoundingSphere();
         _sph.copy(g.boundingSphere).applyMatrix4(o.matrixWorld);
@@ -1663,17 +2220,15 @@ function nearFade(a) {
   const m = a.model.mat, tr = k < 1;
   if (m.transparent !== tr) { m.transparent = tr; m.needsUpdate = true; }   // 切换透明要重编着色器（OPAQUE 宏），否则透明度不生效
   m.opacity = 0.15 + 0.85 * k; m.depthWrite = k > 0.6;
-  const ol = k > 0.97;
-  a.model.root.traverse(o => { if (o.userData.outline) o.visible = ol; });
   if (a.wmesh) a.wmesh.visible = k > 0.5;
 }
 function targetPose(a, realT) {
   const s = a.state, st = a.st;
   const tP = (name) => HP[name] || HP.guard;
-  if (a.side === 'player' && a.weapon && ['idle', 'walk'].indexOf(s) >= 0) {
+  if ((a.side === 'player' || (a.def && a.def.rifle)) && a.weapon && ['idle', 'walk', 'hover'].indexOf(s) >= 0) {
     const k = a.weapon.kind;
     if (k === 'gun') return s === 'walk' ? walkPose(a.walkPh, 0.8, GUN_POSE) : GUN_POSE;
-    if (['shotgun', 'smg', 'bazooka'].includes(k)) return s === 'walk' ? walkPose(a.walkPh, 0.8, SG_POSE) : SG_POSE;
+    if (['shotgun', 'smg', 'bazooka', 'rifle'].includes(k)) return s === 'walk' ? walkPose(a.walkPh, 0.8, SG_POSE) : SG_POSE;
   }
   switch (s) {
     case 'title': return lerpPose(HP.guard, HP.crossArms, 0.5 + 0.5 * Math.sin(realT * 0.8 + a.id), tmpPose);
@@ -1730,7 +2285,16 @@ function targetPose(a, realT) {
     case 'victory': return sample(HC.victory, Math.min(st, 1.2));
     case 'door': return st < 0.4 ? sample(HC.kickMid, st) : HP.guard;
     case 'leave': return HP.jumpUp;
+    case 'aim': return HP.aim;
+    case 'mace': return st < 0.6 ? HP.maceUp : HP.maceOut;
+    case 'poke': return sample(HC.hook, Math.min(st * 0.6, HC.hook.dur));
+    case 'dash': return st < 0.34 ? HP.guard2 : (a.swords ? HP.slash1 : HP.tackle);
+    case 'butt': return a.sub.phase === 'land' ? HP.sit : a.sub.phase === 'down' ? HP.buttSit : HP.jumpUp;
+    case 'leap': return HP.jumpUp;
+    case 'pickSword': return HP.crouch;
+    case 'incar': return HP.sit;
     case 'cut': {
+      if (a.sub.chop) return sample(HC.chop, st % HC.chop.dur);
       const ps = a.sub.pose;
       if (ps === 'whip') return sample(HC.whip, Math.min(st, 0.6));
       if (ps && HP[ps]) return HP[ps];
@@ -1755,15 +2319,19 @@ function renderHuman(a, dt, realT) {
   // 必杀旋转
   if (a.state === 'attack' && a.move && a.move.id === 'mega') a.model.bones.body.rotation.y = a.spin || 0;
 }
+const tmpR = new Float32Array(R_LEN);
 function renderRaptor(r, dt) {
-  const sp = Math.hypot(r.vx, r.vz);
-  r.walkPh += dt * (4 + sp * 2.4);
+  const sp = Math.hypot(r.vx, r.vz), big = r.type === 'shivat';
+  r.walkPh += dt * (big ? 2.2 + sp * 1.3 : 4 + sp * 2.4);
   let tp;
   switch (r.state) {
+    case 'sleep': case 'knocked': tp = RPOSE.sleep; break;
+    case 'waking': tp = lerpR(RPOSE.sleep, RPOSE.roar, Math.min(1, r.st / 0.9), tmpR); break;
+    case 'stomp': tp = r.st < 0.55 ? RPOSE.stomp0 : RPOSE.stomp1; break;
     case 'chained': tp = r.angry ? RPOSE.roar : (r.sub.roar > 0 ? RPOSE.roar : RPOSE.crouch); break;
     case 'idle': tp = r.sub.roar > 0 ? RPOSE.roar : RPOSE.idle; break;
-    case 'walk': case 'flee': tp = raptorRun(r.walkPh, Math.min(1.2, 0.5 + sp * 0.2)); break;
-    case 'bite': tp = r.st < 0.26 ? RPOSE.bite0 : RPOSE.bite1; break;
+    case 'walk': case 'flee': tp = raptorRun(r.walkPh, big ? 0.65 : Math.min(1.2, 0.5 + sp * 0.2)); break;
+    case 'bite': tp = r.st < (big ? 0.45 : 0.26) ? RPOSE.bite0 : RPOSE.bite1; break;
     case 'claw': tp = r.st < 0.3 ? RPOSE.claw0 : RPOSE.claw1; break;
     case 'leap': tp = RPOSE.leap; break;
     case 'hurt': tp = RPOSE.hurt; break;
@@ -1775,7 +2343,41 @@ function renderRaptor(r, dt) {
   const k = dt <= 0 ? 0 : 1 - Math.exp(-dt * 16);
   for (let i = 0; i < R_LEN; i++) r.pose[i] += (tp[i] - r.pose[i]) * k;
   applyRaptor(r.model, r.pose);
+  if (big && (r.state === 'sleep' || r.state === 'knocked')) r.model.bones.body.rotation.x += Math.sin(G.t * 1.8) * 0.025;   // 呼吸起伏
   if (r.flash > 0 && r.model.mat) r.model.mat.emissive.setRGB(0.3, 0.28, 0.25); else if (r.model.mat) r.model.mat.emissive.setRGB(0, 0, 0);
+}
+// 三角龙：四条腿交替摆动，冲锋时低头，倒地侧躺
+function renderTrike(t, dt) {
+  const B = t.model.bones, sp = Math.hypot(t.vx, t.vz), s = t.state;
+  t.walkPh += dt * (2.5 + sp * 2.1);
+  const ph = t.walkPh;
+  let amp = Math.min(1, sp / 3) * 0.6, head = 0, rz = 0, rx = 0, by = 0, jaw = 0.05, legs = null;
+  if (s === 'charge') { amp = 0.95; head = 0.34; rx = 0.06; }
+  else if (s === 'paw') { head = 0.3; }
+  else if (s === 'gore') { head = t.st < 0.3 ? 0.42 : -0.55; jaw = 0.35; }
+  else if (s === 'hurt') { head = -0.35; rz = 0.14; jaw = 0.45; }
+  else if (s === 'down') { rz = 1.35; by = -0.36; amp = 0; jaw = 0.45; legs = 0.25; }
+  else if (s === 'getup') { const k = Math.max(0, 1 - t.st / 0.6); rz = 1.35 * k; by = -0.36 * k; }
+  else if (s === 'flee' && t.dazed) { amp = 0.9; head = -0.2 + Math.sin(G.t * 9) * 0.2; rz = Math.sin(G.t * 7) * 0.1; }
+  else if (s === 'skid') { head = 0.18; rx = -0.1; }
+  else if (s === 'idle') { head = Math.sin(G.t * 1.5 + t.id) * 0.06; }
+  const k = dt <= 0 ? 0 : 1 - Math.exp(-dt * 14);
+  B.body.rotation.z += (rz - B.body.rotation.z) * k;
+  B.body.rotation.x += (rx - B.body.rotation.x) * k;
+  B.body.position.y += (0.98 + by - B.body.position.y) * k;
+  B.head.rotation.x += (head - B.head.rotation.x) * k;
+  B.jaw.rotation.x += (jaw - B.jaw.rotation.x) * k;
+  B.tail1.rotation.y = Math.sin(ph * 0.5) * 0.14; B.tail2.rotation.y = Math.sin(ph * 0.5 - 0.6) * 0.2;
+  const sw = Math.sin(ph), cw = Math.cos(ph);
+  const set = (n, u, l) => { B[n + 'U'].rotation.x = u; B[n + 'L'].rotation.x = l; };
+  if (legs !== null) { for (const n of ['lf', 'rf', 'lb', 'rb']) set(n, legs, 0.2); }
+  else {
+    set('lf', sw * amp, Math.max(0, -cw) * amp * 0.9); set('rb', sw * amp, Math.max(0, -cw) * amp * 0.9);
+    set('rf', -sw * amp, Math.max(0, cw) * amp * 0.9); set('lb', -sw * amp, Math.max(0, cw) * amp * 0.9);
+    if (s === 'paw') set('rf', -0.75 + Math.sin(t.st * 16) * 0.45, 0.7);
+  }
+  const m = t.model.mat;
+  if (m) { const f = t.flash > 0 ? 0.3 : 0; m.emissive.setRGB(f, f * 0.95, f * 0.85); }
 }
 
 // ---------- HUD 数据 ----------
@@ -1799,26 +2401,30 @@ export const _test = {
   G,
   tp(x, z) { const p = G.player; p.x = x; if (z !== undefined) p.z = z; },
   hp(v) { G.player.hp = v; },
-  killAll() { for (const e of G.actors) if (e !== G.player && e.alive && e.side === 'enemy' && !e.isRaptor) { e.hp = 0; knockdown(e, FACE_RIGHT, 1, true); } },
+  killAll() { for (const e of G.actors) if (e !== G.player && e.alive && e.side === 'enemy' && e.type !== 'raptor' && !(e.type === 'shivat' && (e.state === 'sleep' || e.state === 'knocked'))) { e.hp = 0; knockdown(e, FACE_RIGHT, 1, true); } },
   hurtAll(d) { for (const e of G.actors) if (e !== G.player && e.alive && e.side === 'enemy') { e.hp -= d; if (e.hp <= 0) knockdown(e, FACE_RIGHT, 1, true); } },
   area(i) { loadArea(i); },
+  stage(n) { loadArea(STAGES[n - 1].first, true); },
+  wake() { if (G.sleeper) wakeShivat(G.sleeper); },
+  sinkK,
   give(kind, ammo) { const p = G.player; p.weapon = { kind, ammo: ammo || ITEMS[kind].ammo }; attachWeapon(p); },
   item(kind, dx) { const p = G.player; return spawnItem(kind, p.x + (dx || 0.3), p.z); },
   enemy(type, dx, dz) { const p = G.player; const e = spawnEnemy(type, p.x + (dx || 1.5), p.z + (dz || 0)); G.waveEnemies.push(e); return e.id; },
   setTimer(t) { G.timer = t; },
   bossHp(v) { if (G.boss) G.boss.hp = v; },
   skipScript() { while (G.script) stepScript(10); },
-  actors: () => G.actors.map(a => ({ id: a.id, type: a.type, side: a.side, state: a.state, x: +a.x.toFixed(2), y: +a.y.toFixed(2), z: +a.z.toFixed(2), hp: +(a.hp || 0).toFixed(1), alive: a.alive, face: +a.face.toFixed(2), token: a.token, nearK: a.nearK === undefined ? 1 : +a.nearK.toFixed(2), radius: a.radius, raptor: !!a.isRaptor })),
+  actors: () => G.actors.map(a => ({ id: a.id, type: a.type, side: a.side, state: a.state, x: +a.x.toFixed(2), y: +a.y.toFixed(2), z: +a.z.toFixed(2), hp: +(a.hp || 0).toFixed(1), alive: a.alive, face: +a.face.toFixed(2), token: a.token, nearK: a.nearK === undefined ? 1 : +a.nearK.toFixed(2), radius: a.radius, raptor: !!a.isRaptor, dino: !!a.isDino, waker: !!a.waker, swords: a.swords })),
   props: () => G.props.map(p => ({ kind: p.kind, x: p.x, z: p.z, broken: p.broken, hp: p.hp })),
   items: () => G.items.map(i => ({ kind: i.kind, x: +i.x.toFixed(2), z: +i.z.toFixed(2) }))
 };
 export function snapshot() {
   const p = G.player;
   return {
-    mode: G.mode, t: +G.t.toFixed(2), area: G.area, focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
+    mode: G.mode, t: +G.t.toFixed(2), area: G.area, areaId: AREAS[G.area] ? AREAS[G.area].id : null, stage: AREAS[G.area] ? AREAS[G.area].stage : 0, cleared: G.cleared.slice(), focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
     score: G.score, hi: G.hi, lives: G.settings.lives === 'inf' ? 'inf' : G.lives, settings: Object.assign({}, G.settings), demoUsed: G.demoUsed,
     player: p ? { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), state: p.state, hp: +p.hp.toFixed(1), face: +p.face.toFixed(2), invul: +p.invul.toFixed(2), weapon: p.weapon ? Object.assign({}, p.weapon) : null, combo: p.comboN, visible: p.model.root.visible } : null,
-    enemies: G.actors.filter(a => a.side === 'enemy').length, boss: G.boss ? { hp: G.boss.hp, state: G.boss.state, summons: G.boss.summons } : null, raptor: G.raptor && !G.raptor.removed ? { state: G.raptor.state, angry: !!G.raptor.angry, hp: G.raptor.hp } : null,
+    enemies: G.actors.filter(a => a.side === 'enemy' && a !== G.sleeper).length, boss: G.boss ? { type: G.boss.type, hp: G.boss.hp, state: G.boss.state, summons: G.boss.summons, swords: G.boss.swords } : null,
+    sleeper: G.sleeper ? { state: G.sleeper.state, wakeN: G.sleeper.wakeN, hp: +G.sleeper.hp.toFixed(1), alive: G.sleeper.alive } : null, car: !!G.car, carMoving: !!G.carAnim, sink: p ? +sinkK(p.x).toFixed(2) : 0, raptor: G.raptor && !G.raptor.removed ? { state: G.raptor.state, angry: !!G.raptor.angry, hp: G.raptor.hp } : null,
     dialog: G.dialog ? G.dialog.text : null, banner: G.banner ? G.banner.text : null, kills: Object.assign({}, G.kills), items: G.items.length, props: G.props.filter(p => !p.broken).length, script: !!G.script, cont: G.cont ? G.cont.count : null, fade: +G.fade.toFixed(2)
   };
 }

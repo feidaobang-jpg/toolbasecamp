@@ -60,7 +60,7 @@ export function createCamera() {
     fitDist(p, depth) {
       const v = Math.tan(p.fov * Math.PI / 360);
       const h = v * this.aspect;
-      const mid = (HALF_W + 0.9) / h, near = (HALF_W - EDGE + 0.55) / h + (depth || 0) * Math.cos(p.pitch);
+      const mid = (HALF_W + 0.9) / h, near = (HALF_W - EDGE + 0.75) / h + (depth || 0) * Math.cos(p.pitch);
       return clamp(Math.max(mid, near), 10.5, 24);
     },
     // opt: { focusX, zc, fitDepth, player:{x,y,z,eye,face}, instant, shake, override:{pos,tgt}, blocks:[Box3] }

@@ -1,5 +1,5 @@
 // 逐帧录像（手动时钟 + 页面截图，含 HUD）+ 离线渲染同场音轨，ffmpeg 合成 mp4。
-// node qa/record.js <模式 full|cams|mobile|portrait> <输出 mp4> [英雄] [种子]
+// node qa/record.js <模式 full|cams|mobile|portrait|stage2> <输出 mp4> [英雄] [种子]
 const { launch, BASE, out, sleep } = require('./lib');
 const { BOT_SRC } = require('./bot');
 const fs = require('fs'), path = require('path'), cp = require('child_process');
@@ -18,7 +18,7 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
   const cdp = mobile ? await ctx.newCDPSession(page) : null;
   page.on('pageerror', e => console.log('pageerror', e.message));
   await page.goto(BASE + '?test=1&clean=1&seed=' + seed, { waitUntil: 'load' });
-  await page.evaluate((h) => { localStorage.clear(); localStorage.setItem('cd3d-stage1:hero', String(h)); }, hero);
+  await page.evaluate(([h, st2]) => { localStorage.clear(); localStorage.setItem('cd3d-stage1:hero', String(h)); if (st2) localStorage.setItem('cd3d-stage1:stage', '1'); }, [hero, mode === 'stage2']);
   await page.reload({ waitUntil: 'load' }); await sleep(800);
   await page.evaluate(() => window.__CD_TEST__.manual(true));
   await page.evaluate(BOT_SRC);
@@ -52,8 +52,20 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
   await sleep(100);
   startFrame = frame;
   await page.evaluate(() => window.__CD_TEST__.audioLogStart());
-  mark('开局：楼顶开场，维斯与手下');
-  if (mode === 'full') {
+  mark(mode === 'stage2' ? '第二关开场：凯迪拉克开进偷猎者森林' : '开局：楼顶开场，维斯与手下');
+  if (mode === 'stage2') {
+    const G = (fn, a) => page.evaluate(fn, a);
+    const jump = (area, wave, x, focus) => G(([area, wave, x, focus]) => { const C = window.__CD_TEST__.cheat, g = C.G; if (area !== null) { C.area(area); C.skipScript(); } C.killAll(); g.pending = []; g.waveOn = false; g.lockX = null; g.wave = wave; g.focusX = focus; g.player.x = x; g.player.z = 0.4; g.player.state = 'idle'; }, [area, wave, x, focus]);
+    await idle(3.2);
+    mark('三角龙哈克：刨地后冲撞'); await play(16, { jumps: true, noSkip: true });
+    await jump(null, 2, 38.5, 34); mark('胖子去捶熟睡的霸王龙希瓦特'); await play(14, { jumps: true, noSkip: true });
+    await G(() => window.__CD_TEST__.cheat.wake()); mark('希瓦特醒了：咬人、跺脚'); await play(10, { jumps: true, noSkip: true });
+    await jump(4, 0, 2.6, 6.8); mark('泥沼：齐腰深，格特从水里冒出来'); await play(14, { jumps: true, noSkip: true });
+    await jump(null, 2, 41.5, 37); mark('岸上：链锤兵拉什·T'); await play(14, { jumps: true, noSkip: true });
+    await jump(5, 0, 2.4, 6.8); mark('黄昏的恐龙尸骸地'); await play(8, { jumps: true, noSkip: true });
+    await jump(null, 9, 42, 38); mark('Boss 屠夫：肢解死恐龙后回头'); await idle(5);
+    mark('屠夫战：双刀、屁股坐、叫手下'); await play(30, { jumps: true, noSkip: true });
+  } else if (mode === 'full') {
     await idle(9.5);   // 看完开场对话
     mark('战斗开始');
     const seen = new Set();

@@ -26,7 +26,7 @@ const fs = require('fs');
   let s = await S(page);
   ok('手机横屏：主菜单可见', s.ui.overlay === 'menu');
   ok('触屏说明显示、键盘说明隐藏', await page.evaluate(() => getComputedStyle(document.querySelector('.help-touch')).display !== 'none' && getComputedStyle(document.querySelector('.help-desktop')).display === 'none'));
-  ok('手机隐藏全屏按钮（按站内约定）', await page.evaluate(() => getComputedStyle(document.querySelector('.fs-btn')).display === 'none'));
+  ok('手机也提供全屏按钮（2026-10-06 起按浏览器能力检测，不按手机分类隐藏）', await page.evaluate(() => getComputedStyle(document.querySelector('.fs-btn')).display !== 'none'));
   const panelFits = await page.evaluate(() => { const r = document.querySelector('#menu .panel').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 1; });
   ok('主菜单宽度落在视口内', panelFits);
   await page.screenshot({ path: out('mobile-menu.png') });
@@ -87,7 +87,7 @@ const fs = require('fs');
   await touch(cdp, 'touchStart', [{ x: lx, y: ly, id: 6 }]);
   for (let k = 1; k <= 8; k++) { await touch(cdp, 'touchMove', [{ x: lx + k * 15, y: ly, id: 6 }]); await sleep(16); }
   await touch(cdp, 'touchEnd', []);
-  s = await S(page); ok('按住画面右拖 = 转视角', s.ui.yawOff > 0.4, s.ui.yawOff);
+  s = await S(page); ok('按住画面右拖 = 向右转视角（与 E 同向）', s.ui.yawOff < -0.3, s.ui.yawOff);
   for (let i = 0; i < 3; i++) await tapSel(page, cdp, '#btn-cam');
   s = await S(page); ok('C 循环回侧视', s.ui.camera === 'side' && s.ui.yawOff === 0, [s.ui.camera, s.ui.yawOff]);
   // 暂停

@@ -1,0 +1,365 @@
+{
+ "date": "2026-10-06T08:45:44.487Z",
+ "viewport": [
+  1280,
+  720
+ ],
+ "quality": "high",
+ "runs": [
+  {
+   "name": "forest-side",
+   "frames": {
+    "n": 630,
+    "fps": 126.2,
+    "mean": 7.93,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 10.8
+   },
+   "work": {
+    "n": 630,
+    "fps": 884.8,
+    "mean": 1.13,
+    "median": 1.1,
+    "p95": 1.4,
+    "over50": 0,
+    "max": 2.4
+   },
+   "drawCalls": {
+    "calls": 45,
+    "tris": 107138
+   },
+   "area": "forest",
+   "x": 8.43,
+   "enemies": 2,
+   "boss": false
+  },
+  {
+   "name": "forest-front",
+   "frames": {
+    "n": 633,
+    "fps": 126.5,
+    "mean": 7.91,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 11.4
+   },
+   "work": {
+    "n": 633,
+    "fps": 779.6,
+    "mean": 1.28,
+    "median": 1.3,
+    "p95": 1.6,
+    "over50": 0,
+    "max": 2.8
+   },
+   "drawCalls": {
+    "calls": 64,
+    "tris": 119318
+   },
+   "area": "forest",
+   "x": 3.41,
+   "enemies": 2,
+   "boss": false
+  },
+  {
+   "name": "forest-fp",
+   "frames": {
+    "n": 635,
+    "fps": 127.1,
+    "mean": 7.87,
+    "median": 7.8,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 10
+   },
+   "work": {
+    "n": 635,
+    "fps": 862.5,
+    "mean": 1.16,
+    "median": 1.2,
+    "p95": 1.4,
+    "over50": 0,
+    "max": 2.4
+   },
+   "drawCalls": {
+    "calls": 64,
+    "tris": 118682
+   },
+   "area": "forest",
+   "x": 1.63,
+   "enemies": 2,
+   "boss": false
+  },
+  {
+   "name": "forest-side-rot",
+   "frames": {
+    "n": 635,
+    "fps": 126.9,
+    "mean": 7.88,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 9.2
+   },
+   "work": {
+    "n": 635,
+    "fps": 821.3,
+    "mean": 1.22,
+    "median": 1.2,
+    "p95": 1.6,
+    "over50": 0,
+    "max": 2.6
+   },
+   "drawCalls": {
+    "calls": 57,
+    "tris": 115470
+   },
+   "area": "forest",
+   "x": 1.35,
+   "enemies": 2,
+   "boss": false
+  },
+  {
+   "name": "swamp-side",
+   "frames": {
+    "n": 633,
+    "fps": 126.5,
+    "mean": 7.91,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 9.3
+   },
+   "work": {
+    "n": 633,
+    "fps": 662.5,
+    "mean": 1.51,
+    "median": 1.5,
+    "p95": 2.1,
+    "over50": 0,
+    "max": 4
+   },
+   "drawCalls": {
+    "calls": 92,
+    "tris": 120836
+   },
+   "area": "swamp",
+   "x": 9.26,
+   "enemies": 3,
+   "boss": false
+  },
+  {
+   "name": "swamp-front",
+   "frames": {
+    "n": 631,
+    "fps": 126.1,
+    "mean": 7.93,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 10.3
+   },
+   "work": {
+    "n": 631,
+    "fps": 671.5,
+    "mean": 1.49,
+    "median": 1.5,
+    "p95": 1.9,
+    "over50": 0,
+    "max": 2.8
+   },
+   "drawCalls": {
+    "calls": 56,
+    "tris": 120320
+   },
+   "area": "swamp",
+   "x": 12.65,
+   "enemies": 3,
+   "boss": false
+  },
+  {
+   "name": "swamp-fp",
+   "frames": {
+    "n": 634,
+    "fps": 126.5,
+    "mean": 7.91,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 11.2
+   },
+   "work": {
+    "n": 634,
+    "fps": 800.9,
+    "mean": 1.25,
+    "median": 1.2,
+    "p95": 1.6,
+    "over50": 0,
+    "max": 2.3
+   },
+   "drawCalls": {
+    "calls": 12,
+    "tris": 92594
+   },
+   "area": "swamp",
+   "x": 12.65,
+   "enemies": 3,
+   "boss": false
+  },
+  {
+   "name": "swamp-side-rot",
+   "frames": {
+    "n": 633,
+    "fps": 126.5,
+    "mean": 7.91,
+    "median": 7.9,
+    "p95": 8.3,
+    "over50": 0,
+    "max": 11.7
+   },
+   "work": {
+    "n": 633,
+    "fps": 715.7,
+    "mean": 1.4,
+    "median": 1.4,
+    "p95": 1.8,
+    "over50": 0,
+    "max": 2.6
+   },
+   "drawCalls": {
+    "calls": 69,
+    "tris": 112792
+   },
+   "area": "swamp",
+   "x": 12.11,
+   "enemies": 2,
+   "boss": false
+  },
+  {
+   "name": "grave-side",
+   "frames": {
+    "n": 849,
+    "fps": 169.9,
+    "mean": 5.89,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 6.2
+   },
+   "work": {
+    "n": 849,
+    "fps": 709.8,
+    "mean": 1.41,
+    "median": 1.4,
+    "p95": 1.8,
+    "over50": 0,
+    "max": 2.9
+   },
+   "drawCalls": {
+    "calls": 79,
+    "tris": 111884
+   },
+   "area": "grave",
+   "x": 51.38,
+   "enemies": 3,
+   "boss": true
+  },
+  {
+   "name": "grave-front",
+   "frames": {
+    "n": 851,
+    "fps": 169.8,
+    "mean": 5.89,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 7.6
+   },
+   "work": {
+    "n": 851,
+    "fps": 697.4,
+    "mean": 1.43,
+    "median": 1.4,
+    "p95": 1.8,
+    "over50": 0,
+    "max": 3
+   },
+   "drawCalls": {
+    "calls": 84,
+    "tris": 114612
+   },
+   "area": "grave",
+   "x": 48.55,
+   "enemies": 3,
+   "boss": true
+  },
+  {
+   "name": "grave-fp",
+   "frames": {
+    "n": 851,
+    "fps": 169.9,
+    "mean": 5.89,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 6.1
+   },
+   "work": {
+    "n": 851,
+    "fps": 755.8,
+    "mean": 1.32,
+    "median": 1.3,
+    "p95": 1.7,
+    "over50": 0,
+    "max": 2.6
+   },
+   "drawCalls": {
+    "calls": 34,
+    "tris": 94664
+   },
+   "area": "grave",
+   "x": 49.99,
+   "enemies": 3,
+   "boss": true
+  },
+  {
+   "name": "grave-side-rot",
+   "frames": {
+    "n": 850,
+    "fps": 169.9,
+    "mean": 5.89,
+    "median": 5.9,
+    "p95": 6,
+    "over50": 0,
+    "max": 6.4
+   },
+   "work": {
+    "n": 850,
+    "fps": 706,
+    "mean": 1.42,
+    "median": 1.4,
+    "p95": 1.8,
+    "over50": 0,
+    "max": 2.6
+   },
+   "drawCalls": {
+    "calls": 92,
+    "tris": 117404
+   },
+   "area": "grave",
+   "x": 48.65,
+   "enemies": 3,
+   "boss": true
+  }
+ ],
+ "renderer": {
+  "calls": 33,
+  "tris": 98170,
+  "geometries": 370,
+  "textures": 11,
+  "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+ }
+}

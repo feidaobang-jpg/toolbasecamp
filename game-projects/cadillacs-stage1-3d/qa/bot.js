@@ -23,13 +23,13 @@ module.exports.BOT_SRC = String.raw`
     tick++;
     if (s.mode !== 'play') { releaseAll(); if (s.dialog && !opts.noSkip && tick % 20 === 0) tap('KeyJ'); return s; }
     if (!p || ['down', 'dead', 'respawn', 'getup', 'hurt'].indexOf(p.state) >= 0) { releaseAll(); return s; }
-    const enemies = acts.filter(a => a.side === 'enemy' && a.alive && ['down', 'dead', 'enter', 'cut', 'leave', 'flee'].indexOf(a.state) < 0);
+    const enemies = acts.filter(a => a.side === 'enemy' && a.alive && ['down', 'dead', 'enter', 'cut', 'leave', 'flee', 'sleep', 'knocked', 'waking'].indexOf(a.state) < 0);   // 不去打熟睡的霸王龙
     let move = { x: 0, z: 0 }, atk = false, lookAt = null;
     const free = !((s.ui.camera === 'side' || s.ui.camera === 'oblique') && Math.abs(s.ui.yawOff) < 0.7);
     // 回血：血少时去吃食物
     const items = T.cheat.items();
     const food = items.filter(i => ['steak', 'barbecue', 'hamburger', 'donut'].indexOf(i.kind) >= 0);
-    const wpn = items.filter(i => ['gun', 'shotgun', 'pipe', 'knife'].indexOf(i.kind) >= 0);
+    const wpn = items.filter(i => ['gun', 'shotgun', 'pipe', 'knife', 'sword', 'rifle'].indexOf(i.kind) >= 0);
     const want = (p.hp < 60 && food.length) ? food[0] : (!p.weapon && wpn.length && opts.weapons !== false ? wpn[0] : (items.find(i => ['gold', 'diamond', 'ring'].indexOf(i.kind) >= 0) || null));
     let target = null, bd = 1e9;
     for (const e of enemies) { const d = Math.abs(e.x - p.x) + Math.abs(e.z - p.z) * 1.5; if (d < bd) { bd = d; target = e; } }
@@ -42,7 +42,7 @@ module.exports.BOT_SRC = String.raw`
       const dx = target.x - p.x, dz = target.z - p.z, dist = Math.hypot(dx, dz);
       const near = enemies.filter(e => Math.hypot(e.x - p.x, e.z - p.z) < 1.4).length;
       if (near >= 3 && p.hp > 35 && opts.mega !== false && Math.random() < 0.06) { tap('KeyU'); stats.megas++; return s; }
-      const gun = p.weapon && (p.weapon.kind === 'gun' || p.weapon.kind === 'shotgun');
+      const gun = p.weapon && ['gun', 'shotgun', 'rifle'].includes(p.weapon.kind);
       const want = gun ? 2.4 : 0.85;
       const tf = Math.atan2(dx, dz), off = Math.abs(angDiff(p.face, tf));
       if (dist > want + 0.25) move = { x: dx / dist, z: dz / dist };
@@ -54,7 +54,7 @@ module.exports.BOT_SRC = String.raw`
       const dx = target.x - p.x, dz = target.z - p.z;
       const near = enemies.filter(e => Math.hypot(e.x - p.x, e.z - p.z) < 1.4).length;
       if (near >= 3 && p.hp > 35 && opts.mega !== false && Math.random() < 0.08) { tap('KeyU'); stats.megas++; return s; }
-      const gun = p.weapon && (p.weapon.kind === 'gun' || p.weapon.kind === 'shotgun');
+      const gun = p.weapon && ['gun', 'shotgun', 'rifle'].includes(p.weapon.kind);
       const wantDx = gun ? 2.5 : 0.85;
       if (Math.abs(dz) > 0.22) move.z = dz;
       if (Math.abs(Math.abs(dx) - wantDx) > 0.25) move.x = Math.sign(dx) * (Math.abs(dx) > wantDx ? 1 : -1);

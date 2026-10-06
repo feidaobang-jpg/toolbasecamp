@@ -91,6 +91,11 @@ export const HP = {
   kickSide: P({ spine: [-0.15, 0, 0.35], rH: [-1.4, 0, -0.5], rK: [0.1, 0, 0], lK: [0.25, 0, 0], lS: [-0.4, 0, 0.8], lE: [-1.4, 0, 0], rS: [-0.2, 0, -0.4], rE: [-1.6, 0, 0], hy: -0.04 })
 };
 HP.jabL2 = mirror(HP.jabR);
+// 第二关：左手劈砍（屠夫双刀第二下）、步枪抵肩瞄准、链锤过顶抡 / 甩出
+HP.slash0L = mirror(HP.slash0); HP.slash1L = mirror(HP.slash1);
+HP.aim = P({ spine: [0.05, 0.35, 0], head: [0.05, -0.3, 0], rS: [-1.1, -0.45, -0.3], rE: [-0.9, 0, 0], lS: [-1.5, -0.4, 0.25], lE: [-0.25, 0, 0], lH: [-0.3, 0, 0.1], lK: [0.35, 0, 0], rH: [0.25, 0, -0.08], rK: [0.3, 0, 0], hy: -0.04 });
+HP.maceUp = P({ spine: [-0.15, 0.3, 0], head: [-0.1, -0.2, 0], rS: [-3.0, 0, -0.35], rE: [-0.3, 0, 0], lS: [-0.5, 0, 0.4], lE: [-1.4, 0, 0], lH: [-0.3, 0, 0.1], lK: [0.35, 0, 0], rH: [0.25, 0, -0.1], rK: [0.3, 0, 0] });
+HP.maceOut = P({ spine: [0.3, -0.35, 0], head: [0.1, 0.3, 0], rS: [-1.55, 0, 0.05], rE: [-0.05, 0, 0], lS: [-0.3, 0, 0.5], lE: [-1.3, 0, 0], lH: [-0.55, 0, 0.1], lK: [0.55, 0, 0], rH: [0.45, 0, -0.1], rK: [0.2, 0, 0], hy: -0.1 });
 
 // 片段：[时间, 姿势]；采样时用平滑插值
 export const HC = {
@@ -118,6 +123,8 @@ export const HC = {
   whip: { dur: 0.6, keys: [[0, HP.stand], [0.25, HP.whip0], [0.35, HP.whip1], [0.6, HP.stand]] },
   longPunch: { dur: 0.7, keys: [[0, HP.guard], [0.24, HP.hurt2 && HP.guard2], [0.34, HP.longPunch], [0.52, HP.longPunch], [0.7, HP.guard]] },
   headbutt: { dur: 0.6, keys: [[0, HP.guard], [0.15, HP.headbutt], [0.6, HP.headbutt]] },
+  slashL: { dur: 0.5, keys: [[0, HP.guard], [0.16, HP.slash0L], [0.26, HP.slash1L], [0.38, HP.slash1L], [0.5, HP.guard]] },
+  chop: { dur: 0.9, keys: [[0, HP.stand], [0.35, mod(HP.slash0, { spine: [0.1, 0.2, 0] })], [0.5, mod(HP.slash1, { spine: [0.6, -0.2, 0], hy: -0.2 })], [0.9, HP.stand]] },
   victory: { dur: 1.2, keys: [[0, HP.guard], [0.25, HP.victory2], [0.7, HP.victory2], [0.95, HP.victory], [1.2, HP.victory]] }
 };
 
@@ -195,7 +202,11 @@ export const RPOSE = {
   leap: RP({ body: [-0.15, 0, 0], neck: [0.2, 0, 0], head: [0.1, 0, 0], jaw: [0.7, 0, 0], tail1: [0.05, 0, 0], tail2: [-0.05, 0, 0], lTh: [-1.2, 0, 0], lSh: [0.6, 0, 0], lFt: [0.4, 0, 0], rTh: [-1.3, 0, 0], rSh: [0.5, 0, 0], rFt: [0.5, 0, 0], lArm: [-0.8, 0, 0], rArm: [-0.8, 0, 0] }),
   hurt: RP({ body: [-0.3, 0, 0.2], neck: [-0.6, 0.3, 0], head: [-0.3, 0, 0], jaw: [0.8, 0, 0], tail1: [0.3, 0, 0], lTh: [0.2, 0, 0], lSh: [0.6, 0, 0], rTh: [-0.1, 0, 0], rSh: [0.5, 0, 0] }),
   lie: RP({ body: [0, 0, 1.45], neck: [0.1, 0.4, 0], head: [0, 0.2, 0], jaw: [0.3, 0, 0], tail1: [0, 0.2, 0], tail2: [0, 0.2, 0], lTh: [-0.6, 0, 0.3], lSh: [0.9, 0, 0], rTh: [-0.4, 0, 0.3], rSh: [0.7, 0, 0], y: -0.62 }),
-  roar: RP({ body: [-0.35, 0, 0], neck: [-0.7, 0, 0], head: [-0.5, 0, 0], jaw: [1.0, 0, 0], tail1: [0.3, 0, 0], tail2: [0.2, 0, 0], lArm: [-1.0, 0, 0.3], rArm: [-1.0, 0, -0.3] })
+  roar: RP({ body: [-0.35, 0, 0], neck: [-0.7, 0, 0], head: [-0.5, 0, 0], jaw: [1.0, 0, 0], tail1: [0.3, 0, 0], tail2: [0.2, 0, 0], lArm: [-1.0, 0, 0.3], rArm: [-1.0, 0, -0.3] }),
+  // 霸王龙趴着睡：腿折到身下，下巴贴地，尾巴拖地
+  sleep: RP({ body: [0.1, 0, 0], neck: [0.62, 0, 0], head: [0.32, 0, 0], jaw: [0.02, 0, 0], tail1: [0.18, 0.25, 0], tail2: [0.1, 0.25, 0], tail3: [0.04, 0.2, 0], lTh: [-1.3, 0, 0.12], lSh: [2.3, 0, 0], lFt: [-0.95, 0, 0], rTh: [-1.25, 0, -0.12], rSh: [2.3, 0, 0], rFt: [-0.95, 0, 0], lArm: [0.7, 0, 0], rArm: [0.7, 0, 0], y: -0.6 }),
+  stomp0: RP({ body: [-0.25, 0, 0], neck: [-0.2, 0, 0], head: [-0.1, 0, 0], jaw: [0.5, 0, 0], tail1: [0.3, 0, 0], lTh: [-1.2, 0, 0], lSh: [1.0, 0, 0], lFt: [-0.2, 0, 0], rTh: [0.15, 0, 0], rSh: [0.5, 0, 0], rFt: [-0.5, 0, 0], y: 0.06 }),
+  stomp1: RP({ body: [0.15, 0, 0], neck: [0.3, 0, 0], head: [0.1, 0, 0], jaw: [0.7, 0, 0], tail1: [-0.2, 0, 0], lTh: [-0.3, 0, 0], lSh: [0.4, 0, 0], lFt: [-0.2, 0, 0], rTh: [0.2, 0, 0], rSh: [0.6, 0, 0], rFt: [-0.5, 0, 0], y: -0.08 })
 };
 export function raptorRun(phase, amp, base) {
   const o = new Float32Array(R_LEN); o.set(base || RPOSE.idle);

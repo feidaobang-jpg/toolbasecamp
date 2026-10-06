@@ -1,27 +1,10 @@
-// 程序化低模角色与道具：按原作配色还原造型。每个骨骼节点的零件合并成一个带顶点色的网格，
-// 角色用卡通着色（MeshToonMaterial）+ 法线外扩描边，接近 CPS 街机像素画的粗轮廓。
+// 程序化低模角色与道具：保留原作角色身份与配色辨识，画风统一为赤色要塞 3D 的玩具感低模——
+// 哑光 Phong 顶点色、无描边、自然柔和配色、头稍大的 Q 版比例。每个骨骼节点的零件合并成一个带顶点色的网格。
 // 模型本地 +Z 为正面、+X 为角色左手侧、+Y 向上；脚底在原点。
 import * as THREE from 'three';
 
-// ---------- 公共材质 ----------
-const grad = new THREE.DataTexture(new Uint8Array([90, 90, 90, 255, 175, 175, 175, 255, 255, 255, 255, 255]), 3, 1, THREE.RGBAFormat);
-grad.minFilter = grad.magFilter = THREE.NearestFilter; grad.needsUpdate = true;
-export const TOON_GRAD = grad;
-export function toonMat(opts) { return new THREE.MeshToonMaterial(Object.assign({ color: 0xffffff, vertexColors: true, gradientMap: grad }, opts || {})); }
-export const outline = { on: true, mats: [] };
-export function outlineMat(width) {
-  const m = new THREE.MeshBasicMaterial({ color: 0x1c1310, side: THREE.BackSide });
-  m.userData.w = { value: width || 0.018 };
-  m.onBeforeCompile = (sh) => {
-    sh.uniforms.uOutW = m.userData.w;
-    sh.vertexShader = 'uniform float uOutW;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  transformed += normalize(normal) * uOutW;');
-  };
-  outline.mats.push(m);
-  return m;
-}
-const OUTLINE = outlineMat(0.017);
-const OUTLINE_THIN = outlineMat(0.011);
-export function setOutlines(on) { outline.on = on; }
+// ---------- 公共材质（与赤色要塞 MAT.toy 相同：低高光哑光） ----------
+export function toyMat(opts) { return new THREE.MeshPhongMaterial(Object.assign({ color: 0xffffff, vertexColors: true, shininess: 28, specular: 0x2a2a2a }, opts || {})); }
 
 // ---------- 几何拼装：带颜色的零件合并为一个 BufferGeometry ----------
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), _s = new THREE.Vector3(), _p = new THREE.Vector3();
@@ -103,7 +86,8 @@ const BUILD = {
   muscle: { cw: 0.55, cd: 0.30, waist: 0.70, arm: 0.072, fore: 0.062, thigh: 0.094, shin: 0.074, hipW: 0.19, neck: 0.07, hand: 0.068, bicep: 1 },
   huge: { cw: 0.66, cd: 0.35, waist: 0.68, arm: 0.090, fore: 0.076, thigh: 0.106, shin: 0.084, hipW: 0.21, neck: 0.085, hand: 0.078, bicep: 1.25 },
   fat: { cw: 0.62, cd: 0.42, waist: 1.04, arm: 0.080, fore: 0.068, thigh: 0.115, shin: 0.088, hipW: 0.225, neck: 0.085, hand: 0.072, belly: 0.36 },
-  female: { cw: 0.37, cd: 0.22, waist: 0.64, arm: 0.043, fore: 0.039, thigh: 0.074, shin: 0.056, hipW: 0.17, neck: 0.046, hand: 0.05, bust: 1 }
+  female: { cw: 0.37, cd: 0.22, waist: 0.64, arm: 0.043, fore: 0.039, thigh: 0.074, shin: 0.056, hipW: 0.17, neck: 0.046, hand: 0.05, bust: 1 },
+  brute: { cw: 0.68, cd: 0.4, waist: 0.9, arm: 0.094, fore: 0.082, thigh: 0.116, shin: 0.09, hipW: 0.22, neck: 0.09, hand: 0.082, bicep: 1.2, belly: 0.3 }   // 屠夫：肌肉 + 啤酒肚
 };
 const PROFILE = {
   base: [[0, -0.03], [0.76, 0], [0.80, 0.25], [0.94, 0.55], [1.0, 0.74], [0.93, 0.9], [0.56, 1.0], [0, 1.03]],
@@ -120,13 +104,16 @@ export function buildHuman(spec) {
   const H = spec.H || 1.85, s = H / 1.85;
   const B = Object.assign({}, BUILD[spec.build || 'normal']);
   for (const k of ['cw', 'cd', 'arm', 'fore', 'thigh', 'shin', 'hipW', 'neck', 'hand', 'belly']) if (B[k]) B[k] *= s;
+  // 玩具感比例：四肢略粗、手脚更圆（与赤色要塞的 Q 版小兵同一系；格斗动作仍需要能看清的手臂和腿）
+  for (const k of ['arm', 'fore', 'thigh', 'shin']) B[k] *= 1.16;
+  B.hand *= 1.3;
   const gold = spec.gold;
   const C = (c) => gold ? (typeof gold === 'string' ? gold : '#d9b241') : c;
   const skin = C(spec.skin || '#e0a878');
   const fat = spec.build === 'fat';
-  const hipH = H * (fat ? 0.46 : 0.5);
-  const torsoH = H * 0.29, neckH = H * 0.035, headR = H * 0.064;
-  const ua = H * 0.168, fa = H * 0.155;
+  const hipH = H * (fat ? 0.42 : 0.45);
+  const torsoH = H * 0.27, neckH = H * 0.022, headR = H * 0.098;   // 头约为写实比例的 1.5 倍，总身高不变
+  const ua = H * 0.15, fa = H * 0.14;
   const th = hipH * 0.5, sh = hipH * 0.43, footH = hipH * 0.07;
   const prof = fat ? PROFILE.fat : spec.build === 'female' ? PROFILE.female : PROFILE.base;
   const profKey = fat ? 'fat' : spec.build === 'female' ? 'female' : 'base';
@@ -198,8 +185,8 @@ export function buildHuman(spec) {
       }
     }
   }
-  if (fat) {   // 啤酒肚
-    const bc = shirt ? C(shirt.color) : skin;
+  if (B.belly) {   // 啤酒肚
+    const bc = shirt && !shirt.tank ? C(shirt.color) : shirt && shirt.tank ? C(shirt.color) : skin;
     P('spine').add(GEO.sph, bc, mtx(0, torsoH * 0.28, tD * 0.25, 0, 0, 0, tW * 0.95, torsoH * 0.42, B.belly));
   }
   if (B.bust && !gold) P('spine').add(GEO.sph, shirt ? C(shirt.color) : skin, mtx(0, torsoH * 0.62, tD * 0.55, 0, 0, 0, tW * 0.8, torsoH * 0.13, tD * 0.55));
@@ -217,17 +204,20 @@ export function buildHuman(spec) {
 
   // --- 头 ---
   const hr = headR;
-  P('head').add(GEO.sph, skin, mtx(0, 0, 0, 0, 0, 0, hr * 0.86, hr, hr * 0.92));
-  P('head').add(GEO.sph, skin, mtx(0, -hr * 0.45, hr * 0.18, 0, 0, 0, hr * 0.62, hr * 0.5, hr * 0.7));    // 下颌
-  P('head').add(GEO.box, darker(skin, 0.88), mtx(0, -hr * 0.08, hr * 0.92, -0.2, 0, 0, hr * 0.2, hr * 0.32, hr * 0.22));   // 鼻
+  P('head').add(GEO.sph, skin, mtx(0, 0, 0, 0, 0, 0, hr * 0.94, hr * 0.98, hr * 0.92));
+  P('head').add(GEO.sph, skin, mtx(0, -hr * 0.36, hr * 0.14, 0, 0, 0, hr * 0.72, hr * 0.56, hr * 0.74));    // 圆下巴
+  P('head').add(GEO.sph, darker(skin, 0.92), mtx(0, -hr * 0.1, hr * 0.9, 0, 0, 0, hr * 0.13, hr * 0.12, hr * 0.12));   // 圆鼻头
   if (!gold) {
-    const eyeC = spec.eyes || '#1d1a22';
+    const eyeC = spec.eyes || '#2b2b2b';
+    const cheek = col(skin).lerp(col('#ff9f8a'), 0.45);
     for (const sx of [-1, 1]) {
-      P('head').add(GEO.box, eyeC, mtx(sx * hr * 0.36, hr * 0.12, hr * 0.84, 0, sx * 0.25, 0, hr * 0.2, hr * 0.13, hr * 0.06));
-      P('head').add(GEO.box, spec.hair && spec.hair.color ? spec.hair.color : '#3a2a20', mtx(sx * hr * 0.36, hr * 0.32, hr * 0.86, 0, sx * 0.25, sx * -0.12, hr * 0.3, hr * 0.07, hr * 0.06));
-      P('head').add(GEO.sph, skin, mtx(sx * hr * 0.86, 0, -hr * 0.05, 0, 0, 0, hr * 0.14, hr * 0.24, hr * 0.12));   // 耳
+      // Q 版椭圆黑眼（同赤色要塞小兵），眉毛用发色
+      P('head').add(GEO.sph, eyeC, mtx(sx * hr * 0.34, hr * 0.1, hr * 0.84, 0, 0, 0, hr * 0.12, hr * 0.18, hr * 0.08));
+      P('head').add(GEO.box, spec.hair && spec.hair.color ? spec.hair.color : '#3a2a20', mtx(sx * hr * 0.34, hr * 0.36, hr * 0.84, 0, sx * 0.3, sx * -0.14, hr * 0.32, hr * 0.08, hr * 0.08));
+      P('head').add(GEO.sph, cheek, mtx(sx * hr * 0.56, -hr * 0.16, hr * 0.7, 0, 0, 0, hr * 0.16, hr * 0.08, hr * 0.06));   // 腮红
+      P('head').add(GEO.sph, skin, mtx(sx * hr * 0.92, 0, -hr * 0.05, 0, 0, 0, hr * 0.13, hr * 0.22, hr * 0.12));   // 耳
     }
-    P('head').add(GEO.box, '#7a3a30', mtx(0, -hr * 0.52, hr * 0.78, 0, 0, 0, hr * 0.34, hr * 0.06, hr * 0.06));   // 嘴
+    P('head').add(GEO.box, '#8a4a3a', mtx(0, -hr * 0.42, hr * 0.84, 0, 0, 0, hr * 0.3, hr * 0.06, hr * 0.06));   // 嘴
   }
   // 原作头像的特征
   const hair = spec.hair || { style: 'short', color: '#3a2a20' };
@@ -321,14 +311,11 @@ export function buildHuman(spec) {
 
   // --- 生成网格 ---
   const meshes = [];
-  const mat = toonMat();
+  const mat = toyMat();
   for (const name in parts) {
     const geo = parts[name].build();
     const mesh = new THREE.Mesh(geo, mat);
     mesh.castShadow = true; mesh.receiveShadow = false;
-    const ol = new THREE.Mesh(geo, H > 1.2 ? OUTLINE : OUTLINE_THIN);
-    ol.userData.outline = true;
-    mesh.add(ol);
     bones[name].add(mesh);
     meshes.push(mesh);
   }
@@ -341,28 +328,36 @@ export function buildHuman(spec) {
 // ---------- 角色表（按原作配色） ----------
 export const SPECS = {
   // 玩家
-  jack: { H: 1.86, build: 'muscle', skin: '#e9b48a', hair: { style: 'messy', color: '#74492a' }, shirt: { color: '#eef2f6', sleeves: 'short', open: true, collar: true }, pants: { color: '#3d5fa6' }, belt: '#4a3018', boots: { color: '#6b4426' } },
-  hannah: { H: 1.74, build: 'female', skin: '#f2c8a2', hair: { style: 'long', color: '#242a4c' }, shirt: { color: '#e8622c', crop: true }, pants: { color: '#f4f1e8' }, belt: '#7a4a26', boots: { color: '#7c4a28', high: true } },
-  mustapha: { H: 1.95, build: 'muscle', skin: '#a9693d', hair: { style: 'short', color: '#24160e' }, cap: { color: '#e4ba3c', logo: '#3c8c2a' }, shirt: { color: '#7fd257', sleeves: 'short', open: true, collar: true }, pants: { color: '#e8c33a' }, belt: '#4a3018', boots: { color: '#6c4628', high: true } },
-  mess: { H: 2.04, build: 'huge', skin: '#e2a379', hair: { style: 'short', color: '#4a2b16' }, shirt: { color: '#e8742a', sleeves: 'none', open: true }, abs: true, pants: { color: '#a9dcb6' }, belt: '#5a3a1c', boots: { color: '#6a4424', high: true } },
+  jack: { H: 1.86, build: 'muscle', skin: '#efbf98', hair: { style: 'messy', color: '#74492a' }, shirt: { color: '#f3efe4', sleeves: 'short', open: true, collar: true }, pants: { color: '#4d6ca6' }, belt: '#4a3018', boots: { color: '#6b4426' } },
+  hannah: { H: 1.74, build: 'female', skin: '#f2c8a2', hair: { style: 'long', color: '#353b5e' }, shirt: { color: '#df7040', crop: true }, pants: { color: '#f4f1e8' }, belt: '#7a4a26', boots: { color: '#7c4a28', high: true } },
+  mustapha: { H: 1.95, build: 'muscle', skin: '#b0764a', hair: { style: 'short', color: '#2e2016' }, cap: { color: '#e6c254', logo: '#4f8f3a' }, shirt: { color: '#8cc464', sleeves: 'short', open: true, collar: true }, pants: { color: '#e0c25a' }, belt: '#4a3018', boots: { color: '#6c4628', high: true } },
+  mess: { H: 2.04, build: 'huge', skin: '#e2a379', hair: { style: 'short', color: '#4a2b16' }, shirt: { color: '#e07c3c', sleeves: 'none', open: true }, abs: true, pants: { color: '#a6cfb0' }, belt: '#5a3a1c', boots: { color: '#6a4424', high: true } },
   // 杂兵（原作第一关出场的几种）
-  ferris: { H: 1.82, build: 'thin', skin: '#d79e6e', hair: { style: 'spiky', color: '#8c5a2a' }, vest: { color: '#5e6852', chevron: '#e6dcc0' }, abs: true, pants: { color: '#c96639' }, boots: { color: '#5a3a22' }, wrist: '#3a3a3a' },
-  gneiss: { H: 1.8, build: 'thin', skin: '#d8a072', hair: { style: 'bandana', color: '#36b2b8' }, vest: { color: '#6d726b', chevron: '#d8d8d0' }, abs: true, pants: { color: '#3a9cb0' }, boots: { color: '#5a3a22' }, wrist: '#2f6f78' },
-  punk: { H: 1.64, build: 'thin', skin: '#c98d60', hair: { style: 'short', color: '#26180f' }, shirt: { color: '#c63c30', sleeves: 'short' }, overalls: '#3554a8', pants: { color: '#3554a8' }, boots: { color: '#4a3020' } },
-  blade: { H: 1.96, build: 'thin', skin: '#e3b08a', hair: { style: 'ponytail', color: '#efd26a' }, shirt: { color: '#2f63c6', sleeves: 'none', tank: true }, pants: { color: '#2f63c6' }, belt: '#24324e', boots: { color: '#38384a', high: true } },
-  elmer: { H: 1.86, build: 'fat', skin: '#d39b6c', hair: { style: 'bald' }, beard: '#1d1410', longBeard: true, shirt: { color: '#cf90d2', sleeves: 'short' }, pants: { color: '#3d72b6' }, belt: '#5a3a1c', boots: { color: '#6a4426' } },
-  hammer: { H: 1.84, build: 'fat', skin: '#dba272', hair: { style: 'bald' }, beard: '#b8462a', shirt: { color: '#f2a92a', sleeves: 'none' }, pants: { color: '#b0402c' }, belt: '#4a2a18', boots: { color: '#4a2e1c' } },
-  wrench: { H: 1.88, build: 'fat', skin: '#d8a070', hair: { style: 'long', color: '#7a4a24' }, beard: '#7a4a24', longBeard: true, shirt: { color: '#eadfba', sleeves: 'short' }, pants: { color: '#5f903c' }, belt: '#4a2e18', boots: { color: '#5a3a22' } },
+  ferris: { H: 1.82, build: 'thin', skin: '#d79e6e', hair: { style: 'spiky', color: '#8c5a2a' }, vest: { color: '#5e6852', chevron: '#e6dcc0' }, abs: true, pants: { color: '#c46e46' }, boots: { color: '#5a3a22' }, wrist: '#3a3a3a' },
+  gneiss: { H: 1.8, build: 'thin', skin: '#d8a072', hair: { style: 'bandana', color: '#47a8ac' }, vest: { color: '#6d726b', chevron: '#d8d8d0' }, abs: true, pants: { color: '#4796a8' }, boots: { color: '#5a3a22' }, wrist: '#2f6f78' },
+  punk: { H: 1.64, build: 'thin', skin: '#c98d60', hair: { style: 'short', color: '#26180f' }, shirt: { color: '#c8503f', sleeves: 'short' }, overalls: '#4a64a6', pants: { color: '#4a64a6' }, boots: { color: '#4a3020' } },
+  blade: { H: 1.96, build: 'thin', skin: '#e3b08a', hair: { style: 'ponytail', color: '#efd26a' }, shirt: { color: '#4470b8', sleeves: 'none', tank: true }, pants: { color: '#4470b8' }, belt: '#24324e', boots: { color: '#38384a', high: true } },
+  elmer: { H: 1.86, build: 'fat', skin: '#d39b6c', hair: { style: 'bald' }, beard: '#1d1410', longBeard: true, shirt: { color: '#c896c6', sleeves: 'short' }, pants: { color: '#4c76ac' }, belt: '#5a3a1c', boots: { color: '#6a4426' } },
+  hammer: { H: 1.84, build: 'fat', skin: '#dba272', hair: { style: 'bald' }, beard: '#b8462a', shirt: { color: '#e8ae46', sleeves: 'none' }, pants: { color: '#b0503e' }, belt: '#4a2a18', boots: { color: '#4a2e1c' } },
+  wrench: { H: 1.88, build: 'fat', skin: '#d8a070', hair: { style: 'long', color: '#7a4a24' }, beard: '#7a4a24', longBeard: true, shirt: { color: '#eadfba', sleeves: 'short' }, pants: { color: '#6a9048' }, belt: '#4a2e18', boots: { color: '#5a3a22' } },
   // Boss：维斯·特修恩
-  vice: { H: 2.1, build: 'huge', skin: '#e7ad82', hair: { style: 'spikyBlond', color: '#f3d566' }, vest: { color: '#25252c', fur: '#8d8d94' }, abs: true, pants: { color: '#9b63c8' }, straps: '#4a3460', boots: { color: '#bcc0cc', high: true }, wrist: '#76767e', eyes: '#2a3a7a' },
+  vice: { H: 2.1, build: 'huge', skin: '#e7ad82', hair: { style: 'spikyBlond', color: '#f3d566' }, vest: { color: '#25252c', fur: '#8d8d94' }, abs: true, pants: { color: '#9a6dbc' }, straps: '#4a3460', boots: { color: '#bcc0cc', high: true }, wrist: '#76767e', eyes: '#2a3a7a' },
+  // 第二关（按原作实机录像取色；与原作头像对不上的细节为推测）
+  poacher: { H: 1.8, build: 'normal', skin: '#dcaa7c', hair: { style: 'short', color: '#4a3020' }, cap: { color: '#6b8450' }, shirt: { color: '#748c56', sleeves: 'long', collar: true }, pants: { color: '#5b7048' }, belt: '#4a3420', boots: { color: '#4c3a26', high: true } },
+  skinner: { H: 1.84, build: 'normal', skin: '#d29870', hair: { style: 'short', color: '#2e2018' }, beard: '#2e2018', shirt: { color: '#c8b48a', sleeves: 'long' }, vest: { color: '#7a5636' }, pants: { color: '#8a7a58' }, belt: '#3e2a18', boots: { color: '#4a3422', high: true } },
+  gutter: { H: 1.82, build: 'normal', skin: '#d8a074', hair: { style: 'bandana', color: '#4f84bc' }, beard: '#9a5a34', shirt: { color: '#e2bc4c', sleeves: 'long', collar: true }, pants: { color: '#68707e' }, belt: '#4a3420', boots: { color: '#3e3426', high: true } },
+  thug: { H: 1.8, build: 'thin', skin: '#d6a074', hair: { style: 'spiky', color: '#b8502e' }, shirt: { color: '#7a8a98', sleeves: 'none', tank: true }, abs: true, pants: { color: '#4c4c5c' }, boots: { color: '#3a3028' }, wrist: '#3a3a3a' },
+  razor: { H: 1.94, build: 'thin', skin: '#c8906a', hair: { style: 'ponytail', color: '#2c1e16' }, shirt: { color: '#d6b04c', sleeves: 'none', tank: true }, pants: { color: '#4c6c9e' }, belt: '#2e2a24', boots: { color: '#3a3240', high: true } },
+  lash: { H: 2.06, build: 'huge', skin: '#d89a6c', hair: { style: 'long', color: '#d8983e' }, vest: { color: '#6c4628' }, abs: true, pants: { color: '#5c3e26' }, belt: '#3a2818', straps: '#3a2818', boots: { color: '#3c2c1e', high: true }, wrist: '#4a3828' },
+  butcher: { H: 2.2, build: 'brute', skin: '#e0a07a', hair: { style: 'bald' }, beard: '#ece6da', shirt: { color: '#c84a3e', sleeves: 'none', tank: true }, pants: { color: '#86587c' }, belt: '#5a3a20', boots: { color: '#5a3a24' }, wrist: '#7a4c96' },
   // 大楼里的金色骑士雕像
   statue: { H: 1.9, build: 'muscle', gold: '#d6ae3e', hair: { style: 'helmet', color: '#d6ae3e' }, shirt: { color: '#d6ae3e', sleeves: 'long' }, pants: { color: '#d6ae3e' }, boots: { color: '#d6ae3e', high: true } }
 };
 
 // ---------- 迅猛龙（岩跳龙 Rock Hopper） ----------
 const RAPTOR_COL = {
-  calm: { base: '#79b04a', dark: '#46772c', belly: '#e3d68c', claw: '#f2ecd8' },
-  angry: { base: '#ee8a2a', dark: '#b75816', belly: '#f6d47a', claw: '#fff4dc' }
+  calm: { base: '#80ae58', dark: '#557a3c', belly: '#e3d896', claw: '#f2ecd8' },
+  angry: { base: '#e88e3e', dark: '#b2622a', belly: '#f2d482', claw: '#fff4dc' }
 };
 const raptorGeoCache = {};
 function raptorParts(pal) {
@@ -406,49 +401,202 @@ function raptorParts(pal) {
   for (const n in parts) out[n] = parts[n].build();
   return out;
 }
-export function buildRaptor() {
-  if (!raptorGeoCache.calm) { raptorGeoCache.calm = raptorParts('calm'); raptorGeoCache.angry = raptorParts('angry'); }
+// 霸王龙希瓦特：与岩跳龙同一套骨架（姿势库通用），头大颈短、腿粗、前肢很小；整体放大 2 倍
+function trexParts() {
+  const c = { base: '#5f8c4c', dark: '#45683a', belly: '#d6cf96', claw: '#f2ecd8' };
+  const parts = {};
+  const P = (n) => parts[n] || (parts[n] = new Parts());
+  P('body').add(GEO.sph, c.base, mtx(0, 0, 0.05, 0.12, 0, 0, 0.42, 0.42, 0.74));
+  P('body').add(GEO.sph, c.belly, mtx(0, -0.13, 0.14, 0.12, 0, 0, 0.33, 0.3, 0.6));
+  for (let i = 0; i < 5; i++) P('body').add(GEO.box, c.dark, mtx(0, 0.38 - i * 0.03, 0.42 - i * 0.22, 0.12, 0, 0, 0.5, 0.07, 0.1));
+  P('neck').add(capsule(0.2, 0.28), c.base, mtx(0, 0.14, 0.04, -0.5, 0, 0));
+  P('neck').add(capsule(0.15, 0.24), c.belly, mtx(0, 0.1, 0.12, -0.5, 0, 0));
+  P('head').add(GEO.sph, c.base, mtx(0, 0.04, 0.1, 0, 0, 0, 0.25, 0.23, 0.3));
+  P('head').add(GEO.box, c.base, mtx(0, 0.0, 0.38, 0, 0, 0, 0.3, 0.2, 0.44));
+  P('head').add(GEO.box, c.dark, mtx(0, 0.12, 0.24, 0, 0, 0, 0.32, 0.06, 0.4));
+  for (const sx of [-1, 1]) {
+    P('head').add(GEO.box, c.dark, mtx(sx * 0.12, 0.17, 0.14, 0, 0, sx * 0.3, 0.1, 0.06, 0.14));   // 眉骨
+    P('head').add(GEO.sph, '#f2d34a', mtx(sx * 0.14, 0.1, 0.16, 0, 0, 0, 0.045, 0.045, 0.045));
+    P('head').add(GEO.box, '#1a1410', mtx(sx * 0.16, 0.1, 0.165, 0, 0, 0, 0.012, 0.04, 0.02));
+    for (let i = 0; i < 6; i++) P('head').add(GEO.cone, c.claw, mtx(sx * 0.12, -0.11, 0.22 + i * 0.06, Math.PI, 0, 0, 0.022, 0.07, 0.022));
+  }
+  P('jaw').add(GEO.box, c.belly, mtx(0, -0.06, 0.22, 0, 0, 0, 0.26, 0.09, 0.42));
+  for (let i = 0; i < 5; i++) for (const sx of [-1, 1]) P('jaw').add(GEO.cone, c.claw, mtx(sx * 0.1, -0.0, 0.1 + i * 0.07, 0, 0, 0, 0.02, 0.06, 0.02));
+  P('tail1').add(capsule(0.24, 0.42), c.base, mtx(0, 0, -0.3, Math.PI / 2, 0, 0));
+  P('tail1').add(GEO.box, c.dark, mtx(0, 0.2, -0.3, 0, 0, 0, 0.24, 0.06, 0.1));
+  P('tail2').add(capsule(0.15, 0.44), c.base, mtx(0, 0, -0.28, Math.PI / 2, 0, 0));
+  P('tail3').add(GEO.cone, c.base, mtx(0, 0, -0.34, -Math.PI / 2, 0, 0, 0.1, 0.66, 0.1));
+  for (const side of ['l', 'r']) {
+    const sx = side === 'l' ? 1 : -1;
+    P(side + 'Th').add(GEO.sph, c.base, mtx(sx * 0.04, -0.18, 0.03, 0.3, 0, 0, 0.19, 0.32, 0.24));
+    P(side + 'Sh').add(capsule(0.1, 0.32), c.base, mtx(0, -0.2, 0));
+    P(side + 'Ft').add(GEO.box, c.base, mtx(0, -0.02, 0.1, 0, 0, 0, 0.2, 0.08, 0.32));
+    for (let i = -1; i <= 1; i++) P(side + 'Ft').add(GEO.cone, c.claw, mtx(i * 0.06, -0.03, 0.28, Math.PI / 2, 0, 0, 0.025, 0.08, 0.025));
+    P(side + 'Arm').add(capsule(0.035, 0.1), c.base, mtx(0, -0.06, 0.02, 0.6, 0, 0));
+    P(side + 'Arm').add(GEO.cone, c.claw, mtx(0, -0.14, 0.07, 2.2, 0, 0, 0.018, 0.05, 0.018));
+  }
+  const out = {};
+  for (const n in parts) out[n] = parts[n].build();
+  return out;
+}
+const trexGeoCache = {};
+export function buildRaptor(kind) {
+  const trex = kind === 'trex';
+  if (trex) { if (!trexGeoCache.calm) { trexGeoCache.calm = trexParts(); trexGeoCache.angry = trexGeoCache.calm; } }
+  else if (!raptorGeoCache.calm) { raptorGeoCache.calm = raptorParts('calm'); raptorGeoCache.angry = raptorParts('angry'); }
+  const cache = trex ? trexGeoCache : raptorGeoCache;
   const bones = {};
-  const root = new THREE.Group(); root.name = 'raptor';
+  const root = new THREE.Group(); root.name = trex ? 'trex' : 'raptor';
   const mk = (name, parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); bones[name] = g; return g; };
   const body = mk('body', root, 0, 0.98, 0);
-  const neck = mk('neck', body, 0, 0.12, 0.5);
-  const head = mk('head', neck, 0, 0.42, 0.22);
+  const neck = trex ? mk('neck', body, 0, 0.16, 0.56) : mk('neck', body, 0, 0.12, 0.5);
+  const head = trex ? mk('head', neck, 0, 0.3, 0.28) : mk('head', neck, 0, 0.42, 0.22);
   mk('jaw', head, 0, -0.04, 0.08);
-  const t1 = mk('tail1', body, 0, 0.02, -0.5);
-  const t2 = mk('tail2', t1, 0, 0, -0.55);
+  const t1 = mk('tail1', body, 0, 0.02, -0.55);
+  const t2 = mk('tail2', t1, 0, 0, -0.58);
   mk('tail3', t2, 0, 0, -0.5);
   for (const side of ['l', 'r']) {
     const sx = side === 'l' ? 1 : -1;
-    const th = mk(side + 'Th', body, sx * 0.2, -0.05, -0.05);
+    const th = mk(side + 'Th', body, sx * (trex ? 0.26 : 0.2), -0.05, -0.05);
     const shn = mk(side + 'Sh', th, sx * 0.02, -0.38, 0.06);
     mk(side + 'Ft', shn, 0, -0.42, -0.04);
-    mk(side + 'Arm', body, sx * 0.18, -0.08, 0.5);
+    mk(side + 'Arm', body, sx * (trex ? 0.22 : 0.18), trex ? -0.14 : -0.08, trex ? 0.56 : 0.5);
   }
-  const mat = toonMat();
+  const SCALE = trex ? 2.0 : 1;
+  const inner = new THREE.Group(); inner.scale.setScalar(SCALE);
+  while (root.children.length) inner.add(root.children[0]);
+  root.add(inner);
+  const mat = toyMat();
   const meshes = {};
-  for (const n in raptorGeoCache.calm) {
-    const m = new THREE.Mesh(raptorGeoCache.calm[n], mat);
+  for (const n in cache.calm) {
+    const m = new THREE.Mesh(cache.calm[n], mat);
     m.castShadow = true;
-    const ol = new THREE.Mesh(raptorGeoCache.calm[n], OUTLINE); ol.userData.outline = true; m.add(ol);
     bones[n].add(m); meshes[n] = m;
   }
   function setPalette(p) {
-    const set = raptorGeoCache[p];
-    for (const n in meshes) { meshes[n].geometry = set[n]; meshes[n].children[0].geometry = set[n]; }
+    const set = cache[p];
+    for (const n in meshes) meshes[n].geometry = set[n];
   }
-  return { root, bones, mat, setPalette, H: 1.6 };
+  return { root, bones, mat, setPalette, H: trex ? 3.4 : 1.6, scale: SCALE };
+}
+
+// ---------- 三角龙哈克（四足） ----------
+// 骨骼：body → head(jaw) / tail1 → tail2 / 四条腿各两节（lfU→lfL、rfU→rfL、lbU→lbL、rbU→rbL）。动作由 game.js 程序化驱动
+const trikeGeo = {};
+function trikeParts() {
+  const c = { base: '#e08a42', dark: '#b0642e', belly: '#f2d8a0', horn: '#f4ecd8', frill: '#c8703a' };
+  const parts = {};
+  const P = (n) => parts[n] || (parts[n] = new Parts());
+  P('body').add(GEO.sph, c.base, mtx(0, 0, 0, 0, 0, 0, 0.62, 0.56, 1.15));
+  P('body').add(GEO.sph, c.belly, mtx(0, -0.17, 0.05, 0, 0, 0, 0.5, 0.4, 0.95));
+  for (let i = 0; i < 5; i++) P('body').add(GEO.box, c.dark, mtx(0, 0.5 - Math.abs(i - 2) * 0.04, 0.6 - i * 0.3, 0, 0, 0, 0.7 - Math.abs(i - 2) * 0.08, 0.08, 0.12));
+  for (let i = 0; i < 7; i++) { const a = i * 0.9; P('body').add(GEO.sph, c.dark, mtx(Math.sin(a) * 0.5, 0.18 + Math.cos(a * 1.3) * 0.12, -0.6 + i * 0.2, 0, 0, 0, 0.1, 0.08, 0.1)); }
+  // 头：圆颅 + 鸟喙 + 颈盾 + 三只角
+  P('head').add(GEO.sph, c.base, mtx(0, 0, 0.18, 0, 0, 0, 0.34, 0.32, 0.42));
+  P('head').add(GEO.cone, c.base, mtx(0, -0.06, 0.62, Math.PI / 2, 0, 0, 0.2, 0.36, 0.18));
+  P('head').add(GEO.cone, '#7a5030', mtx(0, -0.1, 0.8, Math.PI / 2 + 0.3, 0, 0, 0.08, 0.16, 0.07));   // 喙尖
+  P('head').add(GEO.cyl, c.frill, mtx(0, 0.26, -0.12, -1.15, 0, 0, 0.62, 0.08, 0.6));   // 颈盾
+  P('head').add(GEO.cyl, c.base, mtx(0, 0.24, -0.09, -1.15, 0, 0, 0.5, 0.1, 0.48));
+  for (let i = 0; i < 9; i++) { const a = -1.4 + i * 0.35; P('head').add(GEO.cone, c.dark, mtx(Math.sin(a) * 0.62, 0.26 + Math.cos(a) * 0.55, -0.12 - Math.cos(a) * 0.2, -0.4 + Math.cos(a) * 0.3, 0, -Math.sin(a), 0.07, 0.18, 0.07)); }
+  for (const sx of [-1, 1]) {
+    P('head').add(GEO.cone, c.horn, mtx(sx * 0.17, 0.26, 0.36, 1.05, 0, -sx * 0.12, 0.07, 0.6, 0.07));   // 额角
+    P('head').add(GEO.sph, '#2b2b2b', mtx(sx * 0.24, 0.1, 0.36, 0, 0, 0, 0.045, 0.06, 0.04));
+  }
+  P('head').add(GEO.cone, c.horn, mtx(0, 0.06, 0.66, 0.6, 0, 0, 0.05, 0.22, 0.05));   // 鼻角
+  P('jaw').add(GEO.box, c.belly, mtx(0, -0.04, 0.3, 0, 0, 0, 0.2, 0.08, 0.4));
+  P('tail1').add(capsule(0.22, 0.5), c.base, mtx(0, 0, -0.32, Math.PI / 2, 0, 0));
+  P('tail1').add(GEO.box, c.dark, mtx(0, 0.18, -0.3, 0, 0, 0, 0.18, 0.06, 0.1));
+  P('tail2').add(GEO.cone, c.base, mtx(0, 0, -0.38, -Math.PI / 2, 0, 0, 0.14, 0.8, 0.14));
+  for (const k of ['lf', 'rf', 'lb', 'rb']) {
+    const back = k[1] === 'b';
+    P(k + 'U').add(capsule(back ? 0.2 : 0.16, 0.3), c.base, mtx(0, -0.2, 0));
+    P(k + 'L').add(capsule(back ? 0.15 : 0.13, 0.26), c.base, mtx(0, -0.18, 0));
+    P(k + 'L').add(GEO.cyl, c.dark, mtx(0, -0.4, 0.04, 0, 0, 0, 0.17, 0.1, 0.2));
+    for (let i = -1; i <= 1; i++) P(k + 'L').add(GEO.sph, c.horn, mtx(i * 0.08, -0.42, 0.2, 0, 0, 0, 0.04, 0.04, 0.04));
+  }
+  const out = {};
+  for (const n in parts) out[n] = parts[n].build();
+  return out;
+}
+export function buildTrike() {
+  if (!trikeGeo.base) trikeGeo.base = trikeParts();
+  const bones = {};
+  const root = new THREE.Group(); root.name = 'trike';
+  const mk = (name, parent, x, y, z) => { const g = new THREE.Group(); g.position.set(x, y, z); parent.add(g); bones[name] = g; return g; };
+  const body = mk('body', root, 0, 0.98, 0);
+  const head = mk('head', body, 0, 0.12, 1.02);
+  mk('jaw', head, 0, -0.06, 0.2);
+  const t1 = mk('tail1', body, 0, 0.05, -1.05);
+  mk('tail2', t1, 0, 0, -0.62);
+  for (const [k, x, z] of [['lf', 0.4, 0.62], ['rf', -0.4, 0.62], ['lb', 0.44, -0.56], ['rb', -0.44, -0.56]]) {
+    const u = mk(k + 'U', body, x, -0.22, z);
+    mk(k + 'L', u, 0, -0.4, 0);
+  }
+  const mat = toyMat();
+  for (const n in trikeGeo.base) { const m = new THREE.Mesh(trikeGeo.base[n], mat); m.castShadow = true; bones[n].add(m); }
+  return { root, bones, mat, H: 1.6 };
+}
+
+// ---------- 凯迪拉克（1950 年代敞篷车，第二关开场） ----------
+let carBodyGeo = null, carWheelGeo = null;
+export function buildCar() {
+  if (!carBodyGeo) {
+    const p = new Parts(), b = '#9db6c8', bd = '#7f98ac', chrome = '#e8ecee', seat = '#b25a46';
+    p.add(GEO.box, b, mtx(0, 0.62, 0, 0, 0, 0, 1.92, 0.5, 5.1));
+    p.add(GEO.sph, b, mtx(0, 0.62, 2.45, 0, 0, 0, 0.96, 0.27, 0.32));
+    p.add(GEO.sph, b, mtx(0, 0.62, -2.45, 0, 0, 0, 0.96, 0.27, 0.32));
+    p.add(GEO.box, b, mtx(0, 0.93, 1.72, 0.05, 0, 0, 1.84, 0.16, 1.5));     // 引擎盖
+    p.add(GEO.box, b, mtx(0, 0.93, -1.95, -0.04, 0, 0, 1.84, 0.16, 1.15));  // 后备箱
+    for (const sx of [-1, 1]) {
+      p.add(GEO.box, bd, mtx(sx * 0.93, 0.98, -0.2, 0, 0, 0, 0.1, 0.18, 2.5));    // 车门上沿
+      p.add(GEO.box, b, mtx(sx * 0.9, 1.0, -2.3, 0, 0, 0, 0.14, 0.34, 0.85));   // 尾鳍
+      p.add(GEO.sph, '#e0564a', mtx(sx * 0.9, 1.08, -2.72, 0, 0, 0, 0.07, 0.12, 0.06));   // 尾灯
+      p.add(GEO.sph, '#fff6d8', mtx(sx * 0.66, 0.78, 2.72, 0, 0, 0, 0.16, 0.16, 0.06));   // 车灯
+      p.add(GEO.box, chrome, mtx(sx * 0.97, 0.62, 0, 0, 0, 0, 0.02, 0.05, 4.6));          // 侧饰条
+    }
+    p.add(GEO.box, chrome, mtx(0, 0.42, 2.66, 0, 0, 0, 2.0, 0.16, 0.16));      // 前保险杠
+    p.add(GEO.box, chrome, mtx(0, 0.42, -2.66, 0, 0, 0, 2.0, 0.16, 0.16));     // 后保险杠
+    p.add(GEO.box, '#5c6a74', mtx(0, 0.64, 2.68, 0, 0, 0, 1.2, 0.2, 0.04));    // 进气格栅
+    p.add(GEO.box, '#cfe6ee', mtx(0, 1.27, 0.86, -0.35, 0, 0, 1.68, 0.5, 0.04));   // 挡风玻璃
+    p.add(GEO.box, chrome, mtx(0, 1.51, 0.78, -0.35, 0, 0, 1.72, 0.05, 0.06));
+    p.add(GEO.box, seat, mtx(0, 0.98, 0.2, 0, 0, 0, 1.6, 0.18, 0.62));    // 座椅
+    p.add(GEO.box, seat, mtx(0, 1.18, -0.1, -0.15, 0, 0, 1.6, 0.42, 0.14));
+    p.add(GEO.box, seat, mtx(0, 0.98, -1.0, 0, 0, 0, 1.6, 0.18, 0.62));
+    p.add(GEO.box, seat, mtx(0, 1.18, -1.3, -0.15, 0, 0, 1.6, 0.42, 0.14));
+    p.add(GEO.cyl, '#2b2b2b', mtx(0.42, 1.18, 0.6, -0.6, 0, 0, 0.17, 0.03, 0.17));   // 方向盘
+    carBodyGeo = p.build();
+    const w = new Parts();
+    w.add(GEO.cyl, '#2e2e2e', mtx(0, 0, 0, 0, 0, Math.PI / 2, 0.36, 0.26, 0.36));
+    w.add(GEO.cyl, '#f2f0ea', mtx(0, 0, 0, 0, 0, Math.PI / 2, 0.25, 0.27, 0.25));    // 白边胎
+    w.add(GEO.cyl, chrome, mtx(0, 0, 0, 0, 0, Math.PI / 2, 0.15, 0.28, 0.15));
+    carWheelGeo = w.build();
+  }
+  const root = new THREE.Group(); root.name = 'cadillac';
+  const bodyM = new THREE.Mesh(carBodyGeo, propMat); bodyM.castShadow = true; root.add(bodyM);
+  const wheels = [];
+  for (const [x, z] of [[0.86, 1.62], [-0.86, 1.62], [0.86, -1.62], [-0.86, -1.62]]) { const m = new THREE.Mesh(carWheelGeo, propMat); m.position.set(x, 0.36, z); m.castShadow = true; root.add(m); wheels.push(m); }
+  root.userData.wheels = wheels;
+  return root;
+}
+// 拉什·T 的链锤：带刺铁球
+export function maceGeo() {
+  return cachedGeo('mace', (p) => {
+    p.add(GEO.sph, '#7a7e86', mtx(0, 0, 0, 0, 0, 0, 0.17, 0.17, 0.17));
+    for (const [x, y, z] of [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1], [0.7, 0.7, 0], [-0.7, 0.7, 0], [0, -0.7, 0.7], [0, 0.7, -0.7]]) {
+      const v = new THREE.Vector3(x, y, z).normalize(), q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), v), e = new THREE.Euler().setFromQuaternion(q);
+      p.add(GEO.cone, '#c8ccd2', mtx(v.x * 0.2, v.y * 0.2, v.z * 0.2, e.x, e.y, e.z, 0.05, 0.12, 0.05));
+    }
+  });
 }
 
 // ---------- 道具 / 物品 / 武器 ----------
-const propMat = toonMat();
+const propMat = toyMat();
 const propCache = new Map();
 function cachedGeo(key, fn) { let g = propCache.get(key); if (!g) { const p = new Parts(); fn(p); g = p.build(); propCache.set(key, g); } return g; }
 export function meshFrom(geo, opts) {
   const o = opts || {};
   const m = new THREE.Mesh(geo, o.mat || propMat);
   m.castShadow = o.shadow !== false; m.receiveShadow = !!o.receive;
-  if (o.outline !== false) { const ol = new THREE.Mesh(geo, o.thin ? OUTLINE_THIN : OUTLINE); ol.userData.outline = true; m.add(ol); }
   return m;
 }
 export function drumGeo() {
@@ -457,6 +605,15 @@ export function drumGeo() {
     for (const y of [0.04, 0.3, 0.6, 0.86]) p.add(GEO.cyl, '#8e3f1a', mtx(0, y, 0, 0, 0, 0, 0.335, 0.035, 0.335));
     p.add(GEO.cyl, '#9a9aa2', mtx(0, 0.905, 0, 0, 0, 0, 0.3, 0.012, 0.3));
     p.add(GEO.cyl, '#e8a45c', mtx(0.2, 0.45, 0.2, 0, 0, 0, 0.05, 0.8, 0.05));   // 高光条
+  });
+}
+export function barrelGeo() {   // 木桶（第二关森林里的可打碎木桶，可举起投掷）
+  return cachedGeo('barrel', (p) => {
+    const prof = [[0.27, 0], [0.33, 0.2], [0.35, 0.42], [0.33, 0.64], [0.27, 0.84]];
+    const g = lathe(prof, 0, 0, 'barrel');
+    p.add(g, '#b07c4a', mtx(0, 0.02, 0));
+    for (const y of [0.12, 0.42, 0.72]) p.add(GEO.cyl, '#5e4a38', mtx(0, y, 0, 0, 0, 0, y === 0.42 ? 0.36 : 0.32, 0.04, y === 0.42 ? 0.36 : 0.32));
+    p.add(GEO.cyl, '#8c6440', mtx(0, 0.86, 0, 0, 0, 0, 0.27, 0.02, 0.27));
   });
 }
 export function pipesGeo() {
@@ -505,7 +662,27 @@ const ITEM_BUILDERS = {
   knife: (p) => { p.add(GEO.box, '#d8dce4', mtx(0, 0, 0.14, 0, 0, 0, 0.012, 0.045, 0.24)); p.add(GEO.box, '#3a2a1e', mtx(0, 0, -0.04, 0, 0, 0, 0.03, 0.04, 0.12)); p.add(GEO.box, '#9a9aa2', mtx(0, 0, 0.02, 0, 0, 0, 0.03, 0.07, 0.015)); },
   pipe: (p) => { p.add(GEO.cyl, '#8c9098', mtx(0, 0, 0.3, Math.PI / 2, 0, 0, 0.03, 0.8, 0.03)); p.add(GEO.cyl, '#6a6e76', mtx(0, 0, -0.08, Math.PI / 2, 0, 0, 0.036, 0.06, 0.036)); },
   ammo: (p) => { p.add(GEO.box, '#6a7a3a', mtx(0, 0.07, 0, 0, 0, 0, 0.26, 0.14, 0.16)); p.add(GEO.box, '#e8c040', mtx(0, 0.15, 0, 0, 0, 0, 0.2, 0.02, 0.1)); },
-  chain: (p) => { for (let i = 0; i < 10; i++) p.add(GEO.tor, '#8a8c94', mtx(0, 0, i * 0.09, 0, i % 2 ? Math.PI / 2 : 0, 0, 0.045, 0.045, 0.045)); }
+  chain: (p) => { for (let i = 0; i < 10; i++) p.add(GEO.tor, '#8a8c94', mtx(0, 0, i * 0.09, 0, i % 2 ? Math.PI / 2 : 0, 0, 0.045, 0.045, 0.045)); },
+  // 屠夫的弯砍刀：宽刃 + 木柄（刃朝 +Z）
+  sword: (p) => {
+    p.add(GEO.box, '#d6dade', mtx(0, 0.02, 0.36, 0.06, 0, 0, 0.02, 0.12, 0.56));
+    p.add(GEO.box, '#d6dade', mtx(0, 0.06, 0.66, 0.3, 0, 0, 0.02, 0.14, 0.12));
+    p.add(GEO.box, '#9a5a8a', mtx(0, -0.04, 0.36, 0.06, 0, 0, 0.024, 0.02, 0.56));   // 刀背的紫色包边（原作里地上那把刀是紫红色）
+    p.add(GEO.box, '#5a3a24', mtx(0, 0, -0.06, 0, 0, 0, 0.04, 0.05, 0.2));
+    p.add(GEO.box, '#8a8c90', mtx(0, 0, 0.05, 0, 0, 0, 0.05, 0.12, 0.03));
+  },
+  rifle: (p) => {
+    p.add(GEO.cyl, '#3e4248', mtx(0, 0.03, 0.4, Math.PI / 2, 0, 0, 0.024, 0.66, 0.024));
+    p.add(GEO.box, '#8a5c34', mtx(0, 0.0, 0.18, 0, 0, 0, 0.05, 0.07, 0.36));
+    p.add(GEO.box, '#7a4c2a', mtx(0, -0.05, -0.2, 0.22, 0, 0, 0.05, 0.12, 0.34));
+    p.add(GEO.box, '#3e4248', mtx(0, 0.03, 0.06, 0, 0, 0, 0.055, 0.08, 0.16));
+    p.add(GEO.cyl, '#3e4248', mtx(0, 0.09, 0.12, Math.PI / 2, 0, 0, 0.02, 0.16, 0.02));   // 瞄准镜
+  },
+  sunglass: (p) => {
+    for (const sx of [-1, 1]) p.add(GEO.cyl, '#2a3440', mtx(sx * 0.06, 0.05, 0, Math.PI / 2, 0, 0, 0.05, 0.015, 0.042));
+    p.add(GEO.box, '#c8a040', mtx(0, 0.06, 0, 0, 0, 0, 0.06, 0.012, 0.012));
+    for (const sx of [-1, 1]) p.add(GEO.box, '#c8a040', mtx(sx * 0.11, 0.06, -0.06, 0, 0, 0, 0.012, 0.012, 0.12));
+  }
 };
 export function itemGeo(kind) { return cachedGeo('item:' + kind, ITEM_BUILDERS[kind]); }
 export function itemMesh(kind) { return meshFrom(itemGeo(kind), { thin: true }); }
@@ -535,7 +712,7 @@ export function bakeModel(root) {
   const inv = new THREE.Matrix4().copy(root.matrixWorld).invert();
   const list = [];
   root.traverse((o) => {
-    if (!o.isMesh || o.userData.outline) return;
+    if (!o.isMesh) return;
     const m = new THREE.Matrix4().multiplyMatrices(inv, o.matrixWorld);
     list.push({ geo: o.geometry, m, colorAttr: true });
   });
@@ -578,8 +755,8 @@ export function portrait(renderer, model, opts) {
   const H = model.H || 1.8;
   if (o.camPos) { cam.position.fromArray(o.camPos); cam.lookAt(new THREE.Vector3().fromArray(o.camTgt)); }
   else if (full) { cam.position.set(H * 0.55, H * 0.62, H * 2.2); cam.lookAt(0, H * 0.5, 0); }
-  else if (o.raptor) { cam.position.set(head.x + 1.0, head.y + 0.25, head.z + 0.9); cam.lookAt(head.x, head.y - 0.05, head.z + 0.2); }
-  else { cam.position.set(head.x + 0.16, head.y + 0.02, head.z + 0.92); cam.lookAt(head.x, head.y - 0.07, head.z); }
+  else if (o.raptor) { const k = o.k || 1; cam.position.set(head.x + 1.0 * k, head.y + 0.25 * k, head.z + 0.9 * k); cam.lookAt(head.x, head.y - 0.05 * k, head.z + 0.2 * k); }
+  else { const k = model.dims ? model.dims.headR / 0.119 : 1; cam.position.set(head.x + 0.16 * k, head.y + 0.02 * k, head.z + 0.92 * k); cam.lookAt(head.x, head.y - 0.07 * k, head.z); }
   const prevRT = renderer.getRenderTarget(), prevColor = new THREE.Color(); renderer.getClearColor(prevColor); const prevAlpha = renderer.getClearAlpha();
   renderer.setRenderTarget(rt);
   renderer.setClearColor(o.bg !== undefined ? o.bg : 0x000000, o.bg !== undefined ? 1 : 0);

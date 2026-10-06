@@ -74,6 +74,8 @@ export function createFx(scene) {
     for (let i = 0; i < 7; i++) { const a = Math.random() * Math.PI * 2; sprite(puffTex, { x: x + Math.cos(a) * 0.4, y: y + 0.8, z: z + Math.sin(a) * 0.4, vx: Math.cos(a) * 1.4, vz: Math.sin(a) * 1.4, vy: 1.4, life: 1.0, s0: 0.8 * S, s1: 2.4 * S, color: 0x5a5048 }); }
     F.shake = Math.max(F.shake, 0.35);
   };
+  F.glint = (x, y, z) => sprite(starTex, { x, y, z, life: 0.22, s0: 0.12, s1: 0.5, color: 0xffffff, order: 8, depthTest: false });   // 步枪兵开枪前的枪口闪光预警
+  F.splash = (x, y, z, n, size) => { for (let i = 0; i < (n || 6); i++) { const a = Math.random() * Math.PI * 2, sp = 0.6 + Math.random() * 1.2; sprite(puffTex, { x: x + Math.cos(a) * 0.15, y, z: z + Math.sin(a) * 0.15, vx: Math.cos(a) * sp, vz: Math.sin(a) * sp, vy: 1.6 + Math.random() * 1.8, grav: 9, life: 0.55, s0: (size || 0.35) * 0.6, s1: (size || 0.35) * 1.3, color: 0xd8ece4 }); } };
   F.ring = (x, y, z) => sprite(ringTex, { x, y, z, life: 0.35, s0: 0.6, s1: 4.2, blend: 'add', order: 6 });
   F.debris = (x, y, z, color, n, size, speed) => {
     for (let i = 0; i < (n || 8); i++) {
@@ -114,7 +116,7 @@ export function createFx(scene) {
   F.clear = () => { sprites.forEach(s => { s.alive = false; s.sp.visible = false; }); debris.forEach(d => { d.alive = false; d.m.visible = false; }); F.shake = 0; };
   F.stats = () => ({ sprites: sprites.length, live: sprites.filter(s => s.alive).length, debris: debris.length });
   // 预热：让各类纹理都先上屏一次
-  F.warm = () => { F.hit(0, -50, 0); F.text(0, -50, 0, '100'); F.boom(0, -50, 0, 0.1); F.dust(0, -50, 0, 1); F.ring(0, -50, 0); F.muzzle(0, -50, 0); F.debris(0, -50, 0, '#888', 1); };
+  F.warm = () => { F.glint(0, -50, 0); F.splash(0, -50, 0, 1); F.hit(0, -50, 0); F.text(0, -50, 0, '100'); F.boom(0, -50, 0, 0.1); F.dust(0, -50, 0, 1); F.ring(0, -50, 0); F.muzzle(0, -50, 0); F.debris(0, -50, 0, '#888', 1); };
   F.GEO = GEO;
   return F;
 }

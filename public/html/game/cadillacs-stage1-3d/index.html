@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#3a2a5a">
-<meta name="description" content="街机恐龙快打（Cadillacs and Dinosaurs）第一关的 3D 重置版：杰克、汉娜、穆斯塔法、梅斯四位主角，楼顶、大楼内部、第 47 街一路打到 Boss 维斯·T 和岩跳龙。电脑键盘与手机触屏均可游玩。">
-<title>恐龙快打 · 第一关 3D 重置版</title>
+<meta name="description" content="街机恐龙快打（Cadillacs and Dinosaurs）第一关、第二关的 3D 重置版：杰克、汉娜、穆斯塔法、梅斯四位主角，从海上都市打到 Boss 维斯·T 和岩跳龙，再开着凯迪拉克闯沼泽森林——三角龙、熟睡的霸王龙、泥沼、链锤兵和 Boss 屠夫。电脑键盘与手机触屏均可游玩。">
+<title>恐龙快打 · 第一、二关 3D 重置版</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=toy3dui3">
+<link rel="stylesheet" href="css/style.css?v=stage2a">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -73,18 +73,19 @@
         <div class="brand">
           <div class="kicker">CAPCOM 1993 街机经典 · 3D 重置版</div>
           <h1 class="logo"><span class="l1">恐龙快打</span><span class="l2">Cadillacs and Dinosaurs</span></h1>
-          <div class="sub" id="menu-sub">第一关 · 海上都市</div>
-          <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。选一位英雄，从大楼楼顶打进大楼内部，跳窗杀到第 47 街，打倒 Boss 维斯·T 和他的岩跳龙。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。</p>
+          <div class="sub" id="menu-sub">第一关 · 海上都市　第二关 · 沼泽森林</div>
+          <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。第一关从大楼楼顶打到第 47 街，揍趴 Boss 维斯·T 和他的岩跳龙；第二关开着凯迪拉克进沼泽森林：躲开三角龙的冲撞，别让胖子吵醒睡着的霸王龙，蹚过齐腰深的泥沼，最后对上挥舞双刀的屠夫。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。菜单里可以直接选起始关卡。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 攻击 · <kbd>K</kbd> 跳跃 · <kbd>U</kbd> 必杀 · <kbd>I</kbd> 冲刺（<kbd>L</kbd> 也行）<br><kbd>C</kbd> 切换视角 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
           <p class="help help-touch">左侧摇杆移动 · 右侧四键：下排 <b>J</b> 攻击、<b>K</b> 跳跃，上排 <b>U</b> 必杀、<b>I</b> 冲刺（点后推摇杆保持，回中停止） · 右上角 <b>C</b> 切换视角与暂停 · 按住画面拖动转视角</p>
           <p class="help help-desktop">特殊技：<kbd>S</kbd>→<kbd>W</kbd>→<kbd>J</kbd>（下→上→攻击）</p>
           <p class="help help-touch">特殊技：摇杆下→上→J；第一人称向右拖就是向右转头。</p>
           <p class="help">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击<br>空手贴近敌人自动抓住，J 膝撞，反向＋J 投掷；冲锋枪按住 J 连射。</p>
           <p class="hi">最高分 <span id="hi-val">50000</span></p>
-          <p class="legal">粉丝向非官方重置：3D 模型重新制作，音乐采用原版录音，缺项音效保留合成；《恐龙快打》（Cadillacs and Dinosaurs）原作版权归 Capcom 及原著方所有。</p>
+          <p class="legal">粉丝向非官方重置：3D 模型按赤色要塞同款哑光低模重新制作，音乐采用原版录音，缺项音效保留合成；《恐龙快打》（Cadillacs and Dinosaurs）原作版权归 Capcom 及原著方所有。</p>
         </div>
         <nav class="items" aria-label="主菜单">
           <button data-act="select" class="primary">开始游戏 <kbd>Enter</kbd></button>
+          <button data-opt="stage"></button>
           <button data-opt="lives"></button>
           <button data-opt="dur"></button>
           <button data-opt="demo"></button>
@@ -138,7 +139,7 @@
 
     <div id="result" class="overlay" hidden>
       <div class="panel small">
-        <h2 id="res-title">第一关完成！</h2>
+        <h2 id="res-title">过关！</h2>
         <table id="tally"></table>
         <p id="res-extra"></p>
         <p id="res-like" class="like"></p>
@@ -154,7 +155,7 @@
     <div id="fps" hidden></div>
     <div id="toast" role="status" hidden></div>
   </div>
-  <div id="loading">正在搭建海上都市…</div>
+  <div id="loading">正在搭建海上都市和沼泽森林…</div>
 </div>
 <script>
   window.addEventListener('error', function (e) {
@@ -162,6 +163,6 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
 </script>
-<script src="js/game.min.js?v=toy3dui3"></script>
+<script src="js/game.min.js?v=stage2a"></script>
 </body>
 </html>

@@ -7,8 +7,8 @@ import IN from './input.js';
 import { buildWorld } from './world.js';
 import { createFx } from './fx.js';
 import { createCamera, PRESETS } from './camera.js';
-import { HEROES, ENEMY } from './level.js';
-import { buildHuman, buildRaptor, SPECS, portrait, outline, itemGeo, meshFrom, toonMat } from './models.js';
+import { HEROES, ENEMY, STAGES, AREAS } from './level.js';
+import { buildHuman, buildRaptor, buildTrike, SPECS, portrait, itemGeo, meshFrom, toyMat } from './models.js';
 import { HP, applyPose, mod } from './anim.js';
 import * as GM from './game.js';
 
@@ -30,7 +30,8 @@ const settings = {
   quality: pickOpt('quality', ['auto', 'high', 'low'], 'auto'),
   touch: pickOpt('touch', ['auto', 'show', 'hide'], 'auto'),
   fps: store.get('fps', false) === true,
-  hero: clamp(store.get('hero', 2) | 0, 0, 3)
+  hero: clamp(store.get('hero', 2) | 0, 0, 3),
+  stage: clamp(store.get('stage', 0) | 0, 0, STAGES.length - 1)   // 起始关卡：已实现的两关都能直接选
 };
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');
 let effQuality = settings.quality === 'low' ? 'low' : 'high';
@@ -67,8 +68,10 @@ function makePortraits() {
     const m2 = buildHuman(SPECS[h.id]); applyPose(m2, mod(HP.victory, { head: [-0.05, 0.25, 0] }));
     FULLS[h.id] = portrait(renderer, m2, { size: 256, full: true });
   }
-  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
+  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
   const r = buildRaptor(); r.setPalette('angry'); FACES.raptor = portrait(renderer, r, { size: 96, raptor: true });
+  const tr = buildRaptor('trex'); FACES.shivat = portrait(renderer, tr, { size: 96, raptor: true, k: 2.1 });
+  const tk = buildTrike(); FACES.hack = portrait(renderer, tk, { size: 96, raptor: true, k: 1.6 });
   // 续关画面：维斯用左轮指着玩家
   const v = buildHuman(SPECS.vice); applyPose(v, mod(HP.shoot, { spine: [0.05, 0.2, 0], head: [0.05, -0.15, 0], rS: [-1.5, 0.2, 0], rE: [0, 0, 0] }));
   const gun = meshFrom(itemGeo('gun'), { thin: true }); gun.rotation.set(Math.PI / 2, 0, 0); gun.scale.setScalar(1.3); v.bones.grip.add(gun);
@@ -81,7 +84,6 @@ function applyQuality() {
   const high = effQuality === 'high';
   renderer.shadowMap.enabled = high;
   world.sun.castShadow = high;
-  outline.mats.forEach(m => { m.visible = high; });
   scene.traverse(o => { if (o.isMesh && o.material && !Array.isArray(o.material)) o.material.needsUpdate = true; });
   layout();
 }
@@ -89,6 +91,7 @@ function applyQuality() {
 // ---------- 选项 ----------
 function optLabel(name) {
   switch (name) {
+    case 'stage': { const S = STAGES[settings.stage]; return ['起始关卡', '第' + '一二三四五六七八'[S.no - 1] + '关 · ' + S.name, false]; }
     case 'lives': return ['命数', settings.lives === 'inf' ? '无限命' : '经典 3 命', false];
     case 'dur': return ['耐久', { std: '标准（受伤 ×0.7）', easy: '宽松（受伤 ×0.45）', classic: '经典（原作伤害）' }[settings.dur], false];
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
@@ -116,7 +119,8 @@ function refreshOptions() {
   $('cam-label').textContent = camCtl.preset().name;
 }
 function adjust(name, delta) {
-  if (name === 'lives') { settings.lives = settings.lives === 'inf' ? 'classic' : 'inf'; store.set('lives', settings.lives); }
+  if (name === 'stage') { settings.stage = (settings.stage + (delta < 0 ? STAGES.length - 1 : 1)) % STAGES.length; store.set('stage', settings.stage); }
+  else if (name === 'lives') { settings.lives = settings.lives === 'inf' ? 'classic' : 'inf'; store.set('lives', settings.lives); }
   else if (name === 'dur') { const o = ['std', 'easy', 'classic']; settings.dur = o[(o.indexOf(settings.dur) + (delta < 0 ? 2 : 1)) % 3]; store.set('dur', settings.dur); }
   else if (name === 'demo') {
     settings.demo = !settings.demo;
@@ -251,7 +255,7 @@ let paused = false;
 function startGame() {
   A.unlock(); A.play('start');
   uiMode = 'game'; paused = false;
-  GM.newGame({ lives: settings.lives, dur: settings.dur, demo: settings.demo, hero: settings.hero, area: params.get('area') ? clamp(parseInt(params.get('area'), 10) || 0, 0, 2) : 0 });
+  GM.newGame({ lives: settings.lives, dur: settings.dur, demo: settings.demo, hero: settings.hero, area: params.get('area') ? clamp(parseInt(params.get('area'), 10) || 0, 0, AREAS.length - 1) : STAGES[settings.stage].first });
   camCtl.yawOff = 0; if (G.player) delete G.player.lookHeading;
   show(null);
   last = performance.now(); acc = 0;
@@ -276,14 +280,15 @@ function toTitle() {
   show('menu');
 }
 G.onEnd = (res) => { setTimeout(() => showResult(res), res.win ? 400 : 200); };
-const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['blade', '布雷德 BLADE'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['raptor', '岩跳龙 R.HOPPER'], ['vice', 'Boss 维斯·T VICE T.']];
+const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER']];
+const STAGE_CN = ['', '第一关', '第二关', '第三关'];
 function showResult(res) {
   if (uiMode !== 'game') return;
   A.music(null);
-  $('res-title').textContent = res.win ? '第一关完成！' : 'GAME OVER';
+  $('res-title').textContent = res.win ? (res.cleared.length > 1 ? res.cleared.map(n => STAGE_CN[n]).join('、') + '全部通关！' : STAGE_CN[res.stage] + '完成！') : 'GAME OVER';
   let rows = '';
   for (const [k, name] of KILL_ROWS) { const n = res.kills[k] || 0; if (!n) continue; rows += '<tr><td>' + name + '</td><td>× ' + n + '</td><td>' + n * ENEMY[k].points + '</td></tr>'; }
-  if (res.win) rows += '<tr><td>体力奖励 VITALITY</td><td>' + res.vitality + ' × 100</td><td>' + res.vitality * 100 + '</td></tr>';
+  if (res.vitalityTotal) rows += '<tr><td>体力奖励 VITALITY</td><td>' + res.vitalityTotal + ' × 100</td><td>' + res.vitalityTotal * 100 + '</td></tr>';
   rows += '<tr class="total"><td>总分</td><td></td><td>' + res.score + '</td></tr>';
   $('tally').innerHTML = rows;
   const extra = [];
@@ -293,7 +298,7 @@ function showResult(res) {
   else if (res.newHi) extra.push('新纪录！最高分 ' + res.hi);
   else extra.push('最高分 ' + res.hi);
   $('res-extra').textContent = extra.join(' · ');
-  $('res-like').textContent = res.win ? '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？' : '';
+  $('res-like').textContent = res.win ? (res.stage >= 2 ? '屠夫的砍刀都被你缴了！第三关还在路上——喜欢的话，也给开发者来个一键三连？' : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
   show('result');
 }
 
@@ -423,7 +428,7 @@ function updateHud() {
   const showTimer = ['play', 'cut'].indexOf(h.mode) >= 0;
   H_.timer.hidden = !showTimer;
   if (showTimer) { setText(H_.timer, 'timer', fmtTime(h.timer)); H_.timer.classList.toggle('big', h.timerBig); H_.timer.classList.toggle('warn', h.timer < 20); }
-  if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || h.weapon.kind === 'gun' || h.weapon.kind === 'shotgun' ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
+  if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || ['gun', 'shotgun', 'rifle'].includes(h.weapon.kind) ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
   else H_.weapon.hidden = true;
   H_.go.hidden = !h.go;
   // 对话框
@@ -431,7 +436,7 @@ function updateHud() {
     H_.dialog.hidden = false;
     const who = G.dialog.who, isP = who === 'player';
     const fkey = isP ? hero.id : who;
-    if (cache.dwho !== fkey) { cache.dwho = fkey; H_.dface.src = FACES[fkey] || ''; H_.dname.textContent = isP ? hero.full + ' ' + hero.en : '维斯·特修恩 VICE T.'; }
+    if (cache.dwho !== fkey) { cache.dwho = fkey; H_.dface.src = FACES[fkey] || ''; H_.dname.textContent = isP ? hero.full + ' ' + hero.en : ({ vice: '维斯·特修恩 VICE T.', butcher: '屠夫 BUTCHER' }[who] || who); }
     const n = Math.min(G.dialog.text.length, Math.floor(G.dialog.t * 24) + 1);
     setText(H_.dtext, 'dtext', G.dialog.text.slice(0, n));
   } else H_.dialog.hidden = true;
@@ -509,7 +514,7 @@ function presentFrame(dtReal, draw, instant) {
     const AR = world.area().def;
     const zc = (AR.z0 + AR.z1) / 2 * 0.6 + p.z * 0.25;
     const fitDepth = AR.z1 - ((AR.z0 + AR.z1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
-    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) }, shake: fx.shake * 0.8, instant, fpOff });
+    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {
@@ -543,10 +548,10 @@ refreshOptions();
 fx.warm();
 try { renderer.compile(scene, camCtl.cam); } catch (e) { /* 旧浏览器跳过 */ }
 // 预编译「淡化」用的透明着色器变体（第一人称贴身淡化、墙面渐隐、户外遮挡淡化）：否则第一次触发时现编，卡一帧约 55 ms。
-// 角色材质各自独立但参数相同，共用这里留住的卡通透明程序（warmToon 不释放）
-const warmToon = toonMat();
+// 角色材质各自独立但参数相同，共用这里留住的哑光透明程序（warmToy 不释放）
+const warmToy = toyMat();
 try {
-  const geo = new THREE.BoxGeometry(0.01, 0.01, 0.01), mats = world.fadeMats().concat([warmToon]), tmp = [];
+  const geo = new THREE.BoxGeometry(0.01, 0.01, 0.01), mats = world.fadeMats().concat([warmToy]), tmp = [];
   for (const m of mats) { m.transparent = true; m.needsUpdate = true; const o = new THREE.Mesh(geo, m); scene.add(o); tmp.push(o); }
   renderer.compile(scene, camCtl.cam);
   for (const o of tmp) scene.remove(o);

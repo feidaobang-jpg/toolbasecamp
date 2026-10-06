@@ -1,0 +1,93 @@
+{
+ "note": "Edge 设备模拟 844×390 DPR2 + CPU 降速 4 倍（RTX 4060 Ti 仍负责 GPU），不代表真机",
+ "runs": [
+  {
+   "date": "2026-10-06T08:47:51.739Z",
+   "area": "forest",
+   "note": "Edge 设备模拟 844×390 DPR2 + CPU 降速 4 倍（RTX 4060 Ti 仍负责 GPU），不代表真机",
+   "quality": {
+    "setting": "auto",
+    "effective": "high",
+    "auto": {
+     "median": 5.9,
+     "quality": "high"
+    }
+   },
+   "fps": 136.9,
+   "median": 5.9,
+   "p95": 11.8,
+   "over50": 0,
+   "n": 1370,
+   "backing": [
+    1688,
+    780
+   ]
+  },
+  {
+   "date": "2026-10-06T08:48:15.128Z",
+   "area": "swamp",
+   "note": "Edge 设备模拟 844×390 DPR2 + CPU 降速 4 倍（RTX 4060 Ti 仍负责 GPU），不代表真机",
+   "quality": {
+    "setting": "auto",
+    "effective": "high",
+    "auto": {
+     "median": 5.9,
+     "quality": "high"
+    }
+   },
+   "fps": 117.8,
+   "median": 6,
+   "p95": 11.9,
+   "over50": 0,
+   "n": 1178,
+   "backing": [
+    1688,
+    780
+   ]
+  },
+  {
+   "date": "2026-10-06T08:48:38.756Z",
+   "area": "grave",
+   "note": "Edge 设备模拟 844×390 DPR2 + CPU 降速 4 倍（RTX 4060 Ti 仍负责 GPU），不代表真机",
+   "quality": {
+    "setting": "auto",
+    "effective": "high",
+    "auto": {
+     "median": 5.9,
+     "quality": "high"
+    }
+   },
+   "fps": 149,
+   "median": 5.9,
+   "p95": 11.8,
+   "over50": 0,
+   "n": 1492,
+   "backing": [
+    1688,
+    780
+   ]
+  },
+  {
+   "date": "2026-10-06T08:49:02.382Z",
+   "area": "roof",
+   "note": "Edge 设备模拟 844×390 DPR2 + CPU 降速 4 倍（RTX 4060 Ti 仍负责 GPU），不代表真机",
+   "quality": {
+    "setting": "auto",
+    "effective": "high",
+    "auto": {
+     "median": 5.9,
+     "quality": "high"
+    }
+   },
+   "fps": 141.9,
+   "median": 5.9,
+   "p95": 11.8,
+   "over50": 0,
+   "n": 1422,
+   "backing": [
+    1688,
+    780
+   ]
+  }
+ ]
+}

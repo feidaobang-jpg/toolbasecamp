@@ -1,5 +1,5 @@
 import {SampleAudio} from "../../../public/js/game/sample-audio.js";
-// 音频：优先原作楼顶/内部/街道/Boss 音乐，未加载或不可用时合成回退。
+// 音频：优先原作各区域与 Boss 音乐（第一、二关），未加载或不可用时合成回退。
 // 点击 / 按键后解锁；所有暂停冻结音频时钟。
 let ctx = null, master = null, musicBus = null, sfxBus = null, comp = null, capDest = null, noiseBuf = null, distCurve = null;
 let samples=null;
@@ -20,7 +20,8 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3", "roof":"roof.mp3", "hall": "hall.mp3", "street": "street.mp3", "boss": "boss.mp3", "select": "select.mp3"});
+  // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3", "roof":"roof.mp3", "hall": "hall.mp3", "street": "street.mp3", "boss": "boss.mp3", "select": "select.mp3", "forest": "forest.mp3", "swamp": "swamp.mp3", "grave": "hall.mp3", "boss2": "boss2.mp3"});
   return ctx;
 }
 const now = () => ctx.currentTime;
@@ -117,7 +118,29 @@ const SFX = {
   oneup(t, v) { [784, 988, 1175, 1568].forEach((f, i) => osc('square', f, t + i * 0.08, 0.12, 0.16 * v)); },
   knifeThrow(t, v) { noise(t, 0.18, 0.3 * v, 'bandpass', 2400, 3, null, { to: 1200 }); },
   door(t, v) { SFX.wood(t, v); noise(t, 0.4, 0.5 * v, 'lowpass', 500, 1); },
-  fuse(t, v) { noise(t, 0.5, 0.12 * v, 'highpass', 4000, 1); }
+  fuse(t, v) { noise(t, 0.5, 0.12 * v, 'highpass', 4000, 1); },
+  // 第二关（合成）
+  rifle(t, v) { noise(t, 0.3, 1.1 * v, 'lowpass', 5200, 0.7, null, { to: 300 }); osc('square', 260, t, 0.05, 0.4 * v, null, { to: 70 }); noise(t + 0.02, 0.5, 0.18 * v, 'bandpass', 900, 1); },
+  splash(t, v) { noise(t, 0.35, 0.6 * v, 'bandpass', 1200, 0.8, null, { to: 400 }); noise(t + 0.05, 0.25, 0.25 * v, 'highpass', 3000, 1); },
+  engine(t, v) { const o = osc('sawtooth', 48, t, 2.0, 0.22 * v, null, { to: 70, slide: 1.4 }); noise(t, 2.0, 0.14 * v, 'lowpass', 300, 1); },
+  brake(t, v) { osc('triangle', 1700, t, 0.4, 0.06 * v, null, { to: 1300 }); noise(t, 0.4, 0.2 * v, 'bandpass', 2200, 3); },
+  snort(t, v) { noise(t, 0.25, 0.5 * v, 'bandpass', 500, 1.5, null, { to: 250 }); },
+  roarBig(t, v) {   // 霸王龙：更低更长的吼声
+    const o = ctx.createOscillator(), g = ctx.createGain(), f1 = ctx.createBiquadFilter(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(140, t); o.frequency.linearRampToValueAtTime(190, t + 0.3); o.frequency.exponentialRampToValueAtTime(60, t + 1.4);
+    lfo.frequency.value = 22; lg.gain.value = 30; lfo.connect(lg); lg.connect(o.frequency);
+    f1.type = 'lowpass'; f1.frequency.value = 900; f1.Q.value = 2;
+    env(g, t, 0.05, 0.55 * v, 1.3, 0.3, 0.2, 1.2);
+    o.connect(f1); f1.connect(g); g.connect(sfxBus); o.start(t); lfo.start(t); o.stop(t + 1.6); lfo.stop(t + 1.6);
+    noise(t, 1.2, 0.3 * v, 'lowpass', 700, 1);
+  },
+  roarMan(t, v) {   // 屠夫的怒吼
+    const o = ctx.createOscillator(), g = ctx.createGain(), f1 = ctx.createBiquadFilter();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(150, t); o.frequency.linearRampToValueAtTime(190, t + 0.25); o.frequency.exponentialRampToValueAtTime(95, t + 0.9);
+    f1.type = 'bandpass'; f1.frequency.value = 700; f1.Q.value = 2.5;
+    env(g, t, 0.03, 0.5 * v, 0.9, 0.3, 0.15, 0.8);
+    o.connect(f1); f1.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + 1.1);
+  }
 };
 
 // ---------- 背景音乐：简单的步进音序 ----------
@@ -253,9 +276,9 @@ const A = {
     samples?.music(name, name!=="clear");
     if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
     seq.gain = null; seq.song = null;
-    if (!name || !(SONGS[name] || ["roof","hall","street"].includes(name))) return;
+    if (!name || !(SONGS[name] || ["roof","hall","street","forest","swamp","grave","boss2"].includes(name))) return;
     seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
-    seq.song = SONGS[name] || SONGS.stage; seq.step = 0; seq.next = now() + 0.08;
+    seq.song = SONGS[name] || (name === 'boss2' ? SONGS.boss : SONGS.stage); seq.step = 0; seq.next = now() + 0.08;
     if (!seq.timer) seq.timer = setInterval(schedule, 25);
   },
   musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
