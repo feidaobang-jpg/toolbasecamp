@@ -1,0 +1,318 @@
+[
+ {
+  "name": "gun朝右：火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "gun",
+   "dist": 0,
+   "behindFront": 0.006,
+   "ends": 1
+  }
+ },
+ {
+  "name": "gun朝右：开枪后有子弹飞出去",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "gun朝右：扣扳机那一帧还没掉血（子弹在飞）",
+  "pass": true,
+  "info": [
+   9999,
+   9999
+  ]
+ },
+ {
+  "name": "gun朝右：子弹飞到后掉血",
+  "pass": true,
+  "info": [
+   9999,
+   9980.12
+  ]
+ },
+ {
+  "name": "gun朝右：子弹拖光消失",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "smg朝右：火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "smg",
+   "dist": 0,
+   "behindFront": 0.005,
+   "ends": 1
+  }
+ },
+ {
+  "name": "smg朝右：开枪后有子弹飞出去",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "smg朝右：扣扳机那一帧还没掉血（子弹在飞）",
+  "pass": true,
+  "info": [
+   9999,
+   9999
+  ]
+ },
+ {
+  "name": "smg朝右：子弹飞到后掉血",
+  "pass": true,
+  "info": [
+   9999,
+   9990.74
+  ]
+ },
+ {
+  "name": "smg朝右：子弹拖光消失",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "shotgun朝右：火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "shotgun",
+   "dist": 0,
+   "behindFront": 0.036,
+   "ends": 5
+  }
+ },
+ {
+  "name": "shotgun朝右：开枪后有子弹飞出去",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "shotgun朝右：扣扳机那一帧还没掉血（子弹在飞）",
+  "pass": true,
+  "info": [
+   9999,
+   9999
+  ]
+ },
+ {
+  "name": "shotgun朝右：子弹飞到后掉血",
+  "pass": true,
+  "info": [
+   9999,
+   9971.491250000001
+  ]
+ },
+ {
+  "name": "shotgun朝右：子弹拖光消失",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "rifle朝右：火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "rifle",
+   "dist": 0,
+   "behindFront": 0.041,
+   "ends": 1
+  }
+ },
+ {
+  "name": "rifle朝右：开枪后有子弹飞出去",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "rifle朝右：扣扳机那一帧还没掉血（子弹在飞）",
+  "pass": true,
+  "info": [
+   9999,
+   9999
+  ]
+ },
+ {
+  "name": "rifle朝右：子弹飞到后掉血",
+  "pass": true,
+  "info": [
+   9999,
+   9970.68
+  ]
+ },
+ {
+  "name": "rifle朝右：子弹拖光消失",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "gun朝左：火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "gun",
+   "dist": 0,
+   "behindFront": 0.006,
+   "ends": 1
+  }
+ },
+ {
+  "name": "gun朝左：开枪后有子弹飞出去",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "gun朝左：扣扳机那一帧还没掉血（子弹在飞）",
+  "pass": true,
+  "info": [
+   9999,
+   9999
+  ]
+ },
+ {
+  "name": "gun朝左：子弹飞到后掉血",
+  "pass": true,
+  "info": [
+   9999,
+   9980.12
+  ]
+ },
+ {
+  "name": "gun朝左：子弹拖光消失",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "rifle朝左：火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "rifle",
+   "dist": 0,
+   "behindFront": 0.041,
+   "ends": 1
+  }
+ },
+ {
+  "name": "rifle朝左：开枪后有子弹飞出去",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "rifle朝左：扣扳机那一帧还没掉血（子弹在飞）",
+  "pass": true,
+  "info": [
+   9999,
+   9999
+  ]
+ },
+ {
+  "name": "rifle朝左：子弹飞到后掉血",
+  "pass": true,
+  "info": [
+   9999,
+   9970.68
+  ]
+ },
+ {
+  "name": "rifle朝左：子弹拖光消失",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "火箭筒：火花在炮管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 5,
+   "kind": "bazooka",
+   "dist": 0,
+   "behindFront": 0.061,
+   "ends": 0
+  }
+ },
+ {
+  "name": "poacher：开枪火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 19,
+   "kind": "rifle",
+   "dist": 0,
+   "behindFront": 0.043,
+   "ends": 1
+  }
+ },
+ {
+  "name": "poacher：子弹飞向主角",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "poacher：开枪那一刻主角还没掉血",
+  "pass": true,
+  "info": [
+   100,
+   100
+  ]
+ },
+ {
+  "name": "poacher：子弹飞到后主角掉血",
+  "pass": true,
+  "info": [
+   100,
+   92.3
+  ]
+ },
+ {
+  "name": "vice：开枪火花在枪管前端",
+  "pass": true,
+  "info": {
+   "ok": true,
+   "id": 20,
+   "kind": "gun",
+   "dist": 0,
+   "behindFront": 0.006,
+   "ends": 1
+  }
+ },
+ {
+  "name": "vice：子弹飞向主角",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "vice：开枪那一刻主角还没掉血",
+  "pass": true,
+  "info": [
+   100,
+   100
+  ]
+ },
+ {
+  "name": "vice：子弹飞到后主角掉血",
+  "pass": true,
+  "info": [
+   100,
+   88.8
+  ]
+ },
+ {
+  "name": "维斯开枪时手里有左轮",
+  "pass": true,
+  "info": null
+ },
+ {
+  "name": "无运行异常",
+  "pass": true,
+  "info": []
+ }
+]

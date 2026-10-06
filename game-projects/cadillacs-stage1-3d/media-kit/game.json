@@ -71,8 +71,8 @@
    "summary": "开枪有子弹拖光飞出去、子弹飞到才命中；火花从枪管前端发出；维斯手里有左轮。",
    "record": "releases/v0.5.5/handoff.json",
    "channels": {
-    "website": "pending",
-    "toy": "pending",
+    "website": "deployed_verified",
+    "toy": "published",
     "bilibili": "pending_merge"
    }
   }
@@ -84,19 +84,19 @@
   "category": "GAME",
   "visibility": "public",
   "status": "published",
-  "submitted_at": "2026-10-06T23:37:21+08:00",
-  "package": "dist/toy-v0.5.4/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_kZmnSbz3/index.html",
-  "note": "v0.5.4（暂停重开有声音、第二关下半屏能走）已过审；标题已改为「恐龙快打 3D：第一、二关」。",
-  "status_verified": "toy mylist published；正式入口 iframe 40412421031936-v23141 显示 v0.5.4，toy-preview-check 通过，Toy 外壳里暂停重开有声音",
+  "submitted_at": "2026-10-07T01:41:33+08:00",
+  "package": "dist/toy-v0.5.5/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_W1LO12Oh/index.html",
+  "note": "v0.5.5（开枪有子弹拖光、火花在枪口）已过审。",
+  "status_verified": "toy mylist published；正式入口 iframe 40412421031936-v23181 显示 v0.5.5",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.5.4",
-  "verified_at": "2026-10-06T23:42:12+08:00",
+  "version": "v0.5.5",
+  "verified_at": "2026-10-07T01:47:48+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.5.4",
+  "last_published_version": "v0.5.5",
   "pending_updates": [
    {
     "version": "v0.2.1",
