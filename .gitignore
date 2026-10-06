@@ -91,3 +91,9 @@ game-projects/*/video/**/*.wav
 game-projects/*/video/**/*.mp3
 game-projects/*/video/**/*.m4a
 game-projects/*/video/**/*.flac
+
+# Video production scratch files, copied game builds and generated frame lists.
+# Keep scripts, subtitles, manifests and release/verification records tracked.
+game-projects/*/video/**/work/tmp/
+game-projects/*/video/**/work/build-current/
+game-projects/*/video/**/*.ffconcat
