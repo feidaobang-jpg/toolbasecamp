@@ -120,7 +120,7 @@
  },
  "toy": {
   "id": 39863936092160,
-  "status": "auditing",
+  "status": "published",
   "package": "dist/toy-v0.7.9/package",
   "package_tree_sha256": "fe99ac10164c4faac117242fea3aaf034819a0694ac65f2539e687dce3c6288d",
   "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
@@ -129,7 +129,9 @@
   "submitted_at": "2026-10-07T05:29:17+08:00",
   "preview_checks": "Toy 预览外壳 18/18（电脑 1280×720；手机横屏外壳内 844×346 主菜单/暂停完整、摇杆开车、全屏按钮与 iframe 能力一致（allowfullscreen）；窄横屏 568×276 滑动首尾可达；竖屏旋转暂停完整；无脚本错误），见 qa/toy-preview.json",
   "doctor": "toy_doctor.py 0 warning",
-  "earlier_preview": "preview_vZGwZogp（首版包，外壳内主菜单需滚动 37px，未提交）"
+  "earlier_preview": "preview_vZGwZogp（首版包，外壳内主菜单需滚动 37px，未提交）",
+  "verified_at": "2026-10-07T05:31:42+08:00",
+  "public_check": "toy mylist published；正式入口 feidao-jackal-3d iframe 载入 v0.7.9，公开入口实测 18/18（qa/toy-public.json）"
  },
  "bilibili": {
   "status": "pending_merge",

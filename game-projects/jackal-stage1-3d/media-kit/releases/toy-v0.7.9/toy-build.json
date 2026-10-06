@@ -19,9 +19,10 @@
     "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
     "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
   },
-  "status": "submitted_auditing",
+  "status": "published",
   "package_tree_sha256": "fe99ac10164c4faac117242fea3aaf034819a0694ac65f2539e687dce3c6288d",
   "submitted_at": "2026-10-07T05:29:17+08:00",
   "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_we71Mp1Y/index.html",
-  "toy_id": 39863936092160
+  "toy_id": 39863936092160,
+  "published_verified_at": "2026-10-07T05:31:42+08:00"
 }
