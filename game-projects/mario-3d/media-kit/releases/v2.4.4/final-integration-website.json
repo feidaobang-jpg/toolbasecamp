@@ -1,0 +1,40 @@
+{
+  "commit": "a7e3bd42e53b3de26e673993635db6cba830b532",
+  "verified_at": "2026-10-06T22:37:03.895437+00:00",
+  "initial_fix_actions": "37538465428 success",
+  "method": "JS byte equality after CRLF normalization; HTML equality except CI cache-bust query values",
+  "checks": [
+    {
+      "file": "html/game/mario-3d/main.js",
+      "match": true
+    },
+    {
+      "file": "html/game/mario-3d/world.js",
+      "match": true
+    },
+    {
+      "file": "html/game/mario-3d/scene.js",
+      "match": true
+    },
+    {
+      "file": "html/game/mario-3d/textures.js",
+      "match": true
+    },
+    {
+      "file": "html/game/mario-3d/index.html",
+      "match": true
+    },
+    {
+      "file": "html/game/journey-west-3d/main.js",
+      "match": true
+    },
+    {
+      "file": "html/game/journey-west-3d/index.html",
+      "match": true
+    }
+  ],
+  "website_version": "v2.4.5",
+  "merged_mainline_commit": "9e4b9b723f7c02d4d299b5ce16dfc84c1e5c97b3",
+  "regressions": "final-integration-qa.json",
+  "note": "最新主线由另一任务增加全屏能力检测并顺延v2.4.5；本次水管、J和过关修复保留，Toy已公开v2.4.4，全屏补丁保留其原任务待同步记录。"
+}

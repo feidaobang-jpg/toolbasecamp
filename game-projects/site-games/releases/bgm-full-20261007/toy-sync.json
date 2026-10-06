@@ -1,0 +1,314 @@
+[
+  {
+    "game": "jackal-stage1-3d",
+    "version": "v0.8.0-bgmfull1",
+    "id": 39863936092160,
+    "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "package": "C:\\Users\\37818\\.codex\\worktrees\\game-bgm-20261007\\toolbasecamp\\game-projects\\jackal-stage1-3d\\dist\\toy-v0.8.0-bgmfull1\\package",
+    "package_sha256": "3bfb4e5539d91b7a5657ffe85dc334d250844c96b79fc44a3375803c0cfb1670",
+    "files": {
+      "css/style.css": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab",
+      "index.html": "ee715947cfd8757c34e7d6bb999fe4ed04e65ef628cebcd73ec65969f2e089b5",
+      "js/game.min.js": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751",
+      "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+      "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+      "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+      "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+    },
+    "preview_requested_at": "2026-10-07T06:51:00.318216+08:00",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_ByEgdybR/index.html"
+    },
+    "preview_verified": {
+      "checks": 10,
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "physical_phone": false,
+      "audio_full_duration": true,
+      "same_package": true
+    },
+    "submission_requested_at": "2026-10-07T06:54:30.495280+08:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_vgTOSfTz/index.html"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\game-bgm-20261007\\packages\\jackal-stage1-3d",
+    "platform_status": "published",
+    "platform_checked_at": "2026-10-06T22:57:55.025Z",
+    "public_verification": {
+      "iframe": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v23216/index.html",
+      "at": "2026-10-06T22:58:11.778Z",
+      "checks": [
+        {
+          "file": "js/game.min.js",
+          "ok": true,
+          "expected": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751",
+          "actual": "672be424e3e6d56b275a7e8660d7a4bc1179824bfa5da9d564be843045694751",
+          "bytes": 656373
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "ok": true,
+          "expected": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+          "actual": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+          "bytes": 2161407
+        },
+        {
+          "file": "sounds/stage.mp3",
+          "ok": true,
+          "expected": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+          "actual": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+          "bytes": 2161407
+        },
+        {
+          "file": "sounds/stage3.mp3",
+          "ok": true,
+          "expected": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949",
+          "actual": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949",
+          "bytes": 2161407
+        }
+      ],
+      "ok": true
+    }
+  },
+  {
+    "game": "mario-3d",
+    "version": "v2.4.5-bgmfull1",
+    "id": 39043286960128,
+    "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+    "package": "C:\\Users\\37818\\.codex\\worktrees\\game-bgm-20261007\\toolbasecamp\\game-projects\\mario-3d\\dist\\toy-v2.4.5-bgmfull1\\package",
+    "package_sha256": "07c32cb62fd99ab084aec2458df271920e87d4cff733fb2d08a6faa67e36f832",
+    "files": {
+      "audio.js": "6a173972fd34374a65cb3b808c1e808662ccafa01321a9f588a19189e6ae41d7",
+      "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
+      "index.html": "bd6831bd4af1278afb7ad3fe595926f218864cb24afcb18202b7701e6884aa83",
+      "levels.js": "f4663d71f8d2a50e9cf472a13a1818b00f896a42485032348c9dd9f3bc4475d6",
+      "main.js": "6fc74b0e4308b39c1217b4f33faf0121a855f8adb6d90491527947c5e0a332b7",
+      "models.js": "51ecb72bd39f9e52ff7df6f97b05662402c82cdabf07d684c166172d0792f46b",
+      "sample-audio.js": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+      "scene.js": "a224a07cacc07bc7a9db85340531449a85267ea0b526ac1e62105ebf50011004",
+      "sounds/overworld.mp3": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+      "sounds/smb_1-up.wav": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+      "sounds/smb_bowserfalls.wav": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+      "sounds/smb_bowserfire.wav": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+      "sounds/smb_breakblock.wav": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+      "sounds/smb_bump.wav": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+      "sounds/smb_coin.wav": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+      "sounds/smb_fireball.wav": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+      "sounds/smb_fireworks.wav": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+      "sounds/smb_flagpole.wav": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+      "sounds/smb_gameover.wav": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+      "sounds/smb_jump-small.wav": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+      "sounds/smb_jump-super.wav": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+      "sounds/smb_kick.wav": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+      "sounds/smb_mariodie.wav": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+      "sounds/smb_pause.wav": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+      "sounds/smb_pipe.wav": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+      "sounds/smb_powerup.wav": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+      "sounds/smb_powerup_appears.wav": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+      "sounds/smb_stage_clear.wav": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+      "sounds/smb_stomp.wav": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+      "sounds/smb_vine.wav": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+      "sounds/smb_warning.wav": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+      "sounds/smb_world_clear.wav": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+      "sounds/star.mp3": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+      "sounds/underground.mp3": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+      "style.css": "75bef51a54e22157eb8eca3788f745ce7682eec8651597970e12a2c49b57e793",
+      "textures.js": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "three.js": "59cc1d99fbfda58eafe899234f06492d75ef1b33aacd3075f534800918dcce68",
+      "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+      "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+      "world.js": "6e63ea3dd18c2d697d6bb0812eb8a3a7c9dfe2e7cdce4a0136b8782b2ac8a320"
+    },
+    "preview_requested_at": "2026-10-07T06:51:05.290843+08:00",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_i0NCvoYZ/index.html"
+    },
+    "preview_verified": {
+      "checks": 10,
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "physical_phone": false,
+      "audio_full_duration": true,
+      "same_package": true
+    },
+    "submission_requested_at": "2026-10-07T06:54:37.325869+08:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_XlZtDh0H/index.html"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\game-bgm-20261007\\packages\\mario-3d",
+    "platform_status": "published",
+    "platform_checked_at": "2026-10-06T22:58:11.839Z",
+    "public_verification": {
+      "iframe": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23217/index.html",
+      "at": "2026-10-06T22:58:20.529Z",
+      "checks": [
+        {
+          "file": "audio.js",
+          "ok": true,
+          "expected": "6a173972fd34374a65cb3b808c1e808662ccafa01321a9f588a19189e6ae41d7",
+          "actual": "6a173972fd34374a65cb3b808c1e808662ccafa01321a9f588a19189e6ae41d7",
+          "bytes": 11207
+        },
+        {
+          "file": "main.js",
+          "ok": true,
+          "expected": "6fc74b0e4308b39c1217b4f33faf0121a855f8adb6d90491527947c5e0a332b7",
+          "actual": "6fc74b0e4308b39c1217b4f33faf0121a855f8adb6d90491527947c5e0a332b7",
+          "bytes": 39458
+        },
+        {
+          "file": "sample-audio.js",
+          "ok": true,
+          "expected": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+          "actual": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+          "bytes": 1939
+        },
+        {
+          "file": "sounds/overworld.mp3",
+          "ok": true,
+          "expected": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+          "actual": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+          "bytes": 2161416
+        },
+        {
+          "file": "sounds/star.mp3",
+          "ok": true,
+          "expected": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+          "actual": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+          "bytes": 2161416
+        },
+        {
+          "file": "sounds/underground.mp3",
+          "ok": true,
+          "expected": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+          "actual": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+          "bytes": 2161416
+        }
+      ],
+      "ok": true
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "version": "v0.5.6-bgmfull1",
+    "id": 40412421031936,
+    "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "package": "C:\\Users\\37818\\.codex\\worktrees\\game-bgm-20261007\\toolbasecamp\\game-projects\\cadillacs-stage1-3d\\dist\\toy-v0.5.6-bgmfull1\\package",
+    "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
+    "files": {
+      "css/style.css": "03de507a52943d0d719e253da67f3fa102131497cd9a5cdfe7c2ff958e33eedf",
+      "index.html": "32766ccfbf8cc87bc3fff2c9bc6681ececdd7a45d7e1a47d1c05b24959c7d220",
+      "js/game.min.js": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee",
+      "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+      "sounds/boss.mp3": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+      "sounds/boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+      "sounds/forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+      "sounds/hall.mp3": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+      "sounds/roof.mp3": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+      "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+      "sounds/street.mp3": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+      "sounds/swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93"
+    },
+    "preview_requested_at": "2026-10-07T06:51:12.657625+08:00",
+    "preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_ZdQQ5x9D/index.html"
+    },
+    "preview_verified": {
+      "checks": 10,
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "physical_phone": false,
+      "audio_full_duration": true,
+      "same_package": true
+    },
+    "submission_requested_at": "2026-10-07T06:54:47.946386+08:00",
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_icldmorp/index.html"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\game-bgm-20261007\\packages\\cadillacs-stage1-3d",
+    "platform_status": "published",
+    "platform_checked_at": "2026-10-06T22:58:20.576Z",
+    "public_verification": {
+      "iframe": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v23218/index.html",
+      "at": "2026-10-06T22:58:30.502Z",
+      "checks": [
+        {
+          "file": "js/game.min.js",
+          "ok": true,
+          "expected": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee",
+          "actual": "1ab56a96d280238d57d578888d0d2b8728bcad967467edaf3878c14bcefb3cee",
+          "bytes": 773522
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "ok": true,
+          "expected": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+          "actual": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+          "bytes": 1069408
+        },
+        {
+          "file": "sounds/boss2.mp3",
+          "ok": true,
+          "expected": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+          "actual": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+          "bytes": 1245667
+        },
+        {
+          "file": "sounds/forest.mp3",
+          "ok": true,
+          "expected": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+          "actual": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+          "bytes": 2393509
+        },
+        {
+          "file": "sounds/hall.mp3",
+          "ok": true,
+          "expected": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+          "actual": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+          "bytes": 1423234
+        },
+        {
+          "file": "sounds/roof.mp3",
+          "ok": true,
+          "expected": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+          "actual": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+          "bytes": 4078318
+        },
+        {
+          "file": "sounds/select.mp3",
+          "ok": true,
+          "expected": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+          "actual": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+          "bytes": 254650
+        },
+        {
+          "file": "sounds/street.mp3",
+          "ok": true,
+          "expected": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+          "actual": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+          "bytes": 1383045
+        },
+        {
+          "file": "sounds/swamp.mp3",
+          "ok": true,
+          "expected": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
+          "actual": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
+          "bytes": 994251
+        }
+      ],
+      "ok": true
+    }
+  }
+]

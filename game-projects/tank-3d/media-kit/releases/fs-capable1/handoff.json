@@ -64,7 +64,7 @@
   },
   "toy": {
    "id": 39043249461248,
-   "status": "auditing",
+   "status": "published",
    "package_hash": "86ca30f3d7167e78df59ddade957e7949dde13af09e29cc9b24138b57660e4cf",
    "preview_url": "https://www.bilibili.com/toy/preview/preview_uRq0Uxsb/index.html",
    "preview_qa": {
@@ -74,7 +74,9 @@
    "preview_qa_note": "首轮 browser-check 功能 18 项全过，但收尾的「无控制台错误」断言收到 2 条 Toy 环境的 COLS: response timeout（游戏代码与包内无 COLS）；重跑无错误通过。fullscreen 首轮桌面菜单导航因脚本 location.reload 竞态失败，改为 goto 等待 load 后 62/62",
    "submitted_at": "2026-10-07T06:58:45+08:00",
    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AqVurCJH/index.html",
-   "public_before": "camera-fullmap1（公开 iframe 39043249461248-v23149 的 main.js 核验）"
+   "public_before": "camera-fullmap1（公开 iframe 39043249461248-v23149 的 main.js 核验）",
+   "published_verified_at": "2026-10-07T07:07:08+08:00",
+   "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23219/index.html"
   },
   "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
  }
