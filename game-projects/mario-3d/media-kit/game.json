@@ -21,27 +21,31 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
-    "verified_at": "2026-10-04T12:11:54.416Z",
-    "video_bindings": [],
-    "submitted_version": "v2.2.0",
-    "submitted_at": "2026-10-04T19:57:49.860312+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Ccb9vl6y/index.html",
-    "release_record": "releases/v2.2.0/camera-mobile-toy.json",
+    "review_status": "auditing",
+    "verified_at": "2026-10-06T08:00:16.643786+08:00",
+    "video_bindings": [
+      "BV1guep6NELt"
+    ],
+    "submitted_version": "v2.3.0",
+    "submitted_at": "2026-10-06T07:57:40.783185+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DewCx8zQ/index.html",
+    "release_record": "releases/unified3d-20261006/handoff.json",
     "published_version": "v2.2.0",
     "published_entry": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v22207/index.html",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_JChtYxAw/index.html",
-    "note": "本次五视角与手机控件更新已发布；保留原ID、slug、可见性和视频绑定。",
+    "note": "已用桌面和手机视口实测同一包并提交审核；审核中不代表新版已上线。",
     "pending_updates": [
       {
         "version": "v2.2.2",
         "classification": "普通补丁",
         "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-        "status": "pending_merge",
+        "status": "included_in_submitted_package",
         "record": "releases/drag-direction-20261005/handoff.json",
-        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+        "included_version": "v2.3.0"
       }
-    ]
+    ],
+    "package_sha256": "27ac4cc4d39e8b3fb151753dca44a511034fb9e8b7993a6de3e645c2360aa7fd"
   },
   "notes": "粉丝向非官方重制：保留原作关卡布局，采用赤色要塞式自然配色、哑光低模；BGM和常用音效采用原版录音，缺项或加载失败保留合成回退。",
   "drag_camera_controls": {

@@ -1,0 +1,55 @@
+{
+  "account_uid": 16214353,
+  "plans": [
+    {
+      "game": "cadillacs-stage1-3d",
+      "bvid": "BV18XHW66E55",
+      "old": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\n\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n\n更新（2026-10-05·v0.2.0）：第一人称同向转头，手机冲刺松I可接J；新增冲锋枪、火箭筒和复活火箭雨，完善走廊。视频为录制时版本，以当前试玩为准。\n\nClaude Opus 5.5辅助开发，音乐与音效为重新编写及合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+      "new": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n更新（2026-10-06·v0.3.0）：接入原版街机音乐；所有视角拖动/QE联动人物转身，第一人称缓慢转头；动作键等大对齐，操作模式显示选中状态，所有暂停同时停音乐。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5辅助开发，本轮由Codex辅助更新，音乐采用原版录音，缺少可用原版素材的音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "bvid": "BV1EyHz6wE5u",
+      "old": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。《赤色要塞》3D双关卡：海滩登陆与废墟城，本期展示第二关翻车后重新整备并完成救援。\n\n本期Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。支持手机触屏。\n\n已加入第一人称驾驶视角，原有五种视角仍可切换。视频为录制时版本，玩法与操作以当前试玩为准。\n\nClaude辅助开发的粉丝向非官方重置。",
+      "new": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。《赤色要塞》3D双关卡：海滩登陆与废墟城，本期展示第二关翻车后重新整备并完成救援。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。支持手机触屏。\n更新（2026-10-06·v0.6.0）：接入原版音乐；所有视角拖动/QE联动车头，驾驶舱缓慢转向；J/K等大对齐、C在暂停旁，操作模式显示选中状态，暂停同时停音乐。视频为录制时版本，以当前试玩为准。\nClaude辅助开发的粉丝向非官方重置。"
+    },
+    {
+      "game": "mario-3d",
+      "bvid": "BV1guep6NELt",
+      "old": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n本视频为早期开发演示；当前试玩为3D平台跳跃实验，包含1-1与1-2，玩法与操作以试玩页面为准。",
+      "new": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-06·v2.3.0）：当前3D试玩包含1-1与1-2，改为自然配色哑光低模，接入原版音乐和常用音效；拖动/QE带动人物转身，U下蹲（L兼容），动作键等大对齐，操作模式显示选中状态，暂停同时停音乐。本视频为早期开发演示，以当前试玩为准。"
+    }
+  ],
+  "results": [
+    {
+      "game": "mario-3d",
+      "bvid": "BV1guep6NELt",
+      "version": "v2.3.0",
+      "status": "public_verified",
+      "submitted_at": "2026-10-05T23:51:49.712Z",
+      "public_text": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-06·v2.3.0）：当前3D试玩包含1-1与1-2，改为自然配色哑光低模，接入原版音乐和常用音效；拖动/QE带动人物转身，U下蹲（L兼容），动作键等大对齐，操作模式显示选中状态，暂停同时停音乐。本视频为早期开发演示，以当前试玩为准。",
+      "title": "一句话让 GPT-6 astra 做超级玛丽，这次终于能正常玩了！",
+      "verified_at": "2026-10-05T23:58:29.234Z"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "bvid": "BV1EyHz6wE5u",
+      "version": "v0.6.0",
+      "status": "public_verified",
+      "submitted_at": "2026-10-05T23:52:46.749Z",
+      "public_text": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。《赤色要塞》3D双关卡：海滩登陆与废墟城，本期展示第二关翻车后重新整备并完成救援。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n方向键/WASD移动，J机枪，K手雷或火箭，C切换视角；默认3格护甲、无限命，机枪跟随车头。支持手机触屏。\n更新（2026-10-06·v0.6.0）：接入原版音乐；所有视角拖动/QE联动车头，驾驶舱缓慢转向；J/K等大对齐、C在暂停旁，操作模式显示选中状态，暂停同时停音乐。视频为录制时版本，以当前试玩为准。\nClaude辅助开发的粉丝向非官方重置。",
+      "title": "小吉普，大救援！赤色要塞3D双关卡已上线，直接开玩",
+      "verified_at": "2026-10-05T23:58:29.215Z"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "bvid": "BV18XHW66E55",
+      "version": "v0.3.0",
+      "status": "public_verified",
+      "submitted_at": "2026-10-05T23:56:22.847Z",
+      "public_text": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n更新（2026-10-06·v0.3.0）：接入原版街机音乐；所有视角拖动/QE联动人物转身，第一人称缓慢转头；动作键等大对齐，操作模式显示选中状态，所有暂停同时停音乐。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5辅助开发，本轮由Codex辅助更新，音乐采用原版录音，缺少可用原版素材的音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+      "title": "恐龙快打第一关3D重置：按C钻进主角眼睛里打",
+      "verified_at": "2026-10-05T23:58:29.195Z"
+    }
+  ]
+}

@@ -6,10 +6,14 @@
   "summary": "统一角色视线转向、慢速第一人称、动作键布局、选中状态及全部暂停音频；玛丽另换自然哑光低模画风；三款复刻接入原版音乐。",
   "qa_record": "../../../../site-games/releases/unified3d-20261006/qa.json",
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "source_commit": "e6642da6e65c8585b62bbeeb49cf64e245b700ca",
+    "verified_files": 72,
+    "record": "../../../../site-games/releases/unified3d-20261006/website.json"
   },
   "toy": {
-    "status": "no_confirmed_3d_mapping"
+    "status": "pending_association",
+    "reason": "没有确认的当前3D项目Toy映射；不覆盖同名旧2D作品"
   },
   "bilibili": {
     "status": "pending_merge",

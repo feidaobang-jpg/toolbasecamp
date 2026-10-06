@@ -6,13 +6,30 @@
   "summary": "统一角色视线转向、慢速第一人称、动作键布局、选中状态及全部暂停音频；玛丽另换自然哑光低模画风；三款复刻接入原版音乐。",
   "qa_record": "../../../../site-games/releases/unified3d-20261006/qa.json",
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "source_commit": "e6642da6e65c8585b62bbeeb49cf64e245b700ca",
+    "verified_files": 72,
+    "record": "../../../../site-games/releases/unified3d-20261006/website.json"
   },
   "toy": {
-    "status": "pending_verified_package"
+    "id": 40412421031936,
+    "version": "v0.3.0",
+    "status": "auditing",
+    "package_sha256": "bac9996fd5f6bd25f0f83783526f540ca8159739520806b96fefa603fa5aa495",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_w9YhsCsa/index.html",
+    "submitted_at": "2026-10-06T07:57:47.171338+08:00",
+    "submission_response": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_9Tfk6RcR/index.html"
+    },
+    "verified_at": "2026-10-06T08:00:16.643786+08:00",
+    "record": "../../../../site-games/releases/unified3d-20261006/toy-sync.json"
   },
   "bilibili": {
-    "status": "pending_meaningful_update",
-    "reason": null
+    "status": "public_verified",
+    "bvid": "BV18XHW66E55",
+    "version": "v0.3.0",
+    "verified_at": "2026-10-05T23:58:29.195Z",
+    "record": "../../../../site-games/releases/unified3d-20261006/bilibili-sync.json"
   }
 }

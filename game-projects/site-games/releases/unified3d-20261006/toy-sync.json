@@ -1,0 +1,319 @@
+[
+  {
+    "game": "tank-3d",
+    "version": "unified3d1",
+    "id": 39043249461248,
+    "package": "D:\\project\\worktrees\\unified3d-20261006\\game-projects\\tank-3d\\dist\\unified3d1\\package",
+    "files_sha256": {
+      "audio.js": "d0a73e7425d9c1386e82bf4a3fa7a541eb13be91fa75d114dd8d4f29e79153e7",
+      "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+      "drag-look.js": "082d16b117dab62e2cc2f80aa7729ee2c9c25b5bad516999a3b82eb102e6fb28",
+      "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
+      "index.html": "e7c0e94f343c998eddaa63cbf4f001473a370ec09f97f5688ae8aaabe8aed9e0",
+      "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
+      "main.js": "f9dcbd92d9b0fdf1209c7cf184d1d617078b0ecc5092c341d007881867d5c0c0",
+      "scene.js": "c7a60563754fb7c58b5f1c141fc0987311e45a4a6ee3a21d1414f8e096db013f",
+      "sim.js": "9c8d00f1aed499898b8da4cd734ebff6c99c588cb6f98fd1c44e7ad3f0eb96c9",
+      "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
+      "sounds/bullet_hit_2.mp3": "76004f25187fd2898cecbf657aa9d3aed46685b2d61d2e6ff7825ec137638937",
+      "sounds/bullet_shot.mp3": "cee289b8b5cfb42c4772a3a7a8072da7ef626470ffbe0d390720cdc25b11679d",
+      "sounds/explosion_1.mp3": "34df0f75fd4e65b67a82269fe2fe502c5c2a0136154b8ff875b51a88236ba2bf",
+      "sounds/explosion_2.mp3": "3502c677ec9d318015be16739150c1afc5487a8e9301a835e2e2d92052bc90c8",
+      "sounds/game_over.mp3": "d23197bd8ab662160ecba3d8fa9926f6c0c2e2431c0d327fc97275578a40375e",
+      "sounds/pause.mp3": "9308b7bcd60c7adb6fefd23e398d4e899e432212deb6297733e7d9227cc20f5e",
+      "sounds/powerup_appear.mp3": "608dd494f5cb66baded7f1bcab33acb34dcc2b136856a19c13de0c11218d8fda",
+      "sounds/powerup_pick.mp3": "786c9f41ab03438e7ba23a6878ee9d09bc03d0f18ae28c47f503914dfd8da80c",
+      "sounds/snow_slide.mp3": "10462c41c3c32a84196e4b4b18972e31c0b23f380fd9d5fc4a5ef4987e5b1d8c",
+      "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
+      "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
+      "style.css": "fd7622be6c1e27f707e6878dc42df78453764476f729f16b4461aafbc8fabcba",
+      "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+    },
+    "package_sha256": "74c8eafe8a8a4f5ce0e943e9cb3931732fc7c63c24426f0235aa6e2db77b8d36",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "9 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    },
+    "preview_requested_at": "2026-10-06T07:42:24.940870+08:00",
+    "exit_code": 0,
+    "response": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_iq36gnwB/index.html"
+    },
+    "stderr": "",
+    "preview_verified": {
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "controls": true,
+      "mode_selected": true,
+      "physical_phone": false,
+      "verified_at": "2026-10-06T07:57:36.175738+08:00"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\unified3d-20261006\\packages\\tank-3d",
+    "submission": {
+      "at": "2026-10-06T07:57:37.624948+08:00",
+      "exit_code": 0,
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_HiLRSpoI/index.html"
+      },
+      "stderr": ""
+    },
+    "current_platform_status": "auditing",
+    "platform_verified_at": "2026-10-06T08:00:16.643786+08:00"
+  },
+  {
+    "game": "mario-3d",
+    "version": "v2.3.0",
+    "id": 39043286960128,
+    "package": "D:\\project\\worktrees\\unified3d-20261006\\game-projects\\mario-3d\\dist\\toy-v2.3.0\\package",
+    "files_sha256": {
+      "audio.js": "1db42de8f6e47da4366de3ee45fb8d49de1c0a218d6c7643566b574ca8f0691c",
+      "drag-look.js": "082d16b117dab62e2cc2f80aa7729ee2c9c25b5bad516999a3b82eb102e6fb28",
+      "index.html": "c5decbe5b7e9e722554143d79be9e67029c5b36cbcdf9e8ac2d4f01ee8952a98",
+      "levels.js": "4968ff6f5196628e0a20745096bc126d72c922b422300187b2e3903d21a23cae",
+      "main.js": "83b4a1f6698c279439403ad5b81124368379e00b1c6ce6b7c2ebef147264d1b0",
+      "models.js": "51ecb72bd39f9e52ff7df6f97b05662402c82cdabf07d684c166172d0792f46b",
+      "sample-audio.js": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+      "scene.js": "bc503a4dab5da724c5b92c8f805600a829f4f3517fc3104f89aa6d673610c37d",
+      "sounds/overworld.mp3": "966c3997495f124b9b26cb61549315d2dea35b17137332366c3e83b4f4015fec",
+      "sounds/smb_1-up.wav": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+      "sounds/smb_bowserfalls.wav": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+      "sounds/smb_bowserfire.wav": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+      "sounds/smb_breakblock.wav": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+      "sounds/smb_bump.wav": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+      "sounds/smb_coin.wav": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+      "sounds/smb_fireball.wav": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+      "sounds/smb_fireworks.wav": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+      "sounds/smb_flagpole.wav": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+      "sounds/smb_gameover.wav": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+      "sounds/smb_jump-small.wav": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+      "sounds/smb_jump-super.wav": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+      "sounds/smb_kick.wav": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+      "sounds/smb_mariodie.wav": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+      "sounds/smb_pause.wav": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+      "sounds/smb_pipe.wav": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+      "sounds/smb_powerup.wav": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+      "sounds/smb_powerup_appears.wav": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+      "sounds/smb_stage_clear.wav": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+      "sounds/smb_stomp.wav": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+      "sounds/smb_vine.wav": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+      "sounds/smb_warning.wav": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+      "sounds/smb_world_clear.wav": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+      "sounds/star.mp3": "bc387aa6f3bd53cfee72ff166f5511db9835e32d64790ba2cc8ada6262c4913e",
+      "sounds/underground.mp3": "952af453468c725c57f8dc60c5f62040c468a9fff8a3db73ca88c897788818aa",
+      "style.css": "4da43da3dc2ff77509a6f9ef753cef43d02687e674a5d6a4f1b4450d50c6baff",
+      "textures.js": "766c99b77114288deeee9291b31985332bde7ba38ae084e2df6e73ace045e2ed",
+      "three.js": "59cc1d99fbfda58eafe899234f06492d75ef1b33aacd3075f534800918dcce68",
+      "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+      "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+      "world.js": "ce71a64515d6ad59667016029daf8e184278f3e9b86897bd9237d481da908500"
+    },
+    "package_sha256": "27ac4cc4d39e8b3fb151753dca44a511034fb9e8b7993a6de3e645c2360aa7fd",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "12 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    },
+    "preview_requested_at": "2026-10-06T07:42:27.903468+08:00",
+    "exit_code": 0,
+    "response": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_IFq4I1Ue/index.html"
+    },
+    "stderr": "",
+    "preview_verified": {
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "controls": true,
+      "mode_selected": true,
+      "physical_phone": false,
+      "verified_at": "2026-10-06T07:57:37.637245+08:00"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\unified3d-20261006\\packages\\mario-3d",
+    "submission": {
+      "at": "2026-10-06T07:57:40.783185+08:00",
+      "exit_code": 0,
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_DewCx8zQ/index.html"
+      },
+      "stderr": ""
+    },
+    "current_platform_status": "auditing",
+    "platform_verified_at": "2026-10-06T08:00:16.643786+08:00"
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "version": "v0.6.0",
+    "id": 39863936092160,
+    "package": "D:\\project\\worktrees\\unified3d-20261006\\game-projects\\jackal-stage1-3d\\dist\\toy-v0.6.0\\package",
+    "files_sha256": {
+      "css/style.css": "a6f80da82f57fc2dc0076cb060d423d10aa69107657f46b5b9d95988e4fb1fbf",
+      "index.html": "b204d06da7475d2cad04535451fd37ca5aee656b0081b0d13ee8fee3c4921862",
+      "js/game.min.js": "d2a118d99760e99e97d5a626b2b1f01567ddf785dd17faccec659408ba3bc0ac",
+      "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+      "sounds/boss.mp3": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+      "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+      "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
+    },
+    "package_sha256": "502d3d0dfb5b2d10bcd050c75e4f5add4f95dcb499db846c96443360cf46e79d",
+    "doctor": {
+      "ok": true,
+      "findings": []
+    },
+    "preview_requested_at": "2026-10-06T07:42:30.237384+08:00",
+    "exit_code": 0,
+    "response": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_V02OEGN8/index.html"
+    },
+    "stderr": "",
+    "preview_verified": {
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "controls": true,
+      "mode_selected": true,
+      "physical_phone": false,
+      "verified_at": "2026-10-06T07:57:40.788783+08:00"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\unified3d-20261006\\packages\\jackal-stage1-3d",
+    "submission": {
+      "at": "2026-10-06T07:57:44.194339+08:00",
+      "exit_code": 0,
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_h1nYVgUx/index.html"
+      },
+      "stderr": ""
+    },
+    "current_platform_status": "auditing",
+    "platform_verified_at": "2026-10-06T08:00:16.643786+08:00"
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "version": "v0.3.0",
+    "id": 40412421031936,
+    "package": "D:\\project\\worktrees\\unified3d-20261006\\game-projects\\cadillacs-stage1-3d\\dist\\toy-v0.3.0\\package",
+    "files_sha256": {
+      "css/style.css": "e49e92bd26c26c79d7b6966f5c14c6f11729b52576508a51a4f651c3a4339a71",
+      "index.html": "20137846267b08ae8f3b1554703ed1db99f66ab2eb7f9a7298cc0459bb17aa04",
+      "js/game.min.js": "de2ea227f57ad00fb4084fe79d8eb9612f375a0ab39a21e834e786a31813c2a4",
+      "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+      "sounds/boss.mp3": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+      "sounds/hall.mp3": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+      "sounds/roof.mp3": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+      "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+      "sounds/street.mp3": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056"
+    },
+    "package_sha256": "bac9996fd5f6bd25f0f83783526f540ca8159739520806b96fefa603fa5aa495",
+    "doctor": {
+      "ok": true,
+      "findings": []
+    },
+    "preview_requested_at": "2026-10-06T07:52:39.122260+08:00",
+    "exit_code": 0,
+    "response": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_w9YhsCsa/index.html"
+    },
+    "stderr": "",
+    "superseded_preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_ljx8gE9h/index.html"
+    },
+    "preview_verified": {
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "controls": true,
+      "mode_selected": true,
+      "physical_phone": false,
+      "verified_at": "2026-10-06T07:57:44.207020+08:00"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\unified3d-20261006\\packages\\cadillacs-stage1-3d",
+    "submission": {
+      "at": "2026-10-06T07:57:47.171338+08:00",
+      "exit_code": 0,
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_9Tfk6RcR/index.html"
+      },
+      "stderr": ""
+    },
+    "current_platform_status": "auditing",
+    "platform_verified_at": "2026-10-06T08:00:16.643786+08:00"
+  },
+  {
+    "game": "starship-defense",
+    "version": "web-unified3d-v0.18.1",
+    "id": 38678478981120,
+    "package": "D:\\project\\worktrees\\unified3d-20261006\\dist\\toy\\chongchao-qianshao\\package",
+    "files_sha256": {
+      "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+      "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+      "combat-controls.css": "f73a3425305011beb029dd09850cc25d57afabd6b2a6514bffb1ef399f614bba",
+      "game.compat.js": "3740d581b4f8a2c3c5216470f52d775b08b1b1264d9cfda6465b3ac5a2eac349",
+      "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+      "index.html": "ab3087d30b135d6e781db969cf6d00146104c9ea9b184f1104337ce57d28adc2",
+      "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+    },
+    "package_sha256": "b5b767d0a613499d2cadf832b4444207a77e4d1f8f725697fbca66406afbae10",
+    "doctor": {
+      "ok": true,
+      "findings": [
+        {
+          "severity": "WARN",
+          "file": ".",
+          "message": "4 个 JS/CSS 产物的文件名都不含内容指纹（形如 assets/index-Ct-l33m_.js）；每次更新访客都要重新下载全部资源。多数构建工具默认已开启：Vite 开箱即用，webpack 配 output.filename '[name].[contenthash].js'。仅为建议，不影响本次发布"
+        }
+      ]
+    },
+    "preview_requested_at": "2026-10-06T07:42:34.097306+08:00",
+    "exit_code": 0,
+    "response": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_7MNb4A2E/index.html"
+    },
+    "stderr": "",
+    "preview_verified": {
+      "desktop": true,
+      "mobile_viewport": [
+        844,
+        390
+      ],
+      "controls": true,
+      "mode_selected": true,
+      "physical_phone": false,
+      "verified_at": "2026-10-06T07:57:47.174893+08:00"
+    },
+    "preserved_package": "D:\\project\\task-artifacts\\unified3d-20261006\\packages\\starship-defense",
+    "submission": {
+      "at": "2026-10-06T07:57:48.218926+08:00",
+      "exit_code": 0,
+      "response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_MAjnSnXa/index.html"
+      },
+      "stderr": ""
+    },
+    "current_platform_status": "auditing",
+    "platform_verified_at": "2026-10-06T08:00:16.643786+08:00"
+  }
+]

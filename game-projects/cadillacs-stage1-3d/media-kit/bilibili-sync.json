@@ -7,19 +7,19 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": "v0.2.0",
+      "last_public_verified_version": "v0.3.0",
       "status": "published（2026-10-05 16:37 公开可见）",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
       "pinned_comment_rpid": 316113740017,
-      "last_public_verified_at": "2026-10-05T20:51:28.502346+08:00",
-      "last_sync_record": "releases/v0.2.0/bilibili-sync.json",
+      "last_public_verified_at": "2026-10-05T23:58:29.195Z",
+      "last_sync_record": "releases/unified3d-20261006/handoff.json",
       "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-      "description_sha256": "20cdce912a1deeadce221536ca377b4b359fa676f6e61850f3e1d44a3feb6f44"
+      "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3"
     }
   ],
-  "status": "v0.2.0 简介已精简并公开核验；特殊技、同向转头、冲刺衔接、武器与复活雨说明已同步",
-  "updated_at": "2026-10-05T20:51:28.502346+08:00",
+  "status": "public_verified",
+  "updated_at": "2026-10-06T08:00:16.643786+08:00",
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
     "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -43,17 +43,18 @@
       "status": "pending_merge",
       "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
       "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
-    }
-  ],
-  "pending": [],
-  "pending_updates": [
+    },
     {
       "version": "v0.2.1",
       "classification": "普通补丁",
       "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-      "status": "pending_merge",
+      "status": "resolved",
       "record": "releases/drag-direction-20261005/handoff.json",
-      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+      "resolved_version": "v0.3.0"
     }
-  ]
+  ],
+  "pending": [],
+  "pending_updates": [],
+  "version": "v0.3.0"
 }

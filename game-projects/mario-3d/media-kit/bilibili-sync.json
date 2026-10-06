@@ -1,33 +1,49 @@
 {
   "game": "mario-3d",
   "owner_mid": 16214353,
-  "videos": [],
-  "status": "pending_association",
-  "reason": "无已确认的本人对应游戏视频映射；未改动其他游戏视频",
-  "version": "v2.2.0",
+  "videos": [
+    {
+      "bvid": "BV1guep6NELt",
+      "url": "https://www.bilibili.com/video/BV1guep6NELt/",
+      "owner_uid": 16214353,
+      "toy_bound": true,
+      "last_public_verified_version": "v2.3.0",
+      "last_public_verified_at": "2026-10-05T23:58:29.234Z",
+      "last_sync_record": "releases/unified3d-20261006/handoff.json",
+      "description_sha256": "e2ccda0d7effe34ddaae28f554ad2dcccdec9a4a30474bed6a9e32347ebcc76e"
+    }
+  ],
+  "status": "public_verified",
+  "reason": null,
+  "version": "v2.3.0",
   "excluded_candidates": [
     {
       "bvid": "BV1guep6NELt",
-      "reason": "本人旧2D像素玛丽游戏视频，画面与本次3D项目不同；未改动"
+      "reason": "本人旧2D像素玛丽游戏视频，画面与本次3D项目不同；未改动",
+      "superseded_by": "2026-10-06用户确认与Toy绑定核验；保留历史误判记录"
     }
   ],
-  "mapping_audit": "已查看本人稿件前两页20条，未确认当前3D玛丽、跳跃狐狸或西游的视频",
-  "pending_updates": [
+  "mapping_audit": "2026-10-06重新核验：用户2026-10-05确认与toy video list均绑定BV1guep6NELt；公开简介已有当前3D试玩。保留历史视频并注明早期演示。",
+  "pending_updates": [],
+  "resolved_updates": [
     {
       "version": "v2.2.1",
       "release": "releases/v2.2.1/handoff.json",
       "classification": "普通补丁",
-      "status": "pending_merge",
+      "status": "resolved",
       "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
-      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
+      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介",
+      "resolved_version": "v2.3.0"
     },
     {
       "version": "v2.2.2",
       "classification": "普通补丁",
       "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-      "status": "pending_merge",
+      "status": "resolved",
       "record": "releases/drag-direction-20261005/handoff.json",
-      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+      "resolved_version": "v2.3.0"
     }
-  ]
+  ],
+  "updated_at": "2026-10-06T08:00:16.643786+08:00"
 }

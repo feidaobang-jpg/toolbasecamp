@@ -32,5 +32,15 @@
   "latest_record": "releases/web-rescue-v0.18.0/bilibili-sync.json",
   "pending": [],
   "pending_note": "v0.18.0 更新已合并现有精简简介，两条均公开核验；不新增评论。",
-  "pending_release": null
+  "pending_release": null,
+  "pending_updates": [
+    {
+      "version": "web-unified3d-v0.18.1",
+      "classification": "普通补丁",
+      "summary": "统一角色视线转向、慢速第一人称、动作键布局、选中状态及全部暂停音频；玛丽另换自然哑光低模画风；三款复刻接入原版音乐。",
+      "status": "pending_merge",
+      "record": "releases/unified3d-20261006/handoff.json",
+      "reason": "普通操作音频修复并入下一次有意义的说明更新；无确认视频映射时待关联"
+    }
+  ]
 }

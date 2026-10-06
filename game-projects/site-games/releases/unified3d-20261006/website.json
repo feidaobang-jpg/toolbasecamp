@@ -1,0 +1,664 @@
+{
+  "commit": "0e075371438808ff3717e6fb3ed738fe4a85e37f",
+  "at": 1791243697.0122888,
+  "results": [
+    {
+      "path": "public/assets/game/thumbs/mario-3d.jpg",
+      "url": "https://www.zhengxiaohui.cn/assets/game/thumbs/mario-3d.jpg?verify=unified3d1",
+      "status": 200,
+      "expected": "aaffbda78a8270a23b864d4f43061c815aed08b6a244c66117fe47c7596966bb",
+      "actual": "aaffbda78a8270a23b864d4f43061c815aed08b6a244c66117fe47c7596966bb",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/games.html",
+      "url": "https://www.zhengxiaohui.cn/games.html?verify=unified3d1",
+      "status": 200,
+      "expected": "1941878b23bc79775a4dbe28b5074d7f17bc75f50735c807ab988fbf90e72d1f",
+      "actual": "285e2c9a0bb90d5cb05cf50cba9542ad0298e1dd6b74722522f33b1d933853ee",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/css/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/css/style.css?verify=unified3d1",
+      "status": 200,
+      "expected": "6c0e11555a17f567c44a8abbf57f9841f9f873553c538118b22b64a1e33d712c",
+      "actual": "6c0e11555a17f567c44a8abbf57f9841f9f873553c538118b22b64a1e33d712c",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "59c8677b28660d599fab1c503f678fc5208ec07ea2159dde489754de0a339d75",
+      "actual": "d2699fc85c54faa9d34441163bf1d69d65056b48e84021fec27d49d48f9a0639",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?verify=unified3d1",
+      "status": 200,
+      "expected": "91087df69875bc3b3d6435b2781f0bd379aa7f12a49d03afa75bd1f16aff9e0d",
+      "actual": "91087df69875bc3b3d6435b2781f0bd379aa7f12a49d03afa75bd1f16aff9e0d",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/sounds/boss.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/boss.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+      "actual": "189f08b13d612e2b8b081815177bf97314b718daebeb57cc1d5240fc24cf1ebc",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/sounds/hall.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/hall.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+      "actual": "226d8327157fd285367b2ed42fa95f5f38e98def21ff43c04cf416c38d6dd1ca",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/sounds/roof.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/roof.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+      "actual": "275e811fe855471f955cd228331b5f72d61d9c2ef8740dd13c215ed9f74fc03f",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/sounds/select.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/select.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+      "actual": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/sounds/street.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/street.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+      "actual": "0e12cbf2c40579977a07046c52c7cd900942af2dfe4082a08b186e6ee4d3b056",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/audio.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/audio.js?verify=unified3d1",
+      "status": 200,
+      "expected": "92c203fc6d1a03d6cc3110d97958ca3c88f158d5d3ab95b92e92720b6bae2191",
+      "actual": "92c203fc6d1a03d6cc3110d97958ca3c88f158d5d3ab95b92e92720b6bae2191",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "4d746005583f93caba68831741fa3ba560bc3c5865994881fd29deb1107dd905",
+      "actual": "a00f6a99d425d6751078a9a4ce80d07a44df500ffc80761505755f7ad2c6afd9",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/main.js?verify=unified3d1",
+      "status": 200,
+      "expected": "841f03ca79357a3f019dc13a696984eee998a1fe08bb0b09bda8b4602f1ababc",
+      "actual": "841f03ca79357a3f019dc13a696984eee998a1fe08bb0b09bda8b4602f1ababc",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/scene.js?verify=unified3d1",
+      "status": 200,
+      "expected": "82d3d1737bf46f5b1d9ad378aa0d0f1b729cfafe5817b9db35353d27654d4053",
+      "actual": "82d3d1737bf46f5b1d9ad378aa0d0f1b729cfafe5817b9db35353d27654d4053",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/hop-fox-3d/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/hop-fox-3d/style.css?verify=unified3d1",
+      "status": 200,
+      "expected": "8c78ef4b115f59bfb841ffee82002f6263c8dffc682aa7385dded0ec8c768d7f",
+      "actual": "8c78ef4b115f59bfb841ffee82002f6263c8dffc682aa7385dded0ec8c768d7f",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/css/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/css/style.css?verify=unified3d1",
+      "status": 200,
+      "expected": "1b891cceb5ace03cf8e3365927c7dbbbf5f21c983d601fae7dd5cf11a620440e",
+      "actual": "1b891cceb5ace03cf8e3365927c7dbbbf5f21c983d601fae7dd5cf11a620440e",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "35940fbc081883694ec282796e8e49468556515002bfdc30f34a1426dd7af209",
+      "actual": "2a04db2b3b7493f4ab8f5e5af9b8e1e8fd08dea2bea2abb521f672a5a18010e0",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js?verify=unified3d1",
+      "status": 200,
+      "expected": "d2a118d99760e99e97d5a626b2b1f01567ddf785dd17faccec659408ba3bc0ac",
+      "actual": "d2a118d99760e99e97d5a626b2b1f01567ddf785dd17faccec659408ba3bc0ac",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/sounds/boss.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/sounds/boss.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+      "actual": "1d49210a2af1e922570d0f24d154b817a9b1159ee2b961b772a84b408dd3019b",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/sounds/stage.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/sounds/stage.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+      "actual": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/jackal-stage1-3d/sounds/stage3.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/sounds/stage3.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e",
+      "actual": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/journey-west-3d/audio.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/audio.js?verify=unified3d1",
+      "status": 200,
+      "expected": "0a24cc1f527009404b7f91748c9ad6f5b1c4e39a5b709ec1d28fe83e1261e975",
+      "actual": "0a24cc1f527009404b7f91748c9ad6f5b1c4e39a5b709ec1d28fe83e1261e975",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/journey-west-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "a15346de6edcaeff7a968d1826e834ee32547cdae28e5bdd8f8c4f84b85fe959",
+      "actual": "50cd3844fad0dd5f8f2e1bf81921e954f6c994ebfce460a387cc1b1fd02031dc",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/journey-west-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/main.js?verify=unified3d1",
+      "status": 200,
+      "expected": "9d15a04ec7068e11ccc9dc91dd2b50bd590753e1f6be8d1db925fc356cd976f7",
+      "actual": "9d15a04ec7068e11ccc9dc91dd2b50bd590753e1f6be8d1db925fc356cd976f7",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/journey-west-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/scene.js?verify=unified3d1",
+      "status": 200,
+      "expected": "c88a10e7b2b406b7b7719cc1ba27a8a4bfc42e6f2f6aca1538f26a961b8d7d4c",
+      "actual": "c88a10e7b2b406b7b7719cc1ba27a8a4bfc42e6f2f6aca1538f26a961b8d7d4c",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/journey-west-3d/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/style.css?verify=unified3d1",
+      "status": 200,
+      "expected": "ee74ff510b8ac4d53f2753210f258ddf3a18aea3d3bb880235e15c8fe9abe6b6",
+      "actual": "ee74ff510b8ac4d53f2753210f258ddf3a18aea3d3bb880235e15c8fe9abe6b6",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/audio.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/audio.js?verify=unified3d1",
+      "status": 200,
+      "expected": "19fef296da95f430ff73b46cecabd9fff1d0b34f45fbfaa43416cf8c68c3a060",
+      "actual": "19fef296da95f430ff73b46cecabd9fff1d0b34f45fbfaa43416cf8c68c3a060",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "e158a4a17ec1cad222413ad5c262a459e9b759af851364177aec350ac72e03a9",
+      "actual": "7da0ee178ae4737effa4101dfb516b338d29f8a40f240b2e56f73138b1f65d0d",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/mario-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js?verify=unified3d1",
+      "status": 200,
+      "expected": "60de308f7ec4079f5d2db092d671178211a28ec9e4bed95281c7b46b14da542f",
+      "actual": "60de308f7ec4079f5d2db092d671178211a28ec9e4bed95281c7b46b14da542f",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/models.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/models.js?verify=unified3d1",
+      "status": 200,
+      "expected": "51ecb72bd39f9e52ff7df6f97b05662402c82cdabf07d684c166172d0792f46b",
+      "actual": "51ecb72bd39f9e52ff7df6f97b05662402c82cdabf07d684c166172d0792f46b",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/scene.js?verify=unified3d1",
+      "status": 200,
+      "expected": "bc503a4dab5da724c5b92c8f805600a829f4f3517fc3104f89aa6d673610c37d",
+      "actual": "bc503a4dab5da724c5b92c8f805600a829f4f3517fc3104f89aa6d673610c37d",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/overworld.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/overworld.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "966c3997495f124b9b26cb61549315d2dea35b17137332366c3e83b4f4015fec",
+      "actual": "966c3997495f124b9b26cb61549315d2dea35b17137332366c3e83b4f4015fec",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_1-up.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_1-up.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+      "actual": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_bowserfalls.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_bowserfalls.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+      "actual": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_bowserfire.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_bowserfire.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+      "actual": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_breakblock.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_breakblock.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+      "actual": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_bump.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_bump.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+      "actual": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_coin.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_coin.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+      "actual": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_fireball.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_fireball.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+      "actual": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_fireworks.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_fireworks.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+      "actual": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_flagpole.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_flagpole.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+      "actual": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_gameover.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_gameover.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+      "actual": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_jump-small.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_jump-small.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+      "actual": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_jump-super.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_jump-super.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+      "actual": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_kick.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_kick.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+      "actual": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_mariodie.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_mariodie.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+      "actual": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_pause.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_pause.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+      "actual": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_pipe.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_pipe.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+      "actual": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_powerup.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_powerup.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+      "actual": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_powerup_appears.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_powerup_appears.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+      "actual": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_stage_clear.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_stage_clear.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+      "actual": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_stomp.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_stomp.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+      "actual": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_vine.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_vine.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+      "actual": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_warning.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_warning.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+      "actual": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/smb_world_clear.wav",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/smb_world_clear.wav?verify=unified3d1",
+      "status": 200,
+      "expected": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+      "actual": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/star.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/star.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "bc387aa6f3bd53cfee72ff166f5511db9835e32d64790ba2cc8ada6262c4913e",
+      "actual": "bc387aa6f3bd53cfee72ff166f5511db9835e32d64790ba2cc8ada6262c4913e",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/sounds/underground.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/sounds/underground.mp3?verify=unified3d1",
+      "status": 200,
+      "expected": "952af453468c725c57f8dc60c5f62040c468a9fff8a3db73ca88c897788818aa",
+      "actual": "952af453468c725c57f8dc60c5f62040c468a9fff8a3db73ca88c897788818aa",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/style.css?verify=unified3d1",
+      "status": 200,
+      "expected": "ed79bb44e24efe57e9b713983dfe466c5b58e659964c8b987c91a60d6d8608d7",
+      "actual": "ed79bb44e24efe57e9b713983dfe466c5b58e659964c8b987c91a60d6d8608d7",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/textures.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/textures.js?verify=unified3d1",
+      "status": 200,
+      "expected": "766c99b77114288deeee9291b31985332bde7ba38ae084e2df6e73ace045e2ed",
+      "actual": "766c99b77114288deeee9291b31985332bde7ba38ae084e2df6e73ace045e2ed",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/mario-3d/world.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/world.js?verify=unified3d1",
+      "status": 200,
+      "expected": "ce71a64515d6ad59667016029daf8e184278f3e9b86897bd9237d481da908500",
+      "actual": "ce71a64515d6ad59667016029daf8e184278f3e9b86897bd9237d481da908500",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/starship-defense/game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?verify=unified3d1",
+      "status": 200,
+      "expected": "b16baeee34e8f963ff18dc896084f30725653720fd93deb43de9f9ff72f145df",
+      "actual": "b16baeee34e8f963ff18dc896084f30725653720fd93deb43de9f9ff72f145df",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/starship-defense/game.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js?verify=unified3d1",
+      "status": 200,
+      "expected": "88161282f1f5b72eb9c76b027f24bdea6f66f5149675132640f37342b40cb5b0",
+      "actual": "88161282f1f5b72eb9c76b027f24bdea6f66f5149675132640f37342b40cb5b0",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/starship-defense/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "617a345cda8355a68d8ca36103d8564f82e21e58c3370756787a371d38338498",
+      "actual": "25e38cefc4e8b7986259a52953487111490b42abf8b99d4fed3b4294c8361f52",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/tank-3d/audio.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/audio.js?verify=unified3d1",
+      "status": 200,
+      "expected": "d0a73e7425d9c1386e82bf4a3fa7a541eb13be91fa75d114dd8d4f29e79153e7",
+      "actual": "d0a73e7425d9c1386e82bf4a3fa7a541eb13be91fa75d114dd8d4f29e79153e7",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/tank-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html?verify=unified3d1",
+      "status": 200,
+      "expected": "93ef5b9448319811abb7103a2b58e9e81ce7ea100d5c1b8113b7a845d61fff4b",
+      "actual": "992b02f8bc7f44e826855c835e32eaa2724d6d106932a11870a1a3dd7ccf606a",
+      "ok": true,
+      "deploy_version_rewrite_only": true
+    },
+    {
+      "path": "public/html/game/tank-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js?verify=unified3d1",
+      "status": 200,
+      "expected": "59460fc090f6178fb14e2b379ec51017f84d83d5f7efcc29059da373341f425b",
+      "actual": "59460fc090f6178fb14e2b379ec51017f84d83d5f7efcc29059da373341f425b",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/tank-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/scene.js?verify=unified3d1",
+      "status": 200,
+      "expected": "2a4773c351ede9c2bf4bbf908b1e543ef0ffe115c11daf91f4173c48e66eec41",
+      "actual": "2a4773c351ede9c2bf4bbf908b1e543ef0ffe115c11daf91f4173c48e66eec41",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/tank-3d/sim.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/sim.js?verify=unified3d1",
+      "status": 200,
+      "expected": "9c8d00f1aed499898b8da4cd734ebff6c99c588cb6f98fd1c44e7ad3f0eb96c9",
+      "actual": "9c8d00f1aed499898b8da4cd734ebff6c99c588cb6f98fd1c44e7ad3f0eb96c9",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/html/game/tank-3d/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/style.css?verify=unified3d1",
+      "status": 200,
+      "expected": "9bcc5012a96505bb49c984cedbf20cba7ba2ce0c7c9d241e551940f0ff638810",
+      "actual": "9bcc5012a96505bb49c984cedbf20cba7ba2ce0c7c9d241e551940f0ff638810",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/js/config.js",
+      "url": "https://www.zhengxiaohui.cn/js/config.js?verify=unified3d1",
+      "status": 200,
+      "expected": "9a42d5d7a076befb4d52ed2fd9718d6774959e411478e5ad17aac9e9ce73c133",
+      "actual": "9a42d5d7a076befb4d52ed2fd9718d6774959e411478e5ad17aac9e9ce73c133",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/js/game/drag-look.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js?verify=unified3d1",
+      "status": 200,
+      "expected": "082d16b117dab62e2cc2f80aa7729ee2c9c25b5bad516999a3b82eb102e6fb28",
+      "actual": "082d16b117dab62e2cc2f80aa7729ee2c9c25b5bad516999a3b82eb102e6fb28",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    },
+    {
+      "path": "public/js/game/sample-audio.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/sample-audio.js?verify=unified3d1",
+      "status": 200,
+      "expected": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+      "actual": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+      "ok": true,
+      "deploy_version_rewrite_only": false
+    }
+  ],
+  "final_source_commit": "e6642da6e65c8585b62bbeeb49cf64e245b700ca",
+  "supplemental_verification": {
+    "commit": "e6642da6e65c8585b62bbeeb49cf64e245b700ca",
+    "path": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?verify=e6642da6",
+    "expected": "de2ea227f57ad00fb4084fe79d8eb9612f375a0ab39a21e834e786a31813c2a4",
+    "actual": "de2ea227f57ad00fb4084fe79d8eb9612f375a0ab39a21e834e786a31813c2a4",
+    "verified_at": 1791244335.413448,
+    "ok": true
+  }
+}

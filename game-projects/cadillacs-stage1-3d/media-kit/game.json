@@ -65,17 +65,17 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-05T20:39:41.339246+08:00",
+    "submitted_at": "2026-10-06T07:57:47.171338+08:00",
     "package": "dist/toy-v0.2.0/package",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_XROMmkYX/index.html",
-    "note": "v0.2.0 已过审，正式入口15/15通过",
+    "note": "已用桌面和手机视口实测同一包并提交审核；审核中不代表新版已上线。",
     "status_verified": "toy mylist published / PUBLIC；正式入口 iframe v22576，桌面和触屏15/15通过",
     "bound_videos": [
       "BV18XHW66E55"
     ],
-    "review_status": "published",
+    "review_status": "auditing",
     "version": "v0.2.0",
-    "verified_at": "2026-10-05T20:46:29.622579+08:00",
+    "verified_at": "2026-10-06T08:00:16.643786+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "last_published_version": "v0.2.0",
     "pending_updates": [
@@ -83,11 +83,16 @@
         "version": "v0.2.1",
         "classification": "普通补丁",
         "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-        "status": "pending_merge",
+        "status": "included_in_submitted_package",
         "record": "releases/drag-direction-20261005/handoff.json",
-        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。"
+        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+        "included_version": "v0.3.0"
       }
-    ]
+    ],
+    "submitted_version": "v0.3.0",
+    "package_sha256": "bac9996fd5f6bd25f0f83783526f540ca8159739520806b96fefa603fa5aa495",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_9Tfk6RcR/index.html",
+    "release_record": "releases/unified3d-20261006/handoff.json"
   },
   "toy_note": "v0.2.0 已过审，正式入口15/15通过",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
