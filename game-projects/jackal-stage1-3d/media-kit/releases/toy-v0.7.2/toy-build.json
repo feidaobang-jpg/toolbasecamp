@@ -19,5 +19,23 @@
     "sounds/stage.mp3": "484fd431d7621ad41876c7a24c062603dee598a8579af294f2ef82b8d5976497",
     "sounds/stage3.mp3": "aff4d858e544bfcfd65b2ce0f7ca2ddac2e814118be072939de04ce13ec9f96e"
   },
-  "status": "built_not_submitted"
+  "status": "auditing",
+  "id": 39863936092160,
+  "submitted_at": "2026-10-06T12:29:05.253398+08:00",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_r5cbAsaD/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
+  "preview_verified_at": "2026-10-06T12:29:05.253398+08:00",
+  "preview_qa": {
+    "passed": 133,
+    "failed": 0,
+    "record": "toy-preview-qa.json"
+  },
+  "package_sha256": "3e6384490286d43b61bd324a4106643a1e0b7ad4569b940da6d44a8d8ffffda4",
+  "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+  "package_artifact": "D:\\project\\task-artifacts\\boss-hud-20261006\\toy-package",
+  "public_verification": "公开入口仍显示得分/最高分旧HUD，未推进新版公开基线。",
+  "public_observed_entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22801/index.html",
+  "doctor": {
+    "warnings": 0
+  }
 }

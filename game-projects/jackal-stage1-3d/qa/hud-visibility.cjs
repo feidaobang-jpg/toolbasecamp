@@ -33,10 +33,17 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
 (async()=>{
   fs.mkdirSync(OUT,{recursive:true});
   const browser=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11']});
-  const page=await browser.newPage({viewport:{width:1280,height:720}}), errors=[];
-  page.on('pageerror',e=>errors.push(e.message));
+  const browserPage=await browser.newPage({viewport:{width:1280,height:720}}), errors=[];
+  let page=browserPage;
+  browserPage.on('pageerror',e=>errors.push(e.message));
   try {
-    await page.goto(BASE+(BASE.includes('?')?'&':'?')+'test=1&stage=2&q=low&seed=123');
+    await browserPage.goto(BASE+(BASE.includes('?')?'&':'?')+'test=1&stage=2&q=low&seed=123');
+    // Toy 外层不是游戏；对已确认的游戏 iframe 执行同一套检查。
+    if(process.env.JK_FRAME_SRC) {
+      await browserPage.locator('iframe[src*="'+process.env.JK_FRAME_SRC+'"]').waitFor();
+      const element=await browserPage.locator('iframe[src*="'+process.env.JK_FRAME_SRC+'"]').elementHandle();
+      page=await element.contentFrame();
+    }
     await page.waitForFunction(()=>window.__JK_TEST__);
     await page.locator('[data-control-mode=hide]').first().click();
     await page.locator('[data-act=start]').click();
@@ -46,7 +53,7 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     const presets=['oblique','top','low','wide','front','fp'];
     for(const viewport of [{width:1280,height:720},{width:844,height:390},{width:667,height:375},{width:390,height:844}]) {
       if (await page.evaluate(()=>!__JK_TEST__.snapshot().ui.overlay)) { await page.locator('#btn-pause').click(); }
-      await page.setViewportSize(viewport);
+      await browserPage.setViewportSize(viewport);
       await page.locator('[data-control-mode=show]:visible').click();await page.locator('[data-act=resume]').click();
       await page.evaluate(()=>__JK_TEST__.step(120));
       for(let i=0;i<6;i++) {
@@ -56,13 +63,13 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
         check(label+' rescue folds',m.rescue==='none');
         check(label+' boss models stay on screen',m.projected.every(b=>!b.clipped&&b.x>=0&&b.y>=0&&b.x+b.w<=m.W&&b.y+b.h<=m.H));
         check(label+' boss models clear UI',m.projected.every(b=>m.blocks.every(u=>!overlap(b,u))),m.blocks);
-        if(i===0)await page.screenshot({path:path.join(OUT,label.replaceAll(' ','-')+'.png')});
-        await page.keyboard.press('KeyC');await page.evaluate(()=>__JK_TEST__.step(120));
+        if(i===0)await browserPage.screenshot({path:path.join(OUT,label.replaceAll(' ','-')+'.png')});
+        await browserPage.keyboard.press('KeyC');await page.evaluate(()=>__JK_TEST__.step(120));
       }
     }
-    await page.setViewportSize({width:844,height:390});
+    await browserPage.setViewportSize({width:844,height:390});
     for (let i=0;i<4;i++) {
-      await page.keyboard.down('KeyE');await page.evaluate(()=>__JK_TEST__.step(60));await page.keyboard.up('KeyE');
+      await browserPage.keyboard.down('KeyE');await page.evaluate(()=>__JK_TEST__.step(60));await browserPage.keyboard.up('KeyE');
       const m=await measure(page);
       check('rotated arena '+i+' keeps bosses clear',m.projected.every(b=>!b.clipped&&b.x>=0&&b.y>=0&&b.x+b.w<=m.W&&b.y+b.h<=m.H&&m.blocks.every(u=>!overlap(b,u))),{blocks:m.blocks,projected:m.projected});
     }
@@ -70,23 +77,23 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     await page.locator('#btn-pause').click();await page.locator('[data-opt=camera]:visible').click();await page.locator('[data-act=resume]').click();await page.evaluate(()=>__JK_TEST__.step(1));
     await page.evaluate(()=>{__JK_TEST__.cheat.armor(1);__JK_TEST__.step(1);});
     check('low armor retains visible warning',await page.locator('#hc-armor').evaluate(e=>e.classList.contains('low')&&e.querySelectorAll('.on').length===1));
-    await page.keyboard.press('Escape');await page.evaluate(()=>__JK_TEST__.step(1));
+    await browserPage.keyboard.press('Escape');await page.evaluate(()=>__JK_TEST__.step(1));
     check('pause exposes score and rescued detail',(await page.locator('#pause-stats').innerText()).includes('车上 3'));
     const before=await page.evaluate(()=>__JK_TEST__.snapshot());
     await page.locator('[data-control-mode=hide]:visible').click();await page.locator('[data-act=resume]').click();await page.evaluate(()=>__JK_TEST__.step(1));
     check('mode switch keeps boss, armor and progress',await page.evaluate(b=>{const s=__JK_TEST__.snapshot();return s.stage===b.stage&&s.carried===b.carried&&s.player.armor===b.player.armor&&s.boss.killed===b.boss.killed&&!s.ui.display.touchOn;},before));
     await page.evaluate(()=>{const q=__JK_TEST__;q.cheat.weapon(4);q.cheat.teleport(-3.5,338);q.cheat.face(0);q.step(1);});
     const hpBefore=await page.evaluate(()=>__JK_TEST__.cheat.state().ents.filter(e=>e.type==='bust').reduce((a,e)=>a+e.hp,0));
-    await page.keyboard.down('KeyK');await page.evaluate(()=>__JK_TEST__.step(180));await page.keyboard.up('KeyK');
+    await browserPage.keyboard.down('KeyK');await page.evaluate(()=>__JK_TEST__.step(180));await browserPage.keyboard.up('KeyK');
     check('real K rockets damage boss',await page.evaluate(hp=>__JK_TEST__.cheat.state().ents.filter(e=>e.type==='bust').reduce((a,e)=>a+e.hp,0)<hp,hpBefore));
-    await page.keyboard.press('Escape');await page.evaluate(()=>__JK_TEST__.step(1));await page.locator('[data-act=title]:visible').click();
+    await browserPage.keyboard.press('Escape');await page.evaluate(()=>__JK_TEST__.step(1));await page.locator('[data-act=title]:visible').click();
     check('return to menu clears boss layout',await page.locator('#stage').evaluate(e=>!e.classList.contains('boss-fight')));
     await page.locator('[data-opt=stage]').first().click();await page.locator('[data-act=start]').click();
     await page.evaluate(()=>{const q=__JK_TEST__;q.step(240);q.cheat.invuln(999);q.cheat.teleport(0,310);q.step(900);});
     const first=await measure(page);
     check('first stage tank boss remains playable',first.state.stage===1&&first.state.boss.state==='fight'&&first.state.boss.spawned===4);
     check('first stage armor remains visible',first.armor.w>0&&!overlap(first.armor,first.blocks.find(b=>b.id==='hud-top')));
-    await page.screenshot({path:path.join(OUT,'stage1-boss.png')});
+    await browserPage.screenshot({path:path.join(OUT,'stage1-boss.png')});
     check('no runtime errors',errors.length===0,errors);
   } finally { await browser.close();fs.writeFileSync(path.join(OUT,'results.json'),JSON.stringify(results,null,2)); }
   process.exitCode=results.every(r=>r.ok)?0:1;

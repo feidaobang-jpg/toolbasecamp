@@ -9,11 +9,54 @@
     "record": "qa.json"
   },
   "website": {
-    "status": "pending_deployment"
+    "status": "verified",
+    "version": "v0.7.2",
+    "commit": "929f54d2",
+    "verified_at": "2026-10-06T12:29:05.253398+08:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+    "qa": {
+      "passed": 133,
+      "failed": 0,
+      "record": "website-qa.json"
+    },
+    "hashes": [
+      {
+        "file": "css/style.css",
+        "sha256": "ec1b2dce06c7004909ca99f1056b31df9701cb4ab0e513ddb9c79f15e9c9a600",
+        "expected": "ec1b2dce06c7004909ca99f1056b31df9701cb4ab0e513ddb9c79f15e9c9a600",
+        "match": true,
+        "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/css/style.css"
+      },
+      {
+        "file": "js/game.min.js",
+        "sha256": "2cefe01a90462c56ae47bf16c2145307f737eb1d0eb1730264b4a199c0c8afd1",
+        "expected": "2cefe01a90462c56ae47bf16c2145307f737eb1d0eb1730264b4a199c0c8afd1",
+        "match": true,
+        "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js"
+      }
+    ]
   },
   "toy": {
     "id": 39863936092160,
-    "status": "pending_package"
+    "version": "v0.7.2",
+    "status": "auditing",
+    "submitted_at": "2026-10-06T12:29:05.253398+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_r5cbAsaD/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_7JBG9Xxe/index.html",
+    "preview_verified_at": "2026-10-06T12:29:05.253398+08:00",
+    "preview_qa": {
+      "passed": 133,
+      "failed": 0,
+      "record": "toy-preview-qa.json"
+    },
+    "package_sha256": "3e6384490286d43b61bd324a4106643a1e0b7ad4569b940da6d44a8d8ffffda4",
+    "package_hash_method": "sha256(sorted(path + colon + file_sha256 + newline))",
+    "package_artifact": "D:\\project\\task-artifacts\\boss-hud-20261006\\toy-package",
+    "public_verification": "公开入口仍显示得分/最高分旧HUD，未推进新版公开基线。",
+    "public_observed_entry": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22801/index.html",
+    "doctor": {
+      "warnings": 0
+    }
   },
   "bilibili": {
     "status": "ordinary_patch_deferred",

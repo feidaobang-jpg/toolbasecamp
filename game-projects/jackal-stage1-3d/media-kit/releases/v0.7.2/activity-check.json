@@ -1,0 +1,36 @@
+{
+  "source": "Codex",
+  "taskId": "01a10f50-hud-01",
+  "checked_at": "2026-10-06T12:27:41.796503+08:00",
+  "status": "partial",
+  "scope": [
+    "活动列表首屏",
+    "AI全民制作人规则",
+    "视频创作激励资格"
+  ],
+  "account_uid": "16214353",
+  "followers_observed": 182,
+  "video_incentive_lv3_requirement_met": false,
+  "credit_requirement_met": true,
+  "credit": 80,
+  "sources": [
+    "https://www.bilibili.com/blackboard/era/reward-activity-list-page.html#/list",
+    "https://www.bilibili.com/blackboard/era/GBslbhKUtDJ8QpLc.html",
+    "https://member.bilibili.com/platform/allowance/excitation/pc"
+  ],
+  "observations": [
+    {
+      "activity_id": "GBslbhKUtDJ8QpLc",
+      "title": "AI全民制作人",
+      "period": "2026-09-28~2026-11-29",
+      "status": "not_applicable_to_existing_game_videos",
+      "requirement": "影视分区、活动期新投稿、至少60秒、对应话题及标题标记；现有游戏开发稿件不匹配。"
+    },
+    {
+      "title": "视频创作激励",
+      "status": "not_eligible",
+      "requirement": "权益等级LV3未达标；信用80分已达标"
+    }
+  ],
+  "note": "无新游戏投稿；未确认新符合条件活动，不办理报名，不改历史视频或签约。部分检查不推进last_completed_check_at。"
+}
