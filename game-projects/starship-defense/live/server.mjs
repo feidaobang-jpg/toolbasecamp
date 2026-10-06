@@ -77,6 +77,13 @@ const server=http.createServer(async(req,res)=>{
     }catch(e){json(400,{error:String(e.message).slice(0,180)});}return;
   }
   if(!['GET','HEAD'].includes(req.method)){res.writeHead(405);res.end();return;}
+  // Resolve relative CSS, modules and popup links against the real game folder.
+  // Returning the console's HTML at / leaves the browser's base URL at /.
+  const entries={'/':'live-console.html','/live-console.html':'live-console.html','/live.html':'live.html'};
+  if(Object.hasOwn(entries,url.pathname)){
+    res.writeHead(302,{'Location':'/html/game/starship-defense/'+entries[url.pathname]+url.search,'Cache-Control':'no-store'});res.end();return;
+  }
+  if(url.pathname==='/favicon.ico'){res.writeHead(204);res.end();return;}
   try{let f,mime;const pathname=decodeURIComponent(url.pathname);if(pathname.startsWith('/audio/')){if(!/^\/audio\/[a-f0-9-]+\.wav$/.test(pathname))throw Error('path');f=path.join(audioDir,path.basename(pathname));mime='audio/wav';}
     else{const relative=pathname==='/'?'/html/game/starship-defense/live-console.html':pathname;f=path.resolve(publicDir,'.'+relative);if(!f.startsWith(publicDir+path.sep))throw Error('path');mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.glb':'model/gltf-binary','.mp3':'audio/mpeg','.webp':'image/webp'}[path.extname(f)]||'application/octet-stream';}
     const bytes=await readFile(f);res.writeHead(200,{'Content-Type':mime,'Cache-Control':'no-store','Set-Cookie':'live_session='+cookie+'; HttpOnly; SameSite=Strict; Path=/','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:bytes);

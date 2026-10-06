@@ -12,6 +12,8 @@ Node.js 22+；在本目录 `npm ci` 后运行 `node server.mjs`，或执行 `sta
 
 配置在 `%LOCALAPPDATA%/ChongchaoLive/config.json`，不在Git或静态目录。修改后退出服务再启动。事件回执在同目录 `events.jsonl`、礼物查重为 `gift-receipts.json`；未确认生效的礼物不自动重放。
 
+桌面启动地址`http://127.0.0.1:18765/`会跳转到完整控制台路径，让相对样式、脚本与直播链接正确加载。`/live.html`短入口也可用；OBS仍使用前述完整直播地址。浏览器入口回归运行`node tests/browser-entry.cjs`，覆盖真实根入口、弹出直播画面、互动与错误日志。
+
 ## 已实现玩法
 
 - 15秒整备、300秒守城、12秒结算，胜利或失守后自动下一场；正常伤害与复活，不用无敌演示替代战斗。

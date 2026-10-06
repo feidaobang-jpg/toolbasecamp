@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:18765/",
+  "errors": [
+    "404 http://127.0.0.1:18765/live.css?v=live1",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "404 http://127.0.0.1:18765/live-console.js?v=live1",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "at": "2026-10-06T14:58:38.596Z"
+}
