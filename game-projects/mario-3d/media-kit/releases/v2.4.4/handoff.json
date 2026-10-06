@@ -7,8 +7,8 @@
   "classification": "严重修复 + 普通视觉/操作补丁",
   "build": {
     "id": "v2.4.4",
-    "dirty": true,
-    "commit": null,
+    "dirty": false,
+    "commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
     "entrypoint": "public/html/game/mario-3d/index.html",
     "source_sha256": {
       "audio.js": "19fef296da95f430ff73b46cecabd9fff1d0b34f45fbfaa43416cf8c68c3a060",
@@ -164,7 +164,9 @@
     "limits": [
       "手机为视口/触控模拟，非真机",
       "录像无音轨，当前版本视频素材仅部分就绪"
-    ]
+    ],
+    "website": "website-qa.json",
+    "toy": "toy-preview-qa.json"
   },
   "thumbnail": {
     "decision": "沿用",
@@ -172,19 +174,33 @@
   },
   "release_channels": {
     "website": {
-      "status": "awaiting_integration"
+      "status": "public_verified",
+      "version": "v2.4.4",
+      "commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
+      "verified_at": "2026-10-06T22:19:17.380462+00:00",
+      "record": "website.json"
     },
     "toy": {
       "id": 39043286960128,
-      "status": "awaiting_website_verification"
+      "status": "auditing",
+      "submitted_version": "v2.4.4",
+      "submitted_at": "2026-10-06T22:22:41+00:00",
+      "package_sha256": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_WFRQqFXp/index.html",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_HO5JCmCy/index.html",
+      "record": "toy-submit.json",
+      "note": "提交同一哈希已实测包；审核不等于上线，公开版本另行核验。"
     },
     "bilibili": {
-      "status": "planned_sync_due_to_progression_block",
+      "status": "public_verified",
       "videos": [
         "BV1guep6NELt",
         "BV1Fwpw6FEFx"
       ],
-      "reason": "通关流程卡死影响试玩，达到严重修复触发条件；保留历史视频"
+      "reason": "通关流程卡死影响试玩，达到严重修复触发条件；保留历史视频",
+      "version": "v2.4.4",
+      "verified_at": "2026-10-06T22:19:35.956Z",
+      "record": "bili-updates.json"
     }
   },
   "readiness": {
@@ -194,5 +210,11 @@
       "无游戏声音母版；没有手机真机验收"
     ]
   },
-  "preserved_artifacts": "D:\\project\\task-artifacts\\mario-fixes-20261007"
+  "preserved_artifacts": "D:\\project\\task-artifacts\\mario-fixes-20261007",
+  "activities": {
+    "status": "skipped_recent_complete_check",
+    "checked_at": "2026-10-06T22:25:35.193188+00:00",
+    "shared_last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
+    "reason": "过去12小时已有全面检查；本任务修复现有游戏/简介，无新视频及已满足而未办理的待办。保留共用台账成功检查时间，不宣称本次完成全面检查。"
+  }
 }

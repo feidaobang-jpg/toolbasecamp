@@ -21,19 +21,19 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
-    "verified_at": "2026-10-06T21:39:01.172522+00:00",
+    "review_status": "auditing",
+    "verified_at": "2026-10-06T22:25:35.193188+00:00",
     "video_bindings": [
       "BV1guep6NELt"
     ],
-    "submitted_version": "v2.4.3",
-    "submitted_at": "2026-10-06T21:34:15.115028+00:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiZ6KIi/index.html",
-    "release_record": "releases/v2.4.3/handoff.json",
+    "submitted_version": "v2.4.4",
+    "submitted_at": "2026-10-06T22:22:41+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_WFRQqFXp/index.html",
+    "release_record": "releases/v2.4.4/handoff.json",
     "published_version": "v2.4.3",
     "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_3nVKa6vU/index.html",
-    "note": "同包预览实测36项通过；Toy审核通过，公开包四个核心文件哈希匹配v2.4.3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_HO5JCmCy/index.html",
+    "note": "v2.4.4同包预览实测并提交审核；published_version保留最后公开核验版本",
     "pending_updates": [
       {
         "version": "v2.2.2",
@@ -73,12 +73,18 @@
         "summary": "修复地下关检查点坠崖后复活到天花板；清理重开/切区后的食人花残留",
         "status": "published",
         "record": "releases/v2.4.3/handoff.json"
+      },
+      {
+        "version": "v2.4.4",
+        "classification": "严重过关修复 + 普通水管/按钮补丁",
+        "status": "auditing",
+        "record": "releases/v2.4.4/handoff.json"
       }
     ],
-    "package_sha256": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
+    "package_sha256": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
     "published_verified_at": "2026-10-06T21:39:01.172522+00:00",
-    "status": "published",
-    "package_hash": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
+    "status": "auditing",
+    "package_hash": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
     "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23208/index.html"
   },
   "notes": "粉丝向非官方重制：保留原作关卡布局，采用赤色要塞式自然配色、哑光低模；BGM和常用音效采用原版录音，缺项或加载失败保留合成回退。",
@@ -99,9 +105,9 @@
     "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v2.4.3",
-  "website_verified_at": "2026-10-06T21:31:39.632832+00:00",
-  "website_commit": "5c92ea0beb426f3136adc29c0216d8bd4c66c620",
+  "website_version": "v2.4.4",
+  "website_verified_at": "2026-10-06T22:19:17.380462+00:00",
+  "website_commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
   "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
