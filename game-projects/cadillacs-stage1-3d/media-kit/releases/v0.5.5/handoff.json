@@ -1,0 +1,108 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.5.5",
+ "base_version": "v0.5.4",
+ "created_at": "2026-10-07T00:40:00+08:00",
+ "classification": "普通补丁（玩家反馈修复）",
+ "build": {
+  "bundle_sha256": "ab1dc95a1afcd687ff1fc2beab260bfebd8e0c1500b752d34829bdfcffa9c38c"
+ },
+ "changes": [
+  {
+   "id": "muzzle-at-barrel",
+   "before": "火花在站位前方固定估计点，手还没举到位",
+   "after": "火花从武器模型枪管前端发出",
+   "verification": "pass"
+  },
+  {
+   "id": "visible-bullets",
+   "before": "即时判定，看不到子弹",
+   "after": "子弹拖光飞到命中点或射程尽头，霰弹扇形散开；子弹飞到才掉血",
+   "verification": "pass"
+  },
+  {
+   "id": "vice-revolver",
+   "after": "维斯开枪时手里有左轮",
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "no-bullet-muzzle-off",
+   "reported_by": "user",
+   "observed": "开枪看不到子弹飞出去；火花不在枪管出口",
+   "cause": "即时判定没有子弹画面；火花用固定估计点且开枪姿势尚未举到位",
+   "fix": "枪口按武器模型计算并在开枪帧摆好姿势；新增子弹拖光，命中在子弹到达时结算",
+   "status": "fixed",
+   "retest": "qa/guns.js 41/41；逐帧截图对照"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41",
+   "evidence": "qa/guns.json"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55",
+   "evidence": "qa/stage2.json"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 90/90",
+   "evidence": "qa/desktop.json"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "evidence": "qa/mobile.json",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/camera.js",
+   "result": "pass 11/11",
+   "evidence": "qa/cam-results.json"
+  },
+  {
+   "method": "qa/depth.js",
+   "result": "pass 31/31",
+   "evidence": "qa/depth.json"
+  },
+  {
+   "method": "qa/timer.js",
+   "result": "pass（无 FAIL）"
+  }
+ ],
+ "media": [
+  {
+   "id": "before-guns",
+   "file": "releases/v0.5.5/captures/before-guns.png",
+   "kind": "screenshot",
+   "version": "v0.5.4",
+   "description": "修复前：手枪 / 冲锋枪 / 霰弹枪 / 步枪开火第 1、3、6 帧",
+   "visual_review": "pass"
+  },
+  {
+   "id": "after-guns",
+   "file": "releases/v0.5.5/captures/after-guns.png",
+   "kind": "screenshot",
+   "version": "v0.5.5",
+   "description": "修复后：四种枪 + 偷猎者 + 维斯开火第 1、3、6 帧",
+   "visual_review": "pass"
+  }
+ ],
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确"
+ }
+}

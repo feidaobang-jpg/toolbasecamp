@@ -16,7 +16,7 @@ export const G = {
   actors: [], items: [], props: [], projs: [], player: null, boss: null, raptor: null,
   banner: null, toast: null, dialog: null, fade: 0, hurtFx: 0, flash: 0, go: 0,
   events: [], kills: {}, stats: null, script: null, onEnd: null, cont: null, demoUsed: false, ended: false,
-  sleeper: null, car: null, carAnim: null, blockers: [], water: null, cleared: [], extraWave: false
+  sleeper: null, car: null, carAnim: null, blockers: [], water: null, cleared: [], extraWave: false, later: []
 };
 const CN_NUM = ['', '一', '二', '三', '四', '五', '六', '七', '八'];
 export const SINK = 0.62;   // 泥沼齐腰：站在水里的角色整体下沉的深度（只影响画面，判定高度不变）
@@ -158,6 +158,46 @@ function attachWeapon(a) {
   else { m.position.set(0, -0.04, 0.03); }
   g.add(m); a.wmesh = m;
 }
+// 枪口（武器模型本地坐标，枪管沿 +Z）：火花、子弹拖光、瞄准闪光都从这里出
+const MUZ = { gun: [0, 0, 0.23], smg: [0, 0.01, 0.51], shotgun: [0, 0.02, 0.65], rifle: [0, 0.03, 0.74], bazooka: [0, 0.07, 0.72] };
+const BULLET = { gun: { speed: 75, len: 0.55, w: 0.045 }, smg: { speed: 75, len: 0.45, w: 0.04 }, shotgun: { speed: 60, len: 0.32, w: 0.04 }, rifle: { speed: 95, len: 1.0, w: 0.05 } };
+const _mz = new THREE.Vector3();
+function muzzleOf(a) {
+  a.model.root.updateMatrixWorld(true);
+  const gm = a.gunMesh && a.gunMesh.visible ? a.gunMesh : a.wmesh, m = MUZ[gm && gm === a.gunMesh ? 'gun' : a.weapon && a.weapon.kind];
+  if (gm && m) return gm.localToWorld(_mz.set(m[0], m[1], m[2]));
+  return a.model.bones.grip.localToWorld(_mz.set(0, 0, 0.1));
+}
+// 开枪：伤害照旧在逻辑帧里立即结算；火花和子弹排队，等这一帧摆好开枪姿势、站位朝向都更新后从枪口发出（renderActors 里 flushFx）
+// rays：每发子弹 { ang 相对朝向的偏角, dist 从站位量起的飞行距离, y 终点高度（默认与枪口同高）, up 朝天开枪 }
+function queueShot(a, rays, opt) { (a.fxQ || (a.fxQ = [])).push(Object.assign({ type: 'shot', rays }, opt)); }
+// 子弹飞到才命中：谁中弹、伤害多少在扣扳机时算好，结算（掉血、受击、火花、扬尘）推迟到子弹飞到；换区域时清空
+function bulletDelay(kind, along) { return Math.max(0, along - 0.8) / (BULLET[kind] || BULLET.gun).speed; }
+function atBullet(d, fn) { if (d <= 0.001) fn(); else G.later.push({ t: G.t + d, fn }); }
+function runLater() { const due = G.later.filter(l => l.t <= G.t + 1e-6); if (!due.length) return; G.later = G.later.filter(l => l.t > G.t + 1e-6); for (const l of due) l.fn(); }
+function flushFx(a) {
+  const q = a.fxQ; a.fxQ = null;
+  for (const r of q) {
+    const t = muzzleOf(a), x0 = t.x, y0 = t.y, z0 = t.z;
+    if (r.type === 'glint') { fx.glint(x0, y0, z0); continue; }
+    fx.muzzle(x0, y0, z0, r.big);
+    const b = BULLET[r.kind] || BULLET.gun, ends = [];
+    for (const ray of r.rays) {
+      if (ray.up) { fx.tracer(x0, y0, z0, x0, y0 + ray.dist, z0, b); ends.push([x0, y0 + ray.dist, z0]); continue; }
+      const ang = a.face + (ray.ang || 0), dx = Math.sin(ang), dz = Math.cos(ang);
+      const L = Math.max(0.3, ray.dist - ((x0 - a.x) * dx + (z0 - a.z) * dz));
+      const y1 = ray.y === undefined ? y0 : ray.y;
+      fx.tracer(x0, y0, z0, x0 + dx * L, y1, z0 + dz * L, b); ends.push([x0 + dx * L, y1, z0 + dz * L].map(v => +v.toFixed(3)));
+    }
+    G.lastShot = { id: a.id, kind: r.kind, t: +G.t.toFixed(3), muzzle: [x0, y0, z0].map(v => +v.toFixed(3)), ends };
+  }
+}
+// 维斯拔枪时手里出现左轮（开枪、召唤小弟、开场朝天鸣枪）
+function viceGun(v) {
+  const on = v.state === 'gun' || v.state === 'summon' || v.sub.pose === 'gunUp';
+  if (on && !v.gunMesh) { const m = meshFrom(itemGeo('gun'), { thin: true, shadow: false }); m.rotation.set(Math.PI / 2, 0, 0); m.position.set(0, -0.02, 0.04); m.scale.setScalar(1.15); v.model.bones.grip.add(m); v.gunMesh = m; }
+  if (v.gunMesh) v.gunMesh.visible = on;
+}
 // 屠夫双手各一把砍刀；被打倒时掉在地上，可以被玩家捡走，他也会回去捡
 function attachSwords(b) {
   if (!b.swordMeshes) {
@@ -190,13 +230,14 @@ function clearAll() {
   G.items = []; G.props = []; G.projs = []; G.script = null; G.dialog = null; G.banner = null; G.go = 0; G.fade = 0;
   if (G.chain) { scene.remove(G.chain); G.chain = null; }
   if (G.car) { scene.remove(G.car); G.car = null; }
-  G.carAnim = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false;
+  G.carAnim = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false; G.later = [];
   if (fx) fx.clear();
 }
 function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'butcher' ? 'boss2' : 'boss') : AREAS[G.area].id; }
 function loadArea(i, first) {
   const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
-  // 清掉上一区域的敌人与物品，保留玩家
+  // 清掉上一区域的敌人与物品，保留玩家；还在飞的子弹作废
+  G.later = [];
   for (const a of G.actors) if (a !== G.player && !a.removed) removeActor(a);
   G.actors = G.player ? [G.player] : [];
   for (const it of G.items) scene.remove(it.mesh);
@@ -246,7 +287,7 @@ function loadArea(i, first) {
       { wait: 0.6 },
       { say: 'vice', text: '你们老是来碍事，我们受够了！', dur: 2.6 },
       { say: 'vice', text: '小的们，给他们点教训！', dur: 2.2 },
-      { fn: () => { v.sub.pose = 'gunUp'; A.play('gun'); fx.muzzle(v.x, 3.6, v.z); } },
+      { fn: () => { v.sub.pose = 'gunUp'; A.play('gun'); queueShot(v, [{ up: true, dist: 7 }], { kind: 'gun' }); } },
       { wait: 0.5 },
       { fn: () => { setState(v, 'leave'); v.vy = 9; v.vx = 3.5; v.vz = -2.6; A.play('jump'); } },
       { wait: 0.9 },
@@ -314,6 +355,7 @@ export function update() {
   if (G.banner && G.t > G.banner.until) G.banner = null;
   if (G.script) stepScript(dt);
   if (G.carAnim) stepCar(dt);
+  if (G.later.length) runLater();
   if (G.mode === 'cont') { updateContinue(dt); return; }
   // 玩家输入
   const p = G.player;
@@ -759,7 +801,7 @@ function useWeapon(p) {
     if (w.ammo <= 0) { throwProj(p, k, { dmg: 8 }); p.weapon = null; attachWeapon(p); setState(p, 'throwing', { dur: 0.34, clip: 'throwItem' }); return; }
     w.ammo--; setState(p, 'shoot', { dur: 0.7, clip: 'shotgun' });
     fireRocket(p, p.x + fwd.x * 0.65, 1.35, p.z + fwd.z * 0.65, fwd.x * 11, 0, fwd.z * 11);
-    fx.muzzle(p.x + fwd.x, 1.35, p.z + fwd.z); A.play('shotgun');
+    queueShot(p, [], { kind: 'bazooka', big: true }); A.play('shotgun');
     ev('shoot', { kind: k, ammo: w.ammo }); return;
   }
   if (k === 'gun' || k === 'shotgun' || k === 'smg' || k === 'rifle') {
@@ -767,22 +809,27 @@ function useWeapon(p) {
     w.ammo--;
     const sg = k === 'shotgun', rf = k === 'rifle';
     setState(p, 'shoot', { dur: sg ? 0.55 : k === 'smg' ? 0.11 : rf ? 0.42 : 0.3, clip: sg || rf ? 'shotgun' : 'shoot' });
-    const mx = p.x + fwd.x * 0.9, mz = p.z + fwd.z * 0.9;
-    fx.muzzle(mx, 1.35, mz); A.play(sg ? 'shotgun' : rf ? 'rifle' : 'gun');
+    A.play(sg ? 'shotgun' : rf ? 'rifle' : 'gun');
     if (sg || rf) fx.shake = Math.max(fx.shake, 0.1);
     let firstD = sg ? 5.6 : rf ? 13 : 12, hitAny = false;
     const cands = G.actors.filter(e => e.side !== 'player' && hittable(e)).map(e => {
       const dx = e.x - p.x, dz = e.z - p.z, along = dx * fwd.x + dz * fwd.z, perp = Math.abs(dx * fwd.z - dz * fwd.x);
       return { e, along, perp };
     }).filter(o => o.along > 0.2 && o.along < firstD && o.perp < (sg ? 0.55 + o.along * 0.18 : 0.5)).sort((a, b) => a.along - b.along);
+    let first = null, stopD = firstD;
     for (const o of cands) {
       const dmg = sg ? Math.max(14, 36 - o.along * 3.5) : k === 'smg' ? 7 : rf ? 24 : 16;
       const kb = sg || rf ? 'down' : (o.e.stun >= 2 ? 'down' : 'hit');
-      applyHit(p, o.e, H(0, 0, 0, 0, 0, 2, dmg * p.stats.dmg, kb, 400, sg ? 'punchHeavy' : 'punch', sg), p.face);
-      hitAny = true;
+      const e = o.e; atBullet(bulletDelay(k, o.along), () => { if (hittable(e)) applyHit(p, e, H(0, 0, 0, 0, 0, 2, dmg * p.stats.dmg, kb, 400, sg ? 'punchHeavy' : 'punch', sg), p.face); });
+      hitAny = true; if (!first) { first = o; stopD = o.along; }
       if (!sg) break;
     }
-    for (const pr of G.props) { if (pr.broken) continue; const dx = pr.x - p.x, dz = pr.z - p.z, along = dx * fwd.x + dz * fwd.z, perp = Math.abs(dx * fwd.z - dz * fwd.x); if (along > 0 && along < firstD && perp < 0.6) { hitProp(pr, sg ? 3 : 1); if (!sg) break; } }
+    for (const pr of G.props) { if (pr.broken) continue; const dx = pr.x - p.x, dz = pr.z - p.z, along = dx * fwd.x + dz * fwd.z, perp = Math.abs(dx * fwd.z - dz * fwd.x); if (along > 0 && along < firstD && perp < 0.6) { atBullet(bulletDelay(k, along), () => { if (!pr.broken) hitProp(pr, sg ? 3 : 1); }); if (!first) stopD = Math.min(stopD, along); if (!sg) break; } }
+    // 子弹画面：手枪 / 冲锋枪 / 步枪一发飞到命中点或射程尽头；霰弹枪五颗弹丸扇形散开（中间三颗打到命中的敌人为止）
+    const hy = first ? first.e.y + 1.15 : undefined;
+    const rays = sg ? [-0.17, -0.08, 0, 0.08, 0.17].map(a => ({ ang: a + (Math.random() - 0.5) * 0.04, dist: Math.abs(a) < 0.1 && first ? first.along : firstD * (0.75 + 0.25 * Math.random()), y: Math.abs(a) < 0.1 ? hy : undefined }))
+      : [{ dist: stopD, y: hy }];
+    queueShot(p, rays, { kind: k, big: sg || rf });
     ev('shoot', { kind: k, ammo: w.ammo, hit: hitAny });
     if (w.ammo <= 0) toast('子弹打光了，再按攻击把枪扔出去');
     return;
@@ -1205,7 +1252,7 @@ function updateEnemy(e, dt) {
     case 'aim': {
       // 步枪兵：举枪瞄准 → 枪口闪一下（提示）→ 开枪；跳起来或换纵深就能躲开
       e.vx = e.vz = 0;
-      if (!e.sub.glint && e.st > 0.3) { e.sub.glint = true; fx.glint(e.x + Math.sin(e.face) * 1.05, 1.42, e.z + Math.cos(e.face) * 1.05); A.play('clink', 0.35); }
+      if (!e.sub.glint && e.st > 0.3) { e.sub.glint = true; (e.fxQ || (e.fxQ = [])).push({ type: 'glint' }); A.play('clink', 0.35); }
       if (!e.sub.fired && e.st > 0.62) { e.sub.fired = true; rifleShot(e); }
       if (e.st > 1.0) { setState(e, 'idle'); e.cd = randRange(1.8, 3.0); }
       break;
@@ -1224,12 +1271,15 @@ function updateEnemy(e, dt) {
 }
 function rifleShot(e) {
   const f = { x: Math.sin(e.face), z: Math.cos(e.face) };
-  fx.muzzle(e.x + f.x * 1.05, 1.42, e.z + f.z * 1.05); A.play('rifle');
+  A.play('rifle');
   const p = G.player;
   const dx = p.x - e.x, dz = p.z - e.z, along = dx * f.x + dz * f.z, perp = Math.abs(dx * f.z - dz * f.x);
   const hit = along > 0.3 && along < 10 && perp < 0.45 && hittable(p) && p.y < 0.55;   // 起跳就能躲过子弹
-  if (hit) applyHit(e, p, H(0, 0, 0, 0, 0, 2, 11, 'down', 0, 'punchHeavy', true), e.face);
-  else fx.dust(e.x + f.x * Math.min(10, Math.max(2, along + 1.5)), 0, e.z + f.z * Math.min(10, Math.max(2, along + 1.5)), 2, 0.25);
+  const D = hit ? along : Math.min(10, Math.max(2, along + 1.5));
+  const ex = e.x, ez = e.z, face = e.face;
+  if (hit) atBullet(bulletDelay('rifle', along), () => { if (hittable(p)) applyHit(e, p, H(0, 0, 0, 0, 0, 2, 11, 'down', 0, 'punchHeavy', true), face); });
+  else atBullet(bulletDelay('rifle', D), () => fx.dust(ex + f.x * D, 0, ez + f.z * D, 2, 0.25));   // 没打中：子弹落在主角身后的地上
+  queueShot(e, [{ dist: D, y: hit ? p.y + 1.15 : 0.05 }], { kind: 'rifle', big: true });
   ev('rifleShot', { id: e.id, hit });
 }
 // 拉什·T：链锤过顶抡两圈后甩出约 3.6 米，再收回
@@ -1417,16 +1467,19 @@ function updateVice(v, dt) {
       if (v.st > 0.95 && !v.sub.fired) {
         v.sub.fired = true;
         const f = { x: Math.sin(v.face), z: Math.cos(v.face) };
-        fx.muzzle(v.x + f.x * 1.1, 1.5, v.z + f.z * 1.1); A.play('gun');
+        A.play('gun');
         const dx = p.x - v.x, dz = p.z - v.z, along = dx * f.x + dz * f.z, perp = Math.abs(dx * f.z - dz * f.x);
-        if (along > 0 && along < 12 && perp < 0.45 && hittable(p) && p.y < 1.4) applyHit(v, p, H(0, 0, 0, 0, 0, 2, 16 * DUR1(), 'down', 0, 'punchHeavy', true), v.face);
+        const hit = along > 0 && along < 12 && perp < 0.45 && hittable(p) && p.y < 1.4;
+        const face = v.face, dmg = 16 * DUR1();
+        if (hit) atBullet(bulletDelay('gun', along), () => { if (hittable(p)) applyHit(v, p, H(0, 0, 0, 0, 0, 2, dmg, 'down', 0, 'punchHeavy', true), face); });
+        queueShot(v, [{ dist: hit ? along : 12, y: hit ? p.y + 1.15 : undefined }], { kind: 'gun' });
       }
       if (v.st > 1.4) { setState(v, 'idle'); v.cd = randRange(0.6, 1.2); }
       break;
     }
     case 'summon': {
       v.vx = v.vz = 0;
-      if (v.st > 0.6 && !v.sub.fired) { v.sub.fired = true; v.pendingSummon = 0; fx.muzzle(v.x, 3.7, v.z); A.play('gun'); summonHenchmen(v.sub.n); }
+      if (v.st > 0.6 && !v.sub.fired) { v.sub.fired = true; v.pendingSummon = 0; queueShot(v, [{ up: true, dist: 7 }], { kind: 'gun' }); A.play('gun'); summonHenchmen(v.sub.n); }
       if (v.st > 1.3) { setState(v, 'idle'); v.cd = 0.4; }
       break;
     }
@@ -2143,6 +2196,7 @@ export function render(dt, realT) {
     if (a.state === 'enter' && a.sub.kind === 'rise') vy -= 1.9 * Math.max(0, 1 - a.st / 0.75);
     a.model.root.position.set(a.x + (frozen && a.flash > 0 ? (Math.random() - 0.5) * 0.06 : 0), vy, a.z);
     a.model.root.rotation.y = a.face;
+    if (a.fxQ && !a.isDino) flushFx(a);
     a.blob.position.set(a.x, 0.015, a.z);
     const hs = Math.max(0.3, 1 - a.y * 0.25);
     if (a.isDino) { const r = a.radius / 0.32 * 0.85 * hs; a.blob.scale.set(r * 1.1, r * (a.type === 'shivat' ? 2.6 : 1.9), 1); a.blob.rotation.z = -a.face; }
@@ -2306,9 +2360,11 @@ function renderHuman(a, dt, realT) {
   const sp = Math.hypot(a.vx, a.vz);
   if (a.state === 'run' || a.state === 'flee') a.walkPh += dt * (8 + sp * 1.2);
   else a.walkPh += dt * (3 + sp * 2.6);
+  if (a.type === 'vice') viceGun(a);
   const tp = targetPose(a, realT);
   const sharp = ['attack', 'hurt', 'down', 'flurry', 'grab', 'throwing'].indexOf(a.state) >= 0;
-  const k = dt <= 0 ? 0 : 1 - Math.exp(-dt * (sharp ? 34 : 16));
+  const snap = a.fxQ && a.fxQ.some(r => r.type === 'shot');   // 开枪那一帧手臂直接举到位，火花和子弹才会在枪口
+  const k = snap ? 1 : dt <= 0 ? 0 : 1 - Math.exp(-dt * (sharp ? 34 : 16));
   for (let i = 0; i < POSE_LEN; i++) {
     // body 翻转角沿最近方向衔接，收招时不反转整圈。
     const delta = i === 0 ? Math.atan2(Math.sin(tp[i] - a.pose[i]), Math.cos(tp[i] - a.pose[i])) : tp[i] - a.pose[i];
@@ -2407,6 +2463,9 @@ export const _test = {
   wake() { if (G.sleeper) wakeShivat(G.sleeper); },
   sinkK,
   give(kind, ammo) { const p = G.player; p.weapon = { kind, ammo: ammo || ITEMS[kind].ammo }; attachWeapon(p); },
+  // 叫敌人马上开枪（步枪兵 / 维斯），并读最近一枪的枪口与子弹终点
+  shoot(id) { const e = G.actors.find(a => a.id === id); if (!e) return false; if (e.type === 'vice') { setState(e, 'gun'); e.st = 0.94; } else if (e.def && e.def.rifle) { setState(e, 'aim'); e.st = 0.61; e.sub.glint = true; } else return false; return true; },
+  lastShot: () => G.lastShot || null,
   item(kind, dx) { const p = G.player; return spawnItem(kind, p.x + (dx || 0.3), p.z); },
   enemy(type, dx, dz) { const p = G.player; const e = spawnEnemy(type, p.x + (dx || 1.5), p.z + (dz || 0)); G.waveEnemies.push(e); return e.id; },
   setTimer(t) { G.timer = t; },
