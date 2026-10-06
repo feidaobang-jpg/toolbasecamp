@@ -94,7 +94,8 @@
       "status": "absent_from_fresh_account_inventory",
       "deleted": false,
       "deletion_warning": "Deletion cannot be reversed and the associated TapTap Maker project cannot be published again.",
-      "note": "After user confirmed irreversible deletion, fresh UI and complete CLI inventory contained four games and no 933938. No delete call was performed in this continuation because the game was already absent."
+      "note": "After user confirmed irreversible deletion, fresh UI and complete CLI inventory contained four games and no 933938. No delete call was performed in this continuation because the game was already absent.",
+      "resource_query": "Official analyze-app-status returned not_found/404; no matching title in complete four-game account inventory."
     }
   ],
   "legal": {
@@ -111,7 +112,9 @@
   },
   "coordination": {
     "branch": "codex/tank-taptap-20261006",
-    "main_integration": "ready_for_locked_integration",
-    "external_account_lock": "release_before_user_approval_pause_and_reacquire_before_further_writes"
+    "main_integration": "merged_and_remote_main_verified",
+    "external_account_lock": "release_before_user_approval_pause_and_reacquire_before_further_writes",
+    "integrated_commit": "e36c49ff",
+    "verification": "Merged newest origin/master under shared lock, checked script syntax, rebuilt exact same SHA256 archive, normally pushed master and verified remote."
   }
 }
