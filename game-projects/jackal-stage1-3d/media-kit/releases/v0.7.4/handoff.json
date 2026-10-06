@@ -50,7 +50,7 @@
   "toy": {
     "id": 39863936092160,
     "version": "v0.7.4",
-    "status": "included_in_v0.7.5",
+    "status": "published_in_v0.7.5",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_l8Szh0mu/index.html",
     "preview_qa": {
       "passed": 134,
@@ -58,7 +58,8 @@
       "record": "toy-preview-qa.json"
     },
     "submission_attempt": "rejected: code 307013; newer v0.7.5 already auditing",
-    "note": "不提交旧包；v0.7.5已整合本版去雾/固定镜头及后续模型变化，转核验最新版本。"
+    "note": "不提交旧包；v0.7.5已整合本版去雾/固定镜头及后续模型变化，转核验最新版本。",
+    "included_version": "v0.7.5"
   },
   "bilibili": {
     "status": "ordinary_patch_deferred",
@@ -119,6 +120,16 @@
   },
   "current_successor": {
     "version": "v0.7.5",
-    "reason": "后续模型任务已保留本版距离雾删除与固定镜头；不再发布旧包。"
+    "reason": "后续模型任务已保留本版距离雾删除与固定镜头；不再发布旧包。",
+    "status": "website_and_toy_public_verified",
+    "verified_at": "2026-10-06T10:12:58.172658+00:00",
+    "website_script_sha256": "76597081fc9e0c9b24041aa5dff11717802dde38eae8fdc52bcc898c680d92df",
+    "public_toy_runtime": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v22991/index.html",
+    "qa": {
+      "website": 134,
+      "toy_preview": 134,
+      "toy_public": 134,
+      "failed": 0
+    }
   }
 }
