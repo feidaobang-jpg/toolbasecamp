@@ -26,5 +26,15 @@
     "browser": "captures/verification.json",
     "physicalPhoneTest": false
   },
-  "created_at": "2026-10-06T10:50:33.741758+00:00"
+  "created_at": "2026-10-06T10:50:33.741758+00:00",
+  "activity_check": {
+    "status": "partial",
+    "source": "https://member.bilibili.com/platform/growingUp/taskManage/main",
+    "account_uid": 16214353,
+    "observations": [
+      "累计有效播放746/10000，80推广金任务未达标",
+      "每周投稿挑战已有1000曝光奖励可领取，台账已记录"
+    ],
+    "note": "本次普通补丁无新投稿、没有确认新适用报名；共用台账被另一任务锁定，未覆盖或推进全面检查时间。"
+  }
 }
