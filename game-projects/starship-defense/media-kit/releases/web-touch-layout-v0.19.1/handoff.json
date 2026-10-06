@@ -15,7 +15,7 @@
   "build": {
     "id": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
     "fingerprint": "ef36ec7d10f21a734b9b4376ee5485f6caf76f0c34ea5c61b13a9e6e04422658",
-    "commit": "5efa2c41d97d4bd26002b39d9705dddd2c03b01c",
+    "commit": "ff026844cbe9db2de4009783cdff69e698a38451",
     "dirty": false,
     "entrypoint": "public/html/game/starship-defense/index.html",
     "files": {
@@ -50,7 +50,9 @@
       "capture_mode": "realtime-automation",
       "description": "同包实际布局编辑；脚本初始化游戏局面",
       "audio": "none",
-      "visual_review": "pass"
+      "visual_review": "pass",
+      "width": 844,
+      "height": 390
     },
     {
       "id": "edit-portrait",
@@ -62,7 +64,9 @@
       "capture_mode": "realtime-automation",
       "description": "同包实际布局编辑；脚本初始化游戏局面",
       "audio": "none",
-      "visual_review": "pass"
+      "visual_review": "pass",
+      "width": 390,
+      "height": 844
     },
     {
       "id": "layout-browser-recording",
@@ -74,7 +78,23 @@
       "capture_mode": "realtime-automation",
       "description": "同包真实编辑输入/手机视口模拟原始录像，未作成片审看",
       "audio": "none",
-      "visual_review": "not-run"
+      "visual_review": "not-run",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 9.52
+    },
+    {
+      "id": "comment-reply",
+      "file": "releases/web-touch-layout-v0.19.1/qa/captures/comment-reply.jpg",
+      "sha256": "9268d29e928d6877c1f801f79e0dff2b90aede41f2ac0596993d4c07080aecf7",
+      "kind": "screenshot",
+      "version": "web-touch-layout-v0.19.1",
+      "capture_mode": "realtime-automation",
+      "description": "原楼报告者及本人已公开回复",
+      "width": 598,
+      "height": 258,
+      "audio": "none",
+      "visual_review": "pass"
     }
   ],
   "historical_media": [],
@@ -84,7 +104,7 @@
     "not_tested": [
       "实体手机多指触控与性能"
     ],
-    "package_results": "qa/results.json"
+    "package_results": "qa/package-results.json"
   },
   "readiness": {
     "overview": "partial",
@@ -98,28 +118,39 @@
     "reason": "操作设置功能不改变战场画风与场景"
   },
   "web": {
-    "status": "initial_public_verified_final_microadjust_pending",
-    "commit": "5efa2c41d97d4bd26002b39d9705dddd2c03b01c",
-    "verified_at": "2026-10-06T10:02:26.458650+00:00",
+    "status": "public_verified",
+    "commit": "ff026844cbe9db2de4009783cdff69e698a38451",
+    "verified_at": "2026-10-06T10:13:53.216366+00:00",
     "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-    "evidence": "qa/results.json",
     "bundle_matches_local": true,
     "stylesheet_matches_local": true,
-    "html_cache_version": "5efa2c41",
-    "initial_deployment_commit": "5efa2c41d97d4bd26002b39d9705dddd2c03b01c",
-    "note": "初始拖动功能已公网核验；最终选中反馈/键盘微调正在等待共享合并锁，尚未发布"
+    "html_cache_version": "ff026844"
   },
   "toy": {
     "id": 38678478981120,
-    "status": "pending_web_deployment"
+    "status": "published",
+    "submitted_at": "2026-10-06T10:14:22.667416+00:00",
+    "version": "web-touch-layout-v0.19.1",
+    "package_sha256": "74c5d570dd596dffd4ef3e6c02ee727c35283178d817f7c77ded39f99544ccaf",
+    "verified_preview_url": "https://www.bilibili.com/toy/preview/preview_FsAwtrhJ/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pwTXVLCC/index.html",
+    "public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_version_path": "38678478981120-v23000",
+    "public_verification": "公开入口实际打开操作设置，显示新增手机按键位置和自定义按键入口"
   },
   "bilibili": {
-    "status": "pending",
-    "reason": "新增可操作的布局功能，网站与Toy验证后同步已确认两条简介"
+    "status": "public_verified",
+    "record": "bilibili-sync.json",
+    "targets": [
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf"
+    ]
   },
   "comment_reply": {
-    "status": "pending_verified_release",
-    "rpid": "316226527777"
+    "status": "public_verified",
+    "rpid": "316226527777",
+    "record": "comment-reply.json"
   },
   "toy_preview": {
     "url": "https://www.bilibili.com/toy/preview/preview_FsAwtrhJ/index.html",
