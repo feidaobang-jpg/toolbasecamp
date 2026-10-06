@@ -36,11 +36,29 @@
     "method": "Edge实际WebGL浏览器；固定种子测试传送与手动时钟，真实按键、DOM截图、各预设距离及scene.fog为空验证。"
   },
   "website": {
-    "status": "pending_deployment"
+    "status": "verified",
+    "version": "v0.7.4",
+    "commit": "a4886a2da6ff11c36dfc2ba9c4d7574ec6b28a55",
+    "verified_at": "2026-10-06T10:04:35.070561+00:00",
+    "qa": {
+      "passed": 134,
+      "failed": 0,
+      "record": "website-qa.json"
+    },
+    "script_hash_matches": true
   },
   "toy": {
     "id": 39863936092160,
-    "status": "pending_package"
+    "version": "v0.7.4",
+    "status": "included_in_v0.7.5",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_l8Szh0mu/index.html",
+    "preview_qa": {
+      "passed": 134,
+      "failed": 0,
+      "record": "toy-preview-qa.json"
+    },
+    "submission_attempt": "rejected: code 307013; newer v0.7.5 already auditing",
+    "note": "不提交旧包；v0.7.5已整合本版去雾/固定镜头及后续模型变化，转核验最新版本。"
   },
   "bilibili": {
     "status": "ordinary_patch_deferred",
@@ -98,5 +116,9 @@
     },
     "record": "performance.json",
     "phone_performance": "not-tested"
+  },
+  "current_successor": {
+    "version": "v0.7.5",
+    "reason": "后续模型任务已保留本版距离雾删除与固定镜头；不再发布旧包。"
   }
 }
