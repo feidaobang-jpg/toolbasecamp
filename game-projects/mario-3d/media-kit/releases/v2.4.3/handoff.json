@@ -84,7 +84,12 @@
     "audio_regressions": "captures/audio/results.json",
     "audio_passed": 5,
     "performance_review": "5 camera presets, Edge RTX4060Ti hardware rendering, ~169-170fps, p95 6ms, zero frames >50ms in post-fix sample; desktop only",
-    "visual_review": "查看复活点截图与实际自动化录像连续帧；模型清理数据与切区画面一致"
+    "visual_review": "查看复活点截图与实际自动化录像连续帧；模型清理数据与切区画面一致",
+    "integrated_results": "D:/project/task-artifacts/mario-comment-fix-20261007/integrated/results.json",
+    "package_results": "D:/project/task-artifacts/mario-comment-fix-20261007/package-qa/results.json",
+    "motion_review": "实际查看五个预设实时自动化录屏的连续帧，食人花仅在当前区域水管中伸缩；没有旧区域冻结模型",
+    "website_results": "captures/website/results.json",
+    "preview_results": "captures/toy-preview/results.json"
   },
   "readiness": {
     "update": "partial",
@@ -97,16 +102,123 @@
     "reason": "修复碰撞/区域模型清理，题材画风与主画面未改"
   },
   "website": {
-    "status": "pending"
+    "status": "public_verified",
+    "commit": "5c92ea0beb426f3136adc29c0216d8bd4c66c620",
+    "verified_at": "2026-10-06T21:31:39.632832+00:00",
+    "method": "Actions success + public HTTP code hashes; index cache-bust matches merged commit",
+    "files": [
+      {
+        "file": "index.html",
+        "sha256": "086012a123df3caf816ff522aea3e95c6f337f768c6522c2d60b4de6add42695",
+        "source_match": false,
+        "verified": true
+      },
+      {
+        "file": "main.js",
+        "sha256": "73317fb6d030f1ec73355256b534512eec23136f29ef90da9d7cd0d27536a237",
+        "source_match": true,
+        "verified": true
+      },
+      {
+        "file": "world.js",
+        "sha256": "7a97515f458129cb6d6d9520af24ca6e7bf324e4766b8425753c7aeceb846608",
+        "source_match": true,
+        "verified": true
+      },
+      {
+        "file": "scene.js",
+        "sha256": "d1c50e95c8fad98d10fdb2783b474d0bf64f6e7f4896a6e6ac36cf8a709f20e7",
+        "source_match": true,
+        "verified": true
+      },
+      {
+        "file": "levels.js",
+        "sha256": "f4663d71f8d2a50e9cf472a13a1818b00f896a42485032348c9dd9f3bc4475d6",
+        "source_match": true,
+        "verified": true
+      }
+    ]
   },
   "toy": {
     "id": 39043286960128,
-    "status": "pending"
+    "status": "published",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Et7fuxvi/index.html",
+    "preview_passed": 36,
+    "package_sha256": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
+    "submitted_at": "2026-10-06T21:34:15.115028+00:00",
+    "response": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_kPiZ6KIi/index.html"
+    },
+    "preview_qa": "D:/project/task-artifacts/mario-comment-fix-20261007/toy-preview/results.json",
+    "public_package_verified": true,
+    "published_at": "2026-10-06T21:37:45.810940+00:00",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23208/index.html",
+    "public_files": [
+      {
+        "file": "main.js",
+        "sha256": "ed42572e5eeceecd93d34c669f0c0727947a62faa2c6d3234f95511524d872e9",
+        "match": true
+      },
+      {
+        "file": "world.js",
+        "sha256": "7a97515f458129cb6d6d9520af24ca6e7bf324e4766b8425753c7aeceb846608",
+        "match": true
+      },
+      {
+        "file": "scene.js",
+        "sha256": "d1c50e95c8fad98d10fdb2783b474d0bf64f6e7f4896a6e6ac36cf8a709f20e7",
+        "match": true
+      },
+      {
+        "file": "levels.js",
+        "sha256": "f4663d71f8d2a50e9cf472a13a1818b00f896a42485032348c9dd9f3bc4475d6",
+        "match": true
+      }
+    ]
   },
   "bilibili": {
     "status": "pending_merge",
     "reason": "普通错误修复累计入下次有意义的简介更新；当前入口/操作说明准确",
-    "comment_reply": "pending after web/Toy verification"
+    "comment_reply": "public_verified",
+    "replies": [
+      {
+        "rpid": "319881490736",
+        "video": "BV1Fwpw6FEFx",
+        "comment_type": 1,
+        "root": "319875690208",
+        "user": "为啥呀鸭",
+        "date": "2026-10-07",
+        "text": "马里奥在第2关坠崖之后,会卡bug来到上方平台",
+        "kind": "bug",
+        "status": "fixed",
+        "fixed_in": "v2.4.3",
+        "reply_rpid": "316297445905",
+        "reply_parent": "319881490736",
+        "reply_text": "回复 @为啥呀鸭 : 谢谢截图，已修复！第2关坠崖后会回到正常的地下中途点，不再复活到上方平台。网站和Toy都已更新到v2.4.3，重新打开试玩即可。",
+        "reply_public_verified_at": "2026-10-06T21:39:01.172522+00:00",
+        "note": "两张反馈截图实际查看；网站与Toy公开包核验通过后回复",
+        "evidence": "D:/project/task-artifacts/mario-comment-fix-20261007/replies.png"
+      },
+      {
+        "rpid": "319881634192",
+        "video": "BV1Fwpw6FEFx",
+        "comment_type": 1,
+        "root": "319875690208",
+        "user": "为啥呀鸭",
+        "date": "2026-10-07",
+        "text": "然后食人花会留下重影",
+        "kind": "bug",
+        "status": "fixed",
+        "fixed_in": "v2.4.3",
+        "reply_rpid": "316297448385",
+        "reply_parent": "319881634192",
+        "reply_text": "回复 @为啥呀鸭 : 这个也修好了：切关、重开时旧食人花没清掉，才会留下重影。现在进出水管和重开会正确清理，网站与Toy已更新到v2.4.3。谢谢帮忙发现！",
+        "reply_public_verified_at": "2026-10-06T21:39:01.172522+00:00",
+        "note": "两张反馈截图实际查看；网站与Toy公开包核验通过后回复",
+        "evidence": "D:/project/task-artifacts/mario-comment-fix-20261007/replies.png"
+      }
+    ]
   },
   "media": [
     {
@@ -681,6 +793,22 @@
       "width": 1280,
       "height": 720,
       "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "plant-camera-motion",
+      "file": "releases/v2.4.3/captures/motion/plant-camera-motion.webm",
+      "sha256": "d8d96f676b1e2a93314a2e9da69074d9910d7b8b9537a1fb6b115d17dac25e61",
+      "kind": "video",
+      "version": "v2.4.3",
+      "build_id": "v2.4.3",
+      "capture_mode": "realtime-automation",
+      "description": "5个视角实时连续移动与转一圈，测试钩子仅设置每段起点/保护，未加速逻辑",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 23.2,
       "audio": "none",
       "visual_review": "pass",
       "audio_review": "not-applicable"

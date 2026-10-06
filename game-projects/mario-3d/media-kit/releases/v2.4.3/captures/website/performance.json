@@ -1,0 +1,77 @@
+[
+  {
+    "preset": 0,
+    "fps": 170.00189681335354,
+    "medianMs": 5.899999999999636,
+    "p95Ms": 6,
+    "over50ms": 0,
+    "info": {
+      "calls": 182,
+      "triangles": 72194,
+      "geometries": 20,
+      "textures": 13
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1
+  },
+  {
+    "preset": 1,
+    "fps": 170.0033287365067,
+    "medianMs": 5.899999999999636,
+    "p95Ms": 6,
+    "over50ms": 0,
+    "info": {
+      "calls": 246,
+      "triangles": 72840,
+      "geometries": 20,
+      "textures": 13
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1
+  },
+  {
+    "preset": 2,
+    "fps": 169.9992867162796,
+    "medianMs": 5.899999999999636,
+    "p95Ms": 6,
+    "over50ms": 0,
+    "info": {
+      "calls": 265,
+      "triangles": 74430,
+      "geometries": 20,
+      "textures": 13
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1
+  },
+  {
+    "preset": 3,
+    "fps": 169.9971588218582,
+    "medianMs": 5.899999999997817,
+    "p95Ms": 6,
+    "over50ms": 0,
+    "info": {
+      "calls": 27,
+      "triangles": 61916,
+      "geometries": 20,
+      "textures": 13
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1
+  },
+  {
+    "preset": 4,
+    "fps": 169.7651779566447,
+    "medianMs": 5.899999999997817,
+    "p95Ms": 6,
+    "over50ms": 0,
+    "info": {
+      "calls": 185,
+      "triangles": 71250,
+      "geometries": 20,
+      "textures": 13
+    },
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "dpr": 1
+  }
+]

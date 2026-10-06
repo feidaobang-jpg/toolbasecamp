@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "rpid": "319881490736",
+      "video": "BV1Fwpw6FEFx",
+      "comment_type": 1,
+      "root": "319875690208",
+      "user": "为啥呀鸭",
+      "date": "2026-10-07",
+      "text": "马里奥在第2关坠崖之后,会卡bug来到上方平台",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "v2.4.3",
+      "reply_rpid": "316297445905",
+      "reply_parent": "319881490736",
+      "reply_text": "回复 @为啥呀鸭 : 谢谢截图，已修复！第2关坠崖后会回到正常的地下中途点，不再复活到上方平台。网站和Toy都已更新到v2.4.3，重新打开试玩即可。",
+      "reply_public_verified_at": "2026-10-06T21:39:01.172522+00:00",
+      "note": "两张反馈截图实际查看；网站与Toy公开包核验通过后回复",
+      "evidence": "D:/project/task-artifacts/mario-comment-fix-20261007/replies.png"
+    },
+    {
+      "rpid": "319881634192",
+      "video": "BV1Fwpw6FEFx",
+      "comment_type": 1,
+      "root": "319875690208",
+      "user": "为啥呀鸭",
+      "date": "2026-10-07",
+      "text": "然后食人花会留下重影",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "v2.4.3",
+      "reply_rpid": "316297448385",
+      "reply_parent": "319881634192",
+      "reply_text": "回复 @为啥呀鸭 : 这个也修好了：切关、重开时旧食人花没清掉，才会留下重影。现在进出水管和重开会正确清理，网站与Toy已更新到v2.4.3。谢谢帮忙发现！",
+      "reply_public_verified_at": "2026-10-06T21:39:01.172522+00:00",
+      "note": "两张反馈截图实际查看；网站与Toy公开包核验通过后回复",
+      "evidence": "D:/project/task-artifacts/mario-comment-fix-20261007/replies.png"
+    }
+  ]
+}
