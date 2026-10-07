@@ -6,19 +6,19 @@
   "category": "GAME",
   "visibility": "public",
   "status": "published",
-  "submitted_at": "2026-10-07T18:03:32+08:00",
-  "package": "dist/toy-v0.9.2/package",
+  "submitted_at": "2026-10-07T18:58:25+08:00",
+  "package": "dist/toy-v0.9.3/package",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_zCPIWrnh/index.html",
-  "note": "v0.9.2（原作开场、背摔、连打重击声）已过审。",
-  "status_verified": "正式入口 20/20 显示 v0.9.2",
+  "note": "v0.9.3（撤回沼泽声重击、只放原版 BGM）已过审。",
+  "status_verified": "正式入口 20/20 显示 v0.9.3",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.9.2",
-  "verified_at": "2026-10-07T18:07:00+08:00",
+  "version": "v0.9.3",
+  "verified_at": "2026-10-07T19:03:00+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.9.2",
+  "last_published_version": "v0.9.3",
   "pending_updates": [
    {
     "version": "v0.2.1",
@@ -311,7 +311,7 @@
    "channels": {
     "website": "deployed_verified",
     "toy": "published",
-    "taptap": "reviewing",
+    "taptap": "superseded_online_V-20261007-3",
     "bilibili": "public_verified"
    }
   },
@@ -321,10 +321,10 @@
    "summary": "撤回沼泽声重击、开场与过关续关只放原版曲。",
    "record": "releases/v0.9.3/handoff.json",
    "channels": {
-    "website": "pending",
-    "toy": "pending",
-    "taptap": "pending_merge",
-    "bilibili": "pending"
+    "website": "deployed_verified",
+    "toy": "published",
+    "taptap": "reviewing",
+    "bilibili": "public_verified"
    }
   }
  ],

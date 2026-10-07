@@ -113,17 +113,46 @@
   "reason": "无画面变化"
  },
  "website": {
-  "status": "pending"
+  "status": "deployed_verified",
+  "commit": "8dbd94da",
+  "verified_at": "2026-10-07T18:55:00+08:00",
+  "verification": "线上 game.min.js 与 opening/clear/continue.mp3 与提交逐字节一致；线上 original-audio 62/62（含真实网络＋0.37 MB/s 限速开场时间线）"
  },
  "toy": {
-  "status": "pending"
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.9.3/package",
+  "package_tree_sha256": "4a141fe3b2de25dceec240359e61993abf3ea112e0c29f4935f01bd65303c7a9",
+  "preview_checks": "toy-preview-check 20/20、original-audio 62/62（预览外壳内）",
+  "submitted_at": "2026-10-07T18:58:25+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_3LLG1MqJ/index.html",
+  "public_check": "正式入口电脑 + 手机 20/20 显示 v0.9.3",
+  "verified_at": "2026-10-07T19:03:00+08:00"
  },
  "taptap": {
-  "status": "pending_merge",
-  "reason": "v0.9.2 审核中，不撤审、不重复上传"
+  "source_version": "v0.9.3",
+  "source_commit": "8dbd94da",
+  "package_sha256": "7cec7f74ece1ee3793d43a4b9e43ba0b5a3858c309247566cfa894a58147a05d",
+  "h5_version_id": 272592,
+  "draft_version_id": "1043085",
+  "platform_version": "V-20261007-5",
+  "status": "reviewing",
+  "submitted_at": "2026-10-07T19:06:04+08:00",
+  "precheck": {
+   "blockers": [],
+   "preaudit_warnings": [
+    "title IP",
+    "description",
+    "trial_note"
+   ],
+   "decision": "同一已展示 IP 风险，按 taptap-force3-20261007 用户试审决定继续"
+  },
+  "verification": "verify-taptap-h5.cjs passed ×2"
  },
  "bilibili": {
-  "status": "pending",
-  "reason": "简介写了「连招最后一下换成原版重击声」，已不准确，需立即纠正"
+  "status": "public_verified",
+  "bvid": "BV18XHW66E55",
+  "record": "releases/v0.9.3/bilibili-sync.json",
+  "verified_at": "2026-10-07T19:07:15+08:00"
  }
 }
