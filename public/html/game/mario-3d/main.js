@@ -522,7 +522,6 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   let id = null;
   btn.addEventListener('pointerdown', (e) => {
     if (name === 'fire' && btn.getAttribute('aria-disabled') === 'true') {
-      if (uiMode === 'game' && !current) showToast('吃到火焰花后可发射火球');
       e.preventDefault(); return;
     }
     id = e.pointerId;
