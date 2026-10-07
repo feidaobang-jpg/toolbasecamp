@@ -1,5 +1,9 @@
 import {campaignDifficulty} from './campaign-difficulty.js';
+import {mountSavePanel} from './save-panel.js';
+import {newSaveId} from './save-store.js';
+import {cloudRecord,SaveConflict} from './cloud-save.js';
 const CLOUD_KEY='chongchao_normal_v1';
+const AUTO_KEY='chongchao_auto_v2',BACKUP_KEY='chongchao_previous_v2';
 const PLAY_URL='https://www.bilibili.com/toy/chongchao-qianshao/index.html';
 const AUTHOR='16214353',VIDEO='BV1Ujad6DEuf';
 
@@ -32,10 +36,38 @@ async function loadSdk(){
   });
 }
 
+export class ToySaveProvider {
+  constructor({sdkPromise,validate,store}){
+    this.id='toy';this.label='Toy 账号云存档';this.validate=validate;this.ready=sdkPromise.then(sdk=>this.bridge=new ToyBridge(sdk));
+    let device=store.readRaw(store.prefix+'cloud-device');if(!device){device=newSaveId();try{store.storage?.setItem(store.prefix+'cloud-device',device);}catch{}}
+    this.deviceKey='chongchao_device_'+device.replace(/[^a-zA-Z0-9]/g,'').slice(0,40);
+  }
+  parse(raw){
+    if(!raw)return null;let r;try{r=JSON.parse(raw);}catch{throw Error('云档格式异常，原数据已保留');}
+    if(![1,2].includes(r?.schema)||!this.validate(r.save)||(r.schema===2&&typeof r.revision!=='string'))throw Error('云档版本或数据不兼容，未自动覆盖任何进度');
+    return r.schema===1?{...r,revision:'legacy-'+r.save.time+'-'+r.save.score}:r;
+  }
+  async read(){
+    await this.ready;
+    const values=await this.bridge.call('getCloudStorage',undefined,{cacheKey:'save-read',refresh:true});
+    const current=this.parse(values[AUTO_KEY])||this.parse(values[CLOUD_KEY]);
+    const devices=Object.entries(values).filter(([key])=>key.startsWith('chongchao_device_')).map(([,raw])=>this.parse(raw));
+    return {current,backups:[this.parse(values[BACKUP_KEY]),this.parse(values[CLOUD_KEY]),...devices].filter(Boolean).sort((a,b)=>b.save.time-a.save.time)};
+  }
+  async write(save,revision){
+    const {current}=await this.read();if((current?.revision||null)!==revision)throw new SaveConflict();
+    const record={...cloudRecord(save),deviceKey:this.deviceKey},values={[AUTO_KEY]:JSON.stringify(record),[this.deviceKey]:JSON.stringify(record)};
+    if(current)values[BACKUP_KEY]=JSON.stringify(current);
+    // Toy has no compare-and-swap API. Preserve a separate device checkpoint as well
+    // as the prior cloud snapshot; preflight conflicts never overwrite the shared slot.
+    await this.bridge.call('setCloudStorage',values);return record;
+  }
+}
+
 export function setupToyPlatform(game,{sdkPromise}={}){
   const $=id=>document.getElementById(id),status=text=>{$('platformStatus').textContent=text;};
-  const sdkReady=sdkPromise||loadSdk();let sdk=null,bridge=new ToyBridge(null),cloud=null,pendingSave=null,rankAt=0;
-  const support=new Set();let cloudAt=0;
+  const sdkReady=sdkPromise||loadSdk();let sdk=null,bridge=new ToyBridge(null),rankAt=0;
+  const support=new Set();
   const describe=d=>d?`${campaignDifficulty(d.difficulty).name} · 周目${d.loop} · 第${d.chapter}章第${d.level}关 · ${Math.floor(d.score)}分 · ${new Date(d.time).toLocaleString('zh-CN')}`:'尚无存档';
   const error=e=>{
     const message=e&&e.message||'';
@@ -45,43 +77,9 @@ export function setupToyPlatform(game,{sdkPromise}={}){
     else status(/[\u4e00-\u9fff]/.test(message)?message.replace(/^\[ToySDK\]\s*/,''):'平台服务暂不可用，请稍后再试；本地进度不受影响');
   };
   async function action(button,fn){button.disabled=true;try{await fn();}catch(e){error(e);}finally{button.disabled=false;}}
-  function parse(raw){
-    const envelope=JSON.parse(raw);
-    if(!envelope||envelope.schema!==1||!game.validate(envelope.save))throw new Error('云档版本或数据不兼容，已保留本地进度');
-    return envelope.save;
-  }
-  async function readCloud(refresh=false){
-    const items=await bridge.call('getCloudStorage',[CLOUD_KEY],{cacheKey:'cloud',refresh});
-    cloud=items[CLOUD_KEY]?parse(items[CLOUD_KEY]):null;
-    cloudAt=Date.now();
-    $('cloudInfo').textContent='云端：'+describe(cloud)+'；本地：'+describe(game.getSave());
-    $('cloudLoad').classList.toggle('hidden',!cloud);return cloud;
-  }
-  const open=()=>{game.open();status(sdk?'Toy 已连接。选择需要的功能；不会自动覆盖进度。':'本地存档可用；云存档和平台排行榜需在 B站 Toy 中登录使用。');};
-  $('btnPlatformMenu').onclick=$('platformBtn').onclick=open;if($('platformBtnMenu'))$('platformBtnMenu').onclick=open;
-  $('platformClose').onclick=game.close;
-  $('cloudRead').onclick=()=>action($('cloudRead'),async()=>{await readCloud(Date.now()-cloudAt>60000);status('已查看云档；读取或覆盖需再点对应按钮');});
-  $('cloudWrite').onclick=()=>action($('cloudWrite'),async()=>{
-    const d=game.getSave();if(game.isTest()||!game.validate(d))throw new Error('请先进行普通模式游戏；自由测试进度不能上传');
-    pendingSave=JSON.parse(JSON.stringify(d));await readCloud(Date.now()-cloudAt>60000);
-    $('cloudConfirm').classList.remove('hidden');status('即将上传：'+describe(pendingSave)+'。确认后替换上方云档。');
-  });
-  $('cloudConfirm').onclick=()=>action($('cloudConfirm'),async()=>{
-    if(!pendingSave||game.isTest())throw new Error('请重新选择普通进度');
-    await bridge.call('setCloudStorage',{[CLOUD_KEY]:JSON.stringify({schema:1,save:pendingSave})});
-    cloud=pendingSave;bridge.cache.set('cloud',{[CLOUD_KEY]:JSON.stringify({schema:1,save:cloud})});pendingSave=null;
-    $('cloudConfirm').classList.add('hidden');$('cloudInfo').textContent='云端：'+describe(cloud);status('普通进度已保存到云端');
-  });
-  $('cloudLoad').onclick=()=>action($('cloudLoad'),async()=>{
-    if(!cloud||!game.validate(cloud))throw new Error('请先查看有效云档');
-    const local=game.getSave();if(local&&!local.testMode)localStorage.setItem(game.prefix+'cloud-backup',JSON.stringify(local));
-    game.load(JSON.parse(JSON.stringify(cloud)));status('已读取云档，原本地进度已备份');
-  });
-  $('cloudBackup').onclick=()=>action($('cloudBackup'),async()=>{
-    const raw=localStorage.getItem(game.prefix+'cloud-backup');
-    const d=raw?JSON.parse(raw):null;if(!game.validate(d))throw new Error('还没有读取云档前的本地备份');
-    game.load(d);
-  });
+  const toyEnvironment=!!sdkPromise||(['www.bilibili.com','bilibilitoy.com','www.bilibilitoy.com'].includes(location.hostname)&&location.pathname.startsWith('/toy/'));
+  const saves=mountSavePanel(game,{storage:game.store.storage,toyProvider:toyEnvironment?new ToySaveProvider({sdkPromise:sdkReady,validate:game.validate,store:game.store}):null});
+  if($('rankTools'))$('rankTools').hidden=!toyEnvironment;
   $('rankRead').onclick=()=>action($('rankRead'),async()=>{
     const refresh=Date.now()-rankAt>60000;
     const rows=await bridge.call('getRankList',{board:1,period:'all',limit:20},{cacheKey:'ranks',refresh});rankAt=Date.now();
@@ -111,4 +109,5 @@ export function setupToyPlatform(game,{sdkPromise}={}){
     for(const method of ['navigate','share'])try{if(await sdk.isSupport(method))support.add(method);}catch(_e){}
     try{const author=await bridge.call('getAuthorProfile',undefined,{cacheKey:'author'});if(author.status==='ok')$('authorInfo').textContent='作者：'+author.data.nickname+' · 万物皆可游戏';}catch(_e){}
   });
+  return saves;
 }

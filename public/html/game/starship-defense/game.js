@@ -9,7 +9,8 @@ let liveController=null;
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
 import {FortressWorld} from './fortress-world.js?v=toy3dui2';
 import {HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
-import {setupToyPlatform} from './toy-platform.js?v=fb97';
+import {setupToyPlatform} from './toy-platform.js?v=cloud240';
+import {LocalSaveStore,newSaveId} from './save-store.js';
 import {validateNormalSave} from './save-validation.js?v=fb9';
 import {BATTLEFIELD_PALETTE} from './battlefield-palette.js';
 import {BattlefieldEnvironment,ENVIRONMENTS,environmentForChapter,paintBattlefieldGround} from './battlefield-environments.js';
@@ -3230,9 +3231,13 @@ let panelOpen=false;
 
 /* ================= 存档系统 ================= */
 const SAVE_PREFIX=LIVE_MODE?'sst_live_save_':'sst_save_';
+let platformSave=null;
+const validateStoredSave=d=>validateNormalSave(d,{weapons:{...WEAPONS,...LEGACY_WEAPONS},buildings:BUILDINGS,vehicles:VEHICLES});
+const saveStore=new LocalSaveStore({storage:combatStorage,prefix:SAVE_PREFIX,validate:validateStoredSave,onStatus:()=>platformSave?.localStatus()});
+
 function saveData(){
   return{
-    testMode:Game.testMode,difficulty:Game.difficulty,loop:Game.loop,chapter:Game.chapter,level:Game.level,
+    campaignId:Game.campaignId,testMode:Game.testMode,difficulty:Game.difficulty,loop:Game.loop,chapter:Game.chapter,level:Game.level,
     gold:Math.floor(Game.gold),score:Game.score,cls:Game.cls,
     weapons:Game.weapons,curWeapon:Game.curWeapon,weaponLv:Game.weaponLv,items:Game.items,hpBonus:Game.hpBonus,
     vehiclesOwned:[...new Set(Game.vehiclesOwned)],squadCount:Game.squadCount,squadOrder:Game.squadOrder,squadAutoDefense:Game.squadAutoDefense,lastBattle:Game.lastBattle,squadGear:Game.squadGear.map(g=>({...g})),opsCompleted:{...Game.opsCompleted},
@@ -3244,6 +3249,7 @@ function saveData(){
 }
 function applySave(d){
   runGeneration++;
+  Game.campaignId=d.campaignId||newSaveId();
   Game.testMode=d.testMode===true;
   Game.difficulty=Game.testMode?'normal':campaignDifficultyId(d.difficulty);
   Game.loop=d.loop;Game.chapter=d.chapter;Game.level=d.level;
@@ -3305,16 +3311,18 @@ function migrateWeapons(d){
   return {weapons,cur,lv,refund,note};
 }
 function savePrefix(){return SAVE_PREFIX+(Game.testMode?'sandbox_':'');}
-function autoSave(){if(coopDriver?.config)return;if(Game.state==='menu'||Game.state==='over')return;try{localStorage.setItem(savePrefix()+'auto',JSON.stringify(saveData()));}catch(e){}}
-// 有实际进度的普通存档（开新局前先备份，避免误点覆盖）
+function autoSave(){
+  if(coopDriver?.config||Game.state==='menu'||Game.state==='over')return;
+  const d=saveData();
+  if(Game.testMode||LIVE_MODE){try{localStorage.setItem(savePrefix()+'auto',JSON.stringify(d));}catch{showMsg('本地保存失败，请导出普通进度备份',3);}return;}
+  saveStore.write(SAVE_PREFIX+'auto',d);platformSave?.checkpoint(d);
+}
+// 新局保留前一局，不让初始进度覆盖已有战役。
 function hasProgress(d){return !!(d&&!d.testMode&&(d.loop>1||d.chapter>1||d.level>1||d.gold>400||(d.weapons||[]).length>1||(d.vehiclesOwned||[]).length||d.squadCount));}
-function backupAuto(){try{const raw=localStorage.getItem(SAVE_PREFIX+'auto');if(raw&&hasProgress(JSON.parse(raw)))localStorage.setItem(SAVE_PREFIX+'auto-backup',raw);}catch(e){}}
+function backupAuto(){const d=saveStore.read(SAVE_PREFIX+'auto');return !d||saveStore.write(SAVE_PREFIX+'auto-backup',d,{rotate:false});}
 function slotInfo(key){
-  try{
-    const d=JSON.parse(localStorage.getItem(key));
-    if(!d)return null;
-    return d;
-  }catch(e){return null;}
+  if(key.startsWith(SAVE_PREFIX+'sandbox_')||LIVE_MODE){try{return JSON.parse(localStorage.getItem(key));}catch{return null;}}
+  return saveStore.read(key);
 }
 let saveMode='save'; // save / load
 function renderSlots(){if(coopDriver?.config){showMsg('联机进度独立于单机存档，本局不读写单机档',2);return;}
@@ -3335,7 +3343,7 @@ function renderSlots(){if(coopDriver?.config){showMsg('联机进度独立于单�
     const btns=document.createElement('span');
     if(saveMode==='save'){
       const b=document.createElement('button');b.className='mbtn';b.textContent='保存';
-      b.onclick=()=>{localStorage.setItem(key,JSON.stringify(saveData()));AudioSys.sfx('buy');showMsg('💾 已保存到存档'+i,1.5);renderSlots();};
+      b.onclick=()=>{const d=saveData();if(Game.testMode){try{localStorage.setItem(key,JSON.stringify(d));}catch{showMsg('本地保存失败',3);return;}}else if(!saveStore.write(key,d)){showMsg(saveStore.status,4);return;}platformSave?.checkpoint(d);AudioSys.sfx('buy');showMsg('💾 已保存到存档'+i,1.5);renderSlots();};
       btns.appendChild(b);
     }else if(d){
       const b=document.createElement('button');b.className='mbtn green';b.textContent='读取';
@@ -3344,7 +3352,7 @@ function renderSlots(){if(coopDriver?.config){showMsg('联机进度独立于单�
     }
     if(d){
       const del=document.createElement('button');del.className='mbtn red';del.textContent='删除';del.style.marginLeft='6px';
-      del.onclick=()=>{localStorage.removeItem(key);renderSlots();};
+      del.onclick=()=>{saveStore.remove(key);renderSlots();};
       btns.appendChild(del);
     }
     div.appendChild(btns);
@@ -3356,7 +3364,7 @@ function restoreView(){
   let pref='third';try{pref=localStorage.getItem('chongchao-person')||'third';}catch(_e){}
   if(pref==='first')setCamMode('first',false);
 }
-function loadGame(d){if(coopDriver?.config){showMsg('联机中不能读入单机存档',2);return;}
+function loadGame(d){if(!d||(!d.testMode&&!validateStoredSave(d))){showAlert('存档内容异常，未读取或覆盖原档');return;}if(coopDriver?.config){showMsg('联机中不能读入单机存档',2);return;}
   closePanels();hideConfirm();
   $('menuMain').classList.add('hidden');$('menuPause').classList.add('hidden');$('menuOver').classList.add('hidden');
   applySave(d);
@@ -3386,7 +3394,7 @@ function requestNewGame(){
   AudioSys.init();AudioSys.resume();
   const d=slotInfo(SAVE_PREFIX+'auto');
   if(hasProgress(d)){
-    askConfirm(`检测到上次进度（周目${d.loop} 第${d.chapter}章 第${d.level}关 · 💰${Math.floor(d.gold)}）。开始新游戏会把它移到「开新局前的备份」，之后可在“读取存档”里恢复。`,'仍然开始新游戏',()=>{backupAuto();newGame(false);},'继续上次进度',()=>loadGame(d));
+    askConfirm(`检测到上次进度（周目${d.loop} 第${d.chapter}章 第${d.level}关 · 💰${Math.floor(d.gold)}）。开始新游戏会把它移到「开新局前的备份」，之后可在“读取存档”里恢复。`,'仍然开始新游戏',()=>{if(backupAuto())newGame(false);else showAlert(saveStore.status);},'继续上次进度',()=>loadGame(d));
     return;
   }
   newGame(false);
@@ -3397,6 +3405,7 @@ function newGame(test){
   runGeneration++;
   resetSandboxWave();
   hideConfirm();
+  Game.campaignId=newSaveId();
   Game.testMode=!!test;
   Game.difficulty=test?'normal':selectedDifficulty;
   Game.loop=1;Game.chapter=1;Game.level=1;
@@ -3622,7 +3631,7 @@ $('btnTest').onclick=()=>{AudioSys.init();AudioSys.resume();newGame(true);};
 $('btnContinue').onclick=()=>{
   AudioSys.init();AudioSys.resume();
   const d=slotInfo(SAVE_PREFIX+'auto');
-  if(d)loadGame(d);else showAlert('没有自动存档，请开始新游戏');
+  if(d)loadGame(d);else showAlert('未找到自动存档，请先到「存档/排行」查看云端和本地备份，或导入存档文件');
 };
 function refreshContinue(){
   const d=slotInfo(SAVE_PREFIX+'auto'),btn=$('btnContinue');
@@ -3712,7 +3721,7 @@ function navRoot(){
   for(const id of NAV_ROOTS){const el=$(id);if(el&&!el.classList.contains('hidden'))return el;}return null;
 }
 function navItems(root){
-  return [...root.querySelectorAll('button,a[href],select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length&&!el.closest('.hidden'));
+  return [...root.querySelectorAll('button,a[href],select,input:not([type="hidden"]),[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length&&!el.closest('.hidden'));
 }
 function navDefault(root){
   const items=navItems(root);
@@ -4000,7 +4009,8 @@ function setupWebControls(){
   };
   const combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
   $('keyPanel').insertBefore(combatSection,$('keyStatus'));
-  if(!LIVE_MODE)setupToyPlatform({
+  if(!LIVE_MODE)platformSave=setupToyPlatform({
+    store:saveStore,confirm:askConfirm,updateContinue:refreshContinue,
     prefix:SAVE_PREFIX,
     getSave:()=>coopDriver?.config?null:Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
     load:d=>loadGame(d),isTest:()=>!!coopDriver?.config||Game.testMode||new URLSearchParams(location.search).has('qa'),
@@ -4040,7 +4050,7 @@ function setupWebControls(){
   syncPauseOptions();syncKeyLabels();
   setDeviceMode(deviceMode);
   if(new URLSearchParams(location.search).get('qa')==='1'){
-    window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
+    window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,saveStore,getPlatformSave:()=>platformSave,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       touchLayout,setDeviceMode,recallUnits,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

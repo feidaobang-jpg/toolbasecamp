@@ -235,6 +235,13 @@ button::before,button::after{content:none!important}
 #tacticsPanel .closeX{min-height:var(--corner-height,44px);min-width:var(--corner-height,44px)}
 #hudRight #webTools{position:static;pointer-events:auto;max-width:100%;margin-top:7px;gap:5px}
 @media(max-width:600px){#tacticalSquad{gap:7px}.tactical-mate{padding:7px}}
+#platformPanel{overflow-y:auto;touch-action:pan-y}#platformPanel,#platformPanel *{touch-action:pan-y}
+#platformPanel .mbtn{min-height:44px}#platformPanel h4{margin:14px 0 4px}#cloudInfo{white-space:pre-line}
+#cloudChoices{max-width:100%;padding:8px}#saveLoginForm label{display:block;margin:8px 0}
+#saveLoginForm input:not([type=checkbox]){margin-left:8px;width:220px;max-width:65%;font:inherit;padding:8px}
+.saveAuto{display:block;padding:8px}.saveAuto input{width:20px;height:20px;vertical-align:middle}
+#localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto;z-index:30}.save-health:active{transform:translateX(-50%) scale(.95)}#hud.hidden~#saveHealth{display:none}
+#saveNotice{font-size:11px;max-width:700px}
 </style>
 </head>
 <body>
@@ -279,6 +286,8 @@ button::before,button::after{content:none!important}
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
   </div>
   <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
+    <!-- 保存状态提示同样提到触控层之上，手机上才能点它打开档案站；显隐跟随 #hud。 -->
+    <button class="mbtn save-health" id="saveHealth" aria-label="查看保存状态"></button>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
       <div class="small" id="placeTip">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 确认 · L 返回建造菜单 · Esc 退出（放下时才扣钱，拆除返还一半）</div>
@@ -328,12 +337,13 @@ button::before,button::after{content:none!important}
       <button type="button" class="tb-btn" data-campaign-difficulty="normal" aria-pressed="true">普通</button>
       <button type="button" class="tb-btn" data-campaign-difficulty="hard" aria-pressed="false">困难</button>
     </div>
+    <p id="saveNotice" class="small" role="status"></p>
     <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
     <div class="btnRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
-      <button class="mbtn" id="btnPlatformMenu">☁ 存档 / 排行 / 作者</button>
+      <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复 / 作者</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
       <button class="mbtn" id="daylightMain">地表：白天</button>
       <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
@@ -440,17 +450,35 @@ button::before,button::after{content:none!important}
     <div class="btnRow"><button id="test-auto" class="mbtn green">暂停自动虫潮</button><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
     <p class="small">同屏最多 48 只虫、4 名队友、64 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。T / Esc 关闭，Tab 与回车操作。</p>
   </div>
-  <section id="platformPanel" class="panel hidden" aria-label="存档、排行与作者" style="width:630px;max-height:85%;">
-    <button class="closeX" id="platformClose" aria-label="关闭平台面板">×</button>
+  <section id="platformPanel" class="panel hidden" aria-label="存档、排行与作者" style="width:680px;max-height:90%;">
+    <button class="closeX" id="platformClose" aria-label="关闭档案站">×</button>
     <h3>☁ 前哨档案站</h3>
-    <p id="platformStatus" role="status">本地自动存档始终可用，云存档需在 B站 Toy 中登录。</p>
-    <div class="btnRow"><button class="mbtn" id="cloudRead">查看云存档</button><button class="mbtn" id="cloudWrite">上传普通进度</button><button class="mbtn green hidden" id="cloudConfirm">确认上传并覆盖云档</button><button class="mbtn green hidden" id="cloudLoad">读取这份云档</button></div>
-    <p id="cloudInfo" class="small">先查看云档，再选择上传或读取；读取前会自动保留一份本地备份。测试模式独立保存。换手机或清理浏览器前，建议先上传一次云档。</p><button class="mbtn" id="cloudBackup">恢复读取云档前的本地备份</button>
-    <div class="btnRow"><button class="mbtn" id="rankRead">普通通关积分榜</button><button class="mbtn" id="rankSubmit">提交最佳通关成绩</button></div>
-    <p class="small">各战役难度共用休闲积分总榜；只计已过关累计积分，自由测试与调试不参与。自愿提交后展示 B站昵称；这是休闲榜单。</p><ol id="rankList"></ol>
-    <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
-    <div class="btnRow"><button class="mbtn" id="authorVisit">支持作者</button><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
-    <p class="small">守住这座前哨的话，顺手去视频给开发者空投个三连补给？玩得开心就好！云存档与排行榜失败不会影响本地游玩。</p>
+    <p id="localSaveStatus" role="status">正在检查本地存档…</p>
+    <div class="btnRow"><button class="mbtn" id="saveExport">导出存档文件</button><button class="mbtn" id="saveImport">导入存档文件</button><button class="mbtn" id="saveHistory">查看本地历史备份</button><button class="mbtn" id="cloudBackup">恢复前次本地进度</button></div>
+    <input id="saveImportFile" type="file" accept=".json,application/json" hidden><div id="localHistory"></div>
+    <h4 id="cloudProvider">账号云存档</h4>
+    <p id="cloudSaveStatus" role="status">尚未连接云备份；本地游戏可继续。</p>
+    <label class="saveAuto"><input id="cloudAuto" type="checkbox" checked> 自动备份普通进度到云端</label>
+    <p class="small">关键进度合并上传。网络失败会保留本地档；两端进度不同时暂停上传，由你选择。联机与测试模式独立。</p>
+    <div class="btnRow"><button class="mbtn" id="cloudRead">查看云档 / 重试</button><button class="mbtn" id="cloudWrite">选择上传本地进度</button><button class="mbtn green hidden" id="cloudConfirm">确认上传并保留旧云档</button></div>
+    <p id="cloudConfirmInfo" class="small"></p><p id="cloudInfo" class="small"></p>
+    <select id="cloudChoices" aria-label="选择云存档或历史备份" hidden></select><button class="mbtn green hidden" id="cloudLoad">读取选中云档</button>
+    <div class="btnRow"><button class="mbtn" id="saveLoginToggle">登录网站账号</button><button class="mbtn" id="saveLogout" hidden>退出云存档账号</button></div>
+    <form id="saveLoginForm" hidden>
+      <p class="small">使用工具大本营网站账号，与游戏平台账号独立。密码只用于本次登录。</p>
+      <label>手机号或邮箱<input id="saveAccount" autocomplete="username" maxlength="255" required></label>
+      <label>密码<input id="savePassword" type="password" autocomplete="current-password" maxlength="200" required></label>
+      <button class="mbtn green" id="saveLoginSubmit" type="submit">登录并连接云备份</button>
+      <a href="https://www.zhengxiaohui.cn/html/auth/register.html" target="_blank" rel="noopener">注册网站账号</a>
+    </form>
+    <div id="toyExtras">
+      <div id="rankTools"><div class="btnRow"><button class="mbtn" id="rankRead">普通通关积分榜</button><button class="mbtn" id="rankSubmit">提交最佳通关成绩</button></div>
+      <p class="small">普通通关积分，自由测试与调试不参与；这是休闲榜单。</p><ol id="rankList"></ol></div>
+      <p id="platformStatus" role="status">云存档和排行榜需在 B站 Toy 中登录。</p>
+      <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
+      <div class="btnRow"><button class="mbtn" id="authorVisit">支持作者</button><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
+      <p class="small">玩得开心的话，去视频给开发者空投个三连补给？</p>
+    </div>
   </section>
   <!-- 存档面板 -->
   <div id="savePanel" class="panel hidden" style="width:580px;">
@@ -466,7 +494,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=lobby-hint1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=cloud240-lobby1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
