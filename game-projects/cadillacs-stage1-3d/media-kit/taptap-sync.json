@@ -1,86 +1,95 @@
 {
- "schema_version": 1,
- "game_id": "cadillacs-stage1-3d",
- "developer_id": 100726,
- "app_id": 962722,
- "automatic_sync_enabled": true,
- "authorization_date": "2026-10-07",
- "status": "reviewing_update_v0.9.2_coop_v0.9.0_online",
- "platform_status": "reviewing",
- "staged_version": "v0.9.2",
- "staged_source_commit": "5bac01d8",
- "staged_package_sha256": "36b7def3e4f1c406b3d32ac3bc0eea6919a2b69a38d368c8f9d532765be644ee",
- "staged_h5_version_id": 272389,
- "staged_h5_package_id": 71926,
- "draft_version_id": "1042885",
- "submitted_version": "v0.9.2",
- "submitted_at": "2026-10-07T10:08:35+00:00",
- "last_published_version": "v0.7.0",
- "last_published_h5_version_id": 270844,
- "last_public_runtime_verified_version": null,
- "last_status_checked_at": "2026-10-07T10:08:40+00:00",
- "release_record": "releases/v0.9.2/handoff.json",
- "pending_material_review": [],
- "pending": [
-  {
-   "version": "v0.9.2",
-   "status": "reviewing",
-   "h5_version_id": 272389,
-   "platform_version": "V-20261007-3",
-   "note": "原作开场、背摔、连打重击声；上线后按规则发一条更新动态",
-   "record": "releases/v0.9.2/handoff.json"
-  }
- ],
- "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
- "agreement_authorized": true,
- "agreement_signed": true,
- "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
- "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
- "agreement_signed_at": "2026-10-07T02:28:33.538741+00:00",
- "submitted_package_sha256": "36b7def3e4f1c406b3d32ac3bc0eea6919a2b69a38d368c8f9d532765be644ee",
- "submitted_h5_version_id": 272389,
- "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
- "force_submission_authorized": true,
- "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
- "content_preaudit_passed": false,
- "content_preaudit_warnings": [
-  {
-   "code": "PREAUDIT",
-   "field_ids": [
-    "title"
-   ],
-   "message": "游戏标题及内容涉及知名经典游戏IP‘恐龙快打’，存在侵权风险。如已获得官方授权，请前往游戏资质页面上传相关授权书，否则将有驳回风险。"
-  }
- ],
- "rights_proof_provided": false,
- "pending_updates": [
-  {
-   "source_version": "v0.8.0",
-   "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
-   "change": "新合并联机功能",
-   "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审",
-   "next_action": "此前审核包已上线；以后续已合并主线与当前网站核验为准继续同步，不重复送首次上线包。",
-   "status": "superseded_by_v0.8.2_submission"
-  }
- ],
- "last_published_platform_version": "V-20261007-2",
- "last_published_revision": 1041013,
- "last_published_at": "2026-10-07T02:47:13+00:00",
- "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
- "public_url": "https://www.taptap.cn/app/962722",
- "online_status_evidence_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
- "community_sync": {
-  "automatic_posting_enabled": true,
-  "last_public_verified_moment_id": "856856050622531778",
-  "last_public_verified_url": "https://www.taptap.cn/moment/856856050622531778",
-  "forum_app_id": 962722,
-  "source_version": "v0.7.0",
-  "h5_version_id": 270844,
-  "platform_version": "V-20261007",
-  "content_sha256": "5e58de5b27fcbae6b195cec8b61586787d2506f81a44f7b9fe2b732be220e92f",
-  "public_verified_at": "2026-10-07T04:43:29.723Z",
-  "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
-  "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
- },
- "pending_note": "联机2-4人包 H5 272255 已绑定main并提审（审核单1042730），应用户指示不等旧包审核直接提审"
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "developer_id": 100726,
+  "app_id": 962722,
+  "automatic_sync_enabled": true,
+  "authorization_date": "2026-10-07",
+  "status": "reviewing_v0.9.2_taptap_startup_adapter_v1",
+  "platform_status": "reviewing",
+  "staged_version": "v0.9.2",
+  "staged_source_commit": "4fb5e806ab3128d59339913c468aee26129c3de9",
+  "staged_package_sha256": "8fb4e412093bd9d8c11c70f86c70afb3bf488c767ff4ed720c01e3d7658e3901",
+  "staged_h5_version_id": 272436,
+  "staged_h5_package_id": 72548,
+  "draft_version_id": "1042927",
+  "submitted_version": "v0.9.2",
+  "submitted_at": "2026-10-07T10:25:46.953415+00:00",
+  "last_published_version": "v0.9.2",
+  "last_published_h5_version_id": 272389,
+  "last_public_runtime_verified_version": null,
+  "last_status_checked_at": "2026-10-07T10:25:46.953415+00:00",
+  "release_record": "releases/taptap-startup-20261007/handoff.json",
+  "pending_material_review": [],
+  "pending": [
+    {
+      "version": "v0.9.2",
+      "startup_adapter": "inline-runtime-v1",
+      "status": "reviewing",
+      "h5_version_id": 272436,
+      "platform_version": "V-20261007-4",
+      "record": "releases/taptap-startup-20261007/handoff.json",
+      "note": "减少独立脚本请求并增加错误提示；待上线与手机核验"
+    }
+  ],
+  "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
+  "agreement_authorized": true,
+  "agreement_signed": true,
+  "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
+  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "agreement_signed_at": "2026-10-07T02:28:33.538741+00:00",
+  "submitted_package_sha256": "8fb4e412093bd9d8c11c70f86c70afb3bf488c767ff4ed720c01e3d7658e3901",
+  "submitted_h5_version_id": 272436,
+  "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
+  "force_submission_authorized": true,
+  "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "content_preaudit_passed": false,
+  "content_preaudit_warnings": [
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "title"
+      ],
+      "message": "游戏名称使用了知名游戏IP‘恐龙快打’，可能存在版权侵权风险。如已获得官方正式授权，请前往游戏资质页面上传相关授权证明文件，否则有驳回风险。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "description"
+      ],
+      "message": "游戏简介中提及非官方复刻相关内容，可能存在版权侵权风险。建议前往游戏资质页面补充提供软件著作权及相关授权资质文件。"
+    }
+  ],
+  "rights_proof_provided": false,
+  "pending_updates": [
+    {
+      "source_version": "v0.8.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "change": "新合并联机功能",
+      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审",
+      "next_action": "此前审核包已上线；以后续已合并主线与当前网站核验为准继续同步，不重复送首次上线包。",
+      "status": "superseded_by_v0.8.2_submission"
+    }
+  ],
+  "last_published_platform_version": "V-20261007-3",
+  "last_published_revision": 1042885,
+  "last_published_at": "2026-10-07T10:13:20+00:00",
+  "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
+  "public_url": "https://www.taptap.cn/app/962722",
+  "online_status_evidence_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "last_public_verified_moment_id": "856856050622531778",
+    "last_public_verified_url": "https://www.taptap.cn/moment/856856050622531778",
+    "forum_app_id": 962722,
+    "source_version": "v0.7.0",
+    "h5_version_id": 270844,
+    "platform_version": "V-20261007",
+    "content_sha256": "5e58de5b27fcbae6b195cec8b61586787d2506f81a44f7b9fe2b732be220e92f",
+    "public_verified_at": "2026-10-07T04:43:29.723Z",
+    "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+    "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+  },
+  "pending_note": "启动适配 H5 272436 已正式提审；手机实际根因与实测仍待用户扫码反馈，不宣称已全面修好。",
+  "startup_adapter": "inline-runtime-v1"
 }
