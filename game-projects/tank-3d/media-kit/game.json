@@ -36,6 +36,7 @@
     "submitted_version": "coop-hub1",
     "submitted_at": "2026-10-07T02:35:39+00:00",
     "video_bindings": [
+      "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
     "release_record": "releases/coop-hub1/handoff.json",
@@ -123,11 +124,19 @@
   },
   "bilibili_videos": [
     {
+      "bvid": "BV1TepK69Eet",
+      "aid": 117397444957530,
+      "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+      "owner_mid": 16214353,
+      "mapping": "公开视频作者UID16214353、feidao-tank-3d入口与toy video list绑定已核验",
+      "publication_record": "../video/online-20261007/work/publication-result.json"
+    },
+    {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
       "title": "把坦克大战做成立体地图，这次能守住老鹰吗？",
       "owner_mid": 16214353,
-      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；Toy 无视频绑定"
+      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；toy video list已确认绑定保留"
     }
   ],
   "drag_camera_controls": {

@@ -17,20 +17,20 @@
   "description": "坦克大战支持2–4人联机合作了：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n联机：大厅建房或填写房间码，队友准备后由房主开始；暂不支持中途加入，房主退出则结束房间。\n用Claude Opus 5.5开发，部分修复由GPT-6 Codex完成的非官方同人实验。\n百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/tank-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱 → 游戏 → 自研游戏投票榜）",
   "tags": [
     "坦克大战",
-    "联机游戏",
-    "合作游戏",
     "游戏开发",
     "bilibilitoy",
     "AI",
-    "Claude",
-    "GPT"
+    "GPT",
+    "联机游戏",
+    "合作游戏",
+    "Claude Opus 5.5"
   ],
   "pinned_comment_draft": "你会选择分路守家，还是两辆坦克一起推进？大厅建房，把六位房间码告诉队友，准备后由房主开始。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱 → 游戏 → 自研游戏投票榜）",
   "description_file": "../../../final/bilibili-zh/投稿文案.txt",
   "topic_candidate": {
     "name": "哔哩哔哩Toy创意挑战",
     "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
-    "status": "verify actual availability when submitting"
+    "status": "selected_in_topic_picker_and_public_verified"
   },
   "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
   "cover_files": {
@@ -60,33 +60,30 @@
   "cover_stage": "completed",
   "subtitle_mode": "burned_in",
   "subtitle_files": [],
-  "category": null,
+  "category": "游戏",
   "copyright_type": "original_creator_game_demonstration",
   "credits": "素材来源与原作说明见 credits.md；未把原作音效宣称为原创授权素材。",
   "disclosures": [
     "Edge合成解说（云希），无真人声音克隆",
     "AI辅助游戏开发，真实浏览器游戏实机画面"
   ],
-  "platform_requirements_checked_at": null,
+  "platform_requirements_checked_at": "2026-10-07T03:15:55+00:00",
   "platform_sources": [
     "https://www.bilibili.com/blackboard/activity-gPIvOmhxbh.html",
     "https://www.bilibili.com/opus/840812291428450327"
   ],
-  "unverified_fields": [
-    "category",
-    "current topic availability",
-    "current AI declaration control",
-    "current cover upload controls"
-  ],
-  "blocking_issues": [
-    "最终成片尚待用户人工审片确认",
-    "人声可懂度与主观听感待人工听审",
-    "投稿时核对实际分区、AI声明入口、话题与双封面入口"
-  ],
+  "unverified_fields": [],
+  "blocking_issues": [],
   "ready_to_upload": false,
-  "production_status": "complete_pending_human_review",
-  "publication_status": "not_uploaded",
-  "human_approval": null,
+  "production_status": "complete",
+  "publication_status": "submitted_public_verified",
+  "bvid": "BV1TepK69Eet",
+  "video_url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+  "creative_statement": "含AI生成内容",
+  "human_approval": {
+    "user_quote": "发布视频后后续",
+    "approved_video_sha256": "50fdf95e9f48019fea41a7e9c88af5c53deef02f54590e4c2175cb0de0bdc611"
+  },
   "toy_id": "39043249461248",
   "toy_public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
   "previous_primary_bvid": "BV1Wqaz6AEJb"

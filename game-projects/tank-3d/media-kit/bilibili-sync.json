@@ -6,18 +6,47 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "coop1",
-      "blockHash": "34143e8291c751c758677fef50fbe44604cfa6c360069d21d665e478af68a6aa",
-      "release": "releases/coop1/handoff.json",
+      "lastPublicVerifiedVersion": "coop-hub1",
+      "blockHash": "82aaa4c69baf8a1b148c925f29c55fce6c63c5c36f846c7e3096044f2021f911",
+      "release": "releases/coop-hub1/handoff.json",
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
-      "descriptionHash": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b",
-      "publicVerifiedAt": "2026-10-06T11:40:48.423653+00:00",
-      "status": "submitted_pending_public",
+      "descriptionHash": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8",
+      "publicVerifiedAt": "2026-10-07T04:32:00+00:00",
+      "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
       "submitted_version": "coop-hub1",
-      "submitted_at": "2026-10-07T02:36:31.738Z"
+      "submitted_at": "2026-10-07T02:36:31.738Z",
+      "status": "public_verified"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "aid": 117397444957530,
+      "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+      "version": "coop-hub1",
+      "release": "releases/coop-hub1/handoff.json",
+      "publicVerifiedAt": "2026-10-07T03:24:00+00:00",
+      "publicUrl": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "toyUrl": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "status": "public_verified",
+      "commentStatus": "pinned",
+      "qqPromotionStatus": "submitted_and_autosaved",
+      "recordedFootageVersion": "landscape-menu1",
+      "lastPublicVerifiedVersion": "coop-hub1"
     }
   ],
   "pending_updates": [
+    {
+      "version": "coop-hub1",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "summary": "统一联机大厅、2–4人合作、房间码/密码/邀请链接；新视频已公开发布并绑定坦克 Toy。",
+      "record": "releases/coop-hub1/handoff.json",
+      "bvid": "BV1TepK69Eet",
+      "reason": "新视频已公开并绑定Toy；旧简介的coop-hub1更新段落及新版入口已公开核验。",
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ]
+    },
     {
       "version": "drag-look1",
       "release": "releases/drag-look1/handoff.json",
@@ -70,10 +99,11 @@
     {
       "version": "lobby1",
       "classification": "正式版本",
-      "status": "pending_review",
+      "status": "included_in_public_verified",
       "record": "releases/lobby1/bilibili-sync.json",
       "summary": "公开/密码房间大厅、2–4人合作、离线规则和按钮反馈",
-      "reason": "平台已保存，公开页面暂为旧版；保留coop1成功基线，不重复提交。"
+      "reason": "2–4人合作、大厅、密码与离线规则已并入公开核验的coop-hub1说明。",
+      "included_version": "coop-hub1"
     },
     {
       "version": "camera-follow1",
@@ -122,17 +152,23 @@
       "version": "coop1",
       "status": "public_verified",
       "checked_at": "2026-10-06T11:40:48.423653+00:00"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "coop-hub1",
+      "status": "public_verified",
+      "checked_at": "2026-10-07T04:32:00+00:00",
+      "description_sha256": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8",
+      "record": "../video/online-20261007/work/publication-result.json"
     }
   ],
   "last_public_verified": {
     "bvid": "BV1Wqaz6AEJb",
-    "version": "coop1",
-    "at": "2026-10-06T11:40:48.423653+00:00",
-    "description_sha256": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b"
+    "version": "coop-hub1",
+    "at": "2026-10-07T04:32:00+00:00",
+    "description_sha256": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8"
   },
   "latest_record": "releases/coop-hub1/bilibili-sync.json",
-  "pending": [
-    "BV1Wqaz6AEJb"
-  ],
-  "pending_note": "统一大厅和合作玩法说明已提交；仅公开核验成功的目标推进基线。"
+  "pending": [],
+  "pending_note": "2026-10-07 12:32已公开核验坦克旧简介，保留此前提交时间；新视频和旧视频均显示coop-hub1入口。"
 }
