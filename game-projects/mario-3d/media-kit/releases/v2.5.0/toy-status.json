@@ -1,0 +1,109 @@
+{
+  "id": 39043286960128,
+  "status": "published",
+  "version": "v2.5.0",
+  "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+  "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23241/index.html",
+  "submitted_at": "2026-10-07T01:27:40.000Z",
+  "published_at": "2026-10-07T01:30:01.000Z",
+  "verified_at": "2026-10-07T01:40:46.831Z",
+  "package_sha256": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61",
+  "source_commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+  "preflight": "toy-preflight.json",
+  "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_4Fc9TxBU/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
+  "public_runtime_qa": "qa/toy-public-results.json",
+  "checks": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "sha256": "6d89e38c984383ff155f6f9b6adceb071828ac1bb5ad6edc6301fda5a7650eaa",
+      "expected": "19caaaf7ee11824dff3e61e2d65522300c6dfe777c046df44ff4383a55067a75",
+      "ok": true,
+      "method": "exact packaged HTML after removing only the observed platform performance and top-level redirect scripts before charset",
+      "normalized_sha256": "19caaaf7ee11824dff3e61e2d65522300c6dfe777c046df44ff4383a55067a75"
+    },
+    {
+      "file": "main.js",
+      "status": 200,
+      "sha256": "c28735794bc2ec9a84abc7ac9328a53ffac03d617244d9c02804685f98e4abcf",
+      "expected": "c28735794bc2ec9a84abc7ac9328a53ffac03d617244d9c02804685f98e4abcf",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "levels.js",
+      "status": 200,
+      "sha256": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
+      "expected": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "world.js",
+      "status": 200,
+      "sha256": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe",
+      "expected": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "scene.js",
+      "status": 200,
+      "sha256": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
+      "expected": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "models.js",
+      "status": 200,
+      "sha256": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
+      "expected": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "style.css",
+      "status": 200,
+      "sha256": "b601f31599b86307dd6a02cab1ae6d03f1ff6ca36d24c0aa130ec1dc63946f19",
+      "expected": "b601f31599b86307dd6a02cab1ae6d03f1ff6ca36d24c0aa130ec1dc63946f19",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "textures.js",
+      "status": 200,
+      "sha256": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "expected": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "ok": true,
+      "method": "exact packaged bytes"
+    },
+    {
+      "file": "audio.js",
+      "status": 200,
+      "sha256": "e727201fd9577d9e5b746227ecd3929c610fee0dd5fb272ddb542dc0e5dba54b",
+      "expected": "e727201fd9577d9e5b746227ecd3929c610fee0dd5fb272ddb542dc0e5dba54b",
+      "ok": true,
+      "method": "exact packaged bytes"
+    }
+  ],
+  "platform": {
+    "id": 39043286960128,
+    "title": "超级玛丽 3D：1-1 至 1-3",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/poster_21954.png",
+    "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/icon_20780_upload",
+    "watermark_enabled": false,
+    "ctime": 1790826424,
+    "mtime": 1791336601
+  }
+}

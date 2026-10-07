@@ -1,4 +1,4 @@
-// 关卡数据：按 FC《超级马力欧兄弟》1-1、1-2 的原作地图逐格录入。
+// 关卡数据：FC《超级马力欧兄弟》1-1、1-2 与 1-3。
 // 坐标单位 = 1 格；第 c 列占 x∈[c,c+1]；h 为方块底边离地高度（地面顶 = 0），占 y∈[h,h+1]。
 // 所有地形沿纵深（z）铺满整条跑道，水管为纵向并排 3 根，防止从旁边绕过。
 // 来源：Ian Albert 原作地图截图逐格核对 + TheVGLC 文本地图 + MarioWiki 道具说明；
@@ -13,7 +13,7 @@ export { key as tileKey };
 function area(id, opts) {
   return Object.assign({
     id, theme: 'overworld', width: 40, ceiling: false, tiles: new Map(), pipes: [], sidePipes: [],
-    enemies: [], coins: [], lifts: [], piranhas: [], flag: null, castle: null, signs: [], start: null, killY: -4
+    enemies: [], coins: [], lifts: [], trees: [], piranhas: [], flag: null, castle: null, signs: [], start: null, killY: -4
   }, opts);
 }
 function set(a, c, h, t, extra) { a.tiles.set(key(c, h), Object.assign({ c, h, t }, extra || {})); }
@@ -165,7 +165,42 @@ function build12() {
   return { id: '1-2', name: 'WORLD 1-2', time: 400, theme: 'underground', areas: { main: m, entry, bonus: b, exit: e }, entranceArea: 'entry', startArea: 'main', checkpoint: { area: 'main', x: 91.5, y: 0 } };
 }
 
-const BUILDERS = { '1-1': build11, '1-2': build12 };
-export const LEVEL_ORDER = ['1-1', '1-2'];
+// ---------------- 1-3：树冠与浮台 ----------------
+// 原作实机地图 + FullScreenMario World13 坐标交叉核对。原资料 8 单位 = 本工程 1 格。
+// 树冠是单向落脚面，树干是背景，能从下方跳上；浮台往返而不是地下关的循环升降台。
+function build13() {
+  const m = area('main', { theme: 'overworld', biome: 'treetops', width: 164, killY: -5 });
+  ground(m, 0, 15); ground(m, 129, 163);
+  const tree = (x, y, w) => m.trees.push({ x, y, w });
+  [[18,1,4],[24,4,8],[26,8,5],[32,1,3],[35,5,5],[40,9,7],
+    [50,0,4],[59,0,5],[60,8,4],[65,0,5],[70,4,3],[76,7,6],
+    [98,2,4],[104,6,8],[113,0,3],[116,4,4],[122,4,4]].forEach(t => tree(...t));
+  // 23 枚散落金币，位置按原作地图；一枚逻辑金币沿 z 展示三枚，延续已有规则。
+  for (const [x, y, n] of [[27.125,8.875,3],[33.25,1.875,1],[37.125,10.875,2],
+    [50.25,6.875,2],[60.25,8.875,4],[85.125,7.875,2],[93.125,8.875,2],
+    [97.125,8.875,2],[113.25,.875,3],[120.25,7.875,2]]) {
+    for (let i=0;i<n;i++) m.coins.push({x:x+i+.35,y});
+  }
+  set(m,59,3,'Q',{content:'power'});
+  m.lifts.push({mode:'pingpong',axis:'y',x:55,y:7,w:3,min:-.5,max:7,dir:-1,speed:2.1,count:1});
+  m.lifts.push({mode:'pingpong',axis:'x',x:86,y:5,w:3,min:82.5,max:90,dir:1,speed:2.3,count:1});
+  m.lifts.push({mode:'pingpong',axis:'x',x:94,y:4,w:3,min:87.5,max:97,dir:-1,speed:2.3,count:1});
+  m.lifts.push({mode:'pingpong',axis:'x',x:131,y:7,w:3,min:126,max:134.5,dir:-1,speed:2.3,count:1});
+  enemy(m,'koopa',30.5,8,{red:true});
+  enemy(m,'goomba',44.5,9); enemy(m,'goomba',46.5,9); enemy(m,'goomba',80.5,7);
+  enemy(m,'koopa',74.5,8,{flight:{min:.5,max:9.5,speed:2.1}});
+  enemy(m,'koopa',110.5,6,{red:true});
+  enemy(m,'koopa',114.5,7,{flight:{min:-.5,max:8,speed:2.1}});
+  enemy(m,'koopa',133.5,0,{red:true});
+  stairs(m,138,[4,4,6,6,8,8]);
+  set(m,152,0,'F'); m.flag={x:152.5,top:9.6};
+  m.castle={x:156,big:true}; m.entryCastle={x:0,big:false};
+  m.start={x:3,y:0};
+  return {id:'1-3',name:'WORLD 1-3',time:300,theme:'overworld',areas:{main:m},startArea:'main',
+    checkpoint:{area:'main',x:77.5,y:7}};
+}
+
+const BUILDERS = { '1-1': build11, '1-2': build12, '1-3': build13 };
+export const LEVEL_ORDER = ['1-1', '1-2', '1-3'];
 // 每次进入关卡都重新生成一份，方块、敌人、道具回到原样（与原作死亡后重置一致）
 export function buildLevel(id) { return BUILDERS[id](); }

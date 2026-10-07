@@ -71,7 +71,9 @@ const server = http.createServer((req, res) => {
       await frame.locator('#btn-pause').click(); await frame.locator('#pause [data-act=title]').click();
       check(prefix + ': title clears underground plants', (await plants()) === 0, await plants());
       // Start 1-1 with the actual menu selector, matching the viewer's first screenshot.
-      await frame.locator('[data-opt=level]').first().click(); await frame.locator('[data-act=start]').first().click();
+      const levelSelector = frame.locator('[data-opt=level]').first();
+      for (let n = 0; n < 3 && !(await levelSelector.innerText()).includes('1-1'); n++) await levelSelector.click();
+      await frame.locator('[data-act=start]').first().click();
       await frame.evaluate(() => { __MARIO_TEST__.skipCard(); __MARIO_TEST__.step(120); });
       check(prefix + ': 1-1 has no ghost plants', await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-1') && (await plants()) === 0, await plants());
       await frame.evaluate(() => { const t = __MARIO_TEST__; Object.assign(t.world.player, { x: 108, y: 0, vx: 0, vy: 0, inv: 0 }); t.world.rt.enemies.forEach(e => e.gone = true); t.view.snap = true; t.step(1); });
