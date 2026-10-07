@@ -326,7 +326,7 @@ function loadArea(i, first) {
     const gang = G.waveEnemies.slice();
     for (const e of gang) { e.hp = Math.min(e.hp, 1); e.introGang = true; }
     const hx = p.x + 1.3, hz = p.z; p.x = AR.x0 + 0.3;
-    A.music(AR.id);
+    A.music('opening');   // 原作：远景到放话这段是「Opening Demo」，主角放出开场必杀时换成第一关曲子
     runScript([
       { fn: () => {
         G.cine = { t: 0, dur: 3.8, from: { pos: [-3, 16, 24], tgt: [20, 2, -48] }, to: { pos: [6.5, 5.6, 15.5], tgt: [7.6, 1.5, 0] } };
@@ -344,7 +344,7 @@ function loadArea(i, first) {
       { fn: () => {
         for (const e of gang) if (e.alive) { setState(e, 'idle'); e.vx = e.vz = 0; e.cd = 99; }
         p.face = FACE_RIGHT; startMove(p, 'mega'); p.move.free = true;
-        A.play('mega', 1, p.hero.id); fx.ring(p.x, 0.15, p.z); ev('introMega');
+        A.play('mega', 1, p.hero.id); fx.ring(p.x, 0.15, p.z); ev('introMega'); A.music(AR.id);
       } },
       // 原作这一下把手下全震飞出去：被打倒的那一刻再加一把力
       { dur: 1.15, tick: () => { for (const e of gang) if (e.state === 'down' && !e.blasted) { e.blasted = true; e.vx *= 2.6; e.vz *= 1.6; e.vy = Math.max(e.vy, 6.8); } } },

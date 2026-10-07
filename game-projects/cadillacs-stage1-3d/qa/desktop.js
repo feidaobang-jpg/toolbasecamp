@@ -277,6 +277,7 @@ const fs = require('fs');
   }
   s = await waitFor(x => x.mode === 'cont', 4000);
   ok('命用完进入续关倒计时', s.mode === 'cont' && s.ui.overlay === 'cont', [s.mode, s.ui.overlay]);
+  ok('续关倒计时放原版「Continue」曲（不是合成曲）', s.ui.music.name === 'cont' && s.ui.music.original && !s.ui.music.synth, s.ui.music);
   await page.screenshot({ path: out('desktop-continue.png') });
   await press('KeyJ'); await sleep(300);
   s = await S(); ok('续关后满命回到战斗', s.mode === 'play' && s.lives === 3, [s.mode, s.lives]);

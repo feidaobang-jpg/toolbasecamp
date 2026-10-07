@@ -23,7 +23,8 @@ function ensure() {
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
   roomIn = buildRoom(ctx, sfxBus);
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3?v=bgmfull1", "roof":"roof.mp3?v=bgmfull1", "hall": "hall.mp3?v=bgmfull1", "street": "street.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1", "select": "select.mp3", "forest": "forest.mp3?v=bgmfull1", "swamp": "swamp.mp3?v=bgmfull1", "grave": "hall.mp3?v=bgmfull1", "boss2": "boss2.mp3?v=bgmfull1", ...ORIGINAL_FILES});
+  // 原版曲目没加载完时不先放合成的旧版曲子；只有原版加载失败才用合成兜底
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3?v=bgmfull1", "roof":"roof.mp3?v=bgmfull1", "hall": "hall.mp3?v=bgmfull1", "street": "street.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1", "select": "select.mp3", "forest": "forest.mp3?v=bgmfull1", "swamp": "swamp.mp3?v=bgmfull1", "grave": "hall.mp3?v=bgmfull1", "boss2": "boss2.mp3?v=bgmfull1", "opening": "opening.mp3?v=1", "clear": "clear.mp3?v=1", "cont": "continue.mp3?v=1", ...ORIGINAL_FILES});
   return ctx;
 }
 const now = () => ctx.currentTime;
@@ -87,7 +88,7 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
 
 // Short samples use this same context/bus for pause, mute, capture and offline rendering.
 const lastSample = new Map();
-const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9, dash: 0.9, heavy: 1.1, shout: 0.95 };
+const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9, dash: 0.9, shout: 0.95 };
 const activeSamples = new Set();
 function playOriginal(name, v, hero, t, throttle = true) {
   const key = originalCue(name, hero), buffer = samples?.buffers.get(key);
@@ -260,6 +261,14 @@ const SONGS = {
   }
 };
 const seq = { song: null, name: null, step: 0, next: 0, timer: 0, duck: false, gain: null };
+// 有原版录音的曲目（第一、二关各区域、Boss、选人）
+// 第一关开场用原版「Opening Demo」，过关「Stage Clear」，续关倒数「Continue 1」
+const ORIGINAL_MUSIC = new Set(['stage', 'roof', 'hall', 'street', 'boss', 'select', 'forest', 'swamp', 'grave', 'boss2', 'opening', 'clear', 'cont']);
+function startSynth(name) {
+  seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
+  seq.song = SONGS[name] || (name === 'boss2' ? SONGS.boss : SONGS.stage); seq.step = 0; seq.next = now() + 0.08;
+  if (!seq.timer) seq.timer = setInterval(schedule, 25);
+}
 function leadVoice(f, t, dur, dest) {
   const g = ctx.createGain(), sh = ctx.createWaveShaper(), lp = ctx.createBiquadFilter();
   sh.curve = distCurve; lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 1.2;
@@ -329,18 +338,18 @@ const A = {
     if (log.on) log.events.push({ t: +clockFn().toFixed(3), music: name });
     seq.name = name;
     if (!ensure()) return;
-    samples?.music(name, name!=="clear");
+    samples?.music(name, name !== 'clear' && name !== 'opening');
     if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
     seq.gain = null; seq.song = null;
-    if (!name || !(SONGS[name] || ["roof","hall","street","forest","swamp","grave","boss2"].includes(name))) return;
-    seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
-    seq.song = SONGS[name] || (name === 'boss2' ? SONGS.boss : SONGS.stage); seq.step = 0; seq.next = now() + 0.08;
-    if (!seq.timer) seq.timer = setInterval(schedule, 25);
+    if (!name || !(SONGS[name] || ORIGINAL_MUSIC.has(name))) return;
+    if (ORIGINAL_MUSIC.has(name) && !samples?.failed.includes(name)) { samples?.ready.then(() => { if (seq.name === name && !samples.has(name) && !seq.song && name !== 'opening') startSynth(name); }); return; }   // 开场曲没有合成版，加载失败就保持安静
+    startSynth(name);
   },
+
   musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
   pause() { /* 音效都很短，暂停时不需要单独处理 */ },
   state: () => ({ ctx: ctx ? ctx.state : 'none', volume, originalsLoaded: Object.keys(ORIGINAL_FILES).filter(k => samples?.has(k)), failed: samples?.failed.slice() || [] }),
-  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden }),
+  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden, synth: !!seq.song, original: !!samples?.source }),
   captureStream() { if (!ensure()) return null; if (!capDest) { capDest = ctx.createMediaStreamDestination(); master.connect(capDest); } return capDest.stream; },
   logStart() { log.on = true; log.events = []; },
   logStop() { log.on = false; return log.events.slice(); },

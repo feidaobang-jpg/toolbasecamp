@@ -48,10 +48,26 @@ const fs = require('fs');
     await page.locator('#menu [data-act=select]').click();
     await page.locator(`[data-hero="${hero}"]`).click();
     if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
-    await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.originalsLoaded.length === 14);
+    await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.originalsLoaded.length === 13);
     // 开场脚本跳过后，开场必杀之后的两名手下要先走进来，再全部清掉
     await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.step(150); T.cheat.killAll(); T.audioLogStart(); T.step(120); });
     check(`hero ${hero}: all recordings decoded`, (await state()).ui.audio.failed.length === 0);
+  }
+  // 开场只放原版 BGM：原版还没加载完时保持安静，绝不先放合成的旧曲子
+  {
+    await navigate();
+    await host.route('**/opening.mp3*', async r => { await new Promise(res => setTimeout(res, 2500)); await r.continue(); });   // 模拟原版曲子加载慢
+    await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
+    if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
+    const early = [], osc0 = await page.evaluate(() => window.audioProbe.oscillators);
+    for (let i = 0; i < 20; i++) { early.push(await page.evaluate(() => window.__CD_TEST__.snapshot().ui.music)); await host.waitForTimeout(160); }
+    const osc = await page.evaluate(n => window.audioProbe.oscillators - n, osc0);   // 合成旧曲每秒要建几十个振荡器；远景这几秒里没有别的合成音
+    await host.unroute('**/opening.mp3*');
+    check('stage 1 intro never plays the synthesized old BGM while the original loads', osc < 6 && early.every(m => !m.synth), { oscillatorsIn3s: osc, synth: early.filter(m => m.synth).length });
+    check('intro plays the original "Opening Demo" once loaded (arcade: from the EASTCOAST shot)', early.some(m => m.name === 'opening' && m.original), early.slice(-2));
+    const rest = [];
+    for (let i = 0; i < 70; i++) { const m = await page.evaluate(() => window.__CD_TEST__.snapshot().ui.music); rest.push(m); if (m.name === 'roof') break; await host.waitForTimeout(200); }
+    check('stage 1 original BGM takes over at the opening mega (arcade: 21.6 s)', rest.some(m => m.name === 'roof' && m.original) && rest.every(m => !m.synth) && await page.evaluate(() => window.__CD_TEST__.cheat.G.events.some(e => e.type === 'introMega')), rest.slice(-1));
   }
   for (let hero = 0; hero < 4; hero++) {
     await start(hero);
@@ -70,7 +86,7 @@ const fs = require('fs');
     await page.evaluate(() => window.__CD_TEST__.step(40));
     const clog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
     const hitsL = clog.filter(e => ['punch', 'punchHeavy', 'kick', 'kickHeavy'].includes(e.name)), fin = clog.filter(e => e.name === 'finisher');
-    check(`hero ${hero}: hits 1-3 use the light original impact, the 4th the heavy knock-down impact`, hitsL.length >= 4 && hitsL.slice(0, 3).every(e => e.sample === 'hit' && e.source === 'original') && hitsL[3].sample === 'heavy' && hitsL[3].source === 'original', hitsL.map(e => e.name + ':' + e.sample));
+    check(`hero ${hero}: all four combo hits use the original arcade impact (0083 reverted)`, hitsL.length >= 4 && hitsL.every(e => e.sample === 'hit' && e.source === 'original'), hitsL.map(e => e.name + ':' + e.sample));
     check(`hero ${hero}: hero's own shout once, ~0.12 s after the heavy 4th hit (arcade: 26.53 heavy -> 26.68 shout)`, fin.length === 1 && fin[0].sample === 'finisher-' + ['jack', 'hannah', 'mustapha', 'mess'][hero] && fin[0].t - hitsL[3].t > 0.08 && fin[0].t - hitsL[3].t < 0.2, { fin, hits: hitsL.map(e => e.t) });
     check(`hero ${hero}: bare-hand combo has no synthesized whoosh`, !clog.some(e => /^whoosh/.test(e.name)), clog.map(e => e.name));
   }
@@ -81,7 +97,7 @@ const fs = require('fs');
     const dlog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
     const dash = dlog.find(e => e.name === 'dash'), dhit = dlog.find(e => e.name === 'dashHit'), shout = dlog.find(e => e.name === 'shout');
     check(`hero ${hero}: dash start plays original dash sound`, dash?.sample === 'dash' && dash.source === 'original', dash);
-    check(`hero ${hero}: dash attack hit uses the original heavy impact (not the light punch)`, dhit?.sample === 'heavy' && dhit.source === 'original' && dhit.t > dash.t, dlog.map(e => e.name));
+    check(`hero ${hero}: dash attack hit uses the original arcade impact`, dhit?.sample === 'hit' && dhit.source === 'original' && dhit.t > dash.t, dlog.map(e => e.name));
     check(`hero ${hero}: only Mustapha shouts on his flying kick`, hero === 2 ? shout?.sample === 'shout-mustapha' && shout.source === 'original' : !shout || shout.sample === null, shout);
   }
   await start(0);
@@ -133,7 +149,7 @@ const fs = require('fs');
   await navigate();
   await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
   if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
-  await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.failed.length === 14);
+  await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.failed.length === 13);
   await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.audioLogStart(); T.step(120); });
   const oscBefore = await page.evaluate(() => window.audioProbe.oscillators);
   await megaInput(); await page.evaluate(() => window.__CD_TEST__.step(5));

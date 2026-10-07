@@ -16,7 +16,7 @@ mkdirSync(out, { recursive: true });
 
 const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]);
 const rel = (base, p) => relative(base, p).replaceAll('\\', '/');
-const expected = ['sounds/cd-hit.wav', 'sounds/cd-dash.wav', 'sounds/cd-heavy.wav', 'sounds/cd-shout-mustapha.wav', 'sounds/cd-bodyfall.wav', 'sounds/cd-go.wav', 'sounds/cd-finisher-jack.wav', 'sounds/cd-finisher-hannah.wav', 'sounds/cd-finisher-mustapha.wav', 'sounds/cd-finisher-mess.wav', 'sounds/cd-mega-jack.wav', 'sounds/cd-mega-hannah.wav', 'sounds/cd-mega-mustapha.wav', 'sounds/cd-mega-mess.wav', 'sounds/boss.mp3', 'sounds/boss2.mp3', 'sounds/forest.mp3', 'sounds/hall.mp3', 'sounds/roof.mp3', 'sounds/select.mp3', 'sounds/street.mp3', 'sounds/swamp.mp3', 'css/style.css', 'index.html', 'js/THREE-LICENSE.txt', 'js/game.min.js'].sort();
+const expected = ['sounds/cd-hit.wav', 'sounds/cd-dash.wav', 'sounds/cd-shout-mustapha.wav', 'sounds/cd-bodyfall.wav', 'sounds/cd-go.wav', 'sounds/cd-finisher-jack.wav', 'sounds/cd-finisher-hannah.wav', 'sounds/cd-finisher-mustapha.wav', 'sounds/cd-finisher-mess.wav', 'sounds/cd-mega-jack.wav', 'sounds/cd-mega-hannah.wav', 'sounds/cd-mega-mustapha.wav', 'sounds/cd-mega-mess.wav', 'sounds/boss.mp3', 'sounds/opening.mp3', 'sounds/clear.mp3', 'sounds/continue.mp3', 'sounds/boss2.mp3', 'sounds/forest.mp3', 'sounds/hall.mp3', 'sounds/roof.mp3', 'sounds/select.mp3', 'sounds/street.mp3', 'sounds/swamp.mp3', 'css/style.css', 'index.html', 'js/THREE-LICENSE.txt', 'js/game.min.js'].sort();
 const found = walk(source).map(p => rel(source, p)).sort();
 if (JSON.stringify(found) !== JSON.stringify(expected)) throw Error('Unexpected runtime files: ' + found.join(', '));
 

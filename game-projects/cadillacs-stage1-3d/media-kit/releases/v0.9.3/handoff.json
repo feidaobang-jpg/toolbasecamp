@@ -1,0 +1,127 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.9.3",
+ "base_version": "v0.9.2",
+ "created_at": "2026-10-07T19:30:00+08:00",
+ "classification": "玩家反馈修复（撤回错选的重击声、开场旧 BGM、全部换原版曲）",
+ "build": {
+  "bundle_sha256": "a39ab52f47d9e4bf9fac20327366eb8d3299a8dfe0110a3d5026e7a290b04f4a",
+  "build_id": "bgm-v093"
+ },
+ "changes": [
+  {
+   "id": "revert-heavy",
+   "before": "第 4 下、击倒、冲刺打中用 0083（用户听来是泥沼声）",
+   "after": "改回原版打击声 0064",
+   "verification": "pass"
+  },
+  {
+   "id": "no-synth-while-loading",
+   "before": "原版曲子没加载完先放合成旧曲",
+   "after": "保持安静直到原版加载好；只有加载失败才兜底",
+   "verification": "pass（v0.9.2 线上 90 个振荡器 → 0）"
+  },
+  {
+   "id": "opening-bgm",
+   "after": "开场放原版 Opening Demo，开场必杀时换第一关曲",
+   "verification": "pass"
+  },
+  {
+   "id": "clear-continue-bgm",
+   "before": "过关、续关为合成曲",
+   "after": "原版 Stage Clear、Continue 1",
+   "verification": "pass"
+  }
+ ],
+ "sources": [
+  {
+   "track": "04. Opening Demo",
+   "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/vlshhntg/04.%20Opening%20Demo.mp3",
+   "source_sha256": "680fe77a76126ec2c97ddee8c37e28981789050ab3840c2fd26ee95f23cd6312",
+   "runtime": "sounds/opening.mp3",
+   "processing": "截取前 32 秒，29–32 秒淡出，128 kbps",
+   "sha256": "4b4d386a41265f6ebe36aad5a8d292f1087c09734291c6d818c8adeeb9b7e732"
+  },
+  {
+   "track": "11. Stage Clear",
+   "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/ihmmbwfi/11.%20Stage%20Clear.mp3",
+   "source_sha256": "ecb516c2924db244e06e9e82e8555e8c37a6296e9227e0f0ba1aa0c30cdf2bfb",
+   "runtime": "sounds/clear.mp3",
+   "processing": "原样",
+   "sha256": "e6f3f840f5841ef0d592f869d51afb7060621e831b9e6aeb861827401114d7d6"
+  },
+  {
+   "track": "35. Continue 1",
+   "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/qcniaewu/35.%20Continue%201.mp3",
+   "source_sha256": "cc1ec35eccf686180ac32209148325f45b65106e6c591110f2473c2dec2b2ab0",
+   "runtime": "sounds/continue.mp3",
+   "processing": "原样",
+   "sha256": "afa6d330f330fba4af1ec21624e32cf501dbb41b1403c30e0b7da357a0c93ff9"
+  }
+ ],
+ "evidence": {
+  "opening_demo_in_arcade": "Y48MXUjtYwc 11.3 秒起，chroma 相似度 0.977（中位 0.677）",
+  "stage1_track_in_arcade": "21.6 秒起（开场必杀 21.58 秒），相似度 0.963"
+ },
+ "qa": [
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 61/61"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 56/56"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 92/92"
+  },
+  {
+   "method": "qa/intro-throw.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "site-games/qa/restart-audio.cjs",
+   "result": "pass 5/5"
+  },
+  {
+   "method": "site-games/qa/cooperative.cjs（仓库大厅代码临时起的本地大厅）",
+   "result": "7/8 前两项外一项失败；改前 v0.9.2 构建在同一大厅同样失败，判定为环境问题"
+  }
+ ],
+ "audio_review": "not-run（AI 无法试听）",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "无画面变化"
+ },
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "taptap": {
+  "status": "pending_merge",
+  "reason": "v0.9.2 审核中，不撤审、不重复上传"
+ },
+ "bilibili": {
+  "status": "pending",
+  "reason": "简介写了「连招最后一下换成原版重击声」，已不准确，需立即纠正"
+ }
+}

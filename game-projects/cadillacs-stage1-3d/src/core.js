@@ -1,5 +1,5 @@
 // 公共常量与工具。世界坐标直接用 three：x = 关卡前进方向（向右），z = 纵深（正方向朝向侧视镜头），y = 高度（米）。
-export const VERSION = 'v0.9.2';
+export const VERSION = 'v0.9.3';
 export const STEP = 1 / 60;            // 固定 60Hz 逻辑步长
 
 export const params = new URLSearchParams(location.search);
