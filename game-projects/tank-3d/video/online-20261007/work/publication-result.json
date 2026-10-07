@@ -1,0 +1,107 @@
+{
+  "status": "post_publication_complete",
+  "task_id": "01a1140c-tank-online-video-20261007-w02",
+  "source": "Codex",
+  "account": {
+    "uid": 16214353,
+    "name": "飞刀班长",
+    "browser_check": "space.bilibili.com/ redirected to 16214353"
+  },
+  "video_sha256": "50fdf95e9f48019fea41a7e9c88af5c53deef02f54590e4c2175cb0de0bdc611",
+  "review_authorization": {
+    "user_quote": "发布视频后后续",
+    "interpretation": "在交付最终成片后，用户要求发布本期视频并执行后续",
+    "approved_video_sha256": "50fdf95e9f48019fea41a7e9c88af5c53deef02f54590e4c2175cb0de0bdc611",
+    "at": "2026-10-07T03:05:33.739344+00:00"
+  },
+  "submission": {
+    "status": "submitted_public_verified",
+    "bvid": "BV1TepK69Eet",
+    "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+    "video_url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+    "public_verified_at": "2026-10-07T03:24:00+00:00",
+    "duration_seconds": 83,
+    "category": "游戏",
+    "creative_statement": "含AI生成内容",
+    "topic": {
+      "name": "哔哩哔哩Toy创意挑战",
+      "topic_id": 1346285,
+      "public_url": "https://m.bilibili.com/topic-detail?topic_id=1346285"
+    },
+    "tags": ["坦克大战", "游戏开发", "bilibilitoy", "AI", "GPT", "联机游戏", "合作游戏", "Claude Opus 5.5"],
+    "public_readback": "标题、描述、Toy入口、投票入口、AI声明和标签均在公开视频页核验。"
+  },
+  "toy": {
+    "toy_id": "39043249461248",
+    "slug": "feidao-tank-3d",
+    "status": "published_public",
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "version": "coop-hub1",
+    "binding": {
+      "status": "bound_and_readback_verified",
+      "bvid": "BV1TepK69Eet",
+      "other_bound_bvids": ["BV1Wqaz6AEJb"]
+    }
+  },
+  "comment": {
+    "status": "published_and_pinned",
+    "public_readback": "公开视频评论区显示置顶标签，评论总数1",
+    "evidence": "publish/bilibili-zh/evidence/new-video-comment-pinned.jpg",
+    "video_url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+    "text": "你会选择分路守家，还是两辆坦克一起推进？大厅建房，把六位房间码告诉队友，准备后由房主开始。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱 → 游戏 → 自研游戏投票榜）"
+  },
+  "qq_promotion": {
+    "status": "submitted_and_autosaved",
+    "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "duplicate_check": "BV1TepK69Eet 无结果",
+    "range": "A304:E304",
+    "evidence": "publish/bilibili-zh/evidence/qq-promotion-A304-F304.jpg",
+    "row": {"up主昵称": "飞刀班长", "视频链接": "https://www.bilibili.com/video/BV1TepK69Eet/", "投稿含bilibilitoy及带话题": "是", "是否置顶Toy链接到评论区": "是", "是否视频中宣传Toy平台": "是", "运营反馈": ""}
+  },
+  "old_video_maintenance": {
+    "bvid": "BV1Wqaz6AEJb",
+    "status": "description_and_new_comment_public_verified",
+    "new_video_link": "https://www.bilibili.com/video/BV1TepK69Eet/",
+    "comment_text": "更新：坦克大战现在支持2–4人联机合作。新视频实测：https://www.bilibili.com/video/BV1TepK69Eet/\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n投票／愿望单：https://www.zhengxiaohui.cn/game-vote.html",
+    "description_editor_readback": "已保留并显示新视频链接",
+    "public_description_readback": "旧公开页已显示新视频链接与coop-hub1更新段落；10行单换行，无多余首行及空白段落",
+    "public_verified_at": "2026-10-07T04:32:00+00:00",
+    "description_before": "old-description-before.txt",
+    "description_after": "old-description-after.txt",
+    "evidence": "publish/bilibili-zh/evidence/old-video-description-public.jpg",
+    "public_comment_readback": "评论区显示置顶标签，评论数4"
+  },
+  "traffic_reward": {
+    "checked_at": "2026-10-07T03:05:33.739344+00:00",
+    "available_exposures": 0,
+    "status": "no_available_reward",
+    "source_url": "https://member.bilibili.com/york/flow-reward/?navhide=1"
+  },
+  "activity_check": {
+    "checked_at": "2026-10-07T03:29:00+00:00",
+    "source_url": "https://member.bilibili.com/platform/growingUp/taskManage/main",
+    "current_task": "10.05-10.18 稿件累计播放量≥1万",
+    "progress": "1563/10000",
+    "effective_videos": 3,
+    "action": "无需报名或领取；任务已在进行中，继续保持公开浏览并按窗口复盘",
+    "scope": "本期相关部分检查；未推进全面检查完成时间"
+  },
+  "collection_membership": {
+    "status": "no_confirmed_collection_mapping",
+    "note": "坦克尚无已确认正式合集映射，未新建或加入其他游戏合集。"
+  },
+  "automatic_dynamic": {
+    "status": "public_video_card_verified",
+    "source_url": "https://space.bilibili.com/16214353/dynamic",
+    "bvid": "BV1TepK69Eet",
+    "readback": "1小时前·投稿了视频，本期标题与BV链接一致",
+    "action": "已有投稿自动动态，不重复发布宣传动态",
+    "evidence": "publish/bilibili-zh/evidence/automatic-dynamic.jpg"
+  },
+  "evidence": {
+    "entry_verification": "publish-entry-verification.json",
+    "cover_screenshot": "publish/bilibili-zh/evidence/dual-covers.jpg",
+    "public_video": "https://www.bilibili.com/video/BV1TepK69Eet/",
+    "toy_binding_readback": "toy video list 39043249461248 --json"
+  }
+}

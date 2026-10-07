@@ -1,0 +1,21 @@
+{
+  "bvid": "BV1TepK69Eet",
+  "published_at": "2026-10-07T11:15:55+08:00",
+  "baseline": {
+    "observed_at": "2026-10-07T12:30:00+08:00",
+    "public_views": 46,
+    "public_likes": 1,
+    "comments": 1,
+    "retention": null,
+    "video_attributed_follows": null,
+    "valid_player_feedback": null,
+    "toy_operator_feedback": null,
+    "note": "发布初期公开页快照，不归因账号总涨粉或推广效果。"
+  },
+  "comparison_windows": [
+    {"hours": 24, "at": "2026-10-08T11:15:55+08:00", "status": "not_due"},
+    {"hours": 72, "at": "2026-10-10T11:15:55+08:00", "status": "not_due"},
+    {"hours": 168, "at": "2026-10-14T11:15:55+08:00", "status": "not_due"}
+  ],
+  "automation": "未新建后台监控或日程，未来相关复盘任务读取此记录。"
+}

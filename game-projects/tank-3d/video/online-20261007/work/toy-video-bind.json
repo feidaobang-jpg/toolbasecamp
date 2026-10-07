@@ -1,0 +1,12 @@
+{
+  "toy_id": "39043249461248",
+  "bvid": "BV1TepK69Eet",
+  "command": "toy video bind BV1TepK69Eet --toy 39043249461248 --json",
+  "result": "bound",
+  "readback": {
+    "list": [
+      {"bvid": "BV1TepK69Eet", "title": "坦克大战能联机了！两个人能守住老鹰吗？", "duration": 83},
+      {"bvid": "BV1Wqaz6AEJb", "title": "把坦克大战做成立体地图，这次能守住老鹰吗？", "duration": 155}
+    ]
+  }
+}
