@@ -28,5 +28,13 @@
   "agreement_authorized": true,
   "agreement_signed": false,
   "agreement_consent_record": "../../site-games/releases/taptap-consent-20261007/authorization.json",
-  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json"
+  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-consent-20261007-04",
+  "source": "Codex",
+  "classification": "已记住同版协议授权，内容转授权资格未解决",
+  "review_submitted": false,
+  "public_verified": false,
+  "platform_agreement_still_required": true,
+  "legal_consent_authorized_but_signing_eligibility_unresolved": true,
+  "pending_ip_evidence": "包体包含原作录音，平台提示知名IP；未取得合法含转授权材料，不代替用户声明已有授权，也不强制提交"
 }
