@@ -128,6 +128,15 @@
    "record": "releases/v0.6.1/handoff.json",
    "summary": "手机竖着拿时菜单直接横屏。",
    "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
+  },
+  {
+   "version": "v0.7.0",
+   "classification": "正式版本",
+   "status": "pending_review",
+   "record": "releases/v0.7.0/bilibili-sync.json",
+   "summary": "原版拳脚、四名角色必杀与GO提示，合并v0.6.1竖屏菜单更新",
+   "bvid": "BV18XHW66E55",
+   "submitted_at": "2026-10-07T08:43:01.731112+08:00"
   }
  ],
  "version": "v0.3.0",
