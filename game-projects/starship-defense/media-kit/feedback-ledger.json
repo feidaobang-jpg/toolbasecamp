@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-07T02:25:06.248252+00:00",
+  "updated_at": "2026-10-07T14:59:04+08:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -530,6 +530,20 @@
       "fixed_in": "web-feedback-v0.22.1",
       "reply_status": "pending",
       "note": "根因：键盘导航循环在.coop-panel弹窗打开时抢焦点；修复后三视口四输入框焦点保持，QA见releases/web-feedback-v0.22.1。"
+    },
+    {
+      "rpid": null,
+      "comment_type": 1,
+      "video": "BV1WbHq6eEBt",
+      "user": "主宇宙马克主宇宙马克",
+      "user_mid": null,
+      "date": "2026-10-07",
+      "text": "作者，这怎么准备😭（附联机大厅截图）/ 往下翻不了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-lobby-scroll-v0.22.2",
+      "reply_status": "pending",
+      "note": "根因：页面级*{touch-action:none}命中大厅卡片后代，触摸滚动被禁；共享coop.js恢复卡片auto并在大厅开启时放开祖先容器，四款合作游戏同修。QA见releases/web-lobby-scroll-v0.22.2。"
     }
   ]
 }
