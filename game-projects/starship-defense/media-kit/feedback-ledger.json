@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-07T07:01:47+00:00",
+  "updated_at": "2026-10-07T14:59:04+08:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -539,6 +539,20 @@
       "reply_rpid": "316340595697",
       "reply_text": "回复 @bili_50539966983 :这条也修好了！原因是联机大厅界面在持续抢占输入焦点，手机上键盘刚弹出来就被打断收起。现在大厅里不再抢焦点，昵称和房间号可以正常打字。网站已更新v0.22.1，Toy同包已提交审核，通过后用手机再试试！",
       "reply_verified_at": "2026-10-07T07:01:47+00:00"
+    },
+    {
+      "rpid": null,
+      "comment_type": 1,
+      "video": "BV1WbHq6eEBt",
+      "user": "主宇宙马克主宇宙马克",
+      "user_mid": null,
+      "date": "2026-10-07",
+      "text": "作者，这怎么准备😭（附联机大厅截图）/ 往下翻不了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-lobby-scroll-v0.22.2",
+      "reply_status": "not_requested_not_posted",
+      "note": "根因：页面级*{touch-action:none}命中大厅卡片后代，触摸滚动被禁；共享coop.js恢复卡片auto并在大厅开启时放开祖先容器，四款合作游戏同修。QA见releases/web-lobby-scroll-v0.22.2。"
     }
   ]
 }
