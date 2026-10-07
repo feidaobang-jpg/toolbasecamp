@@ -3,7 +3,7 @@
   "name": "坦克大战 3D：经典 35 关 + 魔改无限周目",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "coop-hub1",
+  "current_version": "lobby-scroll1",
   "handoff": "releases/coop-hub1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
@@ -33,8 +33,8 @@
     "preview_url": "https://www.bilibili.com/toy/preview/preview_X0l2USEs/index.html",
     "verified_at": "2026-10-07T02:43:57.353796+00:00",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AVDJkYmP/index.html",
-    "submitted_version": "coop-hub1",
-    "submitted_at": "2026-10-07T02:35:39+00:00",
+    "submitted_version": "lobby-scroll1",
+    "submitted_at": "2026-10-07T16:38:45+08:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
@@ -107,7 +107,7 @@
       }
     ],
     "published_verified_at": "2026-10-07T07:50:06+08:00",
-    "status": "published",
+    "status": "auditing",
     "package_hash": "86ca30f3d7167e78df59ddade957e7949dde13af09e29cc9b24138b57660e4cf",
     "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23219/index.html",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_0pRaRPP1/index.html",

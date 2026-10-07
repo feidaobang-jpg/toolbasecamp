@@ -46,12 +46,20 @@
     "桌面滚轮回归视口内无溢出未覆盖，桌面行为未改动"
   ],
   "site": {
-    "status": "pending",
-    "version": "web-lobby-scroll-v0.22.2"
+    "status": "public_verified",
+    "version": "web-lobby-scroll-v0.22.2",
+    "verified_at": "2026-10-07T16:34:00+08:00",
+    "source_commit": "b646a109",
+    "evidence": "线上 coop.js 含 setPanelVisible、三包含 touch-action:auto；www 触摸拖拽终验 scrollTop 0→201"
   },
   "toy": {
-    "status": "pending_sync",
-    "note": "四款游戏大厅同受影响；网站部署核验后按任务节奏同步"
+    "id": 38678478981120,
+    "status": "auditing",
+    "version": "web-lobby-scroll-v0.22.2",
+    "package_sha256": "b750987cb0fe1bd990e32da4f29fefc667453d78ae39176c94453b2f2d4852f3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_IYIwR4dU/index.html",
+    "submitted_at": "2026-10-07T16:38:35+08:00",
+    "note": "预览实测 ta=auto 0→201 无报错后以同包提交；取代在审的 v0.22.1 包"
   },
   "taptap": {
     "status": "pending_sync",

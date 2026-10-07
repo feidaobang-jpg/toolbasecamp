@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-3d",
+  "version": "lobby-scroll1",
+  "classification": "严重修复（联机大厅手机无法滚动）",
+  "site": {
+    "status": "public_verified",
+    "source_commit": "b646a109",
+    "note": "style.css overlay 面板恢复触摸滚动；线上已核验"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "auditing",
+    "package_hash": "6e87e8996bb6538c453660fc78a0e56e6f42dec8a8245ee3704ed858ed96dd1f",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_tmvE9PFO/index.html",
+    "submitted_at": "2026-10-07T16:38:35+08:00",
+    "note": "预览实测 scrollTop 0→514 无报错后同包提交"
+  },
+  "build": "media-kit/releases/lobby-scroll1/toy-build.json"
+}
