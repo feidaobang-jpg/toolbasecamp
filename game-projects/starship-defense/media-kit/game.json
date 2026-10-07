@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-coop-v0.23.0",
+  "current_version": "web-coop-v0.23.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -19,14 +19,14 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-07T02:43:57.353796+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_WxN6g49B/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_rrNp2476/index.html",
     "title": "虫潮围城",
     "zip_sha256": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
     "submitted_date": "2026-10-07",
@@ -34,7 +34,7 @@
     "submitted_version": "web-lobby-scroll-v0.22.2",
     "published_version": "web-coop-v0.22.0",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_Fu3YmxFJ/index.html",
-    "note": "寒霜脉冲塔、重型迫击炮及二/三周目扩容与伤害成长已在公开入口通过电脑/手机视口模拟验证。",
+    "note": "联机2-4人统一版本送审（ZCode接管收尾）；网站已部署核验，等待审核",
     "package_sha256": "70826e27af907b35d576d45a73727612a6afc29c52681aad0eb3e63897eec67a",
     "pending_updates": [
       {
@@ -73,9 +73,10 @@
     "status": "auditing",
     "package_hash": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
     "submission_time_note": "本版本精确提交时间未单独保存；状态、包哈希与公开核验见发布记录。",
-    "submitted_at": "2026-10-07T16:38:35+08:00",
+    "submitted_at": "2026-10-07T16:53:45+08:00",
     "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json",
+    "version": "web-coop-v0.23.0"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-defense-v0.21.0",

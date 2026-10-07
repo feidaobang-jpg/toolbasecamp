@@ -32,6 +32,7 @@ fs.copyFileSync(path.join(root, 'public/css/base.css'), path.join(packageDir, 'b
 let html = fs.readFileSync(path.join(source, 'index.html'), 'utf8');
 html = html.replaceAll('../../../css/base.css', './base.css');
 html = html.replace(/<script src="\.\.\/\.\.\/\.\.\/js\/game\/thumb-preview\.js"><\/script>/g, '');
+html = html.replace(/<script type="module">[\s\S]*?landscape-typing\.js[\s\S]*?<\/script>/g, '');
 html = html.replace(/<a class="gameBack"[^>]*>[\s\S]*?<\/a>/g, '');
 html = html.replace(/<button[^>]*id="(?:platformBtn|btnPlatformMenu|platformBtnMenu)"[^>]*>[\s\S]*?<\/button>/g, '');
 html = html.replace(/<section id="platformPanel"[\s\S]*?<\/section>/, '<section id="platformPanel" class="panel hidden"></section>');

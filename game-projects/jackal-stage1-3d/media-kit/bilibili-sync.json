@@ -5,7 +5,7 @@
       "bvid": "BV1EyHz6wE5u",
       "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
       "owner_uid": 16214353,
-      "last_public_verified_version": "v0.9.0",
+      "last_public_verified_version": "v0.10.0",
       "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
       "verified_at": "2026-10-06T22:35:15.869180+00:00",
       "release_record": "releases/v0.8.0/bilibili-sync.json",
@@ -18,7 +18,8 @@
       "publicVerifiedAt": "2026-10-07T02:35:12.420Z",
       "status": "public_verified",
       "submitted_version": "v0.9.0",
-      "submitted_at": "2026-10-07T02:35:12.420Z"
+      "submitted_at": "2026-10-07T02:35:12.420Z",
+      "public_verified_at": "2026-10-07T18:05:00+08:00"
     }
   ],
   "pending": [],
@@ -36,6 +37,19 @@
       "record": "releases/v0.8.1/handoff.json",
       "summary": "手机竖着拿时菜单直接横屏。",
       "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
+    },
+    {
+      "version": "v0.10.0",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "baseline_version": "v0.9.0",
+      "bvids": [
+        "BV1EyHz6wE5u"
+      ],
+      "summary": "联机统一2–4人合作：建房可选2/3/4人、中途加入/退出保留战场、闲置30秒电脑接管、房主踢人。",
+      "prepared_update_line": "更新（2026-10-07·v0.10.0）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "reason": "浏览器自动化在当前子代理环境不可用（agent.browsers 报 Browser is not available in subagent），未能读取/编辑B站简介；未向平台提交，保留原公开核验基线，待浏览器可用后按本行文案先读平台全文再合并提交。",
+      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)"
     }
   ],
   "resolved_updates": [
@@ -156,6 +170,15 @@
       "status": "public_verified",
       "record": "releases/v0.8.0/bilibili-sync.json",
       "checked_at": "2026-10-06T22:35:15.869180+00:00"
+    },
+    {
+      "bv": "BV1EyHz6wE5u",
+      "version": "v0.10.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·v0.10.0）：联机统一支持2–4人合作，建房可选2/3/4人；中途加入/退出保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。视频为录制时版本，以当前试玩为准。",
+      "method": "browser编辑投稿replace更新行"
     }
   ],
   "last_public_verified": {
@@ -165,5 +188,5 @@
     "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be"
   },
   "latest_record": "releases/v0.9.0/bilibili-sync.json",
-  "pending_note": "统一大厅和合作玩法说明已提交；仅公开核验成功的目标推进基线。"
+  "pending_note": "统一2–4人合作正式版本简介更新待平台提交（浏览器自动化不可用）；仅公开核验成功的目标推进基线。"
 }

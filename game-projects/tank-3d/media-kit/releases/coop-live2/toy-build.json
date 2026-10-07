@@ -7,11 +7,11 @@
   "files": {
     "audio.js": "5e8bb41f1723cca52940035d41cf0f69f8e0555d2a0ec38f47e8ced0e8d05e39",
     "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
-    "coop-shared.js": "eba712b205761fae06c8ece48465a66b044cd63bfda1a6c1d1f44d57c56b020c",
+    "coop-shared.js": "60f85ac382be617f57ace6ad07f4a824f69cf90fe945a2d05dbfe7904b60e11a",
     "coop.js": "d387cdb075243032e1e26edf76c4b7c93eefa1019d8ce0833de81a7fc8e7c464",
     "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
     "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
-    "index.html": "ec82cdab7847040649439d55d843f2ef6141a3257b3d3b12695c8929cf500396",
+    "index.html": "70984c1412ae6fc3610046559f755930787d8e4c125892a54973776c5a0b6ed2",
     "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
     "main.js": "950af18728a13e79fb354c25818b52b33bed8107e3cad341c63c91a29fc36638",
     "scene.js": "364bb0ed72e20394ef7aeea3a2032e83ab740b8de5fc32e571a4093b800845ae",
@@ -28,9 +28,9 @@
     "sounds/snow_slide.mp3": "10462c41c3c32a84196e4b4b18972e31c0b23f380fd9d5fc4a5ef4987e5b1d8c",
     "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
     "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
-    "style.css": "ca67cabfb67945af808a18390fe9e170e040a704360bc9c7d35f1436890e9178",
+    "style.css": "79ed4b6513df4e9029594a6988d3440de7ead760be4b5359e069b0f6ecbdbb83",
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
   },
-  "packageHash": "a5710311b727161df76226463a1a788fc38b786e1a8e20d84bbcede518c939b9",
+  "packageHash": "dbcac73e9fda542c82c2124db7d1461ff18204481a5efe9a1b77f6a7a13e829a",
   "status": "built_not_submitted"
 }
