@@ -16,5 +16,10 @@
     "submitted_at": "2026-10-07T16:38:35+08:00",
     "note": "预览实测 scrollTop 0→514 无报错后同包提交"
   },
-  "build": "media-kit/releases/lobby-scroll1/toy-build.json"
+  "build": "media-kit/releases/lobby-scroll1/toy-build.json",
+  "taptap": {
+    "status": "pending_sync",
+    "app_id": 962376,
+    "note": "本次会话预算不足，下次任务按 taptap-release.md 继续；包体取主线 lobby-scroll1 之后构建"
+  }
 }
