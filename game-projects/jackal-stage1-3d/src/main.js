@@ -549,6 +549,16 @@ if (TEST) {
       return s;
     },
     events: () => G.events.slice(),
+    // 联机诊断：各车位姿与收到快照次数（host 为权威，guest 靠快照驱动）
+    coop() {
+      if (!coopDriver?.config) return null;
+      const c = coopDriver.connection;
+      return { host: c.host, slot: c.slot, stateCount: c.stateCount, rtt: c.rtt, mode: G.mode, smooth: GM.coopRemoteSmooth(),
+        players: GM.players().map(p => ({ slot: p.slot, ang: +(p.ang ?? 0).toFixed(3), x: +p.x.toFixed(2), y: +p.y.toFixed(2),
+          vis: p.vis ? { x: +p.vis.x.toFixed(2), y: +p.vis.y.toFixed(2), ang: +p.vis.ang.toFixed(3) } : null,
+          body: +(p.obj.body.rotation.y ?? 0).toFixed(3) })) };
+    },
+    interp: () => GM.interpProbe(),
     clearInput: () => IN.clear(),
     cheat: GM._test,
     fx: () => fx.stats(),
@@ -636,7 +646,7 @@ installRemakeUI();
 
 coopDriver=installRemakeCoop({
  game:'jackal',container:stage,menu:overlays.menu.querySelector('.items'),getConfig:()=>({...settings}),notify:showToast,
- onStart:config=>{settings.demo=false;startGame(config.stage);GM.setCoopInput(slot=>coopDriver.connection.control(slot,slot===0?null:coopDriver.connection.input(slot),()=>GM.computerInput(slot)));},
+ onStart:config=>{settings.demo=false;startGame(config.stage);GM.setCoopInput(slot=>coopDriver.connection.control(slot,slot===0?null:coopDriver.connection.input(slot),()=>GM.computerInput(slot)));GM.setCoopRemoteSmooth(!coopDriver.connection.host);},
  onJoin:m=>GM.joinCoopSlot(m.slot),
  getInput:()=>GM.coopInput(),getState:()=>({...GM.coopSnapshot(),sounds:coopSounds.snapshot()}),getUI:()=>({paused,current}),
  onState:state=>{

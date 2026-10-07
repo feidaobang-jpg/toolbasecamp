@@ -5,7 +5,7 @@ import { markTree, treeState, applyTree, scalarState } from '../../../public/js/
 import * as THREE from 'three';
 import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
 import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX, STAGES } from './level.js';
-import { buildHuman, buildRaptor, buildTrike, buildCar, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
+import { buildHuman, buildRaptor, buildTrike, buildCar, buildPtero, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
 import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
 import { propMesh } from './world.js';
 import A from './audio.js';
@@ -17,7 +17,8 @@ export const G = {
   actors: [], items: [], props: [], projs: [], player: null, boss: null, raptor: null,
   banner: null, toast: null, dialog: null, fade: 0, hurtFx: 0, flash: 0, go: 0,
   events: [], kills: {}, stats: null, script: null, onEnd: null, cont: null, demoUsed: false, ended: false,
-  sleeper: null, car: null, carAnim: null, blockers: [], water: null, cleared: [], extraWave: false, later: []
+  sleeper: null, car: null, carAnim: null, blockers: [], water: null, cleared: [], extraWave: false, later: [],
+  cine: null, cineCam: null, pteroFly: []
 };
 const CN_NUM = ['', '一', '二', '三', '四', '五', '六', '七', '八'];
 export const SINK = 0.62;   // 泥沼齐腰：站在水里的角色整体下沉的深度（只影响画面，判定高度不变）
@@ -256,6 +257,7 @@ export function newGame(opts) {
 }
 function clearAll() {
   A.clearEffects();
+  clearIntroFx();
   for (const a of G.actors) if (!a.removed) removeActor(a);
   G.actors = []; G.player = null; G.boss = null; G.raptor = null;
   for (const it of G.items) scene.remove(it.mesh);
@@ -272,6 +274,7 @@ function loadArea(i, first) {
   const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
   // 清掉上一区域的敌人与物品，保留玩家；还在飞的子弹作废
   G.later = [];
+  clearIntroFx();
   for (const a of G.actors) if (a.side !== 'player' && !a.removed) removeActor(a);
   G.actors = G.actors.filter(a=>a.side==='player'&&!a.removed);
   for (const it of G.items) scene.remove(it.mesh);
@@ -313,21 +316,51 @@ function loadArea(i, first) {
     setState(sh, 'sleep'); G.sleeper = sh;
   }
   if (i === 0) {
-    // 楼顶开场：维斯带着四个手下
+    // 楼顶开场（照原作）：海边远景、翼龙飞过、「EASTCOAST 2513」→ 主角走进楼顶，维斯带手下放话，翼龙又飞过一只
+    // → 手下围上来，主角一记必杀把他们全震飞（开场这一下不扣血）→ 维斯朝天开枪跳楼走 → 「TOP OF THE BUILDING」，新敌人上来
     const v = makeActor('vice', 'enemy', { def: ENEMY.vice, x: 12.9, z: 0.5, hp: 400, maxHp: 400, face: FACE_LEFT, cine: true });
     setState(v, 'cut'); v.sub.pose = 'crossArms';
     G.introVice = v;
     G.mode = 'cut';
     triggerWave(0);
+    const gang = G.waveEnemies.slice();
+    for (const e of gang) { e.hp = Math.min(e.hp, 1); e.introGang = true; }
+    const hx = p.x + 1.3, hz = p.z; p.x = AR.x0 + 0.3;
+    A.music(AR.id);
     runScript([
-      { wait: 0.6 },
+      { fn: () => {
+        G.cine = { t: 0, dur: 3.8, from: { pos: [-3, 16, 24], tgt: [20, 2, -48] }, to: { pos: [6.5, 5.6, 15.5], tgt: [7.6, 1.5, 0] } };
+        banner('东海岸 · 2513年', 'EASTCOAST 2513', 3.6);
+        addIntroPtero(36, 9.5, -3.5, 13, 0.25, 1.7); addIntroPtero(42, 7.4, -8, 12, 0.85, 1.5);
+      } },
+      { wait: 3.8, skip: true },
+      { fn: () => { G.cine = null; G.cineCam = null; setState(p, 'cutwalk', { x: hx, z: hz, face: FACE_RIGHT }); } },
+      { wait: 1.5 },
       { say: 'vice', text: '你们老是来碍事，我们受够了！', dur: 2.6 },
+      { fn: () => addIntroPtero(p.x + 16, 6.5, -9, 9, 0, 1.6) },
       { say: 'vice', text: '小的们，给他们点教训！', dur: 2.2 },
+      { fn: () => { for (const e of gang) if (e.alive) { setState(e, 'cutwalk'); e.cd = 99; } } },
+      { dur: 1.25, tick: () => { for (const e of gang) { if (!e.alive || e.state !== 'cutwalk') continue; const tx = p.x + 1.0 + Math.abs(e.z - p.z) * 0.3, dx = tx - e.x; e.vx = clamp(dx * 3.2, -5.5, 5.5); e.vz = (p.z - e.z) * 0.9; e.face = FACE_LEFT; } } },
+      { fn: () => {
+        for (const e of gang) if (e.alive) { setState(e, 'idle'); e.vx = e.vz = 0; e.cd = 99; }
+        p.face = FACE_RIGHT; startMove(p, 'mega'); p.move.free = true;
+        A.play('mega', 1, p.hero.id); fx.ring(p.x, 0.15, p.z); ev('introMega');
+      } },
+      // 原作这一下把手下全震飞出去：被打倒的那一刻再加一把力
+      { dur: 1.15, tick: () => { for (const e of gang) if (e.state === 'down' && !e.blasted) { e.blasted = true; e.vx *= 2.6; e.vz *= 1.6; e.vy = Math.max(e.vy, 6.8); } } },
       { fn: () => { v.sub.pose = 'gunUp'; A.play('gun'); queueShot(v, [{ up: true, dist: 7 }], { kind: 'gun' }); } },
       { wait: 0.5 },
       { fn: () => { setState(v, 'leave'); v.vy = 9; v.vx = 3.5; v.vz = -2.6; A.play('jump'); } },
       { wait: 0.9 },
-      { fn: () => { if (!v.removed) removeActor(v); G.actors = G.actors.filter(a => a !== v); G.introVice = null; for (const e of G.waveEnemies) if (e.state === 'cut') setState(e, 'idle'); G.mode = 'play'; A.music(AR.id); } }
+      { fn: () => {
+        if (!v.removed) removeActor(v); G.actors = G.actors.filter(a => a !== v); G.introVice = null;
+        for (const e of G.waveEnemies) if (e.alive && (e.state === 'cut' || e.state === 'cutwalk')) setState(e, 'idle');
+        banner(AR.name, AR.title, 2.2);
+        // 原作：开场必杀之后马上又有手下从右边上来
+        const t0 = G.t;
+        G.pending.push({ at: t0 + 0.2, type: 'ferris', from: 'right', z: 0.8 }, { at: t0 + 1.4, type: 'gneiss', from: 'right', z: -1.0 });
+        G.mode = 'play';
+      } }
     ]);
   } else if (AR.car) {
     carIntro(AR);
@@ -338,6 +371,34 @@ function loadArea(i, first) {
     if (AR.id === 'swamp') { p.y = 2.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 1.6; }   // 从山崖上跳进泥沼
   }
 }
+// 开场：飞过镜头前的翼龙（从右往左），x0 起点、y 高度、z 纵深、speed 米/秒、delay 秒后出发、s 缩放
+function addIntroPtero(x0, y, z, speed, delay, s) {
+  const gp = buildPtero(); gp.scale.setScalar(s); gp.rotation.y = -Math.PI / 2; gp.visible = false; scene.add(gp);
+  G.pteroFly.push({ g: gp, x0, y, z, speed, delay, t: 0 });
+}
+function updateIntroFx(dt) {
+  const C = G.cine;
+  if (C) {
+    C.t += dt;
+    const u = Math.min(1, C.t / C.dur), k = u * u * (3 - 2 * u), L = (a, b) => a.map((v, i) => v + (b[i] - v) * k);
+    const pos = L(C.from.pos, C.to.pos), tgt = L(C.from.tgt, C.to.tgt);
+    G.cineCam = { pos: { x: pos[0], y: pos[1], z: pos[2] }, tgt: { x: tgt[0], y: tgt[1], z: tgt[2] }, fov: 42 };
+  }
+  for (const f of G.pteroFly) {
+    f.t += dt;
+    const tt = f.t - f.delay;
+    f.g.visible = tt > 0;
+    const x = f.x0 - f.speed * Math.max(0, tt);
+    f.g.position.set(x, f.y + Math.sin(tt * 1.3) * 0.4, f.z);
+    f.g.rotation.z = Math.sin(tt * 1.3) * 0.08;
+    const flap = Math.sin(tt * 4.2) * 0.6, w = f.g.userData.wings, o = f.g.userData.outer;
+    w[0].rotation.z = flap; w[1].rotation.z = -flap;
+    if (o) { o[0].rotation.z = o[1].rotation.z = flap * 0.6; }   // 外段翼在镜像组里，同号即左右对称
+    if (x < f.x0 - 90) { scene.remove(f.g); f.done = true; }
+  }
+  G.pteroFly = G.pteroFly.filter(f => !f.done);
+}
+function clearIntroFx() { for (const f of G.pteroFly) scene.remove(f.g); G.pteroFly = []; G.cine = null; G.cineCam = null; }
 // 第二关开场：凯迪拉克开进森林停下，主角从驾驶座跳出来
 function carIntro(AR) {
   const p = G.player, c = buildCar();
@@ -393,6 +454,7 @@ export function update() {
   if (G.script) stepScript(dt);
   if (G.carAnim) stepCar(dt);
   if (G.later.length) runLater();
+  if (G.cine || G.pteroFly.length) updateIntroFx(dt);
   if (G.mode === 'cont') { updateContinue(dt); return; }
   // 玩家输入
   const p = G.player;
@@ -519,7 +581,6 @@ function playerAttack(p) {
   const chain = G.t - p.lastHitT < 0.6 && p.comboN < combo.length - 1;
   p.comboN = chain ? p.comboN + 1 : 0;
   startMove(p, combo[p.comboN]);
-  finisherShout(p);
 }
 function autoAim(p) {
   // 自由视角（正视 / 第一人称 / 转过的镜头）下给出软锁定：转向身前最近的敌人；侧视保持原作的左右朝向
@@ -670,13 +731,13 @@ function updateMove(a, dt) {
       else if (tryHit(a, hh, false, m, i)) m.connected = true;
     }
   }
-  if (m.id === 'mega' && m.t > 0.5 && m.megaHit && !m.paid) { m.paid = true; if (!G.settings.demo) a.hp = Math.max(1, a.hp - 6); }
+  if (m.id === 'mega' && m.t > 0.5 && m.megaHit && !m.paid && !m.free) { m.paid = true; if (!G.settings.demo) a.hp = Math.max(1, a.hp - 6); }
   // 连招：打中且按了攻击 → 提前接下一招
   const cancelT = d.cancel !== undefined ? d.cancel * recMul : 9;
   if (a === G.player && m.next && m.connected && m.t >= cancelT) {
     a.lastHitT = G.t;
     const combo = a.hero.combo;
-    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); finisherShout(a); return; }
+    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); return; }
   }
   if (m.connected && a === G.player) a.lastHitT = G.t;
   if (m.t >= d.dur * (d.dash ? 1 : recMul)) {
@@ -696,8 +757,6 @@ function megaHits(a, h, m) {
   for (const pr of G.props) if (!pr.broken && Math.hypot(pr.x - a.x, pr.z - a.z) < h.r + pr.r && !m.hit.has('p' + pr.x)) { m.hit.add('p' + pr.x); hitProp(pr, 2); }
 }
 
-// 原作：连招最后一下起手时主角喊一声（杰克、汉娜、穆斯塔法、梅斯各自的喝声）
-function finisherShout(a) { if (a.hero && a.comboN === a.hero.combo.length - 1) A.play('finisher', 1, a.hero.id); }
 // 重招：连招最后一下、踢、勾拳、上勾拳、特殊技与武器挥击（挥空声更沉、带挥击残影）
 function isHeavyMove(a, m) {
   if (!m) return false;
@@ -739,8 +798,12 @@ function tryGrab(p, mv) {
 function grabStrike(p) {
   const e = p.grab;
   if (!e) return;
+  // 抓住时不能走动，所以方向键只用来选投技（按相对主角朝向判断）：
+  // 与朝向垂直（侧视里就是上 / 下，和街机一样；正视、第一人称里是左 / 右）＋J＝背摔；反方向＋J＝向后抛；不按或朝前＋J＝膝撞，第四下向前摔
   const mv = moveVec();
-  const away = mv.len > 0.4 && (mv.x * Math.sin(p.face) + mv.z * Math.cos(p.face)) < -0.4;
+  const along = mv.len > 0.4 ? (mv.x * Math.sin(p.face) + mv.z * Math.cos(p.face)) / mv.len : 0;
+  if (mv.len > 0.4 && Math.abs(along) < 0.5) return suplex(p, e);
+  const away = mv.len > 0.4 && along < -0.5;
   if (away || p.sub.strikes >= 3) return throwEnemy(p, e, away);
   p.sub.strikes++;
   p.sub.anim = 'knee'; p.sub.animT = p.st; p.sub.animDur = 0.24;
@@ -751,6 +814,21 @@ function grabStrike(p) {
   p.hitstop = Math.max(p.hitstop, 0.07); e.hitstop = Math.max(e.hitstop, 0.08); e.hsMax = 0.08; e.hsDir = p.face; e.hsAmp = 0.06;
   fx.shake = Math.max(fx.shake, 0.05);
   p.st = Math.min(p.st, 0.4);
+}
+// 背摔：把敌人从头顶抡过去，摔在身后
+function suplex(p, e) {
+  releaseGrab(p, true);
+  setState(p, 'throwing', { dur: 0.72, clip: 'suplex' });
+  const f = { x: Math.sin(p.face), z: Math.cos(p.face) };
+  e.hp -= G.settings.demo && e.side === 'player' ? 0 : 22 * p.stats.dmg;
+  addScore(400, e.x, 2, e.z, false);
+  e.lastHitBy = p;
+  setState(e, 'down', { phase: 'air', thrown: true, suplex: true });
+  e.x = p.x + f.x * 0.35; e.z = p.z + f.z * 0.35; e.y = 1.5;
+  e.vy = 4.6; e.vx = -f.x * 3.0; e.vz = -f.z * 3.0;
+  e.face = p.face;   // 头朝下翻过去，脸朝同一方向
+  A.play('whoosh', 0.7);
+  ev('suplex', { id: e.id });
 }
 function throwEnemy(p, e, back) {
   releaseGrab(p, true);
@@ -1114,6 +1192,8 @@ function applyHit(a, e, h, dir, splash) {
   if (w >= 1 && sfx === 'punch') sfx = 'punchHeavy';
   if (w >= 1 && sfx === 'kick') sfx = 'kickHeavy';
   if (sfx) A.play(sfx);
+  // 原作：连招最后一下打中后约 0.15 秒主角喊一声（杰克、汉娜、穆斯塔法、梅斯各自的喝声）
+  if (fin && !a.move.shouted) { a.move.shouted = true; const hid = a.hero.id; G.later.push({ t: G.t + 0.12, fn: () => A.play('finisher', 1, hid) }); }
   // 原作：连招最后一下打中时主角喊一声（杰克、汉娜、穆斯塔法、梅斯各自的喝声）
   if (h.sfx === 'slash') fx.blood(e.x, 1.3, e.z, Math.sin(dir) > 0 ? 1 : -1);
   const hs = [0.065, 0.1, 0.14][w];
@@ -1313,6 +1393,7 @@ function updateEnemy(e, dt) {
   const p = G.player, def = e.def;
   switch (e.state) {
     case 'cut': e.vx = e.vz = 0; e.face = approachAng(e.face, faceOf(p.x - e.x, p.z - e.z), dt * 6); break;
+    case 'cutwalk': break;   // 开场脚本推着走
     case 'enter': updateEnter(e, dt); break;
     case 'idle': case 'walk': case 'hover': think(e, dt); break;
     case 'attack': updateEnemyMove(e, dt); break;
@@ -2163,7 +2244,8 @@ function stepScript(dt) {
     if (S.t === 0 && s.say) { G.dialog = { who: s.say, text: s.text, t: 0 }; A.play('blip'); }
     S.t += dt;
     let done = false;
-    if (s.wait !== undefined) done = S.t >= s.wait;
+    if (s.wait !== undefined) done = S.t >= s.wait || (s.skip && S.t > 0.3 && (IN.take('atk') || IN.take('jump')));
+    else if (s.tick) { s.tick(dt, Math.min(1, S.t / s.dur)); done = S.t >= s.dur; }
     else if (s.fn) { s.fn(); done = true; }
     else if (s.say) {
       G.dialog.t = S.t;

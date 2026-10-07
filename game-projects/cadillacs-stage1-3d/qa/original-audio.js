@@ -49,7 +49,8 @@ const fs = require('fs');
     await page.locator(`[data-hero="${hero}"]`).click();
     if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
     await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.originalsLoaded.length === 14);
-    await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.cheat.killAll(); T.audioLogStart(); T.step(120); });
+    // 开场脚本跳过后，开场必杀之后的两名手下要先走进来，再全部清掉
+    await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.step(150); T.cheat.killAll(); T.audioLogStart(); T.step(120); });
     check(`hero ${hero}: all recordings decoded`, (await state()).ui.audio.failed.length === 0);
   }
   for (let hero = 0; hero < 4; hero++) {
@@ -69,8 +70,8 @@ const fs = require('fs');
     await page.evaluate(() => window.__CD_TEST__.step(40));
     const clog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
     const hitsL = clog.filter(e => ['punch', 'punchHeavy', 'kick', 'kickHeavy'].includes(e.name)), fin = clog.filter(e => e.name === 'finisher');
-    check(`hero ${hero}: four combo hits all use the original impact`, hitsL.length >= 4 && hitsL.every(e => e.sample === 'hit' && e.source === 'original'), hitsL.map(e => e.name + ':' + e.sample));
-    check(`hero ${hero}: hero's own shout once, as the last blow starts (between 3rd and 4th hit)`, fin.length === 1 && fin[0].sample === 'finisher-' + ['jack', 'hannah', 'mustapha', 'mess'][hero] && fin[0].t > hitsL[2].t && fin[0].t <= hitsL[3].t, { fin, hits: hitsL.map(e => e.t) });
+    check(`hero ${hero}: hits 1-3 use the light original impact, the 4th the heavy knock-down impact`, hitsL.length >= 4 && hitsL.slice(0, 3).every(e => e.sample === 'hit' && e.source === 'original') && hitsL[3].sample === 'heavy' && hitsL[3].source === 'original', hitsL.map(e => e.name + ':' + e.sample));
+    check(`hero ${hero}: hero's own shout once, ~0.12 s after the heavy 4th hit (arcade: 26.53 heavy -> 26.68 shout)`, fin.length === 1 && fin[0].sample === 'finisher-' + ['jack', 'hannah', 'mustapha', 'mess'][hero] && fin[0].t - hitsL[3].t > 0.08 && fin[0].t - hitsL[3].t < 0.2, { fin, hits: hitsL.map(e => e.t) });
     check(`hero ${hero}: bare-hand combo has no synthesized whoosh`, !clog.some(e => /^whoosh/.test(e.name)), clog.map(e => e.name));
   }
   for (let hero = 0; hero < 4; hero++) {
@@ -80,7 +81,7 @@ const fs = require('fs');
     const dlog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
     const dash = dlog.find(e => e.name === 'dash'), dhit = dlog.find(e => e.name === 'dashHit'), shout = dlog.find(e => e.name === 'shout');
     check(`hero ${hero}: dash start plays original dash sound`, dash?.sample === 'dash' && dash.source === 'original', dash);
-    check(`hero ${hero}: dash attack hit uses the original dash impact (not the punch)`, dhit?.sample === 'dashHit' && dhit.source === 'original' && dhit.t > dash.t, dlog.map(e => e.name));
+    check(`hero ${hero}: dash attack hit uses the original heavy impact (not the light punch)`, dhit?.sample === 'heavy' && dhit.source === 'original' && dhit.t > dash.t, dlog.map(e => e.name));
     check(`hero ${hero}: only Mustapha shouts on his flying kick`, hero === 2 ? shout?.sample === 'shout-mustapha' && shout.source === 'original' : !shout || shout.sample === null, shout);
   }
   await start(0);

@@ -87,7 +87,7 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
 
 // Short samples use this same context/bus for pause, mute, capture and offline rendering.
 const lastSample = new Map();
-const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9, dash: 0.9, dashHit: 1.1, shout: 0.95 };
+const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9, dash: 0.9, heavy: 1.1, shout: 0.95 };
 const activeSamples = new Set();
 function playOriginal(name, v, hero, t, throttle = true) {
   const key = originalCue(name, hero), buffer = samples?.buffers.get(key);

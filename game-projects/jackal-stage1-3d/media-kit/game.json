@@ -10,14 +10,14 @@
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_557nRXIU/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_o1QjrBAb/index.html",
     "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "联机2-4人统一版本送审（ZCode接管收尾）；网站已部署核验，等待审核",
-    "submitted_at": "2026-10-07T16:53:45+08:00",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_wZxCVZzI/index.html",
-    "submitted_version": "v0.9.1",
+    "note": "v0.10.2 联机队友车头转向与加入者卡顿修复（严重修复）；预览双视口实测通过后提交审核，等待审核。",
+    "submitted_at": "2026-10-07T17:55:35+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DyEKsYfW/index.html",
+    "submitted_version": "v0.10.2",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_rS8VqubD/index.html",
     "release_record": "releases/v0.9.0/handoff.json",
     "published_version": "v0.9.0",
@@ -102,16 +102,25 @@
         "summary": "U联合开火，机枪默认固定世界北，可选跟随车头",
         "included_version": "v0.8.0",
         "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
+      },
+      {
+        "version": "v0.10.2",
+        "classification": "严重修复",
+        "status": "auditing",
+        "summary": "联机队友车头随本人视角转向；加入者车位按帧插值；快照体积 68.6KB→29.6KB。",
+        "record": "releases/v0.10.2/notes.md",
+        "submitted_at": "2026-10-07T17:55:35+08:00",
+        "preview_verified": "1280×720 与 390×844 双视口实测正常，无页面错误"
       }
     ],
     "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
     "last_successful_sync_version": "v0.8.1",
-    "package_sha256": "b2d84020bf4fa30ea8a3d89440d505a153d35c13fb0f4225d7ac145f0735b012",
+    "package_sha256": "84922aaeeffa60778a540ec50aeb79f47526b108866321b8791f0922bd272e06",
     "published_verified_at": "2026-10-07T07:50:06+08:00",
     "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
     "status": "auditing",
     "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
-    "version": "v0.10.0",
+    "version": "v0.10.2",
     "package": "dist/toy-v0.8.0/package",
     "last_published_version": "v0.8.1",
     "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
@@ -137,12 +146,12 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.10.1",
+  "current_version": "v0.10.2",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "website_version": "v0.8.1",
+  "website_version": "v0.10.2",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
   "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
-  "website_verified_at": "2026-10-07T07:30:00+08:00",
+  "website_verified_at": "2026-10-07T17:55:35+08:00",
   "versions": [
     {
       "version": "v0.1",
@@ -259,7 +268,7 @@
       "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
     }
   ],
-  "website_commit": "3576fc8d",
+  "website_commit": "f8e47dc3",
   "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "dev": {
@@ -381,6 +390,19 @@
         "toy": "published",
         "bilibili": "pending_merge"
       }
+    },
+    {
+      "version": "v0.10.2",
+      "classification": "严重修复",
+      "summary": "赤色要塞联机：真人队友车头不转向、加入者卡顿。",
+      "record": "releases/v0.10.2/notes.md",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "auditing",
+        "taptap": "not_synced_this_task",
+        "bilibili": "pending_merge"
+      },
+      "bilibili_note": "本会话浏览器未登录 B站创作中心，简介未提交；已在 bilibili-sync.json 留下准备文案，累计到下一次有意义的说明更新。"
     }
   ],
   "taptap": {

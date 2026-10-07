@@ -80,7 +80,7 @@
           <p class="help help-touch help-extra">左侧摇杆移动 · 右侧四键：下排 <b>J</b> 攻击、<b>K</b> 跳跃，上排 <b>U</b> 必杀、<b>I</b> 冲刺（点后推摇杆保持，回中停止） · 右上角 <b>C</b> 切换视角与暂停 · 按住画面拖动转视角</p>
           <p class="help help-desktop help-extra">特殊技：<kbd>S</kbd>→<kbd>W</kbd>→<kbd>J</kbd>（下→上→攻击）</p>
           <p class="help help-touch help-extra">特殊技：摇杆下→上→J；第一人称向右拖就是向右转头。</p>
-          <p class="help help-extra">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击<br>空手贴近敌人自动抓住，J 膝撞，反向＋J 投掷；冲锋枪按住 J 连射。</p>
+          <p class="help help-extra">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击<br>空手贴近敌人自动抓住：J 膝撞，上／下＋J 背摔（正视时左／右），反向＋J 往后扔；冲锋枪按住 J 连射。</p>
           <p class="hi">最高分 <span id="hi-val">50000</span></p>
           <p class="legal">粉丝向非官方重置：3D 模型重新制作，音乐采用原版录音，缺项音效保留合成；《恐龙快打》（Cadillacs and Dinosaurs）原作版权归 Capcom 及原著方所有。</p>
         </div>
@@ -118,7 +118,7 @@
         <h2>暂停</h2>
         <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 攻击 · <kbd>K</kbd> 跳跃 · <kbd>U</kbd> 必杀 · <kbd>I</kbd> 冲刺 · <kbd>C</kbd> 切换视角 · 特殊技 <kbd>S</kbd>→<kbd>W</kbd>→<kbd>J</kbd></p>
         <p class="help help-touch">摇杆移动 · J 攻击 · K 跳跃 · U 必杀 · I 冲刺（点后推摇杆保持）· 特殊技：摇杆下→上→J</p>
-        <p class="help">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击 · 空手贴近敌人自动抓住，J 膝撞，反向＋J 投掷；冲锋枪按住 J 连射。</p>
+        <p class="help">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击 · 空手贴近敌人自动抓住：J 膝撞，上／下＋J 背摔（正视时左／右），反向＋J 往后扔；冲锋枪按住 J 连射。</p>
         <nav class="items" aria-label="暂停菜单">
           <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
           <button data-act="restart">重新开始</button>
@@ -167,7 +167,7 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
 </script>
-<script src="js/game.min.js?v=ime-live1"></script>
+<script src="js/game.min.js?v=intro-v092"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
 (function(){

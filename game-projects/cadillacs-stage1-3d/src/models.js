@@ -703,22 +703,40 @@ const ITEM_BUILDERS = {
 export function itemGeo(kind) { return cachedGeo('item:' + kind, ITEM_BUILDERS[kind]); }
 export function itemMesh(kind) { return meshFrom(itemGeo(kind), { thin: true }); }
 
-// 翼龙（背景装饰，原作楼顶远景里飞过）
+// 翼龙（楼顶远景里盘旋；第一关开场从镜头前飞过）：冠饰长喙、两段式后掠翼，扇动时外段翼跟着折
 export function buildPtero() {
   const g = new THREE.Group();
-  const bodyG = cachedGeo('ptero-body', (p) => {
-    p.add(GEO.sph, '#b8603a', mtx(0, 0, 0, 0, 0, 0, 0.18, 0.16, 0.6));
-    p.add(GEO.cone, '#c8743c', mtx(0, 0.05, 0.75, Math.PI / 2, 0, 0, 0.08, 0.6, 0.06));
-    p.add(GEO.cone, '#a04a2a', mtx(0, 0.25, 0.4, -0.6, 0, 0, 0.05, 0.45, 0.05));
+  const bodyG = cachedGeo('ptero-body2', (p) => {
+    p.add(GEO.sph, '#b4552f', mtx(0, 0, 0, 0, 0, 0, 0.17, 0.15, 0.5));
+    p.add(GEO.sph, '#d99a62', mtx(0, -0.045, 0.03, 0, 0, 0, 0.13, 0.11, 0.42));
+    p.add(GEO.sph, '#b4552f', mtx(0, 0.08, 0.48, -0.45, 0, 0, 0.07, 0.07, 0.2));
+    p.add(GEO.sph, '#c2643a', mtx(0, 0.16, 0.66, 0, 0, 0, 0.085, 0.08, 0.14));
+    p.add(GEO.cone, '#e0a050', mtx(0, 0.13, 0.98, Math.PI / 2, 0, 0, 0.045, 0.52, 0.028));
+    p.add(GEO.cone, '#8e3a1c', mtx(0, 0.27, 0.48, -2.25, 0, 0, 0.04, 0.46, 0.022));
+    p.add(GEO.sph, '#1a1410', mtx(0.06, 0.19, 0.72, 0, 0, 0, 0.016, 0.016, 0.016));
+    p.add(GEO.sph, '#1a1410', mtx(-0.06, 0.19, 0.72, 0, 0, 0, 0.016, 0.016, 0.016));
+    p.add(GEO.cone, '#9a4424', mtx(0, 0, -0.6, -Math.PI / 2, 0, 0, 0.035, 0.32, 0.03));
+    p.add(GEO.cone, '#7a3418', mtx(0.06, -0.08, -0.36, -2.3, 0, 0, 0.02, 0.3, 0.02));
+    p.add(GEO.cone, '#7a3418', mtx(-0.06, -0.08, -0.36, -2.3, 0, 0, 0.02, 0.3, 0.02));
   });
-  const wingG = cachedGeo('ptero-wing', (p) => { p.add(GEO.box, '#c8703e', mtx(0.75, 0, 0, 0, 0, 0, 1.5, 0.03, 0.55)); p.add(GEO.box, '#9a4a28', mtx(0.75, 0.01, 0.2, 0, 0, 0, 1.5, 0.03, 0.12)); });
-  const b = meshFrom(bodyG, { thin: true, shadow: false });
-  g.add(b);
-  const wl = new THREE.Group(), wr = new THREE.Group();
-  const ml = meshFrom(wingG, { thin: true, shadow: false }), mr = meshFrom(wingG, { thin: true, shadow: false });
-  wl.add(ml); wr.add(mr); mr.scale.x = -1;
-  g.add(wl, wr);
-  g.userData.wings = [wl, wr];
+  const innerG = cachedGeo('ptero-wing-in', (p) => {
+    p.add(GEO.box, '#c96a38', mtx(0.42, 0, -0.06, 0, 0, 0, 0.84, 0.022, 0.52));
+    p.add(GEO.box, '#843619', mtx(0.42, 0.012, 0.19, 0, 0, 0, 0.86, 0.045, 0.05));
+  });
+  const outerG = cachedGeo('ptero-wing-out', (p) => {
+    p.add(GEO.box, '#d27a42', mtx(0.5, 0, -0.1, 0, 0.32, 0, 1.0, 0.018, 0.34));
+    p.add(GEO.box, '#843619', mtx(0.5, 0.01, 0.05, 0, 0.32, 0, 1.04, 0.04, 0.045));
+  });
+  g.add(meshFrom(bodyG, { thin: true, shadow: false }));
+  const wings = [], outer = [];
+  for (const side of [1, -1]) {
+    const w = new THREE.Group(), o = new THREE.Group();
+    w.position.set(0.1 * side, 0.05, 0.12); w.scale.x = side;
+    w.add(meshFrom(innerG, { thin: true, shadow: false }));
+    o.position.set(0.84, 0, 0.12); o.add(meshFrom(outerG, { thin: true, shadow: false }));
+    w.add(o); g.add(w); wings.push(w); outer.push(o);
+  }
+  g.userData.wings = wings; g.userData.outer = outer;
   return g;
 }
 

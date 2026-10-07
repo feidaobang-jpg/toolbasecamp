@@ -41,9 +41,9 @@ const fs = require('fs');
   ok('触屏按键显示、键位提示隐藏', !s.ui.touchHidden && await page.evaluate(() => document.getElementById('keyhint').hidden));
   ok('未自动请求全屏', !s.ui.fs && s.ui.fsLog.length === 0);
   // 用 J 键跳过开场对话
-  for (let i = 0; i < 12; i++) { s = await S(page); if (s.mode === 'play') break; await tapSel(page, cdp, '#btn-atk'); await sleep(250); }
+  for (let i = 0; i < 48; i++) { s = await S(page); if (s.mode === 'play') break; await tapSel(page, cdp, '#btn-atk'); await sleep(250); }
   s = await S(page); ok('点 J 跳过对话进入战斗', s.mode === 'play', s.mode);
-  await page.evaluate(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500);
+  await page.evaluate(() => { window.__CD_TEST__.cheat.G.pending = []; window.__CD_TEST__.cheat.killAll(); }); await sleep(1500);   // 开场后还有两名手下排队上场，一并清掉
   await page.screenshot({ path: out('mobile-game.png') });
   // 摇杆
   const jz = await rectOf(page, '#joy-zone');
@@ -137,8 +137,8 @@ const fs = require('fs');
   });
   const near = (a, b) => Math.abs(a - b) <= 2;
   ok('触屏 2×2 方阵：下排 J K、上排 U I，等大对齐', near(pad.J.y, pad.K.y) && near(pad.U.y, pad.I.y) && near(pad.J.x, pad.U.x) && near(pad.K.x, pad.I.x) && pad.J.x < pad.K.x && pad.U.y < pad.J.y && new Set([pad.J.s, pad.K.s, pad.U.s, pad.I.s]).size === 1, pad);
-  for (let i = 0; i < 12; i++) { s = await S(page); if (s.mode === 'play') break; await tapSel(page, cdp, '#btn-atk'); await sleep(250); }
-  await page.evaluate(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500);
+  for (let i = 0; i < 48; i++) { s = await S(page); if (s.mode === 'play') break; await tapSel(page, cdp, '#btn-atk'); await sleep(250); }
+  await page.evaluate(() => { window.__CD_TEST__.cheat.G.pending = []; window.__CD_TEST__.cheat.killAll(); }); await sleep(1500);   // 开场后还有两名手下排队上场，一并清掉
   await page.screenshot({ path: out('mobile-portrait-game.png') });
   // 旋转布局下：在屏幕上向下拖 = 横屏里的向右
   const jz2 = await rectOf(page, '#joy-zone');
