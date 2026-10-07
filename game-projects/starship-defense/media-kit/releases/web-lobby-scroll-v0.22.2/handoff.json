@@ -46,12 +46,20 @@
     "桌面滚轮回归视口内无溢出未覆盖，桌面行为未改动"
   ],
   "site": {
-    "status": "pending",
-    "version": "web-lobby-scroll-v0.22.2"
+    "status": "public_verified",
+    "version": "web-lobby-scroll-v0.22.2",
+    "source_commit": "b646a109",
+    "verified_at": "2026-10-07T08:46:30+00:00",
+    "evidence": "线上 coop.js 含 .coop-card touch-action:auto；game.compat.js sha256 前缀 02050e60 与仓库一致"
   },
   "toy": {
-    "status": "pending_sync",
-    "note": "四款游戏大厅同受影响；网站部署核验后按任务节奏同步"
+    "status": "auditing",
+    "version": "web-lobby-scroll-v0.22.2",
+    "package_sha256": "b750987cb0fe1bd990e32da4f29fefc667453d78ae39176c94453b2f2d4852f3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_6XRLBKIw/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_SE9wxVRt/index.html",
+    "submitted_at": "2026-10-07T08:46:30+00:00",
+    "note": "预览服务 compat 哈希 978ea97a 与包内一致；包内 compat 即线上已验证 bundle 加存档命名空间变换"
   },
   "taptap": {
     "status": "pending_sync",
