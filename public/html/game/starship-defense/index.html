@@ -240,7 +240,7 @@ button::before,button::after{content:none!important}
 #cloudChoices{max-width:100%;padding:8px}#saveLoginForm label{display:block;margin:8px 0}
 #saveLoginForm input:not([type=checkbox]){margin-left:8px;width:220px;max-width:65%;font:inherit;padding:8px}
 .saveAuto{display:block;padding:8px}.saveAuto input{width:20px;height:20px;vertical-align:middle}
-#localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto}
+#localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto;z-index:30}.save-health:active{transform:translateX(-50%) scale(.95)}#hud.hidden~#saveHealth{display:none}
 #saveNotice{font-size:11px;max-width:700px}
 </style>
 </head>
@@ -263,7 +263,6 @@ button::before,button::after{content:none!important}
       <div id="baseAlert" role="status">基地耐久归零即失败</div>
     </div>
     <canvas id="radar" width="224" height="224" aria-label="小地图"></canvas>
-    <button class="mbtn save-health" id="saveHealth" aria-label="查看保存状态"></button>
     <div id="hudRight">
       <div>💰 金币 <span id="goldTxt">0</span></div>
       <div>⭐ 分数 <span id="scoreTxt">0</span></div>
@@ -287,6 +286,8 @@ button::before,button::after{content:none!important}
     <button id="readyBtn" class="hidden">✅ 准备完毕，开战！（R）</button>
   </div>
   <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
+    <!-- 保存状态提示同样提到触控层之上，手机上才能点它打开档案站；显隐跟随 #hud。 -->
+    <button class="mbtn save-health" id="saveHealth" aria-label="查看保存状态"></button>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
       <div class="small" id="placeTip">走动移动虚影 · Q/E 或鼠标转视角就能转朝向 · J/回车/左键/射击键 确认 · L 返回建造菜单 · Esc 退出（放下时才扣钱，拆除返还一半）</div>

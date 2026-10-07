@@ -1,0 +1,148 @@
+{
+  "method": "Edge headless; actual game bundles; cloud APIs mocked in isolated contexts, no player account writes; mobile viewports are simulations",
+  "results": [
+    {
+      "channel": "web",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary",
+        "account login keyboard focus",
+        "password not persisted"
+      ],
+      "errors": []
+    },
+    {
+      "channel": "web",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary",
+        "account login keyboard focus",
+        "password not persisted"
+      ],
+      "errors": []
+    },
+    {
+      "channel": "web",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary",
+        "account login keyboard focus",
+        "password not persisted"
+      ],
+      "errors": []
+    },
+    {
+      "channel": "toy",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary"
+      ],
+      "errors": []
+    },
+    {
+      "channel": "toy",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary"
+      ],
+      "errors": []
+    },
+    {
+      "channel": "taptap",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary",
+        "account login keyboard focus",
+        "password not persisted"
+      ],
+      "errors": []
+    },
+    {
+      "channel": "taptap",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "checks": [
+        "one-day-old legacy save",
+        "automatic cloud checkpoint",
+        "empty-device cloud restore",
+        "export without credentials",
+        "bad import rejected",
+        "confirmed import preserves former local save",
+        "history recovery entries",
+        "storage failure keeps primary",
+        "account login keyboard focus",
+        "password not persisted"
+      ],
+      "errors": []
+    }
+  ]
+}
