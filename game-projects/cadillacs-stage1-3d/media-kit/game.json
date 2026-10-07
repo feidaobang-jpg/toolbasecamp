@@ -5,20 +5,20 @@
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
-  "status": "auditing",
-  "submitted_at": "2026-10-07T16:53:45+08:00",
-  "package": "dist/toy-v0.8.2/package",
+  "status": "published",
+  "submitted_at": "2026-10-07T18:03:32+08:00",
+  "package": "dist/toy-v0.9.2/package",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_zCPIWrnh/index.html",
-  "note": "联机2-4人统一版本送审（ZCode接管收尾）；网站已部署核验，等待审核",
-  "status_verified": "正式入口 20/20 显示 v0.8.2，原版音效 58/58",
+  "note": "v0.9.2（原作开场、背摔、连打重击声）已过审。",
+  "status_verified": "正式入口 20/20 显示 v0.9.2",
   "bound_videos": [
    "BV18XHW66E55"
   ],
-  "review_status": "auditing",
-  "version": "v0.9.0",
-  "verified_at": "2026-10-07T13:12:00+08:00",
+  "review_status": "published",
+  "version": "v0.9.2",
+  "verified_at": "2026-10-07T18:07:00+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.8.2",
+  "last_published_version": "v0.9.2",
   "pending_updates": [
    {
     "version": "v0.2.1",
@@ -301,10 +301,10 @@
    "summary": "原作开场动画与开场必杀、背摔、连打重击声。",
    "record": "releases/v0.9.2/handoff.json",
    "channels": {
-    "website": "pending",
-    "toy": "pending",
-    "taptap": "pending_merge",
-    "bilibili": "pending"
+    "website": "deployed_verified",
+    "toy": "published",
+    "taptap": "reviewing",
+    "bilibili": "public_verified"
    }
   }
  ],
