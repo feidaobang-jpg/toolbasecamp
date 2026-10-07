@@ -486,6 +486,50 @@
       "public_verified_at": "2026-10-07T02:24:34.244Z",
       "record": "releases/web-defense-v0.21.0/comment-reply.json",
       "screenshot": "qa/bilibili/comment-316305468593-reply.jpg"
+    },
+    {
+      "rpid": "316324806465",
+      "comment_type": 1,
+      "video": "BV1Ujad6DEuf",
+      "user": "0250348",
+      "user_mid": 3494379050240760,
+      "date": "2026-10-07 12:27",
+      "text": "@飞刀班长，这个bug修一下吧，这个小怪刷我基地后面了，我找了半天才找到的有一些甚至卡在母巢那里了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.22.1",
+      "reply_status": "pending",
+      "note": "卡住检测去掉无路线与z<182限制，5秒无位移即绕行/钻地；出生点撞墙自动找安全位；钻地检查头顶净高。QA见releases/web-feedback-v0.22.1。"
+    },
+    {
+      "rpid": "316323444209",
+      "comment_type": 2,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": "316305468593",
+      "user": "bili_50539966983",
+      "user_mid": 479258671,
+      "date": "2026-10-07 12:15",
+      "text": "还有那个重型迫击炮帮改一下吧，不然一直打不到怪，射程没有狙击枪远，伤害没有狙击枪高，又比狙击枪贵，并且他那个子弹速度太慢了，落地都要2秒",
+      "kind": "balance",
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.22.1",
+      "reply_status": "pending",
+      "note": "射程48→64、伤害140→180、价格1600→1400、弹速32→85并按移动预判落点；修复前移动目标0伤害，修复后180。"
+    },
+    {
+      "rpid": "316322217985",
+      "comment_type": 2,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": "316305468593",
+      "user": "bili_50539966983",
+      "user_mid": 479258671,
+      "date": "2026-10-07 12:04",
+      "text": "那个联机大厅的点昵称和房间号好像有点bug，我是手机的，点上去，键盘弹出来然后立马又弹回去了，输入不了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.22.1",
+      "reply_status": "pending",
+      "note": "根因：键盘导航循环在.coop-panel弹窗打开时抢焦点；修复后三视口四输入框焦点保持，QA见releases/web-feedback-v0.22.1。"
     }
   ]
 }

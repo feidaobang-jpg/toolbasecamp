@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-feedback-v0.22.1",
+  "base_version": "web-coop-v0.22.0",
+  "created_at": "2026-10-07T13:50:00+08:00",
+  "classification": "普通补丁",
+  "source_comments": ["316324806465", "316323444209", "316322217985"],
+  "changes": [
+    "重型迫击炮：射程64米、伤害180、价格1400、弹速85并按移动预判落点，解决打不到怪/比狙击枪弱贵的问题。",
+    "虫子卡死恢复：卡住检测覆盖隧道路线与母巢口，5秒无位移即绕行或钻地朝目标推进；出生点撞墙自动搜索安全位。",
+    "联机大厅手机端输入：键盘导航不再抢占弹窗输入框焦点，昵称/房间号/密码可正常输入。"
+  ],
+  "build": {
+    "id": "web-feedback-v0.22.1",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "qa": [
+    {
+      "method": "game-projects/starship-defense/verify-comment-feedback.cjs（1280x720/390x844/844x390 Edge 模拟）",
+      "result": "passed",
+      "evidence": "game-projects/starship-defense/media-kit/releases/web-feedback-v0.22.1/qa/after/results.json",
+      "scope": "大厅四输入框焦点保持（修复前全部丢失）、迫击炮对0/8/16米每秒移动目标均180伤害（修复前移动目标0伤害）、三条虫洞路线全部走出、精英出生点无撞墙（修复前1处）"
+    },
+    {
+      "method": "同脚本 Qoder 复跑",
+      "result": "passed",
+      "evidence": "game-projects/starship-defense/media-kit/releases/web-feedback-v0.22.1/qa/verify-qoder/results.json"
+    },
+    {
+      "method": "verify-insect-navigation.cjs + verify-feedback-input-flight.cjs",
+      "result": "passed",
+      "scope": "虫群导航与既有反馈回归"
+    },
+    {
+      "method": "verify-keyboard.cjs",
+      "result": "16/19，3项失败与主线v0.22.0一致（既有问题，非本改动引入）"
+    }
+  ],
+  "limitations": [
+    "手机视口为浏览器模拟，未做真机多指与软键盘真机验收",
+    "桌面验证不覆盖联机双端实际网络环境"
+  ],
+  "site": { "status": "pending" },
+  "toy": { "id": 38678478981120, "status": "pending" }
+}
