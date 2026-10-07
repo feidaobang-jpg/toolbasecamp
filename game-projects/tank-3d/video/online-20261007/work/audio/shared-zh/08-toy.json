@@ -1,0 +1,133 @@
+{
+  "text": "游戏已经在哔哩哔哩Toy上线。视频下方入口就能试玩，叫上队友一起守老鹰。喜欢这次联机，顺手来个三连补给。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 5250000,
+      "text": "游戏"
+    },
+    {
+      "offset": 6500000,
+      "duration": 2500000,
+      "text": "已经"
+    },
+    {
+      "offset": 9000000,
+      "duration": 1250000,
+      "text": "在"
+    },
+    {
+      "offset": 10500000,
+      "duration": 5000000,
+      "text": "哔哩哔哩"
+    },
+    {
+      "offset": 15500000,
+      "duration": 2875000,
+      "text": "Toy"
+    },
+    {
+      "offset": 18500000,
+      "duration": 4375000,
+      "text": "上线"
+    },
+    {
+      "offset": 28500000,
+      "duration": 4375000,
+      "text": "视频"
+    },
+    {
+      "offset": 33000000,
+      "duration": 3500000,
+      "text": "下方"
+    },
+    {
+      "offset": 36625000,
+      "duration": 3750000,
+      "text": "入口"
+    },
+    {
+      "offset": 40625000,
+      "duration": 1125000,
+      "text": "就"
+    },
+    {
+      "offset": 41750000,
+      "duration": 1000000,
+      "text": "能"
+    },
+    {
+      "offset": 42875000,
+      "duration": 5250000,
+      "text": "试玩"
+    },
+    {
+      "offset": 51125000,
+      "duration": 4125000,
+      "text": "叫上"
+    },
+    {
+      "offset": 55375000,
+      "duration": 2125000,
+      "text": "队友"
+    },
+    {
+      "offset": 57750000,
+      "duration": 2000000,
+      "text": "一起"
+    },
+    {
+      "offset": 59875000,
+      "duration": 1750000,
+      "text": "守"
+    },
+    {
+      "offset": 61625000,
+      "duration": 3875000,
+      "text": "老鹰"
+    },
+    {
+      "offset": 71125000,
+      "duration": 3750000,
+      "text": "喜欢"
+    },
+    {
+      "offset": 75000000,
+      "duration": 2375000,
+      "text": "这次"
+    },
+    {
+      "offset": 77500000,
+      "duration": 5125000,
+      "text": "联机"
+    },
+    {
+      "offset": 85125000,
+      "duration": 4625000,
+      "text": "顺手"
+    },
+    {
+      "offset": 89875000,
+      "duration": 1125000,
+      "text": "来"
+    },
+    {
+      "offset": 91000000,
+      "duration": 625000,
+      "text": "个"
+    },
+    {
+      "offset": 91875000,
+      "duration": 3625000,
+      "text": "三连"
+    },
+    {
+      "offset": 95625000,
+      "duration": 3750000,
+      "text": "补给"
+    }
+  ]
+}

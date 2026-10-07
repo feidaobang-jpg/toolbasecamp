@@ -5,25 +5,62 @@
   "app_id": 962721,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "draft_waiting_agreement_and_ip_review",
-  "platform_status": "draft",
+  "status": "reviewing",
+  "platform_status": "reviewing",
   "staged_version": "v0.8.1",
   "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
   "staged_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
   "staged_h5_version_id": 270833,
   "staged_h5_package_id": 71922,
   "draft_version_id": "1041012",
-  "submitted_version": null,
-  "submitted_at": null,
+  "submitted_version": "v0.8.1",
+  "submitted_at": "2026-10-07T02:28:18.912443+00:00",
   "last_published_version": null,
   "last_published_h5_version_id": null,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T01:34:56.499227+00:00",
-  "release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
+  "release_record": "releases/taptap-force3-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
-    "用户明确同意《创意工坊内容授权协议》",
-    "处理平台实际IP风险提示，并提供适用的可转授权证明或改为原创内容后重新预检"
+    "等待TapTap正式审核；内容预审未通过，已按用户明确指令尝试提交，仍可能因IP风险驳回",
+    "v0.9.0 联机版本待TapTap构建验证与后续同步",
+    {
+      "version": "v0.9.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "package_sha256": "9588732a6e76f5637bb56096f365229438b5af4d2e63e8b9105bc12d452b397d",
+      "status": "built_waiting_current_review",
+      "reason": "平台当前旧包审核中，保留审核现场，本次稳定联机包待下一次可编辑草稿续发。",
+      "record": "releases/v0.9.0/handoff.json"
+    }
   ],
-  "dedupe_rule": "现有草稿和包已上传绑定，处理授权后先读平台与本记录；同哈希不重复上传，不重复创建；提交前核对最新主线/网站版本，不代签新协议，不强制忽略预审风险。"
+  "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
+  "agreement_authorized": true,
+  "agreement_signed": true,
+  "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
+  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "agreement_signed_at": "2026-10-07T02:27:46.325186+00:00",
+  "submitted_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
+  "submitted_h5_version_id": 270833,
+  "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
+  "force_submission_authorized": true,
+  "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "content_preaudit_passed": false,
+  "content_preaudit_warnings": [
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "title"
+      ],
+      "message": "游戏标题包含知名游戏IP“赤色要塞”，可能有侵权嫌疑，如已获得官方正规授权，请前往游戏资质页面上传相关授权证明文件，否则将有驳回风险；如未获得授权，请修改游戏名称。"
+    }
+  ],
+  "rights_proof_provided": false,
+  "pending_updates": [
+    {
+      "source_version": "v0.9.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "change": "新合并联机功能",
+      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
+    }
+  ]
 }

@@ -1,0 +1,203 @@
+{
+  "method": "Headless Edge D3D11; 48 mixed insects, 4 squad, 64/96 mixed towers; continuous W movement + E turn for 6.5s, no recording during timing",
+  "results": [
+    {
+      "mobileSimulation": false,
+      "cpuThrottle": 1,
+      "count": 64,
+      "measurement": {
+        "samples": 728,
+        "averageFPS": 102.3765996343693,
+        "medianMs": 7.900000000372529,
+        "p95Ms": 15,
+        "over50ms": 2,
+        "drawCalls": 346,
+        "triangles": 239150,
+        "memory": {
+          "geometries": 334,
+          "textures": 7
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark",
+        "buildings": 64,
+        "enemies": 48
+      },
+      "errors": []
+    },
+    {
+      "mobileSimulation": false,
+      "cpuThrottle": 1,
+      "count": 96,
+      "measurement": {
+        "samples": 522,
+        "averageFPS": 79.34095330739075,
+        "medianMs": 12.099999999627471,
+        "p95Ms": 19.59999999962747,
+        "over50ms": 1,
+        "drawCalls": 510,
+        "triangles": 248480,
+        "memory": {
+          "geometries": 668,
+          "textures": 7
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark",
+        "buildings": 96,
+        "enemies": 48
+      },
+      "errors": []
+    },
+    {
+      "mobileSimulation": true,
+      "cpuThrottle": 1,
+      "count": 64,
+      "measurement": {
+        "samples": 761,
+        "averageFPS": 115.30128331387942,
+        "medianMs": 7.2999999998137355,
+        "p95Ms": 16,
+        "over50ms": 4,
+        "drawCalls": 415,
+        "triangles": 255858,
+        "memory": {
+          "geometries": 333,
+          "textures": 6
+        },
+        "viewport": [
+          844,
+          390
+        ],
+        "dpr": 0.8791666666666667,
+        "drawingBuffer": [
+          844,
+          390
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "buildings": 64,
+        "enemies": 48
+      },
+      "errors": []
+    },
+    {
+      "mobileSimulation": true,
+      "cpuThrottle": 1,
+      "count": 96,
+      "measurement": {
+        "samples": 614,
+        "averageFPS": 90.21054023478494,
+        "medianMs": 9.800000000745058,
+        "p95Ms": 17.90000000037253,
+        "over50ms": 1,
+        "drawCalls": 598,
+        "triangles": 269898,
+        "memory": {
+          "geometries": 674,
+          "textures": 6
+        },
+        "viewport": [
+          844,
+          390
+        ],
+        "dpr": 0.8791666666666667,
+        "drawingBuffer": [
+          844,
+          390
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "buildings": 96,
+        "enemies": 48
+      },
+      "errors": []
+    },
+    {
+      "mobileSimulation": true,
+      "cpuThrottle": 4,
+      "count": 64,
+      "measurement": {
+        "samples": 120,
+        "averageFPS": 15.689966266572144,
+        "medianMs": 47.90000000037253,
+        "p95Ms": 176.29999999981374,
+        "over50ms": 55,
+        "drawCalls": 296,
+        "triangles": 390372,
+        "memory": {
+          "geometries": 328,
+          "textures": 6
+        },
+        "viewport": [
+          844,
+          390
+        ],
+        "dpr": 0.8791666666666667,
+        "drawingBuffer": [
+          844,
+          390
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "buildings": 64,
+        "enemies": 48
+      },
+      "errors": []
+    },
+    {
+      "mobileSimulation": true,
+      "cpuThrottle": 4,
+      "count": 96,
+      "measurement": {
+        "samples": 96,
+        "averageFPS": 14.669702480095324,
+        "medianMs": 10.699999999254942,
+        "p95Ms": 462.30000000074506,
+        "over50ms": 16,
+        "drawCalls": 373,
+        "triangles": 211312,
+        "memory": {
+          "geometries": 585,
+          "textures": 6
+        },
+        "viewport": [
+          844,
+          390
+        ],
+        "dpr": 0.8791666666666667,
+        "drawingBuffer": [
+          844,
+          390
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "buildings": 96,
+        "enemies": 48
+      },
+      "errors": []
+    }
+  ]
+}

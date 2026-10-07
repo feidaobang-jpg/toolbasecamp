@@ -3,11 +3,11 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
-import { CoopConnection, snapshot, hydrate } from './coop.js?v=lobby1';
+import { CoopConnection, snapshot, hydrate } from './coop.js?v=coop-hub1';
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'landscape-menu1';
+const VERSION = 'coop-hub1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -103,8 +103,9 @@ $('coop-ready').addEventListener('click', () => { const ready = coop.room?.playe
 $('coop-start').addEventListener('click', () => coop.send({ type: 'start', config: { mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] } }));
 $('coop-copy').addEventListener('click', async () => {
   if (!coop.room) return;
-  try { await navigator.clipboard.writeText(coop.room.code); $('coop-message').textContent = '房间码已复制，把它发给好友即可。'; }
-  catch { $('coop-message').textContent = '房间码：' + coop.room.code + '（可手动复制）'; }
+  const url = new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.zhengxiaohui.cn/html/game/tank-3d/index.html'); url.search = ''; url.hash = ''; url.searchParams.set('coop', coop.room.code);
+  try { await navigator.clipboard.writeText(url.href); $('coop-message').textContent = '邀请链接已复制，发给好友即可加入同一房间。'; }
+  catch { $('coop-message').textContent = '邀请链接：' + url.href; }
 });
 window.addEventListener('pagehide', () => coop.disconnect());
 
@@ -966,3 +967,9 @@ if (TEST) {
 }
 
 installRemakeUI();
+const coopIntent = new URLSearchParams(location.search).get('coop');
+if (coopIntent) {
+  openLobby();
+  if (/^\d{6}$/.test(coopIntent)) { $('coop-code').value = coopIntent; $('coop-message').textContent = '邀请房间已填入；填写密码后加入，公开房可直接加入。'; }
+  else if (coopIntent === 'create') $('coop-create').click();
+}

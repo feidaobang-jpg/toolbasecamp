@@ -1,3 +1,5 @@
+import {createSoundRelay} from '../../../public/js/game/coop.js';
+import { installRemakeCoop } from '../../../public/js/game/remake-coop.js';
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
@@ -35,6 +37,8 @@ if (params.get('stage')) settings.stage = Math.max(1, Math.min(L.STAGE_COUNT, pa
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');   // 测试/录制用：强制画质
 let effQuality = settings.quality === 'low' ? 'low' : 'high';
 let autoProbe = { on: settings.quality === 'auto', frames: [], done: false, decided: null };
+let coopDriver=null;
+const coopSounds=createSoundRelay(A,['mg','grenade','rocket','boom','splash','enemyShot','shell','ping','thud','soldierDown','squash','powFree','powPick','powDeliver','upgrade','checkpoint','star','playerDown','alarm','clear','gameOver','hurt','repair'],()=>coopDriver?.config&&coopDriver.connection.host);
 let uiMode = 'title';
 let current = 'menu';
 
@@ -104,6 +108,7 @@ function adjust(name, delta) {
   if (name === 'lives') { settings.lives = settings.lives === 'inf' ? 'classic' : 'inf'; store.set('lives', settings.lives); }
   else if (name === 'armor') { settings.armor = settings.armor === 'classic' ? 'std' : 'classic'; store.set('armor', settings.armor); }
   else if (name === 'demo') {
+    if(coopDriver?.config){showToast('联机模式不启用演示无敌');return;}
     settings.demo = !settings.demo;
     if (uiMode === 'game') { G.settings.demo = settings.demo; if (settings.demo) G.demoUsed = true; }
   } else if (name === 'quality') {
@@ -215,14 +220,15 @@ bindTopButton('btn-cam', () => { if (uiMode === 'game' && !current) cycleCamera(
 
 // ---------- 流程 ----------
 const gameRunning = () => uiMode === 'game' && ['intro', 'play', 'over', 'clear'].indexOf(G.mode) >= 0;
-IN.active = () => gameRunning() && !current && !paused;
+IN.active = () => gameRunning() && !current && !paused && !coopDriver?.lobby.opened;
 let paused = false;
 function startGame(stageNo) {
+  if(coopDriver?.action('restart'))return;
   A.musicDuck(false);   // 从暂停菜单「重新开始」：先解除暂停时挂起的音频，否则新的一局没有 BGM 和音效
   A.unlock();
   uiMode = 'game'; paused = false;
   stage.classList.remove('boss-fight');
-  GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor, gun: settings.gun, stage: stageNo || settings.stage });
+  GM.newGame({ lives: settings.lives, demo: settings.demo, armor: settings.armor, gun: settings.gun, stage: stageNo || settings.stage, ...(coopDriver?.config||{}) });
   show(null);
   camCtl.update(0, GM.player().x, GM.player().y, { instant: true });
   if (!touch.hidden && !dragHintShown) { dragHintShown = true; showToast('拖动画面空白处转视角；右上角切换视角'); }
@@ -230,6 +236,7 @@ function startGame(stageNo) {
   autoProbe.frames = [];
 }
 function nextStage() {
+  if(coopDriver?.action('next'))return;
   A.musicDuck(false);
   A.unlock();
   uiMode = 'game'; paused = false;
@@ -239,16 +246,19 @@ function nextStage() {
   last = performance.now(); acc = 0;
 }
 function pauseGame() {
+  if(coopDriver?.action('pause')){IN.clear();return;}
   if (!gameRunning() || paused) return;
   paused = true; A.engine('off'); A.pause(); A.musicDuck(true);
   show('pause');
 }
 function resume() {
+  if(coopDriver?.action('resume'))return;
   paused = false; A.musicDuck(false);
   show(null);
   last = performance.now(); acc = 0;
 }
 function toTitle() {
+  coopDriver?.leave();
   uiMode = 'title'; paused = false;
   stage.classList.remove('boss-fight');
   A.musicDuck(false);
@@ -256,7 +266,7 @@ function toTitle() {
   titleT = 0;
   show('menu');
 }
-G.onEnd = (res) => { setTimeout(() => showResult(res), 300); };
+G.onEnd = (res) => { if(coopDriver?.config)coopDriver.result=res; setTimeout(() => showResult(res), 300); };
 const KILL_ROWS = [['soldier', '步兵'], ['officer', '军官'], ['mg', '机枪巢'], ['turret', '炮塔'], ['cannon', '炮台'], ['boat', '炮艇'], ['tank', '坦克'], ['brownTank', '棕色坦克'], ['bulltank', '重型坦克'],
   ['ejeep', '敌方吉普'], ['bomber', '轰炸机'], ['wstatue', '水中石像'], ['fallpillar', '倒塌石柱'], ['boss', 'Boss 蓝色坦克'], ['bust', 'Boss 石像'], ['hut', '营房']];
 const BOSS_KEY = { tanks: 'boss', statues: 'bust' };
@@ -393,7 +403,7 @@ function updateStep() {
   const turn = camCtl.stepLook(STEP, (orbitKeys.has('KeyE') ? 1 : 0) - (orbitKeys.has('KeyQ') ? 1 : 0));
   const body = GM.player();
   if (turn && body && !camCtl.fpNow) body.lookHeading = (body.lookHeading ?? body.ang) + turn;
-  GM.update();
+  if(!coopDriver?.config||coopDriver.connection.host)GM.update();
 }
 
 refreshControlModes = addControlModeButtons({ containers: [overlays.menu.querySelector('.items'), overlays.pause.querySelector('.items')], get: () => settings.touch, set: value => { IN.clear(); settings.touch = value; store.set('touch', value); layout(); refreshOptions(); } });
@@ -511,6 +521,7 @@ function presentFrame(dtReal, draw) {
   world.update(realT, dtReal);
   fx.update(paused || current ? 0 : dtReal);
   GM.render(dtReal, realT);
+  coopDriver?.tick(performance.now());
   if (draw) renderer.render(scene, camCtl.cam);
 }
 
@@ -622,3 +633,18 @@ if (TEST) {
 }
 
 installRemakeUI();
+
+coopDriver=installRemakeCoop({
+ game:'jackal',container:stage,menu:overlays.menu.querySelector('.items'),getConfig:()=>({...settings}),notify:showToast,
+ onStart:config=>{settings.demo=false;startGame(config.stage);GM.setCoopInput(slot=>coopDriver.connection.input(slot));},
+ getInput:()=>GM.coopInput(),getState:()=>({...GM.coopSnapshot(),sounds:coopSounds.snapshot()}),getUI:()=>({paused,current}),
+ onState:state=>{
+  GM.coopApply(state.game);coopSounds.apply(state.game.sounds);
+  if(paused!==state.ui.paused){paused=state.ui.paused;A.musicDuck(paused);}
+  if(state.ui.result&&!coopDriver.result){coopDriver.result=state.ui.result;showResult(state.ui.result);}
+  else if(!state.ui.result&&current!==state.ui.current){coopDriver.result=null;show(state.ui.current);}
+ },
+ onAction:kind=>{if(kind==='pause')pauseGame();else if(kind==='resume')resume();else if(kind==='restart'||kind==='retry'){coopDriver.result=null;coopDriver.config.stage=G.stage;startGame(G.stage);}else if(kind==='next'){coopDriver.result=null;nextStage();}},
+ onEnd:m=>{if(m.type==='player_left')GM.leaveCoopSlot(m.slot);else if(m.type==='ended'){uiMode='title';paused=false;A.musicDuck(false);GM.toTitle(settings.stage);show('menu');}},
+});
+refreshOptions();

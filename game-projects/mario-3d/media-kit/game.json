@@ -264,12 +264,19 @@
     "developer_id": 100726,
     "app_id": 962723,
     "automatic_sync_enabled": true,
-    "status": "draft_waiting_agreement_and_ip_review",
+    "status": "reviewing",
     "staged_version": "v2.5.0",
     "staged_h5_version_id": 270893,
     "draft_version_id": "1041014",
     "last_published_version": null,
     "sync_record": "taptap-sync.json",
-    "release_record": "releases/taptap-first-publish-20261007/handoff.json"
+    "release_record": "releases/taptap-force3-20261007/handoff.json",
+    "agreement_authorized": true,
+    "agreement_signed": true,
+    "submitted_version": "v2.5.0",
+    "submitted_h5_version_id": 270893,
+    "submitted_at": "2026-10-07T02:30:03.682018+00:00",
+    "force_submission_authorized": true,
+    "pending_updates": []
   }
 }

@@ -16,16 +16,18 @@ function clearAll() {
 
 const I = {
   active: () => false,       // 由 UI 覆盖：游戏进行中且无菜单时为 true
+  network:null,
   dir() {
+    if(this.network)return this.network.dir??-1;
     if (touchDir >= 0) return touchDir;
     const x = (held.r ? 1 : 0) - (held.l ? 1 : 0), y = (held.u ? 1 : 0) - (held.d ? 1 : 0);
     if (!x && !y) return -1;
     const a = Math.atan2(x, y);   // 0 = 北，顺时针
     return ((Math.round(a / (Math.PI / 4)) % 8) + 8) % 8;
   },
-  fire: () => keyFire || touchFire || keyCombo || touchCombo,
-  bomb: () => keyBomb || touchBomb || keyCombo || touchCombo,
-  take(name) { const i = queue.indexOf(name); if (i >= 0) { queue.splice(i, 1); return true; } return false; },
+  fire: () => I.network?!!I.network.fire:keyFire || touchFire || keyCombo || touchCombo,
+  bomb: () => I.network?!!I.network.bomb:keyBomb || touchBomb || keyCombo || touchCombo,
+  take(name) { if(this.network){const i=(this.network.edges||[]).indexOf(name);if(i<0)return false;this.network.edges.splice(i,1);return true;}const i = queue.indexOf(name); if (i >= 0) { queue.splice(i, 1); return true; } return false; },
   push(name) { queue.push(name); log.push(name); if (log.length > 50) log.shift(); },
   clear: clearAll,
   onClear(fn) { listeners.push(fn); },

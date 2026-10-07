@@ -1,0 +1,143 @@
+{
+  "text": "玩完去百宝箱的游戏投票榜点一下，想玩什么也写进愿望单。票数和反馈，会帮我决定接下来优先优化哪款。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "玩完"
+    },
+    {
+      "offset": 4750000,
+      "duration": 1000000,
+      "text": "去"
+    },
+    {
+      "offset": 5875000,
+      "duration": 4000000,
+      "text": "百宝箱"
+    },
+    {
+      "offset": 9875000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 10750000,
+      "duration": 5250000,
+      "text": "游戏"
+    },
+    {
+      "offset": 17125000,
+      "duration": 3875000,
+      "text": "投票"
+    },
+    {
+      "offset": 21125000,
+      "duration": 3125000,
+      "text": "榜点"
+    },
+    {
+      "offset": 24375000,
+      "duration": 3875000,
+      "text": "一下"
+    },
+    {
+      "offset": 32625000,
+      "duration": 2375000,
+      "text": "想"
+    },
+    {
+      "offset": 35000000,
+      "duration": 1375000,
+      "text": "玩"
+    },
+    {
+      "offset": 36500000,
+      "duration": 4125000,
+      "text": "什么"
+    },
+    {
+      "offset": 41625000,
+      "duration": 1375000,
+      "text": "也"
+    },
+    {
+      "offset": 43000000,
+      "duration": 2625000,
+      "text": "写进"
+    },
+    {
+      "offset": 45875000,
+      "duration": 2750000,
+      "text": "愿望"
+    },
+    {
+      "offset": 48625000,
+      "duration": 2375000,
+      "text": "单"
+    },
+    {
+      "offset": 56625000,
+      "duration": 4125000,
+      "text": "票数"
+    },
+    {
+      "offset": 61000000,
+      "duration": 875000,
+      "text": "和"
+    },
+    {
+      "offset": 62000000,
+      "duration": 5250000,
+      "text": "反馈"
+    },
+    {
+      "offset": 70750000,
+      "duration": 1375000,
+      "text": "会"
+    },
+    {
+      "offset": 72250000,
+      "duration": 1250000,
+      "text": "帮"
+    },
+    {
+      "offset": 73500000,
+      "duration": 1000000,
+      "text": "我"
+    },
+    {
+      "offset": 74625000,
+      "duration": 5125000,
+      "text": "决定"
+    },
+    {
+      "offset": 80875000,
+      "duration": 4375000,
+      "text": "接下来"
+    },
+    {
+      "offset": 85500000,
+      "duration": 3375000,
+      "text": "优先"
+    },
+    {
+      "offset": 89000000,
+      "duration": 2875000,
+      "text": "优化"
+    },
+    {
+      "offset": 92000000,
+      "duration": 1500000,
+      "text": "哪"
+    },
+    {
+      "offset": 93500000,
+      "duration": 2875000,
+      "text": "款"
+    }
+  ]
+}

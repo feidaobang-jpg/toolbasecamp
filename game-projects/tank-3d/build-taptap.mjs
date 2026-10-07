@@ -25,7 +25,7 @@ for(const entry of fs.readdirSync(source,{withFileTypes:true})){
   if(!/\.(js|html|css)$/.test(entry.name))throw Error('Unexpected runtime asset');
   let text=fs.readFileSync(path.join(source,entry.name),'utf8')
     .replaceAll('../../../vendor/three/0.170.0/build/three.module.js','./vendor/three.module.js')
-    .replaceAll('../../../js/game/drag-look.js','./drag-look.js')
+    .replaceAll('../../../js/game/drag-look.js','./drag-look.js').replaceAll('../../../js/game/coop.js','./coop-shared.js')
     .replaceAll('../../../favicon.svg','./favicon.svg');
   if(entry.name==='index.html')text=text.replace(/\s*<a data-act="list"[^>]*>[\s\S]*?<\/a>/g,'')
     .replaceAll('data-list-url="../../../games.html"','data-list-url="./index.html"')
@@ -41,7 +41,7 @@ for(const entry of fs.readdirSync(source,{withFileTypes:true})){
   if(/\.\.\/\.\.\//.test(text))throw Error('External relative dependency: '+entry.name);
   write(entry.name,Buffer.from(text,'utf8'));
 }
-for(const [from,to] of [['public/vendor/three/0.170.0/build/three.module.js','vendor/three.module.js'],['public/favicon.svg','favicon.svg'],['public/js/game/drag-look.js','drag-look.js']])write(to,fs.readFileSync(path.join(root,from)));
+for(const [from,to] of [['public/vendor/three/0.170.0/build/three.module.js','vendor/three.module.js'],['public/favicon.svg','favicon.svg'],['public/js/game/drag-look.js','drag-look.js'],['public/js/game/coop.js','coop-shared.js']])write(to,fs.readFileSync(path.join(root,from)));
 const zip=path.join(output,'tank-3d.zip');
 const result=spawnSync(process.env.PYTHON||'python',['-c','import pathlib,sys,zipfile; p=pathlib.Path(sys.argv[1]); z=zipfile.ZipFile(sys.argv[2],"w"); [(z.writestr(zipfile.ZipInfo(f.relative_to(p.parent).as_posix(),(2026,1,1,0,0,0)),f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=6)) for f in sorted(p.rglob("*")) if f.is_file()]; z.close()',packageDir,zip],{encoding:'utf8',env:{...process.env,PYTHONUTF8:'1'}});
 if(result.status!==0)throw Error(result.stderr||result.error?.message);

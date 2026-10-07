@@ -1,0 +1,25 @@
+{
+  "status": "public_runtime_verified",
+  "source_commit": "8c6df1189d29307d19f87038a440c50b3a6a3e0b",
+  "verified_at": "2026-10-07T01:59:59.072348+00:00",
+  "files": {
+    "game.compat.js": {
+      "sha256": "dbbff327ed4064715950434a709bcbb2e0d2c4e4270c86b4c7cba43fe09fb522",
+      "matches_source": true
+    },
+    "game.js": {
+      "sha256": "a15e88f1ec08e7a80452a8751134522edd2b38ec9eb4c5155421613faa1f0f44",
+      "matches_source": true
+    },
+    "save-validation.js": {
+      "sha256": "e0c9ffb5c26a75ac69cf4202efe7d85e48f9acf790414e90739a63ce4fd850a8",
+      "matches_source": true
+    },
+    "defense-progression.js": {
+      "sha256": "d953c209529e0d2c9ef494be43f0adda85fc39bd714f70a46fcf56745e910ce8",
+      "matches_source": true
+    }
+  },
+  "html_new_build_header": true,
+  "deployment": "GitHub Actions自动部署；HTML缓存参数由部署流水线重写"
+}

@@ -1,0 +1,2351 @@
+{
+  "method": "Independent Edge sessions; real menus, keyboard and virtual joystick. Mobile viewport simulation only; no real phone claim. Earlier harness failures kept in local artifacts; all listed final checks passed.",
+  "groups": [
+    {
+      "scope": "gameplay-tank-starship",
+      "checks": 16,
+      "passed": true,
+      "local_raw_evidence": "qa/merged-gameplay/qa.json",
+      "results": [
+        {
+          "game": "tank",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 107,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 128,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 128,
+              "y": 192,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": 175,
+              "y": 192,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 175,
+              "y": 192,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": 175,
+              "y": 192,
+              "hp": 3
+            },
+            "states": 76
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 204,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 175,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 39,
+            "players": [
+              {
+                "slot": 0,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "starship",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 1,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": 2.5,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": false,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.5,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "after": {
+              "slot": 1,
+              "x": -7.40754999999469,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            }
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": -7.40754999999469,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "guest": {
+              "slot": 1,
+              "x": -7.40754999999469,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "states": 36
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 1,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": -7.40754999999469,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": true,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "starship",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "starship",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 2,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": 2.5,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": false,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "scope": "gameplay-jackal-cadillacs",
+      "checks": 16,
+      "passed": true,
+      "local_raw_evidence": "qa/gameplay-final/qa.json",
+      "results": [
+        {
+          "game": "jackal",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 136,
+            "players": [
+              {
+                "slot": 0,
+                "x": -19,
+                "y": 10,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -17,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": -17,
+              "y": 10,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": -8.256666666666698,
+              "y": 10,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": -8.256666666666698,
+              "y": 10,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": -8.256666666666698,
+              "y": 10,
+              "hp": 3
+            },
+            "states": 51
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 241,
+            "players": [
+              {
+                "slot": 0,
+                "x": -19,
+                "y": 10,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -8.256666666666698,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "jackal",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "jackal",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 37,
+            "players": [
+              {
+                "slot": 0,
+                "x": -23.904976215784274,
+                "y": 4.53445507384038,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -17,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "cadillacs",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 441,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 2.2,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.2,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "after": {
+              "slot": 1,
+              "x": 3.7108333333333294,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            }
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 3.7108333333333294,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "guest": {
+              "slot": 1,
+              "x": 3.7108333333333294,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "states": 123
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 552,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 3.7108333333333294,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "cadillacs",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "cadillacs",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 38,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 2.2,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "scope": "toy-preview",
+      "checks": 40,
+      "passed": true,
+      "local_raw_evidence": "qa/toy-preview-frame/qa.json",
+      "results": [
+        {
+          "game": "tank",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 91,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 128,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 128,
+              "y": 192,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": 176,
+              "y": 192,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 176,
+              "y": 192,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": 176,
+              "y": 192,
+              "hp": 3
+            },
+            "states": 79
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 285,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 176,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 21,
+            "players": [
+              {
+                "slot": 0,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "jackal",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 134,
+            "players": [
+              {
+                "slot": 0,
+                "x": -19,
+                "y": 10,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -17,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": -17,
+              "y": 10,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": -8.543333333333363,
+              "y": 10,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": -8.543333333333363,
+              "y": 10,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": -8.543333333333363,
+              "y": 10,
+              "hp": 3
+            },
+            "states": 51
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 305,
+            "players": [
+              {
+                "slot": 0,
+                "x": -19,
+                "y": 10,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -8.543333333333363,
+                "y": 10,
+                "hp": 2
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "jackal",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "jackal",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 33,
+            "players": [
+              {
+                "slot": 0,
+                "x": -24.27600244249949,
+                "y": 4.121025849786282,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -17,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "cadillacs",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 437,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 2.2,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.2,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "after": {
+              "slot": 1,
+              "x": 3.6758333333333293,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            }
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 3.6758333333333293,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "guest": {
+              "slot": 1,
+              "x": 3.6758333333333293,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "states": 123
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 604,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 3.483054079306361,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 95.8,
+                "state": "idle"
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "cadillacs",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "cadillacs",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 32,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 2.2,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "starship",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 1,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": 2.5,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": false,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.5,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "after": {
+              "slot": 1,
+              "x": -7.468767999998974,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            }
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": -7.468767999998974,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "guest": {
+              "slot": 1,
+              "x": -7.468767999998974,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "states": 35
+          }
+        },
+        {
+          "game": "starship",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "starship",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 1,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": -7.468767999998974,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": true,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "starship",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "starship",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 2,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": 2.5,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": false,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "scope": "toy-mobile-remakes",
+      "checks": 33,
+      "passed": true,
+      "local_raw_evidence": "qa/toy-mobile-real-controls/qa.json",
+      "results": [
+        {
+          "game": "tank",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 120,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 128,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy virtual joystick moves guest on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 128,
+              "y": 192,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": 168,
+              "y": 192,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 128,
+              "y": 192,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": 192,
+              "y": 192,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 192,
+              "y": 192,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": 192,
+              "y": 192,
+              "hp": 3
+            },
+            "states": 99
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 335,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 192,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 52,
+            "players": [
+              {
+                "slot": 0,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "jackal",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 133,
+            "players": [
+              {
+                "slot": 0,
+                "x": -19,
+                "y": 10,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -17,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "Toy virtual joystick moves guest on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": -17,
+              "y": 10,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": -9.690000000000024,
+              "y": 10,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": -17,
+              "y": 10,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": -1.0900000000000236,
+              "y": 10,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": -1.0900000000000236,
+              "y": 10,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": -1.0900000000000236,
+              "y": 10,
+              "hp": 3
+            },
+            "states": 64
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 331,
+            "players": [
+              {
+                "slot": 0,
+                "x": -19,
+                "y": 10,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -1.0900000000000236,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "jackal",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "jackal",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 31,
+            "players": [
+              {
+                "slot": 0,
+                "x": -24.453283427942495,
+                "y": 3.9234841802926477,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": -17,
+                "y": 10,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "jackal",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "game": "cadillacs",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 437,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 2.2,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "Toy virtual joystick moves guest on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.2,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "after": {
+              "slot": 1,
+              "x": 5.435655907661685,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            }
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.2,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 100,
+              "state": "idle"
+            },
+            "after": {
+              "slot": 1,
+              "x": 6.549822574328356,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 94,
+              "state": "idle"
+            }
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 6.549822574328356,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 94,
+              "state": "idle"
+            },
+            "guest": {
+              "slot": 1,
+              "x": 6.549822574328356,
+              "y": 0,
+              "z": 1.1707407407407406,
+              "hp": 94,
+              "state": "idle"
+            },
+            "states": 139
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 650,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 6.198736875471269,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 77.19999999999999,
+                "state": "hurt"
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "cadillacs",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "cadillacs",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 31,
+            "players": [
+              {
+                "slot": 0,
+                "x": 2.2,
+                "y": 0,
+                "z": 0.5927407407407407,
+                "hp": 100,
+                "state": "idle"
+              },
+              {
+                "slot": 1,
+                "x": 2.2,
+                "y": 0,
+                "z": 1.1707407407407406,
+                "hp": 100,
+                "state": "idle"
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "cadillacs",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "scope": "toy-mobile-starship",
+      "checks": 11,
+      "passed": true,
+      "local_raw_evidence": "qa/toy-mobile-controls/qa.json",
+      "results": [
+        {
+          "game": "starship",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 1,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": 2.5,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": false,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 2.5,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "after": {
+              "slot": 1,
+              "x": -7.057000000000001,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            }
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": -7.057000000000001,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "guest": {
+              "slot": 1,
+              "x": -7.057000000000001,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "states": 36
+          }
+        },
+        {
+          "game": "starship",
+          "name": "Toy virtual joystick moves guest on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": -7.057000000000001,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            },
+            "after": {
+              "slot": 1,
+              "x": -7.495555070139992,
+              "y": -20,
+              "hp": 120,
+              "dead": false
+            }
+          }
+        },
+        {
+          "game": "starship",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "starship",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "starship",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 1,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": -7.495555070139992,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": true,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "starship",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "starship",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 2,
+            "players": [
+              {
+                "slot": 0,
+                "x": 0,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              },
+              {
+                "slot": 1,
+                "x": 2.5,
+                "y": -20,
+                "hp": 120,
+                "dead": false
+              }
+            ],
+            "paused": false,
+            "states": 0,
+            "buildings": 3,
+            "gold": 150
+          }
+        },
+        {
+          "game": "starship",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "scope": "taptap-tank",
+      "checks": 10,
+      "passed": true,
+      "local_raw_evidence": "qa/taptap-tank-final/qa.json",
+      "results": [
+        {
+          "game": "tank",
+          "name": "two independently controlled players",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 77,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 128,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest input moves its own player on host",
+          "ok": true,
+          "detail": {
+            "before": {
+              "slot": 1,
+              "x": 128,
+              "y": 192,
+              "hp": 3
+            },
+            "after": {
+              "slot": 1,
+              "x": 176,
+              "y": 192,
+              "hp": 3
+            }
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest receives authoritative player state",
+          "ok": true,
+          "detail": {
+            "host": {
+              "slot": 1,
+              "x": 176,
+              "y": 192,
+              "hp": 3
+            },
+            "guest": {
+              "slot": 1,
+              "x": 176,
+              "y": 192,
+              "hp": 3
+            },
+            "states": 77
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy mobile viewport stays connected 844",
+          "ok": true,
+          "detail": {
+            "width": 844,
+            "height": 390
+          }
+        },
+        {
+          "game": "tank",
+          "name": "Toy mobile viewport stays connected 390",
+          "ok": true,
+          "detail": {
+            "width": 390,
+            "height": 844
+          }
+        },
+        {
+          "game": "tank",
+          "name": "guest can pause entire team",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 232,
+            "players": [
+              {
+                "slot": 0,
+                "x": 64,
+                "y": 192,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "x": 176,
+                "y": 192,
+                "hp": 3
+              }
+            ],
+            "paused": true,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "pause freezes battlefield",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host resumes both clients",
+          "ok": true
+        },
+        {
+          "game": "tank",
+          "name": "host restart stays in same cooperative room",
+          "ok": true,
+          "detail": {
+            "slots": 2,
+            "frame": 9,
+            "players": [
+              {
+                "slot": 0,
+                "hp": 3
+              },
+              {
+                "slot": 1,
+                "hp": 3
+              }
+            ],
+            "paused": false,
+            "states": 0
+          }
+        },
+        {
+          "game": "tank",
+          "name": "no browser exceptions",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    },
+    {
+      "scope": "singleplayer-audio",
+      "checks": 20,
+      "passed": true,
+      "local_raw_evidence": "qa/singleplayer-audio/results.json",
+      "results": [
+        {
+          "name": "tank-3d：开局有声音",
+          "ok": true,
+          "detail": {
+            "states": [
+              "running"
+            ],
+            "times": [
+              5.02
+            ],
+            "starts": 3,
+            "rms": 0.0333
+          }
+        },
+        {
+          "name": "tank-3d：暂停时音频挂起",
+          "ok": true,
+          "detail": {
+            "states": [
+              "suspended"
+            ],
+            "times": [
+              6.36
+            ],
+            "starts": 4
+          }
+        },
+        {
+          "name": "tank-3d：重开后音频恢复（running 且时钟在走）",
+          "ok": true,
+          "detail": {
+            "a1": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                8.38
+              ],
+              "starts": 5
+            },
+            "a2": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                9.39
+              ],
+              "starts": 5,
+              "rms": 0.0646
+            }
+          }
+        },
+        {
+          "name": "tank-3d：重开后实际有声音输出",
+          "ok": true,
+          "detail": {
+            "rms": 0.0646,
+            "startsPaused": 4,
+            "startsAfter": 5
+          }
+        },
+        {
+          "name": "tank-3d：无运行异常",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "name": "jackal-stage1-3d：开局有声音",
+          "ok": true,
+          "detail": {
+            "states": [
+              "running"
+            ],
+            "times": [
+              7.37
+            ],
+            "starts": 4,
+            "rms": 0.2381
+          }
+        },
+        {
+          "name": "jackal-stage1-3d：暂停时音频挂起",
+          "ok": true,
+          "detail": {
+            "states": [
+              "suspended"
+            ],
+            "times": [
+              8.69
+            ],
+            "starts": 9
+          }
+        },
+        {
+          "name": "jackal-stage1-3d：重开后音频恢复（running 且时钟在走）",
+          "ok": true,
+          "detail": {
+            "a1": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                10.71
+              ],
+              "starts": 9
+            },
+            "a2": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                11.72
+              ],
+              "starts": 9,
+              "rms": 0.2382
+            }
+          }
+        },
+        {
+          "name": "jackal-stage1-3d：重开后实际有声音输出",
+          "ok": true,
+          "detail": {
+            "rms": 0.2382,
+            "startsPaused": 9,
+            "startsAfter": 9
+          }
+        },
+        {
+          "name": "jackal-stage1-3d：无运行异常",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "name": "cadillacs-stage1-3d：开局有声音",
+          "ok": true,
+          "detail": {
+            "states": [
+              "running"
+            ],
+            "times": [
+              5.97
+            ],
+            "starts": 28,
+            "rms": 0.1223
+          }
+        },
+        {
+          "name": "cadillacs-stage1-3d：暂停时音频挂起",
+          "ok": true,
+          "detail": {
+            "states": [
+              "suspended"
+            ],
+            "times": [
+              7.3
+            ],
+            "starts": 31
+          }
+        },
+        {
+          "name": "cadillacs-stage1-3d：重开后音频恢复（running 且时钟在走）",
+          "ok": true,
+          "detail": {
+            "a1": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                9.34
+              ],
+              "starts": 43
+            },
+            "a2": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                10.34
+              ],
+              "starts": 43,
+              "rms": 0.1288
+            }
+          }
+        },
+        {
+          "name": "cadillacs-stage1-3d：重开后实际有声音输出",
+          "ok": true,
+          "detail": {
+            "rms": 0.1288,
+            "startsPaused": 31,
+            "startsAfter": 43
+          }
+        },
+        {
+          "name": "cadillacs-stage1-3d：无运行异常",
+          "ok": true,
+          "detail": []
+        },
+        {
+          "name": "starship-defense：开局有声音",
+          "ok": true,
+          "detail": {
+            "states": [
+              "running"
+            ],
+            "times": [
+              6.09
+            ],
+            "starts": 18,
+            "rms": 0.0247
+          }
+        },
+        {
+          "name": "starship-defense：暂停时音频挂起",
+          "ok": true,
+          "detail": {
+            "states": [
+              "suspended"
+            ],
+            "times": [
+              7.43
+            ],
+            "starts": 24
+          }
+        },
+        {
+          "name": "starship-defense：重开后音频恢复（running 且时钟在走）",
+          "ok": true,
+          "detail": {
+            "a1": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                9.45
+              ],
+              "starts": 31
+            },
+            "a2": {
+              "states": [
+                "running"
+              ],
+              "times": [
+                10.45
+              ],
+              "starts": 34,
+              "rms": 0.0082
+            }
+          }
+        },
+        {
+          "name": "starship-defense：重开后实际有声音输出",
+          "ok": true,
+          "detail": {
+            "rms": 0.0082,
+            "startsPaused": 24,
+            "startsAfter": 34
+          }
+        },
+        {
+          "name": "starship-defense：无运行异常",
+          "ok": true,
+          "detail": []
+        }
+      ]
+    }
+  ]
+}

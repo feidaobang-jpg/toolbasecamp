@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.9.0",
+  "base_version": "v0.8.1",
+  "created_at": "2026-10-07T01:54:15.710139+00:00",
+  "classification": "正式版本",
+  "changes": [
+    "2人各驾驶一辆吉普；独立武器、耐久与载员，敌人、营救、分数和关卡由房主统一推进。",
+    "统一网站联机大厅；保留游戏菜单入口，共用昵称、房间、密码、准备、邀请、分页与暂停/重开流程。"
+  ],
+  "build": {
+    "id": "v0.9.0",
+    "commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+    "dirty": false,
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "cooperative",
+      "status": "implemented",
+      "description": "2人各驾驶一辆吉普；独立武器、耐久与载员，敌人、营救、分数和关卡由房主统一推进。"
+    }
+  ],
+  "media": [],
+  "qa": [
+    {
+      "method": "server/tests/test_coop_lobby.py + test_tank3d_lobby.py",
+      "result": "13 passed",
+      "scope": "旧坦克兼容、跨游戏隔离、输入裁剪、席位和动作权限、房间目录"
+    },
+    {
+      "method": "site-games/qa/coop-capacity.cjs",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/capacity-summary.json",
+      "scope": "最大席位、独立角色、横竖屏按钮、第二关（赤色/恐龙）、共享扣款（虫潮）、房主/队友离线"
+    },
+    {
+      "method": "two independent Edge browser contexts using exact Toy preview package, real keyboard and virtual joystick; desktop and mobile viewport simulation",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/qa/toy-preview-frame/qa.json"
+    },
+    {
+      "method": "published Toy core JS hash equals tested package",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    }
+  ],
+  "limitations": [
+    "暂不支持中途加入、断线重连和房主迁移",
+    "联机不写入单机存档/排行榜",
+    "手机横竖屏为Edge设备模拟，未做手机真机和多指触控验收"
+  ],
+  "site": {
+    "status": "public_verified",
+    "version": "v0.9.0",
+    "verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+    "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/website.json"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "published",
+    "version": "v0.9.0",
+    "package_sha256": "b2d84020bf4fa30ea8a3d89440d505a153d35c13fb0f4225d7ac145f0735b012",
+    "file_hashes": {
+      "css/style.css": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab",
+      "index.html": "f949f297585c6726790505beca14187d9dc05d577f5df82b508513c7699363ae",
+      "js/game.min.js": "502c17c6d45ffb3029b933837bbed53c40975341865915941cbe09465bbe5b03",
+      "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+      "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+      "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+      "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+    },
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_557nRXIU/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_uEFDSO6e/index.html",
+    "submitted_at": "2026-10-07T02:34:16+00:00",
+    "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "record": "releases/v0.9.0/bilibili-sync.json"
+  },
+  "taptap": {
+    "status": "pending_after_current_review",
+    "version": "v0.9.0",
+    "record": "releases/v0.9.0/taptap-build.json",
+    "package_sha256": "9588732a6e76f5637bb56096f365229438b5af4d2e63e8b9105bc12d452b397d"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "ready",
+    "gaps": [
+      "手机真机、多指触控未验收；联机更新未制作或人工审片新视频。"
+    ]
+  }
+}

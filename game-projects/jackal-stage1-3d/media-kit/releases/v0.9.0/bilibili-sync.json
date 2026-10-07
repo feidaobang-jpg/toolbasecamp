@@ -1,0 +1,18 @@
+{
+  "classification": "正式版本",
+  "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+  "version": "v0.9.0",
+  "targets": [
+    {
+      "bv": "BV1EyHz6wE5u",
+      "version": "v0.9.0",
+      "old": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。《赤色要塞》3D双关卡：海滩登陆与废墟城，本期展示第二关翻车后重新整备并完成救援。\n\n本期Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n方向键/WASD或手机摇杆移动，J机枪，K手雷或火箭，U联合开火，C切换视角；默认机枪固定向北，可在菜单切为跟随车头；3格护甲、无限命。\n\n更新（2026-10-07·v0.8.0）：U按住同时发射两种武器，各自保留原射速；两关直接选，支持拖动观察和操作模式切换；手机菜单、暂停重开声音已修复。视频为录制时版本，以当前试玩为准。\n\nClaude与Codex辅助开发的粉丝向非官方重置。",
+      "new": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。《赤色要塞》3D双关卡：海滩登陆与废墟城，本期展示第二关翻车后重新整备并完成救援。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n方向键/WASD或手机摇杆移动，J机枪，K手雷或火箭，U联合开火，C切换视角；默认机枪固定向北，可在菜单切为跟随车头；3格护甲、无限命。\n更新（2026-10-07·v0.9.0）：新增双人合作联机，各自驾驶一辆吉普，共同炸营房、救俘虏并闯两关；武器与护甲分别计算，可全队暂停或重开。视频为录制时版本，以当前试玩为准。\nClaude与Codex辅助开发的粉丝向非官方重置。",
+      "status": "public_verified",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "public_text": "驾驶小吉普炸营房、救俘虏、升级火箭，再把人送上直升机。《赤色要塞》3D双关卡：海滩登陆与废墟城，本期展示第二关翻车后重新整备并完成救援。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-jackal-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n方向键/WASD或手机摇杆移动，J机枪，K手雷或火箭，U联合开火，C切换视角；默认机枪固定向北，可在菜单切为跟随车头；3格护甲、无限命。\n更新（2026-10-07·v0.9.0）：新增双人合作联机，各自驾驶一辆吉普，共同炸营房、救俘虏并闯两关；武器与护甲分别计算，可全队暂停或重开。视频为录制时版本，以当前试玩为准。\nClaude与Codex辅助开发的粉丝向非官方重置。\n收起",
+      "verified_at": "2026-10-07T02:35:12.420Z"
+    }
+  ],
+  "status": "public_verified"
+}

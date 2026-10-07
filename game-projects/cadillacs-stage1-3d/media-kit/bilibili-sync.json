@@ -1,158 +1,163 @@
 {
- "game_id": "cadillacs-stage1-3d",
- "account": "飞刀班长 / UID16214353",
- "videos": [
-  {
-   "bvid": "BV18XHW66E55",
-   "url": "https://www.bilibili.com/video/BV18XHW66E55/",
-   "owner_uid": 16214353,
-   "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-   "last_public_verified_version": "v0.6.0",
-   "status": "published（2026-10-05 16:37 公开可见）",
-   "publish_record": "video/views-20261005/work/publication-result.json",
-   "toy_bound": true,
-   "pinned_comment_rpid": 316113740017,
-   "last_public_verified_at": "2026-10-07T07:21:07+08:00",
-   "last_sync_record": "releases/v0.6.0/bilibili-sync.json",
-   "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-   "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3",
-   "lastPublicVerifiedVersion": "v0.6.0",
-   "descriptionHash": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001",
-   "release": "releases/v0.6.0/handoff.json",
-   "publicVerifiedAt": "2026-10-07T07:21:07+08:00"
-  }
- ],
- "status": "public_verified",
- "updated_at": "2026-10-07T07:21:07+08:00",
- "mapping_sources": [
-  "本期发布记录 video/views-20261005/work/publication-result.json",
-  "创作中心稿件列表（BV18XHW66E55 审核中）"
- ],
- "resolved_updates": [
-  {
-   "version": "v0.1.1",
-   "date": "2026-10-05",
-   "kind": "普通补丁",
-   "summary": "正视贴墙不进墙、第一人称贴身不黑屏、锁屏角色不出画（视频里出现过的三处镜头问题）",
-   "targets": [
-    "BV18XHW66E55"
-   ],
-   "reason_deferred": "按 2026-10-05 分渠道节奏，普通补丁累计到下一次有意义的简介更新；现有简介未描述这些问题，无需立即纠正",
-   "release_record": "releases/v0.1.1/handoff.json"
+  "game_id": "cadillacs-stage1-3d",
+  "account": "飞刀班长 / UID16214353",
+  "videos": [
+    {
+      "bvid": "BV18XHW66E55",
+      "url": "https://www.bilibili.com/video/BV18XHW66E55/",
+      "owner_uid": 16214353,
+      "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
+      "last_public_verified_version": "v0.8.0",
+      "status": "public_verified",
+      "publish_record": "video/views-20261005/work/publication-result.json",
+      "toy_bound": true,
+      "pinned_comment_rpid": 316113740017,
+      "last_public_verified_at": "2026-10-07T02:30:21.062Z",
+      "last_sync_record": "releases/v0.6.0/bilibili-sync.json",
+      "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
+      "description_sha256": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81",
+      "lastPublicVerifiedVersion": "v0.8.0",
+      "descriptionHash": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81",
+      "release": "releases/v0.6.0/handoff.json",
+      "publicVerifiedAt": "2026-10-07T02:30:21.062Z",
+      "submitted_version": "v0.8.0",
+      "submitted_at": "2026-10-07T02:30:21.062Z"
+    }
+  ],
+  "status": "public_verified",
+  "updated_at": "2026-10-07T07:21:07+08:00",
+  "mapping_sources": [
+    "本期发布记录 video/views-20261005/work/publication-result.json",
+    "创作中心稿件列表（BV18XHW66E55 审核中）"
+  ],
+  "resolved_updates": [
+    {
+      "version": "v0.1.1",
+      "date": "2026-10-05",
+      "kind": "普通补丁",
+      "summary": "正视贴墙不进墙、第一人称贴身不黑屏、锁屏角色不出画（视频里出现过的三处镜头问题）",
+      "targets": [
+        "BV18XHW66E55"
+      ],
+      "reason_deferred": "按 2026-10-05 分渠道节奏，普通补丁累计到下一次有意义的简介更新；现有简介未描述这些问题，无需立即纠正",
+      "release_record": "releases/v0.1.1/handoff.json"
+    },
+    {
+      "version": "v0.1.2",
+      "release": "releases/v0.1.2/handoff.json",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
+      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
+    },
+    {
+      "version": "v0.2.1",
+      "classification": "普通补丁",
+      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+      "status": "resolved",
+      "record": "releases/drag-direction-20261005/handoff.json",
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+      "resolved_version": "v0.3.0"
+    },
+    {
+      "version": "v0.4.1",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+      "record": "releases/v0.4.1/handoff.json",
+      "resolved_version": "v0.5.2"
+    },
+    {
+      "version": "v0.5.1",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "无敌模式不限时，倒计时在关闭无敌后从剩余时间继续。",
+      "reason": "普通补丁累计到下一次有意义的简介更新；现有简介未描述无敌限时规则，入口和操作仍准确。",
+      "record": "releases/v0.5.1/handoff.json",
+      "resolved_version": "v0.5.2"
+    },
+    {
+      "version": "v0.5.2",
+      "classification": "正式版本",
+      "status": "resolved",
+      "summary": "简介删去不准确的画风句，更新行改为 v0.5.2 并注明演示无敌不再限时。",
+      "record": "releases/v0.5.2/bilibili-sync.json",
+      "resolved_version": "v0.5.2",
+      "public_verified_at": "2026-10-06T21:25:28+08:00"
+    },
+    {
+      "version": "v0.5.4",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "暂停后重新开始恢复声音；第二关可走到画面下方。",
+      "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
+      "record": "releases/v0.5.4/handoff.json",
+      "resolved_version": "v0.6.0"
+    },
+    {
+      "version": "v0.5.5",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "开枪看得见子弹、火花在枪口。",
+      "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
+      "record": "releases/v0.5.5/handoff.json",
+      "resolved_version": "v0.6.0"
+    },
+    {
+      "version": "v0.5.6",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+      "record": "releases/v0.5.6/handoff.json",
+      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。",
+      "resolved_version": "v0.6.0"
+    },
+    {
+      "version": "v0.6.0",
+      "classification": "正式版本",
+      "status": "resolved",
+      "summary": "更新行改为 v0.6.0：打击感重做；并入开枪看得见子弹、完整原曲 BGM。",
+      "record": "releases/v0.6.0/bilibili-sync.json",
+      "resolved_version": "v0.6.0",
+      "public_verified_at": "2026-10-07T07:21:07+08:00"
+    }
+  ],
+  "pending_updates": [
+    {
+      "version": "v0.6.1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "record": "releases/v0.6.1/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏。",
+      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
+    },
+    {
+      "version": "v0.7.0",
+      "classification": "正式版本",
+      "status": "pending_review",
+      "record": "releases/v0.7.0/bilibili-sync.json",
+      "summary": "原版拳脚、四名角色必杀与GO提示，合并v0.6.1竖屏菜单更新",
+      "bvid": "BV18XHW66E55",
+      "submitted_at": "2026-10-07T08:43:01.731112+08:00"
+    }
+  ],
+  "version": "v0.3.0",
+  "history": [
+    {
+      "bvid": "BV18XHW66E55",
+      "version": "v0.4.0",
+      "status": "public_verified",
+      "record": "releases/v0.4.0/handoff.json",
+      "checked_at": "2026-10-06T01:41:19.279Z"
+    }
+  ],
+  "last_public_verified": {
+    "bvid": "BV18XHW66E55",
+    "version": "v0.6.0",
+    "at": "2026-10-07T07:21:07+08:00",
+    "description_sha256": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001"
   },
-  {
-   "version": "v0.1.2",
-   "release": "releases/v0.1.2/handoff.json",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
-   "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介"
-  },
-  {
-   "version": "v0.2.1",
-   "classification": "普通补丁",
-   "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-   "status": "resolved",
-   "record": "releases/drag-direction-20261005/handoff.json",
-   "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
-   "resolved_version": "v0.3.0"
-  },
-  {
-   "version": "v0.4.1",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-   "record": "releases/v0.4.1/handoff.json",
-   "resolved_version": "v0.5.2"
-  },
-  {
-   "version": "v0.5.1",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "无敌模式不限时，倒计时在关闭无敌后从剩余时间继续。",
-   "reason": "普通补丁累计到下一次有意义的简介更新；现有简介未描述无敌限时规则，入口和操作仍准确。",
-   "record": "releases/v0.5.1/handoff.json",
-   "resolved_version": "v0.5.2"
-  },
-  {
-   "version": "v0.5.2",
-   "classification": "正式版本",
-   "status": "resolved",
-   "summary": "简介删去不准确的画风句，更新行改为 v0.5.2 并注明演示无敌不再限时。",
-   "record": "releases/v0.5.2/bilibili-sync.json",
-   "resolved_version": "v0.5.2",
-   "public_verified_at": "2026-10-06T21:25:28+08:00"
-  },
-  {
-   "version": "v0.5.4",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "暂停后重新开始恢复声音；第二关可走到画面下方。",
-   "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
-   "record": "releases/v0.5.4/handoff.json",
-   "resolved_version": "v0.6.0"
-  },
-  {
-   "version": "v0.5.5",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "开枪看得见子弹、火花在枪口。",
-   "reason": "普通补丁累计到下一次有意义的简介更新；现有简介仍准确。",
-   "record": "releases/v0.5.5/handoff.json",
-   "resolved_version": "v0.6.0"
-  },
-  {
-   "version": "v0.5.6",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
-   "record": "releases/v0.5.6/handoff.json",
-   "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。",
-   "resolved_version": "v0.6.0"
-  },
-  {
-   "version": "v0.6.0",
-   "classification": "正式版本",
-   "status": "resolved",
-   "summary": "更新行改为 v0.6.0：打击感重做；并入开枪看得见子弹、完整原曲 BGM。",
-   "record": "releases/v0.6.0/bilibili-sync.json",
-   "resolved_version": "v0.6.0",
-   "public_verified_at": "2026-10-07T07:21:07+08:00"
-  }
- ],
- "pending_updates": [
-  {
-   "version": "v0.6.1",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "record": "releases/v0.6.1/handoff.json",
-   "summary": "手机竖着拿时菜单直接横屏。",
-   "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
-  },
-  {
-   "version": "v0.7.0",
-   "classification": "正式版本",
-   "status": "pending_review",
-   "record": "releases/v0.7.0/bilibili-sync.json",
-   "summary": "原版拳脚、四名角色必杀与GO提示，合并v0.6.1竖屏菜单更新",
-   "bvid": "BV18XHW66E55",
-   "submitted_at": "2026-10-07T08:43:01.731112+08:00"
-  }
- ],
- "version": "v0.3.0",
- "history": [
-  {
-   "bvid": "BV18XHW66E55",
-   "version": "v0.4.0",
-   "status": "public_verified",
-   "record": "releases/v0.4.0/handoff.json",
-   "checked_at": "2026-10-06T01:41:19.279Z"
-  }
- ],
- "last_public_verified": {
-  "bvid": "BV18XHW66E55",
-  "version": "v0.6.0",
-  "at": "2026-10-07T07:21:07+08:00",
-  "description_sha256": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001"
- }
+  "latest_record": "releases/v0.8.0/bilibili-sync.json",
+  "pending": [],
+  "pending_note": "统一大厅和合作玩法说明已提交；仅公开核验成功的目标推进基线。"
 }

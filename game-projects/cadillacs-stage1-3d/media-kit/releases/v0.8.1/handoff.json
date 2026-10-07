@@ -1,13 +1,13 @@
 {
  "schema_version": 1,
  "game_id": "cadillacs-stage1-3d",
- "version": "v0.7.1",
- "base_version": "v0.7.0",
+ "version": "v0.8.1",
+ "base_version": "v0.8.0",
  "created_at": "2026-10-07T12:30:00+08:00",
  "classification": "严重问题修正（原版音效对错号：连招、必杀、GO）",
  "build": {
   "bundle_sha256": "dbd0b5a103914b6f01a0f1e6db4cfea3d77b56390b54a79f5d787707a520fbf1",
-  "build_id": "original-sfx-v071"
+  "build_id": "original-sfx-v081"
  },
  "changes": [
   {
@@ -81,7 +81,7 @@
   }
  ],
  "audio_review": "not-run（AI 无法试听；依据为录像比对，见 audio-sources.json）",
- "sources": "releases/v0.7.1/audio-sources.json",
+ "sources": "releases/v0.8.1/audio-sources.json",
  "thumbnail": {
   "decision": "沿用",
   "reason": "无画面变化"

@@ -1,0 +1,10 @@
+{
+  "source": "01-host-lobby",
+  "method": "original frame file persistence timestamps; drop non-increasing timestamps",
+  "duration": 12.550204277038574,
+  "retained_frames": 186,
+  "original_frames": 210,
+  "raw_images_unchanged": true,
+  "audio_unchanged": true,
+  "limitation": "receive/persistence times, not original GPU frame timestamps; inspect synchronization"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "channel": "taptap-h5",
+  "title": "虫潮围城",
+  "version": "web-defense-v0.21.0",
+  "source_commit": "8c6df1189d29307d19f87038a440c50b3a6a3e0b",
+  "package_directory": "dist/taptap/chongchao-qianshao/chongchao-qianshao",
+  "archive": "dist/taptap/chongchao-qianshao/chongchao-qianshao.zip",
+  "archive_root": "chongchao-qianshao/",
+  "zip_bytes": 273071,
+  "zip_sha256": "e9eb04e32b6af02eefdc5e5964be0c871fda1dd5d6ff44d3ba3aeb9b36caace7",
+  "files": {
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "game.compat.js": "6fe388404f337a31fe74238bbbc8c2a8cd8bc6e6db9f8a2797d52d8c17770cc2",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "index.html": "e53a89a0e8084b8aea448a96709bcee4378fd37ab5316db2ce060abc5463082f",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "changes": [
+    "Self-contained H5 package with one top-level directory",
+    "Local save namespace isolated from website and Toy",
+    "Toy-only cloud/ranking/author navigation omitted"
+  ],
+  "monetization": "none",
+  "status": "built_not_uploaded"
+}

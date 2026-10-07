@@ -11,7 +11,10 @@
       "release": "releases/coop1/handoff.json",
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
       "descriptionHash": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b",
-      "publicVerifiedAt": "2026-10-06T11:40:48.423653+00:00"
+      "publicVerifiedAt": "2026-10-06T11:40:48.423653+00:00",
+      "status": "submitted_pending_public",
+      "submitted_version": "coop-hub1",
+      "submitted_at": "2026-10-07T02:36:31.738Z"
     }
   ],
   "pending_updates": [
@@ -126,5 +129,10 @@
     "version": "coop1",
     "at": "2026-10-06T11:40:48.423653+00:00",
     "description_sha256": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b"
-  }
+  },
+  "latest_record": "releases/coop-hub1/bilibili-sync.json",
+  "pending": [
+    "BV1Wqaz6AEJb"
+  ],
+  "pending_note": "统一大厅和合作玩法说明已提交；仅公开核验成功的目标推进基线。"
 }

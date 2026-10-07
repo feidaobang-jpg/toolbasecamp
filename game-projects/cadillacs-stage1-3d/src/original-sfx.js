@@ -1,4 +1,4 @@
-// 原版街机录音（来源与核对方法见 media-kit/releases/v0.7.1/audio-sources.json）。
+// 原版街机录音（来源与核对方法见 media-kit/releases/v0.8.1/audio-sources.json）。
 // 映射按实机录像逐一核对：所有拳脚命中同一个打击声（游戏里以 0.75 倍速播放，文件已按该速度写好采样率），
 // 连招最后一下叠主角自己的喝声；必杀是各自的招式喊声；GO 连喊三遍，间隔 0.59 秒；倒地是身体砸地声。
 export const ORIGINAL_FILES = {

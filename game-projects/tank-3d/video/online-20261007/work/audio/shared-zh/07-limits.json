@@ -1,0 +1,98 @@
+{
+  "text": "不过现在还不能中途加入。房主退出，房间就结束。开局之前，先把人凑齐。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 6750000,
+      "text": "不过"
+    },
+    {
+      "offset": 8875000,
+      "duration": 4625000,
+      "text": "现在"
+    },
+    {
+      "offset": 13625000,
+      "duration": 1375000,
+      "text": "还"
+    },
+    {
+      "offset": 15000000,
+      "duration": 2375000,
+      "text": "不能"
+    },
+    {
+      "offset": 17625000,
+      "duration": 2875000,
+      "text": "中途"
+    },
+    {
+      "offset": 20625000,
+      "duration": 3875000,
+      "text": "加入"
+    },
+    {
+      "offset": 30250000,
+      "duration": 4000000,
+      "text": "房主"
+    },
+    {
+      "offset": 34375000,
+      "duration": 5125000,
+      "text": "退出"
+    },
+    {
+      "offset": 42375000,
+      "duration": 3625000,
+      "text": "房间"
+    },
+    {
+      "offset": 46125000,
+      "duration": 1000000,
+      "text": "就"
+    },
+    {
+      "offset": 47250000,
+      "duration": 4000000,
+      "text": "结束"
+    },
+    {
+      "offset": 57000000,
+      "duration": 3875000,
+      "text": "开局"
+    },
+    {
+      "offset": 61000000,
+      "duration": 5375000,
+      "text": "之前"
+    },
+    {
+      "offset": 70750000,
+      "duration": 2250000,
+      "text": "先"
+    },
+    {
+      "offset": 73000000,
+      "duration": 1000000,
+      "text": "把"
+    },
+    {
+      "offset": 74000000,
+      "duration": 750000,
+      "text": "人"
+    },
+    {
+      "offset": 74875000,
+      "duration": 2000000,
+      "text": "凑"
+    },
+    {
+      "offset": 76875000,
+      "duration": 2875000,
+      "text": "齐"
+    }
+  ]
+}

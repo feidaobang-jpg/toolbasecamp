@@ -1,3 +1,4 @@
+import { markTree, treeState, applyTree, scalarState } from '../../../public/js/game/coop.js';
 // 玩法核心：角色、连招、抓投、武器、敌人 AI、卷轴锁屏波次、计时、过场与结算。
 // 第一关 Boss 维斯·T 与岩跳龙；第二关三角龙哈克、熟睡的霸王龙希瓦特、步枪偷猎者、链锤兵拉什·T、泥沼减速与 Boss 屠夫。
 // 固定 60Hz 逻辑步长；坐标 x = 关卡前进方向，z = 纵深，y = 高度。
@@ -28,6 +29,16 @@ export function sinkK(x) {
   if (x < w.bank) return (w.bank - x) / (w.bank - w.x1);
   return 0;
 }
+let coopInputs=()=>({}), coopLocalSlot=0;
+const players=()=>G.actors.filter(a=>a.side==='player'&&!a.removed);
+function withPlayer(p,fn){
+ const old=G.player,hero=G.hero,jump=lastJumpT,atk=lastAtkT,network=IN.network;
+ G.player=p;G.hero=HEROES.findIndex(h=>h.id===p.type);lastJumpT=p.lastJumpT??-9;lastAtkT=p.lastAtkT??-9;
+ IN.network=p.slot===0?null:(p.netInput||coopInputs(p.slot));if(IN.network)p.lookHeading=IN.network.look;
+ try{return fn();}finally{p.lastJumpT=lastJumpT;p.lastAtkT=lastAtkT;lastJumpT=jump;lastAtkT=atk;G.player=old;G.hero=hero;IN.network=network;}
+}
+export function setCoopInput(fn){coopInputs=fn;}
+export function leaveCoopSlot(slot){const p=players().find(a=>a.slot===slot);if(p){removeActor(p);G.actors=G.actors.filter(a=>a!==p);}}
 let scene, world, fx, camCtl, nextId = 1, bannerId = 0, toastId = 0;
 const GRAV = 24;
 const DUR_MUL = { easy: 0.45, std: 0.7, classic: 1.0 };   // 耐久：敌人伤害倍率
@@ -122,6 +133,7 @@ function makeActor(type, side, opts) {
     if (type === 'vice' || type === 'mess' || type === 'lash') a.radius = 0.42;
     if (type === 'butcher') a.radius = 0.52;
   }
+  markTree(a.model.root);
   a.blob = new THREE.Mesh(blobGeo, blobMat); a.blob.rotation.x = -Math.PI / 2; a.blob.renderOrder = 1;
   a.blob.scale.setScalar(a.radius / 0.32 * 0.85);
   scene.add(a.model.root, a.blob);
@@ -210,6 +222,7 @@ function attachSwords(b) {
 export function newGame(opts) {
   reseed(opts.seed !== undefined ? opts.seed : (seed + Date.now()) >>> 0);
   clearAll();
+  G.coop=!!opts.coop;G.coopGuest=G.coop&&opts.localSlot!==0;coopLocalSlot=opts.localSlot||0;
   G.settings = { lives: opts.lives || 'inf', dur: opts.dur || 'std', demo: !!opts.demo, hero: opts.hero || 0 };
   G.hero = G.settings.hero;
   G.score = 0; G.lives = G.settings.lives === 'inf' ? Infinity : 3; G.demoUsed = !!opts.demo; G.ended = false;
@@ -217,8 +230,13 @@ export function newGame(opts) {
   G.events = []; G.t = 0; G.frames = 0; G.timeScale = 1; G.slowT = 0; G.cont = null; G.vitality = 0; G.vitalityTotal = 0; G.lastTarget = null; G.cleared = []; G.areaLoaded = false;
   const h = HEROES[G.hero];
   const p = makeActor(h.id, 'player', { hero: h, stats: heroStats(h), hp: 100, maxHp: 100, face: FACE_RIGHT, comboN: 0, lastHitT: -9, radius: 0.34 });
-  G.player = p;
+  G.player = p;p.slot=0;
+  if(G.coop)for(const slot of opts.playerSlots.filter(s=>s!==0)){
+    const hero=HEROES[opts.playerChoices?.[slot]??slot%4];
+    const other=makeActor(hero.id,'player',{slot,hero,stats:heroStats(hero),hp:100,maxHp:100,face:FACE_RIGHT,comboN:0,lastHitT:-9,radius:.34});
+  }
   loadArea(opts.area || 0, true);
+  if(G.coopGuest){G.player=players().find(a=>a.slot===coopLocalSlot)||p;G.hero=HEROES.findIndex(h=>h.id===G.player.type);}
   ev('start', { hero: h.id, lives: G.settings.lives, dur: G.settings.dur });
 }
 function clearAll() {
@@ -239,8 +257,8 @@ function loadArea(i, first) {
   const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
   // 清掉上一区域的敌人与物品，保留玩家；还在飞的子弹作废
   G.later = [];
-  for (const a of G.actors) if (a !== G.player && !a.removed) removeActor(a);
-  G.actors = G.player ? [G.player] : [];
+  for (const a of G.actors) if (a.side !== 'player' && !a.removed) removeActor(a);
+  G.actors = G.actors.filter(a=>a.side==='player'&&!a.removed);
   for (const it of G.items) scene.remove(it.mesh);
   for (const p of G.props) if (p.mesh) scene.remove(p.mesh);
   for (const pr of G.projs) scene.remove(pr.mesh);
@@ -255,9 +273,11 @@ function loadArea(i, first) {
   G.timer = AR.timer; G.timerShow = 2.5; G.go = 0;
   const p = G.player;
   p.x = AR.start.x; p.z = AR.start.z; p.y = 0; p.vx = p.vy = p.vz = 0; p.face = FACE_RIGHT; setState(p, 'idle');
+  if(G.coop)for(const other of players()){if(other===p)continue;other.x=p.x;other.z=clamp(p.z+(other.slot||1)*.55,AR.z0+.25,AR.z1-.25);other.y=0;other.vx=other.vy=other.vz=0;setState(other,'idle');other.invul=2;other.grab=null;other.grabbedBy=null;}
   for (const pd of AR.props) {
     const big = pd.kind === 'statue', pipes = pd.kind === 'pipes';
     const pr = { kind: pd.kind, x: pd.x, z: pd.z, item: pd.item, points: pd.points || (big ? 1000 : 0), hp: big ? 4 : pipes ? 2 : pd.kind === 'barrel' ? 2 : 3, r: big ? 0.45 : pipes ? 0.5 : 0.36, mesh: propMesh(pd.kind), shake: 0, broken: false };
+    markTree(pr.mesh);
     pr.mesh.position.set(pd.x, 0, pd.z);
     if (big) pr.mesh.rotation.y = 0;
     scene.add(pr.mesh); G.props.push(pr);
@@ -361,7 +381,7 @@ export function update() {
   if (G.mode === 'cont') { updateContinue(dt); return; }
   // 玩家输入
   const p = G.player;
-  if (G.mode === 'play') handleInput(p, dt);
+  if (G.mode === 'play') for(const actor of G.coop?players():[p]){actor.netInput=actor.slot===0?null:coopInputs(actor.slot);withPlayer(actor,()=>handleInput(actor,dt));}
   else IN.flush();
   // 角色
   for (const a of G.actors) {
@@ -371,17 +391,21 @@ export function update() {
     if (a.invul > 0) a.invul -= dt;
     if (a.flash > 0) a.flash -= dt;
     if (a.stunT > 0) { a.stunT -= dt; if (a.stunT <= 0) a.stun = 0; }
-    if (a === p) updatePlayer(a, dt);
-    else if (a.type === 'shivat') updateShivat(a, dt);
+    if (a.side === 'player') withPlayer(a,()=>updatePlayer(a,dt));
+    else {
+    const target=players().filter(p=>p.alive).sort((p,q)=>Math.hypot(p.x-a.x,p.z-a.z)-Math.hypot(q.x-a.x,q.z-a.z))[0]||p;G.player=target;
+    if (a.type === 'shivat') updateShivat(a, dt);
     else if (a.isTrike) updateTrike(a, dt);
     else if (a.isRaptor) updateRaptor(a, dt);
     else if (a.type === 'vice') updateVice(a, dt);
     else if (a.type === 'butcher') updateButcher(a, dt);
     else updateEnemy(a, dt);
+    G.player=p;
+    }
     const beforeX=a.x,beforeZ=a.z;
     physics(a, dt);
     if (G.water) waterFx(a, dt);
-    if(a===p&&!camCtl.fp()&&['walk','run','carry'].includes(a.state)) {
+    if(a.side==='player'&&!camCtl.fp()&&['walk','run','carry'].includes(a.state)) {
       const dx=a.x-beforeX,dz=a.z-beforeZ;
       if(Math.hypot(dx,dz)>.0001){delete a.lookHeading;a.face=approachAng(a.face,faceOf(dx,dz),dt*16);}
     }
@@ -403,6 +427,7 @@ export function update() {
 
 // ---------- 玩家输入 ----------
 function moveVec() {
+  if(IN.network){const x=IN.network.x||0,z=IN.network.z||0;return {x,z,len:Math.min(1,Math.hypot(x,z)),sx:IN.network.x||0,sy:IN.network.y||0};}
   const m = IN.move();
   if (!m.x && !m.y) return { x: 0, z: 0, len: 0, sx: 0, sy: 0 };
   const ax = camCtl.axes();
@@ -411,7 +436,7 @@ function moveVec() {
   const l = Math.hypot(x, z) || 1;
   return { x: x / l * len, z: z / l * len, len, sx: m.x, sy: m.y };
 }
-function laneMode() { const pr = camCtl.preset(); return (pr.id === 'side' || pr.id === 'oblique') && Math.abs(camCtl.yawOff) < 0.7; }
+function laneMode() { if(IN.network)return !!IN.network.lane;const pr = camCtl.preset(); return (pr.id === 'side' || pr.id === 'oblique') && Math.abs(camCtl.yawOff) < 0.7; }
 let lastJumpT = -9, lastAtkT = -9;
 function handleInput(p, dt) {
   const canAct = ['idle', 'walk', 'run'].indexOf(p.state) >= 0;
@@ -943,7 +968,7 @@ function explode(x, z, r, dmg, owner, friendlySafe = false) {
   fx.boom(x, 0, z, r / 2); A.play('boom');
   for (const e of G.actors) {
     if (!e.alive || e.removed || ['dead', 'enter', 'cut', 'leave'].indexOf(e.state) >= 0) continue;
-    if (friendlySafe && e.side === owner?.side) continue;
+    if ((friendlySafe||G.coop) && e.side === owner?.side) continue;
     const d = Math.hypot(e.x - x, e.z - z);
     if (d < r + e.radius) {
       let k = 1 - d / (r + e.radius) * 0.5;
@@ -2203,8 +2228,8 @@ function finish(win) {
   if (G.ended) return;
   G.ended = true;
   G.mode = win ? 'clear' : 'over';
-  const newHi = !G.demoUsed && G.score > G.hi;
-  if (newHi) { G.hi = G.score; store.set('hi', G.hi); }
+  const newHi = !G.coop && !G.demoUsed && G.score > G.hi;
+  if (!G.coop && newHi) { G.hi = G.score; store.set('hi', G.hi); }
   const res = { win, score: G.score, hi: G.hi, newHi, demo: G.demoUsed, kills: Object.assign({}, G.kills), seconds: Math.round(G.t), deaths: G.stats.deaths, hits: G.stats.hits, food: G.stats.food, vitality: G.vitality || 0, vitalityTotal: G.vitalityTotal || G.vitality || 0, cleared: G.cleared.slice(), stage: AREAS[G.area].stage, hero: HEROES[G.hero], lives: G.settings.lives, dur: G.settings.dur, conts: G.stats.contCount };
   ev('end', { win, score: G.score });
   if (G.onEnd) G.onEnd(res);
@@ -2212,7 +2237,7 @@ function finish(win) {
 
 // ---------- 标题画面：四位主角站在楼顶 ----------
 export function toTitle() {
-  clearAll();
+  G.coop=false;G.coopGuest=false;  clearAll();
   G.mode = 'title';
   world.setArea(0);
   G.focusX = 8; G.lockX = null;
@@ -2228,6 +2253,7 @@ const tmpPose = new Float32Array(POSE_LEN);
 const GUN_POSE = mod(HP.guard, { rS: [-0.6, 0, -0.2], rE: [-1.2, 0, 0] });
 const SG_POSE = mod(HP.guard, { rS: [-0.5, -0.2, -0.2], rE: [-1.4, 0, 0], lS: [-0.9, -0.3, 0.3], lE: [-0.8, 0, 0] });
 export function render(dt, realT) {
+  if(G.coopGuest){for(const a of G.actors){if(a.netTree)applyTree(a.model.root,a.netTree);a.blob.position.set(a.x,.015,a.z);a.blob.visible=a.alive&&a.y<1.5;if(a.slot===coopLocalSlot&&G.fpActive)a.model.root.visible=false;}return;}
   for (const a of G.actors) {
     if (a.removed) continue;
     const frozen = a.hitstop > 0;
@@ -2536,4 +2562,43 @@ export function snapshot() {
     sleeper: G.sleeper ? { state: G.sleeper.state, wakeN: G.sleeper.wakeN, hp: +G.sleeper.hp.toFixed(1), alive: G.sleeper.alive } : null, car: !!G.car, carMoving: !!G.carAnim, sink: p ? +sinkK(p.x).toFixed(2) : 0, raptor: G.raptor && !G.raptor.removed ? { state: G.raptor.state, angry: !!G.raptor.angry, hp: G.raptor.hp } : null,
     dialog: G.dialog ? G.dialog.text : null, banner: G.banner ? G.banner.text : null, kills: Object.assign({}, G.kills), items: G.items.length, props: G.props.filter(p => !p.broken).length, script: !!G.script, cont: G.cont ? G.cont.count : null, fade: +G.fade.toFixed(2)
   };
+}
+
+export function coopInput(){
+ const mv=moveVec(),edges=[],events={};for(const k of ['atk','jump','mega','dash']){const e=IN.take(k);if(e){edges.push(k);events[k]=e.data;}}
+ return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
+}
+export function coopSnapshot(){
+ return {g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water},
+ actors:G.actors.map(a=>{const vis=a.model.root.visible;if(a.side==='player'&&a===G.player&&G.fpActive)a.model.root.visible=true;const tree=treeState(a.model.root);a.model.root.visible=vis;return {s:scalarState(a),weapon:a.weapon?{kind:a.weapon.kind,ammo:a.weapon.ammo}:null,tree};}),
+ items:G.items.map(i=>({s:scalarState(i),tree:treeState(i.mesh)})),props:G.props.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
+ projs:G.projs.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
+ bossId:G.boss?.id,raptorId:G.raptor?.id,sleeperId:G.sleeper?.id,lastTargetId:G.lastTarget?.id,
+ car:G.car?treeState(G.car):null,doors:(world.area().doors||[]).map(d=>scalarState(d))};
+}
+export function coopApply(data){
+ if(!data?.g)return;
+ if(G.area!==data.g.area||data.g.frames<G.frames){loadArea(data.g.area,true);}
+ const areaChanged=G.area!==data.g.area;Object.assign(G,data.g);G.coopGuest=true;
+ const ids=new Set(data.actors.map(a=>a.s.id));
+ for(const a of G.actors.slice())if(!ids.has(a.id)){removeActor(a);G.actors=G.actors.filter(o=>o!==a);}
+ for(const row of data.actors){
+  let a=G.actors.find(a=>a.id===row.s.id);
+  if(!a)a=makeActor(row.s.type,row.s.side,row.s.side==='player'?{hero:HEROES.find(h=>h.id===row.s.type)}:{def:ENEMY[row.s.type]});
+  const oldWeapon=a.weapon?.kind;Object.assign(a,row.s);a.weapon=row.weapon;
+  if(oldWeapon!==a.weapon?.kind)attachWeapon(a);
+  if(a.type==='butcher')attachSwords(a);
+  a.netTree=row.tree;applyTree(a.model.root,row.tree);
+ }
+ G.player=players().find(a=>a.slot===coopLocalSlot)||players()[0];G.hero=HEROES.findIndex(h=>h.id===G.player.type);
+ G.boss=G.actors.find(a=>a.id===data.bossId)||null;G.raptor=G.actors.find(a=>a.id===data.raptorId)||null;G.sleeper=G.actors.find(a=>a.id===data.sleeperId)||null;G.lastTarget=G.actors.find(a=>a.id===data.lastTargetId)||null;
+ while(G.items.length>data.items.length)removeItem(G.items.at(-1));
+ data.items.forEach((row,i)=>{let it=G.items[i];if(it&&it.kind!==row.s.kind){scene.remove(it.mesh);it.mesh=itemMesh(row.s.kind);}if(!it)it=spawnItem(row.s.kind,row.s.x,row.s.z);Object.assign(it,row.s);applyTree(it.mesh,row.tree);});
+ data.props.forEach((row,i)=>{if(G.props[i]){Object.assign(G.props[i],row.s);applyTree(G.props[i].mesh,row.tree);if(row.s.broken)scene.remove(G.props[i].mesh);}});
+ while(G.projs.length>data.projs.length)killProj(G.projs.at(-1));
+ data.projs.forEach((row,i)=>{let pr=G.projs[i];if(pr&&pr.kind!==row.s.kind){killProj(pr);pr=null;}
+ if(!pr){const mesh=row.s.kind==='drum'?propMesh('barrel'):row.s.kind==='rocket'?itemMesh('rocket'):meshFrom(itemGeo(row.s.kind),{thin:true,shadow:false});scene.add(mesh);pr={mesh};G.projs[i]=pr;}Object.assign(pr,row.s);applyTree(pr.mesh,row.tree);});
+ if(data.car){if(!G.car){G.car=buildCar();scene.add(G.car);}applyTree(G.car,data.car);}else if(G.car){scene.remove(G.car);G.car=null;}
+ data.doors.forEach((d,i)=>{if(world.area().doors?.[i])Object.assign(world.area().doors[i],d);});
+ if(G.mode==='play')A.music(areaMusic());
 }

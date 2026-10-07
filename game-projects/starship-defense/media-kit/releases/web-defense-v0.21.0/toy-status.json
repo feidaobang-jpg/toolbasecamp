@@ -1,0 +1,11 @@
+{
+  "status": "published",
+  "version": "web-defense-v0.21.0",
+  "target_id": "38678478981120",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_oWo6TDI3/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CgLA0MYI/index.html",
+  "package_sha256": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "public_verified_at": "2026-10-07T02:13:36.108489+00:00",
+  "qa": "qa/toy-public/results.json"
+}

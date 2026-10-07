@@ -1,0 +1,26 @@
+{
+  "verified_at": "2026-10-07T02:27:36.149457+00:00",
+  "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+  "website_version": "web-coop-v0.22.0",
+  "files": {
+    "game.js": {
+      "sha256": "06a7c19ee353db0c917145a95fdf5fc60da52ec4a5004b567daa86fab41768c8",
+      "matches_latest_main": true
+    },
+    "game.compat.js": {
+      "sha256": "fd10be513c4330cf46b499a481b78146c80f464d44c73c6396c2d3f6248ecc6b",
+      "matches_latest_main": true
+    },
+    "save-validation.js": {
+      "sha256": "e0c9ffb5c26a75ac69cf4202efe7d85e48f9acf790414e90739a63ce4fd850a8",
+      "matches_latest_main": true
+    },
+    "defense-progression.js": {
+      "sha256": "d953c209529e0d2c9ef494be43f0adda85fc39bd714f70a46fcf56745e910ce8",
+      "matches_latest_main": true
+    }
+  },
+  "note": "并行联机更新保留v0.21炮塔与存档改动；本任务只整合发布记录。",
+  "qa": "qa/latest-main/results.json",
+  "result": "desktop/landscape/portrait passed"
+}
