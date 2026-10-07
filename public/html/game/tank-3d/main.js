@@ -3,13 +3,13 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
-import { CoopConnection, snapshot, hydrate } from './coop.js?v=ime1';
+import { CoopConnection, snapshot, hydrate } from './coop.js?v=ime-live1';
 import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
 installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'coop-hub1';
+const VERSION = 'coop-live2';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -115,9 +115,10 @@ function renderLobby() {
   const room = coop.room;
   $('coop-room').textContent = room ? room.code : '尚未加入';
   $('coop-roster').textContent = room ? room.players.map(p => `${p.slot + 1}P ${p.name} · ${p.slot === 0 ? '房主' : p.ready ? '已准备' : '未准备'}`).join('　 /　 ') : '输入昵称后建房，或填写好友的六位房间码。';
+  if(room&&coop.host)for(const p of room.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=()=>coop.send({type:'kick',slot:p.slot});$('coop-roster').append(b);}
   $('coop-create').disabled = $('coop-join').disabled = !!room;
-  $('coop-ready').hidden = !room || coop.host;
-  $('coop-start').hidden = !room || !coop.host;
+  $('coop-ready').hidden = !room || coop.host || room.started;
+  $('coop-start').hidden = !room || !coop.host || room.started;
   $('coop-copy').disabled = !room;
   $('coop-start').disabled = !room || room.players.length < 2 || !room.players.every(p => p.ready);
   $('coop-ready').textContent = room?.players.find(p => p.slot === coop.slot)?.ready ? '取消准备' : '准备好了';
@@ -143,7 +144,7 @@ function renderDirectory(message) {
     const title = document.createElement('strong'); title.textContent = room.name;
     const details = document.createElement('span');
     details.textContent = `${room.hasPassword ? '有密码' : '无密码'} · ${room.players.length}/${room.maxPlayers}人 · ${room.started ? '已开局' : '等待中'} · ${modeName(room.settings.mode)} 第${room.settings.stage}关 · 房主 ${room.players.find(p => p.slot === 0)?.name || ''}`;
-    card.append(title, details); card.disabled = room.started || room.players.length >= room.maxPlayers;
+    card.append(title, details); card.disabled = (room.started&&!room.canJoin) || room.players.length >= room.maxPlayers;
     card.addEventListener('click', () => {
       $('coop-code').value = room.code; $('coop-password').value = '';
       if (room.hasPassword) { $('coop-message').textContent = `已选择“${room.name}”，请填写房间密码后加入。`; $('coop-password').focus(); }
@@ -173,6 +174,12 @@ function onCoopMessage(msg) {
   } else if (msg.type === 'input' && coop.host) {
     const previous = remoteInputs[msg.slot];
     remoteInputs[msg.slot] = { ...msg.input, firePressed: !!(previous?.firePressed || msg.input.firePressed), at: performance.now() };
+  } else if (msg.type === 'player_joined') {
+    if(run?.coop)run.playerSlots=coop.room.players.map(p=>p.slot);
+    if(coop.host&&world){joinPlayer(world,msg.slot);sentTerrain=-1;lastStateAt=0;}
+    showToast(msg.message);
+  } else if (msg.type === 'control') {
+    showToast(msg.message);renderLobby();
   } else if (msg.type === 'player_left') {
     if (coop.room) coop.room.players = coop.room.players.filter(p => p.slot !== msg.slot);
     if (run?.coop) run.playerSlots = coop.room.players.map(p => p.slot);
@@ -408,7 +415,8 @@ document.addEventListener('click', e => {
   switch (t.getAttribute('data-act')) {
     case 'start': startGame(); break;
     case 'coop': openLobby(); break;
-    case 'coop-back': coop.disconnect(); networkStarted = false; show('menu'); break;
+    case 'coop-back': coop.disconnect(); networkStarted = false; toTitle(); show('menu'); break;
+    case 'coop-return': show(paused?'pause':null); break;
     case 'retry': retryRun(); break;
     case 'resume': resume(); break;
     case 'restart': restartStage(); break;
@@ -868,7 +876,7 @@ function simulate(dt) {
   const input = { dir: worldDir(), fire: isDown('fire'), firePressed };
   firePressed = false;
   if (run.coop) {
-    const inputs = world.seats.map(s => s.slot === 0 ? input : performance.now() - (remoteInputs[s.slot]?.at || 0) < 600 ? remoteInputs[s.slot] : { dir: -1 });
+    const inputs = world.seats.map(s => coop.control(s.slot,s.slot===0?input:performance.now()-(remoteInputs[s.slot]?.at||0)<600?remoteInputs[s.slot]:{dir:-1},()=>computerPlayerInput(world,s.slot)));
     step(world, { players: inputs });
     for (const remote of Object.values(remoteInputs)) remote.firePressed = false;
   } else step(world, input);
@@ -880,6 +888,7 @@ function simulate(dt) {
   for (const e of evs) { handleEvent(e); if (current === 'tally') break; }
 }
 function frame(now) {
+  coop.controlTick(paused);
   if (manual) { last = now; requestAnimationFrame(frame); return; }
   const dtReal = Math.min(.1, (now - last) / 1000);
   if (perf.on) perf.frames.push(now - last);
@@ -892,7 +901,7 @@ function frame(now) {
   publishState(now);
   if (coop.active && networkStarted) {
     $('coop-status').hidden = false;
-    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.rtt ? coop.rtt + 'ms' : '多人合作'}${paused ? ' · 全队暂停' : ''}`;
+    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.room.players.map(p=>(p.slot+1)+'P'+(p.ai?'电脑':'真人')).join(' / ')}${paused ? ' · 全队暂停' : coop.bots.has(coop.slot)?' · 操作即可接回':' · 闲置30秒电脑接管'}`;
     if (!coop.host && coop.stateCount && now - snapshotReceivedAt > 3000 && !paused) { clearInput(); coop.send({ type: 'action', action: 'pause' }); showToast('同步暂时中断，正在暂停战场'); }
   } else $('coop-status').hidden = true;
   if (autoProbe.on && !autoProbe.done && uiMode === 'game' && phase === 'play' && !current) {

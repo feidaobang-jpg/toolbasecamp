@@ -7,7 +7,7 @@ const check=(g,n,ok,data)=>{results.push({game:g,name:n,ok,detail:data});console
 async function snap(p,g){return p.evaluate(g=>g==='tank'?__TANK_TEST__.state():__COOP_QA__.snapshot(),g);}
 (async()=>{const browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-gpu','--ignore-gpu-blocklist','--use-angle=d3d11']});
 for(const g of (process.env.GAMES_ONLY||'tank,jackal,cadillacs,starship').split(',')){const cs=[],ps=[],errors=[];try{
- const count=g==='jackal'?2:4;
+ const count=Number(process.env.GAMES_CAPACITY||4);
  for(let i=0;i<count;i++){
   const c=await browser.newContext({viewport:i===1?{width:844,height:390}:{width:960,height:540},hasTouch:i===1,isMobile:i===1});cs.push(c);const p=await c.newPage();ps.push(p);p.on('pageerror',e=>errors.push(e.message));
   await p.goto(base+'html/game/'+paths[g]+'/index.html?test=1&qa=1&q=low');await p.waitForFunction(g=>g==='tank'?window.__TANK_TEST__:window.__COOP_QA__,g,{timeout:120000});
@@ -18,6 +18,7 @@ for(const g of (process.env.GAMES_ONLY||'tank,jackal,cadillacs,starship').split(
  const [host,phone]=ps;
  if(g==='tank')for(const p of ps)await p.evaluate(()=>__TANK_TEST__.manual(false));
  const native=g==='tank',button=k=>native?'#coop-'+k:'[data-do='+k+']';
+ await host.locator(native?'#coop-capacity':'[data-field=capacity]').selectOption(String(count));
  await host.locator(button('create')).click();await host.waitForFunction(g=>(g==='tank'?__TANK_TEST__.coop:__COOP_QA__.connection).room,g);
  const code=await host.evaluate(g=>(g==='tank'?__TANK_TEST__.coop:__COOP_QA__.connection).room.code,g);console.log('STEP',g,'room created');
  // The site directory exposes the same room and a usable invitation URL.
@@ -35,7 +36,7 @@ for(const g of (process.env.GAMES_ONLY||'tank,jackal,cadillacs,starship').split(
  await phone.screenshot({path:path.join(out,g+'-phone-landscape.png')});await phone.setViewportSize({width:390,height:844});await phone.waitForTimeout(300);check(g,'portrait touch button remains reachable',await phone.locator(fire).isVisible());await phone.screenshot({path:path.join(out,g+'-phone-portrait.png')});
  await phone.setViewportSize({width:844,height:390});
  if(g==='jackal'){
-  await host.evaluate(()=>__JK_TEST__.cheat.nextStage());await phone.waitForFunction(()=>__COOP_QA__.snapshot().g.stage===2);check(g,'second stage retains both players',rows(await snap(phone,g)).length===count);
+  await host.evaluate(()=>__JK_TEST__.cheat.nextStage());await phone.waitForFunction(()=>__COOP_QA__.snapshot().g.stage===2);check(g,'second stage retains whole team',rows(await snap(phone,g)).length===count);
  }else if(g==='cadillacs'){
   await host.evaluate(()=>{__CD_TEST__.cheat.stage(2);__CD_TEST__.cheat.skipScript();});await phone.waitForFunction(()=>__COOP_QA__.snapshot().g.area>=3);check(g,'second-stage transition retains team',rows(await snap(phone,g)).length===count);
  }else if(g==='starship'){

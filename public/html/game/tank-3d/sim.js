@@ -64,6 +64,23 @@ export const emit = (w, type, d = {}) => { w.events.push({ ...d, ...(w.activeSlo
 const PLAYER_FIELDS = ['lives', 'hp', 'stars', 'plate', 'boats'];
 export const localPlayer = w => w?.seats ? w.seats[w.localSlot || 0].tank : w?.player;
 export const localStats = w => w?.seats ? w.seats[w.localSlot || 0].state : w?.run;
+export function joinPlayer(w,slot){
+ const fresh=createRun({lives:w.run.livesMode,armor:w.run.armor});
+ while(w.seats.length<=slot)w.seats.push({slot:w.seats.length,state:{lives:0,hp:3,stars:0,plate:0,boats:0},tank:null,spawnT:0});
+ const seat=w.seats[slot];seat.state=Object.fromEntries(PLAYER_FIELDS.map(k=>[k,fresh[k]]));seat.tank=null;seat.spawnT=37;
+ w.run.coopPlayers=w.seats.map(s=>s.state);w.run.playerCount=Math.max(w.run.playerCount,slot+1);
+}
+export function computerPlayerInput(w,slot){
+ const p=w.seats[slot]?.tank;if(!p||p.state!=='active')return {dir:-1};
+ const target=w.bots.filter(t=>t.state==='active').sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+ if(!target)return {dir:-1,fire:false};
+ const dx=target.x-p.x,dy=target.y-p.y;
+ const wanted=Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?2:0);
+ const dirs=[wanted,(wanted+1)%4,(wanted+3)%4,(wanted+2)%4];
+ const dir=dirs.find(n=>!blockedBy(w,p,p.x+DX[n]*2,p.y+DY[n]*2))??wanted;
+ const safe=!(dir===2&&Math.abs(p.x-EAGLE.x)<24&&p.y<EAGLE.y);
+ return {dir,look:wanted*Math.PI/2,fire:safe,firePressed:safe&&w.f%15===0};
+}
 const playerTanks = w => w.seats ? w.seats.map(s => s.tank).filter(Boolean) : w.player ? [w.player] : [];
 const targetPlayer = (w, t) => playerTanks(w).filter(p => p.state === 'active').sort((a, b) => Math.abs(a.x - t.x) + Math.abs(a.y - t.y) - Math.abs(b.x - t.x) - Math.abs(b.y - t.y))[0];
 function withSeat(w, seat, fn) {

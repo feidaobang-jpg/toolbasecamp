@@ -658,7 +658,8 @@ installRemakeUI();
 
 coopDriver=installRemakeCoop({
  game:'cadillacs',container:stage,menu:overlays.menu.querySelector('.items'),getConfig:()=>({...settings,stage:settings.stage+1,area:STAGES[settings.stage].first}),notify:showToast,
- onStart:config=>{settings.demo=false;startGame();GM.setCoopInput(slot=>coopDriver.connection.input(slot));},
+ onStart:config=>{settings.demo=false;startGame();GM.setCoopInput(slot=>coopDriver.connection.control(slot,slot===0?null:coopDriver.connection.input(slot),()=>GM.computerInput(slot)));},
+ onJoin:m=>{if(coopDriver.connection.host)GM.joinCoopSlot(m.slot,m.hero);},
  getInput:()=>GM.coopInput(),getState:()=>({...GM.coopSnapshot(),sounds:coopSounds.snapshot()}),getUI:()=>({paused,current}),
  onState:state=>{
   GM.coopApply(state.game);coopSounds.apply(state.game.sounds);

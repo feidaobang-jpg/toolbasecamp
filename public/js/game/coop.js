@@ -2,7 +2,7 @@
 import {installLandscapeTyping} from './landscape-typing.js?v=lt1';
 export const GAMES = {
   tank: {title:'坦克大战', protocol:'tank3d-v2', max:4, path:'tank-3d'},
-  jackal: {title:'赤色要塞', protocol:'jackal3d-v1', max:2, path:'jackal-stage1-3d'},
+  jackal: {title:'赤色要塞', protocol:'jackal3d-v1', max:4, path:'jackal-stage1-3d'},
   cadillacs: {title:'恐龙快打', protocol:'cadillacs3d-v1', max:4, path:'cadillacs-stage1-3d'},
   starship: {title:'虫潮围城', protocol:'starship-v1', max:4, path:'starship-defense'}
 };
@@ -15,10 +15,36 @@ export class CoopConnection {
     this.game=game; this.onMessage=onMessage; this.onStatus=onStatus;
     this.socket=null; this.room=null; this.slot=-1; this.intentional=false; this.rtt=0; this.lastReceive=0; this.stateCount=0;
     this.inputs=new Map();
+    this.activity=new Map();this.bots=new Set();this.held=new Set();this.contacts=new Set();this.localAt=performance.now();this.controlAt=this.localAt;
+    try{this.identity=localStorage.getItem('gamehub-player-id')||crypto.randomUUID();localStorage.setItem('gamehub-player-id',this.identity);}catch{this.identity=crypto.randomUUID();}
+    document.addEventListener('keydown',e=>{this.held.add(e.code);this.localAt=performance.now();});
+    document.addEventListener('keyup',e=>{this.held.delete(e.code);this.localAt=performance.now();});
+    document.addEventListener('pointerdown',e=>{this.contacts.add(e.pointerId);this.localAt=performance.now();});
+    document.addEventListener('pointermove',e=>{if(e.buttons||this.contacts.has(e.pointerId))this.localAt=performance.now();});
+    for(const name of ['pointerup','pointercancel'])document.addEventListener(name,e=>{this.contacts.delete(e.pointerId);this.localAt=performance.now();});
+    window.addEventListener('blur',()=>{this.held.clear();this.contacts.clear();});
   }
   get host(){return this.slot===0;}
   get active(){return !!this.room?.started;}
-  send(data){if(this.socket?.readyState!==1||this.socket.bufferedAmount>200000)return false;this.socket.send(JSON.stringify(data));return true;}
+  send(data){if(this.socket?.readyState!==1||this.socket.bufferedAmount>200000)return false;if(data.type==='input')data={...data,input:{...data.input,activity:this.localActive()}};this.socket.send(JSON.stringify(data));return true;}
+  localActive(){return this.held.size>0||this.contacts.size>0||performance.now()-this.localAt<250;}
+  controlTick(paused=false){
+    const now=performance.now(),dt=now-this.controlAt;this.controlAt=now;
+    if(paused)for(const [slot,at] of this.activity)this.activity.set(slot,at+dt);
+  }
+  observe(slot,input){
+    const moving=(input?.dir??-1)>=0||Math.hypot(input?.x||0,input?.z||0)>.08;
+    const active=input?.activity||moving||input?.bomb||input?.atk||input?.jump||input?.firePressed||(input?.fire&&!input?.autoFire)||input?.edges?.length;
+    if(active)this.activity.set(slot,performance.now());
+  }
+  control(slot,human,computer){
+    if(!this.host||!this.active)return human;
+    if(slot===0&&this.localActive())this.activity.set(0,performance.now());
+    if(!this.activity.has(slot))this.activity.set(slot,performance.now());
+    const ai=performance.now()-this.activity.get(slot)>=30000;
+    if(ai!==this.bots.has(slot)){if(ai)this.bots.add(slot);else this.bots.delete(slot);this.send({type:'control',slot,ai});}
+    return ai?computer():human;
+  }
   connect(type, name, code, options={}) {
     this.disconnect();this.intentional=false;
     const socket=this.socket=new WebSocket(endpoint(this.game));
@@ -31,19 +57,23 @@ export class CoopConnection {
       if(msg.type==='hello'){
         clearTimeout(timeout);
         if(msg.protocol!==GAMES[this.game].protocol){this.disconnect();this.onStatus('联机版本不一致，请刷新后重试');return;}
-        this.send({type,name,code,...options});
+        this.send({type,name,code,identity:this.identity,liveJoin:true,...options});
       }
       if(msg.type==='joined'){this.slot=msg.slot;this.room=msg.room;}
       if(msg.type==='roster')this.room=msg.room;
       if(msg.type==='start'&&this.room)this.room.started=true;
+      if(msg.type==='start'){this.controlAt=performance.now();this.activity.clear();this.bots.clear();for(const slot of msg.config.playerSlots)this.activity.set(slot,performance.now());}
+      if(msg.type==='player_joined'){this.activity.set(msg.slot,performance.now());this.bots.delete(msg.slot);}
+      if(msg.type==='control'){if(msg.ai)this.bots.add(msg.slot);else this.bots.delete(msg.slot);const p=this.room?.players.find(p=>p.slot===msg.slot);if(p)p.ai=msg.ai;}
       if(msg.type==='pong')this.rtt=Math.round(performance.now()-msg.at);
       if(msg.type==='state')this.stateCount++;
       if(msg.type==='input'){
+        this.observe(msg.slot,msg.input);
         const old=this.inputs.get(msg.slot);
         msg.input.edges=[...new Set([...(old?.edges||[]),...(msg.input.edges||[])])];
         this.inputs.set(msg.slot,{...msg.input,at:performance.now()});
       }
-      if(msg.type==='player_left')this.inputs.delete(msg.slot);
+      if(msg.type==='player_left'){this.inputs.delete(msg.slot);this.activity.delete(msg.slot);this.bots.delete(msg.slot);}
       if(msg.type==='error')this.onStatus(msg.message);
       this.onMessage(msg);
     };
@@ -63,7 +93,7 @@ export class CoopConnection {
   disconnect(){
     this.intentional=true;clearInterval(this.heartbeat);const socket=this.socket;this.socket=null;
     if(socket?.readyState===1)socket.send(JSON.stringify({type:'leave'}));
-    socket?.close();this.room=null;this.slot=-1;this.stateCount=0;this.inputs.clear();
+    socket?.close();this.room=null;this.slot=-1;this.stateCount=0;this.inputs.clear();this.activity.clear();this.bots.clear();
   }
 }
 const css = `
@@ -88,7 +118,7 @@ export class CooperativeLobby {
     const entry=document.createElement('button');entry.className='coop-entry';entry.type='button';entry.dataset.act='coop';entry.textContent='联机大厅 · 2–'+GAMES[game].max+'人合作';menu.append(entry);entry.addEventListener('click',()=>this.open());
     this.entry=entry;
     const panel=document.createElement('div');panel.className='coop-panel';panel.hidden=true;panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label',GAMES[game].title+'联机大厅');
-    panel.innerHTML='<section class="coop-card"><h2>'+GAMES[game].title+' · 联机大厅</h2><p>填昵称即可联机，单机存档独立保留。</p><div class="coop-grid"><label>昵称<input data-field="name" maxlength="12" autocomplete="nickname" value="玩家"></label><label>房间名称<input data-field="roomName" maxlength="32" placeholder="我的合作房间"></label><label>人数<select data-field="capacity"></select></label><label>房间号<input data-field="code" inputmode="numeric" maxlength="6" placeholder="六位房间号"></label><label>密码（选填）<input data-field="password" maxlength="32" type="password" autocomplete="off"></label><label>房间筛选<select data-field="filter"><option value="all">全部房间</option><option value="open">无需密码</option><option value="locked">密码房</option></select></label></div><div class="coop-actions"><button data-do="create">创建房间</button><button data-do="join">加入房间</button><button data-do="refresh">刷新列表</button><button data-do="close">返回游戏</button></div><p class="coop-status" role="status" aria-live="polite"></p><div class="coop-roster" hidden></div><div class="coop-actions coop-room-actions" hidden><button data-do="ready">准备</button><button data-do="start">开始合作</button><button data-do="invite">复制邀请链接</button><button data-do="leave">退出房间</button></div><ul class="coop-rooms"></ul><div class="coop-actions coop-pager"><button data-do="prev">上一页</button><span></span><button data-do="next">下一页</button></div><p class="coop-footer">合作同步暂停；房主退出则结束房间，暂不支持中途加入。<a href="https://www.zhengxiaohui.cn/game-online.html" target="_blank" rel="noopener">全部游戏联机大厅</a></p></section>';
+    panel.innerHTML='<section class="coop-card"><h2>'+GAMES[game].title+' · 联机大厅</h2><p>填昵称即可联机，单机存档独立保留。</p><div class="coop-grid"><label>昵称<input data-field="name" maxlength="12" autocomplete="nickname" value="玩家"></label><label>房间名称<input data-field="roomName" maxlength="32" placeholder="我的合作房间"></label><label>人数<select data-field="capacity"></select></label><label>房间号<input data-field="code" inputmode="numeric" maxlength="6" placeholder="六位房间号"></label><label>密码（选填）<input data-field="password" maxlength="32" type="password" autocomplete="off"></label><label>房间筛选<select data-field="filter"><option value="all">全部房间</option><option value="open">无需密码</option><option value="locked">密码房</option></select></label></div><div class="coop-actions"><button data-do="create">创建房间</button><button data-do="join">加入房间</button><button data-do="refresh">刷新列表</button><button data-do="close">返回游戏</button></div><p class="coop-status" role="status" aria-live="polite"></p><div class="coop-roster" hidden></div><div class="coop-actions coop-room-actions" hidden><button data-do="ready">准备</button><button data-do="start">开始合作</button><button data-do="invite">复制邀请链接</button><button data-do="leave">退出房间</button></div><ul class="coop-rooms"></ul><div class="coop-actions coop-pager"><button data-do="prev">上一页</button><span></span><button data-do="next">下一页</button></div><p class="coop-footer">合作同步暂停；房主退出则结束房间，支持中途加入；闲置30秒电脑接管，操作后交还真人。<a href="https://www.zhengxiaohui.cn/game-online.html" target="_blank" rel="noopener">全部游戏联机大厅</a></p></section>';
     container.append(panel);this.panel=panel;
     for(let n=2;n<=GAMES[game].max;n++){const o=document.createElement('option');o.value=n;o.textContent=n+'人';this.field('capacity').append(o);}this.field('capacity').value=GAMES[game].max;
     if(game==='cadillacs'||game==='starship'){
@@ -135,7 +165,7 @@ export class CooperativeLobby {
     else if(kind==='ready'){const ready=!c.room?.players.find(p=>p.slot===c.slot)?.ready;c.send({type:'ready',ready,hero:this.getConfig().hero||0});}
     else if(kind==='start')c.send({type:'start'});
     else if(kind==='invite')this.invite();
-    else if(kind==='leave'){c.disconnect();this.roster();this.list();}
+    else if(kind==='leave'){const active=c.active;c.disconnect();if(active)this.message({type:'ended',message:'你已退出房间，其他队友继续'});else{this.roster();this.list();}}
     else if(kind==='prev'||kind==='next'){this.page+=kind==='prev'?-1:1;this.list();}
   }
   async invite(){
@@ -145,14 +175,15 @@ export class CooperativeLobby {
   roster(){
     const c=this.connection,r=c.room,roster=this.panel.querySelector('.coop-roster');
     roster.hidden=!r;this.panel.querySelector('.coop-room-actions').hidden=!r;if(this.field('hero'))this.field('hero').disabled=!!r?.players.find(p=>p.slot===c.slot)?.ready;
-    if(r){roster.textContent='房间 '+r.code+' · '+r.name+' · '+r.players.map(p=>(p.slot===0?'房主 ':'')+p.name+(p.ready?' ✓':' 等待准备')).join(' / ');this.panel.querySelector('[data-do="ready"]').hidden=c.host;this.panel.querySelector('[data-do="start"]').hidden=!c.host;if(this.field('hero'))this.field('hero').disabled=!!r.players.find(p=>p.slot===c.slot)?.ready;this.panel.querySelector('[data-do="ready"]').textContent=r.players.find(p=>p.slot===c.slot)?.ready?'取消准备':'准备';}
+    if(r){roster.textContent='房间 '+r.code+' · '+r.name+' · '+r.players.map(p=>(p.slot===0?'房主 ':'')+p.name+(p.ready?' ✓':' 等待准备')).join(' / ');this.panel.querySelector('[data-do="ready"]').hidden=c.host||r.started;this.panel.querySelector('[data-do="start"]').hidden=!c.host||r.started;if(this.field('hero'))this.field('hero').disabled=!!r.players.find(p=>p.slot===c.slot)?.ready;this.panel.querySelector('[data-do="ready"]').textContent=r.players.find(p=>p.slot===c.slot)?.ready?'取消准备':'准备';}
+    if(r&&c.host)for(const p of r.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.type='button';b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=e=>{e.stopPropagation();c.send({type:'kick',slot:p.slot});};roster.append(b);}
     for(const k of ['create','join'])this.panel.querySelector('[data-do="'+k+'"]').disabled=!!r;
   }
   message(m){
     if(m.type==='rooms'){
       const ul=this.panel.querySelector('.coop-rooms');ul.replaceChildren();this.page=m.page;this.total=m.total;
       if(!m.rooms.length){const li=document.createElement('li');li.textContent='暂无房间，可以创建一个邀请朋友';ul.append(li);}
-      for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=r.started||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
+      for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=(r.started&&!r.canJoin)||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
       const pager=this.panel.querySelector('.coop-pager');pager.hidden=m.total<=20;pager.querySelector('span').textContent=this.page+' / '+Math.max(1,Math.ceil(m.total/20));pager.querySelector('[data-do="prev"]').disabled=this.page<=1;pager.querySelector('[data-do="next"]').disabled=this.page>=Math.ceil(m.total/20);
     } else if(m.type==='joined'||m.type==='roster'){this.roster();if(m.type==='joined')this.status('已加入房间，队友准备后由房主开始');}
     else if(m.type==='start'){this.opened=false;this.setPanelVisible(false);this.onStart(m.config);}

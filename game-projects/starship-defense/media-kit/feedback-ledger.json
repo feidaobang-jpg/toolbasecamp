@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-07T14:59:04+08:00",
+  "updated_at": "2026-10-07T08:46:30+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -541,7 +541,7 @@
       "reply_verified_at": "2026-10-07T07:01:47+00:00"
     },
     {
-      "rpid": null,
+      "rpid": "316333818065",
       "comment_type": 1,
       "video": "BV1WbHq6eEBt",
       "user": "主宇宙马克主宇宙马克",
@@ -551,8 +551,60 @@
       "kind": "bug",
       "status": "fixed",
       "fixed_in": "web-lobby-scroll-v0.22.2",
-      "reply_status": "not_requested_not_posted",
-      "note": "根因：页面级*{touch-action:none}命中大厅卡片后代，触摸滚动被禁；共享coop.js恢复卡片auto并在大厅开启时放开祖先容器，四款合作游戏同修。QA见releases/web-lobby-scroll-v0.22.2。"
+      "reply_status": "posted_public_verified",
+      "note": "根因：页面级*{touch-action:none}命中大厅卡片后代，触摸滚动被禁；共享coop.js恢复卡片auto并在大厅开启时放开祖先容器，四款合作游戏同修。QA见releases/web-lobby-scroll-v0.22.2。",
+      "reply_rpid": "316350644737",
+      "reply_verified_at": "2026-10-07T08:46:30+00:00",
+      "reply_text": "修好了！之前往下翻不动…（v0.22.2 大厅滚动恢复，准备/开始/退出可滑到）"
+    },
+    {
+      "rpid": "316343482577",
+      "comment_type": 2,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": "316305468593",
+      "user": "bili_50539966983",
+      "user_mid": 479258671,
+      "date": "2026-10-07 15:31",
+      "text": "回复 @飞刀班长 : 作者作者，手机版的话，能输入了，但是进了别的房间准备按钮有的看不到,无法往下翻，或者是按钮太小了，点不到,创建房间的话，也是一样",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-lobby-scroll-v0.22.2",
+      "reply_rpid": "316350507793",
+      "reply_status": "posted_public_verified",
+      "reply_verified_at": "2026-10-07T08:46:30+00:00",
+      "note": "输入修复获玩家确认；滚动/按钮不可达为 v0.22.2 同源问题；按钮本身 min-height 44px"
+    },
+    {
+      "rpid": "316342654721",
+      "comment_type": 2,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": "316305468593",
+      "user": "主宇宙马克主宇宙马克",
+      "date": "2026-10-07 15:22",
+      "text": "回复 @飞刀班长 :手机没准备按钮",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-lobby-scroll-v0.22.2",
+      "reply_rpid": "316350645857",
+      "reply_status": "posted_public_verified",
+      "reply_verified_at": "2026-10-07T08:46:30+00:00",
+      "note": "按钮存在但滚不到；v0.22.2 修复后已解释"
+    },
+    {
+      "rpid": "316333972001",
+      "comment_type": 1,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": null,
+      "user": "不争气的空白",
+      "date": "2026-10-07 13:52",
+      "text": "游戏过了一天我的存档就没了，这么好的游戏都被你搞崩了，联机模式也搞不了，进入不了房间",
+      "kind": "bug-report",
+      "status": "investigated_not_reproduced",
+      "fixed_in": "v0.22.1/v0.22.2 覆盖进房链路；存档未发现问题",
+      "reply_rpid": "316350585777",
+      "reply_status": "posted_public_verified",
+      "reply_verified_at": "2026-10-07T08:46:30+00:00",
+      "note": "存档读写/隔天续玩/旧字段兼容 Playwright 实测通过（qa/save-persistence-results.json）；WS 端点 101 存活；疑似浏览器清数据或网站/Toy 存档隔离，待玩家回复入口与浏览器信息"
     }
   ]
 }
