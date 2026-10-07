@@ -19,7 +19,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
+    "review_status": "published",
     "verified_at": "2026-10-07T14:25:00+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
@@ -32,9 +32,9 @@
     "submitted_date": "2026-10-07",
     "release_record": "releases/web-cloudsave-v0.24.0/handoff.json",
     "submitted_version": "web-cloudsave-v0.24.0",
-    "published_version": "web-lobby-scroll-v0.22.2",
+    "published_version": "web-cloudsave-v0.24.0",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_M1MJLXv/index.html",
-    "note": "v0.24.0 云存档正式版本已于 2026-10-07 22:25 提审 auditing；现网 published 为不含云存档的上一批版本，过审后生效",
+    "note": "v0.24.0 云存档已于 2026-10-07 22:25 提审、22:27 published 生效；网站与 Toy 同版本",
     "package_sha256": "b764673c5c145706b53ab4f83a765c0562ace6631778ec37f468984085a89a78",
     "pending_updates": [
       {
@@ -77,8 +77,7 @@
     "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
     "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json",
     "version": "web-coop-v0.23.0",
-    "published_at": "2026-10-07",
-    "publish_note": "上一批 web-lobby-scroll-v0.22.2 已过审 published；本批 v0.24.0 提审期间现网仍为不含云存档的该旧版本"
+    "published_at": "2026-10-07T22:27:36+08:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-defense-v0.21.0",

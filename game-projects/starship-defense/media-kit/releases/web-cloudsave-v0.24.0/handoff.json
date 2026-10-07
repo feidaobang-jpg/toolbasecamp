@@ -22,14 +22,14 @@
     "evidence": "VPS /opt/toolbasecamp-api 与主线一致（game_saves.py/main.py 仓库md5匹配），服务重启后 health db:true、deploy_sha:ae4b1318；tests/verify_game_saves_deployed.py 通过：public login/bearer auth/empty new account/96建筑上限/MySQL并发revision保护/三份云备份/H5限定CORS/private no-store（临时QA账号已清理）"
   },
   "toy": {
-    "status": "auditing",
+    "status": "published",
     "id": 38678478981120,
     "package": "dist/toy/chongchao-qianshao/package",
     "zip_sha256": "b764673c5c145706b53ab4f83a765c0562ace6631778ec37f468984085a89a78",
     "submitted_at": "2026-10-07T22:25:00+08:00",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_M1MJLXv/index.html",
-    "preview_verified": "HTTP 200；与网站同一已实测包（同一提交 ae4b1318 重建）",
-    "note": "上一批 v0.23 已不在审核中（mylist 显示 published）；现网 published 尚不含云存档，待本批过审生效"
+    "note": "22:25 提审 auditing，22:27:36 平台转 published（审核约3分钟）；发布包即本次提交包（toy history 与 preview_M1MJLXv HTTP 200 佐证），与网站同一提交 ae4b1318 实测内容",
+    "audited_at": "2026-10-07T22:27:36+08:00"
   },
   "taptap": {
     "status": "pending_manual_upload",
@@ -37,8 +37,8 @@
     "note": "dist/taptap/chongchao-qianshao 已用含云存档与胶囊修复的最新主线重建；需按 TapTap 后台人工上传流程替换旧包（此前 all-startup 六包同样待人工上传）"
   },
   "bilibili": {
-    "status": "pending",
-    "note": "云存档属正式版本可见变化；待 Toy 过审 published 生效后，把简介的试玩说明补上云存档并核验 BV1Ujad6DEuf/BV1WbHq6eEBt"
+    "status": "in_progress",
+    "note": "Toy 已 published，简介云存档说明本次收尾同步"
   },
   "limitations": [
     "手机视口为浏览器模拟，未做真机多指触控验收",
@@ -50,5 +50,5 @@
     "production_smoke": "VPS 上 verify_game_saves_deployed.py 通过（仅临时QA账号）",
     "merge": "已整合主线联机手动建房（lobby-hint1）后重建 compat/toy/taptap 并复验"
   },
-  "updated_at": "2026-10-07T22:28:00+08:00"
+  "updated_at": "2026-10-07T22:35:00+08:00"
 }
