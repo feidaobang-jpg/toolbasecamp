@@ -1,0 +1,32 @@
+{
+  "task_id": "01a115b7-10e9-73c2-a133-6c1ce226e916-taptap-load-check-01",
+  "game_id": "cadillacs-stage1-3d",
+  "app_id": 962722,
+  "classification": "TapTap 渠道启动适配与故障提示",
+  "gameplay_version": "v0.9.2",
+  "startup_adapter": "inline-runtime-v1",
+  "reported_environment": "手机 TapTap App；机型与系统尚未提供",
+  "reported_symptom": "一直停在正在搭建海上都市和沼泽森林",
+  "confirmed_defect": "外部 game.min.js 载入失败不会触发原非捕获 error 监听，加载文字无限保留；旧 v0.7.0 包 HTTP 404 故障注入已复现",
+  "root_cause_status": "未取得手机客户端日志，尚不能认定实际故障是脚本下载、WebGL 或同步初始化阻塞",
+  "changes": [
+    "只在恐龙快打 TapTap 包把已打包普通主脚本内联到 index.html，省去单独请求及其查询参数；模型与音频仍为独立文件",
+    "启动期间捕获脚本异常和 Promise 拒绝，提供明确阶段、20 秒等待提示与重新加载按钮",
+    "保持核心玩法、TapTap 存档命名空间与作品映射"
+  ],
+  "verification": {
+    "node_tests": "4/4 passed：无外部主程序请求、成功后不误报、语法错误、初始化拒绝与超时、忽略可选图片失败、HTML script 结束标记转义",
+    "browser": "Codex 内置 Chromium 浏览器；独立主脚本路径始终返回 404，新 ZIP 仍进入菜单与关卡",
+    "viewports": ["桌面默认视口", "844x390", "390x844"],
+    "controls": "选人、开局、暂停、触屏/键鼠双向切换、动作按钮点击、重开通过；不声称实测多点触控与手机帧率",
+    "fault_pages": "语法错误与初始化未完成均显示错误阶段和重新加载按钮；浏览器超时故障注入缩短等待至 100ms",
+    "physical_taptap_app": "not_verified",
+    "archive_preflight": "passed: one game root; no violations or warnings"
+  },
+  "channels": {
+    "website": "核心运行文件未修改，沿用已部署 v0.9.2",
+    "toy": "核心运行文件未修改，不重复送包",
+    "bilibili": "手机问题尚未确认完全修复，不发布已修好声明",
+    "taptap": "待主线整合后上传同一已验证包与真机自测入口"
+  }
+}
