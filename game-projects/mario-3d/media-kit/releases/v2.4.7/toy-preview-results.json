@@ -1,0 +1,600 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_D3oHCEum/index.html?test=1&level=1-1",
+  "browser": "154.0.4258.53",
+  "methods": "Test-only teleports/manual clock for regression; final 4.7 seconds use real-time simulation; viewport emulation, no physical phone; videos have no audio.",
+  "checks": [
+    {
+      "name": "1280x720 1-1 clear reaches 1-2 surface card",
+      "ok": true,
+      "detail": {
+        "level": "1-2",
+        "area": "entry",
+        "mode": "entrance",
+        "phase": "card",
+        "paused": false,
+        "camera": "side",
+        "time": 400,
+        "player": {
+          "x": 5.5,
+          "y": 0,
+          "z": 0,
+          "vx": 0,
+          "vy": 0,
+          "vz": 0,
+          "power": "fire",
+          "grounded": true,
+          "crouch": false,
+          "star": 0,
+          "inv": 0,
+          "visible": true
+        },
+        "session": {
+          "score": 8334,
+          "coins": 23,
+          "lives": "inf",
+          "hearts": 3,
+          "power": "fire",
+          "checkpoint": null,
+          "demoUsed": false,
+          "stats": {
+            "deaths": 0,
+            "oneups": 0,
+            "hits": 0,
+            "stomps": 0,
+            "coins": 0,
+            "secrets": 0,
+            "startTime": 0.675
+          }
+        },
+        "cleared": [
+          "1-1"
+        ],
+        "keys": []
+      }
+    },
+    {
+      "name": "1280x720 score/coins/power/lives carry over",
+      "ok": true,
+      "detail": {
+        "score": 8334,
+        "coins": 23,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "fire",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 0,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 0.675
+        }
+      }
+    },
+    {
+      "name": "1280x720 pause freezes entrance",
+      "ok": true
+    },
+    {
+      "name": "1280x720 automatic horizontal pipe ignores movement/jump",
+      "ok": true,
+      "detail": {
+        "x": 12.667,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "fire",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 0,
+        "visible": true
+      }
+    },
+    {
+      "name": "1280x720 lands before input/timer resume",
+      "ok": true,
+      "detail": {
+        "level": "1-2",
+        "area": "main",
+        "mode": "play",
+        "phase": "play",
+        "paused": false,
+        "camera": "side",
+        "time": 400,
+        "player": {
+          "x": 2.6,
+          "y": 0,
+          "z": 0,
+          "vx": 0,
+          "vy": 0,
+          "vz": 0,
+          "power": "fire",
+          "grounded": true,
+          "crouch": false,
+          "star": 0,
+          "inv": 0,
+          "visible": true
+        },
+        "session": {
+          "score": 8334,
+          "coins": 23,
+          "lives": "inf",
+          "hearts": 3,
+          "power": "fire",
+          "checkpoint": null,
+          "demoUsed": false,
+          "stats": {
+            "deaths": 0,
+            "oneups": 0,
+            "hits": 0,
+            "stomps": 0,
+            "coins": 0,
+            "secrets": 0,
+            "startTime": 0.675
+          }
+        },
+        "cleared": [
+          "1-1"
+        ],
+        "keys": []
+      }
+    },
+    {
+      "name": "1280x720 entrance does not award points/secrets",
+      "ok": true
+    },
+    {
+      "name": "1280x720 first-person temporarily shows player for cinematic",
+      "ok": true
+    },
+    {
+      "name": "1280x720 first-person restored after landing",
+      "ok": true
+    },
+    {
+      "name": "1280x720 checkpoint respawn skips opening",
+      "ok": true,
+      "detail": {
+        "x": 91.5,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": false,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.5,
+        "visible": true
+      }
+    },
+    {
+      "name": "1280x720 bonus pipe stays playable",
+      "ok": true
+    },
+    {
+      "name": "1280x720 bonus return still rises to correct pipe",
+      "ok": true
+    },
+    {
+      "name": "1280x720 exit pipe still rises to overworld",
+      "ok": true
+    },
+    {
+      "name": "1280x720 1-2 final clear still settles",
+      "ok": true
+    },
+    {
+      "name": "1280x720 menu directly selecting 1-2 includes opening",
+      "ok": true
+    },
+    {
+      "name": "1280x720 real-time opening reaches playable floor",
+      "ok": true
+    },
+    {
+      "name": "844x390 1-1 clear reaches 1-2 surface card",
+      "ok": true,
+      "detail": {
+        "level": "1-2",
+        "area": "entry",
+        "mode": "entrance",
+        "phase": "card",
+        "paused": false,
+        "camera": "side",
+        "time": 400,
+        "player": {
+          "x": 5.5,
+          "y": 0,
+          "z": 0,
+          "vx": 0,
+          "vy": 0,
+          "vz": 0,
+          "power": "fire",
+          "grounded": true,
+          "crouch": false,
+          "star": 0,
+          "inv": 0,
+          "visible": true
+        },
+        "session": {
+          "score": 8334,
+          "coins": 23,
+          "lives": "inf",
+          "hearts": 3,
+          "power": "fire",
+          "checkpoint": null,
+          "demoUsed": false,
+          "stats": {
+            "deaths": 0,
+            "oneups": 0,
+            "hits": 0,
+            "stomps": 0,
+            "coins": 0,
+            "secrets": 0,
+            "startTime": 0.49166666666666736
+          }
+        },
+        "cleared": [
+          "1-1"
+        ],
+        "keys": []
+      }
+    },
+    {
+      "name": "844x390 score/coins/power/lives carry over",
+      "ok": true,
+      "detail": {
+        "score": 8334,
+        "coins": 23,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "fire",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 0,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 0.49166666666666736
+        }
+      }
+    },
+    {
+      "name": "844x390 pause freezes entrance",
+      "ok": true
+    },
+    {
+      "name": "844x390 automatic horizontal pipe ignores movement/jump",
+      "ok": true,
+      "detail": {
+        "x": 12.667,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "fire",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 0,
+        "visible": true
+      }
+    },
+    {
+      "name": "844x390 lands before input/timer resume",
+      "ok": true,
+      "detail": {
+        "level": "1-2",
+        "area": "main",
+        "mode": "play",
+        "phase": "play",
+        "paused": false,
+        "camera": "side",
+        "time": 400,
+        "player": {
+          "x": 2.6,
+          "y": 0,
+          "z": 0,
+          "vx": 0,
+          "vy": 0,
+          "vz": 0,
+          "power": "fire",
+          "grounded": true,
+          "crouch": false,
+          "star": 0,
+          "inv": 0,
+          "visible": true
+        },
+        "session": {
+          "score": 8334,
+          "coins": 23,
+          "lives": "inf",
+          "hearts": 3,
+          "power": "fire",
+          "checkpoint": null,
+          "demoUsed": false,
+          "stats": {
+            "deaths": 0,
+            "oneups": 0,
+            "hits": 0,
+            "stomps": 0,
+            "coins": 0,
+            "secrets": 0,
+            "startTime": 0.49166666666666736
+          }
+        },
+        "cleared": [
+          "1-1"
+        ],
+        "keys": []
+      }
+    },
+    {
+      "name": "844x390 entrance does not award points/secrets",
+      "ok": true
+    },
+    {
+      "name": "844x390 first-person temporarily shows player for cinematic",
+      "ok": true
+    },
+    {
+      "name": "844x390 first-person restored after landing",
+      "ok": true
+    },
+    {
+      "name": "844x390 checkpoint respawn skips opening",
+      "ok": true,
+      "detail": {
+        "x": 91.5,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": false,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.5,
+        "visible": true
+      }
+    },
+    {
+      "name": "844x390 bonus pipe stays playable",
+      "ok": true
+    },
+    {
+      "name": "844x390 bonus return still rises to correct pipe",
+      "ok": true
+    },
+    {
+      "name": "844x390 exit pipe still rises to overworld",
+      "ok": true
+    },
+    {
+      "name": "844x390 1-2 final clear still settles",
+      "ok": true
+    },
+    {
+      "name": "844x390 menu directly selecting 1-2 includes opening",
+      "ok": true
+    },
+    {
+      "name": "844x390 real-time opening reaches playable floor",
+      "ok": true
+    },
+    {
+      "name": "390x844 1-1 clear reaches 1-2 surface card",
+      "ok": true,
+      "detail": {
+        "level": "1-2",
+        "area": "entry",
+        "mode": "entrance",
+        "phase": "card",
+        "paused": false,
+        "camera": "side",
+        "time": 400,
+        "player": {
+          "x": 5.5,
+          "y": 0,
+          "z": 0,
+          "vx": 0,
+          "vy": 0,
+          "vz": 0,
+          "power": "fire",
+          "grounded": true,
+          "crouch": false,
+          "star": 0,
+          "inv": 0,
+          "visible": true
+        },
+        "session": {
+          "score": 8334,
+          "coins": 23,
+          "lives": "inf",
+          "hearts": 3,
+          "power": "fire",
+          "checkpoint": null,
+          "demoUsed": false,
+          "stats": {
+            "deaths": 0,
+            "oneups": 0,
+            "hits": 0,
+            "stomps": 0,
+            "coins": 0,
+            "secrets": 0,
+            "startTime": 0.7166666666666666
+          }
+        },
+        "cleared": [
+          "1-1"
+        ],
+        "keys": []
+      }
+    },
+    {
+      "name": "390x844 score/coins/power/lives carry over",
+      "ok": true,
+      "detail": {
+        "score": 8334,
+        "coins": 23,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "fire",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 0,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 0.7166666666666666
+        }
+      }
+    },
+    {
+      "name": "390x844 pause freezes entrance",
+      "ok": true
+    },
+    {
+      "name": "390x844 automatic horizontal pipe ignores movement/jump",
+      "ok": true,
+      "detail": {
+        "x": 12.667,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "fire",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 0,
+        "visible": true
+      }
+    },
+    {
+      "name": "390x844 lands before input/timer resume",
+      "ok": true,
+      "detail": {
+        "level": "1-2",
+        "area": "main",
+        "mode": "play",
+        "phase": "play",
+        "paused": false,
+        "camera": "side",
+        "time": 400,
+        "player": {
+          "x": 2.6,
+          "y": 0,
+          "z": 0,
+          "vx": 0,
+          "vy": 0,
+          "vz": 0,
+          "power": "fire",
+          "grounded": true,
+          "crouch": false,
+          "star": 0,
+          "inv": 0,
+          "visible": true
+        },
+        "session": {
+          "score": 8334,
+          "coins": 23,
+          "lives": "inf",
+          "hearts": 3,
+          "power": "fire",
+          "checkpoint": null,
+          "demoUsed": false,
+          "stats": {
+            "deaths": 0,
+            "oneups": 0,
+            "hits": 0,
+            "stomps": 0,
+            "coins": 0,
+            "secrets": 0,
+            "startTime": 0.7166666666666666
+          }
+        },
+        "cleared": [
+          "1-1"
+        ],
+        "keys": []
+      }
+    },
+    {
+      "name": "390x844 entrance does not award points/secrets",
+      "ok": true
+    },
+    {
+      "name": "390x844 first-person temporarily shows player for cinematic",
+      "ok": true
+    },
+    {
+      "name": "390x844 first-person restored after landing",
+      "ok": true
+    },
+    {
+      "name": "390x844 checkpoint respawn skips opening",
+      "ok": true,
+      "detail": {
+        "x": 91.5,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": false,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.5,
+        "visible": true
+      }
+    },
+    {
+      "name": "390x844 bonus pipe stays playable",
+      "ok": true
+    },
+    {
+      "name": "390x844 bonus return still rises to correct pipe",
+      "ok": true
+    },
+    {
+      "name": "390x844 exit pipe still rises to overworld",
+      "ok": true
+    },
+    {
+      "name": "390x844 1-2 final clear still settles",
+      "ok": true
+    },
+    {
+      "name": "390x844 menu directly selecting 1-2 includes opening",
+      "ok": true
+    },
+    {
+      "name": "390x844 real-time opening reaches playable floor",
+      "ok": true
+    },
+    {
+      "name": "no browser runtime errors",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}

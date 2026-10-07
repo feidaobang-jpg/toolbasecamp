@@ -56,5 +56,6 @@
     "world.js": "bca3a402f8c96a90dc149f503f67a1240e5816ef74f71c4198ac49de3dbe6fa6"
   },
   "package_sha256": "eaf711b274ae3dfd464c4a7b3a65d06a411392d3f6cc66c1e47745341b3d24f3",
-  "status": "built_not_submitted"
+  "status": "submitted_auditing",
+  "toy_id": 39043286960128
 }

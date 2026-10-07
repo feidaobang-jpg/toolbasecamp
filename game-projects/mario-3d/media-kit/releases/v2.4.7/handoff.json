@@ -323,13 +323,48 @@
   },
   "release_channels": {
     "website": {
+      "commit": "48c4384ee0913827b82fc1a03e6c5d18024b80ec",
       "version": "v2.4.7",
-      "status": "pending_deploy"
+      "verified_at": "2026-10-07T08:48:28.210570+08:00",
+      "status": "public_verified",
+      "files": [
+        {
+          "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js?verify=2.4.7",
+          "sha256": "063eee05b77b91c5f19c0fcea0785d26a04a3a5218f486e4cc0938cef887f6d8",
+          "matches": true
+        },
+        {
+          "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/levels.js?verify=2.4.7",
+          "sha256": "0cdd6f4fbc22fddeddba6e6619cec99580de2c464299d59bbd828b683b21b888",
+          "matches": true
+        },
+        {
+          "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/world.js?verify=2.4.7",
+          "sha256": "bca3a402f8c96a90dc149f503f67a1240e5816ef74f71c4198ac49de3dbe6fa6",
+          "matches": true
+        },
+        {
+          "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/scene.js?verify=2.4.7",
+          "sha256": "1ae40976ffaeb10dc358be3385d065bd7cf79c36b2f3e28009b2d88f7bede2da",
+          "matches": true
+        }
+      ],
+      "actions_run_id": 37553761701,
+      "actions_conclusion": "success",
+      "record": "website.json",
+      "qa_record": "website-results.json"
     },
     "toy": {
       "id": 39043286960128,
       "version": "v2.4.7",
-      "status": "pending_website_verification"
+      "status": "auditing",
+      "submitted_at": "2026-10-07T08:49:59.626904+08:00",
+      "package_sha256": "eaf711b274ae3dfd464c4a7b3a65d06a411392d3f6cc66c1e47745341b3d24f3",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_xPjCFTlG/index.html",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_D3oHCEum/index.html",
+      "checks_passed": 46,
+      "record": "toy-submit.json",
+      "qa_record": "toy-preview-results.json"
     },
     "bilibili": {
       "status": "pending_merge",
