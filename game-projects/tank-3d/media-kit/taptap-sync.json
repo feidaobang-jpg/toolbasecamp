@@ -5,30 +5,23 @@
   "app_id": 962376,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing",
-  "submitted_version": "coop-hub1",
+  "status": "reviewing_update_coop-live2",
+  "submitted_version": "coop-live2",
   "submitted_package_sha256": "e846ccf62df9d37ff143e0b333291a2b723448193a8ebc8c820804f59baedbb2",
   "submitted_h5_version_id": 271019,
   "draft_version_id": "1041268",
-  "submitted_at": "2026-10-07T02:43:57.353796+00:00",
+  "submitted_at": "2026-10-07T18:40:00+08:00",
   "last_published_version": "landscape-menu1",
   "last_published_h5_version_id": 270784,
   "last_public_runtime_verified_version": null,
   "release_record": "releases/coop-hub1/handoff.json",
-  "pending": [
-    {
-      "version": "coop-live2",
-      "status": "built_waiting_current_review",
-      "package": "dist/taptap/tank-3d/tank-3d.zip",
-      "package_sha256": null,
-      "reason": "上一包仍在平台审核，按查重规则积累联机2-4人包，不撤审不重复送；审核结束后优先同步",
-      "record": "releases/coop-live2/handoff.json",
-      "updated_at": "2026-10-07T17:10:00+08:00"
-    }
-  ],
+  "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "TapTap version log review_submitted.updated_time",
-  "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
+  "last_status_checked_at": "2026-10-07T18:40:00+08:00",
   "submitted_source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
-  "platform_version": "V-20261007-1"
+  "platform_version": "V-20261007-1",
+  "staged_version": "coop-live2",
+  "staged_h5_version_id": "272259",
+  "pending_note": "联机2-4人包 H5 272259 已绑定main并提审（审核单1042736），应用户指示不等旧包审核直接提审"
 }
