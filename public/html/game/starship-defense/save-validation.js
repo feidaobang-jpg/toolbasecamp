@@ -9,6 +9,7 @@ export function validateNormalSave(d,{weapons,buildings,vehicles}){
   const list=(v,max,test)=>v===undefined||Array.isArray(v)&&v.length<=max&&v.every(test);
   const plain=v=>v&&typeof v==='object'&&!Array.isArray(v);
   return !!(d&&typeof d==='object'&&!d.testMode&&['gunner','rifle','medic'].includes(d.cls)&&
+    (d.campaignId===undefined||typeof d.campaignId==='string'&&d.campaignId.length>0&&d.campaignId.length<=80)&&
     (d.difficulty===undefined||typeof d.difficulty==='string'&&Object.hasOwn(CAMPAIGN_DIFFICULTIES,d.difficulty))&&
     int(d.loop,1,100000)&&int(d.chapter,1,10)&&int(d.level,1,10)&&num(d.gold,0,1e12)&&num(d.score,0,1e12)&&
     Array.isArray(d.weapons)&&d.weapons.length>0&&d.weapons.length<=30&&d.weapons.every(k=>Object.hasOwn(weapons,k))&&Object.hasOwn(weapons,d.curWeapon)&&

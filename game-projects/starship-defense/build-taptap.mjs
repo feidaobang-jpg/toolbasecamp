@@ -34,8 +34,7 @@ html = html.replaceAll('../../../css/base.css', './base.css');
 html = html.replace(/<script src="\.\.\/\.\.\/\.\.\/js\/game\/thumb-preview\.js"><\/script>/g, '');
 html = html.replace(/<script type="module">[\s\S]*?landscape-typing\.js[\s\S]*?<\/script>/g, '');
 html = html.replace(/<a class="gameBack"[^>]*>[\s\S]*?<\/a>/g, '');
-html = html.replace(/<button[^>]*id="(?:platformBtn|btnPlatformMenu|platformBtnMenu)"[^>]*>[\s\S]*?<\/button>/g, '');
-html = html.replace(/<section id="platformPanel"[\s\S]*?<\/section>/, '<section id="platformPanel" class="panel hidden"></section>');
+html = html.replace(/<div id="toyExtras">[\s\S]*?<\/section>/, '</section>');
 if (/\.\.\/\.\.\/|B站 Toy|bilibili\.com/.test(html)) {
   throw new Error('TapTap HTML still contains a site-relative or Toy-only dependency');
 }
@@ -49,8 +48,8 @@ await build({
   plugins: [{name: 'taptap-channel', setup(b) {
     b.onResolve({filter: /\?v=/}, args => ({path: path.resolve(args.resolveDir, args.path.split('?')[0])}));
     // Toy account, rankings and external video navigation are unavailable on TapTap.
-    // Keep the game-side DOM panel identifier used by closePanels(), without promising cloud saves.
-    b.onLoad({filter: /[\\/]toy-platform\.js$/}, () => ({contents: 'export function setupToyPlatform() {}', loader: 'js'}));
+    // Site-account cloud saves and local file backups remain available on TapTap.
+    b.onLoad({filter: /[\\/]toy-platform\.js$/}, () => ({contents: "import {mountSavePanel} from './save-panel.js'; export function setupToyPlatform(game){return mountSavePanel(game,{storage:game.store.storage});}", loader: 'js', resolveDir: source}));
     b.onLoad({filter: /[\\/]live-controller\.js$/}, () => ({contents: 'export function createLiveController() { throw new Error("Live mode is unavailable in the TapTap trial"); }', loader: 'js'}));
     b.onLoad({filter: /[\\/]starship-defense[\\/]game\.js$/}, args => {
       const original = fs.readFileSync(args.path, 'utf8');
@@ -78,7 +77,7 @@ const manifest = {
   archive: path.relative(root, zipPath).replaceAll('\\', '/'),
   archive_root: 'chongchao-qianshao/', zip_bytes: fs.statSync(zipPath).size,
   zip_sha256: hash(fs.readFileSync(zipPath)), files,
-  changes: ['Self-contained H5 package with one top-level directory', 'Local save namespace isolated from website and Toy', 'Toy-only cloud/ranking/author navigation omitted'],
+  changes: ['Self-contained H5 package with one top-level directory', 'Local save namespace isolated from website and Toy', 'Website-account cloud backups and local import/export enabled; Toy rankings and video navigation omitted'],
   monetization: 'none', status: 'built_not_uploaded',
 };
 fs.writeFileSync(path.join(output, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
