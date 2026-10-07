@@ -47,13 +47,19 @@
         "BV1EyHz6wE5u"
       ],
       "summary": "联机统一2–4人合作：建房可选2/3/4人、中途加入/退出保留战场、闲置30秒电脑接管、房主踢人。",
-      "prepared_update_line": "更新（2026-10-07·v0.10.0）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。v0.10.2 联机修复：真人队友车头按自己的视角转向，加入者画面按帧插值不再一顿一顿。",
-      "reason": "浏览器自动化在当前子代理环境不可用（agent.browsers 报 Browser is not available in subagent），未能读取/编辑B站简介；未向平台提交，保留原公开核验基线，待浏览器可用后按本行文案先读平台全文再合并提交。；v0.10.2 联机严重修复并入本条（见 releases/v0.10.2/notes.md）。",
-      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)",
-      "accumulated_versions": [
-        "v0.10.0",
-        "v0.10.2"
-      ]
+      "prepared_update_line": "更新（2026-10-07·v0.10.0）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "reason": "浏览器自动化在当前子代理环境不可用（agent.browsers 报 Browser is not available in subagent），未能读取/编辑B站简介；未向平台提交，保留原公开核验基线，待浏览器可用后按本行文案先读平台全文再合并提交。",
+      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)"
+    },
+    {
+      "version": "v0.10.2",
+      "classification": "严重修复",
+      "status": "pending_merge",
+      "summary": "联机真人队友车头不随视角转向、加入者画面逐快照跳格；地物增量同步与数值量化使联机包体从 68.6KB 降到 26.3KB。",
+      "prepared_update_line": "更新（2026-10-07·v0.10.2）：联机修复——真人队友的车头会跟着你自己的视角转，加入者画面按帧插值不再一顿一顿。网站已可玩，Toy 包审核中。",
+      "reason": "本会话浏览器未登录 B站创作中心（member.bilibili.com 返回出错页），未能读取并编辑简介；不盲目提交。网站与 Toy 已按节奏同步，本条累计到下一次有意义的简介更新（现有公开说明 v0.10.0 仍准确，未写车头细节）。",
+      "record": "releases/v0.10.2/notes.md",
+      "recorded_at": "2026-10-07"
     }
   ],
   "resolved_updates": [

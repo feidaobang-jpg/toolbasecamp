@@ -13,5 +13,5 @@
 - 渠道：
   - 网站：已提交并推送主线（`f8e47dc3`），公网核验 `https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js` 哈希与本地构建一致（`84922aae…`），页面引用为 `?v=f8e47dc3`（部署流水线按提交号刷新，手工 bump 已被覆盖）。
   - Toy `39863936092160`（feidao-jackal-3d）：以本包 v0.10.2 提交审核，2026-10-07，状态 `auditing`，预览 `https://www.bilibili.com/toy/preview/preview_DyEKsYfW/index.html` 已在 1280×720 与 390×844 两个视口实测（菜单可开、开始进局、画布在跑、联机大厅入口存在、无页面错误）；包内 `js/game.min.js` 与线上部署文件逐字节同哈希。保留原 slug、可见性与视频绑定。
-  - TapTap：本任务未打包同步；联机 2–4 人包已在上一任务提交，下次相关任务按渠道状态处理。
-  - B站简介（BV1EyHz6wE5u）：v0.10.0「联机 2–4 人」那条待合并说明仍未公开核验（上一任务因浏览器不可用留下准备文案）。本次修复并入该条一起更新，不单独立新行，见 `media-kit/bilibili-sync.json` 的 `pending_updates`。
+  - TapTap：本任务未重新打包同步；上一任务已提交联机 2–4 人包，按渠道状态由后续相关任务处理。
+  - B站简介（BV1EyHz6wE5u）：未提交。本会话浏览器未登录 B站创作中心（member.bilibili.com 返回出错页），按技能要求不盲目重试、不假装已同步；已把一句话文案留在 `media-kit/bilibili-sync.json` 的 `pending_updates`（v0.10.2，status pending_merge）。现有公开说明停留在 v0.10.0「联机 2–4 人」，仍然准确，故本条累计到下一次有意义的简介更新。

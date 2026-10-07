@@ -402,7 +402,7 @@
         "taptap": "not_synced_this_task",
         "bilibili": "pending_merge"
       },
-      "bilibili_note": "并入 v0.10.0「联机 2–4 人」那条待合并说明一起更新，不单独立行。"
+      "bilibili_note": "本会话浏览器未登录 B站创作中心，简介未提交；已在 bilibili-sync.json 留下准备文案，累计到下一次有意义的说明更新。"
     }
   ],
   "taptap": {
