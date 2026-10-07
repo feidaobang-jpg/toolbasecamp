@@ -22,6 +22,7 @@ import {tacticalWavePlan,openingSupply} from './tactical-waves.js';
 import {mountTacticalPanel} from './tactical-panel.js';
 import {createCombatControls,mountCombatSettings} from './combat-controls.js';
 import {mountTouchLayout} from './touch-layout.js';
+import {MAX_BUILDINGS,buildingLimit,turretDamageMul} from './defense-progression.js';
 import {CAMPAIGN_DIFFICULTIES,campaignDifficultyId,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval} from './campaign-difficulty.js';
 let selectedDifficulty='normal';
 try{selectedDifficulty=campaignDifficultyId(localStorage.getItem('chongchao-campaign-difficulty'));}catch(_e){}
@@ -29,7 +30,7 @@ let combatStorage;try{combatStorage=localStorage;}catch(_e){}
 const CombatControls=createCombatControls(combatStorage);
 const keyBindings=createKeyBindings();
 let bindingAction=null;
-const MAX_BUILDINGS=64;
+const currentBuildingLimit=()=>buildingLimit(Game,operations.active);
 const THEME='dark',PAL=BATTLEFIELD_PALETTE;
 let visualAssets=false;
 const frameTimes=[];let previousFrame=0,measuring=false;
@@ -511,6 +512,8 @@ const BUILDINGS={
   teslaTurret:{name:'特斯拉塔',hp:300,price:1100,dmg:30,rate:.7,range:20,desc:'电弧连锁，最多跳3个目标'},
   sniperTurret:{name:'狙击炮台',hp:280,price:1000,dmg:160,rate:1.9,range:55,desc:'超远程精确狙杀'},
   bunker:{name:'重型堡垒',hp:1200,price:1200,dmg:12,rate:.12,range:30,desc:'超高血量+双联机枪'},
+  cryoTurret:{name:'寒霜脉冲塔',hp:380,price:900,dmg:18,rate:.8,range:30,desc:'冰霜脉冲波及5米内最多6只虫，减速2秒；首领减速较弱'},
+  mortarTurret:{name:'重型迫击炮',hp:450,price:1600,dmg:140,rate:2.4,range:48,explode:6,desc:'远程抛射，爆炸覆盖6米，专打地面虫群'},
 };
 const ITEMS={
   medkit:{name:'医疗包',price:120,desc:'按H回复60生命(按最大生命比例增强)',heal:60},
@@ -815,6 +818,31 @@ function makeBuildingMesh(kind){
     gun.rotation.x=Math.PI/2;gun.position.set(0,1.6,.9);grp.add(gun);
     const scope=new THREE.Mesh(new THREE.BoxGeometry(.16,.16,.5),new THREE.MeshBasicMaterial({color:0x66ffff}));scope.position.set(0,1.85,.6);grp.add(scope);
     grp.userData.head=head;grp.userData.gun=gun;
+  }else if(kind==='cryoTurret'||kind==='mortarTurret'){
+    const frost=kind==='cryoTurret';
+    const steel=new THREE.MeshLambertMaterial({color:0x465568});
+    const dark=new THREE.MeshLambertMaterial({color:0x222b36});
+    const light=new THREE.MeshBasicMaterial({color:frost?0x72dfff:0xffb85a});
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(1.05,1.45,.85,8),steel);
+    base.position.y=.43;base.castShadow=true;grp.add(base);
+    const head=new THREE.Group();head.position.y=1.55;grp.add(head);grp.userData.head=head;
+    const housing=new THREE.Mesh(new THREE.BoxGeometry(1.45,.75,1.2),steel);
+    housing.castShadow=true;head.add(housing);
+    if(frost){
+      for(const x of[-.42,.42]){
+        const coil=new THREE.Mesh(new THREE.CylinderGeometry(.2,.25,1.5,8),dark);
+        coil.rotation.x=Math.PI/2;coil.position.set(x,.1,.75);head.add(coil);
+        const ring=new THREE.Mesh(new THREE.TorusGeometry(.25,.06,5,10),light);
+        ring.position.set(x,.1,1.45);head.add(ring);
+      }
+      const tank=new THREE.Mesh(new THREE.CylinderGeometry(.32,.32,1.2,8),steel);
+      tank.position.set(0,.1,-.7);head.add(tank);
+    }else{
+      const tube=new THREE.Mesh(new THREE.CylinderGeometry(.3,.4,2.5,8),dark);
+      tube.rotation.x=Math.PI/3;tube.position.set(0,.65,.65);tube.castShadow=true;head.add(tube);
+      const band=new THREE.Mesh(new THREE.TorusGeometry(.34,.07,5,10),light);
+      band.rotation.x=-Math.PI/6;band.position.set(0,1.28,1.72);head.add(band);
+    }
   }else if(kind==='bunker'){
     const m=new THREE.Mesh(new THREE.BoxGeometry(4,2.6,4),new THREE.MeshLambertMaterial({color:0x777f66}));m.position.y=1.3;m.castShadow=true;grp.add(m);
     const top=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.6,1,8),new THREE.MeshLambertMaterial({color:0x99a077}));top.position.y=3.1;grp.add(top);
@@ -1397,6 +1425,7 @@ function updMonsters(dt){
   for(let i=monsters.length-1;i>=0;i--){
     const mo=monsters[i];
     if(mo.dead){if(!mo.mesh.userData.corpse)visuals.release(mo.mesh);monsters.splice(i,1);continue;}
+    mo.slowT=Math.max(0,(mo.slowT||0)-dt);
     if(mo.burnT>0){ // 火焰灼烧：每 0.25 秒结算一次
       mo.burnT-=dt;mo.burnTick=(mo.burnTick||0)-dt;
       if(mo.burnTick<=0){mo.burnTick=.25;if(Math.random()<.5)spawnParticles(mo.mesh.position.clone().add(new THREE.Vector3(0,mo.hitH*1.4,0)),0xff7a2a,1,2,.35);damageMonster(mo,mo.burnDps*.25*weaponMul('flamer'));}
@@ -1535,7 +1564,7 @@ function burrowToward(mo,to){
   mo.stuckT=0;return false;
 }
 function moveMonster(mo,dir,dt,mul,goal=null){
-  const sp=mo.speed*mul;
+  const sp=mo.speed*mul*(mo.slowT>0?mo.slowFactor:1);
   const margin=mo.radius+.2;
   const canMove=(x,z)=>x>WORLD.minX+margin&&x<WORLD.maxX-margin&&z>WORLD.minZ+margin&&z<WORLD.maxZ-margin&&!collideWalls(x,z,mo.radius,mo.fly?flyHeight(x,z):groundY(x,z))&&(mo.fly||!tooSteep(x,z));
   const step=monsterStep(mo,dir,dt,sp,goal,canMove);
@@ -1573,18 +1602,27 @@ function navDir(mo,tgtPos){
   return wp.sub(p).setY(0).normalize();
 }
 /* ---------- 建筑 ---------- */
-function placeBuilding(kind,x,z,rotY,hp){
+function placeBuilding(kind,x,z,rotY,hp,savedMaxHp){
   const cfg=BUILDINGS[kind];
   const mesh=makeBuildingMesh(kind);
   mesh.position.set(x,groundY(x,z),z);mesh.rotation.y=rotY||0;
   scene.add(mesh);
   const maxHp=Math.round(cfg.hp*(1+(Game.loop-1)*.4));
-  const bd={mesh,kind,hp:hp!=null?hp:maxHp,maxHp,radius:kind==='wall'?3:(kind==='bunker'?2.6:1.4),
+  const restored=hp!=null&&savedMaxHp>0?maxHp*clamp(hp/savedMaxHp,0,1):hp;
+  const bd={mesh,kind,hp:restored!=null?clamp(restored,0,maxHp):maxHp,maxHp,radius:kind==='wall'?3:(kind==='bunker'?2.6:1.4),
     dmg:cfg.dmg,rate:cfg.rate,range:cfg.range,explode:cfg.explode,fireCd:0,dead:false,
     isWall:kind==='wall',rotY:rotY||0};
   bd.bar=makeHPBar(kind==='wall'?4:2.6,'#6cf');bd.bar.position.y=kind==='wall'?COVER_HEIGHT+.35:3.6;mesh.add(bd.bar);updHPBar(bd.bar,bd.hp/maxHp);
   buildings.push(bd);
   return bd;
+}
+function syncBuildingDurability(){
+  for(const bd of buildings){
+    const maxHp=Math.round(BUILDINGS[bd.kind].hp*(1+(Game.loop-1)*.4));
+    if(maxHp===bd.maxHp)continue;
+    bd.hp=maxHp*clamp(bd.hp/bd.maxHp,0,1);bd.maxHp=maxHp;
+    updHPBar(bd.bar,bd.hp/maxHp);
+  }
 }
 function damageBuilding(bd,d){
   if(Game.testMode)return;
@@ -1644,18 +1682,32 @@ function zapLine(a,b,color){
 }
 /* 炮塔自动索敌 */
 function updBuildings(dt){
+  const mul=turretDamageMul(Game,operations.active);
   for(const bd of buildings){
     if(bd.dead||!bd.dmg)continue;
     bd.fireCd-=dt;
     if(bd.fireCd>0)continue;
     let best=null,bd2=bd.range*bd.range;
     for(const mo of monsters){
-      if(mo.dead||mo.home||mo.emerge>0||(bd.kind==='antiAir'&&!mo.fly))continue;
+      if(mo.dead||mo.home||mo.emerge>0||(bd.kind==='antiAir'&&!mo.fly)||(bd.kind==='mortarTurret'&&mo.fly))continue;
       const d2=dist2(bd.mesh.position,mo.mesh.position);
       if(d2<bd2){bd2=d2;best=mo;}
     }
     if(!best)continue;
-    const mul=1;
+    if(bd.kind==='cryoTurret'){
+      bd.fireCd=bd.rate;
+      const from=bd.mesh.position.clone().add(new THREE.Vector3(0,1.65,0));
+      bd.mesh.userData.head.rotation.y=Math.atan2(best.mesh.position.x-from.x,best.mesh.position.z-from.z);
+      const targets=monsters.filter(m=>!m.dead&&!m.home&&!(m.emerge>0)&&m.mesh.position.distanceToSquared(best.mesh.position)<=25)
+        .sort((a,b)=>a.mesh.position.distanceToSquared(best.mesh.position)-b.mesh.position.distanceToSquared(best.mesh.position)).slice(0,6);
+      for(const mo of targets){
+        const to=mo.mesh.position.clone().add(new THREE.Vector3(0,mo.hitH,0));
+        if(shotCover(from,to,true,from)<1||firstWallHit(from,to,true,from))continue;
+        zapLine(from,to,0x72dfff);damageMonster(mo,bd.dmg*mul);
+        mo.slowT=2;mo.slowFactor=mo.kind==='mob'?.45:.7;
+      }
+      AudioSys.sfx('laser');continue;
+    }
     if(bd.kind==='teslaTurret'){
       // 电弧连锁：主目标+附近最多2只，伤害递减
       bd.fireCd=bd.rate;
@@ -1682,13 +1734,17 @@ function updBuildings(dt){
       continue;
     }
     bd.fireCd=bd.rate;
-    const from=bd.mesh.position.clone();from.y+=bd.kind==='bunker'?3.2:(bd.kind==='cannonTurret'?2:1.5);
+    const from=bd.mesh.position.clone();from.y+=bd.kind==='bunker'?3.2:bd.kind==='mortarTurret'?2.8:(bd.kind==='cannonTurret'?2:1.5);
     const to=best.mesh.position.clone();to.y+=best.hitH;
     const dir=new THREE.Vector3().subVectors(to,from);
     if(bd.mesh.userData.head)bd.mesh.userData.head.rotation.y=Math.atan2(dir.x,dir.z);
     if(bd.mesh.userData.gun)bd.mesh.userData.gun.rotation.y=Math.atan2(dir.x,dir.z);
     if(bd.kind==='antiAir'){
-      fireBullet(from,dir,{beam:true,dmg:bd.dmg,range:bd.range,color:0x8bffda},true);AudioSys.sfx('shoot');
+      fireBullet(from,dir,{beam:true,dmg:bd.dmg*mul,range:bd.range,color:0x8bffda},true);AudioSys.sfx('shoot');
+    }else if(bd.kind==='mortarTurret'){
+      const impact=best.mesh.position.clone();impact.y=groundY(impact.x,impact.z)+.2;
+      fireBullet(from,dir,{dmg:bd.dmg*mul,speed:32,range:bd.range,spread:0,arc:true,explode:bd.explode,color:0xffb85a},true,impact);
+      AudioSys.sfx('cannon');
     }else if(bd.kind==='sniperTurret'){
       fireBullet(from,dir,{dmg:bd.dmg*mul,speed:140,range:bd.range+8,spread:0,color:0xaaffff},true);
       AudioSys.sfx('sniper');
@@ -2602,7 +2658,7 @@ function claimSandbox(type,id){
     while(squad.length<4)spawnSquad();Game.squadCount=squad.length;showMsg('四人小队已就位');
   }else if(type==='item')grantSupply({type,id});
   else if(type==='building'){
-    if(buildings.length>=MAX_BUILDINGS){showMsg('防御设施已达 64 座，重置场景可重新布置');return;}
+    if(buildings.length>=currentBuildingLimit()){showMsg('防御设施已达 '+currentBuildingLimit()+' 座，重置场景可重新布置');return;}
     startPlacement(id,true);return;
   }
   closePanels();
@@ -2811,11 +2867,12 @@ function levelWin(){
     Game.level=1;Game.chapter++;
     if(Game.chapter>10){
       Game.chapter=1;Game.loop++;
-      showMsg(`🌟 全章通关！进入周目${Game.loop}，敌人更强了！`,4);
+      showMsg(`🌟 进入周目${Game.loop}！设施上限 ${currentBuildingLimit()} 座，炮塔火力 ×${turretDamageMul(Game).toFixed(1)}`,4);
     }else{
       showMsg(`📖 进入第${Game.chapter}章「${chapterCfg().name}」`,3.5);
     }
   }
+  syncBuildingDurability();
   base.maxHp=baseMaxHp();
   base.hp=Math.min(base.maxHp,base.hp+base.maxHp*.15); // 关间维修
   updHPBar(base.bar,base.hp/base.maxHp);
@@ -2980,14 +3037,16 @@ function updAirdrops(dt){
 
 /* ================= 建造 ================= */
 function renderBuild(){
-  $('buildGold').textContent=(Game.testMode?'∞':Math.floor(Game.gold))+' · 设施 '+buildings.length+'/'+MAX_BUILDINGS;
+  const mul=turretDamageMul(Game,operations.active),hpMul=1+(Game.loop-1)*.4;
+  const budgetHint=Game.testMode?'自由测试':operations.active?'副本布防':'二周目80座，三周目起96座';
+  $('buildGold').textContent=(Game.testMode?'∞':Math.floor(Game.gold))+' · 设施 '+buildings.length+'/'+currentBuildingLimit()+' · 炮塔火力 ×'+mul.toFixed(1)+'（'+budgetHint+'）';
   const grid=$('buildGrid');grid.innerHTML='';
   for(const k of Object.keys(BUILDINGS).sort((a,b)=>BUILDINGS[a].price-BUILDINGS[b].price)){
     const c=BUILDINGS[k];
     const div=document.createElement('div');div.className='shopItem';div.tabIndex=0;div.setAttribute('role','button');
-    div.innerHTML=`<div class="nm">${c.name}</div><div>${c.desc}<br>耐久${c.hp}${c.dmg?' 伤害'+c.dmg:''}${c.range?' 射程'+c.range:''}</div><div class="pr">💰${c.price}</div>`;
+    div.innerHTML=`<div class="nm">${c.name}</div><div>${c.desc}<br>耐久${Math.round(c.hp*hpMul)}${c.dmg?' 伤害'+Math.round(c.dmg*mul):''}${c.range?' 射程'+c.range:''}</div><div class="pr">💰${c.price}</div>`;
     div.onclick=()=>{
-      if(buildings.length>=MAX_BUILDINGS){showMsg('设施已达 64 座，请先保留通路',1.8);return;}
+      if(buildings.length>=currentBuildingLimit()){showMsg('设施已达 '+currentBuildingLimit()+' 座，请先保留通路',1.8);return;}
       if(!Game.testMode&&Game.gold<c.price){showMsg('金币不足！还差 '+Math.ceil(c.price-Game.gold),1.6);AudioSys.sfx('click');return;}
       startPlacement(k);
     };
@@ -3029,7 +3088,7 @@ function cancelPlacement(quiet=false){
 }
 function placementCheck(kind,x,z,yaw){
   const cfg=BUILDINGS[kind];
-  if(buildings.length>=MAX_BUILDINGS)return '设施已达 64 座';
+  if(buildings.length>=currentBuildingLimit())return '设施已达 '+currentBuildingLimit()+' 座';
   if(!place.free&&!Game.testMode&&Game.gold<cfg.price)return '金币不足（需要 '+cfg.price+'）';
   if(x<WORLD.minX+3||x>WORLD.maxX-3||z<WORLD.minZ+3||z>WORLD.maxZ-3)return '超出地图边界';
   if(Math.abs(x-gate.pos.x)<7.5&&Math.abs(z-gate.pos.z)<2.4)return '不能堵住城门';
@@ -3133,7 +3192,7 @@ function saveData(){
     vehiclesOwned:[...new Set(Game.vehiclesOwned)],squadCount:Game.squadCount,squadOrder:Game.squadOrder,squadAutoDefense:Game.squadAutoDefense,lastBattle:Game.lastBattle,squadGear:Game.squadGear.map(g=>({...g})),opsCompleted:{...Game.opsCompleted},
     perks:{magnet:Game.magnet,regen:Game.regen},hive:{...Game.hive},
     baseHp:base.hp,pendingDrops:airdrops.map(a=>a.it),
-    buildings:buildings.map(b=>({k:b.kind,x:b.mesh.position.x,z:b.mesh.position.z,r:b.rotY,hp:b.hp})),
+    buildings:buildings.map(b=>({k:b.kind,x:b.mesh.position.x,z:b.mesh.position.z,r:b.rotY,hp:b.hp,maxHp:b.maxHp})),
     time:Date.now(),version:'0.9',rampartRevision:1,
   };
 }
@@ -3163,7 +3222,7 @@ function applySave(d){
   base.maxHp=baseMaxHp();base.hp=Math.min(base.maxHp,d.baseHp||base.maxHp);updHPBar(base.bar,base.hp/base.maxHp);
   // Old default high walls survived the broad-rampart upgrade in saved games.
   // Remove only the exact legacy positions once; retain player-built walls elsewhere.
-  for(const b of (d.buildings||[]))if(d.rampartRevision>=1||!legacyRampartWall(b))placeBuilding(b.k,b.x,b.z,b.r,b.hp);
+  for(const b of (d.buildings||[]))if(d.rampartRevision>=1||!legacyRampartWall(b))placeBuilding(b.k,b.x,b.z,b.r,b.hp,b.maxHp);
   for(const vk of new Set(d.vehiclesOwned||[])){if(!VEHICLES[vk])continue;Game.vehiclesOwned.push(vk);spawnVehicle(vk);}
   Game.squadCount=clamp(d.squadCount||0,0,4);
   for(let i=0;i<Game.squadCount;i++)spawnSquad();
