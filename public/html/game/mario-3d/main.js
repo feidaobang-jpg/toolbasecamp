@@ -567,9 +567,9 @@ function updateHud() {
     if (hearts >= 0) { let h = ''; for (let i = 1; i <= 3; i++) h += i <= hearts ? '♥' : '<span class="off">♥</span>'; $('h-hearts').innerHTML = h; }
     const fireReady = w.player.power === 'fire';
     const fireButton = document.querySelector('#touch [data-hold=fire]');
-    $('run-label').textContent = fireReady ? '火球' : '需火焰花';
+    $('run-label').textContent = '火球';
     fireButton.setAttribute('aria-disabled', String(!fireReady));
-    fireButton.setAttribute('aria-label', fireReady ? 'J 火球' : 'J 火球（吃到火焰花后可用）');
+    fireButton.setAttribute('aria-label', 'J 火球');
   }
   // 只剩 1 格护心：护心按游戏时间闪烁变红
   const low = hearts === 1 && w.mode === 'play';
