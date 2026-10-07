@@ -1,0 +1,38 @@
+{
+  "channel": "taptap-h5",
+  "game": "journey-west-3d",
+  "title": "西游降魔 3D",
+  "version": "action-state1",
+  "source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
+  "source_hashes": {
+    "audio.js": "0a24cc1f527009404b7f91748c9ad6f5b1c4e39a5b709ec1d28fe83e1261e975",
+    "index.html": "8bc186681be1acc78182de560d56cd8efcebf1f9d1840f8ed67728e7ba11cab1",
+    "locale.js": "0aa30827d528f534c1c5a11cc50f6ef387bd348e05e07131a9245e55625c5e08",
+    "main.js": "e62333502d2160c4170d7db9d9754843f788eac7c937731c5b498e3410e7c21c",
+    "scene.js": "c88a10e7b2b406b7b7719cc1ba27a8a4bfc42e6f2f6aca1538f26a961b8d7d4c",
+    "style.css": "3d89dca81c366487217437dca2a755c8667d031bc956a799c234924c131a08d2",
+    "world.js": "f7a1ae98dbeb2373f95fe10f45c0964f0be64acb2b0e31a565be2a02a6732d0f"
+  },
+  "files": {
+    "audio.js": "0a24cc1f527009404b7f91748c9ad6f5b1c4e39a5b709ec1d28fe83e1261e975",
+    "index.html": "914a22c27ba2802cf71d49c3e06a72cd77cad8cc1b06c3479751d1c42d7a4542",
+    "locale.js": "0aa30827d528f534c1c5a11cc50f6ef387bd348e05e07131a9245e55625c5e08",
+    "main.js": "a0fdf68092aff14e790b003deea6ba56c4b3be6e6a1e5bbaf821f137229f1b4a",
+    "scene.js": "59845651cdf1d736ca9d4c32f5ef1f7d2eb7049b2b0bbb9de365132d526d3ae4",
+    "style.css": "3d89dca81c366487217437dca2a755c8667d031bc956a799c234924c131a08d2",
+    "world.js": "f7a1ae98dbeb2373f95fe10f45c0964f0be64acb2b0e31a565be2a02a6732d0f",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "vendor/BufferGeometryUtils.js": "3de832095679e56578beddf70f3e90846a47ec8a886fa8eb21c973cdaef88922",
+    "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
+    "sample-audio.js": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
+    "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "zip_sha256": "32652d9876e894645ae0ef5a1bf26c56d06d501865a3b25d2248423991ec08c4",
+  "zip_bytes": 301645,
+  "archive_root": "journey-west-3d/",
+  "storage_namespace": "no persistent gameplay save",
+  "monetization": "none",
+  "status": "built_not_uploaded"
+}

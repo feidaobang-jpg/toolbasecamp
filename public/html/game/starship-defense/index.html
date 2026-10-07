@@ -124,6 +124,9 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
 .shopItem .nm{font-size:14px;font-weight:bold;}
 .shopItem .lv{font-size:11px;padding:0 4px;border-radius:4px}
 .shopItem .desc{opacity:.75;font-size:10px}
+#buildPanel .buildHeader{position:sticky;top:-12px;margin:-12px -12px 8px;padding:12px 48px 10px 12px;background:#101f31;z-index:3}
+#buildPanel .buildHeader h3{margin:0 0 5px;text-align:left}
+#buildGold{font-size:12px;line-height:1.5;color:#ffd36a}
 .shopItem .upg{display:block;width:100%;margin-top:5px;font:inherit;font-size:11px;font-weight:bold;padding:5px;border-radius:6px;cursor:pointer}
 .shopItem .upg.max{opacity:.6;cursor:default}
 .closeX{position:absolute;right:10px;top:8px;font-size:20px;cursor:pointer;padding:0 8px;background:none;border:0}
@@ -411,8 +414,11 @@ button::before,button::after{content:none!important}
 
   <!-- 建造 -->
   <div id="buildPanel" class="panel hidden" style="width:540px;">
-    <button class="closeX" id="buildClose" aria-label="关闭建造">✕</button>
-    <h3>🏗 基地建造（选中后出现虚影，走动/Q·E 转视角调整，J 放置；最后一项是拆除）　💰<span id="buildGold">0</span></h3>
+    <div class="buildHeader">
+      <button class="closeX" id="buildClose" aria-label="关闭建造">✕</button>
+      <h3>🏗 基地建造 · 选设施后走动摆放，J确认，L换建筑</h3>
+      <div id="buildGold">0</div>
+    </div>
     <div class="shopGrid" id="buildGrid" style="grid-template-columns:repeat(2,1fr);"></div>
   </div>
 

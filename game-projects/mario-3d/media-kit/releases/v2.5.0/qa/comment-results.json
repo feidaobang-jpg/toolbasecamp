@@ -1,0 +1,220 @@
+{
+  "url": "http://127.0.0.1:8953/html/game/mario-3d/index.html",
+  "browser": "154.0.4258.53",
+  "methods": "test-only teleports + real game simulation/UI, viewport emulation; no physical phone",
+  "results": [
+    {
+      "name": "1280x720: initial underground entry stays below roof",
+      "ok": true
+    },
+    {
+      "name": "1280x720: pit invokes death",
+      "ok": true
+    },
+    {
+      "name": "1280x720: checkpoint respawn returns to playable floor",
+      "ok": true,
+      "detail": {
+        "x": 91.5,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.4,
+        "visible": true
+      }
+    },
+    {
+      "name": "1280x720: current area has nine plant models",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "1280x720: restart clears previous plants 0",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "1280x720: restart clears previous plants 1",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "1280x720: restart clears previous plants 2",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "1280x720: bonus room has no retained plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "1280x720: return from bonus restores only current plants",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "1280x720: title clears underground plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "1280x720: 1-1 has no ghost plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "1280x720: no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "844x390: initial underground entry stays below roof",
+      "ok": true
+    },
+    {
+      "name": "844x390: pit invokes death",
+      "ok": true
+    },
+    {
+      "name": "844x390: checkpoint respawn returns to playable floor",
+      "ok": true,
+      "detail": {
+        "x": 91.5,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.4,
+        "visible": true
+      }
+    },
+    {
+      "name": "844x390: current area has nine plant models",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "844x390: restart clears previous plants 0",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "844x390: restart clears previous plants 1",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "844x390: restart clears previous plants 2",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "844x390: bonus room has no retained plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "844x390: return from bonus restores only current plants",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "844x390: title clears underground plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "844x390: 1-1 has no ghost plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "844x390: no runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "390x844: initial underground entry stays below roof",
+      "ok": true
+    },
+    {
+      "name": "390x844: pit invokes death",
+      "ok": true
+    },
+    {
+      "name": "390x844: checkpoint respawn returns to playable floor",
+      "ok": true,
+      "detail": {
+        "x": 91.5,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.4,
+        "visible": true
+      }
+    },
+    {
+      "name": "390x844: current area has nine plant models",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "390x844: restart clears previous plants 0",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "390x844: restart clears previous plants 1",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "390x844: restart clears previous plants 2",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "390x844: bonus room has no retained plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "390x844: return from bonus restores only current plants",
+      "ok": true,
+      "detail": 9
+    },
+    {
+      "name": "390x844: title clears underground plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "390x844: 1-1 has no ghost plants",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "390x844: no runtime errors",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}

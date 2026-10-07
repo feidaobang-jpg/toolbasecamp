@@ -1,0 +1,61 @@
+{
+  "slug": "jackal-stage1-3d",
+  "package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
+  "scenarios": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "mobile": false,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [
+        "taptap-jackal-v1:touch"
+      ],
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "mobile": true,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [
+        "taptap-jackal-v1:touch"
+      ],
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mobile": true,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [
+        "taptap-jackal-v1:touch"
+      ],
+      "errors": [],
+      "failed": [],
+      "external": []
+    }
+  ],
+  "real_phone_test": false,
+  "taptap_client_test": false,
+  "method": "Normal keyboard and pointer input; read-only existing state hooks. Canvas/audio capture does not change gameplay.",
+  "status": "passed"
+}

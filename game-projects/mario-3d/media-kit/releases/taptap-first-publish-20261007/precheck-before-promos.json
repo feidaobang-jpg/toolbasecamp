@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [
+        {
+          "code": "SCE_AGREEMENT_REQUIRED",
+          "field_ids": [],
+          "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+        }
+      ],
+      "preaudit_passed": false,
+      "version_id": "1041014",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题涉及使用知名IP‘超级玛丽’，可能存在侵权风险。若已获得官方正版授权，请前往资质页面上传相关授权书，否则建议修改标题以避免侵权与蹭热度风险。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "简介中包含对‘超级玛丽’等知名IP内容的引用与宣传，可能存在侵权风险，建议在资质页面补充上传授权文件或修改相关描述。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "icon"
+          ],
+          "message": "图标素材使用了知名角色形象（马力欧），涉嫌侵权风险，请提供正版授权资质或更换为原创美术素材。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "screenshots"
+          ],
+          "message": "游戏截图中包含问号砖块、绿色水管及经典角色等大量知名IP元素，可能存在侵权风险，建议在资质页面上传授权文件或使用原创游戏资产。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图包含知名IP形象涉嫌侵权风险；且画面构图与设计感不足，整体呈现临时素材拼接效果，不符合宣传图视觉品质要求，建议重新设计高质量宣传图。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "封面图包含知名IP形象涉嫌侵权风险；且画面排版较为简陋、元素拼贴感明显，未达到平台推荐素材的基础视觉质量要求，建议重新设计并上传高质量的原创封面图。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

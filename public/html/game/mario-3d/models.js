@@ -85,7 +85,7 @@ export function goomba(theme) {
   box(g, mat('#fbfbf2'), -0.07, 0.36, 0.25, 0.04, 0.06, 0.02); box(g, mat('#fbfbf2'), 0.07, 0.36, 0.25, 0.04, 0.06, 0.02);
   return g;
 }
-export function koopa(red) {
+export function koopa(red, winged=false) {
   const g = new THREE.Group();
   const shellM = mat(red ? '#ab5947' : '#668762'), rim = mat('#f8f4e0'), skin = mat('#f6d27a'), dark = mat(red ? '#8c1c0c' : '#14701e');
   const shell = new THREE.Group(); g.add(shell);
@@ -103,7 +103,16 @@ export function koopa(red) {
     ball(body, skin, s * 0.2, 0.09, 0.08, 0.1, 0.09, 0.15);
     ball(body, skin, s * 0.32, 0.45, 0.18, 0.07);
   }
-  g.userData = { shell, body };
+  const wings=[];
+  if (winged) for (const s of [-1,1]) {
+    const wing=new THREE.Group(); wing.position.set(s*.29,.67,-.12); g.add(wing);
+    for (let i=0;i<3;i++) {
+      const feather=ball(wing,rim,s*(.12+i*.12),.18+i*.12,0,.13,.3-i*.045,.075);
+      feather.rotation.z=-s*.4;
+    }
+    wings.push(wing);
+  }
+  g.userData = { shell, body, wings };
   return g;
 }
 export function piranha() {

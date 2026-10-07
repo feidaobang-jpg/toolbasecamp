@@ -1,11 +1,11 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=2.4.7';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.4.7';
-import { LEVEL_ORDER } from './levels.js?v=2.4.7';
+import { createView, PRESETS } from './scene.js?v=2.5.0';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.5.0';
+import { LEVEL_ORDER } from './levels.js?v=2.5.0';
 import { GameAudio } from './audio.js?v=bgmfull1';
 
-const VERSION = 'v2.4.7';
+const VERSION = 'v2.5.0';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -66,7 +66,8 @@ const eventLog = [];
 
 const LEVEL_TIPS = {
   '1-1': '顶问号砖拿蘑菇、火焰花和无敌星；第 4 根水管上按 U（L兼容） 能钻进奖励房间',
-  '1-2': '地下关：砖墙顶上也能走；出口水管旁边的天花板上面藏着传送区'
+  '1-2': '地下关：砖墙顶上也能走；出口水管旁边的天花板上面藏着传送区',
+  '1-3': '远跳先按 I 冲刺，等浮台靠近再跳；飞行乌龟第一次踩掉翅膀，再踩才变龟壳'
 };
 
 // ---------- 输入：键盘与触屏共用一张动作表 ----------
@@ -120,7 +121,7 @@ function buildInput() {
 // ---------- 设置菜单 ----------
 function optLabel(name) {
   switch (name) {
-    case 'level': return ['起始关卡', settings.level + (settings.level === '1-1' ? ' 地面' : ' 地下'), false];
+    case 'level': return ['起始关卡', settings.level + ' ' + {'1-1':'地面','1-2':'地下','1-3':'树冠'}[settings.level], false];
     case 'lives': return ['命数', settings.lives === 'inf' ? '无限命' : '经典 3 命', false];
     case 'armor': return ['耐久', settings.armor === 'classic' ? '原作（小玛丽一碰就输）' : '标准 3 格护心', false];
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
@@ -394,7 +395,7 @@ function onClear() {
   cleared.push(w.levelId);
   const next = nextLevelId(w.levelId);
   if (next) { session.levelId = next; session.checkpoint = null; beginLevel({}); }
-  else finishRun(true, cleared.length >= LEVEL_ORDER.length ? '1-1 与 1-2 全部完成' : '从 WORLD ' + cleared[0] + ' 开始，打到了最后一关');
+  else finishRun(true, cleared.length >= LEVEL_ORDER.length ? '1-1 至 1-3 全部完成' : '从 WORLD ' + cleared[0] + ' 开始，打到了最后一关');
 }
 
 // ---------- 全屏 ----------

@@ -95,8 +95,16 @@ async function until(frame, condition, max = 4000) {
       await page.keyboard.down('KeyU'); await frame.evaluate(() => __MARIO_TEST__.step(400)); await page.keyboard.up('KeyU');
       check(prefix + ' exit pipe still rises to overworld', await frame.evaluate(() => __MARIO_TEST__.world.areaId === 'exit' && __MARIO_TEST__.world.player.y === 2));
       await frame.evaluate(() => { const t = __MARIO_TEST__; t.world.time = 102; Object.assign(t.world.player, { x: 32.3, y: 7, vx: 0, vy: 0 }); t.step(1); });
+      const finalLevel = await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-3');
+      if (!finalLevel) {
+        for (let n = 0; n < 400 && await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-2'); n++) await frame.evaluate(() => __MARIO_TEST__.step(12));
+      }
+      if (await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-3')) {
+        check(prefix + ' 1-2 clear enters third stage', await frame.evaluate(() => __MARIO_TEST__.state().cleared.join() === '1-1,1-2'));
+        await frame.evaluate(() => { const t = __MARIO_TEST__; t.skipCard(); Object.assign(t.world.player, { x: t.world.area.flag.x - .2, y: 1, vx: 0, vy: 0 }); t.step(1); });
+      }
       await until(frame, 'result');
-      check(prefix + ' 1-2 final clear still settles', await frame.evaluate(() => __MARIO_TEST__.state().overlay === 'result'));
+      check(prefix + ' last implemented stage settles', await frame.evaluate(() => __MARIO_TEST__.state().overlay === 'result'));
       await frame.locator('#result [data-act=title]').click();
       await frame.locator('[data-opt=level]').first().click(); await frame.locator('[data-act=start]').first().click();
       check(prefix + ' menu directly selecting 1-2 includes opening', await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-2' && __MARIO_TEST__.world.areaId === 'entry'));

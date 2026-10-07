@@ -2,9 +2,9 @@
 // 角色、道具、特效与镜头（C 预设 + Q/E 无极旋转），遮挡主角的物体做网点淡化。
 import * as THREE from './three.js?v=2.1.0';
 import { tex, textTexture } from './textures.js?v=2.4.4';
-import * as M from './models.js?v=toy3dui2';
-import { LANE, SOLID, tileKey } from './levels.js?v=2.4.7';
-import { heightOf } from './world.js?v=2.4.7';
+import * as M from './models.js?v=2.5.0';
+import { LANE, SOLID, tileKey } from './levels.js?v=2.5.0';
+import { heightOf } from './world.js?v=2.5.0';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -180,9 +180,11 @@ export function createView(canvas) {
     for (const m of Object.values(meshes)) if (m) { m.instanceMatrix.needsUpdate = true; m.computeBoundingSphere(); }
 
     buildPipes(a);
+    buildTrees(a);
     buildLifts(a);
     buildCoins(w);
     if (a.flag) buildFlag(a.flag);
+    if (a.entryCastle) buildCastle(a.entryCastle);
     if (a.castle) buildCastle(a.castle);
     for (const s of a.signs) {
       const { texture, aspect } = textTexture(s.text, { color: '#fcfcfc', size: 56 });
@@ -235,6 +237,36 @@ export function createView(canvas) {
     }
   }
 
+  // 原作树冠的平坦落脚面沿跑道铺满，圆润叶簇和谷底树干沿用自然色哑光低模。
+  // 树干放在跑道后侧，玩家从树冠下方跳起时不会穿过实体模型。
+  function buildTrees(a) {
+    if (!a.trees.length) return;
+    const trunkGeo=new THREE.CylinderGeometry(.7,1,1,8);
+    const bark=plainMat('#7d6a50'), leaf=plainMat('#79a457'), leafDark=plainMat('#608846');
+    const caps=new THREE.InstancedMesh(boxGeo,[leafDark,leafDark,leaf,leafDark,leafDark,leafDark],a.trees.length);
+    const trunks=new THREE.InstancedMesh(trunkGeo,bark,a.trees.length);
+    const branches=new THREE.InstancedMesh(trunkGeo,bark,a.trees.length*2);
+    const blobs=[];
+    const up=new THREE.Vector3(0,1,0), direction=new THREE.Vector3(), midpoint=new THREE.Vector3();
+    a.trees.forEach((t,i)=>{
+      tmpM.compose(tmpP.set(t.x+t.w/2,t.y-.3,0),tmpQ.identity(),tmpS.set(t.w,.6,LANE*2)); caps.setMatrixAt(i,tmpM);
+      const base=-14, top=t.y-.7;
+      tmpM.compose(tmpP.set(t.x+t.w/2,(base+top)/2,-4.6),tmpQ.identity(),tmpS.set(Math.max(.7,t.w*.48),top-base,.75)); trunks.setMatrixAt(i,tmpM);
+      for (const s of [-1,1]) {
+        const p0=new THREE.Vector3(t.x+t.w/2,top-1.6,-4.3),p1=new THREE.Vector3(t.x+t.w/2+s*t.w*.28,top,-2.65);
+        direction.subVectors(p1,p0); midpoint.addVectors(p0,p1).multiplyScalar(.5);
+        tmpM.compose(midpoint,tmpQ.setFromUnitVectors(up,direction.clone().normalize()),tmpS.set(.22,direction.length(),.22)); branches.setMatrixAt(i*2+(s>0?1:0),tmpM);
+      }
+      const n=Math.ceil(t.w/1.2);
+      for (let j=0;j<n;j++) for (const z of [-LANE,LANE]) blobs.push({x:t.x+(j+.5)*t.w/n,y:t.y-.31,z,sx:t.w/n*.55});
+      for (const x of [t.x,t.x+t.w]) for (const z of [-2,0,2]) blobs.push({x,y:t.y-.31,z,sx:.38});
+    });
+    const rim=new THREE.InstancedMesh(ballGeo,leaf,blobs.length);
+    blobs.forEach((b,i)=>{tmpM.compose(tmpP.set(b.x,b.y,b.z),tmpQ.identity(),tmpS.set(b.sx,.27,.43));rim.setMatrixAt(i,tmpM);});
+    for (const m of [caps,trunks,branches,rim]) {m.castShadow=true;m.receiveShadow=true;m.frustumCulled=false;areaGroup.add(m);areaDispose.push({dispose:()=>m.dispose()});}
+    areaDispose.push(trunkGeo);
+  }
+
   function buildLifts(a) {
     for (const l of w_lifts(a)) {
       const g = new THREE.Group();
@@ -277,11 +309,18 @@ export function createView(canvas) {
     for (let x = 1; x < 4; x++) for (let y = 2; y < 4; y++) if (!(y === 2 && x === 2)) cells.push([x, y]);
     cells.push([2, 2]);
     for (let x = 1; x < 4; x += 1) cells.push([x, 4]);
+    if (c.big) {
+      cells.length=0;
+      for (let x=-1;x<=5;x++) for (let y=0;y<3;y++) cells.push([x,y]);
+      for (const x of [-1,1,3,5]) cells.push([x,3]);
+      for (let x=1;x<4;x++) for (let y=3;y<8;y++) cells.push([x,y]);
+      for (const x of [1,3]) cells.push([x,8]);
+    }
     const n = cells.length * depth;
     const m = new THREE.InstancedMesh(boxGeo, tileMat('brick', 'overworld'), n);
     let i = 0;
     for (const [x, y] of cells) for (let k = 0; k < depth; k++) {
-      const crenel = (y === 2 && x !== 2 && (x === 0 || x === 4)) || y === 4;
+      const crenel = c.big ? (y===3&&(x<1||x>3))||y===8 : (y === 2 && x !== 2 && (x === 0 || x === 4)) || y === 4;
       tmpM.compose(tmpP.set(c.x + x + 0.5, y + (crenel ? 0.3 : 0.5), z0 + k + 0.5), tmpQ.identity(), tmpS.set(crenel ? 0.7 : 1, crenel ? 0.6 : 1, crenel ? 0.7 : 1));
       m.setMatrixAt(i++, tmpM);
     }
@@ -289,11 +328,13 @@ export function createView(canvas) {
     const dark = plainMat('#000000');
     const door = new THREE.Mesh(boxGeo, dark); door.scale.set(1, 1.6, 0.1); door.position.set(c.x + 2.5, 0.8, z0 + depth + 0.03); areaGroup.add(door);
     for (const x of [1.5, 3.5]) { const win = new THREE.Mesh(boxGeo, dark); win.scale.set(0.5, 0.9, 0.1); win.position.set(c.x + x, 3.1, z0 + depth + 0.03); areaGroup.add(win); }
+    if (c.big) {const win=new THREE.Mesh(boxGeo,dark);win.scale.set(.7,1.2,.1);win.position.set(c.x+2.5,6.3,z0+depth+.03);areaGroup.add(win);}
     const fm = new THREE.MeshStandardMaterial({ map: tex('starFlag'), transparent: true, alphaTest: 0.5, side: THREE.DoubleSide });
     castleFlag = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), fm);
-    castleFlag.position.set(c.x + 2.95, 4.2, z0 + 1.5); areaGroup.add(castleFlag);
-    const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.4, 6), plainMat('#c8a060')); staff.position.set(c.x + 2.5, 5.1, z0 + 1.5); areaGroup.add(staff);
-    castleFlag.userData.y0 = 4.2;
+    const flagY=c.big?7.8:4.2;
+    castleFlag.position.set(c.x + 2.95, flagY, z0 + 1.5); areaGroup.add(castleFlag);
+    const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.4, 6), plainMat('#c8a060')); staff.position.set(c.x + 2.5, flagY+.9, z0 + 1.5); areaGroup.add(staff);
+    castleFlag.userData.y0 = flagY;
     areaDispose.push(castleFlag.geometry, fm, staff.geometry);
   }
 
@@ -391,7 +432,7 @@ export function createView(canvas) {
   // ---------- 实体 ----------
   function enemyModel(e) {
     let m = enemyModels.get(e);
-    if (!m) { m = e.type === 'koopa' ? M.koopa(e.red) : M.goomba(view.theme); scene.add(m); enemyModels.set(e, m); }
+    if (!m) { m = e.type === 'koopa' ? M.koopa(e.red,e.winged) : M.goomba(view.theme); scene.add(m); enemyModels.set(e, m); }
     return m;
   }
   function itemModel(it) {
@@ -476,7 +517,8 @@ export function createView(canvas) {
   const solidAt = (a, c, h) => {
     const k = view.cutNow;
     if (k && ((k.l !== null && c < k.l) || (k.r !== null && c >= k.r) || (k.top !== null && h >= k.top))) return false;
-    const t = a.tiles.get(tileKey(c, h)); return !!t && SOLID.has(t.t) && !t.hidden;
+    const t = a.tiles.get(tileKey(c, h));
+    return (!!t && SOLID.has(t.t) && !t.hidden) || a.trees.some(t=>c+.5>=t.x&&c+.5<t.x+t.w&&h+1>t.y-.6&&h<t.y);
   };
   function cutsFor(a, p, pos) {
     const ceil = a.ceiling ? (a.ceilY || 10) : null;
@@ -595,7 +637,7 @@ export function createView(canvas) {
       coinRecs.forEach((c, i) => PIPE_Z.forEach((z, j) => { tmpM.compose(tmpP.set(c.x, c.y + Math.sin(time * 3 + c.x) * 0.05, z), rot, c.alive ? tmpS.set(1, 1, 1) : ZERO); coinInst.setMatrixAt(i * 3 + j, tmpM); }));
       coinInst.instanceMatrix.needsUpdate = true;
     }
-    for (const lg of liftGroups) lg.group.position.y = lg.lift.y;
+    for (const lg of liftGroups) {lg.group.position.y=lg.lift.y;lg.group.position.x=lg.lift.x;}
     if (flagMesh && w.flag) flagMesh.position.y = w.flag.flagY;
     if (castleFlag && castleFlag.userData.rise) castleFlag.position.y = Math.min(castleFlag.userData.y0 + 1.3, castleFlag.position.y + dt * 1.2);
     updatePlayerModel(w, dt);
@@ -612,6 +654,7 @@ export function createView(canvas) {
         const ud = m.userData;
         const shell = e.state === 'shell' || e.state === 'shellMove' || (e.state === 'dead' && e.h < 1);
         ud.body.visible = !shell;
+        ud.wings.forEach((wing,i)=>{wing.visible=e.winged&&e.state==='walk';wing.rotation.z=(i?1:-1)*(.15+Math.sin(time*12)*.3);});
         ud.shell.position.y = shell ? -0.2 : 0;
         if (e.state === 'shellMove') m.rotation.y += dt * 18;
         else m.rotation.set(0, shell ? m.rotation.y : (e.dir > 0 ? Math.PI / 2 : -Math.PI / 2), 0);

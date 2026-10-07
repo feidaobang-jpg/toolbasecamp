@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-consent-20261007-04",
+  "source": "Codex",
+  "at": "2026-10-07T02:03:15.981940+00:00",
+  "status": "current_agreement_automatic_consent_saved_and_journey_review_submitted",
+  "authorization_record": "authorization.json",
+  "games": [
+    {
+      "app_id": 962721,
+      "game_id": "jackal-stage1-3d",
+      "status": "draft_waiting_ip_authorization",
+      "agreement_authorized": true,
+      "agreement_signed": false,
+      "release_record": "game-projects/jackal-stage1-3d/media-kit/releases/taptap-consent-20261007/handoff.json"
+    },
+    {
+      "app_id": 962722,
+      "game_id": "cadillacs-stage1-3d",
+      "status": "draft_waiting_ip_authorization",
+      "agreement_authorized": true,
+      "agreement_signed": false,
+      "release_record": "game-projects/cadillacs-stage1-3d/media-kit/releases/taptap-consent-20261007/handoff.json"
+    },
+    {
+      "app_id": 962723,
+      "game_id": "mario-3d",
+      "status": "draft_waiting_ip_authorization",
+      "agreement_authorized": true,
+      "agreement_signed": false,
+      "release_record": "game-projects/mario-3d/media-kit/releases/taptap-consent-20261007/handoff.json"
+    },
+    {
+      "app_id": 962724,
+      "game_id": "journey-west-3d",
+      "status": "reviewing",
+      "agreement_authorized": true,
+      "agreement_signed": true,
+      "release_record": "game-projects/journey-west-3d/media-kit/releases/taptap-consent-20261007/handoff.json"
+    }
+  ],
+  "other_legal_agreements_blanket_authorized": false,
+  "new_material_ip_authorizations_assumed": false,
+  "workflow": "同一已展示版本按用户授权自动签署；实质条款变化仍按当时工具要求处理；内容资格单独核验",
+  "worktree": "C:/Users/37818/.codex/worktrees/taptap-publish-four-20261007/toolbasecamp",
+  "artifacts": "D:/project/toolbasecamp-artifacts/taptap/consent/20261007"
+}

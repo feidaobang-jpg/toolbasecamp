@@ -39,5 +39,22 @@
   },
   "website_version": "action-state1",
   "website_verified_at": "2026-10-06T22:19:17.380462+00:00",
-  "website_commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68"
+  "website_commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
+  "taptap": {
+    "developer_id": 100726,
+    "app_id": 962724,
+    "automatic_sync_enabled": true,
+    "status": "reviewing",
+    "staged_version": "action-state1",
+    "staged_h5_version_id": 270846,
+    "draft_version_id": "1041015",
+    "last_published_version": null,
+    "sync_record": "taptap-sync.json",
+    "release_record": "releases/taptap-consent-20261007/handoff.json",
+    "agreement_authorized": true,
+    "agreement_signed": true,
+    "submitted_version": "action-state1",
+    "submitted_h5_version_id": 270846,
+    "submitted_at": "2026-10-07T02:01:28.948920+00:00"
+  }
 }
