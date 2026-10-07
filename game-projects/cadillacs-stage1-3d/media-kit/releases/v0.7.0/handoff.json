@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.7.0",
+  "base_version": "v0.6.1",
+  "created_at": "2026-10-07T08:33:34.478282+08:00",
+  "classification": "正式版本",
+  "changes": [
+    "原版轻拳/重拳/轻踢/重踢四种命中声音替换合成；保留当前动作命中时机和轻重反馈。",
+    "U必杀（含J+K兼容）按杰克、汉娜、穆斯塔法、梅斯播放不同原版语音。",
+    "清完一波后的GO提示播放原版Go语音三次。",
+    "录音沿用音量、暂停和录制总线；同一命中组避免重复叠音；重开/返回清理排队短语音；文件不可用时合成回退。"
+  ],
+  "build": {
+    "id": "original-sfx-v070",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "aee84b79ac9a027df9bbad054e24c6939629edbd44dcd9951f76d4244f47234a",
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "qa": [
+    {
+      "method": "qa/original-audio.js (Edge)",
+      "result": "pass 22/22",
+      "scope": "9 files decoded; 4 actual hero voices; 3 GO calls; AudioContext pause/restart; real speaker mute; missing-file fallback; offline output peak 0.475, RMS 0.090; no JS errors"
+    },
+    {
+      "method": "qa/feel.js",
+      "result": "pass 16/16",
+      "scope": "unchanged combo hit timing, hitstop, finishing blow, light/heavy cue selection"
+    }
+  ],
+  "media": [
+    {
+      "id": "audio-demo",
+      "file": "releases/v0.7.0/captures/original-audio-demo.wav",
+      "sha256": "0ef8b47a096bb85580eb4b0ef27a2355041fd1d2fec8955a8ba797aad1769164",
+      "kind": "audio",
+      "version": "v0.7.0",
+      "build_id": "original-sfx-v070",
+      "capture_mode": "offline-render",
+      "description": "轻拳→重拳→轻踢→重踢→GO×3→杰克必杀，来自浏览器 OfflineAudioContext 原版采样输出。",
+      "duration_seconds": 9,
+      "audio": "game",
+      "visual_review": "not-applicable",
+      "audio_review": "not-run"
+    }
+  ],
+  "site": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 40412421031936,
+    "status": "pending"
+  },
+  "bilibili": {
+    "status": "pending"
+  },
+  "thumbnail": {
+    "status": "retained",
+    "reason": "仅声音更新，画面和场景未变"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "No human auditory review; browser measurements confirm decoding/playback, loudness and clipping."
+    ]
+  }
+}

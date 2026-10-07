@@ -1,190 +1,191 @@
 [
- {
-  "id": "ref-video-mustapha-1cc",
-  "use": "第一关流程、敌人顺序、区域标题、Boss 演出、HUD 与配色参考",
-  "source_type": "reference",
-  "source": "https://www.youtube.com/watch?v=Y48MXUjtYwc",
-  "notes": "只截帧看画面（本机 scratchpad，不入库、不进游戏）"
- },
- {
-  "id": "ref-video-hannah",
-  "use": "汉娜配色、选人画面能力值",
-  "source_type": "reference",
-  "source": "https://www.youtube.com/watch?v=NkuO7wjBEcs",
-  "notes": "截取前 90 秒看画面"
- },
- {
-  "id": "ref-video-jack",
-  "use": "杰克配色、杰克选人能力值",
-  "source_type": "reference",
-  "source": "https://www.youtube.com/watch?v=RT5A4YulSVY",
-  "notes": "截取前 90 秒看画面"
- },
- {
-  "id": "ref-video-mess",
-  "use": "梅斯配色与能力值",
-  "source_type": "reference",
-  "source": "https://www.youtube.com/watch?v=qeHp2Au4rfQ",
-  "notes": "截取前 90 秒看画面"
- },
- {
-  "id": "ref-namuwiki",
-  "use": "关卡构成、敌人行为与分值、物品分值、角色性能",
-  "source_type": "reference",
-  "source": "https://en.namu.wiki/w/캐딜락&다이노소어 （及 /스테이지、/적군 일람、/아이템 일람、/등장인물 子页面）",
-  "notes": "CC BY-NC-SA 2.0 KR；只取数据与描述，不搬运文字"
- },
- {
-  "id": "char-heroes",
-  "use": "四位主角模型",
-  "runtime": "src/models.js SPECS.jack/hannah/mustapha/mess",
-  "source_type": "procedural",
-  "tool": "Three.js 程序化拼装（胶囊 / 车床体 / 球体，按骨骼合并顶点色网格）+ MeshToonMaterial + 法线外扩描边（v0.5.0 曾改哑光，v0.5.2 改回）",
-  "process": "按原作实机截帧取色与发型、服装特征",
-  "status": "正式"
- },
- {
-  "id": "char-enemies",
-  "use": "费里斯、尼斯、朋克、布雷德、锤子·T、扳手·T、黑埃尔默、维斯·T",
-  "runtime": "src/models.js SPECS",
-  "source_type": "procedural",
-  "tool": "同上",
-  "process": "按原作实机截帧取色",
-  "status": "正式"
- },
- {
-  "id": "char-raptor",
-  "use": "岩跳龙（绿色 / 橙色两套配色）",
-  "runtime": "src/models.js buildRaptor",
-  "source_type": "procedural",
-  "tool": "同上",
-  "status": "正式"
- },
- {
-  "id": "prop-statue",
-  "use": "金色骑士像（四座）",
-  "runtime": "src/world.js statueMesh",
-  "source_type": "procedural",
-  "process": "人形骨架摆姿势后烘焙为单网格",
-  "status": "正式"
- },
- {
-  "id": "props-items",
-  "use": "油桶、通风管、食物、宝物、武器、锁链、翼龙",
-  "runtime": "src/models.js",
-  "source_type": "procedural",
-  "status": "正式"
- },
- {
-  "id": "env-textures",
-  "use": "楼顶石板、砖墙、石砌外墙、窗格、壁纸、木纹、红地毯、大理石、街面、铁丝网、蛛网、海面；第二关林地泥土、泥沼烂泥、植物斑驳纹理（v0.5.2 起与第一关同为写实噪点风格）",
-  "runtime": "src/world.js T()",
-  "source_type": "procedural",
-  "tool": "Canvas 2D 程序化贴图（固定种子）",
-  "status": "正式"
- },
- {
-  "id": "portraits",
-  "use": "HUD / 对话框 / 选人卡片头像、续关画面",
-  "runtime": "src/main.js makePortraits → models.js portrait()",
-  "source_type": "procedural",
-  "process": "开局离屏渲染 3D 模型",
-  "status": "正式"
- },
- {
-  "id": "music",
-  "use": "关卡曲、Boss 曲、过关、续关",
-  "runtime": "src/audio.js SampleAudio / SONGS fallback",
-  "source_type": "original_game_recording",
-  "tool": "原版录音；合成仅在未加载/解码失败时回退",
-  "process": "下载并核对源哈希，压缩保留完整时长",
-  "status": "正式",
-  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json"
- },
- {
-  "id": "sfx",
-  "use": "拳脚、枪声、爆炸、惨叫、恐龙嘶吼、拾取等",
-  "runtime": "src/audio.js SFX",
-  "source_type": "procedural",
-  "tool": "WebAudio 合成",
-  "status": "替代（非原作采样）"
- },
- {
-  "id": "site-thumb",
-  "use": "网站游戏列表卡片封面",
-  "runtime": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg",
-  "source_type": "procedural",
-  "process": "qa/cover.js 在 Boss 区摆拍实机画面（隐藏 HUD），2× 截图后裁成 512×512；v0.5.0 曾按哑光画风重拍（?v=2），v0.5.2 画风改回后恢复原图（?v=3）",
-  "status": "正式"
- },
- {
-  "id": "stage1-background-v020",
-  "source_type": "reference",
-  "source": "https://www.spriters-resource.com/arcade/cadillacsdinosaurs/asset/55293/",
-  "use": "已在浏览器查看原版第一关背景图；参考走廊灰绿拱券、低护墙线、墙皮破损；未复制贴图进游戏"
- },
- {
-  "id": "special-moves-v020",
-  "source_type": "reference",
-  "source": "https://rq87.flyingomelette.com/RQ/CAD/char.html",
-  "use": "四位角色下上攻击、跳跃下踢动作区分；时窗、伤害、弹量为本项目平衡值，非精确原版数值"
- },
- {
-  "id": "ref-video-stage2",
-  "use": "第二关流程、HUD 敌人名字（HACK、POACHER J、SKINNER、GUTTER、LASH T.、BUTCHER）、区域字幕、屠夫造型与招式、配色",
-  "source_type": "reference",
-  "source": "https://www.youtube.com/watch?v=Y48MXUjtYwc（215–490 秒、480–540 秒片段）",
-  "notes": "yt-dlp 只下载片段截帧看画面（本机 scratchpad，不入库、不进游戏）"
- },
- {
-  "id": "ref-rq87-stage2",
-  "use": "第二关段落顺序：下凯迪拉克遇三角龙、熟睡霸王龙会被敌人叫醒、跳进泥沼、拉什·T、天色变暗的死恐龙、油桶、屠夫双刀脱手 / 乱跳 / 两种冲刺斩 / 屁股坐 / 小弟不断出现",
-  "source_type": "reference",
-  "source": "https://rq87.flyingomelette.com/RQ/CAD/l2.html"
- },
- {
-  "id": "ref-aqm-stage2",
-  "use": "第二关敌人类型、三角龙冲撞、霸王龙咬与地震、拉什·T 远距离链锤",
-  "source_type": "reference",
-  "source": "https://www.arcadequartermaster.com/cad_bosses.html ；https://www.arcadequartermaster.com/cad_enemies.html"
- },
- {
-  "id": "music-stage2",
-  "use": "2-1、2-2、Boss 2 原版音乐（2-3 复用 hall.mp3 Trap of Silence，原作同曲）",
-  "runtime": "public/html/game/cadillacs-stage1-3d/sounds/forest.mp3、swamp.mp3、boss2.mp3",
-  "source_type": "original_game_recording",
-  "source": [
-   "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/xbooefob/13.%20In%20the%20Poachers%27%20Forest%20%28Stage%202-1%2C%206-2%29.mp3",
-   "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/tmemwyzf/14.%20Ancient%20Earth%20%28Stage%202-2%2C%206-3%29.mp3",
-   "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/aoplijvz/15.%20Boss%202%20%28Stage%202%2C%206%2C%208%29.mp3"
-  ],
-  "source_sha256": {
-   "forest": "d3e40e631200f6e09306fb902cb3e90f3c233d24fb19f0eb06765d002f8dc9e8",
-   "swamp": "c38f9f7b56e3d1af95474dabb7d974e5e2ed1c0292ce209d7f251841bb2f575c",
-   "boss2": "02ba43a90ea49578ff0174309280eaf16e91e84813c2d3a3890517408ec635d8"
+  {
+    "id": "ref-video-mustapha-1cc",
+    "use": "第一关流程、敌人顺序、区域标题、Boss 演出、HUD 与配色参考",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=Y48MXUjtYwc",
+    "notes": "只截帧看画面（本机 scratchpad，不入库、不进游戏）"
   },
-  "sha256": {
-   "forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
-   "swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
-   "boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d"
+  {
+    "id": "ref-video-hannah",
+    "use": "汉娜配色、选人画面能力值",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=NkuO7wjBEcs",
+    "notes": "截取前 90 秒看画面"
   },
-  "processing": "完整原录音，单声道32kHz MP3 96kbps；取消70秒截取"
- },
- {
-  "id": "char-stage2",
-  "use": "偷猎者 J、斯金纳、格特、打手、雷泽、拉什·T、屠夫；三角龙哈克（四足骨架）；霸王龙希瓦特（与岩跳龙同一骨架，放大 2 倍）；凯迪拉克；砍刀、步枪、太阳镜、木桶、链锤、死恐龙布景",
-  "runtime": "src/models.js、src/world.js",
-  "source_type": "procedural",
-  "tool": "Three.js 程序化拼装，卡通色阶着色 + 描边（与第一关角色一致）",
-  "process": "按原作实机截帧取色与造型特征",
-  "status": "正式"
- },
- {
-  "id": "sfx-stage2",
-  "use": "步枪、溅水、引擎、刹车、三角龙鼻息、霸王龙吼、屠夫怒吼",
-  "runtime": "src/audio.js SFX",
-  "source_type": "procedural",
-  "tool": "WebAudio 合成",
-  "status": "替代（非原作采样）"
- }
+  {
+    "id": "ref-video-jack",
+    "use": "杰克配色、杰克选人能力值",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=RT5A4YulSVY",
+    "notes": "截取前 90 秒看画面"
+  },
+  {
+    "id": "ref-video-mess",
+    "use": "梅斯配色与能力值",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=qeHp2Au4rfQ",
+    "notes": "截取前 90 秒看画面"
+  },
+  {
+    "id": "ref-namuwiki",
+    "use": "关卡构成、敌人行为与分值、物品分值、角色性能",
+    "source_type": "reference",
+    "source": "https://en.namu.wiki/w/캐딜락&다이노소어 （及 /스테이지、/적군 일람、/아이템 일람、/등장인물 子页面）",
+    "notes": "CC BY-NC-SA 2.0 KR；只取数据与描述，不搬运文字"
+  },
+  {
+    "id": "char-heroes",
+    "use": "四位主角模型",
+    "runtime": "src/models.js SPECS.jack/hannah/mustapha/mess",
+    "source_type": "procedural",
+    "tool": "Three.js 程序化拼装（胶囊 / 车床体 / 球体，按骨骼合并顶点色网格）+ MeshToonMaterial + 法线外扩描边（v0.5.0 曾改哑光，v0.5.2 改回）",
+    "process": "按原作实机截帧取色与发型、服装特征",
+    "status": "正式"
+  },
+  {
+    "id": "char-enemies",
+    "use": "费里斯、尼斯、朋克、布雷德、锤子·T、扳手·T、黑埃尔默、维斯·T",
+    "runtime": "src/models.js SPECS",
+    "source_type": "procedural",
+    "tool": "同上",
+    "process": "按原作实机截帧取色",
+    "status": "正式"
+  },
+  {
+    "id": "char-raptor",
+    "use": "岩跳龙（绿色 / 橙色两套配色）",
+    "runtime": "src/models.js buildRaptor",
+    "source_type": "procedural",
+    "tool": "同上",
+    "status": "正式"
+  },
+  {
+    "id": "prop-statue",
+    "use": "金色骑士像（四座）",
+    "runtime": "src/world.js statueMesh",
+    "source_type": "procedural",
+    "process": "人形骨架摆姿势后烘焙为单网格",
+    "status": "正式"
+  },
+  {
+    "id": "props-items",
+    "use": "油桶、通风管、食物、宝物、武器、锁链、翼龙",
+    "runtime": "src/models.js",
+    "source_type": "procedural",
+    "status": "正式"
+  },
+  {
+    "id": "env-textures",
+    "use": "楼顶石板、砖墙、石砌外墙、窗格、壁纸、木纹、红地毯、大理石、街面、铁丝网、蛛网、海面；第二关林地泥土、泥沼烂泥、植物斑驳纹理（v0.5.2 起与第一关同为写实噪点风格）",
+    "runtime": "src/world.js T()",
+    "source_type": "procedural",
+    "tool": "Canvas 2D 程序化贴图（固定种子）",
+    "status": "正式"
+  },
+  {
+    "id": "portraits",
+    "use": "HUD / 对话框 / 选人卡片头像、续关画面",
+    "runtime": "src/main.js makePortraits → models.js portrait()",
+    "source_type": "procedural",
+    "process": "开局离屏渲染 3D 模型",
+    "status": "正式"
+  },
+  {
+    "id": "music",
+    "use": "关卡曲、Boss 曲、过关、续关",
+    "runtime": "src/audio.js SampleAudio / SONGS fallback",
+    "source_type": "original_game_recording",
+    "tool": "原版录音；合成仅在未加载/解码失败时回退",
+    "process": "下载并核对源哈希，压缩保留完整时长",
+    "status": "正式",
+    "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json"
+  },
+  {
+    "id": "sfx",
+    "use": "拳脚、枪声、爆炸、惨叫、恐龙嘶吼、拾取等",
+    "runtime": "src/audio.js + src/original-sfx.js; sounds/original-*.wav",
+    "source_type": "original_game_recording + procedural_fallback",
+    "tool": "WebAudio decoded arcade recordings; synthesizer retained for remaining events or download failure",
+    "status": "轻重拳脚、四名角色必杀、GO 使用原版；其他音效仍为合成",
+    "sources": "releases/v0.7.0/audio-sources.json"
+  },
+  {
+    "id": "site-thumb",
+    "use": "网站游戏列表卡片封面",
+    "runtime": "public/assets/game/thumbs/cadillacs-stage1-3d.jpg",
+    "source_type": "procedural",
+    "process": "qa/cover.js 在 Boss 区摆拍实机画面（隐藏 HUD），2× 截图后裁成 512×512；v0.5.0 曾按哑光画风重拍（?v=2），v0.5.2 画风改回后恢复原图（?v=3）",
+    "status": "正式"
+  },
+  {
+    "id": "stage1-background-v020",
+    "source_type": "reference",
+    "source": "https://www.spriters-resource.com/arcade/cadillacsdinosaurs/asset/55293/",
+    "use": "已在浏览器查看原版第一关背景图；参考走廊灰绿拱券、低护墙线、墙皮破损；未复制贴图进游戏"
+  },
+  {
+    "id": "special-moves-v020",
+    "source_type": "reference",
+    "source": "https://rq87.flyingomelette.com/RQ/CAD/char.html",
+    "use": "四位角色下上攻击、跳跃下踢动作区分；时窗、伤害、弹量为本项目平衡值，非精确原版数值"
+  },
+  {
+    "id": "ref-video-stage2",
+    "use": "第二关流程、HUD 敌人名字（HACK、POACHER J、SKINNER、GUTTER、LASH T.、BUTCHER）、区域字幕、屠夫造型与招式、配色",
+    "source_type": "reference",
+    "source": "https://www.youtube.com/watch?v=Y48MXUjtYwc（215–490 秒、480–540 秒片段）",
+    "notes": "yt-dlp 只下载片段截帧看画面（本机 scratchpad，不入库、不进游戏）"
+  },
+  {
+    "id": "ref-rq87-stage2",
+    "use": "第二关段落顺序：下凯迪拉克遇三角龙、熟睡霸王龙会被敌人叫醒、跳进泥沼、拉什·T、天色变暗的死恐龙、油桶、屠夫双刀脱手 / 乱跳 / 两种冲刺斩 / 屁股坐 / 小弟不断出现",
+    "source_type": "reference",
+    "source": "https://rq87.flyingomelette.com/RQ/CAD/l2.html"
+  },
+  {
+    "id": "ref-aqm-stage2",
+    "use": "第二关敌人类型、三角龙冲撞、霸王龙咬与地震、拉什·T 远距离链锤",
+    "source_type": "reference",
+    "source": "https://www.arcadequartermaster.com/cad_bosses.html ；https://www.arcadequartermaster.com/cad_enemies.html"
+  },
+  {
+    "id": "music-stage2",
+    "use": "2-1、2-2、Boss 2 原版音乐（2-3 复用 hall.mp3 Trap of Silence，原作同曲）",
+    "runtime": "public/html/game/cadillacs-stage1-3d/sounds/forest.mp3、swamp.mp3、boss2.mp3",
+    "source_type": "original_game_recording",
+    "source": [
+      "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/xbooefob/13.%20In%20the%20Poachers%27%20Forest%20%28Stage%202-1%2C%206-2%29.mp3",
+      "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/tmemwyzf/14.%20Ancient%20Earth%20%28Stage%202-2%2C%206-3%29.mp3",
+      "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/aoplijvz/15.%20Boss%202%20%28Stage%202%2C%206%2C%208%29.mp3"
+    ],
+    "source_sha256": {
+      "forest": "d3e40e631200f6e09306fb902cb3e90f3c233d24fb19f0eb06765d002f8dc9e8",
+      "swamp": "c38f9f7b56e3d1af95474dabb7d974e5e2ed1c0292ce209d7f251841bb2f575c",
+      "boss2": "02ba43a90ea49578ff0174309280eaf16e91e84813c2d3a3890517408ec635d8"
+    },
+    "sha256": {
+      "forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+      "swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
+      "boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d"
+    },
+    "processing": "完整原录音，单声道32kHz MP3 96kbps；取消70秒截取"
+  },
+  {
+    "id": "char-stage2",
+    "use": "偷猎者 J、斯金纳、格特、打手、雷泽、拉什·T、屠夫；三角龙哈克（四足骨架）；霸王龙希瓦特（与岩跳龙同一骨架，放大 2 倍）；凯迪拉克；砍刀、步枪、太阳镜、木桶、链锤、死恐龙布景",
+    "runtime": "src/models.js、src/world.js",
+    "source_type": "procedural",
+    "tool": "Three.js 程序化拼装，卡通色阶着色 + 描边（与第一关角色一致）",
+    "process": "按原作实机截帧取色与造型特征",
+    "status": "正式"
+  },
+  {
+    "id": "sfx-stage2",
+    "use": "步枪、溅水、引擎、刹车、三角龙鼻息、霸王龙吼、屠夫怒吼",
+    "runtime": "src/audio.js SFX",
+    "source_type": "procedural",
+    "tool": "WebAudio 合成",
+    "status": "替代（非原作采样）"
+  }
 ]

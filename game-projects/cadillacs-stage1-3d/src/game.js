@@ -222,6 +222,7 @@ export function newGame(opts) {
   ev('start', { hero: h.id, lives: G.settings.lives, dur: G.settings.dur });
 }
 function clearAll() {
+  A.clearEffects();
   for (const a of G.actors) if (!a.removed) removeActor(a);
   G.actors = []; G.player = null; G.boss = null; G.raptor = null;
   for (const it of G.items) scene.remove(it.mesh);
@@ -424,7 +425,7 @@ function handleInput(p, dt) {
     if (p.grab) releaseGrab(p);
     p.y = 0; p.vy = 0; p.vx = p.vz = 0;
     startMove(p, 'mega');
-    A.play('mega'); fx.ring(p.x, 0.15, p.z);
+    A.play('mega', 1, p.hero.id); fx.ring(p.x, 0.15, p.z);
     ev('mega');
     return;
   }
