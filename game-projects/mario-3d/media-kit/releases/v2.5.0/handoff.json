@@ -8,8 +8,8 @@
   "user_authorization": "用户：第三关可以了，发布吧（2026-10-07）",
   "build": {
     "id": "v2.5.0-0243c7af16f5",
-    "commit": null,
-    "dirty": true,
+    "commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+    "dirty": false,
     "fingerprint": "0243c7af16f58642585a996d4ed77eb0b9cd3eb43a7739d14b7cf93debe76656",
     "files_sha256": {
       "index.html": "96606649b44ff5b6cbf26d8ae42d14970f3ed07f6c3918290e42da0024804c51",
@@ -122,7 +122,7 @@
       "width": 844,
       "height": 390,
       "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
-      "visual_review": "not-run",
+      "visual_review": "passed",
       "audio": "none",
       "audio_review": "not-applicable",
       "segments": []
@@ -202,6 +202,22 @@
           "description": "连续转动视角"
         }
       ]
+    },
+    {
+      "id": "published-toy-treetops",
+      "file": "releases/v2.5.0/captures/toy-public-treetops-view-1.png",
+      "sha256": "c4f743fe0ba3a42de2c3805e113250687afa8ee0ecf3da24a6683a06c1c4262f",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 1280,
+      "height": 720,
+      "description": "已发布Toy官方宿主实机运行截图；测试定位用于取景，非普通带敌人全程通关",
+      "visual_review": "passed",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
     }
   ],
   "historical_media": [],
@@ -237,6 +253,27 @@
       "result": "32/32",
       "evidence": "qa/stage3-results.json",
       "environment": "Edge GPU；桌面与手机视口模拟，非真机；五视角连续转动"
+    },
+    {
+      "method": "published website pipe-clear-buttons",
+      "result": "13/13",
+      "evidence": "qa/website-play-results.json"
+    },
+    {
+      "method": "Toy official preview entrance",
+      "result": "49/49",
+      "evidence": "qa/toy-entrance-results.json"
+    },
+    {
+      "method": "Toy official preview third-stage UI",
+      "result": "22/22",
+      "evidence": "qa/toy-preview-results.json"
+    },
+    {
+      "method": "published Toy third-stage UI",
+      "result": "22/22",
+      "evidence": "qa/toy-public-results.json",
+      "environment": "实际官方宿主iframe；手机为桌面视口模拟，非真机"
     }
   ],
   "readiness": {
@@ -244,27 +281,50 @@
     "update": "partial",
     "gaps": [
       "局部素材留存，尚无第三关普通带敌人全程视频",
-      "音轨未人工听审，部分新截图待目视复核；不宣称可直接制成新视频"
+      "音轨未人工听审；只有已目视复核的截图标记通过，其他素材保留未审状态，不宣称可直接制作新视频"
     ]
   },
   "site": {
-    "status": "pending"
+    "status": "deployed_verified",
+    "version": "v2.5.0",
+    "commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+    "verified_at": "2026-10-07T01:21:36.302Z",
+    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3",
+    "record": "website.json",
+    "actions_run": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/37556642893",
+    "runtime_qa": "qa/website-play-results.json"
   },
   "toy": {
     "id": 39043286960128,
-    "status": "pending"
+    "status": "published",
+    "version": "v2.5.0",
+    "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23241/index.html",
+    "submitted_at": "2026-10-07T01:27:40.000Z",
+    "published_at": "2026-10-07T01:30:01.000Z",
+    "verified_at": "2026-10-07T01:40:46.831Z",
+    "package_sha256": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61",
+    "source_commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+    "preflight": "toy-preflight.json",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_4Fc9TxBU/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
+    "public_runtime_qa": "qa/toy-public-results.json",
+    "record": "toy-status.json"
   },
   "bilibili": {
-    "status": "pending",
+    "status": "public_verified",
+    "version": "v2.5.0",
+    "verified_at": "2026-10-07T01:40:46.831Z",
     "targets": [
       "BV1guep6NELt",
       "BV1Fwpw6FEFx"
     ],
-    "reason": "新关卡达到正式版本说明同步条件，汇总此前未同步的钻管过场等累计项"
+    "record": "bilibili-sync.json"
   },
   "taptap": {
     "status": "not_mapped",
     "reason": "现有已确认厂商H5映射只有虫潮962354/坦克962376，玛丽无明确app ID；不新建作品"
   },
-  "local_media_backup": "D:/project/task-artifacts/mario-stage3-release-20261007"
+  "local_media_backup": "D:/project/task-artifacts/mario-stage3-release-20261007",
+  "completed_at": "2026-10-07T01:40:46.831Z"
 }

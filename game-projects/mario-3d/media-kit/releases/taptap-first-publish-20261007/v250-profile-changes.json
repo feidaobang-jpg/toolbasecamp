@@ -1,0 +1,34 @@
+{
+  "changes": [
+    {
+      "field_id": "description",
+      "expected": "跳跃顶砖、收集金币和道具，钻水管进入地下，完成1-1与1-2。\n\n这是超级玛丽玩法的非官方3D平台跳跃实验，保留蘑菇、火焰花、无敌星、奖励房间与传送区；两关之间加入地面走入水管和地下落地过场。\n\n支持电脑键盘和手机触屏，可切换操作模式、视角、画质和音量，暂停后继续或重玩。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。",
+      "value": "跳跃顶砖、收集金币和道具，探索1-1地面、1-2地下与1-3树冠三个关卡。\n\n这是超级玛丽玩法的非官方3D平台跳跃实验，保留蘑菇、火焰花、无敌星、奖励房间与传送区；第三关加入高低树冠、往返浮台、飞行乌龟与终点城堡。三关可以直接选择，并按顺序衔接，保留走入水管和地下落地过场。\n\n支持电脑键盘和手机触屏，可切换操作模式、视角、画质和音量，暂停后继续或重玩。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。"
+    },
+    {
+      "field_id": "developer_message",
+      "expected": "我在尝试把经典平台跳跃的地图与操作放进3D视角中，先打磨1-1和1-2的探索、道具与水管衔接。这是爱好者制作的非官方玩法实验，仍在持续修正体验。",
+      "value": "我在尝试把经典平台跳跃的地图与操作放进3D视角中，目前完成1-1、1-2和1-3，继续打磨探索、道具、水管衔接与树冠浮台体验。这是爱好者制作的非官方玩法实验，仍在持续修正体验。"
+    },
+    {
+      "field_id": "promotion_text",
+      "expected": "顶砖跳跃钻水管，探索地面与地下",
+      "value": "顶砖钻水管，在树冠和浮台之间闯关"
+    },
+    {
+      "field_id": "screenshots",
+      "expected": [
+        "https://img-tc.tapimg.com/market/images/bceeb57e64998248320e43af453f9f4b.jpg",
+        "https://img-tc.tapimg.com/market/images/fe483caa693ff9bc78b45b8bf62e80f1.jpg",
+        "https://img-tc.tapimg.com/market/images/c0f818fbfb8f5e29fd1d592067ac14d7.jpg"
+      ],
+      "value": [
+        "https://img-tc.tapimg.com/market/images/bceeb57e64998248320e43af453f9f4b.jpg",
+        "https://img-tc.tapimg.com/market/images/fe483caa693ff9bc78b45b8bf62e80f1.jpg",
+        "https://img-tc.tapimg.com/market/images/c0f818fbfb8f5e29fd1d592067ac14d7.jpg",
+        "https://img-tc.tapimg.com/market/images/9a0385eab72c0031431adc93619875b7.jpg"
+      ],
+      "op": "replace"
+    }
+  ]
+}

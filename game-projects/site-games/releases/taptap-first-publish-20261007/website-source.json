@@ -1,0 +1,30 @@
+[
+  {
+    "game": "jackal-stage1-3d",
+    "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js",
+    "sha256": "0def9c3d18750b3c0e6610d39ed990dd63b1b66297d770991db15f5ad8b07733",
+    "matches_source": true,
+    "verified_at": "2026-10-07T01:44:15.248768+00:00"
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js",
+    "sha256": "aee84b79ac9a027df9bbad054e24c6939629edbd44dcd9951f76d4244f47234a",
+    "matches_source": true,
+    "verified_at": "2026-10-07T01:44:22.808247+00:00"
+  },
+  {
+    "game": "mario-3d",
+    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js",
+    "sha256": "0e5cb0b32d0fdcb8cb61e7946bb7733ffabe4e967d62fdd574da5a5369c0b062",
+    "matches_source": true,
+    "verified_at": "2026-10-07T01:44:31.804425+00:00"
+  },
+  {
+    "game": "journey-west-3d",
+    "url": "https://www.zhengxiaohui.cn/html/game/journey-west-3d/main.js",
+    "sha256": "e62333502d2160c4170d7db9d9754843f788eac7c937731c5b498e3410e7c21c",
+    "matches_source": true,
+    "verified_at": "2026-10-07T01:44:31.889199+00:00"
+  }
+]

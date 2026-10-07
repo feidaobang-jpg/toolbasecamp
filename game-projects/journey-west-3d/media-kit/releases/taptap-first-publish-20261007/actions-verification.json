@@ -1,0 +1,55 @@
+{
+  "slug": "journey-west-3d",
+  "package_sha256": "32652d9876e894645ae0ef5a1bf26c56d06d501865a3b25d2248423991ec08c4",
+  "scenarios": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "mobile": false,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [],
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "mobile": true,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [],
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mobile": true,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [],
+      "errors": [],
+      "failed": [],
+      "external": []
+    }
+  ],
+  "real_phone_test": false,
+  "taptap_client_test": false,
+  "method": "Normal keyboard and pointer input; read-only existing state hooks. Canvas/audio capture does not change gameplay.",
+  "status": "passed"
+}

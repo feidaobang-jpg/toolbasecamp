@@ -9,15 +9,24 @@ const check=(name,ok,data)=>{checks.push({name,ok,data});assert(ok,name+': '+JSO
 const position=async(p,x=36.5,y=5)=>p.evaluate(({x,y})=>{const q=__MARIO_TEST__;Object.assign(q.world.player,{x,y,z:0,vx:0,vy:0,vz:0,grounded:true,inv:999});q.view.snap=true;q.step(1);},{x,y});
 const start=async p=>{await p.locator('#menu [data-act=start]').click();await p.evaluate(()=>{__MARIO_TEST__.manual(true);__MARIO_TEST__.skipCard();});};
 const photograph=async(p,file)=>{await p.evaluate(()=>{__MARIO_TEST__.world.player.inv=0;__MARIO_TEST__.step(0);});await p.screenshot({path:path.join(out,file)});};
+// Toy allows its runtime inside the official shell; keep actual iframe geometry for UI checks.
+async function openRuntime(page){
+ await page.goto(url,{waitUntil:'networkidle'});
+ if(!/www\.bilibili\.com\/toy\//.test(url))return page;
+ await page.waitForFunction(()=>Array.from(document.querySelectorAll('iframe')).some(f=>/bilibilitoy\.com/.test(f.src)));
+ const frame=page.frames().find(f=>/bilibilitoy\.com/.test(f.url()));
+ const entry=new URL(frame.url());entry.searchParams.set('test','1');entry.searchParams.set('level','1-3');entry.searchParams.set('q','high');await frame.goto(entry.href,{waitUntil:'networkidle'});
+ return new Proxy(page,{get(target,key){if(['locator','evaluate','waitForFunction'].includes(key))return frame[key].bind(frame);if(key==='reload')return()=>frame.goto(entry.href,{waitUntil:'networkidle'});const value=target[key];return typeof value==='function'?value.bind(target):value;}});
+}
 (async()=>{
  fs.mkdirSync(out,{recursive:true});
  const b=await chromium.launch({channel:'msedge',headless:true,args:['--enable-gpu','--use-angle=d3d11']});
  const errors=[];
  try{
-  const c=await b.newContext({viewport:{width:1280,height:720}}),p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));
+  const c=await b.newContext({viewport:{width:1280,height:720}});let p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));
   // Tap only this game's audio output, without microphone/system audio permissions.
   await p.addInitScript(()=>{const original=AudioNode.prototype.connect;AudioNode.prototype.connect=function(destination,...rest){const result=original.call(this,destination,...rest);if(destination===this.context.destination){const sink=this.context.createMediaStreamDestination();original.call(this,sink);window.__qaGameAudio=sink;}return result;};});
-  await p.goto(url,{waitUntil:'networkidle'});await p.waitForFunction(()=>window.__marioReady&&window.__MARIO_TEST__);
+  p=await openRuntime(p);await p.waitForFunction(()=>window.__marioReady&&window.__MARIO_TEST__);
   const selector=p.locator('#menu [data-opt=level]');
   for(const label of ['1-3 树冠','1-1 地面','1-2 地下']){check('direct selection label '+label,(await selector.innerText()).includes(label));await selector.click();}
   check('level selector cycles back to 1-3',(await selector.innerText()).includes('1-3 树冠'));
@@ -77,8 +86,8 @@ const photograph=async(p,file)=>{await p.evaluate(()=>{__MARIO_TEST__.world.play
   check('capture contains game audio',recorded.audioTracks===1,recorded);
   await p.evaluate(()=>__MARIO_TEST__.manual(true));check('no browser runtime errors',errors.length===0,errors);
   // Fresh portrait title starts in the logical landscape layout, before gameplay.
-  const mobile=await b.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true}),mp=await mobile.newPage();
-  await mp.goto(url,{waitUntil:'networkidle'});await mp.waitForFunction(()=>window.__marioReady);await mp.screenshot({path:path.join(out,'portrait-menu.png')});
+  const mobile=await b.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true});let mp=await mobile.newPage();
+  mp=await openRuntime(mp);await mp.waitForFunction(()=>window.__marioReady);await mp.screenshot({path:path.join(out,'portrait-menu.png')});
   const rotation=await mp.evaluate(()=>getComputedStyle(document.querySelector('#stage')).transform);
   check('portrait title is already rotated landscape',rotation!=='none',rotation);await mobile.close();await c.close();
   const resultPath=process.env.QA_SKIP_PERF?'media-results.json':'preview-results.json';

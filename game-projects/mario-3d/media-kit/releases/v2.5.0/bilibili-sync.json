@@ -1,0 +1,67 @@
+{
+  "version": "v2.5.0",
+  "source_commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+  "channels": {
+    "website": "deployed_verified",
+    "toy": "published"
+  },
+  "records": [
+    {
+      "bvid": "BV1guep6NELt",
+      "owner_uid": 16214353,
+      "status": "public_verified",
+      "before": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n更新（2026-10-07·v2.4.4）：当前3D试玩含1-1与1-2，修复第一关降旗后卡住，现可自动进入第二关；水管改为圆润绿色，J保持实体按钮并提示“需火焰花”。I冲刺、J火球、K跳跃、U下蹲（L兼容），空白处拖动转视角、C切视角；可切换电脑/手机操作。本视频为早期开发演示，以当前试玩为准。",
+      "before_source": "live .ql-editor text was read and matches the recorded normalized content; Quill exposes paragraph separators as double newlines",
+      "after": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n第三关网站直玩：https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3\n更新（2026-10-07·v2.5.0）：网站试玩新增1-3树冠关，含往返浮台与飞行乌龟；三关可直接选择，过关自动衔接，并补齐进入地下关的钻管过场。远跳先按I冲刺再按K跳；J火球需火焰花，U下蹲（L兼容）。空白处拖动观察，C切视角，支持电脑/手机操作。网站与Toy均已更新。本视频为早期开发演示，以当前试玩为准。",
+      "after_sha256": "d69543762303c479fb06d3df9e8c5085d67ce46dbda5873019191b33d5b1de28",
+      "chars": 543,
+      "urls": [
+        "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+        "https://www.bilibili.com/toy/feidao-games/index.html",
+        "https://www.zhengxiaohui.cn/games.html",
+        "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3"
+      ],
+      "prepared_at": "2026-10-07T01:30:24.333Z",
+      "submitted_at": null,
+      "public_verified_at": "2026-10-07T01:40:46.831Z",
+      "public_text": "这次给 GPT-6 astra 一句话需求，做一个超级玛丽第一关。素材不是原版，但熟悉的玩法终于能跑起来了：管子跳得过去，坑也能正常跨越，最后一路到旗杆和城堡。对比我以前用其他 AI 开发时遇到的各种“能看不能玩”，这次的进步确实很直观。\n当前Toy试玩：https://www.bilibili.com/toy/feidao-mario-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n第三关网站直玩：https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3\n更新（2026-10-07·v2.5.0）：网站试玩新增1-3树冠关，含往返浮台与飞行乌龟；三关可直接选择，过关自动衔接，并补齐进入地下关的钻管过场。远跳先按I冲刺再按K跳；J火球需火焰花，U下蹲（L兼容）。空白处拖动观察，C切视角，支持电脑/手机操作。网站与Toy均已更新。本视频为早期开发演示，以当前试玩为准。",
+      "public_text_matches": true,
+      "public_url": "https://www.bilibili.com/video/BV1guep6NELt/",
+      "verification": "通过浏览器UI保存既有稿件；公开视频页展开全文，与最终文案逐字符比对一致，无空白行，原标题/标签/成片保留",
+      "changed_fields": [
+        "description"
+      ],
+      "recorded_at": "2026-10-07T01:40:46.831Z",
+      "submission_time_note": "浏览器UI已确认保存成功；精确平台提交时间未返回，recorded_at为核验记录时间"
+    },
+    {
+      "bvid": "BV1Fwpw6FEFx",
+      "owner_uid": 16214353,
+      "status": "public_verified",
+      "before": "坦克大战、超级玛丽、赤色要塞、恐龙快打、虫潮围城：在同一局里切换视角，看看驾驶、跳跃和贴身交战变成第一人称后是什么感觉。\n\n五款Toy试玩合集：https://www.bilibili.com/toy/feidao-games/index.html\n\n电脑按C切换视角，Q/E转头；手机可点切换视角、拖动画面观察。第一人称更贴近现场，俯视和侧视方便看清全局。\n\n各作由GPT、Claude等AI辅助开发，本期由Codex辅助制作。视频为录制时版本，以当前试玩为准。\n\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱→游戏→自研游戏投票榜）\n\n超级玛丽更新（2026-10-07·v2.4.4）：已修复第一关过关卡住，现能自动进入第二关；水管更圆且恢复绿色，J键未获火焰花时显示提示。",
+      "before_source": "live .ql-editor text was read and matches the recorded normalized content; Quill exposes paragraph separators as double newlines",
+      "after": "坦克大战、超级玛丽、赤色要塞、恐龙快打、虫潮围城：在同一局里切换视角，看看驾驶、跳跃和贴身交战变成第一人称后是什么感觉。\n五款Toy试玩合集：https://www.bilibili.com/toy/feidao-games/index.html\n电脑按C切换视角，Q/E转头；手机可点切换视角、拖动画面观察。第一人称更贴近现场，俯视和侧视方便看清全局。\n各作由GPT、Claude等AI辅助开发，本期由Codex辅助制作。视频为录制时版本，以当前试玩为准。\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱→游戏→自研游戏投票榜）\n超级玛丽更新（2026-10-07·v2.5.0）：网站新增1-3树冠关，含往返浮台与飞行乌龟；三关可直接选择，过关自动衔接，并补齐进入地下关的钻管过场。远跳先按I冲刺再按K跳跃，J火球需火焰花。网站与Toy均已更新，第三关直玩：https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3",
+      "after_sha256": "fcc0f49bac7fe863d206630687da2fabc947a10ecda4e8c0f0d89ab86471b9d2",
+      "chars": 486,
+      "urls": [
+        "https://www.bilibili.com/toy/feidao-games/index.html",
+        "https://www.zhengxiaohui.cn/game-vote.html",
+        "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3"
+      ],
+      "prepared_at": "2026-10-07T01:30:24.334Z",
+      "submitted_at": null,
+      "public_verified_at": "2026-10-07T01:40:46.831Z",
+      "public_text": "坦克大战、超级玛丽、赤色要塞、恐龙快打、虫潮围城：在同一局里切换视角，看看驾驶、跳跃和贴身交战变成第一人称后是什么感觉。\n五款Toy试玩合集：https://www.bilibili.com/toy/feidao-games/index.html\n电脑按C切换视角，Q/E转头；手机可点切换视角、拖动画面观察。第一人称更贴近现场，俯视和侧视方便看清全局。\n各作由GPT、Claude等AI辅助开发，本期由Codex辅助制作。视频为录制时版本，以当前试玩为准。\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱→游戏→自研游戏投票榜）\n超级玛丽更新（2026-10-07·v2.5.0）：网站新增1-3树冠关，含往返浮台与飞行乌龟；三关可直接选择，过关自动衔接，并补齐进入地下关的钻管过场。远跳先按I冲刺再按K跳跃，J火球需火焰花。网站与Toy均已更新，第三关直玩：https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3",
+      "public_text_matches": true,
+      "public_url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
+      "verification": "通过浏览器UI保存既有稿件；公开视频页展开全文，与最终文案逐字符比对一致，无空白行，原标题/标签/成片保留",
+      "changed_fields": [
+        "description"
+      ],
+      "recorded_at": "2026-10-07T01:40:46.831Z",
+      "submission_time_note": "浏览器UI已确认保存成功；精确平台提交时间未返回，recorded_at为核验记录时间"
+    }
+  ],
+  "status": "public_verified",
+  "verified_at": "2026-10-07T01:40:46.831Z"
+}

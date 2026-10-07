@@ -7,33 +7,33 @@
       "url": "https://www.bilibili.com/video/BV1guep6NELt/",
       "owner_uid": 16214353,
       "toy_bound": true,
-      "last_public_verified_version": "v2.4.4",
-      "last_public_verified_at": "2026-10-06T22:19:35.956Z",
-      "last_sync_record": "releases/v2.4.4/bili-updates.json",
-      "description_sha256": "91d49374615571250ea041a342b296bdf7750567d8f5e10403a3c46ebaae25a7",
-      "lastPublicVerifiedVersion": "v2.4.4",
-      "descriptionHash": "91d49374615571250ea041a342b296bdf7750567d8f5e10403a3c46ebaae25a7",
-      "release": "releases/v2.4.4/handoff.json",
-      "publicVerifiedAt": "2026-10-06T22:19:35.956Z"
+      "last_public_verified_version": "v2.5.0",
+      "last_public_verified_at": "2026-10-07T01:40:46.831Z",
+      "last_sync_record": "releases/v2.5.0/bilibili-sync.json",
+      "description_sha256": "d69543762303c479fb06d3df9e8c5085d67ce46dbda5873019191b33d5b1de28",
+      "lastPublicVerifiedVersion": "v2.5.0",
+      "descriptionHash": "d69543762303c479fb06d3df9e8c5085d67ce46dbda5873019191b33d5b1de28",
+      "release": "releases/v2.5.0/handoff.json",
+      "publicVerifiedAt": "2026-10-07T01:40:46.831Z"
     },
     {
       "bvid": "BV1Fwpw6FEFx",
       "url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
       "owner_uid": 16214353,
       "mapping_evidence": "本人五款游戏实战视频，公开简介明确包含超级玛丽；只追加玛丽修复段落，不新增或改变视频绑定",
-      "last_public_verified_version": "v2.4.4",
-      "last_public_verified_at": "2026-10-06T22:19:35.956Z",
-      "last_sync_record": "releases/v2.4.4/bili-updates.json",
-      "description_sha256": "6ea756bcb3ce4f83cca480c28a809594106f2f607374e0eb300e88cab105cfc1",
-      "lastPublicVerifiedVersion": "v2.4.4",
-      "descriptionHash": "6ea756bcb3ce4f83cca480c28a809594106f2f607374e0eb300e88cab105cfc1",
-      "release": "releases/v2.4.4/handoff.json",
-      "publicVerifiedAt": "2026-10-06T22:19:35.956Z"
+      "last_public_verified_version": "v2.5.0",
+      "last_public_verified_at": "2026-10-07T01:40:46.831Z",
+      "last_sync_record": "releases/v2.5.0/bilibili-sync.json",
+      "description_sha256": "fcc0f49bac7fe863d206630687da2fabc947a10ecda4e8c0f0d89ab86471b9d2",
+      "lastPublicVerifiedVersion": "v2.5.0",
+      "descriptionHash": "fcc0f49bac7fe863d206630687da2fabc947a10ecda4e8c0f0d89ab86471b9d2",
+      "release": "releases/v2.5.0/handoff.json",
+      "publicVerifiedAt": "2026-10-07T01:40:46.831Z"
     }
   ],
   "status": "public_verified",
   "reason": null,
-  "version": "v2.4.4",
+  "version": "v2.5.0",
   "excluded_candidates": [
     {
       "bvid": "BV1guep6NELt",
@@ -42,32 +42,7 @@
     }
   ],
   "mapping_audit": "2026-10-06重新核验：用户2026-10-05确认与toy video list均绑定BV1guep6NELt；公开简介已有当前3D试玩。保留历史视频并注明早期演示。",
-  "pending_updates": [
-    {
-      "version": "v2.4.5",
-      "classification": "普通补丁",
-      "status": "pending_merge",
-      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
-      "record": "releases/v2.4.5/handoff.json",
-      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。"
-    },
-    {
-      "version": "v2.4.6",
-      "classification": "普通补丁",
-      "status": "pending_merge",
-      "record": "releases/v2.4.6/handoff.json",
-      "summary": "手机竖着拿时菜单直接横屏。",
-      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
-    },
-    {
-      "version": "v2.4.7",
-      "classification": "普通补丁",
-      "status": "pending_merge",
-      "summary": "补齐1-1到1-2地面钻管过场。",
-      "record": "releases/v2.4.7/handoff.json",
-      "reason": "局部演出补丁；现有试玩入口和操作仍准确，累计到下一次有意义更新。"
-    }
-  ],
+  "pending_updates": [],
   "resolved_updates": [
     {
       "version": "v2.2.1",
@@ -95,9 +70,39 @@
       "record": "releases/v2.4.1/handoff.json",
       "resolved_version": "v2.4.4",
       "reason": "累计补丁随本次严重过关修复合并说明；公开核验成功"
+    },
+    {
+      "version": "v2.4.5",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+      "record": "releases/v2.4.5/handoff.json",
+      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。",
+      "resolved_version": "v2.5.0",
+      "resolved_at": "2026-10-07T01:40:46.831Z"
+    },
+    {
+      "version": "v2.4.6",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "record": "releases/v2.4.6/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏。",
+      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。",
+      "resolved_version": "v2.5.0",
+      "resolved_at": "2026-10-07T01:40:46.831Z"
+    },
+    {
+      "version": "v2.4.7",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "补齐1-1到1-2地面钻管过场。",
+      "record": "releases/v2.4.7/handoff.json",
+      "reason": "局部演出补丁；现有试玩入口和操作仍准确，累计到下一次有意义更新。",
+      "resolved_version": "v2.5.0",
+      "resolved_at": "2026-10-07T01:40:46.831Z"
     }
   ],
-  "updated_at": "2026-10-06T22:25:35.193188+00:00",
+  "updated_at": "2026-10-07T01:40:46.831Z",
   "history": [
     {
       "bvid": "BV1guep6NELt",
@@ -119,11 +124,25 @@
       "status": "public_verified",
       "record": "releases/v2.4.4/bili-updates.json",
       "checked_at": "2026-10-06T22:19:35.956Z"
+    },
+    {
+      "bvid": "BV1guep6NELt",
+      "version": "v2.5.0",
+      "status": "public_verified",
+      "record": "releases/v2.5.0/bilibili-sync.json",
+      "checked_at": "2026-10-07T01:40:46.831Z"
+    },
+    {
+      "bvid": "BV1Fwpw6FEFx",
+      "version": "v2.5.0",
+      "status": "public_verified",
+      "record": "releases/v2.5.0/bilibili-sync.json",
+      "checked_at": "2026-10-07T01:40:46.831Z"
     }
   ],
   "last_public_verified": {
-    "version": "v2.4.4",
-    "at": "2026-10-06T22:19:35.956Z",
+    "version": "v2.5.0",
+    "at": "2026-10-07T01:40:46.831Z",
     "videos": [
       "BV1guep6NELt",
       "BV1Fwpw6FEFx"
