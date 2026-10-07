@@ -58,6 +58,14 @@
       "record": "releases/v2.4.6/handoff.json",
       "summary": "手机竖着拿时菜单直接横屏。",
       "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
+    },
+    {
+      "version": "v2.4.7",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "补齐1-1到1-2地面钻管过场。",
+      "record": "releases/v2.4.7/handoff.json",
+      "reason": "局部演出补丁；现有试玩入口和操作仍准确，累计到下一次有意义更新。"
     }
   ],
   "resolved_updates": [

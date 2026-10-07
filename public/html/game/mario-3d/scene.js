@@ -3,8 +3,8 @@
 import * as THREE from './three.js?v=2.1.0';
 import { tex, textTexture } from './textures.js?v=2.4.4';
 import * as M from './models.js?v=toy3dui2';
-import { LANE, SOLID, tileKey } from './levels.js?v=2.4.4';
-import { heightOf } from './world.js?v=2.4.4';
+import { LANE, SOLID, tileKey } from './levels.js?v=2.4.7';
+import { heightOf } from './world.js?v=2.4.7';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -469,7 +469,7 @@ export function createView(canvas) {
   view.setPreset = (i) => { view.presetIndex = i; view.yawOffset = 0; view.pitchOffset = 0; };
   view.cameraYaw = () => PRESETS[view.presetIndex].yaw + view.yawOffset;
   // 第一人称只在游玩时生效：标题画面换成正视，死亡动画时退到身后看清发生了什么
-  view.firstPerson = (w) => !!PRESETS[view.presetIndex].fp && !view.titleMode && !!w && w.mode !== 'dying';
+  view.firstPerson = (w) => !!PRESETS[view.presetIndex].fp && !view.titleMode && !!w && !w.entrance && w.mode !== 'dying';
 
   // 镜头避让：第三人称镜头落进或贴着方块时，先往上抬过障碍；上面没空间（天花板下）就沿视线往玛丽方向拉近
   // 已被剖面切掉的墙和天花板不算障碍（view.cutNow 每帧按未避让的镜头位置算出）
@@ -527,9 +527,10 @@ export function createView(canvas) {
   function updateCamera(w, dt) {
     let pr = PRESETS[view.presetIndex];
     const p = w.player, a = w.area, fp = view.firstPerson(w);
+    if (w.entrance) pr = PRESETS[0]; // 开场用侧视看清走路与钻管，结束后恢复玩家选择。
     if (pr.fp && !fp) pr = FRONT;
-    const pitch=pr.pitch+view.pitchOffset;
-    const yaw = pr.yaw + view.yawOffset;
+    const pitch = pr.pitch + (w.entrance ? 0 : view.pitchOffset);
+    const yaw = pr.yaw + (w.entrance ? 0 : view.yawOffset);
     let tx = p.x;
     const snap = view.snap;
     const k = snap ? 1 : 1 - Math.exp(-6 * dt);
@@ -564,7 +565,7 @@ export function createView(canvas) {
     }
     const near = fp ? 0.06 : 0.3;
     if (camera.fov !== pr.fov || camera.near !== near) { camera.fov = pr.fov; camera.near = near; camera.updateProjectionMatrix(); }
-    FADE.on.value = fp ? 0 : 1;
+    FADE.on.value = fp || w.entrance ? 0 : 1; // 钻管演出保留管壁遮挡，角色逐渐消失在管内。
     // 阴影范围有限，跟着镜头朝向往前挪，正视时前方的砖块和水管也有影子
     const fwdX = -Math.sin(yaw) * 10;
     sun.position.set(target.x + fwdX - 10, target.y + 24, 14); sun.target.position.set(target.x + fwdX, 0, 0);
@@ -677,14 +678,14 @@ export function createView(canvas) {
       if (Math.random() < dt * 14) burst(p.x + (Math.random() - 0.5), p.y + Math.random() * 1.6, p.z, '#fff6a0', 1, 1.5, 0.4, 0.06);
     } else { player.mats.cap.color.set(col.cap); player.mats.overalls.color.set(col.overalls); }
     const model = showBig ? player.big : player.small, ud = model.userData;
-    const speed = Math.hypot(p.vx, p.vz);
+    const speed = w.mode === 'pipe' && w.pipeAnim?.kind === 'side' ? 1.6 : Math.hypot(p.vx, p.vz);
     const crouch = p.crouch && showBig;
     ud.body.scale.y = crouch ? 0.55 : 1;
     let legA = 0, armA = 0;
     if (w.mode === 'dying') { ud.arms.forEach(a => { a.rotation.x = 0; a.rotation.z = (a.position.x > 0 ? 1 : -1) * 2.6; }); ud.legs.forEach(l => l.rotation.x = 0); return; }
     if (w.mode === 'flag' && w.flag && (w.flag.phase === 'slide' || w.flag.phase === 'hold')) { ud.arms.forEach(a => { a.rotation.x = -2.6; a.rotation.z = 0; }); ud.legs.forEach((l, i) => l.rotation.x = i ? 0.4 : -0.2); return; }
     ud.arms.forEach(a => a.rotation.z = 0);
-    if (!p.grounded && w.mode === 'play') {
+    if (!p.grounded && (w.mode === 'play' || w.entrance?.phase === 'drop')) {
       ud.legs[0].rotation.x = -0.7; ud.legs[1].rotation.x = 0.5;
       ud.arms[0].rotation.x = 0.4; ud.arms[1].rotation.x = -2.7;
       return;

@@ -53,7 +53,7 @@ function check(name, ok, data) { checks.push({ name, ok, data }); if (!ok) throw
       check('1-1 flag sequence automatically enters 1-2', await p.evaluate(() => __MARIO_TEST__.state().level === '1-2' && __MARIO_TEST__.state().cleared.join() === '1-1'));
       await p.screenshot({ path: path.join(out, 'second-stage.png') });
       // Relocate to the actual underground exit pipe, then use its real transition.
-      await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); const s = q.world.area.sidePipes.find(s => s.to?.area === 'exit'); Object.assign(q.world.player, { x: s.x - .3, y: s.y, vx: 0, vy: 0, grounded: true }); });
+      await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); q.step(600); const s = q.world.area.sidePipes.find(s => s.to?.area === 'exit'); Object.assign(q.world.player, { x: s.x - .3, y: s.y, vx: 0, vy: 0, grounded: true }); });
       await p.keyboard.down('KeyU'); await p.evaluate(() => __MARIO_TEST__.step(1)); await p.keyboard.up('KeyU');
       await p.evaluate(() => __MARIO_TEST__.step(500));
       check('1-2 pipe reaches overworld exit', await p.evaluate(() => __MARIO_TEST__.world.areaId === 'exit'));
