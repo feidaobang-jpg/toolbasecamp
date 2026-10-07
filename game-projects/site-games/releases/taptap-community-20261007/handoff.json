@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-community-20261007-06",
+  "source": "Codex",
+  "developer_id": 100726,
+  "taptap_user_id": 416707686,
+  "checked_at": "2026-10-07T04:43:29.723Z",
+  "status": "community_public_verified_profile_reviewing",
+  "policy": {
+    "automatic_posting_enabled": true,
+    "authorization_date": "2026-10-07",
+    "first_online_release": "one_dynamic_attached_to_matching_game_forum",
+    "meaningful_update_or_severe_fix": "one_dynamic_attached_to_matching_game_forum",
+    "ordinary_player_visible_patch": "one_short_dynamic_per_completed_task",
+    "internal_only": "no_post",
+    "trigger": "after_target_taptap_version_online_and_public_entry_visible",
+    "dedupe": "app_id + online_package_or_version + content_sha256; resume by querying published moment",
+    "scheduler_created": false,
+    "reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+  },
+  "posts": [
+    {
+      "game_id": "jackal-stage1-3d",
+      "app_id": 962721,
+      "title": "赤色要塞 3D 上线试玩",
+      "moment_id": "856855343290912347",
+      "source_version": "v0.8.1",
+      "h5_version_id": 270833,
+      "proof": "jackal-post-public.png",
+      "body": "第一关与废墟城第二关试玩已开放：驾驶武装吉普救出俘虏、送上直升机，突破敌军防线。机关枪默认固定向上，也可在设置中切换方向；联合开火键可同时发射机枪和手雷或火箭炮，独立攻击键继续保留。\n\n支持电脑键鼠与手机触屏、即时切换操作模式和观察视角。这是爱好者制作的非官方 3D 复刻试玩，欢迎反馈操作、节奏和难度。\n\nTapTap 试玩入口：https://www.taptap.cn/app/962721",
+      "url": "https://www.taptap.cn/moment/856855343290912347",
+      "game_url": "https://www.taptap.cn/app/962721",
+      "forum_app_id": 962721,
+      "forum_url": "https://www.taptap.cn/app/962721/topic",
+      "platform_version": "V-20261007",
+      "online_version_details": {
+        "logs": [
+          {
+            "action": 0,
+            "entry_type": 0,
+            "event": "draft_created",
+            "post_audit_status": 0,
+            "updated_time": 1791334953,
+            "version_code": 0
+          },
+          {
+            "action": 1,
+            "entry_type": 0,
+            "event": "review_submitted",
+            "post_audit_status": 0,
+            "updated_time": 1791340099,
+            "version_code": 0
+          },
+          {
+            "action": 4,
+            "entry_type": 0,
+            "event": "review_approved",
+            "post_audit_status": 0,
+            "updated_time": 1791341136,
+            "version_code": 0
+          },
+          {
+            "action": 8,
+            "entry_type": 2,
+            "event": "published",
+            "post_audit_status": 0,
+            "updated_time": 1791341136,
+            "version_code": 0
+          }
+        ],
+        "revision": 1041012,
+        "status": "online",
+        "status_label": "已上线",
+        "status_value": 4,
+        "version": "V-20261007",
+        "version_id": "1041012"
+      },
+      "version_timeline": {
+        "list": [
+          {
+            "created_time": 1791334953,
+            "last_event": "published",
+            "status": "online",
+            "status_label": "已上线",
+            "status_value": 4,
+            "version": "V-20261007",
+            "version_id": "V-20261007"
+          }
+        ],
+        "page": 1,
+        "page_size": 100,
+        "total": 1
+      },
+      "published_source_mapping": "matches the previously submitted revision and its saved H5 package receipt",
+      "status": "public_verified",
+      "profile_dynamic_verified": true,
+      "forum_membership_verified": true,
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "screenshot": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/jackal-post-public.png",
+      "post_action": "created once, then edited the same moment to add exact playable content, direct entry and matching forum",
+      "content_sha256": "b794bc2d39851910046c8da10aa3e86b50440e539031cd9fb069c3acb4960b46"
+    },
+    {
+      "game_id": "cadillacs-stage1-3d",
+      "app_id": 962722,
+      "title": "恐龙快打 3D 上线试玩",
+      "moment_id": "856856050622531778",
+      "source_version": "v0.7.0",
+      "h5_version_id": 270844,
+      "proof": "cadillacs-post-public.png",
+      "body": "海上都市与沼泽森林两关试玩已开放，可直接选择起始关卡，选四位英雄体验连打、抓投、跳跃攻击和场景道具。支持电脑键鼠与手机触屏、操作模式即时切换和多种观察视角。\n\n这是爱好者制作的非官方 3D 复刻试玩。欢迎体验，告诉我动作反馈、角色手感和难度哪里还需要调整。\n\nTapTap 试玩入口：https://www.taptap.cn/app/962722",
+      "url": "https://www.taptap.cn/moment/856856050622531778",
+      "game_url": "https://www.taptap.cn/app/962722",
+      "forum_app_id": 962722,
+      "forum_url": "https://www.taptap.cn/app/962722/topic",
+      "platform_version": "V-20261007",
+      "online_version_details": {
+        "logs": [
+          {
+            "action": 0,
+            "entry_type": 0,
+            "event": "draft_created",
+            "post_audit_status": 0,
+            "updated_time": 1791334960,
+            "version_code": 0
+          },
+          {
+            "action": 1,
+            "entry_type": 0,
+            "event": "review_submitted",
+            "post_audit_status": 0,
+            "updated_time": 1791340147,
+            "version_code": 0
+          },
+          {
+            "action": 4,
+            "entry_type": 0,
+            "event": "review_approved",
+            "post_audit_status": 0,
+            "updated_time": 1791341233,
+            "version_code": 0
+          },
+          {
+            "action": 8,
+            "entry_type": 2,
+            "event": "published",
+            "post_audit_status": 0,
+            "updated_time": 1791341233,
+            "version_code": 0
+          }
+        ],
+        "revision": 1041013,
+        "status": "online",
+        "status_label": "已上线",
+        "status_value": 4,
+        "version": "V-20261007",
+        "version_id": "1041013"
+      },
+      "version_timeline": {
+        "list": [
+          {
+            "created_time": 1791334960,
+            "last_event": "published",
+            "status": "online",
+            "status_label": "已上线",
+            "status_value": 4,
+            "version": "V-20261007",
+            "version_id": "V-20261007"
+          }
+        ],
+        "page": 1,
+        "page_size": 100,
+        "total": 1
+      },
+      "published_source_mapping": "matches the previously submitted revision and its saved H5 package receipt",
+      "status": "public_verified",
+      "profile_dynamic_verified": true,
+      "forum_membership_verified": true,
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "screenshot": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/cadillacs-post-public.png",
+      "post_action": "created once, then edited the same moment to add exact playable content, direct entry and matching forum",
+      "content_sha256": "5e58de5b27fcbae6b195cec8b61586787d2506f81a44f7b9fe2b732be220e92f"
+    },
+    {
+      "game_id": "mario-3d",
+      "app_id": 962723,
+      "title": "超级玛丽 3D 上线试玩",
+      "moment_id": "856856121875366958",
+      "source_version": "v2.5.0",
+      "h5_version_id": 270893,
+      "proof": "mario-post-public.png",
+      "body": "1-1 地面、1-2 地下与 1-3 树冠三关试玩已开放，可以直接选择关卡，也可以按顺序闯关。跳跃顶砖、收集金币和道具，探索水管、奖励房间与树冠浮台。支持电脑键鼠与手机触屏，并可切换观察视角。\n\n这是爱好者制作的非官方 3D 平台跳跃实验。欢迎试玩，告诉我跳跃手感、镜头和关卡节奏哪里还需要调整。\n\nTapTap 试玩入口：https://www.taptap.cn/app/962723",
+      "url": "https://www.taptap.cn/moment/856856121875366958",
+      "game_url": "https://www.taptap.cn/app/962723",
+      "forum_app_id": 962723,
+      "forum_url": "https://www.taptap.cn/app/962723/topic",
+      "platform_version": "V-20261007",
+      "online_version_details": {
+        "logs": [
+          {
+            "action": 0,
+            "entry_type": 0,
+            "event": "draft_created",
+            "post_audit_status": 0,
+            "updated_time": 1791334967,
+            "version_code": 0
+          },
+          {
+            "action": 1,
+            "entry_type": 0,
+            "event": "review_submitted",
+            "post_audit_status": 0,
+            "updated_time": 1791340203,
+            "version_code": 0
+          },
+          {
+            "action": 4,
+            "entry_type": 0,
+            "event": "review_approved",
+            "post_audit_status": 0,
+            "updated_time": 1791341290,
+            "version_code": 0
+          },
+          {
+            "action": 8,
+            "entry_type": 2,
+            "event": "published",
+            "post_audit_status": 0,
+            "updated_time": 1791341290,
+            "version_code": 0
+          }
+        ],
+        "revision": 1041014,
+        "status": "online",
+        "status_label": "已上线",
+        "status_value": 4,
+        "version": "V-20261007",
+        "version_id": "1041014"
+      },
+      "version_timeline": {
+        "list": [
+          {
+            "created_time": 1791334967,
+            "last_event": "published",
+            "status": "online",
+            "status_label": "已上线",
+            "status_value": 4,
+            "version": "V-20261007",
+            "version_id": "V-20261007"
+          }
+        ],
+        "page": 1,
+        "page_size": 100,
+        "total": 1
+      },
+      "published_source_mapping": "matches the previously submitted revision and its saved H5 package receipt",
+      "status": "public_verified",
+      "profile_dynamic_verified": true,
+      "forum_membership_verified": true,
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "screenshot": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/mario-post-public.png",
+      "post_action": "created once, then edited the same moment to add exact playable content, direct entry and matching forum",
+      "content_sha256": "aae8d89cacdb21538589ddd4c434a2ab53feceb1eb1fa0f31b5d4c2355ea3122"
+    },
+    {
+      "game_id": "journey-west-3d",
+      "app_id": 962724,
+      "title": "西游降魔 3D 上线试玩",
+      "moment_id": "856856192419367675",
+      "source_version": "action-state1",
+      "h5_version_id": 270846,
+      "proof": "journey-post-public.png",
+      "body": "西游题材的 3D 动作试玩，完整第一关已开放。在山寺战场中切换武器、闪避与护体，积攒气力爆发，击退妖怪并挑战关底。支持电脑键鼠与手机触屏，操作模式可即时切换，也可选择多个观察视角。\n\n欢迎试玩，告诉我战斗节奏和操作手感还需要怎样打磨。当前先打磨现有第一关，再决定后续方向。\n\nTapTap 试玩入口：https://www.taptap.cn/app/962724",
+      "url": "https://www.taptap.cn/moment/856856192419367675",
+      "game_url": "https://www.taptap.cn/app/962724",
+      "forum_app_id": 962724,
+      "forum_url": "https://www.taptap.cn/app/962724/topic",
+      "platform_version": "V-20261007",
+      "online_version_details": {
+        "logs": [
+          {
+            "action": 0,
+            "entry_type": 0,
+            "event": "draft_created",
+            "post_audit_status": 0,
+            "updated_time": 1791334976,
+            "version_code": 0
+          },
+          {
+            "action": 1,
+            "entry_type": 0,
+            "event": "review_submitted",
+            "post_audit_status": 0,
+            "updated_time": 1791338489,
+            "version_code": 0
+          },
+          {
+            "action": 4,
+            "entry_type": 0,
+            "event": "review_approved",
+            "post_audit_status": 0,
+            "updated_time": 1791340948,
+            "version_code": 0
+          },
+          {
+            "action": 8,
+            "entry_type": 2,
+            "event": "published",
+            "post_audit_status": 0,
+            "updated_time": 1791340948,
+            "version_code": 0
+          }
+        ],
+        "revision": 1041015,
+        "status": "online",
+        "status_label": "已上线",
+        "status_value": 4,
+        "version": "V-20261007",
+        "version_id": "1041015"
+      },
+      "version_timeline": {
+        "list": [
+          {
+            "created_time": 1791334976,
+            "last_event": "published",
+            "status": "online",
+            "status_label": "已上线",
+            "status_value": 4,
+            "version": "V-20261007",
+            "version_id": "V-20261007"
+          }
+        ],
+        "page": 1,
+        "page_size": 100,
+        "total": 1
+      },
+      "published_source_mapping": "matches the previously submitted revision and its saved H5 package receipt",
+      "status": "public_verified",
+      "profile_dynamic_verified": true,
+      "forum_membership_verified": true,
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "screenshot": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/journey-post-public.png",
+      "post_action": "created once, then edited the same moment to add exact playable content, direct entry and matching forum",
+      "content_sha256": "0976e0dc5db944d29d026bbb52431b35f6208ce2ae609b8a34c423ab098a157b"
+    }
+  ],
+  "developer_card": {
+    "public_url": "https://www.taptap.cn/developer/100726",
+    "profile_status": "reviewing",
+    "profile_saved_success_message": "保存成功，请等待审核",
+    "logo_file": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/developer-card-logo.png",
+    "logo_dimensions": [
+      512,
+      512
+    ],
+    "logo_design": "cream and dark green gamepad mark with 飞刀帮工作室 text",
+    "alias": "飞刀班长",
+    "website": "https://www.zhengxiaohui.cn",
+    "intro": "飞刀帮工作室，由飞刀班长持续开发和打磨可直接试玩的游戏。用 AI 辅助开发，把有趣的点子和玩家建议做成能玩的作品。\n\n近期主线是《虫潮围城》，也在探索经典街机、平台跳跃与动作游戏的 3D 玩法实验。作品支持电脑键鼠和手机触屏，欢迎试玩并反馈操作、镜头、难度和关卡体验。\n\n在这里分享新作品、正式版本更新和真实开发进展。",
+    "recommended_apps": [
+      962354,
+      962721,
+      962722
+    ],
+    "recommendations_status": "public_verified",
+    "recommendations_saved_success_message": "保存成功",
+    "public_home_screenshot": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/developer-home-public.png",
+    "profile_review_screenshot": "D:/project/toolbasecamp-artifacts/taptap-community-20261007/developer-profile-review.png",
+    "checked_at": "2026-10-07T04:43:29.723Z"
+  },
+  "limitations": [
+    "Developer logo/intro/alias/site are submitted and reviewing; recommendation order is already public.",
+    "No game runtime or mobile-device QA was added in this community-only task; previous package QA remains in original release receipts.",
+    "Later website/Toy versions pending TapTap synchronization remain separate; these posts describe the currently online TapTap packages."
+  ]
+}

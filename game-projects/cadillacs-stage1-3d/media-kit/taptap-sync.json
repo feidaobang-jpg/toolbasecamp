@@ -5,8 +5,8 @@
   "app_id": 962722,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing",
-  "platform_status": "reviewing",
+  "status": "online",
+  "platform_status": "online",
   "staged_version": "v0.7.0",
   "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
   "staged_package_sha256": "52c202384267b99b6d8b80a07453c436e32799ecfb5e263bc0a99b767d99799f",
@@ -15,14 +15,13 @@
   "draft_version_id": "1041013",
   "submitted_version": "v0.7.0",
   "submitted_at": "2026-10-07T02:29:07.463647+00:00",
-  "last_published_version": null,
-  "last_published_h5_version_id": null,
+  "last_published_version": "v0.7.0",
+  "last_published_h5_version_id": 270844,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T02:29:16.246767+00:00",
+  "last_status_checked_at": "2026-10-07T04:43:29.723Z",
   "release_record": "releases/taptap-force3-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
-    "等待TapTap正式审核；内容预审未通过，已按用户明确指令尝试提交，仍可能因IP风险驳回",
     "v0.8.0 联机版本待TapTap构建验证与后续同步"
   ],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
@@ -52,7 +51,27 @@
       "source_version": "v0.8.0",
       "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
       "change": "新合并联机功能",
-      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
+      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审",
+      "next_action": "此前审核包已上线；以后续已合并主线与当前网站核验为准继续同步，不重复送首次上线包。"
     }
-  ]
+  ],
+  "last_published_platform_version": "V-20261007",
+  "last_published_revision": 1041013,
+  "last_published_at": "2026-10-07T02:47:13+00:00",
+  "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
+  "public_url": "https://www.taptap.cn/app/962722",
+  "online_status_evidence_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "last_public_verified_moment_id": "856856050622531778",
+    "last_public_verified_url": "https://www.taptap.cn/moment/856856050622531778",
+    "forum_app_id": 962722,
+    "source_version": "v0.7.0",
+    "h5_version_id": 270844,
+    "platform_version": "V-20261007",
+    "content_sha256": "5e58de5b27fcbae6b195cec8b61586787d2506f81a44f7b9fe2b732be220e92f",
+    "public_verified_at": "2026-10-07T04:43:29.723Z",
+    "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+    "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+  }
 }
