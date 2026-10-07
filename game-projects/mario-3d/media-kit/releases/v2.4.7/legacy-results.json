@@ -1,0 +1,156 @@
+{
+  "url": "http://127.0.0.1:51719/html/game/mario-3d/index.html",
+  "baseline": false,
+  "browser": "154.0.4258.53",
+  "method": "Edge headless GPU; browser viewport simulation; relocations and manual clock explicitly used",
+  "checks": [
+    {
+      "name": "unavailable fire keeps solid button and explains requirement",
+      "ok": true,
+      "data": {
+        "opacity": "1",
+        "nativeDisabled": false,
+        "aria": "true",
+        "label": "J\n需火焰花"
+      }
+    },
+    {
+      "name": "unavailable fire gives hint without shooting",
+      "ok": true
+    },
+    {
+      "name": "fire flower enables real projectile",
+      "ok": true
+    },
+    {
+      "name": "losing flower returns to unavailable state",
+      "ok": true
+    },
+    {
+      "name": "1-1 flag sequence automatically enters 1-2",
+      "ok": true
+    },
+    {
+      "name": "1-2 pipe reaches overworld exit",
+      "ok": true
+    },
+    {
+      "name": "1-2 full flag sequence ends run once",
+      "ok": true
+    },
+    {
+      "name": "equal opaque buttons in 844x390",
+      "ok": true,
+      "data": [
+        {
+          "action": "down",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 674,
+          "y": 224,
+          "right": 734,
+          "bottom": 284,
+          "background": "linear-gradient(rgb(216, 172, 66), rgb(152, 107, 37))"
+        },
+        {
+          "action": "fire",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 674,
+          "y": 294,
+          "right": 734,
+          "bottom": 354,
+          "background": "linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40))"
+        },
+        {
+          "action": "jump",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 744,
+          "y": 294,
+          "right": 804,
+          "bottom": 354,
+          "background": "linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55))"
+        },
+        {
+          "action": "sprint",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 744,
+          "y": 224,
+          "right": 804,
+          "bottom": 284,
+          "background": "linear-gradient(rgb(84, 132, 189), rgb(49, 86, 130))"
+        }
+      ]
+    },
+    {
+      "name": "switch modes preserves stage and position",
+      "ok": true
+    },
+    {
+      "name": "equal opaque buttons in 390x844",
+      "ok": true,
+      "data": [
+        {
+          "action": "down",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 106,
+          "y": 674,
+          "right": 166,
+          "bottom": 734,
+          "background": "linear-gradient(rgb(216, 172, 66), rgb(152, 107, 37))"
+        },
+        {
+          "action": "fire",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 36,
+          "y": 674,
+          "right": 96,
+          "bottom": 734,
+          "background": "linear-gradient(rgb(226, 87, 63), rgb(168, 58, 40))"
+        },
+        {
+          "action": "jump",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 36,
+          "y": 744,
+          "right": 96,
+          "bottom": 804,
+          "background": "linear-gradient(rgb(93, 154, 82), rgb(61, 110, 55))"
+        },
+        {
+          "action": "sprint",
+          "opacity": "1",
+          "width": 60,
+          "height": 60,
+          "x": 106,
+          "y": 744,
+          "right": 166,
+          "bottom": 804,
+          "background": "linear-gradient(rgb(84, 132, 189), rgb(49, 86, 130))"
+        }
+      ]
+    },
+    {
+      "name": "switch modes preserves stage and position",
+      "ok": true
+    },
+    {
+      "name": "no runtime errors",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "audio": "video has no audio; not a media-ready gameplay master"
+}

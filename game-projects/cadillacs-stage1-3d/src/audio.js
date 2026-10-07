@@ -1,3 +1,4 @@
+import { ORIGINAL_FILES, originalCue } from './original-sfx.js';
 import {SampleAudio} from "../../../public/js/game/sample-audio.js";
 // 音频：优先原作各区域与 Boss 音乐（第一、二关），未加载或不可用时合成回退。
 // 点击 / 按键后解锁；所有暂停冻结音频时钟。
@@ -22,7 +23,7 @@ function ensure() {
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
   roomIn = buildRoom(ctx, sfxBus);
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3?v=bgmfull1", "roof":"roof.mp3?v=bgmfull1", "hall": "hall.mp3?v=bgmfull1", "street": "street.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1", "select": "select.mp3", "forest": "forest.mp3?v=bgmfull1", "swamp": "swamp.mp3?v=bgmfull1", "grave": "hall.mp3?v=bgmfull1", "boss2": "boss2.mp3?v=bgmfull1"});
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3?v=bgmfull1", "roof":"roof.mp3?v=bgmfull1", "hall": "hall.mp3?v=bgmfull1", "street": "street.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1", "select": "select.mp3", "forest": "forest.mp3?v=bgmfull1", "swamp": "swamp.mp3?v=bgmfull1", "grave": "hall.mp3?v=bgmfull1", "boss2": "boss2.mp3?v=bgmfull1", ...ORIGINAL_FILES});
   return ctx;
 }
 const now = () => ctx.currentTime;
@@ -82,6 +83,27 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
   s.connect(fl); fl.connect(g); g.connect(dest || sfxBus);
   if (opts && opts.room && roomIn) g.connect(roomIn);
   s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.05);
+}
+
+// Short samples use this same context/bus for pause, mute, capture and offline rendering.
+const lastSample = new Map();
+const activeSamples = new Set();
+function playOriginal(name, v, hero, t, throttle = true) {
+  const key = originalCue(name, hero), buffer = samples?.buffers.get(key);
+  if (!buffer) return false;
+  // One impact per simultaneous hit group; every subsequent combo hit still sounds.
+  if (throttle && name !== 'mega' && name !== 'go' && t - (lastSample.get(key) ?? -9) < 0.035) return true;
+  if (throttle) lastSample.set(key, t);
+  const repeats = name === 'go' ? 3 : 1;
+  for (let i = 0; i < repeats; i++) {
+    const source = ctx.createBufferSource(), gain = ctx.createGain();
+    source.buffer = buffer; gain.gain.value = v * (name === 'go' || name === 'mega' ? 0.9 : 1.15);
+    source.connect(gain); gain.connect(sfxBus);
+    if (throttle) activeSamples.add(source);
+    source.onended = () => { activeSamples.delete(source); source.disconnect(); gain.disconnect(); };
+    source.start(t + i * Math.max(0.34, buffer.duration + 0.08));
+  }
+  return true;
 }
 
 // ---------- 音效 ----------
@@ -288,11 +310,13 @@ const A = {
   get volume() { return volume; },
   setClock(fn) { clockFn = fn; },
   unlock() { if (!ensure()) return; syncAudioPause(); },
+  clearEffects() { for (const s of activeSamples) s.stop(); activeSamples.clear(); lastSample.clear(); },
   setVolume(v) { volume = v; try { localStorage.setItem('cd3d-stage1:volume', String(v)); } catch (e) { /* ignore */ } if (master) master.gain.value = v; },
   tick() { if (ctx && ctx.state === 'running') SFX.select(now(), 1); },
-  play(name, vol) {
-    if (log.on) log.events.push({ t: +clockFn().toFixed(3), name, vol: vol || 1 });
+  play(name, vol, hero = 'jack') {
+    if (log.on) log.events.push({ t: +clockFn().toFixed(3), name, vol: vol ?? 1, hero, sample: originalCue(name, hero), source: samples?.has(originalCue(name, hero)) ? 'original' : 'fallback' });
     if (!ctx || offRendering || ctx.state !== 'running' || volume <= 0) return;
+    if (playOriginal(name, vol ?? 1, hero, now() + 0.005)) return;
     const f = SFX[name]; if (!f) return;
     try { f(now() + 0.005, vol === undefined ? 1 : vol); } catch (e) { /* 节点上限等 */ }
   },
@@ -311,7 +335,7 @@ const A = {
   },
   musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
   pause() { /* 音效都很短，暂停时不需要单独处理 */ },
-  state: () => ({ ctx: ctx ? ctx.state : 'none', volume }),
+  state: () => ({ ctx: ctx ? ctx.state : 'none', volume, originalsLoaded: Object.keys(ORIGINAL_FILES).filter(k => samples?.has(k)), failed: samples?.failed.slice() || [] }),
   musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden }),
   captureStream() { if (!ensure()) return null; if (!capDest) { capDest = ctx.createMediaStreamDestination(); master.connect(capDest); } return capDest.stream; },
   logStart() { log.on = true; log.events = []; },
@@ -357,7 +381,7 @@ const A = {
             if (D && D !== '.') drumVoice(D, lt, dest);
           }
         });
-        for (const e of events) if (e.name && SFX[e.name] && e.t >= s0 && e.t < s1) { try { SFX[e.name](e.t - s0 + 0.005, e.vol || 1); } catch (err) { /* ignore */ } }
+        for (const e of events) if (e.name && SFX[e.name] && e.t >= s0 && e.t < s1) { try { if (!playOriginal(e.name, e.vol ?? 1, e.hero, e.t - s0 + 0.005, false)) SFX[e.name](e.t - s0 + 0.005, e.vol ?? 1); } catch (err) { /* ignore */ } }
         const buf = await off.startRendering();
         const a = buf.getChannelData(0), b = buf.getChannelData(1), o = Math.round(s0 * sr);
         for (let i = 0; i < a.length && o + i < N; i++) { outL[o + i] += a[i]; outR[o + i] += b[i]; }

@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.5.0",
+  "base_version": "v2.4.7",
+  "created_at": "2026-10-07T01:20:28.770Z",
+  "classification": "正式版本",
+  "user_authorization": "用户：第三关可以了，发布吧（2026-10-07）",
+  "build": {
+    "id": "v2.5.0-0243c7af16f5",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "0243c7af16f58642585a996d4ed77eb0b9cd3eb43a7739d14b7cf93debe76656",
+    "files_sha256": {
+      "index.html": "96606649b44ff5b6cbf26d8ae42d14970f3ed07f6c3918290e42da0024804c51",
+      "main.js": "0e5cb0b32d0fdcb8cb61e7946bb7733ffabe4e967d62fdd574da5a5369c0b062",
+      "world.js": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe",
+      "levels.js": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
+      "scene.js": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
+      "models.js": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
+      "textures.js": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "style.css": "b601f31599b86307dd6a02cab1ae6d03f1ff6ca36d24c0aa130ec1dc63946f19",
+      "audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf"
+    },
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "source_preview_commit": "48c7eb769a3353e21bb54abf3d6bf443b5d8a069",
+    "integrated_mainline": "b0dd1a4d992e214cc6130f92e539c7493c2740e7"
+  },
+  "feature_inventory": [
+    {
+      "id": "level-1-3",
+      "status": "implemented",
+      "description": "17组高低树冠、4个往返浮台、23枚逻辑金币、道具、飞行乌龟与终点大城堡",
+      "evidence_ids": [
+        "treetops-view-1",
+        "winged-koopa",
+        "final-castle"
+      ]
+    },
+    {
+      "id": "stage-flow",
+      "status": "implemented",
+      "description": "三关直接选择、按顺序自动衔接，保留1-2地面走入横管和地下落地过场",
+      "evidence_ids": [
+        "menu"
+      ]
+    },
+    {
+      "id": "moving-platforms",
+      "status": "implemented",
+      "description": "水平/垂直往返，角色随台移动；一向树冠可由下方跳上",
+      "evidence_ids": []
+    },
+    {
+      "id": "winged-koopa",
+      "status": "implemented",
+      "description": "第一次踩掉翅膀，第二次踩成龟壳",
+      "evidence_ids": [
+        "winged-koopa"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "release-third-stage",
+      "feature_ids": [
+        "level-1-3",
+        "stage-flow"
+      ],
+      "before": "网站v2.4.7仅有1-1和1-2，1-3只在本地预览",
+      "after": "发布已获用户认可的第三关，保留最新主线的钻管过场，并更新游戏列表关卡说明",
+      "verification": "merged-branch checks passed",
+      "evidence_ids": [
+        "menu",
+        "treetops-view-1",
+        "motion-with-game-audio"
+      ]
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "menu",
+      "file": "releases/v2.5.0/captures/menu.png",
+      "sha256": "c5eee9f6e705dd3382471870084940352499b378024f25ef0d4e806b8e3f607d",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 1280,
+      "height": 720,
+      "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
+      "visual_review": "not-run",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "treetops-view-1",
+      "file": "releases/v2.5.0/captures/treetops-view-1.png",
+      "sha256": "746137de9d7c7dbf8e924c279b5324174b33193df15adce06a48d83363eb4fbd",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 1280,
+      "height": 720,
+      "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
+      "visual_review": "not-run",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-844",
+      "file": "releases/v2.5.0/captures/phone-844.png",
+      "sha256": "eaa4cac34ca82c7a036f64887eb189e25a0b30717719acc46219cc1b2b013614",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 844,
+      "height": 390,
+      "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
+      "visual_review": "not-run",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-390",
+      "file": "releases/v2.5.0/captures/phone-390.png",
+      "sha256": "caba5d80e577f7205b0375a48ad23df028e1f8a91d752c01e4ace866d06559ba",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 390,
+      "height": 844,
+      "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
+      "visual_review": "not-run",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "winged-koopa",
+      "file": "releases/v2.5.0/captures/winged-koopa.png",
+      "sha256": "3d210abc2695d356c137df7a0ac935454555f9353892c3a9c4dd475ac17141a5",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 390,
+      "height": 844,
+      "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
+      "visual_review": "not-run",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "final-castle",
+      "file": "releases/v2.5.0/captures/final-castle.png",
+      "sha256": "50cdd115c0de2239bb1ae5340ba62634228aedbd4cb253edf5b84c49ba4275a3",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "screenshot",
+      "width": 390,
+      "height": 844,
+      "description": "合并最新钻管过场后的正式运行文件；测试定位与手动时钟取景，非普通带敌人通关记录",
+      "visual_review": "not-run",
+      "audio": "none",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "motion-with-game-audio",
+      "file": "releases/v2.5.0/captures/motion-with-game-audio.webm",
+      "sha256": "1785e46192057c380e5074bfea97f186dedc54aab554bcb5c3220d0527e14096",
+      "version": "v2.5.0",
+      "build_id": "v2.5.0-0243c7af16f5",
+      "capture_mode": "realtime-automation",
+      "kind": "video",
+      "width": 1280,
+      "height": 720,
+      "description": "真实I/D/K冲刺起跑跳上高树冠，再C/E观察，起点为测试定位，录制演示无敌用于稳定取景，只有游戏Canvas和游戏声音",
+      "visual_review": "not-run",
+      "audio": "game",
+      "audio_review": "not-run",
+      "duration_seconds": 3.759957,
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 1.3,
+          "description": "真实冲刺起跳并落在高树冠"
+        },
+        {
+          "in_seconds": 1.3,
+          "out_seconds": 3.7,
+          "description": "连续转动视角"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "stage3-physics",
+      "result": "10/10",
+      "evidence": "qa/physics-results.json"
+    },
+    {
+      "method": "route replay",
+      "result": "完整地形输入重放44.33秒/5320步/0死亡",
+      "scope": "关闭敌人，仅验证地形跳跃与浮台时序，无改位置；敌人另做针对性检查",
+      "evidence": "qa/route-results.json"
+    },
+    {
+      "method": "pipe-clear-buttons",
+      "result": "13/13",
+      "evidence": "qa/regression-results.json"
+    },
+    {
+      "method": "entrance regressions",
+      "result": "49/49",
+      "evidence": "qa/entrance-results.json"
+    },
+    {
+      "method": "comment regressions",
+      "result": "36/36",
+      "evidence": "qa/comment-results.json"
+    },
+    {
+      "method": "third-stage UI/rotation/performance",
+      "result": "32/32",
+      "evidence": "qa/stage3-results.json",
+      "environment": "Edge GPU；桌面与手机视口模拟，非真机；五视角连续转动"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "局部素材留存，尚无第三关普通带敌人全程视频",
+      "音轨未人工听审，部分新截图待目视复核；不宣称可直接制成新视频"
+    ]
+  },
+  "site": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": 39043286960128,
+    "status": "pending"
+  },
+  "bilibili": {
+    "status": "pending",
+    "targets": [
+      "BV1guep6NELt",
+      "BV1Fwpw6FEFx"
+    ],
+    "reason": "新关卡达到正式版本说明同步条件，汇总此前未同步的钻管过场等累计项"
+  },
+  "taptap": {
+    "status": "not_mapped",
+    "reason": "现有已确认厂商H5映射只有虫潮962354/坦克962376，玛丽无明确app ID；不新建作品"
+  },
+  "local_media_backup": "D:/project/task-artifacts/mario-stage3-release-20261007"
+}

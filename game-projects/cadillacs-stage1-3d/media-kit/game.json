@@ -6,8 +6,8 @@
  },
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.6.1",
- "handoff": "releases/v0.6.1/handoff.json",
+ "current_version": "v0.7.0",
+ "handoff": "releases/v0.7.0/handoff.json",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
   "device_root": "D:/project/toolbasecamp",
@@ -97,6 +97,17 @@
     "toy": "published",
     "bilibili": "pending_merge"
    }
+  },
+  {
+   "version": "v0.7.0",
+   "classification": "正式版本",
+   "summary": "接入原版轻重拳脚、四名角色必杀语音和三次 GO 提示；暂停、静音、重开与离线录像共用音频链。",
+   "record": "releases/v0.7.0/handoff.json",
+   "channels": {
+    "website": "deployed_verified",
+    "toy": "auditing",
+    "bilibili": "pending_review"
+   }
   }
  ],
  "toy": {
@@ -105,18 +116,18 @@
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
-  "status": "published",
-  "submitted_at": "2026-10-07T07:35:44+08:00",
-  "package": "dist/toy-v0.6.0/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_qEnkXFSY/index.html",
-  "note": "v0.6.0（打击感重做，含完整BGM与全屏能力检测）已过审。",
-  "status_verified": "toy mylist published；正式入口电脑 + 手机视口 20/20 显示 v0.6.0",
+  "status": "auditing",
+  "submitted_at": "2026-10-07T08:40:17+08:00",
+  "package": "dist/toy-v0.7.0/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_0vpqIhjk/index.html",
+  "note": "v0.7.0原版音效包已通过电脑与触屏预览测试并送审；正式入口过审前仍为v0.6.1",
+  "status_verified": "toy mylist auditing",
   "bound_videos": [
    "BV18XHW66E55"
   ],
-  "review_status": "published",
-  "version": "v0.6.0",
-  "verified_at": "2026-10-07T07:50:06+08:00",
+  "review_status": "auditing",
+  "version": "v0.7.0",
+  "verified_at": "2026-10-07T08:43:01.731112+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "last_published_version": "v0.6.1",
   "pending_updates": [
@@ -169,10 +180,10 @@
     "included_version": "v0.5.6-bgmfull1"
    }
   ],
-  "submitted_version": "v0.6.1",
+  "submitted_version": "v0.7.0",
   "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_icldmorp/index.html",
-  "release_record": "releases/v0.6.1/handoff.json",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
+  "release_record": "releases/v0.7.0/handoff.json",
   "published_version": "v0.6.1",
   "published_verified_at": "2026-10-07T07:50:06+08:00",
   "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -189,9 +200,10 @@
    "verified_at": "2026-10-06T23:38:00+08:00"
   },
   "public_verified_version": "v0.5.6-bgmfull1",
-  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_P2v6YpvX/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
   "last_successful_sync_version": "v0.6.1",
-  "last_successful_sync_at": "2026-10-07T07:50:06+08:00"
+  "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+  "package_tree_sha256": "c6f9cf28bfe2bcaaff1a09b02e2397867b574c0c7e5ee9b34246da08fee191c9"
  },
  "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",

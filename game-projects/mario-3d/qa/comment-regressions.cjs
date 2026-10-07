@@ -39,7 +39,7 @@ const server = http.createServer((req, res) => {
       const frame = await openGame(page, entry);
       await frame.locator('[data-control-mode=show]').first().click();
       await frame.locator('[data-act=start]').first().click();
-      await frame.evaluate(() => { __MARIO_TEST__.manual(true); __MARIO_TEST__.skipCard(); __MARIO_TEST__.step(180); });
+      await frame.evaluate(() => { __MARIO_TEST__.manual(true); __MARIO_TEST__.skipCard(); __MARIO_TEST__.step(600); }); // 等待 1-2 地面钻管过场结束
       const prefix = `${viewport.width}x${viewport.height}`;
       check(prefix + ': initial underground entry stays below roof', await frame.evaluate(() => __MARIO_TEST__.world.player.y === 0));
       // Register the checkpoint through its real trigger, then walk over a pit.
@@ -57,7 +57,7 @@ const server = http.createServer((req, res) => {
       await showPlants(); check(prefix + ': current area has nine plant models', (await plants()) === 9, await plants());
       for (let i = 0; i < 3; i++) {
         await frame.locator('#btn-pause').click(); await frame.locator('#pause [data-act=restart]').click();
-        await frame.evaluate(() => { __MARIO_TEST__.skipCard(); __MARIO_TEST__.step(180); }); await showPlants();
+        await frame.evaluate(() => { __MARIO_TEST__.skipCard(); __MARIO_TEST__.step(600); }); await showPlants();
         check(prefix + ': restart clears previous plants ' + i, (await plants()) === 9, await plants());
       }
       await page.screenshot({ path: path.join(out, prefix + '-plants.png') });
@@ -71,7 +71,9 @@ const server = http.createServer((req, res) => {
       await frame.locator('#btn-pause').click(); await frame.locator('#pause [data-act=title]').click();
       check(prefix + ': title clears underground plants', (await plants()) === 0, await plants());
       // Start 1-1 with the actual menu selector, matching the viewer's first screenshot.
-      await frame.locator('[data-opt=level]').first().click(); await frame.locator('[data-act=start]').first().click();
+      const levelSelector = frame.locator('[data-opt=level]').first();
+      for (let n = 0; n < 3 && !(await levelSelector.innerText()).includes('1-1'); n++) await levelSelector.click();
+      await frame.locator('[data-act=start]').first().click();
       await frame.evaluate(() => { __MARIO_TEST__.skipCard(); __MARIO_TEST__.step(120); });
       check(prefix + ': 1-1 has no ghost plants', await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-1') && (await plants()) === 0, await plants());
       await frame.evaluate(() => { const t = __MARIO_TEST__; Object.assign(t.world.player, { x: 108, y: 0, vx: 0, vy: 0, inv: 0 }); t.world.rt.enemies.forEach(e => e.gone = true); t.view.snap = true; t.step(1); });

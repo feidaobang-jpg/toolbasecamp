@@ -1,0 +1,17 @@
+{
+ "baseline": "v0.6.0",
+ "version": "v0.7.0",
+ "bvid": "BV18XHW66E55",
+ "status": "pending_review",
+ "old_description": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\n\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n\n更新（2026-10-07·v0.6.0）：重做打击感——出拳出腿先蓄力再一下打到位，命中停顿分轻重，敌人挨打会被打歪、弯腰，连招最后一下更重；拳脚、挥空和倒地音效加厚。另有第二关沼泽森林（菜单可直接选）、开枪看得见子弹、背景音乐改为完整原曲。视频为录制时版本，以当前试玩为准。\n\nClaude Opus 5.5辅助开发，音乐采用原版录音，缺少可用原版素材的音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+ "new_description": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n更新（2026-10-07·v0.7.0）：接入原版轻重拳脚打击、四名角色必杀语音和“Go! Go! Go!”提示。保留新版打击感、第二关可直选、可见子弹和完整原曲；手机竖屏菜单直接横屏。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+ "new_description_sha256": "0b90685e3bd965254949f93e5a883e7ddd27c1f7998db3539aed48dd8b92723e",
+ "prepared_at": "2026-10-07T00:40:41.756193+00:00",
+ "checks": {
+  "no_empty_editor_paragraphs": true,
+  "expected_paragraphs": 7,
+  "links_unique": true
+ },
+ "submitted_at": "2026-10-07T08:43:01.731112+08:00",
+ "public_check": "公开页面仍为v0.6.0；保持原public_verified基线。"
+}

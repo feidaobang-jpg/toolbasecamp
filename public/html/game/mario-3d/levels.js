@@ -1,4 +1,4 @@
-// 关卡数据：FC《超级马力欧兄弟》1-1、1-2 与 1-3 本地预览。
+// 关卡数据：FC《超级马力欧兄弟》1-1、1-2 与 1-3。
 // 坐标单位 = 1 格；第 c 列占 x∈[c,c+1]；h 为方块底边离地高度（地面顶 = 0），占 y∈[h,h+1]。
 // 所有地形沿纵深（z）铺满整条跑道，水管为纵向并排 3 根，防止从旁边绕过。
 // 来源：Ian Albert 原作地图截图逐格核对 + TheVGLC 文本地图 + MarioWiki 道具说明；
@@ -138,6 +138,13 @@ function build12() {
   enemy(m, 'koopa', 147.5, 0, { red: true });
   m.start = { x: 2.6, y: 11.5, drop: true };
 
+  // 地下关开场：先在地面自动走进横管，再从地下左侧落下；不计入奖励房间。
+  const entry = area('entry', { theme: 'overworld', width: 24 });
+  ground(entry, 0, 23);
+  entry.castle = { x: 0, big: false };
+  entry.start = { x: 5.5, y: 0 };
+  sidePipe(entry, 13, 0, 10, { to: { area: 'main', mode: 'drop', x: m.start.x, y: m.start.y, entrance: true } });
+
   // 奖励房间（27 枚金币 + 一块 10 金币砖），出口回到第三根水管
   const b = area('bonus', { theme: 'underground', width: 18, ceiling: true });
   ground(b, 0, 17);
@@ -155,7 +162,7 @@ function build12() {
   stairs(e, 15, [1, 2, 3, 4, 5, 6, 7, 8, 8]);
   set(e, 32, 0, 'F'); e.flag = { x: 32.5, top: 9.6 };
   e.castle = { x: 36, big: false };
-  return { id: '1-2', name: 'WORLD 1-2', time: 400, theme: 'underground', areas: { main: m, bonus: b, exit: e }, startArea: 'main', checkpoint: { area: 'main', x: 91.5, y: 0 } };
+  return { id: '1-2', name: 'WORLD 1-2', time: 400, theme: 'underground', areas: { main: m, entry, bonus: b, exit: e }, entranceArea: 'entry', startArea: 'main', checkpoint: { area: 'main', x: 91.5, y: 0 } };
 }
 
 // ---------------- 1-3：树冠与浮台 ----------------

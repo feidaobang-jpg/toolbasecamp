@@ -84,6 +84,14 @@
     "usage": "public/html/game/mario-3d/three.js"
   },
   {
+    "id": "entry-cutscene-v2.4.7",
+    "purpose": "1-1通关到1-2地下的钻管衔接",
+    "source_type": "reference",
+    "input": "https://www.mariowiki.com/World_1-2_(Super_Mario_Bros.) ; 用户反馈缺失地面钻管动画",
+    "processing": "地下入场从屋顶落下按已有路线保留；地面横管、场景距离与约4秒动作是本版三维适配，非逐帧还原。",
+    "usage": "levels.js entry area, world.js updateEntrance; 复用现有模型与声音"
+  },
+  {
     "id": "ref-map-1-3",
     "purpose": "原作 WORLD 1-3 树冠、金币、道具、浮台、敌人、阶梯与城堡布局",
     "source_type": "reference",

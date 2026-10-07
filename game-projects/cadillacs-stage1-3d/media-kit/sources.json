@@ -104,10 +104,11 @@
  {
   "id": "sfx",
   "use": "拳脚、枪声、爆炸、惨叫、恐龙嘶吼、拾取等",
-  "runtime": "src/audio.js SFX",
-  "source_type": "procedural",
-  "tool": "WebAudio 合成",
-  "status": "替代（非原作采样）"
+  "runtime": "src/audio.js + src/original-sfx.js; sounds/original-*.wav",
+  "source_type": "original_game_recording + procedural_fallback",
+  "tool": "WebAudio decoded arcade recordings; synthesizer retained for remaining events or download failure",
+  "status": "轻重拳脚、四名角色必杀、GO 使用原版；其他音效仍为合成",
+  "sources": "releases/v0.7.0/audio-sources.json"
  },
  {
   "id": "site-thumb",

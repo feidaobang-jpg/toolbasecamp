@@ -1,0 +1,25 @@
+{
+  "list": [
+    {
+      "created_time": 1791333351,
+      "last_event": "review_submitted",
+      "status": "reviewing",
+      "status_label": "审核中",
+      "status_value": 1,
+      "version": "V-20261007",
+      "version_id": "V-20261007"
+    },
+    {
+      "created_time": 1791293606,
+      "last_event": "published",
+      "status": "online",
+      "status_label": "已上线",
+      "status_value": 4,
+      "version": "V-20261006",
+      "version_id": "V-20261006"
+    }
+  ],
+  "page": 1,
+  "page_size": 50,
+  "total": 2
+}

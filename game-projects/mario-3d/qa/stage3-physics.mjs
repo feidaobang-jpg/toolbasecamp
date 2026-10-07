@@ -4,7 +4,7 @@ import {buildLevel,LEVEL_ORDER} from '../../../public/html/game/mario-3d/levels.
 
 const checks=[];
 const input={mx:0,mz:0,jump:false,jumpPressed:false,run:false,down:false,firePressed:false};
-const fresh=(level='1-3')=>createWorld(createSession({startLevel:level,lives:'inf',armor:'std'}));
+const fresh=(level='1-3')=>createWorld(createSession({startLevel:level,lives:'inf',armor:'std'}),{respawn:level==='1-2'}); // isolate underground lifts from the new opening cutscene
 const advance=(w,n,keys={})=>{for(let i=0;i<n;i++)step(w,{...input,...keys,jumpPressed:!!keys.jumpPressed&&i===0},STEP);};
 const check=(name,fn)=>{fn();checks.push({name,pass:true});};
 

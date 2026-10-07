@@ -1,11 +1,11 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=stage3-preview1';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=stage3-preview1';
-import { LEVEL_ORDER } from './levels.js?v=stage3-preview1';
+import { createView, PRESETS } from './scene.js?v=2.5.0';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.5.0';
+import { LEVEL_ORDER } from './levels.js?v=2.5.0';
 import { GameAudio } from './audio.js?v=bgmfull1';
 
-const VERSION = 'v2.5.0-preview1';
+const VERSION = 'v2.5.0';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -276,10 +276,12 @@ function startGame() {
 // 进入关卡（新关卡、复活或从头重来）：重新生成关卡，显示 WORLD 卡片
 function beginLevel(opts) {
   w = createWorld(session, opts);
+  clearInput();
   w.events.length = 0;
   if (!opts.respawn && !opts.fromCheckpoint) levelStart = { score: session.score, coins: session.coins, power: session.power, lives: session.lives, hearts: session.hearts };
   view.build(w);
   hurtFx = 0;
+  toastEl.hidden = true; clearTimeout(toastTimer);
   latch.jump = latch.fire = false;
   audio.setHurry(false); audio.stopMusic();
   phase = 'card'; cardT = 0;
@@ -366,6 +368,7 @@ function handleEvent(e) {
     case 'starEnd': audio.music(w.area.theme); break;
     case 'flagpole': audio.stopMusic(); audio.sfx('flagpole'); break;
     case 'clearTune': audio.jingle('clear'); break;
+    case 'entranceEnd': clearInput(); break;
     case 'die': audio.jingle('die'); break;
     case 'toast': showToast(e.text); break;
     case 'dead': onDead(); break;
@@ -585,11 +588,11 @@ function simulate(dt) {
   // 单步推进：Q/E 旋转、卡片计时、世界步进、事件
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (uiMode === 'game' && !paused && !current) { lookControl.step(dt, rot); pitchControl.step(dt); }
+  if (uiMode === 'game' && !paused && !current && !w?.entrance) { lookControl.step(dt, rot); pitchControl.step(dt); }
   if (uiMode !== 'game' || paused || current || !w) return;
   if (phase === 'card') { cardT += dt; if (cardT >= 2.2) endCard(); return; }
   const input = buildInput();
-  if (!view.firstPerson(w) && Math.hypot(input.mx,input.mz) > .05) delete w.player.lookHeading;
+  if (w.entrance || (!view.firstPerson(w) && Math.hypot(input.mx,input.mz) > .05)) delete w.player.lookHeading;
   if (w.player.lookHeading !== undefined) w.player.facing = w.player.lookHeading;
   const before = w;
   step(w, input, dt);

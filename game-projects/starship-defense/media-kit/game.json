@@ -199,5 +199,27 @@
   ],
   "battle_report": true,
   "physical_phone_test": false
+ },
+ "taptap": {
+  "schema_version": 1,
+  "game_id": "starship-defense",
+  "developer_id": 100726,
+  "app_id": 962354,
+  "automatic_sync_enabled": true,
+  "authorization_date": "2026-10-07",
+  "status": "reviewing",
+  "submitted_version": "web-tactics-v0.20.0",
+  "submitted_package_sha256": "1c3d930515bf1099bf6584097cc85916a002111c4bbe04243d84c6342d382902",
+  "submitted_h5_version_id": 270783,
+  "draft_version_id": "1040969",
+  "submitted_at": "2026-10-07T00:43:10+00:00",
+  "last_published_version": "web-touch-layout-v0.19.1",
+  "last_published_h5_version_id": 269751,
+  "last_public_runtime_verified_version": null,
+  "release_record": "releases/taptap-sync-20261007/handoff.json",
+  "pending": [],
+  "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
+  "submission_time_source": "TapTap version log review_submitted.updated_time",
+  "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00"
  }
 }

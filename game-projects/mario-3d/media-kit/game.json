@@ -2,8 +2,8 @@
   "game_id": "mario-3d-world-1-1",
   "name": "超级玛丽 3D",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.5.0-preview1",
-  "handoff": "releases/v2.5.0-preview1/handoff.json",
+  "current_version": "v2.5.0",
+  "handoff": "releases/v2.5.0/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在任务 worktree 根目录对 public/ 起 HTTP 服务，打开 /html/game/mario-3d/index.html?level=1-3；可直接选 1-1/1-2/1-3，?test=1 为测试钩子，?q=high|low 指定画质",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J实体红键，未获得时显示需火焰花并提示，获得后发射火球，键盘J旧跑/火球别名兼容。",
@@ -21,19 +21,19 @@
     "slug": "feidao-mario-3d",
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-07T07:50:06+08:00",
     "video_bindings": [
       "BV1guep6NELt"
     ],
-    "submitted_version": "v2.4.6",
-    "submitted_at": "2026-10-07T07:35:44+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_XlZtDh0H/index.html",
-    "release_record": "releases/v2.4.6/handoff.json",
+    "submitted_version": "v2.4.7",
+    "submitted_at": "2026-10-07T08:49:59.626904+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_xPjCFTlG/index.html",
+    "release_record": "releases/v2.4.7/handoff.json",
     "published_version": "v2.4.6",
     "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_gz2xdRRB/index.html",
-    "note": "同包预览实测并通过审核；公开UI及main.js?v=2.4.4核验通过，HTTP逐文件比对受412限制。",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_xPjCFTlG/index.html",
+    "note": "同包电脑、手机横屏与旋转竖屏46项回归通过；已提交审核，公开上线状态另核验。",
     "pending_updates": [
       {
         "version": "v2.2.2",
@@ -87,21 +87,30 @@
         "status": "published",
         "record": "releases/v2.4.5/handoff.json",
         "included_version": "v2.4.5-bgmfull1"
+      },
+      {
+        "version": "v2.4.7",
+        "classification": "普通补丁",
+        "status": "auditing",
+        "record": "releases/v2.4.7/handoff.json",
+        "summary": "补齐1-1通关到1-2地下的自动钻管演出。",
+        "package_sha256": "eaf711b274ae3dfd464c4a7b3a65d06a411392d3f6cc66c1e47745341b3d24f3"
       }
     ],
-    "package_sha256": "07c32cb62fd99ab084aec2458df271920e87d4cff733fb2d08a6faa67e36f832",
+    "package_sha256": "eaf711b274ae3dfd464c4a7b3a65d06a411392d3f6cc66c1e47745341b3d24f3",
     "published_verified_at": "2026-10-07T07:50:06+08:00",
-    "status": "published",
-    "package_hash": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
+    "status": "auditing",
+    "package_hash": "eaf711b274ae3dfd464c4a7b3a65d06a411392d3f6cc66c1e47745341b3d24f3",
     "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23212/index.html",
-    "version": "v2.4.5-bgmfull1",
+    "version": "v2.4.7",
     "public_verified_version": "v2.4.5-bgmfull1",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_wkDpg9yZ/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_xPjCFTlG/index.html",
     "last_published_version": "v2.4.6",
     "last_successful_sync_version": "v2.4.6",
-    "last_successful_sync_at": "2026-10-07T07:50:06+08:00"
+    "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_D3oHCEum/index.html"
   },
-  "notes": "粉丝向非官方重制：原作地图 + 自然色哑光低模；BGM/常用音效原版录音优先、合成回退。第三关仅本地预览，网站/Toy 保持 v2.4.6。",
+  "notes": "粉丝向非官方重制：原作 1-1、1-2、1-3 地图与自然色哑光低模；BGM/常用音效原版录音优先、合成回退。",
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
     "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
@@ -121,10 +130,10 @@
     "processing": "完整音源压缩，不截取前70秒"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v2.4.6",
-  "website_verified_at": "2026-10-07T07:30:00+08:00",
-  "website_commit": "3576fc8d",
-  "web_toy_versions_match": true,
+  "website_version": "v2.4.7",
+  "website_verified_at": "2026-10-07T08:48:28.210570+08:00",
+  "website_commit": "48c4384ee0913827b82fc1a03e6c5d18024b80ec",
+  "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
     "bottom_css_px": 36,
@@ -150,6 +159,14 @@
       "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
     },
     {
+      "version": "v2.4.7",
+      "base_version": "v2.4.6",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "补齐1-1通关后地面自动走进横管、落到1-2地下起点的过场。",
+      "handoff": "releases/v2.4.7/handoff.json"
+    },
+    {
       "version": "v2.5.0-preview1",
       "base_version": "v2.4.6",
       "date": "2026-10-07",
@@ -157,13 +174,22 @@
       "status": "local_preview",
       "summary": "WORLD 1-3 树冠、往返浮台与飞行乌龟；仅本机试看",
       "handoff": "releases/v2.5.0-preview1/handoff.json"
+    },
+    {
+      "version": "v2.5.0",
+      "base_version": "v2.4.7",
+      "date": "2026-10-07",
+      "classification": "正式版本",
+      "status": "preparing",
+      "summary": "第三关树冠、往返浮台与飞行乌龟；保留1-2钻管过场",
+      "handoff": "releases/v2.5.0/handoff.json"
     }
   ],
   "website": {
-    "version": "v2.4.5-bgmfull1",
+    "version": "v2.4.7",
     "status": "deployed_verified",
-    "verified_at": "2026-10-07T06:49:45.870220+08:00",
-    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
+    "commit": "48c4384ee0913827b82fc1a03e6c5d18024b80ec",
+    "verified_at": "2026-10-07T08:48:28.210570+08:00"
   },
   "pending_channel_changes": [
     {
@@ -176,6 +202,15 @@
       "toy": "public_verified"
     },
     {
+      "version": "v2.4.7",
+      "classification": "普通补丁",
+      "changes": [
+        "地面自动钻管与地下落地过场"
+      ],
+      "bilibili": "待合并至下一次有意义的简介更新",
+      "toy": "auditing"
+    },
+    {
       "version": "v2.5.0-preview1",
       "classification": "新关卡预览",
       "changes": [
@@ -184,9 +219,23 @@
       "website": "withheld_per_user",
       "toy": "withheld_per_user",
       "bilibili": "withheld_per_user",
-      "reason": "用户明确先不要上线，待效果反馈，当前未发布"
+      "reason": "用户已确认第三关效果并授权正式发布，转入v2.5.0",
+      "status": "promoted_to_release",
+      "resolved_version": "v2.5.0"
+    },
+    {
+      "version": "v2.5.0",
+      "classification": "正式版本",
+      "changes": [
+        "WORLD 1-3 树冠关",
+        "保留最新1-2钻管过场"
+      ],
+      "website": "pending",
+      "toy": "pending",
+      "bilibili": "pending",
+      "reason": "2026-10-07用户明确授权发布"
     }
   ],
-  "publication_status": "local_preview",
+  "publication_status": "release_preparing",
   "preview_url": "http://127.0.0.1:8953/html/game/mario-3d/index.html?level=1-3"
 }

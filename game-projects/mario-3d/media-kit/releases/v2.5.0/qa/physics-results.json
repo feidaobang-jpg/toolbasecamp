@@ -1,0 +1,45 @@
+{
+  "method": "deterministic physics tests; positions set deliberately to isolate contacts",
+  "checks": [
+    {
+      "name": "three selectable levels; 300 timer; 17 canopies, four lifts, 23 coins, two winged enemies",
+      "pass": true
+    },
+    {
+      "name": "tree canopy catches a fall, but lets a jump through its underside",
+      "pass": true
+    },
+    {
+      "name": "horizontal lift carries idle rider without sliding off",
+      "pass": true
+    },
+    {
+      "name": "vertical lift carries rider and reverses without wrapping or dropping them",
+      "pass": true
+    },
+    {
+      "name": "jump releases moving lift; walking past its edge falls normally",
+      "pass": true
+    },
+    {
+      "name": "red Koopa patrols treetop instead of walking off",
+      "pass": true
+    },
+    {
+      "name": "flying Koopa oscillates, first stomp removes wings, next stomp produces shell",
+      "pass": true
+    },
+    {
+      "name": "checkpoint respawn is on safe high canopy and restores protection",
+      "pass": true
+    },
+    {
+      "name": "single question block yields real power-up and can be hit from beneath",
+      "pass": true
+    },
+    {
+      "name": "old underground looping lifts retain their original axes and wrap",
+      "pass": true
+    }
+  ]
+}
