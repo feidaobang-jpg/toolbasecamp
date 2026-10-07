@@ -350,5 +350,11 @@
       "录像无音轨，需要后续带游戏声音母版；没有手机真机验收。"
     ]
   },
-  "preserved_artifacts": "D:/project/task-artifacts/mario-pipe-transition-20261007"
+  "preserved_artifacts": "D:/project/task-artifacts/mario-pipe-transition-20261007",
+  "integration": {
+    "tested_commit": "d907c4deebcd7d8329a9f09640362f2af9edea82",
+    "origin_master": "5118eabeca294b1ab5ff1e4b1ffec39d0e9f479a",
+    "checks_passed": 46,
+    "record": "integration-results.json"
+  }
 }
