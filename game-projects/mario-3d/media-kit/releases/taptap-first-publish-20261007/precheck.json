@@ -1,0 +1,68 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [
+        {
+          "code": "SCE_AGREEMENT_REQUIRED",
+          "field_ids": [],
+          "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+        }
+      ],
+      "preaudit_passed": false,
+      "version_id": "1041014",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题使用了知名IP名称‘超级玛丽’，可能存在侵权风险及蹭热度嫌疑。如已获得官方正式授权，请前往游戏资质页面上传相关授权书，否则建议修改为原创名称。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "游戏简介中包含‘超级玛丽’等知名IP相关内容，存在版权侵权风险，请提供相应授权文件或调整相关描述。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "icon"
+          ],
+          "message": "游戏图标使用了知名角色‘马里奥’的视觉形象，存在版权侵权风险，请前往游戏资质页面提供IP授权文件，或替换为原创美术素材。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "screenshots"
+          ],
+          "message": "游戏截图内展示了大量知名IP‘超级玛丽’的角色与素材原型，存在侵权风险，请确认是否具备相关授权并在资质页面提交证明文件。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图中包含知名IP‘超级玛丽’的角色与核心要素，存在侵权风险，请前往资质页面上传授权书或修改素材。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "竖版封面中包含知名IP‘超级玛丽’的角色与核心要素，存在侵权风险，请前往资质页面上传授权书或修改素材。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

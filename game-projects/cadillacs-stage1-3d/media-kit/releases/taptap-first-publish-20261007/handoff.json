@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "developer_id": 100726,
+  "app_id": 962722,
+  "automatic_sync_enabled": true,
+  "authorization_date": "2026-10-07",
+  "status": "draft_waiting_agreement_and_ip_review",
+  "platform_status": "draft",
+  "staged_version": "v0.7.0",
+  "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
+  "staged_package_sha256": "52c202384267b99b6d8b80a07453c436e32799ecfb5e263bc0a99b767d99799f",
+  "staged_h5_version_id": 270844,
+  "staged_h5_package_id": 71926,
+  "draft_version_id": "1041013",
+  "submitted_version": null,
+  "submitted_at": null,
+  "last_published_version": null,
+  "last_published_h5_version_id": null,
+  "last_public_runtime_verified_version": null,
+  "last_status_checked_at": "2026-10-07T01:41:21.841584+00:00",
+  "release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "pending_material_review": [],
+  "pending": [
+    "用户明确同意《创意工坊内容授权协议》",
+    "处理平台实际IP风险提示，并提供适用的可转授权证明或改为原创内容后重新预检"
+  ],
+  "dedupe_rule": "现有草稿和包已上传绑定，处理授权后先读平台与本记录；同哈希不重复上传，不重复创建；提交前核对最新主线/网站版本，不代签新协议，不强制忽略预审风险。",
+  "title": "恐龙快打 3D",
+  "classification": "首次上架准备",
+  "admin_url": "https://developer.taptap.cn/v3/100726/app/962722/store/update",
+  "package": "dist/taptap/cadillacs-stage1-3d/cadillacs-stage1-3d.zip",
+  "package_bytes": 13431021,
+  "main_package_bound": true,
+  "preaudit_passed": false,
+  "blockers": [
+    {
+      "code": "SCE_AGREEMENT_REQUIRED",
+      "field_ids": [],
+      "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "title"
+      ],
+      "message": "游戏标题使用了知名街机游戏IP《恐龙快打》，涉嫌侵权蹭热度风险。若已获得官方授权，请前往游戏资质页面上传相关授权证明文件，否则建议修改标题。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "description"
+      ],
+      "message": "游戏简介中明确指出为《恐龙快打》的非官方复刻作品，存在版权侵权风险，请提供正规IP授权资质或修改相关侵权内容。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "trial_note"
+      ],
+      "message": "开发者的话中包含对第三方知名IP《恐龙快打》的复刻说明，存在版权侵权风险，请提供正规IP授权证明或调整相关描述。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "screenshots"
+      ],
+      "message": "游戏截图中包含《恐龙快打》知名角色设定（如MUSTAPHA等），存在侵权风险，请前往资质页面上传授权文件。"
+    }
+  ],
+  "material_review": "已测试游戏正常输入生成真实截图与无额外配音实机视频；玛丽v2.5.0沿用仍准确的1-1截图/视频并追加当前包第三关实机截图与验证；图标/宣传图使用现有游戏模型的原生3D构图，更新后的横竖封面已人工查看；不是玩法截图替代品或正版授权证明。",
+  "agreement_signed": false,
+  "review_submitted": false,
+  "public_verified": false,
+  "test_limits": {
+    "physical_phone": false,
+    "taptap_client": false,
+    "local_edge_desktop_and_mobile_viewports": true
+  },
+  "ip_rights": {
+    "platform_warning": true,
+    "authorization_proof_provided": false,
+    "original_music_in_package": true,
+    "music_source_record": "game-projects/site-games/releases/bgm-full-20261007/audio-sources.json",
+    "source_attribution_is_permission": false
+  },
+  "artifact_root": "D:/project/toolbasecamp-artifacts/taptap/publish-four/20261007",
+  "not_changed": [
+    "原游戏代码、关卡、玩法与画风",
+    "网站及Toy版本",
+    "B站视频与简介",
+    "其他TapTap作品",
+    "未签协议/未提交审核/未声称上线"
+  ]
+}

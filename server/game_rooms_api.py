@@ -18,6 +18,23 @@ from fastapi.responses import JSONResponse
 from tank3d_rooms import tank3d_ws
 
 router = APIRouter(prefix="/game/tank-coop", tags=["tank-coop"])
+hub_router = APIRouter(prefix="/game/coop", tags=["game-coop"])
+
+@hub_router.get("/rooms")
+async def coop_rooms(page: int = 1, game: str = "all", password: str = "all"):
+    from coop_lobby import GAMES, listing
+    if game != "all" and game not in GAMES:
+        return JSONResponse({"message": "未知游戏"}, status_code=400)
+    if password not in ("all", "locked", "open"):
+        password = "all"
+    return JSONResponse(listing(max(1, page), password, game),
+                        headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"})
+
+@hub_router.websocket("/ws")
+async def coop_ws(socket: WebSocket):
+    from coop_lobby import coop_lobby_ws
+    await coop_lobby_ws(socket, socket.query_params.get("game", "tank"))
+
 
 MAX_PLAYERS = 8
 ROOM_IDLE_SEC = 3600

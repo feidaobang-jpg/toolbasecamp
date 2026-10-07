@@ -259,5 +259,19 @@
   ],
   "publication_status": "published_verified",
   "preview_url": "http://127.0.0.1:8953/html/game/mario-3d/index.html?level=1-3",
-  "local_preview_retention": "本机8953预览仍打开且保留原试玩进度，任务worktree/服务暂保留；发布素材另存D:/project/task-artifacts/mario-stage3-release-20261007"
+  "local_preview_retention": "本机8953预览仍打开且保留原试玩进度，任务worktree/服务暂保留；发布素材另存D:/project/task-artifacts/mario-stage3-release-20261007",
+  "taptap": {
+    "developer_id": 100726,
+    "app_id": 962723,
+    "automatic_sync_enabled": true,
+    "status": "draft_waiting_ip_authorization",
+    "staged_version": "v2.5.0",
+    "staged_h5_version_id": 270893,
+    "draft_version_id": "1041014",
+    "last_published_version": null,
+    "sync_record": "taptap-sync.json",
+    "release_record": "releases/taptap-consent-20261007/handoff.json",
+    "agreement_authorized": true,
+    "agreement_signed": false
+  }
 }

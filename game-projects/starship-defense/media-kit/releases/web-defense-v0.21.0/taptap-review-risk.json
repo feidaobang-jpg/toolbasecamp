@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-07T02:09:02.058774+00:00",
+  "scope": {
+    "developer_id": 100726,
+    "app_id": 962354,
+    "version_id": "1041175",
+    "h5_version_id": "270949"
+  },
+  "passed": [
+    {
+      "type": "current_fact",
+      "evidence": "taptap-analysis.json / taptap-precheck.json",
+      "result": "无blocker或warning，内容预审通过"
+    },
+    {
+      "type": "test_evidence",
+      "evidence": "qa/taptap-local/results.json",
+      "result": "电脑/手机横竖屏核心炮塔与周目、存档测试通过"
+    },
+    {
+      "type": "current_fact",
+      "evidence": "taptap-platform-status.json",
+      "result": "沿用现有分发状态，未修改"
+    }
+  ],
+  "unverified": [
+    "TapTap客户端/手机真机未测试",
+    "现有准确物料沿用；未宣称本次获得首页推荐资格"
+  ],
+  "historical_review": "V-20261007 已审核通过并上线，本次新包无当前历史拒绝提示",
+  "material_reminder": "保留既有介绍/截图/视频；版本审核、素材审核与首页推荐分别判断。"
+}

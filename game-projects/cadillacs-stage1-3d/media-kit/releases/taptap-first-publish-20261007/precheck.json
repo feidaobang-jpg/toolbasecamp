@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [
+        {
+          "code": "SCE_AGREEMENT_REQUIRED",
+          "field_ids": [],
+          "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+        }
+      ],
+      "preaudit_passed": false,
+      "version_id": "1041013",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题使用了知名街机游戏IP《恐龙快打》，涉嫌侵权蹭热度风险。若已获得官方授权，请前往游戏资质页面上传相关授权证明文件，否则建议修改标题。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "游戏简介中明确指出为《恐龙快打》的非官方复刻作品，存在版权侵权风险，请提供正规IP授权资质或修改相关侵权内容。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "trial_note"
+          ],
+          "message": "开发者的话中包含对第三方知名IP《恐龙快打》的复刻说明，存在版权侵权风险，请提供正规IP授权证明或调整相关描述。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "screenshots"
+          ],
+          "message": "游戏截图中包含《恐龙快打》知名角色设定（如MUSTAPHA等），存在侵权风险，请前往资质页面上传授权文件。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

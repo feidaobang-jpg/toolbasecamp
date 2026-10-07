@@ -1,0 +1,336 @@
+{
+  "version": "web-defense-v0.21.0",
+  "checked_at": "2026-10-07T01:51:44.142Z",
+  "results": [
+    {
+      "shape": "desktop",
+      "combat": {
+        "antiAir": [
+          34,
+          51,
+          68
+        ],
+        "mgTurret": [
+          7,
+          10.5,
+          14
+        ],
+        "cannonTurret": [
+          60,
+          90,
+          120
+        ],
+        "teslaTurret": [
+          30,
+          45,
+          60
+        ],
+        "sniperTurret": [
+          160,
+          240,
+          320
+        ],
+        "bunker": [
+          12,
+          18,
+          24
+        ],
+        "cryoTurret": [
+          18,
+          27,
+          36
+        ],
+        "mortarTurret": [
+          140,
+          210,
+          280
+        ],
+        "frost": {
+          "damage": [
+            18,
+            18,
+            18
+          ],
+          "slow": [
+            0.45,
+            0.45,
+            0.7
+          ],
+          "duration": 2,
+          "slowDistance": 0.225,
+          "normalDistance": 0.5,
+          "expired": true
+        },
+        "mortar": {
+          "arc": true,
+          "damage": [
+            140,
+            140
+          ],
+          "noAirTarget": true
+        }
+      },
+      "saves": {
+        "res": [
+          {
+            "loop": 1,
+            "limit": 64,
+            "valid": true,
+            "overflow": true,
+            "count": 64,
+            "rejected": "设施已达 64 座",
+            "menu": "20000 · 设施 64/64 · 炮塔火力 ×1.0（二周目80座，三周目起96座）"
+          },
+          {
+            "loop": 2,
+            "limit": 80,
+            "valid": true,
+            "overflow": true,
+            "count": 80,
+            "rejected": "设施已达 80 座",
+            "menu": "20000 · 设施 80/80 · 炮塔火力 ×1.5（二周目80座，三周目起96座）"
+          },
+          {
+            "loop": 3,
+            "limit": 96,
+            "valid": true,
+            "overflow": true,
+            "count": 96,
+            "rejected": "设施已达 96 座",
+            "menu": "20000 · 设施 96/96 · 炮塔火力 ×2.0（二周目80座，三周目起96座）"
+          }
+        ],
+        "rolled": {
+          "loop": 2,
+          "hp": 175,
+          "maxHp": 350,
+          "valid": true,
+          "reload": 175,
+          "legacyHp": 100,
+          "legacyValid": true
+        }
+      },
+      "errors": []
+    },
+    {
+      "shape": "landscape",
+      "combat": {
+        "antiAir": [
+          34,
+          51,
+          68
+        ],
+        "mgTurret": [
+          7,
+          10.5,
+          14
+        ],
+        "cannonTurret": [
+          60,
+          90,
+          120
+        ],
+        "teslaTurret": [
+          30,
+          45,
+          60
+        ],
+        "sniperTurret": [
+          160,
+          240,
+          320
+        ],
+        "bunker": [
+          12,
+          18,
+          24
+        ],
+        "cryoTurret": [
+          18,
+          27,
+          36
+        ],
+        "mortarTurret": [
+          140,
+          210,
+          280
+        ],
+        "frost": {
+          "damage": [
+            18,
+            18,
+            18
+          ],
+          "slow": [
+            0.45,
+            0.45,
+            0.7
+          ],
+          "duration": 2,
+          "slowDistance": 0.225,
+          "normalDistance": 0.5,
+          "expired": true
+        },
+        "mortar": {
+          "arc": true,
+          "damage": [
+            140,
+            140
+          ],
+          "noAirTarget": true
+        }
+      },
+      "saves": {
+        "res": [
+          {
+            "loop": 1,
+            "limit": 64,
+            "valid": true,
+            "overflow": true,
+            "count": 64,
+            "rejected": "设施已达 64 座",
+            "menu": "20000 · 设施 64/64 · 炮塔火力 ×1.0（二周目80座，三周目起96座）"
+          },
+          {
+            "loop": 2,
+            "limit": 80,
+            "valid": true,
+            "overflow": true,
+            "count": 80,
+            "rejected": "设施已达 80 座",
+            "menu": "20000 · 设施 80/80 · 炮塔火力 ×1.5（二周目80座，三周目起96座）"
+          },
+          {
+            "loop": 3,
+            "limit": 96,
+            "valid": true,
+            "overflow": true,
+            "count": 96,
+            "rejected": "设施已达 96 座",
+            "menu": "20000 · 设施 96/96 · 炮塔火力 ×2.0（二周目80座，三周目起96座）"
+          }
+        ],
+        "rolled": {
+          "loop": 2,
+          "hp": 175,
+          "maxHp": 350,
+          "valid": true,
+          "reload": 175,
+          "legacyHp": 100,
+          "legacyValid": true
+        }
+      },
+      "errors": []
+    },
+    {
+      "shape": "portrait",
+      "combat": {
+        "antiAir": [
+          34,
+          51,
+          68
+        ],
+        "mgTurret": [
+          7,
+          10.5,
+          14
+        ],
+        "cannonTurret": [
+          60,
+          90,
+          120
+        ],
+        "teslaTurret": [
+          30,
+          45,
+          60
+        ],
+        "sniperTurret": [
+          160,
+          240,
+          320
+        ],
+        "bunker": [
+          12,
+          18,
+          24
+        ],
+        "cryoTurret": [
+          18,
+          27,
+          36
+        ],
+        "mortarTurret": [
+          140,
+          210,
+          280
+        ],
+        "frost": {
+          "damage": [
+            18,
+            18,
+            18
+          ],
+          "slow": [
+            0.45,
+            0.45,
+            0.7
+          ],
+          "duration": 2,
+          "slowDistance": 0.225,
+          "normalDistance": 0.5,
+          "expired": true
+        },
+        "mortar": {
+          "arc": true,
+          "damage": [
+            140,
+            140
+          ],
+          "noAirTarget": true
+        }
+      },
+      "saves": {
+        "res": [
+          {
+            "loop": 1,
+            "limit": 64,
+            "valid": true,
+            "overflow": true,
+            "count": 64,
+            "rejected": "设施已达 64 座",
+            "menu": "20000 · 设施 64/64 · 炮塔火力 ×1.0（二周目80座，三周目起96座）"
+          },
+          {
+            "loop": 2,
+            "limit": 80,
+            "valid": true,
+            "overflow": true,
+            "count": 80,
+            "rejected": "设施已达 80 座",
+            "menu": "20000 · 设施 80/80 · 炮塔火力 ×1.5（二周目80座，三周目起96座）"
+          },
+          {
+            "loop": 3,
+            "limit": 96,
+            "valid": true,
+            "overflow": true,
+            "count": 96,
+            "rejected": "设施已达 96 座",
+            "menu": "20000 · 设施 96/96 · 炮塔火力 ×2.0（二周目80座，三周目起96座）"
+          }
+        ],
+        "rolled": {
+          "loop": 2,
+          "hp": 175,
+          "maxHp": 350,
+          "valid": true,
+          "reload": 175,
+          "legacyHp": 100,
+          "legacyValid": true
+        }
+      },
+      "errors": []
+    }
+  ]
+}

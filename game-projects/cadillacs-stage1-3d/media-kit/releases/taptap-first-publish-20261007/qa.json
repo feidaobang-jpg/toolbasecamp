@@ -1,0 +1,64 @@
+{
+  "slug": "cadillacs-stage1-3d",
+  "package_sha256": "52c202384267b99b6d8b80a07453c436e32799ecfb5e263bc0a99b767d99799f",
+  "scenarios": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "mobile": false,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [
+        "taptap-cadillacs-v1:touch",
+        "taptap-cadillacs-v1:hero"
+      ],
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "mobile": true,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [
+        "taptap-cadillacs-v1:touch",
+        "taptap-cadillacs-v1:hero"
+      ],
+      "errors": [],
+      "failed": [],
+      "external": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "mobile": true,
+      "movement": true,
+      "actions": true,
+      "pause": true,
+      "mode_switch_preserves_progress": true,
+      "storage_keys": [
+        "taptap-cadillacs-v1:touch",
+        "taptap-cadillacs-v1:hero"
+      ],
+      "errors": [],
+      "failed": [],
+      "external": []
+    }
+  ],
+  "real_phone_test": false,
+  "taptap_client_test": false,
+  "method": "Normal keyboard and pointer input; read-only existing state hooks. Canvas/audio capture does not change gameplay.",
+  "status": "passed"
+}
