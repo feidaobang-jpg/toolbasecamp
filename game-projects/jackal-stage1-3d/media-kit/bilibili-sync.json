@@ -5,7 +5,7 @@
       "bvid": "BV1EyHz6wE5u",
       "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
       "owner_uid": 16214353,
-      "last_public_verified_version": "v0.9.0",
+      "last_public_verified_version": "v0.10.0",
       "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
       "verified_at": "2026-10-06T22:35:15.869180+00:00",
       "release_record": "releases/v0.8.0/bilibili-sync.json",
@@ -18,7 +18,8 @@
       "publicVerifiedAt": "2026-10-07T02:35:12.420Z",
       "status": "public_verified",
       "submitted_version": "v0.9.0",
-      "submitted_at": "2026-10-07T02:35:12.420Z"
+      "submitted_at": "2026-10-07T02:35:12.420Z",
+      "public_verified_at": "2026-10-07T18:05:00+08:00"
     }
   ],
   "pending": [],
@@ -40,7 +41,7 @@
     {
       "version": "v0.10.0",
       "classification": "正式版本",
-      "status": "pending_platform_submit",
+      "status": "public_verified",
       "baseline_version": "v0.9.0",
       "bvids": [
         "BV1EyHz6wE5u"
@@ -169,6 +170,15 @@
       "status": "public_verified",
       "record": "releases/v0.8.0/bilibili-sync.json",
       "checked_at": "2026-10-06T22:35:15.869180+00:00"
+    },
+    {
+      "bv": "BV1EyHz6wE5u",
+      "version": "v0.10.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·v0.10.0）：联机统一支持2–4人合作，建房可选2/3/4人；中途加入/退出保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。视频为录制时版本，以当前试玩为准。",
+      "method": "browser编辑投稿replace更新行"
     }
   ],
   "last_public_verified": {

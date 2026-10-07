@@ -7,7 +7,7 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-coop-v0.22.0",
+      "last_public_verified_version": "web-coop-v0.23.0",
       "last_public_verified_at": "2026-10-07T02:40:31.756Z",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
@@ -19,7 +19,8 @@
       "submitted_at": "2026-10-07T02:40:31.756Z",
       "lastPublicVerifiedVersion": "web-coop-v0.22.0",
       "publicVerifiedAt": "2026-10-07T02:40:31.756Z",
-      "descriptionHash": "ca0f88dbdf92ea2de6e58152f067589475026d3b535497b287abb024ecc2d3db"
+      "descriptionHash": "ca0f88dbdf92ea2de6e58152f067589475026d3b535497b287abb024ecc2d3db",
+      "public_verified_at": "2026-10-07T18:05:00+08:00"
     },
     {
       "bvid": "BV1Ujad6DEuf",
@@ -56,7 +57,7 @@
     {
       "version": "web-coop-v0.23.0",
       "classification": "正式版本",
-      "status": "pending_platform_submit",
+      "status": "public_verified",
       "baseline_version": "web-coop-v0.22.0",
       "bvids": [
         "BV1WbHq6eEBt"
@@ -79,6 +80,17 @@
       "reply_id": null,
       "id_note": "原置顶回复第二页已公开核验；UI未提供回复ID，使用目标BV、原文和回复哈希去重",
       "reply_sha256": "055f0928ea8026cc74048e2d3deef71fd7508135301e485ce2154031d4bd1c4b"
+    }
+  ],
+  "history": [
+    {
+      "bv": "BV1WbHq6eEBt",
+      "version": "web-coop-v0.23.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·v0.23.0）：联机统一支持2–4人合作，建房可选2/3/4人；支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。保留各选兵种、共享金币与防线、建造与队友指令同步；副本暂为单机。网站试玩已可玩，Toy/TapTap包审核中。",
+      "method": "browser编辑投稿replace更新行"
     }
   ]
 }

@@ -7,7 +7,7 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": "v0.8.0",
+      "last_public_verified_version": "v0.9.0",
       "status": "public_verified",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
@@ -21,7 +21,8 @@
       "release": "releases/v0.6.0/handoff.json",
       "publicVerifiedAt": "2026-10-07T02:30:21.062Z",
       "submitted_version": "v0.8.0",
-      "submitted_at": "2026-10-07T02:30:21.062Z"
+      "submitted_at": "2026-10-07T02:30:21.062Z",
+      "public_verified_at": "2026-10-07T18:05:00+08:00"
     }
   ],
   "status": "public_verified",
@@ -159,7 +160,7 @@
     {
       "version": "v0.9.0",
       "classification": "正式版本",
-      "status": "pending_platform_submit",
+      "status": "public_verified",
       "baseline_version": "v0.8.0",
       "bvids": [
         "BV18XHW66E55"
@@ -178,6 +179,15 @@
       "status": "public_verified",
       "record": "releases/v0.4.0/handoff.json",
       "checked_at": "2026-10-06T01:41:19.279Z"
+    },
+    {
+      "bv": "BV18XHW66E55",
+      "version": "v0.9.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·v0.9.0）：联机统一支持2–4人合作，建房可选2/3/4人；中途加入/退出保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。视频为录制时版本，以当前试玩为准。",
+      "method": "browser编辑投稿replace更新行"
     }
   ],
   "last_public_verified": {

@@ -15,7 +15,9 @@
       "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
       "submitted_version": "coop-hub1",
       "submitted_at": "2026-10-07T02:36:31.738Z",
-      "status": "public_verified"
+      "status": "public_verified",
+      "last_public_verified_version": "coop-live2",
+      "public_verified_at": "2026-10-07T18:05:00+08:00"
     },
     {
       "bvid": "BV1TepK69Eet",
@@ -30,7 +32,9 @@
       "commentStatus": "pinned",
       "qqPromotionStatus": "submitted_and_autosaved",
       "recordedFootageVersion": "landscape-menu1",
-      "lastPublicVerifiedVersion": "coop-hub1"
+      "lastPublicVerifiedVersion": "coop-hub1",
+      "last_public_verified_version": "coop-live2",
+      "public_verified_at": "2026-10-07T18:05:00+08:00"
     }
   ],
   "pending_updates": [
@@ -141,7 +145,7 @@
     {
       "version": "coop-live2",
       "classification": "正式版本",
-      "status": "pending_platform_submit",
+      "status": "public_verified",
       "baseline_version": "coop-hub1",
       "bvids": [
         "BV1Wqaz6AEJb",
@@ -174,6 +178,24 @@
       "checked_at": "2026-10-07T04:32:00+00:00",
       "description_sha256": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8",
       "record": "../video/online-20261007/work/publication-result.json"
+    },
+    {
+      "bv": "BV1Wqaz6AEJb",
+      "version": "coop-live2",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·coop-live2）：联机统一支持2–4人合作，建房可选2/3/4人；支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "bv": "BV1TepK69Eet",
+      "version": "coop-live2",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "method": "browser编辑投稿replace更新行"
     }
   ],
   "last_public_verified": {
