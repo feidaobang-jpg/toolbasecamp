@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "game_id": "starship-defense",
+  "version": "web-cloudsave-v0.24.0",
+  "base_version": "web-lobby-ime-v0.23.1",
+  "classification": "正式版本",
+  "changes": [
+    "账号级云存档：普通模式检查点自动备份，登录网站账号即用；联机与沙盒不写云档",
+    "云端保留最近三份恢复快照；本地清空后可从档案站选档恢复",
+    "本地与云端不一致时暂停自动上传，比较后选择读取或上传，不静默覆盖",
+    "Toy/TapTap 走平台云存储并按设备隔离快照，网站走 /api/game/saves（Bearer 鉴权、revision 乐观并发）",
+    "HUD 新增保存状态胶囊；修复其被 .mbtn:active 变换顶掉居中定位、以及手机上被触控视角层遮挡无法点击的问题"
+  ],
+  "site": {
+    "status": "verified",
+    "verified_at": "2026-10-07T22:24:00+08:00",
+    "evidence": "www.zhengxiaohui.cn 上 index.html 含 hud.hidden~#saveHealth 新规则且 compat 标记为提交号 ae4b1318；save-panel.js/cloud-save.js/site-save.js/game.js/game.compat.js 线上 md5 与仓库 blob 一致；浏览器QA七场景全通过"
+  },
+  "server": {
+    "status": "verified",
+    "verified_at": "2026-10-07T22:23:00+08:00",
+    "evidence": "VPS /opt/toolbasecamp-api 与主线一致（game_saves.py/main.py 仓库md5匹配），服务重启后 health db:true、deploy_sha:ae4b1318；tests/verify_game_saves_deployed.py 通过：public login/bearer auth/empty new account/96建筑上限/MySQL并发revision保护/三份云备份/H5限定CORS/private no-store（临时QA账号已清理）"
+  },
+  "toy": {
+    "status": "auditing",
+    "id": 38678478981120,
+    "package": "dist/toy/chongchao-qianshao/package",
+    "zip_sha256": "b764673c5c145706b53ab4f83a765c0562ace6631778ec37f468984085a89a78",
+    "submitted_at": "2026-10-07T22:25:00+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_M1MJLXv/index.html",
+    "preview_verified": "HTTP 200；与网站同一已实测包（同一提交 ae4b1318 重建）",
+    "note": "上一批 v0.23 已不在审核中（mylist 显示 published）；现网 published 尚不含云存档，待本批过审生效"
+  },
+  "taptap": {
+    "status": "pending_manual_upload",
+    "app_id": 962354,
+    "note": "dist/taptap/chongchao-qianshao 已用含云存档与胶囊修复的最新主线重建；需按 TapTap 后台人工上传流程替换旧包（此前 all-startup 六包同样待人工上传）"
+  },
+  "bilibili": {
+    "status": "pending",
+    "note": "云存档属正式版本可见变化；待 Toy 过审 published 生效后，把简介的试玩说明补上云存档并核验 BV1Ujad6DEuf/BV1WbHq6eEBt"
+  },
+  "limitations": [
+    "手机视口为浏览器模拟，未做真机多指触控验收",
+    "云端三快照为平台单槽备份策略，非多角色云存档列表"
+  ],
+  "validation": {
+    "browser_qa": "game-projects/starship-defense/verify-save-browser.cjs 七场景（web/toy/taptap × 视口）全通过，results.json 与截图见 qa/browser/",
+    "unit": "verify-cloud-save.mjs 26例通过；verify-platform-unit.mjs、verify-combat-controls.mjs 通过；server/tests/test_game_saves.py 11例通过（SQLite mock）",
+    "production_smoke": "VPS 上 verify_game_saves_deployed.py 通过（仅临时QA账号）",
+    "merge": "已整合主线联机手动建房（lobby-hint1）后重建 compat/toy/taptap 并复验"
+  },
+  "updated_at": "2026-10-07T22:28:00+08:00"
+}
