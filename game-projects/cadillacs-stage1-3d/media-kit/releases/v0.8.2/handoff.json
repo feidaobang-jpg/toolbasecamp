@@ -87,12 +87,46 @@
   "reason": "无画面变化"
  },
  "website": {
-  "status": "pending"
+  "status": "deployed_verified",
+  "commit": "1f197c98",
+  "verified_at": "2026-10-07T12:53:00+08:00",
+  "verification": "线上 game.min.js 与新增 cd-dash / cd-dashhit / cd-shout-mustapha 与提交逐字节一致；线上 qa/original-audio.js 58/58"
  },
  "toy": {
-  "status": "pending"
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.8.2/package",
+  "package_tree_sha256": "fd415504604c2f8de3a40af1c760307b370156df3954543293e866b2a0865c25",
+  "preview_checks": "预览 toy-preview-check 20/20、original-audio 58/58",
+  "submitted_at": "2026-10-07T12:51:12+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_zCPIWrnh/index.html",
+  "public_check": "正式入口电脑 + 手机 20/20 显示 v0.8.2；正式入口内 original-audio 58/58",
+  "verified_at": "2026-10-07T13:12:00+08:00"
  },
  "bilibili": {
-  "status": "pending"
+  "status": "pending_merge",
+  "reason": "现有简介「保留原版打击音、必杀语音」仍准确；必杀间隔和冲刺音效属于普通修正，并入下一次有意义的说明更新"
+ },
+ "taptap": {
+  "source_version": "v0.8.2",
+  "source_commit": "1f197c98",
+  "package_sha256": "7f1efad4c023a7d50f675a7ab8df0a4f9917e6d27ef9675114e18f81fdad539f",
+  "h5_version_id": 271477,
+  "draft_version_id": "1041831",
+  "platform_version": "V-20261007-1",
+  "status": "reviewing",
+  "submitted_at": "2026-10-07T13:07:12+08:00",
+  "precheck": {
+   "blockers": [],
+   "preaudit_warnings": [
+    "title IP",
+    "description 非官方复刻",
+    "trial_note 第三方复刻"
+   ],
+   "decision": "同一已展示 IP 风险，按 taptap-force3-20261007 用户试审决定继续"
+  },
+  "verification": "verify-taptap-h5.cjs passed（3 次中 1 次因实时测试里玩家被敌人击倒导致「jump works」失败，与本次改动无关）",
+  "community_post": "pending_until_online",
+  "record": "releases/v0.8.2/handoff.json"
  }
 }
