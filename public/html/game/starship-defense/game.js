@@ -518,7 +518,7 @@ const BUILDINGS={
   sniperTurret:{name:'狙击炮台',hp:280,price:1000,dmg:160,rate:1.9,range:55,desc:'超远程精确狙杀'},
   bunker:{name:'重型堡垒',hp:1200,price:1200,dmg:12,rate:.12,range:30,desc:'超高血量+双联机枪'},
   cryoTurret:{name:'寒霜脉冲塔',hp:380,price:900,dmg:18,rate:.8,range:30,desc:'冰霜脉冲波及5米内最多6只虫，减速2秒；首领减速较弱'},
-  mortarTurret:{name:'重型迫击炮',hp:450,price:1600,dmg:140,rate:2.4,range:48,explode:6,desc:'远程抛射，爆炸覆盖6米，专打地面虫群'},
+  mortarTurret:{name:'重型迫击炮',hp:450,price:1400,dmg:180,rate:2.4,range:64,explode:7,desc:'64米预判抛射，爆炸覆盖7米，专打地面虫群'},
 };
 const ITEMS={
   medkit:{name:'医疗包',price:120,desc:'按H回复60生命(按最大生命比例增强)',heal:60},
@@ -1084,7 +1084,7 @@ function fireBullet(from,dir,cfg,friendly,target){
   if(cfg.arc){
     // 抛物线落点对准目标（原来固定落在约34米外，近处虫子根本打不到）。
     const g=16,aim=target?target.clone():from.clone().addScaledVector(new THREE.Vector3(dir.x,0,dir.z).normalize(),Math.min(cfg.range,cfg.throw||22));
-    const dx=aim.x-from.x,dz=aim.z-from.z,dist=Math.max(1,Math.hypot(dx,dz)),T=clamp(dist/cfg.speed*1.15,.45,1.5);
+    const dx=aim.x-from.x,dz=aim.z-from.z,dist=Math.max(1,Math.hypot(dx,dz)),T=cfg.flightTime||clamp(dist/cfg.speed*1.15,.45,1.5);
     b.vel.set(dx/T+rand(-spread,spread)*dist,(aim.y-from.y+.5*g*T*T)/T,dz/T+rand(-spread,spread)*dist);
     b.gravity=g;b.life=T+.8;m.scale.setScalar(2);
   }
@@ -1291,6 +1291,16 @@ function spawnMonster(kind,x,z,opts={}){
   mo.bar.position.y=(fly?2.2:1.6)*scale*(mo.scaleMul||1)+.6;mesh.add(mo.bar);updHPBar(mo.bar,1);
   if(mesh.userData.worlds){mo.bar.scale.divideScalar(mesh.scale.x);mo.bar.position.y=mesh.userData.visualHeight+.5/mesh.scale.y;if(mo.gem)mo.gem.position.y=mesh.userData.visualHeight+.9/mesh.scale.y;}
   if(mo.stealth)mesh.traverse(o=>{if(o.material&&!o.material.transparent){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;}});
+  // Elite affixes change collision size after the first spawn check.
+  const safe=(px,pz)=>!collideWalls(px,pz,mo.radius,fly?flyHeight(px,pz):groundY(px,pz))&&(fly||!tooSteep(px,pz));
+  if(!safe(x,z)){
+    let found=false;
+    for(const r of [2,4,8,12,20,32]){for(let i=0;i<24;i++){
+      const px=clamp(x+Math.cos(i*TAU/24)*r,WORLD.minX+mo.radius+1,WORLD.maxX-mo.radius-1),pz=clamp(z+Math.sin(i*TAU/24)*r,12,WORLD.maxZ-mo.radius-1);
+      if(safe(px,pz)){mesh.position.set(px,fly?flyHeight(px,pz):groundY(px,pz),pz);found=true;break;}
+    }if(found)break;}
+    if(!found)for(let pz=40;pz<180&&!found;pz+=10)for(let px=-90;px<=90;px+=10)if(safe(px,pz)){mesh.position.set(px,groundY(px,pz),pz);found=true;break;}
+  }
   markTree(mesh);monsters.push(mo);
   if(mo.elite&&!opts.quiet)showMsg('⚠ 精英虫「'+affixNames(mo.elite)+'」出现！',1.6);
   return mo;
@@ -1434,6 +1444,7 @@ function updMonsters(dt){
   for(let i=monsters.length-1;i>=0;i--){
     const mo=monsters[i];
     if(mo.dead){if(!mo.mesh.userData.corpse)visuals.release(mo.mesh);monsters.splice(i,1);continue;}
+    mo.vx=mo.vz=0;
     mo.slowT=Math.max(0,(mo.slowT||0)-dt);
     if(mo.burnT>0){ // 火焰灼烧：每 0.25 秒结算一次
       mo.burnT-=dt;mo.burnTick=(mo.burnTick||0)-dt;
@@ -1463,7 +1474,7 @@ function updMonsters(dt){
       if(!wp){mo.route=null;}
       else {
         const close=monsterTargets(mo),engaged=close&&close.d2<18*18&&Math.abs(close.pos.y-mo.mesh.position.y)<6;
-        if(!engaged){const d=new THREE.Vector3(wp.x-mo.mesh.position.x,0,wp.z-mo.mesh.position.z).normalize();mo.mesh.rotation.y=Math.atan2(d.x,d.z);moveMonster(mo,d,dt,2.2,wp);continue;}
+        if(!engaged){if(recoverStuckMonster(mo,wp,dt,true))continue;const d=new THREE.Vector3(wp.x-mo.mesh.position.x,0,wp.z-mo.mesh.position.z).normalize();mo.mesh.rotation.y=Math.atan2(d.x,d.z);moveMonster(mo,d,dt,2.2,wp);continue;}
       }
     }
     mo.fly=mo.flightAfterExit&&!mo.route&&!isFinite(fortress.ceilingAt(mo.mesh.position.x,mo.mesh.position.z,groundY(mo.mesh.position.x,mo.mesh.position.z)+.5));
@@ -1522,11 +1533,7 @@ function updMonsters(dt){
       shotCover(mo.mesh.position.clone().add(new THREE.Vector3(0,mo.hitH+.5,0)),tgt.pos.clone().add(new THREE.Vector3(0,1,0)))<1;
     // Detours may temporarily move away from a target. Only actual immobility
     // counts as stuck; never interrupt a valid path around a wall.
-    if(!mo.home&&!mo.fly&&!mo.route&&mo.mesh.position.z<182&&mo.chargeT<=0){
-      mo.trackT=(mo.trackT||0)+dt;
-      if(mo.trackT>=1){mo.trackT=0;const p=mo.mesh.position,moved=mo.lastPX===undefined?1:Math.hypot(p.x-mo.lastPX,p.z-mo.lastPZ);mo.stuckT=moved<.15&&dist>atkRange+1&&!mo.navPath?(mo.stuckT||0)+1:0;mo.lastPX=p.x;mo.lastPZ=p.z;}
-      if(mo.stuckT>=5){burrowToward(mo,tgt.pos);continue;}
-    }
+    if(recoverStuckMonster(mo,tgt.pos,dt,dist>atkRange+1||blockedShot))continue;
     if(mo.chargeT>0){ // 冲锋中：直线突进
       mo.chargeT-=dt;
       moveMonster(mo,mo.chargeDir,dt,3.4);
@@ -1562,17 +1569,27 @@ function updMonsters(dt){
     }
   }
 }
+function recoverStuckMonster(mo,to,dt,needsMove){
+  if(mo.home||mo.fly||mo.chargeT>0||!needsMove){mo.stuckT=0;return false;}
+  mo.trackT=(mo.trackT||0)+dt;
+  if(mo.trackT>=1){mo.trackT=0;const p=mo.mesh.position,moved=mo.lastPX===undefined?1:Math.hypot(p.x-mo.lastPX,p.z-mo.lastPZ);mo.stuckT=moved<.15?(mo.stuckT||0)+1:0;mo.lastPX=p.x;mo.lastPZ=p.z;}
+  if(mo.stuckT<5)return false;
+  // Discard a cached route that makes no actual movement, including underground.
+  mo.navPath=null;mo.navCooldown=0;return burrowToward(mo,to);
+}
 function burrowToward(mo,to){
   const p=mo.mesh.position,dx=to.x-p.x,dz=to.z-p.z,d=Math.hypot(dx,dz)||1,step=Math.min(16,Math.max(6,d-6));
   spawnParticles(new THREE.Vector3(p.x,groundY(p.x,p.z)+.4,p.z),0x6b5236,8,5,.6,1.3);
   for(const off of [0,.5,-.5,1,-1,1.5,-1.5]){
     const c=Math.cos(off),s=Math.sin(off),ux=(dx*c-dz*s)/d,uz=(dx*s+dz*c)/d;
     for(const k of [1,.7,.45]){const x=clamp(p.x+ux*step*k,WORLD.minX+3,WORLD.maxX-3),z=clamp(p.z+uz*step*k,WORLD.minZ+3,WORLD.maxZ-3);
-      if(!collideWalls(x,z,mo.radius)&&!tooSteep(x,z)&&!isFinite(fortress.ceilingAt(x,z,groundY(x,z)+.5))){p.set(x,groundY(x,z)-2.6*mo.mesh.scale.y,z);mo.emerge=.9;mo.stuckT=0;mo.lastD=undefined;return true;}}
+      const y=groundY(x,z),ceiling=fortress.ceilingAt(x,z,y+.5);
+      if(!collideWalls(x,z,mo.radius,y)&&!tooSteep(x,z)&&(!isFinite(ceiling)||ceiling-y>mo.hitH*2+.5)){p.set(x,y-2.6*mo.mesh.scale.y,z);mo.emerge=.9;mo.stuckT=0;mo.lastPX=x;mo.lastPZ=z;return true;}}
   }
   mo.stuckT=0;return false;
 }
 function moveMonster(mo,dir,dt,mul,goal=null){
+  const beforeX=mo.mesh.position.x,beforeZ=mo.mesh.position.z;
   const sp=mo.speed*mul*(mo.slowT>0?mo.slowFactor:1);
   const margin=mo.radius+.2;
   const canMove=(x,z)=>x>WORLD.minX+margin&&x<WORLD.maxX-margin&&z>WORLD.minZ+margin&&z<WORLD.maxZ-margin&&!collideWalls(x,z,mo.radius,mo.fly?flyHeight(x,z):groundY(x,z))&&(mo.fly||!tooSteep(x,z));
@@ -1588,6 +1605,7 @@ function moveMonster(mo,dir,dt,mul,goal=null){
   const pressure=Math.hypot(px,pz),cap=sp*dt*.45;if(pressure>cap){px*=cap/pressure;pz*=cap/pressure;}
   if(clearMonsterSegment(mo.mesh.position,{x:nx+px,z:nz+pz},canMove)){nx+=px;nz+=pz;}
   if(clearMonsterSegment(mo.mesh.position,{x:nx,z:nz},canMove)){mo.mesh.position.x=nx;mo.mesh.position.z=nz;}
+  mo.vx=(mo.mesh.position.x-beforeX)/dt;mo.vz=(mo.mesh.position.z-beforeZ)/dt;
   const gy=groundY(mo.mesh.position.x,mo.mesh.position.z);
   if(mo.fly){const want=flyHeight(mo.mesh.position.x,mo.mesh.position.z)+Math.sin(mo.anim*.5)*.5;mo.mesh.position.y+=(want-mo.mesh.position.y)*Math.min(1,dt*5);}
   else mo.mesh.position.y=gy;
@@ -1751,8 +1769,11 @@ function updBuildings(dt){
     if(bd.kind==='antiAir'){
       fireBullet(from,dir,{beam:true,dmg:bd.dmg*mul,range:bd.range,color:0x8bffda},true);AudioSys.sfx('shoot');
     }else if(bd.kind==='mortarTurret'){
-      const impact=best.mesh.position.clone();impact.y=groundY(impact.x,impact.z)+.2;
-      fireBullet(from,dir,{dmg:bd.dmg*mul,speed:32,range:bd.range,spread:0,arc:true,explode:bd.explode,color:0xffb85a},true,impact);
+      const flightTime=clamp(Math.sqrt(bd2)/85,.3,.8),impact=best.mesh.position.clone();
+      impact.x=clamp(impact.x+(best.vx||0)*flightTime,WORLD.minX+1,WORLD.maxX-1);
+      impact.z=clamp(impact.z+(best.vz||0)*flightTime,WORLD.minZ+1,WORLD.maxZ-1);
+      impact.y=groundY(impact.x,impact.z)+.2;
+      fireBullet(from,dir,{dmg:bd.dmg*mul,speed:85,range:bd.range,spread:0,arc:true,flightTime,explode:bd.explode,color:0xffb85a},true,impact);
       AudioSys.sfx('cannon');
     }else if(bd.kind==='sniperTurret'){
       fireBullet(from,dir,{dmg:bd.dmg*mul,speed:140,range:bd.range+8,spread:0,color:0xaaffff},true);
@@ -3685,7 +3706,11 @@ $('deviceMode').onchange=e=>setDeviceMode(e.target.value);
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
 const NAV_ROOTS=['touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','menuOver','menuPause','menuMain'];
 const nav={root:null,index:0};
-function navRoot(){for(const id of NAV_ROOTS){const el=$(id);if(el&&!el.classList.contains('hidden'))return el;}return null;}
+function navRoot(){
+  // The modal owns its native text fields and Tab/Escape handling.
+  if(stage.querySelector('.coop-panel:not([hidden])'))return null;
+  for(const id of NAV_ROOTS){const el=$(id);if(el&&!el.classList.contains('hidden'))return el;}return null;
+}
 function navItems(root){
   return [...root.querySelectorAll('button,a[href],select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length&&!el.closest('.hidden'));
 }
