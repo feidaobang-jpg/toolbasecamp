@@ -5,33 +5,23 @@
   "app_id": 962721,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "online",
+  "status": "reviewing_update_v0.10.0_old_online",
   "platform_status": "online",
-  "staged_version": "v0.8.1",
+  "staged_version": "v0.10.0",
   "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
   "staged_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
-  "staged_h5_version_id": 270833,
+  "staged_h5_version_id": "272179",
   "staged_h5_package_id": 71922,
   "draft_version_id": "1041012",
-  "submitted_version": "v0.8.1",
-  "submitted_at": "2026-10-07T02:28:18.912443+00:00",
+  "submitted_version": "v0.10.0",
+  "submitted_at": "2026-10-07T17:10:00+08:00",
   "last_published_version": "v0.8.1",
   "last_published_h5_version_id": 270833,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T04:43:29.723Z",
-  "release_record": "releases/taptap-force3-20261007/handoff.json",
+  "last_status_checked_at": "2026-10-07T17:10:00+08:00",
+  "release_record": "releases/v0.10.0/handoff.json",
   "pending_material_review": [],
-  "pending": [
-    "v0.9.0 联机版本待TapTap构建验证与后续同步",
-    {
-      "version": "v0.9.0",
-      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
-      "package_sha256": "9588732a6e76f5637bb56096f365229438b5af4d2e63e8b9105bc12d452b397d",
-      "status": "built_waiting_next_taptap_sync",
-      "reason": "旧包已正式上线，本次稳定联机包保留，待后续TapTap构建验证与同步。",
-      "record": "releases/v0.9.0/handoff.json"
-    }
-  ],
+  "pending": [],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
   "agreement_authorized": true,
   "agreement_signed": true,
@@ -81,5 +71,6 @@
     "public_verified_at": "2026-10-07T04:43:29.723Z",
     "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
-  }
+  },
+  "dedupe_note": "v0.10.0联机2-4人包 H5 272179 已绑定main并提审（审核单1042639），IP预审提示沿用已批准的试审决定"
 }

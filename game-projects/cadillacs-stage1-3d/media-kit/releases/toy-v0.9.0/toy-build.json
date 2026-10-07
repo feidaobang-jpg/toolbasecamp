@@ -3,9 +3,9 @@
   "source": "public/html/game/cadillacs-stage1-3d",
   "source_sha256": {
     "css/style.css": "467f5cc29207238e9e730dae760bba8b467f572b9c515f3f70a2dc22a4a3e893",
-    "index.html": "d845562299159589b20085eee55f596670b4fc8ffa3a76a4d7534d354c1863e5",
+    "index.html": "dda04b192321a9b213c6c91363b228ccb69d1d3343c5fe9c4a24c8dfe724f6c0",
     "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
-    "js/game.min.js": "427c9d0506a0b9ee9d7cee29fe48312e5128c12365fc9365688eef9b79a31925",
+    "js/game.min.js": "2c58806aa43370f5e91b941e0ebbd648d4317073d2b1dd95ae1a0bed4b9029aa",
     "sounds/boss.mp3": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
     "sounds/boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
     "sounds/cd-bodyfall.wav": "1626f823242a7d7874d32680e1514d014c085380c674c68904422baa75a5f3c9",
@@ -31,9 +31,9 @@
   },
   "files": {
     "css/style.css": "467f5cc29207238e9e730dae760bba8b467f572b9c515f3f70a2dc22a4a3e893",
-    "index.html": "50e48a3c6b829a91b2d70960f6fd252061ba3b65b7c5f008ca44d717bd27c92d",
+    "index.html": "08af4891a4d169ee3603ede59f7da9bd8266d2ccdb618b56ab5c6218e69caec7",
     "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
-    "js/game.min.js": "427c9d0506a0b9ee9d7cee29fe48312e5128c12365fc9365688eef9b79a31925",
+    "js/game.min.js": "2c58806aa43370f5e91b941e0ebbd648d4317073d2b1dd95ae1a0bed4b9029aa",
     "sounds/boss.mp3": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
     "sounds/boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
     "sounds/cd-bodyfall.wav": "1626f823242a7d7874d32680e1514d014c085380c674c68904422baa75a5f3c9",

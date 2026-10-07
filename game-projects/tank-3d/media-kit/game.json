@@ -29,12 +29,12 @@
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_X0l2USEs/index.html",
     "verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AVDJkYmP/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_JKUHdXI2/index.html",
     "submitted_version": "lobby-scroll1",
-    "submitted_at": "2026-10-07T16:38:45+08:00",
+    "submitted_at": "2026-10-07T16:53:45+08:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
@@ -42,7 +42,7 @@
     "release_record": "releases/coop-hub1/handoff.json",
     "published_version": "coop-hub1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "fs-capable1 审核通过；公开 iframe v23219 的 main.js 为 fs-capable1，含 fsCapable 与 #btn-fs[hidden] 规则。",
+    "note": "联机2-4人统一版本送审（ZCode接管收尾）；网站已部署核验，等待审核",
     "package_sha256": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
     "pending_updates": [
       {
@@ -115,7 +115,8 @@
     "last_successful_sync_version": "landscape-menu1",
     "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
     "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json",
+    "version": "coop-live2"
   },
   "merged_from": {
     "game": "tank-battle",

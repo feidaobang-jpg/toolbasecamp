@@ -26,7 +26,7 @@ for(const entry of fs.readdirSync(source,{withFileTypes:true})){
   let text=fs.readFileSync(path.join(source,entry.name),'utf8')
     .replaceAll('../../../vendor/three/0.170.0/build/three.module.js','./vendor/three.module.js')
     .replaceAll('../../../js/game/drag-look.js','./drag-look.js').replaceAll('../../../js/game/coop.js','./coop-shared.js')
-    .replaceAll('../../../js/game/landscape-typing.js','./landscape-typing.js')
+    .replaceAll(/'\.\.\/\.\.\/\.\.\/js\/game\/landscape-typing\.js(\?v=[a-z0-9-]+)?'/g,"'./landscape-typing.js'")
     .replaceAll('../../../favicon.svg','./favicon.svg');
   if(entry.name==='index.html')text=text.replace(/\s*<a data-act="list"[^>]*>[\s\S]*?<\/a>/g,'')
     .replaceAll('data-list-url="../../../games.html"','data-list-url="./index.html"')
