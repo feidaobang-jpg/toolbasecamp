@@ -83,5 +83,33 @@
   ],
   "operation_stage": "long_term",
   "operation_handbook": "https://developer.taptap.cn/docs/store/operation/long-term/long-term-handbook/",
-  "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00"
+  "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00",
+  "integration": {
+    "origin_master": "0360bc35415186b6c71cd0e2eac8bc18a2106d2a",
+    "checked_at": "2026-10-07T00:52:04.617434+00:00",
+    "mapped_game_runtime_and_adapters_unchanged": true,
+    "tests_still_apply_to_identical_packages": true,
+    "latest_unmapped_versions": [
+      {
+        "game_id": "jackal-stage1-3d",
+        "current_version": "v0.8.1",
+        "status": "not_on_taptap"
+      },
+      {
+        "game_id": "cadillacs-stage1-3d",
+        "current_version": "v0.7.0",
+        "status": "not_on_taptap"
+      },
+      {
+        "game_id": "mario-3d",
+        "current_version": "v2.4.7",
+        "status": "not_on_taptap"
+      },
+      {
+        "game_id": "journey-west-3d",
+        "current_version": "action-state1",
+        "status": "not_on_taptap"
+      }
+    ]
+  }
 }
