@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-coop-v0.22.0",
+  "current_version": "web-coop-v0.23.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -262,9 +262,21 @@
     "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
     "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
     "limitations": [
-      "暂不支持中途加入、断线重连和房主迁移",
-      "联机不写入单机存档/排行榜",
-      "当前联机仅合作守城，副本使用单机入口"
-    ]
-  }
+      "暂无房主迁移；房主离线结束房间",
+      "联机不写入单机存档/排行榜"
+    ],
+    "late_join": true,
+    "idle_takeover_seconds": 30,
+    "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
+    "host_kick": true
+  },
+  "versions": [
+    {
+      "version": "web-coop-v0.23.0",
+      "base_version": "web-coop-v0.22.0",
+      "classification": "正式版本",
+      "handoff": "releases/web-coop-v0.23.0/handoff.json",
+      "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
+    }
+  ]
 }

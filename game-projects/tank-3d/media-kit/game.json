@@ -3,7 +3,7 @@
   "name": "坦克大战 3D：经典 35 关 + 魔改无限周目",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "coop-hub1",
+  "current_version": "coop-live2",
   "handoff": "releases/coop-hub1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
@@ -201,9 +201,22 @@
     "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
     "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
     "limitations": [
-      "暂不支持中途加入、断线重连和房主迁移",
+      "暂无房主迁移；房主离线结束房间",
       "联机不写入单机存档/排行榜"
-    ]
+    ],
+    "late_join": true,
+    "idle_takeover_seconds": 30,
+    "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
+    "host_kick": true
   },
-  "publication_status": "published"
+  "publication_status": "published",
+  "versions": [
+    {
+      "version": "coop-live2",
+      "base_version": "coop-hub1",
+      "classification": "正式版本",
+      "handoff": "releases/coop-live2/handoff.json",
+      "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
+    }
+  ]
 }

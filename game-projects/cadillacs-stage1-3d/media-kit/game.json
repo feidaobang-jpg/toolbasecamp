@@ -116,6 +116,13 @@
       "classification": "正式版本",
       "summary": "打击感重做：出招到位、轻重分档的停顿/震屏/火花/音效、方向受击、挥空不吞键、波末慢动作。",
       "handoff": "releases/v0.6.0/handoff.json"
+    },
+    {
+      "version": "v0.9.0",
+      "base_version": "v0.8.0",
+      "classification": "正式版本",
+      "handoff": "releases/v0.9.0/handoff.json",
+      "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
     }
   ],
   "dev": {
@@ -145,9 +152,13 @@
     "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
     "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
     "limitations": [
-      "暂不支持中途加入、断线重连和房主迁移",
+      "暂无房主迁移；房主离线结束房间",
       "联机不写入单机存档/排行榜"
-    ]
+    ],
+    "late_join": true,
+    "idle_takeover_seconds": 30,
+    "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
+    "host_kick": true
   },
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
@@ -258,7 +269,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.8.0",
+  "current_version": "v0.9.0",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",

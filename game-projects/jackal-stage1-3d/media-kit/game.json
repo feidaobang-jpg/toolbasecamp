@@ -137,7 +137,7 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.9.0",
+  "current_version": "v0.10.0",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "website_version": "v0.8.1",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
@@ -250,6 +250,13 @@
       "classification": "普通补丁",
       "handoff": "releases/v0.8.1/handoff.json",
       "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+    },
+    {
+      "version": "v0.10.0",
+      "base_version": "v0.9.0",
+      "classification": "正式版本",
+      "handoff": "releases/v0.10.0/handoff.json",
+      "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
     }
   ],
   "website_commit": "3576fc8d",
@@ -285,14 +292,18 @@
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
   "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
   "multiplayer": {
-    "players": "2",
+    "players": "2–4",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
     "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
     "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
     "limitations": [
-      "暂不支持中途加入、断线重连和房主迁移",
+      "暂无房主迁移；房主离线结束房间",
       "联机不写入单机存档/排行榜"
-    ]
+    ],
+    "late_join": true,
+    "idle_takeover_seconds": 30,
+    "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
+    "host_kick": true
   },
   "release_intent": "web_demo",
   "entrypoint": "public/html/game/jackal-stage1-3d/index.html",

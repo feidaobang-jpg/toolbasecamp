@@ -16,7 +16,7 @@ PROTOCOL = 'tank3d-v2'
 MAX_PLAYERS = 4
 GAMES = {
     'tank': {'title': '坦克大战', 'protocol': 'tank3d-v2', 'maxPlayers': 4, 'path': 'tank-3d'},
-    'jackal': {'title': '赤色要塞', 'protocol': 'jackal3d-v1', 'maxPlayers': 2, 'path': 'jackal-stage1-3d'},
+    'jackal': {'title': '赤色要塞', 'protocol': 'jackal3d-v1', 'maxPlayers': 4, 'path': 'jackal-stage1-3d'},
     'cadillacs': {'title': '恐龙快打', 'protocol': 'cadillacs3d-v1', 'maxPlayers': 4, 'path': 'cadillacs-stage1-3d'},
     'starship': {'title': '虫潮围城', 'protocol': 'starship-v1', 'maxPlayers': 4, 'path': 'starship-defense'},
 }
@@ -73,12 +73,14 @@ class Room:
     peers: dict = field(default_factory=dict)
     started: bool = False
     seq: int = 0
+    features: bool = False
+    kicked: set = field(default_factory=set)
 
     def public(self):
         return {'game': self.game, 'gameTitle': GAMES[self.game]['title'], 'protocol': GAMES[self.game]['protocol'], 'code': self.code, 'name': self.name, 'maxPlayers': self.capacity,
                 'hasPassword': bool(self.key), 'started': self.started,
-                'settings': self.settings,
-                'players': [{'slot': p.slot, 'name': p.name, 'ready': p.ready, 'hero': getattr(p, 'hero', 0)}
+                'settings': self.settings, 'canJoin': self.features,
+                'players': [{'slot': p.slot, 'name': p.name, 'ready': p.ready, 'hero': getattr(p, 'hero', 0), 'ai': getattr(p, 'ai', False)}
                             for p in self.peers.values()]}
 
     async def broadcast(self, message, guests_only=False):
@@ -129,7 +131,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
             if now - window >= 1:
                 counts = {}; window = now
             counts[kind] = counts.get(kind, 0) + 1
-            if counts[kind] > (90 if kind in ('input', 'state') else 6):
+            if counts[kind] > (90 if kind in ('input', 'state') else 16 if kind == 'control' else 6):
                 continue
             if kind == 'ping':
                 await peer.send({'type': 'pong', 'at': msg.get('at')})
@@ -150,6 +152,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     await peer.send({'type': 'error', 'message': '房间密码最多32个字符'})
                     continue
                 peer.name = str(msg.get('name') or '坦克手')[:12]
+                peer.identity = str(msg.get('identity') or secrets.token_hex(16))[:64]
                 if kind == 'create':
                     if len(rooms) >= 128:
                         await peer.send({'type': 'error', 'message': '房间繁忙，请稍后重试'})
@@ -164,13 +167,15 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                                      capacity, game_config(game, msg.get('config')), salt,
                                      password_key(password, salt) if password else b'', game=game)
                     rooms[code] = candidate
+                    candidate.features = msg.get('liveJoin') is True
                     peer.hero = candidate.settings.get('hero', 0)
                     peer.slot = 0; peer.ready = True
                 else:
                     code = str(msg.get('code') or '').strip()
                     candidate = rooms.get(code)
                     error = ('房间不存在或已结束' if not candidate or candidate.game != game else
-                             '本局已经开始，暂不支持中途加入' if candidate.started else
+                             '房主版本较旧，请在开局前加入或让房主更新' if candidate.started and not candidate.features else
+                             '你已被房主移出本房间' if peer.identity in candidate.kicked else
                              '房间已满' if len(candidate.peers) >= candidate.capacity else None)
                     if error:
                         await peer.send({'type': 'error', 'message': error})
@@ -191,12 +196,20 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                             continue
                         failed_passwords.pop(attempt_id, None)
                     peer.slot = next(s for s in range(candidate.capacity) if s not in candidate.peers)
-                    peer.ready = False
+                    peer.ready = candidate.started
+                    peer.hero = bounded((msg.get('config') or {}).get('hero') if isinstance(msg.get('config'), dict) else 0, 0, 3, 0)
                 room = candidate
                 room.peers[peer.slot] = peer
                 watchers[id(socket)] = (peer, 1, 'all', game)
                 await peer.send({'type': 'joined', 'slot': peer.slot, 'room': room.public()})
                 await room.broadcast({'type': 'roster', 'room': room.public()})
+                if room.started:
+                    start = dict(room.settings)
+                    start['playerChoices'] = {str(s): getattr(p, 'hero', 0) for s, p in room.peers.items()}
+                    start['playerSlots'] = sorted(room.peers)
+                    start['playerCount'] = max(room.peers) + 1
+                    await peer.send({'type': 'start', 'config': start, 'lateJoin': True})
+                    await room.broadcast({'type': 'player_joined', 'slot': peer.slot, 'hero': peer.hero, 'name': peer.name, 'message': f'{peer.name}中途加入'})
                 await publish_directory()
             elif kind == 'ready' and room and not room.started:
                 peer.ready = msg.get('ready') is True
@@ -227,7 +240,26 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                             'look': max(-1000, min(1000, angle)) if type(angle) in (int, float) and math.isfinite(angle) else None}
                 else:
                     data = clean_input(source)
+                data['activity'] = source.get('activity') is True
                 await room.peers[0].send({'type': 'input', 'slot': peer.slot, 'input': data})
+            elif kind == 'control' and room and room.started and peer.slot == 0:
+                target = room.peers.get(msg.get('slot')) if type(msg.get('slot')) is int else None
+                if target and getattr(target, 'ai', False) != (msg.get('ai') is True):
+                    target.ai = msg.get('ai') is True
+                    await room.broadcast({'type': 'control', 'slot': target.slot, 'ai': target.ai,
+                                          'message': f'{target.name}：30秒未操作，电脑队友接管' if target.ai else f'{target.name}已回来，恢复真人操作'})
+            elif kind == 'kick' and room and peer.slot == 0:
+                target = room.peers.get(msg.get('slot')) if type(msg.get('slot')) is int else None
+                if target and target.slot != 0:
+                    room.kicked.add(target.identity)
+                    if len(room.kicked) > 64:
+                        room.kicked.pop()
+                    room.peers.pop(target.slot)
+                    await target.send({'type': 'ended', 'message': '你已被房主移出房间'})
+                    await room.broadcast({'type': 'player_left', 'slot': target.slot, 'message': f'{target.name}已被房主移出房间'})
+                    await room.broadcast({'type': 'roster', 'room': room.public()})
+                    await target.socket.close(code=1000)
+                    await publish_directory()
             elif kind == 'state' and room and room.started and peer.slot == 0:
                 if isinstance(msg.get('state'), dict):
                     room.seq += 1
@@ -247,7 +279,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
         pass
     finally:
         watchers.pop(id(socket), None)
-        if room and rooms.get(room.code) is room:
+        if room and rooms.get(room.code) is room and room.peers.get(peer.slot) is peer:
             room.peers.pop(peer.slot, None)
             if peer.slot == 0:
                 rooms.pop(room.code, None)
@@ -255,6 +287,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 await asyncio.gather(*(p.socket.close(code=1000) for p in room.peers.values()), return_exceptions=True)
             elif room.started:
                 await room.broadcast({'type': 'player_left', 'slot': peer.slot, 'message': f'{peer.name}已离线，其余队友可继续'})
+                await room.broadcast({'type': 'roster', 'room': room.public()})
             else:
                 await room.broadcast({'type': 'roster', 'room': room.public()})
             await publish_directory()

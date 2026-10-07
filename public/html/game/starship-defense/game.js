@@ -4025,10 +4025,10 @@ function setupWebControls(){
 }
 
 function withHuman(human,fn){
-  if(!human||human===player)return fn();
+  if(!human||human===player&&!coopDriver?.config)return fn();
   const old=player,cls=Game.cls,weapon=Game.curWeapon,yaw=camYaw,mode=camMode,network=Input.network;
   old.curWeapon=Game.curWeapon;player=human;Game.cls=human.cls||cls;Game.curWeapon=human.curWeapon||weapon;
-  Input.network=coopDriver?.connection.host?coopDriver.connection.input(human.slot):null;
+  Input.network=coopDriver?.connection.host?coopDriver.connection.control(human.slot,human.slot===0?null:coopDriver.connection.input(human.slot),()=>computerHumanInput(human)):null;
   if(Input.network){camYaw=Input.network.yaw??human.yaw;camMode=Input.network.fp?'first':'third';}
   try{return fn();}finally{human.curWeapon=Game.curWeapon;human.moving=!!human.moveZ;player=old;Game.cls=cls;Game.curWeapon=weapon;camYaw=yaw;camMode=mode;Input.network=network;}
 }
@@ -4048,6 +4048,21 @@ function setupCoopHumans(config){
   if(window.__gameQA)window.__gameQA.player=player;
 }
 function coopId(obj){if(!obj.coopId)obj.coopId=coopNextId++;return obj.coopId;}
+function joinCoopHuman(slot,choice=0){
+ const existing=coopHumans.find(h=>h.slot===slot);if(existing&&!existing.disconnected)return;
+ if(existing){scene.remove(existing.mesh);visuals.release(existing.mesh);coopHumans=coopHumans.filter(h=>h!==existing);}
+ const anchor=coopHumans.find(h=>!h.dead&&!h.disconnected)||player,cls=['gunner','rifle','medic'][choice]||'gunner';
+ const human={...anchor,slot,cls,mesh:null,bar:null,inVehicle:null,pos:new THREE.Vector3(),curWeapon:CLASSES[cls].weapon,disconnected:false};
+ withHuman(human,()=>human.reset(cls));human.pos.copy(anchor.pos);human.pos.x+=slot*2.5;human.mesh.position.copy(human.pos);human.invulnerable=3;coopHumans.push(human);
+ for(const weapon of CLASSES[cls].weapons)if(!Game.weapons.includes(weapon))Game.weapons.push(weapon);
+}
+function computerHumanInput(h){
+ const enemy=monsters.filter(m=>!m.dead&&m.hp>0).sort((a,b)=>a.mesh.position.distanceToSquared(h.pos)-b.mesh.position.distanceToSquared(h.pos))[0];
+ const friend=coopHumans.find(p=>p!==h&&!p.dead&&!p.disconnected);
+ const target=enemy?.mesh.position||friend?.pos||base.mesh?.position||h.pos,dx=target.x-h.pos.x,dz=target.z-h.pos.z,d=Math.hypot(dx,dz);
+ const move=d>(enemy?14:6);
+ return {x:move?dx/Math.max(1,d):0,z:move?dz/Math.max(1,d):0,yaw:Math.atan2(dx,dz),autoAim:true,autoFire:true,fire:!!enemy,edges:[],run:false};
+}
 function rootData(obj){
   const mesh=obj.mesh,aim={};for(const k of ['turret','gun','head','barrel']){const part=mesh.userData[k];if(part?.isObject3D)aim[k]=part.quaternion.toArray();}
   return {id:coopId(obj),s:Object.fromEntries(['kind','slot','type','hp','maxHp','dead','yaw','rotY','isWall','alt','radius','hitH','wild','fly','anim','scale','dmg','val','life','friendly','heat','moving'].filter(k=>obj[k]!==undefined).map(k=>[k,obj[k]])),pos:mesh.position.toArray(),q:mesh.quaternion.toArray(),scale:mesh.scale.toArray(),visible:mesh.visible,aim};
@@ -4130,7 +4145,8 @@ function installStarshipCoop(){
  coopDriver=installRemakeCoop({
   game:'starship',container:$('stage'),menu:$('btnStart').parentElement,getConfig:()=>({hero:['gunner','rifle','medic'].indexOf(Game.cls)}),notify:showMsg,
   onStart:config=>{closePanels();Game.cls=['gunner','rifle','medic'][config.playerChoices?.[0]??config.hero??0]||'gunner';newGame(false);setupCoopHumans(config);},
-  getState:()=>({...starshipSnapshot(),sounds:coopSounds.snapshot()}),getInput:starshipInput,getUI:()=>({}),
+  getState:()=>({...starshipSnapshot(),sounds:coopSounds.snapshot()}),getInput:starshipInput,getUI:()=>({paused:Game.state==='paused'}),
+  onJoin:m=>joinCoopHuman(m.slot,m.hero),
   onState:state=>{starshipApply(state.game);coopSounds.apply(state.game.sounds);},
   onAction:kind=>{if(kind==='pause'&&Game.state!=='paused')togglePause();else if(kind==='resume'&&Game.state==='paused')togglePause();else if(kind==='restart'||kind==='retry'){newGame(false);setupCoopHumans(coopDriver.config);}},
   onEnd:m=>{if(m.type==='player_left'){const h=coopHumans.find(h=>h.slot===m.slot);if(h){if(h.inVehicle)withHuman(h,exitVehicle);h.disconnected=true;h.dead=true;h.mesh.visible=false;}}

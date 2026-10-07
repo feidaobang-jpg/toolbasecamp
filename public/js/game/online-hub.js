@@ -1,4 +1,4 @@
-import {GAMES} from './coop.js?v=coop-hub1';
+import {GAMES} from './coop.js?v=coop-live2';
 const $=id=>document.getElementById(id),filter=$('online-filter'),password=$('online-password');
 let page=1,inflight=false;
 for(const [id,g] of Object.entries(GAMES)){
@@ -21,8 +21,8 @@ async function refresh(){
    const g=GAMES[room.game];if(!g)continue;
    const li=document.createElement('li'),text=document.createElement('div'),title=document.createElement('strong'),detail=document.createElement('span'),a=document.createElement('a');
    title.textContent=g.title+' · '+room.name;detail.textContent=room.players.length+'/'+room.maxPlayers+'人 · 房间 '+room.code+(room.hasPassword?' · 需要密码':'')+(room.started?' · 游戏中':' · 等待开始');
-   a.className='tb-btn';a.textContent=room.started?'游戏中':room.players.length>=room.maxPlayers?'已满':'加入';
-   if(!room.started&&room.players.length<room.maxPlayers)a.href='html/game/'+g.path+'/index.html?coop='+room.code;else{a.setAttribute('aria-disabled','true');a.tabIndex=-1;}
+   a.className='tb-btn';a.textContent=room.players.length>=room.maxPlayers?'已满':room.started?'中途加入':'加入';
+   if((!room.started||room.canJoin)&&room.players.length<room.maxPlayers)a.href='html/game/'+g.path+'/index.html?coop='+room.code;else{a.setAttribute('aria-disabled','true');a.tabIndex=-1;}
    text.append(title,detail);li.append(text,a);list.append(li);
   }
   for(const [id,g] of Object.entries(GAMES))$('online-count-'+id).textContent='2–'+g.max+'人合作 · '+(data.counts[id]||0)+' 个房间';
