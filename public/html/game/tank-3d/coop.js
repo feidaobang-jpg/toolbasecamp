@@ -22,7 +22,11 @@ export function hydrate(world, data, slot) {
   }
   const tanks = new Map([...world.seats.map(s => s.tank), ...world.bots].filter(Boolean).map(t => [t.id, t]));
   for (const b of world.bullets) b.owner = tanks.get(b.owner);
-  for (const t of [...tanks.values(), ...world.bullets]) { const old = previous.get(t.id); t.ox = old?.x ?? t.x; t.oy = old?.y ?? t.y; }
+  for (const t of [...tanks.values(), ...world.bullets]) {
+    const old = previous.get(t.id); t.ox = old?.x ?? t.x; t.oy = old?.y ?? t.y;
+    // 位置跳变（复活/脱困传送/丢包）直接落位，不沿线插值穿过砖墙
+    if (Math.abs(t.ox - t.x) + Math.abs(t.oy - t.y) > 24) { t.ox = t.x; t.oy = t.y; }
+  }
   world.player = world.seats[0].tank; world.boss = tanks.get(data.bossId) || null;
   world.run.coopPlayers = world.seats.map(s => s.state);
   for (const state of world.run.coopPlayers) if (state.lives === null) state.lives = Infinity;

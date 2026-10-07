@@ -2,7 +2,7 @@
 // 以及 5 个视角预设（斜俯视 / 正俯视 / 近景 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
 // 美术全部程序化：基础几何体 + Canvas 纹理。1 个 8px 格 = 1 个世界单位，战场中心在原点。
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
-import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer, playerSpawn } from './sim.js?v=lobby1';
+import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer, playerSpawn } from './sim.js?v=coop-unstick1';
 
 const C = N / 2, TAU = Math.PI * 2;
 const P = v => v / 8 - C;                       // FC 像素 → 世界坐标
@@ -65,6 +65,8 @@ function iconTex(type) {
     if (type === 'tank') { g.fillStyle = '#e2b233'; g.fillRect(-34, -6, 68, 26); g.fillStyle = '#34373b'; g.fillRect(-38, 18, 76, 12); g.fillStyle = '#e2b233'; g.fillRect(-16, -22, 30, 18); g.fillRect(12, -16, 30, 7); }
     if (type === 'gun') { g.fillStyle = '#c9ced4'; g.fillRect(-36, -18, 62, 16); g.fillRect(-36, -18, 16, 46); g.fillStyle = '#7a5030'; g.fillRect(-34, 0, 12, 28); g.fillStyle = '#ffd23f'; g.fillRect(26, -14, 10, 8); }
     if (type === 'boat') { g.fillStyle = '#3f8fd0'; g.beginPath(); g.moveTo(-42, 0); g.lineTo(42, 0); g.lineTo(30, 26); g.lineTo(-30, 26); g.closePath(); g.fill(); g.fillStyle = '#f3f5f7'; g.beginPath(); g.moveTo(0, -40); g.lineTo(0, -4); g.lineTo(28, -4); g.closePath(); g.fill(); g.fillStyle = '#8a5a30'; g.fillRect(-3, -42, 6, 44); }
+    if (type === 'rpg') { g.rotate(-.5); g.fillStyle = '#3a3a30'; g.fillRect(-10, -44, 20, 66); g.fillStyle = '#c9302c'; g.beginPath(); g.moveTo(0, -44); g.lineTo(14, -26); g.lineTo(-14, -26); g.closePath(); g.fill(); g.fillStyle = '#8a5a30'; g.fillRect(-16, -10, 32, 12); }
+    if (type === 'missile') { g.fillStyle = '#4a5a4a'; g.fillRect(-34, 10, 68, 16); for (const x of [-22, -8, 8, 22]) { g.fillStyle = '#c9ced4'; g.fillRect(x - 5, -34, 10, 44); g.fillStyle = '#7affc0'; g.beginPath(); g.moveTo(x - 5, -34); g.lineTo(x, -46); g.lineTo(x + 5, -34); g.closePath(); g.fill(); } }
     if (type === 'repair') { g.rotate(.7); g.fillStyle = '#e0e6ec'; g.fillRect(-7, -30, 14, 60); g.beginPath(); g.arc(0, -32, 16, 0, TAU); g.fill(); g.fillStyle = '#10213a'; g.fillRect(-6, -48, 12, 18); g.fillStyle = '#7ef0a0'; g.beginPath(); g.arc(0, 30, 10, 0, TAU); g.fill(); }
     if (type === 'medal') { g.fillStyle = '#ffd23f'; g.beginPath(); g.arc(0, 8, 30, 0, TAU); g.fill(); g.fillStyle = '#c03030'; g.fillRect(-14, -44, 28, 26); g.fillStyle = '#10213a'; g.font = '900 30px Arial'; g.textAlign = 'center'; g.fillText('500', 0, 19); }
     g.restore();
@@ -276,7 +278,7 @@ export function createScene(canvas) {
   const shieldMat = new THREE.MeshBasicMaterial({ color: '#6fe7ff', wireframe: true, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, depthWrite: false });
   const shields = [];
   const bulletGeo = new THREE.CapsuleGeometry(.1, .26, 3, 8); bulletGeo.rotateX(Math.PI / 2);
-  const bulletMats = { player: new THREE.MeshBasicMaterial({ color: '#fff2a0' }), bot: new THREE.MeshBasicMaterial({ color: '#ff8a52' }), wide: new THREE.MeshBasicMaterial({ color: '#ffd0a0' }), flame: new THREE.MeshBasicMaterial({ color: '#ff7a1a', transparent: true, opacity: .9 }), pierce: new THREE.MeshBasicMaterial({ color: '#ff3040' }) };
+  const bulletMats = { player: new THREE.MeshBasicMaterial({ color: '#fff2a0' }), bot: new THREE.MeshBasicMaterial({ color: '#ff8a52' }), wide: new THREE.MeshBasicMaterial({ color: '#ffd0a0' }), flame: new THREE.MeshBasicMaterial({ color: '#ff7a1a', transparent: true, opacity: .9 }), pierce: new THREE.MeshBasicMaterial({ color: '#ff3040' }), rpg: new THREE.MeshBasicMaterial({ color: '#ffb030' }), missile: new THREE.MeshBasicMaterial({ color: '#7affc0' }) };
   const trailGeo = new THREE.PlaneGeometry(.16, 1); trailGeo.translate(0, .5, 0); trailGeo.rotateX(-Math.PI / 2);
   const trailMats = { player: new THREE.MeshBasicMaterial({ color: '#ffd84a', transparent: true, opacity: .45, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }), bot: new THREE.MeshBasicMaterial({ color: '#ff6a3a', transparent: true, opacity: .45, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }) };
   const bulletPool = [];
@@ -514,7 +516,7 @@ export function createScene(canvas) {
       const special = b.kind !== 'shell';
       g.core.material = special ? bulletMats[b.kind] || bulletMats.wide : bulletMats[b.team];
       g.trail.material = trailMats[b.team];
-      if (special) { const wdt = Math.max(.5, b.half / 4); g.core.scale.set(wdt * 2.2, b.kind === 'flame' ? 2.2 : 1.6, b.kind === 'pierce' ? 3 : 1.6); if (b.kind === 'flame') g.core.rotation.z = elapsed * 9; }
+      if (special) { const wdt = Math.max(.5, b.half / 4); g.core.scale.set(wdt * 2.2, b.kind === 'flame' ? 2.2 : b.kind === 'rpg' ? 2.4 : 1.6, b.kind === 'pierce' ? 3 : b.kind === 'rpg' || b.kind === 'missile' ? 2 : 1.6); if (b.kind === 'flame') g.core.rotation.z = elapsed * 9; }
       else { g.core.scale.set(1, 1, 1); g.core.rotation.z = 0; }
       g.trail.scale.set(special ? 4 : 1, 1, Math.min(1.6, b.age * b.speed * .1) || .01); g.trail.position.z = .12;
     });

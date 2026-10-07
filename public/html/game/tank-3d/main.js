@@ -2,7 +2,7 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
-import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
+import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop-unstick1';
 import { CoopConnection, snapshot, hydrate } from './coop.js?v=ime-live1';
 import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
 installLandscapeTyping();
@@ -610,15 +610,17 @@ function tallyDone() {
 }
 
 // ---------- 事件 ----------
-const PU_TEXT = { star: '星星：火力升级', grenade: '手雷：场上敌军全部炸毁', helmet: '头盔：无敌护盾', shovel: '铁锹：老鹰围墙变成钢墙', timer: '定时器：敌军全部冻结', tank: '坦克：生命 +1', gun: '手枪：火力直升、装甲加厚', boat: '船：可以过河，还能挡一发炮弹' };
+const PU_TEXT = { star: '星星：火力升级', grenade: '手雷：场上敌军全部炸毁', helmet: '头盔：无敌护盾', shovel: '铁锹：老鹰围墙变成钢墙', timer: '定时器：敌军全部冻结', tank: '坦克：生命 +1', gun: '手枪：火力直升、装甲加厚', boat: '船：可以过河，还能挡一发炮弹', rpg: '火箭筒：重型火箭弹 ×5，砖墙钢墙一起炸开', missile: '导弹架：一次四连发导弹 ×4，带溅射' };
 const LOOT_TEXT = { star: '敌军抢到星星，火力变强了！', gun: '敌军抢到手枪，能打穿钢墙了！', boat: '敌军抢到船，能过河了！', grenade: '敌军抢到手雷，你被炸了一下！', helmet: '敌军抢到头盔，全体护盾 8 秒！', shovel: '敌军抢到铁锹，老鹰围墙被挖空了！', timer: '敌军抢到定时器，你被冻住 3 秒！', tank: '敌军抢到坦克，增援 +1！' };
 function handleEvent(e) {
   eventLog.push(e.type); if (eventLog.length > 80) eventLog.shift();
   view.effect(e); audio.effect(e);
-  if (run?.coop && e.slot !== undefined && e.slot !== coop.slot && ['pickup', 'repair', 'medal', 'hurt', 'plate', 'boatHit', 'die', 'levelup'].includes(e.type)) return;
+  if (run?.coop && e.slot !== undefined && e.slot !== coop.slot && ['pickup', 'repair', 'medal', 'hurt', 'plate', 'boatHit', 'die', 'levelup', 'weapon', 'weaponEmpty'].includes(e.type)) return;
   switch (e.type) {
     case 'powerup': showToast('战场上出现了道具！' + (run.mode === 'remix' ? '（4 秒后敌军也会抢）' : '')); break;
     case 'pickup': showToast(PU_TEXT[e.kind] || '道具'); break;
+    case 'weapon': showToast(e.kind === 'rpg' ? '火箭筒就位：重型火箭弹还剩 ' + e.ammo + ' 发' : '导弹架就位：四连发导弹还剩 ' + e.ammo + ' 组'); break;
+    case 'weaponEmpty': showToast('特殊弹药耗尽，恢复常规火炮'); break;
     case 'enemyLoot': showToast(LOOT_TEXT[e.kind] || '敌军抢走了道具'); break;
     case 'repair': showToast(e.repaired === false ? '修理包已拾取：护甲已满' : '修理包：耐久补满'); break;
     case 'medal': showToast('奖章：+500 分'); break;
@@ -795,7 +797,7 @@ function updateHud() {
   const r = run, w = world, p = localPlayer(w), personal = localStats(w);
   const stars = p ? p.stars : personal.stars, maxStars = r.mode === 'classic' ? 3 : 4;
   const hp = r.armor === 'classic' ? -1 : personal.hp;
-  const key = [r.score, personal.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length].join('|');
+  const key = [r.score, personal.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length, p?.weapon, p?.ammo].join('|');
   if (key !== lastHud) {
     lastHud = key;
     $('h-mode').textContent = r.mode === 'classic' ? 'STAGE' : '魔改' + (r.cycle > 1 ? ' · ' + r.cycle + ' 周目' : '');
@@ -825,6 +827,8 @@ function updateHud() {
   if (p && p.shield > 0 && phase === 'play') chips.push(['护盾 ' + Math.ceil(p.shield / 60), '']);
   if (p && p.boats > 0) chips.push(['船 ×' + p.boats, '']);
   if (p && p.plate > 0) chips.push(['装甲 ×' + p.plate, '']);
+  if (p && p.weapon === 'rpg' && p.ammo > 0) chips.push(['火箭弹 ×' + p.ammo, '']);
+  if (p && p.weapon === 'missile' && p.ammo > 0) chips.push(['四连导弹 ×' + p.ammo, '']);
   if (w.playerFrozen > 0) chips.push(['被冻住 ' + Math.ceil(w.playerFrozen / 60), 'warn']);
   if (w.powerup && w.rules.enemyLoot && w.powerup.age > 240) chips.push(['道具会被敌军抢！', 'warn']);
   const html = chips.map(c => '<span class="' + c[1] + '">' + c[0] + '</span>').join('');
