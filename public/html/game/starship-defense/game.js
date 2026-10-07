@@ -489,6 +489,8 @@ const WEAPONS={
   flamer:{name:'火焰喷射器',dmg:7,rate:.05,range:15,speed:28,spread:.12,price:1100,color:0xff6622,sfx:'mg',auto:true,flame:true,pierce:2,burn:35,desc:'火焰穿透3个敌人并点燃，持续灼烧'},
   laser:{beam:true,name:'脉冲激光炮',dmg:16,rate:.08,range:48,speed:170,spread:.006,price:1500,color:0x44ffff,sfx:'laser',auto:true,pierce:1,desc:'按住持续光束，越烧越烫(+50%)，贯穿2个敌人，远程打飞虫'},
   plasma:{name:'等离子炮',dmg:60,rate:.24,range:40,speed:52,spread:.025,price:2300,color:0xcc66ff,sfx:'shoot',auto:true,explode:2.8,desc:'最高秒伤的重型弹，小范围爆炸，打首领和厚甲'},
+  rpg:{name:'RPG火箭筒',dmg:135,rate:1.25,range:46,speed:38,spread:.02,price:1300,color:0xff7733,sfx:'cannon',auto:true,explode:5,desc:'重型火箭弹：直飞命中后5米大范围爆炸，一发拆一片虫群和巢穴墙'},
+  missilePod:{name:'四连导弹架',dmg:42,rate:1.15,range:44,speed:44,spread:.05,price:2100,color:0x77ffaa,sfx:'shoot',auto:true,explode:2.4,homing:.6,burst:4,desc:'扣一次扳机错开半拍连发4枚小型导弹，自动追目标，边跑边轰'},
 };
 // 旧存档里的已下架武器：并入机枪或按买价+强化花费退款
 const LEGACY_WEAPONS={smg:{name:'冲锋枪',price:0,merge:'lmg'},rifle:{name:'战斗步枪',price:0,merge:'lmg'},minigun:{name:'加特林',price:1900,merge:'lmg'},sniper:{name:'狙击枪',price:650},missile:{name:'追踪导弹',price:2600},railgun:{name:'电磁轨道炮',price:3200}};
@@ -498,7 +500,7 @@ function weaponMul(id){return 1+.2*weaponLv(id);}
 function upgradeCost(price,lv){return Math.round(Math.max(300,price)*.35*(lv+1)/10)*10;}
 function upgradePrice(id){return upgradeCost(WEAPONS[id].price,weaponLv(id));}
 function classDamage(id){const c=CLASSES[Game.cls];return c.specialty===id?c.damage:1;}
-function weaponDps(id){const w=WEAPONS[id];return Math.round(w.dmg*(w.pellets||1)/w.rate*weaponMul(id)*classDamage(id));}
+function weaponDps(id){const w=WEAPONS[id];return Math.round(w.dmg*(w.pellets||1)*(w.burst||1)/w.rate*weaponMul(id)*classDamage(id));}
 const CLASSES={
   gunner:{specialty:'lmg',damage:1.25,armor:.85,name:'机枪兵',hp:120,speed:9.5,weapon:'lmg',weapons:['lmg'],color:0x3a7bd5},
   rifle:{specialty:'shotgun',damage:1.3,name:'火枪兵',hp:100,speed:10.5,weapon:'shotgun',weapons:['lmg','shotgun'],color:0xd58a3a},
@@ -2455,7 +2457,7 @@ function throwGrenade(){
 function selectWeapon(id,quiet=false){
   if(coopCommand({kind:'weapon',id}))return;
   if(!Game.weapons.includes(id))return;
-  if(Game.curWeapon!==id){Game.curWeapon=id;player.fireCd=Math.min(player.fireCd,.15);player.heat=0;AudioSys.sfx('reload');}
+  if(Game.curWeapon!==id){Game.curWeapon=id;player.fireCd=Math.min(player.fireCd,.15);player.heat=0;player.burstLeft=0;AudioSys.sfx('reload');}
   if(!quiet)showMsg('🔫 '+WEAPONS[id].name+(weaponLv(id)?' Lv'+weaponLv(id):''),1);
   renderWeaponBar();updViewModel();
 }
@@ -2519,10 +2521,20 @@ function updPlayer(dt){
       v.yaw+=clamp(turn,-dt*2.1,dt*2.1);
       v.mesh.rotation.y=v.yaw;
       const nx=v.mesh.position.x+mvx*sp*dt,nz=v.mesh.position.z+mvz*sp*dt;
-      if(!collideWalls(nx,nz,2,v.mesh.position.y)&&(v.cfg.fly||!tooSteep(nx,nz))){
-        v.mesh.position.x=clamp(nx,WORLD.minX+3,WORLD.maxX-3);
-        v.mesh.position.z=clamp(nz,WORLD.minZ+3,WORLD.maxZ-3);
-      }
+      const canGo=(x,z)=>!collideWalls(x,z,2,v.mesh.position.y)&&(v.cfg.fly||!tooSteep(x,z));
+      let moved=false;
+      if(canGo(nx,nz)){v.mesh.position.x=clamp(nx,WORLD.minX+3,WORLD.maxX-3);v.mesh.position.z=clamp(nz,WORLD.minZ+3,WORLD.maxZ-3);moved=true;}
+      // 整体被挡时按单轴滑动贴墙走，不再整帧卡死
+      else if(canGo(nx,v.mesh.position.z)){v.mesh.position.x=clamp(nx,WORLD.minX+3,WORLD.maxX-3);moved=true;}
+      else if(canGo(v.mesh.position.x,nz)){v.mesh.position.z=clamp(nz,WORLD.minZ+3,WORLD.maxZ-3);moved=true;}
+      // 兜底脱困：有输入却持续走不动约 1.5 秒（嵌进坡体/墙角/联机卡位），挪到最近安全空地
+      if(moving&&!moved){v.stuckT=(v.stuckT||0)+dt;
+        if(v.stuckT>1.5){
+          const spot=rescueSpot(v.mesh.position,3,(x,z)=>vehicleCanStand(v,x,z),[{x:v.mesh.position.x,z:v.mesh.position.z,r:0}]);
+          if(spot){v.mesh.position.set(spot.x,groundY(spot.x,spot.z),spot.z);v.alt=Math.max(0,v.alt);v.navPath=null;showMsg('载具已从卡住的位置脱困',1.6);}
+          v.stuckT=0;
+        }
+      }else v.stuckT=0;
     }
     if(v.cfg.fly){
       // 升降：Y 升 / H 降（键盘上下相邻）；驾驶中本来就不能用医疗包，H 不冲突。
@@ -2633,6 +2645,18 @@ function updPlayer(dt){
     AudioSys.sfx(wp.sfx);
     player.muzzle.intensity=2;setTimeout(()=>{if(player.muzzle)player.muzzle.intensity=0;},50);
     viewKick=Math.min(1,viewKick+(wp.rate>.3?1:.35));
+    if(wp.burst){player.burstLeft=wp.burst-1;player.burstT=0;}   // 四连导弹：首发已出，余下在后续帧错开续发
+  }
+  // 四连发导弹续发：每 90ms 一枚，微散布并追踪当帧目标
+  if(player.burstLeft>0){
+    player.burstT-=dt;
+    if(player.burstT<=0){
+      player.burstLeft--;player.burstT=.09;
+      const from=playerMuzzle(aim.dir);
+      const bcfg={...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*classDamage(Game.curWeapon),burst:0,fp:camMode==='first'};
+      fireBullet(from,aim.dir,bcfg,true,aim.target);
+      AudioSys.sfx(wp.sfx);
+    }
   }
 
   // I 只负责互动（载具 / 城门）；H 才是医疗包，避免开门时误吃药或想回血却关了门
