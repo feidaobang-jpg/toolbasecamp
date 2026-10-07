@@ -6,19 +6,19 @@
   "category": "GAME",
   "visibility": "public",
   "status": "published",
-  "submitted_at": "2026-10-07T02:36:59+00:00",
-  "package": "dist/toy-v0.7.0/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_nyMrgPoi/index.html",
-  "note": "v0.7.0原版音效包已通过电脑与触屏预览测试并送审；正式入口过审前仍为v0.6.1",
-  "status_verified": "toy mylist auditing",
+  "submitted_at": "2026-10-07T12:09:19+08:00",
+  "package": "dist/toy-v0.8.1/package",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_yhGoKvFc/index.html",
+  "note": "v0.8.1（原版音效对号入座）已过审。",
+  "status_verified": "正式入口电脑 + 手机视口 20/20 显示 v0.8.1，原版音效 34/34",
   "bound_videos": [
    "BV18XHW66E55"
   ],
   "review_status": "published",
-  "version": "v0.7.0",
-  "verified_at": "2026-10-07T02:43:57.353796+00:00",
+  "version": "v0.8.1",
+  "verified_at": "2026-10-07T12:15:00+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.6.1",
+  "last_published_version": "v0.8.1",
   "pending_updates": [
    {
     "version": "v0.2.1",
@@ -252,9 +252,9 @@
    "summary": "原版音效对号入座：连招、必杀、GO、倒地。",
    "record": "releases/v0.8.1/handoff.json",
    "channels": {
-    "website": "pending",
-    "toy": "pending",
-    "bilibili": "pending"
+    "website": "deployed_verified",
+    "toy": "published",
+    "bilibili": "pending_merge"
    }
   }
  ],
