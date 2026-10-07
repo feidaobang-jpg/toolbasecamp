@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "coop-hub1",
+  "base_version": "landscape-menu1",
+  "created_at": "2026-10-07T01:54:15.710139+00:00",
+  "classification": "正式版本",
+  "changes": [
+    "坦克作为统一房间基础，兼容旧坦克联机协议，2–4人合作与邀请链接。",
+    "统一网站联机大厅；保留游戏菜单入口，共用昵称、房间、密码、准备、邀请、分页与暂停/重开流程。"
+  ],
+  "build": {
+    "id": "coop-hub1",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "cooperative",
+      "status": "implemented",
+      "description": "坦克作为统一房间基础，兼容旧坦克联机协议，2–4人合作与邀请链接。"
+    }
+  ],
+  "media": [],
+  "qa": [
+    {
+      "method": "server/tests/test_coop_lobby.py + test_tank3d_lobby.py",
+      "result": "13 passed",
+      "scope": "旧坦克兼容、跨游戏隔离、输入裁剪、席位和动作权限、房间目录"
+    },
+    {
+      "method": "site-games/qa/coop-capacity.cjs",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/capacity-summary.json",
+      "scope": "最大席位、独立角色、横竖屏按钮、第二关（赤色/恐龙）、共享扣款（虫潮）、房主/队友离线"
+    }
+  ],
+  "limitations": [
+    "暂不支持中途加入、断线重连和房主迁移",
+    "联机不写入单机存档/排行榜",
+    "手机横竖屏为Edge设备模拟，未做手机真机和多指触控验收"
+  ],
+  "site": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "pending_sync"
+  },
+  "bilibili": {
+    "status": "pending_sync"
+  },
+  "taptap": {
+    "status": "pending_check"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "联机实测截图/录像有，未制作或人工审片新视频；真机与公网部署待核验。"
+    ]
+  }
+}

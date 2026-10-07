@@ -1,0 +1,221 @@
+{
+  "method": "maximum rooms: 4/2/4/4 independent Edge contexts, mobile viewport mouse drag, explicit host fixtures for stage/resources; title rendering paused only during multi-context initialization for Tank",
+  "results": [
+    {
+      "game": "jackal",
+      "name": "unified directory lists live room",
+      "ok": true
+    },
+    {
+      "game": "jackal",
+      "name": "maximum seats spawn",
+      "ok": true,
+      "detail": {
+        "count": 2
+      }
+    },
+    {
+      "game": "jackal",
+      "name": "portrait touch button remains reachable",
+      "ok": true
+    },
+    {
+      "game": "jackal",
+      "name": "second stage retains both players",
+      "ok": true
+    },
+    {
+      "game": "jackal",
+      "name": "snapshot fits relay limit",
+      "ok": true,
+      "detail": {
+        "bytes": 48561
+      }
+    },
+    {
+      "game": "jackal",
+      "name": "host departure ends room",
+      "ok": true
+    },
+    {
+      "game": "jackal",
+      "name": "no browser exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "game": "cadillacs",
+      "name": "unified directory lists live room",
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "name": "maximum seats spawn",
+      "ok": true,
+      "detail": {
+        "count": 4
+      }
+    },
+    {
+      "game": "cadillacs",
+      "name": "per-player role selection",
+      "ok": true,
+      "detail": [
+        "jack",
+        "hannah",
+        "mustapha",
+        "mess"
+      ]
+    },
+    {
+      "game": "cadillacs",
+      "name": "portrait touch button remains reachable",
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "name": "second-stage transition retains team",
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "name": "snapshot fits relay limit",
+      "ok": true,
+      "detail": {
+        "bytes": 9126
+      }
+    },
+    {
+      "game": "cadillacs",
+      "name": "one guest leaves others connected",
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "name": "host departure ends room",
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "name": "no browser exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "game": "tank",
+      "name": "unified directory lists live room",
+      "ok": true
+    },
+    {
+      "game": "tank",
+      "name": "maximum seats spawn",
+      "ok": true,
+      "detail": {
+        "count": 4
+      }
+    },
+    {
+      "game": "tank",
+      "name": "portrait touch button remains reachable",
+      "ok": true
+    },
+    {
+      "game": "tank",
+      "name": "one guest leaves others connected",
+      "ok": true
+    },
+    {
+      "game": "tank",
+      "name": "host departure ends room",
+      "ok": true
+    },
+    {
+      "game": "tank",
+      "name": "no browser exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "game": "starship",
+      "name": "unified directory lists live room",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "maximum seats spawn",
+      "ok": true,
+      "detail": {
+        "count": 4
+      }
+    },
+    {
+      "game": "starship",
+      "name": "per-player role selection",
+      "ok": true,
+      "detail": [
+        "gunner",
+        "rifle",
+        "medic",
+        "gunner"
+      ]
+    },
+    {
+      "game": "starship",
+      "name": "portrait touch button remains reachable",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "insufficient shared funds reject guest purchase",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "host charges actual price once",
+      "ok": true,
+      "detail": {
+        "gold": 400
+      }
+    },
+    {
+      "game": "starship",
+      "name": "guest team order is authoritative",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "shared battle starts from guest ready",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "snapshot fits relay limit",
+      "ok": true,
+      "detail": {
+        "bytes": 11589
+      }
+    },
+    {
+      "game": "starship",
+      "name": "one guest leaves others connected",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "host departure ends room",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "name": "no browser exceptions",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "harness_notes": [
+    "初期本地HTTP访问日志缓冲和同时录制/渲染多个标题的本机资源争用影响加载等待；安静服务器与初始化阶段暂停标题渲染后通过。"
+  ],
+  "not_tested": [
+    "真实手机、多指触控、公网链路（本报告为本地）"
+  ]
+}

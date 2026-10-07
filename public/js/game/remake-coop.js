@@ -32,4 +32,3 @@ export function installRemakeCoop({game,container,menu,getConfig,onStart,onState
  if(new URLSearchParams(location.search).get('test')==='1')window.__COOP_QA__=driver;
  return driver;
 }
-

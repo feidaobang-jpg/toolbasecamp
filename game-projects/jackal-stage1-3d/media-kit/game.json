@@ -1,376 +1,386 @@
 {
- "game_id": "jackal-stage1-3d",
- "name": {
-  "zh": "赤色要塞 · 3D 重置版",
-  "en": "Jackal · 3D remake (fan-made)"
- },
- "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
- "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.8.1",
- "handoff": "releases/v0.8.1/handoff.json",
- "launch": {
-  "public_entry": "public/html/game/jackal-stage1-3d/index.html",
-  "device_root": "D:/project/toolbasecamp",
-  "device_entry": "D:/project/toolbasecamp/public/html/game/jackal-stage1-3d/index.html",
-  "game_list": "D:/project/toolbasecamp/public/games.html（public/js/config.js 的 gamesConfig 动作组）",
-  "site_url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
-  "source": "D:/project/toolbasecamp/game-projects/jackal-stage1-3d/src",
-  "build": "在 game-projects/jackal-stage1-3d 运行 node tools/build.mjs（需要 esbuild 0.28.2）；Toy 包：node tools/build-toy.mjs",
-  "serve": "在 D:/project/toolbasecamp/public 目录运行 python -m http.server 8766，然后打开 http://127.0.0.1:8766/html/game/jackal-stage1-3d/index.html",
-  "previous_location": "2026-10-03 前在 D:/project/claude/test（无 Git），原目录保留未删",
-  "url_params": {
-   "seed": "固定随机种子",
-   "test": "=1 时暴露自动化测试钩子 window.__JK_TEST__（玩家界面不暴露）",
-   "clean": "=1 时隐藏桌面键位提示，用于录制",
-   "q": "high / low：测试用强制画质"
-  }
- },
- "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
- "release_intent": "web_demo",
- "verified_public_links": [
-  "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
-  "https://www.bilibili.com/video/BV1EyHz6wE5u/",
-  "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
- ],
- "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
- "dev": {
-  "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
-  "tools": [
-   "Claude Cowork 云端工作区",
-   "Three.js r152（复用 D:/project/toolbasecamp/public/html/game/starship-defense/vendor 的固定副本）",
-   "esbuild 0.28.2",
-   "Playwright 1.56 + Chromium（无头，SwiftShader 软件渲染）",
-   "ffmpeg / ffprobe",
-   "Python Pillow"
+  "game_id": "jackal-stage1-3d",
+  "name": {
+    "zh": "赤色要塞 · 3D 重置版",
+    "en": "Jackal · 3D remake (fan-made)"
+  },
+  "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
+  "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
+  "current_version": "v0.9.0",
+  "handoff": "releases/v0.9.0/handoff.json",
+  "launch": {
+    "public_entry": "public/html/game/jackal-stage1-3d/index.html",
+    "device_root": "D:/project/toolbasecamp",
+    "device_entry": "D:/project/toolbasecamp/public/html/game/jackal-stage1-3d/index.html",
+    "game_list": "D:/project/toolbasecamp/public/games.html（public/js/config.js 的 gamesConfig 动作组）",
+    "site_url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+    "source": "D:/project/toolbasecamp/game-projects/jackal-stage1-3d/src",
+    "build": "在 game-projects/jackal-stage1-3d 运行 node tools/build.mjs（需要 esbuild 0.28.2）；Toy 包：node tools/build-toy.mjs",
+    "serve": "在 D:/project/toolbasecamp/public 目录运行 python -m http.server 8766，然后打开 http://127.0.0.1:8766/html/game/jackal-stage1-3d/index.html",
+    "previous_location": "2026-10-03 前在 D:/project/claude/test（无 Git），原目录保留未删",
+    "url_params": {
+      "seed": "固定随机种子",
+      "test": "=1 时暴露自动化测试钩子 window.__JK_TEST__（玩家界面不暴露）",
+      "clean": "=1 时隐藏桌面键位提示，用于录制",
+      "q": "high / low：测试用强制画质"
+    }
+  },
+  "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
+  "release_intent": "web_demo",
+  "verified_public_links": [
+    "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+    "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+    "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
   ],
-  "skill": "C:/Users/37818/.claude/skills/game-maker/SKILL.md"
- },
- "hosted_copy": {
-  "url": "https://claude.ai/artifact/CkhWeEfGUhWgtxd1xAAwXF",
-  "visibility": "private（仅用户本人，可在页面 Share 菜单分享）",
-  "note": "同一份 game.min.js 内联的单文件版本，去掉了「返回游戏列表」入口"
- },
- "versions": [
-  {
-   "version": "v0.1",
-   "handoff": "releases/v0.1/handoff.json",
-   "summary": "首版：完整第一关，中一发即毁"
+  "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
+  "dev": {
+    "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
+    "tools": [
+      "Claude Cowork 云端工作区",
+      "Three.js r152（复用 D:/project/toolbasecamp/public/html/game/starship-defense/vendor 的固定副本）",
+      "esbuild 0.28.2",
+      "Playwright 1.56 + Chromium（无头，SwiftShader 软件渲染）",
+      "ffmpeg / ffprobe",
+      "Python Pillow"
+    ],
+    "skill": "C:/Users/37818/.claude/skills/game-maker/SKILL.md"
   },
-  {
-   "version": "v0.2",
-   "handoff": "releases/v0.2/handoff.json",
-   "base_version": "v0.1",
-   "summary": "3 格护甲、营房修理包、检查点补满、耐久选项（经典一发）"
+  "hosted_copy": {
+    "url": "https://claude.ai/artifact/CkhWeEfGUhWgtxd1xAAwXF",
+    "visibility": "private（仅用户本人，可在页面 Share 菜单分享）",
+    "note": "同一份 game.min.js 内联的单文件版本，去掉了「返回游戏列表」入口"
   },
-  {
-   "version": "v0.2.1",
-   "handoff": "releases/v0.2.1/handoff.json",
-   "base_version": "v0.2",
-   "summary": "搬进 toolbasecamp 上架网站与 Toy；修复部分 Windows 台式机被误判为触屏（显示摇杆、隐藏键位提示）"
-  },
-  {
-   "version": "v0.3.1",
-   "handoff": "releases/v0.3.1/handoff.json",
-   "base_version": "v0.3",
-   "summary": "修复两关大门近距离手雷越过目标：对准射程内大门时缩短落点，两发破门。"
-  },
-  {
-   "version": "v0.4.0",
-   "date": "2026-10-05",
-   "note": "新增第一人称视角，移动方向随车头自适应"
-  },
-  {
-   "version": "v0.5.3",
-   "date": "2026-10-06",
-   "base_version": "v0.5.2",
-   "handoff": "releases/v0.5.3/handoff.json",
-   "summary": "对齐恐龙快打动作布局、第一人称视线稳定/慢速转头、修正环绕视角移动映射并让第一人称跟随射击沿视线"
-  },
-  {
-   "version": "v0.7.2",
-   "base_version": "v0.7.1",
-   "date": "2026-10-06",
-   "classification": "普通补丁",
-   "handoff": "releases/v0.7.2/handoff.json",
-   "summary": "精简半透明状态行、暂停详情、Boss条下移；Boss镜头保证模型可见且不改战斗判定。"
-  },
-  {
-   "version": "v0.7.3",
-   "base_version": "v0.7.2",
-   "date": "2026-10-06",
-   "classification": "普通补丁",
-   "handoff": "releases/v0.7.3/handoff.json",
-   "summary": "第二关模型统一复用第一关：炮塔改用沙袋机枪巢外观，营房/围墙/大门恢复木屋红顶与石墙木门（用户反馈第一关更好看，各关同类敌人外观需一致）。"
-  },
-  {
-   "version": "v0.7.4",
-   "base_version": "v0.7.3",
-   "date": "2026-10-06",
-   "classification": "普通补丁",
-   "handoff": "releases/v0.7.4/handoff.json",
-   "summary": "两关全去距离雾，Boss恢复固定预设距离，保留精简HUD。"
-  },
-  {
-   "version": "v0.7.5",
-   "base_version": "v0.7.4",
-   "classification": "普通补丁",
-   "date": "2026-10-06",
-   "handoff": "releases/v0.7.5/handoff.json",
-   "summary": "按原作身份复用：第二关普通炮台改用同型炮台模型；闪光俘虏囚室用灰绿铁皮房、普通营房用浅色帆布棚，保留专属敌人。"
-  },
-  {
-   "version": "v0.7.6",
-   "base_version": "v0.7.5",
-   "date": "2026-10-06",
-   "classification": "普通补丁",
-   "handoff": "releases/v0.7.6/handoff.json",
-   "summary": "修正固定炮台/机枪巢父子节点叠加180度导致炮管反向，第二关三发散射从共用炮口发出。"
-  },
-  {
-   "version": "v0.7.9",
-   "base_version": "v0.7.8",
-   "date": "2026-10-07",
-   "classification": "普通补丁",
-   "handoff": "releases/v0.7.9/handoff.json",
-   "summary": "手机横屏 844×390 起菜单/暂停/结算完整显示，568×320 整层滚动首尾可达；全屏按浏览器能力显示；修复失败结算误显示「进入下一关」与标题页漏出 HUD。"
-  },
-  {
-   "version": "v0.8.0",
-   "base_version": "v0.7.9",
-   "date": "2026-10-07",
-   "classification": "正式版本",
-   "handoff": "releases/v0.8.0/handoff.json",
-   "summary": "新增U联合开火，保留J/K独立输入与各自冷却；机枪默认恢复原作朝上，保留跟随车头选项及已保存选择。"
-  },
-  {
-   "version": "v0.8.0-bgmfull1",
-   "base_version": "v0.8.0",
-   "date": "2026-10-07",
-   "classification": "普通补丁",
-   "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
-   "handoff": "releases/v0.8.0-bgmfull1/handoff.json"
-  },
-  {
-   "version": "v0.8.1",
-   "base_version": "v0.8.0-bgmfull1",
-   "date": "2026-10-07",
-   "classification": "普通补丁",
-   "handoff": "releases/v0.8.1/handoff.json",
-   "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
-  }
- ],
- "toy": {
-  "id": 39863936092160,
-  "slug": "feidao-jackal-3d",
-  "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
-  "visibility": "public",
-  "review_status": "published",
-  "verified_at": "2026-10-07T07:50:06+08:00",
-  "video_bindings": [
-   "BV1EyHz6wE5u"
+  "versions": [
+    {
+      "version": "v0.1",
+      "handoff": "releases/v0.1/handoff.json",
+      "summary": "首版：完整第一关，中一发即毁"
+    },
+    {
+      "version": "v0.2",
+      "handoff": "releases/v0.2/handoff.json",
+      "base_version": "v0.1",
+      "summary": "3 格护甲、营房修理包、检查点补满、耐久选项（经典一发）"
+    },
+    {
+      "version": "v0.2.1",
+      "handoff": "releases/v0.2.1/handoff.json",
+      "base_version": "v0.2",
+      "summary": "搬进 toolbasecamp 上架网站与 Toy；修复部分 Windows 台式机被误判为触屏（显示摇杆、隐藏键位提示）"
+    },
+    {
+      "version": "v0.3.1",
+      "handoff": "releases/v0.3.1/handoff.json",
+      "base_version": "v0.3",
+      "summary": "修复两关大门近距离手雷越过目标：对准射程内大门时缩短落点，两发破门。"
+    },
+    {
+      "version": "v0.4.0",
+      "date": "2026-10-05",
+      "note": "新增第一人称视角，移动方向随车头自适应"
+    },
+    {
+      "version": "v0.5.3",
+      "date": "2026-10-06",
+      "base_version": "v0.5.2",
+      "handoff": "releases/v0.5.3/handoff.json",
+      "summary": "对齐恐龙快打动作布局、第一人称视线稳定/慢速转头、修正环绕视角移动映射并让第一人称跟随射击沿视线"
+    },
+    {
+      "version": "v0.7.2",
+      "base_version": "v0.7.1",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.2/handoff.json",
+      "summary": "精简半透明状态行、暂停详情、Boss条下移；Boss镜头保证模型可见且不改战斗判定。"
+    },
+    {
+      "version": "v0.7.3",
+      "base_version": "v0.7.2",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.3/handoff.json",
+      "summary": "第二关模型统一复用第一关：炮塔改用沙袋机枪巢外观，营房/围墙/大门恢复木屋红顶与石墙木门（用户反馈第一关更好看，各关同类敌人外观需一致）。"
+    },
+    {
+      "version": "v0.7.4",
+      "base_version": "v0.7.3",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.4/handoff.json",
+      "summary": "两关全去距离雾，Boss恢复固定预设距离，保留精简HUD。"
+    },
+    {
+      "version": "v0.7.5",
+      "base_version": "v0.7.4",
+      "classification": "普通补丁",
+      "date": "2026-10-06",
+      "handoff": "releases/v0.7.5/handoff.json",
+      "summary": "按原作身份复用：第二关普通炮台改用同型炮台模型；闪光俘虏囚室用灰绿铁皮房、普通营房用浅色帆布棚，保留专属敌人。"
+    },
+    {
+      "version": "v0.7.6",
+      "base_version": "v0.7.5",
+      "date": "2026-10-06",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.6/handoff.json",
+      "summary": "修正固定炮台/机枪巢父子节点叠加180度导致炮管反向，第二关三发散射从共用炮口发出。"
+    },
+    {
+      "version": "v0.7.9",
+      "base_version": "v0.7.8",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.7.9/handoff.json",
+      "summary": "手机横屏 844×390 起菜单/暂停/结算完整显示，568×320 整层滚动首尾可达；全屏按浏览器能力显示；修复失败结算误显示「进入下一关」与标题页漏出 HUD。"
+    },
+    {
+      "version": "v0.8.0",
+      "base_version": "v0.7.9",
+      "date": "2026-10-07",
+      "classification": "正式版本",
+      "handoff": "releases/v0.8.0/handoff.json",
+      "summary": "新增U联合开火，保留J/K独立输入与各自冷却；机枪默认恢复原作朝上，保留跟随车头选项及已保存选择。"
+    },
+    {
+      "version": "v0.8.0-bgmfull1",
+      "base_version": "v0.8.0",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+      "handoff": "releases/v0.8.0-bgmfull1/handoff.json"
+    },
+    {
+      "version": "v0.8.1",
+      "base_version": "v0.8.0-bgmfull1",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "handoff": "releases/v0.8.1/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+    }
   ],
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_HGesbD0I/index.html",
-  "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
-  "title": "赤色要塞 3D",
-  "category": "GAME",
-  "note": "同包预检、预览玩法检查与CUA实测后一次送审；已过审，公开入口46/46。预览外层COLS超时保留原始记录。",
-  "submitted_at": "2026-10-07T07:35:44+08:00",
-  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_wZxCVZzI/index.html",
-  "submitted_version": "v0.8.1",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vgTOSfTz/index.html",
-  "release_record": "releases/v0.8.1/handoff.json",
-  "published_version": "v0.8.1",
-  "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
-  "pending_updates": [
-   {
-    "version": "v0.7.0",
-    "classification": "正式版本",
-    "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+  "toy": {
+    "id": 39863936092160,
+    "slug": "feidao-jackal-3d",
+    "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "visibility": "public",
+    "review_status": "published",
+    "verified_at": "2026-10-07T07:50:06+08:00",
+    "video_bindings": [
+      "BV1EyHz6wE5u"
+    ],
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_HGesbD0I/index.html",
+    "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
+    "title": "赤色要塞 3D",
+    "category": "GAME",
+    "note": "同包预检、预览玩法检查与CUA实测后一次送审；已过审，公开入口46/46。预览外层COLS超时保留原始记录。",
+    "submitted_at": "2026-10-07T07:35:44+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_wZxCVZzI/index.html",
+    "submitted_version": "v0.8.1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_vgTOSfTz/index.html",
+    "release_record": "releases/v0.8.1/handoff.json",
+    "published_version": "v0.8.1",
+    "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "pending_updates": [
+      {
+        "version": "v0.7.0",
+        "classification": "正式版本",
+        "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+        "status": "published",
+        "record": "releases/v0.7.0/handoff.json",
+        "included_version": "v0.7.0"
+      },
+      {
+        "version": "v0.7.1",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.7.1/handoff.json",
+        "summary": "右上贴边单行按钮，HUD避让。",
+        "included_version": "v0.7.2",
+        "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
+      },
+      {
+        "version": "v0.7.2",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.7.2/handoff.json",
+        "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。",
+        "included_version": "v0.7.2",
+        "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
+      },
+      {
+        "version": "v0.7.3",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.7.3/handoff.json",
+        "summary": "第二关炮塔/营房/围墙/大门统一复用第一关模型外观。",
+        "included_version": "v0.7.3",
+        "published_verified_at": "2026-10-06T17:52:35.090868+08:00"
+      },
+      {
+        "version": "v0.7.5",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.7.5/handoff.json",
+        "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。",
+        "included_version": "v0.7.5",
+        "published_verified_at": "2026-10-06T10:16:04.314128+00:00"
+      },
+      {
+        "version": "v0.7.6",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.7.6/handoff.json",
+        "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。",
+        "included_version": "v0.8.0",
+        "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
+      },
+      {
+        "version": "v0.7.7",
+        "classification": "普通补丁",
+        "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+        "status": "published",
+        "record": "releases/v0.7.7/handoff.json",
+        "included_version": "v0.8.0",
+        "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
+      },
+      {
+        "version": "v0.7.9",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.7.9/handoff.json",
+        "summary": "手机横屏菜单完整显示（Toy 外壳 844×346）、全屏按 iframe 能力显示、失败结算不再显示进入下一关。",
+        "included_version": "v0.7.9",
+        "published_verified_at": "2026-10-07T05:31:42+08:00"
+      },
+      {
+        "version": "v0.8.0",
+        "classification": "正式版本",
+        "status": "published",
+        "record": "releases/v0.8.0/handoff.json",
+        "summary": "U联合开火，机枪默认固定世界北，可选跟随车头",
+        "included_version": "v0.8.0",
+        "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
+      }
+    ],
+    "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+    "last_successful_sync_version": "v0.8.1",
+    "package_sha256": "3bfb4e5539d91b7a5657ffe85dc334d250844c96b79fc44a3375803c0cfb1670",
+    "published_verified_at": "2026-10-07T07:50:06+08:00",
+    "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
     "status": "published",
-    "record": "releases/v0.7.0/handoff.json",
-    "included_version": "v0.7.0"
-   },
-   {
-    "version": "v0.7.1",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.7.1/handoff.json",
-    "summary": "右上贴边单行按钮，HUD避让。",
-    "included_version": "v0.7.2",
-    "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
-   },
-   {
-    "version": "v0.7.2",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.7.2/handoff.json",
-    "summary": "轻量半透明状态行，暂停详情，Boss战收起救援详情与重复视角提示；Boss条/事件提示移到底部，渲染镜头避让界面。",
-    "included_version": "v0.7.2",
-    "published_verified_at": "2026-10-06T12:30:53.469813+08:00"
-   },
-   {
-    "version": "v0.7.3",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.7.3/handoff.json",
-    "summary": "第二关炮塔/营房/围墙/大门统一复用第一关模型外观。",
-    "included_version": "v0.7.3",
-    "published_verified_at": "2026-10-06T17:52:35.090868+08:00"
-   },
-   {
-    "version": "v0.7.5",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.7.5/handoff.json",
-    "summary": "按原作同型炮台复用，保留第二关铁皮囚室、浅色棚与专属敌人；包含v0.7.4固定镜头修复。",
-    "included_version": "v0.7.5",
-    "published_verified_at": "2026-10-06T10:16:04.314128+00:00"
-   },
-   {
-    "version": "v0.7.6",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.7.6/handoff.json",
-    "summary": "修正两关固定炮台/机枪巢炮管反向；第二关散射从同一炮口发射。",
-    "included_version": "v0.8.0",
-    "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
-   },
-   {
-    "version": "v0.7.7",
-    "classification": "普通补丁",
-    "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
-    "status": "published",
-    "record": "releases/v0.7.7/handoff.json",
-    "included_version": "v0.8.0",
-    "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
-   },
-   {
-    "version": "v0.7.9",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.7.9/handoff.json",
-    "summary": "手机横屏菜单完整显示（Toy 外壳 844×346）、全屏按 iframe 能力显示、失败结算不再显示进入下一关。",
-    "included_version": "v0.7.9",
-    "published_verified_at": "2026-10-07T05:31:42+08:00"
-   },
-   {
-    "version": "v0.8.0",
-    "classification": "正式版本",
-    "status": "published",
-    "record": "releases/v0.8.0/handoff.json",
-    "summary": "U联合开火，机枪默认固定世界北，可选跟随车头",
-    "included_version": "v0.8.0",
-    "published_verified_at": "2026-10-06T22:37:42.986820+00:00"
-   }
+    "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
+    "version": "v0.8.0-bgmfull1",
+    "package": "dist/toy-v0.8.0/package",
+    "last_published_version": "v0.8.1",
+    "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
+    "public_verified_version": "v0.8.0-bgmfull1"
+  },
+  "drag_camera_controls": {
+    "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
+    "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
+    "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
+    "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标",
+    "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
+    "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
+    "action_layout": "复刻以赤色要塞样式，J红/K绿/U金/I蓝等大2×2，无装饰点；C/暂停/全屏右上；原创按玩法保留必要动作",
+    "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局",
+    "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
+  },
+  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
+  "audio_assets": {
+    "policy": "original first; synthesis fallback",
+    "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+    "revision": "bgmfull1",
+    "processing": "完整音源压缩，不截取前70秒"
+  },
+  "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
+  "website_version": "v0.8.1",
+  "website_verified_at": "2026-10-07T07:30:00+08:00",
+  "website_commit": "3576fc8d",
+  "web_toy_versions_match": true,
+  "touch_control_inset": {
+    "side_css_px": 40,
+    "bottom_css_px": 36,
+    "safe_area_added": true,
+    "previous_version": "v0.7.6",
+    "physical_phone_test": false
+  },
+  "pending_changes": [
+    {
+      "version": "v0.7.8",
+      "classification": "普通补丁",
+      "summary": "暂停后「重新开始」恢复 BGM 和音效。",
+      "record": "releases/v0.7.8/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "public_verified"
+      },
+      "bilibili_included_version": "v0.8.0"
+    },
+    {
+      "version": "v0.7.9",
+      "classification": "普通补丁",
+      "summary": "手机横屏菜单完整显示与窄屏滚动、全屏按能力显示、hidden 按钮修复。",
+      "record": "releases/v0.7.9/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "public_verified"
+      },
+      "bilibili_included_version": "v0.8.0"
+    },
+    {
+      "version": "v0.8.0",
+      "classification": "正式版本",
+      "summary": "联合开火及机枪默认固定向北",
+      "record": "releases/v0.8.0/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "public_verified"
+      },
+      "bilibili_included_version": "v0.8.0"
+    },
+    {
+      "version": "v0.8.1",
+      "classification": "普通补丁",
+      "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩。",
+      "record": "releases/v0.8.1/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "pending_merge"
+      }
+    }
   ],
-  "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
-  "last_successful_sync_version": "v0.8.1",
-  "package_sha256": "3bfb4e5539d91b7a5657ffe85dc334d250844c96b79fc44a3375803c0cfb1670",
-  "published_verified_at": "2026-10-07T07:50:06+08:00",
-  "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
-  "status": "published",
-  "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
-  "version": "v0.8.0-bgmfull1",
-  "package": "dist/toy-v0.8.0/package",
-  "last_published_version": "v0.8.1",
-  "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
-  "public_verified_version": "v0.8.0-bgmfull1"
- },
- "drag_camera_controls": {
-  "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
-  "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
-  "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
-  "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标",
-  "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
-  "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
-  "action_layout": "复刻以赤色要塞样式，J红/K绿/U金/I蓝等大2×2，无装饰点；C/暂停/全屏右上；原创按玩法保留必要动作",
-  "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局",
-  "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
- },
- "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
- "audio_assets": {
-  "policy": "original first; synthesis fallback",
-  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
-  "revision": "bgmfull1",
-  "processing": "完整音源压缩，不截取前70秒"
- },
- "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
- "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.8.1",
- "website_verified_at": "2026-10-07T07:30:00+08:00",
- "website_commit": "3576fc8d",
- "web_toy_versions_match": true,
- "touch_control_inset": {
-  "side_css_px": 40,
-  "bottom_css_px": 36,
-  "safe_area_added": true,
-  "previous_version": "v0.7.6",
-  "physical_phone_test": false
- },
- "pending_changes": [
-  {
-   "version": "v0.7.8",
-   "classification": "普通补丁",
-   "summary": "暂停后「重新开始」恢复 BGM 和音效。",
-   "record": "releases/v0.7.8/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "public_verified"
-   },
-   "bilibili_included_version": "v0.8.0"
+  "website": {
+    "version": "v0.8.0-bgmfull1",
+    "status": "deployed_verified",
+    "verified_at": "2026-10-07T06:49:45.870220+08:00",
+    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
   },
-  {
-   "version": "v0.7.9",
-   "classification": "普通补丁",
-   "summary": "手机横屏菜单完整显示与窄屏滚动、全屏按能力显示、hidden 按钮修复。",
-   "record": "releases/v0.7.9/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "public_verified"
-   },
-   "bilibili_included_version": "v0.8.0"
-  },
-  {
-   "version": "v0.8.0",
-   "classification": "正式版本",
-   "summary": "联合开火及机枪默认固定向北",
-   "record": "releases/v0.8.0/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "public_verified"
-   },
-   "bilibili_included_version": "v0.8.0"
-  },
-  {
-   "version": "v0.8.1",
-   "classification": "普通补丁",
-   "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩。",
-   "record": "releases/v0.8.1/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "pending_merge"
-   }
+  "pending_channel_changes": [
+    {
+      "version": "v0.8.0-bgmfull1",
+      "classification": "普通补丁",
+      "changes": [
+        "完整原版BGM取消70秒截取"
+      ],
+      "bilibili": "待合并至下一次有意义的简介更新",
+      "toy": "public_verified"
+    }
+  ],
+  "multiplayer": {
+    "players": "2",
+    "hub": "https://www.zhengxiaohui.cn/game-online.html",
+    "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
+    "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
+    "limitations": [
+      "暂不支持中途加入、断线重连和房主迁移",
+      "联机不写入单机存档/排行榜"
+    ]
   }
- ],
- "website": {
-  "version": "v0.8.0-bgmfull1",
-  "status": "deployed_verified",
-  "verified_at": "2026-10-07T06:49:45.870220+08:00",
-  "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
- },
- "pending_channel_changes": [
-  {
-   "version": "v0.8.0-bgmfull1",
-   "classification": "普通补丁",
-   "changes": [
-    "完整原版BGM取消70秒截取"
-   ],
-   "bilibili": "待合并至下一次有意义的简介更新",
-   "toy": "public_verified"
-  }
- ]
 }

@@ -88,4 +88,3 @@ def test_old_tank_and_hub_share_the_same_room_directory():
 def test_unknown_directory_game_is_rejected():
     with TestClient(app) as client:
         assert client.get('/game/coop/rooms?game=unknown').status_code == 400
-

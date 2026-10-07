@@ -32,4 +32,3 @@ async function refresh(){
 for(const el of [filter,password])el.addEventListener('change',()=>{page=1;refresh();});
 $('online-refresh').addEventListener('click',refresh);refresh();
 setInterval(()=>{if(!document.hidden)refresh();},5000);
-

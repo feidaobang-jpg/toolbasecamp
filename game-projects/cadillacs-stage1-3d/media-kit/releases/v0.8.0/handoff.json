@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.8.0",
+  "base_version": "v0.7.0",
+  "created_at": "2026-10-07T01:54:15.710139+00:00",
+  "classification": "正式版本",
+  "changes": [
+    "2–4人选不同角色并肩闯关；各自攻击、跳跃、必杀和受伤，共享敌军、道具和区域进度。",
+    "统一网站联机大厅；保留游戏菜单入口，共用昵称、房间、密码、准备、邀请、分页与暂停/重开流程。"
+  ],
+  "build": {
+    "id": "v0.8.0",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "cooperative",
+      "status": "implemented",
+      "description": "2–4人选不同角色并肩闯关；各自攻击、跳跃、必杀和受伤，共享敌军、道具和区域进度。"
+    }
+  ],
+  "media": [],
+  "qa": [
+    {
+      "method": "server/tests/test_coop_lobby.py + test_tank3d_lobby.py",
+      "result": "13 passed",
+      "scope": "旧坦克兼容、跨游戏隔离、输入裁剪、席位和动作权限、房间目录"
+    },
+    {
+      "method": "site-games/qa/coop-capacity.cjs",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/capacity-summary.json",
+      "scope": "最大席位、独立角色、横竖屏按钮、第二关（赤色/恐龙）、共享扣款（虫潮）、房主/队友离线"
+    }
+  ],
+  "limitations": [
+    "暂不支持中途加入、断线重连和房主迁移",
+    "联机不写入单机存档/排行榜",
+    "手机横竖屏为Edge设备模拟，未做手机真机和多指触控验收"
+  ],
+  "site": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": 40412421031936,
+    "status": "pending_sync"
+  },
+  "bilibili": {
+    "status": "pending_sync"
+  },
+  "taptap": {
+    "status": "pending_check"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "联机实测截图/录像有，未制作或人工审片新视频；真机与公网部署待核验。"
+    ]
+  }
+}
