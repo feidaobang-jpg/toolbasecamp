@@ -17,12 +17,13 @@
   "release_record": "releases/web-defense-v0.21.0/handoff.json",
   "pending": [
     {
-      "version": "web-coop-v0.22.0",
-      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
-      "package_sha256": "983f1f96f7e04267c699dc87c8ac344b48b77ddeef12763fc636b8f7cdf6afd5",
+      "version": "web-coop-v0.23.0",
       "status": "built_waiting_current_review",
-      "reason": "平台当前旧包审核中，保留审核现场，本次稳定联机包待下一次可编辑草稿续发。",
-      "record": "releases/web-coop-v0.22.0/handoff.json"
+      "package": "dist/taptap/chongchao-qianshao/chongchao-qianshao.zip",
+      "package_sha256": "0512629063066b1fbbce91cb69ceada335f2d54a607b2e21babaa6b051c59335",
+      "reason": "上一包仍在平台审核，按查重规则积累联机2-4人包，不撤审不重复送；审核结束后优先同步",
+      "record": "releases/web-coop-v0.23.0/handoff.json",
+      "updated_at": "2026-10-07T17:10:00+08:00"
     }
   ],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
