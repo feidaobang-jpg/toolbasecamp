@@ -2,13 +2,14 @@
   "schema_version": 1,
   "game_id": "cadillacs-stage1-3d",
   "version": "v0.9.0",
-  "base_version": "v0.8.0",
+  "base_version": "v0.8.1",
   "classification": "正式版本",
   "changes": [
     "2–4人合作与独立玩家实体；保留原玩法、音效与关卡",
     "中途加入保留当前战场，退出保留其余队友",
     "闲置30秒普通NPC接管，真人操作立即交还并提示",
-    "房主踢人及本房间阻止直接重新加入；不做投票踢人"
+    "房主踢人及本房间阻止直接重新加入；不做投票踢人",
+    "保留 v0.8.1 新合入的原作角色音效"
   ],
   "site": {
     "status": "pending"

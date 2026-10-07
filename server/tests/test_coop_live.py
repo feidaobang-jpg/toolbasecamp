@@ -51,3 +51,25 @@ def test_live_join_leave_host_control_and_kick(game):
         assert until(host,'player_left')['slot']==1
         host.send_json({'type':'leave'})
         assert '房主' in until(replacement,'ended')['message']
+
+
+def test_kicking_an_already_closed_target_does_not_end_host(monkeypatch):
+    from tank3d_rooms import Peer
+    original=Peer.send
+    async def send(self,data):
+        if data.get('type')=='ended' and '移出' in data.get('message',''):
+            raise RuntimeError('target closed before acknowledgement')
+        return await original(self,data)
+    monkeypatch.setattr(Peer,'send',send)
+    with TestClient(app) as client, ExitStack() as stack:
+        host=stack.enter_context(client.websocket_connect('/game/coop/ws?game=jackal'));host.receive_json()
+        host.send_json({'type':'create','liveJoin':True})
+        code=until(host,'joined')['room']['code']
+        guest=stack.enter_context(client.websocket_connect('/game/coop/ws?game=jackal'));guest.receive_json()
+        guest.send_json({'type':'join','code':code});until(guest,'joined')
+        until(host,'roster');until(host,'roster')
+        host.send_json({'type':'kick','slot':1})
+        assert until(host,'player_left')['slot']==1
+        assert len(until(host,'roster')['room']['players'])==1
+        host.send_json({'type':'ping','at':123})
+        assert until(host,'pong')['at']==123

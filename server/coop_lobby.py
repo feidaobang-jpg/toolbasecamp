@@ -255,10 +255,16 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     if len(room.kicked) > 64:
                         room.kicked.pop()
                     room.peers.pop(target.slot)
-                    await target.send({'type': 'ended', 'message': '你已被房主移出房间'})
+                    try:
+                        await target.send({'type': 'ended', 'message': '你已被房主移出房间'})
+                    except (WebSocketDisconnect, RuntimeError, asyncio.TimeoutError):
+                        pass
                     await room.broadcast({'type': 'player_left', 'slot': target.slot, 'message': f'{target.name}已被房主移出房间'})
                     await room.broadcast({'type': 'roster', 'room': room.public()})
-                    await target.socket.close(code=1000)
+                    try:
+                        await target.socket.close(code=1000)
+                    except (WebSocketDisconnect, RuntimeError, asyncio.TimeoutError):
+                        pass
                     await publish_directory()
             elif kind == 'state' and room and room.started and peer.slot == 0:
                 if isinstance(msg.get('state'), dict):

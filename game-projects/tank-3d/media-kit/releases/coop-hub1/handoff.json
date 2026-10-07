@@ -22,7 +22,16 @@
       "description": "坦克作为统一房间基础，兼容旧坦克联机协议，2–4人合作与邀请链接。"
     }
   ],
-  "media": [],
+  "media": [
+    {
+      "type": "published_video",
+      "bvid": "BV1TepK69Eet",
+      "url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "recorded_version": "landscape-menu1",
+      "scope": "双人房间码联机合作实战，未展示此后新增的统一跨游戏大厅",
+      "publication_record": "game-projects/tank-3d/video/online-20261007/work/publication-result.json"
+    }
+  ],
   "qa": [
     {
       "method": "server/tests/test_coop_lobby.py + test_tank3d_lobby.py",
@@ -56,7 +65,11 @@
     "version": "coop-hub1",
     "verified_at": "2026-10-07T02:43:57.353796+00:00",
     "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
-    "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/website.json"
+    "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/website.json",
+    "post_publication_entry_verification": {
+      "checked_at": "2026-10-07T03:05:33.706206+00:00",
+      "evidence": "game-projects/tank-3d/video/online-20261007/work/publish-entry-verification.json"
+    }
   },
   "toy": {
     "id": 39043249461248,
@@ -94,11 +107,21 @@
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AVDJkYmP/index.html",
     "submitted_at": "2026-10-07T02:35:39+00:00",
     "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json",
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "video_bindings": [
+      "BV1TepK69Eet",
+      "BV1Wqaz6AEJb"
+    ]
   },
   "bilibili": {
-    "status": "partial_public_verified",
-    "record": "releases/coop-hub1/bilibili-sync.json"
+    "status": "public_verified",
+    "record": "releases/coop-hub1/bilibili-sync.json",
+    "bvid": "BV1TepK69Eet",
+    "url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+    "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+    "public_verified_at": "2026-10-07T03:24:00+00:00",
+    "old_video_maintenance": "BV1Wqaz6AEJb description and new update comment publicly verified; comment pinned"
   },
   "taptap": {
     "status": "reviewing",
@@ -110,7 +133,7 @@
     "overview": "partial",
     "update": "ready",
     "gaps": [
-      "手机真机、多指触控未验收；联机更新未制作或人工审片新视频。"
+      "本期双人联机成片已公开发布，网站与Toy的coop-hub1入口已核验；尚未补拍统一跨游戏大厅，手机真机与多指触控未验收。"
     ]
   }
 }
