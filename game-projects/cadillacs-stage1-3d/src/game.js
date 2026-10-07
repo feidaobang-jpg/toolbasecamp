@@ -73,11 +73,11 @@ const MOVES = {
   rollingElbow: { clip: 'rollingElbow', dur: 0.72, lunge: 3.4, hits: [H(0.2, 0.48, 0.95, 0.65, 0, 1.8, 20, 'launch', 500, 'punchHeavy', true)] },
   rollingJump: { clip: 'rollingJump', dur: 0.78, lunge: 1.8, hits: [H(0.25, 0.58, 1.0, 0.75, 0, 2.5, 24, 'down', 600, 'punchHeavy', true)] },
   // 冲刺攻击（各角色不同）
-  slide: { dash: true, dur: 0.62, speed: 7.5, decel: 9, hits: [H(0.04, 0.42, 0.7, 0.62, 0.0, 0.9, 12, 'down', 500, 'kick', true)], pose: 'slide' },
-  flyKick: { dash: true, dur: 0.62, speed: 7.2, decel: 3, air: 5.2, hits: [H(0.06, 0.26, 0.9, 0.62, 0.4, 1.7, 8, 'hit', 500, 'kick'), H(0.27, 0.5, 0.9, 0.62, 0.4, 1.7, 8, 'down', 500, 'kick', true)], pose: 'flyKick' },
-  kneeFly: { dash: true, dur: 0.56, speed: 6.8, decel: 4, air: 4.6, hits: [H(0.05, 0.4, 0.62, 0.6, 0.6, 1.8, 11, 'down', 500, 'kick', true)], pose: 'kneeFly' },
-  tackle: { dash: true, dur: 0.6, speed: 6.6, decel: 6, hits: [H(0.04, 0.42, 0.75, 0.66, 0.4, 1.9, 14, 'down', 500, 'punchHeavy', true)], pose: 'tackle' },
-  mega: { dur: 0.62, invul: true, hits: [H(0.1, 0.42, 0, 2.1, 0.0, 2.2, 18, 'down', 0, 'punchHeavy', true)] },
+  slide: { dash: true, dur: 0.62, speed: 7.5, decel: 9, hits: [H(0.04, 0.42, 0.7, 0.62, 0.0, 0.9, 12, 'down', 500, 'dashHit', true)], pose: 'slide' },
+  flyKick: { dash: true, dur: 0.62, speed: 7.2, decel: 3, air: 5.2, hits: [H(0.06, 0.26, 0.9, 0.62, 0.4, 1.7, 8, 'hit', 500, 'dashHit'), H(0.27, 0.5, 0.9, 0.62, 0.4, 1.7, 8, 'down', 500, 'dashHit', true)], pose: 'flyKick' },
+  kneeFly: { dash: true, dur: 0.56, speed: 6.8, decel: 4, air: 4.6, hits: [H(0.05, 0.4, 0.62, 0.6, 0.6, 1.8, 11, 'down', 500, 'dashHit', true)], pose: 'kneeFly' },
+  tackle: { dash: true, dur: 0.6, speed: 6.6, decel: 6, hits: [H(0.04, 0.42, 0.75, 0.66, 0.4, 1.9, 14, 'down', 500, 'dashHit', true)], pose: 'tackle' },
+  mega: { dur: 0.95, invul: true, hits: [H(0.1, 0.42, 0, 2.1, 0.0, 2.2, 18, 'down', 0, 'punchHeavy', true)] },
   knee: { clip: 'knee', dur: 0.24, hits: [] },
   // 武器
   swing: { clip: 'swing', dur: 0.42, lunge: 0.4, hits: [H(0.13, 0.24, 1.15, 0.6, 0.6, 1.9, 12, 'down', 400, 'punchHeavy', true)] },
@@ -446,7 +446,7 @@ function handleInput(p, dt) {
   if (jumpE) lastJumpT = G.t;
   const directionalJump = moveVec().len > 0.2;
   const megaNow = megaE || (atkE && jumpE) || (atkE && !directionalJump && G.t - lastJumpT < 0.09 && p.state === 'jump' && p.st < 0.1) || (jumpE && G.t - lastAtkT < 0.09 && p.state === 'attack' && p.st < 0.1 && p.move && !p.move.def.dash);
-  if (megaNow && (canAct || p.state === 'attack' || (p.state === 'jump' && p.st < 0.12) || p.state === 'grab' || p.state === 'hurt')) {
+  if (megaNow && (canAct || (p.state === 'attack' && p.move?.id !== 'mega') || (p.state === 'jump' && p.st < 0.12) || p.state === 'grab' || p.state === 'hurt')) {
     if (p.grab) releaseGrab(p);
     p.y = 0; p.vy = 0; p.vx = p.vz = 0;
     startMove(p, 'mega');
@@ -459,7 +459,7 @@ function handleInput(p, dt) {
     ev('offensive', { hero: p.hero.id, move: p.move.id }); return;
   }
   if (!atkE && canAct && p.weapon?.kind === 'smg' && p.weapon.ammo > 0 && IN.down('atk')) { useWeapon(p); return; }
-  if (dashE && canAct) { const mv = moveVec(); setState(p, 'run', { dirX: mv.len ? mv.x : Math.sin(p.face), dirZ: mv.len ? mv.z : Math.cos(p.face), tap: true }); }
+  if (dashE && canAct) { const mv = moveVec(); setState(p, 'run', { dirX: mv.len ? mv.x : Math.sin(p.face), dirZ: mv.len ? mv.z : Math.cos(p.face), tap: true }); A.play('dash'); }
   if (jumpE) {
     if (canAct) {
       const mv = moveVec(), spd = p.state === 'run' ? p.stats.run : p.stats.walk * 0.95;
@@ -471,7 +471,7 @@ function handleInput(p, dt) {
 }
 function playerAttack(p) {
   const s = p.state;
-  if (s === 'run') { if (p.weapon && ['dynamite', 'grenade', 'knife'].indexOf(p.weapon.kind) >= 0) return useWeapon(p); return startMove(p, p.hero.dash); }
+  if (s === 'run') { if (p.weapon && ['dynamite', 'grenade', 'knife'].indexOf(p.weapon.kind) >= 0) return useWeapon(p); startMove(p, p.hero.dash); if (p.hero.id === 'mustapha') A.play('shout', 1, 'mustapha'); return; }
   if (s === 'jump') {
     if (p.sub.atk || p.sub.noAtk) return;
     p.sub.atk = true; p.sub.atkT = p.st;
@@ -504,6 +504,7 @@ function playerAttack(p) {
   const chain = G.t - p.lastHitT < 0.6 && p.comboN < combo.length - 1;
   p.comboN = chain ? p.comboN + 1 : 0;
   startMove(p, combo[p.comboN]);
+  finisherShout(p);
 }
 function autoAim(p) {
   // 自由视角（正视 / 第一人称 / 转过的镜头）下给出软锁定：转向身前最近的敌人；侧视保持原作的左右朝向
@@ -533,7 +534,7 @@ function updatePlayer(p, dt) {
   switch (p.state) {
     case 'idle': case 'walk': {
       const mv = G.mode === 'play' ? moveVec() : { x: 0, z: 0, len: 0 };
-      if (G.mode === 'play' && IN.down('run') && mv.len > 0.2) { setState(p, 'run', { dirX: mv.x, dirZ: mv.z }); break; }
+      if (G.mode === 'play' && IN.down('run') && mv.len > 0.2) { setState(p, 'run', { dirX: mv.x, dirZ: mv.z }); A.play('dash'); break; }
       if (mv.len > 0.05) {
         p.vx = mv.x * st.walk; p.vz = mv.z * st.walk;
         faceMove(p, mv, dt);
@@ -642,7 +643,7 @@ function updateMove(a, dt) {
   if (a === G.player && !m.swung && d.hits.length && m.id !== 'mega' && m.t >= d.hits[0].t0 - 0.025) {
     m.swung = true;
     const heavy = isHeavyMove(a, m);
-    A.play(heavy ? 'whooshHeavy' : 'whoosh', heavy ? 0.6 : 0.45);   // 挥空声压低，让原版打击声做主
+    if (['swing', 'swordSlash', 'stab'].includes(m.id)) A.play(heavy ? 'whooshHeavy' : 'whoosh', heavy ? 0.6 : 0.45);   // 原作空手出拳没有挥空声，只在武器挥击时响
     if (heavy && !d.dash) swingArc(a, d.hits[0]);
   }
   // 判定
@@ -660,7 +661,7 @@ function updateMove(a, dt) {
   if (a === G.player && m.next && m.connected && m.t >= cancelT) {
     a.lastHitT = G.t;
     const combo = a.hero.combo;
-    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); return; }
+    if (a.comboN < combo.length - 1) { a.comboN++; autoAim(a); startMove(a, combo[a.comboN]); finisherShout(a); return; }
   }
   if (m.connected && a === G.player) a.lastHitT = G.t;
   if (m.t >= d.dur * (d.dash ? 1 : recMul)) {
@@ -680,6 +681,8 @@ function megaHits(a, h, m) {
   for (const pr of G.props) if (!pr.broken && Math.hypot(pr.x - a.x, pr.z - a.z) < h.r + pr.r && !m.hit.has('p' + pr.x)) { m.hit.add('p' + pr.x); hitProp(pr, 2); }
 }
 
+// 原作：连招最后一下起手时主角喊一声（杰克、汉娜、穆斯塔法、梅斯各自的喝声）
+function finisherShout(a) { if (a.hero && a.comboN === a.hero.combo.length - 1) A.play('finisher', 1, a.hero.id); }
 // 重招：连招最后一下、踢、勾拳、上勾拳、特殊技与武器挥击（挥空声更沉、带挥击残影）
 function isHeavyMove(a, m) {
   if (!m) return false;
@@ -1097,7 +1100,6 @@ function applyHit(a, e, h, dir, splash) {
   if (w >= 1 && sfx === 'kick') sfx = 'kickHeavy';
   if (sfx) A.play(sfx);
   // 原作：连招最后一下打中时主角喊一声（杰克、汉娜、穆斯塔法、梅斯各自的喝声）
-  if (fin) A.play('finisher', 1, a.hero.id);
   if (h.sfx === 'slash') fx.blood(e.x, 1.3, e.z, Math.sin(dir) > 0 ? 1 : -1);
   const hs = [0.065, 0.1, 0.14][w];
   // 远处飞来的子弹 / 爆炸不让开枪的人跟着定格

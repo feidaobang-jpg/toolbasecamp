@@ -147,6 +147,14 @@
    "summary": "原版音效对号入座：连招打击声、连招最后一下喝声、四人必杀喊声、GO 间隔。",
    "reason": "现有简介「保留原版打击音、必杀语音」仍准确；并入下一次有意义的说明更新",
    "record": "releases/v0.8.1/handoff.json"
+  },
+  {
+   "version": "v0.8.2",
+   "classification": "玩家反馈修复",
+   "status": "pending_merge",
+   "summary": "必杀不能连按且全程无敌、空手不带挥空声、起跑与冲刺打击原版声音。",
+   "reason": "现有简介仍准确",
+   "record": "releases/v0.8.2/handoff.json"
   }
  ],
  "version": "v0.3.0",
