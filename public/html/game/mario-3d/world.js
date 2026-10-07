@@ -1,5 +1,5 @@
 // 玩法模拟：与渲染无关。地形整条跑道纵深一致，碰撞按 (x,y) 网格计算，z 只用于跑道边界和实体之间的接触。
-import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.4';
+import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.7';
 
 export const STEP = 1 / 120;
 export const PW = 0.36;                       // 玛丽半宽
@@ -36,11 +36,13 @@ export function createWorld(session, opts = {}) {
     onLift: null, growT: 0, fireT: 0, lastSafe: null, visible: true, walkT: 0, skid: false
   };
   if (session.settings.armor !== 'classic') session.hearts = 3;
-  enterArea(w, cp ? cp.area : level.startArea);
+  const entrance = level.entranceArea && !opts.respawn && !opts.fromCheckpoint;
+  enterArea(w, cp ? cp.area : entrance ? level.entranceArea : level.startArea);
   const p = w.player, a = w.area;
   // 检查点明确记录站立高度；地下关同一列的天花板不能当作复活地面。
   if (cp) { p.x = cp.x; p.y = cp.y; }
   else { p.x = a.start.x; p.y = a.start.y; }
+  if (entrance) { w.mode = 'entrance'; w.entrance = { phase: 'walk' }; p.grounded = true; }
   p.lastSafe = { x: p.x, y: p.y, z: 0 };
   return w;
 }
@@ -108,7 +110,7 @@ export function step(w, input, dt) {
   w.clock += dt;
   w.modeT += dt;
   const p = w.player, s = w.session;
-  updateLifts(w, dt);
+  if (!w.entrance) updateLifts(w, dt);
   if (w.mode === 'play') {
     w.timeAcc += dt;
     while (w.timeAcc >= 0.4) {                                // 原作一个时间单位 ≈ 0.4 秒
@@ -117,10 +119,11 @@ export function step(w, input, dt) {
       if (w.time <= 0) { w.time = 0; die(w, 'time'); break; }
     }
     if (w.mode === 'play') updatePlayer(w, input, dt);
-  } else if (w.mode === 'pipe') updatePipe(w, dt);
+  } else if (w.mode === 'entrance') updateEntrance(w, dt);
+  else if (w.mode === 'pipe') updatePipe(w, dt);
   else if (w.mode === 'flag') updateFlag(w, dt);
   else if (w.mode === 'dying') updateDying(w, dt);
-  if (w.mode !== 'dying' && w.mode !== 'clear') {
+  if (!w.entrance && w.mode !== 'dying' && w.mode !== 'clear') {
     updateEnemies(w, dt);
     updatePiranhas(w, dt);
     updateItems(w, dt);
@@ -317,6 +320,25 @@ function tryPipes(w, input) {
   return false;
 }
 
+function updateEntrance(w, dt) {
+  const p = w.player;
+  p.facing = Math.PI / 2;
+  if (w.entrance.phase === 'walk') {
+    const pipe = w.area.sidePipes[0], mouth = pipe.x - PW;
+    p.vx = 3.2; p.x = Math.min(mouth, p.x + p.vx * dt); p.walkT += p.vx * dt;
+    if (p.x >= mouth) startPipe(w, 'side', pipe.to, pipe);
+  } else {
+    p.vx = p.vz = 0; p.grounded = false;
+    p.vy = Math.max(-MAX_FALL, p.vy - G_FALL * dt);
+    const hit = moveBody(w, p, dt, PW, heightOf(p));
+    if (hit.landed) {
+      p.grounded = true; w.mode = 'play'; w.entrance = null;
+      p.lastSafe = { x: p.x, y: p.y, z: p.z };
+      emit(w, 'entranceEnd');
+    }
+  }
+}
+
 function startPipe(w, kind, dest, from) {
   const p = w.player;
   w.mode = 'pipe'; w.modeT = 0;
@@ -330,12 +352,15 @@ function startPipe(w, kind, dest, from) {
 function updatePipe(w, dt) {
   const p = w.player, a = w.pipeAnim;
   if (a.phase === 'in') {
-    if (a.kind === 'down') p.y -= 2.3 * dt; else p.x += 1.6 * dt;
+    if (a.kind === 'down') p.y -= 2.3 * dt;
+    else { p.x += 1.6 * dt; p.walkT += 1.6 * dt; }
     if (w.modeT > 0.95) {
       if (a.dest.warp) { w.mode = 'clear'; emit(w, 'warp', { world: a.dest.warp }); w.session.stats.secrets++; return; }
       enterArea(w, a.dest.area);
       if (a.dest.mode === 'drop') {
-        p.x = a.dest.x; p.y = 11.2; p.z = 0; p.vy = 0; w.mode = 'play'; w.pipeAnim = null;
+        p.x = a.dest.x; p.y = a.dest.y ?? 11.2; p.z = 0; p.vy = 0; p.grounded = false;
+        w.mode = a.dest.entrance ? 'entrance' : 'play'; w.pipeAnim = null;
+        if (a.dest.entrance) w.entrance.phase = 'drop';
         if (a.dest.area === 'bonus') w.session.stats.secrets++;
       } else {
         const out = w.area.pipes.find(q => q.exitId === a.dest.pipe);

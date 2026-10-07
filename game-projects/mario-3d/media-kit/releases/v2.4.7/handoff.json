@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.4.7",
+  "base_version": "v2.4.6",
+  "created_at": "2026-10-07T08:41:34.774693+08:00",
+  "classification": "普通补丁",
+  "build": {
+    "id": "v2.4.7",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "source_sha256": {
+      "audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
+      "levels.js": "0cdd6f4fbc22fddeddba6e6619cec99580de2c464299d59bbd828b683b21b888",
+      "main.js": "063eee05b77b91c5f19c0fcea0785d26a04a3a5218f486e4cc0938cef887f6d8",
+      "models.js": "51ecb72bd39f9e52ff7df6f97b05662402c82cdabf07d684c166172d0792f46b",
+      "scene.js": "1ae40976ffaeb10dc358be3385d065bd7cf79c36b2f3e28009b2d88f7bede2da",
+      "textures.js": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+      "world.js": "bca3a402f8c96a90dc149f503f67a1240e5816ef74f71c4198ac49de3dbe6fa6",
+      "index.html": "b03487fb530a7dcb0c2ff451af344539d34bdd8dfb86f410466608c1769b31c8"
+    }
+  },
+  "changes": [
+    {
+      "id": "underground-entry",
+      "before": "1-1通关后省略地面钻管，直接出现地下起点。",
+      "after": "WORLD 1-2卡片后自动走进横管，角色被管壁遮住并落到地下；落地恢复控制与原镜头。",
+      "verification": "46项专项回归通过，覆盖两关衔接、直接选关、暂停、第一人称、重生、奖励和出口水管。"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "missing-pipe-entrance",
+      "status": "fixed",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "1280x720-surface-walk",
+        "1280x720-enter-pipe",
+        "1280x720-underground-ready"
+      ],
+      "cause": "1-2只定义地下主区域，没有地面入口和自动演出状态；旧onClear直接创建地下世界。",
+      "before_evidence": "源码确认，未留旧版录像。"
+    }
+  ],
+  "media": [
+    {
+      "id": "1280x720-enter-pipe",
+      "file": "releases/v2.4.7/captures/1280x720-enter-pipe.png",
+      "sha256": "f13f112cb563a8dc5fd3a6abeba546bea65fb8efac9570bee64f5df681fe8ac9",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "1280x720-entrance",
+      "file": "releases/v2.4.7/captures/1280x720-entrance.webm",
+      "sha256": "2a9e63065c3e05be54b91a9ecc433fe3b63eb207e5f789fc5b6b65cec7c881fd",
+      "kind": "video",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 9.76,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 5.06,
+          "out_seconds": 9.76,
+          "description": "末段：实时自动走入横管并落到地下；无加速逻辑。"
+        }
+      ]
+    },
+    {
+      "id": "1280x720-surface-walk",
+      "file": "releases/v2.4.7/captures/1280x720-surface-walk.png",
+      "sha256": "37fbb25961b0e5b415d26df96d682f2d066e6b91e9cb62c718306e09c257ca09",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "1280x720-underground-drop",
+      "file": "releases/v2.4.7/captures/1280x720-underground-drop.png",
+      "sha256": "76e0a593f63f0e7096ab5f22642990dad1ef1e0a7948e78468547f454f6e9d16",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "1280x720-underground-ready",
+      "file": "releases/v2.4.7/captures/1280x720-underground-ready.png",
+      "sha256": "5518073823ecddb228df49dd46514311783fdb44f02a3534d6a76ad1454b6f62",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "390x844-enter-pipe",
+      "file": "releases/v2.4.7/captures/390x844-enter-pipe.png",
+      "sha256": "2e119e21ab5216612b01e800729a26fcb039f6154cc628cb4fcbbcb263581a5e",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "390x844-entrance",
+      "file": "releases/v2.4.7/captures/390x844-entrance.webm",
+      "sha256": "cc9c90e829bdb2fee050a93c7f978396957f4346b36478516ba0c8a6d3e6dc4c",
+      "kind": "video",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 8.44,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 3.7399999999999993,
+          "out_seconds": 8.44,
+          "description": "末段：实时自动走入横管并落到地下；无加速逻辑。"
+        }
+      ]
+    },
+    {
+      "id": "390x844-surface-walk",
+      "file": "releases/v2.4.7/captures/390x844-surface-walk.png",
+      "sha256": "22b211b4e71c95268f3dcde6218664b6394f77560ef94daad526239096743aa2",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "390x844-underground-drop",
+      "file": "releases/v2.4.7/captures/390x844-underground-drop.png",
+      "sha256": "417a860bd17e340a58fa791d231a721110166524b9da70cd5aeecd39bc3460c7",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "390x844-underground-ready",
+      "file": "releases/v2.4.7/captures/390x844-underground-ready.png",
+      "sha256": "6fd27f90668e09ec502b78199887b49ca900481a97a517154328c6cdd10bf516",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "844x390-enter-pipe",
+      "file": "releases/v2.4.7/captures/844x390-enter-pipe.png",
+      "sha256": "a567f844f48678079528e3db6f01ef58cbac3f744f1f24613f06bdf3677ee8f7",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "844x390-entrance",
+      "file": "releases/v2.4.7/captures/844x390-entrance.webm",
+      "sha256": "da194ee7ff831b207d6e9de5ff7008641b2c35be8d408f77604767e2454f9f86",
+      "kind": "video",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 8.4,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 3.7,
+          "out_seconds": 8.4,
+          "description": "末段：实时自动走入横管并落到地下；无加速逻辑。"
+        }
+      ]
+    },
+    {
+      "id": "844x390-surface-walk",
+      "file": "releases/v2.4.7/captures/844x390-surface-walk.png",
+      "sha256": "3b073a3464540e3ad5881bac2e43dd58fb6a86fd8cadc7cce816aed4299b5cc0",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "844x390-underground-drop",
+      "file": "releases/v2.4.7/captures/844x390-underground-drop.png",
+      "sha256": "39221058e3b664afc67ba8c943be6ae150f11479e21e929b38f2a0a27e6adc74",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "844x390-underground-ready",
+      "file": "releases/v2.4.7/captures/844x390-underground-ready.png",
+      "sha256": "caf69ef338d74d49640ba1f50053dacfdb5d31b04262dabe4d98ccf04836c493",
+      "kind": "screenshot",
+      "version": "v2.4.7",
+      "build_id": "v2.4.7",
+      "capture_mode": "realtime-automation",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "qa": {
+    "browser": "154.0.4258.53",
+    "checks_passed": 46,
+    "results": "captures/results.json",
+    "physical_phone": false,
+    "methods": "Test-only teleports/manual clock for regression; final 4.7 seconds use real-time simulation; viewport emulation, no physical phone; videos have no audio."
+  },
+  "thumbnail": {
+    "decision": "沿用",
+    "reason": "局部衔接演出不改变整体画风、主题和主玩法。"
+  },
+  "release_channels": {
+    "website": {
+      "version": "v2.4.7",
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "id": 39043286960128,
+      "version": "v2.4.7",
+      "status": "pending_website_verification"
+    },
+    "bilibili": {
+      "status": "pending_merge",
+      "version": "v2.4.7",
+      "reason": "普通过场补丁累计，不逐次修改简介。"
+    }
+  },
+  "activities": {
+    "status": "account_locked_skip",
+    "last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
+    "reason": "收尾读取共用台账，另一活跃任务持有账号锁；跳过本次账号操作，不推进全面检查成功时间。",
+    "new_video_published": false
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像无音轨，需要后续带游戏声音母版；没有手机真机验收。"
+    ]
+  },
+  "preserved_artifacts": "D:/project/task-artifacts/mario-pipe-transition-20261007"
+}

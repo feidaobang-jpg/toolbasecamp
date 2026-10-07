@@ -2,7 +2,7 @@
   "game_id": "mario-3d-world-1-1",
   "name": "超级玛丽 3D：1-1 与 1-2",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.4.6",
+  "current_version": "v2.4.7",
   "handoff": "releases/v2.4.6/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
   "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
@@ -124,7 +124,7 @@
   "website_version": "v2.4.6",
   "website_verified_at": "2026-10-07T07:30:00+08:00",
   "website_commit": "3576fc8d",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
     "bottom_css_px": 36,
@@ -148,6 +148,14 @@
       "classification": "普通补丁",
       "handoff": "releases/v2.4.6/handoff.json",
       "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+    },
+    {
+      "version": "v2.4.7",
+      "base_version": "v2.4.6",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "补齐1-1通关后地面自动走进横管、落到1-2地下起点的过场。",
+      "handoff": "releases/v2.4.7/handoff.json"
     }
   ],
   "website": {
@@ -165,6 +173,15 @@
       ],
       "bilibili": "待合并至下一次有意义的简介更新",
       "toy": "public_verified"
+    },
+    {
+      "version": "v2.4.7",
+      "classification": "普通补丁",
+      "changes": [
+        "地面自动钻管与地下落地过场"
+      ],
+      "bilibili": "待合并至下一次有意义的简介更新",
+      "toy": "pending_website_verification"
     }
   ]
 }
