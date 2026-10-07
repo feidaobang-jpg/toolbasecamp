@@ -48,7 +48,7 @@ const fs = require('fs');
     await page.locator('#menu [data-act=select]').click();
     await page.locator(`[data-hero="${hero}"]`).click();
     if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
-    await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.originalsLoaded.length === 9);
+    await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.originalsLoaded.length === 11);
     await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.cheat.killAll(); T.audioLogStart(); T.step(120); });
     check(`hero ${hero}: all recordings decoded`, (await state()).ui.audio.failed.length === 0);
   }
@@ -62,14 +62,25 @@ const fs = require('fs');
     check(`hero ${hero}: U plays own original voice`, mega?.source === 'original' && mega.sample === ['mega-jack', 'mega-hannah', 'mega-mustapha', 'mega-mess'][hero], mega);
     check(`hero ${hero}: actual buffer source started`, await page.evaluate(n => window.audioProbe.samples.length > n, before));
   }
+  for (let hero = 0; hero < 4; hero++) {
+    await start(hero);
+    await page.evaluate(() => { const T = window.__CD_TEST__, G = T.cheat.G, p = G.player; p.invul = 999; const id = T.cheat.enemy('ferris', 1.05, 0), e = G.actors.find(a => a.id === id); Object.assign(e, { hp: 999, maxHp: 999, cd: 999, z: p.z, x: p.x + 1.05 }); e.def = { ...e.def, aggr: 0, speed: 0 }; T.audioLogStart(); });
+    for (let k = 0; k < 4; k++) { await host.keyboard.press('KeyJ'); await page.evaluate(() => window.__CD_TEST__.step(9)); }
+    await page.evaluate(() => window.__CD_TEST__.step(40));
+    const clog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
+    const hitsL = clog.filter(e => ['punch', 'punchHeavy', 'kick', 'kickHeavy'].includes(e.name)), fin = clog.filter(e => e.name === 'finisher');
+    check(`hero ${hero}: four combo hits all use the original impact`, hitsL.length >= 4 && hitsL.every(e => e.sample === 'hit' && e.source === 'original'), hitsL.map(e => e.name + ':' + e.sample));
+    check(`hero ${hero}: only the last hit adds the hero's own shout`, fin.length === 1 && fin[0].sample === 'finisher-' + ['jack', 'hannah', 'mustapha', 'mess'][hero] && fin[0].t >= hitsL[hitsL.length - 1].t - 0.001, fin);
+  }
   await start(0);
   const log = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
   check('wave completion plays original GO', log.some(e => e.name === 'go' && e.source === 'original'), log.filter(e => e.name === 'go'));
-  const goSamples = await page.evaluate(() => window.audioProbe.samples.filter(s => s.duration < 1));
-  check('GO schedules three calls on AudioContext clock', goSamples.length >= 3, goSamples);
-  const cues = ['punch', 'punchHeavy', 'kick', 'kickHeavy', 'go', 'mega'];
+  const goSamples = await page.evaluate(() => window.audioProbe.samples.filter(s => Math.abs(s.duration - 0.52) < 0.01));
+  const gaps = goSamples.slice(-3).map((s, i, a) => i ? +(s.at - a[i - 1].at).toFixed(3) : 0).slice(1);
+  check('GO is called three times 0.59 s apart (arcade timing)', goSamples.length >= 3 && gaps.every(g => Math.abs(g - 0.59) < 0.01), gaps);
+  const cues = ['punch', 'punchHeavy', 'kick', 'kickHeavy', 'finisher', 'bodyfall', 'go', 'mega'];
   const events = cues.map((name, i) => ({ t: i * 1.4, name, vol: 1, hero: 'jack' }));
-  const wav = await page.evaluate(e => window.__CD_TEST__.audioOffline(e, 9), events);
+  const wav = await page.evaluate(e => window.__CD_TEST__.audioOffline(e, 13), events);
   const bytes = Buffer.from(wav, 'base64'); fs.writeFileSync(out('original-audio.wav'), bytes);
   let peak = 0, sum = 0;
   for (let i = 44; i < bytes.length; i += 2) { const x = bytes.readInt16LE(i) / 32768; peak = Math.max(peak, Math.abs(x)); sum += x * x; }
@@ -96,11 +107,11 @@ const fs = require('fs');
   });
   check('menu mute makes the speaker output silent', silent < 0.00001, silent);
   // Simulated loading failure must leave the game usable and synthesize the event immediately.
-  await host.route('**/original-*.wav', r => r.abort());
+  await host.route('**/cd-*.wav*', r => r.abort());
   await navigate();
   await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
   if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
-  await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.failed.length === 9);
+  await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.failed.length === 11);
   await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.audioLogStart(); T.step(120); });
   const oscBefore = await page.evaluate(() => window.audioProbe.oscillators);
   await megaInput(); await page.evaluate(() => window.__CD_TEST__.step(5));

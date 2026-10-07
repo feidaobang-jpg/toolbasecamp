@@ -87,6 +87,7 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
 
 // Short samples use this same context/bus for pause, mute, capture and offline rendering.
 const lastSample = new Map();
+const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9 };
 const activeSamples = new Set();
 function playOriginal(name, v, hero, t, throttle = true) {
   const key = originalCue(name, hero), buffer = samples?.buffers.get(key);
@@ -94,14 +95,15 @@ function playOriginal(name, v, hero, t, throttle = true) {
   // One impact per simultaneous hit group; every subsequent combo hit still sounds.
   if (throttle && name !== 'mega' && name !== 'go' && t - (lastSample.get(key) ?? -9) < 0.035) return true;
   if (throttle) lastSample.set(key, t);
+  // 原作清完一波喊三遍 GO，间隔 0.59 秒（实机录像测得）
   const repeats = name === 'go' ? 3 : 1;
   for (let i = 0; i < repeats; i++) {
     const source = ctx.createBufferSource(), gain = ctx.createGain();
-    source.buffer = buffer; gain.gain.value = v * (name === 'go' || name === 'mega' ? 0.9 : 1.15);
+    source.buffer = buffer; gain.gain.value = v * (CUE_GAIN[key.split('-')[0]] ?? 1);
     source.connect(gain); gain.connect(sfxBus);
     if (throttle) activeSamples.add(source);
     source.onended = () => { activeSamples.delete(source); source.disconnect(); gain.disconnect(); };
-    source.start(t + i * Math.max(0.34, buffer.duration + 0.08));
+    source.start(t + i * 0.59);
   }
   return true;
 }
@@ -381,7 +383,7 @@ const A = {
             if (D && D !== '.') drumVoice(D, lt, dest);
           }
         });
-        for (const e of events) if (e.name && SFX[e.name] && e.t >= s0 && e.t < s1) { try { if (!playOriginal(e.name, e.vol ?? 1, e.hero, e.t - s0 + 0.005, false)) SFX[e.name](e.t - s0 + 0.005, e.vol ?? 1); } catch (err) { /* ignore */ } }
+        for (const e of events) if (e.name && (SFX[e.name] || originalCue(e.name, e.hero)) && e.t >= s0 && e.t < s1) { try { if (!playOriginal(e.name, e.vol ?? 1, e.hero, e.t - s0 + 0.005, false) && SFX[e.name]) SFX[e.name](e.t - s0 + 0.005, e.vol ?? 1); } catch (err) { /* ignore */ } }
         const buf = await off.startRendering();
         const a = buf.getChannelData(0), b = buf.getChannelData(1), o = Math.round(s0 * sr);
         for (let i = 0; i < a.length && o + i < N; i++) { outL[o + i] += a[i]; outR[o + i] += b[i]; }

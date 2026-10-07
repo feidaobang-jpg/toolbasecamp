@@ -1,0 +1,98 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.7.1",
+ "base_version": "v0.7.0",
+ "created_at": "2026-10-07T12:30:00+08:00",
+ "classification": "严重问题修正（原版音效对错号：连招、必杀、GO）",
+ "build": {
+  "bundle_sha256": "dbd0b5a103914b6f01a0f1e6db4cfea3d77b56390b54a79f5d787707a520fbf1",
+  "build_id": "original-sfx-v071"
+ },
+ "changes": [
+  {
+   "id": "hit-sample",
+   "before": "005C～005F（按编号猜，实机里几乎不出现）",
+   "after": "0064 以 0.75 倍速",
+   "verification": "pass"
+  },
+  {
+   "id": "finisher-shout",
+   "after": "连招最后一下叠主角自己的喝声 V18/V20/V22/V24",
+   "verification": "pass"
+  },
+  {
+   "id": "mega-shout",
+   "before": "V01～V04（捡东西 / 嘲讽台词）",
+   "after": "Dino uppercut / Spiral smash / Get off me / Hay breaker",
+   "verification": "pass"
+  },
+  {
+   "id": "go",
+   "before": "V33 ×3，间隔约 0.75 秒",
+   "after": "实机更接近的 GO ×3，间隔 0.59 秒",
+   "verification": "pass"
+  },
+  {
+   "id": "bodyfall",
+   "before": "合成",
+   "after": "原版 0072",
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "wrong-original-sfx-mapping",
+   "reported_by": "user",
+   "observed": "打人 4 连击的声音和扣血必杀的声音不对",
+   "cause": "拆包文件名只有编号，v0.7.0 按编号顺序猜映射",
+   "fix": "用实机录像音轨比对 + 截帧 + 标注人声视频逐一核对后重新映射",
+   "status": "fixed",
+   "retest": "qa/original-audio.js 34/34"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 34/34"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "site-games/qa/restart-audio.cjs",
+   "result": "pass 5/5"
+  }
+ ],
+ "audio_review": "not-run（AI 无法试听；依据为录像比对，见 audio-sources.json）",
+ "sources": "releases/v0.7.1/audio-sources.json",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "无画面变化"
+ },
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending"
+ }
+}
