@@ -1,0 +1,98 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.8.2",
+ "base_version": "v0.8.1",
+ "created_at": "2026-10-07T13:30:00+08:00",
+ "classification": "玩家反馈修复（必杀可连按、冲刺与连打声音）",
+ "build": {
+  "bundle_sha256": "5b382fd340ad36b5c1d53128eb36643d60af4ba5c27c7c42dd98bf291ebea8b5",
+  "build_id": "original-sfx-v082"
+ },
+ "changes": [
+  {
+   "id": "mega-no-restart",
+   "before": "必杀转圈中再按会从头再放",
+   "after": "做完才能再放；做完无冷却",
+   "verification": "pass"
+  },
+  {
+   "id": "mega-duration",
+   "before": "0.62 秒",
+   "after": "0.95 秒全程无敌（原作逐帧测得）",
+   "verification": "pass"
+  },
+  {
+   "id": "no-bare-hand-whoosh",
+   "before": "每拳叠合成挥空声",
+   "after": "空手只有原版打击声",
+   "verification": "pass"
+  },
+  {
+   "id": "finisher-shout-timing",
+   "before": "喝声叠在最后一下打中时",
+   "after": "最后一下起手时",
+   "verification": "pass"
+  },
+  {
+   "id": "dash-sounds",
+   "before": "起跑无声，冲刺攻击用普通拳脚声",
+   "after": "起跑 0071，冲刺打中 0083，穆斯塔法飞踢喊 V12",
+   "verification": "pass"
+  }
+ ],
+ "decisions": [
+  {
+   "topic": "必杀后几秒无敌",
+   "decision": "未加",
+   "reason": "原作 60 fps 录像必杀后不闪烁、看不到额外无敌迹象；只把动作中的无敌对齐到原作时长"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 58/58"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "qa/combat-feedback.js",
+   "result": "32/33（失败项改前构建同样失败）"
+  },
+  {
+   "method": "site-games/qa/cooperative.cjs（本地联机大厅）",
+   "result": "cadillacs 8/8"
+  }
+ ],
+ "audio_review": "not-run（AI 无法试听）",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "无画面变化"
+ },
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "bilibili": {
+  "status": "pending"
+ }
+}

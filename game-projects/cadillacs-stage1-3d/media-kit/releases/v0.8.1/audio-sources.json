@@ -96,5 +96,33 @@
   }
  ],
  "local_workdir": "D:/project/_assets/cadillacs-sfx（下载的拆包、参考音轨、匹配脚本与截帧，不入库）",
- "license_note": "原作录音，非开源授权；用户明确不考虑版权"
+ "license_note": "原作录音，非开源授权；用户明确不考虑版权",
+ "additions_v0.8.2": [
+  {
+   "cue": "dash（起跑）",
+   "file": "cd-dash.wav",
+   "source": "效果拆包 0071.wav",
+   "evidence": "杰克、梅斯实机每次起跑都出现，截帧均为起步前冲"
+  },
+  {
+   "cue": "dashHit（冲刺攻击打中）",
+   "file": "cd-dashhit.wav",
+   "source": "效果拆包 0083.wav",
+   "evidence": "起跑后 0.8 秒内出现：杰克 5/14、汉娜 6/16、梅斯 6/24，随机时刻对照 0～0.1"
+  },
+  {
+   "cue": "shout-mustapha（穆斯塔法飞踢）",
+   "file": "cd-shout-mustapha.wav",
+   "source": "人声拆包 V12.wav（标注为 Mustapha grunts）",
+   "evidence": "穆斯塔法实机飞踢时反复出现（与 V30 同时、晚 0.06 秒）"
+  },
+  {
+   "cue": "finisher 时机",
+   "evidence": "杰克实机连打后喝声在最后一拳后约 0.5 秒、最后一下起手时"
+  },
+  {
+   "cue": "空手挥空声",
+   "evidence": "杰克连打 25.0～27.2 秒、28.6～31.0 秒、76.3～78.6 秒全部声音事件只有打击声 0064（和最后的喝声），没有挥空声"
+  }
+ ]
 }

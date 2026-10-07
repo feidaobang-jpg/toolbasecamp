@@ -5,8 +5,8 @@
   "app_id": 962721,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing",
-  "platform_status": "reviewing",
+  "status": "online",
+  "platform_status": "online",
   "staged_version": "v0.8.1",
   "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
   "staged_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
@@ -15,21 +15,20 @@
   "draft_version_id": "1041012",
   "submitted_version": "v0.8.1",
   "submitted_at": "2026-10-07T02:28:18.912443+00:00",
-  "last_published_version": null,
-  "last_published_h5_version_id": null,
+  "last_published_version": "v0.8.1",
+  "last_published_h5_version_id": 270833,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
+  "last_status_checked_at": "2026-10-07T04:43:29.723Z",
   "release_record": "releases/taptap-force3-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
-    "等待TapTap正式审核；内容预审未通过，已按用户明确指令尝试提交，仍可能因IP风险驳回",
     "v0.9.0 联机版本待TapTap构建验证与后续同步",
     {
       "version": "v0.9.0",
       "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
       "package_sha256": "9588732a6e76f5637bb56096f365229438b5af4d2e63e8b9105bc12d452b397d",
-      "status": "built_waiting_current_review",
-      "reason": "平台当前旧包审核中，保留审核现场，本次稳定联机包待下一次可编辑草稿续发。",
+      "status": "built_waiting_next_taptap_sync",
+      "reason": "旧包已正式上线，本次稳定联机包保留，待后续TapTap构建验证与同步。",
       "record": "releases/v0.9.0/handoff.json"
     }
   ],
@@ -60,7 +59,27 @@
       "source_version": "v0.9.0",
       "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
       "change": "新合并联机功能",
-      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
+      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审",
+      "next_action": "此前审核包已上线；以后续已合并主线与当前网站核验为准继续同步，不重复送首次上线包。"
     }
-  ]
+  ],
+  "last_published_platform_version": "V-20261007",
+  "last_published_revision": 1041012,
+  "last_published_at": "2026-10-07T02:45:36+00:00",
+  "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
+  "public_url": "https://www.taptap.cn/app/962721",
+  "online_status_evidence_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "last_public_verified_moment_id": "856855343290912347",
+    "last_public_verified_url": "https://www.taptap.cn/moment/856855343290912347",
+    "forum_app_id": 962721,
+    "source_version": "v0.8.1",
+    "h5_version_id": 270833,
+    "platform_version": "V-20261007",
+    "content_sha256": "b794bc2d39851910046c8da10aa3e86b50440e539031cd9fb069c3acb4960b46",
+    "public_verified_at": "2026-10-07T04:43:29.723Z",
+    "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+    "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+  }
 }
