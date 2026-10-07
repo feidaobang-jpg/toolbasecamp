@@ -7,7 +7,7 @@
 <meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
 <title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=landscape-menu1">
+<link rel="stylesheet" href="./style.css?v=lobby-scroll1">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -119,25 +119,25 @@
           <button id="coop-copy" disabled>复制邀请链接</button>
           <button id="coop-ready" hidden>准备好了</button>
           <button id="coop-start" class="primary" hidden>全队开始</button>
-          <button data-act="coop-back">退出房间 · 返回主菜单</button>
+          <button data-act="coop-return">返回游戏</button><button data-act="coop-back">退出房间 · 返回主菜单</button>
         </nav>
         </div>
         <section id="coop-directory" aria-label="公开房间列表">
           <div class="directory-heading"><h3>所有房间</h3><button id="coop-refresh" class="lobby-action">刷新列表</button></div>
-          <p>无密码可直接加入；有密码房间先输入密码。满员或已开局的房间暂不可加入。</p>
+          <p>无密码可直接加入；有密码房间先输入密码。满员房间不可加入；游戏中仍有空位时可中途加入。</p>
           <p id="coop-empty">暂无房间，可以创建第一个房间。</p>
           <nav id="coop-rooms" class="items" aria-label="可加入的房间"></nav>
           <label>密码筛选 <select id="coop-filter"><option value="all">所有房间</option><option value="open">无密码</option><option value="locked">有密码</option></select></label>
           <div class="directory-heading"><button id="coop-prev" class="lobby-action" disabled>上一页</button><span id="coop-page" aria-live="polite">第 1 / 1 页 · 0 个房间</span><button id="coop-next" class="lobby-action" disabled>下一页</button></div>
         </section>
-        <p class="help lobby-footer">每人控制一辆坦克，合作守住老鹰；暂停同步全队。队友离线，其余玩家可继续；房主离线则结束房间，暂无房主迁移和中途加入。联机不覆盖单机存档。</p>
+        <p class="help lobby-footer">每人控制一辆坦克，合作守住老鹰；暂停同步全队。队友离线，其余玩家可继续；房主离线则结束房间，支持中途加入；闲置30秒电脑接管，操作后立即交还。联机不覆盖单机存档。</p>
       </div>
     </div>
     <div id="coop-status" role="status" hidden></div>
     <div id="pause" class="overlay" hidden>
       <div class="panel small">
         <h2>暂停</h2>
-        <nav class="items" aria-label="暂停菜单">
+        <nav class="items" aria-label="暂停菜单"><button data-act="coop">房间与队友</button>
           <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
           <button data-act="restart">从本关开头重来</button>
           <button data-opt="demo"></button>
@@ -190,6 +190,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=coop-hub1"></script>
+<script type="module" src="./main.js?v=ime-live1"></script>
 </body>
 </html>

@@ -5,7 +5,11 @@
   "base_version": "web-coop-v0.22.0",
   "created_at": "2026-10-07T13:50:00+08:00",
   "classification": "普通补丁",
-  "source_comments": ["316324806465", "316323444209", "316322217985"],
+  "source_comments": [
+    "316324806465",
+    "316323444209",
+    "316322217985"
+  ],
   "changes": [
     "重型迫击炮：射程64米、伤害180、价格1400、弹速85并按移动预判落点，解决打不到怪/比狙击枪弱贵的问题。",
     "虫子卡死恢复：卡住检测覆盖隧道路线与母巢口，5秒无位移即绕行或钻地朝目标推进；出生点撞墙自动搜索安全位。",
@@ -41,6 +45,30 @@
     "手机视口为浏览器模拟，未做真机多指与软键盘真机验收",
     "桌面验证不覆盖联机双端实际网络环境"
   ],
-  "site": { "status": "pending" },
-  "toy": { "id": 38678478981120, "status": "pending" }
+  "site": {
+    "status": "public_verified",
+    "version": "web-feedback-v0.22.1",
+    "verified_at": "2026-10-07T06:37:41.279Z",
+    "source_commit": "6ff61b15",
+    "evidence": "game-projects/starship-defense/media-kit/releases/web-feedback-v0.22.1/site-runtime.json"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "version": "web-feedback-v0.22.1",
+    "package_sha256": "f20d1ab1a7f05d6f346d073e3d69be9774d59da29ecb3310e8c48b863362ab94",
+    "file_hashes": {
+      "index.html": "1dd5d0e320658b2906383f4b6970e2fbe8470bcdb69dda344444299dabbc6363",
+      "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+      "game.compat.js": "6bb45ec01e2ad3362effca23eb7261c9f62b70c7273d39198591597d1db22277",
+      "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+      "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+      "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+      "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+    },
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_4MmhUYsW/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_B8OuehKc/index.html",
+    "submitted_at": "2026-10-07T06:37:41.279Z",
+    "note": "预览包在线 game.compat.js 哈希与包内一致（6bb45ec…），预览环境主菜单启动截图核验；大厅输入焦点在包内同码经三视口本地QA，预览沙箱跨源无法脚本化点测，如实记录。"
+  }
 }

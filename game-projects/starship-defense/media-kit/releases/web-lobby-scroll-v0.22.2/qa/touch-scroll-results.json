@@ -1,0 +1,165 @@
+[
+ {
+  "test": "starship-lobby",
+  "before": {
+   "scrollTop": 0,
+   "scrollHeight": 592,
+   "clientHeight": 414,
+   "rect": {
+    "x": 11,
+    "y": 70,
+    "w": 369,
+    "h": 703
+   },
+   "touchAction": "auto",
+   "overflow": "auto",
+   "rotated": 90
+  },
+  "drag": {
+   "before": {
+    "scrollTop": 0,
+    "scrollHeight": 592,
+    "clientHeight": 414,
+    "rect": {
+     "x": 11,
+     "y": 70,
+     "w": 369,
+     "h": 703
+    },
+    "touchAction": "auto",
+    "overflow": "auto",
+    "rotated": 90
+   },
+   "after": {
+    "scrollTop": 178,
+    "scrollHeight": 592,
+    "clientHeight": 414,
+    "rect": {
+     "x": 11,
+     "y": 70,
+     "w": 369,
+     "h": 703
+    },
+    "touchAction": "auto",
+    "overflow": "auto",
+    "rotated": 90
+   },
+   "bottom": {
+    "text": "返回游戏",
+    "visibleAtBottom": true
+   }
+  },
+  "errors": []
+ },
+ {
+  "test": "starship-lobby-small",
+  "before": {
+   "scrollTop": 0,
+   "scrollHeight": 455,
+   "clientHeight": 437,
+   "rect": {
+    "x": 62,
+    "y": 9,
+    "w": 617,
+    "h": 341
+   },
+   "touchAction": "auto",
+   "overflow": "auto",
+   "rotated": 0
+  },
+  "drag": {
+   "before": {
+    "scrollTop": 0,
+    "scrollHeight": 455,
+    "clientHeight": 437,
+    "rect": {
+     "x": 62,
+     "y": 9,
+     "w": 617,
+     "h": 341
+    },
+    "touchAction": "auto",
+    "overflow": "auto",
+    "rotated": 0
+   },
+   "after": {
+    "scrollTop": 18,
+    "scrollHeight": 455,
+    "clientHeight": 437,
+    "rect": {
+     "x": 62,
+     "y": 9,
+     "w": 617,
+     "h": 341
+    },
+    "touchAction": "auto",
+    "overflow": "auto",
+    "rotated": 0
+   },
+   "bottom": {
+    "text": "返回游戏",
+    "visibleAtBottom": true
+   }
+  },
+  "errors": []
+ },
+ {
+  "test": "tank3d-lobby",
+  "before": {
+   "scrollTop": 0,
+   "scrollHeight": 1053,
+   "clientHeight": 356,
+   "rect": {
+    "x": 14,
+    "y": 235,
+    "w": 362,
+    "h": 374
+   },
+   "touchAction": "auto",
+   "overflow": "auto",
+   "rotated": 90
+  },
+  "drag": {
+   "before": {
+    "scrollTop": 0,
+    "scrollHeight": 1053,
+    "clientHeight": 356,
+    "rect": {
+     "x": 14,
+     "y": 235,
+     "w": 362,
+     "h": 374
+    },
+    "touchAction": "auto",
+    "overflow": "auto",
+    "rotated": 90
+   },
+   "after": {
+    "scrollTop": 208,
+    "scrollHeight": 1053,
+    "clientHeight": 356,
+    "rect": {
+     "x": 14,
+     "y": 235,
+     "w": 362,
+     "h": 374
+    },
+    "touchAction": "auto",
+    "overflow": "auto",
+    "rotated": 90
+   },
+   "bottom": {
+    "text": "下一页",
+    "visibleAtBottom": true
+   }
+  },
+  "errors": []
+ },
+ {
+  "test": "desktop-wheel",
+  "before": 0,
+  "after": 0,
+  "overflow": false,
+  "errors": []
+ }
+]

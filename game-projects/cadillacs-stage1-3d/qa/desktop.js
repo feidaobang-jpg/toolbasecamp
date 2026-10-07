@@ -28,7 +28,8 @@ const fs = require('fs');
     await sleep(200);
   };
   const skipIntro = async () => { for (let i = 0; i < 48; i++) { const s = await S(); if (s.mode === 'play') break; await press('KeyJ'); await sleep(250); } return S(); };
-  const clearEnemies = async () => { await C(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500); };
+  // 开场后还有两名手下排队上场，一并清掉
+  const clearEnemies = async () => { await C(() => { window.__CD_TEST__.cheat.G.pending = []; window.__CD_TEST__.cheat.killAll(); }); await sleep(1500); };
 
   await fresh();
   let s = await S();

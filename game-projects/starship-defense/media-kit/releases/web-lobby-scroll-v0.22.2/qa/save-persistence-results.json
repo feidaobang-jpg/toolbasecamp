@@ -1,0 +1,25 @@
+{
+  "tested_at": "2026-10-07T08:43:35.765Z",
+  "task": "排查玩家“不争气的空白”反馈：过一天存档丢失、联机进不了房间",
+  "build": "web-lobby-scroll-v0.22.2 (worktree f88c72a4)",
+  "method": "Playwright+Edge headless, 本地静态服务, window.__gameQA 驱动",
+  "cases": {
+    "write_and_reload": {
+      "wrote_gold": 1234,
+      "restored": {
+        "ok": true,
+        "gold": 1234,
+        "chapter": 2,
+        "level": 3,
+        "state": "prep"
+      }
+    },
+    "legacy_shape_one_day_old": {
+      "ok": true,
+      "note": "删除 vehiclesOwned/squadCount、time=一天前，仍可读取进入准备阶段"
+    },
+    "pageerrors": []
+  },
+  "conclusion": "v0.22.x 未改动存档键与读写逻辑，网站存档写入/隔天读取/旧字段兼容实测通过；玩家侧丢失最可能为浏览器清理站点数据、无痕/换设备、或 Toy 与网站存档相互隔离（toy-chongchao-v1- 前缀，v0.17.13 起即如此）。联机 WS 端点 wss://www.zhengxiaohui.cn/api/game/coop/ws?game=starship 实测返回 101 存活；“进入不了房间”与已修复的手机输入框抢焦点（v0.22.1）及大厅无法滚动（v0.22.2）高度相关。",
+  "limitations": "无法访问玩家设备复现具体清档路径；需玩家回复入口（网站/Toy）与浏览器继续定位。"
+}

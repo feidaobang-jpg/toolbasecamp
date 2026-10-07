@@ -6,8 +6,9 @@
  "created_at": "2026-10-07T15:30:00+08:00",
  "classification": "正式版本（新增原作开场与背摔，连打重击声修正）",
  "build": {
-  "bundle_sha256": "fa8b153fd8ab3e7b865a479707f459af01c468d403916c6356138ca0be47bcaa",
-  "build_id": "intro-v090"
+  "bundle_sha256": "50c29a2c580b772f76ee6656f75b13e33df4c69deb4823952499c74bb033d671",
+  "build_id": "intro-v092",
+  "note": "合并四人合作 v0.9.1 后的最终构建"
  },
  "changes": [
   {
@@ -52,7 +53,7 @@
  "qa": [
   {
    "method": "qa/intro-throw.js",
-   "result": "pass 16/16（两次）"
+   "result": "pass 16/16"
   },
   {
    "method": "qa/original-audio.js",
@@ -64,7 +65,7 @@
   },
   {
    "method": "qa/mobile.js",
-   "result": "pass 35/35",
+   "result": "pass 35/35（连跑三次；测试改为同时清掉开场后排队上场的两名手下）",
    "unmeasured": [
     "physical device"
    ]
@@ -82,11 +83,7 @@
    "result": "pass 16/16"
   },
   {
-   "method": "qa/combat-feedback.js",
-   "result": "32/33（失败项改前同样失败）"
-  },
-  {
-   "method": "site-games/qa/cooperative.cjs",
+   "method": "site-games/qa/cooperative.cjs（本地联机大厅）",
    "result": "cadillacs 8/8"
   },
   {

@@ -35,11 +35,26 @@ const players=()=>G.actors.filter(a=>a.side==='player'&&!a.removed);
 function withPlayer(p,fn){
  const old=G.player,hero=G.hero,jump=lastJumpT,atk=lastAtkT,network=IN.network;
  G.player=p;G.hero=HEROES.findIndex(h=>h.id===p.type);lastJumpT=p.lastJumpT??-9;lastAtkT=p.lastAtkT??-9;
- IN.network=p.slot===0?null:(p.netInput||coopInputs(p.slot));if(IN.network)p.lookHeading=IN.network.look;
+ IN.network=p.netInput||(p.slot===0?null:coopInputs(p.slot));if(IN.network)p.lookHeading=IN.network.look;
  try{return fn();}finally{p.lastJumpT=lastJumpT;p.lastAtkT=lastAtkT;lastJumpT=jump;lastAtkT=atk;G.player=old;G.hero=hero;IN.network=network;}
 }
 export function setCoopInput(fn){coopInputs=fn;}
 export function leaveCoopSlot(slot){const p=players().find(a=>a.slot===slot);if(p){removeActor(p);G.actors=G.actors.filter(a=>a!==p);}}
+export function joinCoopSlot(slot,choice=0){
+ if(players().some(p=>p.slot===slot))return;
+ const h=HEROES[choice]||HEROES[0],anchor=players()[0]||G.player,AR=AREAS[G.area];
+ const p=makeActor(h.id,'player',{slot,hero:h,stats:heroStats(h),hp:100,maxHp:100,face:FACE_RIGHT,comboN:0,lastHitT:-9,radius:.34,invul:3});
+ p.x=anchor.x;p.z=clamp(anchor.z+(slot%2?1:-1),-HALF_W+.6,HALF_W-.6);
+ for(let i=0;i<8&&players().some(q=>q!==p&&q.alive&&Math.hypot(q.x-p.x,q.z-p.z)<.75);i++)p.x=clamp(anchor.x+(i%2?1:-1)*(1+Math.floor(i/2)),AR.x0+.5,AR.x1-.5);
+}
+export function computerInput(slot){
+ const p=players().find(a=>a.slot===slot);if(!p||!p.alive)return {edges:[]};
+ const e=G.actors.filter(a=>a.side==='enemy'&&a.alive&&!a.removed).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];
+ const goal=e||players().find(a=>a!==p&&a.alive)||{x:p.x+4,z:p.z};
+ const dx=goal.x-p.x,dz=goal.z-p.z,d=Math.hypot(dx,dz),near=!!e&&Math.abs(dx)<1.5&&Math.abs(dz)<.7;
+ const attack=near&&['idle','walk','run','grab'].includes(p.state);
+ return {x:near?0:dx/Math.max(1,d),z:near?0:dz/Math.max(1,d),atk:attack,edges:attack?['atk']:[],look:dx<0?FACE_LEFT:FACE_RIGHT,lane:false};
+}
 let scene, world, fx, camCtl, nextId = 1, bannerId = 0, toastId = 0;
 const GRAV = 24;
 const DUR_MUL = { easy: 0.45, std: 0.7, classic: 1.0 };   // 耐久：敌人伤害倍率
@@ -443,7 +458,7 @@ export function update() {
   if (G.mode === 'cont') { updateContinue(dt); return; }
   // 玩家输入
   const p = G.player;
-  if (G.mode === 'play') for(const actor of G.coop?players():[p]){actor.netInput=actor.slot===0?null:coopInputs(actor.slot);withPlayer(actor,()=>handleInput(actor,dt));}
+  if (G.mode === 'play') for(const actor of G.coop?players():[p]){actor.netInput=G.coop?coopInputs(actor.slot):null;withPlayer(actor,()=>handleInput(actor,dt));}
   else IN.flush();
   // 角色
   for (const a of G.actors) {

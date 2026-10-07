@@ -37,6 +37,7 @@ for(const file of walk(source)){
     .replaceAll('../../../vendor/three/0.170.0/build/three.module.js','./vendor/three.module.js')
     .replaceAll('../../../vendor/three/0.170.0/examples/jsm/utils/BufferGeometryUtils.js','./vendor/BufferGeometryUtils.js')
     .replaceAll('../../../js/game/drag-look.js','./drag-look.js')
+    .replaceAll(/'\.\.\/\.\.\/\.\.\/js\/game\/landscape-typing\.js(\?v=[a-z0-9-]+)?'/g,"'./landscape-typing.js'")
     .replaceAll('../../../js/game/sample-audio.js','./sample-audio.js')
     .replaceAll('../../../css/base.css','./base.css')
     .replaceAll('../../../favicon.svg','./favicon.svg');
@@ -46,6 +47,7 @@ for(const file of walk(source)){
     .replaceAll('data-list-url="../../../games.html"','data-list-url="./index.html"')
     .replace(/<a href="\.\.\/\.\.\/\.\.\/games.html"[^>]*>[\s\S]*?<\/a>/g,'');
   text=text.replaceAll('../../../games.html','./index.html');
+  text=text.replaceAll('gamehub-','taptap-gamehub-');
   if(config.namespace){const [from,to]=config.namespace;namespaceRewrites+=text.split(from).length-1;text=text.replaceAll(from,to);}
   if(/\.\.\/\.\.\//.test(text))throw Error('Unbundled relative dependency in '+name);
   write(name,Buffer.from(text,'utf8'));
@@ -55,6 +57,7 @@ for(const [from,to] of [
   ['public/vendor/three/0.170.0/build/three.module.js','vendor/three.module.js'],
   ['public/vendor/three/0.170.0/examples/jsm/utils/BufferGeometryUtils.js','vendor/BufferGeometryUtils.js'],
   ['public/js/game/drag-look.js','drag-look.js'],
+  ['public/js/game/landscape-typing.js','landscape-typing.js'],
   ['public/js/game/sample-audio.js','sample-audio.js'],
   ['public/css/base.css','base.css'],['public/favicon.svg','favicon.svg'],
   ['game-projects/starship-defense/THREE-LICENSE.txt','vendor/THREE-LICENSE.txt'],

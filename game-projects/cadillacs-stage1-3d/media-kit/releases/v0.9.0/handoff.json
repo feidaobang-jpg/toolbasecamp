@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.9.0",
+  "base_version": "v0.8.1",
+  "classification": "正式版本",
+  "changes": [
+    "2–4人合作与独立玩家实体；保留原玩法、音效与关卡",
+    "中途加入保留当前战场，退出保留其余队友",
+    "闲置30秒普通NPC接管，真人操作立即交还并提示",
+    "房主踢人及本房间阻止直接重新加入；不做投票踢人",
+    "保留 v0.8.1 新合入的原作角色音效"
+  ],
+  "site": {
+    "status": "pending"
+  },
+  "toy": {
+    "status": "pending"
+  },
+  "taptap": {
+    "status": "pending"
+  },
+  "bilibili": {
+    "status": "pending"
+  },
+  "limitations": [
+    "暂无房主迁移，房主离线结束房间",
+    "手机视口模拟不代表真机或多指触控验收"
+  ],
+  "validation": {
+    "server": "17项服务端权限/容量与兼容测试通过；包含2/3/4人、晚加入、踢人权限、补位与断线",
+    "idle_timer": "Node 验证29.999秒不接管、30秒接管、立即接回、暂停不计时、自动射击不算真人活动",
+    "browser": "C:\\Users\\37818\\.codex\\artifacts\\jackal-four-player-20261007\\live-cadillacs-final\\live.json",
+    "method": "独立 Edge 上下文；晚加入后四个实际角色；退出并复用席位、房主踢人；将挂机计时老化到31秒后运行真实普通NPC逻辑，非大模型",
+    "phone": "手机横竖视口与控件模拟；未作手机真机验收"
+  },
+  "updated_at": "2026-10-07T04:47:06.786889+00:00"
+}

@@ -5,17 +5,17 @@
   "slug": "feidao-cadillacs-3d",
   "category": "GAME",
   "visibility": "public",
-  "status": "published",
-  "submitted_at": "2026-10-07T12:51:12+08:00",
+  "status": "auditing",
+  "submitted_at": "2026-10-07T16:53:45+08:00",
   "package": "dist/toy-v0.8.2/package",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_zCPIWrnh/index.html",
-  "note": "v0.8.2（必杀不能连按、连打与冲刺原版声音）已过审。",
+  "note": "联机2-4人统一版本送审（ZCode接管收尾）；网站已部署核验，等待审核",
   "status_verified": "正式入口 20/20 显示 v0.8.2，原版音效 58/58",
   "bound_videos": [
    "BV18XHW66E55"
   ],
-  "review_status": "published",
-  "version": "v0.8.2",
+  "review_status": "auditing",
+  "version": "v0.9.0",
   "verified_at": "2026-10-07T13:12:00+08:00",
   "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
   "last_published_version": "v0.8.2",
@@ -71,7 +71,7 @@
   ],
   "submitted_version": "v0.8.0",
   "package_sha256": "fdd3ebf0c40fe36fc0c1fa29d5906db03291101ead2922b6b25b7018913bf882",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_QxPV5KvH/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GzFYONAq/index.html",
   "release_record": "releases/v0.8.0/handoff.json",
   "published_version": "v0.8.0",
   "published_verified_at": "2026-10-07T07:50:06+08:00",
@@ -135,11 +135,18 @@
   },
   {
    "version": "v0.9.0",
-   "base_version": "v0.8.2",
+   "base_version": "v0.8.1",
+   "classification": "正式版本",
+   "handoff": "releases/v0.9.0/handoff.json",
+   "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
+  },
+  {
+   "version": "v0.9.2",
+   "base_version": "v0.9.1",
    "date": "2026-10-07",
    "classification": "正式版本",
    "summary": "原作第一关开场（海边远景翼龙飞过、EASTCOAST 2513、开场必杀震飞手下）；抓住后上／下＋J 背摔；连招第 4 下与击倒用原版重击声，喝声在其后。",
-   "handoff": "releases/v0.9.0/handoff.json"
+   "handoff": "releases/v0.9.2/handoff.json"
   }
  ],
  "dev": {
@@ -169,9 +176,13 @@
   "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
   "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
   "limitations": [
-   "暂不支持中途加入、断线重连和房主迁移",
+   "暂无房主迁移；房主离线结束房间",
    "联机不写入单机存档/排行榜"
-  ]
+  ],
+  "late_join": true,
+  "idle_takeover_seconds": 30,
+  "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
+  "host_kick": true
  },
  "drag_camera_controls": {
   "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
@@ -279,17 +290,16 @@
    "summary": "必杀间隔与无敌时长、连打与冲刺声音对照原作。",
    "record": "releases/v0.8.2/handoff.json",
    "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "taptap": "reviewing",
-    "bilibili": "pending_merge"
+    "website": "pending",
+    "toy": "pending",
+    "bilibili": "pending"
    }
   },
   {
-   "version": "v0.9.0",
+   "version": "v0.9.2",
    "classification": "正式版本",
    "summary": "原作开场动画与开场必杀、背摔、连打重击声。",
-   "record": "releases/v0.9.0/handoff.json",
+   "record": "releases/v0.9.2/handoff.json",
    "channels": {
     "website": "pending",
     "toy": "pending",
@@ -298,7 +308,7 @@
    }
   }
  ],
- "handoff": "releases/v0.9.0/handoff.json",
+ "handoff": "releases/v0.9.2/handoff.json",
  "game_id": "cadillacs-stage1-3d",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
@@ -317,7 +327,7 @@
    "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
   }
  },
- "current_version": "v0.9.0",
+ "current_version": "v0.9.2",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
