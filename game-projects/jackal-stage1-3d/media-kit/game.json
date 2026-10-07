@@ -5,7 +5,7 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
+    "review_status": "published",
     "verified_at": "2026-10-07T02:43:57.353796+00:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
@@ -14,13 +14,13 @@
     "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.10.2 联机队友车头转向与加入者卡顿修复（严重修复）；预览双视口实测通过后提交审核，等待审核。",
-    "submitted_at": "2026-10-07T17:55:35+08:00",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_DyEKsYfW/index.html",
-    "submitted_version": "v0.10.2",
+    "note": "v0.10.3 大厅手动建房补丁已审核通过并公开生效：公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房得到房间号、已在房间时按钮为可见锁定态且点击说明\"你已在房间…退出房间\"、无脚本报错（12/12）",
+    "submitted_at": "2026-10-07T21:52:19+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_6EJHjzyO/index.html",
+    "submitted_version": "v0.10.3",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_rS8VqubD/index.html",
     "release_record": "releases/v0.9.0/handoff.json",
-    "published_version": "v0.9.0",
+    "published_version": "v0.10.3",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -106,27 +106,42 @@
       {
         "version": "v0.10.2",
         "classification": "严重修复",
-        "status": "auditing",
+        "status": "published",
         "summary": "联机队友车头随本人视角转向；加入者车位按帧插值；快照体积 68.6KB→29.6KB。",
         "record": "releases/v0.10.2/notes.md",
         "submitted_at": "2026-10-07T17:55:35+08:00",
-        "preview_verified": "1280×720 与 390×844 双视口实测正常，无页面错误"
+        "preview_verified": "1280×720 与 390×844 双视口实测正常，无页面错误",
+        "included_version": "v0.10.3",
+        "published_verified_at": "2026-10-07T21:52:19+08:00"
+      },
+      {
+        "version": "v0.10.3",
+        "classification": "普通补丁",
+        "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+        "status": "published",
+        "record": "releases/v0.10.3/notes.md",
+        "submitted_at": "2026-10-07T21:52:19+08:00",
+        "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
+        "published_verified_at": "2026-10-07T21:52:19+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
       }
     ],
-    "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
-    "last_successful_sync_version": "v0.8.1",
+    "last_successful_sync_at": "2026-10-07T21:56:53+08:00",
+    "last_successful_sync_version": "v0.10.3",
     "package_sha256": "84922aaeeffa60778a540ec50aeb79f47526b108866321b8791f0922bd272e06",
-    "published_verified_at": "2026-10-07T07:50:06+08:00",
+    "published_verified_at": "2026-10-07T21:56:53+08:00",
     "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
-    "status": "auditing",
+    "status": "published",
     "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
-    "version": "v0.10.2",
+    "version": "v0.10.3",
     "package": "dist/toy-v0.8.0/package",
-    "last_published_version": "v0.8.1",
+    "last_published_version": "v0.10.3",
     "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
-    "public_verified_version": "v0.8.0-bgmfull1",
-    "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    "public_verified_version": "v0.10.3",
+    "public_verified_at": "2026-10-07T21:56:53+08:00",
+    "public_runtime_evidence": "公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房得到房间号、已在房间时按钮为可见锁定态且点击说明\"你已在房间…退出房间\"、无脚本报错（12/12）",
+    "website_verified_at": "2026-10-07T21:52:19+08:00",
+    "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
   },
   "game_id": "jackal-stage1-3d",
   "launch": {
@@ -146,12 +161,12 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.10.2",
+  "current_version": "v0.10.3",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "website_version": "v0.10.2",
+  "website_version": "v0.10.3",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
   "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
-  "website_verified_at": "2026-10-07T17:55:35+08:00",
+  "website_verified_at": "2026-10-07T21:52:19+08:00",
   "versions": [
     {
       "version": "v0.1",
@@ -268,7 +283,7 @@
       "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
     }
   ],
-  "website_commit": "f8e47dc3",
+  "website_commit": "1dd01fd5",
   "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "dev": {

@@ -155,6 +155,16 @@
       "prepared_update_line": "更新（2026-10-07·coop-live2）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
       "reason": "浏览器自动化在当前子代理环境不可用（agent.browsers 报 Browser is not available in subagent），未能读取/编辑B站简介；未向平台提交，保留原公开核验基线，待浏览器可用后按本行文案先读平台全文再合并提交。",
       "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)"
+    },
+    {
+      "version": "lobby-hint1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+      "prepared_update_line": "更新（2026-10-07·联机大厅）：建房改为玩家自己点「创建房间」，进来不再静默建房；已在房间时创建/加入按钮会说明原因和\"先退出房间\"；把邀请链接发给朋友，点开公开房直接进、密码房会提示填密码。",
+      "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
+      "record": "releases/lobby-hint1/notes.md",
+      "recorded_at": "2026-10-07"
     }
   ],
   "history": [

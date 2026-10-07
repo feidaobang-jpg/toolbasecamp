@@ -6,19 +6,19 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-07T20:11:52+08:00",
+    "submitted_at": "2026-10-07T21:52:19+08:00",
     "package": "dist/toy-v0.9.4/package",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_7ngzEtfk/index.html",
-    "note": "v0.9.4（旧WebView玩家ID回退，修复启动即报错）已于 2026-10-07 20:11 提审 auditing；现网 published 仍为 v0.9.3，过审后核验正式入口。",
+    "note": "v0.9.5 大厅手动建房补丁已审核通过并公开生效：公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房、锁定态说明、无脚本报错（12/12）；v0.9.4 的旧 WebView 玩家标识修复随本包一并生效",
     "status_verified": "2026-10-07 20:1x mylist：status=published(v0.9.3)，v0.9.4 审核中",
     "bound_videos": [
       "BV18XHW66E55"
     ],
     "review_status": "published",
-    "version": "v0.9.3",
+    "version": "v0.9.5",
     "verified_at": "2026-10-07T19:03:00+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-    "last_published_version": "v0.9.3",
+    "last_published_version": "v0.9.5",
     "pending_updates": [
       {
         "version": "v0.2.1",
@@ -67,14 +67,25 @@
         "record": "releases/v0.5.6/handoff.json",
         "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换",
         "included_version": "v0.5.6-bgmfull1"
+      },
+      {
+        "version": "v0.9.5",
+        "classification": "普通补丁",
+        "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+        "status": "published",
+        "record": "releases/v0.9.5/notes.md",
+        "submitted_at": "2026-10-07T21:52:19+08:00",
+        "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
+        "published_verified_at": "2026-10-07T21:56:53+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
       }
     ],
-    "submitted_version": "v0.8.0",
+    "submitted_version": "v0.9.5",
     "package_sha256": "fdd3ebf0c40fe36fc0c1fa29d5906db03291101ead2922b6b25b7018913bf882",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_GzFYONAq/index.html",
     "release_record": "releases/v0.8.0/handoff.json",
-    "published_version": "v0.8.0",
-    "published_verified_at": "2026-10-07T07:50:06+08:00",
+    "published_version": "v0.9.5",
+    "published_verified_at": "2026-10-07T21:56:53+08:00",
     "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "video_bindings": [
       "BV18XHW66E55"
@@ -88,17 +99,19 @@
       "status": "published",
       "verified_at": "2026-10-06T23:38:00+08:00"
     },
-    "public_verified_version": "v0.5.6-bgmfull1",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
-    "last_successful_sync_version": "v0.6.1",
-    "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+    "public_verified_version": "v0.9.5",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_Hy2hKSFi/index.html",
+    "last_successful_sync_version": "v0.9.5",
+    "last_successful_sync_at": "2026-10-07T21:56:53+08:00",
     "package_tree_sha256": "c6f9cf28bfe2bcaaff1a09b02e2397867b574c0c7e5ee9b34246da08fee191c9",
-    "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    "public_verified_at": "2026-10-07T21:56:53+08:00",
+    "public_runtime_evidence": "公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房、锁定态说明、无脚本报错（12/12）；v0.9.4 的旧 WebView 玩家标识修复随本包一并生效",
+    "website_verified_at": "2026-10-07T21:52:19+08:00",
+    "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
   },
   "website_version": "v0.6.1",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
-  "website_verified_at": "2026-10-07T07:30:00+08:00",
+  "website_verified_at": "2026-10-07T21:52:19+08:00",
   "website_commit": "a0da954f",
   "versions": [
     {
@@ -360,11 +373,11 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.9.4",
+  "current_version": "v0.9.5",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
-  "web_toy_versions_match": false,
+  "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
