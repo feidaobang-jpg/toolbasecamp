@@ -1,5 +1,5 @@
 import {installRemakeCoop} from '../../../js/game/remake-coop.js';
-import {markTree,treeState,applyTree,scalarState,createSoundRelay} from '../../../js/game/coop.js';
+import {markTree,treeState,applyTree,scalarState,createSoundRelay} from '../../../js/game/coop.js?v=ime-live1';
 let coopDriver=null,coopHumans=[],coopNextId=1,coopEpoch=0,coopPendingEdges=[];
 import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=controls-inset1';
 import * as THREE from './vendor/three.module.js';

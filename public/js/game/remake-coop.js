@@ -1,5 +1,5 @@
-import {CooperativeLobby} from './coop.js';
-export function installRemakeCoop({game,container,menu,getConfig,onStart,onState,onEnd,onJoin=()=>{},onAction,getState,getInput,getUI,onGuestFrame=()=>{},notify=()=>{}}){
+import {CooperativeLobby} from './coop.js?v=ime-live1';
+export function installRemakeCoop({game,container,menu,getConfig,onStart,onState,onEnd,onAction,getState,getInput,getUI,onGuestFrame=()=>{},notify=()=>{}}){
  const driver={snapshot:getState,config:null,applying:false,lastSend:0,lastInput:0,result:null,lobby:null};
  driver.lobby=new CooperativeLobby({
   game,container,menu,getConfig,
