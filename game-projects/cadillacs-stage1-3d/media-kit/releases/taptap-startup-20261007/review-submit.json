@@ -1,0 +1,45 @@
+{
+  "ok": true,
+  "data": {
+    "handoff": {
+      "stage": "review_submitted",
+      "completed": [
+        "review submission accepted"
+      ],
+      "pending": [
+        "wait for TapTap review"
+      ],
+      "userActionRequired": false,
+      "userActionSummary": "当前无需重复提交；等待审核结果",
+      "nextActions": [
+        {
+          "id": "check_review_status",
+          "label": "查询审核状态",
+          "requiresConfirmation": false
+        }
+      ],
+      "links": [
+        {
+          "kind": "admin",
+          "label": "开发者后台资料页",
+          "url": "https://developer.taptap.cn/v3/100726/app/962722/store/update",
+          "available": true,
+          "source": "derived_from_ids"
+        }
+      ]
+    },
+    "result": {
+      "audit_id": "1042927",
+      "status": "reviewing",
+      "version_id": "1042927"
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

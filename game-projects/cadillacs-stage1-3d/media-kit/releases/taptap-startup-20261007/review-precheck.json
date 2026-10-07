@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1042927",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏名称使用了知名游戏IP‘恐龙快打’，可能存在版权侵权风险。如已获得官方正式授权，请前往游戏资质页面上传相关授权证明文件，否则有驳回风险。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "游戏简介中提及非官方复刻相关内容，可能存在版权侵权风险。建议前往游戏资质页面补充提供软件著作权及相关授权资质文件。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}
