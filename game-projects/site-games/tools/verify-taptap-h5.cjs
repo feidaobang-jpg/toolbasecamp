@@ -4,9 +4,11 @@ const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const slug=process.argv[2];
 const verificationOnly=process.argv.includes('--verification-only');
+const requestedLevel=process.env.VERIFY_LEVEL||'';
+assert(!requestedLevel||slug==='mario-3d'&&['1-1','1-2','1-3'].includes(requestedLevel));
 assert(['jackal-stage1-3d','cadillacs-stage1-3d','mario-3d','journey-west-3d'].includes(slug));
 const root=path.resolve(__dirname,'../../..'),base=path.join(root,'dist/taptap',slug,slug);
-const out=path.join(root,'dist/taptap-publish-four-20261007/qa',slug+(verificationOnly?'-verification':''));fs.mkdirSync(out,{recursive:true});
+const out=path.join(root,'dist/taptap-publish-four-20261007/qa',slug+(verificationOnly?'-verification':'')+(requestedLevel?'-'+requestedLevel:''));fs.mkdirSync(out,{recursive:true});
 const server=http.createServer((req,res)=>{
   const file=path.resolve(base,'.'+decodeURIComponent(new URL(req.url,'http://local').pathname));
   if(!file.startsWith(base+path.sep))return res.writeHead(403).end();
@@ -26,9 +28,9 @@ async function start(page){
 function time(s){return s.t??s.time;}
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
-  const url='http://127.0.0.1:'+server.address().port+'/index.html?test=1&q=high&seed=7';
+  const url='http://127.0.0.1:'+server.address().port+'/index.html?test=1&q=high&seed=7'+(requestedLevel?'&level='+requestedLevel:'');
   const browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-gpu','--ignore-gpu-blocklist','--use-angle=d3d11','--autoplay-policy=no-user-gesture-required']});
-  const results={slug,package_sha256:JSON.parse(fs.readFileSync(path.join(base,'../manifest.json'),'utf8')).zip_sha256,scenarios:[],real_phone_test:false,taptap_client_test:false,method:'Normal keyboard and pointer input; read-only existing state hooks. Canvas/audio capture does not change gameplay.'};
+  const results={slug,requested_level:requestedLevel||null,package_sha256:JSON.parse(fs.readFileSync(path.join(base,'../manifest.json'),'utf8')).zip_sha256,scenarios:[],real_phone_test:false,taptap_client_test:false,method:'Normal keyboard and pointer input; read-only existing state hooks. Canvas/audio capture does not change gameplay.'};
   try{
     for(const viewport of [{width:1920,height:1080},{width:844,height:390},{width:390,height:844}]){
       const mobile=viewport.width<1000,context=await browser.newContext({viewport,isMobile:mobile,hasTouch:mobile,userAgent:mobile?'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36':undefined});
@@ -41,7 +43,7 @@ function time(s){return s.t??s.time;}
         AudioNode.prototype.connect=function(target,...rest){const result=original.call(this,target,...rest);if(target instanceof AudioDestinationNode){const dest=this.context.createMediaStreamDestination();original.call(this,dest);window.__recordAudio.push(dest.stream);}return result;};
       });
       await page.goto(url);await page.waitForFunction(()=>!!(window.__JK_TEST__||window.__CD_TEST__||window.__MARIO_TEST__||window.__CAMERA_QA__));
-      await start(page);const before=await snapshot(page);
+      await start(page);const before=await snapshot(page);if(requestedLevel)assert.equal(before.level,requestedLevel,'requested level starts through menu');
       await page.keyboard.down('KeyD');await page.waitForTimeout(500);await page.keyboard.up('KeyD');const after=await snapshot(page);
       assert(Math.hypot(after.player.x-before.player.x,(after.player.z??after.player.y)-(before.player.z??before.player.y))>.1,'movement works');
       const actionBefore=await snapshot(page);

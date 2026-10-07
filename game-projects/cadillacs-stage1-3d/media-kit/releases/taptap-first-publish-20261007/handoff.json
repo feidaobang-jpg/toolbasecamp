@@ -18,7 +18,7 @@
   "last_published_version": null,
   "last_published_h5_version_id": null,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T01:41:30.142145+00:00",
+  "last_status_checked_at": "2026-10-07T01:41:21.841584+00:00",
   "release_record": "releases/taptap-first-publish-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
@@ -70,7 +70,7 @@
       "message": "游戏截图中包含《恐龙快打》知名角色设定（如MUSTAPHA等），存在侵权风险，请前往资质页面上传授权文件。"
     }
   ],
-  "material_review": "当前包正常输入生成的真实截图与无额外配音实机视频；图标/宣传图使用现有游戏模型的原生3D构图，更新后的横竖封面已人工查看；不是玩法截图替代品或正版授权证明。",
+  "material_review": "已测试游戏正常输入生成真实截图与无额外配音实机视频；玛丽v2.5.0沿用仍准确的1-1截图/视频并追加当前包第三关实机截图与验证；图标/宣传图使用现有游戏模型的原生3D构图，更新后的横竖封面已人工查看；不是玩法截图替代品或正版授权证明。",
   "agreement_signed": false,
   "review_submitted": false,
   "public_verified": false,

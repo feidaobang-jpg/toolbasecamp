@@ -69,7 +69,7 @@
         },
         "screenshots": {
           "collection_spec": {
-            "current_count": 3,
+            "current_count": 4,
             "max_items": 10,
             "min_items": 3,
             "missing_count": 0
@@ -77,7 +77,8 @@
           "current_value": [
             "https://img-tc.tapimg.com/market/images/bceeb57e64998248320e43af453f9f4b.jpg",
             "https://img-tc.tapimg.com/market/images/fe483caa693ff9bc78b45b8bf62e80f1.jpg",
-            "https://img-tc.tapimg.com/market/images/c0f818fbfb8f5e29fd1d592067ac14d7.jpg"
+            "https://img-tc.tapimg.com/market/images/c0f818fbfb8f5e29fd1d592067ac14d7.jpg",
+            "https://img-tc.tapimg.com/market/images/9a0385eab72c0031431adc93619875b7.jpg"
           ],
           "field_id": "screenshots",
           "filled": true,
