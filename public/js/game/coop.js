@@ -123,6 +123,7 @@ const css = `
 .coop-card label{display:flex;flex-direction:column;gap:4px}.coop-card input,.coop-card select{font:inherit;box-sizing:border-box;width:100%;min-height:44px;border:1px solid #7e927a;border-radius:8px;background:white;color:#244833;padding:8px}
 .coop-actions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.coop-card button,.coop-entry{background:#3b7049;color:#fff8e9;border:2px solid #294b32;border-radius:10px;padding:9px 12px;min-height:44px;cursor:pointer}
 .coop-card button:focus-visible,.coop-entry:focus-visible{outline:3px solid #e5ae34;outline-offset:2px}.coop-card button:disabled{opacity:.55;cursor:default}
+.coop-card button.coop-btn-locked{opacity:.6;background:#6f8270;border-color:#52624f}
 .coop-card a{color:#27563c}.coop-rooms{list-style:none;padding:0;margin:8px 0}.coop-rooms li{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid #c9d2ba;padding:6px 0}.coop-rooms button{flex-shrink:0}
 .coop-status{min-height:1.4em;color:#884123}.coop-roster{padding:8px;background:#e8eedb;border-radius:8px}.coop-footer{font-size:12px}
 @media(max-height:430px){.coop-card{padding:10px}.coop-card h2{font-size:18px}.coop-card p{margin:3px 0}.coop-footer{display:none}.coop-actions{margin:5px 0}}
@@ -133,7 +134,7 @@ export class CooperativeLobby {
     this.game=game;this.getConfig=getConfig;this.onStart=onStart;this.onMessage=onMessage;this.onClose=onClose;this.onOpen=onOpen;
     this.connection=new CoopConnection(m=>this.message(m),s=>this.status(s),game);
     installLandscapeTyping();
-    this.page=1;this.total=0;this.opened=false;
+    this.page=1;this.total=0;this.opened=false;this.pendingInvite=null;this.roomsByCode=null;
     if(!document.getElementById('coop-shared-style')){const s=document.createElement('style');s.id='coop-shared-style';s.textContent=css;document.head.append(s);}
     const entry=document.createElement('button');entry.className='coop-entry';entry.type='button';entry.dataset.act='coop';entry.textContent='联机大厅 · 2–'+GAMES[game].max+'人合作';menu.append(entry);entry.addEventListener('click',()=>this.open());
     this.entry=entry;
@@ -156,7 +157,11 @@ export class CooperativeLobby {
     panel.addEventListener('click',e=>{const b=e.target.closest('[data-do]');if(b)this.action(b.dataset.do);e.stopPropagation();});
     this.field('filter').addEventListener('change',()=>{this.page=1;this.list();});
     const intent=new URLSearchParams(location.search).get('coop');
-    if(intent){setTimeout(()=>{this.open();if(intent==='create')this.action('create');else if(/^\d{6}$/.test(intent)){this.field('code').value=intent;this.status('邀请房间已填入；需要密码的房间请填密码后加入');}},300);}
+    if(intent){setTimeout(()=>{this.open();
+      // 联机大厅的「创建房间」链接只把玩家带到大厅，建房由玩家自己点，避免昵称/房间名/密码还没填就静默建房。
+      if(intent==='create'){const b=this.panel.querySelector('[data-do="create"]');b.focus();this.status('填好昵称、房间名称、人数和密码后点「创建房间」');}
+      else if(/^\d{6}$/.test(intent)){this.pendingInvite=intent;this.field('code').value=intent;this.status('邀请房间 '+intent+' 已填入，正在确认房间状态…');}
+    },300);}
   }
   field(k){return this.panel.querySelector('[data-field="'+k+'"]');}
   status(s){this.panel.querySelector('.coop-status').textContent=s;}
@@ -170,14 +175,14 @@ export class CooperativeLobby {
       for(const[el,prev]of this._pannedAncestors)el.style.touchAction=prev;this._pannedAncestors=[];
     }
   }
-  open(){this.opened=true;this.onOpen();this.setPanelVisible(true);this.field('name').focus();if(!this.connection.room)this.connection.connect('list');else this.roster();}
+  open(){this.opened=true;this.onOpen();this.setPanelVisible(true);this.field('name').focus();const r=this.connection.room;if(!r)this.connection.connect('list');else{this.roster();this.status('你已在房间 '+r.code+'，可用下方「准备 / 开始合作 / 复制邀请链接 / 退出房间」；想新建或加入别的房间请先点「退出房间」');}}
   close(){if(this.connection.room&&!this.connection.active){this.status('请开始合作或退出房间后返回游戏');return;}this.opened=false;this.setPanelVisible(false);this.onClose();this.entry.focus();}
   list(){if(this.connection.socket?.readyState===1)this.connection.send({type:'list',page:this.page,passwordFilter:this.field('filter').value});else this.connection.connect('list',null,null,{page:this.page,passwordFilter:this.field('filter').value});}
   action(kind){
     const c=this.connection,name=this.field('name').value.trim()||'玩家',code=this.field('code').value.trim(),password=this.field('password').value;
     try{localStorage.setItem('gamehub-nickname',name);}catch{}
     if(kind==='create'||kind==='join'){
-      if(c.room){this.status('请先退出当前房间');return;}
+      if(c.room){this.status('你已在房间 '+c.room.code+'，请先点「退出房间」再'+(kind==='create'?'创建新房间':'加入其他房间'));return;}
       if(kind==='join'&&!/^\d{6}$/.test(code)){this.status('请输入六位房间号');return;}
       c.connect(kind,name,code,{password,roomName:this.field('roomName').value.trim(),maxPlayers:+this.field('capacity').value,config:this.getConfig()});
     } else if(kind==='refresh')this.list();
@@ -192,19 +197,33 @@ export class CooperativeLobby {
     const u=new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.zhengxiaohui.cn/html/game/'+GAMES[this.game].path+'/index.html');u.search='';u.hash='';u.searchParams.set('coop',this.connection.room.code);
     try{await navigator.clipboard.writeText(u.href);this.status('邀请链接已复制，发给朋友后即可加入');}catch{this.status(u.href);}
   }
+  autoJoin(){
+    const code=this.pendingInvite;
+    if(this.connection.room){this.pendingInvite=null;return;}
+    this.pendingInvite=null;
+    const room=this.roomsByCode?.get(code);
+    if(!room){this.status('邀请房间 '+code+' 不在线或已结束；房主重新建房后再点「加入房间」');return;}
+    if(room.players.length>=room.maxPlayers){this.status('邀请房间 '+code+' 已满员；可以让房主开一个新房间');return;}
+    if(room.started&&!room.canJoin){this.status('邀请房间 '+code+' 已在游戏中且不支持中途加入；房主重开后点「加入房间」');return;}
+    if(room.hasPassword){this.field('password').focus();this.status('邀请房间 '+code+' 需要密码，请填写密码后点「加入房间」');return;}
+    this.field('code').value=code;this.status('正在加入邀请房间 '+code+'…');this.action('join');
+  }
   roster(){
     const c=this.connection,r=c.room,roster=this.panel.querySelector('.coop-roster');
     roster.hidden=!r;this.panel.querySelector('.coop-room-actions').hidden=!r;if(this.field('hero'))this.field('hero').disabled=!!r?.players.find(p=>p.slot===c.slot)?.ready;
     if(r){roster.textContent='房间 '+r.code+' · '+r.name+' · '+r.players.map(p=>(p.slot===0?'房主 ':'')+p.name+(p.ready?' ✓':' 等待准备')).join(' / ');this.panel.querySelector('[data-do="ready"]').hidden=c.host||r.started;this.panel.querySelector('[data-do="start"]').hidden=!c.host||r.started;if(this.field('hero'))this.field('hero').disabled=!!r.players.find(p=>p.slot===c.slot)?.ready;this.panel.querySelector('[data-do="ready"]').textContent=r.players.find(p=>p.slot===c.slot)?.ready?'取消准备':'准备';}
     if(r&&c.host)for(const p of r.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.type='button';b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=e=>{e.stopPropagation();c.send({type:'kick',slot:p.slot});};roster.append(b);}
-    for(const k of ['create','join'])this.panel.querySelector('[data-do="'+k+'"]').disabled=!!r;
+    // 已在房间时不再用 disabled 吞掉点击：按钮显示为锁定态但仍可点，点了才会说明原因和下一步。
+    for(const k of ['create','join']){const b=this.panel.querySelector('[data-do="'+k+'"]');b.classList.toggle('coop-btn-locked',!!r);b.setAttribute('aria-disabled',r?'true':'false');b.title=r?'已在房间 '+r.code+'，点「退出房间」后才能'+(k==='create'?'新建':'加入'):'';}
   }
   message(m){
     if(m.type==='rooms'){
       const ul=this.panel.querySelector('.coop-rooms');ul.replaceChildren();this.page=m.page;this.total=m.total;
+      this.roomsByCode=new Map(m.rooms.map(r=>[r.code,r]));
       if(!m.rooms.length){const li=document.createElement('li');li.textContent='暂无房间，可以创建一个邀请朋友';ul.append(li);}
-      for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=(r.started&&!r.canJoin)||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
+      for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');li.dataset.code=r.code;label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=(r.started&&!r.canJoin)||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
       const pager=this.panel.querySelector('.coop-pager');pager.hidden=m.total<=20;pager.querySelector('span').textContent=this.page+' / '+Math.max(1,Math.ceil(m.total/20));pager.querySelector('[data-do="prev"]').disabled=this.page<=1;pager.querySelector('[data-do="next"]').disabled=this.page>=Math.ceil(m.total/20);
+      if(this.pendingInvite)this.autoJoin();
     } else if(m.type==='joined'||m.type==='roster'){this.roster();if(m.type==='joined')this.status('已加入房间，队友准备后由房主开始');}
     else if(m.type==='start'){this.opened=false;this.setPanelVisible(false);this.onStart(m.config);}
     else if(m.type==='ended'){this.connection.disconnect();this.opened=true;this.setPanelVisible(true);this.status(m.message);this.roster();}
