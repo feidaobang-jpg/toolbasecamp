@@ -1,19 +1,17 @@
 {
+  "channel": "taptap-h5",
+  "title": "坦克大战 3D",
   "version": "coop-hub1",
-  "toyId": 39043249461248,
-  "slug": "feidao-tank-3d",
-  "source": "public/html/game/tank-3d",
-  "package": "game-projects/tank-3d/dist/coop-hub1/package",
+  "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+  "zip_sha256": "e846ccf62df9d37ff143e0b333291a2b723448193a8ebc8c820804f59baedbb2",
+  "zip_bytes": 416892,
   "files": {
     "audio.js": "5e8bb41f1723cca52940035d41cf0f69f8e0555d2a0ec38f47e8ced0e8d05e39",
     "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
-    "coop-shared.js": "92621763250dc3678531c5825db9e4155604333e100ee79411260aba414d16b9",
     "coop.js": "2a8709cdeb4bbdf31fcd499fb385b69a747c8ed54232e8deca08d5fc7f5622e1",
-    "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
-    "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
     "index.html": "d30e2ecfd32fe48a9b0272159ade9d40f38ed483059006e7574e4e81b2359bce",
     "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
-    "main.js": "bc276df4f269f46e54e3db339977d8f88d139f79209ca10db8416a5dfa951dfb",
+    "main.js": "22fc6e1126be3080ad1cc9ecceade667c7558a30038680f230db774082f413e9",
     "scene.js": "364bb0ed72e20394ef7aeea3a2032e83ab740b8de5fc32e571a4093b800845ae",
     "sim.js": "ff5b2f94123dbc581800f5b977d77f9f81ba62a38e1319e895c662b654dd22e5",
     "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
@@ -29,8 +27,13 @@
     "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
     "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
     "style.css": "ca67cabfb67945af808a18390fe9e170e040a704360bc9c7d35f1436890e9178",
-    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
+    "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
+    "coop-shared.js": "92621763250dc3678531c5825db9e4155604333e100ee79411260aba414d16b9"
   },
-  "packageHash": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
-  "status": "built_not_submitted"
+  "archive_root": "tank-3d/",
+  "monetization": "none",
+  "network": "Optional 2–4 player co-op using existing production WebSocket relay; single-player assets bundled.",
+  "status": "built_not_uploaded"
 }

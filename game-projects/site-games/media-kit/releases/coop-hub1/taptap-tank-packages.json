@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "current_bindings": [
+        {
+          "package_id": "270784",
+          "revision": 1041268,
+          "slot": "main"
+        }
+      ],
+      "list": [
+        {
+          "package_id": "271019",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "270784",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "269855",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        }
+      ],
+      "package_slots": {
+        "apk_mini_game_play": {
+          "available": false,
+          "expected": {
+            "kind": "none"
+          }
+        },
+        "main": {
+          "available": true,
+          "expected": {
+            "h5_version_id": "270784",
+            "kind": "h5"
+          }
+        },
+        "windows": {
+          "available": false,
+          "expected": {
+            "kind": "none"
+          }
+        }
+      },
+      "total": 3
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

@@ -1,10 +1,9 @@
 {
+  "id": 39043249461248,
+  "status": "published",
   "version": "coop-hub1",
-  "toyId": 39043249461248,
-  "slug": "feidao-tank-3d",
-  "source": "public/html/game/tank-3d",
-  "package": "game-projects/tank-3d/dist/coop-hub1/package",
-  "files": {
+  "package_sha256": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
+  "file_hashes": {
     "audio.js": "5e8bb41f1723cca52940035d41cf0f69f8e0555d2a0ec38f47e8ced0e8d05e39",
     "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
     "coop-shared.js": "92621763250dc3678531c5825db9e4155604333e100ee79411260aba414d16b9",
@@ -31,6 +30,9 @@
     "style.css": "ca67cabfb67945af808a18390fe9e170e040a704360bc9c7d35f1436890e9178",
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
   },
-  "packageHash": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
-  "status": "built_not_submitted"
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_X0l2USEs/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AVDJkYmP/index.html",
+  "submitted_at": "2026-10-07T02:35:39+00:00",
+  "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
+  "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
 }

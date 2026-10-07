@@ -18,12 +18,20 @@
   "last_published_version": null,
   "last_published_h5_version_id": null,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T02:29:16.246767+00:00",
+  "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
   "release_record": "releases/taptap-force3-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
     "等待TapTap正式审核；内容预审未通过，已按用户明确指令尝试提交，仍可能因IP风险驳回",
-    "v0.8.0 联机版本待TapTap构建验证与后续同步"
+    "v0.8.0 联机版本待TapTap构建验证与后续同步",
+    {
+      "version": "v0.8.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "package_sha256": "9c8671b099d1a72c6d64926f1ca44cbf3edd57670e7a5aeb5d0232bd0e753432",
+      "status": "built_waiting_current_review",
+      "reason": "平台当前旧包审核中，保留审核现场，本次稳定联机包待下一次可编辑草稿续发。",
+      "record": "releases/v0.8.0/handoff.json"
+    }
   ],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
   "agreement_authorized": true,

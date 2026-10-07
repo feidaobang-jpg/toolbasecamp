@@ -1,0 +1,277 @@
+{
+  "total": 15,
+  "pn": 1,
+  "ps": 20,
+  "list": [
+    {
+      "id": 40495283951616,
+      "title": "飞刀班长游戏合集",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-games/poster_22402.jpg",
+      "url": "https://www.bilibili.com/toy/feidao-games/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "COLLECTION",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-games/icon_22402_upload",
+      "watermark_enabled": false,
+      "ctime": 1791172531,
+      "mtime": 1791209062
+    },
+    {
+      "id": 40412421031936,
+      "title": "恐龙快打 3D：第一、二关",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-cadillacs-3d/poster_22351.png",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-cadillacs-3d/icon_22351_upload",
+      "watermark_enabled": false,
+      "ctime": 1791152839,
+      "mtime": 1791340619
+    },
+    {
+      "id": 39863936092160,
+      "title": "赤色要塞 3D",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-jackal-3d/poster_21706.png",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-jackal-3d/icon_21706_upload",
+      "watermark_enabled": false,
+      "ctime": 1791022032,
+      "mtime": 1791340456
+    },
+    {
+      "id": 39586315360256,
+      "title": "叠叠乐",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-sheepstack/poster_21465.png",
+      "url": "https://www.bilibili.com/toy/feidao-sheepstack/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-sheepstack/icon_21465_upload",
+      "watermark_enabled": false,
+      "ctime": 1790955866,
+      "mtime": 1790955866
+    },
+    {
+      "id": 39586310916096,
+      "title": "打砖块",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-brick-breaker/poster_21464.png",
+      "url": "https://www.bilibili.com/toy/feidao-brick-breaker/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-brick-breaker/icon_21464_upload",
+      "watermark_enabled": false,
+      "ctime": 1790955861,
+      "mtime": 1790955861
+    },
+    {
+      "id": 39043618560000,
+      "title": "百战天虫",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-worms/poster_20789.png",
+      "url": "https://www.bilibili.com/toy/feidao-worms/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-worms/icon_20789_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826657,
+      "mtime": 1790826657
+    },
+    {
+      "id": 39043580811264,
+      "title": "青蛙祖玛",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-frog-zuma/poster_20787.png",
+      "url": "https://www.bilibili.com/toy/feidao-frog-zuma/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-frog-zuma/icon_20787_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826509,
+      "mtime": 1790826509
+    },
+    {
+      "id": 39043471509504,
+      "title": "泡泡龙",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-bubble-dragon/poster_20785.png",
+      "url": "https://www.bilibili.com/toy/feidao-bubble-dragon/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-bubble-dragon/icon_20785_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826485,
+      "mtime": 1790826485
+    },
+    {
+      "id": 39043509258240,
+      "title": "飞行鸟",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-fly-bird/poster_20786.png",
+      "url": "https://www.bilibili.com/toy/feidao-fly-bird/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-fly-bird/icon_20786_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826444,
+      "mtime": 1790826444
+    },
+    {
+      "id": 39043324958720,
+      "title": "西游降魔",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-journey-west/poster_20781.png",
+      "url": "https://www.bilibili.com/toy/feidao-journey-west/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-journey-west/icon_20781_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826439,
+      "mtime": 1790826439
+    },
+    {
+      "id": 39043434010624,
+      "title": "连连看",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-lianliankan/poster_20784.png",
+      "url": "https://www.bilibili.com/toy/feidao-lianliankan/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-lianliankan/icon_20784_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826434,
+      "mtime": 1790826434
+    },
+    {
+      "id": 39043396261888,
+      "title": "宝石迷阵",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-gemswap/poster_20783.png",
+      "url": "https://www.bilibili.com/toy/feidao-gemswap/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-gemswap/icon_20783_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826429,
+      "mtime": 1790826429
+    },
+    {
+      "id": 39043286960128,
+      "title": "超级玛丽 3D：1-1 至 1-3",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/poster_21954.png",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-mario-3d/icon_20780_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826424,
+      "mtime": 1791336601
+    },
+    {
+      "id": 39043249461248,
+      "title": "坦克大战 3D",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-tank-3d/poster_20779.png",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-tank-3d/icon_20779_upload",
+      "watermark_enabled": false,
+      "ctime": 1790826385,
+      "mtime": 1791340539
+    },
+    {
+      "id": 38678478981120,
+      "title": "虫潮围城",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+      "watermark_enabled": false,
+      "ctime": 1790739397,
+      "mtime": 1791340593
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "verified_at": "2026-10-07T02:41:19.992Z",
+  "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+  "results": [
+    {
+      "game": "tank",
+      "url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23253/main.js",
+      "status": 200,
+      "actual_sha256": "bc276df4f269f46e54e3db339977d8f88d139f79209ca10db8416a5dfa951dfb",
+      "expected_sha256": "bc276df4f269f46e54e3db339977d8f88d139f79209ca10db8416a5dfa951dfb",
+      "ok": true
+    },
+    {
+      "game": "jackal",
+      "url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v23254/js/game.min.js",
+      "status": 200,
+      "actual_sha256": "502c17c6d45ffb3029b933837bbed53c40975341865915941cbe09465bbe5b03",
+      "expected_sha256": "502c17c6d45ffb3029b933837bbed53c40975341865915941cbe09465bbe5b03",
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v23255/js/game.min.js",
+      "status": 200,
+      "actual_sha256": "5a84890c212e1b7454479de498d8e8593e106a5d78eb4add9408a9317619d07e",
+      "expected_sha256": "5a84890c212e1b7454479de498d8e8593e106a5d78eb4add9408a9317619d07e",
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v23256/game.compat.js",
+      "status": 200,
+      "actual_sha256": "f3b81ee33c26c70a76e79e31c413a674c01d2ccb2e085e4a0e604f9244d1bb44",
+      "expected_sha256": "f3b81ee33c26c70a76e79e31c413a674c01d2ccb2e085e4a0e604f9244d1bb44",
+      "ok": true
+    }
+  ]
+}
