@@ -58,7 +58,30 @@ function allPlayers(){return G.coop?coopPlayers:[P];}
 function nearestPlayer(x,y){return allPlayers().filter(p=>p.alive).sort((a,b)=>dist2(a.x,a.y,x,y)-dist2(b.x,b.y,x,y))[0]||P;}
 export function setCoopInput(fn){inputProvider=fn;}
 export function leaveCoopSlot(slot){G.playerSlots=G.playerSlots.filter(s=>s!==slot);const p=coopPlayers.find(p=>p.slot===slot);if(p){p.alive=false;p.disconnected=true;p.obj.root.visible=false;}}
+// ---------- 地物增量同步 ----------
+// 地物（营房、大门、油桶、树……）动辄上千个，只在被摧毁或掉血时变化。过去每 65ms 的快照都把
+// 整份状态塞进包里（约占包体 57%），线路被撑满后加入者收包不及时，车就一卡一卡。
+// 现在只上送与"上次已发状态"不同的条目；每约 2.6 秒改与"本关初始状态"比对一次，
+// 这样中途加入、此前没收到过增量包的队友也能补齐现场。
+let staticSig = null, staticBase = null, staticTick = 0;
+export function markStaticsDirty() { staticSig = null; }
+function captureStaticBase() {
+  const list = L.statics, n = list.length;
+  staticBase = new Int16Array(n * 2);
+  for (let i = 0; i < n; i++) { const s = list[i]; staticBase[i * 2] = s ? (s.alive ? 1 : 0) : 2; staticBase[i * 2 + 1] = s ? Math.round(s.hp || 0) : 0; }
+  staticSig = null;
+}
+function staticRows() {
+  const list = L.statics, n = list.length, out = [], next = new Int16Array(n * 2);
+  for (let i = 0; i < n; i++) { const s = list[i]; next[i * 2] = s ? (s.alive ? 1 : 0) : 2; next[i * 2 + 1] = s ? Math.round(s.hp || 0) : 0; }
+  const full = !staticSig || staticSig.length !== n * 2 || !staticBase || staticBase.length !== n * 2 || (++staticTick % 40 === 1);
+  const ref = full ? staticBase : staticSig;
+  for (let i = 0; i < n * 2; i += 2) if (ref[i] !== next[i] || ref[i + 1] !== next[i + 1]) out.push([i / 2, next[i], next[i + 1]]);
+  staticSig = next;
+  return out;
+}
 export function joinCoopSlot(slot) {
+  markStaticsDirty();
   const existing=coopPlayers.find(p=>p.slot===slot);
   if(existing&&!existing.disconnected)return;
   if(existing){scene.remove(existing.obj.root);coopPlayers=coopPlayers.filter(p=>p!==existing);}
@@ -149,6 +172,7 @@ function ensureStage(n) { if (L.STAGE_NO !== n) { L.loadStage(n); world.rebuild(
 function setupScene() {
   clearAll();
   L.resetStatics(); world.resetAll();
+  captureStaticBase();
   for (const slot of G.coop ? G.playerSlots : [0]) {
     makePlayer(slot); coopPlayers.push(P);
   }
@@ -239,7 +263,7 @@ function spawnOffset(slot) { return G.coop ? slot * 2.2 : 0; }
 function makePlayer(slot = 0) {
   const obj = M.makeJeep(G.coop ? TEAM_COLORS[slot] : M.C.olive);markTree(obj.root);
   scene.add(obj.root);
-  P = { slot, weapon: 1, carried: 0, x: L.START.x + spawnOffset(slot), y: L.START.y, dir: L.START.dir, ang: DIR8[L.START.dir].a, r: 0.82, alive: true, invuln: 0, shield: 0, armor: G.armorMax || 3, hitFlash: 0, smokeT: 0, respawnT: 0, fireCd: 0, bombCd: 0, moving: false, obj, wheelSpin: 0, bob: 0, dust: 0, speed: 8.6 };
+  P = { slot, weapon: 1, carried: 0, x: L.START.x + spawnOffset(slot), y: L.START.y, dir: L.START.dir, ang: DIR8[L.START.dir].a, r: 0.82, alive: true, invuln: 0, shield: 0, armor: G.armorMax || 3, hitFlash: 0, smokeT: 0, respawnT: 0, fireCd: 0, bombCd: 0, moving: false, obj, wheelSpin: 0, bob: 0, dust: 0, speed: 8.6, vis: null };
 }
 
 function spawnEntity(s) {
@@ -372,7 +396,9 @@ function updatePlayer(dt) {
   // 方向换算：输入始终相对画面（镜头）。常规视角按镜头 yaw 换算；第一人称按车头+yaw 换算，
   // 且按住同一输入期间锁定换算结果（镜头会随车头转，避免画圈）。
   if (d0 >= 0) {
-    if(P.netInput){d=P.netInput.dir??-1;} else if (camCtl.fpNow) {
+    // 联机队友的 dir 已由本人按自己的镜头换算成世界方向（见 coopInput），主机直接采用；
+    // 电脑接管（computerInput）给的是相对本屏的方向，仍走下面的换算分支。
+    if (P.netInput && Number.isFinite(P.netInput.dir) && P.netInput.dir >= 0) { d = P.netInput.dir; } else if (camCtl.fpNow) {
       const q = ((Math.round((P.ang + camCtl.yaw) / (Math.PI / 4)) % 8) + 8) % 8;
       if (!fpLatch || fpLatch.d !== d0 || fpLatch.revision !== camCtl.lookRevision) fpLatch = { d: d0, w: (d0 + q) % 8, revision: camCtl.lookRevision };
       d = fpLatch.w;
@@ -386,7 +412,7 @@ function updatePlayer(dt) {
   P.moving = false;
   if (d >= 0) {
     P.dir = d;
-    if (!camCtl.fpNow) delete P.lookHeading;
+    if (!camCtl.fpNow && !P.netInput) delete P.lookHeading;
     const sp = P.speed * dt, dx = DIR8[d].x * sp, dy = DIR8[d].y * sp;
     const ox = P.x, oy = P.y;
     moveBody(P, Math.abs(dx) < 1e-6 ? 0 : dx, Math.abs(dy) < 1e-6 ? 0 : dy, P.r, P, true);
@@ -394,7 +420,8 @@ function updatePlayer(dt) {
     if (P.moving) { P.wheelSpin += sp * 2.6; P.dust += dt; if (P.dust > 0.07) { P.dust = 0; const t = L.terrainAt(P.x, P.y); if (t === L.T.SAND || t === L.T.ROAD || t === L.T.DIRT || t === L.T.FLOOR || t === L.T.STONE) fx.dust(P.x - DIR8[d].x * 1.2, P.y - DIR8[d].y * 1.2); } }
   }
   const oldAng = P.ang;
-  const targetAng = P.netInput ? (P.netInput.look ?? DIR8[P.dir].a) : camCtl.fpNow ? P.ang + camCtl.yaw : P.lookHeading !== undefined ? P.lookHeading : DIR8[P.dir].a;
+  // 联机队友：车头朝向由本人上报的世界朝向决定（否则会用主机视角的旧值把车头钉死）；无朝向时按行驶方向。
+  const targetAng = P.netInput ? (P.netInput.look ?? DIR8[d >= 0 ? d : P.dir].a) : camCtl.fpNow ? P.ang + camCtl.yaw : P.lookHeading !== undefined ? P.lookHeading : DIR8[P.dir].a;
   P.ang = approachAng(P.ang, targetAng, dt * (camCtl.fpNow ? 2.1 : 16));
   // 补偿实际模型转角，而非一次扣掉目标方向的 45°/90°：平移、倒车不会甩动玩家视线。
   if (camCtl.fpNow && !P.netInput) camCtl.rotate(-angDiff(oldAng, P.ang));
@@ -1124,7 +1151,13 @@ function updateBullets(dt) {
     for (let sub = 0; sub < 2 && !dead; sub++) {
       b.x += b.vx * dt / 2; b.y += b.vy * dt / 2;
       const victim=allPlayers().find(p=>p.alive&&G.mode==='play'&&dist2(b.x,b.y,p.x,p.y)<(p.r*.75+b.r)**2);
-      if(victim){withPlayer(victim,()=>hitPlayer(b.kind));fx.hit(b.x,b.y,1,0x9ff3ff);dead=true;break;}
+      if(victim){
+        // 演示模式挡下敌弹时记一笔：让 QA/排障能确认"无敌生效被吞掉"，而不是"子弹根本没打中"。
+        const demoBlocked = G.settings.demo && victim.slot === localSlot && !(victim.invuln > 0 || victim.shield > 0);
+        withPlayer(victim, () => hitPlayer(b.kind));
+        if (demoBlocked) ev('demoBlock');
+        fx.hit(b.x, b.y, 1, 0x9ff3ff); dead = true; break;
+      }
       if (!b.high) { const s = L.blockedShot(b.x, b.y); if (s) { fx.hit(b.x, b.y, 1); dead = true; break; } }
     }
     b.life -= dt;
@@ -1378,16 +1411,48 @@ function endGame(win, reason) {
 }
 
 // ---------- 渲染同步 ----------
+// 联机加入者是纯渲染端：所有车位姿（含自己的车）都来自约 15Hz 的主机快照，
+// 直接摆到 60Hz 画面上就会一顿一顿。这里按帧向权威值插值收敛；自己的车跟得更紧，避免操作发飘。
+// 房主两端都不需要：本机模拟本来就像画面一样连续。
+let remoteSmooth = false;
+export function setCoopRemoteSmooth(on) { remoteSmooth = !!on; if (!on) for (const p of coopPlayers) p.vis = null; }
+export function coopRemoteSmooth() { return remoteSmooth; }
+function visualPose(p, dt) {
+  // remoteSmooth 只在加入者（纯渲染端）打开：本机不做模拟，所有车位姿都来自 15Hz 快照，
+  // 直接按快照摆放会逐帧跳格。这里按帧向内插值；自己的车跟得更紧，减少操作延迟。
+  if (!remoteSmooth || G.mode !== 'play' || !p.alive) { p.vis = null; return { x: p.x, y: p.y, ang: p.ang }; }
+  if (!p.vis) p.vis = { x: p.x, y: p.y, ang: p.ang };
+  const k = 1 - Math.exp(-dt * (p.slot === localSlot ? 24 : 14));
+  p.vis.x += (p.x - p.vis.x) * k; p.vis.y += (p.y - p.vis.y) * k;
+  p.vis.ang = approachAng(p.vis.ang, p.vis.ang + angDiff(p.vis.ang, p.ang), k);
+  return p.vis;
+}
+// 供联机 QA：把远端车位瞬移 4 格，按固定步长步进插值，确认它逐帧收敛而不是一格跳到位。
+// 无头浏览器只有几帧/秒，真实帧率下的平滑只能这样定量验证，不能靠采样页面帧。
+export function interpProbe(dt = 1 / 60, frames = 5) {
+  const p = coopPlayers.find(q => q.slot !== localSlot && q.alive);
+  if (!p || !remoteSmooth || G.mode !== 'play') return null;
+  const x0 = p.x, vis = { x: x0, y: p.y, ang: p.ang };
+  p.vis = vis;
+  p.x = x0 + 4;
+  const steps = [];
+  let prev = x0;
+  for (let i = 0; i < frames; i++) { visualPose(p, dt); steps.push(+(p.vis.x - prev).toFixed(3)); prev = p.vis.x; }
+  const reached = +(p.vis.x - x0).toFixed(3);
+  p.x = x0; p.vis = null;
+  return { jump: 4, steps, reached };
+}
 export function render(dt, realT) {
   if (!P) return;
   for(const p of allPlayers())withPlayer(p,()=>{
   const o = P.obj;
+  const pose = visualPose(P, dt);
   // 第一人称时隐藏车体（相机在驾驶位内）；死亡隐藏逻辑保持不变
   o.root.visible = !(camCtl.fpNow&&P.slot===localSlot) && P.alive;
-  o.root.position.set(P.x, 0, Z(P.y));
-  o.body.rotation.y = -P.ang;
-  o.turret.position.set(-Math.sin(P.ang) * 0.82, 0, Math.cos(P.ang) * 0.82);
-  o.turret.rotation.y = G.settings.gun === 'up' ? 0 : -P.ang;
+  o.root.position.set(pose.x, 0, Z(pose.y));
+  o.body.rotation.y = -pose.ang;
+  o.turret.position.set(-Math.sin(pose.ang) * 0.82, 0, Math.cos(pose.ang) * 0.82);
+  o.turret.rotation.y = G.settings.gun === 'up' ? 0 : -pose.ang;
   P.bob += dt;
   o.body.position.y = P.moving ? Math.sin(P.bob * 26) * 0.035 : Math.sin(P.bob * 9) * 0.012;
   for (const w of o.wheels) w.rotation.x = -P.wheelSpin;
@@ -1432,6 +1497,7 @@ export function render(dt, realT) {
 }
 
 export function player() { return P; }
+export function players() { return allPlayers(); }
 export function mode() { return G.mode; }
 export function bossLock() { const s = G.boss && G.boss.state; return s === 'intro' || s === 'fight' || s === 'done' ? L.BOSS : null; }
 export function heliCam() { return heliOut && heliOut.obj ? { x: heliOut.x, y: heliOut.cy } : null; }
@@ -1485,17 +1551,30 @@ export function snapshotBoss(k) {
 
 // Authoritative gameplay state for cooperative guests; guests only render, never run AI/damage.
 export function coopInput(){
-  let dir=IN.dir();
-  if(dir>=0){const q=Math.round((camCtl.fpNow?P.ang+camCtl.yaw:-camCtl.yaw)/(Math.PI/4));dir=(dir+q+80)%8;}
-  return {dir,fire:IN.fire(),bomb:IN.bomb(),edges:['fireTap','bombTap'].filter(k=>IN.take(k)),look:P.lookHeading??P.ang,aim:camCtl.fpNow?P.ang+camCtl.yaw:P.ang};
+  const d0 = IN.dir();
+  // 世界朝向：第一人称按车头+拖动角；第三人称拖过视角才有明确朝向（与单机 lookHeading 同语义）。
+  const fpLook = camCtl.fpNow ? P.ang + camCtl.yaw : undefined;
+  const look = fpLook ?? P.lookHeading;
+  // 本机上送的是"世界方向/世界朝向"：本人的镜头（含第一人称）只有自己知道，主机按此直接开车并按需转车头。
+  const q = camCtl.fpNow ? 0 : -Math.round(camCtl.yaw / (Math.PI / 4));
+  const dir = d0 >= 0 ? (d0 + q + 80) % 8 : -1;
+  const aim = fpLook ?? look ?? (dir >= 0 ? DIR8[dir].a : P.ang);
+  return {dir,fire:IN.fire(),bomb:IN.bomb(),edges:['fireTap','bombTap'].filter(k=>IN.take(k)),look,aim};
+}
+// 数值只保留 4 位小数：0.1 毫米与 0.06 角分远超画面需要，却能把浮点尾巴（…99999995）
+// 从每个字段砍掉，联机包体小三成，加入者收包更及时。
+function netState(o, omit) {
+  const s = scalarState(o, omit);
+  for (const k in s) { const v = s[k]; if (typeof v === 'number' && v !== 0 && Math.abs(v) < 1e6) s[k] = Math.round(v * 1e4) / 1e4; }
+  return s;
 }
 export function coopSnapshot(){
   if(P){P.weapon=G.weapon;P.carried=G.carried;}
-  return {g:{...scalarState(G,['hi']),settings:G.settings,playerSlots:G.playerSlots,kills:G.kills,banner:G.banner,toast:G.toast,boss:{...scalarState(G.boss),tanks:(G.boss?.tanks||[]).map(e=>e.netId)}},
-    players:coopPlayers.map(p=>scalarState(p)),entities:ents.map(e=>({s:scalarState(e),data:e.data,tree:treeState(e.objRoot)})),
-    statics:L.statics.map(s=>s?{alive:s.alive,hp:s.hp}:null),
-    pows:pows.map(p=>({s:scalarState(p),tree:treeState(p.obj.root)})),kits:kits.map(k=>scalarState(k)),
-    bullets:pbul.map(b=>scalarState(b)),enemyBullets:ebul.map(b=>scalarState(b)),bombs:bombs.map(b=>scalarState(b)),arcs:earc.map(b=>scalarState(b))};
+  return {g:{...netState(G,['hi']),settings:G.settings,playerSlots:G.playerSlots,kills:G.kills,banner:G.banner,toast:G.toast,boss:{...netState(G.boss),tanks:(G.boss?.tanks||[]).map(e=>e.netId)}},
+    players:coopPlayers.map(p=>netState(p)),entities:ents.map(e=>({s:netState(e),data:e.data,tree:treeState(e.objRoot)})),
+    statics:staticRows(),
+    pows:pows.map(p=>({s:netState(p),tree:treeState(p.obj.root)})),kits:kits.map(k=>netState(k)),
+    bullets:pbul.map(b=>netState(b)),enemyBullets:ebul.map(b=>netState(b)),bombs:bombs.map(b=>netState(b)),arcs:earc.map(b=>netState(b))};
 }
 export function coopApply(data){
   if(!data?.g||!data.players)return;
@@ -1507,7 +1586,15 @@ export function coopApply(data){
   for(const e of ents.slice())if(!ids.has(e.netId)){scene.remove(e.objRoot);ents.splice(ents.indexOf(e),1);}
   for(const row of data.entities){let e=ents.find(e=>e.netId===row.s.netId);if(!e)e=spawnEntity(row.data);Object.assign(e,row.s);applyTree(e.objRoot,row.tree);}
   G.boss.tanks=(data.g.boss?.tanks||[]).map(id=>ents.find(e=>e.netId===id)).filter(Boolean);
-  data.statics.forEach((row,i)=>{const st=L.statics[i];if(st&&row){if(st.alive&&!row.alive){L.removeStatic(st);world.removeStatic(st);}st.hp=row.hp;}});
+  // 快照里只带变化的地物：[下标, 存活(1)/摧毁(0)/无地物(2), 血量]
+  for (const row of data.statics || []) {
+    const st = L.statics[row[0]];
+    if (!st || row[1] === 2) continue;
+    if (st.alive && !row[1]) { L.removeStatic(st); world.removeStatic(st); }
+    // 同一关内地物不会复活；重开本关时双方都会按初始状态重建，这里不处理"起死回生"。
+    if (row[2] !== undefined) st.hp = row[2];
+    st.hp = row[2];
+  }
   while(pows.length>data.pows.length){scene.remove(pows.pop().obj.root);}
   data.pows.forEach((row,i)=>{const p=pows[i]||spawnPow(row.s.x,row.s.y,row.s.flash,true);Object.assign(p,row.s);applyTree(p.obj.root,row.tree);});
   while(kits.length>data.kits.length)scene.remove(kits.pop().obj.root);
