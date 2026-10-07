@@ -1,9 +1,13 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-06T08:31:01Z */
+/** generated_at: 2026-10-07T08:06:53Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
+      { title: "HOLLOWMARK", url: "https://hollowmark.mindblown.ai/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/hollowmark/gameplay.jpg", external: true },
+      { title: "Canyon Overdrive", url: "https://canyonoverdrive.ai-created.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/canyon-overdrive/gameplay.jpg", external: true },
+      { title: "Flight 1073", url: "https://flight1073.pages.dev/play/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/flight-1073/gameplay.jpg", external: true },
+      { title: "FOE TO FLEET", url: "https://foe-to-fleet.miya333.chatgpt.site", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/foe-to-fleet/gameplay.jpg", external: true },
       { title: "MoxRide", url: "https://www.moxride.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/moxride/gameplay.png", external: true },
       { title: "中途岛海战·空中突击 / MIDWAY 1942: Air Strike", url: "https://ihca.cn/midway/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/midway-1942/gameplay.png", external: true },
       { title: "沙线行动 / SANDLINE", url: "https://ihca.cn/sandline/", thumb: "https://github.com/user-attachments/assets/0443c8e4-4060-49f2-af31-175138c4e6ab", external: true },
@@ -58,6 +62,7 @@
       { title: "准点下班，别被发现 / Clock Out Unseen", url: "https://www.bilibili.com/toy/clockout-unseen/index.html", thumb: "https://raw.githubusercontent.com/Ryan-fm/clockout-unseen/main/docs/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPuzzle', items: [
+      { title: "Astra 2048", url: "https://jianfan.app/2048/gpt/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astra-2048-eddy/gameplay.jpg", external: true },
       { title: "Vesper: The Last Light", url: "https://vesper.mansgullberg.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/vesper/gameplay.png", external: true },
       { title: "Mystery Town", url: "https://playableworld.itch.io/mystery-town", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mystery-town/gameplay.png", external: true },
       { title: "瓜体实验室", url: "https://melon-game.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/melon-lab/gameplay.jpg", external: true },
@@ -110,6 +115,8 @@
       { title: "Stillwater · Aquarium", url: "https://fish.kennyatx.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/stillwater-aquarium/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraRpg', items: [
+      { title: "The Fourth Knock", url: "https://nikhilsatishdesai.github.io/the-fourth-knock/play/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-fourth-knock/gameplay.jpg", external: true },
+      { title: "Saber / Descent", url: "https://vheissu.github.io/saber-battle/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/saber-descent/gameplay.jpg", external: true },
       { title: "The Sunshard", url: "https://mindblown.ai/games/the-sunshard", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/the-sunshard/gameplay.png", external: true },
       { title: "Lumbridge / Elderwood Realms", url: "https://elderwood-realms.rohannvarma.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/lumbridge/gameplay.jpg", external: true },
       { title: "Silent Meridian / 静默子午线", url: "https://silent-meridian.stackloom.org/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/silent-meridian/gameplay.png", external: true },
@@ -131,6 +138,7 @@
       { title: "Europe, the Game", url: "https://play.justmovetoeurope.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/europe-the-game/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraPlatform', items: [
+      { title: "Sulli RUN", url: "https://sulli-game.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/sulli-run/gameplay.jpg", external: true },
       { title: "Barrelbound: The Lost Cargo", url: "https://barrelbound.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/barrelbound/gameplay.jpg", external: true },
       { title: "STORM RACE", url: "https://storm-race.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/storm-race/gameplay.jpg", external: true },
       { title: "FANG STARLIGHT RUN", url: "https://fang-starlight-run.yosshy666.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/fang-starlight-run/gameplay.jpg", external: true },
@@ -184,8 +192,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-06T08:31:01Z",
-    count: 166,
+    generatedAt: "2026-10-07T08:06:53Z",
+    count: 174,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
