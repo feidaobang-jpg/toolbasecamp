@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-3d",
+  "version": "v0.9.1",
+  "classification": "严重修复（联机大厅手机无法滚动，共享coop.js重建进game.min.js）",
+  "site": {
+    "status": "public_verified",
+    "source_commit": "b646a109"
+  },
+  "toy": {
+    "id": 39863936092160,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_UFutFvlx/index.html",
+    "submitted_at": "2026-10-07T16:38:35+08:00",
+    "note": "预览实测 scrollTop 0→112 无报错后同包提交"
+  },
+  "build": "media-kit/releases/toy-v0.9.1/toy-build.json"
+}

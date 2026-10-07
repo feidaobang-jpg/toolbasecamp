@@ -48,21 +48,32 @@
   "site": {
     "status": "public_verified",
     "version": "web-lobby-scroll-v0.22.2",
+    "verified_at": "2026-10-07T16:34:00+08:00",
     "source_commit": "b646a109",
-    "verified_at": "2026-10-07T08:46:30+00:00",
-    "evidence": "线上 coop.js 含 .coop-card touch-action:auto；game.compat.js sha256 前缀 02050e60 与仓库一致"
+    "evidence": "线上 coop.js 含 setPanelVisible、三包含 touch-action:auto；www 触摸拖拽终验 scrollTop 0→201；game.compat.js sha256 前缀 02050e60 与仓库一致"
   },
   "toy": {
+    "id": 38678478981120,
     "status": "auditing",
     "version": "web-lobby-scroll-v0.22.2",
     "package_sha256": "b750987cb0fe1bd990e32da4f29fefc667453d78ae39176c94453b2f2d4852f3",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_6XRLBKIw/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_IYIwR4dU/index.html",
+    "submitted_at": "2026-10-07T16:45:00+08:00",
+    "note": "预览实测 ta=auto 0→201 无报错后以同包提交；取代在审的 v0.22.1 包；同包此前预览 preview_6XRLBKIw/提交 preview_SE9wxVRt，哈希一致不重复送审",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_SE9wxVRt/index.html",
-    "submitted_at": "2026-10-07T08:46:30+00:00",
-    "note": "预览服务 compat 哈希 978ea97a 与包内一致；包内 compat 即线上已验证 bundle 加存档命名空间变换"
+    "earlier_preview_url": "https://www.bilibili.com/toy/preview/preview_6XRLBKIw/index.html"
   },
   "taptap": {
     "status": "pending_sync",
-    "note": "虫潮 962354、坦克 962376 有映射；赤色/恐龙/玛丽/西游在审或草稿，按各自 taptap-sync 规则处理"
+    "app_id": 962354,
+    "note": "严重修复需同步，但本次会话预算不足以完整走 draft→上传→绑定→提审→三视口测试，避免留半截外部写入；下次相关任务按 taptap-release.md 读本记录继续，包体用主线 dcebeb97 后构建"
+  },
+  "bilibili_description": {
+    "status": "pending",
+    "videos": [
+      "BV1Ujad6DEuf",
+      "BV1WbHq6eEBt"
+    ],
+    "note": "细碎说明可并入下一次有意义的简介更新；现有简介未因此修复变得不准确，不强制立即改"
   }
 }
