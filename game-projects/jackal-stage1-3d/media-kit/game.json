@@ -137,7 +137,7 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.10.0",
+  "current_version": "v0.10.1",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "website_version": "v0.8.1",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
