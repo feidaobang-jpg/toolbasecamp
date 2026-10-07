@@ -30,19 +30,20 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_qgS5CBJG/index.html",
-    "verified_at": "2026-10-07T07:50:06+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AqVurCJH/index.html",
-    "submitted_version": "landscape-menu1",
-    "submitted_at": "2026-10-07T07:35:44+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_X0l2USEs/index.html",
+    "verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AVDJkYmP/index.html",
+    "submitted_version": "coop-hub1",
+    "submitted_at": "2026-10-07T02:35:39+00:00",
     "video_bindings": [
+      "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/landscape-menu1/handoff.json",
-    "published_version": "landscape-menu1",
+    "release_record": "releases/coop-hub1/handoff.json",
+    "published_version": "coop-hub1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "note": "fs-capable1 审核通过；公开 iframe v23219 的 main.js 为 fs-capable1，含 fsCapable 与 #btn-fs[hidden] 规则。",
-    "package_sha256": "86ca30f3d7167e78df59ddade957e7949dde13af09e29cc9b24138b57660e4cf",
+    "package_sha256": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -112,7 +113,9 @@
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_0pRaRPP1/index.html",
     "last_published_version": "landscape-menu1",
     "last_successful_sync_version": "landscape-menu1",
-    "last_successful_sync_at": "2026-10-07T07:50:06+08:00"
+    "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+    "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
   },
   "merged_from": {
     "game": "tank-battle",
@@ -121,11 +124,19 @@
   },
   "bilibili_videos": [
     {
+      "bvid": "BV1TepK69Eet",
+      "aid": 117397444957530,
+      "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+      "owner_mid": 16214353,
+      "mapping": "公开视频作者UID16214353、feidao-tank-3d入口与toy video list绑定已核验",
+      "publication_record": "../video/online-20261007/work/publication-result.json"
+    },
+    {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
       "title": "把坦克大战做成立体地图，这次能守住老鹰吗？",
       "owner_mid": 16214353,
-      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；Toy 无视频绑定"
+      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；toy video list已确认绑定保留"
     }
   ],
   "drag_camera_controls": {
@@ -177,19 +188,21 @@
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
     "status": "reviewing",
-    "submitted_version": "landscape-menu1",
-    "submitted_package_sha256": "77143f1eb30eae0f965417c2500a9674c2e5e457bfc09866e78ac38eab9a95cf",
-    "submitted_h5_version_id": 270784,
-    "draft_version_id": "1040971",
-    "submitted_at": "2026-10-07T00:43:20+00:00",
-    "last_published_version": "lobby1",
-    "last_published_h5_version_id": 269855,
+    "submitted_version": "coop-hub1",
+    "submitted_package_sha256": "e846ccf62df9d37ff143e0b333291a2b723448193a8ebc8c820804f59baedbb2",
+    "submitted_h5_version_id": 271019,
+    "draft_version_id": "1041268",
+    "submitted_at": "2026-10-07T02:43:57.353796+00:00",
+    "last_published_version": "landscape-menu1",
+    "last_published_h5_version_id": 270784,
     "last_public_runtime_verified_version": null,
-    "release_record": "releases/taptap-sync-20261007/handoff.json",
+    "release_record": "releases/coop-hub1/handoff.json",
     "pending": [],
     "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
     "submission_time_source": "TapTap version log review_submitted.updated_time",
-    "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00"
+    "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
+    "submitted_source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+    "platform_version": "V-20261007-1"
   },
   "multiplayer": {
     "players": "2–4",
@@ -200,5 +213,6 @@
       "暂不支持中途加入、断线重连和房主迁移",
       "联机不写入单机存档/排行榜"
     ]
-  }
+  },
+  "publication_status": "published"
 }

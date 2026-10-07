@@ -22,7 +22,15 @@
   "release_record": "releases/taptap-force3-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
-    "v0.8.0 联机版本待TapTap构建验证与后续同步"
+    "v0.8.0 联机版本待TapTap构建验证与后续同步",
+    {
+      "version": "v0.8.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "package_sha256": "9c8671b099d1a72c6d64926f1ca44cbf3edd57670e7a5aeb5d0232bd0e753432",
+      "status": "built_waiting_next_taptap_sync",
+      "reason": "旧包已正式上线，本次稳定联机包保留，待后续TapTap构建验证与同步。",
+      "record": "releases/v0.8.0/handoff.json"
+    }
   ],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
   "agreement_authorized": true,

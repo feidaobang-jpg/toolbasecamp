@@ -642,7 +642,7 @@ function updateMove(a, dt) {
   if (a === G.player && !m.swung && d.hits.length && m.id !== 'mega' && m.t >= d.hits[0].t0 - 0.025) {
     m.swung = true;
     const heavy = isHeavyMove(a, m);
-    A.play(heavy ? 'whooshHeavy' : 'whoosh', heavy ? 0.9 : 0.75);
+    A.play(heavy ? 'whooshHeavy' : 'whoosh', heavy ? 0.6 : 0.45);   // 挥空声压低，让原版打击声做主
     if (heavy && !d.dash) swingArc(a, d.hits[0]);
   }
   // 判定
@@ -1096,6 +1096,8 @@ function applyHit(a, e, h, dir, splash) {
   if (w >= 1 && sfx === 'punch') sfx = 'punchHeavy';
   if (w >= 1 && sfx === 'kick') sfx = 'kickHeavy';
   if (sfx) A.play(sfx);
+  // 原作：连招最后一下打中时主角喊一声（杰克、汉娜、穆斯塔法、梅斯各自的喝声）
+  if (fin) A.play('finisher', 1, a.hero.id);
   if (h.sfx === 'slash') fx.blood(e.x, 1.3, e.z, Math.sin(dir) > 0 ? 1 : -1);
   const hs = [0.065, 0.1, 0.14][w];
   // 远处飞来的子弹 / 爆炸不让开枪的人跟着定格

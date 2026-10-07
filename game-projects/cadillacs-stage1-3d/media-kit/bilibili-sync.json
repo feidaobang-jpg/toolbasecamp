@@ -7,19 +7,21 @@
    "url": "https://www.bilibili.com/video/BV18XHW66E55/",
    "owner_uid": 16214353,
    "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-   "last_public_verified_version": "v0.6.0",
-   "status": "published（2026-10-05 16:37 公开可见）",
+   "last_public_verified_version": "v0.8.0",
+   "status": "public_verified",
    "publish_record": "video/views-20261005/work/publication-result.json",
    "toy_bound": true,
    "pinned_comment_rpid": 316113740017,
-   "last_public_verified_at": "2026-10-07T07:21:07+08:00",
+   "last_public_verified_at": "2026-10-07T02:30:21.062Z",
    "last_sync_record": "releases/v0.6.0/bilibili-sync.json",
    "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-   "description_sha256": "c1dfea28c5318d8b623e5b82e373d8327b094f1255914cf4e1b33bb454fdf2d3",
-   "lastPublicVerifiedVersion": "v0.6.0",
-   "descriptionHash": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001",
+   "description_sha256": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81",
+   "lastPublicVerifiedVersion": "v0.8.0",
+   "descriptionHash": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81",
    "release": "releases/v0.6.0/handoff.json",
-   "publicVerifiedAt": "2026-10-07T07:21:07+08:00"
+   "publicVerifiedAt": "2026-10-07T02:30:21.062Z",
+   "submitted_version": "v0.8.0",
+   "submitted_at": "2026-10-07T02:30:21.062Z"
   }
  ],
  "status": "public_verified",
@@ -137,6 +139,14 @@
    "summary": "原版拳脚、四名角色必杀与GO提示，合并v0.6.1竖屏菜单更新",
    "bvid": "BV18XHW66E55",
    "submitted_at": "2026-10-07T08:43:01.731112+08:00"
+  },
+  {
+   "version": "v0.8.1",
+   "classification": "严重问题修正",
+   "status": "pending_merge",
+   "summary": "原版音效对号入座：连招打击声、连招最后一下喝声、四人必杀喊声、GO 间隔。",
+   "reason": "现有简介「保留原版打击音、必杀语音」仍准确；并入下一次有意义的说明更新",
+   "record": "releases/v0.8.1/handoff.json"
   }
  ],
  "version": "v0.3.0",
@@ -154,5 +164,8 @@
   "version": "v0.6.0",
   "at": "2026-10-07T07:21:07+08:00",
   "description_sha256": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001"
- }
+ },
+ "latest_record": "releases/v0.8.0/bilibili-sync.json",
+ "pending": [],
+ "pending_note": "统一大厅和合作玩法说明已提交；仅公开核验成功的目标推进基线。"
 }

@@ -15,10 +15,19 @@
   "last_published_h5_version_id": 270783,
   "last_public_runtime_verified_version": null,
   "release_record": "releases/web-defense-v0.21.0/handoff.json",
-  "pending": [],
+  "pending": [
+    {
+      "version": "web-coop-v0.22.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "package_sha256": "983f1f96f7e04267c699dc87c8ac344b48b77ddeef12763fc636b8f7cdf6afd5",
+      "status": "built_waiting_current_review",
+      "reason": "平台当前旧包审核中，保留审核现场，本次稳定联机包待下一次可编辑草稿续发。",
+      "record": "releases/web-coop-v0.22.0/handoff.json"
+    }
+  ],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "本次CLI提交后保存记录时间；已收到review_submitted回执",
-  "last_status_checked_at": "2026-10-07T02:09:49.047489+00:00",
+  "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
   "submitted_source_commit": "8c6df1189d29307d19f87038a440c50b3a6a3e0b",
   "platform_version": "V-20261007-1"
 }
