@@ -1,0 +1,12 @@
+{
+  "root_rpid": "316305468593",
+  "bvid": "BV1WbHq6eEBt",
+  "account_mid": 16214353,
+  "reply_text": "安排上了！新增寒霜脉冲塔（群体减速）和重型迫击炮（范围清虫）；二周目可造80座防御设施，三周目起96座，炮塔火力也随周目增强。旧存档直接继续，电脑按L、手机点“建造”就能买。网站和Toy都已更新到v0.21.0，感谢建议，试试这版！",
+  "status": "public_verified_after_reload",
+  "reply_rpid": null,
+  "id_note": "公开DOM未暴露我方回复ID；以原评论rpid、本人UID和全文哈希查重",
+  "verified_at": "2026-10-07T02:24:34.244Z",
+  "screenshot": "qa/bilibili/comment-316305468593-reply.jpg",
+  "reply_sha256": "6d1a65272d11f1c54a665da318b711871ba95befe72c3c6bf36e367cfbb74af4"
+}

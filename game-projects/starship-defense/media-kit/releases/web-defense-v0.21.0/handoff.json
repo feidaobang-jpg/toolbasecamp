@@ -7,8 +7,8 @@
   "release_classification": "正式版本",
   "build": {
     "id": "web-defense-v0.21.0",
-    "commit": null,
-    "dirty": true,
+    "commit": "8c6df1189d29307d19f87038a440c50b3a6a3e0b",
+    "dirty": false,
     "fingerprint": "d357197bfc0a3800ead0250b1a8fd1d332e5b6862e09d13c5ad5c54f229a0d05",
     "files": {
       "game.js": "a15e88f1ec08e7a80452a8751134522edd2b38ec9eb4c5155421613faa1f0f44",
@@ -144,35 +144,87 @@
       "qa/continuous-build/qa.json",
       "qa/campaign/results.json",
       "qa/tactics/results.json",
-      "qa/combat-regression/combat.json"
+      "qa/combat-regression/combat.json",
+      "qa/toy-preview/results.json",
+      "qa/toy-public/results.json",
+      "qa/taptap-local/results.json",
+      "qa/website-public/results.json",
+      "qa/integration/results.json"
     ],
     "performance": "qa/performance/results.json",
     "physical_phone": false,
     "full_campaign_human_playthrough": false,
-    "performance_summary": "正常桌面96设施约79 FPS，普通手机视口模拟96设施约90 FPS；4倍CPU降速96设施约15 FPS，不代表真机验收。"
+    "performance_summary": "正常桌面96设施约79 FPS，普通手机视口模拟96设施约90 FPS；4倍CPU降速96设施约15 FPS，不代表真机验收。",
+    "toy_preview": "passed",
+    "toy_public": "passed",
+    "taptap_local": "passed",
+    "website_public": "passed",
+    "integration": "passed"
   },
   "channels": {
     "website": {
-      "status": "pending_deploy"
+      "status": "public_runtime_verified",
+      "source_commit": "8c6df1189d29307d19f87038a440c50b3a6a3e0b",
+      "verified_at": "2026-10-07T01:59:59.072348+00:00",
+      "files": {
+        "game.compat.js": {
+          "sha256": "dbbff327ed4064715950434a709bcbb2e0d2c4e4270c86b4c7cba43fe09fb522",
+          "matches_source": true
+        },
+        "game.js": {
+          "sha256": "a15e88f1ec08e7a80452a8751134522edd2b38ec9eb4c5155421613faa1f0f44",
+          "matches_source": true
+        },
+        "save-validation.js": {
+          "sha256": "e0c9ffb5c26a75ac69cf4202efe7d85e48f9acf790414e90739a63ce4fd850a8",
+          "matches_source": true
+        },
+        "defense-progression.js": {
+          "sha256": "d953c209529e0d2c9ef494be43f0adda85fc39bd714f70a46fcf56745e910ce8",
+          "matches_source": true
+        }
+      },
+      "html_new_build_header": true,
+      "deployment": "GitHub Actions自动部署；HTML缓存参数由部署流水线重写"
     },
     "toy": {
-      "status": "pending_package",
-      "target_id": "38678478981120"
+      "status": "published",
+      "version": "web-defense-v0.21.0",
+      "target_id": "38678478981120",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_oWo6TDI3/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CgLA0MYI/index.html",
+      "package_sha256": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
+      "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "public_verified_at": "2026-10-07T02:13:36.108489+00:00",
+      "qa": "qa/toy-public/results.json"
     },
     "taptap": {
-      "status": "pending_package",
-      "target_id": 962354
+      "status": "reviewing",
+      "target_id": 962354,
+      "version_id": "1041175",
+      "h5_version_id": 270949,
+      "package_sha256": "e9eb04e32b6af02eefdc5e5964be0c871fda1dd5d6ff44d3ba3aeb9b36caace7",
+      "release_record": "taptap-submit.json"
     },
     "bilibili": {
-      "status": "pending_sync",
+      "status": "public_verified",
       "targets": [
         "BV1Ujad6DEuf",
         "BV1WbHq6eEBt"
-      ]
+      ],
+      "record": "bilibili-sync.json"
     },
     "reply": {
-      "status": "pending_release_verification",
-      "rpid": "316305468593"
+      "root_rpid": "316305468593",
+      "bvid": "BV1WbHq6eEBt",
+      "account_mid": 16214353,
+      "reply_text": "安排上了！新增寒霜脉冲塔（群体减速）和重型迫击炮（范围清虫）；二周目可造80座防御设施，三周目起96座，炮塔火力也随周目增强。旧存档直接继续，电脑按L、手机点“建造”就能买。网站和Toy都已更新到v0.21.0，感谢建议，试试这版！",
+      "status": "public_verified_after_reload",
+      "reply_rpid": null,
+      "id_note": "公开DOM未暴露我方回复ID；以原评论rpid、本人UID和全文哈希查重",
+      "verified_at": "2026-10-07T02:24:34.244Z",
+      "screenshot": "qa/bilibili/comment-316305468593-reply.jpg",
+      "reply_sha256": "6d1a65272d11f1c54a665da318b711871ba95befe72c3c6bf36e367cfbb74af4"
     }
   },
   "cover": {
@@ -187,5 +239,9 @@
       "手机真机、多指触控及真人完整二/三周目平衡未验收",
       "四倍CPU降速极限负载低于30FPS"
     ]
-  }
+  },
+  "pending": [
+    "TapTap v0.21.0已提交审核；等待平台通过及公开入口核验。"
+  ],
+  "updated_at": "2026-10-07T02:25:06.248252+00:00"
 }

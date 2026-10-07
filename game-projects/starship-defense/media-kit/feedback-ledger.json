@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-05T12:22:35.819312+00:00",
+  "updated_at": "2026-10-07T02:25:06.248252+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -469,6 +469,23 @@
       "note": "原楼可见本人回复，UI未提供回复ID；以原评论rpid和回复哈希去重。",
       "reply_sha256": "17296b3c7da17e19bca8b499f68e6db37d9e935e353fca737c6a7e96731bf57d",
       "screenshot": "qa/captures/comment-reply.jpg"
+    },
+    {
+      "rpid": "316305468593",
+      "video": "BV1WbHq6eEBt",
+      "user": "bili_50539966983",
+      "text": "能不能增加一点新的炮塔,或者增加一下炮塔数量也行,玩到后面二周目、三周目，老难打了",
+      "kind": "feature",
+      "status": "fixed",
+      "fixed_in": "web-defense-v0.21.0",
+      "reply_rpid": null,
+      "reply_text": "安排上了！新增寒霜脉冲塔（群体减速）和重型迫击炮（范围清虫）；二周目可造80座防御设施，三周目起96座，炮塔火力也随周目增强。旧存档直接继续，电脑按L、手机点“建造”就能买。网站和Toy都已更新到v0.21.0，感谢建议，试试这版！",
+      "note": "公开DOM未暴露我方回复ID；以原评论rpid、本人UID和全文哈希查重",
+      "reply_status": "public_verified_after_reload",
+      "reply_sha256": "6d1a65272d11f1c54a665da318b711871ba95befe72c3c6bf36e367cfbb74af4",
+      "public_verified_at": "2026-10-07T02:24:34.244Z",
+      "record": "releases/web-defense-v0.21.0/comment-reply.json",
+      "screenshot": "qa/bilibili/comment-316305468593-reply.jpg"
     }
   ]
 }
