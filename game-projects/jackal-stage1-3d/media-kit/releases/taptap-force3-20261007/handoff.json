@@ -54,5 +54,58 @@
       "change": "新合并联机功能",
       "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
     }
-  ]
+  ],
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "source": "Codex",
+  "classification": "用户明确确认的内容预审风险试审",
+  "review_submitted": true,
+  "public_verified": false,
+  "release_schedule": {
+    "kind": "immediate"
+  },
+  "server_blockers": [],
+  "warnings": [
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "title"
+      ],
+      "message": "游戏标题包含知名游戏IP“赤色要塞”，可能有侵权嫌疑，如已获得官方正规授权，请前往游戏资质页面上传相关授权证明文件，否则将有驳回风险；如未获得授权，请修改游戏名称。"
+    }
+  ],
+  "authorization": "在说明平台IP预审提示、原作录音风险与可能驳回后，用户明确回复“试试吧”；结合已展示同版SCE自动签署授权，执行本次尝试。",
+  "ip_rights": {
+    "authorization_proof_provided": false,
+    "original_music_in_package": true,
+    "qualification_approved": false,
+    "preaudit_bypass_is_permission": false
+  },
+  "package_qa_reused_from": "releases/taptap-first-publish-20261007/qa.json",
+  "reuse_existing_tested_package": true,
+  "new_upload": false,
+  "admin_url": "https://developer.taptap.cn/v3/100726/app/962721/store/update",
+  "admin_url_source": "derived_from_ids",
+  "material_status": {
+    "icon": "已有正式图标",
+    "description": "已填写",
+    "developer_message": "已填写",
+    "screenshots": "真实实机截图已填写",
+    "banner": "横竖宣传图已填写",
+    "gameplay_demo": "已有实机视频",
+    "homepage": "实机演示与推荐语已填写"
+  },
+  "distribution": {
+    "android": "提供游玩（过审生效）",
+    "ios": "提供游玩（过审生效）",
+    "pc": "提供游玩（过审生效）"
+  },
+  "operational_stage": "first_launch",
+  "stage_evidence": "完整历史仅一个草稿，首次发布前无online/offline/published；当前已reviewing。",
+  "operations_handbook": {
+    "title": "首发上线期运营手册",
+    "url": "https://developer.taptap.cn/docs/store/operation/events/events-handbook/",
+    "description": "首发期的资源和社区活动说明；提交不代表已经获得推荐。"
+  },
+  "next_check": "后续用户查询或相关游戏任务时核对正式审核结果；本次不创建定时任务",
+  "next_action": "读版本历史及公开入口；online且实测后推进published基线；若驳回按真实原因处理。"
 }

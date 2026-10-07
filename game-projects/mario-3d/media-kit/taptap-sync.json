@@ -5,28 +5,81 @@
   "app_id": 962723,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "draft_waiting_ip_authorization",
-  "platform_status": "draft",
+  "status": "reviewing",
+  "platform_status": "reviewing",
   "staged_version": "v2.5.0",
   "staged_source_commit": "8a0114c5549d2916eed5de5bc2c052c38822d83f",
   "staged_package_sha256": "1574fa6ce2867446bc485e05d5df818a8d7d1919caa87d3a39774cdf8230529b",
   "staged_h5_version_id": 270893,
   "staged_h5_package_id": 71946,
   "draft_version_id": "1041014",
-  "submitted_version": null,
-  "submitted_at": null,
+  "submitted_version": "v2.5.0",
+  "submitted_at": "2026-10-07T02:30:03.682018+00:00",
   "last_published_version": null,
   "last_published_h5_version_id": null,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T01:48:16.846499+00:00",
-  "release_record": "releases/taptap-consent-20261007/handoff.json",
+  "last_status_checked_at": "2026-10-07T02:30:21.723283+00:00",
+  "release_record": "releases/taptap-force3-20261007/handoff.json",
   "pending_material_review": [],
   "pending": [
-    "处理平台实际IP与原版录音的合法转授权资格；资格成立后同版协议自动签署并重新预检"
+    "等待TapTap正式审核；内容预审未通过，已按用户明确指令尝试提交，仍可能因IP风险驳回"
   ],
-  "dedupe_rule": "现有草稿和包已上传绑定，处理授权后先读平台与本记录；同哈希不重复上传，不重复创建；提交前核对最新主线/网站版本，不代签新协议，不强制忽略预审风险。",
+  "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
   "agreement_authorized": true,
-  "agreement_signed": false,
-  "agreement_consent_record": "../../site-games/releases/taptap-consent-20261007/authorization.json",
-  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json"
+  "agreement_signed": true,
+  "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
+  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "agreement_signed_at": "2026-10-07T02:29:21.298200+00:00",
+  "submitted_package_sha256": "1574fa6ce2867446bc485e05d5df818a8d7d1919caa87d3a39774cdf8230529b",
+  "submitted_h5_version_id": 270893,
+  "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
+  "force_submission_authorized": true,
+  "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "content_preaudit_passed": false,
+  "content_preaudit_warnings": [
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "title"
+      ],
+      "message": "游戏标题包含知名IP‘超级玛丽’，可能存在侵权风险；如已获得官方授权，请前往游戏资质页面上传相关授权文件，否则建议修改标题。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "description"
+      ],
+      "message": "游戏简介中引用了知名IP‘超级玛丽’，若无官方授权请修改相关表述，或在资质页面补充上传授权证明。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "icon"
+      ],
+      "message": "游戏图标使用了知名角色形象，存在侵权风险，请提供相应授权证明或更换为原创美术素材。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "screenshots"
+      ],
+      "message": "游戏截图中使用了大量知名IP的美术资产与角色形象，存在版权侵权风险，请在资质页面上传授权资质或调整游戏内相关素材。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "banner_4"
+      ],
+      "message": "宣传图中包含知名IP角色与元素，存在版权风险，建议上传相关授权书或替换素材。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "cover_vertical"
+      ],
+      "message": "竖版封面中包含知名IP角色与元素，存在版权风险，建议上传相关授权书或替换素材。"
+    }
+  ],
+  "rights_proof_provided": false,
+  "pending_updates": []
 }

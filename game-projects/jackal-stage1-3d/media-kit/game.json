@@ -374,15 +374,27 @@
     "developer_id": 100726,
     "app_id": 962721,
     "automatic_sync_enabled": true,
-    "status": "draft_waiting_ip_authorization",
+    "status": "reviewing",
     "staged_version": "v0.8.1",
     "staged_h5_version_id": 270833,
     "draft_version_id": "1041012",
     "last_published_version": null,
     "sync_record": "taptap-sync.json",
-    "release_record": "releases/taptap-consent-20261007/handoff.json",
+    "release_record": "releases/taptap-force3-20261007/handoff.json",
     "agreement_authorized": true,
-    "agreement_signed": false
+    "agreement_signed": true,
+    "submitted_version": "v0.8.1",
+    "submitted_h5_version_id": 270833,
+    "submitted_at": "2026-10-07T02:28:18.912443+00:00",
+    "force_submission_authorized": true,
+    "pending_updates": [
+      {
+        "source_version": "v0.9.0",
+        "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+        "change": "新合并联机功能",
+        "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
+      }
+    ]
   },
   "website": {
     "version": "v0.8.0-bgmfull1",
