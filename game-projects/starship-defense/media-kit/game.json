@@ -1,30 +1,48 @@
 {
-  "site_list_name": "虫潮围城",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
-  "pending_release": "web-defense-v0.21.0",
+  "game_id": "chongchao-qianshao",
+  "name": "虫潮围城",
+  "engine": "Three.js r152",
+  "current_version": "web-coop-v0.22.0",
+  "entrypoint": "public/html/game/starship-defense/index.html",
+  "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
+  "release_intent": "web_demo",
+  "development_model": null,
+  "toy_id": "38678478981120",
+  "publication_status": "published",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_CgLA0MYI/index.html",
+  "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "media_readiness": "partial",
+  "qa": "releases/web-defense-v0.21.0/qa/website/results.json",
+  "pending_toy_merge": [
+    {
+      "version": "web-coop-v0.22.0",
+      "record": "releases/web-coop-v0.22.0/handoff.json",
+      "status": "pending_sync",
+      "task": "01a113e9-f575-71c3-8d22-cb78d8f7c821-multiplayer-01"
+    }
+  ],
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-06T23:18:57.080Z",
+    "verified_at": "2026-10-07T02:13:36.108489+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CgLA0MYI/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+    "zip_sha256": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
     "submitted_date": "2026-10-07",
-    "release_record": "releases/web-tactics-v0.20.0/handoff.json",
-    "submitted_version": "web-tactics-v0.20.0",
-    "published_version": "web-tactics-v0.20.0",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
-    "note": "网站运行与同包Toy预览通过；审核已通过，公开入口已核验战术部署、双洞口预告与新兵补给。",
-    "submitted_at": "2026-10-07T07:09:30.748598+08:00",
-    "package_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+    "release_record": "releases/web-defense-v0.21.0/handoff.json",
+    "submitted_version": "web-defense-v0.21.0",
+    "published_version": "web-defense-v0.21.0",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_CgLA0MYI/index.html",
+    "note": "寒霜脉冲塔、重型迫击炮及二/三周目扩容与伤害成长已在公开入口通过电脑/手机视口模拟验证。",
+    "package_sha256": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -58,62 +76,39 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-06T23:18:57.080Z",
+    "published_verified_at": "2026-10-07T02:13:36.108489+00:00",
     "status": "published",
-    "package_hash": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a"
+    "package_hash": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
+    "submission_time_note": "本版本精确提交时间未单独保存；状态、包哈希与公开核验见发布记录。"
   },
-  "pending_toy_merge": [],
-  "website_version": "web-defense-v0.21.0",
-  "campaign_difficulty": {
-    "default": "normal",
-    "choices": [
-      "casual",
-      "normal",
-      "hard"
-    ],
-    "labels": [
-      "休闲",
-      "普通",
-      "困难"
-    ],
-    "selection": "新游戏前选择，本局固定，随本地/云存档保存",
-    "legacy_save": "normal",
-    "operation_difficulty": "独立，不叠加战役倍率"
-  },
-  "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
-  "website_verified_at": "2026-10-07T07:04:42.608681+08:00",
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "publication_status": "published",
-  "website_commit": "ac026d4ef5c407052ea256288f22f982bb478a35",
-  "preview_version": "web-tactics-v0.20.0",
+  "published_toy_version": "web-defense-v0.21.0",
+  "web_toy_versions_match": false,
+  "migration": {
+    "source": "D:/project/gpt/worlds/breachline",
+    "mode": "asset-and-presentation-merge",
+    "full_native_port": false
+  },
+  "visual_style": "Segmented chitin insects with six jointed legs, mandibles, bone spikes and small red eyes; muted species palettes, winged variants and enlarged queen abdomen. Day/night surface and automatic cave flashlight retained.",
+  "skill_updated": true,
+  "steam_status": "Optional possibility only; Toy/video response determines any future decision",
+  "extension_review_status": "published",
+  "preview_version": "web-defense-v0.21.0",
+  "submitted_toy_version": "web-defense-v0.21.0",
+  "website_version": "web-coop-v0.22.0",
+  "website_verified_at": "2026-10-07T02:27:36.149457+00:00",
+  "site_list_name": "虫潮围城",
+  "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
+  "default_theme": "dark",
+  "feedback_ledger": "feedback-ledger.json",
+  "handoff": "releases/web-coop-v0.22.0/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
-  "live": {
-    "version": "live-v0.1.0",
-    "entrypoint": "public/html/game/starship-defense/live.html",
-    "console": "public/html/game/starship-defense/live-console.html",
-    "runtime": "game-projects/starship-defense/live",
-    "status": "local_verified_pending_bilibili_permissions",
-    "modes": [
-      "auto",
-      "assist",
-      "host"
-    ],
-    "release_record": "releases/live-v0.1.0/handoff.json",
-    "normal_gameplay_changed": false
+  "environments": {
+    "desert": "第1–3章：荒漠，可选白天/夜晚",
+    "frost": "第4–6章：极光冰原",
+    "hive": "第7–10章：虫巢边境",
+    "preview": "自由测试 → 测试台 → 战场环境"
   },
-  "name": "虫潮围城",
-  "multiplayer": {
-    "players": "2–4",
-    "hub": "https://www.zhengxiaohui.cn/game-online.html",
-    "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
-    "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
-    "limitations": [
-      "暂不支持中途加入、断线重连和房主迁移",
-      "联机不写入单机存档/排行榜",
-      "当前联机仅合作守城，副本使用单机入口"
-    ]
-  },
-  "qa": "releases/web-defense-v0.21.0/qa/website/results.json",
   "operations": {
     "count": 9,
     "difficulties": [
@@ -133,6 +128,18 @@
       5
     ]
   },
+  "lighting": {
+    "surface_default": "day",
+    "options": [
+      "day",
+      "night"
+    ],
+    "saved": true,
+    "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
+  },
+  "bilibili_sync": "bilibili-sync.json",
+  "pending_release": "web-coop-v0.22.0",
+  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "drag_camera_controls": {
     "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
     "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
@@ -140,6 +147,45 @@
     "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局",
     "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
+  },
+  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
+  "website_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+  "campaign_difficulty": {
+    "default": "normal",
+    "choices": [
+      "casual",
+      "normal",
+      "hard"
+    ],
+    "labels": [
+      "休闲",
+      "普通",
+      "困难"
+    ],
+    "selection": "新游戏前选择，本局固定，随本地/云存档保存",
+    "legacy_save": "normal",
+    "operation_difficulty": "独立，不叠加战役倍率"
+  },
+  "live": {
+    "version": "live-v0.1.0",
+    "entrypoint": "public/html/game/starship-defense/live.html",
+    "console": "public/html/game/starship-defense/live-console.html",
+    "runtime": "game-projects/starship-defense/live",
+    "status": "local_verified_pending_bilibili_permissions",
+    "modes": [
+      "auto",
+      "assist",
+      "host"
+    ],
+    "release_record": "releases/live-v0.1.0/handoff.json",
+    "normal_gameplay_changed": false
+  },
+  "touch_control_inset": {
+    "side_css_px": 40,
+    "bottom_css_px": 36,
+    "safe_area_added": true,
+    "previous_version": "web-live-adapter-v0.19.2",
+    "physical_phone_test": false
   },
   "restart_audio_fix": {
     "version": "web-restart-audio-v0.19.4",
@@ -161,10 +207,29 @@
     "battle_report": true,
     "physical_phone_test": false
   },
-  "migration": {
-    "source": "D:/project/gpt/worlds/breachline",
-    "mode": "asset-and-presentation-merge",
-    "full_native_port": false
+  "taptap": {
+    "schema_version": 1,
+    "game_id": "starship-defense",
+    "developer_id": 100726,
+    "app_id": 962354,
+    "automatic_sync_enabled": true,
+    "authorization_date": "2026-10-07",
+    "status": "reviewing",
+    "submitted_version": "web-defense-v0.21.0",
+    "submitted_package_sha256": "e9eb04e32b6af02eefdc5e5964be0c871fda1dd5d6ff44d3ba3aeb9b36caace7",
+    "submitted_h5_version_id": 270949,
+    "draft_version_id": "1041175",
+    "submitted_at": "2026-10-07T02:09:49.047489+00:00",
+    "last_published_version": "web-tactics-v0.20.0",
+    "last_published_h5_version_id": 270783,
+    "last_public_runtime_verified_version": null,
+    "release_record": "releases/web-defense-v0.21.0/handoff.json",
+    "pending": [],
+    "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
+    "submission_time_source": "本次CLI提交后保存记录时间；已收到review_submitted回执",
+    "last_status_checked_at": "2026-10-07T02:09:49.047489+00:00",
+    "submitted_source_commit": "8c6df1189d29307d19f87038a440c50b3a6a3e0b",
+    "platform_version": "V-20261007-1"
   },
   "defense_update": {
     "attack_towers": 8,
@@ -185,71 +250,16 @@
     "legacy_save_compatible": true,
     "physical_phone_test": false
   },
-  "published_toy_version": "web-tactics-v0.20.0",
-  "handoff": "releases/web-coop-v0.22.0/handoff.json",
-  "bilibili_sync": "bilibili-sync.json",
-  "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
-  "game_id": "chongchao-qianshao",
-  "media_readiness": "partial",
-  "current_version": "web-coop-v0.22.0",
-  "engine": "Three.js r152",
-  "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-  "extension_review_status": "published",
-  "steam_status": "Optional possibility only; Toy/video response determines any future decision",
-  "environments": {
-    "desert": "第1–3章：荒漠，可选白天/夜晚",
-    "frost": "第4–6章：极光冰原",
-    "hive": "第7–10章：虫巢边境",
-    "preview": "自由测试 → 测试台 → 战场环境"
-  },
-  "submitted_toy_version": "web-tactics-v0.20.0",
-  "lighting": {
-    "surface_default": "day",
-    "options": [
-      "day",
-      "night"
-    ],
-    "saved": true,
-    "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
-  },
-  "skill_updated": true,
-  "development_model": null,
-  "web_toy_versions_match": false,
-  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
-  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "release_intent": "web_demo",
-  "entrypoint": "public/html/game/starship-defense/index.html",
-  "default_theme": "dark",
-  "visual_style": "Segmented chitin insects with six jointed legs, mandibles, bone spikes and small red eyes; muted species palettes, winged variants and enlarged queen abdomen. Day/night surface and automatic cave flashlight retained.",
-  "taptap": {
-    "schema_version": 1,
-    "game_id": "starship-defense",
-    "developer_id": 100726,
-    "app_id": 962354,
-    "automatic_sync_enabled": true,
-    "authorization_date": "2026-10-07",
-    "status": "reviewing",
-    "submitted_version": "web-tactics-v0.20.0",
-    "submitted_package_sha256": "1c3d930515bf1099bf6584097cc85916a002111c4bbe04243d84c6342d382902",
-    "submitted_h5_version_id": 270783,
-    "draft_version_id": "1040969",
-    "submitted_at": "2026-10-07T00:43:10+00:00",
-    "last_published_version": "web-touch-layout-v0.19.1",
-    "last_published_h5_version_id": 269751,
-    "last_public_runtime_verified_version": null,
-    "release_record": "releases/taptap-sync-20261007/handoff.json",
-    "pending": [],
-    "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
-    "submission_time_source": "TapTap version log review_submitted.updated_time",
-    "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00"
-  },
-  "toy_id": "38678478981120",
-  "touch_control_inset": {
-    "side_css_px": 40,
-    "bottom_css_px": 36,
-    "safe_area_added": true,
-    "previous_version": "web-live-adapter-v0.19.2",
-    "physical_phone_test": false
-  },
-  "feedback_ledger": "feedback-ledger.json"
+  "taptap_sync_status": "reviewing",
+  "multiplayer": {
+    "players": "2–4",
+    "hub": "https://www.zhengxiaohui.cn/game-online.html",
+    "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
+    "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
+    "limitations": [
+      "暂不支持中途加入、断线重连和房主迁移",
+      "联机不写入单机存档/排行榜",
+      "当前联机仅合作守城，副本使用单机入口"
+    ]
+  }
 }

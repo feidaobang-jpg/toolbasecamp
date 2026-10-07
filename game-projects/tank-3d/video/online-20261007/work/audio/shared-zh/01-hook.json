@@ -1,0 +1,88 @@
+{
+  "text": "这回守老鹰，终于有人帮忙了。坦克大战现在支持两到四人联机合作！",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1500000,
+      "text": "这"
+    },
+    {
+      "offset": 2625000,
+      "duration": 2875000,
+      "text": "回守"
+    },
+    {
+      "offset": 5625000,
+      "duration": 4875000,
+      "text": "老鹰"
+    },
+    {
+      "offset": 13625000,
+      "duration": 3375000,
+      "text": "终于"
+    },
+    {
+      "offset": 17125000,
+      "duration": 1875000,
+      "text": "有人"
+    },
+    {
+      "offset": 19125000,
+      "duration": 2875000,
+      "text": "帮忙"
+    },
+    {
+      "offset": 22000000,
+      "duration": 2125000,
+      "text": "了"
+    },
+    {
+      "offset": 29750000,
+      "duration": 8875000,
+      "text": "坦克大战"
+    },
+    {
+      "offset": 39875000,
+      "duration": 3625000,
+      "text": "现在"
+    },
+    {
+      "offset": 43625000,
+      "duration": 3125000,
+      "text": "支持"
+    },
+    {
+      "offset": 47000000,
+      "duration": 1875000,
+      "text": "两"
+    },
+    {
+      "offset": 48875000,
+      "duration": 1125000,
+      "text": "到"
+    },
+    {
+      "offset": 50125000,
+      "duration": 2375000,
+      "text": "四"
+    },
+    {
+      "offset": 52500000,
+      "duration": 1625000,
+      "text": "人"
+    },
+    {
+      "offset": 54375000,
+      "duration": 3875000,
+      "text": "联机"
+    },
+    {
+      "offset": 58375000,
+      "duration": 4250000,
+      "text": "合作"
+    }
+  ]
+}

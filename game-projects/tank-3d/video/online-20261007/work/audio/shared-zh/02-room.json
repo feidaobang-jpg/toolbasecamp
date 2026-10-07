@@ -1,0 +1,103 @@
+{
+  "text": "建个房间，把六位房间码告诉队友。只想跟熟人玩，还可以设个密码。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2000000,
+      "text": "建"
+    },
+    {
+      "offset": 3000000,
+      "duration": 625000,
+      "text": "个"
+    },
+    {
+      "offset": 3750000,
+      "duration": 5000000,
+      "text": "房间"
+    },
+    {
+      "offset": 11375000,
+      "duration": 1625000,
+      "text": "把"
+    },
+    {
+      "offset": 13125000,
+      "duration": 1375000,
+      "text": "六"
+    },
+    {
+      "offset": 14500000,
+      "duration": 1125000,
+      "text": "位"
+    },
+    {
+      "offset": 15750000,
+      "duration": 6125000,
+      "text": "房间码"
+    },
+    {
+      "offset": 22875000,
+      "duration": 2625000,
+      "text": "告诉"
+    },
+    {
+      "offset": 25625000,
+      "duration": 3250000,
+      "text": "队友"
+    },
+    {
+      "offset": 34625000,
+      "duration": 2000000,
+      "text": "只"
+    },
+    {
+      "offset": 36625000,
+      "duration": 1500000,
+      "text": "想"
+    },
+    {
+      "offset": 38250000,
+      "duration": 1375000,
+      "text": "跟"
+    },
+    {
+      "offset": 39750000,
+      "duration": 3875000,
+      "text": "熟人"
+    },
+    {
+      "offset": 43625000,
+      "duration": 4000000,
+      "text": "玩"
+    },
+    {
+      "offset": 51125000,
+      "duration": 2000000,
+      "text": "还"
+    },
+    {
+      "offset": 53250000,
+      "duration": 1625000,
+      "text": "可以"
+    },
+    {
+      "offset": 55000000,
+      "duration": 1750000,
+      "text": "设"
+    },
+    {
+      "offset": 56750000,
+      "duration": 875000,
+      "text": "个"
+    },
+    {
+      "offset": 57750000,
+      "duration": 4375000,
+      "text": "密码"
+    }
+  ]
+}

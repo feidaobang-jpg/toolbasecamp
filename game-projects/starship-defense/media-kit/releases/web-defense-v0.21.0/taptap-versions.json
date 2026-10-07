@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "list": [
+        {
+          "created_time": 1791338632,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261007-1",
+          "version_id": "V-20261007-1"
+        },
+        {
+          "created_time": 1791333351,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007",
+          "version_id": "V-20261007"
+        },
+        {
+          "created_time": 1791293606,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261006",
+          "version_id": "V-20261006"
+        }
+      ],
+      "page": 1,
+      "page_size": 100,
+      "total": 3
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "pagination": {
+      "pages": 1,
+      "truncated": false
+    },
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

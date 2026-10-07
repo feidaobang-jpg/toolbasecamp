@@ -1,0 +1,18 @@
+{
+  "title": "虫潮围城",
+  "slug": "chongchao-qianshao",
+  "version": "web-defense-v0.21.0",
+  "source": "public\\html\\game\\starship-defense",
+  "zip_sha256": "e7aa9cb03cf01de344d9c8624b973fdc77e543dabfd2a96aed7b5e0a7d50e6be",
+  "files": {
+    "index.html": "5b8716aa2eb66f5e2e87f46742ba48fc92914ca0f427770756ea1b04f538c119",
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "game.compat.js": "07df58c4b3de8e25e188eddc9bb70bf053c56e904658211b05f8b8df8c5393fd",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245"
+  },
+  "status": "built_not_submitted",
+  "published_toy_unchanged": true
+}

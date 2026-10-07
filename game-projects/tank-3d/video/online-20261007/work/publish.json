@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "game_name": "坦克大战",
+  "game_version": "landscape-menu1",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "最终成片尚待用户人工审片确认",
+        "人声可懂度与主观听感待人工听审",
+        "投稿时核对实际分区、AI声明入口、话题与双封面入口"
+      ]
+    }
+  ],
+  "ready_to_upload": false
+}

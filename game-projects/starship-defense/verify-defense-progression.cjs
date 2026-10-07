@@ -25,7 +25,7 @@ async function run(){
     await game.locator('#buildGrid .shopItem').filter({hasText:name}).click();
     assert.equal(await game.evaluate(()=>__gameQA.place.kind),id);
     if(mobile)await game.locator('#placeOk').tap();else await page.keyboard.press('KeyJ');
-    assert.ok(await game.evaluate(id=>__gameQA.buildings.some(b=>b.kind===id),id));
+    await game.waitForFunction(id=>__gameQA.buildings.some(b=>b.kind===id),id);
     if(mobile)await game.locator('#placeCancel').tap();else await page.keyboard.press('Escape');
     await game.evaluate(()=>{const q=__gameQA;q.player.pos.x+=7;q.player.pos.y=q.groundY(q.player.pos.x,q.player.pos.z);q.player.mesh.position.copy(q.player.pos);});
    }

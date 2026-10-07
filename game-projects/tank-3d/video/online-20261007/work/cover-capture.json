@@ -1,0 +1,322 @@
+{
+  "method": "normal co-op start, C near preset selected via persistent player settings, ordinary W/A movement; read-only QA state",
+  "host": {
+    "uiMode": "game",
+    "overlay": null,
+    "paused": false,
+    "phase": "play",
+    "coop": {
+      "room": {
+        "code": "018705",
+        "name": "视频封面实拍",
+        "maxPlayers": 4,
+        "hasPassword": true,
+        "started": true,
+        "settings": {
+          "mode": "classic",
+          "stage": 1,
+          "cycle": 1,
+          "score": 0,
+          "lives": "classic",
+          "armor": "classic",
+          "seed": 925422,
+          "demo": false,
+          "coop": true
+        },
+        "players": [
+          {
+            "slot": 0,
+            "name": "封面一号",
+            "ready": true
+          },
+          {
+            "slot": 1,
+            "name": "封面二号",
+            "ready": true
+          }
+        ]
+      },
+      "slot": 0,
+      "host": true,
+      "states": 0,
+      "rtt": 0,
+      "epoch": 1
+    },
+    "players": [
+      {
+        "slot": 0,
+        "lives": 3,
+        "tank": {
+          "x": 64,
+          "y": 161,
+          "id": 2
+        }
+      },
+      {
+        "slot": 1,
+        "lives": 3,
+        "tank": {
+          "x": 128,
+          "y": 160,
+          "id": 3
+        }
+      }
+    ],
+    "display": {
+      "rotated": false,
+      "W": 1920,
+      "H": 1080,
+      "vw": 1920,
+      "vh": 1080,
+      "dpr": 1,
+      "touchOn": false,
+      "backing": [
+        1920,
+        1080
+      ]
+    },
+    "camera": "close",
+    "yawOffset": 0,
+    "fp": false,
+    "quality": {
+      "setting": "high",
+      "effective": "high",
+      "auto": null
+    },
+    "fs": false,
+    "fsCapable": true,
+    "fsLog": [],
+    "focus": "app",
+    "toast": null,
+    "touchHidden": true,
+    "keys": [],
+    "touchHold": [],
+    "stick": {
+      "id": null,
+      "axis": -1
+    },
+    "mode": "classic",
+    "stage": 1,
+    "cycle": 1,
+    "status": "play",
+    "player": {
+      "x": 64,
+      "y": 161,
+      "dir": 0,
+      "state": "active",
+      "stars": 0,
+      "shield": 0,
+      "invuln": 0,
+      "boats": 0,
+      "plate": 0
+    },
+    "run": {
+      "score": 0,
+      "lives": 3,
+      "hp": 3,
+      "armor": "classic",
+      "livesMode": "classic",
+      "demo": false,
+      "demoUsed": false,
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "hits": 0,
+        "stages": 0,
+        "pickups": 0,
+        "repairs": 0,
+        "bosses": 0
+      }
+    },
+    "bots": [
+      {
+        "type": "basic",
+        "state": "active",
+        "x": 14,
+        "y": 0,
+        "hp": 1
+      },
+      {
+        "type": "basic",
+        "state": "spawn",
+        "x": 192,
+        "y": 0,
+        "hp": 1
+      }
+    ],
+    "events": [
+      "spawn",
+      "spawn",
+      "playerSpawn",
+      "playerSpawn",
+      "fire",
+      "border",
+      "pop",
+      "fire",
+      "spawn",
+      "border",
+      "pop"
+    ],
+    "remixProgress": null
+  },
+  "guest": {
+    "uiMode": "game",
+    "overlay": null,
+    "paused": false,
+    "phase": "play",
+    "coop": {
+      "room": {
+        "code": "018705",
+        "name": "视频封面实拍",
+        "maxPlayers": 4,
+        "hasPassword": true,
+        "started": true,
+        "settings": {
+          "mode": "classic",
+          "stage": 1,
+          "cycle": 1,
+          "score": 0,
+          "lives": "classic",
+          "armor": "classic",
+          "seed": 925422,
+          "demo": false,
+          "coop": true
+        },
+        "players": [
+          {
+            "slot": 0,
+            "name": "封面一号",
+            "ready": true
+          },
+          {
+            "slot": 1,
+            "name": "封面二号",
+            "ready": true
+          }
+        ]
+      },
+      "slot": 1,
+      "host": false,
+      "states": 103,
+      "rtt": 0,
+      "epoch": 1
+    },
+    "players": [
+      {
+        "slot": 0,
+        "lives": 3,
+        "tank": {
+          "x": 64,
+          "y": 161,
+          "id": 2
+        }
+      },
+      {
+        "slot": 1,
+        "lives": 3,
+        "tank": {
+          "x": 128,
+          "y": 160,
+          "id": 3
+        }
+      }
+    ],
+    "display": {
+      "rotated": false,
+      "W": 1920,
+      "H": 1080,
+      "vw": 1920,
+      "vh": 1080,
+      "dpr": 1,
+      "touchOn": false,
+      "backing": [
+        1920,
+        1080
+      ]
+    },
+    "camera": "close",
+    "yawOffset": 0,
+    "fp": false,
+    "quality": {
+      "setting": "high",
+      "effective": "high",
+      "auto": null
+    },
+    "fs": false,
+    "fsCapable": true,
+    "fsLog": [],
+    "focus": "app",
+    "toast": null,
+    "touchHidden": true,
+    "keys": [],
+    "touchHold": [],
+    "stick": {
+      "id": null,
+      "axis": -1
+    },
+    "mode": "classic",
+    "stage": 1,
+    "cycle": 1,
+    "status": "play",
+    "player": {
+      "x": 128,
+      "y": 160,
+      "dir": 3,
+      "state": "active",
+      "stars": 0,
+      "shield": 0,
+      "invuln": 0,
+      "boats": 0,
+      "plate": 0
+    },
+    "run": {
+      "score": 0,
+      "lives": 3,
+      "hp": 3,
+      "armor": "classic",
+      "livesMode": "classic",
+      "demo": false,
+      "demoUsed": false,
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "hits": 0,
+        "stages": 0,
+        "pickups": 0,
+        "repairs": 0,
+        "bosses": 0
+      }
+    },
+    "bots": [
+      {
+        "type": "basic",
+        "state": "active",
+        "x": 15,
+        "y": 0,
+        "hp": 1
+      },
+      {
+        "type": "basic",
+        "state": "spawn",
+        "x": 192,
+        "y": 0,
+        "hp": 1
+      }
+    ],
+    "events": [
+      "spawn",
+      "spawn",
+      "playerSpawn",
+      "playerSpawn",
+      "fire",
+      "border",
+      "pop",
+      "fire",
+      "spawn",
+      "border",
+      "pop"
+    ],
+    "remixProgress": null
+  },
+  "at": "2026-10-07T02:08:33.685Z"
+}

@@ -1,0 +1,29 @@
+【标题】
+坦克大战能联机了！两个人能守住老鹰吗？
+
+【标签】
+坦克大战
+联机游戏
+合作游戏
+游戏开发
+bilibilitoy
+AI
+Claude
+GPT
+
+【话题】
+哔哩哔哩Toy创意挑战
+https://www.bilibili.com/v/topic/detail?topic_id=1346285
+
+【简介】
+坦克大战支持2–4人联机合作了：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。
+Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html
+联机：大厅建房或填写房间码，队友准备后由房主开始；暂不支持中途加入，房主退出则结束房间。
+用Claude Opus 5.5开发，部分修复由GPT-6 Codex完成的非官方同人实验。
+百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/tank-3d/index.html
+投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱 → 游戏 → 自研游戏投票榜）
+
+【置顶评论】
+你会选择分路守家，还是两辆坦克一起推进？大厅建房，把六位房间码告诉队友，准备后由房主开始。
+Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html
+投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html（百宝箱 → 游戏 → 自研游戏投票榜）
