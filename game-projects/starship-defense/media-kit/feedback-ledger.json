@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-07T02:25:06.248252+00:00",
+  "updated_at": "2026-10-07T14:59:04+08:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -486,6 +486,73 @@
       "public_verified_at": "2026-10-07T02:24:34.244Z",
       "record": "releases/web-defense-v0.21.0/comment-reply.json",
       "screenshot": "qa/bilibili/comment-316305468593-reply.jpg"
+    },
+    {
+      "rpid": "316324806465",
+      "comment_type": 1,
+      "video": "BV1Ujad6DEuf",
+      "user": "0250348",
+      "user_mid": 3494379050240760,
+      "date": "2026-10-07 12:27",
+      "text": "@飞刀班长，这个bug修一下吧，这个小怪刷我基地后面了，我找了半天才找到的有一些甚至卡在母巢那里了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.22.1",
+      "reply_status": "posted_public_verified",
+      "note": "卡住检测去掉无路线与z<182限制，5秒无位移即绕行/钻地；出生点撞墙自动找安全位；钻地检查头顶净高。QA见releases/web-feedback-v0.22.1。",
+      "reply_rpid": "316338501553",
+      "reply_text": "修好了！之前虫子绕到基地建筑后面或者从母巢洞口出来时，容易卡原地不动，所以怎么都找不到。现在卡住几秒会自动绕行或钻地朝目标推进，出生位置被撞墙也会自动挪到安全点。网站已更新到v0.22.1，Toy同包已提交审核，通过后即可玩到，谢谢反馈！",
+      "reply_verified_at": "2026-10-07T07:01:47+00:00"
+    },
+    {
+      "rpid": "316323444209",
+      "comment_type": 2,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": "316305468593",
+      "user": "bili_50539966983",
+      "user_mid": 479258671,
+      "date": "2026-10-07 12:15",
+      "text": "还有那个重型迫击炮帮改一下吧，不然一直打不到怪，射程没有狙击枪远，伤害没有狙击枪高，又比狙击枪贵，并且他那个子弹速度太慢了，落地都要2秒",
+      "kind": "balance",
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.22.1",
+      "reply_status": "posted_public_verified",
+      "note": "射程48→64、伤害140→180、价格1600→1400、弹速32→85并按移动预判落点；修复前移动目标0伤害，修复后180。",
+      "reply_rpid": "316340442113",
+      "reply_text": "回复 @bili_50539966983 :改好了！重型迫击炮射程提到64米（超过狙击枪的55米），伤害180、价格降到1400，炮弹速度大幅提升并按虫子移动方向预判落点，落地约0.3–0.8秒；实测移动目标也能命中。网站已更新v0.22.1，Toy同包已提交审核，通过后试试这版！",
+      "reply_verified_at": "2026-10-07T07:01:47+00:00"
+    },
+    {
+      "rpid": "316322217985",
+      "comment_type": 2,
+      "video": "BV1WbHq6eEBt",
+      "root_rpid": "316305468593",
+      "user": "bili_50539966983",
+      "user_mid": 479258671,
+      "date": "2026-10-07 12:04",
+      "text": "那个联机大厅的点昵称和房间号好像有点bug，我是手机的，点上去，键盘弹出来然后立马又弹回去了，输入不了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.22.1",
+      "reply_status": "posted_public_verified",
+      "note": "根因：键盘导航循环在.coop-panel弹窗打开时抢焦点；修复后三视口四输入框焦点保持，QA见releases/web-feedback-v0.22.1。",
+      "reply_rpid": "316340595697",
+      "reply_text": "回复 @bili_50539966983 :这条也修好了！原因是联机大厅界面在持续抢占输入焦点，手机上键盘刚弹出来就被打断收起。现在大厅里不再抢焦点，昵称和房间号可以正常打字。网站已更新v0.22.1，Toy同包已提交审核，通过后用手机再试试！",
+      "reply_verified_at": "2026-10-07T07:01:47+00:00"
+    },
+    {
+      "rpid": null,
+      "comment_type": 1,
+      "video": "BV1WbHq6eEBt",
+      "user": "主宇宙马克主宇宙马克",
+      "user_mid": null,
+      "date": "2026-10-07",
+      "text": "作者，这怎么准备😭（附联机大厅截图）/ 往下翻不了",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-lobby-scroll-v0.22.2",
+      "reply_status": "not_requested_not_posted",
+      "note": "根因：页面级*{touch-action:none}命中大厅卡片后代，触摸滚动被禁；共享coop.js恢复卡片auto并在大厅开启时放开祖先容器，四款合作游戏同修。QA见releases/web-lobby-scroll-v0.22.2。"
     }
   ]
 }

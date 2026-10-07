@@ -97,7 +97,7 @@ export class CoopConnection {
 }
 const css = `
 .coop-panel{position:absolute;inset:0;z-index:1000;background:#142018d9;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;touch-action:auto}
-.coop-panel[hidden],.coop-card [hidden]{display:none!important}.coop-card{width:min(800px,100%);max-height:100%;overflow:auto;background:#fff8e9;color:#244833;border:3px solid #5c7853;border-radius:18px;padding:16px;box-sizing:border-box;font:15px/1.4 system-ui}
+.coop-panel[hidden],.coop-card [hidden]{display:none!important}.coop-card,.coop-card *{touch-action:auto}.coop-card{width:min(800px,100%);max-height:100%;overflow:auto;background:#fff8e9;color:#244833;border:3px solid #5c7853;border-radius:18px;padding:16px;box-sizing:border-box;font:15px/1.4 system-ui}
 .coop-card h2{margin:0 0 8px}.coop-card p{margin:6px 0}.coop-card button,.coop-card a{font:inherit}.coop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .coop-card label{display:flex;flex-direction:column;gap:4px}.coop-card input,.coop-card select{font:inherit;box-sizing:border-box;width:100%;min-height:44px;border:1px solid #7e927a;border-radius:8px;background:white;color:#244833;padding:8px}
 .coop-actions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.coop-card button,.coop-entry{background:#3b7049;color:#fff8e9;border:2px solid #294b32;border-radius:10px;padding:9px 12px;min-height:44px;cursor:pointer}
@@ -138,8 +138,18 @@ export class CooperativeLobby {
   }
   field(k){return this.panel.querySelector('[data-field="'+k+'"]');}
   status(s){this.panel.querySelector('.coop-status').textContent=s;}
-  open(){this.opened=true;this.onOpen();this.panel.hidden=false;this.field('name').focus();if(!this.connection.room)this.connection.connect('list');else this.roster();}
-  close(){if(this.connection.room&&!this.connection.active){this.status('请开始合作或退出房间后返回游戏');return;}this.opened=false;this.panel.hidden=true;this.onClose();this.entry.focus();}
+  setPanelVisible(v){
+    this.panel.hidden=!v;
+    this._pannedAncestors=this._pannedAncestors||[];
+    if(v&&!this._panningEnabled){this._panningEnabled=true;
+      for(let el=this.panel.parentElement;el&&el!==document.documentElement;el=el.parentElement)
+        if(getComputedStyle(el).touchAction==='none'){this._pannedAncestors.push([el,el.style.touchAction]);el.style.touchAction='auto';}
+    } else if(!v&&this._panningEnabled){this._panningEnabled=false;
+      for(const[el,prev]of this._pannedAncestors)el.style.touchAction=prev;this._pannedAncestors=[];
+    }
+  }
+  open(){this.opened=true;this.onOpen();this.setPanelVisible(true);this.field('name').focus();if(!this.connection.room)this.connection.connect('list');else this.roster();}
+  close(){if(this.connection.room&&!this.connection.active){this.status('请开始合作或退出房间后返回游戏');return;}this.opened=false;this.setPanelVisible(false);this.onClose();this.entry.focus();}
   list(){if(this.connection.socket?.readyState===1)this.connection.send({type:'list',page:this.page,passwordFilter:this.field('filter').value});else this.connection.connect('list',null,null,{page:this.page,passwordFilter:this.field('filter').value});}
   action(kind){
     const c=this.connection,name=this.field('name').value.trim()||'玩家',code=this.field('code').value.trim(),password=this.field('password').value;
@@ -174,8 +184,8 @@ export class CooperativeLobby {
       for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=(r.started&&!r.canJoin)||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
       const pager=this.panel.querySelector('.coop-pager');pager.hidden=m.total<=20;pager.querySelector('span').textContent=this.page+' / '+Math.max(1,Math.ceil(m.total/20));pager.querySelector('[data-do="prev"]').disabled=this.page<=1;pager.querySelector('[data-do="next"]').disabled=this.page>=Math.ceil(m.total/20);
     } else if(m.type==='joined'||m.type==='roster'){this.roster();if(m.type==='joined')this.status('已加入房间，队友准备后由房主开始');}
-    else if(m.type==='start'){this.opened=false;this.panel.hidden=true;this.onStart(m.config);}
-    else if(m.type==='ended'){this.connection.disconnect();this.opened=true;this.panel.hidden=false;this.status(m.message);this.roster();}
+    else if(m.type==='start'){this.opened=false;this.setPanelVisible(false);this.onStart(m.config);}
+    else if(m.type==='ended'){this.connection.disconnect();this.opened=true;this.setPanelVisible(true);this.status(m.message);this.roster();}
     this.onMessage(m);
   }
 }

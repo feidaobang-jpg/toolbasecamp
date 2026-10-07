@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-lobby-scroll-v0.22.2",
+  "base_version": "web-feedback-v0.22.1",
+  "created_at": "2026-10-07T21:30:00+08:00",
+  "classification": "严重修复（手机端联机大厅无法滚动，影响操作）",
+  "source_comments": [
+    {
+      "video": "BV1WbHq6eEBt",
+      "user": "主宇宙马克主宇宙马克",
+      "rpid": null,
+      "date": "2026-10-07",
+      "text": "作者，这怎么准备😭 / 往下翻不了（附联机大厅截图）",
+      "channel": "bilibili-screenshot"
+    }
+  ],
+  "shared_impact": [
+    "starship-defense（虫潮围城）",
+    "tank-3d（坦克大战3D，自定义#lobby面板同修）",
+    "jackal-stage1-3d（赤色要塞3D，重建game.min.js）",
+    "cadillacs-stage1-3d（恐龙快打3D，重建game.min.js）"
+  ],
+  "changes": [
+    "共享联机大厅 coop.js：卡片及后代恢复 touch-action:auto，抵消游戏页 *{touch-action:none} 对弹窗的误伤。",
+    "大厅打开期间临时放开祖先容器（如坦克3D #stage）的 touch-action:none，关闭时还原，覆盖显隐全部路径。",
+    "坦克大战3D：.overlay 面板及后代恢复滚动，body:has 规则放开 #stage。",
+    "重建 starship game.compat.js 与 jackal/cadillacs game.min.js，引用统一 bump ?v=lobby-scroll1。"
+  ],
+  "root_cause": "页面级 *{touch-action:none} 命中大厅卡片全部后代，触摸平移被判 none；线上旧包实测两方向拖拽 scrollTop 均为 0，本地新包正常。",
+  "qa": [
+    {
+      "method": "Playwright+Edge CDP 触摸拖拽（390x844 竖持旋转90°、740x360、坦克3D 390x844）",
+      "result": "passed",
+      "evidence": "game-projects/starship-defense/media-kit/releases/web-lobby-scroll-v0.22.2/qa/touch-scroll-results.json",
+      "scope": "虫潮 scrollTop 0→178 且底部返回游戏可见；不旋转视口 0→18 全量；坦克3D 0→208；无新增 pageerror"
+    },
+    {
+      "method": "线上旧包对照组（同法拖拽）",
+      "result": "reproduced",
+      "scope": "www.zhengxiaohui.cn 卡片 computed touch-action=none，两方向 scrollTop 均 0，确认玩家反馈可复现且本修复对症"
+    }
+  ],
+  "limitations": [
+    "手机视口为浏览器模拟，真机多指触控与软键盘组合未验收",
+    "桌面滚轮回归视口内无溢出未覆盖，桌面行为未改动"
+  ],
+  "site": {
+    "status": "public_verified",
+    "version": "web-lobby-scroll-v0.22.2",
+    "verified_at": "2026-10-07T16:34:00+08:00",
+    "source_commit": "b646a109",
+    "evidence": "线上 coop.js 含 setPanelVisible、三包含 touch-action:auto；www 触摸拖拽终验 scrollTop 0→201"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "auditing",
+    "version": "web-lobby-scroll-v0.22.2",
+    "package_sha256": "b750987cb0fe1bd990e32da4f29fefc667453d78ae39176c94453b2f2d4852f3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_IYIwR4dU/index.html",
+    "submitted_at": "2026-10-07T16:45:00+08:00",
+    "note": "预览实测 ta=auto 0→201 无报错后以同包提交；取代在审的 v0.22.1 包"
+  },
+  "taptap": {
+    "status": "pending_sync",
+    "app_id": 962354,
+    "note": "严重修复需同步，但本次会话预算不足以完整走 draft→上传→绑定→提审→三视口测试，避免留半截外部写入；下次相关任务按 taptap-release.md 读本记录继续，包体用主线 dcebeb97 后构建"
+  },
+  "bilibili_description": {
+    "status": "pending",
+    "videos": [
+      "BV1Ujad6DEuf",
+      "BV1WbHq6eEBt"
+    ],
+    "note": "细碎说明可并入下一次有意义的简介更新；现有简介未因此修复变得不准确，不强制立即改"
+  }
+}
