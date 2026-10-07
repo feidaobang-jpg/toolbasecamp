@@ -27,6 +27,7 @@ from recipe_ai import (
     get_recipe_config,
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
+from game_saves import router as game_saves_router, wire as wire_game_saves, ensure_game_save_tables, GameSaveCors
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from stickers import router as stickers_router, _wire as wire_stickers
@@ -273,6 +274,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_middleware(GameSaveCors)
+
 class RegisterBody(BaseModel):
     email: str = ""
     phone: str = ""
@@ -421,6 +424,7 @@ def ensure_tables():
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """
             )
+            ensure_game_save_tables(cur)
             ensure_record_tables(cur)
             ensure_image_quota_table(cur)
             ensure_tts_tables(cur)
@@ -606,6 +610,8 @@ def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
     return _ensure_admin_role(user)
 
 
+wire_game_saves(get_conn, require_db, get_current_user, lambda body: login(LoginBody(**body)))
+app.include_router(game_saves_router)
 wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
 # image_tools wired after get_optional_user + require_admin (public gallery)

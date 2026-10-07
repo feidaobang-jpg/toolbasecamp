@@ -24,22 +24,4 @@ for(const f of HILL_FORTS){
 }
 console.log('PASS: cloud dedup/cache/limit backoff/fallback; two walkable plateaus; slope direction and bounds');
 
-// Verify the platform UI contract against a fake SDK. No real cloud/account writes.
-const elements=new Map();globalThis.document={getElementById:id=>{
-  if(!elements.has(id)){const classes=new Set();elements.set(id,{textContent:'',disabled:false,children:[],classList:{add:x=>classes.add(x),remove:x=>classes.delete(x),toggle:(x,v)=>v?classes.add(x):classes.delete(x),contains:x=>classes.has(x)},replaceChildren(){this.children=[];},appendChild(v){this.children.push(v);}});}return elements.get(id);
-},createElement:()=>({textContent:''})};
-const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,String(v))};
-let gameSave={level:1,score:100,loop:1,chapter:1,time:Date.now()},loaded=null,test=false,writes=0,submits=0;
-const cloudSave={...gameSave,level:3,score:300};let cloudRaw={chongchao_normal_v1:JSON.stringify({schema:1,save:cloudSave})};
-const sdk={isSupport:async()=>true,getAuthorProfile:async()=>({status:'denied'}),getCloudStorage:async()=>cloudRaw,setCloudStorage:async d=>{writes++;cloudRaw=d;},getRankList:async()=>[{rank:1,nickname:'<img onerror=bad>',score:300}],submitScore:async()=>{submits++;}};
-const {setupToyPlatform}=await import('../../public/html/game/starship-defense/toy-platform.js');
-setupToyPlatform({prefix:'test-',open(){},close(){},getSave:()=>gameSave,load:d=>{loaded=d;},isTest:()=>test,validate:d=>d&&!d.testMode&&d.level>=1&&Number.isFinite(d.score)},{sdkPromise:Promise.resolve(sdk)});
-await new Promise(r=>setTimeout(r,0));
-const click=id=>elements.get(id).onclick();
-await click('cloudRead');assert.equal(loaded,null,'reading never overwrites');await click('cloudLoad');assert.equal(loaded.level,3);assert.equal(JSON.parse(storage.get('test-cloud-backup')).level,1);
-await click('cloudBackup');assert.equal(loaded.level,1,'backup has working restore path');
-await click('cloudWrite');assert.equal(writes,0,'upload requires preview/confirmation');await click('cloudConfirm');assert.equal(writes,1);
-test=true;await click('cloudWrite');await click('rankSubmit');assert.equal(writes,1);assert.equal(submits,0);
-test=false;storage.set('test-rank-best','100');await click('rankSubmit');await click('rankSubmit');assert.equal(submits,1,'score deduplicated');
-await click('rankRead');assert.equal(elements.get('rankList').children[0].textContent,'第1名 <img onerror=bad> · 300分');
-console.log('PASS: mock SDK read/preview/confirm/upload/backup/restore, sandbox guards, score dedup, text-only nickname');
+// Archive UI, imports and conflict approvals are exercised in verify-save-browser.cjs.

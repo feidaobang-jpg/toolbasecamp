@@ -1,0 +1,6 @@
+{
+  "name": "site-game-channel-tools",
+  "private": true,
+  "scripts": {"test": "node --test tools/taptap-startup.test.mjs"},
+  "devDependencies": {"esbuild": "0.28.2"}
+}

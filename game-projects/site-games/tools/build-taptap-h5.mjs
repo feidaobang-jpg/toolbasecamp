@@ -6,13 +6,14 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {inlineStartup,STARTUP_ADAPTER} from './taptap-startup.mjs';
+import {bundleRuntime} from './taptap-runtime.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
 const games={
-  'jackal-stage1-3d':{title:'赤色要塞 3D',namespace:['jk3d-stage1:','taptap-jackal-v1:']},
+  'jackal-stage1-3d':{title:'赤色要塞 3D',namespace:['jk3d-stage1:','taptap-jackal-v1:'],inlineRuntime:'js/game.min.js'},
   'cadillacs-stage1-3d':{title:'恐龙快打 3D',namespace:['cd3d-stage1:','taptap-cadillacs-v1:'],inlineRuntime:'js/game.min.js'},
-  'mario-3d':{title:'超级玛丽 3D',namespace:['mario3d-v2:','taptap-mario-v1:']},
-  'journey-west-3d':{title:'西游降魔 3D',namespace:null},
+  'mario-3d':{title:'超级玛丽 3D',namespace:['mario3d-v2:','taptap-mario-v1:'],kind:'module'},
+  'journey-west-3d':{title:'西游降魔 3D',namespace:null,kind:'journey'},
 };
 const slug=process.argv[2];
 if(!Object.hasOwn(games,slug))throw Error('Choose an existing supported game directory');
@@ -54,12 +55,10 @@ for(const file of walk(source)){
     .replaceAll('data-list-url="../../../games.html"','data-list-url="./index.html"')
     .replace(/<a href="\.\.\/\.\.\/\.\.\/games.html"[^>]*>[\s\S]*?<\/a>/g,'');
   text=text.replaceAll('../../../games.html','./index.html');
-  if(name==='index.html'&&config.inlineRuntime)text=inlineStartup(text,fs.readFileSync(path.join(source,config.inlineRuntime),'utf8'));
   text=adaptText(text);
   if(/\.\.\/\.\.\//.test(text))throw Error('Unbundled relative dependency in '+name);
   write(name,Buffer.from(text,'utf8'));
 }
-if(config.namespace&&!namespaceRewrites)throw Error('Save namespace changed; review adapter');
 for(const [from,to] of [
   ['public/vendor/three/0.170.0/build/three.module.js','vendor/three.module.js'],
   ['public/vendor/three/0.170.0/examples/jsm/utils/BufferGeometryUtils.js','vendor/BufferGeometryUtils.js'],
@@ -73,9 +72,14 @@ for(const [from,to] of [
   if(to==='vendor/BufferGeometryUtils.js')data=Buffer.from(data.toString('utf8').replace(/from 'three'/g,"from './three.module.js'"));
   write(to,data);
 }
+const runtime=config.inlineRuntime?adaptText(fs.readFileSync(path.join(source,config.inlineRuntime),'utf8')):await bundleRuntime(packageDir,'main.js');
+if(config.namespace&&!namespaceRewrites)throw Error('Save namespace changed; review adapter');
+write('index.html',Buffer.from(inlineStartup(fs.readFileSync(path.join(packageDir,'index.html'),'utf8'),runtime,{kind:config.kind||'classic'}),'utf8'));
+// All modules are in the inline runtime; omit redundant copies from the downloadable ZIP.
+for(const name of Object.keys(files).filter(n=>n.endsWith('.js'))){fs.unlinkSync(path.join(packageDir,name));delete files[name];}
 const zip=path.join(output,slug+'.zip');
 const zipped=spawnSync(process.env.PYTHON||'python',['-c','import pathlib,sys,zipfile; p=pathlib.Path(sys.argv[1]); z=zipfile.ZipFile(sys.argv[2],"w"); [(z.writestr(zipfile.ZipInfo(f.relative_to(p.parent).as_posix(),(2026,1,1,0,0,0)),f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=6)) for f in sorted(p.rglob("*")) if f.is_file()]; z.close()',packageDir,zip],{encoding:'utf8',env:{...process.env,PYTHONUTF8:'1'}});
 if(zipped.status!==0)throw Error(zipped.stderr||zipped.error?.message);
-const manifest={channel:'taptap-h5',game:slug,title:config.title,version:meta.current_version,startup_adapter:config.inlineRuntime?STARTUP_ADAPTER:null,source_commit:spawnSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).stdout.trim(),source_hashes:sourceHashes,files,zip_sha256:hash(fs.readFileSync(zip)),zip_bytes:fs.statSync(zip).size,archive_root:slug+'/',storage_namespace:config.namespace?.[1]??'no persistent gameplay save',monetization:'none',status:'built_not_uploaded'};
+const manifest={channel:'taptap-h5',game:slug,title:config.title,version:meta.current_version,startup_adapter:STARTUP_ADAPTER,source_commit:spawnSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).stdout.trim(),source_hashes:sourceHashes,files,zip_sha256:hash(fs.readFileSync(zip)),zip_bytes:fs.statSync(zip).size,archive_root:slug+'/',storage_namespace:config.namespace?.[1]??'no persistent gameplay save',monetization:'none',status:'built_not_uploaded'};
 fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n','utf8');
 console.log(JSON.stringify({zip,version:manifest.version,sha256:manifest.zip_sha256,bytes:manifest.zip_bytes}));

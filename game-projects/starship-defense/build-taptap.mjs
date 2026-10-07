@@ -1,5 +1,6 @@
 // Build the existing stable game for TapTap H5; this command never uploads it.
-import {build} from 'esbuild';
+import {build} from '../site-games/tools/taptap-runtime.mjs';
+import {inlineStartup,STARTUP_ADAPTER} from '../site-games/tools/taptap-startup.mjs';
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -34,8 +35,7 @@ html = html.replaceAll('../../../css/base.css', './base.css');
 html = html.replace(/<script src="\.\.\/\.\.\/\.\.\/js\/game\/thumb-preview\.js"><\/script>/g, '');
 html = html.replace(/<script type="module">[\s\S]*?landscape-typing\.js[\s\S]*?<\/script>/g, '');
 html = html.replace(/<a class="gameBack"[^>]*>[\s\S]*?<\/a>/g, '');
-html = html.replace(/<button[^>]*id="(?:platformBtn|btnPlatformMenu|platformBtnMenu)"[^>]*>[\s\S]*?<\/button>/g, '');
-html = html.replace(/<section id="platformPanel"[\s\S]*?<\/section>/, '<section id="platformPanel" class="panel hidden"></section>');
+html = html.replace(/<div id="toyExtras">[\s\S]*?<\/section>/, '</section>');
 if (/\.\.\/\.\.\/|B站 Toy|bilibili\.com/.test(html)) {
   throw new Error('TapTap HTML still contains a site-relative or Toy-only dependency');
 }
@@ -49,8 +49,8 @@ await build({
   plugins: [{name: 'taptap-channel', setup(b) {
     b.onResolve({filter: /\?v=/}, args => ({path: path.resolve(args.resolveDir, args.path.split('?')[0])}));
     // Toy account, rankings and external video navigation are unavailable on TapTap.
-    // Keep the game-side DOM panel identifier used by closePanels(), without promising cloud saves.
-    b.onLoad({filter: /[\\/]toy-platform\.js$/}, () => ({contents: 'export function setupToyPlatform() {}', loader: 'js'}));
+    // Site-account cloud saves and local file backups remain available on TapTap.
+    b.onLoad({filter: /[\\/]toy-platform\.js$/}, () => ({contents: "import {mountSavePanel} from './save-panel.js'; export function setupToyPlatform(game){return mountSavePanel(game,{storage:game.store.storage});}", loader: 'js', resolveDir: source}));
     b.onLoad({filter: /[\\/]live-controller\.js$/}, () => ({contents: 'export function createLiveController() { throw new Error("Live mode is unavailable in the TapTap trial"); }', loader: 'js'}));
     b.onLoad({filter: /[\\/]starship-defense[\\/]game\.js$/}, args => {
       const original = fs.readFileSync(args.path, 'utf8');
@@ -64,21 +64,25 @@ await build({
 });
 
 const zipPath = path.join(output, 'chongchao-qianshao.zip');
+html=inlineStartup(html,fs.readFileSync(path.join(packageDir,'game.compat.js'),'utf8'),{kind:'starship',prelude:fs.readFileSync(path.join(packageDir,'boot.js'),'utf8'),loadingId:'assetLoad',readyFlag:'__ccReady'});
+fs.writeFileSync(path.join(packageDir,'index.html'),html,'utf8');
+for(const name of ['boot.js','game.compat.js'])fs.unlinkSync(path.join(packageDir,name));
 const zip = spawnSync(process.env.PYTHON || 'python', ['-c',
   'import pathlib,sys,zipfile; p=pathlib.Path(sys.argv[1]); z=zipfile.ZipFile(sys.argv[2],"w",compression=zipfile.ZIP_DEFLATED,compresslevel=6); [(z.writestr(zipfile.ZipInfo(f.relative_to(p.parent).as_posix(),(2026,1,1,0,0,0)),f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=6)) for f in sorted(p.rglob("*")) if f.is_file()]; z.close()',
   packageDir, zipPath], {encoding: 'utf8', env: {...process.env, PYTHONUTF8: '1'}});
 if (zip.status !== 0) throw new Error(zip.stderr || zip.error?.message || 'ZIP build failed');
 const sourceCommit = spawnSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8'}).stdout.trim();
-const files = Object.fromEntries([...entries, 'index.html', 'base.css', 'game.compat.js'].sort().map(name =>
+const files = Object.fromEntries([...entries.filter(n=>n!=='boot.js'), 'index.html', 'base.css'].sort().map(name =>
   [name, hash(fs.readFileSync(path.join(packageDir, name)))]));
 const manifest = {
   schema_version: 1, channel: 'taptap-h5', title: game.name,
-  version: game.current_version, source_commit: sourceCommit,
+  version: game.current_version, startup_adapter: STARTUP_ADAPTER, source_commit: sourceCommit,
   package_directory: path.relative(root, packageDir).replaceAll('\\', '/'),
   archive: path.relative(root, zipPath).replaceAll('\\', '/'),
   archive_root: 'chongchao-qianshao/', zip_bytes: fs.statSync(zipPath).size,
+  storage_namespace: 'taptap-chongchao-v1-sst_save_',
   zip_sha256: hash(fs.readFileSync(zipPath)), files,
-  changes: ['Self-contained H5 package with one top-level directory', 'Local save namespace isolated from website and Toy', 'Toy-only cloud/ranking/author navigation omitted'],
+  changes: ['Self-contained H5 package with one top-level directory', 'Local save namespace isolated from website and Toy', 'Website-account cloud backups and local import/export enabled; Toy rankings and video navigation omitted'],
   monetization: 'none', status: 'built_not_uploaded',
 };
 fs.writeFileSync(path.join(output, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');

@@ -3,9 +3,9 @@
   "source": "public/html/game/mario-3d",
   "source_sha256": {
     "audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
-    "index.html": "2ef839374adead06312c4b0bbee23da114e9b41f1967e1c3d884950f7d340308",
+    "index.html": "04e575c50d592b0bd0e85d00091bd1a289f5be89046a59deb86f8293a8e4c6df",
     "levels.js": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
-    "main.js": "7244b05ab4ae2b158382b017a1f41dc2a568aff290c776780b223019b2d1b16f",
+    "main.js": "ac774760471dcb83276ac96c9a9655f530ed12c8fe013d8b2097beea87748c47",
     "models.js": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
     "scene.js": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
     "style.css": "b601f31599b86307dd6a02cab1ae6d03f1ff6ca36d24c0aa130ec1dc63946f19",
@@ -16,9 +16,9 @@
   "files": {
     "audio.js": "e727201fd9577d9e5b746227ecd3929c610fee0dd5fb272ddb542dc0e5dba54b",
     "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
-    "index.html": "e569ba441bd67b909c1f3a50bb8574ab55177e2c9b23f2152133be3dd315fc50",
+    "index.html": "e77db32d47465880565389fabf5b091d7be7cc5d81d9bff2790520af49ae7e07",
     "levels.js": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
-    "main.js": "38ab1fe87a13d61501224225c3f4b5687d74b801d9e0f14c8c665200b1f6620a",
+    "main.js": "619725cd8600731bbfd0c4278b04e7cf81e66dceaf40c1841daccc338d99effd",
     "models.js": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
     "sample-audio.js": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
     "scene.js": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
@@ -55,6 +55,6 @@
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
     "world.js": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe"
   },
-  "package_sha256": "6f4099da7dd56859e53f3814e300e2f6ce2554ceab2bd805596fb3d916c23add",
+  "package_sha256": "07d7506e695a72638bac14df8a7cc1bcc378bfe7a89a90e644a40fb4236500dc",
   "status": "built_not_submitted"
 }

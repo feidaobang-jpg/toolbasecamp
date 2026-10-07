@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-10-07T11:52:56.222044+00:00",
+  "files": [
+    {
+      "path": "html/game/cadillacs-stage1-3d/index.html",
+      "sha256": "694da0d65fb42eadc481fdb9ae6a9f669403f2b294d1c6ea54e5293dc448d2a0",
+      "expected_sha256": "d2783d928fcec009c87ac1d6d47e5ea055031fffb38cb45983f7544999cb111f",
+      "exact_match": false,
+      "new_marker": false
+    },
+    {
+      "path": "html/game/cadillacs-stage1-3d/js/game.min.js",
+      "sha256": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+      "expected_sha256": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+      "exact_match": true,
+      "new_marker": null
+    },
+    {
+      "path": "js/game/coop.js",
+      "sha256": "28eb0531d38884503ae2dc34fe2e2f8c3632a8d3d7038f6c5b67207ad5aa3ed3",
+      "expected_sha256": "28eb0531d38884503ae2dc34fe2e2f8c3632a8d3d7038f6c5b67207ad5aa3ed3",
+      "exact_match": true,
+      "new_marker": null
+    }
+  ],
+  "final_verification": {
+    "checked_at": "2026-10-07T20:20:00+08:00",
+    "by": "Qoder",
+    "conclusion": "关键修复文件与主线哈希一致，判定网站已上线；index.html 差异为部署脚本全站改写?v=标记所致，内容等价",
+    "live_hashes": {
+      "html/game/cadillacs-stage1-3d/js/game.min.js": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+      "js/game/coop.js": "28eb0531d38884503ae2dc34fe2e2f8c3632a8d3d7038f6c5b67207ad5aa3ed3",
+      "html/game/cadillacs-stage1-3d/index.html": "694da0d65fb42eadc481fdb9ae6a9f669403f2b294d1c6ea54e5293dc448d2a0 (?v=cbb8d0bd)"
+    }
+  }
+}
