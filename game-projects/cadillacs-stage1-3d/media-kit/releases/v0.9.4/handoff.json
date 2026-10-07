@@ -4,6 +4,7 @@
   "version": "v0.9.4",
   "base_version": "v0.9.3",
   "created_at": "2026-10-07T11:46:58.957848+00:00",
+  "updated_at": "2026-10-07T23:10:00+08:00",
   "classification": "严重修复",
   "build": {
     "id": "v094-uuid1",
@@ -59,29 +60,45 @@
       "by": "Qoder 接管核验"
     },
     "toy": {
-      "status": "auditing",
+      "status": "published",
       "submitted_at": "2026-10-07T20:11:52+08:00",
+      "published_at": "2026-10-07T21:52:04+08:00",
       "package": "dist/toy-v0.9.4/package",
       "package_fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
       "preview_url": "https://www.bilibili.com/toy/preview/preview_7ngzEtfk/index.html",
-      "note": "严重修复随任务同步；mylist 显示现网仍为 v0.9.3 published，过审后再核验正式入口",
+      "note": "mylist 显示 v0.9.4 published（mtime 2026-10-07T21:52:04），与网站同版本上线",
       "by": "Qoder"
     },
     "taptap": {
-      "status": "pending",
-      "note": "taptap-all-startup 的恐龙快打 zip 基于 v0.9.3 源码，需用 v0.9.4（含UUID回退）重建后再上传；六款包均待TapTap后台人工上传",
+      "status": "reviewing",
+      "submitted_at": "2026-10-07T22:52:59+08:00",
+      "platform_version": "V-20261007-6",
+      "draft_version_id": "1043928",
+      "h5_version_id": 273318,
+      "package": "dist/taptap/cadillacs-stage1-3d/cadillacs-stage1-3d.zip",
+      "package_sha256": "71f034bde99cd79b78d020e4280f2bdf377f8cf5870384bcf128a590f16c4001",
+      "source_commit": "e2fb73a5",
+      "note": "此前台账误记为待人工上传；实际经官方CLI以 v0.9.4 源码重建（build-taptap-h5.mjs）、三视口QA与无randomUUID启动单测通过后上传、绑定main并提审 reviewing；商店简介沿用不改（对齐 v0.9.3 先例）。v0.9.3 已确认上线（V-20261007-5）。",
       "by": "Qoder"
     },
     "bilibili": {
-      "status": "pending",
-      "note": "Toy 过审生效后，若简介中的可玩状态或版本说明不再准确再一并纠正；当前不单独改简介",
+      "status": "public_verified",
+      "bvids": [
+        "BV18XHW66E55"
+      ],
+      "submitted_at": "2026-10-07T22:47:00+08:00",
+      "public_verified_at": "2026-10-07T22:49:00+08:00",
+      "description_sha256": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+      "record": "releases/v0.9.4/bilibili-sync.json",
+      "note": "Toy published 后按严重修复节奏同步简介；公开页逐行核验 v0.9.4 更新行在线；不新增评论",
       "by": "Qoder"
     }
   },
   "readiness": {
-    "update": "website-verified-toy-auditing",
+    "update": "website-toy-taptap-bilibili-all-synced",
     "gaps": [
-      "玩家原设备待复测，未知其浏览器内核；非手机真机测试"
+      "玩家原设备待复测，未知其浏览器内核；非手机真机测试",
+      "TapTap V-20261007-6 审核中，上线确认后再发动态（pending_until_online）"
     ]
   }
 }

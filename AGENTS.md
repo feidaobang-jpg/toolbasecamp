@@ -153,7 +153,7 @@ Codex、Claude、Cursor 等均应读取本文件及相关 `.cursor/rules/*.mdc`�
 以下三个 Codex 在途任务经用户确认由 Qoder 接管收尾并已进入主线；Codex 恢复额度后不要重做、不要重新提审或重复提交台账，按规则从最新远端另建工作区继续新任务即可：
 
 1. **TapTap 启动统一修复**（原分支提交 a6186105）：已整合主线 ba05d672，taptap-startup 单测 8/8 通过，任务完结。
-2. **恐龙快打 v0.9.4 WebView 修复收尾**：网站主线核验通过，Toy v0.9.4 已提审 auditing（preview_7ngzEtfk），台账登记于 e85ac341。遗留为渠道操作而非未完成的代码任务：恐龙快打 TapTap zip 需以 v0.9.4 重建后在 TapTap 后台人工上传；B站简介待 Toy 过审后核验。
-3. **虫潮围城云存档 web-cloudsave-v0.24.0**：自 Codex 未提交的半成品工作区接管，补齐并修复保存状态胶囊被 .mbtn:active 变换顶掉居中定位、以及手机上被触控视角层遮挡无法点击的问题后并入主线（ae4b1318、50e00797、81a5ca8c）。网站静态核验、生产 API 冒烟（verify_game_saves_deployed.py）与七场景浏览器 QA 全部通过；Toy 已提审 auditing（preview_M1MJLXv）；TapTap 包已用最新主线重建待人工上传；B站简介待 Toy published 后补云存档说明。
+2. **恐龙快打 v0.9.4 WebView 修复收尾**：网站主线核验通过，Toy v0.9.4 已过审 published（mylist mtime 2026-10-07T21:52:04，preview_7ngzEtfk 提审于 20:11），台账登记于 e85ac341。渠道遗留已全部完成：TapTap 包已以 v0.9.4 源码经官方CLI重建（sha256 71f034bd…）并上传、绑定 main、提审 reviewing（V-20261007-6，审核单 1043928）；B站 BV18XHW66E55 简介已更新 v0.9.4 闪退修复说明并公开核验（sha256 90e8fd97…）。仅剩 TapTap 上线确认后的动态/论坛帖（pending_until_online，已查重规则记录）。
+3. **虫潮围城云存档 web-cloudsave-v0.24.0**：自 Codex 未提交的半成品工作区接管，补齐并修复保存状态胶囊被 .mbtn:active 变换顶掉居中定位、以及手机上被触控视角层遮挡无法点击的问题后并入主线（ae4b1318、50e00797、81a5ca8c）。网站静态核验、生产 API 冒烟（verify_game_saves_deployed.py）与七场景浏览器 QA 全部通过；Toy 已 published（mylist mtime 2026-10-07T22:27:36，preview_M1MJLXv）；TapTap 包已用最新主线以 v0.24.0 经官方CLI上传并提审 reviewing（V-20261007-3，审核单 1043869，H5 273272，sha256 949e57bb…，商店简介已补云存档说明）；B站两期简介（BV1WbHq6eEBt、BV1Ujad6DEuf）均已补云存档说明并公开核验。仅剩 TapTap 上线确认后的动态/论坛帖（pending_until_online）。
 
 相关过期分支：qoder/cadillacs-model-preview 的 Tripo 模型样例经对比后按预期不采用；low-wall-fix、backup-mario-wip 为旧快照。均无需继续或合并。

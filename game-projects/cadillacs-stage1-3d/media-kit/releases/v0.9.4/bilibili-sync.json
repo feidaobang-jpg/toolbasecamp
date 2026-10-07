@@ -1,0 +1,35 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.9.4",
+ "classification": "严重修复",
+ "trigger": "Toy v0.9.4 published（mylist mtime 2026-10-07T21:52:04+08:00）；影响试玩的闪退修复按规则立即同步简介",
+ "targets": [
+  {
+   "bvid": "BV18XHW66E55",
+   "url": "https://www.bilibili.com/video/BV18XHW66E55/",
+   "baseline_version_before": "v0.9.3",
+   "baseline_sha256_before": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81",
+   "submitted_version": "v0.9.4",
+   "description_sha256": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+   "description_length": 604,
+   "update_line": "更新（2026-10-07·v0.9.4）：修复部分安卓机型/旧内核打开Toy即闪退的问题（联机玩家ID在不支持随机数接口的设备自动回退），画面与操作不变；保留原作开场、背摔与原版音乐，仍支持2–4人联机合作。网站与B站Toy已同步上线，TapTap新版审核中。视频为录制时版本，以当前试玩为准。",
+   "method": "创作中心稿件管理→编辑视频→简介富文本全选替换纯文本→立即投稿",
+   "submit_toast": "稿件投递成功",
+   "submitted_at": "2026-10-07T22:47:00+08:00",
+   "status": "public_verified",
+   "public_verified_at": "2026-10-07T22:49:00+08:00",
+   "public_check": "视频页 window.__INITIAL_STATE__.videoData.desc 逐行比对，v0.9.4 更新行与入口链接均在线",
+   "changes_summarized": [
+    "严重修复 v0.9.4：crypto.randomUUID 缺失机型闪退回退",
+    "纠正旧简介中已过时的渠道状态（Toy 已上线、TapTap 新版审核中）"
+   ],
+   "not_done": [
+    "不新增评论、不重传视频、不动置顶评论与BV等元信息"
+   ]
+  }
+ ],
+ "written_off": "接管 Codex 遗留渠道操作：v0.9.4 收尾时 Toy 已过审，简介待同步项按 bili-game-update 规则自动执行",
+ "recorded_by": "Qoder",
+ "recorded_at": "2026-10-07T23:10:00+08:00"
+}

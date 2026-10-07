@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "game_id": "starship-defense",
+  "release_version": "web-cloudsave-v0.24.0",
+  "classification": "正式版本",
+  "mode": "compact_description",
+  "trigger_note": "云存档为正式版本玩家可见变化；Toy published（22:27）且网站同版验证后按 2026-10-05 节奏集中同步；同时纠正 v0.23.0 行内“Toy/TapTap包审核中”过期状态",
+  "submitted_at": "2026-10-07T22:31:00+08:00",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+      "baseline_version": "web-coop-v0.23.0",
+      "old_description_sha256": "ca0f88dbdf92ea2de6e58152f067589475026d3b535497b287abb024ecc2d3db",
+      "new_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式进度自动同步到账号，登录网站账号即玩即备份，本地清空后可从档案站选档恢复；云端与本地不一致时先选上传或读取，不静默覆盖。联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管、房主可踢人。网站与B站Toy均已上线同一版本。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "new_description_sha256": "f1b95087406b776ffe41711b36ad646c8e52709ceedacbeb965ebffd99a799be",
+      "length_chars": 531,
+      "paragraphs": 8,
+      "submit_toast": "稿件投递成功",
+      "method": "创作中心稿件管理→编辑视频→简介富文本全选替换纯文本→立即投稿",
+      "status": "public_verified",
+      "public_verified_at": "2026-10-07T22:33:00+08:00",
+      "public_check": "公开页 __INITIAL_STATE__.videoData.desc 回读含 v0.24.0 云存档行；单换行、无空白段落、URL不重复、标签与网址同行；无置顶评论改动（旧说明仍准确）"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
+      "baseline_version": "web-coop-v0.22.0",
+      "old_description_sha256": "1d155bbaaa35f683d9c5c9914ec4144a3011a19241b23c3f8a5189b06d78dd8a",
+      "new_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式进度自动同步到账号，登录网站账号即玩即备份，本地清空后可从档案站选档恢复；云端与本地不一致时先选上传或读取，不静默覆盖。联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。网站与B站Toy均已上线同一版本。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "new_description_sha256": "a1db6c1e4cff181f74db2f13177a865d04ec8ebd0c387f5959b15c6ca2913c10",
+      "length_chars": 584,
+      "paragraphs": 9,
+      "submit_toast": "稿件投递成功",
+      "method": "创作中心编辑视频页（type=edit&bvid 直达）→简介全选替换纯文本→立即投稿",
+      "status": "public_verified",
+      "public_verified_at": "2026-10-07T22:34:00+08:00",
+      "public_check": "公开页 videoData.desc 回读含 v0.24.0 云存档行，旧 v0.22.0 更新行已合并替换；单换行、无空段；保留“本视频为早期版本”说明"
+    }
+  ],
+  "account": "飞刀班长 / UID 16214353（编辑页头像菜单核验为本人）",
+  "changes_summarized": [
+    "web-coop-v0.23.0 联机2–4人合作（上次仅同步到 BV1WbHq6eEBt，本批并入两稿）",
+    "web-lobby-ime-v0.23.1 房间号输入法修复（此前评论回复已说明，简介不单列）",
+    "web-cloudsave-v0.24.0 账号云存档、三快照恢复与冲突选择（玩家可感知，正式版本主体）"
+  ],
+  "not_done": ["未重剪或替换成片；未改标题、封面、标签、可见性与Toy绑定；未新增评论"],
+  "updated_at": "2026-10-07T22:42:00+08:00"
+}
