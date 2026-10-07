@@ -3,7 +3,7 @@
   "name": "坦克大战 3D：经典 35 关 + 魔改无限周目",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "coop-live2",
+  "current_version": "coop-unstick1",
   "handoff": "releases/coop-hub1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
