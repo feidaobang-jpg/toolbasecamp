@@ -1,0 +1,60 @@
+{
+  "status": "passed",
+  "tested_at": "2026-10-07T00:35:12.051Z",
+  "package_sha256": "1c3d930515bf1099bf6584097cc85916a002111c4bbe04243d84c6342d382902",
+  "version": "web-tactics-v0.20.0",
+  "results": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1920,
+        "height": 1080
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    },
+    {
+      "viewport": {
+        "name": "phone-landscape",
+        "width": 844,
+        "height": 390
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    },
+    {
+      "viewport": {
+        "name": "phone-portrait",
+        "width": 390,
+        "height": 844
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    }
+  ],
+  "real_phone_test": false
+}

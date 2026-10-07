@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d",
+  "developer_id": 100726,
+  "app_id": 962376,
+  "automatic_sync_enabled": true,
+  "authorization_date": "2026-10-07",
+  "status": "reviewing",
+  "submitted_version": "landscape-menu1",
+  "submitted_package_sha256": "77143f1eb30eae0f965417c2500a9674c2e5e457bfc09866e78ac38eab9a95cf",
+  "submitted_h5_version_id": 270784,
+  "draft_version_id": "1040971",
+  "submitted_at": "2026-10-07T00:43:20+00:00",
+  "last_published_version": "lobby1",
+  "last_published_h5_version_id": 269855,
+  "last_public_runtime_verified_version": null,
+  "release_record": "releases/taptap-sync-20261007/handoff.json",
+  "pending": [],
+  "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
+  "submission_time_source": "TapTap version log review_submitted.updated_time",
+  "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00"
+}

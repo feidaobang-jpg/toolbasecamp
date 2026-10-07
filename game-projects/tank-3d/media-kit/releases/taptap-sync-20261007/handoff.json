@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-sync-20261007-02",
+  "game_id": "tank-3d",
+  "channel": "taptap-h5",
+  "developer_id": 100726,
+  "app_id": 962376,
+  "classification": "existing_channel_catch_up",
+  "dates_checked": [
+    "2026-10-06",
+    "2026-10-07"
+  ],
+  "source_version": "landscape-menu1",
+  "source_commit": "c203eda139235aee59d947c5cde5a3eb14984926",
+  "previous_published_source_version": "lobby1",
+  "previous_published_h5_version_id": 269855,
+  "version_name": "V-20261007",
+  "draft_version_id": "1040971",
+  "audit_id": "1040971",
+  "status": "reviewing",
+  "submitted_at": "2026-10-07T00:43:20+00:00",
+  "release_schedule": {
+    "kind": "immediate"
+  },
+  "package": {
+    "sha256": "77143f1eb30eae0f965417c2500a9674c2e5e457bfc09866e78ac38eab9a95cf",
+    "bytes": 410950,
+    "h5_version_id": 270784,
+    "h5_package_id": 71896,
+    "upload_task_id": "b4240d78-9741-41e4-bec0-6b588473a21d",
+    "bound": true
+  },
+  "precheck": {
+    "blockers": [],
+    "preaudit_passed": true,
+    "version_id": "1040971",
+    "warnings": []
+  },
+  "qa": "qa.json",
+  "qa_limits": {
+    "physical_phone": false,
+    "taptap_client": false,
+    "method": "实际H5包在Edge键鼠及手机横竖屏模拟；坦克含生产服务两客户端联机"
+  },
+  "description": {
+    "old": "操控坦克守住基地，击退敌军。\n\n经典模式包含35关地图；魔改模式包含100关一周目的战场、道具、精英敌军与Boss挑战，支持继续挑战更高周目。提供多种3D视角，可拖动画面观察战场。\n\n支持电脑键盘和手机触屏操作，设置中可切换自动识别、电脑键鼠和手机触屏。联机大厅支持2–4人合作，可设置房间密码。单人进度保存在当前设备，清理站点数据可能导致存档丢失。\n\n这是粉丝向非官方作品，免费试玩，无内购。",
+    "new": "操控坦克守住基地，击退敌军。\n\n经典模式包含35关地图；魔改模式包含100关一周目的战场、道具、精英敌军与Boss挑战，支持继续挑战更高周目。提供多种3D视角，可拖动画面观察战场。\n\n支持电脑键盘和手机触屏操作，设置中可切换自动识别、电脑键鼠和手机触屏。联机大厅支持2–4人合作，可设置房间密码。单人进度保存在当前设备，清理站点数据可能导致存档丢失。\n\n这是粉丝向非官方作品，免费试玩，无内购。\n\n更新（2026-10-07·landscape-menu1）：手机竖屏从标题菜单起按横屏布局，操作模式可即时切换并保留本局；全屏按浏览器能力显示，斜俯视恢复全图取景。"
+  },
+  "materials": {
+    "icon": "kept",
+    "screenshots": "kept",
+    "banner": "kept",
+    "gameplay_video": "kept",
+    "developer_message": "kept",
+    "home_promotion": "kept",
+    "reason": "现有实机素材仍准确表达核心玩法，更新仅换包和补版本说明"
+  },
+  "distribution": "既有Android/iOS/PC提供游玩设置保留",
+  "runtime_storage": "既有TapTap命名空间保持；本包保存与重新加载验证通过",
+  "public_runtime_verified": false,
+  "next_check": "下次相关游戏任务先核对审核与H5上线包；不重复提交同包",
+  "remaining": [
+    "等待平台审核结果",
+    "未做TapTap客户端真机验收"
+  ],
+  "public_url": "https://www.taptap.cn/app/962376",
+  "admin_url": "https://developer.taptap.cn/v3/100726/app/962376/store/update",
+  "artifacts": "D:/project/toolbasecamp-artifacts/taptap/sync/20261007",
+  "channel_differences": [
+    "保留现有联机服务；存档使用TapTap独立命名空间"
+  ],
+  "submission_time_source": "TapTap version log review_submitted.updated_time",
+  "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00",
+  "status_receipt": "version-status.json",
+  "review_screenshot": "D:/project/toolbasecamp-artifacts/taptap/sync/20261007/tank-review.jpg"
+}
