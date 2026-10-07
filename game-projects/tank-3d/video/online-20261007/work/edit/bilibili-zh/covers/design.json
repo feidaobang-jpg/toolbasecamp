@@ -1,0 +1,25 @@
+{
+  "source": "qa\\retimed-source\\009.00.jpg",
+  "source_time_seconds": 9,
+  "hero_source": "capture\\cover-close-host.png",
+  "hero_evidence": "cover-capture.json; actual near-view co-op spawn, no gameplay modifications",
+  "method": "recorded screenshot background darkened; two exact native close-view tank crops in graphic panels; not an untreated screenshot",
+  "gold_crop": [
+    752,
+    406,
+    1022,
+    679
+  ],
+  "blue_crop": [
+    1524,
+    399,
+    1822,
+    669
+  ],
+  "copy": [
+    "坦克大战",
+    "能联机了！",
+    "2–4人，一起守老鹰"
+  ],
+  "font": "Microsoft YaHei Bold"
+}

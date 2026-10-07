@@ -1,0 +1,123 @@
+{
+  "text": "这次用两个独立窗口实测。金色是一号，蓝色是二号。各开一辆坦克，先把挡路的砖墙打通。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 5250000,
+      "text": "这次"
+    },
+    {
+      "offset": 6500000,
+      "duration": 2000000,
+      "text": "用"
+    },
+    {
+      "offset": 8500000,
+      "duration": 3125000,
+      "text": "两个"
+    },
+    {
+      "offset": 11875000,
+      "duration": 2625000,
+      "text": "独立"
+    },
+    {
+      "offset": 14625000,
+      "duration": 3375000,
+      "text": "窗口"
+    },
+    {
+      "offset": 18125000,
+      "duration": 4875000,
+      "text": "实测"
+    },
+    {
+      "offset": 28750000,
+      "duration": 4500000,
+      "text": "金色"
+    },
+    {
+      "offset": 33500000,
+      "duration": 1000000,
+      "text": "是"
+    },
+    {
+      "offset": 34625000,
+      "duration": 5000000,
+      "text": "一号"
+    },
+    {
+      "offset": 42500000,
+      "duration": 3875000,
+      "text": "蓝色"
+    },
+    {
+      "offset": 46625000,
+      "duration": 1000000,
+      "text": "是"
+    },
+    {
+      "offset": 47750000,
+      "duration": 4250000,
+      "text": "二号"
+    },
+    {
+      "offset": 57750000,
+      "duration": 2000000,
+      "text": "各"
+    },
+    {
+      "offset": 59750000,
+      "duration": 1750000,
+      "text": "开"
+    },
+    {
+      "offset": 61625000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 62625000,
+      "duration": 1375000,
+      "text": "辆"
+    },
+    {
+      "offset": 64125000,
+      "duration": 5750000,
+      "text": "坦克"
+    },
+    {
+      "offset": 72875000,
+      "duration": 2250000,
+      "text": "先"
+    },
+    {
+      "offset": 75125000,
+      "duration": 1125000,
+      "text": "把"
+    },
+    {
+      "offset": 76500000,
+      "duration": 2875000,
+      "text": "挡路"
+    },
+    {
+      "offset": 79375000,
+      "duration": 1125000,
+      "text": "的"
+    },
+    {
+      "offset": 80625000,
+      "duration": 4000000,
+      "text": "砖墙"
+    },
+    {
+      "offset": 84750000,
+      "duration": 4500000,
+      "text": "打通"
+    }
+  ]
+}

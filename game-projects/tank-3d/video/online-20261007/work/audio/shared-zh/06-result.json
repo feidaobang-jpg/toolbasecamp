@@ -1,0 +1,113 @@
+{
+  "text": "最后一辆，击毁！这一关二十辆敌人清完，老鹰还在。合作模式，这次确实打通了。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3625000,
+      "text": "最后"
+    },
+    {
+      "offset": 4750000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 5750000,
+      "duration": 2375000,
+      "text": "辆"
+    },
+    {
+      "offset": 11750000,
+      "duration": 4875000,
+      "text": "击毁"
+    },
+    {
+      "offset": 22250000,
+      "duration": 1625000,
+      "text": "这"
+    },
+    {
+      "offset": 23875000,
+      "duration": 1375000,
+      "text": "一"
+    },
+    {
+      "offset": 25250000,
+      "duration": 1375000,
+      "text": "关"
+    },
+    {
+      "offset": 26875000,
+      "duration": 3125000,
+      "text": "二十"
+    },
+    {
+      "offset": 30000000,
+      "duration": 1375000,
+      "text": "辆"
+    },
+    {
+      "offset": 31500000,
+      "duration": 2250000,
+      "text": "敌人"
+    },
+    {
+      "offset": 33875000,
+      "duration": 2250000,
+      "text": "清"
+    },
+    {
+      "offset": 36125000,
+      "duration": 3000000,
+      "text": "完"
+    },
+    {
+      "offset": 43250000,
+      "duration": 4125000,
+      "text": "老鹰"
+    },
+    {
+      "offset": 47500000,
+      "duration": 1625000,
+      "text": "还"
+    },
+    {
+      "offset": 49125000,
+      "duration": 2375000,
+      "text": "在"
+    },
+    {
+      "offset": 57125000,
+      "duration": 3750000,
+      "text": "合作"
+    },
+    {
+      "offset": 61000000,
+      "duration": 5250000,
+      "text": "模式"
+    },
+    {
+      "offset": 68500000,
+      "duration": 2750000,
+      "text": "这次"
+    },
+    {
+      "offset": 71500000,
+      "duration": 3125000,
+      "text": "确实"
+    },
+    {
+      "offset": 74750000,
+      "duration": 3500000,
+      "text": "打通"
+    },
+    {
+      "offset": 78250000,
+      "duration": 1875000,
+      "text": "了"
+    }
+  ]
+}

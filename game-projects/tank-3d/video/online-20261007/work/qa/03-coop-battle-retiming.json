@@ -1,0 +1,10 @@
+{
+  "source": "03-coop-battle",
+  "method": "original frame file persistence timestamps; drop non-increasing timestamps",
+  "duration": 126.45096755027771,
+  "retained_frames": 3536,
+  "original_frames": 3793,
+  "raw_images_unchanged": true,
+  "audio_unchanged": true,
+  "limitation": "receive/persistence times, not original GPU frame timestamps; inspect synchronization"
+}
