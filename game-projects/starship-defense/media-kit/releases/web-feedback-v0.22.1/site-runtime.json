@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-10-07T06:37:41.279Z",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/",
+  "files": {
+    "game.compat.js": "45d07ae8f2d86238327018e07bdd2c86f6b9a8704d0cb8851c632d1416304ae0",
+    "game.js": "ddba761b120fdc33c5fe360c46883ac691201218e2368ac72afe8882f42510e7",
+    "index.html": "live script tag game.compat.js?v=6ff61b15 (deploy pipeline rewrites cache-bust query to commit hash)"
+  },
+  "result": "live hashes equal pushed files"
+}
