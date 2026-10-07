@@ -69,12 +69,12 @@
       "version": "v2.4.7",
       "build_id": "v2.4.7",
       "capture_mode": "realtime-automation",
-      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。",
+      "description": "测试定位与手动时钟回归；录像末段为正常实时开场。手机为视口模拟。 已检查实时末段的逐秒代表帧，自动走路、管壁遮挡与地下落地连续。",
       "width": 1280,
       "height": 720,
       "duration_seconds": 9.76,
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": [
         {

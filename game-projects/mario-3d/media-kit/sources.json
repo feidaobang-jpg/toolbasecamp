@@ -8,5 +8,5 @@
   {"id":"scene-procedural","purpose":"体素跑道、纵向 3 根水管、城堡、远景山丘灌木云、地下砖墙与遮挡淡化","source_type":"procedural","tool":"Three.js","input":"scene.js","processing":"InstancedMesh 实例化方块；自定义着色器做网点淡化与地下剖面","usage":"public/html/game/mario-3d/scene.js"},
   {"id":"audio-resynth","purpose":"地面、地下、无敌星音乐，过关、死亡、GAME OVER、催促、1UP 等短曲与音效","source_type":"procedural","tool":"Web Audio API","input":"audio.js","processing":"按公开乐谱转写的音符用方波/三角波实时重新合成，无敌星音乐为近似还原；不加载原始音频文件","usage":"public/html/game/mario-3d/audio.js"},
   {"id":"three-vendor","purpose":"WebGL 渲染","source_type":"licensed","tool":"Three.js 0.170.0（MIT）","input":"public/vendor/three/0.170.0/build/three.module.js","processing":"仓库已固定版本，three.js 包装模块转出","usage":"public/html/game/mario-3d/three.js"},
-  {"id":"entry-cutscene-v2.4.7","purpose":"1-1通关到1-2地下的钻管衔接","source_type":"reference","input":"https://www.mariowiki.com/World_1-2_(Super_Mario_Bros.) ; 用户反馈缺失地面钻管动画","processing":"地下入场从屋顶落下按已有路线保留；地面横管、场景距离与3.9秒动作是本版三维适配，非逐帧还原。","usage":"levels.js entry area, world.js updateEntrance; 复用现有模型与声音"}
+  {"id":"entry-cutscene-v2.4.7","purpose":"1-1通关到1-2地下的钻管衔接","source_type":"reference","input":"https://www.mariowiki.com/World_1-2_(Super_Mario_Bros.) ; 用户反馈缺失地面钻管动画","processing":"地下入场从屋顶落下按已有路线保留；地面横管、场景距离与约4秒动作是本版三维适配，非逐帧还原。","usage":"levels.js entry area, world.js updateEntrance; 复用现有模型与声音"}
 ]
