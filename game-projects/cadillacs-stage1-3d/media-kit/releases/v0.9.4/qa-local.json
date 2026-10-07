@@ -1,0 +1,90 @@
+[
+  {
+    "name": "baseline-no-uuid",
+    "pass": true,
+    "errors": [
+      "crypto.randomUUID is not a function"
+    ],
+    "expected_failure": true
+  },
+  {
+    "name": "desktop-native",
+    "pass": true,
+    "missing": "native",
+    "viewport": [
+      1280,
+      720
+    ],
+    "errors": [],
+    "movement": [
+      3.47,
+      4.88
+    ],
+    "attack": "attack",
+    "method": "Edge desktop with API removal and mobile viewport emulation; not a physical device"
+  },
+  {
+    "name": "desktop-no-uuid",
+    "pass": true,
+    "missing": "uuid",
+    "viewport": [
+      1280,
+      720
+    ],
+    "errors": [],
+    "movement": [
+      3.47,
+      4.88
+    ],
+    "attack": "attack",
+    "method": "Edge desktop with API removal and mobile viewport emulation; not a physical device"
+  },
+  {
+    "name": "mobile-no-uuid",
+    "pass": true,
+    "missing": "uuid",
+    "viewport": [
+      844,
+      390
+    ],
+    "errors": [],
+    "movement": [
+      3.47,
+      4.81
+    ],
+    "attack": "attack",
+    "method": "Edge desktop with API removal and mobile viewport emulation; not a physical device"
+  },
+  {
+    "name": "mobile-no-crypto-storage",
+    "pass": true,
+    "missing": "all",
+    "viewport": [
+      844,
+      390
+    ],
+    "errors": [],
+    "movement": [
+      3.47,
+      4.88
+    ],
+    "attack": "attack",
+    "method": "Edge desktop with API removal and mobile viewport emulation; not a physical device"
+  },
+  {
+    "name": "portrait-no-uuid",
+    "pass": true,
+    "missing": "uuid",
+    "viewport": [
+      390,
+      844
+    ],
+    "errors": [],
+    "movement": [
+      3.47,
+      4.88
+    ],
+    "attack": "attack",
+    "method": "Edge desktop with API removal and mobile viewport emulation; not a physical device"
+  }
+]

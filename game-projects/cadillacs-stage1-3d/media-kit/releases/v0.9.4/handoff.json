@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.9.4",
+  "base_version": "v0.9.3",
+  "created_at": "2026-10-07T11:46:58.957848+00:00",
+  "classification": "严重修复",
+  "build": {
+    "id": "v094-uuid1",
+    "commit": null,
+    "fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "webview-startup",
+      "before": "联机模块两处直接调用crypto.randomUUID，新会话在不支持此接口的Toy/WebView中启动即异常",
+      "after": "优先原生UUID，回退getRandomValues或普通随机UUID；存储异常不再重新生成ID",
+      "verification": "17/17玩家ID测试；桌面、手机横屏在无UUID/无crypto/无存储环境启动及实操通过。竖屏另补核验。"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "randomUUID-missing",
+      "status": "fixed",
+      "cause": "玩家ID初始化中未检测浏览器能力，catch再次调用同一个不可用API",
+      "report": "用户提供安卓Toy错误截图；是否模拟器及具体WebView版本未确认"
+    }
+  ],
+  "qa": [
+    {
+      "method": "site-games/qa/coop-identity.mjs",
+      "result": "17/17"
+    },
+    {
+      "method": "site-games/qa/coop-controls.mjs",
+      "result": "pass"
+    },
+    {
+      "method": "qa/startup-compat.cjs",
+      "result": "6/6已完成场景通过，含旧版准确复现",
+      "record": "qa-local.json",
+      "unmeasured": [
+        "玩家原设备、手机真机"
+      ]
+    }
+  ],
+  "thumbnail": {
+    "decision": "沿用",
+    "reason": "启动兼容修复，无画面变化"
+  },
+  "captures_root": "D:/project/artifacts/cadillacs-uuid-20261007",
+  "physical_device_test": false,
+  "channels": {
+    "website": {
+      "status": "verified",
+      "verified_at": "2026-10-07T20:20:00+08:00",
+      "evidence": "game.min.js 线上sha256=4e8a808e…、coop.js=28eb0531…与主线一致；index.html 本体等价，仅?v=标记被VPS部署脚本按提交号全站改写（cbb8d0bd），非旧版残留",
+      "by": "Qoder 接管核验"
+    },
+    "toy": {
+      "status": "auditing",
+      "submitted_at": "2026-10-07T20:11:52+08:00",
+      "package": "dist/toy-v0.9.4/package",
+      "package_fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_7ngzEtfk/index.html",
+      "note": "严重修复随任务同步；mylist 显示现网仍为 v0.9.3 published，过审后再核验正式入口",
+      "by": "Qoder"
+    },
+    "taptap": {
+      "status": "pending",
+      "note": "taptap-all-startup 的恐龙快打 zip 基于 v0.9.3 源码，需用 v0.9.4（含UUID回退）重建后再上传；六款包均待TapTap后台人工上传",
+      "by": "Qoder"
+    },
+    "bilibili": {
+      "status": "pending",
+      "note": "Toy 过审生效后，若简介中的可玩状态或版本说明不再准确再一并纠正；当前不单独改简介",
+      "by": "Qoder"
+    }
+  },
+  "readiness": {
+    "update": "website-verified-toy-auditing",
+    "gaps": [
+      "玩家原设备待复测，未知其浏览器内核；非手机真机测试"
+    ]
+  }
+}
