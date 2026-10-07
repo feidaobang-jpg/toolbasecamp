@@ -1,4 +1,4 @@
-import {GAMES} from './coop.js?v=lobby-scroll1';
+import {GAMES} from './coop.js?v=ime1';
 const $=id=>document.getElementById(id),filter=$('online-filter'),password=$('online-password');
 let page=1,inflight=false;
 for(const [id,g] of Object.entries(GAMES)){

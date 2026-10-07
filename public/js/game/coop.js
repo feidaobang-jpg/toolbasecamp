@@ -1,4 +1,5 @@
 // Shared rooms transport and portable lobby UI. Gameplay stays in each game's adapter.
+import {installLandscapeTyping} from './landscape-typing.js?v=lt1';
 export const GAMES = {
   tank: {title:'坦克大战', protocol:'tank3d-v2', max:4, path:'tank-3d'},
   jackal: {title:'赤色要塞', protocol:'jackal3d-v1', max:2, path:'jackal-stage1-3d'},
@@ -81,6 +82,7 @@ export class CooperativeLobby {
   constructor({game,container,menu,getConfig,onStart,onMessage=()=>{},onClose=()=>{},onOpen=()=>{}}) {
     this.game=game;this.getConfig=getConfig;this.onStart=onStart;this.onMessage=onMessage;this.onClose=onClose;this.onOpen=onOpen;
     this.connection=new CoopConnection(m=>this.message(m),s=>this.status(s),game);
+    installLandscapeTyping();
     this.page=1;this.total=0;this.opened=false;
     if(!document.getElementById('coop-shared-style')){const s=document.createElement('style');s.id='coop-shared-style';s.textContent=css;document.head.append(s);}
     const entry=document.createElement('button');entry.className='coop-entry';entry.type='button';entry.dataset.act='coop';entry.textContent='联机大厅 · 2–'+GAMES[game].max+'人合作';menu.append(entry);entry.addEventListener('click',()=>this.open());

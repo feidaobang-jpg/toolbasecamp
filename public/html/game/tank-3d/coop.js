@@ -1,4 +1,4 @@
-import { CoopConnection, endpoint } from '../../../js/game/coop.js?v=coop-hub1';
+import { CoopConnection, endpoint } from '../../../js/game/coop.js?v=ime1';
 export { CoopConnection, endpoint };
 
 const WORLD_FIELDS = ['f', 't', 'eagle', 'playerSpawnT', 'nextId', 'roster', 'rosterIndex', 'remaining', 'freeze', 'shovel', 'playerFrozen', 'kills', 'killOrder', 'pickups', 'stageScore', 'status', 'endT', 'overRise', 'result', 'eagleBy', 'powerup', 'items', 'mines', 'mortars', 'lasers', 'curtainSet', 'playerShots'];

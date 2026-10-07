@@ -3283,5 +3283,8 @@ const Game = (() => {
 })();
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
+<script type="module">
+try{const m=await import('../../js/game/landscape-typing.js?v=lt1');m.installLandscapeTyping();}catch(e){console.warn(e)}
+</script>
 </body>
 </html>
