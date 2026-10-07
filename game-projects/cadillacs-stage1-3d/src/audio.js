@@ -87,7 +87,7 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
 
 // Short samples use this same context/bus for pause, mute, capture and offline rendering.
 const lastSample = new Map();
-const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9 };
+const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9, dash: 0.9, dashHit: 1.1, shout: 0.95 };
 const activeSamples = new Set();
 function playOriginal(name, v, hero, t, throttle = true) {
   const key = originalCue(name, hero), buffer = samples?.buffers.get(key);
@@ -114,6 +114,8 @@ const SFX = {
   punch(t, v) { const r = vary(); noise(t, 0.022, 0.75 * v, 'highpass', 2600 * r, 0.8); noise(t, 0.075, 0.95 * v, 'bandpass', 1500 * r, 0.9, null, { to: 650, room: true }); thump(t, 200 * r, 62, 0.13, 0.75 * v); },
   punchHeavy(t, v) { const r = vary(); noise(t, 0.03, 0.9 * v, 'highpass', 2200 * r, 0.8); noise(t, 0.13, 1.05 * v, 'bandpass', 1100 * r, 0.8, null, { to: 380, room: true }); thump(t, 165 * r, 44, 0.26, 1.05 * v, 0.16); osc('sine', 62, t, 0.32, 0.7 * v, null, { to: 32 }); noise(t + 0.008, 0.06, 0.4 * v, 'lowpass', 3400, 1); },
   kick(t, v) { const r = vary(); noise(t, 0.025, 0.65 * v, 'highpass', 1900 * r, 0.8); noise(t, 0.1, 0.95 * v, 'bandpass', 950 * r, 0.8, null, { to: 360, room: true }); thump(t, 160 * r, 50, 0.17, 0.9 * v); },
+  dashHit(t, v) { SFX.kickHeavy(t, v); },
+  dash(t, v) { SFX.whoosh(t, v * 0.8); },
   kickHeavy(t, v) { const r = vary(); noise(t, 0.032, 0.85 * v, 'highpass', 1700 * r, 0.8); noise(t, 0.16, 1.1 * v, 'bandpass', 800 * r, 0.8, null, { to: 260, room: true }); thump(t, 140 * r, 38, 0.3, 1.1 * v, 0.18); osc('sine', 55, t, 0.34, 0.75 * v, null, { to: 30 }); },
   // 挥空：轻招短促偏高，重招更长更沉（带一点低频“呼”）
   whoosh(t, v) { const r = vary(); noise(t, 0.11, 0.5 * v, 'bandpass', 1300 * r, 1.4, null, { to: 3400 * r, a: 0.035 }); },

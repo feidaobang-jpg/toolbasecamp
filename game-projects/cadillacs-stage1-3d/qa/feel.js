@@ -1,5 +1,5 @@
 // 打击感回归（v0.6.0）：命中停顿时拳脚定格在打到位的姿势、受击方向反应、轻 / 重 / 终结三档停顿与音效、
-// 挥空连打不吞键、挥空声在打出时才响、倒地有砸地声、一波最后一个敌人倒下的慢动作会自动恢复。
+// 挥空连打不吞键、空手出拳不带挥空声（原作没有，v0.8.2 起）、倒地有砸地声、一波最后一个敌人倒下的慢动作会自动恢复。
 // node qa/feel.js（CD_BASE 指向本地服务）
 const { launch, BASE, out } = require('./lib');
 (async () => {
@@ -46,8 +46,7 @@ const { launch, BASE, out } = require('./lib');
   const lightHs = st ? st.ehs : 0;
   await step(30);
   let log = await C(() => window.__CD_TEST__.audioLogStop());
-  const whooshAt = log.find(e => e.name === 'whoosh'), punchAt = log.find(e => e.name === 'punch');
-  ok('挥空声在打出时响（不早于命中前 0.06 秒）', whooshAt && punchAt && punchAt.t - whooshAt.t <= 0.06 && punchAt.t >= whooshAt.t, { whooshAt, punchAt });
+  ok('空手出拳只有打击声、没有合成挥空声（原作如此）', log.some(e => e.name === 'punch') && !log.some(e => /^whoosh/.test(e.name)), log.map(e => e.name).join(','));
 
   // 2. 终结技：杰克第四下上勾拳 → 最长停顿、重拳音、挑飞，落地有砸地声
   await reset(1, 9999);
@@ -60,7 +59,7 @@ const { launch, BASE, out } = require('./lib');
   log = await C(() => window.__CD_TEST__.audioLogStop());
   ok('连招打到终结技（上勾拳）并击倒', fin.combo === 3 && log.some(e => e.name === 'bodyfall'), fin);
   ok('终结技停顿明显长于轻拳', maxHs > lightHs + 0.05, { maxHs, lightHs });
-  ok('终结技使用重拳音与重挥空声', log.some(e => e.name === 'punchHeavy') && log.some(e => e.name === 'whooshHeavy'), log.map(e => e.name).join(','));
+  ok('终结技用重拳事件并在起手时喊一声，没有挥空声', log.some(e => e.name === 'punchHeavy') && log.some(e => e.name === 'finisher') && !log.some(e => /^whoosh/.test(e.name)), log.map(e => e.name).join(','));
   ok('被打飞落地有砸地声', log.some(e => e.name === 'bodyfall'), log.map(e => e.name).join(','));
 
   // 3. 汉娜踢中身体 → 弯腰受击；第四下高踢用重踢音
