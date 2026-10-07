@@ -1,335 +1,347 @@
 {
- "game_id": "cadillacs-stage1-3d",
- "name": {
-  "zh": "恐龙快打 · 第一、二关 3D 重置版",
-  "en": "Cadillacs and Dinosaurs · Stages 1-2 3D remake (fan-made)"
- },
- "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
- "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
- "current_version": "v0.7.0",
- "handoff": "releases/v0.7.0/handoff.json",
- "launch": {
-  "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
-  "device_root": "D:/project/toolbasecamp",
-  "device_entry": "D:/project/toolbasecamp/public/html/game/cadillacs-stage1-3d/index.html",
-  "game_list": "D:/project/toolbasecamp/public/games.html（public/js/config.js 的游戏动作组，标题 tools.cadillacs3d）",
-  "site_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
-  "source": "D:/project/toolbasecamp/game-projects/cadillacs-stage1-3d/src",
-  "build": "在 game-projects/cadillacs-stage1-3d 运行 npm i 后 node tools/build.mjs",
-  "serve": "在 game-projects/cadillacs-stage1-3d 运行 node qa/serve.mjs 8777，然后打开 http://127.0.0.1:8777/html/game/cadillacs-stage1-3d/index.html",
-  "url_params": {
-   "seed": "固定随机种子",
-   "test": "=1 时暴露自动化测试钩子 window.__CD_TEST__（玩家界面不暴露）",
-   "clean": "=1 时隐藏桌面键位提示，用于录制",
-   "q": "high / low：测试用强制画质",
-   "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
-  }
- },
- "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
- "release_intent": "web_demo",
- "verified_public_links": [
-  "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
-  "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
- ],
- "pending_changes": [
-  {
-   "version": "v0.5.1",
-   "classification": "普通补丁",
-   "summary": "演示无敌暂停倒计时；显示无限时间；关闭后从原剩余时间继续，普通模式超时规则不变。",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "merged_into_v0.5.2"
-   },
-   "record": "releases/v0.5.1/handoff.json"
-  },
-  {
-   "version": "v0.5.2",
-   "classification": "正式版本",
-   "summary": "画风改回旧版硬派写实（第一关回到 v0.4.1，第二关同款）；封面恢复。",
-   "record": "releases/v0.5.2/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "public_verified"
-   }
-  },
-  {
-   "version": "v0.5.4",
-   "classification": "普通补丁",
-   "summary": "暂停后「重新开始」恢复 BGM 和音效；第二关可走到画面下方（约 83% 高），外沿放边界物。",
-   "record": "releases/v0.5.4/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "merged_into_v0.6.0"
-   }
-  },
-  {
-   "version": "v0.5.5",
-   "classification": "普通补丁",
-   "summary": "开枪有子弹拖光飞出去、子弹飞到才命中；火花从枪管前端发出；维斯手里有左轮。",
-   "record": "releases/v0.5.5/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "merged_into_v0.6.0"
-   }
-  },
-  {
-   "version": "v0.6.0",
-   "classification": "正式版本",
-   "summary": "打击感：出招蓄力-爆发-停住，命中定格在拳脚到位；受击按方向反应；轻/重/终结三档停顿、震屏、火花与音效；三层打击声与砸地声；挥空不吞键；波末慢动作。",
-   "record": "releases/v0.6.0/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "public_verified"
-   }
-  },
-  {
-   "version": "v0.6.1",
-   "classification": "普通补丁",
-   "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩，完整操作说明移入暂停。",
-   "record": "releases/v0.6.1/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "published",
-    "bilibili": "pending_merge"
-   }
-  },
-  {
-   "version": "v0.7.0",
-   "classification": "正式版本",
-   "summary": "接入原版轻重拳脚、四名角色必杀语音和三次 GO 提示；暂停、静音、重开与离线录像共用音频链。",
-   "record": "releases/v0.7.0/handoff.json",
-   "channels": {
-    "website": "deployed_verified",
-    "toy": "auditing",
-    "bilibili": "pending_review"
-   }
-  }
- ],
- "toy": {
-  "id": 40412421031936,
-  "title": "恐龙快打 3D：第一、二关",
-  "slug": "feidao-cadillacs-3d",
-  "category": "GAME",
-  "visibility": "public",
-  "status": "auditing",
-  "submitted_at": "2026-10-07T08:40:17+08:00",
-  "package": "dist/toy-v0.7.0/package",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_0vpqIhjk/index.html",
-  "note": "v0.7.0原版音效包已通过电脑与触屏预览测试并送审；正式入口过审前仍为v0.6.1",
-  "status_verified": "toy mylist auditing",
-  "bound_videos": [
-   "BV18XHW66E55"
-  ],
-  "review_status": "auditing",
-  "version": "v0.7.0",
-  "verified_at": "2026-10-07T08:43:01.731112+08:00",
-  "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "last_published_version": "v0.6.1",
-  "pending_updates": [
-   {
-    "version": "v0.2.1",
-    "classification": "普通补丁",
-    "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-    "status": "included_in_submitted_package",
-    "record": "releases/drag-direction-20261005/handoff.json",
-    "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
-    "included_version": "v0.3.0"
-   },
-   {
-    "version": "v0.4.0",
-    "classification": "正式版本",
-    "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
-    "status": "published",
-    "record": "releases/v0.4.0/handoff.json",
-    "included_version": "v0.4.0"
-   },
-   {
-    "version": "v0.4.1",
-    "classification": "普通补丁",
-    "status": "published",
-    "record": "releases/v0.4.1/handoff.json",
-    "summary": "右上贴边单行按钮，HUD避让。"
-   },
-   {
-    "version": "v0.5.0",
-    "classification": "正式版本",
-    "summary": "画风与赤色要塞统一；新增第二关沼泽森林；起始关卡可选。",
-    "status": "published",
-    "record": "releases/v0.5.0/handoff.json",
-    "included_version": "v0.5.0"
-   },
-   {
-    "version": "v0.5.3",
-    "classification": "普通补丁",
-    "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+  "toy": {
+    "id": 40412421031936,
+    "title": "恐龙快打 3D：第一、二关",
+    "slug": "feidao-cadillacs-3d",
+    "category": "GAME",
+    "visibility": "public",
     "status": "auditing",
-    "record": "releases/v0.5.3/handoff.json"
-   },
-   {
-    "version": "v0.5.6",
-    "classification": "普通补丁",
-    "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
-    "status": "published",
-    "record": "releases/v0.5.6/handoff.json",
-    "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换",
-    "included_version": "v0.5.6-bgmfull1"
-   }
-  ],
-  "submitted_version": "v0.7.0",
-  "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
-  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
-  "release_record": "releases/v0.7.0/handoff.json",
-  "published_version": "v0.6.1",
-  "published_verified_at": "2026-10-07T07:50:06+08:00",
-  "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-  "video_bindings": [
-   "BV18XHW66E55"
-  ],
-  "package_hash": "df8f27eee40763cb2f373f8005e72ca9de3b380d22ab7e784913b70f2235aad9",
-  "title_changed": {
-   "from": "恐龙快打 3D：第一关",
-   "to": "恐龙快打 3D：第一、二关",
-   "requested_by": "user",
-   "submitted_at": "2026-10-06T22:44:10+08:00",
-   "status": "published",
-   "verified_at": "2026-10-06T23:38:00+08:00"
+    "submitted_at": "2026-10-07T08:40:17+08:00",
+    "package": "dist/toy-v0.7.0/package",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_0vpqIhjk/index.html",
+    "note": "v0.7.0原版音效包已通过电脑与触屏预览测试并送审；正式入口过审前仍为v0.6.1",
+    "status_verified": "toy mylist auditing",
+    "bound_videos": [
+      "BV18XHW66E55"
+    ],
+    "review_status": "auditing",
+    "version": "v0.7.0",
+    "verified_at": "2026-10-07T08:43:01.731112+08:00",
+    "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "last_published_version": "v0.6.1",
+    "pending_updates": [
+      {
+        "version": "v0.2.1",
+        "classification": "普通补丁",
+        "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+        "status": "included_in_submitted_package",
+        "record": "releases/drag-direction-20261005/handoff.json",
+        "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+        "included_version": "v0.3.0"
+      },
+      {
+        "version": "v0.4.0",
+        "classification": "正式版本",
+        "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+        "status": "published",
+        "record": "releases/v0.4.0/handoff.json",
+        "included_version": "v0.4.0"
+      },
+      {
+        "version": "v0.4.1",
+        "classification": "普通补丁",
+        "status": "published",
+        "record": "releases/v0.4.1/handoff.json",
+        "summary": "右上贴边单行按钮，HUD避让。"
+      },
+      {
+        "version": "v0.5.0",
+        "classification": "正式版本",
+        "summary": "画风与赤色要塞统一；新增第二关沼泽森林；起始关卡可选。",
+        "status": "published",
+        "record": "releases/v0.5.0/handoff.json",
+        "included_version": "v0.5.0"
+      },
+      {
+        "version": "v0.5.3",
+        "classification": "普通补丁",
+        "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+        "status": "auditing",
+        "record": "releases/v0.5.3/handoff.json"
+      },
+      {
+        "version": "v0.5.6",
+        "classification": "普通补丁",
+        "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+        "status": "published",
+        "record": "releases/v0.5.6/handoff.json",
+        "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换",
+        "included_version": "v0.5.6-bgmfull1"
+      }
+    ],
+    "submitted_version": "v0.7.0",
+    "package_sha256": "c088b3aa98fb2f4487ac9909ebc8729e3fb3a86f4a40edceeaed9e46149c7324",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
+    "release_record": "releases/v0.7.0/handoff.json",
+    "published_version": "v0.6.1",
+    "published_verified_at": "2026-10-07T07:50:06+08:00",
+    "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "video_bindings": [
+      "BV18XHW66E55"
+    ],
+    "package_hash": "df8f27eee40763cb2f373f8005e72ca9de3b380d22ab7e784913b70f2235aad9",
+    "title_changed": {
+      "from": "恐龙快打 3D：第一关",
+      "to": "恐龙快打 3D：第一、二关",
+      "requested_by": "user",
+      "submitted_at": "2026-10-06T22:44:10+08:00",
+      "status": "published",
+      "verified_at": "2026-10-06T23:38:00+08:00"
+    },
+    "public_verified_version": "v0.5.6-bgmfull1",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
+    "last_successful_sync_version": "v0.6.1",
+    "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
+    "package_tree_sha256": "c6f9cf28bfe2bcaaff1a09b02e2397867b574c0c7e5ee9b34246da08fee191c9"
   },
-  "public_verified_version": "v0.5.6-bgmfull1",
-  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_14KDo9O6/index.html",
-  "last_successful_sync_version": "v0.6.1",
-  "last_successful_sync_at": "2026-10-07T07:50:06+08:00",
-  "package_tree_sha256": "c6f9cf28bfe2bcaaff1a09b02e2397867b574c0c7e5ee9b34246da08fee191c9"
- },
- "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
- "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
- "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
- "dev": {
-  "model": "claude-opus-5-5（Claude Code 会话模型标识）",
-  "tools": [
-   "Claude Code 桌面版（Windows 本机）",
-   "Three.js r170",
-   "esbuild 0.28.2",
-   "Playwright + 系统 Edge（ANGLE D3D11，RTX 4060 Ti）",
-   "yt-dlp / ffmpeg（参考录像截帧）",
-   "Python Pillow"
+  "website_version": "v0.6.1",
+  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
+  "website_verified_at": "2026-10-07T07:30:00+08:00",
+  "website_commit": "a0da954f",
+  "versions": [
+    {
+      "version": "v0.5.6-bgmfull1",
+      "base_version": "v0.5.6",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+      "handoff": "releases/v0.5.6-bgmfull1/handoff.json"
+    },
+    {
+      "version": "v0.6.0",
+      "base_version": "v0.5.6-bgmfull1",
+      "date": "2026-10-07",
+      "classification": "正式版本",
+      "summary": "打击感重做：出招到位、轻重分档的停顿/震屏/火花/音效、方向受击、挥空不吞键、波末慢动作。",
+      "handoff": "releases/v0.6.0/handoff.json"
+    }
   ],
-  "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md",
-  "continuation": {
-   "tool": "Codex",
-   "scope": "v0.2.0 玩家反馈：触控、特殊技、枪械与走廊细节"
-  }
- },
- "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git",
- "drag_camera_controls": {
-  "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
-  "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
-  "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
-  "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标",
-  "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
-  "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
-  "action_layout": "复刻以赤色要塞样式，J红/K绿/U金/I蓝等大2×2，无装饰点；C/暂停/全屏右上；原创按玩法保留必要动作",
-  "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局",
-  "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
- },
- "resolved_changes": [
-  {
-   "date": "2026-10-05",
-   "change": "手机端两批小修：①移除 Q/E 左右转视角按钮，改为按住画面拖动无极转视角（电脑 Q/E 不变）；②选人画面竖屏即旋转横屏（不用等开局）；③右下按钮改街机习惯位（J 攻击离右下角最近且最大，K 跳跃斜后，环形布局）；④切视角 toast 触屏端不再显示 Q/E 文案（改为按住画面拖动）。网站已部署（game.min.js?v=5），手机触控 QA 34/34，桌面 QA 每轮随机 1 项时序抖动（并行负载，与改动无关，玩法代码未变）。",
-   "reason": "用户指示：选人界面应横屏、J 攻击在前 K 跳跃在后、去掉触屏 Q/E 提示",
-   "channels": {
-    "website": "deployed 2026-10-05",
-    "toy": "待合并：今日批次已用（v0.1.0 auditing），随下次 Toy 更新一起送审",
-    "bilibili_videos": "无已有视频；新视频手机段已用最新布局重录（mobile-landscape-v5）"
-   },
-   "resolved_in": "v0.1.3",
-   "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
+  "dev": {
+    "model": "claude-opus-5-5（Claude Code 会话模型标识）",
+    "tools": [
+      "Claude Code 桌面版（Windows 本机）",
+      "Three.js r170",
+      "esbuild 0.28.2",
+      "Playwright + 系统 Edge（ANGLE D3D11，RTX 4060 Ti）",
+      "yt-dlp / ffmpeg（参考录像截帧）",
+      "Python Pillow"
+    ],
+    "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md",
+    "continuation": {
+      "tool": "Codex",
+      "scope": "v0.2.0 玩家反馈：触控、特殊技、枪械与走廊细节"
+    }
   },
-  {
-   "date": "2026-10-05",
-   "version": "v0.1.1",
-   "kind": "普通补丁",
-   "change": "三处镜头修复：①正视在第 47 街贴后墙按 Q/E 转头不再进墙（后墙 / 楼体立面剖切 + 贴近渐隐，瓦砾实体先抬高后拉近）；②第一人称贴身岩跳龙 / 敌人时按距离淡化、隐藏描边，不再黑屏或露出模型内部；③锁屏时敌人、Boss、被打飞 / 被抓的角色不出画，侧视取景保证最前一排完整入画（16:9 约拉远 8%）。另修户外遮挡淡化从未生效。网站已部署（提交 378dc004，线上 game.min.js?v=378dc004，sha256 5fc92be2…），qa/camera.js 本地与线上 11/11、desktop 88/88、mobile 34/34。",
-   "reason": "做视角版视频时同一局实机录像里发现（views-run-1080p.mp4 176.8 s / 224 s / 280–290 s）",
-   "channels": {
-    "website": "deployed 2026-10-05 16:53（公网抽查 index.html 与 game.min.js 哈希一致）",
-    "toy": "待合并：普通补丁；本游戏北京时间 10-05 的 Toy 批次已用于 v0.1.0 首发（06:25 提交，现 published），与上一条手机端小修一起随下一批（10-06 起）送审",
-    "bilibili_videos": "待合并：普通补丁不单独改简介；BV18XHW66E55 简介与置顶仍准确（未写镜头相关的已知问题），下次有意义的说明更新时一并写入"
-   },
-   "handoff": "releases/v0.1.1/handoff.json",
-   "resolved_in": "v0.1.3",
-   "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
-  }
- ],
- "website": {
-  "version": "v0.5.6-bgmfull1",
-  "status": "deployed_verified",
-  "verified_at": "2026-10-07T06:49:45.870220+08:00",
-  "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
- },
- "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
- "audio_assets": {
-  "policy": "original first; synthesis fallback",
-  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
-  "revision": "bgmfull1",
-  "processing": "完整音源压缩，不截取前70秒"
- },
- "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
- "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
- "website_version": "v0.6.1",
- "website_verified_at": "2026-10-07T07:30:00+08:00",
- "website_commit": "a0da954f",
- "web_toy_versions_match": true,
- "touch_control_inset": {
-  "side_css_px": 40,
-  "bottom_css_px": 36,
-  "safe_area_added": true,
-  "previous_version": "v0.5.2",
-  "physical_phone_test": false
- },
- "versions": [
-  {
-   "version": "v0.5.6-bgmfull1",
-   "base_version": "v0.5.6",
-   "date": "2026-10-07",
-   "classification": "普通补丁",
-   "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
-   "handoff": "releases/v0.5.6-bgmfull1/handoff.json"
+  "name": {
+    "zh": "恐龙快打 · 第一、二关 3D 重置版",
+    "en": "Cadillacs and Dinosaurs · Stages 1-2 3D remake (fan-made)"
   },
-  {
-   "version": "v0.6.0",
-   "base_version": "v0.5.6-bgmfull1",
-   "date": "2026-10-07",
-   "classification": "正式版本",
-   "summary": "打击感重做：出招到位、轻重分档的停顿/震屏/火花/音效、方向受击、挥空不吞键、波末慢动作。",
-   "handoff": "releases/v0.6.0/handoff.json"
-  }
- ],
- "pending_channel_changes": [
-  {
-   "version": "v0.5.6-bgmfull1",
-   "classification": "普通补丁",
-   "changes": [
-    "完整原版BGM取消70秒截取"
-   ],
-   "bilibili": "已并入 v0.6.0 简介更新（2026-10-07 公开核验）",
-   "toy": "public_verified"
-  }
- ],
- "taptap": {
-  "developer_id": 100726,
-  "app_id": 962722,
-  "automatic_sync_enabled": true,
-  "status": "draft_waiting_agreement_and_ip_review",
-  "staged_version": "v0.7.0",
-  "staged_h5_version_id": 270844,
-  "draft_version_id": "1041013",
-  "last_published_version": null,
-  "sync_record": "taptap-sync.json",
-  "release_record": "releases/taptap-first-publish-20261007/handoff.json"
- }
+  "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
+  "multiplayer": {
+    "players": "2–4",
+    "hub": "https://www.zhengxiaohui.cn/game-online.html",
+    "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
+    "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
+    "limitations": [
+      "暂不支持中途加入、断线重连和房主迁移",
+      "联机不写入单机存档/排行榜"
+    ]
+  },
+  "drag_camera_controls": {
+    "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
+    "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
+    "modes": "自动识别 / 电脑键鼠 / 手机触屏，可在设置中切换，本局保留",
+    "direction": "所有预设与人称均右拖右看、左拖左看；Q左转/E右转，竖屏先逆变换逻辑坐标",
+    "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
+    "pause_audio": "手动/失焦/切后台暂停冻结音频时钟，继续原播放位置",
+    "action_layout": "复刻以赤色要塞样式，J红/K绿/U金/I蓝等大2×2，无装饰点；C/暂停/全屏右上；原创按玩法保留必要动作",
+    "selected_mode": "明显背景/边框/文字对比和aria-pressed，自动/电脑/手机切换保留本局",
+    "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
+  },
+  "pending_changes": [
+    {
+      "version": "v0.5.1",
+      "classification": "普通补丁",
+      "summary": "演示无敌暂停倒计时；显示无限时间；关闭后从原剩余时间继续，普通模式超时规则不变。",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "merged_into_v0.5.2"
+      },
+      "record": "releases/v0.5.1/handoff.json"
+    },
+    {
+      "version": "v0.5.2",
+      "classification": "正式版本",
+      "summary": "画风改回旧版硬派写实（第一关回到 v0.4.1，第二关同款）；封面恢复。",
+      "record": "releases/v0.5.2/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "public_verified"
+      }
+    },
+    {
+      "version": "v0.5.4",
+      "classification": "普通补丁",
+      "summary": "暂停后「重新开始」恢复 BGM 和音效；第二关可走到画面下方（约 83% 高），外沿放边界物。",
+      "record": "releases/v0.5.4/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "merged_into_v0.6.0"
+      }
+    },
+    {
+      "version": "v0.5.5",
+      "classification": "普通补丁",
+      "summary": "开枪有子弹拖光飞出去、子弹飞到才命中；火花从枪管前端发出；维斯手里有左轮。",
+      "record": "releases/v0.5.5/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "merged_into_v0.6.0"
+      }
+    },
+    {
+      "version": "v0.6.0",
+      "classification": "正式版本",
+      "summary": "打击感：出招蓄力-爆发-停住，命中定格在拳脚到位；受击按方向反应；轻/重/终结三档停顿、震屏、火花与音效；三层打击声与砸地声；挥空不吞键；波末慢动作。",
+      "record": "releases/v0.6.0/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "public_verified"
+      }
+    },
+    {
+      "version": "v0.6.1",
+      "classification": "普通补丁",
+      "summary": "手机竖着拿时菜单直接横屏，紧凑横屏菜单压缩，完整操作说明移入暂停。",
+      "record": "releases/v0.6.1/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "bilibili": "pending_merge"
+      }
+    },
+    {
+      "version": "v0.7.0",
+      "classification": "正式版本",
+      "summary": "接入原版轻重拳脚、四名角色必杀语音和三次 GO 提示；暂停、静音、重开与离线录像共用音频链。",
+      "record": "releases/v0.7.0/handoff.json",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "auditing",
+        "bilibili": "pending_review"
+      }
+    }
+  ],
+  "handoff": "releases/v0.8.0/handoff.json",
+  "game_id": "cadillacs-stage1-3d",
+  "launch": {
+    "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
+    "device_root": "D:/project/toolbasecamp",
+    "device_entry": "D:/project/toolbasecamp/public/html/game/cadillacs-stage1-3d/index.html",
+    "game_list": "D:/project/toolbasecamp/public/games.html（public/js/config.js 的游戏动作组，标题 tools.cadillacs3d）",
+    "site_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "source": "D:/project/toolbasecamp/game-projects/cadillacs-stage1-3d/src",
+    "build": "在 game-projects/cadillacs-stage1-3d 运行 npm i 后 node tools/build.mjs",
+    "serve": "在 game-projects/cadillacs-stage1-3d 运行 node qa/serve.mjs 8777，然后打开 http://127.0.0.1:8777/html/game/cadillacs-stage1-3d/index.html",
+    "url_params": {
+      "seed": "固定随机种子",
+      "test": "=1 时暴露自动化测试钩子 window.__CD_TEST__（玩家界面不暴露）",
+      "clean": "=1 时隐藏桌面键位提示，用于录制",
+      "q": "high / low：测试用强制画质",
+      "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
+    }
+  },
+  "current_version": "v0.8.0",
+  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
+  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
+  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
+  "web_toy_versions_match": true,
+  "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
+  "audio_assets": {
+    "policy": "original first; synthesis fallback",
+    "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+    "revision": "bgmfull1",
+    "processing": "完整音源压缩，不截取前70秒"
+  },
+  "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
+  "release_intent": "web_demo",
+  "toy_note": "v0.5.1 已过审公开，网站与Toy同版",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git",
+  "pending_channel_changes": [
+    {
+      "version": "v0.5.6-bgmfull1",
+      "classification": "普通补丁",
+      "changes": [
+        "完整原版BGM取消70秒截取"
+      ],
+      "bilibili": "已并入 v0.6.0 简介更新（2026-10-07 公开核验）",
+      "toy": "public_verified"
+    }
+  ],
+  "verified_public_links": [
+    "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
+  ],
+  "taptap": {
+    "developer_id": 100726,
+    "app_id": 962722,
+    "automatic_sync_enabled": true,
+    "status": "draft_waiting_ip_authorization",
+    "staged_version": "v0.7.0",
+    "staged_h5_version_id": 270844,
+    "draft_version_id": "1041013",
+    "last_published_version": null,
+    "sync_record": "taptap-sync.json",
+    "release_record": "releases/taptap-consent-20261007/handoff.json",
+    "agreement_authorized": true,
+    "agreement_signed": false
+  },
+  "website": {
+    "version": "v0.5.6-bgmfull1",
+    "status": "deployed_verified",
+    "verified_at": "2026-10-07T06:49:45.870220+08:00",
+    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232"
+  },
+  "touch_control_inset": {
+    "side_css_px": 40,
+    "bottom_css_px": 36,
+    "safe_area_added": true,
+    "previous_version": "v0.5.2",
+    "physical_phone_test": false
+  },
+  "resolved_changes": [
+    {
+      "date": "2026-10-05",
+      "change": "手机端两批小修：①移除 Q/E 左右转视角按钮，改为按住画面拖动无极转视角（电脑 Q/E 不变）；②选人画面竖屏即旋转横屏（不用等开局）；③右下按钮改街机习惯位（J 攻击离右下角最近且最大，K 跳跃斜后，环形布局）；④切视角 toast 触屏端不再显示 Q/E 文案（改为按住画面拖动）。网站已部署（game.min.js?v=5），手机触控 QA 34/34，桌面 QA 每轮随机 1 项时序抖动（并行负载，与改动无关，玩法代码未变）。",
+      "reason": "用户指示：选人界面应横屏、J 攻击在前 K 跳跃在后、去掉触屏 Q/E 提示",
+      "channels": {
+        "website": "deployed 2026-10-05",
+        "toy": "待合并：今日批次已用（v0.1.0 auditing），随下次 Toy 更新一起送审",
+        "bilibili_videos": "无已有视频；新视频手机段已用最新布局重录（mobile-landscape-v5）"
+      },
+      "resolved_in": "v0.1.3",
+      "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
+    },
+    {
+      "date": "2026-10-05",
+      "version": "v0.1.1",
+      "kind": "普通补丁",
+      "change": "三处镜头修复：①正视在第 47 街贴后墙按 Q/E 转头不再进墙（后墙 / 楼体立面剖切 + 贴近渐隐，瓦砾实体先抬高后拉近）；②第一人称贴身岩跳龙 / 敌人时按距离淡化、隐藏描边，不再黑屏或露出模型内部；③锁屏时敌人、Boss、被打飞 / 被抓的角色不出画，侧视取景保证最前一排完整入画（16:9 约拉远 8%）。另修户外遮挡淡化从未生效。网站已部署（提交 378dc004，线上 game.min.js?v=378dc004，sha256 5fc92be2…），qa/camera.js 本地与线上 11/11、desktop 88/88、mobile 34/34。",
+      "reason": "做视角版视频时同一局实机录像里发现（views-run-1080p.mp4 176.8 s / 224 s / 280–290 s）",
+      "channels": {
+        "website": "deployed 2026-10-05 16:53（公网抽查 index.html 与 game.min.js 哈希一致）",
+        "toy": "待合并：普通补丁；本游戏北京时间 10-05 的 Toy 批次已用于 v0.1.0 首发（06:25 提交，现 published），与上一条手机端小修一起随下一批（10-06 起）送审",
+        "bilibili_videos": "待合并：普通补丁不单独改简介；BV18XHW66E55 简介与置顶仍准确（未写镜头相关的已知问题），下次有意义的说明更新时一并写入"
+      },
+      "handoff": "releases/v0.1.1/handoff.json",
+      "resolved_in": "v0.1.3",
+      "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
+    }
+  ]
 }

@@ -149,7 +149,8 @@
       "qa/toy-public/results.json",
       "qa/taptap-local/results.json",
       "qa/website-public/results.json",
-      "qa/integration/results.json"
+      "qa/integration/results.json",
+      "qa/latest-main/results.json"
     ],
     "performance": "qa/performance/results.json",
     "physical_phone": false,
@@ -243,5 +244,7 @@
   "pending": [
     "TapTap v0.21.0已提交审核；等待平台通过及公开入口核验。"
   ],
-  "updated_at": "2026-10-07T02:25:06.248252+00:00"
+  "updated_at": "2026-10-07T02:25:06.248252+00:00",
+  "latest_main_compatibility": "latest-main-compatibility.json",
+  "artifact_archive": "D:\\project\\toolbasecamp-artifacts\\starship-defense\\web-defense-v0.21.0-01a11403"
 }

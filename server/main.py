@@ -639,8 +639,9 @@ else:
     print("[seedance] router not mounted:", _seedance_import_error or "unknown")
 
 try:
-    from game_rooms_api import router as tank_coop_router
+    from game_rooms_api import router as tank_coop_router, hub_router as game_coop_router
     app.include_router(tank_coop_router)
+    app.include_router(game_coop_router)
 except Exception as _tank_coop_exc:  # noqa: BLE001
     print("[tank-coop] router not mounted:", _tank_coop_exc)
 

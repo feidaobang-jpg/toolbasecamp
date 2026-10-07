@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "agreement_id": "taptap-sce-20260311",
+  "agreement_name": "创意工坊内容授权协议",
+  "url": "https://www.taptap.cn/doc/ugcgame-agreement/",
+  "effective_date": "2026-03-11",
+  "agreement_text_sha256": "08db8c2e114658c04654eecc7be69cd164c6c9e6aa0b82dc7ddcf5a6fe122445",
+  "normalization": "官方页面可见text内容从发布日期至最后条款；Unicode NFKC后去全部空白；排除导航/页脚/AX索引",
+  "developer_id": 100726,
+  "authorized": true,
+  "automatic_signing_enabled": true,
+  "authorized_at": "2026-10-07T01:57:34.961685+00:00",
+  "authorization_source": "当前用户在本对话读到协议名称、URL、关键条款与截图后要求自动同意",
+  "user_quote": "这个能改成不需要我手动，你自己自动同意吗",
+  "thread_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21",
+  "source": "Codex",
+  "scope": "飞刀帮工作室已有明确app映射、满足内容原创或合法含转授权条件的游戏；当前已展示2026-03-11协议版本",
+  "known_app_ids": [
+    962354,
+    962376,
+    962721,
+    962722,
+    962723,
+    962724
+  ],
+  "signing_eligibility": {
+    "962724": "当前材料原创/程序生成，实际内容预审通过，可签署并提交",
+    "962721": "实际IP与原版录音授权缺口，保留待处理，不据此声明有授权",
+    "962722": "实际IP与原版录音授权缺口，保留待处理，不据此声明有授权",
+    "962723": "实际IP与原版录音授权缺口，保留待处理，不据此声明有授权"
+  },
+  "material_change_rule": "协议正文或授权对象/范围有实质变化、新付费/新签约/敏感资料或工具要求当次确认时，准备具体内容交用户处理；同版条款不重复询问",
+  "signed_apps": {
+    "962724": {
+      "status": "signed",
+      "at": "2026-10-07T02:00:56.092241+00:00",
+      "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-consent-20261007-04",
+      "receipt": "game-projects/journey-west-3d/media-kit/releases/taptap-consent-20261007/agreement-signed.json",
+      "agreement_text_sha256": "08db8c2e114658c04654eecc7be69cd164c6c9e6aa0b82dc7ddcf5a6fe122445"
+    }
+  }
+}
