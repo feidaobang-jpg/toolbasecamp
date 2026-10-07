@@ -29,9 +29,9 @@ def request(method, path, data=None, authenticated=True):
                                  method=method, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=20) as r:
-            return r.status, json.load(r), dict(r.headers)
+            return r.status, json.load(r), {k.lower(): v for k, v in r.headers.items()}
     except urllib.error.HTTPError as e:
-        return e.code, json.load(e), dict(e.headers)
+        return e.code, json.load(e), {k.lower(): v for k, v in e.headers.items()}
 
 try:
     conn = main.get_conn()
@@ -65,8 +65,8 @@ try:
                     {'save': {**save, 'level': level}, 'expected_revision': state['current']['revision']})
         assert status == 200
     assert [r['save']['level'] for r in state['backups']][:2] == [7, 6]
-    assert 'no-store' in headers.get('Cache-Control', '')
-    assert headers.get('Access-Control-Allow-Origin') == '*'
+    assert 'no-store' in headers.get('cache-control', '')
+    assert headers.get('access-control-allow-origin') == '*'
     print(json.dumps({'passed': True, 'checks': ['public login', 'bearer auth', 'empty new account',
         '96-building legacy limit', 'MySQL concurrent revision protection', 'three cloud backups',
         'H5 scoped CORS', 'private no-store'], 'fixture': 'temporary QA account only'}, ensure_ascii=False))
