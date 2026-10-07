@@ -1,0 +1,16 @@
+{
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "source": "Codex",
+  "at": "2026-10-07T02:27:41.083391+00:00",
+  "app_ids": [
+    962721,
+    962722,
+    962723
+  ],
+  "user_quote": "试试吧",
+  "context": "用户已获知三款平台IP预审提示、原作音乐问题、可跳过内容预审继续正式送审且可能被驳回；确认本次尝试。此前已授权自动签署已展示的同版协议。",
+  "force_submission_authorized": true,
+  "current_sce_signing_authorized": true,
+  "rights_proof_provided": false,
+  "future_unrelated_risk_bypass_authorized": false
+}

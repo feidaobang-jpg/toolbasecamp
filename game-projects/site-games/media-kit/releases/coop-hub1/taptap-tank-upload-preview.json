@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "dry_run": true,
+  "data": {
+    "appId": 962376,
+    "archive_preflight": {
+      "entry_count": 25,
+      "top_level_entries": [
+        "tank-3d"
+      ],
+      "violations": [],
+      "warnings": []
+    },
+    "developerId": 100726,
+    "filePath": "dist/taptap/tank-3d/tank-3d.zip",
+    "networkRequests": 0,
+    "nextStep": "rerun with --yes to execute upload-h5-package",
+    "operation": "upload-h5-package",
+    "requiresConfirmation": true,
+    "status": "preview"
+  }
+}

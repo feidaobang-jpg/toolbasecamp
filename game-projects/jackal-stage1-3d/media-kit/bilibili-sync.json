@@ -1,164 +1,169 @@
 {
- "game_id": "jackal-stage1-3d",
- "videos": [
-  {
-   "bvid": "BV1EyHz6wE5u",
-   "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
-   "owner_uid": 16214353,
-   "last_public_verified_version": "v0.8.0",
-   "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
-   "verified_at": "2026-10-06T22:35:15.869180+00:00",
-   "release_record": "releases/v0.8.0/bilibili-sync.json",
-   "last_public_verified_at": "2026-10-06T22:35:15.869180+00:00",
-   "last_sync_record": "releases/v0.8.0/bilibili-sync.json",
-   "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
-   "lastPublicVerifiedVersion": "v0.8.0",
-   "descriptionHash": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
-   "release": "releases/v0.8.0/bilibili-sync.json",
-   "publicVerifiedAt": "2026-10-06T22:35:15.869180+00:00"
-  }
- ],
- "pending": [],
- "mapping_sources": [
-  "本人发布记录",
-  "toy video list: 1条",
-  "toy video mine --keyword 赤色要塞: 1条",
-  "本人稿件管理"
- ],
- "pending_updates": [
-  {
-   "version": "v0.8.1",
-   "classification": "普通补丁",
-   "status": "pending_merge",
-   "record": "releases/v0.8.1/handoff.json",
-   "summary": "手机竖着拿时菜单直接横屏。",
-   "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
-  }
- ],
- "resolved_updates": [
-  {
-   "version": "v0.5.1",
-   "release": "releases/v0.5.1/handoff.json",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
-   "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介",
-   "resolved_version": "v0.6.0"
-  },
-  {
-   "version": "v0.5.2",
-   "classification": "普通补丁",
-   "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-   "status": "resolved",
-   "record": "releases/drag-direction-20261005/handoff.json",
-   "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
-   "resolved_version": "v0.6.0"
-  },
-  {
-   "version": "v0.5.3",
-   "release": "releases/v0.5.3/handoff.json",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
-   "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。",
-   "resolved_version": "v0.6.0"
-  },
-  {
-   "version": "v0.7.1",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-   "record": "releases/v0.7.1/handoff.json",
-   "resolved_version": "v0.8.0",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
-  },
-  {
-   "version": "v0.7.2",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "精简HUD并修正二关石像Boss遮挡，保留现有操作与入口。",
-   "record": "releases/v0.7.2/handoff.json",
-   "resolved_version": "v0.8.0",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
-  },
-  {
-   "version": "v0.7.3",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "第二关模型统一复用第一关外观；原视频说明仍准确。",
-   "record": "releases/v0.7.3/handoff.json",
-   "resolved_version": "v0.8.0",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
-  },
-  {
-   "version": "v0.7.4",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "release": "releases/v0.7.4/handoff.json",
-   "summary": "全去距离雾；Boss取消自动拉远，恢复固定镜头；操作与入口不变。",
-   "resolved_version": "v0.8.0",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
-  },
-  {
-   "version": "v0.7.5",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "record": "releases/v0.7.5/handoff.json",
-   "summary": "同型固定炮台复用，第二关铁皮囚室/浅色棚保留原作区别；专属敌人不合并造型。",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
-   "resolved_version": "v0.8.0"
-  },
-  {
-   "version": "v0.7.6",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "record": "releases/v0.7.6/handoff.json",
-   "summary": "固定炮管对准实际子弹，第二关散射炮口对齐。",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
-   "resolved_version": "v0.8.0"
-  },
-  {
-   "version": "v0.7.8",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "summary": "暂停后重新开始恢复声音。",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
-   "record": "releases/v0.7.8/handoff.json",
-   "resolved_version": "v0.8.0"
-  },
-  {
-   "version": "v0.7.9",
-   "classification": "普通补丁",
-   "status": "resolved",
-   "record": "releases/v0.7.9/handoff.json",
-   "summary": "手机横屏菜单完整显示、全屏按浏览器能力显示、失败结算不再误显示进入下一关。",
-   "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
-   "resolved_version": "v0.8.0"
-  }
- ],
- "status": "public_verified",
- "version": "v0.8.0",
- "updated_at": "2026-10-06T22:35:15.869180+00:00",
- "history": [
-  {
-   "bvid": "BV1EyHz6wE5u",
-   "version": "v0.7.0",
-   "status": "public_verified",
-   "record": "releases/v0.7.0/handoff.json",
-   "checked_at": "2026-10-06T01:35:49.352Z"
-  },
-  {
-   "bvid": "BV1EyHz6wE5u",
-   "version": "v0.8.0",
-   "status": "public_verified",
-   "record": "releases/v0.8.0/bilibili-sync.json",
-   "checked_at": "2026-10-06T22:35:15.869180+00:00"
-  }
- ],
- "last_public_verified": {
-  "bvid": "BV1EyHz6wE5u",
+  "game_id": "jackal-stage1-3d",
+  "videos": [
+    {
+      "bvid": "BV1EyHz6wE5u",
+      "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+      "owner_uid": 16214353,
+      "last_public_verified_version": "v0.9.0",
+      "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
+      "verified_at": "2026-10-06T22:35:15.869180+00:00",
+      "release_record": "releases/v0.8.0/bilibili-sync.json",
+      "last_public_verified_at": "2026-10-07T02:35:12.420Z",
+      "last_sync_record": "releases/v0.8.0/bilibili-sync.json",
+      "description_sha256": "d482a0c4de892106d8994a4ad1c9ae7be3f6b3dfb0e1e78e077a4b495cf612db",
+      "lastPublicVerifiedVersion": "v0.9.0",
+      "descriptionHash": "d482a0c4de892106d8994a4ad1c9ae7be3f6b3dfb0e1e78e077a4b495cf612db",
+      "release": "releases/v0.8.0/bilibili-sync.json",
+      "publicVerifiedAt": "2026-10-07T02:35:12.420Z",
+      "status": "public_verified",
+      "submitted_version": "v0.9.0",
+      "submitted_at": "2026-10-07T02:35:12.420Z"
+    }
+  ],
+  "pending": [],
+  "mapping_sources": [
+    "本人发布记录",
+    "toy video list: 1条",
+    "toy video mine --keyword 赤色要塞: 1条",
+    "本人稿件管理"
+  ],
+  "pending_updates": [
+    {
+      "version": "v0.8.1",
+      "classification": "普通补丁",
+      "status": "pending_merge",
+      "record": "releases/v0.8.1/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏。",
+      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
+    }
+  ],
+  "resolved_updates": [
+    {
+      "version": "v0.5.1",
+      "release": "releases/v0.5.1/handoff.json",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
+      "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介",
+      "resolved_version": "v0.6.0"
+    },
+    {
+      "version": "v0.5.2",
+      "classification": "普通补丁",
+      "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+      "status": "resolved",
+      "record": "releases/drag-direction-20261005/handoff.json",
+      "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+      "resolved_version": "v0.6.0"
+    },
+    {
+      "version": "v0.5.3",
+      "release": "releases/v0.5.3/handoff.json",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "J左K右等大动作键，C移到暂停旁；第一人称按实际车身转角补偿视线、每秒最多60度平滑转头；移动映射与跟随射击沿视线",
+      "reason": "普通操作修复并入下一次有意义的简介更新；当前公开简介的J/K/C键位与默认跟随车头说明仍适用，未写旧按键位置。已核验BV1EyHz6wE5u公开说明。",
+      "resolved_version": "v0.6.0"
+    },
+    {
+      "version": "v0.7.1",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
+      "record": "releases/v0.7.1/handoff.json",
+      "resolved_version": "v0.8.0",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+    },
+    {
+      "version": "v0.7.2",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "精简HUD并修正二关石像Boss遮挡，保留现有操作与入口。",
+      "record": "releases/v0.7.2/handoff.json",
+      "resolved_version": "v0.8.0",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+    },
+    {
+      "version": "v0.7.3",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "第二关模型统一复用第一关外观；原视频说明仍准确。",
+      "record": "releases/v0.7.3/handoff.json",
+      "resolved_version": "v0.8.0",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+    },
+    {
+      "version": "v0.7.4",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "release": "releases/v0.7.4/handoff.json",
+      "summary": "全去距离雾；Boss取消自动拉远，恢复固定镜头；操作与入口不变。",
+      "resolved_version": "v0.8.0",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告"
+    },
+    {
+      "version": "v0.7.5",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "record": "releases/v0.7.5/handoff.json",
+      "summary": "同型固定炮台复用，第二关铁皮囚室/浅色棚保留原作区别；专属敌人不合并造型。",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+      "resolved_version": "v0.8.0"
+    },
+    {
+      "version": "v0.7.6",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "record": "releases/v0.7.6/handoff.json",
+      "summary": "固定炮管对准实际子弹，第二关散射炮口对齐。",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+      "resolved_version": "v0.8.0"
+    },
+    {
+      "version": "v0.7.8",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "summary": "暂停后重新开始恢复声音。",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+      "record": "releases/v0.7.8/handoff.json",
+      "resolved_version": "v0.8.0"
+    },
+    {
+      "version": "v0.7.9",
+      "classification": "普通补丁",
+      "status": "resolved",
+      "record": "releases/v0.7.9/handoff.json",
+      "summary": "手机横屏菜单完整显示、全屏按浏览器能力显示、失败结算不再误显示进入下一关。",
+      "reason": "本次正式版本说明覆盖最新操作、试玩状态与累计补丁，不逐条扩充历史更新公告",
+      "resolved_version": "v0.8.0"
+    }
+  ],
+  "status": "public_verified",
   "version": "v0.8.0",
-  "at": "2026-10-06T22:35:15.869180+00:00",
-  "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be"
- }
+  "updated_at": "2026-10-06T22:35:15.869180+00:00",
+  "history": [
+    {
+      "bvid": "BV1EyHz6wE5u",
+      "version": "v0.7.0",
+      "status": "public_verified",
+      "record": "releases/v0.7.0/handoff.json",
+      "checked_at": "2026-10-06T01:35:49.352Z"
+    },
+    {
+      "bvid": "BV1EyHz6wE5u",
+      "version": "v0.8.0",
+      "status": "public_verified",
+      "record": "releases/v0.8.0/bilibili-sync.json",
+      "checked_at": "2026-10-06T22:35:15.869180+00:00"
+    }
+  ],
+  "last_public_verified": {
+    "bvid": "BV1EyHz6wE5u",
+    "version": "v0.8.0",
+    "at": "2026-10-06T22:35:15.869180+00:00",
+    "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be"
+  },
+  "latest_record": "releases/v0.9.0/bilibili-sync.json",
+  "pending_note": "统一大厅和合作玩法说明已提交；仅公开核验成功的目标推进基线。"
 }

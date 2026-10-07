@@ -1,0 +1,38 @@
+{
+  "channel": "taptap-h5",
+  "game": "jackal-stage1-3d",
+  "title": "赤色要塞 3D",
+  "version": "v0.9.0",
+  "source_commit": "7326760cd10ddd7e4bfba8e90e29c9d6f7009297",
+  "source_hashes": {
+    "css/style.css": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab",
+    "index.html": "3856e652dbcb738c2821e821654eee7217f97d48ffab4af58359f697f94c18e5",
+    "js/game.min.js": "502c17c6d45ffb3029b933837bbed53c40975341865915941cbe09465bbe5b03",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+    "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+    "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+  },
+  "files": {
+    "css/style.css": "e471daa23fbfaec6eadeca315afd4d9ac4f015b0f53fd0049abcb89a44dd45ab",
+    "index.html": "3556b4fa830a28ada4c8540fabe012057923c54c96bde870607ff20679c56426",
+    "js/game.min.js": "55ffd511ca74ea2428d21e30572c08aad1ca95fa3c77a3c9367c2b9d3b4e83f5",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+    "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+    "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949",
+    "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+    "vendor/BufferGeometryUtils.js": "3de832095679e56578beddf70f3e90846a47ec8a886fa8eb21c973cdaef88922",
+    "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
+    "sample-audio.js": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
+    "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "zip_sha256": "9588732a6e76f5637bb56096f365229438b5af4d2e63e8b9105bc12d452b397d",
+  "zip_bytes": 6950719,
+  "archive_root": "jackal-stage1-3d/",
+  "storage_namespace": "taptap-jackal-v1:",
+  "monetization": "none",
+  "status": "built_not_uploaded"
+}

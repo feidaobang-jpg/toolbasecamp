@@ -12,7 +12,10 @@
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
       "descriptionHash": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8",
       "publicVerifiedAt": "2026-10-07T04:32:00+00:00",
-      "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/"
+      "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "submitted_version": "coop-hub1",
+      "submitted_at": "2026-10-07T02:36:31.738Z",
+      "status": "public_verified"
     },
     {
       "bvid": "BV1TepK69Eet",
@@ -164,5 +167,8 @@
     "version": "coop-hub1",
     "at": "2026-10-07T04:32:00+00:00",
     "description_sha256": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8"
-  }
+  },
+  "latest_record": "releases/coop-hub1/bilibili-sync.json",
+  "pending": [],
+  "pending_note": "2026-10-07 12:32已公开核验坦克旧简介，保留此前提交时间；新视频和旧视频均显示coop-hub1入口。"
 }

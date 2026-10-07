@@ -1,0 +1,112 @@
+{
+  "verified_at": "2026-10-07T02:43:57.353796+00:00",
+  "host": "https://www.zhengxiaohui.cn",
+  "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+  "method": "两个公网WebSocket会话，真实建房、目录、加入准备、开始、输入转发、状态和暂停，测试房间已随会话关闭；不代表手机真机",
+  "results": [
+    {
+      "game": "tank",
+      "protocol": "tank3d-v2",
+      "directory": true,
+      "input": true,
+      "state": true,
+      "pause": true,
+      "ok": true
+    },
+    {
+      "game": "jackal",
+      "protocol": "jackal3d-v1",
+      "directory": true,
+      "input": true,
+      "state": true,
+      "pause": true,
+      "ok": true
+    },
+    {
+      "game": "cadillacs",
+      "protocol": "cadillacs3d-v1",
+      "directory": true,
+      "input": true,
+      "state": true,
+      "pause": true,
+      "ok": true
+    },
+    {
+      "game": "starship",
+      "protocol": "starship-v1",
+      "directory": true,
+      "input": true,
+      "state": true,
+      "pause": true,
+      "ok": true
+    }
+  ],
+  "runtime_files": [
+    {
+      "file": "game-online.html",
+      "url": "https://www.zhengxiaohui.cn/game-online.html?v=coop-hub1",
+      "actual_sha256": "b0492a0e4afd9ac88a7f1789ae0ad65e8a78635b249dd883e99cad3becb145f9",
+      "expected_sha256": "b0492a0e4afd9ac88a7f1789ae0ad65e8a78635b249dd883e99cad3becb145f9",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "js/game/online-hub.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/online-hub.js?v=coop-hub1",
+      "actual_sha256": "d909060fa2d5205d958cd487045e1a7b8ddd01d5be30c4994c205fda3ec074ac",
+      "expected_sha256": "d909060fa2d5205d958cd487045e1a7b8ddd01d5be30c4994c205fda3ec074ac",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "js/game/coop.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/coop.js?v=coop-hub1",
+      "actual_sha256": "d3088cc2b10145cc41481487db543a1647cf1bba1fd03f5203c399f2a7aa0b17",
+      "expected_sha256": "d3088cc2b10145cc41481487db543a1647cf1bba1fd03f5203c399f2a7aa0b17",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "js/game/remake-coop.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/remake-coop.js?v=coop-hub1",
+      "actual_sha256": "a3f29dfae4d3a904c25c056b9ac48f27a139c44b3b580e5c1ceaa1e445b3c6a9",
+      "expected_sha256": "a3f29dfae4d3a904c25c056b9ac48f27a139c44b3b580e5c1ceaa1e445b3c6a9",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "html/game/tank-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js?v=coop-hub1",
+      "actual_sha256": "519ae4d074b3898e8266d4ef3b6d9d17fec8bbc71cd497471592fa4d8ff7d977",
+      "expected_sha256": "519ae4d074b3898e8266d4ef3b6d9d17fec8bbc71cd497471592fa4d8ff7d977",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "html/game/jackal-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js?v=coop-hub1",
+      "actual_sha256": "502c17c6d45ffb3029b933837bbed53c40975341865915941cbe09465bbe5b03",
+      "expected_sha256": "502c17c6d45ffb3029b933837bbed53c40975341865915941cbe09465bbe5b03",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js?v=coop-hub1",
+      "actual_sha256": "5a84890c212e1b7454479de498d8e8593e106a5d78eb4add9408a9317619d07e",
+      "expected_sha256": "5a84890c212e1b7454479de498d8e8593e106a5d78eb4add9408a9317619d07e",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    },
+    {
+      "file": "html/game/starship-defense/game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?v=coop-hub1",
+      "actual_sha256": "fd10be513c4330cf46b499a481b78146c80f464d44c73c6396c2d3f6248ecc6b",
+      "expected_sha256": "fd10be513c4330cf46b499a481b78146c80f464d44c73c6396c2d3f6248ecc6b",
+      "normalization": "Git checkout CRLF normalized to LF; HTML deployment-generated cache versions excluded",
+      "ok": true
+    }
+  ],
+  "status": "public_verified",
+  "url": "https://www.zhengxiaohui.cn/game-online.html"
+}

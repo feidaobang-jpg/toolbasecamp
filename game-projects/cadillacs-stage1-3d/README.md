@@ -1,6 +1,6 @@
 # 恐龙快打 · 第一、二关 3D 重置版（cadillacs-stage1-3d）
 
-Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重置版（当前 v0.6.0，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
+Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重置版（当前 v0.8.1，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
 
 - 第一关「海上都市 CITY IN THE SEA」：楼顶 → 大楼内部 → 第 47 街，Boss 维斯·T 和岩跳龙。
 - 第二关「沼泽森林 THE SWAMP FOREST」：凯迪拉克开进偷猎者森林，三角龙哈克冲撞、胖子想吵醒熟睡的霸王龙希瓦特 → 跳崖落进齐腰深的泥沼 MUD SWAMP，格特从水里冒出、上岸遇链锤兵拉什·T → 黄昏的恐龙尸骸地，Boss 屠夫（双刀、满屏乱跳、屁股坐、不断叫手下）。
@@ -50,6 +50,7 @@ URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `win
 - `node qa/botrun.js <英雄0-3> <种子> [std|easy|classic] [起始关卡 1|2]`：手动时钟让 bot 打完整关（从第一关开始会一路打到第二关结算）
 - `node qa/perf.js [宽] [高] [high|low]`：实时测帧
 - `node qa/shots.js <英雄> <前缀>`：各区域、各视角截图
+- `node qa/original-audio.js`：原版音效回归（34 项）：四人连打四下都是原版打击声、只有最后一下叠主角喝声，U 必杀用各自喊声，GO 三遍间隔 0.59 秒，暂停 / 重开 / 静音 / 加载失败回退；映射依据见 `media-kit/releases/v0.8.1/audio-sources.json`（`CD_PHONE=1` 用触屏）
 - `node qa/feel.js`：打击感回归（16 项）：命中停顿定格在拳脚到位、受击方向、轻 / 重 / 终结三档停顿与音效、挥空声在出手时响、倒地砸地声、挥空连打不吞键、波末慢动作自动恢复
 - `node qa/moves-strip.js <前缀> [英雄]` + `python qa/strip-sheet.py <前缀>`：四位英雄连招 / 冲刺攻击 / 下上攻击逐帧截图拼成联系表（新旧对照用）
 - `node qa/guns.js`：枪口与子弹回归（火花在枪模型前端、有子弹拖光、子弹飞到才掉血，含偷猎者、维斯）；`node qa/gun-shots.js <前缀>` 逐帧截图对照

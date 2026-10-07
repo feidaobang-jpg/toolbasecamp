@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "list": [
+        {
+          "created_time": 1791334967,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261007",
+          "version_id": "V-20261007"
+        }
+      ],
+      "page": 1,
+      "page_size": 100,
+      "total": 1
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "pagination": {
+      "pages": 1,
+      "truncated": false
+    },
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

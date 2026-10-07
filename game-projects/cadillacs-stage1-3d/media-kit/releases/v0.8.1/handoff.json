@@ -1,0 +1,121 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.8.1",
+ "base_version": "v0.8.0",
+ "created_at": "2026-10-07T12:30:00+08:00",
+ "classification": "严重问题修正（原版音效对错号：连招、必杀、GO）",
+ "build": {
+  "bundle_sha256": "0a6a79600b5211aa0e5e7c1b4fa731504ca657f60c21b08f52ab493f4c72e16a",
+  "build_id": "original-sfx-v081"
+ },
+ "changes": [
+  {
+   "id": "hit-sample",
+   "before": "005C～005F（按编号猜，实机里几乎不出现）",
+   "after": "0064 以 0.75 倍速",
+   "verification": "pass"
+  },
+  {
+   "id": "finisher-shout",
+   "after": "连招最后一下叠主角自己的喝声 V18/V20/V22/V24",
+   "verification": "pass"
+  },
+  {
+   "id": "mega-shout",
+   "before": "V01～V04（捡东西 / 嘲讽台词）",
+   "after": "Dino uppercut / Spiral smash / Get off me / Hay breaker",
+   "verification": "pass"
+  },
+  {
+   "id": "go",
+   "before": "V33 ×3，间隔约 0.75 秒",
+   "after": "实机更接近的 GO ×3，间隔 0.59 秒",
+   "verification": "pass"
+  },
+  {
+   "id": "bodyfall",
+   "before": "合成",
+   "after": "原版 0072",
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "wrong-original-sfx-mapping",
+   "reported_by": "user",
+   "observed": "打人 4 连击的声音和扣血必杀的声音不对",
+   "cause": "拆包文件名只有编号，v0.7.0 按编号顺序猜映射",
+   "fix": "用实机录像音轨比对 + 截帧 + 标注人声视频逐一核对后重新映射",
+   "status": "fixed",
+   "retest": "qa/original-audio.js 34/34"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 34/34"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "site-games/qa/restart-audio.cjs",
+   "result": "pass 5/5"
+  },
+  {
+   "method": "site-games/qa/cooperative.cjs（本地联机大厅）",
+   "result": "pass 8/8"
+  },
+  {
+   "method": "qa/original-audio.js（线上 / Toy 预览）",
+   "result": "34/34 / 34/34"
+  }
+ ],
+ "audio_review": "not-run（AI 无法试听；依据为录像比对，见 audio-sources.json）",
+ "sources": "releases/v0.8.1/audio-sources.json",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "无画面变化"
+ },
+ "website": {
+  "status": "deployed_verified",
+  "commit": "585e4ac6",
+  "verified_at": "2026-10-07T12:07:00+08:00",
+  "verification": "线上 game.min.js 与 11 段 cd-*.wav 与提交逐字节一致，旧 original-*.wav 已 404；线上 qa/original-audio.js 34/34"
+ },
+ "toy": {
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.8.1/package",
+  "package_tree_sha256": "cbd56cd251dbcd74d36715d0924035d0beb13587a77c11b661f8a9a21691dc43",
+  "doctor": "0 warning",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_eeifFwB3/index.html",
+  "preview_checks": "toy-preview-check 20/20；original-audio 34/34（Toy 预览外壳内）",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_yhGoKvFc/index.html",
+  "submitted_at": "2026-10-07T12:09:19+08:00",
+  "verified_at": "2026-10-07T12:15:00+08:00",
+  "public_check": "toy mylist published 12:12；正式入口电脑 + 手机视口 toy-preview-check 20/20 显示 v0.8.1；正式入口内 original-audio 34/34"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "现有简介写「保留原版打击音、必杀语音」，修正后内容仍准确；并入下一次有意义的说明更新",
+  "checked_desc_sha256": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81"
+ }
+}

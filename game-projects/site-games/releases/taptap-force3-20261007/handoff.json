@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "source": "Codex",
+  "at": "2026-10-07T02:30:27.995991+00:00",
+  "status": "all_three_formal_reviews_accepted",
+  "authorization_record": "authorization.json",
+  "games": [
+    {
+      "app_id": 962721,
+      "game_id": "jackal-stage1-3d",
+      "status": "reviewing",
+      "version": "v0.8.1",
+      "h5_version_id": 270833,
+      "draft_version_id": "1041012",
+      "pending_updates": [
+        {
+          "source_version": "v0.9.0",
+          "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+          "change": "新合并联机功能",
+          "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
+        }
+      ]
+    },
+    {
+      "app_id": 962722,
+      "game_id": "cadillacs-stage1-3d",
+      "status": "reviewing",
+      "version": "v0.7.0",
+      "h5_version_id": 270844,
+      "draft_version_id": "1041013",
+      "pending_updates": [
+        {
+          "source_version": "v0.8.0",
+          "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+          "change": "新合并联机功能",
+          "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
+        }
+      ]
+    },
+    {
+      "app_id": 962723,
+      "game_id": "mario-3d",
+      "status": "reviewing",
+      "version": "v2.5.0",
+      "h5_version_id": 270893,
+      "draft_version_id": "1041014",
+      "pending_updates": []
+    }
+  ],
+  "public_verified": false,
+  "release_schedule": {
+    "kind": "immediate"
+  },
+  "ip_rights_assumed": false,
+  "new_qualification_documents_uploaded": false,
+  "operational_stage": "first_launch",
+  "artifacts": "D:/project/toolbasecamp-artifacts/taptap/force3/20261007"
+}

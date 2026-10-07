@@ -1,0 +1,13 @@
+{
+  "app_id": 962376,
+  "expected": {
+    "h5_version_id": "270784",
+    "kind": "h5"
+  },
+  "developer_id": 100726,
+  "slot": "main",
+  "package": {
+    "type": "h5",
+    "id": "271019"
+  }
+}
