@@ -57,7 +57,28 @@ function withPlayer(player, fn) {
 function allPlayers(){return G.coop?coopPlayers:[P];}
 function nearestPlayer(x,y){return allPlayers().filter(p=>p.alive).sort((a,b)=>dist2(a.x,a.y,x,y)-dist2(b.x,b.y,x,y))[0]||P;}
 export function setCoopInput(fn){inputProvider=fn;}
-export function leaveCoopSlot(slot){const p=coopPlayers.find(p=>p.slot===slot);if(p){p.alive=false;p.disconnected=true;p.obj.root.visible=false;}}
+export function leaveCoopSlot(slot){G.playerSlots=G.playerSlots.filter(s=>s!==slot);const p=coopPlayers.find(p=>p.slot===slot);if(p){p.alive=false;p.disconnected=true;p.obj.root.visible=false;}}
+export function joinCoopSlot(slot) {
+  const existing=coopPlayers.find(p=>p.slot===slot);
+  if(existing&&!existing.disconnected)return;
+  if(existing){scene.remove(existing.obj.root);coopPlayers=coopPlayers.filter(p=>p!==existing);}
+  const old=P,anchor=coopPlayers.find(p=>p.alive&&!p.disconnected)||old;
+  makePlayer(slot);const added=P;added.armor=G.armorMax;added.invuln=3;
+  if(anchor){added.x=anchor.x+2.2;added.y=anchor.y;
+    outer:for(let r=2;r<7;r++)for(let k=0;k<8;k++){const x=anchor.x+DIR8[k].x*r,y=anchor.y+DIR8[k].y*r;if(!blockedFor(x,y,added.r,added)&&!coopPlayers.some(q=>q.alive&&!q.disconnected&&dist2(x,y,q.x,q.y)<4)){added.x=x;added.y=y;break outer;}}}
+  coopPlayers.push(added);G.playerSlots=[...new Set([...G.playerSlots,slot])];P=old;
+}
+export function computerInput(slot) {
+  const p=coopPlayers.find(p=>p.slot===slot);if(!p||!p.alive)return {dir:-1};
+  const target=ents.filter(e=>e.alive&&e.active).sort((a,b)=>dist2(p.x,p.y,a.x,a.y)-dist2(p.x,p.y,b.x,b.y))[0];
+  const friend=coopPlayers.filter(h=>h!==p&&h.alive&&!h.disconnected).sort((a,b)=>dist2(p.x,p.y,a.x,a.y)-dist2(p.x,p.y,b.x,b.y))[0];
+  const close=target&&dist2(p.x,p.y,target.x,target.y)<22*22;
+  const goal=p.carried>0&&dist2(p.x,p.y,L.PAD.x,L.PAD.y)<20*20?L.PAD:close?target:friend&&dist2(p.x,p.y,friend.x,friend.y)>4*4?friend:{x:p.x,y:p.y+4};
+  const a=angTo(p.x,p.y,goal.x,goal.y),want=(Math.round(a/(PI/4))+8)%8;
+  let dir=-1;
+  if(!close||dist2(p.x,p.y,goal.x,goal.y)>8*8)for(const offset of [0,1,-1,2,-2,3,-3,4]){const n=(want+offset+8)%8;if(!blockedFor(p.x+DIR8[n].x,p.y+DIR8[n].y,p.r,p)){dir=n;break;}}
+  return {dir,look:close?angTo(p.x,p.y,target.x,target.y):DIR8[want].a,aim:close?angTo(p.x,p.y,target.x,target.y):DIR8[want].a,fire:!!close,bomb:!!close,edges:[]};
+}
 let P = null;                       // 玩家
 const ents = [];                    // 敌人 + 道具（星）
 const pows = [];
@@ -128,10 +149,10 @@ function ensureStage(n) { if (L.STAGE_NO !== n) { L.loadStage(n); world.rebuild(
 function setupScene() {
   clearAll();
   L.resetStatics(); world.resetAll();
-  makePlayer();
-  const first=P;first.slot=0;first.weapon=1;first.carried=0;coopPlayers=[first];
-  if(G.coop)for(const slot of G.playerSlots.filter(n=>n!==0)){makePlayer();P.slot=slot;P.weapon=1;P.carried=0;P.x+=slot*2;P.invuln=2;coopPlayers.push(P);}
-  P=coopPlayers.find(p=>p.slot===localSlot)||first;
+  for (const slot of G.coop ? G.playerSlots : [0]) {
+    makePlayer(slot); coopPlayers.push(P);
+  }
+  P=coopPlayers.find(p=>p.slot===localSlot)||coopPlayers[0];
   for (const s of L.spawns) spawnEntity(s);
   // 直升机停在机坪上
   heli = M.makeHeli(); heli.root.position.set(L.PAD.x, 0, Z(L.PAD.y + 1)); heli.root.rotation.y = PI * 0.85; scene.add(heli.root);
@@ -150,9 +171,11 @@ function resetStageState() {
 }
 function beginStage() {
   G.mode = 'intro';
-  P.armor = G.armorMax;
-  P.x = L.START.introFrom.x; P.y = L.START.introFrom.y;
-  if (L.STAGE.intro === 'craft') { P.dir = 1; P.ang = DIR8[1].a; } else { P.dir = L.START.dir; P.ang = DIR8[L.START.dir].a; }
+  for (const p of allPlayers()) {
+    p.armor = G.armorMax;
+    p.x = L.START.introFrom.x + spawnOffset(p.slot); p.y = L.START.introFrom.y;
+    p.dir = L.STAGE.intro === 'craft' ? 1 : L.START.dir; p.ang = DIR8[p.dir].a;
+  }
   camCtl.snap(L.START.x + (L.STAGE.intro === 'craft' ? 1 : 0), L.START.y + (L.STAGE.intro === 'craft' ? 2 : 0));
   banner(STAGE_NAME[G.stage] + ' · ' + L.STAGE.title, L.STAGE.sub, 2.6);
   A.music(L.STAGE.music);
@@ -211,10 +234,12 @@ function clearAll() {
   fx && fx.clear();
 }
 
-function makePlayer() {
-  const obj = M.makeJeep();markTree(obj.root);
+const TEAM_COLORS = [M.C.olive, 0xa56b53, 0x648eaa, 0xb79b52];
+function spawnOffset(slot) { return G.coop ? slot * 2.2 : 0; }
+function makePlayer(slot = 0) {
+  const obj = M.makeJeep(G.coop ? TEAM_COLORS[slot] : M.C.olive);markTree(obj.root);
   scene.add(obj.root);
-  P = { x: L.START.x, y: L.START.y, dir: L.START.dir, ang: DIR8[L.START.dir].a, r: 0.82, alive: true, invuln: 0, shield: 0, armor: G.armorMax || 3, hitFlash: 0, smokeT: 0, respawnT: 0, fireCd: 0, bombCd: 0, moving: false, obj, wheelSpin: 0, bob: 0, dust: 0, speed: 8.6 };
+  P = { slot, weapon: 1, carried: 0, x: L.START.x + spawnOffset(slot), y: L.START.y, dir: L.START.dir, ang: DIR8[L.START.dir].a, r: 0.82, alive: true, invuln: 0, shield: 0, armor: G.armorMax || 3, hitFlash: 0, smokeT: 0, respawnT: 0, fireCd: 0, bombCd: 0, moving: false, obj, wheelSpin: 0, bob: 0, dust: 0, speed: 8.6 };
 }
 
 function spawnEntity(s) {
@@ -310,7 +335,7 @@ export function update() {
   if (G.banner) { G.banner.t -= dt; if (G.banner.t <= 0) G.banner = null; }
   if (G.toast) { G.toast.t -= dt; if (G.toast.t <= 0) G.toast = null; }
   if (G.mode === 'intro') updateIntro(dt);
-  else if (G.mode === 'play') for(const p of allPlayers()){if(p.disconnected)continue;withPlayer(p,()=>{p.netInput=p.slot===0?null:inputProvider(p.slot);IN.network=p.netInput;updatePlayer(dt);IN.network=null;});}
+  else if (G.mode === 'play') for(const p of allPlayers()){if(p.disconnected)continue;withPlayer(p,()=>{p.netInput=G.coop?inputProvider(p.slot):null;IN.network=p.netInput;updatePlayer(dt);IN.network=null;});}
   else if (G.mode === 'clear') updateClear(dt);
   else if (G.mode === 'over') { G.endT += dt; if (G.endT > 2.2 && !G.ended) endGame(false, 'lives'); }
   if (G.mode === 'play' || G.mode === 'clear' || G.mode === 'over') {
@@ -323,11 +348,15 @@ export function update() {
 function updateIntro(dt) {
   G.introT += dt;
   const k = Math.min(1, G.introT / 1.7), s = k * k * (3 - 2 * k);
-  P.x = L.START.introFrom.x + (L.START.x - L.START.introFrom.x) * s;
-  P.y = L.START.introFrom.y + (L.START.y - L.START.introFrom.y) * s;
-  P.moving = k < 1;
-  if (L.STAGE.intro === 'craft') { P.dir = 1; P.ang = DIR8[1].a + (DIR8[2].a - DIR8[1].a) * s; }
-  if (k >= 1) { G.mode = 'play'; P.dir = L.START.dir; P.ang = DIR8[L.START.dir].a; P.invuln = 1.2; ev('introDone'); }
+  for (const p of allPlayers()) {
+    if (p.disconnected) continue;
+    p.x = L.START.introFrom.x + (L.START.x - L.START.introFrom.x) * s + spawnOffset(p.slot);
+    p.y = L.START.introFrom.y + (L.START.y - L.START.introFrom.y) * s;
+    p.moving = k < 1;
+    if (L.STAGE.intro === 'craft') { p.dir = 1; p.ang = DIR8[1].a + (DIR8[2].a - DIR8[1].a) * s; }
+    if (k >= 1) { p.dir = L.START.dir; p.ang = DIR8[L.START.dir].a; p.invuln = 1.2; }
+  }
+  if (k >= 1) { G.mode = 'play'; ev('introDone'); }
 }
 
 function updatePlayer(dt) {
@@ -371,12 +400,12 @@ function updatePlayer(dt) {
   if (camCtl.fpNow && !P.netInput) camCtl.rotate(-angDiff(oldAng, P.ang));
   // 机枪：默认固定向北（原作朝上）；可选跟随车头。U 共用两种武器原有冷却与弹数上限。
   P.fireCd -= dt; P.bombCd -= dt;
-  const mgCount = pbul.filter(b => b.kind === 'mg').length;
+  const mgCount = pbul.filter(b => b.kind === 'mg' && b.slot === P.slot).length;
   if ((IN.take('fireTap') || IN.fire()) && P.fireCd <= 0 && mgCount < 6) {
     const a = gunAngle();
     const tx = P.x - Math.sin(P.ang) * 0.82, ty = P.y - Math.cos(P.ang) * 0.82;
     const mx = tx + Math.sin(a) * 1.1, my = ty + Math.cos(a) * 1.1;
-    pbul.push({ kind: 'mg', x: mx, y: my, h: 1.58, a, vx: Math.sin(a) * 26, vy: Math.cos(a) * 26, life: 0.7, r: 0.16 });
+    pbul.push({ kind: 'mg', slot: P.slot, x: mx, y: my, h: 1.58, a, vx: Math.sin(a) * 26, vy: Math.cos(a) * 26, life: 0.7, r: 0.16 });
     fx.muzzle(mx, my, 1.58, a);
     P.fireCd = 0.1; A.mg(); G.mgShots = (G.mgShots || 0) + 1;
   }
@@ -410,7 +439,7 @@ export function gunAngle() { return G.settings.gun === 'up' ? 0 : P.netInput ? (
 function fireBomb() {
   const w = G.weapon, a = P.netInput ? (P.netInput.aim??P.ang) : camCtl.fpNow ? P.ang + camCtl.yaw : P.ang;
   const d = { x: Math.sin(a), y: Math.cos(a), a };
-  const live = bombs.filter(b => b.own && b.kind !== 'shrap').length;
+  const live = bombs.filter(b => b.own && b.slot === P.slot && b.kind !== 'shrap').length;
   const max = w <= 2 ? 2 : 3;
   if (live >= max) return;
   const sx = P.x + d.x * 1.1, sy = P.y + d.y * 1.1;
@@ -422,11 +451,11 @@ function fireBomb() {
       const target = L.staticAt(P.x + d.x * r, P.y + d.y * r);
       if (target && target.alive && target.kind === 'gate') { range = r; break; }
     }
-    bombs.push({ own: true, kind: 'grenade', x: sx, y: sy, sx, sy, tx: P.x + d.x * range, ty: P.y + d.y * range, t: 0, dur: 0.62, h: 1.1, a: d.a });
+    bombs.push({ own: true, slot: P.slot, kind: 'grenade', x: sx, y: sy, sx, sy, tx: P.x + d.x * range, ty: P.y + d.y * range, t: 0, dur: 0.62, h: 1.1, a: d.a });
     P.bombCd = 0.34; A.grenade();
   } else {
     const sp = w === 2 ? 22 : 26, range = w === 2 ? 13 : 16;
-    bombs.push({ own: true, kind: w === 2 ? 'rocket' : 'rocket3', spread: w === 3 ? 2 : w === 4 ? 4 : 0, x: sx, y: sy, vx: d.x * sp, vy: d.y * sp, life: range / sp, h: 1.0, a: d.a, smokeT: 0 });
+    bombs.push({ own: true, slot: P.slot, kind: w === 2 ? 'rocket' : 'rocket3', spread: w === 3 ? 2 : w === 4 ? 4 : 0, x: sx, y: sy, vx: d.x * sp, vy: d.y * sp, life: range / sp, h: 1.0, a: d.a, smokeT: 0 });
     P.bombCd = w === 2 ? 0.28 : 0.24; A.rocket();
   }
   fx.muzzle(sx, sy, 1.0, d.a, true);
@@ -1328,7 +1357,12 @@ function endGame(win, reason) {
   G.ended = true;
   A.engine('off');
   let powBonus = 0, lateDeliver = 0;
-  if (win) { lateDeliver = G.carried; G.delivered += G.carried; G.totalDelivered = (G.totalDelivered || 0) + G.carried; G.carried = 0; addScore(lateDeliver * POINTS.pow); powBonus = G.delivered * POINTS.powBonus; addScore(powBonus); G.cleared = (G.cleared || 0) + 1; }
+  if (win) {
+    lateDeliver = allPlayers().reduce((sum, p) => sum + (p === P ? G.carried : p.carried || 0), 0);
+    for (const p of allPlayers()) p.carried = 0;
+    G.carried = 0; G.delivered += lateDeliver; G.totalDelivered = (G.totalDelivered || 0) + lateDeliver;
+    addScore(lateDeliver * POINTS.pow); powBonus = G.delivered * POINTS.powBonus; addScore(powBonus); G.cleared = (G.cleared || 0) + 1;
+  }
   let newHi = false;
   if (!G.coop && !G.demoUsed && G.score > G.hi) { G.hi = G.score; store.set('hi', G.hi); newHi = true; }
   const hasNext = win && G.stage < L.STAGE_COUNT;

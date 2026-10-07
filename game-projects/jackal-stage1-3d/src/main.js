@@ -636,7 +636,8 @@ installRemakeUI();
 
 coopDriver=installRemakeCoop({
  game:'jackal',container:stage,menu:overlays.menu.querySelector('.items'),getConfig:()=>({...settings}),notify:showToast,
- onStart:config=>{settings.demo=false;startGame(config.stage);GM.setCoopInput(slot=>coopDriver.connection.input(slot));},
+ onStart:config=>{settings.demo=false;startGame(config.stage);GM.setCoopInput(slot=>coopDriver.connection.control(slot,slot===0?null:coopDriver.connection.input(slot),()=>GM.computerInput(slot)));},
+ onJoin:m=>GM.joinCoopSlot(m.slot),
  getInput:()=>GM.coopInput(),getState:()=>({...GM.coopSnapshot(),sounds:coopSounds.snapshot()}),getUI:()=>({paused,current}),
  onState:state=>{
   GM.coopApply(state.game);coopSounds.apply(state.game.sounds);

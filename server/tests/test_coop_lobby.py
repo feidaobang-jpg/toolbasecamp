@@ -30,7 +30,7 @@ def test_movement_is_bounded_and_non_finite_inputs_are_dropped():
     assert len(value['edges']) <= 12 and set(value['edges']) == {'atk'}
 
 @pytest.mark.parametrize('game,protocol,capacity', [
-    ('tank', 'tank3d-v2', 4), ('jackal', 'jackal3d-v1', 2),
+    ('tank', 'tank3d-v2', 4), ('jackal', 'jackal3d-v1', 4),
     ('cadillacs', 'cadillacs3d-v1', 4), ('starship', 'starship-v1', 4),
 ])
 def test_shared_rooms_relay_authority_and_game_isolation(game, protocol, capacity):
