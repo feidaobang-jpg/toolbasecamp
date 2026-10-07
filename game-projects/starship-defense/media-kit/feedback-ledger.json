@@ -498,8 +498,11 @@
       "kind": "bug",
       "status": "fixed",
       "fixed_in": "web-feedback-v0.22.1",
-      "reply_status": "pending",
-      "note": "卡住检测去掉无路线与z<182限制，5秒无位移即绕行/钻地；出生点撞墙自动找安全位；钻地检查头顶净高。QA见releases/web-feedback-v0.22.1。"
+      "reply_status": "posted_public_verified",
+      "note": "卡住检测去掉无路线与z<182限制，5秒无位移即绕行/钻地；出生点撞墙自动找安全位；钻地检查头顶净高。QA见releases/web-feedback-v0.22.1。",
+      "reply_rpid": "316338501553",
+      "reply_text": "修好了！之前虫子绕到基地建筑后面或者从母巢洞口出来时，容易卡原地不动，所以怎么都找不到。现在卡住几秒会自动绕行或钻地朝目标推进，出生位置被撞墙也会自动挪到安全点。网站已更新到v0.22.1，Toy同包已提交审核，通过后即可玩到，谢谢反馈！",
+      "reply_verified_at": "2026-10-07T07:01:47+00:00"
     },
     {
       "rpid": "316323444209",
@@ -513,8 +516,11 @@
       "kind": "balance",
       "status": "fixed",
       "fixed_in": "web-feedback-v0.22.1",
-      "reply_status": "pending",
-      "note": "射程48→64、伤害140→180、价格1600→1400、弹速32→85并按移动预判落点；修复前移动目标0伤害，修复后180。"
+      "reply_status": "posted_public_verified",
+      "note": "射程48→64、伤害140→180、价格1600→1400、弹速32→85并按移动预判落点；修复前移动目标0伤害，修复后180。",
+      "reply_rpid": "316340442113",
+      "reply_text": "回复 @bili_50539966983 :改好了！重型迫击炮射程提到64米（超过狙击枪的55米），伤害180、价格降到1400，炮弹速度大幅提升并按虫子移动方向预判落点，落地约0.3–0.8秒；实测移动目标也能命中。网站已更新v0.22.1，Toy同包已提交审核，通过后试试这版！",
+      "reply_verified_at": "2026-10-07T07:01:47+00:00"
     },
     {
       "rpid": "316322217985",
@@ -528,8 +534,11 @@
       "kind": "bug",
       "status": "fixed",
       "fixed_in": "web-feedback-v0.22.1",
-      "reply_status": "pending",
-      "note": "根因：键盘导航循环在.coop-panel弹窗打开时抢焦点；修复后三视口四输入框焦点保持，QA见releases/web-feedback-v0.22.1。"
+      "reply_status": "posted_public_verified",
+      "note": "根因：键盘导航循环在.coop-panel弹窗打开时抢焦点；修复后三视口四输入框焦点保持，QA见releases/web-feedback-v0.22.1。",
+      "reply_rpid": "316340595697",
+      "reply_text": "回复 @bili_50539966983 :这条也修好了！原因是联机大厅界面在持续抢占输入焦点，手机上键盘刚弹出来就被打断收起。现在大厅里不再抢焦点，昵称和房间号可以正常打字。网站已更新v0.22.1，Toy同包已提交审核，通过后用手机再试试！",
+      "reply_verified_at": "2026-10-07T07:01:47+00:00"
     },
     {
       "rpid": null,
@@ -542,7 +551,7 @@
       "kind": "bug",
       "status": "fixed",
       "fixed_in": "web-lobby-scroll-v0.22.2",
-      "reply_status": "pending",
+      "reply_status": "not_requested_not_posted",
       "note": "根因：页面级*{touch-action:none}命中大厅卡片后代，触摸滚动被禁；共享coop.js恢复卡片auto并在大厅开启时放开祖先容器，四款合作游戏同修。QA见releases/web-lobby-scroll-v0.22.2。"
     }
   ]

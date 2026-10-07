@@ -36,6 +36,40 @@
       "reply_public_verified_at": "2026-10-06T21:39:01.172522+00:00",
       "note": "两张反馈截图实际查看；网站与Toy公开包核验通过后回复",
       "evidence": "D:/project/task-artifacts/mario-comment-fix-20261007/replies.png"
+    },
+    {
+      "rpid": "319924229680",
+      "video": "BV1Fwpw6FEFx",
+      "comment_type": 1,
+      "root": null,
+      "user": "为啥呀鸭",
+      "date": "2026-10-07 12:05",
+      "text": "猜猜我为什么有4条命",
+      "kind": "chat/question",
+      "status": "answered_no_code_change",
+      "fixed_in": null,
+      "reply_rpid": "316340596737",
+      "reply_parent": "319924229680",
+      "reply_text": "哈哈被我抓到——是不是撞了1-1第4根水管和第一个坑之间那块隐藏1UP砖，或者攒够100金币换的命？这两个彩蛋都是特意埋的。后面还有金币奖励房和天花板隐藏区，欢迎继续挖。",
+      "reply_public_verified_at": "2026-10-07T07:01:47+00:00",
+      "note": "娱乐向提问，功能均已存在于v2.4.3（隐藏1UP块 world.js 1-1 x=64；100金币奖命），无需改动"
+    },
+    {
+      "rpid": "319923455008",
+      "video": "BV1Fwpw6FEFx",
+      "comment_type": 1,
+      "root": "319875690208",
+      "user": "为啥呀鸭",
+      "date": "2026-10-07 11:57",
+      "text": "马力欧的隐藏奖励盒和跳关也做了吗？",
+      "kind": "question",
+      "status": "answered_no_code_change",
+      "fixed_in": null,
+      "reply_rpid": "316340522321",
+      "reply_parent": "319923455008",
+      "reply_text": "回复 @为啥呀鸭 :都做了！隐藏1UP砖、金币奖励房、天花板隐藏区在1-1/1-2里都有；1-2还埋了三根跳关传送水管，走进会触发彩蛋结算——不过本版只复刻到1-2，真正跳到后面的关卡要等系列后续更新。",
+      "reply_public_verified_at": "2026-10-07T07:01:47+00:00",
+      "note": "隐藏奖励盒与跳关水管已在v2.4.3实现（1-2 x=178/182/186 传送管→彩蛋提示，因仅复刻1-1/1-2），如实说明范围"
     }
   ]
 }
