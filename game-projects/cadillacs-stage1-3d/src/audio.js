@@ -24,10 +24,32 @@ function ensure() {
   roomIn = buildRoom(ctx, sfxBus);
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
   // 原版曲目没加载完时不先放合成的旧版曲子；只有原版加载失败才用合成兜底
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3?v=bgmfull1", "roof":"roof.mp3?v=bgmfull1", "hall": "hall.mp3?v=bgmfull1", "street": "street.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1", "select": "select.mp3", "forest": "forest.mp3?v=bgmfull1", "swamp": "swamp.mp3?v=bgmfull1", "grave": "hall.mp3?v=bgmfull1", "boss2": "boss2.mp3?v=bgmfull1", "opening": "opening.mp3?v=1", "clear": "clear.mp3?v=1", "cont": "continue.mp3?v=1", ...ORIGINAL_FILES});
+  // 先下最先要用的（选人曲、开场曲、所选起始关的第一首、全部音效），其余排在后面；同一个文件只下一次（stage=roof、grave=hall）
+  const startStage2 = (() => { try { return JSON.parse(localStorage.getItem('cd3d-stage1:stage')) === 1; } catch (e) { return false; } })();
+  // 第一批（并行）：选人曲、开场曲、全部音效，都很小；之后按需要的先后逐首下载，起始关的第一首排最前
+  const first = startStage2 ? ['select'] : ['select', 'opening'];
+  const order = startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont', 'roof', 'street', 'boss'] : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'];
+  const pick = (names) => Object.fromEntries(names.map(n => [n, MUSIC_FILES[n]]));
+  samples = new SampleAudio(ctx, musicBus, sfxBus, { ...pick(first), ...ORIGINAL_FILES });
+  samples.ready.then(() => loadRest(samples, order.concat(Object.keys(MUSIC_FILES).filter(n => !first.includes(n) && !order.includes(n)))));
   return ctx;
 }
 const now = () => ctx.currentTime;
+// 原版曲子：第一关（楼顶 / 大楼内部 / 47 街 / Boss 1）、第二关（森林 / 泥沼 / 尸骸地 / Boss 2）、选人、开场、过关、续关
+const MUSIC_FILES = { select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
+const ALIAS = { stage: 'roof', grave: 'hall' };   // 同曲不同名：只下载一次
+// 第二批：依次下载（不和第一批抢带宽），下完一首就能用；同名别名共用同一段解码好的音频
+async function loadRest(s, names) {
+  const base = new URL('./sounds/', location.href);
+  for (const name of names) {
+    try {
+      const r = await fetch(new URL(MUSIC_FILES[name], base)); if (!r.ok) throw Error(r.status);
+      s.buffers.set(name, await s.ctx.decodeAudioData(await r.arrayBuffer()));
+      if (s.track?.name === name) s.startTrack();
+    } catch (e) { s.failed.push(name); }
+  }
+}
+function linkAlias(name) { const src = ALIAS[name]; if (src && samples && !samples.has(name) && samples.has(src)) samples.buffers.set(name, samples.buffers.get(src)); }
 // 总线：压缩 → 软限幅（tanh，小信号增益约为 1，峰值不超过 0.98）→ 主音量。爆炸、霰弹枪叠在一起时不会硬削波
 let softCurve = null;
 function buildChain(c, mBus, sBus, out) {
@@ -263,6 +285,16 @@ const SONGS = {
 const seq = { song: null, name: null, step: 0, next: 0, timer: 0, duck: false, gain: null };
 // 有原版录音的曲目（第一、二关各区域、Boss、选人）
 // 第一关开场用原版「Opening Demo」，过关「Stage Clear」，续关倒数「Continue 1」
+let pendingMusic = null, pendingTimer = 0;
+// 原版曲还没下载好、当前也没在放原版曲：保持安静等它；下载失败才用合成兜底（开场曲没有合成版，失败就安静）
+function waitOriginal(name) {
+  const id = setInterval(() => {
+    if (seq.name !== name) return clearInterval(id);
+    linkAlias(name);
+    if (samples.has(name)) { clearInterval(id); if (!samples.track || samples.track.name !== name || !samples.source) samples.music(name, name !== 'clear' && name !== 'opening', true); }
+    else if (samples.failed.includes(name) || samples.failed.includes(ALIAS[name])) { clearInterval(id); if (name !== 'opening' && !seq.song) startSynth(name); }
+  }, 150);
+}
 const ORIGINAL_MUSIC = new Set(['stage', 'roof', 'hall', 'street', 'boss', 'select', 'forest', 'swamp', 'grave', 'boss2', 'opening', 'clear', 'cont']);
 function startSynth(name) {
   seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
@@ -334,22 +366,37 @@ const A = {
     try { f(now() + 0.005, vol === undefined ? 1 : vol); } catch (e) { /* 节点上限等 */ }
   },
   music(name) {
-    if (seq.name === name && (seq.song || samples?.track)) return;
+    if (seq.name === name && (seq.song || samples?.track || pendingMusic === name)) return;
     if (log.on) log.events.push({ t: +clockFn().toFixed(3), music: name });
     seq.name = name;
     if (!ensure()) return;
+    if (name) linkAlias(name);
+    pendingMusic = null;
+    if (name && samples && !samples.has(name) && samples.source && !samples.failed.includes(name) && !samples.failed.includes(ALIAS[name])) {
+      // 新原版曲还没下载完：先接着放当前这首原版曲，下好立刻换（开场必杀时第一关曲还在下载就是这种情况）
+      pendingMusic = name;
+      if (!pendingTimer) pendingTimer = setInterval(() => {
+        if (!pendingMusic) return;
+        linkAlias(pendingMusic);
+        if (samples.has(pendingMusic)) { const n = pendingMusic; pendingMusic = null; samples.music(n, n !== 'clear' && n !== 'opening'); }
+        else if (samples.failed.includes(pendingMusic) || samples.failed.includes(ALIAS[pendingMusic])) { const n = pendingMusic; pendingMusic = null; samples.music(null); if (n !== 'opening') startSynth(n); }
+      }, 150);
+      if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
+      seq.gain = null; seq.song = null;
+      return;
+    }
     samples?.music(name, name !== 'clear' && name !== 'opening');
     if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
     seq.gain = null; seq.song = null;
     if (!name || !(SONGS[name] || ORIGINAL_MUSIC.has(name))) return;
-    if (ORIGINAL_MUSIC.has(name) && !samples?.failed.includes(name)) { samples?.ready.then(() => { if (seq.name === name && !samples.has(name) && !seq.song && name !== 'opening') startSynth(name); }); return; }   // 开场曲没有合成版，加载失败就保持安静
+    if (ORIGINAL_MUSIC.has(name) && !samples?.failed.includes(name)) { waitOriginal(name); return; }
     startSynth(name);
   },
 
   musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
   pause() { /* 音效都很短，暂停时不需要单独处理 */ },
   state: () => ({ ctx: ctx ? ctx.state : 'none', volume, originalsLoaded: Object.keys(ORIGINAL_FILES).filter(k => samples?.has(k)), failed: samples?.failed.slice() || [] }),
-  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden, synth: !!seq.song, original: !!samples?.source }),
+  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden, synth: !!seq.song, original: !!samples?.source, track: samples?.source ? samples.track?.name || null : null, loaded: samples ? Object.keys(MUSIC_FILES).filter(n => samples.has(n)) : [] }),
   captureStream() { if (!ensure()) return null; if (!capDest) { capDest = ctx.createMediaStreamDestination(); master.connect(capDest); } return capDest.stream; },
   logStart() { log.on = true; log.events = []; },
   logStop() { log.on = false; return log.events.slice(); },

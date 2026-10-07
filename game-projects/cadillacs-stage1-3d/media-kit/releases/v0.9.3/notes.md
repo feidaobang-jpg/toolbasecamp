@@ -21,3 +21,12 @@ v0.9.2 把连招最后一下、击倒和冲刺攻击改成效果 0083。依据�
 - `qa/stage2.js` 56/56（新增过关放原版 Stage Clear）、`qa/desktop.js` 92/92（新增续关放原版 Continue）、`qa/intro-throw.js` 16/16、`qa/feel.js` 16/16、`qa/mobile.js` 35/35、`qa/guns.js` 41/41、`site-games/qa/restart-audio.cjs` 5/5。
 - 联机 `site-games/qa/cooperative.cjs`：用本仓库的大厅代码临时起的本地大厅上「客机输入移动自己的角色」一项失败，改前的 v0.9.2 构建在同一大厅上同样失败（之前通过时用的是另一会话的新版开发大厅），本次只改音频，判定为测试环境问题。
 - 我听不到声音，依据是录像比对与程序测量。
+
+## 补充：原版曲子下载顺序（同一版本第二次提交）
+
+上线后用真实网络实测：我们服务器单个文件下载约 0.37 MB/s，第一关曲子 roof.mp3（340 秒完整版，4 MB）单独就要 11 秒；而旧代码在音频解锁时把约 15 MB 的曲子同时开下，还把第一关曲（stage / roof 两个名字）和大楼内部曲（hall / grave）各下了两遍。结果新访客的开场可能好几秒没音乐。
+
+- 第一批只并行下载选人曲、开场曲和全部音效（共约 1.1 MB）；之后按用到的先后逐首下载，起始关的第一首排最前；同一首曲子只下一次。
+- 开场必杀时第一关曲若还没下完，先接着放原版 Opening Demo，下好立刻换，不留空白。
+- 按 0.37 MB/s 限速实测（`qa/original-audio.js` 新增 4 项）：开场 3.1 秒响起 Opening Demo，开场必杀（11.5 秒）时音乐不断，14.7 秒换成第一关原版曲，全程没有合成曲；同样条件下修改前的线上版 30 秒内都没响起开场曲，必杀时没有音乐。
+- 回归：`qa/original-audio.js` 62/62、`qa/desktop.js` 92/92、`qa/stage2.js` 56/56、`qa/intro-throw.js` 16/16、`qa/mobile.js` 35/35、`qa/feel.js` 16/16、`site-games/qa/restart-audio.cjs` 5/5。

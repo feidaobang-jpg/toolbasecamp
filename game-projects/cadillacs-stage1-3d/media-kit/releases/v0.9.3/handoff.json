@@ -6,8 +6,8 @@
  "created_at": "2026-10-07T19:30:00+08:00",
  "classification": "玩家反馈修复（撤回错选的重击声、开场旧 BGM、全部换原版曲）",
  "build": {
-  "bundle_sha256": "a39ab52f47d9e4bf9fac20327366eb8d3299a8dfe0110a3d5026e7a290b04f4a",
-  "build_id": "bgm-v093"
+  "bundle_sha256": "ba6d06fd2d16e67abd01d63526df29bd6fb726fed1d94e793be61d961f589fbd",
+  "build_id": "bgm-v093b"
  },
  "changes": [
   {
@@ -32,6 +32,12 @@
    "before": "过关、续关为合成曲",
    "after": "原版 Stage Clear、Continue 1",
    "verification": "pass"
+  },
+  {
+   "id": "music-load-order",
+   "before": "音频解锁时并行下载约 15 MB 曲子，第一关曲与大楼内部曲各下两遍",
+   "after": "第一批只下选人曲、开场曲与音效；其余按需要先后逐首下载、每首一次；新曲未下完时先接着放当前原版曲",
+   "verification": "pass（0.37 MB/s 限速：开场 3.1 秒有曲、必杀时不断、14.7 秒换第一关曲）"
   }
  ],
  "sources": [
@@ -67,22 +73,18 @@
  "qa": [
   {
    "method": "qa/original-audio.js",
-   "result": "pass 61/61"
-  },
-  {
-   "method": "qa/stage2.js",
-   "result": "pass 56/56"
+   "result": "pass 62/62（含 0.37 MB/s 限速开场时间线 4 项）"
   },
   {
    "method": "qa/desktop.js",
    "result": "pass 92/92"
   },
   {
-   "method": "qa/intro-throw.js",
-   "result": "pass 16/16"
+   "method": "qa/stage2.js",
+   "result": "pass 56/56"
   },
   {
-   "method": "qa/feel.js",
+   "method": "qa/intro-throw.js",
    "result": "pass 16/16"
   },
   {
@@ -93,8 +95,8 @@
    ]
   },
   {
-   "method": "qa/guns.js",
-   "result": "pass 41/41"
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
   },
   {
    "method": "site-games/qa/restart-audio.cjs",
@@ -102,7 +104,7 @@
   },
   {
    "method": "site-games/qa/cooperative.cjs（仓库大厅代码临时起的本地大厅）",
-   "result": "7/8 前两项外一项失败；改前 v0.9.2 构建在同一大厅同样失败，判定为环境问题"
+   "result": "改前 v0.9.2 与本版在同一大厅同样失败一项，判定为环境问题；本版只改音频"
   }
  ],
  "audio_review": "not-run（AI 无法试听）",

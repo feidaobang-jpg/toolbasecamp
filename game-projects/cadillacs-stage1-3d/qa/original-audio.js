@@ -53,21 +53,34 @@ const fs = require('fs');
     await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.step(150); T.cheat.killAll(); T.audioLogStart(); T.step(120); });
     check(`hero ${hero}: all recordings decoded`, (await state()).ui.audio.failed.length === 0);
   }
-  // 开场只放原版 BGM：原版还没加载完时保持安静，绝不先放合成的旧曲子
+  // 开场只放原版 BGM：按我们服务器实测的下载速度（约 0.37 MB/s）限速，记录开场音乐时间线
   {
+    const cdp = await host.context().newCDPSession(host);
+    await cdp.send('Network.enable');
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 40, downloadThroughput: 375000, uploadThroughput: 100000 });
     await navigate();
-    await host.route('**/opening.mp3*', async r => { await new Promise(res => setTimeout(res, 2500)); await r.continue(); });   // 模拟原版曲子加载慢
     await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
     if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
-    const early = [], osc0 = await page.evaluate(() => window.audioProbe.oscillators);
-    for (let i = 0; i < 20; i++) { early.push(await page.evaluate(() => window.__CD_TEST__.snapshot().ui.music)); await host.waitForTimeout(160); }
-    const osc = await page.evaluate(n => window.audioProbe.oscillators - n, osc0);   // 合成旧曲每秒要建几十个振荡器；远景这几秒里没有别的合成音
-    await host.unroute('**/opening.mp3*');
-    check('stage 1 intro never plays the synthesized old BGM while the original loads', osc < 6 && early.every(m => !m.synth), { oscillatorsIn3s: osc, synth: early.filter(m => m.synth).length });
-    check('intro plays the original "Opening Demo" once loaded (arcade: from the EASTCOAST shot)', early.some(m => m.name === 'opening' && m.original), early.slice(-2));
-    const rest = [];
-    for (let i = 0; i < 70; i++) { const m = await page.evaluate(() => window.__CD_TEST__.snapshot().ui.music); rest.push(m); if (m.name === 'roof') break; await host.waitForTimeout(200); }
-    check('stage 1 original BGM takes over at the opening mega (arcade: 21.6 s)', rest.some(m => m.name === 'roof' && m.original) && rest.every(m => !m.synth) && await page.evaluate(() => window.__CD_TEST__.cheat.G.events.some(e => e.type === 'introMega')), rest.slice(-1));
+    const osc0 = await page.evaluate(() => window.audioProbe.oscillators), t0 = Date.now(), line = [];
+    let megaAt = null;
+    while (Date.now() - t0 < 30000) {
+      const r = await page.evaluate(() => { const T = window.__CD_TEST__, m = T.snapshot().ui.music; return { m, mega: T.cheat.G.events.some(e => e.type === 'introMega'), osc: window.audioProbe.oscillators }; });
+      const t = (Date.now() - t0) / 1000;
+      if (r.mega && megaAt === null) megaAt = t;
+      line.push({ t: +t.toFixed(1), track: r.m.track, name: r.m.name, synth: r.m.synth, osc: r.osc - osc0 });
+      if (megaAt !== null && r.m.track === 'roof' && t - megaAt > 1) break;
+      await host.waitForTimeout(250);
+    }
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+    const first = line.find(x => x.track === 'opening'), atMega = line.find(x => megaAt !== null && x.t >= megaAt), roof = line.find(x => x.track === 'roof');
+    const gapAfterOpening = first ? line.filter(x => x.t > first.t && !x.track && (!roof || x.t < roof.t)).length : -1;
+    console.log('   timeline', JSON.stringify(line.filter((x, i) => i % 4 === 0 || x === first || x === atMega || x === roof).map(x => [x.t, x.track || '-', x.osc])));
+    // 合成旧曲每秒要建约 30 个振荡器；远景 3.5 秒内没有别的合成音（之后台词滴答声、开枪等短音效会建少量）
+    const est = line.filter(x => x.t <= 3.5).pop(), total = line[line.length - 1];
+    check('slow network: intro never plays the synthesized old BGM', line.every(x => !x.synth) && est.osc === 0 && total.osc / Math.max(1, total.t) < 4, { establishingOsc: est.osc, perSecond: +(total.osc / total.t).toFixed(1) });
+    check('slow network: original Opening Demo starts within 6 s of the intro', !!first && first.t < 6, first);
+    check('slow network: at the opening mega the music keeps playing (Opening Demo continues until the stage track arrives)', !!atMega && !!atMega.track && gapAfterOpening === 0, { megaAt, atMega, gapAfterOpening });
+    check('slow network: stage 1 original track takes over after the mega', !!roof && megaAt !== null && roof.t >= megaAt - 0.3, { roof, megaAt });
   }
   for (let hero = 0; hero < 4; hero++) {
     await start(hero);
