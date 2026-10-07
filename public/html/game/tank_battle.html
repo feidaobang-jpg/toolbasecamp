@@ -3284,7 +3284,31 @@ const Game = (() => {
 </script>
 <script src="../../js/game/thumb-preview.js"></script>
 <script type="module">
-try{const m=await import('../../js/game/landscape-typing.js?v=lt1');m.installLandscapeTyping();}catch(e){console.warn(e)}
+// 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
+(function(){
+if(window.__landscapeTypingInstalled)return;window.__landscapeTypingInstalled=true;
+const COARSE_UA=/Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i;
+const isTouch=()=>(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||COARSE_UA.test(navigator.userAgent||'');
+const HINT='键盘按竖屏方向弹出，建议先把手机转为横屏再输入';
+function showHint(text){let el=document.getElementById('landscape-typing-hint');
+ if(!el){el=document.createElement('div');el.id='landscape-typing-hint';el.setAttribute('role','status');
+  el.style.cssText='position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);z-index:2147483000;background:rgba(20,28,40,.92);color:#fff;font:14px/1.4 system-ui,sans-serif;padding:10px 16px;border-radius:10px;max-width:86vw;text-align:center;pointer-events:none;transition:opacity .3s;opacity:0';
+  document.body.appendChild(el);}
+ el.textContent=text;el.style.opacity='1';clearTimeout(showHint.timer);showHint.timer=setTimeout(()=>{el.style.opacity='0';},3000);}
+document.addEventListener('focusin',(e)=>{
+ const el=e.target;
+ if(!(el instanceof HTMLInputElement)&&!(el instanceof HTMLTextAreaElement))return;
+ if(el.disabled||el.readOnly||/^(checkbox|radio|button|submit|file|range|color)$/.test(el.type||'text'))return;
+ if(window.innerWidth>=window.innerHeight||!isTouch())return;
+ const fsEl=document.fullscreenElement||document.webkitFullscreenElement;
+ if(fsEl){try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>showHint(HINT));}catch{showHint(HINT);}return;}
+ const de=document.documentElement,req=de.requestFullscreen||de.webkitRequestFullscreen;
+ if(!req){showHint(HINT);return;}
+ try{Promise.resolve(req.call(de,{navigationUI:'hide'})).then(()=>{
+  try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch{}
+ },()=>showHint(HINT));}catch{showHint(HINT);}
+});
+})();
 </script>
 </body>
 </html>

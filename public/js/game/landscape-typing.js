@@ -21,8 +21,9 @@ function showHint(text) {
 }
 const HINT_TEXT = '键盘按竖屏方向弹出，建议先把手机转为横屏再输入';
 export function installLandscapeTyping() {
-	if (installLandscapeTyping.done) return;
+	if (installLandscapeTyping.done || window.__landscapeTypingInstalled) return;
 	installLandscapeTyping.done = true;
+	window.__landscapeTypingInstalled = true;
 	document.addEventListener('focusin', (e) => {
 		const el = e.target;
 		if (!(el instanceof HTMLInputElement) && !(el instanceof HTMLTextAreaElement)) return;
