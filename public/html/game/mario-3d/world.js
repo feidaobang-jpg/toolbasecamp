@@ -1,5 +1,5 @@
 // 玩法模拟：与渲染无关。地形整条跑道纵深一致，碰撞按 (x,y) 网格计算，z 只用于跑道边界和实体之间的接触。
-import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.4';
+import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=stage3-preview1';
 
 export const STEP = 1 / 120;
 export const PW = 0.36;                       // 玛丽半宽
@@ -53,7 +53,9 @@ function enterArea(w, id) {
     a.rt = {
       enemies: a.enemies.map(d => ({
         type: d.type, red: !!d.red, x: d.x, y: d.y, z: 0, vx: 0, vy: 0, dir: -1, state: 'walk', active: false,
-        w: 0.42, h: d.type === 'koopa' ? 1.3 : 0.9, t: 0, kickGrace: 0, chain: 0, grounded: false, gone: false
+        w: 0.42, h: d.type === 'koopa' ? 1.3 : 0.9, t: 0, kickGrace: 0, chain: 0, grounded: false, gone: false,
+        winged: !!d.flight, flight: d.flight || null,
+        flyPhase: d.flight ? Math.acos(clamp((d.y-(d.flight.min+d.flight.max)/2)/((d.flight.max-d.flight.min)/2),-1,1)) : 0
       })),
       items: [], fireballs: [],
       coins: a.coins.map(c => ({ x: c.x, y: c.y, alive: true })),
@@ -61,7 +63,9 @@ function enterArea(w, id) {
     };
     for (const l of a.lifts) {
       const span = l.max - l.min;
-      for (let i = 0; i < l.count; i++) a.rt.lifts.push({ x: l.x, w: l.w, y: l.min + span * (i + 0.35) / l.count, dir: l.dir, speed: l.speed, min: l.min, max: l.max, dy: 0 });
+      const count = l.count || 1;
+      for (let i = 0; i < count; i++) a.rt.lifts.push(Object.assign({mode:'cycle',axis:'y'},l,
+        { y:l.mode==='pingpong'?l.y:l.min+span*(i+.35)/count, dx:0,dy:0,wrapped:false }));
     }
   }
   w.area = a; w.areaId = id; w.tiles = a.tiles; w.rt = a.rt; w.areaVersion++;
@@ -76,6 +80,17 @@ function anySolid(w, x0, y0, x1, y1) {
   for (let c = Math.floor(x0); c <= Math.floor(x1 - 1e-6); c++)
     for (let h = Math.floor(y0); h <= Math.floor(y1 - 1e-6); h++) if (solidAt(w, c, h)) return true;
   return false;
+}
+
+// 树冠只接住从上方落下的实体，不把装饰树干当墙，也不挡从下方起跳。
+function landOnTrees(w, b, prevY, hw) {
+  let top = -Infinity;
+  for (const t of w.area.trees) if (b.x+hw>t.x && b.x-hw<t.x+t.w && prevY>=t.y-.08 && b.y<=t.y) top=Math.max(top,t.y);
+  if (top===-Infinity) return false;
+  b.y=top; b.vy=0; return true;
+}
+function supportedAt(w, x, y) {
+  return solidAt(w,Math.floor(x),Math.floor(y-.5)) || w.area.trees.some(t=>x>=t.x&&x<t.x+t.w&&Math.abs(y-t.y)<.12);
 }
 
 // 通用实体移动：先 x 后 y，对整格方块做 AABB 推出。返回 {wall, landed, ceil}
@@ -96,6 +111,7 @@ function moveBody(w, b, dt, hw, hgt) {
   if (b.vy <= 0) {
     const h = Math.floor(b.y);
     if (prevY >= h + 1 - 0.3) for (let c = c0; c <= c1; c++) if (solidAt(w, c, h)) { b.y = h + 1; b.vy = 0; r.landed = true; break; }
+    if (!r.landed && landOnTrees(w,b,prevY,hw)) r.landed=true;
   } else {
     const h = Math.floor(b.y + hgt);
     for (let c = c0; c <= c1; c++) if (solidAt(w, c, h)) { b.y = h - hgt; b.vy = 0; r.ceil = true; break; }
@@ -136,12 +152,21 @@ export function step(w, input, dt) {
 
 function updateLifts(w, dt) {
   for (const l of w.rt.lifts) {
-    const before = l.y;
+    const before = l.y, beforeX=l.x;
+    if (l.mode==='pingpong') {
+      const axis=l.axis;
+      l[axis]+=l.dir*l.speed*dt;
+      if (l[axis]>l.max) { l[axis]=2*l.max-l[axis]; l.dir=-1; }
+      else if (l[axis]<l.min) { l[axis]=2*l.min-l[axis]; l.dir=1; }
+      l.dx=l.x-beforeX; l.dy=l.y-before; l.wrapped=false;
+      continue;
+    }
     l.y += l.dir * l.speed * dt;
     l.wrapped = false;
     if (l.dir < 0 && l.y < l.min) { l.y += l.max - l.min; l.wrapped = true; }
     if (l.dir > 0 && l.y > l.max) { l.y -= l.max - l.min; l.wrapped = true; }
     l.dy = l.wrapped ? 0 : l.y - before;
+    l.dx=0;
   }
 }
 
@@ -217,6 +242,7 @@ function updatePlayer(w, input, dt) {
   const prevY0 = p.y;
   if (p.onLift) {
     const l = p.onLift;
+    p.x+=l.dx;
     if (l.wrapped || p.x + PW < l.x || p.x - PW > l.x + l.w) p.onLift = null;
     else { p.y = l.y; }
   }
@@ -246,6 +272,7 @@ function updatePlayer(w, input, dt) {
   if (p.vy <= 0) {
     const h = Math.floor(p.y);
     if (prevBottom >= h + 1 - 0.3) for (let c = c0; c <= c1; c++) if (solidAt(w, c, h)) { p.y = h + 1; p.vy = 0; p.grounded = true; p.onLift = null; break; }
+    if (!p.grounded && landOnTrees(w,p,prevBottom,PW)) { p.grounded=true; p.onLift=null; }
     if (!p.grounded) for (const l of w.rt.lifts) {
       if (p.x + PW > l.x && p.x - PW < l.x + l.w && prevBottom >= l.y - 0.32 && p.y <= l.y && !l.wrapped) { p.y = l.y; p.vy = 0; p.grounded = true; p.onLift = l; break; }
     }
@@ -492,6 +519,13 @@ function updateEnemies(w, dt) {
     e.kickGrace = Math.max(0, e.kickGrace - dt);
     if (e.state === 'squash') { if (e.t > 0.5) e.gone = true; continue; }
     if (e.state === 'dead') { e.vy -= 30 * dt; e.y += e.vy * dt; e.x += e.vx * dt; if (e.y < -10) e.gone = true; continue; }
+    // 飞行乌龟上下巡航；第一次踩中只去掉翅膀，随后才变龟壳。
+    if (e.winged && e.state==='walk') {
+      const f=e.flight, amplitude=(f.max-f.min)/2;
+      e.flyPhase+=f.speed/amplitude*dt;
+      e.y=(f.min+f.max)/2+amplitude*Math.cos(e.flyPhase);
+      e.vx=e.vy=0; e.grounded=false;
+    } else {
     // 行走/滑壳
     if (e.state === 'walk') e.vx = e.dir * 1.9;
     else if (e.state === 'shell') {
@@ -505,7 +539,8 @@ function updateEnemies(w, dt) {
     // 红乌龟不会走下平台
     if (e.red && e.state === 'walk' && e.grounded) {
       const ahead = Math.floor(e.x + e.dir * (e.w + 0.05));
-      if (!solidAt(w, ahead, Math.floor(e.y - 0.5))) e.dir *= -1;
+      if (!supportedAt(w,ahead+.5,e.y)) e.dir *= -1;
+    }
     }
     // 3D：靠近玛丽时缓慢对准她所在的纵深，不能从侧面轻松绕开
     if (e.state === 'walk' && Math.abs(p.x - e.x) < 9) {
@@ -541,6 +576,7 @@ function updateEnemies(w, dt) {
       if (sc < 0) oneUp(w, e.x, e.y + 1.2, e.z); else addScore(w, sc, e.x, e.y + e.h + 0.4, e.z);
       w.session.stats.stomps++;
       if (e.type === 'goomba') { e.state = 'squash'; e.t = 0; emit(w, 'stomp', { x: e.x, y: e.y, z: e.z }); }
+      else if (e.winged) { e.winged=false; e.flight=null; e.vy=0; e.t=0; emit(w,'stomp',{x:e.x,y:e.y,z:e.z}); }
       else { e.state = 'shell'; e.h = 0.85; e.t = 0; e.vx = 0; emit(w, 'stomp', { x: e.x, y: e.y, z: e.z }); }
       bounce(w, p);
       continue;

@@ -1,4 +1,4 @@
-// Regression: real input for action availability, full flag sequence and second-stage result.
+// Regression: real input for action availability and full flag sequences through the last implemented stage.
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const out = process.env.QA_OUT || path.resolve(__dirname, '../media-kit/releases/v2.4.4/qa');
@@ -60,7 +60,12 @@ function check(name, ok, data) { checks.push({ name, ok, data }); if (!ok) throw
       await p.evaluate(() => { const q = __MARIO_TEST__; q.world.player.x = 8; q.world.player.y = 0; for (let i = 0; i < 100; i++) q.step(1); });
       await p.screenshot({ path: path.join(out, 'exit-pipe.png') });
       await p.evaluate(() => { const q = __MARIO_TEST__; q.world.player.x = q.world.area.flag.x - .2; q.world.player.y = 1; q.world.player.vx = q.world.player.vy = 0; q.step(1800); });
-      check('1-2 full flag sequence ends run once', await p.evaluate(() => __MARIO_TEST__.state().overlay === 'result' && __MARIO_TEST__.state().cleared.join() === '1-1,1-2'));
+      const third = await p.evaluate(() => __MARIO_TEST__.state().level === '1-3');
+      if (third) {
+        check('1-2 flag sequence automatically enters 1-3', await p.evaluate(() => __MARIO_TEST__.state().cleared.join() === '1-1,1-2'));
+        await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); q.world.player.x = q.world.area.flag.x - .2; q.world.player.y = 1; q.world.player.vx = q.world.player.vy = 0; q.step(1800); });
+      }
+      check('last implemented stage ends run once', await p.evaluate(hasThird => __MARIO_TEST__.state().overlay === 'result' && __MARIO_TEST__.state().cleared.join() === (hasThird ? '1-1,1-2,1-3' : '1-1,1-2'), third));
       await p.locator('[data-act=again]').click();
       await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); q.world.player.inv = 999; });
       for (const viewport of [{ width: 844, height: 390 }, { width: 390, height: 844 }]) {
