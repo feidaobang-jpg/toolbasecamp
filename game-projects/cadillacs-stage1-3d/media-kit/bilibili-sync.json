@@ -7,26 +7,25 @@
    "url": "https://www.bilibili.com/video/BV18XHW66E55/",
    "owner_uid": 16214353,
    "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-   "last_public_verified_version": "v0.9.3",
+   "last_public_verified_version": "v0.9.4",
    "status": "public_verified",
    "publish_record": "video/views-20261005/work/publication-result.json",
    "toy_bound": true,
    "pinned_comment_rpid": 316113740017,
-   "last_public_verified_at": "2026-10-07T19:07:15+08:00",
-   "last_sync_record": "releases/v0.9.3/bilibili-sync.json",
+   "last_public_verified_at": "2026-10-07T22:49:00+08:00",
+   "last_sync_record": "releases/v0.9.4/bilibili-sync.json",
    "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-   "description_sha256": "ddce2cdef740ce8c10777614b2b0e29f96839ccc78bdd35effa4262e763d4e81",
-   "lastPublicVerifiedVersion": "v0.9.3",
-   "descriptionHash": "278bdf4ec76b8a2257895a1bb49bfedf030b10e63f8b69098bebf08228b5b576",
-   "release": "releases/v0.9.3/handoff.json",
-   "publicVerifiedAt": "2026-10-07T19:07:15+08:00",
-   "submitted_version": "v0.8.0",
-   "submitted_at": "2026-10-07T02:30:21.062Z",
-   "public_verified_at": "2026-10-07T18:05:00+08:00"
+   "description_sha256": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+   "lastPublicVerifiedVersion": "v0.9.4",
+   "descriptionHash": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+   "release": "releases/v0.9.4/handoff.json",
+   "publicVerifiedAt": "2026-10-07T22:49:00+08:00",
+   "submitted_version": "v0.9.4",
+   "submitted_at": "2026-10-07T22:47:00+08:00"
   }
  ],
  "status": "public_verified",
- "updated_at": "2026-10-07T07:21:07+08:00",
+ "updated_at": "2026-10-07T23:10:00+08:00",
  "mapping_sources": [
   "本期发布记录 video/views-20261005/work/publication-result.json",
   "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -203,15 +202,25 @@
    "public_verified_at": "2026-10-07T18:05:00+08:00",
    "line": "更新（2026-10-07·v0.9.0）：联机统一支持2–4人合作，建房可选2/3/4人；中途加入/退出保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。视频为录制时版本，以当前试玩为准。",
    "method": "browser编辑投稿replace更新行"
+  },
+  {
+   "bv": "BV18XHW66E55",
+   "version": "v0.9.4",
+   "type": "description_update_line",
+   "submitted_at": "2026-10-07T22:47:00+08:00",
+   "public_verified_at": "2026-10-07T22:49:00+08:00",
+   "line": "更新（2026-10-07·v0.9.4）：修复部分安卓机型/旧内核打开Toy即闪退的问题（联机玩家ID在不支持随机数接口的设备自动回退），画面与操作不变；保留原作开场、背摔与原版音乐，仍支持2–4人联机合作。网站与B站Toy已同步上线，TapTap新版审核中。视频为录制时版本，以当前试玩为准。",
+   "method": "创作中心稿件管理→编辑视频→简介富文本全选替换纯文本→立即投稿；Toy published 21:52:04 后触发，TapTap v0.9.4 已提审使审核中表述成立",
+   "record": "releases/v0.9.4/bilibili-sync.json"
   }
  ],
  "last_public_verified": {
   "bvid": "BV18XHW66E55",
-  "version": "v0.9.3",
-  "at": "2026-10-07T19:07:15+08:00",
-  "description_sha256": "278bdf4ec76b8a2257895a1bb49bfedf030b10e63f8b69098bebf08228b5b576"
+  "version": "v0.9.4",
+  "at": "2026-10-07T22:49:00+08:00",
+  "description_sha256": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696"
  },
- "latest_record": "releases/v0.8.0/bilibili-sync.json",
+ "latest_record": "releases/v0.9.4/bilibili-sync.json",
  "pending": [],
- "pending_note": "统一2–4人合作正式版本简介更新待平台提交（浏览器自动化不可用）；仅公开核验成功的目标推进基线。"
+ "pending_note": "v0.9.4 严重修复简介已公开核验；普通小修累计到下一次有意义的说明更新；动态待 TapTap 上线确认后处理。"
 }

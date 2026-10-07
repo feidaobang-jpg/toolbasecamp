@@ -7,42 +7,43 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-coop-v0.23.0",
-      "last_public_verified_at": "2026-10-07T02:40:31.756Z",
+      "last_public_verified_version": "web-cloudsave-v0.24.0",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
       "description_revision": "web-defense-v0.21.0",
       "description_public_verified_at": "2026-10-07T02:13:36.108489+00:00",
-      "description_sha256": "ca0f88dbdf92ea2de6e58152f067589475026d3b535497b287abb024ecc2d3db",
+      "description_sha256": "f1b95087406b776ffe41711b36ad646c8e52709ceedacbeb965ebffd99a799be",
       "submission_time_note": "本版本提交时刻未单独记录；公开核验时间及文案哈希见本版本发布记录。",
-      "submitted_version": "web-coop-v0.22.0",
-      "submitted_at": "2026-10-07T02:40:31.756Z",
-      "lastPublicVerifiedVersion": "web-coop-v0.22.0",
-      "publicVerifiedAt": "2026-10-07T02:40:31.756Z",
-      "descriptionHash": "ca0f88dbdf92ea2de6e58152f067589475026d3b535497b287abb024ecc2d3db",
-      "public_verified_at": "2026-10-07T18:05:00+08:00"
+      "submitted_version": "web-cloudsave-v0.24.0",
+      "submitted_at": "2026-10-07T22:31:00+08:00",
+      "lastPublicVerifiedVersion": "web-cloudsave-v0.24.0",
+      "publicVerifiedAt": "2026-10-07T22:33:00+08:00",
+      "descriptionHash": "f1b95087406b776ffe41711b36ad646c8e52709ceedacbeb965ebffd99a799be",
+      "public_verified_at": "2026-10-07T22:33:00+08:00",
+      "last_public_verified_at": "2026-10-07T22:33:00+08:00"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-coop-v0.22.0",
-      "last_public_verified_at": "2026-10-07T02:39:18.210Z",
+      "last_public_verified_version": "web-cloudsave-v0.24.0",
+      "last_public_verified_at": "2026-10-07T22:34:00+08:00",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
       "description_revision": "web-defense-v0.21.0",
       "description_public_verified_at": "2026-10-07T02:13:36.108489+00:00",
-      "description_sha256": "1d155bbaaa35f683d9c5c9914ec4144a3011a19241b23c3f8a5189b06d78dd8a",
+      "description_sha256": "a1db6c1e4cff181f74db2f13177a865d04ec8ebd0c387f5959b15c6ca2913c10",
       "submission_time_note": "本版本提交时刻未单独记录；公开核验时间及文案哈希见本版本发布记录。",
-      "submitted_version": "web-coop-v0.22.0",
-      "submitted_at": "2026-10-07T02:39:18.210Z",
-      "lastPublicVerifiedVersion": "web-coop-v0.22.0",
-      "publicVerifiedAt": "2026-10-07T02:39:18.210Z",
-      "descriptionHash": "1d155bbaaa35f683d9c5c9914ec4144a3011a19241b23c3f8a5189b06d78dd8a"
+      "submitted_version": "web-cloudsave-v0.24.0",
+      "submitted_at": "2026-10-07T22:32:00+08:00",
+      "lastPublicVerifiedVersion": "web-cloudsave-v0.24.0",
+      "publicVerifiedAt": "2026-10-07T22:34:00+08:00",
+      "descriptionHash": "a1db6c1e4cff181f74db2f13177a865d04ec8ebd0c387f5959b15c6ca2913c10",
+      "public_verified_at": "2026-10-07T22:34:00+08:00"
     }
   ],
-  "latest_record": "releases/web-coop-v0.22.0/bilibili-sync.json",
+  "latest_record": "releases/web-cloudsave-v0.24.0/bilibili-sync.json",
   "pending": [],
-  "pending_note": "统一2–4人合作正式版本简介更新待平台提交（浏览器自动化不可用）；仅公开核验成功的目标推进基线。",
+  "pending_note": "2026-10-05 起待合并说明更新已全部同步并公开核验；下一批从 v0.24.0 基线累计",
   "pending_release": null,
   "pending_updates": [
     {
@@ -57,15 +58,16 @@
     {
       "version": "web-coop-v0.23.0",
       "classification": "正式版本",
-      "status": "public_verified",
+      "status": "included",
       "baseline_version": "web-coop-v0.22.0",
       "bvids": [
         "BV1WbHq6eEBt"
       ],
       "summary": "联机统一2–4人合作：建房可选2/3/4人、中途加入/退出保留战场、闲置30秒电脑接管、房主踢人。",
       "prepared_update_line": "更新（2026-10-07·web-coop-v0.23.0）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
-      "reason": "浏览器自动化在当前子代理环境不可用（agent.browsers 报 Browser is not available in subagent），未能读取/编辑B站简介；未向平台提交，保留原公开核验基线，待浏览器可用后按本行文案先读平台全文再合并提交。",
-      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)"
+      "reason": "2026-10-07 22:31 随云存档正式版本简介一并同步两期视频并公开核验，过期“Toy/TapTap审核中”状态同时纠正",
+      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)",
+      "included_version": "web-cloudsave-v0.24.0"
     },
     {
       "version": "web-lobby-hint-v0.23.2",
@@ -76,6 +78,19 @@
       "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
       "record": "releases/web-lobby-hint-v0.23.2/notes.md",
       "recorded_at": "2026-10-07"
+    },
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "baseline_version": "web-coop-v0.23.0",
+      "bvids": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "summary": "账号云存档：普通模式检查点自动备份、三快照恢复、云端本地冲突先选不覆盖；网站与Toy同版上线。",
+      "record": "releases/web-cloudsave-v0.24.0/bilibili-sync.json",
+      "recorded_at": "2026-10-07T22:42:00+08:00"
     }
   ],
   "comment_corrections": [
@@ -101,6 +116,15 @@
       "public_verified_at": "2026-10-07T18:05:00+08:00",
       "line": "更新（2026-10-07·v0.23.0）：联机统一支持2–4人合作，建房可选2/3/4人；支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。保留各选兵种、共享金币与防线、建造与队友指令同步；副本暂为单机。网站试玩已可玩，Toy/TapTap包审核中。",
       "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "bv": "BV1WbHq6eEBt,BV1Ujad6DEuf",
+      "version": "web-cloudsave-v0.24.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T22:31:00+08:00",
+      "public_verified_at": "2026-10-07T22:34:00+08:00",
+      "line": "更新（2026-10-07·v0.24.0）：新增云存档——普通模式进度自动同步到账号…网站与B站Toy均已上线同一版本。",
+      "method": "browser编辑投稿replace更新行（创作中心type=edit页，全选替换纯文本，立即投稿）"
     }
   ]
 }
