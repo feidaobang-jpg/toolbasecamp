@@ -10,13 +10,33 @@ export function endpoint(game='tank') {
   const local = typeof location !== 'undefined' && /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   return (local ? 'ws://127.0.0.1:8792' : 'wss://www.zhengxiaohui.cn/api') + '/game/coop/ws?game=' + game;
 }
+// Player IDs identify a lobby participant; they are not authentication tokens.
+// Older Android WebViews (and non-secure contexts) may lack randomUUID.
+function createPlayerIdentity() {
+  const api = typeof crypto === 'undefined' ? null : crypto;
+  if (typeof api?.randomUUID === 'function') {
+    try { return api.randomUUID(); } catch {}
+  }
+  const bytes = new Uint8Array(16);
+  let secure = false;
+  if (typeof api?.getRandomValues === 'function') {
+    try { api.getRandomValues(bytes); secure = true; } catch {}
+  }
+  if (!secure) for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  bytes[6] = (bytes[6] & 15) | 64;
+  bytes[8] = (bytes[8] & 63) | 128;
+  const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  return hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);
+}
 export class CoopConnection {
   constructor(onMessage=()=>{}, onStatus=()=>{}, game='tank') {
     this.game=game; this.onMessage=onMessage; this.onStatus=onStatus;
     this.socket=null; this.room=null; this.slot=-1; this.intentional=false; this.rtt=0; this.lastReceive=0; this.stateCount=0;
     this.inputs=new Map();
     this.activity=new Map();this.bots=new Set();this.held=new Set();this.contacts=new Set();this.localAt=performance.now();this.controlAt=this.localAt;
-    try{this.identity=localStorage.getItem('gamehub-player-id')||crypto.randomUUID();localStorage.setItem('gamehub-player-id',this.identity);}catch{this.identity=crypto.randomUUID();}
+    try { this.identity = localStorage.getItem('gamehub-player-id'); } catch {}
+    if (!this.identity) this.identity = createPlayerIdentity();
+    try { localStorage.setItem('gamehub-player-id', this.identity); } catch {}
     document.addEventListener('keydown',e=>{this.held.add(e.code);this.localAt=performance.now();});
     document.addEventListener('keyup',e=>{this.held.delete(e.code);this.localAt=performance.now();});
     document.addEventListener('pointerdown',e=>{this.contacts.add(e.pointerId);this.localAt=performance.now();});

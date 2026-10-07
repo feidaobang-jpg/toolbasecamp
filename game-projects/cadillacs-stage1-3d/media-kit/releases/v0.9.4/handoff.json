@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.9.4",
+  "base_version": "v0.9.3",
+  "created_at": "2026-10-07T11:46:58.957848+00:00",
+  "classification": "严重修复",
+  "build": {
+    "id": "v094-uuid1",
+    "commit": null,
+    "fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "webview-startup",
+      "before": "联机模块两处直接调用crypto.randomUUID，新会话在不支持此接口的Toy/WebView中启动即异常",
+      "after": "优先原生UUID，回退getRandomValues或普通随机UUID；存储异常不再重新生成ID",
+      "verification": "17/17玩家ID测试；桌面、手机横屏在无UUID/无crypto/无存储环境启动及实操通过。竖屏另补核验。"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "randomUUID-missing",
+      "status": "fixed",
+      "cause": "玩家ID初始化中未检测浏览器能力，catch再次调用同一个不可用API",
+      "report": "用户提供安卓Toy错误截图；是否模拟器及具体WebView版本未确认"
+    }
+  ],
+  "qa": [
+    {
+      "method": "site-games/qa/coop-identity.mjs",
+      "result": "17/17"
+    },
+    {
+      "method": "site-games/qa/coop-controls.mjs",
+      "result": "pass"
+    },
+    {
+      "method": "qa/startup-compat.cjs",
+      "result": "6/6已完成场景通过，含旧版准确复现",
+      "record": "qa-local.json",
+      "unmeasured": [
+        "玩家原设备、手机真机"
+      ]
+    }
+  ],
+  "thumbnail": {
+    "decision": "沿用",
+    "reason": "启动兼容修复，无画面变化"
+  },
+  "captures_root": "D:/project/artifacts/cadillacs-uuid-20261007",
+  "physical_device_test": false,
+  "channels": {
+    "website": {
+      "status": "pending"
+    },
+    "toy": {
+      "status": "pending"
+    },
+    "taptap": {
+      "status": "pending"
+    },
+    "bilibili": {
+      "status": "pending"
+    }
+  },
+  "readiness": {
+    "update": "partial",
+    "gaps": [
+      "玩家原设备待复测，未知其浏览器内核；非手机真机测试"
+    ]
+  }
+}
