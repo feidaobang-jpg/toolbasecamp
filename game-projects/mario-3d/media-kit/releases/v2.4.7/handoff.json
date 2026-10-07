@@ -7,8 +7,8 @@
   "classification": "普通补丁",
   "build": {
     "id": "v2.4.7",
-    "commit": null,
-    "dirty": true,
+    "commit": "ba616356",
+    "dirty": false,
     "entrypoint": "public/html/game/mario-3d/index.html",
     "source_sha256": {
       "audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
@@ -312,7 +312,10 @@
     "checks_passed": 46,
     "results": "captures/results.json",
     "physical_phone": false,
-    "methods": "Test-only teleports/manual clock for regression; final 4.7 seconds use real-time simulation; viewport emulation, no physical phone; videos have no audio."
+    "methods": "Test-only teleports/manual clock for regression; final 4.7 seconds use real-time simulation; viewport emulation, no physical phone; videos have no audio.",
+    "legacy_checks_passed": 12,
+    "legacy_results": "legacy-results.json",
+    "media_review": "实时末段逐秒代表帧已检查，自动走路、管壁遮挡与地下落地连续；无音轨。"
   },
   "thumbnail": {
     "decision": "沿用",
