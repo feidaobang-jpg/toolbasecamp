@@ -1,8 +1,8 @@
 {
  "schema_version": 1,
  "game_id": "cadillacs-stage1-3d",
- "version": "v0.9.0",
- "base_version": "v0.8.2",
+ "version": "v0.9.2",
+ "base_version": "v0.9.1",
  "created_at": "2026-10-07T15:30:00+08:00",
  "classification": "正式版本（新增原作开场与背摔，连打重击声修正）",
  "build": {
@@ -97,44 +97,44 @@
  "media": [
   {
    "id": "arcade-intro-reference",
-   "file": "releases/v0.9.0/captures/arcade-intro-reference.png",
+   "file": "releases/v0.9.2/captures/arcade-intro-reference.png",
    "kind": "screenshot",
    "description": "原作开场 4fps 联系表（参考）"
   },
   {
    "id": "intro-establishing",
-   "file": "releases/v0.9.0/captures/intro-establishing.png",
+   "file": "releases/v0.9.2/captures/intro-establishing.png",
    "kind": "screenshot",
-   "version": "v0.9.0",
+   "version": "v0.9.2",
    "description": "远景镜头：翼龙飞过、EASTCOAST 2513",
    "visual_review": "pass"
   },
   {
    "id": "intro-mega",
-   "file": "releases/v0.9.0/captures/intro-mega.png",
+   "file": "releases/v0.9.2/captures/intro-mega.png",
    "kind": "screenshot",
-   "version": "v0.9.0",
+   "version": "v0.9.2",
    "description": "开场必杀把手下震飞",
    "visual_review": "pass"
   },
   {
    "id": "intro-mega-sequence",
-   "file": "releases/v0.9.0/captures/intro-mega-sequence.png",
+   "file": "releases/v0.9.2/captures/intro-mega-sequence.png",
    "kind": "screenshot",
-   "version": "v0.9.0",
+   "version": "v0.9.2",
    "visual_review": "pass"
   },
   {
    "id": "suplex-land",
-   "file": "releases/v0.9.0/captures/suplex-land.png",
+   "file": "releases/v0.9.2/captures/suplex-land.png",
    "kind": "screenshot",
-   "version": "v0.9.0",
+   "version": "v0.9.2",
    "description": "背摔落地",
    "visual_review": "pending"
   },
   {
    "id": "combo-spectrogram",
-   "file": "releases/v0.9.0/captures/combo-spectrogram-v082-vs-arcade.png",
+   "file": "releases/v0.9.2/captures/combo-spectrogram-v082-vs-arcade.png",
    "kind": "analysis",
    "description": "原作连打 / 冲刺与 v0.8.2 输出的频谱对比"
   }
