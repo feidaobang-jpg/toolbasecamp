@@ -91,5 +91,23 @@
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
   },
   "pending_note": "启动适配 H5 272436 已正式提审；手机实际根因与实测仍待用户扫码反馈，不宣称已全面修好。",
-  "startup_adapter": "inline-runtime-v1"
+  "startup_adapter": "inline-runtime-v1",
+  "pending_community_updates": [
+    {
+      "gameplay_version": "v0.9.2",
+      "h5_version_id": 272389,
+      "platform_version": "V-20261007-3",
+      "status": "online_pending_community",
+      "note": "保留上一任务关于原作开场、背摔与连打重击声的上线动态待办；发布前查本人动态，避免重复。可合并下一次已上线更新说明。",
+      "record": "releases/v0.9.2/handoff.json"
+    },
+    {
+      "gameplay_version": "v0.9.2",
+      "startup_adapter": "inline-runtime-v1",
+      "h5_version_id": 272436,
+      "status": "awaiting_online_and_phone_feedback",
+      "note": "启动适配审核中；手机故障未确认解决，不能写已全面修好。",
+      "record": "releases/taptap-startup-20261007/handoff.json"
+    }
+  ]
 }
