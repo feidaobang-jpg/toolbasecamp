@@ -53,20 +53,33 @@
   "physical_device_test": false,
   "channels": {
     "website": {
-      "status": "pending"
+      "status": "verified",
+      "verified_at": "2026-10-07T20:20:00+08:00",
+      "evidence": "game.min.js 线上sha256=4e8a808e…、coop.js=28eb0531…与主线一致；index.html 本体等价，仅?v=标记被VPS部署脚本按提交号全站改写（cbb8d0bd），非旧版残留",
+      "by": "Qoder 接管核验"
     },
     "toy": {
-      "status": "pending"
+      "status": "auditing",
+      "submitted_at": "2026-10-07T20:11:52+08:00",
+      "package": "dist/toy-v0.9.4/package",
+      "package_fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_7ngzEtfk/index.html",
+      "note": "严重修复随任务同步；mylist 显示现网仍为 v0.9.3 published，过审后再核验正式入口",
+      "by": "Qoder"
     },
     "taptap": {
-      "status": "pending"
+      "status": "pending",
+      "note": "taptap-all-startup 的恐龙快打 zip 基于 v0.9.3 源码，需用 v0.9.4（含UUID回退）重建后再上传；六款包均待TapTap后台人工上传",
+      "by": "Qoder"
     },
     "bilibili": {
-      "status": "pending"
+      "status": "pending",
+      "note": "Toy 过审生效后，若简介中的可玩状态或版本说明不再准确再一并纠正；当前不单独改简介",
+      "by": "Qoder"
     }
   },
   "readiness": {
-    "update": "partial",
+    "update": "website-verified-toy-auditing",
     "gaps": [
       "玩家原设备待复测，未知其浏览器内核；非手机真机测试"
     ]

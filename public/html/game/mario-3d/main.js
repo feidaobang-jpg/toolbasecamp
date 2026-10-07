@@ -355,7 +355,8 @@ function handleEvent(e) {
   switch (e.type) {
     case 'area':
       view.build(w);
-      if (w.player.star <= 0) audio.music(e.theme);
+      // 同曲子在播不重启：奖励房间等同主题区域往返不打断 BGM
+      if (w.player.star <= 0) audio.music(e.theme, false);
       break;
     case 'jump': case 'coin': case 'bump': case 'break': case 'stomp': case 'kick': case 'fireball': case 'pop': case 'sprout':
     case 'grow': case 'fire': case 'powerup': case 'oneup': case 'pipe': case 'firework': case 'checkpoint': case 'revive':

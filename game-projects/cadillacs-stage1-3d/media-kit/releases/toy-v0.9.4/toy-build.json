@@ -61,5 +61,12 @@
     "sounds/street.mp3": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
     "sounds/swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93"
   },
-  "status": "built_not_submitted"
+  "status": "submitted_for_review",
+  "submit": {
+    "toy_id": 40412421031936,
+    "submitted_at": "2026-10-07T20:11:52+08:00",
+    "response_status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_7ngzEtfk/index.html",
+    "by": "Qoder"
+  }
 }
