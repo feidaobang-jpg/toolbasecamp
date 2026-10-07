@@ -4,9 +4,10 @@ const fs = require('fs');
 (async () => {
   const browser = await launch(), results = [], errors = [];
   const check = (name, pass, info) => { results.push({ name, pass: !!pass, info }); console.log(`${pass ? 'PASS' : 'FAIL'} ${name} ${JSON.stringify(info ?? '')}`); };
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
-  page.on('pageerror', e => errors.push(e.message));
-  await page.addInitScript(() => {
+  const phone = process.env.CD_PHONE === '1';
+  const host = await browser.newPage(phone ? { viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36' } : { viewport: { width: 1280, height: 720 } });
+  host.on('pageerror', e => errors.push(e.message));
+  await host.addInitScript(() => {
     window.audioProbe = { contexts: [], samples: [], oscillators: 0 };
     const connect = AudioNode.prototype.connect;
     AudioNode.prototype.connect = function (target, ...args) {
@@ -31,9 +32,19 @@ const fs = require('fs');
       }
     };
   });
+  let page = host;
+  async function navigate() {
+    await host.goto(BASE + '?test=1&seed=21');
+    page = host.frames().find(f => /www\.bilibilitoy\.com/.test(f.url())) || host;
+    await page.waitForFunction(() => window.__CD_TEST__);
+    if (await page.evaluate(() => window.__CD_TEST__.snapshot().ui.audio.volume === 0)) {
+      await page.locator('#menu [data-opt="volume"]').click();
+    }
+  }
   const state = () => page.evaluate(() => window.__CD_TEST__.snapshot());
+  const megaInput = () => phone ? page.locator('#btn-mega').tap() : host.keyboard.press('KeyU');
   async function start(hero) {
-    await page.goto(BASE + '?test=1&seed=21');
+    await navigate();
     await page.locator('#menu [data-act=select]').click();
     await page.locator(`[data-hero="${hero}"]`).click();
     if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
@@ -44,7 +55,7 @@ const fs = require('fs');
   for (let hero = 0; hero < 4; hero++) {
     await start(hero);
     const before = await page.evaluate(() => window.audioProbe.samples.length);
-    await page.keyboard.press('KeyU');
+    await megaInput();
     await page.evaluate(() => window.__CD_TEST__.step(5, true));
     const log = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
     const mega = log.find(e => e.name === 'mega');
@@ -64,35 +75,35 @@ const fs = require('fs');
   for (let i = 44; i < bytes.length; i += 2) { const x = bytes.readInt16LE(i) / 32768; peak = Math.max(peak, Math.abs(x)); sum += x * x; }
   check('offline capture contains audible original effects without clipping', peak > 0.1 && peak < 0.99, { peak, rms: Math.sqrt(sum / ((bytes.length - 44) / 2)) });
   await page.evaluate(() => window.__CD_TEST__.manual(false));
-  await page.keyboard.press('Escape');
+  await host.keyboard.press('Escape');
   await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.paused);
   check('pause freezes the same AudioContext used by recordings', await page.evaluate(() => window.audioProbe.contexts.every(c => c.state === 'suspended')));
   const pausedT = await page.evaluate(() => window.audioProbe.contexts[0].currentTime);
-  await page.waitForTimeout(150);
+  await host.waitForTimeout(150);
   check('paused audio clock does not advance', await page.evaluate(t => window.audioProbe.contexts[0].currentTime === t, pausedT));
   const restart = page.locator('#pause [data-act="restart"]');
   await restart.click();
   await page.waitForFunction(() => window.audioProbe.contexts.every(c => c.state === 'running'));
   check('restart resumes audio', (await state()).ui.audio.ctx === 'running');
   await page.evaluate(() => { const T = window.__CD_TEST__; T.cheat.skipScript(); });
-  await page.keyboard.press('Escape'); await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.paused);
+  await host.keyboard.press('Escape'); await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.paused);
   while ((await state()).ui.audio.volume > 0) await page.locator('#pause [data-opt="volume"]').click();
-  await page.keyboard.press('Escape'); await page.waitForFunction(() => !window.__CD_TEST__.snapshot().ui.paused);
-  await page.waitForTimeout(150);
+  await host.keyboard.press('Escape'); await page.waitForFunction(() => !window.__CD_TEST__.snapshot().ui.paused);
+  await host.waitForTimeout(150);
   const silent = await page.evaluate(() => {
     const meter = window.audioProbe.contexts[0].outputMeter, data = new Float32Array(meter.fftSize);
     meter.getFloatTimeDomainData(data); return Math.max(...data.map(Math.abs));
   });
   check('menu mute makes the speaker output silent', silent < 0.00001, silent);
   // Simulated loading failure must leave the game usable and synthesize the event immediately.
-  await page.route('**/original-*.wav', r => r.abort());
-  await page.goto(BASE + '?test=1&seed=21');
+  await host.route('**/original-*.wav', r => r.abort());
+  await navigate();
   await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
   if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
   await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.failed.length === 9);
   await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.audioLogStart(); T.step(120); });
   const oscBefore = await page.evaluate(() => window.audioProbe.oscillators);
-  await page.keyboard.press('KeyU'); await page.evaluate(() => window.__CD_TEST__.step(5));
+  await megaInput(); await page.evaluate(() => window.__CD_TEST__.step(5));
   const fallback = await page.evaluate(() => window.__CD_TEST__.audioLogStop().find(e => e.name === 'mega'));
   check('missing recording uses synthesized fallback', fallback?.source === 'fallback' && await page.evaluate(n => window.audioProbe.oscillators > n, oscBefore), fallback);
   check('no JavaScript errors', errors.length === 0, errors);
