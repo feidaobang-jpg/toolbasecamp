@@ -31,8 +31,8 @@ try{for(const mode of ['desktop','mobile','portrait']){
  await page.keyboard.press('Escape');await game.waitForTimeout(80);assert.equal(await game.evaluate(()=>__gameQA.place.kind),null);assert.equal(await game.evaluate(()=>__gameQA.Game.state),'prep');
  await build();await game.locator('#buildGrid .shopItem').filter({hasText:'自动机枪塔'}).click();
  if(mobile)await game.locator('#vO').tap();else await page.keyboard.press('KeyO');await game.locator('#shopPanel').waitFor({state:'visible'});assert.equal(await game.evaluate(()=>__gameQA.place.kind),null);await game.waitForTimeout(320);await game.locator('#shopClose').click();
- // 64 facilities is still a hard limit, including free/sandbox placement.
- await game.evaluate(()=>{const q=__gameQA;q.clearEntities(true);q.Game.testMode=true;for(let i=0;i<63;i++)q.placeBuilding('mgTurret',-90,-100,0);q.startPlacement('mgTurret',true);});
- await move(0);await confirm();assert.equal(await game.evaluate(()=>__gameQA.buildings.length),64);await move(10);await confirm();assert.equal(await game.evaluate(()=>__gameQA.buildings.length),64);assert.match(await game.locator('#placeState').innerText(),/64/);
+ // Sandbox has the absolute 96-facility budget; campaign budgets are tested separately.
+ await game.evaluate(()=>{const q=__gameQA;q.clearEntities(true);q.Game.testMode=true;for(let i=0;i<95;i++)q.placeBuilding('mgTurret',-90,-100,0);q.startPlacement('mgTurret',true);});
+ await move(0);await confirm();assert.equal(await game.evaluate(()=>__gameQA.buildings.length),96);await move(10);await confirm();assert.equal(await game.evaluate(()=>__gameQA.buildings.length),96);assert.match(await game.locator('#placeState').innerText(),/96/);
  assert.deepEqual(errors,[]);results.push({mode,placements:3,overlapBlocked:true,fundsChecked:true,capChecked:true,cancel:true,switchKind:true,shop:true,errors});await context.close();
 }fs.writeFileSync(path.join(out,'qa.json'),JSON.stringify({url,results},null,2));console.log(JSON.stringify(results));}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-defense-v0.21.0",
+  "base_version": "web-tactics-v0.20.0",
+  "created_at": "2026-10-07T01:52:12.807675+00:00",
+  "release_classification": "正式版本",
+  "build": {
+    "id": "web-defense-v0.21.0",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "d357197bfc0a3800ead0250b1a8fd1d332e5b6862e09d13c5ad5c54f229a0d05",
+    "files": {
+      "game.js": "a15e88f1ec08e7a80452a8751134522edd2b38ec9eb4c5155421613faa1f0f44",
+      "game.compat.js": "dbbff327ed4064715950434a709bcbb2e0d2c4e4270c86b4c7cba43fe09fb522",
+      "index.html": "509530f92913f5e613d664a956363bf4be377bf0da551fdda66d507e5e4f3a69",
+      "save-validation.js": "e0c9ffb5c26a75ac69cf4202efe7d85e48f9acf790414e90739a63ce4fd850a8",
+      "defense-progression.js": "d953c209529e0d2c9ef494be43f0adda85fc39bd714f70a46fcf56745e910ce8"
+    },
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "source_feedback": {
+    "video": "BV1WbHq6eEBt",
+    "rpid": "316305468593",
+    "user": "bili_50539966983",
+    "text": "能不能增加一点新的炮塔,或者增加一下炮塔数量也行,玩到后面二周目、三周目，老难打了"
+  },
+  "feature_inventory": [
+    {
+      "id": "cryoTurret",
+      "status": "implemented",
+      "description": "有限目标群体减速脉冲"
+    },
+    {
+      "id": "mortarTurret",
+      "status": "implemented",
+      "description": "地面范围抛射炮"
+    },
+    {
+      "id": "defense-progression",
+      "status": "implemented",
+      "description": "64/80/96设施与每周目50%初始火力成长"
+    }
+  ],
+  "changes": [
+    {
+      "id": "defense-progression",
+      "before": "6种攻击设施；统一64上限；炮塔伤害不随周目提升",
+      "after": "8种攻击设施；64/80/96上限；火力成长；旧设施周目耐久同步",
+      "validation": "qa/website/results.json"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "path": "qa/website/desktop-build-menu.jpg",
+      "sha256": "9af0f6b3b1b1932638babbc390d36ea381e0f2cdb95edaeb6a9d4234f7a00bea",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/desktop-new-turrets.jpg",
+      "sha256": "a43701bfed0132eadf61dc9aa376a5db0bc94becc2b9f07ad0520625c682b146",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/desktop-tower-combat.jpg",
+      "sha256": "d197eeea6090e9c7b09e862d158f14bea3e322405c0c48e31660e3e8b8a863c6",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/landscape-build-menu.jpg",
+      "sha256": "9fdc311c97717dce611a939e0bb79404f591b7f398e084d23df1b6373e862382",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/landscape-new-turrets.jpg",
+      "sha256": "96ca5b1d4128c15c17e43b7b1a28e2ca1caa07b0096c3f58febb225a86cc55a6",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/landscape-tower-combat.jpg",
+      "sha256": "b96a0a850addd0fa20f3443bc877897e4844a98e6ca6d1dd81fd121402f7afa6",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/portrait-build-menu.jpg",
+      "sha256": "8c00d65cac59a6547270f9a4ba4037dd15abe2502d0c080f7f2305c35d2b995e",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/portrait-new-turrets.jpg",
+      "sha256": "6ff9b0dd99f5046d9dd37322140e99d462230ecb0be896f8ee74e1ec4cb71c70",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/portrait-tower-combat.jpg",
+      "sha256": "0936dc169683399edb3dd8146bcf1f7b71baeae70f25a65bb59991d6c358f9b9",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": null
+    },
+    {
+      "path": "qa/website/captures/page@aec062f9da83c3144b26c7d9f77b23c6.webm",
+      "sha256": "84903192ab009c84e6f07ac67591e55a9d5b015724a908feb658addf3b194e74",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": "none"
+    },
+    {
+      "path": "qa/website/captures/page@f296b5cd6bc0a72cb499b06f80032ed8.webm",
+      "sha256": "9b3db40d1be6e2c13123f6d7fa0d0667edd59fa0242de385a4ccb45e8276bdcd",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": "none"
+    },
+    {
+      "path": "qa/website/captures/page@feaa822aca96818bb0da3c416abe0756.webm",
+      "sha256": "7b80656dc7b7102d8d0b55a12272a13b3485517f60bf0be3ea523d816de50dcd",
+      "build_id": "web-defense-v0.21.0",
+      "capture_mode": "Playwright真实运行；合成测试布局",
+      "audio": "none"
+    }
+  ],
+  "qa": {
+    "website": "passed",
+    "records": [
+      "qa/website/results.json",
+      "qa/continuous-build/qa.json",
+      "qa/campaign/results.json",
+      "qa/tactics/results.json",
+      "qa/combat-regression/combat.json"
+    ],
+    "performance": "qa/performance/results.json",
+    "physical_phone": false,
+    "full_campaign_human_playthrough": false,
+    "performance_summary": "正常桌面96设施约79 FPS，普通手机视口模拟96设施约90 FPS；4倍CPU降速96设施约15 FPS，不代表真机验收。"
+  },
+  "channels": {
+    "website": {
+      "status": "pending_deploy"
+    },
+    "toy": {
+      "status": "pending_package",
+      "target_id": "38678478981120"
+    },
+    "taptap": {
+      "status": "pending_package",
+      "target_id": 962354
+    },
+    "bilibili": {
+      "status": "pending_sync",
+      "targets": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt"
+      ]
+    },
+    "reply": {
+      "status": "pending_release_verification",
+      "rpid": "316305468593"
+    }
+  },
+  "cover": {
+    "decision": "retain",
+    "reason": "深色战场、主画面与视角未变，局部炮塔扩展沿用现有实机封面"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "当前自动化录像无游戏音轨",
+      "手机真机、多指触控及真人完整二/三周目平衡未验收",
+      "四倍CPU降速极限负载低于30FPS"
+    ]
+  }
+}

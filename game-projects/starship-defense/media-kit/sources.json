@@ -243,5 +243,13 @@
     "source": "Restored project DarkVisuals.bug geometry from commit af5668d6; muted palettes and reduced emissive wings/queen abdomen.",
     "processing": "Merged meshes cached per species/rank/flight; animated body, six jointed legs and optional wings.",
     "usage": "Original project geometry; no external assets or movie models."
+  },
+  {
+    "id": "defense-towers-v021",
+    "type": "procedural",
+    "runtime": "public/html/game/starship-defense/game.js:makeBuildingMesh",
+    "description": "原创钢灰寒霜双管/冷却罐与仰角迫击炮，沿用既有深色战场材质；程序化Three.js几何，无外部下载",
+    "tool": "Codex",
+    "version": "web-defense-v0.21.0"
   }
 ]

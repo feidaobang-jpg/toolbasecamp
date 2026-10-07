@@ -1,6 +1,7 @@
 import {CAMPAIGN_DIFFICULTIES} from './campaign-difficulty.js';
 import {SQUAD_ROLES} from './squad-roles.js';
 import {OP_COMPLETION_KEYS} from './operations.js';
+import {buildingLimit} from './defense-progression.js';
 // Cloud data is untrusted input. Keep legacy normal saves compatible; reject broken structures.
 export function validateNormalSave(d,{weapons,buildings,vehicles}){
   const num=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)&&v>=min&&v<=max;
@@ -22,6 +23,6 @@ export function validateNormalSave(d,{weapons,buildings,vehicles}){
     (d.hive===undefined||plain(d.hive)&&num(d.hive.queen,0,1)&&typeof d.hive.killed==='boolean'&&int(d.hive.chapter,1,10)&&int(d.hive.loop,1,100000))&&
     list(d.squadGear,4,g=>plain(g)&&int(g.weapon,0,5)&&int(g.armor,0,5)&&(g.role===undefined||Object.hasOwn(SQUAD_ROLES,g.role))&&(g.order===undefined||g.order===null||['follow','defend'].includes(g.order))&&(g.vehicle===undefined||g.vehicle===null||Object.hasOwn(vehicles,g.vehicle)))&&
     (d.opsCompleted===undefined||plain(d.opsCompleted)&&Object.entries(d.opsCompleted).length<=OP_COMPLETION_KEYS.length&&Object.entries(d.opsCompleted).every(([k,v])=>OP_COMPLETION_KEYS.includes(k)&&typeof v==='string'&&/^\d{1,6}:\d{1,2}$/.test(v)))&&
-    list(d.buildings,64,b=>b&&Object.hasOwn(buildings,b.k)&&num(b.x,-120,120)&&num(b.z,-80,340)&&num(b.r,-1e6,1e6)&&num(b.hp,0,1e7))&&
+    list(d.buildings,buildingLimit(d),b=>b&&Object.hasOwn(buildings,b.k)&&num(b.x,-120,120)&&num(b.z,-80,340)&&num(b.r,-1e6,1e6)&&num(b.hp,0,1e8)&&(b.maxHp===undefined||num(b.maxHp,1,1e8)&&b.hp<=b.maxHp))&&
     list(d.vehiclesOwned,4,k=>Object.hasOwn(vehicles,k))&&list(d.pendingDrops,32,it=>it&&['item','vehicle','squad'].includes(it.type)&&typeof it.id==='string'));
 }
