@@ -129,6 +129,7 @@ export const HC = {
   kickHi: { dur: 0.46, imp: 0.15, keys: [[0, HP.guard], [0.08, HP.kickMid0], [0.15, HP.kickHiX, 'o'], [0.3, HP.kickHi], [0.46, HP.guard]] },
   kickSide: { dur: 0.44, imp: 0.14, keys: [[0, HP.guard], [0.08, HP.kickMid0], [0.14, HP.kickSideX, 'o'], [0.3, HP.kickSide], [0.44, HP.guard]] },
   knee: { dur: 0.24, imp: 0.05, keys: [[0, HP.grab], [0.05, HP.kneeX, 'o'], [0.14, HP.kneeUp], [0.24, HP.grab]] },
+  suplex: { dur: 0.72, keys: [[0, HP.grab], [0.14, HP.throwUp], [0.34, mod(HP.throwUp, { body: [-0.55, 0, 0], spine: [-0.75, 0, 0], head: [-0.6, 0, 0], hy: -0.12 }), 'o'], [0.5, mod(HP.crouch, { body: [-0.35, 0, 0] })], [0.72, HP.guard]] },
   throw: { dur: 0.5, keys: [[0, HP.grab], [0.15, HP.throwUp], [0.27, HP.throwDown, 'o'], [0.5, HP.guard]] },
   slam: { dur: 0.6, keys: [[0, HP.grab], [0.2, HP.throwUp], [0.34, HP.throwDown], [0.48, HP.throwDown], [0.6, HP.guard]] },
   pickup: { dur: 0.3, keys: [[0, HP.guard], [0.1, HP.crouch], [0.2, HP.crouch], [0.3, HP.guard]] },

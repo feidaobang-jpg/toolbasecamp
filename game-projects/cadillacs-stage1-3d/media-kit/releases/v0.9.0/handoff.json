@@ -1,0 +1,163 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.9.0",
+ "base_version": "v0.8.2",
+ "created_at": "2026-10-07T15:30:00+08:00",
+ "classification": "正式版本（新增原作开场与背摔，连打重击声修正）",
+ "build": {
+  "bundle_sha256": "fa8b153fd8ab3e7b865a479707f459af01c468d403916c6356138ca0be47bcaa",
+  "build_id": "intro-v090"
+ },
+ "changes": [
+  {
+   "id": "heavy-hit",
+   "before": "4 下都用轻打击声，喝声在最后一下起手前",
+   "after": "第 4 下与击倒类打击用原版重击声 0083，喝声在其后 0.12 秒",
+   "verification": "pass"
+  },
+  {
+   "id": "intro",
+   "after": "海边远景、翼龙飞过、EASTCOAST 2513；主角走上楼顶；维斯两句台词；手下被开场必杀全震飞；TOP OF THE BUILDING 后新手下上来",
+   "verification": "pass"
+  },
+  {
+   "id": "ptero-model",
+   "after": "翼龙重做：冠饰长喙、两段式后掠翼",
+   "verification": "pass（截图）"
+  },
+  {
+   "id": "suplex",
+   "after": "抓住后上／下＋J（正视左／右）背摔，摔在身后",
+   "verification": "pass"
+  },
+  {
+   "id": "cine-hud",
+   "after": "远景镜头时隐藏 HUD、计时、键位提示",
+   "verification": "pass"
+  }
+ ],
+ "decisions": [
+  {
+   "topic": "背摔按键",
+   "decision": "与朝向垂直的方向＋J",
+   "reason": "抓住时不能走动，上下键空闲；街机同款；前＋J 易被走过去抓人时按着的前误触"
+  },
+  {
+   "topic": "冲刺踢没打中时的声音",
+   "decision": "不加",
+   "reason": "原作只有起跑声，打中才有重击声"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/intro-throw.js",
+   "result": "pass 16/16（两次）"
+  },
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 58/58"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 91/91"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/combat-feedback.js",
+   "result": "32/33（失败项改前同样失败）"
+  },
+  {
+   "method": "site-games/qa/cooperative.cjs",
+   "result": "cadillacs 8/8"
+  },
+  {
+   "method": "实时出口电平（冲刺踢 / 连打）",
+   "result": "有明显音效输出；音效/音乐峰值比约 1.4～1.8，原作约 1.55"
+  }
+ ],
+ "media": [
+  {
+   "id": "arcade-intro-reference",
+   "file": "releases/v0.9.0/captures/arcade-intro-reference.png",
+   "kind": "screenshot",
+   "description": "原作开场 4fps 联系表（参考）"
+  },
+  {
+   "id": "intro-establishing",
+   "file": "releases/v0.9.0/captures/intro-establishing.png",
+   "kind": "screenshot",
+   "version": "v0.9.0",
+   "description": "远景镜头：翼龙飞过、EASTCOAST 2513",
+   "visual_review": "pass"
+  },
+  {
+   "id": "intro-mega",
+   "file": "releases/v0.9.0/captures/intro-mega.png",
+   "kind": "screenshot",
+   "version": "v0.9.0",
+   "description": "开场必杀把手下震飞",
+   "visual_review": "pass"
+  },
+  {
+   "id": "intro-mega-sequence",
+   "file": "releases/v0.9.0/captures/intro-mega-sequence.png",
+   "kind": "screenshot",
+   "version": "v0.9.0",
+   "visual_review": "pass"
+  },
+  {
+   "id": "suplex-land",
+   "file": "releases/v0.9.0/captures/suplex-land.png",
+   "kind": "screenshot",
+   "version": "v0.9.0",
+   "description": "背摔落地",
+   "visual_review": "pending"
+  },
+  {
+   "id": "combo-spectrogram",
+   "file": "releases/v0.9.0/captures/combo-spectrogram-v082-vs-arcade.png",
+   "kind": "analysis",
+   "description": "原作连打 / 冲刺与 v0.8.2 输出的频谱对比"
+  }
+ ],
+ "media_gaps": [
+  "开场动画适合录一段带声音的视频：本版未录，做视频前用 qa/record.js 补录"
+ ],
+ "audio_review": "not-run（AI 无法试听）",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "默认画面不变"
+ },
+ "website": {
+  "status": "pending"
+ },
+ "toy": {
+  "status": "pending"
+ },
+ "taptap": {
+  "status": "pending_merge",
+  "reason": "v0.8.2 审核中，按规则不重复上传，累计到下一批"
+ },
+ "bilibili": {
+  "status": "pending"
+ }
+}

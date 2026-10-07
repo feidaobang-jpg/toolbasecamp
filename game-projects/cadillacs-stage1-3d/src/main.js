@@ -427,7 +427,11 @@ const cache = {};
 function setText(el, key, v) { if (cache[key] !== v) { cache[key] = v; el.textContent = v; } }
 function setStyle(el, key, prop, v) { if (cache[key] !== v) { cache[key] = v; el.style[prop] = v; } }
 let lastBanner = null, lastToast = null;
+// 开场远景镜头时像原作一样不显示 HUD 与键位提示
+const CINE_HIDE = ['hud', 'hud-top', 'keyhint', 'h-timer'].map(id => document.getElementById(id)).filter(Boolean);
 function updateHud() {
+  const cine = !!G.cineCam;
+  if (cache.cine !== cine) { cache.cine = cine; for (const el of CINE_HIDE) el.style.visibility = cine ? 'hidden' : ''; }
   const h = GM.hudState();
   const hero = HEROES[h.hero];
   if (cache.hero !== hero.id) { cache.hero = hero.id; H_.face.src = FACES[hero.id]; H_.name.textContent = hero.en.split('.')[0]; }
@@ -539,7 +543,7 @@ function presentFrame(dtReal, draw, instant) {
     const cz1 = AR.camZ1 === undefined ? AR.z1 : AR.camZ1;   // 取景按这一排算；第二关可走范围比它更靠前（见 level.js camZ1）
     const zc = (AR.z0 + cz1) / 2 * 0.6 + p.z * 0.25;
     const fitDepth = cz1 - ((AR.z0 + cz1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
-    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
+    camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {

@@ -132,6 +132,14 @@
    "classification": "玩家反馈修复",
    "summary": "必杀不能在转圈中重按、动作 0.95 秒全程无敌；空手攻击去掉合成挥空声，喝声改在最后一下起手；起跑与冲刺攻击用原版声音，穆斯塔法飞踢喊声。",
    "handoff": "releases/v0.8.2/handoff.json"
+  },
+  {
+   "version": "v0.9.0",
+   "base_version": "v0.8.2",
+   "date": "2026-10-07",
+   "classification": "正式版本",
+   "summary": "原作第一关开场（海边远景翼龙飞过、EASTCOAST 2513、开场必杀震飞手下）；抓住后上／下＋J 背摔；连招第 4 下与击倒用原版重击声，喝声在其后。",
+   "handoff": "releases/v0.9.0/handoff.json"
   }
  ],
  "dev": {
@@ -276,9 +284,21 @@
     "taptap": "reviewing",
     "bilibili": "pending_merge"
    }
+  },
+  {
+   "version": "v0.9.0",
+   "classification": "正式版本",
+   "summary": "原作开场动画与开场必杀、背摔、连打重击声。",
+   "record": "releases/v0.9.0/handoff.json",
+   "channels": {
+    "website": "pending",
+    "toy": "pending",
+    "taptap": "pending_merge",
+    "bilibili": "pending"
+   }
   }
  ],
- "handoff": "releases/v0.8.2/handoff.json",
+ "handoff": "releases/v0.9.0/handoff.json",
  "game_id": "cadillacs-stage1-3d",
  "launch": {
   "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
@@ -297,7 +317,7 @@
    "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
   }
  },
- "current_version": "v0.8.2",
+ "current_version": "v0.9.0",
  "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
  "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
  "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
