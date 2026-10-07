@@ -372,5 +372,17 @@
    "bilibili": "待合并至下一次有意义的简介更新",
    "toy": "public_verified"
   }
- ]
+ ],
+ "taptap": {
+  "developer_id": 100726,
+  "app_id": 962721,
+  "automatic_sync_enabled": true,
+  "status": "draft_waiting_agreement_and_ip_review",
+  "staged_version": "v0.8.1",
+  "staged_h5_version_id": 270833,
+  "draft_version_id": "1041012",
+  "last_published_version": null,
+  "sync_record": "taptap-sync.json",
+  "release_record": "releases/taptap-first-publish-20261007/handoff.json"
+ }
 }

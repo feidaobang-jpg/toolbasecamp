@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [
+        {
+          "code": "SCE_AGREEMENT_REQUIRED",
+          "field_ids": [],
+          "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+        }
+      ],
+      "preaudit_passed": false,
+      "version_id": "1041013",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题涉及知名街机IP‘恐龙快打’，可能存在侵权及误导风险；如已获得官方正式授权，建议前往游戏资质页面上传相关授权证明文件，否则建议修改游戏名称。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "简介中包含非官方复刻‘恐龙快打’的相关描述，涉及知名IP版权问题，建议在资质页面补充相关授权资质或调整相关表述。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "16:9宣传图画面整体较为简陋，背景单一且角色模型与标题排版较为松散，建议结合游戏场景、精美背景及艺术化排版重新设计高质量宣传图。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "竖版封面画面构图较为单调空旷，仅由纯色背景与角色模型简单排版构成，整体视觉质量不足，建议重新设计并丰富画面背景与视觉表现。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

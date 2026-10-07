@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [
+        {
+          "code": "SCE_AGREEMENT_REQUIRED",
+          "field_ids": [],
+          "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+        }
+      ],
+      "preaudit_passed": false,
+      "version_id": "1041014",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏名称“超级玛丽 3D”涉及知名经典IP（超级马力欧/超级玛丽），存在侵权及蹭热度风险。若已获得官方授权，建议前往游戏资质页面上传相关授权书，否则将有驳回风险。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "游戏内容及描述中涉及知名IP“超级玛丽”的核心玩法及素材引用。非官方衍生/还原作品存在版权合规风险，建议前往游戏资质页面提供相关版权证明或软件著作权信息。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

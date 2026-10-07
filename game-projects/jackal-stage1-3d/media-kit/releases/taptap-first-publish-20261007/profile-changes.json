@@ -1,0 +1,54 @@
+{
+  "changes": [
+    {
+      "field_id": "description",
+      "expected": [],
+      "value": "驾驶武装吉普救出俘虏、送上直升机，突破敌军防线。\n\n这是赤色要塞玩法的非官方3D复刻试玩，包含第一关与废墟城第二关。机关枪默认固定向上，可在设置中切换；可独立使用机枪、手雷或火箭炮，也可使用联合开火键同时发射。\n\n支持电脑键盘与手机触屏、操作模式即时切换、暂停、视角与画质调整。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。"
+    },
+    {
+      "field_id": "icon",
+      "expected": "https://img-tc.tapimg.com/market/images/ef4719159691d7db73760cadfc67eac4.png",
+      "value": "https://img-tc.tapimg.com/market/images/02ae68114aca3d75e464ede29fd49e1c.jpg"
+    },
+    {
+      "field_id": "author_name",
+      "expected": [],
+      "value": "飞刀帮工作室"
+    },
+    {
+      "field_id": "developer_message",
+      "expected": [],
+      "value": "我在用程序化3D模型重建吉普救援的节奏，希望机枪、爆炸武器和救人路线都能玩得清楚。这是爱好者制作的非官方复刻实验，仍在持续打磨操作和两关体验。"
+    },
+    {
+      "field_id": "promotion_text",
+      "expected": [],
+      "value": "开吉普救人，双武器联合开火"
+    },
+    {
+      "field_id": "promotion_material_type",
+      "expected": [],
+      "value": "GAMEPLAY_DEMO"
+    },
+    {
+      "field_id": "app_platforms",
+      "expected": [
+        "MOBILE"
+      ],
+      "value": [
+        "MOBILE",
+        "PC_OFFICIAL"
+      ]
+    },
+    {
+      "field_id": "region_flag_android",
+      "expected": 1,
+      "value": 4
+    },
+    {
+      "field_id": "region_flag_ios",
+      "expected": 1,
+      "value": 0
+    }
+  ]
+}

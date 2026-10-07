@@ -1,0 +1,54 @@
+{
+  "changes": [
+    {
+      "field_id": "description",
+      "expected": [],
+      "value": "跳跃顶砖、收集金币和道具，钻水管进入地下，完成1-1与1-2。\n\n这是超级玛丽玩法的非官方3D平台跳跃实验，保留蘑菇、火焰花、无敌星、奖励房间与传送区；两关之间加入地面走入水管和地下落地过场。\n\n支持电脑键盘和手机触屏，可切换操作模式、视角、画质和音量，暂停后继续或重玩。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。"
+    },
+    {
+      "field_id": "icon",
+      "expected": "https://img-tc.tapimg.com/market/images/ef4719159691d7db73760cadfc67eac4.png",
+      "value": "https://img-tc.tapimg.com/market/images/0696fdc409411f4d15a69a271e97d45d.jpg"
+    },
+    {
+      "field_id": "author_name",
+      "expected": [],
+      "value": "飞刀帮工作室"
+    },
+    {
+      "field_id": "developer_message",
+      "expected": [],
+      "value": "我在尝试把经典平台跳跃的地图与操作放进3D视角中，先打磨1-1和1-2的探索、道具与水管衔接。这是爱好者制作的非官方玩法实验，仍在持续修正体验。"
+    },
+    {
+      "field_id": "promotion_text",
+      "expected": [],
+      "value": "顶砖跳跃钻水管，探索地面与地下"
+    },
+    {
+      "field_id": "promotion_material_type",
+      "expected": [],
+      "value": "GAMEPLAY_DEMO"
+    },
+    {
+      "field_id": "app_platforms",
+      "expected": [
+        "MOBILE"
+      ],
+      "value": [
+        "MOBILE",
+        "PC_OFFICIAL"
+      ]
+    },
+    {
+      "field_id": "region_flag_android",
+      "expected": 1,
+      "value": 4
+    },
+    {
+      "field_id": "region_flag_ios",
+      "expected": 1,
+      "value": 0
+    }
+  ]
+}
