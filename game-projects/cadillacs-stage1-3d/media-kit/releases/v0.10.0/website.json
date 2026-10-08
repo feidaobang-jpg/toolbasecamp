@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-08T09:50:34.459621+00:00",
+  "checked_at": "2026-10-08T10:03:37.574505+00:00",
   "files": [
     {
       "path": "html/game/cadillacs-stage1-3d/index.html",
-      "sha256": "240919cd3a5490e45739719962b0ac1326fc7834eee6566d4ef9b99175ec7877",
-      "expected_sha256": "9207a6e9901d0e693ef910ba32a3e4cd0cfb5cdc47c5bf4c26898dd114599379",
+      "sha256": "cb5a1924cc42d805242be42333e8d8a3ae7ca956366b3fb91935f7de980717a6",
+      "expected_sha256": "3d733d1ce1f241a94108fc3e25c5b811bbb51523761f3894176dd8cac068f8e2",
       "exact_match": false,
       "markers": true,
       "equivalent_after_deploy_query_rewrite": true
     },
     {
       "path": "html/game/cadillacs-stage1-3d/js/game.min.js",
-      "sha256": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
-      "expected_sha256": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+      "sha256": "b9d2c49d127920fc4518489376b64ba607f39baf8fd9053ce753c211cd313b44",
+      "expected_sha256": "b9d2c49d127920fc4518489376b64ba607f39baf8fd9053ce753c211cd313b44",
       "exact_match": true,
       "markers": null
     },
@@ -43,5 +43,7 @@
     "protocol": "cadillacs3d-v2",
     "game": "cadillacs",
     "maxPlayers": 4
-  }
+  },
+  "source_commit": "0b18e520",
+  "playtest": "qa-website.json；实际线上三视口25/25"
 }
