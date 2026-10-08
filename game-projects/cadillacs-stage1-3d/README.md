@@ -1,6 +1,6 @@
-# 恐龙快打 · 第一、二关 3D 重置版（cadillacs-stage1-3d）
+# 恐龙快打 · 第一、二关 3D 重制版（cadillacs-stage1-3d）
 
-Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重置版（当前 v0.9.3，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
+Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重制版（当前 v0.9.3，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
 
 - 第一关「海上都市 CITY IN THE SEA」：楼顶 → 大楼内部 → 第 47 街，Boss 维斯·T 和岩跳龙。
 - 第二关「沼泽森林 THE SWAMP FOREST」：凯迪拉克开进偷猎者森林，三角龙哈克冲撞、胖子想吵醒熟睡的霸王龙希瓦特 → 跳崖落进齐腰深的泥沼 MUD SWAMP，格特从水里冒出、上岸遇链锤兵拉什·T → 黄昏的恐龙尸骸地，Boss 屠夫（双刀、满屏乱跳、屁股坐、不断叫手下）。

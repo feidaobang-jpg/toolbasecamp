@@ -284,7 +284,7 @@
     }
   ],
   "website_commit": "1dd01fd5",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "dev": {
     "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
@@ -310,11 +310,11 @@
     "note": "同一份 game.min.js 内联的单文件版本，去掉了「返回游戏列表」入口"
   },
   "name": {
-    "zh": "赤色要塞 · 3D 重置版",
+    "zh": "赤色要塞 · 3D 重制版",
     "en": "Jackal · 3D remake (fan-made)"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "ip_note": "粉丝向非官方重置：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
+  "ip_note": "粉丝向非官方重制：关卡流程与规则参照 NES 版 Jackal 第一关（Checkpoint Alpha），模型与贴图重新制作，音乐采用原版录音，缺项音效保留合成；游戏内菜单注明《赤色要塞》原作版权归 Konami。",
   "multiplayer": {
     "players": "2–4",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
@@ -340,6 +340,19 @@
       ],
       "bilibili": "待合并至下一次有意义的简介更新",
       "toy": "public_verified"
+    },
+    {
+      "version": "v0.10.3-wording1",
+      "date": "2026-10-08",
+      "classification": "普通补丁",
+      "changes": [
+        "页面标题、菜单小标题、版权说明与网站卡片简介中的「3D 重置版」统一为「3D 重制版」（纯文案，玩法与 game.min.js 未变）"
+      ],
+      "record": "releases/wording-remake-20261008/notes.md",
+      "website": "随本提交部署，待公网核验",
+      "toy": "待合并：纯文案不单独送审，随下次本游戏更新一并打包",
+      "taptap": "待合并：同 Toy",
+      "bilibili": "不更新：已发视频标题与简介保留原文"
     }
   ],
   "drag_camera_controls": {

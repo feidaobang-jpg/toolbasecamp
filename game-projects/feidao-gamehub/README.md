@@ -6,7 +6,7 @@ B站 Toy 平台的「游戏合集」入口页（仿 GameHub 形态）：一个�
 
 - 单文件 `package/index.html`（内联 CSS/JS）+ 本地封面 `package/assets/`，无构建步骤。
 - 跳转优先用 Toy SDK：`<script src="https://s1.hdslb.com/bfs/seed/toy/app/sdk/toy-sdk.js">` 提供 `globalThis.toy.navigate({ type: 'toy', id: slug })`；SDK 不在场（本地预览等）时退回 `window.open('https://www.bilibili.com/toy/<slug>/index.html')`。参考火山哥哥 GameHub（toy_id 5780350732288）的实现。
-- 游戏清单内联在页面 `GAMES` 数组里：slug、标题、分类（3D 重置 / 经典休闲 / 策略塔防）、简介、标签、封面（本地 assets，源为各 Toy 的 poster）。绑定了实机视频的游戏卡片带「▶ 实机视频」角标，点角标新开视频页。
+- 游戏清单内联在页面 `GAMES` 数组里：slug、标题、分类（3D 重制 / 经典休闲 / 策略塔防）、简介、标签、封面（本地 assets，源为各 Toy 的 poster）。绑定了实机视频的游戏卡片带「▶ 实机视频」角标，点角标新开视频页。
 - 卡片封面如加载失败会显示占位图案，不阻塞页面。
 
 ## 维护
