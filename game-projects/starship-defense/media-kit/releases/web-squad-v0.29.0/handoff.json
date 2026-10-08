@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-squad-v0.29.0",
+  "base_version": "web-rv-v0.28.0",
+  "created_at": "2026-10-08T11:08:01.450599+00:00",
+  "build": {
+    "id": "b7670e6b7690",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "b7670e6b76902146ccd5ffce900662a57ab5e75527b58a0f20fa46485e61babd",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "single-player-squad",
+      "status": "implemented",
+      "description": "单人雇佣12名，逐人装备与分工",
+      "evidence_ids": [
+        "desktop-orders",
+        "desktop-battle"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "squad-capacity",
+      "feature_ids": [
+        "single-player-squad"
+      ],
+      "before": "最多4名队友",
+      "after": "最多12名，三排编队及完整存档",
+      "verification": "passed",
+      "evidence_ids": [
+        "desktop-orders",
+        "portrait-orders"
+      ]
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop-battle",
+      "file": "releases/web-squad-v0.29.0/qa/local/desktop-battle.png",
+      "sha256": "f2ab5232f39f2e4bcb1a0f277d15863b4d7823db868b9ef159a248af5698db46",
+      "kind": "screenshot",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop-orders",
+      "file": "releases/web-squad-v0.29.0/qa/local/desktop-orders.png",
+      "sha256": "fe337898e1c58b57fbe351a1fafca186dbffec7399dfee0420010aed222fbb61",
+      "kind": "screenshot",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop-session",
+      "file": "releases/web-squad-v0.29.0/qa/local/desktop-session.webm",
+      "sha256": "d131b8b461c5bcc944c552c8d46586f8dcc7003605eb25d08587cb742b254169",
+      "kind": "video",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "landscape-battle",
+      "file": "releases/web-squad-v0.29.0/qa/local/landscape-battle.png",
+      "sha256": "ae8004d6c1427ccfaa9b2670dcea923208867f73310321d2facc7bcee5c000e4",
+      "kind": "screenshot",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "landscape-orders",
+      "file": "releases/web-squad-v0.29.0/qa/local/landscape-orders.png",
+      "sha256": "318410785ca857cae982c190551c7284b379d7f3620b03e4a2015eefdec1c710",
+      "kind": "screenshot",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "page@5f46b12c4ee40eef0d20a22ba3b1823e",
+      "file": "releases/web-squad-v0.29.0/qa/local/page@5f46b12c4ee40eef0d20a22ba3b1823e.webm",
+      "sha256": "d131b8b461c5bcc944c552c8d46586f8dcc7003605eb25d08587cb742b254169",
+      "kind": "video",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "page@eed99c5ddd741ddc65cbd9c2bf89a69a",
+      "file": "releases/web-squad-v0.29.0/qa/local/page@eed99c5ddd741ddc65cbd9c2bf89a69a.webm",
+      "sha256": "44835d2877bb39affd854499e4a8f085e5e612521ffdda18d6bf6bd355a1f482",
+      "kind": "video",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "portrait-battle",
+      "file": "releases/web-squad-v0.29.0/qa/local/portrait-battle.png",
+      "sha256": "edb4f3a6ff0ffaf0deb0691b1ba261036632c88ee46750d86d9dfbb89c7fc3a1",
+      "kind": "screenshot",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "portrait-orders",
+      "file": "releases/web-squad-v0.29.0/qa/local/portrait-orders.png",
+      "sha256": "298252f5eabc666f306c5089174517ca0248c9a948689d7ddd427eec957b1ad5",
+      "kind": "screenshot",
+      "version": "web-squad-v0.29.0",
+      "build_id": "b7670e6b7690",
+      "capture_mode": "realtime-automation",
+      "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "method": "Headless Edge on desktop GPU; shop clicks and keyboard input. Seeded test funds, accelerated airdrop animation and invincible load scene. Phone viewport simulation, not physical phone. Video has no captured game audio.",
+    "results": [
+      {
+        "shape": "desktop",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "averageFPS": 161.65222660784482,
+        "p95Ms": 8.300000011920929,
+        "squad": 12,
+        "bugs": 61,
+        "errors": []
+      },
+      {
+        "shape": "landscape",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "averageFPS": 168.45481145972195,
+        "p95Ms": 6.100000008940697,
+        "squad": 12,
+        "bugs": 62,
+        "errors": []
+      },
+      {
+        "shape": "portrait",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "averageFPS": 169.75996040584013,
+        "p95Ms": 6.0999999940395355,
+        "squad": 12,
+        "bugs": 62,
+        "errors": []
+      }
+    ],
+    "report": "qa/local/results.json",
+    "unverified": [
+      "physical phone",
+      "game audio in video"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像无游戏音轨；完整介绍沿用历史素材，未重录整局"
+    ]
+  }
+}
