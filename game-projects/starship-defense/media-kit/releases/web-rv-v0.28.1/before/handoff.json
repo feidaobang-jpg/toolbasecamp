@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-rv-v0.28.0",
+  "build": {
+    "id": "rv280-69d2dc9db07a",
+    "commit": "7abff674",
+    "dirty": false,
+    "fingerprint": "69d2dc9db07a9761c892b2fff8afe0cb177bf35a4db94599331b90bf9a29a70e"
+  },
+  "media": [
+    {
+      "id": "rv281-media-1",
+      "file": "releases/web-rv-v0.28.1/before/before-gate.png",
+      "sha256": "f73d34643b2362e5ee6a08ec6d2cc9ac57b4befd266b9fad5312cef6e7b033e6",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "before/before-gate.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ]
+}

@@ -1,0 +1,619 @@
+{
+  "url": "http://127.0.0.1:8798/html/game/starship-defense/index.html",
+  "at": "2026-10-08T11:31:31.266Z",
+  "method": "Headless Edge on desktop GPU; shop clicks and keyboard input. Seeded test funds, accelerated airdrop animation and invincible load scene. Phone viewport simulation, not physical phone. Video has no captured game audio.",
+  "results": [
+    {
+      "shape": "desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "save": {
+        "valid": true,
+        "overflow": false,
+        "fraction": false,
+        "gearOverflow": false,
+        "restored": {
+          "count": 12,
+          "gear": 1,
+          "order": "defend"
+        },
+        "positions": [
+          {
+            "slot": 0,
+            "anchor": {
+              "x": -12,
+              "z": -18
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -16
+            }
+          },
+          {
+            "slot": 1,
+            "anchor": {
+              "x": -21,
+              "z": -18
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -17.8
+            }
+          },
+          {
+            "slot": 2,
+            "anchor": {
+              "x": 12,
+              "z": -18
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -26
+            }
+          },
+          {
+            "slot": 3,
+            "anchor": {
+              "x": 4,
+              "z": -18
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -24.8
+            }
+          },
+          {
+            "slot": 4,
+            "anchor": {
+              "x": -12,
+              "z": -21.5
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -19.5
+            }
+          },
+          {
+            "slot": 5,
+            "anchor": {
+              "x": -21,
+              "z": -21.5
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -21.3
+            }
+          },
+          {
+            "slot": 6,
+            "anchor": {
+              "x": 12,
+              "z": -21.5
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -29.5
+            }
+          },
+          {
+            "slot": 7,
+            "anchor": {
+              "x": 4,
+              "z": -21.5
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -28.3
+            }
+          },
+          {
+            "slot": 8,
+            "anchor": {
+              "x": -12,
+              "z": -25
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -23
+            }
+          },
+          {
+            "slot": 9,
+            "anchor": {
+              "x": -21,
+              "z": -25
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -24.8
+            }
+          },
+          {
+            "slot": 10,
+            "anchor": {
+              "x": 12,
+              "z": -25
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -33
+            }
+          },
+          {
+            "slot": 11,
+            "anchor": {
+              "x": 4,
+              "z": -25
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -31.8
+            }
+          }
+        ],
+        "legacyValid": true,
+        "legacyCount": 4
+      },
+      "recovery": {
+        "wounded": 11,
+        "returned": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          7
+        ],
+        "count": 12,
+        "gear": 1,
+        "order": "defend"
+      },
+      "performance": {
+        "samples": 827,
+        "averageFPS": 134.37103954778556,
+        "medianMs": 7.0999999940395355,
+        "p95Ms": 10.200000002980232,
+        "over50ms": 1,
+        "drawCalls": 401,
+        "triangles": 437854,
+        "memory": {
+          "geometries": 132,
+          "textures": 15
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark",
+        "squad": 12,
+        "bugs": 62,
+        "finite": true,
+        "targets": 12
+      },
+      "errors": []
+    },
+    {
+      "shape": "landscape",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "save": {
+        "valid": true,
+        "overflow": false,
+        "fraction": false,
+        "gearOverflow": false,
+        "restored": {
+          "count": 12,
+          "gear": 1,
+          "order": "defend"
+        },
+        "positions": [
+          {
+            "slot": 0,
+            "anchor": {
+              "x": -12,
+              "z": -18
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -16
+            }
+          },
+          {
+            "slot": 1,
+            "anchor": {
+              "x": -21,
+              "z": -18
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -17.8
+            }
+          },
+          {
+            "slot": 2,
+            "anchor": {
+              "x": 12,
+              "z": -18
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -26
+            }
+          },
+          {
+            "slot": 3,
+            "anchor": {
+              "x": 4,
+              "z": -18
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -24.8
+            }
+          },
+          {
+            "slot": 4,
+            "anchor": {
+              "x": -12,
+              "z": -21.5
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -19.5
+            }
+          },
+          {
+            "slot": 5,
+            "anchor": {
+              "x": -21,
+              "z": -21.5
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -21.3
+            }
+          },
+          {
+            "slot": 6,
+            "anchor": {
+              "x": 12,
+              "z": -21.5
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -29.5
+            }
+          },
+          {
+            "slot": 7,
+            "anchor": {
+              "x": 4,
+              "z": -21.5
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -28.3
+            }
+          },
+          {
+            "slot": 8,
+            "anchor": {
+              "x": -12,
+              "z": -25
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -23
+            }
+          },
+          {
+            "slot": 9,
+            "anchor": {
+              "x": -21,
+              "z": -25
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -24.8
+            }
+          },
+          {
+            "slot": 10,
+            "anchor": {
+              "x": 12,
+              "z": -25
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -33
+            }
+          },
+          {
+            "slot": 11,
+            "anchor": {
+              "x": 4,
+              "z": -25
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -31.8
+            }
+          }
+        ],
+        "legacyValid": true,
+        "legacyCount": 4
+      },
+      "recovery": {
+        "wounded": 11,
+        "returned": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          7
+        ],
+        "count": 12,
+        "gear": 1,
+        "order": "defend"
+      },
+      "performance": {
+        "samples": 1020,
+        "averageFPS": 166.80839929359868,
+        "medianMs": 5.899999991059303,
+        "p95Ms": 6.799999997019768,
+        "over50ms": 1,
+        "drawCalls": 423,
+        "triangles": 439506,
+        "memory": {
+          "geometries": 135,
+          "textures": 15
+        },
+        "viewport": [
+          844,
+          390
+        ],
+        "dpr": 0.8791666666666667,
+        "drawingBuffer": [
+          844,
+          390
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "squad": 12,
+        "bugs": 62,
+        "finite": true,
+        "targets": 12
+      },
+      "errors": []
+    },
+    {
+      "shape": "portrait",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "save": {
+        "valid": true,
+        "overflow": false,
+        "fraction": false,
+        "gearOverflow": false,
+        "restored": {
+          "count": 12,
+          "gear": 1,
+          "order": "defend"
+        },
+        "positions": [
+          {
+            "slot": 0,
+            "anchor": {
+              "x": -12,
+              "z": -18
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -16
+            }
+          },
+          {
+            "slot": 1,
+            "anchor": {
+              "x": -21,
+              "z": -18
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -17.8
+            }
+          },
+          {
+            "slot": 2,
+            "anchor": {
+              "x": 12,
+              "z": -18
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -26
+            }
+          },
+          {
+            "slot": 3,
+            "anchor": {
+              "x": 4,
+              "z": -18
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -24.8
+            }
+          },
+          {
+            "slot": 4,
+            "anchor": {
+              "x": -12,
+              "z": -21.5
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -19.5
+            }
+          },
+          {
+            "slot": 5,
+            "anchor": {
+              "x": -21,
+              "z": -21.5
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -21.3
+            }
+          },
+          {
+            "slot": 6,
+            "anchor": {
+              "x": 12,
+              "z": -21.5
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -29.5
+            }
+          },
+          {
+            "slot": 7,
+            "anchor": {
+              "x": 4,
+              "z": -21.5
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -28.3
+            }
+          },
+          {
+            "slot": 8,
+            "anchor": {
+              "x": -12,
+              "z": -25
+            },
+            "follow": {
+              "x": 4.6,
+              "z": -23
+            }
+          },
+          {
+            "slot": 9,
+            "anchor": {
+              "x": -21,
+              "z": -25
+            },
+            "follow": {
+              "x": -4.6,
+              "z": -24.8
+            }
+          },
+          {
+            "slot": 10,
+            "anchor": {
+              "x": 12,
+              "z": -25
+            },
+            "follow": {
+              "x": 1.8,
+              "z": -33
+            }
+          },
+          {
+            "slot": 11,
+            "anchor": {
+              "x": 4,
+              "z": -25
+            },
+            "follow": {
+              "x": -1.8,
+              "z": -31.8
+            }
+          }
+        ],
+        "legacyValid": true,
+        "legacyCount": 4
+      },
+      "recovery": {
+        "wounded": 11,
+        "returned": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          7
+        ],
+        "count": 12,
+        "gear": 1,
+        "order": "defend"
+      },
+      "performance": {
+        "samples": 1027,
+        "averageFPS": 168.55131213971427,
+        "medianMs": 5.899999991059303,
+        "p95Ms": 6.700000002980232,
+        "over50ms": 0,
+        "drawCalls": 446,
+        "triangles": 445178,
+        "memory": {
+          "geometries": 134,
+          "textures": 15
+        },
+        "viewport": [
+          390,
+          844
+        ],
+        "dpr": 0.8791666666666667,
+        "drawingBuffer": [
+          844,
+          390
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "smooth",
+        "theme": "dark",
+        "squad": 12,
+        "bugs": 62,
+        "finite": true,
+        "targets": 12
+      },
+      "errors": []
+    }
+  ]
+}

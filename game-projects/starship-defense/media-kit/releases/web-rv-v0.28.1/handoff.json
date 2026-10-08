@@ -1,0 +1,554 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-rv-v0.28.1",
+  "base_version": "web-rv-v0.28.0",
+  "classification": "影响试玩的严重修复",
+  "summary": "房车虫群直接追击，停车路障35秒自动放行；道路箭头、胜利目标与双面正向标牌；卡点旧档自动恢复",
+  "source_request": "用户反馈房车敌人没有围攻、方向和胜利条件不明、加油站卡死及反字",
+  "created_at": "2026-10-08T11:27:01.017617+00:00",
+  "development_tool": "Codex",
+  "build": {
+    "id": "rv281-5cb99302501e",
+    "commit": "7abff6749a4af7a9e6d6ccb2b99f966dd0ead620",
+    "dirty": true,
+    "fingerprint": "5cb99302501e3ee30004f2fe494fbee9b19d45d1d1cd0f6a5f68bd45c5d3cf9b",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "rv-pursuit",
+      "description": "虫群追击房车和下车人员",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv281-media-5"
+      ]
+    },
+    {
+      "id": "rv-guidance",
+      "description": "蓝色道路箭头、持续胜利目标和停车倒计时",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv281-media-7"
+      ]
+    },
+    {
+      "id": "rv-sign",
+      "description": "标牌两面正向可读",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv281-media-16",
+        "rv281-media-17"
+      ]
+    },
+    {
+      "id": "rv-save",
+      "description": "独立旧档卡点恢复并保留库存",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv281-media-7"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "rv-feedback",
+      "feature_ids": [
+        "rv-pursuit",
+        "rv-guidance",
+        "rv-sign",
+        "rv-save"
+      ],
+      "before": "虫群误用基地坐标；路障停点在计时范围外；标牌背面镜像",
+      "after": "虫群接近攻击；顶路障停稳35秒可通过；标牌两面可读；方向和胜利目标持续提示",
+      "verification": "passed",
+      "evidence_ids": [
+        "rv281-media-7",
+        "rv281-media-16",
+        "rv281-media-17",
+        "rv281-media-5"
+      ]
+    }
+  ],
+  "bugs": [
+    {
+      "id": "rv-pursuit",
+      "discovered_version": "web-rv-v0.28.0",
+      "reproduction": "车在2000；虫在14,1975；运行寻路",
+      "observation": "虫距车从28.65米增至35.80米",
+      "cause": "navDir沿用基地虫洞入口坐标",
+      "status": "fixed",
+      "fix": "RV平地直接追击，关闭旧地形寻路及飞行标记",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "rv281-media-5"
+      ],
+      "retest": "后方及两翼距离减小，真实RAF近战造成车损；before.json保存旧数值"
+    },
+    {
+      "id": "rv-checkpoint",
+      "discovered_version": "web-rv-v0.28.0",
+      "reproduction": "持续W顶加油站路障",
+      "observation": "z2119.9在17米计时半径外，hold保持0",
+      "cause": "碰撞停点与停车计时区域不一致",
+      "status": "fixed",
+      "fix": "路障前可达停车区、禁用RV脱困挪车、旧档移回当前路障范围",
+      "before_media_ids": [
+        "rv281-media-1"
+      ],
+      "after_media_ids": [
+        "rv281-media-7"
+      ],
+      "retest": "旧档升级库存保留；真实35秒持续W抬杆进入stage1"
+    },
+    {
+      "id": "rv-sign",
+      "discovered_version": "web-rv-v0.28.0",
+      "reproduction": "由公路接近标牌",
+      "observation": "DoubleSide同纹理的背面镜像",
+      "cause": "单面文字被反面观察",
+      "status": "fixed",
+      "fix": "两块朝外FrontSide面",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "rv281-media-16",
+        "rv281-media-17"
+      ],
+      "retest": "前后实际截图目视文字方向正常；未留旧反字单独截图"
+    }
+  ],
+  "media": [
+    {
+      "id": "rv281-media-2",
+      "file": "releases/web-rv-v0.28.1/capture/01-arrival.png",
+      "sha256": "d58718421f8c1da70be1a262f8b26abf5ccce885f4c21541e02ef717145b7932",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "capture/01-arrival.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-3",
+      "file": "releases/web-rv-v0.28.1/capture/02-search.png",
+      "sha256": "704753ce161a1b8b65d077ee91e93de0942f2eb724e3258367caeec0f095ff23",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "capture/02-search.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-4",
+      "file": "releases/web-rv-v0.28.1/capture/03-loot.png",
+      "sha256": "e43874cf6dae0d7557fa69211089d51e7532ab483e608fe581abd77c5833ff88",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "capture/03-loot.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-5",
+      "file": "releases/web-rv-v0.28.1/capture/rv-supply-real-time.webm",
+      "sha256": "ef6f867af420f9fd16cc33c8fa4e36c1a478c5f0043cc57e4b1d4b0c780b1eaf",
+      "kind": "video",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "capture/rv-supply-real-time.webm; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 26.401177,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 5,
+          "description": "接近加油站，蓝色停车区和朝向正确的标牌",
+          "supports": [
+            "rv-guidance",
+            "rv-sign"
+          ]
+        },
+        {
+          "in_seconds": 5,
+          "out_seconds": 26,
+          "description": "实际下车搜索，虫群接近攻击与自动火力",
+          "supports": [
+            "rv-pursuit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rv281-media-6",
+      "file": "releases/web-rv-v0.28.1/qa/campaign-audio/starship-defense-after-restart.png",
+      "sha256": "8d465ed7ce3714124924a15fa6fcaa928c13bab7b0fd1a09fa5261d8c4a199c6",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/campaign-audio/starship-defense-after-restart.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-7",
+      "file": "releases/web-rv-v0.28.1/qa/checkpoint-countdown.png",
+      "sha256": "69924fb574e25bdeb8550d1648dceb78119b8491d7912920702fcb90d80af81a",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/checkpoint-countdown.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-8",
+      "file": "releases/web-rv-v0.28.1/qa/checkpoint-open.png",
+      "sha256": "2983bf690918547fa42ab3a0a33fef741dfe355206ee69f03406b68c715caf83",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/checkpoint-open.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-9",
+      "file": "releases/web-rv-v0.28.1/qa/desktop-drive.png",
+      "sha256": "b0e57415962bd288991b55634d4ec05cd5d9a09391e9c827561b8cbe996e5458",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-drive.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-10",
+      "file": "releases/web-rv-v0.28.1/qa/desktop-menu.png",
+      "sha256": "6e7a46bddcc90102da784a042de8b0f34d09eb7f0fe8fa54136580379b870188",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-menu.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-11",
+      "file": "releases/web-rv-v0.28.1/qa/desktop-swarm.png",
+      "sha256": "e59cb8a93a4c6ae2166d19ae17e5266fefd79f317eb6261065b4e3a500e4a1b7",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-swarm.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-12",
+      "file": "releases/web-rv-v0.28.1/qa/desktop-win.png",
+      "sha256": "77ccdf65cba1e1935d2393d00f1f89eeb8008a14a989babf92e298cfd3890094",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-win.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-13",
+      "file": "releases/web-rv-v0.28.1/qa/menu.png",
+      "sha256": "4414a916ee617c30756c79722535d69b6ad0506c0f21b9ccff5ac16fad9b1161",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/menu.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-14",
+      "file": "releases/web-rv-v0.28.1/qa/mobile-landscape.png",
+      "sha256": "04313b98ca51f82bbe22607fade86b695a50fd4fad1aa6867ec0f4c71fc5def3",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/mobile-landscape.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-15",
+      "file": "releases/web-rv-v0.28.1/qa/mobile-portrait.png",
+      "sha256": "5f63ae71b1255e52c4e0771954ae037a84a9e9ddba8d70f91ec5d67ebf86c61b",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/mobile-portrait.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-16",
+      "file": "releases/web-rv-v0.28.1/qa/sign-back.png",
+      "sha256": "e3490ec12a175c7529902475da1c83af4ab1fbccbc025d8ff58fdffea10e2db2",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/sign-back.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-17",
+      "file": "releases/web-rv-v0.28.1/qa/sign-front.png",
+      "sha256": "0ff7f66fa189848c6945bfda06169502800e87ab00409699679a799c1476f3d3",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/sign-front.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-18",
+      "file": "releases/web-rv-v0.28.1/qa/versus-regression/teams-load.png",
+      "sha256": "d7b757440d7435d6b0e7a666686872183b440e21876852e7dbe62e3abbf31297",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/versus-regression/teams-load.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-19",
+      "file": "releases/web-rv-v0.28.1/qa/versus-regression/teams-mobile-landscape.png",
+      "sha256": "e0bf67bc4762492e47f4b8cb63a41b57f94f6577f73222c893634c1916403f16",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/versus-regression/teams-mobile-landscape.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1688,
+      "height": 780,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-20",
+      "file": "releases/web-rv-v0.28.1/qa/versus-regression/teams-mobile-portrait.png",
+      "sha256": "b2302e44430d39ccd61e327de702f0cd4bc9c504ce9402bc2b70f546a316853c",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/versus-regression/teams-mobile-portrait.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 780,
+      "height": 1688,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-21",
+      "file": "releases/web-rv-v0.28.1/qa/versus-regression/teams-result.png",
+      "sha256": "2d49ad25eab7b85c8eba2df614165502ceaa1f98299e8114c9004667a0424837",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/versus-regression/teams-result.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv281-media-22",
+      "file": "releases/web-rv-v0.28.1/qa/versus-regression/teams-start.png",
+      "sha256": "33078e1dd5ce08ec9e3916186b1a53abb4667463dd7c6d2f22d73b9280663acf",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.1",
+      "build_id": "rv281-5cb99302501e",
+      "capture_mode": "realtime-automation",
+      "description": "qa/versus-regression/teams-start.png; QA positions/boundaries where identified in test scripts; continuous capture at normal RAF",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "rv281-media-1",
+      "handoff": "releases/web-rv-v0.28.1/before/handoff.json",
+      "media_id": "rv281-media-1",
+      "reason": "Actual reproduction before editing runtime"
+    }
+  ],
+  "qa": [
+    {
+      "id": "functional",
+      "evidence": "qa/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "feedback",
+      "evidence": "qa/feedback-results.json",
+      "result": "pass"
+    },
+    {
+      "id": "complete_route",
+      "evidence": "qa/route-balance.json",
+      "result": "pass"
+    },
+    {
+      "id": "versus_regression",
+      "evidence": "qa/versus-regression/verify-versus-teams.json",
+      "result": "pass"
+    },
+    {
+      "id": "campaign_audio",
+      "evidence": "qa/campaign-audio/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "limits",
+      "method": "real RAF feedback; fixed-step full route; mobile viewport simulation",
+      "physical_phone_test": false,
+      "human_difficulty_test": false
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "手机真机",
+      "真人全程与难度评价",
+      "人工听片"
+    ]
+  },
+  "channels": {
+    "website": "pending_deploy",
+    "toy": "pending",
+    "taptap": "pending",
+    "bilibili": "pending"
+  },
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.28.1-20261008"
+}
