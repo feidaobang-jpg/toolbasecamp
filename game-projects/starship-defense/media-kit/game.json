@@ -23,7 +23,8 @@
     "verified_at": "2026-10-08T08:18:52.414299+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
-      "BV1WbHq6eEBt"
+      "BV1WbHq6eEBt",
+      "BV1C5HQ6gEvD"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_VnsIR1zh/index.html",
@@ -355,13 +356,20 @@
   "current_video_preparation": {
     "episode": "wish-versus-20261008",
     "version": "web-versus-teams-v0.27.0",
-    "status": "waiting_final_review",
+    "status": "published",
     "variants": [
       "bilibili-zh",
       "douyin-zh",
       "youtube-zh"
     ],
     "manifest": "../video/wish-versus-20261008/work/publish.json",
-    "new_bvid": null
+    "new_bvid": "BV1C5HQ6gEvD",
+    "published_at": "2026-10-08T10:48:23.100599+00:00",
+    "publication_result": "../video/wish-versus-20261008/work/publication-result.json",
+    "platform_urls": {
+      "douyin": "https://www.douyin.com/video/7694239926304427298",
+      "bilibili": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "youtube": "https://www.youtube.com/watch?v=QOTmOfT19_g"
+    }
   }
 }

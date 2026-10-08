@@ -61,19 +61,34 @@
   },
   "platform_requirements_checked_at": "2026-10-08",
   "human_review": {
-    "status": "pending",
-    "required_before_upload": true
+    "video_sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+    "scope": "本期已展示的完整三平台版本集",
+    "file_hashes": {
+      "captions-zh.srt": "4d4e833e27cc50a12670f16896eccec773b903d672a313e1740c749ffb16174c",
+      "English-localizations.txt": "6b8f0dfeddf68486640661af9fc37cde67c95b790879009e08cc54581d2af05d",
+      "captions-en.srt": "002757e1206a0d6b1bbeb18e0130369b822bab3693df101768b3c45641770944",
+      "cover-zh-16x9.jpg": "bd6b9a3fd188ce6472b13d9852c01d55f5221f0df2f5d8b30a793db456d07cd0",
+      "gameplay-youtube-final.mp4": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+      "投稿文案.txt": "73d2f84912e26682e2bd746453b56c09be5c3ed05cb0dda56f3d5d060da2a7bc"
+    },
+    "accepted_at": "2026-10-08T10:10:00.8570241Z",
+    "source": "user",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "statement": "可以发布",
+    "status": "approved"
   },
-  "audio_listening_review": "not-run: this model cannot accept audio input; user review required",
+  "audio_listening_review": "用户已明确通过本期最终审片；模型仅做客观音频检测",
   "technical_preparation_complete": true,
   "ready_to_upload": false,
-  "blocking_issues": [
-    "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
-  ],
+  "blocking_issues": [],
   "unverified_fields": [
     "本期投稿页分类及登录状态，上传前重新核对"
   ],
-  "created_at": "2026-10-08T09:39:33.166904+00:00",
+  "created_at": "2026-10-08T17:39:33.166904+08:00",
   "english_localizations": {
     "title": "I Built the Top-Voted Tower Defense Wish — Now Up to 4v4 | Swarm Siege",
     "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the Chinese game list, then select 虫潮对战 (Versus). Copy the URL into your browser if it is not clickable.\nThe top-voted wish is playable: earn income, upgrade your bank and deploy troops, from 1v1 to 4v4. Each player has their own economy, with 200-gold team transfers. The recorded 4v4 demonstration uses one player seat and seven bots.\nThe Versus mode was developed with Claude; Codex handled release verification and this video.\nWould you upgrade your bank first, or deploy units first?",
@@ -82,5 +97,60 @@
   "platform_sources": [
     "https://support.google.com/youtube/answer/72431?hl=zh-Hans",
     "https://support.google.com/youtube/answer/2734796?hl=zh-Hans"
-  ]
+  ],
+  "publication": {
+    "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+    "status": "published",
+    "platform_id": "QOTmOfT19_g",
+    "url": "https://www.youtube.com/watch?v=QOTmOfT19_g",
+    "video_sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+    "episode_id": "wish-versus-20261008",
+    "variant_id": "youtube-zh",
+    "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+    "human_review": {
+      "video_sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+      "scope": "本期已展示的完整三平台版本集",
+      "file_hashes": {
+        "captions-zh.srt": "4d4e833e27cc50a12670f16896eccec773b903d672a313e1740c749ffb16174c",
+        "English-localizations.txt": "6b8f0dfeddf68486640661af9fc37cde67c95b790879009e08cc54581d2af05d",
+        "captions-en.srt": "002757e1206a0d6b1bbeb18e0130369b822bab3693df101768b3c45641770944",
+        "cover-zh-16x9.jpg": "bd6b9a3fd188ce6472b13d9852c01d55f5221f0df2f5d8b30a793db456d07cd0",
+        "gameplay-youtube-final.mp4": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+        "投稿文案.txt": "73d2f84912e26682e2bd746453b56c09be5c3ed05cb0dda56f3d5d060da2a7bc"
+      },
+      "accepted_at": "2026-10-08T10:10:00.8570241Z",
+      "source": "user",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "statement": "可以发布",
+      "status": "approved"
+    },
+    "last_observed_at": "2026-10-08T10:39:18.340997+00:00",
+    "public_url": "https://www.youtube.com/watch?v=QOTmOfT19_g",
+    "public_verified_at": "2026-10-08T10:39:18.340997+00:00",
+    "channel_name": "郑晓辉",
+    "duration_seconds": 104.301,
+    "public_player_ready_state": 4,
+    "video_language": "zh-Hans",
+    "subtitle_tracks": [
+      {
+        "language": "zh-Hans",
+        "type": "manual_srt",
+        "status": "published",
+        "public_selectable": true
+      },
+      {
+        "language": "en",
+        "type": "manual_srt",
+        "status": "published",
+        "public_selectable": true
+      }
+    ],
+    "english_metadata": "published",
+    "checks": "no_issues",
+    "evidence": "work/publication-evidence/youtube-public.png"
+  }
 }

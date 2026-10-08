@@ -39,6 +39,17 @@
       "publicVerifiedAt": "2026-10-08T08:18:52.414299+00:00",
       "descriptionHash": "860488e4269f8b0a3c4d4f18e676a3213acf239e8987f92536e36d52a51f1b6b",
       "public_verified_at": "2026-10-08T08:18:52.414299+00:00"
+    },
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "recorded_game_version": "web-versus-teams-v0.27.0",
+      "last_public_verified_version": "web-versus-teams-v0.27.0",
+      "status": "public_verified",
+      "last_public_verified_at": "2026-10-08T10:48:23.100599+00:00",
+      "publication_record": "../video/wish-versus-20261008/work/publication-result.json",
+      "development_model": "Claude Opus 5.5",
+      "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。"
     }
   ],
   "latest_record": "releases/web-versus-teams-v0.27.0/bilibili-sync.json",
@@ -126,6 +137,14 @@
       "public_verified_at": "2026-10-07T22:34:00+08:00",
       "line": "更新（2026-10-07·v0.24.0）：新增云存档——普通模式进度自动同步到账号…网站与B站Toy均已上线同一版本。",
       "method": "browser编辑投稿replace更新行（创作中心type=edit页，全选替换纯文本，立即投稿）"
+    },
+    {
+      "bv": "BV1WbHq6eEBt",
+      "type": "new_episode_guide",
+      "new_bvid": "BV1C5HQ6gEvD",
+      "public_verified_at": "2026-10-08T10:48:23.100599+00:00",
+      "record": "../video/wish-versus-20261008/work/publication-result.json",
+      "preserved_latest_game_update": "web-rv-v0.28.0"
     }
   ]
 }

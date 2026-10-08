@@ -1,0 +1,255 @@
+{
+  "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+  "updated_at": "2026-10-08T10:50:19.799801+00:00",
+  "approval_statement": "可以发布",
+  "platforms": {
+    "douyin": {
+      "account_id": "84261875244",
+      "status": "published",
+      "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+      "episode_id": "wish-versus-20261008",
+      "variant_id": "douyin-zh",
+      "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+      "human_review": {
+        "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+        "scope": "本期已展示的完整三平台版本集",
+        "file_hashes": {
+          "gameplay-zh-final.mp4": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+          "投稿文案.txt": "8a67bfd1164dd169653e3560b1dd1a75b13f2b989678bb499e1d966de096d00d",
+          "cover-horizontal-4x3.jpg": "b6daa239452d16df6773d3a634cdd71325eb151133046da63f76139620a89600",
+          "cover-portrait-3x4.jpg": "371ca4b57a7883c904a16eafea617087703f76c68b0dbcd8c674659fe23f0f5b"
+        },
+        "accepted_at": "2026-10-08T10:10:00.8570241Z",
+        "source": "user",
+        "approved_variant_ids": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "statement": "可以发布",
+        "status": "approved"
+      },
+      "last_observed_at": "2026-10-08T10:50:19.799801+00:00",
+      "platform_id": "7694239926304427298",
+      "public_url": "https://www.douyin.com/video/7694239926304427298",
+      "public_verified_at": "2026-10-08T10:50:19.799801+00:00",
+      "evidence": "work/publication-evidence/douyin-public.png",
+      "public_verified": "official public page and creator normal status, video duration104.277, readyState4",
+      "publishing_settings": {
+        "horizontal_cover_uploaded": true,
+        "portrait_cover_uploaded": true,
+        "paid_promotion": false,
+        "ai_content_disclosure": true
+      },
+      "creator_url": "https://creator.douyin.com/creator-micro/work-management/work-detail/7694239926304427298",
+      "visibility": "public",
+      "published_title": "愿望榜第一名做出来了！虫潮对战支持4对4",
+      "published_description": "定时赚钱、升级银行、派兵攻城：双人对战塔防已经做进虫潮围城，还能打4对4。试玩入口：https://www.zhengxiaohui.cn/games.html （复制到浏览器打开，选择虫潮围城→虫潮对战）。你会先升级银行，还是先出兵？\n#虫潮围城 #塔防 #游戏开发 #AI"
+    },
+    "bilibili": {
+      "account_id": "16214353",
+      "status": "published",
+      "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+      "episode_id": "wish-versus-20261008",
+      "variant_id": "bilibili-zh",
+      "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+      "human_review": {
+        "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+        "scope": "本期已展示的完整三平台版本集",
+        "file_hashes": {
+          "cover-space-16x9.jpg": "bd6b9a3fd188ce6472b13d9852c01d55f5221f0df2f5d8b30a793db456d07cd0",
+          "投稿文案.txt": "5e5dc56d9d48c0e92eedf02a5cca7e14208ed62e62856a577438060a51cde3e6",
+          "gameplay-zh-final.mp4": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+          "cover-home-4x3.jpg": "b6daa239452d16df6773d3a634cdd71325eb151133046da63f76139620a89600"
+        },
+        "accepted_at": "2026-10-08T10:10:00.8570241Z",
+        "source": "user",
+        "approved_variant_ids": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "statement": "可以发布",
+        "status": "approved"
+      },
+      "last_observed_at": "2026-10-08T10:46:16.263883+00:00",
+      "platform_id": "BV1C5HQ6gEvD",
+      "public_url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "public_verified_at": "2026-10-08T10:46:16.263883+00:00",
+      "aid": 117404776536294,
+      "published_at": "2026-10-08T18:22:53+08:00",
+      "author": "飞刀班长",
+      "visibility": "public",
+      "public_player_ready_state": 4,
+      "public_duration_seconds": 105,
+      "topic": {
+        "id": 1346285,
+        "name": "哔哩哔哩Toy创意挑战",
+        "public_verified": true
+      },
+      "tags": [
+        "哔哩哔哩Toy创意挑战",
+        "虫潮围城",
+        "塔防",
+        "联机游戏",
+        "游戏开发",
+        "AI",
+        "bilibilitoy",
+        "Claude Opus 5.5"
+      ],
+      "tag_note": "Toy话题保留；Claude普通关键词会替换活动话题，实际采用开发模型名Claude Opus 5.5普通标签。",
+      "publishing_settings": {
+        "home_cover_4x3": true,
+        "space_cover_16x9": true,
+        "ai_content_disclosure": true,
+        "paid_promotion": false
+      },
+      "collection_membership": {
+        "season_id": 9248439,
+        "title": "虫潮围城开发实录",
+        "url": "https://space.bilibili.com/16214353/lists/9248439?type=season",
+        "order": 3,
+        "previous_members": [
+          "BV1Ujad6DEuf",
+          "BV1WbHq6eEBt"
+        ],
+        "status": "public_verified"
+      },
+      "toy_binding": {
+        "toy_id": "38678478981120",
+        "slug": "chongchao-qianshao",
+        "status": "verified",
+        "receipt": "work/toy-video-binding.json"
+      },
+      "pinned_comment": {
+        "status": "public_verified",
+        "text": "你会先升级银行，还是先出兵？点开虫潮围城，主菜单选择「虫潮对战」。\nToy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+        "sha256": "3677fe9098ae05ed49d0114a21a192181b0eaea5f307b6ed63c7caebe93cdd53",
+        "comment_id": null,
+        "id_note": "UI复制评论链接未返回可用地址，按BV和完整文案哈希查重。",
+        "evidence": "work/publication-evidence/bilibili-pinned.png"
+      },
+      "automatic_dynamic": {
+        "status": "public_verified",
+        "url": "https://space.bilibili.com/16214353/dynamic",
+        "additional_post_created": false,
+        "evidence": "work/publication-evidence/auto-dynamic.png"
+      },
+      "toy_push_application": {
+        "status": "submitted_cloud_saved",
+        "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "sheet": "【进行中】日常推流",
+        "range": "A316:E316",
+        "values": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+          "是",
+          "是",
+          "是"
+        ],
+        "operator_feedback_column": "F316",
+        "operator_feedback": null,
+        "screenshot": "work/publication-evidence/toy-push-application.png",
+        "note": "表内精确BV查重无结果，A316:F316全部空白后填入A:E，F保持空白，云端显示已自动保存。"
+      },
+      "traffic_reward": {
+        "status": "no_available_free_reward",
+        "available_exposure": 0,
+        "official_url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+        "evidence": "work/publication-evidence/flow-reward-none.png"
+      },
+      "previous_video_maintenance": {
+        "bvid": "BV1WbHq6eEBt",
+        "new_bvid": "BV1C5HQ6gEvD",
+        "status": "public_verified",
+        "old_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\n\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n更新（2026-10-08·v0.28.0）：新增单人「房车突围」，约5–10分钟短线：开车穿过虫群，停车搜物资、维修和升级，最后撤离。I上下车/搜索，O整备；房车进度独立保存。\n\n对战仍支持1对1至4对4、最多8人联机，每人独立金币和银行，队伍页可转账。\n\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作。\n\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+        "new_description": "本片为早期版本实录。新增「虫潮对战」实战（1对1到4对4）看：https://www.bilibili.com/video/BV1C5HQ6gEvD/\n《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-08·v0.28.0）：新增单人「房车突围」，约5–10分钟短线：开车穿过虫群，停车搜物资、维修和升级，最后撤离。I上下车/搜索，O整备；房车进度独立保存。\n对战仍支持1对1至4对4、最多8人联机，每人独立金币和银行，队伍页可转账。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+        "original_pinned_comment": "先打补给攒金币，再换装备；V 切视角，空格冲刺，靠近载具按 I 上车。你更喜欢留守建造，还是钻洞反攻母皇？\nToy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+        "new_pinned_comment": "本片为早期版本实录。新增「虫潮对战」：定时赚钱、升级银行、派兵拆核心，1对1到4对4。新版实战：https://www.bilibili.com/video/BV1C5HQ6gEvD/\nToy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n先打补给攒金币，再换装备；电脑 C 切视角、Shift 按住跑步，靠近载具按 I 上车，以当前试玩设置为准。你更喜欢守城，还是和朋友对战？\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+        "original_comment_preserved": true,
+        "toy_binding_preserved": true,
+        "evidence": "work/publication-evidence/previous-video-after.png"
+      },
+      "related_activities": {
+        "toy_challenge": "topic_and_binding_verified_automatically_included",
+        "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+        "deadline": "2026-10-31T23:59:00+08:00",
+        "high_energy_video_threshold": "views > 300",
+        "current_video_views_observed": 9,
+        "award_status": "not_awarded",
+        "growth_task_views": 2690,
+        "growth_task_target": 10000,
+        "growth_task_gap": 7310,
+        "scope": "本期Toy活动、流量奖励、任务中心及相关官方活动；未完成全量资格复查，不推进全面检查时间。"
+      },
+      "evidence": "work/publication-evidence/bilibili-public.png",
+      "verified_at": "2026-10-08T10:46:16.173443+00:00"
+    },
+    "youtube": {
+      "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "status": "published",
+      "platform_id": "QOTmOfT19_g",
+      "url": "https://www.youtube.com/watch?v=QOTmOfT19_g",
+      "video_sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+      "episode_id": "wish-versus-20261008",
+      "variant_id": "youtube-zh",
+      "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+      "human_review": {
+        "video_sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+        "scope": "本期已展示的完整三平台版本集",
+        "file_hashes": {
+          "captions-zh.srt": "4d4e833e27cc50a12670f16896eccec773b903d672a313e1740c749ffb16174c",
+          "English-localizations.txt": "6b8f0dfeddf68486640661af9fc37cde67c95b790879009e08cc54581d2af05d",
+          "captions-en.srt": "002757e1206a0d6b1bbeb18e0130369b822bab3693df101768b3c45641770944",
+          "cover-zh-16x9.jpg": "bd6b9a3fd188ce6472b13d9852c01d55f5221f0df2f5d8b30a793db456d07cd0",
+          "gameplay-youtube-final.mp4": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+          "投稿文案.txt": "73d2f84912e26682e2bd746453b56c09be5c3ed05cb0dda56f3d5d060da2a7bc"
+        },
+        "accepted_at": "2026-10-08T10:10:00.8570241Z",
+        "source": "user",
+        "approved_variant_ids": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "statement": "可以发布",
+        "status": "approved"
+      },
+      "last_observed_at": "2026-10-08T10:39:18.340997+00:00",
+      "public_url": "https://www.youtube.com/watch?v=QOTmOfT19_g",
+      "public_verified_at": "2026-10-08T10:39:18.340997+00:00",
+      "channel_name": "郑晓辉",
+      "duration_seconds": 104.301,
+      "public_player_ready_state": 4,
+      "video_language": "zh-Hans",
+      "subtitle_tracks": [
+        {
+          "language": "zh-Hans",
+          "type": "manual_srt",
+          "status": "published",
+          "public_selectable": true
+        },
+        {
+          "language": "en",
+          "type": "manual_srt",
+          "status": "published",
+          "public_selectable": true
+        }
+      ],
+      "english_metadata": "published",
+      "checks": "no_issues",
+      "evidence": "work/publication-evidence/youtube-public.png"
+    }
+  },
+  "episode_id": "wish-versus-20261008",
+  "overall_status": "published",
+  "website_wishlist_video_url": {
+    "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+    "status": "pending_deploy_verification"
+  },
+  "x": {
+    "status": "skipped",
+    "reason": "用户免费优先；本期没有可用免费官方发布能力，不转付费API或浏览器代发。"
+  },
+  "remaining_platform_steps": []
+}

@@ -12,34 +12,34 @@
       "variant_id": "bilibili-zh",
       "manifest_file": "publish/bilibili-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
-      ]
+      "blocking_issues": [],
+      "status": "published"
     },
     {
       "variant_id": "douyin-zh",
       "manifest_file": "publish/douyin-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
-      ]
+      "blocking_issues": [],
+      "status": "published"
     },
     {
       "variant_id": "youtube-zh",
       "manifest_file": "publish/youtube-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
-      ]
+      "blocking_issues": [],
+      "status": "published"
     }
   ],
   "technical_preparation_complete": true,
-  "human_review_status": "pending",
+  "human_review_status": "approved",
   "ready_to_upload": false,
   "post_publication": {
     "toy_bind": true,
     "season_id": 9248439,
-    "wishlist_video_url": "fill only after real BV is public",
+    "wishlist_video_url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
     "x": "free official capability only; skip paid access"
-  }
+  },
+  "approval_statement": "可以发布",
+  "publication_status": "published",
+  "publication_result": "publication-result.json"
 }

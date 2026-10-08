@@ -51,17 +51,73 @@
   },
   "platform_requirements_checked_at": "2026-10-08",
   "human_review": {
-    "status": "pending",
-    "required_before_upload": true
+    "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+    "scope": "本期已展示的完整三平台版本集",
+    "file_hashes": {
+      "gameplay-zh-final.mp4": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+      "投稿文案.txt": "8a67bfd1164dd169653e3560b1dd1a75b13f2b989678bb499e1d966de096d00d",
+      "cover-horizontal-4x3.jpg": "b6daa239452d16df6773d3a634cdd71325eb151133046da63f76139620a89600",
+      "cover-portrait-3x4.jpg": "371ca4b57a7883c904a16eafea617087703f76c68b0dbcd8c674659fe23f0f5b"
+    },
+    "accepted_at": "2026-10-08T10:10:00.8570241Z",
+    "source": "user",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "statement": "可以发布",
+    "status": "approved"
   },
-  "audio_listening_review": "not-run: this model cannot accept audio input; user review required",
+  "audio_listening_review": "用户已明确通过本期最终审片；模型仅做客观音频检测",
   "technical_preparation_complete": true,
   "ready_to_upload": false,
-  "blocking_issues": [
-    "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
-  ],
+  "blocking_issues": [],
   "unverified_fields": [
     "本期投稿页分类及登录状态，上传前重新核对"
   ],
-  "created_at": "2026-10-08T09:39:33.166904+00:00"
+  "created_at": "2026-10-08T17:39:33.166904+08:00",
+  "publication": {
+    "account_id": "84261875244",
+    "status": "published",
+    "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+    "episode_id": "wish-versus-20261008",
+    "variant_id": "douyin-zh",
+    "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+    "human_review": {
+      "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+      "scope": "本期已展示的完整三平台版本集",
+      "file_hashes": {
+        "gameplay-zh-final.mp4": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+        "投稿文案.txt": "8a67bfd1164dd169653e3560b1dd1a75b13f2b989678bb499e1d966de096d00d",
+        "cover-horizontal-4x3.jpg": "b6daa239452d16df6773d3a634cdd71325eb151133046da63f76139620a89600",
+        "cover-portrait-3x4.jpg": "371ca4b57a7883c904a16eafea617087703f76c68b0dbcd8c674659fe23f0f5b"
+      },
+      "accepted_at": "2026-10-08T10:10:00.8570241Z",
+      "source": "user",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "statement": "可以发布",
+      "status": "approved"
+    },
+    "last_observed_at": "2026-10-08T10:50:19.799801+00:00",
+    "platform_id": "7694239926304427298",
+    "public_url": "https://www.douyin.com/video/7694239926304427298",
+    "public_verified_at": "2026-10-08T10:50:19.799801+00:00",
+    "evidence": "work/publication-evidence/douyin-public.png",
+    "public_verified": "official public page and creator normal status, video duration104.277, readyState4",
+    "publishing_settings": {
+      "horizontal_cover_uploaded": true,
+      "portrait_cover_uploaded": true,
+      "paid_promotion": false,
+      "ai_content_disclosure": true
+    },
+    "creator_url": "https://creator.douyin.com/creator-micro/work-management/work-detail/7694239926304427298",
+    "visibility": "public",
+    "published_title": "愿望榜第一名做出来了！虫潮对战支持4对4",
+    "published_description": "定时赚钱、升级银行、派兵攻城：双人对战塔防已经做进虫潮围城，还能打4对4。试玩入口：https://www.zhengxiaohui.cn/games.html （复制到浏览器打开，选择虫潮围城→虫潮对战）。你会先升级银行，还是先出兵？\n#虫潮围城 #塔防 #游戏开发 #AI"
+  }
 }
