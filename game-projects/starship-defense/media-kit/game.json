@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-versus-v0.26.0",
+  "current_version": "web-versus-teams-v0.27.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -284,7 +284,7 @@
     "legacy_save_compatible": true,
     "physical_phone_test": false
   },
-  "taptap_sync_status": "reviewing V-20261008-1 (web-versus-v0.26.0)",
+  "taptap_sync_status": "V-20261008-1（web-versus-v0.26.0）已 online（2026-10-08 核验）；v0.27.0 待网站部署后同步",
   "multiplayer": {
     "players": "2–4",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
@@ -313,6 +313,13 @@
       "classification": "正式版本",
       "handoff": "releases/web-versus-v0.26.0/handoff.json",
       "summary": "新增虫潮对战（1 对 1）：银行经济、9 兵种派兵、5 种设施、三档电脑、好友联机 1 对 1"
+    },
+    {
+      "version": "web-versus-teams-v0.27.0",
+      "base_version": "web-versus-v0.26.0",
+      "classification": "正式版本",
+      "handoff": "releases/web-versus-teams-v0.27.0/handoff.json",
+      "summary": "虫潮对战加入 2 对 2、3 对 3、4 对 4：每人独立钱包与银行、队伍页转账、同一张图按人数放大；联机最多 8 人、选队伍、电脑补位与中途接手；修复联机中途加入报错；简单电脑改为让子"
     }
   ],
   "comment_feedback_fix": {
@@ -326,16 +333,21 @@
     "record": "releases/web-feedback-v0.22.1/notes.md"
   },
   "versus": {
-    "version": "web-versus-v0.26.0",
-    "design": "design/versus-mode.md",
+    "version": "web-versus-teams-v0.27.0",
+    "design": "design/versus-mode.md（第 17 节为多人）",
     "module": "public/html/game/starship-defense/versus.js",
-    "server": "server/coop_lobby.py mode=versus（上限 2 人）",
-    "record_key": "chongchao-versus-record-v1",
+    "server": "server/coop_lobby.py：mode=versus，size 1–4（上限 2×size），diff，每人 team，pick 消息",
+    "record_key": "chongchao-versus-record-v1（1 对 1 沿用原键，多人键名加 -2/-3/-4）",
     "qa": [
       "verify-versus.cjs",
+      "verify-versus-teams.cjs",
       "verify-versus-online.cjs",
-      "verify-versus-balance.cjs"
+      "verify-versus-teams-online.cjs",
+      "verify-versus-balance.cjs SIZE=1..4"
     ],
-    "captures": "capture-versus.cjs"
+    "captures": [
+      "capture-versus.cjs",
+      "capture-versus-teams.cjs"
+    ]
   }
 }

@@ -111,6 +111,45 @@ def test_starship_versus_rooms_are_one_on_one():
         guest.send_json({'type': 'command', 'command': {'kind': 'vsSend', 'id': 'swarm'}})
         assert until(host, 'command')['command'] == {'kind': 'vsSend', 'id': 'swarm'}
 
+def test_starship_versus_team_rooms_seat_two_per_side_and_carry_teams():
+    url = '/game/coop/ws?game=starship'
+    with TestClient(app) as client, ExitStack() as stack:
+        host = stack.enter_context(client.websocket_connect(url)); host.receive_json()
+        host.send_json({'type': 'create', 'name': 'host', 'maxPlayers': 2, 'liveJoin': True,
+                        'config': {'hero': 0, 'mode': 'versus', 'size': 4, 'team': 'red', 'diff': 'hard'}})
+        room = until(host, 'joined')['room']
+        assert room['maxPlayers'] == 8 and room['settings']['size'] == 4 and room['settings']['diff'] == 'hard'
+        assert room['players'][0]['team'] == 'red'
+        guest = stack.enter_context(client.websocket_connect(url)); guest.receive_json()
+        guest.send_json({'type': 'join', 'code': room['code'], 'config': {'hero': 2, 'team': 'nonsense'}})
+        assert until(guest, 'joined')['room']['players'][1]['team'] == 'auto'
+        # 准备前改选队伍；准备时也能带上队伍
+        guest.send_json({'type': 'pick', 'team': 'blue', 'hero': 1})
+        while [p['team'] for p in until(host, 'roster')['room']['players']][1:] != ['blue']:
+            pass
+        guest.send_json({'type': 'ready', 'ready': True, 'hero': 1, 'team': 'red'})
+        while not all(p['ready'] for p in until(host, 'roster')['room']['players']):
+            pass
+        # 准备后客人不能再改；房主随时可改
+        guest.send_json({'type': 'pick', 'team': 'blue', 'hero': 1})
+        host.send_json({'type': 'pick', 'team': 'blue', 'hero': 0})
+        players = until(host, 'roster')['room']['players']
+        assert [p['team'] for p in players] == ['blue', 'red']
+        host.send_json({'type': 'start'})
+        config = until(host, 'start')['config']
+        assert config['size'] == 4 and config['playerTeams'] == {'0': 'blue', '1': 'red'} and config['playerChoices']['1'] == 1
+        late = stack.enter_context(client.websocket_connect(url)); late.receive_json()
+        late.send_json({'type': 'join', 'code': room['code'], 'config': {'hero': 0, 'team': 'blue'}})
+        assert until(late, 'start')['config']['playerTeams']['2'] == 'blue'
+        joined = until(host, 'player_joined')
+        assert joined['slot'] == 2 and joined['team'] == 'blue'
+
+def test_starship_versus_size_is_bounded():
+    with TestClient(app) as client, client.websocket_connect('/game/coop/ws?game=starship') as host:
+        host.receive_json(); host.send_json({'type': 'create', 'config': {'mode': 'versus', 'size': 9, 'diff': 'insane'}})
+        room = until(host, 'joined')['room']
+        assert room['maxPlayers'] == 8 and room['settings']['size'] == 4 and room['settings']['diff'] == 'normal'
+
 def test_starship_coop_rooms_keep_coop_mode():
     with TestClient(app) as client, client.websocket_connect('/game/coop/ws?game=starship') as host:
         host.receive_json(); host.send_json({'type': 'create', 'maxPlayers': 3, 'config': {'mode': 'nonsense'}})

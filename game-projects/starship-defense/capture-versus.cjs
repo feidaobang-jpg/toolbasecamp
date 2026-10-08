@@ -19,7 +19,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     await shot(p,'01-main-menu.png','主菜单「⚔ 虫潮对战 · 1 对 1」入口');
     await p.click('#btnVersus');await sleep(300);await shot(p,'02-versus-menu.png','对战菜单：三档电脑 + 好友联机，规则速览');
     await p.click('[data-vs-ai="normal"]');await sleep(1500);
-    await p.evaluate(()=>{const v=__gameQA.versus;v.state.time=200;v.team('blue').gold=2600;});
+    await p.evaluate(()=>{const v=__gameQA.versus;v.state.time=200;v.seat('blue0').gold=2600;});
     await p.keyboard.press('KeyR');await sleep(400);await shot(p,'03-command-panel.png','出兵面板：银行 + 9 兵种，价格/冷却/解锁时间');
     await p.keyboard.press('Digit1');await sleep(200);await p.keyboard.press('Digit2');await sleep(200);await p.keyboard.press('Digit4');await sleep(900);
     await p.keyboard.press('KeyR');await sleep(1500);await shot(p,'04-sent-wave.png','派出小虫群、机枪小队、甲壳战虫，带蓝色阵营环');

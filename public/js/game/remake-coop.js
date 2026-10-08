@@ -1,5 +1,5 @@
 import {CooperativeLobby} from './coop.js?v=lobby-hint1';
-export function installRemakeCoop({game,container,menu,getConfig,onStart,onState,onEnd,onAction,getState,getInput,getUI,onGuestFrame=()=>{},notify=()=>{}}){
+export function installRemakeCoop({game,container,menu,getConfig,onStart,onState,onEnd,onJoin=()=>{},onAction,getState,getInput,getUI,onGuestFrame=()=>{},notify=()=>{},stateEvery=()=>65}){
  const driver={snapshot:getState,config:null,applying:false,lastSend:0,lastInput:0,result:null,lobby:null};
  driver.lobby=new CooperativeLobby({
   game,container,menu,getConfig,
@@ -38,7 +38,7 @@ export function installRemakeCoop({game,container,menu,getConfig,onStart,onState
   const ui=getUI();driver.connection.controlTick(!!ui.paused);
   status.textContent=driver.connection.room.players.map(p=>(p.slot+1)+'P '+(p.ai?'电脑':'真人')).join(' · ')+(driver.connection.bots.has(driver.connection.slot)?' · 操作即可接回':' · 闲置30秒电脑接管');
   if(!driver.connection.host){onGuestFrame();if(now-driver.lastInput>=30){driver.connection.send({type:'input',input:getInput()});driver.lastInput=now;}}
-  else if(now-driver.lastSend>=65){const state={game:getState(),ui:{...getUI(),result:driver.result}};if(driver.connection.send({type:'state',state}))driver.lastSend=now;}
+  else if(now-driver.lastSend>=stateEvery()){const state={game:getState(),ui:{...getUI(),result:driver.result}};if(driver.connection.send({type:'state',state}))driver.lastSend=now;}
  };
  window.addEventListener('pagehide',()=>driver.leave());
  if(new URLSearchParams(location.search).get('test')==='1')window.__COOP_QA__=driver;
