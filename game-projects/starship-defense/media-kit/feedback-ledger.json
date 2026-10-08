@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-08T09:01:43+08:00",
+  "updated_at": "2026-10-08T19:46:08+08:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -607,6 +607,35 @@
       "note": "原存档读写/模拟隔天时间戳/旧字段兼容测试通过，未复现个人丢档根因。Qoder 已完成 v0.24.0：本地保留、登录后普通检查点云备份、三份快照与冲突选择；网站/Toy/TapTap 均已发布。2026-10-08 公网四人私密房进房/准备/开局/输入与状态转发回归通过（网站与 Toy 来源）。Toy 用平台云档，网站/TapTap 需游戏内网站账号；原报告者设备、浏览器与进房路径仍未确认，未恢复其无备份的历史进度，也未做真实手机隔夜验收。",
       "mitigation_record": "releases/cloudsave-closure-20261008/handoff.json",
       "followup_reply_status": "not_posted"
+    },
+    {
+      "feedback_key": "BV1C5HQ6gEvD:401971101:2026-10-08:1082766ea9a83c0fc274af0148098ee028ab82bf03ed21898bb2ba96dadbe87a",
+      "rpid": null,
+      "root_rpid": null,
+      "video": "BV1C5HQ6gEvD",
+      "comment_type": 1,
+      "user": "老德国波兰球",
+      "user_mid": 401971101,
+      "date": "2026-10-08",
+      "comment_time_precision": "date_only",
+      "text": "能不能在单人模式中，增加，队友的人数。",
+      "kind": "feature",
+      "status": "fixed",
+      "fixed_in": "web-squad-v0.29.0",
+      "adoption_basis": "用户提供视频和原建议并要求实现；2026-10-08明确要求回复，并授权以后采纳的具体玩家反馈完成后默认回复。",
+      "website_status": "public_verified",
+      "toy_status": "published_public_verified",
+      "taptap_status": "review_submitted_reviewing_last_checked_at_release",
+      "taptap_note": "本轮仅补回复，不重新提审或把审核中称上线。",
+      "reply_text": "安排上了！单人守城队友上限从4名增加到12名了，在军需商店「队友」里继续雇佣就行，旧存档也能接着扩编。网站和Toy都已更新，感谢建议！",
+      "reply_sha256": "59d61c8fbbad29a850ead89a439b8f6512b68d2a2b3685baadc887930d11face",
+      "reply_rpid": null,
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-08T19:46:08+08:00",
+      "public_url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "record": "releases/web-squad-v0.29.0/comment-reply.json",
+      "screenshot": "D:/project/toolbasecamp-artifacts/chongchao-squad-v0.29.0-20261008/reply/comment-public-verified.jpg",
+      "note": "原楼和子回复的公开DOM未暴露rpid或精确时间；不读取私有状态。原楼首次显示53分钟前，刷新后58分钟前；反馈键采用BV、作者UID、公开日期与原文SHA256。发送前台账和原楼均无重复本人答复；发送后本人UID16214353的子回复全文可见，刷新后仍在原楼内。"
     }
   ]
 }
