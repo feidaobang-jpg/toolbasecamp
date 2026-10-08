@@ -1,0 +1,53 @@
+{
+  "version": "web-versus-teams-v0.27.0",
+  "source_commit": "eba175f1264c4c79f123f5a21d58f54f7e900121",
+  "package_sha256": "70b8e67d7b5bf632649a3671167584a18664127ae5b858f72338710c263b57fb",
+  "h5_version_id": 275356,
+  "h5_package_id": 73768,
+  "draft_version_id": "1046502",
+  "audit_id": "1046502",
+  "platform_version": "V-20261008-2",
+  "status": "reviewing",
+  "submitted_at": "2026-10-08T08:14:20.258396+00:00",
+  "qa": "taptap/qa.json",
+  "receipt": "taptap/receipts/submit.json",
+  "physical_phone_test": false,
+  "release_schedule": {
+    "kind": "immediate"
+  },
+  "precheck": {
+    "blockers": [],
+    "warnings": [],
+    "passed": true
+  },
+  "distribution": {
+    "android": "提供游玩",
+    "ios": "提供游玩",
+    "pc": "提供游玩"
+  },
+  "community_status": "pending_until_online",
+  "submission_time_source": "CLI submit receipt saved time, close to action; platform response has no exact submitted timestamp",
+  "last_checked_at": "2026-10-08T08:23:26.453335+00:00",
+  "material_status": {
+    "icon": "existing filled",
+    "description": "v0.27.0 updated and read back",
+    "developer_words": "existing retained",
+    "screenshots": "existing filled",
+    "banner": "existing filled",
+    "gameplay_demo_video": "existing filled",
+    "trailer": "optional not filled",
+    "square_promo": "optional not filled"
+  },
+  "risk_assessment": {
+    "current_fact": "analysis/snapshot/precheck均无blocker/warning；继承已上线v0.26资料与分发设置",
+    "test_evidence": "同一包三视口启动、操作、存档、4v4与转账通过；包唯一目录且无独立JS",
+    "historical_review": "完整8版历史均online/reviewing，无rejected项",
+    "unknown": "未测试手机TapTap App、多指与8真人满员对战；未宣称首页推荐资格"
+  },
+  "operation_handbook": {
+    "stage": "long_term",
+    "title": "长线运营期运营手册",
+    "url": "https://developer.taptap.cn/docs/store/operation/long-term/long-term-handbook/",
+    "summary": "适用于已有上线历史的版本更新，可参照官方手册规划社区运营与重大版本展示。"
+  }
+}

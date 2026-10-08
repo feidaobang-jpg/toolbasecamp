@@ -1,0 +1,66 @@
+{
+ "url": "https://www.bilibili.com/toy/preview/preview_u4V157YC/index.html",
+ "at": "2026-10-08T08:10:39.095Z",
+ "results": [
+  {
+   "name": "Toy 电脑：所选规模与座位数一致",
+   "detail": {
+    "teamSize": 4,
+    "seats": 8
+   }
+  },
+  {
+   "name": "Toy 预览·电脑：进入对战、R 面板、派出小虫",
+   "detail": {
+    "blue": 6,
+    "panel": true,
+    "arena": true
+   }
+  },
+  {
+   "name": "Toy 预览·电脑：对局实时推进、电脑在运营",
+   "detail": {
+    "time": 26,
+    "redBuild": 4
+   }
+  },
+  {
+   "name": "Toy 电脑：T 队伍页转账实际到账",
+   "detail": {
+    "before": 300,
+    "after": 500
+   }
+  },
+  {
+   "name": "Toy 预览·电脑无脚本报错"
+  },
+  {
+   "name": "Toy 手机：所选规模与座位数一致",
+   "detail": {
+    "teamSize": 4,
+    "seats": 8
+   }
+  },
+  {
+   "name": "Toy 预览·手机竖屏视口：点「出兵」打开面板",
+   "detail": {
+    "touch": true,
+    "panel": true,
+    "cards": 10
+   }
+  },
+  {
+   "name": "Toy 预览·手机：点卡片升级银行"
+  },
+  {
+   "name": "Toy 手机：点队伍卡片转账实际到账",
+   "detail": {
+    "before": 600,
+    "after": 800
+   }
+  },
+  {
+   "name": "Toy 预览·手机无脚本报错"
+  }
+ ]
+}

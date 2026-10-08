@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "tested_at": "2026-10-08T08:10:52.588Z",
+  "package_sha256": "70b8e67d7b5bf632649a3671167584a18664127ae5b858f72338710c263b57fb",
+  "version": "web-versus-teams-v0.27.0",
+  "results": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1920,
+        "height": 1080
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "versus": true,
+      "versus_size": 4,
+      "team_transfer": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    },
+    {
+      "viewport": {
+        "name": "phone-landscape",
+        "width": 844,
+        "height": 390
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "versus": true,
+      "versus_size": 4,
+      "team_transfer": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    },
+    {
+      "viewport": {
+        "name": "phone-portrait",
+        "width": 390,
+        "height": 844
+      },
+      "boot": true,
+      "new_game": true,
+      "mode_switch_preserves_progress": true,
+      "input": true,
+      "battle": true,
+      "reload_save": true,
+      "versus": true,
+      "versus_size": 4,
+      "team_transfer": true,
+      "errors": [],
+      "external_requests": [],
+      "failed_resources": [],
+      "device": "desktop browser simulation"
+    }
+  ],
+  "real_phone_test": false
+}

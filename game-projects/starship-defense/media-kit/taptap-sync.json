@@ -5,26 +5,26 @@
   "app_id": 962354,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_versus_v0260",
-  "submitted_version": "web-versus-v0.26.0",
-  "submitted_package_sha256": "42be8c7d65104271a13aea371e46e938249fcd5a2c121ed6f7c89dbe7a14994c",
-  "submitted_h5_version_id": 274950,
-  "draft_version_id": "1045922",
-  "audit_id": "1045922",
-  "platform_version": "V-20261008-1",
-  "submitted_at": "2026-10-08T13:59:59+08:00",
-  "last_published_version": "web-unstick-rpg-v0.25.0",
-  "last_published_h5_version_id": 274325,
-  "last_published_platform_version": "V-20261008",
+  "status": "reviewing_versus_teams_v0270",
+  "submitted_version": "web-versus-teams-v0.27.0",
+  "submitted_package_sha256": "70b8e67d7b5bf632649a3671167584a18664127ae5b858f72338710c263b57fb",
+  "submitted_h5_version_id": 275356,
+  "draft_version_id": "1046502",
+  "audit_id": "1046502",
+  "platform_version": "V-20261008-2",
+  "submitted_at": "2026-10-08T08:15:25.529798+00:00",
+  "last_published_version": "web-versus-v0.26.0",
+  "last_published_h5_version_id": 274950,
+  "last_published_platform_version": "V-20261008-1",
   "last_public_runtime_verified_version": null,
-  "release_record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
+  "release_record": "releases/web-versus-teams-v0.27.0/taptap-release.json",
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "CLI回执review_submitted；created_time 1791383950换算22:39:10+08:00",
-  "last_status_checked_at": "2026-10-08T14:00:26+08:00",
-  "submitted_source_commit": "2918b028d5a5b4b8f4b04a6d669df5d3cfe9b528",
+  "last_status_checked_at": "2026-10-08T08:15:25.529798+00:00",
+  "submitted_source_commit": "eba175f1264c4c79f123f5a21d58f54f7e900121",
   "community_post_status": "pending_until_online",
-  "community_post_note": "v0.24.0 云存档动态与论坛已由 cloudsave-closure 任务公开核验。新 v0.25.0 / 启动适配包已 reviewing，待真实 online 后合并发布一条本次说明。",
+  "community_post_note": "v0.27.0确认online后与v0.25/0.26尚未发出的说明合并为一条动态与游戏论坛。",
   "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
   "history": [
     {
@@ -71,13 +71,13 @@
     "saved_at": "2026-10-08T02:33:11.714647+00:00"
   },
   "description_correction_pending": null,
-  "pending_note": "虫潮对战 v0.26.0 包已上传、绑定 main、补一行简介更新、预检无阻塞并正常提审（V-20261008-1 reviewing）；V-20261008（v0.25.0）已 online。reviewing 不代表上线；手机 TapTap App 未实机验证。",
+  "pending_note": "v0.27.0 已正常提审；v0.26.0 已online。网站/Toy新版本分别核验；手机TapTap App未实机验证。",
   "platform_status": "reviewing",
-  "staged_version": "web-versus-v0.26.0",
-  "staged_source_commit": "2918b028d5a5b4b8f4b04a6d669df5d3cfe9b528",
-  "staged_package_sha256": "42be8c7d65104271a13aea371e46e938249fcd5a2c121ed6f7c89dbe7a14994c",
-  "staged_h5_version_id": 274950,
-  "staged_h5_package_id": 73595,
+  "staged_version": "web-versus-teams-v0.27.0",
+  "staged_source_commit": "eba175f1264c4c79f123f5a21d58f54f7e900121",
+  "staged_package_sha256": "70b8e67d7b5bf632649a3671167584a18664127ae5b858f72338710c263b57fb",
+  "staged_h5_version_id": 275356,
+  "staged_h5_package_id": 73768,
   "startup_adapter": "inline-runtime-v2",
   "verification": {
     "startup_guard": "8/8 pass",
@@ -143,6 +143,12 @@
       "status": "pending_until_online",
       "note": "上线后与 v0.25.0（V-20261008，已 online、说明待发）合并成一条：虫潮对战 + 新武器/卡地形修复/启动优化",
       "record": "../../starship-defense/media-kit/releases/web-versus-v0.26.0/notes.md"
+    },
+    {
+      "source_version": "web-versus-teams-v0.27.0",
+      "h5_version_id": 275356,
+      "platform_version": "V-20261008-2",
+      "status": "pending_until_online"
     }
   ],
   "description_update_history": [
@@ -160,5 +166,5 @@
       "draft_version_id": "1045922"
     }
   ],
-  "release_receipts": "D:/project/toolbasecamp-artifacts/taptap/versus-20261008/receipts/962354"
+  "release_receipts": "D:\\project\\worktrees\\chongchao-versus-design-20261008\\game-projects\\starship-defense\\media-kit\\releases\\web-versus-teams-v0.27.0\\taptap\\receipts"
 }

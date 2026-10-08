@@ -1,0 +1,28 @@
+{
+  "source": "Codex",
+  "code_commit": "5026cf0bcf2e1d1e9660065dc5947b32e4e1b445",
+  "verified_at": "2026-10-08T08:09:21.263583+00:00",
+  "files": [
+    {
+      "file": "public/html/game/starship-defense/game.compat.js",
+      "local_sha256": "3328a803079749c82d0c49da0667a8f2a2a7f131d108205dad75ab3fd597fbfd",
+      "remote_sha256": "3328a803079749c82d0c49da0667a8f2a2a7f131d108205dad75ab3fd597fbfd",
+      "match": true
+    },
+    {
+      "file": "public/js/game/coop.js",
+      "local_sha256": "b2b93dcf7db972f8385c68b7ba3e3ae1ee60b1bde353eb024ab1d7701d1ac28c",
+      "remote_sha256": "b2b93dcf7db972f8385c68b7ba3e3ae1ee60b1bde353eb024ab1d7701d1ac28c",
+      "match": true
+    },
+    {
+      "file": "public/js/game/remake-coop.js",
+      "local_sha256": "f369a2329d9da19b3a7f187abfe09db83270d89d9b4eeace72ee40ccf8512f28",
+      "remote_sha256": "f369a2329d9da19b3a7f187abfe09db83270d89d9b4eeace72ee40ccf8512f28",
+      "match": true
+    }
+  ],
+  "team_online_qa": "qa/production-teams-online/verify-versus-teams-online.json",
+  "teams_qa": "qa/production-teams/verify-versus-teams.json",
+  "physical_phone_test": false
+}

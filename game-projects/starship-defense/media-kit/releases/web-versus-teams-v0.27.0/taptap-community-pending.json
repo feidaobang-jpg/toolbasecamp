@@ -1,0 +1,18 @@
+{
+  "app_id": 962354,
+  "version": "web-versus-teams-v0.27.0",
+  "platform_version": "V-20261008-2",
+  "h5_version_id": 275356,
+  "status": "prepared_pending_online",
+  "merged_pending_versions": [
+    "web-unstick-rpg-v0.25.0",
+    "web-versus-v0.26.0",
+    "web-versus-teams-v0.27.0"
+  ],
+  "title": "《虫潮围城》对战扩至4对4：喊上队友，一起拆核心",
+  "body": "《虫潮围城》TapTap v0.27.0 已上线：虫潮对战支持1对1、2对2、3对3、4对4，最多8人联机，也可对战简单、普通、困难三档电脑。\n\n每人独立金币与银行，全队共用一个核心；用队伍面板给队友转200金，配合派兵、建塔，自己端枪上场。联机可选队伍、空位电脑补位，中途加入接手电脑，队友掉线由电脑接管；房主退出会结束房间。多人规模下，同一张地图随人数放大。\n\n本包也带入此前的RPG火箭筒、四连导弹架、载具卡地形修复与启动异常提示；普通模式本地存档和网站账号云备份保留。\n\n试玩入口：https://www.taptap.cn/app/962354\n手机建议先用流畅画质。欢迎反馈设备、对战规模和具体问题；桌面模拟已验收，手机TapTap App本版还未做真机测试。",
+  "forum_app_id": 962354,
+  "dedupe": "app_id+platform_version+body sha256; before publishing reread official online status, own profile and forum; post one item with forum association",
+  "prepared_at": "2026-10-08T08:23:26.453335+00:00",
+  "body_sha256": "453039decd00d7d6334d69468a157524a50aba182ef30bd0c5a6d3a1a614f6aa"
+}

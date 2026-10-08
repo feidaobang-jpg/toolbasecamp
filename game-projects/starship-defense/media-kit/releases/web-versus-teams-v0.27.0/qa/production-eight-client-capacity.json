@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "verified_at": "2026-10-08T08:21:11.713259+00:00",
+  "method": "8 separate WebSocket clients joined a password-protected 4v4 production lobby, all closed in finally; does not replace 8-human gameplay or bandwidth pressure test",
+  "room_max": 8,
+  "size": 4,
+  "players": 8,
+  "teams": [
+    "blue",
+    "blue",
+    "blue",
+    "blue",
+    "red",
+    "red",
+    "red",
+    "red"
+  ]
+}

@@ -83,8 +83,9 @@ const server = http.createServer((req,res) => {
       // 虫潮对战（v0.26.0）：同一包里从主菜单进入对战电脑，打开出兵面板并派兵，退出后回到主菜单。
       await page.evaluate(() => document.getElementById('btnQuit').click());
       await page.waitForFunction(() => __gameQA.Game.state === 'menu');
-      await page.locator('#btnVersus').click();await page.locator('[data-vs-ai="normal"]').click();
+      await page.locator('#btnVersus').click();await page.locator('[data-vs-size="4"]').click();await page.locator('[data-vs-ai="normal"]').click();
       await page.waitForFunction(() => __gameQA.versus.state.active);
+      assert.equal(await page.evaluate(() => __gameQA.versus.state.seats.length),8);
       await page.evaluate(() => {const v=__gameQA.versus;v.state.time=21;v.seat('blue0').gold=2000;});
       await page.locator(size.name === 'desktop' ? '#stage' : '#vR').click({position: size.name === 'desktop' ? {x:500,y:400} : undefined});
       if (size.name === 'desktop') await page.keyboard.press('KeyR');
@@ -92,10 +93,14 @@ const server = http.createServer((req,res) => {
       await page.locator('#vsGrid .vs-card').nth(1).click();
       await page.waitForFunction(() => __gameQA.versus.state.units.filter(u => u.team === 'blue').length >= 6);
       await page.waitForTimeout(1500);
+      await page.evaluate(() => {__gameQA.versus.seat('blue0').gold=2000;});
+      const mateGold=await page.evaluate(() => __gameQA.versus.seat('blue1').gold);
+      await page.locator('#vsTeamTab').click();await page.locator('#vsGrid .vs-card').nth(0).click();
+      assert.ok(await page.evaluate(() => __gameQA.versus.seat('blue1').gold)>=mateGold+200);
       await page.screenshot({path:path.join(reportDir,size.name+'-versus.png')});
       assert.equal(await page.evaluate(() => localStorage.getItem('taptap-chongchao-v1-sst_save_auto') !== null),true);
       assert.deepEqual(errors,[]);assert.deepEqual(external,[]);assert.deepEqual(failedResources,[]);
-      results.push({viewport:size,boot:true,new_game:true,mode_switch_preserves_progress:true,input:true,battle:true,reload_save:true,versus:true,errors,external_requests:external,failed_resources:failedResources,device:'desktop browser simulation'});
+      results.push({viewport:size,boot:true,new_game:true,mode_switch_preserves_progress:true,input:true,battle:true,reload_save:true,versus:true,versus_size:4,team_transfer:true,errors,external_requests:external,failed_resources:failedResources,device:'desktop browser simulation'});
       await context.close();
     }
     const manifest = JSON.parse(fs.readFileSync(path.join(output,'manifest.json'),'utf8'));
