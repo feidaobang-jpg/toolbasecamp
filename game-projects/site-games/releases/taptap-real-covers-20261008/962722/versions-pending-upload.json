@@ -1,0 +1,105 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "list": [
+        {
+          "created_time": 1791458577,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261008-1",
+          "version_id": "V-20261008-1"
+        },
+        {
+          "created_time": 1791453214,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261008",
+          "version_id": "V-20261008"
+        },
+        {
+          "created_time": 1791384779,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-6",
+          "version_id": "V-20261007-6"
+        },
+        {
+          "created_time": 1791371128,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-5",
+          "version_id": "V-20261007-5"
+        },
+        {
+          "created_time": 1791368455,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-4",
+          "version_id": "V-20261007-4"
+        },
+        {
+          "created_time": 1791367677,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-3",
+          "version_id": "V-20261007-3"
+        },
+        {
+          "created_time": 1791365011,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-2",
+          "version_id": "V-20261007-2"
+        },
+        {
+          "created_time": 1791349570,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-1",
+          "version_id": "V-20261007-1"
+        },
+        {
+          "created_time": 1791334960,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007",
+          "version_id": "V-20261007"
+        }
+      ],
+      "page": 1,
+      "page_size": 100,
+      "total": 9
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "pagination": {
+      "pages": 1,
+      "truncated": false
+    },
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

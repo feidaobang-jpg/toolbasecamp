@@ -190,5 +190,123 @@
       "draft_version_id": "1045922"
     }
   ],
-  "release_receipts": "releases/web-rv-v0.28.0"
+  "release_receipts": "releases/web-rv-v0.28.0",
+  "cover_update": {
+    "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+    "app_id": 962354,
+    "title": "虫潮围城",
+    "status": "pending_existing_review",
+    "prepared_at": "2026-10-08T11:44:30.296112+00:00",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\banner_4.jpg",
+        "sha256": "fd11760c034e656fd62577f6dc773f54b1064f9ff552971e1709d48ea4dbadce",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 338437,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+        "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+        "crop": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover_vertical.jpg",
+        "sha256": "183bf7fa32a076a63ac18bb548b770aeadaa3f402c5004b7a7b201149777b129",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 149875,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+        "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+        "crop": [
+          420,
+          40,
+          1100,
+          1060
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    },
+    "uploads": {
+      "banner_4": {
+        "assetId": "362997",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 338437,
+          "width": 1920
+        },
+        "url": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+        "width": 1920
+      },
+      "cover_vertical": {
+        "assetId": "362998",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 149875,
+          "width": 720
+        },
+        "url": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+        "width": 720
+      }
+    },
+    "reviewing": [
+      {
+        "created_time": 1791457964,
+        "last_event": "review_submitted",
+        "status": "reviewing",
+        "status_label": "审核中",
+        "status_value": 1,
+        "version": "V-20261008-4",
+        "version_id": "V-20261008-4"
+      }
+    ],
+    "public_verified": false,
+    "next_action": "现有玩法版本审核结束后，从最新线上创建资料草稿，写前重读，仅替换已准备的 banner_4 与 cover_vertical，不改包体、不撤审。",
+    "game_id": "starship-defense",
+    "developer_id": 100726,
+    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+    "updated_at": "2026-10-08T11:50:37.151935+00:00",
+    "source_note": "2026-10-06 正常试玩截图；荒漠第三人称场景",
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": "https://img-tc.tapimg.com/market/images/0ffc232a8c72eee41054f53ac6e50dfe.png",
+        "value": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+        "applied": false
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": "https://img-tc.tapimg.com/market/images/638152a40567886f71bb91a56f3803a4.png",
+        "value": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+        "applied": false
+      }
+    ],
+    "only_cover_fields_changed": false,
+    "package_binding_changed": false,
+    "checked_at": "2026-10-08T11:49:16.253895+00:00",
+    "platform_read_only": {
+      "blockers": [
+        {
+          "code": "READ_ONLY",
+          "field_ids": [],
+          "message": "当前应用处于「审核中」状态，无法提交审核"
+        }
+      ],
+      "suggestions": [],
+      "warnings": []
+    }
+  }
 }

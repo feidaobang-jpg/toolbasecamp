@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047323",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题涉及知名经典游戏IP‘赤色要塞’，可能有侵权嫌疑。如已获得官方授权，请前往游戏资质页面上传相关授权书，否则请修改游戏名称避免侵权风险。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "简介中包含对知名游戏IP‘赤色要塞’的复刻宣传，若拥有授权请前往资质页面上传授权文件，否则建议修改描述。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图设计较为简陋，直接复用游戏场景并叠加简易标题框，建议进行专业的美术宣发设计。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "竖版封面设计较为简陋，仅在简单截图上叠加了临时标题文本框，建议重新进行美术排版与设计以提升视觉质量。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

@@ -7,25 +7,25 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": "v0.9.4",
+      "last_public_verified_version": "v0.10.1",
       "status": "public_verified",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
       "pinned_comment_rpid": 316113740017,
-      "last_public_verified_at": "2026-10-08T01:02:01.971243+00:00",
-      "last_sync_record": "releases/v0.9.4/bilibili-status-correction.json",
+      "last_public_verified_at": "2026-10-08T11:48:26.160Z",
+      "last_sync_record": "releases/v0.10.1/bilibili-sync.json",
       "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-      "description_sha256": "fc2216dde8a4f8f137fb2b409d7c001cafef543ca0281b1b9a3bb4bd823d96bb",
-      "lastPublicVerifiedVersion": "v0.9.4",
-      "descriptionHash": "fc2216dde8a4f8f137fb2b409d7c001cafef543ca0281b1b9a3bb4bd823d96bb",
-      "release": "releases/v0.9.4/handoff.json",
-      "publicVerifiedAt": "2026-10-08T01:02:01.971243+00:00",
-      "submitted_version": "v0.9.4",
-      "submitted_at": "2026-10-07T22:47:00+08:00"
+      "description_sha256": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc",
+      "lastPublicVerifiedVersion": "v0.10.1",
+      "descriptionHash": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc",
+      "release": "releases/v0.10.1/bilibili-sync.json",
+      "publicVerifiedAt": "2026-10-08T11:48:26.160Z",
+      "submitted_version": "v0.10.1",
+      "submitted_at": "2026-10-08T19:47:45.272057+08:00"
     }
   ],
   "status": "public_verified",
-  "updated_at": "2026-10-08T01:02:01.971243+00:00",
+  "updated_at": "2026-10-08T11:48:26.160Z",
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
     "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -173,20 +173,8 @@
       "resolved_version": "v0.9.2"
     }
   ],
-  "pending_updates": [
-    {
-      "version": "v0.9.5",
-      "classification": "普通补丁",
-      "status": "merged_into_v0.10.0",
-      "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
-      "prepared_update_line": "更新（2026-10-07·联机大厅）：建房改为玩家自己点「创建房间」，进来不再静默建房；已在房间时创建/加入按钮会说明原因和\"先退出房间\"；把邀请链接发给朋友，点开公开房直接进、密码房会提示填密码。",
-      "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
-      "record": "releases/v0.9.5/notes.md",
-      "recorded_at": "2026-10-07",
-      "resolved_version": "v0.10.0"
-    }
-  ],
-  "version": "v0.3.0",
+  "pending_updates": [],
+  "version": "v0.10.1",
   "history": [
     {
       "bvid": "BV18XHW66E55",
@@ -232,16 +220,16 @@
   ],
   "last_public_verified": {
     "bvid": "BV18XHW66E55",
-    "version": "v0.10.0",
-    "at": "2026-10-08T10:08:26.834Z",
-    "description_sha256": "87989cf31dfc36ea1db6c71d1ff8c5a508bd26d8fb73bc49ca3db6c1f94b4e4d"
+    "version": "v0.10.1",
+    "at": "2026-10-08T11:48:26.160Z",
+    "description_sha256": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc"
   },
-  "latest_record": "releases/v0.10.0/bilibili-sync.json",
-  "pending": [],
-  "pending_note": "v0.10.0正式关卡更新已公开核验，v0.9.5大厅补丁并入此次简介；无新视频或评论",
+  "latest_record": "releases/v0.10.1/bilibili-sync.json",
+  "pending": false,
+  "pending_note": null,
   "rollback": {
     "version": "v0.10.1",
-    "reason": "用户要求删除本次新增第三关",
-    "status": "pending"
+    "status": "public_verified",
+    "reason": "用户要求删除本次第三关"
   }
 }

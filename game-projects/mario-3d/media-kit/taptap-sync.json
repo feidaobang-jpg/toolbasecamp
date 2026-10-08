@@ -132,5 +132,172 @@
     "phone": "not tested on actual mobile TapTap App for these exact packages"
   },
   "pending_note": "TapTap统一启动包已上传、绑定、预检并正常提审；reviewing不代表上线，exact ZIP 手机App未实机验证。",
-  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962723\\h5-latest.json"
+  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962723\\h5-latest.json",
+  "cover_update": {
+    "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+    "app_id": 962723,
+    "title": "超级玛丽 3D",
+    "status": "reviewing",
+    "prepared_at": "2026-10-08T11:41:11.531029+00:00",
+    "draft_id": "1047325",
+    "platform_version": "V-20261008-1",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\banner_4.jpg",
+        "sha256": "47ab741097edbdc02b74ea0d4bfea75102253c11b3499d7bc47e3b850825a4b9",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 266909,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\cover-source.jpg",
+        "source_sha256": "d43aa71b949d2393788ca66236d9a36c3519f0db83b752dc001726a918f01dee",
+        "crop": [
+          250,
+          170,
+          2330,
+          1340
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\cover_vertical.jpg",
+        "sha256": "d5c060bd771ca4442918ffd500c655f44a4f2818ea522aab06fe09e5cab7676b",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 138291,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\raw-gameplay-3.jpg",
+        "source_sha256": "3b2a8455b196721cdcf00c5e988edd1151582205857e71105db92acfc5bdbe9c",
+        "crop": [
+          880,
+          170,
+          1640,
+          1310
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    },
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": "https://img-tc.tapimg.com/market/images/26844c9b0bd6060fcaaef10b18b25156.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/e52f5c6ce3586cd08f6000e4342c26e4.jpg"
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": "https://img-tc.tapimg.com/market/images/b2796caa18638aae0664c80831b8ddcf.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/ac69a3988dcd064c64eaed179f09c3be.jpg"
+      }
+    ],
+    "uploads": {
+      "banner_4": {
+        "assetId": "362957",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 266909,
+          "width": 1920
+        },
+        "url": "https://img-tc.tapimg.com/market/images/e52f5c6ce3586cd08f6000e4342c26e4.jpg",
+        "width": 1920
+      },
+      "cover_vertical": {
+        "assetId": "362958",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 138291,
+          "width": 720
+        },
+        "url": "https://img-tc.tapimg.com/market/images/ac69a3988dcd064c64eaed179f09c3be.jpg",
+        "width": 720
+      }
+    },
+    "snapshot": {
+      "changes": [],
+      "revision": 1047325,
+      "status": "ready",
+      "version_id": "1047325",
+      "warnings": []
+    },
+    "precheck": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047325",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题包含知名游戏IP‘超级玛丽’，可能存在侵权嫌疑；如已获得官方授权，请前往游戏资质页面上传相关授权证明文件，否则将有驳回风险。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "游戏简介中包含知名IP‘超级玛丽’相关内容及玩法声明，建议前往游戏资质页面上传相应授权资质文件。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "icon"
+          ],
+          "message": "图标素材使用了经典‘马力欧/超级玛丽’角色形象，可能存在版权侵权风险，请提供相应授权文件或更换原创素材。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "screenshots"
+          ],
+          "message": "游戏截图素材中包含‘超级玛丽’相关角色与经典要素，如已获得正规授权，请前往资质页面上传授权书及软著等文件。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图素材涉及知名IP‘超级玛丽’形象与元素，请前往游戏资质页面补充版权授权证明。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "封面图素材涉及知名IP‘超级玛丽’形象与元素，请前往游戏资质页面补充版权授权证明。"
+        }
+      ]
+    },
+    "only_cover_fields_changed": true,
+    "package_binding_changed": false,
+    "submitted_at": "2026-10-08T11:43:23.995263+00:00",
+    "submission": {
+      "audit_id": "1047325",
+      "status": "reviewing",
+      "version_id": "1047325"
+    },
+    "public_verified": false,
+    "preaudit_note": "无硬阻塞；保留已知经典IP提示及本次实机截图封面排版建议，正常送正式审核。",
+    "platform_history_head": {
+      "created_time": 1791458580,
+      "last_event": "review_submitted",
+      "status": "reviewing",
+      "status_label": "审核中",
+      "status_value": 1,
+      "version": "V-20261008-1",
+      "version_id": "V-20261008-1"
+    },
+    "last_status_checked_at": "2026-10-08T11:49:17.828309+00:00",
+    "game_id": "mario-3d",
+    "developer_id": 100726,
+    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+    "updated_at": "2026-10-08T11:50:37.156455+00:00",
+    "source_note": "本次当前 TapTap H5 包正常试玩截图；竖版另选正面视角"
+  }
 }
