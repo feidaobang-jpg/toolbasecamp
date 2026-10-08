@@ -5,7 +5,7 @@
   "app_id": 962354,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_update_web-cloudsave-v0.24.0",
+  "status": "online_web-cloudsave-v0.24.0",
   "submitted_version": "web-cloudsave-v0.24.0",
   "submitted_package_sha256": "949e57bbdd8baff27352296d08b497f0e5458d1bf9183a4320da3aa9b5e4fdb3",
   "submitted_h5_version_id": 273272,
@@ -13,19 +13,30 @@
   "audit_id": "1043869",
   "platform_version": "V-20261007-3",
   "submitted_at": "2026-10-07T22:39:10+08:00",
-  "last_published_version": "web-coop-v0.23.0",
-  "last_published_h5_version_id": 272261,
-  "last_published_platform_version": "V-20261007-2",
+  "last_published_version": "web-cloudsave-v0.24.0",
+  "last_published_h5_version_id": 273272,
+  "last_published_platform_version": "V-20261007-3",
   "last_public_runtime_verified_version": null,
   "release_record": "releases/web-cloudsave-v0.24.0/handoff.json",
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "CLI回执review_submitted；created_time 1791383950换算22:39:10+08:00",
-  "last_status_checked_at": "2026-10-07T22:40:00+08:00",
+  "last_status_checked_at": "2026-10-08T08:47:00+08:00",
   "submitted_source_commit": "ae4b1318",
-  "community_post_status": "pending_until_online",
-  "community_post_note": "动态与论坛说明待 V-20261007-3 确认 online 后按 bili-game-update/game-maker 共享参考发布，先查重",
+  "community_post_status": "waiting_account_write_lock",
+  "community_post_note": "已确认 V-20261007-3 online；本人主页全部8条既有动态未见该版云存档说明，待共用账号锁释放后发布单条动态并关联虫潮论坛。TapTap 需登录网站账号使用云备份。",
+  "cloud_provider": "SiteSaveProvider；在游戏档案站登录网站账号，不是 TapTap 账号云存储",
   "history": [
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "platform_version": "V-20261007-3",
+      "h5_version_id": 273272,
+      "audit_id": "1043869",
+      "status": "online",
+      "last_event": "published",
+      "verified_at": "2026-10-08T08:47:00+08:00",
+      "evidence": "官方 CLI list-app-versions；公开游戏页可见 TapTap PC端 试玩DEMO 入口"
+    },
     {
       "version": "web-coop-v0.23.0",
       "platform_version": "V-20261007-2",
@@ -43,5 +54,6 @@
     "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
     "saved_at": "2026-10-07T22:37:00+08:00"
   },
-  "pending_note": "v0.24.0 云存档包 H5 273272 已上传、绑定 main（草稿1043869），预审通过并提审 reviewing（V-20261007-3）；上线确认前不发布社区动态。"
+  "description_correction_pending": "公开商店介绍仍写“按设备通过平台云存档自动备份”，下次可编辑更新需明确 TapTap 使用游戏内网站账号云备份；本次社区说明先准确说明账号要求。",
+  "pending_note": "v0.24.0 云存档包 H5 273272 已 online，不重复送审；仅待社区动态与论坛归属核验。网站 v0.25.0 的玩法更新另由原任务协调，不能提前写入本包说明。"
 }
