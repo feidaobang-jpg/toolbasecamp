@@ -3,7 +3,7 @@
   "source": "Codex",
   "workspace": "C:\\Users\\37818\\.codex\\worktrees\\video-backfill-20261008\\toolbasecamp",
   "branch": "codex/video-backfill-20261008",
-  "phase": "awaiting_human_review_and_platform_login",
+  "phase": "awaiting_platform_login",
   "production_complete": true,
   "published": false,
   "ready_to_review": true,
@@ -13,10 +13,27 @@
   "audio_metrics": "qa/audio-metrics.json",
   "platform_preview": "not-run",
   "subjective_listening": "not-run",
-  "updated_at": "2026-10-08T04:08:07.154875+00:00",
+  "updated_at": "2026-10-08T05:50:15.972565+00:00",
   "retention_reason": "本机被忽略的成片/音轨仍用于审片与后续发布，保留任务worktree，不归档。",
   "preview_limitations": [
     "本地预览服务被自动审批策略拒绝",
     "内置浏览器不允许file协议，使用本地文件链接交付"
-  ]
+  ],
+  "human_review": {
+    "status": "approved",
+    "statement": "可以，继续把",
+    "accepted_at": "2026-10-08T05:50:15.972565+00:00",
+    "context": "回复已展示的7版审片包及按通过版本继续发布的请求",
+    "approved_variant_ids": [
+      "swarm-youtube-zh",
+      "swarm-douyin-zh",
+      "jackal-youtube-zh",
+      "jackal-douyin-zh",
+      "cadillacs-youtube-zh",
+      "cadillacs-douyin-zh",
+      "swarm-youtube-en"
+    ],
+    "source": "user"
+  },
+  "continuation_task_id": "01a11964-7a1a-74a0-b55b-357944dbcfd4-video-backfill-publish-02"
 }

@@ -49,7 +49,7 @@
   ],
   "ready_to_upload": false,
   "ready_to_review": true,
-  "phase": "awaiting_human_review",
+  "phase": "awaiting_platform_login",
   "post_publication": {
     "x": {
       "authorized": true,
@@ -57,5 +57,21 @@
       "one_post_per_episode": true,
       "swarm_preferred_link": "english_pilot_if_public"
     }
+  },
+  "human_review": {
+    "status": "approved",
+    "statement": "可以，继续把",
+    "accepted_at": "2026-10-08T05:50:15.972565+00:00",
+    "context": "回复已展示的7版审片包及按通过版本继续发布的请求",
+    "approved_variant_ids": [
+      "swarm-youtube-zh",
+      "swarm-douyin-zh",
+      "jackal-youtube-zh",
+      "jackal-douyin-zh",
+      "cadillacs-youtube-zh",
+      "cadillacs-douyin-zh",
+      "swarm-youtube-en"
+    ],
+    "source": "user"
   }
 }
