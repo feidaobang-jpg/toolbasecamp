@@ -1,0 +1,176 @@
+{
+  "results": [
+    {
+      "name": "独立入口、房车上车、隐藏基地、战役存档保留",
+      "pass": true,
+      "data": {
+        "vehicle": "rv",
+        "hp": 1400,
+        "ground": false,
+        "base": false,
+        "save": "{\"untouched\":\"campaign\"}"
+      }
+    },
+    {
+      "name": "实际按W驾驶、燃料消耗、虫群追逐",
+      "pass": true,
+      "data": {
+        "z": 1558.8492000001017,
+        "fuel": 97.95857439999494,
+        "enemies": 3
+      }
+    },
+    {
+      "name": "空车可受伤并成为虫群目标",
+      "pass": true,
+      "data": {
+        "old": 1400,
+        "hp": 1300,
+        "target": "vehicle"
+      }
+    },
+    {
+      "name": "下车维修真实计时8秒并扣40零件",
+      "pass": true,
+      "data": {
+        "hp": 1400,
+        "scrap": 20,
+        "job": null
+      }
+    },
+    {
+      "name": "搜索补给、一次性奖励",
+      "pass": true,
+      "data": {
+        "scrap": 130,
+        "looted": [
+          true,
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "name": "机枪升级真实计时完成",
+      "pass": true
+    },
+    {
+      "name": "补给站通行计时、下一站边界",
+      "pass": true,
+      "data": {
+        "stage": 1,
+        "blocked": true,
+        "oldGate": false
+      }
+    },
+    {
+      "name": "暂停冻结路线时钟",
+      "pass": true
+    },
+    {
+      "name": "退出恢复战场、战役存档未改",
+      "pass": true,
+      "data": {
+        "active": false,
+        "base": true,
+        "ground": true,
+        "save": "{\"untouched\":\"campaign\"}"
+      }
+    },
+    {
+      "name": "刷新后房车独立进度恢复",
+      "pass": true,
+      "data": {
+        "stage": 1,
+        "gun": 1,
+        "hp": 1400,
+        "gate": false
+      }
+    },
+    {
+      "name": "完整目标终点胜利与结果",
+      "pass": true
+    },
+    {
+      "name": "房车毁坏失败、Enter重玩",
+      "pass": true
+    },
+    {
+      "name": "暂停重开恢复玩法与声音",
+      "pass": true
+    },
+    {
+      "name": "电脑/手机操作切换保留房车进度",
+      "pass": true,
+      "data": {
+        "touch": true,
+        "desktop": true,
+        "same": true
+      }
+    },
+    {
+      "name": "36虫移动转视角性能测量",
+      "pass": true,
+      "data": {
+        "samples": 946,
+        "averageFPS": 134.0911990249612,
+        "medianMs": 5.9000000059604645,
+        "p95Ms": 15.799999997019768,
+        "over50ms": 0,
+        "drawCalls": 111,
+        "triangles": 73080,
+        "memory": {
+          "geometries": 156,
+          "textures": 15
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark"
+      }
+    },
+    {
+      "name": "桌面无脚本异常",
+      "pass": true
+    },
+    {
+      "name": "手机竖屏模拟自动横屏并可进入",
+      "pass": true,
+      "data": {
+        "touch": true,
+        "rotate": "translate(-50%, -50%) rotate(90deg) scale(0.879167)",
+        "hud": {
+          "x": 286.6943359375,
+          "y": 8.791668891906738,
+          "width": 94.51040649414062,
+          "height": 157.31588745117188,
+          "top": 8.791668891906738,
+          "right": 381.2047424316406,
+          "bottom": 166.1075563430786,
+          "left": 286.6943359375
+        },
+        "ready": true
+      }
+    },
+    {
+      "name": "触屏互动按钮下车",
+      "pass": true
+    },
+    {
+      "name": "横竖切换及手机模拟无脚本异常",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "手机为视口和触控模拟，未做真机验收",
+    "规则边界部分用QA传送和计时推进；驾驶、整备、性能为实际RAF"
+  ]
+}

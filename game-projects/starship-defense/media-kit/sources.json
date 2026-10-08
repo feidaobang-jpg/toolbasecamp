@@ -1,5 +1,14 @@
 [
   {
+    "id": "rv-road-and-armored-vehicle",
+    "purpose": "房车突围场景、补给站和装甲房车模型",
+    "source_type": "procedural",
+    "tool": "Codex; Three.js geometry and CanvasTexture",
+    "runtime_file": "../../../public/html/game/starship-defense/rv-breakout.js",
+    "processing": "盒体车身、轮胎与车顶炮塔；实例化公路标线、围栏和岩石；程序绘制补给站中文标牌",
+    "usage": "项目原创程序化几何，虫群/角色/音效复用现有资产"
+  },
+  {
     "id": "roach",
     "provider": "OpenGameArt",
     "source": "https://opengameart.org/content/roach-game-ready-and-animated",
