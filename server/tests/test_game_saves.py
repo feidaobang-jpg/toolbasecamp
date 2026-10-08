@@ -4,6 +4,7 @@ SQLite is used locally; production InnoDB row locking is separately verified at 
 """
 import sys
 import sqlite3
+import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -87,3 +88,22 @@ def test_legacy_and_large_second_third_loop_saves():
         d={**SAVE,'loop':loop,'buildings':[{'k':'wall','x':0,'z':0,'r':0,'hp':500}]*count}
         assert saves.validate_save(d)
         assert not saves.validate_save({**d,'buildings':d['buildings']+[d['buildings'][0]]})
+
+
+def test_game_catalogs_remain_compatible_with_cloud_saves():
+    source=(Path(__file__).resolve().parents[2]/'public/html/game/starship-defense/game.js').read_text(encoding='utf-8')
+    def keys(name):
+        catalog=re.search(r'const '+name+r'=\{(.*?)\};',source,re.S).group(1)
+        return set(re.findall(r'\b([a-zA-Z]\w*):\s*\{',catalog))
+    assert keys('WEAPONS') | keys('LEGACY_WEAPONS') <= saves.WEAPONS
+    assert keys('BUILDINGS') <= saves.BUILDINGS
+    assert keys('VEHICLES') <= saves.VEHICLES
+
+
+@pytest.mark.parametrize('weapon',['rpg','missilePod'])
+def test_new_weapon_progress_round_trips_without_loss(client,weapon):
+    d={**SAVE,'weapons':['lmg','rpg','missilePod'],'curWeapon':weapon,'weaponLv':{'rpg':3,'missilePod':2}}
+    result=put(client,d)
+    assert result.status_code==200
+    loaded=client.get('/game/saves/starship-defense',headers=headers()).json()['current']['save']
+    assert loaded==d

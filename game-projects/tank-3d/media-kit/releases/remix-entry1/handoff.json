@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "remix-entry1",
+  "base_version": "coop-unstick1",
+  "created_at": "2026-10-08T08:49:06.763810+08:00",
+  "classification": "正式版本",
+  "task_id": "01a11621-5afa-7900-a4fd-cae2b56ee9ad-20261008-01",
+  "branch": "codex/tank-remix-default-20261008",
+  "build": {
+    "id": "remix-entry1",
+    "commit": null,
+    "dirty": true,
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "remix-default",
+      "before": "新玩家默认经典复刻，魔改藏在循环选项里",
+      "after": "新玩家默认魔改挑战；两种玩法各有直接选择按钮，主动选择继续保存",
+      "verification_status": "pass"
+    },
+    {
+      "id": "remix-promotion",
+      "before": "标题、卡片和首屏先强调经典35关",
+      "after": "主标题保持坦克大战，副标题与玩法说明先展示Boss、抢道具与魔改武器，明确经典35关入口",
+      "verification_status": "pass"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "desktop-menu-new-player.png",
+      "file": "releases/remix-entry1/captures/desktop-menu-new-player.png",
+      "sha256": "4527bd68d6865474f6eaa59c5aff57cfe816ab9edde4da9f5f184684228814e7",
+      "kind": "screenshot",
+      "version": "remix-entry1",
+      "build_id": "remix-entry1",
+      "capture_mode": "realtime-automation",
+      "description": "本版入口及模式/手机布局验收",
+      "visual_review": "pass",
+      "audio": "none",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop-menu-classic.png",
+      "file": "releases/remix-entry1/captures/desktop-menu-classic.png",
+      "sha256": "70d5083192a5b7e9fac5632a5d4275185b749dd74606b6a83a09a583fb8a1400",
+      "kind": "screenshot",
+      "version": "remix-entry1",
+      "build_id": "remix-entry1",
+      "capture_mode": "realtime-automation",
+      "description": "本版入口及模式/手机布局验收",
+      "visual_review": "pass",
+      "audio": "none",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-portrait-menu.png",
+      "file": "releases/remix-entry1/captures/phone-portrait-menu.png",
+      "sha256": "29cf95ce848a7a33481d7a783bbd1a80a0b772aaba9ffe595cde1aaffcd2de6c",
+      "kind": "screenshot",
+      "version": "remix-entry1",
+      "build_id": "remix-entry1",
+      "capture_mode": "realtime-automation",
+      "description": "本版入口及模式/手机布局验收",
+      "visual_review": "pass",
+      "audio": "none",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-landscape.png",
+      "file": "releases/remix-entry1/captures/phone-landscape.png",
+      "sha256": "b543bcfcbdf7509c50cc7318e7d71fe3b66c39247df4341a1143fb0dae26273a",
+      "kind": "screenshot",
+      "version": "remix-entry1",
+      "build_id": "remix-entry1",
+      "capture_mode": "realtime-automation",
+      "description": "本版入口及模式/手机布局验收",
+      "visual_review": "pass",
+      "audio": "none",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "qa": [
+    {
+      "method": "sim-check.mjs",
+      "result": "pass",
+      "checks": 19
+    },
+    {
+      "method": "coop-sim-check.mjs",
+      "result": "pass",
+      "scope": "2人和4人实体、移动、射击、损伤、快照、换关与失败"
+    },
+    {
+      "method": "browser-check.cjs QA_SKIP_PERF=1",
+      "result": "pass",
+      "checks": 18,
+      "artifact": "D:/project/task-artifacts/tank-remix-default-20261008/local-final/browser.json",
+      "scope": "菜单选择及保存、经典关卡与计分流程、魔改Boss/进度/耐久、五视角与键盘、手机横竖屏控件",
+      "limitations": "桌面Edge模拟手机；本次无渲染变更，未做手机真机或新增性能验收。初轮全脚本进入无关性能段时浏览器初始化超时。"
+    },
+    {
+      "method": "TapTap H5 desktop/landscape/portrait",
+      "result": "pass",
+      "scope": "开始、核心操作、操作模式切换、进度保留；另需完成联机测试"
+    },
+    {
+      "method": "UTF-8 + node --check + no-tailwind + startup tests",
+      "result": "pass"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "渠道发布与核验待完成"
+    ]
+  },
+  "channels": {
+    "website": {
+      "status": "pending"
+    },
+    "toy": {
+      "id": 39043249461248,
+      "status": "pending"
+    },
+    "taptap": {
+      "app_id": 962376,
+      "status": "pending"
+    },
+    "bilibili": {
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ],
+      "status": "pending"
+    }
+  },
+  "artifact_directory": "D:/project/task-artifacts/tank-remix-default-20261008"
+}

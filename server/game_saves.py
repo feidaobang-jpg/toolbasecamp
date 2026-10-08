@@ -17,7 +17,7 @@ from starlette.middleware.cors import CORSMiddleware
 router = APIRouter(prefix='/game/saves', tags=['game-saves'])
 security = HTTPBearer(auto_error=False)
 MAX_BYTES = 65536
-WEAPONS = {'lmg','shotgun','launcher','flamer','laser','plasma','smg','rifle','minigun','sniper','missile','railgun'}
+WEAPONS = {'lmg','shotgun','launcher','flamer','laser','plasma','rpg','missilePod','smg','rifle','minigun','sniper','missile','railgun'}
 BUILDINGS = {'antiAir','wall','mgTurret','cannonTurret','teslaTurret','sniperTurret','bunker','cryoTurret','mortarTurret'}
 VEHICLES = {'jeep','tank','mech','heli'}
 _login_attempts = defaultdict(deque)

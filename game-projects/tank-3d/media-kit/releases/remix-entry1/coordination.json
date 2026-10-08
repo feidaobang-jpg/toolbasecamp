@@ -1,0 +1,11 @@
+{
+  "raw_owner": "{\"task_id\":\"chongchao-unstick-rpg-20261007\",\"source\":\"ZCode\",\"workspace\":\"D:\\project\\worktrees\\tank-coop-stuck-fix-20261007\",\"branch\":\"claude/tank-coop-stuck-fix-20261007\",\"target\":\"master\",\"started_at\":\"2026-10-07T23:30:10+08:00\"}\n",
+  "verification": {
+    "zcode_session": "sess_0654236d-e394-48b7-a3ff-072e43eb5084",
+    "task_status": "error",
+    "last_model_completed_at": "2026-10-07T15:44:51.906Z",
+    "error": "exceed quota limit",
+    "production_deployment_processes": "未发现rsync/scp/fix-static-site/bust-html-cache在运行"
+  },
+  "action": "发布前恢复已退出任务的遗留锁"
+}

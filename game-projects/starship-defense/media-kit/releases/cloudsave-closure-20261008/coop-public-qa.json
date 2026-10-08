@@ -1,0 +1,30 @@
+[
+  {
+    "origin": "https://www.zhengxiaohui.cn",
+    "players": 4,
+    "passed": true,
+    "checks": [
+      "private room create",
+      "three guests join",
+      "ready and start",
+      "input relay",
+      "state broadcast",
+      "host departure ends room"
+    ],
+    "fixture": "password-protected temporary QA room; all sockets closed"
+  },
+  {
+    "origin": "https://www.bilibilitoy.com",
+    "players": 4,
+    "passed": true,
+    "checks": [
+      "private room create",
+      "three guests join",
+      "ready and start",
+      "input relay",
+      "state broadcast",
+      "host departure ends room"
+    ],
+    "fixture": "password-protected temporary QA room; all sockets closed"
+  }
+]
