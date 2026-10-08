@@ -35,7 +35,9 @@ const server=http.createServer((req,res)=>{const file=path.resolve(source,'.'+ne
      await p.screenshot({path:path.join(out,'gameplay-0'+(i+1)+'.jpg'),type:'jpeg',quality:90});
     }
     await p.keyboard.press('Escape');await p.locator('#pause [data-act="title"]').click();
-    await p.locator('#menu [data-opt="mode"]').click();await p.locator('#start-btn').click();await p.waitForFunction(()=>window.__TANK_TEST__.state().phase==='play');
+    await p.locator('#menu [data-game-mode="classic"]').click();
+    assert.equal(await p.locator('#menu [data-game-mode="classic"]').getAttribute('aria-pressed'),'true');
+    await p.locator('#menu [data-game-mode="remix"]').click();await p.locator('#start-btn').click();await p.waitForFunction(()=>window.__TANK_TEST__.state().phase==='play');
     assert.equal(await p.evaluate(()=>window.__TANK_TEST__.state().mode),'remix');
     for(let j=0;j<12;j++){await p.keyboard.press('KeyJ');await p.waitForTimeout(400);}
     await p.screenshot({path:path.join(out,'remix-battle.jpg'),type:'jpeg',quality:90});
@@ -45,7 +47,7 @@ const server=http.createServer((req,res)=>{const file=path.resolve(source,'.'+ne
    assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);results.push({device:name,viewport:[w,h],start:true,control_mode_switch:true,progress_preserved:true,errors,failed});console.log('Verified '+name);
   }
   const context=await browser.newContext({viewport:{width:1280,height:900}});const p=await context.newPage();
-  await p.goto(url+'?test=1');await p.waitForFunction(()=>window.__tankReady);await p.locator('[data-act="coop"]').click();
+  await p.goto(url+'?test=1');await p.waitForFunction(()=>window.__tankReady);await p.locator('#menu [data-act="coop"]').click();
   await p.locator('#coop-name').fill('Tap包体验证');await p.locator('#coop-room-name').fill('Tap包体验证');await p.locator('#coop-create-password').fill('tapqa2026');await p.locator('#coop-create').click();
   await p.waitForFunction(()=>window.__TANK_TEST__.coop.room,{timeout:20000});
   const code=await p.locator('#coop-room').innerText();const q=await context.newPage();

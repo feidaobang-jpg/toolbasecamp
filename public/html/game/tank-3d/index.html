@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#1b2433">
-<meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
-<title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
+<meta name="description" content="坦克大战 3D：推荐魔改 Boss 挑战，吃船过河、拿火箭筒和四连导弹，敌军也会抢道具；100 关无限周目，支持 2–4 人联机合作。保留 FC 原版经典复刻 35 关，电脑键盘与手机触屏都能玩。">
+<title>坦克大战 3D · 魔改 Boss 挑战 · 含经典 35 关</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=lobby-scroll1">
+<link rel="stylesheet" href="./style.css?v=remix-entry1">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -67,9 +67,9 @@
     <div id="menu" class="overlay title-screen">
       <div class="panel">
         <div class="brand">
-          <div class="kicker" id="mode-kicker">FC 原版 · 3D 完美复刻</div>
+          <div class="kicker" id="mode-kicker">魔改挑战 · 推荐玩法</div>
           <h1 class="logo">坦克大战 <span>3D</span></h1>
-          <div class="sub" id="mode-sub">经典 35 关 · 原版地图、敌军名单与数值</div>
+          <div class="sub" id="mode-sub">Boss 对战 · 敌军抢道具 · 100 关无限周目</div>
           <p class="rules" id="mode-rules"></p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 行驶 · <kbd>J</kbd> 开炮 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切换视角 · <kbd>Esc</kbd> 暂停<br><kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
           <p class="help help-touch">左侧摇杆行驶 · 右侧 <b>J</b> 开炮 · 拖动画面空白处转视角、<b>C</b> 切换视角</p>
@@ -78,7 +78,10 @@
         </div>
         <nav class="items" aria-label="主菜单">
           <button data-act="start" class="primary" id="start-btn">开始游戏 <kbd>Enter</kbd></button>
-          <button data-opt="mode"></button>
+          <div class="mode-choices" role="group" aria-label="玩法模式">
+            <button type="button" data-act="choose-mode" data-game-mode="remix" aria-pressed="true">魔改挑战 <span>推荐</span></button>
+            <button type="button" data-act="choose-mode" data-game-mode="classic" aria-pressed="false">经典复刻 <span>35 关</span></button>
+          </div>
           <button data-opt="from"></button>
           <button data-opt="lives"></button>
           <button data-opt="armor"></button>
@@ -190,6 +193,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=coop-unstick1"></script>
+<script type="module" src="./main.js?v=remix-entry1"></script>
 </body>
 </html>

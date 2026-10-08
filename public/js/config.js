@@ -176,7 +176,8 @@ const gamesConfig = {
                 { titleKey: 'tools.cadillacs3d.title', subtitleKey: 'games.content.cadillacs', tagKeys: ['games.tags.threeD', 'games.tags.developing'], firstProducedAt: '2026-10-05', toyUrl: 'https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html', url: 'html/game/cadillacs-stage1-3d/index.html?v=3', thumb: 'assets/game/thumbs/cadillacs-stage1-3d.jpg?v=3' },
                 { titleKey: 'tools.jackal3d.title', subtitleKey: 'games.content.jackal', tagKeys: ['games.tags.threeD', 'games.tags.developing'], firstProducedAt: '2026-10-03', toyUrl: 'https://www.bilibili.com/toy/feidao-jackal-3d/index.html', url: 'html/game/jackal-stage1-3d/index.html?v=1', thumb: 'assets/game/thumbs/jackal-stage1-3d.jpg?v=1' },
                 { titleKey: 'tools.starshipDefense.title', subtitleKey: 'games.content.starshipDefense', tagKeys: ['games.tags.threeD', 'games.tags.developing'], firstProducedAt: '2026-10-02', toyUrl: 'https://www.bilibili.com/toy/chongchao-qianshao/index.html', url: 'html/game/starship_defense.html?v=7', thumb: 'assets/game/thumbs/starship_defense.jpg?v=5' },
-                { titleKey: 'tools.tank3d.title', subtitleKey: 'games.content.tank', tagKeys: ['games.tags.threeD', 'games.tags.demo'], firstProducedAt: '2026-09-29', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-3d/index.html', url: 'html/game/tank-3d/index.html?v=2', thumb: 'assets/game/thumbs/tank-3d.jpg?v=2' }
+                { titleKey: 'tools.tank3d.title', subtitleKey: 'games.content.tank', tagKeys: ['games.tags.threeD', 'games.tags.demo'], firstProducedAt: '2026-09-29', toyUrl: 'https://www.bilibili.com/toy/feidao-tank-3d/index.html', url: 'html/game/tank-3d/index.html?v=2', thumb: 'assets/game/thumbs/tank-3d.jpg?v=2' },
+                { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], firstProducedAt: '2026-09-28', url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=4', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' }
             ]
         },
         {
@@ -190,13 +191,6 @@ const gamesConfig = {
                 { titleKey: 'tools.worms.title', toyUrl: 'https://www.bilibili.com/toy/feidao-worms/index.html', url: 'html/game/worms.html?v=7' },
                 { titleKey: 'tools.brickBreaker.title', toyUrl: 'https://www.bilibili.com/toy/feidao-brick-breaker/index.html', url: 'html/game/brick_breaker.html?v=7' },
                 { titleKey: 'tools.sheepstack.title', toyUrl: 'https://www.bilibili.com/toy/feidao-sheepstack/index.html', url: 'html/game/sheepstack.html?v=10' }
-            ]
-        },
-        {
-            titleKey: 'games.groups.early',
-            descriptionKey: 'games.earlyDesc',
-            items: [
-                { titleKey: 'tools.mario3d.title', subtitleKey: 'games.content.mario', tagKeys: ['games.tags.threeD', 'games.tags.demo'], url: 'html/game/mario-3d/index.html', thumb: 'assets/game/thumbs/mario-3d.jpg?v=4', toyUrl: 'https://www.bilibili.com/toy/feidao-mario-3d/index.html' }
             ]
         }
     ]

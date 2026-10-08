@@ -204,10 +204,10 @@
     }
   },
   "name": {
-    "zh": "恐龙快打 · 第一、二关 3D 重置版",
+    "zh": "恐龙快打 · 第一、二关 3D 重制版",
     "en": "Cadillacs and Dinosaurs · Stages 1-2 3D remake (fan-made)"
   },
-  "ip_note": "粉丝向非官方重置：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
+  "ip_note": "粉丝向非官方重制：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
   "multiplayer": {
     "players": "2–4",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
@@ -393,7 +393,7 @@
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
@@ -415,6 +415,19 @@
       ],
       "bilibili": "已并入 v0.6.0 简介更新（2026-10-07 公开核验）",
       "toy": "public_verified"
+    },
+    {
+      "version": "v0.9.5-wording1",
+      "date": "2026-10-08",
+      "classification": "普通补丁",
+      "changes": [
+        "页面标题、菜单小标题、版权说明与网站卡片简介中的「3D 重置版」统一为「3D 重制版」（纯文案，玩法与 game.min.js 未变）"
+      ],
+      "record": "releases/wording-remake-20261008/notes.md",
+      "website": "随本提交部署，待公网核验",
+      "toy": "待合并：纯文案不单独送审，随下次本游戏更新一并打包",
+      "taptap": "待合并：同 Toy",
+      "bilibili": "不更新：已发视频标题与简介保留原文"
     }
   ],
   "verified_public_links": [
