@@ -88,3 +88,31 @@ def test_old_tank_and_hub_share_the_same_room_directory():
 def test_unknown_directory_game_is_rejected():
     with TestClient(app) as client:
         assert client.get('/game/coop/rooms?game=unknown').status_code == 400
+
+def test_starship_versus_rooms_are_one_on_one():
+    url = '/game/coop/ws?game=starship'
+    with TestClient(app) as client, ExitStack() as stack:
+        host = stack.enter_context(client.websocket_connect(url)); host.receive_json()
+        host.send_json({'type': 'create', 'name': 'host', 'maxPlayers': 4, 'config': {'hero': 1, 'mode': 'versus'}})
+        room = until(host, 'joined')['room']
+        assert room['maxPlayers'] == 2 and room['settings']['mode'] == 'versus'
+        guest = stack.enter_context(client.websocket_connect(url)); guest.receive_json()
+        guest.send_json({'type': 'join', 'code': room['code']})
+        assert until(guest, 'joined')['slot'] == 1
+        third = stack.enter_context(client.websocket_connect(url)); third.receive_json()
+        third.send_json({'type': 'join', 'code': room['code']})
+        assert '满' in until(third, 'error')['message']
+        guest.send_json({'type': 'ready', 'ready': True, 'hero': 0})
+        while not all(p['ready'] for p in until(host, 'roster')['room']['players']):
+            pass
+        host.send_json({'type': 'start'})
+        assert until(host, 'start')['config']['mode'] == 'versus'
+        assert until(guest, 'start')['config']['mode'] == 'versus'
+        guest.send_json({'type': 'command', 'command': {'kind': 'vsSend', 'id': 'swarm'}})
+        assert until(host, 'command')['command'] == {'kind': 'vsSend', 'id': 'swarm'}
+
+def test_starship_coop_rooms_keep_coop_mode():
+    with TestClient(app) as client, client.websocket_connect('/game/coop/ws?game=starship') as host:
+        host.receive_json(); host.send_json({'type': 'create', 'maxPlayers': 3, 'config': {'mode': 'nonsense'}})
+        room = until(host, 'joined')['room']
+        assert room['maxPlayers'] == 3 and room['settings']['mode'] == 'coop'

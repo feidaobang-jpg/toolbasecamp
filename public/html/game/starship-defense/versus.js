@@ -1,0 +1,1001 @@
+// 虫潮对战（1 对 1）：双堡峡谷地图、银行经济、派兵放虫、建造防守、电脑对手与联机同步。
+// 设计见 game-projects/starship-defense/design/versus-mode.md；数值为初始值，靠电脑对打模拟调平衡。
+// 只在对战模式启用：单机战役、合作联机、副本和自由测试不经过这里。
+import {wallTouches} from './wall-geometry.js';
+import {monsterStep} from './monster-navigation.js';
+
+// 场地放在主战场北边很远处（雾外），原地图的地形、城墙、虫洞碰撞都不会影响这里。
+export const ARENA={z:900,halfX:88,halfZ:104,mid:25};
+export const TEAMS=['blue','red'];
+export const TEAM_COLOR={blue:0x3fa9ff,red:0xff5a4d};
+export const TEAM_CSS={blue:'#3fa9ff',red:'#ff5a4d'};
+export const TEAM_NAME={blue:'蓝方',red:'红方'};
+export const VS_RULES={
+  startGold:600,incomeEvery:10,income:[60,85,115,150,190],bankCost:[0,500,900,1400,2000],
+  bankHp:800,bankHpStep:200,bankDown:30,bankTrickle:30,
+  prep:20,tier2:180,tier3:360,lateBoost:360,lateMul:1.5,surgeEvery:30,corrode:[[360,1.5],[540,2]],frenzy:[[360,1.25],[540,1.5]],limit:900,overtime:120,overtimeWave:20,
+  hqHp:6000,hqGun:{dmg:12,rate:.18,range:32},popCap:24,buildLimit:16,bounty:.25,heroBounty:150,
+  heroDmgMul:.8,heroVsBuilding:.6,respawnBase:8,respawnStep:2,respawnMax:20,surrenderAfter:300,
+  baseHealRange:12,baseHeal:8,grenadeCd:6,bldHp:1.6,bldDmg:1.3, // 对战里设施更耐打、火力更强：守方靠炮塔，派兵靠数量
+};
+export const VS_BUILD_KINDS=['wall','mgTurret','antiAir','cannonTurret','teslaTurret'];
+const TIER_TIME={t1:VS_RULES.prep,t2:VS_RULES.tier2,t3:VS_RULES.tier3};
+export const VS_UNITS=[
+  {id:'swarm',name:'小虫群',price:150,cd:6,tier:'t1',desc:'6 只小虫：便宜的肉盾，吸引炮塔火力',group:[['bug0',6]]},
+  {id:'gunners',name:'机枪小队',price:300,cd:6,tier:'t1',desc:'机枪兵 ×2：射程 27，比机枪塔远',group:[['gunner',2]]},
+  {id:'assault',name:'突击小队',price:300,cd:6,tier:'t1',desc:'突击兵 ×2：霰弹近身清虫群',group:[['assault',2]]},
+  {id:'carapace',name:'甲壳战虫',price:400,cd:10,tier:'t2',desc:'4 只厚皮慢虫：顶在最前面扛伤害',group:[['bug2',4]]},
+  {id:'flyers',name:'迅猛飞虫',price:450,cd:10,tier:'t2',desc:'4 只飞虫：飞越城墙，怕防空塔',group:[['bug3',4]]},
+  {id:'bombers',name:'炎爆虫',price:450,cd:10,tier:'t2',desc:'3 只：死亡爆炸 90，对建筑双倍伤害',group:[['bug4',3]]},
+  {id:'medics',name:'医疗小队',price:450,cd:10,tier:'t2',desc:'医疗兵 + 机枪兵：跟着大波续航',group:[['medic',1],['gunner',1]]},
+  {id:'jeep',name:'突击战车',price:900,cd:25,tier:'t2',desc:'电脑驾驶，速度快，优先突袭银行',group:[['jeep',1]]},
+  {id:'king',name:'虫王',price:3000,cd:120,tier:'t3',desc:'6000 血带甲，拆建筑 ×3，冲锋撞飞、召唤小虫；场上最多 1 只',group:[['king',1]]},
+];
+const UNIT_BY_ID=Object.fromEntries(VS_UNITS.map(u=>[u.id,u]));
+// 单个单位的属性。虫子取自现有章节虫种（小虫=第1章、甲壳=第3章、飞虫=第4章、炎爆=第5章，二级虫种按模拟加强），
+// 士兵取自队友兵种（机枪兵火力下调，避免单刷），战车取自突击战车（火力×0.5），虫王用第1章首领「巨颚虫王」的模型。
+export const VS_PROFILES={
+  bug0:{kind:'bug',species:0,hp:30,dmg:8,rate:1,speed:5,scale:1,pop:1},
+  bug2:{kind:'bug',species:2,hp:240,dmg:16,rate:1,speed:4.6,scale:1.15,pop:1},
+  bug3:{kind:'bug',species:3,hp:90,dmg:14,rate:1,speed:7.5,scale:.95,pop:1,fly:true},
+  bug4:{kind:'bug',species:4,hp:120,dmg:14,rate:1,speed:5,scale:1.05,pop:1,blast:{r:4,dmg:90,bld:2}},
+  // 枪弹打装甲建筑效率低：士兵对建筑、银行、核心 ×0.7，战车 ×0.6；虫子啃咬照常，炎爆虫爆炸 ×2。
+  gunner:{kind:'soldier',role:'gunner',hp:120,dmg:7,rate:.2,range:27,speed:7,pop:1,bld:.7},
+  assault:{kind:'soldier',role:'assault',hp:110,dmg:7,pellets:5,rate:.7,range:18,speed:8.5,pop:1,bld:.7},
+  medic:{kind:'soldier',role:'medic',hp:90,dmg:6,rate:.45,range:24,speed:7.5,pop:1,heal:6,healR:10,bld:.7},
+  jeep:{kind:'jeep',hp:300,dmg:5,rate:.09,range:30,speed:13,pop:4,bld:.6},
+  king:{kind:'boss',species:0,hp:6000,dmg:50,rate:1.2,speed:4,scale:3.4,pop:6,bld:3,armor:.7},
+};
+const PROFILE_KEYS=Object.keys(VS_PROFILES);
+const SOLDIER_COLOR={blue:{gunner:0x3f86d9,assault:0x5fa3e8,medic:0x58d3c8},red:{gunner:0xd9483f,assault:0xe8785f,medic:0xe0b04a}};
+// 电脑对手：和玩家同一套规则与收入，不作弊。
+export const VS_AI={
+  // 模拟结论：攒成大波一起压上远强于零散出兵。难度主要按出兵节奏区分，简单再额外让子。
+  // 简单：小波零散出兵、二级兵种晚 2 分钟、一波最多 2 组、几乎不造塔、英雄开火间歇
+  easy:{name:'简单',think:10,bankMax:2,bankAt:[0,90,9999,9999,9999],wave:t=>Math.min(1000,450+t*.6),lane:'random',counter:false,king:false,reserve:0,heroPush:false,baseDef:300,defPerSec:.4,weapons:[],prepTurret:false,turrets:[1,300],heroFire:.5,retreat:.5,tierDelay:120,maxGroups:2,firstWave:90,waveGap:25},
+  // 普通：中等成波、针对配兵、打防守弱的一路
+  normal:{name:'普通',think:4,bankMax:3,bankAt:[0,45,240,9999,9999],wave:t=>Math.min(1800,800+t),maxGroups:3,lane:'weak',counter:true,king:true,reserve:0,heroPush:true,baseDef:300,defPerSec:.7,weapons:[[300,'launcher']],prepTurret:true,turrets:[2,200],heroFire:.85,retreat:.35},
+  // 困难：大波压上、反应最快、银行升到 Lv4
+  hard:{name:'困难',think:2,bankMax:4,bankAt:[0,30,180,330,9999],wave:t=>Math.min(2200,1000+t*1.2),maxGroups:4,lane:'weak',counter:true,king:true,reserve:0,heroPush:true,baseDef:400,defPerSec:.8,weapons:[[240,'launcher']],walls:0,prepTurret:true,turrets:[2,170],heroFire:1,retreat:.35},
+};
+// 攻方本地坐标下的行军路线（x 取正 = 东路；z 从本方基地前沿到对方基地）。
+const PATH=[[0,-74],[18,-70],[42,-56],[51,-32],[52,0],[51,32],[42,56],[18,70],[0,76]];
+// 中央岩丘与侧翼掩体（点对称：每个 [x,z,r] 都有 [-x,-z,r]）。
+const MASSIF=[[0,0,9],[14,10,7],[6,26,6.5],[18,33,5.5],[-4,43,5],[24,-8,6],[-20,18,5.5],[-10,-30,5],[22,-27,5]];
+const FLANK=[[74,-52,2.6],[78,6,3],[70,58,2.4],[67,-14,2]];
+// 电脑布防点（攻方本地坐标，蓝方视角；红方按点对称换算）。lane: 1=东路口，-1=西路口，0=基地内。
+const AI_SLOTS=[[0,-61,0],[44,-46,1],[57,-47,1],[49,-58,1],[-44,-46,-1],[-57,-47,-1],[-49,-58,-1],[14,-64,0],[-14,-64,0],[28,-74,0],[-28,-72,0],[34,-58,1],[-34,-58,-1]];
+const AI_WALLS=[[49,-38,1],[-49,-38,-1]];
+
+export function createVersus(api){
+  const {THREE,scene}=api;
+  const R=VS_RULES,AZ=ARENA.z;
+  const clamp=(v,a,b)=>v<a?a:(v>b?b:v),rand=(a,b)=>a+Math.random()*(b-a),TAU=Math.PI*2;
+  const dirOf=team=>team==='blue'?1:-1,other=team=>team==='blue'?'red':'blue';
+  const world=(team,x,z)=>({x:dirOf(team)*x,z:AZ+dirOf(team)*z});
+  const rel=(team,z)=>(z-AZ)*dirOf(team); // 负数=本方半场
+  const VS={active:false,role:'local',mode:'ai',time:0,over:false,result:null,teams:null,units:[],matchId:0,localTeam:'blue',
+    difficulty:'normal',objects:[],solids:[],nextId:1,flags:{},overtime:null,hidden:[],savedWorld:null,sky:[],panel:{open:false,tab:'units'},
+    lastHit:null,guestUnits:new Map(),sim:false};
+  const ringGeo=new THREE.RingGeometry(.62,.86,28);ringGeo.rotateX(-Math.PI/2);
+  const ringMat={blue:new THREE.MeshBasicMaterial({color:TEAM_COLOR.blue,transparent:true,opacity:.85,depthWrite:false}),red:new THREE.MeshBasicMaterial({color:TEAM_COLOR.red,transparent:true,opacity:.85,depthWrite:false})};
+  const teamRing=(team,size)=>{const r=new THREE.Mesh(ringGeo,ringMat[team]);r.scale.setScalar(size);r.position.y=.06;r.renderOrder=3;r.userData.vsRing=true;return r;};
+  function addRing(obj,team,size){
+    const old=obj.children.find(c=>c.userData.vsRing);if(old){if(old.material===ringMat[team])return;obj.remove(old);}
+    obj.add(teamRing(team,size));
+  }
+  const humans=()=>api.getHumans();
+  const heroOf=team=>humans().find(h=>h.team===team);
+
+  /* ================= 场地 ================= */
+  function buildArena(){
+    const group=new THREE.Group();group.name='versus-arena';
+    // 地面：沿用战场配色，再画出行军路线、基地广场与建造线。
+    const W=ARENA.halfX*2+24,D=ARENA.halfZ*2+28;
+    const g=new THREE.PlaneGeometry(W,D,98,118);g.rotateX(-Math.PI/2);
+    const ground=new THREE.Mesh(g,new THREE.MeshLambertMaterial({vertexColors:true}));ground.position.z=AZ;ground.receiveShadow=true;
+    api.paintGround(ground);
+    const col=g.attributes.color,pos=g.attributes.position,c=new THREE.Color(),lane=new THREE.Color(0x4f3e2c),plaza=new THREE.Color(0x5b6470),blue=new THREE.Color(TEAM_COLOR.blue),red=new THREE.Color(TEAM_COLOR.red);
+    const lanePts=[];for(const s of [1,-1])for(const team of TEAMS)lanePts.push(PATH.map(([x,z])=>world(team,s*x,z)));
+    const segDist=(px,pz,a,b)=>{const dx=b.x-a.x,dz=b.z-a.z,l=dx*dx+dz*dz||1,t=clamp(((px-a.x)*dx+(pz-a.z)*dz)/l,0,1);return Math.hypot(px-a.x-dx*t,pz-a.z-dz*t);};
+    for(let i=0;i<pos.count;i++){
+      const x=pos.getX(i),z=pos.getZ(i)+AZ;c.setRGB(col.getX(i),col.getY(i),col.getZ(i));
+      let d=Infinity;for(const pts of lanePts)for(let k=1;k<pts.length;k++)d=Math.min(d,segDist(x,z,pts[k-1],pts[k]));
+      if(d<10)c.lerp(lane,Math.min(1,(1-d/10)*1.4)*.7);
+      for(const team of TEAMS){const h=world(team,0,-88),pd=Math.hypot(x-h.x,(z-h.z)*.8);if(pd<26)c.lerp(plaza,(1-pd/26)*.75);if(pd<34)c.lerp(team==='blue'?blue:red,(1-pd/34)*.12);}
+      col.setXYZ(i,c.r,c.g,c.b);
+    }
+    col.needsUpdate=true;group.add(ground);
+    // 建造线：各自半场离中线 25 米以外才能建造。
+    for(const team of TEAMS){
+      const line=new THREE.Mesh(new THREE.PlaneGeometry(ARENA.halfX*2,.5),new THREE.MeshBasicMaterial({color:TEAM_COLOR[team],transparent:true,opacity:.45,depthWrite:false}));
+      line.rotation.x=-Math.PI/2;line.position.set(0,.05,AZ-dirOf(team)*ARENA.mid);group.add(line);
+    }
+    const midLine=new THREE.Mesh(new THREE.PlaneGeometry(ARENA.halfX*2,.25),new THREE.MeshBasicMaterial({color:0xfff0c0,transparent:true,opacity:.25,depthWrite:false}));
+    midLine.rotation.x=-Math.PI/2;midLine.position.set(0,.05,AZ);group.add(midLine);
+    // 岩石：中央岩丘挡住直线行军，侧翼小掩体可绕行；外圈石壁标出边界。
+    const rocks=[];
+    for(const [x,z,r] of MASSIF){rocks.push([x,z,r,true]);if(x||z)rocks.push([-x,-z,r,true]);}
+    for(const [x,z,r] of FLANK){rocks.push([x,z,r,true]);rocks.push([-x,-z,r,true]);}
+    for(let i=0;i<=22;i++){const z=-ARENA.halfZ-4+i*((ARENA.halfZ*2+8)/22);rocks.push([ARENA.halfX+6+Math.sin(i*2.1)*2,z,4.5+Math.sin(i*1.3)*1.2,false],[-(ARENA.halfX+6+Math.cos(i*1.7)*2),z,4.5+Math.cos(i*1.9)*1.2,false]);}
+    for(let i=0;i<=18;i++){const x=-ARENA.halfX-4+i*((ARENA.halfX*2+8)/18);for(const s of [1,-1])rocks.push([x,s*(ARENA.halfZ+6+Math.sin(i*1.8)*2),4.5+Math.sin(i*2.3)*1.2,false]);}
+    const rockMesh=new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1,0),new THREE.MeshLambertMaterial({color:0x7c6650,flatShading:true}),rocks.length),dummy=new THREE.Object3D();
+    rocks.forEach(([x,z,r,solid],i)=>{
+      dummy.position.set(x,r*.25,AZ+z);dummy.rotation.set(0,i*1.73,0);dummy.scale.set(r,r*.85,r);dummy.updateMatrix();rockMesh.setMatrixAt(i,dummy.matrix);
+      if(solid)VS.solids.push({x,z:AZ+z,r:r*.86,bottom:-2,top:r*1.05});
+    });
+    rockMesh.castShadow=rockMesh.receiveShadow=true;group.add(rockMesh);
+    // 行军路线两侧的标桩和小灯，远处也看得清两条路
+    const posts=[];
+    for(const side of [1,-1]){const pts=PATH.map(([x,z])=>({x:side*x,z:AZ+z}));
+      for(let k=1;k<pts.length;k++){const a=pts[k-1],b=pts[k],len=Math.hypot(b.x-a.x,b.z-a.z),nx=-(b.z-a.z)/len,nz=(b.x-a.x)/len;
+        for(let t=0;t<len;t+=13){const x=a.x+(b.x-a.x)*t/len,z=a.z+(b.z-a.z)*t/len;if(Math.abs(z-AZ)>66)continue;for(const o of [-10.5,10.5])posts.push([x+nx*o,z+nz*o]);}}}
+    const postMesh=new THREE.InstancedMesh(new THREE.CylinderGeometry(.14,.18,1.5,6),new THREE.MeshLambertMaterial({color:0x3d434c}),posts.length);
+    const lampMesh=new THREE.InstancedMesh(new THREE.SphereGeometry(.2,8,6),new THREE.MeshBasicMaterial({color:0xffc35a}),posts.length);
+    posts.forEach(([x,z],i)=>{dummy.position.set(x,.75,z);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();postMesh.setMatrixAt(i,dummy.matrix);dummy.position.y=1.6;dummy.updateMatrix();lampMesh.setMatrixAt(i,dummy.matrix);});
+    group.add(postMesh,lampMesh);
+    // 基地后方的补给箱、沙袋和天线（只是布景，不挡路）
+    const crates=[],bags=[];
+    for(const team of TEAMS){for(const [x,z] of [[18,-97],[21,-95],[19.5,-99],[-24,-97],[-27,-99]]){const q=world(team,x,z);crates.push([q.x,q.z]);}
+      for(let i=0;i<9;i++){const q=world(team,-16+i*4,-102);bags.push([q.x,q.z]);}}
+    const crateMesh=new THREE.InstancedMesh(new THREE.BoxGeometry(1.6,1.2,1.6),new THREE.MeshLambertMaterial({color:0x8a6a3c}),crates.length);
+    crates.forEach(([x,z],i)=>{dummy.position.set(x,.6,z);dummy.rotation.set(0,i*.7,0);dummy.updateMatrix();crateMesh.setMatrixAt(i,dummy.matrix);});
+    const bagMesh=new THREE.InstancedMesh(new THREE.BoxGeometry(3.6,.8,1.1),new THREE.MeshLambertMaterial({color:0x7d7458}),bags.length);
+    bags.forEach(([x,z],i)=>{dummy.position.set(x,.4,z);dummy.rotation.set(0,0,0);dummy.updateMatrix();bagMesh.setMatrixAt(i,dummy.matrix);});
+    crateMesh.castShadow=bagMesh.castShadow=true;group.add(crateMesh,bagMesh);
+    for(const team of TEAMS){const q=world(team,-30,-92),mast=new THREE.Mesh(new THREE.CylinderGeometry(.18,.3,9,6),new THREE.MeshLambertMaterial({color:0x5a6573}));mast.position.set(q.x,4.5,q.z);group.add(mast);
+      const tip=new THREE.Mesh(new THREE.SphereGeometry(.35,8,6),new THREE.MeshBasicMaterial({color:TEAM_COLOR[team]}));tip.position.set(q.x,9.2,q.z);group.add(tip);}
+    scene.add(group);VS.objects.push(group);
+    // 基地：核心、银行、出兵口。
+    VS.hq={};VS.bank={};
+    for(const team of TEAMS){
+      const hp=world(team,0,-90);
+      const hq={vsType:'hq',team,pos:new THREE.Vector3(hp.x,0,hp.z),radius:5,hitH:3,hp:R.hqHp,maxHp:R.hqHp,dead:false,fireCd:0,aimBias:-.4,kind:'hq'};
+      hq.mesh=makeHQMesh(team);hq.mesh.position.copy(hq.pos);scene.add(hq.mesh);VS.objects.push(hq.mesh);
+      hq.bar=api.makeHPBar(7,TEAM_CSS[team]);hq.bar.position.y=10.8;hq.mesh.add(hq.bar);api.updHPBar(hq.bar,1);
+      VS.hq[team]=hq;VS.solids.push({x:hq.pos.x,z:hq.pos.z,r:4.6,bottom:-1,top:8,cover:true});
+      const bp=world(team,-15,-84);
+      const bank={vsType:'bank',team,pos:new THREE.Vector3(bp.x,0,bp.z),radius:3,hitH:1.8,hp:R.bankHp,maxHp:R.bankHp,dead:false,aimBias:-.5,kind:'bank'};
+      bank.mesh=makeBankMesh(team);bank.mesh.position.copy(bank.pos);bank.mesh.rotation.y=team==='blue'?0:Math.PI;scene.add(bank.mesh);VS.objects.push(bank.mesh);
+      bank.bar=api.makeHPBar(4,'#ffd34d');bank.bar.position.y=5.4;bank.mesh.add(bank.bar);api.updHPBar(bank.bar,1);
+      VS.bank[team]=bank;VS.solids.push({x:bank.pos.x,z:bank.pos.z,r:3,bottom:-1,top:5,cover:true});
+      const sp=world(team,0,-74),pad=new THREE.Mesh(new THREE.CylinderGeometry(4,4,.2,24),new THREE.MeshLambertMaterial({color:0x3b4552}));
+      pad.position.set(sp.x,.1,sp.z);pad.receiveShadow=true;scene.add(pad);VS.objects.push(pad);
+      const padRing=new THREE.Mesh(new THREE.TorusGeometry(3.4,.14,6,32),new THREE.MeshBasicMaterial({color:TEAM_COLOR[team]}));padRing.rotation.x=Math.PI/2;padRing.position.set(sp.x,.3,sp.z);scene.add(padRing);VS.objects.push(padRing);
+    }
+    api.fortress.solids.push(...VS.solids);
+  }
+  function makeHQMesh(team){
+    const grp=new THREE.Group(),metal=new THREE.MeshLambertMaterial({color:0x7c8ea3}),dark=new THREE.MeshLambertMaterial({color:0x3a4350});
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(6.2,6.8,.8,16),dark);base.position.y=.4;base.receiveShadow=true;grp.add(base);
+    const core=new THREE.Mesh(new THREE.CylinderGeometry(3.1,4.2,6,10),metal);core.position.y=3.8;core.castShadow=true;grp.add(core);
+    const band=new THREE.Mesh(new THREE.CylinderGeometry(4.25,4.25,.7,10),new THREE.MeshBasicMaterial({color:TEAM_COLOR[team]}));band.position.y=2.2;grp.add(band);
+    const dome=new THREE.Mesh(new THREE.SphereGeometry(3.1,14,10,0,TAU,0,Math.PI/2),new THREE.MeshLambertMaterial({color:TEAM_COLOR[team],emissive:TEAM_COLOR[team],emissiveIntensity:.35,transparent:true,opacity:.85}));dome.position.y=6.8;grp.add(dome);
+    const gun=new THREE.Group(),barrel=new THREE.Mesh(new THREE.BoxGeometry(.32,.32,2.4),dark);barrel.position.z=1.2;gun.add(barrel);gun.position.y=8.6;grp.add(gun);grp.userData.gun=gun;
+    const beacon=new THREE.PointLight(TEAM_COLOR[team],1.3,34);beacon.position.y=10;grp.add(beacon);
+    const flagPole=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,5,5),metal);flagPole.position.set(4.6,3.3,0);grp.add(flagPole);
+    const flag=new THREE.Mesh(new THREE.PlaneGeometry(2.2,1.3),new THREE.MeshBasicMaterial({color:TEAM_COLOR[team],side:THREE.DoubleSide}));flag.position.set(5.75,5.1,0);grp.add(flag);
+    return grp;
+  }
+  function makeBankMesh(team){
+    const grp=new THREE.Group();
+    const body=new THREE.Mesh(new THREE.BoxGeometry(5,3,4.2),new THREE.MeshLambertMaterial({color:0x8d8a7a}));body.position.y=1.5;body.castShadow=true;grp.add(body);
+    const roof=new THREE.Mesh(new THREE.BoxGeometry(5.6,.4,4.8),new THREE.MeshLambertMaterial({color:0x5b4c34}));roof.position.y=3.2;grp.add(roof);
+    const stripe=new THREE.Mesh(new THREE.BoxGeometry(5.05,.36,4.25),new THREE.MeshBasicMaterial({color:TEAM_COLOR[team]}));stripe.position.y=2.6;grp.add(stripe);
+    const coin=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,.2,20),new THREE.MeshLambertMaterial({color:0xffc83a,emissive:0x664400}));coin.rotation.x=Math.PI/2;coin.position.set(0,1.7,2.15);grp.add(coin);
+    const bars=new THREE.Group();grp.add(bars);grp.userData.bars=bars;
+    for(let i=0;i<5;i++){const b=new THREE.Mesh(new THREE.BoxGeometry(.9,.32,.45),new THREE.MeshLambertMaterial({color:0xffd34d,emissive:0x553300}));b.position.set(-1.8+i*.9,3.6,0);bars.add(b);}
+    return grp;
+  }
+  function syncBankMesh(team){
+    const t=VS.teams[team],bank=VS.bank[team];
+    bank.mesh.userData.bars.children.forEach((b,i)=>{b.visible=i<t.bank;});
+    bank.mesh.visible=!(t.bankDown>0);bank.bar.visible=bank.mesh.visible;
+  }
+  function removeArena(){
+    for(const o of VS.objects){scene.remove(o);o.traverse?.(n=>{if(n.isMesh&&n.geometry&&n.geometry!==ringGeo)n.geometry.dispose?.();});}
+    VS.objects=[];
+    const set=new Set(VS.solids);for(let i=api.fortress.solids.length-1;i>=0;i--)if(set.has(api.fortress.solids[i]))api.fortress.solids.splice(i,1);
+    VS.solids=[];
+  }
+  // 隐藏原战场（地形、城墙、虫巢都在 900 米外的雾里，隐藏后省下绘制）；天空跟到场地中心。
+  function hideMainWorld(){
+    const keep=new Set(api.keepObjects());
+    VS.hidden=scene.children.filter(o=>o.visible&&!o.isLight&&!keep.has(o)&&o.name!=='versus-arena');
+    for(const o of VS.hidden)o.visible=false;
+    VS.sky=api.skyObjects();for(const o of VS.sky)o.position.z+=AZ;
+    VS.savedWorld={...api.WORLD};Object.assign(api.WORLD,{minX:-ARENA.halfX-2,maxX:ARENA.halfX+2,minZ:AZ-ARENA.halfZ-2,maxZ:AZ+ARENA.halfZ+2});
+  }
+  function restoreMainWorld(){
+    for(const o of VS.hidden)o.visible=true;VS.hidden=[];
+    for(const o of VS.sky)o.position.z-=AZ;VS.sky=[];
+    if(VS.savedWorld)Object.assign(api.WORLD,VS.savedWorld);VS.savedWorld=null;
+  }
+
+  /* ================= 对局 ================= */
+  function freshTeam(team){
+    return {team,gold:R.startGold,bank:1,bankDown:0,incomeT:0,lane:'left',altNext:'left',cd:{},ai:null,aiState:null,surrendered:false,
+      stats:{sent:0,spent:0,earned:0,kills:0,heroKills:0,built:0,lostBuildings:0,heroDeaths:0,units:0}};
+  }
+  function start(opts){
+    if(VS.active)stop(true);
+    VS.active=true;VS.role=opts.role||'local';VS.mode=opts.mode||'ai';VS.sim=!!opts.sim;VS.difficulty=opts.difficulty||'normal';
+    VS.time=0;VS.over=false;VS.result=null;VS.overtime=null;VS.flags={};VS.units=[];VS.nextId=1;VS.matchId=opts.matchId||((VS.matchId||0)+1);
+    VS.localTeam=opts.localTeam||'blue';VS.teams={blue:freshTeam('blue'),red:freshTeam('red')};VS.local=api.getPlayer();
+    for(const team of TEAMS){const ai=opts.ai?.[team];if(ai)setAI(team,ai);}
+    hideMainWorld();buildArena();
+    for(const team of TEAMS)syncBankMesh(team);
+    const list=humans();
+    for(const h of list){setupHero(h,h.team||(h.slot===0?'blue':'red'));placeHero(h,true);}
+    VS.panel.open=false;VS.panel.tab='units';
+    api.onStart?.(VS);
+    if(!VS.sim)api.showMsg('⚔ 虫潮对战开始！准备 20 秒：先升级银行、造防御，开战后 R 出兵',4);
+    return VS;
+  }
+  function setAI(team,difficulty){
+    const t=VS.teams[team];t.ai=VS_AI[difficulty]?difficulty:'normal';
+    t.aiState={next:1+Math.random(),queue:[],sendT:0,lastLane:Math.random()<.5?'left':'right',bought:new Set(),built:0,feint:0};
+  }
+  function setupHero(h,team){
+    h.team=team;h.vsType='hero';h.hitH=1.1;h.aimBias=.6;h.kind='hero';h.vsDeaths=h.vsDeaths||0;h.grenadeCd=0;
+    if(!Array.isArray(h.vsWeapons))h.vsWeapons=[...api.CLASSES[h.cls||'gunner'].weapons];
+    if(h.bar)api.recolorBar?.(h,team);
+  }
+  function placeHero(h,initial=false){
+    const p=world(h.team,8,-79); // 点对称：两边英雄都在各自核心右前方
+    h.pos.set(p.x,api.groundY(p.x,p.z),p.z);h.vy=0;h.onGround=true;
+    if(h.mesh){h.mesh.position.copy(h.pos);h.mesh.visible=true;addRing(h.mesh,h.team,1.25);}
+    h.yaw=h.team==='blue'?0:Math.PI;
+    if(api.recolorBar)api.recolorBar(h,h.team);
+    if(initial)h.vsDeaths=0;
+    if(h===VS.local)api.faceTeam(h.team);
+  }
+  function stop(quiet=false){
+    if(!VS.active)return;
+    for(const u of VS.units)disposeUnit(u);VS.units=[];
+    for(const [,g] of VS.guestUnits)disposeUnit(g);VS.guestUnits.clear();
+    removeArena();restoreMainWorld();
+    for(const h of humans()){if(h.mesh){const ring=h.mesh.children.find(c=>c.userData.vsRing);if(ring)h.mesh.remove(ring);}delete h.team;delete h.vsType;}
+    VS.active=false;VS.over=false;VS.panel.open=false;
+    api.onStop?.(quiet);
+  }
+  function disposeUnit(u){if(u.mesh){api.visuals.release?.(u.mesh);scene.remove(u.mesh);}}
+  const tier=id=>TIER_TIME[UNIT_BY_ID[id].tier];
+  function incomeOf(team){
+    const t=VS.teams[team];
+    const base=t.bankDown>0?R.bankTrickle:R.income[t.bank-1];
+    return Math.round(base*(VS.time>=R.lateBoost?R.lateMul:1));
+  }
+  function popOf(team){let n=0;for(const u of VS.units)if(!u.dead&&u.team===team)n+=u.pop;return n;}
+  function sendReason(team,id){
+    const t=VS.teams[team],def=UNIT_BY_ID[id];
+    if(!def)return '没有这个兵种';
+    if(VS.over)return '对局已结束';
+    if(VS.time<R.prep)return '准备阶段结束后才能出兵（'+Math.ceil(R.prep-VS.time)+' 秒）';
+    if(VS.time<tier(id))return def.name+' '+fmtTime(tier(id))+' 解锁';
+    if((t.cd[id]||0)>0)return def.name+' 冷却中（'+Math.ceil(t.cd[id])+' 秒）';
+    if(t.gold<def.price)return '金币不足（还差 '+Math.ceil(def.price-t.gold)+'）';
+    const need=def.group.reduce((s,[k,n])=>s+VS_PROFILES[k].pop*n,0);
+    if(popOf(team)+need>R.popCap)return '在场兵力已满（'+popOf(team)+'/'+R.popCap+'）';
+    if(id==='king'&&VS.units.some(u=>!u.dead&&u.team===team&&u.prof==='king'))return '虫王已经在场';
+    return '';
+  }
+  function sideFor(team,lane){return (lane==='left'?1:-1)*dirOf(team);} // 左/右按各自面朝对方的视角
+  function send(team,id,lane){
+    const reason=sendReason(team,id);if(reason)return reason;
+    const t=VS.teams[team],def=UNIT_BY_ID[id];
+    let choice=lane||t.lane;if(choice==='alt'){choice=t.altNext;t.altNext=choice==='left'?'right':'left';}
+    t.gold-=def.price;t.stats.spent+=def.price;t.cd[id]=def.cd;
+    const side=sideFor(team,choice),count=def.group.reduce((s,[,n])=>s+n,0),value=def.price/count;
+    let i=0;
+    for(const [key,n] of def.group)for(let k=0;k<n;k++){spawnUnit(team,key,side,value,i++);}
+    t.stats.sent+=count;if(t.stats.firstSend==null)t.stats.firstSend=Math.round(VS.time);t.stats.byUnit=t.stats.byUnit||{};t.stats.byUnit[id]=(t.stats.byUnit[id]||0)+1;
+    if(team===VS.localTeam&&!VS.sim){api.AudioSys.sfx('build');api.showMsg('已派出 '+def.name+' → '+(choice==='left'?'左路':'右路'),1.4);}
+    if(id==='king'&&!VS.sim){api.AudioSys.sfx('wave');api.showMsg(team===VS.localTeam?'👑 虫王出动！':'⚠ 敌方放出了虫王！',2.6);}
+    return '';
+  }
+  function lanePath(team,side){return PATH.map(([x,z])=>world(team,side*x*dirOf(team),z));}
+  function makeUnitMesh(prof,team){
+    const p=VS_PROFILES[prof];let mesh,ring=1;
+    if(p.kind==='bug'){mesh=api.visuals.bug(p.scale,'mob',!!p.fly,p.species);ring=1.1*p.scale;}
+    else if(p.kind==='boss'){mesh=api.visuals.bug(p.scale,'boss',false,p.species);ring=3.2;}
+    else if(p.kind==='soldier'){mesh=api.makeSoldier(SOLDIER_COLOR[team][p.role]);ring=.95;}
+    else {mesh=api.makeVehicleMesh('jeep');ring=2.6;}
+    addRing(mesh,team,ring);
+    return mesh;
+  }
+  function spawnUnit(team,prof,side,value,index=0,at=null){
+    const p=VS_PROFILES[prof],mesh=makeUnitMesh(prof,team),fz=frenzy(); // 7:00 起虫潮狂暴：新派出的单位血量、伤害提高
+    const path=lanePath(team,side),start=at||world(team,(index%3-1)*2.2,-74+Math.floor(index/3)*1.8);
+    const radius=p.kind==='jeep'?2:p.kind==='soldier'?.6:.9*(p.scale||1);
+    const u={id:VS.nextId++,vsType:'unit',team,prof,kind:p.kind==='boss'?'boss':p.kind,mesh,hp:p.hp*fz,maxHp:p.hp*fz,dmg:p.dmg*fz,rate:p.rate,range:p.range||0,speed:p.speed,
+      radius,hitH:p.kind==='jeep'?1.2:p.kind==='soldier'?1.1:p.kind==='boss'?2.4:.7*(p.scale||1),fly:!!p.fly,pop:p.pop,value,pellets:p.pellets||0,heal:p.heal||0,healR:p.healR||0,
+      blast:p.blast||null,bldMul:p.bld||1,armor:p.armor||1,cd:rand(0,.4),retarget:0,target:null,side,path,pathIdx:1,dead:false,anim:rand(0,10),stuckT:0,yaw:team==='blue'?0:Math.PI,
+      chargeCd:6,summonCd:10,charge:0,aimBias:0,healT:0,atkAnim:0};
+    const y=u.fly?flyY(start.x,start.z):api.groundY(start.x,start.z);
+    mesh.position.set(start.x,y,start.z);mesh.rotation.y=u.yaw;
+    u.bar=api.makeHPBar(p.kind==='boss'?5:p.kind==='jeep'?3.4:1.6,TEAM_CSS[team]);
+    u.bar.position.y=p.kind==='boss'?7.5:p.kind==='jeep'?3.4:p.kind==='soldier'?2.6:(u.fly?2.2:1.6)*(p.scale||1)+.4;
+    if(mesh.userData.worlds){u.bar.scale.divideScalar(mesh.scale.x);u.bar.position.y=mesh.userData.visualHeight+.5/mesh.scale.y;}
+    mesh.add(u.bar);api.updHPBar(u.bar,1);
+    scene.add(mesh);VS.units.push(u);VS.teams[team].stats.units++;
+    return u;
+  }
+  function flyY(x,z){return Math.max(api.groundY(x,z),api.fortress.topAt(x,z))+4.5;}
+  function upgradeBank(team){
+    const t=VS.teams[team];
+    if(VS.over)return '对局已结束';
+    if(t.bankDown>0)return '银行正在重建（'+Math.ceil(t.bankDown)+' 秒）';
+    if(t.bank>=5)return '银行已满级';
+    const cost=R.bankCost[t.bank];if(t.gold<cost)return '金币不足（还差 '+Math.ceil(cost-t.gold)+'）';
+    t.gold-=cost;t.stats.spent+=cost;t.bank++;
+    const bank=VS.bank[team];bank.maxHp=R.bankHp+R.bankHpStep*(t.bank-1);bank.hp=Math.min(bank.maxHp,bank.hp+R.bankHpStep);api.updHPBar(bank.bar,bank.hp/bank.maxHp);
+    syncBankMesh(team);
+    if(team===VS.localTeam&&!VS.sim){api.AudioSys.sfx('build');api.showMsg('🏦 银行升到 Lv'+t.bank+'：每 10 秒 +'+incomeOf(team),1.8);}
+    return '';
+  }
+  function setLane(team,lane){if(['left','right','alt'].includes(lane))VS.teams[team].lane=lane;}
+  function cycleLane(team){const order=['left','right','alt'],t=VS.teams[team];setLane(team,order[(order.indexOf(t.lane)+1)%3]);return t.lane;}
+  function buyWeapon(h,id){
+    const w=api.WEAPONS[id];if(!w)return '没有这把武器';
+    if(h.vsWeapons.includes(id))return 'owned';
+    const t=VS.teams[h.team];if(t.gold<w.price)return '金币不足（还差 '+Math.ceil(w.price-t.gold)+'）';
+    t.gold-=w.price;t.stats.spent+=w.price;h.vsWeapons.push(id);
+    return '';
+  }
+  function surrender(team){
+    if(VS.over)return '';
+    if(VS.time<R.surrenderAfter)return fmtTime(R.surrenderAfter)+' 后才能投降';
+    VS.teams[team].surrendered=true;endMatch(other(team),TEAM_NAME[team]+'投降');return '';
+  }
+  /* ---------- 建造 ---------- */
+  function buildingCount(team){return api.buildings.filter(b=>!b.dead&&b.team===team).length;}
+  function zoneReason(team,kind,x,z){
+    if(!VS_BUILD_KINDS.includes(kind))return '对战模式不能建这个设施';
+    if(buildingCount(team)>=R.buildLimit)return '本方设施已达 '+R.buildLimit+' 座';
+    const r=rel(team,z);
+    if(r>-ARENA.mid)return '只能建在本方半场、离中线 '+ARENA.mid+' 米以外';
+    if(Math.abs(x)>ARENA.halfX-3||r<-ARENA.halfZ+3)return '超出场地边界';
+    const hq=VS.hq[team].pos,bank=VS.bank[team].pos,pad=world(team,0,-74);
+    if(Math.hypot(x-hq.x,z-hq.z)<8.5)return '离基地核心太近';
+    if(Math.hypot(x-bank.x,z-bank.z)<5.5)return '离银行太近';
+    if(Math.hypot(x-pad.x,z-pad.z)<6)return '不能堵住出兵口';
+    for(const u of VS.units)if(!u.dead&&!u.fly&&Math.hypot(x-u.mesh.position.x,z-u.mesh.position.z)<u.radius+2)return '有单位挡着';
+    return '';
+  }
+  function canPlace(team,kind,x,z,yaw){
+    const reason=zoneReason(team,kind,x,z);if(reason)return reason;
+    const pts=kind==='wall'?[-2.4,0,2.4].map(o=>[x+Math.cos(yaw)*o,z-Math.sin(yaw)*o]):[[x,z]];
+    const r=kind==='wall'?.75:1.3;
+    for(const [px,pz] of pts){if(api.collideWalls(px,pz,r))return '和墙体、岩石或其他设施重叠';for(const h of humans())if(!h.dead&&Math.hypot(px-h.pos.x,pz-h.pos.z)<r+.9)return '会压到英雄';}
+    return '';
+  }
+  function build(team,kind,x,z,yaw){
+    if(VS.over)return '对局已结束';
+    const reason=canPlace(team,kind,x,z,yaw);if(reason)return reason;
+    const cfg=api.BUILDINGS[kind],t=VS.teams[team];if(t.gold<cfg.price)return '金币不足（需要 '+cfg.price+'）';
+    t.gold-=cfg.price;t.stats.spent+=cfg.price;t.stats.built++;
+    const bd=api.placeBuilding(kind,x,z,yaw);markBuilding(bd,team,true);
+    return '';
+  }
+  function markBuilding(bd,team,fresh=false){
+    if(fresh){bd.maxHp=Math.round(bd.maxHp*R.bldHp);bd.hp=bd.maxHp;if(bd.dmg)bd.dmg*=R.bldDmg;}
+    bd.team=team;bd.vsType='building';bd.hitH=bd.isWall?.9:1.4;bd.aimBias=-.6;
+    addRing(bd.mesh,team,bd.isWall?3.2:bd.radius+.6);
+    if(bd.bar)api.recolorBuildingBar?.(bd,TEAM_CSS[team]);
+  }
+  function demolish(team,bd){
+    if(!bd||bd.dead||bd.team!==team)return '只能拆除本方设施';
+    const refund=Math.round(api.BUILDINGS[bd.kind].price*.5);VS.teams[team].gold+=refund;
+    removeBuilding(bd,false);return '';
+  }
+  function removeBuilding(bd,destroyed){
+    bd.dead=true;api.scene.remove(bd.mesh);const i=api.buildings.indexOf(bd);if(i>=0)api.buildings.splice(i,1);
+    api.spawnParticles(bd.mesh.position.clone().add(new THREE.Vector3(0,1.4,0)),destroyed?0x999999:0xbfc6cc,destroyed?14:10,destroyed?7:5,.7,1.4);
+    if(destroyed){api.AudioSys.sfx('boom');VS.teams[bd.team].stats.lostBuildings++;}
+  }
+
+  /* ================= 目标、伤害 ================= */
+  const posOf=t=>t.vsType==='hero'?t.pos:t.vsType==='unit'||t.vsType==='building'?t.mesh.position:t.pos;
+  function alive(t){
+    if(!t||t.dead)return false;
+    if(t.vsType==='hero')return !t.disconnected&&!!t.mesh;
+    if(t.vsType==='bank')return !(VS.teams[t.team].bankDown>0);
+    if(t.vsType==='building')return api.buildings.includes(t);
+    return true;
+  }
+  function hostiles(team,{units=true,heroes=true,structures=true}={}){
+    const out=[];
+    if(units)for(const u of VS.units)if(!u.dead&&u.team!==team)out.push(u);
+    if(heroes)for(const h of humans())if(h.team&&h.team!==team&&alive(h))out.push(h);
+    if(structures){for(const b of api.buildings)if(!b.dead&&b.team&&b.team!==team)out.push(b);const o=other(team);out.push(VS.hq[o]);if(alive(VS.bank[o]))out.push(VS.bank[o]);}
+    return out;
+  }
+  function aimTargets(team){return hostiles(team);}
+  function centerOf(t,out){const p=posOf(t);return out.set(p.x,(t.vsType==='unit'&&t.fly?t.mesh.position.y:p.y)+(t.hitH||1),p.z);}
+  function hitRadius(t){return t.vsType==='hero'?.65:t.vsType==='building'?(t.isWall?1.1:t.radius):t.radius+.3;}
+  const _c=new THREE.Vector3();
+  function segmentTargets(a,b,team,hitSet){
+    const out=[];
+    for(const t of hostiles(team)){
+      if(hitSet&&hitSet.has(t))continue;
+      if(t.vsType==='building'&&t.isWall)continue; // 墙由 firstWallHit 结算
+      const tt=api.segmentHit(a,b,centerOf(t,_c),hitRadius(t)+.25);
+      if(tt!==null)out.push({m:t,t:tt});
+    }
+    return out.sort((x,y)=>x.t-y.t);
+  }
+  function beamHits(a,b,team){return segmentTargets(a,b,team,null);}
+  const isStructure=t=>t.vsType==='building'||t.vsType==='hq'||t.vsType==='bank';
+  // 子弹逐帧扫掠：命中最近的敌方目标；掩体/墙先挡住的不算。
+  function bulletStep(b,previous,p,cover,wallHit,sceneryCover){
+    for(const {m,t} of segmentTargets(previous,p,b.team,b.hitSet)){
+      if(t>=cover)break;
+      if(!b.explode){
+        damage(m,b.dmg*(isStructure(m)?b.bld||1:1),b.team,b.src||'unit');
+        if(b.burn&&m.vsType==='unit'&&!m.dead){m.burnT=2.5;m.burnDps=Math.max(m.burnDps||0,b.burn);}
+        if(!b.flame)api.spawnParticles(p,0xffe28a,3,3,.25);
+        if(b.pierce>0){b.pierce--;(b.hitSet||(b.hitSet=new Set())).add(m);continue;}
+      }
+      p.lerpVectors(previous,p,t);return true;
+    }
+    if(cover<1){
+      if(wallHit&&wallHit.t<=sceneryCover&&wallHit.wall.team&&wallHit.wall.team!==b.team&&!b.explode)damage(wallHit.wall,b.dmg*(b.bld||1),b.team,b.src||'unit');
+      p.lerpVectors(previous,p,cover);return true;
+    }
+    return false;
+  }
+  function explodeAt(pos,radius,dmg,team,opts={}){
+    for(const t of hostiles(team)){
+      if(t.vsType==='unit'&&t.fly&&!opts.air)continue;
+      const p=posOf(t),r=t.vsType==='hero'?1:t.vsType==='building'?2:t.radius;
+      if(Math.hypot(p.x-pos.x,p.z-pos.z)<radius+r&&Math.abs((t.vsType==='unit'?t.mesh.position.y:p.y)-pos.y)<radius+3)
+        damage(t,dmg*((t.vsType==='building'||t.vsType==='hq'||t.vsType==='bank')?(opts.bld||1):1),team,opts.src||'unit');
+    }
+  }
+  function damage(t,d,team,src='unit'){
+    if(!alive(t)||t.team===team||VS.over||!(d>0))return;
+    if(t.vsType==='unit'){
+      t.hp-=d*(t.armor||1);api.updHPBar(t.bar,t.hp/t.maxHp);if(t.hp<=0)killUnit(t,team,src);
+    }else if(t.vsType==='hero'){
+      heroHit(t,d*R.heroDmgMul,team);
+    }else{
+      if(src==='hero'&&!(t.vsType==='building'&&t.isWall))d*=R.heroVsBuilding;
+      d*=corrosion();
+      t.hp-=d;api.updHPBar(t.bar,Math.max(0,t.hp/t.maxHp));
+      if(t.vsType==='building'){if(t.hp<=0)removeBuilding(t,true);}
+      else if(t.vsType==='bank'){if(t.hp<=0)bankDestroyed(t.team);}
+      else if(t.vsType==='hq'){
+        if(VS.overtime&&!VS.overtime.loser){VS.overtime.loser=t.team;endMatch(other(t.team),'加时赛：'+TEAM_NAME[t.team]+'核心先掉血');return;}
+        if(t.team===VS.localTeam&&!VS.sim&&!(VS.flags.hqAlarm>0)){api.showMsg('⚠ 我方基地核心正在受袭！',2);VS.flags.hqAlarm=6;}
+        if(t.hp<=0){t.hp=0;t.dead=true;endMatch(other(t.team),TEAM_NAME[t.team]+'基地核心被摧毁');}
+      }
+    }
+  }
+  // 6:00 起虫潮腐蚀装甲：建筑、银行、核心受到的伤害 ×1.5，9:00 起 ×2。
+  function corrosion(){let m=1;for(const [at,k] of R.corrode)if(VS.time>=at)m=k;return m;}
+  function frenzy(){let m=1;for(const [at,k] of R.frenzy)if(VS.time>=at)m=k;return m;}
+  function heroHit(h,d,team){
+    if(h.dead||h.invulnerable>0)return;
+    VS.lastHit={team,at:VS.time};
+    if(h===VS.local&&!VS.sim)api.withHuman(h,()=>api.playerDamage(d)); // 本机玩家走原受伤流程（红屏、震屏）
+    else{
+      d*=api.CLASSES[h.cls||'gunner'].armor||1;
+      if(h.shield>0){const ab=Math.min(h.shield,d);h.shield-=ab;d-=ab;}
+      h.hp-=d;if(h.bar)api.updHPBar(h.bar,Math.max(0,h.hp/h.maxHp));
+      if(h.hp<=0){h.hp=0;h.dead=true;}
+    }
+    if(h.dead&&!h.vsDown)heroDown(h,team);
+  }
+  function heroDown(h,killer){
+    h.vsDown=true;h.vsDeaths=(h.vsDeaths||0)+1;
+    h.respawnT=Math.min(R.respawnMax,R.respawnBase+R.respawnStep*(h.vsDeaths-1));
+    if(h.mesh)h.mesh.visible=false;if(h.inVehicle)h.inVehicle=null;
+    VS.teams[h.team].stats.heroDeaths++;
+    if(killer&&killer!==h.team){const kt=VS.teams[killer];kt.gold+=R.heroBounty;kt.stats.earned+=R.heroBounty;kt.stats.heroKills++;}
+    if(!VS.sim){
+      if(h.team===VS.localTeam)api.showMsg('阵亡！'+Math.ceil(h.respawnT)+' 秒后在基地复活',2.4);
+      else if(killer===VS.localTeam)api.showMsg('击倒敌方英雄 +'+R.heroBounty,1.6);
+    }
+  }
+  function respawned(h){h.vsDown=false;placeHero(h);}
+  function killUnit(u,killer,src='unit'){
+    if(u.dead)return;u.dead=true;
+    { // 平衡统计：被谁打死、走到了哪（rel>0=进入对方半场）
+      const st=VS.teams[u.team].stats,by=st.deathsBy||(st.deathsBy={}),r=rel(u.team,u.mesh.position.z);by[src]=(by[src]||0)+1;
+      const zone=r<-25?'home':r<25?'mid':r<70?'enemy':'base';const zs=st.deathZone||(st.deathZone={});zs[zone]=(zs[zone]||0)+1;
+      if(src==='hero'&&killer){const ks=VS.teams[killer].stats;ks.heroUnitKills=(ks.heroUnitKills||0)+1;}
+    }
+    if(killer&&killer!==u.team){const kt=VS.teams[killer],b=Math.round(u.value*R.bounty);kt.gold+=b;kt.stats.earned+=b;kt.stats.kills++;}
+    const p=u.mesh.position.clone();p.y+=u.hitH;
+    api.spawnParticles(p,u.kind==='soldier'||u.kind==='jeep'?0xff8866:0x88ff44,u.kind==='boss'?26:8,6,.5,u.kind==='boss'?2:1.1);
+    if(u.blast){api.spawnParticles(p,0xff7722,14,8,.6,1.6);api.AudioSys.sfx('boom');explodeAt(u.mesh.position,u.blast.r,u.blast.dmg,u.team,{bld:u.blast.bld});}
+    if(u.kind==='boss'||u.kind==='jeep')api.AudioSys.sfx('boom');
+    if(u.kind==='boss'&&!VS.sim)api.showMsg(u.team===VS.localTeam?'我方虫王被击倒':'👑 敌方虫王被击倒！',2);
+    if(!(u.kind==='bug'||u.kind==='boss')||!api.visuals.death(u.mesh))disposeUnit(u); // 保留 mesh 引用：同一帧里其他单位可能还在读它的位置
+  }
+  function bankDestroyed(team){
+    const t=VS.teams[team],bank=VS.bank[team];
+    t.bankDown=R.bankDown;bank.hp=0; // 只停产，不掉级
+    api.spawnParticles(bank.pos.clone().add(new THREE.Vector3(0,2,0)),0xffd34d,20,8,.8,1.5);api.AudioSys.sfx('boom');
+    syncBankMesh(team);
+    if(!VS.sim)api.showMsg(team===VS.localTeam?'💥 我方银行被摧毁！停产 '+R.bankDown+' 秒后自动重建':'💰 打掉了敌方银行：对方停产 '+R.bankDown+' 秒',2.6);
+  }
+
+  /* ================= 主循环（房主/单机） ================= */
+  function update(dt){
+    if(!VS.active||VS.over)return;
+    VS.time+=dt;VS.frame=(VS.frame||0)+1;const flip=VS.frame%2===1,order=flip?['red','blue']:TEAMS; // 每帧交替先后，避免固定一方先结算
+    VS.flags.hqAlarm=Math.max(0,(VS.flags.hqAlarm||0)-dt);
+    announceTiers();
+    for(const team of order){
+      const t=VS.teams[team];
+      for(const k in t.cd)t.cd[k]=Math.max(0,t.cd[k]-dt);
+      t.incomeT+=dt;
+      if(t.incomeT>=R.incomeEvery){t.incomeT-=R.incomeEvery;const inc=incomeOf(team);t.gold+=inc;t.stats.earned+=inc;if(team===VS.localTeam)VS.flags.incomePop=1;}
+      if(t.bankDown>0){t.bankDown-=dt;if(t.bankDown<=0){t.bankDown=0;const bank=VS.bank[team];bank.maxHp=R.bankHp+R.bankHpStep*(t.bank-1);bank.hp=bank.maxHp*.3;api.updHPBar(bank.bar,.3);syncBankMesh(team);
+        if(!VS.sim&&team===VS.localTeam)api.showMsg('🏦 银行重建完成，恢复生产',1.6);}}
+      if(t.ai)aiThink(team,dt);
+    }
+    for(const h of humans()){
+      if(!h.team)continue;
+      h.grenadeCd=Math.max(0,(h.grenadeCd||0)-dt);
+      if(!h.dead&&h.hp<h.maxHp){const hq=VS.hq[h.team].pos;if(Math.hypot(h.pos.x-hq.x,h.pos.z-hq.z)<R.baseHealRange){h.hp=Math.min(h.maxHp,h.hp+R.baseHeal*dt);if(h.bar)api.updHPBar(h.bar,h.hp/h.maxHp);}}
+    }
+    if(flip){for(let i=VS.units.length-1;i>=0;i--){const u=VS.units[i];if(!u.dead)updUnit(u,dt);}}else for(const u of VS.units)if(!u.dead)updUnit(u,dt);
+    for(let i=VS.units.length-1;i>=0;i--)if(VS.units[i].dead)VS.units.splice(i,1);
+    updTurrets(dt);
+    updSurge();
+    updOvertime(dt);
+    if(!VS.over&&VS.time>=R.limit&&!VS.overtime)timeUp();
+  }
+  function announceTiers(){
+    if(VS.sim)return;
+    for(const [key,at,text] of [['prep',R.prep,'⚔ 开战！R 打开出兵面板派兵'],['t2',R.tier2,'⬆ 二级兵种解锁：甲壳虫、飞虫、炎爆虫、医疗小队、突击战车'],['t3',R.tier3,'👑 虫王解锁（3000 金）'],['corrode1',R.corrode[0][0],'☣ 虫潮狂暴：新派出的单位血量、伤害 +25%，建筑受到伤害 +50%'],['late',R.lateBoost,'💰 进入后期：收入 +50%，虫潮来袭'],['corrode2',R.corrode[1][0],'☣ 虫潮狂暴加剧：新单位 +50%，建筑受到伤害翻倍']])
+      if(!VS.flags[key]&&VS.time>=at){VS.flags[key]=true;api.AudioSys.sfx('wave');api.showMsg(text,3);}
+  }
+  function timeUp(){
+    const a=VS.hq.blue.hp/VS.hq.blue.maxHp,b=VS.hq.red.hp/VS.hq.red.maxHp;
+    if(Math.abs(a-b)>=.05){endMatch(a>b?'blue':'red','时间到：核心剩余血量 '+Math.round(a*100)+'% 对 '+Math.round(b*100)+'%');return;}
+    VS.overtime={start:VS.time,waveT:0,loser:null};
+    if(!VS.sim){api.AudioSys.sfx('wave');api.showMsg('⏱ 时间到、核心血量接近：进入 2 分钟「虫潮爆发」加时，先掉核心血者输',4);}
+  }
+  // 6:00 起「虫潮来袭」：双方出兵口每 30 秒刷出一波免费虫群，一波比一波大，逼出胜负。
+  function updSurge(){
+    if(VS.overtime||VS.time<R.lateBoost)return;
+    const k=Math.floor((VS.time-R.lateBoost)/R.surgeEvery);if((VS.flags.surge??-1)>=k)return;VS.flags.surge=k;
+    const lane=k%2?'right':'left',small=Math.min(20,8+2*k),heavy=k>=2?Math.min(6,1+Math.floor(k/2)):0;
+    for(const team of TEAMS){const side=sideFor(team,lane);let i=0;for(let n=0;n<small;n++)spawnUnit(team,'bug0',side,25,i++);for(let n=0;n<heavy;n++)spawnUnit(team,'bug2',side,25,i++);}
+    if(!VS.sim&&k===0){api.AudioSys.sfx('wave');api.showMsg('🐛 虫潮来袭！双方出兵口每 30 秒自动涌出一波免费虫群',3.2);}
+  }
+  function updOvertime(dt){
+    const ot=VS.overtime;if(!ot||VS.over)return;
+    ot.waveT-=dt;
+    if(ot.waveT<=0){ot.waveT=R.overtimeWave;const lane=Math.floor((VS.time-ot.start)/R.overtimeWave)%2?'right':'left';
+      for(const team of TEAMS){const side=sideFor(team,lane);for(let i=0;i<6;i++)spawnUnit(team,'bug0',side,25,i);}}
+    if(VS.time>=ot.start+R.overtime)endMatch(null,'加时赛结束，双方核心都没有掉血');
+  }
+  function endMatch(winner,reason){
+    if(VS.over)return;
+    VS.over=true;VS.result={winner,reason,time:VS.time,stats:{blue:{...VS.teams.blue.stats},red:{...VS.teams.red.stats}},bank:{blue:VS.teams.blue.bank,red:VS.teams.red.bank},
+      hq:{blue:Math.max(0,VS.hq.blue.hp/VS.hq.blue.maxHp),red:Math.max(0,VS.hq.red.hp/VS.hq.red.maxHp)},mode:VS.mode,difficulty:VS.difficulty};
+    if(winner){const hq=VS.hq[other(winner)];api.spawnParticles(hq.pos.clone().add(new THREE.Vector3(0,4,0)),0xffaa33,40,12,1.2,2.4);api.AudioSys.sfx('boom');}
+    api.onEnd?.(VS.result);
+  }
+
+  /* ---------- 单位 AI ---------- */
+  function canHit(u,t){
+    if(t.vsType==='unit'&&t.fly&&!u.range&&!u.fly)return false; // 地面近战咬不到飞虫
+    return true;
+  }
+  // 行军中遇到敌方单位边走边打（不停下、不追），英雄和建筑才停下来打；虫王见什么都停下撕。
+  function pickTarget(u){
+    const me=u.mesh.position,aggro=u.range?Math.max(15,u.range*.95):(u.kind==='boss'?18:13);
+    let best=null,bd=Infinity;
+    for(const t of hostiles(u.team,{structures:false})){
+      if(!canHit(u,t))continue;const p=posOf(t),d=Math.hypot(p.x-me.x,p.z-me.z);
+      const limit=t.vsType==='hero'||u.kind==='boss'?aggro:reachOf(u,t);
+      if(d<limit&&d<bd){bd=d;best=t;}
+    }
+    if(best)return best;
+    const reach=u.range?Math.max(12,u.range*.9):11;
+    for(const b of api.buildings){
+      if(b.dead||!b.team||b.team===u.team)continue;if(b.isWall&&u.fly)continue;
+      const d=Math.hypot(b.mesh.position.x-me.x,b.mesh.position.z-me.z)-(b.isWall?2:b.radius);
+      const score=d+(b.isWall?6:0);if(d<reach&&score<bd){bd=score;best=b;}
+    }
+    if(best)return best;
+    if(u.pathIdx>=u.path.length-2||rel(u.team,me.z)>45){
+      const o=other(u.team),bank=VS.bank[o],hq=VS.hq[o];
+      if(alive(bank)){const db=Math.hypot(bank.pos.x-me.x,bank.pos.z-me.z),dh=Math.hypot(hq.pos.x-me.x,hq.pos.z-me.z);if(u.kind==='jeep'||db<dh-4)return bank;}
+      return hq;
+    }
+    return null;
+  }
+  function reachOf(u,t){
+    const r=t.vsType==='hero'?.6:t.vsType==='building'?(t.isWall?1.2:t.radius):t.radius;
+    if(u.range)return u.range+r*.5;
+    return u.radius+r+.9;
+  }
+  function distTo(u,t){
+    const p=posOf(t),me=u.mesh.position;
+    if(t.vsType==='building'&&t.isWall){
+      // 墙按线段距离算，近战贴着墙面就能咬到
+      const yaw=t.rotY||0,ax=Math.cos(yaw),az=-Math.sin(yaw),dx=me.x-p.x,dz=me.z-p.z,along=clamp(dx*ax+dz*az,-2.6,2.6);
+      return Math.hypot(dx-ax*along,dz-az*along);
+    }
+    return Math.hypot(p.x-me.x,p.z-me.z);
+  }
+  function canMove(u,x,z){
+    const m=u.radius+.2;
+    if(x<-ARENA.halfX+m||x>ARENA.halfX-m||z<AZ-ARENA.halfZ+m||z>AZ+ARENA.halfZ-m)return false;
+    if(u.fly)return true;
+    if(api.fortress.blocked(x,z,u.radius,0))return false;
+    for(const b of api.buildings){
+      if(b.dead)continue;
+      if(b.isWall){if(b.team!==u.team&&wallTouches(b,x,z,u.radius))return false;}
+      else if((x-b.mesh.position.x)**2+(z-b.mesh.position.z)**2<(b.radius+u.radius)**2)return false;
+    }
+    return true;
+  }
+  function moveToward(u,goal,dt,mul=1){
+    const p=u.mesh.position,dx=goal.x-p.x,dz=goal.z-p.z,d=Math.hypot(dx,dz);if(d<.05)return 0;
+    const sp=u.speed*mul*(u.slowT>0?.55:1),bx=p.x,bz=p.z;
+    if(u.fly){const k=Math.min(1,sp*dt/d);p.x+=dx*k;p.z+=dz*k;p.x=clamp(p.x,-ARENA.halfX+1,ARENA.halfX-1);p.z=clamp(p.z,AZ-ARENA.halfZ+1,AZ+ARENA.halfZ-1);}
+    else{
+      const step=navStep(u,{x:dx/d,z:dz/d},dt,sp,goal);
+      let nx=step.x,nz=step.z,px=0,pz=0;
+      for(const o of VS.units){if(o===u||o.dead||o.fly)continue;const ox=nx-o.mesh.position.x,oz=nz-o.mesh.position.z,d2=ox*ox+oz*oz,s=(u.radius+o.radius)*.85;
+        if(d2<s*s&&d2>1e-4){const dd=Math.sqrt(d2),push=Math.min(.08,(s-dd)*dt*3);px+=ox/dd*push;pz+=oz/dd*push;}}
+      const pr=Math.hypot(px,pz),cap=sp*dt*.45;if(pr>cap){px*=cap/pr;pz*=cap/pr;}
+      if(canMove(u,nx+px,nz+pz)){nx+=px;nz+=pz;}
+      if(canMove(u,nx,nz)){p.x=nx;p.z=nz;}
+    }
+    const moved=Math.hypot(p.x-bx,p.z-bz);
+    if(moved>.001)u.yaw=Math.atan2(p.x-bx,p.z-bz);
+    return moved;
+  }
+  // 寻路在各自视角里算：红方把坐标绕场地中心转 180° 后调用同一套寻路，再转回来。
+  // 共用寻路的邻格顺序和绕障方向都按世界坐标取，直接用会让两边绕路不对称。
+  function navStep(u,dir,dt,sp,goal){
+    if(u.team==='blue')return monsterStep(u,dir,dt,sp,goal,(x,z)=>canMove(u,x,z));
+    const p=u.mesh.position,proxy=u.navProxy||(u.navProxy={mesh:{position:new THREE.Vector3()}});
+    proxy.mesh.position.set(-p.x,p.y,2*AZ-p.z);
+    const r=monsterStep(proxy,{x:-dir.x,z:-dir.z},dt,sp,goal?{x:-goal.x,z:2*AZ-goal.z}:null,(x,z)=>canMove(u,-x,2*AZ-z));
+    return {x:-r.x,z:2*AZ-r.z};
+  }
+  function face(u,t){const p=posOf(t),me=u.mesh.position;u.yaw=Math.atan2(p.x-me.x,p.z-me.z);}
+  function updUnit(u,dt){
+    const me=u.mesh.position;
+    u.cd-=dt;u.retarget-=dt;u.slowT=Math.max(0,(u.slowT||0)-dt);u.atkAnim=Math.max(0,u.atkAnim-dt);
+    if(u.burnT>0){u.burnT-=dt;u.burnTick=(u.burnTick||0)-dt;if(u.burnTick<=0){u.burnTick=.25;damage(u,(u.burnDps||0)*.25,other(u.team),'hero');if(u.dead)return;}}
+    if(u.target&&!alive(u.target))u.target=null;
+    if(u.retarget<=0||!u.target){u.retarget=.35+Math.random()*.25;u.target=pickTarget(u)||null;}
+    if(u.heal){u.healT-=dt;if(u.healT<=0){u.healT=.5;healAround(u);}}
+    if(u.kind==='boss')bossSkills(u,dt);
+    let moving=false;
+    const t=u.target;
+    const stops=t&&(t.vsType!=='unit'||u.kind==='boss');
+    if(t&&canHit(u,t)&&distTo(u,t)<=reachOf(u,t)){
+      if(stops)face(u,t);else moving=followPath(u,dt)>0;
+      if(u.cd<=0){u.cd=u.rate;attack(u,t);}
+    }else if(t&&stops){
+      const p=posOf(t);moving=moveToward(u,p,dt)>0;
+    }else moving=followPath(u,dt)>0;
+    // 卡住：被敌方墙挡住就改咬墙
+    if(!moving&&!(t&&alive(t)&&distTo(u,t)<=reachOf(u,t))){u.stuckT+=dt;if(u.stuckT>.8){u.stuckT=0;const wall=nearestEnemyWall(u,6);if(wall)u.target=wall;}}else u.stuckT=0;
+    me.y=u.fly?me.y+(flyY(me.x,me.z)+Math.sin(u.anim*.5)*.4-me.y)*Math.min(1,dt*4):api.groundY(me.x,me.z);
+    u.mesh.rotation.y+=Math.atan2(Math.sin(u.yaw-u.mesh.rotation.y),Math.cos(u.yaw-u.mesh.rotation.y))*Math.min(1,dt*10);
+    u.anim+=dt*8;u.moving=moving;
+    animateUnit(u,dt,moving);
+  }
+  function animateUnit(u,dt,moving){
+    if(!u.mesh)return;
+    if(u.kind==='bug'||u.kind==='boss'){api.visuals.animate(u.mesh,dt,u.atkAnim>0?'Attack':'Walk',api.camera);if(u.mesh.userData.legGroup)u.mesh.userData.legGroup.forEach((l,i)=>{l.rotation.x=Math.sin(u.anim+i)*.5;});}
+    else if(u.kind==='soldier'){api.visuals.animate(u.mesh,dt,moving?'Run':'Idle',api.camera);const legs=u.mesh.userData.legs;if(legs)legs.forEach((l,i)=>{l.rotation.x=moving?Math.sin(u.anim*1.25+i*Math.PI)*.7:l.rotation.x*.8;});}
+  }
+  function followPath(u,dt){
+    while(u.pathIdx<u.path.length){const wp=u.path[u.pathIdx],me=u.mesh.position;if(Math.hypot(wp.x-me.x,wp.z-me.z)<4)u.pathIdx++;else break;}
+    if(u.pathIdx>=u.path.length){const hq=VS.hq[other(u.team)];return moveToward(u,hq.pos,dt);}
+    return moveToward(u,u.path[u.pathIdx],dt);
+  }
+  function nearestEnemyWall(u,max){
+    let best=null,bd=max;for(const b of api.buildings){if(b.dead||!b.isWall||!b.team||b.team===u.team)continue;const d=distTo(u,b);if(d<bd){bd=d;best=b;}}return best;
+  }
+  const _from=new THREE.Vector3(),_to=new THREE.Vector3();
+  function attack(u,t){
+    u.atkAnim=.35;
+    const bld=t.vsType==='building'||t.vsType==='hq'||t.vsType==='bank';
+    if(!u.range){ // 近战咬
+      damage(t,u.dmg*(bld?u.bldMul:1),u.team,'unit');
+      if(u.kind==='boss'){api.AudioSys.sfx('cannon');api.spawnParticles(posOf(t).clone().add(new THREE.Vector3(0,1,0)),0xff9a4a,6,5,.4,1.3);}
+      return;
+    }
+    const me=u.mesh.position;
+    _from.set(me.x,me.y+(u.kind==='jeep'?1.9:1.35),me.z);centerOf(t,_to);
+    const dir=_to.clone().sub(_from).normalize();_from.addScaledVector(dir,u.kind==='jeep'?1.6:.55);
+    const color=u.team==='blue'?0x8fd4ff:0xffa08a;
+    api.fireBullet(_from,dir,{dmg:u.dmg,speed:62,range:u.range+6,spread:u.pellets?.11:.035,pellets:u.pellets||0,color,team:u.team,src:'unit',bld:u.bldMul},true,_to.clone());
+    if(Math.random()<.5)api.AudioSys.sfx(u.pellets?'shoot':'mg');
+  }
+  function healAround(u){
+    let best=null,ratio=.999;
+    for(const o of VS.units)if(!o.dead&&o.team===u.team&&o!==u&&o.kind!=='jeep'&&Math.hypot(o.mesh.position.x-u.mesh.position.x,o.mesh.position.z-u.mesh.position.z)<u.healR){const r=o.hp/o.maxHp;if(r<ratio){ratio=r;best=o;}}
+    for(const h of humans())if(h.team===u.team&&!h.dead&&Math.hypot(h.pos.x-u.mesh.position.x,h.pos.z-u.mesh.position.z)<u.healR){const r=h.hp/h.maxHp;if(r<ratio){ratio=r;best=h;}}
+    if(!best)return;
+    const amount=u.heal*.5;
+    if(best.vsType==='hero'){best.hp=Math.min(best.maxHp,best.hp+amount);if(best.bar)api.updHPBar(best.bar,best.hp/best.maxHp);}
+    else{best.hp=Math.min(best.maxHp,best.hp+amount);api.updHPBar(best.bar,best.hp/best.maxHp);}
+  }
+  function bossSkills(u,dt){
+    u.chargeCd-=dt;u.summonCd-=dt;
+    if(u.charge>0){
+      u.charge-=dt;const me=u.mesh.position,nx=me.x+Math.sin(u.yaw)*14*dt,nz=me.z+Math.cos(u.yaw)*14*dt;
+      if(canMove(u,nx,nz)){me.x=nx;me.z=nz;}else u.charge=0;
+      for(const t of hostiles(u.team,{structures:false})){if(t.vsType==='unit'&&t.fly)continue;const p=posOf(t);if(Math.hypot(p.x-me.x,p.z-me.z)<u.radius+1.4&&!(u.chargeHit?.has(t))){(u.chargeHit||(u.chargeHit=new Set())).add(t);damage(t,60,u.team,'unit');}}
+      return;
+    }
+    const t=u.target;
+    if(u.chargeCd<=0&&t&&t.vsType!=='hq'&&t.vsType!=='bank'){const d=distTo(u,t);if(d>5&&d<18){face(u,t);u.mesh.rotation.y=u.yaw;u.charge=.8;u.chargeCd=7;u.chargeHit=new Set();api.AudioSys.sfx('wave');}}
+    if(u.summonCd<=0){u.summonCd=10;let n=0;for(const o of VS.units)if(!o.dead&&o.team===u.team)n++;
+      if(n<30)for(let i=0;i<4;i++){const a=i*TAU/4+rand(0,1),s={x:u.mesh.position.x+Math.cos(a)*3.5,z:u.mesh.position.z+Math.sin(a)*3.5};const m=spawnUnit(u.team,'bug0',u.side,0,i,s);m.pathIdx=u.pathIdx;}}
+  }
+  /* ---------- 炮塔与核心机枪 ---------- */
+  function updTurrets(dt){
+    const list=VS.frame%2?[...api.buildings].reverse():api.buildings;
+    for(const bd of list){
+      if(bd.dead||!bd.team||!bd.dmg)continue;
+      bd.fireCd-=dt;if(bd.fireCd>0)continue;
+      const from=bd.mesh.position.clone();from.y+=bd.kind==='cannonTurret'?2:bd.kind==='teslaTurret'?2.1:1.5;
+      let best=null,bd2=bd.range*bd.range;
+      for(const t of hostiles(bd.team,{structures:false})){
+        const fly=t.vsType==='unit'&&t.fly;if(bd.kind==='antiAir'&&!fly)continue;if(bd.kind==='cannonTurret'&&fly)continue;
+        const p=posOf(t),d2=(p.x-from.x)**2+(p.z-from.z)**2;if(d2<bd2){bd2=d2;best=t;}
+      }
+      if(!best)continue;
+      bd.fireCd=bd.rate;
+      const to=centerOf(best,new THREE.Vector3()),dir=to.clone().sub(from);
+      if(bd.mesh.userData.head)bd.mesh.userData.head.rotation.y=Math.atan2(dir.x,dir.z);
+      if(bd.mesh.userData.gun)bd.mesh.userData.gun.rotation.y=Math.atan2(dir.x,dir.z);
+      if(bd.kind==='teslaTurret'){
+        let prev=from,cur=best;const hit=[cur];
+        for(let k=0;k<2;k++){let nxt=null,nd=64;for(const o of hostiles(bd.team,{structures:false})){if(hit.includes(o))continue;const a=posOf(o),b=posOf(cur),d2=(a.x-b.x)**2+(a.z-b.z)**2;if(d2<nd){nd=d2;nxt=o;}}if(!nxt)break;hit.push(nxt);cur=nxt;}
+        hit.forEach((o,i)=>{const p=centerOf(o,new THREE.Vector3());api.zapLine(prev,p,0xcc88ff);damage(o,bd.dmg*Math.pow(.6,i),bd.team,'turret');prev=p;});
+        api.AudioSys.sfx('shoot');continue;
+      }
+      if(bd.kind==='antiAir'){api.fireBullet(from,dir,{beam:true,dmg:bd.dmg,range:bd.range,color:0x8bffda,team:bd.team,src:'turret'},true);api.AudioSys.sfx('shoot');continue;}
+      api.fireBullet(from,dir,{dmg:bd.dmg,speed:55,range:bd.range+6,spread:.04,explode:bd.explode,color:bd.kind==='cannonTurret'?0xff8844:(bd.team==='blue'?0x9fdcff:0xffb09f),team:bd.team,src:'turret'},true,to);
+      api.AudioSys.sfx(bd.kind==='cannonTurret'?'cannon':'mg');
+    }
+    for(const team of VS.frame%2?['red','blue']:TEAMS){
+      const hq=VS.hq[team],g=R.hqGun;hq.fireCd-=dt;if(hq.fireCd>0)continue;
+      const from=hq.pos.clone();from.y+=8.6;let best=null,bd2=g.range*g.range;
+      for(const t of hostiles(team,{structures:false})){const p=posOf(t),d2=(p.x-hq.pos.x)**2+(p.z-hq.pos.z)**2;if(d2<bd2){bd2=d2;best=t;}}
+      if(!best)continue;hq.fireCd=g.rate;
+      const to=centerOf(best,new THREE.Vector3()),dir=to.clone().sub(from);hq.mesh.userData.gun.rotation.y=Math.atan2(dir.x,dir.z);
+      api.fireBullet(from,dir,{dmg:g.dmg,speed:60,range:g.range+10,spread:.03,color:TEAM_COLOR[team],team,src:'hq'},true,to);
+      if(Math.random()<.4)api.AudioSys.sfx('mg');
+    }
+  }
+
+  /* ================= 电脑对手 ================= */
+  function aiThink(team,dt){
+    const t=VS.teams[team],cfg=VS_AI[t.ai],s=t.aiState;
+    // 排队的出兵按冷却逐个发出
+    s.sendT-=dt;
+    if(s.sendT<=0&&s.queue.length&&VS.time>=R.prep){
+      s.sendT=.5;const next=s.queue[0];
+      const why=sendReason(team,next.id);
+      if(!why){send(team,next.id,next.lane);s.queue.shift();}
+      else if(/金币不足|兵力已满|虫王已经在场|解锁/.test(why))s.queue.shift();
+    }
+    s.next-=dt;if(s.next>0)return;
+    s.next=cfg.think*(.85+Math.random()*.3);
+    const threat=threatOn(team),defense=defenseOf(team),desired=cfg.baseDef+VS.time*cfg.defPerSec,turretCap=Math.min(R.buildLimit,cfg.turrets[0]+Math.floor(VS.time/cfg.turrets[1]));
+    const underAttack=threat.value>0;
+    // 0. 准备阶段先在基地正前方放一座机枪塔，两条路过来都打得到
+    if(cfg.prepTurret&&VS.time<R.prep+10&&!s.prepDone){s.prepDone=true;const p=world(team,0,-61);if(!build(team,'mgTurret',p.x,p.z,0))return;}
+    // 1. 银行
+    if(t.bank<cfg.bankMax&&!underAttack&&VS.time>=cfg.bankAt[t.bank]&&!(t.bankDown>0)){
+      if(!(t.ai==='hard'&&t.bank>=4&&VS.hq[team].hp/VS.hq[team].maxHp<.7)){const cost=R.bankCost[t.bank];if(t.gold>=cost+(underAttack?300:0)){upgradeBank(team);return;}}
+    }
+    // 2. 防守：威胁超过防守八成，或防守低于随时间增长的底线
+    const turrets=api.buildings.filter(b=>!b.dead&&b.team===team&&b.dmg).length;
+    if((threat.value>defense*.8||defense<desired)&&turrets<turretCap&&VS.time-(s.lastBuild||-99)>15){
+      const kind=aiTurretKind(team,threat);
+      if(kind&&t.gold>=api.BUILDINGS[kind].price){if(aiPlace(team,kind,threat.side)){s.lastBuild=VS.time;return;}}
+    }
+    if(cfg.walls&&VS.time>cfg.walls&&!s.walls&&t.gold>800){s.walls=true;for(const [x,z] of AI_WALLS){const p=world(team,x,z);build(team,'wall',p.x,p.z,0);}}
+    // 3. 英雄武器
+    const hero=heroOf(team);
+    if(hero&&hero.vsAI)for(const [at,id] of cfg.weapons)if(VS.time>=at&&!hero.vsWeapons.includes(id)&&t.gold>=api.WEAPONS[id].price+1500){if(!buyWeapon(hero,id))api.equipHero(hero,id);break;}
+    // 4. 虫王：6:00 后攒钱放虫王（场上没有、冷却好了才攒），攒的时候只派小股兵
+    const kingReady=cfg.king&&VS.time>=R.tier3&&!(t.cd.king>0)&&!VS.units.some(u=>!u.dead&&u.team===team&&u.prof==='king');
+    if(kingReady&&t.gold>=3000+cfg.reserve&&!(underAttack&&threat.value>defense)&&!s.queue.some(q=>q.id==='king')){s.queue.unshift({id:'king',lane:aiLane(team)});return;}
+    // 5. 进攻：攒够一波再一起派
+    const budget=kingReady?Math.min(cfg.wave(VS.time),600):cfg.wave(VS.time),hold=kingReady&&t.gold<3000&&t.gold+incomeOf(team)*18>=3000;
+    const paced=VS.time>=(cfg.firstWave||0)&&VS.time-(s.lastWave??-999)>=(cfg.waveGap||0);
+    if(paced&&!hold&&!s.queue.length&&t.gold>=budget+cfg.reserve&&!(underAttack&&threat.value>defense)){
+      s.lastWave=VS.time;
+      const lane=aiLane(team);let money=budget;const picks=aiCompose(team,money);
+      for(const id of picks)s.queue.push({id,lane});
+    }
+  }
+  function threatOn(team){
+    const hq=VS.hq[team].pos;let value=0,fly=0,swarm=0,heavy=0,soldier=0,east=0,west=0;
+    for(const u of VS.units){if(u.dead||u.team===team)continue;const p=u.mesh.position;if(rel(team,p.z)<-5||Math.hypot(p.x-hq.x,p.z-hq.z)<75){
+      const v=u.value||25;value+=v;if(u.fly)fly+=v;else if(u.kind==='soldier')soldier+=v;else if(u.prof==='bug0')swarm+=v;else heavy+=v;if(p.x>0)east+=v;else west+=v;}}
+    for(const h of humans())if(h.team&&h.team!==team&&!h.dead&&rel(team,h.pos.z)<-20){value+=200;soldier+=200;if(h.pos.x>0)east+=200;else west+=200;}
+    return {value,fly,swarm,heavy,soldier,side:east>west?1:west>east?-1:dirOf(team)}; // 平局按各自左手边，两边一致
+  }
+  function defenseOf(team){
+    let v=300;for(const b of api.buildings)if(!b.dead&&b.team===team&&b.dmg)v+=api.BUILDINGS[b.kind].price;
+    for(const u of VS.units)if(!u.dead&&u.team===team&&rel(team,u.mesh.position.z)<0)v+=(u.value||25)*.8;
+    const h=heroOf(team);if(h&&!h.dead)v+=300;return v;
+  }
+  function aiTurretKind(team,threat){
+    const t=VS.teams[team],cfg=VS_AI[t.ai],own={};for(const b of api.buildings)if(!b.dead&&b.team===team)own[b.kind]=(own[b.kind]||0)+1;
+    const enemyFlyers=VS.units.some(u=>!u.dead&&u.team!==team&&u.fly);
+    if(threat.fly>0||(enemyFlyers&&!(own.antiAir>0))||(VS.time>R.tier2&&cfg.counter&&(own.antiAir||0)<1))return 'antiAir';
+    if(!cfg.counter)return Math.random()<.6?'mgTurret':'cannonTurret';
+    if(threat.soldier+threat.heavy>threat.swarm*1.2&&(own.cannonTurret||0)<4)return 'cannonTurret';
+    if(threat.swarm>0&&(own.mgTurret||0)>=2&&t.gold>=1100&&(own.teslaTurret||0)<2)return 'teslaTurret';
+    if((own.mgTurret||0)<=(own.cannonTurret||0))return 'mgTurret';
+    return 'cannonTurret';
+  }
+  function aiPlace(team,kind,side){
+    const d=dirOf(team),rank=s=>s.lane*d===side?0:s.lane===0?1:2;
+    const slots=AI_SLOTS.map(([x,z,lane],i)=>({x,z,lane,i})).sort((a,b)=>rank(a)-rank(b)||a.i-b.i);
+    for(const s of slots){const p=world(team,s.x,s.z);for(const [ox,oz] of [[0,0],[3,0],[-3,0],[0,3],[0,-3]]){if(!build(team,kind,p.x+ox,p.z+oz,0))return true;}}
+    return false;
+  }
+  function laneDefense(enemy,side){
+    // 统计对方在该路口附近（其本方半场、同侧）的炮塔火力
+    let v=0;for(const b of api.buildings){if(b.dead||b.team!==enemy||!b.dmg)continue;const p=b.mesh.position;if(Math.sign(p.x)===side||Math.abs(p.x)<20)v+=api.BUILDINGS[b.kind].price*(Math.sign(p.x)===side?1:.5);}return v;
+  }
+  function aiLane(team){
+    const t=VS.teams[team],cfg=VS_AI[t.ai];
+    if(cfg.lane==='random')return Math.random()<.5?'left':'right';
+    const enemy=other(team),l=laneDefense(enemy,sideFor(team,'left')),r=laneDefense(enemy,sideFor(team,'right'));
+    if(Math.abs(l-r)<150)return t.aiState.lastLane=t.aiState.lastLane==='left'?'right':'left';
+    return t.aiState.lastLane=l<r?'left':'right';
+  }
+  function aiCompose(team,money){
+    const t=VS.teams[team],cfg=VS_AI[t.ai],enemy=other(team),own={};
+    for(const b of api.buildings)if(!b.dead&&b.team===enemy)own[b.kind]=(own[b.kind]||0)+1;
+    const w={swarm:2.5,gunners:2.5,assault:2.5,carapace:1.2,flyers:1,bombers:.8,medics:1,jeep:1.2};
+    if(cfg.counter){
+      if((own.antiAir||0)>=1)w.flyers*=.35/(own.antiAir);else w.flyers*=2;
+      if((own.wall||0)>=2)w.bombers*=2.2;
+      if((own.mgTurret||0)>=2){w.gunners*=1.7;w.swarm*=.6;}
+      if((own.cannonTurret||0)>=1){w.swarm*=1.3;w.gunners*=.8;w.assault*=.8;}
+      if((own.teslaTurret||0)>=1)w.assault*=.7;
+      if(!alive(VS.bank[enemy]))w.jeep*=.5;else if(VS.time>240)w.jeep*=1.4;
+    }
+    const picks=[];let guard=0;
+    while(money>=150&&guard++<20){
+      if(cfg.maxGroups&&picks.length>=cfg.maxGroups)break;
+      const pool=VS_UNITS.filter(d=>d.id!=='king'&&VS.time>=tier(d.id)+(d.tier==='t1'?0:cfg.tierDelay||0)&&d.price<=money&&w[d.id]>0&&(!cfg.only||cfg.only.includes(d.id)));
+      if(!pool.length)break;
+      let sum=pool.reduce((s,d)=>s+w[d.id],0),r=Math.random()*sum,pick=pool[0];
+      for(const d of pool){r-=w[d.id];if(r<=0){pick=d;break;}}
+      picks.push(pick.id);money-=pick.price;w[pick.id]*=.7;
+    }
+    if(!cfg.only&&picks.length&&picks.every(id=>id!=='swarm')&&money>=150)picks.unshift('swarm');
+    return picks;
+  }
+  // 电脑英雄：残血回家，平时守本方半场炮塔附近；困难难度跟着大波压上。
+  function aiHeroInput(h){
+    if(!VS.active||h.dead)return {x:0,z:0,yaw:h.yaw||0,edges:[],fire:false,autoFire:true,autoAim:true,run:false};
+    const team=h.team,cfg=VS.teams[team].ai?VS_AI[VS.teams[team].ai]:VS_AI.normal,me=h.pos,hq=VS.hq[team].pos;
+    const wp=api.WEAPONS[h.curWeapon]||api.WEAPONS.lmg,range=wp.range;
+    let goal=null,target=null,bd=Infinity;
+    // 残血回家，回满七成再出门
+    if(h.hp<h.maxHp*(cfg.retreat||.35))h.vsRetreat=true;else if(h.hp>h.maxHp*.7)h.vsRetreat=false;
+    if(h.vsRetreat)goal={x:hq.x,z:hq.z+dirOf(team)*8};
+    else{
+      for(const t of hostiles(team,{structures:false})){const p=posOf(t),d=Math.hypot(p.x-me.x,p.z-me.z);
+        const inHome=rel(team,p.z)<-10;if((inHome||d<range+6)&&d<bd&&d<55){bd=d;target=t;}}
+      if(target){const p=posOf(target);if(bd>range*.7)goal=p;}
+      else{
+        let push=null;
+        if(cfg.heroPush&&h.hp>h.maxHp*.6){let n=0,cx=0,cz=0;for(const u of VS.units)if(!u.dead&&u.team===team&&rel(team,u.mesh.position.z)>-30){n++;cx+=u.mesh.position.x;cz+=u.mesh.position.z;}if(n>=8)push={x:cx/n,z:cz/n-dirOf(team)*8};}
+        const th=threatOn(team);
+        goal=push||world(team,th.value>0?dirOf(team)*th.side*44:((VS.matchId+Math.floor(VS.time/40))%2?40:-40),-44);
+      }
+    }
+    let x=0,z=0;
+    if(goal){const dx=goal.x-me.x,dz=goal.z-me.z,d=Math.hypot(dx,dz);if(d>2.5){x=dx/d;z=dz/d;}}
+    let yaw=h.yaw||0;
+    if(target){const p=posOf(target);yaw=Math.atan2(p.x-me.x,p.z-me.z);}else if(x||z)yaw=Math.atan2(x,z);
+    const duty=cfg.heroFire??1,shoot=!!target&&bd<range&&(duty>=1||((VS.time*1.3)%1)<duty); // 简单难度英雄开火有间歇
+    return {x,z,yaw,fp:false,run:!target&&(Math.abs(x)+Math.abs(z)>0),fire:shoot,autoFire:duty>=1,autoAim:true,edges:[]};
+  }
+
+  /* ================= 联机同步 ================= */
+  function snapshot(){
+    if(!VS.active)return null;
+    const T=team=>{const t=VS.teams[team];return {g:Math.floor(t.gold),b:t.bank,bd:+t.bankDown.toFixed(1),bh:Math.round(VS.bank[team].hp),bm:VS.bank[team].maxHp,h:Math.round(VS.hq[team].hp),
+      l:t.lane,cd:Object.fromEntries(Object.entries(t.cd).filter(([,v])=>v>0).map(([k,v])=>[k,+v.toFixed(1)])),ai:!!t.ai,s:t.stats,it:+t.incomeT.toFixed(1)};};
+    return {m:VS.matchId,t:+VS.time.toFixed(2),over:VS.over,res:VS.result,ot:VS.overtime?{start:VS.overtime.start}:null,mode:VS.mode,diff:VS.difficulty,
+      teams:{blue:T('blue'),red:T('red')},
+      u:VS.units.filter(u=>!u.dead).map(u=>[u.id,PROFILE_KEYS.indexOf(u.prof),u.team==='blue'?0:1,+u.mesh.position.x.toFixed(2),+u.mesh.position.y.toFixed(2),+u.mesh.position.z.toFixed(2),+u.mesh.rotation.y.toFixed(2),+(u.hp/u.maxHp).toFixed(3),u.atkAnim>0?1:u.moving?2:0]),
+      w:Object.fromEntries(humans().map(h=>[h.slot,h.vsWeapons||[]])),d:Object.fromEntries(humans().map(h=>[h.slot,[h.vsDeaths||0,+(h.respawnT||0).toFixed(1),h.team]]))};
+  }
+  function apply(data,dt=.016){
+    if(!data)return;
+    if(!VS.active||data.m!==VS.matchId){api.onGuestMatch?.(data);if(!VS.active)return;}
+    VS.time=data.t;VS.mode=data.mode;VS.difficulty=data.diff;VS.overtime=data.ot?{start:data.ot.start}:null;
+    for(const team of TEAMS){
+      const s=data.teams[team],t=VS.teams[team];
+      t.gold=s.g;t.bank=s.b;t.bankDown=s.bd;t.lane=s.l;t.cd=s.cd||{};t.stats=s.s;t.incomeT=s.it;t.ai=s.ai?'normal':null;
+      VS.bank[team].hp=s.bh;VS.bank[team].maxHp=s.bm;api.updHPBar(VS.bank[team].bar,s.bh/s.bm);
+      VS.hq[team].hp=s.h;api.updHPBar(VS.hq[team].bar,s.h/VS.hq[team].maxHp);syncBankMesh(team);
+    }
+    const seen=new Set();
+    for(const row of data.u){
+      const [id,pk,ti,x,y,z,ry,hp,anim]=row;seen.add(id);let g=VS.guestUnits.get(id);
+      if(!g){const prof=PROFILE_KEYS[pk],team=ti?'red':'blue';g={id,prof,team,kind:VS_PROFILES[prof].kind==='boss'?'boss':VS_PROFILES[prof].kind,mesh:makeUnitMesh(prof,team),anim:0,atkAnim:0};
+        const p=VS_PROFILES[prof];g.bar=api.makeHPBar(p.kind==='boss'?5:p.kind==='jeep'?3.4:1.6,TEAM_CSS[team]);g.bar.position.y=p.kind==='boss'?7.5:p.kind==='jeep'?3.4:p.kind==='soldier'?2.6:(p.fly?2.2:1.6)*(p.scale||1)+.4;
+        if(g.mesh.userData.worlds){g.bar.scale.divideScalar(g.mesh.scale.x);g.bar.position.y=g.mesh.userData.visualHeight+.5/g.mesh.scale.y;}
+        g.mesh.add(g.bar);g.mesh.position.set(x,y,z);scene.add(g.mesh);VS.guestUnits.set(id,g);}
+      g.target={x,y,z,ry};g.atkAnim=anim===1?.35:0;g.moving=anim===2;api.updHPBar(g.bar,hp);
+    }
+    for(const [id,g] of VS.guestUnits)if(!seen.has(id)){if(!(g.kind==='bug'||g.kind==='boss')||!api.visuals.death(g.mesh))disposeUnit(g);VS.guestUnits.delete(id);}
+    const local=VS.local;
+    if(data.w&&local&&data.w[local.slot]){local.vsWeapons=data.w[local.slot];api.setLocalWeapons(local.vsWeapons);}
+    if(data.d)for(const h of humans()){const d=data.d[h.slot];if(d){h.vsDeaths=d[0];h.respawnT=d[1];if(d[2]&&h.team!==d[2]){setupHero(h,d[2]);}if(h.mesh&&!h.mesh.children.some(c=>c.userData.vsRing))addRing(h.mesh,h.team,1.25);}}
+    for(const b of api.buildings)if(b.team&&!b.vsType)markBuilding(b,b.team);
+    if(data.over&&!VS.over){VS.over=true;VS.result=data.res;api.onEnd?.(data.res);}
+    else if(!data.over&&VS.over){VS.over=false;VS.result=null;}
+  }
+  // 客人画面：位置插值、动画
+  function guestFrame(dt){
+    for(const [,g] of VS.guestUnits){
+      if(!g.target||!g.mesh)continue;const p=g.mesh.position,k=Math.min(1,dt*12);
+      p.x+=(g.target.x-p.x)*k;p.y+=(g.target.y-p.y)*k;p.z+=(g.target.z-p.z)*k;
+      g.mesh.rotation.y+=Math.atan2(Math.sin(g.target.ry-g.mesh.rotation.y),Math.cos(g.target.ry-g.mesh.rotation.y))*k;
+      g.anim+=dt*8;g.atkAnim=Math.max(0,g.atkAnim-dt);animateUnit(g,dt,g.moving);
+    }
+  }
+  function handleCommand(h,c){
+    if(!VS.active||!h||!h.team)return false;
+    const team=h.team;
+    if(c.kind==='vsSend'){send(team,c.id,null);return true;}
+    if(c.kind==='vsBank'){upgradeBank(team);return true;}
+    if(c.kind==='vsLane'){setLane(team,c.lane);return true;}
+    if(c.kind==='vsWeapon'){const r=buyWeapon(h,c.id);if(r===''||r==='owned')api.equipHero(h,c.id);return true;}
+    if(c.kind==='vsSurrender'){surrender(team);return true;}
+    if(c.kind==='build'){if([c.x,c.z,c.yaw].every(Number.isFinite)&&Math.hypot(c.x-h.pos.x,c.z-h.pos.z)<7)build(team,c.id,c.x,c.z,c.yaw);return true;}
+    if(c.kind==='demolish'){const bd=api.buildings.find(b=>b.coopId===c.id);if(bd&&Math.hypot(bd.mesh.position.x-h.pos.x,bd.mesh.position.z-h.pos.z)<16)demolish(team,bd);return true;}
+    return false;
+  }
+
+  /* ================= 小地图 ================= */
+  function drawRadar(ctx,W,H,center,camYaw,heading){
+    const cx=W/2,cy=H/2,Rr=W/2-4,range=120,sc=Rr/range,c=Math.cos(camYaw),s=Math.sin(camYaw);
+    const toS=(x,z)=>{const dx=x-center.x,dz=z-center.z;return [cx+(-dx*c+dz*s)*sc,cy-(dx*s+dz*c)*sc];};
+    ctx.clearRect(0,0,W,H);ctx.save();ctx.beginPath();ctx.arc(cx,cy,Rr,0,TAU);ctx.fillStyle='rgba(6,14,24,.8)';ctx.fill();ctx.clip();
+    ctx.lineCap='round';ctx.lineWidth=9;ctx.strokeStyle='rgba(150,120,80,.35)';
+    for(const side of [1,-1]){ctx.beginPath();PATH.forEach(([x,z],i)=>{const [X,Y]=toS(side*x,AZ+z);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.stroke();}
+    ctx.fillStyle='rgba(120,100,80,.6)';for(const [x,z,r] of MASSIF){for(const k of [1,-1]){const [X,Y]=toS(k*x,AZ+k*z);ctx.beginPath();ctx.arc(X,Y,r*sc,0,TAU);ctx.fill();}}
+    const dot=(x,z,r,col,shape)=>{const [X,Y]=toS(x,z);ctx.fillStyle=col;ctx.beginPath();if(shape==='sq')ctx.rect(X-r,Y-r,r*2,r*2);else ctx.arc(X,Y,r,0,TAU);ctx.fill();};
+    for(const team of TEAMS){dot(VS.hq[team].pos.x,VS.hq[team].pos.z,8,TEAM_CSS[team],'sq');if(alive(VS.bank[team]))dot(VS.bank[team].pos.x,VS.bank[team].pos.z,4,'#ffd34d','sq');}
+    for(const b of api.buildings)if(!b.dead&&b.team)dot(b.mesh.position.x,b.mesh.position.z,b.isWall?2.2:3,b.team==='blue'?'rgba(130,190,255,.95)':'rgba(255,150,140,.95)','sq');
+    const units=VS.role==='guest'?[...VS.guestUnits.values()]:VS.units;
+    for(const u of units)if(!u.dead&&u.mesh)dot(u.mesh.position.x,u.mesh.position.z,u.kind==='boss'?7:u.kind==='jeep'?4.5:2.8,TEAM_CSS[u.team]);
+    for(const h of humans())if(h.team&&!h.dead&&h!==VS.local)dot(h.pos.x,h.pos.z,4.5,h.team==='blue'?'#bfe4ff':'#ffd0c8');
+    ctx.restore();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(-(heading-camYaw));ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(0,-8);ctx.lineTo(6,6);ctx.lineTo(-6,6);ctx.closePath();ctx.fill();ctx.restore();
+    ctx.strokeStyle='rgba(120,170,200,.55)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,Rr,0,TAU);ctx.stroke();
+  }
+
+  return {
+    state:VS,get active(){return VS.active;},get over(){return VS.over;},
+    start,stop,update,setAI,send,sendReason,upgradeBank,setLane,cycleLane,buyWeapon,surrender,build,canPlace,zoneReason,demolish,
+    aimTargets,beamHits,bulletStep,explodeAt,damage,heroDown,respawned,placeHero,setupHero,markBuilding,aiHeroInput,
+    snapshot,apply,guestFrame,handleCommand,drawRadar,incomeOf,popOf,tier,fmtTime,heroOf,
+    team:t=>VS.teams?.[t],hq:t=>VS.hq?.[t],bank:t=>VS.bank?.[t],rel,world,
+  };
+}
+export function fmtTime(s){s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}

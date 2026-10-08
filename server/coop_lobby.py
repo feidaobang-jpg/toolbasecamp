@@ -27,7 +27,7 @@ def game_config(game, raw):
     if game == 'tank':
         return config(raw)
     raw = raw if isinstance(raw, dict) else {}
-    return {'lives': 'classic' if raw.get('lives') == 'classic' else 'inf',
+    settings = {'lives': 'classic' if raw.get('lives') == 'classic' else 'inf',
             'armor': 'classic' if raw.get('armor') == 'classic' else 'std',
             'dur': raw.get('dur') if raw.get('dur') in ('std', 'easy', 'classic') else 'std',
             'gun': 'follow' if raw.get('gun') == 'follow' else 'up',
@@ -35,6 +35,10 @@ def game_config(game, raw):
             'area': bounded(raw.get('area'), 0, 7, 0),
             'hero': bounded(raw.get('hero'), 0, 3, 0),
             'seed': secrets.randbelow(1000000), 'demo': False, 'coop': True}
+    if game == 'starship':
+        # 虫潮对战：1 对 1 房间，客户端按 mode 开局；其余设置与合作相同。
+        settings['mode'] = 'versus' if raw.get('mode') == 'versus' else 'coop'
+    return settings
 
 def clean_input(source):
     data = {}
@@ -163,8 +167,11 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     capacity = msg.get('maxPlayers', spec['maxPlayers'])
                     capacity = capacity if type(capacity) is int and 2 <= capacity <= spec['maxPlayers'] else spec['maxPlayers']
                     salt = secrets.token_bytes(16)
+                    settings = game_config(game, msg.get('config'))
+                    if settings.get('mode') == 'versus':
+                        capacity = 2
                     candidate = Room(code, str(msg.get('roomName') or peer.name + '的房间')[:32],
-                                     capacity, game_config(game, msg.get('config')), salt,
+                                     capacity, settings, salt,
                                      password_key(password, salt) if password else b'', game=game)
                     rooms[code] = candidate
                     candidate.features = msg.get('liveJoin') is True

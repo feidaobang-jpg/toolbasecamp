@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "Enter starts normal game",
+    "WASD moves player",
+    "four camera presets switch with C",
+    "keyboard shop/build/pause",
+    "three normal deaths respawn with protection",
+    "protection blocks damage",
+    "normal damage after protection expires",
+    "base destruction fails and Enter restarts",
+    "390×844 rotated touch joystick + firing, release clears",
+    "mobile resize and touch pause/resume",
+    "QA empty-wave completion advances to next level"
+  ],
+  "errors": [],
+  "limitations": [
+    "No physical phone tested",
+    "No human keyboard/mouse playtest",
+    "QA scene positions and wave completion use explicit test hooks",
+    "Audio not captured by Playwright video"
+  ],
+  "url": "http://127.0.0.1:8794/html/game/starship-defense/index.html"
+}

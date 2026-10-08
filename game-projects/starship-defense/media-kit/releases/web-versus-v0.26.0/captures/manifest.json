@@ -1,0 +1,41 @@
+{
+ "url": "http://127.0.0.1:8794/html/game/starship-defense/index.html",
+ "at": "2026-10-08T05:34:41.016Z",
+ "files": [
+  {
+   "file": "01-main-menu.png",
+   "kind": "screenshot",
+   "note": "主菜单「⚔ 虫潮对战 · 1 对 1」入口"
+  },
+  {
+   "file": "02-versus-menu.png",
+   "kind": "screenshot",
+   "note": "对战菜单：三档电脑 + 好友联机，规则速览"
+  },
+  {
+   "file": "03-command-panel.png",
+   "kind": "screenshot",
+   "note": "出兵面板：银行 + 9 兵种，价格/冷却/解锁时间"
+  },
+  {
+   "file": "04-sent-wave.png",
+   "kind": "screenshot",
+   "note": "派出小虫群、机枪小队、甲壳战虫，带蓝色阵营环"
+  },
+  {
+   "file": "05-midgame.png",
+   "kind": "screenshot",
+   "note": "中局（约 6 分钟后）双方交战，镜头跟随蓝方英雄"
+  },
+  {
+   "file": "06-midgame-battle.webm",
+   "kind": "video",
+   "note": "电脑困难对困难，加速快进到 5:30 后实时录制约 45 秒；画面为当前构建实时渲染，不含解说"
+  },
+  {
+   "file": "07-result.png",
+   "kind": "screenshot",
+   "note": "胜利结算：双方数据对比"
+  }
+ ]
+}
