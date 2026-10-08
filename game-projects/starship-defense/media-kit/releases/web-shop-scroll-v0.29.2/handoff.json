@@ -116,5 +116,14 @@
     "source_comment": "public_verified"
   },
   "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008",
-  "source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee"
+  "source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee",
+  "website_deployment_commit": "a1e443c65a9f4f34da9e59063d8faae65c100b1e",
+  "website_cache_marker": "a1e443c6",
+  "cleanup": {
+    "own_browser_tabs_closed": true,
+    "temporary_viewport_reset": true,
+    "preview_servers_8924_8974_stopped": true,
+    "preserved_artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008",
+    "other_tasks_untouched": true
+  }
 }
