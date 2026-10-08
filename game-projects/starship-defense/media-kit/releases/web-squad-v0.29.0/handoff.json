@@ -6,8 +6,8 @@
   "created_at": "2026-10-08T11:08:01.450599+00:00",
   "build": {
     "id": "b7670e6b7690",
-    "commit": null,
-    "dirty": true,
+    "commit": "94045b02fdbb0ea783f0747266cd6914e583f679",
+    "dirty": false,
     "fingerprint": "b7670e6b76902146ccd5ffce900662a57ab5e75527b58a0f20fa46485e61babd",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -49,7 +49,7 @@
       "capture_mode": "realtime-automation",
       "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable"
     },
     {
@@ -153,7 +153,7 @@
       "capture_mode": "realtime-automation",
       "description": "实际雇佣/逐人指令或满编负载场景；测试资金和动画加速见qa",
       "audio": "none",
-      "visual_review": "not-run",
+      "visual_review": "pass",
       "audio_review": "not-applicable"
     }
   ],
@@ -202,7 +202,8 @@
     "unverified": [
       "physical phone",
       "game audio in video"
-    ]
+    ],
+    "follow_regression": "12/12 passed; qa/follow-regression/squad-follow-qa.json"
   },
   "readiness": {
     "overview": "partial",
@@ -210,5 +211,11 @@
     "gaps": [
       "录像无游戏音轨；完整介绍沿用历史素材，未重录整局"
     ]
+  },
+  "channels": {
+    "website": "public verified",
+    "toy": "published, live 12/12 verified",
+    "taptap": "reviewing",
+    "bilibili": "three descriptions public verified"
   }
 }

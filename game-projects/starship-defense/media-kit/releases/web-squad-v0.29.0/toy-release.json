@@ -1,0 +1,16 @@
+{
+  "version": "web-squad-v0.29.0",
+  "source_commit": "94045b02fdbb0ea783f0747266cd6914e583f679",
+  "toy_id": 38678478981120,
+  "zip_sha256": "848d583d13cdf9c6c0c931597d1fe6804aead27a40bff8e0eb4254c6dcf237dc",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_w6bRBl65/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_1nXdtN7p/index.html",
+  "submitted_at": "2026-10-08T11:19:56+00:00",
+  "status": "published",
+  "published_at": "2026-10-08T11:22:30+00:00",
+  "public_verified_at": "2026-10-08T11:27:00.617837+00:00",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "runtime_frame_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v23741/index.html",
+  "verification": "Final preview and public entry: real free-test start, T panel, supplement 12; live HUD 12/12; preview 390×844 viewport and camera switch checked. Package shop/save/refresh tests on desktop and phone viewports. No physical phone test.",
+  "doctor_warning": "4 JS/CSS names do not contain content hashes; advisory cache optimization only"
+}
