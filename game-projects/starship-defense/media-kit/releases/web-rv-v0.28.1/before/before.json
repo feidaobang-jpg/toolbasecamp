@@ -1,0 +1,34 @@
+{
+  "method": "actual browser, QA isolated fixed-step chase and boundary reproduction",
+  "chase": {
+    "oldDistance": 28.653097563788805,
+    "newDistance": 35.79678599483251,
+    "before": [
+      14,
+      0,
+      1975
+    ],
+    "after": [
+      5.1837812655098565,
+      0,
+      1964.5805378449759
+    ],
+    "direction": [
+      -0.04558285745633784,
+      0,
+      -0.9989605613366902
+    ],
+    "target": "vehicle"
+  },
+  "gate": {
+    "position": [
+      0,
+      0,
+      2119.9
+    ],
+    "hold": 0,
+    "stage": 0,
+    "blocked": true,
+    "objective": "1/4 废弃加油站 · 20米"
+  }
+}

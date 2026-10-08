@@ -400,6 +400,7 @@ function terrainH(x,z){
 }
 /* 坡度过陡（悬崖）则地面单位不可通行，只能走斜坡 */
 function tooSteep(x,z){
+  if(rvOn())return false; // 房车公路是独立平地，不沿用基地地形坡度。
   const d=.6;
   const sx=Math.abs(terrainH(x+d,z)-terrainH(x-d,z));
   const sz=Math.abs(terrainH(x,z+d)-terrainH(x,z-d));
@@ -1632,6 +1633,7 @@ function moveMonster(mo,dir,dt,mul,goal=null){
 function navDir(mo,tgtPos){
   const p=mo.mesh.position;
   mo.navWaypoint=tgtPos;
+  if(rvOn())return null; // 公路直接追击房车/人员，不走基地虫洞入口。
   const route=hiveNavigation(p,tgtPos);
   if(route){mo.navWaypoint=route;return new THREE.Vector3(route.x-p.x,0,route.z-p.z).normalize();}
   const onPlat=plateauH(p.x,p.z)>PLAT.H*.6;
@@ -2555,7 +2557,7 @@ function updPlayer(dt){
       else if(canGo(nx,v.mesh.position.z)){v.mesh.position.x=clamp(nx,WORLD.minX+3,WORLD.maxX-3);moved=true;}
       else if(canGo(v.mesh.position.x,nz)){v.mesh.position.z=clamp(nz,WORLD.minZ+3,WORLD.maxZ-3);moved=true;}
       // 兜底脱困：有输入却持续走不动约 1.5 秒（嵌进坡体/墙角/联机卡位），挪到最近安全空地
-      if(moving&&!moved){v.stuckT=(v.stuckT||0)+dt;
+      if(moving&&!moved&&v.kind!=='rv'){v.stuckT=(v.stuckT||0)+dt;
         if(v.stuckT>1.5){
           const spot=rescueSpot(v.mesh.position,3,(x,z)=>vehicleCanStand(v,x,z),[{x:v.mesh.position.x,z:v.mesh.position.z,r:0}]);
           if(spot){v.mesh.position.set(spot.x,groundY(spot.x,spot.z),spot.z);v.alt=Math.max(0,v.alt);v.navPath=null;showMsg('载具已从卡住的位置脱困',1.6);}

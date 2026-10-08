@@ -32,15 +32,15 @@ export function createRVBreakout(a){
       .rv-mode .campaign-only,.rv-mode #hudTop,.rv-mode #hudRight,.rv-mode #radar,.rv-mode #weaponBar,.rv-mode #hint,.rv-mode #readyBtn,.rv-mode #webTools .mbtn:not(#menuButton):not(#fullBtn):not(#qualityBtn):not(#muteBtn):not(#personBtn),.rv-mode #vL,.rv-mode #vR,.rv-mode #vX{display:none!important}
       #rvHUD{position:absolute;left:10px;top:10px;max-width:290px;padding:8px 12px;border-radius:9px;background:rgba(8,18,29,.82);color:#e8f1f7;line-height:1.5;font-size:13px;pointer-events:none}
       #rvHUD b{color:#ffda85}#rvMeter{height:7px;background:#253848;border-radius:4px;overflow:hidden;margin:4px 0}#rvFill{height:100%;background:#5ed0b2}
-      #rvObjective{color:#96e3e8}#rvAction{color:#ffd28c}#rvPanel,#rvMenu,#rvResult{background:rgba(8,18,29,.96);color:#e8f1f7}
+      #rvObjective{color:#96e3e8}#rvAction{color:#ffd28c}#rvGoal{color:#c1ccd6;font-size:11px;margin-top:3px}#rvPanel,#rvMenu,#rvResult{background:rgba(8,18,29,.96);color:#e8f1f7}
       #rvPanel{width:520px}#rvPanel .mbtn{min-height:44px}#rvPanel .small{margin:8px 0}#rvMenu,#rvResult{justify-content:center;align-items:center;text-align:center}#rvMenu .small,#rvResult .small{max-width:660px}
       .touch-mode #rvHUD{max-width:260px;font-size:11px;padding:5px 9px}.rv-mode #interactHint{max-width:420px;white-space:normal}.rv-mode #vO{display:block!important}
       @media(max-height:420px){#rvMenu,#rvResult{justify-content:flex-start;padding:12px 28px}#rvMenu h1,#rvResult h1{font-size:24px;letter-spacing:1px}#rvMenu .small,#rvResult .small{font-size:11px;line-height:1.5}}
     `;document.head.append(style);
     const button=document.createElement('button');button.id='btnRV';button.className='mbtn';button.textContent='🚐 房车突围 · 短线生存';$('btnVersus').after(button);
     const host=document.createElement('div');host.innerHTML=`
-      <div id="rvMenu" class="overlay menu hidden"><h1>房车突围</h1><p class="small">一辆移动基地，三个补给站，一段撤离公路。目标约 5–10 分钟。</p><p class="small">开车抵达标记站 → 停车守住 35 秒等待通行 → 下车靠近补给箱搜索 18 秒 → 修车、升级再出发。<br>搜索和维修期间虫群继续进攻；可以放弃额外物资，尽快逃走。房车毁坏即失败，人员阵亡会在房车旁复活。</p><p id="rvSaveInfo" class="small"></p><div class="btnRow"><button id="rvContinue" class="mbtn green">继续房车进度</button><button id="rvStart" class="mbtn green">开始房车突围</button><button id="rvBack" class="mbtn">返回主菜单</button></div></div>
-      <div id="rvHUD" class="hidden"><b>🚐 房车突围</b><div id="rvStatus"></div><div id="rvMeter"><div id="rvFill"></div></div><div id="rvObjective"></div><div id="rvAction"></div><div id="rvResources"></div></div>
+      <div id="rvMenu" class="overlay menu hidden"><h1>房车突围</h1><p class="small">胜利：依次通过三个补给站，开进最后的撤离隧道。约 5–10 分钟。</p><p class="small">沿公路上的蓝色箭头前进；W/↑向当前视角前方开车，A/D左右调整，手机用左摇杆。<br>到站后在蓝色停车区停稳，自动倒计时 35 秒，路障随后抬起；顶到路障也会正常计时。<br>I上下车；下车靠近右侧补给箱按I搜索18秒，房车旁按O维修、补油、升级（可选）。<br>虫群会围攻房车和下车人员；房车毁坏即失败，人员阵亡会在房车旁复活。</p><p id="rvSaveInfo" class="small"></p><div class="btnRow"><button id="rvContinue" class="mbtn green">继续房车进度</button><button id="rvStart" class="mbtn green">开始房车突围</button><button id="rvBack" class="mbtn">返回主菜单</button></div></div>
+      <div id="rvHUD" class="hidden"><b>🚐 房车突围</b><div id="rvStatus"></div><div id="rvMeter"><div id="rvFill"></div></div><div id="rvObjective"></div><div id="rvAction"></div><div id="rvResources"></div><div id="rvGoal">胜利：通过3个补给站 → 开进撤离隧道</div></div>
       <div id="rvPanel" class="panel hidden"><h3>房车整备</h3><p id="rvPanelInfo" class="small"></p><div class="btnRow"><button id="rvRepair" class="mbtn">维修 · 40零件</button><button id="rvGun" class="mbtn">机枪升级 · 90零件</button><button id="rvArmor" class="mbtn">装甲升级 · 90零件</button><button id="rvFuel" class="mbtn">应急燃料 · 25零件</button><button id="rvClose" class="mbtn">返回战斗</button></div><p class="small">维修需原地停留 8 秒，恢复 450 耐久；升级需 6 秒。离车过远或驾驶会取消作业并退回零件。菜单选择暂停战斗，实际作业恢复战斗。</p></div>
       <div id="rvResult" class="overlay menu hidden"><h1 id="rvResultTitle"></h1><p id="rvResultInfo" class="small"></p><div class="btnRow"><button id="rvRetry" class="mbtn green">再跑一趟</button><button id="rvResultBack" class="mbtn">返回主菜单</button></div></div>`;
     for(const child of [...host.children])a.stage.append(child);
@@ -54,20 +54,28 @@ export function createRVBreakout(a){
   }
   function buildArena(){
     const group=s.arena=new T.Group();group.name='rv-road';scene.add(group);
-    const mats={ground:new T.MeshLambertMaterial({color:0x26323b}),road:new T.MeshLambertMaterial({color:0x17232b}),steel:new T.MeshLambertMaterial({color:0x5b6a73}),yellow:new T.MeshBasicMaterial({color:0xc3a464}),cyan:new T.MeshBasicMaterial({color:0x58bfce}),crate:new T.MeshLambertMaterial({color:0x96794f})};
+    const mats={ground:new T.MeshLambertMaterial({color:0x26323b}),road:new T.MeshLambertMaterial({color:0x17232b}),steel:new T.MeshLambertMaterial({color:0x5b6a73}),yellow:new T.MeshBasicMaterial({color:0xc3a464}),cyan:new T.MeshBasicMaterial({color:0x58bfce}),stop:new T.MeshLambertMaterial({color:0x284753}),crate:new T.MeshLambertMaterial({color:0x96794f})};
     const box=(w,h,d,x,y,z,m)=>{const o=new T.Mesh(new T.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.receiveShadow=true;group.add(o);return o;};
     box(600,.4,3400,0,-.25,2740,mats.ground);box(26,.08,2700,0,.01,2740,mats.road);
     const marks=new T.InstancedMesh(new T.BoxGeometry(.25,.04,5),mats.yellow,240),matrix=new T.Matrix4();
     for(let i=0;i<240;i++){matrix.makeTranslation(i%2?-10:10,.08,START-50+Math.floor(i/2)*23);marks.setMatrixAt(i,matrix);}group.add(marks);
+    const arrow=new T.Shape();arrow.moveTo(-.65,-2.5);arrow.lineTo(.65,-2.5);arrow.lineTo(.65,.1);arrow.lineTo(1.7,.1);arrow.lineTo(0,2.3);arrow.lineTo(-1.7,.1);arrow.lineTo(-.65,.1);arrow.closePath();
+    const arrowGeo=new T.ShapeGeometry(arrow);arrowGeo.rotateX(Math.PI/2);
+    const arrows=new T.InstancedMesh(arrowGeo,new T.MeshBasicMaterial({color:0x70d8e7,side:T.DoubleSide}),34);
+    for(let i=0;i<34;i++){matrix.makeTranslation(0,.2,START+40+i*75);arrows.setMatrixAt(i,matrix);}group.add(arrows);
     const rails=new T.InstancedMesh(new T.BoxGeometry(.35,1.2,22),mats.steel,240);
     for(let i=0;i<240;i++){matrix.makeTranslation(i%2?-39:39,.6,START-50+Math.floor(i/2)*23);rails.setMatrixAt(i,matrix);}group.add(rails);
     s.nodes=RV_ROUTE.map((node,i)=>{
       box(13,.12,26,20,.07,node.z,mats.steel);box(8,3,4,27,1.5,node.z+5,mats.steel);box(2,1.5,2,18,.85,node.z,mats.crate);
       const ring=new T.Mesh(new T.TorusGeometry(12,.13,6,40),mats.cyan);ring.rotation.x=Math.PI/2;ring.position.set(0,.14,node.z);group.add(ring);
-      const gate=box(76,.7,.4,0,1.1,node.z+22,mats.yellow);
-      const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const c=canvas.getContext('2d');c.fillStyle='#10202c';c.fillRect(0,0,512,128);c.fillStyle='#91e2e7';c.font='bold 48px Microsoft YaHei';c.textAlign='center';c.fillText((i+1)+' '+node.name,256,82);const tex=new T.CanvasTexture(canvas);
-      const sign=new T.Mesh(new T.PlaneGeometry(14,3.5),new T.MeshBasicMaterial({map:tex,side:T.DoubleSide}));sign.position.set(0,7,node.z+12);group.add(sign);
-      return {ring,gate};
+      const gate=box(76,.7,.4,0,1.1,node.z+10,mats.yellow);gate.visible=i<3;
+      if(i<3){box(26,.04,30,0,.1,node.z-8,mats.stop);box(26,.04,.5,0,.16,node.z+1,mats.yellow);}
+      else{for(const x of [-10,10])box(2,7,18,x,3.5,node.z,mats.steel);box(22,1,18,0,7.5,node.z,mats.steel);}
+      const canvas=document.createElement('canvas');canvas.width=512;canvas.height=192;const c=canvas.getContext('2d');c.fillStyle='#10202c';c.fillRect(0,0,512,192);c.fillStyle='#91e2e7';c.font='bold 48px Microsoft YaHei';c.textAlign='center';c.fillText((i+1)+' '+node.name,256,78);c.fillStyle='#ffda85';c.font='30px Microsoft YaHei';c.fillText(i<3?'停车守住35秒 · 自动抬杆':'驶入隧道光圈 · 撤离获胜',256,143);const tex=new T.CanvasTexture(canvas);
+      // Two outward-facing surfaces keep the same text readable from either side.
+      const signMat=new T.MeshBasicMaterial({map:tex,side:T.FrontSide}),signGeo=new T.PlaneGeometry(14,5.25),signs=[];
+      for(const back of [false,true]){const sign=new T.Mesh(signGeo,signMat);sign.position.set(0,7,node.z+12+(back?.06:-.06));sign.rotation.y=back?0:Math.PI;group.add(sign);signs.push(sign);}
+      return {ring,gate,signs};
     });
     // Distant rock banks give the road a readable edge from every camera angle.
     const rocks=new T.InstancedMesh(new T.DodecahedronGeometry(1,0),mats.ground,200);
@@ -82,14 +90,16 @@ export function createRVBreakout(a){
     Object.assign(s,{active:true,over:false,stage:d?.stage||0,hold:d?.hold||0,elapsed:d?.elapsed||0,fuel:d?.fuel??100,scrap:d?.scrap??60,gun:d?.gun||0,armor:d?.armor||0,looted:d?[...d.looted]:[false,false,false],spawn:3,search:0,job:null,saveT:0});
     const keep=new Set([a.camera,player.mesh,...a.skyObjects()]);s.hidden=scene.children.filter(o=>o.visible&&!o.isLight&&!keep.has(o));s.hidden.forEach(o=>o.visible=false);
     s.sky=a.skyObjects();s.skyOffset=d?.z||START;s.sky.forEach(o=>o.position.z+=s.skyOffset);s.world={...WORLD};Object.assign(WORLD,{minX:-39,maxX:39,minZ:START-30,maxZ:4010});buildArena();
-    s.nodes.forEach((n,i)=>n.gate.visible=i>=s.stage);s.lastPos=null;
-    s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(d?.x||0,0,d?.z||START);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);
+    s.nodes.forEach((n,i)=>n.gate.visible=i<3&&i>=s.stage);s.lastPos=null;
+    const savedZ=clamp(d?.z??START,START,s.stage<3?RV_ROUTE[s.stage].z+6:4010);
+    s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(d?.x||0,0,savedZ);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);
     a.faceForward();a.stage.classList.add('rv-mode');['menuMain','menuPause','menuOver','rvMenu','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('rvHUD').classList.remove('hidden');a.showHUD();a.showHint(null);
     $('btnRestartLv').textContent='🔄 重开房车突围';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 房车整备 · H 医疗 · U 手雷 · K 跳跃 · C 切换视角 · Q/E 转头 · Esc 暂停';
-    save();a.showMsg('驶向发光路标；房车耐久归零即失败',3);hud();
+    save();a.showMsg('沿蓝色公路箭头前进；到站停车35秒抬杆，最后开进撤离隧道获胜',6);hud();
   }
   function configure(){s.rv.maxHp=RV_CFG.hp+s.armor*200;s.rv.cfg.dmg=RV_CFG.dmg*(1+s.gun*.35);s.rv.cfg.speed=s.fuel>0?RV_CFG.speed:3;}
-  function blocked(x,z){return x<-38||x>38||z<START-29||z>Math.min(4010,RV_ROUTE[s.stage].z+20);}
+  function blocked(x,z){return x<-38||x>38||z<START-29||z>(s.stage<3?RV_ROUTE[s.stage].z+6:4010);}
+  function atStop(p){const node=RV_ROUTE[s.stage];return s.stage<3&&Math.abs(p.x)<=38&&p.z>=node.z-24&&p.z<=node.z+7;}
   function target(mo){
     const v=s.rv,p=v.mesh.position;if(v.dead)return null;
     const person=!player.dead&&!player.inVehicle&&distance(mo.mesh.position,player.pos)<distance(mo.mesh.position,p)*.65;
@@ -119,9 +129,9 @@ export function createRVBreakout(a){
   function spawnSwarm(count=3){
     const p=s.rv.mesh.position;
     for(let i=0;i<count&&a.monsters.length<36;i++){
-      const n=Math.floor(s.elapsed)+i,side=i%2?-1:1,x=clamp(p.x+side*(15+Math.random()*16),-35,35),z=clamp(p.z+(i===0?28:-25),START-25,4005);
+      const n=Math.floor(s.elapsed)+i,side=i%2?-1:1,x=clamp(p.x+side*(15+Math.random()*16),-35,35),z=clamp(p.z+(i===0?28:-25),START-25,s.stage<3?RV_ROUTE[s.stage].z+4:4005);
       const ch=a.CHAPTERS[Math.min(3,s.stage)],mo=a.spawnMonster('mob',x,z,{ch,quiet:true});
-      mo.hp=mo.maxHp=70+s.stage*24;mo.dmg=12+s.stage*3;mo.speed=7.2+s.stage*.6;mo.ranged=n%7===0;mo.flightAfterExit=false;mo.split=false;mo.explodeOnDie=false;mo.stealth=false;mo.gold=0;a.updHPBar(mo.bar,1);
+      mo.hp=mo.maxHp=70+s.stage*24;mo.dmg=12+s.stage*3;mo.speed=7.2+s.stage*.6;mo.ranged=n%7===0;mo.fly=false;mo.mesh.position.y=0;mo.flightAfterExit=false;mo.split=false;mo.explodeOnDie=false;mo.stealth=false;mo.gold=0;a.updHPBar(mo.bar,1);
     }
   }
   function update(dt){
@@ -132,20 +142,20 @@ export function createRVBreakout(a){
     if(!player.inVehicle){s.rv.fireCd-=dt;const mo=a.monsters.filter(m=>!m.dead).sort((x,y)=>distance(x.mesh.position,p)-distance(y.mesh.position,p))[0];
       if(mo&&distance(mo.mesh.position,p)<s.rv.cfg.range&&s.rv.fireCd<=0){s.rv.fireCd=s.rv.cfg.rate;const aim=mo.mesh.position.clone().add(new T.Vector3(0,mo.hitH,0)),dir=aim.clone().sub(p).normalize();a.vehicleAim(s.rv,dir);const from=a.vehicleMuzzle(s.rv,dir);a.fireBullet(from,aim.clone().sub(from).normalize(),{...s.rv.cfg,speed:65,color:0xffd27a},true,aim);AudioSys.sfx('mg');}}
     if(player.dead){player.respawnT-=dt;if(player.respawnT<=0){player.reset(Game.cls);player.pos.set(clamp(p.x+4,-36,36),0,p.z-3);player.mesh.position.copy(player.pos);player.invulnerable=3;a.showMsg('在房车旁复活；房车损伤保留',2);}}
-    const near=s.stage<3&&distance(p,{x:0,z:RV_ROUTE[s.stage].z})<17;
+    const near=atStop(p);s.moving=travel>dt*2;
     if(near&&travel<dt*2){s.hold=Math.min(35,s.hold+dt);if(s.hold>=35){s.fuel=Math.min(100,s.fuel+25);s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+100);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);s.nodes[s.stage].gate.visible=false;s.stage++;s.hold=0;s.search=0;save();a.showMsg('通行已恢复：补充燃料，驶向 '+RV_ROUTE[s.stage].name,3);}}
     if(s.search){if(player.dead||player.inVehicle||s.stage>=3||distance(player.pos,{x:18,z:RV_ROUTE[s.stage].z})>7){s.search=0;}else{s.search+=dt;if(s.search>=18){s.looted[s.stage]=true;s.scrap+=110;s.fuel=Math.min(100,s.fuel+15);Game.items.medkit++;s.search=0;AudioSys.sfx('buy');save();a.showMsg('搜索完成：+110 零件、燃料、医疗包',2);}}}
     if(s.job){const j=s.job;if(player.dead||player.inVehicle||distance(player.pos,p)>8){s.scrap+=j.cost;s.job=null;a.showMsg('整备取消，零件已退回');save();}else if((j.t+=dt)>=j.duration){if(j.kind==='repair')s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+450);else if(j.kind==='fuel')s.fuel=Math.min(100,s.fuel+35);else{s[j.kind]++;configure();if(j.kind==='armor')s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+200);}a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);s.job=null;AudioSys.sfx('build');save();a.showMsg('房车整备完成',2);}}
     s.spawn-=dt;if(s.spawn<=0){s.spawn=(near||s.search||s.job)?3.4:5;spawnSwarm(near?4:3);}
     for(const mo of [...a.monsters])if(distance(mo.mesh.position,p)>90){a.visuals.release(mo.mesh);scene.remove(mo.mesh);a.monsters.splice(a.monsters.indexOf(mo),1);}
-    if(s.stage===3&&p.z>=RV_ROUTE[3].z-8)finish(true);
+    if(s.stage===3&&p.z>=RV_ROUTE[3].z-5&&Math.abs(p.x)<=9)finish(true);
     if(s.saveT>=10){s.saveT=0;save();}hud();
   }
   function hud(){
     if(!s.active)return;const v=s.rv,node=RV_ROUTE[s.stage],p=v.mesh.position,dist=distance(p,{x:0,z:node.z});
     $('rvStatus').textContent=`耐久 ${Math.max(0,Math.ceil(v.hp))}/${v.maxHp} · 燃料 ${Math.ceil(s.fuel)}%`;$('rvFill').style.width=clamp(v.hp/v.maxHp*100,0,100)+'%';
-    $('rvObjective').textContent=`${s.stage+1}/4 ${node.name} · ${Math.ceil(dist)}米${s.stage<3&&dist<17?' · 停车通行 '+Math.ceil(s.hold)+'/35秒':''}`;
-    $('rvAction').textContent=s.job?'整备 '+Math.ceil(s.job.t)+'/'+s.job.duration+'秒':s.search?'搜索 '+Math.ceil(s.search)+'/18秒':s.fuel<=0?'燃料耗尽：仍可慢速挪车，停车整备补油':(a.isTouch()?'互动上下车/搜索 · 整备按钮修车':'I 上下车/搜索 · O 房车整备');
+    $('rvObjective').textContent=atStop(p)?`第${s.stage+1}站 ${node.name} · ${s.moving?'减速停稳开始计时':'守住，还需'+Math.ceil(35-s.hold)+'秒抬杆'}`:s.stage===3?`终点：开进撤离隧道 · ${Math.ceil(dist)}米`:`沿蓝色箭头前进 → ${s.stage+1}/3 ${node.name} · ${Math.ceil(dist)}米`;
+    $('rvAction').textContent=s.job?'整备 '+Math.ceil(s.job.t)+'/'+s.job.duration+'秒':s.search?'搜索 '+Math.ceil(s.search)+'/18秒':s.fuel<=0?'燃料耗尽：仍可慢速挪车，停车整备补油':atStop(p)?'停稳自动通行倒计时；搜索/维修可选':(a.isTouch()?'左摇杆驾驶 · 互动上下车/搜索 · 整备修车':'W/↑前进，A/D调整 · I上下车/搜索 · O整备');
     $('rvResources').textContent=`零件 ${Math.floor(s.scrap)} · 机枪${s.gun}/2 装甲${s.armor}/2 · ${Math.floor(s.elapsed/60)}:${String(Math.floor(s.elapsed%60)).padStart(2,'0')}${player.inVehicle?'':' · 人员 '+Math.ceil(player.hp)+'/'+player.maxHp}`;
     $('vO').textContent='整备';
   }

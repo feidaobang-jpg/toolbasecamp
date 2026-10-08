@@ -2,12 +2,12 @@
 // all subsequent driving, fighting and searching run at normal RAF speed.
 const fs=require('node:fs'),path=require('node:path');
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const out=path.join(__dirname,'media-kit/releases/web-rv-v0.28.0/capture');fs.mkdirSync(out,{recursive:true});
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-rv-v0.28.0/capture');fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const b=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11']});
  try{
   const p=await b.newPage({viewport:{width:1280,height:720}});
-  await p.goto('http://127.0.0.1:8798/html/game/starship-defense/index.html?qa=1');await p.waitForFunction(()=>window.__gameQA&&window.__ccReady);
+  await p.goto((process.env.GAME_URL||'http://127.0.0.1:8798/html/game/starship-defense/index.html')+'?qa=1');await p.waitForFunction(()=>window.__gameQA&&window.__ccReady,null,{timeout:60000});
   await p.click('#btnRV');await p.click('#rvStart');
   await p.evaluate(()=>{const q=__gameQA;q.rvBreakout.state.rv.mesh.position.z=2040;q.player.pos.z=2040;});await p.waitForTimeout(400);
   await p.evaluate(()=>{
