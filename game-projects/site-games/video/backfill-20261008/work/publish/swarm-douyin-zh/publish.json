@@ -34,7 +34,7 @@
   "subtitle_mode": "burned_in",
   "subtitle_files": [],
   "credits": "credits.txt",
-  "cover_upload_mode": "verify_current_entry",
+  "cover_upload_mode": "horizontal_4x3_and_portrait_3x4",
   "recorded_date": "2026-10-04",
   "historical_bilibili_source": {
     "bvid": "BV1WbHq6eEBt",
@@ -65,10 +65,42 @@
     "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
     "subtitle_sha256": {}
   },
-  "blocking_issues": [
-    "发布账号登录与当前投稿设置待核对"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "ready_to_review": true,
-  "uploaded": false
+  "uploaded": true,
+  "account_id": "84261875244",
+  "platform_cover_files": [
+    {
+      "file": "../../../final/swarm/douyin-zh/cover-horizontal-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "douyin_horizontal",
+      "sha256": "68b9be8e9a83d7af5da0670fe730c1138263e3241c2111b227b9f78722c6686e",
+      "source": "approved gameplay frame; native text layout"
+    },
+    {
+      "file": "../../../final/swarm/douyin-zh/cover-portrait-3x4.jpg",
+      "width": 1080,
+      "height": 1440,
+      "purpose": "douyin_portrait",
+      "sha256": "bd545ec43c90ddc8dc6931239a5feccfd45c5235e416651034c472928c156db5",
+      "source": "approved gameplay frame; native text layout"
+    }
+  ],
+  "status": "published",
+  "last_observed_at": "2026-10-08T06:24:59.282647+00:00",
+  "platform_id": "7694177740940922131",
+  "public_url": "https://www.douyin.com/video/7694177740940922131",
+  "public_verified_at": "2026-10-08T06:24:59.282647+00:00",
+  "visibility": "public",
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+    "original_audio": true,
+    "publish_mode": "immediate",
+    "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
+  }
 }

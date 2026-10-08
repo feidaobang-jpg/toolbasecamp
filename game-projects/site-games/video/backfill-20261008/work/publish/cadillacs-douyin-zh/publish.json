@@ -34,7 +34,7 @@
   "subtitle_mode": "burned_in",
   "subtitle_files": [],
   "credits": "credits.txt",
-  "cover_upload_mode": "verify_current_entry",
+  "cover_upload_mode": "horizontal_4x3_and_portrait_3x4",
   "recorded_date": "2026-10-05",
   "historical_bilibili_source": {
     "bvid": "BV18XHW66E55",
@@ -65,10 +65,42 @@
     "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
     "subtitle_sha256": {}
   },
-  "blocking_issues": [
-    "发布账号登录与当前投稿设置待核对"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "ready_to_review": true,
-  "uploaded": false
+  "uploaded": true,
+  "account_id": "84261875244",
+  "platform_cover_files": [
+    {
+      "file": "../../../final/cadillacs/douyin-zh/cover-horizontal-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "douyin_horizontal",
+      "sha256": "799d0eaa5b1dbd3000d01688c670a89845439632aa866997b16d49a90b203007",
+      "source": "approved gameplay frame; native text layout"
+    },
+    {
+      "file": "../../../final/cadillacs/douyin-zh/cover-portrait-3x4.jpg",
+      "width": 1080,
+      "height": 1440,
+      "purpose": "douyin_portrait",
+      "sha256": "bc92606b7efd1d74bbec72cdd42995086793d4b9886d725fd7f94ee63ffde5df",
+      "source": "approved gameplay frame; native text layout"
+    }
+  ],
+  "status": "published",
+  "last_observed_at": "2026-10-08T06:50:08.404001+00:00",
+  "platform_id": "7694183607279062326",
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+    "original_audio": true,
+    "publish_mode": "immediate",
+    "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
+  },
+  "public_url": "https://www.douyin.com/video/7694183607279062326",
+  "public_verified_at": "2026-10-08T06:50:08.404001+00:00",
+  "visibility": "public"
 }

@@ -83,17 +83,52 @@
       "en": "36f4e53c3ad247a33e1aa5da8b28b074c7bb80d5940601dbcbd45524a8a583ed"
     }
   },
-  "blocking_issues": [
-    "发布账号登录与当前投稿设置待核对"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "ready_to_review": true,
-  "uploaded": false,
+  "uploaded": true,
   "localizations": {
     "en": {
       "title": "What If Cadillacs and Dinosaurs Were First Person? Three Views Tested",
       "description": "Play the first stage in side view, rear view and first person, comparing visibility and combat all the way to the boss.\nEdited development footage recorded on 2026-10-05. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\nFan-made, unofficial Cadillacs and Dinosaurs remake. Original rights belong to Capcom and the original rights holders.\nCurrent browser demo: https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html"
     }
   },
-  "localization_file": "../../../final/cadillacs/youtube-zh/English-localizations.txt"
+  "localization_file": "../../../final/cadillacs/youtube-zh/English-localizations.txt",
+  "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+  "status": "published",
+  "last_observed_at": "2026-10-08T06:39:45.040191+00:00",
+  "platform_id": "fJBtG1-njZc",
+  "visibility": "public",
+  "subtitle_upload_status": {
+    "zh-CN": "saved_on_platform",
+    "en": "saved_on_platform"
+  },
+  "public_url": "https://www.youtube.com/watch?v=fJBtG1-njZc",
+  "public_verified_at": "2026-10-08T06:39:45.040191+00:00",
+  "localization_upload_status": {
+    "en": "saved_on_platform"
+  },
+  "duplicate_check_scope": {
+    "pre_upload_normal_videos": [
+      "Kk8XPu9vQ-M"
+    ],
+    "pre_upload_shorts": [
+      "DE7PRJiSReo"
+    ],
+    "matching_backfill_found": false,
+    "description": "Normal-video library and channel translations list inspected before upload"
+  },
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+    "made_for_kids": false,
+    "paid_promotion": false,
+    "video_language": "zh-CN",
+    "category": "Gaming",
+    "hd_processing": "complete",
+    "caption_public_verification": "manual zh-CN and en listed in public player",
+    "external_demo_link": "URL present; clickable external links require channel verification"
+  }
 }

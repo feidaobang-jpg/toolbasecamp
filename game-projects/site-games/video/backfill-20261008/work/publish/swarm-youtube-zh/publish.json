@@ -83,17 +83,52 @@
       "en": "4e67343aed98b8bae4348b73c3c4d63393d7dde5bee8fe523c5c3602b6f7de29"
     }
   },
-  "blocking_issues": [
-    "发布账号登录与当前投稿设置待核对"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "ready_to_review": true,
-  "uploaded": false,
+  "uploaded": true,
   "localizations": {
     "en": {
       "title": "Raid the Queen or Defend the Base? Swarm Siege Gameplay",
       "description": "Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\nCurrent browser demo: https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
     }
   },
-  "localization_file": "../../../final/swarm/youtube-zh/English-localizations.txt"
+  "localization_file": "../../../final/swarm/youtube-zh/English-localizations.txt",
+  "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+  "platform_id": "5pr0fr0CMl0",
+  "status": "published",
+  "visibility": "public",
+  "last_observed_at": "2026-10-08T06:09:08.236349+00:00",
+  "subtitle_upload_status": {
+    "zh-CN": "saved_on_platform",
+    "en": "saved_on_platform"
+  },
+  "public_url": "https://www.youtube.com/watch?v=5pr0fr0CMl0",
+  "public_verified_at": "2026-10-08T06:09:08.236349+00:00",
+  "localization_upload_status": {
+    "en": "saved_on_platform"
+  },
+  "duplicate_check_scope": {
+    "pre_upload_normal_videos": [
+      "Kk8XPu9vQ-M"
+    ],
+    "pre_upload_shorts": [
+      "DE7PRJiSReo"
+    ],
+    "matching_backfill_found": false,
+    "description": "Normal-video library and channel translations list inspected before upload"
+  },
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+    "made_for_kids": false,
+    "paid_promotion": false,
+    "video_language": "zh-CN",
+    "category": "Gaming",
+    "hd_processing": "complete",
+    "caption_public_verification": "manual zh-CN and en listed in public player",
+    "external_demo_link": "URL present; clickable external links require channel verification"
+  }
 }
