@@ -227,19 +227,19 @@
     "app_id": 962354,
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
-    "status": "reviewing_rv_v0280",
-    "submitted_version": "web-rv-v0.28.0",
-    "submitted_package_sha256": "58408cf136a51eb4f47602dd0dac8f9d240c56b627abc58c0ef9738353e909aa",
-    "submitted_h5_version_id": 275671,
-    "draft_version_id": "1046885",
-    "audit_id": "1046885",
-    "platform_version": "V-20261008-3",
-    "submitted_at": "2026-10-08T09:36:24+00:00",
-    "last_published_version": "web-versus-teams-v0.27.0",
-    "last_published_h5_version_id": 275356,
-    "last_published_platform_version": "V-20261008-2",
+    "status": "reviewing",
+    "submitted_version": "web-squad-v0.29.0",
+    "submitted_package_sha256": "eaf9b78fab954e653e90a45173576fc1bde53f52dccd42b09db313b47fdbcd40",
+    "submitted_h5_version_id": 276055,
+    "draft_version_id": "1047272",
+    "audit_id": "1047272",
+    "platform_version": "V-20261008-4",
+    "submitted_at": "2026-10-08T11:27:00.617837+00:00",
+    "last_published_version": "web-rv-v0.28.0",
+    "last_published_h5_version_id": 275671,
+    "last_published_platform_version": "V-20261008-3",
     "last_public_runtime_verified_version": null,
-    "release_record": "releases/web-rv-v0.28.0/taptap-release.json",
+    "release_record": "releases/web-squad-v0.29.0/taptap-release.json",
     "pending": [
       {
         "version": "web-rv-v0.29.1",
@@ -259,9 +259,9 @@
     "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
     "submission_time_source": "list-app-versions created_time 1791452184",
     "last_status_checked_at": "2026-10-08T11:41:23.044637+00:00",
-    "submitted_source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+    "submitted_source_commit": "94045b02fdbb0ea783f0747266cd6914e583f679",
     "community_post_status": "pending_until_online",
-    "community_post_note": "房车v0.28上线并核验后，与尚未发布的v0.25–0.27说明合并一条动态，挂同游戏论坛，先查重。",
+    "community_post_note": "pending until target online; merge previous pending v0.25–0.28 notes; do not repeat posts",
     "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
     "history": [
       {
@@ -412,7 +412,125 @@
         "draft_version_id": "1045922"
       }
     ],
-    "release_receipts": "releases/web-rv-v0.28.0"
+    "release_receipts": "releases/web-rv-v0.28.0",
+    "cover_update": {
+      "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+      "app_id": 962354,
+      "title": "虫潮围城",
+      "status": "pending_existing_review",
+      "prepared_at": "2026-10-08T11:44:30.296112+00:00",
+      "fields": {
+        "banner_4": {
+          "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\banner_4.jpg",
+          "sha256": "fd11760c034e656fd62577f6dc773f54b1064f9ff552971e1709d48ea4dbadce",
+          "size": [
+            1920,
+            1080
+          ],
+          "bytes": 338437,
+          "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+          "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+          "crop": [
+            0,
+            0,
+            1920,
+            1080
+          ],
+          "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+        },
+        "cover_vertical": {
+          "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover_vertical.jpg",
+          "sha256": "183bf7fa32a076a63ac18bb548b770aeadaa3f402c5004b7a7b201149777b129",
+          "size": [
+            720,
+            1080
+          ],
+          "bytes": 149875,
+          "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+          "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+          "crop": [
+            420,
+            40,
+            1100,
+            1060
+          ],
+          "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+        }
+      },
+      "uploads": {
+        "banner_4": {
+          "assetId": "362997",
+          "height": 1080,
+          "info": {
+            "format": "jpeg",
+            "height": 1080,
+            "size": 338437,
+            "width": 1920
+          },
+          "url": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+          "width": 1920
+        },
+        "cover_vertical": {
+          "assetId": "362998",
+          "height": 1080,
+          "info": {
+            "format": "jpeg",
+            "height": 1080,
+            "size": 149875,
+            "width": 720
+          },
+          "url": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+          "width": 720
+        }
+      },
+      "reviewing": [
+        {
+          "created_time": 1791457964,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261008-4",
+          "version_id": "V-20261008-4"
+        }
+      ],
+      "public_verified": false,
+      "next_action": "现有玩法版本审核结束后，从最新线上创建资料草稿，写前重读，仅替换已准备的 banner_4 与 cover_vertical，不改包体、不撤审。",
+      "game_id": "starship-defense",
+      "developer_id": 100726,
+      "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+      "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+      "updated_at": "2026-10-08T11:50:37.151935+00:00",
+      "source_note": "2026-10-06 正常试玩截图；荒漠第三人称场景",
+      "changes": [
+        {
+          "field_id": "banner_4",
+          "expected": "https://img-tc.tapimg.com/market/images/0ffc232a8c72eee41054f53ac6e50dfe.png",
+          "value": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+          "applied": false
+        },
+        {
+          "field_id": "cover_vertical",
+          "expected": "https://img-tc.tapimg.com/market/images/638152a40567886f71bb91a56f3803a4.png",
+          "value": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+          "applied": false
+        }
+      ],
+      "only_cover_fields_changed": false,
+      "package_binding_changed": false,
+      "checked_at": "2026-10-08T11:49:16.253895+00:00",
+      "platform_read_only": {
+        "blockers": [
+          {
+            "code": "READ_ONLY",
+            "field_ids": [],
+            "message": "当前应用处于「审核中」状态，无法提交审核"
+          }
+        ],
+        "suggestions": [],
+        "warnings": []
+      }
+    }
   },
   "defense_update": {
     "attack_towers": 8,
