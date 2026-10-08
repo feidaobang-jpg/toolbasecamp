@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047748",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏名称及内容涉嫌引用知名IP“坦克大战”，建议前往游戏资质页面上传相关正版授权证明或权属文件，以避免驳回风险。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

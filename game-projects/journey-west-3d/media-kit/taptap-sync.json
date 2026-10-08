@@ -83,139 +83,281 @@
     "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
     "app_id": 962724,
     "title": "西游降魔 3D",
+    "phase": "quality-v2",
     "status": "reviewing",
-    "prepared_at": "2026-10-08T11:41:32.835812+00:00",
-    "draft_id": "1047326",
-    "platform_version": "V-20261008-1",
+    "draft": {
+      "based_on_version_id": "1047326",
+      "status": "draft",
+      "version_id": "1047767"
+    },
+    "draft_id": "1047767",
+    "platform_version": "V-20261008-2",
+    "prepared_at": "2026-10-08T13:11:46.172058+00:00",
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": "https://img-tc.tapimg.com/market/images/1c255f4768814266d801f2ab7da4154f.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/8a140ebc95dc3d0e4cfe11a11b32ba33.jpg"
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": "https://img-tc.tapimg.com/market/images/c982cd90bd49b6be08c24a156cae2b6d.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/11394f9289dc525b81aed5a596c05ebb.jpg"
+      }
+    ],
     "fields": {
       "banner_4": {
-        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\banner_4.jpg",
-        "sha256": "803e5fe7834e7e979eaa2bdf917a4dcf7a8bc9d1430bb46c5bc2557c8245d197",
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\banner_4.jpg",
         "size": [
           1920,
           1080
         ],
-        "bytes": 319767,
-        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover-source.jpg",
-        "source_sha256": "f9c7e2fcca04ca11dc02afb1388ab3e180cc2ea000d4755b51107a19cb9058d3",
-        "crop": [
-          160,
-          170,
-          2400,
-          1430
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\journey-first.jpg",
+        "source_sha256": "3abe582446eeb5a9866c93763d4cbc31e3e27919a3fda5155e9dc9556646ac90",
+        "source_size": [
+          3840,
+          2072
         ],
-        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+        "crop": [
+          200,
+          200,
+          3528,
+          2072
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\banner_4.html",
+        "sha256": "2a6c6785b102904425515e6f4fd522e7188b3c020af8944858390c64a42ba74c",
+        "bytes": 117953
       },
       "cover_vertical": {
-        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover_vertical.jpg",
-        "sha256": "52e2df6914010ee2764a3092c9a581e70a994a9b2974c44c10c52b2758da2a55",
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\cover_vertical.jpg",
         "size": [
           720,
           1080
         ],
-        "bytes": 141018,
-        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover-source.jpg",
-        "source_sha256": "f9c7e2fcca04ca11dc02afb1388ab3e180cc2ea000d4755b51107a19cb9058d3",
-        "crop": [
-          770,
-          180,
-          1590,
-          1410
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\journey-first.jpg",
+        "source_sha256": "3abe582446eeb5a9866c93763d4cbc31e3e27919a3fda5155e9dc9556646ac90",
+        "source_size": [
+          3840,
+          2072
         ],
-        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+        "crop": [
+          2060,
+          0,
+          3441,
+          2072
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\cover_vertical.html",
+        "sha256": "902057f4ed1f669ade05e98bf7b9a53ad28e485f5256ac15812d6e6995445314",
+        "bytes": 54105
       }
     },
-    "changes": [
-      {
-        "field_id": "banner_4",
-        "expected": "https://img-tc.tapimg.com/market/images/dd0f10e4d18c8aaa7dac55964788b500.jpg",
-        "value": "https://img-tc.tapimg.com/market/images/1c255f4768814266d801f2ab7da4154f.jpg"
-      },
-      {
-        "field_id": "cover_vertical",
-        "expected": "https://img-tc.tapimg.com/market/images/82f7d739e1ca509f4b692669b501a214.jpg",
-        "value": "https://img-tc.tapimg.com/market/images/c982cd90bd49b6be08c24a156cae2b6d.jpg"
-      }
-    ],
     "uploads": {
       "banner_4": {
-        "assetId": "362959",
+        "assetId": "363806",
         "height": 1080,
         "info": {
           "format": "jpeg",
           "height": 1080,
-          "size": 319767,
+          "size": 117953,
           "width": 1920
         },
-        "url": "https://img-tc.tapimg.com/market/images/1c255f4768814266d801f2ab7da4154f.jpg",
+        "url": "https://img-tc.tapimg.com/market/images/8a140ebc95dc3d0e4cfe11a11b32ba33.jpg",
         "width": 1920
       },
       "cover_vertical": {
-        "assetId": "362960",
+        "assetId": "363807",
         "height": 1080,
         "info": {
           "format": "jpeg",
           "height": 1080,
-          "size": 141018,
+          "size": 54105,
           "width": 720
         },
-        "url": "https://img-tc.tapimg.com/market/images/c982cd90bd49b6be08c24a156cae2b6d.jpg",
+        "url": "https://img-tc.tapimg.com/market/images/11394f9289dc525b81aed5a596c05ebb.jpg",
         "width": 720
       }
     },
     "snapshot": {
       "changes": [],
-      "revision": 1047326,
+      "revision": 1047767,
       "status": "ready",
-      "version_id": "1047326",
+      "version_id": "1047767",
       "warnings": []
     },
     "precheck": {
       "blockers": [],
-      "preaudit_passed": false,
-      "version_id": "1047326",
-      "warnings": [
-        {
-          "code": "PREAUDIT",
-          "field_ids": [
-            "banner_4"
-          ],
-          "message": "宣传图请勿直接使用未经排版的原始游戏截图（底部包含操作UI提示）并简单叠加标题，建议重新设计并上传符合平台推荐规范的高质量宣传海报。"
-        },
-        {
-          "code": "PREAUDIT",
-          "field_ids": [
-            "cover_vertical"
-          ],
-          "message": "竖版封面存在直接截取游戏画面导致的UI文字残留（底部按键提示被裁切）及排版拼贴感，建议使用专门设计的竖版视觉海报。"
-        }
-      ]
+      "preaudit_passed": true,
+      "version_id": "1047767",
+      "warnings": []
     },
     "only_cover_fields_changed": true,
     "package_binding_changed": false,
-    "submitted_at": "2026-10-08T11:43:26.554755+00:00",
-    "submission": {
-      "audit_id": "1047326",
-      "status": "reviewing",
-      "version_id": "1047326"
-    },
     "public_verified": false,
-    "preaudit_note": "无硬阻塞；保留已知经典IP提示及本次实机截图封面排版建议，正常送正式审核。",
+    "material_quality_verified": false,
+    "submission": {
+      "audit_id": "1047767",
+      "status": "reviewing",
+      "version_id": "1047767"
+    },
+    "submitted_at": "2026-10-08T13:14:08.181781+00:00",
+    "remaining_warning_note": "预审通过，无提示。",
     "platform_history_head": {
-      "created_time": 1791458585,
+      "created_time": 1791465088,
       "last_event": "review_submitted",
       "status": "reviewing",
       "status_label": "审核中",
       "status_value": 1,
-      "version": "V-20261008-1",
-      "version_id": "V-20261008-1"
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
     },
-    "last_status_checked_at": "2026-10-08T11:49:18.170149+00:00",
     "game_id": "journey-west-3d",
     "developer_id": 100726,
-    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
-    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
-    "updated_at": "2026-10-08T11:50:37.158468+00:00",
-    "source_note": "本次当前 TapTap H5 包正常试玩截图"
+    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/quality-v2/handoff.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2",
+    "updated_at": "2026-10-08T13:18:01.231863+00:00",
+    "next_action": "等待本次正式素材审核；读取 published/entry_type/status_reason，公开生效与推荐标准分别核验。entry_type=1仍需按新意见整改，不重复用同图送审。",
+    "history": [
+      {
+        "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+        "app_id": 962724,
+        "title": "西游降魔 3D",
+        "status": "reviewing",
+        "prepared_at": "2026-10-08T11:41:32.835812+00:00",
+        "draft_id": "1047326",
+        "platform_version": "V-20261008-1",
+        "fields": {
+          "banner_4": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\banner_4.jpg",
+            "sha256": "803e5fe7834e7e979eaa2bdf917a4dcf7a8bc9d1430bb46c5bc2557c8245d197",
+            "size": [
+              1920,
+              1080
+            ],
+            "bytes": 319767,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover-source.jpg",
+            "source_sha256": "f9c7e2fcca04ca11dc02afb1388ab3e180cc2ea000d4755b51107a19cb9058d3",
+            "crop": [
+              160,
+              170,
+              2400,
+              1430
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          },
+          "cover_vertical": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover_vertical.jpg",
+            "sha256": "52e2df6914010ee2764a3092c9a581e70a994a9b2974c44c10c52b2758da2a55",
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 141018,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover-source.jpg",
+            "source_sha256": "f9c7e2fcca04ca11dc02afb1388ab3e180cc2ea000d4755b51107a19cb9058d3",
+            "crop": [
+              770,
+              180,
+              1590,
+              1410
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          }
+        },
+        "changes": [
+          {
+            "field_id": "banner_4",
+            "expected": "https://img-tc.tapimg.com/market/images/dd0f10e4d18c8aaa7dac55964788b500.jpg",
+            "value": "https://img-tc.tapimg.com/market/images/1c255f4768814266d801f2ab7da4154f.jpg"
+          },
+          {
+            "field_id": "cover_vertical",
+            "expected": "https://img-tc.tapimg.com/market/images/82f7d739e1ca509f4b692669b501a214.jpg",
+            "value": "https://img-tc.tapimg.com/market/images/c982cd90bd49b6be08c24a156cae2b6d.jpg"
+          }
+        ],
+        "uploads": {
+          "banner_4": {
+            "assetId": "362959",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 319767,
+              "width": 1920
+            },
+            "url": "https://img-tc.tapimg.com/market/images/1c255f4768814266d801f2ab7da4154f.jpg",
+            "width": 1920
+          },
+          "cover_vertical": {
+            "assetId": "362960",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 141018,
+              "width": 720
+            },
+            "url": "https://img-tc.tapimg.com/market/images/c982cd90bd49b6be08c24a156cae2b6d.jpg",
+            "width": 720
+          }
+        },
+        "snapshot": {
+          "changes": [],
+          "revision": 1047326,
+          "status": "ready",
+          "version_id": "1047326",
+          "warnings": []
+        },
+        "precheck": {
+          "blockers": [],
+          "preaudit_passed": false,
+          "version_id": "1047326",
+          "warnings": [
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "banner_4"
+              ],
+              "message": "宣传图请勿直接使用未经排版的原始游戏截图（底部包含操作UI提示）并简单叠加标题，建议重新设计并上传符合平台推荐规范的高质量宣传海报。"
+            },
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "cover_vertical"
+              ],
+              "message": "竖版封面存在直接截取游戏画面导致的UI文字残留（底部按键提示被裁切）及排版拼贴感，建议使用专门设计的竖版视觉海报。"
+            }
+          ]
+        },
+        "only_cover_fields_changed": true,
+        "package_binding_changed": false,
+        "submitted_at": "2026-10-08T11:43:26.554755+00:00",
+        "submission": {
+          "audit_id": "1047326",
+          "status": "reviewing",
+          "version_id": "1047326"
+        },
+        "public_verified": false,
+        "preaudit_note": "无硬阻塞；保留已知经典IP提示及本次实机截图封面排版建议，正常送正式审核。",
+        "platform_history_head": {
+          "created_time": 1791458585,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261008-1",
+          "version_id": "V-20261008-1"
+        },
+        "last_status_checked_at": "2026-10-08T11:49:18.170149+00:00",
+        "game_id": "journey-west-3d",
+        "developer_id": 100726,
+        "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+        "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+        "updated_at": "2026-10-08T11:50:37.158468+00:00",
+        "source_note": "本次当前 TapTap H5 包正常试玩截图"
+      }
+    ]
   }
 }

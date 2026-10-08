@@ -45,139 +45,480 @@
     "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
     "app_id": 962376,
     "title": "坦克大战 3D",
+    "phase": "quality-v2",
     "status": "reviewing",
-    "prepared_at": "2026-10-08T11:40:00.782148+00:00",
-    "draft_id": "1047322",
-    "platform_version": "V-20261008-1",
+    "draft": {
+      "based_on_version_id": "1047322",
+      "status": "draft",
+      "version_id": "1047748"
+    },
+    "draft_id": "1047748",
+    "platform_version": "V-20261008-2",
+    "prepared_at": "2026-10-08T13:13:58.306149+00:00",
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": "https://img-tc.tapimg.com/market/images/a2424d7d4f3eb169ea73f58d0b385a32.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/c9d8eceddb1c7fb683bc0377c28674bd.jpg"
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": "https://img-tc.tapimg.com/market/images/ddfb272c08d008fa4a0ab199a4b09d69.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/ddfb272c08d008fa4a0ab199a4b09d69.jpg"
+      }
+    ],
     "fields": {
       "banner_4": {
-        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\banner_4.jpg",
-        "sha256": "f668facf9138414997d47462c0533a3ba3173e6f8c4d53d23d0033fded2a7701",
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.jpg",
         "size": [
           1920,
           1080
         ],
-        "bytes": 566617,
-        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover-source.jpg",
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
         "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
-        "crop": [
-          160,
-          170,
-          2400,
-          1430
+        "source_size": [
+          2560,
+          1437
         ],
-        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+        "crop": [
+          400,
+          160,
+          2320,
+          1240
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.html",
+        "sha256": "f627ea08bf40ed06d166d765e14fa39e0b67d6b66cd84fd3394ae7542d54854c",
+        "bytes": 159407
       },
       "cover_vertical": {
-        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover_vertical.jpg",
-        "sha256": "380095099752fe304947471285c218672cf0e45cd3fb5d719d34f6083e3a0d7d",
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.jpg",
         "size": [
           720,
           1080
         ],
-        "bytes": 194659,
-        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover-source.jpg",
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
         "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
-        "crop": [
-          1020,
-          230,
-          1820,
-          1430
+        "source_size": [
+          2560,
+          1437
         ],
-        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+        "crop": [
+          820,
+          175,
+          1640,
+          1405
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.html",
+        "sha256": "be987648d2e82919721aac6919e531dcb27e1fb93aa9949ec6a2c6eab4d4dfb6",
+        "bytes": 63899
       }
     },
-    "changes": [
-      {
-        "field_id": "banner_4",
-        "expected": "https://img-tc.tapimg.com/market/images/58ec77b5c115bbf17584ec18f6267f03.png",
-        "value": "https://img-tc.tapimg.com/market/images/fbe9d60db59ac98d63b26eeec88c7993.jpg"
-      },
-      {
-        "field_id": "cover_vertical",
-        "expected": "https://img-tc.tapimg.com/market/images/ced00df68fda63a88275204af5eabab4.png",
-        "value": "https://img-tc.tapimg.com/market/images/f5c8a2f0d33b27c3086ebc405961e3a1.jpg"
-      }
-    ],
     "uploads": {
       "banner_4": {
-        "assetId": "362952",
+        "assetId": "363837",
         "height": 1080,
         "info": {
           "format": "jpeg",
           "height": 1080,
-          "size": 566617,
+          "size": 159407,
           "width": 1920
         },
-        "url": "https://img-tc.tapimg.com/market/images/fbe9d60db59ac98d63b26eeec88c7993.jpg",
+        "url": "https://img-tc.tapimg.com/market/images/c9d8eceddb1c7fb683bc0377c28674bd.jpg",
         "width": 1920
       },
       "cover_vertical": {
-        "assetId": "362953",
+        "assetId": "363784",
         "height": 1080,
         "info": {
           "format": "jpeg",
           "height": 1080,
-          "size": 194659,
+          "size": 63899,
           "width": 720
         },
-        "url": "https://img-tc.tapimg.com/market/images/f5c8a2f0d33b27c3086ebc405961e3a1.jpg",
+        "url": "https://img-tc.tapimg.com/market/images/ddfb272c08d008fa4a0ab199a4b09d69.jpg",
         "width": 720
       }
     },
     "snapshot": {
       "changes": [],
-      "revision": 1047322,
+      "revision": 1047748,
       "status": "ready",
-      "version_id": "1047322",
+      "version_id": "1047748",
       "warnings": []
     },
     "precheck": {
       "blockers": [],
       "preaudit_passed": false,
-      "version_id": "1047322",
+      "version_id": "1047748",
       "warnings": [
         {
           "code": "PREAUDIT",
           "field_ids": [
-            "banner_4"
+            "title"
           ],
-          "message": "宣传图请勿直接复用未经排版、带有UI按键的游戏实机截图并简单叠加标题文字，建议重新设计并上传具备良好视觉质量的宣传海报。"
-        },
-        {
-          "code": "PREAUDIT",
-          "field_ids": [
-            "cover_vertical"
-          ],
-          "message": "竖版封面素材排版较为简陋，请避免直接使用游戏局部截图贴字作为封面，建议上传更具设计感与辨识度的精美封面海报。"
+          "message": "游戏名称及内容涉嫌引用知名IP“坦克大战”，建议前往游戏资质页面上传相关正版授权证明或权属文件，以避免驳回风险。"
         }
       ]
     },
     "only_cover_fields_changed": true,
     "package_binding_changed": false,
-    "submitted_at": "2026-10-08T11:43:18.901028+00:00",
-    "submission": {
-      "audit_id": "1047322",
-      "status": "reviewing",
-      "version_id": "1047322"
-    },
     "public_verified": false,
-    "preaudit_note": "无硬阻塞；保留已知经典IP提示及本次实机截图封面排版建议，正常送正式审核。",
+    "material_quality_verified": false,
+    "design_review_history": [
+      {
+        "fields": {
+          "banner_4": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.jpg",
+            "size": [
+              1920,
+              1080
+            ],
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
+            "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+            "source_size": [
+              2560,
+              1437
+            ],
+            "crop": [
+              400,
+              160,
+              2320,
+              1240
+            ],
+            "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+            "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.html",
+            "sha256": "696d78d3cd09fd563c9752ada458b5be16f4c907f49e37c4ab9dca185f31c85c",
+            "bytes": 188805
+          },
+          "cover_vertical": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.jpg",
+            "size": [
+              720,
+              1080
+            ],
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
+            "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+            "source_size": [
+              2560,
+              1437
+            ],
+            "crop": [
+              820,
+              175,
+              1640,
+              1405
+            ],
+            "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+            "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.html",
+            "sha256": "751864b84569219a5e825b5225ae582e74e8c68b95f6367d708c2f09a3426d19",
+            "bytes": 69736
+          }
+        },
+        "uploads": {
+          "banner_4": {
+            "assetId": "363756",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 188805,
+              "width": 1920
+            },
+            "url": "https://img-tc.tapimg.com/market/images/479d32d34377e2bf4ec540b486ffb4d3.jpg",
+            "width": 1920
+          },
+          "cover_vertical": {
+            "assetId": "363757",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 69736,
+              "width": 720
+            },
+            "url": "https://img-tc.tapimg.com/market/images/69c715548a8c609300d5c7de8c1f2467.jpg",
+            "width": 720
+          }
+        },
+        "precheck": {
+          "blockers": [],
+          "preaudit_passed": false,
+          "version_id": "1047748",
+          "warnings": [
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "banner_4"
+              ],
+              "message": "16:9宣传图中包含了“守护基地 · 炮火突围”等多余宣传文案，请修改宣传图，仅保留完整的游戏名称与必要标识信息。"
+            },
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "cover_vertical"
+              ],
+              "message": "竖版封面中包含了“守护基地 · 炮火突围”等多余宣传文案，请修改封面图，仅保留完整的游戏名称与必要标识信息。"
+            }
+          ]
+        },
+        "prepared_at": "2026-10-08T13:08:28.354555+00:00"
+      },
+      {
+        "fields": {
+          "banner_4": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.jpg",
+            "size": [
+              1920,
+              1080
+            ],
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
+            "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+            "source_size": [
+              2560,
+              1437
+            ],
+            "crop": [
+              400,
+              160,
+              2320,
+              1240
+            ],
+            "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+            "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.html",
+            "sha256": "8f73702cb7227feda0905d5e1b41ddb3b3d6913ae41fae9537a6c1c448c78f14",
+            "bytes": 178248
+          },
+          "cover_vertical": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.jpg",
+            "size": [
+              720,
+              1080
+            ],
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
+            "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+            "source_size": [
+              2560,
+              1437
+            ],
+            "crop": [
+              820,
+              175,
+              1640,
+              1405
+            ],
+            "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+            "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.html",
+            "sha256": "be987648d2e82919721aac6919e531dcb27e1fb93aa9949ec6a2c6eab4d4dfb6",
+            "bytes": 63899
+          }
+        },
+        "uploads": {
+          "banner_4": {
+            "assetId": "363782",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 178248,
+              "width": 1920
+            },
+            "url": "https://img-tc.tapimg.com/market/images/a2424d7d4f3eb169ea73f58d0b385a32.jpg",
+            "width": 1920
+          },
+          "cover_vertical": {
+            "assetId": "363784",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 63899,
+              "width": 720
+            },
+            "url": "https://img-tc.tapimg.com/market/images/ddfb272c08d008fa4a0ab199a4b09d69.jpg",
+            "width": 720
+          }
+        },
+        "precheck": {
+          "blockers": [],
+          "preaudit_passed": false,
+          "version_id": "1047748",
+          "warnings": [
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "banner_4"
+              ],
+              "message": "宣传图请勿直接在游戏原始截图上简单叠加游戏标题，建议重新设计并上传经过专门美术排版的宣传素材。"
+            }
+          ]
+        },
+        "prepared_at": "2026-10-08T13:10:39.782257+00:00"
+      }
+    ],
+    "submission": {
+      "audit_id": "1047748",
+      "status": "reviewing",
+      "version_id": "1047748"
+    },
+    "submitted_at": "2026-10-08T13:15:39.693669+00:00",
+    "remaining_warning_note": "素材构图/排版预检已无提示；既有经典IP版权预审提示保留，未声称已获授权，按本次已授权范围提交正式审核。",
     "platform_history_head": {
-      "created_time": 1791458571,
+      "created_time": 1791464890,
       "last_event": "review_submitted",
       "status": "reviewing",
       "status_label": "审核中",
       "status_value": 1,
-      "version": "V-20261008-1",
-      "version_id": "V-20261008-1"
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
     },
-    "last_status_checked_at": "2026-10-08T11:49:17.099536+00:00",
     "game_id": "tank-3d",
     "developer_id": 100726,
-    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
-    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
-    "updated_at": "2026-10-08T11:50:37.151935+00:00",
-    "source_note": "本次当前 TapTap H5 包正常试玩截图"
+    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/quality-v2/handoff.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2",
+    "updated_at": "2026-10-08T13:18:01.224133+00:00",
+    "next_action": "等待本次正式素材审核；读取 published/entry_type/status_reason，公开生效与推荐标准分别核验。entry_type=1仍需按新意见整改，不重复用同图送审。",
+    "history": [
+      {
+        "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+        "app_id": 962376,
+        "title": "坦克大战 3D",
+        "status": "reviewing",
+        "prepared_at": "2026-10-08T11:40:00.782148+00:00",
+        "draft_id": "1047322",
+        "platform_version": "V-20261008-1",
+        "fields": {
+          "banner_4": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\banner_4.jpg",
+            "sha256": "f668facf9138414997d47462c0533a3ba3173e6f8c4d53d23d0033fded2a7701",
+            "size": [
+              1920,
+              1080
+            ],
+            "bytes": 566617,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover-source.jpg",
+            "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+            "crop": [
+              160,
+              170,
+              2400,
+              1430
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          },
+          "cover_vertical": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover_vertical.jpg",
+            "sha256": "380095099752fe304947471285c218672cf0e45cd3fb5d719d34f6083e3a0d7d",
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 194659,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover-source.jpg",
+            "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+            "crop": [
+              1020,
+              230,
+              1820,
+              1430
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          }
+        },
+        "changes": [
+          {
+            "field_id": "banner_4",
+            "expected": "https://img-tc.tapimg.com/market/images/58ec77b5c115bbf17584ec18f6267f03.png",
+            "value": "https://img-tc.tapimg.com/market/images/fbe9d60db59ac98d63b26eeec88c7993.jpg"
+          },
+          {
+            "field_id": "cover_vertical",
+            "expected": "https://img-tc.tapimg.com/market/images/ced00df68fda63a88275204af5eabab4.png",
+            "value": "https://img-tc.tapimg.com/market/images/f5c8a2f0d33b27c3086ebc405961e3a1.jpg"
+          }
+        ],
+        "uploads": {
+          "banner_4": {
+            "assetId": "362952",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 566617,
+              "width": 1920
+            },
+            "url": "https://img-tc.tapimg.com/market/images/fbe9d60db59ac98d63b26eeec88c7993.jpg",
+            "width": 1920
+          },
+          "cover_vertical": {
+            "assetId": "362953",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 194659,
+              "width": 720
+            },
+            "url": "https://img-tc.tapimg.com/market/images/f5c8a2f0d33b27c3086ebc405961e3a1.jpg",
+            "width": 720
+          }
+        },
+        "snapshot": {
+          "changes": [],
+          "revision": 1047322,
+          "status": "ready",
+          "version_id": "1047322",
+          "warnings": []
+        },
+        "precheck": {
+          "blockers": [],
+          "preaudit_passed": false,
+          "version_id": "1047322",
+          "warnings": [
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "banner_4"
+              ],
+              "message": "宣传图请勿直接复用未经排版、带有UI按键的游戏实机截图并简单叠加标题文字，建议重新设计并上传具备良好视觉质量的宣传海报。"
+            },
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "cover_vertical"
+              ],
+              "message": "竖版封面素材排版较为简陋，请避免直接使用游戏局部截图贴字作为封面，建议上传更具设计感与辨识度的精美封面海报。"
+            }
+          ]
+        },
+        "only_cover_fields_changed": true,
+        "package_binding_changed": false,
+        "submitted_at": "2026-10-08T11:43:18.901028+00:00",
+        "submission": {
+          "audit_id": "1047322",
+          "status": "reviewing",
+          "version_id": "1047322"
+        },
+        "public_verified": false,
+        "preaudit_note": "无硬阻塞；保留已知经典IP提示及本次实机截图封面排版建议，正常送正式审核。",
+        "platform_history_head": {
+          "created_time": 1791458571,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261008-1",
+          "version_id": "V-20261008-1"
+        },
+        "last_status_checked_at": "2026-10-08T11:49:17.099536+00:00",
+        "game_id": "tank-3d",
+        "developer_id": 100726,
+        "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+        "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+        "updated_at": "2026-10-08T11:50:37.151935+00:00",
+        "source_note": "本次当前 TapTap H5 包正常试玩截图"
+      }
+    ]
   }
 }

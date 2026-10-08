@@ -1,0 +1,310 @@
+[
+  {
+    "app_id": 962354,
+    "title": "虫潮围城",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962354\\banner_4.jpg",
+        "sha256": "3c6a3489e57ab7a6da066d61404148fff582acae107a0bce87e6106586948354",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 306825,
+        "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+        "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+        "crop": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+        "version": "web-shop-scroll-v0.29.2",
+        "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体",
+        "source_task_output": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\banner_4-hud-hidden.jpg"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962354\\cover_vertical.jpg",
+        "sha256": "48b794f13ce00c6e82eb352b54dc0dca7d36f3d753c5f5b2962f55ae338386aa",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 172838,
+        "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+        "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+        "crop": [
+          600,
+          0,
+          1320,
+          1080
+        ],
+        "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+        "version": "web-shop-scroll-v0.29.2",
+        "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体",
+        "source_task_output": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover_vertical-hud-hidden.jpg"
+      }
+    }
+  },
+  {
+    "app_id": 962376,
+    "title": "坦克大战 3D",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.jpg",
+        "size": [
+          1920,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
+        "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+        "source_size": [
+          2560,
+          1437
+        ],
+        "crop": [
+          400,
+          160,
+          2320,
+          1240
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\banner_4.html",
+        "sha256": "f627ea08bf40ed06d166d765e14fa39e0b67d6b66cd84fd3394ae7542d54854c",
+        "bytes": 159407
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.jpg",
+        "size": [
+          720,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\..\\962376\\raw-gameplay-1.jpg",
+        "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+        "source_size": [
+          2560,
+          1437
+        ],
+        "crop": [
+          820,
+          175,
+          1640,
+          1405
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962376\\cover_vertical.html",
+        "sha256": "be987648d2e82919721aac6919e531dcb27e1fb93aa9949ec6a2c6eab4d4dfb6",
+        "bytes": 63899
+      }
+    }
+  },
+  {
+    "app_id": 962721,
+    "title": "赤色要塞 3D",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962721\\banner_4.jpg",
+        "size": [
+          1920,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\jackal-hd-clean.jpg",
+        "source_sha256": "442ab22fc72306741fbe4b28feb14ca65f775d0f46ef1af20827b1e5b0905404",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          500,
+          280,
+          3660,
+          2058
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962721\\banner_4.html",
+        "sha256": "7329625b374d0b0e29f61a15db54e8394e99eca1128c93f829ed6f0f8d1d089a",
+        "bytes": 103313
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962721\\cover_vertical.jpg",
+        "size": [
+          720,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\jackal-hd-clean.jpg",
+        "source_sha256": "442ab22fc72306741fbe4b28feb14ca65f775d0f46ef1af20827b1e5b0905404",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          1390,
+          170,
+          2690,
+          2120
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962721\\cover_vertical.html",
+        "sha256": "3e052b742281ef564918f348cf6898b9363dc15f49ecfc48b0e809591663b1e4",
+        "bytes": 45236
+      }
+    }
+  },
+  {
+    "app_id": 962722,
+    "title": "恐龙快打 3D",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\banner_4.jpg",
+        "size": [
+          1920,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\dino-fight.jpg",
+        "source_sha256": "d336bcd5c180d144e1845e263afb9e9ddf9e5ad8e182038e03de9bd6f42a1541",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          400,
+          390,
+          3333,
+          2040
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\banner_4.html",
+        "sha256": "48ae400de5ced7a42de7dc3b4e5abf7eda0c37f49c77f00ae19139f9997dd962",
+        "bytes": 220209
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\cover_vertical.jpg",
+        "size": [
+          720,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\dino-fight.jpg",
+        "source_sha256": "d336bcd5c180d144e1845e263afb9e9ddf9e5ad8e182038e03de9bd6f42a1541",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          620,
+          80,
+          2006,
+          2159
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\cover_vertical.html",
+        "sha256": "1859cba18b2697da66479bd2ad680be64544f397f1591d1bdfca87d6b9d3bc90",
+        "bytes": 82944
+      }
+    }
+  },
+  {
+    "app_id": 962723,
+    "title": "超级玛丽 3D",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962723\\banner_4.jpg",
+        "size": [
+          1920,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\mario-hd-clean.jpg",
+        "source_sha256": "b6bed1564e56dc16f2d345069a471b9dbd59bc455402c751d5ff8cb3b3223219",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          1060,
+          410,
+          2980,
+          1490
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962723\\banner_4.html",
+        "sha256": "89fe4d7e83b9f4f9e2d0b277fe783c57c0f8153190fde638824a80532829b5bd",
+        "bytes": 122823
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962723\\cover_vertical.jpg",
+        "size": [
+          720,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\mario-hd-clean.jpg",
+        "source_sha256": "b6bed1564e56dc16f2d345069a471b9dbd59bc455402c751d5ff8cb3b3223219",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          1300,
+          100,
+          2660,
+          2140
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962723\\cover_vertical.html",
+        "sha256": "09cf2ce092519e5582fc7300b3f642830e32e90add1662b7777cda454d30cf1c",
+        "bytes": 59256
+      }
+    }
+  },
+  {
+    "app_id": 962724,
+    "title": "西游降魔 3D",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\banner_4.jpg",
+        "size": [
+          1920,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\journey-first.jpg",
+        "source_sha256": "3abe582446eeb5a9866c93763d4cbc31e3e27919a3fda5155e9dc9556646ac90",
+        "source_size": [
+          3840,
+          2072
+        ],
+        "crop": [
+          200,
+          200,
+          3528,
+          2072
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\banner_4.html",
+        "sha256": "2a6c6785b102904425515e6f4fd522e7188b3c020af8944858390c64a42ba74c",
+        "bytes": 117953
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\cover_vertical.jpg",
+        "size": [
+          720,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\journey-first.jpg",
+        "source_sha256": "3abe582446eeb5a9866c93763d4cbc31e3e27919a3fda5155e9dc9556646ac90",
+        "source_size": [
+          3840,
+          2072
+        ],
+        "crop": [
+          2060,
+          0,
+          3441,
+          2072
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962724\\cover_vertical.html",
+        "sha256": "902057f4ed1f669ade05e98bf7b9a53ad28e485f5256ac15812d6e6995445314",
+        "bytes": 54105
+      }
+    }
+  }
+]

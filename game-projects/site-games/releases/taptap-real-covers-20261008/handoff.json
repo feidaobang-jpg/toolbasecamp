@@ -889,5 +889,8 @@
     "evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\public-developer-before-review.jpg",
     "url": "https://www.taptap.cn/developer/100726",
     "note": "公开页推荐卡片仍展示原 banner URL；新封面未推进公开成功基线。"
-  }
+  },
+  "current_phase": "quality-v2",
+  "latest_record": "game-projects/site-games/releases/taptap-real-covers-20261008/quality-v2/handoff.json",
+  "superseded_note": "本文件保留第一轮送审历史；最新六款真实封面与正式审核状态以quality-v2为准。"
 }
