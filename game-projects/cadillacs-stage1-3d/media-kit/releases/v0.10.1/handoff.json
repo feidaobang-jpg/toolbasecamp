@@ -44,7 +44,8 @@
   },
   "bilibili": {
     "bv": "BV18XHW66E55",
-    "status": "waiting_account_lock"
+    "status": "public_verified",
+    "record": "bilibili-sync.json"
   },
   "qa": {
     "stage2": {
@@ -56,5 +57,5 @@
     },
     "channels": "3-viewports: website, Toy preview, extracted final TapTap ZIP. Not a physical phone test"
   },
-  "updated_at": "2026-10-08T19:43:54.608891+08:00"
+  "updated_at": "2026-10-08T19:49:37.936845+08:00"
 }
