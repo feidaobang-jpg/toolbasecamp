@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "dry_run": true,
+  "data": {
+    "operationId": "selectPackage",
+    "request": {
+      "method": "POST",
+      "url": "https://api.tapapis.cn/developer/app/v1/select-package?app_id=962722&developer_id=100726",
+      "headers": {
+        "Accept-Language": [
+          "zh-CN"
+        ],
+        "Idempotency-Key": [
+          "<redacted>"
+        ]
+      },
+      "body": {
+        "expected": {
+          "h5_version_id": "275750",
+          "kind": "h5"
+        },
+        "package": {
+          "id": "276136",
+          "type": "h5"
+        },
+        "slot": "main"
+      }
+    }
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

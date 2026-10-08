@@ -5,42 +5,31 @@
   "app_id": 962722,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_v0.10.0",
+  "status": "reviewing_v0.10.1",
   "platform_status": "reviewing",
-  "staged_version": "v0.10.0",
-  "staged_source_commit": "0b18e520",
-  "staged_package_sha256": "262e4386ac6f32aadc3af59fb3afa2f53e8de40c76ba5b45ca2c3d5062601bdd",
-  "staged_h5_version_id": 275750,
-  "draft_version_id": "1046962",
-  "platform_version": "V-20261008",
-  "submitted_version": "v0.10.0",
-  "submitted_package_sha256": "262e4386ac6f32aadc3af59fb3afa2f53e8de40c76ba5b45ca2c3d5062601bdd",
-  "submitted_h5_version_id": 275750,
-  "submitted_at": "2026-10-08T10:03:37.574505+00:00",
-  "submitted_source_commit": "0b18e520",
-  "submission_time_source": "平台 list-app-versions created_time=1791384779（V-20261007-6，last_event=review_submitted）",
-  "last_published_version": "v0.9.4",
-  "last_published_h5_version_id": 273318,
-  "last_published_platform_version": "V-20261007-6",
-  "last_published_revision": 1043928,
-  "last_published_at": null,
+  "staged_version": "v0.10.1",
+  "staged_source_commit": "999d4057",
+  "staged_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+  "staged_h5_version_id": 276136,
+  "draft_version_id": "1047324",
+  "submitted_version": "v0.10.1",
+  "submitted_at": "2026-10-08T19:40:31.571191+08:00",
+  "last_published_version": "v0.10.0",
+  "last_published_h5_version_id": 275750,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-08T10:03:37.574505+00:00",
-  "release_record": "releases/v0.10.0/handoff.json",
+  "last_status_checked_at": "2026-10-08T19:40:31.571191+08:00",
+  "release_record": "releases/v0.10.1/handoff.json",
   "pending_material_review": [],
   "pending": [],
-  "verification": {
-    "qa": "最终ZIP三视口25/25，屏蔽独立JS仍启动，非手机真机",
-    "store_description_change": true,
-    "startup_adapter": "inline-runtime-v1",
-    "namespace": "taptap-cadillacs-v1:"
-  },
   "dedupe_rule": "当前同哈希已上线、同版本更新帖已公开核验，不重复上传、提审或发帖；恢复时读取平台及最新台账。",
   "agreement_authorized": true,
   "agreement_signed": true,
   "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
   "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
   "agreement_signed_at": "2026-10-07T02:28:33.538741+00:00",
+  "submitted_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+  "submitted_h5_version_id": 276136,
+  "submission_time_source": "平台 list-app-versions created_time=1791384779（V-20261007-6，last_event=review_submitted）",
   "force_submission_authorized": true,
   "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
   "content_preaudit_passed": false,
@@ -78,6 +67,9 @@
       "status": "superseded_by_v0.8.2_submission"
     }
   ],
+  "last_published_platform_version": "V-20261008",
+  "last_published_revision": 1043928,
+  "last_published_at": null,
   "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
   "public_url": "https://www.taptap.cn/app/962722",
   "online_status_evidence_record": "releases/v0.9.4/taptap-online-check.json",
@@ -97,8 +89,17 @@
     "release_record": "releases/v0.9.4/taptap-community.json",
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
   },
-  "pending_note": "第三关已正式送审，旧公开版仍v0.9.4；不上调published基线",
+  "pending_note": "用户要求撤回第三关；两关回退包已提审，等待替换现网第三关包",
   "startup_adapter": "inline-runtime-v1",
+  "pending_community_updates": [],
+  "platform_version": "V-20261008-1",
+  "submitted_source_commit": "999d4057",
+  "verification": {
+    "qa": "最终ZIP三视口25/25，屏蔽独立JS仍启动，非手机真机",
+    "store_description_change": true,
+    "startup_adapter": "inline-runtime-v1",
+    "namespace": "taptap-cadillacs-v1:"
+  },
   "community_post_status": "public_verified",
   "community_post_note": "原作开场、背摔、音频调整与启动兼容修复合并为一条更新动态，已核验本人主页与恐龙快打论坛显示同一 moment。",
   "history": [
@@ -121,6 +122,14 @@
       "last_event": "published",
       "verified_at": "2026-10-08T00:58:42.737833+00:00",
       "community_moment_id": "857180359089981386"
+    },
+    {
+      "version": "v0.10.1",
+      "platform_version": "V-20261008-1",
+      "h5_version_id": 276136,
+      "status": "reviewing",
+      "submitted_at": "2026-10-08T19:40:31.571191+08:00",
+      "note": "删除第三关，恢复两关；不继续扩展本次第三关"
     }
   ],
   "last_published_verified_at": "2026-10-08T00:58:42.737833+00:00",
@@ -168,23 +177,16 @@
       "moment_id": "857180359089981386"
     }
   ],
-  "pending_community_updates": [
-    {
-      "source_version": "v0.10.0",
-      "h5_version_id": 275750,
-      "status": "awaiting_online",
-      "summary": "第三关地狱公路驾驶追逐，正式版本上线确认后合并动态与论坛",
-      "record": "releases/v0.10.0/handoff.json"
-    }
-  ],
   "pending_device_feedback": {
     "physical_device_verified": false,
     "scope": "玩家原设备的启动复测与其他手机机型表现",
     "does_not_block_verified_release": true
   },
   "rollback": {
-    "version": "v0.10.1",
-    "reason": "用户要求删除本次新增第三关",
-    "status": "pending"
+    "from": "v0.10.0",
+    "to": "v0.10.1",
+    "reason": "用户要求删除本次第三关",
+    "status": "reviewing",
+    "third_stage_community_update": "cancelled_without_publication"
   }
 }
