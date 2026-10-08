@@ -1,0 +1,164 @@
+{
+  "text": "I head out as the medic. Aiming and firing are automatic by default, so positioning matters. Get into range and the character fires. Space lets me dash away in this build.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "I",
+      "offset": 1000000,
+      "duration": 1875000
+    },
+    {
+      "text": "head",
+      "offset": 3125000,
+      "duration": 2250000
+    },
+    {
+      "text": "out",
+      "offset": 5625000,
+      "duration": 2000000
+    },
+    {
+      "text": "as",
+      "offset": 7750000,
+      "duration": 1375000
+    },
+    {
+      "text": "the",
+      "offset": 9375000,
+      "duration": 1000000
+    },
+    {
+      "text": "medic",
+      "offset": 10500000,
+      "duration": 4500000
+    },
+    {
+      "text": "Aiming",
+      "offset": 23625000,
+      "duration": 3625000
+    },
+    {
+      "text": "and",
+      "offset": 27375000,
+      "duration": 1000000
+    },
+    {
+      "text": "firing",
+      "offset": 28625000,
+      "duration": 4375000
+    },
+    {
+      "text": "are",
+      "offset": 33250000,
+      "duration": 1375000
+    },
+    {
+      "text": "automatic",
+      "offset": 34875000,
+      "duration": 5375000
+    },
+    {
+      "text": "by",
+      "offset": 40375000,
+      "duration": 1250000
+    },
+    {
+      "text": "default",
+      "offset": 41875000,
+      "duration": 5250000
+    },
+    {
+      "text": "so",
+      "offset": 49000000,
+      "duration": 1250000
+    },
+    {
+      "text": "positioning",
+      "offset": 50500000,
+      "duration": 5750000
+    },
+    {
+      "text": "matters",
+      "offset": 56500000,
+      "duration": 5000000
+    },
+    {
+      "text": "Get",
+      "offset": 70375000,
+      "duration": 2000000
+    },
+    {
+      "text": "into",
+      "offset": 72625000,
+      "duration": 2000000
+    },
+    {
+      "text": "range",
+      "offset": 74875000,
+      "duration": 3875000
+    },
+    {
+      "text": "and",
+      "offset": 79000000,
+      "duration": 1125000
+    },
+    {
+      "text": "the",
+      "offset": 80375000,
+      "duration": 1000000
+    },
+    {
+      "text": "character",
+      "offset": 81500000,
+      "duration": 4750000
+    },
+    {
+      "text": "fires",
+      "offset": 86500000,
+      "duration": 5000000
+    },
+    {
+      "text": "Space",
+      "offset": 100375000,
+      "duration": 4125000
+    },
+    {
+      "text": "lets",
+      "offset": 104625000,
+      "duration": 2000000
+    },
+    {
+      "text": "me",
+      "offset": 106750000,
+      "duration": 1250000
+    },
+    {
+      "text": "dash",
+      "offset": 108250000,
+      "duration": 2750000
+    },
+    {
+      "text": "away",
+      "offset": 111250000,
+      "duration": 2250000
+    },
+    {
+      "text": "in",
+      "offset": 113750000,
+      "duration": 875000
+    },
+    {
+      "text": "this",
+      "offset": 114875000,
+      "duration": 1750000
+    },
+    {
+      "text": "build",
+      "offset": 116875000,
+      "duration": 3875000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

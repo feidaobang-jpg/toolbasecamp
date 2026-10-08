@@ -1,0 +1,256 @@
+{
+  "batch_id": "game-video-backfill-20261008",
+  "updated_at": "2026-10-08T04:08:07.154875+00:00",
+  "historical_bilibili": [
+    {
+      "episode_id": "swarm",
+      "bvid": "BV1WbHq6eEBt",
+      "recorded_date": "2026-10-04",
+      "source_directory": "D:\\project\\toolbasecamp\\game-projects\\starship-defense\\video\\update-20261003",
+      "source_video": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "source_video_sha256": "e1403349512ad4c44ff1db7614d858f299bc65cbb552a5b879c25b0165853645",
+      "source_bilibili_kept": true,
+      "picture_source": "work/edit/shared-zh/picture-with-game-audio.mp4",
+      "voice_reused": false
+    },
+    {
+      "episode_id": "jackal",
+      "bvid": "BV1EyHz6wE5u",
+      "recorded_date": "2026-10-04",
+      "source_directory": "D:\\project\\toolbasecamp\\game-projects\\jackal-stage1-3d\\video\\launch-20261004",
+      "source_video": "final/bilibili-zh/赤色要塞-双关卡上架介绍.mp4",
+      "source_video_sha256": "82dd0ac77d251df58a24f0de76a0b67f66e2c533bbd61fab24052403400181e6",
+      "source_bilibili_kept": true,
+      "picture_source": "work/edit/shared-zh/assembly.mp4",
+      "voice_reused": true
+    },
+    {
+      "episode_id": "cadillacs",
+      "bvid": "BV18XHW66E55",
+      "recorded_date": "2026-10-05",
+      "source_directory": "D:\\project\\toolbasecamp\\game-projects\\cadillacs-stage1-3d\\video\\views-20261005",
+      "source_video": "final/bilibili-zh/恐龙快打3D-第一人称打第一关.mp4",
+      "source_video_sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a",
+      "source_bilibili_kept": true,
+      "picture_source": "work/edit/shared-zh/picture.mp4",
+      "voice_reused": true
+    }
+  ],
+  "new_variants": [
+    {
+      "variant_id": "swarm-youtube-zh",
+      "platform": "youtube",
+      "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [
+        {
+          "file": "../../../final/swarm/youtube-zh/captions-zh.srt",
+          "language": "zh-CN",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "b0d061cc7493ad1f6448fc5c74a0c16141e724ce9b384a8d68639ffc9d62dd72"
+        },
+        {
+          "file": "../../../final/swarm/youtube-zh/captions-en.srt",
+          "language": "en",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "4e67343aed98b8bae4348b73c3c4d63393d7dde5bee8fe523c5c3602b6f7de29"
+        }
+      ],
+      "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
+      "cover_file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg"
+    },
+    {
+      "variant_id": "swarm-douyin-zh",
+      "platform": "douyin",
+      "video_sha256": "41c2b390473f1a079c8219674e58bdd124d9b5986252e399998edfed3ec221a5",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "41c2b390473f1a079c8219674e58bdd124d9b5986252e399998edfed3ec221a5",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [],
+      "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
+      "cover_file": "../../../final/swarm/douyin-zh/cover-zh-16x9.jpg"
+    },
+    {
+      "variant_id": "jackal-youtube-zh",
+      "platform": "youtube",
+      "video_sha256": "0d9f4de768af0625f968cde561c795c0c95053c08357888010640e490f504daa",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "0d9f4de768af0625f968cde561c795c0c95053c08357888010640e490f504daa",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [
+        {
+          "file": "../../../final/jackal/youtube-zh/captions-zh.srt",
+          "language": "zh-CN",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "366cb591b7c8a185ac5d5ffba9757276cfd886887c864ff6abcbaa697b61b48e"
+        },
+        {
+          "file": "../../../final/jackal/youtube-zh/captions-en.srt",
+          "language": "en",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "daeed4cb72afeb80c0c854e9d835fe54c59bd659ec72168f9445065fcfca486f"
+        }
+      ],
+      "cover_sha256": "fd924208dc48c41eacf89eb95241da059c41c3b4cf4eca781519882754e41236",
+      "cover_file": "../../../final/jackal/youtube-zh/cover-zh-16x9.jpg"
+    },
+    {
+      "variant_id": "jackal-douyin-zh",
+      "platform": "douyin",
+      "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [],
+      "cover_sha256": "fd924208dc48c41eacf89eb95241da059c41c3b4cf4eca781519882754e41236",
+      "cover_file": "../../../final/jackal/douyin-zh/cover-zh-16x9.jpg"
+    },
+    {
+      "variant_id": "cadillacs-youtube-zh",
+      "platform": "youtube",
+      "video_sha256": "460329bf8909b2006b022fdfb574d5e1be92bfc3e18409abd07e3d658bcfe960",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "460329bf8909b2006b022fdfb574d5e1be92bfc3e18409abd07e3d658bcfe960",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [
+        {
+          "file": "../../../final/cadillacs/youtube-zh/captions-zh.srt",
+          "language": "zh-CN",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "7a5e019bc0d8d873bf10963d5346da818bf1d019f75cf3c899ccf9d3a55cb272"
+        },
+        {
+          "file": "../../../final/cadillacs/youtube-zh/captions-en.srt",
+          "language": "en",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "36f4e53c3ad247a33e1aa5da8b28b074c7bb80d5940601dbcbd45524a8a583ed"
+        }
+      ],
+      "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
+      "cover_file": "../../../final/cadillacs/youtube-zh/cover-zh-16x9.jpg"
+    },
+    {
+      "variant_id": "cadillacs-douyin-zh",
+      "platform": "douyin",
+      "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [],
+      "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
+      "cover_file": "../../../final/cadillacs/douyin-zh/cover-zh-16x9.jpg"
+    },
+    {
+      "variant_id": "swarm-youtube-en",
+      "platform": "youtube",
+      "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
+      "status": "awaiting_human_review_and_login",
+      "uploaded": false,
+      "platform_id": null,
+      "public_url": null,
+      "account_identity": "unconfirmed",
+      "duplicate_check": "pending_authenticated_platform_library",
+      "human_review": {
+        "status": "pending",
+        "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
+        "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+      },
+      "subtitle_files": [
+        {
+          "file": "../../../final/swarm/youtube-en/captions-zh.srt",
+          "language": "zh-CN",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "f9ef6377e9c3d1b1fa43edc632659d1fa527dd97fc86998e0d94616fa64b6859"
+        },
+        {
+          "file": "../../../final/swarm/youtube-en/captions-en.srt",
+          "language": "en",
+          "purpose": "selectable captions",
+          "required_for_upload": true,
+          "sha256": "f6e9386723d22f3feb81b48fcb928459ef6676d63d847c537ffc7e92ee20a602"
+        }
+      ],
+      "cover_sha256": "f490b9ab3433d553bb408e099641f46011ce001e4508ca84b808857db1919d46",
+      "cover_file": "../../../final/swarm/youtube-en/cover-en-16x9.jpg"
+    }
+  ],
+  "platforms": {
+    "youtube": {
+      "status": "needs_login",
+      "notification_status": "sent",
+      "notification_service": "feishu",
+      "account_mapping": "pending"
+    },
+    "douyin": {
+      "status": "needs_login",
+      "notification_status": "sent",
+      "notification_service": "feishu",
+      "account_mapping": "pending"
+    },
+    "x": {
+      "authorized": true,
+      "status": "draft_only",
+      "needs": "已公开YouTube链接、本人账号与官方API/连接器权限",
+      "one_post_per_episode": true
+    }
+  },
+  "release_status": "not_uploaded",
+  "next_action": "用户审片通过后，核对已登录账号及已有视频，再按通过版本继续发布。"
+}

@@ -1,0 +1,60 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Microsoft YaHei,46,&H00FFFFFF,&H00FFFFFF,&H00111111,&H80111111,-1,0,0,0,100,100,0,0,1,3,1,2,130,130,255,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.35,0:00:02.35,Default,,0,0,0,,{\an2\pos(960,810)}The bugs used to attack my base.
+Dialogue: 0,0:00:03.10,0:00:05.97,Default,,0,0,0,,{\an2\pos(960,810)}This time, I went into their burrow to take on the\Nqueen!
+Dialogue: 0,0:00:07.78,0:00:10.34,Default,,0,0,0,,{\an2\pos(960,810)}This is Swarm Siege, my base-defense game.
+Dialogue: 0,0:00:11.11,0:00:13.90,Default,,0,0,0,,{\an2\pos(960,810)}You are watching an October fourth development build.
+Dialogue: 0,0:00:14.66,0:00:16.73,Default,,0,0,0,,{\an2\pos(960,810)}The interface is still in Chinese.
+Dialogue: 0,0:00:18.52,0:00:20.04,Default,,0,0,0,,{\an2\pos(960,810)}I head out as the medic.
+Dialogue: 0,0:00:20.78,0:00:24.69,Default,,0,0,0,,{\an2\pos(960,810)}Aiming and firing are automatic by default, so\Npositioning matters.
+Dialogue: 0,0:00:25.45,0:00:27.69,Default,,0,0,0,,{\an2\pos(960,810)}Get into range and the character fires.
+Dialogue: 0,0:00:28.45,0:00:30.61,Default,,0,0,0,,{\an2\pos(960,810)}Space lets me dash away in this build.
+Dialogue: 0,0:00:32.42,0:00:34.91,Default,,0,0,0,,{\an2\pos(960,810)}Third person helps me watch the surroundings.
+Dialogue: 0,0:00:35.67,0:00:38.20,Default,,0,0,0,,{\an2\pos(960,810)}In this build, V switches to first person.
+Dialogue: 0,0:00:38.97,0:00:42.26,Default,,0,0,0,,{\an2\pos(960,810)}Manual shooting and shortcuts can be changed in the\Nsettings.
+Dialogue: 0,0:00:44.05,0:00:47.88,Default,,0,0,0,,{\an2\pos(960,810)}Before starting the wave, I clear the abandoned supply\Nstation, collect its
+Dialogue: 0,0:00:47.89,0:00:50.63,Default,,0,0,0,,{\an2\pos(960,810)}first-clear reward, and spend the coins at the shop.
+Dialogue: 0,0:00:52.42,0:00:54.52,Default,,0,0,0,,{\an2\pos(960,810)}The machine gun gives sustained fire.
+Dialogue: 0,0:00:55.29,0:00:57.75,Default,,0,0,0,,{\an2\pos(960,810)}A shotgun spreads pellets at close range.
+Dialogue: 0,0:00:58.50,0:01:02.34,Default,,0,0,0,,{\an2\pos(960,810)}During the beacon mission, I stay inside the blue\Ncircle and collect coins while
+Dialogue: 0,0:01:02.35,0:01:02.90,Default,,0,0,0,,{\an2\pos(960,810)}fighting.
+Dialogue: 0,0:01:04.68,0:01:06.43,Default,,0,0,0,,{\an2\pos(960,810)}I can build defenses too.
+Dialogue: 0,0:01:07.18,0:01:10.90,Default,,0,0,0,,{\an2\pos(960,810)}Choose a machine-gun turret, check the placement\Npreview, and confirm.
+Dialogue: 0,0:01:11.67,0:01:14.88,Default,,0,0,0,,{\an2\pos(960,810)}A bad placement can be dismantled for half the cost\Nback.
+Dialogue: 0,0:01:16.65,0:01:19.48,Default,,0,0,0,,{\an2\pos(960,810)}Next, I hire a teammate and enter the elite nest.
+Dialogue: 0,0:01:20.25,0:01:22.60,Default,,0,0,0,,{\an2\pos(960,810)}The squad helps fight and collect supplies.
+Dialogue: 0,0:01:23.36,0:01:25.97,Default,,0,0,0,,{\an2\pos(960,810)}Mission rewards pay for stronger equipment.
+Dialogue: 0,0:01:27.75,0:01:29.96,Default,,0,0,0,,{\an2\pos(960,810)}Now I can afford the pulse laser cannon.
+Dialogue: 0,0:01:30.72,0:01:33.84,Default,,0,0,0,,{\an2\pos(960,810)}The next target is deep inside the map: the alien\Nqueen.
+Dialogue: 0,0:01:35.65,0:01:38.04,Default,,0,0,0,,{\an2\pos(960,810)}I follow the central burrow in first person.
+Dialogue: 0,0:01:38.81,0:01:41.14,Default,,0,0,0,,{\an2\pos(960,810)}Beyond the tunnel are the queen and her guards.
+Dialogue: 0,0:01:41.89,0:01:43.57,Default,,0,0,0,,{\an2\pos(960,810)}Do not stop at the entrance.
+Dialogue: 0,0:01:44.31,0:01:45.92,Default,,0,0,0,,{\an2\pos(960,810)}Move into firing range!
+Dialogue: 0,0:01:47.72,0:01:50.41,Default,,0,0,0,,{\an2\pos(960,810)}The beam keeps hitting and the damage numbers appear.
+Dialogue: 0,0:01:51.18,0:01:55.03,Default,,0,0,0,,{\an2\pos(960,810)}Guards block the way, so I clear the immediate threats\Nbefore focusing on the
+Dialogue: 0,0:01:55.04,0:01:55.80,Default,,0,0,0,,{\an2\pos(960,810)}queen again.
+Dialogue: 0,0:01:57.58,0:01:58.62,Default,,0,0,0,,{\an2\pos(960,810)}She is down!
+Dialogue: 0,0:01:59.37,0:02:03.89,Default,,0,0,0,,{\an2\pos(960,810)}In this recorded build, later swarms in the chapter\Nshrink by thirty-five percent.
+Dialogue: 0,0:02:04.63,0:02:07.14,Default,,0,0,0,,{\an2\pos(960,810)}Attacking first takes pressure off the base.
+Dialogue: 0,0:02:08.92,0:02:12.64,Default,,0,0,0,,{\an2\pos(960,810)}Back on the front line, I intercept the bugs coming out\Nof the burrow.
+Dialogue: 0,0:02:13.39,0:02:14.64,Default,,0,0,0,,{\an2\pos(960,810)}The wave is cleared.
+Dialogue: 0,0:02:15.39,0:02:18.17,Default,,0,0,0,,{\an2\pos(960,810)}Stage two begins with the base still at full health.
+Dialogue: 0,0:02:19.95,0:02:22.32,Default,,0,0,0,,{\an2\pos(960,810)}With enough coins, I can buy a vehicle.
+Dialogue: 0,0:02:23.07,0:02:26.36,Default,,0,0,0,,{\an2\pos(960,810)}I board it with I in this build, then drive through the\Ngate for a different
+Dialogue: 0,0:02:26.38,0:02:27.01,Default,,0,0,0,,{\an2\pos(960,810)}approach.
+Dialogue: 0,0:02:28.78,0:02:33.33,Default,,0,0,0,,{\an2\pos(960,810)}Supplies, upgrades, defenses, and a raid on the queen\Nnow form a complete route.
+Dialogue: 0,0:02:34.08,0:02:37.79,Default,,0,0,0,,{\an2\pos(960,810)}Tunnel visibility and squad following still needed work\Nat this point.
+Dialogue: 0,0:02:39.58,0:02:41.84,Default,,0,0,0,,{\an2\pos(960,810)}Would you defend first or raid the queen?
+Dialogue: 0,0:02:42.60,0:02:45.40,Default,,0,0,0,,{\an2\pos(960,810)}The current Chinese-language demo is linked below.
+Dialogue: 0,0:02:46.17,0:02:48.08,Default,,0,0,0,,{\an2\pos(960,810)}Follow its in-game controls.
+Dialogue: 0,0:02:48.85,0:02:49.98,Default,,0,0,0,,{\an2\pos(960,810)}Thanks for watching!

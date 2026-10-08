@@ -1,0 +1,21 @@
+{
+  "status": "not_published",
+  "requires": "verified public YouTube URL and confirmed owner X account/API",
+  "posts": [
+    {
+      "episode_id": "swarm",
+      "text": "I built a base-defense game, then took the fight into the alien queen’s burrow. Here is an edited run from an earlier build. English narration; the playable demo currently has a Chinese UI.",
+      "preferred_variant": "swarm-youtube-en"
+    },
+    {
+      "episode_id": "jackal",
+      "text": "One little jeep, two rescue missions: barracks, rocket upgrades and helicopter evacuations in my unofficial 3D Jackal remake. Chinese narration with English subtitles.",
+      "preferred_variant": "jackal-youtube-zh"
+    },
+    {
+      "episode_id": "cadillacs",
+      "text": "What changes when a classic brawler becomes first person? I tested side, rear and first-person views in my unofficial Cadillacs and Dinosaurs remake. Chinese narration with English subtitles.",
+      "preferred_variant": "cadillacs-youtube-zh"
+    }
+  ]
+}

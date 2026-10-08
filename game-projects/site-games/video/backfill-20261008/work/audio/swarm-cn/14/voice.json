@@ -1,0 +1,194 @@
+{
+  "text": "这次从打补给、换装备，到钻洞反攻，已经能串起一条完整路线。实际试玩里，隧道入口的视野和队友跟随还值得继续打磨，你玩的时候也可以重点看看。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "这次",
+      "offset": 1000000,
+      "duration": 4375000
+    },
+    {
+      "text": "从",
+      "offset": 5625000,
+      "duration": 1625000
+    },
+    {
+      "text": "打补",
+      "offset": 7500000,
+      "duration": 2375000
+    },
+    {
+      "text": "给",
+      "offset": 9875000,
+      "duration": 2375000
+    },
+    {
+      "text": "换",
+      "offset": 14875000,
+      "duration": 2750000
+    },
+    {
+      "text": "装备",
+      "offset": 17625000,
+      "duration": 4375000
+    },
+    {
+      "text": "到",
+      "offset": 23875000,
+      "duration": 2125000
+    },
+    {
+      "text": "钻洞",
+      "offset": 26250000,
+      "duration": 3500000
+    },
+    {
+      "text": "反攻",
+      "offset": 29875000,
+      "duration": 4625000
+    },
+    {
+      "text": "已经",
+      "offset": 38625000,
+      "duration": 2250000
+    },
+    {
+      "text": "能",
+      "offset": 41000000,
+      "duration": 1375000
+    },
+    {
+      "text": "串起",
+      "offset": 42375000,
+      "duration": 3500000
+    },
+    {
+      "text": "一条",
+      "offset": 46000000,
+      "duration": 3000000
+    },
+    {
+      "text": "完整",
+      "offset": 49250000,
+      "duration": 3625000
+    },
+    {
+      "text": "路线",
+      "offset": 53000000,
+      "duration": 3625000
+    },
+    {
+      "text": "实际",
+      "offset": 62375000,
+      "duration": 3875000
+    },
+    {
+      "text": "试玩",
+      "offset": 66375000,
+      "duration": 3875000
+    },
+    {
+      "text": "里",
+      "offset": 70250000,
+      "duration": 2625000
+    },
+    {
+      "text": "隧道",
+      "offset": 76625000,
+      "duration": 3250000
+    },
+    {
+      "text": "入口",
+      "offset": 80000000,
+      "duration": 2875000
+    },
+    {
+      "text": "的",
+      "offset": 82875000,
+      "duration": 750000
+    },
+    {
+      "text": "视野",
+      "offset": 83750000,
+      "duration": 3750000
+    },
+    {
+      "text": "和",
+      "offset": 87750000,
+      "duration": 1125000
+    },
+    {
+      "text": "队友",
+      "offset": 89000000,
+      "duration": 2250000
+    },
+    {
+      "text": "跟随",
+      "offset": 91375000,
+      "duration": 5375000
+    },
+    {
+      "text": "还",
+      "offset": 97875000,
+      "duration": 3000000
+    },
+    {
+      "text": "值得",
+      "offset": 100875000,
+      "duration": 2000000
+    },
+    {
+      "text": "继续",
+      "offset": 103125000,
+      "duration": 2500000
+    },
+    {
+      "text": "打磨",
+      "offset": 105750000,
+      "duration": 5250000
+    },
+    {
+      "text": "你",
+      "offset": 114500000,
+      "duration": 5000000
+    },
+    {
+      "text": "玩",
+      "offset": 119500000,
+      "duration": 1625000
+    },
+    {
+      "text": "的",
+      "offset": 121125000,
+      "duration": 625000
+    },
+    {
+      "text": "时候",
+      "offset": 121875000,
+      "duration": 5375000
+    },
+    {
+      "text": "也",
+      "offset": 128250000,
+      "duration": 1250000
+    },
+    {
+      "text": "可以",
+      "offset": 129500000,
+      "duration": 1625000
+    },
+    {
+      "text": "重点",
+      "offset": 131375000,
+      "duration": 2500000
+    },
+    {
+      "text": "看看",
+      "offset": 134000000,
+      "duration": 4250000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

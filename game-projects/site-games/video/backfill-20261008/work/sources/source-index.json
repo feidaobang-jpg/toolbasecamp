@@ -1,0 +1,37 @@
+{
+  "historical_sources": [
+    {
+      "episode_id": "swarm",
+      "bvid": "BV1WbHq6eEBt",
+      "recorded_date": "2026-10-04",
+      "source_directory": "D:\\project\\toolbasecamp\\game-projects\\starship-defense\\video\\update-20261003",
+      "source_video": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "source_video_sha256": "e1403349512ad4c44ff1db7614d858f299bc65cbb552a5b879c25b0165853645",
+      "source_bilibili_kept": true,
+      "picture_source": "work/edit/shared-zh/picture-with-game-audio.mp4",
+      "voice_reused": false
+    },
+    {
+      "episode_id": "jackal",
+      "bvid": "BV1EyHz6wE5u",
+      "recorded_date": "2026-10-04",
+      "source_directory": "D:\\project\\toolbasecamp\\game-projects\\jackal-stage1-3d\\video\\launch-20261004",
+      "source_video": "final/bilibili-zh/赤色要塞-双关卡上架介绍.mp4",
+      "source_video_sha256": "82dd0ac77d251df58a24f0de76a0b67f66e2c533bbd61fab24052403400181e6",
+      "source_bilibili_kept": true,
+      "picture_source": "work/edit/shared-zh/assembly.mp4",
+      "voice_reused": true
+    },
+    {
+      "episode_id": "cadillacs",
+      "bvid": "BV18XHW66E55",
+      "recorded_date": "2026-10-05",
+      "source_directory": "D:\\project\\toolbasecamp\\game-projects\\cadillacs-stage1-3d\\video\\views-20261005",
+      "source_video": "final/bilibili-zh/恐龙快打3D-第一人称打第一关.mp4",
+      "source_video_sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a",
+      "source_bilibili_kept": true,
+      "picture_source": "work/edit/shared-zh/picture.mp4",
+      "voice_reused": true
+    }
+  ]
+}

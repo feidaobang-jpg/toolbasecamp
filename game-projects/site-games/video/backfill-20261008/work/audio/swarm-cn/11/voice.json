@@ -1,0 +1,94 @@
+{
+  "text": "打掉了！这章后面的虫潮规模减少百分之三十五。主动出击，确实能给守城减压。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "打掉",
+      "offset": 1000000,
+      "duration": 4500000
+    },
+    {
+      "text": "了",
+      "offset": 5500000,
+      "duration": 2500000
+    },
+    {
+      "text": "这",
+      "offset": 13625000,
+      "duration": 2000000
+    },
+    {
+      "text": "章",
+      "offset": 15625000,
+      "duration": 1500000
+    },
+    {
+      "text": "后面",
+      "offset": 17250000,
+      "duration": 2500000
+    },
+    {
+      "text": "的",
+      "offset": 19750000,
+      "duration": 750000
+    },
+    {
+      "text": "虫潮",
+      "offset": 20750000,
+      "duration": 3750000
+    },
+    {
+      "text": "规模",
+      "offset": 24625000,
+      "duration": 5375000
+    },
+    {
+      "text": "减少",
+      "offset": 31125000,
+      "duration": 4625000
+    },
+    {
+      "text": "百分之三十五",
+      "offset": 36000000,
+      "duration": 9250000
+    },
+    {
+      "text": "主动",
+      "offset": 51000000,
+      "duration": 3625000
+    },
+    {
+      "text": "出击",
+      "offset": 54750000,
+      "duration": 4625000
+    },
+    {
+      "text": "确实",
+      "offset": 61375000,
+      "duration": 4500000
+    },
+    {
+      "text": "能",
+      "offset": 66000000,
+      "duration": 1375000
+    },
+    {
+      "text": "给",
+      "offset": 67375000,
+      "duration": 1000000
+    },
+    {
+      "text": "守城",
+      "offset": 68625000,
+      "duration": 3375000
+    },
+    {
+      "text": "减压",
+      "offset": 72125000,
+      "duration": 4625000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

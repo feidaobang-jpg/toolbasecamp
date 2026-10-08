@@ -1,0 +1,144 @@
+{
+  "text": "I follow the central burrow in first person. Beyond the tunnel are the queen and her guards. Do not stop at the entrance. Move into firing range!",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "I",
+      "offset": 1000000,
+      "duration": 1500000
+    },
+    {
+      "text": "follow",
+      "offset": 2750000,
+      "duration": 3000000
+    },
+    {
+      "text": "the",
+      "offset": 6000000,
+      "duration": 1250000
+    },
+    {
+      "text": "central",
+      "offset": 7375000,
+      "duration": 4250000
+    },
+    {
+      "text": "burrow",
+      "offset": 11750000,
+      "duration": 3125000
+    },
+    {
+      "text": "in",
+      "offset": 15000000,
+      "duration": 1000000
+    },
+    {
+      "text": "first",
+      "offset": 16250000,
+      "duration": 3125000
+    },
+    {
+      "text": "person",
+      "offset": 19500000,
+      "duration": 4250000
+    },
+    {
+      "text": "Beyond",
+      "offset": 32625000,
+      "duration": 4000000
+    },
+    {
+      "text": "the",
+      "offset": 36750000,
+      "duration": 875000
+    },
+    {
+      "text": "tunnel",
+      "offset": 37875000,
+      "duration": 3500000
+    },
+    {
+      "text": "are",
+      "offset": 41625000,
+      "duration": 875000
+    },
+    {
+      "text": "the",
+      "offset": 42625000,
+      "duration": 875000
+    },
+    {
+      "text": "queen",
+      "offset": 43625000,
+      "duration": 3250000
+    },
+    {
+      "text": "and",
+      "offset": 47000000,
+      "duration": 1000000
+    },
+    {
+      "text": "her",
+      "offset": 48125000,
+      "duration": 1250000
+    },
+    {
+      "text": "guards",
+      "offset": 49625000,
+      "duration": 5125000
+    },
+    {
+      "text": "Do",
+      "offset": 63375000,
+      "duration": 1500000
+    },
+    {
+      "text": "not",
+      "offset": 65000000,
+      "duration": 2125000
+    },
+    {
+      "text": "stop",
+      "offset": 67375000,
+      "duration": 3375000
+    },
+    {
+      "text": "at",
+      "offset": 71000000,
+      "duration": 875000
+    },
+    {
+      "text": "the",
+      "offset": 72125000,
+      "duration": 875000
+    },
+    {
+      "text": "entrance",
+      "offset": 73250000,
+      "duration": 5750000
+    },
+    {
+      "text": "Move",
+      "offset": 87625000,
+      "duration": 3125000
+    },
+    {
+      "text": "into",
+      "offset": 91000000,
+      "duration": 2000000
+    },
+    {
+      "text": "firing",
+      "offset": 93250000,
+      "duration": 4500000
+    },
+    {
+      "text": "range",
+      "offset": 97875000,
+      "duration": 4625000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

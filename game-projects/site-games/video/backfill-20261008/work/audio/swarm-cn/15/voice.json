@@ -1,0 +1,139 @@
+{
+  "text": "这段录于十月四日。当前试玩入口见简介，操作以游戏内提示为准。你会先守城，还是先打母皇？",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "这",
+      "offset": 1000000,
+      "duration": 2375000
+    },
+    {
+      "text": "段",
+      "offset": 3375000,
+      "duration": 1375000
+    },
+    {
+      "text": "录于",
+      "offset": 4875000,
+      "duration": 2375000
+    },
+    {
+      "text": "十月",
+      "offset": 7500000,
+      "duration": 2875000
+    },
+    {
+      "text": "四日",
+      "offset": 10500000,
+      "duration": 5250000
+    },
+    {
+      "text": "当前",
+      "offset": 21500000,
+      "duration": 5250000
+    },
+    {
+      "text": "试玩",
+      "offset": 27000000,
+      "duration": 3625000
+    },
+    {
+      "text": "入口",
+      "offset": 30625000,
+      "duration": 3875000
+    },
+    {
+      "text": "见",
+      "offset": 34750000,
+      "duration": 1875000
+    },
+    {
+      "text": "简介",
+      "offset": 36750000,
+      "duration": 4875000
+    },
+    {
+      "text": "操作",
+      "offset": 45250000,
+      "duration": 4625000
+    },
+    {
+      "text": "以",
+      "offset": 50125000,
+      "duration": 1125000
+    },
+    {
+      "text": "游戏",
+      "offset": 51375000,
+      "duration": 3500000
+    },
+    {
+      "text": "内",
+      "offset": 54875000,
+      "duration": 2125000
+    },
+    {
+      "text": "提示",
+      "offset": 58000000,
+      "duration": 4250000
+    },
+    {
+      "text": "为",
+      "offset": 62375000,
+      "duration": 1625000
+    },
+    {
+      "text": "准",
+      "offset": 64000000,
+      "duration": 2375000
+    },
+    {
+      "text": "你",
+      "offset": 72000000,
+      "duration": 2500000
+    },
+    {
+      "text": "会",
+      "offset": 74500000,
+      "duration": 1375000
+    },
+    {
+      "text": "先",
+      "offset": 76000000,
+      "duration": 1500000
+    },
+    {
+      "text": "守",
+      "offset": 77500000,
+      "duration": 1500000
+    },
+    {
+      "text": "城",
+      "offset": 79000000,
+      "duration": 3500000
+    },
+    {
+      "text": "还是",
+      "offset": 86750000,
+      "duration": 2500000
+    },
+    {
+      "text": "先",
+      "offset": 89375000,
+      "duration": 1500000
+    },
+    {
+      "text": "打",
+      "offset": 90875000,
+      "duration": 1250000
+    },
+    {
+      "text": "母皇",
+      "offset": 92250000,
+      "duration": 4125000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

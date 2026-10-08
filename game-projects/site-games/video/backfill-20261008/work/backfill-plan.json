@@ -1,0 +1,541 @@
+{
+  "batch_id": "game-video-backfill-20261008",
+  "source_checkout": "D:/project/toolbasecamp",
+  "strategy": "中文主版，英文字幕与元数据翻译；一条虫潮完整英文试验版；同批适配抖音横屏",
+  "approval": {
+    "scope": "制作补发物料及英文试验，YouTube公开后同步X",
+    "statement": "按你说的做。",
+    "new_media_review": "pending"
+  },
+  "episodes": [
+    {
+      "id": "swarm",
+      "game_name": "虫潮围城",
+      "recorded_date": "2026-10-04",
+      "source_episode": "game-projects/starship-defense/video/update-20261003",
+      "bvid": "BV1WbHq6eEBt",
+      "source_video": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "clean_picture": "work/edit/shared-zh/picture-with-game-audio.mp4",
+      "source_subtitles": "work/edit/shared-zh/subtitles.srt",
+      "source_cover": "final/bilibili-zh/cover-space-16x9.jpg",
+      "cut_end": 132.8,
+      "outro_picture_start": 5.2,
+      "outro_picture_duration": 9.533333,
+      "outro_zh": "这段录于十月四日。当前试玩入口见简介，操作以游戏内提示为准。你会先守城，还是先打母皇？",
+      "outro_en": "Recorded on October fourth. The current demo is linked below; follow its in-game controls. Would you defend first, or attack the queen?",
+      "outro_english_phrases": [
+        "Recorded on October fourth.",
+        "The current demo is linked below.",
+        "Follow its in-game controls.",
+        "Would you defend first,",
+        "or attack the queen?"
+      ],
+      "title_zh": "先守城还是先反攻？虫潮围城母皇战实录",
+      "title_en": "Raid the Queen or Defend the Base? Swarm Siege Gameplay",
+      "demo_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "english_cues": [
+        "The bugs used to attack my base.",
+        "This time, I went into their burrow",
+        "to attack the queen!",
+        "This used to be Chongchao Qianshao.",
+        "Now it is called Swarm Siege.",
+        "The visuals, controls and gameplay changed.",
+        "Here is one gameplay run",
+        "through that recorded build.",
+        "I head out as the medic.",
+        "Aiming and firing are automatic by default.",
+        "Positioning matters: get close enough,",
+        "and the character starts firing.",
+        "Need some distance?",
+        "Press Space to dash in this build.",
+        "Third person shows the surroundings.",
+        "V switches to first person in this build.",
+        "Prefer manual controls?",
+        "Shooting and shortcuts are configurable.",
+        "There is no rush to start the wave.",
+        "I clear the abandoned supply station,",
+        "collect the first-clear reward,",
+        "then spend the coins at the shop.",
+        "The machine gun gives sustained fire.",
+        "A shotgun spreads pellets at close range.",
+        "Stay near the blue beacon circle.",
+        "Fight and collect coins inside the area.",
+        "You can build your own defenses.",
+        "Choose a turret and check its preview.",
+        "Confirm when the position looks right.",
+        "Placed it badly? Dismantle it",
+        "for half the construction cost back.",
+        "I hire a teammate,",
+        "then head for the elite nest.",
+        "The squad helps fight and collect supplies.",
+        "Rewards pay for stronger equipment.",
+        "Enough coins for the pulse laser cannon.",
+        "The target is deep inside the map:",
+        "the alien queen.",
+        "I follow the central burrow,",
+        "using first person to see the route.",
+        "Beyond the tunnel: the queen and guards.",
+        "Do not wait at the entrance.",
+        "Move into firing range!",
+        "The beam keeps hitting,",
+        "and damage numbers appear.",
+        "The guards can block the way.",
+        "Clear the immediate threats,",
+        "then keep firing at the queen.",
+        "Defeated! Later swarms shrink 35% in this build.",
+        "Attacking first takes pressure off the base.",
+        "Back on the front line,",
+        "I intercept bugs emerging from the burrow.",
+        "The wave is cleared.",
+        "Stage two begins with the base at full health.",
+        "More coins can buy a vehicle.",
+        "I board with I in this recorded build,",
+        "then drive out for a different approach.",
+        "From supplies and equipment",
+        "to the queen: a complete gameplay route.",
+        "Tunnel visibility and squad following still needed work.",
+        "Those were priorities in this early build."
+      ]
+    },
+    {
+      "id": "jackal",
+      "game_name": "赤色要塞",
+      "recorded_date": "2026-10-04",
+      "source_episode": "game-projects/jackal-stage1-3d/video/launch-20261004",
+      "bvid": "BV1EyHz6wE5u",
+      "source_video": "final/bilibili-zh/赤色要塞-双关卡上架介绍.mp4",
+      "clean_picture": "work/edit/shared-zh/assembly.mp4",
+      "source_subtitles": "work/edit/shared-zh/captions.srt",
+      "source_cover": "final/bilibili-zh/cover-space-16x9.jpg",
+      "cut_end": 145.746,
+      "outro_picture_start": 135.448,
+      "outro_picture_duration": 10.298,
+      "outro_zh": "这段是十月四日的双关卡实录。当前试玩入口见简介，操作以游戏内提示为准。我们下次再见！",
+      "outro_en": "This two-stage run was recorded on October fourth. The current demo is linked below; follow its in-game controls. See you next time!",
+      "outro_english_phrases": [
+        "This two-stage run was recorded on October fourth.",
+        "The current demo is linked below.",
+        "Follow its in-game controls.",
+        "See you next time!"
+      ],
+      "title_zh": "一辆小吉普，救完两关的人：赤色要塞实战",
+      "title_en": "One Little Jeep, Two Rescue Missions | Jackal 3D Gameplay",
+      "demo_url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+      "english_cues": [
+        "One little jeep.",
+        "Nineteen people to rescue.",
+        "Four tanks stand in the way.",
+        "Jackal:",
+        "let us go!",
+        "Blast open the barracks with a grenade,",
+        "then drive over to pick up prisoners.",
+        "The back seat is getting crowded.",
+        "This rescue has to count.",
+        "Flashing prisoners are the key upgrade.",
+        "Pick one up,",
+        "and grenades become rockets.",
+        "Now we have the firepower.",
+        "The camp gate can be destroyed too.",
+        "Drive in and rescue more people.",
+        "Upgrade to two-way rockets,",
+        "then four-way rockets.",
+        "Clear the tank guarding the bridge,",
+        "then pick up the flashing prisoner.",
+        "Look at the upper left:",
+        "four-way rockets acquired.",
+        "Rescuing people makes us stronger.",
+        "Find the helipad,",
+        "and stop to unload.",
+        "The passenger count goes down,",
+        "the delivered count goes up.",
+        "Nineteen people:",
+        "everyone made it.",
+        "Four blue tanks are the final fight.",
+        "Line up before firing.",
+        "If they get close, move sideways.",
+        "Shell hits really reduce the armor.",
+        "Unlimited lives do not mean invincibility.",
+        "The last tank is down.",
+        "Stage one's rescue is complete.",
+        "Next stop: the ruined city.",
+        "Stage two is the ruined city.",
+        "Pillars, narrow roads and crossfire",
+        "make the route much tighter.",
+        "I failed to dodge that hit.",
+        "The jeep was destroyed.",
+        "Respawning lets us continue,",
+        "but the weapon resets to grenades.",
+        "Time to rescue more people",
+        "and rebuild our firepower.",
+        "Back into camp to open the barracks.",
+        "Pick up a flashing prisoner,",
+        "and upgrade the weapon again.",
+        "There is a repair pickup ahead.",
+        "Lost armor can still be recovered.",
+        "On this ruined-city run,",
+        "all fifteen people were delivered.",
+        "Cross the stone bridge,",
+        "and keep moving north.",
+        "Stage two ends with four statues.",
+        "Aim at them and fire,",
+        "while watching incoming missiles and tanks.",
+        "The last statue goes down.",
+        "Both stages cleared!",
+        "Use the direction keys to move.",
+        "The machine gun follows the jeep's facing,",
+        "and grenades go the same way.",
+        "Press C in this recorded build",
+        "to switch between overhead and close views.",
+        "Rescues, upgrades and two stages now connect.",
+        "What would you improve first: steering,",
+        "or the feel of throwing grenades?"
+      ]
+    },
+    {
+      "id": "cadillacs",
+      "game_name": "恐龙快打",
+      "recorded_date": "2026-10-05",
+      "source_episode": "game-projects/cadillacs-stage1-3d/video/views-20261005",
+      "bvid": "BV18XHW66E55",
+      "source_video": "final/bilibili-zh/恐龙快打3D-第一人称打第一关.mp4",
+      "clean_picture": "work/edit/shared-zh/picture.mp4",
+      "source_subtitles": "work/edit/shared-zh/captions.srt",
+      "source_cover": "final/bilibili-zh/cover-space-16x9.jpg",
+      "cut_end": 153.6,
+      "outro_picture_start": 153.6,
+      "outro_picture_duration": 16,
+      "outro_zh": "侧视看得全，身后视角更有推进感，第一人称更贴近战斗。这是十月五日的开发实录。当前试玩见简介，你更想用哪个视角？",
+      "outro_en": "Side view shows more, the rear view feels more direct, and first person puts you in the fight. This was recorded on October fifth. The current demo is linked below. Which view would you choose?",
+      "outro_english_phrases": [
+        "Side view shows more.",
+        "Rear view feels more direct.",
+        "First person puts you in the fight.",
+        "This was recorded on October fifth.",
+        "The current demo is linked below.",
+        "Which view would you choose?"
+      ],
+      "title_zh": "恐龙快打换成第一人称，会怎样？三种视角实战",
+      "title_en": "What If Cadillacs and Dinosaurs Were First Person? Three Views Tested",
+      "demo_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+      "english_cues": [
+        "The first stage of Cadillacs and Dinosaurs.",
+        "This time, fight through the hero's eyes.",
+        "Revolver in hand,",
+        "a big enemy charges straight at me.",
+        "I fire several shots.",
+        "I took this stage from Capcom's 1993 game",
+        "and made an unofficial 3D remake.",
+        "Side view is the default,",
+        "like the original arcade game.",
+        "Vice threatens us, then jumps away.",
+        "His men close in.",
+        "Press C,",
+        "and the camera moves behind the hero.",
+        "This is the rear view.",
+        "W moves forward in this build.",
+        "Enemies approach from ahead.",
+        "Who enters punching range first?",
+        "It is easy to see.",
+        "The trade-off: I cannot see behind me.",
+        "Look:",
+        "someone comes up from behind.",
+        "I notice only after getting hit.",
+        "Press C again:",
+        "first person.",
+        "My fists are right in front of me.",
+        "So are the enemies' faces.",
+        "One last kick",
+        "opens the stairwell door.",
+        "Inside the building,",
+        "the rear view gives the hall depth.",
+        "But enemies suddenly emerge from doors.",
+        "Three of them pin me beside the doorway.",
+        "I cannot see the one behind me.",
+        "The health bar drops to zero.",
+        "This build has unlimited lives by default.",
+        "I respawn on the spot,",
+        "knocking nearby enemies down.",
+        "Back to first person in the hall.",
+        "Blade approaches with a knife.",
+        "The blade is waving right in front of me.",
+        "Defeat him and a revolver drops:",
+        "the gun from the opening shots.",
+        "When the big enemies crowd together,",
+        "bellies fill the screen.",
+        "Break through the window,",
+        "and jump onto 47th Street.",
+        "At the end of the route,",
+        "Vice holds a chained dinosaur",
+        "right in front of us.",
+        "He cracks the whip.",
+        "The dinosaur turns orange",
+        "and goes berserk.",
+        "In the rear-view boss fight,",
+        "Vice and the dinosaur are both ahead.",
+        "I can see who charges first.",
+        "Of course,",
+        "seeing it does not mean dodging it.",
+        "Switch to first person,",
+        "and the teeth fill my view.",
+        "A little closer,",
+        "and the camera enters the dinosaur's mouth.",
+        "That is a bug",
+        "recorded in this early build.",
+        "Vice calls for help as his health drops.",
+        "That punch lands,",
+        "and I go down again.",
+        "I finish by returning to side view.",
+        "Now I can see enemies on both sides.",
+        "When to kick and which way to dodge",
+        "are easier to judge.",
+        "There is a reason the original used this view.",
+        "A few final hits,",
+        "and Vice finally falls.",
+        "The health bonus is counted.",
+        "Stage one cleared.",
+        "A score of 122,400.",
+        "Mustapha went down three times.",
+        "Unlimited lives kept this run going.",
+        "The footage caught another problem:",
+        "fight close to a wall in rear view,",
+        "and the camera enters the brickwork.",
+        "Those two camera problems",
+        "were the next fixes at the time."
+      ]
+    }
+  ],
+  "english_pilot": {
+    "episode_id": "swarm",
+    "voice": "en-US-GuyNeural",
+    "title": "I Took the Fight Into the Alien Burrow | Swarm Siege",
+    "cover_title": "RAID THE QUEEN",
+    "cover_subtitle": "SWARM SIEGE",
+    "segments": [
+      {
+        "start": 0,
+        "end": 5.2,
+        "text": "The bugs used to attack my base. This time, I went into their burrow to take on the queen!"
+      },
+      {
+        "start": 5.2,
+        "end": 14.733333,
+        "text": "This is Swarm Siege, my base-defense game. You are watching an October fourth development build. The interface is still in Chinese."
+      },
+      {
+        "start": 14.733333,
+        "end": 26.3,
+        "text": "I head out as the medic. Aiming and firing are automatic by default, so positioning matters. Get into range and the character fires. Space lets me dash away in this build."
+      },
+      {
+        "start": 26.3,
+        "end": 35,
+        "text": "Third person helps me watch the surroundings. In this build, V switches to first person. Manual shooting and shortcuts can be changed in the settings."
+      },
+      {
+        "start": 35,
+        "end": 43.266667,
+        "text": "Before starting the wave, I clear the abandoned supply station, collect its first-clear reward, and spend the coins at the shop."
+      },
+      {
+        "start": 43.266667,
+        "end": 54.633333,
+        "text": "The machine gun gives sustained fire. A shotgun spreads pellets at close range. During the beacon mission, I stay inside the blue circle and collect coins while fighting."
+      },
+      {
+        "start": 54.633333,
+        "end": 64.266667,
+        "text": "I can build defenses too. Choose a machine-gun turret, check the placement preview, and confirm. A bad placement can be dismantled for half the cost back."
+      },
+      {
+        "start": 64.266667,
+        "end": 73.333333,
+        "text": "Next, I hire a teammate and enter the elite nest. The squad helps fight and collect supplies. Mission rewards pay for stronger equipment."
+      },
+      {
+        "start": 73.333333,
+        "end": 80.133333,
+        "text": "Now I can afford the pulse laser cannon. The next target is deep inside the map: the alien queen."
+      },
+      {
+        "start": 80.133333,
+        "end": 90.233333,
+        "text": "I follow the central burrow in first person. Beyond the tunnel are the queen and her guards. Do not stop at the entrance. Move into firing range!"
+      },
+      {
+        "start": 90.233333,
+        "end": 98.333333,
+        "text": "The beam keeps hitting and the damage numbers appear. Guards block the way, so I clear the immediate threats before focusing on the queen again."
+      },
+      {
+        "start": 98.333333,
+        "end": 105.733333,
+        "text": "She is down! In this recorded build, later swarms in the chapter shrink by thirty-five percent. Attacking first takes pressure off the base."
+      },
+      {
+        "start": 105.733333,
+        "end": 113.933333,
+        "text": "Back on the front line, I intercept the bugs coming out of the burrow. The wave is cleared. Stage two begins with the base still at full health."
+      },
+      {
+        "start": 113.933333,
+        "end": 120.6,
+        "text": "With enough coins, I can buy a vehicle. I board it with I in this build, then drive through the gate for a different approach."
+      },
+      {
+        "start": 120.6,
+        "end": 126.366667,
+        "text": "Supplies, upgrades, defenses, and a raid on the queen now form a complete route. Tunnel visibility and squad following still needed work at this point."
+      },
+      {
+        "start": 5.2,
+        "end": 14.733333,
+        "text": "Would you defend first or raid the queen? The current Chinese-language demo is linked below. Follow its in-game controls. Thanks for watching!",
+        "outro": true
+      }
+    ],
+    "chinese_sentences": [
+      [
+        "以前是虫子来拆家。",
+        "这次，我钻进虫洞反攻母皇！"
+      ],
+      [
+        "这是我做的基地防守游戏《虫潮围城》。",
+        "画面来自十月四日的开发版本。",
+        "游戏界面目前仍是中文。"
+      ],
+      [
+        "我先选医疗兵出门。",
+        "默认自动瞄准与攻击，所以走位很重要。",
+        "进入射程，角色就会开火。",
+        "这个录制版本用空格冲刺拉开距离。"
+      ],
+      [
+        "第三人称方便观察周围。",
+        "这个版本按V切第一人称。",
+        "手动射击与快捷键可在设置调整。"
+      ],
+      [
+        "开战前，我先清理失落补给站，拿首通奖励，再回商店花金币。"
+      ],
+      [
+        "机枪适合持续扫射。",
+        "霰弹枪在近距离散射弹丸。",
+        "信标任务要留在蓝圈里，边战斗边拾取金币。"
+      ],
+      [
+        "防御也能自己建。",
+        "选机枪塔、检查放置预览，再确认。",
+        "摆错了可拆除，返还一半造价。"
+      ],
+      [
+        "接下来雇队友，进入精英巢穴。",
+        "小队帮忙战斗与拾取补给。",
+        "任务奖励用来换更强装备。"
+      ],
+      [
+        "现在攒够钱买脉冲激光炮。",
+        "下一目标在地图深处：虫巢母皇。"
+      ],
+      [
+        "我用第一人称沿中央虫洞前进。",
+        "隧道后就是母皇和护卫。",
+        "别停在入口。",
+        "进入射程！"
+      ],
+      [
+        "光束持续命中，伤害数字出现。",
+        "护卫会挡路，先清眼前威胁，再打母皇。"
+      ],
+      [
+        "母皇倒下了！",
+        "这个录制版本里，本章后续虫潮规模减少百分之三十五。",
+        "主动出击能给基地减压。"
+      ],
+      [
+        "回到正面战场，拦住钻出虫洞的敌人。",
+        "这一波守住。",
+        "进入第二关时，基地仍是满血。"
+      ],
+      [
+        "钱够了也能买载具。",
+        "这个版本按I上车，开出城门换个打法。"
+      ],
+      [
+        "补给、升级、防线和反攻母皇，形成了一条完整路线。",
+        "当时隧道视野和队友跟随还需要打磨。"
+      ],
+      [
+        "你会先守城，还是先打母皇？",
+        "当前中文版试玩入口见简介。",
+        "操作以游戏内提示为准。",
+        "感谢观看！"
+      ]
+    ]
+  },
+  "swarm_chinese_voice": {
+    "voice": "zh-CN-YunxiNeural",
+    "source_cue_ranges": [
+      [
+        0,
+        3
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        8,
+        14
+      ],
+      [
+        14,
+        18
+      ],
+      [
+        18,
+        22
+      ],
+      [
+        22,
+        26
+      ],
+      [
+        26,
+        31
+      ],
+      [
+        31,
+        35
+      ],
+      [
+        35,
+        38
+      ],
+      [
+        38,
+        43
+      ],
+      [
+        43,
+        48
+      ],
+      [
+        48,
+        50
+      ],
+      [
+        50,
+        54
+      ],
+      [
+        54,
+        57
+      ],
+      [
+        57,
+        61
+      ]
+    ],
+    "reason": "旧曼波来源记录限本次B站；中文补发版重新配云希并按新WordBoundary对齐，不沿用旧音轨授权假设。"
+  }
+}

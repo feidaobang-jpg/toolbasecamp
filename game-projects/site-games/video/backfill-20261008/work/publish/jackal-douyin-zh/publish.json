@@ -1,0 +1,61 @@
+{
+  "variant_id": "jackal-douyin-zh",
+  "platform": "douyin",
+  "content_type": "historical_gameplay_backfill",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "赤色要塞",
+  "game_version": "recorded 2026-10-04",
+  "episode_id": "game-projects/jackal-stage1-3d/video/launch-20261004",
+  "video_file": "../../../final/jackal/douyin-zh/gameplay-zh-final.mp4",
+  "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 157.04,
+  "title": "一辆小吉普，救完两关的人：赤色要塞实战",
+  "description": "开小吉普炸营房、救俘虏、升级火箭，再把人送到直升机坪，完成两关救援。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n粉丝向非官方赤色要塞重制，原作版权归Konami。\n当前试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+  "tags": [
+    "游戏开发",
+    "赤色要塞",
+    "实机演示"
+  ],
+  "description_file": "../../../final/jackal/douyin-zh/投稿文案.txt",
+  "cover_file": "../../../final/jackal/douyin-zh/cover-zh-16x9.jpg",
+  "cover_sha256": "fd924208dc48c41eacf89eb95241da059c41c3b4cf4eca781519882754e41236",
+  "cover_files": [
+    {
+      "file": "../../../final/jackal/douyin-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "upload/reference subject to current platform cover entry"
+    }
+  ],
+  "subtitle_mode": "burned_in",
+  "subtitle_files": [],
+  "credits": "credits.txt",
+  "cover_upload_mode": "verify_current_entry",
+  "recorded_date": "2026-10-04",
+  "historical_bilibili_source": {
+    "bvid": "BV1EyHz6wE5u",
+    "video_url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+    "reupload": false
+  },
+  "demo_http_check": {
+    "status": 200,
+    "checked_at": "2026-10-08",
+    "overseas_playability": "not-tested"
+  },
+  "human_review": {
+    "status": "pending",
+    "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
+    "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+  },
+  "blocking_issues": [
+    "人工审片待完成",
+    "发布账号登录与当前投稿设置待核对"
+  ],
+  "ready_to_upload": false,
+  "ready_to_review": true,
+  "uploaded": false
+}

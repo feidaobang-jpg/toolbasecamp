@@ -1,0 +1,76 @@
+{
+  "variant_id": "swarm-youtube-en",
+  "platform": "youtube",
+  "content_type": "english_gameplay_experiment",
+  "language": "en",
+  "audio_language": "en",
+  "packaging_language": "en",
+  "game_name": "虫潮围城",
+  "game_version": "recorded 2026-10-04",
+  "episode_id": "game-projects/starship-defense/video/update-20261003",
+  "video_file": "../../../final/swarm/youtube-en/gameplay-en-final.mp4",
+  "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 171.489333,
+  "title": "I Took the Fight Into the Alien Burrow | Swarm Siege",
+  "description": "Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nEnglish narration and captions; Chinese captions are also provided. The game interface is currently in Chinese; follow the current in-game control prompts.\nCurrent browser demo: https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\nEnglish-language experiment for this gameplay episode; Swarm Siege is the translated title used in this video.",
+  "tags": [
+    "gamedev",
+    "base defense",
+    "Swarm Siege"
+  ],
+  "description_file": "../../../final/swarm/youtube-en/Upload-copy.txt",
+  "cover_file": "../../../final/swarm/youtube-en/cover-en-16x9.jpg",
+  "cover_sha256": "f490b9ab3433d553bb408e099641f46011ce001e4508ca84b808857db1919d46",
+  "cover_files": [
+    {
+      "file": "../../../final/swarm/youtube-en/cover-en-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "upload/reference subject to current platform cover entry"
+    }
+  ],
+  "subtitle_mode": "burned_in_and_sidecar",
+  "subtitle_files": [
+    {
+      "file": "../../../final/swarm/youtube-en/captions-zh.srt",
+      "language": "zh-CN",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "f9ef6377e9c3d1b1fa43edc632659d1fa527dd97fc86998e0d94616fa64b6859"
+    },
+    {
+      "file": "../../../final/swarm/youtube-en/captions-en.srt",
+      "language": "en",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "f6e9386723d22f3feb81b48fcb928459ef6676d63d847c537ffc7e92ee20a602"
+    }
+  ],
+  "credits": "credits.txt",
+  "cover_upload_mode": "verify_current_entry",
+  "recorded_date": "2026-10-04",
+  "historical_bilibili_source": {
+    "bvid": "BV1WbHq6eEBt",
+    "video_url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+    "reupload": false
+  },
+  "demo_http_check": {
+    "status": 200,
+    "checked_at": "2026-10-08",
+    "overseas_playability": "not-tested"
+  },
+  "human_review": {
+    "status": "pending",
+    "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
+    "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+  },
+  "blocking_issues": [
+    "人工审片待完成",
+    "发布账号登录与当前投稿设置待核对"
+  ],
+  "ready_to_upload": false,
+  "ready_to_review": true,
+  "uploaded": false
+}

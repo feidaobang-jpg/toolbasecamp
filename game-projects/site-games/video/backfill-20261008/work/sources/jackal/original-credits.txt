@@ -1,0 +1,4 @@
+﻿游戏素材、音乐与音效来自本项目v0.3运行包。原作《Jackal/赤色要塞》版权归Konami，粉丝向非官方重置；本项目资产声明沿用media-kit/sources.json。Three.js MIT许可随游戏保留。
+解说：Microsoft Edge在线神经网络预置音色zh-CN-YunxiNeural，正常语速；未克隆真人。
+字幕与尾卡字体：Microsoft YaHei，渲染入画，不分发字体文件。
+封面：OpenAI内置imagegen，参考实机重构，非原始截图。没有外加背景音乐。
