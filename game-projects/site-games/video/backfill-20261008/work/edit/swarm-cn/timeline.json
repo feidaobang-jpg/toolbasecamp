@@ -1,0 +1,136 @@
+{
+  "voice": "zh-CN-YunxiNeural",
+  "duration": 175.5,
+  "segments": [
+    {
+      "source_start": 0,
+      "source_end": 5.2,
+      "start_in_final": 0.0,
+      "end_in_final": 6.7,
+      "picture_time_scale": 1.2884615384615385,
+      "text": "以前是虫子来拆家，这次，我直接钻进虫洞，反攻母皇！"
+    },
+    {
+      "source_start": 5.2,
+      "source_end": 14.733333,
+      "start_in_final": 6.7,
+      "end_in_final": 20.433333333333334,
+      "picture_time_scale": 1.4405594909286537,
+      "text": "这是虫潮围城的早期实战，画面录于十月四日。当时画面、操作和玩法刚做了更新，这次用一轮旧版实战，带你看看它的防守和反攻路线。"
+    },
+    {
+      "source_start": 14.733333,
+      "source_end": 26.3,
+      "start_in_final": 20.433333333333334,
+      "end_in_final": 33.8,
+      "picture_time_scale": 1.1556195632386292,
+      "text": "先选医疗兵出门。现在默认自动瞄准、自动攻击，走位更重要。靠近敌人，角色自己开火；需要拉开距离，就按空格冲刺。"
+    },
+    {
+      "source_start": 26.3,
+      "source_end": 35,
+      "start_in_final": 33.8,
+      "end_in_final": 45.53333333333333,
+      "picture_time_scale": 1.3486590038314177,
+      "text": "第三人称方便看周围，按V还能切到第一人称。喜欢手动操作，也可以在设置里调整射击方式和快捷键。"
+    },
+    {
+      "source_start": 35,
+      "source_end": 43.266667,
+      "start_in_final": 45.53333333333333,
+      "end_in_final": 55.599999999999994,
+      "picture_time_scale": 1.2177418863813758,
+      "text": "准备阶段不用急着开战。我先去失落补给站清掉守军，拿到首通奖励，再回商店把金币花出去。"
+    },
+    {
+      "source_start": 43.266667,
+      "source_end": 54.633333,
+      "start_in_final": 55.599999999999994,
+      "end_in_final": 68.63333333333333,
+      "picture_time_scale": 1.146627633233292,
+      "text": "机枪适合持续扫射，换上霰弹枪，靠近敌人就是一片弹丸。信标守夜要留在蓝圈附近，边打边捡钱，别跑出任务范围。"
+    },
+    {
+      "source_start": 54.633333,
+      "source_end": 64.266667,
+      "start_in_final": 68.63333333333333,
+      "end_in_final": 80.66666666666666,
+      "picture_time_scale": 1.249134861651567,
+      "text": "防御也能自己布置。选机枪塔，先看放置虚影，位置合适再确认。摆错了还能拆掉，返还一半造价。"
+    },
+    {
+      "source_start": 64.266667,
+      "source_end": 73.333333,
+      "start_in_final": 80.66666666666666,
+      "end_in_final": 91.23333333333332,
+      "picture_time_scale": 1.165441262164799,
+      "text": "再雇一名队友，一起去精英巢穴。小队能帮忙开火、拾取补给，任务结束后，再把钱换成更强的装备。"
+    },
+    {
+      "source_start": 73.333333,
+      "source_end": 80.133333,
+      "start_in_final": 91.23333333333332,
+      "end_in_final": 99.76666666666665,
+      "picture_time_scale": 1.2549019607843142,
+      "text": "攒够金币，脉冲激光炮到手。这次的目标在地图最深处：虫巢母皇。"
+    },
+    {
+      "source_start": 80.133333,
+      "source_end": 90.233333,
+      "start_in_final": 99.76666666666665,
+      "end_in_final": 110.79999999999998,
+      "picture_time_scale": 1.0924092409240915,
+      "text": "沿中央虫洞往里走，切第一人称看路，穿过隧道，就能看到母皇和护卫。别在入口发呆，往前压到射程内！"
+    },
+    {
+      "source_start": 90.233333,
+      "source_end": 98.333333,
+      "start_in_final": 110.79999999999998,
+      "end_in_final": 120.66666666666666,
+      "picture_time_scale": 1.2181069958847746,
+      "text": "光束持续命中，伤害数字跳出来了。护卫也会挡路，先清掉眼前的威胁，再继续打母皇。"
+    },
+    {
+      "source_start": 98.333333,
+      "source_end": 105.733333,
+      "start_in_final": 120.66666666666666,
+      "end_in_final": 130.16666666666666,
+      "picture_time_scale": 1.2837837837837829,
+      "text": "打掉了！这章后面的虫潮规模减少百分之三十五。主动出击，确实能给守城减压。"
+    },
+    {
+      "source_start": 105.733333,
+      "source_end": 113.933333,
+      "start_in_final": 130.16666666666666,
+      "end_in_final": 140.03333333333333,
+      "picture_time_scale": 1.2032520325203249,
+      "text": "回到基地前方，拦住虫洞里出来的敌人。这轮防守成功，进入第二关时，基地仍然是满血。"
+    },
+    {
+      "source_start": 113.933333,
+      "source_end": 120.6,
+      "start_in_final": 140.03333333333333,
+      "end_in_final": 148.43333333333334,
+      "picture_time_scale": 1.2599999370000052,
+      "text": "钱够了也能买载具。靠近战车按I上车，开出城门，下一波换个打法。"
+    },
+    {
+      "source_start": 120.6,
+      "source_end": 132.8,
+      "start_in_final": 148.43333333333334,
+      "end_in_final": 164.06666666666666,
+      "picture_time_scale": 1.2814207650273206,
+      "text": "这次从打补给、换装备，到钻洞反攻，已经能串起一条完整路线。实际试玩里，隧道入口的视野和队友跟随还值得继续打磨，你玩的时候也可以重点看看。"
+    },
+    {
+      "source_start": 5.2,
+      "source_end": 14.733333,
+      "start_in_final": 164.06666666666666,
+      "end_in_final": 175.5,
+      "picture_time_scale": 1.1993007412342918,
+      "text": "这段录于十月四日。当前试玩入口见简介，操作以游戏内提示为准。你会先守城，还是先打母皇？"
+    }
+  ],
+  "original_mambo_audio_used": false,
+  "timing": "Edge-TTS WordBoundary"
+}

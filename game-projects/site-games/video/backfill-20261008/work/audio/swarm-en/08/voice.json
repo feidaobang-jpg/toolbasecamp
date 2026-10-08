@@ -1,0 +1,104 @@
+{
+  "text": "Now I can afford the pulse laser cannon. The next target is deep inside the map: the alien queen.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "Now",
+      "offset": 1000000,
+      "duration": 2750000
+    },
+    {
+      "text": "I",
+      "offset": 3875000,
+      "duration": 750000
+    },
+    {
+      "text": "can",
+      "offset": 4875000,
+      "duration": 1375000
+    },
+    {
+      "text": "afford",
+      "offset": 6500000,
+      "duration": 3375000
+    },
+    {
+      "text": "the",
+      "offset": 10125000,
+      "duration": 1000000
+    },
+    {
+      "text": "pulse",
+      "offset": 11375000,
+      "duration": 2625000
+    },
+    {
+      "text": "laser",
+      "offset": 14250000,
+      "duration": 3375000
+    },
+    {
+      "text": "cannon",
+      "offset": 17875000,
+      "duration": 4000000
+    },
+    {
+      "text": "The",
+      "offset": 30750000,
+      "duration": 1000000
+    },
+    {
+      "text": "next",
+      "offset": 31875000,
+      "duration": 2375000
+    },
+    {
+      "text": "target",
+      "offset": 34375000,
+      "duration": 3375000
+    },
+    {
+      "text": "is",
+      "offset": 37875000,
+      "duration": 1250000
+    },
+    {
+      "text": "deep",
+      "offset": 39250000,
+      "duration": 2250000
+    },
+    {
+      "text": "inside",
+      "offset": 41625000,
+      "duration": 3625000
+    },
+    {
+      "text": "the",
+      "offset": 45375000,
+      "duration": 750000
+    },
+    {
+      "text": "map",
+      "offset": 46250000,
+      "duration": 3125000
+    },
+    {
+      "text": "the",
+      "offset": 51125000,
+      "duration": 1125000
+    },
+    {
+      "text": "alien",
+      "offset": 52500000,
+      "duration": 4000000
+    },
+    {
+      "text": "queen",
+      "offset": 56750000,
+      "duration": 4000000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

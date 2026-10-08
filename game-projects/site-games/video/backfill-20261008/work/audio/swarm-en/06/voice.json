@@ -1,0 +1,139 @@
+{
+  "text": "I can build defenses too. Choose a machine-gun turret, check the placement preview, and confirm. A bad placement can be dismantled for half the cost back.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "I",
+      "offset": 1000000,
+      "duration": 1875000
+    },
+    {
+      "text": "can",
+      "offset": 3125000,
+      "duration": 1625000
+    },
+    {
+      "text": "build",
+      "offset": 5000000,
+      "duration": 2375000
+    },
+    {
+      "text": "defenses",
+      "offset": 7625000,
+      "duration": 5500000
+    },
+    {
+      "text": "too",
+      "offset": 13375000,
+      "duration": 3875000
+    },
+    {
+      "text": "Choose",
+      "offset": 26000000,
+      "duration": 2750000
+    },
+    {
+      "text": "a",
+      "offset": 29000000,
+      "duration": 500000
+    },
+    {
+      "text": "machine-gun",
+      "offset": 29625000,
+      "duration": 5625000
+    },
+    {
+      "text": "turret",
+      "offset": 35500000,
+      "duration": 3375000
+    },
+    {
+      "text": "check",
+      "offset": 40750000,
+      "duration": 2125000
+    },
+    {
+      "text": "the",
+      "offset": 43125000,
+      "duration": 1125000
+    },
+    {
+      "text": "placement",
+      "offset": 44375000,
+      "duration": 4250000
+    },
+    {
+      "text": "preview",
+      "offset": 48750000,
+      "duration": 4125000
+    },
+    {
+      "text": "and",
+      "offset": 54500000,
+      "duration": 1500000
+    },
+    {
+      "text": "confirm",
+      "offset": 56250000,
+      "duration": 5750000
+    },
+    {
+      "text": "A",
+      "offset": 70875000,
+      "duration": 1500000
+    },
+    {
+      "text": "bad",
+      "offset": 72500000,
+      "duration": 2500000
+    },
+    {
+      "text": "placement",
+      "offset": 75250000,
+      "duration": 4500000
+    },
+    {
+      "text": "can",
+      "offset": 80000000,
+      "duration": 1375000
+    },
+    {
+      "text": "be",
+      "offset": 81500000,
+      "duration": 1125000
+    },
+    {
+      "text": "dismantled",
+      "offset": 82875000,
+      "duration": 6000000
+    },
+    {
+      "text": "for",
+      "offset": 89125000,
+      "duration": 1625000
+    },
+    {
+      "text": "half",
+      "offset": 90875000,
+      "duration": 2375000
+    },
+    {
+      "text": "the",
+      "offset": 93500000,
+      "duration": 1000000
+    },
+    {
+      "text": "cost",
+      "offset": 94625000,
+      "duration": 3125000
+    },
+    {
+      "text": "back",
+      "offset": 98000000,
+      "duration": 3750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

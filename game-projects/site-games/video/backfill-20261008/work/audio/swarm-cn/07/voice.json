@@ -1,0 +1,139 @@
+{
+  "text": "再雇一名队友，一起去精英巢穴。小队能帮忙开火、拾取补给，任务结束后，再把钱换成更强的装备。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "再",
+      "offset": 1000000,
+      "duration": 2375000
+    },
+    {
+      "text": "雇",
+      "offset": 3375000,
+      "duration": 1125000
+    },
+    {
+      "text": "一",
+      "offset": 4625000,
+      "duration": 875000
+    },
+    {
+      "text": "名",
+      "offset": 5500000,
+      "duration": 1250000
+    },
+    {
+      "text": "队友",
+      "offset": 6875000,
+      "duration": 4625000
+    },
+    {
+      "text": "一起",
+      "offset": 13625000,
+      "duration": 2875000
+    },
+    {
+      "text": "去",
+      "offset": 16625000,
+      "duration": 1250000
+    },
+    {
+      "text": "精英",
+      "offset": 18125000,
+      "duration": 3000000
+    },
+    {
+      "text": "巢穴",
+      "offset": 21250000,
+      "duration": 5500000
+    },
+    {
+      "text": "小队",
+      "offset": 32500000,
+      "duration": 3750000
+    },
+    {
+      "text": "能",
+      "offset": 36500000,
+      "duration": 1000000
+    },
+    {
+      "text": "帮忙",
+      "offset": 37625000,
+      "duration": 2375000
+    },
+    {
+      "text": "开火",
+      "offset": 40125000,
+      "duration": 5250000
+    },
+    {
+      "text": "拾取",
+      "offset": 47500000,
+      "duration": 4125000
+    },
+    {
+      "text": "补给",
+      "offset": 51750000,
+      "duration": 4125000
+    },
+    {
+      "text": "任务",
+      "offset": 60125000,
+      "duration": 2875000
+    },
+    {
+      "text": "结束",
+      "offset": 63125000,
+      "duration": 3125000
+    },
+    {
+      "text": "后",
+      "offset": 66250000,
+      "duration": 3625000
+    },
+    {
+      "text": "再",
+      "offset": 71625000,
+      "duration": 1625000
+    },
+    {
+      "text": "把",
+      "offset": 73250000,
+      "duration": 875000
+    },
+    {
+      "text": "钱",
+      "offset": 74250000,
+      "duration": 2125000
+    },
+    {
+      "text": "换成",
+      "offset": 76375000,
+      "duration": 3125000
+    },
+    {
+      "text": "更",
+      "offset": 79750000,
+      "duration": 1625000
+    },
+    {
+      "text": "强",
+      "offset": 81375000,
+      "duration": 2125000
+    },
+    {
+      "text": "的",
+      "offset": 83500000,
+      "duration": 625000
+    },
+    {
+      "text": "装备",
+      "offset": 84250000,
+      "duration": 3500000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

@@ -30,20 +30,20 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_X0l2USEs/index.html",
-    "verified_at": "2026-10-07T02:43:57.353796+00:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_JKUHdXI2/index.html",
-    "submitted_version": "lobby-hint1",
-    "submitted_at": "2026-10-07T21:52:19+08:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_3PQWkFb5/index.html",
+    "verified_at": "2026-10-08T02:49:45.078750+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_I0Gossrs/index.html",
+    "submitted_version": "remix-entry1",
+    "submitted_at": "2026-10-08T02:38:01+00:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/coop-hub1/handoff.json",
-    "published_version": "lobby-hint1",
+    "release_record": "releases/remix-entry1/handoff.json",
+    "published_version": "remix-entry1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "lobby-hint1 大厅手动建房补丁已审核通过并公开生效：公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房得到房间号、面板显示房间号并收起建房表单、无脚本报错（10/10）",
-    "package_sha256": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
+    "note": "remix-entry1 已发布并核验魔改推荐入口，保留既有模式选择和经典35关。手机为桌面浏览器模拟，未做真机验收。",
+    "package_sha256": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -70,33 +70,37 @@
       {
         "version": "pickup-clean1",
         "classification": "普通补丁",
-        "status": "platform_published_pending_public_verification",
+        "status": "included_in_published",
         "record": "releases/pickup-clean1/handoff.json",
-        "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。"
+        "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。",
+        "included_version": "remix-entry1"
       },
       {
         "version": "hit-audio1",
         "classification": "普通补丁",
-        "status": "auditing",
+        "status": "included_in_published",
         "record": "releases/hit-audio1/handoff.json",
         "summary": "修复敌军击毁事件覆盖导致无爆炸声，重甲命中改用现有原版金属音。",
         "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
-        "submitted_at": "2026-10-06T11:16:46.505145+00:00"
+        "submitted_at": "2026-10-06T11:16:46.505145+00:00",
+        "included_version": "remix-entry1"
       },
       {
         "version": "lobby1",
         "classification": "正式版本",
-        "status": "auditing",
+        "status": "included_in_published",
         "record": "releases/lobby1/handoff.json",
-        "summary": "2–4人大厅、可选密码、服务端分页筛选及菜单按钮反馈。"
+        "summary": "2–4人大厅、可选密码、服务端分页筛选及菜单按钮反馈。",
+        "included_version": "remix-entry1"
       },
       {
         "version": "controls-inset1",
         "classification": "普通补丁",
         "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
-        "status": "auditing",
-        "record": "releases/controls-inset1/handoff.json"
+        "status": "included_in_published",
+        "record": "releases/controls-inset1/handoff.json",
+        "included_version": "remix-entry1"
       },
       {
         "version": "fs-capable1",
@@ -115,22 +119,30 @@
         "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
         "published_verified_at": "2026-10-07T21:56:53+08:00",
         "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
+      },
+      {
+        "version": "remix-entry1",
+        "classification": "正式版本",
+        "status": "published",
+        "record": "releases/remix-entry1/handoff.json",
+        "summary": "新玩家默认魔改、保留已有选择、经典35关直接入口、标题与宣传先展示魔改看点。"
       }
     ],
     "published_verified_at": "2026-10-07T21:56:53+08:00",
     "status": "published",
-    "package_hash": "86ca30f3d7167e78df59ddade957e7949dde13af09e29cc9b24138b57660e4cf",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23219/index.html",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_bA1HMTC7/index.html",
-    "last_published_version": "lobby-hint1",
-    "last_successful_sync_version": "lobby-hint1",
-    "last_successful_sync_at": "2026-10-07T21:56:53+08:00",
-    "public_verified_at": "2026-10-07T21:56:53+08:00",
-    "public_runtime_evidence": "公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房得到房间号、面板显示房间号并收起建房表单、无脚本报错（10/10）",
-    "version": "lobby-hint1",
+    "package_hash": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23567/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_I0Gossrs/index.html",
+    "last_published_version": "remix-entry1",
+    "last_successful_sync_version": "remix-entry1",
+    "last_successful_sync_at": "2026-10-08T02:49:45.078750+00:00",
+    "public_verified_at": "2026-10-08T02:49:45.078750+00:00",
+    "public_runtime_evidence": "预览开始、开炮、暂停、双向操作切换、经典选择与刷新保存、手机横竖屏；正式入口魔改推荐与经典按钮已公开核验",
+    "version": "remix-entry1",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
-    "public_verified_version": "lobby-hint1",
-    "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
+    "public_verified_version": "remix-entry1",
+    "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。"
   },
   "merged_from": {
     "game": "tank-battle",
@@ -202,22 +214,42 @@
     "app_id": 962376,
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
-    "status": "reviewing",
-    "submitted_version": "coop-hub1",
-    "submitted_package_sha256": "e846ccf62df9d37ff143e0b333291a2b723448193a8ebc8c820804f59baedbb2",
-    "submitted_h5_version_id": 271019,
-    "draft_version_id": "1041268",
-    "submitted_at": "2026-10-07T02:43:57.353796+00:00",
-    "last_published_version": "landscape-menu1",
-    "last_published_h5_version_id": 270784,
+    "status": "reviewing_remix-entry1",
+    "submitted_version": "remix-entry1",
+    "submitted_package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
+    "submitted_h5_version_id": 274362,
+    "draft_version_id": "1045147",
+    "submitted_at": "2026-10-08T02:40:06.611058+00:00",
+    "last_published_h5_version_id": 272259,
     "last_public_runtime_verified_version": null,
-    "release_record": "releases/coop-hub1/handoff.json",
+    "release_record": "releases/remix-entry1/handoff.json",
     "pending": [],
     "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
-    "submission_time_source": "TapTap version log review_submitted.updated_time",
-    "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
-    "submitted_source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
-    "platform_version": "V-20261007-1"
+    "submission_time_source": "官方CLI提交回执保存时间；不把草稿created_time当提交时间",
+    "last_status_checked_at": "2026-10-08T02:43:20.850596+00:00",
+    "submitted_source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
+    "platform_version": "V-20261008",
+    "staged_version": "remix-entry1",
+    "staged_h5_version_id": 274362,
+    "pending_note": "新版包及魔改推荐文案已提审；审核中不重发，确认online后再发布本次动态并关联坦克论坛。",
+    "platform_status": "reviewing",
+    "audit_id": "1045147",
+    "last_published_platform_version": "V-20261007-2",
+    "community_post_status": "pending_online",
+    "community_post_version": "remix-entry1",
+    "qa": {
+      "package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
+      "devices": [
+        "desktop",
+        "landscape",
+        "portrait"
+      ],
+      "co_op": "two independent browser contexts on production relay",
+      "real_mobile_test": false,
+      "taptap_client_test": false,
+      "artifact": "D:\\project\\task-artifacts\\tank-remix-default-20261008\\taptap\\qa.json"
+    },
+    "last_published_source_version_note": "平台V-20261007-2/H5 272259已online；旧台账源版本冲突，不从其推断新的公开运行版本。"
   },
   "multiplayer": {
     "players": "2–4",
@@ -242,5 +274,6 @@
       "handoff": "releases/coop-live2/handoff.json",
       "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
     }
-  ]
+  ],
+  "last_release_completed_at": "2026-10-08T02:49:45.078750+00:00"
 }

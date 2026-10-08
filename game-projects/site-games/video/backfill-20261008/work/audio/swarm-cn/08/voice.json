@@ -1,0 +1,84 @@
+{
+  "text": "攒够金币，脉冲激光炮到手。这次的目标在地图最深处：虫巢母皇。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "攒",
+      "offset": 1000000,
+      "duration": 2875000
+    },
+    {
+      "text": "够金币",
+      "offset": 3875000,
+      "duration": 5750000
+    },
+    {
+      "text": "脉冲",
+      "offset": 13125000,
+      "duration": 4375000
+    },
+    {
+      "text": "激光",
+      "offset": 17625000,
+      "duration": 3500000
+    },
+    {
+      "text": "炮",
+      "offset": 21125000,
+      "duration": 1375000
+    },
+    {
+      "text": "到手",
+      "offset": 22625000,
+      "duration": 3750000
+    },
+    {
+      "text": "这次",
+      "offset": 32125000,
+      "duration": 3000000
+    },
+    {
+      "text": "的",
+      "offset": 35125000,
+      "duration": 875000
+    },
+    {
+      "text": "目标",
+      "offset": 36125000,
+      "duration": 4625000
+    },
+    {
+      "text": "在",
+      "offset": 41875000,
+      "duration": 2000000
+    },
+    {
+      "text": "地图",
+      "offset": 44000000,
+      "duration": 3125000
+    },
+    {
+      "text": "最",
+      "offset": 47375000,
+      "duration": 1625000
+    },
+    {
+      "text": "深处",
+      "offset": 49000000,
+      "duration": 5000000
+    },
+    {
+      "text": "虫巢",
+      "offset": 56625000,
+      "duration": 5250000
+    },
+    {
+      "text": "母皇",
+      "offset": 61875000,
+      "duration": 5750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

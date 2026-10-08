@@ -1,0 +1,8 @@
+﻿Title
+What If Cadillacs and Dinosaurs Were First Person? Three Views Tested
+Description
+Play the first stage in side view, rear view and first person, comparing visibility and combat all the way to the boss.
+Edited development footage recorded on 2026-10-05. Features, controls and issues shown belong to that earlier build; the current demo may differ.
+Chinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.
+Fan-made, unofficial Cadillacs and Dinosaurs remake. Original rights belong to Capcom and the original rights holders.
+Current browser demo: https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html

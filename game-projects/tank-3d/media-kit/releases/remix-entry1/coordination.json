@@ -5,7 +5,7 @@
     "task_status": "error",
     "last_model_completed_at": "2026-10-07T15:44:51.906Z",
     "error": "exceed quota limit",
-    "production_deployment_processes": "未发现rsync/scp/fix-static-site/bust-html-cache在运行"
+    "production_deployment_processes": "SSH检查未发现rsync/scp或静态部署进程"
   },
-  "action": "发布前恢复已退出任务的遗留锁"
+  "action": "旧任务额度耗尽并已停止，按当时规则恢复遗留锁；网站核验后已释放自有锁。2026-10-08用户新规则废弃本机全局合并锁，后续整合不再获取。"
 }

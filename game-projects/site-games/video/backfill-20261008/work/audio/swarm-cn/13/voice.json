@@ -1,0 +1,114 @@
+{
+  "text": "钱够了也能买载具。靠近战车按I上车，开出城门，下一波换个打法。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "钱",
+      "offset": 1000000,
+      "duration": 3125000
+    },
+    {
+      "text": "够",
+      "offset": 4125000,
+      "duration": 2000000
+    },
+    {
+      "text": "了",
+      "offset": 6125000,
+      "duration": 2875000
+    },
+    {
+      "text": "也",
+      "offset": 10125000,
+      "duration": 1500000
+    },
+    {
+      "text": "能",
+      "offset": 11625000,
+      "duration": 1000000
+    },
+    {
+      "text": "买",
+      "offset": 12750000,
+      "duration": 1500000
+    },
+    {
+      "text": "载",
+      "offset": 14375000,
+      "duration": 1750000
+    },
+    {
+      "text": "具",
+      "offset": 16125000,
+      "duration": 2500000
+    },
+    {
+      "text": "靠近",
+      "offset": 24250000,
+      "duration": 3750000
+    },
+    {
+      "text": "战车",
+      "offset": 28125000,
+      "duration": 3750000
+    },
+    {
+      "text": "按",
+      "offset": 32125000,
+      "duration": 2250000
+    },
+    {
+      "text": "I",
+      "offset": 34375000,
+      "duration": 1500000
+    },
+    {
+      "text": "上车",
+      "offset": 36000000,
+      "duration": 5250000
+    },
+    {
+      "text": "开出",
+      "offset": 43000000,
+      "duration": 3750000
+    },
+    {
+      "text": "城门",
+      "offset": 46750000,
+      "duration": 4625000
+    },
+    {
+      "text": "下",
+      "offset": 53250000,
+      "duration": 3000000
+    },
+    {
+      "text": "一",
+      "offset": 56250000,
+      "duration": 875000
+    },
+    {
+      "text": "波",
+      "offset": 57125000,
+      "duration": 1875000
+    },
+    {
+      "text": "换",
+      "offset": 59250000,
+      "duration": 2125000
+    },
+    {
+      "text": "个",
+      "offset": 61375000,
+      "duration": 625000
+    },
+    {
+      "text": "打法",
+      "offset": 62125000,
+      "duration": 3875000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

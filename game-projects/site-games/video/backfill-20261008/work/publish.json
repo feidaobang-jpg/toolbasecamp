@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "batch_id": "game-video-backfill-20261008",
+  "requested_variants": [
+    "swarm-youtube-zh",
+    "swarm-douyin-zh",
+    "jackal-youtube-zh",
+    "jackal-douyin-zh",
+    "cadillacs-youtube-zh",
+    "cadillacs-douyin-zh",
+    "swarm-youtube-en"
+  ],
+  "variants": [
+    {
+      "variant_id": "swarm-youtube-zh",
+      "manifest_file": "publish/swarm-youtube-zh/publish.json",
+      "ready_to_upload": false
+    },
+    {
+      "variant_id": "swarm-douyin-zh",
+      "manifest_file": "publish/swarm-douyin-zh/publish.json",
+      "ready_to_upload": false
+    },
+    {
+      "variant_id": "jackal-youtube-zh",
+      "manifest_file": "publish/jackal-youtube-zh/publish.json",
+      "ready_to_upload": false
+    },
+    {
+      "variant_id": "jackal-douyin-zh",
+      "manifest_file": "publish/jackal-douyin-zh/publish.json",
+      "ready_to_upload": false
+    },
+    {
+      "variant_id": "cadillacs-youtube-zh",
+      "manifest_file": "publish/cadillacs-youtube-zh/publish.json",
+      "ready_to_upload": false
+    },
+    {
+      "variant_id": "cadillacs-douyin-zh",
+      "manifest_file": "publish/cadillacs-douyin-zh/publish.json",
+      "ready_to_upload": false
+    },
+    {
+      "variant_id": "swarm-youtube-en",
+      "manifest_file": "publish/swarm-youtube-en/publish.json",
+      "ready_to_upload": false
+    }
+  ],
+  "ready_to_upload": false,
+  "ready_to_review": true,
+  "phase": "awaiting_human_review",
+  "post_publication": {
+    "x": {
+      "authorized": true,
+      "status": "pending_youtube_publication",
+      "one_post_per_episode": true,
+      "swarm_preferred_link": "english_pilot_if_public"
+    }
+  }
+}

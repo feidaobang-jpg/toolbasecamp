@@ -1,0 +1,134 @@
+{
+  "text": "The beam keeps hitting and the damage numbers appear. Guards block the way, so I clear the immediate threats before focusing on the queen again.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "The",
+      "offset": 1000000,
+      "duration": 1375000
+    },
+    {
+      "text": "beam",
+      "offset": 2625000,
+      "duration": 2500000
+    },
+    {
+      "text": "keeps",
+      "offset": 5375000,
+      "duration": 2500000
+    },
+    {
+      "text": "hitting",
+      "offset": 8125000,
+      "duration": 3375000
+    },
+    {
+      "text": "and",
+      "offset": 11625000,
+      "duration": 750000
+    },
+    {
+      "text": "the",
+      "offset": 12500000,
+      "duration": 1125000
+    },
+    {
+      "text": "damage",
+      "offset": 13750000,
+      "duration": 3625000
+    },
+    {
+      "text": "numbers",
+      "offset": 17625000,
+      "duration": 3625000
+    },
+    {
+      "text": "appear",
+      "offset": 21500000,
+      "duration": 5250000
+    },
+    {
+      "text": "Guards",
+      "offset": 35625000,
+      "duration": 3250000
+    },
+    {
+      "text": "block",
+      "offset": 39000000,
+      "duration": 2750000
+    },
+    {
+      "text": "the",
+      "offset": 42000000,
+      "duration": 1000000
+    },
+    {
+      "text": "way",
+      "offset": 43125000,
+      "duration": 2625000
+    },
+    {
+      "text": "so",
+      "offset": 48125000,
+      "duration": 1250000
+    },
+    {
+      "text": "I",
+      "offset": 49625000,
+      "duration": 750000
+    },
+    {
+      "text": "clear",
+      "offset": 50625000,
+      "duration": 2625000
+    },
+    {
+      "text": "the",
+      "offset": 53500000,
+      "duration": 1000000
+    },
+    {
+      "text": "immediate",
+      "offset": 54750000,
+      "duration": 4750000
+    },
+    {
+      "text": "threats",
+      "offset": 59750000,
+      "duration": 3375000
+    },
+    {
+      "text": "before",
+      "offset": 63375000,
+      "duration": 3250000
+    },
+    {
+      "text": "focusing",
+      "offset": 66750000,
+      "duration": 5000000
+    },
+    {
+      "text": "on",
+      "offset": 72000000,
+      "duration": 875000
+    },
+    {
+      "text": "the",
+      "offset": 73125000,
+      "duration": 875000
+    },
+    {
+      "text": "queen",
+      "offset": 74250000,
+      "duration": 2500000
+    },
+    {
+      "text": "again",
+      "offset": 76875000,
+      "duration": 3750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

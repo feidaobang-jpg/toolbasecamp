@@ -1,0 +1,154 @@
+{
+  "text": "机枪适合持续扫射，换上霰弹枪，靠近敌人就是一片弹丸。信标守夜要留在蓝圈附近，边打边捡钱，别跑出任务范围。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "机枪",
+      "offset": 1000000,
+      "duration": 4125000
+    },
+    {
+      "text": "适合",
+      "offset": 5250000,
+      "duration": 3625000
+    },
+    {
+      "text": "持续",
+      "offset": 9125000,
+      "duration": 3875000
+    },
+    {
+      "text": "扫射",
+      "offset": 13125000,
+      "duration": 5125000
+    },
+    {
+      "text": "换",
+      "offset": 20625000,
+      "duration": 2250000
+    },
+    {
+      "text": "上",
+      "offset": 22875000,
+      "duration": 1125000
+    },
+    {
+      "text": "霰弹枪",
+      "offset": 24250000,
+      "duration": 7250000
+    },
+    {
+      "text": "靠近",
+      "offset": 34125000,
+      "duration": 4125000
+    },
+    {
+      "text": "敌人",
+      "offset": 38375000,
+      "duration": 5000000
+    },
+    {
+      "text": "就",
+      "offset": 44500000,
+      "duration": 1750000
+    },
+    {
+      "text": "是",
+      "offset": 46250000,
+      "duration": 1125000
+    },
+    {
+      "text": "一片",
+      "offset": 47500000,
+      "duration": 2875000
+    },
+    {
+      "text": "弹丸",
+      "offset": 50500000,
+      "duration": 4625000
+    },
+    {
+      "text": "信标",
+      "offset": 60875000,
+      "duration": 4125000
+    },
+    {
+      "text": "守夜",
+      "offset": 65125000,
+      "duration": 4875000
+    },
+    {
+      "text": "要",
+      "offset": 71000000,
+      "duration": 1500000
+    },
+    {
+      "text": "留",
+      "offset": 72625000,
+      "duration": 1375000
+    },
+    {
+      "text": "在",
+      "offset": 74000000,
+      "duration": 1250000
+    },
+    {
+      "text": "蓝圈",
+      "offset": 75500000,
+      "duration": 3625000
+    },
+    {
+      "text": "附近",
+      "offset": 79250000,
+      "duration": 3750000
+    },
+    {
+      "text": "边",
+      "offset": 87000000,
+      "duration": 2125000
+    },
+    {
+      "text": "打",
+      "offset": 89125000,
+      "duration": 1625000
+    },
+    {
+      "text": "边",
+      "offset": 90750000,
+      "duration": 1625000
+    },
+    {
+      "text": "捡",
+      "offset": 92500000,
+      "duration": 1625000
+    },
+    {
+      "text": "钱",
+      "offset": 94125000,
+      "duration": 3500000
+    },
+    {
+      "text": "别",
+      "offset": 100375000,
+      "duration": 1750000
+    },
+    {
+      "text": "跑出",
+      "offset": 102125000,
+      "duration": 3125000
+    },
+    {
+      "text": "任务",
+      "offset": 105500000,
+      "duration": 2125000
+    },
+    {
+      "text": "范围",
+      "offset": 107750000,
+      "duration": 4500000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

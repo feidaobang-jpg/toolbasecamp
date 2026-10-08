@@ -1,0 +1,134 @@
+{
+  "text": "With enough coins, I can buy a vehicle. I board it with I in this build, then drive through the gate for a different approach.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "With",
+      "offset": 1000000,
+      "duration": 2125000
+    },
+    {
+      "text": "enough",
+      "offset": 3375000,
+      "duration": 2500000
+    },
+    {
+      "text": "coins",
+      "offset": 6125000,
+      "duration": 4125000
+    },
+    {
+      "text": "I",
+      "offset": 12625000,
+      "duration": 750000
+    },
+    {
+      "text": "can",
+      "offset": 13625000,
+      "duration": 1500000
+    },
+    {
+      "text": "buy",
+      "offset": 15375000,
+      "duration": 1875000
+    },
+    {
+      "text": "a",
+      "offset": 17500000,
+      "duration": 625000
+    },
+    {
+      "text": "vehicle",
+      "offset": 18375000,
+      "duration": 5125000
+    },
+    {
+      "text": "I",
+      "offset": 32250000,
+      "duration": 1500000
+    },
+    {
+      "text": "board",
+      "offset": 33875000,
+      "duration": 2375000
+    },
+    {
+      "text": "it",
+      "offset": 36375000,
+      "duration": 750000
+    },
+    {
+      "text": "with",
+      "offset": 37375000,
+      "duration": 1500000
+    },
+    {
+      "text": "I",
+      "offset": 39125000,
+      "duration": 1500000
+    },
+    {
+      "text": "in",
+      "offset": 40875000,
+      "duration": 875000
+    },
+    {
+      "text": "this",
+      "offset": 42000000,
+      "duration": 1750000
+    },
+    {
+      "text": "build",
+      "offset": 44000000,
+      "duration": 2875000
+    },
+    {
+      "text": "then",
+      "offset": 49250000,
+      "duration": 1625000
+    },
+    {
+      "text": "drive",
+      "offset": 51125000,
+      "duration": 2750000
+    },
+    {
+      "text": "through",
+      "offset": 54125000,
+      "duration": 1500000
+    },
+    {
+      "text": "the",
+      "offset": 55750000,
+      "duration": 1000000
+    },
+    {
+      "text": "gate",
+      "offset": 57000000,
+      "duration": 2000000
+    },
+    {
+      "text": "for",
+      "offset": 59250000,
+      "duration": 1625000
+    },
+    {
+      "text": "a",
+      "offset": 61000000,
+      "duration": 625000
+    },
+    {
+      "text": "different",
+      "offset": 61875000,
+      "duration": 3125000
+    },
+    {
+      "text": "approach",
+      "offset": 65250000,
+      "duration": 5125000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

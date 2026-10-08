@@ -1,0 +1,212 @@
+{
+  "results": [
+    {
+      "variant_id": "cadillacs-douyin-zh",
+      "duration_seconds": 167.778667,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [],
+      "audio_hash": "SHA256=987bc9d5331e37d8fbcf8e7d8651e82cabcce7766bd99618cccc3db20b68023c",
+      "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    },
+    {
+      "variant_id": "cadillacs-youtube-zh",
+      "duration_seconds": 167.778667,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [
+        {
+          "language": "zh-CN",
+          "cues": 89,
+          "last_end": 165.87
+        },
+        {
+          "language": "en",
+          "cues": 41,
+          "last_end": 165.87
+        }
+      ],
+      "audio_hash": "SHA256=987bc9d5331e37d8fbcf8e7d8651e82cabcce7766bd99618cccc3db20b68023c",
+      "video_sha256": "460329bf8909b2006b022fdfb574d5e1be92bfc3e18409abd07e3d658bcfe960",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    },
+    {
+      "variant_id": "jackal-douyin-zh",
+      "duration_seconds": 157.04,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [],
+      "audio_hash": "SHA256=a10bf48c776094565344466f3c2035419d7f2e4b7e2d5cc07a4e1e6dbd1eb169",
+      "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    },
+    {
+      "variant_id": "jackal-youtube-zh",
+      "duration_seconds": 157.04,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [
+        {
+          "language": "zh-CN",
+          "cues": 71,
+          "last_end": 155.154
+        },
+        {
+          "language": "en",
+          "cues": 38,
+          "last_end": 155.154
+        }
+      ],
+      "audio_hash": "SHA256=a10bf48c776094565344466f3c2035419d7f2e4b7e2d5cc07a4e1e6dbd1eb169",
+      "video_sha256": "0d9f4de768af0625f968cde561c795c0c95053c08357888010640e490f504daa",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    },
+    {
+      "variant_id": "swarm-douyin-zh",
+      "duration_seconds": 175.544,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [],
+      "audio_hash": "SHA256=aefc14b1a5c5a3c63809b7fb59b9033e83296f03a599d7d22b922654676aa584",
+      "video_sha256": "41c2b390473f1a079c8219674e58bdd124d9b5986252e399998edfed3ec221a5",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    },
+    {
+      "variant_id": "swarm-youtube-en",
+      "duration_seconds": 171.489333,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [
+        {
+          "language": "zh-CN",
+          "cues": 44,
+          "last_end": 169.978
+        },
+        {
+          "language": "en",
+          "cues": 48,
+          "last_end": 169.978
+        }
+      ],
+      "audio_hash": "SHA256=a8da9ad75cc28bd85c770725092adb93d00e601cd7fd6624c04244594138a449",
+      "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    },
+    {
+      "variant_id": "swarm-youtube-zh",
+      "duration_seconds": 175.544,
+      "width": 1920,
+      "height": 1080,
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "full_decode": "pass",
+      "references": "pass",
+      "cover_ratio": "pass",
+      "subtitle_timing": "pass",
+      "subtitles": [
+        {
+          "language": "zh-CN",
+          "cues": 66,
+          "last_end": 174.074
+        },
+        {
+          "language": "en",
+          "cues": 41,
+          "last_end": 174.074
+        }
+      ],
+      "audio_hash": "SHA256=aefc14b1a5c5a3c63809b7fb59b9033e83296f03a599d7d22b922654676aa584",
+      "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+      "visual_review": "pass_sampled_intro_middle_outro",
+      "subjective_listening": "not-run",
+      "human_review": "pending",
+      "platform_preview": "not-run",
+      "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
+      "checked_at": "2026-10-08T04:08:07.154875+00:00"
+    }
+  ],
+  "chinese_douyin_youtube_audio_identical": true,
+  "live_platform_upload": "not-run",
+  "new_human_approval": "pending"
+}

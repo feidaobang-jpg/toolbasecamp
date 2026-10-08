@@ -1,0 +1,139 @@
+{
+  "text": "准备阶段不用急着开战。我先去失落补给站清掉守军，拿到首通奖励，再回商店把金币花出去。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "准备",
+      "offset": 1000000,
+      "duration": 3375000
+    },
+    {
+      "text": "阶段",
+      "offset": 4500000,
+      "duration": 5500000
+    },
+    {
+      "text": "不用",
+      "offset": 11125000,
+      "duration": 3250000
+    },
+    {
+      "text": "急",
+      "offset": 14500000,
+      "duration": 1375000
+    },
+    {
+      "text": "着",
+      "offset": 15875000,
+      "duration": 750000
+    },
+    {
+      "text": "开战",
+      "offset": 16750000,
+      "duration": 4250000
+    },
+    {
+      "text": "我",
+      "offset": 26750000,
+      "duration": 1625000
+    },
+    {
+      "text": "先",
+      "offset": 28375000,
+      "duration": 1500000
+    },
+    {
+      "text": "去",
+      "offset": 29875000,
+      "duration": 1000000
+    },
+    {
+      "text": "失落",
+      "offset": 31125000,
+      "duration": 3250000
+    },
+    {
+      "text": "补给",
+      "offset": 34500000,
+      "duration": 2625000
+    },
+    {
+      "text": "站清",
+      "offset": 37250000,
+      "duration": 3250000
+    },
+    {
+      "text": "掉",
+      "offset": 40500000,
+      "duration": 1125000
+    },
+    {
+      "text": "守军",
+      "offset": 41750000,
+      "duration": 4625000
+    },
+    {
+      "text": "拿",
+      "offset": 50125000,
+      "duration": 3250000
+    },
+    {
+      "text": "到",
+      "offset": 53375000,
+      "duration": 1000000
+    },
+    {
+      "text": "首通",
+      "offset": 54625000,
+      "duration": 3125000
+    },
+    {
+      "text": "奖励",
+      "offset": 57875000,
+      "duration": 3750000
+    },
+    {
+      "text": "再",
+      "offset": 65500000,
+      "duration": 2250000
+    },
+    {
+      "text": "回",
+      "offset": 67750000,
+      "duration": 1125000
+    },
+    {
+      "text": "商店",
+      "offset": 69000000,
+      "duration": 4375000
+    },
+    {
+      "text": "把",
+      "offset": 73625000,
+      "duration": 1375000
+    },
+    {
+      "text": "金",
+      "offset": 75125000,
+      "duration": 1750000
+    },
+    {
+      "text": "币",
+      "offset": 76875000,
+      "duration": 1000000
+    },
+    {
+      "text": "花",
+      "offset": 77875000,
+      "duration": 1750000
+    },
+    {
+      "text": "出去",
+      "offset": 79750000,
+      "duration": 2750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

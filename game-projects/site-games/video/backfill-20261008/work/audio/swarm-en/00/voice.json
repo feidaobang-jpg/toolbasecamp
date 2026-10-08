@@ -1,0 +1,104 @@
+{
+  "text": "The bugs used to attack my base. This time, I went into their burrow to take on the queen!",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "The",
+      "offset": 1000000,
+      "duration": 1375000
+    },
+    {
+      "text": "bugs",
+      "offset": 2625000,
+      "duration": 3250000
+    },
+    {
+      "text": "used",
+      "offset": 6125000,
+      "duration": 2250000
+    },
+    {
+      "text": "to",
+      "offset": 8625000,
+      "duration": 1000000
+    },
+    {
+      "text": "attack",
+      "offset": 9750000,
+      "duration": 3500000
+    },
+    {
+      "text": "my",
+      "offset": 13375000,
+      "duration": 1375000
+    },
+    {
+      "text": "base",
+      "offset": 15000000,
+      "duration": 4750000
+    },
+    {
+      "text": "This",
+      "offset": 28500000,
+      "duration": 2250000
+    },
+    {
+      "text": "time",
+      "offset": 30875000,
+      "duration": 2875000
+    },
+    {
+      "text": "I",
+      "offset": 35750000,
+      "duration": 500000
+    },
+    {
+      "text": "went",
+      "offset": 36500000,
+      "duration": 2125000
+    },
+    {
+      "text": "into",
+      "offset": 38875000,
+      "duration": 1750000
+    },
+    {
+      "text": "their",
+      "offset": 40875000,
+      "duration": 1625000
+    },
+    {
+      "text": "burrow",
+      "offset": 42750000,
+      "duration": 2625000
+    },
+    {
+      "text": "to",
+      "offset": 45625000,
+      "duration": 1000000
+    },
+    {
+      "text": "take",
+      "offset": 46750000,
+      "duration": 2750000
+    },
+    {
+      "text": "on",
+      "offset": 49750000,
+      "duration": 1000000
+    },
+    {
+      "text": "the",
+      "offset": 50875000,
+      "duration": 750000
+    },
+    {
+      "text": "queen",
+      "offset": 51875000,
+      "duration": 4125000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

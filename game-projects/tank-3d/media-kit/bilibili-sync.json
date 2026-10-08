@@ -6,35 +6,38 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "coop-hub1",
+      "lastPublicVerifiedVersion": "remix-entry1",
       "blockHash": "82aaa4c69baf8a1b148c925f29c55fce6c63c5c36f846c7e3096044f2021f911",
-      "release": "releases/coop-hub1/handoff.json",
+      "release": "releases/remix-entry1/bilibili-sync.json",
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
-      "descriptionHash": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8",
-      "publicVerifiedAt": "2026-10-07T04:32:00+00:00",
+      "descriptionHash": "529803c19f95ac466f07500c42e9a518735e78d06690873a48bb7daf6c45231c",
+      "publicVerifiedAt": "2026-10-08T02:45:15.057Z",
       "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
-      "submitted_version": "coop-hub1",
-      "submitted_at": "2026-10-07T02:36:31.738Z",
+      "submitted_version": "remix-entry1",
+      "submitted_at": "2026-10-08T02:44:30.631Z",
       "status": "public_verified",
-      "last_public_verified_version": "coop-live2",
-      "public_verified_at": "2026-10-07T18:05:00+08:00"
+      "last_public_verified_version": "remix-entry1",
+      "public_verified_at": "2026-10-08T02:45:15.057Z"
     },
     {
       "bvid": "BV1TepK69Eet",
       "aid": 117397444957530,
       "title": "坦克大战能联机了！两个人能守住老鹰吗？",
       "version": "coop-hub1",
-      "release": "releases/coop-hub1/handoff.json",
-      "publicVerifiedAt": "2026-10-07T03:24:00+00:00",
+      "release": "releases/remix-entry1/bilibili-sync.json",
+      "publicVerifiedAt": "2026-10-08T02:44:53.237Z",
       "publicUrl": "https://www.bilibili.com/video/BV1TepK69Eet/",
       "toyUrl": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
       "status": "public_verified",
       "commentStatus": "pinned",
       "qqPromotionStatus": "submitted_and_autosaved",
       "recordedFootageVersion": "landscape-menu1",
-      "lastPublicVerifiedVersion": "coop-hub1",
-      "last_public_verified_version": "coop-live2",
-      "public_verified_at": "2026-10-07T18:05:00+08:00"
+      "lastPublicVerifiedVersion": "remix-entry1",
+      "last_public_verified_version": "remix-entry1",
+      "public_verified_at": "2026-10-08T02:44:53.237Z",
+      "descriptionHash": "544c63a9ac04e7f5cb2e41bc4cb76002d0c78124ace6a6ea29fb902d991976d0",
+      "submitted_version": "remix-entry1",
+      "submitted_at": "2026-10-08T02:43:41.438Z"
     }
   ],
   "pending_updates": [
@@ -165,6 +168,17 @@
       "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
       "record": "releases/lobby-hint1/notes.md",
       "recorded_at": "2026-10-07"
+    },
+    {
+      "version": "remix-entry1",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ],
+      "record": "releases/remix-entry1/bilibili-sync.json",
+      "summary": "默认推荐魔改、保留经典入口和已有选择，简介突出Boss/敌军抢道具/火箭筒/四连发导弹，纠正Toy已上线状态。"
     }
   ],
   "history": [
@@ -206,15 +220,33 @@
       "public_verified_at": "2026-10-07T18:05:00+08:00",
       "line": "联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
       "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "remix-entry1",
+      "status": "public_verified",
+      "description_sha256": "529803c19f95ac466f07500c42e9a518735e78d06690873a48bb7daf6c45231c",
+      "checked_at": "2026-10-08T02:45:15.057Z",
+      "record": "releases/remix-entry1/bilibili-sync.json"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "version": "remix-entry1",
+      "status": "public_verified",
+      "description_sha256": "544c63a9ac04e7f5cb2e41bc4cb76002d0c78124ace6a6ea29fb902d991976d0",
+      "checked_at": "2026-10-08T02:44:53.237Z",
+      "record": "releases/remix-entry1/bilibili-sync.json"
     }
   ],
   "last_public_verified": {
-    "bvid": "BV1Wqaz6AEJb",
-    "version": "coop-hub1",
-    "at": "2026-10-07T04:32:00+00:00",
-    "description_sha256": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8"
+    "version": "remix-entry1",
+    "at": "2026-10-08T02:49:45.078750+00:00",
+    "bvids": [
+      "BV1Wqaz6AEJb",
+      "BV1TepK69Eet"
+    ]
   },
-  "latest_record": "releases/coop-hub1/bilibili-sync.json",
+  "latest_record": "releases/remix-entry1/bilibili-sync.json",
   "pending": [],
-  "pending_note": "统一2–4人合作正式版本简介更新待平台提交（浏览器自动化不可用）；仅公开核验成功的目标推进基线。"
+  "pending_note": "新旧两条坦克视频简介均已公开核验；保留历史成片、标题、封面、标签和绑定。TapTap当前仍审核中。"
 }

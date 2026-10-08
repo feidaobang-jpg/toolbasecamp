@@ -1,0 +1,149 @@
+{
+  "text": "The machine gun gives sustained fire. A shotgun spreads pellets at close range. During the beacon mission, I stay inside the blue circle and collect coins while fighting.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "The",
+      "offset": 1000000,
+      "duration": 1125000
+    },
+    {
+      "text": "machine",
+      "offset": 2375000,
+      "duration": 3750000
+    },
+    {
+      "text": "gun",
+      "offset": 6250000,
+      "duration": 2375000
+    },
+    {
+      "text": "gives",
+      "offset": 8875000,
+      "duration": 2125000
+    },
+    {
+      "text": "sustained",
+      "offset": 11250000,
+      "duration": 4750000
+    },
+    {
+      "text": "fire",
+      "offset": 16250000,
+      "duration": 4625000
+    },
+    {
+      "text": "A",
+      "offset": 29750000,
+      "duration": 1125000
+    },
+    {
+      "text": "shotgun",
+      "offset": 31125000,
+      "duration": 5000000
+    },
+    {
+      "text": "spreads",
+      "offset": 36250000,
+      "duration": 3750000
+    },
+    {
+      "text": "pellets",
+      "offset": 40125000,
+      "duration": 4125000
+    },
+    {
+      "text": "at",
+      "offset": 44500000,
+      "duration": 875000
+    },
+    {
+      "text": "close",
+      "offset": 45625000,
+      "duration": 2750000
+    },
+    {
+      "text": "range",
+      "offset": 48625000,
+      "duration": 4500000
+    },
+    {
+      "text": "During",
+      "offset": 61875000,
+      "duration": 2875000
+    },
+    {
+      "text": "the",
+      "offset": 65000000,
+      "duration": 1000000
+    },
+    {
+      "text": "beacon",
+      "offset": 66250000,
+      "duration": 3125000
+    },
+    {
+      "text": "mission",
+      "offset": 69625000,
+      "duration": 3500000
+    },
+    {
+      "text": "I",
+      "offset": 75375000,
+      "duration": 625000
+    },
+    {
+      "text": "stay",
+      "offset": 76250000,
+      "duration": 2250000
+    },
+    {
+      "text": "inside",
+      "offset": 78750000,
+      "duration": 3750000
+    },
+    {
+      "text": "the",
+      "offset": 82625000,
+      "duration": 1000000
+    },
+    {
+      "text": "blue",
+      "offset": 83750000,
+      "duration": 2000000
+    },
+    {
+      "text": "circle",
+      "offset": 86000000,
+      "duration": 4125000
+    },
+    {
+      "text": "and",
+      "offset": 90250000,
+      "duration": 1000000
+    },
+    {
+      "text": "collect",
+      "offset": 91500000,
+      "duration": 3375000
+    },
+    {
+      "text": "coins",
+      "offset": 95125000,
+      "duration": 3125000
+    },
+    {
+      "text": "while",
+      "offset": 98375000,
+      "duration": 1875000
+    },
+    {
+      "text": "fighting",
+      "offset": 100375000,
+      "duration": 4250000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

@@ -1,0 +1,114 @@
+{
+  "text": "Before starting the wave, I clear the abandoned supply station, collect its first-clear reward, and spend the coins at the shop.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "Before",
+      "offset": 1000000,
+      "duration": 3375000
+    },
+    {
+      "text": "starting",
+      "offset": 4625000,
+      "duration": 3375000
+    },
+    {
+      "text": "the",
+      "offset": 8250000,
+      "duration": 875000
+    },
+    {
+      "text": "wave",
+      "offset": 9250000,
+      "duration": 3000000
+    },
+    {
+      "text": "I",
+      "offset": 14250000,
+      "duration": 750000
+    },
+    {
+      "text": "clear",
+      "offset": 15250000,
+      "duration": 2625000
+    },
+    {
+      "text": "the",
+      "offset": 18125000,
+      "duration": 1000000
+    },
+    {
+      "text": "abandoned",
+      "offset": 19375000,
+      "duration": 4500000
+    },
+    {
+      "text": "supply",
+      "offset": 24000000,
+      "duration": 3375000
+    },
+    {
+      "text": "station",
+      "offset": 27625000,
+      "duration": 4375000
+    },
+    {
+      "text": "collect",
+      "offset": 34000000,
+      "duration": 3625000
+    },
+    {
+      "text": "its",
+      "offset": 37875000,
+      "duration": 1375000
+    },
+    {
+      "text": "first-clear",
+      "offset": 39375000,
+      "duration": 5500000
+    },
+    {
+      "text": "reward",
+      "offset": 45000000,
+      "duration": 4250000
+    },
+    {
+      "text": "and",
+      "offset": 50750000,
+      "duration": 1375000
+    },
+    {
+      "text": "spend",
+      "offset": 52375000,
+      "duration": 2500000
+    },
+    {
+      "text": "the",
+      "offset": 55000000,
+      "duration": 875000
+    },
+    {
+      "text": "coins",
+      "offset": 56125000,
+      "duration": 3375000
+    },
+    {
+      "text": "at",
+      "offset": 59625000,
+      "duration": 750000
+    },
+    {
+      "text": "the",
+      "offset": 60625000,
+      "duration": 875000
+    },
+    {
+      "text": "shop",
+      "offset": 61625000,
+      "duration": 4000000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

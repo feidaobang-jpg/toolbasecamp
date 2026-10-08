@@ -5,27 +5,38 @@
   "app_id": 962354,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_update_web-cloudsave-v0.24.0",
-  "submitted_version": "web-cloudsave-v0.24.0",
-  "submitted_package_sha256": "949e57bbdd8baff27352296d08b497f0e5458d1bf9183a4320da3aa9b5e4fdb3",
-  "submitted_h5_version_id": 273272,
-  "draft_version_id": "1043869",
-  "audit_id": "1043869",
-  "platform_version": "V-20261007-3",
-  "submitted_at": "2026-10-07T22:39:10+08:00",
-  "last_published_version": "web-coop-v0.23.0",
-  "last_published_h5_version_id": 272261,
-  "last_published_platform_version": "V-20261007-2",
+  "status": "reviewing_startup_inline_runtime_v2",
+  "submitted_version": "web-unstick-rpg-v0.25.0",
+  "submitted_package_sha256": "d9b01df9bcd8bad58298cb2d889b4075d92684da72285cab7dd0c7ba74e9a78a",
+  "submitted_h5_version_id": 274325,
+  "draft_version_id": "1045140",
+  "audit_id": "1045140",
+  "platform_version": "V-20261008",
+  "submitted_at": "2026-10-08T02:38:04.812187+00:00",
+  "last_published_version": "web-cloudsave-v0.24.0",
+  "last_published_h5_version_id": 273272,
+  "last_published_platform_version": "V-20261007-3",
   "last_public_runtime_verified_version": null,
-  "release_record": "releases/web-cloudsave-v0.24.0/handoff.json",
+  "release_record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "CLI回执review_submitted；created_time 1791383950换算22:39:10+08:00",
-  "last_status_checked_at": "2026-10-07T22:40:00+08:00",
-  "submitted_source_commit": "ae4b1318",
+  "last_status_checked_at": "2026-10-08T02:40:39.031351+00:00",
+  "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
   "community_post_status": "pending_until_online",
-  "community_post_note": "动态与论坛说明待 V-20261007-3 确认 online 后按 bili-game-update/game-maker 共享参考发布，先查重",
+  "community_post_note": "v0.24.0 云存档动态与论坛已由 cloudsave-closure 任务公开核验。新 v0.25.0 / 启动适配包已 reviewing，待真实 online 后合并发布一条本次说明。",
+  "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
   "history": [
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "platform_version": "V-20261007-3",
+      "h5_version_id": 273272,
+      "audit_id": "1043869",
+      "status": "online",
+      "last_event": "published",
+      "verified_at": "2026-10-08T08:47:00+08:00",
+      "evidence": "官方 CLI list-app-versions；公开游戏页可见 TapTap PC端 试玩DEMO 入口"
+    },
     {
       "version": "web-coop-v0.23.0",
       "platform_version": "V-20261007-2",
@@ -34,14 +45,95 @@
       "status": "online",
       "note": "2026-10-07 晚间核验 list-app-versions 该版 last_event=published；本次云存档草稿 based_on_version_id=1042737 且继承 main=272261 佐证",
       "verified_at": "2026-10-07T22:40:00+08:00"
+    },
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "platform_version": "V-20261007-3",
+      "h5_version_id": 273272,
+      "status_before_resume": "online_web-cloudsave-v0.24.0",
+      "note": "Preserved previous baseline; actual online package observed before new draft creation."
     }
   ],
   "description_update": {
-    "old": "…当前版本没有跨设备云存档。\n\n更新（2026-10-07·v0.20.0）：可逐人安排留守或跟随…修复暂停后重开声音。",
-    "new": "…进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
-    "new_description_sha256": "0c1edf09fd93085249a3586a16c3be6cdc66ef77784097725d725f13893dcc26",
-    "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
-    "saved_at": "2026-10-07T22:37:00+08:00"
+    "old": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
+    "new": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，支持本地存档、存档文件导入/导出，以及使用工具大本营网站账号登录后的云端备份与恢复。\n\n更新（2026-10-07·v0.24.0）：新增网站账号云存档——登录后普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。\n\n更新（2026-10-08·v0.25.0）：优化 TapTap 启动加载，异常或等待过久时显示原因并可重试；保留已有存档。修复载具卡地形后无法移动的问题，新增 RPG 火箭筒和四连导弹架。",
+    "revision": 1045140,
+    "saved_at": "2026-10-08T02:33:11.714647+00:00"
   },
-  "pending_note": "v0.24.0 云存档包 H5 273272 已上传、绑定 main（草稿1043869），预审通过并提审 reviewing（V-20261007-3）；上线确认前不发布社区动态。"
+  "description_correction_pending": null,
+  "pending_note": "TapTap统一启动包已上传、绑定、预检并正常提审；reviewing不代表上线，exact ZIP 手机App未实机验证。",
+  "platform_status": "reviewing",
+  "staged_version": "web-unstick-rpg-v0.25.0",
+  "staged_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+  "staged_package_sha256": "d9b01df9bcd8bad58298cb2d889b4075d92684da72285cab7dd0c7ba74e9a78a",
+  "staged_h5_version_id": 274325,
+  "staged_h5_package_id": 73329,
+  "startup_adapter": "inline-runtime-v2",
+  "verification": {
+    "startup_guard": "8/8 pass",
+    "player_identity_crypto_storage": "17/17 pass",
+    "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
+    "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "phone": "not tested on actual mobile TapTap App for these exact packages"
+  },
+  "content_preaudit_passed": true,
+  "content_preaudit_warnings": [],
+  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962354\\h5-latest.json",
+  "community_post": {
+    "app_id": 962354,
+    "platform_version": "V-20261007-3",
+    "h5_version_id": 273272,
+    "status": "public_verified",
+    "title": "《虫潮围城》更新：云备份与2–4人合作守城",
+    "body": "这是一款可以建防线、指挥队友、驾驶载具抵御虫群的游戏。TapTap v0.24.0 已上线，这次重点补上进度备份，并带入2–4人合作守城。\n\n普通模式仍保留本地存档。打开游戏内「档案站」，登录网站账号后，检查点会自动备份到服务器；云端保留最近三份快照，本地记录被清空后可选档恢复。本地与云端不一致时，先比较再选择读取或上传，避免静默覆盖，也可导出文件留一份备份。Toy账号云档与这里独立；TapTap版使用的是游戏内网站账号，不是TapTap账号自动备份。此前从未备份的旧进度无法凭空恢复，联机与沙盒进度也不写入单人云档。\n\n联机可建2–4人房间，中途加入或退出会保留战场；房主退出会结束房间。手机大厅输入和滚动的问题已有修复。\n\n试玩入口：https://www.taptap.cn/app/962354\n欢迎反馈遇到的问题，请带上设备、浏览器或TapTap入口，以及具体操作步骤，方便复现。",
+    "moment_id": "857205558501965884",
+    "public_url": "https://www.taptap.cn/moment/857205558501965884",
+    "forum_app_id": 962354,
+    "forum_group_id": 1518030,
+    "user_id": 416707686,
+    "submitted_at": null,
+    "public_verified_at": "2026-10-08T10:31:04+08:00",
+    "profile_verified": true,
+    "forum_verified": true,
+    "screenshot": "C:/Users/37818/.codex/artifacts/chongchao-cloudsave-closure-20261008/community-public.jpg",
+    "evidence": "公开全文与本人 UID 回读一致；本人主页最新动态含该 moment；游戏论坛 /app/962354/topic 链接含同 moment 和 group_id=1518030。平台将试玩 URL 自动转换为游戏卡片，href 保持962354。",
+    "submission_time_note": "浏览器提交成功后立即回读公开 URL；平台未提供精确发布时间，本地公开核验时间另记。",
+    "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517"
+  },
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "last_public_verified_moment_id": "857205558501965884",
+    "last_public_verified_url": "https://www.taptap.cn/moment/857205558501965884",
+    "forum_app_id": 962354,
+    "source_version": "web-cloudsave-v0.24.0",
+    "h5_version_id": 273272,
+    "platform_version": "V-20261007-3",
+    "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517",
+    "public_verified_at": "2026-10-08T10:31:04+08:00",
+    "own_profile_verified": true,
+    "forum_verified": true,
+    "release_record": "releases/cloudsave-closure-20261008/community-post.json"
+  },
+  "pending_community_updates": [
+    {
+      "source_version": "web-unstick-rpg-v0.25.0",
+      "h5_version_id": 274325,
+      "platform_version": "V-20261008",
+      "status": "pending_until_online",
+      "record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json"
+    }
+  ],
+  "description_update_history": [
+    {
+      "old": "…当前版本没有跨设备云存档。\n\n更新（2026-10-07·v0.20.0）：可逐人安排留守或跟随…修复暂停后重开声音。",
+      "new": "…进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
+      "new_description_sha256": "0c1edf09fd93085249a3586a16c3be6cdc66ef77784097725d725f13893dcc26",
+      "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
+      "saved_at": "2026-10-07T22:37:00+08:00"
+    }
+  ]
 }

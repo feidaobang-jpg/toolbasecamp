@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "file": "final/cadillacs/youtube-zh/gameplay-youtube-final.mp4",
+      "integrated_lufs": "-15.56",
+      "true_peak_dbtp": "-1.45",
+      "loudness_range_lu": "4.50",
+      "objective_analysis": "pass",
+      "subjective_listening": "not-run"
+    },
+    {
+      "file": "final/jackal/youtube-zh/gameplay-youtube-final.mp4",
+      "integrated_lufs": "-15.78",
+      "true_peak_dbtp": "-1.44",
+      "loudness_range_lu": "4.90",
+      "objective_analysis": "pass",
+      "subjective_listening": "not-run"
+    },
+    {
+      "file": "final/swarm/youtube-en/gameplay-en-final.mp4",
+      "integrated_lufs": "-15.09",
+      "true_peak_dbtp": "-1.49",
+      "loudness_range_lu": "4.40",
+      "objective_analysis": "pass",
+      "subjective_listening": "not-run"
+    },
+    {
+      "file": "final/swarm/youtube-zh/gameplay-youtube-final.mp4",
+      "integrated_lufs": "-15.56",
+      "true_peak_dbtp": "-1.46",
+      "loudness_range_lu": "5.80",
+      "objective_analysis": "pass",
+      "subjective_listening": "not-run"
+    }
+  ],
+  "note": "客观响度/峰值检查；不代替人工完整试听。"
+}

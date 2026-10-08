@@ -1,0 +1,129 @@
+{
+  "text": "防御也能自己布置。选机枪塔，先看放置虚影，位置合适再确认。摆错了还能拆掉，返还一半造价。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "防御",
+      "offset": 1000000,
+      "duration": 6375000
+    },
+    {
+      "text": "也",
+      "offset": 8375000,
+      "duration": 1625000
+    },
+    {
+      "text": "能",
+      "offset": 10000000,
+      "duration": 1250000
+    },
+    {
+      "text": "自己",
+      "offset": 11500000,
+      "duration": 3125000
+    },
+    {
+      "text": "布置",
+      "offset": 14750000,
+      "duration": 4375000
+    },
+    {
+      "text": "选",
+      "offset": 24875000,
+      "duration": 3625000
+    },
+    {
+      "text": "机枪塔",
+      "offset": 28500000,
+      "duration": 6875000
+    },
+    {
+      "text": "先",
+      "offset": 37375000,
+      "duration": 2625000
+    },
+    {
+      "text": "看",
+      "offset": 40000000,
+      "duration": 2250000
+    },
+    {
+      "text": "放置",
+      "offset": 42500000,
+      "duration": 3000000
+    },
+    {
+      "text": "虚影",
+      "offset": 45625000,
+      "duration": 5000000
+    },
+    {
+      "text": "位置",
+      "offset": 54625000,
+      "duration": 3500000
+    },
+    {
+      "text": "合适",
+      "offset": 58250000,
+      "duration": 5000000
+    },
+    {
+      "text": "再",
+      "offset": 63500000,
+      "duration": 1625000
+    },
+    {
+      "text": "确认",
+      "offset": 65125000,
+      "duration": 4000000
+    },
+    {
+      "text": "摆错",
+      "offset": 74750000,
+      "duration": 3750000
+    },
+    {
+      "text": "了",
+      "offset": 78500000,
+      "duration": 625000
+    },
+    {
+      "text": "还",
+      "offset": 79375000,
+      "duration": 1250000
+    },
+    {
+      "text": "能",
+      "offset": 80625000,
+      "duration": 1125000
+    },
+    {
+      "text": "拆",
+      "offset": 81875000,
+      "duration": 2875000
+    },
+    {
+      "text": "掉",
+      "offset": 84750000,
+      "duration": 2625000
+    },
+    {
+      "text": "返还",
+      "offset": 90625000,
+      "duration": 4500000
+    },
+    {
+      "text": "一半",
+      "offset": 95250000,
+      "duration": 3000000
+    },
+    {
+      "text": "造价",
+      "offset": 98375000,
+      "duration": 3875000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

@@ -1,0 +1,124 @@
+{
+  "text": "第三人称方便看周围，按V还能切到第一人称。喜欢手动操作，也可以在设置里调整射击方式和快捷键。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "第三人称",
+      "offset": 1000000,
+      "duration": 8000000
+    },
+    {
+      "text": "方便",
+      "offset": 10000000,
+      "duration": 2750000
+    },
+    {
+      "text": "看",
+      "offset": 12875000,
+      "duration": 1500000
+    },
+    {
+      "text": "周围",
+      "offset": 14500000,
+      "duration": 4375000
+    },
+    {
+      "text": "按",
+      "offset": 22625000,
+      "duration": 2125000
+    },
+    {
+      "text": "V",
+      "offset": 24750000,
+      "duration": 3375000
+    },
+    {
+      "text": "还",
+      "offset": 29125000,
+      "duration": 2250000
+    },
+    {
+      "text": "能",
+      "offset": 31375000,
+      "duration": 1125000
+    },
+    {
+      "text": "切到",
+      "offset": 32625000,
+      "duration": 2875000
+    },
+    {
+      "text": "第一人称",
+      "offset": 35500000,
+      "duration": 7000000
+    },
+    {
+      "text": "喜欢",
+      "offset": 48250000,
+      "duration": 4375000
+    },
+    {
+      "text": "手动",
+      "offset": 52875000,
+      "duration": 3125000
+    },
+    {
+      "text": "操作",
+      "offset": 56125000,
+      "duration": 4625000
+    },
+    {
+      "text": "也",
+      "offset": 64125000,
+      "duration": 1250000
+    },
+    {
+      "text": "可以",
+      "offset": 65500000,
+      "duration": 1875000
+    },
+    {
+      "text": "在",
+      "offset": 67375000,
+      "duration": 1250000
+    },
+    {
+      "text": "设置",
+      "offset": 68875000,
+      "duration": 3125000
+    },
+    {
+      "text": "里",
+      "offset": 72000000,
+      "duration": 3000000
+    },
+    {
+      "text": "调整",
+      "offset": 76125000,
+      "duration": 4625000
+    },
+    {
+      "text": "射击",
+      "offset": 81000000,
+      "duration": 3375000
+    },
+    {
+      "text": "方式",
+      "offset": 84500000,
+      "duration": 5250000
+    },
+    {
+      "text": "和",
+      "offset": 91000000,
+      "duration": 1750000
+    },
+    {
+      "text": "快捷键",
+      "offset": 92875000,
+      "duration": 6500000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

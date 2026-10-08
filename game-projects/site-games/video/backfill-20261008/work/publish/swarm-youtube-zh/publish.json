@@ -1,0 +1,83 @@
+{
+  "variant_id": "swarm-youtube-zh",
+  "platform": "youtube",
+  "content_type": "historical_gameplay_backfill",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "recorded 2026-10-04",
+  "episode_id": "game-projects/starship-defense/video/update-20261003",
+  "video_file": "../../../final/swarm/youtube-zh/gameplay-youtube-final.mp4",
+  "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 175.544,
+  "title": "先守城还是先反攻？虫潮围城母皇战实录",
+  "description": "打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n当前试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "tags": [
+    "游戏开发",
+    "虫潮围城",
+    "实机演示"
+  ],
+  "description_file": "../../../final/swarm/youtube-zh/投稿文案.txt",
+  "cover_file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg",
+  "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
+  "cover_files": [
+    {
+      "file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "upload/reference subject to current platform cover entry"
+    }
+  ],
+  "subtitle_mode": "sidecar",
+  "subtitle_files": [
+    {
+      "file": "../../../final/swarm/youtube-zh/captions-zh.srt",
+      "language": "zh-CN",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "b0d061cc7493ad1f6448fc5c74a0c16141e724ce9b384a8d68639ffc9d62dd72"
+    },
+    {
+      "file": "../../../final/swarm/youtube-zh/captions-en.srt",
+      "language": "en",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "4e67343aed98b8bae4348b73c3c4d63393d7dde5bee8fe523c5c3602b6f7de29"
+    }
+  ],
+  "credits": "credits.txt",
+  "cover_upload_mode": "verify_current_entry",
+  "recorded_date": "2026-10-04",
+  "historical_bilibili_source": {
+    "bvid": "BV1WbHq6eEBt",
+    "video_url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+    "reupload": false
+  },
+  "demo_http_check": {
+    "status": 200,
+    "checked_at": "2026-10-08",
+    "overseas_playability": "not-tested"
+  },
+  "human_review": {
+    "status": "pending",
+    "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+    "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+  },
+  "blocking_issues": [
+    "人工审片待完成",
+    "发布账号登录与当前投稿设置待核对"
+  ],
+  "ready_to_upload": false,
+  "ready_to_review": true,
+  "uploaded": false,
+  "localizations": {
+    "en": {
+      "title": "Raid the Queen or Defend the Base? Swarm Siege Gameplay",
+      "description": "Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\nCurrent browser demo: https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+    }
+  },
+  "localization_file": "../../../final/swarm/youtube-zh/English-localizations.txt"
+}

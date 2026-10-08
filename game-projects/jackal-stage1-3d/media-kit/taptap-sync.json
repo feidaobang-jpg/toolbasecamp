@@ -5,21 +5,21 @@
   "app_id": 962721,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_update_v0.10.0_old_online",
-  "platform_status": "online",
-  "staged_version": "v0.10.0",
-  "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
-  "staged_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
-  "staged_h5_version_id": "272179",
-  "staged_h5_package_id": 71922,
-  "draft_version_id": "1041012",
-  "submitted_version": "v0.10.0",
-  "submitted_at": "2026-10-07T17:10:00+08:00",
-  "last_published_version": "v0.8.1",
-  "last_published_h5_version_id": 270833,
+  "status": "reviewing_startup_inline_runtime_v2",
+  "platform_status": "reviewing",
+  "staged_version": "v0.10.3",
+  "staged_source_commit": "22a7cdf072d4b6423ec3da7240e2a09d780c812d",
+  "staged_package_sha256": "240748a0ae91cedc5fca95574414084da133eb8eec7ad142d39c25b6ad7d9f87",
+  "staged_h5_version_id": 274361,
+  "staged_h5_package_id": 73344,
+  "draft_version_id": "1045141",
+  "submitted_version": "v0.10.3",
+  "submitted_at": "2026-10-08T02:38:06.192777+00:00",
+  "last_published_version": "v0.10.0",
+  "last_published_h5_version_id": 272179,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T17:10:00+08:00",
-  "release_record": "releases/v0.10.0/handoff.json",
+  "last_status_checked_at": "2026-10-08T02:40:39.031351+00:00",
+  "release_record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
   "pending_material_review": [],
   "pending": [],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
@@ -28,8 +28,8 @@
   "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
   "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
   "agreement_signed_at": "2026-10-07T02:27:46.325186+00:00",
-  "submitted_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
-  "submitted_h5_version_id": 270833,
+  "submitted_package_sha256": "240748a0ae91cedc5fca95574414084da133eb8eec7ad142d39c25b6ad7d9f87",
+  "submitted_h5_version_id": 274361,
   "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
   "force_submission_authorized": true,
   "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
@@ -40,7 +40,21 @@
       "field_ids": [
         "title"
       ],
-      "message": "游戏标题包含知名游戏IP“赤色要塞”，可能有侵权嫌疑，如已获得官方正规授权，请前往游戏资质页面上传相关授权证明文件，否则将有驳回风险；如未获得授权，请修改游戏名称。"
+      "message": "游戏标题涉及知名经典游戏IP‘赤色要塞’，可能有侵权嫌疑。如已获得官方授权，请前往游戏资质页面上传相关授权证明文件，否则将有驳回风险；如未获授权，请修改游戏名称避免侵权。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "description"
+      ],
+      "message": "简介中提及‘赤色要塞’等知名IP名称，如已获得官方授权，建议前往游戏资质页面上传相关授权书，否则存在驳回风险。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "trial_note"
+      ],
+      "message": "开发者的话中涉及未经官方授权复刻知名游戏内容，建议在资质页面补充相关授权证明或调整相关表述以规避侵权风险。"
     }
   ],
   "rights_proof_provided": false,
@@ -50,12 +64,13 @@
       "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
       "change": "新合并联机功能",
       "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审",
-      "next_action": "此前审核包已上线；以后续已合并主线与当前网站核验为准继续同步，不重复送首次上线包。"
+      "next_action": "No repeat upload; current startup package includes latest stable main.",
+      "status": "superseded_by_current_submitted_package"
     }
   ],
-  "last_published_platform_version": "V-20261007",
-  "last_published_revision": 1041012,
-  "last_published_at": "2026-10-07T02:45:36+00:00",
+  "last_published_platform_version": "V-20261007-1",
+  "last_published_revision": 1042639,
+  "last_published_at": null,
   "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
   "public_url": "https://www.taptap.cn/app/962721",
   "online_status_evidence_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
@@ -72,5 +87,32 @@
     "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
   },
-  "dedupe_note": "v0.10.0联机2-4人包 H5 272179 已绑定main并提审（审核单1042639），IP预审提示沿用已批准的试审决定"
+  "dedupe_note": "v0.10.0联机2-4人包 H5 272179 已绑定main并提审（审核单1042639），IP预审提示沿用已批准的试审决定",
+  "history": [
+    {
+      "version": "v0.10.0",
+      "platform_version": "V-20261007",
+      "h5_version_id": 270833,
+      "status_before_resume": "reviewing_update_v0.10.0_old_online",
+      "note": "Preserved previous baseline; actual online package observed before new draft creation."
+    }
+  ],
+  "submitted_source_commit": "22a7cdf072d4b6423ec3da7240e2a09d780c812d",
+  "audit_id": "1045141",
+  "platform_version": "V-20261008",
+  "startup_adapter": "inline-runtime-v2",
+  "community_post_status": "pending_until_online",
+  "verification": {
+    "startup_guard": "8/8 pass",
+    "player_identity_crypto_storage": "17/17 pass",
+    "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
+    "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "phone": "not tested on actual mobile TapTap App for these exact packages"
+  },
+  "pending_note": "TapTap统一启动包已上传、绑定、预检并正常提审；reviewing不代表上线，exact ZIP 手机App未实机验证。",
+  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962721\\h5-latest.json"
 }
