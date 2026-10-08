@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "account_mid": 16214353,
+  "version": "web-rv-v0.29.1",
+  "source": "Codex",
+  "task_id": "01a1197a-fb19-78b0-b18d-2c2a07956e2a-work04-rv-feedback",
+  "classification": "影响试玩的严重修复",
+  "status": "public_verified",
+  "method": "Creator UI description only; replace one current update paragraph, preserve all others; success toast then exact public text verification",
+  "preserved": [
+    "original videos",
+    "titles",
+    "tags",
+    "Toy bindings",
+    "previous accurate descriptions",
+    "model attribution"
+  ],
+  "targets": [
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "version": "web-rv-v0.29.1",
+      "status": "public_verified",
+      "submitted_at": "2026-10-08T11:52:15.789Z",
+      "public_verified_at": "2026-10-08T11:53:03.781Z",
+      "submit_toast": "稿件投递成功",
+      "before_sha256": "ddae964826f2897bac42c357e69dfd2c0c90eb365f9d710a9ce4799718f1dfe1",
+      "description_sha256": "297115b79ec435b453f5c3dba09abac1d67aefd1a1ea7bfe85c3a314aa402107",
+      "hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
+      "before": "bilibili/BV1C5HQ6gEvD/before.txt",
+      "after": "bilibili/BV1C5HQ6gEvD/after.txt",
+      "public": "bilibili/BV1C5HQ6gEvD/public.txt",
+      "screenshot": "bilibili/BV1C5HQ6gEvD/public.png"
+    },
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+      "version": "web-rv-v0.29.1",
+      "status": "public_verified",
+      "submitted_at": "2026-10-08T11:52:33.314Z",
+      "public_verified_at": "2026-10-08T11:54:27.563Z",
+      "submit_toast": "稿件投递成功",
+      "before_sha256": "be6127ed1aa24a206177829e23e465b506dd1096352377186eda963cfb8ccae8",
+      "description_sha256": "7d07a2a093dc8fe4bf6af4f14ce068cb3fd4483ba096b7ce53a66f70b3f51e4c",
+      "hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
+      "before": "bilibili/BV1WbHq6eEBt/before.txt",
+      "after": "bilibili/BV1WbHq6eEBt/after.txt",
+      "public": "bilibili/BV1WbHq6eEBt/public.txt",
+      "screenshot": "bilibili/BV1WbHq6eEBt/public.png"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
+      "version": "web-rv-v0.29.1",
+      "status": "public_verified",
+      "submitted_at": "2026-10-08T11:53:02.269Z",
+      "public_verified_at": "2026-10-08T11:54:51.417Z",
+      "submit_toast": "稿件投递成功",
+      "before_sha256": "a0caaa6eac4da0acdbd86172430df2953943a1fc4a99b21fc732168880fc101a",
+      "description_sha256": "3bb1b609b448406941649026a57347b7cabf2aa2ec915174069ba3a0d6bf5b47",
+      "hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
+      "before": "bilibili/BV1Ujad6DEuf/before.txt",
+      "after": "bilibili/BV1Ujad6DEuf/after.txt",
+      "public": "bilibili/BV1Ujad6DEuf/public.txt",
+      "screenshot": "bilibili/BV1Ujad6DEuf/public.png"
+    }
+  ],
+  "checked_at": "2026-10-08T11:58:31.525231+00:00"
+}

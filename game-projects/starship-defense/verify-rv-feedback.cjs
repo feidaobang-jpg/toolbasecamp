@@ -3,7 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const url=process.env.GAME_URL||'http://127.0.0.1:8798/html/game/starship-defense/index.html';
-const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-rv-v0.28.1/qa');fs.mkdirSync(out,{recursive:true});
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-rv-v0.29.1/qa');fs.mkdirSync(out,{recursive:true});
 const results=[],pass=(name,data)=>{results.push({name,pass:true,data});console.log('PASS',name,JSON.stringify(data??''));};
 (async()=>{const b=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11']});try{
  const p=await b.newPage({viewport:{width:1280,height:720}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(url+'?qa=1');await p.waitForFunction(()=>window.__gameQA&&window.__ccReady);

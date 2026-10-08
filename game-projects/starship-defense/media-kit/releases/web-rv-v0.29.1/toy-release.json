@@ -1,0 +1,16 @@
+{
+  "version": "web-rv-v0.29.1",
+  "source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "toy_id": 38678478981120,
+  "zip_sha256": "4a782170307190ebbae7d0d67087031cdadf096c010c951e5f3b044e5c089190",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_byCBSHAv/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_OP4kneeV/index.html",
+  "status": "published",
+  "public_verified_at": "2026-10-08T11:44:17.464493+00:00",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "qa": "qa/toy-public/results.json",
+  "verification": "Desktop/mobile viewport actual controls, save/reload, retry; new rvGoal required on public runtime",
+  "physical_phone_test": false,
+  "submission_time_note": "Exact platform submit/publish timestamp unavailable; CLI receipt and current public verification retained",
+  "doctor_warning": "4 existing JS/CSS filenames lack contenthash; advisory only"
+}

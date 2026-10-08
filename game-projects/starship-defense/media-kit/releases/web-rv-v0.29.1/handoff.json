@@ -14,7 +14,8 @@
     "dirty": true,
     "fingerprint": "ba7aca6e8944d14466b85f62a23c412f9aabd35f9b129d78eb06c3f0c2d5ce09",
     "entrypoint": "public/html/game/starship-defense/index.html",
-    "note": "captured staged merged RV fix and latest squad v0.29.0; integration commit recorded after commit"
+    "note": "captured staged merged RV fix and latest squad v0.29.0; integration commit recorded after commit",
+    "integration_commit": "ff2609daaa3d19554320aad3fdf14586b279e471"
   },
   "feature_inventory": [
     {
@@ -264,6 +265,22 @@
       "id": "limits",
       "physical_phone_test": false,
       "human_difficulty_test": false
+    },
+    {
+      "id": "production",
+      "evidence": "qa/production/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "toy-public",
+      "evidence": "qa/toy-public/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "taptap-exact-zip",
+      "evidence": "qa/taptap-package/results.json",
+      "result": "pass",
+      "method": "All standalone JS requests blocked; current exact ZIP; simulated mobile and desktop"
     }
   ],
   "readiness": {
@@ -276,11 +293,16 @@
     ]
   },
   "channels": {
-    "website": "pending_deploy",
-    "toy": "pending",
-    "taptap": "pending",
-    "bilibili": "pending"
+    "website": "deployed_public_verified",
+    "toy": "published_public_verified",
+    "taptap": "queued_previous_review",
+    "bilibili": "three_descriptions_public_verified"
   },
   "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.29.1-20261008",
-  "rv_base_version": "web-rv-v0.28.0"
+  "rv_base_version": "web-rv-v0.28.0",
+  "package_source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "pending": [
+    "TapTap前一版仍审核中；修复ZIP已保全，结束审核后按既有授权同步并在online后合并社区说明",
+    "视频候选素材尚未人工听片，本次不发布新视频"
+  ]
 }

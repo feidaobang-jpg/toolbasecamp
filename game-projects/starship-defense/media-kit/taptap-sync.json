@@ -18,10 +18,25 @@
   "last_published_platform_version": "V-20261008-3",
   "last_public_runtime_verified_version": null,
   "release_record": "releases/web-squad-v0.29.0/taptap-release.json",
-  "pending": [],
+  "pending": [
+    {
+      "version": "web-rv-v0.29.1",
+      "source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+      "package_sha256": "dc77affa26aa1005a2e117427b7056cf1e126ff557be5f7d1a9742b669882ebf",
+      "artifact_zip": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.29.1-20261008\\taptap-chongchao-qianshao.zip",
+      "classification": "影响试玩的严重修复",
+      "summary": "房车虫群追击、35秒顶杆放行、旧卡点存档恢复、箭头/胜利提示和双面正常标牌；含主线12人队友",
+      "status": "queued_previous_review",
+      "reason": "上一版V-20261008-4仍reviewing；不撤审、不重复上传当前版本",
+      "qa": "releases/web-rv-v0.29.1/qa/taptap-package/results.json",
+      "physical_phone_test": false,
+      "recorded_at": "2026-10-08T11:41:23.044637+00:00",
+      "release_record": "releases/web-rv-v0.29.1/taptap-release.json"
+    }
+  ],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "list-app-versions created_time 1791452184",
-  "last_status_checked_at": "2026-10-08T11:27:00.617837+00:00",
+  "last_status_checked_at": "2026-10-08T11:41:23.044637+00:00",
   "submitted_source_commit": "94045b02fdbb0ea783f0747266cd6914e583f679",
   "community_post_status": "pending_until_online",
   "community_post_note": "pending until target online; merge previous pending v0.25–0.28 notes; do not repeat posts",
@@ -79,7 +94,7 @@
     "saved_at": "2026-10-08T02:33:11.714647+00:00"
   },
   "description_correction_pending": null,
-  "pending_note": "v0.28.0已提审reviewing；v0.27.0平台online；当前RV包手机TapTap App未实机验证。",
+  "pending_note": "上一版V-20261008-4仍reviewing；不撤审、不重复上传当前版本",
   "platform_status": "reviewing",
   "staged_version": "web-rv-v0.28.0",
   "staged_source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",

@@ -12,6 +12,7 @@ try{for(const mobile of [false,true]){
  const u=new URL(f.url());u.searchParams.set('qa','1');await f.goto(u.href);await f.waitForFunction(()=>window.__gameQA&&window.__ccReady,null,{timeout:60000});
  const prefix=process.env.SAVE_PREFIX||'sst_save_';await f.evaluate(key=>localStorage.setItem(key,'{"campaign":"kept"}'),prefix+'auto');
  await f.click('#btnRV');await f.click('#rvStart');await f.waitForFunction(()=>__gameQA.rvBreakout.state.active);
+ assert.match(await f.textContent('#rvGoal'),/通过3个补给站.*撤离隧道/);
  const z=await f.evaluate(()=>__gameQA.player.pos.z);await f.press('#stage','w');
  await p.keyboard.down('KeyW');await p.waitForTimeout(1600);await p.keyboard.up('KeyW');
  assert.ok(await f.evaluate(old=>__gameQA.player.pos.z>old+8,z));

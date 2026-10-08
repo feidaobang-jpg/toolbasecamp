@@ -1,0 +1,39 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_byCBSHAv/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "pass": true,
+      "checks": [
+        "startup",
+        "drive",
+        "I exit",
+        "pause/resume",
+        "independent save/reload",
+        "campaign save preserved",
+        "retry",
+        "responsive controls"
+      ],
+      "blocked_external_js": false
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "checks": [
+        "startup",
+        "drive",
+        "I exit",
+        "pause/resume",
+        "independent save/reload",
+        "campaign save preserved",
+        "retry",
+        "responsive controls"
+      ],
+      "blocked_external_js": false
+    }
+  ],
+  "limitations": [
+    "Mobile simulation; not physical TapTap/Toy app",
+    "QA direct failure boundary; ordinary keyboard and DOM controls used"
+  ]
+}
