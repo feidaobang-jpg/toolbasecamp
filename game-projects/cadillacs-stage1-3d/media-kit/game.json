@@ -114,7 +114,7 @@
     "package_fingerprint_note": "为随 v0.9.5 包一并生效的 v0.9.4 闪退修复指纹"
   },
   "website_version": "v0.6.1",
-  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
+  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；第三关驾驶：方向/摇杆转向，J撞击加速、I加速，按住K刹车，U下车（联机仅房主）；下车恢复步行操作。",
   "website_verified_at": "2026-10-07T21:52:19+08:00",
   "website_commit": "a0da954f",
   "versions": [
@@ -186,6 +186,13 @@
         "bilibili": "public_verified",
         "taptap_community": "public_verified"
       }
+    },
+    {
+      "version": "v0.10.0",
+      "base_version": "v0.9.5",
+      "classification": "正式版本",
+      "summary": "第三关地狱公路：无线电叫车、凯迪拉克驾驶、摩托霍格投雷、车毁步行续战与2–4人共乘",
+      "handoff": "releases/v0.10.0/handoff.json"
     }
   ],
   "dev": {
@@ -201,14 +208,15 @@
     "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md",
     "continuation": {
       "tool": "Codex",
-      "scope": "v0.2.0 玩家反馈：触控、特殊技、枪械与走廊细节"
+      "model": "GPT-6（当前会话，未提供具体子型号）",
+      "scope": "v0.10.0 第三关地狱公路"
     }
   },
   "name": {
-    "zh": "恐龙快打 · 第一、二关 3D 重制版",
-    "en": "Cadillacs and Dinosaurs · Stages 1-2 3D remake (fan-made)"
+    "zh": "恐龙快打 · 第一至三关 3D 重制版",
+    "en": "Cadillacs and Dinosaurs · Stages 1-3 3D remake (fan-made)"
   },
-  "ip_note": "粉丝向非官方重制：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
+  "ip_note": "粉丝向非官方重制：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一至三关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一至三关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
   "multiplayer": {
     "players": "2–4",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
@@ -370,9 +378,21 @@
         "bilibili": "public_verified",
         "taptap_community": "public_verified"
       }
+    },
+    {
+      "version": "v0.10.0",
+      "classification": "正式版本",
+      "summary": "第三关完成，等待本任务发布核验",
+      "channels": {
+        "website": "pending",
+        "toy": "pending",
+        "taptap": "pending",
+        "bilibili": "pending"
+      },
+      "record": "releases/v0.10.0/handoff.json"
     }
   ],
-  "handoff": "releases/v0.9.4/handoff.json",
+  "handoff": "releases/v0.10.0/handoff.json",
   "game_id": "cadillacs-stage1-3d",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
@@ -391,7 +411,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.9.5",
+  "current_version": "v0.10.0",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
@@ -649,5 +669,17 @@
       "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
     }
   ],
-  "publication_status": "published"
+  "publication_status": "published",
+  "stage3": {
+    "name": "地狱公路",
+    "implemented": [
+      "无线电叫车",
+      "凯迪拉克驾驶、撞敌和油桶碰撞",
+      "霍格摩托追逐与投雷预警",
+      "车毁或主动下车后步行续战",
+      "2–4人共乘与步行合作",
+      "三关直接选择与连续过关"
+    ],
+    "scope": "只增加第三关，第四至八关尚未实现"
+  }
 }

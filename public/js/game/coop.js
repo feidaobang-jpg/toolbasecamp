@@ -3,7 +3,7 @@ import {installLandscapeTyping} from './landscape-typing.js?v=lt1';
 export const GAMES = {
   tank: {title:'坦克大战', protocol:'tank3d-v2', max:4, path:'tank-3d'},
   jackal: {title:'赤色要塞', protocol:'jackal3d-v1', max:4, path:'jackal-stage1-3d'},
-  cadillacs: {title:'恐龙快打', protocol:'cadillacs3d-v1', max:4, path:'cadillacs-stage1-3d'},
+  cadillacs: {title:'恐龙快打', protocol:'cadillacs3d-v2', max:4, path:'cadillacs-stage1-3d'},
   starship: {title:'虫潮围城', protocol:'starship-v1', max:4, path:'starship-defense'}
 };
 export function endpoint(game='tank') {

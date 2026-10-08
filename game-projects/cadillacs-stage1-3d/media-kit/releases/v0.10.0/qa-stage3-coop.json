@@ -1,0 +1,185 @@
+{
+  "method": "Real local WebSocket relay, 2/3/4 independent contexts; phone viewport and mouse on virtual controls, not a real phone",
+  "results": [
+    {
+      "name": "2人第三关开局",
+      "pass": true
+    },
+    {
+      "name": "2人共乘保留独立角色与座位",
+      "pass": true,
+      "data": [
+        {
+          "slot": 0,
+          "type": "jack",
+          "x": 14.61,
+          "z": 0.43
+        },
+        {
+          "slot": 1,
+          "type": "hannah",
+          "x": 14.61,
+          "z": -0.43
+        }
+      ]
+    },
+    {
+      "name": "2人手机摇杆转向经房主同步",
+      "pass": true,
+      "data": [
+        0,
+        -1.7233333333333338
+      ]
+    },
+    {
+      "name": "2人手机动作键触发加速",
+      "pass": true
+    },
+    {
+      "name": "2人Boss与投雷同步",
+      "pass": true,
+      "data": 1
+    },
+    {
+      "name": "2人快照低于中继上限",
+      "pass": true,
+      "data": 6395
+    },
+    {
+      "name": "2人房主退出结束房间",
+      "pass": true
+    },
+    {
+      "name": "3人第三关开局",
+      "pass": true
+    },
+    {
+      "name": "3人共乘保留独立角色与座位",
+      "pass": true,
+      "data": [
+        {
+          "slot": 0,
+          "type": "jack",
+          "x": 14.746666666666666,
+          "z": 0.43
+        },
+        {
+          "slot": 1,
+          "type": "hannah",
+          "x": 14.746666666666666,
+          "z": -0.43
+        },
+        {
+          "slot": 2,
+          "type": "mustapha",
+          "x": 13.546666666666667,
+          "z": 0.43
+        }
+      ]
+    },
+    {
+      "name": "3人手机摇杆转向经房主同步",
+      "pass": true,
+      "data": [
+        0,
+        -1.7185827833606355
+      ]
+    },
+    {
+      "name": "3人手机动作键触发加速",
+      "pass": true
+    },
+    {
+      "name": "3人Boss与投雷同步",
+      "pass": true,
+      "data": 1
+    },
+    {
+      "name": "3人快照低于中继上限",
+      "pass": true,
+      "data": 7529
+    },
+    {
+      "name": "3人房主退出结束房间",
+      "pass": true
+    },
+    {
+      "name": "4人第三关开局",
+      "pass": true
+    },
+    {
+      "name": "4人共乘保留独立角色与座位",
+      "pass": true,
+      "data": [
+        {
+          "slot": 0,
+          "type": "jack",
+          "x": 14.61,
+          "z": 0.43
+        },
+        {
+          "slot": 1,
+          "type": "hannah",
+          "x": 14.61,
+          "z": -0.43
+        },
+        {
+          "slot": 2,
+          "type": "mustapha",
+          "x": 13.41,
+          "z": 0.43
+        },
+        {
+          "slot": 3,
+          "type": "mess",
+          "x": 13.41,
+          "z": -0.43
+        }
+      ]
+    },
+    {
+      "name": "4人手机摇杆转向经房主同步",
+      "pass": true,
+      "data": [
+        0,
+        -1.4100000000000004
+      ]
+    },
+    {
+      "name": "4人手机动作键触发加速",
+      "pass": true
+    },
+    {
+      "name": "4人Boss与投雷同步",
+      "pass": true,
+      "data": 1
+    },
+    {
+      "name": "4人快照低于中继上限",
+      "pass": true,
+      "data": 8635
+    },
+    {
+      "name": "联机竖屏旋转后按钮可达",
+      "pass": true
+    },
+    {
+      "name": "四人下车保留全队与进度",
+      "pass": true
+    },
+    {
+      "name": "一位队友离开其余三人继续",
+      "pass": true
+    },
+    {
+      "name": "4人房主退出结束房间",
+      "pass": true
+    },
+    {
+      "name": "联机无浏览器异常",
+      "pass": true,
+      "data": []
+    }
+  ],
+  "errors": []
+}

@@ -73,7 +73,7 @@ function makePortraits() {
     const m2 = buildHuman(SPECS[h.id]); applyPose(m2, mod(HP.victory, { head: [-0.05, 0.25, 0] }));
     FULLS[h.id] = portrait(renderer, m2, { size: 256, full: true });
   }
-  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
+  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher', 'hogg']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
   const r = buildRaptor(); r.setPalette('angry'); FACES.raptor = portrait(renderer, r, { size: 96, raptor: true });
   const tr = buildRaptor('trex'); FACES.shivat = portrait(renderer, tr, { size: 96, raptor: true, k: 2.1 });
   const tk = buildTrike(); FACES.hack = portrait(renderer, tk, { size: 96, raptor: true, k: 1.6 });
@@ -294,7 +294,7 @@ function toTitle() {
   show('menu');
 }
 G.onEnd = (res) => { if(coopDriver?.config)coopDriver.result=res; setTimeout(() => showResult(res), res.win ? 400 : 200); };
-const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER']];
+const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER'], ['hogg', 'Boss 霍格 HOGG']];
 const STAGE_CN = ['', '第一关', '第二关', '第三关'];
 function showResult(res) {
   if (uiMode !== 'game') return;
@@ -312,7 +312,7 @@ function showResult(res) {
   else if (res.newHi) extra.push('新纪录！最高分 ' + res.hi);
   else extra.push('最高分 ' + res.hi);
   $('res-extra').textContent = extra.join(' · ');
-  $('res-like').textContent = res.win ? (res.stage >= 2 ? '屠夫的砍刀都被你缴了！第三关还在路上——喜欢的话，也给开发者来个一键三连？' : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
+  $('res-like').textContent = res.win ? (res.stage >= 3 ? '霍格也拦不住这辆凯迪拉克！喜欢这趟公路狂飙，也给开发者来个一键三连？' : res.stage === 2 ? '屠夫的砍刀都被你缴了！下一站：地狱公路。' : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
   show('result');
 }
 
@@ -433,6 +433,17 @@ function updateHud() {
   const cine = !!G.cineCam;
   if (cache.cine !== cine) { cache.cine = cine; for (const el of CINE_HIDE) el.style.visibility = cine ? 'hidden' : ''; }
   const h = GM.hudState();
+  const driving=!!G.road?.mounted;
+  if(cache.driving!==driving){
+    cache.driving=driving;
+    for(const [id,key,walk,drive] of [['btn-atk','J','攻击','撞击'],['btn-jump','K','跳跃','刹车'],['btn-mega','U','必杀','下车'],['btn-run','I','冲刺','加速']]){
+      const button=$(id);button.querySelector('span').textContent=driving?drive:walk;button.setAttribute('aria-label',key+' '+(driving?drive:walk));
+    }
+    const labels=keyHint.querySelectorAll('span');
+    ['移动','攻击 / 捡东西','跳跃','必杀（J+K 也行）','冲刺（L / 双击方向也行）'].forEach((text,i)=>{
+      if(i>0)labels[i].innerHTML='<kbd>'+['','J','K','U','I'][i]+'</kbd> '+(driving?['','撞击','刹车','下车（联机由房主操作）','加速'][i]:text);
+    });
+  }
   const hero = HEROES[h.hero];
   if (cache.hero !== hero.id) { cache.hero = hero.id; H_.face.src = FACES[hero.id]; H_.name.textContent = hero.en.split('.')[0]; }
   setText(H_.lives, 'lives', '=' + h.lives);
@@ -543,7 +554,7 @@ function presentFrame(dtReal, draw, instant) {
     const cz1 = AR.camZ1 === undefined ? AR.z1 : AR.camZ1;   // 取景按这一排算；第二关可走范围比它更靠前（见 level.js camZ1）
     const zc = (AR.z0 + cz1) / 2 * 0.6 + p.z * 0.25;
     const fitDepth = cz1 - ((AR.z0 + cz1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
-    camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
+    camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: G.road?.mounted ? 1.65 : p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {

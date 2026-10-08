@@ -1,0 +1,81 @@
+{
+  "method": "Edge phone viewport simulation, real input with explicitly documented boundary fixtures; not a real phone",
+  "results": [
+    {
+      "name": "不捡无线电可走步行路线",
+      "pass": true
+    },
+    {
+      "name": "步行路线可正常移动",
+      "pass": true
+    },
+    {
+      "name": "手机叫车与驾驶能运行",
+      "pass": true,
+      "detail": {
+        "phase": "drive",
+        "mounted": true,
+        "called": true,
+        "hp": 180,
+        "maxHp": 180,
+        "x": 17.963333333333335,
+        "z": 0,
+        "baseX": 17.963333333333335,
+        "speed": 8.2,
+        "invul": 0,
+        "boost": 0,
+        "cooldown": 0,
+        "spawnAt": 35,
+        "spawnN": 0,
+        "hitN": 0,
+        "dodged": 0
+      }
+    },
+    {
+      "name": "切电脑模式保持驾驶进度",
+      "pass": true
+    },
+    {
+      "name": "切回触屏保留车辆",
+      "pass": true
+    },
+    {
+      "name": "车毁后下车继续，无软锁",
+      "pass": true
+    },
+    {
+      "name": "车毁后恢复拳脚输入",
+      "pass": true,
+      "detail": "attack"
+    },
+    {
+      "name": "驾驶超时先下车再死亡",
+      "pass": true,
+      "detail": "down"
+    },
+    {
+      "name": "无限命超时后可复活继续",
+      "pass": true
+    },
+    {
+      "name": "第二关胜利自动接第三关",
+      "pass": true,
+      "detail": [
+        "hellroad",
+        [
+          2
+        ]
+      ]
+    },
+    {
+      "name": "第三关竖屏旋转后触屏按钮可达",
+      "pass": true
+    },
+    {
+      "name": "变体无浏览器异常",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

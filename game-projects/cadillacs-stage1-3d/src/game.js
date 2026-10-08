@@ -5,7 +5,7 @@ import { markTree, treeState, applyTree, scalarState } from '../../../public/js/
 import * as THREE from 'three';
 import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
 import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX, STAGES } from './level.js';
-import { buildHuman, buildRaptor, buildTrike, buildCar, buildPtero, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
+import { buildHuman, buildRaptor, buildTrike, buildCar, buildMotorcycle, buildPtero, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
 import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
 import { propMesh } from './world.js';
 import A from './audio.js';
@@ -46,9 +46,11 @@ export function joinCoopSlot(slot,choice=0){
  const p=makeActor(h.id,'player',{slot,hero:h,stats:heroStats(h),hp:100,maxHp:100,face:FACE_RIGHT,comboN:0,lastHitT:-9,radius:.34,invul:3});
  p.x=anchor.x;p.z=clamp(anchor.z+(slot%2?1:-1),-HALF_W+.6,HALF_W-.6);
  for(let i=0;i<8&&players().some(q=>q!==p&&q.alive&&Math.hypot(q.x-p.x,q.z-p.z)<.75);i++)p.x=clamp(anchor.x+(i%2?1:-1)*(1+Math.floor(i/2)),AR.x0+.5,AR.x1-.5);
+ if(G.road?.mounted)seatRoadPlayers();
 }
 export function computerInput(slot){
  const p=players().find(a=>a.slot===slot);if(!p||!p.alive)return {edges:[]};
+ if(G.road?.mounted)return {x:0,z:0,edges:[],look:FACE_RIGHT,lane:true};
  const e=G.actors.filter(a=>a.side==='enemy'&&a.alive&&!a.removed).sort((a,b)=>Math.hypot(a.x-p.x,a.z-p.z)-Math.hypot(b.x-p.x,b.z-p.z))[0];
  const goal=e||players().find(a=>a!==p&&a.alive)||{x:p.x+4,z:p.z};
  const dx=goal.x-p.x,dz=goal.z-p.z,d=Math.hypot(dx,dz),near=!!e&&Math.abs(dx)<1.5&&Math.abs(dz)<.7;
@@ -145,6 +147,7 @@ function makeActor(type, side, opts) {
     a.model = buildTrike(); a.isTrike = true; a.isDino = true; a.wild = true; a.radius = 0.78; a.height = 1.7;
   } else {
     a.model = buildHuman(SPECS[type]); a.pose.set(HP.guard); a.height = a.model.H * 0.95;
+    if(type==='hogg'){a.bike=buildMotorcycle();a.model.root.add(a.bike);a.radius=.75;}
     if (SPECS[type] && SPECS[type].build === 'fat') a.radius = 0.45;
     if (type === 'vice' || type === 'mess' || type === 'lash') a.radius = 0.42;
     if (type === 'butcher') a.radius = 0.52;
@@ -266,10 +269,10 @@ function clearAll() {
   G.items = []; G.props = []; G.projs = []; G.script = null; G.dialog = null; G.banner = null; G.go = 0; G.fade = 0;
   if (G.chain) { scene.remove(G.chain); G.chain = null; }
   if (G.car) { scene.remove(G.car); G.car = null; }
-  G.carAnim = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false; G.later = [];
+  G.carAnim = null; G.road = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false; G.later = [];
   if (fx) fx.clear();
 }
-function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'butcher' ? 'boss2' : 'boss') : AREAS[G.area].id; }
+function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'hogg' ? 'boss3' : G.boss.type === 'butcher' ? 'boss2' : 'boss') : G.road?.mounted ? 'roadDrive' : AREAS[G.area].id; }
 function loadArea(i, first) {
   const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
   // 清掉上一区域的敌人与物品，保留玩家；还在飞的子弹作废
@@ -282,9 +285,10 @@ function loadArea(i, first) {
   for (const pr of G.projs) scene.remove(pr.mesh);
   G.items = []; G.props = []; G.projs = []; G.boss = null; G.raptor = null;
   if (G.car) { scene.remove(G.car); G.car = null; }
-  G.carAnim = null; G.sleeper = null; G.blockers = []; G.extraWave = false;
+  G.carAnim = null; G.road = null; G.sleeper = null; G.blockers = []; G.extraWave = false;
   if (G.player && G.player.carryMesh) { scene.remove(G.player.carryMesh); G.player.carryMesh = null; G.player.carryItem = null; }
   G.area = i; G.areaLoaded = true; const AR = AREAS[i];
+  if(AR.road)G.road={phase:'opening',mounted:false,called:false,hp:180,maxHp:180,x:AR.start.x,z:0,baseX:AR.start.x,speed:0,invul:0,boost:0,cooldown:0,spawnAt:35,spawnN:0,hitN:0,dodged:0};
   G.water = AR.water || null;
   world.setArea(i);
   G.focusX = AR.x0 + HALF_W; G.lockX = null; G.wave = 0; G.waveOn = false; G.pending = []; G.waveEnemies = [];
@@ -431,6 +435,197 @@ function stepCar(dt) {
   if (u >= 1) { G.carAnim = null; A.play('brake'); fx.dust(x - 1.6, 0, G.car.position.z + 0.9, 4, 0.5); }
 }
 
+// ---------- 第三关：无线电、共乘凯迪拉克与霍格追逐 ----------
+function callRoadCar() {
+  const R=G.road,p=G.player;
+  if(!R||R.mounted||R.phase==='delivery'||R.phase==='complete')return;
+  R.phase='delivery';R.called=true;R.x=Math.max(14,p.x);R.z=0;R.baseX=R.x;
+  const car=buildCar();markTree(car);car.rotation.y=FACE_RIGHT;car.position.set(R.x-16,0,0);scene.add(car);G.car=car;
+  G.mode='cut';G.lockX=null;G.focusX=R.x+1;
+  for(const a of players()){a.weapon=null;attachWeapon(a);if(a.grab)releaseGrab(a);setState(a,'cut');a.vx=a.vz=0;}
+  A.play('engine');banner('凯迪拉克来了！','方向控制 · 撞开敌人，躲开油桶',2.1);
+  runScript([
+    {dur:2,tick:(_,u)=>{car.position.x=R.x-16*(1-u)*(1-u);for(const wheel of car.userData.wheels)wheel.rotation.x-=.32;}},
+    {fn:()=>{
+      car.position.x=R.x;R.mounted=true;R.phase='drive';G.mode='play';IN.clear();seatRoadPlayers();
+      A.music('roadDrive');toast('方向转向 · J撞击 / I加速 · K刹车 · U下车');ev('roadBoard',{players:players().length});
+    }}
+  ]);
+}
+function seatRoadPlayers() {
+  const R=G.road;
+  for(const p of players()){
+    const slot=p.slot||0;
+    p.x=R.x+(slot<2?.2:-1);p.z=R.z+(slot%2?-.43:.43);p.y=.55;
+    p.vx=p.vy=p.vz=0;p.face=FACE_RIGHT;p.driving=true;
+    if(p.state!=='incar')setState(p,'incar');
+  }
+}
+function hurtRoadCar(amount,kind) {
+  const R=G.road;
+  if(!R?.mounted||R.invul>0||G.settings.demo)return;
+  R.hp=Math.max(0,R.hp-amount*(DUR_MUL[G.settings.dur]||.7));R.invul=.9;R.hitN++;
+  G.stats.hits++;G.hurtFx=.6;fx.shake=.24;fx.hit(R.x+2,.65,R.z,true);A.play('metal');
+  ev('roadCarHit',{kind,hp:+R.hp.toFixed(1)});
+  if(R.hp<=0)dismountRoad(true);
+}
+function dismountRoad(destroyed) {
+  const R=G.road;
+  if(!R?.mounted)return;
+  R.mounted=false;R.phase='foot';G.lockX=G.boss?.alive?G.focusX:null;IN.clear();
+  for(const p of players()){
+    const slot=p.slot||0;p.driving=false;p.x=R.x-1+(slot%2)*1.2;p.z=clamp(R.z+(slot<2?-1.5:1.5),-2.6,2.6);
+    p.y=0;p.vx=p.vy=p.vz=0;setState(p,'idle');p.invul=2;delete p.lookHeading;
+  }
+  if(G.car){scene.remove(G.car);G.car=null;}
+  if(destroyed){fx.boom(R.x,.4,R.z,2);A.play('boom');}
+  A.music(areaMusic());toast(destroyed?'凯迪拉克被毁！下车继续战斗':'已下车，继续追击霍格');
+  ev('roadExitCar',{destroyed,players:players().length});
+  for(const e of G.actors)if(e.roadRunner){e.roadRunner=false;if(e.alive)setState(e,'idle');}
+}
+function roadBombMesh() {
+  const mesh=meshFrom(itemGeo('grenade'),{thin:true,shadow:false});
+  const ring=new THREE.Mesh(new THREE.RingGeometry(.8,1.02,24),new THREE.MeshBasicMaterial({color:'#ee7342',transparent:true,opacity:.68,side:THREE.DoubleSide,depthWrite:false}));
+  ring.rotation.x=-Math.PI/2;ring.name='landing-warning';mesh.add(ring);markTree(mesh);return mesh;
+}
+function dropRoadBomb(h,x,z) {
+  const mesh=roadBombMesh();scene.add(mesh);
+  const pr={kind:'grenade',roadBomb:true,side:'enemy',owner:h,x,z,y:2.4,t:0,mesh};
+  G.projs.push(pr);A.play('whoosh');ev('hoggGrenade',{x:+x.toFixed(1),z:+z.toFixed(1)});
+}
+function stepRoadBombs(dt) {
+  for(const b of G.projs.slice()){
+    if(!b.roadBomb)continue;b.t+=dt;b.y=Math.max(.08,2.4*(1-b.t/.8));
+    b.mesh.position.set(b.x,b.y,b.z);
+    const ring=b.mesh.getObjectByName('landing-warning');
+    if(ring){ring.position.y=.025-b.y;ring.scale.setScalar(1+Math.sin(b.t*18)*.08);}
+    if(b.t<1.15)continue;
+    fx.boom(b.x,0,b.z,1.05);A.play('boom');
+    const R=G.road;
+    if(R?.mounted){
+      if(Math.abs(R.x-b.x)<3.2&&Math.abs(R.z-b.z)<1.55)hurtRoadCar(38,'grenade');
+      else R.dodged++;
+    }else for(const p of players())if(hittable(p)&&Math.hypot(p.x-b.x,p.z-b.z)<1.8){
+      applyHit(b.owner,p,H(0,0,0,0,0,3,18,'down',0,'punchHeavy',true),faceOf(p.x-b.x,p.z-b.z),true);
+    }
+    ev('hoggGrenadeExplosion');killProj(b);
+  }
+}
+function startHogg() {
+  if(G.boss)return;
+  const R=G.road;R.phase='boss';
+  const h=spawnEnemy('hogg',G.focusX+4.5,-1.8,{roadClock:0,grenadeCd:1.4,ramCd:0,summons:0});
+  setState(h,'ride');G.boss=h;G.waveEnemies=[h];
+  if(!R.mounted)G.lockX=G.focusX;
+  G.timer=Math.max(G.timer,150);A.music('boss3');banner('BOSS · 霍格','躲开落点预警，侧向对齐撞他的摩托',2.7);ev('bossStart',{boss:'hogg'});
+}
+function updateHogg(h,dt) {
+  if(!h.alive){updateDown(h,dt);return;}
+  const R=G.road;h.roadClock+=dt;h.ramCd=Math.max(0,h.ramCd-dt);h.grenadeCd-=dt;
+  const cycle=h.roadClock%5.2, target=R.mounted?{x:R.x,z:R.z}:players().filter(p=>p.alive).sort((a,b)=>Math.abs(a.x-h.x)-Math.abs(b.x-h.x))[0]||G.player;
+  // 悬臂抛雷 -> 亮灯蓄势 -> 横穿车前；冲过头后留出碰撞/拳脚反击窗口。
+  const anchor=R.mounted?R.baseX:G.focusX;
+  const offset=cycle<2.6?4.4:cycle<3.3?5.2:cycle<4.5?5.2-(cycle-3.3)*8:-4.4+(cycle-4.5)*10;
+  h.x=anchor+offset;
+  if(cycle<3.3)h.z+=(target.z-h.z)*Math.min(1,dt*1.4);
+  else h.z=clamp(h.z+Math.sin(h.roadClock)*dt*.4,-2.7,2.7);
+  h.y=0;h.vx=h.vz=h.vy=0;h.face=cycle<4.5?FACE_LEFT:FACE_RIGHT;
+  h.state=cycle>2.6&&cycle<3.3?'bikeWind':'ride';h.invul=Math.max(0,h.invul-dt);
+  for(const wheel of h.bike.userData.wheels)wheel.rotation.x+=dt*15;
+  if(h.grenadeCd<=0){
+    h.grenadeCd=2.5;
+    dropRoadBomb(h,target.x+(R.mounted?Math.min(R.speed*1.05,Math.max(0,AREAS[G.area].road.end-R.baseX)):0),target.z);
+    if(!R.mounted&&h.summons<3){
+      h.summons++;
+      for(let i=0;i<2;i++)spawnEnemy(i?'poacher':'punk',G.focusX+(i?-5:5),i?1.6:-1.6,{drop:i?'rifle':'hamburger'});
+    }
+  }
+  if(cycle>2.6&&cycle<3.3&&h.ramCd===0){h.ramCd=.65;A.play('engine',.5);ev('hoggChargeWarning');}
+  if(Math.abs(h.x-target.x)<(R.mounted?3.2:1.2)&&Math.abs(h.z-target.z)<(R.mounted?1.13:.75)){
+    if(R.mounted){
+      if(h.ramCd<=0){
+        h.ramCd=.95;h.hp-=R.boost>0?55:38;h.flash=.12;G.lastTarget=h;G.lastTargetT=G.t;
+        fx.hit(h.x,1,h.z,true);fx.shake=.2;A.play('dashHit');addScore(400,undefined,0,0,false);ev('roadRam',{hp:h.hp});
+        if(h.hp<=0){h.hp=0;knockdown(h,FACE_RIGHT,.7,true);}
+      }
+    }else if(h.ramCd<=0){
+      h.ramCd=1;
+      applyHit(h,target,H(0,0,0,0,0,3,16,'down',0,'punchHeavy',true),faceOf(target.x-h.x,target.z-h.z));
+    }
+  }
+}
+function stepRoad(dt) {
+  const R=G.road,AR=AREAS[G.area];
+  if(R.phase==='opening'&&!G.waveOn&&G.wave>=AR.waves.length){
+    R.phase='radio';toast('捡无线电叫来凯迪拉克，也可以步行向前');
+  }
+  if(R.phase==='radio'&&R.called){callRoadCar();return;}
+  if(R.phase==='radio'&&G.player.x>24){R.phase='foot';ev('roadOnFoot');}
+  if(R.phase==='complete')return;
+  stepRoadBombs(dt);
+  if(R.mounted){
+    let x=0,z=0,active=0,boost=false,brake=false,exit=false;
+    for(const p of players()){
+      p.netInput=G.coop?coopInputs(p.slot):null;
+      withPlayer(p,()=>{
+        const mv=moveVec();if(mv.len>.05){x+=mv.x;z+=mv.z;active++;}
+        boost=!!(IN.take('atk')||IN.take('dash')||IN.down('run'))||boost;
+        brake=IN.down('jump')||brake;
+        const leave=IN.take('mega');if((p.slot||0)===0&&leave)exit=true;
+      });
+    }
+    if(exit){dismountRoad(false);return;}
+    if(active){x/=active;z/=active;}
+    R.cooldown=Math.max(0,R.cooldown-dt);R.boost=Math.max(0,R.boost-dt);R.invul=Math.max(0,R.invul-dt);
+    if(boost&&!R.cooldown){R.boost=.65;R.cooldown=1.2;A.play('engine',.7);}
+    R.speed=brake?3.2:R.boost>0?13:8.2;
+    const advance=R.baseX<AR.road.end?R.speed*dt:0;
+    R.baseX=Math.min(AR.road.end,R.baseX+advance);
+    R.x=clamp(R.x+advance+x*4.8*dt,R.baseX-3.2,R.baseX+3.2);
+    R.z=clamp(R.z+z*4.7*dt,AR.z0+.95,AR.z1-.95);
+    G.focusX=R.baseX+1;G.lockX=null;
+    G.car.position.set(R.x,Math.sin(G.t*24)*.012,R.z);
+    G.car.rotation.y=FACE_RIGHT;G.car.rotation.x=z*.04;G.car.rotation.z=-x*.018;
+    for(const wheel of G.car.userData.wheels)wheel.rotation.x-=R.speed*dt/.36;
+    seatRoadPlayers();
+    for(const e of G.actors.slice()){
+      if(e.side==='player'||e.removed)continue;
+      e.st+=dt;e.flash=Math.max(0,e.flash-dt);e.invul=Math.max(0,e.invul-dt);
+      if(e.type==='hogg'){updateHogg(e,dt);if(!R.mounted)return;continue;}
+      if(!e.alive){if(e.x<G.focusX-10){removeActor(e);}continue;}
+      if(e.roadRunner){
+        e.z=clamp(e.z+Math.sin(G.t+e.id)*dt*.5,-2.6,2.6);
+        if(Math.abs(e.x-R.x)<2.8&&Math.abs(e.z-R.z)<1.12){
+          damage(G.player,e,999,'down',FACE_RIGHT,0,true);fx.hit(e.x,.8,e.z,true);A.play('dashHit');R.hitN++;
+          ev('roadRunDown',{enemy:e.type});
+        }else if(e.x<G.focusX-10){removeActor(e);R.dodged++;}
+      }
+    }
+    for(const p of G.props.slice()){
+      if(p.broken||!p.roadObstacle)continue;
+      if(Math.abs(p.x-R.x)<2.75&&Math.abs(p.z-R.z)<1.1){hitProp(p,4);hurtRoadCar(23,'barrel');if(!R.mounted)return;}
+      else if(p.x<G.focusX-10){scene.remove(p.mesh);p.broken=true;R.dodged++;}
+    }
+    if(R.hp<R.maxHp*.35&&G.frames%16===0)fx.dust(R.x+1.6,1.1,R.z,2,.3);
+  }
+  // 路上的敌人与油桶按路程激活，不按帧率生成；过屏及时回收。
+  const progress=R.mounted?R.baseX:G.player.x;
+  if(['drive','foot'].includes(R.phase)&&progress>=R.spawnAt&&R.spawnAt<AR.road.bossAt-15){
+    R.spawnAt+=22;R.spawnN++;
+    const x=progress+12,z=[-1.9,1.7,0][R.spawnN%3];
+    if(R.spawnN%3===0){
+      const mesh=propMesh('drum');markTree(mesh);mesh.position.set(x,0,z);scene.add(mesh);
+      G.props.push({kind:'drum',x,z,item:null,points:0,hp:3,r:.36,mesh,shake:0,broken:false,roadObstacle:true});
+    }else{
+      const e=spawnEnemy(R.spawnN%2?'punk':'poacher',x,z,{drop:R.spawnN%2?'hamburger':'rifle'});
+      e.roadRunner=R.mounted;if(e.roadRunner)setState(e,'walk');
+    }
+  }
+  if(!G.boss&&progress>=AR.road.bossAt)startHogg();
+  G.actors=G.actors.filter(a=>!a.removed);
+  G.props=G.props.filter(p=>!p.roadObstacle||!p.broken);
+}
+
 // ---------- 状态 ----------
 function setState(a, s, data) {
   a.state = s; a.st = 0; a.sub = data || {};
@@ -456,6 +651,14 @@ export function update() {
   if (G.later.length) runLater();
   if (G.cine || G.pteroFly.length) updateIntroFx(dt);
   if (G.mode === 'cont') { updateContinue(dt); return; }
+  if(G.road && G.mode==='play')stepRoad(dt);
+  if(G.road?.mounted && G.mode==='play'){
+    updateItems(dt);updateProps(dt);updateTimer(dt);
+    if(G.hurtFx>0)G.hurtFx=Math.max(0,G.hurtFx-dt*2.2);
+    if(G.flash>0)G.flash=Math.max(0,G.flash-dt*3);
+    if(G.timerShow>0)G.timerShow-=dt;
+    return;
+  }
   // 玩家输入
   const p = G.player;
   if (G.mode === 'play') for(const actor of G.coop?players():[p]){actor.netInput=G.coop?coopInputs(actor.slot):null;withPlayer(actor,()=>handleInput(actor,dt));}
@@ -476,6 +679,7 @@ export function update() {
     else if (a.isRaptor) updateRaptor(a, dt);
     else if (a.type === 'vice') updateVice(a, dt);
     else if (a.type === 'butcher') updateButcher(a, dt);
+    else if (a.type === 'hogg') updateHogg(a, dt);
     else updateEnemy(a, dt);
     G.player=p;
     }
@@ -920,7 +1124,8 @@ function pickUp(p, it) {
   const def = ITEMS[it.kind];
   setState(p, 'pickup');
   removeItem(it);
-  if (def.food) {
+  if(def.radio){G.road.called=true;A.play('pickup');toast('无线电已接通，清掉敌人后凯迪拉克就来！');ev('radioCall');}
+  else if (def.food) {
     if (p.hp < p.maxHp) { const heal = Math.round(p.maxHp * def.heal / 100); p.hp = Math.min(p.maxHp, p.hp + heal); fx.text(p.x, 2.3, p.z, '+' + def.cn, '#8dff7a', 0.6); }
     else addScore(def.points, p.x, 2.2, p.z);
     A.play('eat'); G.stats.food++;
@@ -1077,6 +1282,7 @@ function explode(x, z, r, dmg, owner, friendlySafe = false) {
 function updateProjectiles(dt) {
   const AR = AREAS[G.area];
   for (const pr of G.projs.slice()) {
+    if(pr.roadBomb)continue;
     pr.t += dt;
     if (pr.kind === 'rocket') {
       pr.x += pr.vx * dt; pr.y += pr.vy * dt; pr.z += pr.vz * dt;
@@ -1220,6 +1426,7 @@ function damage(a, e, dmg, kb, dir, pts, react) {
     if (e.weapon && kb !== 'hit') dropWeapon(e);
   } else if (e.grabbedBy && kb !== 'hit') releaseGrab(e.grabbedBy);
   if (!react) return;
+  if(e.type==='hogg'&&e.hp>0){e.invul=.18;G.lastTarget=e;G.lastTargetT=G.t;return;}
   const dead = e.hp <= 0;
   if (dead) { e.hp = 0; }
   e.stun++; e.stunT = 1.0;
@@ -1270,7 +1477,10 @@ function onDeath(e) {
   if (def) addScore(def.points, e.x, 2.4, e.z);
   if (e.drop) spawnItem(e.drop, e.x, e.z, { pop: true, life: ITEMS[e.drop].weapon ? 14 : 0 });
   ev('kill', { enemy: e.type, id: e.id });
-  if (e.type === 'vice' || e.type === 'butcher') bossDefeated(e);
+  if (e.type === 'vice' || e.type === 'butcher' || e.type === 'hogg') {
+    if(e.type==='hogg'){dismountRoad(false);e.bike.visible=false;G.road.phase='complete';}
+    bossDefeated(e);
+  }
   // 一波最后一个敌人被主角打倒：短暂慢动作，收尾更有分量
   else if (e.lastHitBy === G.player && G.mode === 'play' && G.waveOn && !G.pending.length && G.timeScale === 1 && !G.waveEnemies.some(o => o !== e && o.alive && !o.removed)) {
     G.timeScale = 0.3; G.slowT = 0.42; fx.shake = Math.max(fx.shake, 0.2); ev('finishSlow');
@@ -1306,7 +1516,7 @@ function updateDown(e, dt) {
 // ---------- 物理 ----------
 function physics(a, dt) {
   const AR = AREAS[G.area];
-  if (a.state === 'grabbed' || a.state === 'incar') return;
+  if (a.state === 'grabbed' || a.state === 'incar' || (a.type==='hogg'&&a.alive)) return;
   // 泥沼齐腰深：在水里走、跑、冲刺都慢一截
   const wf = G.water && a.y < 0.4 ? 1 - 0.3 * sinkK(a.x) : 1;
   a.x += a.vx * dt * wf; a.z += a.vz * dt * wf;
@@ -1709,7 +1919,7 @@ function bossDefeated(v) {
   A.music(null);
   // 剩下的杂兵逃走，恐龙跑开
   for (const e of G.actors) {
-    if (e === v || e === G.player || !e.alive) continue;
+    if (e === v || e.side==='player' || !e.alive) continue;
     if (e.isRaptor && e.type === 'raptor') { setState(e, 'flee', { vanish: true }); e.angry = false; }
     else if (['down', 'dead', 'knocked', 'sleep'].indexOf(e.state) < 0) { setState(e, 'flee', { vanish: true }); }
   }
@@ -1734,7 +1944,7 @@ function bossDefeated(v) {
 function toNextStage(ST) {
   runScript([
     { fade: 1, dur: 0.9 },
-    { fn: () => { const p = G.player; p.hp = p.maxHp; p.invul = 0; if (p.weapon) { p.weapon = null; attachWeapon(p); } setState(p, 'idle'); G.timeScale = 1; ev('stageClear', { next: ST.no }); loadArea(ST.first); } },
+    { fn: () => { for(const p of players()){p.hp=p.maxHp;p.alive=true;p.invul=0;p.weapon=null;attachWeapon(p);setState(p,'idle');} G.timeScale=1;ev('stageClear',{next:ST.no});loadArea(ST.first); } },
     { fade: 0, dur: 0.7 }
   ]);
 }
@@ -2151,6 +2361,7 @@ function updateTimer(dt) {
   if (G.timer < 30 && Math.floor(before) !== Math.floor(G.timer) && G.timer > 0) { A.play('timer'); }
   if (G.timer <= 0) {
     G.timer = AREAS[G.area].timer;
+    if(G.road?.mounted)dismountRoad(false);
     if (p.alive && p.state !== 'dead') { banner('TIME OVER', '时间到！', 2); p.hp = 0; knockdownPlayerDeath(p); }
   }
 }
@@ -2209,6 +2420,7 @@ function exitArea(type) {
 function startBoss() {
   const AR = AREAS[G.area], B = AR.boss, p = G.player;
   if (B.type === 'butcher') return startButcher(B);
+  if (B.type === 'hogg') return startHogg();
   G.mode = 'cut';
   G.lockX = B.lock;
   if (p.grab) releaseGrab(p);
@@ -2351,8 +2563,10 @@ export function toTitle() {
 const tmpPose = new Float32Array(POSE_LEN);
 const GUN_POSE = mod(HP.guard, { rS: [-0.6, 0, -0.2], rE: [-1.2, 0, 0] });
 const SG_POSE = mod(HP.guard, { rS: [-0.5, -0.2, -0.2], rE: [-1.4, 0, 0], lS: [-0.9, -0.3, 0.3], lE: [-0.8, 0, 0] });
+const DRIVE_POSE = mod(HP.sit,{body:[0,0,0],spine:[.12,0,0],head:[0,0,0],lS:[-1.2,0,.12],rS:[-1.2,0,-.12],lE:[-.55,0,0],rE:[-.55,0,0],hy:-.25,py:0,pz:0});
+const BIKE_POSE = mod(DRIVE_POSE,{lH:[-1.25,0,.22],rH:[-1.25,0,-.22],lK:[1.5,0,0],rK:[1.5,0,0],hy:-.3});
 export function render(dt, realT) {
-  if(G.coopGuest){for(const a of G.actors){if(a.netTree)applyTree(a.model.root,a.netTree);a.blob.position.set(a.x,.015,a.z);a.blob.visible=a.alive&&a.y<1.5;if(a.slot===coopLocalSlot&&G.fpActive)a.model.root.visible=false;}return;}
+  if(G.coopGuest){for(const a of G.actors){if(a.netTree)applyTree(a.model.root,a.netTree);a.blob.position.set(a.x,.015,a.z);a.blob.visible=a.alive&&a.y<1.5&&!a.driving;if(a.slot===coopLocalSlot&&G.fpActive)a.model.root.visible=false;}return;}
   for (const a of G.actors) {
     if (a.removed) continue;
     const frozen = a.hitstop > 0;
@@ -2367,13 +2581,13 @@ export function render(dt, realT) {
     let jx = 0, jz = 0;
     if (frozen && a.hsDir !== undefined && a.hsMax > 0) { const k = Math.min(1, a.hitstop / a.hsMax) * a.hsAmp * (Math.floor(G.frames / 2) % 2 ? 1 : -1); jx = Math.sin(a.hsDir) * k; jz = Math.cos(a.hsDir) * k; }
     a.model.root.position.set(a.x + jx, vy, a.z + jz);
-    a.model.root.rotation.y = a.face;
+    a.model.root.rotation.y = a.driving ? FACE_RIGHT : a.face;
     if (a.fxQ && !a.isDino) flushFx(a);
     a.blob.position.set(a.x, 0.015, a.z);
     const hs = Math.max(0.3, 1 - a.y * 0.25);
     if (a.isDino) { const r = a.radius / 0.32 * 0.85 * hs; a.blob.scale.set(r * 1.1, r * (a.type === 'shivat' ? 2.6 : 1.9), 1); a.blob.rotation.z = -a.face; }
     else a.blob.scale.setScalar(a.radius / 0.32 * 0.85 * hs);
-    a.blob.visible = sk < 0.05 && (a.state !== 'dead' || Math.floor(a.st * 12) % 2 === 0);
+    a.blob.visible = !a.driving && sk < 0.05 && (a.state !== 'dead' || Math.floor(a.st * 12) % 2 === 0);
     // 闪烁：无敌 / 倒地消失
     let vis = true;
     if (a.state === 'dead' && a.side !== 'player') vis = Math.floor(a.st * 12) % 2 === 0;
@@ -2449,6 +2663,8 @@ function nearFade(a) {
 }
 function targetPose(a, realT) {
   const s = a.state, st = a.st;
+  if(a.driving)return DRIVE_POSE;
+  if(a.type==='hogg'&&a.alive)return a.state==='bikeWind'?mod(BIKE_POSE,{rS:[-2.4,0,-.2],rE:[-1.1,0,0]}):BIKE_POSE;
   const tP = (name) => HP[name] || HP.guard;
   if ((a.side === 'player' || (a.def && a.def.rifle)) && a.weapon && ['idle', 'walk', 'hover'].indexOf(s) >= 0) {
     const k = a.weapon.kind;
@@ -2547,6 +2763,7 @@ function renderHuman(a, dt, realT) {
     a.pose[i] += delta * k;
   }
   applyPose(a.model, a.pose);
+  if(a.driving){a.model.bones.head.rotation.y=clamp(angDiff(FACE_RIGHT,a.lookHeading??FACE_RIGHT),-1.2,1.2);}
   // 必杀旋转
   if (a.state === 'attack' && a.move && a.move.id === 'mega') a.model.bones.body.rotation.y = a.spin || 0;
 }
@@ -2621,7 +2838,7 @@ export function hudState() {
   return {
     hp: p ? Math.max(0, p.hp) : 0, maxHp: p ? p.maxHp : 100, lives: G.settings.lives === 'inf' ? '∞' : Math.max(0, G.lives),
     score: G.score, hi: Math.max(G.hi, G.score), hero: G.hero,
-    weapon: p && p.weapon ? { kind: p.weapon.kind, ammo: p.weapon.ammo, name: ITEMS[p.weapon.kind].cn } : null,
+    weapon: G.road?.mounted ? {kind:'cadillac',ammo:Math.ceil(G.road.hp),name:'/ '+G.road.maxHp+' 耐久 · '+(G.boss?'追击霍格':'公路 '+Math.min(100,Math.round(G.road.baseX/AREAS[G.area].road.bossAt*100))+'%')} : p && p.weapon ? { kind: p.weapon.kind, ammo: p.weapon.ammo, name: ITEMS[p.weapon.kind].cn } : null,
     enemy: enemy ? { type: enemy.type, name: enemy.def ? enemy.def.name : enemy.type, cn: enemy.def ? enemy.def.cn : '', hp: Math.max(0, enemy.hp), maxHp: enemy.maxHp } : null,
     timer: G.timer, timerUnlimited: G.settings.demo, timerBig: G.timerShow > 0 || G.timer < 30, go: G.go > 0, mode: G.mode
   };
@@ -2659,16 +2876,17 @@ export function snapshot() {
     player: p ? { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), state: p.state, hp: +p.hp.toFixed(1), face: +p.face.toFixed(2), invul: +p.invul.toFixed(2), weapon: p.weapon ? Object.assign({}, p.weapon) : null, combo: p.comboN, visible: p.model.root.visible } : null,
     enemies: G.actors.filter(a => a.side === 'enemy' && a !== G.sleeper).length, boss: G.boss ? { type: G.boss.type, hp: G.boss.hp, state: G.boss.state, summons: G.boss.summons, swords: G.boss.swords } : null,
     sleeper: G.sleeper ? { state: G.sleeper.state, wakeN: G.sleeper.wakeN, hp: +G.sleeper.hp.toFixed(1), alive: G.sleeper.alive } : null, car: !!G.car, carMoving: !!G.carAnim, sink: p ? +sinkK(p.x).toFixed(2) : 0, raptor: G.raptor && !G.raptor.removed ? { state: G.raptor.state, angry: !!G.raptor.angry, hp: G.raptor.hp } : null,
+    road: G.road ? {...G.road} : null,
     dialog: G.dialog ? G.dialog.text : null, banner: G.banner ? G.banner.text : null, kills: Object.assign({}, G.kills), items: G.items.length, props: G.props.filter(p => !p.broken).length, script: !!G.script, cont: G.cont ? G.cont.count : null, fade: +G.fade.toFixed(2)
   };
 }
 
 export function coopInput(){
  const mv=moveVec(),edges=[],events={};for(const k of ['atk','jump','mega','dash']){const e=IN.take(k);if(e){edges.push(k);events[k]=e.data;}}
- return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
+ return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),jump:IN.down('jump'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
 }
 export function coopSnapshot(){
- return {g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water},
+ return {g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water,road:G.road},
  actors:G.actors.map(a=>{const vis=a.model.root.visible;if(a.side==='player'&&a===G.player&&G.fpActive)a.model.root.visible=true;const tree=treeState(a.model.root);a.model.root.visible=vis;return {s:scalarState(a),weapon:a.weapon?{kind:a.weapon.kind,ammo:a.weapon.ammo}:null,tree};}),
  items:G.items.map(i=>({s:scalarState(i),tree:treeState(i.mesh)})),props:G.props.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
  projs:G.projs.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
@@ -2693,10 +2911,11 @@ export function coopApply(data){
  G.boss=G.actors.find(a=>a.id===data.bossId)||null;G.raptor=G.actors.find(a=>a.id===data.raptorId)||null;G.sleeper=G.actors.find(a=>a.id===data.sleeperId)||null;G.lastTarget=G.actors.find(a=>a.id===data.lastTargetId)||null;
  while(G.items.length>data.items.length)removeItem(G.items.at(-1));
  data.items.forEach((row,i)=>{let it=G.items[i];if(it&&it.kind!==row.s.kind){scene.remove(it.mesh);it.mesh=itemMesh(row.s.kind);}if(!it)it=spawnItem(row.s.kind,row.s.x,row.s.z);Object.assign(it,row.s);applyTree(it.mesh,row.tree);});
- data.props.forEach((row,i)=>{if(G.props[i]){Object.assign(G.props[i],row.s);applyTree(G.props[i].mesh,row.tree);if(row.s.broken)scene.remove(G.props[i].mesh);}});
+ while(G.props.length>data.props.length){scene.remove(G.props.pop().mesh);}
+ data.props.forEach((row,i)=>{let pr=G.props[i];if(!pr||pr.kind!==row.s.kind){if(pr)scene.remove(pr.mesh);pr={mesh:propMesh(row.s.kind)};markTree(pr.mesh);scene.add(pr.mesh);G.props[i]=pr;}Object.assign(pr,row.s);applyTree(pr.mesh,row.tree);if(row.s.broken)scene.remove(pr.mesh);});
  while(G.projs.length>data.projs.length)killProj(G.projs.at(-1));
  data.projs.forEach((row,i)=>{let pr=G.projs[i];if(pr&&pr.kind!==row.s.kind){killProj(pr);pr=null;}
- if(!pr){const mesh=row.s.kind==='drum'?propMesh('barrel'):row.s.kind==='rocket'?itemMesh('rocket'):meshFrom(itemGeo(row.s.kind),{thin:true,shadow:false});scene.add(mesh);pr={mesh};G.projs[i]=pr;}Object.assign(pr,row.s);applyTree(pr.mesh,row.tree);});
+ if(!pr){const mesh=row.s.roadBomb?roadBombMesh():row.s.kind==='drum'?propMesh('barrel'):row.s.kind==='rocket'?itemMesh('rocket'):meshFrom(itemGeo(row.s.kind),{thin:true,shadow:false});scene.add(mesh);pr={mesh};G.projs[i]=pr;}Object.assign(pr,row.s);applyTree(pr.mesh,row.tree);});
  if(data.car){if(!G.car){G.car=buildCar();scene.add(G.car);}applyTree(G.car,data.car);}else if(G.car){scene.remove(G.car);G.car=null;}
  data.doors.forEach((d,i)=>{if(world.area().doors?.[i])Object.assign(world.area().doors[i],d);});
  if(G.mode==='play')A.music(areaMusic());
