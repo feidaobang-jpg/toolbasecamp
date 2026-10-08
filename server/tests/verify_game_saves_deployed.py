@@ -48,8 +48,8 @@ try:
     status, first, _ = request('GET', '/starship-defense')
     assert status == 200 and first['current'] is None and first['account_id'] == uid
     save = {'testMode': False, 'cls': 'gunner', 'campaignId': 'deployed-qa', 'loop': 3,
-            'chapter': 2, 'level': 3, 'gold': 1234, 'score': 200, 'weapons': ['lmg'],
-            'curWeapon': 'lmg', 'time': int(time.time() * 1000),
+            'chapter': 2, 'level': 3, 'gold': 1234, 'score': 200, 'weapons': ['lmg','rpg','missilePod'],
+            'curWeapon': 'missilePod', 'weaponLv': {'rpg':3,'missilePod':2}, 'time': int(time.time() * 1000),
             'buildings': [{'k': 'wall', 'x': 0, 'z': 0, 'r': 0, 'hp': 500}] * 96}
     status, first, headers = request('PUT', '/starship-defense', {'save': save, 'expected_revision': None})
     assert status == 200, 'First save failed: ' + str(status)
@@ -68,7 +68,7 @@ try:
     assert 'no-store' in headers.get('cache-control', '')
     assert headers.get('access-control-allow-origin') == '*'
     print(json.dumps({'passed': True, 'checks': ['public login', 'bearer auth', 'empty new account',
-        '96-building legacy limit', 'MySQL concurrent revision protection', 'three cloud backups',
+        'RPG and missilePod upgrades retained', '96-building legacy limit', 'MySQL concurrent revision protection', 'three cloud backups',
         'H5 scoped CORS', 'private no-store'], 'fixture': 'temporary QA account only'}, ensure_ascii=False))
 finally:
     if uid is not None:

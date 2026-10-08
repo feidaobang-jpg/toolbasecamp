@@ -1,0 +1,34 @@
+[
+  {
+    "origin": "https://www.zhengxiaohui.cn",
+    "players": 4,
+    "passed": true,
+    "checks": [
+      "private room create",
+      "three guests join",
+      "ready and start",
+      "input relay",
+      "state broadcast",
+      "host departure ends room"
+    ],
+    "fixture": "password-protected temporary QA room; all sockets closed",
+    "checked_at": "2026-10-08T10:33:57+0800",
+    "transport": "direct TLS WebSocket (local HTTP proxy excluded)"
+  },
+  {
+    "origin": "https://www.bilibilitoy.com",
+    "players": 4,
+    "passed": true,
+    "checks": [
+      "private room create",
+      "three guests join",
+      "ready and start",
+      "input relay",
+      "state broadcast",
+      "host departure ends room"
+    ],
+    "fixture": "password-protected temporary QA room; all sockets closed",
+    "checked_at": "2026-10-08T10:33:58+0800",
+    "transport": "direct TLS WebSocket (local HTTP proxy excluded)"
+  }
+]

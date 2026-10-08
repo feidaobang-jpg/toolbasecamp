@@ -12,20 +12,20 @@
    "publish_record": "video/views-20261005/work/publication-result.json",
    "toy_bound": true,
    "pinned_comment_rpid": 316113740017,
-   "last_public_verified_at": "2026-10-07T22:49:00+08:00",
-   "last_sync_record": "releases/v0.9.4/bilibili-sync.json",
+   "last_public_verified_at": "2026-10-08T01:02:01.971243+00:00",
+   "last_sync_record": "releases/v0.9.4/bilibili-status-correction.json",
    "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-   "description_sha256": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+   "description_sha256": "fc2216dde8a4f8f137fb2b409d7c001cafef543ca0281b1b9a3bb4bd823d96bb",
    "lastPublicVerifiedVersion": "v0.9.4",
-   "descriptionHash": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+   "descriptionHash": "fc2216dde8a4f8f137fb2b409d7c001cafef543ca0281b1b9a3bb4bd823d96bb",
    "release": "releases/v0.9.4/handoff.json",
-   "publicVerifiedAt": "2026-10-07T22:49:00+08:00",
+   "publicVerifiedAt": "2026-10-08T01:02:01.971243+00:00",
    "submitted_version": "v0.9.4",
    "submitted_at": "2026-10-07T22:47:00+08:00"
   }
  ],
  "status": "public_verified",
- "updated_at": "2026-10-07T23:10:00+08:00",
+ "updated_at": "2026-10-08T01:02:01.971243+00:00",
  "mapping_sources": [
   "本期发布记录 video/views-20261005/work/publication-result.json",
   "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -212,6 +212,14 @@
    "line": "更新（2026-10-07·v0.9.4）：修复部分安卓机型/旧内核打开Toy即闪退的问题（联机玩家ID在不支持随机数接口的设备自动回退），画面与操作不变；保留原作开场、背摔与原版音乐，仍支持2–4人联机合作。网站与B站Toy已同步上线，TapTap新版审核中。视频为录制时版本，以当前试玩为准。",
    "method": "创作中心稿件管理→编辑视频→简介富文本全选替换纯文本→立即投稿；Toy published 21:52:04 后触发，TapTap v0.9.4 已提审使审核中表述成立",
    "record": "releases/v0.9.4/bilibili-sync.json"
+  },
+  {
+   "bvid": "BV18XHW66E55",
+   "version": "v0.9.4",
+   "classification": "已过期渠道状态纠正",
+   "status": "public_verified",
+   "record": "releases/v0.9.4/bilibili-status-correction.json",
+   "checked_at": "2026-10-08T01:02:01.971243+00:00"
   }
  ],
  "last_public_verified": {
