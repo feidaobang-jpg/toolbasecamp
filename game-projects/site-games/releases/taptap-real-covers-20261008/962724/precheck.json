@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047326",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图请勿直接使用未经排版的原始游戏截图（底部包含操作UI提示）并简单叠加标题，建议重新设计并上传符合平台推荐规范的高质量宣传海报。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "竖版封面存在直接截取游戏画面导致的UI文字残留（底部按键提示被裁切）及排版拼贴感，建议使用专门设计的竖版视觉海报。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

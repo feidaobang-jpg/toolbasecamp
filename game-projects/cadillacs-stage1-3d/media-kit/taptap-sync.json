@@ -186,5 +186,123 @@
     "version": "v0.10.1",
     "reason": "用户要求删除本次新增第三关",
     "status": "pending"
+  },
+  "cover_update": {
+    "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+    "app_id": 962722,
+    "status": "pending_existing_review",
+    "checked_at": "2026-10-08T11:49:16.590563+00:00",
+    "reviewing": [
+      {
+        "created_time": 1791458577,
+        "last_event": "review_submitted",
+        "status": "reviewing",
+        "status_label": "审核中",
+        "status_value": 1,
+        "version": "V-20261008-1",
+        "version_id": "V-20261008-1"
+      }
+    ],
+    "title": "恐龙快打 3D",
+    "prepared_at": "2026-10-08T11:44:33.268658+00:00",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\banner_4.jpg",
+        "sha256": "8af8018d4f3f936bf8fae9631222164b8497d3e8de61850eb7e6d4a5a3e7bace",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 575945,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover-source.jpg",
+        "source_sha256": "300cd4c49fdef52622a4f57d2c962cfc30f051bf4010fbc50c583ab7bd171fcf",
+        "crop": [
+          120,
+          210,
+          1400,
+          930
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover_vertical.jpg",
+        "sha256": "a649fe797b4babf9158dbb8695ba1ba6c79534671b95f50ec0baa00a2987a2e4",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 243268,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover-source.jpg",
+        "source_sha256": "300cd4c49fdef52622a4f57d2c962cfc30f051bf4010fbc50c583ab7bd171fcf",
+        "crop": [
+          280,
+          100,
+          920,
+          1060
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    },
+    "uploads": {
+      "banner_4": {
+        "assetId": "362999",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 575945,
+          "width": 1920
+        },
+        "url": "https://img-tc.tapimg.com/market/images/9a22f7839b5ad4dee945f53acfd07431.jpg",
+        "width": 1920
+      },
+      "cover_vertical": {
+        "assetId": "363000",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 243268,
+          "width": 720
+        },
+        "url": "https://img-tc.tapimg.com/market/images/f583e8d807ef08e3301c2d10c8c968f0.jpg",
+        "width": 720
+      }
+    },
+    "public_verified": false,
+    "next_action": "现有玩法版本审核结束后，从最新线上创建资料草稿，写前重读，仅替换已准备的 banner_4 与 cover_vertical，不改包体、不撤审。",
+    "game_id": "cadillacs-stage1-3d",
+    "developer_id": 100726,
+    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+    "updated_at": "2026-10-08T11:50:37.154945+00:00",
+    "source_note": "2026-10-07 正常试玩截图；与当前 v0.10.0 相同的第一关角色、画风及场景",
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": null,
+        "value": "https://img-tc.tapimg.com/market/images/9a22f7839b5ad4dee945f53acfd07431.jpg",
+        "applied": false
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": null,
+        "value": "https://img-tc.tapimg.com/market/images/f583e8d807ef08e3301c2d10c8c968f0.jpg",
+        "applied": false
+      }
+    ],
+    "only_cover_fields_changed": false,
+    "package_binding_changed": false,
+    "platform_read_only": {
+      "blockers": [
+        {
+          "code": "READ_ONLY",
+          "field_ids": [],
+          "message": "当前应用处于「审核中」状态，无法提交审核"
+        }
+      ],
+      "suggestions": [],
+      "warnings": []
+    }
   }
 }
