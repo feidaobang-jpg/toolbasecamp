@@ -1,0 +1,25 @@
+{
+  "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+  "approval_event_id": "wish-versus-final-review-4a922fbb-ccef-4625-97b0-a7be8bc16af2",
+  "stage": "waiting_for_user_review",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "human_review": "pending",
+  "publication": "not_uploaded",
+  "website_wishlist": "deployed_verified",
+  "website_commit": "e53324f5bfc97ce8d08852b856d3aee42622c186",
+  "wish_id": 11,
+  "updated_at": "2026-10-08T09:42:07.334939+00:00",
+  "next": "核验三平台包、持久保全并交用户审片；通过后发布三平台，B站绑定Toy/加入合集/试玩评论，再填真实videoUrl。",
+  "technical_checks": "pass",
+  "subjective_listening": "not-run: audio input unavailable",
+  "final_hashes": {
+    "bilibili-zh": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+    "youtube-zh": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323"
+  },
+  "artifact_directory": "D:\\project\\toolbasecamp-artifacts\\wish-versus-20261008-codex-multiplatform",
+  "review_entry": "D:\\project\\toolbasecamp-artifacts\\wish-versus-20261008-codex-multiplatform\\work\\review\\index.html"
+}

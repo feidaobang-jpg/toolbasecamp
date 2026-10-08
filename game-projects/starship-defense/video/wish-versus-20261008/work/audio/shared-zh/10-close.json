@@ -1,0 +1,163 @@
+{
+  "text": "愿望单已经标成已实现、可试玩，原需求和十一票都保留。去哔哩哔哩Toy或百宝箱试一局。你会先升级银行，还是先出兵？",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 12.408,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3875000,
+      "text": "愿望"
+    },
+    {
+      "offset": 5000000,
+      "duration": 2375000,
+      "text": "单"
+    },
+    {
+      "offset": 7375000,
+      "duration": 2000000,
+      "text": "已经"
+    },
+    {
+      "offset": 9500000,
+      "duration": 4500000,
+      "text": "标成"
+    },
+    {
+      "offset": 14250000,
+      "duration": 750000,
+      "text": "已"
+    },
+    {
+      "offset": 15125000,
+      "duration": 4750000,
+      "text": "实现"
+    },
+    {
+      "offset": 23875000,
+      "duration": 1750000,
+      "text": "可"
+    },
+    {
+      "offset": 25625000,
+      "duration": 5000000,
+      "text": "试玩"
+    },
+    {
+      "offset": 33125000,
+      "duration": 2375000,
+      "text": "原"
+    },
+    {
+      "offset": 35500000,
+      "duration": 4875000,
+      "text": "需求"
+    },
+    {
+      "offset": 40625000,
+      "duration": 1000000,
+      "text": "和"
+    },
+    {
+      "offset": 41750000,
+      "duration": 2750000,
+      "text": "十一"
+    },
+    {
+      "offset": 44500000,
+      "duration": 1875000,
+      "text": "票"
+    },
+    {
+      "offset": 46625000,
+      "duration": 1250000,
+      "text": "都"
+    },
+    {
+      "offset": 48000000,
+      "duration": 4500000,
+      "text": "保留"
+    },
+    {
+      "offset": 58250000,
+      "duration": 2750000,
+      "text": "去"
+    },
+    {
+      "offset": 61250000,
+      "duration": 4625000,
+      "text": "哔哩哔哩"
+    },
+    {
+      "offset": 65875000,
+      "duration": 4500000,
+      "text": "Toy"
+    },
+    {
+      "offset": 70500000,
+      "duration": 1875000,
+      "text": "或"
+    },
+    {
+      "offset": 72500000,
+      "duration": 5750000,
+      "text": "百宝箱"
+    },
+    {
+      "offset": 78500000,
+      "duration": 1875000,
+      "text": "试"
+    },
+    {
+      "offset": 80375000,
+      "duration": 1250000,
+      "text": "一"
+    },
+    {
+      "offset": 81625000,
+      "duration": 3000000,
+      "text": "局"
+    },
+    {
+      "offset": 90250000,
+      "duration": 2500000,
+      "text": "你"
+    },
+    {
+      "offset": 92750000,
+      "duration": 1375000,
+      "text": "会"
+    },
+    {
+      "offset": 94250000,
+      "duration": 1625000,
+      "text": "先"
+    },
+    {
+      "offset": 96000000,
+      "duration": 3250000,
+      "text": "升级"
+    },
+    {
+      "offset": 99375000,
+      "duration": 4875000,
+      "text": "银行"
+    },
+    {
+      "offset": 107750000,
+      "duration": 2250000,
+      "text": "还是"
+    },
+    {
+      "offset": 110125000,
+      "duration": 1500000,
+      "text": "先"
+    },
+    {
+      "offset": 111625000,
+      "duration": 3750000,
+      "text": "出兵"
+    }
+  ]
+}

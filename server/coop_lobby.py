@@ -17,7 +17,7 @@ MAX_PLAYERS = 4
 GAMES = {
     'tank': {'title': '坦克大战', 'protocol': 'tank3d-v2', 'maxPlayers': 4, 'path': 'tank-3d'},
     'jackal': {'title': '赤色要塞', 'protocol': 'jackal3d-v1', 'maxPlayers': 4, 'path': 'jackal-stage1-3d'},
-    'cadillacs': {'title': '恐龙快打', 'protocol': 'cadillacs3d-v1', 'maxPlayers': 4, 'path': 'cadillacs-stage1-3d'},
+    'cadillacs': {'title': '恐龙快打', 'protocol': 'cadillacs3d-v2', 'maxPlayers': 4, 'path': 'cadillacs-stage1-3d'},
     'starship': {'title': '虫潮围城', 'protocol': 'starship-v1', 'maxPlayers': 4, 'path': 'starship-defense'},
 }
 def bounded(value, low, high, default):
@@ -31,7 +31,7 @@ def game_config(game, raw):
             'armor': 'classic' if raw.get('armor') == 'classic' else 'std',
             'dur': raw.get('dur') if raw.get('dur') in ('std', 'easy', 'classic') else 'std',
             'gun': 'follow' if raw.get('gun') == 'follow' else 'up',
-            'stage': bounded(raw.get('stage'), 1, 2, 1),
+            'stage': bounded(raw.get('stage'), 1, 3 if game == 'cadillacs' else 2, 1),
             'area': bounded(raw.get('area'), 0, 7, 0),
             'hero': bounded(raw.get('hero'), 0, 3, 0),
             'seed': secrets.randbelow(1000000), 'demo': False, 'coop': True}

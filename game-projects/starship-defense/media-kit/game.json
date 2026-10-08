@@ -6,7 +6,7 @@
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
-  "development_model": null,
+  "development_model": "Claude Opus 5.5（虫潮对战模式）",
   "toy_id": "38678478981120",
   "publication_status": "published",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_gITuVtTw/index.html",
@@ -489,5 +489,18 @@
       "capture-versus-teams.cjs"
     ]
   },
-  "website_deploy_record": "releases/web-rv-v0.28.0/website-deploy.json"
+  "website_deploy_record": "releases/web-rv-v0.28.0/website-deploy.json",
+  "development_model_scope": "确认v0.26.0/v0.27.0虫潮对战模式的开发来源；更早版本未完整核对，Codex完成接管核验和视频制作。",
+  "current_video_preparation": {
+    "episode": "wish-versus-20261008",
+    "version": "web-versus-teams-v0.27.0",
+    "status": "waiting_final_review",
+    "variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "manifest": "../video/wish-versus-20261008/work/publish.json",
+    "new_bvid": null
+  }
 }

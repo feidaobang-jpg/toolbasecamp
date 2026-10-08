@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-08T08:57:53.213Z",
+  "production_writes": 0,
+  "reports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "fulfilled": "双人对战塔防\n已实现 · 可试玩\n虫潮围城 · 虫潮对战\n定时收入、升级银行、不同兵种攻城、好友线上对决已实现；支持 1 对 1 到 4 对 4，空位由电脑补齐。\n网站试玩\nB站 Toy 试玩\n11 票",
+      "urls": [
+        "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+        "https://www.bilibili.com/toy/chongchao-qianshao/index.html"
+      ],
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fulfilled": "双人对战塔防\n已实现 · 可试玩\n虫潮围城 · 虫潮对战\n定时收入、升级银行、不同兵种攻城、好友线上对决已实现；支持 1 对 1 到 4 对 4，空位由电脑补齐。\n网站试玩\nB站 Toy 试玩\n11 票",
+      "urls": [
+        "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+        "https://www.bilibili.com/toy/chongchao-qianshao/index.html"
+      ],
+      "errors": []
+    }
+  ]
+}

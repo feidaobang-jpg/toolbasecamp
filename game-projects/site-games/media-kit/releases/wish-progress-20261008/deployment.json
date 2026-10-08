@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-08T09:42:07.334939+00:00",
+  "commit": "e53324f5bfc97ce8d08852b856d3aee42622c186",
+  "server_last_successful_deploy": "e53324f5bfc97ce8d08852b856d3aee42622c186",
+  "public_api": {
+    "pending": 8,
+    "fulfilled": 1,
+    "wish_id": 11,
+    "votes": 11,
+    "totals": {
+      "votes": 79,
+      "voters_devices": 42,
+      "wishes": 9
+    }
+  },
+  "public_browser": "desktop and mobile read-only verification passed",
+  "original_text_and_votes_preserved": true,
+  "video_url": "pending real publication"
+}

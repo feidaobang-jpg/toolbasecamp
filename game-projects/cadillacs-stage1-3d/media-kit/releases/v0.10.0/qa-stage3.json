@@ -1,0 +1,156 @@
+{
+  "method": "Edge real keyboard and DOM actions with explicit combat/distance fixtures; desktop simulation",
+  "results": [
+    {
+      "name": "键盘直接选第三关",
+      "pass": true
+    },
+    {
+      "name": "保存第三关选择",
+      "pass": true
+    },
+    {
+      "name": "刷新保留选关",
+      "pass": true
+    },
+    {
+      "name": "第三关实际开局",
+      "pass": true,
+      "detail": {
+        "phase": "opening",
+        "mounted": false,
+        "called": false,
+        "hp": 180,
+        "maxHp": 180,
+        "x": 2.5,
+        "z": 0,
+        "baseX": 2.5,
+        "speed": 0,
+        "invul": 0,
+        "boost": 0,
+        "cooldown": 0,
+        "spawnAt": 35,
+        "spawnN": 0,
+        "hitN": 0,
+        "dodged": 0
+      }
+    },
+    {
+      "name": "开场清敌后无线电掉落",
+      "pass": true
+    },
+    {
+      "name": "J拾无线电并坐上凯迪拉克",
+      "pass": true,
+      "detail": {
+        "phase": "drive",
+        "mounted": true,
+        "called": true,
+        "hp": 180,
+        "maxHp": 180,
+        "x": 14.683333333333334,
+        "z": 0,
+        "baseX": 14.683333333333334,
+        "speed": 8.2,
+        "invul": 0,
+        "boost": 0,
+        "cooldown": 0,
+        "spawnAt": 35,
+        "spawnN": 0,
+        "hitN": 0,
+        "dodged": 0
+      }
+    },
+    {
+      "name": "驾驶动作标签",
+      "pass": true
+    },
+    {
+      "name": "方向键实际转向",
+      "pass": true,
+      "detail": [
+        0,
+        -1.958333333333334
+      ]
+    },
+    {
+      "name": "I加速",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "name": "K刹车降低速度",
+      "pass": true,
+      "detail": 3.2
+    },
+    {
+      "name": "暂停冻结公路与音频",
+      "pass": true
+    },
+    {
+      "name": "油桶碰撞扣车辆耐久",
+      "pass": true,
+      "detail": 163.9
+    },
+    {
+      "name": "霍格摩托Boss登场",
+      "pass": true,
+      "detail": {
+        "type": "hogg",
+        "hp": 420,
+        "state": "ride",
+        "summons": 0
+      }
+    },
+    {
+      "name": "投雷有实际落点与爆炸",
+      "pass": true
+    },
+    {
+      "name": "驾驶撞击真实扣Boss血量",
+      "pass": true,
+      "detail": [
+        420,
+        365
+      ]
+    },
+    {
+      "name": "U下车后仍可战斗",
+      "pass": true,
+      "detail": "idle"
+    },
+    {
+      "name": "下车恢复动作标签",
+      "pass": true
+    },
+    {
+      "name": "步行Boss战有持枪援兵",
+      "pass": true
+    },
+    {
+      "name": "击败霍格计入第三关通关",
+      "pass": true,
+      "detail": [
+        3
+      ]
+    },
+    {
+      "name": "第三关结算完整显示",
+      "pass": true
+    },
+    {
+      "name": "结算包含霍格",
+      "pass": true
+    },
+    {
+      "name": "再玩一次仍从第三关开始",
+      "pass": true
+    },
+    {
+      "name": "没有浏览器异常",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

@@ -79,6 +79,12 @@ function T(name) {
       for (let i = 0; i < 9; i++) crack(g, r() * w, r() * h, 60 + r() * 80, r, 'rgba(60,58,54,0.75)');
       speckle(g, w, h, r, 200, 'rgba(120,118,110,0.4)', 2);
     }); break;
+    case 'asphalt': t = mkTex(256,256,39,(g,w,h,r) => {
+      g.fillStyle='#504b47'; g.fillRect(0,0,w,h);
+      speckle(g,w,h,r,2600,'rgba(12,11,10,.28)',1.6);
+      speckle(g,w,h,r,1700,'rgba(170,155,130,.22)',1.1);
+      for(let i=0;i<6;i++) crack(g,r()*w,r()*h,45+r()*50,r,'#302f2d');
+    }); break;
     case 'pave': t = mkTex(256, 256, 20, (g, w, h, r) => {   // 街道：裂开的灰石板 + 尘土
       g.fillStyle = '#b3a68c'; g.fillRect(0, 0, w, h);
       for (let y = 0; y < 3; y++) for (let x = 0; x < 3; x++) { const v = r() * 18; g.fillStyle = rgb(182 + v, 170 + v, 146 + v); g.fillRect(x * 85 + 2, y * 85 + 2, 81, 81); }
@@ -370,6 +376,54 @@ export function statueMesh() {
 
 // ---------- 区域构建 ----------
 const BUILDERS = {
+  hellroad(A) {
+    const g=A.group, r=fixedRng(333), end=A.def.x1;
+    A.light={sky:'#ccbfb0',ground:'#6b5145',hemi:1.15,sun:'#ffe1ac',sunI:1.65,dir:[-.35,.7,.45],fog:'#9b7c63',fogNear:65,fogFar:230};
+    skyDome(g,'#292b42','#9e7156','#a08365');
+    const soil=new THREE.Mesh(new THREE.PlaneGeometry(1800,1800),texMat('dirt',[180,180],{color:'#b6936d'}));
+    soil.rotation.x=-Math.PI/2;soil.position.set(end/2,-.12,0);soil.receiveShadow=true;g.add(soil);
+    const road=new THREE.Mesh(texBox(end+90,.12,7.6,3),texMat('asphalt',null));
+    road.position.set(end/2,-.055,0);road.receiveShadow=true;g.add(road);
+    // 标线抬离柏油顶面，避免移动时深度冲突；肩线就是可走范围的外缘。
+    const lines=new Parts(), edge=new Parts();
+    for(let x=-35;x<end+45;x+=6) {
+      lines.add(GEO.box,'#b5a05c',mtx(x,.012,0,0,0,0,2.8,.01,.065));
+      for(const z of [-3.55,3.55]) edge.add(GEO.box,'#c2b29a',mtx(x,.015,z,0,0,0,5.5,.015,.1));
+    }
+    g.add(new THREE.Mesh(lines.build(),new THREE.MeshLambertMaterial({vertexColors:true})),new THREE.Mesh(edge.build(),new THREE.MeshLambertMaterial({vertexColors:true})));
+    // 分段合批，距离裁剪可跳过远处的路边零件；360度都有地表与远山。
+    for(let x0=-40;x0<end+65;x0+=40) {
+      const p=new Parts();
+      for(let i=0;i<17;i++) {
+        const x=x0+r()*40, side=i%2?-1:1, z=side*(5+r()*19);
+        rock(p,x,z,.5+r()*1.6,r,'#826953');
+        if(i%3===0) {
+          const h=1.1+r()*1.6;
+          p.add(GEO.cyl6,'#53604a',mtx(x,h/2,z,0,0,0,.13,h,.13));
+          p.add(GEO.cyl6,'#53604a',mtx(x+.24,h*.65,z,0,0,Math.PI/2,.1,.55,.1));
+          p.add(GEO.cyl6,'#53604a',mtx(x+.5,h*.79,z,0,0,0,.1,h*.35,.1));
+        }
+      }
+      for(const side of [-1,1]) {
+        p.add(GEO.box,'#6a5546',mtx(x0+12,.8,side*5.7,0,0,0,.1,1.6,.1));
+        p.add(GEO.box,'#6a5546',mtx(x0+32,.8,side*5.7,0,0,0,.1,1.6,.1));
+        p.add(GEO.box,'#6a5546',mtx(x0+22,.7,side*5.7,0,0,0,20,.09,.09));
+      }
+      g.add(new THREE.Mesh(p.build(),vegMat()));
+    }
+    const hills=new Parts();
+    for(let x=-100;x<end+130;x+=28)for(const side of [-1,1]){
+      const z=side*(34+r()*40),h=10+r()*16;
+      mountain(hills,x,z,11+r()*13,h,r()<.5?'#80604f':'#6b5350');
+      hills.add(GEO.box,'#866651',mtx(x,h*.35,z,0,r()*.4,0,12+r()*10,h*.55,14));
+    }
+    g.add(new THREE.Mesh(hills.build(),vegMat()));
+    const sign=new Parts();
+    sign.add(GEO.cyl6,'#78746a',mtx(20,1.25,-4.4,0,0,0,.06,2.5,.06));
+    sign.add(GEO.box,'#718275',mtx(20,2.4,-4.4,0,0,0,3.6,.75,.13));
+    sign.add(GEO.box,'#b3ab92',mtx(20,2.4,-4.31,0,0,0,3.2,.035,.015));
+    g.add(meshFrom(sign.build(),{}));
+  },
   // 楼顶：EASTCOAST 2513，海上城市的高楼楼顶
   roof(A) {
     const g = A.group;

@@ -1,0 +1,128 @@
+{
+  "text": "我把它做成了虫潮围城里的虫潮对战。可以打一对一，也能选二对二、三对三、四对四。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 8.28,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2500000,
+      "text": "我"
+    },
+    {
+      "offset": 3625000,
+      "duration": 1125000,
+      "text": "把"
+    },
+    {
+      "offset": 4750000,
+      "duration": 1125000,
+      "text": "它"
+    },
+    {
+      "offset": 6000000,
+      "duration": 2875000,
+      "text": "做成"
+    },
+    {
+      "offset": 8875000,
+      "duration": 1000000,
+      "text": "了"
+    },
+    {
+      "offset": 10125000,
+      "duration": 4125000,
+      "text": "虫潮"
+    },
+    {
+      "offset": 14375000,
+      "duration": 3250000,
+      "text": "围城"
+    },
+    {
+      "offset": 17625000,
+      "duration": 750000,
+      "text": "里"
+    },
+    {
+      "offset": 18375000,
+      "duration": 1000000,
+      "text": "的"
+    },
+    {
+      "offset": 19625000,
+      "duration": 4250000,
+      "text": "虫潮"
+    },
+    {
+      "offset": 24000000,
+      "duration": 4500000,
+      "text": "对战"
+    },
+    {
+      "offset": 34250000,
+      "duration": 2250000,
+      "text": "可以"
+    },
+    {
+      "offset": 36625000,
+      "duration": 1250000,
+      "text": "打"
+    },
+    {
+      "offset": 37875000,
+      "duration": 4625000,
+      "text": "一对一"
+    },
+    {
+      "offset": 44375000,
+      "duration": 1375000,
+      "text": "也"
+    },
+    {
+      "offset": 45750000,
+      "duration": 1250000,
+      "text": "能"
+    },
+    {
+      "offset": 47125000,
+      "duration": 1625000,
+      "text": "选"
+    },
+    {
+      "offset": 48750000,
+      "duration": 5375000,
+      "text": "二对二"
+    },
+    {
+      "offset": 57375000,
+      "duration": 3000000,
+      "text": "三"
+    },
+    {
+      "offset": 60375000,
+      "duration": 1500000,
+      "text": "对"
+    },
+    {
+      "offset": 62000000,
+      "duration": 3375000,
+      "text": "三"
+    },
+    {
+      "offset": 68000000,
+      "duration": 2250000,
+      "text": "四"
+    },
+    {
+      "offset": 70375000,
+      "duration": 1250000,
+      "text": "对"
+    },
+    {
+      "offset": 71625000,
+      "duration": 2500000,
+      "text": "四"
+    }
+  ]
+}
