@@ -1,0 +1,179 @@
+{
+  "limits": {
+    "favorite": 3,
+    "wishlist": 5,
+    "wishSubmit": 3
+  },
+  "totals": {
+    "votes": 79,
+    "voters": 42,
+    "wishes": 9
+  },
+  "favorite": [
+    {
+      "key": "starship_defense",
+      "votes": 19,
+      "weekVotes": 19,
+      "url": "html/game/starship_defense.html?v=7",
+      "titleKey": "tools.starshipDefense.title"
+    },
+    {
+      "key": "tank-3d",
+      "votes": 7,
+      "weekVotes": 7,
+      "url": "html/game/tank-3d/index.html?v=2",
+      "titleKey": "tools.tank3d.title"
+    },
+    {
+      "key": "cadillacs-stage1-3d",
+      "votes": 6,
+      "weekVotes": 6,
+      "url": "html/game/cadillacs-stage1-3d/index.html?v=3",
+      "titleKey": "tools.cadillacs3d.title"
+    },
+    {
+      "key": "jackal-stage1-3d",
+      "votes": 6,
+      "weekVotes": 6,
+      "url": "html/game/jackal-stage1-3d/index.html?v=1",
+      "titleKey": "tools.jackal3d.title"
+    },
+    {
+      "key": "mario-3d",
+      "votes": 4,
+      "weekVotes": 4,
+      "url": "html/game/mario-3d/index.html",
+      "titleKey": "tools.mario3d.title"
+    },
+    {
+      "key": "worms",
+      "votes": 3,
+      "weekVotes": 3,
+      "url": "html/game/worms.html?v=7",
+      "titleKey": "tools.worms.title"
+    },
+    {
+      "key": "frog_zuma",
+      "votes": 1,
+      "weekVotes": 1,
+      "url": "html/game/frog_zuma.html?v=6",
+      "titleKey": "tools.frogZuma.title"
+    }
+  ],
+  "wishlist": [
+    {
+      "id": 18,
+      "key": "w18",
+      "name": "blibli版逃离后室",
+      "note": "完美复刻原版",
+      "source": "user",
+      "votes": 7,
+      "weekVotes": 7,
+      "createdAt": "2026-10-06 14:36:05",
+      "progress": "pending"
+    },
+    {
+      "id": 13,
+      "key": "w13",
+      "name": "马桶人大战监控人",
+      "note": "马桶人大战监控人，像素版(浏览器可打开)",
+      "source": "user",
+      "votes": 6,
+      "weekVotes": 6,
+      "createdAt": "2026-10-04 11:02:12",
+      "progress": "pending"
+    },
+    {
+      "id": 14,
+      "key": "w14",
+      "name": "minecraft雅典地下世界冒险",
+      "note": "一款像素2D游戏，玩家是矿工。有背包和武器，参考我的世界风格模型。玩家需要与怪物战斗，获取掉落物，击杀怪物获得经验。按L触发大招旋转，玩家有初始有一百血量，僵尸有五十血量，五攻击。骷髅射手有二十血量，九攻击。第一关有五个僵尸，三个骷髅射手。后面每一关会增加五个僵尸，六个骷髅射手。有5关。最后一关是末影龙。每关能保存存档",
+      "source": "user",
+      "votes": 3,
+      "weekVotes": 3,
+      "createdAt": "2026-10-06 12:10:29",
+      "progress": "pending"
+    },
+    {
+      "id": 19,
+      "key": "w19",
+      "name": "肉割",
+      "note": "",
+      "source": "user",
+      "votes": 2,
+      "weekVotes": 2,
+      "createdAt": "2026-10-07 22:57:30",
+      "progress": "pending"
+    },
+    {
+      "id": 15,
+      "key": "w15",
+      "name": "minecraft古典寻宝外传故事",
+      "note": "",
+      "source": "user",
+      "votes": 2,
+      "weekVotes": 2,
+      "createdAt": "2026-10-06 14:28:04",
+      "progress": "pending"
+    },
+    {
+      "id": 17,
+      "key": "w17",
+      "name": "荒野大镖客",
+      "note": "",
+      "source": "user",
+      "votes": 1,
+      "weekVotes": 1,
+      "createdAt": "2026-10-06 14:32:32",
+      "progress": "pending"
+    },
+    {
+      "id": 12,
+      "key": "w12",
+      "name": "GTA手机版",
+      "note": "开放世界",
+      "source": "user",
+      "votes": 1,
+      "weekVotes": 1,
+      "createdAt": "2026-10-04 10:13:45",
+      "progress": "pending"
+    },
+    {
+      "id": 10,
+      "key": "w10",
+      "name": "fc的快打旋风",
+      "note": "我想双人可以玩。",
+      "source": "user",
+      "votes": 0,
+      "weekVotes": 0,
+      "createdAt": "2026-10-03 00:20:29",
+      "progress": "pending"
+    }
+  ],
+  "wishlistTotal": 8,
+  "wishlistOffset": 0,
+  "wishCounts": {
+    "pending": 8,
+    "fulfilled": 1
+  },
+  "fulfilled": [
+    {
+      "id": 11,
+      "key": "w11",
+      "name": "双人对战塔防",
+      "note": "玩家每隔一段时间可以获得一些钱可以选择造出不同的兵种攻击对面的城池或是升级你的银行来增加你的钱的效率可以与朋友线上对决",
+      "source": "user",
+      "votes": 11,
+      "weekVotes": 11,
+      "createdAt": "2026-10-03 01:03:42",
+      "progress": "fulfilled",
+      "gameName": "虫潮围城 · 虫潮对战",
+      "playUrl": "/html/game/starship-defense/index.html",
+      "toyUrl": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "releaseNote": "定时收入、升级银行、不同兵种攻城、好友线上对决已实现；支持 1 对 1 到 4 对 4，空位由电脑补齐。",
+      "fulfilledAt": "2026-10-08",
+      "videoUrl": ""
+    }
+  ],
+  "updatedAt": "2026-10-08 16:56:10"
+}

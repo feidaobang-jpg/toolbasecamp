@@ -1,0 +1,168 @@
+{
+  "text": "一对一打赢了电脑，另一场四对四却输了。十五分钟结束，我方核心剩百分之七十六，对面百分之九十一。出兵更多，不等于赢。接下来继续打磨对局节奏和兵种平衡。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 15.648,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4500000,
+      "text": "一对一"
+    },
+    {
+      "offset": 5750000,
+      "duration": 2250000,
+      "text": "打赢"
+    },
+    {
+      "offset": 8000000,
+      "duration": 750000,
+      "text": "了"
+    },
+    {
+      "offset": 8875000,
+      "duration": 4250000,
+      "text": "电脑"
+    },
+    {
+      "offset": 15625000,
+      "duration": 2000000,
+      "text": "另"
+    },
+    {
+      "offset": 17625000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 18625000,
+      "duration": 1750000,
+      "text": "场"
+    },
+    {
+      "offset": 20625000,
+      "duration": 4625000,
+      "text": "四对四"
+    },
+    {
+      "offset": 25500000,
+      "duration": 1250000,
+      "text": "却"
+    },
+    {
+      "offset": 26875000,
+      "duration": 2375000,
+      "text": "输"
+    },
+    {
+      "offset": 29250000,
+      "duration": 1875000,
+      "text": "了"
+    },
+    {
+      "offset": 36750000,
+      "duration": 7000000,
+      "text": "十五分钟"
+    },
+    {
+      "offset": 43875000,
+      "duration": 4375000,
+      "text": "结束"
+    },
+    {
+      "offset": 51750000,
+      "duration": 4375000,
+      "text": "我方"
+    },
+    {
+      "offset": 56250000,
+      "duration": 4125000,
+      "text": "核心"
+    },
+    {
+      "offset": 60625000,
+      "duration": 2000000,
+      "text": "剩"
+    },
+    {
+      "offset": 62750000,
+      "duration": 8875000,
+      "text": "百分之七十六"
+    },
+    {
+      "offset": 74625000,
+      "duration": 3500000,
+      "text": "对面"
+    },
+    {
+      "offset": 78375000,
+      "duration": 8500000,
+      "text": "百分之九十一"
+    },
+    {
+      "offset": 92625000,
+      "duration": 3750000,
+      "text": "出兵"
+    },
+    {
+      "offset": 96500000,
+      "duration": 4375000,
+      "text": "更多"
+    },
+    {
+      "offset": 103750000,
+      "duration": 1375000,
+      "text": "不"
+    },
+    {
+      "offset": 105125000,
+      "duration": 2250000,
+      "text": "等于"
+    },
+    {
+      "offset": 107375000,
+      "duration": 2250000,
+      "text": "赢"
+    },
+    {
+      "offset": 115125000,
+      "duration": 5625000,
+      "text": "接下来"
+    },
+    {
+      "offset": 121000000,
+      "duration": 3250000,
+      "text": "继续"
+    },
+    {
+      "offset": 124375000,
+      "duration": 3250000,
+      "text": "打磨"
+    },
+    {
+      "offset": 127875000,
+      "duration": 2750000,
+      "text": "对局"
+    },
+    {
+      "offset": 130750000,
+      "duration": 4500000,
+      "text": "节奏"
+    },
+    {
+      "offset": 136500000,
+      "duration": 2375000,
+      "text": "和"
+    },
+    {
+      "offset": 139000000,
+      "duration": 3500000,
+      "text": "兵种"
+    },
+    {
+      "offset": 142625000,
+      "duration": 5000000,
+      "text": "平衡"
+    }
+  ]
+}

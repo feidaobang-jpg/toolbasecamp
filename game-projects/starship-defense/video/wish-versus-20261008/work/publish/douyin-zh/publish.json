@@ -1,0 +1,67 @@
+{
+  "variant_id": "douyin-zh",
+  "platform": "douyin",
+  "content_type": "gameplay_update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-versus-teams-v0.27.0",
+  "video_file": "../../../final/douyin-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 104.266667,
+  "title": "愿望榜第一名做出来了！虫潮对战支持4对4",
+  "description": "定时赚钱、升级银行、派兵攻城：双人对战塔防已经做进虫潮围城，还能打4对4。试玩入口在百宝箱游戏列表；你会先升级银行，还是先出兵？",
+  "tags": [
+    "虫潮围城",
+    "塔防",
+    "游戏开发",
+    "AI"
+  ],
+  "description_file": "../../../final/douyin-zh/投稿文案.txt",
+  "cover_file": "../../../final/douyin-zh/cover-horizontal-4x3.jpg",
+  "cover_files": {
+    "horizontal_4_3": {
+      "file": "../../../final/douyin-zh/cover-horizontal-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "横版封面",
+      "sha256": "b6daa239452d16df6773d3a634cdd71325eb151133046da63f76139620a89600"
+    },
+    "portrait_3_4": {
+      "file": "../../../final/douyin-zh/cover-portrait-3x4.jpg",
+      "width": 1080,
+      "height": 1440,
+      "purpose": "竖版展示封面",
+      "sha256": "371ca4b57a7883c904a16eafea617087703f76c68b0dbcd8c674659fe23f0f5b"
+    }
+  },
+  "cover_upload_mode": "custom_image",
+  "cover_text": "愿望榜第一名 / 做成了对战！ / 1对1 → 4对4",
+  "cover_selection_source": "current normal-rule gameplay frame, native typography; covers.py and gameplay-source.jpg retained",
+  "subtitle_mode": "burned_in",
+  "subtitle_files": [],
+  "disclosures": {
+    "synthetic_narration": true,
+    "ai_assisted_development": true,
+    "gameplay_is_generated_video": false
+  },
+  "platform_requirements_checked_at": "2026-10-08",
+  "human_review": {
+    "status": "pending",
+    "required_before_upload": true
+  },
+  "audio_listening_review": "not-run: this model cannot accept audio input; user review required",
+  "technical_preparation_complete": true,
+  "ready_to_upload": false,
+  "blocking_issues": [
+    "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
+  ],
+  "unverified_fields": [
+    "本期投稿页分类及登录状态，上传前重新核对"
+  ],
+  "created_at": "2026-10-08T09:39:33.166904+00:00"
+}

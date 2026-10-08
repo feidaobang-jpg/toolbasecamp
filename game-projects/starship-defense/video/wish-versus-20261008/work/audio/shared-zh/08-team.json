@@ -1,0 +1,168 @@
+{
+  "text": "多人对战每个人有独立的钱包和银行，还能给队友转两百金。这段四对四是我加七个电脑，真人联机最多支持八人。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 10.848,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1750000,
+      "text": "多"
+    },
+    {
+      "offset": 2750000,
+      "duration": 1625000,
+      "text": "人"
+    },
+    {
+      "offset": 4500000,
+      "duration": 4875000,
+      "text": "对战"
+    },
+    {
+      "offset": 10500000,
+      "duration": 5250000,
+      "text": "每个人"
+    },
+    {
+      "offset": 16000000,
+      "duration": 1250000,
+      "text": "有"
+    },
+    {
+      "offset": 17375000,
+      "duration": 2750000,
+      "text": "独立"
+    },
+    {
+      "offset": 20125000,
+      "duration": 875000,
+      "text": "的"
+    },
+    {
+      "offset": 21125000,
+      "duration": 4375000,
+      "text": "钱包"
+    },
+    {
+      "offset": 25750000,
+      "duration": 875000,
+      "text": "和"
+    },
+    {
+      "offset": 26750000,
+      "duration": 5125000,
+      "text": "银行"
+    },
+    {
+      "offset": 34375000,
+      "duration": 1750000,
+      "text": "还"
+    },
+    {
+      "offset": 36125000,
+      "duration": 1000000,
+      "text": "能"
+    },
+    {
+      "offset": 37250000,
+      "duration": 1250000,
+      "text": "给"
+    },
+    {
+      "offset": 38625000,
+      "duration": 2500000,
+      "text": "队友"
+    },
+    {
+      "offset": 41375000,
+      "duration": 1750000,
+      "text": "转"
+    },
+    {
+      "offset": 43250000,
+      "duration": 3375000,
+      "text": "两百"
+    },
+    {
+      "offset": 46625000,
+      "duration": 2625000,
+      "text": "金"
+    },
+    {
+      "offset": 54875000,
+      "duration": 2000000,
+      "text": "这"
+    },
+    {
+      "offset": 56875000,
+      "duration": 1375000,
+      "text": "段"
+    },
+    {
+      "offset": 58500000,
+      "duration": 6375000,
+      "text": "四对四"
+    },
+    {
+      "offset": 65875000,
+      "duration": 2125000,
+      "text": "是"
+    },
+    {
+      "offset": 68000000,
+      "duration": 875000,
+      "text": "我"
+    },
+    {
+      "offset": 69000000,
+      "duration": 1375000,
+      "text": "加"
+    },
+    {
+      "offset": 70625000,
+      "duration": 2125000,
+      "text": "七"
+    },
+    {
+      "offset": 72750000,
+      "duration": 625000,
+      "text": "个"
+    },
+    {
+      "offset": 73500000,
+      "duration": 4250000,
+      "text": "电脑"
+    },
+    {
+      "offset": 82125000,
+      "duration": 3250000,
+      "text": "真人"
+    },
+    {
+      "offset": 85500000,
+      "duration": 4125000,
+      "text": "联机"
+    },
+    {
+      "offset": 89875000,
+      "duration": 3375000,
+      "text": "最多"
+    },
+    {
+      "offset": 93375000,
+      "duration": 2375000,
+      "text": "支持"
+    },
+    {
+      "offset": 95875000,
+      "duration": 2125000,
+      "text": "八"
+    },
+    {
+      "offset": 98000000,
+      "duration": 1875000,
+      "text": "人"
+    }
+  ]
+}

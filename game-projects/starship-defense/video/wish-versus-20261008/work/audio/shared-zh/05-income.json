@@ -1,0 +1,128 @@
+{
+  "text": "银行每十秒给钱，升级后从六十涨到八十五。长远赚得更多，但对手不会等你慢慢发育。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 8.928,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3875000,
+      "text": "银行"
+    },
+    {
+      "offset": 5125000,
+      "duration": 1625000,
+      "text": "每"
+    },
+    {
+      "offset": 6750000,
+      "duration": 1625000,
+      "text": "十"
+    },
+    {
+      "offset": 8375000,
+      "duration": 2000000,
+      "text": "秒"
+    },
+    {
+      "offset": 10500000,
+      "duration": 1375000,
+      "text": "给"
+    },
+    {
+      "offset": 11875000,
+      "duration": 4000000,
+      "text": "钱"
+    },
+    {
+      "offset": 19000000,
+      "duration": 3750000,
+      "text": "升级"
+    },
+    {
+      "offset": 22750000,
+      "duration": 3000000,
+      "text": "后"
+    },
+    {
+      "offset": 26000000,
+      "duration": 2625000,
+      "text": "从"
+    },
+    {
+      "offset": 28750000,
+      "duration": 3125000,
+      "text": "六十"
+    },
+    {
+      "offset": 32125000,
+      "duration": 1500000,
+      "text": "涨"
+    },
+    {
+      "offset": 33625000,
+      "duration": 1750000,
+      "text": "到"
+    },
+    {
+      "offset": 35625000,
+      "duration": 5500000,
+      "text": "八十五"
+    },
+    {
+      "offset": 46875000,
+      "duration": 4125000,
+      "text": "长远"
+    },
+    {
+      "offset": 51250000,
+      "duration": 1250000,
+      "text": "赚"
+    },
+    {
+      "offset": 52500000,
+      "duration": 750000,
+      "text": "得"
+    },
+    {
+      "offset": 53375000,
+      "duration": 5000000,
+      "text": "更多"
+    },
+    {
+      "offset": 61625000,
+      "duration": 1500000,
+      "text": "但"
+    },
+    {
+      "offset": 63250000,
+      "duration": 4875000,
+      "text": "对手"
+    },
+    {
+      "offset": 68375000,
+      "duration": 2625000,
+      "text": "不会"
+    },
+    {
+      "offset": 71000000,
+      "duration": 1250000,
+      "text": "等"
+    },
+    {
+      "offset": 72250000,
+      "duration": 1125000,
+      "text": "你"
+    },
+    {
+      "offset": 73625000,
+      "duration": 2750000,
+      "text": "慢慢"
+    },
+    {
+      "offset": 76500000,
+      "duration": 3875000,
+      "text": "发育"
+    }
+  ]
+}

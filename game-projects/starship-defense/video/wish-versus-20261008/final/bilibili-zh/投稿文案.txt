@@ -1,0 +1,27 @@
+﻿【标题】
+愿望榜第一名做出来了：双人塔防还能4对4｜虫潮围城
+
+【标签】
+虫潮围城
+塔防
+联机游戏
+游戏开发
+AI
+Claude
+bilibilitoy
+
+【话题】
+哔哩哔哩Toy创意挑战
+https://www.bilibili.com/v/topic/detail?topic_id=1346285
+
+【简介】
+网友想玩双人对战塔防，我把它做进虫潮围城：定时赚钱、升级银行、派兵拆核心，从1对1扩到4对4；本片含电脑对战与队伍操作演示。
+哔哩哔哩 Toy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html
+百宝箱试玩（复制到浏览器）：https://www.zhengxiaohui.cn/games.html
+虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。
+投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）
+
+【置顶评论】
+你会先升级银行，还是先出兵？点开虫潮围城，主菜单选择「虫潮对战」。
+Toy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html
+投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）

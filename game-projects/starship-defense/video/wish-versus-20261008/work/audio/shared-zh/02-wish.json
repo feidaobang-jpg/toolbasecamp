@@ -1,0 +1,113 @@
+{
+  "text": "这条愿望拿到了十一票。要求很具体：定时赚钱，升级银行，派不同兵种，和朋友线上对决。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 9.6,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2000000,
+      "text": "这"
+    },
+    {
+      "offset": 3000000,
+      "duration": 1375000,
+      "text": "条"
+    },
+    {
+      "offset": 4500000,
+      "duration": 5125000,
+      "text": "愿望"
+    },
+    {
+      "offset": 10500000,
+      "duration": 2750000,
+      "text": "拿到"
+    },
+    {
+      "offset": 13250000,
+      "duration": 750000,
+      "text": "了"
+    },
+    {
+      "offset": 14250000,
+      "duration": 3875000,
+      "text": "十一"
+    },
+    {
+      "offset": 18125000,
+      "duration": 2875000,
+      "text": "票"
+    },
+    {
+      "offset": 26625000,
+      "duration": 3500000,
+      "text": "要求"
+    },
+    {
+      "offset": 30375000,
+      "duration": 1875000,
+      "text": "很"
+    },
+    {
+      "offset": 32250000,
+      "duration": 4625000,
+      "text": "具体"
+    },
+    {
+      "offset": 39625000,
+      "duration": 3875000,
+      "text": "定时"
+    },
+    {
+      "offset": 43625000,
+      "duration": 5750000,
+      "text": "赚钱"
+    },
+    {
+      "offset": 51000000,
+      "duration": 4375000,
+      "text": "升级"
+    },
+    {
+      "offset": 55500000,
+      "duration": 5375000,
+      "text": "银行"
+    },
+    {
+      "offset": 62875000,
+      "duration": 2125000,
+      "text": "派"
+    },
+    {
+      "offset": 65250000,
+      "duration": 2875000,
+      "text": "不同"
+    },
+    {
+      "offset": 68250000,
+      "duration": 4250000,
+      "text": "兵种"
+    },
+    {
+      "offset": 74500000,
+      "duration": 1500000,
+      "text": "和"
+    },
+    {
+      "offset": 76125000,
+      "duration": 4625000,
+      "text": "朋友线"
+    },
+    {
+      "offset": 80750000,
+      "duration": 1375000,
+      "text": "上"
+    },
+    {
+      "offset": 82250000,
+      "duration": 5000000,
+      "text": "对决"
+    }
+  ]
+}

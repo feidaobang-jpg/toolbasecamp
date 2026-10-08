@@ -1,0 +1,860 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 104.26666666666667,
+  "segments": [
+    {
+      "id": "01-hook",
+      "text": "网友想玩双人对战塔防。现在能玩了，而且还能打四对四。",
+      "en": "A viewer asked for head-to-head tower defense. It's playable now, and it even supports four versus four.",
+      "start": 0,
+      "end": 6.7,
+      "duration": 6.7,
+      "voice_duration": 6.336,
+      "voice_offset": 0.12,
+      "frames": 201,
+      "wav": "audio\\shared-zh\\01-hook.wav"
+    },
+    {
+      "id": "02-wish",
+      "text": "这条愿望拿到了十一票。要求很具体：定时赚钱，升级银行，派不同兵种，和朋友线上对决。",
+      "en": "This wish received eleven votes. The request was specific: earn income over time, upgrade a bank, deploy different units, and battle friends online.",
+      "start": 6.7,
+      "end": 16.666666666666668,
+      "duration": 9.966666666666667,
+      "voice_duration": 9.6,
+      "voice_offset": 0.12,
+      "frames": 299,
+      "wav": "audio\\shared-zh\\02-wish.wav"
+    },
+    {
+      "id": "03-mode",
+      "text": "我把它做成了虫潮围城里的虫潮对战。可以打一对一，也能选二对二、三对三、四对四。",
+      "en": "I made it a Versus mode inside 虫潮围城, Swarm Siege. Choose one versus one, two versus two, three versus three, or four versus four.",
+      "start": 16.666666666666668,
+      "end": 25.3,
+      "duration": 8.633333333333333,
+      "voice_duration": 8.28,
+      "voice_offset": 0.12,
+      "frames": 259,
+      "wav": "audio\\shared-zh\\03-mode.wav"
+    },
+    {
+      "id": "04-bank",
+      "text": "开局六百金，先花五百升级银行，手里就只剩一百。想马上出兵？得等下一笔收入。",
+      "en": "You start with 600 gold. Spend 500 upgrading your bank, and only 100 remains. Want to deploy right away? You'll have to wait for the next income payment.",
+      "start": 25.3,
+      "end": 34.63333333333333,
+      "duration": 9.333333333333334,
+      "voice_duration": 8.976,
+      "voice_offset": 0.12,
+      "frames": 280,
+      "wav": "audio\\shared-zh\\04-bank.wav"
+    },
+    {
+      "id": "05-income",
+      "text": "银行每十秒给钱，升级后从六十涨到八十五。长远赚得更多，但对手不会等你慢慢发育。",
+      "en": "The bank pays every ten seconds. Upgrading raises each payment from 60 to 85. You earn more over time, but your opponent won't wait for you to build your economy.",
+      "start": 34.63333333333333,
+      "end": 43.93333333333334,
+      "duration": 9.3,
+      "voice_duration": 8.928,
+      "voice_offset": 0.12,
+      "frames": 279,
+      "wav": "audio\\shared-zh\\05-income.wav"
+    },
+    {
+      "id": "06-units",
+      "text": "攒够钱，就派小虫群和机枪小队。它们沿选定路线前进，遇敌交战，目标是拆掉对方核心。",
+      "en": "Save enough gold, then deploy bug swarms and machine-gun squads. They advance along your chosen route, engage enemies, and try to destroy the opposing core.",
+      "start": 43.93333333333334,
+      "end": 54.2,
+      "duration": 10.266666666666667,
+      "voice_duration": 9.912,
+      "voice_offset": 0.12,
+      "frames": 308,
+      "wav": "audio\\shared-zh\\06-units.wav"
+    },
+    {
+      "id": "07-hero",
+      "text": "自己也能跟着部队上前线，开枪、扔手雷。既要管钱，也要看住战场。",
+      "en": "You can join your troops on the front line, shoot, and throw grenades. You need to manage your money and keep an eye on the battlefield.",
+      "start": 54.2,
+      "end": 62.300000000000004,
+      "duration": 8.1,
+      "voice_duration": 7.728,
+      "voice_offset": 0.12,
+      "frames": 243,
+      "wav": "audio\\shared-zh\\07-hero.wav"
+    },
+    {
+      "id": "08-team",
+      "text": "多人对战每个人有独立的钱包和银行，还能给队友转两百金。这段四对四是我加七个电脑，真人联机最多支持八人。",
+      "en": "In team matches, each player has a separate wallet and bank. You can transfer 200 gold to a teammate. This four-versus-four demonstration uses me and seven bots; online rooms support up to eight human players.",
+      "start": 62.300000000000004,
+      "end": 73.5,
+      "duration": 11.2,
+      "voice_duration": 10.848,
+      "voice_offset": 0.12,
+      "frames": 336,
+      "wav": "audio\\shared-zh\\08-team.wav"
+    },
+    {
+      "id": "09-result",
+      "text": "一对一打赢了电脑，另一场四对四却输了。十五分钟结束，我方核心剩百分之七十六，对面百分之九十一。出兵更多，不等于赢。接下来继续打磨对局节奏和兵种平衡。",
+      "en": "I beat the computer in one versus one, but lost a separate four-versus-four match. At the fifteen-minute limit, our core had 76 percent health left and theirs had 91 percent. Deploying more troops does not guarantee a win. Next I will keep refining match pacing and unit balance.",
+      "start": 73.5,
+      "end": 89.5,
+      "duration": 16.0,
+      "voice_duration": 15.648,
+      "voice_offset": 0.12,
+      "frames": 480,
+      "wav": "audio\\shared-zh\\09-result.wav"
+    },
+    {
+      "id": "10-close",
+      "text": "愿望单已经标成已实现、可试玩，原需求和十一票都保留。去哔哩哔哩Toy或百宝箱试一局。你会先升级银行，还是先出兵？",
+      "en": "The wish is now marked as fulfilled and playable, with the original request and eleven votes preserved. Try it on Bilibili Toy or Treasure Box. Would you upgrade your bank first, or deploy units first?",
+      "start": 89.5,
+      "end": 104.26666666666667,
+      "duration": 14.766666666666667,
+      "voice_duration": 12.408,
+      "voice_offset": 0.12,
+      "frames": 443,
+      "wav": "audio\\shared-zh\\10-close.wav"
+    }
+  ],
+  "shots": [
+    {
+      "index": 0,
+      "segment": "01-hook",
+      "start": 0,
+      "end": 6.7,
+      "duration": 6.7,
+      "frames": 201,
+      "source": "capture-1v1/04-late-battle/raw.mp4",
+      "source_in": 6,
+      "source_out": 12.7,
+      "speed": 1,
+      "label": "1 对 1 · 玩家对电脑",
+      "still": false
+    },
+    {
+      "index": 1,
+      "segment": "02-wish",
+      "start": 6.7,
+      "end": 16.666666666666668,
+      "duration": 9.966666666666667,
+      "frames": 299,
+      "source": "edit/shared-zh/wish.png",
+      "source_in": 0,
+      "source_out": 9.966666666666667,
+      "speed": 1,
+      "label": "",
+      "still": true
+    },
+    {
+      "index": 2,
+      "segment": "03-mode",
+      "start": 16.666666666666668,
+      "end": 25.3,
+      "duration": 8.633333333333333,
+      "frames": 259,
+      "source": "capture-menu/01-menu/raw.mp4",
+      "source_in": 0,
+      "source_out": 8.633333333333333,
+      "speed": 1,
+      "label": "规模选择 · 当前版本",
+      "still": false
+    },
+    {
+      "index": 3,
+      "segment": "04-bank",
+      "start": 25.3,
+      "end": 34.63333333333333,
+      "duration": 9.333333333333334,
+      "frames": 280,
+      "source": "capture/01-bank-and-opening/raw.mp4",
+      "source_in": 0,
+      "source_out": 9.333333333333334,
+      "speed": 1,
+      "label": "4 对 4 · 银行升级",
+      "still": false
+    },
+    {
+      "index": 4,
+      "segment": "05-income",
+      "start": 34.63333333333333,
+      "end": 43.93333333333334,
+      "duration": 9.3,
+      "frames": 279,
+      "source": "capture/01-bank-and-opening/raw.mp4",
+      "source_in": 9,
+      "source_out": 18.3,
+      "speed": 1,
+      "label": "每 10 秒结算收入 · 开局阶段",
+      "still": false
+    },
+    {
+      "index": 5,
+      "segment": "06-units",
+      "start": 43.93333333333334,
+      "end": 49.53333333333334,
+      "duration": 5.6,
+      "frames": 168,
+      "source": "capture-units/01-unit-deployment/raw.mp4",
+      "source_in": 1,
+      "source_out": 6.6,
+      "speed": 1,
+      "label": "1 对 1 · 出兵操作演示",
+      "still": false
+    },
+    {
+      "index": 6,
+      "segment": "06-units",
+      "start": 49.53333333333334,
+      "end": 54.2,
+      "duration": 4.666666666666667,
+      "frames": 140,
+      "source": "capture-1v1/03-early-battle/raw.mp4",
+      "source_in": 31,
+      "source_out": 35.666666666666664,
+      "speed": 1,
+      "label": "1 对 1 · 实际交战",
+      "still": false
+    },
+    {
+      "index": 7,
+      "segment": "07-hero",
+      "start": 54.2,
+      "end": 62.300000000000004,
+      "duration": 8.1,
+      "frames": 243,
+      "source": "capture-1v1/03-early-battle/raw.mp4",
+      "source_in": 36,
+      "source_out": 44.1,
+      "speed": 1,
+      "label": "1 对 1 · 实际交战",
+      "still": false
+    },
+    {
+      "index": 8,
+      "segment": "08-team",
+      "start": 62.300000000000004,
+      "end": 73.5,
+      "duration": 11.2,
+      "frames": 336,
+      "source": "capture-team/01-team-transfer/raw.mp4",
+      "source_in": 0,
+      "source_out": 11.2,
+      "speed": 1,
+      "label": "4 对 4 · 1 名玩家 + 7 名电脑",
+      "still": false
+    },
+    {
+      "index": 9,
+      "segment": "09-result",
+      "start": 73.5,
+      "end": 76.7,
+      "duration": 3.2,
+      "frames": 96,
+      "source": "capture-1v1/06-real-result/raw.mp4",
+      "source_in": 0,
+      "source_out": 3.2,
+      "speed": 1,
+      "label": "1 对 1 · 13:27 实际结算",
+      "still": false
+    },
+    {
+      "index": 10,
+      "segment": "09-result",
+      "start": 76.7,
+      "end": 82.7,
+      "duration": 6.0,
+      "frames": 180,
+      "source": "capture/06-real-result/raw.mp4",
+      "source_in": 0,
+      "source_out": 6.0,
+      "speed": 1,
+      "label": "另一场 4 对 4 · 15:00 实际结算",
+      "still": false
+    },
+    {
+      "index": 11,
+      "segment": "09-result",
+      "start": 82.7,
+      "end": 89.5,
+      "duration": 6.8,
+      "frames": 204,
+      "source": "edit/shared-zh/result-recap.png",
+      "source_in": 0,
+      "source_out": 6.8,
+      "speed": 1,
+      "label": "",
+      "still": true
+    },
+    {
+      "index": 12,
+      "segment": "10-close",
+      "start": 89.5,
+      "end": 94.1,
+      "duration": 4.6,
+      "frames": 138,
+      "source": "qa/production-hub-1440.png",
+      "source_in": 0,
+      "source_out": 4.6,
+      "speed": 1,
+      "label": "愿望单 · 网站已上线",
+      "still": true
+    },
+    {
+      "index": 13,
+      "segment": "10-close",
+      "start": 94.1,
+      "end": 104.26666666666667,
+      "duration": 10.166666666666666,
+      "frames": 305,
+      "source": "edit/shared-zh/closing.png",
+      "source_in": 0,
+      "source_out": 10.166666666666666,
+      "speed": 1,
+      "label": "",
+      "still": true
+    }
+  ],
+  "subtitles": [
+    {
+      "start": 0.22,
+      "end": 2.515,
+      "text": "网友想玩双人对战塔防。",
+      "segment": "01-hook"
+    },
+    {
+      "start": 3.0075000000000003,
+      "end": 4.0275,
+      "text": "现在能玩了，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 4.2825,
+      "end": 5.652500000000001,
+      "text": "而且还能打四对四。",
+      "segment": "01-hook"
+    },
+    {
+      "start": 6.92,
+      "end": 8.99,
+      "text": "这条愿望拿到了十一票。",
+      "segment": "02-wish"
+    },
+    {
+      "start": 9.4825,
+      "end": 11.8275,
+      "text": "要求很具体：定时赚钱，",
+      "segment": "02-wish"
+    },
+    {
+      "start": 11.92,
+      "end": 12.977500000000001,
+      "text": "升级银行，",
+      "segment": "02-wish"
+    },
+    {
+      "start": 13.1075,
+      "end": 14.14,
+      "text": "派不同兵种，",
+      "segment": "02-wish"
+    },
+    {
+      "start": 14.27,
+      "end": 15.615,
+      "text": "和朋友线上对决。",
+      "segment": "02-wish"
+    },
+    {
+      "start": 16.88666666666667,
+      "end": 19.70666666666667,
+      "text": "我把它做成了虫潮围城里的虫潮对战。",
+      "segment": "03-mode"
+    },
+    {
+      "start": 20.21166666666667,
+      "end": 21.10666666666667,
+      "text": "可以打一对一，",
+      "segment": "03-mode"
+    },
+    {
+      "start": 21.22416666666667,
+      "end": 24.26916666666667,
+      "text": "也能选二对二、三对三、四对四。",
+      "segment": "03-mode"
+    },
+    {
+      "start": 25.520000000000003,
+      "end": 26.665000000000003,
+      "text": "开局六百金，",
+      "segment": "04-bank"
+    },
+    {
+      "start": 26.795,
+      "end": 28.465000000000003,
+      "text": "先花五百升级银行，",
+      "segment": "04-bank"
+    },
+    {
+      "start": 28.595000000000002,
+      "end": 30.2025,
+      "text": "手里就只剩一百。",
+      "segment": "04-bank"
+    },
+    {
+      "start": 30.707500000000003,
+      "end": 31.852500000000003,
+      "text": "想马上出兵？",
+      "segment": "04-bank"
+    },
+    {
+      "start": 32.3575,
+      "end": 33.5775,
+      "text": "得等下一笔收入。",
+      "segment": "04-bank"
+    },
+    {
+      "start": 34.85333333333333,
+      "end": 36.41083333333333,
+      "text": "银行每十秒给钱，",
+      "segment": "05-income"
+    },
+    {
+      "start": 36.65333333333333,
+      "end": 38.93583333333333,
+      "text": "升级后从六十涨到八十五。",
+      "segment": "05-income"
+    },
+    {
+      "start": 39.44083333333333,
+      "end": 40.66083333333333,
+      "text": "长远赚得更多，",
+      "segment": "05-income"
+    },
+    {
+      "start": 40.91583333333333,
+      "end": 42.86083333333333,
+      "text": "但对手不会等你慢慢发育。",
+      "segment": "05-income"
+    },
+    {
+      "start": 44.153333333333336,
+      "end": 45.02333333333333,
+      "text": "攒够钱，",
+      "segment": "06-units"
+    },
+    {
+      "start": 45.14083333333333,
+      "end": 47.52333333333333,
+      "text": "就派小虫群和机枪小队。",
+      "segment": "06-units"
+    },
+    {
+      "start": 48.028333333333336,
+      "end": 49.660833333333336,
+      "text": "它们沿选定路线前进，",
+      "segment": "06-units"
+    },
+    {
+      "start": 49.928333333333335,
+      "end": 50.79833333333333,
+      "text": "遇敌交战，",
+      "segment": "06-units"
+    },
+    {
+      "start": 51.07833333333333,
+      "end": 53.160833333333336,
+      "text": "目标是拆掉对方核心。",
+      "segment": "06-units"
+    },
+    {
+      "start": 54.42,
+      "end": 56.2275,
+      "text": "自己也能跟着部队上前线，",
+      "segment": "07-hero"
+    },
+    {
+      "start": 56.52,
+      "end": 58.4025,
+      "text": "开枪、扔手雷。",
+      "segment": "07-hero"
+    },
+    {
+      "start": 58.895,
+      "end": 59.915,
+      "text": "既要管钱，",
+      "segment": "07-hero"
+    },
+    {
+      "start": 60.1575,
+      "end": 61.24,
+      "text": "也要看住战场。",
+      "segment": "07-hero"
+    },
+    {
+      "start": 62.52,
+      "end": 65.6775,
+      "text": "多人对战每个人有独立的钱包和银行，",
+      "segment": "08-team"
+    },
+    {
+      "start": 65.8575,
+      "end": 67.41499999999999,
+      "text": "还能给队友转两百金。",
+      "segment": "08-team"
+    },
+    {
+      "start": 67.9075,
+      "end": 70.265,
+      "text": "这段四对四是我加七个电脑，",
+      "segment": "08-team"
+    },
+    {
+      "start": 70.63250000000001,
+      "end": 72.47749999999999,
+      "text": "真人联机最多支持八人。",
+      "segment": "08-team"
+    },
+    {
+      "start": 73.72,
+      "end": 75.0025,
+      "text": "一对一打赢了电脑，",
+      "segment": "09-result"
+    },
+    {
+      "start": 75.1825,
+      "end": 76.8025,
+      "text": "另一场四对四却输了。",
+      "segment": "09-result"
+    },
+    {
+      "start": 77.295,
+      "end": 78.515,
+      "text": "十五分钟结束，",
+      "segment": "09-result"
+    },
+    {
+      "start": 78.795,
+      "end": 80.85249999999999,
+      "text": "我方核心剩百分之七十六，",
+      "segment": "09-result"
+    },
+    {
+      "start": 81.08250000000001,
+      "end": 82.3775,
+      "text": "对面百分之九十一。",
+      "segment": "09-result"
+    },
+    {
+      "start": 82.88250000000001,
+      "end": 83.7775,
+      "text": "出兵更多，",
+      "segment": "09-result"
+    },
+    {
+      "start": 83.995,
+      "end": 84.6525,
+      "text": "不等于赢。",
+      "segment": "09-result"
+    },
+    {
+      "start": 85.13250000000001,
+      "end": 88.4525,
+      "text": "接下来继续打磨对局节奏和兵种平衡。",
+      "segment": "09-result"
+    },
+    {
+      "start": 89.72,
+      "end": 92.7525,
+      "text": "愿望单已经标成已实现、可试玩，",
+      "segment": "10-close"
+    },
+    {
+      "start": 92.9325,
+      "end": 94.94,
+      "text": "原需求和十一票都保留。",
+      "segment": "10-close"
+    },
+    {
+      "start": 95.44500000000001,
+      "end": 98.1525,
+      "text": "去哔哩哔哩Toy或百宝箱试一局。",
+      "segment": "10-close"
+    },
+    {
+      "start": 98.64500000000001,
+      "end": 100.115,
+      "text": "你会先升级银行，",
+      "segment": "10-close"
+    },
+    {
+      "start": 100.39500000000001,
+      "end": 101.22749999999999,
+      "text": "还是先出兵？",
+      "segment": "10-close"
+    }
+  ],
+  "english_subtitles": [
+    {
+      "start": 0.22,
+      "end": 2.515,
+      "text": "A viewer asked for head-to-head tower defense.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 3.0075000000000003,
+      "end": 5.652500000000001,
+      "text": "It is playable now, and even supports four versus four.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 6.92,
+      "end": 8.99,
+      "text": "This wish received eleven votes.",
+      "segment": "02-wish"
+    },
+    {
+      "start": 9.4825,
+      "end": 11.8275,
+      "text": "The request was specific: earn income over time,",
+      "segment": "02-wish"
+    },
+    {
+      "start": 11.92,
+      "end": 14.14,
+      "text": "upgrade a bank, deploy different units,",
+      "segment": "02-wish"
+    },
+    {
+      "start": 14.27,
+      "end": 15.615,
+      "text": "and battle friends online.",
+      "segment": "02-wish"
+    },
+    {
+      "start": 16.88666666666667,
+      "end": 19.70666666666667,
+      "text": "I made it a Versus mode inside 虫潮围城, Swarm Siege.",
+      "segment": "03-mode"
+    },
+    {
+      "start": 20.21166666666667,
+      "end": 21.10666666666667,
+      "text": "Play one versus one,",
+      "segment": "03-mode"
+    },
+    {
+      "start": 21.22416666666667,
+      "end": 24.26916666666667,
+      "text": "or choose two versus two, three versus three, or four versus four.",
+      "segment": "03-mode"
+    },
+    {
+      "start": 25.520000000000003,
+      "end": 26.665000000000003,
+      "text": "You start with 600 gold.",
+      "segment": "04-bank"
+    },
+    {
+      "start": 26.795,
+      "end": 28.465000000000003,
+      "text": "Spend 500 upgrading your bank,",
+      "segment": "04-bank"
+    },
+    {
+      "start": 28.595000000000002,
+      "end": 30.2025,
+      "text": "and only 100 remains.",
+      "segment": "04-bank"
+    },
+    {
+      "start": 30.707500000000003,
+      "end": 31.852500000000003,
+      "text": "Want to deploy right away?",
+      "segment": "04-bank"
+    },
+    {
+      "start": 32.3575,
+      "end": 33.5775,
+      "text": "Wait for the next income payment.",
+      "segment": "04-bank"
+    },
+    {
+      "start": 34.85333333333333,
+      "end": 36.41083333333333,
+      "text": "The bank pays every ten seconds.",
+      "segment": "05-income"
+    },
+    {
+      "start": 36.65333333333333,
+      "end": 38.93583333333333,
+      "text": "Upgrading raises each payment from 60 to 85.",
+      "segment": "05-income"
+    },
+    {
+      "start": 39.44083333333333,
+      "end": 40.66083333333333,
+      "text": "You earn more over time,",
+      "segment": "05-income"
+    },
+    {
+      "start": 40.91583333333333,
+      "end": 42.86083333333333,
+      "text": "but your opponent will not wait for your economy.",
+      "segment": "05-income"
+    },
+    {
+      "start": 44.153333333333336,
+      "end": 47.52333333333333,
+      "text": "Save enough gold, then deploy bug swarms and machine-gun squads.",
+      "segment": "06-units"
+    },
+    {
+      "start": 48.028333333333336,
+      "end": 49.660833333333336,
+      "text": "They advance along your chosen route,",
+      "segment": "06-units"
+    },
+    {
+      "start": 49.928333333333335,
+      "end": 50.79833333333333,
+      "text": "engage enemies,",
+      "segment": "06-units"
+    },
+    {
+      "start": 51.07833333333333,
+      "end": 53.160833333333336,
+      "text": "and try to destroy the opposing core.",
+      "segment": "06-units"
+    },
+    {
+      "start": 54.42,
+      "end": 56.2275,
+      "text": "Join your troops on the front line,",
+      "segment": "07-hero"
+    },
+    {
+      "start": 56.52,
+      "end": 58.4025,
+      "text": "shoot, and throw grenades.",
+      "segment": "07-hero"
+    },
+    {
+      "start": 58.895,
+      "end": 59.915,
+      "text": "Manage your money",
+      "segment": "07-hero"
+    },
+    {
+      "start": 60.1575,
+      "end": 61.24,
+      "text": "and keep an eye on the battlefield.",
+      "segment": "07-hero"
+    },
+    {
+      "start": 62.52,
+      "end": 65.6775,
+      "text": "Each player has a separate wallet and bank in team matches.",
+      "segment": "08-team"
+    },
+    {
+      "start": 65.8575,
+      "end": 67.41499999999999,
+      "text": "You can transfer 200 gold to a teammate.",
+      "segment": "08-team"
+    },
+    {
+      "start": 67.9075,
+      "end": 70.265,
+      "text": "This four-versus-four demonstration uses me and seven bots.",
+      "segment": "08-team"
+    },
+    {
+      "start": 70.63250000000001,
+      "end": 72.47749999999999,
+      "text": "Online rooms support up to eight human players.",
+      "segment": "08-team"
+    },
+    {
+      "start": 73.72,
+      "end": 75.0025,
+      "text": "I beat the computer in one versus one,",
+      "segment": "09-result"
+    },
+    {
+      "start": 75.1825,
+      "end": 76.8025,
+      "text": "but lost a separate four-versus-four match.",
+      "segment": "09-result"
+    },
+    {
+      "start": 77.295,
+      "end": 78.515,
+      "text": "At the fifteen-minute limit,",
+      "segment": "09-result"
+    },
+    {
+      "start": 78.795,
+      "end": 80.85249999999999,
+      "text": "our core had 76 percent health left,",
+      "segment": "09-result"
+    },
+    {
+      "start": 81.08250000000001,
+      "end": 82.3775,
+      "text": "and theirs had 91 percent.",
+      "segment": "09-result"
+    },
+    {
+      "start": 82.88250000000001,
+      "end": 83.7775,
+      "text": "Deploying more troops",
+      "segment": "09-result"
+    },
+    {
+      "start": 83.995,
+      "end": 84.6525,
+      "text": "does not guarantee a win.",
+      "segment": "09-result"
+    },
+    {
+      "start": 85.13250000000001,
+      "end": 88.4525,
+      "text": "Next I will keep refining match pacing and unit balance.",
+      "segment": "09-result"
+    },
+    {
+      "start": 89.72,
+      "end": 92.7525,
+      "text": "The wish is now marked as fulfilled and playable.",
+      "segment": "10-close"
+    },
+    {
+      "start": 92.9325,
+      "end": 94.94,
+      "text": "The original request and eleven votes are preserved.",
+      "segment": "10-close"
+    },
+    {
+      "start": 95.44500000000001,
+      "end": 98.1525,
+      "text": "Try it on Bilibili Toy or Treasure Box.",
+      "segment": "10-close"
+    },
+    {
+      "start": 98.64500000000001,
+      "end": 101.22749999999999,
+      "text": "Would you upgrade your bank first, or deploy units first?",
+      "segment": "10-close"
+    }
+  ],
+  "time_scale": 1,
+  "normal_rules": true
+}
