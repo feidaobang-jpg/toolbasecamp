@@ -1,6 +1,6 @@
 {
   "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
-  "updated_at": "2026-10-08T10:50:19.799801+00:00",
+  "updated_at": "2026-10-08T10:57:56.309560+00:00",
   "approval_statement": "可以发布",
   "platforms": {
     "douyin": {
@@ -242,14 +242,17 @@
     }
   },
   "episode_id": "wish-versus-20261008",
-  "overall_status": "published",
+  "overall_status": "complete",
   "website_wishlist_video_url": {
     "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
-    "status": "pending_deploy_verification"
+    "status": "deployed_verified",
+    "record": "wishlist-video-deploy.json",
+    "original_votes": 11
   },
   "x": {
     "status": "skipped",
     "reason": "用户免费优先；本期没有可用免费官方发布能力，不转付费API或浏览器代发。"
   },
-  "remaining_platform_steps": []
+  "remaining_platform_steps": [],
+  "completed_at": "2026-10-08T10:57:56.309560+00:00"
 }

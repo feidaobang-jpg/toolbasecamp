@@ -37,9 +37,10 @@
     "toy_bind": true,
     "season_id": 9248439,
     "wishlist_video_url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
-    "x": "free official capability only; skip paid access"
+    "x": "free official capability only; skip paid access",
+    "wishlist_video_status": "deployed_verified"
   },
   "approval_statement": "可以发布",
-  "publication_status": "published",
+  "publication_status": "complete",
   "publication_result": "publication-result.json"
 }

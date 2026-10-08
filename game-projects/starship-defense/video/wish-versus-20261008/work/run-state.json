@@ -1,7 +1,7 @@
 {
   "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
   "approval_event_id": "wish-versus-final-review-4a922fbb-ccef-4625-97b0-a7be8bc16af2",
-  "stage": "published_pending_wishlist_deploy",
+  "stage": "complete",
   "requested_variants": [
     "bilibili-zh",
     "douyin-zh",
@@ -12,8 +12,8 @@
   "website_wishlist": "deployed_verified",
   "website_commit": "e53324f5bfc97ce8d08852b856d3aee42622c186",
   "wish_id": 11,
-  "updated_at": "2026-10-08T10:48:23.100599+00:00",
-  "next": "验证愿望单已上线真实视频入口并保存Git/部署回执。",
+  "updated_at": "2026-10-08T10:57:56.309560+00:00",
+  "next": null,
   "technical_checks": "pass",
   "subjective_listening": "not-run: audio input unavailable",
   "final_hashes": {
@@ -28,5 +28,10 @@
     "douyin": "https://www.douyin.com/video/7694239926304427298",
     "bilibili": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
     "youtube": "https://www.youtube.com/watch?v=QOTmOfT19_g"
-  }
+  },
+  "completed_at": "2026-10-08T10:57:56.309560+00:00",
+  "website_wishlist_video_url": "deployed_verified",
+  "website_video_commit": "a1f7118f",
+  "website_deployed_api_sha": "bd6d5af8974b370814a384aa4f2c78ca927ed88b",
+  "approval_event_status": "resolved"
 }
