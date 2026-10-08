@@ -10,11 +10,13 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 import os
 import re
 from datetime import datetime, timedelta, timezone
-from typing import Any, Callable, Dict, List, Optional
+from pathlib import Path
+from typing import Annotated, Any, Callable, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -30,6 +32,28 @@ except Exception:  # pragma: no cover - 环境相关兜底
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/game-votes", tags=["game-votes"])
 security = HTTPBearer(auto_error=False)
+
+# 发布进度独立于用户原文、可见性和选票；随已验证的游戏版本发布，不改数据库现场。
+WISH_PROGRESS = json.loads(Path(__file__).with_name("game_wish_progress.json").read_text(encoding="utf-8"))
+
+
+def _wish_progress(row: dict) -> dict:
+    record = WISH_PROGRESS.get(str(row["id"]), {})
+    if record.get("name") != row.get("name") or record.get("source") != row.get("source"):
+        return {"progress": "pending"}
+    return {key: value for key, value in record.items() if key not in ("name", "source")}
+
+
+def _progress_filter(progress: str, alias: str = "w") -> tuple[str, list]:
+    if progress == "all":
+        return "1=1", []
+    matches, params = [], []
+    for wish_id, record in WISH_PROGRESS.items():
+        if record.get("progress") == "fulfilled":
+            matches.append(f"({alias}.id=%s AND {alias}.name=%s AND {alias}.source=%s)")
+            params.extend((int(wish_id), record["name"], record["source"]))
+    fulfilled = "(" + " OR ".join(matches) + ")" if matches else "0=1"
+    return (fulfilled if progress == "fulfilled" else f"NOT {fulfilled}"), params
 
 _get_conn: Optional[Callable[..., Any]] = None
 _require_db: Optional[Callable[[], None]] = None
@@ -310,13 +334,15 @@ def _normalize_target(vote_type: str, target: str) -> str:
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT id, status FROM game_wishes WHERE id=%s", (wish_id,)
+                "SELECT id, name, source, status FROM game_wishes WHERE id=%s", (wish_id,)
             )
             row = cur.fetchone()
     finally:
         conn.close()
     if not row or int(row["status"]) != 1:
         raise HTTPException(status_code=400, detail="Wish not available")
+    if _wish_progress(row)["progress"] == "fulfilled":
+        raise HTTPException(status_code=400, detail="Wish already fulfilled; try the game or vote for another wish")
     return f"w{wish_id}"
 
 
@@ -372,13 +398,20 @@ def get_board(
     limit: int = Query(20, ge=1, le=20),
     offset: int = Query(0, ge=0),
     sort: str = Query("votes", pattern="^(votes|newest)$"),
+    progress: Annotated[str, Query(pattern="^(all|pending|fulfilled)$")] = "all",
 ) -> dict:
     """热度榜 + 愿望榜（公开、无鉴权，前端首屏和榜单卡都读它）。"""
     conn = _db()
     try:
         with conn.cursor() as cur:
             fav_rows = _favorite_counts(cur)
-            wish_rows = _wish_counts(cur, limit=limit, offset=offset, sort=sort)
+            wish_rows = _wish_counts(cur, limit=limit, offset=offset, sort=sort, progress=progress)
+            fulfilled_rows = _wish_counts(cur, limit=5, progress="fulfilled")
+            wish_counts = {}
+            for kind in ("pending", "fulfilled"):
+                where, params = _progress_filter(kind)
+                cur.execute(f"SELECT COUNT(*) AS c FROM game_wishes w WHERE w.status=1 AND {where}", params)
+                wish_counts[kind] = int((cur.fetchone() or {}).get("c") or 0)
             totals = _totals(cur)
     finally:
         conn.close()
@@ -404,6 +437,7 @@ def get_board(
             "votes": int(r["votes"]),
             "weekVotes": int(r["week_votes"] or 0),
             "createdAt": _cn_text(r["created_at"]),
+            **_wish_progress(r),
         }
         for r in wish_rows
     ]
@@ -416,8 +450,15 @@ def get_board(
         "totals": totals,
         "favorite": favorite,
         "wishlist": wishlist,
-        "wishlistTotal": totals["wishes"],
+        "wishlistTotal": totals["wishes"] if progress == "all" else wish_counts[progress],
         "wishlistOffset": offset,
+        "wishCounts": wish_counts,
+        "fulfilled": [
+            {"id": int(r["id"]), "key": f"w{r['id']}", "name": r["name"],
+             "note": r["note"] or "", "source": r["source"], "votes": int(r["votes"]),
+             "weekVotes": int(r["week_votes"] or 0), "createdAt": _cn_text(r["created_at"]),
+             **_wish_progress(r)} for r in fulfilled_rows
+        ],
         "updatedAt": _cn_text(_now_utc()),
     }
 
@@ -442,9 +483,11 @@ def _favorite_counts(cur) -> List[dict]:
 
 
 def _wish_counts(cur, limit: int = 20, include_hidden: bool = False,
-                 offset: int = 0, sort: str = "votes") -> List[dict]:
+                 offset: int = 0, sort: str = "votes", progress: str = "all") -> List[dict]:
     week_ago = _now_utc() - timedelta(days=7)
     where = "1=1" if include_hidden else "w.status=1"
+    progress_where, progress_params = _progress_filter(progress)
+    where += " AND " + progress_where
     order = "w.id DESC" if sort == "newest" else "w.status ASC, votes DESC, week_votes DESC, w.id DESC"
     cur.execute(
         f"""
@@ -459,7 +502,7 @@ def _wish_counts(cur, limit: int = 20, include_hidden: bool = False,
         ORDER BY {order}
         LIMIT %s OFFSET %s
         """,
-        (week_ago, VOTE_WISHLIST, limit, offset),
+        (week_ago, VOTE_WISHLIST, *progress_params, limit, offset),
     )
     return list(cur.fetchall())
 
@@ -703,6 +746,7 @@ def admin_wishes(user: dict = Depends(_admin_user)) -> dict:
                 "status": int(r["status"]),
                 "votes": int(r["votes"]),
                 "createdAt": _cn_text(r["created_at"]),
+                **_wish_progress(r),
             }
             for r in rows
         ],

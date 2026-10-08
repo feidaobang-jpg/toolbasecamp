@@ -493,3 +493,11 @@
 
 .gv-section-nav { margin-bottom: 1rem; }
 #gv-original-games, #gv-compose, #gv-wish-board { scroll-margin-top: 1rem; }
+
+.gv-progress { align-self: flex-start; margin: 4px 0; padding: 4px 9px; border-radius: 999px; background: #dcfce7; color: #166534; font-size: .75rem; font-weight: 600; }
+.gv-progress-links { margin-top: 8px; }
+.gv-progress-links .tb-btn { min-height: 44px; display: inline-flex; align-items: center; padding: 6px 14px; font-size: .8125rem; }
+.gv-progress-tabs { margin-bottom: 14px; }
+.gv-progress-tabs .tb-btn[aria-pressed="true"] { outline: 3px solid #bfdbfe; outline-offset: 2px; font-weight: 700; }
+.gvb-fulfilled { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #dbeafe; }
+.gvb-fulfilled-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0 16px; }

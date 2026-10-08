@@ -99,12 +99,21 @@
                         'gameVote.previewGames', 'gv-original-games') +
                 '</section>' +
                 '<section class="gvb-col">' +
-                    '<h3 class="gvb-col-title">' + esc(tr('gameVote.wishBoardTitle')) + '</h3>' +
+                    '<h3 class="gvb-col-title">' + esc(tr('gameVote.pendingBoardTitle')) + '</h3>' +
                     '<ol class="gvb-list">' + wishHtml + '</ol>' +
                     previewFooter(wishTotal, Math.min(TOP_N, wishes.length),
                         'gameVote.previewWishes', 'gv-wish-board') +
                 '</section>' +
-            '</div>';
+            '</div>' +
+            ((board.fulfilled || []).length ? '<section class="gvb-fulfilled">' +
+                '<h3 class="gvb-col-title">' + esc(tr('gameVote.fulfilledBoardTitle')) + '</h3>' +
+                '<ul class="gvb-list">' + board.fulfilled.map(function (item) {
+                    return '<li class="gvb-fulfilled-row"><span class="gv-row-main"><a class="gv-link" href="game-vote.html?progress=fulfilled#gv-wish-board">' +
+                        esc(item.name) + '</a>' + V.wishProgressHtml(item) + '</span><span class="gvb-votes">' + item.votes +
+                        ' ' + esc(tr('gameVote.voteSuffix')) + '</span></li>';
+                }).join('') + '</ul>' +
+                '<a class="gv-link" href="game-vote.html?progress=fulfilled#gv-wish-board">' + esc(tr('gameVote.viewAllFulfilled')) + '</a>' +
+            '</section>' : '');
     }
 
     function loadBoard() {

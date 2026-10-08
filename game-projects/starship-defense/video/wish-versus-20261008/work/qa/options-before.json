@@ -1,0 +1,84 @@
+{
+  "favorites": [
+    {
+      "key": "cadillacs-stage1-3d",
+      "url": "html/game/cadillacs-stage1-3d/index.html?v=3",
+      "titleKey": "tools.cadillacs3d.title"
+    },
+    {
+      "key": "jackal-stage1-3d",
+      "url": "html/game/jackal-stage1-3d/index.html?v=1",
+      "titleKey": "tools.jackal3d.title"
+    },
+    {
+      "key": "starship_defense",
+      "url": "html/game/starship_defense.html?v=7",
+      "titleKey": "tools.starshipDefense.title"
+    },
+    {
+      "key": "tank-3d",
+      "url": "html/game/tank-3d/index.html?v=2",
+      "titleKey": "tools.tank3d.title"
+    },
+    {
+      "key": "mario-3d",
+      "url": "html/game/mario-3d/index.html",
+      "titleKey": "tools.mario3d.title"
+    },
+    {
+      "key": "gemswap",
+      "url": "html/game/gemswap.html?v=10",
+      "titleKey": "tools.gemswap.title"
+    },
+    {
+      "key": "lianliankan",
+      "url": "html/game/lianliankan.html",
+      "titleKey": "tools.lianliankan.title"
+    },
+    {
+      "key": "bubble_dragon",
+      "url": "html/game/bubble_dragon.html?v=6",
+      "titleKey": "tools.bubbleDragon.title"
+    },
+    {
+      "key": "fly_bird",
+      "url": "html/game/fly_bird.html",
+      "titleKey": "tools.flyBird.title"
+    },
+    {
+      "key": "frog_zuma",
+      "url": "html/game/frog_zuma.html?v=6",
+      "titleKey": "tools.frogZuma.title"
+    },
+    {
+      "key": "worms",
+      "url": "html/game/worms.html?v=7",
+      "titleKey": "tools.worms.title"
+    },
+    {
+      "key": "brick_breaker",
+      "url": "html/game/brick_breaker.html?v=7",
+      "titleKey": "tools.brickBreaker.title"
+    },
+    {
+      "key": "sheepstack",
+      "url": "html/game/sheepstack.html?v=10",
+      "titleKey": "tools.sheepstack.title"
+    }
+  ],
+  "limits": {
+    "favorite": 3,
+    "wishlist": 5,
+    "wishSubmit": 3
+  },
+  "seedWishes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

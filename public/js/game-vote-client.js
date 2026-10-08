@@ -115,6 +115,23 @@
             .replace(/"/g, '&quot;');
     }
 
+    function wishProgressHtml(item) {
+        if (!item || item.progress !== 'fulfilled') return '';
+        var html = '<span class="gv-progress">' + escapeHtml(tr('gameVote.fulfilledBadge')) + '</span>';
+        if (item.gameName) html += '<span class="gv-note">' + escapeHtml(item.gameName) + '</span>';
+        if (item.releaseNote) html += '<span class="gv-note">' + escapeHtml(item.releaseNote) + '</span>';
+        var links = '';
+        [['playUrl', 'gameVote.playWish'], ['toyUrl', 'gameVote.toyWish'], ['videoUrl', 'gameVote.videoWish']].forEach(function (pair) {
+            if (!item[pair[0]]) return;
+            try {
+                var url = new URL(item[pair[0]], global.location.href);
+                if (url.protocol !== 'https:' && url.protocol !== 'http:') return;
+                links += '<a class="tb-btn" href="' + escapeHtml(url.href) + '">' + escapeHtml(tr(pair[1])) + '</a>';
+            } catch (e) { /* 无效地址不生成入口 */ }
+        });
+        return html + (links ? '<span class="action-row gv-progress-links">' + links + '</span>' : '');
+    }
+
     global.TBGameVote = {
         apiBase: apiBase,
         deviceId: deviceId,
@@ -122,9 +139,10 @@
         gameName: gameName,
         gameUrl: gameUrl,
         escapeHtml: escapeHtml,
-        getBoard: function (page, sort) {
+        wishProgressHtml: wishProgressHtml,
+        getBoard: function (page, sort, progress) {
             return request('/game-votes/board?limit=20&offset=' + (Math.max(0, (Number(page) || 1) - 1) * 20) +
-                '&sort=' + encodeURIComponent(sort || 'votes'));
+                '&sort=' + encodeURIComponent(sort || 'votes') + '&progress=' + encodeURIComponent(progress || 'pending'));
         },
         getOptions: function () { return request('/game-votes/options'); },
         getMyVotes: function () {
