@@ -1,0 +1,113 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "app_platforms": {
+          "current_value": [
+            "MOBILE",
+            "PC_OFFICIAL"
+          ],
+          "field_id": "app_platforms",
+          "filled": true,
+          "input_type": "select",
+          "label": "发布平台",
+          "options": [
+            "MOBILE",
+            "PC_OFFICIAL"
+          ],
+          "state": "required",
+          "value_labels": {
+            "MOBILE": "手机",
+            "PC_OFFICIAL": "电脑端-官方下载"
+          }
+        },
+        "itunes_id": {
+          "constraints": {
+            "max_length": 18,
+            "pattern_hint": "须为最多 18 位 Apple ID 数字"
+          },
+          "field_id": "itunes_id",
+          "filled": false,
+          "input_type": "text",
+          "label": "App Store ID",
+          "state": "optional"
+        },
+        "region_flag_android": {
+          "current_value": 4,
+          "field_id": "region_flag_android",
+          "filled": true,
+          "input_type": "select",
+          "label": "Android 发布状态",
+          "options": [
+            "1",
+            "3",
+            "4"
+          ],
+          "state": "required",
+          "value_labels": {
+            "1": "敬请期待",
+            "3": "预约",
+            "4": "提供游玩"
+          }
+        },
+        "region_flag_ios": {
+          "current_value": 0,
+          "field_id": "region_flag_ios",
+          "filled": true,
+          "input_type": "select",
+          "label": "iOS 发布状态",
+          "options": [
+            "1",
+            "3",
+            "0"
+          ],
+          "state": "required",
+          "value_labels": {
+            "0": "提供游玩",
+            "1": "敬请期待",
+            "3": "预约"
+          }
+        },
+        "region_flag_pc": {
+          "current_value": 4,
+          "field_id": "region_flag_pc",
+          "filled": true,
+          "input_type": "select",
+          "label": "Windows 发布状态",
+          "options": [
+            "1",
+            "3",
+            "4"
+          ],
+          "state": "required",
+          "value_labels": {
+            "1": "敬请期待",
+            "3": "预约",
+            "4": "提供游玩"
+          }
+        },
+        "steam_id": {
+          "constraints": {
+            "pattern_hint": "须为 Steam 数字 ID"
+          },
+          "field_id": "steam_id",
+          "filled": false,
+          "input_type": "text",
+          "label": "Steam ID",
+          "state": "optional"
+        }
+      },
+      "module_id": "platform-status",
+      "revision": 1047324
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

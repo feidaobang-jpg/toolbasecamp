@@ -23,6 +23,14 @@ const { launch, BASE, out, sleep } = require('./lib');
 
   await page.goto(BASE + '?test=1&seed=21', { waitUntil: 'load' });
   await sleep(800);
+  await T(() => localStorage.setItem('cd3d-stage1:stage', '2'));
+  await page.reload({ waitUntil: 'load' }); await sleep(1200);
+  let rollbackLabel = await T(() => document.querySelector('[data-opt=stage]').textContent);
+  ok('旧第三关选择安全回退到第二关', /第二关 · 沼泽森林/.test(rollbackLabel), rollbackLabel);
+  await T(() => document.querySelector('[data-opt=stage]').focus());
+  await page.keyboard.press('ArrowRight'); await sleep(100);
+  rollbackLabel = await T(() => document.querySelector('[data-opt=stage]').textContent);
+  ok('两关选择循环回第一关，没有第三关', /第一关 · 海上都市/.test(rollbackLabel), rollbackLabel);
   await T(() => { localStorage.removeItem('cd3d-stage1:stage'); localStorage.setItem('cd3d-stage1:hero', '0'); });
   await page.reload({ waitUntil: 'load' }); await sleep(1200);
   // ---------- 起始关卡选项 ----------
@@ -216,14 +224,16 @@ const { launch, BASE, out, sleep } = require('./lib');
   ok('打倒屠夫 → 过关', s.mode === 'clear' && s.cleared.indexOf(2) >= 0, [s.mode, s.cleared]);
   s = await until(x => x.ui.music.name === 'clear', 400);
   ok('过关放原版「Stage Clear」（不是合成曲）', s.ui.music.name === 'clear' && s.ui.music.original && !s.ui.music.synth, s.ui.music);
-  s = await until(x => x.areaId === 'hellroad', 1600, 20);
-  ok('第二关通关后接第三关，不弹中途结算', s.areaId === 'hellroad' && s.ui.overlay === null && s.cleared.includes(2), [s.areaId, s.cleared]);
-  ok('跨关体力回满', s.player.hp === 100, s.player.hp);
-  await until(x => x.mode === 'play' && !x.script, 200);
-  await page.keyboard.press('Escape'); await step(2);
-  await page.locator('#pause [data-act=restart]').click(); await step(2);
+  await T(() => window.__CD_TEST__.manual(false));
+  s = await (async () => { for (let i = 0; i < 60; i++) { const x = await S(); if (x.ui.overlay === 'result') return x; await sleep(300); } return S(); })();
+  const title = await T(() => document.getElementById('res-title').textContent);
+  const tally = await T(() => document.getElementById('tally').textContent);
+  ok('第二关结算画面', s.ui.overlay === 'result' && title === '第二关完成！', title);
+  ok('结算含屠夫', /屠夫/.test(tally), tally.slice(0, 160));
+  await shot('stage2-result.png');
+  await page.keyboard.press('Enter'); await sleep(400);
   s = await S();
-  ok('暂停重开回到所选的第二关', s.areaId === 'forest' && s.ui.overlay === null, [s.areaId, s.ui.overlay]);
+  ok('再玩一次回到所选的第二关', s.areaId === 'forest' && s.ui.overlay === null, [s.areaId, s.ui.overlay]);
 
   // ---------- 第一关打完接着打第二关 ----------
   await T(() => window.__CD_TEST__.manual(true));

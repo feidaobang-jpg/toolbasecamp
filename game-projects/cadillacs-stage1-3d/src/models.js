@@ -364,7 +364,6 @@ export const SPECS = {
   razor: { H: 1.94, build: 'thin', skin: '#c8906a', hair: { style: 'ponytail', color: '#2c1e16' }, shirt: { color: '#d6b04c', sleeves: 'none', tank: true }, pants: { color: '#4c6c9e' }, belt: '#2e2a24', boots: { color: '#3a3240', high: true } },
   lash: { H: 2.06, build: 'huge', skin: '#d89a6c', hair: { style: 'long', color: '#d8983e' }, vest: { color: '#6c4628' }, abs: true, pants: { color: '#5c3e26' }, belt: '#3a2818', straps: '#3a2818', boots: { color: '#3c2c1e', high: true }, wrist: '#4a3828' },
   butcher: { H: 2.2, build: 'brute', skin: '#e0a07a', hair: { style: 'bald' }, beard: '#ece6da', shirt: { color: '#c84a3e', sleeves: 'none', tank: true }, pants: { color: '#86587c' }, belt: '#5a3a20', boots: { color: '#5a3a24' }, wrist: '#7a4c96' },
-  hogg: { H: 2.03, build: 'huge', skin: '#c8936c', hair: { style: 'long', color: '#352a25' }, beard: '#3b2e28', vest: { color: '#393840' }, abs: true, pants: { color: '#556873' }, belt: '#392a21', boots: { color: '#302b29', high: true }, wrist: '#59534b' },
   // 大楼里的金色骑士雕像
   statue: { H: 1.9, build: 'muscle', gold: '#d6ae3e', hair: { style: 'helmet', color: '#d6ae3e' }, shirt: { color: '#d6ae3e', sleeves: 'long' }, pants: { color: '#d6ae3e' }, boots: { color: '#d6ae3e', high: true } }
 };
@@ -594,32 +593,6 @@ export function buildCar() {
   root.userData.wheels = wheels;
   return root;
 }
-// 霍格巡航摩托，正面沿 +Z。合并车架，普通模型树可直接同步。
-export function buildMotorcycle() {
-  const root = new THREE.Group(); root.name = 'hogg-motorcycle';
-  root.add(meshFrom(cachedGeo('hogg-bike', p => {
-    p.add(GEO.box, '#242930', mtx(0,.62,0,0,0,0,.43,.28,1.6));
-    p.add(GEO.sph, '#8f332c', mtx(0,.87,.25,0,0,0,.33,.25,.6));
-    p.add(GEO.box, '#252226', mtx(0,.83,-.45,0,0,0,.47,.15,.65));
-    for (const x of [-.22,.22]) {
-      p.add(GEO.cyl, '#c0c2c3', mtx(x,.73,.94,-.35,0,0,.05,.8,.05));
-      p.add(GEO.cyl, '#b9b9b6', mtx(x,.36,-.34,Math.PI/2,0,0,.07,1.5,.07));
-      p.add(GEO.box, '#7c7d7a', mtx(x,.55,-.05,0,0,0,.06,.26,.5));
-    }
-    p.add(GEO.cyl, '#cacac6', mtx(0,1.16,.78,0,0,Math.PI/2,.055,1.05,.055));
-    p.add(GEO.cyl, '#e1c997', mtx(0,1,1.05,Math.PI/2,0,0,.18,.12,.18));
-    p.add(GEO.box, '#792f29', mtx(0,.55,-1.07,0,0,0,.5,.08,.5));
-  }), {}));
-  const wheels = [];
-  for (const z of [-1,1]) {
-    const wheel = meshFrom(cachedGeo('hogg-wheel', p => {
-      p.add(GEO.cyl, '#28272a', mtx(0,0,0,0,0,Math.PI/2,.39,.23,.39));
-      p.add(GEO.cyl, '#b7b8b7', mtx(0,0,0,0,0,Math.PI/2,.23,.24,.23));
-    }), { thin: true });
-    wheel.position.set(0,.39,z); root.add(wheel); wheels.push(wheel);
-  }
-  root.userData.wheels = wheels; return root;
-}
 // 拉什·T 的链锤：带刺铁球
 export function maceGeo() {
   return cachedGeo('mace', (p) => {
@@ -673,12 +646,6 @@ export function pipesGeo() {
   });
 }
 const ITEM_BUILDERS = {
-  radio: p => {
-    p.add(GEO.box, '#444e39', mtx(0,.18,0,0,0,0,.38,.32,.22));
-    p.add(GEO.box, '#d2bd79', mtx(0,.24,.115,0,0,0,.22,.07,.015));
-    p.add(GEO.cyl, '#b5b7a6', mtx(.12,.46,0,0,0,-.1,.014,.35,.014));
-    for(let i=0;i<3;i++) p.add(GEO.box, '#242b22', mtx(0,.11+i*.025,.12,0,0,0,.23,.01,.012));
-  },
   steak: (p) => { p.add(GEO.sph, '#8a3a22', mtx(0, 0.06, 0, 0, 0, 0, 0.2, 0.06, 0.15)); p.add(GEO.sph, '#c85a3a', mtx(0, 0.09, 0, 0, 0, 0, 0.16, 0.04, 0.11)); p.add(capsule(0.025, 0.14), '#f2ecd8', mtx(0.2, 0.07, 0, 0, 0, Math.PI / 2)); p.add(GEO.cyl, '#f4f4f0', mtx(0, 0.01, 0, 0, 0, 0, 0.26, 0.02, 0.2)); },
   barbecue: (p) => { p.add(capsule(0.07, 0.36), '#9a4424', mtx(0, 0.08, 0, 0, 0, Math.PI / 2)); for (let i = -1; i <= 1; i++) p.add(GEO.sph, '#c66a34', mtx(i * 0.14, 0.12, 0.02, 0, 0, 0, 0.07, 0.05, 0.06)); p.add(GEO.cyl, '#d8d0b8', mtx(0, 0.08, 0, 0, 0, Math.PI / 2, 0.012, 0.66, 0.012)); },
   hamburger: (p) => { p.add(GEO.hemi, '#d8943c', mtx(0, 0.1, 0, 0, 0, 0, 0.14, 0.09, 0.14)); p.add(GEO.cyl, '#6a3a1e', mtx(0, 0.08, 0, 0, 0, 0, 0.15, 0.035, 0.15)); p.add(GEO.cyl, '#5ab04a', mtx(0, 0.1, 0, 0, 0, 0, 0.155, 0.012, 0.155)); p.add(GEO.cyl, '#d8943c', mtx(0, 0.04, 0, 0, 0, 0, 0.14, 0.05, 0.14)); },

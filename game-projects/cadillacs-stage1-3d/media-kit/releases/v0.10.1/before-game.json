@@ -1,15 +1,15 @@
 {
   "toy": {
     "id": 40412421031936,
-    "title": "恐龙快打 3D：第一、二关",
+    "title": "恐龙快打 3D：第一至三关",
     "slug": "feidao-cadillacs-3d",
     "category": "GAME",
     "visibility": "public",
-    "status": "rollback_pending",
+    "status": "published",
     "submitted_at": "2026-10-08T10:03:37.574505+00:00",
     "package": "dist/toy-v0.10.0/package",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_nYXCNf4T/index.html",
-    "note": "按用户要求撤回第三关，待同步两关包；保留原作品ID与视频绑定",
+    "note": "v0.10.0第三关已published；公开入口三視口28/28：直接选第三关、叫车驾驶、I单点加速、暂停/切模式/下车与三首音乐，无报错；非手机真机",
     "status_verified": "2026-10-07 mylist：v0.9.4 published 21:52:04，v0.9.5 published 21:56:53 为现网最新",
     "bound_videos": [
       "BV18XHW66E55"
@@ -120,10 +120,10 @@
     "package_fingerprint_note": "为随 v0.9.5 包一并生效的 v0.9.4 闪退修复指纹",
     "pending_note": ""
   },
-  "website_version": "v0.6.1",
-  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
-  "website_verified_at": "2026-10-07T21:52:19+08:00",
-  "website_commit": "a0da954f",
+  "website_version": "v0.10.0",
+  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；第三关驾驶：方向/摇杆转向，J撞击加速、I加速，按住K刹车，U下车（联机仅房主）；下车恢复步行操作。",
+  "website_verified_at": "2026-10-08T10:03:37.574505+00:00",
+  "website_commit": "0b18e520",
   "versions": [
     {
       "version": "v0.5.6-bgmfull1",
@@ -193,6 +193,13 @@
         "bilibili": "public_verified",
         "taptap_community": "public_verified"
       }
+    },
+    {
+      "version": "v0.10.0",
+      "base_version": "v0.9.5",
+      "classification": "正式版本",
+      "summary": "第三关地狱公路：无线电叫车、凯迪拉克驾驶、摩托霍格投雷、车毁步行续战与2–4人共乘",
+      "handoff": "releases/v0.10.0/handoff.json"
     }
   ],
   "dev": {
@@ -208,14 +215,15 @@
     "skill": "game-maker（~/.claude/skills/game-maker），交接协议 game-video/references/development-handoff.md",
     "continuation": {
       "tool": "Codex",
-      "scope": "v0.2.0 玩家反馈：触控、特殊技、枪械与走廊细节"
+      "model": "GPT-6（当前会话，未提供具体子型号）",
+      "scope": "v0.10.0 第三关地狱公路"
     }
   },
   "name": {
-    "zh": "恐龙快打 · 第一、二关 3D 重制版",
-    "en": "Cadillacs and Dinosaurs · Stages 1-2 3D remake (fan-made)"
+    "zh": "恐龙快打 · 第一至三关 3D 重制版",
+    "en": "Cadillacs and Dinosaurs · Stages 1-3 3D remake (fan-made)"
   },
-  "ip_note": "粉丝向非官方重制：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一、二关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一、二关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
+  "ip_note": "粉丝向非官方重制：关卡流程、角色、敌人、数值参照 Capcom 1993 街机 Cadillacs and Dinosaurs 第一至三关；模型与贴图为程序化重新制作（卡通着色 + 描边 + 写实贴图，v0.5.2 起第一至三关统一），音乐采用原版录音，缺项音效保留合成；游戏内菜单注明原作版权归 Capcom 及原著方。",
   "multiplayer": {
     "players": "2–4",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
@@ -377,9 +385,21 @@
         "bilibili": "public_verified",
         "taptap_community": "public_verified"
       }
+    },
+    {
+      "version": "v0.10.0",
+      "classification": "正式版本",
+      "summary": "第三关正式版本已发布网站与Toy、简介同步；TapTap审核中",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "published",
+        "taptap": "reviewing",
+        "bilibili": "public_verified"
+      },
+      "record": "releases/v0.10.0/handoff.json"
     }
   ],
-  "handoff": "releases/v0.9.4/handoff.json",
+  "handoff": "releases/v0.10.0/handoff.json",
   "game_id": "cadillacs-stage1-3d",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
@@ -398,7 +418,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.10.1",
+  "current_version": "v0.10.0",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
@@ -450,19 +470,19 @@
     "app_id": 962722,
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
-    "status": "online_v0.9.4",
-    "platform_status": "online",
-    "staged_version": "v0.9.4",
-    "staged_source_commit": "e2fb73a5",
-    "staged_package_sha256": "71f034bde99cd79b78d020e4280f2bdf377f8cf5870384bcf128a590f16c4001",
-    "staged_h5_version_id": 273318,
-    "draft_version_id": "1043928",
-    "platform_version": "V-20261007-6",
-    "submitted_version": "v0.9.4",
-    "submitted_package_sha256": "71f034bde99cd79b78d020e4280f2bdf377f8cf5870384bcf128a590f16c4001",
-    "submitted_h5_version_id": 273318,
-    "submitted_at": "2026-10-07T22:52:59+08:00",
-    "submitted_source_commit": "e2fb73a5",
+    "status": "reviewing_v0.10.0",
+    "platform_status": "reviewing",
+    "staged_version": "v0.10.0",
+    "staged_source_commit": "0b18e520",
+    "staged_package_sha256": "262e4386ac6f32aadc3af59fb3afa2f53e8de40c76ba5b45ca2c3d5062601bdd",
+    "staged_h5_version_id": 275750,
+    "draft_version_id": "1046962",
+    "platform_version": "V-20261008",
+    "submitted_version": "v0.10.0",
+    "submitted_package_sha256": "262e4386ac6f32aadc3af59fb3afa2f53e8de40c76ba5b45ca2c3d5062601bdd",
+    "submitted_h5_version_id": 275750,
+    "submitted_at": "2026-10-08T10:03:37.574505+00:00",
+    "submitted_source_commit": "0b18e520",
     "submission_time_source": "平台 list-app-versions created_time=1791384779（V-20261007-6，last_event=review_submitted）",
     "last_published_version": "v0.9.4",
     "last_published_h5_version_id": 273318,
@@ -470,15 +490,15 @@
     "last_published_revision": 1043928,
     "last_published_at": null,
     "last_public_runtime_verified_version": null,
-    "last_status_checked_at": "2026-10-08T00:58:42.737833+00:00",
-    "release_record": "releases/v0.9.4/handoff.json",
+    "last_status_checked_at": "2026-10-08T10:03:37.574505+00:00",
+    "release_record": "releases/v0.10.0/handoff.json",
     "pending_material_review": [],
     "pending": [],
     "verification": {
-      "build_command": "node game-projects/site-games/tools/build-taptap-h5.mjs cadillacs-stage1-3d",
-      "qa": "verify-taptap-h5.cjs 三视口通过；无 randomUUID 环境启动单测 ready:true play:true errors:[]",
-      "store_description_change": false,
-      "store_description_note": "沿用 v0.9.3 先例：仅修复闪退、玩法与操作不变，不改商店简介"
+      "qa": "最终ZIP三视口25/25，屏蔽独立JS仍启动，非手机真机",
+      "store_description_change": true,
+      "startup_adapter": "inline-runtime-v1",
+      "namespace": "taptap-cadillacs-v1:"
     },
     "dedupe_rule": "当前同哈希已上线、同版本更新帖已公开核验，不重复上传、提审或发帖；恢复时读取平台及最新台账。",
     "agreement_authorized": true,
@@ -495,14 +515,21 @@
         "field_ids": [
           "title"
         ],
-        "message": "游戏名称使用了知名游戏IP‘恐龙快打’，可能存在版权侵权风险。如已获得官方正式授权，请前往游戏资质页面上传相关授权证明文件，否则有驳回风险。"
+        "message": "游戏标题涉及知名游戏IP‘恐龙快打’，可能存在侵权风险与误导倾向。如已获得官方正式授权，请前往游戏资质页面上传相关授权证明文件，否则有驳回风险。"
       },
       {
         "code": "PREAUDIT",
         "field_ids": [
           "description"
         ],
-        "message": "游戏简介中提及非官方复刻相关内容，可能存在版权侵权风险。建议前往游戏资质页面补充提供软件著作权及相关授权资质文件。"
+        "message": "游戏简介中声明为‘恐龙快打非官方复刻’，涉及知名IP同人/复刻内容，建议前往游戏资质页面提供软件著作权及相关授权资质证明，否则存在驳回风险。"
+      },
+      {
+        "code": "PREAUDIT",
+        "field_ids": [
+          "trial_note"
+        ],
+        "message": "开发者的话中提及爱好者复刻经典原作，涉及知名IP版权问题，建议前往资质页面补充相关授权文件。"
       }
     ],
     "rights_proof_provided": false,
@@ -535,7 +562,7 @@
       "release_record": "releases/v0.9.4/taptap-community.json",
       "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
     },
-    "pending_note": "v0.9.4 修复包已确认 online/published，合并动态与论坛已公开核验；玩家原设备仍未复测，不能视为手机真机全面验收。",
+    "pending_note": "第三关已正式送审，旧公开版仍v0.9.4；不上调published基线",
     "startup_adapter": "inline-runtime-v1",
     "community_post_status": "public_verified",
     "community_post_note": "原作开场、背摔、音频调整与启动兼容修复合并为一条更新动态，已核验本人主页与恐龙快打论坛显示同一 moment。",
@@ -606,7 +633,15 @@
         "moment_id": "857180359089981386"
       }
     ],
-    "pending_community_updates": [],
+    "pending_community_updates": [
+      {
+        "source_version": "v0.10.0",
+        "h5_version_id": 275750,
+        "status": "awaiting_online",
+        "summary": "第三关地狱公路驾驶追逐，正式版本上线确认后合并动态与论坛",
+        "record": "releases/v0.10.0/handoff.json"
+      }
+    ],
     "pending_device_feedback": {
       "physical_device_verified": false,
       "scope": "玩家原设备的启动复测与其他手机机型表现",
@@ -614,11 +649,12 @@
     }
   },
   "website": {
-    "version": "v0.9.4",
+    "version": "v0.10.0",
     "status": "deployed_verified",
-    "verified_at": "2026-10-07T20:20:00+08:00",
-    "evidence": "game.min.js 线上sha256=4e8a808e…、coop.js=28eb0531…与主线一致",
-    "record": "releases/v0.9.4/handoff.json"
+    "verified_at": "2026-10-08T10:03:37.574505+00:00",
+    "source_commit": "0b18e520",
+    "runtime_sha256": "b9d2c49d127920fc4518489376b64ba607f39baf8fd9053ce753c211cd313b44",
+    "record": "releases/v0.10.0/website.json"
   },
   "touch_control_inset": {
     "side_css_px": 40,
@@ -656,13 +692,17 @@
       "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
     }
   ],
-  "publication_status": "published",
-  "withdrawn_releases": [
-    {
-      "version": "v0.10.0",
-      "reason": "用户要求删除本次新增第三关",
-      "replacement": "v0.10.1",
-      "reimplement_automatically": false
-    }
-  ]
+  "publication_status": "website_and_toy_published_taptap_reviewing",
+  "stage3": {
+    "name": "地狱公路",
+    "implemented": [
+      "无线电叫车",
+      "凯迪拉克驾驶、撞敌和油桶碰撞",
+      "霍格摩托追逐与投雷预警",
+      "车毁或主动下车后步行续战",
+      "2–4人共乘与步行合作",
+      "三关直接选择与连续过关"
+    ],
+    "scope": "只增加第三关，第四至八关尚未实现"
+  }
 }

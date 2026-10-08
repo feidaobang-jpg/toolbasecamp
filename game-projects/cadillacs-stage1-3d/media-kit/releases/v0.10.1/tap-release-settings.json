@@ -1,0 +1,81 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "can_pre_download_play_pc": {
+          "current_value": "false",
+          "field_id": "can_pre_download_play_pc",
+          "filled": true,
+          "input_type": "select",
+          "label": "PC 预下载开关",
+          "options": [
+            "true",
+            "false"
+          ],
+          "state": "optional",
+          "value_labels": {
+            "false": "关闭",
+            "true": "开启"
+          }
+        },
+        "platform_open_time_android": {
+          "field_id": "platform_open_time_android",
+          "filled": false,
+          "input_type": "text",
+          "label": "首发上线时间(安卓)",
+          "state": "optional"
+        },
+        "platform_open_time_pc": {
+          "field_id": "platform_open_time_pc",
+          "filled": false,
+          "input_type": "text",
+          "label": "首发上线时间(PC)",
+          "state": "optional"
+        },
+        "release_method": {
+          "field_id": "release_method",
+          "filled": false,
+          "hint": "伴随提审一次性传入，不可通过 saveChanges 修改",
+          "input_type": "select",
+          "label": "上线方式",
+          "state": "optional"
+        },
+        "release_schedule": {
+          "field_id": "release_schedule",
+          "filled": false,
+          "hint": "伴随提审一次性传入（submit-review 的 release_schedule），不可通过 saveChanges 修改",
+          "input_type": "select",
+          "label": "发布档期",
+          "options": [
+            "immediate",
+            "scheduled_exact"
+          ],
+          "state": "optional",
+          "value_labels": {
+            "immediate": "立即上线",
+            "scheduled_exact": "精确定时上线"
+          }
+        },
+        "release_time": {
+          "field_id": "release_time",
+          "filled": false,
+          "hint": "伴随提审一次性传入，不可通过 saveChanges 修改",
+          "input_type": "text",
+          "label": "定时上线时间",
+          "state": "optional"
+        }
+      },
+      "module_id": "release-settings",
+      "revision": 1047324
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

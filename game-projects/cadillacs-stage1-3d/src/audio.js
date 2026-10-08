@@ -27,8 +27,7 @@ function ensure() {
   // 先下最先要用的（选人曲、开场曲、所选起始关的第一首、全部音效），其余排在后面；同一个文件只下一次（stage=roof、grave=hall）
   const startStage2 = (() => { try { return JSON.parse(localStorage.getItem('cd3d-stage1:stage')) === 1; } catch (e) { return false; } })();
   // 第一批（并行）：选人曲、开场曲、全部音效，都很小；之后按需要的先后逐首下载，起始关的第一首排最前
-  const startStage3=(()=>{try{return JSON.parse(localStorage.getItem('cd3d-stage1:stage'))===2;}catch(e){return false;}})();
-  const first = startStage3 ? ['select','hellroad','roadDrive','boss3'] : startStage2 ? ['select'] : ['select', 'opening'];
+  const first = startStage2 ? ['select'] : ['select', 'opening'];
   const order = startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont', 'roof', 'street', 'boss'] : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'];
   const pick = (names) => Object.fromEntries(names.map(n => [n, MUSIC_FILES[n]]));
   samples = new SampleAudio(ctx, musicBus, sfxBus, { ...pick(first), ...ORIGINAL_FILES });
@@ -37,7 +36,7 @@ function ensure() {
 }
 const now = () => ctx.currentTime;
 // 原版曲子：第一关（楼顶 / 大楼内部 / 47 街 / Boss 1）、第二关（森林 / 泥沼 / 尸骸地 / Boss 2）、选人、开场、过关、续关
-const MUSIC_FILES = { hellroad:'road-walk.mp3', roadDrive:'road-drive.mp3', boss3:'boss3.mp3', select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
+const MUSIC_FILES = { select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
 const ALIAS = { stage: 'roof', grave: 'hall' };   // 同曲不同名：只下载一次
 // 第二批：依次下载（不和第一批抢带宽），下完一首就能用；同名别名共用同一段解码好的音频
 async function loadRest(s, names) {
@@ -296,7 +295,7 @@ function waitOriginal(name) {
     else if (samples.failed.includes(name) || samples.failed.includes(ALIAS[name])) { clearInterval(id); if (name !== 'opening' && !seq.song) startSynth(name); }
   }, 150);
 }
-const ORIGINAL_MUSIC = new Set(['hellroad','roadDrive','boss3','stage', 'roof', 'hall', 'street', 'boss', 'select', 'forest', 'swamp', 'grave', 'boss2', 'opening', 'clear', 'cont']);
+const ORIGINAL_MUSIC = new Set(['stage', 'roof', 'hall', 'street', 'boss', 'select', 'forest', 'swamp', 'grave', 'boss2', 'opening', 'clear', 'cont']);
 function startSynth(name) {
   seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
   seq.song = SONGS[name] || (name === 'boss2' ? SONGS.boss : SONGS.stage); seq.step = 0; seq.next = now() + 0.08;
