@@ -24,8 +24,8 @@ cat .cursor/rules/*.mdc        # 全量；或按下方索引只读与本次任�
 以下为流程规则的要点摘要；与 `.mdc` 原文冲突时以原文为准。规则声明的优先级高于"未明确要求不要提交"这类默认习惯。
 
 1. **开工前**（`git-sync-before-work`）：独立修改任务默认从最新远端建立任务分支与独立 worktree；继续任务复用原工作区，只读任务除外。原目录有改动或分叉时保留现场，仅迁移本任务差异，无需逐次询问。
-2. **修改验证后**（`auto-commit-push`）：按本任务路径自动暂存、提交，在共享合并锁下整合最新主线、复验并正常推送主线；必要时部署核验后再释放锁。不要等用户提醒。提交说明用简体中文、简短祈使句并说明"为什么"；普通 commit，不 `--amend`；不提交 `.env`/密钥。仅当用户明确说"不要 commit / no push / 只改不提交"或处于只读模式时跳过。
-3. **动了 `public/**` 时**（`verify-static-deploy`）：push 成功 ≠ 线上已更新。必须 curl 抽查 `https://www.zhengxiaohui.cn/<对应路径>` 是否含新文案（例如 `/js/locales/zh-CN.js`）。约 2–3 分钟仍未生效 → 判定部署未落地，自己 SSH 补同步：先 `scp` 到 `toolbasecamp-cn:~/sync-static/`，再 `ssh toolbasecamp-cn "sudo install -o lighthouse -g ubuntu -m 644 ~/sync-static/<file> /var/www/toolbasecamp/<dir>/"`，最后再次抽查确认。禁止用"等 Actions / 你清下缓存"代替校验。
+2. **修改验证后**（`auto-commit-push`）：按本任务路径自动暂存、提交，整合最新主线、复验后直接正常推送主线（2026-10-08 起不用全局合并锁；推送被拒就重新整合再推）。不要等用户提醒。提交说明用简体中文、简短祈使句并说明"为什么"；普通 commit，不 `--amend`；不提交 `.env`/密钥。仅当用户明确说"不要 commit / no push / 只改不提交"或处于只读模式时跳过。
+3. **动了 `public/**` 时**（`verify-static-deploy`）：push 成功 ≠ 线上已更新。必须 curl 抽查 `https://www.zhengxiaohui.cn/<对应路径>` 是否含新文案（例如 `/js/locales/zh-CN.js`）。约 2–3 分钟仍未生效 → 先查 Actions 是否还有排队/进行中的部署，有就等它结束；没有才判定部署未落地，自己 SSH 补同步（文件取自最新 `origin/master`，不用任务工作区里的文件）：先 `scp` 到 `toolbasecamp-cn:~/sync-static/`，再 `ssh toolbasecamp-cn "sudo install -o lighthouse -g ubuntu -m 644 ~/sync-static/<file> /var/www/toolbasecamp/<dir>/"`，最后再次抽查确认。禁止用"等 Actions / 你清下缓存"代替校验。
 4. **动了 `comfyui-api-server/` 时**（`comfyui-api-restart`）：push 后本机能重启就自动重启该 API。
 5. **VPS 运维类改动**（`vps-ssh-ops`）：由 Agent 直接 SSH 执行，不把操作甩给用户。
 
@@ -33,9 +33,11 @@ Git 安全底线仍然有效：不改 `git config`，不 force push `master`，�
 
 用户于 2026-10-05 授权：遇到原工作区有其他改动或与远端分叉，按推荐的独立工作区方案继续，不再逐次询问。保留原工作区，从最新远端创建 worktree，仅迁入本任务改动并验证、正常提交推送；不强推、不覆盖或夹带他人改动。确需凭据或无法安全判断的冲突才说明具体阻塞。
 
-## 多AI并行任务（用户确认，2026-10-05）
+## 多AI并行任务（用户确认，2026-10-05；合并方式更新于 2026-10-08）
 
-每个独立修改任务一个分支＋一个 worktree；同任务复用，问答/只读除外。开发并行，主线合并与部署互斥串行；完成后自动整合最新主线、验证、正常推送并按需核验部署，不逐次询问。共享锁、冲突处理、外部目标协调与清理要求详见 `.cursor/rules/auto-commit-push.mdc`。保留其他任务现场，不强推、不夹带改动；只有凭据缺失、互相矛盾的需求或无法安全判断的冲突才需用户介入。
+每个独立修改任务一个分支＋一个 worktree；同任务复用，问答/只读除外。开发并行；完成后自动整合最新主线、验证、正常推送并按需核验部署，不逐次询问。
+
+2026-10-08 用户确认**废弃本机全局合并锁 `agent-integration.lock`**：主线靠 git 快进检查（推送被拒就重新 fetch、整合、复验再推，最多连续 3 次，不强推）；部署顺序靠 `deploy.yml` 的 `concurrency` 排队，并与服务器记录的上次成功部署提交比较，推送后无需占锁等部署；Toy/TapTap/B站等外部目标按目标单独加锁，只锁写操作那一小段，长耗时环节不持锁。旧会话可能仍留有该锁目录，不要删除别人的锁，也不必等待。冲突处理、外部目标锁路径与清理要求详见 `.cursor/rules/auto-commit-push.mdc`。保留其他任务现场，不强推、不夹带改动；只有凭据缺失、互相矛盾的需求或无法安全判断的冲突才需用户介入。
 
 Codex、Claude、Cursor 等均应读取本文件及相关 `.cursor/rules/*.mdc`；本规则需要各任务实际读取并遵守，不是独立后台调度器。已运行的旧任务下次操作前重新读取；不擅自中断、迁移或清理其他活跃任务。
 
