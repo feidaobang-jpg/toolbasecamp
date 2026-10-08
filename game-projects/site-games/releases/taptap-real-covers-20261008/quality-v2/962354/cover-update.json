@@ -1,0 +1,103 @@
+{
+  "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+  "app_id": 962354,
+  "game_id": "starship-defense",
+  "title": "虫潮围城",
+  "phase": "quality-v2",
+  "status": "reviewing",
+  "draft_id": "1047715",
+  "platform_version": "V-20261008-5",
+  "audit_id": "1047715",
+  "fields": {
+    "banner_4": {
+      "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962354\\banner_4.jpg",
+      "sha256": "3c6a3489e57ab7a6da066d61404148fff582acae107a0bce87e6106586948354",
+      "size": [
+        1920,
+        1080
+      ],
+      "bytes": 306825,
+      "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+      "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+      "crop": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+      "version": "web-shop-scroll-v0.29.2",
+      "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体",
+      "source_task_output": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\banner_4-hud-hidden.jpg"
+    },
+    "cover_vertical": {
+      "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962354\\cover_vertical.jpg",
+      "sha256": "48b794f13ce00c6e82eb352b54dc0dca7d36f3d753c5f5b2962f55ae338386aa",
+      "size": [
+        720,
+        1080
+      ],
+      "bytes": 172838,
+      "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+      "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+      "crop": [
+        600,
+        0,
+        1320,
+        1080
+      ],
+      "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+      "version": "web-shop-scroll-v0.29.2",
+      "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体",
+      "source_task_output": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover_vertical-hud-hidden.jpg"
+    }
+  },
+  "uploads": {
+    "banner_4": {
+      "assetId": "363762",
+      "height": 1080,
+      "info": {
+        "format": "jpeg",
+        "height": 1080,
+        "size": 306825,
+        "width": 1920
+      },
+      "url": "https://img-tc.tapimg.com/market/images/219e937b2f7afca69e59b9e2bd90d130.jpg",
+      "width": 1920
+    },
+    "cover_vertical": {
+      "assetId": "363763",
+      "height": 1080,
+      "info": {
+        "format": "jpeg",
+        "height": 1080,
+        "size": 172838,
+        "width": 720
+      },
+      "url": "https://img-tc.tapimg.com/market/images/aae482a5be1606f789334f8709bb8b21.jpg",
+      "width": 720
+    }
+  },
+  "precheck": {
+    "blockers": [],
+    "preaudit_passed": true,
+    "version_id": "1047715",
+    "warnings": []
+  },
+  "checked_at": "2026-10-08T13:18:01.224133+00:00",
+  "public_verified": false,
+  "material_quality_verified": false,
+  "submission_origin": "同一应用的已授权 web-shop-scroll-v0.29.2 更新已同时修正真实实机封面，官方字段/审核ID读回一致；采用该预审通过素材，避免重复或覆盖在审版本。",
+  "source_task_id": "01a11b2b-2580-7223-9318-1624d4ff841c-shop-scroll-03",
+  "only_cover_fields_changed": false,
+  "package_binding_changed": false,
+  "includes_other_authorized_game_update": true,
+  "game_update_version": "web-shop-scroll-v0.29.2",
+  "h5_version_id": 276450,
+  "candidate_not_submitted": true,
+  "developer_id": 100726,
+  "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/quality-v2/handoff.json",
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2",
+  "updated_at": "2026-10-08T13:18:01.224133+00:00",
+  "next_action": "等待本次正式素材审核；读取 published/entry_type/status_reason，公开生效与推荐标准分别核验。entry_type=1仍需按新意见整改，不重复用同图送审。"
+}
