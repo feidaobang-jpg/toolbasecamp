@@ -1,6 +1,6 @@
 {
   "batch_id": "game-video-backfill-20261008",
-  "updated_at": "2026-10-08T07:17:25.009195+00:00",
+  "updated_at": "2026-10-08T07:55:00.331335+00:00",
   "historical_bilibili": [
     {
       "episode_id": "swarm",
@@ -584,26 +584,65 @@
     },
     "x": {
       "authorized": true,
-      "status": "ready_pending_official_access",
-      "needs": "Provide an existing authorized official X API/connector, or explicitly defer X. Do not send credentials in chat.",
+      "status": "skipped_user_no_paid_access",
+      "needs": null,
       "one_post_per_episode": true,
       "capability_discovery": {
-        "checked_at": "2026-10-08T05:50:15.972565+00:00",
+        "checked_at": "2026-10-08T07:50:05.430018+00:00",
         "candidate": "Metricool",
-        "installed": false,
-        "connection": "not-established",
+        "installed": true,
+        "connection": "brand_has_no_connected_networks",
         "payment_required_for_x": "paid plan plus X/Twitter add-on; no purchase authorized or performed",
+        "official_source": "https://help.metricool.com/your-guide-to-the-x-twitter-add-on-wt5wy",
+        "brand_id": "7304854",
+        "connection_entry_url": "https://app.metricool.com/brands/connections?blogId=7304854"
+      },
+      "notification_status": "sent",
+      "metricool_connection_check": {
+        "plugin": "Metricool",
+        "installed": true,
+        "checked_at": "2026-10-08T07:50:05.430018+00:00",
+        "brand_id": "7304854",
+        "tool": "getBrandSettings",
+        "tool_result": "INVALID_ARGUMENT: brand has no connected social networks",
+        "x_connected": false,
+        "x_account_confirmed": false,
+        "browser_entry_redirected_to": "https://app.metricool.com/login",
+        "connection_entry_url": "https://app.metricool.com/brands/connections?blogId=7304854",
+        "posting_or_scheduling_performed": false,
+        "plan_and_write_permissions": "not-yet-verified",
+        "subscription_change_performed": false,
+        "official_requirements": "Starter or higher and X/Twitter add-on; current standard add-on USD10/month/account, main plan separate",
         "official_source": "https://help.metricool.com/your-guide-to-the-x-twitter-add-on-wt5wy"
       },
-      "pending_event": {
-        "task_id": "game-video-x-publication-access-pending-owner",
-        "event_id": "d7fcb924-412a-4cb5-b384-bbbf0071a229"
+      "authorized_this_batch": false,
+      "authorization_scope": "free official capability only; no purchase",
+      "user_decision": {
+        "source": "user",
+        "statement": "要收费吗？如果收费就不做",
+        "recorded_at": "2026-10-08T07:55:00.331335+00:00",
+        "scope": "X sync requires no paid plan, add-on or API credit purchase",
+        "current_batch": "skip X",
+        "reason": "Metricool X requires paid Starter or higher plus X add-on",
+        "official_source": "https://help.metricool.com/your-guide-to-the-x-twitter-add-on-wt5wy",
+        "subscription_change_performed": false,
+        "posting_or_scheduling_performed": false
       },
-      "notification_status": "sent"
+      "resolved_event": {
+        "task_id": "game-video-x-publication-access-pending-owner",
+        "event_id": "d7fcb924-412a-4cb5-b384-bbbf0071a229",
+        "status": "resolved",
+        "resolution": "User declines paid X automation; no further connection action needed",
+        "resolved_at": "2026-10-08T07:55:00.331335+00:00",
+        "notification_resolution": "Resolve returned resolved"
+      },
+      "automated_publication_enabled": false,
+      "posted": false,
+      "notification_resolution": "Resolve returned resolved"
     }
   },
-  "release_status": "videos_published_x_pending",
-  "next_action": "7版均公开；X三条带链接文案已定稿，需本人接入已有官方API/连接器或明确暂缓。",
+  "release_status": "videos_published_x_skipped_user_no_paid_access",
+  "next_action": null,
   "human_review": {
     "status": "approved",
     "statement": "可以，继续把",
@@ -639,5 +678,6 @@
       "sha256": "9ee0ceee6c1a696789e3495e1088bdbf33eee1cdf3a501815a8350cff121f188",
       "purpose": "public description with first-line catalog URL"
     }
-  ]
+  ],
+  "task_complete": true
 }

@@ -1,0 +1,17 @@
+{
+  "source": "Codex",
+  "scope": "Skip paid X synchronization per user decision",
+  "user_statement": "要收费吗？如果收费就不做",
+  "runtime_skill": "C:\\Users\\37818\\.claude\\skills\\game-video\\SKILL.md",
+  "files_changed": [
+    "game-video/SKILL.md"
+  ],
+  "backup": "C:\\Users\\37818\\.claude\\state\\skill-updates\\backups\\20261008-x-no-paid",
+  "isolated_branch": "codex/x-no-paid-20261008",
+  "commit": "c4d190126490e0cc389a8c4381d8b2d538a472b4",
+  "remote_master_verified": true,
+  "activated": true,
+  "activated_at": "2026-10-08T07:56:39.060478+00:00",
+  "activation_method": "Under game-video target lock, reread and insert only the verified no-paid-X bullet; preserve other pending edits",
+  "runtime_sha256": "8552b86d453ea43bb1856f5a420d2eb36b10115d58c7b86d433122925ccadae5"
+}
