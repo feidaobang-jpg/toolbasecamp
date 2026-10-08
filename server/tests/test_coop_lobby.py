@@ -31,7 +31,7 @@ def test_movement_is_bounded_and_non_finite_inputs_are_dropped():
 
 @pytest.mark.parametrize('game,protocol,capacity', [
     ('tank', 'tank3d-v2', 4), ('jackal', 'jackal3d-v1', 4),
-    ('cadillacs', 'cadillacs3d-v1', 4), ('starship', 'starship-v1', 4),
+    ('cadillacs', 'cadillacs3d-v2', 4), ('starship', 'starship-v1', 4),
 ])
 def test_shared_rooms_relay_authority_and_game_isolation(game, protocol, capacity):
     url = '/game/coop/ws?game=' + game

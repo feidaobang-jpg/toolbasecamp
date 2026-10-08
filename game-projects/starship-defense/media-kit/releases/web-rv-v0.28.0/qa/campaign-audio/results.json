@@ -1,0 +1,72 @@
+{
+ "base": "http://127.0.0.1:8798/html/game/",
+ "at": "2026-10-08T09:22:36.385Z",
+ "results": [
+  {
+   "name": "starship-defense：开局有声音",
+   "ok": true,
+   "detail": {
+    "states": [
+     "running"
+    ],
+    "times": [
+     6.19
+    ],
+    "starts": 17,
+    "rms": 0.0127
+   }
+  },
+  {
+   "name": "starship-defense：暂停时音频挂起",
+   "ok": true,
+   "detail": {
+    "states": [
+     "suspended"
+    ],
+    "times": [
+     7.72
+    ],
+    "starts": 24
+   }
+  },
+  {
+   "name": "starship-defense：重开后音频恢复（running 且时钟在走）",
+   "ok": true,
+   "detail": {
+    "a1": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      9.73
+     ],
+     "starts": 31
+    },
+    "a2": {
+     "states": [
+      "running"
+     ],
+     "times": [
+      10.74
+     ],
+     "starts": 34,
+     "rms": 0.0125
+    }
+   }
+  },
+  {
+   "name": "starship-defense：重开后实际有声音输出",
+   "ok": true,
+   "detail": {
+    "rms": 0.0125,
+    "startsPaused": 24,
+    "startsAfter": 34
+   }
+  },
+  {
+   "name": "starship-defense：无运行异常",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

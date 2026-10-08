@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.10.0",
+  "base_version": "v0.9.5",
+  "created_at": "2026-10-08T09:43:41.035384+00:00",
+  "classification": "正式版本",
+  "build": {
+    "id": "v0100-stage3-1",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "stage3-driving",
+      "description": "无线电叫车、共乘凯迪拉克、转向加速刹车、耐久与下车步行",
+      "status": "implemented",
+      "evidence_ids": [
+        "stage3-driving",
+        "stage3-coop-four",
+        "stage3-driving-video"
+      ]
+    },
+    {
+      "id": "hogg",
+      "description": "摩托霍格投雷、预警圈、冲撞与步行援兵",
+      "status": "implemented",
+      "evidence_ids": [
+        "stage3-hogg",
+        "stage3-result",
+        "stage3-driving-video"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "stage3",
+      "feature_ids": [
+        "stage3-driving",
+        "hogg"
+      ],
+      "before": "第二关屠夫后结算，第三关未实现",
+      "after": "第二关全队衔接第三关，三关直接选；第三关驾驶追逐后打倒霍格完成结算",
+      "player_visible_result": "新增完整第三关与三首完整原版BGM",
+      "evidence_ids": [
+        "stage3-driving",
+        "stage3-hogg",
+        "stage3-result"
+      ],
+      "verification": "passed"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "stage3-driving",
+      "file": "releases/v0.10.0/captures/stage3-driving.png",
+      "sha256": "3a1a151a1af87b8c7a5e8a79096acfd969036a2261a2698640bab5b80a88a165",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-1",
+      "capture_mode": "realtime-automation",
+      "description": "stage3-driving；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "stage3-hogg",
+      "file": "releases/v0.10.0/captures/stage3-hogg.png",
+      "sha256": "2b30bc9fa902828304f612148edc1d8bfbbbc2860d5af447340fa7ba5be66559",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-1",
+      "capture_mode": "realtime-automation",
+      "description": "stage3-hogg；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "stage3-result",
+      "file": "releases/v0.10.0/captures/stage3-result.png",
+      "sha256": "5b3826e5729602b94485c59378652ee36f1d087f117e76d712317edbdf40ec97",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-1",
+      "capture_mode": "realtime-automation",
+      "description": "stage3-result；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "stage3-coop-four",
+      "file": "releases/v0.10.0/captures/stage3-coop-four.png",
+      "sha256": "04712c7d4f21f242bb33ba0b71fd0c88122d743e6e99f43774bdf49a9d66814d",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-1",
+      "capture_mode": "realtime-automation",
+      "description": "stage3-coop-four；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
+      "width": 960,
+      "height": 540,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "stage3-mobile-driving-portrait",
+      "file": "releases/v0.10.0/captures/stage3-mobile-driving-portrait.png",
+      "sha256": "bf56d01908f0389552d9d320862766a183bc74c6ef6be3d499dc7202c3973be5",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-1",
+      "capture_mode": "realtime-automation",
+      "description": "stage3-mobile-driving-portrait；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "stage3-driving-video",
+      "file": "releases/v0.10.0/captures/stage3-realtime.webm",
+      "sha256": "8f1c806aac8b06b1c9b1f8b8904ef6b2554a06b7ef0c6fcb9078fd77d0e1b63f",
+      "kind": "video",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-1",
+      "capture_mode": "realtime-automation",
+      "description": "四种视角实时驾驶和连续横转，末段霍格投雷与加速撞击；开场清敌、叫车与Boss距离使用夹具，未做全关无捷径录像",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 29.869,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "audio_technical_check": "Opus立体声；完整解码无错；mean -22.1dB，peak -6.2dB；未人工听审",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 23,
+          "description": "真实驾驶和四种镜头连续观察"
+        },
+        {
+          "in_seconds": 24,
+          "out_seconds": 29.7,
+          "description": "霍格摩托与投雷落点"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "desktop",
+      "method": "qa/desktop.js",
+      "passed": 92,
+      "total": 92,
+      "record": "qa-desktop.json"
+    },
+    {
+      "id": "mobile",
+      "method": "qa/mobile.js",
+      "passed": 35,
+      "total": 35,
+      "record": "qa-mobile.json"
+    },
+    {
+      "id": "stage2",
+      "method": "qa/stage2.js",
+      "passed": 56,
+      "total": 56,
+      "record": "qa-stage2.json"
+    },
+    {
+      "id": "stage3",
+      "method": "qa/stage3.js",
+      "passed": 23,
+      "total": 23,
+      "record": "qa-stage3.json"
+    },
+    {
+      "id": "stage3-coop",
+      "method": "qa/stage3-coop.js",
+      "passed": 25,
+      "total": 25,
+      "record": "qa-stage3-coop.json"
+    },
+    {
+      "id": "stage3-variants",
+      "method": "qa/stage3-variants.js",
+      "passed": 12,
+      "total": 12,
+      "record": "qa-stage3-variants.json"
+    },
+    {
+      "method": "server pytest test_coop_lobby/test_cadillacs_stage3",
+      "result": "18/18",
+      "scope": "仅恐龙支持第三关，新旧联机协议隔离，其他游戏选关范围保持"
+    },
+    {
+      "method": "qa/stage3-visual.js without --record",
+      "result": "4种视角桌面高画质与触屏模拟低画质均约167–170fps，P95约6ms；录制轮次不用于性能结论",
+      "records": [
+        "qa-stage3-visual-desktop.json",
+        "qa-stage3-visual-mobile.json"
+      ]
+    }
+  ],
+  "thumbnail": {
+    "decision": "沿用",
+    "reason": "默认第一关与人物打斗未改变；现有封面仍代表游戏，第三关新内容在卡片副标题说明"
+  },
+  "physical_device_test": false,
+  "channels": {
+    "website": {
+      "status": "pending"
+    },
+    "toy": {
+      "status": "pending"
+    },
+    "taptap": {
+      "status": "pending"
+    },
+    "bilibili": {
+      "status": "pending"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本版本未录制完整三关一轮",
+      "声音仅解码/电平验证，未人工听审",
+      "手机为桌面触屏模拟，未做手机真机性能与多指验收"
+    ]
+  },
+  "task_id": "01a11abd-8057-7d80-8fd9-239ab8e4347f-work1"
+}

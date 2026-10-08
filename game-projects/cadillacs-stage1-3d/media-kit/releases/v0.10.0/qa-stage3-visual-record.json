@@ -1,0 +1,970 @@
+{
+  "method": "Realtime Edge hardware renderer, keyboard movement and a full horizontal turn in each preset. Setup and Boss distance use explicit fixtures; phone viewport simulation, not a real phone. Recording run timing is excluded from performance conclusions.",
+  "viewport": [
+    1280,
+    720
+  ],
+  "quality": "high",
+  "recording": true,
+  "runs": [
+    {
+      "camera": 0,
+      "frames": {
+        "samples": 748,
+        "fps": 166.00457178366145,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0
+      },
+      "work": {
+        "samples": 748,
+        "fps": 559.7126608400341,
+        "median": 1.5,
+        "p95": 3.1000000089406967,
+        "over50": 0
+      },
+      "renderer": {
+        "calls": 61,
+        "tris": 33058,
+        "geometries": 362,
+        "textures": 14,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "snapshot": {
+        "mode": "play",
+        "t": 7.67,
+        "area": 6,
+        "areaId": "hellroad",
+        "stage": 3,
+        "cleared": [],
+        "focusX": 57.91,
+        "lockX": null,
+        "wave": 1,
+        "waveOn": false,
+        "timer": 234.3,
+        "score": 1000,
+        "hi": 50000,
+        "lives": "inf",
+        "settings": {
+          "lives": "inf",
+          "dur": "std",
+          "demo": false,
+          "hero": 2
+        },
+        "demoUsed": false,
+        "player": {
+          "x": 59.03,
+          "y": 0.55,
+          "z": 0.43,
+          "state": "incar",
+          "hp": 100,
+          "face": 1.53,
+          "invul": 0,
+          "weapon": null,
+          "combo": 0,
+          "visible": true
+        },
+        "enemies": 0,
+        "boss": null,
+        "sleeper": null,
+        "car": true,
+        "carMoving": false,
+        "sink": 0,
+        "raptor": null,
+        "road": {
+          "phase": "drive",
+          "mounted": true,
+          "called": true,
+          "hp": 180,
+          "maxHp": 180,
+          "x": 58.833333333332625,
+          "z": 0,
+          "baseX": 56.9133333333327,
+          "speed": 8.2,
+          "invul": 2.8000000000000185,
+          "boost": 0,
+          "cooldown": 0,
+          "spawnAt": 57,
+          "spawnN": 1,
+          "hitN": 0,
+          "dodged": 1
+        },
+        "dialog": null,
+        "banner": null,
+        "kills": {
+          "punk": 1
+        },
+        "items": 0,
+        "props": 1,
+        "script": false,
+        "cont": null,
+        "fade": 0,
+        "ui": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "display": {
+            "rotated": false,
+            "W": 1280,
+            "H": 720,
+            "vw": 1280,
+            "vh": 720,
+            "dpr": 1,
+            "touchOn": false,
+            "backing": [
+              1280,
+              720
+            ]
+          },
+          "touchHidden": true,
+          "fs": false,
+          "fsCapable": true,
+          "fsLog": [],
+          "audio": {
+            "ctx": "running",
+            "volume": 0.8,
+            "originalsLoaded": [
+              "hit",
+              "bodyfall",
+              "go",
+              "dash",
+              "shout-mustapha",
+              "finisher-jack",
+              "finisher-hannah",
+              "finisher-mustapha",
+              "finisher-mess",
+              "mega-jack",
+              "mega-hannah",
+              "mega-mustapha",
+              "mega-mess"
+            ],
+            "failed": []
+          },
+          "music": {
+            "name": "roadDrive",
+            "playing": true,
+            "synth": false,
+            "original": true,
+            "track": "roadDrive",
+            "loaded": [
+              "hellroad",
+              "roadDrive",
+              "boss3",
+              "select",
+              "opening",
+              "roof",
+              "hall",
+              "street",
+              "boss",
+              "forest",
+              "swamp",
+              "boss2",
+              "clear",
+              "cont"
+            ]
+          },
+          "camera": "side",
+          "yawOff": -7.484,
+          "fpActive": false,
+          "quality": {
+            "setting": "high",
+            "effective": "high",
+            "auto": null
+          },
+          "focus": "app",
+          "toast": null,
+          "banner": null,
+          "hero": 2,
+          "settings": {
+            "lives": "inf",
+            "dur": "std",
+            "demo": false,
+            "quality": "high",
+            "touch": "auto",
+            "fps": false,
+            "hero": 2,
+            "stage": 2
+          }
+        },
+        "input": {
+          "held": {
+            "u": false,
+            "d": false,
+            "l": false,
+            "r": false
+          },
+          "keyBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false,
+            "rotL": false,
+            "rotR": false
+          },
+          "touchBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false
+          },
+          "stick": {
+            "x": 0,
+            "y": 0
+          },
+          "queue": [],
+          "log": []
+        },
+        "cam": {
+          "pos": [
+            45.77,
+            5.6,
+            8.02
+          ],
+          "axes": {
+            "fwd": {
+              "x": 0.9324688914993564,
+              "z": -0.36125028219499217
+            },
+            "right": {
+              "x": 0.36125028219499217,
+              "z": 0.9324688914993564
+            }
+          },
+          "av": {
+            "s": 1,
+            "lift": 0,
+            "blocked": false
+          }
+        },
+        "hud": {
+          "hp": "100%",
+          "timer": "3:55",
+          "enemy": null,
+          "weapon": "/ 180 耐久 · 公路 20%",
+          "go": false,
+          "dialog": null
+        }
+      }
+    },
+    {
+      "camera": 1,
+      "frames": {
+        "samples": 702,
+        "fps": 155.38880403745273,
+        "median": 5.899999999999636,
+        "p95": 11.700000000000728,
+        "over50": 1
+      },
+      "work": {
+        "samples": 702,
+        "fps": 491.83773563191085,
+        "median": 1.2999999970197678,
+        "p95": 5.5999999940395355,
+        "over50": 1
+      },
+      "renderer": {
+        "calls": 88,
+        "tris": 40862,
+        "geometries": 395,
+        "textures": 14,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "snapshot": {
+        "mode": "play",
+        "t": 13.32,
+        "area": 6,
+        "areaId": "hellroad",
+        "stage": 3,
+        "cleared": [],
+        "focusX": 104.24,
+        "lockX": null,
+        "wave": 1,
+        "waveOn": false,
+        "timer": 228.7,
+        "score": 1000,
+        "hi": 50000,
+        "lives": "inf",
+        "settings": {
+          "lives": "inf",
+          "dur": "std",
+          "demo": false,
+          "hero": 2
+        },
+        "demoUsed": false,
+        "player": {
+          "x": 106.64,
+          "y": 0.55,
+          "z": 1.71,
+          "state": "incar",
+          "hp": 100,
+          "face": 1.53,
+          "invul": 0,
+          "weapon": null,
+          "combo": 0,
+          "visible": true
+        },
+        "enemies": 1,
+        "boss": null,
+        "sleeper": null,
+        "car": true,
+        "carMoving": false,
+        "sink": 0,
+        "raptor": null,
+        "road": {
+          "phase": "drive",
+          "mounted": true,
+          "called": true,
+          "hp": 180,
+          "maxHp": 180,
+          "x": 106.44333333333356,
+          "z": 1.2806417922509472,
+          "baseX": 103.24333333333355,
+          "speed": 8.2,
+          "invul": 2.7500000000000187,
+          "boost": 0,
+          "cooldown": 0,
+          "spawnAt": 123,
+          "spawnN": 4,
+          "hitN": 0,
+          "dodged": 3
+        },
+        "dialog": null,
+        "banner": null,
+        "kills": {
+          "punk": 1
+        },
+        "items": 0,
+        "props": 1,
+        "script": false,
+        "cont": null,
+        "fade": 0,
+        "ui": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "display": {
+            "rotated": false,
+            "W": 1280,
+            "H": 720,
+            "vw": 1280,
+            "vh": 720,
+            "dpr": 1,
+            "touchOn": false,
+            "backing": [
+              1280,
+              720
+            ]
+          },
+          "touchHidden": true,
+          "fs": false,
+          "fsCapable": true,
+          "fsLog": [],
+          "audio": {
+            "ctx": "running",
+            "volume": 0.8,
+            "originalsLoaded": [
+              "hit",
+              "bodyfall",
+              "go",
+              "dash",
+              "shout-mustapha",
+              "finisher-jack",
+              "finisher-hannah",
+              "finisher-mustapha",
+              "finisher-mess",
+              "mega-jack",
+              "mega-hannah",
+              "mega-mustapha",
+              "mega-mess"
+            ],
+            "failed": []
+          },
+          "music": {
+            "name": "roadDrive",
+            "playing": true,
+            "synth": false,
+            "original": true,
+            "track": "roadDrive",
+            "loaded": [
+              "hellroad",
+              "roadDrive",
+              "boss3",
+              "select",
+              "opening",
+              "roof",
+              "hall",
+              "street",
+              "boss",
+              "forest",
+              "swamp",
+              "boss2",
+              "clear",
+              "cont"
+            ]
+          },
+          "camera": "oblique",
+          "yawOff": -7.512,
+          "fpActive": false,
+          "quality": {
+            "setting": "high",
+            "effective": "high",
+            "auto": null
+          },
+          "focus": "app",
+          "toast": null,
+          "banner": null,
+          "hero": 2,
+          "settings": {
+            "lives": "inf",
+            "dur": "std",
+            "demo": false,
+            "quality": "high",
+            "touch": "auto",
+            "fps": false,
+            "hero": 2,
+            "stage": 2
+          }
+        },
+        "input": {
+          "held": {
+            "u": false,
+            "d": false,
+            "l": false,
+            "r": false
+          },
+          "keyBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false,
+            "rotL": false,
+            "rotR": false
+          },
+          "touchBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false
+          },
+          "stick": {
+            "x": 0,
+            "y": 0
+          },
+          "queue": [],
+          "log": []
+        },
+        "cam": {
+          "pos": [
+            94.82,
+            6.89,
+            0.2
+          ],
+          "axes": {
+            "fwd": {
+              "x": 0.9434072717462924,
+              "z": 0.3316364268535911
+            },
+            "right": {
+              "x": -0.3316364268535911,
+              "z": 0.9434072717462924
+            }
+          },
+          "av": {
+            "s": 1,
+            "lift": 0,
+            "blocked": false
+          }
+        },
+        "hud": {
+          "hp": "100%",
+          "timer": "3:49",
+          "enemy": null,
+          "weapon": "/ 180 耐久 · 公路 36%",
+          "go": false,
+          "dialog": null
+        }
+      }
+    },
+    {
+      "camera": 2,
+      "frames": {
+        "samples": 767,
+        "fps": 170.00243810537046,
+        "median": 5.899999999997817,
+        "p95": 6,
+        "over50": 0
+      },
+      "work": {
+        "samples": 767,
+        "fps": 823.4031134425929,
+        "median": 1.199999988079071,
+        "p95": 1.7999999970197678,
+        "over50": 0
+      },
+      "renderer": {
+        "calls": 51,
+        "tris": 26658,
+        "geometries": 411,
+        "textures": 18,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "snapshot": {
+        "mode": "play",
+        "t": 18.82,
+        "area": 6,
+        "areaId": "hellroad",
+        "stage": 3,
+        "cleared": [],
+        "focusX": 149.34,
+        "lockX": null,
+        "wave": 1,
+        "waveOn": false,
+        "timer": 223.2,
+        "score": 3000,
+        "hi": 50000,
+        "lives": "inf",
+        "settings": {
+          "lives": "inf",
+          "dur": "std",
+          "demo": false,
+          "hero": 2
+        },
+        "demoUsed": false,
+        "player": {
+          "x": 151.74,
+          "y": 0.55,
+          "z": 2.58,
+          "state": "incar",
+          "hp": 100,
+          "face": 1.58,
+          "invul": 0,
+          "weapon": null,
+          "combo": 0,
+          "visible": true
+        },
+        "enemies": 0,
+        "boss": null,
+        "sleeper": null,
+        "car": true,
+        "carMoving": false,
+        "sink": 0,
+        "raptor": null,
+        "road": {
+          "phase": "drive",
+          "mounted": true,
+          "called": true,
+          "hp": 180,
+          "maxHp": 180,
+          "x": 151.5433333333323,
+          "z": 2.1500000000000004,
+          "baseX": 148.34333333333262,
+          "speed": 8.2,
+          "invul": 2.7666666666666853,
+          "boost": 0,
+          "cooldown": 0,
+          "spawnAt": 167,
+          "spawnN": 6,
+          "hitN": 1,
+          "dodged": 4
+        },
+        "dialog": null,
+        "banner": null,
+        "kills": {
+          "punk": 1,
+          "poacher": 1
+        },
+        "items": 1,
+        "props": 2,
+        "script": false,
+        "cont": null,
+        "fade": 0,
+        "ui": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "display": {
+            "rotated": false,
+            "W": 1280,
+            "H": 720,
+            "vw": 1280,
+            "vh": 720,
+            "dpr": 1,
+            "touchOn": false,
+            "backing": [
+              1280,
+              720
+            ]
+          },
+          "touchHidden": true,
+          "fs": false,
+          "fsCapable": true,
+          "fsLog": [],
+          "audio": {
+            "ctx": "running",
+            "volume": 0.8,
+            "originalsLoaded": [
+              "hit",
+              "bodyfall",
+              "go",
+              "dash",
+              "shout-mustapha",
+              "finisher-jack",
+              "finisher-hannah",
+              "finisher-mustapha",
+              "finisher-mess",
+              "mega-jack",
+              "mega-hannah",
+              "mega-mustapha",
+              "mega-mess"
+            ],
+            "failed": []
+          },
+          "music": {
+            "name": "roadDrive",
+            "playing": true,
+            "synth": false,
+            "original": true,
+            "track": "roadDrive",
+            "loaded": [
+              "hellroad",
+              "roadDrive",
+              "boss3",
+              "select",
+              "opening",
+              "roof",
+              "hall",
+              "street",
+              "boss",
+              "forest",
+              "swamp",
+              "boss2",
+              "clear",
+              "cont"
+            ]
+          },
+          "camera": "front",
+          "yawOff": -7.503,
+          "fpActive": false,
+          "quality": {
+            "setting": "high",
+            "effective": "high",
+            "auto": null
+          },
+          "focus": "app",
+          "toast": null,
+          "banner": null,
+          "hero": 2,
+          "settings": {
+            "lives": "inf",
+            "dur": "std",
+            "demo": false,
+            "quality": "high",
+            "touch": "auto",
+            "fps": false,
+            "hero": 2,
+            "stage": 2
+          }
+        },
+        "input": {
+          "held": {
+            "u": false,
+            "d": false,
+            "l": false,
+            "r": false
+          },
+          "keyBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false,
+            "rotL": false,
+            "rotR": false
+          },
+          "touchBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false
+          },
+          "stick": {
+            "x": 0,
+            "y": 0
+          },
+          "queue": [],
+          "log": []
+        },
+        "cam": {
+          "pos": [
+            148.4,
+            3.11,
+            -1.96
+          ],
+          "axes": {
+            "fwd": {
+              "x": 0.3440530313053161,
+              "z": 0.9389502178761253
+            },
+            "right": {
+              "x": -0.9389502178761253,
+              "z": 0.3440530313053161
+            }
+          },
+          "av": {
+            "s": 1,
+            "lift": 0,
+            "blocked": false
+          }
+        },
+        "hud": {
+          "hp": "100%",
+          "timer": "3:44",
+          "enemy": null,
+          "weapon": "/ 180 耐久 · 公路 52%",
+          "go": false,
+          "dialog": null
+        }
+      }
+    },
+    {
+      "camera": 3,
+      "frames": {
+        "samples": 1156,
+        "fps": 169.8526278669978,
+        "median": 5.899999999997817,
+        "p95": 6,
+        "over50": 0
+      },
+      "work": {
+        "samples": 1156,
+        "fps": 881.836905878329,
+        "median": 1,
+        "p95": 1.9000000059604645,
+        "over50": 0
+      },
+      "renderer": {
+        "calls": 14,
+        "tris": 11250,
+        "geometries": 444,
+        "textures": 18,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "snapshot": {
+        "mode": "play",
+        "t": 26.53,
+        "area": 6,
+        "areaId": "hellroad",
+        "stage": 3,
+        "cleared": [],
+        "focusX": 212.62,
+        "lockX": null,
+        "wave": 1,
+        "waveOn": false,
+        "timer": 215.5,
+        "score": 4000,
+        "hi": 50000,
+        "lives": "inf",
+        "settings": {
+          "lives": "inf",
+          "dur": "std",
+          "demo": false,
+          "hero": 2
+        },
+        "demoUsed": false,
+        "player": {
+          "x": 215.02,
+          "y": 0.55,
+          "z": 2.58,
+          "state": "incar",
+          "hp": 100,
+          "face": 1.58,
+          "invul": 0,
+          "weapon": null,
+          "combo": 0,
+          "visible": false
+        },
+        "enemies": 0,
+        "boss": null,
+        "sleeper": null,
+        "car": true,
+        "carMoving": false,
+        "sink": 0,
+        "raptor": null,
+        "road": {
+          "phase": "drive",
+          "mounted": true,
+          "called": true,
+          "hp": 180,
+          "maxHp": 180,
+          "x": 214.81999999999405,
+          "z": 2.1500000000000004,
+          "baseX": 211.61999999999438,
+          "speed": 8.2,
+          "invul": 0.48333333333335665,
+          "boost": 0,
+          "cooldown": 0,
+          "spawnAt": 233,
+          "spawnN": 9,
+          "hitN": 2,
+          "dodged": 6
+        },
+        "dialog": null,
+        "banner": null,
+        "kills": {
+          "punk": 2,
+          "poacher": 1
+        },
+        "items": 2,
+        "props": 2,
+        "script": false,
+        "cont": null,
+        "fade": 0,
+        "ui": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "display": {
+            "rotated": false,
+            "W": 1280,
+            "H": 720,
+            "vw": 1280,
+            "vh": 720,
+            "dpr": 1,
+            "touchOn": false,
+            "backing": [
+              1280,
+              720
+            ]
+          },
+          "touchHidden": true,
+          "fs": false,
+          "fsCapable": true,
+          "fsLog": [],
+          "audio": {
+            "ctx": "running",
+            "volume": 0.8,
+            "originalsLoaded": [
+              "hit",
+              "bodyfall",
+              "go",
+              "dash",
+              "shout-mustapha",
+              "finisher-jack",
+              "finisher-hannah",
+              "finisher-mustapha",
+              "finisher-mess",
+              "mega-jack",
+              "mega-hannah",
+              "mega-mustapha",
+              "mega-mess"
+            ],
+            "failed": []
+          },
+          "music": {
+            "name": "roadDrive",
+            "playing": true,
+            "synth": false,
+            "original": true,
+            "track": "roadDrive",
+            "loaded": [
+              "hellroad",
+              "roadDrive",
+              "boss3",
+              "select",
+              "opening",
+              "roof",
+              "hall",
+              "street",
+              "boss",
+              "forest",
+              "swamp",
+              "boss2",
+              "clear",
+              "cont"
+            ]
+          },
+          "camera": "fp",
+          "yawOff": -7.404,
+          "fpActive": true,
+          "quality": {
+            "setting": "high",
+            "effective": "high",
+            "auto": null
+          },
+          "focus": "app",
+          "toast": null,
+          "banner": null,
+          "hero": 2,
+          "settings": {
+            "lives": "inf",
+            "dur": "std",
+            "demo": false,
+            "quality": "high",
+            "touch": "auto",
+            "fps": false,
+            "hero": 2,
+            "stage": 2
+          }
+        },
+        "input": {
+          "held": {
+            "u": false,
+            "d": false,
+            "l": false,
+            "r": false
+          },
+          "keyBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false,
+            "rotL": false,
+            "rotR": false
+          },
+          "touchBtn": {
+            "atk": false,
+            "jump": false,
+            "run": false,
+            "mega": false
+          },
+          "stick": {
+            "x": 0,
+            "y": 0
+          },
+          "queue": [],
+          "log": []
+        },
+        "cam": {
+          "pos": [
+            215.02,
+            1.65,
+            2.58
+          ],
+          "axes": {
+            "fwd": {
+              "x": 0.4346653265308205,
+              "z": 0.9005920574332505
+            },
+            "right": {
+              "x": -0.9005920574332505,
+              "z": 0.4346653265308205
+            }
+          },
+          "av": {
+            "s": 1,
+            "lift": 0,
+            "blocked": false
+          }
+        },
+        "hud": {
+          "hp": "100%",
+          "timer": "3:36",
+          "enemy": null,
+          "weapon": "/ 180 耐久 · 公路 74%",
+          "go": false,
+          "dialog": null
+        }
+      }
+    }
+  ],
+  "errors": []
+}

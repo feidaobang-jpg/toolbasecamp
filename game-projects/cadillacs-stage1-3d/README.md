@@ -1,11 +1,13 @@
-# 恐龙快打 · 第一、二关 3D 重制版（cadillacs-stage1-3d）
+# 恐龙快打 · 第一至三关 3D 重制版（cadillacs-stage1-3d）
 
-Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重制版（当前 v0.9.3，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
+Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重制版（当前 v0.10.0，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
 
 - 第一关「海上都市 CITY IN THE SEA」：楼顶 → 大楼内部 → 第 47 街，Boss 维斯·T 和岩跳龙。
 - 第二关「沼泽森林 THE SWAMP FOREST」：凯迪拉克开进偷猎者森林，三角龙哈克冲撞、胖子想吵醒熟睡的霸王龙希瓦特 → 跳崖落进齐腰深的泥沼 MUD SWAMP，格特从水里冒出、上岸遇链锤兵拉什·T → 黄昏的恐龙尸骸地，Boss 屠夫（双刀、满屏乱跳、屁股坐、不断叫手下）。
 
-四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原。打完第一关会像街机一样直接接第二关；主菜单「起始关卡」也能直接选第二关。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染。画风是这款自己的硬派写实路线（v0.5.2 按用户选择改回，第二关同款）：写实比例角色、卡通色阶着色（MeshToonMaterial）+ 黑色法线外扩描边、带噪点 / 裂缝 / 青苔的程序化写实贴图、偏暗的对比光照。v0.5.0 曾短暂改成赤色要塞式哑光 Q 版，用户对比后认为旧版「更暗更写实」更好。音乐采用原版录音（第二关：In the Poachers' Forest / Ancient Earth / Trap of Silence / Boss 2），缺项音效 WebAudio 合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
+- 第三关「地狱公路 HELL ROAD」：荒原清敌 → J 拾无线电叫来凯迪拉克（也可选择步行）→ 公路驾驶、撞敌、避油桶 → 投手雷的摩托 Boss 霍格；车毁或主动下车后仍可步行打完。驾驶时方向转向、J 撞击、K 刹车、I 加速、U 下车（联机由房主操作），2–4 人共乘、全队下车后恢复各自战斗。原版 Roaring Around / Like a Gale / Boss 3 全曲循环。三关均可直接选，第二关通关连续接第三关。
+
+四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原。打完第一关会像街机一样直接接第二、三关；主菜单「起始关卡」也能直接选第二关。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染。画风是这款自己的硬派写实路线（v0.5.2 按用户选择改回，第二关同款）：写实比例角色、卡通色阶着色（MeshToonMaterial）+ 黑色法线外扩描边、带噪点 / 裂缝 / 青苔的程序化写实贴图、偏暗的对比光照。v0.5.0 曾短暂改成赤色要塞式哑光 Q 版，用户对比后认为旧版「更暗更写实」更好。音乐采用原版录音（第二关：In the Poachers' Forest / Ancient Earth / Trap of Silence / Boss 2），缺项音效 WebAudio 合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
 
 ## 目录
 
@@ -29,7 +31,7 @@ node qa/serve.mjs 8777    # 本地静态服务（no-store），打开 http://127
 
 改了源码重新构建后，递增 `index.html` 里 `js/game.min.js?v=` 的版本号。
 
-URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `window.__CD_TEST__`；`?clean=1` 隐藏桌面键位提示（录制用）；`?q=high|low` 强制画质；`?area=0..5` 直接从某个区域开始（测试用：0 楼顶、1 大楼内部、2 第 47 街、3 偷猎者森林、4 泥沼、5 恐龙尸骸地）。
+URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `window.__CD_TEST__`；`?clean=1` 隐藏桌面键位提示（录制用）；`?q=high|low` 强制画质；`?area=0..6` 直接从某个区域开始（测试用：0 楼顶、1 大楼内部、2 第 47 街、3 偷猎者森林、4 泥沼、5 恐龙尸骸地）。
 
 ## 操作
 
@@ -61,3 +63,10 @@ URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `win
 - `node qa/cover.js`：网站卡片封面
 
 脚本输出写在 `qa/out/`，不入库。
+
+## 第三关回归与采集
+
+- `node qa/stage3.js`：选关保存、拾无线电、驾驶、油桶与霍格、下车续战、结算重玩。
+- `node qa/stage3-variants.js`：不叫车、车毁、超时复活、跨关、模式切换、旋转触屏。
+- `node qa/stage3-coop.js`：本地 WebSocket 中继上的 2/3/4 人独立会话与同步。中继按 site-games 联机 QA 启动。
+- `node qa/stage3-visual.js [--mobile | --record]`：四预设连续移动与转圈，性能和实时原声录像分别运行；手机为视口模拟，非真机。

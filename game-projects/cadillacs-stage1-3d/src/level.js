@@ -8,7 +8,8 @@ export const ENTER_DX = 8.2;        // 敌人从屏幕外进场的距离
 // 两关：first 为该关第一个区域的下标
 export const STAGES = [
   { no: 1, name: '海上都市', en: 'CITY IN THE SEA', first: 0 },
-  { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 }
+  { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 },
+  { no: 3, name: '地狱公路', en: 'HELL ROAD', first: 6 }
 ];
 // 区域：x0..x1 为可走范围，z0..z1 为纵深；timer 为该区域的倒计时（秒）；exit.to 为下一个区域
 // 第二关地面一直铺到画面底部，可走纵深加到 z1 = 4.0（前排到画面约八成高处）；侧视取景仍按 camZ1 那一排算（不因纵深加大而拉远），
@@ -108,6 +109,19 @@ export const AREAS = [
       { id: 'g2', trigger: 22, lock: 28, spawns: [{ type: 'gutter', from: 'right', z: 0.4 }, { type: 'gneiss', from: 'left', z: -0.8, delay: 1.2 }, { type: 'elmer', from: 'right', z: 1.4, delay: 2.6, drop: 'steak' }, { type: 'razor', from: 'left', z: 0.8, delay: 4.4 }] }
     ],
     boss: { type: 'butcher', trigger: 41, lock: 50, x: 54.4, z: -0.8, carcass: { x: 58.6, z: -1.2 } }
+  },
+  {
+    // 荒原清敌、无线电叫车、公路碾敌、霍格投雷追逐；不叫车或车毁后可步行完成。
+    // 路长、敌人数、伤害为本版调校值，来源及差异见 v0.10.0 还原清单。
+    id: 'hellroad', stage: 3, name: '地狱公路', title: 'HELL ROAD', x0: 0, x1: 430,
+    z0: -3.1, z1: 3.1, camZ1: 2.5, camTy: 0.6, start: { x: 2.5, z: 0.5 }, timer: 240,
+    props: [{ kind: 'drum', x: 17.5, z: -2.1, item: 'hamburger' }],
+    waves: [{ id: 'road-start', trigger: 0, lock: 7, spawns: [
+      { type: 'punk', from: 'right', z: 0.3 }, { type: 'gneiss', from: 'right', z: -1.6, delay: 0.8 },
+      { type: 'ferris', from: 'left', z: 1.6, delay: 1.6, drop: 'radio' }
+    ] }],
+    road: { bossAt: 285, end: 415 },
+    boss: { type: 'hogg', trigger: 285, lock: 305 }
   }
 ];
 
@@ -131,10 +145,12 @@ export const ENEMY = {
   thug: { name: 'THUG', cn: '打手', hp: 42, speed: 2.1, points: 1000, reach: 0.95, dmg: 6, aggr: 0.6, kick: 0.25 },
   razor: { name: 'RAZOR', cn: '雷泽', hp: 54, speed: 1.5, points: 2000, reach: 1.25, dmg: 10, aggr: 0.45, knife: true },
   lash: { name: 'LASH T.', cn: '拉什·T', hp: 230, speed: 1.8, points: 8000, reach: 1.1, dmg: 10, aggr: 0.65, mace: true },
-  butcher: { name: 'BUTCHER', cn: '屠夫', hp: 520, speed: 2.3, points: 10000, reach: 1.25, dmg: 10, aggr: 0.85, boss: true }
+  butcher: { name: 'BUTCHER', cn: '屠夫', hp: 520, speed: 2.3, points: 10000, reach: 1.25, dmg: 10, aggr: 0.85, boss: true },
+  hogg: { name: 'HOGG', cn: '霍格', hp: 420, speed: 4.8, points: 15000, reach: 1.2, dmg: 14, aggr: 0.8, boss: true }
 };
 // 原作物品分值（来自原作物品表）：食物回血百分比 / 满血时加分；宝物加分
 export const ITEMS = {
+  radio: { cn: '无线电 · 呼叫凯迪拉克', points: 0, radio: true },
   barbecue: { cn: '烤肉', heal: 100, points: 10000, food: true },
   steak: { cn: '牛排', heal: 80, points: 10000, food: true },
   hamburger: { cn: '汉堡', heal: 48, points: 5000, food: true },
