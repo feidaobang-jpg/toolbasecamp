@@ -1,0 +1,14 @@
+{
+  "source": "Codex",
+  "scope": "YouTube first-line catalog URL and full-description verification",
+  "runtime_skill": "C:/Users/37818/.claude/skills/game-video/SKILL.md",
+  "runtime_reference": "C:/Users/37818/.claude/skills/game-video/references/delivery.md",
+  "files_changed": ["game-video/SKILL.md", "game-video/references/delivery.md"],
+  "backup": "C:/Users/37818/.claude/state/skill-updates/backups/20261008-youtube-catalog-entry",
+  "isolated_branch": "codex/youtube-catalog-entry-20261008",
+  "commit": "8dda2fed8e37ade0cfa1b2a34c97f5b59e574ce6",
+  "remote_master_verified": true,
+  "activated": true,
+  "activation_method": "Under game-video target lock, reread and apply only the verified new bullet and section; preserve other pending skill edits",
+  "validation": "quick_validate.py passed for isolated and active game-video skills"
+}

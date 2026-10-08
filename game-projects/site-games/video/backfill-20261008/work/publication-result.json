@@ -1,6 +1,6 @@
 {
   "batch_id": "game-video-backfill-20261008",
-  "updated_at": "2026-10-08T05:50:15.972565+00:00",
+  "updated_at": "2026-10-08T07:17:25.009195+00:00",
   "historical_bilibili": [
     {
       "episode_id": "swarm",
@@ -41,12 +41,12 @@
       "variant_id": "swarm-youtube-zh",
       "platform": "youtube",
       "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "5pr0fr0CMl0",
+      "public_url": "https://www.youtube.com/watch?v=5pr0fr0CMl0",
+      "account_identity": "UCha4DVE3db0P1eJvu4qsLJg",
+      "duplicate_check": "pass_authenticated_all_entries",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -86,18 +86,50 @@
         }
       ],
       "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
-      "cover_file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg"
+      "cover_file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg",
+      "visibility": "public",
+      "draft_url": "https://studio.youtube.com/video/5pr0fr0CMl0/edit",
+      "last_observed_at": "2026-10-08T06:09:08.236349+00:00",
+      "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "ready_to_upload": false,
+      "subtitle_upload_status": {
+        "zh-CN": "saved_on_platform",
+        "en": "saved_on_platform"
+      },
+      "public_verified_at": "2026-10-08T06:09:08.236349+00:00",
+      "localization_upload_status": {
+        "en": "saved_on_platform"
+      },
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "made_for_kids": false,
+        "paid_promotion": false,
+        "video_language": "zh-CN",
+        "category": "Gaming",
+        "hd_processing": "complete",
+        "caption_public_verification": "manual zh-CN and en listed in public player",
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:01:28.944Z",
+        "public_verified_at": "2026-10-08T07:09:31.161Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
+      }
     },
     {
       "variant_id": "swarm-douyin-zh",
       "platform": "douyin",
       "video_sha256": "41c2b390473f1a079c8219674e58bdd124d9b5986252e399998edfed3ec221a5",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "7694177740940922131",
+      "public_url": "https://www.douyin.com/video/7694177740940922131",
+      "account_identity": "84261875244",
+      "duplicate_check": "pass_authenticated_keyword_search",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -119,18 +151,50 @@
       },
       "subtitle_files": [],
       "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
-      "cover_file": "../../../final/swarm/douyin-zh/cover-zh-16x9.jpg"
+      "cover_file": "../../../final/swarm/douyin-zh/cover-zh-16x9.jpg",
+      "last_observed_at": "2026-10-08T06:24:59.282647+00:00",
+      "account_id": "84261875244",
+      "ready_to_upload": false,
+      "public_verified_at": "2026-10-08T06:24:59.282647+00:00",
+      "visibility": "public",
+      "platform_cover_files": [
+        {
+          "file": "../../../final/swarm/douyin-zh/cover-horizontal-4x3.jpg",
+          "width": 1440,
+          "height": 1080,
+          "purpose": "douyin_horizontal",
+          "sha256": "68b9be8e9a83d7af5da0670fe730c1138263e3241c2111b227b9f78722c6686e",
+          "source": "approved gameplay frame; native text layout"
+        },
+        {
+          "file": "../../../final/swarm/douyin-zh/cover-portrait-3x4.jpg",
+          "width": 1080,
+          "height": 1440,
+          "purpose": "douyin_portrait",
+          "sha256": "bd545ec43c90ddc8dc6931239a5feccfd45c5235e416651034c472928c156db5",
+          "source": "approved gameplay frame; native text layout"
+        }
+      ],
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "original_audio": true,
+        "publish_mode": "immediate",
+        "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
+      }
     },
     {
       "variant_id": "jackal-youtube-zh",
       "platform": "youtube",
       "video_sha256": "0d9f4de768af0625f968cde561c795c0c95053c08357888010640e490f504daa",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "9MwVi2fVMPo",
+      "public_url": "https://www.youtube.com/watch?v=9MwVi2fVMPo",
+      "account_identity": "UCha4DVE3db0P1eJvu4qsLJg",
+      "duplicate_check": "pass_authenticated_all_entries",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -170,18 +234,49 @@
         }
       ],
       "cover_sha256": "fd924208dc48c41eacf89eb95241da059c41c3b4cf4eca781519882754e41236",
-      "cover_file": "../../../final/jackal/youtube-zh/cover-zh-16x9.jpg"
+      "cover_file": "../../../final/jackal/youtube-zh/cover-zh-16x9.jpg",
+      "last_observed_at": "2026-10-08T06:34:12.332731+00:00",
+      "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "ready_to_upload": false,
+      "visibility": "public",
+      "subtitle_upload_status": {
+        "zh-CN": "saved_on_platform",
+        "en": "saved_on_platform"
+      },
+      "public_verified_at": "2026-10-08T06:34:12.332731+00:00",
+      "localization_upload_status": {
+        "en": "saved_on_platform"
+      },
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "made_for_kids": false,
+        "paid_promotion": false,
+        "video_language": "zh-CN",
+        "category": "Gaming",
+        "hd_processing": "complete",
+        "caption_public_verification": "manual zh-CN and en listed in public player",
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:00:58.594Z",
+        "public_verified_at": "2026-10-08T07:09:30.665Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
+      }
     },
     {
       "variant_id": "jackal-douyin-zh",
       "platform": "douyin",
       "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "7694182043927760191",
+      "public_url": "https://www.douyin.com/video/7694182043927760191",
+      "account_identity": "84261875244",
+      "duplicate_check": "pass_authenticated_keyword_search",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -203,18 +298,50 @@
       },
       "subtitle_files": [],
       "cover_sha256": "fd924208dc48c41eacf89eb95241da059c41c3b4cf4eca781519882754e41236",
-      "cover_file": "../../../final/jackal/douyin-zh/cover-zh-16x9.jpg"
+      "cover_file": "../../../final/jackal/douyin-zh/cover-zh-16x9.jpg",
+      "last_observed_at": "2026-10-08T06:45:15.485978+00:00",
+      "account_id": "84261875244",
+      "ready_to_upload": false,
+      "public_verified_at": "2026-10-08T06:45:15.485978+00:00",
+      "visibility": "public",
+      "platform_cover_files": [
+        {
+          "file": "../../../final/jackal/douyin-zh/cover-horizontal-4x3.jpg",
+          "width": 1440,
+          "height": 1080,
+          "purpose": "douyin_horizontal",
+          "sha256": "1f9ff1d59767692c64d13e50d111f4c01d2835ec1d1adf6dc9124ffed49c21bc",
+          "source": "approved gameplay frame; native text layout"
+        },
+        {
+          "file": "../../../final/jackal/douyin-zh/cover-portrait-3x4.jpg",
+          "width": 1080,
+          "height": 1440,
+          "purpose": "douyin_portrait",
+          "sha256": "7d0cbf043ec291875eaaf37cca8385759475136433692566bf40f40ec84308b8",
+          "source": "approved gameplay frame; native text layout"
+        }
+      ],
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "original_audio": true,
+        "publish_mode": "immediate",
+        "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
+      }
     },
     {
       "variant_id": "cadillacs-youtube-zh",
       "platform": "youtube",
       "video_sha256": "460329bf8909b2006b022fdfb574d5e1be92bfc3e18409abd07e3d658bcfe960",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "fJBtG1-njZc",
+      "public_url": "https://www.youtube.com/watch?v=fJBtG1-njZc",
+      "account_identity": "UCha4DVE3db0P1eJvu4qsLJg",
+      "duplicate_check": "pass_authenticated_all_entries",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -254,18 +381,49 @@
         }
       ],
       "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
-      "cover_file": "../../../final/cadillacs/youtube-zh/cover-zh-16x9.jpg"
+      "cover_file": "../../../final/cadillacs/youtube-zh/cover-zh-16x9.jpg",
+      "last_observed_at": "2026-10-08T06:39:45.040191+00:00",
+      "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "ready_to_upload": false,
+      "visibility": "public",
+      "subtitle_upload_status": {
+        "zh-CN": "saved_on_platform",
+        "en": "saved_on_platform"
+      },
+      "public_verified_at": "2026-10-08T06:39:45.040191+00:00",
+      "localization_upload_status": {
+        "en": "saved_on_platform"
+      },
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "made_for_kids": false,
+        "paid_promotion": false,
+        "video_language": "zh-CN",
+        "category": "Gaming",
+        "hd_processing": "complete",
+        "caption_public_verification": "manual zh-CN and en listed in public player",
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:00:13.667Z",
+        "public_verified_at": "2026-10-08T07:09:18.880Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
+      }
     },
     {
       "variant_id": "cadillacs-douyin-zh",
       "platform": "douyin",
       "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "7694183607279062326",
+      "public_url": "https://www.douyin.com/video/7694183607279062326",
+      "account_identity": "84261875244",
+      "duplicate_check": "pass_authenticated_keyword_search",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -287,18 +445,50 @@
       },
       "subtitle_files": [],
       "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
-      "cover_file": "../../../final/cadillacs/douyin-zh/cover-zh-16x9.jpg"
+      "cover_file": "../../../final/cadillacs/douyin-zh/cover-zh-16x9.jpg",
+      "last_observed_at": "2026-10-08T06:50:08.404001+00:00",
+      "account_id": "84261875244",
+      "ready_to_upload": false,
+      "platform_cover_files": [
+        {
+          "file": "../../../final/cadillacs/douyin-zh/cover-horizontal-4x3.jpg",
+          "width": 1440,
+          "height": 1080,
+          "purpose": "douyin_horizontal",
+          "sha256": "799d0eaa5b1dbd3000d01688c670a89845439632aa866997b16d49a90b203007",
+          "source": "approved gameplay frame; native text layout"
+        },
+        {
+          "file": "../../../final/cadillacs/douyin-zh/cover-portrait-3x4.jpg",
+          "width": 1080,
+          "height": 1440,
+          "purpose": "douyin_portrait",
+          "sha256": "bc92606b7efd1d74bbec72cdd42995086793d4b9886d725fd7f94ee63ffde5df",
+          "source": "approved gameplay frame; native text layout"
+        }
+      ],
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "original_audio": true,
+        "publish_mode": "immediate",
+        "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
+      },
+      "public_verified_at": "2026-10-08T06:50:08.404001+00:00",
+      "visibility": "public"
     },
     {
       "variant_id": "swarm-youtube-en",
       "platform": "youtube",
       "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
-      "status": "approved_awaiting_login",
-      "uploaded": false,
-      "platform_id": null,
-      "public_url": null,
-      "account_identity": "unconfirmed",
-      "duplicate_check": "pending_authenticated_platform_library",
+      "status": "published",
+      "uploaded": true,
+      "platform_id": "-RWUU4wpAuY",
+      "public_url": "https://www.youtube.com/watch?v=-RWUU4wpAuY",
+      "account_identity": "UCha4DVE3db0P1eJvu4qsLJg",
+      "duplicate_check": "pass_authenticated_all_entries",
       "human_review": {
         "status": "approved",
         "statement": "可以，继续把",
@@ -338,26 +528,64 @@
         }
       ],
       "cover_sha256": "f490b9ab3433d553bb408e099641f46011ce001e4508ca84b808857db1919d46",
-      "cover_file": "../../../final/swarm/youtube-en/cover-en-16x9.jpg"
+      "cover_file": "../../../final/swarm/youtube-en/cover-en-16x9.jpg",
+      "last_observed_at": "2026-10-08T06:44:04.835145+00:00",
+      "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "ready_to_upload": false,
+      "visibility": "public",
+      "subtitle_upload_status": {
+        "zh-CN": "saved_on_platform",
+        "en": "saved_on_platform"
+      },
+      "public_verified_at": "2026-10-08T06:44:04.835145+00:00",
+      "publishing_settings": {
+        "ai_content_disclosure": true,
+        "custom_cover_uploaded": true,
+        "settings_observed_on": "official creator website",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+        "made_for_kids": false,
+        "paid_promotion": false,
+        "video_language": "en",
+        "category": "Gaming",
+        "hd_processing": "complete",
+        "caption_public_verification": "manual zh-CN and en listed in public player",
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:02:17.652Z",
+        "public_verified_at": "2026-10-08T07:09:37.166Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
+      }
     }
   ],
   "platforms": {
     "youtube": {
-      "status": "needs_login",
+      "status": "published",
       "notification_status": "sent",
       "notification_service": "feishu",
-      "account_mapping": "pending"
+      "account_mapping": "confirmed",
+      "channel_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "display_name": "郑晓辉",
+      "account_key": "7366c2ad3af6da91",
+      "login_incident_status": "resolved",
+      "notification_resolution": "Resolve returned resolved"
     },
     "douyin": {
-      "status": "needs_login",
+      "status": "published",
       "notification_status": "sent",
       "notification_service": "feishu",
-      "account_mapping": "pending"
+      "account_mapping": "confirmed",
+      "account_id": "84261875244",
+      "display_name": "飞刀帮主",
+      "account_key": "72b53d74f2e7d06c",
+      "login_incident_status": "resolved",
+      "notification_resolution": "Resolve returned resolved"
     },
     "x": {
       "authorized": true,
-      "status": "draft_only",
-      "needs": "已公开YouTube链接、本人账号与官方API/连接器权限",
+      "status": "ready_pending_official_access",
+      "needs": "Provide an existing authorized official X API/connector, or explicitly defer X. Do not send credentials in chat.",
       "one_post_per_episode": true,
       "capability_discovery": {
         "checked_at": "2026-10-08T05:50:15.972565+00:00",
@@ -366,11 +594,16 @@
         "connection": "not-established",
         "payment_required_for_x": "paid plan plus X/Twitter add-on; no purchase authorized or performed",
         "official_source": "https://help.metricool.com/your-guide-to-the-x-twitter-add-on-wt5wy"
-      }
+      },
+      "pending_event": {
+        "task_id": "game-video-x-publication-access-pending-owner",
+        "event_id": "d7fcb924-412a-4cb5-b384-bbbf0071a229"
+      },
+      "notification_status": "sent"
     }
   },
-  "release_status": "not_uploaded",
-  "next_action": "在Codex浏览器完成抖音/YouTube登录，核对本人账号与稿件查重，再上传已通过7版。无需再次人工审片。",
+  "release_status": "videos_published_x_pending",
+  "next_action": "7版均公开；X三条带链接文案已定稿，需本人接入已有官方API/连接器或明确暂缓。",
   "human_review": {
     "status": "approved",
     "statement": "可以，继续把",
@@ -386,5 +619,25 @@
       "swarm-youtube-en"
     ],
     "source": "user"
-  }
+  },
+  "publishing_screenshots": [
+    {
+      "platform": "youtube",
+      "file": "qa\\youtube-published.jpg",
+      "sha256": "969c46b84589be82e02aa08125bc9ae78666f5f9db524afffe8aac9b603f5e73",
+      "purpose": "official creator library after publication"
+    },
+    {
+      "platform": "douyin",
+      "file": "qa\\douyin-published.jpg",
+      "sha256": "20b692e13441f67bcb15dc19bc5610ce588403422c4e460e7b0cda6c6c6d940c",
+      "purpose": "official creator library after publication"
+    },
+    {
+      "platform": "youtube",
+      "file": "qa\\youtube-catalog-entry.jpg",
+      "sha256": "9ee0ceee6c1a696789e3495e1088bdbf33eee1cdf3a501815a8350cff121f188",
+      "purpose": "public description with first-line catalog URL"
+    }
+  ]
 }

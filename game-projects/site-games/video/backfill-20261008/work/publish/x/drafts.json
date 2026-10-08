@@ -1,21 +1,41 @@
 {
-  "status": "not_published",
+  "status": "ready_pending_official_access",
   "requires": "verified public YouTube URL and confirmed owner X account/API",
   "posts": [
     {
       "episode_id": "swarm",
       "text": "I built a base-defense game, then took the fight into the alien queen’s burrow. Here is an edited run from an earlier build. English narration; the playable demo currently has a Chinese UI.",
-      "preferred_variant": "swarm-youtube-en"
+      "preferred_variant": "swarm-youtube-en",
+      "youtube_id": "-RWUU4wpAuY",
+      "youtube_url": "https://www.youtube.com/watch?v=-RWUU4wpAuY",
+      "final_text": "I built a base-defense game, then took the fight into the alien queen’s burrow. Here is an edited run from an earlier build. English narration; the playable demo currently has a Chinese UI.\nhttps://www.youtube.com/watch?v=-RWUU4wpAuY",
+      "status": "ready_pending_official_access",
+      "posted": false
     },
     {
       "episode_id": "jackal",
       "text": "One little jeep, two rescue missions: barracks, rocket upgrades and helicopter evacuations in my unofficial 3D Jackal remake. Chinese narration with English subtitles.",
-      "preferred_variant": "jackal-youtube-zh"
+      "preferred_variant": "jackal-youtube-zh",
+      "youtube_id": "9MwVi2fVMPo",
+      "youtube_url": "https://www.youtube.com/watch?v=9MwVi2fVMPo",
+      "final_text": "One little jeep, two rescue missions: barracks, rocket upgrades and helicopter evacuations in my unofficial 3D Jackal remake. Chinese narration with English subtitles.\nhttps://www.youtube.com/watch?v=9MwVi2fVMPo",
+      "status": "ready_pending_official_access",
+      "posted": false
     },
     {
       "episode_id": "cadillacs",
       "text": "What changes when a classic brawler becomes first person? I tested side, rear and first-person views in my unofficial Cadillacs and Dinosaurs remake. Chinese narration with English subtitles.",
-      "preferred_variant": "cadillacs-youtube-zh"
+      "preferred_variant": "cadillacs-youtube-zh",
+      "youtube_id": "fJBtG1-njZc",
+      "youtube_url": "https://www.youtube.com/watch?v=fJBtG1-njZc",
+      "final_text": "What changes when a classic brawler becomes first person? I tested side, rear and first-person views in my unofficial Cadillacs and Dinosaurs remake. Chinese narration with English subtitles.\nhttps://www.youtube.com/watch?v=fJBtG1-njZc",
+      "status": "ready_pending_official_access",
+      "posted": false
     }
-  ]
+  ],
+  "updated_at": "2026-10-08T07:17:25.009195+00:00",
+  "pending_event": {
+    "task_id": "game-video-x-publication-access-pending-owner",
+    "event_id": "d7fcb924-412a-4cb5-b384-bbbf0071a229"
+  }
 }

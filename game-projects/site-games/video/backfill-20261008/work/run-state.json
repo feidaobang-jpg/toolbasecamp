@@ -3,18 +3,18 @@
   "source": "Codex",
   "workspace": "C:\\Users\\37818\\.codex\\worktrees\\video-backfill-20261008\\toolbasecamp",
   "branch": "codex/video-backfill-20261008",
-  "phase": "awaiting_platform_login",
+  "phase": "videos_published_x_pending",
   "production_complete": true,
-  "published": false,
+  "published": true,
   "ready_to_review": true,
   "review_page": "../审片.html",
   "manifests": "publish.json",
   "technical_validation": "qa/media-validation.json",
   "audio_metrics": "qa/audio-metrics.json",
-  "platform_preview": "not-run",
+  "platform_preview": "public desktop web players verified; no real-phone test",
   "subjective_listening": "not-run",
-  "updated_at": "2026-10-08T05:50:15.972565+00:00",
-  "retention_reason": "本机被忽略的成片/音轨仍用于审片与后续发布，保留任务worktree，不归档。",
+  "updated_at": "2026-10-08T07:17:25.009195+00:00",
+  "retention_reason": "7版被忽略的成片与音轨仍须保全；X续接待处理，保留任务worktree。",
   "preview_limitations": [
     "本地预览服务被自动审批策略拒绝",
     "内置浏览器不允许file协议，使用本地文件链接交付"
@@ -35,5 +35,6 @@
     ],
     "source": "user"
   },
-  "continuation_task_id": "01a11964-7a1a-74a0-b55b-357944dbcfd4-video-backfill-publish-02"
+  "continuation_task_id": "01a11964-7a1a-74a0-b55b-357944dbcfd4-video-backfill-publish-02",
+  "x_published": false
 }

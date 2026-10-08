@@ -14,7 +14,7 @@
   "height": 1080,
   "duration_seconds": 171.489333,
   "title": "I Took the Fight Into the Alien Burrow | Swarm Siege",
-  "description": "Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nEnglish narration and captions; Chinese captions are also provided. The game interface is currently in Chinese; follow the current in-game control prompts.\nCurrent browser demo: https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\nEnglish-language experiment for this gameplay episode; Swarm Siege is the translated title used in this video.",
+  "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nSelect 虫潮围城 in the list; copy the URL into your browser if it is not clickable.\nCollect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nEnglish narration and captions; Chinese captions are also provided. The game interface is currently in Chinese; follow the current in-game control prompts.\nEnglish-language experiment for this gameplay episode; Swarm Siege is the translated title used in this video.",
   "tags": [
     "gamedev",
     "base defense",
@@ -83,10 +83,48 @@
       "en": "f6e9386723d22f3feb81b48fcb928459ef6676d63d847c537ffc7e92ee20a602"
     }
   },
-  "blocking_issues": [
-    "发布账号登录与当前投稿设置待核对"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "ready_to_review": true,
-  "uploaded": false
+  "uploaded": true,
+  "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+  "status": "published",
+  "last_observed_at": "2026-10-08T06:44:04.835145+00:00",
+  "platform_id": "-RWUU4wpAuY",
+  "visibility": "public",
+  "subtitle_upload_status": {
+    "zh-CN": "saved_on_platform",
+    "en": "saved_on_platform"
+  },
+  "public_url": "https://www.youtube.com/watch?v=-RWUU4wpAuY",
+  "public_verified_at": "2026-10-08T06:44:04.835145+00:00",
+  "duplicate_check_scope": {
+    "pre_upload_normal_videos": [
+      "Kk8XPu9vQ-M"
+    ],
+    "pre_upload_shorts": [
+      "DE7PRJiSReo"
+    ],
+    "matching_backfill_found": false,
+    "description": "Normal-video library and channel translations list inspected before upload"
+  },
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+    "made_for_kids": false,
+    "paid_promotion": false,
+    "video_language": "en",
+    "category": "Gaming",
+    "hd_processing": "complete",
+    "caption_public_verification": "manual zh-CN and en listed in public player",
+    "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+  },
+  "demo_entry_revision": {
+    "url": "https://www.zhengxiaohui.cn/games.html",
+    "updated_at": "2026-10-08T07:02:17.652Z",
+    "public_verified_at": "2026-10-08T07:09:37.166Z",
+    "original_description_retained_in": "../youtube-entry-revision.json"
+  }
 }
