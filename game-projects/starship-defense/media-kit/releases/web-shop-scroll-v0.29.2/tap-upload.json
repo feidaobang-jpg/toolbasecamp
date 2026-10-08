@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "data": {
+    "applyCommand": "taptap-cli app select-package --dev-id 100726 --app-id 962354 --data '{\"expected\":{\"h5_version_id\":\"276055\",\"kind\":\"h5\"},\"package\":{\"id\":\"276450\",\"type\":\"h5\"},\"slot\":\"main\"}' --idempotency-key \u003credacted\u003e --yes",
+    "archive_preflight": {
+      "entry_count": 5,
+      "top_level_entries": [
+        "chongchao-qianshao"
+      ],
+      "violations": [],
+      "warnings": []
+    },
+    "boundMainPackage": false,
+    "cliTaskId": "a4bb0375-d7f3-4269-9b8a-c67d892decc8",
+    "fileName": "chongchao-qianshao.zip",
+    "h5PackageId": 74265,
+    "h5VersionId": 276450,
+    "handoff": {
+      "stage": "package_uploaded",
+      "completed": [
+        "H5 package uploaded",
+        "H5 version created"
+      ],
+      "pending": [
+        "main package slot is not bound",
+        "profile review is still pending"
+      ],
+      "userActionRequired": true,
+      "userActionSummary": "确认主包位绑定后才能继续",
+      "nextActions": [
+        {
+          "id": "bind_main_package",
+          "label": "预览并确认主包位绑定",
+          "requiresConfirmation": true
+        },
+        {
+          "id": "inspect_package",
+          "label": "检查包体状态和手机试玩入口",
+          "requiresConfirmation": false
+        }
+      ],
+      "links": [
+        {
+          "kind": "admin",
+          "label": "开发者后台资料页",
+          "url": "https://developer.taptap.cn/v3/100726/app/962354/store/update",
+          "available": true,
+          "source": "derived_from_ids"
+        }
+      ]
+    },
+    "nextCommand": "taptap-cli app select-package --dev-id 100726 --app-id 962354 --data '{\"expected\":{\"h5_version_id\":\"276055\",\"kind\":\"h5\"},\"package\":{\"id\":\"276450\",\"type\":\"h5\"},\"slot\":\"main\"}' --idempotency-key \u003credacted\u003e --dry-run",
+    "nextStep": "H5 version created but not bound; preview the read-before-write main-slot change, then apply it after user confirmation",
+    "packageSize": 343179,
+    "readinessCheck": {
+      "bindable": true,
+      "bound": false,
+      "packageRecordAvailable": true,
+      "slotReadable": true,
+      "uploaded": true
+    },
+    "screenOrientation": 0
+  }
+}

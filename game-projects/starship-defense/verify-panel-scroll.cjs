@@ -14,6 +14,7 @@ const out=path.resolve(__dirname,process.env.OUT_DIR||'media-kit/releases/web-sh
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   if(process.env.BASELINE_SCRIPT)await page.route(/game\.compat\.js(?:\?|$)/,route=>route.fulfill({contentType:'application/javascript',body:fs.readFileSync(process.env.BASELINE_SCRIPT)}));
   if(process.env.BASELINE_HTML)await page.route(/index\.html(?:\?|$)/,route=>route.fulfill({contentType:'text/html',body:fs.readFileSync(process.env.BASELINE_HTML)}));
+  if(process.env.BLOCK_JS==='1')await page.route(/\.js(?:\?|$)/,route=>route.abort());
   await page.goto(url+(url.includes('?')?'&':'?')+'qa=1&test=1');await page.waitForFunction(()=>window.__gameQA&&window.__ccReady);
   await page.locator('#btnStart').click();await page.waitForTimeout(300);
   await page.evaluate(shape=>{__gameQA.setDeviceMode(shape==='desktop'?'pc':'touch');__gameQA.Game.gold=100000;__gameQA.openShop();},shape);

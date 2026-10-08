@@ -1,0 +1,167 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "banner_4": {
+          "current_value": "https://img-tc.tapimg.com/market/images/0ffc232a8c72eee41054f53ac6e50dfe.png",
+          "field_id": "banner_4",
+          "filled": true,
+          "image_spec": {
+            "aspect_ratio": "16:9",
+            "content_note": "横版宣传图",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 4,
+            "min_height": 1080,
+            "min_width": 1920
+          },
+          "input_type": "image",
+          "label": "宣传图",
+          "state": "suggested"
+        },
+        "banner_4_ios": {
+          "field_id": "banner_4_ios",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "16:9",
+            "content_note": "横版宣传图",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 4,
+            "min_height": 1080,
+            "min_width": 1920
+          },
+          "input_type": "image",
+          "label": "宣传图(iOS)",
+          "state": "optional"
+        },
+        "gameplay_demo_video": {
+          "current_value": 5945458,
+          "field_id": "gameplay_demo_video",
+          "filled": true,
+          "input_type": "video",
+          "label": "实机录屏",
+          "state": "suggested",
+          "video_spec": {
+            "aspect_ratio": "9:21 ~ 21:9",
+            "formats": [
+              "mp4",
+              "mov"
+            ],
+            "label": "实机录屏",
+            "max_seconds": 1800,
+            "min_height": 540,
+            "min_seconds": 15,
+            "min_width": 540,
+            "requirements": [
+              "需充分演示核心玩法",
+              "前 5 秒内展示核心玩法，核心玩法展示至少持续 10 秒",
+              "请勿使用额外人声配音及字幕",
+              "请勿使用画中画或露出手机等设备 UI"
+            ],
+            "scene": "gameplay_demo_video"
+          }
+        },
+        "screenshots": {
+          "collection_spec": {
+            "current_count": 3,
+            "max_items": 10,
+            "min_items": 3,
+            "missing_count": 0
+          },
+          "current_value": [
+            "https://img-tc.tapimg.com/market/images/d41bd198408b3f12508366f9a1753bfe.jpg",
+            "https://img-tc.tapimg.com/market/images/e1a29554355dd1dbf21bc968ce71e188.jpg",
+            "https://img-tc.tapimg.com/market/images/d2ef2515acff3c571acc3e525879c5c3.jpg"
+          ],
+          "field_id": "screenshots",
+          "filled": true,
+          "input_type": "image_array",
+          "label": "游戏截图",
+          "state": "suggested"
+        },
+        "screenshots_ios": {
+          "field_id": "screenshots_ios",
+          "filled": false,
+          "input_type": "image_array",
+          "label": "游戏截图(iOS)",
+          "state": "optional"
+        },
+        "square_promo_image": {
+          "field_id": "square_promo_image",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "方图宣传图",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 4,
+            "min_height": 1440,
+            "min_width": 1440
+          },
+          "input_type": "image",
+          "label": "1:1 宣传图",
+          "state": "optional"
+        },
+        "square_promo_image_ios": {
+          "field_id": "square_promo_image_ios",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "方图宣传图",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 4,
+            "min_height": 1440,
+            "min_width": 1440
+          },
+          "input_type": "image",
+          "label": "1:1 宣传图(iOS)",
+          "state": "optional"
+        },
+        "trailer": {
+          "field_id": "trailer",
+          "filled": false,
+          "input_type": "video",
+          "label": "宣传片",
+          "state": "optional",
+          "video_spec": {
+            "aspect_ratio": "16:9",
+            "formats": [
+              "mp4",
+              "mov"
+            ],
+            "label": "宣传片",
+            "min_height": 720,
+            "min_seconds": 15,
+            "min_width": 1280,
+            "requirements": [
+              "仅支持横屏视频",
+              "用于首页推荐及游戏详情页展示"
+            ],
+            "scene": "trailer"
+          }
+        }
+      },
+      "module_id": "assets-upload",
+      "revision": 1047715
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

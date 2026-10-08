@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047715",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图素材直接复用了带游戏UI界面的实机截图，且包含标题以外的大量UI文字。请使用专门设计的宣传海报/主视觉插画，避免直接在实机截图上叠加标题作为宣传图。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "竖版封面素材直接复用了包含游戏界面UI的实机截图，且画面中出现了标题以外的多余UI文字。请上传经过专门排版设计、去除游戏内操作UI的高清封面图。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

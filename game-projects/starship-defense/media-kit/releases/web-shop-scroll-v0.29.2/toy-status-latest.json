@@ -1,0 +1,26 @@
+{
+  "total": 15,
+  "pn": 1,
+  "ps": 20,
+  "list": [
+    {
+      "id": 38678478981120,
+      "title": "虫潮围城",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+      "watermark_enabled": false,
+      "ctime": 1790739397,
+      "mtime": 1791464489
+    }
+  ],
+  "scope_note": "仅保留本任务目标；原账号分页总数不代表本记录list长度"
+}

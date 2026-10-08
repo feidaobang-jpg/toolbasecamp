@@ -1,0 +1,24 @@
+{
+  "toy_id": 38678478981120,
+  "slug": "chongchao-qianshao",
+  "version": "web-shop-scroll-v0.29.2",
+  "status": "published",
+  "visibility": "PUBLIC",
+  "source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee",
+  "package_sha256": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_l0jtub7g/index.html",
+  "submission_receipt": "toy-submit.json",
+  "public_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "public_verified_at": "2026-10-08T13:15:54.717982+00:00",
+  "publication_time_note": "mylist最新状态published；mtime为1791464489，核验时间与平台时间分别记录",
+  "platform_mtime": 1791464489,
+  "verification": "公开入口电脑/390x844竖屏：新翻页按钮、激光/等离子切换使用中；同ZIP模拟触摸购买与扣费通过",
+  "phone_real_device": false,
+  "screenshots": [
+    "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\preview\\toy-public-desktop.jpg",
+    "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\preview\\toy-public-portrait.jpg"
+  ],
+  "doctor_warnings": [],
+  "public_iframe": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v23779/index.html",
+  "cache_note": "Toy正式入口使用平台版本目录v23779；缓存更新独立于网站脚本query，后续网站仅递增script查询标记，同一运行代码不重复送审"
+}

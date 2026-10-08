@@ -649,12 +649,15 @@
       "comment_time_precision": "date_only",
       "text": "不能挪动啊,无法上下挪动只能用一些普通的防御塔和普通的武器,等离子炮和激光枪都不能用,点不到",
       "kind": "bug",
-      "status": "fixed_pending_release_reply",
+      "status": "fixed",
       "fixed_in": "web-shop-scroll-v0.29.2",
-      "reply_status": "pending_release",
+      "reply_status": "public_verified",
       "reply_rpid": null,
       "record": "releases/web-shop-scroll-v0.29.2/comment-reply.json",
-      "note": "公开页面原楼无本人回复；用户指定修复。联机65ms快照夹具复现滚动被焦点恢复拉回及卡片节点持续替换；单机Chrome原滑动正常，增加商店/建造固定翻页键作为独立浏览路径。原报告者设备/玩法仍未知，桌面模拟不等于真机。"
+      "note": "公开页面原楼无本人回复；用户指定修复。联机65ms快照夹具复现滚动被焦点恢复拉回及卡片节点持续替换；单机Chrome原滑动正常，增加商店/建造固定翻页键作为独立浏览路径。原报告者设备/玩法仍未知，桌面模拟不等于真机。",
+      "reply_text": "修好了！已处理商店刷新时列表回弹、影响点击的问题，商店和建造现在都能滑动，也可以点「上一页／下一页」找到后面的装备。激光炮、等离子炮和高级炮塔都能选了，网站和Toy已更新。重新打开试玩再试试，感谢反馈！",
+      "reply_public_verified_at": "2026-10-08T13:11:45.992Z",
+      "screenshot": "D:/project/toolbasecamp-artifacts/chongchao-shop-scroll-v0.29.2-20261008/comment-public-verified.jpg"
     }
   ]
 }

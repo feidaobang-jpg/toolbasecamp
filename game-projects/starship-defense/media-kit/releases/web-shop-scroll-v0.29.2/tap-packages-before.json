@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "current_bindings": [
+        {
+          "package_id": "276055",
+          "revision": 1047715,
+          "slot": "main"
+        }
+      ],
+      "list": [
+        {
+          "package_id": "276450",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "276055",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "276037",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "275671",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "275356",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "274950",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "274325",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "273272",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "272261",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "270949",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "270783",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        },
+        {
+          "package_id": "269751",
+          "status": "ready",
+          "type": "h5",
+          "version_name": ""
+        }
+      ],
+      "package_slots": {
+        "apk_mini_game_play": {
+          "available": false,
+          "expected": {
+            "kind": "none"
+          }
+        },
+        "main": {
+          "available": true,
+          "expected": {
+            "h5_version_id": "276055",
+            "kind": "h5"
+          }
+        },
+        "windows": {
+          "available": false,
+          "expected": {
+            "kind": "none"
+          }
+        }
+      },
+      "total": 12
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

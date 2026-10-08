@@ -8,8 +8,8 @@
   "development_tool": "Codex",
   "build": {
     "id": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
-    "commit": null,
-    "dirty": true,
+    "commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee",
+    "dirty": false,
     "fingerprint": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -39,7 +39,7 @@
   "media": [
     {
       "id": "local-844x390-shopPanel-verified.png",
-      "file": "releases/web-shop-scroll-v0.29.2/qa/local/844x390-shopPanel-verified.png",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\release\\qa\\local\\844x390-shopPanel-verified.png",
       "sha256": "ce2d7eadd6f288ca9116ce6feece58e90f0d1c9cb3fcbc76ddcbe4ecc615ef79",
       "kind": "screenshot",
       "version": "web-shop-scroll-v0.29.2",
@@ -54,7 +54,7 @@
     },
     {
       "id": "local-390x844-shopPanel-verified.png",
-      "file": "releases/web-shop-scroll-v0.29.2/qa/local/390x844-shopPanel-verified.png",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\release\\qa\\local\\390x844-shopPanel-verified.png",
       "sha256": "6cbb7835935487d11ee2208271045846f252c28b806fd33d28270b820101f280",
       "kind": "screenshot",
       "version": "web-shop-scroll-v0.29.2",
@@ -69,7 +69,7 @@
     },
     {
       "id": "before-coop-844x390-shopPanel.png",
-      "file": "releases/web-shop-scroll-v0.29.2/qa/before-coop/844x390-shopPanel.png",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\release\\qa\\before-coop\\844x390-shopPanel.png",
       "sha256": "1fa190f88fc0975f1962038b53c183d4a8d60b2a06f24468be770c5077177fee",
       "kind": "screenshot",
       "version": "web-rv-v0.29.1",
@@ -89,7 +89,10 @@
       "qa/local/results.json",
       "qa/after-coop/results.json",
       "qa/before-coop/results.json",
-      "qa/squad-regression/results.json"
+      "qa/squad-regression/results.json",
+      "qa/final-coop/results.json",
+      "qa/toy-package/results.json",
+      "qa/taptap-package/results.json"
     ],
     "method": "桌面Edge移动视口与CDP真实触控；联机为经实际消息适配器注入的快照夹具，非真实跨设备联网。",
     "untested": [
@@ -106,10 +109,12 @@
     ]
   },
   "channels": {
-    "website": "pending",
-    "toy": "pending",
-    "taptap": "pending",
-    "bilibili_descriptions": "pending",
-    "source_comment": "pending"
-  }
+    "website": "public_verified",
+    "toy": "published_public_verified",
+    "taptap": "reviewing",
+    "bilibili_descriptions": "public_verified_3_targets",
+    "source_comment": "public_verified"
+  },
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008",
+  "source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee"
 }

@@ -1,0 +1,42 @@
+{
+  "banner_4": {
+    "path": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\banner_4-hud-hidden.jpg",
+    "sha256": "3c6a3489e57ab7a6da066d61404148fff582acae107a0bce87e6106586948354",
+    "size": [
+      1920,
+      1080
+    ],
+    "bytes": 306825,
+    "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+    "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+    "crop": [
+      0,
+      0,
+      1920,
+      1080
+    ],
+    "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+    "version": "web-shop-scroll-v0.29.2",
+    "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体"
+  },
+  "cover_vertical": {
+    "path": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover_vertical-hud-hidden.jpg",
+    "sha256": "48b794f13ce00c6e82eb352b54dc0dca7d36f3d753c5f5b2962f55ae338386aa",
+    "size": [
+      720,
+      1080
+    ],
+    "bytes": 172838,
+    "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+    "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+    "crop": [
+      600,
+      0,
+      1320,
+      1080
+    ],
+    "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+    "version": "web-shop-scroll-v0.29.2",
+    "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体"
+  }
+}
