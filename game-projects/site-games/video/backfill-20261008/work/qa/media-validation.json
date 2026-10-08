@@ -18,7 +18,7 @@
       "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -52,7 +52,7 @@
       "video_sha256": "460329bf8909b2006b022fdfb574d5e1be92bfc3e18409abd07e3d658bcfe960",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -75,7 +75,7 @@
       "video_sha256": "f686506d73b2e06d6bd9314ceaef756f28a66e0481ffada711e7bf478edd2fdc",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -109,7 +109,7 @@
       "video_sha256": "0d9f4de768af0625f968cde561c795c0c95053c08357888010640e490f504daa",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -132,7 +132,7 @@
       "video_sha256": "41c2b390473f1a079c8219674e58bdd124d9b5986252e399998edfed3ec221a5",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -166,7 +166,7 @@
       "video_sha256": "ee74943f9f9f184055da6826a3789380ca6244429dfc614ee7a8e47544e19b67",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -200,7 +200,7 @@
       "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
       "visual_review": "pass_sampled_intro_middle_outro",
       "subjective_listening": "not-run",
-      "human_review": "pending",
+      "human_review": "approved",
       "platform_preview": "not-run",
       "visual_review_detail": "实际查看每版1.8秒、55%位置和结尾前4秒；画面无黑屏、字幕不挡核心玩法，历史版本标记与新尾卡完整。未代替完整人工审片。",
       "checked_at": "2026-10-08T04:08:07.154875+00:00"
@@ -208,5 +208,5 @@
   ],
   "chinese_douyin_youtube_audio_identical": true,
   "live_platform_upload": "not-run",
-  "new_human_approval": "pending"
+  "new_human_approval": "approved"
 }

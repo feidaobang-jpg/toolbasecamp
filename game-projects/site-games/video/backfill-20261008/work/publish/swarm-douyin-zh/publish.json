@@ -47,12 +47,25 @@
     "overseas_playability": "not-tested"
   },
   "human_review": {
-    "status": "pending",
+    "status": "approved",
+    "statement": "可以，继续把",
+    "accepted_at": "2026-10-08T05:50:15.972565+00:00",
+    "context": "回复已展示的7版审片包及按通过版本继续发布的请求",
+    "approved_variant_ids": [
+      "swarm-youtube-zh",
+      "swarm-douyin-zh",
+      "jackal-youtube-zh",
+      "jackal-douyin-zh",
+      "cadillacs-youtube-zh",
+      "cadillacs-douyin-zh",
+      "swarm-youtube-en"
+    ],
+    "source": "user",
     "video_sha256": "41c2b390473f1a079c8219674e58bdd124d9b5986252e399998edfed3ec221a5",
-    "reason": "本次重新剪辑/配音/翻译字幕尚未人工审片"
+    "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
+    "subtitle_sha256": {}
   },
   "blocking_issues": [
-    "人工审片待完成",
     "发布账号登录与当前投稿设置待核对"
   ],
   "ready_to_upload": false,
