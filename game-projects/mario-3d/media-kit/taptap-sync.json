@@ -5,21 +5,21 @@
   "app_id": 962723,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "online",
-  "platform_status": "online",
+  "status": "reviewing_startup_inline_runtime_v2",
+  "platform_status": "reviewing",
   "staged_version": "v2.5.0",
-  "staged_source_commit": "8a0114c5549d2916eed5de5bc2c052c38822d83f",
-  "staged_package_sha256": "1574fa6ce2867446bc485e05d5df818a8d7d1919caa87d3a39774cdf8230529b",
-  "staged_h5_version_id": 270893,
-  "staged_h5_package_id": 71946,
-  "draft_version_id": "1041014",
+  "staged_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+  "staged_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+  "staged_h5_version_id": 274324,
+  "staged_h5_package_id": 73328,
+  "draft_version_id": "1045138",
   "submitted_version": "v2.5.0",
-  "submitted_at": "2026-10-07T02:30:03.682018+00:00",
+  "submitted_at": "2026-10-08T02:38:03.280324+00:00",
   "last_published_version": "v2.5.0",
   "last_published_h5_version_id": 270893,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-07T04:43:29.723Z",
-  "release_record": "releases/taptap-force3-20261007/handoff.json",
+  "last_status_checked_at": "2026-10-08T02:40:39.031351+00:00",
+  "release_record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
   "pending_material_review": [],
   "pending": [],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
@@ -28,8 +28,8 @@
   "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
   "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
   "agreement_signed_at": "2026-10-07T02:29:21.298200+00:00",
-  "submitted_package_sha256": "1574fa6ce2867446bc485e05d5df818a8d7d1919caa87d3a39774cdf8230529b",
-  "submitted_h5_version_id": 270893,
+  "submitted_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+  "submitted_h5_version_id": 274324,
   "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
   "force_submission_authorized": true,
   "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
@@ -40,42 +40,49 @@
       "field_ids": [
         "title"
       ],
-      "message": "游戏标题包含知名IP‘超级玛丽’，可能存在侵权风险；如已获得官方授权，请前往游戏资质页面上传相关授权文件，否则建议修改标题。"
+      "message": "游戏名称‘超级玛丽 3D’涉及使用知名游戏IP名称，存在侵权与蹭热度风险。若已获得官方授权，请前往游戏资质页面上传相关授权书，否则请修改游戏名称。"
     },
     {
       "code": "PREAUDIT",
       "field_ids": [
         "description"
       ],
-      "message": "游戏简介中引用了知名IP‘超级玛丽’，若无官方授权请修改相关表述，或在资质页面补充上传授权证明。"
+      "message": "简介中包含对知名IP‘超级玛丽’的引用，存在侵权风险，请提供相应授权资质或调整文本表述。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "trial_note"
+      ],
+      "message": "开发者的话中内容涉及使用未经授权的知名游戏IP，存在侵权风险，建议前往资质页面上传授权文件或修改描述。"
     },
     {
       "code": "PREAUDIT",
       "field_ids": [
         "icon"
       ],
-      "message": "游戏图标使用了知名角色形象，存在侵权风险，请提供相应授权证明或更换为原创美术素材。"
+      "message": "图标素材使用了知名游戏角色（马里奥）的形象，存在侵权风险，请前往游戏资质页面上传授权书或更换原创素材。"
     },
     {
       "code": "PREAUDIT",
       "field_ids": [
         "screenshots"
       ],
-      "message": "游戏截图中使用了大量知名IP的美术资产与角色形象，存在版权侵权风险，请在资质页面上传授权资质或调整游戏内相关素材。"
+      "message": "游戏截图中包含知名IP（超级玛丽/马里奥）的角色、UI及经典关卡元素，存在侵权风险，请前往资质页面上传相关授权证明。"
     },
     {
       "code": "PREAUDIT",
       "field_ids": [
         "banner_4"
       ],
-      "message": "宣传图中包含知名IP角色与元素，存在版权风险，建议上传相关授权书或替换素材。"
+      "message": "宣传图中使用了‘超级玛丽’知名IP形象及素材（如马里奥、板栗仔、问号砖块等），存在侵权风险，请提供授权资质或更换素材。"
     },
     {
       "code": "PREAUDIT",
       "field_ids": [
         "cover_vertical"
       ],
-      "message": "竖版封面中包含知名IP角色与元素，存在版权风险，建议上传相关授权书或替换素材。"
+      "message": "竖版封面中使用了‘超级玛丽’知名IP形象及素材（如马里奥、板栗仔、问号砖块等），存在侵权风险，请提供授权资质或更换素材。"
     }
   ],
   "rights_proof_provided": false,
@@ -98,5 +105,32 @@
     "public_verified_at": "2026-10-07T04:43:29.723Z",
     "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
-  }
+  },
+  "history": [
+    {
+      "version": "v2.5.0",
+      "platform_version": "V-20261007",
+      "h5_version_id": 270893,
+      "status_before_resume": "online",
+      "note": "Preserved previous baseline; actual online package observed before new draft creation."
+    }
+  ],
+  "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+  "audit_id": "1045138",
+  "platform_version": "V-20261008",
+  "startup_adapter": "inline-runtime-v2",
+  "community_post_status": "pending_until_online",
+  "verification": {
+    "startup_guard": "8/8 pass",
+    "player_identity_crypto_storage": "17/17 pass",
+    "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
+    "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "phone": "not tested on actual mobile TapTap App for these exact packages"
+  },
+  "pending_note": "TapTap统一启动包已上传、绑定、预检并正常提审；reviewing不代表上线，exact ZIP 手机App未实机验证。",
+  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962723\\h5-latest.json"
 }

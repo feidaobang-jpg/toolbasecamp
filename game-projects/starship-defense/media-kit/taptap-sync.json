@@ -5,27 +5,27 @@
   "app_id": 962354,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "online_web-cloudsave-v0.24.0",
-  "submitted_version": "web-cloudsave-v0.24.0",
-  "submitted_package_sha256": "949e57bbdd8baff27352296d08b497f0e5458d1bf9183a4320da3aa9b5e4fdb3",
-  "submitted_h5_version_id": 273272,
-  "draft_version_id": "1043869",
-  "audit_id": "1043869",
-  "platform_version": "V-20261007-3",
-  "submitted_at": "2026-10-07T22:39:10+08:00",
+  "status": "reviewing_startup_inline_runtime_v2",
+  "submitted_version": "web-unstick-rpg-v0.25.0",
+  "submitted_package_sha256": "d9b01df9bcd8bad58298cb2d889b4075d92684da72285cab7dd0c7ba74e9a78a",
+  "submitted_h5_version_id": 274325,
+  "draft_version_id": "1045140",
+  "audit_id": "1045140",
+  "platform_version": "V-20261008",
+  "submitted_at": "2026-10-08T02:38:04.812187+00:00",
   "last_published_version": "web-cloudsave-v0.24.0",
   "last_published_h5_version_id": 273272,
   "last_published_platform_version": "V-20261007-3",
   "last_public_runtime_verified_version": null,
-  "release_record": "releases/web-cloudsave-v0.24.0/handoff.json",
+  "release_record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "CLI回执review_submitted；created_time 1791383950换算22:39:10+08:00",
-  "last_status_checked_at": "2026-10-08T08:47:00+08:00",
-  "submitted_source_commit": "ae4b1318",
-  "community_post_status": "waiting_account_write_lock",
+  "last_status_checked_at": "2026-10-08T02:40:39.031351+00:00",
+  "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+  "community_post_status": "pending_until_online",
   "community_post_note": "已确认 V-20261007-3 online；本人主页全部8条既有动态未见该版云存档说明，待共用账号锁释放后发布单条动态并关联虫潮论坛。TapTap 需登录网站账号使用云备份。",
-  "cloud_provider": "SiteSaveProvider；在游戏档案站登录网站账号，不是 TapTap 账号云存储",
+  "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
   "history": [
     {
       "version": "web-cloudsave-v0.24.0",
@@ -45,15 +45,42 @@
       "status": "online",
       "note": "2026-10-07 晚间核验 list-app-versions 该版 last_event=published；本次云存档草稿 based_on_version_id=1042737 且继承 main=272261 佐证",
       "verified_at": "2026-10-07T22:40:00+08:00"
+    },
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "platform_version": "V-20261007-3",
+      "h5_version_id": 273272,
+      "status_before_resume": "online_web-cloudsave-v0.24.0",
+      "note": "Preserved previous baseline; actual online package observed before new draft creation."
     }
   ],
   "description_update": {
-    "old": "…当前版本没有跨设备云存档。\n\n更新（2026-10-07·v0.20.0）：可逐人安排留守或跟随…修复暂停后重开声音。",
-    "new": "…进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
-    "new_description_sha256": "0c1edf09fd93085249a3586a16c3be6cdc66ef77784097725d725f13893dcc26",
-    "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
-    "saved_at": "2026-10-07T22:37:00+08:00"
+    "old": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
+    "new": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，支持本地存档、存档文件导入/导出，以及使用工具大本营网站账号登录后的云端备份与恢复。\n\n更新（2026-10-07·v0.24.0）：新增网站账号云存档——登录后普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。\n\n更新（2026-10-08·v0.25.0）：优化 TapTap 启动加载，异常或等待过久时显示原因并可重试；保留已有存档。修复载具卡地形后无法移动的问题，新增 RPG 火箭筒和四连导弹架。",
+    "revision": 1045140,
+    "saved_at": "2026-10-08T02:33:11.714647+00:00"
   },
-  "description_correction_pending": "公开商店介绍仍写“按设备通过平台云存档自动备份”，下次可编辑更新需明确 TapTap 使用游戏内网站账号云备份；本次社区说明先准确说明账号要求。",
-  "pending_note": "v0.24.0 云存档包 H5 273272 已 online，不重复送审；仅待社区动态与论坛归属核验。网站 v0.25.0 的玩法更新另由原任务协调，不能提前写入本包说明。"
+  "description_correction_pending": null,
+  "pending_note": "TapTap统一启动包已上传、绑定、预检并正常提审；reviewing不代表上线，exact ZIP 手机App未实机验证。",
+  "platform_status": "reviewing",
+  "staged_version": "web-unstick-rpg-v0.25.0",
+  "staged_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+  "staged_package_sha256": "d9b01df9bcd8bad58298cb2d889b4075d92684da72285cab7dd0c7ba74e9a78a",
+  "staged_h5_version_id": 274325,
+  "staged_h5_package_id": 73329,
+  "startup_adapter": "inline-runtime-v2",
+  "verification": {
+    "startup_guard": "8/8 pass",
+    "player_identity_crypto_storage": "17/17 pass",
+    "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
+    "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
+    "viewports": [
+      "844x390",
+      "390x844"
+    ],
+    "phone": "not tested on actual mobile TapTap App for these exact packages"
+  },
+  "content_preaudit_passed": true,
+  "content_preaudit_warnings": [],
+  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962354\\h5-latest.json"
 }

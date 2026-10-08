@@ -153,5 +153,7 @@
     }
   ],
   "media_location": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261007",
-  "limitations": "desktop IAB responsive simulation does not prove actual mobile WebView, touch gestures or device performance"
+  "limitations": "desktop IAB responsive simulation does not prove actual mobile WebView, touch gestures or device performance",
+  "superseded_by": "resume-20261008.json",
+  "history_note": "Original 2026-10-07 ZIPs were locally tested but not uploaded. Resume rebuilds newer main instead; do not submit original artifacts."
 }
