@@ -9,7 +9,7 @@ test -f "$APP_DIR/stocks.py" || {
   echo "FAILED: missing $APP_DIR/stocks.py — deploy server/ first"
   exit 1
 }
-grep -n "stocks\|stocks_api\|recommend-tail-buy\|recommend-monthly-recovery\|_assess_hs300" \
+grep -n "stocks\|stocks_api\|recommend-pullback\|status\|compute_screen" \
   "$APP_DIR/main.py" "$APP_DIR/stocks.py" | head -80 || true
 grep -q 'include_router(stocks_router)' "$APP_DIR/main.py" || {
   echo "FAILED: $APP_DIR/main.py missing stocks_router"
@@ -47,12 +47,12 @@ echo "$HEALTH" | grep -q '"stocks_api":true' || {
   journalctl -u toolbasecamp-api -n 60 --no-pager || true
   exit 1
 }
-curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/stocks/recommend-tail-buy' || {
-  echo "FAILED: openapi missing /stocks/recommend-tail-buy"
+curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/stocks/recommend-pullback' || {
+  echo "FAILED: openapi missing /stocks/recommend-pullback"
   exit 1
 }
-curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/stocks/recommend-monthly-recovery' || {
-  echo "FAILED: openapi missing /stocks/recommend-monthly-recovery"
+curl -sf http://127.0.0.1:8001/openapi.json | grep -q '/stocks/status' || {
+  echo "FAILED: openapi missing /stocks/status"
   exit 1
 }
 

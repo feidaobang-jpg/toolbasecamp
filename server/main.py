@@ -1099,9 +1099,9 @@ def health():
         and "/pcbuilds/refresh" in paths,
         "pc_builds_api_rev": PC_BUILDS_API_REV,
         "stocks_api": (
-            "/stocks/recommend-tail-buy" in paths
-            and "/stocks/recommend-monthly-recovery" in paths
-            and "/stocks/recommend-monster-stock" in paths
+            "/stocks/recommend-pullback" in paths
+            and "/stocks/status" in paths
+            and "/stocks/review-export" in paths
             and "/stocks/records" in paths
         ),
         "fx_allowed_rev": FX_ALLOWED_REV,
