@@ -25,7 +25,7 @@ import {monsterStep,clearMonsterSegment} from './monster-navigation.js';
 import {WALL_TOP,RAMPARTS,rampartHeight,rampartNavigation,legacyRampartWall} from './fortress-layout.js';
 import {COVER_HEIGHT,WALL_WIDTH,WALL_DEPTH,wallTouches,wallSegment} from './wall-geometry.js';
 import {HiveWorld,HIVE,MOUTHS,tunnelDistance,hiveFloor,hiveCeiling,hiveRoute,hiveNavigation} from './hive-world.js?v=toy3dui2';
-import {SQUAD_ROLES,squadRoleId} from './squad-roles.js';
+import {SQUAD_ROLES,squadRoleId,MAX_SQUAD} from './squad-roles.js';
 import {KEY_ACTIONS,createKeyBindings} from './key-bindings.js';
 import {createOperations,OP_COMPLETION_KEYS} from './operations.js';
 import {tacticalWavePlan,openingSupply} from './tactical-waves.js';
@@ -2075,6 +2075,7 @@ function updateSquadTag(s,behavior){
   x.font='bold 22px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillStyle='#'+role.color.toString(16).padStart(6,'0');x.fillText(label,96,24);tag.material.map.needsUpdate=true;
 }
 function squadGear(slot){return Game.squadGear[slot]||(Game.squadGear[slot]={weapon:0,armor:0,role:'gunner',vehicle:null,order:null});}
+function squadLimit(){return Game.coop?4:MAX_SQUAD;}
 function squadRole(slot){return SQUAD_ROLES[squadRoleId(squadGear(slot).role)];}
 function squadMaxHp(slot){return Math.round(squadRole(slot).hp*(1+(Game.chapter-1)*.15)*(1+(Game.loop-1)*.5)*(1+squadGear(slot).armor*.25));}
 function upgradeSquad(slot,kind){
@@ -2089,9 +2090,9 @@ function upgradeSquad(slot,kind){
   AudioSys.sfx('buy');showMsg('队友 '+(slot+1)+' '+(kind==='weapon'?'武器':'护甲')+' 升至 Lv'+gear[kind],2);renderShop();autoSave();return true;
 }
 function spawnSquad(requestedSlot){
-  if(squad.length>=4)return;
-  const slot=Number.isInteger(requestedSlot)?requestedSlot:[0,1,2,3].find(i=>!squad.some(s=>s.slot===i));
-  if(slot<0||slot>3||squad.some(s=>s.slot===slot))return;
+  if(squad.length>=squadLimit())return;
+  const slot=Number.isInteger(requestedSlot)?requestedSlot:Array.from({length:squadLimit()},(_,i)=>i).find(i=>!squad.some(s=>s.slot===i));
+  if(!Number.isInteger(slot)||slot<0||slot>=squadLimit()||squad.some(s=>s.slot===slot))return;
   const mesh=makeSoldier(squadRole(slot).color);
   const pp=player.inVehicle?player.inVehicle.mesh.position:player.pos;
   const point=squadPatrolPoint(pp,slot,0);
@@ -2217,19 +2218,20 @@ function squadAnchor(s){
       const center={x:position.x,z:Math.min(position.z,gate.pos.z-4)},spot=rescueSpot(center,.65,squadCanWalk,[]);if(spot)return spot;
     }
     // Stay within repair range of the gate when every structure is healthy.
-    return {x:-4+(s.slot%2)*8,z:-18};
+    return {x:-4+(s.slot%2)*8,z:-18-Math.floor(s.slot/4)*3.5};
   }
   // 虫群突破到基地后收缩防线；门外的敌人只在城门防线内应战。
   const breached=monsters.some(mo=>squadBaseThreat(mo)&&mo.mesh.position.z<-30);
-  return breached?{x:base.pos.x+[-7,-2,3,8][s.slot],z:base.pos.z+7+(s.slot%2)*3}
-    :{x:[-12,-21,12,21][s.slot],z:-18};
+  const column=s.slot%4,row=Math.floor(s.slot/4);
+  return breached?{x:base.pos.x+[-7,-2,3,8][column],z:base.pos.z+7+(column%2)*3+row*4}
+    :{x:[-12,-21,12,21][column],z:-18-row*3.5};
 }
 function squadCanWalk(x,z){
   return x>WORLD.minX+1&&x<WORLD.maxX-1&&z>WORLD.minZ+1&&z<WORLD.maxZ-1&&!collideWalls(x,z,.65)&&!tooSteep(x,z);
 }
 function squadPatrolPoint(center,slot,step){
   for(let i=0;i<24;i++){
-    const angle=slot*TAU/4+step*.65+i*.38,r=6+(i%3)*2;
+    const angle=(slot%4)*TAU/4+step*.65+i*.38,r=6+Math.floor(slot/4)*3+(i%3)*2;
     const x=center.x+Math.cos(angle)*r,z=center.z+Math.sin(angle)*r;
     if(squadCanWalk(x,z)&&squad.every(s=>Math.hypot(s.mesh.position.x-x,s.mesh.position.z-z)>2.5))return{x,z};
   }
@@ -2256,7 +2258,7 @@ function updateSquadHeading(pp){
 function squadFollowPoint(s,pp){
   const base=SQUAD_FORM[squadRoleId(squadGear(s.slot).role)]||SQUAD_FORM.gunner;
   const inTunnel=Number.isFinite(hiveCeiling(pp.x,pp.z))&&Math.hypot(pp.x-HIVE.x,pp.z-HIVE.z)>24;
-  const lateral=(SQUAD_LATERAL[s.slot]||0)*(inTunnel?.45:1),fwd=base.fwd+(s.slot%2?1.2:0);
+  const lateral=SQUAD_LATERAL[s.slot%4]*(inTunnel?.45:1),fwd=base.fwd+(s.slot%2?1.2:0)-Math.floor(s.slot/4)*3.5;
   // 前进方向 * 前后距离 + 右方向 * 左右偏移（右方向 = 前进方向逆时针 90°）
   for(const k of[1,.8,.6,.4,0]){
     const x=pp.x+squadHeading.x*fwd*k-squadHeading.z*lateral*k;
@@ -2272,6 +2274,8 @@ function updSquad(dt){
   else Game.squadAlert=monsters.some(squadBaseThreat)?3:Math.max(0,(Game.squadAlert||0)-dt);
   const pp=player.inVehicle?player.inVehicle.mesh.position:player.mesh.position;
   updateSquadHeading(pp);
+  const targeting=new Map();
+  for(const mate of squad)if(!mate.dead&&mate.target)targeting.set(mate.target,(targeting.get(mate.target)||0)+1);
   for(const s of squad){
     if(s.dead)continue;
     const behavior=squadBehavior(s);
@@ -2292,9 +2296,11 @@ function updSquad(dt){
       // 只照顾队形附近的敌人，不因追击残血虫远离玩家或基地。
       if(behavior==='defend'?!squadBaseThreat(mo):dist2(mo.mesh.position,pp)>24*24)continue;
       const d2=dist2(s.mesh.position,mo.mesh.position);if(d2>role.range*role.range)continue;
-      const value=d2+squad.filter(other=>other!==s&&other.target===mo).length*180;
+      const value=d2+Math.max(0,(targeting.get(mo)||0)-(s.target===mo?1:0))*180;
       if(value<score){score=value;bd2=d2;best=mo;}
     }
+    if(s.target)targeting.set(s.target,Math.max(0,(targeting.get(s.target)||0)-1));
+    if(best)targeting.set(best,(targeting.get(best)||0)+1);
     s.target=best;s.patrolTimer-=dt;
     if(s.behavior!==behavior){s.behavior=behavior;s.patrolTimer=0;}
     // 位置目标：守基地用固定岗位；跟随用编队点（按兵种层次贴在玩家前进方向的后方与两翼）。
@@ -2317,7 +2323,7 @@ function updSquad(dt){
       if(priority<lootScore){loot=pk;lootScore=priority;}
     }
     if(best&&!outOfPosition&&!hurt){
-      const distance=Math.sqrt(bd2),range=role.hold+s.slot*.5;
+      const distance=Math.sqrt(bd2),range=role.hold+(s.slot%4)*.5;
       const advance=distance<7?-1:!anchor&&distance>range?1:0;
       const mx=(best.mesh.position.x-p.x)*advance,mz=(best.mesh.position.z-p.z)*advance;
       // 保持射程；只有下一步仍在编队内才追击或后撤。守基地时先走到岗位。
@@ -2749,7 +2755,7 @@ function claimSandbox(type,id){
     if(!v){Game.vehiclesOwned.push(id);v=spawnVehicle(id);}
     enterVehicle(v);showMsg('已登上 '+VEHICLES[id].name+' · I 下车'+(v.cfg.fly?(isTouch?'；升 / 降 按钮调高度':'；Y 升高 / H 降低'):''),3);
   }else if(type==='squad'){
-    while(squad.length<4)spawnSquad();Game.squadCount=squad.length;showMsg('四人小队已就位');
+    while(squad.length<squadLimit())spawnSquad();Game.squadCount=squad.length;showMsg(squad.length+'名队友已就位');
   }else if(type==='item')grantSupply({type,id});
   else if(type==='building'){
     if(buildings.length>=currentBuildingLimit()){showMsg('防御设施已达 '+currentBuildingLimit()+' 座，重置场景可重新布置');return;}
@@ -2866,7 +2872,7 @@ function startPrep(){
   if(gate.dead)showMsg('🔧 城门已修复',1.5);
   gate.dead=false;gate.maxHp=Math.round(2500*(1+(Game.chapter-1)*.08)*(1+(Game.loop-1)*.4));gate.hp=gate.maxHp;gate.auto=false;
   updHPBar(gate.bar,1);gate.open=true;
-  if(!Game.testMode){repairVehicles();while(squad.length<Math.min(4,Game.squadCount))spawnSquad();}
+  if(!Game.testMode){repairVehicles();while(squad.length<Math.min(squadLimit(),Game.squadCount))spawnSquad();}
   // 野怪：散布在前中场，避开隧道与老巢
   const n=6+Math.min(10,Game.chapter+Game.loop);
   for(let i=0;i<n;i++){
@@ -3025,7 +3031,7 @@ function renderShop(){
     else if(it.type==='item'){const c=ITEMS[it.id];nm=c.name;pr=c.price;desc=c.desc;owned=(it.id==='magnet'&&Game.magnet)||(it.id==='regen'&&Game.regen);}
     else if(it.type==='vehicle'){const c=VEHICLES[it.id];nm=c.name;pr=c.price;desc=`血量${c.hp} 伤害${c.dmg}${c.fly?' 可飞行(Y/升高，H/降低)':''}<br><span class="desc">可在「队友」分配驾驶；停放时无敌，损毁下关修好</span>`;owned=Game.vehiclesOwned.includes(it.id);
       if(owned&&!vehicles.some(v=>v.kind===it.id))extra=`<button class="upg" data-fix="${it.id}">立即修复 · 💰${Math.round(c.price*.25)}</button>`;}
-    else{const role=SQUAD_ROLES[it.id];nm=role.name;pr=squadPrice(it.id);desc=`${role.brief} · 生命${role.hp}<br><span class="desc">最多4名（现有${Game.squadCount}）；暂停选择任务，商店分配载具</span>`;owned=Game.squadCount>=4;}
+    else{const role=SQUAD_ROLES[it.id];nm=role.name;pr=squadPrice(it.id);desc=`${role.brief} · 生命${role.hp}<br><span class="desc">最多${squadLimit()}名（现有${Game.squadCount}）；暂停选择任务，商店分配载具</span>`;owned=Game.squadCount>=squadLimit();}
     const pending=airdrops.some(a=>a.it.id===it.id&&a.it.type===it.type);
     div.innerHTML=`<div class="nm">${nm}</div><div>${desc}</div><div class="pr">${owned?(it.type==='weapon'?(Game.curWeapon===it.id?'✅使用中':'点击装备 ('+(Game.weapons.indexOf(it.id)+1)+')'):it.type==='squad'?'✅已满编':'✅已拥有'):(pending?'📦送达中（关闭商店继续）':'💰'+pr)}</div>${extra}`;
     if(owned)div.classList.add('own');
@@ -3066,7 +3072,7 @@ function buyItem(it,pr,owned){
   if(owned){if(it.type==='weapon'){selectWeapon(it.id,true);player.fireCd=0;renderShop();updHUD(0);showMsg('已装备 '+WEAPONS[it.id].name,1.5);}else showMsg('已拥有',1);return;}
   if(airdrops.some(a=>a.it.id===it.id&&a.it.type===it.type)){showMsg('物资正在空投，请关闭商店等待送达',2);return;}
   if(!Game.testMode&&Game.gold<pr){showMsg('金币不足！去野外刷怪吧',1.4);AudioSys.sfx('click');return;}
-  if(it.type==='squad'&&Game.squadCount>=4){showMsg('队友已满(4名)',1.2);return;}
+  if(it.type==='squad'&&Game.squadCount>=squadLimit()){showMsg('队友已满('+squadLimit()+'名)',1.2);return;}
   if(!Game.testMode)spendGold(pr);
   AudioSys.sfx('buy');
   if(it.type==='weapon'){
@@ -3327,7 +3333,7 @@ function applySave(d){
   Game.squadOrder=d.squadOrder==='defend'?'defend':'follow';Game.squadAlert=0;
   Game.squadAutoDefense=d.squadAutoDefense!==false;Game.lastBattle=d.lastBattle||null;Game.battleLedger=null;
   Game.rescueCooldown={squad:0,vehicles:0};Game.baseAlarm=0;
-  Game.squadGear=Array.from({length:4},(_,i)=>{const g=(d.squadGear||[])[i]||{};return{weapon:clamp(Math.floor(g.weapon)||0,0,5),armor:clamp(Math.floor(g.armor)||0,0,5),role:squadRoleId(g.role),vehicle:Object.hasOwn(VEHICLES,g.vehicle)?g.vehicle:null,order:g.order==='follow'||g.order==='defend'?g.order:null};});
+  Game.squadGear=Array.from({length:MAX_SQUAD},(_,i)=>{const g=(d.squadGear||[])[i]||{};return{weapon:clamp(Math.floor(g.weapon)||0,0,5),armor:clamp(Math.floor(g.armor)||0,0,5),role:squadRoleId(g.role),vehicle:Object.hasOwn(VEHICLES,g.vehicle)?g.vehicle:null,order:g.order==='follow'||g.order==='defend'?g.order:null};});
   const crewKinds=new Set();for(const g of Game.squadGear){if(!(d.vehiclesOwned||[]).includes(g.vehicle)||crewKinds.has(g.vehicle))g.vehicle=null;if(g.vehicle)crewKinds.add(g.vehicle);}
   Game.opsCompleted={};for(const k of OP_COMPLETION_KEYS)if(d.opsCompleted&&typeof d.opsCompleted[k]==='string')Game.opsCompleted[k]=d.opsCompleted[k];
   operations.clear();
@@ -3340,7 +3346,7 @@ function applySave(d){
   // Remove only the exact legacy positions once; retain player-built walls elsewhere.
   for(const b of (d.buildings||[]))if(d.rampartRevision>=1||!legacyRampartWall(b))placeBuilding(b.k,b.x,b.z,b.r,b.hp,b.maxHp);
   for(const vk of new Set(d.vehiclesOwned||[])){if(!VEHICLES[vk])continue;Game.vehiclesOwned.push(vk);spawnVehicle(vk);}
-  Game.squadCount=clamp(d.squadCount||0,0,4);
+  Game.squadCount=clamp(Math.floor(d.squadCount)||0,0,MAX_SQUAD);
   for(let i=0;i<Game.squadCount;i++)spawnSquad();
   for(const it of (d.pendingDrops||[])){
     if((it.type==='item'&&ITEMS[it.id])||(it.type==='vehicle'&&VEHICLES[it.id])||it.type==='squad'){
@@ -4271,7 +4277,7 @@ function handleCoopCommand(slot,c){
    const item=SHOP[c.type].find(it=>it.id===c.id);if(!item)return;
    const cfg=c.type==='weapon'?WEAPONS[c.id]:c.type==='item'?ITEMS[c.id]:c.type==='vehicle'?VEHICLES[c.id]:null;
    const price=c.type==='squad'?squadPrice(c.id):cfg.price;
-   const owned=c.type==='weapon'?Game.weapons.includes(c.id):c.type==='vehicle'?Game.vehiclesOwned.includes(c.id):c.type==='squad'?Game.squadCount>=4:(c.id==='magnet'&&Game.magnet)||(c.id==='regen'&&Game.regen);
+   const owned=c.type==='weapon'?Game.weapons.includes(c.id):c.type==='vehicle'?Game.vehiclesOwned.includes(c.id):c.type==='squad'?Game.squadCount>=squadLimit():(c.id==='magnet'&&Game.magnet)||(c.id==='regen'&&Game.regen);
    buyItem({...item,coopSlot:slot},price,owned);
   }else if(c.kind==='upgrade'&&Game.weapons.includes(c.id))upgradeWeapon(c.id);
   else if(c.kind==='repair'&&Game.vehiclesOwned.includes(c.id)&&!vehicles.some(v=>v.kind===c.id))repairNow(c.id);

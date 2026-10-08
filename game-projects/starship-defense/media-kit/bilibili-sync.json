@@ -7,50 +7,54 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-rv-v0.28.0",
+      "last_public_verified_version": "web-squad-v0.29.0",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-rv-v0.28.0",
-      "description_public_verified_at": "2026-10-08T10:48:23.100599+00:00",
-      "description_sha256": "46f98c3d0a7bb95ce83dd15f65de08e203e2a44a8449d27d938ed35a42e51cf2",
+      "description_revision": "web-squad-v0.29.0",
+      "description_public_verified_at": "2026-10-08T11:27:00.617837+00:00",
+      "description_sha256": "be6127ed1aa24a206177829e23e465b506dd1096352377186eda963cfb8ccae8",
       "submission_time_note": "Exact submission timestamp not separately recorded; success toast and public text checked",
-      "submitted_version": "web-rv-v0.28.0",
+      "submitted_version": "web-squad-v0.29.0",
       "submitted_at": null,
-      "lastPublicVerifiedVersion": "web-rv-v0.28.0",
-      "publicVerifiedAt": "2026-10-08T09:53:22.515247+00:00",
+      "lastPublicVerifiedVersion": "web-squad-v0.29.0",
+      "publicVerifiedAt": "2026-10-08T11:27:00.617837+00:00",
       "descriptionHash": "46f98c3d0a7bb95ce83dd15f65de08e203e2a44a8449d27d938ed35a42e51cf2",
-      "public_verified_at": "2026-10-08T09:53:22.515247+00:00",
-      "last_public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "public_verified_at": "2026-10-08T11:27:00.617837+00:00",
+      "last_public_verified_at": "2026-10-08T11:27:00.617837+00:00",
       "new_episode_guide_record": "../video/wish-versus-20261008/work/publication-result.json"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-rv-v0.28.0",
-      "last_public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "last_public_verified_version": "web-squad-v0.29.0",
+      "last_public_verified_at": "2026-10-08T11:27:00.617837+00:00",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-rv-v0.28.0",
-      "description_public_verified_at": "2026-10-08T09:53:22.515247+00:00",
-      "description_sha256": "b656f21b668ca1a31066e97cc6a67b48f3e344cef5eb64f5af9e9b758d553888",
+      "description_revision": "web-squad-v0.29.0",
+      "description_public_verified_at": "2026-10-08T11:27:00.617837+00:00",
+      "description_sha256": "a0caaa6eac4da0acdbd86172430df2953943a1fc4a99b21fc732168880fc101a",
       "submission_time_note": "Exact submission timestamp not separately recorded; success toast and public text checked",
-      "submitted_version": "web-rv-v0.28.0",
+      "submitted_version": "web-squad-v0.29.0",
       "submitted_at": null,
-      "lastPublicVerifiedVersion": "web-rv-v0.28.0",
-      "publicVerifiedAt": "2026-10-08T09:53:22.515247+00:00",
+      "lastPublicVerifiedVersion": "web-squad-v0.29.0",
+      "publicVerifiedAt": "2026-10-08T11:27:00.617837+00:00",
       "descriptionHash": "b656f21b668ca1a31066e97cc6a67b48f3e344cef5eb64f5af9e9b758d553888",
-      "public_verified_at": "2026-10-08T09:53:22.515247+00:00"
+      "public_verified_at": "2026-10-08T11:27:00.617837+00:00"
     },
     {
       "bvid": "BV1C5HQ6gEvD",
       "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
       "recorded_game_version": "web-versus-teams-v0.27.0",
-      "last_public_verified_version": "web-versus-teams-v0.27.0",
+      "last_public_verified_version": "web-squad-v0.29.0",
       "status": "public_verified",
-      "last_public_verified_at": "2026-10-08T10:48:23.100599+00:00",
+      "last_public_verified_at": "2026-10-08T11:27:00.617837+00:00",
       "publication_record": "../video/wish-versus-20261008/work/publication-result.json",
       "development_model": "Claude Opus 5.5",
-      "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。"
+      "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。",
+      "submitted_version": "web-squad-v0.29.0",
+      "description_revision": "web-squad-v0.29.0",
+      "description_sha256": "ddae964826f2897bac42c357e69dfd2c0c90eb365f9d710a9ce4799718f1dfe1",
+      "description_public_verified_at": "2026-10-08T11:27:00.617837+00:00"
     }
   ],
   "latest_record": "releases/web-rv-v0.28.0/bilibili-sync.json",
@@ -157,5 +161,6 @@
       "record": "../video/wish-versus-20261008/work/publication-result.json",
       "preserved_latest_game_update": "web-rv-v0.28.0"
     }
-  ]
+  ],
+  "last_release_record": "releases/web-squad-v0.29.0/bilibili-sync.json"
 }

@@ -418,7 +418,7 @@ button::before,button::after{content:none!important}
       按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 跳跃（落地后可再次起跳，无冷却）· I 互动（开关城门、上下载具）· H 医疗包 · U 无限手雷（无需补充，无投掷间隔）· 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角；「切换视角」在各第三人称预设与第一/第三人称间循环，无需记键盘；商店、建造、换枪、医疗、手雷都有对应按钮<br>
       菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
-      玩法：打怪攒钱 → 买枪强化、造炮塔、雇队友 → 开战守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。<br>
+      玩法：打怪攒钱 → 买枪强化、造炮塔、雇最多12名队友 → 开战守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。<br>
       母皇：早杀可减少本章后续虫潮 35%，每次通关额外领补给；晚杀保留更多虫群掉落。菜单可「队友集合 / 载具救援」，各冷却 20 秒，保留血量；在虫洞内救援时载具停在洞口。<br>
       城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和基地方向提示找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，副本三档难度分别领奖（独立于战役难度）；右侧「菜单」或 P/Esc 暂停
     </div>
@@ -536,9 +536,9 @@ button::before,button::after{content:none!important}
       <label>虫族<select id="testSpecies"></select></label><label>级别<select id="testRank"><option value="mob">普通虫</option><option value="elite">精英虫</option><option value="miniboss">小首领</option><option value="boss">大首领</option></select></label>
       <label>精英词缀<select id="testAffix"></select></label><label>召唤数量<select id="testCount"><option>1</option><option>6</option><option>12</option></select></label>
     </div>
-    <div class="btnRow"><button id="test-selected" class="mbtn green">召唤所选虫群</button><button id="test-showcase" class="mbtn">全类型混战</button><button id="test-clear" class="mbtn">清理虫群</button><button class="mbtn" data-test-claim="squad">补齐四人小队</button></div>
+    <div class="btnRow"><button id="test-selected" class="mbtn green">召唤所选虫群</button><button id="test-showcase" class="mbtn">全类型混战</button><button id="test-clear" class="mbtn">清理虫群</button><button class="mbtn" data-test-claim="squad">补齐12人小队</button></div>
     <div class="btnRow"><button id="test-auto" class="mbtn green">暂停自动虫潮</button><button id="test-reset" class="mbtn">重置测试场景</button><button id="test-normal" class="mbtn">返回普通模式</button></div>
-    <p class="small">同屏最多 48 只虫、4 名队友、64 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。T / Esc 关闭，Tab 与回车操作。</p>
+    <p class="small">同屏最多 48 只虫、12 名队友、64 座防御设施；载具重复领取会直接驾驶已有车辆。数量限制用来保持流畅，资源与使用次数无限。T / Esc 关闭，Tab 与回车操作。</p>
   </div>
   <section id="platformPanel" class="panel hidden" aria-label="存档、排行与作者" style="width:680px;max-height:90%;">
     <button class="closeX" id="platformClose" aria-label="关闭档案站">×</button>
@@ -584,7 +584,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=rv281" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=rv291" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

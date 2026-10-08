@@ -1,0 +1,45 @@
+{
+  "method": "fixed .05s simulation; scripted navigation, sound disabled; no invulnerability or health/resource grants",
+  "won": true,
+  "elapsed": 311.3500000000365,
+  "steps": 6227,
+  "hp": 1348.7999999999993,
+  "minHP": 1248.7999999999993,
+  "stage": 3,
+  "gun": 2,
+  "looted": [
+    true,
+    true,
+    true
+  ],
+  "stages": [
+    {
+      "stage": 0,
+      "t": 0,
+      "hp": 1400,
+      "fuel": 100,
+      "scrap": 60
+    },
+    {
+      "stage": 1,
+      "t": 84.79999999999733,
+      "hp": 1400,
+      "fuel": 100,
+      "scrap": 80
+    },
+    {
+      "stage": 2,
+      "t": 171.45000000000474,
+      "hp": 1388.4,
+      "fuel": 100,
+      "scrap": 50
+    },
+    {
+      "stage": 3,
+      "t": 258.1500000000244,
+      "hp": 1348.7999999999993,
+      "fuel": 100,
+      "scrap": 160
+    }
+  ]
+}

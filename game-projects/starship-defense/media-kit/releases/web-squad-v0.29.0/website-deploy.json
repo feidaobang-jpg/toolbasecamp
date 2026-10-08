@@ -1,0 +1,10 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "runtime_sha256": "b7670e6b76902146ccd5ffce900662a57ab5e75527b58a0f20fa46485e61babd",
+  "expected_sha256": "b7670e6b76902146ccd5ffce900662a57ab5e75527b58a0f20fa46485e61babd",
+  "matches": true,
+  "source_commit": "94045b02fdbb0ea783f0747266cd6914e583f679",
+  "verified_at": "2026-10-08T11:27:00.617837+00:00",
+  "menu": "雇最多12名队友",
+  "sandbox": "补齐12人小队"
+}
