@@ -5,26 +5,26 @@
   "app_id": 962354,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_versus_teams_v0270",
-  "submitted_version": "web-versus-teams-v0.27.0",
-  "submitted_package_sha256": "70b8e67d7b5bf632649a3671167584a18664127ae5b858f72338710c263b57fb",
-  "submitted_h5_version_id": 275356,
-  "draft_version_id": "1046502",
-  "audit_id": "1046502",
-  "platform_version": "V-20261008-2",
-  "submitted_at": "2026-10-08T08:15:25.529798+00:00",
-  "last_published_version": "web-versus-v0.26.0",
-  "last_published_h5_version_id": 274950,
-  "last_published_platform_version": "V-20261008-1",
+  "status": "reviewing_rv_v0280",
+  "submitted_version": "web-rv-v0.28.0",
+  "submitted_package_sha256": "58408cf136a51eb4f47602dd0dac8f9d240c56b627abc58c0ef9738353e909aa",
+  "submitted_h5_version_id": 275671,
+  "draft_version_id": "1046885",
+  "audit_id": "1046885",
+  "platform_version": "V-20261008-3",
+  "submitted_at": "2026-10-08T09:36:24+00:00",
+  "last_published_version": "web-versus-teams-v0.27.0",
+  "last_published_h5_version_id": 275356,
+  "last_published_platform_version": "V-20261008-2",
   "last_public_runtime_verified_version": null,
-  "release_record": "releases/web-versus-teams-v0.27.0/taptap-release.json",
+  "release_record": "releases/web-rv-v0.28.0/taptap-release.json",
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
-  "submission_time_source": "CLI回执review_submitted；created_time 1791383950换算22:39:10+08:00",
-  "last_status_checked_at": "2026-10-08T08:15:25.529798+00:00",
-  "submitted_source_commit": "eba175f1264c4c79f123f5a21d58f54f7e900121",
+  "submission_time_source": "list-app-versions created_time 1791452184",
+  "last_status_checked_at": "2026-10-08T09:53:22.515247+00:00",
+  "submitted_source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
   "community_post_status": "pending_until_online",
-  "community_post_note": "v0.27.0确认online后与v0.25/0.26尚未发出的说明合并为一条动态与游戏论坛。",
+  "community_post_note": "房车v0.28上线并核验后，与尚未发布的v0.25–0.27说明合并一条动态，挂同游戏论坛，先查重。",
   "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
   "history": [
     {
@@ -62,6 +62,14 @@
       "h5_version_id": 273272,
       "status_before_resume": "online_web-cloudsave-v0.24.0",
       "note": "Preserved previous baseline; actual online package observed before new draft creation."
+    },
+    {
+      "version": "web-versus-teams-v0.27.0",
+      "h5_version_id": 275356,
+      "platform_version": "V-20261008-2",
+      "status": "online",
+      "evidence": "releases/web-rv-v0.28.0/taptap-versions-before.json",
+      "verified_at": "2026-10-08T09:53:22.515247+00:00"
     }
   ],
   "description_update": {
@@ -71,24 +79,18 @@
     "saved_at": "2026-10-08T02:33:11.714647+00:00"
   },
   "description_correction_pending": null,
-  "pending_note": "v0.27.0 已正常提审；v0.26.0 已online。网站/Toy新版本分别核验；手机TapTap App未实机验证。",
+  "pending_note": "v0.28.0已提审reviewing；v0.27.0平台online；当前RV包手机TapTap App未实机验证。",
   "platform_status": "reviewing",
-  "staged_version": "web-versus-teams-v0.27.0",
-  "staged_source_commit": "eba175f1264c4c79f123f5a21d58f54f7e900121",
-  "staged_package_sha256": "70b8e67d7b5bf632649a3671167584a18664127ae5b858f72338710c263b57fb",
-  "staged_h5_version_id": 275356,
-  "staged_h5_package_id": 73768,
+  "staged_version": "web-rv-v0.28.0",
+  "staged_source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "staged_package_sha256": "58408cf136a51eb4f47602dd0dac8f9d240c56b627abc58c0ef9738353e909aa",
+  "staged_h5_version_id": 275671,
   "startup_adapter": "inline-runtime-v2",
   "verification": {
-    "startup_guard": "8/8 pass",
-    "player_identity_crypto_storage": "17/17 pass",
-    "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
-    "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
-    "viewports": [
-      "844x390",
-      "390x844"
-    ],
-    "phone": "not tested on actual mobile TapTap App for these exact packages"
+    "startup": "exact ZIP with standalone JS blocked: passed",
+    "browser": "desktop and mobile viewport startup/drive/exit/pause/save/reload/campaign preservation/retry passed",
+    "qa": "releases/web-rv-v0.28.0/qa/taptap-package/results.json",
+    "phone": "physical TapTap App not tested"
   },
   "content_preaudit_passed": true,
   "content_preaudit_warnings": [],
@@ -133,14 +135,14 @@
       "source_version": "web-unstick-rpg-v0.25.0",
       "h5_version_id": 274325,
       "platform_version": "V-20261008",
-      "status": "pending_until_online",
+      "status": "online_pending_merged_announcement",
       "record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json"
     },
     {
       "source_version": "web-versus-v0.26.0",
       "h5_version_id": 274950,
       "platform_version": "V-20261008-1",
-      "status": "pending_until_online",
+      "status": "online_pending_merged_announcement",
       "note": "上线后与 v0.25.0（V-20261008，已 online、说明待发）合并成一条：虫潮对战 + 新武器/卡地形修复/启动优化",
       "record": "../../starship-defense/media-kit/releases/web-versus-v0.26.0/notes.md"
     },
@@ -148,7 +150,14 @@
       "source_version": "web-versus-teams-v0.27.0",
       "h5_version_id": 275356,
       "platform_version": "V-20261008-2",
-      "status": "pending_until_online"
+      "status": "online_pending_merged_announcement"
+    },
+    {
+      "source_version": "web-rv-v0.28.0",
+      "h5_version_id": 275671,
+      "platform_version": "V-20261008-3",
+      "status": "pending_until_online",
+      "record": "releases/web-rv-v0.28.0/taptap-release.json"
     }
   ],
   "description_update_history": [
@@ -166,5 +175,5 @@
       "draft_version_id": "1045922"
     }
   ],
-  "release_receipts": "D:\\project\\worktrees\\chongchao-versus-design-20261008\\game-projects\\starship-defense\\media-kit\\releases\\web-versus-teams-v0.27.0\\taptap\\receipts"
+  "release_receipts": "releases/web-rv-v0.28.0"
 }

@@ -120,7 +120,7 @@ const EM = {
 };
 
 // ---------- 初始化 ----------
-export function init(sc, w, f, cam) { scene = sc; world = w; fx = f; camCtl = cam; }
+export function init(sc, w, f, cam) { scene = sc; world = w; fx = f; camCtl = cam; IN.vehicleMode=()=>!!G.road?.mounted; }
 export const HERO_DATA = HEROES;
 export const player = () => G.player;
 

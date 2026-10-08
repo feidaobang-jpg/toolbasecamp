@@ -33,6 +33,8 @@ let browser;
   await guest.mouse.move(joy.x+joy.width/2,joy.y+joy.height/2);await guest.mouse.down();await guest.mouse.move(joy.x+joy.width/2,joy.y+joy.height*.08,{steps:5});await guest.waitForTimeout(350);await guest.mouse.up();
   state=await snap();check(count+'人手机摇杆转向经房主同步',Math.abs(state.g.road.z-before)>.3,[before,state.g.road.z]);
   await guest.locator('#btn-atk').click();await sleep(100);check(count+'人手机动作键触发加速',await host.evaluate(()=>__CD_TEST__.snapshot().road.cooldown>0));
+  await host.evaluate(()=>{__CD_TEST__.cheat.G.road.cooldown=0;});
+  await guest.locator('#btn-run').click();await sleep(100);check(count+'人手机I单点加速无需摇杆',await host.evaluate(()=>__CD_TEST__.snapshot().road.cooldown>0));
   await host.evaluate(()=>{const G=__CD_TEST__.cheat.G;G.road.x=286;G.road.baseX=286;G.road.z=0;});
   await guest.waitForFunction(()=>__CD_TEST__.snapshot().boss?.type==='hogg');await sleep(2000);
   state=await snap();

@@ -7,38 +7,39 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-versus-teams-v0.27.0",
+      "last_public_verified_version": "web-rv-v0.28.0",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-versus-teams-v0.27.0",
-      "description_public_verified_at": "2026-10-08T08:18:52.414299+00:00",
-      "description_sha256": "162ae77d45a5ed83402c3c1ced346971c6be2a30b9c56775e9ca67e454179c23",
-      "submission_time_note": "本版本提交时刻未单独记录；公开核验时间及文案哈希见本版本发布记录。",
-      "submitted_version": "web-versus-teams-v0.27.0",
-      "submitted_at": "2026-10-08T14:03:00+08:00",
-      "lastPublicVerifiedVersion": "web-versus-teams-v0.27.0",
-      "publicVerifiedAt": "2026-10-08T08:18:52.414299+00:00",
-      "descriptionHash": "162ae77d45a5ed83402c3c1ced346971c6be2a30b9c56775e9ca67e454179c23",
-      "public_verified_at": "2026-10-08T08:18:52.414299+00:00",
-      "last_public_verified_at": "2026-10-08T08:18:52.414299+00:00"
+      "description_revision": "web-rv-v0.28.0",
+      "description_public_verified_at": "2026-10-08T10:48:23.100599+00:00",
+      "description_sha256": "46f98c3d0a7bb95ce83dd15f65de08e203e2a44a8449d27d938ed35a42e51cf2",
+      "submission_time_note": "Exact submission timestamp not separately recorded; success toast and public text checked",
+      "submitted_version": "web-rv-v0.28.0",
+      "submitted_at": null,
+      "lastPublicVerifiedVersion": "web-rv-v0.28.0",
+      "publicVerifiedAt": "2026-10-08T09:53:22.515247+00:00",
+      "descriptionHash": "46f98c3d0a7bb95ce83dd15f65de08e203e2a44a8449d27d938ed35a42e51cf2",
+      "public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "last_public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "new_episode_guide_record": "../video/wish-versus-20261008/work/publication-result.json"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-versus-teams-v0.27.0",
-      "last_public_verified_at": "2026-10-08T08:18:52.414299+00:00",
+      "last_public_verified_version": "web-rv-v0.28.0",
+      "last_public_verified_at": "2026-10-08T09:53:22.515247+00:00",
       "status": "public_verified",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-versus-teams-v0.27.0",
-      "description_public_verified_at": "2026-10-08T08:18:52.414299+00:00",
-      "description_sha256": "860488e4269f8b0a3c4d4f18e676a3213acf239e8987f92536e36d52a51f1b6b",
-      "submission_time_note": "本版本提交时刻未单独记录；公开核验时间及文案哈希见本版本发布记录。",
-      "submitted_version": "web-versus-teams-v0.27.0",
-      "submitted_at": "2026-10-08T14:03:00+08:00",
-      "lastPublicVerifiedVersion": "web-versus-teams-v0.27.0",
-      "publicVerifiedAt": "2026-10-08T08:18:52.414299+00:00",
-      "descriptionHash": "860488e4269f8b0a3c4d4f18e676a3213acf239e8987f92536e36d52a51f1b6b",
-      "public_verified_at": "2026-10-08T08:18:52.414299+00:00"
+      "description_revision": "web-rv-v0.28.0",
+      "description_public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "description_sha256": "b656f21b668ca1a31066e97cc6a67b48f3e344cef5eb64f5af9e9b758d553888",
+      "submission_time_note": "Exact submission timestamp not separately recorded; success toast and public text checked",
+      "submitted_version": "web-rv-v0.28.0",
+      "submitted_at": null,
+      "lastPublicVerifiedVersion": "web-rv-v0.28.0",
+      "publicVerifiedAt": "2026-10-08T09:53:22.515247+00:00",
+      "descriptionHash": "b656f21b668ca1a31066e97cc6a67b48f3e344cef5eb64f5af9e9b758d553888",
+      "public_verified_at": "2026-10-08T09:53:22.515247+00:00"
     },
     {
       "bvid": "BV1C5HQ6gEvD",
@@ -52,9 +53,9 @@
       "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。"
     }
   ],
-  "latest_record": "releases/web-versus-teams-v0.27.0/bilibili-sync.json",
+  "latest_record": "releases/web-rv-v0.28.0/bilibili-sync.json",
   "pending": [],
-  "pending_note": "v0.27.0 多人对战和中途加入修复已同步两条简介并公开核验",
+  "pending_note": "v0.28.0房车突围已同步两条既有视频简介并公开核验",
   "pending_release": null,
   "pending_updates": [
     {
@@ -137,6 +138,16 @@
       "public_verified_at": "2026-10-07T22:34:00+08:00",
       "line": "更新（2026-10-07·v0.24.0）：新增云存档——普通模式进度自动同步到账号…网站与B站Toy均已上线同一版本。",
       "method": "browser编辑投稿replace更新行（创作中心type=edit页，全选替换纯文本，立即投稿）"
+    },
+    {
+      "version": "web-rv-v0.28.0",
+      "bvids": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "type": "compact_description",
+      "public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "record": "releases/web-rv-v0.28.0/bilibili-sync.json"
     },
     {
       "bv": "BV1WbHq6eEBt",

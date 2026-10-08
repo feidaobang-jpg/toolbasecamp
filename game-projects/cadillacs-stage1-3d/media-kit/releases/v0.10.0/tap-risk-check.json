@@ -1,0 +1,60 @@
+{
+  "game_facts": {
+    "internet_required": "可单机；联机需网络",
+    "in_app_purchase": false,
+    "ai_generated_visuals": false,
+    "fan_remake_and_original_recordings": true,
+    "rights_proof_provided": false
+  },
+  "required_qualification_gaps": [],
+  "objective_slots": {
+    "qualifications": [
+      {
+        "qualification_type": "game-license",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "icp-filing",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "privacy-compliance",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "anti-addiction",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "ai-declaration",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "software-copyright",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "authorization-letters",
+        "status": "pending_upload",
+        "submitted_fields": []
+      },
+      {
+        "qualification_type": "security-assessment",
+        "status": "pending_upload",
+        "submitted_fields": []
+      }
+    ],
+    "version": "V-20261008"
+  },
+  "known_risks": "原作IP与录音缺授权，保留真实非官方介绍；同一现有作品已知风险，沿用户2026-10-07明确试审授权；新增未知风险须另判断",
+  "current_tests": "最终ZIP三视口25/25，独立JS请求全屏蔽仍可启动；手机非真机",
+  "history": "平台七次版本均online，当前不是授权证明",
+  "source_commit": "0b18e520",
+  "zip_sha256": "262e4386ac6f32aadc3af59fb3afa2f53e8de40c76ba5b45ca2c3d5062601bdd"
+}

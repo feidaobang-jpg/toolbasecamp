@@ -6,10 +6,10 @@
   "created_at": "2026-10-08T09:43:41.035384+00:00",
   "classification": "正式版本",
   "build": {
-    "id": "v0100-stage3-1",
-    "commit": null,
-    "dirty": true,
-    "fingerprint": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+    "id": "v0100-stage3-2",
+    "commit": "0b18e520",
+    "dirty": false,
+    "fingerprint": "b9d2c49d127920fc4518489376b64ba607f39baf8fd9053ce753c211cd313b44",
     "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
   },
   "feature_inventory": [
@@ -19,7 +19,7 @@
       "status": "implemented",
       "evidence_ids": [
         "stage3-driving",
-        "stage3-coop-four",
+        "final-stage3-coop-four",
         "stage3-driving-video"
       ]
     },
@@ -52,104 +52,40 @@
       "verification": "passed"
     }
   ],
-  "bugs": [],
+  "bugs": [
+    {
+      "id": "phone-I-drive",
+      "found_version": "v0.10.0候选包",
+      "steps": [
+        "进入第三关并叫车",
+        "松开摇杆后点I"
+      ],
+      "observed": "车辆未加速",
+      "cause": "步行冲刺的触屏run条件要求摇杆偏移",
+      "status": "fixed",
+      "fix": "只在驾驶状态把I单点转为已有dash边沿；联机沿同一输入同步",
+      "retest": "桌面/横屏/竖屏25项；2/3/4人手机I单点全部通过",
+      "before_media_ids": [],
+      "after_media_ids": []
+    }
+  ],
   "media": [
     {
-      "id": "stage3-driving",
-      "file": "releases/v0.10.0/captures/stage3-driving.png",
-      "sha256": "3a1a151a1af87b8c7a5e8a79096acfd969036a2261a2698640bab5b80a88a165",
-      "kind": "screenshot",
-      "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
-      "capture_mode": "realtime-automation",
-      "description": "stage3-driving；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
-      "width": 1280,
-      "height": 720,
-      "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
-    {
-      "id": "stage3-hogg",
-      "file": "releases/v0.10.0/captures/stage3-hogg.png",
-      "sha256": "2b30bc9fa902828304f612148edc1d8bfbbbc2860d5af447340fa7ba5be66559",
-      "kind": "screenshot",
-      "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
-      "capture_mode": "realtime-automation",
-      "description": "stage3-hogg；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
-      "width": 1280,
-      "height": 720,
-      "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
-    {
-      "id": "stage3-result",
-      "file": "releases/v0.10.0/captures/stage3-result.png",
-      "sha256": "5b3826e5729602b94485c59378652ee36f1d087f117e76d712317edbdf40ec97",
-      "kind": "screenshot",
-      "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
-      "capture_mode": "realtime-automation",
-      "description": "stage3-result；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
-      "width": 1280,
-      "height": 720,
-      "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
-    {
-      "id": "stage3-coop-four",
-      "file": "releases/v0.10.0/captures/stage3-coop-four.png",
-      "sha256": "04712c7d4f21f242bb33ba0b71fd0c88122d743e6e99f43774bdf49a9d66814d",
-      "kind": "screenshot",
-      "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
-      "capture_mode": "realtime-automation",
-      "description": "stage3-coop-four；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
-      "width": 960,
-      "height": 540,
-      "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
-    {
-      "id": "stage3-mobile-driving-portrait",
-      "file": "releases/v0.10.0/captures/stage3-mobile-driving-portrait.png",
-      "sha256": "bf56d01908f0389552d9d320862766a183bc74c6ef6be3d499dc7202c3973be5",
-      "kind": "screenshot",
-      "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
-      "capture_mode": "realtime-automation",
-      "description": "stage3-mobile-driving-portrait；开场敌人/距离/低Boss血量使用明确测试夹具，操作与模拟实时执行",
-      "width": 390,
-      "height": 844,
-      "audio": "none",
-      "visual_review": "pass",
-      "audio_review": "not-applicable",
-      "segments": []
-    },
-    {
       "id": "stage3-driving-video",
-      "file": "releases/v0.10.0/captures/stage3-realtime.webm",
-      "sha256": "8f1c806aac8b06b1c9b1f8b8904ef6b2554a06b7ef0c6fcb9078fd77d0e1b63f",
+      "file": "releases/v0.10.0/captures/stage3-realtime-current.webm",
+      "sha256": "44dbbe98a1879425522dd783e6964ffee284c93e7e2a4ced9bd674d0a44c8929",
       "kind": "video",
       "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
+      "build_id": "v0100-stage3-2",
       "capture_mode": "realtime-automation",
       "description": "四种视角实时驾驶和连续横转，末段霍格投雷与加速撞击；开场清敌、叫车与Boss距离使用夹具，未做全关无捷径录像",
       "width": 1280,
       "height": 720,
-      "duration_seconds": 29.869,
+      "duration_seconds": 29.505,
       "audio": "game",
       "visual_review": "pass",
       "audio_review": "not-run",
-      "audio_technical_check": "Opus立体声；完整解码无错；mean -22.1dB，peak -6.2dB；未人工听审",
+      "audio_technical_check": "游戏音轨完整保留；新录音未人工听审",
       "segments": [
         {
           "in_seconds": 0,
@@ -158,13 +94,86 @@
         },
         {
           "in_seconds": 24,
-          "out_seconds": 29.7,
+          "out_seconds": 29.5,
           "description": "霍格摩托与投雷落点"
         }
       ]
+    },
+    {
+      "id": "final-stage3-desktop-view0",
+      "file": "releases/v0.10.0/captures/stage3-desktop-view0.png",
+      "sha256": "2fd85bc43683f2c6348d2b6674c3dadfabf3f0bcc27eb2f5729eb7434c243766",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-2",
+      "capture_mode": "realtime-automation",
+      "description": "最终版本实时游戏画面；开场/距离使用明确QA夹具",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "final-stage3-desktop-boss",
+      "file": "releases/v0.10.0/captures/stage3-desktop-boss.png",
+      "sha256": "179d4b4d14a454d53d1622b3298ab128f9c934e0755b4ee8749e339493bdd5f9",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-2",
+      "capture_mode": "realtime-automation",
+      "description": "最终版本实时游戏画面；开场/距离使用明确QA夹具",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "final-stage3-coop-four",
+      "file": "releases/v0.10.0/captures/stage3-coop-four.png",
+      "sha256": "01c2598ba0fc5b580dc2d8c88a3b85907af5139a4995efa6080bf19495604c47",
+      "kind": "screenshot",
+      "version": "v0.10.0",
+      "build_id": "v0100-stage3-2",
+      "capture_mode": "realtime-automation",
+      "description": "最终版本实时游戏画面；开场/距离使用明确QA夹具",
+      "width": 960,
+      "height": 540,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
     }
   ],
-  "historical_media": [],
+  "historical_media": [
+    {
+      "id": "stage3-driving",
+      "handoff": "releases/v0.10.0/candidate1-handoff.json",
+      "media_id": "stage3-driving",
+      "reason": "本任务候选1真实流程；最终只修正驾驶手机I输入，画面与关卡不变；来源build保留"
+    },
+    {
+      "id": "stage3-hogg",
+      "handoff": "releases/v0.10.0/candidate1-handoff.json",
+      "media_id": "stage3-hogg",
+      "reason": "本任务候选1真实流程；最终只修正驾驶手机I输入，画面与关卡不变；来源build保留"
+    },
+    {
+      "id": "stage3-result",
+      "handoff": "releases/v0.10.0/candidate1-handoff.json",
+      "media_id": "stage3-result",
+      "reason": "本任务候选1真实流程；最终只修正驾驶手机I输入，画面与关卡不变；来源build保留"
+    },
+    {
+      "id": "stage3-mobile-driving-portrait",
+      "handoff": "releases/v0.10.0/candidate1-handoff.json",
+      "media_id": "stage3-mobile-driving-portrait",
+      "reason": "本任务候选1真实流程；最终只修正驾驶手机I输入，画面与关卡不变；来源build保留"
+    }
+  ],
   "qa": [
     {
       "id": "desktop",
@@ -197,8 +206,8 @@
     {
       "id": "stage3-coop",
       "method": "qa/stage3-coop.js",
-      "passed": 25,
-      "total": 25,
+      "passed": 28,
+      "total": 28,
       "record": "qa-stage3-coop.json"
     },
     {
@@ -220,6 +229,22 @@
         "qa-stage3-visual-desktop.json",
         "qa-stage3-visual-mobile.json"
       ]
+    },
+    {
+      "id": "stage3-phone-I",
+      "result": "25/25",
+      "record": "qa-stage3-local-qa.json",
+      "method": "实际手机I单点加速；不依赖摇杆，步行行为保持"
+    },
+    {
+      "method": "最终渠道包",
+      "records": [
+        "qa-website.json",
+        "qa-toy-preview.json",
+        "qa-toy-public.json",
+        "qa-taptap-package.json"
+      ],
+      "result": "网站25/25、Toy预览28/28、Toy公开28/28、TapTap ZIP25/25；真实来源包，手机为模拟"
     }
   ],
   "thumbnail": {
@@ -229,16 +254,47 @@
   "physical_device_test": false,
   "channels": {
     "website": {
-      "status": "pending"
+      "version": "v0.10.0",
+      "status": "deployed_verified",
+      "verified_at": "2026-10-08T10:03:37.574505+00:00",
+      "source_commit": "0b18e520",
+      "runtime_sha256": "b9d2c49d127920fc4518489376b64ba607f39baf8fd9053ce753c211cd313b44",
+      "record": "releases/v0.10.0/website.json"
     },
     "toy": {
-      "status": "pending"
+      "id": 40412421031936,
+      "title": "恐龙快打 3D：第一至三关",
+      "status": "published",
+      "submitted_at": "2026-10-08T10:03:37.574505+00:00",
+      "package": "dist/toy-v0.10.0/package",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_nYXCNf4T/index.html",
+      "review_status": "published",
+      "submitted_version": "v0.10.0",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_dPqW1A23/index.html",
+      "release_record": "releases/v0.10.0/handoff.json",
+      "public_verified_version": "v0.10.0",
+      "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
+      "public_verified_at": "2026-10-08T10:09:55.607608+00:00",
+      "public_runtime_evidence": "releases/v0.10.0/qa-toy-public.json"
     },
     "taptap": {
-      "status": "pending"
+      "status": "reviewing",
+      "h5_version_id": 275750,
+      "draft_version_id": "1046962",
+      "platform_version": "V-20261008",
+      "package_sha256": "262e4386ac6f32aadc3af59fb3afa2f53e8de40c76ba5b45ca2c3d5062601bdd",
+      "source_commit": "0b18e520",
+      "submitted_at": "2026-10-08T10:03:37.574505+00:00",
+      "record": "tap-submitted.json"
     },
     "bilibili": {
-      "status": "pending"
+      "status": "public_verified",
+      "bvids": [
+        "BV18XHW66E55"
+      ],
+      "public_verified_at": "2026-10-08T10:08:26.834Z",
+      "record": "bilibili-sync.json",
+      "description_sha256": "87989cf31dfc36ea1db6c71d1ff8c5a508bd26d8fb73bc49ca3db6c1f94b4e4d"
     }
   },
   "readiness": {
@@ -248,7 +304,17 @@
       "本版本未录制完整三关一轮",
       "声音仅解码/电平验证，未人工听审",
       "手机为桌面触屏模拟，未做手机真机性能与多指验收"
-    ]
+    ],
+    "game_release": "website_and_toy_published_taptap_reviewing"
   },
-  "task_id": "01a11abd-8057-7d80-8fd9-239ab8e4347f-work1"
+  "task_id": "01a11abd-8057-7d80-8fd9-239ab8e4347f-work1",
+  "capture_builds": [
+    {
+      "id": "v0100-stage3-1",
+      "commit": null,
+      "dirty": true,
+      "fingerprint": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+      "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+    }
+  ]
 }

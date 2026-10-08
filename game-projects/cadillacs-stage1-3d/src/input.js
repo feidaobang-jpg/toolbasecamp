@@ -41,6 +41,8 @@ function clearAll() {
 
 const I = {
   network:null,
+  vehicleMode:()=>false, // 驾驶自动前进时，I单点也应产生加速边沿。
+
   active: () => false,       // 由 UI 覆盖：游戏进行中且无菜单时为 true
   // 屏幕空间的移动输入：x 右、y 上（键盘对角归一化；摇杆为模拟量）
   move() {
@@ -166,7 +168,7 @@ I.bindTouch = function (zone, base, knob, btns, toLocal) {
   }
   for (const b of ['atk', 'jump', 'mega']) bindBtn(btns[b], b, () => { touchBtn[b] = true; I.push(b); }, () => { touchBtn[b] = false; });
   for (const b of ['run']) {
-    bindBtn(btns[b], b, () => { touchBtn[b] = true; touchRun = true; }, () => { touchBtn[b] = false; });
+    bindBtn(btns[b], b, () => { touchBtn[b] = true; touchRun = true; if(I.vehicleMode())I.push('dash'); }, () => { touchBtn[b] = false; });
     btns[b]?.addEventListener('pointercancel', () => { touchRun = false; });
   }
   bindBtn(btns.cam, 'cam', () => { I.push('camera'); });

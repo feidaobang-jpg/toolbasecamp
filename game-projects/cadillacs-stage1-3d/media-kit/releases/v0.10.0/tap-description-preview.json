@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "dry_run": true,
+  "data": {
+    "operationId": "saveChanges",
+    "request": {
+      "method": "POST",
+      "url": "https://api.tapapis.cn/developer/app/v1/save-changes?app_id=962722\u0026developer_id=100726",
+      "headers": {
+        "Accept-Language": [
+          "zh-CN"
+        ],
+        "Idempotency-Key": [
+          "\u003credacted\u003e"
+        ]
+      },
+      "body": {
+        "changes": [
+          {
+            "expected": "选四位英雄闯海上都市与沼泽森林，连打、抓投、捡起枪械与刀具迎战。\n\n这是恐龙快打玩法的非官方3D复刻试玩，包含第一、二关，可直接选择起始关卡；保留角色差异、跳跃攻击、冲刺、必杀与场景道具。\n\n支持电脑键盘与手机触屏、操作模式即时切换，以及多种视角、暂停和画质设置。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。",
+            "field_id": "description",
+            "value": "选四位英雄闯海上都市、沼泽森林与地狱公路，连打、抓投、捡起枪械与刀具迎战。\n\n这是恐龙快打玩法的非官方3D复刻试玩，包含第一至三关，可直接选择起始关卡；保留角色差异、跳跃攻击、冲刺、必杀与场景道具。第三关捡无线电叫车，驾驶凯迪拉克躲油桶与手雷、追击摩托Boss霍格；车毁或下车后步行续战。支持2–4人合作共乘。\n\n支持电脑键盘与手机触屏、操作模式即时切换，以及多种视角、暂停和画质设置。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。"
+          }
+        ]
+      }
+    }
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "version": "web-rv-v0.28.0",
+  "source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "zip_sha256": "58408cf136a51eb4f47602dd0dac8f9d240c56b627abc58c0ef9738353e909aa",
+  "h5_version_id": 275671,
+  "draft_version_id": "1046885",
+  "platform_version": "V-20261008-3",
+  "status": "reviewing",
+  "checked_at": "2026-10-08T09:45:47.525546+00:00",
+  "precheck": "passed; no blockers/warnings",
+  "qa": "qa/taptap-package/results.json",
+  "materials": {
+    "icon": "preserved",
+    "description": "RV note appended",
+    "developer_message": "preserved",
+    "screenshots": "preserved existing main-game screenshots",
+    "banner": "preserved",
+    "gameplay_video": "preserved existing footage; RV candidate not submitted",
+    "homepage": "preserved GAMEPLAY_DEMO"
+  },
+  "limitations": [
+    "No physical TapTap App test",
+    "Prior assets not freshly reviewed; no new-material claim"
+  ],
+  "community": "pending target online; no premature announcement",
+  "submitted_at": "2026-10-08T09:36:24+00:00",
+  "artifact_zip": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.28.0-20261008\\taptap-chongchao-qianshao.zip",
+  "operation_handoff": {
+    "stage": "long_term",
+    "evidence": "full history contains previous online/published releases",
+    "title": "长线运营期运营手册",
+    "url": "https://developer.taptap.cn/docs/store/operation/long-term/long-term-handbook/",
+    "summary": "已上线作品可了解平台运营支持、活动和重大版本展示；实际流量取决于内容与热度，不保证推流。",
+    "description_source": "official CLI embedded operation-handbooks manifest"
+  }
+}
