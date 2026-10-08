@@ -11,7 +11,9 @@
       "state broadcast",
       "host departure ends room"
     ],
-    "fixture": "password-protected temporary QA room; all sockets closed"
+    "fixture": "password-protected temporary QA room; all sockets closed",
+    "checked_at": "2026-10-08T10:33:57+0800",
+    "transport": "direct TLS WebSocket (local HTTP proxy excluded)"
   },
   {
     "origin": "https://www.bilibilitoy.com",
@@ -25,6 +27,8 @@
       "state broadcast",
       "host departure ends room"
     ],
-    "fixture": "password-protected temporary QA room; all sockets closed"
+    "fixture": "password-protected temporary QA room; all sockets closed",
+    "checked_at": "2026-10-08T10:33:58+0800",
+    "transport": "direct TLS WebSocket (local HTTP proxy excluded)"
   }
 ]

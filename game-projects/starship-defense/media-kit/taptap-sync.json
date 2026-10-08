@@ -21,10 +21,10 @@
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
   "submission_time_source": "CLI回执review_submitted；created_time 1791383950换算22:39:10+08:00",
-  "last_status_checked_at": "2026-10-08T08:47:00+08:00",
+  "last_status_checked_at": "2026-10-08T10:31:04+08:00",
   "submitted_source_commit": "ae4b1318",
-  "community_post_status": "waiting_account_write_lock",
-  "community_post_note": "已确认 V-20261007-3 online；本人主页全部8条既有动态未见该版云存档说明，待共用账号锁释放后发布单条动态并关联虫潮论坛。TapTap 需登录网站账号使用云备份。",
+  "community_post_status": "public_verified",
+  "community_post_note": "v0.24.0 已 online；已发布单条动态并关联虫潮论坛，公开全文、本人主页与论坛均核验；未重复提交游戏包。",
   "cloud_provider": "SiteSaveProvider；在游戏档案站登录网站账号，不是 TapTap 账号云存储",
   "history": [
     {
@@ -54,6 +54,27 @@
     "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
     "saved_at": "2026-10-07T22:37:00+08:00"
   },
-  "description_correction_pending": "公开商店介绍仍写“按设备通过平台云存档自动备份”，下次可编辑更新需明确 TapTap 使用游戏内网站账号云备份；本次社区说明先准确说明账号要求。",
-  "pending_note": "v0.24.0 云存档包 H5 273272 已 online，不重复送审；仅待社区动态与论坛归属核验。网站 v0.25.0 的玩法更新另由原任务协调，不能提前写入本包说明。"
+  "description_correction_pending": "2026-10-08 只读核验：另一任务的 V-20261008 草稿（1045140）已纠正网站账号云备份文字，仍 draft，沿原 v0.25.0 发布任务送审；本次公开社区说明已明确登录要求，不覆盖该草稿。",
+  "pending_note": "原云存档任务的上线与社区收尾完成。网站 v0.25.0 玩法更新仍由原任务协调；本次仅服务端兼容补丁，不重发渠道包。",
+  "community_post": {
+    "app_id": 962354,
+    "platform_version": "V-20261007-3",
+    "h5_version_id": 273272,
+    "status": "public_verified",
+    "title": "《虫潮围城》更新：云备份与2–4人合作守城",
+    "body": "这是一款可以建防线、指挥队友、驾驶载具抵御虫群的游戏。TapTap v0.24.0 已上线，这次重点补上进度备份，并带入2–4人合作守城。\n\n普通模式仍保留本地存档。打开游戏内「档案站」，登录网站账号后，检查点会自动备份到服务器；云端保留最近三份快照，本地记录被清空后可选档恢复。本地与云端不一致时，先比较再选择读取或上传，避免静默覆盖，也可导出文件留一份备份。Toy账号云档与这里独立；TapTap版使用的是游戏内网站账号，不是TapTap账号自动备份。此前从未备份的旧进度无法凭空恢复，联机与沙盒进度也不写入单人云档。\n\n联机可建2–4人房间，中途加入或退出会保留战场；房主退出会结束房间。手机大厅输入和滚动的问题已有修复。\n\n试玩入口：https://www.taptap.cn/app/962354\n欢迎反馈遇到的问题，请带上设备、浏览器或TapTap入口，以及具体操作步骤，方便复现。",
+    "moment_id": "857205558501965884",
+    "public_url": "https://www.taptap.cn/moment/857205558501965884",
+    "forum_app_id": 962354,
+    "forum_group_id": 1518030,
+    "user_id": 416707686,
+    "submitted_at": null,
+    "public_verified_at": "2026-10-08T10:31:04+08:00",
+    "profile_verified": true,
+    "forum_verified": true,
+    "screenshot": "C:/Users/37818/.codex/artifacts/chongchao-cloudsave-closure-20261008/community-public.jpg",
+    "evidence": "公开全文与本人 UID 回读一致；本人主页最新动态含该 moment；游戏论坛 /app/962354/topic 链接含同 moment 和 group_id=1518030。平台将试玩 URL 自动转换为游戏卡片，href 保持962354。",
+    "submission_time_note": "浏览器提交成功后立即回读公开 URL；平台未提供精确发布时间，本地公开核验时间另记。",
+    "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517"
+  }
 }

@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-08T10:37:54+08:00",
+  "source": "Codex",
+  "task_id": "01a115e7-9ecb-7ce1-8784-020e5e528077-cloudsave-03",
+  "scope": "本任务相关 Toy 活动与虫潮既有两稿，非全面资格检查",
+  "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+  "official_page_read": "官方动态仍展示 Toy 创意挑战，活动到10月31日23:59；已登录本人UID16214353。",
+  "existing_participation": "共用台账已记虫潮稿参与；未重报、未改旧稿或创建视频，奖金仍待官方结算。",
+  "videos": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "owner_uid": 16214353,
+      "views": 3420,
+      "description_has_toy_entry": true,
+      "description_has_cloud_save": true,
+      "latest_description_version": "v0.25.0",
+      "description_sha256": "0f83f3efff35a2413cb37871345ccc2810f1ddbbf906b0119eedf3237f972379",
+      "description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-07·v0.25.0）：修复联机驾驶载具容易卡进地形的问题（沿墙会滑行，卡住约1.5秒自动脱困）；商店新增RPG火箭筒和四连导弹架两把武器。云存档：普通模式进度自动同步账号，本地清空可从档案站恢复；云端与本地不一致先选上传或读取。联机2–4人合作：建房选人数、中途进出保留战场、闲置电脑接管。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "owner_uid": 16214353,
+      "views": 9023,
+      "description_has_toy_entry": true,
+      "description_has_cloud_save": true,
+      "latest_description_version": "v0.25.0",
+      "description_sha256": "c34b4ccc7b635a26e73fcd6ce35af075a6319c69cc0ca8a9f1670b6c726e5ef1",
+      "description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-07·v0.25.0）：修复联机驾驶载具容易卡进地形的问题（卡住约1.5秒自动脱困）；商店新增RPG火箭筒和四连导弹架两把武器。云存档：普通模式进度自动同步账号，本地清空可从档案站恢复。联机2–4人合作，建房选人数、闲置电脑接管。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。"
+    }
+  ],
+  "full_check_completed": false
+}
