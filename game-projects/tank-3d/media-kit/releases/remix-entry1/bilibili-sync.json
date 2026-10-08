@@ -1,0 +1,45 @@
+{
+  "version": "remix-entry1",
+  "source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
+  "baseline_version": "coop-live2",
+  "classification": "正式版本",
+  "videos": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "old": "早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前版本：经典复刻35关及困难循环；魔改模式100关一周目、周目无限。WASD/方向键移动，J开火，Esc暂停；可选无限命，基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-07·coop-unstick1）：修复联机驾驶时坦克卡进墙里的问题；魔改模式新增火箭筒、四连发导弹两种道具。网站已更新，Toy/TapTap包审核中。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+      "new": "早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前玩法：新玩家默认魔改挑战，100关一周目、无限周目，可抢道具、挑战Boss；经典35关和困难循环可直接选择，老玩家保留原选择。WASD/方向键移动，J开火，Esc暂停；基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-08·remix-entry1）：入口突出魔改Boss、敌军抢道具、火箭筒与四连发导弹。联机卡墙问题已修复。网站、Toy新版已可玩；TapTap更新审核中。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+      "status": "public_verified",
+      "submitted_at": "2026-10-08T02:44:30.631Z",
+      "public_verified_at": "2026-10-08T02:45:15.057Z",
+      "public_text": "早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前玩法：新玩家默认魔改挑战，100关一周目、无限周目，可抢道具、挑战Boss；经典35关和困难循环可直接选择，老玩家保留原选择。WASD/方向键移动，J开火，Esc暂停；基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-08·remix-entry1）：入口突出魔改Boss、敌军抢道具、火箭筒与四连发导弹。联机卡墙问题已修复。网站、Toy新版已可玩；TapTap更新审核中。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。\n收起",
+      "screenshot": "D:/project/task-artifacts/tank-remix-default-20261008/bili-old-video-public.png",
+      "description_sha256": "529803c19f95ac466f07500c42e9a518735e78d06690873a48bb7daf6c45231c",
+      "source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
+      "version": "remix-entry1"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "old": "坦克大战支持2–4人联机合作了：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\n\n更新（2026-10-07·coop-unstick1）：修复联机驾驶时坦克卡进墙里的问题；魔改模式新增火箭筒、四连发导弹两种道具。\n\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n\n网站试玩已更新；Toy/TapTap包审核中。",
+      "new": "坦克大战支持2–4人联机合作：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n更新（2026-10-08·remix-entry1）：新玩家默认魔改挑战，Boss、敌军抢道具、火箭筒和四连发导弹是主要看点；经典35关仍可直接选，老玩家保留原选择。已修复联机坦克卡墙问题。\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n网站、Toy新版已可玩；TapTap更新审核中。视频为录制时版本，以当前试玩为准。",
+      "status": "public_verified",
+      "submitted_at": "2026-10-08T02:43:41.438Z",
+      "public_verified_at": "2026-10-08T02:44:53.237Z",
+      "public_text": "坦克大战支持2–4人联机合作：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n更新（2026-10-08·remix-entry1）：新玩家默认魔改挑战，Boss、敌军抢道具、火箭筒和四连发导弹是主要看点；经典35关仍可直接选，老玩家保留原选择。已修复联机坦克卡墙问题。\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n网站、Toy新版已可玩；TapTap更新审核中。视频为录制时版本，以当前试玩为准。\n收起",
+      "screenshot": "D:/project/task-artifacts/tank-remix-default-20261008/bili-new-video-public.png",
+      "description_sha256": "544c63a9ac04e7f5cb2e41bc4cb76002d0c78124ace6a6ea29fb902d991976d0",
+      "source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
+      "version": "remix-entry1"
+    }
+  ],
+  "status": "public_verified",
+  "recorded_at": "2026-10-08T02:49:45.078750+00:00",
+  "preserved": [
+    "BV",
+    "title",
+    "cover",
+    "video",
+    "tags",
+    "visibility",
+    "Toy bindings"
+  ]
+}

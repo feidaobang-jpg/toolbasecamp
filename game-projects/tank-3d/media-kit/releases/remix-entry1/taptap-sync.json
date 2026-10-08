@@ -1,0 +1,109 @@
+{
+  "version": "remix-entry1",
+  "source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
+  "package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
+  "h5_version_id": 274362,
+  "draft_version_id": "1045147",
+  "platform_version": "V-20261008",
+  "status": "reviewing",
+  "precheck": {
+    "blockers": [],
+    "preaudit_passed": true,
+    "version_id": "1045147",
+    "warnings": []
+  },
+  "submission": {
+    "handoff": {
+      "stage": "review_submitted",
+      "completed": [
+        "review submission accepted"
+      ],
+      "pending": [
+        "wait for TapTap review"
+      ],
+      "userActionRequired": false,
+      "userActionSummary": "当前无需重复提交；等待审核结果",
+      "nextActions": [
+        {
+          "id": "check_review_status",
+          "label": "查询审核状态",
+          "requiresConfirmation": false
+        }
+      ],
+      "links": [
+        {
+          "kind": "admin",
+          "label": "开发者后台资料页",
+          "url": "https://developer.taptap.cn/v3/100726/app/962376/store/update",
+          "available": true,
+          "source": "derived_from_ids"
+        }
+      ]
+    },
+    "result": {
+      "audit_id": "1045147",
+      "status": "reviewing",
+      "version_id": "1045147"
+    },
+    "status": "completed"
+  },
+  "old_description": "操控坦克守住基地，击退敌军。\n\n经典模式包含35关地图；魔改模式包含100关一周目的战场、道具、精英敌军与Boss挑战，支持继续挑战更高周目。提供多种3D视角，可拖动画面观察战场。\n\n支持电脑键盘和手机触屏操作，设置中可切换自动识别、电脑键鼠和手机触屏。联机大厅支持2–4人合作，可设置房间密码。单人进度保存在当前设备，清理站点数据可能导致存档丢失。\n\n这是粉丝向非官方作品，免费试玩，无内购。\n\n更新（2026-10-07·landscape-menu1）：手机竖屏从标题菜单起按横屏布局，操作模式可即时切换并保留本局；全屏按浏览器能力显示，斜俯视恢复全图取景。",
+  "new_description": "操控坦克守住基地，挑战Boss、抢夺道具。新玩家默认推荐魔改挑战，已有玩家保留上次选择。\n\n魔改模式包含100关一周目的战场、精英敌军与Boss挑战，可捡到船、手枪、火箭筒和四连发导弹，敌军也会抢道具，通关后可继续挑战更高周目。经典复刻35关仍有直接入口。提供多种3D视角，可拖动画面观察战场。\n\n支持电脑键盘和手机触屏操作，设置中可即时切换自动识别、电脑键鼠和手机触屏并保留本局。联机大厅支持2–4人合作，可设置房间密码，支持中途加入/退出；闲置30秒电脑队友接管，操作即交还，房主可踢人。单人进度保存在当前设备，清理站点数据可能导致存档丢失。\n\n这是粉丝向非官方作品，免费试玩，无内购。\n\n更新（2026-10-08·remix-entry1）：魔改推荐与经典复刻各有直接选择按钮；修复联机卡墙，新增魔改火箭筒和四连发导弹。",
+  "old_promotion": "35关经典战场，支持多人合作守基地",
+  "new_promotion": "魔改Boss挑战，抢道具！2–4人合作守基地",
+  "community_post_status": "pending_online",
+  "qa": {
+    "package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
+    "results": [
+      {
+        "device": "desktop",
+        "viewport": [
+          1920,
+          1080
+        ],
+        "start": true,
+        "control_mode_switch": true,
+        "progress_preserved": true,
+        "errors": [],
+        "failed": []
+      },
+      {
+        "device": "landscape",
+        "viewport": [
+          844,
+          390
+        ],
+        "start": true,
+        "control_mode_switch": true,
+        "progress_preserved": true,
+        "errors": [],
+        "failed": []
+      },
+      {
+        "device": "portrait",
+        "viewport": [
+          390,
+          844
+        ],
+        "start": true,
+        "control_mode_switch": true,
+        "progress_preserved": true,
+        "errors": [],
+        "failed": []
+      },
+      {
+        "co_op": "two real browser clients using production relay",
+        "joined": true,
+        "ready": true,
+        "started": true,
+        "state_sync": true
+      }
+    ],
+    "method": "Normal buttons and keyboard; test hook read-only observations, no invulnerability or scene mutation.",
+    "real_mobile_test": false,
+    "taptap_client_test": false,
+    "captured_at": "2026-10-08T02:36:25.142Z"
+  },
+  "recorded_at": "2026-10-08T02:49:45.078750+00:00",
+  "cli_evidence_directory": "D:\\project\\task-artifacts\\tank-remix-default-20261008\\release-cli"
+}

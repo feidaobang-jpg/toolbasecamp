@@ -33,5 +33,13 @@
     "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
   },
   "packageHash": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
-  "status": "built_not_submitted"
+  "status": "published",
+  "source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_3PQWkFb5/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_I0Gossrs/index.html",
+  "submitted_at": "2026-10-08T02:38:01+00:00",
+  "public_verified_at": "2026-10-08T02:49:45.078750+00:00",
+  "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+  "verification": "预览开始、开炮、暂停、双向操作切换、经典选择与刷新保存、手机横竖屏；正式入口魔改推荐与经典按钮已公开核验",
+  "physical_device_test": false
 }
