@@ -24,7 +24,7 @@
   "last_status_checked_at": "2026-10-08T02:40:39.031351+00:00",
   "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
   "community_post_status": "pending_until_online",
-  "community_post_note": "已确认 V-20261007-3 online；本人主页全部8条既有动态未见该版云存档说明，待共用账号锁释放后发布单条动态并关联虫潮论坛。TapTap 需登录网站账号使用云备份。",
+  "community_post_note": "v0.24.0 云存档动态与论坛已由 cloudsave-closure 任务公开核验。新 v0.25.0 / 启动适配包已 reviewing，待真实 online 后合并发布一条本次说明。",
   "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
   "history": [
     {
@@ -82,5 +82,58 @@
   },
   "content_preaudit_passed": true,
   "content_preaudit_warnings": [],
-  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962354\\h5-latest.json"
+  "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962354\\h5-latest.json",
+  "community_post": {
+    "app_id": 962354,
+    "platform_version": "V-20261007-3",
+    "h5_version_id": 273272,
+    "status": "public_verified",
+    "title": "《虫潮围城》更新：云备份与2–4人合作守城",
+    "body": "这是一款可以建防线、指挥队友、驾驶载具抵御虫群的游戏。TapTap v0.24.0 已上线，这次重点补上进度备份，并带入2–4人合作守城。\n\n普通模式仍保留本地存档。打开游戏内「档案站」，登录网站账号后，检查点会自动备份到服务器；云端保留最近三份快照，本地记录被清空后可选档恢复。本地与云端不一致时，先比较再选择读取或上传，避免静默覆盖，也可导出文件留一份备份。Toy账号云档与这里独立；TapTap版使用的是游戏内网站账号，不是TapTap账号自动备份。此前从未备份的旧进度无法凭空恢复，联机与沙盒进度也不写入单人云档。\n\n联机可建2–4人房间，中途加入或退出会保留战场；房主退出会结束房间。手机大厅输入和滚动的问题已有修复。\n\n试玩入口：https://www.taptap.cn/app/962354\n欢迎反馈遇到的问题，请带上设备、浏览器或TapTap入口，以及具体操作步骤，方便复现。",
+    "moment_id": "857205558501965884",
+    "public_url": "https://www.taptap.cn/moment/857205558501965884",
+    "forum_app_id": 962354,
+    "forum_group_id": 1518030,
+    "user_id": 416707686,
+    "submitted_at": null,
+    "public_verified_at": "2026-10-08T10:31:04+08:00",
+    "profile_verified": true,
+    "forum_verified": true,
+    "screenshot": "C:/Users/37818/.codex/artifacts/chongchao-cloudsave-closure-20261008/community-public.jpg",
+    "evidence": "公开全文与本人 UID 回读一致；本人主页最新动态含该 moment；游戏论坛 /app/962354/topic 链接含同 moment 和 group_id=1518030。平台将试玩 URL 自动转换为游戏卡片，href 保持962354。",
+    "submission_time_note": "浏览器提交成功后立即回读公开 URL；平台未提供精确发布时间，本地公开核验时间另记。",
+    "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517"
+  },
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "last_public_verified_moment_id": "857205558501965884",
+    "last_public_verified_url": "https://www.taptap.cn/moment/857205558501965884",
+    "forum_app_id": 962354,
+    "source_version": "web-cloudsave-v0.24.0",
+    "h5_version_id": 273272,
+    "platform_version": "V-20261007-3",
+    "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517",
+    "public_verified_at": "2026-10-08T10:31:04+08:00",
+    "own_profile_verified": true,
+    "forum_verified": true,
+    "release_record": "releases/cloudsave-closure-20261008/community-post.json"
+  },
+  "pending_community_updates": [
+    {
+      "source_version": "web-unstick-rpg-v0.25.0",
+      "h5_version_id": 274325,
+      "platform_version": "V-20261008",
+      "status": "pending_until_online",
+      "record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json"
+    }
+  ],
+  "description_update_history": [
+    {
+      "old": "…当前版本没有跨设备云存档。\n\n更新（2026-10-07·v0.20.0）：可逐人安排留守或跟随…修复暂停后重开声音。",
+      "new": "…进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
+      "new_description_sha256": "0c1edf09fd93085249a3586a16c3be6cdc66ef77784097725d725f13893dcc26",
+      "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
+      "saved_at": "2026-10-07T22:37:00+08:00"
+    }
+  ]
 }

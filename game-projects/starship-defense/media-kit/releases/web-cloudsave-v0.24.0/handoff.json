@@ -40,9 +40,11 @@
     "draft_version_id": "1043869",
     "platform_version": "V-20261007-3",
     "submitted_at": "2026-10-07T22:39:10+08:00",
-    "note": "2026-10-07 经官方 CLI 上传、绑定 main、预审并提审；2026-10-08 08:47 重新查询 V-20261007-3 为 online、last_event=published，公开游戏页试玩入口可见。动态与论坛待账号写锁释放后补发；TapTap 的云备份需在游戏档案站登录网站账号，原记录误称 TapTap 平台云存储已纠正。",
+    "note": "2026-10-08 官方 CLI 复查 V-20261007-3 为 online、last_event=published；公开试玩入口可见。动态和虫潮论坛的同一条云存档说明已核验，明确 TapTap 使用游戏内网站账号云备份。",
     "status_checked_at": "2026-10-08T08:47:00+08:00",
-    "community_post_status": "waiting_account_write_lock"
+    "community_post_status": "public_verified",
+    "community_post_url": "https://www.taptap.cn/moment/857205558501965884",
+    "community_verified_at": "2026-10-08T10:31:04+08:00"
   },
   "bilibili": {
     "status": "public_verified",
@@ -65,5 +67,5 @@
     "production_smoke": "VPS 上 verify_game_saves_deployed.py 通过（仅临时QA账号）",
     "merge": "已整合主线联机手动建房（lobby-hint1）后重建 compat/toy/taptap 并复验"
   },
-  "updated_at": "2026-10-08T09:01:43+08:00"
+  "updated_at": "2026-10-08T10:31:04+08:00"
 }
