@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-versus-teams-v0.27.0",
+  "current_version": "web-rv-v0.28.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,7 +12,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_u4V157YC/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-versus-teams-v0.27.0/handoff.json",
+  "qa": "releases/web-rv-v0.28.0/handoff.json",
   "pending_toy_merge": [],
   "toy": {
     "id": 38678478981120,
