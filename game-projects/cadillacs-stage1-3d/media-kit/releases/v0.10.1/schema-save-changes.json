@@ -1,0 +1,234 @@
+{
+  "ok": true,
+  "data": {
+    "_meta": {
+      "access_tokens": [],
+      "affordance": {
+        "use_when": [
+          "Save explicit store-information changes after inspecting the current draft and confirming the exact fields to update."
+        ],
+        "avoid_when": [
+          "You only need to inspect current readiness → use `analyze-app-status`",
+          "You are changing the selected package rather than store fields → use `select-package`"
+        ],
+        "prerequisites": [
+          "Current draft state from `analyze-app-status` or `get-app-module`",
+          "An idempotency key and explicit user-approved field values"
+        ],
+        "examples": [
+          {
+            "description": "Preview exact changes",
+            "command": "taptap-cli app save-changes --dev-id \"<developer_id>\" --app-id \"<app_id>\" --data @changes.json --idempotency-key \"<key>\" --dry-run"
+          }
+        ],
+        "skills": [
+          "taptap-app-edit/references/app-edit-fields-and-packages.md"
+        ]
+      },
+      "danger": true,
+      "envelope_version": "1.0",
+      "required_scopes": [],
+      "risk": "write",
+      "scopes": []
+    },
+    "description": "保存 App 资料编辑草稿，支持逐字段写入；read-before-write 校验。",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "app_id": {
+          "description": "游戏 ID",
+          "format": "int64",
+          "type": "integer"
+        },
+        "changes": {
+          "description": "字段变更列表",
+          "items": {
+            "anyOf": [
+              {
+                "required": [
+                  "expected"
+                ]
+              },
+              {
+                "properties": {
+                  "force": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "force"
+                ]
+              }
+            ],
+            "description": "单条字段变更",
+            "properties": {
+              "expected": {
+                "description": "read-before-write 防漂移：当前字段值快照（任意 JSON）",
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "array",
+                  "object",
+                  "null"
+                ]
+              },
+              "field_id": {
+                "description": "字段 ID",
+                "type": "string"
+              },
+              "force": {
+                "description": "显式声明覆盖最新值，跳过 expected 校验",
+                "type": "boolean"
+              },
+              "old_value": {
+                "description": "remove 时被移除的旧值（任意 JSON）",
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "array",
+                  "object",
+                  "null"
+                ]
+              },
+              "op": {
+                "description": "数组操作：append / remove / replace_one",
+                "type": "string"
+              },
+              "value": {
+                "description": "字段新值（任意 JSON：text=string / image=URL / video=数字 / localized=对象）",
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "array",
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "field_id"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "developer_id": {
+          "description": "厂商 ID",
+          "format": "int64",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "app_id",
+        "changes",
+        "developer_id"
+      ],
+      "type": "object"
+    },
+    "name": "app save-changes",
+    "outputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "result": {
+          "description": "保存资料修改结果",
+          "properties": {
+            "revision": {
+              "description": "保存后的草稿版本 ID 数字形式",
+              "format": "int64",
+              "type": "integer"
+            },
+            "stale": {
+              "description": "因写入顺序导致与当前草稿事实冲突的字段，需重新读取后再次保存",
+              "items": {
+                "description": "冲突字段",
+                "properties": {
+                  "actual_before": {
+                    "description": "实际当前值，供重新决策（任意 JSON，与请求侧 change.value 同类型）",
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "array",
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "expected": {
+                    "description": "调用方提供的当前值快照（任意 JSON，与请求侧 change.value 同类型）",
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "array",
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "field_id": {
+                    "description": "字段 ID",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "field_id"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "updated_fields": {
+              "description": "本次保存实际修改的字段列表",
+              "items": {
+                "description": "已更新字段",
+                "properties": {
+                  "field_id": {
+                    "description": "字段 ID",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "field_id"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "version_id": {
+              "description": "当前草稿的版本 ID",
+              "type": "string"
+            }
+          },
+          "required": [
+            "revision",
+            "version_id"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "accepted"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "status"
+      ],
+      "type": "object"
+    }
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

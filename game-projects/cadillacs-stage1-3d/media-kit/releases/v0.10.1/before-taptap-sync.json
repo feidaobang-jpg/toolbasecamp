@@ -181,10 +181,5 @@
     "physical_device_verified": false,
     "scope": "玩家原设备的启动复测与其他手机机型表现",
     "does_not_block_verified_release": true
-  },
-  "rollback": {
-    "version": "v0.10.1",
-    "reason": "用户要求删除本次新增第三关",
-    "status": "pending"
   }
 }

@@ -23,6 +23,14 @@ const { launch, BASE, out, sleep } = require('./lib');
 
   await page.goto(BASE + '?test=1&seed=21', { waitUntil: 'load' });
   await sleep(800);
+  await T(() => localStorage.setItem('cd3d-stage1:stage', '2'));
+  await page.reload({ waitUntil: 'load' }); await sleep(1200);
+  let rollbackLabel = await T(() => document.querySelector('[data-opt=stage]').textContent);
+  ok('旧第三关选择安全回退到第二关', /第二关 · 沼泽森林/.test(rollbackLabel), rollbackLabel);
+  await T(() => document.querySelector('[data-opt=stage]').focus());
+  await page.keyboard.press('ArrowRight'); await sleep(100);
+  rollbackLabel = await T(() => document.querySelector('[data-opt=stage]').textContent);
+  ok('两关选择循环回第一关，没有第三关', /第一关 · 海上都市/.test(rollbackLabel), rollbackLabel);
   await T(() => { localStorage.removeItem('cd3d-stage1:stage'); localStorage.setItem('cd3d-stage1:hero', '0'); });
   await page.reload({ waitUntil: 'load' }); await sleep(1200);
   // ---------- 起始关卡选项 ----------
