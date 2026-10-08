@@ -7,9 +7,7 @@ import re
 import uuid
 from pathlib import Path
 
-import render_backfill as render
-
-WORK = render.WORK
+WORK = Path(__file__).resolve().parent
 ROOT = WORK.parent
 STATE = Path('C:/Users/37818/.claude/state/game-video')
 TASK = json.loads((WORK / 'run-state.json').read_text(encoding='utf-8'))['continuation_task_id']
@@ -35,6 +33,17 @@ def locked(key):
 
 now = datetime.datetime.now(datetime.timezone.utc).isoformat()
 result = read(WORK / 'publication-result.json')
+x_drafts = read(WORK / 'publish' / 'x' / 'drafts.json')
+if result['platforms']['x'].get('user_decision') or x_drafts.get('user_decision') or any(
+        post.get('posted')
+        or post.get('status') in {'scheduled', 'publishing', 'published', 'submission_unknown'}
+        or any(post.get(key) for key in ('post_id', 'x_post_id', 'metricool_schedule_id',
+                                        'metricool_uuid', 'planner_url'))
+        for post in x_drafts['posts']):
+    raise SystemExit('Existing X decision or submission records must be preserved; '
+                     'update the observed result directly instead of regenerating pending notes.')
+import render_backfill as render
+
 for platform in ['youtube', 'douyin']:
     account = result['platforms'][platform]
     with locked(platform + '-' + account['account_key']):

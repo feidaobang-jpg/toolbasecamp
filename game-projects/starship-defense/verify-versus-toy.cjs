@@ -23,7 +23,7 @@ async function gameFrame(page){
     const f=await gameFrame(p);f.page().on('pageerror',e=>errors.push(e.message));
     await f.click('#btnVersus');assert.ok(await f.isVisible('#vsMenu'));
     await f.click('[data-vs-ai="normal"]');await f.waitForFunction(()=>__gameQA.versus.state.active);
-    await f.evaluate(()=>{const v=__gameQA.versus;v.state.time=21;v.team('blue').gold=2000;});
+    await f.evaluate(()=>{const v=__gameQA.versus;v.state.time=21;v.seat('blue0').gold=2000;});
     await f.locator('#stage').click({position:{x:400,y:400}});
     await p.keyboard.press('KeyR');await sleep(300);await p.keyboard.press('Digit1');await sleep(500);
     const st=await f.evaluate(()=>({blue:__gameQA.versus.state.units.filter(u=>u.team==='blue').length,panel:!document.getElementById('vsPanel').classList.contains('hidden'),arena:!__gameQA.groundMesh.visible}));
@@ -41,7 +41,7 @@ async function gameFrame(page){
     const mm=await mf.evaluate(()=>({touch:__gameQA.isTouch,panel:!document.getElementById('vsPanel').classList.contains('hidden'),cards:document.querySelectorAll('#vsGrid .vs-card').length}));
     assert.ok(mm.panel);pass('Toy 预览·手机竖屏视口：点「出兵」打开面板',mm);
     await mf.tap('#vsGrid .vs-card >> nth=0');await sleep(400);
-    const bank=await mf.evaluate(()=>__gameQA.versus.team('blue').bank);assert.equal(bank,2);pass('Toy 预览·手机：点卡片升级银行');
+    const bank=await mf.evaluate(()=>__gameQA.versus.seat('blue0').bank);assert.equal(bank,2);pass('Toy 预览·手机：点卡片升级银行');
     await m.screenshot({path:path.join(OUT,'toy-mobile.png')});
     assert.deepEqual(merr,[]);pass('Toy 预览·手机无脚本报错');await ctx.close();
   }finally{await b.close();}

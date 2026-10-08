@@ -85,7 +85,7 @@ const server = http.createServer((req,res) => {
       await page.waitForFunction(() => __gameQA.Game.state === 'menu');
       await page.locator('#btnVersus').click();await page.locator('[data-vs-ai="normal"]').click();
       await page.waitForFunction(() => __gameQA.versus.state.active);
-      await page.evaluate(() => {const v=__gameQA.versus;v.state.time=21;v.team('blue').gold=2000;});
+      await page.evaluate(() => {const v=__gameQA.versus;v.state.time=21;v.seat('blue0').gold=2000;});
       await page.locator(size.name === 'desktop' ? '#stage' : '#vR').click({position: size.name === 'desktop' ? {x:500,y:400} : undefined});
       if (size.name === 'desktop') await page.keyboard.press('KeyR');
       await page.waitForFunction(() => !document.getElementById('vsPanel').classList.contains('hidden'));

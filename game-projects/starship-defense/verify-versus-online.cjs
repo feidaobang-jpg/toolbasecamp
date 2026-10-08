@@ -19,8 +19,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     await host.goto(url+'?qa=1&test=1');await host.waitForFunction(()=>window.__gameQA&&window.__ccReady&&window.__COOP_QA__,null,{timeout:60000});
     await host.click('#btnVersus');await host.click('#vsOnline');
     await host.waitForSelector('.coop-panel:not([hidden])');
-    const cap=await host.evaluate(()=>{const s=document.querySelector('.coop-panel [data-field="capacity"]');return {value:s.value,disabled:s.disabled};});
-    assert.equal(cap.value,'2');assert.ok(cap.disabled);pass('对战菜单 → 好友对战：大厅人数固定 2 人',cap);
+    const cap=await host.evaluate(()=>{const s=document.querySelector('.coop-panel [data-field="capacity"]');return {value:s.value,options:[...s.options].map(o=>o.textContent),team:!document.querySelector('.coop-panel [data-field="vsTeam"]').closest('label').hidden};});
+    assert.equal(cap.value,'2');assert.equal(cap.options.length,4);assert.ok(cap.options[3].includes('4 对 4'));assert.ok(cap.team);pass('对战菜单 → 好友对战：大厅「对战规模」默认 1 对 1，可选到 4 对 4，并显示队伍选择',cap);
     await host.fill('.coop-panel [data-field="name"]','房主');await host.click('.coop-panel [data-do="create"]');
     await host.waitForFunction(()=>window.__COOP_QA__.connection.room?.code,null,{timeout:15000});
     const room=await host.evaluate(()=>({code:__COOP_QA__.connection.room.code,max:__COOP_QA__.connection.room.maxPlayers,mode:__COOP_QA__.connection.room.settings.mode}));
@@ -38,7 +38,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     assert.equal(roles[0].role,'host');assert.equal(roles[0].team,'blue');assert.equal(roles[1].role,'guest');assert.equal(roles[1].team,'red');
     pass('开局：房主蓝方计算整局，客人红方',roles);
     // 跳过准备阶段，给双方加钱
-    await host.evaluate(()=>{const v=__gameQA.versus;v.state.time=21;v.team('red').gold=5000;v.team('blue').gold=5000;});await sleep(500);
+    await host.evaluate(()=>{const v=__gameQA.versus;v.state.time=21;v.seat('red0').gold=5000;v.seat('blue0').gold=5000;});await sleep(500);
     // 客人：出兵
     await guest.keyboard.press('KeyR');await sleep(200);await guest.keyboard.press('Digit1');
     await host.waitForFunction(()=>__gameQA.versus.state.units.filter(u=>u.team==='red').length>=6,null,{timeout:8000});
@@ -47,8 +47,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     // 客人：升级银行、换路线、买枪
     await guest.keyboard.press('Digit0');await guest.keyboard.press('KeyZ');await sleep(200);
     await guest.keyboard.press('KeyO');await sleep(200);await guest.keyboard.press('Digit2');
-    await host.waitForFunction(()=>{const v=__gameQA.versus;return v.team('red').bank===2&&v.team('red').lane==='right'&&v.heroOf('red').vsWeapons.includes('shotgun');},null,{timeout:8000});
-    await guest.waitForFunction(()=>__gameQA.Game.weapons.includes('shotgun')&&__gameQA.versus.team('red').bank===2,null,{timeout:8000});
+    await host.waitForFunction(()=>{const v=__gameQA.versus;return v.seat('red0').bank===2&&v.seat('red0').lane==='right'&&v.heroOf('red').vsWeapons.includes('shotgun');},null,{timeout:8000});
+    await guest.waitForFunction(()=>__gameQA.Game.weapons.includes('shotgun')&&__gameQA.versus.seat('red0').bank===2,null,{timeout:8000});
     pass('客人升级银行、切换路线、买霰弹枪：房主核验后执行并同步');
     // 客人：建造（在红方半场正前方）
     await guest.keyboard.press('KeyL');await sleep(200);await guest.keyboard.press('Digit2');await sleep(500);await guest.keyboard.press('KeyJ');
@@ -74,10 +74,10 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     pass('房主再来一局：双方进入新一局，客人结算界面关闭');
     // 客人掉线 → 电脑接管
     await gc.close();
-    await host.waitForFunction(()=>{const v=__gameQA.versus,h=v.heroOf('red');return h&&h.vsAI&&v.team('red').ai==='normal';},null,{timeout:15000});
+    await host.waitForFunction(()=>{const v=__gameQA.versus,h=v.heroOf('red');return h&&h.vsAI&&v.seat('red0').ai==='normal';},null,{timeout:15000});
     const msg=await host.textContent('#msg');pass('客人掉线：电脑接管红方指挥与英雄',{msg});
     await sleep(6000);
-    const ai=await host.evaluate(()=>({redGold:Math.round(__gameQA.versus.team('red').gold),redBuild:__gameQA.buildings.filter(b=>b.team==='red').length,time:Math.round(__gameQA.versus.state.time)}));
+    const ai=await host.evaluate(()=>({redGold:Math.round(__gameQA.versus.seat('red0').gold),redBuild:__gameQA.buildings.filter(b=>b.team==='red').length,time:Math.round(__gameQA.versus.state.time)}));
     pass('接管后红方电脑继续运营',ai);
     assert.deepEqual(errors,[]);pass('双方无脚本报错');
   }finally{await b.close();}

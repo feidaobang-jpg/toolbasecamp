@@ -3,7 +3,7 @@
   "source": "Codex",
   "workspace": "C:\\Users\\37818\\.codex\\worktrees\\video-backfill-20261008\\toolbasecamp",
   "branch": "codex/video-backfill-20261008",
-  "phase": "videos_published_x_pending",
+  "phase": "videos_published_x_skipped_user_no_paid_access",
   "production_complete": true,
   "published": true,
   "ready_to_review": true,
@@ -13,8 +13,8 @@
   "audio_metrics": "qa/audio-metrics.json",
   "platform_preview": "public desktop web players verified; no real-phone test",
   "subjective_listening": "not-run",
-  "updated_at": "2026-10-08T07:17:25.009195+00:00",
-  "retention_reason": "7版被忽略的成片与音轨仍须保全；X续接待处理，保留任务worktree。",
+  "updated_at": "2026-10-08T07:55:00.331335+00:00",
+  "retention_reason": "本批发布已完成，X按用户收费则跳过的决定不发；7版被忽略成片及工程保留在本任务worktree，媒体保全前不归档。",
   "preview_limitations": [
     "本地预览服务被自动审批策略拒绝",
     "内置浏览器不允许file协议，使用本地文件链接交付"
@@ -36,5 +36,36 @@
     "source": "user"
   },
   "continuation_task_id": "01a11964-7a1a-74a0-b55b-357944dbcfd4-video-backfill-publish-02",
-  "x_published": false
+  "x_published": false,
+  "metricool_connection_check": {
+    "plugin": "Metricool",
+    "installed": true,
+    "checked_at": "2026-10-08T07:50:05.430018+00:00",
+    "brand_id": "7304854",
+    "tool": "getBrandSettings",
+    "tool_result": "INVALID_ARGUMENT: brand has no connected social networks",
+    "x_connected": false,
+    "x_account_confirmed": false,
+    "browser_entry_redirected_to": "https://app.metricool.com/login",
+    "connection_entry_url": "https://app.metricool.com/brands/connections?blogId=7304854",
+    "posting_or_scheduling_performed": false,
+    "plan_and_write_permissions": "not-yet-verified",
+    "subscription_change_performed": false,
+    "official_requirements": "Starter or higher and X/Twitter add-on; current standard add-on USD10/month/account, main plan separate",
+    "official_source": "https://help.metricool.com/your-guide-to-the-x-twitter-add-on-wt5wy"
+  },
+  "next_action": null,
+  "task_complete": true,
+  "x_status": "skipped_user_no_paid_access",
+  "x_user_decision": {
+    "source": "user",
+    "statement": "要收费吗？如果收费就不做",
+    "recorded_at": "2026-10-08T07:55:00.331335+00:00",
+    "scope": "X sync requires no paid plan, add-on or API credit purchase",
+    "current_batch": "skip X",
+    "reason": "Metricool X requires paid Starter or higher plus X add-on",
+    "official_source": "https://help.metricool.com/your-guide-to-the-x-twitter-add-on-wt5wy",
+    "subscription_change_performed": false,
+    "posting_or_scheduling_performed": false
+  }
 }

@@ -23,22 +23,22 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
     const focused=await p.evaluate(()=>document.activeElement?.dataset?.vsAi);assert.equal(focused,'normal');
     await p.keyboard.press('Enter');
     await p.waitForFunction(()=>__gameQA.versus.state.active);
-    const hud=await p.evaluate(()=>({top:getComputedStyle(document.getElementById('vsTop')).display,stat:getComputedStyle(document.getElementById('statLine')).display,hint:document.getElementById('keysHint').textContent,diff:__gameQA.versus.state.difficulty,ai:__gameQA.versus.team('red').ai}));
+    const hud=await p.evaluate(()=>({top:getComputedStyle(document.getElementById('vsTop')).display,stat:getComputedStyle(document.getElementById('statLine')).display,hint:document.getElementById('keysHint').textContent,diff:__gameQA.versus.state.difficulty,ai:__gameQA.versus.seat('red0').ai}));
     assert.equal(hud.top,'flex');assert.equal(hud.stat,'none');assert.ok(hud.hint.includes('R 出兵面板'));assert.equal(hud.diff,'normal');assert.equal(hud.ai,'normal');
     pass('键盘 Enter 开始「对战电脑·普通」，对战 HUD 显示、战役 HUD 隐藏',hud);
     await p.screenshot({path:path.join(OUT,'desktop-start.png')});
     await p.keyboard.press('KeyR');await sleep(200);
     const panel=await p.evaluate(()=>({vis:!document.getElementById('vsPanel').classList.contains('hidden'),cards:document.querySelectorAll('#vsGrid .vs-card').length,first:document.querySelector('#vsGrid .vs-card b').textContent}));
     assert.ok(panel.vis);assert.equal(panel.cards,10);assert.ok(panel.first.includes('银行'));pass('R 打开出兵面板：银行 + 9 个兵种',panel);
-    await p.keyboard.press('KeyZ');await sleep(100);assert.equal(await p.evaluate(()=>__gameQA.versus.team('blue').lane),'right');pass('Z 切换进攻路线到右路');
+    await p.keyboard.press('KeyZ');await sleep(100);assert.equal(await p.evaluate(()=>__gameQA.versus.seat('blue0').lane),'right');pass('Z 切换进攻路线到右路');
     await p.keyboard.press('Digit0');await sleep(150);
-    const bank=await p.evaluate(()=>({bank:__gameQA.versus.team('blue').bank,gold:__gameQA.versus.team('blue').gold}));assert.equal(bank.bank,2);assert.ok(bank.gold<=100+30);pass('0 升级银行 Lv2，扣 500 金',bank);
+    const bank=await p.evaluate(()=>({bank:__gameQA.versus.seat('blue0').bank,gold:__gameQA.versus.seat('blue0').gold}));assert.equal(bank.bank,2);assert.ok(bank.gold<=100+30);pass('0 升级银行 Lv2，扣 500 金',bank);
     await p.keyboard.press('Digit1');await sleep(150);
     assert.equal(await p.evaluate(()=>__gameQA.versus.state.units.filter(u=>u.team==='blue').length),0);
     assert.ok((await p.textContent('#msg')).includes('准备阶段'));pass('准备阶段按 1 不能出兵并提示原因');
-    await p.evaluate(()=>{const v=__gameQA.versus;v.state.time=21;v.team('blue').gold=3000;});
+    await p.evaluate(()=>{const v=__gameQA.versus;v.state.time=21;v.seat('blue0').gold=3000;});
     await p.keyboard.press('Digit1');await sleep(200);
-    const sent=await p.evaluate(()=>({n:__gameQA.versus.state.units.filter(u=>u.team==='blue').length,gold:Math.round(__gameQA.versus.team('blue').gold),side:Math.sign(__gameQA.versus.state.units.find(u=>u.team==='blue').path[3].x)}));
+    const sent=await p.evaluate(()=>({n:__gameQA.versus.state.units.filter(u=>u.team==='blue').length,gold:Math.round(__gameQA.versus.seat('blue0').gold),side:Math.sign(__gameQA.versus.state.units.find(u=>u.team==='blue').path[3].x)}));
     assert.equal(sent.n,6);assert.ok(sent.gold<=2850+30);assert.equal(sent.side,-1);pass('开战后 1 派出 6 只小虫，走右路（蓝方右手=西路）',sent);
     await p.keyboard.press('Digit1');await sleep(150);assert.ok((await p.textContent('#msg')).includes('冷却'));pass('同一兵种冷却中不能连派');
     // 建造：L → 2 机枪塔 → 放置
@@ -52,7 +52,7 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
     assert.equal(built.n,builtBefore+1);assert.equal(built.kind,'mgTurret');assert.equal(built.hp,400);assert.ok(built.ring);pass('L→2→J 在本方半场造机枪塔（对战耐久 ×1.6，蓝色阵营环）',built);
     await p.keyboard.press('Escape');await sleep(150);
     // 越线建造被拒
-    const cross=await p.evaluate(()=>__gameQA.versus.zoneReason('blue','mgTurret',0,900-10));assert.ok(cross.includes('本方半场'));pass('中线 25 米以内不能建造',cross);
+    const cross=await p.evaluate(()=>__gameQA.versus.zoneReason('blue0','mgTurret',0,900-10));assert.ok(cross.includes('本方半场'));pass('中线 25 米以内不能建造',cross);
     // 买枪：O → 2 霰弹枪
     await p.keyboard.press('KeyO');await sleep(150);await p.keyboard.press('Digit2');await sleep(200);
     const gun=await p.evaluate(()=>({owned:__gameQA.Game.weapons.slice(),cur:__gameQA.Game.curWeapon}));assert.ok(gun.owned.includes('shotgun'));assert.equal(gun.cur,'shotgun');pass('O→2 买霰弹枪并换上',gun);
@@ -61,14 +61,14 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
     // 规则：友伤、英雄伤害系数、建筑打折、赏金
     const rules=await p.evaluate(()=>{const v=__gameQA.versus,s=v.state;const own=s.units.find(u=>u.team==='blue'),hp0=own.hp;v.damage(own,50,'blue','hero');
       const red=__gameQA.versus.heroOf('red');red.invulnerable=0;const r0=red.hp;v.damage(red,50,'blue','hero');
-      v.send('red','swarm');const ru=s.units.find(u=>u.team==='red');const g0=v.team('blue').gold;v.damage(ru,1e4,'blue','hero');
+      v.send('red0','swarm');const ru=s.units.find(u=>u.team==='red');const g0=v.seat('blue0').gold;v.damage(ru,1e4,'blue','hero');
       const bd=__gameQA.buildings.find(b=>b.team==='blue');const b0=bd.hp;v.damage(bd,100,'red','hero');
-      return {friendly:own.hp===hp0,heroTaken:Math.round(r0-red.hp),bounty:Math.round(v.team('blue').gold-g0),bldTaken:Math.round(b0-bd.hp)};});
+      return {friendly:own.hp===hp0,heroTaken:Math.round(r0-red.hp),bounty:Math.round(v.seat('blue0').gold-g0),bldTaken:Math.round(b0-bd.hp)};});
     assert.ok(rules.friendly);assert.ok(rules.heroTaken>=30&&rules.heroTaken<=40);assert.equal(rules.bounty,6);assert.equal(rules.bldTaken,60);pass('无友伤 · 英雄受伤 ×0.8 · 小虫赏金 6 · 英雄打建筑 ×0.6',rules);
     // 炮塔自动开火：把红方小虫放到蓝方机枪塔旁
     await p.evaluate(()=>{const v=__gameQA.versus,s=v.state,bd=__gameQA.buildings.find(b=>b.team==='blue'&&b.kind==='mgTurret');for(const u of s.units.filter(u=>u.team==='red'&&!u.dead)){u.mesh.position.set(bd.mesh.position.x+6,0,bd.mesh.position.z+6);u.path=[{x:bd.mesh.position.x,z:bd.mesh.position.z}];u.pathIdx=0;}});
     await sleep(3000);
-    const turret=await p.evaluate(()=>({alive:__gameQA.versus.state.units.filter(u=>u.team==='red'&&!u.dead).length,kills:__gameQA.versus.team('blue').stats.kills}));
+    const turret=await p.evaluate(()=>({alive:__gameQA.versus.state.units.filter(u=>u.team==='red'&&!u.dead).length,kills:__gameQA.versus.teamSummary('blue').kills}));
     assert.ok(turret.alive<5);pass('蓝方机枪塔自动射杀靠近的红方小虫',turret);
     // 胜负与结算
     await p.evaluate(()=>{const v=__gameQA.versus;v.damage(v.hq('red'),1e6,'blue','unit');});
@@ -95,9 +95,9 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
     /* ---------- 满负载帧时间 ---------- */
     await p.evaluate(()=>{__gameQA.startVersusAI('hard');});await sleep(800);
     const load=await p.evaluate(async()=>{const q=__gameQA,v=q.versus,s=v.state;s.time=400;
-      for(const team of ['blue','red']){const t=v.team(team);t.gold=1e6;t.ai=null;
-        for(let i=0;i<16;i++){const kinds=['mgTurret','cannonTurret','teslaTurret','antiAir','wall'];const p=v.world(team,-60+(i%8)*16,-30-Math.floor(i/8)*12);v.build(team,kinds[i%5],p.x,p.z,0);}
-        for(const id of ['swarm','gunners','assault','carapace','flyers','bombers']){t.cd={};v.send(team,id,'left');}}
+      for(const team of ['blue','red']){const pid=team+'0',t=v.seat(pid);t.gold=1e6;t.ai=null;t.aiState=null;
+        for(let i=0;i<16;i++){const kinds=['mgTurret','cannonTurret','teslaTurret','antiAir','wall'];const p=v.world(team,-60+(i%8)*16,-30-Math.floor(i/8)*12);v.build(pid,kinds[i%5],p.x,p.z,0);}
+        for(const id of ['swarm','gunners','assault','carapace','flyers','bombers']){t.cd={};v.send(pid,id,'left');}}
       const blue=s.units.filter(u=>u.team==='blue').length,red=s.units.filter(u=>u.team==='red').length;
       q.player.pos.set(0,0,900);q.startMeasure();await new Promise(r=>setTimeout(r,6000));const m=q.endMeasure();delete m.raw;
       return {blue,red,buildings:q.buildings.length,fps:Math.round(m.averageFPS),p95:Math.round(m.p95Ms),over50:m.over50ms,draws:m.drawCalls,tris:m.triangles,quality:m.quality,renderer:m.renderer};});
@@ -119,9 +119,9 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
         const hit=['joyBase','vJ','vK','vU','vI','vX','vSPRINT','vO','vL','vR'].filter(id=>{const b=R(document.getElementById(id));if(!b.width)return false;return !(b.right<=panel.left||b.left>=panel.right||b.bottom<=panel.top||b.top>=panel.bottom);});
         return {open:!document.getElementById('vsPanel').classList.contains('hidden'),overlap:hit,cards:document.querySelectorAll('#vsGrid .vs-card').length};});
       assert.ok(lay.open);assert.deepEqual(lay.overlap,[]);pass(name+'：出兵面板不遮挡摇杆和动作键',lay);
-      const g0=await m.evaluate(()=>__gameQA.versus.team('blue').gold);
+      const g0=await m.evaluate(()=>__gameQA.versus.seat('blue0').gold);
       await m.tap('#vsGrid .vs-card >> nth=0');await sleep(300);
-      const g1=await m.evaluate(()=>({gold:__gameQA.versus.team('blue').gold,bank:__gameQA.versus.team('blue').bank}));
+      const g1=await m.evaluate(()=>({gold:__gameQA.versus.seat('blue0').gold,bank:__gameQA.versus.seat('blue0').bank}));
       assert.equal(g1.bank,2);assert.ok(g1.gold<g0);pass(name+'：点卡片升级银行',g1);
       await m.screenshot({path:path.join(OUT,'mobile-'+name+'.png')});
       await m.tap('#vsClose');await sleep(200);assert.ok(await m.evaluate(()=>document.getElementById('vsPanel').classList.contains('hidden')));pass(name+'：✕ 关闭面板');

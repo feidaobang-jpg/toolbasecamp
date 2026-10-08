@@ -26,7 +26,7 @@
 
 YouTube四版中英手工字幕均已上传并在公开播放器核验，三条中文主版英文标题与简介已发布。抖音横4:3及竖3:4封面实际上传，游戏视频保持横屏。门户的截屏封面建议已记录，不表示投稿失败。公开视频实机与字幕在桌面网页检查，未做真实手机验收。YouTube四版及三条英文元数据的试玩入口已统一放首行：`https://www.zhengxiaohui.cn/games.html`，下一行提示选择对应游戏；新旧完整简介保存在[入口修订记录](work/publish/youtube-entry-revision.json)。频道尚需一次性验证才支持可点击的外部链接，当前URL可复制。
 
-X每期一条英文文案已加真实YouTube链接，虫潮优先英文版；保存在[三条X文案](work/publish/x/drafts.json)。当前没有本人已确认的官方API或已授权连接器，尚未发X；Metricool仅是未安装的候选，X需要付费套餐和附加项，未购买。通知登录事件已核验恢复并Resolve。
+X每期一条英文文案已加真实YouTube链接，虫潮优先英文版；保存在[三条X文案](work/publish/x/drafts.json)。Metricool插件已安装，检查时品牌尚未连接X；官方X功能需要付费套餐和附加项。用户于2026-10-08明确“如果收费就不做”，本批X已跳过，未创建帖子或定时稿，也未开通付费服务。三条定稿保留，X人工处理事件已按用户决定Resolve，无需继续登录或授权。YouTube和抖音登录事件此前均已核验恢复并Resolve。
 
 ## 来源与制作
 
@@ -43,7 +43,7 @@ X每期一条英文文案已加真实YouTube链接，虫潮优先英文版；保
 1. `work/backfill-plan.json`固定片源、语稿、译文及选片范围。
 2. `work/render_backfill.py --phase all`重新制作；`pilot`、`swarm-cn`可单独重做对应配音版本。已有声音及真实时间戳缓存位于work/audio。
 3. `work/package_backfill.py`生成物料与清单；发现已审/已上传状态时拒绝覆盖。
-4. `work/douyin_covers.py`制作平台4:3/3:4封面；`work/publication_state.py`按账号锁保存实际稿件ID和状态；`work/publication_notes.py`更新发布记录与X续接文案，不执行远端投稿。
+4. `work/douyin_covers.py`制作平台4:3/3:4封面；`work/publication_state.py`按账号锁保存实际稿件ID和状态；`work/publication_notes.py`更新发布记录与X续接文案，不执行远端投稿；已存在X提交记录或用户决定时停止，避免覆盖真实状态。
 5. `work/verify_backfill.py`完整解码、检查字幕/哈希/引用，并留存抽查帧；`work/audio_metrics.py`检测4条不同音轨的响度与峰值。
 
-媒体文件依照仓库既有规则不进Git，保留在本任务worktree。已审片通过并上传，X续接及媒体保全尚有后续，暂不归档工作区；以后清理前必须另行保全全部必要媒体。文本、字幕、制作方案及状态记录提交至仓库，不代表Git克隆包含成片。
+媒体文件依照仓库既有规则不进Git，保留在本任务worktree。已审片通过并公开，X按用户决定跳过；保留成片和工程，媒体保全前暂不归档工作区；以后清理前必须另行保全全部必要媒体。文本、字幕、制作方案及状态记录提交至仓库，不代表Git克隆包含成片。

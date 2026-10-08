@@ -1,0 +1,88 @@
+{
+ "schema_version": 1,
+ "game_id": "starship-defense",
+ "version": "web-versus-teams-v0.27.0",
+ "base_version": "web-versus-v0.26.0",
+ "classification": "正式版本",
+ "summary": "虫潮对战加入 2 对 2、3 对 3、4 对 4：每人独立钱包与银行、队伍页转账、同一张图按人数放大；联机最多 8 人、选队伍、电脑补位与中途接手；修复联机中途加入报错；简单电脑改为让子",
+ "source": {
+  "request": "用户 2026-10-08：「可以加入2v2和3v3和4v4吗」",
+  "user_confirmed": "每人独立钱包；联机最多 8 人（空位电脑补）；同一张图按人数放大",
+  "design": "game-projects/starship-defense/design/versus-mode.md 第 17 节"
+ },
+ "changes": [
+  "对战菜单规模 1 对 1 到 4 对 4；对战电脑时你 + 电脑队友对电脑（队友难度与对手相同）",
+  "每队 1–4 个座位：各自的金币、银行建筑、出兵冷却、路线和英雄，全队共用核心；队伍页（T）每次给队友转 200 金",
+  "按人数放大：场地加宽到 ×1.36、核心 6000/10200/14400/16800、每人兵力 24/16/12/10、每人设施 16/12/10/9、后期免费虫群放大并封顶",
+  "赏金记给出手的人；每队一只虫王；只能拆自己的设施；投降要本队真人都同意",
+  "联机：对战规模/队伍/电脑补位难度，房间上限 = 两队座位数（最多 8），邀请进房自动显示队伍，中途加入接手电脑座位，掉线电脑接管",
+  "电脑：普通/困难与同队电脑一起出兵；简单让子（出兵多攒 400 金、间隔 35 秒），1 对 1 同样生效",
+  "性能：空间网格、行军单位降低扫描频率、对战场地跳过地形计算；联机快照精简、超过 3 人时 10 次/秒",
+  "服务器 coop_lobby：size/diff、每人 team、playerTeams、pick 消息"
+ ],
+ "bugs_found": [
+  "共享联机适配 remake-coop.js 在 10-07 合并时丢了 onJoin 参数：虫潮联机中途加入报错、新玩家没有英雄（已修，2 对 2 中途加入测试覆盖）",
+  "多人时电脑各自出兵，简单反而常赢普通（2 对 2 普通只赢 35%）：改为同队一起出兵并让简单让子",
+  "4 对 4 后期逻辑耗时随单位数平方增长（147 单位 3.3 ms/帧 → 优化后 0.7 ms）",
+  "性能优化引入：目标死后晚一帧重选，1 对 1 僵局变多（7–11/16 局超时，原代码 3/16）；改回当帧重选后平均时长与原代码一致",
+  "碰撞网格在拆旧场地建新场地后可能不重建；大厅从合作切到对战沿用了合作人数；桌面指挥面板压住右上信息框（v0.26 起）——均已修"
+ ],
+ "qa": {
+  "verify_versus_teams": "qa/verify-versus-teams.json（24 项通过）",
+  "verify_versus_teams_online": "qa/verify-versus-teams-online.json（14 项通过，本地联机服务）",
+  "verify_versus": "qa/verify-versus.json（30 项通过）",
+  "verify_versus_online": "qa/verify-versus-online.json（13 项通过）",
+  "balance": "qa/versus-balance-release-{1..4}.json（252 局）、qa/release-summary.json",
+  "regression": [
+   "qa/regression-web-verification.json",
+   "qa/regression-web-performance.json",
+   "qa/regression-touch-layout.json",
+   "qa/regression-other.json（pc-controls / squad-crew / unstick-weapons）",
+   "qa/regression-coop-capacity.json（虫潮 4 人 12 项通过；坦克大战 1 项为测试脚本选择器问题，与本版无关）"
+  ],
+  "server_tests": "test_coop_lobby 11 项 + 相关共 39 项通过",
+  "performance": "1 对 1 满负载 165 FPS、4 对 4 满负载 143–146 FPS（RTX 4060 Ti，Edge 无界面，精致画质）；手机仅视口模拟，未测真机"
+ },
+ "media": {
+  "policy": "截图录像只留本机（.gitignore 排除）",
+  "captures": [
+   {
+    "file": "01-size-menu.png",
+    "kind": "screenshot",
+    "note": "对战菜单：规模 1 对 1 到 4 对 4"
+   },
+   {
+    "file": "02-team-panel.png",
+    "kind": "screenshot",
+    "note": "队伍页：3 名电脑队友的金币、银行，点一下转 200 金"
+   },
+   {
+    "file": "03-four-heroes.png",
+    "kind": "screenshot",
+    "note": "开局：蓝方 4 名英雄和 4 座银行，派出第一波"
+   },
+   {
+    "file": "04-midgame-4v4.png",
+    "kind": "screenshot",
+    "note": "4 对 4 中局（约 6:40 后）双方交战，镜头跟随蓝方 0 号英雄"
+   },
+   {
+    "file": "05-midgame-4v4.webm",
+    "kind": "video",
+    "note": "4 对 4 电脑困难对困难，加速快进到约 6:40 后实时录制约 40 秒；开头有快进期间的静止画面，剪辑时裁掉；不含解说"
+   },
+   {
+    "file": "06-result-3v3.png",
+    "kind": "screenshot",
+    "note": "3 对 3 胜利结算界面（摆拍：时间直接设到 10:40 后打掉核心，统计数据为 0，只看界面布局）"
+   }
+  ],
+  "hook": "愿望榜第一名的对战，我加到了 4 对 4"
+ },
+ "channels": {
+  "website": "待部署核验",
+  "toy": "待同步",
+  "taptap": "待同步（V-20261008-1 已 online）",
+  "bilibili": "待同步简介"
+ }
+}

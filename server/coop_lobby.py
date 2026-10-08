@@ -36,9 +36,15 @@ def game_config(game, raw):
             'hero': bounded(raw.get('hero'), 0, 3, 0),
             'seed': secrets.randbelow(1000000), 'demo': False, 'coop': True}
     if game == 'starship':
-        # 虫潮对战：1 对 1 房间，客户端按 mode 开局；其余设置与合作相同。
+        # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
         settings['mode'] = 'versus' if raw.get('mode') == 'versus' else 'coop'
+        if settings['mode'] == 'versus':
+            settings['size'] = bounded(raw.get('size'), 1, 4, 1)
+            settings['diff'] = raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal'
     return settings
+
+def clean_team(value):
+    return value if value in ('blue', 'red') else 'auto'
 
 def clean_input(source):
     data = {}
@@ -84,7 +90,7 @@ class Room:
         return {'game': self.game, 'gameTitle': GAMES[self.game]['title'], 'protocol': GAMES[self.game]['protocol'], 'code': self.code, 'name': self.name, 'maxPlayers': self.capacity,
                 'hasPassword': bool(self.key), 'started': self.started,
                 'settings': self.settings, 'canJoin': self.features,
-                'players': [{'slot': p.slot, 'name': p.name, 'ready': p.ready, 'hero': getattr(p, 'hero', 0), 'ai': getattr(p, 'ai', False)}
+                'players': [{'slot': p.slot, 'name': p.name, 'ready': p.ready, 'hero': getattr(p, 'hero', 0), 'ai': getattr(p, 'ai', False), 'team': getattr(p, 'team', 'auto')}
                             for p in self.peers.values()]}
 
     async def broadcast(self, message, guests_only=False):
@@ -169,13 +175,14 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     salt = secrets.token_bytes(16)
                     settings = game_config(game, msg.get('config'))
                     if settings.get('mode') == 'versus':
-                        capacity = 2
+                        capacity = 2 * settings.get('size', 1)
                     candidate = Room(code, str(msg.get('roomName') or peer.name + '的房间')[:32],
                                      capacity, settings, salt,
                                      password_key(password, salt) if password else b'', game=game)
                     rooms[code] = candidate
                     candidate.features = msg.get('liveJoin') is True
                     peer.hero = candidate.settings.get('hero', 0)
+                    peer.team = clean_team((msg.get('config') or {}).get('team') if isinstance(msg.get('config'), dict) else None)
                     peer.slot = 0; peer.ready = True
                 else:
                     code = str(msg.get('code') or '').strip()
@@ -205,6 +212,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     peer.slot = next(s for s in range(candidate.capacity) if s not in candidate.peers)
                     peer.ready = candidate.started
                     peer.hero = bounded((msg.get('config') or {}).get('hero') if isinstance(msg.get('config'), dict) else 0, 0, 3, 0)
+                    peer.team = clean_team((msg.get('config') or {}).get('team') if isinstance(msg.get('config'), dict) else None)
                 room = candidate
                 room.peers[peer.slot] = peer
                 watchers[id(socket)] = (peer, 1, 'all', game)
@@ -213,14 +221,23 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                 if room.started:
                     start = dict(room.settings)
                     start['playerChoices'] = {str(s): getattr(p, 'hero', 0) for s, p in room.peers.items()}
+                    start['playerTeams'] = {str(s): getattr(p, 'team', 'auto') for s, p in room.peers.items()}
                     start['playerSlots'] = sorted(room.peers)
                     start['playerCount'] = max(room.peers) + 1
                     await peer.send({'type': 'start', 'config': start, 'lateJoin': True})
-                    await room.broadcast({'type': 'player_joined', 'slot': peer.slot, 'hero': peer.hero, 'name': peer.name, 'message': f'{peer.name}中途加入'})
+                    await room.broadcast({'type': 'player_joined', 'slot': peer.slot, 'hero': peer.hero, 'team': peer.team, 'name': peer.name, 'message': f'{peer.name}中途加入'})
                 await publish_directory()
             elif kind == 'ready' and room and not room.started:
                 peer.ready = msg.get('ready') is True
                 peer.hero = bounded(msg.get('hero'), 0, 3, 0)
+                if 'team' in msg:
+                    peer.team = clean_team(msg.get('team'))
+                await room.broadcast({'type': 'roster', 'room': room.public()})
+                await publish_directory()
+            elif kind == 'pick' and room and not room.started and (peer.slot == 0 or not peer.ready):
+                # 开局前改选队伍/兵种（房主始终就绪，所以单独一条消息；客人准备后锁定）
+                peer.team = clean_team(msg.get('team'))
+                peer.hero = bounded(msg.get('hero'), 0, 3, getattr(peer, 'hero', 0))
                 await room.broadcast({'type': 'roster', 'room': room.public()})
                 await publish_directory()
             elif kind == 'start' and room:
@@ -232,6 +249,7 @@ async def coop_lobby_ws(socket: WebSocket, game='tank'):
                     room.started = True
                     start = dict(room.settings)
                     start['playerChoices'] = {str(s): getattr(p, 'hero', start.get('hero', 0)) for s, p in room.peers.items()}
+                    start['playerTeams'] = {str(s): getattr(p, 'team', 'auto') for s, p in room.peers.items()}
                     start['playerSlots'] = sorted(room.peers)
                     start['playerCount'] = max(room.peers) + 1
                     await room.broadcast({'type': 'start', 'config': start})

@@ -187,7 +187,7 @@ export class CooperativeLobby {
       c.connect(kind,name,code,{password,roomName:this.field('roomName').value.trim(),maxPlayers:+this.field('capacity').value,config:this.getConfig()});
     } else if(kind==='refresh')this.list();
     else if(kind==='close')this.close();
-    else if(kind==='ready'){const ready=!c.room?.players.find(p=>p.slot===c.slot)?.ready;c.send({type:'ready',ready,hero:this.getConfig().hero||0});}
+    else if(kind==='ready'){const ready=!c.room?.players.find(p=>p.slot===c.slot)?.ready,cfg=this.getConfig();c.send({type:'ready',ready,hero:cfg.hero||0,...(cfg.team?{team:cfg.team}:{})});}
     else if(kind==='start')c.send({type:'start'});
     else if(kind==='invite')this.invite();
     else if(kind==='leave'){const active=c.active;c.disconnect();if(active)this.message({type:'ended',message:'你已退出房间，其他队友继续'});else{this.roster();this.list();}}
@@ -211,7 +211,8 @@ export class CooperativeLobby {
   roster(){
     const c=this.connection,r=c.room,roster=this.panel.querySelector('.coop-roster');
     roster.hidden=!r;this.panel.querySelector('.coop-room-actions').hidden=!r;if(this.field('hero'))this.field('hero').disabled=!!r?.players.find(p=>p.slot===c.slot)?.ready;
-    if(r){roster.textContent='房间 '+r.code+' · '+r.name+' · '+r.players.map(p=>(p.slot===0?'房主 ':'')+p.name+(p.ready?' ✓':' 等待准备')).join(' / ');this.panel.querySelector('[data-do="ready"]').hidden=c.host||r.started;this.panel.querySelector('[data-do="start"]').hidden=!c.host||r.started;if(this.field('hero'))this.field('hero').disabled=!!r.players.find(p=>p.slot===c.slot)?.ready;this.panel.querySelector('[data-do="ready"]').textContent=r.players.find(p=>p.slot===c.slot)?.ready?'取消准备':'准备';}
+    if(r){const vs=r.settings?.mode==='versus',teamTag=t=>vs?({blue:'（蓝方）',red:'（红方）'}[t]||'（自动分队）'):'';
+    roster.textContent='房间 '+r.code+' · '+r.name+(vs?' · 对战 '+(r.settings.size||1)+' 对 '+(r.settings.size||1):'')+' · '+r.players.map(p=>(p.slot===0?'房主 ':'')+p.name+teamTag(p.team)+(p.ready?' ✓':' 等待准备')).join(' / ');this.panel.querySelector('[data-do="ready"]').hidden=c.host||r.started;this.panel.querySelector('[data-do="start"]').hidden=!c.host||r.started;if(this.field('hero'))this.field('hero').disabled=!!r.players.find(p=>p.slot===c.slot)?.ready;this.panel.querySelector('[data-do="ready"]').textContent=r.players.find(p=>p.slot===c.slot)?.ready?'取消准备':'准备';}
     if(r&&c.host)for(const p of r.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.type='button';b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=e=>{e.stopPropagation();c.send({type:'kick',slot:p.slot});};roster.append(b);}
     // 已在房间时不再用 disabled 吞掉点击：按钮显示为锁定态但仍可点，点了才会说明原因和下一步。
     for(const k of ['create','join']){const b=this.panel.querySelector('[data-do="'+k+'"]');b.classList.toggle('coop-btn-locked',!!r);b.setAttribute('aria-disabled',r?'true':'false');b.title=r?'已在房间 '+r.code+'，点「退出房间」后才能'+(k==='create'?'新建':'加入'):'';}
@@ -221,7 +222,7 @@ export class CooperativeLobby {
       const ul=this.panel.querySelector('.coop-rooms');ul.replaceChildren();this.page=m.page;this.total=m.total;
       this.roomsByCode=new Map(m.rooms.map(r=>[r.code,r]));
       if(!m.rooms.length){const li=document.createElement('li');li.textContent='暂无房间，可以创建一个邀请朋友';ul.append(li);}
-      for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');li.dataset.code=r.code;label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.settings?.mode==='versus'?' · 对战 1 对 1':'')+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=(r.started&&!r.canJoin)||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
+      for(const r of m.rooms){const li=document.createElement('li'),label=document.createElement('span'),btn=document.createElement('button');li.dataset.code=r.code;label.textContent=r.name+' · '+r.players.length+'/'+r.maxPlayers+'人'+(r.settings?.mode==='versus'?' · 对战 '+(r.settings.size||1)+' 对 '+(r.settings.size||1):'')+(r.hasPassword?' · 密码房':'')+(r.started?' · 游戏中':'');btn.textContent='加入';btn.disabled=(r.started&&!r.canJoin)||r.players.length>=r.maxPlayers;btn.onclick=()=>{this.field('code').value=r.code;if(r.hasPassword&&!this.field('password').value){this.field('password').focus();this.status('请填写该房间密码后加入');}else this.action('join');};li.append(label,btn);ul.append(li);}
       const pager=this.panel.querySelector('.coop-pager');pager.hidden=m.total<=20;pager.querySelector('span').textContent=this.page+' / '+Math.max(1,Math.ceil(m.total/20));pager.querySelector('[data-do="prev"]').disabled=this.page<=1;pager.querySelector('[data-do="next"]').disabled=this.page>=Math.ceil(m.total/20);
       if(this.pendingInvite)this.autoJoin();
     } else if(m.type==='joined'||m.type==='roster'){this.roster();if(m.type==='joined')this.status('已加入房间，队友准备后由房主开始');}

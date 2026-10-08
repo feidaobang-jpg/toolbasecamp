@@ -243,7 +243,7 @@ button::before,button::after{content:none!important}
 #localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto;z-index:30}.save-health:active{transform:translateX(-50%) scale(.95)}#hud.hidden~#saveHealth{display:none}
 #saveNotice{font-size:11px;max-width:700px}
 
-/* ===== 虫潮对战（1 对 1） ===== */
+/* ===== 虫潮对战（1 对 1 到 4 对 4） ===== */
 .versus-only{display:none!important}
 #stage.versus-mode .campaign-only{display:none!important}
 #stage.versus-mode #vsTop{display:flex!important}
@@ -259,10 +259,10 @@ button::before,button::after{content:none!important}
 .vs-clock b{font-size:18px;letter-spacing:1px}.vs-clock small{font-size:10px;color:#e3edf4;white-space:nowrap}
 #vsEco{font-size:11px;line-height:1.5;color:#cfe6f5;white-space:pre-line;margin-top:2px}
 #goldTxt.pulse{color:#ffe066;text-shadow:0 0 8px #ffbf3a}
-#vsPanel{position:absolute;left:50%;top:84px;transform:translateX(-50%);width:600px;max-width:64%;max-height:62%;overflow-y:auto;z-index:30;padding:8px 10px 10px;background:rgba(10,20,32,.94);border:1px solid #5b8fb3;border-radius:10px;color:#e8f3fa;pointer-events:auto;touch-action:pan-y;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+#vsPanel{position:absolute;left:calc(50% - 50px);top:84px;transform:translateX(-50%);width:560px;max-width:64%;max-height:62%;overflow-y:auto;z-index:30;padding:8px 10px 10px;background:rgba(10,20,32,.94);border:1px solid #5b8fb3;border-radius:10px;color:#e8f3fa;pointer-events:auto;touch-action:pan-y;box-shadow:0 6px 22px rgba(0,0,0,.45)}
 .vs-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .vs-tabs,.vs-lane{display:flex;gap:4px;align-items:center}
-.vs-tabs button,.vs-lane button,.vs-close{font:inherit;font-size:12px;font-weight:bold;min-height:34px;padding:4px 10px;border-radius:6px;border:1px solid #5b8fb3;background:#17293a;color:#e8f3fa;cursor:pointer;white-space:nowrap}
+.vs-tabs button,.vs-lane button,.vs-close{font:inherit;font-size:12px;font-weight:bold;min-height:34px;padding:4px 8px;border-radius:6px;border:1px solid #5b8fb3;background:#17293a;color:#e8f3fa;cursor:pointer;white-space:nowrap}
 .vs-tabs button[aria-selected="true"],.vs-lane button[aria-pressed="true"]{background:#ffe09a;color:#24372c;border-color:#ffbe36}
 .vs-lane span{font-size:11px;opacity:.8;white-space:nowrap}
 .vs-close{margin-left:auto;min-width:40px}
@@ -286,6 +286,8 @@ button::before,button::after{content:none!important}
 #vsResult .vs-stats th:first-child,#vsResult .vs-stats td:first-child{text-align:left}
 #vsResult h2{font-size:28px}
 #vsMenu .btnRow,#vsResult .btnRow{flex-wrap:wrap}
+.vs-size{align-items:center;gap:6px}.vs-size .mbtn{min-width:76px}.vs-size .mbtn[aria-pressed="true"]{background:#ffe09a;color:#24372c;border-color:#ffbe36}
+#vsResult .vs-stats th[colspan]{text-align:left;padding-top:8px;font-size:12px;opacity:.85}
 .vs-rules{max-width:820px;line-height:1.6}
 </style>
 </head>
@@ -341,7 +343,7 @@ button::before,button::after{content:none!important}
     <button class="mbtn save-health campaign-only" id="saveHealth" aria-label="查看保存状态"></button>
     <section id="vsPanel" class="hidden" aria-label="对战指挥面板">
       <div class="vs-head">
-        <div class="vs-tabs" role="tablist" aria-label="面板分页"><button type="button" role="tab" data-vstab="units">出兵 R</button><button type="button" role="tab" data-vstab="build">建造 L</button><button type="button" role="tab" data-vstab="weapons">买枪 O</button></div>
+        <div class="vs-tabs" role="tablist" aria-label="面板分页"><button type="button" role="tab" data-vstab="units">出兵 R</button><button type="button" role="tab" data-vstab="build">建造 L</button><button type="button" role="tab" data-vstab="weapons">买枪 O</button><button type="button" role="tab" data-vstab="team" id="vsTeamTab" class="hidden">队伍 T</button></div>
         <div class="vs-lane" role="group" aria-label="进攻路线"><span>路线 Z</span><button type="button" data-vslane="left">左路</button><button type="button" data-vslane="right">右路</button><button type="button" data-vslane="alt">交替</button></div>
         <button type="button" class="vs-close" id="vsClose" aria-label="关闭面板">✕</button>
       </div>
@@ -403,7 +405,7 @@ button::before,button::after{content:none!important}
     <div class="btnRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
-      <button class="mbtn red" id="btnVersus">⚔ 虫潮对战 · 1 对 1</button>
+      <button class="mbtn red" id="btnVersus">⚔ 虫潮对战 · 1 对 1 到 4 对 4</button>
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复 / 作者</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
@@ -455,14 +457,17 @@ button::before,button::after{content:none!important}
   <div id="vsMenu" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsMenuTitle">
     <h2 id="vsMenuTitle">⚔ 虫潮对战 · 1 对 1</h2>
     <p class="small vs-rules">两座基地隔着荒漠对峙：每 10 秒进账，花钱派兵、放虫去拆对面的基地核心，或者升级银行攒钱打后期；你自己也端着枪在场上，守家、护送、偷袭对面银行都行。英雄兵种沿用主菜单的选择。</p>
+    <div class="btnRow vs-size" role="group" aria-label="对战规模"><span class="small">规模</span><button class="mbtn" data-vs-size="1" aria-pressed="true">1 对 1</button><button class="mbtn" data-vs-size="2" aria-pressed="false">2 对 2</button><button class="mbtn" data-vs-size="3" aria-pressed="false">3 对 3</button><button class="mbtn" data-vs-size="4" aria-pressed="false">4 对 4</button></div>
+    <p class="small" id="vsSizeNote" role="status"></p>
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
-    <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机 1 对 1）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
+    <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
     <div class="small vs-rules">
       规则速览：0:20 开战 · 3:00 解锁二级兵种 · 6:00 解锁虫王，同时进入后期：收入 +50%、每 30 秒双方各涌出一波免费虫群、新派出的单位更强、建筑更不经打（9:00 再加强）· 15:00 时间到比核心剩余血量，接近则进入 2 分钟加时，先掉核心血者输。<br>
       银行 Lv1–Lv5：每 10 秒 60 / 85 / 115 / 150 / 190 金，升级 500 / 900 / 1400 / 2000；被打掉停产 30 秒后自动重建。派出的兵边走边打，遇到英雄和建筑才停下来打。打死对方派出的单位得造价的 25%，打倒对方英雄得 150。<br>
       电脑：R 出兵面板（打开后 1-9 派兵、0 升级银行）· Z 切换进攻路线 · L 建造（只能建在本方半场、离中线 25 米外）· O 买枪 · 回己方核心附近自动回血。<br>
-      手机：右侧「出兵」「建造」「商店」按钮打开同一面板，点卡片即可。联机为娱乐对战：房主那台电脑计算整局，不做排位。
+      2 对 2 到 4 对 4：每人各管自己的金币、银行和出兵冷却，全队共用一个核心；人越多场地越宽、核心越厚，每人兵力上限略低。面板「队伍」页（电脑 T）每点一次给队友转 200 金。投降要本队真人都同意。<br>
+      手机：右侧「出兵」「建造」「商店」按钮打开同一面板，点卡片即可。联机为娱乐对战：房主那台电脑计算整局，不做排位；中途加入的玩家接手电脑的座位。
     </div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
@@ -579,7 +584,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=versus1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=versus2" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
