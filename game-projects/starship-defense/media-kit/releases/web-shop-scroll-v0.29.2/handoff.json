@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-shop-scroll-v0.29.2",
+  "base_version": "web-rv-v0.29.1",
+  "created_at": "2026-10-08T12:48:24.079662+00:00",
+  "classification": "严重修复",
+  "development_tool": "Codex",
+  "build": {
+    "id": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "stable-shop",
+      "before": "联机快照每65ms清空重建商店，恢复焦点拉回列表；原楼报告高级装备点不到。",
+      "after": "内容未变化时保留卡片节点，必要刷新不移动滚动位置。",
+      "verification": "passed"
+    },
+    {
+      "id": "panel-paging",
+      "before": "商店/建造仅依赖浏览器滑动与滚轮，底部条目难到达。",
+      "after": "固定标题、关闭和上一页/下一页；键盘滚动留出标题安全区。",
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "shop-sync-scroll",
+      "status": "fixed",
+      "cause": "starshipApply每次快照调用renderShop清空DOM；navTick重建焦点调用scrollIntoView。",
+      "observed_before": "三视口滚动停在78且首卡节点替换；点击有时能发出请求，不将所有点击都称失败。",
+      "retest": "普通五视口两面板滑动与翻页、激光/等离子购买扣费和装备、高级炮塔选中；联机三视口持续快照下卡片稳定、一次长按点击只发一个购买请求。"
+    }
+  ],
+  "media": [
+    {
+      "id": "local-844x390-shopPanel-verified.png",
+      "file": "releases/web-shop-scroll-v0.29.2/qa/local/844x390-shopPanel-verified.png",
+      "sha256": "ce2d7eadd6f288ca9116ce6feece58e90f0d1c9cb3fcbc76ddcbe4ecc615ef79",
+      "kind": "screenshot",
+      "version": "web-shop-scroll-v0.29.2",
+      "build_id": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+      "capture_mode": "realtime-automation",
+      "description": "移动设备视口模拟；测试金钱与联机快照为QA夹具，触摸和购买走真实界面。",
+      "width": 844,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "local-390x844-shopPanel-verified.png",
+      "file": "releases/web-shop-scroll-v0.29.2/qa/local/390x844-shopPanel-verified.png",
+      "sha256": "6cbb7835935487d11ee2208271045846f252c28b806fd33d28270b820101f280",
+      "kind": "screenshot",
+      "version": "web-shop-scroll-v0.29.2",
+      "build_id": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+      "capture_mode": "realtime-automation",
+      "description": "移动设备视口模拟；测试金钱与联机快照为QA夹具，触摸和购买走真实界面。",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "before-coop-844x390-shopPanel.png",
+      "file": "releases/web-shop-scroll-v0.29.2/qa/before-coop/844x390-shopPanel.png",
+      "sha256": "1fa190f88fc0975f1962038b53c183d4a8d60b2a06f24468be770c5077177fee",
+      "kind": "screenshot",
+      "version": "web-rv-v0.29.1",
+      "build_id": "baseline-rv291",
+      "capture_mode": "realtime-automation",
+      "description": "移动设备视口模拟；测试金钱与联机快照为QA夹具，触摸和购买走真实界面。",
+      "width": 844,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "records": [
+      "qa/local/results.json",
+      "qa/after-coop/results.json",
+      "qa/before-coop/results.json",
+      "qa/squad-regression/results.json"
+    ],
+    "method": "桌面Edge移动视口与CDP真实触控；联机为经实际消息适配器注入的快照夹具，非真实跨设备联网。",
+    "untested": [
+      "原报告者设备",
+      "手机真机",
+      "手机Toy/TapTap App真机"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "无手机真机反馈，自动录像未采集游戏声音。"
+    ]
+  },
+  "channels": {
+    "website": "pending",
+    "toy": "pending",
+    "taptap": "pending",
+    "bilibili_descriptions": "pending",
+    "source_comment": "pending"
+  }
+}

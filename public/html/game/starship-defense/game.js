@@ -3016,7 +3016,7 @@ let shopTab='weapon';
 function squadPrice(role='gunner'){return SQUAD_ROLES[squadRoleId(role)].price+Game.squadCount*250;}
 function renderShop(){
   $('shopGold').textContent=$('goldTxt').textContent=Game.testMode?'∞':Math.floor(Game.gold);
-  const grid=$('shopGrid');grid.innerHTML='';
+  const grid=$('shopGrid'),cards=[];
   for(const it of SHOP[shopTab]){
     if(it.type==='weapon'&&WEAPONS[it.id].price===0&&!Game.weapons.includes(it.id))continue; // 其他兵种的初始枪不卖
     const div=document.createElement('div');div.className='shopItem';
@@ -3038,7 +3038,7 @@ function renderShop(){
     div.tabIndex=0;div.setAttribute('role','button');
     div.onclick=e=>{const up=e.target.closest('[data-up]'),fix=e.target.closest('[data-fix]');if(up){upgradeWeapon(up.dataset.up);return;}if(fix){repairNow(fix.dataset.fix);return;}buyItem(it,pr,owned);};
     div.onkeydown=e=>{if(e.target!==div)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();div.click();}};
-    grid.appendChild(div);
+    cards.push(div);
   }
   if(shopTab==='squad')for(let slot=0;slot<Game.squadCount;slot++){
     const gear=squadGear(slot),mate=squad.find(s=>s.slot===slot),card=document.createElement('div');card.className='shopItem';
@@ -3047,8 +3047,12 @@ function renderShop(){
     for(const kind of ['weapon','armor']){const lv=gear[kind],b=document.createElement('button');b.className='upg';b.dataset.squadSlot=slot;b.dataset.gear=kind;b.disabled=lv>=5;
       b.textContent=(kind==='weapon'?'武器':'护甲')+' Lv'+lv+(lv>=5?' · 已满级':' → Lv'+(lv+1)+' · 💰'+(kind==='weapon'?180:140)*(lv+1));b.onclick=()=>upgradeSquad(slot,kind);card.appendChild(b);}
     mountSquadChoices(card,slot);
-    grid.appendChild(card);
+    cards.push(card);
   }
+  // Network snapshots also update the shop. Keep live touch targets and focus
+  // while only gold/world state changes, so a tap can span several snapshots.
+  const markup=cards.map(card=>card.outerHTML+'|'+[...card.querySelectorAll('select')].map(el=>el.value).join('|')).join('||');
+  if(grid._shopMarkup!==markup){grid.replaceChildren(...cards);grid._shopMarkup=markup;}
 }
 function upgradeWeapon(id){
   if(coopCommand({kind:'upgrade',id}))return;
@@ -3808,12 +3812,12 @@ function navDefault(root){
     :root.querySelector('.shopItem,.saveSlot button,select')||items.find(el=>!el.classList.contains('closeX'));
   return pick&&items.includes(pick)?pick:items[0];
 }
-function navFocus(el){if(!el)return;el.focus({preventScroll:false});if(el.scrollIntoView)el.scrollIntoView({block:'nearest'});nav.index=Math.max(0,navItems(nav.root).indexOf(el));}
+function navFocus(el,scroll=true){if(!el)return;el.focus({preventScroll:!scroll});if(scroll&&el.scrollIntoView)el.scrollIntoView({block:'nearest'});nav.index=Math.max(0,navItems(nav.root).indexOf(el));}
 function navTick(){
   const root=navRoot();
   if(root!==nav.root){nav.root=root;nav.index=0;if(root){if(navItems(root).includes(document.activeElement))nav.index=navItems(root).indexOf(document.activeElement);else navFocus(navDefault(root));}return;}
   // 内容重新渲染（例如商店购买后）焦点丢失时，回到原来的位置
-  if(root&&!root.contains(document.activeElement)){const items=navItems(root);if(items.length)navFocus(items[Math.min(nav.index,items.length-1)]);}
+  if(root&&!root.contains(document.activeElement)){const items=navItems(root);if(items.length)navFocus(items[Math.min(nav.index,items.length-1)],false);}
 }
 function navMove(dir){
   const items=navItems(nav.root),cur=document.activeElement;if(!items.length)return;
@@ -3873,6 +3877,15 @@ let lastT=performance.now(),saveTimer=30;
 let panelOpenedAt=-1e9;
 const markPanelOpen=()=>{panelOpenedAt=performance.now()-(Input.lastTouchT||-1e9)<500?performance.now():-1e9;};
 for(const id of ['shopPanel','buildPanel','tacticsPanel'])$(id).addEventListener('click',e=>{if(performance.now()-panelOpenedAt<250&&!e.target.closest('.closeX')){e.stopPropagation();e.preventDefault();}},true);
+for(const button of document.querySelectorAll('[data-panel-page]'))button.onclick=()=>{
+  const panel=button.closest('.panel'),header=panel.querySelector('.panelHeader,.buildHeader');
+  panel.scrollTop+=Number(button.dataset.panelPage)*Math.max(80,(panel.clientHeight-(header?.offsetHeight||0))*.85);
+};
+for(const id of ['shopPanel','buildPanel']){
+  const panel=$(id),header=panel.querySelector('.panelHeader,.buildHeader');
+  const resize=()=>panel.style.setProperty('--panel-header-height',(header.offsetHeight+8)+'px');
+  resize();if(typeof ResizeObserver!=='undefined')new ResizeObserver(resize).observe(header);
+}
 function openShop(){if(rvOn()){rvBreakout.panel();return;}Input.reset();markPanelOpen();shopTab='weapon';document.querySelectorAll('#shopTabs .tab').forEach(e=>e.classList.toggle('on',e.dataset.t==='weapon'));renderShop();$('shopPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
 function openBuild(){if(rvOn()){showMsg('房车模式使用整备，沿途无固定建造');return;}cancelPlacement(true);Input.reset();markPanelOpen();renderBuild();$('buildPanel').classList.remove('hidden');panelOpen=true;AudioSys.sfx('click');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();}
 function loop(){

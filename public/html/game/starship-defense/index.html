@@ -124,8 +124,11 @@ a.gameBack{font-size:12px;text-decoration:none;padding:6px 0}
 .shopItem .nm{font-size:14px;font-weight:bold;}
 .shopItem .lv{font-size:11px;padding:0 4px;border-radius:4px}
 .shopItem .desc{opacity:.75;font-size:10px}
-#buildPanel .buildHeader{position:sticky;top:-12px;margin:-12px -12px 8px;padding:12px 48px 10px 12px;background:#101f31;z-index:3}
-#buildPanel .buildHeader h3{margin:0 0 5px;text-align:left}
+#shopPanel .panelHeader,#buildPanel .buildHeader{position:sticky;top:-12px;margin:-12px -12px 8px;padding:12px 48px 10px 12px;background:#101f31;z-index:3}
+#shopPanel .panelHeader h3,#buildPanel .buildHeader h3{margin:0 0 5px;text-align:left}
+.panelPager{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.panelPager .mbtn{min-height:var(--corner-height,44px);min-width:100px;padding:6px 12px;white-space:nowrap}
+#shopPanel,#buildPanel{scroll-padding-top:var(--panel-header-height,140px);scroll-padding-bottom:8px}
 #buildGold{font-size:12px;line-height:1.5;color:#ffd36a}
 .shopItem .upg{display:block;width:100%;margin-top:5px;font:inherit;font-size:11px;font-weight:bold;padding:5px;border-radius:6px;cursor:pointer}
 .shopItem .upg.max{opacity:.6;cursor:default}
@@ -501,6 +504,7 @@ button::before,button::after{content:none!important}
 
   <!-- 商店 -->
   <div id="shopPanel" class="panel hidden">
+    <div class="panelHeader">
     <button class="closeX" id="shopClose" aria-label="关闭商店">✕</button>
     <h3>🛒 军需商店（武器即时装备，可强化）　💰<span id="shopGold">0</span></h3>
     <div class="tabRow" id="shopTabs">
@@ -508,6 +512,8 @@ button::before,button::after{content:none!important}
       <div class="tab" data-t="item" tabindex="0">道具</div>
       <div class="tab" data-t="vehicle" tabindex="0">载具</div>
       <div class="tab" data-t="squad" tabindex="0">队友</div>
+    </div>
+    <div class="panelPager" aria-label="商店翻页"><button type="button" class="mbtn" data-panel-page="-1">↑ 上一页</button><button type="button" class="mbtn" data-panel-page="1">↓ 下一页</button></div>
     </div>
     <div class="shopGrid" id="shopGrid"></div>
   </div>
@@ -518,6 +524,7 @@ button::before,button::after{content:none!important}
       <button class="closeX" id="buildClose" aria-label="关闭建造">✕</button>
       <h3>🏗 基地建造 · 选设施后走动摆放，J确认，L换建筑</h3>
       <div id="buildGold">0</div>
+      <div class="panelPager" aria-label="建造翻页"><button type="button" class="mbtn" data-panel-page="-1">↑ 上一页</button><button type="button" class="mbtn" data-panel-page="1">↓ 下一页</button></div>
     </div>
     <div class="shopGrid" id="buildGrid" style="grid-template-columns:repeat(2,1fr);"></div>
   </div>

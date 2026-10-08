@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-08T19:46:08+08:00",
+  "updated_at": "2026-10-08T12:48:24.079662+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -636,6 +636,25 @@
       "record": "releases/web-squad-v0.29.0/comment-reply.json",
       "screenshot": "D:/project/toolbasecamp-artifacts/chongchao-squad-v0.29.0-20261008/reply/comment-public-verified.jpg",
       "note": "原楼和子回复的公开DOM未暴露rpid或精确时间；不读取私有状态。原楼首次显示53分钟前，刷新后58分钟前；反馈键采用BV、作者UID、公开日期与原文SHA256。发送前台账和原楼均无重复本人答复；发送后本人UID16214353的子回复全文可见，刷新后仍在原楼内。"
+    },
+    {
+      "feedback_key": "BV1C5HQ6gEvD:479258671:2026-10-08:6f44b1cc84b64601d765fcd6807f80793499d6cefffbb75af9ce0e1f9cfd8284",
+      "rpid": null,
+      "root_rpid": null,
+      "video": "BV1C5HQ6gEvD",
+      "comment_type": 1,
+      "user": "bili_50539966983",
+      "user_mid": 479258671,
+      "date": "2026-10-08",
+      "comment_time_precision": "date_only",
+      "text": "不能挪动啊,无法上下挪动只能用一些普通的防御塔和普通的武器,等离子炮和激光枪都不能用,点不到",
+      "kind": "bug",
+      "status": "fixed_pending_release_reply",
+      "fixed_in": "web-shop-scroll-v0.29.2",
+      "reply_status": "pending_release",
+      "reply_rpid": null,
+      "record": "releases/web-shop-scroll-v0.29.2/comment-reply.json",
+      "note": "公开页面原楼无本人回复；用户指定修复。联机65ms快照夹具复现滚动被焦点恢复拉回及卡片节点持续替换；单机Chrome原滑动正常，增加商店/建造固定翻页键作为独立浏览路径。原报告者设备/玩法仍未知，桌面模拟不等于真机。"
     }
   ]
 }

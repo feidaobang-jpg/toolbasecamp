@@ -1,0 +1,66 @@
+{
+  "url": "http://127.0.0.1:8924/html/game/starship-defense/index.html",
+  "at": "2026-10-08T12:48:34.702Z",
+  "method": "Desktop Edge mobile viewport, real CDP touch gestures; not physical phone",
+  "results": [
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "panel": "shopPanel",
+      "initial": {
+        "start": {
+          "x": 383.17654266357425,
+          "y": 286.6462812423706
+        },
+        "rotated": false,
+        "scroll": 0,
+        "height": 415,
+        "total": 604,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "shopPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 171,
+        "active": "机枪秒伤125 射程32初始武器：中距离持续扫射，什么虫都能打✅使用中强化 Lv1 · 💰110",
+        "stableCards": true,
+        "commands": [
+          {
+            "type": "command",
+            "command": {
+              "kind": "buy",
+              "id": "plasma",
+              "type": "weapon"
+            }
+          }
+        ],
+        "paging": {
+          "top": 189,
+          "max": 189
+        }
+      },
+      "errors": []
+    }
+  ]
+}

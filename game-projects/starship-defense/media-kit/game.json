@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-rv-v0.29.1",
+  "current_version": "web-shop-scroll-v0.29.2",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,8 +12,14 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_w6bRBl65/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-rv-v0.29.1/handoff.json",
-  "pending_toy_merge": [],
+  "qa": "releases/web-shop-scroll-v0.29.2/handoff.json",
+  "pending_toy_merge": [
+    {
+      "version": "web-shop-scroll-v0.29.2",
+      "classification": "严重修复",
+      "summary": "联机商店稳定卡片和滚动，商店/建造提供上下翻页与固定关闭入口。"
+    }
+  ],
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
