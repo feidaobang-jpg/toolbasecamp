@@ -1,6 +1,6 @@
 {
   "batch_id": "game-video-backfill-20261008",
-  "updated_at": "2026-10-08T06:53:16.965910+00:00",
+  "updated_at": "2026-10-08T07:17:25.009195+00:00",
   "historical_bilibili": [
     {
       "episode_id": "swarm",
@@ -104,14 +104,20 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "made_for_kids": false,
         "paid_promotion": false,
         "video_language": "zh-CN",
         "category": "Gaming",
         "hd_processing": "complete",
         "caption_public_verification": "manual zh-CN and en listed in public player",
-        "external_demo_link": "URL present; clickable external links require channel verification"
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:01:28.944Z",
+        "public_verified_at": "2026-10-08T07:09:31.161Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
       }
     },
     {
@@ -173,7 +179,7 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "original_audio": true,
         "publish_mode": "immediate",
         "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
@@ -245,14 +251,20 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "made_for_kids": false,
         "paid_promotion": false,
         "video_language": "zh-CN",
         "category": "Gaming",
         "hd_processing": "complete",
         "caption_public_verification": "manual zh-CN and en listed in public player",
-        "external_demo_link": "URL present; clickable external links require channel verification"
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:00:58.594Z",
+        "public_verified_at": "2026-10-08T07:09:30.665Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
       }
     },
     {
@@ -314,7 +326,7 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "original_audio": true,
         "publish_mode": "immediate",
         "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
@@ -386,14 +398,20 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "made_for_kids": false,
         "paid_promotion": false,
         "video_language": "zh-CN",
         "category": "Gaming",
         "hd_processing": "complete",
         "caption_public_verification": "manual zh-CN and en listed in public player",
-        "external_demo_link": "URL present; clickable external links require channel verification"
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:00:13.667Z",
+        "public_verified_at": "2026-10-08T07:09:18.880Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
       }
     },
     {
@@ -453,7 +471,7 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "original_audio": true,
         "publish_mode": "immediate",
         "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
@@ -524,14 +542,20 @@
         "ai_content_disclosure": true,
         "custom_cover_uploaded": true,
         "settings_observed_on": "official creator website",
-        "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+        "recorded_at": "2026-10-08T07:17:25.009195+00:00",
         "made_for_kids": false,
         "paid_promotion": false,
         "video_language": "en",
         "category": "Gaming",
         "hd_processing": "complete",
         "caption_public_verification": "manual zh-CN and en listed in public player",
-        "external_demo_link": "URL present; clickable external links require channel verification"
+        "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+      },
+      "demo_entry_revision": {
+        "url": "https://www.zhengxiaohui.cn/games.html",
+        "updated_at": "2026-10-08T07:02:17.652Z",
+        "public_verified_at": "2026-10-08T07:09:37.166Z",
+        "original_description_retained_in": "../youtube-entry-revision.json"
       }
     }
   ],
@@ -608,6 +632,12 @@
       "file": "qa\\douyin-published.jpg",
       "sha256": "20b692e13441f67bcb15dc19bc5610ce588403422c4e460e7b0cda6c6c6d940c",
       "purpose": "official creator library after publication"
+    },
+    {
+      "platform": "youtube",
+      "file": "qa\\youtube-catalog-entry.jpg",
+      "sha256": "9ee0ceee6c1a696789e3495e1088bdbf33eee1cdf3a501815a8350cff121f188",
+      "purpose": "public description with first-line catalog URL"
     }
   ]
 }

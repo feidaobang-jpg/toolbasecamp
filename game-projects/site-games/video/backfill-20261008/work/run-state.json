@@ -13,7 +13,7 @@
   "audio_metrics": "qa/audio-metrics.json",
   "platform_preview": "public desktop web players verified; no real-phone test",
   "subjective_listening": "not-run",
-  "updated_at": "2026-10-08T06:53:16.965910+00:00",
+  "updated_at": "2026-10-08T07:17:25.009195+00:00",
   "retention_reason": "7版被忽略的成片与音轨仍须保全；X续接待处理，保留任务worktree。",
   "preview_limitations": [
     "本地预览服务被自动审批策略拒绝",

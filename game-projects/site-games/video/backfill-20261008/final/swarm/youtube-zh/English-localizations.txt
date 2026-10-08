@@ -1,7 +1,8 @@
 ﻿Title
 Raid the Queen or Defend the Base? Swarm Siege Gameplay
 Description
+Play my games: https://www.zhengxiaohui.cn/games.html
+Select 虫潮围城 in the list; copy the URL into your browser if it is not clickable.
 Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.
 Edited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.
 Chinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.
-Current browser demo: https://www.zhengxiaohui.cn/html/game/starship-defense/index.html

@@ -14,7 +14,7 @@
   "height": 1080,
   "duration_seconds": 175.544,
   "title": "先守城还是先反攻？虫潮围城母皇战实录",
-  "description": "打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n当前试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n打开后选择“虫潮围城”；如链接不可点击，请复制到浏览器打开。\n打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。",
   "tags": [
     "游戏开发",
     "虫潮围城",
@@ -90,7 +90,7 @@
   "localizations": {
     "en": {
       "title": "Raid the Queen or Defend the Base? Swarm Siege Gameplay",
-      "description": "Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\nCurrent browser demo: https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nSelect 虫潮围城 in the list; copy the URL into your browser if it is not clickable.\nCollect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts."
     }
   },
   "localization_file": "../../../final/swarm/youtube-zh/English-localizations.txt",
@@ -122,13 +122,19 @@
     "ai_content_disclosure": true,
     "custom_cover_uploaded": true,
     "settings_observed_on": "official creator website",
-    "recorded_at": "2026-10-08T06:53:16.965910+00:00",
+    "recorded_at": "2026-10-08T07:17:25.009195+00:00",
     "made_for_kids": false,
     "paid_promotion": false,
     "video_language": "zh-CN",
     "category": "Gaming",
     "hd_processing": "complete",
     "caption_public_verification": "manual zh-CN and en listed in public player",
-    "external_demo_link": "URL present; clickable external links require channel verification"
+    "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+  },
+  "demo_entry_revision": {
+    "url": "https://www.zhengxiaohui.cn/games.html",
+    "updated_at": "2026-10-08T07:01:28.944Z",
+    "public_verified_at": "2026-10-08T07:09:31.161Z",
+    "original_description_retained_in": "../youtube-entry-revision.json"
   }
 }

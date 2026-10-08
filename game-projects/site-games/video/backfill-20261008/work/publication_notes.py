@@ -53,7 +53,7 @@ for platform in ['youtube', 'douyin']:
                                  'video_language': 'en' if item['variant_id'].endswith('-en') else 'zh-CN',
                                  'category': 'Gaming', 'hd_processing': 'complete',
                                  'caption_public_verification': 'manual zh-CN and en listed in public player',
-                                 'external_demo_link': 'URL present; clickable external links require channel verification'})
+                                 'external_demo_link': 'Catalog URL at first line; clickable external links require channel verification' if manifest.get('demo_entry_revision') else 'URL present; clickable external links require channel verification'})
                 manifest['duplicate_check_scope'] = {
                     'pre_upload_normal_videos': ['Kk8XPu9vQ-M'],
                     'pre_upload_shorts': ['DE7PRJiSReo'],
@@ -109,6 +109,10 @@ for platform in ['youtube', 'douyin']:
     if proof.exists():
         result['publishing_screenshots'].append({'platform': platform, 'file': str(proof.relative_to(WORK)),
                                                 'sha256': render.sha(proof), 'purpose': 'official creator library after publication'})
+proof = WORK / 'qa' / 'youtube-catalog-entry.jpg'
+if proof.exists():
+    result['publishing_screenshots'].append({'platform': 'youtube', 'file': str(proof.relative_to(WORK)),
+                                            'sha256': render.sha(proof), 'purpose': 'public description with first-line catalog URL'})
 result['platforms']['x']['notification_status'] = incident['notification_status']
 render.write_json(WORK / 'publication-result.json', result)
 run = read(WORK / 'run-state.json')
@@ -142,6 +146,9 @@ end = readme.index('## 来源与制作')
 readme = readme[:start] + '## 当前状态\n\n用户于2026-10-08回复“可以，继续把”，本批7版审片通过，已关联视频、封面和字幕哈希。实际账号：YouTube郑晓辉（频道UCha4DVE3db0P1eJvu4qsLJg）；抖音飞刀帮主（公开抖音号84261875244）。\n\n| 版本 | 状态 | 投稿ID / 公开入口 |\n| --- | --- | --- |\n' + '\n'.join(rows) + '\n\nYouTube四版中英手工字幕均已上传并在公开播放器核验，三条中文主版英文标题与简介已发布。抖音横4:3及竖3:4封面实际上传，游戏视频保持横屏。门户的截屏封面建议已记录，不表示投稿失败。公开视频实机与字幕在桌面网页检查，未做真实手机验收。YouTube试玩URL可复制，频道尚需一次性验证才支持可点击的外部链接。\n\nX每期一条英文文案已加真实YouTube链接，虫潮优先英文版；保存在[三条X文案](work/publish/x/drafts.json)。当前没有本人已确认的官方API或已授权连接器，尚未发X；Metricool仅是未安装的候选，X需要付费套餐和附加项，未购买。通知登录事件已核验恢复并Resolve。\n\n' + readme[end:]
 readme = readme.replace('已审片通过，尚待登录与发布，暂不归档工作区；', '已审片通过并上传，X续接及媒体保全尚有后续，暂不归档工作区；')
 readme = readme.replace('4. `work/verify_backfill.py`', '4. `work/douyin_covers.py`制作平台4:3/3:4封面；`work/publication_state.py`按账号锁保存实际稿件ID和状态；`work/publication_notes.py`更新发布记录与X续接文案，不执行远端投稿。\n5. `work/verify_backfill.py`')
+readme = readme.replace('YouTube试玩URL可复制，频道尚需一次性验证才支持可点击的外部链接。', 'YouTube四版及三条英文元数据的试玩入口已统一放首行：`https://www.zhengxiaohui.cn/games.html`，下一行提示选择对应游戏；新旧完整简介保存在[入口修订记录](work/publish/youtube-entry-revision.json)。频道尚需一次性验证才支持可点击的外部链接，当前URL可复制。')
+if 'work/youtube_entry_revision.py' not in readme:
+    readme = readme.replace('## 复现与保全', '`work/youtube_entry_revision.py`只准备并记录简介入口修订，不执行远端操作；保存公开核验后按既有视频ID续接，不重传成片。\n\n## 复现与保全')
 (ROOT / 'README.md').write_text(readme, encoding='utf-8', newline='\n')
 page = (ROOT / '审片.html').read_text(encoding='utf-8')
 published_count = sum(row['status'] == 'published' for row in result['new_variants'])
