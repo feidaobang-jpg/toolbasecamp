@@ -12,7 +12,10 @@ const shapes=process.env.SHAPES?process.env.SHAPES.split(','):['desktop','landsc
   const viewport=shape==='desktop'?{width:1280,height:720}:shape==='landscape'?{width:844,height:390}:{width:390,height:844};
   const context=await browser.newContext({viewport,isMobile:shape!=='desktop',hasTouch:shape!=='desktop',recordVideo:shape==='desktop'?{dir:out,size:viewport}:undefined});
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  if(process.env.BLOCK_JS==='1')await page.route(/\.js(?:\?|$)/,route=>route.abort());
   await page.goto(url+(url.includes('?')?'&':'?')+'qa=1');await page.waitForFunction(()=>window.__gameQA&&window.__ccReady);
+  assert.ok((await page.locator('#menuMain').textContent()).includes('雇最多12名队友'));
+  assert.equal(await page.locator('[data-test-claim="squad"]').textContent(),'补齐12人小队');
   await page.locator('#btnStart').click();await page.waitForTimeout(300);
   await page.evaluate(()=>{const q=__gameQA;q.Game.gold=100000;q.openShop();});
   await page.locator('#shopTabs [data-t="squad"]').click();

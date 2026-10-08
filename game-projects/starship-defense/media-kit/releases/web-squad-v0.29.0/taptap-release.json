@@ -1,0 +1,18 @@
+{
+  "version": "web-squad-v0.29.0",
+  "source_commit": "94045b02fdbb0ea783f0747266cd6914e583f679",
+  "zip_sha256": "eaf9b78fab954e653e90a45173576fc1bde53f52dccd42b09db313b47fdbcd40",
+  "app_id": 962354,
+  "h5_version_id": 276055,
+  "draft_version_id": "1047272",
+  "platform_version": "V-20261008-4",
+  "status": "reviewing",
+  "submitted_at": "2026-10-08T11:27:00.617837+00:00",
+  "checked_at": "2026-10-08T11:27:00.617837+00:00",
+  "precheck": "passed; no blockers or warnings",
+  "qa": "qa/taptap-package/results.json; qa/taptap-final-no-js/results.json",
+  "community": "pending until target online; merge previous pending v0.25–0.28 notes; do not repeat posts",
+  "unchanged_materials": "existing icon, description, screenshots, video and distribution preserved",
+  "limitation": "No physical TapTap App test",
+  "artifact_zip": "D:/project/toolbasecamp-artifacts/chongchao-squad-v0.29.0-20261008/taptap-chongchao-qianshao.zip"
+}
