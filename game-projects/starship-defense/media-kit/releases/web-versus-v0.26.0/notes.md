@@ -56,9 +56,10 @@
 
 `captures/`：主菜单入口、对战菜单、出兵面板、派兵、中局交战截图，结算截图，`06-midgame-battle.webm`（困难对困难快进到 5:30 后实时录约 45 秒；开头有快进期间的静止画面，剪辑时裁掉）。视频看点建议：「愿望榜第一名，我直接做进了虫潮」。
 
-## 渠道状态
+## 渠道状态（2026-10-08 14:05）
 
-- 网站：待部署核验（public/html/game/starship-defense/*、public/js/game/coop.js；server/coop_lobby.py 需 API 重启生效）。
-- Toy（38678478981120）：部署核验后重建包送审（发布前状态 published，无在审）。
-- TapTap（962354）：部署核验后按 taptap-sync.json 同步稳定包。
-- B站简介：正式版本，同步 BV1Ujad6DEuf、BV1WbHq6eEBt 简介更新区块。
+- 网站：已部署核验（提交 2918b028；线上文件与仓库逐字节一致；生产环境单机/手机 30 项、联机 13 项通过）。
+- 服务器：API 已重启到 2918b028；线上对战房间上限 2 人、mode=versus，合作房不受影响。
+- Toy（38678478981120）：13:52 提审，13:54 published；预览与公开入口在 Toy 外壳内实测通过（电脑 + 手机竖屏视口）。
+- TapTap（962354）：V-20261008（v0.25.0）已 online；本版 V-20261008-1 13:59 提审 reviewing（预检无阻塞，简介补一行更新）。上线后与 v0.25.0 合并发一条动态并挂虫潮论坛。手机 TapTap App 未实机验证。
+- B站简介：BV1Ujad6DEuf、BV1WbHq6eEBt 已更新并公开核验（14:03），见 `bilibili-sync.json`。
