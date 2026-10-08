@@ -6,10 +6,10 @@
   "created_at": "2026-10-08T09:43:41.035384+00:00",
   "classification": "正式版本",
   "build": {
-    "id": "v0100-stage3-1",
+    "id": "v0100-stage3-2",
     "commit": null,
     "dirty": true,
-    "fingerprint": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+    "fingerprint": "b9d2c49d127920fc4518489376b64ba607f39baf8fd9053ce753c211cd313b44",
     "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
   },
   "feature_inventory": [
@@ -52,7 +52,23 @@
       "verification": "passed"
     }
   ],
-  "bugs": [],
+  "bugs": [
+    {
+      "id": "phone-I-drive",
+      "found_version": "v0.10.0候选包",
+      "steps": [
+        "进入第三关并叫车",
+        "松开摇杆后点I"
+      ],
+      "observed": "车辆未加速",
+      "cause": "步行冲刺的触屏run条件要求摇杆偏移",
+      "status": "fixed",
+      "fix": "只在驾驶状态把I单点转为已有dash边沿；联机沿同一输入同步",
+      "retest": "桌面/横屏/竖屏25项；2/3/4人手机I单点全部通过",
+      "before_media_ids": [],
+      "after_media_ids": []
+    }
+  ],
   "media": [
     {
       "id": "stage3-driving",
@@ -136,20 +152,20 @@
     },
     {
       "id": "stage3-driving-video",
-      "file": "releases/v0.10.0/captures/stage3-realtime.webm",
-      "sha256": "8f1c806aac8b06b1c9b1f8b8904ef6b2554a06b7ef0c6fcb9078fd77d0e1b63f",
+      "file": "releases/v0.10.0/captures/stage3-realtime-current.webm",
+      "sha256": "44dbbe98a1879425522dd783e6964ffee284c93e7e2a4ced9bd674d0a44c8929",
       "kind": "video",
       "version": "v0.10.0",
-      "build_id": "v0100-stage3-1",
+      "build_id": "v0100-stage3-2",
       "capture_mode": "realtime-automation",
       "description": "四种视角实时驾驶和连续横转，末段霍格投雷与加速撞击；开场清敌、叫车与Boss距离使用夹具，未做全关无捷径录像",
       "width": 1280,
       "height": 720,
-      "duration_seconds": 29.869,
+      "duration_seconds": 29.505,
       "audio": "game",
       "visual_review": "pass",
       "audio_review": "not-run",
-      "audio_technical_check": "Opus立体声；完整解码无错；mean -22.1dB，peak -6.2dB；未人工听审",
+      "audio_technical_check": "游戏音轨完整保留；新录音未人工听审",
       "segments": [
         {
           "in_seconds": 0,
@@ -197,8 +213,8 @@
     {
       "id": "stage3-coop",
       "method": "qa/stage3-coop.js",
-      "passed": 25,
-      "total": 25,
+      "passed": 28,
+      "total": 28,
       "record": "qa-stage3-coop.json"
     },
     {
@@ -220,6 +236,12 @@
         "qa-stage3-visual-desktop.json",
         "qa-stage3-visual-mobile.json"
       ]
+    },
+    {
+      "id": "stage3-phone-I",
+      "result": "25/25",
+      "record": "qa-stage3-local-qa.json",
+      "method": "实际手机I单点加速；不依赖摇杆，步行行为保持"
     }
   ],
   "thumbnail": {
@@ -250,5 +272,14 @@
       "手机为桌面触屏模拟，未做手机真机性能与多指验收"
     ]
   },
-  "task_id": "01a11abd-8057-7d80-8fd9-239ab8e4347f-work1"
+  "task_id": "01a11abd-8057-7d80-8fd9-239ab8e4347f-work1",
+  "capture_builds": [
+    {
+      "id": "v0100-stage3-1",
+      "commit": null,
+      "dirty": true,
+      "fingerprint": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+      "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+    }
+  ]
 }

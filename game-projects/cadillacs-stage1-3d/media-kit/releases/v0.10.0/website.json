@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-10-08T09:50:34.459621+00:00",
+  "files": [
+    {
+      "path": "html/game/cadillacs-stage1-3d/index.html",
+      "sha256": "240919cd3a5490e45739719962b0ac1326fc7834eee6566d4ef9b99175ec7877",
+      "expected_sha256": "9207a6e9901d0e693ef910ba32a3e4cd0cfb5cdc47c5bf4c26898dd114599379",
+      "exact_match": false,
+      "markers": true,
+      "equivalent_after_deploy_query_rewrite": true
+    },
+    {
+      "path": "html/game/cadillacs-stage1-3d/js/game.min.js",
+      "sha256": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+      "expected_sha256": "e362a2067cc4649bc987b1c3a40c21750aec1f581241568ba7256b4b44ff0754",
+      "exact_match": true,
+      "markers": null
+    },
+    {
+      "path": "js/game/coop.js",
+      "sha256": "28c8009f8c9d835fec7fc8df7b644cc836f38129cd8495c73d386fe3bce7ac32",
+      "expected_sha256": "28c8009f8c9d835fec7fc8df7b644cc836f38129cd8495c73d386fe3bce7ac32",
+      "exact_match": true,
+      "markers": null
+    },
+    {
+      "path": "js/locales/zh-CN.js",
+      "sha256": "76f5234f855060059ca6b69e837d80b78c1a74b79435972b30e3791ef5ea1aa2",
+      "expected_sha256": "0f5d5aab3156d9a60ff54320d1bf5257db18a6d6acd3e9b7e4e6202bf26f946b",
+      "exact_match": false,
+      "markers": true
+    },
+    {
+      "path": "html/game/cadillacs-stage1-3d/sounds/boss3.mp3",
+      "sha256": "7775e9ad043afa75849abff68d2e8ee8c35344d63d5a17341779035b81821b47",
+      "expected_sha256": "7775e9ad043afa75849abff68d2e8ee8c35344d63d5a17341779035b81821b47",
+      "exact_match": true,
+      "markers": null
+    }
+  ],
+  "relay_hello": {
+    "type": "hello",
+    "protocol": "cadillacs3d-v2",
+    "game": "cadillacs",
+    "maxPlayers": 4
+  }
+}

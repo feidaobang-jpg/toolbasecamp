@@ -1,0 +1,97 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "category": {
+          "field_id": "category",
+          "filled": false,
+          "input_type": "select",
+          "label": "游戏类型",
+          "options": [
+            "rpg",
+            "casual",
+            "action",
+            "strategy",
+            "simulation",
+            "trivia",
+            "arcade",
+            "adventure",
+            "card",
+            "sports",
+            "racing",
+            "puzzle",
+            "educational",
+            "music",
+            "word",
+            "board"
+          ],
+          "state": "required",
+          "value_labels": {
+            "action": "动作",
+            "adventure": "冒险",
+            "arcade": "街机",
+            "board": "桌游",
+            "card": "卡牌",
+            "casual": "休闲",
+            "educational": "教育",
+            "music": "音乐",
+            "puzzle": "解谜",
+            "racing": "竞速",
+            "rpg": "角色扮演",
+            "simulation": "模拟",
+            "sports": "体育",
+            "strategy": "策略",
+            "trivia": "益智",
+            "word": "文字"
+          }
+        },
+        "description": {
+          "field_id": "description",
+          "filled": false,
+          "input_type": "textarea",
+          "label": "游戏简介",
+          "state": "suggested"
+        },
+        "icon": {
+          "field_id": "icon",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "必须为方图，禁止自行切圆角",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 512,
+            "min_width": 512
+          },
+          "input_type": "image",
+          "label": "游戏图标",
+          "state": "required"
+        },
+        "title": {
+          "constraints": {
+            "max_length": 50,
+            "min_length": 1
+          },
+          "field_id": "title",
+          "filled": false,
+          "input_type": "text",
+          "label": "游戏名称",
+          "state": "required"
+        }
+      },
+      "module_id": "basic-info",
+      "revision": 0
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}
