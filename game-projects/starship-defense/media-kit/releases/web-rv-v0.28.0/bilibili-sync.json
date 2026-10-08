@@ -1,0 +1,44 @@
+{
+  "version": "web-rv-v0.28.0",
+  "source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "account_uid": 16214353,
+  "mode": "compact_description",
+  "classification": "meaningful new gameplay",
+  "new_video_published": false,
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "version": "web-rv-v0.28.0",
+      "status": "public_verified",
+      "submit_toast": "稿件投递成功",
+      "before_file": "bili-BV1WbHq6eEBt-before.txt",
+      "after_file": "bili-BV1WbHq6eEBt-after.txt",
+      "before_sha256": "162ae77d45a5ed83402c3c1ced346971c6be2a30b9c56775e9ca67e454179c23",
+      "description_sha256": "f9e234089d38b8c60e3bca6b40347be2df263d078239087b7cb6adcc3fc74f2d",
+      "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+      "proof": "qa/bili-public-BV1WbHq6eEBt.png",
+      "public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "submitted_at": null,
+      "submission_time_note": "Exact submission timestamp not separately recorded; success toast and public text checked",
+      "content_verified": "normalized public DOM text equals saved after text; no extra empty lines"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "version": "web-rv-v0.28.0",
+      "status": "public_verified",
+      "submit_toast": "稿件投递成功",
+      "before_file": "bili-BV1Ujad6DEuf-before.txt",
+      "after_file": "bili-BV1Ujad6DEuf-after.txt",
+      "before_sha256": "860488e4269f8b0a3c4d4f18e676a3213acf239e8987f92536e36d52a51f1b6b",
+      "description_sha256": "b656f21b668ca1a31066e97cc6a67b48f3e344cef5eb64f5af9e9b758d553888",
+      "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
+      "proof": "qa/bili-public-BV1Ujad6DEuf.png",
+      "public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "submitted_at": null,
+      "submission_time_note": "Exact submission timestamp not separately recorded; success toast and public text checked",
+      "content_verified": "normalized public DOM text equals saved after text; no extra empty lines"
+    }
+  ],
+  "pending": [],
+  "screenshot_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.28.0-20261008"
+}

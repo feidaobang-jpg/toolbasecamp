@@ -1,0 +1,157 @@
+{
+  "artifact_directory": "D:/project/toolbasecamp-artifacts/wish-versus-20261008-codex-multiplatform",
+  "recordings": [
+    {
+      "directory": "capture",
+      "mode": "normal-rules recording",
+      "clips": [
+        {
+          "clip": "01-bank-and-opening",
+          "seconds": 20.991,
+          "source_frames": 244,
+          "raw_mp4_sha256": "1147a2ace5e79975ea83d08d86b702f038d12f4cc3b9f733b72a6f82cf2c9e4c"
+        },
+        {
+          "clip": "02-first-deployment",
+          "seconds": 33.042,
+          "source_frames": 385,
+          "raw_mp4_sha256": "da9f4f2faa26dc57803ad10e4fc54149706799473ea7bbcaa58025d7baf11644"
+        },
+        {
+          "clip": "03-early-battle",
+          "seconds": 54.566,
+          "source_frames": 639,
+          "raw_mp4_sha256": "efd43cc9e42ac3b94d9adc69f26df33018393882b79fc216bf87974c0cb116de"
+        },
+        {
+          "clip": "04-late-battle",
+          "seconds": 67.333,
+          "source_frames": 663,
+          "raw_mp4_sha256": "7564cc83191f249162bebe9c53a1f72a17a8d9eda54e1e6e13d0185df735b3c1"
+        },
+        {
+          "clip": "05-final-push",
+          "seconds": 85.528,
+          "source_frames": 675,
+          "raw_mp4_sha256": "1ebc1f823a6e37801df9ec27bc397290ce610bf73060c81cba384e0737742aba"
+        },
+        {
+          "clip": "06-real-result",
+          "seconds": 6.978,
+          "source_frames": 65,
+          "raw_mp4_sha256": "33c7d20f4d8260966e20074b2f6e29f0ae4b3e223e7461d1f7f932566d0e1309"
+        }
+      ],
+      "gameplay_modified": false,
+      "time_scale": 1,
+      "result": "\n    💀 失败\n    4 对 4 · 时间到：核心剩余血量 76% 对 91% · 用时 15:00\n    我方（蓝方）敌方（红方）核心剩余76%91%派出单位259211击杀单位800838击倒英雄88建造设施214损失设施012总收入4966149411银行等级Lv2/2/2/2Lv2/2/2/2英雄阵亡88每人（派兵 / 击杀 / 击倒英雄 / 银行）你：86 / 104 / 6 / Lv2电脑：50 / 139 / 3 / Lv2电脑：59 / 308 / 1 / Lv2电脑：52 / 183 / 5 / Lv2电脑：59 / 233 / 0 / Lv2电脑：56 / 187 / 0 / Lv2电脑：55 / 125 / 1 / Lv2电脑：53 / 313 / 0 / Lv2\n    对战电脑·简单·4 对 4：本机累计 0 胜 1 负\n    🔄 再来一局🏠 回主菜单\n    喜欢这场对战的话，也给开发者空投个三连？\n  ",
+      "game_seconds": 900.0110000000606,
+      "errors": []
+    },
+    {
+      "directory": "capture-1v1",
+      "mode": "normal-rules recording",
+      "clips": [
+        {
+          "clip": "01-bank-and-opening",
+          "seconds": 30.206,
+          "source_frames": 190,
+          "raw_mp4_sha256": "9e7d461e9421f3a38d5cd6b79a3cfe2a85e5c8c39521dc2d77c1603e69368f0f"
+        },
+        {
+          "clip": "02-first-deployment",
+          "seconds": 40.504,
+          "source_frames": 374,
+          "raw_mp4_sha256": "60b2eba27178118c8b4613131f6cace68b9fc4b6e8df02038846150b72f7ff55"
+        },
+        {
+          "clip": "03-early-battle",
+          "seconds": 73.05,
+          "source_frames": 551,
+          "raw_mp4_sha256": "dd8a20be17bc6f813a4910c83a24e191a20594841d72b68288ec39f36131e78d"
+        },
+        {
+          "clip": "04-late-battle",
+          "seconds": 64.327,
+          "source_frames": 677,
+          "raw_mp4_sha256": "8206899865f21803d16c1d7f2ebb875c849acd0bf1c0e08420a133617c394f6a"
+        },
+        {
+          "clip": "05-final-push",
+          "seconds": 73.402,
+          "source_frames": 716,
+          "raw_mp4_sha256": "79dd61c90e984bff87324c5423c9b3975941f86cc86ca8ce2f4463b3bac9952d"
+        },
+        {
+          "clip": "06-real-result",
+          "seconds": 6.564,
+          "source_frames": 78,
+          "raw_mp4_sha256": "5d44ff80d2c0f54aa766dd8e97f7581071611ba936f9f0aa1fac3f0d85d71758"
+        }
+      ],
+      "gameplay_modified": false,
+      "time_scale": 1,
+      "result": "\n    🏆 胜利！\n    红方基地核心被摧毁 · 用时 13:27\n    我方（蓝方）敌方（红方）核心剩余92%0%派出单位9294击杀单位384380击倒英雄73建造设施06损失设施06总收入1241712956银行等级Lv2Lv2英雄阵亡37\n    对战电脑·简单：本机累计 1 胜 0 负\n    🔄 再来一局🏠 回主菜单\n    喜欢这场对战的话，也给开发者空投个三连？\n  ",
+      "game_seconds": 807.5993999997014,
+      "errors": []
+    },
+    {
+      "directory": "capture-attempt1",
+      "mode": "failed initial attempt",
+      "clips": [
+        {
+          "clip": "01-bank-and-opening",
+          "seconds": 20.996,
+          "source_frames": 244,
+          "raw_mp4_sha256": null
+        }
+      ]
+    },
+    {
+      "directory": "capture-menu",
+      "mode": "normal-rules recording",
+      "clips": [
+        {
+          "clip": "01-menu",
+          "seconds": 14.714,
+          "source_frames": 88,
+          "raw_mp4_sha256": "136f1c4ce7309923ad35526dd116a310a8f3fb0d8dd7aa740d19c245b9778505"
+        }
+      ]
+    },
+    {
+      "directory": "capture-team",
+      "mode": "normal-rules recording",
+      "clips": [
+        {
+          "clip": "01-team-transfer",
+          "seconds": 15.426,
+          "source_frames": 99,
+          "raw_mp4_sha256": "1e292a8c3b6de5434632f881efcb513d6c474c874b90e4adbde734b7ee596429"
+        }
+      ],
+      "gameplay_modified": false,
+      "time_scale": null,
+      "result": null,
+      "game_seconds": null,
+      "errors": []
+    },
+    {
+      "directory": "capture-units",
+      "mode": "normal-rules recording",
+      "clips": [
+        {
+          "clip": "01-unit-deployment",
+          "seconds": 36.177,
+          "source_frames": 328,
+          "raw_mp4_sha256": "3eebc2938ba998d2e3a16270d8800a8ee386bf1daf44f014384631d446de1d7d"
+        }
+      ],
+      "gameplay_modified": false,
+      "time_scale": null,
+      "result": "\n    \n    \n    \n    \n    🔄 再来一局🏠 回主菜单\n    喜欢这场对战的话，也给开发者空投个三连？\n  ",
+      "game_seconds": 35.401500000029884,
+      "errors": []
+    }
+  ]
+}

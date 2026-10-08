@@ -1,0 +1,113 @@
+{
+  "text": "开局六百金，先花五百升级银行，手里就只剩一百。想马上出兵？得等下一笔收入。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 8.976,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4000000,
+      "text": "开局"
+    },
+    {
+      "offset": 5250000,
+      "duration": 3375000,
+      "text": "六百"
+    },
+    {
+      "offset": 8625000,
+      "duration": 3125000,
+      "text": "金"
+    },
+    {
+      "offset": 13750000,
+      "duration": 3000000,
+      "text": "先"
+    },
+    {
+      "offset": 16750000,
+      "duration": 1750000,
+      "text": "花"
+    },
+    {
+      "offset": 18625000,
+      "duration": 2875000,
+      "text": "五百"
+    },
+    {
+      "offset": 21750000,
+      "duration": 3000000,
+      "text": "升级"
+    },
+    {
+      "offset": 24875000,
+      "duration": 4875000,
+      "text": "银行"
+    },
+    {
+      "offset": 31750000,
+      "duration": 6250000,
+      "text": "手里"
+    },
+    {
+      "offset": 38125000,
+      "duration": 1500000,
+      "text": "就"
+    },
+    {
+      "offset": 39750000,
+      "duration": 1500000,
+      "text": "只"
+    },
+    {
+      "offset": 41250000,
+      "duration": 1625000,
+      "text": "剩"
+    },
+    {
+      "offset": 43000000,
+      "duration": 4125000,
+      "text": "一百"
+    },
+    {
+      "offset": 52875000,
+      "duration": 3125000,
+      "text": "想"
+    },
+    {
+      "offset": 56000000,
+      "duration": 3125000,
+      "text": "马上"
+    },
+    {
+      "offset": 59250000,
+      "duration": 4375000,
+      "text": "出兵"
+    },
+    {
+      "offset": 69375000,
+      "duration": 1750000,
+      "text": "得"
+    },
+    {
+      "offset": 71125000,
+      "duration": 2750000,
+      "text": "等下"
+    },
+    {
+      "offset": 74000000,
+      "duration": 1250000,
+      "text": "一"
+    },
+    {
+      "offset": 75250000,
+      "duration": 875000,
+      "text": "笔"
+    },
+    {
+      "offset": 76250000,
+      "duration": 4625000,
+      "text": "收入"
+    }
+  ]
+}

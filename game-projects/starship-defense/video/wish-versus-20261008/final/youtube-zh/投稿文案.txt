@@ -1,0 +1,18 @@
+﻿【标题】
+愿望榜第一名做出来了：双人塔防还能4对4｜虫潮围城
+
+【标签】
+虫潮围城
+塔防
+Swarm Siege
+tower defense
+game development
+Claude
+
+【简介】
+游戏试玩：https://www.zhengxiaohui.cn/games.html
+在列表选择「虫潮围城」，主菜单进入「虫潮对战」；链接不可点击时可复制到浏览器。
+愿望榜第一名的双人对战塔防已可试玩，支持1对1到4对4、独立银行与队伍转账。本片演示普通规则电脑对战，4对4段落为1个玩家席位加7个电脑。
+虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。
+你会先升级银行，还是先出兵？
+玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html

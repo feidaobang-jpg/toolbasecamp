@@ -1,0 +1,14 @@
+# Generated media, raw recordings, render caches and earlier drafts are preserved
+# in the local delivery artifact; Git retains scripts, timelines and receipts.
+*.mp4
+*.webm
+*.wav
+*.mp3
+*.jpg
+*.png
+*.ffconcat
+work/capture*/
+work/history/
+work/edit/shared-zh/shots/
+work/edit/covers/
+work/artifact-owner.json

@@ -1,0 +1,110 @@
+{
+  "at": "2026-10-08T09:39:33.041644+00:00",
+  "technical_checks": "pass",
+  "reports": [
+    {
+      "variant": "bilibili-zh",
+      "sha256": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+      "duration": 104.266667,
+      "size_bytes": 23907326,
+      "video": {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "avg_frame_rate": "30/1",
+        "color_space": "bt709"
+      },
+      "audio": {
+        "codec_name": "aac",
+        "channels": 2,
+        "sample_rate": "48000"
+      },
+      "full_decode": "pass",
+      "measured_loudness": {
+        "input_i": "-16.05",
+        "input_tp": "-0.97",
+        "input_lra": "4.80",
+        "input_thresh": "-27.14",
+        "output_i": "-15.90",
+        "output_tp": "-1.00",
+        "output_lra": "5.00",
+        "output_thresh": "-26.97",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.10"
+      },
+      "subjective_listening": "not-run: model cannot accept audio input"
+    },
+    {
+      "variant": "youtube-zh",
+      "sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+      "duration": 104.266667,
+      "size_bytes": 23373933,
+      "video": {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "avg_frame_rate": "30/1",
+        "color_space": "bt709"
+      },
+      "audio": {
+        "codec_name": "aac",
+        "channels": 2,
+        "sample_rate": "48000"
+      },
+      "full_decode": "pass",
+      "measured_loudness": {
+        "input_i": "-16.05",
+        "input_tp": "-0.97",
+        "input_lra": "4.80",
+        "input_thresh": "-27.14",
+        "output_i": "-15.90",
+        "output_tp": "-1.00",
+        "output_lra": "5.00",
+        "output_thresh": "-26.97",
+        "normalization_type": "dynamic",
+        "target_offset": "-0.10"
+      },
+      "subjective_listening": "not-run: model cannot accept audio input"
+    }
+  ],
+  "douyin_video_identical_to_bilibili": true,
+  "captions": "real WordBoundary timing, monotonic and in bounds",
+  "tail_reading_margin_seconds": 3.0391666666666737,
+  "covers": [
+    {
+      "file": "bilibili-zh\\cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "size_bytes": 149637
+    },
+    {
+      "file": "bilibili-zh\\cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "size_bytes": 159550
+    },
+    {
+      "file": "douyin-zh\\cover-horizontal-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "size_bytes": 149637
+    },
+    {
+      "file": "douyin-zh\\cover-portrait-3x4.jpg",
+      "width": 1080,
+      "height": 1440,
+      "size_bytes": 184119
+    },
+    {
+      "file": "youtube-zh\\cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "size_bytes": 159550
+    }
+  ],
+  "visual_checks": "source/current final frames checked at all scene midpoints, result, closing and cover thumbnails",
+  "human_review": "pending",
+  "subjective_audio_listening": "not-run; user must confirm narration and mix during review"
+}

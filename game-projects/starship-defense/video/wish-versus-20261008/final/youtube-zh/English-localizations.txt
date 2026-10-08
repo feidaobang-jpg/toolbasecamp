@@ -1,0 +1,9 @@
+【Title】
+I Built the Top-Voted Tower Defense Wish — Now Up to 4v4 | Swarm Siege
+
+【Description】
+Play my games: https://www.zhengxiaohui.cn/games.html
+Choose 虫潮围城 (Swarm Siege) from the Chinese game list, then select 虫潮对战 (Versus). Copy the URL into your browser if it is not clickable.
+The top-voted wish is playable: earn income, upgrade your bank and deploy troops, from 1v1 to 4v4. Each player has their own economy, with 200-gold team transfers. The recorded 4v4 demonstration uses one player seat and seven bots.
+The Versus mode was developed with Claude; Codex handled release verification and this video.
+Would you upgrade your bank first, or deploy units first?

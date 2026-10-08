@@ -1,0 +1,86 @@
+{
+  "variant_id": "youtube-zh",
+  "platform": "youtube",
+  "content_type": "gameplay_update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-versus-teams-v0.27.0",
+  "video_file": "../../../final/youtube-zh/gameplay-youtube-final.mp4",
+  "media_id": "youtube-zh-clean",
+  "video_sha256": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 104.266667,
+  "title": "愿望榜第一名做出来了：双人塔防还能4对4｜虫潮围城",
+  "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择「虫潮围城」，主菜单进入「虫潮对战」；链接不可点击时可复制到浏览器。\n愿望榜第一名的双人对战塔防已可试玩，支持1对1到4对4、独立银行与队伍转账。本片演示普通规则电脑对战，4对4段落为1个玩家席位加7个电脑。\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n你会先升级银行，还是先出兵？\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html",
+  "tags": [
+    "虫潮围城",
+    "塔防",
+    "Swarm Siege",
+    "tower defense",
+    "game development",
+    "Claude"
+  ],
+  "description_file": "../../../final/youtube-zh/投稿文案.txt",
+  "cover_file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
+  "cover_files": {
+    "main_16_9": {
+      "file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "中文缩略图",
+      "sha256": "bd6b9a3fd188ce6472b13d9852c01d55f5221f0df2f5d8b30a793db456d07cd0"
+    }
+  },
+  "cover_upload_mode": "custom_image",
+  "cover_text": "愿望榜第一名 / 做成了对战！ / 1对1 → 4对4",
+  "cover_selection_source": "current normal-rule gameplay frame, native typography; covers.py and gameplay-source.jpg retained",
+  "subtitle_mode": "sidecar",
+  "subtitle_files": [
+    {
+      "file": "../../../final/youtube-zh/captions-zh.srt",
+      "language": "zh-CN",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "4d4e833e27cc50a12670f16896eccec773b903d672a313e1740c749ffb16174c"
+    },
+    {
+      "file": "../../../final/youtube-zh/captions-en.srt",
+      "language": "en",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "002757e1206a0d6b1bbeb18e0130369b822bab3693df101768b3c45641770944"
+    }
+  ],
+  "disclosures": {
+    "synthetic_narration": true,
+    "ai_assisted_development": true,
+    "gameplay_is_generated_video": false
+  },
+  "platform_requirements_checked_at": "2026-10-08",
+  "human_review": {
+    "status": "pending",
+    "required_before_upload": true
+  },
+  "audio_listening_review": "not-run: this model cannot accept audio input; user review required",
+  "technical_preparation_complete": true,
+  "ready_to_upload": false,
+  "blocking_issues": [
+    "本期最终成片待用户审片；请确认画面、配音与字幕后再发布"
+  ],
+  "unverified_fields": [
+    "本期投稿页分类及登录状态，上传前重新核对"
+  ],
+  "created_at": "2026-10-08T09:39:33.166904+00:00",
+  "english_localizations": {
+    "title": "I Built the Top-Voted Tower Defense Wish — Now Up to 4v4 | Swarm Siege",
+    "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the Chinese game list, then select 虫潮对战 (Versus). Copy the URL into your browser if it is not clickable.\nThe top-voted wish is playable: earn income, upgrade your bank and deploy troops, from 1v1 to 4v4. Each player has their own economy, with 200-gold team transfers. The recorded 4v4 demonstration uses one player seat and seven bots.\nThe Versus mode was developed with Claude; Codex handled release verification and this video.\nWould you upgrade your bank first, or deploy units first?",
+    "file": "../../../final/youtube-zh/English-localizations.txt"
+  },
+  "platform_sources": [
+    "https://support.google.com/youtube/answer/72431?hl=zh-Hans",
+    "https://support.google.com/youtube/answer/2734796?hl=zh-Hans"
+  ]
+}

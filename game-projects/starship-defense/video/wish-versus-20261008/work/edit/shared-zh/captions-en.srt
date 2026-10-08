@@ -1,0 +1,167 @@
+1
+00:00:00,220 --> 00:00:02,515
+A viewer asked for head-to-head tower defense.
+
+2
+00:00:03,008 --> 00:00:05,653
+It is playable now, and even supports four versus four.
+
+3
+00:00:06,920 --> 00:00:08,990
+This wish received eleven votes.
+
+4
+00:00:09,482 --> 00:00:11,828
+The request was specific: earn income over time,
+
+5
+00:00:11,920 --> 00:00:14,140
+upgrade a bank, deploy different units,
+
+6
+00:00:14,270 --> 00:00:15,615
+and battle friends online.
+
+7
+00:00:16,887 --> 00:00:19,707
+I made it a Versus mode inside 虫潮围城, Swarm Siege.
+
+8
+00:00:20,212 --> 00:00:21,107
+Play one versus one,
+
+9
+00:00:21,224 --> 00:00:24,269
+or choose two versus two, three versus three, or four versus four.
+
+10
+00:00:25,520 --> 00:00:26,665
+You start with 600 gold.
+
+11
+00:00:26,795 --> 00:00:28,465
+Spend 500 upgrading your bank,
+
+12
+00:00:28,595 --> 00:00:30,202
+and only 100 remains.
+
+13
+00:00:30,708 --> 00:00:31,853
+Want to deploy right away?
+
+14
+00:00:32,358 --> 00:00:33,578
+Wait for the next income payment.
+
+15
+00:00:34,853 --> 00:00:36,411
+The bank pays every ten seconds.
+
+16
+00:00:36,653 --> 00:00:38,936
+Upgrading raises each payment from 60 to 85.
+
+17
+00:00:39,441 --> 00:00:40,661
+You earn more over time,
+
+18
+00:00:40,916 --> 00:00:42,861
+but your opponent will not wait for your economy.
+
+19
+00:00:44,153 --> 00:00:47,523
+Save enough gold, then deploy bug swarms and machine-gun squads.
+
+20
+00:00:48,028 --> 00:00:49,661
+They advance along your chosen route,
+
+21
+00:00:49,928 --> 00:00:50,798
+engage enemies,
+
+22
+00:00:51,078 --> 00:00:53,161
+and try to destroy the opposing core.
+
+23
+00:00:54,420 --> 00:00:56,228
+Join your troops on the front line,
+
+24
+00:00:56,520 --> 00:00:58,402
+shoot, and throw grenades.
+
+25
+00:00:58,895 --> 00:00:59,915
+Manage your money
+
+26
+00:01:00,158 --> 00:01:01,240
+and keep an eye on the battlefield.
+
+27
+00:01:02,520 --> 00:01:05,678
+Each player has a separate wallet and bank in team matches.
+
+28
+00:01:05,858 --> 00:01:07,415
+You can transfer 200 gold to a teammate.
+
+29
+00:01:07,908 --> 00:01:10,265
+This four-versus-four demonstration uses me and seven bots.
+
+30
+00:01:10,633 --> 00:01:12,477
+Online rooms support up to eight human players.
+
+31
+00:01:13,720 --> 00:01:15,002
+I beat the computer in one versus one,
+
+32
+00:01:15,182 --> 00:01:16,802
+but lost a separate four-versus-four match.
+
+33
+00:01:17,295 --> 00:01:18,515
+At the fifteen-minute limit,
+
+34
+00:01:18,795 --> 00:01:20,852
+our core had 76 percent health left,
+
+35
+00:01:21,083 --> 00:01:22,378
+and theirs had 91 percent.
+
+36
+00:01:22,883 --> 00:01:23,778
+Deploying more troops
+
+37
+00:01:23,995 --> 00:01:24,652
+does not guarantee a win.
+
+38
+00:01:25,133 --> 00:01:28,452
+Next I will keep refining match pacing and unit balance.
+
+39
+00:01:29,720 --> 00:01:32,752
+The wish is now marked as fulfilled and playable.
+
+40
+00:01:32,932 --> 00:01:34,940
+The original request and eleven votes are preserved.
+
+41
+00:01:35,445 --> 00:01:38,152
+Try it on Bilibili Toy or Treasure Box.
+
+42
+00:01:38,645 --> 00:01:41,227
+Would you upgrade your bank first, or deploy units first?
