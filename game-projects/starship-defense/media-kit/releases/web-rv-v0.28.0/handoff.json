@@ -15,7 +15,10 @@
     "campaign_audio": "qa/campaign-audio/results.json",
     "physical_phone_test": false,
     "human_difficulty_test": false,
-    "visual_review": "截图和连续视频帧；天空断层已修；手机横竖屏布局模拟通过"
+    "visual_review": "截图和连续视频帧；天空断层已修；手机横竖屏布局模拟通过",
+    "production": "qa/production/results.json",
+    "toy_public": "qa/toy-public/results.json",
+    "taptap_exact_zip": "qa/taptap-package/results.json"
   },
   "media": [
     {
@@ -184,10 +187,10 @@
     }
   ],
   "channels": {
-    "website": "pending_deployment",
-    "toy": "pending_package",
-    "taptap": "pending_package",
-    "bilibili": "pending_description_sync"
+    "website": "deployed_public_verified",
+    "toy": "published_public_verified",
+    "taptap": "reviewing",
+    "bilibili": "both_descriptions_public_verified"
   },
   "next_scope": "先收集房车首版反馈，再决定是否扩展路线或车辆",
   "created_at": "2026-10-08T09:28:23.444492+00:00",
@@ -307,5 +310,12 @@
       "手机真机性能",
       "本版人工审片成片"
     ]
-  }
+  },
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.28.0-20261008",
+  "package_source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "capture_build_note": "captures were made before commit, from the runtime fingerprint now committed at 35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "pending": [
+    "TapTap审核自然等待；确认online后核验公开入口，再按既有授权合并社区说明",
+    "房车视频为候选素材，未发布新视频；如制片仍需人工审片"
+  ]
 }

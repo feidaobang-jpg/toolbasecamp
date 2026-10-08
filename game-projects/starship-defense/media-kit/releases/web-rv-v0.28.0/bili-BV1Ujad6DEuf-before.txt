@@ -1,0 +1,10 @@
+用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。
+Toy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html
+全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html
+联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html
+网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html
+新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/
+更新（2026-10-08·v0.27.0）：虫潮对战扩至1对1、2对2、3对3、4对4，最多8人联机，选队伍、空位电脑补、中途加入接手电脑；每人独立金币与银行，队伍页可转200金。也可打三档电脑，派兵拆对面核心，自己端枪上场；修复联机中途加入报错。
+此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作。
+新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。
+本视频为早期版本，玩法与操作以当前试玩为准。
