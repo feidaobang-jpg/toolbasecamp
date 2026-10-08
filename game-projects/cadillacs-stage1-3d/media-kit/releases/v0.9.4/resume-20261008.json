@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "task_id": "01a11629-be0c-7693-a960-560b142abbe9-uuid-startup-02",
+  "checked_at": "2026-10-08T00:58:59.550491+00:00",
+  "main_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+  "website": [
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+      "matches_main": true,
+      "online_sha256": "fe4828ca53ec60bdaba46e7e26bd7cd4036c947d2bea829131db168175f27bfb",
+      "check": "HTML仅归一化部署?v=标记后比较"
+    },
+    {
+      "path": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "matches_main": true,
+      "online_sha256": "ae26bbd01181be69fbe0895b9335a886de145a6f4cb658e38379ea60a1884586",
+      "check": "完整字节比较"
+    },
+    {
+      "path": "public/js/game/coop.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/coop.js",
+      "matches_main": true,
+      "online_sha256": "ae5885c0c057d5254902da6501236febd05d1a6ec71a1dca26f8a4b0e9ffd409",
+      "check": "完整字节比较"
+    }
+  ],
+  "toy": {
+    "id": 40412421031936,
+    "status": "published",
+    "current_version": "v0.9.5",
+    "uuid_fix_included": true,
+    "evidence": "恢复时 toy mylist 已核对；此前接管记录包含公开双视口实测"
+  },
+  "taptap": {
+    "platform_version": "V-20261007-6",
+    "status": "online",
+    "last_event": "published",
+    "evidence_record": "taptap-online-check.json"
+  },
+  "taptap_community_record": "taptap-community.json",
+  "physical_device_verified": false,
+  "runtime_files_changed_on_resume": false,
+  "bilibili_status_correction_record": "bilibili-status-correction.json",
+  "activities_check": {
+    "scope": "本游戏已有Toy创意挑战参与核对，非全面检查",
+    "status": "existing_participation_retained",
+    "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+    "deadline": "2026-10-31T23:59:00+08:00",
+    "bvid": "BV18XHW66E55",
+    "topic_visible": true,
+    "toy_link_visible": true,
+    "bilibilitoy_tag_visible": true,
+    "new_signup_required": false,
+    "checked_at": "2026-10-08T01:02:01.971243+00:00"
+  }
+}
