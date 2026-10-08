@@ -1,0 +1,108 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_kMmXRmza/index.html",
+  "channel": "toy",
+  "method": "Edge 实际包三视口模拟；非手机真机。TapTap 屏蔽独立 JS 请求。",
+  "results": [
+    {
+      "name": "1280,720游戏载入",
+      "pass": true
+    },
+    {
+      "name": "1280,720回退版本",
+      "pass": true
+    },
+    {
+      "name": "1280,720菜单可选第二关",
+      "pass": true
+    },
+    {
+      "name": "1280,720下一项回第一关",
+      "pass": true
+    },
+    {
+      "name": "1280,720第二关实际开局",
+      "pass": true
+    },
+    {
+      "name": "1280,720切触屏并继续保留第二关",
+      "pass": true
+    },
+    {
+      "name": "1280,720实际跳跃",
+      "pass": true
+    },
+    {
+      "name": "1280,720重玩仍是第二关",
+      "pass": true
+    },
+    {
+      "name": "844,390游戏载入",
+      "pass": true
+    },
+    {
+      "name": "844,390回退版本",
+      "pass": true
+    },
+    {
+      "name": "844,390菜单可选第二关",
+      "pass": true
+    },
+    {
+      "name": "844,390下一项回第一关",
+      "pass": true
+    },
+    {
+      "name": "844,390第二关实际开局",
+      "pass": true
+    },
+    {
+      "name": "844,390切触屏并继续保留第二关",
+      "pass": true
+    },
+    {
+      "name": "844,390实际跳跃",
+      "pass": true
+    },
+    {
+      "name": "844,390重玩仍是第二关",
+      "pass": true
+    },
+    {
+      "name": "390,844游戏载入",
+      "pass": true
+    },
+    {
+      "name": "390,844回退版本",
+      "pass": true
+    },
+    {
+      "name": "390,844菜单可选第二关",
+      "pass": true
+    },
+    {
+      "name": "390,844下一项回第一关",
+      "pass": true
+    },
+    {
+      "name": "390,844第二关实际开局",
+      "pass": true
+    },
+    {
+      "name": "390,844切触屏并继续保留第二关",
+      "pass": true
+    },
+    {
+      "name": "390,844实际跳跃",
+      "pass": true
+    },
+    {
+      "name": "390,844重玩仍是第二关",
+      "pass": true
+    },
+    {
+      "name": "无脚本异常",
+      "pass": true,
+      "data": []
+    }
+  ]
+}
