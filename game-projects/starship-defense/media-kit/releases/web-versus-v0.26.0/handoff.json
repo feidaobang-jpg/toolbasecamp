@@ -82,24 +82,50 @@
     "hook": "愿望榜第一名，我直接做进了虫潮"
   },
   "site": {
-    "status": "pending"
+    "status": "verified",
+    "verified_at": "2026-10-08T13:45:00+08:00",
+    "commit": "2918b028",
+    "evidence": "线上 index.html 含对战入口与面板、compat 标记为提交号；game.compat.js/versus.js/game.js/key-bindings.js 与仓库逐字节一致；coop.js 含对战标注；生产环境 verify-versus 30 项、verify-versus-online 13 项通过"
   },
   "server": {
-    "status": "pending"
+    "status": "verified",
+    "verified_at": "2026-10-08T13:45:00+08:00",
+    "evidence": "/opt/toolbasecamp-api/DEPLOY_SHA=2918b028，coop_lobby.py 含 versus 分支；线上 wss 建对战房 maxPlayers=2 mode=versus、合作房不受影响（建完即退）"
   },
   "toy": {
-    "status": "pending",
-    "id": 38678478981120
+    "status": "published",
+    "id": 38678478981120,
+    "package": "dist/toy/chongchao-qianshao/package",
+    "zip_sha256": "889caad347c47cc416ed7a5e879b470794c93182815f2e95c0194f267ac1c3dd",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Q8fMFtEF/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_BjHmE0EC/index.html",
+    "submitted_at": "2026-10-08T13:52:31+08:00",
+    "audited_at": "2026-10-08T13:54:15+08:00",
+    "doctor": "passed，1 条 WARN：产物文件名不带内容指纹（建议，不影响发布）",
+    "verification": "预览与公开入口均在 Toy 外壳 iframe 内实测：电脑进入对战/面板/派兵/对局推进、手机竖屏视口点出兵与卡片，无报错（qa/verify-versus-toy-*.json）"
   },
   "taptap": {
-    "status": "pending",
-    "app_id": 962354
+    "status": "reviewing",
+    "app_id": 962354,
+    "platform_version": "V-20261008-1",
+    "draft_version_id": "1045922",
+    "h5_version_id": 274950,
+    "zip_sha256": "42be8c7d65104271a13aea371e46e938249fcd5a2c121ed6f7c89dbe7a14994c",
+    "submitted_at": "2026-10-08T13:59:59+08:00",
+    "precheck": "blockers 0、preaudit_passed",
+    "description": "补一行 v0.26.0 更新说明",
+    "verification": "verify-taptap.cjs 同包三视口（电脑、手机横屏、手机竖屏模拟）启动/战役/存档重载/对战通过、无外部请求；手机 TapTap App 未实机验证",
+    "receipts": "D:/project/toolbasecamp-artifacts/taptap/versus-20261008/receipts/962354",
+    "community": "上线后与 v0.25.0 合并发一条动态并挂虫潮论坛"
   },
   "bilibili": {
-    "status": "pending",
+    "status": "public_verified",
     "bvids": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt"
-    ]
-  }
+    ],
+    "record": "bilibili-sync.json",
+    "public_verified_at": "2026-10-08T14:03:20+08:00"
+  },
+  "site_card_cover": "沿用：主画面、画风和默认视角没变，对战是主菜单里新增的模式；B站/Toy 封面未改"
 }

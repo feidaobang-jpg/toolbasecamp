@@ -1,0 +1,35 @@
+{
+  "version": "web-versus-v0.26.0",
+  "baseline_public": "web-unstick-rpg-v0.25.0（公开简介已含 v0.25.0 更新行，台账基线仍写 v0.24.0）",
+  "classification": "正式版本",
+  "source_commit": "2918b028",
+  "summary": "新增虫潮对战 1 对 1；v0.25.0 更新行压成一句「此前」",
+  "method": "独立 Edge 配置 + Playwright：编辑器读回与公开简介一致后清空，逐行输入，读回一致、无空段才点立即投稿",
+  "account_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock（已释放）",
+  "targets": [
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "old_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-07·v0.25.0）：修复联机驾驶载具容易卡进地形的问题（卡住约1.5秒自动脱困）；商店新增RPG火箭筒和四连导弹架两把武器。云存档：普通模式进度自动同步账号，本地清空可从档案站恢复。联机2–4人合作，建房选人数、闲置电脑接管。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "new_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-08·v0.26.0）：新增「虫潮对战」1 对 1（愿望单第一名）——每10秒进账、可升级银行，派兵放虫去拆对面核心，自己也端枪上场；可打三档电脑，或在联机大厅开对战房和好友对打。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "old_sha256": "c34b4ccc7b635a26e73fcd6ce35af075a6319c69cc0ca8a9f1670b6c726e5ef1",
+      "new_sha256": "567df4af9d69306240be729cad9fd7bd53252f64c193724f4a9f6748a308ff61",
+      "submitted_at": "2026-10-08T14:03:00+08:00",
+      "submit_toast": "稿件投递成功",
+      "public_verified_at": "2026-10-08T14:03:20+08:00",
+      "status": "public_verified",
+      "evidence": "api.bilibili.com/x/web-interface/view desc 与目标逐字一致，无空行"
+    },
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "old_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-07·v0.25.0）：修复联机驾驶载具容易卡进地形的问题（沿墙会滑行，卡住约1.5秒自动脱困）；商店新增RPG火箭筒和四连导弹架两把武器。云存档：普通模式进度自动同步账号，本地清空可从档案站恢复；云端与本地不一致先选上传或读取。联机2–4人合作：建房选人数、中途进出保留战场、闲置电脑接管。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "new_description": "《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-08·v0.26.0）：新增「虫潮对战」1 对 1（愿望单第一名）——每10秒进账、可升级银行，派兵放虫去拆对面核心，自己也端枪上场；可打三档电脑，或在联机大厅开对战房和好友对打。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "old_sha256": "0f83f3efff35a2413cb37871345ccc2810f1ddbbf906b0119eedf3237f972379",
+      "new_sha256": "cef20b06402946a02a276fab3ac2e2f3f264fd72639eb6a954781f7c7d388126",
+      "submitted_at": "2026-10-08T14:03:00+08:00",
+      "submit_toast": "稿件投递成功",
+      "public_verified_at": "2026-10-08T14:03:20+08:00",
+      "status": "public_verified",
+      "evidence": "api.bilibili.com/x/web-interface/view desc 与目标逐字一致，无空行"
+    }
+  ]
+}
