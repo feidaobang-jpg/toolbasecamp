@@ -9,7 +9,7 @@ installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'coop-live2';
+const VERSION = 'remix-entry1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -40,7 +40,7 @@ function legacy() {
 legacy();
 const MODES = ['classic', 'remix'];
 const settings = {
-  mode: pick(store.get('mode', 'classic'), MODES, 'classic'),
+  mode: pick(store.get('mode', 'remix'), MODES, 'remix'),
   classicStage: clampInt(store.get('classicStage', 1), 1, CLASSIC_COUNT),
   remixFrom: 'continue',
   lives: { classic: pick(store.get('lives.classic', 'classic'), ['inf', 'classic'], 'classic'), remix: pick(store.get('lives.remix', 'inf'), ['inf', 'classic'], 'inf') },
@@ -260,8 +260,8 @@ const MODE_TEXT = {
     rules: '按 FC《坦克大战》逐格还原 35 关：砖墙按 4 像素一块削掉，钢墙只有三颗星能打穿；每关 20 辆敌军按原版顺序从中、右、左三处出场，第 4、11、18 辆闪红色掉道具。移速、弹速、出生间隔、AI 和 6 种道具都照原版。默认原版 3 命、一发就坏，满 2 万分奖一命；打完 35 关进入 36～70 关的困难循环。'
   },
   remix: {
-    kicker: '魔改 · 自创地图 · 周目无限', sub: '100 关一周目 · 10 个章节 · 第 5 关小 Boss、第 10 关大 Boss',
-    rules: '每章 10 关自创战场，加入河道、树林、冰面：吃到「船」才能过河，船还能替你挡炮；「手枪」直升满级火力、装甲加厚，四星还能烧掉树林。精英重炮和火焰车混在敌军里，道具放久了会被敌军抢走。每章第 5 关小 Boss、第 10 关大 Boss，第 100 关终焉 Boss；打通进入下一周目，敌军更快更硬。默认无限命、3 格耐久，修理包固定在每关第 7、14 辆敌军处掉落。'
+    kicker: '魔改挑战 · 推荐玩法', sub: 'Boss 对战 · 敌军抢道具 · 100 关无限周目',
+    rules: '守住老鹰，挑战精英坦克和 Boss！吃船过河、拿手枪升满火力，还能捡到火箭筒与四连导弹；道具放久了，敌军也会来抢。每章第 5 关小 Boss、第 10 关大 Boss，第 100 关终焉 Boss；打通后进入更难的下一周目。默认无限命、3 格耐久，基地被毁仍会失败。想重温原版，可直接选择「经典复刻」。'
   }
 };
 
@@ -294,7 +294,7 @@ function clearInput() {
 }
 
 // ---------- 设置菜单 ----------
-const modeName = m => m === 'classic' ? '经典复刻 · FC 原版 35 关' : '魔改 · 无限周目';
+const modeName = m => m === 'classic' ? '经典复刻 · FC 原版 35 关' : '魔改挑战 · 无限周目';
 function fromLabel() {
   if (settings.mode === 'classic') return ['起始关卡', '第 ' + settings.classicStage + ' 关'];
   if (remixProgress && settings.remixFrom === 'continue') return ['进度', '继续第 ' + remixProgress.level + ' 关' + (remixProgress.cycle > 1 ? '（第 ' + remixProgress.cycle + ' 周目）' : '')];
@@ -319,6 +319,7 @@ function optLabel(name) {
 let refreshControlModes = () => {};
 function refreshOptions() {
   refreshControlModes();
+  document.querySelectorAll('[data-game-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.gameMode === settings.mode)));
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
@@ -338,9 +339,15 @@ function refreshOptions() {
   $('fire-hint').textContent = settings.mode === 'classic' ? '开炮（每按一下一发）' : '开炮（可按住）';
 }
 function cycle(list, v, delta) { return list[(list.indexOf(v) + (delta < 0 ? list.length - 1 : 1)) % list.length]; }
+function chooseMode(mode) {
+  if (current !== 'menu' || !MODES.includes(mode)) return;
+  clearInput();
+  settings.mode = mode; store.set('mode', mode);
+  view.setPreset(settings.camera[mode]); buildTitle(); refreshOptions();
+}
 function adjust(name, delta) {
   const m = settings.mode;
-  if (name === 'mode') { settings.mode = cycle(MODES, m, delta); store.set('mode', settings.mode); view.setPreset(settings.camera[settings.mode]); buildTitle(); }
+  if (name === 'mode') { chooseMode(cycle(MODES, m, delta)); return; }
   else if (name === 'from') {
     if (m === 'classic') { settings.classicStage = ((settings.classicStage - 1 + (delta < 0 ? CLASSIC_COUNT - 1 : 1)) % CLASSIC_COUNT) + 1; store.set('classicStage', settings.classicStage); }
     else if (remixProgress) settings.remixFrom = settings.remixFrom === 'continue' ? 'new' : 'continue';
@@ -385,7 +392,7 @@ function show(name) {
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
 }
 // 只取实际显示的项：hidden 属性之外，样式收起的元素 focus() 后会让 ↑↓ 卡住
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden && el.getClientRects().length > 0) : []);
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .mode-choices > button, .control-modes > button'), el => !el.hidden && el.getClientRects().length > 0) : []);
 const isTyping = e => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', e => {
   if (isTyping(e)) return;
@@ -397,9 +404,13 @@ document.addEventListener('keydown', e => {
       case 'ArrowDown': case 'KeyS': if (list.length) list[(i + 1 + list.length) % list.length].focus(); e.preventDefault(); break;
       case 'ArrowUp': case 'KeyW': if (list.length) list[(i - 1 + list.length) % list.length].focus(); e.preventDefault(); break;
       case 'ArrowLeft': case 'KeyA': case 'ArrowRight': case 'KeyD':
-        if (el && el.hasAttribute('data-opt')) { adjust(el.getAttribute('data-opt'), /Left|KeyA/.test(e.code) ? -1 : 1); e.preventDefault(); }
+        if (el && el.hasAttribute('data-game-mode')) {
+          const choices = Array.from(el.parentElement.querySelectorAll('[data-game-mode]'));
+          const next = choices[(choices.indexOf(el) + 1) % choices.length];
+          next.focus(); chooseMode(next.dataset.gameMode); e.preventDefault();
+        } else if (el && el.hasAttribute('data-opt')) { adjust(el.getAttribute('data-opt'), /Left|KeyA/.test(e.code) ? -1 : 1); e.preventDefault(); }
         break;
-      case 'Enter': case 'NumpadEnter': case 'KeyJ':
+      case 'Enter': case 'NumpadEnter': case 'KeyJ': case 'Space':
         if (!e.repeat) { if (el) el.click(); else if (list[0]) list[0].click(); }
         e.preventDefault(); break;
       case 'Escape': if (current === 'pause') { resume(); e.preventDefault(); } break;
@@ -427,6 +438,7 @@ document.addEventListener('click', e => {
   if (!t) return;
   if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), e.target.closest('[data-step]')?.dataset.step === '-1' ? -1 : 1); return; }
   switch (t.getAttribute('data-act')) {
+    case 'choose-mode': chooseMode(t.dataset.gameMode); break;
     case 'start': startGame(); break;
     case 'coop': openLobby(); break;
     case 'coop-back': coop.disconnect(); networkStarted = false; toTitle(); show('menu'); break;
