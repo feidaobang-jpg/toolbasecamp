@@ -187,5 +187,57 @@
   "source_type": "procedural",
   "tool": "WebAudio 合成",
   "status": "替代（非原作采样）"
- }
+ },
+  {
+    "id": "road-walk",
+    "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/ljjvbsla/16.%20Roaring%20Around%20%28Stage%203-A%29.mp3",
+    "file": "public/html/game/cadillacs-stage1-3d/sounds/road-walk.mp3",
+    "sha256": "85d6433a1cda8c5dbd47a7cfa2e9284e7bb399fda0b3fdd65bb4995d3d9e5ae2",
+    "bytes": 1599535,
+    "source_type": "supplied",
+    "use": "第三关完整原版街机BGM",
+    "process": "完整音轨，ffmpeg loudnorm I=-18 TP=-1.5 LRA=11，44.1kHz立体声96kbpsMP3；不截断循环",
+    "usage_condition": "原作录音，保留原作版权说明，不声明原创或授权"
+  },
+  {
+    "id": "road-drive",
+    "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/whuejkyn/17.%20Like%20a%20Gale%20%28Stage%203-B%2C%207-2%29.mp3",
+    "file": "public/html/game/cadillacs-stage1-3d/sounds/road-drive.mp3",
+    "sha256": "570cc8e1a2843c5a2e2710de9125728978b0d6ae2a576d35d5642d73dc45a8dd",
+    "bytes": 1024321,
+    "source_type": "supplied",
+    "use": "第三关完整原版街机BGM",
+    "process": "完整音轨，ffmpeg loudnorm I=-18 TP=-1.5 LRA=11，44.1kHz立体声96kbpsMP3；不截断循环",
+    "usage_condition": "原作录音，保留原作版权说明，不声明原创或授权"
+  },
+  {
+    "id": "boss3",
+    "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/xnwukorq/19.%20Boss%203%20%28Stage%203%29.mp3",
+    "file": "public/html/game/cadillacs-stage1-3d/sounds/boss3.mp3",
+    "sha256": "7775e9ad043afa75849abff68d2e8ee8c35344d63d5a17341779035b81821b47",
+    "bytes": 1471630,
+    "source_type": "supplied",
+    "use": "第三关完整原版街机BGM",
+    "process": "完整音轨，ffmpeg loudnorm I=-18 TP=-1.5 LRA=11，44.1kHz立体声96kbpsMP3；不截断循环",
+    "usage_condition": "原作录音，保留原作版权说明，不声明原创或授权"
+  },
+  {
+    "id": "stage3-preview-reference",
+    "source_type": "reference",
+    "source": [
+      "https://www.hardcoregaming101.net/cadillacs-dinosaurs/",
+      "https://en.wikipedia.org/wiki/Cadillacs_and_Dinosaurs_(video_game)"
+    ],
+    "use": "电台叫车、公路撞击、霍格投雷、毁车步战流程；数值与预警为本项目调校，不宣称逐帧复刻"
+  },
+  {
+    "id": "stage3-preview-art",
+    "source_type": "procedural",
+    "runtime": [
+      "src/road-world.js",
+      "src/road.js"
+    ],
+    "use": "荒漠公路、摩托、电台、路障与预警；沿用当前人物比例与卡通色阶描边",
+    "tool": "Three.js r170；本地Canvas程序化噪声纹理"
+  }
 ]

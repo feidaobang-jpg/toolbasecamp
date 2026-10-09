@@ -12,13 +12,14 @@
   "source": {
     "type": "direct_user_request",
     "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
-    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246"
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "merged_origin_commit": "413f24973f5685907db1671132f0ca1ee050262d"
   },
   "build": {
     "id": "v0.10.3-menu-text1",
-    "commit": null,
+    "commit": "daefe1f0cb696251f23f9f9ce9686ea4dc685685",
     "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "98d6490aa0d9b40e301b708a511d58a4e1e3f2d239e4f5cb856571783af95e25",
     "files": {
       "public/html/game/jackal-stage1-3d/index.html": "cb5c7d8e2a170e70a4542ed897450a3ac8ad459e43914211787bf33f7d6adede",
@@ -26,7 +27,8 @@
       "public/html/game/jackal-stage1-3d/js/game.min.js": "0de0f9bc521a17a147704adbc756b765a1919cac36552c8092ffc489cbb8a36c",
       "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
     },
-    "entrypoint": "public/html/game/jackal-stage1-3d/index.html"
+    "entrypoint": "public/html/game/jackal-stage1-3d/index.html",
+    "source_note": "源修复提交加merged_origin_commit的正常合并；运行文件指纹对应最终合并后产物"
   },
   "changes": [
     {
@@ -157,13 +159,88 @@
         "test": "568x320 runtime",
         "ok": true,
         "detail": []
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "赤色要塞",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "第一关完成！",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "jackal-stage1-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
       }
     ],
     "unverified": [
       "手机真机",
       "Toy/TapTap本版本包"
     ],
-    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos"
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos",
+    "post_merge_revalidation": "cadillacs-stage1-3d: 13浏览器检查重新通过；其余运行文件与已测版本相同"
   },
   "thumbnail": {
     "action": "reuse",

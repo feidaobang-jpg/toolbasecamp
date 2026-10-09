@@ -12,13 +12,14 @@
   "source": {
     "type": "direct_user_request",
     "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
-    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246"
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "merged_origin_commit": "413f24973f5685907db1671132f0ca1ee050262d"
   },
   "build": {
     "id": "v2.5.0-menu-text1",
-    "commit": null,
+    "commit": "daefe1f0cb696251f23f9f9ce9686ea4dc685685",
     "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "add0cbec3ae306b836ba1fce63fa96d29332c655224f665958042dce2ac388e1",
     "files": {
       "public/html/game/mario-3d/audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
@@ -34,7 +35,8 @@
       "public/html/game/mario-3d/world.js": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe",
       "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
     },
-    "entrypoint": "public/html/game/mario-3d/index.html"
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "source_note": "源修复提交加merged_origin_commit的正常合并；运行文件指纹对应最终合并后产物"
   },
   "changes": [
     {
@@ -169,13 +171,92 @@
         "test": "568x320 runtime",
         "ok": true,
         "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "超级玛丽 3D",
+            "shadow": "none"
+          },
+          {
+            "text": "3D",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "通关！",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "mario-3d",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
       }
     ],
     "unverified": [
       "手机真机",
       "Toy/TapTap本版本包"
     ],
-    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos"
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos",
+    "post_merge_revalidation": "cadillacs-stage1-3d: 13浏览器检查重新通过；其余运行文件与已测版本相同"
   },
   "thumbnail": {
     "action": "reuse",

@@ -12,13 +12,14 @@
   "source": {
     "type": "direct_user_request",
     "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
-    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246"
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "merged_origin_commit": "413f24973f5685907db1671132f0ca1ee050262d"
   },
   "build": {
     "id": "web-shop-scroll-v0.29.2-menu-text1",
-    "commit": null,
+    "commit": "daefe1f0cb696251f23f9f9ce9686ea4dc685685",
     "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "d908ceb7dee2bff81e12ea1468638f745eb1a632140ea6e75c368dec2e43a955",
     "files": {
       "public/html/game/starship-defense/battlefield-environments.js": "890365d83aaef3a402b97bfed48396838d4aabf3c8a8263e10bbf8ea2a4084a9",
@@ -69,7 +70,8 @@
       "public/html/game/starship-defense/vendor/three.module.js": "4d01ed1c468372b16732fcecfeb2f463ac1b29b0fc296b2d64ec084e32876b39",
       "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
     },
-    "entrypoint": "public/html/game/starship-defense/index.html"
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "source_note": "源修复提交加merged_origin_commit的正常合并；运行文件指纹对应最终合并后产物"
   },
   "changes": [
     {
@@ -127,6 +129,49 @@
   "qa": {
     "method": "Playwright + Edge真实DOM与点击/键盘，桌面1280×720，手机模拟844×390、390×844、800×346、568×320；选人和暂停经过实际入口，恐龙开场脚本用测试钩子跳过",
     "checks": [
+      {
+        "game": "starship-defense",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "虫潮围城",
+            "shadow": "none"
+          },
+          {
+            "text": "选择前哨守卫",
+            "shadow": "none"
+          },
+          {
+            "text": "战役难度",
+            "shadow": "none"
+          },
+          {
+            "text": "⏸ 游戏暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "⚔ 虫潮对战 · 1 对 1",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          },
+          {
+            "text": "💀 游戏结束",
+            "shadow": "none"
+          },
+          {
+            "text": "房车突围",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          }
+        ]
+      },
       {
         "game": "starship-defense",
         "test": "plain menu headings",
@@ -273,7 +318,8 @@
       "手机真机",
       "Toy/TapTap本版本包"
     ],
-    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos"
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos",
+    "post_merge_revalidation": "cadillacs-stage1-3d: 13浏览器检查重新通过；其余运行文件与已测版本相同"
   },
   "thumbnail": {
     "action": "reuse",

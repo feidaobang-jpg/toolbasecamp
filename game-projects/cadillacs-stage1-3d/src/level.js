@@ -5,10 +5,11 @@ export const HALF_W = 6.8;          // 一屏的半宽（米）：玩家与镜�
 export const EDGE = 0.7;            // 角色中心离画面边缘的留量（身体 + 出手）；锁屏时敌人、Boss、被打飞的角色同样受限，侧视镜头保证最前一排纵深也完整入画
 export const ENTER_DX = 8.2;        // 敌人从屏幕外进场的距离
 
-// 两关：first 为该关第一个区域的下标
+// 关卡：first 为该关第一个区域的下标
 export const STAGES = [
   { no: 1, name: '海上都市', en: 'CITY IN THE SEA', first: 0 },
-  { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 }
+  { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 },
+  { no: 3, name: '地狱公路', en: 'HELL ROAD', first: 6 }
 ];
 // 区域：x0..x1 为可走范围，z0..z1 为纵深；timer 为该区域的倒计时（秒）；exit.to 为下一个区域
 // 第二关地面一直铺到画面底部，可走纵深加到 z1 = 4.0（前排到画面约八成高处）；侧视取景仍按 camZ1 那一排算（不因纵深加大而拉远），
@@ -111,8 +112,19 @@ export const AREAS = [
   }
 ];
 
-// 敌人参数（hp 为 1 条血 = 100）：原作数值查不到，按「第一关杂兵三四下连击倒地」的手感推测
+// 第三关：荒漠步战接公路追逐
+AREAS.push({
+  id:'desert',stage:3,name:'死亡荒漠',title:'HELL ROAD',x0:0,x1:36,z0:-2.8,z1:3.8,camZ1:2.5,camTy:.6,start:{x:3,z:.5},timer:120,
+  props:[{kind:'drum',x:17,z:-1.5,item:'steak'},{kind:'drum',x:22,z:2.5,item:'gun'}],
+  waves:[
+    {id:'d1',trigger:0,lock:7,spawns:[{type:'punk',from:'right',z:.5},{type:'gneiss',from:'left',z:-1,delay:1.2},{type:'punk',from:'right',z:2,delay:2.5}]},
+    {id:'d2',trigger:15,lock:21,spawns:[{type:'blade',from:'right',z:-.8},{type:'poacher',from:'right',z:2,delay:1.8,drop:'rifle'},{type:'thug',from:'left',z:.5,delay:3.3}]}
+  ],exit:{type:'radio',x:29,z:.5,to:7}
+},{id:'hellroad',stage:3,name:'地狱公路',title:'HELL ROAD',x0:8,x1:24,z0:-2.8,z1:3.8,camZ1:2.5,camTy:.65,start:{x:11,z:.5},timer:150,props:[],waves:[]});
+
+// 敌人参数（hp 为 1 条血 = 100）：原作数值查不到，按战斗手感调校
 export const ENEMY = {
+  hogg: {name:'HOGG',cn:'霍格',hp:460,speed:2.4,points:20000,reach:1.3,dmg:17,aggr:.8,boss:true},
   ferris: { name: 'FERRIS', cn: '费里斯', hp: 46, speed: 2.0, points: 1000, reach: 0.95, dmg: 6, aggr: 0.55, kick: 0.25 },
   gneiss: { name: 'GNEISS', cn: '尼斯', hp: 52, speed: 2.0, points: 2000, reach: 0.95, dmg: 6, aggr: 0.6, kick: 0.3 },
   punk: { name: 'PUNK', cn: '朋克', hp: 34, speed: 3.2, points: 1000, reach: 0.85, dmg: 5, aggr: 0.75, behind: true, bomb: 'dynamite' },

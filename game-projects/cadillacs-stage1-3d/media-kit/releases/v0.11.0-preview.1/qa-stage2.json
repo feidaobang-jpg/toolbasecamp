@@ -1,0 +1,453 @@
+{
+ "date": "2026-10-09T03:24:42.328Z",
+ "pass": 57,
+ "total": 57,
+ "results": [
+  {
+   "name": "第三关选择保留且可直接游玩",
+   "pass": true,
+   "info": "起始关卡◂ 第三关 · 地狱公路 ▸"
+  },
+  {
+   "name": "三关选择循环回第一关",
+   "pass": true,
+   "info": "起始关卡◂ 第一关 · 海上都市 ▸"
+  },
+  {
+   "name": "菜单有起始关卡选项（默认第一关）",
+   "pass": true,
+   "info": "起始关卡◂ 第一关 · 海上都市 ▸"
+  },
+  {
+   "name": "键盘 → 切到第二关",
+   "pass": true,
+   "info": "起始关卡◂ 第二关 · 沼泽森林 ▸"
+  },
+  {
+   "name": "起始关卡保存",
+   "pass": true
+  },
+  {
+   "name": "刷新后仍是第二关",
+   "pass": true,
+   "info": "起始关卡◂ 第二关 · 沼泽森林 ▸"
+  },
+  {
+   "name": "直接从第二关开局：偷猎者森林",
+   "pass": true,
+   "info": [
+    "forest",
+    2
+   ]
+  },
+  {
+   "name": "第二关标题",
+   "pass": true,
+   "info": "第二关 · 沼泽森林"
+  },
+  {
+   "name": "凯迪拉克开进来（过场）",
+   "pass": true,
+   "info": [
+    "cut",
+    true,
+    "incar"
+   ]
+  },
+  {
+   "name": "下车后开始游玩",
+   "pass": true,
+   "info": {
+    "x": 4.83,
+    "y": 0,
+    "z": 0.66,
+    "state": "idle",
+    "hp": 100,
+    "face": 1.57,
+    "invul": 0,
+    "weapon": null,
+    "combo": 0,
+    "visible": true
+   }
+  },
+  {
+   "name": "凯迪拉克停在起点",
+   "pass": true
+  },
+  {
+   "name": "第二关 2-1 音乐（原版 In the Poachers' Forest）",
+   "pass": true,
+   "info": "forest"
+  },
+  {
+   "name": "熟睡的霸王龙在原位",
+   "pass": true,
+   "info": {
+    "state": "sleep",
+    "wakeN": 0,
+    "hp": 320,
+    "alive": true
+   }
+  },
+  {
+   "name": "三角龙哈克登场",
+   "pass": true,
+   "info": {
+    "id": 7,
+    "type": "hack",
+    "side": "enemy",
+    "state": "enter",
+    "x": 14.89,
+    "y": 0,
+    "z": 0.6,
+    "hp": 130,
+    "alive": true,
+    "face": -1.57,
+    "token": false,
+    "nearK": 1,
+    "radius": 0.78,
+    "raptor": false,
+    "dino": true,
+    "waker": false
+   }
+  },
+  {
+   "name": "冲锋前先刨地预警",
+   "pass": true
+  },
+  {
+   "name": "三角龙冲锋撞倒玩家",
+   "pass": true,
+   "info": [
+    100,
+    91.6,
+    "down"
+   ]
+  },
+  {
+   "name": "打败三角龙计分",
+   "pass": true,
+   "info": {
+    "hack": 1
+   }
+  },
+  {
+   "name": "被打败的三角龙跑开（不打死恐龙）",
+   "pass": true
+  },
+  {
+   "name": "偷猎者举枪瞄准后开枪",
+   "pass": true,
+   "info": {
+    "t": 13.38,
+    "type": "rifleShot",
+    "id": 9,
+    "hit": true
+   }
+  },
+  {
+   "name": "同一纵深站着不动会被打中",
+   "pass": true,
+   "info": [
+    true
+   ]
+  },
+  {
+   "name": "跳起来能躲开步枪",
+   "pass": true,
+   "info": [
+    {
+     "t": 14.05,
+     "type": "rifleShot",
+     "id": 9,
+     "hit": false
+    }
+   ]
+  },
+  {
+   "name": "玩家用步枪远距离打中",
+   "pass": true,
+   "info": [
+    {
+     "kind": "rifle",
+     "ammo": 5
+    },
+    200,
+    171.68
+   ]
+  },
+  {
+   "name": "走到霸王龙附近触发第三波",
+   "pass": true,
+   "info": [
+    2,
+    true
+   ]
+  },
+  {
+   "name": "胖子被标记为去叫醒霸王龙",
+   "pass": true,
+   "info": [
+    "hammer"
+   ]
+  },
+  {
+   "name": "胖子捶了霸王龙",
+   "pass": true,
+   "info": 3
+  },
+  {
+   "name": "捶三下把霸王龙吵醒",
+   "pass": true,
+   "info": {
+    "state": "waking",
+    "wakeN": 3,
+    "hp": 320,
+    "alive": true
+   }
+  },
+  {
+   "name": "霸王龙会咬 / 跺脚",
+   "pass": true,
+   "info": "bite"
+  },
+  {
+   "name": "霸王龙醒着时锁屏",
+   "pass": true,
+   "info": true
+  },
+  {
+   "name": "打倒霸王龙后它倒地睡着、本波结束",
+   "pass": true,
+   "info": [
+    {
+     "state": "knocked",
+     "wakeN": 3,
+     "hp": 0,
+     "alive": false
+    },
+    false
+   ]
+  },
+  {
+   "name": "打倒霸王龙计 10000 分",
+   "pass": true,
+   "info": {
+    "hack": 1,
+    "poacher": 2,
+    "shivat": 1,
+    "hammer": 1,
+    "blade": 1,
+    "wrench": 1
+   }
+  },
+  {
+   "name": "胖子还没叫醒就被打倒：霸王龙一直睡着、可以直接过",
+   "pass": true,
+   "info": [
+    false,
+    {
+     "state": "sleep",
+     "wakeN": 0,
+     "hp": 320,
+     "alive": true
+    }
+   ]
+  },
+  {
+   "name": "走到山崖边跳进泥沼",
+   "pass": true,
+   "info": "swamp"
+  },
+  {
+   "name": "落在泥水里（齐腰）",
+   "pass": true,
+   "info": 1
+  },
+  {
+   "name": "2-2 音乐（原版 Ancient Earth）",
+   "pass": true,
+   "info": "swamp"
+  },
+  {
+   "name": "格特从泥水里冒出来",
+   "pass": true,
+   "info": 2
+  },
+  {
+   "name": "泥沼里走得比岸上慢",
+   "pass": true,
+   "info": [
+    2.36,
+    3.37
+   ]
+  },
+  {
+   "name": "拉什·T 甩出链锤，3 米外也能打中",
+   "pass": true,
+   "info": [
+    1,
+    90.9
+   ]
+  },
+  {
+   "name": "拉什·T 多条血",
+   "pass": true
+  },
+  {
+   "name": "走出泥沼 → 黄昏的恐龙尸骸地",
+   "pass": true,
+   "info": "grave"
+  },
+  {
+   "name": "原作字幕：看看这些恐龙尸体！",
+   "pass": true,
+   "info": "看看这些恐龙尸体！"
+  },
+  {
+   "name": "2-3 音乐（原版 Trap of Silence，与 1-2 同曲）",
+   "pass": true,
+   "info": "grave"
+  },
+  {
+   "name": "一排油桶",
+   "pass": true,
+   "info": 5
+  },
+  {
+   "name": "屠夫登场（背对玩家在肢解死恐龙）",
+   "pass": true,
+   "info": {
+    "type": "butcher",
+    "hp": 520,
+    "state": "cut",
+    "summons": 0,
+    "swords": 2
+   }
+  },
+  {
+   "name": "屠夫转身开打、Boss 2 音乐",
+   "pass": true,
+   "info": "boss2"
+  },
+  {
+   "name": "屠夫双手两把刀",
+   "pass": true
+  },
+  {
+   "name": "打倒屠夫后两把刀脱手掉在地上",
+   "pass": true,
+   "info": [
+    0,
+    2
+   ]
+  },
+  {
+   "name": "玩家捡起屠夫的砍刀",
+   "pass": true,
+   "info": {
+    "kind": "sword",
+    "ammo": 12
+   }
+  },
+  {
+   "name": "屠夫连续屁股坐",
+   "pass": true,
+   "info": 2
+  },
+  {
+   "name": "屠夫掉血后叫手下",
+   "pass": true,
+   "info": {
+    "type": "butcher",
+    "hp": 340,
+    "state": "attack",
+    "summons": 1,
+    "swords": 0
+   }
+  },
+  {
+   "name": "打倒屠夫 → 过关",
+   "pass": true,
+   "info": [
+    "clear",
+    [
+     2
+    ]
+   ]
+  },
+  {
+   "name": "过关放原版「Stage Clear」（不是合成曲）",
+   "pass": true,
+   "info": {
+    "name": "clear",
+    "playing": true,
+    "synth": false,
+    "original": true,
+    "track": "clear",
+    "loaded": [
+     "desert",
+     "hellroad",
+     "boss3",
+     "select",
+     "opening",
+     "roof",
+     "hall",
+     "street",
+     "boss",
+     "forest",
+     "swamp",
+     "boss2",
+     "clear",
+     "cont"
+    ]
+   }
+  },
+  {
+   "name": "第二关通关直接进入第三关，不提前弹结算",
+   "pass": true,
+   "info": [
+    "desert",
+    [
+     2
+    ]
+   ]
+  },
+  {
+   "name": "进入第三关回满体力",
+   "pass": true,
+   "info": 100
+  },
+  {
+   "name": "打倒维斯后接着进入第二关（不弹结算）",
+   "pass": true,
+   "info": [
+    "forest",
+    null,
+    [
+     2,
+     1
+    ]
+   ]
+  },
+  {
+   "name": "进入第二关时体力回满",
+   "pass": true,
+   "info": 100
+  },
+  {
+   "name": "第二关开场后可操作、画面已淡入",
+   "pass": true,
+   "info": [
+    "play",
+    0
+   ]
+  },
+  {
+   "name": "无脚本错误",
+   "pass": true,
+   "info": []
+  }
+ ],
+ "errors": []
+}

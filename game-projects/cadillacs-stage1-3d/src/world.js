@@ -6,6 +6,7 @@ import { fixedRng } from './core.js';
 import { AREAS } from './level.js';
 import { Parts, mtx, GEO, toonMat, meshFrom, drumGeo, barrelGeo, pipesGeo, buildHuman, SPECS, bakeModel, buildPtero, capsule } from './models.js';
 import { applyPose, HP, mod } from './anim.js';
+import { roadWorld } from './road-world.js';
 
 // ---------- 程序化贴图 ----------
 function mkTex(w, h, seed, fn) {
@@ -370,6 +371,8 @@ export function statueMesh() {
 
 // ---------- 区域构建 ----------
 const BUILDERS = {
+  desert: roadWorld,
+  hellroad: roadWorld,
   // 楼顶：EASTCOAST 2513，海上城市的高楼楼顶
   roof(A) {
     const g = A.group;
