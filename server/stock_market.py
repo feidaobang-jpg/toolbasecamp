@@ -4,12 +4,20 @@ from datetime import datetime
 import json
 import math
 import re
+import threading
 import time
+from urllib.parse import urlsplit
 
 import requests
 from stock_calendar import CN_TZ
 
-HEADERS = {"User-Agent": "Mozilla/5.0", "Referer": "https://finance.sina.com.cn/", "Accept-Encoding": "identity"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36", "Referer": "https://finance.sina.com.cn/", "Accept-Encoding": "identity"}
+# Public web-client identifier, not an account credential.
+EASTMONEY_UT = "fa5fd1943c7b386f172d6893dbfba10b"
+SPOT_URLS = ("https://push2delay.eastmoney.com/api/qt/clist/get",
+             "https://push2.eastmoney.com/api/qt/clist/get")
+_spot_lock = threading.Lock()
+_spot_cache = {}
 NEGATIVE_WORDS = ("退市", "立案调查", "立案告知", "财务造假", "欺诈发行", "破产清算", "债务违约", "无法表示意见", "否定意见", "重大违法", "风险警示")
 
 
@@ -23,9 +31,14 @@ def number(value):
 
 def get_text(url, params=None):
     last = None
-    for attempt in range(2):
+    headers = dict(HEADERS)
+    host = urlsplit(url).hostname or ""
+    if host.endswith(".eastmoney.com"):
+        headers["Referer"] = "https://data.eastmoney.com/" if host.startswith(("np-anotice-stock.", "datacenter.")) else "https://quote.eastmoney.com/center/gridlist.html"
+        headers.pop("Accept-Encoding", None)
+    for attempt in range(3):
         try:
-            response = requests.get(url, params=params, headers=HEADERS, timeout=(4, 8))
+            response = requests.get(url, params=params, headers=headers, timeout=(4, 8))
             response.raise_for_status()
             try:
                 return response.content.decode("utf-8")
@@ -33,9 +46,10 @@ def get_text(url, params=None):
                 return response.content.decode("gb18030")
         except requests.RequestException as exc:
             last = exc
-            if attempt == 0:
-                time.sleep(0.3)
-    raise RuntimeError("行情接口暂不可用") from last
+            if attempt < 2:
+                time.sleep(0.5 * (attempt + 1))
+    source = "东方财富公告" if host.startswith("np-anotice-stock.") else "东方财富行情" if host.endswith(".eastmoney.com") else "新浪行情"
+    raise RuntimeError(source + "接口暂不可用，已重试，请稍后重试") from last
 
 
 def get_json(url, params=None):
@@ -50,11 +64,36 @@ def normal_stock(code, name):
 
 
 def spot_market():
-    url = "https://push2.eastmoney.com/api/qt/clist/get"
+    # Share only a recently fetched, complete snapshot; keep provider timestamps.
+    # Expired cache is never a fallback for a failed live request.
+    with _spot_lock:
+        cached = _spot_cache.get("rows")
+        if cached and time.monotonic() - _spot_cache["at"] < 30:
+            return [dict(row) for row in cached]
+        try:
+            rows = _fetch_spot_market()
+        except RuntimeError:
+            rows = _sina_spot_market()
+        _spot_cache.update(rows=rows, at=time.monotonic())
+        return [dict(row) for row in rows]
+
+
+def _fetch_spot_market():
     def page(pn):
-        payload = get_json(url, {"pn": pn, "pz": 100, "po": 1, "np": 1, "fltt": 2, "invt": 2,
-            "fid": "f6", "fs": "m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23",
-            "fields": "f12,f14,f2,f3,f8,f6,f100,f124"}).get("data") or {}
+        params = {"pn": pn, "pz": 100, "po": 1, "np": 1, "fltt": 2, "invt": 2,
+            "fs": "m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23",
+            "fields": "f12,f14,f2,f3,f8,f6,f100,f124", "ut": EASTMONEY_UT, "fid": "f6"}
+        last = None
+        for url in SPOT_URLS:
+            try:
+                payload = get_json(url, params).get("data") or {}
+                if not payload.get("diff") or not payload.get("total"):
+                    raise RuntimeError("全市场行情返回空分页")
+                break
+            except RuntimeError as exc:
+                last = exc
+        else:
+            raise RuntimeError("全市场行情主备接口暂不可用，已重试；暂停筛选") from last
         diff = payload.get("diff") or []
         return int(payload.get("total") or 0), list(diff.values()) if isinstance(diff, dict) else diff
     total, first = page(1)
@@ -63,7 +102,7 @@ def spot_market():
     pages = math.ceil(total / len(first))
     if pages > 100:
         raise RuntimeError("行情分页异常")
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=4) as pool:
         chunks = list(pool.map(page, range(2, pages + 1)))
     raw = first + [row for _, chunk in chunks for row in chunk]
     unique = {str(r.get("f12")): r for r in raw if r.get("f12")}
@@ -72,8 +111,51 @@ def spot_market():
     return [{"symbol": str(r["f12"]), "name": str(r.get("f14") or ""),
              "price": number(r.get("f2")), "pct": number(r.get("f3")),
              "amount": number(r.get("f6")), "turnover": number(r.get("f8")),
-             "sector": str(r.get("f100") or ""), "timestamp": number(r.get("f124"))}
+             "sector": str(r.get("f100") or ""), "timestamp": number(r.get("f124")), "source": "东方财富实时行情"}
             for r in unique.values()]
+
+
+def _sina_spot_market():
+    """Use Eastmoney only for the universe/industry, never its undated prices."""
+    catalog = []
+    for pn in range(1, 41):
+        payload = get_json("https://datacenter.eastmoney.com/stock/selection/api/data/get/", {
+            "type": "RPTA_APP_STOCKSELECT", "sty": "SECURITY_CODE,SECURITY_NAME_ABBR,INDUSTRY",
+            "p": pn, "ps": 500, "st": "SECURITY_CODE", "sr": 1,
+            "source": "WEB", "client": "WEB"})
+        result = payload.get("result") or {}
+        rows = result.get("data")
+        if not payload.get("success") or not isinstance(rows, list) or result.get("currentpage") != pn:
+            raise RuntimeError("备用行情股票行业名册核验失败，暂停筛选")
+        catalog.extend(rows)
+        if result.get("nextpage") is False:
+            break
+        if result.get("nextpage") is not True or not rows:
+            raise RuntimeError("备用行情名册分页不完整，暂停筛选")
+    else:
+        raise RuntimeError("备用行情名册分页异常，暂停筛选")
+    mainland = [r for r in catalog if re.fullmatch(r"[036]\d{5}", str(r.get("SECURITY_CODE") or ""))]
+    unique = {r["SECURITY_CODE"]: r for r in mainland}
+    if len(unique) < 3000 or len(unique) < len(mainland) * 0.98:
+        raise RuntimeError("备用行情股票名册不完整，暂停筛选")
+    symbols = sorted(unique)
+    batches = [symbols[i:i+200] for i in range(0, len(symbols), 200)]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        chunks = list(pool.map(quotes, batches))
+    qmap = {symbol: q for chunk in chunks for symbol, q in chunk.items() if symbol in unique}
+    if len(qmap) < len(unique) * 0.98:
+        raise RuntimeError("备用实时行情覆盖不足，暂停筛选")
+    rows = []
+    for symbol, q in qmap.items():
+        if symbol not in unique:
+            continue
+        r = unique[symbol]
+        rows.append({"symbol": symbol, "name": q["name"], "price": q["last"],
+            "pct": round((q["last"]/q["prev_close"]-1)*100, 2), "amount": q["amount"],
+            "turnover": None, "sector": str(r.get("INDUSTRY") or ""),
+            "timestamp": datetime.fromisoformat(q["at"]).timestamp(),
+            "source": "新浪实时行情＋东方财富行业名册"})
+    return rows
 
 
 def daily_bars(symbol, limit=100):

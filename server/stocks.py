@@ -136,6 +136,7 @@ def market_context(rows, now):
     allowed = ratio>=0.4 and pct>-1.5
     return {"allow_recommend": allowed, "up_ratio": round(ratio*100,1), "index_pct": round(pct,2),
             "sample_count": len(valid), "quote_at": index["at"],
+            "source": "、".join(sorted({r.get("source", "东方财富实时行情") for r in rows})),
             "message": "市场过滤通过" if allowed else "市场明显偏弱，本次空仓观察"}
 
 def compute_screen(now):
