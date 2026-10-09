@@ -1,12 +1,14 @@
 {
   "local_preview": {
     "version": "v0.11.0-preview.1",
-    "status": "awaiting_user_review",
+    "status": "website_trial_authorized_only",
     "url": "http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3",
     "release_record": "releases/v0.11.0-preview.1/handoff.json",
     "approval_event_id": "cadillacs-stage3-preview-20261009-review-01",
-    "authorization": "2026-10-09 新请求重新开发第三关；审核前不发布",
-    "public_channel_baselines_unchanged": true
+    "authorization": "发布到网站里我试玩一下，不要发布到其他游戏平台",
+    "public_channel_baselines_unchanged": true,
+    "website_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
+    "automatic_platform_sync": false
   },
   "toy": {
     "id": 40412421031936,

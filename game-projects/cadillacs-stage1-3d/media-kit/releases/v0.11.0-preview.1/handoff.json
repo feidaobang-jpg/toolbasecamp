@@ -95,16 +95,16 @@
   "media": [
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/clear.png",
-      "sha256": "e8c745114acde93bb98dc770d87dc59a6bac9f9308e0e803a28760a0d3e60d9e",
-      "bytes": 554281,
-      "modified_utc": "2026-10-09T01:02:49.971890+00:00",
+      "sha256": "79b5d580e2874429242a1345104a2c2f793502aa26a541b3a10b557435addc58",
+      "bytes": 554173,
+      "modified_utc": "2026-10-09T03:24:28.599704+00:00",
       "git": "ignored_local_evidence"
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/desert.png",
-      "sha256": "e01a7e0a6135833e4c9ef0b58f216658dd3272a5b4cda7f80b2527e049bdfe2d",
-      "bytes": 808247,
-      "modified_utc": "2026-10-09T01:02:46.692379+00:00",
+      "sha256": "45b7e28b736be46078b7ce997bdd26dedefe00ea6f9466e40800986cc8647f0e",
+      "bytes": 807664,
+      "modified_utc": "2026-10-09T03:24:25.503924+00:00",
       "git": "ignored_local_evidence"
     },
     {
@@ -130,44 +130,44 @@
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/drive-view-0.png",
-      "sha256": "b81cbedc4a27bd7420058d6d4705c45ef56029472b78149730cb8230dd1e1320",
-      "bytes": 796847,
-      "modified_utc": "2026-10-09T01:02:47.078831+00:00",
+      "sha256": "f84523bc93060ce6774a1f22184e83e2455b7b96a1451c125556dd2b646ea4b3",
+      "bytes": 796855,
+      "modified_utc": "2026-10-09T03:24:25.901840+00:00",
       "git": "ignored_local_evidence"
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/drive-view-1.png",
-      "sha256": "e000c8d4a437f72fa65089727bd4c2962da6553aeac8a546a91c5740f503d306",
-      "bytes": 1012809,
-      "modified_utc": "2026-10-09T01:02:47.305502+00:00",
+      "sha256": "3bf819cb1e64bae6e580bdd3c28340c847221dd6c1f3a6cb368abd6263dc1a48",
+      "bytes": 1012816,
+      "modified_utc": "2026-10-09T03:24:26.117847+00:00",
       "git": "ignored_local_evidence"
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/drive-view-2.png",
-      "sha256": "a81599c89bc7f4d93c8e92ead794252d2da197e3cad2047899c9383cadf18617",
-      "bytes": 803834,
-      "modified_utc": "2026-10-09T01:02:47.492495+00:00",
+      "sha256": "3b95bfd5e87d6b70ad65137c8c60ae03b86b2165b15c08ecf45e03e0363659d1",
+      "bytes": 803831,
+      "modified_utc": "2026-10-09T03:24:26.303932+00:00",
       "git": "ignored_local_evidence"
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/drive-view-3.png",
-      "sha256": "44c9a1a57dafd7543ee8a862ca9870c0440690cf4bfdfbac33b5342e13288e60",
-      "bytes": 547370,
-      "modified_utc": "2026-10-09T01:02:47.638060+00:00",
+      "sha256": "a2e8fcd4997f478eaea00e5385f07d5a5e1692bf4af4b4a16de674abcde47e5e",
+      "bytes": 547379,
+      "modified_utc": "2026-10-09T03:24:26.431649+00:00",
       "git": "ignored_local_evidence"
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/hogg-chase.png",
-      "sha256": "65a998f0281214f752e8d139a1059d8cbbae201520b2c4e6b4a704e897c8d79f",
-      "bytes": 772839,
-      "modified_utc": "2026-10-09T01:02:48.479202+00:00",
+      "sha256": "1ca353781e3cea2e1bf5b59ca48a590136ddc388a66d41e0296d24d85609dbed",
+      "bytes": 772987,
+      "modified_utc": "2026-10-09T03:24:27.232234+00:00",
       "git": "ignored_local_evidence"
     },
     {
       "path": "media-kit/releases/v0.11.0-preview.1/captures/hogg-foot.png",
-      "sha256": "58b973816d287b44b18a2722a92b452228ff45c215214e4e7926caad640b9523",
-      "bytes": 792242,
-      "modified_utc": "2026-10-09T01:02:50.251739+00:00",
+      "sha256": "0a05fb2520ca919f6ddb9baebc3e3775e34dce0b243edb76121256dc6d2def0e",
+      "bytes": 793990,
+      "modified_utc": "2026-10-09T03:24:28.879070+00:00",
       "git": "ignored_local_evidence"
     },
     {
@@ -206,5 +206,14 @@
       "git": "ignored_local_evidence"
     }
   ],
-  "next_action": "User reviews local preview; do not publish before approval"
+  "next_action": "User reviews local preview; do not publish before approval",
+  "website_trial_authorization": "website-authorization.json",
+  "current_stage": "website_trial_authorized_only",
+  "revalidation": {
+    "at": "2026-10-09T03:25:31.871301+00:00",
+    "integrated_main": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "runtime_unchanged": true,
+    "stage3_passed": 19,
+    "stage2_passed": 57
+  }
 }

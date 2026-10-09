@@ -1,39 +1,42 @@
 {
   "version": "v0.11.0-preview.1",
   "classification": "正式玩法版本的本地审核稿",
-  "updated_at": "2026-10-09T01:01:56.323494+00:00",
+  "updated_at": "2026-10-09T03:25:05.625396+00:00",
   "user_instruction": "开发恐龙快打第三关，先不上线，等我审核后再上",
   "development": "ready_for_review",
-  "approval": "pending",
+  "approval": "website_trial_authorized_only",
   "task_id": "01a11e15-1529-7582-99ff-33cd54debef8-dino-stage3-01",
   "approval_event_id": "cadillacs-stage3-preview-20261009-review-01",
   "branch": "codex/cadillacs-stage3-preview-20261009",
   "local_url": "http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3",
   "website": {
-    "status": "not_published_user_review",
+    "status": "authorized_pending_deploy",
     "last_recorded_version": "v0.10.1",
-    "live_rechecked_this_task": false
+    "live_rechecked_this_task": false,
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
+    "authorized_runtime_sha256": "932c3d69fa116a9c777afef82a82a58c9c1d020db09ebb9262e7bd6a3b0a7825"
   },
   "toy": {
-    "status": "not_submitted_user_review",
+    "status": "excluded_by_user_do_not_publish",
     "last_recorded_version": "v0.10.1"
   },
   "taptap": {
-    "status": "not_submitted_user_review",
+    "status": "excluded_by_user_do_not_publish",
     "live_rechecked_this_task": false
   },
   "bilibili": {
-    "status": "not_updated_user_review"
+    "status": "held_pending_user_trial"
   },
   "git": {
-    "local_commit": "See commit containing this record; local branch only",
+    "local_commit": "f9004a48",
     "push": false,
-    "merge": false
+    "merge": true
   },
   "pending_after_approval": [
-    "整合最新主线并复验后正常推送",
-    "核验网站实际部署",
-    "按长期授权同步对应Toy并分别核验状态",
-    "按正式版本节奏核对简介和其他相关渠道，不把提交审核说成上线"
-  ]
+    "完成网站试玩与核验",
+    "其他游戏平台保持用户禁止状态；不得加入22点自动批次，需后续明确授权",
+    "继续收集用户试玩意见，不发布视频或更新外部说明"
+  ],
+  "latest_user_instruction": "发布到网站里我试玩一下，不要发布到其他游戏平台",
+  "approval_record": "website-authorization.json"
 }

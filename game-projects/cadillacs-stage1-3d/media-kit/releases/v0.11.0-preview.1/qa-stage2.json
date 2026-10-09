@@ -1,5 +1,5 @@
 {
- "date": "2026-10-09T00:52:58.815Z",
+ "date": "2026-10-09T03:24:42.328Z",
  "pass": 57,
  "total": 57,
  "results": [
@@ -139,9 +139,9 @@
    "name": "偷猎者举枪瞄准后开枪",
    "pass": true,
    "info": {
-    "t": 12.75,
+    "t": 13.38,
     "type": "rifleShot",
-    "id": 8,
+    "id": 9,
     "hit": true
    }
   },
@@ -157,9 +157,9 @@
    "pass": true,
    "info": [
     {
-     "t": 13.4,
+     "t": 14.05,
      "type": "rifleShot",
-     "id": 8,
+     "id": 9,
      "hit": false
     }
    ]
