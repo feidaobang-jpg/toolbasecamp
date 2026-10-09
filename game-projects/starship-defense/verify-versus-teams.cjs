@@ -55,7 +55,7 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
     await p.keyboard.press('KeyR');await sleep(100);
     // 每人设施上限 9；只能拆自己的
     const bld=await p.evaluate(()=>{const v=__gameQA.versus,q=__gameQA;v.seat('blue0').gold=1e5;v.seat('blue1').gold=1e5;let ok=0;
-      for(let i=0;i<12;i++){const w=v.world('blue',-70+i*12,-36);if(!v.build('blue0','wall',w.x,w.z,0))ok++;}
+      for(const z of [-54,-66])for(let x=-100;x<=100&&ok<9;x+=12){const w=v.world('blue',x,z);if(!v.build('blue0','wall',w.x,w.z,0))ok++;}
       const w2=v.world('blue',20,-48);const r2=v.build('blue1','mgTurret',w2.x,w2.z,0);const mate=q.buildings.find(b=>b.owner==='blue1');
       return {mine:ok,limit:v.zoneReason('blue0','wall',0,900-60),mateBuilt:r2,demolishMate:v.demolish('blue0',mate)};});
     assert.equal(bld.mine,9);assert.ok(bld.limit.includes('9'));assert.equal(bld.mateBuilt,'');assert.ok(bld.demolishMate.includes('自己'));pass('每人最多 9 座设施；不能拆队友建的',bld);

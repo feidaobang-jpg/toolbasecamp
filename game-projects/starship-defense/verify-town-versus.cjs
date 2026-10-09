@@ -56,7 +56,7 @@ const results=[],pass=(name,data)=>{results.push({name,pass:true,data});console.
   const waves=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state;q.Game.state='pause';for(const t of s.seats)v.clearAI(t.pid);s.time=19.99;v.update(.02);
     const first=s.units.filter(u=>u.laneMinion),split=Object.fromEntries(['blue','red'].map(t=>[t,first.filter(u=>u.team===t).length])),ids=first.map(u=>u.id);const pop=v.popOf('blue0');
     s.time=44.99;v.update(.02);return {split,pop,next:s.units.filter(u=>u.laneMinion&&!ids.includes(u.id)).length,lanes:[...new Set(first.map(u=>u.side))],profiles:[...new Set(first.map(u=>u.prof))]};});
-  assert.deepEqual(waves.split,{blue:6,red:6});assert.equal(waves.pop,0);assert.equal(waves.next,12);assert.equal(waves.lanes.length,2);pass('首波20秒、每25秒双路自动兵线且不占付费人口',waves);
+  assert.deepEqual(waves.split,{blue:9,red:9});assert.equal(waves.pop,0);assert.equal(waves.next,18);assert.equal(waves.lanes.length,3);pass('首波20秒、每25秒三路自动兵线且不占付费人口',waves);
   const growth=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state,h=q.player,seat=v.seat('blue0');const before={gold:seat.gold,hp:h.maxHp};let count=0;
    for(const u of [...s.units].filter(u=>u.team==='red')){h.pos.copy(u.mesh.position);v.damage(u,9999,'blue','hero','blue0');count++;}
    const lv=seat.level,max=h.maxHp,xp=seat.xp,earned=seat.gold-before.gold;const snap=v.snapshot();h.dead=true;v.heroDown(h,'red','red0');h.reset(h.cls);v.respawned(h);

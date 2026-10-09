@@ -2485,7 +2485,7 @@ function useMedkit(){
 function throwGrenade(){
   if(player.dead||place.kind)return false;
   if(player.inVehicle){showMsg('下车后可投掷手雷',1.2);return false;}
-  if(vsOn()){if(player.grenadeCd>0){if(player===versus.state.local)showMsg('手雷冷却中 '+Math.ceil(player.grenadeCd)+' 秒',.9);return false;}player.grenadeCd=VS_RULES.grenadeCd;}
+  if(vsOn()){if(player.grenadeCd>0){if(player===versus.state.local)showMsg('手雷冷却中 '+Math.ceil(player.grenadeCd)+' 秒',.9);return false;}player.grenadeCd=versus.grenadeCooldown(player);}
   const from=player.pos.clone();from.y+=1.45;
   const facing=camForward(false),aim=CombatControls.autoAim?autoAim(from,facing,26,.65):{mo:null};
   const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,22);
@@ -4217,7 +4217,7 @@ function computerHumanInput(h){
 }
 function rootData(obj){
   const mesh=obj.mesh,aim={};for(const k of ['turret','gun','head','barrel']){const part=mesh.userData[k];if(part?.isObject3D)aim[k]=part.quaternion.toArray();}
-  return {id:coopId(obj),s:Object.fromEntries(['kind','slot','type','hp','maxHp','dead','yaw','rotY','isWall','alt','radius','hitH','wild','fly','anim','scale','dmg','val','life','friendly','heat','moving','team'].filter(k=>obj[k]!==undefined).map(k=>[k,obj[k]])),pos:mesh.position.toArray(),q:mesh.quaternion.toArray(),scale:mesh.scale.toArray(),visible:mesh.visible,aim};
+  return {id:coopId(obj),s:Object.fromEntries(['kind','slot','type','hp','maxHp','dead','yaw','rotY','isWall','alt','radius','hitH','wild','fly','anim','scale','dmg','val','life','friendly','heat','moving','team','owner','vsLaneTower'].filter(k=>obj[k]!==undefined).map(k=>[k,obj[k]])),pos:mesh.position.toArray(),q:mesh.quaternion.toArray(),scale:mesh.scale.toArray(),visible:mesh.visible,aim};
 }
 function applyRoot(obj,row){
   Object.assign(obj,row.s);obj.coopId=row.id;obj.mesh.position.fromArray(row.pos);obj.mesh.quaternion.fromArray(row.q);obj.mesh.scale.fromArray(row.scale);obj.mesh.visible=row.visible;
@@ -4615,11 +4615,11 @@ function versusBank(){
   const why=versus.upgradeBank(player.vsPid);if(why){showMsg(why,1.4);AudioSys.sfx('click');}
 }
 function versusSetLane(lane){
-  const t=mySeat(),order=['left','right','alt'];
-  const next=lane||order[(order.indexOf(t.lane)+1)%3];
+  const t=mySeat(),order=['left','mid','right','alt'];
+  const next=lane||order[(order.indexOf(t.lane)+1)%order.length];
   if(versusGuest())versusSendCommand({kind:'vsLane',lane:next});
   versus.setLane(player.vsPid,next);
-  showMsg('进攻路线：'+({left:'左路',right:'右路',alt:'左右交替'})[next],1.1);renderVersusPanel();
+  showMsg('进攻路线：'+({left:'上路',mid:'中路',right:'下路',alt:'三路轮换'})[next],1.1);renderVersusPanel();
 }
 function versusWeapon(id){
   if(Game.weapons.includes(id)){selectWeapon(id);return;}
@@ -4665,10 +4665,10 @@ function updVersusHUD(dt){
   else if(time<VS_RULES.lateBoost)phase='收入 +50% '+fmtTime(VS_RULES.lateBoost-time)+' 后';
   else phase='时限 '+fmtTime(VS_RULES.limit-time);
   $('vsClock').textContent=fmtTime(time);$('vsPhase').textContent=phase+(time>=VS_RULES.prep?' · 基础兵 '+Math.ceil(VS_RULES.laneEvery-(time-VS_RULES.prep)%VS_RULES.laneEvery)+'秒':'');
-  const lane=({left:'左路',right:'右路',alt:'交替'})[t.lane];
+  const lane=({left:'上路',mid:'中路',right:'下路',alt:'轮换'})[t.lane];
   let mates='';
-  if(n>1){const list=versus.members(me).filter(s=>s.pid!==t.pid);mates='\n👥 '+'队友：'+list.map(s=>versus.seatName(s)+(s.ai&&s.name&&s.name!=='电脑'?'（电脑接管）':'')+' Lv'+s.bank).join(' · ');const votes=versus.members(me).filter(s=>s.surrender).length;if(votes)mates+=' · 🏳 投降 '+votes+'/'+versus.members(me).filter(s=>!s.ai).length;}
-  $('vsEco').textContent='英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':'R 出兵 · L 建造 · O 买枪 · Z 换路线'+(n>1?' · T 队伍':''));
+  if(n>1){const list=versus.members(me).filter(s=>s.pid!==t.pid);mates='\n👥 '+'队友：'+list.map(s=>versus.seatName(s)+(s.ai&&s.name&&s.name!=='电脑'?'（电脑接管）':'')+' 英雄Lv'+s.level).join(' · ');const votes=versus.members(me).filter(s=>s.surrender).length;if(votes)mates+=' · 🏳 投降 '+votes+'/'+versus.members(me).filter(s=>!s.ai).length;}
+  $('vsEco').textContent='英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%'+versus.buffText(t.pid)+'\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':'R 出兵 · L 建造 · O 买枪 · Z 换路线'+(n>1?' · T 队伍':''));
   renderWeaponBar();
   if(vsUI.open&&(vsUI.t-=dt)<=0){vsUI.t=.2;renderVersusPanel();}
   if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}

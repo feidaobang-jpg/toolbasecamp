@@ -1,0 +1,53 @@
+// Reproducible gameplay checks. Boundary cases use declared QA positioning/time;
+// keyboard, touch and frame measurements use real browser RAF.
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const {chromium}=require(process.env.PW||'C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const url=process.env.GAME_URL||'http://127.0.0.1:8809/html/game/starship-defense/index.html';
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-three-lanes-v0.31.0/qa');fs.mkdirSync(out,{recursive:true});
+const results=[],pass=(name,data)=>{results.push({name,pass:true,data});console.log('PASS',name,JSON.stringify(data??''));};
+(async()=>{const b=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11']});try{
+ const p=await b.newPage({viewport:{width:1280,height:720}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
+ await p.goto(url+'?qa=1');await p.waitForFunction(()=>window.__gameQA&&window.__ccReady);
+ await p.click('#btnVersus');await p.click('[data-vs-ai="normal"]');await p.waitForTimeout(250);
+ const arena=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state;q.Game.state='pause';s.seats.forEach(x=>v.clearAI(x.pid));q.AudioSys.master.gain.value=0;
+  const paths=v.paths();return {paths:paths.map(a=>a.map(p=>[p.x,p.z-900])),middleClear:s.solids.filter(o=>!o.cover&&Math.abs(o.x)<16&&Math.abs(o.z-900)<28).length===0,towers:q.buildings.filter(x=>x.vsLaneTower).length,camps:s.camps.length};});
+ assert.equal(arena.paths.length,3);assert.ok(arena.paths[1].every(([x])=>x===0));assert.ok(arena.paths[0].some(([x])=>x>60)&&arena.paths[2].some(([x])=>x< -60));assert.ok(arena.middleClear);assert.equal(arena.towers,6);assert.equal(arena.camps,8);pass('三条真实路线、六座外塔、八处野区且中路没有岩山',arena);
+ const wave=await p.evaluate(()=>{const v=__gameQA.versus,s=v.state;s.time=19.99;v.update(.02);const units=s.units.filter(u=>u.laneMinion),ids=units.map(x=>x.id);s.time=44.99;v.update(.02);return {first:units.length,lanes:[...new Set(units.map(u=>u.side))],styles:[...new Set(units.map(u=>u.mesh.userData.vsCreature?.style))],next:s.units.filter(u=>u.laneMinion&&!ids.includes(u.id)).length,pop:v.popOf('blue0'),wild:s.units.filter(u=>u.team==='neutral').length};});
+ assert.equal(wave.first,18);assert.equal(wave.next,18);assert.equal(wave.lanes.length,3);assert.deepEqual(wave.styles.sort(),['guard','spitter']);assert.equal(wave.pop,0);assert.equal(wave.wild,6);pass('20秒首波、25秒三路补兵，盾甲和吐酸独立外形，不占人口',wave);
+ const roles=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state;s.time=219.99;v.update(.02);s.time=244.99;v.update(.02);const us=s.units.filter(u=>u.laneMinion),guard=us.find(u=>u.prof==='guard'),spitter=us.find(u=>u.prof==='recruit');let a=guard.hp,c=spitter.hp;v.damage(guard,10,guard.team==='blue'?'red':'blue','unit');v.damage(spitter,10,spitter.team==='blue'?'red':'blue','unit');
+  v.seat('blue0').gold=1e5;v.seat('blue0').cd={};v.send('blue0','gunners','mid');v.send('blue0','assault','mid');v.send('blue0','medics','mid');
+  return {guardDamage:a-guard.hp,spitterDamage:c-spitter.hp,siege:us.some(u=>u.prof==='siege'&&u.bldMul===2.5&&u.range>18),healer:us.some(u=>u.prof==='healer'&&u.heal>0),paid:s.units.filter(u=>u.owner==='blue0').map(u=>({prof:u.prof,style:u.mesh.userData.vsCreature?.style,side:u.side})),heroCustom:!!q.player.mesh.userData.vsCreature};});
+ assert.equal(roles.guardDamage,8);assert.equal(roles.spitterDamage,10);assert.ok(roles.siege&&roles.healer);assert.ok(roles.paid.every(u=>u.style&&u.side===0));assert.equal(roles.heroCustom,false);pass('不同兵种实际减伤/射程/攻城/治疗特性，付费兵也不再复用主角',roles);
+ const wild=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state,h=q.player;const c=s.camps.find(c=>c.id==='blue-energy'),u=c.unit;
+  for(const hero of q.coopHumans)if(hero!==h)hero.dead=true;
+  h.invulnerable=0;h.pos.set(c.x+2,0,c.z);h.hp=h.maxHp;u.cd=0;v.update(.1);const hurt=h.hp<h.maxHp,chase=u.jungleMode;
+  h.pos.set(-110,0,900);for(let i=0;i<140;i++)v.update(.05);const returned=u.jungleMode==='idle'&&u.hp===u.maxHp;
+  h.pos.set(c.x+10,0,c.z);const seat=v.seat('blue0'),g=seat.gold,xp=seat.xp,level=seat.level;v.damage(u,99999,'blue','hero','blue0');const reward=seat.gold-g,energy=seat.buffs.energy>s.time,id=u.id,next=c.next;
+  h.hp=40;v.update(2);const regen=h.hp,cd=v.grenadeCooldown(h);s.time=next-.05;v.update(.01);const tooEarly=c.unit.id===id;s.time=next;v.update(.01);const respawn=c.unit.id!==id&&!c.unit.dead;
+  return {hurt,chase,returned,reward,energy,regen,cd,tooEarly,respawn,xpGained:seat.xp!==xp||seat.level>level};});
+ assert.ok(wild.hurt&&wild.returned&&wild.energy&&wild.tooEarly&&wild.respawn&&wild.xpGained,JSON.stringify(wild));assert.equal(wild.chase,'chase');assert.equal(wild.reward,70);assert.ok(Math.abs(wild.regen-44)<.01);assert.ok(Math.abs(wild.cd-3.9)<.001);pass('野怪索敌、越界回巢回血、击杀收益、能量实效及80秒重生',wild);
+ const buff=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state,h=q.player,seat=v.seat('blue0');let c=s.camps.find(c=>c.id==='blue-rage');h.pos.set(c.x+10,0,c.z);v.damage(c.unit,99999,'blue','hero','blue0');
+  const target=s.units.find(u=>u.team==='red'&&u.laneMinion),base=target.hp;v.damage(target,10,'blue','hero','blue0');const damage=base-target.hp,expected=10*(1+(seat.level-1)*.04)*1.15*(target.armor||1);
+  const boss=s.camps.find(c=>c.id==='river-brood');h.pos.set(boss.x+10,0,boss.z);const gold=seat.gold;v.damage(boss.unit,99999,'blue','hero','blue0');const team=s.teams.blue.buffs.siege>s.time,bossGold=seat.gold-gold;
+  const before=target.hp;v.damage(target,10,'blue','unit');const boosted=before-target.hp;
+  const snap=v.snapshot();h.dead=true;v.heroDown(h,'red','red0');const cleared=Object.keys(seat.buffs).length===0,level=seat.level;h.reset(h.cls);v.respawned(h);
+  const hasNeutrals=snap.u.some(row=>row[2]===2),timers=snap.camps.length,sharedBuff=snap.buffs.blue.siege;s.time=sharedBuff+.1;const expired=!v.buffText('blue0').includes('推进');return {damage,expected,team,bossGold,boosted,expectedUnit:12.5*(target.armor||1),cleared,levelAfter:v.seat('blue0').level,level,hasNeutrals,timers,expired};});
+ assert.ok(Math.abs(buff.damage-buff.expected)<.01);assert.ok(buff.team&&buff.cleared&&buff.hasNeutrals&&buff.expired);assert.equal(buff.bossGold,120);assert.ok(Math.abs(buff.boosted-buff.expectedUnit)<.01);assert.equal(buff.levelAfter,buff.level);assert.equal(buff.timers,8);pass('狂怒与团队推进实际伤害、快照中立单位/计时、死亡清个人增益并保留等级',buff);
+ // Actual siege bullets and healer recovery, isolated from other combat.
+ const actions=await p.evaluate(()=>{const q=__gameQA,v=q.versus,s=v.state;const siege=s.units.find(u=>u.prof==='siege'&&u.team==='blue'),healer=s.units.find(u=>u.prof==='healer'&&u.team==='blue'),ally=s.units.find(u=>u.prof==='guard'&&u.team==='blue'),tower=q.buildings.find(b=>b.vsLaneTower&&b.team==='red'&&Math.abs(b.mesh.position.x)<1);
+  for(const u of s.units)if(![siege,healer,ally].includes(u)){u.dead=true;u.mesh.visible=false;}s.units=s.units.filter(u=>!u.dead);for(const h of q.coopHumans)h.dead=true;for(const b of q.buildings)b.dmg=0;
+  siege.mesh.position.copy(tower.mesh.position);siege.mesh.position.z-=17;siege.pathIdx=siege.path.length-2;siege.cd=0;siege.retarget=0;
+  healer.mesh.position.set(-65,0,840);ally.mesh.position.set(-65,0,842);ally.hp=20;ally.speed=0;healer.speed=0;const th=tower.hp;
+  for(let i=0;i<40;i++){v.update(.05);q.updBullets(.05);}return {towerDamage:th-tower.hp,healed:ally.hp>20};});
+ assert.ok(actions.towerDamage>0&&actions.healed);pass('攻城兵真实弹丸命中外塔，治疗兵实际恢复友军',actions);
+ // A fresh match for real inputs and performance, not the boundary fixture above.
+ await p.evaluate(()=>{__gameQA.exitVersus();__gameQA.startVersusAI('normal',4);__gameQA.versus.state.time=50;});await p.waitForTimeout(400);
+ const cycle=[];for(let i=0;i<4;i++){await p.keyboard.press('KeyZ');await p.waitForTimeout(60);cycle.push(await p.evaluate(()=>__gameQA.versus.seat('blue0').lane));}assert.deepEqual(cycle,['mid','right','alt','left']);pass('实际Z键遍历上中下三路与轮换',cycle);
+ await p.keyboard.down('KeyW');await p.keyboard.down('KeyE');
+ const perf=await p.evaluate(()=>new Promise(resolve=>{const samples=[],end=performance.now()+6000;let last=performance.now();const tick=t=>{samples.push(t-last);last=t;if(t<end)requestAnimationFrame(tick);else{samples.shift();samples.sort((a,b)=>a-b);const q=__gameQA;resolve({frames:samples.length,fps:1000/(samples.reduce((a,b)=>a+b,0)/samples.length),p95:samples[Math.floor(samples.length*.95)],longFrames:samples.filter(x=>x>50).length,units:q.versus.state.units.length,draws:q.renderer.info.render.calls,triangles:q.renderer.info.render.triangles});}};requestAnimationFrame(tick);}));
+ await p.keyboard.up('KeyW');await p.keyboard.up('KeyE');assert.ok(perf.fps>40);pass('4对4真实移动转镜头帧时间',perf);await p.screenshot({path:path.join(out,'desktop.png')});
+ const mob=await b.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});mob.on('pageerror',e=>errors.push(e.message));await mob.goto(url+'?qa=1');await mob.waitForFunction(()=>window.__gameQA&&window.__ccReady);await mob.tap('#btnVersus');await mob.tap('[data-vs-ai="normal"]');await mob.waitForTimeout(350);await mob.tap('#vR');await mob.waitForSelector('#vsPanel:not(.hidden)');await mob.screenshot({path:path.join(out,'mobile-portrait.png')});await mob.setViewportSize({width:844,height:390});await mob.waitForTimeout(200);await mob.screenshot({path:path.join(out,'mobile-landscape.png')});
+ await mob.tap('[data-vslane="mid"]');await mob.waitForFunction(()=>__gameQA.versus.seat('blue0').lane==='mid');pass('实际触屏中路按钮可切换派兵路线');
+ const modes=await mob.evaluate(()=>{const q=__gameQA,id=q.versus.state.matchId;q.setDeviceMode('desktop');const a=!q.isTouch;q.setDeviceMode('touch');return {desktop:a,touch:q.isTouch,same:id===q.versus.state.matchId};});assert.ok(modes.desktop&&modes.touch&&modes.same);pass('手机横竖视口、真实派兵面板和双向操作模式切换',modes);await mob.close();
+ assert.deepEqual(errors,[]);pass('本次浏览器无脚本异常');fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({results,limitations:['手机为浏览器模拟','规则边界使用QA定位/时钟，不冒称真人整局验收']},null,2));
+}finally{await b.close();}})().catch(e=>{console.error(e);fs.writeFileSync(path.join(out,'failure.txt'),String(e.stack));process.exitCode=1;});
