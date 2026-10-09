@@ -1,8 +1,8 @@
 {
   "version": "web-conquest-v0.32.0",
-  "zip_bytes": 344473,
-  "uncompressed_bytes": 1150418,
-  "zip_sha256": "a84935c024d137d3bd1ad3d2111666aea5ffef9dfa47e828e5a6124303849f90",
+  "zip_bytes": 344528,
+  "uncompressed_bytes": 1150588,
+  "zip_sha256": "af9f3cea1c848a744f36a6110788a863efa382c4d8729207f232636bd396c459",
   "files": [
     "base.css",
     "index.html",

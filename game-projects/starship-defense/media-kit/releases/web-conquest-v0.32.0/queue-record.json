@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "item_id": "chongchao-conquest-v0320-01",
+  "game_slug": "starship-defense",
+  "project_path": "game-projects/starship-defense",
+  "task_id": "01a1206f-2e3f-70b3-a6f3-6b8948cd1efd-battlefield-01",
+  "source": "Codex",
+  "branch": "codex/chongchao-battlefield-20261009",
+  "worktree": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-battlefield-20261009\\toolbasecamp",
+  "artifact_root": "D:/project/toolbasecamp-artifacts/chongchao-conquest-20261009",
+  "version": "web-conquest-v0.32.0",
+  "classification": "routine",
+  "release_kind": "major",
+  "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
+  "runtime_sha256": "ed28a5a15441114c28993a0ef001dd14ff56691b1883ad4c75adbcc828620f39",
+  "summary": "对战改为战地据点战：军事地图、五兵种八枪四载具；删除金币经验等级和升级",
+  "release_record": "game-projects/starship-defense/media-kit/releases/web-conquest-v0.32.0/release-status.json",
+  "tests": {
+    "status": "passed",
+    "local_groups": 10,
+    "online_groups": 7,
+    "production_groups": 11,
+    "physical_phone": false
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T12:45:32.210Z",
+    "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
+    "runtime_sha256": "ed28a5a15441114c28993a0ef001dd14ff56691b1883ad4c75adbcc828620f39",
+    "html_runtime_revision": "d5eafc25",
+    "runtime_matches_tested_build": true,
+    "tabs": [
+      "兵种",
+      "部署",
+      "装备",
+      "战况"
+    ],
+    "errors": [],
+    "core_regression": "qa/production/results.json",
+    "physical_phone": false,
+    "deployed_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a"
+  },
+  "package": {
+    "version": "web-conquest-v0.32.0",
+    "zip_bytes": 344528,
+    "uncompressed_bytes": 1150588,
+    "zip_sha256": "af9f3cea1c848a744f36a6110788a863efa382c4d8729207f232636bd396c459",
+    "files": [
+      "base.css",
+      "index.html",
+      "boot.js",
+      "game.compat.js",
+      "combat-controls.css",
+      "icon.svg",
+      "vendor/LICENSE.txt"
+    ],
+    "status": "built_and_smoke_tested_not_submitted",
+    "limit_bytes": 50000000
+  },
+  "automatic_batch_eligible": true,
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": "38678478981120"
+    },
+    "taptap": {
+      "status": "held_by_user",
+      "id": "962354",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "existing_video_descriptions": {
+      "status": "held_by_user",
+      "bvids": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "announcements": {
+      "status": "held_by_user",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "feedback_replies": {
+      "status": "not_applicable",
+      "reason": "直接用户需求，无本批玩家原楼"
+    },
+    "new_video": {
+      "status": "not_requested"
+    }
+  },
+  "source_feedback_keys": [],
+  "next_step": "既有北京时间22点任务b-2合并稳定版本；保留目标hold，不新建任务或新发视频",
+  "updated_at": "2026-10-09T20:48:11.834581+08:00"
+}

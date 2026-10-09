@@ -9,10 +9,10 @@
   "artifact_root": "D:/project/toolbasecamp-artifacts/chongchao-conquest-20261009",
   "build": {
     "id": "conquest0320",
-    "commit": "5c03aeeb742cbdc9daa0b9e24ecc030f9e136a02",
+    "commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
     "base_commit": "2d05005a952394e3bc95f31eb2cd77bcac858ae0",
     "dirty": false,
-    "fingerprint": "7e0f49833ff1f418a5473b6011724ab2a50e1e6163184ef8a9a64ff34898a3d0",
+    "fingerprint": "ed28a5a15441114c28993a0ef001dd14ff56691b1883ad4c75adbcc828620f39",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
   "feature_inventory": [
@@ -21,8 +21,11 @@
       "description": "三据点争夺、兵力票消耗、8秒复活与15分钟上限",
       "status": "implemented",
       "evidence_ids": [
-        "qa-local",
-        "qa-online"
+        "desktop",
+        "gameplay"
+      ],
+      "qa_ids": [
+        "qa-local"
       ]
     },
     {
@@ -30,8 +33,11 @@
       "description": "固定五兵种八武器、弹匣换弹、医疗维修补给；无成长经济",
       "status": "implemented",
       "evidence_ids": [
-        "qa-local",
-        "qa-online"
+        "desktop",
+        "gameplay"
+      ],
+      "qa_ids": [
+        "qa-local"
       ]
     },
     {
@@ -39,8 +45,11 @@
       "description": "旧镇、通信站、仓库、营地与射击/移动掩体",
       "status": "implemented",
       "evidence_ids": [
-        "qa-local",
-        "qa-online"
+        "desktop",
+        "gameplay"
+      ],
+      "qa_ids": [
+        "qa-local"
       ]
     },
     {
@@ -48,16 +57,19 @@
       "description": "越野车、坦克、轮式装甲车、直升机及损毁再补充",
       "status": "implemented",
       "evidence_ids": [
-        "qa-local",
-        "qa-online"
+        "desktop",
+        "gameplay"
+      ],
+      "qa_ids": [
+        "qa-local"
       ]
     },
     {
       "id": "conquest-network",
       "description": "1v1–4v4、主机权威同步、中途加入与断线电脑接管",
       "status": "implemented",
-      "evidence_ids": [
-        "qa-local",
+      "evidence_ids": [],
+      "qa_ids": [
         "qa-online"
       ]
     }
@@ -76,6 +88,12 @@
       "after": "军事地图中步兵/载具夺点与固定兵种装备",
       "verification": "passed",
       "evidence_ids": [
+        "desktop",
+        "aim",
+        "deployment",
+        "gameplay"
+      ],
+      "qa_ids": [
         "qa-local",
         "qa-online",
         "qa-package"
@@ -89,7 +107,8 @@
       "cause": "withHuman收尾把旧Game.weapons写回新兵种",
       "fix": "装备更新同时修改当前控制上下文；真实客机换装回归通过",
       "before_media_ids": [],
-      "after_media_ids": [
+      "after_media_ids": [],
+      "qa_ids": [
         "qa-online"
       ]
     },
@@ -109,7 +128,7 @@
       "id": "desktop",
       "file": "releases/web-conquest-v0.32.0/captures/battlefield-desktop.png",
       "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\battlefield-desktop.png",
-      "sha256": "35ec5292dab44ba24ed8eff0c45be431225efb581ec043f1af4d78a13ecb206d",
+      "sha256": "664014f778720317357c04f87668abd57bb66323848cf5baeb12586befef6739",
       "kind": "screenshot",
       "version": "web-conquest-v0.32.0",
       "build_id": "conquest0320",
@@ -127,7 +146,7 @@
       "id": "aim",
       "file": "releases/web-conquest-v0.32.0/captures/battlefield-first-person.png",
       "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\battlefield-first-person.png",
-      "sha256": "14e516df22d2d8d7741471349c9991f658d94cc3ba6eab0cf96b978d0f5af4ff",
+      "sha256": "0527e74807a20b1ee75dced6f720e97e9d22e8d08783f659ac314ea92e18a0f2",
       "kind": "screenshot",
       "version": "web-conquest-v0.32.0",
       "build_id": "conquest0320",
@@ -145,7 +164,7 @@
       "id": "touch-landscape",
       "file": "releases/web-conquest-v0.32.0/qa/touch-844x390.png",
       "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\qa\\touch-844x390.png",
-      "sha256": "a1648f0b5680b9bf8873a858d98112cd91e720579c2336e86f612d0cb4f96765",
+      "sha256": "f593fb5b17a670ef27b3de00c5bfe7e3dade2886ee3c8e5d2cfd5382bfad4323",
       "kind": "screenshot",
       "version": "web-conquest-v0.32.0",
       "build_id": "conquest0320",
@@ -163,7 +182,7 @@
       "id": "touch-portrait",
       "file": "releases/web-conquest-v0.32.0/qa/touch-390x844.png",
       "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\qa\\touch-390x844.png",
-      "sha256": "b9f5848b85a7077d4ca61656be8d3cb0ecfd6851d3cabcac7900314cc03c0ee6",
+      "sha256": "7374585fae2f3a462359ac21f028f5a8572046d1ac39c506e160109f68028775",
       "kind": "screenshot",
       "version": "web-conquest-v0.32.0",
       "build_id": "conquest0320",
@@ -181,7 +200,7 @@
       "id": "deployment",
       "file": "releases/web-conquest-v0.32.0/qa/touch-deployment.png",
       "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\qa\\touch-deployment.png",
-      "sha256": "818505210ee931e91a5c799ab3cf41f5f9d797a5727b9c54863cab5f6f0930c4",
+      "sha256": "525f3afd21d1d5152fddb4276322872982034dd55c5a432acbc1ed0ecd5078b4",
       "kind": "screenshot",
       "version": "web-conquest-v0.32.0",
       "build_id": "conquest0320",
@@ -199,7 +218,7 @@
       "id": "gameplay",
       "file": "releases/web-conquest-v0.32.0/captures/gameplay-realtime.webm",
       "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\gameplay-realtime.webm",
-      "sha256": "1a9188ccc9aea07dd0b862cf9137b5335a7d0aadfafb53268e1eb6c23aa8f75c",
+      "sha256": "7a27911b5fb3c698f8a0f3a9ffc4f8b36de168cf2c5e90ba9dcde6eea52eceda",
       "kind": "video",
       "version": "web-conquest-v0.32.0",
       "build_id": "conquest0320",
@@ -207,7 +226,7 @@
       "description": "实际浏览器按键试玩；触屏为桌面模拟",
       "width": 1440,
       "height": 810,
-      "duration_seconds": 19.36,
+      "duration_seconds": 19.44,
       "audio": "none",
       "visual_review": "not-run",
       "audio_review": "not-applicable",
@@ -215,29 +234,61 @@
     }
   ],
   "historical_media": [],
-  "qa": {
-    "device": "Windows desktop / Microsoft Edge headless / ANGLE D3D11",
-    "local": "qa/results.json",
-    "online": "qa/online-results.json",
-    "package": "qa/package-smoke.json",
-    "physical_phone": false,
-    "human_balance": false,
-    "status": "passed",
-    "additional": [
-      "qa/keyboard.json",
-      "qa/touch-final.json",
-      "qa/vehicle-respawn.json"
-    ],
-    "local_assertion_groups": 10,
-    "online_assertion_groups": 7
-  },
+  "qa": [
+    {
+      "id": "qa-local",
+      "device": "Windows desktop / Edge / ANGLE D3D11",
+      "method": "Real keyboard and isolated rule simulation; 1v1 and 4v4 complete matches",
+      "result": "passed",
+      "evidence": "qa/results.json",
+      "physical_phone": false
+    },
+    {
+      "id": "qa-online",
+      "method": "Three actual local WebSocket clients and fourth late join",
+      "result": "passed",
+      "evidence": "qa/online-results.json"
+    },
+    {
+      "id": "qa-package",
+      "method": "Independent package with all nonlocal HTTP requests blocked; keyboard gameplay and RV start regression",
+      "result": "passed",
+      "evidence": "qa/package-smoke.json"
+    },
+    {
+      "id": "qa-production",
+      "method": "Public website full core regression followed by final bundle hash and touch-label check",
+      "result": "passed",
+      "evidence": [
+        "qa/production/results.json",
+        "website-assets.json"
+      ]
+    },
+    {
+      "id": "qa-touch",
+      "method": "Landscape/portrait/small viewport layout, 44 CSS px targets and two-way input mode switch",
+      "result": "passed",
+      "physical_phone": false,
+      "evidence": [
+        "qa/touch-final.json",
+        "qa/touch-labels.json"
+      ]
+    },
+    {
+      "id": "qa-vehicle",
+      "method": "Destroy occupied tank; casualty/ticket deduction and vehicle respawn",
+      "result": "passed",
+      "evidence": "qa/vehicle-respawn.json"
+    }
+  ],
   "readiness": {
     "overview": "partial",
     "update": "partial",
     "gaps": [
       "录像不含游戏音轨，未做音频验收",
       "未拍摄全部载具完整战斗镜头",
-      "手机为浏览器模拟，未做真机与真人对战平衡"
+      "手机为浏览器模拟，未做真机与真人对战平衡",
+      "录像已保存并核验格式，但未完成整段视听审片；不得据此自动发新片"
     ]
   },
   "approval": {
@@ -246,15 +297,94 @@
     "policy": "2026-10-09-website-immediate"
   },
   "website": {
-    "status": "pending_deploy",
-    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T12:45:32.210Z",
+    "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
+    "runtime_sha256": "ed28a5a15441114c28993a0ef001dd14ff56691b1883ad4c75adbcc828620f39",
+    "html_runtime_revision": "d5eafc25",
+    "runtime_matches_tested_build": true,
+    "tabs": [
+      "兵种",
+      "部署",
+      "装备",
+      "战况"
+    ],
+    "errors": [],
+    "core_regression": "qa/production/results.json",
+    "physical_phone": false,
+    "deployed_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a"
   },
   "channels": {
-    "toy": "pending_22_batch",
-    "taptap": "pending_22_batch_subject_to_existing_hold",
-    "existing_video_descriptions": "pending_22_batch_subject_to_existing_hold",
-    "announcements": "pending_22_batch_subject_to_existing_hold",
-    "new_video": "not_requested"
+    "toy": {
+      "status": "pending_22_batch",
+      "id": "38678478981120"
+    },
+    "taptap": {
+      "status": "held_by_user",
+      "id": "962354",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "existing_video_descriptions": {
+      "status": "held_by_user",
+      "bvids": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "announcements": {
+      "status": "held_by_user",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "feedback_replies": {
+      "status": "not_applicable",
+      "reason": "直接用户需求，无本批玩家原楼"
+    },
+    "new_video": {
+      "status": "not_requested"
+    }
   },
   "activities_check": {
     "scope": "related existing Toy participation; no new video or Toy submission in this task",
@@ -278,5 +408,6 @@
       "id": "qa-package",
       "file": "qa/package-smoke.json"
     }
-  ]
+  ],
+  "automatic_batch_eligible": true
 }

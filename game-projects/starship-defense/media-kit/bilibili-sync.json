@@ -130,6 +130,18 @@
       "summary": "账号云存档：普通模式检查点自动备份、三快照恢复、云端本地冲突先选不覆盖；网站与Toy同版上线。",
       "record": "releases/web-cloudsave-v0.24.0/bilibili-sync.json",
       "recorded_at": "2026-10-07T22:42:00+08:00"
+    },
+    {
+      "version": "web-conquest-v0.32.0",
+      "status": "pending_22_batch_subject_to_existing_hold",
+      "changes": [
+        "战地三据点战，固定兵种装备与兵力票取代成长经济",
+        "八种枪械、四类军用载具、阵亡部署和联机同步"
+      ],
+      "record": "releases/web-conquest-v0.32.0/handoff.json",
+      "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
+      "website_verified": true,
+      "new_video": "not_requested"
     }
   ],
   "comment_corrections": [
