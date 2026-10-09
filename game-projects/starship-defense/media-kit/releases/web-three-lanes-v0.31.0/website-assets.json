@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-09T05:13:16.998628+00:00",
+  "status": "public_verified",
+  "source_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+  "resources": [
+    {
+      "file": "index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "http": 200,
+      "ok": true,
+      "comparison": "HTML exact after stripping deployment asset version queries only",
+      "remote_sha256": "8c54abcbf3e96b25e9183bee4146384e1b57111405cc8a3c28c6a3a8d5bf8010",
+      "local_sha256": "a096bfa639a80680d54bd33a1b708605000e1c0c6f04c9505d4707eebf5965d8",
+      "bytes": 56791
+    },
+    {
+      "file": "game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+      "http": 200,
+      "ok": true,
+      "comparison": "byte_sha256",
+      "remote_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+      "local_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+      "bytes": 1111112
+    },
+    {
+      "file": "game.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js",
+      "http": 200,
+      "ok": true,
+      "comparison": "byte_sha256",
+      "remote_sha256": "bdcb8ef4ee552ab3545224ea82aa779a4e928a16f347facd2e7c79f0f683a091",
+      "local_sha256": "bdcb8ef4ee552ab3545224ea82aa779a4e928a16f347facd2e7c79f0f683a091",
+      "bytes": 322482
+    },
+    {
+      "file": "rv-breakout.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/rv-breakout.js",
+      "http": 200,
+      "ok": true,
+      "comparison": "byte_sha256",
+      "remote_sha256": "6c9ea7139e05e6411deefb618028320cd7173df31736ffcaca553df50ab5c1f4",
+      "local_sha256": "6c9ea7139e05e6411deefb618028320cd7173df31736ffcaca553df50ab5c1f4",
+      "bytes": 26300
+    },
+    {
+      "file": "rv-town.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/rv-town.js",
+      "http": 200,
+      "ok": true,
+      "comparison": "byte_sha256",
+      "remote_sha256": "9e3f3b9f80781bd9d5fa3f8b15eef341dc57de86fd527e2004baf36107820787",
+      "local_sha256": "9e3f3b9f80781bd9d5fa3f8b15eef341dc57de86fd527e2004baf36107820787",
+      "bytes": 9175
+    },
+    {
+      "file": "versus.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/versus.js",
+      "http": 200,
+      "ok": true,
+      "comparison": "byte_sha256",
+      "remote_sha256": "b9dbf6e14db7c986961a8732f0dfcab745cf6cbea973fa22724fa8778124f930",
+      "local_sha256": "b9dbf6e14db7c986961a8732f0dfcab745cf6cbea973fa22724fa8778124f930",
+      "bytes": 96745
+    },
+    {
+      "file": "versus-creatures.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/versus-creatures.js",
+      "http": 200,
+      "ok": true,
+      "comparison": "byte_sha256",
+      "remote_sha256": "333f134ad0a764f6aae6eb2a547114601e6bca0a14597cf3b00a28abebf8471f",
+      "local_sha256": "333f134ad0a764f6aae6eb2a547114601e6bca0a14597cf3b00a28abebf8471f",
+      "bytes": 4589
+    }
+  ]
+}

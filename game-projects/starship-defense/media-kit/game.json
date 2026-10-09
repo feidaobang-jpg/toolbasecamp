@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-shop-scroll-v0.29.2-menu-text1",
+  "current_version": "web-three-lanes-v0.31.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,8 +12,14 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_l0jtub7g/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-shop-scroll-v0.29.2/handoff.json",
-  "pending_toy_merge": [],
+  "qa": "releases/web-three-lanes-v0.31.0/handoff.json",
+  "pending_toy_merge": [
+    {
+      "version": "web-three-lanes-v0.31.0",
+      "status": "pending_22_batch",
+      "record": "releases/web-three-lanes-v0.31.0/release-status.json"
+    }
+  ],
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
@@ -739,8 +745,8 @@
     "reply_status": "public_verified"
   },
   "versus": {
-    "version": "web-versus-teams-v0.27.0",
-    "design": "design/versus-mode.md（第 17 节为多人）",
+    "version": "web-three-lanes-v0.31.0",
+    "design": "design/three-lanes-v0.31.md",
     "module": "public/html/game/starship-defense/versus.js",
     "server": "server/coop_lobby.py：mode=versus，size 1–4（上限 2×size），diff，每人 team，pick 消息",
     "record_key": "chongchao-versus-record-v1（1 对 1 沿用原键，多人键名加 -2/-3/-4）",
@@ -756,7 +762,7 @@
       "capture-versus-teams.cjs"
     ]
   },
-  "website_deploy_record": "releases/web-shop-scroll-v0.29.2/website.json",
+  "website_deploy_record": "releases/web-three-lanes-v0.31.0/website.json",
   "development_model_scope": "确认v0.26.0/v0.27.0虫潮对战模式的开发来源；更早版本未完整核对，Codex完成接管核验和视频制作。",
   "current_video_preparation": {
     "episode": "wish-versus-20261008",
@@ -800,19 +806,37 @@
   },
   "development_preview": {
     "version": "web-three-lanes-v0.31.0",
-    "status": "tested_ready_for_website",
-    "handoff": "releases/web-three-lanes-v0.31.0/handoff.json",
-    "release_record": "releases/web-three-lanes-v0.31.0/release-status.json",
-    "approval": {
-      "required": false,
-      "status": "not_required",
-      "policy": "2026-10-09-website-immediate",
-      "evidence": "所有修改代码对网站立刻生效。就是做完后直接更新网站，除非我单独说要审核的。其他按定时任务走。"
-    }
+    "status": "released_to_website",
+    "supersedes": "web-town-versus-v0.30.0",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "handoff": "releases/web-three-lanes-v0.31.0/handoff.json"
   },
   "pending_channel_release": {
     "version": "web-three-lanes-v0.31.0",
-    "status": "website_verification_then_22_batch",
+    "status": "pending_22_batch",
     "record": "releases/web-three-lanes-v0.31.0/release-status.json"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T05:14:27.175293+00:00",
+    "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+    "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+    "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+    "evidence": [
+      "website-assets.json",
+      "qa/public/results.json",
+      "qa/public-rv/results.json"
+    ],
+    "public_checks": 29,
+    "physical_phone": false
+  },
+  "current_development_tool": "Codex",
+  "rv_town": {
+    "version": "web-three-lanes-v0.31.0",
+    "module": "public/html/game/starship-defense/rv-town.js",
+    "single_player": true,
+    "zombie_count": 36,
+    "infection_zones": 6
   }
 }

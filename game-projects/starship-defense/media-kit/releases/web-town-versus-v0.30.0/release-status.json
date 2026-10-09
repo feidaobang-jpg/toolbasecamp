@@ -8,7 +8,7 @@
   "branch": "codex/chongchao-town-versus-20261009",
   "worktree": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-town-versus-20261009\\toolbasecamp",
   "version": "web-town-versus-v0.30.0",
-  "classification": "review_required",
+  "classification": "routine",
   "base_commit": "7260ea242a7f5718b72e09ec67fec4a9dbcc789d",
   "source_commit": "2514e44f1d4b569b566a3ffc98ee65e568cb47aa",
   "runtime_sha256": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
@@ -24,35 +24,33 @@
   },
   "preview_url": "http://127.0.0.1:8809/html/game/starship-defense/index.html",
   "website": {
-    "status": "not_deployed_pending_review"
+    "status": "included_in_v031",
+    "record": "../web-three-lanes-v0.31.0/website.json"
   },
   "approval": {
-    "status": "pending",
-    "evidence": null,
-    "approved_targets": [],
-    "proposed_targets": [
-      "website",
-      "existing_toy_mapping",
-      "existing_taptap_mapping",
-      "existing_video_descriptions_after_public_verification"
-    ]
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate",
+    "evidence": "所有修改代码对网站立刻生效。就是做完后直接更新网站，除非我单独说要审核的。其他按定时任务走。",
+    "note": "原pending仅由旧默认规则产生；本任务续作后v031合并发布，不是人工approved"
   },
   "automatic_batch_eligible": false,
   "source_feedback_keys": [],
   "channels": {
-    "website": "hold_pending_user_review",
-    "toy": "hold_pending_user_review",
-    "taptap": "hold_pending_user_review",
-    "video_descriptions": "hold_pending_user_review",
-    "announcements": "hold_pending_user_review",
-    "feedback_replies": "hold_pending_user_review"
+    "website": "superseded_by_v031",
+    "toy": "superseded_by_v031",
+    "taptap": "superseded_by_v031",
+    "video_descriptions": "superseded_by_v031",
+    "announcements": "superseded_by_v031",
+    "feedback_replies": "superseded_by_v031"
   },
   "notification": {
     "task_id": "01a11ec3-a9ee-77c1-9f5e-2f9a403e5c77-01",
     "event_id": "01a11ec3-a9ee-77c1-9f5e-2f9a403e5c77-01-town-versus-review-v030-01",
     "reason": "Approval",
-    "status": "sent",
-    "sent_at": "2026-10-09T04:16:03.766961+00:00"
+    "status": "resolved",
+    "sent_at": "2026-10-09T04:16:03.766961+00:00",
+    "resolved_at": "2026-10-09T05:14:27.175293+00:00"
   },
   "created_at": "2026-10-09T04:14:18.043687+00:00",
   "next_action": "由v0.31.0统一网站发布与22点待办，不单独发布旧包",
@@ -60,5 +58,19 @@
   "superseded_at": "2026-10-09T05:10:04.707552+00:00",
   "superseded_by": "web-three-lanes-v0.31.0",
   "supersession_reason": "本任务按用户最新网站即时发布规则继续；保留原审核历史，不再等待旧默认审核",
-  "current_status": "superseded"
+  "current_status": "superseded",
+  "approval_history": [
+    {
+      "status": "pending",
+      "evidence": null,
+      "approved_targets": [],
+      "proposed_targets": [
+        "website",
+        "existing_toy_mapping",
+        "existing_taptap_mapping",
+        "existing_video_descriptions_after_public_verification"
+      ]
+    }
+  ],
+  "release_kind": "major"
 }

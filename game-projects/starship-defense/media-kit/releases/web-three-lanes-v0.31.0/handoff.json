@@ -6,7 +6,7 @@
   "created_at": "2026-10-09T05:10:04.707552+00:00",
   "classification": "routine",
   "release_kind": "major",
-  "status": "tested_ready_for_website",
+  "status": "website_public_verified_channels_pending_22",
   "build": {
     "id": "three-lanes031-9adf204cab73",
     "commit": "505ded3cc7df6b37987c3725e8497e92b908ad2f",
@@ -279,5 +279,20 @@
       "录像无游戏音轨，未逐帧视听审片",
       "不是新视频成片，不授权自动发片"
     ]
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T05:14:27.175293+00:00",
+    "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+    "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+    "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+    "evidence": [
+      "website-assets.json",
+      "qa/public/results.json",
+      "qa/public-rv/results.json"
+    ],
+    "public_checks": 29,
+    "physical_phone": false
   }
 }

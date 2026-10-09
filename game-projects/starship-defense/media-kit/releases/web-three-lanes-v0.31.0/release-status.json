@@ -31,8 +31,19 @@
     "evidence": "所有修改代码对网站立刻生效。就是做完后直接更新网站，除非我单独说要审核的。其他按定时任务走。"
   },
   "website": {
-    "status": "ready_for_deploy",
-    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T05:14:27.175293+00:00",
+    "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+    "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+    "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+    "evidence": [
+      "website-assets.json",
+      "qa/public/results.json",
+      "qa/public-rv/results.json"
+    ],
+    "public_checks": 29,
+    "physical_phone": false
   },
   "channels": {
     "toy": "pending_22_batch",
@@ -42,8 +53,11 @@
   },
   "source_feedback_keys": [],
   "feedback_replies": "not_applicable_no_external_source",
-  "automatic_batch_eligible": false,
+  "automatic_batch_eligible": true,
   "created_at": "2026-10-09T05:10:04.707552+00:00",
-  "updated_at": "2026-10-09T05:10:04.707552+00:00",
-  "next_action": "整合最新主线、复验、推送并核验网站后标记22点资格"
+  "updated_at": "2026-10-09T05:14:27.175293+00:00",
+  "next_action": "既有b-2在北京时间22点合并最新主线已验证版本，按现有映射同步Toy/TapTap与既有视频简介/公告；本次无外部原楼反馈。",
+  "status": "website_public_verified_channels_pending_22",
+  "artifact_root": "D:/project/task-artifacts/chongchao-town-versus-20261009-v031",
+  "worktree_lifecycle": "archive_after_remote_and_artifact_verification"
 }
