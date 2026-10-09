@@ -808,6 +808,7 @@
     "classification": "review_required",
     "runtime_sha256": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
     "automatic_batch_eligible": false,
-    "published_baselines_unchanged": true
+    "published_baselines_unchanged": true,
+    "source_commit": "2514e44f1d4b569b566a3ffc98ee65e568cb47aa"
   }
 }

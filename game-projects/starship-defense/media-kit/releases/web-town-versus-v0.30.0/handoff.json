@@ -8,8 +8,8 @@
   "status": "local_pending_user_review",
   "build": {
     "id": "town-versus030-db58cd345248",
-    "commit": null,
-    "dirty": true,
+    "commit": "2514e44f1d4b569b566a3ffc98ee65e568cb47aa",
+    "dirty": false,
     "fingerprint": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },

@@ -10,7 +10,7 @@
   "version": "web-town-versus-v0.30.0",
   "classification": "review_required",
   "base_commit": "7260ea242a7f5718b72e09ec67fec4a9dbcc789d",
-  "source_commit": null,
+  "source_commit": "2514e44f1d4b569b566a3ffc98ee65e568cb47aa",
   "runtime_sha256": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
   "build_id": "town-versus030-db58cd345248",
   "tests": {
@@ -51,8 +51,10 @@
     "task_id": "01a11ec3-a9ee-77c1-9f5e-2f9a403e5c77-01",
     "event_id": "01a11ec3-a9ee-77c1-9f5e-2f9a403e5c77-01-town-versus-review-v030-01",
     "reason": "Approval",
-    "status": "pending"
+    "status": "sent",
+    "sent_at": "2026-10-09T04:16:03.766961+00:00"
   },
   "created_at": "2026-10-09T04:14:18.043687+00:00",
-  "next_action": "本人在本地试玩完成版本，记录审核意见和批准渠道；未批准前禁止合并部署主线或进入22点自动发布。"
+  "next_action": "本人在本地试玩完成版本，记录审核意见和批准渠道；未批准前禁止合并部署主线或进入22点自动发布。",
+  "updated_at": "2026-10-09T04:15:43.273596+00:00"
 }
