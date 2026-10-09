@@ -4,6 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const pw=process.env.PW||'D:/project/godot/absurd-3d-daily/node_modules/playwright';
 const {chromium}=require(pw);
 const url=process.env.GAME_URL||'http://127.0.0.1:8798/html/game/starship-defense/index.html';
+const teamSize=Number(process.env.VERSUS_SIZE||1);
 const out=process.env.QA_OUTPUT||path.join(__dirname,'qa/out/versus-panel-scroll');
 fs.mkdirSync(out,{recursive:true});
 const results=[],sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -36,16 +37,17 @@ async function metrics(f){return f.evaluate(()=>{
   const g=document.getElementById('vsGrid'),p=document.getElementById('vsPanel'),s=document.getElementById('stage'),r=p.getBoundingClientRect();
   return {top:g.scrollTop,height:g.clientHeight,total:g.scrollHeight,panelHeight:p.offsetHeight,stageHeight:s.offsetHeight,topOffset:p.offsetTop,
     within:r.left>=-1&&r.top>=-1&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1,
-    action:getComputedStyle(g.querySelector('button b')).touchAction,last:g.lastElementChild.querySelector('b').textContent};
+    action:getComputedStyle(g.querySelector('button b')).touchAction,last:g.lastElementChild.querySelector('b').textContent,
+    clipped:[...g.children].filter(b=>b.scrollHeight>b.clientHeight+1).map(b=>b.querySelector('b').textContent)};
 });}
 (async()=>{
  const b=await chromium.launch({channel:'msedge',headless:true,args:['--use-angle=d3d11','--mute-audio']});
  try{
-  for(const [width,height] of [[1280,720],[844,390],[844,346],[390,844],[346,844],[320,568],[844,260]]){
+  for(const [width,height] of JSON.parse(process.env.QA_VIEWPORTS||'[[1280,720],[844,390],[844,346],[390,844],[346,844],[320,568],[844,260]]')){
    const mobile=width!==1280,ctx=await b.newContext({viewport:{width,height},hasTouch:mobile,isMobile:mobile,userAgent:mobile?ua:undefined,
      recordVideo:width===390&&height===844?{dir:path.join(out,'video'),size:{width,height}}:undefined});
    const p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));const f=await gameFrame(p);
-   await f.locator('#btnVersus')[mobile?'tap':'click']();await f.locator('[data-vs-ai="easy"]')[mobile?'tap':'click']();
+   await f.locator('#btnVersus')[mobile?'tap':'click']();await f.locator('[data-vs-size="'+teamSize+'"]')[mobile?'tap':'click']();await f.locator('[data-vs-ai="easy"]')[mobile?'tap':'click']();
    await f.waitForFunction(()=>__gameQA.versus.state.active);
    // Test-funded seat in preparation, so wave units do not block the placement check.
    await f.evaluate(()=>{__gameQA.versus.seat('blue0').gold=20000;__gameQA.versus.state.time=0;});
@@ -55,6 +57,7 @@ async function metrics(f){return f.evaluate(()=>{
     else await f.locator('[data-vstab="'+tab+'"]')[mobile?'tap':'click']();
     await f.waitForFunction(tab=>!document.getElementById('vsPanel').classList.contains('hidden')&&document.getElementById('vsGrid').dataset.sig.startsWith(tab+':'),tab);await sleep(150);
     let m=await metrics(f);assert.ok(m.within,'panel stays inside viewport');assert.ok(m.height>=44,'usable item area');
+    assert.deepEqual(m.clipped,[],'item descriptions and purchase states are not clipped');
     assert.equal(m.action,'pan-x pan-y','card descendants allow both transformed axes');
     if(m.total>m.height+2){
       if(mobile){await swipe(p,f);assert.ok((await metrics(f)).top>m.top+5,'real swipe scrolls '+tab);}
@@ -67,7 +70,7 @@ async function metrics(f){return f.evaluate(()=>{
     for(let n=0;n<12;n++)await f.locator('[data-vspage="1"]')[mobile?'tap':'click']();
     m=await metrics(f);assert.ok(m.top+m.height>=m.total-2,'paging reaches last item');
     const visible=await f.evaluate(()=>{const g=document.getElementById('vsGrid'),a=g.getBoundingClientRect(),r=g.lastElementChild.getBoundingClientRect();return r.left>=a.left-1&&r.top>=a.top-1&&r.right<=a.right+1&&r.bottom<=a.bottom+1;});
-    assert.ok(visible,'last card fully visible');
+    assert.ok(visible,'last card fully visible: '+JSON.stringify(m));
     if(tab==='build'){
       await p.screenshot({path:path.join(out,width+'x'+height+'-build.png')});
       await f.locator('#vsGrid .vs-card').nth(4)[mobile?'tap':'click']();
@@ -80,7 +83,8 @@ async function metrics(f){return f.evaluate(()=>{
       const before=await f.evaluate(()=>__gameQA.versus.seat('blue0').gold);
       await f.locator('#vsGrid .vs-card').last()[mobile?'tap':'click']();
       assert.equal(await f.evaluate(()=>__gameQA.Game.curWeapon),'missilePod');
-      assert.ok(await f.evaluate(()=>__gameQA.Game.weapons.includes('missilePod')));assert.ok(before-(await f.evaluate(()=>__gameQA.versus.seat('blue0').gold))>2090,'purchase deducts price');
+      assert.ok(await f.evaluate(()=>__gameQA.Game.weapons.includes('missilePod')));
+      const paid=before-(await f.evaluate(()=>__gameQA.versus.seat('blue0').gold));assert.ok(paid>=2040&&paid<=2100,'purchase deducts 2100, allowing one 60-gold income tick');
       await f.locator('#vsGrid .vs-card').nth(5)[mobile?'tap':'click']();assert.equal(await f.evaluate(()=>__gameQA.Game.curWeapon),'plasma');
       await p.screenshot({path:path.join(out,width+'x'+height+'-weapons.png')});
     }
