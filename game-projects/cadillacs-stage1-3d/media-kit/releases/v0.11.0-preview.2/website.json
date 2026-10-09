@@ -1,0 +1,70 @@
+{
+  "checkedAt": "2026-10-09T09:25:31.671Z",
+  "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+  "version": "v0.11.0-preview.2",
+  "rows": [
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "touch": false,
+      "area": 6,
+      "z": 5.1,
+      "passed": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "touch": false,
+      "area": 7,
+      "z": 5.1,
+      "passed": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "touch": false,
+      "phase": "drive",
+      "z": 4.300000000000001,
+      "passed": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "touch": true,
+      "area": 6,
+      "z": 5.1,
+      "passed": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "touch": true,
+      "area": 7,
+      "z": 5.1,
+      "passed": true
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "touch": true,
+      "phase": "drive",
+      "z": 4.300000000000001,
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "physicalPhone": false,
+  "fixture": "newGame/clear wave/demo immunity only locates scenario; movement uses keyboard or CDP touch"
+}

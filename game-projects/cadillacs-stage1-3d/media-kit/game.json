@@ -1,7 +1,7 @@
 {
   "local_preview": {
     "version": "v0.11.0-preview.2",
-    "status": "road_bounds_tested_pending_website_deploy",
+    "status": "website_trial_ready",
     "url": "http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3",
     "release_record": "releases/v0.11.0-preview.2/handoff.json",
     "approval_event_id": "cadillacs-stage3-preview-20261009-review-01",
@@ -9,7 +9,7 @@
     "public_channel_baselines_unchanged": false,
     "website_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
     "automatic_platform_sync": false,
-    "website_verified_at": "2026-10-09T03:31:16.950894+00:00"
+    "website_verified_at": "2026-10-09T09:27:18.690515+00:00"
   },
   "toy": {
     "id": 40412421031936,
@@ -143,10 +143,10 @@
     },
     "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24038/index.html?test=1&qa=1"
   },
-  "website_version": "v0.11.0-preview.1-menu-text1",
+  "website_version": "v0.11.0-preview.2",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
-  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
-  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+  "website_verified_at": "2026-10-09T09:27:18.690515+00:00",
+  "website_commit": "740b225e7ccfcd8bfe6d06d0b09f6c493ed8dec2",
   "versions": [
     {
       "version": "v0.5.6-bgmfull1",
@@ -421,7 +421,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.11.0-preview.1-menu-text1",
+  "current_version": "v0.11.0-preview.2",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",

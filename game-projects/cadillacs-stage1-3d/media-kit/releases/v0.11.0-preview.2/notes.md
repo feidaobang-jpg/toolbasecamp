@@ -1,3 +1,5 @@
+> 已核验网站：https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3 。部署成功，运行脚本SHA256匹配；电脑键盘与手机竖屏触控模拟的开场、毁车步战、驾驶6项线上边界检查通过，无脚本错误。
+
 # 第三关道路可移动范围修正 v0.11.0-preview.2
 
 用户反馈：“第三关的道路距离底部道路有一段无法走进去，是不是区域错了。”
