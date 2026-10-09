@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-09T03:30:46.070Z",
+  "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+  "results": [
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "touch": false,
+      "version": "v0.11.0-preview.1",
+      "menuThirdStage": true,
+      "desertStarted": true,
+      "driveAndBoost": true,
+      "music": {
+        "name": "hellroad",
+        "playing": true,
+        "synth": false,
+        "original": true,
+        "track": "hellroad",
+        "loaded": [
+          "desert",
+          "hellroad",
+          "boss3",
+          "select",
+          "opening"
+        ]
+      },
+      "failedResources": []
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "touch": true,
+      "version": "v0.11.0-preview.1",
+      "menuThirdStage": true,
+      "desertStarted": true,
+      "driveAndBoost": true,
+      "music": {
+        "name": "hellroad",
+        "playing": true,
+        "synth": false,
+        "original": true,
+        "track": "hellroad",
+        "loaded": [
+          "desert",
+          "hellroad",
+          "boss3",
+          "select",
+          "opening"
+        ]
+      },
+      "failedResources": []
+    }
+  ],
+  "errors": [],
+  "physicalPhone": false,
+  "fixture": "QA hooks locate driving segment; keyboard/touch are real browser inputs"
+}

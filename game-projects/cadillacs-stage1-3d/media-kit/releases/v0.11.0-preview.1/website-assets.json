@@ -1,0 +1,32 @@
+[
+  {
+    "file": "js/game.min.js",
+    "match": true,
+    "sha256": "932c3d69fa116a9c777afef82a82a58c9c1d020db09ebb9262e7bd6a3b0a7825",
+    "bytes": 837374
+  },
+  {
+    "file": "css/style.css",
+    "match": true,
+    "sha256": "656f2ce3459aa166dfd0c4b89d47b2c2a6beee72928bcd9691ba4270428fc5ac",
+    "bytes": 25827
+  },
+  {
+    "file": "sounds/road-walk.mp3",
+    "match": true,
+    "sha256": "85d6433a1cda8c5dbd47a7cfa2e9284e7bb399fda0b3fdd65bb4995d3d9e5ae2",
+    "bytes": 1599535
+  },
+  {
+    "file": "sounds/road-drive.mp3",
+    "match": true,
+    "sha256": "570cc8e1a2843c5a2e2710de9125728978b0d6ae2a576d35d5642d73dc45a8dd",
+    "bytes": 1024321
+  },
+  {
+    "file": "sounds/boss3.mp3",
+    "match": true,
+    "sha256": "7775e9ad043afa75849abff68d2e8ee8c35344d63d5a17341779035b81821b47",
+    "bytes": 1471630
+  }
+]

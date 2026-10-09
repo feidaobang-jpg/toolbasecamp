@@ -204,16 +204,58 @@
       "bytes": 8762571,
       "modified_utc": "2026-10-09T00:56:47.214223+00:00",
       "git": "ignored_local_evidence"
+    },
+    {
+      "path": "media-kit/releases/v0.11.0-preview.1/captures/website-desert-1280.png",
+      "sha256": "394c3fcb511d7dba93fe48ccff029fe79e017c74088365e2b461e6a7ca92b074",
+      "bytes": 806553,
+      "modified_utc": "2026-10-09T03:30:13.198472+00:00",
+      "git": "ignored_local_evidence"
+    },
+    {
+      "path": "media-kit/releases/v0.11.0-preview.1/captures/website-desert-390.png",
+      "sha256": "ecbf7c6d772e51b3e9a9cd598cf7e693963864592aebf2f934f99389a81c5ba4",
+      "bytes": 364413,
+      "modified_utc": "2026-10-09T03:30:30.583339+00:00",
+      "git": "ignored_local_evidence"
+    },
+    {
+      "path": "media-kit/releases/v0.11.0-preview.1/captures/website-drive-1280.png",
+      "sha256": "eb3bce6f7857be7924fa773301ed40b1fe36d4d8b1315b5e90b7a5c67267174a",
+      "bytes": 783347,
+      "modified_utc": "2026-10-09T03:30:28.060672+00:00",
+      "git": "ignored_local_evidence"
+    },
+    {
+      "path": "media-kit/releases/v0.11.0-preview.1/captures/website-drive-390.png",
+      "sha256": "4b9bfaafbe46f469365076b00ecee7c495a797d7806dd37fbde9a82899ab828f",
+      "bytes": 363799,
+      "modified_utc": "2026-10-09T03:30:46.044941+00:00",
+      "git": "ignored_local_evidence"
     }
   ],
   "next_action": "User reviews local preview; do not publish before approval",
   "website_trial_authorization": "website-authorization.json",
-  "current_stage": "website_trial_authorized_only",
+  "current_stage": "website_trial_ready",
   "revalidation": {
     "at": "2026-10-09T03:25:31.871301+00:00",
     "integrated_main": "954fc0b20db3200d79452b327dc30770d2df4246",
     "runtime_unchanged": true,
     "stage3_passed": 19,
     "stage2_passed": 57
-  }
+  },
+  "website": {
+    "status": "deployed_verified_website_trial",
+    "version": "v0.11.0-preview.1",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
+    "verified_at": "2026-10-09T03:31:16.950894+00:00",
+    "deploy_commit": "06dc45be1ddacf6d6ec56a023ae6fbbba9063339",
+    "deployment_run": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/37879245719",
+    "deployment_conclusion": "success",
+    "runtime_sha256": "932c3d69fa116a9c777afef82a82a58c9c1d020db09ebb9262e7bd6a3b0a7825",
+    "asset_evidence": "website-assets.json",
+    "browser_evidence": "website-runtime.json",
+    "physical_phone": false
+  },
+  "source_deployment_commit": "06dc45be1ddacf6d6ec56a023ae6fbbba9063339"
 }
