@@ -1,0 +1,52 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+  "at": "2026-10-09T09:35:01.357Z",
+  "results": [
+    {
+      "width": 320,
+      "height": 568,
+      "tabs": [
+        {
+          "tab": "units",
+          "top": 5,
+          "height": 335,
+          "total": 340,
+          "panelHeight": 508,
+          "stageHeight": 586,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "虫王",
+          "clipped": []
+        },
+        {
+          "tab": "build",
+          "top": 0,
+          "height": 192,
+          "total": 192,
+          "panelHeight": 365,
+          "stageHeight": 586,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "🔨 拆除",
+          "clipped": []
+        },
+        {
+          "tab": "weapons",
+          "top": 0,
+          "height": 205,
+          "total": 205,
+          "panelHeight": 378,
+          "stageHeight": 586,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "四连导弹架",
+          "clipped": []
+        }
+      ],
+      "ok": true
+    }
+  ]
+}

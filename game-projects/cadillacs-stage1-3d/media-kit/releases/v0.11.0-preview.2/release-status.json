@@ -1,0 +1,32 @@
+{
+  "version": "v0.11.0-preview.2",
+  "base_version": "v0.11.0-preview.1-menu-text1",
+  "classification": "routine",
+  "release_kind": "patch",
+  "task_id": "01a11e15-1529-7582-99ff-33cd54debef8-dino-road-bounds-03",
+  "branch": "codex/cadillacs-stage3-preview-20261009",
+  "source_base_commit": "9292d65e875886ba9d22ca216ec25279b6370bc4",
+  "runtime_sha256": "ce322bab0fe2d7bd0d2cd5ed3a92804ae91d681bbe4bbc751de037ef8b1a1ea8",
+  "approval": {
+    "required": false,
+    "status": "not_required_for_website",
+    "evidence": "用户已授权发布到网站试玩；2026-10-09完成验证后网站即时更新"
+  },
+  "website": {
+    "status": "deployed_verified",
+    "version": "v0.11.0-preview.2",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
+    "verified_at": "2026-10-09T09:27:18.690515+00:00",
+    "deploy_commit": "740b225e7ccfcd8bfe6d06d0b09f6c493ed8dec2",
+    "runtime_sha256": "ce322bab0fe2d7bd0d2cd5ed3a92804ae91d681bbe4bbc751de037ef8b1a1ea8",
+    "html_cache": "740b225e",
+    "deploy_run": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/37910924716",
+    "deploy_conclusion": "success",
+    "browser_evidence": "website.json",
+    "physical_phone": false
+  },
+  "other_channels": "held_this_task_website_only",
+  "automatic_batch_eligible": false,
+  "updated_at": "2026-10-09T09:27:18.690515+00:00",
+  "source_commit": "740b225e7ccfcd8bfe6d06d0b09f6c493ed8dec2"
+}

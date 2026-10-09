@@ -4,6 +4,8 @@
 export const HALF_W = 6.8;          // 一屏的半宽（米）：玩家与镜头锁定窗口
 export const EDGE = 0.7;            // 角色中心离画面边缘的留量（身体 + 出手）；锁屏时敌人、Boss、被打飞的角色同样受限，侧视镜头保证最前一排纵深也完整入画
 export const ENTER_DX = 8.2;        // 敌人从屏幕外进场的距离
+// 第三关白线与移动范围共用道路尺寸；留量按角色脚下 / 车身半宽计算。
+export const ROAD = { z0: -4, z1: 5.4, footMargin: .3, carMargin: 1.1 };
 
 // 关卡：first 为该关第一个区域的下标
 export const STAGES = [
@@ -114,13 +116,13 @@ export const AREAS = [
 
 // 第三关：荒漠步战接公路追逐
 AREAS.push({
-  id:'desert',stage:3,name:'死亡荒漠',title:'HELL ROAD',x0:0,x1:36,z0:-2.8,z1:3.8,camZ1:2.5,camTy:.6,start:{x:3,z:.5},timer:120,
+  id:'desert',stage:3,name:'死亡荒漠',title:'HELL ROAD',x0:0,x1:36,z0:ROAD.z0+ROAD.footMargin,z1:ROAD.z1-ROAD.footMargin,camZ0:-2.8,camZ1:2.5,camTy:.6,start:{x:3,z:.5},timer:120,
   props:[{kind:'drum',x:17,z:-1.5,item:'steak'},{kind:'drum',x:22,z:2.5,item:'gun'}],
   waves:[
     {id:'d1',trigger:0,lock:7,spawns:[{type:'punk',from:'right',z:.5},{type:'gneiss',from:'left',z:-1,delay:1.2},{type:'punk',from:'right',z:2,delay:2.5}]},
     {id:'d2',trigger:15,lock:21,spawns:[{type:'blade',from:'right',z:-.8},{type:'poacher',from:'right',z:2,delay:1.8,drop:'rifle'},{type:'thug',from:'left',z:.5,delay:3.3}]}
   ],exit:{type:'radio',x:29,z:.5,to:7}
-},{id:'hellroad',stage:3,name:'地狱公路',title:'HELL ROAD',x0:8,x1:24,z0:-2.8,z1:3.8,camZ1:2.5,camTy:.65,start:{x:11,z:.5},timer:150,props:[],waves:[]});
+},{id:'hellroad',stage:3,name:'地狱公路',title:'HELL ROAD',x0:8,x1:24,z0:ROAD.z0+ROAD.footMargin,z1:ROAD.z1-ROAD.footMargin,camZ0:-2.8,camZ1:2.5,camTy:.65,start:{x:11,z:.5},timer:150,props:[],waves:[]});
 
 // 敌人参数（hp 为 1 条血 = 100）：原作数值查不到，按战斗手感调校
 export const ENEMY = {

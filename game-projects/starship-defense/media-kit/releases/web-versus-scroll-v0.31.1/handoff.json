@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-versus-scroll-v0.31.1",
+  "base_version": "web-three-lanes-v0.31.0",
+  "created_at": "2026-10-09T09:21:01.550814+00:00",
+  "classification": "routine",
+  "release_kind": "emergency_patch",
+  "build": {
+    "id": "versus-scroll0311-5167749e30f5",
+    "commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240",
+    "dirty": false,
+    "fingerprint": "5167749e30f537e2d0108033c88b145d1a2207e85af4491988a81bf67e38c00f",
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "files": {
+      "index.html": "a4862878c7e6df222ed38fa10f9171daa35568166c178de802bb5bb52c976246",
+      "game.compat.js": "5167749e30f537e2d0108033c88b145d1a2207e85af4491988a81bf67e38c00f"
+    }
+  },
+  "changes": [
+    {
+      "id": "versus-panel-scroll",
+      "before": "触屏面板高度仅46%，物品子元素禁止滚动，底部建造及买枪卡片不可达。",
+      "after": "面板适应可用高度、物品区独立滚动、分类及关闭固定、上下翻阅按钮，横竖触摸轴均可滚动。",
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "versus-bottom-items-unreachable",
+      "status": "fixed",
+      "cause": "触屏高度限制、全局touch-action:none作用于卡片子元素及旋转轴限制",
+      "retest": "7种视口触摸/翻页、底排建造放置和购买扣费通过",
+      "before_media_ids": [
+        "user-before"
+      ]
+    }
+  ],
+  "qa": {
+    "method": "Chromium real touch dispatch and taps, funded qa seat",
+    "physical_phone": false,
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        844,
+        346
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        346,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        260
+      ]
+    ],
+    "results": "qa/local/results.json",
+    "three_lanes": "qa/three-lanes/results.json",
+    "tests": "passed",
+    "website": "qa/website/results.json",
+    "4v4_compact": "qa/compact/results.json",
+    "merged": "qa/merged/results.json",
+    "website_final": "qa/website-final/results.json",
+    "toy_preview": {
+      "status": "passed",
+      "evidence": [
+        "qa/toy-preview-final/results.json",
+        "qa/toy-preview-320/results.json"
+      ],
+      "viewports": 6,
+      "mode": "4v4"
+    },
+    "toy_public": {
+      "status": "passed",
+      "evidence": "qa/toy-public/results.json",
+      "viewports": 3,
+      "mode": "4v4",
+      "hashes": "boot.js, game.compat.js, combat-controls.css, base.css and icon.svg match uploaded package; license txt is not served by Toy and is not requested by the game"
+    },
+    "artifact_validation": "UTF-8 HTML, JS syntax, no Tailwind, diff check passed"
+  },
+  "media": [
+    {
+      "id": "compact-final-346x844-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/compact-final/346x844-build.png",
+      "sha256": "d3503549e90b8433c384d78924f6f32d8a098fc8261063a2d4bb50247ad55e73",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "compact-final-346x844-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/compact-final/346x844-weapons.png",
+      "sha256": "4d33b8eb8616f63eecf22a642accbd5fe7c1f6477a85723ad5306fd501259de1",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "compact-final-844x260-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/compact-final/844x260-build.png",
+      "sha256": "00b106938ae3873dc0c78611bcc947192218dad29c65050f01fa62e6dc1b448f",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "compact-final-844x260-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/compact-final/844x260-weapons.png",
+      "sha256": "00775f2fb15c42004d3cf68808dccb2326573ac5e44b494a0d0df2f0442ae6bd",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "compact-final-844x346-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/compact-final/844x346-build.png",
+      "sha256": "ccdf80e55ad5e38a16ed8cfb3770ee9122b90ffd81b2a96c1f015ff2c9444efc",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "compact-final-844x346-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/compact-final/844x346-weapons.png",
+      "sha256": "3eb3c05ea5b627543a6b84821e99d2c75e44f9d03a57e0ff1ce36b693dcf5d6b",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-1280x720-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/1280x720-build.png",
+      "sha256": "cc8593dc71644dff89f7c58bd93bc1de361ec91fd5a11a4ffb3f1e9b53027466",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-1280x720-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/1280x720-weapons.png",
+      "sha256": "e0e6c61ad39bef1a1eee6a0fea3594152b79a75ffeaa5ae0d8fbffbb39fc5add",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-346x844-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/346x844-build.png",
+      "sha256": "05d182583d3e1e3df8d22a6c9edafe215ca0ef0aaad32263053a5b1dbe14b645",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-346x844-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/346x844-weapons.png",
+      "sha256": "063f6fbc3075ff666a258467f4571aceae79cb94321f1c5058efeaeec13b2423",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-390x844-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/390x844-build.png",
+      "sha256": "572e94ea6d1f348b306060b4b28f80983ea50822e9eda7c39058aecc770f2a0f",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-390x844-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/390x844-weapons.png",
+      "sha256": "d249ed767c90e33dd5f4f3d42fd37e98da2e5f62a3460088f316ccdec25a33ca",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-844x346-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/844x346-build.png",
+      "sha256": "07d35187c86e4f42e41ec903128bdcc1389b8840100049441143978307744c4f",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-844x346-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/844x346-weapons.png",
+      "sha256": "edfcf4b9e37082c9799402d10dd7a89e855ef1c74256feaa1e778748d26b14b0",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-844x390-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/844x390-build.png",
+      "sha256": "4d42723031c8963f576a2683c0d497c99bfa29c6758b3cb50024aba31f9c2892",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-844x390-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/844x390-weapons.png",
+      "sha256": "35e7f12879e5422e0c4e386a501a6a5cfba52af87281c6815fde1aaa0ff28a37",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-final-video-check",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/video-check.png",
+      "sha256": "701adaef163622706af8e38a88b4c46b1d01f914a5abc09e1f62cb6792e09306",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-320-320x568-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-320/320x568-build.png",
+      "sha256": "cae2ed92bb89259851b3efb3dba21c7634de650f0654e0fe97ce3c2c0d11e82e",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-preview-320-320x568-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-320/320x568-weapons.png",
+      "sha256": "eddc1d61f07a550c998a9a8868200e1de8ac6245cd6f2a9262df1891a81cad4d",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "toy-portrait-panel-demo",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/toy-preview-final/video/page@4a98acd6581ac36a250299ee5b35255e.webm",
+      "sha256": "cdd6d73a1981327c12fabaf0ead2dc41573a506a2005566c38f4a6aaba16ebf8",
+      "kind": "video",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-5167749e30f5",
+      "capture_mode": "realtime-automation",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 8.28,
+      "audio": "none",
+      "visual_review": "pass",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 8.28,
+          "description": "Toy外壳中四对四，触屏查看建造/买枪、底排放置与购买；qa注入金币"
+        }
+      ],
+      "review_method": "人工查看2秒间隔帧联系表与6秒帧，实机菜单翻阅/选择可见；无音频。"
+    },
+    {
+      "id": "user-before",
+      "file": "releases/web-versus-scroll-v0.31.1/captures/user-before.jpg",
+      "sha256": "190cdb4e35d3c197dcc430fb44747fa2446e4358aeb87beb6eb5576bbde3cb0f",
+      "kind": "screenshot",
+      "version": "reported-before-fix",
+      "build_id": null,
+      "capture_mode": "realtime-user-input",
+      "description": "用户原始手机截图：建造第一排以下无法查看，截图具体运行哈希未知",
+      "audio": "none",
+      "visual_review": "pass"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "overview": "not_applicable",
+    "gaps": [
+      "无物理手机验收；仅本次局部修复证据，不重录完整游戏"
+    ]
+  },
+  "cover": {
+    "decision": "reuse",
+    "reason": "仅面板交互修复，游戏场景和画风不变"
+  },
+  "authorization": {
+    "website": "immediate after tests per 2026-10-09 latest policy",
+    "toy": "用户本轮要求紧急修复，toy也要更新",
+    "other_channels": "existing 22:00 b-2 batch"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T09:32:38.327019+00:00",
+    "evidence": [
+      "website-assets.json",
+      "qa/website/results.json",
+      "qa/website-final/results.json"
+    ]
+  },
+  "toy": {
+    "id": "38678478981120",
+    "title": "虫潮围城",
+    "slug": "chongchao-qianshao",
+    "task_id": "01a11fec-124d-7000-8529-326264d746d5-01",
+    "source": "Codex",
+    "version": "web-versus-scroll-v0.31.1",
+    "source_commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240",
+    "package_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
+    "files": {
+      "index.html": "233c110a44441825906b39c6a5542e72384e975ee87f1542216abcf07ebe6c4a",
+      "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+      "game.compat.js": "f999718a9ba6c12c42bc0530c2a6742186ca28f5627aec7520a25668735b770e",
+      "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+      "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+      "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+      "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+    },
+    "status": "published",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+    "preview_at": "2026-10-09T09:33:15.594667+00:00",
+    "authorization": "本轮用户要求紧急修复，toy也要更新",
+    "doctor_warnings": [
+      "4个JS/CSS文件无内容指纹，缓存建议，已向用户说明"
+    ],
+    "physical_phone": false,
+    "superseded_preview": {
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_BIOa4EGD/index.html",
+      "sha256": "b651c9c00c0330b4e15f42a913401a3bed5669beedbf8dac52e4c35c08645277",
+      "qa": {
+        "status": "failed",
+        "reason": "Toy外壳较矮窗口逻辑高度344，物品区93px仍不能完整显示最后卡片；紧凑模式门槛已改400，须重新构建预览。",
+        "evidence": "qa/toy-preview/results.json"
+      }
+    },
+    "preview_qa": {
+      "status": "passed",
+      "viewports": [
+        [
+          1280,
+          720
+        ],
+        [
+          844,
+          390
+        ],
+        [
+          844,
+          346
+        ],
+        [
+          390,
+          844
+        ],
+        [
+          346,
+          844
+        ],
+        [
+          320,
+          568
+        ]
+      ],
+      "evidence": [
+        "qa/toy-preview-final/results.json",
+        "qa/toy-preview-320/results.json"
+      ],
+      "physical_phone": false,
+      "note": "320视口仅溢出数px时，滑动断言按实际可滚动距离判定。"
+    },
+    "submission": {
+      "status": "auditing",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_3rvmzYby/index.html"
+    },
+    "submitted_at": "2026-10-09T09:35:41.761585+00:00",
+    "status_readback": {
+      "id": 38678478981120,
+      "title": "虫潮围城",
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "published",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+      "watermark_enabled": false,
+      "ctime": 1790739397,
+      "mtime": 1791538648
+    },
+    "public_verification": "passed",
+    "public_verified_at": "2026-10-09T09:41:12.115005+00:00",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24074/index.html",
+    "public_qa": {
+      "status": "passed",
+      "evidence": "qa/toy-public/results.json",
+      "viewports": 3,
+      "mode": "4v4",
+      "hashes": "boot.js, game.compat.js, combat-controls.css, base.css and icon.svg match uploaded package; license txt is not served by Toy and is not requested by the game"
+    }
+  },
+  "channels": {
+    "taptap": "pending_22_batch",
+    "existing_video_descriptions": "pending_22_batch"
+  },
+  "status": "website_and_toy_public_verified_other_channels_pending_22"
+}
