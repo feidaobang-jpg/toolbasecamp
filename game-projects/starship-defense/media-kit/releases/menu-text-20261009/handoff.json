@@ -17,7 +17,7 @@
   },
   "build": {
     "id": "web-shop-scroll-v0.29.2-menu-text1",
-    "commit": "daefe1f0cb696251f23f9f9ce9686ea4dc685685",
+    "commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
     "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
     "dirty": false,
     "fingerprint": "d908ceb7dee2bff81e12ea1468638f745eb1a632140ea6e75c368dec2e43a955",
@@ -326,8 +326,125 @@
     "reason": "仅菜单文字和按钮留白变化，玩法、场景和画风不变"
   },
   "website": {
-    "status": "pending_deploy",
-    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T11:38:09.686387+08:00",
+    "commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+    "resource_checks": [
+      {
+        "file": "js/game/drag-look.js",
+        "ok": true,
+        "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js",
+        "sha256": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
+      },
+      {
+        "file": "html/game/starship-defense/index.html",
+        "ok": true,
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+        "sha256": "73e8b93254dce1ca0a0c2da1a1dd8b8f9615b706668d3ce6b7318dbf818d0c53"
+      }
+    ],
+    "runtime_checks": [
+      {
+        "game": "starship-defense",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "虫潮围城",
+            "shadow": "none"
+          },
+          {
+            "text": "选择前哨守卫",
+            "shadow": "none"
+          },
+          {
+            "text": "战役难度",
+            "shadow": "none"
+          },
+          {
+            "text": "⏸ 游戏暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "⚔ 虫潮对战 · 1 对 1",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          },
+          {
+            "text": "💀 游戏结束",
+            "shadow": "none"
+          },
+          {
+            "text": "房车突围",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "starship-defense",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "evidence": "D:/project/task-artifacts/game-menu-text-20261009/website-qa.json"
   },
   "channels": {
     "toy": {
@@ -355,5 +472,6 @@
       "仅收集本次局部菜单证据，完整介绍沿用历史版本；本次测试录像静音"
     ]
   },
-  "artifact_location": "D:\\project\\task-artifacts\\game-menu-text-20261009"
+  "artifact_location": "D:\\project\\task-artifacts\\game-menu-text-20261009",
+  "media_preserved_at": "D:/project/task-artifacts/game-menu-text-20261009/delivery/starship-defense/media-kit"
 }

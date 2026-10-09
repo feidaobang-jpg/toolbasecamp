@@ -140,9 +140,9 @@
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
   "website_version": "v2.5.0-menu-text1",
-  "website_verified_at": "2026-10-07T01:21:36.302Z",
-  "website_commit": "47352b283a366abdeb8f20e399c160bb681eb581",
-  "web_toy_versions_match": true,
+  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
+  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+  "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
     "bottom_css_px": 36,
@@ -283,7 +283,7 @@
     "version": "v2.5.0-menu-text1",
     "record": "releases/menu-text-20261009/handoff.json",
     "classification": "routine",
-    "website_status": "pending_deploy",
+    "website_status": "public_verified",
     "platform_status": "pending_22_batch"
   }
 }
