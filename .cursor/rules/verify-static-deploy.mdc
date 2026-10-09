@@ -5,6 +5,8 @@ alwaysApply: true
 
 # 主站静态部署：push ≠ 上线
 
+游戏运行改动必须先通过 `game-release-cadence.mdc` 的发布门槛。新游戏/关卡、重大功能和紧急Bug未获本人本地审核通过前，不推送部署主线、不SSH补上线；部署核验不能替代审核。普通小改可先上线网站，其他渠道与反馈结果回复进入22点批次。
+
 `zhengxiaohui.cn` 静态文件在 VPS **`/var/www/toolbasecamp`**，靠 GitHub Actions `rsync public/`。  
 **git push 成功只表示 GitHub 有新代码**；Actions 失败/卡住时，线上仍是旧 HTML/JS（曾导致改名后侧栏仍显示「文字成片」）。
 
