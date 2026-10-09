@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#3a2a5a">
-<meta name="description" content="街机恐龙快打（Cadillacs and Dinosaurs）第一关、第二关的 3D 重制版：杰克、汉娜、穆斯塔法、梅斯四位主角，从海上都市打到 Boss 维斯·T 和岩跳龙，再开着凯迪拉克闯沼泽森林——三角龙、熟睡的霸王龙、泥沼、链锤兵和 Boss 屠夫。电脑键盘与手机触屏均可游玩。">
-<title>恐龙快打 · 第一、二关 3D 重制版</title>
+<meta name="description" content="恐龙快打第三关审核预览：荒漠清敌、电台叫车、凯迪拉克公路追逐与霍格摩托Boss；毁车后继续步战。保留第一、二关与四名角色，电脑和触屏均可玩。">
+<title>恐龙快打 · 第三关审核预览</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=portrait-menu1">
+<link rel="stylesheet" href="css/style.css?v=stage3preview1">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -32,6 +32,8 @@
     </div>
     <div id="h-timer" hidden>2:00</div>
     <div id="h-weapon" hidden><span class="wico"></span><b id="h-wammo">6</b><span id="h-wname">左轮手枪</span></div>
+    <div id="road-hud" hidden></div>
+    <div id="drive-hint" hidden><span class="kb-only">WASD 移动车辆 · J 加速撞击 · 按住 K 刹车</span><span class="touch-only">摇杆移动车辆 · 加速撞击 · 按住刹车</span></div>
     <div id="h-go" hidden>GO <span>▶</span></div>
 
     <div id="hurt" aria-hidden="true"></div>
@@ -73,8 +75,8 @@
         <div class="brand">
           <div class="kicker">CAPCOM 1993 街机经典 · 3D 重制版</div>
           <h1 class="logo"><span class="l1">恐龙快打</span><span class="l2">Cadillacs and Dinosaurs</span></h1>
-          <div class="sub" id="menu-sub">第一关 · 海上都市　第二关 · 沼泽森林</div>
-          <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。第一关从大楼楼顶打到第 47 街，揍趴 Boss 维斯·T 和他的岩跳龙；第二关开着凯迪拉克进沼泽森林：躲开三角龙的冲撞，别让胖子吵醒睡着的霸王龙，蹚过齐腰深的泥沼，最后对上挥舞双刀的屠夫。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。菜单里可以直接选起始关卡。</p>
+          <div class="sub" id="menu-sub">第三关 · 地狱公路（审核预览）</div>
+          <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。第一关从大楼楼顶打到第 47 街，揍趴 Boss 维斯·T 和他的岩跳龙；第二关开着凯迪拉克进沼泽森林：躲开三角龙的冲撞，别让胖子吵醒睡着的霸王龙，蹚过齐腰深的泥沼，最后对上挥舞双刀的屠夫。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。菜单里可以直接选起始关卡。第三关审核版：清理荒漠匪徒，按攻击键使用电台叫车；驾车撞击、躲避油桶与手雷，追上摩托首领霍格。毁车后继续步战。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 攻击 · <kbd>K</kbd> 跳跃 · <kbd>U</kbd> 必杀 · <kbd>I</kbd> 冲刺（<kbd>L</kbd> 也行）<br><kbd>C</kbd> 切换视角 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
           <p class="help help-touch help-compact">左侧摇杆移动 · 右侧 <b>J</b> 攻击、<b>K</b> 跳跃、<b>U</b> 必杀、<b>I</b> 冲刺 · 完整操作和特殊技见暂停菜单</p>
           <p class="help help-touch help-extra">左侧摇杆移动 · 右侧四键：下排 <b>J</b> 攻击、<b>K</b> 跳跃，上排 <b>U</b> 必杀、<b>I</b> 冲刺（点后推摇杆保持，回中停止） · 右上角 <b>C</b> 切换视角与暂停 · 按住画面拖动转视角</p>
@@ -167,7 +169,7 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
   });
 </script>
-<script src="js/game.min.js?v=v0101-two-stages"></script>
+<script src="js/game.min.js?v=stage3preview1"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
 (function(){

@@ -1,0 +1,281 @@
+{
+  "rows": [
+    {
+      "name": "844x390预览选中第三关",
+      "pass": true
+    },
+    {
+      "name": "844x390旋转布局正确",
+      "pass": true,
+      "detail": {
+        "rotated": false,
+        "W": 844,
+        "H": 390,
+        "vw": 844,
+        "vh": 390,
+        "dpr": 1,
+        "touchOn": true,
+        "backing": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "name": "844x390触屏加速有效",
+      "pass": true
+    },
+    {
+      "name": "844x390摇杆逆变换和驾驶有效",
+      "pass": true
+    },
+    {
+      "name": "触屏切电脑保留第三关",
+      "pass": true
+    },
+    {
+      "name": "切回触屏清空移动输入",
+      "pass": true
+    },
+    {
+      "name": "390x844预览选中第三关",
+      "pass": true
+    },
+    {
+      "name": "390x844旋转布局正确",
+      "pass": true,
+      "detail": {
+        "rotated": true,
+        "W": 844,
+        "H": 390,
+        "vw": 390,
+        "vh": 844,
+        "dpr": 1,
+        "touchOn": true,
+        "backing": [
+          844,
+          390
+        ]
+      }
+    },
+    {
+      "name": "390x844触屏加速有效",
+      "pass": true
+    },
+    {
+      "name": "390x844摇杆逆变换和驾驶有效",
+      "pass": true
+    },
+    {
+      "name": "触屏切电脑保留第三关",
+      "pass": true
+    },
+    {
+      "name": "切回触屏清空移动输入",
+      "pass": true
+    },
+    {
+      "name": "800x346预览选中第三关",
+      "pass": true
+    },
+    {
+      "name": "800x346旋转布局正确",
+      "pass": true,
+      "detail": {
+        "rotated": false,
+        "W": 800,
+        "H": 346,
+        "vw": 800,
+        "vh": 346,
+        "dpr": 1,
+        "touchOn": true,
+        "backing": [
+          800,
+          346
+        ]
+      }
+    },
+    {
+      "name": "800x346触屏加速有效",
+      "pass": true
+    },
+    {
+      "name": "800x346摇杆逆变换和驾驶有效",
+      "pass": true
+    },
+    {
+      "name": "触屏切电脑保留第三关",
+      "pass": true
+    },
+    {
+      "name": "切回触屏清空移动输入",
+      "pass": true
+    },
+    {
+      "name": "2人同车且座位独立",
+      "pass": true
+    },
+    {
+      "name": "2人客机重建车辆和路障",
+      "pass": true
+    },
+    {
+      "name": "2人毁车全队恢复且客机同步",
+      "pass": true
+    },
+    {
+      "name": "3人同车且座位独立",
+      "pass": true
+    },
+    {
+      "name": "3人客机重建车辆和路障",
+      "pass": true
+    },
+    {
+      "name": "3人毁车全队恢复且客机同步",
+      "pass": true
+    },
+    {
+      "name": "4人同车且座位独立",
+      "pass": true
+    },
+    {
+      "name": "4人客机重建车辆和路障",
+      "pass": true
+    },
+    {
+      "name": "4人毁车全队恢复且客机同步",
+      "pass": true
+    },
+    {
+      "name": "暂停冻结音频",
+      "pass": true,
+      "detail": {
+        "ctx": "suspended",
+        "volume": 0.8,
+        "originalsLoaded": [
+          "hit",
+          "bodyfall",
+          "go",
+          "dash",
+          "shout-mustapha",
+          "finisher-jack",
+          "finisher-hannah",
+          "finisher-mustapha",
+          "finisher-mess",
+          "mega-jack",
+          "mega-hannah",
+          "mega-mustapha",
+          "mega-mess"
+        ],
+        "failed": []
+      }
+    },
+    {
+      "name": "暂停重开恢复音频",
+      "pass": true,
+      "detail": {
+        "ctx": "running",
+        "volume": 0.8,
+        "originalsLoaded": [
+          "hit",
+          "bodyfall",
+          "go",
+          "dash",
+          "shout-mustapha",
+          "finisher-jack",
+          "finisher-hannah",
+          "finisher-mustapha",
+          "finisher-mess",
+          "mega-jack",
+          "mega-hannah",
+          "mega-mustapha",
+          "mega-mess"
+        ],
+        "failed": []
+      }
+    },
+    {
+      "name": "realtime-perf",
+      "pass": true,
+      "detail": {
+        "camera": 0,
+        "n": 1161,
+        "fps": 170.0052714812863,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0,
+        "renderer": {
+          "calls": 101,
+          "tris": 64648,
+          "geometries": 596,
+          "textures": 22,
+          "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      }
+    },
+    {
+      "name": "realtime-perf",
+      "pass": true,
+      "detail": {
+        "camera": 1,
+        "n": 1158,
+        "fps": 170.001614868535,
+        "median": 5.899999999999636,
+        "p95": 6,
+        "over50": 0,
+        "renderer": {
+          "calls": 69,
+          "tris": 50876,
+          "geometries": 596,
+          "textures": 22,
+          "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      }
+    },
+    {
+      "name": "realtime-perf",
+      "pass": true,
+      "detail": {
+        "camera": 2,
+        "n": 1159,
+        "fps": 170.00117343346636,
+        "median": 5.899999999997817,
+        "p95": 6,
+        "over50": 0,
+        "renderer": {
+          "calls": 57,
+          "tris": 35628,
+          "geometries": 596,
+          "textures": 22,
+          "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      }
+    },
+    {
+      "name": "realtime-perf",
+      "pass": true,
+      "detail": {
+        "camera": 3,
+        "n": 1158,
+        "fps": 170.00161486853492,
+        "median": 5.900000000001455,
+        "p95": 6,
+        "over50": 0,
+        "renderer": {
+          "calls": 28,
+          "tris": 34760,
+          "geometries": 596,
+          "textures": 22,
+          "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        }
+      }
+    },
+    {
+      "name": "无运行时异常",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

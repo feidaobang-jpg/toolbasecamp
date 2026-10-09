@@ -341,6 +341,7 @@ export function buildHuman(spec) {
 
 // ---------- 角色表（按原作配色） ----------
 export const SPECS = {
+  hogg: { H:2.02,build:'huge',skin:'#bd8563',hair:{style:'long',color:'#30251f'},beard:'#30251f',longBeard:true,vest:{color:'#362b35'},abs:true,pants:{color:'#455376'},belt:'#312923',boots:{color:'#282426',high:true},wrist:'#77716b' },
   // 玩家
   jack: { H: 1.86, build: 'muscle', skin: '#e9b48a', hair: { style: 'messy', color: '#74492a' }, shirt: { color: '#eef2f6', sleeves: 'short', open: true, collar: true }, pants: { color: '#3d5fa6' }, belt: '#4a3018', boots: { color: '#6b4426' } },
   hannah: { H: 1.74, build: 'female', skin: '#f2c8a2', hair: { style: 'long', color: '#242a4c' }, shirt: { color: '#e8622c', crop: true }, pants: { color: '#f4f1e8' }, belt: '#7a4a26', boots: { color: '#7c4a28', high: true } },
@@ -572,7 +573,6 @@ export function buildCar() {
     p.add(GEO.box, chrome, mtx(0, 0.42, 2.66, 0, 0, 0, 2.0, 0.16, 0.16));      // 前保险杠
     p.add(GEO.box, chrome, mtx(0, 0.42, -2.66, 0, 0, 0, 2.0, 0.16, 0.16));     // 后保险杠
     p.add(GEO.box, '#5c6a74', mtx(0, 0.64, 2.68, 0, 0, 0, 1.2, 0.2, 0.04));    // 进气格栅
-    p.add(GEO.box, '#cfe6ee', mtx(0, 1.27, 0.86, -0.35, 0, 0, 1.68, 0.5, 0.04));   // 挡风玻璃
     p.add(GEO.box, chrome, mtx(0, 1.51, 0.78, -0.35, 0, 0, 1.72, 0.05, 0.06));
     p.add(GEO.box, seat, mtx(0, 0.98, 0.2, 0, 0, 0, 1.6, 0.18, 0.62));    // 座椅
     p.add(GEO.box, seat, mtx(0, 1.18, -0.1, -0.15, 0, 0, 1.6, 0.42, 0.14));
@@ -587,6 +587,7 @@ export function buildCar() {
     carWheelGeo = w.build();
   }
   const root = new THREE.Group(); root.name = 'cadillac';
+  const glass=new THREE.Mesh(GEO.box,new THREE.MeshBasicMaterial({color:'#b6d3d2',transparent:true,opacity:.19,depthWrite:false}));glass.position.set(0,1.27,.86);glass.rotation.x=-.35;glass.scale.set(1.68,.5,.04);root.add(glass);
   const bodyM = meshFrom(carBodyGeo, {}); root.add(bodyM);
   const wheels = [];
   for (const [x, z] of [[0.86, 1.62], [-0.86, 1.62], [0.86, -1.62], [-0.86, -1.62]]) { const m = meshFrom(carWheelGeo, { thin: true }); m.position.set(x, 0.36, z); root.add(m); wheels.push(m); }

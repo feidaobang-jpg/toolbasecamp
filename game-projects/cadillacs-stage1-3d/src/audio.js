@@ -25,10 +25,11 @@ function ensure() {
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
   // 原版曲目没加载完时不先放合成的旧版曲子；只有原版加载失败才用合成兜底
   // 先下最先要用的（选人曲、开场曲、所选起始关的第一首、全部音效），其余排在后面；同一个文件只下一次（stage=roof、grave=hall）
+  const startStage3 = new URLSearchParams(location.search).get('stage')==='3'||(()=>{try{return JSON.parse(localStorage.getItem('cd3d-stage1:stage'))===2;}catch{return false;}})();
   const startStage2 = (() => { try { return JSON.parse(localStorage.getItem('cd3d-stage1:stage')) === 1; } catch (e) { return false; } })();
   // 第一批（并行）：选人曲、开场曲、全部音效，都很小；之后按需要的先后逐首下载，起始关的第一首排最前
   const first = startStage2 ? ['select'] : ['select', 'opening'];
-  const order = startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont', 'roof', 'street', 'boss'] : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'];
+  const order = startStage3 ? ['desert','hellroad','boss3','clear','cont'] : startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont', 'roof', 'street', 'boss'] : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'];
   const pick = (names) => Object.fromEntries(names.map(n => [n, MUSIC_FILES[n]]));
   samples = new SampleAudio(ctx, musicBus, sfxBus, { ...pick(first), ...ORIGINAL_FILES });
   samples.ready.then(() => loadRest(samples, order.concat(Object.keys(MUSIC_FILES).filter(n => !first.includes(n) && !order.includes(n)))));
@@ -36,7 +37,7 @@ function ensure() {
 }
 const now = () => ctx.currentTime;
 // 原版曲子：第一关（楼顶 / 大楼内部 / 47 街 / Boss 1）、第二关（森林 / 泥沼 / 尸骸地 / Boss 2）、选人、开场、过关、续关
-const MUSIC_FILES = { select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
+const MUSIC_FILES = { desert:'road-walk.mp3', hellroad:'road-drive.mp3', boss3:'boss3.mp3', select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
 const ALIAS = { stage: 'roof', grave: 'hall' };   // 同曲不同名：只下载一次
 // 第二批：依次下载（不和第一批抢带宽），下完一首就能用；同名别名共用同一段解码好的音频
 async function loadRest(s, names) {

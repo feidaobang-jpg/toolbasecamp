@@ -1,0 +1,39 @@
+{
+  "version": "v0.11.0-preview.1",
+  "classification": "正式玩法版本的本地审核稿",
+  "updated_at": "2026-10-09T01:01:56.323494+00:00",
+  "user_instruction": "开发恐龙快打第三关，先不上线，等我审核后再上",
+  "development": "ready_for_review",
+  "approval": "pending",
+  "task_id": "01a11e15-1529-7582-99ff-33cd54debef8-dino-stage3-01",
+  "approval_event_id": "cadillacs-stage3-preview-20261009-review-01",
+  "branch": "codex/cadillacs-stage3-preview-20261009",
+  "local_url": "http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3",
+  "website": {
+    "status": "not_published_user_review",
+    "last_recorded_version": "v0.10.1",
+    "live_rechecked_this_task": false
+  },
+  "toy": {
+    "status": "not_submitted_user_review",
+    "last_recorded_version": "v0.10.1"
+  },
+  "taptap": {
+    "status": "not_submitted_user_review",
+    "live_rechecked_this_task": false
+  },
+  "bilibili": {
+    "status": "not_updated_user_review"
+  },
+  "git": {
+    "local_commit": "See commit containing this record; local branch only",
+    "push": false,
+    "merge": false
+  },
+  "pending_after_approval": [
+    "整合最新主线并复验后正常推送",
+    "核验网站实际部署",
+    "按长期授权同步对应Toy并分别核验状态",
+    "按正式版本节奏核对简介和其他相关渠道，不把提交审核说成上线"
+  ]
+}

@@ -364,3 +364,8 @@ body.touch-on #stage.compact .title-screen .help-compact { display: block; }
 #stage.compact .title-screen .items .val { font-size: 13px; }
 #stage.compact:not(.narrow) .title-screen .rules, #stage.compact:not(.narrow) .title-screen .help { font-size: 11.5px; line-height: 1.38; }
 #stage.compact:not(.narrow) .title-screen .logo .l1 { font-size: clamp(30px, 4.6vw, 44px); }
+#road-hud{position:absolute;top:112px;left:50%;transform:translateX(-50%);z-index:6;background:#231c18e8;border:1px solid #bc925a;border-radius:7px;padding:7px 13px;color:#ffe8b4;font-size:13px;white-space:nowrap;pointer-events:none}
+#drive-hint{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);z-index:6;color:#f8e9cc;background:#201b16d9;border-radius:6px;padding:6px 10px;font-size:12px;white-space:nowrap;pointer-events:none}
+.driving #keyhint{visibility:hidden}
+.compact #road-hud{top:93px;font-size:11px;padding:4px 8px}
+.compact #drive-hint{bottom:8px;font-size:11px}

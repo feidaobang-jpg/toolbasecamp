@@ -1,4 +1,13 @@
 {
+  "local_preview": {
+    "version": "v0.11.0-preview.1",
+    "status": "awaiting_user_review",
+    "url": "http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3",
+    "release_record": "releases/v0.11.0-preview.1/handoff.json",
+    "approval_event_id": "cadillacs-stage3-preview-20261009-review-01",
+    "authorization": "2026-10-09 新请求重新开发第三关；审核前不发布",
+    "public_channel_baselines_unchanged": true
+  },
   "toy": {
     "id": 40412421031936,
     "title": "恐龙快打 3D：第一、二关",

@@ -1,3 +1,5 @@
+> **本地审核版 v0.11.0-preview.1**：按2026-10-09新请求开发第三关，当前不发布。运行 `npm run build`、`npm run preview` 后打开 http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3 。详细流程与已知取舍见 [审核记录](media-kit/releases/v0.11.0-preview.1/notes.md)。第三关源码为 `src/road.js` / `src/road-world.js`，验收为 `qa/stage3.js` / `qa/stage3-display.js`；区域6为荒漠、7为公路。旧版资料保留如下。
+
 # 恐龙快打 · 第一、二关 3D 重制版（cadillacs-stage1-3d）
 
 Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重制版（当前 v0.9.3，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：

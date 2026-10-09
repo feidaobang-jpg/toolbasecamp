@@ -10,6 +10,7 @@ import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LE
 import { propMesh } from './world.js';
 import A from './audio.js';
 import IN from './input.js';
+import { createRoad } from './road.js';
 
 export const G = {
   mode: 'title', t: 0, score: 0, hi: store.get('hi', 50000) | 0, lives: 0, settings: {}, hero: 0,
@@ -56,6 +57,7 @@ export function computerInput(slot){
  return {x:near?0:dx/Math.max(1,d),z:near?0:dz/Math.max(1,d),atk:attack,edges:attack?['atk']:[],look:dx<0?FACE_LEFT:FACE_RIGHT,lane:false};
 }
 let scene, world, fx, camCtl, nextId = 1, bannerId = 0, toastId = 0;
+let road;
 const GRAV = 24;
 const DUR_MUL = { easy: 0.45, std: 0.7, classic: 1.0 };   // 耐久：敌人伤害倍率
 export const DUR_NAME = { easy: '宽松', std: '标准', classic: '经典' };
@@ -118,7 +120,12 @@ const EM = {
 };
 
 // ---------- 初始化 ----------
-export function init(sc, w, f, cam) { scene = sc; world = w; fx = f; camCtl = cam; }
+export function init(sc, w, f, cam) {
+  scene = sc; world = w; fx = f; camCtl = cam;
+  road=createRoad({G,scene,world,fx,move:moveVec,coopInput:s=>coopInputs(s),spawn:spawnEnemy,state:setState,attachWeapon,banner,toast,ev,score:addScore,damage,
+    prop:()=>propMesh('drum'),raider:()=>{const m=buildHuman(SPECS.punk);applyPose(m,HP.guard);return m;},
+    hitPlayer:(a,p,dmg)=>{if(hittable(p))applyHit(a,p,H(0,1,1,1,0,3,dmg,'down',0,'hit',true),a?.face||FACE_RIGHT);}});
+}
 export const HERO_DATA = HEROES;
 export const player = () => G.player;
 
@@ -256,6 +263,7 @@ export function newGame(opts) {
   ev('start', { hero: h.id, lives: G.settings.lives, dur: G.settings.dur });
 }
 function clearAll() {
+  if(road)road.clear();
   A.clearEffects();
   clearIntroFx();
   for (const a of G.actors) if (!a.removed) removeActor(a);
@@ -269,8 +277,9 @@ function clearAll() {
   G.carAnim = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false; G.later = [];
   if (fx) fx.clear();
 }
-function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'butcher' ? 'boss2' : 'boss') : AREAS[G.area].id; }
+function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'hogg' ? 'boss3' : G.boss.type === 'butcher' ? 'boss2' : 'boss') : AREAS[G.area].id; }
 function loadArea(i, first) {
+  if(road)road.clear();
   const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
   // 清掉上一区域的敌人与物品，保留玩家；还在飞的子弹作废
   G.later = [];
@@ -370,6 +379,7 @@ function loadArea(i, first) {
     if (AR.id === 'street') { p.y = 1.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 2; }
     if (AR.id === 'swamp') { p.y = 2.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 1.6; }   // 从山崖上跳进泥沼
   }
+  road.init(AR.id);
 }
 // 开场：飞过镜头前的翼龙（从右往左），x0 起点、y 高度、z 纵深、speed 米/秒、delay 秒后出发、s 缩放
 function addIntroPtero(x0, y, z, speed, delay, s) {
@@ -456,6 +466,7 @@ export function update() {
   if (G.later.length) runLater();
   if (G.cine || G.pteroFly.length) updateIntroFx(dt);
   if (G.mode === 'cont') { updateContinue(dt); return; }
+  if(road.step(dt))return;
   // 玩家输入
   const p = G.player;
   if (G.mode === 'play') for(const actor of G.coop?players():[p]){actor.netInput=G.coop?coopInputs(actor.slot):null;withPlayer(actor,()=>handleInput(actor,dt));}
@@ -476,11 +487,12 @@ export function update() {
     else if (a.isRaptor) updateRaptor(a, dt);
     else if (a.type === 'vice') updateVice(a, dt);
     else if (a.type === 'butcher') updateButcher(a, dt);
+    else if (a.type === 'hogg' && a.alive) road.bossStep(a,dt);
     else updateEnemy(a, dt);
     G.player=p;
     }
     const beforeX=a.x,beforeZ=a.z;
-    physics(a, dt);
+    if(a.type!=='hogg'||!a.alive)physics(a, dt);
     if (G.water) waterFx(a, dt);
     if(a.side==='player'&&!camCtl.fp()&&['walk','run','carry'].includes(a.state)) {
       const dx=a.x-beforeX,dz=a.z-beforeZ;
@@ -516,6 +528,8 @@ function moveVec() {
 function laneMode() { if(IN.network)return !!IN.network.lane;const pr = camCtl.preset(); return (pr.id === 'side' || pr.id === 'oblique') && Math.abs(camCtl.yawOff) < 0.7; }
 let lastJumpT = -9, lastAtkT = -9;
 function handleInput(p, dt) {
+  const exit=AREAS[G.area].exit;
+  if(exit?.type==='radio'&&p.alive&&['idle','walk','run'].includes(p.state)&&G.wave>=AREAS[G.area].waves.length&&!G.waveOn&&Math.hypot(p.x-exit.x,p.z-exit.z)<1.8&&IN.take('atk')){exitArea('radio');return;}
   const canAct = ['idle', 'walk', 'run'].indexOf(p.state) >= 0;
   // 必杀：J+K 同时按（或 U）
   const atkE = IN.take('atk'), jumpE = IN.take('jump'), megaE = IN.take('mega'), dashE = IN.take('dash');
@@ -1221,6 +1235,7 @@ function damage(a, e, dmg, kb, dir, pts, react) {
   } else if (e.grabbedBy && kb !== 'hit') releaseGrab(e.grabbedBy);
   if (!react) return;
   const dead = e.hp <= 0;
+  if(e.type==='hogg'&&!dead){e.invul=.14;return;}
   if (dead) { e.hp = 0; }
   e.stun++; e.stunT = 1.0;
   if (e.isDino && e.type !== 'raptor') {
@@ -1270,7 +1285,7 @@ function onDeath(e) {
   if (def) addScore(def.points, e.x, 2.4, e.z);
   if (e.drop) spawnItem(e.drop, e.x, e.z, { pop: true, life: ITEMS[e.drop].weapon ? 14 : 0 });
   ev('kill', { enemy: e.type, id: e.id });
-  if (e.type === 'vice' || e.type === 'butcher') bossDefeated(e);
+  if (e.type === 'vice' || e.type === 'butcher' || e.type === 'hogg') bossDefeated(e);
   // 一波最后一个敌人被主角打倒：短暂慢动作，收尾更有分量
   else if (e.lastHitBy === G.player && G.mode === 'play' && G.waveOn && !G.pending.length && G.timeScale === 1 && !G.waveEnemies.some(o => o !== e && o.alive && !o.removed)) {
     G.timeScale = 0.3; G.slowT = 0.42; fx.shake = Math.max(fx.shake, 0.2); ev('finishSlow');
@@ -1704,12 +1719,13 @@ function summonHenchmen(n) {
   ev('summon', { n });
 }
 function bossDefeated(v) {
+  if(v.type==='hogg'&&G.road){G.road.phase='won';G.road.speed=0;G.road.hazards=[];for(const p of players()){p.y=0;p.x=clamp(p.x,11,18);p.z=clamp(p.z+1.3,-2,3.5);setState(p,'idle');}if(G.car)G.car.position.set(10,0,-2.7);}
   G.timeScale = 0.35;
   ev('bossDown', { boss: v.type });
   A.music(null);
   // 剩下的杂兵逃走，恐龙跑开
   for (const e of G.actors) {
-    if (e === v || e === G.player || !e.alive) continue;
+    if (e === v || e.side === 'player' || !e.alive) continue;
     if (e.isRaptor && e.type === 'raptor') { setState(e, 'flee', { vanish: true }); e.angry = false; }
     else if (['down', 'dead', 'knocked', 'sleep'].indexOf(e.state) < 0) { setState(e, 'flee', { vanish: true }); }
   }
@@ -2125,11 +2141,12 @@ function updateWaves(dt) {
     } else if (AR.exit) {
       const ex = AR.exit;
       const wide = ex.type === 'cliff' || ex.type === 'dusk';
-      if (p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < (wide ? 9 : 1.1) && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
+      if (ex.type !== 'radio' && p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < (wide ? 9 : 1.1) && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
     } else if (AR.boss && !G.boss && p.x >= AR.boss.trigger) startBoss();
   }
 }
 function updateCameraFocus(dt) {
+  if(G.road&&G.road.phase!=='radio'){G.focusX=16;G.lockX=16;return;}
   const AR = AREAS[G.area], p = G.player;
   const minF = AR.x0 + HALF_W, maxF = AR.x1 - HALF_W;
   let target = clamp(p.x + 0.8, minF, maxF);
@@ -2162,7 +2179,9 @@ function exitArea(type) {
   G.mode = 'trans';
   if (p.grab) releaseGrab(p);
   const W0 = world.area();
-  if (type === 'door') {
+  if(type==='radio'){
+    runScript([{fn:()=>{setState(p,'pickup');A.play('pickup');banner('电台接通 · 凯迪拉克来了','准备上车！',2);}}, {wait:1}, {fade:1,dur:.6},{fn:()=>loadArea(to)},{fade:0,dur:.7}]);ev('radioCall');
+  } else if (type === 'door') {
     p.face = FACE_RIGHT; p.x = Math.min(p.x, 43.9); setState(p, 'door', { kick: true });
     runScript([
       { wait: 0.15 },
@@ -2352,6 +2371,7 @@ const tmpPose = new Float32Array(POSE_LEN);
 const GUN_POSE = mod(HP.guard, { rS: [-0.6, 0, -0.2], rE: [-1.2, 0, 0] });
 const SG_POSE = mod(HP.guard, { rS: [-0.5, -0.2, -0.2], rE: [-1.4, 0, 0], lS: [-0.9, -0.3, 0.3], lE: [-0.8, 0, 0] });
 export function render(dt, realT) {
+  road.render();
   if(G.coopGuest){for(const a of G.actors){if(a.netTree)applyTree(a.model.root,a.netTree);a.blob.position.set(a.x,.015,a.z);a.blob.visible=a.alive&&a.y<1.5;if(a.slot===coopLocalSlot&&G.fpActive)a.model.root.visible=false;}return;}
   for (const a of G.actors) {
     if (a.removed) continue;
@@ -2362,6 +2382,7 @@ export function render(dt, realT) {
     // 泥沼里整个人下沉到齐腰；从水里冒出来的敌人从水下升起（只改画面，判定高度不变）
     const sk = G.water ? sinkK(a.x) * SINK : 0;
     let vy = a.y - sk;
+    if(a.type==='hogg'&&a.alive)vy+=.52;
     if (a.state === 'enter' && a.sub.kind === 'rise') vy -= 1.9 * Math.max(0, 1 - a.st / 0.75);
     // 命中停顿：被打的人沿受力方向来回抖，越到后面越小
     let jx = 0, jz = 0;
@@ -2519,6 +2540,7 @@ function targetPose(a, realT) {
     case 'butt': return a.sub.phase === 'land' ? HP.sit : a.sub.phase === 'down' ? HP.buttSit : HP.jumpUp;
     case 'leap': return HP.jumpUp;
     case 'pickSword': return HP.crouch;
+    case 'ride': return mod(HP.sit,{rS:[-.65,0,-.12],lS:[-.65,0,.12],rE:[-.65,0,0],lE:[-.65,0,0]});
     case 'incar': return HP.sit;
     case 'cut': {
       if (a.sub.chop) return sample(HC.chop, st % HC.chop.dur);
@@ -2629,6 +2651,8 @@ export function hudState() {
 
 // ---------- 测试钩子 ----------
 export const _test = {
+  newGame,coopSnapshot,coopApply,joinCoopSlot,
+  wreck:()=>road.wreck(),
   G,
   tp(x, z) { const p = G.player; p.x = x; if (z !== undefined) p.z = z; },
   hp(v) { G.player.hp = v; },
@@ -2654,7 +2678,7 @@ export const _test = {
 export function snapshot() {
   const p = G.player;
   return {
-    mode: G.mode, t: +G.t.toFixed(2), area: G.area, areaId: AREAS[G.area] ? AREAS[G.area].id : null, stage: AREAS[G.area] ? AREAS[G.area].stage : 0, cleared: G.cleared.slice(), focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
+    road:road.snapshot(), mode: G.mode, t: +G.t.toFixed(2), area: G.area, areaId: AREAS[G.area] ? AREAS[G.area].id : null, stage: AREAS[G.area] ? AREAS[G.area].stage : 0, cleared: G.cleared.slice(), focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
     score: G.score, hi: G.hi, lives: G.settings.lives === 'inf' ? 'inf' : G.lives, settings: Object.assign({}, G.settings), demoUsed: G.demoUsed,
     player: p ? { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), state: p.state, hp: +p.hp.toFixed(1), face: +p.face.toFixed(2), invul: +p.invul.toFixed(2), weapon: p.weapon ? Object.assign({}, p.weapon) : null, combo: p.comboN, visible: p.model.root.visible } : null,
     enemies: G.actors.filter(a => a.side === 'enemy' && a !== G.sleeper).length, boss: G.boss ? { type: G.boss.type, hp: G.boss.hp, state: G.boss.state, summons: G.boss.summons, swords: G.boss.swords } : null,
@@ -2665,10 +2689,10 @@ export function snapshot() {
 
 export function coopInput(){
  const mv=moveVec(),edges=[],events={};for(const k of ['atk','jump','mega','dash']){const e=IN.take(k);if(e){edges.push(k);events[k]=e.data;}}
- return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
+ return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),jump:IN.down('jump'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
 }
 export function coopSnapshot(){
- return {g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water},
+ return {road:road.snapshot(),g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water},
  actors:G.actors.map(a=>{const vis=a.model.root.visible;if(a.side==='player'&&a===G.player&&G.fpActive)a.model.root.visible=true;const tree=treeState(a.model.root);a.model.root.visible=vis;return {s:scalarState(a),weapon:a.weapon?{kind:a.weapon.kind,ammo:a.weapon.ammo}:null,tree};}),
  items:G.items.map(i=>({s:scalarState(i),tree:treeState(i.mesh)})),props:G.props.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
  projs:G.projs.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
@@ -2699,5 +2723,6 @@ export function coopApply(data){
  if(!pr){const mesh=row.s.kind==='drum'?propMesh('barrel'):row.s.kind==='rocket'?itemMesh('rocket'):meshFrom(itemGeo(row.s.kind),{thin:true,shadow:false});scene.add(mesh);pr={mesh};G.projs[i]=pr;}Object.assign(pr,row.s);applyTree(pr.mesh,row.tree);});
  if(data.car){if(!G.car){G.car=buildCar();scene.add(G.car);}applyTree(G.car,data.car);}else if(G.car){scene.remove(G.car);G.car=null;}
  data.doors.forEach((d,i)=>{if(world.area().doors?.[i])Object.assign(world.area().doors[i],d);});
+ road.apply(data.road);
  if(G.mode==='play')A.music(areaMusic());
 }
