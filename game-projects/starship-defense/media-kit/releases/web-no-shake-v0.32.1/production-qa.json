@@ -1,0 +1,81 @@
+{
+  "stage": "production",
+  "realGrenade": true,
+  "results": [
+    {
+      "name": "conquest-third-explosion",
+      "positionDelta": 0,
+      "rotationDelta": 0
+    },
+    {
+      "name": "conquest-third-damage",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "damage": 8
+    },
+    {
+      "name": "conquest-third-grenade",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "grenades": 1
+    },
+    {
+      "name": "conquest-first-explosion",
+      "positionDelta": 0,
+      "rotationDelta": 0
+    },
+    {
+      "name": "conquest-first-damage",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "damage": 8
+    },
+    {
+      "name": "conquest-first-grenade",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "grenades": 1
+    },
+    {
+      "name": "campaign-third-base-hit",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "damage": 1
+    },
+    {
+      "name": "campaign-first-base-hit",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "damage": 1
+    },
+    {
+      "name": "campaign-gate-destroyed",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "gateDestroyed": true
+    },
+    {
+      "name": "tank-third-fire",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "shots": 1
+    },
+    {
+      "name": "tank-first-fire",
+      "positionDelta": 0,
+      "rotationDelta": 0,
+      "shots": 1
+    },
+    {
+      "name": "rv-third-explosion",
+      "positionDelta": 0,
+      "rotationDelta": 1.1102230246251565e-16
+    },
+    {
+      "name": "rv-first-explosion",
+      "positionDelta": 0,
+      "rotationDelta": 0
+    }
+  ],
+  "errors": []
+}

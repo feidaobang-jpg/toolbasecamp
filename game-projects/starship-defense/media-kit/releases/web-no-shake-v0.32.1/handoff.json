@@ -7,9 +7,9 @@
   "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-no-shake-20261009",
   "build": {
     "id": "no-shake0321",
-    "commit": null,
+    "commit": "6b55b57b77339287274211095c9c6ed67a1910d4",
     "base_commit": "2ffa78d7a5cb20863ea861a2b1da3b9315726763",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "1f4a0d7c7c911c37d3a436e92b87e1fa88d7371af54a93a6d2ca460ec64ac454",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },

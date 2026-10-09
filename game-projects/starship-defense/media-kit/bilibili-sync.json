@@ -150,8 +150,9 @@
         "取消手雷、爆炸、受伤、开炮等引起的镜头震动"
       ],
       "record": "releases/web-no-shake-v0.32.1/handoff.json",
-      "website_verified": false,
-      "new_video": "not_requested"
+      "website_verified": true,
+      "new_video": "not_requested",
+      "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4"
     }
   ],
   "comment_corrections": [

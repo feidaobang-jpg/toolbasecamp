@@ -1,16 +1,23 @@
 {
   "version": "web-no-shake-v0.32.1",
-  "source_commit": null,
+  "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4",
   "runtime_sha256": "1f4a0d7c7c911c37d3a436e92b87e1fa88d7371af54a93a6d2ca460ec64ac454",
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T21:11:21.295256+08:00",
+    "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4",
+    "html_runtime_revision": "game.compat.js?v=6b55b57b",
+    "runtime_sha256": "1f4a0d7c7c911c37d3a436e92b87e1fa88d7371af54a93a6d2ca460ec64ac454",
+    "runtime_matches_tested_build": true,
+    "physical_phone": false
   },
   "approval": {
     "required": false,
     "status": "not_required",
     "policy": "2026-10-09-website-immediate"
   },
-  "automatic_batch_eligible": false,
+  "automatic_batch_eligible": true,
   "channels": {
     "toy": {
       "status": "pending_22_batch",
