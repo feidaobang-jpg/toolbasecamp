@@ -81,7 +81,7 @@ function fitStage(){
   rotated=(h>w)&&isTouch; // 竖屏手机 → 旋转
   let vw=rotated?h:w, vh=rotated?w:h;
   BASE_H=BASE_W*vh/vw;stage.style.height=BASE_H+'px';
-  stage.classList.toggle('vs-compact',BASE_H<340);
+  stage.classList.toggle('vs-compact',BASE_H<400);
   stageScale=Math.min(vw/BASE_W,vh/BASE_H);
   // Keep utility targets and edge spacing in CSS pixels even when the stage scales.
   const safe=getComputedStyle(cornerSafeProbe);
