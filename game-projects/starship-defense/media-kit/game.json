@@ -131,8 +131,8 @@
   "extension_review_status": "published",
   "preview_version": "web-shop-scroll-v0.29.2",
   "submitted_toy_version": "web-shop-scroll-v0.29.2",
-  "website_version": "web-shop-scroll-v0.29.2-menu-text1",
-  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
+  "website_version": "web-resistance-v0.33.0",
+  "website_verified_at": "2026-10-09T21:53:12.762458+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
@@ -185,7 +185,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+  "website_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -784,7 +784,7 @@
       "capture-versus-teams.cjs"
     ]
   },
-  "website_deploy_record": "releases/web-camera-response-v0.31.2/website-assets.json",
+  "website_deploy_record": "releases/web-resistance-v0.33.0/website.json",
   "development_model_scope": "确认v0.26.0/v0.27.0虫潮对战模式的开发来源；更早版本未完整核对，Codex完成接管核验和视频制作。",
   "current_video_preparation": {
     "episode": "rv-town-20261009",
@@ -837,7 +837,7 @@
   "pending_channel_release": {
     "version": "web-resistance-v0.33.0",
     "record": "releases/web-resistance-v0.33.0/release-status.json",
-    "status": "awaiting_website_verification_then_22_batch",
+    "status": "pending_22_batch",
     "channels": {
       "toy": {
         "status": "pending_22_batch",
@@ -905,18 +905,19 @@
         "verify_original_before_reply": true
       }
     },
-    "previous_pending_record": "releases/web-camera-response-v0.31.2/release-status.json"
+    "previous_pending_record": "releases/web-camera-response-v0.31.2/release-status.json",
+    "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda"
   },
   "website": {
     "status": "public_verified",
     "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-    "verified_at": "2026-10-09T21:11:21.295256+08:00",
-    "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4",
-    "html_runtime_revision": "game.compat.js?v=6b55b57b",
-    "runtime_sha256": "1f4a0d7c7c911c37d3a436e92b87e1fa88d7371af54a93a6d2ca460ec64ac454",
+    "verified_at": "2026-10-09T21:53:12.762458+08:00",
+    "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
+    "html_runtime_revision": "game.compat.js?v=a47bc064",
+    "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
     "runtime_matches_tested_build": true,
     "physical_phone": false,
-    "version": "web-no-shake-v0.32.1"
+    "version": "web-resistance-v0.33.0"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -983,6 +984,17 @@
       "version": "web-three-lanes-v0.31.0",
       "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
       "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+    },
+    {
+      "status": "public_verified",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "verified_at": "2026-10-09T21:11:21.295256+08:00",
+      "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4",
+      "html_runtime_revision": "game.compat.js?v=6b55b57b",
+      "runtime_sha256": "1f4a0d7c7c911c37d3a436e92b87e1fa88d7371af54a93a6d2ca460ec64ac454",
+      "runtime_matches_tested_build": true,
+      "physical_phone": false,
+      "version": "web-no-shake-v0.32.1"
     }
   ],
   "resistance_campaign": {
@@ -1011,6 +1023,7 @@
       "非电视剧逐镜复刻",
       "没有演员语音",
       "战役暂不支持联机或云存档"
-    ]
+    ],
+    "website_verified": true
   }
 }

@@ -1,17 +1,23 @@
 {
   "version": "web-resistance-v0.33.0",
-  "source_commit": null,
+  "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
   "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
   "website": {
-    "status": "pending_verification",
-    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T21:53:12.762458+08:00",
+    "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
+    "html_runtime_revision": "game.compat.js?v=a47bc064",
+    "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
+    "runtime_matches_tested_build": true,
+    "physical_phone": false
   },
   "approval": {
     "required": false,
     "status": "not_required",
     "policy": "2026-10-09-website-immediate"
   },
-  "automatic_batch_eligible": false,
+  "automatic_batch_eligible": true,
   "channels": {
     "toy": {
       "status": "pending_22_batch",
@@ -83,5 +89,11 @@
       "status": "not_requested"
     }
   },
-  "release_kind": "major"
+  "release_kind": "major",
+  "tests": {
+    "status": "passed",
+    "local_groups": 17,
+    "production_groups": 17,
+    "physical_phone": false
+  }
 }

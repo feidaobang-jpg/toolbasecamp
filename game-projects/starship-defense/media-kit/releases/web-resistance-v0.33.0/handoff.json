@@ -7,9 +7,9 @@
   "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-resistance-20261009",
   "build": {
     "id": "resistance0330",
-    "commit": null,
+    "commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
     "base_commit": "13f5de2dc3d435b4904e8ff46f7d210d1baf90a6",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -262,6 +262,20 @@
       ],
       "unverified": [
         "Toy客户端"
+      ]
+    },
+    {
+      "id": "public-website",
+      "device": "Windows / Edge headless / D3D11",
+      "viewport": "1440x900 / 844x390 / 390x844",
+      "method": "正式公网入口重复17组机制、操作与模式回归测试，SHA256与本地测试产物一致",
+      "result": "pass",
+      "evidence": [
+        "website.json",
+        "qa/production/results.json"
+      ],
+      "unverified": [
+        "手机真机"
       ]
     }
   ],
