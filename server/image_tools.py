@@ -549,12 +549,9 @@ ENHANCE_TASKS = {
     202: "blackAndWhite",
     204: "brightenMode",
     205: "grayScale",
-    207: "inkSaving",
+    207: "dotMatrix",
     208: "textSharpening",
-    301: "removeMoire",
     302: "removeShadow",
-    303: "removeBlur",
-    304: "removeOverexposure",
 }
 
 

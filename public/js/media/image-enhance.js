@@ -30,12 +30,9 @@
         { taskType: 202, id: 'blackAndWhite' },
         { taskType: 204, id: 'brightenMode' },
         { taskType: 205, id: 'grayScale' },
-        { taskType: 207, id: 'inkSaving' },
+        { taskType: 207, id: 'dotMatrix' },
         { taskType: 208, id: 'textSharpening' },
-        { taskType: 301, id: 'removeMoire' },
-        { taskType: 302, id: 'removeShadow' },
-        { taskType: 303, id: 'removeBlur' },
-        { taskType: 304, id: 'removeOverexposure' }
+        { taskType: 302, id: 'removeShadow' }
     ];
 
     if (loginLink) loginLink.href = C.loginUrl();
