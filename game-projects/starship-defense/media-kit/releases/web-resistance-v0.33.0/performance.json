@@ -1,0 +1,84 @@
+{
+  "method": "8 seconds movement, firing, grenade and camera rotation per chapter after warmup; no recording during timing; QA invulnerability for repeatable render load",
+  "physicalPhone": false,
+  "results": [
+    {
+      "chapter": 0,
+      "samples": 1362,
+      "averageFPS": 169.99500748876684,
+      "medianMs": 5.9000000059604645,
+      "p95Ms": 6,
+      "over50ms": 0,
+      "drawCalls": 73,
+      "triangles": 28574,
+      "memory": {
+        "geometries": 95,
+        "textures": 4
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "dpr": 1.5,
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "quality": "high",
+      "theme": "dark"
+    },
+    {
+      "chapter": 1,
+      "samples": 1363,
+      "averageFPS": 169.99675721557531,
+      "medianMs": 5.9000000059604645,
+      "p95Ms": 6,
+      "over50ms": 0,
+      "drawCalls": 61,
+      "triangles": 21274,
+      "memory": {
+        "geometries": 153,
+        "textures": 4
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "dpr": 1.5,
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "quality": "high",
+      "theme": "dark"
+    },
+    {
+      "chapter": 2,
+      "samples": 1364,
+      "averageFPS": 170.00274197958308,
+      "medianMs": 5.9000000059604645,
+      "p95Ms": 6,
+      "over50ms": 0,
+      "drawCalls": 85,
+      "triangles": 34878,
+      "memory": {
+        "geometries": 106,
+        "textures": 11
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "dpr": 1.5,
+      "drawingBuffer": [
+        1440,
+        900
+      ],
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "quality": "high",
+      "theme": "dark"
+    }
+  ]
+}

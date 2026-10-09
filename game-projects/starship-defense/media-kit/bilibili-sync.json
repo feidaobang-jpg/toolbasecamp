@@ -153,6 +153,17 @@
       "website_verified": true,
       "new_video": "not_requested",
       "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4"
+    },
+    {
+      "version": "web-resistance-v0.33.0",
+      "status": "pending_website_then_22_batch_subject_to_existing_hold",
+      "changes": [
+        "新增抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮攻城",
+        "二战服装、四款枪械、军马军刀、中式城镇与独立检查点；无成长和震屏"
+      ],
+      "record": "releases/web-resistance-v0.33.0/handoff.json",
+      "website_verified": false,
+      "new_video": "not_requested"
     }
   ],
   "comment_corrections": [

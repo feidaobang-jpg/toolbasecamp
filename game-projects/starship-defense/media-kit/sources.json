@@ -290,5 +290,30 @@
     "description": "原创钢灰寒霜双管/冷却罐与仰角迫击炮，沿用既有深色战场材质；程序化Three.js几何，无外部下载",
     "tool": "Codex",
     "version": "web-defense-v0.21.0"
+  },
+  {
+    "id": "resistance-period-assets-v033",
+    "source_type": "procedural",
+    "runtime_file": "public/html/game/starship-defense/resistance-assets.js",
+    "tool": "Codex / Three.js r152",
+    "purpose": "二战人物、枪械、骑兵、炮位与中式村镇三个战役地图",
+    "parameters": "几何尺寸、合并网格与顶点色见运行源码；复用既有合成音效",
+    "processing": "原创建模及动画，未下载或提取电影、电视剧和商业游戏素材",
+    "story_references": [
+      {
+        "title": "央视《亮剑》第4集（李家坡作战）",
+        "url": "https://dianshiju.cctv.com/2009/12/27/VIDE1354512802260697.shtml"
+      },
+      {
+        "title": "央视《亮剑》骑兵连冲锋片段",
+        "url": "https://tv.cctv.com/2015/05/13/VIDE1431511418411371.shtml"
+      },
+      {
+        "title": "央视《亮剑》第13集（平安县城）",
+        "url": "https://tv.cctv.com/v/v4/VIDErn4ARx8m7lOrx6dYkuLd120120.html"
+      }
+    ],
+    "adaptation": "玩法改编，非逐镜还原，骑兵关以运输车突围构成可重玩结局",
+    "sha256": "b803026edf8f884d881bbecc971c33e2a763044266f3b5d6dc61164190fe667b"
   }
 ]

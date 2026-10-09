@@ -1,0 +1,20 @@
+{
+  "title": "虫潮围城",
+  "slug": "chongchao-qianshao",
+  "version": "web-resistance-v0.33.0",
+  "source": "public/html/game/starship-defense",
+  "zip_sha256": "6dae6b3cbbd5512f505b4ba10e8f55d0cd67749b1d1c9b7be43bcc5102cbcb33",
+  "files": {
+    "index.html": "514cf082586d8773b3d559a115f465d6e9b2fb02fea335c8a4ffe1f39bac618a",
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "game.compat.js": "41171b2c318efb742aec27ebe072882a7902568031cce1ac60ab0955a88732a3",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "status": "built_not_submitted",
+  "published_toy_unchanged": true,
+  "zip_bytes": 366504,
+  "uncompressed_bytes": 1206418
+}

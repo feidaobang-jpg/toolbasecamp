@@ -4,6 +4,9 @@ let coopDriver=null,coopHumans=[],coopNextId=1,coopEpoch=0,coopPendingEdges=[];
 import {createVersus,VS_UNITS,VS_RULES,VS_BUILD_KINDS,VS_SIZES,TEAM_CSS,TEAM_NAME,VS_AI,fmtTime} from './versus.js?v=vs2';
 import {BF_WEAPONS,BF_VEHICLES,militaryGun,militarySoldier,militaryVehicle} from './battlefield-assets.js';
 import {createRVBreakout,makeRVMesh,RV_CFG} from './rv-breakout.js';
+import {createResistanceCampaign} from './resistance-campaign.js';
+let resistanceCampaign=null;
+const warOn=()=>!!resistanceCampaign?.state.active;
 let rvBreakout=null,rvFrameDt=0;
 const rvOn=()=>!!rvBreakout?.state.active;
 let versus=null,lobbyMode='coop',versusBackup=null;
@@ -3402,6 +3405,7 @@ function migrateWeapons(d){
 }
 function savePrefix(){return SAVE_PREFIX+(Game.testMode?'sandbox_':'');}
 function autoSave(){
+  if(warOn()){resistanceCampaign.save();return;}
   if(rvOn()){rvBreakout.save();return;}
   if(coopDriver?.config||vsOn()||versusBackup||Game.state==='menu'||Game.state==='over')return;
   const d=saveData();
@@ -3747,12 +3751,13 @@ $('btnSaveMenu').onclick=()=>{saveMode='save';renderSlots();$('savePanel').class
 $('btnOverLoad').onclick=()=>{saveMode='load';renderSlots();$('savePanel').classList.remove('hidden');panelOpen=true;};
 $('saveClose').onclick=closePanels;
 $('btnResume').onclick=togglePause;
-$('btnRestartLv').onclick=()=>{if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();};
+$('btnRestartLv').onclick=()=>{if(warOn())resistanceCampaign.retry();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();};
 $('btnRetry').onclick=restartLevel;
 $('btnQuit').onclick=$('btnOverQuit').onclick=()=>{
+  const leavingWar=warOn();if(leavingWar)resistanceCampaign.stop();
   if(rvOn())rvBreakout.stop();
   if(vsOn()||versusBackup)exitVersus();
-  if(Game.state!=='over')autoSave();
+  if(!leavingWar&&Game.state!=='over')autoSave();
   coopDriver?.leave();clearCoopHumans();Game.coop=false;
   operations.clear();Game.state='menu';Game.testMode=false;$('sandboxBtn').classList.add('hidden');
   if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
@@ -3811,7 +3816,7 @@ $('deviceMode').onchange=e=>setDeviceMode(e.target.value);
 /* ================= 纯键盘界面导航 =================
    最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
-const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','rvResult','rvPanel','rvMenu','vsResult','menuOver','menuPause','vsMenu','menuMain'];
+const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
 function navRoot(){
   // The modal owns its native text fields and Tab/Escape handling.
@@ -3873,6 +3878,8 @@ window.addEventListener('keydown',e=>{
   if(e.code==='KeyK'||e.code==='Escape'){
     e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;Input.reset();
     if(root.id==='confirmPanel')$('confirmCancel').click();
+    else if(root.id==='warMenu')$('warBack').click();
+    else if(root.id==='warResult')$('warResultBack').click();
     else if(root.id==='rvMenu')$('rvBack').click();
     else if(root.id==='rvResult')$('rvResultBack').click();
     else if(root.id==='vsPanel')versusClosePanel();
@@ -3913,6 +3920,13 @@ function loop(){
   let dt=Math.min(.05,(now-lastT)/1000);lastT=now;
   rvFrameDt=dt;
   if(liveController)liveController.tick(dt);
+  if(warOn()){
+    const playing=Game.state==='battle'&&!panelOpen;
+    if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
+    if(playing)updLook(dt);
+    resistanceCampaign.update(dt,playing);
+    frameStats(now);renderer.render(resistanceCampaign.state.scene,camera);Input.clearFrame();return;
+  }
   if(vsOn()&&Game.state==='battle'&&!panelOpen){
     if(Input.pop('O'))versusTogglePanel('weapons');else if(Input.pop('L'))versusTogglePanel('build');else if(Input.pop('R'))battlefieldCommand({kind:'bfReload'});else if(Input.pop('T'))versusTogglePanel('team');
   }else if((Game.state==='prep'||Game.state==='battle')&&!panelOpen){
@@ -4054,6 +4068,12 @@ rvBreakout=createRVBreakout({THREE,scene,Game,player,WORLD,AudioSys,stage,camera
 });
 player.reset('gunner');
 player.mesh.visible=false; // 菜单时隐藏
+resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get player(){return player;},showHUD,
+  isTouch:()=>isTouch,view:()=>({yaw:camYaw,pitch:camPitch,first:camMode==='first',preset:CAMERA_VIEWS[camView]}),
+  autoAim:()=>isTouch||CombatControls.autoAim,cycleView:cycleCamView,syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
+  faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
+  prepare(){if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
+});
 const _origNewGame=newGame;
 newGame=function(t){player.mesh.visible=true;_origNewGame(t);};
 const _origLoadGame=loadGame;
@@ -4141,8 +4161,8 @@ function setupWebControls(){
   if(!LIVE_MODE)platformSave=setupToyPlatform({
     store:saveStore,confirm:askConfirm,updateContinue:refreshContinue,
     prefix:SAVE_PREFIX,
-    getSave:()=>rvOn()||coopDriver?.config||vsOn()||versusBackup?null:Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
-    load:d=>loadGame(d),isTest:()=>rvOn()||!!coopDriver?.config||vsOn()||Game.testMode||new URLSearchParams(location.search).has('qa'),
+    getSave:()=>warOn()||rvOn()||coopDriver?.config||vsOn()||versusBackup?null:Game.state==='menu'?slotInfo(SAVE_PREFIX+'auto'):Game.testMode?null:saveData(),
+    load:d=>loadGame(d),isTest:()=>warOn()||rvOn()||!!coopDriver?.config||vsOn()||Game.testMode||new URLSearchParams(location.search).has('qa'),
     open:()=>{closePanels();Input.reset();panelOpen=true;$('platformPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();},close:closePanels,
     validate:d=>validateNormalSave(d,{weapons:{...WEAPONS,...LEGACY_WEAPONS},buildings:BUILDINGS,vehicles:VEHICLES})
   });
@@ -4167,8 +4187,8 @@ function setupWebControls(){
     if(e.repeat)return;
     if(e.code!=='Escape'&&(e.target.closest&&e.target.closest('select,input')||(!Input.isPlaying()&&['Enter','Space'].includes(e.code)&&e.target.closest&&e.target.closest('button,[tabindex="0"]'))))return;
     if(!$('confirmPanel').classList.contains('hidden')){if(e.code==='Escape')$('confirmCancel').click();return;}
-    if(e.code==='Enter'&&Game.state==='menu'&&$('vsMenu').classList.contains('hidden'))requestNewGame();
-    else if(e.code==='Enter'&&Game.state==='over'){if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();}
+    if(e.code==='Enter'&&Game.state==='menu'&&$('vsMenu').classList.contains('hidden')&&!resistanceCampaign?.menuOpen())requestNewGame();
+    else if(e.code==='Enter'&&Game.state==='over'){if(warOn())resistanceCampaign.retry();else if(rvOn())rvBreakout.start();else if(vsOn())versusRematch();else restartLevel();}
     else if(keyBindings.action(e.code)==='R'&&Game.state==='prep'&&!panelOpen)startBattle();
     else if(e.code==='Escape'){e.preventDefault();pauseKey(true);}
     else if(keyBindings.action(e.code)==='T'&&Game.testMode&&Game.state!=='menu'){e.preventDefault();if(panelOpen)closePanels();else openSandbox();}
@@ -4180,7 +4200,7 @@ function setupWebControls(){
   setDeviceMode(deviceMode);
   if(new URLSearchParams(location.search).get('qa')==='1'){
     window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,saveStore,getPlatformSave:()=>platformSave,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
-      get rvBreakout(){return rvBreakout;},get versus(){return versus;},startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,VS_UNITS,VS_AI,VS_RULES,VS_SIZES,get coopHumans(){return coopHumans;},
+      get resistanceCampaign(){return resistanceCampaign;},get rvBreakout(){return rvBreakout;},get versus(){return versus;},startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,VS_UNITS,VS_AI,VS_RULES,VS_SIZES,get coopHumans(){return coopHumans;},
       touchLayout,setDeviceMode,recallUnits,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}

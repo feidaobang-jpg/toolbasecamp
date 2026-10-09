@@ -1,0 +1,53 @@
+export const WAR_CHAPTERS=[
+ {name:'李家坡 · 交通壕突击',tag:'步兵 / 手榴弹 / 阵地突破',brief:'扮演李云龙带领突击班，从交通壕逼近山崎部队。利用掩体接近机枪火力点，用手榴弹打开突破口，再夺取坡顶阵地。',stages:['夺取前沿交通壕','炸毁两座机枪堡垒','冲入坡顶指挥阵地']},
+ {name:'骑兵连 · 冲锋突围',tag:'骑乘 / 军刀 / 掩护撤离',brief:'跟随孙德胜的骑兵连冲开封锁。上马后用冲刺拉近距离，挥刀冲击敌骑和步兵，掩护后方运输车撤离。以骑兵连冲锋名场面改编为可重玩的突围任务。',stages:['上马，与骑兵连集结','冲破前方日军封锁线','掩护运输车抵达撤离点']},
+ {name:'平安县城 · 开炮',tag:'城镇 / 运弹 / 操炮 / 巷战',brief:'扮演李云龙夺取城外街道，运送炮弹、接管攻城炮。向城门开炮打开通路，带队进入县城，夺下守备队部。',stages:['攻下城外机枪阵地','运送炮弹到攻城炮','操作火炮，轰开城门','突入县城，夺取守备队部']},
+];
+export function mountResistanceUI(api){
+ const $=id=>document.getElementById(id),stage=$('stage');
+ const css=document.createElement('style');css.textContent=`
+ .resistance-mode #hudTop,.resistance-mode #hudRight,.resistance-mode #radar,.resistance-mode #weaponBar,.resistance-mode #readyBtn,.resistance-mode #hint,.resistance-mode #interactHint,.resistance-mode #screenFx,.resistance-mode #crosshair,.resistance-mode #bfScore,.resistance-mode #bfFlags,.resistance-mode #bfInfo{display:none!important}
+ .resistance-mode #webTools .mbtn:not(#personBtn):not(#menuButton):not(#fullBtn):not(#qualityBtn):not(#muteBtn){display:none!important}
+ .resistance-mode #vX,.resistance-mode #vR,.resistance-mode #vT,.resistance-mode #vZ{display:none!important}
+ .resistance-mode #vJ{background:#a65348!important}.resistance-mode #vK{background:#5b8260!important}.resistance-mode #vU{background:#9b8151!important}.resistance-mode #vI{background:#527b91!important}
+ .resistance-mode #vU,.resistance-mode #vI,.resistance-mode #vO,.resistance-mode #vL,.resistance-mode #vH{display:block!important}
+ .resistance-mode .campaign-only,.resistance-mode #btnSaveMenu,.resistance-mode #btnLoadMenu2,.resistance-mode #squadTask,.resistance-mode #squadTaskHint,.resistance-mode #saveHealth{display:none!important}
+ #warMenu,#warResult{background:linear-gradient(140deg,rgba(31,39,35,.99),rgba(53,54,41,.98));color:#f0e6cc;overflow:auto;justify-content:flex-start;padding:28px 30px;gap:12px}
+ #warKeysTouch{display:none}.touch-mode #warKeysDesktop{display:none}.touch-mode #warKeysTouch{display:block}
+ #warMenu h1,#warResult h1{color:#eed8a4;margin:4px 0;font-size:34px;letter-spacing:4px}
+ #warMenu .warKicker{letter-spacing:5px;color:#b7bfaa;font-size:12px;margin-top:8px}#warMenu .small,#warResult .small{color:#d4d4bb;max-width:950px;line-height:1.7}
+ #warChapters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;width:min(980px,98%);text-align:left}
+ .warChapter{border:1px solid #78806a;border-radius:9px;padding:16px;background:#e4dcc5;color:#303c35;min-height:190px;text-align:left;line-height:1.7;font-size:14px;cursor:pointer;box-shadow:0 5px 0 #171f19}
+ .warChapter strong{display:block;font-size:21px;line-height:1.4;margin:6px 0 12px}.warChapter small{display:block;color:#596951}.warChapter:hover,.warChapter:focus-visible{outline:3px solid #d5ac54;outline-offset:3px;transform:translateY(-2px)}
+ #warHUD{position:absolute;left:12px;top:12px;width:330px;padding:10px 13px;background:#202c29ed;border-left:4px solid #c9ab61;border-radius:5px;color:#eee4c9;pointer-events:none;line-height:1.55;font-size:13px}
+ #warHUD strong{font-size:17px;display:block;color:#e7d49d}#warMission{margin-top:4px;color:#fff}#warProgress{color:#b8cda7}#warHint{color:#decb90;font-size:12px;margin-top:5px}
+ #warMap{position:absolute;right:12px;top:118px;width:142px;height:160px;background:#1f2c27e6;border:1px solid #8c9777;border-radius:5px;pointer-events:none}
+ #warStatus{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);color:#f1e9d2;background:#1d2a25ed;border:1px solid #6d785f;border-radius:6px;padding:9px 15px;line-height:1.6;text-align:center;min-width:280px;pointer-events:none;font-size:14px}
+ #warLoadout{position:absolute;left:50%;bottom:79px;transform:translateX(-50%);display:flex;gap:5px}
+ #warLoadout button{min-height:42px;border-radius:4px;border:1px solid #80866e;background:#dfd7bd;color:#25362b;padding:5px 10px;font-size:12px;cursor:pointer}#warLoadout button.on{background:#b6cb99;border-color:#e4c475;box-shadow:0 0 0 2px #e4c475}
+ #warDialogue{position:absolute;left:50%;bottom:132px;transform:translateX(-50%);max-width:640px;width:60%;background:#17211de8;border-left:4px solid #dac389;padding:12px 18px;color:#f5e9c7;font-size:19px;line-height:1.65;pointer-events:none}
+ #warReticle{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;border:1px solid #efe4b1;border-radius:50%;pointer-events:none}#warReticle:after{content:'';position:absolute;width:3px;height:3px;left:7px;top:7px;background:#fff4c0}
+ #warDamage{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 65px #b54539;opacity:0}
+ #warOrder{position:absolute;right:12px;top:285px;min-height:44px;background:#e2d8b9;color:#304335;border:1px solid #b4a974;border-radius:6px;padding:6px 12px;cursor:pointer}
+ .touch-mode #warHUD{width:275px;font-size:11px;padding:6px 10px}.touch-mode #warHUD strong{font-size:14px}.touch-mode #warHint{font-size:10px}
+ .touch-mode #warMap{width:103px;height:117px;top:108px}.touch-mode #warOrder{top:230px;font-size:11px;min-height:44px}
+ .touch-mode #warStatus{bottom:12px;min-width:205px;font-size:11px;padding:5px 9px}.touch-mode #warLoadout{bottom:62px;gap:4px;max-width:50%}.touch-mode #warLoadout button{font-size:10px;min-height:44px;padding:3px 6px}
+ .touch-mode #warDialogue{bottom:120px;width:45%;font-size:14px;padding:8px 12px}
+ .touch-mode #warMenu{padding:10px 22px;gap:6px}.touch-mode #warMenu h1{font-size:27px}.touch-mode .warChapter{min-height:160px;padding:10px;font-size:12px}.touch-mode .warChapter strong{font-size:17px}
+ @media(max-height:450px){#warMenu{padding:10px 20px}#warMenu h1{font-size:24px}.warChapter{padding:10px;min-height:160px;font-size:12px}.warChapter strong{font-size:17px}#warMenu .small{font-size:11px}}
+ `;document.head.append(css);
+ const button=document.createElement('button');button.id='btnResistance';button.className='mbtn green';button.textContent='抗战战役 · 亮剑名场面';$('btnRV').after(button);
+ const wrap=document.createElement('div');wrap.innerHTML=`
+ <div id="warMenu" class="overlay menu hidden"><div class="warKicker">虫潮围城 · 独立剧情模式</div><h1>抗 战 战 役</h1><p class="small">《亮剑》名场面改编 · 单人带领电脑队友 · 三章直接选择与重玩 · 检查点继续 · 固定装备</p><div id="warChapters"></div><p id="warKeysDesktop" class="small">WASD 移动 · J 射击 / 军刀 · U 手雷 · I 互动 / 上下马 / 操炮 · K 跳跃 / 骑马冲刺<br>O 切枪 · R / L 换弹 · H 医疗 · T 小队指令 · C 视角 · Q / E 或拖动转头 · Esc 暂停</p><p id="warKeysTouch" class="small">左下摇杆移动，空白处拖动瞄准；右下按钮射击、手雷、跳跃和互动。骑乘后射击变为挥刀，跳跃变为冲刺。右上可切换视角和暂停。</p><div class="btnRow"><button id="warContinue" class="mbtn green">继续检查点</button><button id="warBack" class="mbtn">返回主菜单</button></div><p id="warSaveInfo" class="small"></p></div>
+ <div id="warHUD" class="hidden"><strong id="warTitle"></strong><div id="warMission"></div><div id="warProgress"></div><div id="warHint"></div></div>
+ <canvas id="warMap" class="hidden" width="180" height="204" aria-label="战役地图：金色目标、红色敌军、蓝色队友、白色玩家"></canvas>
+ <div id="warStatus" class="hidden"></div><div id="warLoadout" class="hidden"></div><div id="warDialogue" class="hidden"></div><div id="warReticle" class="hidden"></div><div id="warDamage" class="hidden"></div><button id="warOrder" class="hidden">小队：跟随</button>
+ <div id="warResult" class="overlay menu hidden"><div class="warKicker">战役记录</div><h1 id="warResultTitle"></h1><p id="warResultText" class="small"></p><div class="btnRow"><button id="warNext" class="mbtn green">下一章</button><button id="warReplay" class="mbtn">重玩本章</button><button id="warSelect" class="mbtn">章节选择</button><button id="warResultBack" class="mbtn">返回主菜单</button></div></div>`;
+ for(const node of [...wrap.children])stage.append(node);
+ WAR_CHAPTERS.forEach((c,i)=>{const btn=document.createElement('button');btn.className='warChapter';btn.dataset.chapter=String(i);btn.innerHTML=`<small>第 ${i+1} 章 · ${c.tag}</small><strong>${c.name}</strong><span>${c.brief}</span>`;btn.onclick=()=>api.start(i);$('warChapters').append(btn);});
+ button.onclick=()=>open();$('warBack').onclick=()=>{hide('warMenu');$('menuMain').classList.remove('hidden');button.focus();};$('warContinue').onclick=api.continue;$('warReplay').onclick=api.retry;$('warNext').onclick=api.next;$('warSelect').onclick=()=>{api.stop();open();};$('warResultBack').onclick=api.quit;$('warOrder').onclick=api.order;
+ const hud=['warHUD','warMap','warStatus','warLoadout','warReticle','warDamage','warOrder'];
+ function hide(id){$(id).classList.add('hidden');}
+ function open(){api.audio();$('menuMain').classList.add('hidden');hide('warResult');$('warMenu').classList.remove('hidden');const save=api.read();$('warContinue').disabled=!save;$('warContinue').textContent=save?.finished?'重玩最近章节':'继续检查点';$('warSaveInfo').textContent=save?'检查点：'+WAR_CHAPTERS[save.chapter].name+' · '+WAR_CHAPTERS[save.chapter].stages[save.phase]:'选择任意章节开始。战役进度独立保存，不影响其他模式。';$('warChapters').querySelector('button').focus();}
+ return {$,open,menuOpen:()=>$('warMenu')&&!$('warMenu').classList.contains('hidden'),show(){['menuMain','menuPause','menuOver','warMenu','warResult'].forEach(hide);hud.forEach(id=>$(id).classList.remove('hidden'));stage.classList.add('resistance-mode');},stop(){[...hud,'warMenu','warDialogue','warResult'].forEach(hide);stage.classList.remove('resistance-mode');},dialogue(text){$('warDialogue').textContent=text;$('warDialogue').classList.toggle('hidden',!text);},result(win,text,last){hud.forEach(hide);hide('warDialogue');$('warResult').classList.remove('hidden');$('warResultTitle').textContent=win?'本章任务完成':'返回战役检查点';$('warResultText').textContent=text;$('warNext').classList.toggle('hidden',!win||last);$('warReplay').focus();}};
+}

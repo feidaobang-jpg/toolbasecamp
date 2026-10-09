@@ -1,0 +1,87 @@
+{
+  "version": "web-resistance-v0.33.0",
+  "source_commit": null,
+  "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
+  "website": {
+    "status": "pending_verification",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate"
+  },
+  "automatic_batch_eligible": false,
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": "38678478981120"
+    },
+    "taptap": {
+      "status": "held_by_user",
+      "id": "962354",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "existing_video_descriptions": {
+      "status": "held_by_user",
+      "bvids": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "announcements": {
+      "status": "held_by_user",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      },
+      "note": "保留先前目标限制；22点批次须先核对，未擅自解除"
+    },
+    "feedback_replies": {
+      "status": "not_applicable",
+      "reason": "直接用户需求，无本批玩家原楼"
+    },
+    "new_video": {
+      "status": "not_requested"
+    }
+  },
+  "release_kind": "major"
+}
