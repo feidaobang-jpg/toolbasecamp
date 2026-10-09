@@ -1,0 +1,163 @@
+{
+  "text": "这趟成功撤离。搜了两个区，击退十二只僵尸，带着三百一十四零件出来。六个区还没搜全，下次再挑战一趟全搜路线。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 11.712,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2375000,
+      "text": "这"
+    },
+    {
+      "offset": 3375000,
+      "duration": 2125000,
+      "text": "趟"
+    },
+    {
+      "offset": 5750000,
+      "duration": 4375000,
+      "text": "成功"
+    },
+    {
+      "offset": 10250000,
+      "duration": 5000000,
+      "text": "撤离"
+    },
+    {
+      "offset": 21000000,
+      "duration": 2625000,
+      "text": "搜"
+    },
+    {
+      "offset": 23625000,
+      "duration": 625000,
+      "text": "了"
+    },
+    {
+      "offset": 24375000,
+      "duration": 1625000,
+      "text": "两"
+    },
+    {
+      "offset": 26000000,
+      "duration": 875000,
+      "text": "个"
+    },
+    {
+      "offset": 26875000,
+      "duration": 3375000,
+      "text": "区"
+    },
+    {
+      "offset": 32750000,
+      "duration": 3500000,
+      "text": "击退"
+    },
+    {
+      "offset": 36500000,
+      "duration": 2500000,
+      "text": "十二"
+    },
+    {
+      "offset": 39000000,
+      "duration": 1000000,
+      "text": "只"
+    },
+    {
+      "offset": 40125000,
+      "duration": 5250000,
+      "text": "僵尸"
+    },
+    {
+      "offset": 47625000,
+      "duration": 1500000,
+      "text": "带"
+    },
+    {
+      "offset": 49125000,
+      "duration": 750000,
+      "text": "着"
+    },
+    {
+      "offset": 50125000,
+      "duration": 6625000,
+      "text": "三百一十四"
+    },
+    {
+      "offset": 56875000,
+      "duration": 2750000,
+      "text": "零件"
+    },
+    {
+      "offset": 59750000,
+      "duration": 3375000,
+      "text": "出来"
+    },
+    {
+      "offset": 68875000,
+      "duration": 2375000,
+      "text": "六"
+    },
+    {
+      "offset": 71250000,
+      "duration": 1000000,
+      "text": "个"
+    },
+    {
+      "offset": 72250000,
+      "duration": 2250000,
+      "text": "区"
+    },
+    {
+      "offset": 74750000,
+      "duration": 1250000,
+      "text": "还"
+    },
+    {
+      "offset": 76000000,
+      "duration": 1000000,
+      "text": "没"
+    },
+    {
+      "offset": 77125000,
+      "duration": 5625000,
+      "text": "搜全"
+    },
+    {
+      "offset": 86250000,
+      "duration": 6125000,
+      "text": "下次"
+    },
+    {
+      "offset": 92625000,
+      "duration": 1625000,
+      "text": "再"
+    },
+    {
+      "offset": 94250000,
+      "duration": 3375000,
+      "text": "挑战"
+    },
+    {
+      "offset": 97750000,
+      "duration": 750000,
+      "text": "一"
+    },
+    {
+      "offset": 98500000,
+      "duration": 2000000,
+      "text": "趟"
+    },
+    {
+      "offset": 100750000,
+      "duration": 3875000,
+      "text": "全搜"
+    },
+    {
+      "offset": 104750000,
+      "duration": 3625000,
+      "text": "路线"
+    }
+  ]
+}

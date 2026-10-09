@@ -1,0 +1,11 @@
+{
+  "source": "capture/journey-01/capture.json",
+  "frame": {
+    "file": "002273.jpg",
+    "timestamp": 1791534125.198259
+  },
+  "source_seconds": 96.0,
+  "operations": "crop of actual frame, resize, native typography and gradient",
+  "gameplay_features_generated": false,
+  "font": "installed Microsoft YaHei; font file not distributed"
+}

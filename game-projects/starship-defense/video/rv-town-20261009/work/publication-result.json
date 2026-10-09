@@ -1,0 +1,25 @@
+{
+  "schema_version": 2,
+  "status": "not_uploaded",
+  "human_review": "pending",
+  "approval_event_id": "rv-town-video-review-e03bf6f6-e919-40c0-9a2e-9cdbe30a1ff4",
+  "platforms": {
+    "bilibili-zh": {
+      "status": "not_uploaded",
+      "id": null,
+      "url": null
+    },
+    "douyin-zh": {
+      "status": "not_uploaded",
+      "id": null,
+      "url": null
+    },
+    "youtube-zh": {
+      "status": "not_uploaded",
+      "id": null,
+      "url": null
+    }
+  },
+  "user_instruction": "今天的修改先同步发布到toy，其他平台先不发；新片先交审片",
+  "updated_at": "2026-10-09T17:01:44.813301+08:00"
+}

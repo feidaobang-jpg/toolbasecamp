@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checked_at": "2026-10-09T17:01:44.813301+08:00",
+  "portable_references": true,
+  "final_hashes_verified": true,
+  "cover_ratios_verified": true,
+  "description_format_verified": true,
+  "platforms": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "human_review": "pending",
+  "subjective_listening": "not-run"
+}

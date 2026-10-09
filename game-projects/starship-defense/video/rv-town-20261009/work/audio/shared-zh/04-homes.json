@@ -1,0 +1,158 @@
+{
+  "text": "拐进旧住宅区，僵尸发现房车就追了过来。先用车顶机枪清出位置，再下车靠近物资箱，搜索四秒。拿到一百一十零件，还有罐头和医疗包。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 13.944,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4750000,
+      "text": "拐进"
+    },
+    {
+      "offset": 6000000,
+      "duration": 1375000,
+      "text": "旧"
+    },
+    {
+      "offset": 7375000,
+      "duration": 6500000,
+      "text": "住宅区"
+    },
+    {
+      "offset": 17250000,
+      "duration": 3500000,
+      "text": "僵尸"
+    },
+    {
+      "offset": 20875000,
+      "duration": 4750000,
+      "text": "发现"
+    },
+    {
+      "offset": 26750000,
+      "duration": 4875000,
+      "text": "房车"
+    },
+    {
+      "offset": 31875000,
+      "duration": 1000000,
+      "text": "就"
+    },
+    {
+      "offset": 33000000,
+      "duration": 1750000,
+      "text": "追"
+    },
+    {
+      "offset": 34750000,
+      "duration": 750000,
+      "text": "了"
+    },
+    {
+      "offset": 35625000,
+      "duration": 3375000,
+      "text": "过来"
+    },
+    {
+      "offset": 44750000,
+      "duration": 2375000,
+      "text": "先"
+    },
+    {
+      "offset": 47125000,
+      "duration": 1875000,
+      "text": "用"
+    },
+    {
+      "offset": 49250000,
+      "duration": 3875000,
+      "text": "车顶"
+    },
+    {
+      "offset": 53125000,
+      "duration": 3875000,
+      "text": "机枪"
+    },
+    {
+      "offset": 57250000,
+      "duration": 2250000,
+      "text": "清"
+    },
+    {
+      "offset": 59500000,
+      "duration": 1125000,
+      "text": "出"
+    },
+    {
+      "offset": 60750000,
+      "duration": 4375000,
+      "text": "位置"
+    },
+    {
+      "offset": 68125000,
+      "duration": 1750000,
+      "text": "再"
+    },
+    {
+      "offset": 70000000,
+      "duration": 5000000,
+      "text": "下车"
+    },
+    {
+      "offset": 75250000,
+      "duration": 3375000,
+      "text": "靠近"
+    },
+    {
+      "offset": 78750000,
+      "duration": 5375000,
+      "text": "物资箱"
+    },
+    {
+      "offset": 85750000,
+      "duration": 3750000,
+      "text": "搜索"
+    },
+    {
+      "offset": 89625000,
+      "duration": 2250000,
+      "text": "四"
+    },
+    {
+      "offset": 91875000,
+      "duration": 2375000,
+      "text": "秒"
+    },
+    {
+      "offset": 99875000,
+      "duration": 3125000,
+      "text": "拿到"
+    },
+    {
+      "offset": 103250000,
+      "duration": 8625000,
+      "text": "一百一十零件"
+    },
+    {
+      "offset": 115375000,
+      "duration": 2750000,
+      "text": "还有"
+    },
+    {
+      "offset": 118250000,
+      "duration": 5000000,
+      "text": "罐头"
+    },
+    {
+      "offset": 123500000,
+      "duration": 1625000,
+      "text": "和"
+    },
+    {
+      "offset": 125250000,
+      "duration": 5250000,
+      "text": "医疗包"
+    }
+  ]
+}

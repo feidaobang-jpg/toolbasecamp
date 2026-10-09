@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "variant_id": "douyin-zh",
+  "platform": "Douyin",
+  "content_type": "gameplay update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-three-lanes-v0.31.0",
+  "video_file": "../../../final/douyin-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 109.86666666666666,
+  "fps": 30,
+  "title": "开房车进僵尸城搜物资，我能活着回来吗？｜虫潮围城",
+  "description": "开房车进僵尸城，边搜物资边找退路。这趟带回314零件，下次挑战搜全六区。\n#虫潮围城 #房车生存 #游戏开发 #AI",
+  "tags": [
+    "虫潮围城",
+    "房车生存",
+    "游戏开发",
+    "AI"
+  ],
+  "description_file": "../../../final/douyin-zh/投稿文案.txt",
+  "cover_file": "../../../final/douyin-zh/cover-reference-16x9.jpg",
+  "cover_files": {
+    "main": {
+      "file": "../../../final/douyin-zh/cover-reference-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "选帧构图参考，上传入口待核",
+      "sha256": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc"
+    }
+  },
+  "cover_text": "开房车 / 进僵尸城 / 能完整撤出来吗？",
+  "cover_selection_source": "同版本正常规则实机第一场96秒，原片与帧保存在work；正文使用补录第二场",
+  "cover_upload_mode": "select_frame_reference_pending_current_entry_check",
+  "subtitle_mode": "burned_in",
+  "subtitles": [],
+  "category": null,
+  "copyright_type": "original creator gameplay; account selection pending",
+  "credits": "../../sources.md",
+  "disclosures": {
+    "AI_generated_narration": true,
+    "voice": "Edge-TTS zh-CN-YunxiNeural +0%",
+    "voice_clone": false,
+    "AI_assisted_game_development": true,
+    "exact_game_development_model": "unverified for RV town; do not reuse versus-only model attribution",
+    "setting_status": "recheck platform-specific declaration at submission"
+  },
+  "platform_requirements_checked_at": null,
+  "platform_sources": [],
+  "unverified_fields": [
+    "当前投稿入口、账号权限、分类与声明设置",
+    "真实公开页面的封面和字幕可用性"
+  ],
+  "blocking_issues": [
+    "人声可懂度与混音主观听审尚未执行；请用户审片",
+    "本期最终文件尚未经用户人工审片批准",
+    "本轮不执行上传；其他渠道暂缓",
+    "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+  ],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "human_review": {
+    "status": "pending",
+    "approved_sha256": null
+  },
+  "publication": {
+    "status": "not_uploaded",
+    "id": null,
+    "url": null
+  }
+}

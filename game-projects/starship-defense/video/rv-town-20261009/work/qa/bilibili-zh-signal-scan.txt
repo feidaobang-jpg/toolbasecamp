@@ -1,0 +1,42 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\37818\.codex\worktrees\chongchao-rv-video-20261009\toolbasecamp\game-projects\starship-defense\video\rv-town-20261009\final\bilibili-zh\gameplay-zh-final.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf63.1.102
+  Duration: 00:01:49.87, start: 0.000000, bitrate: 2533 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 2335 kb/s, 30 fps, 30 tbr, 15360 tbn, start 0.033333 (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc63.1.102 h264_nvenc
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 189 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))
+  Stream #0:1 -> #0:1 (aac (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf63.1.102
+  Stream #0:0(und): Video: wrapped_avframe, yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 30 fps, 30 tbn (default)
+    Metadata:
+      encoder         : Lavc63.1.102 wrapped_avframe
+      handler_name    : VideoHandler
+  Stream #0:1(und): Audio: pcm_s16le, 48000 Hz, stereo, s16, 1536 kb/s (default)
+    Metadata:
+      encoder         : Lavc63.1.102 pcm_s16le
+      handler_name    : SoundHandler
+frame=  676 fps=0.0 q=-0.0 size=N/A time=00:00:23.25 bitrate=N/A speed=44.9x elapsed=0:00:00.51
+frame= 1389 fps=1347 q=-0.0 size=N/A time=00:00:47.01 bitrate=N/A speed=45.6x elapsed=0:00:01.03
+frame= 2082 fps=1352 q=-0.0 size=N/A time=00:01:10.10 bitrate=N/A speed=45.5x elapsed=0:00:01.53
+frame= 2834 fps=1379 q=-0.0 size=N/A time=00:01:35.21 bitrate=N/A speed=46.3x elapsed=0:00:02.05
+[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_start: 95.206292
+[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_end: 96.613958 | silence_duration: 1.407667
+[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_start: 108.015563
+[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_end: 109.866667 | silence_duration: 1.851104
+[out#0/null @ 000001d03ca35900] video:1364KiB audio:20600KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame= 3295 fps=1398 q=-0.0 Lsize=N/A time=00:01:49.86 bitrate=N/A speed=46.6x elapsed=0:00:02.35

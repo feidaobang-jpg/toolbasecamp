@@ -1,0 +1,96 @@
+{
+  "schema_version": 2,
+  "variant_id": "bilibili-zh",
+  "platform": "Bilibili",
+  "content_type": "gameplay update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-three-lanes-v0.31.0",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 109.86666666666666,
+  "fps": 30,
+  "title": "开房车进僵尸城搜物资，我能活着回来吗？｜虫潮围城",
+  "description": "虫潮围城房车模式：开进废弃城镇，升级车顶机枪、搜索物资、维修，再找路撤离。这趟搜了2/6区，击退12只僵尸，带回314零件。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n进入游戏后选择“房车生存”；WASD驾驶/移动，J射击，I上下车/搜索，O地图与设施。\n房车城镇玩法由Codex辅助开发，本期展示实际试玩。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。",
+  "tags": [
+    "虫潮围城",
+    "房车生存",
+    "僵尸生存",
+    "游戏开发",
+    "AI",
+    "bilibilitoy"
+  ],
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐",
+      "sha256": "053a4562c1a5f528f800b3b5beb1bb71ea0d4867132d58126a5edd8b7f7a699c"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间",
+      "sha256": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc"
+    }
+  },
+  "cover_text": "开房车 / 进僵尸城 / 能完整撤出来吗？",
+  "cover_selection_source": "同版本正常规则实机第一场96秒，原片与帧保存在work；正文使用补录第二场",
+  "cover_upload_mode": "image_file_pending_current_entry_check",
+  "subtitle_mode": "burned_in",
+  "subtitles": [],
+  "category": null,
+  "copyright_type": "original creator gameplay; account selection pending",
+  "credits": "../../sources.md",
+  "disclosures": {
+    "AI_generated_narration": true,
+    "voice": "Edge-TTS zh-CN-YunxiNeural +0%",
+    "voice_clone": false,
+    "AI_assisted_game_development": true,
+    "exact_game_development_model": "unverified for RV town; do not reuse versus-only model attribution",
+    "setting_status": "recheck platform-specific declaration at submission"
+  },
+  "platform_requirements_checked_at": null,
+  "platform_sources": [],
+  "unverified_fields": [
+    "当前投稿入口、账号权限、分类与声明设置",
+    "真实公开页面的封面和字幕可用性"
+  ],
+  "blocking_issues": [
+    "人声可懂度与混音主观听审尚未执行；请用户审片",
+    "本期最终文件尚未经用户人工审片批准",
+    "本轮不执行上传；其他渠道暂缓",
+    "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+  ],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "human_review": {
+    "status": "pending",
+    "approved_sha256": null
+  },
+  "publication": {
+    "status": "not_uploaded",
+    "id": null,
+    "url": null
+  },
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected": false,
+    "status": "draft; verify current rules and select during approved submission"
+  },
+  "pinned_comment_draft": "先选“房车生存”，在修理厂改装、加油站补油，再去感染区下车搜物资。你会先升级机枪，还是先加装甲？\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。",
+  "toy_id": "38678478981120",
+  "toy_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "season_id": 9248439,
+  "topic_verification": "按用户指定话题准备草稿，未报名"
+}

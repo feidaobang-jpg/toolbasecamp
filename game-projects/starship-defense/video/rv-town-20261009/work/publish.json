@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮围城",
+  "game_version": "web-three-lanes-v0.31.0",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [
+        "人声可懂度与混音主观听审尚未执行；请用户审片",
+        "本期最终文件尚未经用户人工审片批准",
+        "本轮不执行上传；其他渠道暂缓",
+        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+      ]
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [
+        "人声可懂度与混音主观听审尚未执行；请用户审片",
+        "本期最终文件尚未经用户人工审片批准",
+        "本轮不执行上传；其他渠道暂缓",
+        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+      ]
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+      "blocking_issues": [
+        "人声可懂度与混音主观听审尚未执行；请用户审片",
+        "本期最终文件尚未经用户人工审片批准",
+        "本轮不执行上传；其他渠道暂缓",
+        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+      ]
+    }
+  ],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "human_review": "pending",
+  "publication": "not_uploaded",
+  "post_publication": {
+    "x": "not requested; no action"
+  },
+  "channel_restriction": "其他平台先不发；先交成片审片，未授权本轮上传"
+}

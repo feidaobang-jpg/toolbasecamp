@@ -1,0 +1,128 @@
+{
+  "text": "废弃超市里还有应急售货机。我用十二零件再买一罐，留着下车受伤时用。补给齐了，继续去市政广场。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 10.632,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4625000,
+      "text": "废弃"
+    },
+    {
+      "offset": 5750000,
+      "duration": 6875000,
+      "text": "超市里"
+    },
+    {
+      "offset": 13750000,
+      "duration": 3375000,
+      "text": "还有"
+    },
+    {
+      "offset": 17375000,
+      "duration": 4125000,
+      "text": "应急"
+    },
+    {
+      "offset": 21625000,
+      "duration": 5875000,
+      "text": "售货机"
+    },
+    {
+      "offset": 33250000,
+      "duration": 1500000,
+      "text": "我"
+    },
+    {
+      "offset": 34750000,
+      "duration": 1750000,
+      "text": "用"
+    },
+    {
+      "offset": 36750000,
+      "duration": 6500000,
+      "text": "十二零件"
+    },
+    {
+      "offset": 43500000,
+      "duration": 1375000,
+      "text": "再"
+    },
+    {
+      "offset": 44875000,
+      "duration": 1250000,
+      "text": "买"
+    },
+    {
+      "offset": 46250000,
+      "duration": 1000000,
+      "text": "一"
+    },
+    {
+      "offset": 47250000,
+      "duration": 2375000,
+      "text": "罐"
+    },
+    {
+      "offset": 53000000,
+      "duration": 2000000,
+      "text": "留"
+    },
+    {
+      "offset": 55000000,
+      "duration": 875000,
+      "text": "着"
+    },
+    {
+      "offset": 56000000,
+      "duration": 4375000,
+      "text": "下车"
+    },
+    {
+      "offset": 60625000,
+      "duration": 3750000,
+      "text": "受伤"
+    },
+    {
+      "offset": 64500000,
+      "duration": 4250000,
+      "text": "时用"
+    },
+    {
+      "offset": 74500000,
+      "duration": 2875000,
+      "text": "补给"
+    },
+    {
+      "offset": 77375000,
+      "duration": 2000000,
+      "text": "齐"
+    },
+    {
+      "offset": 79375000,
+      "duration": 2750000,
+      "text": "了"
+    },
+    {
+      "offset": 84875000,
+      "duration": 4000000,
+      "text": "继续"
+    },
+    {
+      "offset": 89000000,
+      "duration": 1000000,
+      "text": "去"
+    },
+    {
+      "offset": 90250000,
+      "duration": 2750000,
+      "text": "市政"
+    },
+    {
+      "offset": 93125000,
+      "duration": 4375000,
+      "text": "广场"
+    }
+  ]
+}

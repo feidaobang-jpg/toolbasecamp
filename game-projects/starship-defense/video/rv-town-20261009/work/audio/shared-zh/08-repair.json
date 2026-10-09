@@ -1,0 +1,143 @@
+{
+  "text": "绕去北街修理厂。花四十零件，停六秒，房车耐久恢复满了。这张地图不用一路清到底，想撤就能去北侧营地。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 11.4,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2250000,
+      "text": "绕"
+    },
+    {
+      "offset": 3250000,
+      "duration": 1500000,
+      "text": "去"
+    },
+    {
+      "offset": 5000000,
+      "duration": 3250000,
+      "text": "北街"
+    },
+    {
+      "offset": 8375000,
+      "duration": 6625000,
+      "text": "修理厂"
+    },
+    {
+      "offset": 20750000,
+      "duration": 2500000,
+      "text": "花"
+    },
+    {
+      "offset": 23500000,
+      "duration": 7125000,
+      "text": "四十零件"
+    },
+    {
+      "offset": 33000000,
+      "duration": 2250000,
+      "text": "停"
+    },
+    {
+      "offset": 35250000,
+      "duration": 4750000,
+      "text": "六秒"
+    },
+    {
+      "offset": 42125000,
+      "duration": 4125000,
+      "text": "房车"
+    },
+    {
+      "offset": 46375000,
+      "duration": 4625000,
+      "text": "耐久"
+    },
+    {
+      "offset": 51250000,
+      "duration": 3250000,
+      "text": "恢复"
+    },
+    {
+      "offset": 54500000,
+      "duration": 1875000,
+      "text": "满"
+    },
+    {
+      "offset": 56375000,
+      "duration": 2500000,
+      "text": "了"
+    },
+    {
+      "offset": 64375000,
+      "duration": 2000000,
+      "text": "这"
+    },
+    {
+      "offset": 66375000,
+      "duration": 1500000,
+      "text": "张"
+    },
+    {
+      "offset": 68000000,
+      "duration": 5000000,
+      "text": "地图"
+    },
+    {
+      "offset": 74125000,
+      "duration": 3000000,
+      "text": "不用"
+    },
+    {
+      "offset": 77250000,
+      "duration": 2750000,
+      "text": "一路"
+    },
+    {
+      "offset": 80000000,
+      "duration": 1875000,
+      "text": "清"
+    },
+    {
+      "offset": 82000000,
+      "duration": 4000000,
+      "text": "到底"
+    },
+    {
+      "offset": 89625000,
+      "duration": 3125000,
+      "text": "想"
+    },
+    {
+      "offset": 92750000,
+      "duration": 2125000,
+      "text": "撤"
+    },
+    {
+      "offset": 95125000,
+      "duration": 1000000,
+      "text": "就"
+    },
+    {
+      "offset": 96125000,
+      "duration": 1125000,
+      "text": "能"
+    },
+    {
+      "offset": 97250000,
+      "duration": 1125000,
+      "text": "去"
+    },
+    {
+      "offset": 98625000,
+      "duration": 2875000,
+      "text": "北侧"
+    },
+    {
+      "offset": 101625000,
+      "duration": 3625000,
+      "text": "营地"
+    }
+  ]
+}

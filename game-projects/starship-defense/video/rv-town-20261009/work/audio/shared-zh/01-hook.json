@@ -1,0 +1,133 @@
+{
+  "text": "这辆房车开进僵尸城，还能完整开出来吗？这次虫潮围城，我想试试边搜物资，边找条撤离路线。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 9.504,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1500000,
+      "text": "这"
+    },
+    {
+      "offset": 2500000,
+      "duration": 1500000,
+      "text": "辆"
+    },
+    {
+      "offset": 4125000,
+      "duration": 5000000,
+      "text": "房车"
+    },
+    {
+      "offset": 9375000,
+      "duration": 3625000,
+      "text": "开进"
+    },
+    {
+      "offset": 13125000,
+      "duration": 6625000,
+      "text": "僵尸城"
+    },
+    {
+      "offset": 23000000,
+      "duration": 1875000,
+      "text": "还"
+    },
+    {
+      "offset": 24875000,
+      "duration": 875000,
+      "text": "能"
+    },
+    {
+      "offset": 25875000,
+      "duration": 3125000,
+      "text": "完整"
+    },
+    {
+      "offset": 29125000,
+      "duration": 1625000,
+      "text": "开"
+    },
+    {
+      "offset": 30750000,
+      "duration": 1875000,
+      "text": "出来"
+    },
+    {
+      "offset": 32625000,
+      "duration": 2500000,
+      "text": "吗"
+    },
+    {
+      "offset": 40750000,
+      "duration": 3250000,
+      "text": "这次"
+    },
+    {
+      "offset": 44250000,
+      "duration": 3250000,
+      "text": "虫潮"
+    },
+    {
+      "offset": 47625000,
+      "duration": 5125000,
+      "text": "围城"
+    },
+    {
+      "offset": 56875000,
+      "duration": 1750000,
+      "text": "我"
+    },
+    {
+      "offset": 58625000,
+      "duration": 1750000,
+      "text": "想"
+    },
+    {
+      "offset": 60500000,
+      "duration": 3125000,
+      "text": "试试"
+    },
+    {
+      "offset": 63875000,
+      "duration": 1875000,
+      "text": "边"
+    },
+    {
+      "offset": 65750000,
+      "duration": 1250000,
+      "text": "搜"
+    },
+    {
+      "offset": 67125000,
+      "duration": 4500000,
+      "text": "物资"
+    },
+    {
+      "offset": 73750000,
+      "duration": 1750000,
+      "text": "边"
+    },
+    {
+      "offset": 75625000,
+      "duration": 1625000,
+      "text": "找"
+    },
+    {
+      "offset": 77250000,
+      "duration": 1625000,
+      "text": "条"
+    },
+    {
+      "offset": 79125000,
+      "duration": 3250000,
+      "text": "撤离"
+    },
+    {
+      "offset": 82500000,
+      "duration": 3625000,
+      "text": "路线"
+    }
+  ]
+}

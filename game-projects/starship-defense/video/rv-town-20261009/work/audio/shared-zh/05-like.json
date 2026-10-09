@@ -1,0 +1,98 @@
+{
+  "text": "这一趟已经开始回本了。喜欢这种开车搜物资的玩法，顺手点个赞。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 6.72,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2125000,
+      "text": "这"
+    },
+    {
+      "offset": 3125000,
+      "duration": 875000,
+      "text": "一"
+    },
+    {
+      "offset": 4000000,
+      "duration": 4750000,
+      "text": "趟"
+    },
+    {
+      "offset": 9750000,
+      "duration": 1875000,
+      "text": "已经"
+    },
+    {
+      "offset": 11750000,
+      "duration": 2375000,
+      "text": "开始"
+    },
+    {
+      "offset": 14250000,
+      "duration": 3000000,
+      "text": "回本"
+    },
+    {
+      "offset": 17250000,
+      "duration": 2375000,
+      "text": "了"
+    },
+    {
+      "offset": 25250000,
+      "duration": 3625000,
+      "text": "喜欢"
+    },
+    {
+      "offset": 29000000,
+      "duration": 2250000,
+      "text": "这种"
+    },
+    {
+      "offset": 31500000,
+      "duration": 4625000,
+      "text": "开车"
+    },
+    {
+      "offset": 36375000,
+      "duration": 1625000,
+      "text": "搜"
+    },
+    {
+      "offset": 38000000,
+      "duration": 2125000,
+      "text": "物资"
+    },
+    {
+      "offset": 40125000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 41000000,
+      "duration": 4750000,
+      "text": "玩法"
+    },
+    {
+      "offset": 48750000,
+      "duration": 4625000,
+      "text": "顺手"
+    },
+    {
+      "offset": 53500000,
+      "duration": 1500000,
+      "text": "点"
+    },
+    {
+      "offset": 55000000,
+      "duration": 1000000,
+      "text": "个"
+    },
+    {
+      "offset": 56000000,
+      "duration": 2500000,
+      "text": "赞"
+    }
+  ]
+}

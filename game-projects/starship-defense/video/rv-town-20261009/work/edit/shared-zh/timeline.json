@@ -1,0 +1,973 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 109.86666666666666,
+  "segments": [
+    {
+      "id": "01-hook",
+      "text": "这辆房车开进僵尸城，还能完整开出来吗？这次虫潮围城，我想试试边搜物资，边找条撤离路线。",
+      "start": 0,
+      "end": 9.866666666666667,
+      "duration": 9.866666666666667,
+      "voice_duration": 9.504,
+      "voice_offset": 0.12,
+      "frames": 296,
+      "wav": "audio\\shared-zh\\01-hook.wav"
+    },
+    {
+      "id": "02-route",
+      "text": "这回不守基地了。废弃城镇的街道可以自由探索，六个感染区挑着搜。我先去修理厂，把车顶机枪升一级。",
+      "start": 9.866666666666667,
+      "end": 20.6,
+      "duration": 10.733333333333333,
+      "voice_duration": 10.368,
+      "voice_offset": 0.12,
+      "frames": 322,
+      "wav": "audio\\shared-zh\\02-route.wav"
+    },
+    {
+      "id": "03-prepare",
+      "text": "改装要花九十零件，还得停车等五秒。再去加油站把油补满，才有底气往感染区开。",
+      "start": 20.6,
+      "end": 29.133333333333333,
+      "duration": 8.533333333333333,
+      "voice_duration": 8.184,
+      "voice_offset": 0.12,
+      "frames": 256,
+      "wav": "audio\\shared-zh\\03-prepare.wav"
+    },
+    {
+      "id": "04-homes",
+      "text": "拐进旧住宅区，僵尸发现房车就追了过来。先用车顶机枪清出位置，再下车靠近物资箱，搜索四秒。拿到一百一十零件，还有罐头和医疗包。",
+      "start": 29.133333333333333,
+      "end": 43.43333333333334,
+      "duration": 14.3,
+      "voice_duration": 13.944,
+      "voice_offset": 0.12,
+      "frames": 429,
+      "wav": "audio\\shared-zh\\04-homes.wav"
+    },
+    {
+      "id": "05-like",
+      "text": "这一趟已经开始回本了。喜欢这种开车搜物资的玩法，顺手点个赞。",
+      "start": 43.43333333333334,
+      "end": 50.5,
+      "duration": 7.066666666666666,
+      "voice_duration": 6.72,
+      "voice_offset": 0.12,
+      "frames": 212,
+      "wav": "audio\\shared-zh\\05-like.wav"
+    },
+    {
+      "id": "06-market",
+      "text": "废弃超市里还有应急售货机。我用十二零件再买一罐，留着下车受伤时用。补给齐了，继续去市政广场。",
+      "start": 50.5,
+      "end": 61.5,
+      "duration": 11.0,
+      "voice_duration": 10.632,
+      "voice_offset": 0.12,
+      "frames": 330,
+      "wav": "audio\\shared-zh\\06-market.wav"
+    },
+    {
+      "id": "07-square",
+      "text": "这里七只僵尸一起来追车。机枪先清出位置，我再下车搜索。人没受伤，房车却掉了耐久，下一站得先修车。",
+      "start": 61.5,
+      "end": 72.46666666666667,
+      "duration": 10.966666666666667,
+      "voice_duration": 10.608,
+      "voice_offset": 0.12,
+      "frames": 329,
+      "wav": "audio\\shared-zh\\07-square.wav"
+    },
+    {
+      "id": "08-repair",
+      "text": "绕去北街修理厂。花四十零件，停六秒，房车耐久恢复满了。这张地图不用一路清到底，想撤就能去北侧营地。",
+      "start": 72.46666666666667,
+      "end": 84.23333333333333,
+      "duration": 11.766666666666667,
+      "voice_duration": 11.4,
+      "voice_offset": 0.12,
+      "frames": 353,
+      "wav": "audio\\shared-zh\\08-repair.wav"
+    },
+    {
+      "id": "09-result",
+      "text": "这趟成功撤离。搜了两个区，击退十二只僵尸，带着三百一十四零件出来。六个区还没搜全，下次再挑战一趟全搜路线。",
+      "start": 84.23333333333333,
+      "end": 96.3,
+      "duration": 12.066666666666666,
+      "voice_duration": 11.712,
+      "voice_offset": 0.12,
+      "frames": 362,
+      "wav": "audio\\shared-zh\\09-result.wav"
+    },
+    {
+      "id": "10-close",
+      "text": "房车模式已经能在哔哩哔哩Toy试玩。你会先改枪，还是先加装甲？也欢迎到百宝箱游戏投票榜，写下想玩的内容。",
+      "start": 96.3,
+      "end": 109.86666666666666,
+      "duration": 13.566666666666666,
+      "voice_duration": 11.208,
+      "voice_offset": 0.12,
+      "frames": 407,
+      "wav": "audio\\shared-zh\\10-close.wav"
+    }
+  ],
+  "shots": [
+    {
+      "index": 0,
+      "segment": "01-hook",
+      "start": 0,
+      "end": 4.1,
+      "duration": 4.1,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 93.16720799255371,
+      "source_out": 97.26720799255371,
+      "speed": 1,
+      "label": "本趟实战预览",
+      "still": false
+    },
+    {
+      "index": 1,
+      "segment": "01-hook",
+      "start": 4.1,
+      "end": 9.866666666666667,
+      "duration": 5.766666666666667,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 3.5,
+      "source_out": 9.266666666666666,
+      "speed": 1,
+      "label": "从出发说起 · 普通规则实战",
+      "still": false
+    },
+    {
+      "index": 2,
+      "segment": "02-route",
+      "start": 9.866666666666667,
+      "end": 20.6,
+      "duration": 10.733333333333333,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 9.2,
+      "source_out": 19.93333333333333,
+      "speed": 1,
+      "label": "自由探索 · 先整备房车",
+      "still": false
+    },
+    {
+      "index": 3,
+      "segment": "03-prepare",
+      "start": 20.6,
+      "end": 24.400000000000002,
+      "duration": 3.8,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 14.64920799255371,
+      "source_out": 18.44920799255371,
+      "speed": 1,
+      "label": "南街修理厂 · 改装机枪",
+      "still": false
+    },
+    {
+      "index": 4,
+      "segment": "03-prepare",
+      "start": 24.400000000000002,
+      "end": 29.133333333333336,
+      "duration": 4.733333333333333,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 43.74320799255371,
+      "source_out": 48.47654132588704,
+      "speed": 1,
+      "label": "加油站 · 补满燃料",
+      "still": false
+    },
+    {
+      "index": 5,
+      "segment": "04-homes",
+      "start": 29.133333333333333,
+      "end": 36.03333333333333,
+      "duration": 6.9,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 51.67420799255371,
+      "source_out": 58.57420799255371,
+      "speed": 1,
+      "label": "旧住宅区 · 实际交战",
+      "still": false
+    },
+    {
+      "index": 6,
+      "segment": "04-homes",
+      "start": 36.03333333333333,
+      "end": 39.233333333333334,
+      "duration": 3.2,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 58.81220799255371,
+      "source_out": 62.01220799255371,
+      "speed": 1,
+      "label": "下车走近物资箱 · 搜索4秒",
+      "still": false
+    },
+    {
+      "index": 7,
+      "segment": "04-homes",
+      "start": 39.233333333333334,
+      "end": 43.43333333333334,
+      "duration": 4.2,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 65.42520799255371,
+      "source_out": 69.62520799255371,
+      "speed": 1,
+      "label": "搜索完成 · 补给入账",
+      "still": false
+    },
+    {
+      "index": 8,
+      "segment": "05-like",
+      "start": 43.43333333333334,
+      "end": 50.5,
+      "duration": 7.066666666666666,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 70.3882079925537,
+      "source_out": 77.45487465922037,
+      "speed": 1,
+      "label": "搜索所得保留 · 前往超市",
+      "still": false
+    },
+    {
+      "index": 9,
+      "segment": "06-market",
+      "start": 50.5,
+      "end": 61.5,
+      "duration": 11.0,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 82.31720799255372,
+      "source_out": 93.31720799255372,
+      "speed": 1,
+      "label": "废弃超市 · 应急售货机",
+      "still": false
+    },
+    {
+      "index": 10,
+      "segment": "07-square",
+      "start": 61.5,
+      "end": 66.0,
+      "duration": 4.5,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 91.5672079925537,
+      "source_out": 96.0672079925537,
+      "speed": 1,
+      "label": "市政广场 · 实际交战",
+      "still": false
+    },
+    {
+      "index": 11,
+      "segment": "07-square",
+      "start": 66.0,
+      "end": 72.46666666666667,
+      "duration": 6.466666666666667,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 100.07020799255372,
+      "source_out": 106.53687465922039,
+      "speed": 1,
+      "label": "下车搜索 · 房车已有损伤",
+      "still": false
+    },
+    {
+      "index": 12,
+      "segment": "08-repair",
+      "start": 72.46666666666667,
+      "end": 76.66666666666667,
+      "duration": 4.2,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 130.13520799255372,
+      "source_out": 134.3352079925537,
+      "speed": 1,
+      "label": "北街修理厂 · 停车维修",
+      "still": false
+    },
+    {
+      "index": 13,
+      "segment": "08-repair",
+      "start": 76.66666666666667,
+      "end": 84.23333333333333,
+      "duration": 7.566666666666666,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 138.5262079925537,
+      "source_out": 146.09287465922037,
+      "speed": 1,
+      "label": "实际维修完成 · 自由选择撤离",
+      "still": false
+    },
+    {
+      "index": 14,
+      "segment": "09-result",
+      "start": 84.23333333333333,
+      "end": 96.3,
+      "duration": 12.066666666666666,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 154.9642079925537,
+      "source_out": 167.03087465922036,
+      "speed": 1,
+      "label": "本趟实际结算 · 2/6区",
+      "still": false
+    },
+    {
+      "index": 15,
+      "segment": "10-close",
+      "start": 96.3,
+      "end": 107.6,
+      "duration": 11.3,
+      "source": "capture/journey-02/raw.mp4",
+      "source_in": 140.72620799255373,
+      "source_out": 152.02620799255374,
+      "speed": 1,
+      "label": "本趟撤离途中 · 余镜",
+      "still": false
+    },
+    {
+      "index": 16,
+      "segment": "10-close",
+      "start": 107.6,
+      "end": 109.86666666666666,
+      "duration": 2.2666666666666666,
+      "source": "edit/shared-zh/closing.png",
+      "source_in": 0,
+      "source_out": 2.2666666666666666,
+      "speed": 1,
+      "label": "",
+      "still": true
+    }
+  ],
+  "subtitles": [
+    {
+      "start": 0.22,
+      "end": 2.165,
+      "text": "这辆房车开进僵尸城，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 2.42,
+      "end": 3.7025,
+      "text": "还能完整开出来吗？",
+      "segment": "01-hook"
+    },
+    {
+      "start": 4.195,
+      "end": 5.465000000000001,
+      "text": "这次虫潮围城，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 5.8075,
+      "end": 7.3525,
+      "text": "我想试试边搜物资，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 7.495,
+      "end": 8.8025,
+      "text": "边找条撤离路线。",
+      "segment": "01-hook"
+    },
+    {
+      "start": 10.086666666666666,
+      "end": 11.419166666666667,
+      "text": "这回不守基地了。",
+      "segment": "02-route"
+    },
+    {
+      "start": 11.911666666666667,
+      "end": 14.519166666666667,
+      "text": "废弃城镇的街道可以自由探索，",
+      "segment": "02-route"
+    },
+    {
+      "start": 14.724166666666665,
+      "end": 16.319166666666668,
+      "text": "六个感染区挑着搜。",
+      "segment": "02-route"
+    },
+    {
+      "start": 16.799166666666665,
+      "end": 17.919166666666666,
+      "text": "我先去修理厂，",
+      "segment": "02-route"
+    },
+    {
+      "start": 18.124166666666667,
+      "end": 19.556666666666665,
+      "text": "把车顶机枪升一级。",
+      "segment": "02-route"
+    },
+    {
+      "start": 20.820000000000004,
+      "end": 22.302500000000002,
+      "text": "改装要花九十零件，",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 22.507500000000004,
+      "end": 23.815,
+      "text": "还得停车等五秒。",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 24.3075,
+      "end": 25.965000000000003,
+      "text": "再去加油站把油补满，",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 26.270000000000003,
+      "end": 28.102500000000003,
+      "text": "才有底气往感染区开。",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 29.353333333333335,
+      "end": 30.710833333333333,
+      "text": "拐进旧住宅区，",
+      "segment": "04-homes"
+    },
+    {
+      "start": 30.978333333333335,
+      "end": 33.223333333333336,
+      "text": "僵尸发现房车就追了过来。",
+      "segment": "04-homes"
+    },
+    {
+      "start": 33.72833333333333,
+      "end": 35.83583333333333,
+      "text": "先用车顶机枪清出位置，",
+      "segment": "04-homes"
+    },
+    {
+      "start": 36.06583333333333,
+      "end": 37.73583333333333,
+      "text": "再下车靠近物资箱，",
+      "segment": "04-homes"
+    },
+    {
+      "start": 37.82833333333333,
+      "end": 38.748333333333335,
+      "text": "搜索四秒。",
+      "segment": "04-homes"
+    },
+    {
+      "start": 39.240833333333335,
+      "end": 40.51083333333333,
+      "text": "拿到一百一十零件，",
+      "segment": "04-homes"
+    },
+    {
+      "start": 40.79083333333333,
+      "end": 42.373333333333335,
+      "text": "还有罐头和医疗包。",
+      "segment": "04-homes"
+    },
+    {
+      "start": 43.653333333333336,
+      "end": 45.58583333333333,
+      "text": "这一趟已经开始回本了。",
+      "segment": "05-like"
+    },
+    {
+      "start": 46.07833333333333,
+      "end": 48.19833333333334,
+      "text": "喜欢这种开车搜物资的玩法，",
+      "segment": "05-like"
+    },
+    {
+      "start": 48.428333333333335,
+      "end": 49.473333333333336,
+      "text": "顺手点个赞。",
+      "segment": "05-like"
+    },
+    {
+      "start": 50.72,
+      "end": 53.44,
+      "text": "废弃超市里还有应急售货机。",
+      "segment": "06-market"
+    },
+    {
+      "start": 53.945,
+      "end": 55.652499999999996,
+      "text": "我用十二零件再买一罐，",
+      "segment": "06-market"
+    },
+    {
+      "start": 55.919999999999995,
+      "end": 57.565,
+      "text": "留着下车受伤时用。",
+      "segment": "06-market"
+    },
+    {
+      "start": 58.07,
+      "end": 58.902499999999996,
+      "text": "补给齐了，",
+      "segment": "06-market"
+    },
+    {
+      "start": 59.1075,
+      "end": 60.44,
+      "text": "继续去市政广场。",
+      "segment": "06-market"
+    },
+    {
+      "start": 61.72,
+      "end": 63.8775,
+      "text": "这里七只僵尸一起来追车。",
+      "segment": "07-square"
+    },
+    {
+      "start": 64.3825,
+      "end": 65.76499999999999,
+      "text": "机枪先清出位置，",
+      "segment": "07-square"
+    },
+    {
+      "start": 65.995,
+      "end": 67.01499999999999,
+      "text": "我再下车搜索。",
+      "segment": "07-square"
+    },
+    {
+      "start": 67.52,
+      "end": 68.47749999999999,
+      "text": "人没受伤，",
+      "segment": "07-square"
+    },
+    {
+      "start": 68.6825,
+      "end": 69.95249999999999,
+      "text": "房车却掉了耐久，",
+      "segment": "07-square"
+    },
+    {
+      "start": 70.1825,
+      "end": 71.4275,
+      "text": "下一站得先修车。",
+      "segment": "07-square"
+    },
+    {
+      "start": 72.68666666666667,
+      "end": 74.15666666666667,
+      "text": "绕去北街修理厂。",
+      "segment": "08-repair"
+    },
+    {
+      "start": 74.66166666666668,
+      "end": 75.71916666666667,
+      "text": "花四十零件，",
+      "segment": "08-repair"
+    },
+    {
+      "start": 75.88666666666667,
+      "end": 76.65666666666667,
+      "text": "停六秒，",
+      "segment": "08-repair"
+    },
+    {
+      "start": 76.79916666666668,
+      "end": 78.54416666666667,
+      "text": "房车耐久恢复满了。",
+      "segment": "08-repair"
+    },
+    {
+      "start": 79.02416666666667,
+      "end": 81.25666666666666,
+      "text": "这张地图不用一路清到底，",
+      "segment": "08-repair"
+    },
+    {
+      "start": 81.54916666666668,
+      "end": 83.18166666666667,
+      "text": "想撤就能去北侧营地。",
+      "segment": "08-repair"
+    },
+    {
+      "start": 84.45333333333333,
+      "end": 85.94833333333334,
+      "text": "这趟成功撤离。",
+      "segment": "09-result"
+    },
+    {
+      "start": 86.45333333333333,
+      "end": 87.44833333333334,
+      "text": "搜了两个区，",
+      "segment": "09-result"
+    },
+    {
+      "start": 87.62833333333334,
+      "end": 88.96083333333333,
+      "text": "击退十二只僵尸，",
+      "segment": "09-result"
+    },
+    {
+      "start": 89.11583333333334,
+      "end": 90.73583333333333,
+      "text": "带着三百一十四零件出来。",
+      "segment": "09-result"
+    },
+    {
+      "start": 91.24083333333334,
+      "end": 92.69833333333334,
+      "text": "六个区还没搜全，",
+      "segment": "09-result"
+    },
+    {
+      "start": 92.97833333333334,
+      "end": 95.26083333333334,
+      "text": "下次再挑战一趟全搜路线。",
+      "segment": "09-result"
+    },
+    {
+      "start": 96.52,
+      "end": 99.565,
+      "text": "房车模式已经能在哔哩哔哩Toy试玩。",
+      "segment": "10-close"
+    },
+    {
+      "start": 100.0575,
+      "end": 101.28999999999999,
+      "text": "你会先改枪，",
+      "segment": "10-close"
+    },
+    {
+      "start": 101.5825,
+      "end": 102.6775,
+      "text": "还是先加装甲？",
+      "segment": "10-close"
+    },
+    {
+      "start": 103.1825,
+      "end": 105.3275,
+      "text": "也欢迎到百宝箱游戏投票榜，",
+      "segment": "10-close"
+    },
+    {
+      "start": 105.545,
+      "end": 106.8025,
+      "text": "写下想玩的内容。",
+      "segment": "10-close"
+    }
+  ],
+  "english_subtitles": [
+    {
+      "start": 0.22,
+      "end": 2.165,
+      "text": "This RV is heading into a zombie-infested town.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 2.42,
+      "end": 3.7025,
+      "text": "Can I bring it back in one piece?",
+      "segment": "01-hook"
+    },
+    {
+      "start": 4.195,
+      "end": 5.465000000000001,
+      "text": "In Swarm Siege this time,",
+      "segment": "01-hook"
+    },
+    {
+      "start": 5.8075,
+      "end": 7.3525,
+      "text": "I want to search for supplies",
+      "segment": "01-hook"
+    },
+    {
+      "start": 7.495,
+      "end": 8.8025,
+      "text": "while finding a route out.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 10.086666666666666,
+      "end": 11.419166666666667,
+      "text": "This time, I am leaving base defense behind.",
+      "segment": "02-route"
+    },
+    {
+      "start": 11.911666666666667,
+      "end": 14.519166666666667,
+      "text": "You can freely explore the abandoned town streets",
+      "segment": "02-route"
+    },
+    {
+      "start": 14.724166666666665,
+      "end": 16.319166666666668,
+      "text": "and choose among six infected districts.",
+      "segment": "02-route"
+    },
+    {
+      "start": 16.799166666666665,
+      "end": 17.919166666666666,
+      "text": "First, I drive to a garage",
+      "segment": "02-route"
+    },
+    {
+      "start": 18.124166666666667,
+      "end": 19.556666666666665,
+      "text": "and upgrade the roof-mounted machine gun.",
+      "segment": "02-route"
+    },
+    {
+      "start": 20.820000000000004,
+      "end": 22.302500000000002,
+      "text": "The upgrade costs 90 scrap",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 22.507500000000004,
+      "end": 23.815,
+      "text": "and takes five seconds while parked.",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 24.3075,
+      "end": 25.965000000000003,
+      "text": "Then I fill the tank at a gas station",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 26.270000000000003,
+      "end": 28.102500000000003,
+      "text": "before heading into an infected district.",
+      "segment": "03-prepare"
+    },
+    {
+      "start": 29.353333333333335,
+      "end": 30.710833333333333,
+      "text": "I turn into the old residential district.",
+      "segment": "04-homes"
+    },
+    {
+      "start": 30.978333333333335,
+      "end": 33.223333333333336,
+      "text": "Zombies spot the RV and start chasing it.",
+      "segment": "04-homes"
+    },
+    {
+      "start": 33.72833333333333,
+      "end": 35.83583333333333,
+      "text": "I clear some space with the roof gun,",
+      "segment": "04-homes"
+    },
+    {
+      "start": 36.06583333333333,
+      "end": 37.73583333333333,
+      "text": "then get out and approach the supply crate.",
+      "segment": "04-homes"
+    },
+    {
+      "start": 37.82833333333333,
+      "end": 38.748333333333335,
+      "text": "Searching takes four seconds.",
+      "segment": "04-homes"
+    },
+    {
+      "start": 39.240833333333335,
+      "end": 40.51083333333333,
+      "text": "I find 110 scrap,",
+      "segment": "04-homes"
+    },
+    {
+      "start": 40.79083333333333,
+      "end": 42.373333333333335,
+      "text": "plus canned food and a medkit.",
+      "segment": "04-homes"
+    },
+    {
+      "start": 43.653333333333336,
+      "end": 45.58583333333333,
+      "text": "The trip is already paying for itself.",
+      "segment": "05-like"
+    },
+    {
+      "start": 46.07833333333333,
+      "end": 48.19833333333334,
+      "text": "If you enjoy driving out to scavenge,",
+      "segment": "05-like"
+    },
+    {
+      "start": 48.428333333333335,
+      "end": 49.473333333333336,
+      "text": "leave a like.",
+      "segment": "05-like"
+    },
+    {
+      "start": 50.72,
+      "end": 53.44,
+      "text": "The abandoned supermarket still has an emergency vending machine.",
+      "segment": "06-market"
+    },
+    {
+      "start": 53.945,
+      "end": 55.652499999999996,
+      "text": "I spend 12 scrap on another can of food",
+      "segment": "06-market"
+    },
+    {
+      "start": 55.919999999999995,
+      "end": 57.565,
+      "text": "in case I get hurt on foot.",
+      "segment": "06-market"
+    },
+    {
+      "start": 58.07,
+      "end": 58.902499999999996,
+      "text": "With supplies stocked,",
+      "segment": "06-market"
+    },
+    {
+      "start": 59.1075,
+      "end": 60.44,
+      "text": "I head to the town square.",
+      "segment": "06-market"
+    },
+    {
+      "start": 61.72,
+      "end": 63.8775,
+      "text": "Seven zombies chase the RV here.",
+      "segment": "07-square"
+    },
+    {
+      "start": 64.3825,
+      "end": 65.76499999999999,
+      "text": "The machine gun clears some room,",
+      "segment": "07-square"
+    },
+    {
+      "start": 65.995,
+      "end": 67.01499999999999,
+      "text": "then I get out to search.",
+      "segment": "07-square"
+    },
+    {
+      "start": 67.52,
+      "end": 68.47749999999999,
+      "text": "I am unhurt,",
+      "segment": "07-square"
+    },
+    {
+      "start": 68.6825,
+      "end": 69.95249999999999,
+      "text": "but the RV has taken damage.",
+      "segment": "07-square"
+    },
+    {
+      "start": 70.1825,
+      "end": 71.4275,
+      "text": "My next stop needs to be a garage.",
+      "segment": "07-square"
+    },
+    {
+      "start": 72.68666666666667,
+      "end": 74.15666666666667,
+      "text": "I detour to the north-street garage.",
+      "segment": "08-repair"
+    },
+    {
+      "start": 74.66166666666668,
+      "end": 75.71916666666667,
+      "text": "For 40 scrap",
+      "segment": "08-repair"
+    },
+    {
+      "start": 75.88666666666667,
+      "end": 76.65666666666667,
+      "text": "and six seconds parked,",
+      "segment": "08-repair"
+    },
+    {
+      "start": 76.79916666666668,
+      "end": 78.54416666666667,
+      "text": "the RV is back to full durability.",
+      "segment": "08-repair"
+    },
+    {
+      "start": 79.02416666666667,
+      "end": 81.25666666666666,
+      "text": "You do not have to clear the entire map;",
+      "segment": "08-repair"
+    },
+    {
+      "start": 81.54916666666668,
+      "end": 83.18166666666667,
+      "text": "you can choose to leave at the northern camp.",
+      "segment": "08-repair"
+    },
+    {
+      "start": 84.45333333333333,
+      "end": 85.94833333333334,
+      "text": "I successfully evacuate.",
+      "segment": "09-result"
+    },
+    {
+      "start": 86.45333333333333,
+      "end": 87.44833333333334,
+      "text": "I searched two districts,",
+      "segment": "09-result"
+    },
+    {
+      "start": 87.62833333333334,
+      "end": 88.96083333333333,
+      "text": "defeated 12 zombies,",
+      "segment": "09-result"
+    },
+    {
+      "start": 89.11583333333334,
+      "end": 90.73583333333333,
+      "text": "and brought out 314 scrap.",
+      "segment": "09-result"
+    },
+    {
+      "start": 91.24083333333334,
+      "end": 92.69833333333334,
+      "text": "I have not searched all six districts.",
+      "segment": "09-result"
+    },
+    {
+      "start": 92.97833333333334,
+      "end": 95.26083333333334,
+      "text": "Next time, I will try a full scavenging route.",
+      "segment": "09-result"
+    },
+    {
+      "start": 96.52,
+      "end": 99.565,
+      "text": "RV mode is already playable on Bilibili Toy.",
+      "segment": "10-close"
+    },
+    {
+      "start": 100.0575,
+      "end": 101.28999999999999,
+      "text": "Would you upgrade the gun first",
+      "segment": "10-close"
+    },
+    {
+      "start": 101.5825,
+      "end": 102.6775,
+      "text": "or add armor?",
+      "segment": "10-close"
+    },
+    {
+      "start": 103.1825,
+      "end": 105.3275,
+      "text": "You can also visit the Treasure Box game voting page",
+      "segment": "10-close"
+    },
+    {
+      "start": 105.545,
+      "end": 106.8025,
+      "text": "and suggest what you want to play.",
+      "segment": "10-close"
+    }
+  ],
+  "time_scale": 1,
+  "normal_rules": true,
+  "original_capture": "capture/journey-02/capture.json",
+  "result_screen_hold_only": true
+}

@@ -1,0 +1,79 @@
+{
+  "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-video-02",
+  "source": "Codex",
+  "stage": "production_completed_awaiting_human_review",
+  "mode": "update",
+  "subject": "房车生存·废弃城镇：整备、搜索、应对僵尸与自愿撤离",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "publication": "not_uploaded",
+  "human_review": "pending",
+  "publication_restriction": "其他平台先不发；先交成片审片，未授权本轮上传",
+  "game_version": "web-three-lanes-v0.31.0",
+  "source_commit": "d7f8b733e991234d3b5ffe901bcc01e000ec6807",
+  "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+  "approval_event_id": "rv-town-video-review-e03bf6f6-e919-40c0-9a2e-9cdbe30a1ff4",
+  "normal_rules": true,
+  "gameplay_modified": false,
+  "time_scale": 1,
+  "audio_review": "objective signal checks passed; subjective listening not-run",
+  "started_at": "2026-10-09T16:21:40.236502+08:00",
+  "capture_result": "探索 1109米 · 用时 2分30秒 · 搜索 2/6区 · 击退 12只僵尸 · 剩余 314零件。下次可尝试搜全六区再撤离。",
+  "capture_errors": [],
+  "visual_issue": "首场把房车停在物资箱边，人物被车体遮挡；第二场改为正常停车在箱外11米，完整拍到下车与走近物资箱。",
+  "production_completed_at": "2026-10-09T17:01:44.813301+08:00",
+  "visual_issue_resolved": true,
+  "final_duration_seconds": 109.86666666666666,
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "artifact_directory": "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009",
+  "source_worktree": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-rv-video-20261009\\toolbasecamp",
+  "render_entry": "render.py",
+  "packaging_entry": "package.py",
+  "next_step": "用户在原聊天审本期最终文件，包含主观听感；按批准的渠道继续。未取得批准不得上传。",
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [
+        "人声可懂度与混音主观听审尚未执行；请用户审片",
+        "本期最终文件尚未经用户人工审片批准",
+        "本轮不执行上传；其他渠道暂缓",
+        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+      ]
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [
+        "人声可懂度与混音主观听审尚未执行；请用户审片",
+        "本期最终文件尚未经用户人工审片批准",
+        "本轮不执行上传；其他渠道暂缓",
+        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+      ]
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+      "blocking_issues": [
+        "人声可懂度与混音主观听审尚未执行；请用户审片",
+        "本期最终文件尚未经用户人工审片批准",
+        "本轮不执行上传；其他渠道暂缓",
+        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
+      ]
+    }
+  ],
+  "cover_stage": "completed"
+}
