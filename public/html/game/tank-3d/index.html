@@ -7,7 +7,7 @@
 <meta name="description" content="坦克大战 3D：推荐魔改 Boss 挑战，吃船过河、拿火箭筒和四连导弹，敌军也会抢道具；100 关无限周目，支持 2–4 人联机合作。保留 FC 原版经典复刻 35 关，电脑键盘与手机触屏都能玩。">
 <title>坦克大战 3D · 魔改 Boss 挑战 · 含经典 35 关</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=remix-entry1">
+<link rel="stylesheet" href="./style.css?v=menu-text1">
 </head>
 <body>
 <div id="app" data-list-url="../../../games.html" tabindex="-1">
@@ -78,9 +78,9 @@
         </div>
         <nav class="items" aria-label="主菜单">
           <button data-act="start" class="primary" id="start-btn">开始游戏 <kbd>Enter</kbd></button>
-          <div class="mode-choices" role="group" aria-label="玩法模式">
-            <button type="button" data-act="choose-mode" data-game-mode="remix" aria-pressed="true">魔改挑战 <span>推荐</span></button>
-            <button type="button" data-act="choose-mode" data-game-mode="classic" aria-pressed="false">经典复刻 <span>35 关</span></button>
+          <div class="mode-choices" role="group" aria-label="玩法模式" aria-describedby="mode-sub">
+            <button type="button" data-act="choose-mode" data-game-mode="remix" aria-pressed="true">魔改挑战</button>
+            <button type="button" data-act="choose-mode" data-game-mode="classic" aria-pressed="false">经典复刻</button>
           </div>
           <button data-opt="from"></button>
           <button data-opt="lives"></button>
@@ -193,6 +193,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=remix-entry1"></script>
+<script type="module" src="./main.js?v=menu-text1"></script>
 </body>
 </html>

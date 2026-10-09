@@ -1,4 +1,4 @@
-import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=menu-text1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createView, PRESETS } from './scene.js?v=2.5.0';
 import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.5.0';

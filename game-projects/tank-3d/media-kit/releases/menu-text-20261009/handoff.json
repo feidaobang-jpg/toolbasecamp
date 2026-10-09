@@ -1,0 +1,414 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "remix-entry1-menu-text1",
+  "base_version": "lobby-hint1",
+  "created_at": "2026-10-09T11:30:23.769472+08:00",
+  "classification": "routine",
+  "review": {
+    "status": "not_required",
+    "reason": "菜单文字与局部留白修复，不改变核心玩法"
+  },
+  "source": {
+    "type": "direct_user_request",
+    "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246"
+  },
+  "build": {
+    "id": "remix-entry1-menu-text1",
+    "commit": null,
+    "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "dirty": true,
+    "fingerprint": "eb4f0b6825a5723cac95ea1305e33d9498d45db189ccadacecb2a23e5afbb79d",
+    "files": {
+      "public/html/game/tank-3d/audio.js": "5e8bb41f1723cca52940035d41cf0f69f8e0555d2a0ec38f47e8ced0e8d05e39",
+      "public/html/game/tank-3d/classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+      "public/html/game/tank-3d/coop.js": "7abdfd3137963706355aea3a659084492f6f594fda3df61a570298ce8de39ae5",
+      "public/html/game/tank-3d/index.html": "d10cbf3cc1164e5ce2a6bda129d5be871cd1133b083242790abaab5832aef20a",
+      "public/html/game/tank-3d/levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
+      "public/html/game/tank-3d/main.js": "2a3dcf73f25961955204353cfe8d288483de7d83087755f80aebfcf4c9666770",
+      "public/html/game/tank-3d/scene.js": "7d5266230d842737edd50a77c8a6b6abed42e20fd94e019a4c0bc4fdd2c26751",
+      "public/html/game/tank-3d/sim.js": "7cd914dd2edb733250a7704735a0887f722e939e3a0a02b6cb33fd3adf04bb6c",
+      "public/html/game/tank-3d/style.css": "6b01dc1c8e97a655325463b2319e3dde23ed3b1eac9ca0952c743f3e0031b8ee",
+      "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
+    },
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "plain-menu-text",
+      "summary": "去掉菜单标题与副标题的偏移阴影，选人/暂停/结算标题使用普通文字。模式按钮仅保留「魔改挑战」「经典复刻」，左右14px内边距；紧凑菜单跨整行放置模式组；推荐/35关在说明区展示。继续默认魔改，尊重已保存选择。",
+      "validation_status": "passed"
+    }
+  ],
+  "media": [
+    {
+      "id": "before-tank-3d",
+      "file": "releases/menu-text-20261009/captures/before-tank-3d.png",
+      "sha256": "a12e6beff0bf04080d18ce728b671c29f11218e91248f22831265a196bd16426",
+      "kind": "screenshot",
+      "version": "lobby-hint1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "after-tank-3d",
+      "file": "releases/menu-text-20261009/captures/after-tank-3d.png",
+      "sha256": "4717b8eee5b8bde4245f282ad9f895f33bf2911999a1cfad376cf5d82d6b2e20",
+      "kind": "screenshot",
+      "version": "remix-entry1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-tank-3d-844x390",
+      "file": "releases/menu-text-20261009/captures/verified-tank-3d-844x390.png",
+      "sha256": "5f940e718fafe06e391cbb309a920753c9c405162ff0232e6b4e19956b282934",
+      "kind": "screenshot",
+      "version": "remix-entry1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-tank-3d-390x844",
+      "file": "releases/menu-text-20261009/captures/verified-tank-3d-390x844.png",
+      "sha256": "021442564b9017d6a27195071e7468d935afce84de3411ac94e51f403adb8264",
+      "kind": "screenshot",
+      "version": "remix-entry1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    }
+  ],
+  "qa": {
+    "method": "Playwright + Edge真实DOM与点击/键盘，桌面1280×720，手机模拟844×390、390×844、800×346、568×320；选人和暂停经过实际入口，恐龙开场脚本用测试钩子跳过",
+    "checks": [
+      {
+        "game": "tank-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "坦克大战 3D",
+            "shadow": "none"
+          },
+          {
+            "text": "3D",
+            "shadow": "none"
+          },
+          {
+            "text": "联机大厅 · 合作守基地",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "GAME OVER",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "tank-3d",
+        "test": "fresh default remix",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "keyboard classic selection",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "classic 35 stage detail",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "saved classic selection",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "classic starts",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "classic pause visible",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "classic resumes",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "remix starts",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "remix pause visible",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "remix resumes",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "tank-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "844x390 mode text margins",
+        "ok": true,
+        "detail": [
+          {
+            "text": "魔改挑战",
+            "width": 211,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          },
+          {
+            "text": "经典复刻",
+            "width": 211,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          }
+        ]
+      },
+      {
+        "game": "tank-3d",
+        "test": "844x390 short mode labels",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "844x390 classic tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "844x390 remix tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "tank-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "390x844 mode text margins",
+        "ok": true,
+        "detail": [
+          {
+            "text": "魔改挑战",
+            "width": 211,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          },
+          {
+            "text": "经典复刻",
+            "width": 211,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          }
+        ]
+      },
+      {
+        "game": "tank-3d",
+        "test": "390x844 short mode labels",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "390x844 classic tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "390x844 remix tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "tank-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "800x346 mode text margins",
+        "ok": true,
+        "detail": [
+          {
+            "text": "魔改挑战",
+            "width": 198,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          },
+          {
+            "text": "经典复刻",
+            "width": 198,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          }
+        ]
+      },
+      {
+        "game": "tank-3d",
+        "test": "800x346 short mode labels",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "800x346 classic tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "800x346 remix tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "tank-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "568x320 mode text margins",
+        "ok": true,
+        "detail": [
+          {
+            "text": "魔改挑战",
+            "width": 154,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          },
+          {
+            "text": "经典复刻",
+            "width": 154,
+            "height": 40,
+            "textWidth": 52,
+            "padding": "14px",
+            "overflow": false
+          }
+        ]
+      },
+      {
+        "game": "tank-3d",
+        "test": "568x320 short mode labels",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "568x320 classic tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "568x320 remix tap",
+        "ok": true
+      },
+      {
+        "game": "tank-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "unverified": [
+      "手机真机",
+      "Toy/TapTap本版本包"
+    ],
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos"
+  },
+  "thumbnail": {
+    "action": "reuse",
+    "reason": "仅菜单文字和按钮留白变化，玩法、场景和画风不变"
+  },
+  "website": {
+    "status": "pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html"
+  },
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": 39043249461248
+    },
+    "taptap": {
+      "status": "pending_22_batch"
+    },
+    "existing_video_descriptions": {
+      "status": "pending_22_batch"
+    },
+    "community": {
+      "status": "pending_22_batch"
+    },
+    "feedback_reply": {
+      "status": "not_applicable",
+      "reason": "本人聊天反馈，无B站原楼"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅收集本次局部菜单证据，完整介绍沿用历史版本；本次测试录像静音"
+    ]
+  },
+  "artifact_location": "D:\\project\\task-artifacts\\game-menu-text-20261009"
+}

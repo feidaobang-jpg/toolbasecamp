@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.10.1-menu-text1",
+  "base_version": "v0.10.1",
+  "created_at": "2026-10-09T11:30:23.769472+08:00",
+  "classification": "routine",
+  "review": {
+    "status": "not_required",
+    "reason": "菜单文字与局部留白修复，不改变核心玩法"
+  },
+  "source": {
+    "type": "direct_user_request",
+    "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246"
+  },
+  "build": {
+    "id": "v0.10.1-menu-text1",
+    "commit": null,
+    "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "dirty": true,
+    "fingerprint": "5207de1c493164c173e91cebea85a85e5f13f9145ac281228cb105906fd53047",
+    "files": {
+      "public/html/game/cadillacs-stage1-3d/index.html": "723543366cfa36acf777955d6f143182fcd1b8ba37daa5c0894c1dc76c8fd802",
+      "public/html/game/cadillacs-stage1-3d/css/style.css": "243232f659144a8f74e75d1f3fcc97fd48901eef49fa4aafbee1b3648d4473e7",
+      "public/html/game/cadillacs-stage1-3d/js/game.min.js": "9ba886a6727724c6b30151172305e38d81767ecbef90b7db41b0348694130027",
+      "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
+    },
+    "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "changes": [
+    {
+      "id": "plain-menu-text",
+      "summary": "去掉菜单标题与副标题的偏移阴影，选人/暂停/结算标题使用普通文字。",
+      "validation_status": "passed"
+    }
+  ],
+  "media": [
+    {
+      "id": "before-cadillacs-stage1-3d",
+      "file": "releases/menu-text-20261009/captures/before-cadillacs-stage1-3d.png",
+      "sha256": "5777e2753e60390383a5064859104f3a34017542db2186ea26291f7d16fb2229",
+      "kind": "screenshot",
+      "version": "v0.10.1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "after-cadillacs-stage1-3d",
+      "file": "releases/menu-text-20261009/captures/after-cadillacs-stage1-3d.png",
+      "sha256": "44d09ab92dbc2d173a1b462d04647a2ad75edcee4e1dbb8e34c88d31bbcbe174",
+      "kind": "screenshot",
+      "version": "v0.10.1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-cadillacs-stage1-3d-844x390",
+      "file": "releases/menu-text-20261009/captures/verified-cadillacs-stage1-3d-844x390.png",
+      "sha256": "9e11abc9c7440025dd927c35f19fb1ed17160f8733775e451c90aba34c4a617a",
+      "kind": "screenshot",
+      "version": "v0.10.1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-cadillacs-stage1-3d-390x844",
+      "file": "releases/menu-text-20261009/captures/verified-cadillacs-stage1-3d-390x844.png",
+      "sha256": "f72ac9bc9e3c3dbc0d59bf68591363e9273aefad4371fec6f6e930d84f0890de",
+      "kind": "screenshot",
+      "version": "v0.10.1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "before-cadillacs-stage1-3d-hero",
+      "file": "releases/menu-text-20261009/captures/before-cadillacs-stage1-3d-hero.png",
+      "sha256": "24e2a1c428a42a72c461a7a702ed2aa191fa927e5da44e5081665bb91675c142",
+      "kind": "screenshot",
+      "version": "v0.10.1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-hero",
+      "file": "releases/menu-text-20261009/captures/verified-hero.png",
+      "sha256": "9f61da645e859d1dac7e51528e14bdffc872c819da846864d0f8c838d6e52926",
+      "kind": "screenshot",
+      "version": "v0.10.1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-pause",
+      "file": "releases/menu-text-20261009/captures/verified-pause.png",
+      "sha256": "c54bd17294da1c84e3af75b1497321f7284ba2821a8bb212c165e1bc2ca8f4ad",
+      "kind": "screenshot",
+      "version": "v0.10.1-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    }
+  ],
+  "qa": {
+    "method": "Playwright + Edge真实DOM与点击/键盘，桌面1280×720，手机模拟844×390、390×844、800×346、568×320；选人和暂停经过实际入口，恐龙开场脚本用测试钩子跳过",
+    "checks": [
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "恐龙快打\nCadillacs and Dinosaurs",
+            "shadow": "none"
+          },
+          {
+            "text": "恐龙快打",
+            "shadow": "none"
+          },
+          {
+            "text": "Cadillacs and Dinosaurs",
+            "shadow": "none"
+          },
+          {
+            "text": "选择英雄",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "过关！",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "hero menu visible",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "pause menu visible",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "resume",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "cadillacs-stage1-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "unverified": [
+      "手机真机",
+      "Toy/TapTap本版本包"
+    ],
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos"
+  },
+  "thumbnail": {
+    "action": "reuse",
+    "reason": "仅菜单文字和按钮留白变化，玩法、场景和画风不变"
+  },
+  "website": {
+    "status": "pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html"
+  },
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": 40412421031936
+    },
+    "taptap": {
+      "status": "pending_22_batch"
+    },
+    "existing_video_descriptions": {
+      "status": "pending_22_batch"
+    },
+    "community": {
+      "status": "pending_22_batch"
+    },
+    "feedback_reply": {
+      "status": "not_applicable",
+      "reason": "本人聊天反馈，无B站原楼"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅收集本次局部菜单证据，完整介绍沿用历史版本；本次测试录像静音"
+    ]
+  },
+  "artifact_location": "D:\\project\\task-artifacts\\game-menu-text-20261009"
+}

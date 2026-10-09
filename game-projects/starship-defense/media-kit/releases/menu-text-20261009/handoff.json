@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-shop-scroll-v0.29.2-menu-text1",
+  "base_version": "web-shop-scroll-v0.29.2",
+  "created_at": "2026-10-09T11:30:23.769472+08:00",
+  "classification": "routine",
+  "review": {
+    "status": "not_required",
+    "reason": "菜单文字与局部留白修复，不改变核心玩法"
+  },
+  "source": {
+    "type": "direct_user_request",
+    "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246"
+  },
+  "build": {
+    "id": "web-shop-scroll-v0.29.2-menu-text1",
+    "commit": null,
+    "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "dirty": true,
+    "fingerprint": "d908ceb7dee2bff81e12ea1468638f745eb1a632140ea6e75c368dec2e43a955",
+    "files": {
+      "public/html/game/starship-defense/battlefield-environments.js": "890365d83aaef3a402b97bfed48396838d4aabf3c8a8263e10bbf8ea2a4084a9",
+      "public/html/game/starship-defense/battlefield-palette.js": "5b0bb91a0d831c7380d0189b1e0ff52b0b774af4c6a6f367c3c197f3abfef873",
+      "public/html/game/starship-defense/boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+      "public/html/game/starship-defense/campaign-difficulty.js": "01b85ea4d0c8052844281fdf18f6f7ac5d62f9a0fabb85a52a14789e4543eb6e",
+      "public/html/game/starship-defense/cloud-save.js": "1fe42db21295c38b8ad280dfb7e4517d70340ad5d9f7bacc745650ccd29dc5fd",
+      "public/html/game/starship-defense/combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+      "public/html/game/starship-defense/combat-controls.js": "136351f61c1b9bea984ce8fcc0ea7265dc2609574418964d45f06ef93a973d5c",
+      "public/html/game/starship-defense/dark-visuals.js": "a9b714e419e2bd497183a7937f39a47a4a2ed3fd1be3c5e254bcd97512455031",
+      "public/html/game/starship-defense/defense-progression.js": "d953c209529e0d2c9ef494be43f0adda85fc39bd714f70a46fcf56745e910ce8",
+      "public/html/game/starship-defense/enemy-visuals.js": "13bb7384f2ba6ff51f6aefe8b670814890960c591f3abf27645b016c367198d4",
+      "public/html/game/starship-defense/exploration-light.js": "4ebf5d0abd0904e780b3369808b5024cb1e1c2f974a0744fc79b73ec2f04d57e",
+      "public/html/game/starship-defense/fortress-layout.js": "3adc088ebb3f3844a011596c4781061abe055744904bc6096f5629e9b075c5c4",
+      "public/html/game/starship-defense/fortress-world.js": "dd1f344f59c396701bd0eda2b48ef68973b2a148bbeaa42c88359cc725b7a71b",
+      "public/html/game/starship-defense/game.compat.js": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+      "public/html/game/starship-defense/game.js": "93693435a0c767d1be02d94f264fdf3bb4ae52bf6a95efd034cbe7b845b209c8",
+      "public/html/game/starship-defense/hive-world.js": "e5cf7120a958fda38c3f0366b9ddd217de0ea144bac7b04b63ffe36b51d6ca39",
+      "public/html/game/starship-defense/index.html": "cff9d2ceda5aa846bcb7635b587d5beee59f527341a674e618d625fee8f85c42",
+      "public/html/game/starship-defense/key-bindings.js": "6e265eb128454130ad45a8081714107f1fcbd081eb101a76e94cdf6c1d467e21",
+      "public/html/game/starship-defense/live-console.html": "2a655a27f378e5aed2aec3ed8182651fb0ac75c09e4ef98e3aac9e6e3c28e1cc",
+      "public/html/game/starship-defense/live-console.js": "338b3fb151f10a0d9e7aa02bc0eef0f26f60d963fdbe9ccf67487a7b51b282a9",
+      "public/html/game/starship-defense/live-controller.js": "85eb4f1b7fb39b0b45fc5add091ef4b2db3b51d8603b37bbc5bd94b9e7574106",
+      "public/html/game/starship-defense/live-host.js": "d2d70c2d4930b2fdd6d107320f5868ee8bfa03c5dbed9617619b1984cbf77b69",
+      "public/html/game/starship-defense/live-rules.js": "cc4e03eed54ba038dd661cb9431cd5679d9d2a830e9d522a1fe6585ecffb80f1",
+      "public/html/game/starship-defense/live.css": "6e3e123deaa02dfe5741ba34122dea6cb80e9ab0abf2f55b861875c2eb5337fe",
+      "public/html/game/starship-defense/live.html": "7e90b20aa56b56a7acb0c75151a4639c598fc540f969f7e9b24157a2c40caea9",
+      "public/html/game/starship-defense/monster-navigation.js": "9053f2eedb14362f10862fd89ae1b097e2f17b185513eb433bf10e9a2fad7bb5",
+      "public/html/game/starship-defense/operations.js": "ee0535ea2d24c47e728c60f35558a7ba72509f1dd5a65cca55fada40b91ce81d",
+      "public/html/game/starship-defense/rv-breakout.js": "5b3d46b332350cc7ab553e372699710d0786303f68f57ffe1e2a7c26217aacc4",
+      "public/html/game/starship-defense/save-panel.js": "42b65448c5cc645a2348622538e93f10bfd487245e4587ee867374fcdc9a1955",
+      "public/html/game/starship-defense/save-store.js": "3efac97c74ed25a448ffbf33fa9d5ea264a2ea63d76e38f6400d5d17e8d75c3d",
+      "public/html/game/starship-defense/save-validation.js": "3523acb3db670755f952234112ecf31b470cedbe001bea82fd9d693473203fcd",
+      "public/html/game/starship-defense/site-save.js": "d80cd9fb5292923bb74f0fb6c00f029738fcf52dd98de1cdd770750644433f9c",
+      "public/html/game/starship-defense/squad-roles.js": "998932217133168781efbe9fdb163bf23259d1a9dd5adb43ed0798babbce7fed",
+      "public/html/game/starship-defense/tactical-panel.js": "d51f998370dddcdba45bb66720006164b6d1f57d1d3dc1b7f8e1f9646ffd628a",
+      "public/html/game/starship-defense/tactical-waves.js": "fd3c8fefa1895f76ba706ad9d0beca159d65bcf98e0ffaf1ea893cb409bb8899",
+      "public/html/game/starship-defense/terrain-controls.js": "bff290c49d597b5b191d6be61ca993cee96864bb1d4fb4b3b30205e951f6925d",
+      "public/html/game/starship-defense/touch-layout.js": "ce17f968cc339d088a7c037f3f6be2bb583976e9732596c3fa3f01a9e9d9e666",
+      "public/html/game/starship-defense/toy-platform.js": "bd6c04d24f9d92664f3a3e3592b67b11af613bcd23b2110bb891fdea3f38bbdb",
+      "public/html/game/starship-defense/unit-visuals.js": "df284a39870c0f2212d6aa6aa73501a2925ff4c4028200b214828cc1d7fd0087",
+      "public/html/game/starship-defense/versus.js": "23742743119784949e0017841040972a3a136c7645ef33f5096b20fc602855a7",
+      "public/html/game/starship-defense/wall-geometry.js": "72122c0fa6bedf2199d310eb32fadec763db09f61a10474d7f810e46517eb282",
+      "public/html/game/starship-defense/worlds-visuals.js": "6be9513cf426632f9c637b54b668067134b1f454f31dcbf41de89f5fa083e0bb",
+      "public/html/game/starship-defense/vendor/BufferGeometryUtils.js": "ba9eda05efd730cb1f91558e9ea1eec1fb2f3f29c8c8ba0929237721b82bb5e9",
+      "public/html/game/starship-defense/vendor/GLTFLoader.js": "a910ed477d96e7b69b30b1563eecc6aacb9d79efd4bfa95f6ac8ef3b4f77bccc",
+      "public/html/game/starship-defense/vendor/SkeletonUtils.js": "0732d130a9366dd7803e5f9b38f60cc8b54e488e1c991d99711fb1d01be3124d",
+      "public/html/game/starship-defense/vendor/three.module.js": "4d01ed1c468372b16732fcecfeb2f463ac1b29b0fc296b2d64ec084e32876b39",
+      "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
+    },
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "plain-menu-text",
+      "summary": "去掉深色菜单标题的发光与偏移阴影，战役与副本标题使用普通文字。",
+      "validation_status": "passed"
+    }
+  ],
+  "media": [
+    {
+      "id": "before-starship-defense",
+      "file": "releases/menu-text-20261009/captures/before-starship-defense.png",
+      "sha256": "36854a24123adac8445de03971cbaec95dd31793a6af207b0483b70d8f90b035",
+      "kind": "screenshot",
+      "version": "web-shop-scroll-v0.29.2",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "after-starship-defense",
+      "file": "releases/menu-text-20261009/captures/after-starship-defense.png",
+      "sha256": "d96ac36c369224d30a286af6863d1b72771c8623a15ef427230ed4dce954a2e4",
+      "kind": "screenshot",
+      "version": "web-shop-scroll-v0.29.2-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-starship-defense-844x390",
+      "file": "releases/menu-text-20261009/captures/verified-starship-defense-844x390.png",
+      "sha256": "1013c123cc618c3a82b97f9f83f6434159726b4c2e4329e212e9d511b993e3e9",
+      "kind": "screenshot",
+      "version": "web-shop-scroll-v0.29.2-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-starship-defense-390x844",
+      "file": "releases/menu-text-20261009/captures/verified-starship-defense-390x844.png",
+      "sha256": "18029dda391bb57f22198985097c665c6a12d8fd4165bb0f9df76b04afc00991",
+      "kind": "screenshot",
+      "version": "web-shop-scroll-v0.29.2-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    }
+  ],
+  "qa": {
+    "method": "Playwright + Edge真实DOM与点击/键盘，桌面1280×720，手机模拟844×390、390×844、800×346、568×320；选人和暂停经过实际入口，恐龙开场脚本用测试钩子跳过",
+    "checks": [
+      {
+        "game": "starship-defense",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "虫潮围城",
+            "shadow": "none"
+          },
+          {
+            "text": "选择前哨守卫",
+            "shadow": "none"
+          },
+          {
+            "text": "战役难度",
+            "shadow": "none"
+          },
+          {
+            "text": "⏸ 游戏暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "⚔ 虫潮对战 · 1 对 1",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          },
+          {
+            "text": "💀 游戏结束",
+            "shadow": "none"
+          },
+          {
+            "text": "房车突围",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "starship-defense",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "虫潮围城",
+            "shadow": "none"
+          },
+          {
+            "text": "选择前哨守卫",
+            "shadow": "none"
+          },
+          {
+            "text": "战役难度",
+            "shadow": "none"
+          },
+          {
+            "text": "⏸ 游戏暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "⚔ 虫潮对战 · 1 对 1",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          },
+          {
+            "text": "💀 游戏结束",
+            "shadow": "none"
+          },
+          {
+            "text": "房车突围",
+            "shadow": "none"
+          },
+          {
+            "text": "",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "starship-defense",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "starship-defense",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "starship-defense",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "unverified": [
+      "手机真机",
+      "Toy/TapTap本版本包"
+    ],
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos"
+  },
+  "thumbnail": {
+    "action": "reuse",
+    "reason": "仅菜单文字和按钮留白变化，玩法、场景和画风不变"
+  },
+  "website": {
+    "status": "pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+  },
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": 38678478981120
+    },
+    "taptap": {
+      "status": "pending_22_batch"
+    },
+    "existing_video_descriptions": {
+      "status": "pending_22_batch"
+    },
+    "community": {
+      "status": "pending_22_batch"
+    },
+    "feedback_reply": {
+      "status": "not_applicable",
+      "reason": "本人聊天反馈，无B站原楼"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅收集本次局部菜单证据，完整介绍沿用历史版本；本次测试录像静音"
+    ]
+  },
+  "artifact_location": "D:\\project\\task-artifacts\\game-menu-text-20261009"
+}

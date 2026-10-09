@@ -124,7 +124,7 @@
     "public_runtime_verified_version": "v0.10.1",
     "source_commit": "999d4057"
   },
-  "website_version": "v0.10.1",
+  "website_version": "v0.10.1-menu-text1",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
   "website_verified_at": "2026-10-08T19:43:54.608891+08:00",
   "website_commit": "999d4057",
@@ -383,7 +383,7 @@
       }
     }
   ],
-  "handoff": "releases/v0.10.1/handoff.json",
+  "handoff": "releases/menu-text-20261009/handoff.json",
   "game_id": "cadillacs-stage1-3d",
   "launch": {
     "public_entry": "public/html/game/cadillacs-stage1-3d/index.html",
@@ -402,7 +402,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.10.1",
+  "current_version": "v0.10.1-menu-text1",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
@@ -704,5 +704,12 @@
     "bilibili": "public_verified"
   },
   "bilibili_update_version": "v0.10.1",
-  "bilibili_update_status": "public_verified"
+  "bilibili_update_status": "public_verified",
+  "menu_text_update": {
+    "version": "v0.10.1-menu-text1",
+    "record": "releases/menu-text-20261009/handoff.json",
+    "classification": "routine",
+    "website_status": "pending_deploy",
+    "platform_status": "pending_22_batch"
+  }
 }
