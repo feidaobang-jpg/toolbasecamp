@@ -2,6 +2,7 @@
 // 所有计时使用游戏 dt，暂停不推进；状态由房主推进并随合作快照同步。
 import * as THREE from 'three';
 import { clamp, FACE_RIGHT, FACE_LEFT } from './core.js';
+import { ROAD } from './level.js';
 import { buildCar, itemMesh } from './models.js';
 import { buildBike, buildRadio } from './road-world.js';
 import A from './audio.js';
@@ -36,7 +37,7 @@ export function createRoad(api) {
     r.phase='foot';r.crashed=true;r.speed=0;r.hazards=[];IN.clear();
     fx.boom(r.x,0,r.z,1);A.play('boom');G.timer=150;
     // 所有乘员安全弹出，随后恢复标准耐久、死亡与续关规则。
-    team().forEach((p,i)=>{p.x=clamp(r.x-1+i*.7,11,17);p.z=clamp(r.z+(i%2?1:-1),-2.7,3.6);p.y=.8;p.vy=4;p.vx=p.vz=0;p.invul=3;p.alive=true;api.state(p,'jump',{noAtk:true});});
+    team().forEach((p,i)=>{p.x=clamp(r.x-1+i*.7,11,17);p.z=clamp(r.z+(i%2?1:-1),world.area().def.z0,world.area().def.z1);p.y=.8;p.vy=4;p.vx=p.vz=0;p.invul=3;p.alive=true;api.state(p,'jump',{noAtk:true});});
     G.car.position.set(9,0,-3.1);G.car.rotation.z=.14;startBoss();G.boss.rideT=0;G.boss.ridePhase='aim';
     api.banner('弃车迎战！','躲开冲撞；摩托减速时反击，击倒枪手可捡枪',3.5);api.ev('carWreck');
   }
@@ -55,7 +56,7 @@ export function createRoad(api) {
     // 步战：锁定纵深 → 0.9秒红色预警 → 横向冲撞 → 2.4秒停顿，明确的反击窗口。
     const p=G.player;
     if(b.ridePhase==='aim'){
-      if(b.rideT<.1){b.x=p.x<16?22:10;b.chargeDir=b.x>16?-1:1;b.z=clamp(p.z,-2.8,3.8);b.hitSlots=[];}
+      if(b.rideT<.1){b.x=p.x<16?22:10;b.chargeDir=b.x>16?-1:1;b.z=clamp(p.z,world.area().def.z0,world.area().def.z1);b.hitSlots=[];}
       b.face=b.chargeDir>0?FACE_RIGHT:FACE_LEFT;
       if(b.rideT>.9){b.ridePhase='charge';b.rideT=0;A.play('dash');api.ev('hoggCharge');}
     }else if(b.ridePhase==='charge'){
@@ -80,7 +81,7 @@ export function createRoad(api) {
       if(!G.settings.demo){G.timer-=dt;if(G.timer<=0){wreck();return false;}}
       r.speed=brake?8:r.ram>0?27:18;
       r.engineT=(r.engineT||0)-dt;if(r.engineT<=0){A.play('engine',.22);r.engineT=1.9;}r.distance+=r.speed*dt;
-      r.x=clamp(r.x+(mv.x*5.5+(r.ram>0?3.2:0))*dt,10,19);r.z=clamp(r.z+mv.z*4.4*dt,-2.7,3.7);
+      r.x=clamp(r.x+(mv.x*5.5+(r.ram>0?3.2:0))*dt,10,19);r.z=clamp(r.z+mv.z*4.4*dt,ROAD.z0+ROAD.carMargin,ROAD.z1-ROAD.carMargin);
       for(const [i,p] of team().entries()){p.state='incar';p.x=r.x-(i>1?1.2:0);p.z=r.z+(i%2?.45:-.45);p.y=.55;p.face=FACE_RIGHT;}
       G.focusX=16;G.lockX=16;r.spawn-=dt;
       if(r.distance<640&&r.spawn<=0){

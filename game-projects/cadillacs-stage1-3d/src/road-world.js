@@ -1,6 +1,7 @@
 // 地狱公路：双侧完整荒漠、有限段循环卷轴；纹理和几何一次创建。
 import * as THREE from 'three';
 import { fixedRng } from './core.js';
+import { ROAD } from './level.js';
 import { Parts, GEO, mtx, meshFrom, toonMat } from './models.js';
 
 export function roadWorld(A) {
@@ -22,13 +23,13 @@ export function roadWorld(A) {
   const skyTex=new THREE.CanvasTexture(skyCanvas);skyTex.colorSpace=THREE.SRGBColorSpace;
   const sky=new THREE.Mesh(new THREE.SphereGeometry(430,24,12),new THREE.MeshBasicMaterial({map:skyTex,side:THREE.BackSide,fog:false,depthWrite:false}));g.add(sky);
   const sand = new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshLambertMaterial({color:'#9b8060',map:sandMap}));sand.rotation.x=-Math.PI/2;sand.position.y=-.06;g.add(sand);
-  const road = new THREE.Mesh(new THREE.PlaneGeometry(500,9.4), new THREE.MeshLambertMaterial({map:tex}));road.rotation.x=-Math.PI/2;road.position.set(70,0,.7);road.receiveShadow=true;g.add(road);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(500,ROAD.z1-ROAD.z0), new THREE.MeshLambertMaterial({map:tex}));road.name='hellroad-asphalt';road.rotation.x=-Math.PI/2;road.position.set(70,0,(ROAD.z0+ROAD.z1)/2);road.receiveShadow=true;g.add(road);
   const chunks=[];
   for(let k=0;k<14;k++) {
     const root=new THREE.Group(),p=new Parts();root.position.x=k*32-192;
     for(let x=0;x<32;x+=6) {
       p.add(GEO.box,'#c0a475',mtx(x,.012,.7,0,0,0,2.5,.016,.11));
-      for(const z of [-4.05,5.4]) p.add(GEO.box,'#aca295',mtx(x,.008,z,0,0,0,6,.01,.12));
+      for(const z of [ROAD.z0,ROAD.z1]) p.add(GEO.box,'#aca295',mtx(x,.008,z,0,0,0,6,.01,.12));
     }
     for(const side of [-1,1]) {
       for(let j=0;j<8;j++) {

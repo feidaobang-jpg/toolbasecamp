@@ -1,9 +1,9 @@
 {
   "local_preview": {
-    "version": "v0.11.0-preview.1",
-    "status": "website_trial_ready",
+    "version": "v0.11.0-preview.2",
+    "status": "road_bounds_tested_pending_website_deploy",
     "url": "http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3",
-    "release_record": "releases/v0.11.0-preview.1/handoff.json",
+    "release_record": "releases/v0.11.0-preview.2/handoff.json",
     "approval_event_id": "cadillacs-stage3-preview-20261009-review-01",
     "authorization": "发布到网站里我试玩一下，不要发布到其他游戏平台",
     "public_channel_baselines_unchanged": false,
@@ -759,5 +759,6 @@
       "announcements"
     ],
     "status": "held_by_user"
-  }
+  },
+  "development_version": "v0.11.0-preview.2"
 }
