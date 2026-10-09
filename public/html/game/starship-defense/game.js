@@ -1134,6 +1134,7 @@ function segmentHit(a,b,center,r){
 }
 // friendly: 我方子弹可越过掩护巨石，枪口附近 1.6 米内不判地面（城楼/高台边缘向下射击）。
 function shotCover(a,b,friendly=false,origin=null){
+  if(rvOn())return rvBreakout.visible(a,b)?1:0;
   const n=Math.max(1,Math.ceil(a.distanceTo(b)/.4));
   for(let i=1;i<=n;i++){
     const p=a.clone().lerp(b,i/n);
@@ -1333,6 +1334,7 @@ function damageMonster(mo,d){
 }
 function killMonster(mo){
   mo.dead=true;
+  if(rvOn()&&mo.rvZombie)rvBreakout.killed(mo);
   if(mo.dmgAcc>0){popDamage(mo);}
   const p=mo.mesh.position.clone();p.y+=1;
   spawnParticles(p,0x88ff44,12,7,.6,1.2);
@@ -1348,13 +1350,13 @@ function killMonster(mo){
   }
   if(mo.kind==='queen')queenKilled(mo);
   // 掉落
-  dropPickup(p,'gold',mo.gold);
+  if(mo.gold>0)dropPickup(p,'gold',mo.gold);
   if(mo.elite){ // 精英：额外金币+必掉回复
     Game.score+=50*mo.elite.length;
     dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'gold',Math.round(mo.gold*.6));
     dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'hp',40);
   }
-  if(Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
+  if(!mo.rvZombie&&Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
   if(mo.kind!=='mob'&&mo.kind!=='queen')dropPickup(p.clone().add(new THREE.Vector3(rand(-2,2),0,rand(-2,2))),'gold',mo.gold);
   Game.score+=mo.kind==='mob'?10:(mo.kind==='miniboss'?150:mo.kind==='queen'?2000:500);
   if(!visuals.death(mo.mesh))scene.remove(mo.mesh);
@@ -1472,6 +1474,7 @@ function updMonsters(dt){
       if(mo.dead)continue;
     }
     if(mo.dmgT>0&&(mo.dmgT-=dt)<=0)popDamage(mo);
+    if(rvOn()&&rvBreakout.updateMonster(mo,dt))continue;
     if(mo.operationStatic)continue;
     mo.anim+=dt*8;
     visuals.animate(mo.mesh,dt,mo.emerge>0?'Walk':mo.atkCd>.75?'Attack':'Walk',camera);
@@ -1695,7 +1698,7 @@ function damageBase(d){
 }
 /* 墙体碰撞（旋转矩形近似） */
 function collideWalls(x,z,r,y=groundY(x,z)){
-  if(rvOn())return rvBreakout.blocked(x,z);
+  if(rvOn())return rvBreakout.blocked(x,z,r);
   if(fortress.blocked(x,z,r,y))return true;
   for(const bd of buildings){
     if(bd.dead)continue;
@@ -2441,6 +2444,7 @@ function playerAim(from,range,moveDir){
   return a.mo?a:{dir:f,target:null,mo:null};
 }
 function automaticFireTarget(from,range,aim){
+  if(rvOn())return !!aim.mo&&aim.mo.mode==='chase';
   if(aim.mo)return true;
   if(isTouch||CombatControls.autoAim)return false;
   const target=autoAim(from,aim.dir,range,.995);
@@ -2469,7 +2473,7 @@ function updInteraction(){
 }
 function useMedkit(){
   if(vsOn()){if(player===versus.state.local)showMsg('对战模式没有医疗包：回到己方基地核心附近自动回血',1.8);return;}
-  if(player.inVehicle){showMsg('驾驶中不能用医疗包，先按 I 下车',1.6);return;}
+  if(player.inVehicle&&!rvOn()){showMsg('驾驶中不能用医疗包，先按 I 下车',1.6);return;}
   if(player.hp>=player.maxHp){showMsg('生命已满，医疗包留到关键时刻',1.4);return;}
   if(!Game.testMode&&Game.items.medkit<=0){showMsg('没有医疗包！O 打开商店购买',2);return;}
   if(!Game.testMode)Game.items.medkit--;
@@ -4028,7 +4032,7 @@ battlefield=new BattlefieldEnvironment(scene,groundMesh,visuals.environmentObjec
 try{battlefield.setTimeOfDay(localStorage.getItem('chongchao-daylight'));}catch(_e){}
 setBattlefieldEnvironment(environmentForChapter(Game.chapter));
 setupVersus();
-rvBreakout=createRVBreakout({THREE,scene,Game,player,WORLD,AudioSys,stage,camera,Input,visuals,monsters,CHAPTERS,spawnMonster,spawnVehicle,enterVehicle,clearEntities,closePanels,hideConfirm,askConfirm,showMsg,showHint,showHUD,updHPBar,vehicleAim,vehicleMuzzle,fireBullet,
+rvBreakout=createRVBreakout({THREE,scene,Game,player,WORLD,AudioSys,stage,camera,Input,visuals,monsters,CHAPTERS,spawnMonster,spawnVehicle,enterVehicle,clearEntities,closePanels,hideConfirm,askConfirm,showMsg,showHint,showHUD,updHPBar,vehicleAim,vehicleMuzzle,fireBullet,damageVehicle,playerDamage,
   isTouch:()=>isTouch,lastDt:()=>rvFrameDt,setPanel:v=>panelOpen=v,vsOn,exitVersus,clearCoop:()=>{coopDriver?.leave();clearCoopHumans();Game.coop=false;},quit:()=>$('btnQuit').click(),
   skyObjects:()=>[visuals.environmentObjects.sky,visuals.environmentObjects.stars,visuals.environmentObjects.moon].filter(Boolean),
   faceForward:()=>{setCameraView(0,false);camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();}
@@ -4660,11 +4664,11 @@ function updVersusHUD(dt){
   else if(time<VS_RULES.tier3)phase='虫王 '+fmtTime(VS_RULES.tier3-time)+' 后';
   else if(time<VS_RULES.lateBoost)phase='收入 +50% '+fmtTime(VS_RULES.lateBoost-time)+' 后';
   else phase='时限 '+fmtTime(VS_RULES.limit-time);
-  $('vsClock').textContent=fmtTime(time);$('vsPhase').textContent=phase;
+  $('vsClock').textContent=fmtTime(time);$('vsPhase').textContent=phase+(time>=VS_RULES.prep?' · 基础兵 '+Math.ceil(VS_RULES.laneEvery-(time-VS_RULES.prep)%VS_RULES.laneEvery)+'秒':'');
   const lane=({left:'左路',right:'右路',alt:'交替'})[t.lane];
   let mates='';
   if(n>1){const list=versus.members(me).filter(s=>s.pid!==t.pid);mates='\n👥 '+'队友：'+list.map(s=>versus.seatName(s)+(s.ai&&s.name&&s.name!=='电脑'?'（电脑接管）':'')+' Lv'+s.bank).join(' · ');const votes=versus.members(me).filter(s=>s.surrender).length;if(votes)mates+=' · 🏳 投降 '+votes+'/'+versus.members(me).filter(s=>!s.ai).length;}
-  $('vsEco').textContent='🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 路线 '+lane+' · 兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':'R 出兵 · L 建造 · O 买枪 · Z 换路线'+(n>1?' · T 队伍':''));
+  $('vsEco').textContent='英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':'R 出兵 · L 建造 · O 买枪 · Z 换路线'+(n>1?' · T 队伍':''));
   renderWeaponBar();
   if(vsUI.open&&(vsUI.t-=dt)<=0){vsUI.t=.2;renderVersusPanel();}
   if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}

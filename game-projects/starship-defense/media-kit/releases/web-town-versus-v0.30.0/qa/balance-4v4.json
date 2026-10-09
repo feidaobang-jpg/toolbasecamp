@@ -1,0 +1,179 @@
+{
+ "url": "http://127.0.0.1:8809/html/game/starship-defense/index.html",
+ "runs": 1,
+ "size": 4,
+ "started": "2026-10-09T04:03:56.852Z",
+ "matchups": {
+  "normal vs normal": {
+   "summary": {
+    "blueWins": 1,
+    "redWins": 0,
+    "draws": 0,
+    "avgTime": 480,
+    "minTime": 480,
+    "maxTime": 480,
+    "timeouts": 0,
+    "maxUnits": 148,
+    "before180": 0,
+    "avgFirstSend": {
+     "blue": 151,
+     "red": 149
+    }
+   },
+   "rows": [
+    {
+     "winner": "blue",
+     "reason": "红方基地核心被摧毁",
+     "time": 480,
+     "blue": {
+      "sent": 126,
+      "first": 151,
+      "bank": "3/2/3/2",
+      "kills": 315,
+      "built": 8,
+      "heroDeaths": 0,
+      "deathsBy": {
+       "turret": 66,
+       "hq": 119,
+       "unit": 107,
+       "hero": 4
+      },
+      "deathZone": {
+       "enemy": 49,
+       "base": 152,
+       "home": 80,
+       "mid": 15
+      },
+      "lostBuildings": 5,
+      "byUnit": {
+       "assault": 17,
+       "swarm": 8,
+       "gunners": 16,
+       "flyers": 3
+      },
+      "hq": 0.748,
+      "maxUnits": 148
+     },
+     "red": {
+      "sent": 137,
+      "first": 149,
+      "bank": "2/2/2/2",
+      "kills": 296,
+      "built": 6,
+      "heroDeaths": 1,
+      "deathsBy": {
+       "hero": 19,
+       "hq": 99,
+       "unit": 129,
+       "turret": 68
+      },
+      "deathZone": {
+       "enemy": 65,
+       "base": 123,
+       "home": 94,
+       "mid": 33
+      },
+      "lostBuildings": 4,
+      "byUnit": {
+       "gunners": 9,
+       "assault": 15,
+       "swarm": 8,
+       "flyers": 7,
+       "jeep": 2,
+       "medics": 4,
+       "bombers": 1
+      },
+      "hq": 0,
+      "maxUnits": 148
+     }
+    }
+   ]
+  },
+  "hard vs normal": {
+   "summary": {
+    "blueWins": 0,
+    "redWins": 1,
+    "draws": 0,
+    "avgTime": 437,
+    "minTime": 437,
+    "maxTime": 437,
+    "timeouts": 0,
+    "maxUnits": 114,
+    "before180": 0,
+    "avgFirstSend": {
+     "blue": 168,
+     "red": 151
+    }
+   },
+   "rows": [
+    {
+     "winner": "red",
+     "reason": "蓝方基地核心被摧毁",
+     "time": 437,
+     "blue": {
+      "sent": 44,
+      "first": 168,
+      "bank": "3/3/3/3",
+      "kills": 259,
+      "built": 16,
+      "heroDeaths": 0,
+      "deathsBy": {
+       "unit": 89,
+       "hq": 57,
+       "turret": 51
+      },
+      "deathZone": {
+       "enemy": 58,
+       "home": 56,
+       "base": 63,
+       "mid": 20
+      },
+      "lostBuildings": 12,
+      "byUnit": {
+       "flyers": 1,
+       "gunners": 5,
+       "carapace": 1,
+       "assault": 3,
+       "swarm": 3,
+       "medics": 1
+      },
+      "hq": 0,
+      "maxUnits": 114
+     },
+     "red": {
+      "sent": 109,
+      "first": 151,
+      "bank": "2/2/2/3",
+      "kills": 197,
+      "built": 4,
+      "heroDeaths": 0,
+      "deathsBy": {
+       "hq": 94,
+       "turret": 92,
+       "unit": 73
+      },
+      "deathZone": {
+       "base": 129,
+       "mid": 29,
+       "enemy": 70,
+       "home": 31
+      },
+      "lostBuildings": 1,
+      "byUnit": {
+       "assault": 17,
+       "swarm": 7,
+       "flyers": 3,
+       "medics": 2,
+       "gunners": 5,
+       "bombers": 1,
+       "carapace": 1
+      },
+      "hq": 0.916,
+      "maxUnits": 114
+     }
+    }
+   ]
+  }
+ },
+ "errors": []
+}

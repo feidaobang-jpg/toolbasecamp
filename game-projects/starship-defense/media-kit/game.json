@@ -797,5 +797,17 @@
     "classification": "routine",
     "website_status": "public_verified",
     "platform_status": "pending_22_batch"
+  },
+  "development_preview": {
+    "version": "web-town-versus-v0.30.0",
+    "status": "local_pending_user_review",
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "url": "http://127.0.0.1:8809/html/game/starship-defense/index.html",
+    "handoff": "releases/web-town-versus-v0.30.0/handoff.json",
+    "release_record": "releases/web-town-versus-v0.30.0/release-status.json",
+    "classification": "review_required",
+    "runtime_sha256": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
+    "automatic_batch_eligible": false,
+    "published_baselines_unchanged": true
   }
 }

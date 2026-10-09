@@ -65,7 +65,7 @@ const MOBILE_UA='Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KH
       const a=v.send('blue1','king','left');return {mate:a,mine:v.sendReason('blue0','king')};});
     assert.equal(king.mate,'');assert.ok(king.mine.includes('本队虫王'));pass('每队场上最多 1 只虫王',king);
     // 赏金记给出手的人：我（英雄）打死红方单位，钱进我的钱包
-    const bounty=await p.evaluate(()=>{const v=__gameQA.versus,s=v.state;v.seat('red0').gold=1000;v.seat('red0').cd={};v.send('red0','swarm','left');const ru=s.units.find(u=>u.team==='red'&&u.prof==='bug0');
+    const bounty=await p.evaluate(()=>{const v=__gameQA.versus,s=v.state;v.seat('red0').gold=1000;v.seat('red0').cd={};v.send('red0','swarm','left');const ru=s.units.find(u=>u.team==='red'&&u.prof==='bug0'&&!u.laneMinion);
       const a=[v.seat('blue0').gold,v.seat('blue2').gold];v.damage(ru,1e4,'blue','hero','blue0');return {me:Math.round(v.seat('blue0').gold-a[0]),mate:Math.round(v.seat('blue2').gold-a[1])};});
     assert.equal(bounty.me,6);assert.equal(bounty.mate,0);pass('赏金记给出手的人（小虫 6 金进我的钱包，队友不分）',bounty);
     // 投降：队友都是电脑，5:00 后我点投降即判负；结算列出每个人

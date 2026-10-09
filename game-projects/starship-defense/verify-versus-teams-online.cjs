@@ -80,6 +80,14 @@ const meter=()=>{const W=window.WebSocket;window.__stateBytes={n:0,bytes:0,since
     await late.keyboard.press('KeyR');await sleep(200);await late.keyboard.press('Digit2');
     await host.waitForFunction(()=>__gameQA.versus.state.units.some(u=>u.owner==='red1'&&u.prof==='gunner'),null,{timeout:8000});
     pass('中途加入者按 R→2 派出机枪小队，记在 red1 名下');
+    // Real socket snapshot: award experience through host combat, never guest mutation.
+    const levelExpected=await host.evaluate(()=>{const q=__gameQA,v=q.versus,h=v.heroOfSeat('blue1');
+      const former=h.pos.clone();for(let wave=0;wave<3;wave++){v.state.time=20+wave*25;v.update(.001);for(const u of [...v.state.units].filter(u=>u.team==='red'&&u.laneMinion)){h.pos.copy(u.mesh.position);v.damage(u,1e5,'blue','hero','blue1');}}
+      h.pos.copy(former);h.mesh.position.copy(former);return {level:v.seat('blue1').level,xp:v.seat('blue1').xp,max:h.maxHp};});
+    assert.ok(levelExpected.level>1);
+    await ally.waitForFunction(x=>__gameQA.versus.seat('blue1').level===x.level,levelExpected,{timeout:8000});
+    const levelActual=await ally.evaluate(()=>({level:__gameQA.versus.seat('blue1').level,xp:__gameQA.versus.seat('blue1').xp,max:__gameQA.player.maxHp,ui:document.getElementById('vsEco').textContent}));
+    assert.equal(levelActual.max,levelExpected.max);assert.ok(levelActual.ui.includes('英雄 Lv'+levelExpected.level));pass('房主战斗升级经真实联机同步到队友生命上限与HUD',{host:levelExpected,guest:levelActual});
     // 客人收到的快照流量（2 对 2，客人 3 人）
     await sleep(3000);
     const flow=await foe.evaluate(()=>{const s=window.__stateBytes,sec=(performance.now()-s.since)/1000;return {msgs:s.n,avgBytes:Math.round(s.bytes/Math.max(1,s.n)),kbPerSec:+(s.bytes/1024/sec).toFixed(1)};});

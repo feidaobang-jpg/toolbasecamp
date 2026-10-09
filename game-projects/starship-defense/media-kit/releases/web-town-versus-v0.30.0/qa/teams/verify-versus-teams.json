@@ -1,0 +1,298 @@
+{
+ "url": "http://127.0.0.1:8809/html/game/starship-defense/index.html",
+ "at": "2026-10-09T04:02:44.139Z",
+ "results": [
+  {
+   "name": "对战菜单键盘选「4 对 4」：标题、选中态、说明和战绩随规模切换",
+   "ok": true,
+   "detail": {
+    "title": "⚔ 虫潮对战 · 4 对 4",
+    "pressed": [
+     "false",
+     "false",
+     "false",
+     "true"
+    ],
+    "note": "你和 3 名电脑队友对 4 名电脑（队友难度与对手相同）。每人各管自己的金币和银行，全队共用一个核心；T 打开队伍面板可给队友转钱。",
+    "record": "本机对战电脑战绩（4 对 4）：简单 0 胜 0 负 · 普通 0 胜 0 负 · 困难 0 胜 0 负"
+   }
+  },
+  {
+   "name": "4 对 4 开局：8 个座位 8 名英雄（你 + 7 个电脑）、8 座银行、核心 16800、每人兵力 10 / 设施 9",
+   "ok": true,
+   "detail": {
+    "size": 4,
+    "seats": [
+     "blue0:人",
+     "blue1:normal",
+     "blue2:normal",
+     "blue3:normal",
+     "red0:normal",
+     "red1:normal",
+     "red2:normal",
+     "red3:normal"
+    ],
+    "heroes": [
+     "blue0@0",
+     "blue1@101电脑",
+     "blue2@102电脑",
+     "blue3@103电脑",
+     "red0@104电脑",
+     "red1@105电脑",
+     "red2@106电脑",
+     "red3@107电脑"
+    ],
+    "local": "blue0",
+    "hq": 16800,
+    "banks": 8,
+    "popCap": 10,
+    "buildCap": 9,
+    "teamTab": true,
+    "hint": "WASD移动 · J/左键射击 · R 出兵面板（打开后 1-9 派兵、0 升级银行）· Z 切换进攻路线 · L 建造 · O 买枪 · T 队伍（给队友转钱） · U 手雷 · K 跳跃 · C 切换视角 · Q/E 转视角 · Esc 暂停"
+   }
+  },
+  {
+   "name": "英雄出生点分开（两两相距 ≥ 3 米），两队点对称",
+   "ok": true,
+   "detail": {
+    "list": [
+     [
+      "blue0",
+      8,
+      -79
+     ],
+     [
+      "blue1",
+      -16,
+      -73
+     ],
+     [
+      "blue2",
+      12,
+      -77
+     ],
+     [
+      "blue3",
+      -12,
+      -77
+     ],
+     [
+      "red0",
+      -16,
+      73
+     ],
+     [
+      "red1",
+      16,
+      73
+     ],
+     [
+      "red2",
+      -12,
+      77
+     ],
+     [
+      "red3",
+      12,
+      77
+     ]
+    ],
+    "minD": 4.9
+   }
+  },
+  {
+   "name": "每人独立钱包：0 升级自己的银行，队友金币不受影响",
+   "ok": true,
+   "detail": {
+    "me": 2,
+    "mate": 1,
+    "meGold": 100,
+    "mateGold": 600
+   }
+  },
+  {
+   "name": "T 打开队伍页：列出 3 名队友",
+   "ok": true,
+   "detail": {
+    "vis": true,
+    "sel": "true",
+    "cards": [
+     "👤 电脑",
+     "🤖 电脑",
+     "🤖 电脑"
+    ]
+   }
+  },
+  {
+   "name": "队伍页按 1：给 1 号队友转 200 金",
+   "ok": true,
+   "detail": {
+    "before": [
+     1000,
+     600
+    ],
+    "after": [
+     800,
+     800
+    ]
+   }
+  },
+  {
+   "name": "不能给对手转账",
+   "ok": true,
+   "detail": "只能转给队友"
+  },
+  {
+   "name": "每人兵力上限 10：派了小虫 6 + 机枪 2 后，再派 4 只甲壳虫被拦",
+   "ok": true,
+   "detail": {
+    "pop": 8,
+    "why": "在场兵力已满（8/10）"
+   }
+  },
+  {
+   "name": "每人最多 9 座设施；不能拆队友建的",
+   "ok": true,
+   "detail": {
+    "mine": 9,
+    "limit": "你的设施已达 9 座",
+    "mateBuilt": "",
+    "demolishMate": "只能拆除自己建的设施"
+   }
+  },
+  {
+   "name": "每队场上最多 1 只虫王",
+   "ok": true,
+   "detail": {
+    "mate": "",
+    "mine": "本队虫王已经在场"
+   }
+  },
+  {
+   "name": "赏金记给出手的人（小虫 6 金进我的钱包，队友不分）",
+   "ok": true,
+   "detail": {
+    "me": 6,
+    "mate": 0
+   }
+  },
+  {
+   "name": "多人投降要本队真人都同意：只有我点时显示 1/2、对局继续",
+   "ok": true,
+   "detail": {
+    "msg": "已发起投降：等队友同意（1/2）",
+    "over": false
+   }
+  },
+  {
+   "name": "队友也点投降后判负；结算列出每个人的派兵/击杀/银行",
+   "ok": true,
+   "detail": {
+    "ask": "发起投降？本队真人都点了投降才会判负。",
+    "reason": "4 对 4 · 蓝方投降 · 用时 05:20",
+    "rows": 15,
+    "note": "对战电脑·普通·4 对 4：本机累计 0 胜 1 负"
+   }
+  },
+  {
+   "name": "再来一局保持 4 对 4",
+   "ok": true
+  },
+  {
+   "name": "回主菜单：对战退出、原战场恢复、自动存档未改动、英雄去掉座位标记",
+   "ok": true,
+   "detail": {
+    "active": false,
+    "ground": true,
+    "heroes": 0,
+    "auto": null
+   }
+  },
+  {
+   "name": "之后开始战役没有对战残留",
+   "ok": true,
+   "detail": {
+    "state": "prep",
+    "heroes": 0,
+    "bld": 0
+   }
+  },
+  {
+   "name": "2 对 2 开局",
+   "ok": true,
+   "detail": {
+    "size": 2,
+    "seats": 4,
+    "heroes": 4,
+    "hq": 10200
+   }
+  },
+  {
+   "name": "3 对 3 开局",
+   "ok": true,
+   "detail": {
+    "size": 3,
+    "seats": 6,
+    "heroes": 6,
+    "hq": 14400
+   }
+  },
+  {
+   "name": "4 对 4 满负载帧时间（8 名英雄 + 每人 8 个单位 + 每人 5 座设施，实时 6 秒）",
+   "ok": true,
+   "detail": {
+    "blue": 32,
+    "red": 32,
+    "heroes": 8,
+    "buildings": 31,
+    "fps": 152,
+    "p95": 6,
+    "over50": 1,
+    "draws": 414,
+    "tris": 228172,
+    "quality": "high",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+   }
+  },
+  {
+   "name": "电脑端无脚本报错",
+   "ok": true
+  },
+  {
+   "name": "手机横屏 2 对 2：点「出兵」再点「队伍」页，面板不遮挡摇杆和动作键",
+   "ok": true,
+   "detail": {
+    "touch": true,
+    "cards": 1,
+    "overlap": [],
+    "tab": "true",
+    "tabSize": [
+     56,
+     30
+    ]
+   }
+  },
+  {
+   "name": "手机横屏：点队友卡片转 200 金",
+   "ok": true
+  },
+  {
+   "name": "手机竖屏 2 对 2：点「出兵」再点「队伍」页，面板不遮挡摇杆和动作键",
+   "ok": true,
+   "detail": {
+    "touch": true,
+    "cards": 1,
+    "overlap": [],
+    "tab": "true",
+    "tabSize": [
+     30,
+     56
+    ]
+   }
+  },
+  {
+   "name": "手机竖屏：点队友卡片转 200 金",
+   "ok": true
+  }
+ ]
+}

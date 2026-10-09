@@ -20,12 +20,13 @@ export const VS_RULES={
   heroDmgMul:.8,heroVsBuilding:.6,respawnBase:8,respawnStep:2,respawnMax:20,surrenderAfter:300,
   baseHealRange:12,baseHeal:8,grenadeCd:6,bldHp:1.6,bldDmg:1.3, // 对战里设施更耐打、火力更强：守方靠炮塔，派兵靠数量
   giveStep:200,
+  laneEvery:25,laneBounty:18,xpRadius:36,heroMaxLevel:15,heroHpPerLevel:14,heroDamagePerLevel:.04,
 };
 // 每队人数：1 对 1 到 4 对 4。多人时场地只拉宽东西向（行军距离基本不变），核心按人数加厚；
 // 兵力和设施上限按人头给，但每人略少；后期免费虫群按 surge 放大，并在 freeCap（每队在场单位）封顶，控制同屏单位数量（性能、联机流量）。
 export const VS_SIZES=[1,2,3,4];
 export const VS_SCALE={
-  1:{sx:1,hq:1,pop:24,build:16,surge:1,freeCap:Infinity},
+  1:{sx:1,hq:1,pop:24,build:16,surge:1,freeCap:54},
   2:{sx:1.12,hq:1.7,pop:16,build:12,surge:1.2,freeCap:58},
   3:{sx:1.24,hq:2.4,pop:12,build:10,surge:1.4,freeCap:66},
   4:{sx:1.36,hq:2.8,pop:10,build:9,surge:1.6,freeCap:74}, // 4 对 4 核心 3.1 倍时一半对局打满 15 分钟，降到 2.8 倍
@@ -47,6 +48,7 @@ const UNIT_BY_ID=Object.fromEntries(VS_UNITS.map(u=>[u.id,u]));
 // 单个单位的属性。虫子取自现有章节虫种（小虫=第1章、甲壳=第3章、飞虫=第4章、炎爆=第5章，二级虫种按模拟加强），
 // 士兵取自队友兵种（机枪兵火力下调，避免单刷），战车取自突击战车（火力×0.5），虫王用第1章首领「巨颚虫王」的模型。
 export const VS_PROFILES={
+  recruit:{kind:'soldier',role:'gunner',hp:65,dmg:5,rate:1,range:14,speed:5,pop:0,bld:.6},
   bug0:{kind:'bug',species:0,hp:30,dmg:8,rate:1,speed:5,scale:1,pop:1},
   bug2:{kind:'bug',species:2,hp:240,dmg:16,rate:1,speed:4.6,scale:1.15,pop:1},
   bug3:{kind:'bug',species:3,hp:90,dmg:14,rate:1,speed:7.5,scale:.95,pop:1,fly:true},
@@ -250,7 +252,7 @@ export function createVersus(api){
   const freshStats=()=>({sent:0,spent:0,earned:0,kills:0,heroKills:0,built:0,lostBuildings:0,heroDeaths:0,units:0,given:0});
   function freshTeam(team){return {team,members:[],surrendered:false,kingSaver:null,lastBuild:-99,stats:freshStats()};}
   function freshSeat(pid,team,idx,name){
-    return {pid,team,idx,name:name||'',gold:R.startGold,bank:1,bankDown:0,incomeT:0,lane:'left',altNext:'left',cd:{},ai:null,aiState:null,surrender:false,stats:freshStats()};
+    return {pid,team,idx,name:name||'',gold:R.startGold,bank:1,bankDown:0,incomeT:0,lane:'left',altNext:'left',cd:{},ai:null,aiState:null,surrender:false,level:1,xp:0,stats:freshStats()};
   }
   // opts.size：每队人数；opts.seats：[{pid,ai,name}]（ai 为电脑难度，真人座位不填）。
   function start(opts){
@@ -274,7 +276,7 @@ export function createVersus(api){
     }
     VS.panel.open=false;VS.panel.tab='units';
     api.onStart?.(VS);
-    if(!VS.sim)api.showMsg('⚔ 虫潮对战'+(n>1?' '+n+' 对 '+n:'')+'开始！准备 20 秒：先升级银行、造防御，开战后 R 出兵',4);
+    if(!VS.sim)api.showMsg('⚔ 虫潮对战'+(n>1?' '+n+' 对 '+n:'')+'开始！准备20秒后双路自动出兵；跟随兵线赚金币与经验',4);
     return VS;
   }
   function setLocal(h,fallbackTeam){
@@ -292,6 +294,7 @@ export function createVersus(api){
     if(h.bar)api.recolorBar?.(h,team);
   }
   function placeHero(h,initial=false){
+    syncHeroStats(h,true);
     const seat=seatOf(h),[x,z]=HERO_SPOTS[seat?seat.idx:0],p=world(h.team,x,z); // 点对称：0 号英雄在各自核心右前方
     h.pos.set(p.x,api.groundY(p.x,p.z),p.z);h.vy=0;h.onGround=true;
     if(h.mesh){h.mesh.position.copy(h.pos);h.mesh.visible=true;addRing(h.mesh,h.team,1.25);}
@@ -534,6 +537,7 @@ export function createVersus(api){
   }
   function damage(t,d,team,src='unit',by=null){
     if(!alive(t)||t.team===team||VS.over||!(d>0))return;
+    if(src==='hero'){const s=VS.seatById[by];if(s&&s.team===team)d*=1+(s.level-1)*R.heroDamagePerLevel;}
     if(t.vsType==='unit'){
       t.hp-=d*(t.armor||1);api.updHPBar(t.bar,t.hp/t.maxHp);if(t.hp<=0)killUnit(t,team,src,by);
     }else if(t.vsType==='hero'){
@@ -559,6 +563,27 @@ export function createVersus(api){
     if(stat)VS.teams[team].stats[stat]++;
     return null;
   }
+  // Experience is local to this match and shared by living heroes near a kill.
+  // A last-hitting hero still receives a share when using a long-range weapon.
+  function xpNeeded(level){return level>=R.heroMaxLevel?0:80+level*30;}
+  function syncHeroStats(h,full=false){
+    const seat=seatOf(h);if(!seat)return;const max=api.CLASSES[h.cls||'gunner'].hp+(seat.level-1)*R.heroHpPerLevel;
+    const old=h.maxHp;h.maxHp=max;if(full)h.hp=max;else if(VS.role!=='guest'&&!h.dead)h.hp=Math.min(max,h.hp+Math.max(0,max-old));
+    h.vsLevel=seat.level;if(h.bar)api.updHPBar(h.bar,h.hp/max);
+  }
+  function addXP(seat,amount){
+    if(!seat||seat.level>=R.heroMaxLevel||!(amount>0))return;seat.xp+=amount;const before=seat.level;
+    while(seat.level<R.heroMaxLevel&&seat.xp>=xpNeeded(seat.level)){seat.xp-=xpNeeded(seat.level);seat.level++;}
+    if(seat.level>=R.heroMaxLevel)seat.xp=0;
+    if(seat.level!==before){const h=heroOfSeat(seat.pid);if(h)syncHeroStats(h);note([seat.pid],'英雄升至 Lv'+seat.level+'：生命 +'+R.heroHpPerLevel+'、伤害 +4%',2);}
+  }
+  function battleReward(team,by,pos,gold,xp,src){
+    const nearby=humans().filter(h=>h.team===team&&!h.dead&&!h.disconnected&&(Math.hypot(h.pos.x-pos.x,h.pos.z-pos.z)<=R.xpRadius||src==='hero'&&h.vsPid===by));
+    const pids=[...new Set(nearby.map(h=>h.vsPid))].filter(pid=>VS.seatById[pid]);
+    if(!pids.length){credit(team,by,gold,'kills');return;}
+    // Half the gold follows the finisher/owner; the other half rewards nearby presence.
+    credit(team,by,gold*.5,'kills');for(const pid of pids){credit(team,pid,gold*.5/pids.length);addXP(VS.seatById[pid],xp/pids.length);}
+  }
   // 6:00 起虫潮腐蚀装甲：建筑、银行、核心受到的伤害 ×1.5，9:00 起 ×2。
   function corrosion(){let m=1;for(const [at,k] of R.corrode)if(VS.time>=at)m=k;return m;}
   function frenzy(){let m=1;for(const [at,k] of R.frenzy)if(VS.time>=at)m=k;return m;}
@@ -580,6 +605,7 @@ export function createVersus(api){
     if(h.mesh)h.mesh.visible=false;if(h.inVehicle)h.inVehicle=null;
     (seatOf(h)||VS.teams[h.team]).stats.heroDeaths++;
     let s=null;if(killer&&killer!==h.team)s=credit(killer,by,R.heroBounty,'heroKills');
+    if(killer&&killer!==h.team){const eligible=humans().filter(x=>x.team===killer&&!x.dead&&(x.vsPid===by||Math.hypot(x.pos.x-h.pos.x,x.pos.z-h.pos.z)<=R.xpRadius));for(const x of eligible)addXP(seatOf(x),100/eligible.length);}
     if(!VS.sim){
       if(h===VS.local)api.showMsg('阵亡！'+Math.ceil(h.respawnT)+' 秒后在基地复活',2.4);
       else if(s&&s.pid===VS.localPid)api.showMsg('击倒敌方英雄 +'+R.heroBounty,1.6);
@@ -594,7 +620,7 @@ export function createVersus(api){
       const zone=r<-25?'home':r<25?'mid':r<70?'enemy':'base';const zs=st.deathZone||(st.deathZone={});zs[zone]=(zs[zone]||0)+1;
       if(src==='hero'&&killer){const ks=(VS.seatById[by]||VS.teams[killer]).stats;ks.heroUnitKills=(ks.heroUnitKills||0)+1;}
     }
-    if(killer&&killer!==u.team)credit(killer,by,Math.round(u.value*R.bounty),'kills');
+    if(killer&&killer!==u.team)battleReward(killer,by,u.mesh.position,u.laneMinion?R.laneBounty:Math.round(u.value*R.bounty),u.laneMinion?32:u.kind==='boss'?180:45,src);
     const p=u.mesh.position.clone();p.y+=u.hitH;
     api.spawnParticles(p,u.kind==='soldier'||u.kind==='jeep'?0xff8866:0x88ff44,u.kind==='boss'?26:8,6,.5,u.kind==='boss'?2:1.1);
     if(u.blast){api.spawnParticles(p,0xff7722,14,8,.6,1.6);api.AudioSys.sfx('boom');explodeAt(u.mesh.position,u.blast.r,u.blast.dmg,u.team,{bld:u.blast.bld,by:u.owner});}
@@ -630,7 +656,7 @@ export function createVersus(api){
       h.grenadeCd=Math.max(0,(h.grenadeCd||0)-dt);
       if(!h.dead&&h.hp<h.maxHp){const hq=VS.hq[h.team].pos;if(Math.hypot(h.pos.x-hq.x,h.pos.z-hq.z)<R.baseHealRange){h.hp=Math.min(h.maxHp,h.hp+R.baseHeal*dt);if(h.bar)api.updHPBar(h.bar,h.hp/h.maxHp);}}
     }
-    buildUnitGrid();
+    updLaneWaves();buildUnitGrid();
     if(flip){for(let i=VS.units.length-1;i>=0;i--){const u=VS.units[i];if(!u.dead)updUnit(u,dt);}}else for(const u of VS.units)if(!u.dead)updUnit(u,dt);
     for(let i=VS.units.length-1;i>=0;i--)if(VS.units[i].dead)VS.units.splice(i,1);
     updTurrets(dt);
@@ -640,7 +666,7 @@ export function createVersus(api){
   }
   function announceTiers(){
     if(VS.sim)return;
-    for(const [key,at,text] of [['prep',R.prep,'⚔ 开战！R 打开出兵面板派兵'],['t2',R.tier2,'⬆ 二级兵种解锁：甲壳虫、飞虫、炎爆虫、医疗小队、突击战车'],['t3',R.tier3,'👑 虫王解锁（3000 金）'],['corrode1',R.corrode[0][0],'☣ 虫潮狂暴：新派出的单位血量、伤害 +25%，建筑受到伤害 +50%'],['late',R.lateBoost,'💰 进入后期：收入 +50%，虫潮来袭'],['corrode2',R.corrode[1][0],'☣ 虫潮狂暴加剧：新单位 +50%，建筑受到伤害翻倍']])
+    for(const [key,at,text] of [['prep',R.prep,'⚔ 双路基础兵开始进攻！跟随兵线赚金币和经验，可额外花钱派兵'],['t2',R.tier2,'⬆ 二级兵种解锁：甲壳虫、飞虫、炎爆虫、医疗小队、突击战车'],['t3',R.tier3,'👑 虫王解锁（3000 金）'],['corrode1',R.corrode[0][0],'☣ 虫潮狂暴：新派出的单位血量、伤害 +25%，建筑受到伤害 +50%'],['late',R.lateBoost,'💰 进入后期：收入 +50%，虫潮来袭'],['corrode2',R.corrode[1][0],'☣ 虫潮狂暴加剧：新单位 +50%，建筑受到伤害翻倍']])
       if(!VS.flags[key]&&VS.time>=at){VS.flags[key]=true;api.AudioSys.sfx('wave');api.showMsg(text,3);}
   }
   function timeUp(){
@@ -652,7 +678,18 @@ export function createVersus(api){
   // 6:00 起「虫潮来袭」：双方出兵口每 30 秒刷出一波免费虫群，一波比一波大，逼出胜负。人多时按 VS_SCALE.surge 放大。
   function spawnFree(team,side,prof,n,start=0){
     let room=G.S.freeCap;if(room<Infinity){for(const u of VS.units)if(!u.dead&&u.team===team)room--;n=Math.max(0,Math.min(n,room));}
-    const ms=VS.teams[team].members;for(let i=0;i<n;i++)spawnUnit(team,prof,side,25,start+i,null,ms[(start+i)%ms.length]);return start+n;
+    const ms=VS.teams[team].members;for(let i=0;i<n;i++){const u=spawnUnit(team,prof,side,25,start+i,null,ms[(start+i)%ms.length]);u.pop=0;}return start+n;
+  }
+  function updLaneWaves(){
+    if(VS.time<R.prep)return;const wave=Math.floor((VS.time-R.prep)/R.laneEvery);if((VS.flags.laneWave??-1)>=wave)return;VS.flags.laneWave=wave;
+    for(const team of TEAMS)for(const lane of ['left','right']){
+      const side=sideFor(team,lane),live=VS.units.filter(u=>!u.dead&&u.team===team),count=3+Math.floor((G.n-1)/2);
+      const room=Math.min(16+G.n*2-live.filter(u=>u.laneMinion&&u.side===side).length,G.S.freeCap-live.length);
+      for(let i=0;i<Math.min(count,room);i++){
+        const u=spawnUnit(team,i===count-1?'recruit':'bug0',side,72,i,null,null);u.pop=0;u.laneMinion=true;
+        const growth=1+Math.min(1,Math.floor(wave/4)*.12);u.hp*=growth;u.maxHp=u.hp;u.dmg*=growth;
+      }
+    }
   }
   function updSurge(){
     if(VS.overtime||VS.time<R.lateBoost)return;
@@ -1058,7 +1095,7 @@ export function createVersus(api){
     if(!VS.active)return null;
     const T=team=>({h:Math.round(VS.hq[team].hp),hm:VS.hq[team].maxHp,v:members(team).filter(m=>m.surrender).length});
     const P=s=>({id:s.pid,g:Math.floor(s.gold),b:s.bank,bd:+s.bankDown.toFixed(1),bh:Math.round(VS.banks[s.pid].hp),bm:VS.banks[s.pid].maxHp,l:s.lane,
-      cd:Object.fromEntries(Object.entries(s.cd).filter(([,v])=>v>0).map(([k,v])=>[k,+v.toFixed(1)])),ai:s.ai||null,it:+s.incomeT.toFixed(1),p:popOf(s.pid),k:s.stats.kills,n:s.name,sv:s.surrender?1:0});
+      cd:Object.fromEntries(Object.entries(s.cd).filter(([,v])=>v>0).map(([k,v])=>[k,+v.toFixed(1)])),ai:s.ai||null,it:+s.incomeT.toFixed(1),p:popOf(s.pid),k:s.stats.kills,n:s.name,sv:s.surrender?1:0,lv:s.level,xp:+s.xp.toFixed(2)});
     return {m:VS.matchId,t:+VS.time.toFixed(2),over:VS.over,res:VS.over?VS.result:null,ot:VS.overtime?{start:VS.overtime.start}:null,mode:VS.mode,diff:VS.difficulty,size:G.n,
       teams:{blue:T('blue'),red:T('red')},seats:VS.seats.map(P),ev:VS.events,
       roster:humans().filter(h=>h.vsPid).map(h=>[h.slot,h.vsPid,h.cls||'gunner',h.vsAI?1:0,h.vsName||'']),
@@ -1076,6 +1113,7 @@ export function createVersus(api){
     for(const row of data.seats||[]){
       const s=VS.seatById[row.id];if(!s)continue;
       s.gold=row.g;s.bank=row.b;s.bankDown=row.bd;s.lane=row.l;s.cd=row.cd||{};s.incomeT=row.it;s.ai=row.ai;s.pop=row.p;s.stats.kills=row.k||0;s.name=row.n||s.name;s.surrender=!!row.sv;
+      s.level=clamp(row.lv||1,1,R.heroMaxLevel);s.xp=row.xp||0;const hero=heroOfSeat(s.pid);if(hero)syncHeroStats(hero);
       const bank=VS.banks[row.id];bank.hp=row.bh;bank.maxHp=row.bm;api.updHPBar(bank.bar,row.bh/row.bm);syncBankMesh(row.id);
     }
     for(const e of data.ev||[])if(e.id>VS.seenEvent){VS.seenEvent=e.id;if(e.p.includes(VS.localPid))api.showMsg(e.t,e.s||2);}
@@ -1142,7 +1180,7 @@ export function createVersus(api){
     state:VS,get active(){return VS.active;},get over(){return VS.over;},get size(){return G.n;},
     start,stop,update,setAI,clearAI,setLocal,send,sendReason,upgradeBank,setLane,cycleLane,buyWeapon,give,surrender,build,canPlace,zoneReason,demolish,
     aimTargets,beamHits,bulletStep,explodeAt,damage,heroDown,respawned,placeHero,setupHero,markBuilding,aiHeroInput,
-    snapshot,apply,guestFrame,handleCommand,drawRadar,incomeOf,popOf,popCap,buildCap,tier,fmtTime,heroOf,heroOfSeat,seatName,teamSummary,
+    snapshot,apply,guestFrame,handleCommand,drawRadar,incomeOf,popOf,popCap,buildCap,tier,fmtTime,heroOf,heroOfSeat,seatName,teamSummary,xpNeeded,
     team:t=>VS.teams?.[t],seat:pid=>VS.seatById?.[pid],seatOf,members:t=>VS.teams?members(t):[],hq:t=>VS.hq?.[t],bank:pid=>VS.banks?.[pid],rel,world,
   };
 }

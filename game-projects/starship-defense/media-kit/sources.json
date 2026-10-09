@@ -1,5 +1,14 @@
 [
   {
+    "id": "rv-abandoned-town-zombies-v030",
+    "purpose": "房车废弃城镇、设施、路网、地图标识与人形僵尸",
+    "source_type": "procedural",
+    "tool": "Codex; Three.js geometry, InstancedMesh, CanvasTexture",
+    "runtime_file": "../../../public/html/game/starship-defense/rv-town.js",
+    "processing": "实例化建筑/道路/街边遗物；破损开放屋顶与侧面设施标牌；共享几何的僵尸四肢摆动；未使用AI生成图片或第三方新资源",
+    "usage": "本项目程序化实现；房车模型、玩家、现有音效复用原有资源"
+  },
+  {
     "id": "rv-road-and-armored-vehicle",
     "purpose": "房车突围场景、补给站和装甲房车模型",
     "source_type": "procedural",

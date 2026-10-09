@@ -1,8 +1,9 @@
-// 房车突围：独立短路线，复用虫潮角色、虫群、子弹与操作。
-export const RV_SAVE='chongchao-rv-breakout-v1';
+// 房车城镇生存：自由探索、场地整备、分区僵尸与独立进度。
+import {TOWN,RV_SITES,RV_ZONES,buildTown,zombieFactory} from './rv-town.js';
+export const RV_SAVE='chongchao-rv-town-v2';
 export const RV_CFG={name:'装甲房车',hp:1400,speed:12,dmg:16,rate:.12,range:36,seatH:2.5,sfx:'mg',color:0x697782};
-export const RV_ROUTE=[{z:2100,name:'废弃加油站'},{z:2720,name:'公路检查站'},{z:3340,name:'通信中继站'},{z:3980,name:'撤离隧道'}];
-const START=1500,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+export const RV_ROUTE=RV_SITES;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export function makeRVMesh(T){
   const g=new T.Group(),steel=new T.MeshLambertMaterial({color:0x61717d}),dark=new T.MeshLambertMaterial({color:0x182532}),glass=new T.MeshPhongMaterial({color:0x6bafbf,shininess:70}),light=new T.MeshBasicMaterial({color:0xffd894});
   const box=(sx,sy,sz,x,y,z,m=steel,parent=g)=>{const o=new T.Mesh(new T.BoxGeometry(sx,sy,sz),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;};
@@ -16,160 +17,165 @@ export function makeRVMesh(T){
   const gun=box(.18,.18,1.65,0,.22,.9,dark,turret);g.userData.turret=turret;g.userData.gun=gun;
   return g;
 }
+
 export function validRVSave(d){
-  const n=(v,a,b)=>Number.isFinite(v)&&v>=a&&v<=b;
-  return !!(d&&d.v===1&&Number.isInteger(d.stage)&&n(d.stage,0,3)&&n(d.z,START,4010)&&n(d.x,-38,38)&&n(d.hp,1,1800)&&n(d.fuel,0,100)&&n(d.scrap,0,9999)&&n(d.elapsed,0,86400)&&n(d.hold,0,35)&&[d.gun,d.armor].every(v=>Number.isInteger(v)&&n(v,0,2))&&Array.isArray(d.looted)&&d.looted.length===3&&d.looted.every(v=>typeof v==='boolean')&&typeof d.finished==='boolean');
+  const n=(v,a,b)=>Number.isFinite(v)&&v>=a&&v<=b,int=(v,a,b)=>Number.isInteger(v)&&n(v,a,b);
+  return !!(d&&d.v===2&&n(d.x,TOWN.minX,TOWN.maxX)&&n(d.z,TOWN.minZ,TOWN.maxZ)&&n(d.hp,1,1800)&&n(d.fuel,0,100)&&n(d.scrap,0,99999)&&n(d.elapsed,0,86400)&&n(d.traveled,0,1e7)&&n(d.personHP,1,500)&&int(d.medkits,0,99)&&int(d.food,0,99)&&[d.gun,d.armor,d.gear].every(v=>int(v,0,2))&&Array.isArray(d.looted)&&d.looted.length===6&&d.looted.every(v=>typeof v==='boolean')&&Array.isArray(d.defeated)&&d.defeated.length<=36&&d.defeated.every(id=>RV_ZONES.some(z=>Array.from({length:z.n},(_,i)=>z.id+'-'+i).includes(id)))&&typeof d.finished==='boolean');
 }
 export function createRVBreakout(a){
   const {THREE:T,scene,Game,player,WORLD,AudioSys}=a,$=id=>document.getElementById(id);
-  const s={active:false,over:false,stage:0,hold:0,elapsed:0,fuel:100,scrap:60,gun:0,armor:0,looted:[false,false,false],spawn:3,search:0,job:null,rv:null,hidden:[],sky:[],world:null,arena:null,backup:null,saveT:0};
-  let cached=null;
+  const s={active:false,over:false,rv:null,backup:null,town:null};
   function read(){try{const d=JSON.parse(localStorage.getItem(RV_SAVE));return validRVSave(d)?d:null;}catch(_e){return null;}}
-  function save(){if(!s.active||s.over)return;const p=s.rv.mesh.position;const d={v:1,stage:s.stage,x:p.x,z:p.z,hp:s.rv.hp,fuel:s.fuel,scrap:s.scrap+(s.job?.cost||0),elapsed:s.elapsed,hold:s.hold,gun:s.gun,armor:s.armor,looted:[...s.looted],finished:false};try{localStorage.setItem(RV_SAVE,JSON.stringify(d));}catch(_e){a.showMsg('房车进度保存失败，请保持页面打开',3);}cached=d;}
-  function refresh(){cached=read();$('rvContinue').hidden=!cached||cached.finished;$('rvSaveInfo').textContent=cached&&!cached.finished?'独立进度：下一站 '+RV_ROUTE[cached.stage].name+' · 房车 '+Math.ceil(cached.hp)+' 耐久':'独立进度；基地防守存档保留。';}
+  function save(){
+    if(!s.active||s.over)return;const p=s.rv.mesh.position;
+    const d={v:2,x:p.x,z:p.z,hp:Math.max(1,s.rv.hp),fuel:s.fuel,scrap:s.scrap+(s.job?.cost||0),elapsed:s.elapsed,traveled:s.traveled,gun:s.gun,armor:s.armor,gear:s.gear,food:s.food,medkits:Game.items.medkit,personHP:Math.max(1,player.hp),looted:[...s.looted],defeated:[...s.defeated],finished:false};
+    try{localStorage.setItem(RV_SAVE,JSON.stringify(d));}catch(_e){a.showMsg('房车进度保存失败，请保持页面打开',3);}
+  }
+  function refresh(){
+    const d=read();$('rvContinue').hidden=!d;let old=false;try{old=!!localStorage.getItem('chongchao-rv-breakout-v1');}catch(_e){}
+    $('rvSaveInfo').textContent=d?'城镇进度：已搜索 '+d.looted.filter(Boolean).length+'/6 区 · 房车 '+Math.ceil(d.hp)+' 耐久':'城镇独立存档，基地防守进度保留。'+(old?'旧公路存档仍保留，新地图需开始新旅程。':'');
+  }
   function mount(){
     const style=document.createElement('style');style.textContent=`
       .rv-mode .campaign-only,.rv-mode #hudTop,.rv-mode #hudRight,.rv-mode #radar,.rv-mode #weaponBar,.rv-mode #hint,.rv-mode #readyBtn,.rv-mode #webTools .mbtn:not(#menuButton):not(#fullBtn):not(#qualityBtn):not(#muteBtn):not(#personBtn),.rv-mode #vL,.rv-mode #vR,.rv-mode #vX{display:none!important}
-      #rvHUD{position:absolute;left:10px;top:10px;max-width:290px;padding:8px 12px;border-radius:9px;background:rgba(8,18,29,.82);color:#e8f1f7;line-height:1.5;font-size:13px;pointer-events:none}
-      #rvHUD b{color:#ffda85}#rvMeter{height:7px;background:#253848;border-radius:4px;overflow:hidden;margin:4px 0}#rvFill{height:100%;background:#5ed0b2}
-      #rvObjective{color:#96e3e8}#rvAction{color:#ffd28c}#rvGoal{color:#c1ccd6;font-size:11px;margin-top:3px}#rvPanel,#rvMenu,#rvResult{background:rgba(8,18,29,.96);color:#e8f1f7}
-      #rvPanel{width:520px}#rvPanel .mbtn{min-height:44px}#rvPanel .small{margin:8px 0}#rvMenu,#rvResult{justify-content:center;align-items:center;text-align:center}#rvMenu .small,#rvResult .small{max-width:660px}
-      .touch-mode #rvHUD{max-width:260px;font-size:11px;padding:5px 9px}.rv-mode #interactHint{max-width:420px;white-space:normal}.rv-mode #vO{display:block!important}
-      @media(max-height:420px){#rvMenu,#rvResult{justify-content:flex-start;padding:12px 28px}#rvMenu h1,#rvResult h1{font-size:24px;letter-spacing:1px}#rvMenu .small,#rvResult .small{font-size:11px;line-height:1.5}}
+      #rvHUD{position:absolute;left:10px;top:10px;max-width:300px;padding:8px 12px;border-radius:9px;background:rgba(8,18,29,.82);color:#e8f1f7;line-height:1.5;font-size:12px;pointer-events:none}
+      #rvHUD b{color:#ffda85}#rvMeter{height:7px;background:#253848;border-radius:4px;overflow:hidden;margin:4px 0}#rvFill{height:100%;background:#5ed0b2}#rvObjective{color:#96e3e8}#rvAction{color:#ffd28c}
+      #rvPanel,#rvMenu,#rvResult{background:rgba(8,18,29,.97);color:#e8f1f7}#rvPanel{width:610px;max-height:90%;overflow:auto}#rvPanel .mbtn{min-height:44px}#rvPanel .small{margin:7px 0}
+      #rvMenu,#rvResult{justify-content:center;align-items:center;text-align:center}#rvMenu .small,#rvResult .small{max-width:720px}
+      #rvMap{position:absolute;right:10px;top:64px;width:145px;height:148px;background:rgba(8,18,29,.86);border:1px solid #516975;border-radius:7px;pointer-events:none}
+      #rvSites{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}#rvSites button{font-size:12px;min-height:44px;padding:6px 10px}
+      .touch-mode #rvHUD{max-width:270px;font-size:10px;padding:5px 8px}.touch-mode #rvMap{width:115px;height:117px}.rv-mode #vO{display:block!important}.rv-mode #interactHint{max-width:400px;white-space:normal}
+      @media(max-height:420px){#rvMenu,#rvResult{justify-content:flex-start;padding:12px 28px}#rvMenu h1,#rvResult h1{font-size:24px}#rvMenu .small,#rvResult .small{font-size:11px;line-height:1.5}}
     `;document.head.append(style);
-    const button=document.createElement('button');button.id='btnRV';button.className='mbtn';button.textContent='🚐 房车突围 · 短线生存';$('btnVersus').after(button);
+    const button=document.createElement('button');button.id='btnRV';button.className='mbtn';button.textContent='🚐 房车生存 · 废弃城镇';$('btnVersus').after(button);
     const host=document.createElement('div');host.innerHTML=`
-      <div id="rvMenu" class="overlay menu hidden"><h1>房车突围</h1><p class="small">胜利：依次通过三个补给站，开进最后的撤离隧道。约 5–10 分钟。</p><p class="small">沿公路上的蓝色箭头前进；W/↑向当前视角前方开车，A/D左右调整，手机用左摇杆。<br>到站后在蓝色停车区停稳，自动倒计时 35 秒，路障随后抬起；顶到路障也会正常计时。<br>I上下车；下车靠近右侧补给箱按I搜索18秒，房车旁按O维修、补油、升级（可选）。<br>虫群会围攻房车和下车人员；房车毁坏即失败，人员阵亡会在房车旁复活。</p><p id="rvSaveInfo" class="small"></p><div class="btnRow"><button id="rvContinue" class="mbtn green">继续房车进度</button><button id="rvStart" class="mbtn green">开始房车突围</button><button id="rvBack" class="mbtn">返回主菜单</button></div></div>
-      <div id="rvHUD" class="hidden"><b>🚐 房车突围</b><div id="rvStatus"></div><div id="rvMeter"><div id="rvFill"></div></div><div id="rvObjective"></div><div id="rvAction"></div><div id="rvResources"></div><div id="rvGoal">胜利：通过3个补给站 → 开进撤离隧道</div></div>
-      <div id="rvPanel" class="panel hidden"><h3>房车整备</h3><p id="rvPanelInfo" class="small"></p><div class="btnRow"><button id="rvRepair" class="mbtn">维修 · 40零件</button><button id="rvGun" class="mbtn">机枪升级 · 90零件</button><button id="rvArmor" class="mbtn">装甲升级 · 90零件</button><button id="rvFuel" class="mbtn">应急燃料 · 25零件</button><button id="rvClose" class="mbtn">返回战斗</button></div><p class="small">维修需原地停留 8 秒，恢复 450 耐久；升级需 6 秒。离车过远或驾驶会取消作业并退回零件。菜单选择暂停战斗，实际作业恢复战斗。</p></div>
-      <div id="rvResult" class="overlay menu hidden"><h1 id="rvResultTitle"></h1><p id="rvResultInfo" class="small"></p><div class="btnRow"><button id="rvRetry" class="mbtn green">再跑一趟</button><button id="rvResultBack" class="mbtn">返回主菜单</button></div></div>`;
+      <div id="rvMenu" class="overlay menu hidden"><h1>房车生存 · 废弃城镇</h1>
+      <p class="small">开车自由探索街道、庭院与广场，随时回头，没有加油站关卡。<br>目标自选：搜索六个感染区、整备房车，或前往北侧营地撤离。</p>
+      <p class="small">加油站补油；驶入修理厂黄框维修、升级车载机枪、装甲和随身武器，车内也能办理。<br>废弃超市的应急售货机用零件交换密封罐头和医疗包；搜索物资箱须下车。<br>僵尸分区活动，视距内且无遮挡才追击；跑出视距或领地后会返回原处。<br>房车毁坏即失败；人员阵亡在车内获救，损失20零件。没油仍可低速挪车。</p>
+      <p id="rvSaveInfo" class="small"></p><div class="btnRow"><button id="rvContinue" class="mbtn green">继续城镇进度</button><button id="rvStart" class="mbtn green">开始城镇探索</button><button id="rvBack" class="mbtn">返回主菜单</button></div></div>
+      <div id="rvHUD" class="hidden"><b>🚐 城镇自由探索</b><div id="rvStatus"></div><div id="rvMeter"><div id="rvFill"></div></div><div id="rvObjective"></div><div id="rvAction"></div><div id="rvResources"></div></div>
+      <canvas id="rvMap" class="hidden" width="220" height="224" aria-label="城镇地图：油为加油站，修为修理厂，店为超市，出为撤离，红色为感染区"></canvas>
+      <div id="rvPanel" class="panel hidden"><h3 id="rvPanelTitle">城镇地图与补给</h3><p id="rvPanelInfo" class="small"></p><div id="rvSites"></div><p id="rvSiteInfo" class="small"></p><div class="btnRow">
+      <button id="rvRepair" class="mbtn">维修 +450耐久 · 40零件</button><button id="rvGun" class="mbtn">机枪升级</button><button id="rvArmor" class="mbtn">装甲升级</button><button id="rvGear" class="mbtn">随身武器升级</button>
+      <button id="rvFuel" class="mbtn">燃料 +40% · 20零件</button><button id="rvFood" class="mbtn">密封罐头 · 12零件</button><button id="rvMedkit" class="mbtn">医疗包 · 25零件</button><button id="rvEat" class="mbtn">吃罐头 · 人员 +45生命</button><button id="rvEvacuate" class="mbtn green">结束探索并撤离</button><button id="rvClose" class="mbtn">返回探索</button></div>
+      <p class="small">维修6秒、改装5秒、加油3秒。停车区内办理，无须下车；移动车辆或下车走远会取消并退款。菜单暂停，作业时战斗继续。</p></div>
+      <div id="rvResult" class="overlay menu hidden"><h1 id="rvResultTitle"></h1><p id="rvResultInfo" class="small"></p><div class="btnRow"><button id="rvRetry" class="mbtn green">再探索一趟</button><button id="rvResultBack" class="mbtn">返回主菜单</button></div></div>`;
     for(const child of [...host.children])a.stage.append(child);
+    for(const site of RV_SITES){const b=document.createElement('button');b.className='mbtn';b.textContent=site.name;b.dataset.site=site.id;b.onclick=()=>{s.destination=site.id;panelInfo();};$('rvSites').append(b);}
     button.onclick=()=>{AudioSys.init();refresh();$('menuMain').classList.add('hidden');$('rvMenu').classList.remove('hidden');};
     $('rvBack').onclick=()=>{$('rvMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
-    $('rvStart').onclick=()=>{if(read()&&!read().finished)a.askConfirm('新的一趟将替换房车进度，基地存档保留。','开始新的一趟',()=>start());else start();};
-    $('rvContinue').onclick=()=>{const d=read();if(d&&!d.finished)start(d);else refresh();};
-    $('rvClose').onclick=a.closePanels;
-    for(const [id,kind] of [['rvRepair','repair'],['rvGun','gun'],['rvArmor','armor'],['rvFuel','fuel']])$(id).onclick=()=>job(kind);
-    $('rvRetry').onclick=()=>start();$('rvResultBack').onclick=()=>a.quit();
-  }
-  function buildArena(){
-    const group=s.arena=new T.Group();group.name='rv-road';scene.add(group);
-    const mats={ground:new T.MeshLambertMaterial({color:0x26323b}),road:new T.MeshLambertMaterial({color:0x17232b}),steel:new T.MeshLambertMaterial({color:0x5b6a73}),yellow:new T.MeshBasicMaterial({color:0xc3a464}),cyan:new T.MeshBasicMaterial({color:0x58bfce}),stop:new T.MeshLambertMaterial({color:0x284753}),crate:new T.MeshLambertMaterial({color:0x96794f})};
-    const box=(w,h,d,x,y,z,m)=>{const o=new T.Mesh(new T.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.receiveShadow=true;group.add(o);return o;};
-    box(600,.4,3400,0,-.25,2740,mats.ground);box(26,.08,2700,0,.01,2740,mats.road);
-    const marks=new T.InstancedMesh(new T.BoxGeometry(.25,.04,5),mats.yellow,240),matrix=new T.Matrix4();
-    for(let i=0;i<240;i++){matrix.makeTranslation(i%2?-10:10,.08,START-50+Math.floor(i/2)*23);marks.setMatrixAt(i,matrix);}group.add(marks);
-    const arrow=new T.Shape();arrow.moveTo(-.65,-2.5);arrow.lineTo(.65,-2.5);arrow.lineTo(.65,.1);arrow.lineTo(1.7,.1);arrow.lineTo(0,2.3);arrow.lineTo(-1.7,.1);arrow.lineTo(-.65,.1);arrow.closePath();
-    const arrowGeo=new T.ShapeGeometry(arrow);arrowGeo.rotateX(Math.PI/2);
-    const arrows=new T.InstancedMesh(arrowGeo,new T.MeshBasicMaterial({color:0x70d8e7,side:T.DoubleSide}),34);
-    for(let i=0;i<34;i++){matrix.makeTranslation(0,.2,START+40+i*75);arrows.setMatrixAt(i,matrix);}group.add(arrows);
-    const rails=new T.InstancedMesh(new T.BoxGeometry(.35,1.2,22),mats.steel,240);
-    for(let i=0;i<240;i++){matrix.makeTranslation(i%2?-39:39,.6,START-50+Math.floor(i/2)*23);rails.setMatrixAt(i,matrix);}group.add(rails);
-    s.nodes=RV_ROUTE.map((node,i)=>{
-      box(13,.12,26,20,.07,node.z,mats.steel);box(8,3,4,27,1.5,node.z+5,mats.steel);box(2,1.5,2,18,.85,node.z,mats.crate);
-      const ring=new T.Mesh(new T.TorusGeometry(12,.13,6,40),mats.cyan);ring.rotation.x=Math.PI/2;ring.position.set(0,.14,node.z);group.add(ring);
-      const gate=box(76,.7,.4,0,1.1,node.z+10,mats.yellow);gate.visible=i<3;
-      if(i<3){box(26,.04,30,0,.1,node.z-8,mats.stop);box(26,.04,.5,0,.16,node.z+1,mats.yellow);}
-      else{for(const x of [-10,10])box(2,7,18,x,3.5,node.z,mats.steel);box(22,1,18,0,7.5,node.z,mats.steel);}
-      const canvas=document.createElement('canvas');canvas.width=512;canvas.height=192;const c=canvas.getContext('2d');c.fillStyle='#10202c';c.fillRect(0,0,512,192);c.fillStyle='#91e2e7';c.font='bold 48px Microsoft YaHei';c.textAlign='center';c.fillText((i+1)+' '+node.name,256,78);c.fillStyle='#ffda85';c.font='30px Microsoft YaHei';c.fillText(i<3?'停车守住35秒 · 自动抬杆':'驶入隧道光圈 · 撤离获胜',256,143);const tex=new T.CanvasTexture(canvas);
-      // Two outward-facing surfaces keep the same text readable from either side.
-      const signMat=new T.MeshBasicMaterial({map:tex,side:T.FrontSide}),signGeo=new T.PlaneGeometry(14,5.25),signs=[];
-      for(const back of [false,true]){const sign=new T.Mesh(signGeo,signMat);sign.position.set(0,7,node.z+12+(back?.06:-.06));sign.rotation.y=back?0:Math.PI;group.add(sign);signs.push(sign);}
-      return {ring,gate,signs};
-    });
-    // Distant rock banks give the road a readable edge from every camera angle.
-    const rocks=new T.InstancedMesh(new T.DodecahedronGeometry(1,0),mats.ground,200);
-    for(let i=0;i<200;i++){matrix.compose(new T.Vector3((i%2?-1:1)*(47+i%5*12),2,START-80+Math.floor(i/2)*29),new T.Quaternion(),new T.Vector3(3+i%4,2+i%3,4+i%4));rocks.setMatrixAt(i,matrix);}group.add(rocks);
+    $('rvStart').onclick=()=>{if(read())a.askConfirm('新探索将替换城镇进度，其他模式存档保留。','开始新探索',()=>start());else start();};
+    $('rvContinue').onclick=()=>{const d=read();if(d)start(d);else refresh();};$('rvClose').onclick=a.closePanels;
+    for(const [id,kind] of [['rvRepair','repair'],['rvGun','gun'],['rvArmor','armor'],['rvGear','gear'],['rvFuel','fuel'],['rvFood','food'],['rvMedkit','medkit']])$(id).onclick=()=>job(kind);
+    $('rvEat').onclick=eat;$('rvEvacuate').onclick=()=>{if(atSite()?.kind==='exit')finish(true);};$('rvRetry').onclick=()=>start();$('rvResultBack').onclick=()=>a.quit();
   }
   function start(d=null){
-    if(s.active){stop(false);}if(a.vsOn())a.exitVersus();
-    if(!s.backup)s.backup=JSON.parse(JSON.stringify(Game));
+    if(d&&!validRVSave(d))d=null;if(s.active)stop(false);if(a.vsOn())a.exitVersus();if(!s.backup)s.backup=JSON.parse(JSON.stringify(Game));
     a.closePanels();a.hideConfirm();a.clearEntities(true);a.clearCoop();AudioSys.init();AudioSys.pause(false);a.Input.reset();
-    Object.assign(Game,{state:'battle',testMode:false,loop:1,chapter:1,level:1,difficulty:'normal',weapons:['lmg','shotgun'],curWeapon:'lmg',weaponLv:{},items:{medkit:2},hpBonus:0,vehiclesOwned:[],squadCount:0,squadGear:[],magnet:false,regen:false,score:0,gold:0,wave:{total:0,spawned:0,killed:0,timer:0},battleLedger:null});
-    player.reset(Game.cls);player.team=null;player.dead=false;player.mesh.visible=true;
-    Object.assign(s,{active:true,over:false,stage:d?.stage||0,hold:d?.hold||0,elapsed:d?.elapsed||0,fuel:d?.fuel??100,scrap:d?.scrap??60,gun:d?.gun||0,armor:d?.armor||0,looted:d?[...d.looted]:[false,false,false],spawn:3,search:0,job:null,saveT:0});
+    Object.assign(Game,{state:'battle',testMode:false,loop:1,chapter:1,level:1,difficulty:'normal',weapons:['lmg','shotgun'],curWeapon:'lmg',weaponLv:{},items:{medkit:d?.medkits??2},hpBonus:0,vehiclesOwned:[],squadCount:0,squadGear:[],magnet:false,regen:false,score:0,gold:0,wave:{total:0,spawned:0,killed:0,timer:0},battleLedger:null});
+    player.reset(Game.cls);player.team=null;player.dead=false;player.mesh.visible=true;player.hp=clamp(d?.personHP??player.maxHp,1,player.maxHp);
+    Object.assign(s,{active:true,over:false,elapsed:d?.elapsed||0,fuel:d?.fuel??85,scrap:d?.scrap??160,gun:d?.gun||0,armor:d?.armor||0,gear:d?.gear||0,food:d?.food??2,looted:d?[...d.looted]:RV_ZONES.map(()=>false),defeated:d?[...d.defeated]:[],search:null,job:null,saveT:0,lastPos:null,traveled:d?.traveled||0,destination:'garage-south',mapT:0,moving:false});
     const keep=new Set([a.camera,player.mesh,...a.skyObjects()]);s.hidden=scene.children.filter(o=>o.visible&&!o.isLight&&!keep.has(o));s.hidden.forEach(o=>o.visible=false);
-    s.sky=a.skyObjects();s.skyOffset=d?.z||START;s.sky.forEach(o=>o.position.z+=s.skyOffset);s.world={...WORLD};Object.assign(WORLD,{minX:-39,maxX:39,minZ:START-30,maxZ:4010});buildArena();
-    s.nodes.forEach((n,i)=>n.gate.visible=i<3&&i>=s.stage);s.lastPos=null;
-    const savedZ=clamp(d?.z??START,START,s.stage<3?RV_ROUTE[s.stage].z+6:4010);
-    s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(d?.x||0,0,savedZ);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);
-    a.faceForward();a.stage.classList.add('rv-mode');['menuMain','menuPause','menuOver','rvMenu','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('rvHUD').classList.remove('hidden');a.showHUD();a.showHint(null);
-    $('btnRestartLv').textContent='🔄 重开房车突围';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 房车整备 · H 医疗 · U 手雷 · K 跳跃 · C 切换视角 · Q/E 转头 · Esc 暂停';
-    save();a.showMsg('沿蓝色公路箭头前进；到站停车35秒抬杆，最后开进撤离隧道获胜',6);hud();
+    s.sky=a.skyObjects();s.skyOffset=d?.z||TOWN.start.z;s.sky.forEach(o=>o.position.z+=s.skyOffset);s.world={...WORLD};Object.assign(WORLD,{minX:TOWN.minX,maxX:TOWN.maxX,minZ:TOWN.minZ,maxZ:TOWN.maxZ});
+    s.town=buildTown(T,scene);s.zombies=zombieFactory(T);const pos=d&&!blocked(d.x,d.z,3)?d:TOWN.start;
+    s.rv=a.spawnVehicle('rv');s.rv.cfg={...RV_CFG};s.rv.mesh.position.set(pos.x,0,pos.z);configure();s.rv.hp=clamp(d?.hp||s.rv.maxHp,1,s.rv.maxHp);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);a.enterVehicle(s.rv);player.pos.copy(s.rv.mesh.position);spawnResidents();
+    a.faceForward();a.stage.classList.add('rv-mode');['menuMain','menuPause','menuOver','rvMenu','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('rvHUD').classList.remove('hidden');$('rvMap').classList.remove('hidden');a.showHUD();a.showHint(null);
+    $('btnRestartLv').textContent='🔄 重开城镇探索';s.keyHint=$('keysHint').textContent;$('keysHint').textContent='WASD 驾驶/移动 · J 射击 · I 上下车/搜索 · O 地图与设施 · H 医疗 · U 手雷 · K 跳跃 · C 视角 · Q/E 转头 · Esc 暂停';
+    save();a.showMsg(a.isTouch()?'街道自由通行；点设施查看地图和服务':'街道自由通行；O 查看地图和设施服务',5);hud();
   }
-  function configure(){s.rv.maxHp=RV_CFG.hp+s.armor*200;s.rv.cfg.dmg=RV_CFG.dmg*(1+s.gun*.35);s.rv.cfg.speed=s.fuel>0?RV_CFG.speed:3;}
-  function blocked(x,z){return x<-38||x>38||z<START-29||z>(s.stage<3?RV_ROUTE[s.stage].z+6:4010);}
-  function atStop(p){const node=RV_ROUTE[s.stage];return s.stage<3&&Math.abs(p.x)<=38&&p.z>=node.z-24&&p.z<=node.z+7;}
-  function target(mo){
-    const v=s.rv,p=v.mesh.position;if(v.dead)return null;
-    const person=!player.dead&&!player.inVehicle&&distance(mo.mesh.position,player.pos)<distance(mo.mesh.position,p)*.65;
-    const pos=person?player.pos:p;return {pos,obj:person?player:v,kind:person?'player':'vehicle',r:person?1:2.8,d2:distance(mo.mesh.position,pos)**2};
-  }
+  function configure(){s.rv.maxHp=RV_CFG.hp+s.armor*200;s.rv.cfg.dmg=RV_CFG.dmg*(1+s.gun*.35);s.rv.cfg.speed=s.fuel>0?RV_CFG.speed:3;Game.weaponLv.lmg=s.gear;Game.weaponLv.shotgun=s.gear;}
+  function blocked(x,z,r=.8){return s.town?s.town.blocked(x,z,r):false;}
+  function atSite(){if(!s.rv||player.dead)return null;const p=s.rv.mesh.position;if(!player.inVehicle&&distance(player.pos,p)>12)return null;return RV_SITES.find(n=>distance(p,n)<10.5)||null;}
   function interaction(){
-    if(player.inVehicle)return {kind:'exit',label:'下车',tip:a.isTouch()?'点互动下车；房车仍会受袭':'I 下车；房车仍会受袭'};
-    if(s.stage<3&&!s.looted[s.stage]&&distance(player.pos,{x:18,z:RV_ROUTE[s.stage].z})<7&&distance(s.rv.mesh.position,{x:0,z:RV_ROUTE[s.stage].z})<18)return {kind:'rv-search',label:s.search?'取消搜索':'搜索',tip:s.search?'正在搜索，离开箱子会中断':'靠近箱子互动：搜索 18 秒，获得 110 零件与燃料'};
+    if(player.inVehicle)return {kind:'exit',label:'下车',tip:a.isTouch()?'下车搜索；设施按钮可在车内使用':'I 下车搜索；O 地图与设施服务'};
+    const i=RV_ZONES.findIndex((n,i)=>!s.looted[i]&&distance(player.pos,n)<4.2);
+    if(i>=0)return {kind:'rv-search',label:s.search?'取消搜索':'搜索',tip:s.search?'搜索中，离开箱子将中断':'搜索4秒：110零件、罐头、医疗包'};
     const v=s.rv;if(!v.dead&&!(v.noEnter>0)&&distance(player.pos,v.mesh.position)<5)return {kind:'vehicle',vehicle:v,label:'驾驶',tip:a.isTouch()?'点互动驾驶房车':'I 驾驶房车'};
-    return {kind:'none',label:'互动',tip:a.isTouch()?'靠近补给箱搜索；房车旁点整备维修':'靠近补给箱 I 搜索；房车旁 O 整备'};
+    return {kind:'none',label:'互动',tip:a.isTouch()?'靠近物资箱搜索；设施查看地图':'靠近物资箱 I 搜索；O 查看地图'};
   }
-  function interact(){s.search=s.search?0:.001;if(s.search)a.showMsg('搜索开始，守住房车；可以离开中断',2);}
+  function interact(){if(s.search){s.search=null;return;}const zone=RV_ZONES.findIndex((n,i)=>!s.looted[i]&&distance(player.pos,n)<4.2);if(zone>=0&&!player.inVehicle){s.search={zone,t:0};a.showMsg('搜索物资中，可射击；离开箱子会中断',2);}}
   function panel(){if(s.over)return;a.Input.reset();$('rvPanel').classList.remove('hidden');a.setPanel(true);panelInfo();}
   function panelInfo(){
-    $('rvPanelInfo').textContent=`零件 ${Math.floor(s.scrap)} · 耐久 ${Math.ceil(s.rv.hp)}/${s.rv.maxHp} · 燃料 ${Math.ceil(s.fuel)}% · 机枪 ${s.gun}/2 · 装甲 ${s.armor}/2`;
-    $('rvGun').textContent=s.gun===2?'机枪已满级':'机枪升级 · '+(90+s.gun*50)+'零件';$('rvArmor').textContent=s.armor===2?'装甲已满级':'装甲升级 · '+(90+s.armor*50)+'零件';
+    const site=atSite(),dest=RV_SITES.find(n=>n.id===s.destination);$('rvPanelTitle').textContent=site?site.name:'城镇地图与随身补给';
+    $('rvPanelInfo').textContent='零件 '+Math.floor(s.scrap)+' · 耐久 '+Math.ceil(s.rv.hp)+'/'+s.rv.maxHp+' · 燃料 '+Math.ceil(s.fuel)+'% · 罐头 '+s.food+' · 医疗包 '+Game.items.medkit;
+    $('rvSiteInfo').textContent=site?site.kind==='market'?'建筑已废弃，备用电源维持应急售货机；库存为密封长保质期罐头与医疗包。':'停在设施标线内即可服务，车内或车旁均可。':'导航：'+dest.name+' · 直线 '+Math.ceil(distance(s.rv.mesh.position,dest))+'米。沿地图道路绕过建筑，到停车框内办理。';
+    for(const b of $('rvSites').children)b.setAttribute('aria-pressed',b.dataset.site===s.destination?'true':'false');
+    for(const [id,kind] of [['rvRepair','garage'],['rvGun','garage'],['rvArmor','garage'],['rvGear','garage'],['rvFuel','fuel'],['rvFood','market'],['rvMedkit','market'],['rvEvacuate','exit']])$(id).hidden=site?.kind!==kind;
+    for(const [id,key,name] of [['rvGun','gun','车载机枪'],['rvArmor','armor','房车装甲'],['rvGear','gear','随身武器']]){$(id).textContent=s[key]>=2?name+' 已满级':name+' '+s[key]+'/2 → 升级 · '+(90+s[key]*50)+'零件';$(id).disabled=s[key]>=2;}
+    $('rvEat').disabled=s.food<=0||player.hp>=player.maxHp;
   }
+  function eat(){if(player.dead||s.food<=0||player.hp>=player.maxHp)return false;s.food--;player.hp=Math.min(player.maxHp,player.hp+45);a.updHPBar(player.bar,player.hp/player.maxHp);AudioSys.sfx('heal');save();panelInfo();return true;}
   function job(kind){
-    if(s.job){a.showMsg('已有整备作业进行中');return false;}
-    if(player.inVehicle||distance(player.pos,s.rv.mesh.position)>8){a.showMsg('先停车下车，站在房车旁整备');return false;}
-    if((kind==='gun'&&s.gun===2)||(kind==='armor'&&s.armor===2)){a.showMsg('已达到首版升级上限');return false;}
-    if(kind==='repair'&&s.rv.hp>=s.rv.maxHp||kind==='fuel'&&s.fuel>=100){a.showMsg('当前无需补充');return false;}
-    const cost=kind==='repair'?40:kind==='fuel'?25:90+s[kind]*50;
-    if(s.scrap<cost){a.showMsg('零件不足，沿途下车搜索补给箱');return false;}
-    s.scrap-=cost;s.job={kind,cost,t:0,duration:kind==='repair'?8:6};s.search=0;a.closePanels();a.showMsg('整备开始，守住房车直到完成',2);save();return true;
+    const need={repair:'garage',gun:'garage',armor:'garage',gear:'garage',fuel:'fuel',food:'market',medkit:'market'}[kind],site=atSite();
+    if(!need||s.over||player.dead)return false;if(!site||site.kind!==need){a.showMsg('请把房车开到'+({garage:'汽车修理厂',fuel:'加油站',market:'废弃超市'})[need]+'的停车框内');return false;}
+    if(s.job){a.showMsg('已有作业进行中');return false;}
+    if(['gun','armor','gear'].includes(kind)&&s[kind]>=2||kind==='repair'&&s.rv.hp>=s.rv.maxHp||kind==='fuel'&&s.fuel>=100||kind==='food'&&s.food>=99||kind==='medkit'&&Game.items.medkit>=99){a.showMsg('当前无需补充或已达到上限');return false;}
+    const cost={repair:40,fuel:20,food:12,medkit:25}[kind]??(90+s[kind]*50);
+    if(s.scrap<cost){a.showMsg('零件不足：搜索感染区物资箱或击退僵尸');return false;}s.scrap-=cost;
+    if(kind==='food'||kind==='medkit'){if(kind==='food')s.food++;else Game.items.medkit++;AudioSys.sfx('buy');save();panelInfo();return true;}
+    s.job={kind,cost,site:site.id,t:0,duration:kind==='repair'?6:kind==='fuel'?3:5};s.search=null;a.closePanels();save();a.showMsg('作业开始，停在原处即可；车内也可射击防卫',2);return true;
   }
-  function spawnSwarm(count=3){
-    const p=s.rv.mesh.position;
-    for(let i=0;i<count&&a.monsters.length<36;i++){
-      const n=Math.floor(s.elapsed)+i,side=i%2?-1:1,x=clamp(p.x+side*(15+Math.random()*16),-35,35),z=clamp(p.z+(i===0?28:-25),START-25,s.stage<3?RV_ROUTE[s.stage].z+4:4005);
-      const ch=a.CHAPTERS[Math.min(3,s.stage)],mo=a.spawnMonster('mob',x,z,{ch,quiet:true});
-      mo.hp=mo.maxHp=70+s.stage*24;mo.dmg=12+s.stage*3;mo.speed=7.2+s.stage*.6;mo.ranged=n%7===0;mo.fly=false;mo.mesh.position.y=0;mo.flightAfterExit=false;mo.split=false;mo.explodeOnDie=false;mo.stealth=false;mo.gold=0;a.updHPBar(mo.bar,1);
-    }
+  function spawnResidents(){let seq=0;RV_ZONES.forEach((zone,zi)=>{for(let i=0;i<zone.n;i++){
+    const id=zone.id+'-'+i;if(s.defeated.includes(id))continue;const angle=i/zone.n*Math.PI*2,r=5+i%3*2.2;
+    let x=zone.x+Math.cos(angle)*r,z=zone.z+Math.sin(angle)*r;if(blocked(x,z,.8)){x=zone.x;z=zone.z+3+i*.9;}
+    const mo=a.spawnMonster('mob',x,z,{ch:a.CHAPTERS[0],quiet:true,wild:true});mo.mesh.remove(mo.bar);a.visuals.release(mo.mesh);scene.remove(mo.mesh);
+    mo.mesh=s.zombies.make(seq++);mo.mesh.position.set(x,0,z);mo.mesh.add(mo.bar);mo.bar.position.y=2.9;scene.add(mo.mesh);
+    Object.assign(mo,{rvZombie:true,rvId:id,zone:zi,homePos:new T.Vector3(x,0,z),mode:'idle',lost:0,hp:95+zi*14,maxHp:95+zi*14,dmg:14+zi*2,speed:3.2+zi*.13,radius:.7,hitH:1.15,ranged:false,fly:false,flightAfterExit:false,split:false,explodeOnDie:false,stealth:false,gold:0,bs:null,home:null,wild:true});a.updHPBar(mo.bar,1);
+  }});}
+  function target(mo){
+    const p=mo.mesh.position,v=s.rv;if(!v||v.dead||mo.mode==='return')return null;
+    const choices=[{pos:v.mesh.position,obj:v,kind:'vehicle',r:2.8}];if(!player.dead&&!player.inVehicle)choices.push({pos:player.pos,obj:player,kind:'player',r:1});
+    const max=mo.mode==='chase'?31:23;return choices.map(t=>({...t,d2:distance(p,t.pos)**2})).filter(t=>t.d2<max*max&&distance(t.pos,mo.homePos)<48&&s.town.visible(p,t.pos)).sort((x,y)=>x.d2-y.d2)[0]||null;
   }
+  function walk(mo,to,dt,speed){
+    const p=mo.mesh.position,dx=to.x-p.x,dz=to.z-p.z,d=Math.hypot(dx,dz);if(d<.1)return false;const step=Math.min(d,speed*dt),ux=dx/d,uz=dz/d;
+    for(const off of [0,.55,-.55,1.05,-1.05,1.55,-1.55]){const c=Math.cos(off),sn=Math.sin(off),nx=p.x+(ux*c-uz*sn)*step,nz=p.z+(uz*c+ux*sn)*step;if(!blocked(nx,nz,.75)){mo.vx=(nx-p.x)/dt;mo.vz=(nz-p.z)/dt;p.x=nx;p.z=nz;mo.mesh.rotation.y=Math.atan2(mo.vx,mo.vz);return true;}}return false;
+  }
+  function updateMonster(mo,dt){
+    if(!mo.rvZombie)return false;mo.atkCd=Math.max(0,mo.atkCd-dt);let moving=false,attacking=false;
+    if(mo.mode==='return'){const trail=mo.trail||[];while(trail.length&&distance(mo.mesh.position,trail[trail.length-1])<.6)trail.pop();moving=walk(mo,trail[trail.length-1]||mo.homePos,dt,mo.speed*1.45);mo.hp=Math.min(mo.maxHp,mo.hp+mo.maxHp*.12*dt);a.updHPBar(mo.bar,mo.hp/mo.maxHp);if(!trail.length&&distance(mo.mesh.position,mo.homePos)<.6){mo.mode='idle';mo.hp=mo.maxHp;a.updHPBar(mo.bar,1);}}
+    else{const t=target(mo);if(t){if(mo.mode==='idle')mo.trail=[mo.homePos.clone()];const trail=mo.trail;if(trail&&distance(mo.mesh.position,trail[trail.length-1])>1.5)trail.push(mo.mesh.position.clone());mo.mode='chase';mo.lost=0;const reach=mo.radius+t.r+1;attacking=t.d2<reach*reach;
+      if(!attacking)moving=walk(mo,t.pos,dt,mo.speed*(mo.slowT>0?.5:1));else{mo.mesh.rotation.y=Math.atan2(t.pos.x-mo.mesh.position.x,t.pos.z-mo.mesh.position.z);if(mo.atkCd<=0){mo.atkCd=1.15;if(t.kind==='vehicle')a.damageVehicle(t.obj,mo.dmg);else a.playerDamage(mo.dmg);}}}
+      else if(mo.mode==='chase'){mo.lost+=dt;if(mo.lost>=1.2||distance(mo.mesh.position,mo.homePos)>45)mo.mode='return';}}
+    s.zombies.animate(mo.mesh,dt,moving,attacking);return true;
+  }
+  function killed(mo){if(!mo.rvZombie||s.defeated.includes(mo.rvId))return;s.defeated.push(mo.rvId);s.scrap+=8;save();}
   function update(dt){
-    if(!s.active||s.over)return;if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}s.elapsed+=dt;s.saveT+=dt;
-    const p=s.rv.mesh.position,travel=distance(p,s.lastPos||p);s.lastPos={x:p.x,z:p.z};s.fuel=Math.max(0,s.fuel-travel*.034-dt*.008);configure();
+    if(!s.active||s.over)return;if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}s.elapsed+=dt;s.saveT+=dt;const p=s.rv.mesh.position,travel=distance(p,s.lastPos||p);s.lastPos={x:p.x,z:p.z};s.traveled+=travel;s.fuel=Math.max(0,s.fuel-travel*.045);s.moving=travel>dt*2;configure();
     const skyDelta=p.z-s.skyOffset;s.sky.forEach(o=>o.position.z+=skyDelta);s.skyOffset=p.z;
-    // Parked mobile base defends itself with its existing turret; driving uses the player's normal vehicle weapon.
-    if(!player.inVehicle){s.rv.fireCd-=dt;const mo=a.monsters.filter(m=>!m.dead).sort((x,y)=>distance(x.mesh.position,p)-distance(y.mesh.position,p))[0];
+    if(!player.inVehicle){s.rv.fireCd-=dt;const mo=a.monsters.filter(m=>!m.dead&&m.mode==='chase'&&s.town.visible(p,m.mesh.position)).sort((x,y)=>distance(x.mesh.position,p)-distance(y.mesh.position,p))[0];
       if(mo&&distance(mo.mesh.position,p)<s.rv.cfg.range&&s.rv.fireCd<=0){s.rv.fireCd=s.rv.cfg.rate;const aim=mo.mesh.position.clone().add(new T.Vector3(0,mo.hitH,0)),dir=aim.clone().sub(p).normalize();a.vehicleAim(s.rv,dir);const from=a.vehicleMuzzle(s.rv,dir);a.fireBullet(from,aim.clone().sub(from).normalize(),{...s.rv.cfg,speed:65,color:0xffd27a},true,aim);AudioSys.sfx('mg');}}
-    if(player.dead){player.respawnT-=dt;if(player.respawnT<=0){player.reset(Game.cls);player.pos.set(clamp(p.x+4,-36,36),0,p.z-3);player.mesh.position.copy(player.pos);player.invulnerable=3;a.showMsg('在房车旁复活；房车损伤保留',2);}}
-    const near=atStop(p);s.moving=travel>dt*2;
-    if(near&&travel<dt*2){s.hold=Math.min(35,s.hold+dt);if(s.hold>=35){s.fuel=Math.min(100,s.fuel+25);s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+100);a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);s.nodes[s.stage].gate.visible=false;s.stage++;s.hold=0;s.search=0;save();a.showMsg('通行已恢复：补充燃料，驶向 '+RV_ROUTE[s.stage].name,3);}}
-    if(s.search){if(player.dead||player.inVehicle||s.stage>=3||distance(player.pos,{x:18,z:RV_ROUTE[s.stage].z})>7){s.search=0;}else{s.search+=dt;if(s.search>=18){s.looted[s.stage]=true;s.scrap+=110;s.fuel=Math.min(100,s.fuel+15);Game.items.medkit++;s.search=0;AudioSys.sfx('buy');save();a.showMsg('搜索完成：+110 零件、燃料、医疗包',2);}}}
-    if(s.job){const j=s.job;if(player.dead||player.inVehicle||distance(player.pos,p)>8){s.scrap+=j.cost;s.job=null;a.showMsg('整备取消，零件已退回');save();}else if((j.t+=dt)>=j.duration){if(j.kind==='repair')s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+450);else if(j.kind==='fuel')s.fuel=Math.min(100,s.fuel+35);else{s[j.kind]++;configure();if(j.kind==='armor')s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+200);}a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);s.job=null;AudioSys.sfx('build');save();a.showMsg('房车整备完成',2);}}
-    s.spawn-=dt;if(s.spawn<=0){s.spawn=(near||s.search||s.job)?3.4:5;spawnSwarm(near?4:3);}
-    for(const mo of [...a.monsters])if(distance(mo.mesh.position,p)>90){a.visuals.release(mo.mesh);scene.remove(mo.mesh);a.monsters.splice(a.monsters.indexOf(mo),1);}
-    if(s.stage===3&&p.z>=RV_ROUTE[3].z-5&&Math.abs(p.x)<=9)finish(true);
-    if(s.saveT>=10){s.saveT=0;save();}hud();
+    if(player.dead){player.respawnT-=dt;if(player.respawnT<=0){player.reset(Game.cls);s.scrap=Math.max(0,s.scrap-20);a.enterVehicle(s.rv);player.pos.copy(p);player.invulnerable=3;a.showMsg('在房车内获救，损失20零件；房车损伤保留',3);}}
+    if(s.search){const q=s.search,zone=RV_ZONES[q.zone];if(player.dead||player.inVehicle||distance(player.pos,zone)>4.2)s.search=null;else if((q.t+=dt)>=4){s.looted[q.zone]=true;s.scrap+=110;s.food=Math.min(99,s.food+1);Game.items.medkit=Math.min(99,Game.items.medkit+1);s.search=null;save();AudioSys.sfx('buy');a.showMsg('获得110零件、密封罐头与医疗包，可自由前往下一区',3);}}
+    if(s.job){const j=s.job,site=atSite();if(!site||site.id!==j.site||s.moving){s.scrap+=j.cost;s.job=null;save();a.showMsg('移动车辆或离开设施，作业取消并退款');}
+      else if((j.t+=dt)>=j.duration){if(j.kind==='repair')s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+450);else if(j.kind==='fuel')s.fuel=Math.min(100,s.fuel+40);else{s[j.kind]++;configure();if(j.kind==='armor')s.rv.hp=Math.min(s.rv.maxHp,s.rv.hp+200);}s.job=null;a.updHPBar(s.rv.bar,s.rv.hp/s.rv.maxHp);save();AudioSys.sfx('build');a.showMsg('设施作业完成，随时出发',2);}}
+    if(s.saveT>=10){s.saveT=0;save();}s.mapT-=dt;hud();
+  }
+  function drawMap(){
+    const ctx=$('rvMap').getContext('2d'),w=220,h=224,X=x=>(x-TOWN.minX)/(TOWN.maxX-TOWN.minX)*(w-16)+8,Z=z=>h-8-(z-TOWN.minZ)/(TOWN.maxZ-TOWN.minZ)*(h-16);
+    ctx.clearRect(0,0,w,h);ctx.fillStyle='#102129';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#58615e';ctx.lineWidth=7;
+    for(const x of [-112,0,112]){ctx.beginPath();ctx.moveTo(X(x),8);ctx.lineTo(X(x),h-8);ctx.stroke();}for(const z of [1525,1640,1750,1850]){ctx.beginPath();ctx.moveTo(8,Z(z));ctx.lineTo(w-8,Z(z));ctx.stroke();}
+    RV_ZONES.forEach((n,i)=>{ctx.fillStyle=s.looted[i]?'#485d58':'#9c604e';ctx.beginPath();ctx.arc(X(n.x),Z(n.z),n.r*.53,0,Math.PI*2);ctx.fill();});
+    ctx.font='bold 12px Microsoft YaHei';ctx.textAlign='center';for(const n of RV_SITES){ctx.fillStyle=({garage:'#ffcf79',fuel:'#77d8e4',market:'#8bdfac',exit:'#fff'})[n.kind];ctx.fillRect(X(n.x)-4,Z(n.z)-4,8,8);ctx.fillText(({garage:'修',fuel:'油',market:'店',exit:'出'})[n.kind],X(n.x)+10,Z(n.z)-4);if(s.destination===n.id){ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(X(n.x)-7,Z(n.z)-7,14,14);}}
+    const p=s.rv.mesh.position;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(X(p.x),Z(p.z),4,0,Math.PI*2);ctx.fill();if(!player.inVehicle){ctx.fillStyle='#8fffae';ctx.fillRect(X(player.pos.x)-2,Z(player.pos.z)-2,4,4);}
   }
   function hud(){
-    if(!s.active)return;const v=s.rv,node=RV_ROUTE[s.stage],p=v.mesh.position,dist=distance(p,{x:0,z:node.z});
-    $('rvStatus').textContent=`耐久 ${Math.max(0,Math.ceil(v.hp))}/${v.maxHp} · 燃料 ${Math.ceil(s.fuel)}%`;$('rvFill').style.width=clamp(v.hp/v.maxHp*100,0,100)+'%';
-    $('rvObjective').textContent=atStop(p)?`第${s.stage+1}站 ${node.name} · ${s.moving?'减速停稳开始计时':'守住，还需'+Math.ceil(35-s.hold)+'秒抬杆'}`:s.stage===3?`终点：开进撤离隧道 · ${Math.ceil(dist)}米`:`沿蓝色箭头前进 → ${s.stage+1}/3 ${node.name} · ${Math.ceil(dist)}米`;
-    $('rvAction').textContent=s.job?'整备 '+Math.ceil(s.job.t)+'/'+s.job.duration+'秒':s.search?'搜索 '+Math.ceil(s.search)+'/18秒':s.fuel<=0?'燃料耗尽：仍可慢速挪车，停车整备补油':atStop(p)?'停稳自动通行倒计时；搜索/维修可选':(a.isTouch()?'左摇杆驾驶 · 互动上下车/搜索 · 整备修车':'W/↑前进，A/D调整 · I上下车/搜索 · O整备');
-    $('rvResources').textContent=`零件 ${Math.floor(s.scrap)} · 机枪${s.gun}/2 装甲${s.armor}/2 · ${Math.floor(s.elapsed/60)}:${String(Math.floor(s.elapsed%60)).padStart(2,'0')}${player.inVehicle?'':' · 人员 '+Math.ceil(player.hp)+'/'+player.maxHp}`;
-    $('vO').textContent='整备';
+    if(!s.active)return;const v=s.rv,site=atSite(),dest=RV_SITES.find(n=>n.id===s.destination);
+    $('rvStatus').textContent='耐久 '+Math.max(0,Math.ceil(v.hp))+'/'+v.maxHp+' · 燃料 '+Math.ceil(s.fuel)+'%';$('rvFill').style.width=clamp(v.hp/v.maxHp*100,0,100)+'%';
+    $('rvObjective').textContent=site?site.name+' · '+(a.isTouch()?'点设施办理':'O 办理服务'):'导航 '+dest.name+' · '+Math.ceil(distance(v.mesh.position,dest))+'米';
+    $('rvAction').textContent=s.job?'设施作业 '+Math.ceil(s.job.t)+'/'+s.job.duration+'秒':s.search?'搜索物资 '+Math.ceil(s.search.t)+'/4秒':s.fuel<=0?'无油，可低速挪车至加油站':a.isTouch()?'互动上下车/搜索 · 设施查看地图':'I 上下车/搜索 · O 地图与设施';
+    $('rvResources').textContent='零件 '+Math.floor(s.scrap)+' · 搜索 '+s.looted.filter(Boolean).length+'/6区 · 人员 '+Math.ceil(player.hp)+'/'+player.maxHp+' · 罐头 '+s.food+' · 医疗包 '+Game.items.medkit;
+    $('vO').textContent='设施';if(s.mapT<=0){s.mapT=.15;drawMap();}
   }
   function finish(won){
-    if(s.over)return;s.over=true;Game.state='over';a.Input.reset();a.closePanels();$('rvResultTitle').textContent=won?'房车成功撤离！':'房车被虫潮吞没';
-    $('rvResultInfo').textContent=`行驶 ${Math.round(s.rv.mesh.position.z-START)}米 · 用时 ${Math.floor(s.elapsed/60)}分${Math.floor(s.elapsed%60)}秒 · 搜索 ${s.looted.filter(Boolean).length}/3站 · 剩余耐久 ${Math.max(0,Math.ceil(s.rv.hp))}。${won?'可以尝试少停车、更快撤离。':'重新开始一趟，优先留零件修车。'}`;
+    if(s.over)return;s.over=true;Game.state='over';a.Input.reset();a.closePanels();$('rvResultTitle').textContent=won?'房车成功撤离！':'房车被僵尸摧毁';
+    $('rvResultInfo').textContent='探索 '+Math.round(s.traveled)+'米 · 用时 '+Math.floor(s.elapsed/60)+'分'+Math.floor(s.elapsed%60)+'秒 · 搜索 '+s.looted.filter(Boolean).length+'/6区 · 击退 '+s.defeated.length+'只僵尸 · 剩余 '+Math.floor(s.scrap)+'零件。'+(won?'下次可尝试搜全六区再撤离。':'可绕开感染区，留零件在修理厂修车。');
     $('rvResult').classList.remove('hidden');AudioSys.sfx(won?'win':'boom');try{localStorage.removeItem(RV_SAVE);}catch(_e){}refresh();
   }
   function stop(restore=true){
-    if(!s.active)return;save();a.clearEntities(true);s.rv=null;s.active=false;s.over=false;s.lastPos=null;
-    s.hidden.forEach(o=>o.visible=true);s.hidden=[];s.sky.forEach(o=>o.position.z-=s.skyOffset);s.sky=[];Object.assign(WORLD,s.world);
-    scene.remove(s.arena);s.arena.traverse(o=>{o.geometry?.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material]){m?.map?.dispose();m?.dispose();}});s.arena=null;
-    a.stage.classList.remove('rv-mode');['rvHUD','rvPanel','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('vO').textContent='商店';$('btnRestartLv').textContent='🔄 重开本关';$('keysHint').textContent=s.keyHint;
+    if(!s.active)return;save();a.clearEntities(true);s.rv=null;s.active=false;s.over=false;s.lastPos=null;s.hidden.forEach(o=>o.visible=true);s.hidden=[];s.sky.forEach(o=>o.position.z-=s.skyOffset);s.sky=[];Object.assign(WORLD,s.world);
+    s.town?.dispose();s.zombies?.dispose();s.town=null;s.zombies=null;a.stage.classList.remove('rv-mode');['rvHUD','rvMap','rvPanel','rvResult'].forEach(id=>$(id).classList.add('hidden'));$('vO').textContent='商店';$('btnRestartLv').textContent='🔄 重开本关';$('keysHint').textContent=s.keyHint;
     if(restore&&s.backup){Object.assign(Game,s.backup);s.backup=null;}player.inVehicle=null;player.mesh.visible=false;Game.state='menu';a.Input.reset();
   }
-  mount();return {state:s,start,stop,save,read,refresh,update,hud,blocked,target,interaction,interact,panel,job,finish,spawnSwarm};
+  mount();return {state:s,start,stop,save,read,refresh,update,hud,blocked,target,updateMonster,killed,interaction,interact,panel,job,eat,finish,atSite,sites:RV_SITES,zones:RV_ZONES,visible:(p,q)=>s.town.visible(p,q)};
 }
