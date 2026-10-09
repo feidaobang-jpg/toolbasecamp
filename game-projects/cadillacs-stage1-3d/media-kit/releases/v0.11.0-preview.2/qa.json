@@ -1,0 +1,108 @@
+{
+  "results": [
+    {
+      "name": "空存档可直接选择第三关",
+      "pass": true
+    },
+    {
+      "name": "第三关从荒漠步战开始",
+      "pass": true
+    },
+    {
+      "name": "电台攻击键叫车并进入驾驶",
+      "pass": true,
+      "detail": {
+        "area": "hellroad",
+        "wave": 0,
+        "on": false,
+        "player": {
+          "x": 11,
+          "y": 0.55,
+          "z": 0.05,
+          "state": "incar",
+          "hp": 95.8,
+          "face": 1.57,
+          "invul": 0,
+          "weapon": null,
+          "combo": 0,
+          "visible": true
+        },
+        "errors": []
+      }
+    },
+    {
+      "name": "方向键改变车辆纵深",
+      "pass": true
+    },
+    {
+      "name": "J触发加速撞击",
+      "pass": true
+    },
+    {
+      "name": "K按住刹车速度降低",
+      "pass": true
+    },
+    {
+      "name": "暂停冻结公路距离和耐久",
+      "pass": true
+    },
+    {
+      "name": "行驶到距离后霍格出现",
+      "pass": true
+    },
+    {
+      "name": "正常耐久驾驶可以击败霍格",
+      "pass": true,
+      "detail": {
+        "phase": "won",
+        "hp": 76,
+        "boss": 0
+      }
+    },
+    {
+      "name": "第三关通关结算",
+      "pass": true
+    },
+    {
+      "name": "毁车恢复步战且保留Boss",
+      "pass": true
+    },
+    {
+      "name": "霍格有冲撞、手雷和援军",
+      "pass": true
+    },
+    {
+      "name": "步战武器能击败霍格",
+      "pass": true
+    },
+    {
+      "name": "摩托冲撞按正常规则扣血",
+      "pass": true,
+      "detail": {
+        "hp": 83
+      }
+    },
+    {
+      "name": "经典最后一命阵亡进入续关",
+      "pass": true
+    },
+    {
+      "name": "真实J键续关保留步战关卡",
+      "pass": true
+    },
+    {
+      "name": "续关倒计时结束出现失败结算",
+      "pass": true
+    },
+    {
+      "name": "失败重玩返回所选第三关起点",
+      "pass": true
+    },
+    {
+      "name": "无运行时错误",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

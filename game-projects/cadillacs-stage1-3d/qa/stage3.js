@@ -1,7 +1,7 @@
 // 第三关审核版回归：真实键盘 + 固定时钟；局部状态注入明确标作 fixture。
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {launch,BASE}=require('./lib');
-const dest=path.resolve(__dirname,'../media-kit/releases/v0.11.0-preview.1/captures');fs.mkdirSync(dest,{recursive:true});
+const dest=path.resolve(__dirname,'../media-kit/releases/'+(process.env.CD_RELEASE||'v0.11.0-preview.1')+'/captures');fs.mkdirSync(dest,{recursive:true});
 (async()=>{const browser=await launch();const results=[],errors=[];let page;
  const check=(name,value,detail)=>{results.push({name,pass:!!value,detail});console.log((value?'PASS ':'FAIL ')+name,detail||'');assert.ok(value,name);};
  try{

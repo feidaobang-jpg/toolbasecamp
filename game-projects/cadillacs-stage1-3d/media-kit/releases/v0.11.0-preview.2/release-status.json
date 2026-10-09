@@ -1,0 +1,22 @@
+{
+  "version": "v0.11.0-preview.2",
+  "base_version": "v0.11.0-preview.1-menu-text1",
+  "classification": "routine",
+  "release_kind": "patch",
+  "task_id": "01a11e15-1529-7582-99ff-33cd54debef8-dino-road-bounds-03",
+  "branch": "codex/cadillacs-stage3-preview-20261009",
+  "source_base_commit": "9292d65e875886ba9d22ca216ec25279b6370bc4",
+  "runtime_sha256": "ce322bab0fe2d7bd0d2cd5ed3a92804ae91d681bbe4bbc751de037ef8b1a1ea8",
+  "approval": {
+    "required": false,
+    "status": "not_required_for_website",
+    "evidence": "用户已授权发布到网站试玩；2026-10-09完成验证后网站即时更新"
+  },
+  "website": {
+    "status": "tested_pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3"
+  },
+  "other_channels": "held_this_task_website_only",
+  "automatic_batch_eligible": false,
+  "updated_at": "2026-10-09T09:22:00.227415+00:00"
+}

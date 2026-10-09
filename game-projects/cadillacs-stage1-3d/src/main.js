@@ -550,8 +550,9 @@ function presentFrame(dtReal, draw, instant) {
     G.fpActive = camCtl.fp() && !fpOff;
     const AR = world.area().def;
     const cz1 = AR.camZ1 === undefined ? AR.z1 : AR.camZ1;   // 取景按这一排算；第二关可走范围比它更靠前（见 level.js camZ1）
-    const zc = (AR.z0 + cz1) / 2 * 0.6 + p.z * 0.25;
-    const fitDepth = cz1 - ((AR.z0 + cz1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
+    const cz0 = AR.camZ0 === undefined ? AR.z0 : AR.camZ0;
+    const zc = (cz0 + cz1) / 2 * 0.6 + p.z * 0.25;
+    const fitDepth = cz1 - ((cz0 + cz1) / 2 * 0.6 + cz0 * 0.25);   // 移动范围扩大时保留原镜头取景，不自动拉远
     camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: (G.road?.phase==='drive'?1.83:p.y + p.model.H * 0.92) - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
