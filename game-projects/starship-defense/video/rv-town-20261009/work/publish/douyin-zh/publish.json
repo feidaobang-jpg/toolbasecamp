@@ -36,7 +36,7 @@
   },
   "cover_text": "开房车 / 进僵尸城 / 能完整撤出来吗？",
   "cover_selection_source": "同版本正常规则实机第一场96秒，原片与帧保存在work；正文使用补录第二场",
-  "cover_upload_mode": "select_frame_reference_pending_current_entry_check",
+  "cover_upload_mode": "platform_editor_horizontal_4x3_vertical_3x4_saved",
   "subtitle_mode": "burned_in",
   "subtitles": [],
   "category": null,
@@ -48,29 +48,95 @@
     "voice_clone": false,
     "AI_assisted_game_development": true,
     "exact_game_development_model": "unverified for RV town; do not reuse versus-only model attribution",
-    "setting_status": "recheck platform-specific declaration at submission"
+    "setting_status": "实际表单已按内容填写，公开页AI声明核验"
   },
-  "platform_requirements_checked_at": null,
+  "platform_requirements_checked_at": "2026-10-09T17:53:41.810316+08:00",
   "platform_sources": [],
-  "unverified_fields": [
-    "当前投稿入口、账号权限、分类与声明设置",
-    "真实公开页面的封面和字幕可用性"
-  ],
-  "blocking_issues": [
-    "人声可懂度与混音主观听审尚未执行；请用户审片",
-    "本期最终文件尚未经用户人工审片批准",
-    "本轮不执行上传；其他渠道暂缓",
-    "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
-  ],
+  "unverified_fields": [],
+  "blocking_issues": [],
   "ready_to_review": true,
   "ready_to_upload": false,
   "human_review": {
-    "status": "pending",
-    "approved_sha256": null
+    "status": "approved",
+    "statement": "可以，发布视频吧",
+    "source": "user",
+    "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+    "file_hashes": {
+      "cover-reference-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+      "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "投稿文案.txt": "4b82997ca974ad8ccf7b0aec63b5be951ca328fa853394871a7a1b3330b91d62"
+    },
+    "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
   },
   "publication": {
-    "status": "not_uploaded",
-    "id": null,
-    "url": null
-  }
+    "status": "published",
+    "id": "7694602953994358058",
+    "url": "https://www.douyin.com/video/7694602953994358058",
+    "episode_id": "rv-town-20261009",
+    "variant_id": "douyin-zh",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+    "account_id": "84261875244",
+    "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+    "human_review": {
+      "status": "approved",
+      "statement": "可以，发布视频吧",
+      "source": "user",
+      "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+      "file_hashes": {
+        "cover-reference-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+        "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+        "投稿文案.txt": "4b82997ca974ad8ccf7b0aec63b5be951ca328fa853394871a7a1b3330b91d62"
+      },
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+    },
+    "last_observed_at": "2026-10-09T17:51:49.728761+08:00",
+    "platform_id": "7694602953994358058",
+    "public_url": "https://www.douyin.com/video/7694602953994358058",
+    "identity_verified": true,
+    "published_at_observed": "2026-10-09T17:49:00+08:00",
+    "duration_seconds": 109.866667,
+    "publishing_settings": {
+      "visibility": "public",
+      "release": "immediate",
+      "ai_content_disclosure": "内容由AI生成",
+      "paid_promotion": false,
+      "simultaneous_other_services": false,
+      "save_permission": "允许"
+    },
+    "covers": {
+      "status": "both_saved_and_platform_check_passed",
+      "source": "已审房车封面在平台编辑器裁切，保留完整标题",
+      "horizontal": "4:3",
+      "vertical": "3:4",
+      "evidence": [
+        "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-horizontal-cover.jpg",
+        "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-vertical-cover.jpg"
+      ]
+    },
+    "public_hashtags": [
+      "虫潮围城",
+      "房车生存",
+      "游戏开发",
+      "AI"
+    ],
+    "precheck": "作品未见异常；封面检测通过",
+    "public_playback": "公开规范URL实际播放正确房车成片，时长1:50，画面内中文字幕正常显示",
+    "sound_review": "人工审片通过；代理未主观试听",
+    "evidence": "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-public.jpg",
+    "next_step": null,
+    "public_verified_at": "2026-10-09T17:51:49.728761+08:00"
+  },
+  "audio_review": "用户明确通过最终审片；代理未执行主观试听"
 }

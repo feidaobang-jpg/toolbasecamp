@@ -30,7 +30,8 @@
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
-      "BV1C5HQ6gEvD"
+      "BV1C5HQ6gEvD",
+      "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_8DGEF0ZA/index.html",
@@ -111,7 +112,8 @@
     "last_successful_sync_version": "web-three-lanes-v0.31.0",
     "last_successful_sync_at": "2026-10-09T16:00:04.613032+08:00",
     "public_verified_version": "web-three-lanes-v0.31.0",
-    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html"
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html",
+    "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-shop-scroll-v0.29.2",
@@ -776,23 +778,24 @@
   "website_deploy_record": "releases/web-three-lanes-v0.31.0/website.json",
   "development_model_scope": "确认v0.26.0/v0.27.0虫潮对战模式的开发来源；更早版本未完整核对，Codex完成接管核验和视频制作。",
   "current_video_preparation": {
-    "episode": "wish-versus-20261008",
-    "version": "web-versus-teams-v0.27.0",
+    "episode": "rv-town-20261009",
+    "version": "web-three-lanes-v0.31.0",
     "status": "published",
     "variants": [
       "bilibili-zh",
       "douyin-zh",
       "youtube-zh"
     ],
-    "manifest": "../video/wish-versus-20261008/work/publish.json",
-    "new_bvid": "BV1C5HQ6gEvD",
-    "published_at": "2026-10-08T10:48:23.100599+00:00",
-    "publication_result": "../video/wish-versus-20261008/work/publication-result.json",
+    "manifest": "../video/rv-town-20261009/work/publish.json",
+    "new_bvid": "BV1xdpx63ETu",
+    "public_verified_at": "2026-10-09T17:53:41.810316+08:00",
+    "publication_result": "../video/rv-town-20261009/work/publication-result.json",
     "platform_urls": {
-      "douyin": "https://www.douyin.com/video/7694239926304427298",
-      "bilibili": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
-      "youtube": "https://www.youtube.com/watch?v=QOTmOfT19_g"
-    }
+      "bilibili": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "douyin": "https://www.douyin.com/video/7694602953994358058",
+      "youtube": "https://www.youtube.com/watch?v=jbTIpyh6Clw"
+    },
+    "scope": "本期新视频获准；其他游戏渠道与旧视频说明仍按channel_holds暂缓"
   },
   "squad_capacity": {
     "single_player": 12,
@@ -864,5 +867,26 @@
       "announcements"
     ],
     "status": "held_by_user"
-  }
+  },
+  "video_publication_history": [
+    {
+      "episode": "wish-versus-20261008",
+      "version": "web-versus-teams-v0.27.0",
+      "status": "published",
+      "variants": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "manifest": "../video/wish-versus-20261008/work/publish.json",
+      "new_bvid": "BV1C5HQ6gEvD",
+      "published_at": "2026-10-08T10:48:23.100599+00:00",
+      "publication_result": "../video/wish-versus-20261008/work/publication-result.json",
+      "platform_urls": {
+        "douyin": "https://www.douyin.com/video/7694239926304427298",
+        "bilibili": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+        "youtube": "https://www.youtube.com/watch?v=QOTmOfT19_g"
+      }
+    }
+  ]
 }

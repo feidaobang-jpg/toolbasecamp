@@ -61,6 +61,17 @@
       "submitted_at": null,
       "record": "releases/web-shop-scroll-v0.29.2/bilibili-sync.json",
       "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text"
+    },
+    {
+      "bvid": "BV1xdpx63ETu",
+      "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "recorded_game_version": "web-three-lanes-v0.31.0",
+      "last_public_verified_version": "web-three-lanes-v0.31.0",
+      "status": "public_verified",
+      "last_public_verified_at": "2026-10-09T17:53:41.810316+08:00",
+      "publication_record": "../video/rv-town-20261009/work/publication-result.json",
+      "development_model": "Codex辅助开发；具体RV模型未完整核对",
+      "note": "正常规则房车城镇实战；搜2/6区、击退12只、带回314零件；新片发布不推进其他旧稿说明基线。"
     }
   ],
   "latest_record": "releases/web-shop-scroll-v0.29.2/bilibili-sync.json",

@@ -4,6 +4,11 @@ import json,hashlib,datetime,re,html
 from PIL import Image
 R=Path(__file__).resolve().parent;F=R.parent/'final';P=R/'publish';P.mkdir(exist_ok=True)
 now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat()
+existing=R/'publication-result.json'
+if existing.exists():
+ previous=json.loads(existing.read_text(encoding='utf-8'))
+ if previous.get('human_review')=='approved' or any(x.get('platform_id') or x.get('id') for x in previous.get('platforms',{}).values()):
+  raise SystemExit('Publication state exists: preserve approved hashes and platform IDs; update packaging deliberately.')
 def read(p):return json.loads(p.read_text(encoding='utf-8'))
 def write(p,obj):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 def sha(p):

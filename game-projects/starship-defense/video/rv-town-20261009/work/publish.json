@@ -14,12 +14,8 @@
       "ready_to_review": true,
       "ready_to_upload": false,
       "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
-      "blocking_issues": [
-        "人声可懂度与混音主观听审尚未执行；请用户审片",
-        "本期最终文件尚未经用户人工审片批准",
-        "本轮不执行上传；其他渠道暂缓",
-        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
-      ]
+      "blocking_issues": [],
+      "publication_status": "published"
     },
     {
       "variant_id": "douyin-zh",
@@ -27,12 +23,8 @@
       "ready_to_review": true,
       "ready_to_upload": false,
       "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
-      "blocking_issues": [
-        "人声可懂度与混音主观听审尚未执行；请用户审片",
-        "本期最终文件尚未经用户人工审片批准",
-        "本轮不执行上传；其他渠道暂缓",
-        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
-      ]
+      "blocking_issues": [],
+      "publication_status": "published"
     },
     {
       "variant_id": "youtube-zh",
@@ -40,20 +32,20 @@
       "ready_to_review": true,
       "ready_to_upload": false,
       "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
-      "blocking_issues": [
-        "人声可懂度与混音主观听审尚未执行；请用户审片",
-        "本期最终文件尚未经用户人工审片批准",
-        "本轮不执行上传；其他渠道暂缓",
-        "当前账号投稿页的分类、封面入口及声明选项须在获准发布时重读"
-      ]
+      "blocking_issues": [],
+      "publication_status": "published"
     }
   ],
   "ready_to_review": true,
   "ready_to_upload": false,
-  "human_review": "pending",
-  "publication": "not_uploaded",
+  "human_review": "approved",
+  "publication": "published",
   "post_publication": {
-    "x": "not requested; no action"
+    "x": {
+      "status": "skipped_paid_access_declined",
+      "user_instruction": "要收费吗？如果收费就不做",
+      "reason": "当前官方API连接未开通；现有Metricool路径需付费，按用户要求跳过。未购买、未发X。"
+    }
   },
-  "channel_restriction": "其他平台先不发；先交成片审片，未授权本轮上传"
+  "channel_restriction": "本期新片获准三平台发布；其他游戏渠道和旧视频说明继续暂缓"
 }

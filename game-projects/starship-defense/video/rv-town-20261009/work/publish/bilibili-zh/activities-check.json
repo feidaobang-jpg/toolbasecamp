@@ -1,16 +1,44 @@
 {
-  "checked_date": "2026-10-09",
-  "status": "partial_preparation_only",
-  "current_video_bvid": null,
-  "current_video_published": false,
-  "topic_id": 1346285,
-  "topic_draft": "哔哩哔哩Toy创意挑战",
-  "official_topic_url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
-  "official_rules_check": "官方话题页在本轮网页工具中不可访问；不声称已核实当期规则或已参加活动。",
-  "shared_last_completed_check_at": "2026-10-08T22:39:14.1027568+08:00",
-  "shared_completed_timestamp_advanced": false,
-  "account_write": false,
-  "registration": "not_performed",
-  "next_step": "现有19点活动任务负责全面复查；本期获准发布并取得真实BV后，按最新官方条件检查免费活动和既有免费流量奖励。",
-  "new_automation_created": false
+  "status": "related_video_check_completed",
+  "scope": "本期Toy活动、推流申请与免费流量奖励；非全账号全面检查",
+  "checked_at": "2026-10-09T17:48:14.379124+08:00",
+  "current_video_bvid": "BV1xdpx63ETu",
+  "current_video_published": true,
+  "toy_challenge": {
+    "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+    "deadline": "2026-10-31T23:59:00+08:00",
+    "topic_id": 1346285,
+    "status": "public_topic_and_toy_binding_verified",
+    "high_energy_video_award": "活动期投稿的参赛Toy视频播放量须超过300；未宣称本片已达标或获奖",
+    "rules_evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-activity-rules.jpg"
+  },
+  "traffic_reward": {
+    "status": "no_available_free_reward",
+    "available_exposure": 0,
+    "url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+    "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-free-rewards.jpg"
+  },
+  "toy_push_application": {
+    "status": "submitted_cloud_saved",
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "sheet": "【进行中】日常推流",
+    "range": "A330:E330",
+    "values": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "是",
+      "是",
+      "是"
+    ],
+    "operator_feedback_cell": "F330",
+    "operator_feedback": null,
+    "verified_at": "2026-10-09T17:48:14.379124+08:00",
+    "reload_verified": true,
+    "real_hyperlink_click_verified": true,
+    "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-application-saved-row330.jpg",
+    "note": "申请保存且B330蓝色下划线链接实点到正确BV；F330为空，运营是否推流尚未确认。"
+  },
+  "shared_full_check_timestamp_advanced": false,
+  "previous_video_maintenance": "held_by_user",
+  "note": "仅登记本期新片；不接管其他未完成活动/协议申请，不新增定时任务。"
 }
