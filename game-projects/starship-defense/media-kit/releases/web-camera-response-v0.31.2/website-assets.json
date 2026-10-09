@@ -1,0 +1,42 @@
+{
+  "verified_at": "2026-10-09T11:37:41.653986+00:00",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+  "status": "public_verified",
+  "assets": [
+    {
+      "path": "html/game/starship-defense/index.html",
+      "ok": true,
+      "sha256": "0e8ba4807b3ead467c5c131e01b0bfcb082616e8da8c0ab3524230a9d107dbf5",
+      "expected_sha256": "eca3ab8569e41ac60d44d6682df182aad9db2253de524d455d3b5e4af65c33c3",
+      "bytes": 57849,
+      "last_modified": "Fri, 09 Oct 2026 11:31:18 GMT",
+      "verification": "部署脚本将HTML的版本参数替换为提交短哈希；确认新lookZone样式和脚本引用，JS本体按SHA256核验"
+    },
+    {
+      "path": "html/game/starship-defense/game.js",
+      "ok": true,
+      "sha256": "2c99871b3a03e517e3a5a85025ee31ae2babd29939cfb360be91e5ff6b971cc4",
+      "expected_sha256": "2c99871b3a03e517e3a5a85025ee31ae2babd29939cfb360be91e5ff6b971cc4",
+      "bytes": 323165,
+      "last_modified": "Fri, 09 Oct 2026 11:31:12 GMT"
+    },
+    {
+      "path": "html/game/starship-defense/game.compat.js",
+      "ok": true,
+      "sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+      "expected_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+      "bytes": 1111895,
+      "last_modified": "Fri, 09 Oct 2026 11:31:12 GMT"
+    },
+    {
+      "path": "js/game/drag-look.js",
+      "ok": true,
+      "sha256": "1151213184a794be12fc032e836581ab67928e62af3e8151670c74ffaf604ea2",
+      "expected_sha256": "1151213184a794be12fc032e836581ab67928e62af3e8151670c74ffaf604ea2",
+      "bytes": 9684,
+      "last_modified": "Fri, 09 Oct 2026 11:31:12 GMT"
+    }
+  ],
+  "deployment_record": "dae62c3891b551627004d15ceb3becd159b241bc"
+}

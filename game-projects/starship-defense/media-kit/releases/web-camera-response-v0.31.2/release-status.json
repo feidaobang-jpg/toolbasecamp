@@ -5,7 +5,7 @@
   "release_kind": "patch",
   "task_id": "01a1205e-4fd7-7401-9c9b-1abef10885ad-01",
   "release_record": "game-projects/starship-defense/media-kit/releases/web-camera-response-v0.31.2/handoff.json",
-  "source_commit": null,
+  "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
   "runtime_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
   "tests": {
     "status": "passed",
@@ -19,7 +19,8 @@
     "limitations": [
       "手机为桌面触屏模拟，未测真实手机多指和性能",
       "性能为隔离输入的空场约3.5秒，不外推密集虫潮或所有设备"
-    ]
+    ],
+    "website_checks": 103
   },
   "approval": {
     "required": false,
@@ -27,18 +28,89 @@
     "policy": "2026-10-09-website-immediate"
   },
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T19:39:36.987575+08:00",
+    "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "deployed_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "runtime_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+    "browser_checks": 103,
+    "physical_phone": false,
+    "evidence": [
+      "website-assets.json",
+      "qa/website.json"
+    ]
   },
-  "automatic_batch_eligible": false,
+  "automatic_batch_eligible": true,
   "source_feedback_keys": [
     "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59"
   ],
   "channels": {
-    "toy": "pending_22_batch",
-    "taptap": "pending_22_batch_respect_existing_user_hold",
-    "existing_video_descriptions": "pending_22_batch_respect_existing_user_hold",
-    "announcements": "pending_22_batch_respect_existing_user_hold",
-    "feedback_replies": "pending_22_batch"
+    "toy": {
+      "status": "pending_22_batch",
+      "id": "38678478981120"
+    },
+    "taptap": {
+      "status": "held_by_user",
+      "id": "962354",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "existing_video_descriptions": {
+      "status": "held_by_user",
+      "bvids": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "announcements": {
+      "status": "held_by_user",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "feedback_replies": {
+      "status": "pending_22_batch",
+      "video": "BV1Ujad6DEuf",
+      "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+      "verify_original_before_reply": true
+    }
   },
-  "updated_at": "2026-10-09T19:30:20.006516+08:00"
+  "updated_at": "2026-10-09T19:39:36.987575+08:00"
 }

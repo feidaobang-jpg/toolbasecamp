@@ -9,9 +9,9 @@
   "artifact_root": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009",
   "build": {
     "id": "camera-response0312",
-    "commit": null,
+    "commit": "dae62c3891b551627004d15ceb3becd159b241bc",
     "base_commit": "7db2d81a3d5fa414179f4e1c0812a46ec38a2f59",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -171,7 +171,8 @@
     "limitations": [
       "手机为桌面触屏模拟，未测真实手机多指和性能",
       "性能为隔离输入的空场约3.5秒，不外推密集虫潮或所有设备"
-    ]
+    ],
+    "website_checks": 103
   },
   "cover": {
     "action": "reuse",
@@ -190,13 +191,88 @@
     "policy": "2026-10-09-website-immediate"
   },
   "website": {
-    "status": "pending_deploy"
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T19:39:36.987575+08:00",
+    "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "deployed_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "runtime_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+    "browser_checks": 103,
+    "physical_phone": false,
+    "evidence": [
+      "website-assets.json",
+      "qa/website.json"
+    ]
   },
   "channels": {
-    "toy": "pending_22_batch",
-    "taptap": "pending_22_batch_respect_existing_user_hold",
-    "existing_video_descriptions": "pending_22_batch_respect_existing_user_hold",
-    "announcements": "pending_22_batch_respect_existing_user_hold",
-    "feedback_replies": "pending_22_batch"
-  }
+    "toy": {
+      "status": "pending_22_batch",
+      "id": "38678478981120"
+    },
+    "taptap": {
+      "status": "held_by_user",
+      "id": "962354",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "existing_video_descriptions": {
+      "status": "held_by_user",
+      "bvids": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "announcements": {
+      "status": "held_by_user",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "feedback_replies": {
+      "status": "pending_22_batch",
+      "video": "BV1Ujad6DEuf",
+      "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+      "verify_original_before_reply": true
+    }
+  },
+  "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+  "updated_at": "2026-10-09T19:39:36.987575+08:00",
+  "automatic_batch_eligible": true,
+  "media_storage_note": "工作区归档后使用artifact_root和各media.preserved_file；源码media相对路径保留为采集时的位置。所有原始截图视频已持久保存。"
 }

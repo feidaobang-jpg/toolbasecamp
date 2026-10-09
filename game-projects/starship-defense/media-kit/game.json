@@ -784,7 +784,7 @@
       "capture-versus-teams.cjs"
     ]
   },
-  "website_deploy_record": "releases/web-three-lanes-v0.31.0/website.json",
+  "website_deploy_record": "releases/web-camera-response-v0.31.2/website-assets.json",
   "development_model_scope": "确认v0.26.0/v0.27.0虫潮对战模式的开发来源；更早版本未完整核对，Codex完成接管核验和视频制作。",
   "current_video_preparation": {
     "episode": "rv-town-20261009",
@@ -835,27 +835,91 @@
     "handoff": "releases/web-three-lanes-v0.31.0/handoff.json"
   },
   "pending_channel_release": {
-    "version": "web-three-lanes-v0.31.0",
+    "version": "web-camera-response-v0.31.2",
     "status": "pending_22_batch",
-    "record": "releases/web-three-lanes-v0.31.0/release-status.json"
+    "record": "releases/web-camera-response-v0.31.2/release-status.json",
+    "channels": {
+      "toy": {
+        "status": "pending_22_batch",
+        "id": "38678478981120"
+      },
+      "taptap": {
+        "status": "held_by_user",
+        "id": "962354",
+        "underlying_pending": "pending_22_batch",
+        "hold_record": {
+          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+          "since": "2026-10-09T16:00:04.613032+08:00",
+          "targets": [
+            "taptap",
+            "other_game_platforms",
+            "existing_video_descriptions",
+            "announcements"
+          ],
+          "status": "held_by_user"
+        }
+      },
+      "existing_video_descriptions": {
+        "status": "held_by_user",
+        "bvids": [
+          "BV1Ujad6DEuf",
+          "BV1WbHq6eEBt",
+          "BV1C5HQ6gEvD",
+          "BV1xdpx63ETu"
+        ],
+        "underlying_pending": "pending_22_batch",
+        "hold_record": {
+          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+          "since": "2026-10-09T16:00:04.613032+08:00",
+          "targets": [
+            "taptap",
+            "other_game_platforms",
+            "existing_video_descriptions",
+            "announcements"
+          ],
+          "status": "held_by_user"
+        }
+      },
+      "announcements": {
+        "status": "held_by_user",
+        "underlying_pending": "pending_22_batch",
+        "hold_record": {
+          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+          "since": "2026-10-09T16:00:04.613032+08:00",
+          "targets": [
+            "taptap",
+            "other_game_platforms",
+            "existing_video_descriptions",
+            "announcements"
+          ],
+          "status": "held_by_user"
+        }
+      },
+      "feedback_replies": {
+        "status": "pending_22_batch",
+        "video": "BV1Ujad6DEuf",
+        "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+        "verify_original_before_reply": true
+      }
+    }
   },
   "website": {
     "status": "public_verified",
     "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-    "verified_at": "2026-10-09T15:47:30.230676+08:00",
-    "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
-    "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
-    "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+    "verified_at": "2026-10-09T19:39:36.987575+08:00",
+    "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "deployed_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "runtime_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+    "browser_checks": 103,
+    "physical_phone": false,
     "evidence": [
       "website-assets.json",
-      "qa/public/results.json",
-      "qa/public-rv/results.json"
+      "qa/website.json"
     ],
-    "public_checks": 29,
-    "physical_phone": false,
-    "version": "web-three-lanes-v0.31.0",
-    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
-    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+    "version": "web-camera-response-v0.31.2"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -901,7 +965,27 @@
   "camera_response_update": {
     "version": "web-camera-response-v0.31.2",
     "record": "releases/web-camera-response-v0.31.2/handoff.json",
-    "status": "tested_pending_website",
+    "status": "website_verified",
     "summary": "视角响应调快、手机空白拖动和切预设残留输入修复"
-  }
+  },
+  "website_history": [
+    {
+      "status": "public_verified",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "verified_at": "2026-10-09T15:47:30.230676+08:00",
+      "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+      "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+      "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+      "evidence": [
+        "website-assets.json",
+        "qa/public/results.json",
+        "qa/public-rv/results.json"
+      ],
+      "public_checks": 29,
+      "physical_phone": false,
+      "version": "web-three-lanes-v0.31.0",
+      "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+      "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+    }
+  ]
 }
