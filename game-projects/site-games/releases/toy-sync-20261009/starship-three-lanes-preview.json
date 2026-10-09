@@ -1,0 +1,269 @@
+{
+  "results": [
+    {
+      "name": "三条真实路线、六座外塔、八处野区且中路没有岩山",
+      "pass": true,
+      "data": {
+        "paths": [
+          [
+            [
+              0,
+              -74
+            ],
+            [
+              30,
+              -72
+            ],
+            [
+              59,
+              -57
+            ],
+            [
+              68,
+              -33
+            ],
+            [
+              68,
+              0
+            ],
+            [
+              68,
+              33
+            ],
+            [
+              59,
+              57
+            ],
+            [
+              30,
+              72
+            ],
+            [
+              0,
+              76
+            ]
+          ],
+          [
+            [
+              0,
+              -74
+            ],
+            [
+              0,
+              -52
+            ],
+            [
+              0,
+              -30
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              30
+            ],
+            [
+              0,
+              52
+            ],
+            [
+              0,
+              76
+            ]
+          ],
+          [
+            [
+              0,
+              -74
+            ],
+            [
+              -30,
+              -72
+            ],
+            [
+              -59,
+              -57
+            ],
+            [
+              -68,
+              -33
+            ],
+            [
+              -68,
+              0
+            ],
+            [
+              -68,
+              33
+            ],
+            [
+              -59,
+              57
+            ],
+            [
+              -30,
+              72
+            ],
+            [
+              0,
+              76
+            ]
+          ]
+        ],
+        "middleClear": true,
+        "towers": 6,
+        "camps": 8
+      }
+    },
+    {
+      "name": "20秒首波、25秒三路补兵，盾甲和吐酸独立外形，不占人口",
+      "pass": true,
+      "data": {
+        "first": 18,
+        "lanes": [
+          1,
+          0,
+          -1
+        ],
+        "styles": [
+          "guard",
+          "spitter"
+        ],
+        "next": 18,
+        "pop": 0,
+        "wild": 6
+      }
+    },
+    {
+      "name": "不同兵种实际减伤/射程/攻城/治疗特性，付费兵也不再复用主角",
+      "pass": true,
+      "data": {
+        "guardDamage": 8,
+        "spitterDamage": 10,
+        "siege": true,
+        "healer": true,
+        "paid": [
+          {
+            "prof": "gunner",
+            "style": "gunner",
+            "side": 0
+          },
+          {
+            "prof": "gunner",
+            "style": "gunner",
+            "side": 0
+          },
+          {
+            "prof": "assault",
+            "style": "assault",
+            "side": 0
+          },
+          {
+            "prof": "assault",
+            "style": "assault",
+            "side": 0
+          },
+          {
+            "prof": "medic",
+            "style": "medic",
+            "side": 0
+          },
+          {
+            "prof": "gunner",
+            "style": "gunner",
+            "side": 0
+          }
+        ],
+        "heroCustom": false
+      }
+    },
+    {
+      "name": "野怪索敌、越界回巢回血、击杀收益、能量实效及80秒重生",
+      "pass": true,
+      "data": {
+        "hurt": true,
+        "chase": "chase",
+        "returned": true,
+        "reward": 70,
+        "energy": true,
+        "regen": 44,
+        "cd": 3.9000000000000004,
+        "tooEarly": true,
+        "respawn": true,
+        "xpGained": true
+      }
+    },
+    {
+      "name": "狂怒与团队推进实际伤害、快照中立单位/计时、死亡清个人增益并保留等级",
+      "pass": true,
+      "data": {
+        "damage": 9.567999999999998,
+        "expected": 9.568,
+        "team": true,
+        "bossGold": 120,
+        "boosted": 10,
+        "expectedUnit": 10,
+        "cleared": true,
+        "levelAfter": 3,
+        "level": 3,
+        "hasNeutrals": true,
+        "timers": 8,
+        "expired": true
+      }
+    },
+    {
+      "name": "攻城兵真实弹丸命中外塔，治疗兵实际恢复友军",
+      "pass": true,
+      "data": {
+        "towerDamage": 93,
+        "healed": true
+      }
+    },
+    {
+      "name": "实际Z键遍历上中下三路与轮换",
+      "pass": true,
+      "data": [
+        "mid",
+        "right",
+        "alt",
+        "left"
+      ]
+    },
+    {
+      "name": "4对4真实移动转镜头帧时间",
+      "pass": true,
+      "data": {
+        "frames": 1019,
+        "fps": 169.83333333333337,
+        "p95": 6,
+        "longFrames": 0,
+        "units": 30,
+        "draws": 37,
+        "triangles": 48290
+      }
+    },
+    {
+      "name": "实际触屏中路按钮可切换派兵路线",
+      "pass": true
+    },
+    {
+      "name": "手机横竖视口、真实派兵面板和双向操作模式切换",
+      "pass": true,
+      "data": {
+        "desktop": true,
+        "touch": true,
+        "same": true
+      }
+    },
+    {
+      "name": "本次浏览器无脚本异常",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "手机为浏览器模拟",
+    "规则边界使用QA定位/时钟，不冒称真人整局验收"
+  ]
+}

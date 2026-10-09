@@ -1,0 +1,67 @@
+{
+  "game": "jackal-stage1-3d",
+  "version": "v0.10.3-menu-text1",
+  "id": 39863936092160,
+  "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+  "slug": "feidao-jackal-3d",
+  "title": "赤色要塞 3D",
+  "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-today-sync-20261009\\toolbasecamp\\game-projects\\jackal-stage1-3d\\dist\\toy-v0.10.3-menu-text1\\package",
+  "upload": "C:\\Users\\37818\\.codex\\worktrees\\toy-today-sync-20261009\\toolbasecamp\\game-projects\\jackal-stage1-3d\\dist\\toy-v0.10.3-menu-text1\\package",
+  "package_sha256": "eb9e124e29fcd004f94e12a5aaf5d6a44eaa939372ac1ff3027b56d645a2e070",
+  "files": {
+    "css/style.css": "ac02c8085b27fd4b453b1f0368e38a0401b0d2d8b2cae0e316f3761dec440ad2",
+    "index.html": "7ec646214078f289f672a36f8c7649c4085b5561780a3d9be468c236b136c573",
+    "js/game.min.js": "0de0f9bc521a17a147704adbc756b765a1919cac36552c8092ffc489cbb8a36c",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+    "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+    "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+  },
+  "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+  "status": "auditing",
+  "authorization": {
+    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+    "at": "2026-10-09T15:48:29.546449+08:00"
+  },
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_4MjqN9a0/index.html"
+  },
+  "preview_at": "2026-10-09T15:49:40.321277+08:00",
+  "preview_content_url": "https://www.bilibilitoy.com/toy/preview/preview_4MjqN9a0/index.html?test=1&qa=1",
+  "preview_qa": "passed",
+  "submit": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_YjjbUeIH/index.html"
+  },
+  "submit_at": "2026-10-09T15:53:41.052296+08:00",
+  "submitted_at": "2026-10-09T15:53:41.052296+08:00",
+  "status_readback": {
+    "id": 39863936092160,
+    "title": "赤色要塞 3D",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-jackal-3d/poster_21706.png",
+    "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-jackal-3d/icon_21706_upload",
+    "watermark_enabled": false,
+    "ctime": 1791022032,
+    "mtime": 1791532512
+  },
+  "preserved_package": "D:\\project\\task-artifacts\\toy-today-sync-20261009\\packages\\jackal-stage1-3d",
+  "public_content_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v24037/index.html?test=1&qa=1",
+  "public_asset_hashes_verified": [
+    "css/style.css",
+    "js/game.min.js"
+  ],
+  "public_qa": "passed",
+  "review_status": "published",
+  "public_verified": true,
+  "recorded_at": "2026-10-09T16:00:04.593272+08:00"
+}

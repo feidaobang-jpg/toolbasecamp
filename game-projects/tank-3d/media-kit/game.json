@@ -33,17 +33,17 @@
     "preview_url": "https://www.bilibili.com/toy/preview/preview_3PQWkFb5/index.html",
     "verified_at": "2026-10-08T02:49:45.078750+00:00",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_I0Gossrs/index.html",
-    "submitted_version": "remix-entry1",
-    "submitted_at": "2026-10-08T02:38:01+00:00",
+    "submitted_version": "remix-entry1-menu-text1",
+    "submitted_at": "2026-10-09T15:53:29.770547+08:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/remix-entry1/handoff.json",
-    "published_version": "remix-entry1",
+    "release_record": "releases/toy-sync-20261009/sync.json",
+    "published_version": "remix-entry1-menu-text1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "note": "remix-entry1 已发布并核验魔改推荐入口，保留既有模式选择和经典35关。手机为桌面浏览器模拟，未做真机验收。",
-    "package_sha256": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
+    "package_sha256": "0185aebff4b162dfcddc672943932c720bffc01833881fcbe990c3b44eb24593",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -131,18 +131,25 @@
     "published_verified_at": "2026-10-07T21:56:53+08:00",
     "status": "published",
     "package_hash": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23567/index.html",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_I0Gossrs/index.html",
-    "last_published_version": "remix-entry1",
-    "last_successful_sync_version": "remix-entry1",
-    "last_successful_sync_at": "2026-10-08T02:49:45.078750+00:00",
-    "public_verified_at": "2026-10-08T02:49:45.078750+00:00",
-    "public_runtime_evidence": "预览开始、开炮、暂停、双向操作切换、经典选择与刷新保存、手机横竖屏；正式入口魔改推荐与经典按钮已公开核验",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v24035/index.html?test=1&qa=1",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_eN0ZNFKW/index.html",
+    "last_published_version": "remix-entry1-menu-text1",
+    "last_successful_sync_version": "remix-entry1-menu-text1",
+    "last_successful_sync_at": "2026-10-09T16:00:04.578669+08:00",
+    "public_verified_at": "2026-10-09T16:00:04.578669+08:00",
+    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
     "version": "remix-entry1",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
-    "public_verified_version": "remix-entry1",
+    "public_verified_version": "remix-entry1-menu-text1",
     "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。"
+    "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。",
+    "title": "坦克大战 3D",
+    "current_public_verification": "verified",
+    "channel_authorization": {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "at": "2026-10-09T15:48:29.454287+08:00"
+    }
   },
   "merged_from": {
     "game": "tank-battle",
@@ -282,5 +289,26 @@
     "classification": "routine",
     "website_status": "public_verified",
     "platform_status": "pending_22_batch"
+  },
+  "channel_holds": {
+    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+    "since": "2026-10-09T16:00:04.578669+08:00",
+    "targets": [
+      "taptap",
+      "other_game_platforms",
+      "existing_video_descriptions",
+      "announcements"
+    ],
+    "status": "held_by_user"
+  },
+  "website": {
+    "status": "public_verified",
+    "version": "remix-entry1-menu-text1",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+    "verified_at": "2026-10-09T15:47:30.230676+08:00",
+    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+    "runtime_sha256": "2a3dcf73f25961955204353cfe8d288483de7d83087755f80aebfcf4c9666770",
+    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
   }
 }

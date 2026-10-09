@@ -37,12 +37,12 @@
     "title": "虫潮围城",
     "zip_sha256": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
     "submitted_date": "2026-10-08",
-    "release_record": "releases/web-shop-scroll-v0.29.2/toy-release.json",
-    "submitted_version": "web-shop-scroll-v0.29.2",
-    "published_version": "web-shop-scroll-v0.29.2",
+    "release_record": "releases/toy-sync-20261009/sync.json",
+    "submitted_version": "web-three-lanes-v0.31.0",
+    "published_version": "web-three-lanes-v0.31.0",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_l0jtub7g/index.html",
     "note": "联机商店刷新保持卡片/滚动，商店和建造上下翻页；电脑与竖屏公开入口可选激光和等离子，实际触摸购买/扣费在同包本地模拟通过",
-    "package_sha256": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
+    "package_sha256": "9e131f6d7aeed246d3d718fd94464c5e997f9171484d8db2d2fe1b3a4405012f",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -93,14 +93,25 @@
     "status": "published",
     "package_hash": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
     "submission_time_note": "本版本精确提交时间未单独保存；状态、包哈希与公开核验见发布记录。",
-    "submitted_at": null,
-    "public_verified_at": "2026-10-08T13:15:54.717982+00:00",
-    "public_runtime_evidence": "releases/web-shop-scroll-v0.29.2/toy-release.json",
+    "submitted_at": "2026-10-09T15:55:44.793236+08:00",
+    "public_verified_at": "2026-10-09T16:00:04.613032+08:00",
+    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
     "version": "web-shop-scroll-v0.29.2",
     "published_at": null,
     "publication_time_note": "精确提交与过审时间未单独记录；确认published并在2026-10-08T11:44:17.464493+00:00核验公开入口",
-    "last_published_version": "web-shop-scroll-v0.29.2",
-    "last_submitted_version": "web-shop-scroll-v0.29.2"
+    "last_published_version": "web-three-lanes-v0.31.0",
+    "last_submitted_version": "web-shop-scroll-v0.29.2",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_oQPZMUQL/index.html",
+    "current_public_verification": "verified",
+    "channel_authorization": {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "at": "2026-10-09T15:48:29.659833+08:00"
+    },
+    "last_successful_sync_version": "web-three-lanes-v0.31.0",
+    "last_successful_sync_at": "2026-10-09T16:00:04.613032+08:00",
+    "public_verified_version": "web-three-lanes-v0.31.0",
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-shop-scroll-v0.29.2",
@@ -819,7 +830,7 @@
   "website": {
     "status": "public_verified",
     "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-    "verified_at": "2026-10-09T05:14:27.175293+00:00",
+    "verified_at": "2026-10-09T15:47:30.230676+08:00",
     "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
     "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
     "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
@@ -829,7 +840,10 @@
       "qa/public-rv/results.json"
     ],
     "public_checks": 29,
-    "physical_phone": false
+    "physical_phone": false,
+    "version": "web-three-lanes-v0.31.0",
+    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -838,5 +852,17 @@
     "single_player": true,
     "zombie_count": 36,
     "infection_zones": 6
+  },
+  "channel_holds": {
+    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+    "since": "2026-10-09T16:00:04.613032+08:00",
+    "targets": [
+      "taptap",
+      "other_game_platforms",
+      "existing_video_descriptions",
+      "announcements"
+    ],
+    "status": "held_by_user"
   }
 }

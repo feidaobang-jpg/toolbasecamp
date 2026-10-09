@@ -26,11 +26,11 @@
     "video_bindings": [
       "BV1guep6NELt"
     ],
-    "submitted_version": "v2.5.0",
-    "submitted_at": "2026-10-07T01:27:40.000Z",
+    "submitted_version": "v2.5.0-menu-text1",
+    "submitted_at": "2026-10-09T15:53:36.437561+08:00",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
-    "release_record": "releases/v2.5.0/handoff.json",
-    "published_version": "v2.5.0",
+    "release_record": "releases/toy-sync-20261009/sync.json",
+    "published_version": "v2.5.0-menu-text1",
     "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
     "note": "网站与Toy均已上线1-3；同一40文件包提交前哈希复核，公开8个JS/CSS文件哈希一致，HTML只含平台已观察到的脚本注入，公开22项操作布局检查通过。",
@@ -106,18 +106,27 @@
         "package_sha256": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61"
       }
     ],
-    "package_sha256": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61",
+    "package_sha256": "e1c20475f5d6493924aa7e273d276fdb83e12c2d500fce123ba4ee4dea5b1cdf",
     "published_verified_at": "2026-10-07T01:40:46.831Z",
     "status": "published",
     "package_hash": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23241/index.html",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v24036/index.html?test=1&qa=1",
     "version": "v2.5.0",
-    "public_verified_version": "v2.5.0",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
-    "last_published_version": "v2.5.0",
-    "last_successful_sync_version": "v2.5.0",
-    "last_successful_sync_at": "2026-10-07T01:40:46.831Z",
-    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_4Fc9TxBU/index.html"
+    "public_verified_version": "v2.5.0-menu-text1",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_sH2ZVclt/index.html",
+    "last_published_version": "v2.5.0-menu-text1",
+    "last_successful_sync_version": "v2.5.0-menu-text1",
+    "last_successful_sync_at": "2026-10-09T16:00:04.587915+08:00",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_4Fc9TxBU/index.html",
+    "title": "超级玛丽 3D：1-1 至 1-3",
+    "current_public_verification": "verified",
+    "channel_authorization": {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "at": "2026-10-09T15:48:29.505007+08:00"
+    },
+    "public_verified_at": "2026-10-09T16:00:04.587915+08:00",
+    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。"
   },
   "notes": "粉丝向非官方重制：原作 1-1、1-2、1-3 地图与自然色哑光低模；BGM/常用音效原版录音优先、合成回退。",
   "drag_camera_controls": {
@@ -195,14 +204,17 @@
     }
   ],
   "website": {
-    "status": "deployed_verified",
-    "version": "v2.5.0",
+    "status": "public_verified",
+    "version": "v2.5.0-menu-text1",
     "commit": "47352b283a366abdeb8f20e399c160bb681eb581",
-    "verified_at": "2026-10-07T01:21:36.302Z",
-    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-3",
+    "verified_at": "2026-10-09T15:47:30.230676+08:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
     "record": "releases/v2.5.0/website.json",
     "actions_run": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/37556642893",
-    "runtime_qa": "releases/v2.5.0/qa/website-play-results.json"
+    "runtime_qa": "releases/v2.5.0/qa/website-play-results.json",
+    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+    "runtime_sha256": "8bde57043ff8adc8d8bc84482a6376698c8b42011415c7a02d56a53fdfd90eee",
+    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
   },
   "pending_channel_changes": [
     {
@@ -285,5 +297,17 @@
     "classification": "routine",
     "website_status": "public_verified",
     "platform_status": "pending_22_batch"
+  },
+  "channel_holds": {
+    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+    "since": "2026-10-09T16:00:04.587915+08:00",
+    "targets": [
+      "taptap",
+      "other_game_platforms",
+      "existing_video_descriptions",
+      "announcements"
+    ],
+    "status": "held_by_user"
   }
 }

@@ -1,0 +1,163 @@
+{
+  "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+  "verified_at": "2026-10-09T15:47:30.230676+08:00",
+  "checks": [
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/css/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/css/style.css",
+      "sha256": "656f2ce3459aa166dfd0c4b89d47b2c2a6beee72928bcd9691ba4270428fc5ac",
+      "ok": true,
+      "bytes": 25827
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+      "sha256": "15290516b49d9dc9335e90291c5b0bc1dc0da112257bdaa18e520607d37319e0",
+      "ok": true,
+      "bytes": 13245,
+      "normalized_match": true,
+      "normalization": "Only resource ?v= cache parameters"
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/js/game.min.js",
+      "sha256": "b0f6e73953e9bea08e2e920ecfb52395806218bb77a4cdfeb8593feaf2aac665",
+      "ok": true,
+      "bytes": 837430
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/boss3.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/boss3.mp3",
+      "sha256": "7775e9ad043afa75849abff68d2e8ee8c35344d63d5a17341779035b81821b47",
+      "ok": true,
+      "bytes": 1471630
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/road-drive.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/road-drive.mp3",
+      "sha256": "570cc8e1a2843c5a2e2710de9125728978b0d6ae2a576d35d5642d73dc45a8dd",
+      "ok": true,
+      "bytes": 1024321
+    },
+    {
+      "file": "public/html/game/cadillacs-stage1-3d/sounds/road-walk.mp3",
+      "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/sounds/road-walk.mp3",
+      "sha256": "85d6433a1cda8c5dbd47a7cfa2e9284e7bb399fda0b3fdd65bb4995d3d9e5ae2",
+      "ok": true,
+      "bytes": 1599535
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
+      "sha256": "5c55b0473dc19f960aab0147693da0ecb66e754ebcb7b8f704814503c43f1381",
+      "ok": true,
+      "bytes": 10409,
+      "normalized_match": true,
+      "normalization": "Only resource ?v= cache parameters"
+    },
+    {
+      "file": "public/html/game/jackal-stage1-3d/js/game.min.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/js/game.min.js",
+      "sha256": "0de0f9bc521a17a147704adbc756b765a1919cac36552c8092ffc489cbb8a36c",
+      "ok": true,
+      "bytes": 692023
+    },
+    {
+      "file": "public/html/game/mario-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+      "sha256": "ebb1e06ae32f01e780deaccf29132b30790541f64f3f986ffda1575fcd532f55",
+      "ok": true,
+      "bytes": 8127,
+      "normalized_match": true,
+      "normalization": "Only resource ?v= cache parameters"
+    },
+    {
+      "file": "public/html/game/mario-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js",
+      "sha256": "8bde57043ff8adc8d8bc84482a6376698c8b42011415c7a02d56a53fdfd90eee",
+      "ok": true,
+      "bytes": 39086
+    },
+    {
+      "file": "public/html/game/starship-defense/game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+      "sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+      "ok": true,
+      "bytes": 1111112
+    },
+    {
+      "file": "public/html/game/starship-defense/game.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js",
+      "sha256": "bdcb8ef4ee552ab3545224ea82aa779a4e928a16f347facd2e7c79f0f683a091",
+      "ok": true,
+      "bytes": 322482
+    },
+    {
+      "file": "public/html/game/starship-defense/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "sha256": "8c54abcbf3e96b25e9183bee4146384e1b57111405cc8a3c28c6a3a8d5bf8010",
+      "ok": true,
+      "bytes": 56791,
+      "normalized_match": true,
+      "normalization": "Ignore deployment-generated resource cache query only"
+    },
+    {
+      "file": "public/html/game/starship-defense/rv-breakout.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/rv-breakout.js",
+      "sha256": "6c9ea7139e05e6411deefb618028320cd7173df31736ffcaca553df50ab5c1f4",
+      "ok": true,
+      "bytes": 26300
+    },
+    {
+      "file": "public/html/game/starship-defense/rv-town.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/rv-town.js",
+      "sha256": "9e3f3b9f80781bd9d5fa3f8b15eef341dc57de86fd527e2004baf36107820787",
+      "ok": true,
+      "bytes": 9175
+    },
+    {
+      "file": "public/html/game/starship-defense/versus-creatures.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/versus-creatures.js",
+      "sha256": "333f134ad0a764f6aae6eb2a547114601e6bca0a14597cf3b00a28abebf8471f",
+      "ok": true,
+      "bytes": 4589
+    },
+    {
+      "file": "public/html/game/starship-defense/versus.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/versus.js",
+      "sha256": "b9dbf6e14db7c986961a8732f0dfcab745cf6cbea973fa22724fa8778124f930",
+      "ok": true,
+      "bytes": 96745
+    },
+    {
+      "file": "public/html/game/tank-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+      "sha256": "1f99fac60c70f4d961f3eff5a1f18434da138082c4a2ac2ef70c97e6f00a4b6a",
+      "ok": true,
+      "bytes": 12561,
+      "normalized_match": true,
+      "normalization": "Only resource ?v= cache parameters"
+    },
+    {
+      "file": "public/html/game/tank-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js",
+      "sha256": "2a3dcf73f25961955204353cfe8d288483de7d83087755f80aebfcf4c9666770",
+      "ok": true,
+      "bytes": 69081
+    },
+    {
+      "file": "public/html/game/tank-3d/style.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/style.css",
+      "sha256": "6b01dc1c8e97a655325463b2319e3dde23ed3b1eac9ca0952c743f3e0031b8ee",
+      "ok": true,
+      "bytes": 22901
+    },
+    {
+      "file": "public/js/game/drag-look.js",
+      "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js",
+      "sha256": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f",
+      "ok": true,
+      "bytes": 9324
+    }
+  ]
+}
