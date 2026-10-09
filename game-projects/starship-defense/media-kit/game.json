@@ -9,15 +9,16 @@
   "development_model": "Claude Opus 5.5（虫潮对战模式）",
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_l0jtub7g/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
   "qa": "releases/web-versus-scroll-v0.31.1/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-three-lanes-v0.31.0",
-      "status": "pending_22_batch",
-      "record": "releases/web-three-lanes-v0.31.0/release-status.json"
+      "status": "included",
+      "record": "releases/web-three-lanes-v0.31.0/release-status.json",
+      "included_version": "web-versus-scroll-v0.31.1"
     }
   ],
   "toy": {
@@ -26,23 +27,23 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-08T13:15:54.717982+00:00",
+    "verified_at": "2026-10-09T09:41:12.115005+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
       "BV1C5HQ6gEvD"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_8DGEF0ZA/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_3rvmzYby/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
+    "zip_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
     "submitted_date": "2026-10-08",
-    "release_record": "releases/toy-sync-20261009/sync.json",
-    "submitted_version": "web-three-lanes-v0.31.0",
-    "published_version": "web-three-lanes-v0.31.0",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_l0jtub7g/index.html",
-    "note": "联机商店刷新保持卡片/滚动，商店和建造上下翻页；电脑与竖屏公开入口可选激光和等离子，实际触摸购买/扣费在同包本地模拟通过",
-    "package_sha256": "9e131f6d7aeed246d3d718fd94464c5e997f9171484d8db2d2fe1b3a4405012f",
+    "release_record": "releases/web-versus-scroll-v0.31.1/toy-sync.json",
+    "submitted_version": "web-versus-scroll-v0.31.1",
+    "published_version": "web-versus-scroll-v0.31.1",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+    "note": "对战建造/买枪高度自适应、独立触摸滚动和上下翻阅；同包6视口预览、3视口公开入口实际选择/建造/购买扣费通过，非真机。",
+    "package_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -111,7 +112,8 @@
     "last_successful_sync_version": "web-three-lanes-v0.31.0",
     "last_successful_sync_at": "2026-10-09T16:00:04.613032+08:00",
     "public_verified_version": "web-three-lanes-v0.31.0",
-    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html"
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html",
+    "source_commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-shop-scroll-v0.29.2",

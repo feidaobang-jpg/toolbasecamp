@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "item_id": "chongchao-versus-scroll-v0311-01",
+  "game_slug": "starship-defense",
+  "project_path": "game-projects/starship-defense",
+  "task_id": "01a11fec-124d-7000-8529-326264d746d5-01",
+  "source": "Codex",
+  "branch": "codex/chongchao-versus-scroll-20261009",
+  "worktree": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-versus-scroll-20261009\\toolbasecamp",
+  "version": "web-versus-scroll-v0.31.1",
+  "classification": "routine",
+  "release_kind": "emergency_patch",
+  "source_commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240",
+  "runtime_sha256": "5167749e30f537e2d0108033c88b145d1a2207e85af4491988a81bf67e38c00f",
+  "summary": "修复对战建造/买枪面板高度和触摸滚动，物品区独立滚动、固定分类与关闭、上下翻阅、底排物品购买可达。",
+  "release_record": "game-projects/starship-defense/media-kit/releases/web-versus-scroll-v0.31.1/release-status.json",
+  "tests": {
+    "status": "passed",
+    "website_4v4_viewports": 7,
+    "local_viewports": 7,
+    "physical_phone": false,
+    "toy_preview_4v4_viewports": 6,
+    "toy_public_4v4_viewports": 3
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate",
+    "evidence": "本轮用户要求紧急修复，toy也要更新"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T09:32:38.327019+00:00",
+    "evidence": [
+      "website-assets.json",
+      "qa/website/results.json",
+      "qa/website-final/results.json"
+    ]
+  },
+  "automatic_batch_eligible": true,
+  "channels": {
+    "toy": {
+      "status": "public_verified",
+      "id": "38678478981120",
+      "package_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_3rvmzYby/index.html",
+      "submitted_at": "2026-10-09T09:35:41.761585+00:00",
+      "timing": "immediate_by_user_request",
+      "public_verification": "passed",
+      "public_verified_at": "2026-10-09T09:41:12.115005+00:00",
+      "public_qa": "qa/toy-public/results.json"
+    },
+    "taptap": {
+      "status": "pending_22_batch",
+      "id": "962354"
+    },
+    "bilibili": {
+      "status": "pending_22_batch",
+      "summary": "对战建造与买枪物品列表可滑动并支持上下翻阅，底部物品可查看购买。"
+    },
+    "feedback_replies": {
+      "status": "not_applicable",
+      "reason": "用户本人在本聊天报告，无外部原楼"
+    }
+  },
+  "next_step": "网站和Toy已公开核验；TapTap、既有视频说明及适用公告进入现有22点b-2批次，不重发相同Toy包。",
+  "updated_at": "2026-10-09T09:41:12.115005+00:00"
+}

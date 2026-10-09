@@ -47,6 +47,13 @@ async function metrics(f){return f.evaluate(()=>{
    const mobile=width!==1280,ctx=await b.newContext({viewport:{width,height},hasTouch:mobile,isMobile:mobile,userAgent:mobile?ua:undefined,
      recordVideo:width===390&&height===844?{dir:path.join(out,'video'),size:{width,height}}:undefined});
    const p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));const f=await gameFrame(p);
+   if(process.env.PACKAGE_MANIFEST){
+    const expected=JSON.parse(fs.readFileSync(process.env.PACKAGE_MANIFEST,'utf8')).files;
+    const hashes=await f.evaluate(async names=>{
+      const pairs=await Promise.all(names.map(async n=>{const r=await fetch('./'+n);if(!r.ok)throw new Error(n+' '+r.status);const b=await r.arrayBuffer(),h=await crypto.subtle.digest('SHA-256',b);return [n,[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')];}));return Object.fromEntries(pairs);
+    },Object.keys(expected).filter(n=>n!=='index.html'&&!n.endsWith('.txt')));
+    for(const [name,hash] of Object.entries(hashes))assert.equal(hash,expected[name],'published package hash '+name);
+   }
    await f.locator('#btnVersus')[mobile?'tap':'click']();await f.locator('[data-vs-size="'+teamSize+'"]')[mobile?'tap':'click']();await f.locator('[data-vs-ai="easy"]')[mobile?'tap':'click']();
    await f.waitForFunction(()=>__gameQA.versus.state.active);
    // Test-funded seat in preparation, so wave units do not block the placement check.
@@ -60,7 +67,7 @@ async function metrics(f){return f.evaluate(()=>{
     assert.deepEqual(m.clipped,[],'item descriptions and purchase states are not clipped');
     assert.equal(m.action,'pan-x pan-y','card descendants allow both transformed axes');
     if(m.total>m.height+2){
-      if(mobile){await swipe(p,f);assert.ok((await metrics(f)).top>m.top+5,'real swipe scrolls '+tab);}
+      if(mobile){await swipe(p,f);const after=await metrics(f);assert.ok(after.top>m.top+Math.min(5,(m.total-m.height)/2),'real swipe scrolls '+tab+': '+JSON.stringify({before:m,after}));}
       else{const r=await f.locator('#vsGrid').boundingBox();await p.mouse.move(r.x+r.width/2,r.y+r.height/2);await p.mouse.wheel(0,200);await sleep(150);assert.ok((await metrics(f)).top>0);}
       // Live economy updates must not reset the scroll or replace the touched card.
       const before=await f.evaluate(()=>{window.__scrollCard=document.getElementById('vsGrid').lastElementChild;return document.getElementById('vsGrid').scrollTop;});
@@ -91,7 +98,7 @@ async function metrics(f){return f.evaluate(()=>{
     tabs.push({tab,...m});
    }
    await f.locator('#vsClose')[mobile?'tap':'click']();assert.ok(await f.locator('#vsPanel').evaluate(el=>el.classList.contains('hidden')));
-   assert.deepEqual(errors,[]);results.push({width,height,tabs,ok:true});console.log('PASS',width+'x'+height,'swipe/paging/lower building/plasma purchase/close');await ctx.close();
+   assert.deepEqual(errors,[]);results.push({width,height,content_url:f.url(),tabs,ok:true});console.log('PASS',width+'x'+height,'swipe/paging/lower building/plasma purchase/close');await ctx.close();
   }
  }finally{await b.close();fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({url,at:new Date().toISOString(),results},null,2));}
 })().catch(e=>{console.error(e);process.exitCode=1;});
