@@ -4587,7 +4587,7 @@ function versusCards(){
 }
 function renderVersusPanel(rebuild=false){
   if(!vsOn())return;const s=mySeat(),cards=versusCards();if(!s)return;
-  document.querySelectorAll('[data-vstab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.vstab===vsUI.tab?'true':'false'));
+  document.querySelectorAll('[data-vstab]').forEach(b=>{const id=b.dataset.vstab;b.setAttribute('aria-selected',id===vsUI.tab?'true':'false');b.textContent=({units:'兵种',build:'部署',weapons:'装备',team:'战况'})[id]+(isTouch?'':({units:'',build:' L',weapons:' O',team:' T'})[id]);});
   document.querySelectorAll('[data-vslane]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.vslane===s.order?'true':'false'));
   $('vsPanelEco').textContent=versus.kits[s.kit].name+' · 100生命 · 弹匣打空自动换弹，备用弹药无限 · '+(isTouch?'点卡片选择':'数字键选择 / Tab切换 / Enter确认');
   const grid=$('vsGrid'),sig=vsUI.tab+':'+cards.map(c=>c.name).join('|');

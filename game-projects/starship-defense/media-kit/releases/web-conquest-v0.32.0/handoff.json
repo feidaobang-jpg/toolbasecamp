@@ -9,9 +9,9 @@
   "artifact_root": "D:/project/toolbasecamp-artifacts/chongchao-conquest-20261009",
   "build": {
     "id": "conquest0320",
-    "commit": null,
+    "commit": "5c03aeeb742cbdc9daa0b9e24ecc030f9e136a02",
     "base_commit": "2d05005a952394e3bc95f31eb2cd77bcac858ae0",
-    "dirty": true,
+    "dirty": false,
     "fingerprint": "7e0f49833ff1f418a5473b6011724ab2a50e1e6163184ef8a9a64ff34898a3d0",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -222,7 +222,14 @@
     "package": "qa/package-smoke.json",
     "physical_phone": false,
     "human_balance": false,
-    "status": "passed"
+    "status": "passed",
+    "additional": [
+      "qa/keyboard.json",
+      "qa/touch-final.json",
+      "qa/vehicle-respawn.json"
+    ],
+    "local_assertion_groups": 10,
+    "online_assertion_groups": 7
   },
   "readiness": {
     "overview": "partial",
