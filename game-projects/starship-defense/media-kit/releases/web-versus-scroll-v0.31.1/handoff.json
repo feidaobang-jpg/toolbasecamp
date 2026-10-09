@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-versus-scroll-v0.31.1",
+  "base_version": "web-three-lanes-v0.31.0",
+  "created_at": "2026-10-09T09:21:01.550814+00:00",
+  "classification": "routine",
+  "release_kind": "emergency_patch",
+  "build": {
+    "id": "versus-scroll0311-4d2a51f4d579",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "4d2a51f4d5797f5d01822d73c8cd0e4d8e48c40263d64539a4f5afb9395c292d",
+    "files": {
+      "index.html": "c03e77becf35c526dde1c3e5235ed5bec55cc5449a91fd350423f507ca587743",
+      "game.compat.js": "4d2a51f4d5797f5d01822d73c8cd0e4d8e48c40263d64539a4f5afb9395c292d"
+    },
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "versus-panel-scroll",
+      "before": "触屏面板高度仅46%，物品子元素禁止滚动，底部建造及买枪卡片不可达。",
+      "after": "面板适应可用高度、物品区独立滚动、分类及关闭固定、上下翻阅按钮，横竖触摸轴均可滚动。",
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "versus-bottom-items-unreachable",
+      "status": "fixed",
+      "cause": "触屏高度限制、全局touch-action:none作用于卡片子元素及旋转轴限制",
+      "retest": "7种视口触摸/翻页、底排建造放置和购买扣费通过"
+    }
+  ],
+  "qa": {
+    "method": "Chromium real touch dispatch and taps, funded qa seat",
+    "physical_phone": false,
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        844,
+        346
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        346,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        260
+      ]
+    ],
+    "results": "qa/local/results.json",
+    "three_lanes": "qa/three-lanes/results.json",
+    "tests": "passed"
+  },
+  "media": [
+    {
+      "id": "1280x720-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/1280x720-build.png",
+      "sha256": "af0d7d7c8b6e6349287fce66a9bfab4a9cef0404de7fdd7bfb4c4d69b23e0eb6",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "1280x720-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/1280x720-weapons.png",
+      "sha256": "bba41425025633a879fedb93b887bd04c09ca5d7458296ea9e292d7f878dffa4",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "320x568-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/320x568-build.png",
+      "sha256": "d907042694b6e9b9180b29aacefa765a13a519970d2654c88b3d48b6f027644c",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "320x568-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/320x568-weapons.png",
+      "sha256": "1bc5cfd546465a54f43b02c2410c4b5ba070ec18e7aa498f6c373bc681e0a58a",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "346x844-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/346x844-build.png",
+      "sha256": "b14404e69d2e5776a7b38515a9866067b2e197d3bfdaf4ab9c572b255fb646e1",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "346x844-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/346x844-weapons.png",
+      "sha256": "f457640f23d1b276cbea6172b5f82a39fe81d700cc290bd6a79e18f3eb1d6569",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "390x844-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/390x844-build.png",
+      "sha256": "79b885c0b8284a6aed24a1e4d35fb33686d2766397a1ee9f8d8fad52ca817040",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "390x844-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/390x844-weapons.png",
+      "sha256": "c2d3a79f016da717f1070053a32830307204aed10ae363a6b045deed994abcf9",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x260-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/844x260-build.png",
+      "sha256": "c30ab3889d260b67deb414d9a266ce5bec8318a73c8012c6db6434db285be45f",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x260-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/844x260-weapons.png",
+      "sha256": "1f170e181b4b32300edbc7ef3e4559bd29c35a594ecde079317236c6cb33c391",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x346-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/844x346-build.png",
+      "sha256": "8a76d36c9e02f7ce718d25f5ced0ab21045f69df1d89dd71d86f58aae4a03f5a",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x346-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/844x346-weapons.png",
+      "sha256": "619349713059e102320f0cf85e26bd0df7886c3aa4231938e4e1d256cbf3bc73",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x390-build",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/844x390-build.png",
+      "sha256": "1beb36fd04c7b68d98f768cbfb8dbddde238bcb098a29b355bc71eee4cc66c24",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x390-weapons",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/844x390-weapons.png",
+      "sha256": "ef392001af9ed5ee0279617eea063aef425fb4d9ff22a138ba40113629ca5528",
+      "kind": "screenshot",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "portrait-panel-demo",
+      "file": "releases/web-versus-scroll-v0.31.1/qa/local/video/page@61628b27bbad6b565129c3b537fd6bd1.webm",
+      "sha256": "67c982b3ec091ae93035d3943543ab5110d9c1ddfe6b1913effd975abd1bc70c",
+      "kind": "video",
+      "version": "web-versus-scroll-v0.31.1",
+      "build_id": "versus-scroll0311-4d2a51f4d579",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "not-run"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "overview": "not_applicable",
+    "gaps": [
+      "无物理手机验收；仅本次局部修复证据，不重录完整游戏"
+    ]
+  },
+  "cover": {
+    "decision": "reuse",
+    "reason": "仅面板交互修复，游戏场景和画风不变"
+  },
+  "authorization": {
+    "website": "immediate after tests per 2026-10-09 latest policy",
+    "toy": "用户本轮要求紧急修复，toy也要更新",
+    "other_channels": "existing 22:00 b-2 batch"
+  },
+  "website": {
+    "status": "pending_deploy"
+  },
+  "toy": {
+    "id": "38678478981120",
+    "status": "pending"
+  },
+  "channels": {
+    "taptap": "pending_22_batch",
+    "existing_video_descriptions": "pending_22_batch"
+  }
+}
