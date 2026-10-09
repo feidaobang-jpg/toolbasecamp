@@ -1,9 +1,10 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-07T08:06:53Z */
+/** generated_at: 2026-10-09T08:26:28Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
       { title: "Mosswing", url: "https://mosswing-quiet-flight.jack-514.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/mosswing/gameplay.jpg", external: true },
+      { title: "Miami Flap", url: "https://miami-flap-neon.europeaningredients.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/miami-flap/gameplay.png", external: true },
       { title: "HOLLOWMARK", url: "https://hollowmark.mindblown.ai/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/hollowmark/gameplay.jpg", external: true },
       { title: "Canyon Overdrive", url: "https://canyonoverdrive.ai-created.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/canyon-overdrive/gameplay.jpg", external: true },
       { title: "Flight 1073", url: "https://flight1073.pages.dev/play/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/flight-1073/gameplay.jpg", external: true },
@@ -192,8 +193,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-07T08:06:53Z",
-    count: 174,
+    generatedAt: "2026-10-09T08:26:28Z",
+    count: 175,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
