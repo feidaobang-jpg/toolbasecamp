@@ -79,14 +79,18 @@ export function addControlModeButtons({ containers, get, set }) {
 }
 
 // Pointer events queue intent; the game clock consumes it at a bounded speed.
-export function createLookController({ turn, firstPerson = () => false }) {
+export function createLookController({ turn, firstPerson = () => false, sensitivity = .5,
+  response = 12, maxPending = Math.PI / 6, firstPersonSpeed = Math.PI / 3, thirdPersonSpeed = Math.PI / 2 }) {
   let pending = 0;
   return {
-    queue(delta) { pending = Math.max(-Math.PI / 6, Math.min(Math.PI / 6, pending + delta * .5)); },
+    queue(delta) {
+      const bound = typeof maxPending === 'function' ? maxPending() : maxPending;
+      pending = Math.max(-bound, Math.min(bound, pending + delta * sensitivity));
+    },
     clear() { pending = 0; },
     step(dt, keys = 0) {
-      const limit = (firstPerson() ? Math.PI / 3 : Math.PI / 2) * Math.max(0, dt);
-      const drag = Math.max(-limit, Math.min(limit, pending * (1 - Math.exp(-12 * dt))));
+      const limit = (firstPerson() ? firstPersonSpeed : thirdPersonSpeed) * Math.max(0, dt);
+      const drag = Math.max(-limit, Math.min(limit, pending * (1 - Math.exp(-response * dt))));
       pending -= drag; if (Math.abs(pending) < .00001) pending = 0;
       const delta = Math.max(-limit, Math.min(limit, drag + keys * limit));
       if (delta) turn(delta);
@@ -96,12 +100,12 @@ export function createLookController({ turn, firstPerson = () => false }) {
   };
 }
 
-export function createPitchController({ turn }) {
+export function createPitchController({ turn, sensitivity = .5, response = 12, speed = 1, maxPending = .45 }) {
   let pending = 0;
   return {
-    queue(d) { pending = Math.max(-.45, Math.min(.45, pending + d * .5)); },
+    queue(d) { pending = Math.max(-maxPending, Math.min(maxPending, pending + d * sensitivity)); },
     clear() { pending = 0; },
-    step(dt) { const d = Math.max(-dt, Math.min(dt, pending * (1-Math.exp(-12*dt)))); pending -= d; if (Math.abs(pending)<.00001) pending=0; if(d)turn(d); }
+    step(dt) { const limit = speed * Math.max(0, dt), d = Math.max(-limit, Math.min(limit, pending * (1-Math.exp(-response*dt)))); pending -= d; if (Math.abs(pending)<.00001) pending=0; if(d)turn(d); }
   };
 }
 

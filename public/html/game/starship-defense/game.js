@@ -7,7 +7,7 @@ let rvBreakout=null,rvFrameDt=0;
 const rvOn=()=>!!rvBreakout?.state.active;
 let versus=null,lobbyMode='coop',versusBackup=null;
 function vsOn(){return !!(versus&&versus.state.active);}
-import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=controls-inset1';
+import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=camera-response0312';
 import * as THREE from './vendor/three.module.js';
 import {createLiveController} from './live-controller.js';
 const LIVE_MODE=new URLSearchParams(location.search).get('live')==='1';
@@ -243,9 +243,9 @@ const Input={
     cv.addEventListener('contextmenu',e=>e.preventDefault());
     cv.addEventListener('wheel',e=>{if(!this.isPlaying()||!CombatControls.mouseEnabled)return;e.preventDefault();this.wheel+=Math.sign(e.deltaY);},{passive:false});
     window.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!isTouch&&this.onTouchDetected)this.onTouchDetected();},true);
-    // Touch look: drag anywhere on the right side that is not a button.
+    // Blank-area look sits below the joystick, action buttons and HUD.
     const lz=$('lookZone');
-    lz.addEventListener('pointerdown',e=>{if(this.touchLook)return;e.preventDefault();lz.setPointerCapture(e.pointerId);const p=toStage(e.clientX,e.clientY);this.touchLook={id:e.pointerId,x:p.x,y:p.y};});
+    lz.addEventListener('pointerdown',e=>{if(!this.isPlaying()||this.touchLook||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();lz.setPointerCapture(e.pointerId);const p=toStage(e.clientX,e.clientY);this.touchLook={id:e.pointerId,x:p.x,y:p.y};});
     lz.addEventListener('pointermove',e=>{const t=this.touchLook;if(!t||t.id!==e.pointerId)return;const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-t.x)*.0105;this.look.pitch-=(p.y-t.y)*.0085;t.x=p.x;t.y=p.y;});
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>lz.addEventListener(t,e=>{if(this.touchLook&&this.touchLook.id===e.pointerId)this.touchLook=null;}));
     // 每个控件独立捕获指针；菜单滚动不会占用摇杆。
@@ -290,11 +290,16 @@ const Input={
   },
   reset(){
     CombatControls.reset();
-    lookControl.clear();pitchControl.clear();this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.drag=null;this.touchLook=null;this.look.yaw=this.look.pitch=0;this.wheel=0;
+    this.resetLook();this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.wheel=0;
     $('joyKnob').style.left=$('joyKnob').style.top='35px';
     // Clear ownership immediately: some webviews defer lostpointercapture until
     // after a panel closes. A stale release must not cancel the next finger.
     document.querySelectorAll('.vbtn').forEach(el=>{const id=el._pointer;el._pointer=null;if(id!=null&&el.hasPointerCapture(id))el.releasePointerCapture(id);el.classList.remove('on');});
+  },
+  resetLook(){
+    lookControl.clear();pitchControl.clear();this.look.yaw=this.look.pitch=0;
+    const mouse=this.drag,touch=this.touchLook;this.drag=null;this.touchLook=null;
+    for(const [el,p] of [[$('c3d'),mouse],[$('lookZone'),touch]])if(p&&el.hasPointerCapture(p.id))el.releasePointerCapture(p.id);
   },
   mapKey(c){
     return keyBindings.action(c);
@@ -334,12 +339,12 @@ function behindYaw(){return player.inVehicle?player.inVehicle.yaw:player.yaw;}
 function setCameraView(index,notify=true){
   camView=((index%CAMERA_VIEWS.length)+CAMERA_VIEWS.length)%CAMERA_VIEWS.length;
   if(camMode==='first')setCamMode('third',false);
-  camYaw=behindYaw();camPitch=0;camState.init=false;delete player.lookHeading;lookControl.clear();pitchControl.clear();
+  camYaw=behindYaw();camPitch=0;camState.init=false;delete player.lookHeading;Input.resetLook();
   if(notify)showMsg('视角：'+CAMERA_VIEWS[camView].name+'（C 切换视角）',1.4);
   syncViewLabels();
 }
 function setCamMode(mode,notify=true){
-  camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;lookControl.clear();pitchControl.clear();
+  camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;Input.resetLook();
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
   if(camMode==='third'&&document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
   if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
@@ -2502,9 +2507,10 @@ function selectWeapon(id,quiet=false){
   renderWeaponBar();updViewModel();
 }
 function cycleWeapon(step){if(Game.weapons.length<2){showMsg('只有一把枪：O 商店购买更多武器',1.6);return;}const i=Game.weapons.indexOf(Game.curWeapon);selectWeapon(Game.weapons[(i+step+Game.weapons.length)%Game.weapons.length]);}
-// 镜头转动：Q/E 带加减速，鼠标/触屏拖动按游戏时钟平滑消费
-const pitchControl=createPitchController({turn:d=>{camPitch=clamp(camPitch+d,-1,1);}});
-const lookControl=createLookController({firstPerson:()=>camMode==='first',turn:delta=>{
+// 虫潮需要快速扫视战场；保留按时钟平滑消费及第一人称的较低转速。
+const pitchControl=createPitchController({sensitivity:1,response:30,speed:Math.PI,maxPending:.65,turn:d=>{camPitch=clamp(camPitch+d,-1,1);}});
+const lookControl=createLookController({firstPerson:()=>camMode==='first',sensitivity:1,response:30,
+  firstPersonSpeed:Math.PI,thirdPersonSpeed:TAU,maxPending:()=>camMode==='first'?Math.PI/3:Math.PI/2,turn:delta=>{
   camYaw-=delta;player.lookHeading=camYaw;
   if(player.inVehicle){const v=player.inVehicle;if(v.mesh.userData.turret)v.mesh.userData.turret.rotation.y=camYaw-v.yaw;}
 }});

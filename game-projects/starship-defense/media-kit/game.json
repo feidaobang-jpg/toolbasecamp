@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-versus-scroll-v0.31.1",
+  "current_version": "web-camera-response-v0.31.2",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,7 +12,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-versus-scroll-v0.31.1/handoff.json",
+  "qa": "releases/web-camera-response-v0.31.2/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-three-lanes-v0.31.0",
@@ -751,6 +751,13 @@
       "classification": "严重修复",
       "handoff": "releases/web-shop-scroll-v0.29.2/handoff.json",
       "summary": "联机商店节点和滚动稳定；商店/建造翻页；高级装备可选择"
+    },
+    {
+      "version": "web-camera-response-v0.31.2",
+      "base_version": "web-versus-scroll-v0.31.1",
+      "classification": "routine",
+      "handoff": "releases/web-camera-response-v0.31.2/handoff.json",
+      "summary": "视角响应与触屏空白区域修复"
     }
   ],
   "comment_feedback_fix": {
@@ -890,5 +897,11 @@
         "youtube": "https://www.youtube.com/watch?v=QOTmOfT19_g"
       }
     }
-  ]
+  ],
+  "camera_response_update": {
+    "version": "web-camera-response-v0.31.2",
+    "record": "releases/web-camera-response-v0.31.2/handoff.json",
+    "status": "tested_pending_website",
+    "summary": "视角响应调快、手机空白拖动和切预设残留输入修复"
+  }
 }

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "version": "web-camera-response-v0.31.2",
+  "classification": "routine",
+  "release_kind": "patch",
+  "task_id": "01a1205e-4fd7-7401-9c9b-1abef10885ad-01",
+  "release_record": "game-projects/starship-defense/media-kit/releases/web-camera-response-v0.31.2/handoff.json",
+  "source_commit": null,
+  "runtime_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+  "tests": {
+    "status": "passed",
+    "camera_checks": 103,
+    "passed": 103,
+    "default_controller_steps": 1260,
+    "old_input_regression": "desktop and touch pass; movement/build/shop/wing state/input ownership",
+    "devices": "Headless Edge; desktop1280x720, touch844x390 and rotated390x844; CDP three simultaneous contacts",
+    "physical_phone": false,
+    "visual_review": "连续帧联系表已检查，无本次新增闪烁、跳帧或HUD操作遮挡",
+    "limitations": [
+      "手机为桌面触屏模拟，未测真实手机多指和性能",
+      "性能为隔离输入的空场约3.5秒，不外推密集虫潮或所有设备"
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate"
+  },
+  "website": {
+    "status": "pending_deploy"
+  },
+  "automatic_batch_eligible": false,
+  "source_feedback_keys": [
+    "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59"
+  ],
+  "channels": {
+    "toy": "pending_22_batch",
+    "taptap": "pending_22_batch_respect_existing_user_hold",
+    "existing_video_descriptions": "pending_22_batch_respect_existing_user_hold",
+    "announcements": "pending_22_batch_respect_existing_user_hold",
+    "feedback_replies": "pending_22_batch"
+  },
+  "updated_at": "2026-10-09T19:30:20.006516+08:00"
+}
