@@ -253,7 +253,7 @@ button::before,button::after{content:none!important}
 #stage.versus-mode #vsEco{display:block!important}
 #stage.versus-mode button.versus-only{display:inline-block!important}
 #stage.versus-mode .vbtn.versus-only{display:block!important}
-#stage.versus-mode #vH{display:none!important}
+#stage.versus-mode #vH{display:block!important}
 #vsTop{position:absolute;left:50%;top:8px;transform:translateX(-50%);gap:6px;width:390px;max-width:calc(100% - 500px);align-items:stretch;pointer-events:none;z-index:12}
 .vs-side{display:flex;flex:1;flex-direction:column;align-items:center;gap:2px;min-width:0;white-space:normal;text-align:center;padding:5px 6px;background:rgba(7,15,27,.84);border-radius:8px;border:1px solid rgba(110,170,215,.35);color:#e3edf4;font-size:10px;text-shadow:0 1px 2px #000}
 .vs-side b{font-size:12px}
@@ -297,6 +297,48 @@ button::before,button::after{content:none!important}
 .vs-size{align-items:center;gap:6px}.vs-size .mbtn{min-width:76px}.vs-size .mbtn[aria-pressed="true"]{background:#ffe09a;color:#24372c;border-color:#ffbe36}
 #vsResult .vs-stats th[colspan]{text-align:left;padding-top:8px;font-size:12px;opacity:.85}
 .vs-rules{max-width:820px;line-height:1.6}
+
+/* Conquest HUD: tickets above, objectives below, equipment at the edge. */
+#stage.versus-mode #bfFlags{display:flex!important}
+#bfFlags{position:absolute;top:78px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:none;font-size:12px}
+#bfFlags span{background:#253331e8;border-bottom:3px solid;padding:5px 9px;white-space:nowrap}
+#stage.versus-mode #hudRight{top:118px;right:12px;max-width:270px}
+#stage.versus-mode #vsTop{top:12px;max-width:calc(100% - 550px)}
+#stage.versus-mode #vsEco{white-space:pre-line;font-size:11px}
+#stage.versus-mode .vs-clock small{max-width:150px}
+#stage.versus-mode #vsPanel{max-height:calc(100% - 30px)}
+#stage.versus-mode #vsPanel .vs-lane{display:none}
+#stage.versus-mode #vsPanel .vs-tabs{flex-wrap:wrap}
+#stage.versus-mode #vsPanel .vs-tabs button{min-height:44px}
+#stage.versus-mode #vsPanel .vs-card{min-height:100px}
+#stage.versus-mode #vsPanel .vs-card[aria-disabled="true"]{border-style:dashed}
+#stage.versus-mode #vsPanel button:focus-visible{outline:3px solid #ffdc86;outline-offset:2px}
+#stage.versus-mode.touch-mode #vsTop{top:8px;max-width:calc(100% - 320px)}
+#stage.versus-mode.touch-mode #vsPhase{display:none}
+#stage.versus-mode.touch-mode #bfFlags{top:64px;font-size:10px;gap:4px}
+#stage.versus-mode.touch-mode #bfFlags span{padding:3px 6px}
+#stage.versus-mode.touch-mode #hudRight{top:94px;max-width:230px}
+#stage.versus-mode.touch-mode #vsEco{font-size:10px}
+#stage.versus-mode #vR{right:calc(var(--touch-right,40px) + 204px);bottom:var(--touch-bottom,36px)}
+#stage.versus-mode #vZ{right:calc(var(--touch-right,40px) + 204px);bottom:calc(var(--touch-bottom,36px) + 68px)}
+#vZ.aiming{background:#8b7948;color:#fff;outline:2px solid #ffdc86}
+#stage.versus-mode #msg{max-width:72%;font-size:18px;white-space:normal;text-align:center;background:#172725b8;border-radius:8px;padding:8px 12px}
+#stage.versus-mode .vs-clock small{font-size:9px}
+#stage.versus-mode.touch-mode{--bf-size:max(58px,var(--corner-height));--bf-step:calc(var(--bf-size) + 10px)}
+#stage.versus-mode.touch-mode #touchUI .vbtn:not(#vC):not(#vP){width:var(--bf-size);height:var(--bf-size);line-height:var(--bf-size)}
+#stage.versus-mode.touch-mode #vJ,#stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vSPRINT{right:calc(var(--touch-right) + var(--bf-step) * 2)}
+#stage.versus-mode.touch-mode #vK,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vH{right:calc(var(--touch-right) + var(--bf-step))}
+#stage.versus-mode.touch-mode #vR,#stage.versus-mode.touch-mode #vZ{right:calc(var(--touch-right) + var(--bf-step) * 3)}
+#stage.versus-mode.touch-mode #vU,#stage.versus-mode.touch-mode #vI,#stage.versus-mode.touch-mode #vO,#stage.versus-mode.touch-mode #vZ{bottom:calc(var(--touch-bottom) + var(--bf-step))}
+#stage.versus-mode.touch-mode #vSPRINT,#stage.versus-mode.touch-mode #vH,#stage.versus-mode.touch-mode #vX{bottom:calc(var(--touch-bottom) + var(--bf-step) * 2)}
+#stage.versus-mode.touch-mode #vsPanel{right:calc(var(--touch-right) + var(--bf-step) * 3 + var(--bf-size) + 12px);max-width:55%;max-height:calc(100% - 70px)}
+#stage.versus-mode.touch-mode #vsPanel .vs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#stage.versus-mode.touch-mode #vsPanel button{min-height:var(--corner-height)}
+#stage.versus-mode.touch-mode #weaponBar{display:none}
+#stage.versus-mode.touch-mode{--bf-corner:max(72px,var(--corner-height))}
+#stage.versus-mode.touch-mode #vP,#stage.versus-mode.touch-mode #cornerTools #fullBtn{width:var(--bf-corner);min-width:var(--corner-height)}
+#stage.versus-mode.touch-mode #vP{right:calc(var(--corner-right) + var(--bf-corner) + var(--corner-gap))}
+#stage.versus-mode.touch-mode #vC{right:calc(var(--corner-right) + var(--bf-corner) * 2 + var(--corner-gap) * 2)}
 </style>
 </head>
 <body>
@@ -319,7 +361,7 @@ button::before,button::after{content:none!important}
     </div>
     <canvas id="radar" width="224" height="224" aria-label="小地图"></canvas>
     <div id="hudRight">
-      <div>💰 金币 <span id="goldTxt">0</span></div>
+      <div class="campaign-only">💰 金币 <span id="goldTxt">0</span></div>
       <div id="vsEco" class="versus-only" role="status"></div>
       <div class="campaign-only">⭐ 分数 <span id="scoreTxt">0</span></div>
       <div id="weapTxt">🔫 轻机枪</div>
@@ -336,6 +378,7 @@ button::before,button::after{content:none!important}
       <div class="vs-clock"><b id="vsClock">00:00</b><small id="vsPhase"></small></div>
       <div class="vs-side foe"><span id="vsFoeName">敌方</span><div class="vs-bar"><i id="vsFoeBar"></i></div><b id="vsFoeHp"></b></div>
     </div>
+    <div id="bfFlags" class="versus-only" aria-label="据点控制状态"></div>
     <div id="crosshair" class="hidden"></div>
     <div id="dmgLayer"></div>
     <div id="screenFx"></div>
@@ -351,8 +394,8 @@ button::before,button::after{content:none!important}
     <button class="mbtn save-health campaign-only" id="saveHealth" aria-label="查看保存状态"></button>
     <section id="vsPanel" class="hidden" aria-label="对战指挥面板">
       <div class="vs-head">
-        <div class="vs-tabs" role="tablist" aria-label="面板分页"><button type="button" role="tab" data-vstab="units">出兵 R</button><button type="button" role="tab" data-vstab="build">建造 L</button><button type="button" role="tab" data-vstab="weapons">买枪 O</button><button type="button" role="tab" data-vstab="team" id="vsTeamTab" class="hidden">队伍 T</button></div>
-        <div class="vs-lane" role="group" aria-label="进攻路线"><span>路线 Z</span><button type="button" data-vslane="left">上路</button><button type="button" data-vslane="mid">中路</button><button type="button" data-vslane="right">下路</button><button type="button" data-vslane="alt">轮换</button></div>
+        <div class="vs-tabs" role="tablist" aria-label="面板分页"><button type="button" role="tab" data-vstab="units">兵种</button><button type="button" role="tab" data-vstab="build">部署 L</button><button type="button" role="tab" data-vstab="weapons">装备 O</button><button type="button" role="tab" data-vstab="team" id="vsTeamTab" class="hidden">战况 T</button></div>
+        <div class="vs-lane" role="group" aria-label="进攻路线"><span>行动目标</span><button type="button" data-vslane="A">A旧镇</button><button type="button" data-vslane="B">B通信站</button><button type="button" data-vslane="C">C仓库</button><button type="button" data-vslane="auto">自动</button></div>
         <button type="button" class="vs-close" id="vsClose" aria-label="关闭面板">✕</button>
       </div>
       <div class="vs-eco" id="vsPanelEco" role="status"></div>
@@ -377,7 +420,8 @@ button::before,button::after{content:none!important}
     <div class="vbtn" id="vU" aria-label="投掷手雷">手雷</div>
     <div class="vbtn" id="vX">换枪</div>
     <div class="vbtn sm" id="vO">商店</div>
-    <div class="vbtn versus-only" id="vR" aria-label="打开出兵面板">出兵</div>
+    <div class="vbtn versus-only" id="vZ" aria-label="切换瞄准" aria-pressed="false">瞄准</div>
+    <div class="vbtn versus-only" id="vR" aria-label="重新装填弹匣">换弹</div>
     <div class="vbtn sm" id="vL">建造</div>
     <div class="vbtn sm" id="vC" aria-label="切换视角预设"><span>切换视角</span></div>
     <div class="vbtn sm" id="vP" role="button" aria-label="打开游戏菜单">菜单</div>
@@ -414,7 +458,7 @@ button::before,button::after{content:none!important}
     <div class="btnRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
-      <button class="mbtn red" id="btnVersus">⚔ 虫潮对战 · 1 对 1 到 4 对 4</button>
+      <button class="mbtn red" id="btnVersus">⚑ 战地模式 · 据点争夺</button>
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复 / 作者</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
@@ -464,21 +508,14 @@ button::before,button::after{content:none!important}
   </div>
 
   <div id="vsMenu" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsMenuTitle">
-    <h2 id="vsMenuTitle">⚔ 虫潮对战 · 1 对 1</h2>
-    <p class="small vs-rules">双方上、中、下三路每25秒自动出基础兵，护送兵线、打兵赚金币与经验，拆掉对方核心获胜。英雄本局从1级成长到15级；每级生命+14、伤害+4%，阵亡保留等级，重开归零。银行、付费增援、建造与买枪仍可使用。</p>
+    <h2 id="vsMenuTitle">⚑ 战地模式 · 沙漠据点战</h2>
+    <p class="small vs-rules">沙漠战场：争夺 A旧镇、B通信站、C补给仓库。控制多数据点消耗敌方兵力票，兵力归零或15分钟结束时决胜。选择固定兵种装备，上车作战；阵亡后8秒重新部署。</p>
     <div class="btnRow vs-size" role="group" aria-label="对战规模"><span class="small">规模</span><button class="mbtn" data-vs-size="1" aria-pressed="true">1 对 1</button><button class="mbtn" data-vs-size="2" aria-pressed="false">2 对 2</button><button class="mbtn" data-vs-size="3" aria-pressed="false">3 对 3</button><button class="mbtn" data-vs-size="4" aria-pressed="false">4 对 4</button></div>
     <p class="small" id="vsSizeNote" role="status"></p>
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">
-      规则速览：0:20 开战 · 3:00 解锁二级兵种 · 6:00 解锁虫王，同时进入后期：收入 +50%、每 30 秒双方各涌出一波免费虫群、新派出的单位更强、建筑更不经打（9:00 再加强）· 15:00 时间到比核心剩余血量，接近则进入 2 分钟加时，先掉核心血者输。<br>
-      盾甲虫扛伤、吐酸虫远射；3分钟后周期加入攻城炮虫（拆建筑×2.5）和治疗孢子虫。各路有一座外塔，中路开阔，河道连接两侧野区。<br>0:20首波基础兵，此后三路每25秒出兵，不占付费兵力；拥堵时暂停补满该路。基础兵每只18金、32经验，付费兵赏金为造价25%；赏金一半给最后击杀者或其指挥者，一半由附近存活英雄共享，经验在36米内共享。击倒英雄150金、100共享经验。<br>
-      野怪：20秒出现普通/能量/狂怒营地；拾荒虫50秒重生，守卫80秒重生。能量增益回血2/秒、手雷冷却-35%；狂怒增益英雄伤害+15%，均90秒，阵亡清除。野怪追出营地会返回回血。<br>2分钟出现裂地母虫与晶甲巨兽，击败给全队金币经验及90秒推进（部队伤害+25%）或守护（受伤-15%），180秒重生。<br>银行 Lv1–Lv5：每10秒60 / 85 / 115 / 150 / 190金，升级500 / 900 / 1400 / 2000金。银行被打掉停产30秒后重建。等级只提升英雄，不强化炮塔和派出的兵。<br>
-      电脑：R 出兵面板（打开后 1-9 派兵、0 升级银行）· Z 切换进攻路线 · L 建造（只能建在本方半场、离中线 25 米外）· O 买枪 · 回己方核心附近自动回血。<br>
-      2 对 2 到 4 对 4：每人各管自己的金币、银行和出兵冷却，全队共用一个核心；人越多场地越宽、核心越厚，每人兵力上限略低。面板「队伍」页（电脑 T）每点一次给队友转 200 金。投降要本队真人都同意。<br>
-      手机：右侧「出兵」「建造」「商店」按钮打开同一面板，点卡片即可。联机为娱乐对战：房主那台电脑计算整局，不做排位；中途加入的玩家接手电脑的座位。
-    </div>
+    <div class="small vs-rules">装备：O / 部署：L / 战况：T / 换弹：R / 支援：H / 上下车：I。手机使用同名按钮。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -598,7 +635,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=camera-response0312" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=conquest-7e0f49833ff1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

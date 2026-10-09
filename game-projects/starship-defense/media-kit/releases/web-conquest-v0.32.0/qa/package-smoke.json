@@ -1,0 +1,64 @@
+{
+  "source": "self-contained package",
+  "externalNetworkBlocked": true,
+  "errors": [],
+  "blockedOptionalRequests": [],
+  "runtime": {
+    "time": 16.493499999970126,
+    "calls": 333,
+    "geometries": 544,
+    "triangles": 34906,
+    "points": [
+      {
+        "id": "A",
+        "name": "旧镇",
+        "x": -72,
+        "z": 884,
+        "owner": null,
+        "progress": -0.07254000000357613,
+        "contested": false,
+        "count": {
+          "blue": 1,
+          "red": 0
+        }
+      },
+      {
+        "id": "B",
+        "name": "通信站",
+        "x": 0,
+        "z": 900,
+        "owner": null,
+        "progress": 0.02080999999940395,
+        "contested": false,
+        "count": {
+          "blue": 1,
+          "red": 0
+        }
+      },
+      {
+        "id": "C",
+        "name": "补给仓库",
+        "x": 72,
+        "z": 916,
+        "owner": null,
+        "progress": -0.10820000000000003,
+        "contested": false,
+        "count": {
+          "blue": 0,
+          "red": 0
+        }
+      }
+    ]
+  },
+  "rv": {
+    "active": true,
+    "vehicle": "rv",
+    "state": "battle"
+  },
+  "video": {
+    "path": "D:/project/toolbasecamp-artifacts/chongchao-conquest-20261009/gameplay-realtime.webm",
+    "audio": "none",
+    "capture_mode": "realtime-automation",
+    "notes": "Real key inputs; QA used after gameplay for RV regression"
+  }
+}

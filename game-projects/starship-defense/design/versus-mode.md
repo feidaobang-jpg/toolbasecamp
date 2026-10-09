@@ -1,3 +1,5 @@
+> 历史设计：v0.32.0起原对战已全面替换为战地据点模式。当前规则见media-kit/overview.md和releases/web-conquest-v0.32.0/handoff.json；使用verify-conquest.cjs与verify-conquest-online.cjs验收。旧verify-versus系列脚本用于对应历史版本，不代表当前验收标准。
+
 # 虫潮围城 · 对战模式 玩法设计（草案）
 
 > 状态：**已确认并实现第一版（v0.26.0，2026-10-08）**。用户确认第 15 节 6 点全部同意。实现时按电脑对打模拟调整了部分数值和规则，见第 16 节；与本节以前文字冲突时以第 16 节为准。

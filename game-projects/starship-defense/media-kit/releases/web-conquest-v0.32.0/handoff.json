@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-conquest-v0.32.0",
+  "base_version": "web-camera-response-v0.31.2",
+  "created_at": "2026-10-09T20:34:46.528412+08:00",
+  "task_id": "01a1206f-2e3f-70b3-a6f3-6b8948cd1efd-battlefield-01",
+  "source": "Codex",
+  "artifact_root": "D:/project/toolbasecamp-artifacts/chongchao-conquest-20261009",
+  "build": {
+    "id": "conquest0320",
+    "commit": null,
+    "base_commit": "2d05005a952394e3bc95f31eb2cd77bcac858ae0",
+    "dirty": true,
+    "fingerprint": "7e0f49833ff1f418a5473b6011724ab2a50e1e6163184ef8a9a64ff34898a3d0",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "conquest-objectives",
+      "description": "三据点争夺、兵力票消耗、8秒复活与15分钟上限",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-local",
+        "qa-online"
+      ]
+    },
+    {
+      "id": "conquest-fixed-kits",
+      "description": "固定五兵种八武器、弹匣换弹、医疗维修补给；无成长经济",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-local",
+        "qa-online"
+      ]
+    },
+    {
+      "id": "conquest-military-map",
+      "description": "旧镇、通信站、仓库、营地与射击/移动掩体",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-local",
+        "qa-online"
+      ]
+    },
+    {
+      "id": "conquest-military-vehicles",
+      "description": "越野车、坦克、轮式装甲车、直升机及损毁再补充",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-local",
+        "qa-online"
+      ]
+    },
+    {
+      "id": "conquest-network",
+      "description": "1v1–4v4、主机权威同步、中途加入与断线电脑接管",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-local",
+        "qa-online"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "replace-moba",
+      "feature_ids": [
+        "conquest-objectives",
+        "conquest-fixed-kits",
+        "conquest-military-map",
+        "conquest-military-vehicles",
+        "conquest-network"
+      ],
+      "before": "三路兵线、外塔、野怪、金币派兵、银行和英雄等级",
+      "after": "军事地图中步兵/载具夺点与固定兵种装备",
+      "verification": "passed",
+      "evidence_ids": [
+        "qa-local",
+        "qa-online",
+        "qa-package"
+      ]
+    }
+  ],
+  "bugs": [
+    {
+      "id": "kit-context-overwrite",
+      "status": "fixed",
+      "cause": "withHuman收尾把旧Game.weapons写回新兵种",
+      "fix": "装备更新同时修改当前控制上下文；真实客机换装回归通过",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "qa-online"
+      ]
+    },
+    {
+      "id": "touch-legacy-layout",
+      "status": "fixed",
+      "cause": "旧模式隐藏医疗、换弹位置复用、旗点被versus-only隐藏",
+      "fix": "独立动作位和可见性，按缩放保证触控尺寸；三种视口通过",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "touch-landscape"
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop",
+      "file": "releases/web-conquest-v0.32.0/captures/battlefield-desktop.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\battlefield-desktop.png",
+      "sha256": "35ec5292dab44ba24ed8eff0c45be431225efb581ec043f1af4d78a13ecb206d",
+      "kind": "screenshot",
+      "version": "web-conquest-v0.32.0",
+      "build_id": "conquest0320",
+      "capture_mode": "realtime-automation",
+      "description": "实际浏览器按键试玩；触屏为桌面模拟",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 0.0,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "aim",
+      "file": "releases/web-conquest-v0.32.0/captures/battlefield-first-person.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\battlefield-first-person.png",
+      "sha256": "14e516df22d2d8d7741471349c9991f658d94cc3ba6eab0cf96b978d0f5af4ff",
+      "kind": "screenshot",
+      "version": "web-conquest-v0.32.0",
+      "build_id": "conquest0320",
+      "capture_mode": "realtime-automation",
+      "description": "实际浏览器按键试玩；触屏为桌面模拟",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 0.0,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "touch-landscape",
+      "file": "releases/web-conquest-v0.32.0/qa/touch-844x390.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\qa\\touch-844x390.png",
+      "sha256": "a1648f0b5680b9bf8873a858d98112cd91e720579c2336e86f612d0cb4f96765",
+      "kind": "screenshot",
+      "version": "web-conquest-v0.32.0",
+      "build_id": "conquest0320",
+      "capture_mode": "realtime-automation",
+      "description": "实际浏览器按键试玩；触屏为桌面模拟",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.0,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "touch-portrait",
+      "file": "releases/web-conquest-v0.32.0/qa/touch-390x844.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\qa\\touch-390x844.png",
+      "sha256": "b9f5848b85a7077d4ca61656be8d3cb0ecfd6851d3cabcac7900314cc03c0ee6",
+      "kind": "screenshot",
+      "version": "web-conquest-v0.32.0",
+      "build_id": "conquest0320",
+      "capture_mode": "realtime-automation",
+      "description": "实际浏览器按键试玩；触屏为桌面模拟",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": 0.0,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "deployment",
+      "file": "releases/web-conquest-v0.32.0/qa/touch-deployment.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\qa\\touch-deployment.png",
+      "sha256": "818505210ee931e91a5c799ab3cf41f5f9d797a5727b9c54863cab5f6f0930c4",
+      "kind": "screenshot",
+      "version": "web-conquest-v0.32.0",
+      "build_id": "conquest0320",
+      "capture_mode": "realtime-automation",
+      "description": "实际浏览器按键试玩；触屏为桌面模拟",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": 0.0,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "gameplay",
+      "file": "releases/web-conquest-v0.32.0/captures/gameplay-realtime.webm",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\chongchao-conquest-20261009\\gameplay-realtime.webm",
+      "sha256": "1a9188ccc9aea07dd0b862cf9137b5335a7d0aadfafb53268e1eb6c23aa8f75c",
+      "kind": "video",
+      "version": "web-conquest-v0.32.0",
+      "build_id": "conquest0320",
+      "capture_mode": "realtime-automation",
+      "description": "实际浏览器按键试玩；触屏为桌面模拟",
+      "width": 1440,
+      "height": 810,
+      "duration_seconds": 19.36,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [],
+  "qa": {
+    "device": "Windows desktop / Microsoft Edge headless / ANGLE D3D11",
+    "local": "qa/results.json",
+    "online": "qa/online-results.json",
+    "package": "qa/package-smoke.json",
+    "physical_phone": false,
+    "human_balance": false,
+    "status": "passed"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像不含游戏音轨，未做音频验收",
+      "未拍摄全部载具完整战斗镜头",
+      "手机为浏览器模拟，未做真机与真人对战平衡"
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate"
+  },
+  "website": {
+    "status": "pending_deploy",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html"
+  },
+  "channels": {
+    "toy": "pending_22_batch",
+    "taptap": "pending_22_batch_subject_to_existing_hold",
+    "existing_video_descriptions": "pending_22_batch_subject_to_existing_hold",
+    "announcements": "pending_22_batch_subject_to_existing_hold",
+    "new_video": "not_requested"
+  },
+  "activities_check": {
+    "scope": "related existing Toy participation; no new video or Toy submission in this task",
+    "ledger_last_full_check": "2026-10-08T22:39:14.1027568+08:00",
+    "official_page": "https://www.bilibili.com/opus/1248175010173943812",
+    "official_read": "unavailable_through_web_tool",
+    "enrollment": "unchanged; existing ledger participation retained",
+    "full_check_completed": false,
+    "followup": "Existing 19:00/19:30 activity tasks; no duplicate task created"
+  },
+  "evidence": [
+    {
+      "id": "qa-local",
+      "file": "qa/results.json"
+    },
+    {
+      "id": "qa-online",
+      "file": "qa/online-results.json"
+    },
+    {
+      "id": "qa-package",
+      "file": "qa/package-smoke.json"
+    }
+  ]
+}

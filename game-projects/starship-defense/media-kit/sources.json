@@ -1,5 +1,17 @@
 [
   {
+    "id": "conquest-military-v032",
+    "purpose": "战地模式地图、建筑、枪械、兵种与军用载具",
+    "source_type": "procedural",
+    "tool": "Codex / Three.js primitive geometry and material batching",
+    "runtime_files": [
+      "../../../public/html/game/starship-defense/battlefield-assets.js"
+    ],
+    "reference": "用户提供的战地风格截图，仅用于观察外形与场景构成",
+    "processing": "程序化建模，静态同色零件合批；保留腿部、炮塔、旋翼动作节点；无位图或模型下载",
+    "usage": "本项目原创代码生成资产，未提取参考游戏模型贴图"
+  },
+  {
     "id": "versus-creatures-v031",
     "purpose": "兵线/付费非人形远程与治疗兵、野怪模型",
     "source_type": "procedural",

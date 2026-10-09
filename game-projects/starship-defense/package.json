@@ -1,5 +1,11 @@
 {
   "private": true,
-  "scripts": { "build": "node build-compat.mjs" },
-  "devDependencies": { "esbuild": "0.28.2" }
+  "scripts": {
+    "build": "node build-compat.mjs",
+    "test:conquest": "node verify-conquest.cjs",
+    "test:conquest-online": "node verify-conquest-online.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
 }

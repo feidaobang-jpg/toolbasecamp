@@ -1,0 +1,136 @@
+{
+  "url": "http://127.0.0.1:8907/html/game/starship-defense/index.html",
+  "at": "2026-10-09T12:33:39.957Z",
+  "results": [
+    {
+      "name": "Conquest setup: 3 objectives, 16 infantry, 8 vehicles, fixed equipment; no economy/XP",
+      "data": {
+        "active": true,
+        "units": 16,
+        "vehicles": 8,
+        "weapons": [
+          "plasma",
+          "missilePod",
+          "lmg",
+          "flamer",
+          "shotgun",
+          "laser",
+          "launcher",
+          "rpg"
+        ],
+        "hp": 100,
+        "flags": "flex",
+        "seat": {
+          "pid": "blue0",
+          "team": "blue",
+          "idx": 0,
+          "name": "",
+          "ai": null,
+          "kit": "assault",
+          "pendingKit": null,
+          "spawn": "HQ",
+          "order": "auto",
+          "stats": {
+            "kills": 0,
+            "deaths": 0,
+            "captures": 0,
+            "vehicles": 0,
+            "healing": 0,
+            "repairs": 0
+          },
+          "surrender": false
+        },
+        "level": {}
+      }
+    },
+    {
+      "name": "Keyboard firing consumes magazine; R reloads; Z enters aimed first person",
+      "data": {
+        "ammo": 25
+      }
+    },
+    {
+      "name": "All 5 kits and 8 weapons selected through menu and fired with keyboard"
+    },
+    {
+      "name": "Capture/contest/ticket bleed, armor, friendly fire, kit-on-respawn and owned spawn validation",
+      "data": {
+        "captured": "blue",
+        "contested": true,
+        "bleed": 2,
+        "friendly": true,
+        "rifleDamage": 2.5,
+        "rocketDamage": 100,
+        "blocked": true,
+        "pending": "engineer",
+        "down": true,
+        "respawn": {
+          "alive": true,
+          "kit": "engineer",
+          "hp": 100,
+          "distance": 4
+        }
+      }
+    },
+    {
+      "name": "Medic healing and engineer repair have actual effects",
+      "data": {
+        "healed": true,
+        "repaired": true
+      }
+    },
+    {
+      "name": "Keyboard boarding, driving, dismounting all four vehicles; helicopter climb/descent"
+    },
+    {
+      "name": "1v1 and 4v4 complete naturally with captures, casualties and ticket victory",
+      "data": [
+        {
+          "size": 1,
+          "time": 219.05000000001556,
+          "winner": "blue",
+          "tickets": {
+            "blue": 98,
+            "red": 0
+          }
+        },
+        {
+          "size": 4,
+          "time": 233.7500000000189,
+          "winner": "red",
+          "tickets": {
+            "blue": 0,
+            "red": 12
+          }
+        }
+      ]
+    },
+    {
+      "name": "Landscape/portrait/small viewport controls; touch reload/aim/deploy; desktop↔touch preserves match"
+    },
+    {
+      "name": "Campaign weapon/vehicle configs and character restored after leaving conquest",
+      "data": {
+        "weapons": [
+          "lmg",
+          "shotgun",
+          "launcher",
+          "flamer",
+          "laser",
+          "plasma",
+          "rpg",
+          "missilePod"
+        ],
+        "tank": 900,
+        "active": false,
+        "state": "prep",
+        "position": -20,
+        "style": false
+      }
+    },
+    {
+      "name": "No browser script errors"
+    }
+  ],
+  "errors": []
+}

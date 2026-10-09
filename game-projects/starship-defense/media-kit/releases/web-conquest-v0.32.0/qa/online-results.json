@@ -1,0 +1,76 @@
+{
+  "url": "http://127.0.0.1:8907/html/game/starship-defense/index.html",
+  "at": "2026-10-09T12:27:40.155Z",
+  "results": [
+    {
+      "name": "Three clients see assigned teams, synchronized infantry, vehicles and fixed kits",
+      "data": [
+        {
+          "pid": "blue0",
+          "role": "host",
+          "team": "blue",
+          "npc": 16,
+          "vehicles": 8,
+          "weapons": [
+            "plasma",
+            "missilePod",
+            "launcher"
+          ]
+        },
+        {
+          "pid": "blue1",
+          "role": "guest",
+          "team": "blue",
+          "npc": 16,
+          "vehicles": 8,
+          "weapons": [
+            "lmg",
+            "flamer"
+          ]
+        },
+        {
+          "pid": "red0",
+          "role": "guest",
+          "team": "red",
+          "npc": 16,
+          "vehicles": 8,
+          "weapons": [
+            "plasma",
+            "missilePod",
+            "launcher"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Guest kit and weapon choices, shot and reload are accepted by host and synchronized"
+    },
+    {
+      "name": "Owned flag spawn, tickets and death/respawn synchronize across actual socket",
+      "data": {
+        "z": 890,
+        "x": -72,
+        "hp": 100,
+        "kit": "engineer"
+      }
+    },
+    {
+      "name": "Obsolete buy/upgrade/build commands cannot mutate conquest or campaign economy"
+    },
+    {
+      "name": "Late join takes AI seat; disconnect hands seat back to AI"
+    },
+    {
+      "name": "Ticket victory result reaches host and both enemy clients",
+      "data": [
+        "任务完成 · 胜利",
+        "任务失败",
+        "任务失败"
+      ]
+    },
+    {
+      "name": "No multiplayer browser errors"
+    }
+  ],
+  "errors": []
+}
