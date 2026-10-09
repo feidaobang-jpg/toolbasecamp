@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import base64
+import json
 import os
+from io import BytesIO
 from typing import Any, Optional
+from urllib.parse import urlsplit
 
 from fastapi import HTTPException
 
@@ -327,24 +330,109 @@ def _cleanup_table_tsv(tsv: str) -> str:
     return "\n\n".join(blocks)
 
 
-def image_enhancement(image_bytes: bytes, task_type: int) -> bytes:
-    from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
-    from tencentcloud.ocr.v20181119 import models
+# Keep the website task IDs, but only expose modes supported by CropEnhanceImageOCR.
+# Values are (Crop, Deskew, EnhanceType); never let the provider's defaults crop
+# a full-page shadow-removal request (also used by the PDF exporter).
+ENHANCE_MODES = {
+    1: (1, 0, 2),
+    2: (0, 1, -1),
+    202: (0, 0, 3),
+    204: (0, 0, 1),
+    205: (0, 0, 4),
+    207: (0, 0, 6),
+    208: (0, 0, 2),
+    302: (0, 0, 5),
+}
+_MAX_ENHANCEMENT_RESULT = 20 * 1024 * 1024
 
-    client = _ocr_client()
-    req = models.ImageEnhancementRequest()
-    req.ImageBase64 = _b64(image_bytes)
-    req.TaskType = int(task_type)
-    req.ReturnImage = "preprocess"
+
+def _download_enhancement_image(url: str) -> bytes:
+    import requests
+
+    # Only follow provider-owned COS result URLs; do not follow redirects or
+    # expose temporary signed URLs in browser responses or error messages.
     try:
-        resp = client.ImageEnhancement(req)
+        parsed = urlsplit(url)
+        valid = (
+            parsed.scheme == "https"
+            and (parsed.hostname or "").endswith((".myqcloud.com", ".tencentcos.cn"))
+            and parsed.port in (None, 443)
+            and not parsed.username
+            and not parsed.password
+        )
+    except ValueError:
+        valid = False
+    if not valid:
+        raise HTTPException(status_code=502, detail="Invalid enhancement image URL")
+    try:
+        with requests.get(url, timeout=(10, 60), stream=True, allow_redirects=False) as response:
+            if response.status_code != 200:
+                raise HTTPException(status_code=502, detail="Enhancement image download failed")
+            data = bytearray()
+            for chunk in response.iter_content(chunk_size=64 * 1024):
+                data.extend(chunk)
+                if len(data) > _MAX_ENHANCEMENT_RESULT:
+                    raise HTTPException(status_code=502, detail="Enhancement image is too large")
+            return bytes(data)
+    except requests.RequestException as exc:
+        raise HTTPException(status_code=502, detail="Enhancement image download failed") from exc
+
+
+def image_enhancement(image_bytes: bytes, task_type: int) -> bytes:
+    """Enhance a document with CropEnhanceImageOCR, preserving our PNG contract."""
+    from PIL import Image
+    from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
+
+    mode = ENHANCE_MODES.get(int(task_type))
+    if mode is None:
+        raise HTTPException(status_code=400, detail="Invalid enhance task type")
+    # The website accepts WebP; the OCR API accepts JPEG/PNG/BMP, so normalize
+    # other readable image formats before sending them.
+    try:
+        with Image.open(BytesIO(image_bytes)) as source:
+            if source.format not in ("JPEG", "PNG", "BMP"):
+                converted = BytesIO()
+                source.convert("RGB").save(converted, format="PNG")
+                image_bytes = converted.getvalue()
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Invalid image file") from exc
+    encoded = _b64(image_bytes)
+    if len(encoded) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Image exceeds enhancement Base64 limit (10MB)")
+    crop, deskew, enhance_type = mode
+    params = {
+        "ImageBase64": encoded,
+        "Crop": crop,
+        "Deskew": deskew,
+        "EnhanceType": enhance_type,
+        "OnlyPosition": 0,
+        "AdjustOrientation": 0,
+    }
+    client = _ocr_client()
+    try:
+        # Parse the raw SDK response: older installed response models discard
+        # CroppedImageUrl, which replaces CroppedImage in the current API.
+        resp = json.loads(client.call("CropEnhanceImageOCR", params))["Response"]
     except TencentCloudSDKException as exc:
         raise HTTPException(status_code=502, detail=_map_tencent_error(exc)) from exc
-    img_b64 = getattr(resp, "Image", None) or ""
-    if not img_b64:
+    except (ValueError, KeyError, TypeError) as exc:
+        raise HTTPException(status_code=502, detail="Invalid enhancement response") from exc
+    if not isinstance(resp, dict):
+        raise HTTPException(status_code=502, detail="Invalid enhancement response")
+    img_b64 = resp.get("CroppedImage") or ""
+    image_url = resp.get("CroppedImageUrl") or ""
+    if not img_b64 and not image_url:
         raise HTTPException(status_code=502, detail="Enhancement returned empty image")
     try:
-        return base64.b64decode(img_b64)
+        raw = base64.b64decode(img_b64, validate=True) if img_b64 else _download_enhancement_image(image_url)
+        # CropEnhanceImageOCR returns JPEG. Existing clients download .png and
+        # /image/enhance advertises image/png, so return actual PNG bytes.
+        with Image.open(BytesIO(raw)) as result:
+            out = BytesIO()
+            result.save(out, format="PNG")
+            return out.getvalue()
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(status_code=502, detail="Invalid enhancement image data") from exc
 
@@ -353,6 +441,7 @@ def _map_tencent_error(exc: Any) -> str:
     code = getattr(exc, "code", "") or ""
     msg = getattr(exc, "message", "") or str(exc)
     mapping = {
+        "ResourceUnavailable.ResourcePackageRunOut": "腾讯云图像服务资源包已耗尽，请联系管理员恢复额度",
         "FailedOperation.ImageNoText": "No text detected in image",
         "FailedOperation.ImageDecodeFailed": "Image decode failed",
         "FailedOperation.ImageDownloadError": "Image download failed",
