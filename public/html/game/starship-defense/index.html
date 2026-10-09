@@ -262,15 +262,19 @@ button::before,button::after{content:none!important}
 .vs-clock b{font-size:18px;letter-spacing:1px}.vs-clock small{font-size:10px;color:#e3edf4;white-space:normal;text-align:center}
 #vsEco{font-size:11px;line-height:1.5;color:#cfe6f5;white-space:pre-line;margin-top:2px}
 #goldTxt.pulse{color:#ffe066;text-shadow:0 0 8px #ffbf3a}
-#vsPanel{position:absolute;left:calc(50% - 50px);top:84px;transform:translateX(-50%);width:560px;max-width:64%;max-height:62%;overflow-y:auto;z-index:30;padding:8px 10px 10px;background:rgba(10,20,32,.94);border:1px solid #5b8fb3;border-radius:10px;color:#e8f3fa;pointer-events:auto;touch-action:pan-y;box-shadow:0 6px 22px rgba(0,0,0,.45)}
-.vs-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#vsPanel{position:absolute;left:calc(50% - 50px);top:84px;transform:translateX(-50%);display:flex;flex-direction:column;width:560px;max-width:64%;max-height:calc(100% - 104px);overflow:hidden;z-index:30;padding:8px 10px 10px;background:rgba(10,20,32,.94);border:1px solid #5b8fb3;border-radius:10px;color:#e8f3fa;pointer-events:auto;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+/* Include cards and both physical axes: the portrait phone stage rotates by 90 degrees. */
+#vsPanel,#vsPanel *{touch-action:pan-x pan-y}
+.vs-head{display:flex;flex-shrink:0;align-items:center;gap:8px;flex-wrap:wrap}
 .vs-tabs,.vs-lane{display:flex;gap:4px;align-items:center}
 .vs-tabs button,.vs-lane button,.vs-close{font:inherit;font-size:12px;font-weight:bold;min-height:34px;padding:4px 8px;border-radius:6px;border:1px solid #5b8fb3;background:#17293a;color:#e8f3fa;cursor:pointer;white-space:nowrap}
 .vs-tabs button[aria-selected="true"],.vs-lane button[aria-pressed="true"]{background:#ffe09a;color:#24372c;border-color:#ffbe36}
 .vs-lane span{font-size:11px;opacity:.8;white-space:nowrap}
 .vs-close{margin-left:auto;min-width:40px}
-.vs-eco{font-size:11px;margin:6px 0;color:#cfe6f5}
-.vs-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.vs-eco{flex-shrink:0;font-size:11px;margin:6px 0;color:#cfe6f5}
+.vs-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scroll-padding:4px;padding:2px 3px 4px}
+.vs-pager{display:flex;flex-shrink:0;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:10px;color:#cfe6f5}
+.vs-pager button{font:inherit;font-size:12px;min-height:44px;padding:4px 12px;border-radius:6px;border:1px solid #5b8fb3;background:#17293a;color:#e8f3fa;cursor:pointer;white-space:nowrap}
 .vs-card{position:relative;font:inherit;text-align:left;padding:6px 7px 8px;border-radius:8px;border:1px solid #4e7181;background:#1b3140;color:#edf6f8;cursor:pointer;min-height:80px;overflow:hidden}
 .vs-card b{display:block;font-size:12px;padding-right:12px}.vs-card .k{position:absolute;right:5px;top:4px;font-size:10px;opacity:.75}
 .vs-card em{display:block;font-style:normal;color:#ffd34d;font-size:12px;font-weight:bold}
@@ -279,7 +283,8 @@ button::before,button::after{content:none!important}
 .vs-card .cd{position:absolute;left:0;bottom:0;height:3px;background:#5fd0ff;width:0}
 .vs-card.locked{opacity:.55}.vs-card.poor em{color:#ff8a7a}.vs-card.owned{border-color:#6fdc9a}.vs-card.ready{border-color:#9fe6ff}
 .vs-card[aria-disabled="true"]{cursor:default}
-.touch-mode #vsPanel{top:58px;left:auto;right:calc(var(--touch-right,40px) + 214px);transform:none;width:520px;max-width:58%;max-height:46%}
+.touch-mode #vsPanel{top:58px;left:auto;right:calc(var(--touch-right,40px) + 214px);transform:none;width:520px;max-width:58%;max-height:calc(100% - 78px)}
+.touch-mode.vs-compact #vsPanel{top:10px;max-height:calc(100% - 20px)}
 .touch-mode .vs-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .touch-mode .vs-card{min-height:76px}.touch-mode .vs-card .k{display:none}
 .touch-mode #vsTop{top:4px}.touch-mode .vs-side{min-width:0;padding:3px 5px}.touch-mode .vs-bar{width:84px}
@@ -352,6 +357,7 @@ button::before,button::after{content:none!important}
       </div>
       <div class="vs-eco" id="vsPanelEco" role="status"></div>
       <div class="vs-grid" id="vsGrid"></div>
+      <div class="vs-pager"><button type="button" data-vspage="-1" aria-label="向上翻阅对战物品">↑ 向上</button><span>滑动物品查看更多</span><button type="button" data-vspage="1" aria-label="向下翻阅对战物品">向下 ↓</button></div>
     </section>
     <div id="placeBar" class="hidden" role="group" aria-label="建造放置">
       <div><b id="placeName"></b> <span id="placeState"></span></div>
@@ -592,7 +598,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=three-lanes031-1" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=versus-scroll0311" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

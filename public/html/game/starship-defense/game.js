@@ -81,6 +81,7 @@ function fitStage(){
   rotated=(h>w)&&isTouch; // 竖屏手机 → 旋转
   let vw=rotated?h:w, vh=rotated?w:h;
   BASE_H=BASE_W*vh/vw;stage.style.height=BASE_H+'px';
+  stage.classList.toggle('vs-compact',BASE_H<340);
   stageScale=Math.min(vw/BASE_W,vh/BASE_H);
   // Keep utility targets and edge spacing in CSS pixels even when the stage scales.
   const safe=getComputedStyle(cornerSafeProbe);
@@ -4344,6 +4345,9 @@ function setupVersus(){
   $('vsRematch').onclick=()=>versusRematch();
   $('vsToMenu').onclick=()=>$('btnQuit').click();
   $('vsClose').onclick=()=>versusClosePanel();
+  document.querySelectorAll('[data-vspage]').forEach(b=>b.onclick=()=>{
+    const grid=$('vsGrid');grid.scrollTop+=Number(b.dataset.vspage)*Math.max(60,grid.clientHeight*.85);
+  });
   $('vsSurrender').onclick=()=>{
     if(versus.state.time<VS_RULES.surrenderAfter){showMsg(fmtTime(VS_RULES.surrenderAfter)+' 后才能投降',1.6);return;}
     askConfirm(versus.size>1?'发起投降？本队真人都点了投降才会判负。':'确定投降？本局直接判负。','投降',()=>{
@@ -4582,7 +4586,7 @@ function renderVersusPanel(rebuild=false){
   $('vsPanelEco').textContent='💰 '+Math.floor(t.gold)+' · 每 10 秒 +'+versus.incomeOf(t.pid)+'（银行 Lv'+t.bank+'）· 兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+' · '+(vsUI.tab==='team'?'每次转 '+VS_RULES.giveStep+' 金 · ':'')+(isTouch?'点卡片执行':'按数字键执行');
   const grid=$('vsGrid'),sig=vsUI.tab+':'+cards.length;
   if(rebuild||grid.dataset.sig!==sig){
-    grid.dataset.sig=sig;grid.replaceChildren();
+    grid.dataset.sig=sig;grid.replaceChildren();grid.scrollTop=0;
     cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='vs-card';b.dataset.i=String(i);
       b.innerHTML='<b></b><span class="k"></span><em></em><small></small><span class="st"></span><i class="cd"></i>';
       b.onclick=()=>{const cur=versusCards()[i];if(cur)cur.act();renderVersusPanel();};grid.appendChild(b);});
