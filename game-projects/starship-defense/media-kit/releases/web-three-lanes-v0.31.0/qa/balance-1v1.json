@@ -1,0 +1,165 @@
+{
+ "url": "http://127.0.0.1:8809/html/game/starship-defense/index.html",
+ "runs": 2,
+ "size": 1,
+ "started": "2026-10-09T05:03:30.647Z",
+ "matchups": {
+  "normal vs normal": {
+   "summary": {
+    "blueWins": 2,
+    "redWins": 0,
+    "draws": 0,
+    "avgTime": 900,
+    "minTime": 900,
+    "maxTime": 900,
+    "timeouts": 2,
+    "maxUnits": 124,
+    "before180": 0,
+    "avgFirstSend": {
+     "blue": 74,
+     "red": 72
+    }
+   },
+   "rows": [
+    {
+     "winner": "blue",
+     "reason": "时间到：核心剩余血量 41% 对 32%",
+     "time": 900,
+     "blue": {
+      "sent": 244,
+      "first": 74,
+      "bank": "1",
+      "kills": 852,
+      "built": 4,
+      "heroDeaths": 4,
+      "deathsBy": {
+       "turret": 48,
+       "hero": 238,
+       "unit": 480,
+       "hq": 74
+      },
+      "deathZone": {
+       "enemy": 286,
+       "base": 153,
+       "mid": 273,
+       "home": 128
+      },
+      "lostBuildings": 6,
+      "byUnit": {
+       "gunners": 18,
+       "swarm": 25,
+       "assault": 12,
+       "bombers": 2,
+       "carapace": 3,
+       "flyers": 3,
+       "medics": 2
+      },
+      "hq": 0.406,
+      "maxUnits": 122
+     },
+     "red": {
+      "sent": 239,
+      "first": 71,
+      "bank": "1",
+      "kills": 841,
+      "built": 3,
+      "heroDeaths": 2,
+      "deathsBy": {
+       "turret": 41,
+       "unit": 466,
+       "hero": 270,
+       "hq": 73
+      },
+      "deathZone": {
+       "enemy": 283,
+       "home": 194,
+       "mid": 283,
+       "base": 90
+      },
+      "lostBuildings": 5,
+      "byUnit": {
+       "assault": 13,
+       "gunners": 15,
+       "swarm": 24,
+       "medics": 4,
+       "flyers": 5,
+       "carapace": 2,
+       "bombers": 1
+      },
+      "hq": 0.317,
+      "maxUnits": 122
+     }
+    },
+    {
+     "winner": "blue",
+     "reason": "时间到：核心剩余血量 74% 对 61%",
+     "time": 900,
+     "blue": {
+      "sent": 257,
+      "first": 74,
+      "bank": "1",
+      "kills": 850,
+      "built": 2,
+      "heroDeaths": 1,
+      "deathsBy": {
+       "turret": 48,
+       "unit": 495,
+       "hq": 126,
+       "hero": 202
+      },
+      "deathZone": {
+       "enemy": 182,
+       "base": 210,
+       "mid": 244,
+       "home": 235
+      },
+      "lostBuildings": 4,
+      "byUnit": {
+       "assault": 9,
+       "gunners": 13,
+       "swarm": 26,
+       "bombers": 1,
+       "flyers": 12,
+       "medics": 3
+      },
+      "hq": 0.741,
+      "maxUnits": 124
+     },
+     "red": {
+      "sent": 204,
+      "first": 73,
+      "bank": "1",
+      "kills": 875,
+      "built": 2,
+      "heroDeaths": 1,
+      "deathsBy": {
+       "turret": 61,
+       "unit": 475,
+       "hq": 74,
+       "hero": 237
+      },
+      "deathZone": {
+       "enemy": 316,
+       "base": 144,
+       "mid": 218,
+       "home": 169
+      },
+      "lostBuildings": 4,
+      "byUnit": {
+       "assault": 13,
+       "gunners": 14,
+       "swarm": 16,
+       "carapace": 2,
+       "flyers": 8,
+       "medics": 4,
+       "bombers": 2
+      },
+      "hq": 0.612,
+      "maxUnits": 124
+     }
+    }
+   ]
+  }
+ },
+ "errors": []
+}

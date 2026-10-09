@@ -799,16 +799,20 @@
     "platform_status": "pending_22_batch"
   },
   "development_preview": {
-    "version": "web-town-versus-v0.30.0",
-    "status": "local_pending_user_review",
-    "entrypoint": "public/html/game/starship-defense/index.html",
-    "url": "http://127.0.0.1:8809/html/game/starship-defense/index.html",
-    "handoff": "releases/web-town-versus-v0.30.0/handoff.json",
-    "release_record": "releases/web-town-versus-v0.30.0/release-status.json",
-    "classification": "review_required",
-    "runtime_sha256": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
-    "automatic_batch_eligible": false,
-    "published_baselines_unchanged": true,
-    "source_commit": "2514e44f1d4b569b566a3ffc98ee65e568cb47aa"
+    "version": "web-three-lanes-v0.31.0",
+    "status": "tested_ready_for_website",
+    "handoff": "releases/web-three-lanes-v0.31.0/handoff.json",
+    "release_record": "releases/web-three-lanes-v0.31.0/release-status.json",
+    "approval": {
+      "required": false,
+      "status": "not_required",
+      "policy": "2026-10-09-website-immediate",
+      "evidence": "所有修改代码对网站立刻生效。就是做完后直接更新网站，除非我单独说要审核的。其他按定时任务走。"
+    }
+  },
+  "pending_channel_release": {
+    "version": "web-three-lanes-v0.31.0",
+    "status": "website_verification_then_22_batch",
+    "record": "releases/web-three-lanes-v0.31.0/release-status.json"
   }
 }

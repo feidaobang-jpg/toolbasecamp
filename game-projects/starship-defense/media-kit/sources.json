@@ -1,5 +1,14 @@
 [
   {
+    "id": "versus-creatures-v031",
+    "purpose": "兵线/付费非人形远程与治疗兵、野怪模型",
+    "source_type": "procedural",
+    "tool": "Codex; Three.js vertex-colored shared BufferGeometry",
+    "runtime_file": "../../../public/html/game/starship-defense/versus-creatures.js",
+    "processing": "共享材质/模板；护盾甲壳、酸囊口器、炮管、治疗孢子翼、野怪晶角；行走摇摆和攻击俯仰",
+    "usage": "本项目程序化实现，无新增第三方资产或AI图片"
+  },
+  {
     "id": "rv-abandoned-town-zombies-v030",
     "purpose": "房车废弃城镇、设施、路网、地图标识与人形僵尸",
     "source_type": "procedural",

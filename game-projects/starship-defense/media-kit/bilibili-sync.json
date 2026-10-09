@@ -66,7 +66,12 @@
   "latest_record": "releases/web-shop-scroll-v0.29.2/bilibili-sync.json",
   "pending": [],
   "pending_note": "v0.29.2商店翻页/联机滚动稳定修复已同步全部三条确认关联视频并公开核验",
-  "pending_release": null,
+  "pending_release": {
+    "version": "web-three-lanes-v0.31.0",
+    "status": "pending_22_batch",
+    "summary": "房车自由城镇、分区僵尸与场地补给；对战三路自动兵线、六座外塔、异形杂兵、八处野区及局内Lv1–15成长。",
+    "record": "releases/web-three-lanes-v0.31.0/release-status.json"
+  },
   "pending_updates": [
     {
       "version": "web-unified3d-v0.18.1",
