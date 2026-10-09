@@ -890,7 +890,7 @@ const Game={
   magnet:false,regen:false,
   wave:{total:0,spawned:0,killed:0,timer:0,bossSpawned:false},
   pausedFrom:'prep',
-  msgTimer:0,shake:0,
+  msgTimer:0,
 };
 const monsters=[],bullets=[],buildings=[],vehicles=[],squad=[],pickups=[],airdrops=[];
 
@@ -994,7 +994,7 @@ function damageGate(d){
   if(gate.open||gate.dead)return;
   gate.hp-=d;updHPBar(gate.bar,gate.hp/gate.maxHp);
   if(gate.hp<=0){
-    gate.hp=0;gate.dead=true;AudioSys.sfx('boom');Game.shake=Math.min(.7,Game.shake+.4);
+    gate.hp=0;gate.dead=true;AudioSys.sfx('boom');
     spawnParticles(gate.mesh.position.clone().add(new THREE.Vector3(0,2,0)),0x99aabb,22,9,.8,1.6);
     showMsg('💥 城门被摧毁！虫群涌入！',2.5);
   }
@@ -1077,7 +1077,7 @@ function playerDamage(d){
     selfFx(0x66ccff,4,4,.35,1.4);
     if(d<=0){updHUDItem();return;}
   }
-  player.hp-=d;AudioSys.sfx('hurt');Game.shake=Math.min(.5,Game.shake+.15);
+  player.hp-=d;AudioSys.sfx('hurt');
   selfFx(0xff4444,5,4,.4,1.3);hurtFlash=Math.min(1,hurtFlash+.55);
   updHPBar(player.bar,player.hp/player.maxHp);
   if(player.hp<=0){
@@ -1117,7 +1117,7 @@ function fireBullet(from,dir,cfg,friendly,target){
     trail.rotation.x=Math.PI/2;m.add(trail);}
 }
 function explode(pos,radius,dmg,friendly,team=null,src=null,pid=null){
-  AudioSys.sfx('boom');Game.shake=Math.min(.7,Game.shake+.3);
+  AudioSys.sfx('boom');
   spawnParticles(pos,0xffaa33,16,9,.6,1.6,6);
   spawnParticles(pos,0xff5511,10,6,.8,2,4);
   if(team&&vsOn()){versus.explodeAt(pos,radius,dmg,team,{src:src||'unit',by:pid});return;}
@@ -1702,7 +1702,6 @@ function damageBase(d){
   base.hp-=d;updHPBar(base.bar,base.hp/base.maxHp);
   if(!(Game.baseAlarm>0)){showMsg('⚠ 基地正在受袭！耐久归零即失败，立即回防',3);AudioSys.sfx('wave');}
   Game.baseAlarm=6;
-  Game.shake=Math.min(.6,Game.shake+.1);
   if(base.hp<=0){base.hp=0;gameOver('基地被摧毁！防线失守…');}
 }
 /* 墙体碰撞（旋转矩形近似） */
@@ -2617,7 +2616,6 @@ function updPlayer(dt){
       const dir=aim.target?new THREE.Vector3().subVectors(aim.target,from).normalize():aim.dir.clone().normalize();
       fireBullet(from,dir,{dmg,speed:70,range:v.cfg.range,spread:.03,explode:v.cfg.explode,color:0xffcc66},true,aim.target);
       AudioSys.sfx(v.cfg.sfx);
-      Game.shake=Math.min(.4,Game.shake+(v.cfg.explode?.15:.02));
     }
     if(Input.pop('I')){exitVehicle();}
     if(Input.pop('H')&&!v.cfg.fly)useMedkit();
@@ -2845,7 +2843,7 @@ function spawnHive(){
 }
 function queenKilled(mo){
   Game.hive.killed=true;Game.hive.queen=0;
-  showMsg('👑 母皇已击杀！后续虫潮 -35%，本章每次通关额外领取 '+queenSupply()+' 金币补给',5);AudioSys.sfx('win');Game.shake=Math.min(.8,Game.shake+.5);
+  showMsg('👑 母皇已击杀！后续虫潮 -35%，本章每次通关额外领取 '+queenSupply()+' 金币补给',5);AudioSys.sfx('win');
   for(let i=0;i<6;i++)dropPickup(mo.mesh.position.clone().add(new THREE.Vector3(rand(-4,4),0,rand(-4,4))),'gold',Math.round(mo.gold/6));
 }
 // A fixed chapter stipend rewards an early assault while full swarms retain
@@ -3674,18 +3672,17 @@ function camBlocked(p){
 }
 // 旋转即时生效，只平滑跟随点与避障距离：不再“拖着走”，也不会在地形起伏时一顿一顿。
 function updCamera(dt){
+  // 用户偏好：爆炸、炮击、受伤等不移动镜头；打击反馈保留在粒子、音效与武器模型上。
   const v=player.inVehicle,tp=v?v.mesh.position:player.pos;
   // 跑步时视野略微拉宽
   const fovT=62+(player.sprinting&&!v?4:0);
   if(camera.fov!==fovT){camera.fov=Math.abs(fovT-camera.fov)<.05?fovT:camera.fov+(fovT-camera.fov)*Math.min(1,dt*(fovT>camera.fov?20:8));camera.updateProjectionMatrix();}
   if(!camState.init){camState.target.copy(tp);camState.init=true;camState.dist=99;}
   camState.target.lerp(tp,1-Math.exp(-dt*(v?11:18)));
-  const shake=Game.shake>0?(Game.shake=Math.max(0,Game.shake-dt*1.5)):0;
   if(camMode==='first'){
     const eye=_look.copy(tp);eye.y+=v?v.cfg.seatH+1.3:1.72;
     if(v)eye.addScaledVector(_dir.set(Math.sin(v.yaw),0,Math.cos(v.yaw)),v.cfg.fly?1.2:1.6);
     camera.position.copy(eye);
-    if(shake){camera.position.x+=rand(-1,1)*shake*.4;camera.position.y+=rand(-1,1)*shake*.4;}
     camera.lookAt(_probe.copy(eye).add(camForward(true)));
     if(!v)player.mesh.visible=false;
     updFirstPersonModel(dt,!v&&!player.dead);
@@ -3704,7 +3701,6 @@ function updCamera(dt){
   if(camState.dist>R+1)camState.dist=free;
   camState.dist+=(free-camState.dist)*(free<camState.dist?1-Math.exp(-dt*24):1-Math.exp(-dt*3.5));
   camera.position.copy(look).addScaledVector(_dir,camState.dist);
-  if(shake){camera.position.x+=rand(-1,1)*shake;camera.position.y+=rand(-1,1)*shake;}
   camera.lookAt(look.x,look.y+.5,look.z);
   if(!player.dead&&!v)player.mesh.visible=camState.dist>1.2;
 }

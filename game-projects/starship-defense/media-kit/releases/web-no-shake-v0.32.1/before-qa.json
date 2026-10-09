@@ -1,0 +1,81 @@
+{
+  "stage": "before",
+  "realGrenade": true,
+  "results": [
+    {
+      "name": "conquest-third-explosion",
+      "positionDelta": 0.2603064110212344,
+      "rotationDelta": 0.00009822215084587249
+    },
+    {
+      "name": "conquest-third-damage",
+      "positionDelta": 0.0911440380249916,
+      "rotationDelta": 0.0000130470526911175,
+      "damage": 8
+    },
+    {
+      "name": "conquest-third-grenade",
+      "positionDelta": 0.23122038739038653,
+      "rotationDelta": 0.00008516145411829878,
+      "grenades": 1
+    },
+    {
+      "name": "conquest-first-explosion",
+      "positionDelta": 0.07964469488014254,
+      "rotationDelta": 0.0007894807076485044
+    },
+    {
+      "name": "conquest-first-damage",
+      "positionDelta": 0.04039793975419139,
+      "rotationDelta": 0.00020379132505843334,
+      "damage": 8
+    },
+    {
+      "name": "conquest-first-grenade",
+      "positionDelta": 0.09840705225978483,
+      "rotationDelta": 0.001203174798654283,
+      "grenades": 1
+    },
+    {
+      "name": "campaign-third-base-hit",
+      "positionDelta": 0.02788997714158329,
+      "rotationDelta": 0.00019710227058411522,
+      "damage": 1
+    },
+    {
+      "name": "campaign-first-base-hit",
+      "positionDelta": 0.023605952399129174,
+      "rotationDelta": 0.00006962845131619488,
+      "damage": 1
+    },
+    {
+      "name": "campaign-gate-destroyed",
+      "positionDelta": 0.1677272720544215,
+      "rotationDelta": 0.003455969848410456,
+      "gateDestroyed": true
+    },
+    {
+      "name": "tank-third-fire",
+      "positionDelta": 0.12704245973356598,
+      "rotationDelta": 0.000025049314153702262,
+      "shots": 1
+    },
+    {
+      "name": "tank-first-fire",
+      "positionDelta": 0.04217822532118245,
+      "rotationDelta": 0.0002221043142184298,
+      "shots": 1
+    },
+    {
+      "name": "rv-third-explosion",
+      "positionDelta": 0.27018138778576983,
+      "rotationDelta": 0.00010642855232390058
+    },
+    {
+      "name": "rv-first-explosion",
+      "positionDelta": 0.10677490576540788,
+      "rotationDelta": 0.0014146503746185202
+    }
+  ],
+  "errors": []
+}

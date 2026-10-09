@@ -142,6 +142,16 @@
       "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
       "website_verified": true,
       "new_video": "not_requested"
+    },
+    {
+      "version": "web-no-shake-v0.32.1",
+      "status": "pending_22_batch_subject_to_existing_hold",
+      "changes": [
+        "取消手雷、爆炸、受伤、开炮等引起的镜头震动"
+      ],
+      "record": "releases/web-no-shake-v0.32.1/handoff.json",
+      "website_verified": false,
+      "new_video": "not_requested"
     }
   ],
   "comment_corrections": [

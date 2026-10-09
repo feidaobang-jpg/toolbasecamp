@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-no-shake-v0.32.1",
+  "base_version": "web-conquest-v0.32.0",
+  "created_at": "2026-10-09T21:09:40.066418+08:00",
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-no-shake-20261009",
+  "build": {
+    "id": "no-shake0321",
+    "commit": null,
+    "base_commit": "2ffa78d7a5cb20863ea861a2b1da3b9315726763",
+    "dirty": true,
+    "fingerprint": "1f4a0d7c7c911c37d3a436e92b87e1fa88d7371af54a93a6d2ca460ec64ac454",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "stable-camera",
+      "description": "守城、战地和房车共用镜头无爆炸/受伤/炮击抖动",
+      "status": "implemented",
+      "evidence_ids": [
+        "after-grenade",
+        "grenade-qa"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "remove-camera-shake",
+      "feature_ids": [
+        "stable-camera"
+      ],
+      "before": "爆炸、受伤、载具开火等叠加相机随机位移与方向变化",
+      "after": "移除全部震屏产生与应用路径，保留发射、伤害、音效和粒子",
+      "evidence_ids": [
+        "after-grenade",
+        "grenade-qa"
+      ],
+      "verification": "13组相机位置/四元数前后对比通过，实际U键手雷正常"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "after-grenade",
+      "file": "releases/web-no-shake-v0.32.1/captures/after-grenade.png",
+      "sha256": "4fb16ab55c0fa463e88da793242e09e541aa7f5da94a2d6a8903212aa93bda0e",
+      "kind": "screenshot",
+      "version": "web-no-shake-v0.32.1",
+      "build_id": "no-shake0321",
+      "capture_mode": "realtime-automation",
+      "description": "实际U键手雷与相机稳定性QA；包含测试用模式切换，非宣传成片",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "grenade-qa",
+      "file": "releases/web-no-shake-v0.32.1/captures/grenade-qa.webm",
+      "sha256": "0a87903018f0367cae8db4dd94cdf5441a2013f6185def71b5424930cb5e2ef2",
+      "kind": "video",
+      "version": "web-no-shake-v0.32.1",
+      "build_id": "no-shake0321",
+      "capture_mode": "realtime-automation",
+      "description": "实际U键手雷与相机稳定性QA；包含测试用模式切换，非宣传成片",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "duration_seconds": 3.6,
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 3.0,
+          "description": "实机第一人称手雷，随后为QA模式切换"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "camera-stability",
+      "device": "Windows / Edge headless / D3D11",
+      "viewport": "1280x720",
+      "method": "冻结角色移动，实触发爆炸、伤害、手雷弹道、闸门破坏、坦克开火后连续150帧比较相机位置/朝向；真实键盘U验证",
+      "result": "pass",
+      "evidence": [
+        "before-qa.json",
+        "after-qa.json"
+      ],
+      "unverified": [
+        "手机真机",
+        "本次未重复多人联机验收"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅本次修复QA片段；未录制游戏音轨，未作为新视频成片"
+    ]
+  }
+}
