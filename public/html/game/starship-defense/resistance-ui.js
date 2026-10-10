@@ -7,7 +7,7 @@ export function mountResistanceUI(api){
  const $=id=>document.getElementById(id),stage=$('stage');
  const css=document.createElement('style');css.textContent=`
  .resistance-mode #hudTop,.resistance-mode #hudRight,.resistance-mode #radar,.resistance-mode #weaponBar,.resistance-mode #readyBtn,.resistance-mode #hint,.resistance-mode #interactHint,.resistance-mode #screenFx,.resistance-mode #crosshair,.resistance-mode #bfScore,.resistance-mode #bfFlags,.resistance-mode #bfInfo{display:none!important}
- .resistance-mode #webTools .mbtn:not(#personBtn):not(#menuButton):not(#fullBtn):not(#qualityBtn):not(#muteBtn){display:none!important}
+ .resistance-mode #webTools .mbtn:not(#personBtn):not(#menuButton):not(#fullBtn):not(#muteBtn){display:none!important}
  .resistance-mode #vX,.resistance-mode #vR,.resistance-mode #vT,.resistance-mode #vZ{display:none!important}
  .resistance-mode #vJ{background:#a65348!important}.resistance-mode #vK{background:#5b8260!important}.resistance-mode #vU{background:#9b8151!important}.resistance-mode #vI{background:#527b91!important}
  .resistance-mode #vU,.resistance-mode #vI,.resistance-mode #vO,.resistance-mode #vL,.resistance-mode #vH{display:block!important}
