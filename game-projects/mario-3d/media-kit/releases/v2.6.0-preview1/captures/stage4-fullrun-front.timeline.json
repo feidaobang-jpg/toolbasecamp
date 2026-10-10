@@ -1,0 +1,26 @@
+{
+ "file": "stage4-fullrun-front.webm",
+ "preset": "front",
+ "url": "http://127.0.0.1:8798/html/game/mario-3d/index.html",
+ "method": "in-page driver: 1/60 s per frame, KeyboardEvent dispatch through the game key handlers, verified plan from qa/stage4-run.json; MediaRecorder canvas + game AudioContext only",
+ "marks": [
+  [
+   "play",
+   2.102199999988079
+  ],
+  [
+   "axe",
+   36.10209999996424,
+   "axe"
+  ],
+  [
+   "result",
+   46.76489999997616,
+   "result"
+  ]
+ ],
+ "hits": 0,
+ "deaths": 0,
+ "audio": 1,
+ "errors": []
+}
