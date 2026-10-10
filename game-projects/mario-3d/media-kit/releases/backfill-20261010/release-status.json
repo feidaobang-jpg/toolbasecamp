@@ -7,7 +7,7 @@
     "recorded_at": "2026-10-10T03:02:52.978211+00:00",
     "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
   },
-  "status": "completed_with_external_pending",
+  "status": "completed_with_user_deferred_channels",
   "central_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
   "toy": {
     "status": "already_published_20261009_not_resubmitted",
@@ -16,7 +16,7 @@
   "taptap": {
     "app_id": 962723,
     "version": "v2.5.0-menu-text1",
-    "status": "blocked_ip_materials",
+    "status": "existing_online_update_deferred_by_user",
     "public_url": "https://www.taptap.cn/app/962723",
     "platform_observation": {
       "created_time": 1791465062,
@@ -40,7 +40,25 @@
     "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
     "evidence": "taptap-962723-versions-before.json",
     "submitted_this_run": false,
-    "reason": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。"
+    "reason": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。",
+    "user_handling_preference": {
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-release-followup-03",
+      "recorded_at": "2026-10-10T03:24:15.330063+00:00",
+      "client_timezone": "America/Los_Angeles",
+      "user_quote": "TapTap 恐龙快打、超级玛丽需要 IP 授权材料，这个不需要啊，别管他，之前都上线了，记住。",
+      "app_ids": [
+        962722,
+        962723
+      ],
+      "games": [
+        "cadillacs-stage1-3d",
+        "mario-3d"
+      ],
+      "decision": "keep_existing_online_versions_no_ip_materials_followup",
+      "handling": "保留已上线旧版本；此次因IP材料退回的更新暂不继续，不再作为用户补材料待办，不重复催问或通知。",
+      "future_updates": "后续有新更新时按正常流程查实际平台状态；旧版本已上线不等于本次更新已通过。同一退回及相同包不反复提交，不伪造授权材料或成功状态。",
+      "resume_current_rejected_update": "仅当用户重新要求办理该次更新或实际平台条件有变化时复核。"
+    }
   },
   "bilibili": {
     "status": "public_verified",
@@ -50,7 +68,8 @@
     ],
     "version": "v2.5.0-menu-text1"
   },
-  "remaining": [
+  "followup_record": "game-projects/site-games/releases/backfill-20261010/followup-03.json",
+  "deferred_by_user": [
     {
       "channel": "taptap",
       "games": [
@@ -61,5 +80,6 @@
       "event_id": "ip-materials-20261010-962722-962723",
       "next_action": "用户提供相应IP授权材料后复核条件；不重复上传当前包。"
     }
-  ]
+  ],
+  "remaining": []
 }

@@ -181,7 +181,7 @@
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
   },
   "bilibili_sync": "bilibili-sync.json",
-  "pending_release": "小红书说明审核中，快手待登录",
+  "pending_release": "小红书2条说明审核中；快手说明已公开核验",
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "drag_camera_controls": {
     "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
@@ -851,14 +851,6 @@
     "status": "partial_external_pending",
     "pending": [
       {
-        "channel": "kuaishou",
-        "platform_id": "3xr939t2s66s7ma",
-        "status": "blocked_login",
-        "account_id": "3x2fca3w3qwq5qc",
-        "event_id": "kuaishou-login-20261010-backfill",
-        "next_action": "在现有浏览器登录飞刀助理后，按既有稿件修改简介并公开核验。"
-      },
-      {
         "channel": "xiaohongshu",
         "platform_ids": [
           "6ac79a4a000000001402cad8",
@@ -1174,5 +1166,12 @@
       "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda"
     }
   ],
-  "last_backfill_record": "releases/backfill-20261010/release-status.json"
+  "last_backfill_record": "releases/backfill-20261010/release-status.json",
+  "kuaishou_description_sync": {
+    "status": "public_verified",
+    "version": "web-resistance-v0.33.0",
+    "platform_id": "3xr939t2s66s7ma",
+    "record": "game-projects/site-games/releases/backfill-20261010/followup-03.json",
+    "public_verified_at": "2026-10-10T03:22:17.380Z"
+  }
 }

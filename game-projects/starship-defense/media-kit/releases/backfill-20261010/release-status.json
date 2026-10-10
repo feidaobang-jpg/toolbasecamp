@@ -87,24 +87,6 @@
   },
   "remaining": [
     {
-      "channel": "taptap",
-      "games": [
-        "cadillacs-stage1-3d",
-        "mario-3d"
-      ],
-      "status": "blocked_ip_materials",
-      "event_id": "ip-materials-20261010-962722-962723",
-      "next_action": "用户提供相应IP授权材料后复核条件；不重复上传当前包。"
-    },
-    {
-      "channel": "kuaishou",
-      "platform_id": "3xr939t2s66s7ma",
-      "status": "blocked_login",
-      "account_id": "3x2fca3w3qwq5qc",
-      "event_id": "kuaishou-login-20261010-backfill",
-      "next_action": "在现有浏览器登录飞刀助理后，按既有稿件修改简介并公开核验。"
-    },
-    {
       "channel": "xiaohongshu",
       "platform_ids": [
         "6ac79a4a000000001402cad8",
@@ -113,5 +95,6 @@
       "status": "reviewing",
       "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
     }
-  ]
+  ],
+  "followup_record": "game-projects/site-games/releases/backfill-20261010/followup-03.json"
 }

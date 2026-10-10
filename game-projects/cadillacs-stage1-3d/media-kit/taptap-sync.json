@@ -5,8 +5,8 @@
   "app_id": 962722,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "blocked_ip_materials",
-  "platform_status": "blocked_ip_materials",
+  "status": "existing_online_update_deferred_by_user",
+  "platform_status": "rejected",
   "staged_version": "v0.10.1",
   "staged_source_commit": "999d4057",
   "staged_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
@@ -89,7 +89,7 @@
     "release_record": "releases/v0.9.4/taptap-community.json",
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
   },
-  "pending_note": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。",
+  "pending_note": "已按用户要求保留既有线上版本，此次IP材料退回的更新不再催办；平台原退回证据保留。",
   "startup_adapter": "inline-runtime-v1",
   "pending_community_updates": [],
   "platform_version": "V-20261008-1",
@@ -100,7 +100,7 @@
     "startup_adapter": "inline-runtime-v1",
     "namespace": "taptap-cadillacs-v1:"
   },
-  "community_post_status": "blocked_until_platform_update",
+  "community_post_status": "deferred_with_current_platform_update",
   "community_post_note": "原作开场、背摔、音频调整与启动兼容修复合并为一条更新动态，已核验本人主页与恐龙快打论坛显示同一 moment。",
   "history": [
     {
@@ -509,8 +509,10 @@
   "pending_release": {
     "version": "v0.11.0-preview.2",
     "package_sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
-    "status": "blocked_ip_materials",
-    "run_id": "release-backfill-20261010"
+    "status": "deferred_by_user",
+    "run_id": "release-backfill-20261010",
+    "user_action_required": false,
+    "decision_record": "game-projects/site-games/releases/backfill-20261010/followup-03.json"
   },
   "rejection": {
     "created_time": 1791465107,
@@ -521,5 +523,23 @@
     "status_value": 2,
     "version": "V-20261008-2",
     "version_id": "V-20261008-2"
+  },
+  "user_handling_preference": {
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-release-followup-03",
+    "recorded_at": "2026-10-10T03:24:15.330063+00:00",
+    "client_timezone": "America/Los_Angeles",
+    "user_quote": "TapTap 恐龙快打、超级玛丽需要 IP 授权材料，这个不需要啊，别管他，之前都上线了，记住。",
+    "app_ids": [
+      962722,
+      962723
+    ],
+    "games": [
+      "cadillacs-stage1-3d",
+      "mario-3d"
+    ],
+    "decision": "keep_existing_online_versions_no_ip_materials_followup",
+    "handling": "保留已上线旧版本；此次因IP材料退回的更新暂不继续，不再作为用户补材料待办，不重复催问或通知。",
+    "future_updates": "后续有新更新时按正常流程查实际平台状态；旧版本已上线不等于本次更新已通过。同一退回及相同包不反复提交，不伪造授权材料或成功状态。",
+    "resume_current_rejected_update": "仅当用户重新要求办理该次更新或实际平台条件有变化时复核。"
   }
 }
