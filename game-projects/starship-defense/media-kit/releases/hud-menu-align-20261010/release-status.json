@@ -1,0 +1,54 @@
+{
+  "release": "hud-menu-align-20261010",
+  "game": "chongchao-qianshao",
+  "project_path": "game-projects/starship-defense",
+  "branch": "qoder/chongchao-hud-menu-20261010",
+  "source_commit": "4a729cf0",
+  "scope": [
+    "右面板对齐：战术入口按钮撑满面板内容宽，功能按钮（副本/存档排行/画质/声音）改等宽两列网格，消除左靠/右靠/换行参差",
+    "主菜单分组：开始游戏（继续/新游戏/联机大厅）、其他玩法·实验内容（战地/房车/抗战/虫族/自由测试）、设置与存档（读档/存档恢复·作者/操作设置/地表），模式按钮统一中性色、绿色仅留主操作",
+    "同包含并行提交 eeac50cf 的 HUD 文案清理与亮场景可见度改进（同一稳定版本合并提交 Toy）"
+  ],
+  "tests": {
+    "status": "passed",
+    "local": [
+      "桌面 1440x810：右面板战术按钮与面板内容边对齐、按钮 2x2 等宽网格",
+      "触屏横屏 844x390：战术按钮撑满面板宽",
+      "主菜单冒烟：战地/房车/抗战菜单开合、联机大厅开合、键盘导航跨组移动、自由测试进入、正常开局、HUD 显示，均通过且无 pageerror"
+    ],
+    "website_live": [
+      "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html 冒烟与对齐复跑通过，无 pageerror"
+    ],
+    "toy_preview": [
+      "预览包桌面：分组标题齐全、okTac/okGrid 通过、无 pageerror",
+      "预览包触屏横屏：okTac 通过、功能按钮按触屏规则隐藏、无 pageerror"
+    ],
+    "captures": ["captures/menu-grouped.png", "captures/hud-desktop-right.png", "captures/hud-touch-right.png"]
+  },
+  "website": {
+    "status": "deployed_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "deploy_commit": "4a729cf0",
+    "verified_at": "2026-10-10T23:20:00+08:00",
+    "reverified_at": "2026-10-10T23:47:41+08:00",
+    "note": "线上 index 含新分组标题（开始游戏/其他玩法/设置与存档，23:47 curl 复核仍在，HTTP 200）；本人改动已并入 origin/master（d11cdc3d/eeac50cf/4a729cf0 均为祖先）。live compat 版本号已因后续并行合并推进到 v=3fe45575（head 53435e80），仍包含本次全部改动。"
+  },
+  "channels": {
+    "toy": {
+      "id": 38678478981120,
+      "status": "auditing",
+      "package_zip_sha256": "911ee82ab71700ad7a32e27db778a1880517e64659f4ecfa87b41d8f8d11dd98",
+      "preview_url_preview_only": "https://www.bilibili.com/toy/preview/preview_PyPCUphk/index.html",
+      "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_EoFrwYp5/index.html",
+      "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "doctor": "passed_with_warn: 资源文件名无内容指纹（既有打包方式，不阻断）",
+      "superseded_note": "本包构建自 4a729cf0；提交后并行任务继续推进线上到 53435e80/compat 3fe45575（虫族修复、手机按键/暂停菜单配色等）。auditing ≠ published；不重复送审、不代并行任务重传其更新包，更新版本的 Toy 提交由持有该改动的活跃任务负责。"
+    },
+    "taptap": { "status": "deferred_by_policy_2026-10-10", "note": "TapTap 暂停主动同步，页面保持在线" }
+  },
+  "video_descriptions": {
+    "status": "consolidated_deferred",
+    "reason": "并行任务 qoder/chongchao-feedback-fix-20261010 正在实时推送虫潮改动（最近 53435e80 于 23:44:34，决策约6分钟前），写向同一批4条B站简介；本人本轮为界面观感类改动，避免并发平台写入与二次churn，将 prepared_update_line 交给下一次单一合并同步携带。详见本目录 bilibili-sync.json 与 media-kit/bilibili-sync.json 的 pending_updates。",
+    "record": "releases/hud-menu-align-20261010/bilibili-sync.json"
+  }
+}
