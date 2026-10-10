@@ -110,6 +110,49 @@ function starFlag() {
   return pixelTexture(c);
 }
 
+// 城堡石：灰色哑光石砖，每格两层错缝（原作城堡砖的排法），颜色压低一点以免在暗处发白
+function castleStone(name) {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = '#8b8b89'; g.fillRect(0, 0, 128, 128);
+  const rows = 4, rh = 128 / rows;
+  for (let r = 0; r < rows; r++) {
+    const y = r * rh, off = r % 2 ? 32 : 0;
+    for (let x = -64; x < 128; x += 64) {
+      const bx = x + off;
+      const shade = ((r * 7 + bx * 3) % 5) * 3 - 6;
+      g.fillStyle = `rgb(${140 + shade},${140 + shade},${137 + shade})`; g.fillRect(bx + 3, y + 3, 58, rh - 6);
+      g.fillStyle = '#ababa7'; g.fillRect(bx + 3, y + 3, 58, 3); g.fillRect(bx + 3, y + 3, 3, rh - 6);
+      g.fillStyle = '#6c6c69'; g.fillRect(bx + 3, y + rh - 6, 58, 3); g.fillRect(bx + 58, y + 3, 3, rh - 6);
+    }
+    g.fillStyle = '#4c4c4a'; g.fillRect(0, y, 128, 3);
+  }
+  for (let r = 0; r < rows; r++) { const off = r % 2 ? 32 : 0; g.fillStyle = '#4c4c4a'; for (let x = off; x < 128 + 64; x += 64) g.fillRect(x % 128, r * rh, 3, rh); }
+  return c;
+}
+// 岩浆：顶面是缓慢流动的亮橙斑块；侧面顶上一道浅色浪尖（原作岩浆的白色波纹）往下渐暗
+function lavaTexture(top) {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d');
+  const grad = g.createLinearGradient(0, 0, 0, 64);
+  if (top) { g.fillStyle = '#d2421a'; g.fillRect(0, 0, 64, 64); }
+  else { grad.addColorStop(0, '#ff8a3a'); grad.addColorStop(0.18, '#e04a1c'); grad.addColorStop(1, '#7a1a0c'); g.fillStyle = grad; g.fillRect(0, 0, 64, 64); }
+  let seed = top ? 7 : 3;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  if (top) {
+    for (let i = 0; i < 26; i++) {
+      const x = rnd() * 64, y = rnd() * 64, r = 3 + rnd() * 7;
+      g.fillStyle = i % 3 ? 'rgba(255,150,50,0.55)' : 'rgba(255,224,120,0.6)';
+      for (const dx of [-64, 0, 64]) for (const dy of [-64, 0, 64]) { g.beginPath(); g.ellipse(x + dx, y + dy, r, r * 0.6, 0, 0, Math.PI * 2); g.fill(); }
+    }
+  } else {
+    g.fillStyle = '#ffd9a0';
+    for (let x = 0; x < 64; x += 16) { g.beginPath(); g.moveTo(x, 6); g.lineTo(x + 4, 0); g.lineTo(x + 8, 6); g.lineTo(x + 12, 2); g.lineTo(x + 16, 6); g.lineTo(x + 16, 8); g.lineTo(x, 8); g.fill(); }
+  }
+  const t = pixelTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+
 export function textTexture(text, opts = {}) {
   const size = opts.size || 48, pad = 10;
   const c = document.createElement('canvas');
@@ -135,11 +178,13 @@ export function tex(name, theme = 'overworld') {
     const g = c.getContext('2d'); g.fillStyle = '#4db457'; g.fillRect(0, 0, 16, 16);
     t = pixelTexture(c); cache.set(k, t); return t;
   }
+  if (name === 'lavaTop' || name === 'lavaSide') { t = lavaTexture(name === 'lavaTop'); cache.set(k, t); return t; }
+  if (theme === 'castle' && ['brick', 'ground', 'hard'].includes(name)) { t = pixelTexture(castleStone(name)); cache.set(k, t); return t; }
   if (['brick','ground','hard','question','used','lift','pipe'].includes(name)) {
     const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');
-    const under=theme==='underground';
-    const color=name==='question'?'#d8b56a':name==='pipe'?'#668c70':name==='ground'?(under?'#607981':'#a59378'):name==='lift'?'#bca16d':name==='used'?'#988c75':(under?'#78929a':'#b3a38a');
-    g.fillStyle=color;g.fillRect(0,0,128,128);g.strokeStyle=under?'#4e666d':'#867b66';g.lineWidth=3;g.strokeRect(3,3,122,122);
+    const under=theme==='underground', castleUsed=theme==='castle'&&name==='used';
+    const color=castleUsed?'#8e6038':name==='question'?'#d8b56a':name==='pipe'?'#668c70':name==='ground'?(under?'#607981':'#a59378'):name==='lift'?'#bca16d':name==='used'?'#988c75':(under?'#78929a':'#b3a38a');
+    g.fillStyle=color;g.fillRect(0,0,128,128);g.strokeStyle=castleUsed?'#5a3820':under?'#4e666d':'#867b66';g.lineWidth=3;g.strokeRect(3,3,122,122);
     if(name==='brick'){g.beginPath();g.moveTo(0,64);g.lineTo(128,64);g.moveTo(64,0);g.lineTo(64,64);g.moveTo(32,64);g.lineTo(32,128);g.moveTo(96,64);g.lineTo(96,128);g.stroke();}
     if(name==='question'){g.fillStyle='#fff1c7';g.font='bold 94px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('?',64,67);}
     t=pixelTexture(c);cache.set(k,t);return t;

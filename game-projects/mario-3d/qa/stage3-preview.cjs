@@ -28,14 +28,16 @@ async function openRuntime(page){
   await p.addInitScript(()=>{const original=AudioNode.prototype.connect;AudioNode.prototype.connect=function(destination,...rest){const result=original.call(this,destination,...rest);if(destination===this.context.destination){const sink=this.context.createMediaStreamDestination();original.call(this,sink);window.__qaGameAudio=sink;}return result;};});
   p=await openRuntime(p);await p.waitForFunction(()=>window.__marioReady&&window.__MARIO_TEST__);
   const selector=p.locator('#menu [data-opt=level]');
-  for(const label of ['1-3 树冠','1-1 地面','1-2 地下']){check('direct selection label '+label,(await selector.innerText()).includes(label));await selector.click();}
+  // v2.6.0 起共四关：1-3 之后是 1-4 城堡
+  for(const label of ['1-3 树冠','1-4 城堡','1-1 地面','1-2 地下']){check('direct selection label '+label,(await selector.innerText()).includes(label));await selector.click();}
   check('level selector cycles back to 1-3',(await selector.innerText()).includes('1-3 树冠'));
   await p.locator('#menu [data-control-mode=show]').click();
   await p.screenshot({path:path.join(out,'menu.png')});await start(p);
   check('direct start at third stage',await p.evaluate(()=>__MARIO_TEST__.world.levelId==='1-3'&&__MARIO_TEST__.world.time===300));
   await position(p);
   const fire=await p.locator('[data-hold=fire]').evaluate(e=>({opacity:getComputedStyle(e).opacity,aria:e.getAttribute('aria-disabled'),label:e.innerText}));
-  check('J remains solid and explains flower requirement',fire.opacity==='1'&&fire.aria==='true'&&fire.label.includes('火焰花'),fire);
+  // 主线 30147c57 起火球键固定显示「火球」，未吃火焰花时只用 aria-disabled 标记
+  check('J remains solid and marked unavailable',fire.opacity==='1'&&fire.aria==='true'&&fire.label.includes('火球'),fire);
   for(let i=0;i<5;i++){
    if(i)await p.keyboard.press('c');await position(p);await p.evaluate(()=>__MARIO_TEST__.step(100));
    await photograph(p,'treetops-view-'+i+'.png');

@@ -9,7 +9,7 @@ const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const root = resolve(project, '../..');
 const source = join(root, 'public/html/game/mario-3d');
 const meta = JSON.parse(readFileSync(join(project, 'media-kit/game.json'), 'utf8'));
-const version = meta.current_version;
+const version = process.env.TOY_VERSION || meta.current_version;   // 审核候选版先打包自检时可指定版本号
 const out = join(project, 'dist', 'toy-' + version, 'package');
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'vendor'), { recursive: true });
@@ -27,8 +27,9 @@ const audioSource=readFileSync(join(out,'audio.js'),'utf8').replaceAll('../../..
 writeFileSync(join(out,'audio.js'),audioSource);
 cpSync(join(root, 'public/js/game/drag-look.js'), join(out, 'drag-look.js'));
 const mainSrc = readFileSync(join(source, 'main.js'), 'utf8');
+// 2026-10-10 起游戏页已去掉「返回游戏列表」，main.js 里不再有列表地址回退；只需改 drag-look 的相对路径
 const mainToy = mainSrc.replaceAll('../../../js/game/drag-look.js', './drag-look.js').replace("|| '../../../games.html'", "|| 'index.html'");
-if (mainToy === mainSrc) throw Error('main.js list-url fallback not found');
+if (!mainToy.includes("'./drag-look.js")) throw Error('main.js drag-look import not rewritten');
 writeFileSync(join(out, 'main.js'), mainToy, 'utf8');
 cpSync(join(root, 'public/vendor/three/0.170.0/build/three.module.js'), join(out, 'vendor/three.module.js'));
 cpSync(join(root, 'game-projects/starship-defense/THREE-LICENSE.txt'), join(out, 'vendor/THREE-LICENSE.txt'));

@@ -21,7 +21,9 @@ const UNDER_LOOP = [...U1, [0, S * 2], [0, S * 4], ...U1, [0, S * 2], [0, S * 4]
   ...seq('Ds4 Cs4 D4', S * 0.72), ...seq('Cs4 Ds4 Ds4 Gs3 G3 Cs4', S * 2), ...seq('C4 Fs4 F4 E3 As4 A4', S * 0.72), ...seq('Gs4 Ds4 B3 As3 A3 Gs3', S * 1.3), [0, S * 4], [0, S * 4], [0, S * 4]];
 const UNDERGROUND = { intro: [], loop: UNDER_LOOP, wave: 'square', vol: 0.18 };
 const STAR = { intro: [], loop: [...seq('C5 C5 C5 - C5 - C5 D5 C5 - C5 - C5 D5 C5 -'), ...seq('B4 B4 B4 - B4 - B4 C5 B4 - B4 - B4 C5 B4 -')], wave: 'square', vol: 0.15 };
-const TRACKS = { overworld: OVERWORLD, underground: UNDERGROUND, star: STAR };
+// 城堡：原版录音加载失败时的近似合成回退（低音半音下行的阴森循环，不是原曲逐音还原）
+const CASTLE = { intro: [], loop: [...seq('D4 Ds4 D4 Cs4 D4 Ds4 D4 Cs4 C4 Cs4 C4 B3 C4 Cs4 C4 B3', S * 1.4), ...seq('As3 B3 As3 A3 As3 B3 As3 A3 Gs3 A3 Gs3 G3 Gs3 A3 Gs3 G3', S * 1.4)], wave: 'square', vol: 0.15 };
+const TRACKS = { overworld: OVERWORLD, underground: UNDERGROUND, star: STAR, castle: CASTLE };
 
 const JINGLES = {
   die: [[NOTE.B4, 0.13], [NOTE.F5, 0.13], [0, 0.13], [NOTE.F5, 0.13], [NOTE.F5, 0.18], [NOTE.E5, 0.18], [NOTE.D5, 0.18], [NOTE.C5, 0.14], [NOTE.E4, 0.14], [0, 0.14], [NOTE.E4, 0.14], [NOTE.C4, 0.4]],
@@ -30,6 +32,7 @@ const JINGLES = {
     ...tri('As3', 'D4', 'F4'), ...tri('As4', 'D5', 'F5'), [NOTE.As5, T * 3], [NOTE.As5, T], [NOTE.As5, T], [NOTE.As5, T], [NOTE.C6, T * 6]],
   hurry: seq('E6 - E6 - Fs6 - Fs6 - G6 - G6 - - - - -', 0.07),
   oneup: seq('E6 G6 E7 C7 D7 G7', 0.09),
+  worldclear: [...tri('C4', 'E4', 'G4'), ...tri('C5', 'E5', 'G5'), [NOTE.C6, T * 6], ...tri('Gs3', 'C4', 'Ds4'), ...tri('Gs4', 'C5', 'Ds5'), [NOTE.Gs5, T * 6], ...tri('As3', 'D4', 'F4'), ...tri('As4', 'D5', 'F5'), [NOTE.As5, T * 6], [NOTE.C6, T * 9]],
   sprout: seq('G4 B4 D5 G5 B5 D6', 0.035)
 };
 
@@ -46,7 +49,7 @@ export class GameAudio {
         this.master = this.ctx.createGain(); this.master.connect(this.ctx.destination);
         this.musicBus = this.ctx.createGain(); this.musicBus.connect(this.master);
         this.sfxBus = this.ctx.createGain(); this.sfxBus.connect(this.master);
-        this.samples=new SampleAudio(this.ctx,this.musicBus,this.sfxBus,{"overworld": "overworld.mp3?v=bgmfull1", "underground": "underground.mp3?v=bgmfull1", "star": "star.mp3?v=bgmfull1", "smb_1-up": "smb_1-up.wav", "smb_bowserfalls": "smb_bowserfalls.wav", "smb_bowserfire": "smb_bowserfire.wav", "smb_breakblock": "smb_breakblock.wav", "smb_bump": "smb_bump.wav", "smb_coin": "smb_coin.wav", "smb_fireball": "smb_fireball.wav", "smb_fireworks": "smb_fireworks.wav", "smb_flagpole": "smb_flagpole.wav", "smb_gameover": "smb_gameover.wav", "smb_jump-small": "smb_jump-small.wav", "smb_jump-super": "smb_jump-super.wav", "smb_kick": "smb_kick.wav", "smb_mariodie": "smb_mariodie.wav", "smb_pause": "smb_pause.wav", "smb_pipe": "smb_pipe.wav", "smb_powerup": "smb_powerup.wav", "smb_powerup_appears": "smb_powerup_appears.wav", "smb_stage_clear": "smb_stage_clear.wav", "smb_stomp": "smb_stomp.wav", "smb_vine": "smb_vine.wav", "smb_warning": "smb_warning.wav", "smb_world_clear": "smb_world_clear.wav"});
+        this.samples=new SampleAudio(this.ctx,this.musicBus,this.sfxBus,{"overworld": "overworld.mp3?v=bgmfull1", "underground": "underground.mp3?v=bgmfull1", "star": "star.mp3?v=bgmfull1", "castle": "castle.mp3?v=castle1", "smb_1-up": "smb_1-up.wav", "smb_bowserfalls": "smb_bowserfalls.wav", "smb_bowserfire": "smb_bowserfire.wav", "smb_breakblock": "smb_breakblock.wav", "smb_bump": "smb_bump.wav", "smb_coin": "smb_coin.wav", "smb_fireball": "smb_fireball.wav", "smb_fireworks": "smb_fireworks.wav", "smb_flagpole": "smb_flagpole.wav", "smb_gameover": "smb_gameover.wav", "smb_jump-small": "smb_jump-small.wav", "smb_jump-super": "smb_jump-super.wav", "smb_kick": "smb_kick.wav", "smb_mariodie": "smb_mariodie.wav", "smb_pause": "smb_pause.wav", "smb_pipe": "smb_pipe.wav", "smb_powerup": "smb_powerup.wav", "smb_powerup_appears": "smb_powerup_appears.wav", "smb_stage_clear": "smb_stage_clear.wav", "smb_stomp": "smb_stomp.wav", "smb_vine": "smb_vine.wav", "smb_warning": "smb_warning.wav", "smb_world_clear": "smb_world_clear.wav"});
         this.applyVolume();
       }
       this.syncPause();
@@ -79,7 +82,7 @@ export class GameAudio {
   }
   sfx(name, opt) {
     if (!this.ctx || this.volume <= 0) return;
-    const map={jump:opt?.big?'smb_jump-super':'smb_jump-small',coin:'smb_coin',bump:'smb_bump',break:'smb_breakblock',stomp:'smb_stomp',kick:'smb_kick',fireball:'smb_fireball',sprout:'smb_powerup_appears',grow:'smb_powerup',fire:'smb_powerup',powerup:'smb_powerup',oneup:'smb_1-up',pipe:'smb_pipe',shrink:'smb_pipe',hurt:'smb_pipe',flagpole:'smb_flagpole',firework:'smb_fireworks'};
+    const map={jump:opt?.big?'smb_jump-super':'smb_jump-small',coin:'smb_coin',bump:'smb_bump',break:'smb_breakblock',stomp:'smb_stomp',kick:'smb_kick',fireball:'smb_fireball',sprout:'smb_powerup_appears',grow:'smb_powerup',fire:'smb_powerup',powerup:'smb_powerup',oneup:'smb_1-up',pipe:'smb_pipe',shrink:'smb_pipe',hurt:'smb_pipe',flagpole:'smb_flagpole',firework:'smb_fireworks',bowserfire:'smb_bowserfire',bowserfall:'smb_bowserfalls'};
     if(this.samples?.sfx(map[name]))return;
     const t = this.ctx.currentTime + 0.005;
     switch (name) {
@@ -102,12 +105,14 @@ export class GameAudio {
       case 'firework': this.noise(t, 0.45, 0.4, 900); break;
       case 'checkpoint': this.tone(NOTE.C6, t, 0.08, 'square', 0.1); this.tone(NOTE.G6, t + 0.08, 0.16, 'square', 0.1); break;
       case 'revive': this.tone(300, t, 0.05, 'square', 0.06); break;
+      case 'bowserfire': this.noise(t, 0.6, 0.3, 700); this.tone(220, t, 0.5, 'sawtooth', 0.08, this.sfxBus, 90); break;
+      case 'bowserfall': this.tone(600, t, 1.0, 'square', 0.12, this.sfxBus, 70); break;
     }
   }
   jingle(name) {
     if (!this.ctx) return;
     this.stopMusic();
-    const original={die:'smb_mariodie',gameover:'smb_gameover',clear:'smb_stage_clear',hurry:'smb_warning',oneup:'smb_1-up',sprout:'smb_powerup_appears'}[name];
+    const original={die:'smb_mariodie',gameover:'smb_gameover',clear:'smb_stage_clear',worldclear:'smb_world_clear',hurry:'smb_warning',oneup:'smb_1-up',sprout:'smb_powerup_appears'}[name];
     if(this.samples?.sfx(original)){this.jingleUntil=this.ctx.currentTime+this.samples.duration(original);return;}
     const end = this.playSeq(JINGLES[name], 'square', 0.17, this.musicBus);
     this.jingleUntil = end;
