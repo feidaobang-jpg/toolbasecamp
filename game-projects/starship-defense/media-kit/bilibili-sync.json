@@ -220,6 +220,23 @@
       "source_commit": "ff3a7162691d122b964912f0310696f6d5a3e406",
       "new_video": "not_requested",
       "website_mainline_commit": "e7beb060e8a228b30900f84f1e1840283f123e98"
+    },
+    {
+      "version": "hud-menu-align-20261010",
+      "classification": "界面观感（普通）",
+      "status": "pending_consolidated",
+      "bvids": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "summary": "主菜单入口按开始游戏/其他玩法·实验内容/设置与存档分组、模式按钮统一中性色；战斗右面板战术入口撑满面板宽、副本/存档排行/画质/声音改等宽两列网格对齐。",
+      "prepared_update_line": "主菜单按「开始游戏 / 其他玩法 / 设置与存档」分组、模式入口配色统一，战斗右面板按钮改等宽对齐更清爽。",
+      "reason": "并行任务 qoder/chongchao-feedback-fix-20261010 实时推送虫潮改动、写向同一批4条简介；本轮为界面观感类改动，避免并发平台写入与二次churn，交下一次单一合并同步携带（应与 aim v0.33.1 / weapon-balance v0.33.2 / 虫族修复 / 手机按键配色一并合并）。",
+      "record": "releases/hud-menu-align-20261010/bilibili-sync.json",
+      "recorded_at": "2026-10-10T23:50:38+08:00",
+      "source_commit": "4a729cf0"
     }
   ],
   "comment_corrections": [
