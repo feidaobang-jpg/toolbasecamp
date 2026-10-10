@@ -255,12 +255,12 @@ export function createZergMode(a){
   }
   s.update=update;
 
-  // 主菜单入口：放在「战地模式」之后、「读取存档」之前，与其他独立玩法并列
-  const anchor=$('btnLoadMenu');
-  const row=anchor?anchor.parentNode:document.querySelector('#menuMain .btnRow');
+  // 主菜单入口：放进「其他玩法」分组，排在自由测试之前，与其他独立玩法并列
+  const anchor=$('btnTest');
+  const row=anchor?anchor.parentNode:document.getElementById('modeRow')||document.querySelector('#menuMain .btnRow');
   if(row&&!$('btnZerg')){
     const b=document.createElement('button');
-    b.className='mbtn red';b.id='btnZerg';
+    b.className='mbtn';b.id='btnZerg';
     b.textContent='🪲 虫族模式 · 攻陷人类要塞';
     b.onclick=()=>start();
     if(anchor)row.insertBefore(b,anchor);else row.appendChild(b);
