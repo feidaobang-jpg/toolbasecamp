@@ -1,16 +1,17 @@
 import { markTree, treeState, applyTree, scalarState } from '../../../public/js/game/coop.js';
 // 玩法核心：角色、连招、抓投、武器、敌人 AI、卷轴锁屏波次、计时、过场与结算。
-// 第一关 Boss 维斯·T 与岩跳龙；第二关三角龙哈克、熟睡的霸王龙希瓦特、步枪偷猎者、链锤兵拉什·T、泥沼减速与 Boss 屠夫。
+// 第一关 Boss 维斯·T 与岩跳龙；第二关三角龙哈克、熟睡的霸王龙希瓦特、步枪偷猎者、链锤兵拉什·T、泥沼减速与 Boss 屠夫；
+// 第三关「地狱公路」的接车、开车撞敌与 Boss 霍格在 hellroad.js（这里只留挂接点）。
 // 固定 60Hz 逻辑步长；坐标 x = 关卡前进方向，z = 纵深，y = 高度。
 import * as THREE from 'three';
 import { STEP, store, rand, randRange, chance, pick, clamp, lerp, angDiff, approachAng, faceOf, FACE_RIGHT, FACE_LEFT, reseed, seed } from './core.js';
 import { AREAS, ENEMY, ITEMS, HEROES, HALF_W, EDGE, ENTER_DX, STAGES } from './level.js';
-import { buildHuman, buildRaptor, buildTrike, buildCar, buildPtero, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
+import { buildHuman, buildRaptor, buildTrike, buildCar, buildBike, buildPtero, maceGeo, SPECS, itemMesh, meshFrom, itemGeo, GEO, toonMat } from './models.js';
+import * as HR from './hellroad.js';
 import { HP, HC, P, mod, sample, lerpPose, walkPose, runPose, applyPose, POSE_LEN, RPOSE, raptorRun, lerpR, applyRaptor, R_LEN } from './anim.js';
 import { propMesh } from './world.js';
 import A from './audio.js';
 import IN from './input.js';
-import { createRoad } from './road.js';
 
 export const G = {
   mode: 'title', t: 0, score: 0, hi: store.get('hi', 50000) | 0, lives: 0, settings: {}, hero: 0,
@@ -19,7 +20,8 @@ export const G = {
   banner: null, toast: null, dialog: null, fade: 0, hurtFx: 0, flash: 0, go: 0,
   events: [], kills: {}, stats: null, script: null, onEnd: null, cont: null, demoUsed: false, ended: false,
   sleeper: null, car: null, carAnim: null, blockers: [], water: null, cleared: [], extraWave: false, later: [],
-  cine: null, cineCam: null, pteroFly: []
+  cine: null, cineCam: null, pteroFly: [],
+  roadPhase: '', roadT: 0, roadDist: 0, roadV: 0, roadDusk: 0, carCalled: false   // 第三关公路：阶段 run 一路撞 / hogg 车上打霍格 / wreck、foot 车毁后徒步 / end、done 收尾
 };
 const CN_NUM = ['', '一', '二', '三', '四', '五', '六', '七', '八'];
 export const SINK = 0.62;   // 泥沼齐腰：站在水里的角色整体下沉的深度（只影响画面，判定高度不变）
@@ -57,7 +59,6 @@ export function computerInput(slot){
  return {x:near?0:dx/Math.max(1,d),z:near?0:dz/Math.max(1,d),atk:attack,edges:attack?['atk']:[],look:dx<0?FACE_LEFT:FACE_RIGHT,lane:false};
 }
 let scene, world, fx, camCtl, nextId = 1, bannerId = 0, toastId = 0;
-let road;
 const GRAV = 24;
 const DUR_MUL = { easy: 0.45, std: 0.7, classic: 1.0 };   // 耐久：敌人伤害倍率
 export const DUR_NAME = { easy: '宽松', std: '标准', classic: '经典' };
@@ -122,9 +123,10 @@ const EM = {
 // ---------- 初始化 ----------
 export function init(sc, w, f, cam) {
   scene = sc; world = w; fx = f; camCtl = cam;
-  road=createRoad({G,scene,world,fx,move:moveVec,coopInput:s=>coopInputs(s),spawn:spawnEnemy,state:setState,attachWeapon,banner,toast,ev,score:addScore,damage,
-    prop:()=>propMesh('drum'),raider:()=>{const m=buildHuman(SPECS.punk);applyPose(m,HP.guard);return m;},
-    hitPlayer:(a,p,dmg)=>{if(hittable(p))applyHit(a,p,H(0,1,1,1,0,3,dmg,'down',0,'hit',true),a?.face||FACE_RIGHT);}});
+  HR.initHellRoad({
+    G, scene, world, fx, GRAV, DUR_MUL, H, players, makeActor, removeActor, spawnEnemy, setState, knockdown, applyHit, hittable, hitProp, removeItem,
+    addScore, banner, toast, ev, runScript, releaseGrab, triggerWave, loadArea, markTree, moveOf: (p) => withPlayer(p, moveVec)
+  });
 }
 export const HERO_DATA = HEROES;
 export const player = () => G.player;
@@ -155,6 +157,8 @@ function makeActor(type, side, opts) {
     if (SPECS[type] && SPECS[type].build === 'fat') a.radius = 0.45;
     if (type === 'vice' || type === 'mess' || type === 'lash') a.radius = 0.42;
     if (type === 'butcher') a.radius = 0.52;
+    // 第三关：霍格和飞车党骑在摩托上（摩托挂在模型根节点下，跟着人走；被打下车时隐藏）
+    if (type === 'hogg' || type === 'biker') { a.bike = buildBike(type); a.model.root.add(a.bike); a.rider = true; a.radius = type === 'hogg' ? 0.6 : 0.5; }
   }
   markTree(a.model.root);
   a.blob = new THREE.Mesh(blobGeo, blobMat); a.blob.rotation.x = -Math.PI / 2; a.blob.renderOrder = 1;
@@ -263,9 +267,9 @@ export function newGame(opts) {
   ev('start', { hero: h.id, lives: G.settings.lives, dur: G.settings.dur });
 }
 function clearAll() {
-  if(road)road.clear();
   A.clearEffects();
   clearIntroFx();
+  HR.reset();
   for (const a of G.actors) if (!a.removed) removeActor(a);
   G.actors = []; G.player = null; G.boss = null; G.raptor = null;
   for (const it of G.items) scene.remove(it.mesh);
@@ -277,13 +281,13 @@ function clearAll() {
   G.carAnim = null; G.sleeper = null; G.blockers = []; G.water = null; G.extraWave = false; G.later = [];
   if (fx) fx.clear();
 }
-function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'hogg' ? 'boss3' : G.boss.type === 'butcher' ? 'boss2' : 'boss') : AREAS[G.area].id; }
+function areaMusic() { return G.boss && G.boss.alive ? (G.boss.type === 'butcher' ? 'boss2' : G.boss.type === 'hogg' ? 'boss3' : 'boss') : AREAS[G.area].id; }
 function loadArea(i, first) {
-  if(road)road.clear();
   const prevStage = G.areaLoaded && AREAS[G.area] ? AREAS[G.area].stage : 0;
   // 清掉上一区域的敌人与物品，保留玩家；还在飞的子弹作废
   G.later = [];
   clearIntroFx();
+  HR.reset();
   for (const a of G.actors) if (a.side !== 'player' && !a.removed) removeActor(a);
   G.actors = G.actors.filter(a=>a.side==='player'&&!a.removed);
   for (const it of G.items) scene.remove(it.mesh);
@@ -373,13 +377,16 @@ function loadArea(i, first) {
     ]);
   } else if (AR.car) {
     carIntro(AR);
+  } else if (AR.id === 'desert') {
+    HR.desertIntro(AR);   // 第三关开场：霍格放话 → 荒漠里蹲着的四个手下
+  } else if (AR.road) {
+    HR.startRoad(AR);     // 第三关公路：一进来就坐在凯迪拉克里
   } else {
     G.mode = 'play';
     A.music(AR.id);
     if (AR.id === 'street') { p.y = 1.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 2; }
     if (AR.id === 'swamp') { p.y = 2.6; p.vy = 0; setState(p, 'jump'); p.sub.noAtk = true; p.vx = 1.6; }   // 从山崖上跳进泥沼
   }
-  road.init(AR.id);
 }
 // 开场：飞过镜头前的翼龙（从右往左），x0 起点、y 高度、z 纵深、speed 米/秒、delay 秒后出发、s 缩放
 function addIntroPtero(x0, y, z, speed, delay, s) {
@@ -466,11 +473,11 @@ export function update() {
   if (G.later.length) runLater();
   if (G.cine || G.pteroFly.length) updateIntroFx(dt);
   if (G.mode === 'cont') { updateContinue(dt); return; }
-  if(road.step(dt))return;
   // 玩家输入
   const p = G.player;
   if (G.mode === 'play') for(const actor of G.coop?players():[p]){actor.netInput=G.coop?coopInputs(actor.slot):null;withPlayer(actor,()=>handleInput(actor,dt));}
   else IN.flush();
+  if (G.roadPhase) HR.update(dt);   // 第三关公路：卷动、开车、路上的敌人与路障、霍格的手雷
   // 角色
   for (const a of G.actors) {
     if (a.removed) continue;
@@ -482,17 +489,18 @@ export function update() {
     if (a.side === 'player') withPlayer(a,()=>updatePlayer(a,dt));
     else {
     const target=players().filter(p=>p.alive).sort((p,q)=>Math.hypot(p.x-a.x,p.z-a.z)-Math.hypot(q.x-a.x,q.z-a.z))[0]||p;G.player=target;
-    if (a.type === 'shivat') updateShivat(a, dt);
+    if (a.type === 'hogg' && a.rider) HR.updateHogg(a, dt);
+    else if (a.road) HR.updateActor(a, dt);
+    else if (a.type === 'shivat') updateShivat(a, dt);
     else if (a.isTrike) updateTrike(a, dt);
     else if (a.isRaptor) updateRaptor(a, dt);
     else if (a.type === 'vice') updateVice(a, dt);
     else if (a.type === 'butcher') updateButcher(a, dt);
-    else if (a.type === 'hogg' && a.alive) road.bossStep(a,dt);
     else updateEnemy(a, dt);
     G.player=p;
     }
     const beforeX=a.x,beforeZ=a.z;
-    if(a.type!=='hogg'||!a.alive)physics(a, dt);
+    physics(a, dt);
     if (G.water) waterFx(a, dt);
     if(a.side==='player'&&!camCtl.fp()&&['walk','run','carry'].includes(a.state)) {
       const dx=a.x-beforeX,dz=a.z-beforeZ;
@@ -528,8 +536,6 @@ function moveVec() {
 function laneMode() { if(IN.network)return !!IN.network.lane;const pr = camCtl.preset(); return (pr.id === 'side' || pr.id === 'oblique') && Math.abs(camCtl.yawOff) < 0.7; }
 let lastJumpT = -9, lastAtkT = -9;
 function handleInput(p, dt) {
-  const exit=AREAS[G.area].exit;
-  if(exit?.type==='radio'&&p.alive&&['idle','walk','run'].includes(p.state)&&G.wave>=AREAS[G.area].waves.length&&!G.waveOn&&Math.hypot(p.x-exit.x,p.z-exit.z)<1.8&&IN.take('atk')){exitArea('radio');return;}
   const canAct = ['idle', 'walk', 'run'].indexOf(p.state) >= 0;
   // 必杀：J+K 同时按（或 U）
   const atkE = IN.take('atk'), jumpE = IN.take('jump'), megaE = IN.take('mega'), dashE = IN.take('dash');
@@ -1225,6 +1231,7 @@ function applyHit(a, e, h, dir, splash) {
 }
 // 统一扣血与受击反应
 function damage(a, e, dmg, kb, dir, pts, react) {
+  if (e.dmgMul) dmg *= e.dmgMul;   // 第三关：车毁之后徒步打霍格，拳脚的伤害按倍率放大（不然只能靠他路过时蹭几下，拖得太久）
   e.hp -= dmg; e.flash = 0.08; e.lastHitBy = a;
   if (e.side === 'player') {
     G.hurtFx = Math.min(1, 0.55 + dmg / 30); G.stats.hits++; G.stats.damage += dmg;
@@ -1235,8 +1242,8 @@ function damage(a, e, dmg, kb, dir, pts, react) {
   } else if (e.grabbedBy && kb !== 'hit') releaseGrab(e.grabbedBy);
   if (!react) return;
   const dead = e.hp <= 0;
-  if(e.type==='hogg'&&!dead){e.invul=.14;return;}
   if (dead) { e.hp = 0; }
+  if (e.rider) { if (dead) HR.riderDown(e, dir); return; }   // 骑在摩托上的霍格不吃硬直、不会被打倒，打到没血才连人带车炸翻
   e.stun++; e.stunT = 1.0;
   if (e.isDino && e.type !== 'raptor') {
     // 三角龙、霸王龙体型大：轻攻击不硬直；冲锋、苏醒时完全不吃硬直
@@ -1340,7 +1347,7 @@ function physics(a, dt) {
     }
   }
   // 边界：纵深与区域两端；玩家受卷轴窗口限制，卷轴时敌人可稍出屏，锁屏时敌人也不出画
-  const free = ['enter', 'leave', 'flee', 'cut', 'sleep', 'knocked', 'waking'].indexOf(a.state) >= 0;   // 熟睡的霸王龙不跟着卷轴窗口挪位置
+  const free = a.noClamp || ['enter', 'leave', 'flee', 'cut', 'sleep', 'knocked', 'waking'].indexOf(a.state) >= 0;   // 熟睡的霸王龙不跟着卷轴窗口挪位置；第三关公路上的人和霍格的摩托进出画面不受限
   if (!free) {
     const zMin = AR.z0, zMax = AR.z1;
     a.z = clamp(a.z, zMin, zMax);
@@ -1385,12 +1392,13 @@ function waterFx(a, dt) {
   a.splashT = (a.splashT || 0) + dt * Math.min(2, sp / 2.5);
   if (a.splashT > 0.28) { a.splashT = 0; fx.splash(a.x - Math.sign(a.vx) * 0.2, 0.05, a.z + 0.15, 3, 0.28); }
 }
+const NO_SEP = ['enter', 'cut', 'leave', 'flee', 'incar', 'road', 'ride'];   // 这些状态不参与互相推挤（过场、坐在车里、公路上的人、骑摩托的）
 function separate() {
   const L = G.actors;
   for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++) {
     const a = L[i], b = L[j];
     if (!a.alive || !b.alive || a.state === 'grabbed' || b.state === 'grabbed' || a.state === 'down' || b.state === 'down' || a.y > 0.4 || b.y > 0.4) continue;
-    if (['enter', 'cut', 'leave', 'flee'].indexOf(a.state) >= 0 || ['enter', 'cut', 'leave', 'flee'].indexOf(b.state) >= 0) continue;
+    if (NO_SEP.indexOf(a.state) >= 0 || NO_SEP.indexOf(b.state) >= 0) continue;
     const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), min = (a.radius + b.radius) * 0.85;
     if (d < min && d > 1e-4) {
       const push = (min - d) / 2, nx = dx / d, nz = dz / d;
@@ -1418,7 +1426,7 @@ function updateEnemy(e, dt) {
     case 'grabbed': e.vx = e.vz = 0; e.y = 0; break;
     case 'down': updateDown(e, dt); break;
     case 'getup': e.vx = e.vz = 0; if (e.st > 0.5) { setState(e, 'idle'); e.cd = randRange(0.2, 0.6); } break;
-    case 'dead': e.vx = e.vz = 0; if (e.st > 1.0) removeActor(e); break;
+    case 'dead': e.vx = e.vz = 0; if (e.st > 1.0 && !e.keepBody) removeActor(e); break;   // keepBody：霍格倒下后留在地上（原作主角站在他旁边摆胜利姿势）
     case 'flee': {
       const dir = e.x > G.focusX ? 1 : -1;
       e.vx = dir * 4.5; e.vz = 0; e.face = dir > 0 ? FACE_RIGHT : FACE_LEFT;
@@ -1719,13 +1727,12 @@ function summonHenchmen(n) {
   ev('summon', { n });
 }
 function bossDefeated(v) {
-  if(v.type==='hogg'&&G.road){G.road.phase='won';G.road.speed=0;G.road.hazards=[];for(const p of players()){p.y=0;p.x=clamp(p.x,11,18);p.z=clamp(p.z+1.3,-2,3.5);setState(p,'idle');}if(G.car)G.car.position.set(10,0,-2.7);}
   G.timeScale = 0.35;
   ev('bossDown', { boss: v.type });
   A.music(null);
   // 剩下的杂兵逃走，恐龙跑开
   for (const e of G.actors) {
-    if (e === v || e.side === 'player' || !e.alive) continue;
+    if (e === v || e.side !== 'enemy' || !e.alive) continue;   // 只赶走敌人（联机时别的玩家不在此列）
     if (e.isRaptor && e.type === 'raptor') { setState(e, 'flee', { vanish: true }); e.angry = false; }
     else if (['down', 'dead', 'knocked', 'sleep'].indexOf(e.state) < 0) { setState(e, 'flee', { vanish: true }); }
   }
@@ -1742,6 +1749,11 @@ function bossDefeated(v) {
     { wait: 2.4 }
   ];
   if (v.type === 'vice') steps.push({ say: 'vice', text: '屠夫在北边的森林里打猎……别去惹他……那家伙是个疯子！', dur: 3.4 });
+  if (v.type === 'hogg') {
+    // 原作过场（下一关 JACK'S GARAGE 的引子）：远处的修车厂在冒烟——「看……我们的修车厂！有人得为这事付出代价！」
+    const isJack = HEROES[G.hero].id === 'jack';
+    steps.push({ say: isJack ? 'hannah' : 'jack', text: isJack ? '杰克，你看……修车厂那边在冒烟！' : HEROES[G.hero].name + '，你看……我们的修车厂！', dur: 2.8 }, { say: 'jack', text: '有人得为这事付出代价！', dur: 2.6 });
+  }
   const next = STAGES[stage];   // STAGES 按关号从 1 排：下标 stage 就是下一关
   steps.push({ fn: () => { if (next) toNextStage(next); else finish(true); } });
   runScript(steps);
@@ -2132,21 +2144,24 @@ function updateWaves(dt) {
       G.waveOn = false; G.lockX = null;
       if (G.extraWave) G.extraWave = false; else G.wave++;   // 霸王龙被打醒时临时锁的屏不占波次
       const more = G.wave < AR.waves.length || AR.exit || AR.boss;
-      if (more) { G.go = 2.4; A.play('go'); }
+      if (more && !(AR.exit && AR.exit.type === 'car' && G.wave >= AR.waves.length)) { G.go = 2.4; A.play('go'); }   // 第三关最后一波打完是车来接，不喊 GO
+      if (AR.waves[G.wave - 1] && AR.waves[G.wave - 1].clearBanner) banner(AR.name, AR.title, 2.4);   // 第三关：打完开场四人才出字幕 DESERT OF DEATH
       ev('waveClear', { wave: G.wave });
     }
   } else if (G.mode === 'play') {
     if (G.wave < AR.waves.length) {
       if (p.x >= AR.waves[G.wave].trigger) triggerWave(G.wave);
+    } else if (AR.exit && AR.exit.type === 'car') {
+      // 第三关 3-1：最后一波打完，凯迪拉克自己开过来接人（等主角站稳、地上的人躺平）
+      if (!G.carCalled && ['idle', 'walk', 'run'].indexOf(p.state) >= 0 && !G.actors.some(e => e.side === 'enemy' && e.state === 'down')) { G.carCalled = true; G.go = 0; HR.carArrive(); }
     } else if (AR.exit) {
       const ex = AR.exit;
       const wide = ex.type === 'cliff' || ex.type === 'dusk';
-      if (ex.type !== 'radio' && p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < (wide ? 9 : 1.1) && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
+      if (p.x >= ex.x - 0.6 && Math.abs(p.z - ex.z) < (wide ? 9 : 1.1) && ['idle', 'walk', 'run'].indexOf(p.state) >= 0) exitArea(ex.type);
     } else if (AR.boss && !G.boss && p.x >= AR.boss.trigger) startBoss();
   }
 }
 function updateCameraFocus(dt) {
-  if(G.road&&G.road.phase!=='radio'){G.focusX=16;G.lockX=16;return;}
   const AR = AREAS[G.area], p = G.player;
   const minF = AR.x0 + HALF_W, maxF = AR.x1 - HALF_W;
   let target = clamp(p.x + 0.8, minF, maxF);
@@ -2161,6 +2176,7 @@ function nearInset(z) { const AR = AREAS[G.area]; return AR.camZ1 === undefined 
 function updateTimer(dt) {
   // 无敌演示不受限时约束；保留剩余时间，关闭后继续原倒计时。
   if (G.settings.demo) return;
+  if (G.roadPhase === 'run') return;   // 第三关开车一路撞过去的那段不计时，霍格出场才开始
   const p = G.player;
   if (!G.waveOn && !G.boss && G.lockX === null && G.wave === 0) { /* 开场还没触发也照样计时 */ }
   const before = G.timer;
@@ -2179,9 +2195,7 @@ function exitArea(type) {
   G.mode = 'trans';
   if (p.grab) releaseGrab(p);
   const W0 = world.area();
-  if(type==='radio'){
-    runScript([{fn:()=>{setState(p,'pickup');A.play('pickup');banner('电台接通 · 凯迪拉克来了','准备上车！',2);}}, {wait:1}, {fade:1,dur:.6},{fn:()=>loadArea(to)},{fade:0,dur:.7}]);ev('radioCall');
-  } else if (type === 'door') {
+  if (type === 'door') {
     p.face = FACE_RIGHT; p.x = Math.min(p.x, 43.9); setState(p, 'door', { kick: true });
     runScript([
       { wait: 0.15 },
@@ -2371,7 +2385,7 @@ const tmpPose = new Float32Array(POSE_LEN);
 const GUN_POSE = mod(HP.guard, { rS: [-0.6, 0, -0.2], rE: [-1.2, 0, 0] });
 const SG_POSE = mod(HP.guard, { rS: [-0.5, -0.2, -0.2], rE: [-1.4, 0, 0], lS: [-0.9, -0.3, 0.3], lE: [-0.8, 0, 0] });
 export function render(dt, realT) {
-  road.render();
+  HR.render(dt);
   if(G.coopGuest){for(const a of G.actors){if(a.netTree)applyTree(a.model.root,a.netTree);a.blob.position.set(a.x,.015,a.z);a.blob.visible=a.alive&&a.y<1.5;if(a.slot===coopLocalSlot&&G.fpActive)a.model.root.visible=false;}return;}
   for (const a of G.actors) {
     if (a.removed) continue;
@@ -2379,10 +2393,10 @@ export function render(dt, realT) {
     if (a.isRaptor) renderRaptor(a, frozen ? 0 : dt);
     else if (a.isTrike) renderTrike(a, frozen ? 0 : dt);
     else renderHuman(a, frozen ? 0 : dt, realT);
+    if (a.rider) HR.renderRider(a, frozen ? 0 : dt);
     // 泥沼里整个人下沉到齐腰；从水里冒出来的敌人从水下升起（只改画面，判定高度不变）
     const sk = G.water ? sinkK(a.x) * SINK : 0;
     let vy = a.y - sk;
-    if(a.type==='hogg'&&a.alive)vy+=.52;
     if (a.state === 'enter' && a.sub.kind === 'rise') vy -= 1.9 * Math.max(0, 1 - a.st / 0.75);
     // 命中停顿：被打的人沿受力方向来回抖，越到后面越小
     let jx = 0, jz = 0;
@@ -2394,10 +2408,10 @@ export function render(dt, realT) {
     const hs = Math.max(0.3, 1 - a.y * 0.25);
     if (a.isDino) { const r = a.radius / 0.32 * 0.85 * hs; a.blob.scale.set(r * 1.1, r * (a.type === 'shivat' ? 2.6 : 1.9), 1); a.blob.rotation.z = -a.face; }
     else a.blob.scale.setScalar(a.radius / 0.32 * 0.85 * hs);
-    a.blob.visible = sk < 0.05 && (a.state !== 'dead' || Math.floor(a.st * 12) % 2 === 0);
+    a.blob.visible = sk < 0.05 && (a.state !== 'dead' || a.keepBody || Math.floor(a.st * 12) % 2 === 0);
     // 闪烁：无敌 / 倒地消失
     let vis = true;
-    if (a.state === 'dead' && a.side !== 'player') vis = Math.floor(a.st * 12) % 2 === 0;
+    if (a.state === 'dead' && a.side !== 'player' && !a.keepBody) vis = Math.floor(a.st * 12) % 2 === 0;
     else if (a.invul > 0 && a.side === 'player' && a.state !== 'attack' && !G.settings.demo) vis = Math.floor(G.t * 15) % 2 === 0;
     if (a === G.player && G.fpActive) vis = false;
     a.model.root.visible = vis;
@@ -2471,6 +2485,8 @@ function nearFade(a) {
 function targetPose(a, realT) {
   const s = a.state, st = a.st;
   const tP = (name) => HP[name] || HP.guard;
+  if (a.rider) return HR.riderPose(a);
+  if (s === 'road') return HR.roadPose(a);
   if ((a.side === 'player' || (a.def && a.def.rifle)) && a.weapon && ['idle', 'walk', 'hover'].indexOf(s) >= 0) {
     const k = a.weapon.kind;
     if (k === 'gun') return s === 'walk' ? walkPose(a.walkPh, 0.8, GUN_POSE) : GUN_POSE;
@@ -2540,7 +2556,6 @@ function targetPose(a, realT) {
     case 'butt': return a.sub.phase === 'land' ? HP.sit : a.sub.phase === 'down' ? HP.buttSit : HP.jumpUp;
     case 'leap': return HP.jumpUp;
     case 'pickSword': return HP.crouch;
-    case 'ride': return mod(HP.sit,{rS:[-.65,0,-.12],lS:[-.65,0,.12],rE:[-.65,0,0],lE:[-.65,0,0]});
     case 'incar': return HP.sit;
     case 'cut': {
       if (a.sub.chop) return sample(HC.chop, st % HC.chop.dur);
@@ -2571,6 +2586,11 @@ function renderHuman(a, dt, realT) {
   applyPose(a.model, a.pose);
   // 必杀旋转
   if (a.state === 'attack' && a.move && a.move.id === 'mega') a.model.bones.body.rotation.y = a.spin || 0;
+  // 翻身跳（第三关跳上 / 跳下凯迪拉克）：绕身体中心前空翻一圈
+  if (a.state === 'jump' && a.sub.flip) {
+    const th = Math.min(1, a.st / a.sub.flip) * Math.PI * 2, b = a.model.bones.body, c = a.model.H * 0.5;
+    b.rotation.x += th; b.position.y += c - c * Math.cos(th); b.position.z -= c * Math.sin(th);
+  }
 }
 const tmpR = new Float32Array(R_LEN);
 function renderRaptor(r, dt) {
@@ -2643,16 +2663,15 @@ export function hudState() {
   return {
     hp: p ? Math.max(0, p.hp) : 0, maxHp: p ? p.maxHp : 100, lives: G.settings.lives === 'inf' ? '∞' : Math.max(0, G.lives),
     score: G.score, hi: Math.max(G.hi, G.score), hero: G.hero,
-    weapon: p && p.weapon ? { kind: p.weapon.kind, ammo: p.weapon.ammo, name: ITEMS[p.weapon.kind].cn } : null,
+    // 第三关开车时武器栏显示凯迪拉克还能挨几颗手雷
+    weapon: p && p.weapon ? { kind: p.weapon.kind, ammo: p.weapon.ammo, name: ITEMS[p.weapon.kind].cn } : G.car && (G.roadPhase === 'run' || G.roadPhase === 'hogg') ? { kind: 'car', ammo: G.carHp, name: '凯迪拉克' } : null,
     enemy: enemy ? { type: enemy.type, name: enemy.def ? enemy.def.name : enemy.type, cn: enemy.def ? enemy.def.cn : '', hp: Math.max(0, enemy.hp), maxHp: enemy.maxHp } : null,
-    timer: G.timer, timerUnlimited: G.settings.demo, timerBig: G.timerShow > 0 || G.timer < 30, go: G.go > 0, mode: G.mode
+    timer: G.timer, timerUnlimited: G.settings.demo, timerBig: G.timerShow > 0 || G.timer < 30, noTimer: G.roadPhase === 'run', go: G.go > 0, mode: G.mode
   };
 }
 
 // ---------- 测试钩子 ----------
 export const _test = {
-  newGame,coopSnapshot,coopApply,joinCoopSlot,
-  wreck:()=>road.wreck(),
   G,
   tp(x, z) { const p = G.player; p.x = x; if (z !== undefined) p.z = z; },
   hp(v) { G.player.hp = v; },
@@ -2673,26 +2692,28 @@ export const _test = {
   skipScript() { while (G.script) stepScript(10); },
   actors: () => G.actors.map(a => ({ id: a.id, type: a.type, side: a.side, state: a.state, x: +a.x.toFixed(2), y: +a.y.toFixed(2), z: +a.z.toFixed(2), hp: +(a.hp || 0).toFixed(1), alive: a.alive, face: +a.face.toFixed(2), token: a.token, nearK: a.nearK === undefined ? 1 : +a.nearK.toFixed(2), radius: a.radius, raptor: !!a.isRaptor, dino: !!a.isDino, waker: !!a.waker, swords: a.swords })),
   props: () => G.props.map(p => ({ kind: p.kind, x: p.x, z: p.z, broken: p.broken, hp: p.hp })),
-  items: () => G.items.map(i => ({ kind: i.kind, x: +i.x.toFixed(2), z: +i.z.toFixed(2) }))
+  items: () => G.items.map(i => ({ kind: i.kind, x: +i.x.toFixed(2), z: +i.z.toFixed(2) })),
+  road: HR.test, roadState: HR.state
 };
 export function snapshot() {
   const p = G.player;
   return {
-    road:road.snapshot(), mode: G.mode, t: +G.t.toFixed(2), area: G.area, areaId: AREAS[G.area] ? AREAS[G.area].id : null, stage: AREAS[G.area] ? AREAS[G.area].stage : 0, cleared: G.cleared.slice(), focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
+    mode: G.mode, t: +G.t.toFixed(2), area: G.area, areaId: AREAS[G.area] ? AREAS[G.area].id : null, stage: AREAS[G.area] ? AREAS[G.area].stage : 0, cleared: G.cleared.slice(), focusX: +G.focusX.toFixed(2), lockX: G.lockX, wave: G.wave, waveOn: G.waveOn, timer: +G.timer.toFixed(1),
     score: G.score, hi: G.hi, lives: G.settings.lives === 'inf' ? 'inf' : G.lives, settings: Object.assign({}, G.settings), demoUsed: G.demoUsed,
     player: p ? { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), state: p.state, hp: +p.hp.toFixed(1), face: +p.face.toFixed(2), invul: +p.invul.toFixed(2), weapon: p.weapon ? Object.assign({}, p.weapon) : null, combo: p.comboN, visible: p.model.root.visible } : null,
     enemies: G.actors.filter(a => a.side === 'enemy' && a !== G.sleeper).length, boss: G.boss ? { type: G.boss.type, hp: G.boss.hp, state: G.boss.state, summons: G.boss.summons, swords: G.boss.swords } : null,
     sleeper: G.sleeper ? { state: G.sleeper.state, wakeN: G.sleeper.wakeN, hp: +G.sleeper.hp.toFixed(1), alive: G.sleeper.alive } : null, car: !!G.car, carMoving: !!G.carAnim, sink: p ? +sinkK(p.x).toFixed(2) : 0, raptor: G.raptor && !G.raptor.removed ? { state: G.raptor.state, angry: !!G.raptor.angry, hp: G.raptor.hp } : null,
+    road: HR.state(),
     dialog: G.dialog ? G.dialog.text : null, banner: G.banner ? G.banner.text : null, kills: Object.assign({}, G.kills), items: G.items.length, props: G.props.filter(p => !p.broken).length, script: !!G.script, cont: G.cont ? G.cont.count : null, fade: +G.fade.toFixed(2)
   };
 }
 
 export function coopInput(){
  const mv=moveVec(),edges=[],events={};for(const k of ['atk','jump','mega','dash']){const e=IN.take(k);if(e){edges.push(k);events[k]=e.data;}}
- return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),jump:IN.down('jump'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
+ return {x:mv.x,z:mv.z,y:mv.sy,atk:IN.down('atk'),run:IN.down('run'),lane:laneMode(),look:G.player.lookHeading??G.player.face,motion:!!events.atk?.offensive,edges};
 }
 export function coopSnapshot(){
- return {road:road.snapshot(),g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water},
+ return {g:{...scalarState(G,['hi','hero','fpActive']),settings:G.settings,stats:G.stats,kills:G.kills,cleared:G.cleared,banner:G.banner,toast:G.toast,dialog:G.dialog,cont:G.cont,water:G.water},
  actors:G.actors.map(a=>{const vis=a.model.root.visible;if(a.side==='player'&&a===G.player&&G.fpActive)a.model.root.visible=true;const tree=treeState(a.model.root);a.model.root.visible=vis;return {s:scalarState(a),weapon:a.weapon?{kind:a.weapon.kind,ammo:a.weapon.ammo}:null,tree};}),
  items:G.items.map(i=>({s:scalarState(i),tree:treeState(i.mesh)})),props:G.props.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
  projs:G.projs.map(pr=>({s:scalarState(pr),tree:treeState(pr.mesh)})),
@@ -2723,6 +2744,5 @@ export function coopApply(data){
  if(!pr){const mesh=row.s.kind==='drum'?propMesh('barrel'):row.s.kind==='rocket'?itemMesh('rocket'):meshFrom(itemGeo(row.s.kind),{thin:true,shadow:false});scene.add(mesh);pr={mesh};G.projs[i]=pr;}Object.assign(pr,row.s);applyTree(pr.mesh,row.tree);});
  if(data.car){if(!G.car){G.car=buildCar();scene.add(G.car);}applyTree(G.car,data.car);}else if(G.car){scene.remove(G.car);G.car=null;}
  data.doors.forEach((d,i)=>{if(world.area().doors?.[i])Object.assign(world.area().doors[i],d);});
- road.apply(data.road);
  if(G.mode==='play')A.music(areaMusic());
 }

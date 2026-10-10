@@ -239,5 +239,40 @@
     ],
     "use": "荒漠公路、摩托、电台、路障与预警；沿用当前人物比例与卡通色阶描边",
     "tool": "Three.js r170；本地Canvas程序化噪声纹理"
+  },
+  {
+    "id": "ref-video-stage3-hellroad",
+    "use": "v0.11.0-hellroad.1 第三关独立重做的依据：过场、荒漠三波、送车、开车路上的顺序、霍格车战与徒步战、两种结局、结算与下一关过场",
+    "source_type": "reference",
+    "source": [
+      "https://www.youtube.com/watch?v=Y48MXUjtYwc（8:25–11:05）",
+      "https://www.youtube.com/watch?v=qeHp2Au4rfQ（6:15–8:10）"
+    ],
+    "notes": "只截帧看画面（本机临时目录），不入库、不进游戏；逐项对照见 releases/v0.11.0-hellroad.1/restoration.md"
+  },
+  {
+    "id": "music-stage3-hellroad",
+    "use": "3-1、3-2、Boss 3 原版音乐",
+    "runtime": [
+      "public/html/game/cadillacs-stage1-3d/sounds/desert.mp3",
+      "public/html/game/cadillacs-stage1-3d/sounds/road.mp3",
+      "public/html/game/cadillacs-stage1-3d/sounds/boss3.mp3"
+    ],
+    "source_type": "original_game_recording",
+    "tool": "yt-dlp 取音轨，ffmpeg 转单声道 32kHz MP3 96kbps 并对齐响度",
+    "sources": "releases/v0.11.0-hellroad.1/audio-sources.json",
+    "status": "本地候选版"
+  },
+  {
+    "id": "stage3-hellroad-art",
+    "use": "第三关荒漠 / 公路场景（红沙地、车辙土路、仙人掌、碎石堆、平顶台地、云带天空与黄昏变色）、霍格与摩托、飞车党、沃尔瑟、车手、机修工、轮胎堆",
+    "source_type": "procedural",
+    "runtime": [
+      "src/world.js（desert / road）",
+      "src/models.js（SPECS.hogg / walther / driver / biker / mechanic、buildBike、tiresGeo）",
+      "src/hellroad.js"
+    ],
+    "tool": "Three.js r170；Canvas 程序化贴图；沿用本作的写实比例 + 卡通色阶着色 + 黑描边",
+    "notes": "造型配色照原作实机画面；与仓库里另一版第三关（src/road.js、road-world.js）无关，这条分支上已不含那两个文件"
   }
 ]

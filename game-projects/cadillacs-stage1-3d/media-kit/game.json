@@ -1,4 +1,21 @@
 {
+  "comparison_candidate": {
+    "version": "v0.11.0-hellroad.1",
+    "status": "website_public_verified",
+    "summary": "按原作实机录像独立重做的第三关「地狱公路」（不参考另一版实现），供本人与网站上的 v0.11.0-preview.2 对比",
+    "branch": "claude/cadillacs-stage3-original-20261009",
+    "worktree": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-stage3-original",
+    "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+    "start": "node qa/serve.mjs 8797（在该 worktree 的 game-projects/cadillacs-stage1-3d 下）；主菜单起始关卡选第三关，或加 ?area=6 / ?area=7",
+    "release_record": "releases/v0.11.0-hellroad.1/handoff.json",
+    "authorization": "先别上架，先本地做。可以再替换网站和发布。",
+    "merged_to_master": true,
+    "website_deployed": true,
+    "automatic_platform_sync": false,
+    "adopted_at": "2026-10-10T16:31:37+08:00",
+    "adoption_quote": "感觉差不多了，先替换掉网站里的第三关吧，把之前codex写的第三关代码去掉，用这份代码。",
+    "revision_20261010": "按本人试玩反馈把公路加宽到约 1.8 倍（纵深 9.8 米、车上下 7.75 米）"
+  },
   "local_preview": {
     "version": "v0.11.0-preview.2",
     "status": "website_trial_ready",
@@ -9,7 +26,10 @@
     "public_channel_baselines_unchanged": false,
     "website_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
     "automatic_platform_sync": false,
-    "website_verified_at": "2026-10-09T09:27:18.690515+00:00"
+    "website_verified_at": "2026-10-09T09:27:18.690515+00:00",
+    "superseded_by": "v0.11.0-hellroad.1",
+    "superseded_at": "2026-10-10T16:31:37+08:00",
+    "superseded_note": "本人对比后改用按原作独立重做的第三关；本版的 src/road.js、road-world.js 与 road-drive / road-walk 曲已从主线移除"
   },
   "toy": {
     "id": 40412421031936,
@@ -163,10 +183,10 @@
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
     "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd"
   },
-  "website_version": "v0.11.0-preview.2",
+  "website_version": "v0.11.0-hellroad.1",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
-  "website_verified_at": "2026-10-09T09:27:18.690515+00:00",
-  "website_commit": "740b225e7ccfcd8bfe6d06d0b09f6c493ed8dec2",
+  "website_verified_at": "2026-10-10T16:41:49+08:00",
+  "website_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
   "versions": [
     {
       "version": "v0.5.6-bgmfull1",
@@ -441,11 +461,11 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.11.0-preview.2",
+  "current_version": "v0.11.0-hellroad.1",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
@@ -480,6 +500,19 @@
       "toy": "待合并：纯文案不单独送审，随下次本游戏更新一并打包",
       "taptap": "待合并：同 Toy",
       "bilibili": "不更新：已发视频标题与简介保留原文"
+    },
+    {
+      "version": "v0.11.0-hellroad.1",
+      "date": "2026-10-10",
+      "classification": "正式版本（第三关替换）",
+      "changes": [
+        "第三关换成按原作独立重做的版本（死亡沙漠三波、机修工送车、开车一路撞、霍格摩托战两种结局、公路加宽）"
+      ],
+      "record": "releases/v0.11.0-hellroad.1/handoff.json",
+      "website": "public_verified 2026-10-10T16:41:49+08:00",
+      "toy": "登记 22 点批次 b-2（Toy 现为 codex 版 v0.11.0-preview.2）",
+      "taptap": "本人 2026-10-10 决定保持线上旧版、不补 IP 材料，不提交",
+      "bilibili": "登记 22 点批次 b-2：BV18XHW66E55 简介里的第三关说明按新版改写"
     }
   ],
   "verified_public_links": [
@@ -722,15 +755,16 @@
     }
   },
   "website": {
-    "version": "v0.11.0-preview.1-menu-text1",
+    "version": "v0.11.0-hellroad.1",
     "status": "public_verified",
-    "verified_at": "2026-10-09T15:47:30.230676+08:00",
-    "evidence": "game.min.js 线上sha256=4e8a808e…、coop.js=28eb0531…与主线一致",
-    "record": "releases/v0.10.1/website.json",
-    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
-    "runtime_sha256": "b0f6e73953e9bea08e2e920ecfb52395806218bb77a4cdfeb8593feaf2aac665",
+    "verified_at": "2026-10-10T16:41:49+08:00",
+    "source_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+    "deployed_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+    "runtime_sha256": "7cc87513a55911aff1b985e963a04c18aec5e58639f4a8ebb364c3a59bde9eee",
+    "evidence": "线上 game.min.js 与本地构建 sha256 一致；index.html 标题「第一至三关」；三首第三关曲子可访问；游戏列表卡片副标题含地狱公路",
+    "record": "releases/v0.11.0-hellroad.1/handoff.json",
     "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
-    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+    "previous": "v0.11.0-preview.2（codex 版第三关）"
   },
   "touch_control_inset": {
     "side_css_px": 40,
@@ -816,7 +850,7 @@
     "recorded_at": "2026-10-10T03:02:52.978211+00:00",
     "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
   },
-  "development_version": "v0.11.0-preview.2",
+  "development_version": "v0.11.0-hellroad.1",
   "channel_baseline_history": [
     {
       "run_id": "release-backfill-20261010",

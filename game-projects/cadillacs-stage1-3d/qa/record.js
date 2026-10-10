@@ -1,5 +1,5 @@
 // 逐帧录像（手动时钟 + 页面截图，含 HUD）+ 离线渲染同场音轨，ffmpeg 合成 mp4。
-// node qa/record.js <模式 full|cams|mobile|portrait|stage2> <输出 mp4> [英雄] [种子]
+// node qa/record.js <模式 full|cams|mobile|portrait|stage2|stage3> <输出 mp4> [英雄] [种子]
 const { launch, BASE, out, sleep } = require('./lib');
 const { BOT_SRC } = require('./bot');
 const fs = require('fs'), path = require('path'), cp = require('child_process');
@@ -18,7 +18,7 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
   const cdp = mobile ? await ctx.newCDPSession(page) : null;
   page.on('pageerror', e => console.log('pageerror', e.message));
   await page.goto(BASE + '?test=1&clean=1&seed=' + seed, { waitUntil: 'load' });
-  await page.evaluate(([h, st2]) => { localStorage.clear(); localStorage.setItem('cd3d-stage1:hero', String(h)); if (st2) localStorage.setItem('cd3d-stage1:stage', '1'); }, [hero, mode === 'stage2']);
+  await page.evaluate(([h, st]) => { localStorage.clear(); localStorage.setItem('cd3d-stage1:hero', String(h)); if (st) localStorage.setItem('cd3d-stage1:stage', String(st)); }, [hero, mode === 'stage2' ? 1 : mode === 'stage3' ? 2 : 0]);
   await page.reload({ waitUntil: 'load' }); await sleep(800);
   await page.evaluate(() => window.__CD_TEST__.manual(true));
   await page.evaluate(BOT_SRC);
@@ -52,7 +52,7 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
   await sleep(100);
   startFrame = frame;
   await page.evaluate(() => window.__CD_TEST__.audioLogStart());
-  mark(mode === 'stage2' ? '第二关开场：凯迪拉克开进偷猎者森林' : '开局：楼顶开场，维斯与手下');
+  mark(mode === 'stage2' ? '第二关开场：凯迪拉克开进偷猎者森林' : mode === 'stage3' ? '第三关开场：黑屏上霍格放话' : '开局：楼顶开场，维斯与手下');
   if (mode === 'stage2') {
     const G = (fn, a) => page.evaluate(fn, a);
     const jump = (area, wave, x, focus) => G(([area, wave, x, focus]) => { const C = window.__CD_TEST__.cheat, g = C.G; if (area !== null) { C.area(area); C.skipScript(); } C.killAll(); g.pending = []; g.waveOn = false; g.lockX = null; g.wave = wave; g.focusX = focus; g.player.x = x; g.player.z = 0.4; g.player.state = 'idle'; }, [area, wave, x, focus]);
@@ -65,6 +65,50 @@ const FFMPEG = process.env.FFMPEG || 'ffmpeg';
     await jump(5, 0, 2.4, 6.8); mark('黄昏的恐龙尸骸地'); await play(8, { jumps: true, noSkip: true });
     await jump(null, 9, 42, 38); mark('Boss 屠夫：肢解死恐龙后回头'); await idle(5);
     mark('屠夫战：双刀、屁股坐、叫手下'); await play(30, { jumps: true, noSkip: true });
+  } else if (mode === 'stage3') {
+    // 第三关全程：荒漠三波（中间跳过一段路）→ 机修工送车 → 开车一路撞 → 霍格（车上躲手雷、撞他）→ 车毁后徒步打完 → 过场
+    const G = (fn, a) => page.evaluate(fn, a);
+    const snap = () => G(() => { const s = window.__CD_TEST__.snapshot(); return { mode: s.mode, area: s.areaId, waveOn: s.waveOn, road: s.road, dialog: s.dialog, ev: window.__CD_TEST__.events().filter(e => e.type === 'bossDown').length }; });
+    const frames = async (sec, fn, stop) => { for (let i = 0; i < sec * fps; i++) { await page.evaluate(fn || (() => window.__CD_TEST__.step(2, true))); await snapFrame(); if (stop && i % 6 === 0 && await stop()) return true; } return false; };
+    // 开车：一路撞时对准前面最近的人 / 路障那一排；霍格出场后红圈压着车就躲，否则朝他撞
+    await G(() => {
+      const held = {};
+      const set = (c, on) => { if (!!held[c] === on) return; held[c] = on; window.dispatchEvent(new KeyboardEvent(on ? 'keydown' : 'keyup', { code: c, key: c, bubbles: true })); };
+      window.__drive = () => {
+        const T = window.__CD_TEST__, g = T.cheat.G, R = T.cheat.roadState();
+        let dx = 0, dz = 0;
+        if (R && R.car && R.phase === 'run') {
+          let best = null, bd = 99;
+          for (const a of g.actors) if (a.road && a.x > g.carX + 2.5 && a.x - g.carX < bd) { bd = a.x - g.carX; best = a.z; }
+          for (const p of g.props) if (!p.broken && !p.parked && p.x > g.carX + 2.5 && p.x - g.carX < bd) { bd = p.x - g.carX; best = p.z; }
+          if (best !== null && Math.abs(best - g.carZ) > 0.25) dz = Math.sign(best - g.carZ);
+          if (g.carX < 6.2) dx = 1;
+        } else if (R && R.car && R.phase === 'hogg') {
+          const c = R.car, h = R.hogg, n = R.nades.filter(n => Math.max(0, Math.abs(n.x - c.x) - 2.62) < 1.2 && Math.max(0, Math.abs(n.z - c.z) - 0.98) < 1.2)[0];
+          if (n) { dz = c.z >= n.z ? 1 : -1; if ((dz > 0 && c.z > 4.6) || (dz < 0 && c.z < -2.75)) dz = -dz; dx = c.x >= n.x ? 1 : -1; }
+          else { dx = Math.abs(h.x - c.x) < 0.4 ? 0 : Math.sign(h.x - c.x); dz = Math.abs(h.z - c.z) < 0.2 ? 0 : Math.sign(h.z - c.z); }
+        }
+        set('KeyD', dx > 0); set('KeyA', dx < 0); set('KeyS', dz > 0); set('KeyW', dz < 0);
+        T.step(2, true);
+      };
+      window.__driveStop = () => { for (const c of Object.keys(held)) set(c, false); };
+    });
+    await idle(8.2);
+    mark('荒漠：蹲着的四个手下围上来'); await play(15, { jumps: true, noSkip: true });
+    await G(() => window.__CD_TEST__.cheat.killAll());
+    mark('打完第一波：字幕 DESERT OF DEATH'); await frames(3.2);
+    await G(() => { const C = window.__CD_TEST__.cheat, g = C.G; C.killAll(); g.pending = []; g.waveOn = false; g.lockX = null; g.wave = 2; g.focusX = 35.5; g.player.x = 39.5; g.player.z = 0.6; g.player.state = 'idle'; });
+    mark('仙人掌石堆旁：大块头沃尔瑟'); await play(15, { jumps: true, noSkip: true });
+    for (let i = 0; i < 40; i++) { await G(() => window.__CD_TEST__.cheat.killAll()); await frames(0.5); const s = await snap(); if (s.mode === 'cut') break; }
+    mark('机修工开着凯迪拉克赶到：「开这辆车走，会安全些」'); await frames(14, null, async () => (await snap()).area === 'road');
+    mark('地狱公路：开着凯迪拉克一路撞过去'); await frames(32, () => window.__drive(), async () => { const s = await snap(); return s.road && s.road.phase === 'hogg'; });
+    mark('Boss 霍格：骑摩托扔手雷，躲红圈、用车撞他');
+    await frames(19, () => window.__drive(), async () => { const s = await snap(); return !s.road || s.road.phase !== 'hogg'; });
+    await G(() => { window.__driveStop(); const R = window.__CD_TEST__.cheat.roadState(); if (R && R.phase === 'hogg') window.__CD_TEST__.cheat.road.wreck(); });
+    mark('凯迪拉克被炸毁：下车徒步，霍格来回冲撞、停下来投弹'); await play(26, { jumps: true, noSkip: true }, null);
+    await G(() => { const g = window.__CD_TEST__.cheat.G; if (g.boss && g.boss.alive) g.boss.hp = Math.min(g.boss.hp, 30); });
+    mark('最后一击：摩托炸开'); for (let i = 0; i < 40 * fps; i++) { await page.evaluate((o) => window.__botTick(o), { jumps: true, noSkip: true }); await snapFrame(); if (i % 6 === 0 && (await snap()).ev > 0) break; }
+    mark('过关：胜利台词、体力奖励、「你看……我们的修车厂！」'); await frames(15, null, async () => await page.evaluate(() => window.__CD_TEST__.events().some(e => e.type === 'end')));
   } else if (mode === 'full') {
     await idle(9.5);   // 看完开场对话
     mark('战斗开始');

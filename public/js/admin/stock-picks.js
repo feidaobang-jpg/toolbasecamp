@@ -1,7 +1,7 @@
 /* One versioned strategy; GET previews never create simulated fills. */
 (function () {
   'use strict';
-  var page = 1, pageSize = 20, recordsRequest = 0, signedIn = false;
+  var page = 1, pageSize = 20, recordsRequest = 0, signedIn = false, lastSessionMessage = '';
   function el(id) { return document.getElementById(id); }
   function tr(key) { return window.t('privateHub.stock.' + key); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
@@ -63,7 +63,8 @@
     if (result && result.errors && result.errors.length) text += ' ' + result.errors.join('；');
     el('schedulerStatus').textContent = text;
     el('schedulerStatus').classList.toggle('is-error', !data.calendar_ok || !!(result && result.errors && result.errors.length));
-    notify('marketSessionStatus', data.session_message || '', !data.calendar_ok);
+    lastSessionMessage = data.session_message || '';
+    notify('marketSessionStatus', lastSessionMessage, !data.calendar_ok);
     el('rulesText').innerHTML = '<p>主板普通股；20/60日趋势向上，回调2～5日且缩量，重新转强；市场和行业偏弱时空仓，最多扫描100只、推荐3只。</p>' +
       '<p>模型本金' + fmt(r.capital,0) + '元，每仓预算' + fmt(r.position_budget,0) + '元，最多' + r.max_positions +
       '仓。正常持有3～10个交易日；止损' + r.stop_loss_pct + '%、止盈' + r.take_profit_pct +
@@ -111,7 +112,9 @@
   }
   function bind() {
     el('btnRefresh').addEventListener('click',function() { action(this,async function() { await loadStatus(); await loadRecords(); notify('actionStatus','已刷新'); }); });
-    el('btnPreview').addEventListener('click',function() { action(this,async function() { var data=await api('/stocks/recommend-pullback'); renderScreen(data,'仅预览，不记成交'); notify('actionStatus',data.message); }); });
+    el('btnPreview').addEventListener('click',function() { action(this,async function() { var data=await api('/stocks/recommend-pullback');
+      if (data.preview && data.message && data.message===lastSessionMessage) { notify('actionStatus','休市期间未执行新筛选；安排见上方休市提示'); return; }
+      renderScreen(data,'仅预览，不记成交'); notify('actionStatus',data.message); }); });
     el('btnCheck').addEventListener('click',function() { action(this,async function() { var data=await api('/stocks/run','POST'); await loadStatus(); await loadRecords(); notify('actionStatus',data.message + (data.errors && data.errors.length ? '：' + data.errors.join('；') : ''),!data.success); }); });
     el('btnExport').addEventListener('click',function() { action(this,async function() {
       var data=await api('/stocks/review-export?days=90'), blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});

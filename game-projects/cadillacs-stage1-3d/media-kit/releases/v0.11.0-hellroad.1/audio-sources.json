@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-10-09",
+  "version": "v0.11.0-hellroad.1",
+  "note": "第三关三首原版曲。原声带站 khinsider 有人机验证未绕过，改取 YouTube 上同一套原声带的逐曲上传（曲名带 STAGE 3-A / 3-B / Boss 3 标注）。19 - Boss 3 Intro（https://www.youtube.com/watch?v=3kwIhpbSh4k）下载核对过但没有用进游戏。音效（撞击、爆炸、引擎、摩托）为 WebAudio 合成。",
+  "mapping": {
+    "desert": "3-1 死亡沙漠（区域 id desert）",
+    "road": "3-2 地狱公路开车段（区域 id road）",
+    "boss3": "霍格出场后（车上与徒步两个阶段）"
+  },
+  "assets": [
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/desert.mp3",
+      "title": "Cadillacs and Dinosaurs (Arcade): 17 - Roaring Sound (STAGE 3-A)",
+      "source": "https://www.youtube.com/watch?v=baNY5uj4_II",
+      "uploader": "kuja45 (OST)",
+      "bytes": 1930319,
+      "sha256": "46d46c94e021a88e21b9fcab8398d57e60975f5eb2f707e016955e5a2c20b67f",
+      "source_type": "original_game_recording",
+      "source_format": "YouTube bestaudio m4a (AAC 44.1kHz stereo ~129kbps)",
+      "source_sha256": "0d07f469500e6efe066fa377bb2d77cc0a916bb2ea573de61e92c533c2aa16d3",
+      "processing": "Full source duration; mono 32kHz MP3 96kbps; volume -2.5 dB to match the stage 1-2 tracks (mean about -16.5 dB, no clipping); no cuts, stretching or added repeats",
+      "source_seconds": 160.775,
+      "after_seconds": 160.775
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/road.mp3",
+      "title": "Cadillacs and Dinosaurs (Arcade): 18 - Like a Squall (STAGE 3-B,7-2)",
+      "source": "https://www.youtube.com/watch?v=htWGLldLQXQ",
+      "uploader": "kuja45 (OST)",
+      "bytes": 1443887,
+      "sha256": "4902b897907e390b93e83ba0c4a8f6b13ddc85f4a65b31513f25683987a7668d",
+      "source_type": "original_game_recording",
+      "source_format": "YouTube bestaudio m4a (AAC 44.1kHz stereo ~129kbps)",
+      "source_sha256": "d573c9b376db842ac989884d974c10a451e2cbcc5c5350b64cb3d7e52053bcb8",
+      "processing": "Full source duration; mono 32kHz MP3 96kbps; volume -4.0 dB to match the stage 1-2 tracks (mean about -16.5 dB, no clipping); no cuts, stretching or added repeats",
+      "source_seconds": 120.233,
+      "after_seconds": 120.233
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "file": "sounds/boss3.mp3",
+      "title": "Cadillacs and Dinosaurs (Arcade): 20 - Boss 3 (STAGE 3)",
+      "source": "https://www.youtube.com/watch?v=020LO-Rzq84",
+      "uploader": "kuja45 (OST)",
+      "bytes": 1690127,
+      "sha256": "00223dd3b9dd80a7edf3cbc5503dc0ec4664827b3cbd48c1311e149e3b83c86b",
+      "source_type": "original_game_recording",
+      "source_format": "YouTube bestaudio m4a (AAC 44.1kHz stereo ~129kbps)",
+      "source_sha256": "23cdc98597bb87444d3f27b9728511d85927483b38cf922ec75a0ec273166b15",
+      "processing": "Full source duration; mono 32kHz MP3 96kbps; volume -3.6 dB to match the stage 1-2 tracks (mean about -16.5 dB, no clipping); no cuts, stretching or added repeats",
+      "source_seconds": 140.736,
+      "after_seconds": 140.736
+    }
+  ],
+  "review": {
+    "loaded_in_game": "qa/stage3.js 核对三首都以原版标记播放（musicState.original）",
+    "by_ear": "not-run"
+  }
+}

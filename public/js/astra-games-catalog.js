@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-09T08:26:28Z */
+/** generated_at: 2026-10-10T08:04:01Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -77,13 +77,14 @@
       { title: "Lantern Cove — The Borrowed Light", url: "https://lantern-cove.akartit.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/lantern-cove/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraStrategy', items: [
+      { title: "Yu-Gi-Oh! Ruins Duel", url: "https://www.bilibili.com/toy/astral-duel-game/index.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astral-duel/public-lobby.png", external: true },
       { title: "Tidehook", url: "https://tidehook-mallow.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/tidehook/gameplay.png", external: true },
       { title: "Dwellcraft · 住进想象", url: "https://dwellcraft.vercel.app/", thumb: "https://raw.githubusercontent.com/Ryan-fm/Dwellcraft/main/docs/screenshots/editor-en.png", external: true },
       { title: "Little Kingdom Chess / 작은 왕국 체스", url: "https://little-kingdom-chess.echo3042.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/little-kingdom-chess/gameplay.jpg", external: true },
       { title: "JUNK RUN", url: "https://junk-run.pages.dev/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/junk-run/gameplay.jpg", external: true },
       { title: "Spy or Lie", url: "https://spyorlie.com/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/spy-or-lie/gameplay.jpg", external: true },
       { title: "三分天下 · 百将风云 / Three Kingdoms: Hundred Heroes", url: "https://sanguo-jiangshan.vercel.app", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/three-kingdoms/gameplay.jpg", external: true },
-      { title: "最后的灯塔 / Last Beacon", url: "https://last-beacon.loupengju.cc", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/last-beacon/gameplay.png", external: true },
+      { title: "最后的灯塔 / Last Beacon", url: "https://last-beacon.pjstack.dev", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/last-beacon/gameplay.png", external: true },
       { title: "缺氧 · 小小星球", url: "https://hypoxia-6tu.pages.dev/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/hypoxia/gameplay.jpg", external: true },
       { title: "魔塔 · 永夜之阶", url: "https://ai.ywnet.xyz/work/mt.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/magic-tower/gameplay.jpg", external: true },
       { title: "永恒荒野", url: "https://starve.pages.dev/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/eternal-wilderness/gameplay.jpg", external: true },
@@ -193,8 +194,8 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-09T08:26:28Z",
-    count: 175,
+    generatedAt: "2026-10-10T08:04:01Z",
+    count: 176,
     groups: groups
   };
 })(typeof window !== 'undefined' ? window : globalThis);
