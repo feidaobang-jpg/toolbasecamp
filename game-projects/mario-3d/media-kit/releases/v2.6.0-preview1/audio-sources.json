@@ -1,0 +1,24 @@
+{
+ "assets": [
+  {
+   "game": "mario-3d",
+   "file": "sounds/castle.mp3",
+   "source": "https://fi.zophar.net/soundfiles/nintendo-nes-nsf/super-mario-bros/7%20-%20Bowser%27s%20Castle.mp3",
+   "source_page": "https://www.zophar.net/music/nintendo-nes-nsf/super-mario-bros",
+   "source_type": "original_game_recording",
+   "source_sha256": "a7f3dd952feff2501951d225971ff318af6620c3f18eb5af603f953a65fdcc99",
+   "bytes": 2161416,
+   "sha256": "2d7c2efd3fbb5a63b1b6958f51a8fbc849c49ad5b559df15e1fa99d22c502c6a",
+   "processing": "Full source duration; mono 32kHz MP3 96kbps (same as overworld/underground/star); no gain change (source mean -17.4 dB vs overworld -18.1 dB)",
+   "source_seconds": 180.001088,
+   "after_seconds": 180.001469,
+   "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/audio/7-bowsers-castle.mp3"
+  },
+  {
+   "game": "mario-3d",
+   "file": "sounds/smb_bowserfire.wav, smb_bowserfalls.wav, smb_world_clear.wav",
+   "source_type": "original_game_recording",
+   "note": "此前已随包（见 bgm-full-20261007 / 早期版本记录），本版首次在游戏里使用；文件未改动"
+  }
+ ]
+}

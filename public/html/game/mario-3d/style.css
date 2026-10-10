@@ -25,6 +25,15 @@ kbd{display:inline-block;min-width:1.5em;padding:0 .35em;margin:0 .1em;border-ra
 #toast{position:absolute;top:calc(100px + var(--sat));left:50%;transform:translateX(-50%);padding:8px 18px;border-radius:999px;background:#000000b0;font-size:15px;font-weight:700;white-space:nowrap;pointer-events:none;border:2px solid #ffd23a}
 
 /* 关卡卡片（原作黑屏 WORLD x-x） */
+/* 1-4 斧头之后蘑菇人的两行字：原作英文 + 中文，屏幕上方居中，任何视角都看得清 */
+#castle-msg{position:absolute;top:calc(18% + var(--sat));left:50%;transform:translateX(-50%);width:min(92%,760px);text-align:center;pointer-events:none;z-index:12;color:#fff;text-shadow:0 2px 0 #000,0 0 10px #000}
+#castle-msg p{margin:0 0 14px}
+#castle-msg .en{display:block;font:900 24px Consolas,"Courier New",monospace;letter-spacing:3px}
+#castle-msg .zh{display:block;margin-top:4px;font:700 15px "Microsoft YaHei",sans-serif;color:#ffe9a8}
+#castle-msg .l2{visibility:hidden}
+#castle-msg.two .l2{visibility:visible}
+.compact #castle-msg .en{font-size:18px;letter-spacing:2px}
+.compact #castle-msg{top:calc(14% + var(--sat))}
 #card{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font:900 30px Consolas,"Courier New",monospace;letter-spacing:3px;z-index:30}
 .card-lives{display:flex;align-items:center;gap:14px;font-size:26px}
 .mini-mario{width:26px;height:30px;border-radius:12px 12px 6px 6px;background:linear-gradient(#e0281c 0 34%,#f6c08a 34% 58%,#2d5fd8 58%);box-shadow:0 0 0 2px #fff3}

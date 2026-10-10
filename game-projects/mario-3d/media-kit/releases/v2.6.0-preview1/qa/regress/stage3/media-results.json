@@ -1,0 +1,268 @@
+{
+  "url": "http://127.0.0.1:8798/html/game/mario-3d/index.html?level=1-3&test=1&q=high",
+  "browser": "155.0.4283.45",
+  "method": "Edge GPU; controlled player relocations for mechanic checks; timings with real-time animation, phone is viewport simulation only; short capture uses demo invulnerability, retaining real movement/jump input",
+  "checks": [
+    {
+      "name": "direct selection label 1-3 树冠",
+      "ok": true
+    },
+    {
+      "name": "direct selection label 1-4 城堡",
+      "ok": true
+    },
+    {
+      "name": "direct selection label 1-1 地面",
+      "ok": true
+    },
+    {
+      "name": "direct selection label 1-2 地下",
+      "ok": true
+    },
+    {
+      "name": "level selector cycles back to 1-3",
+      "ok": true
+    },
+    {
+      "name": "direct start at third stage",
+      "ok": true
+    },
+    {
+      "name": "J remains solid and marked unavailable",
+      "ok": true,
+      "data": {
+        "opacity": "1",
+        "aria": "true",
+        "label": "J\n火球"
+      }
+    },
+    {
+      "name": "preset renders stage 1-3 0",
+      "ok": true
+    },
+    {
+      "name": "preset renders stage 1-3 1",
+      "ok": true
+    },
+    {
+      "name": "preset renders stage 1-3 2",
+      "ok": true
+    },
+    {
+      "name": "preset renders stage 1-3 3",
+      "ok": true
+    },
+    {
+      "name": "preset renders stage 1-3 4",
+      "ok": true
+    },
+    {
+      "name": "third-stage checkpoint is saved",
+      "ok": true
+    },
+    {
+      "name": "fall respawns at treetop checkpoint",
+      "ok": true
+    },
+    {
+      "name": "restart returns to third-stage start",
+      "ok": true
+    },
+    {
+      "name": "mode switch preserves third stage 844",
+      "ok": true
+    },
+    {
+      "name": "phone buttons opaque, equal and inside viewport 844",
+      "ok": true,
+      "data": [
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 674,
+          "y": 224,
+          "right": 734,
+          "bottom": 284
+        },
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 674,
+          "y": 294,
+          "right": 734,
+          "bottom": 354
+        },
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 744,
+          "y": 294,
+          "right": 804,
+          "bottom": 354
+        },
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 744,
+          "y": 224,
+          "right": 804,
+          "bottom": 284
+        }
+      ]
+    },
+    {
+      "name": "mode switch preserves third stage 390",
+      "ok": true
+    },
+    {
+      "name": "phone buttons opaque, equal and inside viewport 390",
+      "ok": true,
+      "data": [
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 106,
+          "y": 674,
+          "right": 166,
+          "bottom": 734
+        },
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 36,
+          "y": 674,
+          "right": 96,
+          "bottom": 734
+        },
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 36,
+          "y": 744,
+          "right": 96,
+          "bottom": 804
+        },
+        {
+          "opacity": "1",
+          "w": 60,
+          "h": 60,
+          "x": 106,
+          "y": 744,
+          "right": 166,
+          "bottom": 804
+        }
+      ]
+    },
+    {
+      "name": "recorded real sprint jump lands on high canopy",
+      "ok": true
+    },
+    {
+      "name": "capture contains game audio",
+      "ok": true,
+      "data": {
+        "audioTracks": 1,
+        "state": {
+          "uiMode": "game",
+          "overlay": null,
+          "paused": false,
+          "phase": "play",
+          "display": {
+            "rotated": false,
+            "W": 1280,
+            "H": 720,
+            "vw": 1280,
+            "vh": 720,
+            "dpr": 1,
+            "touchOn": true,
+            "backing": [
+              1280,
+              720
+            ]
+          },
+          "camera": "oblique",
+          "yawOffset": -3.312,
+          "quality": {
+            "setting": "high",
+            "effective": "high",
+            "auto": null
+          },
+          "fs": false,
+          "fsCapable": true,
+          "fsLog": [],
+          "focus": "app",
+          "toast": null,
+          "card": null,
+          "touchHidden": false,
+          "keys": [],
+          "touchHold": [],
+          "joy": {
+            "x": 0,
+            "y": 0
+          },
+          "level": "1-3",
+          "area": "main",
+          "mode": "play",
+          "time": 291,
+          "player": {
+            "x": 42.538,
+            "y": 9,
+            "z": 2,
+            "vx": 0,
+            "vy": 0,
+            "vz": 0,
+            "power": "small",
+            "grounded": true,
+            "crouch": false,
+            "star": 0,
+            "inv": 0,
+            "visible": true
+          },
+          "session": {
+            "score": 0,
+            "coins": 0,
+            "lives": "inf",
+            "hearts": 3,
+            "power": "small",
+            "checkpoint": null,
+            "demoUsed": false,
+            "stats": {
+              "deaths": 0,
+              "oneups": 0,
+              "hits": 0,
+              "stomps": 0,
+              "coins": 0,
+              "secrets": 0,
+              "startTime": 0.6583333333333334
+            }
+          },
+          "cleared": [],
+          "events": [
+            "jump",
+            "land"
+          ],
+          "hi": 0
+        }
+      }
+    },
+    {
+      "name": "no browser runtime errors",
+      "ok": true,
+      "data": []
+    },
+    {
+      "name": "portrait title is already rotated landscape",
+      "ok": true,
+      "data": "matrix(0, 1, -1, 0, 390, 0)"
+    }
+  ],
+  "performance": [],
+  "errors": []
+}

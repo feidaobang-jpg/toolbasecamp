@@ -102,6 +102,10 @@ async function until(frame, condition, max = 4000) {
       if (await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-3')) {
         check(prefix + ' 1-2 clear enters third stage', await frame.evaluate(() => __MARIO_TEST__.state().cleared.join() === '1-1,1-2'));
         await frame.evaluate(() => { const t = __MARIO_TEST__; t.skipCard(); Object.assign(t.world.player, { x: t.world.area.flag.x - .2, y: 1, vx: 0, vy: 0 }); t.step(1); });
+        // v2.6.0 起 1-3 之后接 1-4 城堡：等 WORLD 1-4 卡片，再到桥头碰斧头走完结尾
+        for (let n = 0; n < 600 && await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-3'); n++) await frame.evaluate(() => __MARIO_TEST__.step(12));
+        check(prefix + ' 1-3 clear enters castle stage 1-4', await frame.evaluate(() => __MARIO_TEST__.world.levelId === '1-4' && __MARIO_TEST__.state().cleared.join() === '1-1,1-2,1-3'));
+        await frame.evaluate(() => { const t = __MARIO_TEST__; t.skipCard(); t.world.rt.flames.length = 0; Object.assign(t.world.player, { x: 140.9, y: 4.4, vx: 0, vy: 0, inv: 9 }); t.step(1); });
       }
       await until(frame, 'result');
       check(prefix + ' last implemented stage settles', await frame.evaluate(() => __MARIO_TEST__.state().overlay === 'result'));

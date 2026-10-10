@@ -1,10 +1,10 @@
 // 渲染：把当前区域的网格地形沿纵深铺成 6 格厚的体素跑道，水管纵向并排 3 根；
 // 角色、道具、特效与镜头（C 预设 + Q/E 无极旋转），遮挡主角的物体做网点淡化。
 import * as THREE from './three.js?v=2.1.0';
-import { tex, textTexture } from './textures.js?v=2.4.4';
-import * as M from './models.js?v=2.5.0';
-import { LANE, SOLID, tileKey } from './levels.js?v=2.5.0';
-import { heightOf } from './world.js?v=2.5.0';
+import { tex, textTexture } from './textures.js?v=2.6.0';
+import * as M from './models.js?v=2.6.0';
+import { LANE, SOLID, tileKey } from './levels.js?v=2.6.0';
+import { heightOf, FIREBAR_GAP, FLAME_H } from './world.js?v=2.6.0';
 
 export const PRESETS = [
   { id: 'side', name: '侧视', yaw: 0, pitch: 0.17, dist: 18, fov: 40, ahead: 2.4 },
@@ -93,6 +93,8 @@ export function createView(canvas) {
   sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.02;
   scene.add(sun, sun.target);
   const lamp = new THREE.PointLight('#ffd9a8', 0, 10, 1.6); scene.add(lamp);
+  // 城堡岩浆的红光：放到离玛丽最近的岩浆坑上方；其他主题强度为 0（灯数不变，避免换关重编着色器）
+  const lavaLight = new THREE.PointLight('#ff6a28', 0, 15, 1.3); scene.add(lavaLight);
 
   const player = M.mario(); scene.add(player.root);
   const view = {
@@ -104,7 +106,8 @@ export function createView(canvas) {
   let areaGroup = null, areaDispose = [];
   let tileRecs = new Map(), meshes = {}, animRecs = new Set();
   let coinInst = null, coinRecs = [], liftGroups = [], flagMesh = null, castleFlag = null;
-  const enemyModels = new Map(), itemModels = new Map(), fireModels = new Map(), piranhaModels = new Map();
+  let fireInst = null, fireGlow = null, castleWall = null, bowserModel = null, bowserFake = null, bridgeRec = null, chainMeshes = [], axeModel = null, lavaTex = [], ceilBottom = null;
+  const enemyModels = new Map(), itemModels = new Map(), fireModels = new Map(), piranhaModels = new Map(), flameModels = new Map();
   const effects = [];
   const fx = new THREE.Group(); scene.add(fx);
 
@@ -119,6 +122,7 @@ export function createView(canvas) {
     piranhaModels.clear();
     for (const e of effects) fx.remove(e.obj); effects.length = 0;
     coinInst = null; coinRecs = []; liftGroups = []; flagMesh = null; castleFlag = null;
+    fireInst = fireGlow = castleWall = bowserModel = bowserFake = bridgeRec = axeModel = null; chainMeshes = []; lavaTex = []; ceilBottom = null; flameModels.clear();
   }
 
   function setSlot(mesh, idx, x, y, z, s) {
@@ -138,13 +142,16 @@ export function createView(canvas) {
     let r = a.width - 1;
     if (tall(r)) { while (r > 0 && tall(r - 1)) r--; view.wallR = r; } else view.wallR = null;
     areaGroup = new THREE.Group(); scene.add(areaGroup);
-    const under = theme === 'underground';
-    scene.background = new THREE.Color(under ? '#182c31' : '#c7ddd2');
-    scene.fog = under ? new THREE.Fog('#182c31', 26, 70) : new THREE.Fog('#c7ddd2', 70, 200);
-    hemi.color.set(under ? '#a8c8ff' : '#eef8ff'); hemi.groundColor.set(under ? '#1c2430' : '#6c5a3a');
-    hemi.intensity = under ? 1.45 : 1.9;
-    sun.intensity = under ? 1.7 : 2.5; sun.color.set(under ? '#d8e6ff' : '#fff4dc');
-    lamp.intensity = under && view.quality !== 'low' ? 7 : 0;
+    const under = theme === 'underground', castle = theme === 'castle';
+    // 城堡：暗色背景、偏暖的顶光，玛丽身边一盏暖灯，岩浆另有红光
+    scene.background = new THREE.Color(castle ? '#0b0807' : under ? '#182c31' : '#c7ddd2');
+    scene.fog = castle ? new THREE.Fog('#0b0807', 26, 66) : under ? new THREE.Fog('#182c31', 26, 70) : new THREE.Fog('#c7ddd2', 70, 200);
+    hemi.color.set(castle ? '#e6e4e2' : under ? '#a8c8ff' : '#eef8ff'); hemi.groundColor.set(castle ? '#2e1c14' : under ? '#1c2430' : '#6c5a3a');
+    hemi.intensity = castle ? 1.5 : under ? 1.45 : 1.9;
+    sun.intensity = castle ? 1.6 : under ? 1.7 : 2.5; sun.color.set(castle ? '#f4f1ec' : under ? '#d8e6ff' : '#fff4dc');
+    lamp.color.set(castle ? '#ffd4ac' : '#ffd9a8');
+    lamp.intensity = (under || castle) && view.quality !== 'low' ? (castle ? 2.6 : 7) : 0;
+    lavaLight.intensity = 0;
 
     // 统计各类方块
     const counts = { ground: 0, hard: 0, brick: 0, question: 0, used: 0 };
@@ -194,7 +201,84 @@ export function createView(canvas) {
       pl.position.set(s.x, s.y, -2.4); areaGroup.add(pl);
       areaDispose.push(pl.geometry, mm, texture);
     }
-    if (under) buildUnderground(a); else buildOverworld(a);
+    if (castle) buildCastleInterior(a, w); else if (under) buildUnderground(a); else buildOverworld(a);
+  }
+
+  // 城堡内景：石墙背景、跑道前方低一格的石地、岩浆、库巴桥与铁链、斧头、蘑菇人、火棒、库巴
+  function buildCastleInterior(a, w) {
+    const add = (o, shadow = true) => { o.castShadow = shadow; o.receiveShadow = true; areaGroup.add(o); return o; };
+    const wt = tex('ground', 'castle').clone(); wt.needsUpdate = true;
+    wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(a.width + 8, 16);
+    const wallM = fadeable(new THREE.MeshStandardMaterial({ map: wt, color: '#5d5853', roughness: 0.95 }));
+    const wall = new THREE.Mesh(new THREE.BoxGeometry(a.width + 8, 16, 0.5), wallM);
+    wall.position.set(a.width / 2, 5, -LANE - 0.25); wall.receiveShadow = true; areaGroup.add(wall); castleWall = wall;
+    areaDispose.push(wall.geometry, wallM, wt);
+    const floorM = plainMat('#3a3632'), deep = plainMat('#0e0b09');
+    for (const [s, e] of groundRuns(a)) {
+      const geo = new THREE.BoxGeometry(e - s, 14, 22);
+      const m = new THREE.Mesh(geo, [deep, deep, floorM, deep, deep, deep]); m.position.set((s + e) / 2, -8, LANE + 11); m.receiveShadow = true; areaGroup.add(m); areaDispose.push(geo);
+    }
+    // 岩浆：跑道内到坑口高度；跑道前方的一截落到前面石地的高度
+    for (const l of a.lava) {
+      const wdt = l.x1 - l.x0;
+      const mk = (base, rx, ry) => { const t = base.clone(); t.needsUpdate = true; t.repeat.set(rx, ry); lavaTex.push(t); areaDispose.push(t); return t; };
+      const topM = new THREE.MeshBasicMaterial({ map: mk(tex('lavaTop'), wdt / 2, 3) }), sideM = new THREE.MeshBasicMaterial({ map: mk(tex('lavaSide'), wdt, 1) });
+      const frontTop = new THREE.MeshBasicMaterial({ map: mk(tex('lavaTop'), wdt / 2, 11) });
+      areaDispose.push(topM, sideM, frontTop);
+      const hLane = l.top + 3, lane = new THREE.Mesh(new THREE.BoxGeometry(wdt, hLane, LANE * 2 + 0.5), [sideM, sideM, topM, sideM, sideM, sideM]);
+      lane.position.set(l.x0 + wdt / 2, -3 + hLane / 2, -0.25); areaGroup.add(lane);
+      const front = new THREE.Mesh(new THREE.BoxGeometry(wdt, 1.95, 22), [sideM, sideM, frontTop, sideM, sideM, sideM]);
+      front.position.set(l.x0 + wdt / 2, -3 + 0.975, LANE + 11); areaGroup.add(front);
+      areaDispose.push(lane.geometry, front.geometry);
+    }
+    // 天花板每列最低处（俯视 / 斜视时按玛丽头顶那段天花板做剖面）
+    ceilBottom = [];
+    for (let c = 0; c < a.width; c++) {
+      let h = 10;
+      while (h > -2 && SOLID.has(a.tiles.get(tileKey(c, h))?.t)) h--;
+      ceilBottom[c] = h + 1;
+    }
+    // 库巴桥：红褐色桥板 + 两侧白色护栏，塌桥时逐格隐藏
+    if (a.bridge) {
+      const n = a.bridge.c1 - a.bridge.c0 + 1;
+      const planks = new THREE.InstancedMesh(boxGeo, plainMat('#a44a2a'), n), rails = new THREE.InstancedMesh(boxGeo, plainMat('#d8d1c2'), n * 4);
+      bridgeRec = { planks, rails, c0: a.bridge.c0, n };
+      for (let i = 0; i < n; i++) setBridgeCol(i, true);
+      for (const m of [planks, rails]) { add(m); m.frustumCulled = false; areaDispose.push({ dispose: () => m.dispose() }); }
+      // 铁链：桥头斜拉到石台上的斧头下面，两侧各一条
+      const cm = plainMat('#c9c4bb', { roughness: 0.5, metalness: 0.4 });
+      const p0 = new THREE.Vector3(a.bridge.c1 + 0.3, 3.05, 0), p1 = new THREE.Vector3(a.axe.x - 0.4, a.axe.y + 0.35, 0), d = p1.clone().sub(p0);
+      const linkGeo = new THREE.TorusGeometry(0.09, 0.025, 5, 10); areaDispose.push(linkGeo);
+      for (const z of [-2.5, 2.5]) for (let k = 0; k < 7; k++) {
+        const o = new THREE.Mesh(linkGeo, cm); o.position.copy(p0).addScaledVector(d, (k + 0.5) / 7); o.position.z = z;
+        o.rotation.set(k % 2 ? Math.PI / 2 : 0, 0, Math.atan2(d.y, d.x)); add(o); chainMeshes.push(o);
+      }
+    }
+    if (a.axe) { axeModel = M.axe(); axeModel.position.set(a.axe.x, a.axe.y, 0); axeModel.scale.setScalar(1.15); areaGroup.add(axeModel); }
+    if (a.toad) { const t = M.toad(); t.position.set(a.toad.x, a.toad.y, 0); t.rotation.y = -Math.PI / 2; areaGroup.add(t); }
+    // 火棒：每颗火球沿纵深 6 份（和方块一样铺满跑道），外面套一层加色光晕
+    const nb = w.rt.firebars.reduce((s, b) => s + b.len, 0) * ZS.length;
+    if (nb) {
+      // 火球也做网点淡化：贴着镜头或挡在镜头与玛丽之间时溶解，正视 / 第一人称经过火棒时不会糊成一大片
+      fireInst = new THREE.InstancedMesh(ballGeo, fadeable(new THREE.MeshBasicMaterial({ color: '#ff4f16' })), nb);
+      fireGlow = new THREE.InstancedMesh(ballGeo, fadeable(new THREE.MeshBasicMaterial({ color: '#ff7a2a', transparent: true, opacity: 0.26, blending: THREE.AdditiveBlending, depthWrite: false })), nb);
+      for (const m of [fireInst, fireGlow]) { m.frustumCulled = false; areaGroup.add(m); areaDispose.push({ dispose: () => m.dispose() }, m.material); }
+    }
+    if (w.rt.bowser) {
+      bowserModel = M.bowser(); areaGroup.add(bowserModel);
+      bowserFake = M.goomba('castle'); bowserFake.scale.setScalar(1.7); bowserFake.visible = false; areaGroup.add(bowserFake);
+    }
+  }
+  function setBridgeCol(i, on) {
+    const r = bridgeRec, x = r.c0 + i + 0.5, s = on ? 1 : 0;
+    tmpQ.identity();
+    r.planks.setMatrixAt(i, tmpM.compose(tmpP.set(x, 2.76, 0), tmpQ, tmpS.set(0.97 * s, 0.48 * s, LANE * 2 * s)));
+    let k = i * 4;
+    for (const z of [-LANE + 0.06, LANE - 0.06]) {
+      r.rails.setMatrixAt(k++, tmpM.compose(tmpP.set(x, 3.36, z), tmpQ, tmpS.set(1.0 * s, 0.07 * s, 0.07 * s)));
+      r.rails.setMatrixAt(k++, tmpM.compose(tmpP.set(x - 0.3, 3.18, z), tmpQ, tmpS.set(0.08 * s, 0.36 * s, 0.08 * s)));
+    }
+    r.planks.instanceMatrix.needsUpdate = r.rails.instanceMatrix.needsUpdate = true;
   }
 
   function refreshTile(rec, bump = 0) {
@@ -419,6 +503,7 @@ export function createView(canvas) {
   function warmUp() {
     const tmp = new THREE.Group();
     tmp.add(M.goomba(view.theme), M.koopa(false), M.koopa(true), M.piranha(), M.mushroom(false), M.mushroom(true), M.flower(), M.star(), M.fireball(), M.coin());
+    if (view.theme === 'castle') tmp.add(M.bowserFlame());
     const { texture } = textTexture('100', { color: '#ffffff', stroke: '#1a1a1a', size: 44 });
     const sm = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
     tmp.add(new THREE.Sprite(sm), new THREE.Mesh(ballGeo, new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true })), new THREE.Mesh(debrisGeo, tileMat('brick', view.theme)));
@@ -487,8 +572,24 @@ export function createView(canvas) {
       case 'firework': burst(e.x, e.y, e.z, ['#ff5a3a', '#fff070', '#7ad8ff'][Math.floor(Math.random() * 3)], 28, 7, 0.9, 0.14); view.shake = 0.15; break;
       case 'castleFlag': if (castleFlag) castleFlag.userData.rise = true; break;
       case 'coin': if (e.x !== undefined) burst(e.x, e.y, e.z, '#ffe066', 5, 2.5, 0.3, 0.07); break;
+      case 'die': if (e.reason === 'lava') { const p = w.player; burst(p.x, p.y + 0.6, p.z, '#ff7a2a', 18, 5, 0.6, 0.11); burst(p.x, p.y + 0.6, p.z, '#ffe08a', 8, 3, 0.5, 0.08); } break;
+      case 'bowserfire': burst(e.x, e.y, e.z, '#ffb040', 8, 2.5, 0.3, 0.1); break;
+      case 'bowserHit': { const b = w.rt.bowser; if (b) burst(b.x, b.y + 1.2, b.z, '#ffffff', 6, 3, 0.3, 0.09); break; }
+      case 'bowserDefeated': burst(e.x, e.y + 1.2, e.z, '#ffe28a', 16, 5, 0.5, 0.1); break;
+      case 'axe': if (axeModel) { burst(axeModel.position.x, axeModel.position.y + 0.7, 0, '#ffd060', 14, 4, 0.5, 0.09); axeModel.visible = false; } break;
+      case 'chainGone': for (const c of chainMeshes) c.visible = false; break;
+      case 'bridgeTile': if (bridgeRec) { setBridgeCol(e.c - bridgeRec.c0, false); debrisAt(e.c + 0.5, 2.8); } break;
     }
   };
+  // 塌桥的碎板：几块红褐色木片往下掉进岩浆
+  function debrisAt(x, y) {
+    const m = plainMat('#a44a2a');
+    for (const z of [-2, 0, 2]) {
+      const o = new THREE.Mesh(debrisGeo, m); o.scale.set(1.6, 0.6, 1.6);
+      o.position.set(x + (Math.random() - 0.5) * 0.5, y, z + (Math.random() - 0.5));
+      fx.add(o); effects.push({ obj: o, life: 1.1, max: 1.1, kind: 'body', v: new THREE.Vector3((Math.random() - 0.5) * 1.5, 1 + Math.random() * 2, (Math.random() - 0.5) * 1.5), spin: 5 });
+    }
+  }
 
   // ---------- 镜头 ----------
   function camTargetY(w, preset) {
@@ -520,10 +621,16 @@ export function createView(canvas) {
     const t = a.tiles.get(tileKey(c, h));
     return (!!t && SOLID.has(t.t) && !t.hidden) || a.trees.some(t=>c+.5>=t.x&&c+.5<t.x+t.w&&h+1>t.y-.6&&h<t.y);
   };
+  // 城堡天花板高低不一：取玛丽头顶附近几列最低的天花板底边；只在镜头明显高过它（斜视、俯视）时剖开，侧视保留压低的天花板
+  function castleCeil(p) {
+    let low = 10;
+    for (let c = Math.floor(p.x) - 2; c <= Math.floor(p.x) + 2; c++) { const b = ceilBottom[c]; if (b !== undefined && b < low && b > p.y + 0.9) low = b; }
+    return low;
+  }
   function cutsFor(a, p, pos) {
-    const ceil = a.ceiling ? (a.ceilY || 10) : null;
+    const castle = !!ceilBottom, ceil = !a.ceiling ? null : castle ? castleCeil(p) : (a.ceilY || 10);
     return {
-      top: ceil !== null && pos.y > ceil - 0.6 && p.y < ceil - 0.5 ? ceil : null,
+      top: ceil !== null && pos.y > ceil + (castle ? 1.2 : -0.6) && p.y < ceil - 0.5 ? ceil : null,
       l: view.wallL !== null && pos.x < view.wallL ? view.wallL : null,
       r: view.wallR !== null && pos.x > view.wallR ? view.wallR : null
     };
@@ -638,6 +745,7 @@ export function createView(canvas) {
       coinInst.instanceMatrix.needsUpdate = true;
     }
     for (const lg of liftGroups) {lg.group.position.y=lg.lift.y;lg.group.position.x=lg.lift.x;}
+    updateCastle(w, dt);
     if (flagMesh && w.flag) flagMesh.position.y = w.flag.flagY;
     if (castleFlag && castleFlag.userData.rise) castleFlag.position.y = Math.min(castleFlag.userData.y0 + 1.3, castleFlag.position.y + dt * 1.2);
     updatePlayerModel(w, dt);
@@ -703,6 +811,64 @@ export function createView(canvas) {
     renderer.render(scene, camera);
   };
 
+  function updateCastle(w, dt) {
+    if (!ceilBottom) return;
+    const p = w.player;
+    // Q/E 转到跑道背面时镜头在背景墙外：藏起背景墙，看到的是城堡的剖面而不是一整面黑墙
+    if (castleWall) castleWall.visible = camera.position.z > -LANE - 0.4;
+    for (const t of lavaTex) { t.offset.x = (t.offset.x + dt * 0.035) % 1; t.offset.y = Math.sin(time * 0.6) * 0.04; }
+    // 岩浆红光放在最近的岩浆坑上方
+    let best = null, bd = 1e9;
+    for (const l of w.area.lava) { const cx = (l.x0 + l.x1) / 2, d = Math.max(0, Math.abs(p.x - cx) - (l.x1 - l.x0) / 2); if (d < bd) { bd = d; best = l; } }
+    if (best && bd < 12 && view.quality !== 'low') {
+      lavaLight.position.set(Math.max(best.x0 + 0.5, Math.min(best.x1 - 0.5, p.x)), best.top + 0.7, 0.5);
+      lavaLight.intensity = (14 + Math.sin(time * 5) * 1.5) * Math.max(0, 1 - bd / 12);
+    } else lavaLight.intensity = 0;
+    if (fireInst) {
+      let i = 0;
+      for (const b of w.rt.firebars) {
+        const c = Math.cos(b.angle), s = Math.sin(b.angle);
+        for (let k = 0; k < b.len; k++) {
+          const x = b.x + c * k * FIREBAR_GAP, y = b.y + s * k * FIREBAR_GAP, r = 0.24 + 0.025 * Math.sin(time * 16 + k * 1.3);
+          for (const z of ZS) {
+            fireInst.setMatrixAt(i, tmpM.compose(tmpP.set(x, y, z), tmpQ.identity(), tmpS.setScalar(r)));
+            fireGlow.setMatrixAt(i, tmpM.compose(tmpP, tmpQ, tmpS.setScalar(r * 1.5)));
+            i++;
+          }
+        }
+      }
+      fireInst.instanceMatrix.needsUpdate = fireGlow.instanceMatrix.needsUpdate = true;
+    }
+    if (axeModel && axeModel.visible) axeModel.rotation.y = time * 1.4;
+    const b = w.rt.bowser;
+    if (b && bowserModel) {
+      bowserModel.visible = b.state !== 'gone' && b.state !== 'dead';
+      bowserFake.visible = b.state === 'dead';
+      if (bowserModel.visible) {
+        const ud = bowserModel.userData;
+        bowserModel.position.set(b.x, b.y, b.z);
+        const want = b.face < 0 ? -Math.PI / 2 : Math.PI / 2;
+        let d = want - bowserModel.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d));
+        bowserModel.rotation.y += d * Math.min(1, dt * 8);
+        const step = b.grounded ? Math.sin(time * 6 + b.x * 2) * Math.min(1, Math.abs(b.vx)) : 0;
+        ud.legs[0].rotation.x = step * 0.5; ud.legs[1].rotation.x = -step * 0.5;
+        ud.arms.forEach((a, i) => { a.rotation.x = b.grounded ? -0.2 + (i ? -step : step) * 0.3 : -1.1; });
+        // 吸气时闭嘴，喷出后张大嘴
+        ud.jaw.rotation.x = b.windup > 0 ? 0 : 0.18 + 0.1 * Math.sin(time * 4);
+        ud.head.rotation.x = b.windup > 0 ? -0.15 : 0;
+        bowserModel.rotation.z = b.state === 'fall' ? Math.sin(time * 9) * 0.25 : 0;
+      }
+      if (bowserFake.visible) { bowserFake.position.set(b.x, b.y + 1.5, b.z); bowserFake.rotation.set(0, 0, Math.PI); }
+    }
+    for (const [f, m] of flameModels) if (!w.rt.flames.includes(f)) { areaGroup.remove(m); flameModels.delete(f); }
+    for (const f of w.rt.flames) {
+      let m = flameModels.get(f);
+      if (!m) { m = M.bowserFlame(); areaGroup.add(m); flameModels.set(f, m); }
+      m.position.set(f.x, f.y + FLAME_H / 2, 0);
+      m.userData.puffs.forEach((pf, i) => { pf.scale.set(1 + 0.12 * Math.sin(time * 31 + i * 1.7), 1 + 0.22 * Math.sin(time * 23 + i), 1); });
+    }
+  }
+
   function updatePlayerModel(w, dt) {
     const p = w.player, s = w.session;
     const root = player.root;
@@ -746,7 +912,7 @@ export function createView(canvas) {
     renderer.shadowMap.enabled = q !== 'low'; sun.castShadow = q !== 'low';
     sun.shadow.mapSize.set(q === 'low' ? 512 : 2048, q === 'low' ? 512 : 2048);
     if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; }
-    lamp.intensity = view.theme === 'underground' && q !== 'low' ? 7 : 0;
+    lamp.intensity = q === 'low' ? 0 : view.theme === 'underground' ? 7 : view.theme === 'castle' ? 2.6 : 0;
     scene.traverse(o => { if (o.material && !Array.isArray(o.material)) o.material.needsUpdate = true; });
   };
   view.stats = () => ({ calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures });

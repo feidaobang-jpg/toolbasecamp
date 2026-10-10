@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#6d9cff">
-<meta name="description" content="FC 超级马力欧兄弟 1-1、1-2 与 1-3 树冠关：顶砖、蘑菇、火焰花、无敌星、隐藏 1UP、钻水管、奖励房间与传送区。电脑键盘与手机触屏均可游玩。">
-<title>超级玛丽 3D · 1-1 至 1-3</title>
+<meta name="description" content="FC 超级马力欧兄弟 1-1 至 1-4：地面、地下、树冠和库巴城堡。顶砖、蘑菇、火焰花、无敌星、隐藏 1UP、钻水管、传送区、旋转火棒和砍断库巴桥的斧头。电脑键盘与手机触屏均可游玩。">
+<title>超级玛丽 3D · 1-1 至 1-4</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=portrait-menu1">
+<link rel="stylesheet" href="./style.css?v=castle1">
 </head>
 <body>
 <div id="app" tabindex="-1">
@@ -66,8 +66,8 @@
         <div class="brand">
           <div class="kicker">FC 经典 · 3D 重制</div>
           <h1 class="logo">超级玛丽 <span>3D</span></h1>
-          <div class="sub">WORLD 1-1 地面 · 1-2 地下 · 1-3 树冠</div>
-          <p class="rules">第三关：跳过高低树冠，搭乘往返浮台，踩掉飞行乌龟的翅膀。前两关保留：顶砖块拿蘑菇、火焰花、无敌星，找隐藏 1UP，按 <b>U</b> 钻进水管（L兼容）去奖励房间，1-2 还藏着传送区。水管、台阶和砖墙沿纵深铺满跑道，不能从旁边绕过去。按 <b>C</b> 能切到身后的正视和第一人称。</p>
+          <div class="sub">WORLD 1-1 地面 · 1-2 地下 · 1-3 树冠 · 1-4 城堡</div>
+          <p class="rules">第四关：库巴城堡——跳过岩浆坑、躲开旋转火棒，冲过喷火的库巴，碰到桥头的斧头把桥砍断。第三关：跳过高低树冠，搭乘往返浮台，踩掉飞行乌龟的翅膀。前两关：顶砖块拿蘑菇、火焰花、无敌星，找隐藏 1UP，按 <b>U</b> 钻进水管（L兼容）去奖励房间，1-2 还藏着传送区。水管、台阶和砖墙沿纵深铺满跑道，不能从旁边绕过去。按 <b>C</b> 能切到身后的正视和第一人称。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>K</kbd> 跳 · <kbd>J</kbd> 按住冲刺 / 火球 · <kbd>I</kbd> 冲刺 · <kbd>U</kbd> 蹲 / 钻水管（L兼容）<br><kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
           <p class="help help-touch">左侧摇杆移动 · 右侧 <b>K</b> 跳、<b>I</b> 冲刺（松方向停止）、<b>J</b> 火球（电脑上按住 = 冲刺）、<b>U</b> 蹲 / 钻水管 · 拖动画面空白处转视角、<b>C</b> 切视角</p>
           <p class="hi">最高分 <span id="hi-val">0</span></p>
@@ -119,6 +119,10 @@
       </div>
     </div>
 
+    <div id="castle-msg" hidden>
+      <p><span class="en">THANK YOU MARIO!</span><span class="zh">谢谢你，马力欧！</span></p>
+      <p class="l2"><span class="en">BUT OUR PRINCESS IS IN<br>ANOTHER CASTLE!</span><span class="zh">可是我们的公主在另一座城堡里！</span></p>
+    </div>
     <div id="fps" hidden></div>
     <div id="toast" role="status" hidden></div>
   </div>
@@ -131,6 +135,6 @@
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=menu-text1"></script>
+<script type="module" src="./main.js?v=castle1"></script>
 </body>
 </html>

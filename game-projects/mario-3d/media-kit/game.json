@@ -404,5 +404,28 @@
       "status": "held_by_user"
     }
   ],
-  "last_backfill_record": "releases/backfill-20261010/release-status.json"
+  "last_backfill_record": "releases/backfill-20261010/release-status.json",
+  "development_version": "v2.6.0-preview1",
+  "review_candidate": {
+    "version": "v2.6.0-preview1",
+    "status": "pending_user_review",
+    "created_at": "2026-10-10T22:21:55+08:00",
+    "branch": "claude/mario-stage4-20261010",
+    "worktree": "D:/project/toolbasecamp/.claude/worktrees/mario-stage4",
+    "source_commit": "63ca398d0351e5457f74eadeba0c1a086c87a16c",
+    "runtime_fingerprint": "4e8d697bb1cff89ea59802d928c59d5f553a187ac9b4df9a8fa255a7ef0bd05c",
+    "record": "releases/v2.6.0-preview1/handoff.json",
+    "scope": "新增 WORLD 1-4 库巴城堡；用户要求本人审核后全平台上架",
+    "user_instruction": "超级玛丽第四关做一下，我审核后全平台上架",
+    "local_preview": "http://127.0.0.1:8798/html/game/mario-3d/index.html?level=1-4（在 worktree 根目录 node game-projects/mario-3d/qa/serve.mjs 8798）",
+    "channels_after_approval": [
+      "website",
+      "toy 39043286960128",
+      "taptap 962723",
+      "bilibili BV1guep6NELt 简介"
+    ],
+    "website": "not_deployed",
+    "toy": "not_submitted",
+    "taptap": "not_submitted"
+  }
 }

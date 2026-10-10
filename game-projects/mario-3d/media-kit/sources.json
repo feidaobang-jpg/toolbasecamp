@@ -127,5 +127,55 @@
     "input": "沿用 v2.4.6，详细出处见 game-projects/site-games/releases/bgm-full-20261007/audio-sources.json",
     "processing": "第三关复用完整 overworld.mp3，不修改或截断音源；audio-resynth 为历史来源兼加载失败回退",
     "usage": "audio.js/SampleAudio"
+  },
+  {
+    "id": "ref-map-1-4",
+    "purpose": "原作 WORLD 1-4 逐格地形、岩浆坑、火棒轴心、隐藏砖、桥、斧头、蘑菇人位置",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://themushroomkingdom.net/images/maps/smb/smb_1-4.png ; https://ian-albert.com/games/super_mario_bros_maps/mario-1-4.gif",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/references/",
+    "processing": "2560×240，16 像素一格逐格读出并与坐标源码交叉核对；只作参考，不入库",
+    "usage": "public/html/game/mario-3d/levels.js build14"
+  },
+  {
+    "id": "ref-world14-coordinates",
+    "purpose": "1-4 坐标、火棒长度 / 转速 / 初始角、库巴移动与喷火计时、斧头演出顺序",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://github.com/timmywil/FullScreenMario/blob/master/Maps/World14.js ; maps.js ; things.js",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/references/",
+    "processing": "8 单位 = 1 格换算；数值按本工程手感换算并记入 restoration.md",
+    "usage": "levels.js build14, world.js 城堡段"
+  },
+  {
+    "id": "ref-footage-1-4",
+    "purpose": "核对火棒转向与转速、库巴跳跃、斧头后演出、结尾计时与分数",
+    "source_type": "reference",
+    "tool": "yt-dlp + ffmpeg 抽帧",
+    "input": "https://www.youtube.com/watch?v=5j4nHkZFizo 3:05–3:48",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/footage/",
+    "processing": "每秒 1 帧 / 0.2 秒一帧联系表；只作参考，不入库",
+    "usage": "restoration.md 的核对项"
+  },
+  {
+    "id": "castle-audio",
+    "purpose": "1-4 城堡背景乐",
+    "source_type": "original_game_recording",
+    "tool": "ffmpeg",
+    "input": "zophar NSF 7 - Bowser's Castle.mp3",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/audio/7-bowsers-castle.mp3",
+    "processing": "完整时长，单声道 32 kHz 96 kbps，未加增益",
+    "usage": "public/html/game/mario-3d/sounds/castle.mp3",
+    "record": "releases/v2.6.0-preview1/audio-sources.json"
+  },
+  {
+    "id": "castle-procedural",
+    "purpose": "城堡石、岩浆贴图，库巴、火焰、蘑菇人、斧头、吊桥、铁链、火棒火球模型",
+    "source_type": "procedural",
+    "tool": null,
+    "input": null,
+    "processing": "程序化 Canvas 贴图与球 / 方块 / 圆柱 / 圆锥组合低模，自然色哑光画风，与前三关一致",
+    "usage": "textures.js castleStone / lavaTexture；models.js bowser / bowserFlame / toad / axe；scene.js buildCastleInterior"
   }
 ]

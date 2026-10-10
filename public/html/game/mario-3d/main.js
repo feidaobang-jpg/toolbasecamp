@@ -1,11 +1,11 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=menu-text1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=2.5.0';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.5.0';
-import { LEVEL_ORDER } from './levels.js?v=2.5.0';
-import { GameAudio } from './audio.js?v=bgmfull1';
+import { createView, PRESETS } from './scene.js?v=2.6.0';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.6.0';
+import { LEVEL_ORDER } from './levels.js?v=2.6.0';
+import { GameAudio } from './audio.js?v=castle1';
 
-const VERSION = 'v2.5.0';
+const VERSION = 'v2.6.0-preview1';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -13,7 +13,7 @@ const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌�
 const $ = (id) => document.getElementById(id);
 const app = $('app'), stage = $('stage'), canvas = $('screen');
 const overlays = { menu: $('menu'), pause: $('pause'), result: $('result') };
-const hud = $('hud'), hudTop = $('hud-top'), touch = $('touch'), keyHint = $('keyhint'), card = $('card'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt');
+const hud = $('hud'), hudTop = $('hud-top'), touch = $('touch'), keyHint = $('keyhint'), card = $('card'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt'), castleMsg = $('castle-msg');
 
 // ---------- 本地保存（独立命名空间，读写失败用默认值） ----------
 const NS = 'mario3d-v2:';
@@ -65,7 +65,8 @@ const eventLog = [];
 const LEVEL_TIPS = {
   '1-1': '顶问号砖拿蘑菇、火焰花和无敌星；第 4 根水管上按 U（L兼容） 能钻进奖励房间',
   '1-2': '地下关：砖墙顶上也能走；出口水管旁边的天花板上面藏着传送区',
-  '1-3': '远跳先按 I 冲刺，等浮台靠近再跳；飞行乌龟第一次踩掉翅膀，再踩才变龟壳'
+  '1-3': '远跳先按 I 冲刺，等浮台靠近再跳；飞行乌龟第一次踩掉翅膀，再踩才变龟壳',
+  '1-4': '火棒会转圈，看准空当再过；跳过库巴的火焰，碰到桥头的斧头就能把桥砍断（火焰花打 5 下也能打倒他）'
 };
 
 // ---------- 输入：键盘与触屏共用一张动作表 ----------
@@ -119,7 +120,7 @@ function buildInput() {
 // ---------- 设置菜单 ----------
 function optLabel(name) {
   switch (name) {
-    case 'level': return ['起始关卡', settings.level + ' ' + {'1-1':'地面','1-2':'地下','1-3':'树冠'}[settings.level], false];
+    case 'level': return ['起始关卡', settings.level + ' ' + {'1-1':'地面','1-2':'地下','1-3':'树冠','1-4':'城堡'}[settings.level], false];
     case 'lives': return ['命数', settings.lives === 'inf' ? '无限命' : '经典 3 命', false];
     case 'armor': return ['耐久', settings.armor === 'classic' ? '原作（小玛丽一碰就输）' : '标准 3 格护心', false];
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
@@ -280,6 +281,7 @@ function beginLevel(opts) {
   view.build(w);
   hurtFx = 0;
   toastEl.hidden = true; clearTimeout(toastTimer);
+  castleMsg.hidden = true; castleMsg.classList.remove('two');
   latch.jump = latch.fire = false;
   audio.setHurry(false); audio.stopMusic();
   phase = 'card'; cardT = 0;
@@ -312,7 +314,7 @@ function resume() {
 function toTitle() {
   uiMode = 'title'; paused = false; session = null; w = null;
   audio.pause(false); audio.stopMusic(); audio.setHurry(false);
-  card.hidden = true; hurtFx = 0;
+  card.hidden = true; hurtFx = 0; castleMsg.hidden = true;
   buildTitle();
   show('menu');
 }
@@ -340,7 +342,9 @@ function finishRun(win, extraNote, how) {
   $('res-extra').textContent = extra.join(' · ');
   const sl = overlays.result.querySelector('.sanlian');
   sl.hidden = !win;
-  sl.textContent = how === 'warp' ? '连传送区都被你翻出来了！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？' : '旗杆已经拔到顶啦！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？';
+  sl.textContent = how === 'warp' ? '连传送区都被你翻出来了！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？'
+    : how === 'castle' ? '桥砍断了，库巴掉进岩浆……可公主在另一座城堡里。喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？'
+    : '旗杆已经拔到顶啦！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？';
   if (!win) audio.jingle('gameover');
   card.hidden = true;
   show('result');
@@ -358,7 +362,14 @@ function handleEvent(e) {
       break;
     case 'jump': case 'coin': case 'bump': case 'break': case 'stomp': case 'kick': case 'fireball': case 'pop': case 'sprout':
     case 'grow': case 'fire': case 'powerup': case 'oneup': case 'pipe': case 'firework': case 'checkpoint': case 'revive':
+    case 'bowserfire':
       audio.sfx(e.type, e); break;
+    case 'bowserHit': audio.sfx('kick'); break;
+    case 'bowserDefeated': audio.sfx('kick'); showToast('原来是栗宝宝假扮的库巴！'); break;
+    case 'axe': audio.stopMusic(); audio.setHurry(false); clearInput(); break;
+    case 'bowserFall': audio.sfx('bowserfall'); break;
+    case 'worldClear': audio.jingle('worldclear'); break;
+    case 'castleText': toastEl.hidden = true; castleMsg.hidden = false; castleMsg.classList.toggle('two', e.line >= 2); break;
     case 'tick': if (gameClock - tickSfxT > 0.05) { tickSfxT = gameClock; audio.sfx('tick'); } break;
     case 'shrink': audio.sfx('shrink'); hurtFx = 1; view.shake = 0.12; break;
     case 'hurt': audio.sfx('hurt'); hurtFx = 1; view.shake = 0.12; showToast('受伤了！剩 ' + e.hearts + ' 格护心'); break;
@@ -375,7 +386,7 @@ function handleEvent(e) {
     case 'warp':
       cleared.push(w.levelId + '（传送区）');
       audio.jingle('clear');
-      finishRun(true, '钻进了 ' + e.world + ' 号传送水管！原作会去 WORLD ' + e.world + '-1，这一版只复刻到 1-2', 'warp');
+      finishRun(true, '钻进了 ' + e.world + ' 号传送水管！原作会去 WORLD ' + e.world + '-1，这一版只复刻到 1-4', 'warp');
       break;
   }
   if (e.type === 'checkpoint') showToast('到达中途点：之后从这里继续');
@@ -394,7 +405,7 @@ function onClear() {
   cleared.push(w.levelId);
   const next = nextLevelId(w.levelId);
   if (next) { session.levelId = next; session.checkpoint = null; beginLevel({}); }
-  else finishRun(true, cleared.length >= LEVEL_ORDER.length ? '1-1 至 1-3 全部完成' : '从 WORLD ' + cleared[0] + ' 开始，打到了最后一关');
+  else finishRun(true, cleared.length >= LEVEL_ORDER.length ? '1-1 至 1-4 全部完成' : '从 WORLD ' + cleared[0] + ' 开始，打到了最后一关', w.levelId === '1-4' ? 'castle' : '');
 }
 
 // ---------- 全屏 ----------
@@ -665,6 +676,7 @@ if (TEST) {
     get world() { return w; },
     get session() { return session; },
     get view() { return view; },
+    get audio() { return audio; },
     settings,
     state() {
       const p = w && w.player;
