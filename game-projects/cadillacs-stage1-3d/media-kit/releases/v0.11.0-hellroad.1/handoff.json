@@ -4,7 +4,7 @@
  "version": "v0.11.0-hellroad.1",
  "base_version": "v0.10.1",
  "created_at": "2026-10-10T12:50:00+08:00",
- "classification": "对比候选版（仅本地，未合并主线、未上线）",
+ "classification": "正式版本（替换网站第三关，本人对比后采用）",
  "user_request": "之前别的ai做的了恐龙快打第三关，你重新自己做一个，不要参考那边，要根据原版关卡做，用game-maker做。做完我对比两边的效果，先别上架，先本地做。可以再替换网站和发布。",
  "build": {
   "id": "f4a5cb7572aeccaf3f493c3ced9cf522a9d42675751dae8c725b3c32212733ca",
@@ -721,17 +721,26 @@
   ]
  },
  "release": {
-  "website": "not_deployed",
-  "merged_to_master": false,
-  "toy": "not_submitted",
-  "taptap": "not_submitted",
-  "video_descriptions": "unchanged",
+  "website": "public_verified",
+  "merged_to_master": true,
+  "source_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+  "deployed_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+  "runtime_sha256": "7cc87513a55911aff1b985e963a04c18aec5e58639f4a8ebb364c3a59bde9eee",
+  "website_verified_at": "2026-10-10T16:41:49+08:00",
+  "website_evidence": "服务器 last-deployed-sha=448dc7bc；线上 game.min.js sha256 与本地构建一致；index.html 标题「第一至三关」、JS 引用 ?v=448dc7bc；desert / road / boss3.mp3 与本地一致，旧版 road-drive / road-walk.mp3 返回 404；style.css 一致；zh-CN.js 卡片副标题「海上都市 · 沼泽森林 · 地狱公路三关」",
+  "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+  "replaced": "v0.11.0-preview.2（另一版第三关：src/road.js、road-world.js、road-drive / road-walk 曲已从主线删除）",
+  "toy": "pending_22_batch_b2（Toy 现公开版为 v0.11.0-preview.2）",
+  "taptap": "not_submitted：本人 2026-10-10 决定保持线上旧版、不补 IP 材料",
+  "video_descriptions": "pending_22_batch_b2：BV18XHW66E55 简介里的第三关说明按新版改写",
   "approval": {
    "required": true,
-   "status": "pending_user_comparison",
-   "requested_by_user": "先别上架，先本地做"
+   "status": "approved",
+   "approved_at": "2026-10-10T16:41:49+08:00",
+   "quote": "感觉差不多了，先替换掉网站里的第三关吧，把之前codex写的第三关代码去掉，用这份代码。",
+   "scope": "用本版替换网站上的第三关并删除另一版代码；网站先发布，其他渠道按发布规则进 22 点批次 b-2"
   },
-  "local_preview": "http://127.0.0.1:8797/html/game/cadillacs-stage1-3d/index.html（node qa/serve.mjs 8797）"
+  "local_preview": "已不需要；worktree 仍保留未入库的截图与录像"
  },
  "cover": "沿用现有网站卡片封面（未发布，不换）",
  "readiness": {

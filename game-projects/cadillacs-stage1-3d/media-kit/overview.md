@@ -1,4 +1,4 @@
-> 2026-10-09 对比候选版 **v0.11.0-hellroad.1**（仅本地，分支 `claude/cadillacs-stage3-original-20261009`）：应用户要求不参考下面这版、按原作实机录像独立重做的第三关——死亡沙漠三波与机修工送车、开车一路撞、霍格摩托战（车上撞死或车毁后徒步两种结局）、三首原版曲。未合并主线、未上线；还原清单与验证见 [restoration.md](releases/v0.11.0-hellroad.1/restoration.md)、[notes.md](releases/v0.11.0-hellroad.1/notes.md)。下面几条是网站上那一版（v0.11.0-preview.*）的记录，原样保留。
+> 2026-10-10 网站第三关已换成 **v0.11.0-hellroad.1**（主线 448dc7bc，公网核验通过；Toy、B站简介登记 22 点批次 b-2，TapTap 按本人决定不提交）：应用户要求不参考下面这版、按原作实机录像独立重做的第三关——死亡沙漠三波与机修工送车、开车一路撞、霍格摩托战（车上撞死或车毁后徒步两种结局）、三首原版曲。本人对比后采用，另一版代码已从主线删除；还原清单与验证见 [restoration.md](releases/v0.11.0-hellroad.1/restoration.md)、[notes.md](releases/v0.11.0-hellroad.1/notes.md)。下面几条是被替换的那一版（v0.11.0-preview.*）的记录，原样保留。
 
 > 2026-10-09 第三关道路修正 v0.11.0-preview.2：人物和车辆可到道路白线内侧，修复底部完整路面走不进去的问题。验证与渠道范围见 [修复记录](releases/v0.11.0-preview.2/notes.md)。
 
