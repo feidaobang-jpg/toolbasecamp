@@ -8,7 +8,7 @@
  "user_request": "之前别的ai做的了恐龙快打第三关，你重新自己做一个，不要参考那边，要根据原版关卡做，用game-maker做。做完我对比两边的效果，先别上架，先本地做。可以再替换网站和发布。",
  "build": {
   "id": "f4a5cb7572aeccaf3f493c3ced9cf522a9d42675751dae8c725b3c32212733ca",
-  "commit": null,
+  "commit": "cfcda307",
   "dirty": false,
   "fingerprint": "f4a5cb7572aeccaf3f493c3ced9cf522a9d42675751dae8c725b3c32212733ca",
   "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest of public/html/game/cadillacs-stage1-3d",
