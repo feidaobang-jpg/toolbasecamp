@@ -223,7 +223,8 @@ button::before,button::after{content:none!important}
 
 .touch-mode #hudRight{top:64px;font-size:9px;line-height:1.35;max-width:140px}
 /* 战术信息集中在主动打开的面板，战斗时只留一个入口。 */
-#tacticsButton{pointer-events:auto;display:block;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
+/* 右面板统一对齐：战术入口撑满面板宽，功能按钮走等宽两列网格，避免左靠/右靠/换行参差。 */
+#tacticsButton{pointer-events:auto;display:block;box-sizing:border-box;width:100%;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
 #tacticsPanel{width:660px;max-height:88%;overflow-y:auto;z-index:60;background:#132432;color:#edf6f8;border:1px solid #7397a4;touch-action:pan-y}
 #tacticsPanel .small{max-width:none;text-align:left;white-space:pre-line;margin:5px 0;color:#d5e3e9}
 #tacticsPanel h3{padding-right:36px;margin-bottom:8px}
@@ -238,7 +239,9 @@ button::before,button::after{content:none!important}
 .touch-mode #tacticsPanel .mbtn{min-height:var(--corner-height,54px);min-width:var(--corner-height,54px);font-size:16px}
 .touch-mode #tacticsButton{font-size:11px;min-height:var(--corner-height,54px)}
 #tacticsPanel .closeX{min-height:var(--corner-height,44px);min-width:var(--corner-height,44px)}
-#hudRight #webTools{position:static;pointer-events:auto;max-width:100%;margin-top:7px;gap:5px}
+#hudRight #webTools{position:static;pointer-events:auto;max-width:100%;margin-top:7px;gap:5px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.touch-mode #hudRight #webTools{grid-template-columns:1fr}
+.no-flexgap #hudRight #webTools>*{margin:0}
 @media(max-width:600px){#tacticalSquad{gap:7px}.tactical-mate{padding:7px}}
 #platformPanel{overflow-y:auto;touch-action:pan-y}#platformPanel,#platformPanel *{touch-action:pan-y}
 #platformPanel .mbtn{min-height:44px}#platformPanel h4{margin:14px 0 4px}#cloudInfo{white-space:pre-line}
@@ -461,15 +464,22 @@ button::before,button::after{content:none!important}
     </div>
     <p id="saveNotice" class="small" role="status"></p>
     <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
-    <div class="btnRow">
+    <h2>开始游戏</h2>
+    <div class="btnRow" id="startRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
-      <button class="mbtn red" id="btnVersus">⚑ 战地模式 · 据点争夺</button>
+    </div>
+    <h2>其他玩法 · 实验内容</h2>
+    <div class="btnRow" id="modeRow">
+      <button class="mbtn" id="btnVersus">⚑ 战地模式 · 据点争夺</button>
+      <button class="mbtn" id="btnTest">🧪 自由测试 · 无限资源 T</button>
+    </div>
+    <h2>设置与存档</h2>
+    <div class="btnRow" id="settingsRow">
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复 / 作者</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
       <button class="mbtn" id="daylightMain">地表：白天</button>
-      <button class="mbtn red" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
     <div class="small">
       地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，无需按键、不耗电。<br>
@@ -640,7 +650,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=cedef445ac" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=4865b94c" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
