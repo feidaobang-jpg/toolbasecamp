@@ -2250,6 +2250,26 @@ function squadTaskLabel(){
   if(defend&&follow)return '留守'+defend+' / 跟随'+follow;
   return defend?'留守基地':Game.squadAutoDefense!==false&&Game.squadAlert>0?'自动回防':'跟随我';
 }
+function updSquadOrderBtn(){
+  const defend=Game.squadOrder==='defend';
+  const label='队友：'+(defend?'守基地':'跟随我');
+  const tip=defend?'当前守基地，点击改为跟随出击（基地受威胁时仍会自动回防）':'当前跟随出击，点击改为守基地（基地受威胁时会自动回防）';
+  const hud=$('squadOrderBtn');
+  if(hud){
+    const usable=!!(Game.squadCount||squad.length)&&!operations.active;
+    hud.classList.toggle('hidden',!usable);
+    if(usable){
+      if(hud.textContent!==label)hud.textContent=label;
+      hud.setAttribute('aria-pressed',String(defend));hud.title=tip;
+    }
+  }
+  const pause=$('squadOrderPause');
+  if(pause){
+    if(pause.textContent!==label)pause.textContent=label;
+    pause.setAttribute('aria-pressed',String(defend));pause.title=tip;
+    pause.disabled=!(Game.squadCount||squad.length)||operations.active;
+  }
+}
 function squadAnchor(s){
   if(!s.vehicle&&squadRoleId(squadGear(s.slot).role)==='engineer'){
     const targets=[...buildings.filter(b=>!b.dead),...vehicles.filter(v=>!v.dead),...(!gate.dead?[gate]:[]),base];
@@ -3175,7 +3195,7 @@ if(it.type==='weapon'){if(!Game.weapons.includes(it.id))Game.weapons.push(it.id)
         showMsg('📦 获得 '+c.name,1.6);
       }
       else if(it.type==='vehicle'){if(!Game.testMode||!vehicles.some(v=>v.kind===it.id)){Game.vehiclesOwned.push(it.id);spawnVehicle(it.id);}showMsg('🚗 '+VEHICLES[it.id].name+' 已送达停机坪！靠近按I驾驶',2.2);}
-      else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad(it.slot);if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 队友已加入！战术部署可安排队友任务：'+SQUAD_ORDERS[Game.squadOrder],2.2);}
+      else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad(it.slot);if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 队友已加入！用右上角「队友」按钮切换跟随/守家，基地告急时自动回防。',2.6);}
 }
 function updAirdrops(dt){
   for(let i=airdrops.length-1;i>=0;i--){
@@ -3382,7 +3402,7 @@ function applySave(d){
   Game.hpBonus=d.hpBonus||0;
   Game.magnet=!!(d.perks&&d.perks.magnet);Game.regen=!!(d.perks&&d.perks.regen);
   Game.squadOrder=d.squadOrder==='defend'?'defend':'follow';Game.squadAlert=0;
-  Game.squadAutoDefense=d.squadAutoDefense!==false;Game.lastBattle=d.lastBattle||null;Game.battleLedger=null;
+  Game.squadAutoDefense=true;Game.lastBattle=d.lastBattle||null;Game.battleLedger=null;
   Game.rescueCooldown={squad:0,vehicles:0};Game.baseAlarm=0;
   Game.squadGear=Array.from({length:MAX_SQUAD},(_,i)=>{const g=(d.squadGear||[])[i]||{};return{weapon:clamp(Math.floor(g.weapon)||0,0,5),armor:clamp(Math.floor(g.armor)||0,0,5),role:squadRoleId(g.role),vehicle:Object.hasOwn(VEHICLES,g.vehicle)?g.vehicle:null,order:g.order==='follow'||g.order==='defend'?g.order:null};});
   const crewKinds=new Set();for(const g of Game.squadGear){if(!(d.vehiclesOwned||[]).includes(g.vehicle)||crewKinds.has(g.vehicle))g.vehicle=null;if(g.vehicle)crewKinds.add(g.vehicle);}
@@ -3629,6 +3649,7 @@ function updHUD(dt){
   else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(weaponLv(Game.curWeapon)?' Lv'+weaponLv(Game.curWeapon):'')+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*30)+'%':'');
   updHUDItem();updJumpUI();
   $('squadTxt').textContent=Game.squadCount||squad.length?`🪖 小队 ${squad.length}/${Math.max(Game.squadCount,squad.length)} · ${squadTaskLabel()} · 驾驶${squad.filter(s=>s.vehicle).length}`:'';
+  updSquadOrderBtn();
   if((tacticalHUDTimer-=dt)<=0){
     tacticalHUDTimer=.3;
     const plan=Game.state==='battle'&&Game.wave.plan?Game.wave.plan:currentWavePlan();
@@ -3808,12 +3829,15 @@ document.querySelectorAll('#shopTabs .tab').forEach(el=>{
 });
 function syncPauseOptions(){
   syncViewLabels();
-  $('squadTaskHint').textContent=operations.active?'副本中自动跟随，返回后恢复分工。':'队友跟随/守基地在「战术部署」里统一或逐人安排，并可设置自动回防。';
+  $('squadTaskHint').textContent=operations.active?'副本中自动跟随，返回后恢复分工。':'队友默认跟随出击，基地告急时自动回防；可随时一键切换全队「跟随/守家」。';
+  updSquadOrderBtn();
   $('qualityBtnMenu').textContent=$('qualityBtn').textContent;$('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
 $('recallSquad').onclick=()=>recallUnits('squad');
+function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'defend');updSquadOrderBtn();}
+$('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
 $('rescueVehicles').onclick=()=>recallUnits('vehicles');
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
 stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
