@@ -1,12 +1,11 @@
-// 场景：第一关三个区域（楼顶 / 大楼内部 / 第 47 街）与第二关三个区域（偷猎者森林 / 泥沼 / 黄昏的恐龙尸骸地）。按原作画面配色：楼顶淡紫色天空与沉在海里的高楼，
+// 场景：第一关三个区域（楼顶 / 大楼内部 / 第 47 街）、第二关三个区域（偷猎者森林 / 泥沼 / 黄昏的恐龙尸骸地）与第三关两个区域（死亡沙漠 / 地狱公路）。按原作画面配色：楼顶淡紫色天空与沉在海里的高楼，
 // 室内棕色壁纸、大理石柱、红地毯与金色骑士像，47 街的残破砖墙与铜绿色摩天楼。四周都有布景，Q/E 转到任何角度都不穿帮；
 // 室内的外墙与天花板在镜头位于墙外时剖切（玩偶屋视图），户外挡住主角的建筑半透明。
 import * as THREE from 'three';
 import { fixedRng } from './core.js';
 import { AREAS } from './level.js';
-import { Parts, mtx, GEO, toonMat, meshFrom, drumGeo, barrelGeo, pipesGeo, buildHuman, SPECS, bakeModel, buildPtero, capsule } from './models.js';
+import { Parts, mtx, GEO, toonMat, meshFrom, drumGeo, barrelGeo, pipesGeo, tiresGeo, buildHuman, SPECS, bakeModel, buildPtero, capsule } from './models.js';
 import { applyPose, HP, mod } from './anim.js';
-import { roadWorld } from './road-world.js';
 
 // ---------- 程序化贴图 ----------
 function mkTex(w, h, seed, fn) {
@@ -122,7 +121,22 @@ function T(name) {
       g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
       for (let i = 0; i < 260; i++) { const x = r() * w, y = r() * h, rr = 2 + r() * 5; g.fillStyle = r() < 0.6 ? 'rgba(30,36,20,0.28)' : 'rgba(255,255,225,0.3)'; g.beginPath(); g.ellipse(x, y, rr, rr * (0.5 + r() * 0.5), r() * 3, 0, Math.PI * 2); g.fill(); }   // 叶簇 / 树皮斑块
       speckle(g, w, h, r, 1200, 'rgba(40,40,30,0.22)', 2); speckle(g, w, h, r, 400, 'rgba(255,255,230,0.3)', 1.5);
-    }); break
+    }); break;
+    case 'sand': t = mkTex(512, 512, 41, (g, w, h, r) => {   // 第三关荒漠：橙红沙地 + 横向拉长的深浅沙斑 + 碎石 + 干裂纹（斑块在四边回绕，卷动时不露接缝）
+      g.fillStyle = '#b9643c'; g.fillRect(0, 0, w, h);
+      const blob = (x, y, rx, ry) => { for (const ox of [-w, 0, w]) for (const oy of [-h, 0, h]) { g.beginPath(); g.ellipse(x + ox, y + oy, rx, ry, 0, 0, Math.PI * 2); g.fill(); } };
+      for (let i = 0; i < 110; i++) { const v = (r() - 0.5) * 44, rr = 12 + r() * 40; g.fillStyle = 'rgba(' + ((186 + v) | 0) + ',' + ((100 + v * 0.7) | 0) + ',' + ((60 + v * 0.5) | 0) + ',0.5)'; blob(r() * w, r() * h, rr * 1.7, rr * 0.5); }
+      for (let i = 0; i < 260; i++) { g.fillStyle = r() < 0.5 ? 'rgba(92,46,26,0.5)' : 'rgba(226,160,110,0.55)'; blob(r() * w, r() * h, 1.5 + r() * 3.5, 1 + r() * 2); }   // 碎石
+      speckle(g, w, h, r, 2200, 'rgba(96,48,26,0.3)', 2); speckle(g, w, h, r, 700, 'rgba(236,176,126,0.4)', 2);
+      for (let i = 0; i < 7; i++) crack(g, 40 + r() * (w - 80), 40 + r() * (h - 80), 40 + r() * 40, r, 'rgba(98,50,28,0.5)');
+    }); break;
+    case 'track': t = mkTex(256, 256, 42, (g, w, h, r) => {   // 公路：压实的土路面 + 几道车辙（透明底，盖在沙地上；只沿行车方向重复）
+      g.clearRect(0, 0, w, h);
+      const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(214,150,104,0)'); gr.addColorStop(0.12, 'rgba(214,150,104,0.42)'); gr.addColorStop(0.88, 'rgba(214,150,104,0.42)'); gr.addColorStop(1, 'rgba(214,150,104,0)');
+      g.fillStyle = gr; g.fillRect(0, 0, w, h);
+      for (const y of [58, 84, 150, 176]) { g.fillStyle = 'rgba(120,62,36,0.34)'; g.fillRect(0, y, w, 9); for (let x = 0; x < w; x += 8) { g.fillStyle = 'rgba(92,46,26,' + (0.12 + r() * 0.3).toFixed(2) + ')'; g.fillRect(x, y + r() * 5, 5, 3); } }
+      for (let i = 0; i < 90; i++) { g.fillStyle = r() < 0.5 ? 'rgba(96,50,30,0.5)' : 'rgba(238,186,140,0.5)'; g.fillRect(r() * w, 20 + r() * (h - 40), 2 + r() * 3, 1.5 + r() * 2); }
+    }); break;
   }
   TEX[name] = t;
   return t;
@@ -239,9 +253,90 @@ function swampWater(A) {
   return mat;
 }
 
+// ---------- 第三关：荒漠（WASTE LAND） ----------
+// 原作画面：蓝紫色天空里横着几道云带，地平线一带发黄；远处一排平顶的红色台地，偶尔有一座很近很大的；橙红沙地上零星草丛，
+// 路边是带灌木的碎石堆和成片的仙人掌。布景按「地块」做成合并网格：3-1 把地块排开不动，3-2 把同一批地块首尾相接、按开过的距离向后卷。
+const TILE = 64, FAR = 960, NEAR_N = 7;
+const ROCKS = ['#b8734c', '#a8643e', '#c88a5c', '#9a5a3a'];
+function desertSky() {
+  return mkTex(512, 256, 43, (g, w, h, r) => {
+    const gr = g.createLinearGradient(0, 0, 0, h);
+    gr.addColorStop(0, '#4e56b8'); gr.addColorStop(0.3, '#7f7ccb'); gr.addColorStop(0.44, '#cdb6cf'); gr.addColorStop(0.495, '#f1d9a6'); gr.addColorStop(0.52, '#dfb088'); gr.addColorStop(1, '#dfb088');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 30; i++) {   // 横向云带
+      const y = h * (0.2 + r() * 0.27), x = r() * w, l = 30 + r() * 110, th = 1.5 + r() * 3.5;
+      g.fillStyle = 'rgba(255,238,222,' + (0.2 + r() * 0.3).toFixed(2) + ')';
+      for (const ox of [-w, 0, w]) { g.beginPath(); g.ellipse(x + ox, y, l, th, 0, 0, Math.PI * 2); g.fill(); }
+    }
+  });
+}
+function saguaro(p, x, z, s, r) {
+  const h = (2.3 + r() * 1.7) * s, c = '#5e8a4a', d = '#4c7440';
+  p.add(capsule(0.2 * s, h - 0.4 * s), c, mtx(x, h / 2, z));
+  const n = 1 + Math.floor(r() * 2.4);
+  for (let i = 0; i < n; i++) {
+    const a = r() * Math.PI * 2, ah = h * (0.35 + r() * 0.28), l = (0.5 + r() * 0.6) * s, dx = Math.cos(a), dz = Math.sin(a);
+    p.add(capsule(0.13 * s, 0.45 * s), d, mtx(x + dx * 0.33 * s, ah, z + dz * 0.33 * s, 0, Math.PI - a, Math.PI / 2));   // 横枝
+    p.add(capsule(0.13 * s, l), c, mtx(x + dx * 0.6 * s, ah + l / 2 + 0.05, z + dz * 0.6 * s));                          // 向上的侧臂
+  }
+}
+function scrub(p, x, z, s, r) { for (let i = 0; i < 3; i++) p.add(GEO.sphLo, i % 2 ? '#6f8e44' : '#869a4e', mtx(x + (r() - 0.5) * 0.7 * s, 0.22 * s, z + (r() - 0.5) * 0.5 * s, 0, r() * 3, 0, 0.42 * s, 0.3 * s, 0.4 * s)); }
+function rockPile(p, x, z, s, r) {   // 带灌木的碎石堆
+  const n = 3 + Math.floor(r() * 3);
+  for (let i = 0; i < n; i++) rock(p, x + (r() - 0.5) * 1.6 * s, z + (r() - 0.5) * 1.0 * s, (0.7 + r() * 0.9) * s, r, ROCKS[Math.floor(r() * ROCKS.length)]);
+  if (r() < 0.7) scrub(p, x + (r() - 0.5) * 1.2 * s, z + 0.4 * s, 0.9 * s, r);
+}
+function mesa(p, x, z, w, h, d, r) {   // 平顶台地：碎石坡 + 岩壁 + 顶盖，偶尔顶上还立着一根石柱
+  p.add(GEO.cone, '#b56a44', mtx(x, h * 0.16, z, 0, r() * 3, 0, w * 0.86, h * 0.36, d * 0.86));
+  p.add(GEO.cyl6, '#c97c50', mtx(x, h * 0.6, z, 0, r() * 3, 0, w * 0.5, h * 0.8, d * 0.5));
+  p.add(GEO.cyl6, '#a9603e', mtx(x, h * 0.44, z, 0, r() * 3, 0, w * 0.53, h * 0.07, d * 0.53));   // 岩层色带
+  p.add(GEO.cyl6, '#db9060', mtx(x, h * 1.0, z, 0, r() * 3, 0, w * 0.47, h * 0.06, d * 0.47));
+  if (r() < 0.45) p.add(GEO.cyl6, '#c97c50', mtx(x + w * 0.22, h * 1.12, z, 0, r(), 0, w * 0.15, h * 0.24, d * 0.18));
+}
+// 一段近处地块（长 TILE 米，x 以地块中心为 0）：后侧碎石矮坎（走不过去的边界）、仙人掌和石堆；前侧一排碎石草丛作边界，再往外偶尔一丛压在画面底边的前景
+function desertTile(seed, fore) {
+  const r = fixedRng(seed), p = new Parts(), H2 = TILE / 2;
+  for (let x = -H2; x < H2; x += 0.9 + r() * 1.1) {   // 后侧矮坎：一溜低矮碎石，间或一丛灌木
+    rock(p, x, -3.15 - r() * 0.5, 0.45 + r() * 0.5, r, ROCKS[Math.floor(r() * ROCKS.length)]);
+    if (r() < 0.3) scrub(p, x + 0.3, -3.5 - r() * 0.4, 0.8 + r() * 0.4, r);
+    if (r() < 0.25) tufts(p, x, -2.95, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+  }
+  for (let x = -H2; x < H2; x += 0.8 + r() * 1.0) {   // 前侧边界：小石子与草丛（都很矮，不挡侧视）
+    if (r() < 0.55) rock(p, x, 4.7 + r() * 0.5, 0.22 + r() * 0.22, r, ROCKS[Math.floor(r() * ROCKS.length)]); else tufts(p, x, 4.65 + r() * 0.5, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+  }
+  for (let i = 0; i < 9; i++) saguaro(p, -H2 + r() * TILE, -5.5 - r() * 22, 0.9 + r() * 0.5, r);
+  for (let i = 0; i < 6; i++) rockPile(p, -H2 + r() * TILE, -5 - r() * 20, 1.0 + r() * 1.2, r);
+  for (let i = 0; i < 26; i++) tufts(p, -H2 + r() * TILE, -4.5 - r() * 30, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+  for (let i = 0; i < 3; i++) { const x = -H2 + r() * TILE, z = -4.4 - r() * 8; p.add(capsule(0.045, 0.5), '#efe6d6', mtx(x, 0.05, z, Math.PI / 2, r() * 3, 0)); if (r() < 0.5) p.add(GEO.sphLo, '#efe6d6', mtx(x + 0.4, 0.12, z + 0.2, 0, r() * 3, 0, 0.16, 0.13, 0.2)); }   // 晒白的骨头
+  for (let i = 0; i < 5; i++) saguaro(p, -H2 + r() * TILE, 12 + r() * 18, 0.9 + r() * 0.5, r);   // 镜头背后那一侧（转视角时不露空地）
+  for (let i = 0; i < 5; i++) rockPile(p, -H2 + r() * TILE, 11 + r() * 18, 1.0 + r() * 1.2, r);
+  for (let i = 0; i < 14; i++) tufts(p, -H2 + r() * TILE, 5.5 + r() * 24, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+  for (const fx of fore || []) { rockPile(p, fx, 7.2, 1.1, r); saguaro(p, fx + 1.2, 7.6, 0.55, r); scrub(p, fx - 1.0, 6.9, 1.0, r); }
+  return p.build();
+}
+// 远景台地一圈（长 FAR 米）：后方地平线上一排，镜头背后也有；其中一座离路很近、很大（原作开车途中掠过的那座）
+function mesaRing(seed) {
+  const r = fixedRng(seed), p = new Parts();
+  for (let i = 0; i < 16; i++) mesa(p, -FAR / 2 + (i + r() * 0.7) * (FAR / 16), -150 - r() * 170, 44 + r() * 66, 20 + r() * 26, 36 + r() * 40, r);
+  for (let i = 0; i < 9; i++) mesa(p, -FAR / 2 + (i + r() * 0.7) * (FAR / 9), 150 + r() * 160, 50 + r() * 60, 20 + r() * 24, 40 + r() * 40, r);
+  mesa(p, 150, -84, 74, 50, 46, r);
+  for (let i = 0; i < 26; i++) mesa(p, -FAR / 2 + r() * FAR, (r() < 0.6 ? -1 : 1) * (70 + r() * 60), 5 + r() * 9, 2.5 + r() * 4, 5 + r() * 8, r);   // 中景的小石墩
+  return p.build();
+}
+function desertBase(A, W) {
+  const g = A.group;
+  A.light = { sky: '#fff0d8', ground: '#a8603c', hemi: 1.2, sun: '#fff2d6', sunI: 2.0, dir: [-0.5, 0.85, 0.45], fog: '#dfb088', fogNear: 80, fogFar: 520, bg: '#dfb088' };
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(700, 24, 12), new THREE.MeshBasicMaterial({ map: desertSky(), side: THREE.BackSide, fog: false, depthWrite: false }));
+  dome.renderOrder = -10; g.add(dome);
+  const groundMat = texMat('sand', null, { color: '#ffffff' });
+  const ground = new THREE.Mesh(texBox(1500, 0.4, 900, 9), groundMat); ground.position.set(A.def.x1 / 2, -0.2, 0); ground.receiveShadow = true; g.add(ground);
+  const nearMat = vegMat(), farMat = new THREE.MeshLambertMaterial({ map: T('grain'), vertexColors: true });
+  return { g, dome, groundMat, nearMat, farMat };
+}
+
 // ---------- 世界 ----------
 export function buildWorld(scene) {
-  const W = { areas: [], active: -1, doors: [], cutters: [], fades: [], pteros: [], waters: [] };
+  const W = { areas: [], active: -1, doors: [], cutters: [], fades: [], pteros: [], waters: [], scene };
   const hemi = new THREE.HemisphereLight(0xffffff, 0x777777, 1.4);
   const sun = new THREE.DirectionalLight(0xffffff, 1.8);
   sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
@@ -371,8 +466,6 @@ export function statueMesh() {
 
 // ---------- 区域构建 ----------
 const BUILDERS = {
-  desert: roadWorld,
-  hellroad: roadWorld,
   // 楼顶：EASTCOAST 2513，海上城市的高楼楼顶
   roof(A) {
     const g = A.group;
@@ -765,6 +858,47 @@ const BUILDERS = {
       A.fires.push(fl, fl2);
     }
     A.anim = (t) => { A.fires.forEach((f, i) => { const k = 0.85 + Math.sin(t * 11 + i * 1.7) * 0.12 + Math.sin(t * 17 + i) * 0.06; f.scale.set(k, 0.9 + (k - 0.85) * 2.2, k); }); };
+  },
+
+  // 3-1 死亡沙漠：开阔的红沙地，四周都是仙人掌、碎石堆和远处的平顶台地；尽头沃尔瑟出场的地方有一丛压着画面底边的石堆仙人掌（原作前景）
+  desert(A, W) {
+    const B = desertBase(A, W), g = B.g;
+    for (let k = 0; k < NEAR_N; k++) {
+      const cx = 30 + (k - (NEAR_N - 1) / 2) * TILE;
+      const m = new THREE.Mesh(desertTile(900 + (k % 3), cx > 20 && cx < 60 ? [51.5 - cx, 57.5 - cx] : null), B.nearMat); m.position.x = cx; m.castShadow = true; m.receiveShadow = true; g.add(m);
+    }
+    const far = new THREE.Mesh(mesaRing(950), B.farMat); far.position.x = 30; g.add(far);
+  },
+
+  // 3-2 地狱公路：同样的荒漠，多一条压实的土路和车辙；地面贴图与地块按开过的距离向后卷，开到霍格出场时天色转成黄昏
+  road(A, W) {
+    const B = desertBase(A, W), g = B.g, cx = A.def.x1 / 2;
+    const trackT = T('track').clone(); trackT.needsUpdate = true; trackT.repeat.set(1500 / 9, 1);
+    const track = new THREE.Mesh(new THREE.PlaneGeometry(1500, 8.6), new THREE.MeshLambertMaterial({ map: trackT, transparent: true, depthWrite: false }));
+    track.rotation.x = -Math.PI / 2; track.position.set(cx, 0.012, 0.85); track.renderOrder = 1; g.add(track);
+    const geos = [desertTile(911, [-14, 19]), desertTile(912, [6]), desertTile(913, null)];
+    const tiles = [];
+    for (let k = 0; k < NEAR_N; k++) { const m = new THREE.Mesh(geos[k % 3], B.nearMat); m.castShadow = true; m.receiveShadow = true; g.add(m); tiles.push(m); }
+    const farG = mesaRing(951), fars = [0, 1].map(() => { const m = new THREE.Mesh(farG, B.farMat); g.add(m); return m; });
+    // dist：凯迪拉克开过的距离（米）。地面贴图、土路、近处地块、远景台地都向后（-x）挪这么多，各自按周期回绕
+    A.scroll = (dist) => {
+      B.groundMat.map.offset.x = (dist / 9) % 1; trackT.offset.x = (dist / 9) % 1;
+      const o = dist % (TILE * 3), half = NEAR_N * TILE / 2;
+      tiles.forEach((m, k) => { let x = k * TILE - o; x = ((x + half) % (NEAR_N * TILE) + NEAR_N * TILE) % (NEAR_N * TILE) - half; m.position.x = cx + x; });
+      const fo = (dist + 520) % FAR;   // 起步约 12 秒后那座大台地掠过身后
+      fars.forEach((m, k) => { let x = k * FAR - fo; x = ((x + FAR) % (2 * FAR) + 2 * FAR) % (2 * FAR) - FAR; m.position.x = cx + x; });
+    };
+    // k：0 白天 → 1 黄昏（原作打到霍格时天色发紫）。只改这个区域用到的灯光、雾和天空球的色调
+    const day = A.light, dusk = { sky: '#e6bcd0', ground: '#5c3646', hemi: 1.0, sun: '#ffb68c', sunI: 1.6, fog: '#8f6e98' };
+    const c1 = new THREE.Color(), c2 = new THREE.Color(), mix = (a, b, k) => c1.set(a).lerp(c2.set(b), k);
+    A.setDusk = (k) => {
+      if (W.active < 0 || W.areas[W.active] !== A) return;
+      W.hemi.color.copy(mix(day.sky, dusk.sky, k)); W.hemi.groundColor.copy(mix(day.ground, dusk.ground, k)); W.hemi.intensity = day.hemi + (dusk.hemi - day.hemi) * k;
+      W.sun.color.copy(mix(day.sun, dusk.sun, k)); W.sun.intensity = day.sunI + (dusk.sunI - day.sunI) * k;
+      W.scene.fog.color.copy(mix(day.fog, dusk.fog, k)); W.scene.background.copy(W.scene.fog.color);
+      B.dome.material.color.copy(mix('#ffffff', '#b295cc', k));
+    };
+    A.scroll(0);
   }
 };
 
@@ -773,6 +907,7 @@ export function propMesh(kind) {
   if (kind === 'drum') return meshFrom(drumGeo(), {});
   if (kind === 'barrel') return meshFrom(barrelGeo(), {});
   if (kind === 'pipes') return meshFrom(pipesGeo(), {});
+  if (kind === 'tires') return meshFrom(tiresGeo(), {});
   if (kind === 'statue') return statueMesh();
   return new THREE.Group();
 }

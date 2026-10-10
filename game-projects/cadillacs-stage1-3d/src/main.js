@@ -33,7 +33,7 @@ const settings = {
   touch: pickOpt('touch', ['auto', 'show', 'hide'], 'auto'),
   fps: store.get('fps', false) === true,
   hero: clamp(store.get('hero', 2) | 0, 0, 3),
-  stage: clamp(params.has('stage')?(Number(params.get('stage'))-1)|0:store.get('stage',0)|0,0,STAGES.length-1)   // 起始关卡：已实现的三关都能直接选
+  stage: clamp(store.get('stage', 0) | 0, 0, STAGES.length - 1)   // 起始关卡：已实现的两关都能直接选
 };
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');
 let effQuality = settings.quality === 'low' ? 'low' : 'high';
@@ -73,7 +73,7 @@ function makePortraits() {
     const m2 = buildHuman(SPECS[h.id]); applyPose(m2, mod(HP.victory, { head: [-0.05, 0.25, 0] }));
     FULLS[h.id] = portrait(renderer, m2, { size: 256, full: true });
   }
-  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher','hogg']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
+  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher', 'driver', 'walther', 'biker', 'hogg', 'mechanic']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
   const r = buildRaptor(); r.setPalette('angry'); FACES.raptor = portrait(renderer, r, { size: 96, raptor: true });
   const tr = buildRaptor('trex'); FACES.shivat = portrait(renderer, tr, { size: 96, raptor: true, k: 2.1 });
   const tk = buildTrike(); FACES.hack = portrait(renderer, tk, { size: 96, raptor: true, k: 1.6 });
@@ -294,7 +294,7 @@ function toTitle() {
   show('menu');
 }
 G.onEnd = (res) => { if(coopDriver?.config)coopDriver.result=res; setTimeout(() => showResult(res), res.win ? 400 : 200); };
-const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER'], ['hogg','Boss 霍格 HOGG']];
+const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['driver', '车手 DRIVER'], ['walther', '沃尔瑟 WALTHER'], ['biker', '飞车党 BIKER'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER'], ['hogg', 'Boss 霍格 HOGG']];
 const STAGE_CN = ['', '第一关', '第二关', '第三关'];
 function showResult(res) {
   if (uiMode !== 'game') return;
@@ -312,7 +312,7 @@ function showResult(res) {
   else if (res.newHi) extra.push('新纪录！最高分 ' + res.hi);
   else extra.push('最高分 ' + res.hi);
   $('res-extra').textContent = extra.join(' · ');
-  $('res-like').textContent = res.win ? (res.stage >= 2 ? (res.stage===3?'霍格的摩托也追上了！喜欢这趟地狱公路的话，也给开发者来个一键三连？':'屠夫的砍刀都被你缴了！喜欢这次冒险的话，也给开发者来个一键三连？') : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
+  $('res-like').textContent = res.win ? (res.stage >= 3 ? '霍格连人带摩托都被你掀翻了！下一站：杰克的修车厂——喜欢的话，也给开发者来个一键三连？' : res.stage >= 2 ? '屠夫的砍刀都被你缴了！喜欢的话，也给开发者来个一键三连？' : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
   show('result');
 }
 
@@ -433,15 +433,6 @@ function updateHud() {
   const cine = !!G.cineCam;
   if (cache.cine !== cine) { cache.cine = cine; for (const el of CINE_HIDE) el.style.visibility = cine ? 'hidden' : ''; }
   const h = GM.hudState();
-  const driving=G.road?.phase==='drive';
-  const roadHud=$('road-hud');roadHud.hidden=!G.road||['radio','won'].includes(G.road.phase)||!['play','cut'].includes(G.mode);
-  if(!roadHud.hidden)roadHud.textContent=driving ? '凯迪拉克 '+Math.ceil(G.road.carHp)+'% · '+Math.min(640,Math.floor(G.road.distance))+'/640 米'+(G.boss?' · 追击霍格':'') : '弃车迎战 · 红线预警 → 躲开冲撞 → 停车时反击';
-  if(cache.driving!==driving){cache.driving=driving;
-    stage.classList.toggle('driving',driving);
-    for(const [id,label]of [['btn-atk',driving?'加速撞击':'攻击'],['btn-jump',driving?'刹车':'跳跃']]){$(id).querySelector('span').textContent=label;$(id).setAttribute('aria-label',label);}
-    $('btn-mega').style.visibility=driving?'hidden':'';$('btn-run').style.visibility=driving?'hidden':'';
-    $('drive-hint').hidden=!driving;
-  }
   const hero = HEROES[h.hero];
   if (cache.hero !== hero.id) { cache.hero = hero.id; H_.face.src = FACES[hero.id]; H_.name.textContent = hero.en.split('.')[0]; }
   setText(H_.lives, 'lives', '=' + h.lives);
@@ -462,18 +453,19 @@ function updateHud() {
     setStyle(H_.ehp2, 'ehp2', 'width', under === 'transparent' ? '0%' : '100%');
     setStyle(H_.ehp2, 'ecol2', 'background', under);
   } else H_.enemy.hidden = true;
-  const showTimer = ['play', 'cut'].indexOf(h.mode) >= 0;
+  const showTimer = ['play', 'cut'].indexOf(h.mode) >= 0 && !h.noTimer;
   H_.timer.hidden = !showTimer;
   if (showTimer) { setText(H_.timer, 'timer', h.timerUnlimited ? '无限时间' : fmtTime(h.timer)); H_.timer.classList.toggle('big', !h.timerUnlimited && h.timerBig); H_.timer.classList.toggle('warn', !h.timerUnlimited && h.timer < 20); }
-  if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || ['gun', 'shotgun', 'rifle'].includes(h.weapon.kind) ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
+  if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || ['gun', 'shotgun', 'rifle', 'car'].includes(h.weapon.kind) ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
   else H_.weapon.hidden = true;
   H_.go.hidden = !h.go;
   // 对话框
   if (G.dialog) {
     H_.dialog.hidden = false;
+    H_.dialog.classList.toggle('over', G.fade > 0.5);   // 黑屏上的过场台词（第三关开场霍格放话）要盖在黑幕上面
     const who = G.dialog.who, isP = who === 'player';
     const fkey = isP ? hero.id : who;
-    if (cache.dwho !== fkey) { cache.dwho = fkey; H_.dface.src = FACES[fkey] || ''; H_.dname.textContent = isP ? hero.full + ' ' + hero.en : ({ vice: '维斯·特修恩 VICE T.', butcher: '屠夫 BUTCHER' }[who] || who); }
+    if (cache.dwho !== fkey) { cache.dwho = fkey; H_.dface.src = FACES[fkey] || ''; H_.dname.textContent = isP ? hero.full + ' ' + hero.en : ({ vice: '维斯·特修恩 VICE T.', butcher: '屠夫 BUTCHER', hogg: '霍格 HOGG', mechanic: '机修工' }[who] || (HEROES.find(x => x.id === who) || {}).full || who); }
     const n = Math.min(G.dialog.text.length, Math.floor(G.dialog.t * 24) + 1);
     setText(H_.dtext, 'dtext', G.dialog.text.slice(0, n));
   } else H_.dialog.hidden = true;
@@ -550,10 +542,9 @@ function presentFrame(dtReal, draw, instant) {
     G.fpActive = camCtl.fp() && !fpOff;
     const AR = world.area().def;
     const cz1 = AR.camZ1 === undefined ? AR.z1 : AR.camZ1;   // 取景按这一排算；第二关可走范围比它更靠前（见 level.js camZ1）
-    const cz0 = AR.camZ0 === undefined ? AR.z0 : AR.camZ0;
-    const zc = (cz0 + cz1) / 2 * 0.6 + p.z * 0.25;
-    const fitDepth = cz1 - ((cz0 + cz1) / 2 * 0.6 + cz0 * 0.25);   // 移动范围扩大时保留原镜头取景，不自动拉远
-    camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: (G.road?.phase==='drive'?1.83:p.y + p.model.H * 0.92) - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
+    const zc = (AR.z0 + cz1) / 2 * 0.6 + p.z * 0.25;
+    const fitDepth = cz1 - ((AR.z0 + cz1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
+    camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, sidePitch: AR.camPitch || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : p.state === 'incar' ? 0.6 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: AR.noShake ? 0 : fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {

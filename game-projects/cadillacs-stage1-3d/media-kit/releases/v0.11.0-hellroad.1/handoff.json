@@ -1,0 +1,715 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.11.0-hellroad.1",
+ "base_version": "v0.10.1",
+ "created_at": "2026-10-10T12:50:00+08:00",
+ "classification": "对比候选版（仅本地，未合并主线、未上线）",
+ "user_request": "之前别的ai做的了恐龙快打第三关，你重新自己做一个，不要参考那边，要根据原版关卡做，用game-maker做。做完我对比两边的效果，先别上架，先本地做。可以再替换网站和发布。",
+ "build": {
+  "id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+  "commit": null,
+  "dirty": false,
+  "fingerprint": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+  "fingerprint_algorithm": "SHA256 of sorted JSON relative-path to file-SHA256 manifest of public/html/game/cadillacs-stage1-3d",
+  "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
+  "game_min_js_sha256": "df56e71ceb13bc1a72ae3d0286e17fe1336c8b39592c18d074846a1d9709a2ef",
+  "branch": "claude/cadillacs-stage3-original-20261009",
+  "based_on": "origin/master fde6b72c；恐龙快打运行与源码文件先恢复为两关回退版 999d4057 的内容再开发"
+ },
+ "feature_inventory": [
+  {
+   "id": "stage3-desert",
+   "description": "3-1 死亡沙漠：霍格放话开场、四个蹲着的手下、打完才出字幕 DESERT OF DEATH、木桶弹药箱、锤子·T 一群、沃尔瑟",
+   "status": "implemented",
+   "evidence_ids": [
+    "01-hogg-line",
+    "02-desert-squat",
+    "03-desert-of-death",
+    "04-hammer-wave",
+    "05-walther",
+    "stage3-fullrun"
+   ]
+  },
+  {
+   "id": "stage3-car-handoff",
+   "description": "机修工开着凯迪拉克赶到、台词、主角空翻上车",
+   "status": "implemented",
+   "evidence_ids": [
+    "06-mechanic-line",
+    "07-flip-in",
+    "stage3-fullrun"
+   ]
+  },
+  {
+   "id": "stage3-road-run",
+   "description": "3-2 地狱公路：一屏宽的卷动公路，方向键 / 摇杆开车，按原作顺序撞人、轮胎堆、桶、飞车党",
+   "status": "implemented",
+   "evidence_ids": [
+    "08-road-razors",
+    "09-road-tires",
+    "10-road-biker",
+    "11-road-drums",
+    "23-mobile-landscape-road",
+    "stage3-fullrun"
+   ]
+  },
+  {
+   "id": "stage3-hogg",
+   "description": "Boss 霍格：车上阶段（换位投弹、落点红圈、用车撞、车挨够手雷爆炸）与徒步阶段（猛冲 / 停车投弹交替、手下、冲锋枪），两种结局",
+   "status": "implemented",
+   "evidence_ids": [
+    "12-hogg-enter",
+    "13-grenade-ring",
+    "14-car-hit",
+    "17-car-wreck",
+    "18-hogg-charge",
+    "19-hogg-down",
+    "20-win-line",
+    "22-ending-car-kill",
+    "stage3-fullrun"
+   ]
+  },
+  {
+   "id": "stage3-views",
+   "description": "侧视 / 斜视 / 正视（车后）/ 第一人称（驾驶座）都能开车",
+   "status": "implemented",
+   "evidence_ids": [
+    "15-view-front",
+    "16-view-first-person"
+   ]
+  },
+  {
+   "id": "stage-select",
+   "description": "起始关卡三关可选；第二关打完接第三关，第三关打完结算",
+   "status": "implemented",
+   "evidence_ids": [
+    "21-result"
+   ]
+  },
+  {
+   "id": "stage3-music",
+   "description": "原版录音 Roaring Sound / Like a Squall / Boss 3",
+   "status": "implemented",
+   "evidence_ids": []
+  },
+  {
+   "id": "stage3-extras",
+   "description": "地图小窗、下一关远景小图、Boss 3 前奏、结算的 ENEMIES / FINAL BLOW 分项",
+   "status": "planned",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "stage3-rebuild",
+   "feature_ids": [
+    "stage3-desert",
+    "stage3-car-handoff",
+    "stage3-road-run",
+    "stage3-hogg",
+    "stage3-views",
+    "stage-select",
+    "stage3-music"
+   ],
+   "before": "这条分支的起点是两关版（v0.10.1 的内容）；网站上另有一版第三关（v0.11.0-preview.2），本版没有参考它",
+   "after": "按原作实机录像独立重做第三关：新区域 desert / road、新模块 src/hellroad.js、新敌人车手 / 沃尔瑟 / 飞车党 / 霍格与机修工、摩托与轮胎堆模型、荒漠场景与黄昏变色、三首原版曲、97 项验收",
+   "user_visible_result": "主菜单起始关卡可选「第三关 · 地狱公路」，从荒漠徒步打到开车撞霍格",
+   "evidence_ids": [
+    "stage3-fullrun"
+   ],
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "ram-stunlock",
+   "found_version": "v0.11.0-hellroad.1（开发中）",
+   "reproduction": "qa/stage3-bot.js car：霍格出场后一直朝他开",
+   "observed": "18 秒撞 14 下撞死，霍格一颗手雷都没扔出来",
+   "impact": "车上阶段没有难度",
+   "humor": "追着撞，他连手雷都掏不出来",
+   "cause": "每撞一下硬直 0.8 秒并把投弹冷却顶回去，车又比他快；他蹭上停着的车也算撞",
+   "status": "fixed",
+   "fix": "撞到后 1.5 秒撞不到并弹开；平时车要追一阵才贴得上，投弹前后一秒他慢下来；必须车朝他压过去才算",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "stage3-fullrun"
+   ],
+   "retest": "同一打法约 31 秒、14 下，期间他扔 13～14 颗手雷"
+  },
+  {
+   "id": "foot-phase-too-long",
+   "found_version": "v0.11.0-hellroad.1（开发中）",
+   "reproduction": "qa/stage3-bot.js foot：不躲手雷让车早早爆炸",
+   "observed": "霍格 640 血，徒步 215 秒打不完",
+   "impact": "车丢得早就成了消耗战",
+   "humor": null,
+   "cause": "徒步时只有他路过才打得到，血量却按全程可打的 Boss 给",
+   "status": "fixed",
+   "fix": "420 血、撞一下 30、徒步伤害 ×1.5，猛冲与停车投弹一趟一趟交替，停车时只扔两颗",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "最差情况（一下没撞到）约 109 秒打完"
+  }
+ ],
+ "media": [
+  {
+   "id": "01-hogg-line",
+   "file": "releases/v0.11.0-hellroad.1/captures/01-hogg-line.png",
+   "sha256": "973b18d06358ba1f8313c00c0f73664ece515e82aff5896469b5447ffe6649c3",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "开场：黑屏上霍格放话（台词盖在黑幕上）（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "intro",
+   "segments": []
+  },
+  {
+   "id": "02-desert-squat",
+   "file": "releases/v0.11.0-hellroad.1/captures/02-desert-squat.png",
+   "sha256": "a99e14a6b4edb33824ee538852b2e179ed59810822b73fb07c2edf308e9c4dfd",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "荒漠里四个手下蹲着等人，主角从左边走进来（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "desert",
+   "segments": []
+  },
+  {
+   "id": "03-desert-of-death",
+   "file": "releases/v0.11.0-hellroad.1/captures/03-desert-of-death.png",
+   "sha256": "301b46b97f51004ef7a6026c3be9684f408b61eb36b48bef5486e8fd6ede46a8",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "第一波打完才出字幕 死亡沙漠 DESERT OF DEATH 与 GO（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "desert",
+   "segments": []
+  },
+  {
+   "id": "04-hammer-wave",
+   "file": "releases/v0.11.0-hellroad.1/captures/04-hammer-wave.png",
+   "sha256": "ec0f9c04b26a07842383b6e3e24c8eb5d701163bc9bacd13849ffa97e125f99a",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "第二波：锤子·T 带着车手、尼斯（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "desert",
+   "segments": []
+  },
+  {
+   "id": "05-walther",
+   "file": "releases/v0.11.0-hellroad.1/captures/05-walther.png",
+   "sha256": "5c356ee7e4cdaad8f95928fb0253fbf234435291f7daaab51a030cf9736249c5",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "第三波：仙人掌石堆旁的沃尔瑟（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "desert",
+   "segments": []
+  },
+  {
+   "id": "06-mechanic-line",
+   "file": "releases/v0.11.0-hellroad.1/captures/06-mechanic-line.png",
+   "sha256": "01fe1abe8bc156ea6e6c81e66613190eb7e99997c9902aca3d40038b0cb6d0e9",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "机修工开着凯迪拉克赶到：「开这辆车走，会安全些。上吧！」（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "car-handoff",
+   "segments": []
+  },
+  {
+   "id": "07-flip-in",
+   "file": "releases/v0.11.0-hellroad.1/captures/07-flip-in.png",
+   "sha256": "dd817f2ef101dd357756e3eb6414b5e6dc87b0ea5d4cd61807e1de06fb07221e",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "主角前空翻跳上驾驶座（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "car-handoff",
+   "segments": []
+  },
+  {
+   "id": "08-road-razors",
+   "file": "releases/v0.11.0-hellroad.1/captures/08-road-razors.png",
+   "sha256": "d8b570a231e197d7e0b0a7131029a7ca72e7d8aec2688cf635b3f4dc4299d25d",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "地狱公路：撞碎木桶，雷泽迎面扑上来（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "road-run",
+   "segments": []
+  },
+  {
+   "id": "09-road-tires",
+   "file": "releases/v0.11.0-hellroad.1/captures/09-road-tires.png",
+   "sha256": "5184bb62234ea2aebf35457f6df072c4409557ba63cf149151996eeccab8425b",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "被撞倒的人留在身后，前面是三摞轮胎（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "road-run",
+   "segments": []
+  },
+  {
+   "id": "10-road-biker",
+   "file": "releases/v0.11.0-hellroad.1/captures/10-road-biker.png",
+   "sha256": "588c217f817c028f4005e50b4c8049a5802d5ea4c4508523207f2baae6056275",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "追上骑粉色摩托的飞车党（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "road-run",
+   "segments": []
+  },
+  {
+   "id": "11-road-drums",
+   "file": "releases/v0.11.0-hellroad.1/captures/11-road-drums.png",
+   "sha256": "81878b409fa012bedf959495231c2ee58cd482acd637d8f587253a5bd461ba94",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "一排铁桶（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "road-run",
+   "segments": []
+  },
+  {
+   "id": "12-hogg-enter",
+   "file": "releases/v0.11.0-hellroad.1/captures/12-hogg-enter.png",
+   "sha256": "40572d94dc6b8670bb7de3f2d5463dd525d69ef7b9828c4da1182e767c9b2bb5",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "Boss 霍格骑着喷火涂装的摩托出场，天色转成黄昏（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "hogg-car",
+   "segments": []
+  },
+  {
+   "id": "13-grenade-ring",
+   "file": "releases/v0.11.0-hellroad.1/captures/13-grenade-ring.png",
+   "sha256": "ab834411b67c1e961ea98381bd35bdbf1c6b1416799df704ed8683eb193a8e20",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "手雷落点的红圈压在车下（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "hogg-car",
+   "segments": []
+  },
+  {
+   "id": "14-car-hit",
+   "file": "releases/v0.11.0-hellroad.1/captures/14-car-hit.png",
+   "sha256": "56cfd4d45bb79763a0036cc5303c91516eb7836f4aeab9874728a1cab3ca2f2e",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "车被炸中：整车闪红、BOOM!（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "hogg-car",
+   "segments": []
+  },
+  {
+   "id": "15-view-front",
+   "file": "releases/v0.11.0-hellroad.1/captures/15-view-front.png",
+   "sha256": "fb686784351af60474380f7ea3b1438e4a35d91da64cbea1aaee33fb716ec72e",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "正视：从车后看，霍格在前面（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "views",
+   "segments": []
+  },
+  {
+   "id": "16-view-first-person",
+   "file": "releases/v0.11.0-hellroad.1/captures/16-view-first-person.png",
+   "sha256": "d19d0389f204bac3e6fea75cdf178f9d56fca44e4595883033b4042952bcd63a",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称：坐在驾驶座上（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "views",
+   "segments": []
+  },
+  {
+   "id": "17-car-wreck",
+   "file": "releases/v0.11.0-hellroad.1/captures/17-car-wreck.png",
+   "sha256": "52d50e742a696bbfbb70095cdf6c22d0df18652a9cfeb166a89bf88e3a6dd8ef",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "凯迪拉克被炸毁，车轮飞出去（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "hogg-foot",
+   "segments": []
+  },
+  {
+   "id": "18-hogg-charge",
+   "file": "releases/v0.11.0-hellroad.1/captures/18-hogg-charge.png",
+   "sha256": "80fac5e95c08b49354d6657331c98571eba786df2ab5f5924b9af0888d1fa297",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "徒步阶段：霍格骑车冲撞（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "hogg-foot",
+   "segments": []
+  },
+  {
+   "id": "19-hogg-down",
+   "file": "releases/v0.11.0-hellroad.1/captures/19-hogg-down.png",
+   "sha256": "114aa235e311317ca06a5e8258a1c74bf2cd7e156ae54248589bb60a964fee37",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "打到没血：摩托炸开（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "ending",
+   "segments": []
+  },
+  {
+   "id": "20-win-line",
+   "file": "releases/v0.11.0-hellroad.1/captures/20-win-line.png",
+   "sha256": "039eca1eaba64e966da6e9487e29350c479764c96b668df2868c22dc1ad4f0e9",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "霍格倒在地上，主角的胜利台词（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "ending",
+   "segments": []
+  },
+  {
+   "id": "21-result",
+   "file": "releases/v0.11.0-hellroad.1/captures/21-result.png",
+   "sha256": "0f294059a7557388d5e8e8b05627a3425d9991ba02f8341f62a74799ca177332",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "第三关结算（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "ending",
+   "segments": []
+  },
+  {
+   "id": "22-ending-car-kill",
+   "file": "releases/v0.11.0-hellroad.1/captures/22-ending-car-kill.png",
+   "sha256": "399a061c60bc4083c024b1d8645507158f07d6c10ca0ad6872ab99d209c987ee",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "另一种结局：在车上把霍格撞死，主角空翻跳下车（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "ending",
+   "segments": []
+  },
+  {
+   "id": "23-mobile-landscape-road",
+   "file": "releases/v0.11.0-hellroad.1/captures/23-mobile-landscape-road.png",
+   "sha256": "21b0959b7b7c7126506bc7b2dba87edf53a307b54dd9513d08195c17a95be483",
+   "kind": "screenshot",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "手机横屏 844×390（触摸模拟，非真机）：摇杆开车（验收脚本在手动时钟下推进到这一刻后截屏，画面即当时的实机渲染）",
+   "width": 1688,
+   "height": 780,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "feature": "mobile",
+   "segments": []
+  },
+  {
+   "id": "stage3-fullrun",
+   "file": "releases/v0.11.0-hellroad.1/captures/stage3-fullrun-mustapha.mp4",
+   "sha256": "c0f21b311e6f7639045e719b3aea775991161c140ba82bae80e9edc817ba2268",
+   "kind": "video",
+   "version": "v0.11.0-hellroad.1",
+   "build_id": "3afff6c92dbca4dca45acf793b8adfd36e816937362b7cef0e404e1cbcec4c5c",
+   "capture_mode": "realtime-automation",
+   "description": "第三关全程（穆斯塔法，种子 7）：逐帧录制（手动时钟，每帧截屏，30fps）。自动试玩操作真实键盘事件；测试捷径：荒漠第一波打一会儿后直接清场、跳到第三波沃尔瑟处；霍格车战 19 秒后用测试钩子让车爆炸以拍到徒步阶段；徒步 26 秒后把霍格血量压到 30 以收尾。时间轴见同名 timeline.json。",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 138.63,
+   "audio": "game（离线渲染的同场音轨：合成音效 + 合成回退音乐，不是网页里实际播放的原版录音）",
+   "visual_review": "pass（抽帧联系表逐张看过）",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0,
+     "out_seconds": 1.5,
+     "description": "标题画面（四位主角站在楼顶）",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 1.5,
+     "out_seconds": 2.5,
+     "description": "选人画面",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 2.5,
+     "out_seconds": 10.7,
+     "description": "第三关开场：黑屏上霍格放话",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 10.7,
+     "out_seconds": 25.7,
+     "description": "荒漠：蹲着的四个手下围上来",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 25.7,
+     "out_seconds": 28.9,
+     "description": "打完第一波：字幕 DESERT OF DEATH",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 28.9,
+     "out_seconds": 45.9,
+     "description": "仙人掌石堆旁：大块头沃尔瑟",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 45.9,
+     "out_seconds": 53.13,
+     "description": "机修工开着凯迪拉克赶到：「开这辆车走，会安全些」",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 53.13,
+     "out_seconds": 80.57,
+     "description": "地狱公路：开着凯迪拉克一路撞过去",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 80.57,
+     "out_seconds": 99.57,
+     "description": "Boss 霍格：骑摩托扔手雷，躲红圈、用车撞他",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 99.57,
+     "out_seconds": 125.57,
+     "description": "凯迪拉克被炸毁：下车徒步，霍格来回冲撞、停下来投弹",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 125.57,
+     "out_seconds": 125.8,
+     "description": "最后一击：摩托炸开",
+     "supports": "stage3"
+    },
+    {
+     "in_seconds": 125.8,
+     "out_seconds": 138.63,
+     "description": "过关：胜利台词、体力奖励、「你看……我们的修车厂！」",
+     "supports": "stage3"
+    }
+   ]
+  }
+ ],
+ "historical_media": [],
+ "qa": {
+  "device": "Windows 11，Edge（Playwright 驱动）+ RTX 4060 Ti；1280×720 桌面视口；手机为 844×390 触摸模拟",
+  "method": "手动时钟推进 + 真实键盘 / 触摸事件；测帧为实时运行",
+  "results": {
+   "qa/stage3.js": "97/97",
+   "qa/desktop.js": "92/92",
+   "qa/stage2.js": "56/56",
+   "qa/mobile.js": "35/35",
+   "qa/feel.js": "16/16",
+   "qa/depth.js": "31/31",
+   "qa/intro-throw.js": "16/16",
+   "qa/guns.js": "41/41",
+   "qa/original-audio.js": "pass",
+   "qa/fullscreen.js": "pass",
+   "qa/camera.js": "三次里两次全过；一次第一关 Boss 战「角色不出画」偶发越界 4.7%（原有随机测试，第一关镜头未改）",
+   "site-games/qa/restart-audio.cjs": "第一关入口 5/5、第三关公路入口 5/5",
+   "qa/perf-stage3.js 1280x720 high": "各阶段各视角约 170 FPS（刷新率封顶），每帧 1.0～1.9 ms，绘制调用 53～235，无超过 25 ms 的帧"
+  },
+  "evidence": [
+   "releases/v0.11.0-hellroad.1/qa-stage3.json",
+   "releases/v0.11.0-hellroad.1/qa-perf-stage3-1280x720-high.json"
+  ],
+  "untested": [
+   "手机真机（触控与性能）",
+   "真实 2～4 人联机下的第三关（公路段客机画面同步）",
+   "用耳朵听原版曲与合成音效",
+   "竖屏自动旋转下的第三关（通用旋转逻辑由 qa/mobile.js 覆盖，未单独在公路段截图）"
+  ]
+ },
+ "release": {
+  "website": "not_deployed",
+  "merged_to_master": false,
+  "toy": "not_submitted",
+  "taptap": "not_submitted",
+  "video_descriptions": "unchanged",
+  "approval": {
+   "required": true,
+   "status": "pending_user_comparison",
+   "requested_by_user": "先别上架，先本地做"
+  },
+  "local_preview": "http://127.0.0.1:8797/html/game/cadillacs-stage1-3d/index.html（node qa/serve.mjs 8797）"
+ },
+ "cover": "沿用现有网站卡片封面（未发布，不换）",
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "录像音轨是离线合成版，不含原版曲",
+   "没有手机真机与竖屏素材",
+   "是否采用本版待本人对比决定，未上线前不能按已发布内容宣传"
+  ]
+ }
+}

@@ -23,14 +23,6 @@ const { launch, BASE, out, sleep } = require('./lib');
 
   await page.goto(BASE + '?test=1&seed=21', { waitUntil: 'load' });
   await sleep(800);
-  await T(() => localStorage.setItem('cd3d-stage1:stage', '2'));
-  await page.reload({ waitUntil: 'load' }); await sleep(1200);
-  let rollbackLabel = await T(() => document.querySelector('[data-opt=stage]').textContent);
-  ok('第三关选择保留且可直接游玩', /第三关 · 地狱公路/.test(rollbackLabel), rollbackLabel);
-  await T(() => document.querySelector('[data-opt=stage]').focus());
-  await page.keyboard.press('ArrowRight'); await sleep(100);
-  rollbackLabel = await T(() => document.querySelector('[data-opt=stage]').textContent);
-  ok('三关选择循环回第一关', /第一关 · 海上都市/.test(rollbackLabel), rollbackLabel);
   await T(() => { localStorage.removeItem('cd3d-stage1:stage'); localStorage.setItem('cd3d-stage1:hero', '0'); });
   await page.reload({ waitUntil: 'load' }); await sleep(1200);
   // ---------- 起始关卡选项 ----------
@@ -224,10 +216,17 @@ const { launch, BASE, out, sleep } = require('./lib');
   ok('打倒屠夫 → 过关', s.mode === 'clear' && s.cleared.indexOf(2) >= 0, [s.mode, s.cleared]);
   s = await until(x => x.ui.music.name === 'clear', 400);
   ok('过关放原版「Stage Clear」（不是合成曲）', s.ui.music.name === 'clear' && s.ui.music.original && !s.ui.music.synth, s.ui.music);
-  s = await until(x => x.areaId === 'desert', 1800, 20);
-  ok('第二关通关直接进入第三关，不提前弹结算', s.areaId === 'desert' && s.ui.overlay === null && s.cleared.includes(2), [s.areaId,s.cleared]);
-  ok('进入第三关回满体力', s.player.hp === 100, s.player.hp);
+  // 第三关接在后面：打倒屠夫不弹结算，像街机一样直接进第三关（第三关自己的验收在 qa/stage3.js）
+  s = await until(x => x.areaId === 'desert', 2400, 20);
+  ok('打倒屠夫后接着进入第三关（不弹结算）', s.areaId === 'desert' && s.stage === 3 && s.ui.overlay === null && s.cleared.indexOf(2) >= 0, [s.areaId, s.ui.overlay, s.cleared]);
+  ok('进入第三关时体力回满、砍刀收走', s.player.hp === 100 && !s.player.weapon, [s.player.hp, s.player.weapon]);
   await shot('stage2-to-stage3.png');
+  // 暂停菜单「重新开始」回到所选的第二关
+  await T(() => window.__CD_TEST__.manual(false));
+  await page.keyboard.press('Escape'); await sleep(300);
+  await T(() => document.querySelector('#pause [data-act=restart]').click()); await sleep(500);
+  s = await S();
+  ok('重新开始回到所选的第二关', s.areaId === 'forest' && s.ui.overlay === null, [s.areaId, s.ui.overlay]);
 
   // ---------- 第一关打完接着打第二关 ----------
   await T(() => window.__CD_TEST__.manual(true));

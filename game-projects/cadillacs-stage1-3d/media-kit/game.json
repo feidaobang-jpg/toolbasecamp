@@ -1,4 +1,18 @@
 {
+  "comparison_candidate": {
+    "version": "v0.11.0-hellroad.1",
+    "status": "local_only_awaiting_user_comparison",
+    "summary": "按原作实机录像独立重做的第三关「地狱公路」（不参考另一版实现），供本人与网站上的 v0.11.0-preview.2 对比",
+    "branch": "claude/cadillacs-stage3-original-20261009",
+    "worktree": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-stage3-original",
+    "url": "http://127.0.0.1:8797/html/game/cadillacs-stage1-3d/index.html",
+    "start": "node qa/serve.mjs 8797（在该 worktree 的 game-projects/cadillacs-stage1-3d 下）；主菜单起始关卡选第三关，或加 ?area=6 / ?area=7",
+    "release_record": "releases/v0.11.0-hellroad.1/handoff.json",
+    "authorization": "先别上架，先本地做。可以再替换网站和发布。",
+    "merged_to_master": false,
+    "website_deployed": false,
+    "automatic_platform_sync": false
+  },
   "local_preview": {
     "version": "v0.11.0-preview.2",
     "status": "website_trial_ready",

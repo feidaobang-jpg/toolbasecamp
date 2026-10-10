@@ -25,19 +25,20 @@ function ensure() {
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
   // 原版曲目没加载完时不先放合成的旧版曲子；只有原版加载失败才用合成兜底
   // 先下最先要用的（选人曲、开场曲、所选起始关的第一首、全部音效），其余排在后面；同一个文件只下一次（stage=roof、grave=hall）
-  const startStage3 = new URLSearchParams(location.search).get('stage')==='3'||(()=>{try{return JSON.parse(localStorage.getItem('cd3d-stage1:stage'))===2;}catch{return false;}})();
-  const startStage2 = (() => { try { return JSON.parse(localStorage.getItem('cd3d-stage1:stage')) === 1; } catch (e) { return false; } })();
+  const startAt = (() => { try { return JSON.parse(localStorage.getItem('cd3d-stage1:stage')) | 0; } catch (e) { return 0; } })(), startStage2 = startAt === 1, startStage3 = startAt === 2;
   // 第一批（并行）：选人曲、开场曲、全部音效，都很小；之后按需要的先后逐首下载，起始关的第一首排最前
-  const first = startStage2 ? ['select'] : ['select', 'opening'];
-  const order = startStage3 ? ['desert','hellroad','boss3','clear','cont'] : startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont', 'roof', 'street', 'boss'] : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'];
+  const first = startStage2 || startStage3 ? ['select'] : ['select', 'opening'];
+  const S3 = ['desert', 'road', 'boss3'];
+  const order = startStage3 ? S3.concat(['clear', 'cont', 'roof', 'hall', 'street', 'boss', 'forest', 'swamp', 'boss2']) : startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont'].concat(S3, ['roof', 'street', 'boss']) : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'].concat(S3);
   const pick = (names) => Object.fromEntries(names.map(n => [n, MUSIC_FILES[n]]));
   samples = new SampleAudio(ctx, musicBus, sfxBus, { ...pick(first), ...ORIGINAL_FILES });
   samples.ready.then(() => loadRest(samples, order.concat(Object.keys(MUSIC_FILES).filter(n => !first.includes(n) && !order.includes(n)))));
   return ctx;
 }
 const now = () => ctx.currentTime;
-// 原版曲子：第一关（楼顶 / 大楼内部 / 47 街 / Boss 1）、第二关（森林 / 泥沼 / 尸骸地 / Boss 2）、选人、开场、过关、续关
-const MUSIC_FILES = { desert:'road-walk.mp3', hellroad:'road-drive.mp3', boss3:'boss3.mp3', select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
+// 原版曲子：第一关（楼顶 / 大楼内部 / 47 街 / Boss 1）、第二关（森林 / 泥沼 / 尸骸地 / Boss 2）、
+// 第三关（3-A Roaring Sound 荒漠 / 3-B Like a Squall 公路 / Boss 3）、选人、开场、过关、续关
+const MUSIC_FILES = { select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', desert: 'desert.mp3?v=hr1', road: 'road.mp3?v=hr1', boss3: 'boss3.mp3?v=hr1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
 const ALIAS = { stage: 'roof', grave: 'hall' };   // 同曲不同名：只下载一次
 // 第二批：依次下载（不和第一批抢带宽），下完一首就能用；同名别名共用同一段解码好的音频
 async function loadRest(s, names) {
@@ -201,6 +202,17 @@ const SFX = {
   rifle(t, v) { noise(t, 0.3, 1.1 * v, 'lowpass', 5200, 0.7, null, { to: 300 }); osc('square', 260, t, 0.05, 0.4 * v, null, { to: 70 }); noise(t + 0.02, 0.5, 0.18 * v, 'bandpass', 900, 1); },
   splash(t, v) { noise(t, 0.35, 0.6 * v, 'bandpass', 1200, 0.8, null, { to: 400 }); noise(t + 0.05, 0.25, 0.25 * v, 'highpass', 3000, 1); },
   engine(t, v) { const o = osc('sawtooth', 48, t, 2.0, 0.22 * v, null, { to: 70, slide: 1.4 }); noise(t, 2.0, 0.14 * v, 'lowpass', 300, 1); },
+  // 第三关（合成）：凯迪拉克行驶中的低沉引擎声（一段约 2 秒，首尾渐入渐出，隔 1.5 秒接一段）、摩托轰油门
+  carHum(t, v) {
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+    o.type = 'sawtooth'; o.frequency.value = 54 + Math.random() * 3; o2.type = 'square'; o2.frequency.value = 27.5;
+    lfo.frequency.value = 11; lg.gain.value = 2.5; lfo.connect(lg); lg.connect(o.frequency);
+    f.type = 'lowpass'; f.frequency.value = 230; f.Q.value = 0.8;
+    env(g, t, 0.3, 0.1 * v, 0.1, 1, 0.55, 1.5);
+    o.connect(f); o2.connect(f); f.connect(g); g.connect(sfxBus);
+    for (const x of [o, o2, lfo]) { x.start(t); x.stop(t + 2.15); }
+  },
+  bikeRev(t, v) { osc('sawtooth', 92, t, 0.9, 0.2 * v, null, { to: 190, slide: 0.35 }); osc('square', 46, t, 0.8, 0.1 * v, null, { to: 95, slide: 0.35 }); noise(t, 0.9, 0.12 * v, 'bandpass', 520, 1.2); },
   brake(t, v) { osc('triangle', 1700, t, 0.4, 0.06 * v, null, { to: 1300 }); noise(t, 0.4, 0.2 * v, 'bandpass', 2200, 3); },
   snort(t, v) { noise(t, 0.25, 0.5 * v, 'bandpass', 500, 1.5, null, { to: 250 }); },
   roarBig(t, v) {   // 霸王龙：更低更长的吼声

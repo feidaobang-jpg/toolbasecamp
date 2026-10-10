@@ -63,10 +63,10 @@ export function createCamera() {
       const mid = (HALF_W + 0.9) / h, near = (HALF_W - EDGE + 0.75) / h + (depth || 0) * Math.cos(p.pitch);
       return clamp(Math.max(mid, near), 10.5, 24);
     },
-    // opt: { focusX, zc, fitDepth, player:{x,y,z,eye,face}, instant, shake, override:{pos,tgt}, blocks:[Box3] }
+    // opt: { focusX, zc, fitDepth, sidePitch, player:{x,y,z,eye,face}, instant, shake, override:{pos,tgt}, blocks:[Box3] }
     update(dt, opt) {
       const base = opt.fpOff ? PRESETS[2] : PRESETS[this.idx];
-      const p = {...base,pitch:base.pitch+(opt.fpOff?0:this.pitchOff)};
+      const p = {...base,pitch:base.pitch+(opt.fpOff?0:this.pitchOff)+(base.fit?opt.sidePitch||0:0)};   // sidePitch：个别区域把侧视压平一点（第三关荒漠要多露一些天空和远处的台地）
       const yaw = p.yaw + this.yawOff;
       const k = opt.instant ? 1 : damp(p.follow ? 9 : 6, dt);
       let tx, ty, tz, px, py, pz;

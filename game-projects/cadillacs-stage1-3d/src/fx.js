@@ -98,6 +98,8 @@ export function createFx(scene) {
   F.text = (x, y, z, txt, color, size) => sprite(textTex(txt, color || '#fff36a'), { x, y, z, life: 0.9, s0: size || 0.9, s1: (size || 0.9) * 1.05, vy: 1.0, order: 9, depthTest: false });
   F.pow = (x, y, z) => sprite(textTex('POW!', '#ffd84a'), { x, y, z, life: 0.35, s0: 0.6, s1: 1.1, order: 9, depthTest: false });
   F.dust = (x, y, z, n, size) => { for (let i = 0; i < (n || 4); i++) { const a = Math.random() * Math.PI * 2; sprite(puffTex, { x: x + Math.cos(a) * 0.2, y: y + 0.1, z: z + Math.sin(a) * 0.2, vx: Math.cos(a) * 1.2, vz: Math.sin(a) * 1.2, vy: 0.4, life: 0.5, s0: (size || 0.35), s1: (size || 0.35) * 2.2, color: 0xd8ccb4 }); } };
+  // 向后飘的一团烟尘（第三关开车：车尾扬尘、引擎盖冒烟）
+  F.trail = (x, y, z, vx, size, color, life, vy) => sprite(puffTex, { x, y, z, vx, vy: vy === undefined ? 0.5 : vy, life: life || 0.45, s0: size, s1: size * 2.4, color: color || 0xd8ccb4 });
   F.blood = (x, y, z, dir) => { for (let i = 0; i < 4; i++) sprite(puffTex, { x, y, z, vx: dir * (0.8 + Math.random()) , vy: 1 + Math.random() * 1.5, vz: (Math.random() - 0.5) * 1.5, grav: 9, life: 0.4, s0: 0.12, s1: 0.06, color: 0xc81e1e }); };
   F.muzzle = (x, y, z, big) => sprite(fireTex, { x, y, z, life: 0.07, s0: big ? 0.42 : 0.28, s1: big ? 0.7 : 0.46, blend: 'add', order: 7 });
   // 子弹拖光：亮芯 + 橙色光晕的细长条，从枪口飞向终点；头到终点后尾巴收拢消失。o = { speed 米/秒, len 拖光长度, w 粗细 }

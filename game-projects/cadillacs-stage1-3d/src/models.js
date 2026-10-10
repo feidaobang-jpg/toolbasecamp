@@ -199,6 +199,11 @@ export function buildHuman(spec) {
       }
     }
   }
+  if (spec.plate) {   // 胸甲（霍格）：胸前两块钢板 + 腹部叠片
+    const pc = C(spec.plate);
+    for (const sx of [-1, 1]) P('spine').add(GEO.sph, pc, mtx(sx * tW * 0.4, torsoH * 0.68, tD * 0.7, 0, 0, 0, tW * 0.52, torsoH * 0.2, tD * 0.5));
+    for (let i = 0; i < 3; i++) P('spine').add(GEO.box, darker(pc, 0.9 - i * 0.06), mtx(0, torsoH * (0.42 - i * 0.13), tD * 0.92, -0.1, 0, 0, tW * (1.25 - i * 0.12), torsoH * 0.11, 0.035 * s));
+  }
   if (B.belly) {   // 啤酒肚
     const bc = shirt && !shirt.tank ? C(shirt.color) : shirt && shirt.tank ? C(shirt.color) : skin;
     P('spine').add(GEO.sph, bc, mtx(0, torsoH * 0.28, tD * 0.25, 0, 0, 0, tW * 0.95, torsoH * 0.42, B.belly));
@@ -277,6 +282,7 @@ export function buildHuman(spec) {
       P('head').add(GEO.cone, hc, mtx(0, hr * 1.3, -hr * 0.1, 0, 0, 0, hr * 0.25, hr * 0.6, hr * 0.25));
       break;
   }
+  if (spec.headband) P('head').add(GEO.cyl, C(spec.headband), mtx(0, hr * 0.4, -hr * 0.02, -0.12, 0, 0, hr * 0.94, hr * 0.2, hr * 0.99));   // 头带（霍格的红头带）
   if (spec.beard) {
     const bc = C(spec.beard);
     P('head').add(GEO.sph, bc, mtx(0, -hr * 0.62, hr * 0.32, 0.2, 0, 0, hr * 0.72, hr * (spec.longBeard ? 0.85 : 0.5), hr * 0.62));
@@ -303,6 +309,12 @@ export function buildHuman(spec) {
     if (B.bicep && !gold) P(side + 'S').add(GEO.sph, armC, mtx(0, -ua * 0.42, B.arm * 0.35, 0, 0, 0, B.arm * 1.05 * B.bicep, ua * 0.3, B.arm * 1.1 * B.bicep));
     if (shirt && sl === 'short') P(side + 'S').add(capsule(B.arm * 1.28, ua * 0.32), C(shirt.color), mtx(0, -ua * 0.18, 0));
     if (vest && vest.fur) P(side + 'S').add(GEO.sph, C(vest.fur), mtx(0, -ua * 0.02, 0, 0, 0, 0, B.arm * 1.7, B.arm * 1.4, B.arm * 1.7));
+    if (spec.pauldron) {   // 钢肩甲（霍格）：一大一小两片叠甲 + 一根尖刺
+      const pc = C(spec.pauldron);
+      P(side + 'S').add(GEO.hemi, pc, mtx(sx * B.arm * 0.5, B.arm * 0.2, 0, 0, 0, sx * -0.5, B.arm * 2.3, B.arm * 1.9, B.arm * 2.2));
+      P(side + 'S').add(GEO.hemi, darker(pc, 0.82), mtx(sx * B.arm * 0.9, -B.arm * 0.9, 0, 0, 0, sx * -0.9, B.arm * 1.9, B.arm * 1.3, B.arm * 1.9));
+      P(side + 'S').add(GEO.cone, darker(pc, 1.12), mtx(sx * B.arm * 1.5, B.arm * 1.9, 0, 0, 0, sx * -0.6, B.arm * 0.5, B.arm * 1.9, B.arm * 0.5));
+    }
     P(side + 'S').add(GEO.sph, armC, mtx(0, 0, 0, 0, 0, 0, B.arm * 1.15, B.arm * 1.15, B.arm * 1.15));   // 肩头
     P(side + 'E').add(capsule(B.fore, fa * 0.85), sl === 'long' ? C(shirt.color) : skin, mtx(0, -fa * 0.5, 0));
     if (spec.wrist) P(side + 'E').add(GEO.cyl, C(spec.wrist), mtx(0, -fa * 0.82, 0, 0, 0, 0, B.fore * 1.25, fa * 0.18, B.fore * 1.25));
@@ -341,7 +353,6 @@ export function buildHuman(spec) {
 
 // ---------- 角色表（按原作配色） ----------
 export const SPECS = {
-  hogg: { H:2.02,build:'huge',skin:'#bd8563',hair:{style:'long',color:'#30251f'},beard:'#30251f',longBeard:true,vest:{color:'#362b35'},abs:true,pants:{color:'#455376'},belt:'#312923',boots:{color:'#282426',high:true},wrist:'#77716b' },
   // 玩家
   jack: { H: 1.86, build: 'muscle', skin: '#e9b48a', hair: { style: 'messy', color: '#74492a' }, shirt: { color: '#eef2f6', sleeves: 'short', open: true, collar: true }, pants: { color: '#3d5fa6' }, belt: '#4a3018', boots: { color: '#6b4426' } },
   hannah: { H: 1.74, build: 'female', skin: '#f2c8a2', hair: { style: 'long', color: '#242a4c' }, shirt: { color: '#e8622c', crop: true }, pants: { color: '#f4f1e8' }, belt: '#7a4a26', boots: { color: '#7c4a28', high: true } },
@@ -366,6 +377,12 @@ export const SPECS = {
   lash: { H: 2.06, build: 'huge', skin: '#d89a6c', hair: { style: 'long', color: '#d8983e' }, vest: { color: '#6c4628' }, abs: true, pants: { color: '#5c3e26' }, belt: '#3a2818', straps: '#3a2818', boots: { color: '#3c2c1e', high: true }, wrist: '#4a3828' },
   butcher: { H: 2.2, build: 'brute', skin: '#e0a07a', hair: { style: 'bald' }, beard: '#ece6da', shirt: { color: '#c84a3e', sleeves: 'none', tank: true }, pants: { color: '#86587c' }, belt: '#5a3a20', boots: { color: '#5a3a24' }, wrist: '#7a4c96' },
   // 大楼里的金色骑士雕像
+  // 第三关：车手（费里斯的换色：黑发、绿背心、灰裤）、沃尔瑟（紫色毛领的大块头）、飞车党、Boss 霍格（向后炸开的金发、红头带、灰甲金边、毛皮护腿）、送车来的机修工
+  driver: { H: 1.82, build: 'thin', skin: '#d69a6a', hair: { style: 'spiky', color: '#2a1c14' }, vest: { color: '#3f9a5c', chevron: '#d8ecc8' }, abs: true, pants: { color: '#6a6e72' }, boots: { color: '#5a3a22' }, wrist: '#2c5a3a' },
+  walther: { H: 2.12, build: 'huge', skin: '#eaa890', hair: { style: 'spiky', color: '#f0e4ea' }, vest: { color: '#b8443c', fur: '#8a5ac6' }, abs: true, pants: { color: '#e06a5c' }, belt: '#f2e8ee', straps: '#f2e8ee', boots: { color: '#c9b6e0', high: true }, wrist: '#8a5ac6' },
+  biker: { H: 1.8, build: 'thin', skin: '#d8a074', hair: { style: 'spiky', color: '#3cc8c8' }, vest: { color: '#8a8e96' }, abs: true, pants: { color: '#36a8b0' }, boots: { color: '#3a3240', high: true }, wrist: '#2f6f78' },
+  hogg: { H: 2.08, build: 'huge', skin: '#e2a57c', hair: { style: 'spikyBlond', color: '#f1cf58' }, headband: '#d8362c', beard: '#e2bd50', shirt: { color: '#8e949e', sleeves: 'long' }, plate: '#b4bac4', pauldron: '#c9b05a', pants: { color: '#7e848e' }, belt: '#c9a84a', boots: { color: '#b08a5a', high: true }, wrist: '#c9a84a', eyes: '#3a1c12' },
+  mechanic: { H: 1.84, build: 'muscle', skin: '#e6b088', hair: { style: 'short', color: '#e6c860' }, shirt: { color: '#eef2f6', sleeves: 'short' }, overalls: '#3e62b0', pants: { color: '#3e62b0' }, belt: '#4a3018', boots: { color: '#7a5028' } },
   statue: { H: 1.9, build: 'muscle', gold: '#d6ae3e', hair: { style: 'helmet', color: '#d6ae3e' }, shirt: { color: '#d6ae3e', sleeves: 'long' }, pants: { color: '#d6ae3e' }, boots: { color: '#d6ae3e', high: true } }
 };
 
@@ -573,6 +590,7 @@ export function buildCar() {
     p.add(GEO.box, chrome, mtx(0, 0.42, 2.66, 0, 0, 0, 2.0, 0.16, 0.16));      // 前保险杠
     p.add(GEO.box, chrome, mtx(0, 0.42, -2.66, 0, 0, 0, 2.0, 0.16, 0.16));     // 后保险杠
     p.add(GEO.box, '#5c6a74', mtx(0, 0.64, 2.68, 0, 0, 0, 1.2, 0.2, 0.04));    // 进气格栅
+    p.add(GEO.box, '#cfe6ee', mtx(0, 1.27, 0.86, -0.35, 0, 0, 1.68, 0.5, 0.04));   // 挡风玻璃
     p.add(GEO.box, chrome, mtx(0, 1.51, 0.78, -0.35, 0, 0, 1.72, 0.05, 0.06));
     p.add(GEO.box, seat, mtx(0, 0.98, 0.2, 0, 0, 0, 1.6, 0.18, 0.62));    // 座椅
     p.add(GEO.box, seat, mtx(0, 1.18, -0.1, -0.15, 0, 0, 1.6, 0.42, 0.14));
@@ -587,13 +605,67 @@ export function buildCar() {
     carWheelGeo = w.build();
   }
   const root = new THREE.Group(); root.name = 'cadillac';
-  const glass=new THREE.Mesh(GEO.box,new THREE.MeshBasicMaterial({color:'#b6d3d2',transparent:true,opacity:.19,depthWrite:false}));glass.position.set(0,1.27,.86);glass.rotation.x=-.35;glass.scale.set(1.68,.5,.04);root.add(glass);
   const bodyM = meshFrom(carBodyGeo, {}); root.add(bodyM);
   const wheels = [];
   for (const [x, z] of [[0.86, 1.62], [-0.86, 1.62], [0.86, -1.62], [-0.86, -1.62]]) { const m = meshFrom(carWheelGeo, { thin: true }); m.position.set(x, 0.36, z); root.add(m); wheels.push(m); }
   root.userData.wheels = wheels;
   return root;
 }
+// ---------- 摩托（第三关）：长前叉的美式大排量，车头朝 +Z。霍格的是紫红车身喷火涂装，飞车党的是粉色 ----------
+const bikeGeoCache = {};
+export function buildBike(kind) {
+  const hog = kind === 'hogg', key = hog ? 'hogg' : 'biker';
+  if (!bikeGeoCache[key]) {
+    const p = new Parts(), chrome = '#d6dade', iron = '#8a8e96';
+    const frame = hog ? '#7a3a9a' : '#d85a9c', tank = hog ? '#b53a8a' : '#e86aa8', flame = hog ? '#ffa030' : '#ffe26a', seat = hog ? '#3a2a22' : '#5a3a2a';
+    p.add(GEO.cyl6, frame, mtx(0, 0.36, 0.1, Math.PI / 2, 0, 0, 0.045, 1.5, 0.045));               // 下梁
+    p.add(GEO.cyl6, frame, mtx(0, 0.86, 0.22, Math.PI / 2 - 0.2, 0, 0, 0.05, 1.05, 0.05));         // 脊梁
+    p.add(GEO.cyl6, frame, mtx(0, 0.58, -0.5, -0.55, 0, 0, 0.045, 0.62, 0.045));                   // 座管
+    p.add(GEO.box, iron, mtx(0, 0.5, 0.08, 0, 0, 0, 0.34, 0.3, 0.5));                              // 曲轴箱
+    for (const sz of [-1, 1]) { p.add(GEO.cyl, chrome, mtx(0, 0.72, 0.08 + sz * 0.13, sz * 0.38, 0, 0, 0.1, 0.26, 0.1)); p.add(GEO.cyl, iron, mtx(0, 0.72, 0.08 + sz * 0.13, sz * 0.38, 0, 0, 0.125, 0.04, 0.125)); }   // V 型双缸
+    for (let i = 0; i < 3; i++) p.add(GEO.box, '#6a6e76', mtx(0, 0.4 + i * 0.09, 0.08, 0, 0, 0, 0.38, 0.02, 0.54));
+    p.add(GEO.sph, tank, mtx(0, 0.98, 0.3, -0.12, 0, 0, 0.19, 0.15, 0.4));                         // 油箱
+    for (const sx of [-1, 1]) for (let i = 0; i < 3; i++) p.add(GEO.cone, flame, mtx(sx * 0.165, 0.98 + (i - 1) * 0.055, 0.5 - i * 0.15, -Math.PI / 2, 0, 0, 0.05, 0.3, 0.03));   // 火焰涂装
+    p.add(GEO.box, seat, mtx(0, 0.84, -0.36, 0.08, 0, 0, 0.3, 0.1, 0.62));                         // 座椅
+    p.add(GEO.box, seat, mtx(0, 1.02, -0.72, -0.3, 0, 0, 0.26, 0.32, 0.08));                       // 靠背
+    p.add(GEO.box, tank, mtx(0, 0.86, -0.92, -0.2, 0, 0, hog ? 0.3 : 0.24, 0.05, 0.66));           // 后挡泥板
+    p.add(GEO.box, tank, mtx(0, 0.78, 1.22, 0.75, 0, 0, 0.16, 0.04, 0.5));                         // 前挡泥板
+    for (const sx of [-1, 1]) {
+      p.add(GEO.cyl6, chrome, mtx(sx * 0.12, 0.75, 0.98, -0.82, 0, 0, 0.032, 1.08, 0.032));        // 长前叉
+      p.add(GEO.cyl6, chrome, mtx(sx * 0.18, 1.28, 0.53, -0.35, 0, 0, 0.022, 0.4, 0.022));           // 车把立管
+      p.add(GEO.cyl, chrome, mtx(sx * (hog ? 0.24 : 0.2), 0.3, -0.5, Math.PI / 2, 0, 0, 0.055, 1.25, 0.055));   // 排气管
+      p.add(GEO.cyl, '#3a3a40', mtx(sx * (hog ? 0.24 : 0.2), 0.3, -1.14, Math.PI / 2, 0, 0, 0.065, 0.06, 0.065));
+      p.add(GEO.cyl6, '#2a2a2e', mtx(sx * 0.34, 1.44, 0.46, 0, 0, Math.PI / 2, 0.03, 0.14, 0.03)); // 把套
+    }
+    p.add(GEO.cyl6, chrome, mtx(0, 1.44, 0.46, 0, 0, Math.PI / 2, 0.022, 0.62, 0.022));            // 车把
+    p.add(GEO.sph, chrome, mtx(0, 1.1, 0.78, 0, 0, 0, 0.11, 0.11, 0.1));                           // 大灯
+    p.add(GEO.sph, '#fff2c0', mtx(0, 1.1, 0.86, 0, 0, 0, 0.085, 0.085, 0.04));
+    if (hog) p.add(GEO.cone, '#e8e2d0', mtx(0, 1.26, 0.8, 1.2, 0, 0, 0.04, 0.3, 0.04));            // 霍格车头的兽角
+    const w = new Parts(), wr = hog ? 0.15 : 0.11;
+    w.add(GEO.tor, '#2b2b2e', mtx(0, 0, 0, 0, Math.PI / 2, 0, 0.3, 0.3, wr / 0.075));
+    w.add(GEO.cyl, chrome, mtx(0, 0, 0, 0, 0, Math.PI / 2, 0.23, 0.05, 0.23));
+    w.add(GEO.cyl, iron, mtx(0, 0, 0, 0, 0, Math.PI / 2, 0.07, wr * 2.2, 0.07));
+    for (let i = 0; i < 4; i++) w.add(GEO.box, '#5c6068', mtx(0, 0, 0, i * Math.PI / 4, 0, 0, 0.03, 0.5, 0.025));
+    bikeGeoCache[key] = { body: p.build(), wheel: w.build() };
+  }
+  const g = bikeGeoCache[key], root = new THREE.Group(); root.name = 'bike';
+  root.add(meshFrom(g.body, { thin: true }));
+  const wheels = [];
+  for (const z of [1.42, -0.92]) { const m = meshFrom(g.wheel, { thin: true }); m.position.set(0, 0.375, z); root.add(m); wheels.push(m); }
+  root.userData.wheels = wheels;
+  return root;
+}
+export function bikeWheelGeo(kind) { buildBike(kind); return bikeGeoCache[kind === 'hogg' ? 'hogg' : 'biker'].wheel; }
+// 轮胎堆（第三关公路上的障碍）：五只旧轮胎叠成一摞；撞散后飞出去的是单只轮胎
+export function tiresGeo() {
+  return cachedGeo('tires', (p) => {
+    for (let i = 0; i < 5; i++) {
+      p.add(GEO.tor, i % 2 ? '#3a3636' : '#2e2b2b', mtx((i % 2 ? 0.03 : -0.02), 0.11 + i * 0.2, (i % 3 ? 0.02 : -0.03), Math.PI / 2, 0, 0, 0.34, 0.34, 0.42));
+      p.add(GEO.cyl, '#1e1c1c', mtx(0, 0.11 + i * 0.2, 0, 0, 0, 0, 0.2, 0.16, 0.2));
+    }
+  });
+}
+export function tireGeo() { return cachedGeo('tire1', (p) => { p.add(GEO.tor, '#33302f', mtx(0, 0, 0, 0, 0, 0, 0.34, 0.34, 0.42)); }); }
 // 拉什·T 的链锤：带刺铁球
 export function maceGeo() {
   return cachedGeo('mace', (p) => {

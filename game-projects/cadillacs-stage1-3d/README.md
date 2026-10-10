@@ -1,15 +1,12 @@
-> 2026-10-09 后续授权：用户要求“发布到网站里我试玩一下，不要发布到其他游戏平台”。本次仅部署网站审核试玩版；其他游戏平台禁止自动同步，视频说明/公告留待试玩审核。以下本地阶段记录保留为历史。
+# 恐龙快打 · 第一至三关 3D 重制版（cadillacs-stage1-3d）
 
-> **本地审核版 v0.11.0-preview.1**：按2026-10-09新请求开发第三关，当前不发布。运行 `npm run build`、`npm run preview` 后打开 http://127.0.0.1:8793/html/game/cadillacs-stage1-3d/index.html?stage=3 。详细流程与已知取舍见 [审核记录](media-kit/releases/v0.11.0-preview.1/notes.md)。第三关源码为 `src/road.js` / `src/road-world.js`，验收为 `qa/stage3.js` / `qa/stage3-display.js`；区域6为荒漠、7为公路。旧版资料保留如下。
-
-# 恐龙快打 · 第一、二关 3D 重制版（cadillacs-stage1-3d）
-
-Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重制版（当前 v0.9.3，目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
+Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网页重制版（这条分支是 v0.11.0-hellroad.1：第三关按原作独立重做的本地候选版，未上线；目录名沿用 stage1 以保持网址、存档和 Toy 绑定不变）：
 
 - 第一关「海上都市 CITY IN THE SEA」：楼顶 → 大楼内部 → 第 47 街，Boss 维斯·T 和岩跳龙。
 - 第二关「沼泽森林 THE SWAMP FOREST」：凯迪拉克开进偷猎者森林，三角龙哈克冲撞、胖子想吵醒熟睡的霸王龙希瓦特 → 跳崖落进齐腰深的泥沼 MUD SWAMP，格特从水里冒出、上岸遇链锤兵拉什·T → 黄昏的恐龙尸骸地，Boss 屠夫（双刀、满屏乱跳、屁股坐、不断叫手下）。
+- 第三关「地狱公路 HELL ROAD」：死亡沙漠 DESERT OF DEATH 里四个手下蹲着等人，打到大块头沃尔瑟倒下，机修工开着凯迪拉克赶到——「开这辆车走，会安全些」→ 开车一路撞过去（画面自动向右卷，车在一屏之内自由移动，路上的人、轮胎堆、桶、飞车党撞到就飞）→ Boss 霍格骑着喷火涂装的摩托扔手雷，躲开落点红圈、用车撞他；车挨够手雷就爆炸，下车徒步打完（或者在车上直接把他撞死）。按原作实机录像逐项对照，见 `media-kit/releases/v0.11.0-hellroad.1/restoration.md`。
 
-四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原。打完第一关会像街机一样直接接第二关；主菜单「起始关卡」也能直接选第二关。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染。画风是这款自己的硬派写实路线（v0.5.2 按用户选择改回，第二关同款）：写实比例角色、卡通色阶着色（MeshToonMaterial）+ 黑色法线外扩描边、带噪点 / 裂缝 / 青苔的程序化写实贴图、偏暗的对比光照。v0.5.0 曾短暂改成赤色要塞式哑光 Q 版，用户对比后认为旧版「更暗更写实」更好。音乐采用原版录音（第二关：In the Poachers' Forest / Ancient Earth / Trap of Silence / Boss 2），缺项音效 WebAudio 合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
+四位主角（杰克、汉娜、穆斯塔法、梅斯）按原作选人画面的能力值与配色还原。打完一关会像街机一样直接接下一关；主菜单「起始关卡」三关都能直接选。用 Three.js r170（站内 `public/vendor/three/0.170.0`）渲染。画风是这款自己的硬派写实路线（v0.5.2 按用户选择改回，第二关同款）：写实比例角色、卡通色阶着色（MeshToonMaterial）+ 黑色法线外扩描边、带噪点 / 裂缝 / 青苔的程序化写实贴图、偏暗的对比光照。v0.5.0 曾短暂改成赤色要塞式哑光 Q 版，用户对比后认为旧版「更暗更写实」更好。音乐采用原版录音（第二关：In the Poachers' Forest / Ancient Earth / Trap of Silence / Boss 2；第三关：Roaring Sound / Like a Squall / Boss 3），缺项音效 WebAudio 合成。源码是 ES 模块，用 esbuild 打成一个普通脚本，双击 `index.html` 也能玩。
 
 ## 目录
 
@@ -17,7 +14,7 @@ Capcom 1993 年街机《恐龙快打》（Cadillacs and Dinosaurs）的 3D 网�
 | --- | --- |
 | `public/html/game/cadillacs-stage1-3d/` | 公开运行文件：`index.html`、`css/style.css`、`js/game.min.js`（打包产物）、`js/THREE-LICENSE.txt` |
 | `public/games.html` | 网站游戏列表（卡片在 `public/js/config.js`，封面 `public/assets/game/thumbs/cadillacs-stage1-3d.jpg`，标题在 `public/js/locales/zh-CN.js` 的 `tools.cadillacs3d`） |
-| `src/` | 源码：`main.js` 入口与界面（起始关卡、头像、结算），`game.js` 玩法（招式、抓投、武器、敌人 AI、维斯 / 屠夫 Boss、三角龙与霸王龙、步枪兵、链锤、泥沼减速、波次、过场、关卡衔接），`level.js` 两关六个区域与数值，`world.js` 六个区域的场景，`models.js` 程序化模型（人形、岩跳龙 / 霸王龙同一骨架、三角龙、凯迪拉克、武器道具），`anim.js` 关键姿势动画，`camera.js` 镜头，`fx.js` 特效，`audio.js` 音效与音乐，`input.js` 键盘与触屏，`core.js` 公共工具 |
+| `src/` | 源码：`main.js` 入口与界面（起始关卡、头像、结算），`game.js` 玩法（招式、抓投、武器、敌人 AI、维斯 / 屠夫 Boss、三角龙与霸王龙、步枪兵、链锤、泥沼减速、波次、过场、关卡衔接），`level.js` 三关八个区域、公路事件表与数值，`world.js` 八个区域的场景（第三关的荒漠地块可按车速向后卷），`hellroad.js` 第三关专属玩法（接车过场、开车撞敌、霍格的摩托战与徒步战），`models.js` 程序化模型（人形、岩跳龙 / 霸王龙同一骨架、三角龙、凯迪拉克、摩托、轮胎堆、武器道具），`anim.js` 关键姿势动画，`camera.js` 镜头，`fx.js` 特效，`audio.js` 音效与音乐，`input.js` 键盘与触屏，`core.js` 公共工具 |
 | `tools/build.mjs` | 构建脚本 |
 | `qa/` | Playwright 验收、自动试玩 bot、测帧、截图、录像脚本 |
 | `media-kit/` | 开发 → 视频交接包（game.json、overview.md、sources.json、releases/v0.1.0/）；截图录像只留本机，不入库 |
@@ -33,10 +30,11 @@ node qa/serve.mjs 8777    # 本地静态服务（no-store），打开 http://127
 
 改了源码重新构建后，递增 `index.html` 里 `js/game.min.js?v=` 的版本号。
 
-URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `window.__CD_TEST__`；`?clean=1` 隐藏桌面键位提示（录制用）；`?q=high|low` 强制画质；`?area=0..5` 直接从某个区域开始（测试用：0 楼顶、1 大楼内部、2 第 47 街、3 偷猎者森林、4 泥沼、5 恐龙尸骸地）。
+URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `window.__CD_TEST__`；`?clean=1` 隐藏桌面键位提示（录制用）；`?q=high|low` 强制画质；`?area=0..7` 直接从某个区域开始（测试用：0 楼顶、1 大楼内部、2 第 47 街、3 偷猎者森林、4 泥沼、5 恐龙尸骸地、6 死亡沙漠、7 地狱公路）。
 
 ## 操作
 
+- 第三关开车：W/A/S/D（手机摇杆）控制凯迪拉克前后与里外，车上不用按攻击键；正视 / 第一人称是坐在车后、驾驶座上的视角。
 - 电脑：W/A/S/D 移动（W 是走向纵深）；J 攻击（连打四下，最后一下击倒；脚下有东西时捡起；拿着武器时使用）；K 跳跃，空中 J 跳踢；U 必杀（或 J+K 同按，命中扣少量体力）；I 冲刺（L / 双击方向键也行），冲刺中 J 是各角色不同的冲刺攻击；走进敌人自动抓住，再按 J 膝撞、第四下或反方向+J 投摔；贴着油桶按 J 举起、再按 J 扔出；C 切换视角（侧视 → 斜视 → 正视 → 第一人称）；Q/E 按住转视角；Esc 暂停。菜单 ↑↓ 选择、←→ 调整、Enter 确认。
 - 手机：左侧浮动摇杆；右侧小霸王式 2×2 方阵——下排 J 攻击、K 跳跃，上排 U 必杀、I 冲刺（按住），与键盘位置一致；右上角 C 切换视角与暂停；按住画面拖动无极转视角（不设 Q/E 按钮）。设置里可切「自动识别 / 电脑键鼠 / 手机触屏」。竖屏开局后自动旋转为横屏布局。
 
@@ -49,6 +47,8 @@ URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `win
 - `node qa/fullscreen.js`：全屏入口按浏览器能力显示（桌面 / 手机横屏 / 竖屏旋转 × 支持 / 不支持全屏，73 项）：支持时显示且点击有效、退出后自动暂停；不支持时按钮隐藏、菜单 ↑↓ 不卡、F 键提示后继续游玩。`TOY_PREVIEW=<预览外壳地址>` 改在 Toy 预览 iframe 内跑
 - `node qa/camera.js [前缀]`：镜头回归（11 项）：正视贴第 47 街后墙 Q/E 转一圈不进墙、主角始终可见；第一人称贴身岩跳龙 / 维斯不黑屏不满屏；侧视锁屏 Boss 战（16:9 与 2.17:1）角色逐顶点投影不出画。`CD_BASE` 指向旧构建、`NO_ASSERT=1` 可得修复前对照
 - `node qa/stage2.js`：第二关验收（55 项）：起始关卡选择与保存、凯迪拉克开场、三角龙刨地冲锋、步枪兵预警开枪与跳跃躲避、霸王龙「被吵醒 / 没被吵醒」两条路线、泥沼减速与水中冒出、链锤 3 米外命中、尸骸地、屠夫双刀脱手可捡 / 屁股坐 / 叫手下 / 结算、第一关打完接第二关、重玩回到所选关卡
+- `node qa/stage3.js`：第三关验收（97 项）：起始关卡、霍格放话开场、荒漠三波与字幕、弹药箱、机修工送车与空翻上车、方向键开车与范围、一路撞人撞路障、躲 / 不躲手雷、撞霍格、演示模式、四个视角、车被炸毁、冲撞与起跳、停车投弹、拳脚与冲锋枪打霍格、两种结局、结算、暂停重开、手机摇杆开车
+- `node qa/stage3-shots.js [前缀] [英雄]`：第三关各阶段截图；`node qa/stage3-bot.js [英雄] [种子] [std|easy|classic] [car|foot|lazy]`：公路段自动试玩，量节奏和难度；`node qa/perf-stage3.js [宽] [高] [high|low]`：第三关各阶段各视角实时测帧
 - `node qa/rotate-stage2.js`：第二关三个区域 Q/E 转一圈、正视、第一人称取景截图（看穿帮）
 - `node qa/perf-stage2.js [宽] [高] [high|low]`：第二关三个区域各视角实时测帧
 - `node qa/botrun.js <英雄0-3> <种子> [std|easy|classic] [起始关卡 1|2]`：手动时钟让 bot 打完整关（从第一关开始会一路打到第二关结算）
@@ -61,7 +61,7 @@ URL 参数：`?seed=N` 固定随机种子；`?test=1` 暴露自动化钩子 `win
 - `node qa/guns.js`：枪口与子弹回归（火花在枪模型前端、有子弹拖光、子弹飞到才掉血，含偷猎者、维斯）；`node qa/gun-shots.js <前缀>` 逐帧截图对照
 - `node qa/depth.js`：可走纵深回归，真实按键走到最前 / 最里 / 左右两端，检查第二关前排在画面约八成高、角色不出画，第一关取景不变
 - `node qa/style-shots.js <前缀>`：固定站位摆拍六个场景（选人、楼顶、大楼内部、47 街 Boss、森林、屠夫），新旧画风并排对比用；旧版只有第一关时加 `SCENES=roof,hall,street`
-- `node qa/record.js full|cams|mobile|portrait|stage2 <输出.mp4>`：逐帧录像 + 离线渲染同场音轨（离线音轨只有合成回退音乐；stage2 为第二关精华段）
+- `node qa/record.js full|cams|mobile|portrait|stage2|stage3 <输出.mp4>`：逐帧录像 + 离线渲染同场音轨（离线音轨只有合成回退音乐；stage2 为第二关精华段，stage3 为第三关全程）
 - `node qa/cover.js`：网站卡片封面
 
 脚本输出写在 `qa/out/`，不入库。

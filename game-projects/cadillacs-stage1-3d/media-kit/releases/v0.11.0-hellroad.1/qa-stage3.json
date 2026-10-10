@@ -1,0 +1,995 @@
+{
+ "date": "2026-10-10T04:32:08.019Z",
+ "pass": 97,
+ "total": 97,
+ "results": [
+  {
+   "name": "起始关卡可选第三关 · 地狱公路",
+   "pass": true,
+   "info": "起始关卡◂ 第三关 · 地狱公路 ▸"
+  },
+  {
+   "name": "起始关卡保存",
+   "pass": true
+  },
+  {
+   "name": "再按一次循环回第一关",
+   "pass": true
+  },
+  {
+   "name": "刷新后仍是第三关",
+   "pass": true
+  },
+  {
+   "name": "主菜单副标题列出三关",
+   "pass": true
+  },
+  {
+   "name": "直接从第三关开局：死亡沙漠",
+   "pass": true,
+   "info": [
+    "desert",
+    3,
+    "cut"
+   ]
+  },
+  {
+   "name": "黑屏上霍格放话",
+   "pass": true,
+   "info": [
+    1,
+    "嘿，那帮家伙正忙得团团转。趁现在，把杰克的修车厂拿下！"
+   ]
+  },
+  {
+   "name": "台词盖在黑幕上面、有霍格头像与名字",
+   "pass": true,
+   "info": {
+    "over": true,
+    "z": 26,
+    "fz": 25,
+    "name": "霍格 HOGG",
+    "face": 11702
+   }
+  },
+  {
+   "name": "荒漠里四个手下蹲着等人（费里斯、车手、尼斯 ×2）",
+   "pass": true,
+   "info": [
+    {
+     "type": "ferris",
+     "state": "cut",
+     "pose": "crouch"
+    },
+    {
+     "type": "driver",
+     "state": "cut",
+     "pose": "crouch"
+    },
+    {
+     "type": "gneiss",
+     "state": "cut",
+     "pose": "crouch"
+    },
+    {
+     "type": "gneiss",
+     "state": "cut",
+     "pose": "crouch"
+    }
+   ]
+  },
+  {
+   "name": "开场结束可操作、画面已淡入",
+   "pass": true,
+   "info": [
+    "play",
+    0,
+    2.95
+   ]
+  },
+  {
+   "name": "关卡标题：第三关 · 地狱公路",
+   "pass": true,
+   "info": "第三关 · 地狱公路"
+  },
+  {
+   "name": "3-1 音乐（原版 Roaring Sound）",
+   "pass": true,
+   "info": {
+    "name": "desert",
+    "playing": true,
+    "synth": false,
+    "original": true,
+    "track": "desert",
+    "loaded": [
+     "select",
+     "desert",
+     "road",
+     "boss3",
+     "clear"
+    ]
+   }
+  },
+  {
+   "name": "计时 2:30",
+   "pass": true,
+   "info": 149.9
+  },
+  {
+   "name": "往前走到最前排 z = 4.0",
+   "pass": true,
+   "info": 4
+  },
+  {
+   "name": "最前排脚下在画面约八成高、整个人在画面里",
+   "pass": true,
+   "info": [
+    [
+     0.2134,
+     0.7585
+    ],
+    [
+     0.204,
+     0.5186
+    ]
+   ]
+  },
+  {
+   "name": "往里走到最里排 z = -2.3",
+   "pass": true,
+   "info": -2.3
+  },
+  {
+   "name": "最里排在画面中部偏上、地平线以下",
+   "pass": true,
+   "info": [
+    0.2921,
+    0.6018
+   ]
+  },
+  {
+   "name": "画面上方露出天空和远处台地（地平线在画面上部一成半以下）",
+   "pass": true,
+   "info": [
+    0.4914,
+    0.2052
+   ]
+  },
+  {
+   "name": "第一波打完出字幕「死亡沙漠 DESERT OF DEATH」并喊 GO",
+   "pass": true,
+   "info": [
+    "死亡沙漠",
+    true
+   ]
+  },
+  {
+   "name": "两只木桶",
+   "pass": true,
+   "info": [
+    {
+     "kind": "barrel",
+     "x": 22.6,
+     "z": 1.3,
+     "broken": false,
+     "hp": 2
+    },
+    {
+     "kind": "barrel",
+     "x": 23.5,
+     "z": 2.1,
+     "broken": false,
+     "hp": 2
+    }
+   ]
+  },
+  {
+   "name": "木桶摔碎掉出弹药箱",
+   "pass": true,
+   "info": [
+    {
+     "kind": "ammo",
+     "x": 26.28,
+     "z": 1.4
+    }
+   ]
+  },
+  {
+   "name": "捡弹药箱 +1000 分",
+   "pass": true,
+   "info": [
+    7000,
+    6000
+   ]
+  },
+  {
+   "name": "第二波：锤子·T + 车手 + 尼斯从右边冲过来",
+   "pass": true,
+   "info": [
+    "driver",
+    "gneiss",
+    "hammer"
+   ]
+  },
+  {
+   "name": "第三波：大块头沃尔瑟登场",
+   "pass": true,
+   "info": [
+    [
+     "driver",
+     "walther"
+    ],
+    170
+   ]
+  },
+  {
+   "name": "拳脚打得动沃尔瑟",
+   "pass": true,
+   "info": 140.3
+  },
+  {
+   "name": "最后一波打完凯迪拉克开过来（不喊 GO）",
+   "pass": true,
+   "info": [
+    "cut",
+    true,
+    false
+   ]
+  },
+  {
+   "name": "开车来的是机修工",
+   "pass": true,
+   "info": {
+    "id": 16,
+    "type": "mechanic",
+    "side": "npc",
+    "state": "incar",
+    "x": 38.93,
+    "y": 0.55,
+    "z": -1.57,
+    "hp": 1,
+    "alive": true,
+    "face": 1.57,
+    "token": false,
+    "nearK": 1,
+    "radius": 0.32,
+    "raptor": false,
+    "dino": false,
+    "waker": false
+   }
+  },
+  {
+   "name": "机修工：「开这辆车走，会安全些。上吧！」",
+   "pass": true,
+   "info": "开这辆车走，会安全些。上吧！"
+  },
+  {
+   "name": "机修工下车站在主角对面（两人不重叠、都在车前面）",
+   "pass": true,
+   "info": {
+    "m": [
+     46.18955267819478,
+     0.80357299967749,
+     "cut"
+    ],
+    "p": [
+     47.52876190689,
+     0.8420501718891683
+    ],
+    "car": [
+     49.37528389675661,
+     -1.15
+    ]
+   }
+  },
+  {
+   "name": "主角翻身跳上车",
+   "pass": true,
+   "info": {
+    "state": "jump",
+    "flip": 0.55,
+    "y": 1.1099999999999994
+   }
+  },
+  {
+   "name": "落在驾驶座上",
+   "pass": true,
+   "info": {
+    "x": 49.48,
+    "y": 0.55,
+    "z": -1.57,
+    "state": "incar",
+    "hp": 83.2,
+    "face": 1.57,
+    "invul": 0,
+    "weapon": null,
+    "combo": 3,
+    "visible": true
+   }
+  },
+  {
+   "name": "车开走后进入 3-2 地狱公路",
+   "pass": true,
+   "info": [
+    "road",
+    3
+   ]
+  },
+  {
+   "name": "公路段：坐在车里、自动开进画面",
+   "pass": true,
+   "info": {
+    "phase": "run",
+    "t": 1.03,
+    "dist": 13.4,
+    "v": 13,
+    "dusk": 0,
+    "ev": 1,
+    "car": {
+     "x": 5.1,
+     "z": 0.6,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    },
+    "hogg": null,
+    "nades": [],
+    "objs": 0,
+    "gang": 0
+   }
+  },
+  {
+   "name": "标题 地狱公路 HELL ROAD、3-2 音乐（原版 Like a Squall）",
+   "pass": true,
+   "info": [
+    "地狱公路",
+    "road"
+   ]
+  },
+  {
+   "name": "一路撞的时候不显示计时、武器栏显示凯迪拉克耐久",
+   "pass": true,
+   "info": [
+    null,
+    "凯迪拉克",
+    {
+     "x": 5.1,
+     "z": 0.6,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    }
+   ]
+  },
+  {
+   "name": "地面按车速向后卷（约 13 米 / 秒）",
+   "pass": true,
+   "info": 13.000000000000002
+  },
+  {
+   "name": "D：车往前（右）",
+   "pass": true,
+   "info": [
+    5.43,
+    8.4
+   ]
+  },
+  {
+   "name": "A：车往后（左）",
+   "pass": true,
+   "info": [
+    8.4,
+    6.18
+   ]
+  },
+  {
+   "name": "W：车往里",
+   "pass": true,
+   "info": [
+    0.6,
+    -1.25
+   ]
+  },
+  {
+   "name": "S：车往外（靠镜头）",
+   "pass": true,
+   "info": [
+    -1.25,
+    0.89
+   ]
+  },
+  {
+   "name": "车开不出范围（右前 10.7 / 3.0，左里 2.9 / -1.25）",
+   "pass": true,
+   "info": [
+    {
+     "x": 10.7,
+     "z": 3,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    },
+    {
+     "x": 2.9,
+     "z": -1.25,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    }
+   ]
+  },
+  {
+   "name": "开到四角整辆车都在画面里",
+   "pass": true,
+   "info": [
+    [
+     [
+      0.9742,
+      0.7742
+     ],
+     [
+      0.5945,
+      0.6626
+     ]
+    ],
+    [
+     [
+      0.167,
+      0.5997
+     ],
+     [
+      0.4335,
+      0.4656
+     ]
+    ]
+   ]
+  },
+  {
+   "name": "重新进入公路：阶段与耐久复位",
+   "pass": true,
+   "info": {
+    "phase": "run",
+    "t": 1.17,
+    "dist": 15.2,
+    "v": 13,
+    "dusk": 0,
+    "ev": 1,
+    "car": {
+     "x": 5.3,
+     "z": 0.6,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    },
+    "hogg": null,
+    "nades": [],
+    "objs": 0,
+    "gang": 0
+   }
+  },
+  {
+   "name": "木桶被撞碎、雷泽被撞飞并计分",
+   "pass": true,
+   "info": [
+    {
+     "ferris": 1,
+     "driver": 4,
+     "gneiss": 3,
+     "hammer": 1,
+     "walther": 1,
+     "razor": 4
+    },
+    5900
+   ]
+  },
+  {
+   "name": "被撞的敌人名字显示在 HUD 上",
+   "pass": true,
+   "info": "RAZOR"
+  },
+  {
+   "name": "不在车道上的格特没被撞到（从旁边过去了）",
+   "pass": true,
+   "info": {
+    "ferris": 1,
+    "driver": 4,
+    "gneiss": 3,
+    "hammer": 1,
+    "walther": 1,
+    "razor": 4,
+    "skinner": 1,
+    "punk": 1,
+    "thug": 2
+   }
+  },
+  {
+   "name": "轮胎堆被撞散，轮胎满天飞",
+   "pass": true,
+   "info": [
+    10
+   ]
+  },
+  {
+   "name": "撞翻飞车党：人飞出去、摩托散架",
+   "pass": true,
+   "info": [
+    1,
+    3
+   ]
+  },
+  {
+   "name": "铁桶也能撞碎",
+   "pass": true,
+   "info": 8
+  },
+  {
+   "name": "一路撞下来撞倒十个以上",
+   "pass": true,
+   "info": 21
+  },
+  {
+   "name": "天色开始转暗",
+   "pass": true,
+   "info": 0.42
+  },
+  {
+   "name": "霍格骑摩托出场（约 27.5 秒）",
+   "pass": true,
+   "info": [
+    28.55,
+    {
+     "type": "hogg",
+     "hp": 420,
+     "state": "ride"
+    }
+   ]
+  },
+  {
+   "name": "Boss 3 音乐（原版）、HUD 显示 HOGG、开始计时 3:00",
+   "pass": true,
+   "info": [
+    "boss3",
+    "HOGG",
+    "2:59"
+   ]
+  },
+  {
+   "name": "霍格扔手雷，落点瞄着车",
+   "pass": true,
+   "info": [
+    [
+     {
+      "x": 5.91,
+      "z": -0.31,
+      "t": 0.95
+     }
+    ],
+    {
+     "x": 5.43,
+     "z": 0.08,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    }
+   ]
+  },
+  {
+   "name": "不躲：车被炸中（耐久 -1、整车闪红、车上的人掉血但不会倒）",
+   "pass": true,
+   "info": [
+    {
+     "x": 5.43,
+     "z": 0.08,
+     "hp": 3,
+     "max": 4,
+     "flash": 0.6
+    },
+    78.3,
+    83.2,
+    "incar",
+    1
+   ]
+  },
+  {
+   "name": "看到红圈把车开走就躲得掉（三颗至少躲开两颗）",
+   "pass": true,
+   "info": 3
+  },
+  {
+   "name": "开车撞到霍格：掉 30 血、加 500 分",
+   "pass": true,
+   "info": [
+    390,
+    360
+   ]
+  },
+  {
+   "name": "车没朝他压过去时只是把他顶开，不掉血",
+   "pass": true,
+   "info": [
+    360,
+    360
+   ]
+  },
+  {
+   "name": "演示模式（无敌）下车不掉耐久",
+   "pass": true,
+   "info": 3
+  },
+  {
+   "name": "斜视 / 正视 / 侧视里车都在画面内",
+   "pass": true,
+   "info": [
+    {
+     "cam": "oblique",
+     "car": [
+      0.317,
+      0.7523
+     ],
+     "fp": false,
+     "y": 6.84
+    },
+    {
+     "cam": "front",
+     "car": [
+      0.5381,
+      0.6871
+     ],
+     "fp": false,
+     "y": 3.12
+    },
+    {
+     "cam": "fp",
+     "car": [
+      -28.1232,
+      -115.0461
+     ],
+     "fp": true,
+     "y": 1.74
+    },
+    {
+     "cam": "side",
+     "car": [
+      0.2471,
+      0.6097
+     ],
+     "fp": false,
+     "y": 4.39
+    }
+   ]
+  },
+  {
+   "name": "第一人称：坐在驾驶座上的高度（眼睛约 1.7 米）",
+   "pass": true,
+   "info": {
+    "cam": "fp",
+    "car": [
+     -28.1232,
+     -115.0461
+    ],
+    "fp": true,
+    "y": 1.74
+   }
+  },
+  {
+   "name": "正视（车后）里 W 是往前开",
+   "pass": true,
+   "info": [
+    2.9,
+    5.87
+   ]
+  },
+  {
+   "name": "Q / E 转视角照常可用",
+   "pass": true,
+   "info": -6.257
+  },
+  {
+   "name": "耐久用完：凯迪拉克爆炸，人被掀下车",
+   "pass": true,
+   "info": [
+    "wreck",
+    "down",
+    58.7
+   ]
+  },
+  {
+   "name": "地面停住、主角爬起来、锁在一屏之内",
+   "pass": true,
+   "info": [
+    0,
+    6.8,
+    "idle"
+   ]
+  },
+  {
+   "name": "武器栏不再显示凯迪拉克",
+   "pass": true,
+   "info": null
+  },
+  {
+   "name": "霍格猛冲：站在同一排被撞飞",
+   "pass": true,
+   "info": [
+    58.7,
+    51,
+    "down"
+   ]
+  },
+  {
+   "name": "看准了按 K 起跳能躲开冲撞",
+   "pass": true
+  },
+  {
+   "name": "慢速经过时停下来朝主角投弹",
+   "pass": true,
+   "info": [
+    [
+     {
+      "x": 7.13,
+      "z": 3.4,
+      "t": 0.95
+     }
+    ],
+    6.8,
+    3.31
+   ]
+  },
+  {
+   "name": "徒步拳脚打得动霍格（伤害 ×1.5），他不吃硬直",
+   "pass": true,
+   "info": [
+    360,
+    333,
+    "ride"
+   ]
+  },
+  {
+   "name": "站在红圈里会被炸飞",
+   "pass": true,
+   "info": [
+    41.3,
+    30.1
+   ]
+  },
+  {
+   "name": "霍格的手下从画面边上来",
+   "pass": true,
+   "info": [
+    "ferris",
+    "hogg"
+   ]
+  },
+  {
+   "name": "打倒费里斯掉冲锋枪",
+   "pass": true,
+   "info": [
+    {
+     "kind": "smg",
+     "x": -1.12,
+     "z": 0.2
+    }
+   ]
+  },
+  {
+   "name": "捡起冲锋枪",
+   "pass": true,
+   "info": {
+    "kind": "smg",
+    "ammo": 48
+   }
+  },
+  {
+   "name": "冲锋枪扫得到霍格",
+   "pass": true,
+   "info": [
+    333,
+    299.6
+   ]
+  },
+  {
+   "name": "打到没血：摩托炸开、霍格摔下来",
+   "pass": true,
+   "info": [
+    {
+     "x": 4.94,
+     "z": 0.26,
+     "hp": 0,
+     "alive": false,
+     "mode": "charge",
+     "slot": "ahead",
+     "rider": false
+    },
+    3,
+    "clear"
+   ]
+  },
+  {
+   "name": "过关音乐、霍格计入击倒数",
+   "pass": true,
+   "info": [
+    "clear",
+    1,
+    [
+     3
+    ]
+   ]
+  },
+  {
+   "name": "主角的胜利台词",
+   "pass": true,
+   "info": [
+    "I'm a Bad Mamba Jamma!",
+    "victory"
+   ]
+  },
+  {
+   "name": "过场：「你看……我们的修车厂！」（下一关的引子）",
+   "pass": true,
+   "info": "穆斯塔法，你看……我们的修车厂！"
+  },
+  {
+   "name": "第三关结算画面",
+   "pass": true,
+   "info": "第三关完成！"
+  },
+  {
+   "name": "结算含霍格、沃尔瑟、车手",
+   "pass": true,
+   "info": "费里斯 FERRIS× 33000尼斯 GNEISS× 48000朋克 PUNK× 33000打手 THUG× 33000雷泽 RAZOR× 48000锤子·T HAMMER T.× 24000扳手·T WRENCH T.× 28000偷猎者 J POACHER J× 12000斯金纳 SKINNER× 24000格特 GUTTER× 12000车手 DRIVER× 55000沃尔瑟 WALTHE"
+  },
+  {
+   "name": "结算很长时「再玩一次」滚动可达",
+   "pass": true
+  },
+  {
+   "name": "再玩一次回到所选的第三关开头",
+   "pass": true,
+   "info": [
+    "desert",
+    null,
+    null
+   ]
+  },
+  {
+   "name": "车上撞死霍格：直接过关",
+   "pass": true,
+   "info": [
+    "end",
+    "clear"
+   ]
+  },
+  {
+   "name": "主角翻身跳下车",
+   "pass": true,
+   "info": "jump"
+  },
+  {
+   "name": "凯迪拉克自己开走、地面停住",
+   "pass": true,
+   "info": [
+    false,
+    0
+   ]
+  },
+  {
+   "name": "落地后摆出胜利姿势",
+   "pass": true,
+   "info": {
+    "x": 7.32,
+    "y": 0,
+    "z": 1.23,
+    "state": "victory",
+    "hp": 100,
+    "face": 1.57,
+    "invul": 0,
+    "weapon": null,
+    "combo": 0,
+    "visible": true
+   }
+  },
+  {
+   "name": "车上撞死的结局也进结算",
+   "pass": true
+  },
+  {
+   "name": "公路上可以暂停",
+   "pass": true,
+   "info": "pause"
+  },
+  {
+   "name": "暂停时公路不继续卷",
+   "pass": true,
+   "info": [
+    2.2,
+    2.2
+   ]
+  },
+  {
+   "name": "重新开始回到第三关开头，车和公路状态清空",
+   "pass": true,
+   "info": [
+    "desert",
+    null,
+    false
+   ]
+  },
+  {
+   "name": "重开后声音正常（音频未挂起）",
+   "pass": true,
+   "info": "running"
+  },
+  {
+   "name": "手机：直接进公路段，触屏按键显示",
+   "pass": true,
+   "info": [
+    "road",
+    "run"
+   ]
+  },
+  {
+   "name": "手机：摇杆右下推，车往前、往外开",
+   "pass": true,
+   "info": [
+    {
+     "x": 5.43,
+     "z": 0.6,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    },
+    {
+     "x": 8.75,
+     "z": 2.5,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    }
+   ]
+  },
+  {
+   "name": "手机：松手后车不再偏移",
+   "pass": true,
+   "info": [
+    {
+     "x": 9.61,
+     "z": 2.93,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    },
+    {
+     "x": 9.63,
+     "z": 2.93,
+     "hp": 4,
+     "max": 4,
+     "flash": 0
+    }
+   ]
+  },
+  {
+   "name": "手机：凯迪拉克耐久与右上按钮都在画面里",
+   "pass": true,
+   "info": {
+    "w": [
+     10,
+     122.015625,
+     112,
+     139
+    ],
+    "vw": 844,
+    "vh": 390,
+    "top": [
+     613.9375,
+     834
+    ]
+   }
+  },
+  {
+   "name": "无脚本错误",
+   "pass": true,
+   "info": []
+  }
+ ],
+ "errors": []
+}
