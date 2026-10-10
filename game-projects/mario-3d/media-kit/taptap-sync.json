@@ -5,8 +5,8 @@
   "app_id": 962723,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_startup_inline_runtime_v2",
-  "platform_status": "reviewing",
+  "status": "existing_online_update_deferred_by_user",
+  "platform_status": "rejected",
   "staged_version": "v2.5.0",
   "staged_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
   "staged_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
@@ -18,8 +18,8 @@
   "last_published_version": "v2.5.0",
   "last_published_h5_version_id": 270893,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-08T02:40:39.031351+00:00",
-  "release_record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
+  "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+  "release_record": "releases/backfill-20261010/release-status.json",
   "pending_material_review": [],
   "pending": [],
   "dedupe_rule": "当前同哈希已正式提审，不重复创建、上传、签署或送审；审核期间积累下一版，不擅自撤审；平台最终审核决定准入，未证明IP或音乐授权，不将试审决定泛化到未知风险。",
@@ -113,13 +113,39 @@
       "h5_version_id": 270893,
       "status_before_resume": "online",
       "note": "Preserved previous baseline; actual online package observed before new draft creation."
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "at": "2026-10-10T03:02:52.978211+00:00",
+      "previous_baseline": {
+        "status": "reviewing_startup_inline_runtime_v2",
+        "platform_version": "V-20261008",
+        "submitted_version": "v2.5.0",
+        "submitted_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+        "last_published_version": "v2.5.0",
+        "last_published_h5_version_id": 270893,
+        "community_post": null,
+        "community_sync": {
+          "automatic_posting_enabled": true,
+          "last_public_verified_moment_id": "856856121875366958",
+          "last_public_verified_url": "https://www.taptap.cn/moment/856856121875366958",
+          "forum_app_id": 962723,
+          "source_version": "v2.5.0",
+          "h5_version_id": 270893,
+          "platform_version": "V-20261007",
+          "content_sha256": "aae8d89cacdb21538589ddd4c434a2ab53feceb1eb1fa0f31b5d4c2355ea3122",
+          "public_verified_at": "2026-10-07T04:43:29.723Z",
+          "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+          "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+        }
+      }
     }
   ],
   "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
   "audit_id": "1045138",
   "platform_version": "V-20261008",
   "startup_adapter": "inline-runtime-v2",
-  "community_post_status": "pending_until_online",
+  "community_post_status": "deferred_with_current_platform_update",
   "verification": {
     "startup_guard": "8/8 pass",
     "player_identity_crypto_storage": "17/17 pass",
@@ -131,7 +157,7 @@
     ],
     "phone": "not tested on actual mobile TapTap App for these exact packages"
   },
-  "pending_note": "TapTap统一启动包已上传、绑定、预检并正常提审；reviewing不代表上线，exact ZIP 手机App未实机验证。",
+  "pending_note": "已按用户要求保留既有线上版本，此次IP材料退回的更新不再催办；平台原退回证据保留。",
   "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962723\\h5-latest.json",
   "cover_update": {
     "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
@@ -484,5 +510,47 @@
         "source_note": "本次当前 TapTap H5 包正常试玩截图；竖版另选正面视角"
       }
     ]
+  },
+  "backfill_authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "pending_release": {
+    "version": "v2.5.0-menu-text1",
+    "package_sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+    "status": "deferred_by_user",
+    "run_id": "release-backfill-20261010",
+    "user_action_required": false,
+    "decision_record": "game-projects/site-games/releases/backfill-20261010/followup-03.json"
+  },
+  "rejection": {
+    "created_time": 1791465062,
+    "last_event": "review_rejected",
+    "status": "rejected",
+    "status_label": "审核失败",
+    "status_reason": "1. 您的游戏标题、素材与“超级玛丽”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+    "status_value": 2,
+    "version": "V-20261008-2",
+    "version_id": "V-20261008-2"
+  },
+  "user_handling_preference": {
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-release-followup-03",
+    "recorded_at": "2026-10-10T03:24:15.330063+00:00",
+    "client_timezone": "America/Los_Angeles",
+    "user_quote": "TapTap 恐龙快打、超级玛丽需要 IP 授权材料，这个不需要啊，别管他，之前都上线了，记住。",
+    "app_ids": [
+      962722,
+      962723
+    ],
+    "games": [
+      "cadillacs-stage1-3d",
+      "mario-3d"
+    ],
+    "decision": "keep_existing_online_versions_no_ip_materials_followup",
+    "handling": "保留已上线旧版本；此次因IP材料退回的更新暂不继续，不再作为用户补材料待办，不重复催问或通知。",
+    "future_updates": "后续有新更新时按正常流程查实际平台状态；旧版本已上线不等于本次更新已通过。同一退回及相同包不反复提交，不伪造授权材料或成功状态。",
+    "resume_current_rejected_update": "仅当用户重新要求办理该次更新或实际平台条件有变化时复核。"
   }
 }

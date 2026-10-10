@@ -1,0 +1,70 @@
+{
+  "run_id": "release-backfill-20261010",
+  "version": "remix-entry1-menu-text1",
+  "authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "status": "completed",
+  "central_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
+  "toy": {
+    "status": "already_published_20261009_not_resubmitted",
+    "version": "remix-entry1-menu-text1"
+  },
+  "taptap": {
+    "app_id": 962376,
+    "version": "remix-entry1-menu-text1",
+    "status": "online",
+    "public_url": "https://www.taptap.cn/app/962376",
+    "platform_observation": {
+      "created_time": 1791596324,
+      "last_event": "published",
+      "status": "online",
+      "status_label": "已上线",
+      "status_value": 4,
+      "version": "V-20261010",
+      "version_id": "V-20261010"
+    },
+    "checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\tank-3d.zip",
+      "sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+      "bytes": 260955,
+      "submitted": true
+    },
+    "public_page_verified": true,
+    "physical_taptap_app_tested": false,
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "evidence": "taptap-962376-versions-final.json",
+    "audit_id": 1054182,
+    "h5_version_id": 282322,
+    "file_id": 76888,
+    "platform_version": "V-20261010",
+    "submitted_this_run": true,
+    "announcement": {
+      "app": 962376,
+      "title": "坦克大战 3D 更新：模式入口和菜单更清楚了",
+      "body": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n试玩：https://www.taptap.cn/app/962376\n欢迎反馈菜单与操作体验。",
+      "rendered": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n\n试玩：\n坦克大战 3D\n\n\n欢迎反馈菜单与操作体验。",
+      "status": "public_verified",
+      "at": "2026-10-10T02:47:37.989Z",
+      "url": "https://www.taptap.cn/moment/857935059817074114",
+      "forum_app_id": null,
+      "moment_id": "857935059817074114",
+      "content_sha256": "7c0ad8bd33f2594f40d2221691e48b6bbd63666a493cb8309938faf467fc0c7a",
+      "source_version": "remix-entry1-menu-text1",
+      "own_profile_verified": true
+    }
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvids": [
+      "BV1Wqaz6AEJb",
+      "BV1TepK69Eet"
+    ],
+    "version": "remix-entry1-menu-text1"
+  },
+  "remaining": []
+}

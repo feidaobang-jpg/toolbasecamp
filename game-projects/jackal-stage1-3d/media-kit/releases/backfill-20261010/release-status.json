@@ -1,0 +1,69 @@
+{
+  "run_id": "release-backfill-20261010",
+  "version": "v0.10.3-menu-text1",
+  "authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "status": "completed",
+  "central_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
+  "toy": {
+    "status": "already_published_20261009_not_resubmitted",
+    "version": "v0.10.3-menu-text1"
+  },
+  "taptap": {
+    "app_id": 962721,
+    "version": "v0.10.3-menu-text1",
+    "status": "online",
+    "public_url": "https://www.taptap.cn/app/962721",
+    "platform_observation": {
+      "created_time": 1791596332,
+      "last_event": "published",
+      "status": "online",
+      "status_label": "已上线",
+      "status_value": 4,
+      "version": "V-20261010",
+      "version_id": "V-20261010"
+    },
+    "checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\jackal-stage1-3d.zip",
+      "sha256": "307e6be505934e402189526f464e0523558883d4cc849d3f2580d33ab0f74e6d",
+      "bytes": 6678129,
+      "submitted": true
+    },
+    "public_page_verified": true,
+    "physical_taptap_app_tested": false,
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "evidence": "taptap-962721-versions-final.json",
+    "audit_id": 1054184,
+    "h5_version_id": 282323,
+    "file_id": 76889,
+    "platform_version": "V-20261010",
+    "submitted_this_run": true,
+    "announcement": {
+      "app": 962721,
+      "title": "赤色要塞 3D 更新：联机移动和大厅衔接更顺了",
+      "body": "驾驶武装吉普救人、送上直升机，两关试玩继续开放。本次 TapTap v0.10.3-menu-text1 已上线，改善联机移动平滑度、大厅衔接与菜单文字清晰度。\n支持2–4人合作，可中途加入和退出；闲置30秒由电脑队友接管，重新操作即交还。\n这是爱好者制作的非官方3D复刻。试玩：https://www.taptap.cn/app/962721\n欢迎反馈联机体验和操作手感。",
+      "rendered": "驾驶武装吉普救人、送上直升机，两关试玩继续开放。本次 TapTap v0.10.3-menu-text1 已上线，改善联机移动平滑度、大厅衔接与菜单文字清晰度。\n\n支持2–4人合作，可中途加入和退出；闲置30秒由电脑队友接管，重新操作即交还。\n\n这是爱好者制作的非官方3D复刻。试玩：\n赤色要塞 3D\n\n\n欢迎反馈联机体验和操作手感。",
+      "status": "public_verified",
+      "at": "2026-10-10T02:48:18.725Z",
+      "url": "https://www.taptap.cn/moment/857935299848701802",
+      "forum_app_id": null,
+      "moment_id": "857935299848701802",
+      "content_sha256": "e70fc4fabdf82afc6a6ae3cf00317457f5795efb4b51500c98947b3f0bbb7cce",
+      "source_version": "v0.10.3-menu-text1",
+      "own_profile_verified": true
+    }
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvids": [
+      "BV1EyHz6wE5u"
+    ],
+    "version": "v0.10.3-menu-text1"
+  },
+  "remaining": []
+}

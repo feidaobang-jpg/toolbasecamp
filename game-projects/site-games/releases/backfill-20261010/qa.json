@@ -1,0 +1,26 @@
+{
+  "toy_doctor": "both passed; insect 4 unhashed-filename cache warnings only",
+  "startup_unit_tests": {
+    "passed": 8
+  },
+  "packages_actually_tested": [
+    "toy:starship-defense",
+    "toy:cadillacs-stage1-3d",
+    "taptap:starship-defense",
+    "taptap:tank-3d",
+    "taptap:jackal-stage1-3d"
+  ],
+  "checks": [
+    "开始及实际动作",
+    "暂停/继续/重玩",
+    "电脑与手机模式双向切换及进度保留",
+    "844x390与390x844视口",
+    "虫潮战役第二、三章",
+    "恐龙第三关启动/攻击/跳跃"
+  ],
+  "physical_phone_tested": false,
+  "physical_taptap_app_tested": false,
+  "browser_network_block_tested": false,
+  "artifact_root": "D:\\project\\task-artifacts\\release-backfill-20261010",
+  "frozen_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a"
+}

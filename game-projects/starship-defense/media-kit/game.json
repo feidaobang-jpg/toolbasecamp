@@ -2,17 +2,17 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-resistance-v0.33.0",
+  "current_version": "web-resistance-aim-v0.33.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-resistance-v0.33.0/handoff.json",
+  "qa": "releases/web-resistance-aim-v0.33.1/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-three-lanes-v0.31.0",
@@ -27,7 +27,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-09T09:41:12.115005+00:00",
+    "verified_at": "2026-10-10T03:02:52.978211+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -35,16 +35,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_3rvmzYby/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
+    "zip_sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
     "submitted_date": "2026-10-08",
-    "release_record": "releases/web-versus-scroll-v0.31.1/toy-sync.json",
-    "submitted_version": "web-versus-scroll-v0.31.1",
-    "published_version": "web-versus-scroll-v0.31.1",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
-    "note": "对战建造/买枪高度自适应、独立触摸滚动和上下翻阅；同包6视口预览、3视口公开入口实际选择/建造/购买扣费通过，非真机。",
-    "package_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
+    "release_record": "releases/backfill-20261010/release-status.json",
+    "submitted_version": "web-resistance-v0.33.0",
+    "published_version": "web-resistance-v0.33.0",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
+    "note": "本批最终稳定包已公开核验；版本与证据见补发记录。",
+    "package_sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -88,37 +88,50 @@
         "public_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
         "included_version": "web-cloudsave-v0.24.0",
         "note": "大厅补丁已于 21:52 单独提审并在 21:56 公开入口双视口复测生效；随后 22:25 的云存档 v0.24.0 包再次带入同一改动并覆盖为最新基线。"
+      },
+      {
+        "version": "web-resistance-aim-v0.33.1",
+        "status": "pending_22_batch",
+        "summary": "抗战默认第一人称与举枪瞄准；橙金曳光和简化弹道；拖炮/高低调节/预计落点；手机按钮层级修复。",
+        "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-08T13:15:54.717982+00:00",
+    "published_verified_at": "2026-10-10T03:02:52.978211+00:00",
     "status": "published",
-    "package_hash": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
-    "submission_time_note": "本版本精确提交时间未单独保存；状态、包哈希与公开核验见发布记录。",
-    "submitted_at": "2026-10-09T15:55:44.793236+08:00",
-    "public_verified_at": "2026-10-09T16:00:04.613032+08:00",
+    "package_hash": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+    "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
+    "submitted_at": null,
+    "public_verified_at": "2026-10-10T03:02:52.978211+00:00",
     "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
-    "version": "web-shop-scroll-v0.29.2",
+    "version": "web-resistance-v0.33.0",
     "published_at": null,
     "publication_time_note": "精确提交与过审时间未单独记录；确认published并在2026-10-08T11:44:17.464493+00:00核验公开入口",
-    "last_published_version": "web-three-lanes-v0.31.0",
-    "last_submitted_version": "web-shop-scroll-v0.29.2",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_oQPZMUQL/index.html",
+    "last_published_version": "web-resistance-v0.33.0",
+    "last_submitted_version": "web-resistance-v0.33.0",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
-      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-      "at": "2026-10-09T15:48:29.659833+08:00"
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-three-lanes-v0.31.0",
-    "last_successful_sync_at": "2026-10-09T16:00:04.613032+08:00",
-    "public_verified_version": "web-three-lanes-v0.31.0",
-    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html",
+    "last_successful_sync_version": "web-resistance-v0.33.0",
+    "last_successful_sync_at": "2026-10-10T03:02:52.978211+00:00",
+    "public_verified_version": "web-resistance-v0.33.0",
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24275/index.html",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240"
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\chongchao-qianshao.zip",
+      "sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+      "bytes": 366485,
+      "submitted": true
+    }
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-shop-scroll-v0.29.2",
+  "published_toy_version": "web-resistance-v0.33.0",
   "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -129,15 +142,15 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
-  "preview_version": "web-shop-scroll-v0.29.2",
-  "submitted_toy_version": "web-shop-scroll-v0.29.2",
+  "preview_version": "web-resistance-v0.33.0",
+  "submitted_toy_version": "web-resistance-v0.33.0",
   "website_version": "web-resistance-v0.33.0",
   "website_verified_at": "2026-10-09T21:53:12.762458+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-resistance-v0.33.0/handoff.json",
+  "handoff": "releases/web-resistance-aim-v0.33.1/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -174,7 +187,7 @@
     "underground": "automatic view-following torch, nearby fill and dim ambient light; no battery"
   },
   "bilibili_sync": "bilibili-sync.json",
-  "pending_release": "TapTap V-20261008-5修复包审核中，社区说明待目标online",
+  "pending_release": "小红书2条说明审核中；快手说明已公开核验",
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "drag_camera_controls": {
     "coupling": "拖动联动身体/头部/炮塔视线，普通视角实际移动及时转身；第一人称单独慢速；虫潮自动射击倒退与坦克独立炮塔保留",
@@ -250,26 +263,26 @@
     "app_id": 962354,
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
-    "status": "reviewing",
-    "submitted_version": "web-shop-scroll-v0.29.2",
-    "submitted_package_sha256": "17af491035e7bba291fe366f12553384002192ab13da0c88fcf5317987cdbd45",
-    "submitted_h5_version_id": 276450,
-    "draft_version_id": "1047715",
-    "audit_id": "1047715",
-    "platform_version": "V-20261008-5",
-    "submitted_at": "2026-10-08T13:15:54.717982+00:00",
-    "last_published_version": "web-squad-v0.29.0",
-    "last_published_h5_version_id": 276055,
-    "last_published_platform_version": "V-20261008-4",
+    "status": "online",
+    "submitted_version": "web-resistance-v0.33.0",
+    "submitted_package_sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+    "submitted_h5_version_id": 282321,
+    "draft_version_id": "1054180",
+    "audit_id": "1054180",
+    "platform_version": "V-20261010",
+    "submitted_at": null,
+    "last_published_version": "web-resistance-v0.33.0",
+    "last_published_h5_version_id": 282321,
+    "last_published_platform_version": "V-20261010",
     "last_public_runtime_verified_version": null,
-    "release_record": "releases/web-shop-scroll-v0.29.2/taptap-release.json",
+    "release_record": "releases/backfill-20261010/release-status.json",
     "pending": [],
     "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
-    "submission_time_source": "local receipt observation; exact server submission time not returned",
-    "last_status_checked_at": "2026-10-08T13:15:54.717982+00:00",
-    "submitted_source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee",
-    "community_post_status": "pending_until_online",
-    "community_post_note": "pending until target online; merge previous pending v0.25–0.28 notes; do not repeat posts",
+    "submission_time_source": "Submission receipt archived; exact server submission time not persisted.",
+    "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "submitted_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "community_post_status": "public_verified",
+    "community_post_note": null,
     "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
     "history": [
       {
@@ -332,56 +345,48 @@
       "saved_at": "2026-10-08T02:33:11.714647+00:00"
     },
     "description_correction_pending": null,
-    "pending_note": "修复包含房车v0.29.1与12人队友；V-20261008-5审核中，尚未确认上线",
-    "platform_status": "reviewing",
-    "staged_version": "web-shop-scroll-v0.29.2",
-    "staged_source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee",
-    "staged_package_sha256": "17af491035e7bba291fe366f12553384002192ab13da0c88fcf5317987cdbd45",
-    "staged_h5_version_id": 276450,
+    "pending_note": null,
+    "platform_status": "online",
+    "staged_version": "web-resistance-v0.33.0",
+    "staged_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "staged_package_sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+    "staged_h5_version_id": 282321,
     "startup_adapter": "inline-runtime-v2",
     "verification": {
-      "startup": "same inline ZIP with standalone .js blocked: passed",
-      "qa": "releases/web-shop-scroll-v0.29.2/qa/taptap-package/results.json",
-      "browser": "横竖视口触摸滑动、翻页、激光/等离子实际购买、正确扣费和装备、高级炮塔选中通过",
+      "qa": "game-projects/site-games/releases/backfill-20261010/qa.json",
+      "local_package_verified": true,
+      "public_page": "TapTap PC端 试玩DEMO 入口可见",
       "phone": "physical TapTap App not tested"
     },
     "content_preaudit_passed": true,
     "content_preaudit_warnings": [],
-    "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962354\\h5-latest.json",
+    "last_published_status_evidence": "game-projects/site-games/releases/backfill-20261010/taptap-962354-status.json",
     "community_post": {
-      "app_id": 962354,
-      "platform_version": "V-20261007-3",
-      "h5_version_id": 273272,
+      "app": 962354,
+      "title": "虫潮围城 v0.33.0：房车探城、据点争夺与三章战役",
+      "body": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：https://www.taptap.cn/app/962354\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+      "rendered": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：\n虫潮围城\n\n\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
       "status": "public_verified",
-      "title": "《虫潮围城》更新：云备份与2–4人合作守城",
-      "body": "这是一款可以建防线、指挥队友、驾驶载具抵御虫群的游戏。TapTap v0.24.0 已上线，这次重点补上进度备份，并带入2–4人合作守城。\n\n普通模式仍保留本地存档。打开游戏内「档案站」，登录网站账号后，检查点会自动备份到服务器；云端保留最近三份快照，本地记录被清空后可选档恢复。本地与云端不一致时，先比较再选择读取或上传，避免静默覆盖，也可导出文件留一份备份。Toy账号云档与这里独立；TapTap版使用的是游戏内网站账号，不是TapTap账号自动备份。此前从未备份的旧进度无法凭空恢复，联机与沙盒进度也不写入单人云档。\n\n联机可建2–4人房间，中途加入或退出会保留战场；房主退出会结束房间。手机大厅输入和滚动的问题已有修复。\n\n试玩入口：https://www.taptap.cn/app/962354\n欢迎反馈遇到的问题，请带上设备、浏览器或TapTap入口，以及具体操作步骤，方便复现。",
-      "moment_id": "857205558501965884",
-      "public_url": "https://www.taptap.cn/moment/857205558501965884",
+      "at": "2026-10-10T02:46:54.560Z",
+      "url": "https://www.taptap.cn/moment/857934878203711369",
       "forum_app_id": 962354,
-      "forum_group_id": 1518030,
-      "user_id": 416707686,
-      "submitted_at": null,
-      "public_verified_at": "2026-10-08T10:31:04+08:00",
-      "profile_verified": true,
-      "forum_verified": true,
-      "screenshot": "C:/Users/37818/.codex/artifacts/chongchao-cloudsave-closure-20261008/community-public.jpg",
-      "evidence": "公开全文与本人 UID 回读一致；本人主页最新动态含该 moment；游戏论坛 /app/962354/topic 链接含同 moment 和 group_id=1518030。平台将试玩 URL 自动转换为游戏卡片，href 保持962354。",
-      "submission_time_note": "浏览器提交成功后立即回读公开 URL；平台未提供精确发布时间，本地公开核验时间另记。",
-      "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517"
+      "moment_id": "857934878203711369",
+      "content_sha256": "793767fb9037aee76924a6de6d000519c5bea0916ab92578e3fdd3f377e4520f",
+      "source_version": "web-resistance-v0.33.0",
+      "own_profile_verified": true
     },
     "community_sync": {
       "automatic_posting_enabled": true,
-      "last_public_verified_moment_id": "857205558501965884",
-      "last_public_verified_url": "https://www.taptap.cn/moment/857205558501965884",
-      "forum_app_id": 962354,
-      "source_version": "web-cloudsave-v0.24.0",
-      "h5_version_id": 273272,
-      "platform_version": "V-20261007-3",
-      "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517",
-      "public_verified_at": "2026-10-08T10:31:04+08:00",
+      "source_version": "web-resistance-v0.33.0",
+      "h5_version_id": 282321,
+      "platform_version": "V-20261010",
+      "last_public_verified_moment_id": "857934878203711369",
+      "last_public_verified_url": "https://www.taptap.cn/moment/857934878203711369",
+      "content_sha256": "793767fb9037aee76924a6de6d000519c5bea0916ab92578e3fdd3f377e4520f",
+      "public_verified_at": "2026-10-10T02:46:54.560Z",
       "own_profile_verified": true,
-      "forum_verified": true,
-      "release_record": "releases/cloudsave-closure-20261008/community-post.json"
+      "forum_app_id": 962354,
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     "pending_community_updates": [
       {
@@ -673,7 +678,19 @@
         "release_record": "releases/web-rv-v0.29.1/taptap-release.json",
         "included_version": "web-shop-scroll-v0.29.2"
       }
-    ]
+    ],
+    "last_published_revision": "1054180",
+    "last_published_at": null,
+    "last_published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_public_page_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "community_post_version": "web-resistance-v0.33.0",
+    "backfill_authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "sync_ledger": "taptap-sync.json"
   },
   "defense_update": {
     "attack_towers": 8,
@@ -694,7 +711,7 @@
     "legacy_save_compatible": true,
     "physical_phone_test": false
   },
-  "taptap_sync_status": "reviewing",
+  "taptap_sync_status": "online",
   "multiplayer": {
     "players": "合作2–4；对战2–8",
     "hub": "https://www.zhengxiaohui.cn/game-online.html",
@@ -818,8 +835,8 @@
     "version": "web-rv-v0.29.1",
     "summary": "修复虫群误走基地虫洞、加油站路障卡死和标牌反字；增加道路箭头、通行倒计时与胜利目标；旧房车卡点存档可继续。"
   },
-  "bilibili_verified_version": "web-shop-scroll-v0.29.2",
-  "bilibili_verified_at": "2026-10-08T13:15:54.717982+00:00",
+  "bilibili_verified_version": "web-resistance-v0.33.0",
+  "bilibili_verified_at": "2026-10-10T03:02:52.978211+00:00",
   "menu_text_update": {
     "version": "web-shop-scroll-v0.29.2-menu-text1",
     "record": "releases/menu-text-20261009/handoff.json",
@@ -836,77 +853,19 @@
   },
   "pending_channel_release": {
     "version": "web-resistance-v0.33.0",
-    "record": "releases/web-resistance-v0.33.0/release-status.json",
-    "status": "pending_22_batch",
-    "channels": {
-      "toy": {
-        "status": "pending_22_batch",
-        "id": "38678478981120"
-      },
-      "taptap": {
-        "status": "held_by_user",
-        "id": "962354",
-        "underlying_pending": "pending_22_batch",
-        "hold_record": {
-          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-          "since": "2026-10-09T16:00:04.613032+08:00",
-          "targets": [
-            "taptap",
-            "other_game_platforms",
-            "existing_video_descriptions",
-            "announcements"
-          ],
-          "status": "held_by_user"
-        }
-      },
-      "existing_video_descriptions": {
-        "status": "held_by_user",
-        "bvids": [
-          "BV1Ujad6DEuf",
-          "BV1WbHq6eEBt",
-          "BV1C5HQ6gEvD",
-          "BV1xdpx63ETu"
+    "record": "releases/backfill-20261010/release-status.json",
+    "status": "partial_external_pending",
+    "pending": [
+      {
+        "channel": "xiaohongshu",
+        "platform_ids": [
+          "6ac79a4a000000001402cad8",
+          "6ac79a330000000001008c04"
         ],
-        "underlying_pending": "pending_22_batch",
-        "hold_record": {
-          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-          "since": "2026-10-09T16:00:04.613032+08:00",
-          "targets": [
-            "taptap",
-            "other_game_platforms",
-            "existing_video_descriptions",
-            "announcements"
-          ],
-          "status": "held_by_user"
-        }
-      },
-      "announcements": {
-        "status": "held_by_user",
-        "underlying_pending": "pending_22_batch",
-        "hold_record": {
-          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-          "since": "2026-10-09T16:00:04.613032+08:00",
-          "targets": [
-            "taptap",
-            "other_game_platforms",
-            "existing_video_descriptions",
-            "announcements"
-          ],
-          "status": "held_by_user"
-        }
-      },
-      "feedback_replies": {
-        "status": "pending_22_batch",
-        "video": "BV1Ujad6DEuf",
-        "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
-        "verify_original_before_reply": true
+        "status": "reviewing",
+        "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
       }
-    },
-    "previous_pending_record": "releases/web-camera-response-v0.31.2/release-status.json",
-    "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda"
+    ]
   },
   "website": {
     "status": "public_verified",
@@ -928,16 +887,11 @@
     "infection_zones": 6
   },
   "channel_holds": {
-    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-    "since": "2026-10-09T16:00:04.613032+08:00",
-    "targets": [
-      "taptap",
-      "other_game_platforms",
-      "existing_video_descriptions",
-      "announcements"
-    ],
-    "status": "held_by_user"
+    "status": "superseded_by_current_authorization",
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
   },
   "video_publication_history": [
     {
@@ -998,7 +952,7 @@
     }
   ],
   "resistance_campaign": {
-    "version": "web-resistance-v0.33.0",
+    "version": "web-resistance-aim-v0.33.1",
     "entry": "抗战战役 · 亮剑名场面",
     "chapters": [
       "李家坡 · 交通壕突击",
@@ -1024,6 +978,221 @@
       "没有演员语音",
       "战役暂不支持联机或云存档"
     ],
-    "website_verified": true
-  }
+    "website_verified": false,
+    "controls": "默认第一人称，C保留切换；Z/右键或举枪按钮瞄准；炮旁K拉炮，WASD/摇杆移动，I放下再操炮；Q/E或A/D左右、W/S或±调高低、空白处拖动瞄炮，J开炮。",
+    "ballistics": "简化重力弹道、橙金曳光、枪口烟与命中反馈；炮位预计落点。无镜头震动。"
+  },
+  "channel_baseline_history": [
+    {
+      "run_id": "release-backfill-20261010",
+      "channel": "toy",
+      "previous": {
+        "id": 38678478981120,
+        "slug": "chongchao-qianshao",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "visibility": "PUBLIC",
+        "review_status": "published",
+        "verified_at": "2026-10-09T09:41:12.115005+00:00",
+        "video_bindings": [
+          "BV1Ujad6DEuf",
+          "BV1WbHq6eEBt",
+          "BV1C5HQ6gEvD",
+          "BV1xdpx63ETu"
+        ],
+        "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
+        "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_3rvmzYby/index.html",
+        "title": "虫潮围城",
+        "zip_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
+        "submitted_date": "2026-10-08",
+        "release_record": "releases/web-versus-scroll-v0.31.1/toy-sync.json",
+        "submitted_version": "web-versus-scroll-v0.31.1",
+        "published_version": "web-versus-scroll-v0.31.1",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+        "note": "对战建造/买枪高度自适应、独立触摸滚动和上下翻阅；同包6视口预览、3视口公开入口实际选择/建造/购买扣费通过，非真机。",
+        "package_sha256": "c0f1829d22228741f96de10f343656d20ce1cb45eb63b47ff1b801b3ed7de75f",
+        "pending_updates": [
+          {
+            "version": "web-controls-v0.18.2",
+            "classification": "普通补丁",
+            "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+            "status": "published",
+            "record": "releases/web-controls-v0.18.2/handoff.json",
+            "included_version": "web-controls-v0.18.2"
+          },
+          {
+            "version": "web-controls-v0.18.3",
+            "classification": "普通补丁",
+            "status": "published",
+            "record": "releases/web-controls-v0.18.3/handoff.json",
+            "summary": "右上贴边单行按钮，HUD避让。"
+          },
+          {
+            "version": "web-difficulty-v0.19.0",
+            "classification": "正式版本",
+            "status": "published",
+            "record": "releases/web-difficulty-v0.19.0/handoff.json",
+            "summary": "新局可选休闲/普通/困难，难度随存档保存，普通保留原体验，困难增援与精英压力更强。"
+          },
+          {
+            "version": "web-controls-inset-v0.19.3",
+            "classification": "普通补丁",
+            "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+            "status": "included",
+            "record": "releases/web-controls-inset-v0.19.3/handoff.json",
+            "included_version": "web-tactics-v0.20.0"
+          },
+          {
+            "version": "web-lobby-hint-v0.23.2",
+            "classification": "普通补丁",
+            "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+            "status": "published",
+            "record": "releases/web-lobby-hint-v0.23.2/notes.md",
+            "submitted_at": "2026-10-07T21:52:19+08:00",
+            "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
+            "published_verified_at": "2026-10-07T21:56:53+08:00",
+            "public_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+            "included_version": "web-cloudsave-v0.24.0",
+            "note": "大厅补丁已于 21:52 单独提审并在 21:56 公开入口双视口复测生效；随后 22:25 的云存档 v0.24.0 包再次带入同一改动并覆盖为最新基线。"
+          }
+        ],
+        "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "published_verified_at": "2026-10-08T13:15:54.717982+00:00",
+        "status": "published",
+        "package_hash": "73255a8a0b51ff337b7d8685b90780ef981581d37a1903f4b466c57aeece8201",
+        "submission_time_note": "本版本精确提交时间未单独保存；状态、包哈希与公开核验见发布记录。",
+        "submitted_at": "2026-10-09T15:55:44.793236+08:00",
+        "public_verified_at": "2026-10-09T16:00:04.613032+08:00",
+        "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+        "version": "web-shop-scroll-v0.29.2",
+        "published_at": null,
+        "publication_time_note": "精确提交与过审时间未单独记录；确认published并在2026-10-08T11:44:17.464493+00:00核验公开入口",
+        "last_published_version": "web-three-lanes-v0.31.0",
+        "last_submitted_version": "web-shop-scroll-v0.29.2",
+        "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_oQPZMUQL/index.html",
+        "current_public_verification": "verified",
+        "channel_authorization": {
+          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+          "at": "2026-10-09T15:48:29.659833+08:00"
+        },
+        "last_successful_sync_version": "web-three-lanes-v0.31.0",
+        "last_successful_sync_at": "2026-10-09T16:00:04.613032+08:00",
+        "public_verified_version": "web-three-lanes-v0.31.0",
+        "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html",
+        "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
+        "source_commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240"
+      }
+    }
+  ],
+  "channel_hold_history": [
+    {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "since": "2026-10-09T16:00:04.613032+08:00",
+      "targets": [
+        "taptap",
+        "other_game_platforms",
+        "existing_video_descriptions",
+        "announcements"
+      ],
+      "status": "held_by_user"
+    }
+  ],
+  "pending_channel_release_history": [
+    {
+      "version": "web-resistance-v0.33.0",
+      "record": "releases/web-resistance-v0.33.0/release-status.json",
+      "status": "pending_22_batch",
+      "channels": {
+        "toy": {
+          "status": "pending_22_batch",
+          "id": "38678478981120"
+        },
+        "taptap": {
+          "status": "held_by_user",
+          "id": "962354",
+          "underlying_pending": "pending_22_batch",
+          "hold_record": {
+            "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+            "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+            "since": "2026-10-09T16:00:04.613032+08:00",
+            "targets": [
+              "taptap",
+              "other_game_platforms",
+              "existing_video_descriptions",
+              "announcements"
+            ],
+            "status": "held_by_user"
+          }
+        },
+        "existing_video_descriptions": {
+          "status": "held_by_user",
+          "bvids": [
+            "BV1Ujad6DEuf",
+            "BV1WbHq6eEBt",
+            "BV1C5HQ6gEvD",
+            "BV1xdpx63ETu"
+          ],
+          "underlying_pending": "pending_22_batch",
+          "hold_record": {
+            "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+            "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+            "since": "2026-10-09T16:00:04.613032+08:00",
+            "targets": [
+              "taptap",
+              "other_game_platforms",
+              "existing_video_descriptions",
+              "announcements"
+            ],
+            "status": "held_by_user"
+          }
+        },
+        "announcements": {
+          "status": "held_by_user",
+          "underlying_pending": "pending_22_batch",
+          "hold_record": {
+            "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+            "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+            "since": "2026-10-09T16:00:04.613032+08:00",
+            "targets": [
+              "taptap",
+              "other_game_platforms",
+              "existing_video_descriptions",
+              "announcements"
+            ],
+            "status": "held_by_user"
+          }
+        },
+        "feedback_replies": {
+          "status": "pending_22_batch",
+          "video": "BV1Ujad6DEuf",
+          "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+          "verify_original_before_reply": true
+        }
+      },
+      "previous_pending_record": "releases/web-camera-response-v0.31.2/release-status.json",
+      "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda"
+    }
+  ],
+  "last_backfill_record": "releases/backfill-20261010/release-status.json",
+  "kuaishou_description_sync": {
+    "status": "public_verified",
+    "version": "web-resistance-v0.33.0",
+    "platform_id": "3xr939t2s66s7ma",
+    "record": "game-projects/site-games/releases/backfill-20261010/followup-03.json",
+    "public_verified_at": "2026-10-10T03:22:17.380Z"
+  },
+  "pending_channel_updates": {
+    "version": "web-resistance-aim-v0.33.1",
+    "status": "pending_22_batch",
+    "queue_item_id": "chongchao-resistance-aim-v0331-04",
+    "channels": [
+      "Toy",
+      "TapTap",
+      "existing_video_descriptions",
+      "community_announcements"
+    ],
+    "new_video_authorized": false
+  },
+  "website_status": "pending_verification"
 }
