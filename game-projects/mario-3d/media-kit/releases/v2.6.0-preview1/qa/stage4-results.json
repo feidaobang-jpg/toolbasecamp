@@ -365,7 +365,7 @@
           "stomps": 0,
           "coins": 0,
           "secrets": 0,
-          "startTime": 1.1499999999999984
+          "startTime": 1.2416666666666647
         }
       }
     },
@@ -405,7 +405,7 @@
           "stomps": 0,
           "coins": 0,
           "secrets": 0,
-          "startTime": 1.1499999999999984
+          "startTime": 1.2416666666666647
         }
       }
     },
@@ -470,7 +470,7 @@
           "stomps": 0,
           "coins": 1,
           "secrets": 1,
-          "startTime": 1.1499999999999984
+          "startTime": 1.2416666666666647
         }
       }
     },
@@ -563,7 +563,7 @@
           "stomps": 0,
           "coins": 1,
           "secrets": 1,
-          "startTime": 1.1499999999999984
+          "startTime": 1.2416666666666647
         }
       }
     },
@@ -585,7 +585,7 @@
           "stomps": 0,
           "coins": 1,
           "secrets": 1,
-          "startTime": 1.1499999999999984
+          "startTime": 1.2416666666666647
         }
       }
     },
@@ -721,7 +721,7 @@
         "level": "1-4",
         "x": 1.4,
         "ctx": "running",
-        "clock": 0.29866666666666664,
+        "clock": 0.30133333333333334,
         "track": "castle",
         "playing": true
       }
