@@ -1497,7 +1497,9 @@ function updMonsters(dt){
   const t=performance.now()/1000;
   for(let i=monsters.length-1;i>=0;i--){
     const mo=monsters[i];
-    if(mo.dead){if(!mo.mesh.userData.corpse)visuals.release(mo.mesh);monsters.splice(i,1);continue;}
+    // 无尸体标记的死亡（不走 killMonster 的路径）只释放材质会把网格留在场景里
+    // 成为孤立模型，且已出列后 clearEntities 也扫不到；这里兜底从场景移除。
+    if(mo.dead){if(!mo.mesh.userData.corpse){visuals.release(mo.mesh);scene.remove(mo.mesh);}monsters.splice(i,1);continue;}
     if(mo.zergPlayer)continue; // 母虫由虫族模块驱动
     mo.vx=mo.vz=0;
     mo.slowT=Math.max(0,(mo.slowT||0)-dt);
@@ -1557,8 +1559,10 @@ function updMonsters(dt){
     }
     const dir=new THREE.Vector3().subVectors(tgt.pos,mo.mesh.position);dir.y=0;
     const dist=Math.sqrt(tgt.d2);
-    dir.normalize();
-    mo.mesh.rotation.y=Math.atan2(dir.x,dir.z);
+    // 目标在正上/正下（如直升机悬停在虫头顶）时水平向量趋近 0，
+    // 取角度会把噪声放大成原地打转；此时保留上一帧朝向、不用零向量移动。
+    const hlen=dir.length();
+    if(hlen>1){dir.normalize();mo.mesh.rotation.y=Math.atan2(dir.x,dir.z);}else dir.set(0,0,0);
     // BOSS/精英技能：冲锋/弹幕/召唤
     if(mo.bs&&mo.bs.length&&mo.spitCd<=0&&mo.chargeT<=0){
       const skill=mo.bs[Math.floor(rand(0,mo.bs.length))];
@@ -1578,7 +1582,7 @@ function updMonsters(dt){
           fireBullet(from,new THREE.Vector3(Math.sin(a),0,Math.cos(a)),{dmg:mo.dmg*.45,speed:18,range:30,spread:0,color:0xaaff44},false);
         }
         AudioSys.sfx('shoot');
-      }else if(skill==='charge'&&dist>8&&dist<28&&!mo.fly){
+      }else if(skill==='charge'&&dist>8&&dist<28&&!mo.fly&&hlen>1){
         mo.spitCd=6;mo.chargeT=.75;mo.chargeDir=dir.clone();
         showMsg('⚠ '+(mo.kind==='boss'?chapterCfg().boss:'精英先锋')+' 发起冲锋！',1.2);
         AudioSys.sfx('wave');
@@ -1595,7 +1599,7 @@ function updMonsters(dt){
       moveMonster(mo,mo.chargeDir,dt,3.4);
     }else if(dist>atkRange||Math.abs(tgt.pos.y-mo.mesh.position.y)>6||blockedShot){
       let mdir=dir;mo.navWaypoint=tgt.pos;
-      if(!mo.fly){const nd=navDir(mo,tgt.pos);if(nd){mdir=nd;mo.mesh.rotation.y=Math.atan2(nd.x,nd.z);}}
+      if(!mo.fly&&hlen>1){const nd=navDir(mo,tgt.pos);if(nd){mdir=nd;mo.mesh.rotation.y=Math.atan2(nd.x,nd.z);}}
       // 远处行军加速，缩短从虫洞到基地的空档；近基地恢复原速。
       const far=!rvOn()&&!mo.wild&&!mo.home&&mo.kind!=='boss'&&Math.hypot(mo.mesh.position.x-base.pos.x,mo.mesh.position.z-base.pos.z)>120;
       moveMonster(mo,mdir,dt,far?2.2:1,mo.navWaypoint||tgt.pos);

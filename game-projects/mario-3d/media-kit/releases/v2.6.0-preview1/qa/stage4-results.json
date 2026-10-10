@@ -1,0 +1,736 @@
+{
+  "url": "http://127.0.0.1:8798/html/game/mario-3d/index.html",
+  "browser": "155.0.4283.45",
+  "method": "Edge GPU headless; manual clock; mechanic checks relocate the player and are not a normal playthrough",
+  "checks": [
+    {
+      "name": "起始关卡可直接选到 1-4 城堡",
+      "ok": true
+    },
+    {
+      "name": "起始关卡可直接选到 1-1 地面",
+      "ok": true
+    },
+    {
+      "name": "起始关卡可直接选到 1-2 地下",
+      "ok": true
+    },
+    {
+      "name": "起始关卡可直接选到 1-3 树冠",
+      "ok": true
+    },
+    {
+      "name": "起始关卡循环回到 1-4",
+      "ok": true
+    },
+    {
+      "name": "开局 WORLD 卡片是 1-4",
+      "ok": true
+    },
+    {
+      "name": "直接从第四关开始、时间 300、左上台阶起步",
+      "ok": true,
+      "data": {
+        "x": 1.4,
+        "y": 6,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": false,
+        "crouch": false,
+        "star": 0,
+        "inv": 0,
+        "visible": true
+      }
+    },
+    {
+      "name": "城堡关播放原版城堡曲，库巴喷火 / 落下 / 城堡通关原版音效已加载",
+      "ok": true,
+      "data": {
+        "has": true,
+        "track": "castle",
+        "sfx": true,
+        "failed": []
+      }
+    },
+    {
+      "name": "台阶/地面高度按原作地图（1-4 共 160 列）",
+      "ok": true,
+      "data": {
+        "1": 6,
+        "3": 5,
+        "4": 4,
+        "8": 3,
+        "20": 3,
+        "30": 3,
+        "40": 4,
+        "60": 4,
+        "80": 3,
+        "100": 3,
+        "110": 0,
+        "117": 3,
+        "121": 0,
+        "125": 3,
+        "135": 3,
+        "142": 4,
+        "150": 0
+      }
+    },
+    {
+      "name": "四处岩浆：13-14、26-28、32-34 与桥下",
+      "ok": true,
+      "data": [
+        [
+          13,
+          15,
+          0.95
+        ],
+        [
+          26,
+          29,
+          -0.05
+        ],
+        [
+          32,
+          35,
+          -0.05
+        ],
+        [
+          128,
+          141,
+          -0.05
+        ]
+      ]
+    },
+    {
+      "name": "6 块隐藏金币砖（上下两排各 3）",
+      "ok": true,
+      "data": [
+        [
+          106,
+          3,
+          "coin"
+        ],
+        [
+          109,
+          3,
+          "coin"
+        ],
+        [
+          112,
+          3,
+          "coin"
+        ],
+        [
+          107,
+          7,
+          "coin"
+        ],
+        [
+          110,
+          7,
+          "coin"
+        ],
+        [
+          113,
+          7,
+          "coin"
+        ]
+      ]
+    },
+    {
+      "name": "岩浆小平台上方问号砖出道具",
+      "ok": true,
+      "data": [
+        "Q",
+        "power"
+      ]
+    },
+    {
+      "name": "7 根火棒，每根 6 颗，第 88 列那根反转",
+      "ok": true,
+      "data": [
+        [
+          30,
+          2,
+          1,
+          6
+        ],
+        [
+          49,
+          6,
+          1,
+          6
+        ],
+        [
+          60,
+          6,
+          1,
+          6
+        ],
+        [
+          67,
+          6,
+          1,
+          6
+        ],
+        [
+          76,
+          3,
+          1,
+          6
+        ],
+        [
+          84,
+          3,
+          1,
+          6
+        ],
+        [
+          88,
+          8,
+          -1,
+          6
+        ]
+      ]
+    },
+    {
+      "name": "13 格库巴桥、桥头斧头、蘑菇人",
+      "ok": true,
+      "data": {
+        "tops": {
+          "1": 6,
+          "3": 5,
+          "4": 4,
+          "8": 3,
+          "20": 3,
+          "30": 3,
+          "40": 4,
+          "60": 4,
+          "80": 3,
+          "100": 3,
+          "110": 0,
+          "117": 3,
+          "121": 0,
+          "125": 3,
+          "135": 3,
+          "142": 4,
+          "150": 0
+        },
+        "lava": [
+          [
+            13,
+            15,
+            0.95
+          ],
+          [
+            26,
+            29,
+            -0.05
+          ],
+          [
+            32,
+            35,
+            -0.05
+          ],
+          [
+            128,
+            141,
+            -0.05
+          ]
+        ],
+        "hidden": [
+          [
+            106,
+            3,
+            "coin"
+          ],
+          [
+            109,
+            3,
+            "coin"
+          ],
+          [
+            112,
+            3,
+            "coin"
+          ],
+          [
+            107,
+            7,
+            "coin"
+          ],
+          [
+            110,
+            7,
+            "coin"
+          ],
+          [
+            113,
+            7,
+            "coin"
+          ]
+        ],
+        "q": [
+          "Q",
+          "power"
+        ],
+        "bars": [
+          [
+            30,
+            2,
+            1,
+            6
+          ],
+          [
+            49,
+            6,
+            1,
+            6
+          ],
+          [
+            60,
+            6,
+            1,
+            6
+          ],
+          [
+            67,
+            6,
+            1,
+            6
+          ],
+          [
+            76,
+            3,
+            1,
+            6
+          ],
+          [
+            84,
+            3,
+            1,
+            6
+          ],
+          [
+            88,
+            8,
+            -1,
+            6
+          ]
+        ],
+        "bridge": {
+          "c0": 128,
+          "c1": 140,
+          "h": 2
+        },
+        "axe": {
+          "x": 141.5,
+          "y": 4
+        },
+        "toad": {
+          "x": 153.5,
+          "y": 0
+        }
+      }
+    },
+    {
+      "name": "火棒转速约 3.3 秒一圈",
+      "ok": true,
+      "data": {
+        "d": 1.8868424345884656
+      }
+    },
+    {
+      "name": "第一根逆时针（角度增加），第 88 列顺时针",
+      "ok": true
+    },
+    {
+      "name": "火棒碰到小玛丽扣一格护心（任意纵深都算）",
+      "ok": true,
+      "data": {
+        "score": 0,
+        "coins": 0,
+        "lives": "inf",
+        "hearts": 2,
+        "power": "small",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 1,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 1.2416666666666647
+        }
+      }
+    },
+    {
+      "name": "火棒碰到大玛丽变小",
+      "ok": true,
+      "data": {
+        "x": 60.8,
+        "y": 4,
+        "z": -2.4,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.19,
+        "visible": true
+      }
+    },
+    {
+      "name": "天花板火棒下面小玛丽正常走过的高度是安全的",
+      "ok": true,
+      "data": {
+        "score": 0,
+        "coins": 0,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "small",
+        "checkpoint": null,
+        "demoUsed": false,
+        "stats": {
+          "deaths": 0,
+          "oneups": 0,
+          "hits": 2,
+          "stomps": 0,
+          "coins": 0,
+          "secrets": 0,
+          "startTime": 1.2416666666666647
+        }
+      }
+    },
+    {
+      "name": "掉进第一个岩浆坑就输",
+      "ok": true,
+      "data": {
+        "mode": "dying"
+      }
+    },
+    {
+      "name": "没过中途点时回到关卡开头",
+      "ok": true,
+      "data": {
+        "x": 1.4,
+        "y": 6,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": false,
+        "crouch": false,
+        "star": 0,
+        "inv": 2.5,
+        "visible": true
+      }
+    },
+    {
+      "name": "从下面顶出隐藏金币砖，变成已用砖",
+      "ok": true,
+      "data": {
+        "coins": 1,
+        "hb": {
+          "t": "U",
+          "hidden": false
+        }
+      }
+    },
+    {
+      "name": "小玛丽顶岩浆平台上方的问号砖出蘑菇",
+      "ok": true,
+      "data": [
+        "mushroom"
+      ]
+    },
+    {
+      "name": "火棒段之后的下沉大房间记为中途点",
+      "ok": true,
+      "data": {
+        "score": 200,
+        "coins": 1,
+        "lives": "inf",
+        "hearts": 3,
+        "power": "small",
+        "checkpoint": "1-4",
+        "demoUsed": false,
+        "stats": {
+          "deaths": 1,
+          "oneups": 0,
+          "hits": 2,
+          "stomps": 0,
+          "coins": 1,
+          "secrets": 1,
+          "startTime": 1.2416666666666647
+        }
+      }
+    },
+    {
+      "name": "离得远时库巴不动",
+      "ok": true,
+      "data": {
+        "x": 137.6,
+        "y": 3,
+        "z": 0,
+        "state": "idle",
+        "hp": 5,
+        "face": -1,
+        "grounded": true
+      }
+    },
+    {
+      "name": "靠近后库巴开始喷火（10 秒内至少 3 口）",
+      "ok": true,
+      "data": {
+        "fires": 4
+      }
+    },
+    {
+      "name": "库巴会跳起来（约 1.6 格）",
+      "ok": true,
+      "data": {
+        "maxY": 4.589999999999997
+      }
+    },
+    {
+      "name": "库巴只在桥上来回挪",
+      "ok": true,
+      "data": {
+        "minX": 135.99283612536883,
+        "maxX": 138.0229509689905
+      }
+    },
+    {
+      "name": "火焰往玛丽脚下那一格的高度飞",
+      "ok": true,
+      "data": [
+        [
+          129.8,
+          3,
+          3
+        ],
+        [
+          134.6,
+          3,
+          3
+        ],
+        [
+          113.5,
+          3,
+          3
+        ],
+        [
+          117.3,
+          3,
+          3
+        ],
+        [
+          129.4,
+          3,
+          3
+        ],
+        [
+          134.2,
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "name": "库巴的火焰打中玛丽扣护心",
+      "ok": true,
+      "data": {
+        "score": 200,
+        "coins": 1,
+        "lives": "inf",
+        "hearts": 2,
+        "power": "small",
+        "checkpoint": "1-4",
+        "demoUsed": false,
+        "stats": {
+          "deaths": 1,
+          "oneups": 0,
+          "hits": 3,
+          "stomps": 0,
+          "coins": 1,
+          "secrets": 1,
+          "startTime": 1.2416666666666647
+        }
+      }
+    },
+    {
+      "name": "碰到库巴会受伤（不能踩）",
+      "ok": true,
+      "data": {
+        "score": 200,
+        "coins": 1,
+        "lives": "inf",
+        "hearts": 2,
+        "power": "small",
+        "checkpoint": "1-4",
+        "demoUsed": false,
+        "stats": {
+          "deaths": 1,
+          "oneups": 0,
+          "hits": 4,
+          "stomps": 0,
+          "coins": 1,
+          "secrets": 1,
+          "startTime": 1.2416666666666647
+        }
+      }
+    },
+    {
+      "name": "火球打 5 下库巴翻身（原来是栗宝宝），加 5000 分",
+      "ok": true,
+      "data": {
+        "b": {
+          "x": 139.4817988132776,
+          "y": 4.700972222222221,
+          "z": 0,
+          "state": "dead",
+          "hp": 0,
+          "face": -1,
+          "grounded": true
+        },
+        "d": 5000
+      }
+    },
+    {
+      "name": "假库巴翻身后掉进岩浆消失",
+      "ok": true
+    },
+    {
+      "name": "碰到斧头进入塌桥演出、火焰清掉",
+      "ok": true,
+      "data": {
+        "mode": "axe"
+      }
+    },
+    {
+      "name": "桥 13 格从斧头那头一格格塌完",
+      "ok": true,
+      "data": {
+        "bridgeLeft": 0
+      }
+    },
+    {
+      "name": "桥塌完库巴掉下去（库巴落下音效）",
+      "ok": true,
+      "data": {
+        "x": 136.097022957524,
+        "y": 3.17625,
+        "z": 0,
+        "state": "fall",
+        "hp": 5,
+        "face": -1,
+        "grounded": false
+      }
+    },
+    {
+      "name": "城堡通关曲响起、玛丽自己往右走",
+      "ok": true,
+      "data": {
+        "x": 142.552,
+        "y": 4,
+        "z": 0,
+        "vx": 3.2,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 0,
+        "visible": true
+      }
+    },
+    {
+      "name": "走到蘑菇人跟前停下",
+      "ok": true,
+      "data": {
+        "x": 152.3,
+        "y": 0,
+        "z": 0,
+        "vx": 0,
+        "vy": 0,
+        "vz": 0,
+        "power": "small",
+        "grounded": true,
+        "crouch": false,
+        "star": 0,
+        "inv": 0,
+        "visible": true
+      }
+    },
+    {
+      "name": "两行字都出现",
+      "ok": true
+    },
+    {
+      "name": "库巴已掉进岩浆",
+      "ok": true,
+      "data": {
+        "x": 136.097022957524,
+        "y": -6.032500000000003,
+        "z": 0,
+        "state": "gone",
+        "hp": 5,
+        "face": -1,
+        "grounded": false
+      }
+    },
+    {
+      "name": "原作城堡关：计时停住，剩余时间不换分数",
+      "ok": true,
+      "data": {
+        "time0": 295,
+        "time": 295,
+        "score1": 0,
+        "score": 0
+      }
+    },
+    {
+      "name": "演出结束进结算：从 1-4 开始打到最后一关",
+      "ok": true,
+      "data": {
+        "overlay": "result"
+      }
+    },
+    {
+      "name": "结算三连文案换成城堡版",
+      "ok": true
+    },
+    {
+      "name": "1-3 拔旗进城堡后接 WORLD 1-4",
+      "ok": true
+    },
+    {
+      "name": "暂停里「从本关开头重来」回到 1-4 开头且城堡曲继续播",
+      "ok": true,
+      "data": {
+        "level": "1-4",
+        "x": 1.4,
+        "ctx": "running",
+        "clock": 0.30133333333333334,
+        "track": "castle",
+        "playing": true
+      }
+    },
+    {
+      "name": "页面没有脚本错误",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": []
+}
