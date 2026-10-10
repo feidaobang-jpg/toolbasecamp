@@ -39,7 +39,8 @@ function makeCar() {
   car.rotation.y = Math.PI / 2;   // 车头（模型 +Z）朝前进方向 +X
   if (!carMat) carMat = toonMat();
   carMat.color.setRGB(1, 1, 1); carMat.emissive.setRGB(0, 0, 0);
-  car.traverse(o => { if (o.isMesh && !o.userData.outline) o.material = carMat; });
+  const wheels = new Set(car.userData.wheels);   // 车轮不跟着闪红（车炸了轮子飞出去还要是原来的颜色）
+  car.traverse(o => { if (o.isMesh && !o.userData.outline && !wheels.has(o)) o.material = carMat; });
   K.scene.add(car);
   return car;
 }
@@ -197,10 +198,17 @@ function wreckBike(kind, x, z, face, power) {
 }
 
 // ---------- 路上的敌人与路障 ----------
+// 事件时间 t 是它到达画面右缘外（x1 + 2.4）的时刻；提前在更远处放好，按车速迎面过来（远排与正视、第一人称里不会凭空冒出来）。
+// 飞车党比车慢、迎面相对速度只有 4.6 米/秒，只提前一小段
 function spawnEvents() {
-  const G = K.G, x = AREAS[G.area].x1 + 2.4;
-  while (G.roadEv < ROAD.events.length && ROAD.events[G.roadEv].t <= G.roadT) {
-    const e = ROAD.events[G.roadEv++];
+  const G = K.G, edge = AREAS[G.area].x1 + 2.4;
+  for (;;) {
+    const e = ROAD.events[G.roadEv];
+    if (!e) break;
+    const bike = e.k === 'bike', ahead = (e.t - G.roadT) * (bike ? 4.6 : ROAD.speed), far = bike ? 3 : ROAD.far;
+    if (ahead > far) break;
+    G.roadEv++;
+    const x = edge + Math.max(0, ahead);
     if (e.k === 'man') {
       const a = K.spawnEnemy(e.type, x, e.z);
       a.road = { pose: e.pose, t: 0 }; a.noClamp = true; a.face = FACE_LEFT; K.setState(a, 'road');
@@ -230,7 +238,7 @@ export function updateActor(a, dt) {
   }
   a.vx = a.vz = 0; a.x += (own - G.roadV) * dt;
   if (G.car && driving() && a.y < 1.5 && overlapCar(a.x, a.z, R.bike ? 0.5 : a.radius)) { runOver(a); return; }
-  if (a.x < -3.5) { a.alive = false; K.removeActor(a); }
+  if (a.x < -10) { a.alive = false; K.removeActor(a); }
 }
 function runOver(a) {
   const G = K.G, bike = !!a.road.bike, side = Math.sign(a.z - G.carZ) || (rand() < 0.5 ? 1 : -1);
@@ -259,17 +267,17 @@ function scrollThings(dt) {
     if (pr.broken || pr.parked) continue;
     pr.x -= d;
     if (on && overlapCar(pr.x, pr.z, pr.r)) smashProp(pr);
-    else if (pr.x < -3) { pr.broken = true; K.scene.remove(pr.mesh); }
+    else if (pr.x < -10) { pr.broken = true; K.scene.remove(pr.mesh); }
   }
   for (const it of G.items.slice()) {
     it.x -= d;
     if (on && it.t > 0.2 && it.y < 1.3 && overlapCar(it.x, it.z, 0.3)) { const def = ITEMS[it.kind]; K.addScore(def.points || 200, it.x, 1.7, it.z); A.play('coin'); K.removeItem(it); }
-    else if (it.x < -3) K.removeItem(it);
+    else if (it.x < -10) K.removeItem(it);
   }
   for (const a of G.actors) {
     if (!a.roadBody || a.removed) continue;
     a.x -= d * (a.y > 0.05 ? 0.3 : 1);
-    if (a.x < -4) K.removeActor(a);
+    if (a.x < -10) K.removeActor(a);
   }
 }
 
@@ -280,11 +288,11 @@ function driveCar(dt) {
   if (G.mode === 'play') for (const pl of ps) { if (!pl.alive) continue; const mv = K.moveOf(pl); mx += mv.x; mz += mv.z; }   // 车上谁都能打方向
   const l = Math.hypot(mx, mz); if (l > 1) { mx /= l; mz /= l; }
   const intro = G.roadPhase === 'run' && G.roadT < 0.9;   // 刚开进画面：自己开到起始位置
-  let tx = mx * 7.5, tz = mz * 5.2;
+  let tx = mx * ROAD.vx, tz = mz * ROAD.vz;
   if (intro) { tx = clamp((AR.start.x - G.carX) * 4, 0, 11); tz = 0; }
   G.carVx += (tx - G.carVx) * damp(7, dt); G.carVz += (tz - G.carVz) * damp(8, dt);
   G.carX += G.carVx * dt; G.carZ += G.carVz * dt;
-  if (!intro) { const cx = clamp(G.carX, ROAD.x0, ROAD.x1); if (cx !== G.carX) { G.carX = cx; G.carVx = 0; } }
+  if (!intro) { const ins = Math.max(0, G.carZ - ROAD.insetZ) * ROAD.insetK, cx = clamp(G.carX, ROAD.x0 + ins, ROAD.x1 - ins); if (cx !== G.carX) { G.carX = cx; G.carVx = 0; } }
   const czc = clamp(G.carZ, ROAD.z0, ROAD.z1); if (czc !== G.carZ) { G.carZ = czc; G.carVz = 0; }
   car.position.set(G.carX, Math.abs(Math.sin(G.roadDist * 0.9)) * 0.018, G.carZ);
   car.rotation.y = Math.PI / 2 - G.carVz * 0.035;   // 打方向时车头微微偏过去
@@ -342,7 +350,7 @@ function carExplode() {
 function hoggEnter() {
   const G = K.G, AR = AREAS[G.area], def = ENEMY.hogg;
   G.roadPhase = 'hogg';
-  const h = K.makeActor('hogg', 'enemy', { def, x: AR.x1 + 3, z: clamp(G.carZ + 2.0, AR.z0, AR.z1), hp: def.hp, maxHp: def.hp, face: FACE_RIGHT, noClamp: true });
+  const h = K.makeActor('hogg', 'enemy', { def, x: AR.x1 + 6, z: clamp(G.carZ + 2.2, AR.z0, AR.z1), hp: def.hp, maxHp: def.hp, face: FACE_RIGHT, noClamp: true });
   K.setState(h, 'ride');
   h.ai = { mode: 'slot', slot: 'ahead', slotT: 2.4, off: 0.5, cd: 1.5, throwT: -1, thrown: false, stag: 0, safe: 0, slowT: 0, vx: 0, vz: 0, n: 0, lean: 0 };
   G.boss = h; G.timer = 180; G.timerShow = 2.5;
@@ -415,10 +423,10 @@ function hoggCar(h, ai, dt) {
   // 平时车要追一阵才贴得上他；抬手投弹的前后他会慢下来，这时最好撞。把他挤到画面边上也跑不掉
   if (ai.slowT > 0) ai.slowT -= dt;
   if (ai.safe > 0) ai.safe -= dt;
-  const busy = ai.throwT >= 0 || ai.slowT > 0, vx = busy ? 3.0 : 7.0, vz = busy ? 2.0 : 4.0;
+  const busy = ai.throwT >= 0 || ai.slowT > 0, vx = busy ? 3.0 : 7.0, vz = busy ? 2.3 : 4.8;   // 纵深比车慢一点（车 6.2）
   const k = ai.stag > 0 ? damp(1.5, dt) : damp(5, dt);
   ai.vx += (clamp((tx - h.x) * 3.2, -vx, vx) - ai.vx) * k; ai.vz += (clamp((tz - h.z) * 3.2, -vz, vz) - ai.vz) * k;
-  h.x = clamp(h.x + ai.vx * dt, AR.x0 - 1, AR.x1 + 4); h.z = clamp(h.z + ai.vz * dt, zLo, zHi);
+  h.x = clamp(h.x + ai.vx * dt, AR.x0 - 1, AR.x1 + 7); h.z = clamp(h.z + ai.vz * dt, zLo, zHi);
   h.face = FACE_RIGHT; ai.lean = ai.vz * 0.07;
   // 投弹：瞄车此刻的位置再加一点提前量
   ai.cd -= dt;
@@ -556,7 +564,7 @@ export function update(dt) {
     const alive = G.actors.filter(e => e.side === 'enemy' && e.alive && e !== G.boss).length;
     if (G.gangCd <= 0 && alive < 2 && G.gangN < GANG.length) {
       const g = GANG[G.gangN++], side = G.gangN % 2 ? -1 : 1;
-      const e = K.spawnEnemy(g[0], G.focusX + side * ENTER_DX, randRange(-1.4, 3.0), { drop: g[1] });
+      const AR = AREAS[G.area], e = K.spawnEnemy(g[0], G.focusX + side * ENTER_DX, randRange(AR.z0 + 0.6, AR.z1 - 0.6), { drop: g[1] });
       K.setState(e, 'enter', { kind: 'walk', tx: G.focusX + side * (HALF_W - 1.5), tz: e.z });
       G.gangCd = alive ? 9 : 6;
     }
@@ -610,7 +618,7 @@ export function state() {
   };
 }
 export const test = {
-  skipTo(t) { K.G.roadT = t; while (K.G.roadEv < ROAD.events.length && ROAD.events[K.G.roadEv].t < t) { const e = ROAD.events[K.G.roadEv++]; if (e.k !== 'man' && e.k !== 'bike') K.G.roadPool++; } },
+  skipTo(t) { K.G.roadT = t; while (K.G.roadEv < ROAD.events.length && ROAD.events[K.G.roadEv].t < t) { const e = ROAD.events[K.G.roadEv++]; if (e.k !== 'man' && e.k !== 'bike') K.G.roadPool++; } for (const a of K.G.actors) if (a.road) { a.alive = false; K.removeActor(a); } for (const pr of K.G.props) if (!pr.parked && !pr.broken) { pr.broken = true; K.scene.remove(pr.mesh); } },
   carHit() { K.G.carInv = 0; carHit(); },
   wreck() { if (K.G.car && driving()) carExplode(); },
   lob(x, z) { const h = K.G.boss; if (h && h.alive) lob(h, x, z); },

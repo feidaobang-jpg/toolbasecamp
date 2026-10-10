@@ -134,7 +134,7 @@ function T(name) {
       g.clearRect(0, 0, w, h);
       const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(214,150,104,0)'); gr.addColorStop(0.12, 'rgba(214,150,104,0.42)'); gr.addColorStop(0.88, 'rgba(214,150,104,0.42)'); gr.addColorStop(1, 'rgba(214,150,104,0)');
       g.fillStyle = gr; g.fillRect(0, 0, w, h);
-      for (const y of [58, 84, 150, 176]) { g.fillStyle = 'rgba(120,62,36,0.34)'; g.fillRect(0, y, w, 9); for (let x = 0; x < w; x += 8) { g.fillStyle = 'rgba(92,46,26,' + (0.12 + r() * 0.3).toFixed(2) + ')'; g.fillRect(x, y + r() * 5, 5, 3); } }
+      for (const y of [46, 70, 112, 136, 178, 202]) { g.fillStyle = 'rgba(120,62,36,0.34)'; g.fillRect(0, y, w, 9); for (let x = 0; x < w; x += 8) { g.fillStyle = 'rgba(92,46,26,' + (0.12 + r() * 0.3).toFixed(2) + ')'; g.fillRect(x, y + r() * 5, 5, 3); } }
       for (let i = 0; i < 90; i++) { g.fillStyle = r() < 0.5 ? 'rgba(96,50,30,0.5)' : 'rgba(238,186,140,0.5)'; g.fillRect(r() * w, 20 + r() * (h - 40), 2 + r() * 3, 1.5 + r() * 2); }
     }); break;
   }
@@ -293,25 +293,26 @@ function mesa(p, x, z, w, h, d, r) {   // 平顶台地：碎石坡 + 岩壁 + �
   p.add(GEO.cyl6, '#db9060', mtx(x, h * 1.0, z, 0, r() * 3, 0, w * 0.47, h * 0.06, d * 0.47));
   if (r() < 0.45) p.add(GEO.cyl6, '#c97c50', mtx(x + w * 0.22, h * 1.12, z, 0, r(), 0, w * 0.15, h * 0.24, d * 0.18));
 }
-// 一段近处地块（长 TILE 米，x 以地块中心为 0）：后侧碎石矮坎（走不过去的边界）、仙人掌和石堆；前侧一排碎石草丛作边界，再往外偶尔一丛压在画面底边的前景
-function desertTile(seed, fore) {
+// 一段近处地块（长 TILE 米，x 以地块中心为 0）：后侧碎石矮坎（走不过去的边界）、仙人掌和石堆；前侧一排碎石草丛作边界，再往外偶尔一丛压在画面底边的前景。
+// zb / zf：后侧矮坎、前侧边界所在的纵深（3-1 默认 -3.15 / 4.7；3-2 公路更宽，外移）
+function desertTile(seed, fore, zb = -3.15, zf = 4.7) {
   const r = fixedRng(seed), p = new Parts(), H2 = TILE / 2;
   for (let x = -H2; x < H2; x += 0.9 + r() * 1.1) {   // 后侧矮坎：一溜低矮碎石，间或一丛灌木
-    rock(p, x, -3.15 - r() * 0.5, 0.45 + r() * 0.5, r, ROCKS[Math.floor(r() * ROCKS.length)]);
-    if (r() < 0.3) scrub(p, x + 0.3, -3.5 - r() * 0.4, 0.8 + r() * 0.4, r);
-    if (r() < 0.25) tufts(p, x, -2.95, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+    rock(p, x, zb - r() * 0.5, 0.45 + r() * 0.5, r, ROCKS[Math.floor(r() * ROCKS.length)]);
+    if (r() < 0.3) scrub(p, x + 0.3, zb - 0.35 - r() * 0.4, 0.8 + r() * 0.4, r);
+    if (r() < 0.25) tufts(p, x, zb + 0.2, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
   }
   for (let x = -H2; x < H2; x += 0.8 + r() * 1.0) {   // 前侧边界：小石子与草丛（都很矮，不挡侧视）
-    if (r() < 0.55) rock(p, x, 4.7 + r() * 0.5, 0.22 + r() * 0.22, r, ROCKS[Math.floor(r() * ROCKS.length)]); else tufts(p, x, 4.65 + r() * 0.5, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+    if (r() < 0.55) rock(p, x, zf + r() * 0.5, 0.22 + r() * 0.22, r, ROCKS[Math.floor(r() * ROCKS.length)]); else tufts(p, x, zf - 0.05 + r() * 0.5, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
   }
-  for (let i = 0; i < 9; i++) saguaro(p, -H2 + r() * TILE, -5.5 - r() * 22, 0.9 + r() * 0.5, r);
-  for (let i = 0; i < 6; i++) rockPile(p, -H2 + r() * TILE, -5 - r() * 20, 1.0 + r() * 1.2, r);
-  for (let i = 0; i < 26; i++) tufts(p, -H2 + r() * TILE, -4.5 - r() * 30, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
-  for (let i = 0; i < 3; i++) { const x = -H2 + r() * TILE, z = -4.4 - r() * 8; p.add(capsule(0.045, 0.5), '#efe6d6', mtx(x, 0.05, z, Math.PI / 2, r() * 3, 0)); if (r() < 0.5) p.add(GEO.sphLo, '#efe6d6', mtx(x + 0.4, 0.12, z + 0.2, 0, r() * 3, 0, 0.16, 0.13, 0.2)); }   // 晒白的骨头
-  for (let i = 0; i < 5; i++) saguaro(p, -H2 + r() * TILE, 12 + r() * 18, 0.9 + r() * 0.5, r);   // 镜头背后那一侧（转视角时不露空地）
-  for (let i = 0; i < 5; i++) rockPile(p, -H2 + r() * TILE, 11 + r() * 18, 1.0 + r() * 1.2, r);
-  for (let i = 0; i < 14; i++) tufts(p, -H2 + r() * TILE, 5.5 + r() * 24, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
-  for (const fx of fore || []) { rockPile(p, fx, 7.2, 1.1, r); saguaro(p, fx + 1.2, 7.6, 0.55, r); scrub(p, fx - 1.0, 6.9, 1.0, r); }
+  for (let i = 0; i < 9; i++) saguaro(p, -H2 + r() * TILE, zb - 2.35 - r() * 22, 0.9 + r() * 0.5, r);
+  for (let i = 0; i < 6; i++) rockPile(p, -H2 + r() * TILE, zb - 1.85 - r() * 20, 1.0 + r() * 1.2, r);
+  for (let i = 0; i < 26; i++) tufts(p, -H2 + r() * TILE, zb - 1.35 - r() * 30, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+  for (let i = 0; i < 3; i++) { const x = -H2 + r() * TILE, z = zb - 1.25 - r() * 8; p.add(capsule(0.045, 0.5), '#efe6d6', mtx(x, 0.05, z, Math.PI / 2, r() * 3, 0)); if (r() < 0.5) p.add(GEO.sphLo, '#efe6d6', mtx(x + 0.4, 0.12, z + 0.2, 0, r() * 3, 0, 0.16, 0.13, 0.2)); }   // 晒白的骨头
+  for (let i = 0; i < 5; i++) saguaro(p, -H2 + r() * TILE, zf + 7.3 + r() * 18, 0.9 + r() * 0.5, r);   // 镜头背后那一侧（转视角时不露空地）
+  for (let i = 0; i < 5; i++) rockPile(p, -H2 + r() * TILE, zf + 6.3 + r() * 18, 1.0 + r() * 1.2, r);
+  for (let i = 0; i < 14; i++) tufts(p, -H2 + r() * TILE, zf + 0.8 + r() * 24, r, r() < 0.5 ? '#8a9a52' : '#b89a5a');
+  for (const fx of fore || []) { rockPile(p, fx, zf + 2.5, 1.1, r); saguaro(p, fx + 1.2, zf + 2.9, 0.55, r); scrub(p, fx - 1.0, zf + 2.2, 1.0, r); }
   return p.build();
 }
 // 远景台地一圈（长 FAR 米）：后方地平线上一排，镜头背后也有；其中一座离路很近、很大（原作开车途中掠过的那座）
@@ -874,9 +875,10 @@ const BUILDERS = {
   road(A, W) {
     const B = desertBase(A, W), g = B.g, cx = A.def.x1 / 2;
     const trackT = T('track').clone(); trackT.needsUpdate = true; trackT.repeat.set(1500 / 9, 1);
-    const track = new THREE.Mesh(new THREE.PlaneGeometry(1500, 8.6), new THREE.MeshLambertMaterial({ map: trackT, transparent: true, depthWrite: false }));
-    track.rotation.x = -Math.PI / 2; track.position.set(cx, 0.012, 0.85); track.renderOrder = 1; g.add(track);
-    const geos = [desertTile(911, [-14, 19]), desertTile(912, [6]), desertTile(913, null)];
+    // 公路比 3-1 宽：可走纵深 -4.0～5.8，土路铺到 -4.9～6.7，后侧矮坎在 -4.85、前侧边界在 6.45
+    const track = new THREE.Mesh(new THREE.PlaneGeometry(1500, 11.6), new THREE.MeshLambertMaterial({ map: trackT, transparent: true, depthWrite: false }));
+    track.rotation.x = -Math.PI / 2; track.position.set(cx, 0.012, 0.9); track.renderOrder = 1; g.add(track);
+    const geos = [desertTile(911, [-14, 19], -4.85, 6.45), desertTile(912, [6], -4.85, 6.45), desertTile(913, null, -4.85, 6.45)];
     const tiles = [];
     for (let k = 0; k < NEAR_N; k++) { const m = new THREE.Mesh(geos[k % 3], B.nearMat); m.castShadow = true; m.receiveShadow = true; g.add(m); tiles.push(m); }
     const farG = mesaRing(951), fars = [0, 1].map(() => { const m = new THREE.Mesh(farG, B.farMat); g.add(m); return m; });

@@ -42,7 +42,7 @@ const { launch, BASE, out, sleep } = require('./lib');
       if (plan === 'car') {
         // 有手雷的红圈压着车：往远离落点的方向躲；否则朝霍格撞过去
         const n = R.nades.filter(n => Math.max(0, Math.abs(n.x - c.x) - 2.62) < 1.2 && Math.max(0, Math.abs(n.z - c.z) - 0.98) < 1.2)[0];
-        if (n) { dz = c.z >= n.z ? 1 : -1; if ((dz > 0 && c.z > 2.8) || (dz < 0 && c.z < -1.05)) dz = -dz; dx = c.x >= n.x ? 1 : -1; }
+        if (n) { dz = c.z >= n.z ? 1 : -1; if ((dz > 0 && c.z > 4.6) || (dz < 0 && c.z < -2.75)) dz = -dz; dx = c.x >= n.x ? 1 : -1; }
         else { dx = Math.abs(h.x - c.x) < 0.4 ? 0 : Math.sign(h.x - c.x); dz = Math.abs(h.z - c.z) < 0.2 ? 0 : Math.sign(h.z - c.z); }
       }
       await dirs(dx, dz);

@@ -155,16 +155,17 @@ const { launch, BASE, out, sleep } = require('./lib');
   await keyUp('KeyD'); await keyUp('KeyS'); await keyDown('KeyA'); await keyDown('KeyW'); await step(170); s = await S();
   const cB = s.road.car, cornB = [await proj(cB.x - 2.62, 0, cB.z - 0.98), await proj(cB.x + 2.62, 1.5, cB.z - 0.98)];
   await keyUp('KeyA'); await keyUp('KeyW'); await step(4);
-  ok('车开不出范围（右前 10.7 / 3.0，左里 2.9 / -1.25）', Math.abs(cA.x - 10.7) < 0.05 && Math.abs(cA.z - 3.0) < 0.05 && Math.abs(cB.x - 2.9) < 0.05 && Math.abs(cB.z + 1.25) < 0.05, [cA, cB]);
+  ok('车开不出范围（右前 9.87 / 4.8，左里 2.4 / -2.95；靠镜头的几排左右收窄）', Math.abs(cA.x - 9.87) < 0.05 && Math.abs(cA.z - 4.8) < 0.05 && Math.abs(cB.x - 2.4) < 0.05 && Math.abs(cB.z + 2.95) < 0.05, [cA, cB]);
+  ok('公路加宽：车上下能开 7.75 米（原来 4.25 米），可走纵深 9.8 米（原来 6.3 米）', Math.abs(cA.z - cB.z - 7.75) < 0.06 && Math.abs((await T(() => window.__CD_TEST__.areaDef())).z1 - (await T(() => window.__CD_TEST__.areaDef())).z0 - 9.8) < 0.01, [cA.z - cB.z]);
   ok('开到四角整辆车都在画面里', cornA.every(inView) && cornB.every(inView), [cornA, cornB]);
 
   // ---------- 一路撞：从头再来一遍（重开本关到公路） ----------
   await T(() => window.__CD_TEST__.cheat.area(7)); await step(70);
-  s = await S(); ok('重新进入公路：阶段与耐久复位', s.road.phase === 'run' && s.road.t < 1.5 && s.road.car.hp === 4 && s.road.ev <= 1 && s.road.objs === 0, s.road);
-  const scoreA = s.score, killsA = Object.values(s.kills).reduce((a, b) => a + b, 0);
+  s = await S(); ok('重新进入公路：阶段与耐久复位', s.road.phase === 'run' && s.road.t < 1.5 && s.road.car.hp === 4 && s.road.ev <= 8 && s.road.objs === 0, s.road);   // 前方 24 米内的人和路障一进来就放好了
+  const scoreA = s.score, killsA = Object.values(s.kills).reduce((a, b) => a + b, 0), razorA = s.kills.razor || 0, roA = (await ev('runOver')).length, propA = (await ev('prop')).length;
   // 不碰方向：车在 z = 0.6 这一排，同排的被撞飞，隔得远的（z = 2.4 的格特）从旁边掠过
   s = await until(x => x.road.t >= 3.5, 600, 3);
-  ok('木桶被撞碎、雷泽被撞飞并计分', (await ev('runOver')).length >= 2 && (s.kills.razor || 0) >= 2 && s.score > scoreA + 4000, [s.kills, s.score - scoreA]);
+  ok('木桶被撞碎、同一排的雷泽被撞飞并计分', (await ev('prop')).length > propA && (await ev('runOver')).length > roA && (s.kills.razor || 0) > razorA && s.score >= scoreA + 2500, [s.kills.razor, razorA, s.score - scoreA]);
   ok('被撞的敌人名字显示在 HUD 上', !!s.hud.enemy, s.hud.enemy);
   await shot('s3-12-runover.png');
   s = await until(x => x.road.t >= 5.2, 600, 3);
@@ -206,7 +207,7 @@ const { launch, BASE, out, sleep } = require('./lib');
     await fixCar();
     s = await until(x => x.road.nades.length > 0, 900, 2);
     const nd = s.road.nades[0], c = s.road.car;
-    const awayZ = c.z >= nd.z ? (c.z < 2.6 ? 'KeyS' : 'KeyW') : (c.z > -0.9 ? 'KeyW' : 'KeyS'), awayX = c.x >= nd.x ? (c.x < 10 ? 'KeyD' : 'KeyA') : (c.x > 3.6 ? 'KeyA' : 'KeyD');
+    const awayZ = c.z >= nd.z ? (c.z < 4.4 ? 'KeyS' : 'KeyW') : (c.z > -2.55 ? 'KeyW' : 'KeyS'), awayX = c.x >= nd.x ? (c.x < 9.5 ? 'KeyD' : 'KeyA') : (c.x > 3.0 ? 'KeyA' : 'KeyD');
     await keyDown(awayZ); await keyDown(awayX); await until(x => x.road.nades.length === 0, 200, 2); await keyUp(awayZ); await keyUp(awayX); await step(10);
     if ((await ev('carHit')).length === hits0) dodged++; else hits0 = (await ev('carHit')).length;
   }
@@ -245,7 +246,7 @@ const { launch, BASE, out, sleep } = require('./lib');
   }
   ok('斜视 / 正视 / 侧视里车都在画面内', camInfo.filter(c => c.cam !== 'fp').every(c => inView(c.car)), camInfo);
   ok('第一人称：坐在驾驶座上的高度（眼睛约 1.7 米）', camInfo.find(c => c.cam === 'fp').fp && Math.abs(camInfo.find(c => c.cam === 'fp').y - 1.75) < 0.25, camInfo.find(c => c.cam === 'fp'));
-  await T(() => window.__CD_TEST__.setCamera(2)); await step(30);
+  await T(() => { const G = window.__CD_TEST__.cheat.G; G.carX = 5.5; G.carVx = 0; window.__CD_TEST__.setCamera(2); }); await step(30);   // 先把车放回中间
   c0 = (await S()).road.car; await hold('KeyW', 30); c1 = (await S()).road.car;
   ok('正视（车后）里 W 是往前开', c1.x > c0.x + 1.0, [c0.x, c1.x]);
   await keyDown('KeyE'); await step(240); await keyUp('KeyE'); s = await S();
@@ -262,6 +263,13 @@ const { launch, BASE, out, sleep } = require('./lib');
   s = await until(x => x.road.phase === 'foot' && ['idle', 'walk'].includes(x.player.state), 600, 4);
   ok('地面停住、主角爬起来、锁在一屏之内', s.road.v === 0 && s.lockX !== null && s.player.hp > 0 && (await ev('death')).length === 0, [s.road.v, s.lockX, s.player.state]);
   ok('武器栏不再显示凯迪拉克', s.hud.weapon === null, s.hud.weapon);
+  await T(() => { const G = window.__CD_TEST__.cheat.G; G.gangCd = 99; G.boss.ai.mode = 'away'; G.boss.ai.wait = 99; G.boss.x = 30; G.player.invul = 99; });
+  await hold('KeyS', 170); s = await S(); const zrf = s.player.z, rf = await proj(s.player.x, 0, s.player.z), rfh = await proj(s.player.x, 1.95, s.player.z);
+  await shot('s3-21b-road-front-row.png');
+  await hold('KeyW', 240); s = await S(); const rb = await proj(s.player.x, 0, s.player.z), rbh = await proj(s.player.x, 1.95, s.player.z);
+  ok('加宽后的公路：徒步走得到最前排 5.8、最里排 -4.0', Math.abs(zrf - 5.8) < 0.05 && Math.abs(s.player.z + 4.0) < 0.05, [zrf, s.player.z]);
+  ok('公路最前排脚下在画面七成半到九成高、最里排头顶在地平线下', rf[1] > 0.72 && rf[1] < 0.93 && rfh[1] > 0.3 && rb[1] > 0.4 && rb[1] < 0.6 && rbh[1] > 0.2, [rf, rfh, rb, rbh]);
+  await T(() => { const G = window.__CD_TEST__.cheat.G; G.boss.ai.wait = 0.5; G.player.invul = 0; G.player.z = 0.9; });
   // 霍格猛冲：站在他那一排会被撞
   await T(() => { const G = window.__CD_TEST__.cheat.G; G.gangCd = 99; });
   s = await until(x => x.road.hogg.mode === 'charge', 900, 2);

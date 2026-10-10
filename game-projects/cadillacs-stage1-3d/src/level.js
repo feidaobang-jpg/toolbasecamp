@@ -132,33 +132,36 @@ export const AREAS = [
   },
   {
     // 3-2：开着凯迪拉克一路撞过去（画面自动向右卷，车在一屏之内自由移动）→ 霍格骑着喷火涂装的摩托追上来扔手雷，用车撞他；
-    // 车挨够手雷就爆炸，下车徒步打完。整段只有一屏宽，地面和布景按车速向后卷（game 里的 G.roadDist）
-    id: 'road', stage: 3, name: '地狱公路', title: 'HELL ROAD', x0: 0, x1: 13.6, z0: -2.3, z1: 4.0, camZ1: 2.5, camTy: 0.55, camPitch: -0.07, start: { x: 5.2, z: 0.6 }, timer: 180, noShake: true, road: true,
+    // 车挨够手雷就爆炸，下车徒步打完。整段只有一屏宽，地面和布景按车速向后卷（game 里的 G.roadDist）。
+    // 公路比 3-1 宽得多（可走纵深 9.8 米，用户 2026-10-10 要求加宽到约 1.5～2 倍），侧视相应拉远一点、压平一点
+    id: 'road', stage: 3, name: '地狱公路', title: 'HELL ROAD', x0: 0, x1: 13.6, z0: -4.0, z1: 5.8, camZ1: 4.4, camTy: 0.2, camPitch: -0.03, start: { x: 5.2, z: 0.9 }, timer: 180, noShake: true, road: true,
     props: [], waves: []
   }
 ];
 // 第三关公路：车速（米/秒）、车身半长半宽、车能开到的范围；路上的敌人与障碍按出发后的秒数出现（顺序照原作，人数与间隔为推测）
 export const ROAD = {
-  speed: 13, carL: 2.62, carW: 0.98, x0: 2.9, x1: 10.7, z0: -1.25, z1: 3.0,
+  // 车的范围：纵深 z0..z1；左右 x0..x1，比 insetZ 更靠镜头的每 1 米左右各收 insetK 米（近处画面窄，车头车尾不出画）
+  speed: 13, carL: 2.62, carW: 0.98, x0: 2.4, x1: 11.2, z0: -2.95, z1: 4.8, insetZ: 1.0, insetK: 0.35, vx: 7.5, vz: 6.2,
+  far: 24,   // 路上的人和路障在离画面右缘这么远的地方就先放好（远排和正视 / 第一人称里不会凭空冒出来）
   // k: 人 man（pose 蹲 squat / 站 stand / 跑过来 run / 扑上来 leap / 端枪 aim）、摩托 bike、轮胎堆 tires、铁桶 drum、木桶 barrel
   events: [
-    { t: 0.9, k: 'barrel', z: 0.9, item: 'ammo' },
-    { t: 1.5, k: 'man', type: 'razor', z: -0.2, pose: 'leap' }, { t: 1.62, k: 'man', type: 'razor', z: 0.9, pose: 'leap' }, { t: 1.75, k: 'man', type: 'razor', z: 2.0, pose: 'leap' },
-    { t: 2.9, k: 'man', type: 'gutter', z: 2.4, pose: 'aim' },
-    { t: 3.7, k: 'man', type: 'skinner', z: -0.5, pose: 'stand' }, { t: 3.9, k: 'man', type: 'punk', z: 0.6, pose: 'squat' }, { t: 4.0, k: 'man', type: 'thug', z: 1.6, pose: 'stand' }, { t: 4.15, k: 'man', type: 'punk', z: 2.5, pose: 'squat' }, { t: 4.3, k: 'man', type: 'thug', z: -0.1, pose: 'squat' },
-    { t: 5.6, k: 'tires', z: -0.7 }, { t: 5.75, k: 'tires', z: 0.9 }, { t: 5.9, k: 'tires', z: 2.5 },
-    { t: 7.0, k: 'man', type: 'walther', z: 0.2, pose: 'leap' }, { t: 7.25, k: 'tires', z: 1.9 }, { t: 7.5, k: 'man', type: 'walther', z: 2.6, pose: 'run' }, { t: 7.6, k: 'tires', z: -0.9 },
-    { t: 8.8, k: 'man', type: 'wrench', z: 1.0, pose: 'run' },
-    { t: 9.8, k: 'man', type: 'skinner', z: -0.6, pose: 'aim' }, { t: 10.0, k: 'man', type: 'gutter', z: 1.9, pose: 'stand' }, { t: 10.3, k: 'man', type: 'poacher', z: 0.4, pose: 'aim' },
-    { t: 11.4, k: 'bike', z: 0.5 },
-    { t: 12.6, k: 'man', type: 'hammer', z: 2.2, pose: 'stand' }, { t: 12.85, k: 'man', type: 'hammer', z: -0.5, pose: 'run' },
-    { t: 13.8, k: 'bike', z: 2.3 },
-    { t: 14.7, k: 'man', type: 'wrench', z: 0.2, pose: 'stand' }, { t: 14.95, k: 'man', type: 'wrench', z: 2.6, pose: 'run' },
-    { t: 16.0, k: 'bike', z: -0.3 },
-    { t: 17.4, k: 'man', type: 'punk', z: -0.6, pose: 'run' }, { t: 17.5, k: 'man', type: 'thug', z: 0.5, pose: 'leap' }, { t: 17.65, k: 'man', type: 'punk', z: 1.5, pose: 'squat' }, { t: 17.8, k: 'man', type: 'thug', z: 2.4, pose: 'squat' }, { t: 17.95, k: 'man', type: 'punk', z: 0.9, pose: 'leap' },
-    { t: 19.6, k: 'drum', z: 2.6, item: 'ammo' }, { t: 19.8, k: 'drum', z: 0.4 }, { t: 20.05, k: 'drum', z: -0.9 }, { t: 20.3, k: 'drum', z: 1.6, item: 'ammo' }, { t: 20.55, k: 'drum', z: 0.1 },
-    { t: 22.2, k: 'man', type: 'ferris', z: 2.5, pose: 'squat' }, { t: 22.3, k: 'man', type: 'gneiss', z: 0.4, pose: 'leap' }, { t: 22.4, k: 'man', type: 'ferris', z: 1.4, pose: 'leap' }, { t: 22.55, k: 'man', type: 'driver', z: -0.6, pose: 'run' }, { t: 22.7, k: 'man', type: 'gneiss', z: 2.0, pose: 'squat' }, { t: 22.85, k: 'man', type: 'ferris', z: 0.0, pose: 'leap' },
-    { t: 24.4, k: 'barrel', z: 0.2 }, { t: 24.55, k: 'barrel', z: 1.5, item: 'ammo' }, { t: 24.7, k: 'barrel', z: 2.7 }, { t: 24.9, k: 'barrel', z: -0.8 }, { t: 25.1, k: 'barrel', z: 0.9 }, { t: 25.3, k: 'barrel', z: 2.1, item: 'ammo' }
+    { t: 0.9, k: 'barrel', z: 1, item: 'ammo' },
+    { t: 1.5, k: 'man', type: 'razor', z: -1, pose: 'leap' }, { t: 1.62, k: 'man', type: 'razor', z: 1, pose: 'leap' }, { t: 1.75, k: 'man', type: 'razor', z: 3, pose: 'leap' },
+    { t: 2.9, k: 'man', type: 'gutter', z: 3.7, pose: 'aim' },
+    { t: 3.7, k: 'man', type: 'skinner', z: -1.6, pose: 'stand' }, { t: 3.9, k: 'man', type: 'punk', z: 0.4, pose: 'squat' }, { t: 4.0, k: 'man', type: 'thug', z: 2.2, pose: 'stand' }, { t: 4.15, k: 'man', type: 'punk', z: 3.9, pose: 'squat' }, { t: 4.3, k: 'man', type: 'thug', z: -0.8, pose: 'squat' },
+    { t: 5.6, k: 'tires', z: -1.9 }, { t: 5.75, k: 'tires', z: 1 }, { t: 5.9, k: 'tires', z: 3.9 },
+    { t: 7.0, k: 'man', type: 'walther', z: -0.3, pose: 'leap' }, { t: 7.25, k: 'tires', z: 2.8 }, { t: 7.5, k: 'man', type: 'walther', z: 4, pose: 'run' }, { t: 7.6, k: 'tires', z: -2.3 },
+    { t: 8.8, k: 'man', type: 'wrench', z: 1.2, pose: 'run' },
+    { t: 9.8, k: 'man', type: 'skinner', z: -1.7, pose: 'aim' }, { t: 10.0, k: 'man', type: 'gutter', z: 2.8, pose: 'stand' }, { t: 10.3, k: 'man', type: 'poacher', z: 0.1, pose: 'aim' },
+    { t: 11.4, k: 'bike', z: 0.2 },
+    { t: 12.6, k: 'man', type: 'hammer', z: 3.3, pose: 'stand' }, { t: 12.85, k: 'man', type: 'hammer', z: -1.6, pose: 'run' },
+    { t: 13.8, k: 'bike', z: 3.5 },
+    { t: 14.7, k: 'man', type: 'wrench', z: -0.3, pose: 'stand' }, { t: 14.95, k: 'man', type: 'wrench', z: 4, pose: 'run' },
+    { t: 16.0, k: 'bike', z: -1.2 },
+    { t: 17.4, k: 'man', type: 'punk', z: -1.7, pose: 'run' }, { t: 17.5, k: 'man', type: 'thug', z: 0.2, pose: 'leap' }, { t: 17.65, k: 'man', type: 'punk', z: 2, pose: 'squat' }, { t: 17.8, k: 'man', type: 'thug', z: 3.7, pose: 'squat' }, { t: 17.95, k: 'man', type: 'punk', z: 1, pose: 'leap' },
+    { t: 19.6, k: 'drum', z: 4, item: 'ammo' }, { t: 19.8, k: 'drum', z: 0.1 }, { t: 20.05, k: 'drum', z: -2.3 }, { t: 20.3, k: 'drum', z: 2.2, item: 'ammo' }, { t: 20.55, k: 'drum', z: -0.5 },
+    { t: 22.2, k: 'man', type: 'ferris', z: 3.9, pose: 'squat' }, { t: 22.3, k: 'man', type: 'gneiss', z: 0.1, pose: 'leap' }, { t: 22.4, k: 'man', type: 'ferris', z: 1.9, pose: 'leap' }, { t: 22.55, k: 'man', type: 'driver', z: -1.7, pose: 'run' }, { t: 22.7, k: 'man', type: 'gneiss', z: 3, pose: 'squat' }, { t: 22.85, k: 'man', type: 'ferris', z: -0.6, pose: 'leap' },
+    { t: 24.4, k: 'barrel', z: -0.3 }, { t: 24.55, k: 'barrel', z: 2, item: 'ammo' }, { t: 24.7, k: 'barrel', z: 4.2 }, { t: 24.9, k: 'barrel', z: -2.1 }, { t: 25.1, k: 'barrel', z: 1 }, { t: 25.3, k: 'barrel', z: 3.1, item: 'ammo' }
   ],
   hoggAt: 27.5,          // 霍格出场
   carHits: { easy: 5, std: 4, classic: 3 },   // 凯迪拉克挨几颗手雷爆炸（原作录像里约 3 颗；宽松 / 标准档多给）
