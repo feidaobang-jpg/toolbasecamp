@@ -28,7 +28,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #baseBarWrap.low{outline:2px solid #ff5757;animation:base-warning 1s infinite alternate}
 @keyframes base-warning{to{filter:brightness(1.8)}}
 .rescue-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-#rescueStatus{max-width:620px;text-align:center}
 #menuPause{justify-content:flex-start;padding-top:22px}
 #menuPause>*{flex-shrink:0}
 #menuPause label{color:#e3edf4}
@@ -239,24 +238,20 @@ button::before,button::after{content:none!important}
 /* 战术信息集中在主动打开的面板，战斗时只留一个入口。 */
 /* 右面板统一对齐：战术入口撑满面板宽，功能按钮走等宽两列网格，避免左靠/右靠/换行参差。 */
 #tacticsButton{pointer-events:auto;display:block;box-sizing:border-box;width:100%;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
+#squadOrderBtn{pointer-events:auto;display:block;box-sizing:border-box;width:100%;margin-top:5px;max-width:100%;min-height:44px;padding:5px 9px;font-size:11px;white-space:normal;text-align:left}
 #tacticsPanel{width:660px;max-height:88%;overflow-y:auto;z-index:60;background:#132432;color:#edf6f8;border:1px solid #7397a4;touch-action:pan-y}
 #tacticsPanel .small{max-width:none;text-align:left;white-space:pre-line;margin:5px 0;color:#d5e3e9}
 #tacticsPanel h3{padding-right:36px;margin-bottom:8px}
 .tactical-brief{padding:10px 12px;background:#203747;border-radius:8px;margin:10px 0;border-left:3px solid #e4c565}
-#tacticalSquad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
-.tactical-mate{padding:10px;border:1px solid #4e7181;border-radius:8px;background:#1b3140;min-width:0}
-.tactical-mate .btnRow{margin:7px 0 0;gap:8px}
 #tacticsPanel .mbtn{min-height:44px;padding:8px 12px}
-#tacticsPanel button[aria-pressed="true"]{outline:2px solid #ffd75e;outline-offset:1px;background:#345b59;color:#fff}
 #lastBattleReport{padding-top:9px;border-top:1px solid #496879}
 .touch-mode #tacticsPanel{max-height:94%;width:90%!important}
 .touch-mode #tacticsPanel .mbtn{min-height:var(--corner-height,54px);min-width:var(--corner-height,54px);font-size:16px}
-.touch-mode #tacticsButton{font-size:11px;min-height:var(--corner-height,54px)}
+.touch-mode #tacticsButton,.touch-mode #squadOrderBtn{font-size:11px;min-height:var(--corner-height,54px)}
 #tacticsPanel .closeX{min-height:var(--corner-height,44px);min-width:var(--corner-height,44px)}
 #hudRight #webTools{position:static;pointer-events:auto;max-width:100%;margin-top:7px;gap:5px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
 .touch-mode #hudRight #webTools{grid-template-columns:1fr}
 .no-flexgap #hudRight #webTools>*{margin:0}
-@media(max-width:600px){#tacticalSquad{gap:7px}.tactical-mate{padding:7px}}
 #platformPanel{overflow-y:auto;touch-action:pan-y}#platformPanel,#platformPanel *{touch-action:pan-y}
 #platformPanel .mbtn{min-height:44px}#platformPanel h4{margin:14px 0 4px}#cloudInfo{white-space:pre-line}
 #cloudChoices{max-width:100%;padding:8px}#saveLoginForm label{display:block;margin:8px 0}
@@ -391,8 +386,9 @@ button::before,button::after{content:none!important}
       <div id="squadTxt" class="campaign-only"></div>
       <div id="hiveTxt" class="campaign-only"></div>
       <div id="waveTxt" class="campaign-only" style="white-space:pre-line"></div>
+      <button class="mbtn campaign-only" id="squadOrderBtn">队友：跟随我</button>
       <button class="mbtn campaign-only" id="tacticsButton">下一波 · 战术部署</button>
-      <div id="webTools"><button class="mbtn campaign-only" id="opsButton">⚑ 副本</button><button class="mbtn campaign-only" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="qualityBtn" class="mbtn">画质</button><button id="muteBtn" class="mbtn">声音 M</button></div>
+      <div id="webTools"><button class="mbtn campaign-only" id="opsButton">⚑ 副本</button><button class="mbtn campaign-only" id="platformBtn">☁ 存档/排行</button><button id="sandboxBtn" class="mbtn hidden">🧪 测试台 T</button><button id="muteBtn" class="mbtn">声音 M</button></div>
     </div>
     <div id="vsTop" class="versus-only" aria-label="对战状态">
       <div class="vs-side me"><span id="vsMeName">我方</span><div class="vs-bar"><i id="vsMeBar"></i></div><b id="vsMeHp"></b></div>
@@ -520,13 +516,10 @@ button::before,button::after{content:none!important}
       <button class="mbtn red versus-only" id="vsSurrender">🏳 投降</button>
       <button class="mbtn red" id="btnQuit">🏠 回主菜单</button>
     </div>
-    <p class="small campaign-only" id="squadTaskHint">队友跟随/守基地在「战术部署」里统一或逐人安排，并可设置自动回防。</p>
-    <div class="btnRow campaign-only"><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button></div>
-    <div class="rescue-actions campaign-only"><button class="tb-btn" id="recallSquad">队友集合</button><button class="tb-btn" id="rescueVehicles">载具救援</button></div>
-    <p class="small campaign-only" id="rescueStatus" role="status">救援保留血量，各冷却 20 秒。队友集合时驾驶员下车、分配保留；洞内救援载具会送到洞口。直升机跟随到洞口待命。</p>
+    <p class="small campaign-only" id="squadTaskHint">队友默认跟随出击，基地告急时自动回防；可随时一键切换全队「跟随/守家」。</p>
+    <div class="btnRow campaign-only"><button class="mbtn" id="squadOrderPause">队友：跟随我</button><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button></div>
     <div class="btnRow optRow">
       <button class="mbtn" id="personBtnMenu">第三人称</button>
-      <button class="mbtn" id="qualityBtnMenu">画质</button>
       <button class="mbtn" id="daylightPause">地表：白天</button>
       <button class="mbtn" id="muteBtnMenu">声音</button>
       <button class="mbtn" id="keysPause">⌨ 操作设置</button>
@@ -558,9 +551,7 @@ button::before,button::after{content:none!important}
     <button class="closeX" id="tacticsClose" aria-label="关闭战术部署">✕</button>
     <h3 id="tacticsTitle">战术部署</h3>
     <div class="tactical-brief"><strong id="tacticsWaveTitle"></strong><p class="small" id="tacticsWaveInfo"></p><p class="small" id="tacticsWaveHint"></p><p class="small" id="tacticsSupply"></p></div>
-    <div class="btnRow"><button class="mbtn" id="allSquadFollow">全队跟随</button><button class="mbtn" id="allSquadDefend">全队守家</button><button class="mbtn" id="squadAutoDefense" aria-pressed="true">自动回防</button></div>
     <p class="small" id="tacticsOrderHint"></p>
-    <div id="tacticalSquad" aria-label="逐人任务"></div>
     <p class="small" id="lastBattleReport" aria-label="上一关战报"></p>
   </section>
   <!-- 结束 -->

@@ -45,7 +45,7 @@
     "submitted_version": "web-zerg-corpse-spinfix-v0.33.3",
     "published_version": "web-resistance-v0.33.0",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
-    "note": "送审包含虫族母虫尸体残留与武直悬停打转修复(基于master@586c619f)。审核中。",
+    "note": "送审包含虫族母虫尸体残留与武直悬停打转修复(基于master@586c619f)。mylist 显示 published(线上仍为 v0.33.0)，v0.33.3 及后续包 --yes 提审连续7次 code=307008 无权限操作，非登录失效、也非审核中锁包；补提以主线 releases/web-touch-cream-pause-20261010/release.json 的 zip_sha256 为准，待本人确认后台权限。",
     "package_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
     "pending_updates": [
       {

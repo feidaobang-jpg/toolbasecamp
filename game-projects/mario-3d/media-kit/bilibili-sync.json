@@ -7,51 +7,55 @@
       "url": "https://www.bilibili.com/video/BV1guep6NELt/",
       "owner_uid": 16214353,
       "toy_bound": true,
-      "last_public_verified_version": "v2.5.0-menu-text1",
-      "last_public_verified_at": "2026-10-10T02:44:35.265Z",
+      "last_public_verified_version": "v2.6.0-preview1",
+      "last_public_verified_at": "2026-10-11T05:11:41+08:00",
       "last_sync_record": "releases/backfill-20261010/release-status.json",
-      "description_sha256": "3db339bdf606bcfc7bfad1da2919465331cca0e24325ad2d3cb46e9bc0e4e807",
-      "lastPublicVerifiedVersion": "v2.5.0-menu-text1",
-      "descriptionHash": "3db339bdf606bcfc7bfad1da2919465331cca0e24325ad2d3cb46e9bc0e4e807",
+      "description_sha256": "0b8e0d1a9a8f806165145d49455562db0dfb300d9e160d1f275e38131f79e0e5",
+      "lastPublicVerifiedVersion": "v2.6.0-preview1",
+      "descriptionHash": "0b8e0d1a9a8f806165145d49455562db0dfb300d9e160d1f275e38131f79e0e5",
       "release": "releases/backfill-20261010/release-status.json",
       "publicVerifiedAt": "2026-10-10T02:44:35.265Z",
       "status": "public_verified",
-      "submitted_version": "v2.5.0-menu-text1",
-      "description_revision": "v2.5.0-menu-text1",
-      "public_verified_at": "2026-10-10T02:44:35.265Z",
-      "description_public_verified_at": "2026-10-10T02:44:35.265Z",
+      "description_revision": "v2.6.0-preview1",
+      "public_verified_at": "2026-10-11T05:11:41+08:00",
+      "description_public_verified_at": "2026-10-11T05:11:41+08:00",
       "record": "releases/backfill-20261010/release-status.json",
       "release_record": "releases/backfill-20261010/release-status.json",
-      "submitted_at": "2026-10-10T02:17:09.296Z",
-      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json",
+      "submitted_version": "v2.6.0-preview1",
+      "submitted_at": "2026-10-11T04:47:00+08:00",
+      "submitted_record": "releases/v2.6.0-preview1/bili-update.json",
+      "pending_public_verification": false
     },
     {
       "bvid": "BV1Fwpw6FEFx",
       "url": "https://www.bilibili.com/video/BV1Fwpw6FEFx/",
       "owner_uid": 16214353,
       "mapping_evidence": "本人五款游戏实战视频，公开简介明确包含超级玛丽；只追加玛丽修复段落，不新增或改变视频绑定",
-      "last_public_verified_version": "v2.5.0-menu-text1",
-      "last_public_verified_at": "2026-10-10T02:44:36.453Z",
+      "last_public_verified_version": "v2.6.0-preview1",
+      "last_public_verified_at": "2026-10-11T05:11:41+08:00",
       "last_sync_record": "releases/backfill-20261010/release-status.json",
-      "description_sha256": "ba8c210c0aad0314bab7dd1076b6f6e6565f4219228ccfc7984987fa19ae1626",
-      "lastPublicVerifiedVersion": "v2.5.0-menu-text1",
-      "descriptionHash": "ba8c210c0aad0314bab7dd1076b6f6e6565f4219228ccfc7984987fa19ae1626",
+      "description_sha256": "c6bbcf78e198b7288992d21faa10051c4bf206def7383549eab3ffe88633bdbc",
+      "lastPublicVerifiedVersion": "v2.6.0-preview1",
+      "descriptionHash": "c6bbcf78e198b7288992d21faa10051c4bf206def7383549eab3ffe88633bdbc",
       "release": "releases/backfill-20261010/release-status.json",
       "publicVerifiedAt": "2026-10-10T02:44:36.453Z",
       "status": "public_verified",
-      "submitted_version": "v2.5.0-menu-text1",
-      "description_revision": "v2.5.0-menu-text1",
-      "public_verified_at": "2026-10-10T02:44:36.453Z",
-      "description_public_verified_at": "2026-10-10T02:44:36.453Z",
+      "description_revision": "v2.6.0-preview1",
+      "public_verified_at": "2026-10-11T05:11:41+08:00",
+      "description_public_verified_at": "2026-10-11T05:11:41+08:00",
       "record": "releases/backfill-20261010/release-status.json",
       "release_record": "releases/backfill-20261010/release-status.json",
-      "submitted_at": "2026-10-10T02:18:53.869Z",
-      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json",
+      "submitted_version": "v2.6.0-preview1",
+      "submitted_at": "2026-10-11T04:38:00+08:00",
+      "submitted_record": "releases/v2.6.0-preview1/bili-update.json",
+      "pending_public_verification": false
     }
   ],
   "status": "public_verified",
-  "reason": null,
-  "version": "v2.5.0-menu-text1",
+  "reason": "v2.6.0-preview1 第四关简介已在公开接口渲染（view API desc 核验）；Toy 已于 2026-10-10 23:49 过审上线，简介「Toy新版审核中」纠错进行中",
+  "version": "v2.6.0-preview1",
   "excluded_candidates": [
     {
       "bvid": "BV1guep6NELt",
@@ -120,7 +124,7 @@
       "resolved_at": "2026-10-07T01:40:46.831Z"
     }
   ],
-  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "updated_at": "2026-10-11T05:11:41+08:00",
   "history": [
     {
       "bvid": "BV1guep6NELt",
@@ -192,18 +196,32 @@
         "release": "releases/v2.5.0/handoff.json",
         "publicVerifiedAt": "2026-10-07T01:40:46.831Z"
       }
+    },
+    {
+      "bvid": "BV1guep6NELt",
+      "version": "v2.6.0-preview1",
+      "status": "public_verified",
+      "record": "releases/v2.6.0-preview1/bili-update.json",
+      "checked_at": "2026-10-11T05:11:41+08:00"
+    },
+    {
+      "bvid": "BV1Fwpw6FEFx",
+      "version": "v2.6.0-preview1",
+      "status": "public_verified",
+      "record": "releases/v2.6.0-preview1/bili-update.json",
+      "checked_at": "2026-10-11T05:11:41+08:00"
     }
   ],
   "last_public_verified": {
-    "version": "v2.5.0-menu-text1",
-    "at": "2026-10-10T03:02:52.978211+00:00",
+    "version": "v2.6.0-preview1",
+    "at": "2026-10-11T05:11:41+08:00",
     "bvids": [
       "BV1guep6NELt",
       "BV1Fwpw6FEFx"
     ],
-    "record": "releases/backfill-20261010/release-status.json"
+    "record": "releases/v2.6.0-preview1/bili-update.json"
   },
-  "latest_record": "releases/backfill-20261010/release-status.json",
-  "last_release_record": "releases/backfill-20261010/release-status.json",
-  "pending_note": null
+  "latest_record": "releases/v2.6.0-preview1/bili-update.json",
+  "last_release_record": "releases/v2.6.0-preview1/bili-update.json",
+  "pending_note": "「Toy新版审核中」待纠错为「网站与Toy均已更新」；纠错公开核验通过后推进 description_revision 基线"
 }
