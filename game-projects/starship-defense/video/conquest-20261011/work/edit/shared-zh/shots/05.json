@@ -1,0 +1,17 @@
+{
+  "index": 5,
+  "segment": "04-kit",
+  "start": 30.633333333333333,
+  "end": 35.233333333333334,
+  "duration": 4.6,
+  "frames": 138,
+  "source": "capture/vehicle-02/01-opening/raw.mp4",
+  "source_in": 8.1,
+  "source_out": 12.7,
+  "speed": 1,
+  "label": "补拍：另一局载具实战 · 普通规则 · I 登乘坦克",
+  "still": false,
+  "source_size": 43678450,
+  "source_mtime_ns": 1791667138817567400,
+  "encoding_schema": "bt709-limited-v2"
+}

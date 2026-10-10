@@ -1,0 +1,98 @@
+{
+  "text": "只剩三张兵力票，还能赢吗？这场据点争夺，最后真的险胜了。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 6.816,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1875000,
+      "text": "只"
+    },
+    {
+      "offset": 2875000,
+      "duration": 1625000,
+      "text": "剩"
+    },
+    {
+      "offset": 4750000,
+      "duration": 2500000,
+      "text": "三"
+    },
+    {
+      "offset": 7250000,
+      "duration": 1625000,
+      "text": "张"
+    },
+    {
+      "offset": 9000000,
+      "duration": 2375000,
+      "text": "兵力"
+    },
+    {
+      "offset": 11375000,
+      "duration": 4125000,
+      "text": "票"
+    },
+    {
+      "offset": 19125000,
+      "duration": 1875000,
+      "text": "还"
+    },
+    {
+      "offset": 21000000,
+      "duration": 1125000,
+      "text": "能"
+    },
+    {
+      "offset": 22250000,
+      "duration": 1875000,
+      "text": "赢"
+    },
+    {
+      "offset": 24125000,
+      "duration": 2375000,
+      "text": "吗"
+    },
+    {
+      "offset": 32125000,
+      "duration": 2000000,
+      "text": "这"
+    },
+    {
+      "offset": 34125000,
+      "duration": 1875000,
+      "text": "场"
+    },
+    {
+      "offset": 36250000,
+      "duration": 3250000,
+      "text": "据点"
+    },
+    {
+      "offset": 39625000,
+      "duration": 5750000,
+      "text": "争夺"
+    },
+    {
+      "offset": 48500000,
+      "duration": 2750000,
+      "text": "最后"
+    },
+    {
+      "offset": 51500000,
+      "duration": 2375000,
+      "text": "真的"
+    },
+    {
+      "offset": 54000000,
+      "duration": 3750000,
+      "text": "险胜"
+    },
+    {
+      "offset": 57750000,
+      "duration": 1750000,
+      "text": "了"
+    }
+  ]
+}

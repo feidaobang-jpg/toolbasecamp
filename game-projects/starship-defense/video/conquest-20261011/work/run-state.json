@@ -1,0 +1,66 @@
+{
+  "task_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011",
+  "source": "Codex",
+  "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+  "project_path": "D:/project/toolbasecamp-artifacts/conquest-video-20261011",
+  "mode": "实战介绍：战地模式据点争夺",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "stage": "waiting_for_user",
+  "production_stage": "completed_pending_human_review",
+  "human_review": {
+    "status": "pending",
+    "approved_variants": [],
+    "user_statement": null,
+    "approved_at": null,
+    "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
+    "reviewed_media_required": {
+      "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "douyin-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "youtube-zh": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4"
+    },
+    "reviewed_subtitles_required": {
+      "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
+      "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
+    }
+  },
+  "game_version": "deployed-08028efe",
+  "source_capture": "current deployed website; exact hashes retained",
+  "branch": "codex/conquest-video-20261011",
+  "original_worktree": "C:\\Users\\37818\\.codex\\worktrees\\conquest-video-20261011\\toolbasecamp",
+  "toolchain": [
+    "Playwright Chromium screencast",
+    "Web Audio MediaRecorder",
+    "Edge TTS Yunxi",
+    "FFmpeg NVENC",
+    "Pillow"
+  ],
+  "cover_stage": "completed",
+  "render_entrypoint": "render.py",
+  "updated_at": "2026-10-10T21:35:02.322312+00:00",
+  "next_step": "用户人工审片三平台版本和中英字幕，确认后按审批哈希继续发布；先核对真实投稿入口与Toy异常，不接管游戏发布待办。",
+  "publication_status": {
+    "bilibili-zh": "not_uploaded",
+    "douyin-zh": "not_uploaded",
+    "youtube-zh": "not_uploaded"
+  },
+  "notification": {
+    "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
+    "needs_user_status": "sent",
+    "reason": "Approval"
+  },
+  "delivery_path": "D:/project/toolbasecamp-artifacts/conquest-video-20261011",
+  "preservation_status": "final_media_and_subtitle_hashes_verified",
+  "resource_cleanup": {
+    "capture_scripts_exited": true,
+    "playwright_contexts_closed_in_finally": true,
+    "toy_public_cua_tab_closed": true,
+    "model_server_started": false,
+    "preview_server_started": false
+  },
+  "git_worktree": "C:/Users/37818/.codex/worktrees/conquest-video-20261011/toolbasecamp",
+  "review_page_check": "pass: local 1080p video and both 52-cue subtitle tracks load without starting playback"
+}

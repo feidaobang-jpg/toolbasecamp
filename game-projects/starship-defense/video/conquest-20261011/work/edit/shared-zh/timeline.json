@@ -1,0 +1,1059 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 110.53333333333333,
+  "segments": [
+    {
+      "id": "01-hook",
+      "text": "只剩三张兵力票，还能赢吗？这场据点争夺，最后真的险胜了。",
+      "english": [
+        "Only three tickets left.",
+        "Could we still win?",
+        "This conquest match",
+        "ended in a very close victory."
+      ],
+      "start": 0,
+      "end": 7.166666666666667,
+      "duration": 7.166666666666667,
+      "voice_duration": 6.816,
+      "voice_offset": 0.12,
+      "frames": 215,
+      "wav": "audio\\shared-zh\\01-hook.wav"
+    },
+    {
+      "id": "02-map",
+      "text": "这是虫潮围城的战地模式。旧镇、通信站、补给仓库，抢的就是这三个点。",
+      "english": [
+        "This is the Battlefield mode in Swarm Siege.",
+        "Old Town, Comms Station and Supply Depot:",
+        "these are the three objectives."
+      ],
+      "start": 7.166666666666667,
+      "end": 15.3,
+      "duration": 8.133333333333333,
+      "voice_duration": 7.776,
+      "voice_offset": 0.12,
+      "frames": 244,
+      "wav": "audio\\shared-zh\\02-map.wav"
+    },
+    {
+      "id": "03-tickets",
+      "text": "控制两个点，就会持续扣掉对面的兵力票。光顾着追人，旗子被偷，照样会输。喜欢这个玩法，顺手点个赞。",
+      "english": [
+        "Control two objectives",
+        "and the enemy keeps losing tickets.",
+        "Chase enemies while",
+        "your flags get taken,",
+        "and you can still lose.",
+        "If you like this mode,",
+        "leave a like."
+      ],
+      "start": 15.3,
+      "end": 26.53333333333333,
+      "duration": 11.233333333333333,
+      "voice_duration": 10.872,
+      "voice_offset": 0.12,
+      "frames": 337,
+      "wav": "audio\\shared-zh\\03-tickets.wav"
+    },
+    {
+      "id": "04-kit",
+      "text": "这次没有买兵和升级。五种兵种用固定装备，开局我选工程兵，先开坦克推进。",
+      "english": [
+        "There is no troop purchasing or leveling up here.",
+        "Five classes have fixed loadouts.",
+        "I choose Engineer at the start",
+        "and push forward in a tank."
+      ],
+      "start": 26.53333333333333,
+      "end": 35.233333333333334,
+      "duration": 8.7,
+      "voice_duration": 8.352,
+      "voice_offset": 0.12,
+      "frames": 261,
+      "wav": "audio\\shared-zh\\04-kit.wav"
+    },
+    {
+      "id": "05-tank",
+      "text": "这段是另开一局补拍的载具战。坦克沿着道路推进，挨打会掉装甲，步兵也在往旗点靠。",
+      "english": [
+        "This vehicle footage is from a separate match.",
+        "The tank advances along the road.",
+        "Its armor drops when it takes hits.",
+        "Infantry are moving toward the objectives too."
+      ],
+      "start": 35.233333333333334,
+      "end": 44.13333333333333,
+      "duration": 8.9,
+      "voice_duration": 8.544,
+      "voice_offset": 0.12,
+      "frames": 267,
+      "wav": "audio\\shared-zh\\05-tank.wav"
+    },
+    {
+      "id": "06-spawn",
+      "text": "回到主战局，第一波我就倒了。但不用一直从老家跑：选已经占住的仓库，换成医疗兵，再部署到前线。",
+      "english": [
+        "Back in the main match,",
+        "I went down in the first push.",
+        "Select our captured depot instead of running from HQ,",
+        "switch to Medic,",
+        "and redeploy near the front."
+      ],
+      "start": 44.13333333333333,
+      "end": 54.1,
+      "duration": 9.966666666666667,
+      "voice_duration": 9.624,
+      "voice_offset": 0.12,
+      "frames": 299,
+      "wav": "audio\\shared-zh\\06-spawn.wav"
+    },
+    {
+      "id": "07-heal",
+      "text": "残血的时候按支援，血量就能补回来。活着留在圈里，比冲出去再送一次更有用。",
+      "english": [
+        "Use support when hurt",
+        "to recover health.",
+        "Staying alive inside the objective",
+        "helps more than rushing out and dying again."
+      ],
+      "start": 54.1,
+      "end": 62.36666666666667,
+      "duration": 8.266666666666667,
+      "voice_duration": 7.92,
+      "voice_offset": 0.12,
+      "frames": 248,
+      "wav": "audio\\shared-zh\\07-heal.wav"
+    },
+    {
+      "id": "08-fight",
+      "text": "中间的通信站反复易手。我贴着掩体交火，再扔手雷压住路口。对面也会开车和反扑，真不能一直硬冲。",
+      "english": [
+        "The central Comms Station changes hands repeatedly.",
+        "I fight from cover",
+        "and throw a grenade toward the junction.",
+        "The enemy uses vehicles and counterattacks too.",
+        "I cannot just keep charging straight in."
+      ],
+      "start": 62.36666666666667,
+      "end": 73.53333333333333,
+      "duration": 11.166666666666666,
+      "voice_duration": 10.824,
+      "voice_offset": 0.12,
+      "frames": 335,
+      "wav": "audio\\shared-zh\\08-fight.wav"
+    },
+    {
+      "id": "09-finish",
+      "text": "到最后，两边兵力都见底了。我们守住通信站和仓库，对面票数归零，我方剩三票。",
+      "english": [
+        "By the end,",
+        "both teams were almost out of tickets.",
+        "We held Comms Station and Supply Depot.",
+        "The enemy reached zero;",
+        "we had three left."
+      ],
+      "start": 73.53333333333333,
+      "end": 82.8,
+      "duration": 9.266666666666667,
+      "voice_duration": 8.904,
+      "voice_offset": 0.12,
+      "frames": 278,
+      "wav": "audio\\shared-zh\\09-finish.wav"
+    },
+    {
+      "id": "10-result",
+      "text": "结算挺有意思：我方击杀九十四，对面一百零五。杀得更多的一边，反而输了。抢点和保住自己，都得算进去。",
+      "english": [
+        "The result is interesting: our team scored 94 kills,",
+        "and theirs scored 105.",
+        "The team with more kills",
+        "still lost.",
+        "Objectives and staying alive",
+        "both matter."
+      ],
+      "start": 82.8,
+      "end": 94.26666666666667,
+      "duration": 11.466666666666667,
+      "voice_duration": 11.112,
+      "voice_offset": 0.12,
+      "frames": 344,
+      "wav": "audio\\shared-zh\\10-result.wav"
+    },
+    {
+      "id": "11-close",
+      "text": "这一局靠占点赢下来了，正面硬冲还是很容易倒。下次我想试试兵种配合和侧翼夺点。虫潮围城现在可以在百宝箱试玩，想玩什么也可以填愿望单。",
+      "english": [
+        "We won this match through objective control,",
+        "but direct charges were still deadly.",
+        "Next time I want to try class teamwork and flanking.",
+        "You can now play 虫潮围城, Swarm Siege, on the Treasure Box website.",
+        "You can also submit a game idea to the wishlist."
+      ],
+      "start": 94.26666666666667,
+      "end": 110.53333333333333,
+      "duration": 16.266666666666666,
+      "voice_duration": 13.92,
+      "voice_offset": 0.12,
+      "frames": 488,
+      "wav": "audio\\shared-zh\\11-close.wav"
+    }
+  ],
+  "shots": [
+    {
+      "index": 0,
+      "segment": "01-hook",
+      "start": 0,
+      "end": 3.6,
+      "duration": 3.6,
+      "frames": 108,
+      "source": "capture/match-01/02-battle/raw.mp4",
+      "source_in": 34.9693359375,
+      "source_out": 38.5693359375,
+      "speed": 1,
+      "label": "主战局结尾预览 · 兵力票见底",
+      "still": false
+    },
+    {
+      "index": 1,
+      "segment": "01-hook",
+      "start": 3.6,
+      "end": 7.166666666666667,
+      "duration": 3.566666666666667,
+      "frames": 107,
+      "source": "capture/match-01/real-result.png",
+      "source_in": 0,
+      "source_out": 3.566666666666667,
+      "speed": 1,
+      "label": "实际结算：3 : 0 险胜",
+      "still": true
+    },
+    {
+      "index": 2,
+      "segment": "02-map",
+      "start": 7.166666666666667,
+      "end": 15.3,
+      "duration": 8.133333333333333,
+      "frames": 244,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 57,
+      "source_out": 65.13333333333333,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑",
+      "still": false
+    },
+    {
+      "index": 3,
+      "segment": "03-tickets",
+      "start": 15.3,
+      "end": 26.53333333333333,
+      "duration": 11.233333333333333,
+      "frames": 337,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 70,
+      "source_out": 81.23333333333333,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑",
+      "still": false
+    },
+    {
+      "index": 4,
+      "segment": "04-kit",
+      "start": 26.53333333333333,
+      "end": 30.633333333333333,
+      "duration": 4.1,
+      "frames": 123,
+      "source": "capture/vehicle-02/01-opening/raw.mp4",
+      "source_in": 0.7,
+      "source_out": 4.8,
+      "speed": 1,
+      "label": "补拍：另一局载具实战 · 普通规则 · 五兵种固定装备",
+      "still": false
+    },
+    {
+      "index": 5,
+      "segment": "04-kit",
+      "start": 30.633333333333333,
+      "end": 35.233333333333334,
+      "duration": 4.6,
+      "frames": 138,
+      "source": "capture/vehicle-02/01-opening/raw.mp4",
+      "source_in": 8.1,
+      "source_out": 12.7,
+      "speed": 1,
+      "label": "补拍：另一局载具实战 · 普通规则 · I 登乘坦克",
+      "still": false
+    },
+    {
+      "index": 6,
+      "segment": "05-tank",
+      "start": 35.233333333333334,
+      "end": 44.13333333333333,
+      "duration": 8.9,
+      "frames": 267,
+      "source": "capture/vehicle-02/01-opening/raw.mp4",
+      "source_in": 50.2,
+      "source_out": 59.1,
+      "speed": 1,
+      "label": "补拍：另一局载具实战 · 普通规则",
+      "still": false
+    },
+    {
+      "index": 7,
+      "segment": "06-spawn",
+      "start": 44.13333333333333,
+      "end": 49.333333333333336,
+      "duration": 5.2,
+      "frames": 156,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 26,
+      "source_out": 31.2,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 阵亡后选择兵种与据点",
+      "still": false
+    },
+    {
+      "index": 8,
+      "segment": "06-spawn",
+      "start": 49.333333333333336,
+      "end": 54.1,
+      "duration": 4.766666666666667,
+      "frames": 143,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 35,
+      "source_out": 39.766666666666666,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 仓库附近重新部署",
+      "still": false
+    },
+    {
+      "index": 9,
+      "segment": "07-heal",
+      "start": 54.1,
+      "end": 58.1,
+      "duration": 4.0,
+      "frames": 120,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 41.262318992614745,
+      "source_out": 45.262318992614745,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · H 医疗支援",
+      "still": false
+    },
+    {
+      "index": 10,
+      "segment": "07-heal",
+      "start": 58.1,
+      "end": 62.36666666666667,
+      "duration": 4.266666666666667,
+      "frames": 128,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 69,
+      "source_out": 73.26666666666667,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 进入补给仓库占领圈",
+      "still": false
+    },
+    {
+      "index": 11,
+      "segment": "08-fight",
+      "start": 62.36666666666667,
+      "end": 73.53333333333333,
+      "duration": 11.166666666666666,
+      "frames": 335,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 119.47331910133362,
+      "source_out": 130.6399857680003,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 掩体交火与手雷",
+      "still": false
+    },
+    {
+      "index": 12,
+      "segment": "09-finish",
+      "start": 73.53333333333333,
+      "end": 82.8,
+      "duration": 9.266666666666667,
+      "frames": 278,
+      "source": "capture/match-01/02-battle/raw.mp4",
+      "source_in": 30.1693359375,
+      "source_out": 39.43600260416667,
+      "speed": 1,
+      "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 最后两个据点",
+      "still": false
+    },
+    {
+      "index": 13,
+      "segment": "10-result",
+      "start": 82.8,
+      "end": 94.26666666666667,
+      "duration": 11.466666666666667,
+      "frames": 344,
+      "source": "capture/match-01/real-result.png",
+      "source_in": 0,
+      "source_out": 11.466666666666667,
+      "speed": 1,
+      "label": "主战局 · 03:45 实际结算 · 击杀94 : 105",
+      "still": true
+    },
+    {
+      "index": 14,
+      "segment": "11-close",
+      "start": 94.26666666666667,
+      "end": 99.96666666666667,
+      "duration": 5.7,
+      "frames": 171,
+      "source": "capture/match-01/01-opening/raw.mp4",
+      "source_in": 54,
+      "source_out": 59.7,
+      "speed": 1,
+      "label": "主战局复盘 · 向侧翼推进",
+      "still": false
+    },
+    {
+      "index": 15,
+      "segment": "11-close",
+      "start": 99.96666666666667,
+      "end": 110.53333333333333,
+      "duration": 10.566666666666666,
+      "frames": 317,
+      "source": "edit/shared-zh/closing.png",
+      "source_in": 0,
+      "source_out": 10.566666666666666,
+      "speed": 1,
+      "label": "",
+      "still": true
+    }
+  ],
+  "subtitles": [
+    {
+      "start": 0.22,
+      "end": 1.74,
+      "text": "只剩三张兵力票，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 2.0325,
+      "end": 2.84,
+      "text": "还能赢吗？",
+      "segment": "01-hook"
+    },
+    {
+      "start": 3.3325,
+      "end": 4.7275,
+      "text": "这场据点争夺，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 4.97,
+      "end": 6.140000000000001,
+      "text": "最后真的险胜了。",
+      "segment": "01-hook"
+    },
+    {
+      "start": 7.386666666666667,
+      "end": 9.581666666666667,
+      "text": "这是虫潮围城的战地模式。",
+      "segment": "02-map"
+    },
+    {
+      "start": 10.086666666666666,
+      "end": 12.681666666666668,
+      "text": "旧镇、通信站、补给仓库，",
+      "segment": "02-map"
+    },
+    {
+      "start": 12.974166666666667,
+      "end": 14.269166666666667,
+      "text": "抢的就是这三个点。",
+      "segment": "02-map"
+    },
+    {
+      "start": 15.52,
+      "end": 16.54,
+      "text": "控制两个点，",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 16.6825,
+      "end": 18.740000000000002,
+      "text": "就会持续扣掉对面的兵力票。",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 19.22,
+      "end": 20.265,
+      "text": "光顾着追人，",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 20.495,
+      "end": 21.39,
+      "text": "旗子被偷，",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 21.5825,
+      "end": 22.5025,
+      "text": "照样会输。",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 22.995,
+      "end": 24.2275,
+      "text": "喜欢这个玩法，",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 24.432499999999997,
+      "end": 25.490000000000002,
+      "text": "顺手点个赞。",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 26.753333333333334,
+      "end": 28.585833333333333,
+      "text": "这次没有买兵和升级。",
+      "segment": "04-kit"
+    },
+    {
+      "start": 29.090833333333332,
+      "end": 30.935833333333335,
+      "text": "五种兵种用固定装备，",
+      "segment": "04-kit"
+    },
+    {
+      "start": 31.215833333333332,
+      "end": 32.660833333333336,
+      "text": "开局我选工程兵，",
+      "segment": "04-kit"
+    },
+    {
+      "start": 33.01583333333333,
+      "end": 34.19833333333333,
+      "text": "先开坦克推进。",
+      "segment": "04-kit"
+    },
+    {
+      "start": 35.45333333333333,
+      "end": 37.83583333333333,
+      "text": "这段是另开一局补拍的载具战。",
+      "segment": "05-tank"
+    },
+    {
+      "start": 38.34083333333333,
+      "end": 39.79833333333333,
+      "text": "坦克沿着道路推进，",
+      "segment": "05-tank"
+    },
+    {
+      "start": 40.053333333333335,
+      "end": 41.32333333333333,
+      "text": "挨打会掉装甲，",
+      "segment": "05-tank"
+    },
+    {
+      "start": 41.52833333333333,
+      "end": 43.08583333333333,
+      "text": "步兵也在往旗点靠。",
+      "segment": "05-tank"
+    },
+    {
+      "start": 44.35333333333333,
+      "end": 45.38583333333333,
+      "text": "回到主战局，",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 45.66583333333333,
+      "end": 46.84833333333333,
+      "text": "第一波我就倒了。",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 47.34083333333333,
+      "end": 50.59833333333333,
+      "text": "但不用一直从老家跑：选已经占住的仓库，",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 50.75333333333333,
+      "end": 51.87333333333333,
+      "text": "换成医疗兵，",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 51.97833333333333,
+      "end": 53.06083333333333,
+      "text": "再部署到前线。",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 54.32,
+      "end": 55.8775,
+      "text": "残血的时候按支援，",
+      "segment": "07-heal"
+    },
+    {
+      "start": 56.207499999999996,
+      "end": 57.44,
+      "text": "血量就能补回来。",
+      "segment": "07-heal"
+    },
+    {
+      "start": 57.9325,
+      "end": 59.1275,
+      "text": "活着留在圈里，",
+      "segment": "07-heal"
+    },
+    {
+      "start": 59.37,
+      "end": 61.3275,
+      "text": "比冲出去再送一次更有用。",
+      "segment": "07-heal"
+    },
+    {
+      "start": 62.586666666666666,
+      "end": 64.76916666666666,
+      "text": "中间的通信站反复易手。",
+      "segment": "08-fight"
+    },
+    {
+      "start": 65.27416666666666,
+      "end": 66.73166666666665,
+      "text": "我贴着掩体交火，",
+      "segment": "08-fight"
+    },
+    {
+      "start": 66.93666666666667,
+      "end": 68.36916666666666,
+      "text": "再扔手雷压住路口。",
+      "segment": "08-fight"
+    },
+    {
+      "start": 68.87416666666667,
+      "end": 70.90666666666665,
+      "text": "对面也会开车和反扑，",
+      "segment": "08-fight"
+    },
+    {
+      "start": 71.13666666666667,
+      "end": 72.50666666666666,
+      "text": "真不能一直硬冲。",
+      "segment": "08-fight"
+    },
+    {
+      "start": 73.75333333333333,
+      "end": 74.48583333333333,
+      "text": "到最后，",
+      "segment": "09-finish"
+    },
+    {
+      "start": 74.75333333333333,
+      "end": 76.34833333333333,
+      "text": "两边兵力都见底了。",
+      "segment": "09-finish"
+    },
+    {
+      "start": 76.84083333333334,
+      "end": 78.81083333333333,
+      "text": "我们守住通信站和仓库，",
+      "segment": "09-finish"
+    },
+    {
+      "start": 79.09083333333334,
+      "end": 80.39833333333333,
+      "text": "对面票数归零，",
+      "segment": "09-finish"
+    },
+    {
+      "start": 80.60333333333334,
+      "end": 81.76083333333332,
+      "text": "我方剩三票。",
+      "segment": "09-finish"
+    },
+    {
+      "start": 83.02,
+      "end": 85.9525,
+      "text": "结算挺有意思：我方击杀九十四，",
+      "segment": "10-result"
+    },
+    {
+      "start": 86.2075,
+      "end": 87.3025,
+      "text": "对面一百零五。",
+      "segment": "10-result"
+    },
+    {
+      "start": 87.8075,
+      "end": 89.08999999999999,
+      "text": "杀得更多的一边，",
+      "segment": "10-result"
+    },
+    {
+      "start": 89.32000000000001,
+      "end": 90.19,
+      "text": "反而输了。",
+      "segment": "10-result"
+    },
+    {
+      "start": 90.6825,
+      "end": 92.10249999999999,
+      "text": "抢点和保住自己，",
+      "segment": "10-result"
+    },
+    {
+      "start": 92.3325,
+      "end": 93.22749999999999,
+      "text": "都得算进去。",
+      "segment": "10-result"
+    },
+    {
+      "start": 94.48666666666666,
+      "end": 96.25666666666666,
+      "text": "这一局靠占点赢下来了，",
+      "segment": "11-close"
+    },
+    {
+      "start": 96.59916666666668,
+      "end": 98.56916666666666,
+      "text": "正面硬冲还是很容易倒。",
+      "segment": "11-close"
+    },
+    {
+      "start": 99.07416666666667,
+      "end": 102.05666666666666,
+      "text": "下次我想试试兵种配合和侧翼夺点。",
+      "segment": "11-close"
+    },
+    {
+      "start": 102.56166666666667,
+      "end": 105.23166666666667,
+      "text": "虫潮围城现在可以在百宝箱试玩，",
+      "segment": "11-close"
+    },
+    {
+      "start": 105.51166666666667,
+      "end": 107.50666666666666,
+      "text": "想玩什么也可以填愿望单。",
+      "segment": "11-close"
+    }
+  ],
+  "english_subtitles": [
+    {
+      "start": 0.22,
+      "end": 1.74,
+      "text": "Only three tickets left.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 2.0325,
+      "end": 2.84,
+      "text": "Could we still win?",
+      "segment": "01-hook"
+    },
+    {
+      "start": 3.3325,
+      "end": 4.7275,
+      "text": "This conquest match",
+      "segment": "01-hook"
+    },
+    {
+      "start": 4.97,
+      "end": 6.140000000000001,
+      "text": "ended in a very close victory.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 7.386666666666667,
+      "end": 9.581666666666667,
+      "text": "This is the Battlefield mode in Swarm Siege.",
+      "segment": "02-map"
+    },
+    {
+      "start": 10.086666666666666,
+      "end": 12.681666666666668,
+      "text": "Old Town, Comms Station and Supply Depot:",
+      "segment": "02-map"
+    },
+    {
+      "start": 12.974166666666667,
+      "end": 14.269166666666667,
+      "text": "these are the three objectives.",
+      "segment": "02-map"
+    },
+    {
+      "start": 15.52,
+      "end": 16.54,
+      "text": "Control two objectives",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 16.6825,
+      "end": 18.740000000000002,
+      "text": "and the enemy keeps losing tickets.",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 19.22,
+      "end": 20.265,
+      "text": "Chase enemies while",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 20.495,
+      "end": 21.39,
+      "text": "your flags get taken,",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 21.5825,
+      "end": 22.5025,
+      "text": "and you can still lose.",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 22.995,
+      "end": 24.2275,
+      "text": "If you like this mode,",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 24.432499999999997,
+      "end": 25.490000000000002,
+      "text": "leave a like.",
+      "segment": "03-tickets"
+    },
+    {
+      "start": 26.753333333333334,
+      "end": 28.585833333333333,
+      "text": "There is no troop purchasing or leveling up here.",
+      "segment": "04-kit"
+    },
+    {
+      "start": 29.090833333333332,
+      "end": 30.935833333333335,
+      "text": "Five classes have fixed loadouts.",
+      "segment": "04-kit"
+    },
+    {
+      "start": 31.215833333333332,
+      "end": 32.660833333333336,
+      "text": "I choose Engineer at the start",
+      "segment": "04-kit"
+    },
+    {
+      "start": 33.01583333333333,
+      "end": 34.19833333333333,
+      "text": "and push forward in a tank.",
+      "segment": "04-kit"
+    },
+    {
+      "start": 35.45333333333333,
+      "end": 37.83583333333333,
+      "text": "This vehicle footage is from a separate match.",
+      "segment": "05-tank"
+    },
+    {
+      "start": 38.34083333333333,
+      "end": 39.79833333333333,
+      "text": "The tank advances along the road.",
+      "segment": "05-tank"
+    },
+    {
+      "start": 40.053333333333335,
+      "end": 41.32333333333333,
+      "text": "Its armor drops when it takes hits.",
+      "segment": "05-tank"
+    },
+    {
+      "start": 41.52833333333333,
+      "end": 43.08583333333333,
+      "text": "Infantry are moving toward the objectives too.",
+      "segment": "05-tank"
+    },
+    {
+      "start": 44.35333333333333,
+      "end": 45.38583333333333,
+      "text": "Back in the main match,",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 45.66583333333333,
+      "end": 46.84833333333333,
+      "text": "I went down in the first push.",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 47.34083333333333,
+      "end": 50.59833333333333,
+      "text": "Select our captured depot instead of running from HQ,",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 50.75333333333333,
+      "end": 51.87333333333333,
+      "text": "switch to Medic,",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 51.97833333333333,
+      "end": 53.06083333333333,
+      "text": "and redeploy near the front.",
+      "segment": "06-spawn"
+    },
+    {
+      "start": 54.32,
+      "end": 55.8775,
+      "text": "Use support when hurt",
+      "segment": "07-heal"
+    },
+    {
+      "start": 56.207499999999996,
+      "end": 57.44,
+      "text": "to recover health.",
+      "segment": "07-heal"
+    },
+    {
+      "start": 57.9325,
+      "end": 59.1275,
+      "text": "Staying alive inside the objective",
+      "segment": "07-heal"
+    },
+    {
+      "start": 59.37,
+      "end": 61.3275,
+      "text": "helps more than rushing out and dying again.",
+      "segment": "07-heal"
+    },
+    {
+      "start": 62.586666666666666,
+      "end": 64.76916666666666,
+      "text": "The central Comms Station changes hands repeatedly.",
+      "segment": "08-fight"
+    },
+    {
+      "start": 65.27416666666666,
+      "end": 66.73166666666665,
+      "text": "I fight from cover",
+      "segment": "08-fight"
+    },
+    {
+      "start": 66.93666666666667,
+      "end": 68.36916666666666,
+      "text": "and throw a grenade toward the junction.",
+      "segment": "08-fight"
+    },
+    {
+      "start": 68.87416666666667,
+      "end": 70.90666666666665,
+      "text": "The enemy uses vehicles and counterattacks too.",
+      "segment": "08-fight"
+    },
+    {
+      "start": 71.13666666666667,
+      "end": 72.50666666666666,
+      "text": "I cannot just keep charging straight in.",
+      "segment": "08-fight"
+    },
+    {
+      "start": 73.75333333333333,
+      "end": 74.48583333333333,
+      "text": "By the end,",
+      "segment": "09-finish"
+    },
+    {
+      "start": 74.75333333333333,
+      "end": 76.34833333333333,
+      "text": "both teams were almost out of tickets.",
+      "segment": "09-finish"
+    },
+    {
+      "start": 76.84083333333334,
+      "end": 78.81083333333333,
+      "text": "We held Comms Station and Supply Depot.",
+      "segment": "09-finish"
+    },
+    {
+      "start": 79.09083333333334,
+      "end": 80.39833333333333,
+      "text": "The enemy reached zero;",
+      "segment": "09-finish"
+    },
+    {
+      "start": 80.60333333333334,
+      "end": 81.76083333333332,
+      "text": "we had three left.",
+      "segment": "09-finish"
+    },
+    {
+      "start": 83.02,
+      "end": 85.9525,
+      "text": "The result is interesting: our team scored 94 kills,",
+      "segment": "10-result"
+    },
+    {
+      "start": 86.2075,
+      "end": 87.3025,
+      "text": "and theirs scored 105.",
+      "segment": "10-result"
+    },
+    {
+      "start": 87.8075,
+      "end": 89.08999999999999,
+      "text": "The team with more kills",
+      "segment": "10-result"
+    },
+    {
+      "start": 89.32000000000001,
+      "end": 90.19,
+      "text": "still lost.",
+      "segment": "10-result"
+    },
+    {
+      "start": 90.6825,
+      "end": 92.10249999999999,
+      "text": "Objectives and staying alive",
+      "segment": "10-result"
+    },
+    {
+      "start": 92.3325,
+      "end": 93.22749999999999,
+      "text": "both matter.",
+      "segment": "10-result"
+    },
+    {
+      "start": 94.48666666666666,
+      "end": 96.25666666666666,
+      "text": "We won this match through objective control,",
+      "segment": "11-close"
+    },
+    {
+      "start": 96.59916666666668,
+      "end": 98.56916666666666,
+      "text": "but direct charges were still deadly.",
+      "segment": "11-close"
+    },
+    {
+      "start": 99.07416666666667,
+      "end": 102.05666666666666,
+      "text": "Next time I want to try class teamwork and flanking.",
+      "segment": "11-close"
+    },
+    {
+      "start": 102.56166666666667,
+      "end": 105.23166666666667,
+      "text": "You can now play 虫潮围城, Swarm Siege, on the Treasure Box website.",
+      "segment": "11-close"
+    },
+    {
+      "start": 105.51166666666667,
+      "end": 107.50666666666666,
+      "text": "You can also submit a game idea to the wishlist.",
+      "segment": "11-close"
+    }
+  ],
+  "time_scale": 1,
+  "normal_rules": true
+}

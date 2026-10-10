@@ -381,7 +381,7 @@ function cycleCamView(){
 }
 function syncViewLabels(){
   const label=camMode==='first'?'第一人称':'第三人称';
-  for(const id of ['personBtn','personBtnMenu'])if($(id))$(id).textContent=label;
+  if($('personBtn'))$('personBtn').textContent=label;
   if($('crosshair'))$('crosshair').classList.toggle('hidden',camMode!=='first');
 }
 
@@ -3799,7 +3799,7 @@ function syncPauseOptions(){
   $('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
-$('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
+$('personBtn').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
 function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'defend');updSquadOrderBtn();}
 $('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
@@ -4632,6 +4632,8 @@ function installStarshipCoop(){
     if(m.type==='player_left'){const h=coopHumans.find(h=>h.slot===m.slot);if(h){if(h.inVehicle)withHuman(h,exitVehicle);h.disconnected=true;h.dead=true;h.mesh.visible=false;}}
     else if(m.type==='ended'){closePanels();clearCoopHumans();Game.coop=false;Game.state='menu';$('menuMain').classList.remove('hidden');$('menuPause').classList.add('hidden');$('hud').classList.add('hidden');$('touchUI').classList.add('hidden');}},
  });
+ // 虫潮：联机大厅入口只放在主菜单（#startRow），不重复出现在暂停菜单里；移除共享 coop 注入的「房间与队友」副本。
+ $('menuPause').querySelector('[data-act="team"]')?.remove();
  coopDriver.lobby.entry.addEventListener('click',()=>{lobbyMode='coop';syncLobbyMode();},true);
  const original=coopDriver.lobby.onMessage;
  coopDriver.lobby.onMessage=m=>{original(m);

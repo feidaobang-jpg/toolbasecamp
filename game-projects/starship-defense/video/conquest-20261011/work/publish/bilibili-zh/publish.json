@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "content_type": "真实游戏实战介绍",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "deployed-08028efe",
+  "metadata_version_label": "web-zerg-corpse-spinfix-v0.33.3（开始时资料，运行内容以现场资产哈希为准）",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration_seconds": 110.53333333333333,
+  "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+  "description": "这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/games.html （选择虫潮围城 → 战地模式）\n操作：WASD移动，I登乘/下车，H兵种支援，U手雷；电脑默认自动瞄准、自动开火，可在设置中切换。\n战地据点模式由Codex辅助开发，本期展示真实实战。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "tags": [
+    "虫潮围城",
+    "据点争夺",
+    "战地模式",
+    "游戏开发",
+    "Codex",
+    "AI"
+  ],
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐 4:3",
+      "sha256": "1481e18603f3c44dfd20cfc295cadf1a73b115974f6742ae43548cbf32e01530"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间 16:9",
+      "sha256": "e36f0d966e2c63a1418eded2e7d8b268351456a7c0dec17814945a73c0ef0cb0"
+    }
+  },
+  "cover_text": [
+    "只剩3票",
+    "抢点险胜！",
+    "杀敌更少，也能赢？"
+  ],
+  "cover_selection_source": "../../edit/covers/cover-source.json",
+  "cover_upload_mode": "custom_image",
+  "subtitle_mode": "burned_in",
+  "subtitles": [],
+  "category": null,
+  "copyright_type": "original_self_recorded_gameplay_pending_account_confirmation",
+  "credits_attachment": "credits.txt",
+  "disclosures": {
+    "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload"
+  },
+  "platform_requirements_checked_at": "2026-10-10T21:35:02.322312+00:00",
+  "platform_sources": [],
+  "unverified_fields": [
+    "account login",
+    "current category options",
+    "platform synthetic-content declaration",
+    "live cover upload control"
+  ],
+  "technical_preparation": "pass",
+  "human_review": {
+    "status": "pending",
+    "approved_variants": [],
+    "user_statement": null,
+    "approved_at": null,
+    "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
+    "reviewed_media_required": {
+      "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "douyin-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "youtube-zh": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4"
+    },
+    "reviewed_subtitles_required": {
+      "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
+      "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
+    }
+  },
+  "subjective_audio_listening": "not-run",
+  "blocking_issues": [
+    "人工审片待确认（画面、配音、字幕）",
+    "主观听审未运行：请在审片时核验人声清晰度与混音",
+    "实际账号投稿入口、分类及平台声明待发布时核对"
+  ],
+  "ready_to_upload": false,
+  "publication_status": "not_uploaded",
+  "toy": {
+    "id": "38678478981120",
+    "slug": "chongchao-qianshao",
+    "entry_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "cli_status": "published",
+    "visibility": "PUBLIC",
+    "public_runtime_verified": false,
+    "public_page_observed_text": "该内容已下架",
+    "status_conflict": "CLI状态与匿名公开入口不一致，未据此断言平台后台已下架",
+    "public_link_in_current_draft": false,
+    "promotion_in_video": false,
+    "binding_status": "not_bound_to_this_unpublished_video",
+    "topic_id": "1346285",
+    "topic_url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "topic_name": "哔哩哔哩Toy创意挑战",
+    "topic_status": "pending_public_entry_and_current_rules"
+  }
+}

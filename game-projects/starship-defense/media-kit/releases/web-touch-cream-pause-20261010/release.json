@@ -7,18 +7,18 @@
   "title": "虫潮围城",
   "package": "D:/project/worktrees/chongchao-hud-labels-20261010/dist/toy/chongchao-qianshao/package",
   "upload": "D:/project/worktrees/chongchao-hud-labels-20261010/dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
-  "zip_sha256": "da83017ecc096bc4be2d6eb58f4d7bae8d7c497f3a8db5fa41e016318573f0f1",
-  "zip_bytes": 369621,
+  "zip_sha256": "655a799c70ddae3e8190f51844bfe7d0a4f9aefd3760c33b2f43fe7d17a6aca8",
+  "zip_bytes": 369623,
   "files": {
-    "index.html": "d8cbbb81c02a7457e72b6ab97a2039c1574b825b7faae4d2aa6a7440610fb9cb",
+    "index.html": "dcc4ae40a617c661aed297665af8988282c3f4c966db90f44b3f90c4f4f09c7e",
     "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
-    "game.compat.js": "af5793334fc74da659d223c983178d82b46cfb26482175b57848f2a7a6b63e0d",
+    "game.compat.js": "62efdd3205a100e0ee474186c5f90466ac2e494804e0960ee182875da059eed9",
     "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
     "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
     "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
     "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
   },
-  "source_commit": "08028efe",
+  "source_commit": "e25e0e31",
   "changes": [
     "右上按钮去\"人称：\"前缀与Ⅱ符号、桌面补P键提示、触屏隐藏键位(eeac50cf)",
     "暂停菜单移除与分段按钮重复的原生操作模式下拉(eeac50cf)",
@@ -29,25 +29,26 @@
     "移除暂停菜单与战术部署重复的队友任务下拉，全队跟随/守基地统一在战术部署(f83e0440)",
     "队友指挥只留全局一键：HUD与暂停菜单加「队友：跟随我/守基地」切换按钮、永远自动回防，战术部署面板只留虫潮预告与战报(51f52d25,06531e9e)",
     "移除暂停菜单「队友集合/载具救援」召回按钮及状态行，清理 recallUnits 与联机救援分支(7eb10a74)",
-    "移除画质手动切换按钮，画质按设备自动：电脑精致(阴影+天气+高分辨率)、手机流畅(关阴影限分辨率)(08028efe)"
+    "移除画质手动切换按钮，画质按设备自动：电脑精致(阴影+天气+高分辨率)、手机流畅(关阴影限分辨率)(08028efe)",
+    "移除暂停菜单重复的人称切换按钮(#personBtnMenu，游戏内右上按钮+C+切换视角已覆盖)与共享coop注入的「房间与队友」副本(联机入口只在主菜单)(e25e0e31)"
   ],
   "website_deploy": {
-    "pushed": "08028efe -> origin/master",
+    "pushed": "e25e0e31 -> origin/master",
     "verified": true,
-    "method": "curl 线上 index.html 无 qualityBtn/qualityBtnMenu 旧标记，game.compat.js 与本地字节一致(cmp IDENTICAL)"
+    "method": "curl 线上 index.html/game.compat.js 均无 personBtnMenu 标记、含暂停菜单 [data-act=\"team\"] 移除调用，game.compat.js 与本地字节一致(cmp IDENTICAL)"
   },
   "doctor": "passed_with_1_warning",
   "doctor_warnings": [
     "4 个 JS/CSS 资产文件名不含内容指纹(contenthash)：每次更新访客都要重新下载全部资源（既有构建约定，非阻断）"
   ],
   "preview": {
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_QHHnH7ag/index.html"
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_rBQJCGxb/index.html"
   },
   "preview_qa": "passed",
-  "preview_qa_method": "Playwright(Edge) 桌面1280x720 + 手机844x390(touch) 双视口加载预览，主菜单正常渲染、无白屏、0 console/pageerror",
+  "preview_qa_method": "Playwright(Edge) 桌面1280x720 + 手机844x390(touch) 双视口加载预览内层 frame，personBtnMenu 已移除、corner personBtn 与 opsPause 保留、0 console/pageerror",
   "submit": {
     "status": "blocked",
-    "attempts": 7,
+    "attempts": 8,
     "error": "code=307008 message=无权限操作",
     "attempt_log": [
       "2026-10-10T23:49+08:00 首次 --yes 被拒",
@@ -56,10 +57,11 @@
       "2026-10-11 合并包(含移除队友任务下拉)预检+预览双视口通过后再试仍被拒",
       "2026-10-11 只留全局一键新包(a9f3f57c)预检+预览双视口通过后再试仍被拒",
       "2026-10-11 移除召回按钮新包(39ef3ebe)预检+预览双视口通过后再试仍被拒",
-      "2026-10-11 画质自动新包(da83017e)预检+预览双视口通过后再试仍被拒"
+      "2026-10-11 画质自动新包(da83017e)预检+预览双视口通过后再试仍被拒",
+      "2026-10-11 暂停菜单去人称/房间新包(655a799c)预检+预览双视口通过后再试仍被拒"
     ],
     "note": "预览上传成功(Toy mtime 推进)但 --yes 提审被拒；同日21:15已由 toy-sync-20261010 提交一批(当时 auditing，现已 published)。whoami/mylist 正常、Toy 归属本账号且 published，故非登录态失效。不盲目重试，待平台/本人确认后以同包重提。",
-    "note_20261011_recheck": "收尾会话 2026-10-11 05:10/05:12 两次 toy mylist 复查：38678478981120 仍为 published、mtime 停在 2026-10-10T15:47:46Z 未再推进，未按 --yes 结果变化。故 v0.33.3 handoff 里“审核中导致重投被拒、等审核结束即可”的归因作废——不是审核中锁，只读接口查不出原因，需本人进 Toy 创作者后台确认；审核结束也不会自动解开。补提目标仍为本包 da83017e(=主线最新)，未再第8次尝试。"
+    "note_20261011_recheck": "收尾会话 2026-10-11 05:10/05:12 两次 toy mylist 复查：38678478981120 仍为 published、mtime 停在 2026-10-10T15:47:46Z 未再推进，未按 --yes 结果变化。故 v0.33.3 handoff 里“审核中导致重投被拒、等审核结束即可”的归因作废——不是审核中锁，只读接口查不出原因，需本人进 Toy 创作者后台确认；审核结束也不会自动解开。补提目标仍为本包 655a799c(=主线最新)，未再第9次尝试。"
   },
   "prior_submission": {
     "record": "releases/toy-sync-20261010/sync.json",
@@ -68,5 +70,5 @@
     "status_now": "published"
   },
   "review_status": "not_submitted_blocked_307008",
-  "recorded_at": "2026-10-11T06:05:00+08:00"
+  "recorded_at": "2026-10-11T07:20:00+08:00"
 }
