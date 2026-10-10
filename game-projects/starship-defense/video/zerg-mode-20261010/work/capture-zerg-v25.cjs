@@ -1,12 +1,4 @@
-// 虫族模式实机采集 v26：线上部署版本，QA 钩子只读观察，输入全部为真实键盘事件，正常规则不改数值。
-// v26 速射修复（v25 探针 345s 五死仍差 875 门血）：酸液实际只打出 0.17 发/秒，瓶颈是"静止 400ms+转向后
-//     380ms 才开酸"这条旧规则——getCamYaw() 返回的就是相机朝向，相机锥内已对齐城门即可立即开火，
-//     于是改为"按相机 yaw 校准（|err|≤0.2）→ 立刻 KeyK"。2500 门血 ÷75 伤 = 34 发命中 ≈ 45 秒破门，
-//     省下 ~150 秒留给终局（v25 的 rally 集结+assault 穿门+grind 贴核心收割）。
-// v25 终局重做（run5/run6b 破门后 3 秒暴毙复盘）：穿门洞直接冲核心=独自吃院内塔群 ~320dps 集火，母虫 950HP 必死。
-//     改为 rally 整备位 (1,2)：破门后先在门口南侧集结，持续召战士（60bio），等≥8 只战士已入场（z<0）
-//     且母虫血>85% 才随虫潮一起穿门——炮塔索敌=最近怪物无LOS，战士先行吸收火力；穿门后全程疾跑+边走边蜕，
-//     到位即贴核心连撕（36bio/口）支撑蜕皮连发，攻不下来也保留完整"虫群涌入城内"高潮镜头。
+// 虫族模式实机采集 v24：线上部署版本，QA 钩子只读观察，输入全部为真实键盘事件，正常规则不改数值。
 // 威胁模型（源码实测）：狙击塔(8,-20) hp280 dmg160/1.9s(r55)=84dps 是围攻位唯一威胁；堡垒(-8,-20)
 //     100dps(r30)、机枪 50dps(r26)、加农 37.5dps(r36) 全在围攻位(1,12)圈外。狙击塔破门前拆不掉
 //     （够到它的位置都在堡垒+加农 ~220dps 交叉火力里），只能诱饵+蜕皮硬抗。
@@ -36,7 +28,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const context=await browser.newContext({viewport:{width:1920,height:1080},deviceScaleFactor:1});
   const p=await context.newPage();
   const errors=[],events=[],states=[],frames=[];let started=0,recording=false,lastSaved=0;
-  const held=new Set();
+  const held=new Set();let lastMoveAt=0;
   async function keys(wanted){for(const k of [...held])if(!wanted.includes(k)){await p.keyboard.up(k);held.delete(k);}for(const k of wanted)if(!held.has(k)){await p.keyboard.down(k);held.add(k);}if(wanted.length)lastMoveAt=Date.now();}
   async function observe(){return p.evaluate(()=>{const q=__gameQA,z=q.zerg,b=z.bug;return{
     state:q.Game.state,zergOn:q.zergOn(),over:z.over,timeLeft:Math.round(z.timeLeft),biomass:Math.round(z.biomass),deaths:z.deaths,
@@ -45,7 +37,6 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     clawCd:+(+z.clawCd).toFixed(2),spitCd:+(+z.spitCd).toFixed(2),sumCd:+(+z.sumCd).toFixed(2),flyCd:+(+z.flyCd).toFixed(2),moltCd:+(+z.moltCd).toFixed(2),dashCd:+(+z.dashCd).toFixed(2),dashT:+(+z.dashT).toFixed(2),
     yaw:+q.getCamYaw().toFixed(3),camMode:(q.getCamMode&&q.getCamMode())||'',
     swarm:q.monsters.filter(m=>!m.dead&&m!==b).length,
-    bugs:q.monsters.filter(m=>!m.dead&&m!==b).map(m=>({x:+m.mesh.position.x.toFixed(1),z:+m.mesh.position.z.toFixed(1)})),
     squads:q.squad.filter(s=>!s.dead).map(s=>({x:+s.mesh.position.x.toFixed(1),z:+s.mesh.position.z.toFixed(1)})),
     turrets:q.buildings.filter(t=>!t.dead).map(t=>({x:+t.mesh.position.x.toFixed(1),z:+t.mesh.position.z.toFixed(1),hp:Math.round(t.hp||0)})),
     gateX:+q.gate.mesh.position.x.toFixed(1),gateZ:+q.gate.mesh.position.z.toFixed(1),gateHp:Math.round(q.gate.hp),gateDead:q.gate.dead,
@@ -69,17 +60,18 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
       recording=true;await cdp.send('Page.startScreencast',{format:'jpeg',quality:98,maxWidth:1920,maxHeight:1080,everyNthFrame:1});
     }
     await mark('start');
-    // ===== 策略层 v25（地图实测 nest(1,176) gate(0,-16) base(-12,-42)，前排塔(±15,-13)被墙挡弹）=====
-    // MARCH = run3 录到 174s 破门的 v20 已验证路线（西侧 x=-69 走廊直落，南侧走廊进场）
-    const MARCH=[[-69,140],[-69,90],[-69,62],[-55,48],[-55,44],[-20,16],[-6,22],[1,12]];
+    // ===== 策略层 v24（地图实测 nest(1,176) gate(0,-16) base(-12,-42)，前排塔(±15,-13)被墙挡弹）=====
+    const MARCH=[[-69,140],[-69,90],[-69,20],[-30,16],[1,12]];
+    const PASS=[[0,-12],[-6,-14]];
     const ASSAULT=[[0,-12],[-4,-22],[-11.8,-42]];
-    const REGROUP=[1,40],RALLY_RUS=[0,30];
+    const REGROUP=[1,45];
     const SIEGE=[1,12],FARM=[-11.8,-42];
     let wpIdx=0,phase='march',way=MARCH,turnKey=null,turnRate=1.9;
   let lastPos=null,stuckN=0,wpSince=Date.now(),progLog=0,strafeDir=1,strafeAt=0;
   let biteN=0,acidN=0,moltN=0,warN=0,flyN=0,dashN=0,viewDone=false,viewBackAt=0;
-  let turretBlocked=false,acidOnT=0,lastTurretHp=-1,passIdx=0,lastMoveAt=0,regroupAt=0;
-  let lastAcidN=0,lastGateHp=-1,missAcid=0,rallyAt=0;let gateMarks=new Set(),baseMarks=new Set(),siegeMarked=false,farmMarked=false,regroup=false,regroupN=0;
+  let turretBlocked=false,acidOnT=0,lastTurretHp=-1,passIdx=0;let gateMarks=new Set(),baseMarks=new Set(),siegeMarked=false,farmMarked=false,regroup=false,regroupN=0;
+  let missAcid=0,lastAcidN=0,lastGateHp=-1,regroupAt=0;
+  let takedownAt=0;const MGS=[[-15,-13],[15,-13]];const mgMarked=new Set(),mgDown=new Set();
   const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
     // Q/E 自适应转向：校准一次方向，之后按误差比例转（真实键盘输入）
     async function aimAt(tx,tz,obs){
@@ -95,40 +87,27 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
       lastMoveAt=Date.now();
       return await observe();
     }
-    // 朝目标点真实前进（Q/E 校准朝向 + WASD 推进，可选 Shift 疾跑）
-    async function goTo(tx,tz,obs,sprint){
-      obs=await aimAt(tx,tz,obs);
-      const dx=tx-obs.bx,dz=tz-obs.bz,mag=Math.hypot(dx,dz)||1;
-      const f=(dx*Math.sin(obs.yaw)+dz*Math.cos(obs.yaw))/mag,r=(-dx*Math.cos(obs.yaw)+dz*Math.sin(obs.yaw))/mag;
-      const w=[];if(f>.5)w.push('KeyW');else if(f<-.5)w.push('KeyS');if(r>.5)w.push('KeyD');else if(r<-.5)w.push('KeyA');
-      await keys(w);
-      if(w.length&&sprint){if(!held.has('ShiftLeft')){await p.keyboard.down('ShiftLeft');held.add('ShiftLeft');}}
-      else if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}
-      return obs;
-    }
     const watchdog=Date.now()+(SMOKE?(+process.env.SMOKE_T||28000)+25000:470000);
     while(Date.now()<watchdog){
       let s=await observe();
       if(s.state!=='battle')break;
-      if(Date.now()-progLog>1500&&states[states.length-1]?.t!==+((Date.now()-started)/1000).toFixed(1)){const{bugs,...rest}=s;states.push({t:+((Date.now()-started)/1000).toFixed(1),...rest,squads:s.squads.length,turrets:s.turrets.length,inside:bugs.filter(u=>u.z<-17).length});}
+      if(Date.now()-progLog>1500&&states[states.length-1]?.t!==+((Date.now()-started)/1000).toFixed(1))states.push({t:+((Date.now()-started)/1000).toFixed(1),...s,squads:s.squads.length,turrets:s.turrets.length});
       if(s.over){if(!events.some(e=>e.name==='round-over'))await mark('round-over');break;}
       if(!s.bug){await keys([]);if(s.deaths>0&&!events.some(e=>e.name==='bug-down-'+s.deaths))await mark('bug-down-'+s.deaths);
-        wpIdx=0;way=MARCH;wpSince=Date.now();lastPos=null;stuckN=0;phase=s.gateDead?'rally':'march';if(s.gateDead)rallyAt=Date.now();await sleep(400);continue;}
+        wpIdx=0;phase='march';way=s.gateDead&&mgDown.size>=2?[...MARCH,...ASSAULT]:[...MARCH];wpSince=Date.now();lastPos=null;stuckN=0;await sleep(400);continue;}
       const hpPct=s.bhp/s.bmax;
       // 阶段推进与节点标记
-      if(s.gateDead&&!gateMarks.has('gate-dead')){gateMarks.add('gate-dead');await mark('gate-dead');phase='rally';rallyAt=Date.now();wpIdx=0;way=MARCH;wpSince=Date.now();lastPos=null;stuckN=0;}
+      if(s.gateDead&&!gateMarks.has('gate-dead')){gateMarks.add('gate-dead');await mark('gate-dead');phase='takedown';takedownAt=Date.now();wpIdx=0;way=ASSAULT;wpSince=Date.now();lastPos=null;stuckN=0;}
       for(const th of [75,50,25]){
         if(!gateMarks.has('gate-'+th)&&!s.gateDead&&s.gateHp<=2500*th/100&&s.gateHp>0){gateMarks.add('gate-'+th);await mark('gate-'+th);}
         if(!baseMarks.has('base-'+th)&&s.baseHp<=s.baseMax*th/100&&s.baseHp>0){baseMarks.add('base-'+th);await mark('base-'+th);}
       }
       if(phase==='assault'&&Math.hypot(s.bx-FARM[0],s.bz-FARM[1])<9){phase='grind';}
       if(GATE_ONLY&&s.gateDead){await mark('gate-only-stop');break;}
-      // v23 低血整编：残血且蜕皮未就绪→撤到 (1,45) 安全区，蜕皮好了再回来；
-      // run4 死锁教训：整编点无任何收入来源（生物量只来自母虫自己打出的伤害），bio<40 时永远付不起
-      // 蜕皮 40→站桩到超时。修复：整编必须 bio>=40 才触发；18s 未完成强制返回磨门；终局 110s 内 rush 不整编。
-      // v26：破门后不再后撤整编（rally/grind 原地蜕皮更划算，且战果由虫群继续产出生物量），只保留破门前整编。
-      const rush=!s.gateDead&&s.timeLeft<110;
-      if(!regroup&&!rush&&!s.gateDead&&hpPct<.35&&s.moltCd>2.5&&s.biomass>=40){regroup=true;regroupAt=Date.now();await mark('regroup-'+(++regroupN));}
+      // v25 整编机制停用（双重复盘）：没钱时撤退=零收入死锁(run4)，hp<.35 才撤=门口被狙死(冒烟)。
+      //     站桩打门本身就是收入(门伤0.25/伤害+守军击杀25)，召唤阈值130永远留70保底蜕皮才是真保险。
+      const rush=false;
+      const regroup=false;
       if(regroup){
         if(Date.now()-regroupAt>18000){console.log('REGROUP-TIMEOUT back to grind');regroup=false;await keys([]);}
         else if(s.moltCd<=0&&s.biomass>=40){await p.keyboard.press('KeyO');moltN++;regroup=false;await mark('molt-'+moltN);await sleep(250);await keys([]);}
@@ -136,20 +115,39 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
         else{if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}await keys([]);}
         await sleep(180);continue;
       }
-      // ===== v27 破门即决：破门前狙击塔 r55 覆盖 (0,30) 集结位（v26b 实测在那儿连死两次），而战士虫
-      //      不会穿过门洞（inside 恒为 0），等虫潮进院是空头支票 → 改为破门后原地蜕皮补满血就立即穿门，
-      //      最多等 14 秒；穿门全程疾跑+冲刺，院内塔群集火靠撕核心×0.6 返生物量连蜕皮对冲。 =====
-      if(phase==='rally'){
-        const inside=s.bugs.filter(u=>u.z<-17).length;
-        const waited=Date.now()-rallyAt;
-        if(Date.now()-progLog>4000){progLog=Date.now();console.log('RALLY',Math.round(waited/1000)+'s','inside',inside,'swarm',s.swarm,'bio',s.biomass,'hp',Math.round(hpPct*100)+'%','base',s.baseHp);}
-        if((hpPct>.8&&waited>2500)||waited>14000){
-          phase='assault';way=ASSAULT;wpIdx=0;wpSince=Date.now();lastPos=null;stuckN=0;await keys([]);await mark('assault-start');
-        }else{
-          await keys([]);if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}
-          if(s.biomass>=60&&s.sumCd<=0&&s.swarm<48){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');}
-          if(hpPct<.92&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);}
+      // ===== v25 破门后拆机枪塔阶段（run6b 复盘：门洞交叉火力 321dps=MG100+堡垒100+狙击84+加农37.5，
+      //      满血也只活 3 秒。两座内圈机枪(±15,-13) 射程 26 < 围攻位距离 28.6，酸程 30 刚好白嫖——
+      //      各 4 发酸(250hp) 拆掉后交叉火力降到 221dps，满血+冲刺可冲过门洞）=====
+      if(phase==='takedown'){
+        if(Date.now()-takedownAt>30000||s.timeLeft<90){phase='assault';wpIdx=0;wpSince=Date.now();lastPos=null;stuckN=0;await mark('assault-go');await sleep(120);continue;}
+        const mgs=MGS.map(([x,z],i)=>({i,x,z,t:s.turrets.find(t=>Math.abs(t.x-x)<2.5&&Math.abs(t.z-z)<2.5)}));
+        for(const m of mgs)if(!m.t&&!mgDown.has(m.i)){mgDown.add(m.i);await mark('mg-down-'+(m.i+1));}
+        const m=mgs.find(m=>m.t);
+        if(!m){
+          const lastLife=s.deaths>=4;
+          const ready=hpPct>=(lastLife?.95:.85)&&s.biomass>=(lastLife?100:60)&&s.dashCd<=.5;
+          if(ready||s.timeLeft<75){phase='assault';wpIdx=0;wpSince=Date.now();lastPos=null;stuckN=0;await mark('assault-go');await sleep(120);continue;}
+          await keys([]);
+          if(hpPct<.95&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(250);}
+          else if(s.biomass>=130&&s.sumCd<=0&&s.swarm<38){await p.keyboard.press('KeyU');warN++;await mark('assault-prep');await sleep(350);}
+          await sleep(120);continue;
         }
+        if(Math.hypot(SIEGE[0]-s.bx,SIEGE[1]-s.bz)>3){
+          s=await aimAt(SIEGE[0],SIEGE[1],s);
+          const dx=SIEGE[0]-s.bx,dz=SIEGE[1]-s.bz,mag=Math.hypot(dx,dz)||1;
+          const f=(dx*Math.sin(s.yaw)+dz*Math.cos(s.yaw))/mag;
+          if(f>.3){await keys(['KeyW']);if(!held.has('ShiftLeft')){await p.keyboard.down('ShiftLeft');held.add('ShiftLeft');}}
+          else{if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}await keys(f<-.3?['KeyS']:[]);}
+          await sleep(150);continue;
+        }
+        await keys([]);
+        if(Date.now()-lastMoveAt>400&&s.spitCd<=0){
+          const y0=s.yaw;s=await aimAt(m.x,m.z,s);
+          if(Math.abs(wrap(s.yaw-y0))>.1)await sleep(380);
+          if(!held.size&&s.spitCd<=0){await p.keyboard.press('KeyK');acidN++;if(!mgMarked.has(m.i)){mgMarked.add(m.i);await mark('acid-mg-'+(m.i+1));}}
+        }
+        if(hpPct<.9&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(250);}
+        else if(s.biomass>=130&&s.sumCd<=0&&s.swarm<38){await p.keyboard.press('KeyU');warN++;await sleep(350);}
         await sleep(120);continue;
       }
       // 目标点选择
@@ -188,6 +186,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
         if(dg<=7){
           wpIdx++;lastPos=null;stuckN=0;wpSince=Date.now();
           if(place==='march'&&wpIdx>=way.length&&!s.gateDead){phase='siege';if(!siegeMarked){siegeMarked=true;await mark('siege-start');}}
+          else if(place==='march'&&wpIdx>=way.length&&s.gateDead&&mgDown.size<2){phase='takedown';takedownAt=Date.now();await mark('takedown-resume');}
           continue;
         }
         if(Date.now()-wpSince>25000){console.log('WP-TIMEOUT skip',wpIdx,'at',s.bx+','+s.bz);wpIdx++;lastPos=null;stuckN=0;wpSince=Date.now();continue;}
@@ -198,45 +197,43 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
             if(nt&&nt.d<27){const s2=await aimAt(nt.t.x,nt.t.z,await observe());await p.keyboard.press('KeyK');acidN++;await sleep(150);}}
         }
         if(s.dashCd<=0&&s.binv<=0&&(inAssault?dg<26:dg>35)){await p.keyboard.press('KeyL');dashN++;if(dashN===1)await mark('dash-1');}
+        if(!s.gateDead&&hpPct<.45&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-march-'+moltN);await sleep(250);}
         if(s.gateDead&&hpPct<.95&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(200);}
       }else if(place==='siege'){
-        // ===== v26 速射围攻：站桩 (1,12)（距门 28.1，酸程 30 内），以相机 yaw 为准校准后立即开酸。
-        //   v25 探针实测只有 0.17 发/秒（理论 0.9），瓶颈是旧规则"静止 400ms+转向后 380ms 才开酸"——
-        //   而 getCamYaw() 读的就是相机本身朝向，相机对齐即锥内锁定目标，无需再等；
-        //   磨门 2500 血 ÷75 = 34 发命中，按 0.9 发/秒约 45 秒可破，早破=早留命给终局。
-        //   承伤仍靠：蜕皮（40bio 回 332，门伤×0.25 每发回 18.75bio 自我造血）+ 战士虫诱饵
-        //   （炮塔索敌取最近怪物、无 LOS，破门前狙击塔(8,-20) r55 拆不掉，只能让它啃）。 =====
+        // ===== 围攻 (1,12)距门28.1：站桩酸磨门+战士诱饵。run4 教训：spit() 沿 camForward 锥形索敌(dot>0.2)，
+        //      身体一转相机滞后→锥内找不到目标→盲发 MISS（run4 四发零伤害）；只有静止≥500ms、
+        //      转向后≥380ms 相机跟上才开酸。狙击塔(8,-20) hp280 破门前拆不掉，战士虫当诱饵吸收。 =====
         if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}
         await keys([]);
         const dGate=Math.hypot(s.gateX-s.bx,s.gateZ-s.bz);
-        if(dGate>29.3||dGate<25||dg>3){
-          s=await goTo(gx,gz,s,false);
-        }else{
-          if(s.spitCd<=0){
-            const errG=wrap(Math.atan2(s.gateX-s.bx,s.gateZ-s.bz)-s.yaw);
-            if(Math.abs(errG)>.08)s=await aimAt(s.gateX,s.gateZ,s);
-            if(Math.abs(wrap(Math.atan2(s.gateX-s.bx,s.gateZ-s.bz)-s.yaw))<=.2){await p.keyboard.press('KeyK');acidN++;if(acidN===1)await mark('acid-1');}
-          }
-          if((hpPct<.6||s.gateHp<=150&&hpPct<.92)&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);}
-          else if(s.biomass>=120&&s.sumCd<=0&&s.swarm<36){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');}
-          else if(flyN<2&&hpPct>.7&&s.biomass>=150&&s.flyCd<=0&&s.swarm<36){await p.keyboard.press('KeyI');flyN++;if(flyN===1)await mark('summon-flyer-1');}
+        if(dGate>29.5||dg>3){s=await aimAt(gx,gz,s);
+          const dx=gx-s.bx,dz=gz-s.bz,mag=Math.hypot(dx,dz)||1;
+          const f=(dx*Math.sin(s.yaw)+dz*Math.cos(s.yaw))/mag,r=(-dx*Math.cos(s.yaw)+dz*Math.sin(s.yaw))/mag;
+          const w=[];if(f>.5)w.push('KeyW');if(r>.5)w.push('KeyD');else if(r<-.5)w.push('KeyA');
+          if(w.length){await keys(w);await sleep(140);await keys([]);}
         }
+        if(!held.size&&s.spitCd<=0&&dGate<=30&&Date.now()-lastMoveAt>400){
+          const y0=s.yaw;s=await aimAt(s.gateX,s.gateZ,s);
+          if(Math.abs(wrap(s.yaw-y0))>.1)await sleep(380);
+          if(!held.size){await p.keyboard.press('KeyK');acidN++;if(acidN===1)await mark('acid-1');}
+        }
+        if(hpPct<.7&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(250);}
+        else if(s.biomass>=130&&s.sumCd<=0&&s.swarm<40){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');await sleep(350);}
+        else if(flyN===0&&hpPct>.6&&s.biomass>=130&&s.flyCd<=0&&s.swarm<40){await p.keyboard.press('KeyI');flyN++;if(flyN===1)await mark('summon-flyer-1');await sleep(350);}
       }else{
-        // ===== v27 城内收割：贴核心撕咬（核心伤×0.6=36bio/口）+酸液+蜕皮连发；够不到核心就先拆眼前的塔 =====
+        // ===== 核心北侧收割：贴脸撕咬+酸液，咬核心 36/口 蜕皮循环，打到死为止 =====
         if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}
-        const coreD=Math.hypot(s.baseX-s.bx,s.baseZ-s.bz);
-        const nearB=s.turrets.map(t=>({t,d:Math.hypot(t.x-s.bx,t.z-s.bz)})).sort((a,b)=>a.d-b.d)[0];
-        const goCore=coreD<=6.5||!nearB||nearB.d>coreD;
-        const mx=goCore?s.baseX:nearB.t.x,mz=goCore?s.baseZ:nearB.t.z;
-        const md=Math.hypot(mx-s.bx,mz-s.bz);
-        if(md>4.8)s=await goTo(mx,mz,s,false);
-        else{
-          await keys([]);
-          if(s.clawCd<=0&&md<=5.5){await p.keyboard.press('KeyJ');biteN++;if(goCore&&!farmMarked){farmMarked=true;await mark('core-engage');}}
-          else if(s.spitCd<=0){const s2=await aimAt(mx,mz,s);if(Math.abs(wrap(Math.atan2(mx-s2.bx,mz-s2.bz)-s2.yaw))<=.2){await p.keyboard.press('KeyK');acidN++;}}
+        await keys([]);
+        if(dg>1.5){s=await aimAt(gx,gz,s);
+          const dx=gx-s.bx,dz=gz-s.bz,mag=Math.hypot(dx,dz)||1;
+          const f=(dx*Math.sin(s.yaw)+dz*Math.cos(s.yaw))/mag,r=(-dx*Math.cos(s.yaw)+dz*Math.sin(s.yaw))/mag;
+          const w=[];if(f>.5)w.push('KeyW');if(r>.5)w.push('KeyD');else if(r<-.5)w.push('KeyA');
+          if(w.length){await keys(w);await sleep(130);await keys([]);}
         }
-        if(hpPct<.8&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);}
-        else if(s.biomass>=60&&s.sumCd<=0&&s.swarm<44){await p.keyboard.press('KeyU');warN++;}
+        if(s.clawCd<=0){await p.keyboard.press('KeyJ');biteN++;if(!farmMarked){farmMarked=true;await mark('core-engage');}}
+        else if(s.spitCd<=0&&tgt){s=await aimAt(tgt[0],tgt[1],s);await p.keyboard.press('KeyK');acidN++;}
+        if(hpPct<.95&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(250);}
+        else if(s.biomass>=70&&s.sumCd<=0&&s.swarm<44){await p.keyboard.press('KeyU');warN++;await sleep(300);}
       }
       if((SMOKE||NOREC)&&(Date.now()-started)>(+process.env.SMOKE_T||28000)){await mark('smoke-stop');break;}
       await sleep(place==='siege'?60:200);
@@ -255,7 +252,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     }
     const data={take:process.env.TAKE||'zerg-run2',url:GAME_URL,started,audioStart,duration_s:+((Date.now()-started)/1000).toFixed(2),frames:frames.length,events,states,errors,finalState:fin,
       build:'线上部署 https://www.zhengxiaohui.cn（2026-10-10 飞虫修复版：zerg-mode.js/game.compat.js 已核验含 flightAfterExit）',
-      strategy:'v26 速射磨门+破门集结：行军(v20 已验证 x=-69 走廊+南侧进场)→(1,12)站桩，按相机 yaw 校准后立即开酸（去掉静止400ms/转向后380ms 的旧门控，理论 0.9 发/秒、45 秒破 2500 门血），承伤靠蜕皮（门伤×0.25 每发回 18.75bio 自造血）+战士诱饵（炮塔取最近怪物无 LOS，狙击塔 r55 破门前拆不掉）；bio≥120 才召战士留蜕皮本；破门后 rally(1,2) 狂召战士，等≥8 只入场（院内 z<-17）且母虫>85% 血再随虫潮穿门→贴核心(-11.8,-42)连撕 36bio/口+蜕皮连发收割；整编 hp<.35 且 bio≥40（run4 死锁教训）+18s 超时+终局 110s rush',
+      strategy:'v25 拆塔决胜版：行军(x=-69走廊)→(1,12)站桩酸磨门(蜕皮.55/召战士留70保底/整编hp<.35且bio>=40+18s超时+终局rush)——破门后先在围攻位酸拆两座内圈机枪(±15,-13)各4发(run6b教训:门洞交叉火力321dps满血3秒融化,MG射程26<28.6白嫖)→就绪门槛(满血85%+/bio60+/冲刺好)→门洞冲刺进核心(-12,-42)贴脸撕咬(核心伤返0.6生物量滚雪球,蜕皮.95连发,战士持续出巢顶堡垒/狙击火力)',
       gameplay_modified:false,time_scale:1,normal_rule_inputs_only:true,qa_hook_usage:'read-only observe',no_recording:NOREC};
     fs.writeFileSync(path.join(OUT,'capture.json'),JSON.stringify(data,null,2));
     if(!NOREC)fs.writeFileSync(path.join(OUT,'frames.json'),JSON.stringify(frames));
