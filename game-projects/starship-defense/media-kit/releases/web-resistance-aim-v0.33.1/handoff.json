@@ -8,9 +8,10 @@
   "build": {
     "id": "resistance-aim0331",
     "base_commit": "ed8e73f11cdec08fd0dc255814853c5dbcf9a7b4",
-    "commit": null,
+    "commit": "1c767c9ff4b5cd40ef5cf00ea50debd1c7da28c0",
     "fingerprint": "3f04135661584c22731b032d5e15fa860a618c1f7fc3134ca9b1292be809e766",
-    "entrypoint": "public/html/game/starship-defense/index.html"
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "integrated_source_commit": "ff3a7162691d122b964912f0310696f6d5a3e406"
   },
   "feature_inventory": [
     {
@@ -212,17 +213,34 @@
       "unverified": [
         "手机真机性能"
       ]
+    },
+    {
+      "id": "public-website",
+      "result": "pass",
+      "evidence": [
+        "website.json",
+        "qa/production/results.json",
+        "regression-production/results.json"
+      ],
+      "method": "最新公网包运行11组新机制+17组旧战役回归；各源文件与主线相同，HTML仅由部署改写资源缓存参数",
+      "unverified": [
+        "手机真机"
+      ]
     }
   ],
   "publication": {
-    "website": "pending_verification",
+    "website": "public_verified",
     "other_channels": "pending_22_batch",
     "approval": {
       "required": false,
       "status": "not_required",
       "basis": "2026-10-09最新网站即时发布规则"
     },
-    "new_video": "not_requested"
+    "new_video": "not_requested",
+    "website_verified_at": "2026-10-10T19:59:04.507933+08:00",
+    "website_mainline_commit": "e7beb060e8a228b30900f84f1e1840283f123e98",
+    "website_runtime_sha256": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5",
+    "runtime_includes_later_mainline_patch": "web-weapon-balance-v0.33.2"
   },
   "readiness": {
     "overview": "partial",

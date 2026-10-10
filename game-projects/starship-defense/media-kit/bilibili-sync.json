@@ -107,7 +107,12 @@
   "latest_record": "releases/backfill-20261010/release-status.json",
   "pending": [],
   "pending_note": null,
-  "pending_release": null,
+  "pending_release": {
+    "version": "web-resistance-aim-v0.33.1",
+    "status": "pending_22_batch",
+    "scope": "已有同游戏新旧视频说明；保留原BV和历史视频，合并主线后续激光平衡更新",
+    "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
+  },
   "pending_updates": [
     {
       "version": "web-unified3d-v0.18.1",
@@ -202,6 +207,19 @@
       "included_version": "web-resistance-v0.33.0",
       "resolved_by_run": "release-backfill-20261010",
       "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "web-resistance-aim-v0.33.1",
+      "status": "pending_22_batch",
+      "changes": [
+        "抗战默认第一人称；Z/右键/按钮举枪，中央准星与实际枪口射击方向收敛",
+        "橙金曳光、烟与简化重力弹道；炮可拉动，支持高低瞄准与预计落点，镜头稳定"
+      ],
+      "record": "releases/web-resistance-aim-v0.33.1/handoff.json",
+      "website_verified": true,
+      "source_commit": "ff3a7162691d122b964912f0310696f6d5a3e406",
+      "new_video": "not_requested",
+      "website_mainline_commit": "e7beb060e8a228b30900f84f1e1840283f123e98"
     }
   ],
   "comment_corrections": [
