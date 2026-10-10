@@ -283,8 +283,27 @@ const Input={
       const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
-    ['J','K','U','I','H','O','L','X','C','SPRINT','R','Z'].forEach(k=>bind('v'+k,k));
-    $('vP').addEventListener('pointerdown',e=>{e.preventDefault();if(this.onPause)this.onPause();});
+    ['J','K','U','I','H','O','L','X','SPRINT','R','Z'].forEach(k=>bind('v'+k,k));
+    /* 暂停/切换视角是开关键：拖视角起手落在键上或滑过键面都会误触，改为只响应位移≤14px 的干净 tap；
+       按住类按键（射击/跳跃等）保持 pointerdown 即时响应不影响手感。 */
+    const tapToggle=(id,key)=>{const el=$(id);let d=null;
+      el.setAttribute('role','button');el.setAttribute('tabindex','0');
+      const release=()=>{if(this.keys[key]){this.keys[key]=false;el.classList.remove('on');}};
+      el.addEventListener('pointerdown',e=>{e.preventDefault();el.setPointerCapture(e.pointerId);AudioSys.init();AudioSys.resume();
+        if(e.pointerType==='touch'){d={x:e.clientX,y:e.clientY,id:e.pointerId};return;}
+        this.pressed[key]=true;this.keys[key]=true;el.classList.add('on');});
+      el.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'){release();return;}
+        if(!d||d.id!==e.pointerId)return;const moved=Math.hypot(e.clientX-d.x,e.clientY-d.y);d=null;if(moved>14)return;
+        this.pressed[key]=true;this.keys[key]=true;el.classList.add('on');setTimeout(release,120);});
+      ['pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,()=>{d=null;release();}));
+      el.addEventListener('click',e=>{if(e.detail===0){this.pressed[key]=true;this.keys[key]=true;setTimeout(release,120);}});
+    };
+    tapToggle('vC','C');
+    {const el=$('vP');let d=null;
+      el.addEventListener('pointerdown',e=>{e.preventDefault();if(e.pointerType==='touch'){d={x:e.clientX,y:e.clientY,id:e.pointerId};return;}if(this.onPause)this.onPause();});
+      el.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;if(!d||d.id!==e.pointerId)return;const moved=Math.hypot(e.clientX-d.x,e.clientY-d.y);d=null;if(moved<=14&&this.onPause)this.onPause();});
+      ['pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,()=>{d=null;}));
+      el.addEventListener('click',e=>{if(e.detail===0&&this.onPause)this.onPause();});}
     // 触屏按钮按下会打开商店/建造面板，同一次点击随后合成的 click 会落到面板里手指下的卡片上
     // （曾误买物品/误选建筑）。取消触摸的默认点击合成。
     document.querySelectorAll('.vbtn,#joyBase,#lookZone').forEach(el=>{for(const t of ['touchstart','touchend'])el.addEventListener(t,e=>{if(e.cancelable)e.preventDefault();},{passive:false});});
