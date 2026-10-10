@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-09T09:32:38.327019+00:00",
+  "source_commit": "5bb37eb1c604877f55bd6a5e3481570000b0c240",
+  "files": [
+    {
+      "file": "index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "sha256": "cadc69e66d2003fc8a28d2249a4b15ef2d2e0227255b093d5052ecf4e865e535",
+      "source_sha256": "a4862878c7e6df222ed38fa10f9171daa35568166c178de802bb5bb52c976246",
+      "matches_source_except_deploy_cache_queries": true
+    },
+    {
+      "file": "game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+      "sha256": "5167749e30f537e2d0108033c88b145d1a2207e85af4491988a81bf67e38c00f",
+      "source_sha256": "5167749e30f537e2d0108033c88b145d1a2207e85af4491988a81bf67e38c00f",
+      "matches_source_except_deploy_cache_queries": true
+    }
+  ]
+}

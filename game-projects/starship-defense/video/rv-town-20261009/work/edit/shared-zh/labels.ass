@@ -1,0 +1,27 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Microsoft YaHei,46,&H00FFFFFF,&H00FFFFFF,&H00201810,&H99000000,-1,0,0,0,100,100,0,0,1,3,1,2,150,150,300,1
+Style: Label,Microsoft YaHei,28,&H00D7EFEB,&H00FFFFFF,&H00101820,&H99000000,0,0,0,0,100,100,0,0,1,2,0,2,70,70,118,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:04.10,Label,,0,0,0,,{\an2\pos(960,954)}本趟实战预览
+Dialogue: 0,0:00:04.10,0:00:09.87,Label,,0,0,0,,{\an2\pos(960,954)}从出发说起 · 普通规则实战
+Dialogue: 0,0:00:09.87,0:00:20.60,Label,,0,0,0,,{\an2\pos(960,954)}自由探索 · 先整备房车
+Dialogue: 0,0:00:20.60,0:00:24.40,Label,,0,0,0,,{\an2\pos(960,954)}南街修理厂 · 改装机枪
+Dialogue: 0,0:00:24.40,0:00:29.13,Label,,0,0,0,,{\an2\pos(960,954)}加油站 · 补满燃料
+Dialogue: 0,0:00:29.13,0:00:36.03,Label,,0,0,0,,{\an2\pos(960,954)}旧住宅区 · 实际交战
+Dialogue: 0,0:00:36.03,0:00:39.23,Label,,0,0,0,,{\an2\pos(960,954)}下车走近物资箱 · 搜索4秒
+Dialogue: 0,0:00:39.23,0:00:43.43,Label,,0,0,0,,{\an2\pos(960,954)}搜索完成 · 补给入账
+Dialogue: 0,0:00:43.43,0:00:50.50,Label,,0,0,0,,{\an2\pos(960,954)}搜索所得保留 · 前往超市
+Dialogue: 0,0:00:50.50,0:01:01.50,Label,,0,0,0,,{\an2\pos(960,954)}废弃超市 · 应急售货机
+Dialogue: 0,0:01:01.50,0:01:06.00,Label,,0,0,0,,{\an2\pos(960,954)}市政广场 · 实际交战
+Dialogue: 0,0:01:06.00,0:01:12.47,Label,,0,0,0,,{\an2\pos(960,954)}下车搜索 · 房车已有损伤
+Dialogue: 0,0:01:12.47,0:01:16.67,Label,,0,0,0,,{\an2\pos(960,954)}北街修理厂 · 停车维修
+Dialogue: 0,0:01:16.67,0:01:24.23,Label,,0,0,0,,{\an2\pos(960,954)}实际维修完成 · 自由选择撤离
+Dialogue: 0,0:01:24.23,0:01:36.30,Label,,0,0,0,,{\an2\pos(960,954)}本趟实际结算 · 2/6区
+Dialogue: 0,0:01:36.30,0:01:47.60,Label,,0,0,0,,{\an2\pos(960,954)}本趟撤离途中 · 余镜

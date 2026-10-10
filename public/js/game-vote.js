@@ -11,7 +11,8 @@
         adminItems: null,
         showHidden: false,
         wishPage: 1,
-        wishSort: 'votes'
+        wishSort: 'votes',
+        wishProgress: new URLSearchParams(global.location.search).get('progress') === 'fulfilled' ? 'fulfilled' : 'pending'
     };
 
     function tr(k) {
@@ -40,7 +41,7 @@
     }
 
     function getBoard() {
-        return V.getBoard(state.wishPage, state.wishSort);
+        return V.getBoard(state.wishPage, state.wishSort, state.wishProgress);
     }
 
     function votesMeta(row) {
@@ -112,6 +113,13 @@
         var box = el('gv-wishlist');
         if (!box) return;
         var items = (state.board && state.board.wishlist) || [];
+        var counts = (state.board && state.board.wishCounts) || {};
+        document.querySelectorAll('[data-wish-progress]').forEach(function (button) {
+            var kind = button.dataset.wishProgress;
+            button.setAttribute('aria-pressed', String(kind === state.wishProgress));
+            button.textContent = tr(kind === 'fulfilled' ? 'gameVote.fulfilledTab' : 'gameVote.pendingTab') +
+                '（' + (counts[kind] || 0) + '）';
+        });
         global.tbRenderPager(el('gv-wish-pager'), {
             page: state.wishPage, pageSize: 20,
             total: (state.board && state.board.wishlistTotal) || 0,
@@ -135,9 +143,10 @@
                         (mine ? '<i class="gv-mine">' + esc(tr('gameVote.mySubmittedLabel')) + '</i>' : '') +
                     '</span>' +
                     (item.note ? '<span class="gv-note">' + esc(item.note) + '</span>' : '') +
+                    V.wishProgressHtml(item) +
                     votesMeta(item) +
                 '</span>' +
-                voteButton(item.key, 'wishlist', item.votes) +
+                (item.progress !== 'fulfilled' || votedSet('wishlist')[item.key] ? voteButton(item.key, 'wishlist', item.votes) : '') +
             '</li>';
         });
         box.innerHTML = html;
@@ -213,6 +222,7 @@
             wishSay(tr('gameVote.wishOk'), 'ok');
             state.wishPage = 1;
             state.wishSort = 'newest';
+            state.wishProgress = 'pending';
             el('gv-wish-sort').value = 'newest';
             return Promise.all([getBoard(), V.getMyVotes()]).catch(function () {
                 say(tr('gameVote.loadFail'), 'error');
@@ -259,6 +269,7 @@
             return '<li class="gv-row">' +
                 '<span class="gv-row-main">' +
                     '<span class="gv-name">' + esc(it.name) + '</span>' +
+                    V.wishProgressHtml(it) +
                     '<span class="gv-meta">' + it.votes + ' · ' + esc(it.createdAt) +
                         (Number(it.status) === 1 ? '' : ' · hidden') + '</span>' +
                 '</span>' +
@@ -291,6 +302,17 @@
             state.wishPage = 1;
             state.wishSort = evt.target.value;
             loadAll();
+        });
+        document.querySelectorAll('[data-wish-progress]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (state.busy) return;
+                state.wishProgress = button.dataset.wishProgress;
+                state.wishPage = 1;
+                var url = new URL(global.location.href);
+                url.searchParams.set('progress', state.wishProgress);
+                global.history.replaceState(null, '', url.href);
+                loadAll();
+            });
         });
         var toggle = el('gv-admin-toggle-hidden');
         if (toggle) toggle.addEventListener('change', function () {

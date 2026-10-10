@@ -1,0 +1,119 @@
+{
+  "text": "Would you defend first or raid the queen? The current Chinese-language demo is linked below. Follow its in-game controls. Thanks for watching!",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "Would",
+      "offset": 1000000,
+      "duration": 2000000
+    },
+    {
+      "text": "you",
+      "offset": 3250000,
+      "duration": 1125000
+    },
+    {
+      "text": "defend",
+      "offset": 4625000,
+      "duration": 4000000
+    },
+    {
+      "text": "first",
+      "offset": 8875000,
+      "duration": 4125000
+    },
+    {
+      "text": "or",
+      "offset": 13250000,
+      "duration": 1625000
+    },
+    {
+      "text": "raid",
+      "offset": 15125000,
+      "duration": 2125000
+    },
+    {
+      "text": "the",
+      "offset": 17500000,
+      "duration": 875000
+    },
+    {
+      "text": "queen",
+      "offset": 18500000,
+      "duration": 3875000
+    },
+    {
+      "text": "The",
+      "offset": 31125000,
+      "duration": 1375000
+    },
+    {
+      "text": "current",
+      "offset": 32750000,
+      "duration": 3125000
+    },
+    {
+      "text": "Chinese-language",
+      "offset": 36125000,
+      "duration": 8375000
+    },
+    {
+      "text": "demo",
+      "offset": 44750000,
+      "duration": 3750000
+    },
+    {
+      "text": "is",
+      "offset": 48750000,
+      "duration": 1500000
+    },
+    {
+      "text": "linked",
+      "offset": 50500000,
+      "duration": 2750000
+    },
+    {
+      "text": "below",
+      "offset": 53375000,
+      "duration": 4625000
+    },
+    {
+      "text": "Follow",
+      "offset": 66875000,
+      "duration": 4500000
+    },
+    {
+      "text": "its",
+      "offset": 71625000,
+      "duration": 1500000
+    },
+    {
+      "text": "in-game",
+      "offset": 73250000,
+      "duration": 4500000
+    },
+    {
+      "text": "controls",
+      "offset": 77875000,
+      "duration": 6875000
+    },
+    {
+      "text": "Thanks",
+      "offset": 93625000,
+      "duration": 3375000
+    },
+    {
+      "text": "for",
+      "offset": 97125000,
+      "duration": 1625000
+    },
+    {
+      "text": "watching",
+      "offset": 99000000,
+      "duration": 4750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

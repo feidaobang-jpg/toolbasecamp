@@ -214,16 +214,19 @@ const { launch, BASE, out, sleep } = require('./lib');
   for (let i = 0; i < 6; i++) { await tap('KeyJ', 10); s = await S(); if (s.mode === 'clear') break; await T(() => { const G = window.__CD_TEST__.cheat.G, b = G.boss, p = G.player; if (b.alive) { p.x = b.x - 0.9; p.z = b.z; p.face = Math.PI / 2; b.invul = 0; b.cd = 9; } }); }
   s = await until(x => x.mode === 'clear', 200);
   ok('打倒屠夫 → 过关', s.mode === 'clear' && s.cleared.indexOf(2) >= 0, [s.mode, s.cleared]);
+  s = await until(x => x.ui.music.name === 'clear', 400);
+  ok('过关放原版「Stage Clear」（不是合成曲）', s.ui.music.name === 'clear' && s.ui.music.original && !s.ui.music.synth, s.ui.music);
+  // 第三关接在后面：打倒屠夫不弹结算，像街机一样直接进第三关（第三关自己的验收在 qa/stage3.js）
+  s = await until(x => x.areaId === 'desert', 2400, 20);
+  ok('打倒屠夫后接着进入第三关（不弹结算）', s.areaId === 'desert' && s.stage === 3 && s.ui.overlay === null && s.cleared.indexOf(2) >= 0, [s.areaId, s.ui.overlay, s.cleared]);
+  ok('进入第三关时体力回满、砍刀收走', s.player.hp === 100 && !s.player.weapon, [s.player.hp, s.player.weapon]);
+  await shot('stage2-to-stage3.png');
+  // 暂停菜单「重新开始」回到所选的第二关
   await T(() => window.__CD_TEST__.manual(false));
-  s = await (async () => { for (let i = 0; i < 60; i++) { const x = await S(); if (x.ui.overlay === 'result') return x; await sleep(300); } return S(); })();
-  const title = await T(() => document.getElementById('res-title').textContent);
-  const tally = await T(() => document.getElementById('tally').textContent);
-  ok('第二关结算画面', s.ui.overlay === 'result' && title === '第二关完成！', title);
-  ok('结算含屠夫', /屠夫/.test(tally), tally.slice(0, 160));
-  await shot('stage2-result.png');
-  await page.keyboard.press('Enter'); await sleep(400);
+  await page.keyboard.press('Escape'); await sleep(300);
+  await T(() => document.querySelector('#pause [data-act=restart]').click()); await sleep(500);
   s = await S();
-  ok('再玩一次回到所选的第二关', s.areaId === 'forest' && s.ui.overlay === null, [s.areaId, s.ui.overlay]);
+  ok('重新开始回到所选的第二关', s.areaId === 'forest' && s.ui.overlay === null, [s.areaId, s.ui.overlay]);
 
   // ---------- 第一关打完接着打第二关 ----------
   await T(() => window.__CD_TEST__.manual(true));

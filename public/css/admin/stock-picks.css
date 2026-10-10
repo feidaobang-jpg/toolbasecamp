@@ -434,6 +434,17 @@
 .stock-page-wrap{max-width:56rem;margin:0 auto;}
 .stock-page-wrap h2{font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 1rem;}
 
+.stock-strategy-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;}
+.stock-strategy-heading h2{margin-bottom:6px;}
+.stock-strategy-heading p,.stock-explanation{font-size:13px;color:#64748b;line-height:1.7;margin:8px 0 14px;}
+.stock-job-status{padding:14px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;line-height:1.8;margin-bottom:16px;}
+.stock-job-status.is-error{color:#b45309;background:#fff7ed;}
+.stock-rules{margin:16px 0;padding:14px 16px;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;line-height:1.8;background:#fff;}
+.stock-rules summary{cursor:pointer;font-weight:700;color:#1e40af;}
+.stock-rules p{margin:10px 0;}
+.records-table small{display:block;color:#64748b;font-size:11px;margin-top:4px;white-space:normal;min-width:110px;max-width:240px;}
+@media(max-width:600px){.stock-strategy-heading{flex-wrap:wrap;}.stock-card{padding:16px;}.stock-header{flex-wrap:wrap;}.stock-job-status{padding:12px;}}
+
 .records-stats{
   margin: 0 0 14px;
   padding: 12px 14px;

@@ -1,0 +1,210 @@
+{
+  "duration": 82.39999999999999,
+  "fps": 30,
+  "segments": [
+    {
+      "id": "01-hook",
+      "final_in": 0,
+      "final_out": 6.9,
+      "lines": [
+        "这回守老鹰，终于有人帮忙了。",
+        "坦克大战现在支持两到四人联机合作！"
+      ],
+      "shots": [
+        {
+          "source": "capture/03-coop-battle-retimed.mp4",
+          "source_in": 39,
+          "source_out": 45.9,
+          "final_in": 0,
+          "final_out": 6.9,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "02-room",
+      "final_in": 6.9,
+      "final_out": 13.766666666666666,
+      "lines": [
+        "建个房间，把六位房间码告诉队友。",
+        "只想跟熟人玩，还可以设个密码。"
+      ],
+      "shots": [
+        {
+          "source": "capture/01-host-lobby-retimed.mp4",
+          "source_in": 0,
+          "source_out": 3.4,
+          "final_in": 6.9,
+          "final_out": 10.3,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        },
+        {
+          "source": "capture/01-host-lobby-retimed.mp4",
+          "source_in": 8,
+          "source_out": 11.466666666666667,
+          "final_in": 10.3,
+          "final_out": 13.766666666666667,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "03-join",
+      "final_in": 13.766666666666666,
+      "final_out": 21.866666666666667,
+      "lines": [
+        "队友填好房间码和密码，加入之后点准备。",
+        "房主点击全队开始，一起进同一张地图。"
+      ],
+      "shots": [
+        {
+          "source": "capture/02-guest-lobby-retimed.mp4",
+          "source_in": 6.3,
+          "source_out": 10.8,
+          "final_in": 13.766666666666666,
+          "final_out": 18.266666666666666,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        },
+        {
+          "source": "capture/03-coop-battle-retimed.mp4",
+          "source_in": 0,
+          "source_out": 3.5999999999999996,
+          "final_in": 18.266666666666666,
+          "final_out": 21.866666666666667,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "04-start",
+      "final_in": 21.866666666666667,
+      "final_out": 31.433333333333334,
+      "lines": [
+        "这次用两个独立窗口实测。",
+        "金色是一号，蓝色是二号。",
+        "各开一辆坦克，先把挡路的砖墙打通。"
+      ],
+      "shots": [
+        {
+          "source": "capture/03-coop-battle-retimed.mp4",
+          "source_in": 4.2,
+          "source_out": 13.766666666666666,
+          "final_in": 21.866666666666667,
+          "final_out": 31.433333333333334,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "05-fight",
+      "final_in": 31.433333333333334,
+      "final_out": 41.8,
+      "lines": [
+        "敌人压下来了，先把左路拦住。",
+        "二号被打爆，还能重新出发。",
+        "一号继续顶着，战斗没有因为队友阵亡就停下来。"
+      ],
+      "shots": [
+        {
+          "source": "capture/03-coop-battle-retimed.mp4",
+          "source_in": 17.7,
+          "source_out": 28.066666666666666,
+          "final_in": 31.433333333333334,
+          "final_out": 41.8,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "06-result",
+      "final_in": 41.8,
+      "final_out": 51.666666666666664,
+      "lines": [
+        "最后一辆，击毁！",
+        "这一关二十辆敌人清完，老鹰还在。",
+        "合作模式，这次确实打通了。"
+      ],
+      "shots": [
+        {
+          "source": "capture/03-coop-battle-retimed.mp4",
+          "source_in": 106.8,
+          "source_out": 116.66666666666666,
+          "final_in": 41.8,
+          "final_out": 51.666666666666664,
+          "kind": "real-time co-op gameplay",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "07-limits",
+      "final_in": 51.666666666666664,
+      "final_out": 60.3,
+      "lines": [
+        "不过现在还不能中途加入。",
+        "房主退出，房间就结束。",
+        "开局之前，先把人凑齐。"
+      ],
+      "shots": [
+        {
+          "source": "edit/shared-zh/limits.png",
+          "source_in": 0,
+          "source_out": 8.633333333333333,
+          "final_in": 51.666666666666664,
+          "final_out": 60.3,
+          "kind": "closing guide card from actual public screenshots",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "08-toy",
+      "final_in": 60.3,
+      "final_out": 70.89999999999999,
+      "lines": [
+        "游戏已经在哔哩哔哩Toy上线。",
+        "视频下方入口就能试玩，叫上队友一起守老鹰。",
+        "喜欢这次联机，顺手来个三连补给。"
+      ],
+      "shots": [
+        {
+          "source": "edit/shared-zh/toy.png",
+          "source_in": 0,
+          "source_out": 10.6,
+          "final_in": 60.3,
+          "final_out": 70.89999999999999,
+          "kind": "closing guide card from actual public screenshots",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "id": "09-vote",
+      "final_in": 70.89999999999999,
+      "final_out": 82.39999999999999,
+      "lines": [
+        "玩完去百宝箱的游戏投票榜点一下，",
+        "想玩什么也写进愿望单。",
+        "票数和反馈，会帮我决定接下来优先优化哪款。"
+      ],
+      "shots": [
+        {
+          "source": "edit/shared-zh/vote.png",
+          "source_in": 0,
+          "source_out": 11.5,
+          "final_in": 70.89999999999999,
+          "final_out": 82.39999999999999,
+          "kind": "closing guide card from actual public screenshots",
+          "speed": 1
+        }
+      ]
+    }
+  ]
+}

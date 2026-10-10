@@ -1,0 +1,61 @@
+{
+  "version": "v0.10.1",
+  "classification": "撤回本次第三关",
+  "reason": "用户明确要求删除；第三关交给其他AI后续制作",
+  "source_commit": "999d4057",
+  "task_branch": "codex/cadillacs-stage3-remove-20261008",
+  "reverted_commits": [
+    "2f9a0290",
+    "4a213d44",
+    "0d3e77ef"
+  ],
+  "runtime_sha256": "429a525f5490e42b82e5bada2fcc6eb635589a947f252f0e8ab205d8bbb3be07",
+  "stages": [
+    1,
+    2
+  ],
+  "third_stage_reimplement_automatically": false,
+  "website": {
+    "status": "deployed_verified",
+    "removed_sounds": [
+      "road-walk.mp3",
+      "road-drive.mp3",
+      "boss3.mp3"
+    ],
+    "protocol": "cadillacs3d-v1",
+    "verification": "website.json"
+  },
+  "toy": {
+    "id": 40412421031936,
+    "status": "public_verified",
+    "package": "dist/toy-v0.10.1/package",
+    "preview_qa": "qa-rollback-toy-qa.json",
+    "public_verification": "toy-public.json",
+    "package_sha256": "3e94f87743a5aece9c8d4938c8c0cbaa2892526f476b1c81d82c56bde9326682"
+  },
+  "taptap": {
+    "app_id": 962722,
+    "h5_version_id": 276136,
+    "platform_version": "V-20261008-1",
+    "status": "reviewing",
+    "package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+    "still_public": "v0.10.0 until review completes",
+    "community": "third-stage pending update cancelled; no third-stage community post was published"
+  },
+  "bilibili": {
+    "bv": "BV18XHW66E55",
+    "status": "public_verified",
+    "record": "bilibili-sync.json"
+  },
+  "qa": {
+    "stage2": {
+      "passed": 58,
+      "total": 58
+    },
+    "server": {
+      "passed": 16
+    },
+    "channels": "3-viewports: website, Toy preview, extracted final TapTap ZIP. Not a physical phone test"
+  },
+  "updated_at": "2026-10-08T19:49:37.936845+08:00"
+}

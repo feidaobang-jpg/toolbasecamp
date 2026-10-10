@@ -1,0 +1,108 @@
+{
+  "text": "攒够钱，就派小虫群和机枪小队。它们沿选定路线前进，遇敌交战，目标是拆掉对方核心。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 9.912,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4000000,
+      "text": "攒够"
+    },
+    {
+      "offset": 5000000,
+      "duration": 4000000,
+      "text": "钱"
+    },
+    {
+      "offset": 10875000,
+      "duration": 1875000,
+      "text": "就"
+    },
+    {
+      "offset": 12750000,
+      "duration": 1875000,
+      "text": "派"
+    },
+    {
+      "offset": 14875000,
+      "duration": 8000000,
+      "text": "小虫群"
+    },
+    {
+      "offset": 24000000,
+      "duration": 2125000,
+      "text": "和"
+    },
+    {
+      "offset": 26250000,
+      "duration": 3125000,
+      "text": "机枪"
+    },
+    {
+      "offset": 29500000,
+      "duration": 4500000,
+      "text": "小队"
+    },
+    {
+      "offset": 39750000,
+      "duration": 2250000,
+      "text": "它们"
+    },
+    {
+      "offset": 42125000,
+      "duration": 1625000,
+      "text": "沿"
+    },
+    {
+      "offset": 44000000,
+      "duration": 3625000,
+      "text": "选定"
+    },
+    {
+      "offset": 47750000,
+      "duration": 3000000,
+      "text": "路线"
+    },
+    {
+      "offset": 50875000,
+      "duration": 4500000,
+      "text": "前进"
+    },
+    {
+      "offset": 58750000,
+      "duration": 3500000,
+      "text": "遇敌"
+    },
+    {
+      "offset": 62375000,
+      "duration": 4375000,
+      "text": "交战"
+    },
+    {
+      "offset": 70250000,
+      "duration": 3375000,
+      "text": "目标"
+    },
+    {
+      "offset": 73625000,
+      "duration": 3500000,
+      "text": "是"
+    },
+    {
+      "offset": 78250000,
+      "duration": 4250000,
+      "text": "拆掉"
+    },
+    {
+      "offset": 82750000,
+      "duration": 2750000,
+      "text": "对方"
+    },
+    {
+      "offset": 85625000,
+      "duration": 4750000,
+      "text": "核心"
+    }
+  ]
+}

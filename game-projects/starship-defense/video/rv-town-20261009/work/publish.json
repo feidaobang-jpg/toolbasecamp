@@ -1,0 +1,51 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮围城",
+  "game_version": "web-three-lanes-v0.31.0",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [],
+      "publication_status": "published"
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [],
+      "publication_status": "published"
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+      "blocking_issues": [],
+      "publication_status": "published"
+    }
+  ],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "human_review": "approved",
+  "publication": "published",
+  "post_publication": {
+    "x": {
+      "status": "skipped_paid_access_declined",
+      "user_instruction": "要收费吗？如果收费就不做",
+      "reason": "当前官方API连接未开通；现有Metricool路径需付费，按用户要求跳过。未购买、未发X。"
+    }
+  },
+  "channel_restriction": "本期新片获准三平台发布；其他游戏渠道和旧视频说明继续暂缓"
+}

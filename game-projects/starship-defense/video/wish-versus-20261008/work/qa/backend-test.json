@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-08T08:50:33.354397+00:00",
+  "passed": true,
+  "mode": "connection-private MySQL TEMPORARY tables",
+  "live_ballots_modified": false,
+  "checks": [
+    "fulfilled/pending pagination",
+    "original text/source/ballots preserved",
+    "ID+name+source match",
+    "fulfilled new vote blocked",
+    "existing cancellation",
+    "normal quotas/pagination"
+  ]
+}

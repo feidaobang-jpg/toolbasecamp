@@ -1,4 +1,4 @@
-/* 赤色要塞 · 第一关 3D 重置版 —— 玩具风菜单、HUD 与触屏控件 */
+/* 赤色要塞 · 第一关 3D 重制版 —— 玩具风菜单、HUD 与触屏控件 */
 :root {
   --cream: #fff6df;
   --cream2: #f6e8c4;
@@ -30,7 +30,7 @@ kbd {
   border: 1px solid #b9a77c; border-bottom-width: 3px; border-radius: 5px;
   font: 700 .82em/1.45 ui-monospace, Consolas, monospace; color: var(--ink); background: #fffaf0; text-align: center;
 }
-button, .list-link { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
 /* ---------- 覆盖层菜单 ---------- */
 .overlay {
@@ -200,6 +200,8 @@ h2 { margin: 0; text-align: center; font-size: 26px; letter-spacing: .25em; colo
 .act span { font-size: 12px; margin-top: 3px; font-weight: 800; }
 #btn-fire { right: calc(var(--sar) + 128px); bottom: calc(var(--sab) + 36px); width: 76px; height: 76px; background: linear-gradient(180deg, #e2573f, #a83a28); }
 #btn-bomb { right: calc(var(--sar) + 40px); bottom: calc(var(--sab) + 36px); width: 76px; height: 76px; background: linear-gradient(180deg, #5d9a52, #3d6e37); }
+#btn-combo { right: calc(var(--sar) + var(--edge) + var(--action) + var(--gap)); bottom: calc(var(--sab) + var(--bottom-edge) + var(--action) + var(--gap)); width: 76px; height: 76px; padding: 0; background: linear-gradient(180deg, #d8ac42, #986b25); }
+#btn-combo span { white-space: nowrap; }
 .act.down { transform: translateY(3px) scale(.95); box-shadow: 0 1px 0 rgba(0,0,0,.3); filter: brightness(1.15); }
 .pause-touch { display: none; }
 body.touch-on .pause-key, body.touch-on kbd { display: none; }
@@ -309,7 +311,7 @@ html body #btn-fs[hidden], html body .items > .fs-btn[hidden] { display: none !i
 #stage.compact .control-modes { margin: 0 !important; gap: 6px !important; }
 #stage.compact .control-modes button[data-control-mode] { min-height: 40px; padding: 4px 8px; font-size: 13px; }
 /* 主菜单：三键操作模式行已可直接切换，紧凑时收起重复的「操作模式」循环项；「开始游戏」与「起始关卡」同排。
-   网站与 Toy 版（无「返回游戏列表」）都只占 7 行，Toy 外壳顶栏下的 844×346 也能完整显示 */
+   网站与 Toy 版菜单都只占 7 行（均无跳出链接），Toy 外壳顶栏下的 844×346 也能完整显示 */
 #stage.compact .title-screen .items > [data-opt=touch] { display: none; }
 #stage.compact:not(.narrow) .title-screen .items > .primary { grid-column: auto; }
 /* 暂停：左列标题、得分与操作提示，右列两列选项 */

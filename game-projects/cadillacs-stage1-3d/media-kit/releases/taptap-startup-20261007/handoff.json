@@ -1,0 +1,76 @@
+{
+  "task_id": "01a115b7-10e9-73c2-a133-6c1ce226e916-taptap-load-check-01",
+  "game_id": "cadillacs-stage1-3d",
+  "app_id": 962722,
+  "classification": "TapTap 渠道启动适配与故障提示",
+  "gameplay_version": "v0.9.2",
+  "startup_adapter": "inline-runtime-v1",
+  "reported_environment": "手机 TapTap App；机型与系统尚未提供",
+  "reported_symptom": "一直停在正在搭建海上都市和沼泽森林",
+  "confirmed_defect": "外部 game.min.js 载入失败不会触发原非捕获 error 监听，加载文字无限保留；旧 v0.7.0 包 HTTP 404 故障注入已复现",
+  "root_cause_status": "未取得手机客户端日志，尚不能认定实际故障是脚本下载、WebGL 或同步初始化阻塞",
+  "changes": [
+    "只在恐龙快打 TapTap 包把已打包普通主脚本内联到 index.html，省去单独请求及其查询参数；模型与音频仍为独立文件",
+    "启动期间捕获脚本异常和 Promise 拒绝，提供明确阶段、20 秒等待提示与重新加载按钮",
+    "保持核心玩法、TapTap 存档命名空间与作品映射"
+  ],
+  "verification": {
+    "node_tests": "4/4 passed：无外部主程序请求、成功后不误报、语法错误、初始化拒绝与超时、忽略可选图片失败、HTML script 结束标记转义",
+    "browser": "Codex 内置 Chromium 浏览器；独立主脚本路径始终返回 404，新 ZIP 仍进入菜单与关卡",
+    "viewports": [
+      "桌面默认视口",
+      "844x390",
+      "390x844"
+    ],
+    "controls": "选人、开局、暂停、触屏/键鼠双向切换、动作按钮点击、重开通过；不声称实测多点触控与手机帧率",
+    "fault_pages": "语法错误与初始化未完成均显示错误阶段和重新加载按钮；浏览器超时故障注入缩短等待至 100ms",
+    "physical_taptap_app": "not_verified",
+    "archive_preflight": "passed: one game root; no violations or warnings",
+    "save": "第二关起始设置刷新后保留，操作模式设置同样保留；仅本地浏览器测试"
+  },
+  "channels": {
+    "website": "核心运行文件未修改，沿用已部署 v0.9.2",
+    "toy": "核心运行文件未修改，不重复送包",
+    "bilibili": "手机问题尚未确认完全修复，不发布已修好声明",
+    "taptap": "已上传、绑定并提交审核；读回 reviewing，公开仍为未加启动适配的 v0.9.2；真机反馈待确认"
+  },
+  "package": {
+    "version": "v0.9.2",
+    "startup_adapter": "inline-runtime-v1",
+    "source_commit": "4fb5e806ab3128d59339913c468aee26129c3de9",
+    "zip_sha256": "8fb4e412093bd9d8c11c70f86c70afb3bf488c767ff4ed720c01e3d7658e3901",
+    "zip_bytes": 13573454,
+    "storage_namespace": "taptap-cadillacs-v1:",
+    "h5_version_id": 272436,
+    "h5_package_id": 72548,
+    "draft_version_id": "1042927",
+    "platform_version": "V-20261007-4",
+    "status": "reviewing",
+    "checked_at": "2026-10-07T10:25:46.953415+00:00",
+    "physical_test_qr": "D:\\project\\toolbasecamp-artifacts\\taptap\\load-check\\01a115b7-20261007\\startup-test-272436.png",
+    "artifact": "D:\\project\\toolbasecamp-artifacts\\taptap\\load-check\\01a115b7-20261007\\cadillacs-stage1-3d.zip"
+  },
+  "risk_assessment": {
+    "source": "TapTap current precheck",
+    "blockers": [],
+    "warnings": [
+      {
+        "code": "PREAUDIT",
+        "field_ids": [
+          "title"
+        ],
+        "message": "游戏名称使用了知名游戏IP‘恐龙快打’，可能存在版权侵权风险。如已获得官方正式授权，请前往游戏资质页面上传相关授权证明文件，否则有驳回风险。"
+      },
+      {
+        "code": "PREAUDIT",
+        "field_ids": [
+          "description"
+        ],
+        "message": "游戏简介中提及非官方复刻相关内容，可能存在版权侵权风险。建议前往游戏资质页面补充提供软件著作权及相关授权资质文件。"
+      }
+    ],
+    "decision": "保持已上线包全部IP与介绍；属于此前用户明确同意试审的同一非官方复刻IP风险，不增加素材或权利声明",
+    "authorization_record": "../../../../site-games/releases/taptap-force3-20261007/authorization.json"
+  },
+  "next_action": "扫码确认实际手机能否打开；如仍失败读取新增启动错误阶段；上线后再公开核验，不发布已全面解决手机问题的声明"
+}

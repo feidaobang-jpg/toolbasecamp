@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "channel": "taptap-h5",
+  "title": "虫潮围城",
+  "version": "web-rv-v0.29.1",
+  "startup_adapter": "inline-runtime-v2",
+  "source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "package_directory": "dist/taptap/chongchao-qianshao/chongchao-qianshao",
+  "archive": "dist/taptap/chongchao-qianshao/chongchao-qianshao.zip",
+  "archive_root": "chongchao-qianshao/",
+  "zip_bytes": 342819,
+  "storage_namespace": "taptap-chongchao-v1-sst_save_",
+  "zip_sha256": "dc77affa26aa1005a2e117427b7056cf1e126ff557be5f7d1a9742b669882ebf",
+  "files": {
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "index.html": "5e12d2d7889e501d0e0ab3bb13d815fe0daf0a44adc2dbb60a05666bf9ff6482",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "changes": [
+    "Self-contained H5 package with one top-level directory",
+    "Local save namespace isolated from website and Toy",
+    "Website-account cloud backups and local import/export enabled; Toy rankings and video navigation omitted"
+  ],
+  "monetization": "none",
+  "status": "built_not_uploaded"
+}

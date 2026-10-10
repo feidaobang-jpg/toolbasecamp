@@ -1,0 +1,17 @@
+{
+  "version": "web-conquest-v0.32.0",
+  "zip_bytes": 344528,
+  "uncompressed_bytes": 1150588,
+  "zip_sha256": "af9f3cea1c848a744f36a6110788a863efa382c4d8729207f232636bd396c459",
+  "files": [
+    "base.css",
+    "index.html",
+    "boot.js",
+    "game.compat.js",
+    "combat-controls.css",
+    "icon.svg",
+    "vendor/LICENSE.txt"
+  ],
+  "status": "built_and_smoke_tested_not_submitted",
+  "limit_bytes": 50000000
+}

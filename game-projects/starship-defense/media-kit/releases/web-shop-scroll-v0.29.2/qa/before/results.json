@@ -1,0 +1,271 @@
+{
+  "url": "http://127.0.0.1:8924/html/game/starship-defense/index.html",
+  "at": "2026-10-08T12:28:28.301Z",
+  "method": "Desktop Edge mobile viewport, real CDP touch gestures; not physical phone",
+  "results": [
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "panel": "shopPanel",
+      "initial": {
+        "start": {
+          "x": 383.17654266357425,
+          "y": 286.6462812423706
+        },
+        "rotated": false,
+        "scroll": 0,
+        "height": 415,
+        "total": 539,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "shopPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 124,
+        "active": "机枪秒伤125 射程32初始武器：中距离持续扫射，什么虫都能打✅使用中强化 Lv1 · 💰110"
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "panel": "buildPanel",
+      "initial": {
+        "start": {
+          "x": 383.17654266357425,
+          "y": 286.6462812423706
+        },
+        "rotated": false,
+        "scroll": 0,
+        "height": 415,
+        "total": 668,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "buildPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 188,
+        "active": "合金围墙阻挡虫群前进耐久500💰100"
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": "shopPanel",
+      "initial": {
+        "start": {
+          "x": 103.35374355316162,
+          "y": 383.17654266357425
+        },
+        "rotated": true,
+        "scroll": 0,
+        "height": 415,
+        "total": 539,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "shopPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 124,
+        "active": "机枪秒伤125 射程32初始武器：中距离持续扫射，什么虫都能打✅使用中强化 Lv1 · 💰110"
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "panel": "buildPanel",
+      "initial": {
+        "start": {
+          "x": 103.35374355316162,
+          "y": 383.17654266357425
+        },
+        "rotated": true,
+        "scroll": 0,
+        "height": 415,
+        "total": 668,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "buildPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 154,
+        "active": "合金围墙阻挡虫群前进耐久500💰100"
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 740,
+        "height": 360
+      },
+      "panel": "shopPanel",
+      "initial": {
+        "start": {
+          "x": 335.96047134399413,
+          "y": 264.5899019241333
+        },
+        "rotated": false,
+        "scroll": 0,
+        "height": 437,
+        "total": 539,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "shopPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 102,
+        "active": "机枪秒伤125 射程32初始武器：中距离持续扫射，什么虫都能打✅使用中强化 Lv1 · 💰110"
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 740,
+        "height": 360
+      },
+      "panel": "buildPanel",
+      "initial": {
+        "start": {
+          "x": 335.96047134399413,
+          "y": 264.5899019241333
+        },
+        "rotated": false,
+        "scroll": 0,
+        "height": 437,
+        "total": 668,
+        "ancestors": [
+          {
+            "tag": "DIV",
+            "id": "buildPanel",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "DIV",
+            "id": "stage",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "BODY",
+            "id": "",
+            "touch": "pan-x pan-y"
+          },
+          {
+            "tag": "HTML",
+            "id": "",
+            "touch": "pan-x pan-y"
+          }
+        ]
+      },
+      "after": {
+        "scroll": 215,
+        "active": "合金围墙阻挡虫群前进耐久500💰100"
+      },
+      "errors": []
+    }
+  ]
+}

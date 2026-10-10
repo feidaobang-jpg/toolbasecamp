@@ -1,0 +1,102 @@
+{
+ "url": "http://127.0.0.1:8794/html/game/starship-defense/index.html",
+ "at": "2026-10-08T05:05:11.545Z",
+ "results": [
+  {
+   "name": "对战菜单 → 好友对战：大厅人数固定 2 人",
+   "ok": true,
+   "detail": {
+    "value": "2",
+    "disabled": true
+   }
+  },
+  {
+   "name": "创建对战房间：服务器记为 versus、上限 2 人",
+   "ok": true,
+   "detail": {
+    "code": "422547",
+    "max": 2,
+    "mode": "versus"
+   }
+  },
+  {
+   "name": "客人通过邀请码进入房间",
+   "ok": true,
+   "detail": {
+    "listed": "房主的房间 · 2/2人 · 对战 1 对 1"
+   }
+  },
+  {
+   "name": "开局：房主蓝方计算整局，客人红方",
+   "ok": true,
+   "detail": [
+    {
+     "role": "host",
+     "team": "blue",
+     "player": "blue",
+     "mode": "online"
+    },
+    {
+     "role": "guest",
+     "team": "red",
+     "player": "red",
+     "mode": "online"
+    }
+   ]
+  },
+  {
+   "name": "客人按 R→1：房主那边派出红方小虫，客人画面同步看到",
+   "ok": true
+  },
+  {
+   "name": "客人升级银行、切换路线、买霰弹枪：房主核验后执行并同步",
+   "ok": true
+  },
+  {
+   "name": "客人 L→2→J 建机枪塔：房主放置为红方设施，客人看到阵营环",
+   "ok": true
+  },
+  {
+   "name": "房主派机枪小队，客人画面同步",
+   "ok": true
+  },
+  {
+   "name": "结算：房主胜利、客人失败，客人按钮显示等待房主",
+   "ok": true,
+   "detail": [
+    {
+     "title": "🏆 胜利！",
+     "btn": "🔄 再来一局"
+    },
+    {
+     "title": "💀 失败",
+     "btn": "⏳ 等待房主再来一局"
+    }
+   ]
+  },
+  {
+   "name": "房主再来一局：双方进入新一局，客人结算界面关闭",
+   "ok": true
+  },
+  {
+   "name": "客人掉线：电脑接管红方指挥与英雄",
+   "ok": true,
+   "detail": {
+    "msg": "玩家已离线，其余队友可继续"
+   }
+  },
+  {
+   "name": "接管后红方电脑继续运营",
+   "ok": true,
+   "detail": {
+    "redGold": 300,
+    "redBuild": 1,
+    "time": 6
+   }
+  },
+  {
+   "name": "双方无脚本报错",
+   "ok": true
+  }
+ ]
+}

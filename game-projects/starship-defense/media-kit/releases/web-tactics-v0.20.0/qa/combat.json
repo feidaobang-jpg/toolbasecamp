@@ -1,0 +1,335 @@
+{
+  "method": "accelerated actual game functions; fixed player stations; normal health and earned gold; optional wild/queen excluded",
+  "physical_phone": false,
+  "runs": [
+    {
+      "strategy": "defend",
+      "level": 1,
+      "won": true,
+      "time": 53.5,
+      "deaths": 0,
+      "before": {
+        "gold": 150,
+        "squad": 0,
+        "base": 2000
+      },
+      "after": {
+        "gold": 622,
+        "squad": 0,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第1关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 472,
+        "spent": 0,
+        "seconds": 53
+      },
+      "live": []
+    },
+    {
+      "strategy": "defend",
+      "level": 2,
+      "won": true,
+      "time": 59.1,
+      "deaths": 0,
+      "before": {
+        "gold": 222,
+        "squad": 1,
+        "base": 2000
+      },
+      "after": {
+        "gold": 788,
+        "squad": 1,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第2关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 566,
+        "spent": 400,
+        "seconds": 59
+      },
+      "live": []
+    },
+    {
+      "strategy": "defend",
+      "level": 3,
+      "won": true,
+      "time": 63.3,
+      "deaths": 0,
+      "before": {
+        "gold": 38,
+        "squad": 2,
+        "base": 2000
+      },
+      "after": {
+        "gold": 960,
+        "squad": 2,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第3关 ⚔小BOSS",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 922,
+        "spent": 750,
+        "seconds": 63
+      },
+      "live": []
+    },
+    {
+      "strategy": "defend",
+      "level": 4,
+      "won": true,
+      "time": 65.6,
+      "deaths": 0,
+      "before": {
+        "gold": 10,
+        "squad": 3,
+        "base": 2000
+      },
+      "after": {
+        "gold": 873,
+        "squad": 3,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第4关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 863,
+        "spent": 950,
+        "seconds": 66
+      },
+      "live": []
+    },
+    {
+      "strategy": "defend",
+      "level": 5,
+      "won": true,
+      "time": 67.3,
+      "deaths": 0,
+      "before": {
+        "gold": 873,
+        "squad": 3,
+        "base": 2000
+      },
+      "after": {
+        "gold": 1904,
+        "squad": 3,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第5关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 1031,
+        "spent": 0,
+        "seconds": 67
+      },
+      "live": []
+    },
+    {
+      "strategy": "split",
+      "level": 1,
+      "won": true,
+      "time": 39.7,
+      "deaths": 0,
+      "before": {
+        "gold": 150,
+        "squad": 0,
+        "base": 2000
+      },
+      "after": {
+        "gold": 687,
+        "squad": 0,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第1关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 537,
+        "spent": 0,
+        "seconds": 40
+      },
+      "live": []
+    },
+    {
+      "strategy": "split",
+      "level": 2,
+      "won": true,
+      "time": 45,
+      "deaths": 0,
+      "before": {
+        "gold": 287,
+        "squad": 1,
+        "base": 2000
+      },
+      "after": {
+        "gold": 853,
+        "squad": 1,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第2关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 566,
+        "spent": 400,
+        "seconds": 45
+      },
+      "live": []
+    },
+    {
+      "strategy": "split",
+      "level": 3,
+      "won": true,
+      "time": 49.6,
+      "deaths": 0,
+      "before": {
+        "gold": 103,
+        "squad": 2,
+        "base": 2000
+      },
+      "after": {
+        "gold": 960,
+        "squad": 2,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第3关 ⚔小BOSS",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 857,
+        "spent": 750,
+        "seconds": 50
+      },
+      "live": []
+    },
+    {
+      "strategy": "split",
+      "level": 4,
+      "won": true,
+      "time": 51.6,
+      "deaths": 0,
+      "before": {
+        "gold": 10,
+        "squad": 3,
+        "base": 2000
+      },
+      "after": {
+        "gold": 1015,
+        "squad": 3,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第4关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 1005,
+        "spent": 950,
+        "seconds": 52
+      },
+      "live": []
+    },
+    {
+      "strategy": "split",
+      "level": 5,
+      "won": true,
+      "time": 53.3,
+      "deaths": 0,
+      "before": {
+        "gold": 1015,
+        "squad": 3,
+        "base": 2000
+      },
+      "after": {
+        "gold": 1862,
+        "squad": 3,
+        "base": 2000
+      },
+      "report": {
+        "label": "普通 · 周目1 第1章「虫族小兵」 第5关",
+        "won": true,
+        "baseHp": 2000,
+        "baseMaxHp": 2000,
+        "gateHp": 2500,
+        "gateMaxHp": 2500,
+        "buildingLosses": 0,
+        "squadLosses": 0,
+        "vehicleLosses": 0,
+        "income": 847,
+        "spent": 0,
+        "seconds": 53
+      },
+      "live": []
+    }
+  ],
+  "support": {
+    "hp": 250,
+    "gap": 37.15558656418476,
+    "position": [
+      -23.974157257907873,
+      5,
+      -48.76090203614789
+    ]
+  }
+}

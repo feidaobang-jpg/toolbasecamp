@@ -13,7 +13,7 @@ export const BOT_SPAWNS = [{ x: 96, y: 0 }, { x: 192, y: 0 }, { x: 0, y: 0 }];  
 export const SCORE = { basic: 100, fast: 200, power: 300, armor: 400, heavy: 500, flame: 600, escort: 100, mini: 2000, boss: 5000, final: 20000 };
 export const TYPE_NAMES = { basic: '普通坦克', fast: '快速坦克', power: '火力坦克', armor: '重甲坦克', heavy: '精英重炮', flame: '火焰车', escort: '护卫', mini: '小 Boss', boss: '大 Boss', final: '终焉 Boss' };
 const POWERUP_TABLE = ['helmet', 'timer', 'shovel', 'star', 'grenade', 'tank', 'grenade', 'star'];   // 原版 rand & 7 查表
-const REMIX_POWERUPS = ['helmet', 'timer', 'shovel', 'star', 'grenade', 'tank', 'star', 'gun', 'boat', 'grenade', 'boat', 'gun'];
+const REMIX_POWERUPS = ['helmet', 'timer', 'shovel', 'star', 'grenade', 'tank', 'star', 'gun', 'boat', 'grenade', 'boat', 'gun', 'rpg', 'missile'];
 const POWERUP_SPOTS = [24, 72, 120, 168];   // 原版 16 个固定掉落点（左上角 px）
 const BOSS_NAMES = ['侦察型', '巡猎型', '重装型', '裂甲型', '赤焰型', '霜锋型', '要塞型', '暗影型', '炼狱型', '终焉型'];
 
@@ -64,6 +64,23 @@ export const emit = (w, type, d = {}) => { w.events.push({ ...d, ...(w.activeSlo
 const PLAYER_FIELDS = ['lives', 'hp', 'stars', 'plate', 'boats'];
 export const localPlayer = w => w?.seats ? w.seats[w.localSlot || 0].tank : w?.player;
 export const localStats = w => w?.seats ? w.seats[w.localSlot || 0].state : w?.run;
+export function joinPlayer(w,slot){
+ const fresh=createRun({lives:w.run.livesMode,armor:w.run.armor});
+ while(w.seats.length<=slot)w.seats.push({slot:w.seats.length,state:{lives:0,hp:3,stars:0,plate:0,boats:0},tank:null,spawnT:0});
+ const seat=w.seats[slot];seat.state=Object.fromEntries(PLAYER_FIELDS.map(k=>[k,fresh[k]]));seat.tank=null;seat.spawnT=37;
+ w.run.coopPlayers=w.seats.map(s=>s.state);w.run.playerCount=Math.max(w.run.playerCount,slot+1);
+}
+export function computerPlayerInput(w,slot){
+ const p=w.seats[slot]?.tank;if(!p||p.state!=='active')return {dir:-1};
+ const target=w.bots.filter(t=>t.state==='active').sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+ if(!target)return {dir:-1,fire:false};
+ const dx=target.x-p.x,dy=target.y-p.y;
+ const wanted=Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?2:0);
+ const dirs=[wanted,(wanted+1)%4,(wanted+3)%4,(wanted+2)%4];
+ const dir=dirs.find(n=>!blockedBy(w,p,p.x+DX[n]*2,p.y+DY[n]*2))??wanted;
+ const safe=!(dir===2&&Math.abs(p.x-EAGLE.x)<24&&p.y<EAGLE.y);
+ return {dir,look:wanted*Math.PI/2,fire:safe,firePressed:safe&&w.f%15===0};
+}
 const playerTanks = w => w.seats ? w.seats.map(s => s.tank).filter(Boolean) : w.player ? [w.player] : [];
 const targetPlayer = (w, t) => playerTanks(w).filter(p => p.state === 'active').sort((a, b) => Math.abs(a.x - t.x) + Math.abs(a.y - t.y) - Math.abs(b.x - t.x) - Math.abs(b.y - t.y))[0];
 function withSeat(w, seat, fn) {
@@ -109,7 +126,7 @@ function makeTank(w, team, type, x, y, size = 16) {
     id: w.nextId++, team, type, x, y, size, dir: team === 'player' ? 0 : 2, state: 'spawn', st: 0,
     hp: 1, maxHp: 1, carrier: false, slot: 0, moveAcc: 0, speed: .5, bulletSpeed: 2, power: 0, maxBullets: 1,
     wait: 0, pending: false, moving: false, travel: 0, recoil: 0, hitFlash: 0, shield: 0, boats: 0, stars: 0, cool: 0,
-    fireCd: 0, telegraph: 0, attackT: 120, pattern: 0, escorts: 0, dash: 0, slide: 0, invuln: 0, plate: 0, lastFireHeld: false
+    fireCd: 0, telegraph: 0, attackT: 120, pattern: 0, escorts: 0, dash: 0, slide: 0, invuln: 0, plate: 0, lastFireHeld: false, stuckT: 0, ammo: 0, burst: 0, burstT: 0
   };
   return t;
 }
@@ -191,6 +208,26 @@ function makeBoss(w, t) {
 
 // ---------------- 移动（1px 一步，按格阻挡） ----------------
 function rectsOverlap(ax, ay, as, bx, by, bs) { return ax < bx + bs && ax + as > bx && ay < by + bs && ay + as > by; }
+// 车体四角 8px 格任一挡坦克即视为嵌进地形（用于转向对齐检查与脱困，不受 blockedBy“已在格不挡自己”的影响）
+function terrainOverlap(w, t, x, y) {
+  const s = t.size;
+  if (x < 0 || y < 0 || x + s > FIELD || y + s > FIELD) return true;
+  for (let cy = y >> 3; cy <= (y + s - 1) >> 3; cy++) for (let cx = x >> 3; cx <= (x + s - 1) >> 3; cx++) if (cellBlocksTank(w, t, cx, cy)) return true;
+  return false;
+}
+function ejectFromTerrain(w, t) {   // 嵌进砖墙/钢墙时移到最近空地（船落水的 ejectFromWater 同款）
+  let best = null, bd = 1e9;
+  for (let y = 0; y <= FIELD - t.size; y += 8) for (let x = 0; x <= FIELD - t.size; x += 8) {
+    if (terrainOverlap(w, t, x, y)) continue;
+    const d = (x - t.x) ** 2 + (y - t.y) ** 2; if (d < bd) { bd = d; best = { x, y }; }
+  }
+  if (best) { t.x = best.x; t.y = best.y; t.stuckT = 0; emit(w, 'eject', { x: t.x + t.size / 2, y: t.y + t.size / 2 }); }
+}
+function alignTankTurn(w, t) {   // 垂直转向的 8px 对齐：就近点被墙占用时改试其他对齐点，都被占则不挪位置
+  for (const nx of [(t.x + 4) & ~7, t.x & ~7, (t.x + 7) & ~7]) for (const ny of [(t.y + 4) & ~7, t.y & ~7, (t.y + 7) & ~7]) {
+    if (!terrainOverlap(w, t, nx, ny)) { t.x = nx; t.y = ny; return; }
+  }
+}
 function blockedBy(w, t, nx, ny) {
   const s = t.size;
   if (nx < 0 || ny < 0 || nx + s > FIELD || ny + s > FIELD) return 'border';
@@ -243,9 +280,12 @@ function updatePlayer(w, input) {
   const dir = controllable ? input.dir : -1;
   const turn = want => {
     if (want === p.dir) return;
-    if ((want & 1) !== (p.dir & 1)) { p.x = (p.x + 4) & ~7; p.y = (p.y + 4) & ~7; }   // 垂直转向就近对齐 8px；掉头不对齐
+    if ((want & 1) !== (p.dir & 1)) alignTankTurn(w, p);   // 垂直转向就近对齐 8px；嵌墙时换点对齐或不挪
     p.dir = want;
   };
+  // 车体已嵌进砖墙/钢墙（旧档、联机地形差或早期版本转向吸附造成）约 1/3 秒后自动挪到最近空地
+  if (terrainOverlap(w, p, p.x, p.y)) { if (++p.stuckT > 20) ejectFromTerrain(w, p); }
+  else p.stuckT = 0;
   // 冰面：起步后 13 步内不能转向和停下，松手后再滑最多 15 步（原版 $DB94 / $DC52）
   const ice = onIce(w, p);
   if (!ice) p.slide = 0;
@@ -264,7 +304,12 @@ function updatePlayer(w, input) {
   if (p.cool > 0) p.cool--;
   if (controllable) {
     const press = input.firePressed, hold = w.rules.autofire && input.fire && p.cool <= 0;
-    if (press || hold) { if (fire(w, p)) p.cool = 12; }
+    if (press || hold) {
+      if (fire(w, p)) {
+        p.cool = p.weapon === 'rpg' ? 36 : p.weapon === 'missile' ? 30 : 12;
+        if (p.weapon === 'rpg' || p.weapon === 'missile') { if (--p.ammo <= 0) { p.weapon = null; emit(w, 'weaponEmpty'); } }
+      }
+    }
   }
   // 拾取道具（中心距离 |d| < 12）
   const pu = w.powerup;
@@ -436,6 +481,10 @@ function updateBursts(w) {
   for (const t of w.bots) if (t.burst > 0 && t.state === 'active') {
     if (--t.burstT <= 0) { t.burstT = 9; t.burst--; const k = t.burst % Math.max(1, t.barrels); fire(w, t, { offset: (k - (t.barrels - 1) / 2) * 8, force: true }); }
   }
+  // 玩家的四连导弹续发（首发在 fire() 里，这里补剩余三枚）
+  for (const p of playerTanks(w)) if (p.burst > 0 && p.state === 'active' && --p.burstT <= 0) {
+    p.burstT = 7; p.burst--; fire(w, p, { kind: 'missile', offset: p.burst % 2 ? 5 : -5, burstPart: true, force: true });
+  }
 }
 
 // ---------------- 炮弹 ----------------
@@ -448,12 +497,14 @@ export function fire(w, t, o = {}) {
   const off = o.offset || 0;
   const vx = heading === undefined ? DX[dir] : -Math.sin(heading), vy = heading === undefined ? DY[dir] : -Math.cos(heading);
   const x = cx + vx * s / 2 + (dir & 1 ? 0 : off), y = cy + vy * s / 2 + (dir & 1 ? off : 0);
-  const kind = o.kind || (t.weapon === 'flame' ? 'flame' : 'shell');
+  const kind = o.kind || t.weapon || 'shell';
   const b = {
-    id: w.nextId++, owner: t, team: t.team, x, y, dir, vx, vy, heading, speed: o.speed || (kind === 'flame' ? 2 : t.bulletSpeed), power: t.power, kind,
+    id: w.nextId++, owner: t, team: t.team, x, y, dir, vx, vy, heading, speed: o.speed || (kind === 'flame' ? 2 : kind === 'rpg' ? 3 : t.bulletSpeed), power: t.power, kind,
     half: o.half || (kind === 'flame' ? 6 : 0), state: 'fly', st: 0, age: 0, pierce: kind === 'pierce'
   };
   w.bullets.push(b);
+  // 四连导弹：扳机只算一发，其余三枚错开半拍、左右交替出膛
+  if (kind === 'missile' && t.team === 'player' && !o.burstPart) { t.burst = 3; t.burstT = 7; }
   if (t.team === 'player') w.playerShots = (w.playerShots || 0) + 1;
   t.recoil = 7;
   emit(w, 'fire', { team: t.team, x, y, dir, big: kind !== 'shell' || s > 16, kind });
@@ -485,6 +536,25 @@ function clearWholeCell(w, px, py, out, steelToo) {
 // 返回 true 表示炮弹停下
 function bulletTerrain(w, b) {
   const vertical = (b.dir & 1) === 0, broken = [];
+  if (b.kind === 'rpg') {   // 重型火箭弹：撞到任何地形都引爆，砖钢一起炸开并溅射（老鹰围墙除外）
+    const ty = probe(w, b.x, b.y);
+    if (ty === 'eagle') { hitEagle(w, b); return true; }
+    if (!ty) return false;
+    blast(w, b.x, b.y, 14, false);
+    const steel = [];
+    for (let cy = Math.max(0, (b.y - 14) >> 3); cy <= Math.min(N - 1, (b.y + 14) >> 3); cy++) for (let cx = Math.max(0, (b.x - 14) >> 3); cx <= Math.min(N - 1, (b.x + 14) >> 3); cx++) {
+      if ((cx * 8 + 4 - b.x) ** 2 + (cy * 8 + 4 - b.y) ** 2 > 196) continue;
+      if (BASE_WALL.some(([bx, by]) => bx === cx && by === cy)) continue;
+      if (w.terrain.steel[cellIdx(cx, cy)]) { w.terrain.steel[cellIdx(cx, cy)] = 0; steel.push({ cx, cy, steel: true }); markCell(w, cx, cy); }
+    }
+    if (steel.length) emit(w, 'brick', { cells: steel, x: b.x, y: b.y, dir: b.dir, team: b.team, steel: true });
+    for (const t of w.bots) if (t.state === 'active' && Math.abs(t.x + t.size / 2 - b.x) < 24 && Math.abs(t.y + t.size / 2 - b.y) < 24) {
+      t.hp -= 2; t.hitFlash = 10;
+      if (t.hp <= 0) destroyBot(w, t, false); else emit(w, 'armor', { x: b.x, y: b.y, big: t.size > 16 });
+    }
+    emit(w, 'boom', { x: b.x, y: b.y, big: true, team: b.team });
+    return true;
+  }
   if (b.kind === 'shell') {
     // 原版：主探测点 A 与偏 1px 的 C；A / C 清掉砖时把同 tile 同一排另一块也清掉 → 16px 宽 × 4px 深
     const A = [b.x, b.y], C = vertical ? [b.x - 1, b.y] : [b.x, b.y - 1];
@@ -576,6 +646,13 @@ function bulletTanks(w, b) {
       if (Math.abs(b.x - t.x - t.size / 2) >= r || Math.abs(b.y - t.y - t.size / 2) >= r) continue;
       b.state = 'boom'; b.st = 9;
       hitBot(w, t, b);
+      // 导弹小范围溅射：波及旁边的敌军
+      if (b.kind === 'missile') for (const o of w.bots) {
+        if (o === t || o.state !== 'active') continue;
+        if (Math.abs(o.x + o.size / 2 - b.x) >= 20 || Math.abs(o.y + o.size / 2 - b.y) >= 20) continue;
+        o.hp -= 1; o.hitFlash = 8;
+        if (o.hp <= 0) destroyBot(w, o, false);
+      }
       return true;
     }
     return false;
@@ -720,6 +797,8 @@ export function applyPowerup(w, type, at = {}) {
     case 'star': if (p) { const max = w.classic ? 3 : 4; if (p.stars < max) { p.stars++; if (!w.classic && p.stars === 3 && p.plate < 1) p.plate = 1; applyStars(w, p); r.stars = p.stars; r.plate = p.plate; emit(w, 'levelup', { level: p.stars }); } } break;
     case 'gun': if (p) { p.stars = p.stars >= 3 ? 4 : 3; p.plate = Math.min(2, p.plate + 1); applyStars(w, p); r.stars = p.stars; r.plate = p.plate; emit(w, 'levelup', { level: p.stars, gun: true }); } break;
     case 'boat': if (p) { p.boats = Math.min(3, p.boats + 1); r.boats = p.boats; emit(w, 'boat', { layers: p.boats }); } break;
+    case 'rpg': if (p) { p.weapon = 'rpg'; p.ammo = 5; emit(w, 'weapon', { kind: 'rpg', ammo: p.ammo }); } break;
+    case 'missile': if (p) { p.weapon = 'missile'; p.ammo = 4; emit(w, 'weapon', { kind: 'missile', ammo: p.ammo }); } break;
     case 'grenade':
       for (const t of w.bots) {
         if (t.state !== 'active') continue;
@@ -843,7 +922,7 @@ export function step(w, input = { dir: -1, fire: false, firePressed: false }) {
 // 第一人称站着不动时，车头跟着视线转（与行驶转向一样就近对齐 8px）
 export function turnPlayer(w, dir) {
   const p = w.player; if (!p || p.state !== 'active' || dir === p.dir || w.status === 'gameover') return;
-  if ((dir & 1) !== (p.dir & 1)) { p.x = (p.x + 4) & ~7; p.y = (p.y + 4) & ~7; }
+  if ((dir & 1) !== (p.dir & 1)) alignTankTurn(w, p);
   p.dir = dir;
 }
 

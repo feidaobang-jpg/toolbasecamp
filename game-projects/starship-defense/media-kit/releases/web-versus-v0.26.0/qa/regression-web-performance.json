@@ -1,0 +1,55 @@
+{
+ "browser": "154.0.4258.62",
+ "mode": "headless Edge, ANGLE D3D11; no screen recording during samples",
+ "scene": "48 high-HP insects, 4 allied soldiers, player continuous fire, 30 seconds per quality after 2 seconds warmup",
+ "high": {
+  "samples": 5094,
+  "averageFPS": 169.7671783454524,
+  "medianMs": 5.899999991059303,
+  "p95Ms": 6,
+  "over50ms": 0,
+  "drawCalls": 391,
+  "triangles": 388906,
+  "memory": {
+   "geometries": 89,
+   "textures": 11
+  },
+  "viewport": [
+   1440,
+   810
+  ],
+  "dpr": 1.5,
+  "drawingBuffer": [
+   1440,
+   810
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "quality": "high",
+  "theme": "dark"
+ },
+ "smooth": {
+  "samples": 5096,
+  "averageFPS": 169.86779911867768,
+  "medianMs": 5.899999991059303,
+  "p95Ms": 6.399999991059303,
+  "over50ms": 0,
+  "drawCalls": 394,
+  "triangles": 388998,
+  "memory": {
+   "geometries": 89,
+   "textures": 12
+  },
+  "viewport": [
+   1440,
+   810
+  ],
+  "dpr": 1.2,
+  "drawingBuffer": [
+   1152,
+   648
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "quality": "smooth",
+  "theme": "dark"
+ }
+}

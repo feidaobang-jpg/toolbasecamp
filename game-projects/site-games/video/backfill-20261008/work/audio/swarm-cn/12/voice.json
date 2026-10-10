@@ -1,0 +1,109 @@
+{
+  "text": "回到基地前方，拦住虫洞里出来的敌人。这轮防守成功，进入第二关时，基地仍然是满血。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "回到",
+      "offset": 1000000,
+      "duration": 3500000
+    },
+    {
+      "text": "基地",
+      "offset": 4750000,
+      "duration": 3000000
+    },
+    {
+      "text": "前方",
+      "offset": 7875000,
+      "duration": 5625000
+    },
+    {
+      "text": "拦住",
+      "offset": 16500000,
+      "duration": 3500000
+    },
+    {
+      "text": "虫洞",
+      "offset": 20250000,
+      "duration": 4000000
+    },
+    {
+      "text": "里",
+      "offset": 24250000,
+      "duration": 1375000
+    },
+    {
+      "text": "出来",
+      "offset": 25875000,
+      "duration": 2500000
+    },
+    {
+      "text": "的",
+      "offset": 28375000,
+      "duration": 1000000
+    },
+    {
+      "text": "敌人",
+      "offset": 29500000,
+      "duration": 3875000
+    },
+    {
+      "text": "这",
+      "offset": 39125000,
+      "duration": 1875000
+    },
+    {
+      "text": "轮",
+      "offset": 41000000,
+      "duration": 1625000
+    },
+    {
+      "text": "防守",
+      "offset": 42875000,
+      "duration": 3000000
+    },
+    {
+      "text": "成功",
+      "offset": 46000000,
+      "duration": 5000000
+    },
+    {
+      "text": "进入",
+      "offset": 52750000,
+      "duration": 3625000
+    },
+    {
+      "text": "第二",
+      "offset": 56625000,
+      "duration": 2375000
+    },
+    {
+      "text": "关时",
+      "offset": 59125000,
+      "duration": 6125000
+    },
+    {
+      "text": "基地",
+      "offset": 67250000,
+      "duration": 4125000
+    },
+    {
+      "text": "仍然",
+      "offset": 71625000,
+      "duration": 3250000
+    },
+    {
+      "text": "是",
+      "offset": 74875000,
+      "duration": 1250000
+    },
+    {
+      "text": "满血",
+      "offset": 76250000,
+      "duration": 4500000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

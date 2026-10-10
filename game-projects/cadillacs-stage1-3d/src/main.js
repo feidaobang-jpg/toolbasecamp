@@ -1,3 +1,5 @@
+import {createSoundRelay} from '../../../public/js/game/coop.js';
+import { installRemakeCoop } from '../../../public/js/game/remake-coop.js';
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../public/js/game/drag-look.js';
 // 入口：渲染器、布局（竖屏自动旋转）、菜单 / 选人导航、HUD、全屏、画质、主循环与测试钩子
 import * as THREE from 'three';
@@ -36,6 +38,8 @@ const settings = {
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');
 let effQuality = settings.quality === 'low' ? 'low' : 'high';
 let autoProbe = { on: settings.quality === 'auto', frames: [], done: false, decided: null };
+let coopDriver=null;
+const coopSounds=createSoundRelay(A,['play'],()=>coopDriver?.config&&coopDriver.connection.host);
 let uiMode = 'title';
 let current = 'menu';
 
@@ -56,6 +60,7 @@ const camCtl = createCamera();
 camCtl.setIndex(clamp(store.get('camera', 0) | 0, 0, PRESETS.length - 1));
 const world = buildWorld(scene);
 const fx = createFx(scene);
+fx.cam = camCtl.cam; Object.defineProperty(fx, 'aspect', { get: () => camCtl.cam.aspect });
 GM.init(scene, world, fx, camCtl);
 A.setClock(() => (G.frames || 0) * STEP);
 
@@ -68,7 +73,7 @@ function makePortraits() {
     const m2 = buildHuman(SPECS[h.id]); applyPose(m2, mod(HP.victory, { head: [-0.05, 0.25, 0] }));
     FULLS[h.id] = portrait(renderer, m2, { size: 256, full: true });
   }
-  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
+  for (const t of ['ferris', 'gneiss', 'punk', 'blade', 'elmer', 'hammer', 'wrench', 'vice', 'poacher', 'skinner', 'gutter', 'thug', 'razor', 'lash', 'butcher', 'driver', 'walther', 'biker', 'hogg', 'mechanic']) { const m = buildHuman(SPECS[t]); applyPose(m, HP.guard); FACES[t] = portrait(renderer, m, { size: 96 }); }
   const r = buildRaptor(); r.setPalette('angry'); FACES.raptor = portrait(renderer, r, { size: 96, raptor: true });
   const tr = buildRaptor('trex'); FACES.shivat = portrait(renderer, tr, { size: 96, raptor: true, k: 2.1 });
   const tk = buildTrike(); FACES.hack = portrait(renderer, tk, { size: 96, raptor: true, k: 1.6 });
@@ -113,9 +118,10 @@ function refreshOptions() {
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
   });
   $('hi-val').textContent = G.hi;
-  const fsOn = !!fsElement();
-  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  const fsOn = !!fsElement(), fsShow = fsOn || fsCapable();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; b.hidden = !fsShow; });
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('btn-fs').hidden = !fsShow;
   $('demo-badge').hidden = !(uiMode === 'game' && settings.demo);
   $('cam-label').textContent = camCtl.preset().name;
 }
@@ -124,6 +130,7 @@ function adjust(name, delta) {
   else if (name === 'lives') { settings.lives = settings.lives === 'inf' ? 'classic' : 'inf'; store.set('lives', settings.lives); }
   else if (name === 'dur') { const o = ['std', 'easy', 'classic']; settings.dur = o[(o.indexOf(settings.dur) + (delta < 0 ? 2 : 1)) % 3]; store.set('dur', settings.dur); }
   else if (name === 'demo') {
+    if(coopDriver?.config){showToast('联机模式不启用演示无敌');return;}
     settings.demo = !settings.demo;
     if (uiMode === 'game') { G.settings.demo = settings.demo; if (settings.demo) G.demoUsed = true; }
   } else if (name === 'quality') {
@@ -185,11 +192,12 @@ function show(name) {
   current = name;
   IN.clear();
   refreshOptions();
-  if (name && name !== 'cont') { const first = Array.prototype.find.call(overlays[name].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden); if (first) first.focus({ preventScroll: true }); }
-  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
   layout();
+  if (name && name !== 'cont') { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
+  else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
 }
-const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden) : [];
+// 只取实际显示的项：hidden 属性之外，样式收起的元素 focus() 后会让 ↑↓ 卡住
+const items = () => current && current !== 'cont' ? Array.prototype.slice.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button')).filter(el => !el.hidden && el.getClientRects().length > 0) : [];
 document.addEventListener('keydown', (e) => {
   A.unlock();
   setInputMode('key');
@@ -251,13 +259,14 @@ hudButton($('btn-cam'), () => { if (uiMode === 'game' && !current) cycleCamera()
 
 // ---------- 流程 ----------
 const gameRunning = () => uiMode === 'game' && ['play', 'cut', 'trans', 'clear', 'cont'].indexOf(G.mode) >= 0;
-IN.active = () => uiMode === 'game' && !paused && (!current || current === 'cont');
+IN.active = () => uiMode === 'game' && !paused && (!current || current === 'cont') && !coopDriver?.lobby.opened;
 let paused = false;
 function startGame() {
+  if(coopDriver?.action('restart'))return;
   A.musicDuck(false);   // 从暂停菜单「重新开始」：先解除暂停时挂起的音频，否则新的一局没有 BGM 和音效
   A.unlock(); A.play('start');
   uiMode = 'game'; paused = false;
-  GM.newGame({ lives: settings.lives, dur: settings.dur, demo: settings.demo, hero: settings.hero, area: params.get('area') ? clamp(parseInt(params.get('area'), 10) || 0, 0, AREAS.length - 1) : STAGES[settings.stage].first });
+  GM.newGame({ lives: settings.lives, dur: settings.dur, demo: settings.demo, hero: settings.hero, area: params.get('area') ? clamp(parseInt(params.get('area'), 10) || 0, 0, AREAS.length - 1) : STAGES[settings.stage].first, ...(coopDriver?.config||{}) });
   camCtl.yawOff = 0; if (G.player) delete G.player.lookHeading;
   show(null);
   last = performance.now(); acc = 0;
@@ -265,24 +274,27 @@ function startGame() {
   presentFrame(0, false, true);
 }
 function pauseGame() {
+  if(coopDriver?.action('pause')){IN.clear();return;}
   if (!gameRunning() || paused || G.mode === 'cont') return;
   paused = true; A.musicDuck(true);
   show('pause');
 }
 function resume() {
+  if(coopDriver?.action('resume'))return;
   paused = false; A.musicDuck(false);
   show(null);
   last = performance.now(); acc = 0;
 }
 function toTitle() {
+  coopDriver?.leave();
   uiMode = 'title'; paused = false;
   A.musicDuck(false); A.music(null);
   GM.toTitle();
   titleT = 0;
   show('menu');
 }
-G.onEnd = (res) => { setTimeout(() => showResult(res), res.win ? 400 : 200); };
-const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER']];
+G.onEnd = (res) => { if(coopDriver?.config)coopDriver.result=res; setTimeout(() => showResult(res), res.win ? 400 : 200); };
+const KILL_ROWS = [['ferris', '费里斯 FERRIS'], ['gneiss', '尼斯 GNEISS'], ['punk', '朋克 PUNK'], ['thug', '打手 THUG'], ['blade', '布雷德 BLADE'], ['razor', '雷泽 RAZOR'], ['hammer', '锤子·T HAMMER T.'], ['wrench', '扳手·T WRENCH T.'], ['elmer', '黑埃尔默 BLK ELMER'], ['poacher', '偷猎者 J POACHER J'], ['skinner', '斯金纳 SKINNER'], ['gutter', '格特 GUTTER'], ['lash', '拉什·T LASH T.'], ['driver', '车手 DRIVER'], ['walther', '沃尔瑟 WALTHER'], ['biker', '飞车党 BIKER'], ['raptor', '岩跳龙 R.HOPPER'], ['hack', '三角龙哈克 HACK'], ['shivat', '霸王龙希瓦特 SHIVAT'], ['vice', 'Boss 维斯·T VICE T.'], ['butcher', 'Boss 屠夫 BUTCHER'], ['hogg', 'Boss 霍格 HOGG']];
 const STAGE_CN = ['', '第一关', '第二关', '第三关'];
 function showResult(res) {
   if (uiMode !== 'game') return;
@@ -300,12 +312,20 @@ function showResult(res) {
   else if (res.newHi) extra.push('新纪录！最高分 ' + res.hi);
   else extra.push('最高分 ' + res.hi);
   $('res-extra').textContent = extra.join(' · ');
-  $('res-like').textContent = res.win ? (res.stage >= 2 ? '屠夫的砍刀都被你缴了！第三关还在路上——喜欢的话，也给开发者来个一键三连？' : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
+  $('res-like').textContent = res.win ? (res.stage >= 3 ? '霍格连人带摩托都被你掀翻了！下一站：杰克的修车厂——喜欢的话，也给开发者来个一键三连？' : res.stage >= 2 ? '屠夫的砍刀都被你缴了！喜欢的话，也给开发者来个一键三连？' : '维斯被揍趴下了！喜欢这关的话，也给开发者来个一键三连？') : '';
   show('result');
 }
 
 // ---------- 全屏 ----------
 const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+// 全屏入口按浏览器实际能力显示，不按手机/电脑分类隐藏：iPhone Safari 没有元素全屏、未授权全屏的 iframe 报 fullscreenEnabled=false，
+// 这些情况隐藏按钮；能请求但被拒绝时由 toggleFullscreen 提示并继续页面内游玩
+function fsCapable() {
+  const el = document.documentElement;
+  if (!(el.requestFullscreen || el.webkitRequestFullscreen)) return false;
+  const enabled = document.fullscreenEnabled !== undefined ? document.fullscreenEnabled : document.webkitFullscreenEnabled;
+  return enabled !== false;
+}
 const fsLog = [];
 function toggleFullscreen() {
   if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
@@ -349,12 +369,14 @@ function viewport() {
 }
 function layout() {
   const { vw, vh } = viewport(), coarse = settings.touch === 'show' || settings.touch === 'auto' && coarsePointer();
-  const rotate = (uiMode === 'game' || current === 'select') && vh > vw && coarse;
+  // 手机触屏竖着拿时，标题菜单也直接旋转成横屏（2026-10-07 用户确认，原先到选人画面才旋转）
+  const rotate = vh > vw && coarse;
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
   stage.classList.toggle('rotated', rotate);
   stage.classList.toggle('compact', H < 520);
+  stage.classList.toggle('narrow', W < 760);   // 667×375 一类窄横屏：主菜单上下排列、整层滚动，选项值不被截断
   stage.classList.toggle('portrait', H > W);
   const orient = rotate + ':' + (W > H);
   if (lastOrient !== null && orient !== lastOrient) IN.clear();
@@ -405,7 +427,11 @@ const cache = {};
 function setText(el, key, v) { if (cache[key] !== v) { cache[key] = v; el.textContent = v; } }
 function setStyle(el, key, prop, v) { if (cache[key] !== v) { cache[key] = v; el.style[prop] = v; } }
 let lastBanner = null, lastToast = null;
+// 开场远景镜头时像原作一样不显示 HUD 与键位提示
+const CINE_HIDE = ['hud', 'hud-top', 'keyhint', 'h-timer'].map(id => document.getElementById(id)).filter(Boolean);
 function updateHud() {
+  const cine = !!G.cineCam;
+  if (cache.cine !== cine) { cache.cine = cine; for (const el of CINE_HIDE) el.style.visibility = cine ? 'hidden' : ''; }
   const h = GM.hudState();
   const hero = HEROES[h.hero];
   if (cache.hero !== hero.id) { cache.hero = hero.id; H_.face.src = FACES[hero.id]; H_.name.textContent = hero.en.split('.')[0]; }
@@ -427,18 +453,19 @@ function updateHud() {
     setStyle(H_.ehp2, 'ehp2', 'width', under === 'transparent' ? '0%' : '100%');
     setStyle(H_.ehp2, 'ecol2', 'background', under);
   } else H_.enemy.hidden = true;
-  const showTimer = ['play', 'cut'].indexOf(h.mode) >= 0;
+  const showTimer = ['play', 'cut'].indexOf(h.mode) >= 0 && !h.noTimer;
   H_.timer.hidden = !showTimer;
   if (showTimer) { setText(H_.timer, 'timer', h.timerUnlimited ? '无限时间' : fmtTime(h.timer)); H_.timer.classList.toggle('big', !h.timerUnlimited && h.timerBig); H_.timer.classList.toggle('warn', !h.timerUnlimited && h.timer < 20); }
-  if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || ['gun', 'shotgun', 'rifle'].includes(h.weapon.kind) ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
+  if (h.weapon) { H_.weapon.hidden = false; setText(H_.wammo, 'wammo', h.weapon.ammo > 1 || ['gun', 'shotgun', 'rifle', 'car'].includes(h.weapon.kind) ? String(h.weapon.ammo) : ''); setText(H_.wname, 'wname', h.weapon.name); }
   else H_.weapon.hidden = true;
   H_.go.hidden = !h.go;
   // 对话框
   if (G.dialog) {
     H_.dialog.hidden = false;
+    H_.dialog.classList.toggle('over', G.fade > 0.5);   // 黑屏上的过场台词（第三关开场霍格放话）要盖在黑幕上面
     const who = G.dialog.who, isP = who === 'player';
     const fkey = isP ? hero.id : who;
-    if (cache.dwho !== fkey) { cache.dwho = fkey; H_.dface.src = FACES[fkey] || ''; H_.dname.textContent = isP ? hero.full + ' ' + hero.en : ({ vice: '维斯·特修恩 VICE T.', butcher: '屠夫 BUTCHER' }[who] || who); }
+    if (cache.dwho !== fkey) { cache.dwho = fkey; H_.dface.src = FACES[fkey] || ''; H_.dname.textContent = isP ? hero.full + ' ' + hero.en : ({ vice: '维斯·特修恩 VICE T.', butcher: '屠夫 BUTCHER', hogg: '霍格 HOGG', mechanic: '机修工' }[who] || (HEROES.find(x => x.id === who) || {}).full || who); }
     const n = Math.min(G.dialog.text.length, Math.floor(G.dialog.t * 24) + 1);
     setText(H_.dtext, 'dtext', G.dialog.text.slice(0, n));
   } else H_.dialog.hidden = true;
@@ -474,7 +501,7 @@ function frame(now) {
       if (IN.take('camera')) cycleCamera();
       acc += dtReal;
       let n = 0;
-      while (acc >= STEP && n < 6) { GM.update(); acc -= STEP; n++; }
+      while (acc >= STEP && n < 6) { if(!coopDriver?.config||coopDriver.connection.host)GM.update(); acc -= STEP; n++; }
       if (n === 6) acc = 0;
       if (autoProbe.on && !autoProbe.done && G.mode === 'play') {
         autoProbe.frames.push(dtReal * 1000);
@@ -517,7 +544,7 @@ function presentFrame(dtReal, draw, instant) {
     const cz1 = AR.camZ1 === undefined ? AR.z1 : AR.camZ1;   // 取景按这一排算；第二关可走范围比它更靠前（见 level.js camZ1）
     const zc = (AR.z0 + cz1) / 2 * 0.6 + p.z * 0.25;
     const fitDepth = cz1 - ((AR.z0 + cz1) / 2 * 0.6 + AR.z0 * 0.25);   // 主角站最里排时，观察点到最前一排的纵深
-    camCtl.update(dtReal, { focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: fx.shake * 0.8, instant, fpOff });
+    camCtl.update(dtReal, { override: G.cineCam || undefined, focusX: p.lookHeading === undefined ? G.focusX : p.x, zc: p.lookHeading === undefined ? zc : p.z, fitDepth, tyOff: AR.camTy || 0, sidePitch: AR.camPitch || 0, blocks: world.area().camBoxes, player: { x: p.x, y: p.y, z: p.z, ground: 0, eye: p.y + p.model.H * 0.92 - (p.state === 'pickup' ? 0.5 : p.state === 'incar' ? 0.6 : 0) - GM.sinkK(p.x) * GM.SINK }, shake: AR.noShake ? 0 : fx.shake * 0.8, instant, fpOff });
     world.followLight(camCtl.preset().follow ? p.x : G.focusX, 0);
     updateHud();
   } else {
@@ -540,6 +567,7 @@ function presentFrame(dtReal, draw, instant) {
   world.update(realT, dtReal, camCtl.cam, uiMode === 'game' && G.player ? { x: G.player.x, y: G.player.y, z: G.player.z } : null);
   fx.update(paused || (current && current !== 'cont') ? 0 : dtReal * (G.timeScale || 1));
   GM.render(paused || (current && current !== 'cont') ? 0 : dtReal * (G.timeScale || 1), realT);
+  coopDriver?.tick(performance.now());
   if (draw) renderer.render(scene, camCtl.cam);
 }
 
@@ -574,7 +602,7 @@ if (TEST) {
     version: VERSION, seed, HEROES,
     snapshot() {
       const s = GM.snapshot();
-      s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, yawOff: +camCtl.yawOff.toFixed(3), fpActive: !!G.fpActive, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.getAttribute('data-hero') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent, hero: settings.hero, settings: Object.assign({}, settings) };
+      s.ui = { uiMode, overlay: current, paused, display: Object.assign({}, display), touchHidden: touch.hidden, fs: !!fsElement(), fsCapable: fsCapable(), fsLog: fsLog.slice(), audio: A.state(), music: A.musicState(), camera: camCtl.preset().id, yawOff: +camCtl.yawOff.toFixed(3), fpActive: !!G.fpActive, quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.getAttribute('data-hero') || document.activeElement.id), toast: toastEl.hidden ? null : toastEl.textContent, banner: bannerEl.hidden ? null : bannerEl.textContent, hero: settings.hero, settings: Object.assign({}, settings) };
       s.input = IN.debug();
       s.cam = { pos: camCtl.cam.position.toArray().map(v => +v.toFixed(2)), axes: camCtl.axes(), av: { s: +camCtl.av.s.toFixed(3), lift: +camCtl.av.lift.toFixed(3), blocked: camCtl.av.blocked } };
       s.hud = { hp: H_.hp.style.width, timer: H_.timer.hidden ? null : H_.timer.textContent, enemy: H_.enemy.hidden ? null : H_.ename.textContent, weapon: H_.weapon.hidden ? null : H_.wname.textContent, go: !H_.go.hidden, dialog: H_.dialog.hidden ? null : H_.dtext.textContent };
@@ -632,3 +660,19 @@ if (TEST) {
 }
 
 installRemakeUI();
+
+coopDriver=installRemakeCoop({
+ game:'cadillacs',container:stage,menu:overlays.menu.querySelector('.items'),getConfig:()=>({...settings,stage:settings.stage+1,area:STAGES[settings.stage].first}),notify:showToast,
+ onStart:config=>{settings.demo=false;startGame();GM.setCoopInput(slot=>coopDriver.connection.control(slot,slot===0?null:coopDriver.connection.input(slot),()=>GM.computerInput(slot)));},
+ onJoin:m=>{if(coopDriver.connection.host)GM.joinCoopSlot(m.slot,m.hero);},
+ getInput:()=>GM.coopInput(),getState:()=>({...GM.coopSnapshot(),sounds:coopSounds.snapshot()}),getUI:()=>({paused,current}),
+ onState:state=>{
+  GM.coopApply(state.game);coopSounds.apply(state.game.sounds);
+  if(paused!==state.ui.paused){paused=state.ui.paused;A.musicDuck(paused);}
+  if(state.ui.result&&!coopDriver.result){coopDriver.result=state.ui.result;showResult(state.ui.result);}
+  else if(!state.ui.result&&current!==state.ui.current){coopDriver.result=null;show(state.ui.current);}
+ },
+ onAction:kind=>{if(kind==='pause')pauseGame();else if(kind==='resume')resume();else if(kind==='restart'||kind==='retry'){coopDriver.result=null;startGame();}},
+ onEnd:m=>{if(m.type==='player_left')GM.leaveCoopSlot(m.slot);else if(m.type==='ended'){uiMode='title';paused=false;A.musicDuck(false);GM.toTitle();show('menu');}},
+});
+refreshOptions();

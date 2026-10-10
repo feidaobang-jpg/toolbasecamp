@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#1b2433">
-<meta name="description" content="坦克大战 3D：经典模式按 FC 原版完美复刻 35 关地图、敌军名单与数值；魔改模式是 100 关一周目的自创战场，带船、手枪、装甲、精英怪、小 Boss 与大 Boss，周目无限。电脑键盘与手机横屏都能玩。">
-<title>坦克大战 3D · 经典 35 关 + 魔改无限周目</title>
+<meta name="description" content="坦克大战 3D：推荐魔改 Boss 挑战，吃船过河、拿火箭筒和四连导弹，敌军也会抢道具；100 关无限周目，支持 2–4 人联机合作。保留 FC 原版经典复刻 35 关，电脑键盘与手机触屏都能玩。">
+<title>坦克大战 3D · 魔改 Boss 挑战 · 含经典 35 关</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=controls-inset1">
+<link rel="stylesheet" href="./style.css?v=menu-text1">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" tabindex="-1">
+<div id="app" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="坦克大战 3D 游戏画面"></canvas>
     <div id="hurt"></div>
@@ -67,9 +67,9 @@
     <div id="menu" class="overlay title-screen">
       <div class="panel">
         <div class="brand">
-          <div class="kicker" id="mode-kicker">FC 原版 · 3D 完美复刻</div>
+          <div class="kicker" id="mode-kicker">魔改挑战 · 推荐玩法</div>
           <h1 class="logo">坦克大战 <span>3D</span></h1>
-          <div class="sub" id="mode-sub">经典 35 关 · 原版地图、敌军名单与数值</div>
+          <div class="sub" id="mode-sub">Boss 对战 · 敌军抢道具 · 100 关无限周目</div>
           <p class="rules" id="mode-rules"></p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 行驶 · <kbd>J</kbd> 开炮 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切换视角 · <kbd>Esc</kbd> 暂停<br><kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
           <p class="help help-touch">左侧摇杆行驶 · 右侧 <b>J</b> 开炮 · 拖动画面空白处转视角、<b>C</b> 切换视角</p>
@@ -78,7 +78,10 @@
         </div>
         <nav class="items" aria-label="主菜单">
           <button data-act="start" class="primary" id="start-btn">开始游戏 <kbd>Enter</kbd></button>
-          <button data-opt="mode"></button>
+          <div class="mode-choices" role="group" aria-label="玩法模式" aria-describedby="mode-sub">
+            <button type="button" data-act="choose-mode" data-game-mode="remix" aria-pressed="true">魔改挑战</button>
+            <button type="button" data-act="choose-mode" data-game-mode="classic" aria-pressed="false">经典复刻</button>
+          </div>
           <button data-opt="from"></button>
           <button data-opt="lives"></button>
           <button data-opt="armor"></button>
@@ -90,7 +93,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="coop" class="coop-link"><svg class="button-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="9" cy="7" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-4-5.65"/></svg><span>联机大厅 · 2–4人合作</span></button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -116,28 +118,28 @@
         <p id="coop-roster"></p>
         <p id="coop-message" role="status" aria-live="polite">建房后，把六位房间码告诉好友。</p>
         <nav class="items" aria-label="联机房间">
-          <button id="coop-copy" disabled>复制房间码</button>
+          <button id="coop-copy" disabled>复制邀请链接</button>
           <button id="coop-ready" hidden>准备好了</button>
           <button id="coop-start" class="primary" hidden>全队开始</button>
-          <button data-act="coop-back">退出房间 · 返回主菜单</button>
+          <button data-act="coop-return">返回游戏</button><button data-act="coop-back">退出房间 · 返回主菜单</button>
         </nav>
         </div>
         <section id="coop-directory" aria-label="公开房间列表">
           <div class="directory-heading"><h3>所有房间</h3><button id="coop-refresh" class="lobby-action">刷新列表</button></div>
-          <p>无密码可直接加入；有密码房间先输入密码。满员或已开局的房间暂不可加入。</p>
+          <p>无密码可直接加入；有密码房间先输入密码。满员房间不可加入；游戏中仍有空位时可中途加入。</p>
           <p id="coop-empty">暂无房间，可以创建第一个房间。</p>
           <nav id="coop-rooms" class="items" aria-label="可加入的房间"></nav>
           <label>密码筛选 <select id="coop-filter"><option value="all">所有房间</option><option value="open">无密码</option><option value="locked">有密码</option></select></label>
           <div class="directory-heading"><button id="coop-prev" class="lobby-action" disabled>上一页</button><span id="coop-page" aria-live="polite">第 1 / 1 页 · 0 个房间</span><button id="coop-next" class="lobby-action" disabled>下一页</button></div>
         </section>
-        <p class="help lobby-footer">每人控制一辆坦克，合作守住老鹰；暂停同步全队。队友离线，其余玩家可继续；房主离线则结束房间，暂无房主迁移和中途加入。联机不覆盖单机存档。</p>
+        <p class="help lobby-footer">每人控制一辆坦克，合作守住老鹰；暂停同步全队。队友离线，其余玩家可继续；房主离线则结束房间，支持中途加入；闲置30秒电脑接管，操作后立即交还。联机不覆盖单机存档。</p>
       </div>
     </div>
     <div id="coop-status" role="status" hidden></div>
     <div id="pause" class="overlay" hidden>
       <div class="panel small">
         <h2>暂停</h2>
-        <nav class="items" aria-label="暂停菜单">
+        <nav class="items" aria-label="暂停菜单"><button data-act="coop">房间与队友</button>
           <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
           <button data-act="restart">从本关开头重来</button>
           <button data-opt="demo"></button>
@@ -147,7 +149,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -173,7 +174,6 @@
         <nav class="items" aria-label="结算菜单">
           <button data-act="retry" class="primary" id="retry-btn">再来一次 <kbd>Enter</kbd></button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -186,10 +186,10 @@
 <script>
   window.addEventListener('error', function (e) {
     var el = document.getElementById('loading');
-    if (el && !window.__tankReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
+    if (el && !window.__tankReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=camera-fullmap1"></script>
+<script type="module" src="./main.js?v=menu-text1"></script>
 </body>
 </html>

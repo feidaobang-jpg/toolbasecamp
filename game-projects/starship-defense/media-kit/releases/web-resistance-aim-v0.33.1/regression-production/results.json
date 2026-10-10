@@ -1,0 +1,142 @@
+{
+  "results": [
+    {
+      "name": "Keyboard chapter selection and four fixed period guns",
+      "data": {
+        "active": true,
+        "chapter": 0,
+        "phase": 0,
+        "weapons": [
+          "rifle",
+          "mauser",
+          "zb26",
+          "arisaka"
+        ],
+        "nativeState": "battle"
+      }
+    },
+    {
+      "name": "Real movement and jump"
+    },
+    {
+      "name": "Visible travelling rifle projectile deals delayed damage",
+      "data": {
+        "immediate": 85,
+        "after": 0,
+        "ammo": 3
+      }
+    },
+    {
+      "name": "Closed town gate blocks walking and shots",
+      "data": {
+        "walkBlocked": true,
+        "flanksBlocked": true,
+        "sightBlocked": true,
+        "gate": 750
+      }
+    },
+    {
+      "name": "Real I carries and delivers ammo; real J cannon opens gate and advances checkpoint",
+      "data": {
+        "phase": 3,
+        "shots": 3,
+        "gateDead": true,
+        "walkBlocked": false,
+        "checkpoint": {
+          "schema": 1,
+          "chapter": 2,
+          "phase": 3,
+          "elapsed": 6.355199999988082,
+          "kills": 0,
+          "finished": false,
+          "cannonPose": {
+            "x": 0,
+            "z": 64,
+            "yaw": 0
+          },
+          "updated": "2026-10-10T11:56:21.305Z"
+        }
+      }
+    },
+    {
+      "name": "Town capture finishes chapter after defenders are cleared",
+      "data": {
+        "over": true,
+        "state": "over"
+      }
+    },
+    {
+      "name": "Result replay returns to the same chapter start"
+    },
+    {
+      "name": "Trench capture advances to two pillboxes",
+      "data": {
+        "phase": 1,
+        "checkpoint": 1
+      }
+    },
+    {
+      "name": "Ballistic grenades destroy both pillboxes and unlock final assault",
+      "data": {
+        "values": [
+          {
+            "key": "left-bunker",
+            "hp": 0,
+            "dead": true
+          },
+          {
+            "key": "right-bunker",
+            "hp": 0,
+            "dead": true
+          }
+        ],
+        "phase": 2,
+        "grenades": 3
+      }
+    },
+    {
+      "name": "Hilltop chapter completes"
+    },
+    {
+      "name": "Real I mounts; real K and W charge forward",
+      "data": {
+        "z": -8.738200000524522,
+        "charge": 2.2939000000357654
+      }
+    },
+    {
+      "name": "Mounted sword strike hits nearby enemy",
+      "data": {
+        "enemyDead": true,
+        "swing": 0.32
+      }
+    },
+    {
+      "name": "Cavalry breakthrough and escorted evacuation complete",
+      "data": {
+        "phase": 2,
+        "over": true,
+        "wagon": 146.0799999999985
+      }
+    },
+    {
+      "name": "Death respawns at saved phase with protection",
+      "data": {
+        "phase": 1,
+        "dead": false,
+        "hp": 140
+      }
+    },
+    {
+      "name": "Pause freezes battle; restart resumes audio and chapter"
+    },
+    {
+      "name": "Touch grenade and landscape/portrait simulation; input switch retains chapter"
+    },
+    {
+      "name": "Exit restores original conquest and RV modes"
+    }
+  ],
+  "errors": [],
+  "physicalPhone": false
+}

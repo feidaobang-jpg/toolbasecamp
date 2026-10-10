@@ -1,0 +1,205 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.6.0",
+ "base_version": "v0.5.6-bgmfull1",
+ "created_at": "2026-10-07T12:00:00+08:00",
+ "classification": "正式版本（明显体验变化：打击感与音效）",
+ "build": {
+  "bundle_sha256": "54120b9e0f73c494c5025915283cf4503a4ed077d815c01655d0ed1f4ae03f16",
+  "note": "合并 v0.5.6-bgmfull1（完整原版BGM、全屏能力检测）后的最终构建"
+ },
+ "changes": [
+  {
+   "id": "strike-anim",
+   "before": "出招平滑过渡、无蓄力；命中停顿定格在半截拳",
+   "after": "蓄力 → 极快打出并过头 → 停住 → 收招；停顿时定格在打到位的一帧",
+   "verification": "pass"
+  },
+  {
+   "id": "hurt-reaction",
+   "before": "受击姿势随机二选一，停顿中保持被打前姿势",
+   "after": "打头按左右手方向歪、踢身体弯腰，先猛歪再缓回，停顿中沿受力方向抖动，后退更明显",
+   "verification": "pass"
+  },
+  {
+   "id": "hit-weight",
+   "before": "停顿 0.05/0.08 两档，只有大招震屏",
+   "after": "轻/重/终结三档停顿、震屏、火花与音效",
+   "verification": "pass"
+  },
+  {
+   "id": "hit-fx",
+   "after": "白热闪光 + 火星 + 终结冲击圈；重招月牙挥击残影",
+   "verification": "pass"
+  },
+  {
+   "id": "sfx",
+   "before": "单层合成、每下同音高、挥空声按键就响、倒地几乎无声",
+   "after": "三层打击声 + 短混响 + 音高浮动；重踢、重挥空、倒地砸地声；挥空声在打出时响",
+   "verification": "pass（离线响度测量；未人耳试听）"
+  },
+  {
+   "id": "input-buffer",
+   "before": "挥空中途按的攻击会丢",
+   "after": "收招后立即再出一拳",
+   "verification": "pass"
+  },
+  {
+   "id": "wave-slowmo",
+   "after": "一波最后一个敌人被主角打倒时 0.42 秒 0.3 倍速慢动作，自动恢复",
+   "verification": "pass"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "half-extended-impact",
+   "reported_by": "user",
+   "observed": "动作不够标准和爽快，打击感、音效弱",
+   "cause": "出招外层平滑让拳头在判定帧只伸出一半，命中停顿又冻结在这一帧；受击、音效、停顿都不分轻重",
+   "fix": "见 changes",
+   "status": "fixed",
+   "retest": "qa/feel.js 16/16；逐帧联系表对照"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/moves-strip.js + strip-sheet.py",
+   "result": "逐帧联系表人工看图通过",
+   "evidence": "captures/"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "qa/depth.js",
+   "result": "pass 31/31"
+  },
+  {
+   "method": "qa/camera.js",
+   "result": "pass 11/11（连跑两次；首次一项锁屏边缘超出 0.03，改前构建同类边缘项也偶发）"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "89/90；失败项为实时按键时长不稳，改前构建同样偶发"
+  },
+  {
+   "method": "qa/combat-feedback.js",
+   "result": "32/33；失败项改前构建同样失败"
+  },
+  {
+   "method": "site-games/qa/restart-audio.cjs",
+   "result": "pass 5/5"
+  },
+  {
+   "method": "qa/botrun.js 3 7 std 1",
+   "result": "第一、二关自动通关，波末慢动作 18 次均恢复"
+  },
+  {
+   "method": "qa/feel.js（线上）",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "合并主线后复验",
+   "result": "feel 16/16、fullscreen 73/73、stage2 55/55、guns 41/41、mobile 35/35、restart-audio 5/5"
+  }
+ ],
+ "media": [
+  {
+   "id": "impact-before-after",
+   "file": "releases/v0.6.0/captures/impact-before-after.png",
+   "kind": "screenshot",
+   "version": "v0.5.5 / v0.6.0",
+   "description": "命中停顿帧放大对照：左旧（半截拳）右新（拳到位、头被打歪）",
+   "visual_review": "pass"
+  },
+  {
+   "id": "before-jack-combo",
+   "file": "releases/v0.6.0/captures/before-jack-combo.png",
+   "kind": "screenshot",
+   "version": "v0.5.5",
+   "description": "改前杰克连招逐帧",
+   "visual_review": "pass"
+  },
+  {
+   "id": "after-jack-combo",
+   "file": "releases/v0.6.0/captures/after-jack-combo.png",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "description": "改后杰克连招逐帧",
+   "visual_review": "pass"
+  },
+  {
+   "id": "after-hannah-combo",
+   "file": "releases/v0.6.0/captures/after-hannah-combo.png",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "description": "改后汉娜拳拳中踢逐帧（弯腰受击）",
+   "visual_review": "pass"
+  },
+  {
+   "id": "after-mess-combo",
+   "file": "releases/v0.6.0/captures/after-mess-combo.png",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "description": "改后梅斯连招逐帧",
+   "visual_review": "pending"
+  },
+  {
+   "id": "feel-jab-impact",
+   "file": "releases/v0.6.0/captures/feel-jab-impact.png",
+   "kind": "screenshot",
+   "version": "v0.6.0",
+   "description": "刺拳命中停顿整屏",
+   "visual_review": "pass"
+  }
+ ],
+ "media_gaps": [
+  "打击感最好用带声音的慢放录像展示：本版未录，做视频前用 qa/record.js 补录连招与终结技"
+ ],
+ "website": {
+  "status": "deployed_verified",
+  "commit": "f14d3a4f",
+  "verified_at": "2026-10-07T07:09:30+08:00",
+  "verification": "线上 game.min.js 与提交构建逐字节一致（sha256 54120b9e…），index.html 引用 ?v=f14d3a4f；线上 qa/feel.js 16/16"
+ },
+ "toy": {
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.6.0/package",
+  "package_tree_sha256": "417955e0e3cd0a4ebcc130a95b032f6ae1eed28d39352e2da51675fe7243507d",
+  "doctor": "toy_doctor 0 warning",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_icLiffZl/index.html",
+  "preview_checks": "toy-preview-check 20/20（电脑 + 手机视口，版本 v0.6.0）",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_akdnE716/index.html",
+  "submitted_at": "2026-10-07T07:11:00+08:00",
+  "verified_at": "2026-10-07T07:14:30+08:00",
+  "public_check": "toy mylist published；正式入口 https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html 电脑 + 手机视口 toy-preview-check 20/20，版本 v0.6.0"
+ },
+ "bilibili": {
+  "status": "public_verified",
+  "bvid": "BV18XHW66E55",
+  "record": "releases/v0.6.0/bilibili-sync.json",
+  "verified_at": "2026-10-07T07:21:07+08:00"
+ },
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "默认视角、场景与画风不变，封面仍代表当前游戏"
+ }
+}

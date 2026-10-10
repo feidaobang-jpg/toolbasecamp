@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "dry_run": true,
+  "data": {
+    "operationId": "saveChanges",
+    "request": {
+      "method": "POST",
+      "url": "https://api.tapapis.cn/developer/app/v1/save-changes?app_id=962354\u0026developer_id=100726",
+      "headers": {
+        "Accept-Language": [
+          "zh-CN"
+        ],
+        "Idempotency-Key": [
+          "\u003credacted\u003e"
+        ]
+      },
+      "body": {
+        "changes": [
+          {
+            "expected": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+            "field_id": "banner_4",
+            "value": "https://img-tc.tapimg.com/market/images/219e937b2f7afca69e59b9e2bd90d130.jpg"
+          },
+          {
+            "expected": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+            "field_id": "cover_vertical",
+            "value": "https://img-tc.tapimg.com/market/images/aae482a5be1606f789334f8709bb8b21.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

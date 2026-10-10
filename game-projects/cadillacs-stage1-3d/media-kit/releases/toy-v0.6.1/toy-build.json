@@ -1,0 +1,34 @@
+{
+  "version": "v0.6.1",
+  "source": "public/html/game/cadillacs-stage1-3d",
+  "source_sha256": {
+    "css/style.css": "467f5cc29207238e9e730dae760bba8b467f572b9c515f3f70a2dc22a4a3e893",
+    "index.html": "ba0b64289f2e8baa2c25b44bde26a996f024b2f7ac6b7638ce62d5d327d4d50c",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "af3a44ff3d02c98918118b89197ecd9913f8bef864fe37dbaa2796b5a1e25f1e",
+    "sounds/boss.mp3": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+    "sounds/boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+    "sounds/forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+    "sounds/hall.mp3": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+    "sounds/roof.mp3": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+    "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+    "sounds/street.mp3": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+    "sounds/swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93"
+  },
+  "files": {
+    "css/style.css": "467f5cc29207238e9e730dae760bba8b467f572b9c515f3f70a2dc22a4a3e893",
+    "index.html": "5b8b68abe15d767320356ec3b843742a53baa09ec8051f0127507be701c1df15",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "af3a44ff3d02c98918118b89197ecd9913f8bef864fe37dbaa2796b5a1e25f1e",
+    "sounds/boss.mp3": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+    "sounds/boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+    "sounds/forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+    "sounds/hall.mp3": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+    "sounds/roof.mp3": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+    "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+    "sounds/street.mp3": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+    "sounds/swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93"
+  },
+  "status": "published",
+  "published_verified_at": "2026-10-07T07:50:06+08:00"
+}

@@ -1,0 +1,74 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.6.1",
+ "base_version": "v0.6.0",
+ "created_at": "2026-10-07T08:20:00+08:00",
+ "classification": "普通补丁",
+ "changes": [
+  "手机触屏竖着拿时，标题菜单打开就旋转为横屏布局（原先进入选人画面才旋转），免得菜单竖屏、开局又变横屏；电脑、横着拿的手机和「电脑键鼠」模式不旋转（用户 2026-10-07 确认）。",
+  "紧凑横屏主菜单：收起与三键行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，左右两栏按 0.7:1.3 分配、按钮内边距收紧，长触屏说明换成一行提示：932×430、844×390、Toy 外壳 844×346 / 800×390 完整显示且选项值不截断；宽度 <760（740×360、667×375）改为上下排列、整层滚动。",
+  "暂停菜单补上完整操作说明与特殊技（紧凑横屏时左列说明、右列两列选项）。"
+ ],
+ "build": {
+  "files_sha256_prefix": {
+   "game.min.js": "af3a44ff3d02",
+   "style.css": "467f5cc29207"
+  }
+ },
+ "qa": [
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35（竖屏断言改为打开即旋转且菜单完整）"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "合并后 90/90；合并前三次各有一项依赖真实时间的单项偶发失败，改动前 origin/master 版本同样偶发（GAME OVER 倒计时项），与本次无关"
+  },
+  {
+   "method": "临时脚本 portrait-check（四款：竖屏打开即旋转、菜单首尾可达/必要时手指滑动、旋转菜单里点开始生效、横屏和电脑窄窗口不旋转、紧凑横屏键盘↓不卡并跳过收起项）",
+   "result": "32/32（合并主线后）"
+  },
+  {
+   "method": "site-games/qa/drag-look.cjs",
+   "result": "超级玛丽、坦克大战全部 PASS；赤色要塞、恐龙快打的失败项（找不到 #btn-cam-t 等）在改动前版本完全相同，属脚本过时"
+  }
+ ],
+ "env_note": "Edge 设备模拟 + CDP 触摸，非真机",
+ "site": {
+  "status": "deployed_verified",
+  "commit": "a0da954f",
+  "verified_at": "2026-10-07T07:30:00+08:00",
+  "verification": "Actions 部署后线上运行文件 sha256 与提交一致；对线上地址跑 portrait-check 四款 32/32"
+ },
+ "toy": {
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.6.1/package",
+  "package_tree_sha256_prefix": "f58c57cd1141c950",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_qEnkXFSY/index.html",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_P2v6YpvX/index.html",
+  "submitted_at": "2026-10-07T07:35:44+08:00",
+  "preview_checks": "Toy 预览外壳 portrait-check 24/24（竖屏打开即旋转、菜单首尾可达、点开始生效、横屏不旋转）",
+  "verified_at": "2026-10-07T07:50:06+08:00",
+  "public_check": "toy mylist published；公开入口 portrait-check 四款 24/24（竖屏菜单即旋转，旧版不会）"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "普通补丁累计；现有简介未写菜单方向，仍准确"
+ },
+ "bugs": [
+  {
+   "id": "toy-preview-cd-overflow",
+   "reported_by": "本次 Toy 预览实测",
+   "observed": "首版预览在 Toy 竖屏外壳（逻辑 800×390）中，标题英文名与副标题不换行撑宽左栏，右侧操作模式按钮被挤出面板 6px",
+   "fix": "去掉不换行，改单行省略引导语/副标题、两栏按比例分配、窄屏上下排列",
+   "status": "fixed",
+   "retest": "800×390、844×346 等主菜单完整且无截断；portrait-check 8/8"
+  }
+ ]
+}

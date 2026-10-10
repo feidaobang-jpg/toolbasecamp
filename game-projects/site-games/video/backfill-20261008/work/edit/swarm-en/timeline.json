@@ -1,0 +1,169 @@
+{
+  "voice": "en-US-GuyNeural",
+  "duration": 171.43333333333334,
+  "segments": [
+    {
+      "start": 0,
+      "end": 5.2,
+      "text": "The bugs used to attack my base. This time, I went into their burrow to take on the queen!",
+      "start_in_final": 0.0,
+      "end_in_final": 7.433333333333334,
+      "duration": 7.433333333333334,
+      "picture_time_scale": 1.4294871794871795,
+      "audio_file": "audio\\swarm-en\\00\\voice.mp3"
+    },
+    {
+      "start": 5.2,
+      "end": 14.733333,
+      "text": "This is Swarm Siege, my base-defense game. You are watching an October fourth development build. The interface is still in Chinese.",
+      "start_in_final": 7.433333333333334,
+      "end_in_final": 18.166666666666664,
+      "duration": 10.733333333333333,
+      "picture_time_scale": 1.1258741652403554,
+      "audio_file": "audio\\swarm-en\\01\\voice.mp3"
+    },
+    {
+      "start": 14.733333,
+      "end": 26.3,
+      "text": "I head out as the medic. Aiming and firing are automatic by default, so positioning matters. Get into range and the character fires. Space lets me dash away in this build.",
+      "start_in_final": 18.166666666666664,
+      "end_in_final": 32.06666666666666,
+      "duration": 13.9,
+      "picture_time_scale": 1.2017290719962803,
+      "audio_file": "audio\\swarm-en\\02\\voice.mp3"
+    },
+    {
+      "start": 26.3,
+      "end": 35,
+      "text": "Third person helps me watch the surroundings. In this build, V switches to first person. Manual shooting and shortcuts can be changed in the settings.",
+      "start_in_final": 32.06666666666666,
+      "end_in_final": 43.699999999999996,
+      "duration": 11.633333333333333,
+      "picture_time_scale": 1.3371647509578544,
+      "audio_file": "audio\\swarm-en\\03\\voice.mp3"
+    },
+    {
+      "start": 35,
+      "end": 43.266667,
+      "text": "Before starting the wave, I clear the abandoned supply station, collect its first-clear reward, and spend the coins at the shop.",
+      "start_in_final": 43.699999999999996,
+      "end_in_final": 52.06666666666666,
+      "duration": 8.366666666666667,
+      "picture_time_scale": 1.0120967333831965,
+      "audio_file": "audio\\swarm-en\\04\\voice.mp3"
+    },
+    {
+      "start": 43.266667,
+      "end": 54.633333,
+      "text": "The machine gun gives sustained fire. A shotgun spreads pellets at close range. During the beacon mission, I stay inside the blue circle and collect coins while fighting.",
+      "start_in_final": 52.06666666666666,
+      "end_in_final": 64.33333333333333,
+      "duration": 12.266666666666667,
+      "picture_time_scale": 1.0791789489254515,
+      "audio_file": "audio\\swarm-en\\05\\voice.mp3"
+    },
+    {
+      "start": 54.633333,
+      "end": 64.266667,
+      "text": "I can build defenses too. Choose a machine-gun turret, check the placement preview, and confirm. A bad placement can be dismantled for half the cost back.",
+      "start_in_final": 64.33333333333333,
+      "end_in_final": 76.3,
+      "duration": 11.966666666666667,
+      "picture_time_scale": 1.242214446905575,
+      "audio_file": "audio\\swarm-en\\06\\voice.mp3"
+    },
+    {
+      "start": 64.266667,
+      "end": 73.333333,
+      "text": "Next, I hire a teammate and enter the elite nest. The squad helps fight and collect supplies. Mission rewards pay for stronger equipment.",
+      "start_in_final": 76.3,
+      "end_in_final": 87.39999999999999,
+      "duration": 11.1,
+      "picture_time_scale": 1.2242647959018236,
+      "audio_file": "audio\\swarm-en\\07\\voice.mp3"
+    },
+    {
+      "start": 73.333333,
+      "end": 80.133333,
+      "text": "Now I can afford the pulse laser cannon. The next target is deep inside the map: the alien queen.",
+      "start_in_final": 87.39999999999999,
+      "end_in_final": 95.3,
+      "duration": 7.9,
+      "picture_time_scale": 1.1617647058823535,
+      "audio_file": "audio\\swarm-en\\08\\voice.mp3"
+    },
+    {
+      "start": 80.133333,
+      "end": 90.233333,
+      "text": "I follow the central burrow in first person. Beyond the tunnel are the queen and her guards. Do not stop at the entrance. Move into firing range!",
+      "start_in_final": 95.3,
+      "end_in_final": 107.36666666666666,
+      "duration": 12.066666666666666,
+      "picture_time_scale": 1.1947194719471936,
+      "audio_file": "audio\\swarm-en\\09\\voice.mp3"
+    },
+    {
+      "start": 90.233333,
+      "end": 98.333333,
+      "text": "The beam keeps hitting and the damage numbers appear. Guards block the way, so I clear the immediate threats before focusing on the queen again.",
+      "start_in_final": 107.36666666666666,
+      "end_in_final": 117.23333333333332,
+      "duration": 9.866666666666667,
+      "picture_time_scale": 1.2181069958847746,
+      "audio_file": "audio\\swarm-en\\10\\voice.mp3"
+    },
+    {
+      "start": 98.333333,
+      "end": 105.733333,
+      "text": "She is down! In this recorded build, later swarms in the chapter shrink by thirty-five percent. Attacking first takes pressure off the base.",
+      "start_in_final": 117.23333333333332,
+      "end_in_final": 128.56666666666666,
+      "duration": 11.333333333333334,
+      "picture_time_scale": 1.5315315315315305,
+      "audio_file": "audio\\swarm-en\\11\\voice.mp3"
+    },
+    {
+      "start": 105.733333,
+      "end": 113.933333,
+      "text": "Back on the front line, I intercept the bugs coming out of the burrow. The wave is cleared. Stage two begins with the base still at full health.",
+      "start_in_final": 128.56666666666666,
+      "end_in_final": 139.6,
+      "duration": 11.033333333333333,
+      "picture_time_scale": 1.3455284552845523,
+      "audio_file": "audio\\swarm-en\\12\\voice.mp3"
+    },
+    {
+      "start": 113.933333,
+      "end": 120.6,
+      "text": "With enough coins, I can buy a vehicle. I board it with I in this build, then drive through the gate for a different approach.",
+      "start_in_final": 139.6,
+      "end_in_final": 148.43333333333334,
+      "duration": 8.833333333333334,
+      "picture_time_scale": 1.3249999337500054,
+      "audio_file": "audio\\swarm-en\\13\\voice.mp3"
+    },
+    {
+      "start": 120.6,
+      "end": 126.366667,
+      "text": "Supplies, upgrades, defenses, and a raid on the queen now form a complete route. Tunnel visibility and squad following still needed work at this point.",
+      "start_in_final": 148.43333333333334,
+      "end_in_final": 159.23333333333335,
+      "duration": 10.8,
+      "picture_time_scale": 1.8728322616859925,
+      "audio_file": "audio\\swarm-en\\14\\voice.mp3"
+    },
+    {
+      "start": 5.2,
+      "end": 14.733333,
+      "text": "Would you defend first or raid the queen? The current Chinese-language demo is linked below. Follow its in-game controls. Thanks for watching!",
+      "outro": true,
+      "start_in_final": 159.23333333333335,
+      "end_in_final": 171.43333333333334,
+      "duration": 12.2,
+      "picture_time_scale": 1.2797203244657456,
+      "audio_file": "audio\\swarm-en\\15\\voice.mp3"
+    }
+  ],
+  "timing": "Edge-TTS WordBoundary",
+  "edited_historical_footage": true
+}

@@ -1,0 +1,17 @@
+{
+  "agreement_name": "创意工坊内容授权协议",
+  "url": "https://www.taptap.cn/doc/ugcgame-agreement/",
+  "effective_date": "2026-03-11",
+  "verified_by": "官方页面实际可见全文，保存 AX 文本与条款截图",
+  "read_at": "2026-10-07T01:49:08.396498+00:00",
+  "key_terms_paraphrased": [
+    "1.2 授予上海创巴科技有限公司全球独占、免费、可多层次转授权的内容权利，覆盖嵌入、改编、推广与机器学习等用途。",
+    "1.3 可按平台流程下架撤回授权，需提前30日书面通知；撤回后可由认证开发者按常规方式上架自身游戏。",
+    "2.2 文字、图像、音乐、音效与视觉设计等所有组成部分须原创或合法取得含转授权的权利；来源链接不等于授权证明。"
+  ],
+  "inference": "独占授权对现有网站/Toy渠道的具体适用需要用户审阅决定，不能由普通发布请求代替明确同意。",
+  "skill_rule": "taptap-cli/SKILL.md：先展示协议名称与URL，用户明确同意后 --yes 执行",
+  "skill_path": "C:/Users/37818/AppData/Local/npm-cache/_npx/f9980c339bc3983a/node_modules/@taptap/cli/skills/taptap-cli/SKILL.md",
+  "decision_pending": true,
+  "agreement_signed": false
+}

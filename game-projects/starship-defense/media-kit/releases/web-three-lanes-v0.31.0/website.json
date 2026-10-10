@@ -1,0 +1,15 @@
+{
+  "status": "public_verified",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "verified_at": "2026-10-09T05:14:27.175293+00:00",
+  "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+  "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+  "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+  "evidence": [
+    "website-assets.json",
+    "qa/public/results.json",
+    "qa/public-rv/results.json"
+  ],
+  "public_checks": 29,
+  "physical_phone": false
+}

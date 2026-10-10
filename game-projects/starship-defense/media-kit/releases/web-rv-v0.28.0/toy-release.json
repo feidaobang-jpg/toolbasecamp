@@ -1,0 +1,22 @@
+{
+  "version": "web-rv-v0.28.0",
+  "source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "toy_id": 38678478981120,
+  "account_uid": 16214353,
+  "zip_sha256": "ad1601329ef18bd5c74ae18bad8552bda6c05da2b412650cee7d9c9ec346885c",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_gITuVtTw/index.html",
+  "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_DjATYQKD/index.html",
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "status": "published",
+  "public_runtime_verified": true,
+  "qa": [
+    "qa/toy-preview/results.json",
+    "qa/toy-public/results.json"
+  ],
+  "existing_icon_poster_video_bindings": "preserved",
+  "submitted_at": null,
+  "submission_time_note": "Exact submission time not separately recorded; CLI accepted auditing; later published and public runtime tested",
+  "published_mtime": 1791452290,
+  "checked_at": "2026-10-08T09:53:22.515247+00:00",
+  "physical_phone_test": false
+}

@@ -1,0 +1,115 @@
+{
+  "task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-sync-20261007-02",
+  "source": "Codex",
+  "dates_checked": [
+    "2026-10-06",
+    "2026-10-07"
+  ],
+  "checked_at": "2026-10-07T00:44:42.020702+00:00",
+  "source_commit": "c203eda139235aee59d947c5cde5a3eb14984926",
+  "automatic_sync_enabled": true,
+  "games": [
+    {
+      "game_id": "starship-defense",
+      "app_id": 962354,
+      "before": "web-touch-layout-v0.19.1",
+      "target": "web-tactics-v0.20.0",
+      "status": "reviewing",
+      "record": "game-projects/starship-defense/media-kit/releases/taptap-sync-20261007/handoff.json",
+      "package_sha256": "1c3d930515bf1099bf6584097cc85916a002111c4bbe04243d84c6342d382902"
+    },
+    {
+      "game_id": "tank-3d",
+      "app_id": 962376,
+      "before": "lobby1",
+      "target": "landscape-menu1",
+      "status": "reviewing",
+      "record": "game-projects/tank-3d/media-kit/releases/taptap-sync-20261007/handoff.json",
+      "package_sha256": "77143f1eb30eae0f965417c2500a9674c2e5e457bfc09866e78ac38eab9a95cf"
+    },
+    {
+      "game_id": "jackal-stage1-3d",
+      "title": "赤色要塞",
+      "target": "v0.8.1",
+      "app_id": null,
+      "status": "not_on_taptap",
+      "reason": "完整账号清单没有对应作品，未自动创建"
+    },
+    {
+      "game_id": "cadillacs-stage1-3d",
+      "title": "恐龙快打",
+      "target": "v0.6.1",
+      "app_id": null,
+      "status": "not_on_taptap",
+      "reason": "完整账号清单没有对应作品，未自动创建"
+    },
+    {
+      "game_id": "mario-3d",
+      "title": "超级玛丽",
+      "target": "v2.4.6",
+      "app_id": null,
+      "status": "not_on_taptap",
+      "reason": "完整账号清单没有对应作品，未自动创建"
+    },
+    {
+      "game_id": "journey-west-3d",
+      "title": "西游降魔",
+      "target": "action-state1",
+      "app_id": null,
+      "status": "not_on_taptap",
+      "reason": "完整账号清单没有对应作品，未自动创建"
+    }
+  ],
+  "artifacts": "D:/project/toolbasecamp-artifacts/taptap/sync/20261007",
+  "physical_phone_test": false,
+  "taptap_client_test": false,
+  "skills": [
+    {
+      "path": "C:/Users/37818/.claude/skills/game-maker/SKILL.md",
+      "sha256": "0257bd8923286410cb0e6f0dd7a9af4c358dd8107ac00ebc0aee9544f3b36313"
+    },
+    {
+      "path": "C:/Users/37818/.claude/skills/bili-game-update/SKILL.md",
+      "sha256": "241f63d37ba5ad351b292aae8434a64eb61cb4c16602ec7deb4188a432f60580"
+    },
+    {
+      "path": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md",
+      "sha256": "3521ca69b44d09a94d1e9b05f728b96f4737f95bbcafca94ca2efd7c9afc9acc"
+    }
+  ],
+  "rules_sources": [
+    "https://developer.taptap.cn/docs/store/release/publish/material/",
+    "https://developer.taptap.cn/docs/store/release/publish/agree/"
+  ],
+  "operation_stage": "long_term",
+  "operation_handbook": "https://developer.taptap.cn/docs/store/operation/long-term/long-term-handbook/",
+  "last_status_checked_at": "2026-10-07T00:48:00.681966+00:00",
+  "integration": {
+    "origin_master": "0360bc35415186b6c71cd0e2eac8bc18a2106d2a",
+    "checked_at": "2026-10-07T00:52:04.617434+00:00",
+    "mapped_game_runtime_and_adapters_unchanged": true,
+    "tests_still_apply_to_identical_packages": true,
+    "latest_unmapped_versions": [
+      {
+        "game_id": "jackal-stage1-3d",
+        "current_version": "v0.8.1",
+        "status": "not_on_taptap"
+      },
+      {
+        "game_id": "cadillacs-stage1-3d",
+        "current_version": "v0.7.0",
+        "status": "not_on_taptap"
+      },
+      {
+        "game_id": "mario-3d",
+        "current_version": "v2.4.7",
+        "status": "not_on_taptap"
+      },
+      {
+        "game_id": "journey-west-3d",
+        "current_version": "action-state1",
+        "status": "not_on_taptap"
+      }
+    ]
+  }
+}

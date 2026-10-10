@@ -1,0 +1,10 @@
+{
+  "status": "public_verified",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "verified_at": "2026-10-09T21:53:12.762458+08:00",
+  "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
+  "html_runtime_revision": "game.compat.js?v=a47bc064",
+  "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
+  "runtime_matches_tested_build": true,
+  "physical_phone": false
+}

@@ -1,0 +1,506 @@
+{
+  "schema_version": 1,
+  "game_id": "starship-defense",
+  "developer_id": 100726,
+  "app_id": 962354,
+  "automatic_sync_enabled": true,
+  "authorization_date": "2026-10-07",
+  "status": "online",
+  "submitted_version": "web-resistance-v0.33.0",
+  "submitted_package_sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+  "submitted_h5_version_id": 282321,
+  "draft_version_id": "1054180",
+  "audit_id": "1054180",
+  "platform_version": "V-20261010",
+  "submitted_at": null,
+  "last_published_version": "web-resistance-v0.33.0",
+  "last_published_h5_version_id": 282321,
+  "last_published_platform_version": "V-20261010",
+  "last_public_runtime_verified_version": null,
+  "release_record": "releases/backfill-20261010/release-status.json",
+  "pending": [],
+  "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
+  "submission_time_source": "Submission receipt archived; exact server submission time not persisted.",
+  "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+  "submitted_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+  "community_post_status": "public_verified",
+  "community_post_note": null,
+  "cloud_provider": "SiteSaveProvider; use website account in the save panel, not TapTap account",
+  "history": [
+    {
+      "version": "web-unstick-rpg-v0.25.0",
+      "platform_version": "V-20261008",
+      "h5_version_id": 274325,
+      "audit_id": "1045140",
+      "status": "online",
+      "last_event": "published",
+      "verified_at": "2026-10-08T14:00:26+08:00",
+      "evidence": "官方 CLI list-app-versions（versus-20261008 receipts/versions-before.json）"
+    },
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "platform_version": "V-20261007-3",
+      "h5_version_id": 273272,
+      "audit_id": "1043869",
+      "status": "online",
+      "last_event": "published",
+      "verified_at": "2026-10-08T08:47:00+08:00",
+      "evidence": "官方 CLI list-app-versions；公开游戏页可见 TapTap PC端 试玩DEMO 入口"
+    },
+    {
+      "version": "web-coop-v0.23.0",
+      "platform_version": "V-20261007-2",
+      "h5_version_id": 272261,
+      "audit_id": "1042737",
+      "status": "online",
+      "note": "2026-10-07 晚间核验 list-app-versions 该版 last_event=published；本次云存档草稿 based_on_version_id=1042737 且继承 main=272261 佐证",
+      "verified_at": "2026-10-07T22:40:00+08:00"
+    },
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "platform_version": "V-20261007-3",
+      "h5_version_id": 273272,
+      "status_before_resume": "online_web-cloudsave-v0.24.0",
+      "note": "Preserved previous baseline; actual online package observed before new draft creation."
+    },
+    {
+      "version": "web-versus-teams-v0.27.0",
+      "h5_version_id": 275356,
+      "platform_version": "V-20261008-2",
+      "status": "online",
+      "evidence": "releases/web-rv-v0.28.0/taptap-versions-before.json",
+      "verified_at": "2026-10-08T09:53:22.515247+00:00"
+    },
+    {
+      "version": "web-squad-v0.29.0",
+      "h5_version_id": 276055,
+      "platform_version": "V-20261008-4",
+      "status": "online",
+      "verified_at": "2026-10-08T13:15:54.717982+00:00",
+      "evidence": "releases/web-shop-scroll-v0.29.2/tap-versions-before.json"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "at": "2026-10-10T03:02:52.978211+00:00",
+      "previous_baseline": {
+        "status": "reviewing",
+        "platform_version": "V-20261008-5",
+        "submitted_version": "web-shop-scroll-v0.29.2",
+        "submitted_package_sha256": "17af491035e7bba291fe366f12553384002192ab13da0c88fcf5317987cdbd45",
+        "last_published_version": "web-squad-v0.29.0",
+        "last_published_h5_version_id": 276055,
+        "community_post": {
+          "app_id": 962354,
+          "platform_version": "V-20261007-3",
+          "h5_version_id": 273272,
+          "status": "public_verified",
+          "title": "《虫潮围城》更新：云备份与2–4人合作守城",
+          "body": "这是一款可以建防线、指挥队友、驾驶载具抵御虫群的游戏。TapTap v0.24.0 已上线，这次重点补上进度备份，并带入2–4人合作守城。\n\n普通模式仍保留本地存档。打开游戏内「档案站」，登录网站账号后，检查点会自动备份到服务器；云端保留最近三份快照，本地记录被清空后可选档恢复。本地与云端不一致时，先比较再选择读取或上传，避免静默覆盖，也可导出文件留一份备份。Toy账号云档与这里独立；TapTap版使用的是游戏内网站账号，不是TapTap账号自动备份。此前从未备份的旧进度无法凭空恢复，联机与沙盒进度也不写入单人云档。\n\n联机可建2–4人房间，中途加入或退出会保留战场；房主退出会结束房间。手机大厅输入和滚动的问题已有修复。\n\n试玩入口：https://www.taptap.cn/app/962354\n欢迎反馈遇到的问题，请带上设备、浏览器或TapTap入口，以及具体操作步骤，方便复现。",
+          "moment_id": "857205558501965884",
+          "public_url": "https://www.taptap.cn/moment/857205558501965884",
+          "forum_app_id": 962354,
+          "forum_group_id": 1518030,
+          "user_id": 416707686,
+          "submitted_at": null,
+          "public_verified_at": "2026-10-08T10:31:04+08:00",
+          "profile_verified": true,
+          "forum_verified": true,
+          "screenshot": "C:/Users/37818/.codex/artifacts/chongchao-cloudsave-closure-20261008/community-public.jpg",
+          "evidence": "公开全文与本人 UID 回读一致；本人主页最新动态含该 moment；游戏论坛 /app/962354/topic 链接含同 moment 和 group_id=1518030。平台将试玩 URL 自动转换为游戏卡片，href 保持962354。",
+          "submission_time_note": "浏览器提交成功后立即回读公开 URL；平台未提供精确发布时间，本地公开核验时间另记。",
+          "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517"
+        },
+        "community_sync": {
+          "automatic_posting_enabled": true,
+          "last_public_verified_moment_id": "857205558501965884",
+          "last_public_verified_url": "https://www.taptap.cn/moment/857205558501965884",
+          "forum_app_id": 962354,
+          "source_version": "web-cloudsave-v0.24.0",
+          "h5_version_id": 273272,
+          "platform_version": "V-20261007-3",
+          "content_sha256": "860dc75702162ac497be81f16797b515a4d790bf64994b11beda122da279a517",
+          "public_verified_at": "2026-10-08T10:31:04+08:00",
+          "own_profile_verified": true,
+          "forum_verified": true,
+          "release_record": "releases/cloudsave-closure-20261008/community-post.json"
+        }
+      }
+    }
+  ],
+  "description_update": {
+    "old": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
+    "new": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，支持本地存档、存档文件导入/导出，以及使用工具大本营网站账号登录后的云端备份与恢复。\n\n更新（2026-10-07·v0.24.0）：新增网站账号云存档——登录后普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。\n\n更新（2026-10-08·v0.25.0）：优化 TapTap 启动加载，异常或等待过久时显示原因并可重试；保留已有存档。修复载具卡地形后无法移动的问题，新增 RPG 火箭筒和四连导弹架。",
+    "revision": 1045140,
+    "saved_at": "2026-10-08T02:33:11.714647+00:00"
+  },
+  "description_correction_pending": null,
+  "pending_note": null,
+  "platform_status": "online",
+  "staged_version": "web-resistance-v0.33.0",
+  "staged_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+  "staged_package_sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+  "staged_h5_version_id": 282321,
+  "startup_adapter": "inline-runtime-v2",
+  "verification": {
+    "qa": "game-projects/site-games/releases/backfill-20261010/qa.json",
+    "local_package_verified": true,
+    "public_page": "TapTap PC端 试玩DEMO 入口可见",
+    "phone": "physical TapTap App not tested"
+  },
+  "content_preaudit_passed": true,
+  "content_preaudit_warnings": [],
+  "last_published_status_evidence": "game-projects/site-games/releases/backfill-20261010/taptap-962354-status.json",
+  "community_post": {
+    "app": 962354,
+    "title": "虫潮围城 v0.33.0：房车探城、据点争夺与三章战役",
+    "body": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：https://www.taptap.cn/app/962354\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+    "rendered": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：\n虫潮围城\n\n\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+    "status": "public_verified",
+    "at": "2026-10-10T02:46:54.560Z",
+    "url": "https://www.taptap.cn/moment/857934878203711369",
+    "forum_app_id": 962354,
+    "moment_id": "857934878203711369",
+    "content_sha256": "793767fb9037aee76924a6de6d000519c5bea0916ab92578e3fdd3f377e4520f",
+    "source_version": "web-resistance-v0.33.0",
+    "own_profile_verified": true
+  },
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "source_version": "web-resistance-v0.33.0",
+    "h5_version_id": 282321,
+    "platform_version": "V-20261010",
+    "last_public_verified_moment_id": "857934878203711369",
+    "last_public_verified_url": "https://www.taptap.cn/moment/857934878203711369",
+    "content_sha256": "793767fb9037aee76924a6de6d000519c5bea0916ab92578e3fdd3f377e4520f",
+    "public_verified_at": "2026-10-10T02:46:54.560Z",
+    "own_profile_verified": true,
+    "forum_app_id": 962354,
+    "release_record": "releases/backfill-20261010/release-status.json"
+  },
+  "pending_community_updates": [
+    {
+      "source_version": "web-unstick-rpg-v0.25.0",
+      "h5_version_id": 274325,
+      "platform_version": "V-20261008",
+      "status": "included_in_public_verified_release",
+      "record": "../../site-games/releases/taptap-all-startup-20261007/resume-20261008.json",
+      "previous_status": "online_pending_merged_announcement",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "source_version": "web-versus-v0.26.0",
+      "h5_version_id": 274950,
+      "platform_version": "V-20261008-1",
+      "status": "included_in_public_verified_release",
+      "note": "上线后与 v0.25.0（V-20261008，已 online、说明待发）合并成一条：虫潮对战 + 新武器/卡地形修复/启动优化",
+      "record": "../../starship-defense/media-kit/releases/web-versus-v0.26.0/notes.md",
+      "previous_status": "online_pending_merged_announcement",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "source_version": "web-versus-teams-v0.27.0",
+      "h5_version_id": 275356,
+      "platform_version": "V-20261008-2",
+      "status": "included_in_public_verified_release",
+      "previous_status": "online_pending_merged_announcement",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "source_version": "web-rv-v0.28.0",
+      "h5_version_id": 275671,
+      "platform_version": "V-20261008-3",
+      "status": "included_in_public_verified_release",
+      "record": "releases/web-rv-v0.28.0/taptap-release.json",
+      "previous_status": "online_pending_merged_announcement",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "source_version": "web-shop-scroll-v0.29.2",
+      "h5_version_id": 276450,
+      "platform_version": "V-20261008-5",
+      "status": "included_in_public_verified_release",
+      "record": "releases/web-shop-scroll-v0.29.2/taptap-release.json",
+      "summary": "合并尚未说明的对战/房车/12人队友/商店修复，目标online后发一条动态并挂虫潮论坛",
+      "previous_status": "pending_until_online",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    }
+  ],
+  "description_update_history": [
+    {
+      "old": "…当前版本没有跨设备云存档。\n\n更新（2026-10-07·v0.20.0）：可逐人安排留守或跟随…修复暂停后重开声音。",
+      "new": "…进度按设备通过平台云存档自动备份。\n\n更新（2026-10-07·v0.24.0）：新增云存档——普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。",
+      "new_description_sha256": "0c1edf09fd93085249a3586a16c3be6cdc66ef77784097725d725f13893dcc26",
+      "reason": "旧简介称“没有跨设备云存档”已不准确，随本次提审纠正；expected 快照 read-before-write 通过，stale 为空",
+      "saved_at": "2026-10-07T22:37:00+08:00"
+    },
+    {
+      "old_tail": "更新（2026-10-08·v0.25.0）：…新增 RPG 火箭筒和四连导弹架。",
+      "added": "更新（2026-10-08·v0.26.0）：新增「虫潮对战」1 对 1——每 10 秒进账、可升级银行，派兵放虫去拆对面基地核心，自己也端枪上场；可对战简单/普通/困难三档电脑，或和好友联机 1 对 1（房主计算整局，娱乐对战不计排位）。",
+      "saved_at": "2026-10-08T13:58:00+08:00",
+      "draft_version_id": "1045922"
+    }
+  ],
+  "release_receipts": "releases/web-shop-scroll-v0.29.2",
+  "cover_update": {
+    "task_id": "01a11b2b-2580-7223-9318-1624d4ff841c-shop-scroll-03",
+    "app_id": 962354,
+    "title": "虫潮围城",
+    "status": "reviewing",
+    "prepared_at": "2026-10-08T11:44:30.296112+00:00",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\banner_4-hud-hidden.jpg",
+        "sha256": "3c6a3489e57ab7a6da066d61404148fff582acae107a0bce87e6106586948354",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 306825,
+        "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+        "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+        "crop": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+        "version": "web-shop-scroll-v0.29.2",
+        "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover_vertical-hud-hidden.jpg",
+        "sha256": "48b794f13ce00c6e82eb352b54dc0dca7d36f3d753c5f5b2962f55ae338386aa",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 172838,
+        "source": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008\\cover-source-hud-hidden.jpg",
+        "source_sha256": "d657761b01da7c79decca0e3a573cd1492b7789af19effdfd7f19341e59dff1a",
+        "crop": [
+          600,
+          0,
+          1320,
+          1080
+        ],
+        "processing": "原生1920x1080实机截图，截图时隐藏HUD和队友名牌；仅按字段等比裁切、加游戏名和JPEG压缩，无扩图或重建玩法",
+        "version": "web-shop-scroll-v0.29.2",
+        "mode": "已发布可玩自由测试模式，正常自动虫潮与实际角色/场景，无移位或补造实体"
+      }
+    },
+    "uploads": {
+      "banner_4": {
+        "assetId": "363762",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 306825,
+          "width": 1920
+        },
+        "url": "https://img-tc.tapimg.com/market/images/219e937b2f7afca69e59b9e2bd90d130.jpg",
+        "width": 1920
+      },
+      "cover_vertical": {
+        "assetId": "363763",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 172838,
+          "width": 720
+        },
+        "url": "https://img-tc.tapimg.com/market/images/aae482a5be1606f789334f8709bb8b21.jpg",
+        "width": 720
+      }
+    },
+    "reviewing": [
+      {
+        "created_time": 1791457964,
+        "last_event": "review_submitted",
+        "status": "reviewing",
+        "status_label": "审核中",
+        "status_value": 1,
+        "version": "V-20261008-4",
+        "version_id": "V-20261008-4"
+      }
+    ],
+    "public_verified": false,
+    "next_action": "审核结束后核验公开图片和published日志entry_type；若素材待优化不能宣布封面整改完成",
+    "game_id": "starship-defense",
+    "developer_id": 100726,
+    "release_record": "releases/web-shop-scroll-v0.29.2/taptap-release.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-shop-scroll-v0.29.2-20261008",
+    "updated_at": "2026-10-08T13:15:54.717982+00:00",
+    "source_note": "web-shop-scroll-v0.29.2完整TapTap包自由测试模式，原生1920x1080截图隐藏HUD和队友标签；实际角色/虫群/场景无移位",
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": "https://img-tc.tapimg.com/market/images/0ffc232a8c72eee41054f53ac6e50dfe.png",
+        "value": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+        "applied": false
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": "https://img-tc.tapimg.com/market/images/638152a40567886f71bb91a56f3803a4.png",
+        "value": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+        "applied": false
+      }
+    ],
+    "only_cover_fields_changed": false,
+    "package_binding_changed": false,
+    "checked_at": "2026-10-08T11:49:16.253895+00:00",
+    "platform_read_only": {
+      "blockers": [
+        {
+          "code": "READ_ONLY",
+          "field_ids": [],
+          "message": "当前应用处于「审核中」状态，无法提交审核"
+        }
+      ],
+      "suggestions": [],
+      "warnings": []
+    },
+    "history": [
+      {
+        "status": "pending_existing_review",
+        "uploads": {
+          "banner_4": {
+            "assetId": "362997",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 338437,
+              "width": 1920
+            },
+            "url": "https://img-tc.tapimg.com/market/images/17d3ba9847850dd2f813a8fcf100a3d2.jpg",
+            "width": 1920
+          },
+          "cover_vertical": {
+            "assetId": "362998",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 149875,
+              "width": 720
+            },
+            "url": "https://img-tc.tapimg.com/market/images/ae53a480a657da112f8c847674866010.jpg",
+            "width": 720
+          }
+        },
+        "fields": {
+          "banner_4": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\banner_4.jpg",
+            "sha256": "fd11760c034e656fd62577f6dc773f54b1064f9ff552971e1709d48ea4dbadce",
+            "size": [
+              1920,
+              1080
+            ],
+            "bytes": 338437,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+            "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+            "crop": [
+              0,
+              0,
+              1920,
+              1080
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          },
+          "cover_vertical": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover_vertical.jpg",
+            "sha256": "183bf7fa32a076a63ac18bb548b770aeadaa3f402c5004b7a7b201149777b129",
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 149875,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+            "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+            "crop": [
+              420,
+              40,
+              1100,
+              1060
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          }
+        },
+        "precheck": {
+          "blockers": [],
+          "preaudit_passed": false,
+          "version_id": "1047715",
+          "warnings": [
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "banner_4"
+              ],
+              "message": "宣传图素材直接复用了带游戏UI界面的实机截图，且包含标题以外的大量UI文字。请使用专门设计的宣传海报/主视觉插画，避免直接在实机截图上叠加标题作为宣传图。"
+            },
+            {
+              "code": "PREAUDIT",
+              "field_ids": [
+                "cover_vertical"
+              ],
+              "message": "竖版封面素材直接复用了包含游戏界面UI的实机截图，且画面中出现了标题以外的多余UI文字。请上传经过专门排版设计、去除游戏内操作UI的高清封面图。"
+            }
+          ]
+        },
+        "resolution": "原图UI文字预审警告；重拍当前可玩版本并隐藏HUD/队友名牌后重新构图，未重建场景",
+        "recorded_at": "2026-10-08T13:15:54.717982+00:00"
+      }
+    ],
+    "source_task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+    "draft_version_id": "1047715",
+    "audit_id": "1047715",
+    "platform_version": "V-20261008-5",
+    "content_preaudit_passed": true,
+    "content_preaudit_warnings": [],
+    "current_platform_note": "1. 游戏封面图、宣传图目前暂不符合素材要求，封面图、宣传图应在原生高清图片素材的基础上，有清晰可辨识的游戏标题或LOGO以及能稳定传递游戏风格、玩法的元素，并且有符合TapTap标准的审美排版保证宣传图的精美观感，建议参考站内编辑推荐游戏，优化主体呈现、构图排版与整体美术表现。",
+    "latest_status_checked_at": "2026-10-10T03:02:52.978211+00:00"
+  },
+  "merged_pending": [
+    {
+      "version": "web-rv-v0.29.1",
+      "source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+      "package_sha256": "dc77affa26aa1005a2e117427b7056cf1e126ff557be5f7d1a9742b669882ebf",
+      "artifact_zip": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.29.1-20261008\\taptap-chongchao-qianshao.zip",
+      "classification": "影响试玩的严重修复",
+      "summary": "房车虫群追击、35秒顶杆放行、旧卡点存档恢复、箭头/胜利提示和双面正常标牌；含主线12人队友",
+      "status": "included_in_public_verified_release",
+      "reason": "上一版V-20261008-4仍reviewing；不撤审、不重复上传当前版本",
+      "qa": "releases/web-rv-v0.29.1/qa/taptap-package/results.json",
+      "physical_phone_test": false,
+      "recorded_at": "2026-10-08T11:41:23.044637+00:00",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "included_version": "web-resistance-v0.33.0",
+      "previous_status": "included_in_submitted_package",
+      "resolved_by_run": "release-backfill-20261010"
+    }
+  ],
+  "backfill_authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "last_published_revision": "1054180",
+  "last_published_at": null,
+  "last_published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+  "last_public_page_verified_at": "2026-10-10T03:02:52.978211+00:00",
+  "community_post_version": "web-resistance-v0.33.0"
+}

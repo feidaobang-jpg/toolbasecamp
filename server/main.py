@@ -27,6 +27,7 @@ from recipe_ai import (
     get_recipe_config,
 )
 from user_records import ensure_record_tables, router as records_router, _wire as wire_records
+from game_saves import router as game_saves_router, wire as wire_game_saves, ensure_game_save_tables, GameSaveCors
 from user_records import RENT_DUE_DAY_MAX, RENT_PAY_REV, ONLINE_DRAFT_REV
 from image_tools import router as image_router, _wire as wire_image, ensure_image_quota_table
 from stickers import router as stickers_router, _wire as wire_stickers
@@ -273,6 +274,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_middleware(GameSaveCors)
+
 class RegisterBody(BaseModel):
     email: str = ""
     phone: str = ""
@@ -421,6 +424,7 @@ def ensure_tables():
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
                 """
             )
+            ensure_game_save_tables(cur)
             ensure_record_tables(cur)
             ensure_image_quota_table(cur)
             ensure_tts_tables(cur)
@@ -606,6 +610,8 @@ def get_current_user(creds: Optional[HTTPAuthorizationCredentials]):
     return _ensure_admin_role(user)
 
 
+wire_game_saves(get_conn, require_db, get_current_user, lambda body: login(LoginBody(**body)))
+app.include_router(game_saves_router)
 wire_records(get_conn, require_db, get_current_user)
 app.include_router(records_router)
 # image_tools wired after get_optional_user + require_admin (public gallery)
@@ -639,8 +645,9 @@ else:
     print("[seedance] router not mounted:", _seedance_import_error or "unknown")
 
 try:
-    from game_rooms_api import router as tank_coop_router
+    from game_rooms_api import router as tank_coop_router, hub_router as game_coop_router
     app.include_router(tank_coop_router)
+    app.include_router(game_coop_router)
 except Exception as _tank_coop_exc:  # noqa: BLE001
     print("[tank-coop] router not mounted:", _tank_coop_exc)
 
@@ -1092,9 +1099,9 @@ def health():
         and "/pcbuilds/refresh" in paths,
         "pc_builds_api_rev": PC_BUILDS_API_REV,
         "stocks_api": (
-            "/stocks/recommend-tail-buy" in paths
-            and "/stocks/recommend-monthly-recovery" in paths
-            and "/stocks/recommend-monster-stock" in paths
+            "/stocks/recommend-pullback" in paths
+            and "/stocks/status" in paths
+            and "/stocks/review-export" in paths
             and "/stocks/records" in paths
         ),
         "fx_allowed_rev": FX_ALLOWED_REV,

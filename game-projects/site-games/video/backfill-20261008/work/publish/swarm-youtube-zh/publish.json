@@ -1,0 +1,140 @@
+{
+  "variant_id": "swarm-youtube-zh",
+  "platform": "youtube",
+  "content_type": "historical_gameplay_backfill",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "recorded 2026-10-04",
+  "episode_id": "game-projects/starship-defense/video/update-20261003",
+  "video_file": "../../../final/swarm/youtube-zh/gameplay-youtube-final.mp4",
+  "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 175.544,
+  "title": "先守城还是先反攻？虫潮围城母皇战实录",
+  "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n打开后选择“虫潮围城”；如链接不可点击，请复制到浏览器打开。\n打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。",
+  "tags": [
+    "游戏开发",
+    "虫潮围城",
+    "实机演示"
+  ],
+  "description_file": "../../../final/swarm/youtube-zh/投稿文案.txt",
+  "cover_file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg",
+  "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
+  "cover_files": [
+    {
+      "file": "../../../final/swarm/youtube-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "upload/reference subject to current platform cover entry"
+    }
+  ],
+  "subtitle_mode": "sidecar",
+  "subtitle_files": [
+    {
+      "file": "../../../final/swarm/youtube-zh/captions-zh.srt",
+      "language": "zh-CN",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "b0d061cc7493ad1f6448fc5c74a0c16141e724ce9b384a8d68639ffc9d62dd72"
+    },
+    {
+      "file": "../../../final/swarm/youtube-zh/captions-en.srt",
+      "language": "en",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
+      "sha256": "4e67343aed98b8bae4348b73c3c4d63393d7dde5bee8fe523c5c3602b6f7de29"
+    }
+  ],
+  "credits": "credits.txt",
+  "cover_upload_mode": "verify_current_entry",
+  "recorded_date": "2026-10-04",
+  "historical_bilibili_source": {
+    "bvid": "BV1WbHq6eEBt",
+    "video_url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+    "reupload": false
+  },
+  "demo_http_check": {
+    "status": 200,
+    "checked_at": "2026-10-08",
+    "overseas_playability": "not-tested"
+  },
+  "human_review": {
+    "status": "approved",
+    "statement": "可以，继续把",
+    "accepted_at": "2026-10-08T05:50:15.972565+00:00",
+    "context": "回复已展示的7版审片包及按通过版本继续发布的请求",
+    "approved_variant_ids": [
+      "swarm-youtube-zh",
+      "swarm-douyin-zh",
+      "jackal-youtube-zh",
+      "jackal-douyin-zh",
+      "cadillacs-youtube-zh",
+      "cadillacs-douyin-zh",
+      "swarm-youtube-en"
+    ],
+    "source": "user",
+    "video_sha256": "f5b5e63d08977dfa8dae839aaaf5dc5df1d39011831ebcfa41bf273cee683cad",
+    "cover_sha256": "4d3215cc3470028ec1a4b59612e4324f69e18e874952c46d8d17086e2dfa18b7",
+    "subtitle_sha256": {
+      "zh-CN": "b0d061cc7493ad1f6448fc5c74a0c16141e724ce9b384a8d68639ffc9d62dd72",
+      "en": "4e67343aed98b8bae4348b73c3c4d63393d7dde5bee8fe523c5c3602b6f7de29"
+    }
+  },
+  "blocking_issues": [],
+  "ready_to_upload": false,
+  "ready_to_review": true,
+  "uploaded": true,
+  "localizations": {
+    "en": {
+      "title": "Raid the Queen or Defend the Base? Swarm Siege Gameplay",
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nSelect 虫潮围城 in the list; copy the URL into your browser if it is not clickable.\nCollect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts."
+    }
+  },
+  "localization_file": "../../../final/swarm/youtube-zh/English-localizations.txt",
+  "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+  "platform_id": "5pr0fr0CMl0",
+  "status": "published",
+  "visibility": "public",
+  "last_observed_at": "2026-10-08T06:09:08.236349+00:00",
+  "subtitle_upload_status": {
+    "zh-CN": "saved_on_platform",
+    "en": "saved_on_platform"
+  },
+  "public_url": "https://www.youtube.com/watch?v=5pr0fr0CMl0",
+  "public_verified_at": "2026-10-08T06:09:08.236349+00:00",
+  "localization_upload_status": {
+    "en": "saved_on_platform"
+  },
+  "duplicate_check_scope": {
+    "pre_upload_normal_videos": [
+      "Kk8XPu9vQ-M"
+    ],
+    "pre_upload_shorts": [
+      "DE7PRJiSReo"
+    ],
+    "matching_backfill_found": false,
+    "description": "Normal-video library and channel translations list inspected before upload"
+  },
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+    "made_for_kids": false,
+    "paid_promotion": false,
+    "video_language": "zh-CN",
+    "category": "Gaming",
+    "hd_processing": "complete",
+    "caption_public_verification": "manual zh-CN and en listed in public player",
+    "external_demo_link": "Catalog URL at first line; clickable external links require channel verification"
+  },
+  "demo_entry_revision": {
+    "url": "https://www.zhengxiaohui.cn/games.html",
+    "updated_at": "2026-10-08T07:01:28.944Z",
+    "public_verified_at": "2026-10-08T07:09:31.161Z",
+    "original_description_retained_in": "../youtube-entry-revision.json"
+  }
+}

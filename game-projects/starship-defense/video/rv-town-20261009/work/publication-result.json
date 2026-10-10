@@ -1,0 +1,380 @@
+{
+  "schema_version": 2,
+  "status": "published",
+  "human_review": "approved",
+  "approval_event_id": "rv-town-video-review-e03bf6f6-e919-40c0-9a2e-9cdbe30a1ff4",
+  "platforms": {
+    "bilibili-zh": {
+      "status": "published",
+      "id": "BV1xdpx63ETu",
+      "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "episode_id": "rv-town-20261009",
+      "variant_id": "bilibili-zh",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+      "account_id": "16214353",
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "human_review": {
+        "status": "approved",
+        "statement": "可以，发布视频吧",
+        "source": "user",
+        "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+        "approved_variant_ids": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+        "file_hashes": {
+          "cover-home-4x3.jpg": "053a4562c1a5f528f800b3b5beb1bb71ea0d4867132d58126a5edd8b7f7a699c",
+          "cover-space-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+          "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+          "投稿文案.txt": "5ba94f2a6ad7dcdd1753fef61caf3c7f06d371f05d692bd5273ccf7493a295cc"
+        },
+        "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+      },
+      "last_observed_at": "2026-10-09T17:48:14.496398+08:00",
+      "platform_id": "BV1xdpx63ETu",
+      "public_url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "public_verified_at": "2026-10-09T17:48:14.496398+08:00",
+      "identity_verified": true,
+      "published_at_observed": "2026-10-09T17:29:58+08:00",
+      "duration_seconds": 110,
+      "publishing_settings": {
+        "home_cover": "4:3",
+        "space_cover": "16:9",
+        "ai_content_disclosure": true,
+        "paid_promotion": false,
+        "visibility": "public"
+      },
+      "collection_membership": {
+        "season_id": 9248439,
+        "title": "合集·虫潮围城开发实录",
+        "url": "https://space.bilibili.com/16214353/lists/9248439?type=season",
+        "order": 4,
+        "previous_members": [
+          "BV1Ujad6DEuf",
+          "BV1WbHq6eEBt",
+          "BV1C5HQ6gEvD"
+        ],
+        "status": "public_video_and_directory_verified",
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-collection.jpg"
+      },
+      "toy_binding": {
+        "toy_id": "38678478981120",
+        "slug": "chongchao-qianshao",
+        "status": "bound_verified",
+        "receipt": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\toy-binding-result.json"
+      },
+      "pinned_comment": {
+        "status": "public_pin_verified",
+        "text": "先选“房车生存”，在修理厂改装、加油站补油，再去感染区下车搜物资。你会先升级机枪，还是先加装甲？\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。",
+        "sha256": "df0bf1d9c12f674c9b2b80421a59dc2233f619c02258c5074d1ec66c8c8deb0f",
+        "comment_id": null,
+        "note": "公开页核验作者、全文与置顶标记；未从UI取得评论ID。",
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-comment-pinned.jpg"
+      },
+      "automatic_dynamic": {
+        "status": "public_card_verified",
+        "url": "https://space.bilibili.com/16214353/dynamic",
+        "additional_post": false,
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-dynamic.jpg"
+      },
+      "toy_push_application": {
+        "status": "submitted_cloud_saved",
+        "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "sheet": "【进行中】日常推流",
+        "range": "A330:E330",
+        "values": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV1xdpx63ETu/",
+          "是",
+          "是",
+          "是"
+        ],
+        "operator_feedback_cell": "F330",
+        "operator_feedback": null,
+        "verified_at": "2026-10-09T17:48:14.379124+08:00",
+        "reload_verified": true,
+        "real_hyperlink_click_verified": true,
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-application-saved-row330.jpg",
+        "note": "申请保存且B330蓝色下划线链接实点到正确BV；F330为空，运营是否推流尚未确认。"
+      },
+      "traffic_reward": {
+        "status": "no_available_free_reward",
+        "available_exposure": 0,
+        "url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-free-rewards.jpg"
+      },
+      "related_activities": {
+        "status": "related_video_check_completed",
+        "scope": "本期Toy活动、推流申请与免费流量奖励；非全账号全面检查",
+        "checked_at": "2026-10-09T17:48:14.379124+08:00",
+        "current_video_bvid": "BV1xdpx63ETu",
+        "current_video_published": true,
+        "toy_challenge": {
+          "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+          "deadline": "2026-10-31T23:59:00+08:00",
+          "topic_id": 1346285,
+          "status": "public_topic_and_toy_binding_verified",
+          "high_energy_video_award": "活动期投稿的参赛Toy视频播放量须超过300；未宣称本片已达标或获奖",
+          "rules_evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-activity-rules.jpg"
+        },
+        "traffic_reward": {
+          "status": "no_available_free_reward",
+          "available_exposure": 0,
+          "url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+          "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-free-rewards.jpg"
+        },
+        "toy_push_application": {
+          "status": "submitted_cloud_saved",
+          "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+          "sheet": "【进行中】日常推流",
+          "range": "A330:E330",
+          "values": [
+            "飞刀班长",
+            "https://www.bilibili.com/video/BV1xdpx63ETu/",
+            "是",
+            "是",
+            "是"
+          ],
+          "operator_feedback_cell": "F330",
+          "operator_feedback": null,
+          "verified_at": "2026-10-09T17:48:14.379124+08:00",
+          "reload_verified": true,
+          "real_hyperlink_click_verified": true,
+          "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-application-saved-row330.jpg",
+          "note": "申请保存且B330蓝色下划线链接实点到正确BV；F330为空，运营是否推流尚未确认。"
+        },
+        "shared_full_check_timestamp_advanced": false,
+        "previous_video_maintenance": "held_by_user",
+        "note": "仅登记本期新片；不接管其他未完成活动/协议申请，不新增定时任务。"
+      },
+      "previous_video_maintenance": {
+        "status": "held_by_user"
+      },
+      "sound_review": "人工审片通过；公开页播放状态与时长核验，代理未主观试听",
+      "verified_at": "2026-10-09T17:48:14.379124+08:00",
+      "next_step": null
+    },
+    "douyin-zh": {
+      "status": "published",
+      "id": "7694602953994358058",
+      "url": "https://www.douyin.com/video/7694602953994358058",
+      "episode_id": "rv-town-20261009",
+      "variant_id": "douyin-zh",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+      "account_id": "84261875244",
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "human_review": {
+        "status": "approved",
+        "statement": "可以，发布视频吧",
+        "source": "user",
+        "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+        "approved_variant_ids": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+        "file_hashes": {
+          "cover-reference-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+          "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+          "投稿文案.txt": "4b82997ca974ad8ccf7b0aec63b5be951ca328fa853394871a7a1b3330b91d62"
+        },
+        "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+      },
+      "last_observed_at": "2026-10-09T17:51:49.728761+08:00",
+      "platform_id": "7694602953994358058",
+      "public_url": "https://www.douyin.com/video/7694602953994358058",
+      "identity_verified": true,
+      "published_at_observed": "2026-10-09T17:49:00+08:00",
+      "duration_seconds": 109.866667,
+      "publishing_settings": {
+        "visibility": "public",
+        "release": "immediate",
+        "ai_content_disclosure": "内容由AI生成",
+        "paid_promotion": false,
+        "simultaneous_other_services": false,
+        "save_permission": "允许"
+      },
+      "covers": {
+        "status": "both_saved_and_platform_check_passed",
+        "source": "已审房车封面在平台编辑器裁切，保留完整标题",
+        "horizontal": "4:3",
+        "vertical": "3:4",
+        "evidence": [
+          "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-horizontal-cover.jpg",
+          "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-vertical-cover.jpg"
+        ]
+      },
+      "public_hashtags": [
+        "虫潮围城",
+        "房车生存",
+        "游戏开发",
+        "AI"
+      ],
+      "precheck": "作品未见异常；封面检测通过",
+      "public_playback": "公开规范URL实际播放正确房车成片，时长1:50，画面内中文字幕正常显示",
+      "sound_review": "人工审片通过；代理未主观试听",
+      "evidence": "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-public.jpg",
+      "next_step": null,
+      "public_verified_at": "2026-10-09T17:51:49.728761+08:00"
+    },
+    "youtube-zh": {
+      "status": "published",
+      "id": "jbTIpyh6Clw",
+      "url": "https://www.youtube.com/watch?v=jbTIpyh6Clw",
+      "episode_id": "rv-town-20261009",
+      "variant_id": "youtube-zh",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+      "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+      "human_review": {
+        "status": "approved",
+        "statement": "可以，发布视频吧",
+        "source": "user",
+        "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+        "approved_variant_ids": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+        "file_hashes": {
+          "captions-en.srt": "e2251157ad5dce5169181335253bb3ea1bc04eacfb7dfe8f09f116afa396c86b",
+          "captions-zh.srt": "6202dc39408f35e6c40c25e314105f59fcc5143ffb4aa011f2edd705070f70e7",
+          "cover-zh-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+          "English-localizations.txt": "8451c627add066bd627efcfa15f59e60a5f3cff8b77ad44c4e8d055a5f74f052",
+          "gameplay-youtube-final.mp4": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+          "投稿文案.txt": "2ee595b7a3c3d052138f5bef218b3582508576b983683227e794802229bd3177"
+        },
+        "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050"
+      },
+      "last_observed_at": "2026-10-09T17:49:34.877996+08:00",
+      "platform_id": "jbTIpyh6Clw",
+      "public_url": "https://www.youtube.com/watch?v=jbTIpyh6Clw",
+      "public_verified_at": "2026-10-09T17:49:34.877996+08:00",
+      "identity_verified": true,
+      "publishing_settings": {
+        "visibility": "public",
+        "made_for_kids": false,
+        "age_restricted": false,
+        "paid_promotion": false,
+        "synthetic_content": true,
+        "language": "zh-Hans",
+        "category": "游戏",
+        "license": "Standard YouTube License"
+      },
+      "processing": {
+        "sd": "complete",
+        "hd": "complete",
+        "copyright": "no_issues_detected"
+      },
+      "thumbnail": {
+        "status": "uploaded_verified",
+        "file": "cover-zh-16x9.jpg"
+      },
+      "subtitles": {
+        "status": "published_and_public_player_selectable",
+        "languages": [
+          "中文（简体）",
+          "英语"
+        ],
+        "cues_per_track": 52,
+        "files": [
+          "captions-zh.srt",
+          "captions-en.srt"
+        ],
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\youtube-public-subtitles.jpg"
+      },
+      "english_metadata": {
+        "status": "published_saved",
+        "source": "English-localizations.txt"
+      },
+      "public_playback": "正确成片公开页可播放，核验后暂停",
+      "sound_review": "人工审片通过；代理未主观试听",
+      "verified_at": "2026-10-09T17:48:14.379124+08:00",
+      "next_step": null
+    }
+  },
+  "user_instruction": "今天的修改先同步发布到toy，其他平台先不发；新片先交审片",
+  "updated_at": "2026-10-09T17:51:49.981833+08:00",
+  "approval_statement": "可以，发布视频吧",
+  "approval_accepted_at": "2026-10-09T17:12:21.426697+08:00",
+  "approved_hashes": {
+    "bilibili-zh": {
+      "status": "approved",
+      "statement": "可以，发布视频吧",
+      "source": "user",
+      "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+      "file_hashes": {
+        "cover-home-4x3.jpg": "053a4562c1a5f528f800b3b5beb1bb71ea0d4867132d58126a5edd8b7f7a699c",
+        "cover-space-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+        "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+        "投稿文案.txt": "5ba94f2a6ad7dcdd1753fef61caf3c7f06d371f05d692bd5273ccf7493a295cc"
+      },
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+    },
+    "douyin-zh": {
+      "status": "approved",
+      "statement": "可以，发布视频吧",
+      "source": "user",
+      "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+      "file_hashes": {
+        "cover-reference-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+        "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+        "投稿文案.txt": "4b82997ca974ad8ccf7b0aec63b5be951ca328fa853394871a7a1b3330b91d62"
+      },
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+    },
+    "youtube-zh": {
+      "status": "approved",
+      "statement": "可以，发布视频吧",
+      "source": "user",
+      "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+      "file_hashes": {
+        "captions-en.srt": "e2251157ad5dce5169181335253bb3ea1bc04eacfb7dfe8f09f116afa396c86b",
+        "captions-zh.srt": "6202dc39408f35e6c40c25e314105f59fcc5143ffb4aa011f2edd705070f70e7",
+        "cover-zh-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+        "English-localizations.txt": "8451c627add066bd627efcfa15f59e60a5f3cff8b77ad44c4e8d055a5f74f052",
+        "gameplay-youtube-final.mp4": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+        "投稿文案.txt": "2ee595b7a3c3d052138f5bef218b3582508576b983683227e794802229bd3177"
+      },
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050"
+    }
+  },
+  "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+  "episode_id": "rv-town-20261009",
+  "previous_video_maintenance": {
+    "status": "held_by_user",
+    "reason": "本次发布授权仅本期新片；此前其他渠道/旧说明暂缓仍有效"
+  },
+  "completed_at": "2026-10-09T17:53:41.810316+08:00",
+  "next_step": null,
+  "post_publication": {
+    "x": {
+      "status": "skipped_paid_access_declined",
+      "user_instruction": "要收费吗？如果收费就不做",
+      "reason": "当前官方API连接未开通；现有Metricool路径需付费，按用户要求跳过。未购买、未发X。"
+    }
+  },
+  "evidence": "work/proof；截图保存在artifact_directory"
+}

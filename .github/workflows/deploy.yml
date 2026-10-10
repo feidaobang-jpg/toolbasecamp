@@ -5,6 +5,11 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+# 生产部署一次只跑一个，最新提交总是最后部署；多个 AI 任务可直接推送主线，不再依赖本机合并锁。
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,58 +20,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Detect changed paths
-        id: changes
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            public:
-              - 'public/**'
-            server:
-              - 'server/**'
-            deploy:
-              - 'deploy/**'
-            portal_news:
-              - 'scripts/news/**'
-              - 'deploy/nginx-toolbasecamp-news.conf'
-              - 'deploy/patch-nginx-news.sh'
-              - 'deploy/news-portal-inject.snippet'
-              - 'deploy/install-news-cron.sh'
-            portal_pcbuilds:
-              - 'scripts/pc-builds/**'
-              - 'deploy/install-pc-builds.sh'
-              - 'deploy/fix-pcbuilds-api.sh'
-            workflow:
-              - '.github/workflows/deploy.yml'
-
-      - name: Set full deploy
-        id: full
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "yes=1" >> $GITHUB_OUTPUT
-          elif [[ "${{ steps.changes.outputs.workflow }}" == "true" ]]; then
-            echo "yes=1" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Print deploy scope
-        run: |
-          echo "event=${{ github.event_name }}"
-          echo "full=${{ steps.full.outputs.yes }}"
-          echo "public=${{ steps.changes.outputs.public }}"
-          echo "server=${{ steps.changes.outputs.server }}"
-          echo "deploy=${{ steps.changes.outputs.deploy }}"
-          echo "portal_news=${{ steps.changes.outputs.portal_news }}"
-          echo "portal_pcbuilds=${{ steps.changes.outputs.portal_pcbuilds }}"
-          if [[ "${{ steps.full.outputs.yes }}" == "1" ]]; then
-            echo "Full deploy  - all steps enabled."
-          elif [[ "${{ steps.changes.outputs.public }}" == "true" \
-             && "${{ steps.changes.outputs.server }}" != "true" \
-             && "${{ steps.changes.outputs.deploy }}" != "true" \
-             && "${{ steps.changes.outputs.portal_news }}" != "true" \
-             && "${{ steps.changes.outputs.portal_pcbuilds }}" != "true" ]]; then
-            echo "Static-only change  - skip portal rebuilds and API restart."
-          fi
 
       - name: Validate secrets
         run: |
@@ -87,6 +40,66 @@ jobs:
           printf '%s\n' "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Resolve change base (last deployed commit)
+        id: base
+        run: |
+          # 部署排队时 GitHub 会丢掉中间等待的运行，只看本次 push 的差异会漏掉被丢运行的改动；
+          # 因此与服务器记录的「上次成功部署的提交」比较。读不到或不在历史里时退回默认行为。
+          LAST="$(ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new "${DO_USER}@${DO_HOST}" \
+            'cat /opt/toolbasecamp-deploy/state/last-deployed-sha 2>/dev/null || true' | tr -dc '0-9a-f' || true)"
+          echo "last deployed: ${LAST:-<none>}  current: ${GITHUB_SHA}"
+          if [[ -z "$LAST" ]] || ! git cat-file -e "${LAST}^{commit}" 2>/dev/null; then
+            echo "No usable record; use default change detection."
+          elif [[ "$LAST" == "$GITHUB_SHA" ]]; then
+            echo "sha=$LAST" >> "$GITHUB_OUTPUT"
+          elif git merge-base --is-ancestor "$LAST" "$GITHUB_SHA"; then
+            echo "sha=$LAST" >> "$GITHUB_OUTPUT"
+          elif git merge-base --is-ancestor "$GITHUB_SHA" "$LAST"; then
+            echo "::error::This run (${GITHUB_SHA}) is older than the deployed commit (${LAST}); refusing to overwrite production with stale files."
+            exit 1
+          else
+            echo "Deployed commit is not in this history; force full deploy."
+            echo "full=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Detect changed paths
+        id: changes
+        env:
+          BASE_DEPLOYED: ${{ steps.base.outputs.sha }}
+          BASE_BEFORE: ${{ github.event.before }}
+        run: bash deploy/detect-deploy-changes.sh "${BASE_DEPLOYED:-$BASE_BEFORE}" "$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Set full deploy
+        id: full
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "yes=1" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.base.outputs.full }}" == "1" ]]; then
+            echo "yes=1" >> $GITHUB_OUTPUT
+          elif [[ "${{ steps.changes.outputs.workflow }}" == "true" ]]; then
+            echo "yes=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Print deploy scope
+        run: |
+          echo "event=${{ github.event_name }}"
+          echo "base=${{ steps.base.outputs.sha }}"
+          echo "full=${{ steps.full.outputs.yes }}"
+          echo "public=${{ steps.changes.outputs.public }}"
+          echo "server=${{ steps.changes.outputs.server }}"
+          echo "deploy=${{ steps.changes.outputs.deploy }}"
+          echo "portal_news=${{ steps.changes.outputs.portal_news }}"
+          echo "portal_pcbuilds=${{ steps.changes.outputs.portal_pcbuilds }}"
+          if [[ "${{ steps.full.outputs.yes }}" == "1" ]]; then
+            echo "Full deploy  - all steps enabled."
+          elif [[ "${{ steps.changes.outputs.public }}" == "true" \
+             && "${{ steps.changes.outputs.server }}" != "true" \
+             && "${{ steps.changes.outputs.deploy }}" != "true" \
+             && "${{ steps.changes.outputs.portal_news }}" != "true" \
+             && "${{ steps.changes.outputs.portal_pcbuilds }}" != "true" ]]; then
+            echo "Static-only change  - skip portal rebuilds and API restart."
+          fi
 
       - name: Check no Tailwind in HTML
         if: steps.full.outputs.yes == '1' || steps.changes.outputs.public == 'true'
@@ -472,16 +485,16 @@ jobs:
             bash /opt/toolbasecamp-deploy/fix-stats-api.sh
             curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stats/overview' >/dev/null || exit 1
           }
-          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-tail-buy' >/dev/null || {
-            echo "=== openapi missing /stocks/recommend-tail-buy  - forcing fix-stocks-api.sh ==="
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-pullback' >/dev/null || {
+            echo "=== openapi missing /stocks/recommend-pullback  - forcing fix-stocks-api.sh ==="
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             bash /opt/toolbasecamp-deploy/fix-stocks-api.sh
-            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-tail-buy' >/dev/null || exit 1
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-pullback' >/dev/null || exit 1
           }
-          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-monthly-recovery' >/dev/null || {
-            echo "=== openapi missing /stocks/recommend-monthly-recovery  - forcing fix-stocks-api.sh ==="
+          curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/status' >/dev/null || {
+            echo "=== openapi missing /stocks/status  - forcing fix-stocks-api.sh ==="
             bash /opt/toolbasecamp-deploy/fix-stocks-api.sh
-            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/recommend-monthly-recovery' >/dev/null || exit 1
+            curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/stocks/status' >/dev/null || exit 1
           }
           curl -sf http://127.0.0.1:8001/openapi.json | grep -F '/nbcheck/status' >/dev/null || {
             echo "=== openapi missing /nbcheck/status  - forcing fix-nbcheck-api.sh ==="
@@ -523,6 +536,7 @@ jobs:
             journalctl -u toolbasecamp-api -n 40 --no-pager || true
             exit 1
           }
+          bash /opt/toolbasecamp-deploy/install-stocks-timer.sh || exit 1
           DAYS_CODE="$(curl -s -o /tmp/records-days-local.txt -w '%{http_code}' http://127.0.0.1:8001/records/days || echo 000)"
           echo "local GET /records/days -> $DAYS_CODE"
           if [[ "$DAYS_CODE" == "404" ]]; then
@@ -1100,3 +1114,8 @@ jobs:
           fi
           echo "News portal OK."
 
+      - name: Record deployed commit
+        if: success()
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new "${DO_USER}@${DO_HOST}" \
+            "mkdir -p /opt/toolbasecamp-deploy/state && echo '${GITHUB_SHA}' > /opt/toolbasecamp-deploy/state/last-deployed-sha && cat /opt/toolbasecamp-deploy/state/last-deployed-sha"

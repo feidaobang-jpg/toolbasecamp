@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-tactics-v0.20.0",
+  "base_version": "web-restart-audio-v0.19.4",
+  "classification": "formal_release",
+  "date": "2026-10-07",
+  "task_id": "01a11338-bd0d-7791-bc91-920d85942b43-tactics-20261007-01",
+  "changes": [
+    "逐人留守/跟随，手动指令优先，自动回防可选",
+    "预告与出兵共用计划，首章前五关混合虫潮",
+    "前五关一次性新兵补给",
+    "工程兵主动接近基地附近受损设施",
+    "战报保存设施/队友/载具损失及本关收支"
+  ],
+  "qa": {
+    "status": "passed",
+    "checks": 45,
+    "results": "qa/results.json",
+    "combat": "qa/combat.json",
+    "performance": "qa/performance.json",
+    "scripts": [
+      "verify-tactics.cjs",
+      "verify-tactics-combat.cjs",
+      "capture-tactics.cjs"
+    ],
+    "regressions": {
+      "verify-squad-tasks.cjs": "passed",
+      "verify-squad-crew.cjs": "passed",
+      "verify-squad-follow.cjs": "12/12 passed",
+      "verify-platform-unit.mjs": "passed"
+    },
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        844,
+        390
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        568,
+        320
+      ]
+    ],
+    "combat_limits": "正常生命/赚取金币，真实战斗与寻路函数，固定玩家站位的加速夹具；不是真人平衡或虫洞突袭验收",
+    "physical_phone_test": false,
+    "post_merge_results": "qa/integrated/results.json"
+  },
+  "media": {
+    "capture": "qa/capture.json",
+    "video": "qa/captures/tactics-realtime.webm",
+    "format": "VP8, 1280x720, 22.92秒",
+    "audio": "none",
+    "readiness": "partial",
+    "gaps": [
+      "后续视频需补录带游戏声音的普通模式母版",
+      "未完成真机多指触控/性能验证"
+    ],
+    "new_video": "not_requested",
+    "persistent_directory": "D:/project/game-media/starship-defense/web-tactics-v0.20.0"
+  },
+  "channels": {
+    "website": {
+      "status": "deployed_verified",
+      "version": "web-tactics-v0.20.0",
+      "commit": "ac026d4ef5c407052ea256288f22f982bb478a35",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "verified_at": "2026-10-07T07:04:42.608681+08:00",
+      "files": [
+        {
+          "file": "index.html",
+          "sha256": "4b2153befd0d3457698eb7811d1851158d383ea8e2778903053f1b7bbc0417e9",
+          "verified_at": "2026-10-07T07:04:36.648872+08:00",
+          "tactics_panel": true,
+          "tactics_button": true,
+          "script": [
+            "game.compat.js?v=ac026d4e"
+          ],
+          "note": "Actions按部署提交替换页面资源查询键"
+        },
+        {
+          "file": "game.compat.js",
+          "sha256": "87e96d929cf0082e25e9f97542c8279969de6725434e40d4931bda8e492bf549",
+          "verified_at": "2026-10-07T07:04:38.757042+08:00",
+          "match": true
+        },
+        {
+          "file": "game.js",
+          "sha256": "177111309552dae2643c3deedd99d2bba39f0d6ad0374156b4e4fd252f5dfc62",
+          "verified_at": "2026-10-07T07:04:40.893613+08:00",
+          "match": true
+        },
+        {
+          "file": "tactical-waves.js",
+          "sha256": "fd3c8fefa1895f76ba706ad9d0beca159d65bcf98e0ffaf1ea893cb409bb8899",
+          "verified_at": "2026-10-07T07:04:42.013769+08:00",
+          "match": true
+        },
+        {
+          "file": "tactical-panel.js",
+          "sha256": "d51f998370dddcdba45bb66720006164b6d1f57d1d3dc1b7f8e1f9646ffd628a",
+          "verified_at": "2026-10-07T07:04:42.115484+08:00",
+          "match": true
+        },
+        {
+          "file": "save-validation.js",
+          "sha256": "1f775b1b2103378ef318ff9fa09386cca56421fc23ea7b77e10b5d74b0df460c",
+          "verified_at": "2026-10-07T07:04:42.265651+08:00",
+          "match": true
+        }
+      ],
+      "qa": "qa/website/results.json",
+      "checks_passed": 45
+    },
+    "toy": {
+      "status": "published_verified",
+      "verified_at": "2026-10-06T23:18:57.080Z",
+      "version": "web-tactics-v0.20.0",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "runtime_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v23221/index.html",
+      "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+      "checks": [
+        "公开版继续旧进度第1章第2关、金币478、基地2000",
+        "已显示新战术部署/建立防线预告、13只虫、中央与西侧洞口、新兵补给220",
+        "面板可打开且按钮可达"
+      ],
+      "evidence": "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/toy-public.jpg",
+      "id": 38678478981120,
+      "slug": "chongchao-qianshao",
+      "submission": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_OARE4Z4P/index.html",
+        "submitted_at": "2026-10-07T07:09:30.748598+08:00",
+        "time_basis": "CLI响应保存时间",
+        "id": 38678478981120,
+        "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a"
+      },
+      "preview": "toy-preview.json",
+      "record": "toy-status.json"
+    },
+    "bilibili_description": {
+      "status": "public_verified",
+      "version": "web-tactics-v0.20.0",
+      "targets": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "record": "bilibili-sync.json"
+    },
+    "activities": {
+      "source": "Codex",
+      "task_id": "01a11338-bd0d-7791-bc91-920d85942b43-tactics-20261007-01",
+      "game": "虫潮围城",
+      "checked_at": "2026-10-07T07:15:46.418212+08:00",
+      "status": "skipped_recent_completed_check",
+      "baseline": "2026-10-06T19:18:03.077+08:00",
+      "new_video_published": false,
+      "ordinary_pending_for_this_game": false,
+      "note": "收尾时读取共用活动及通知台账；最近12小时已有全面成功检查，无本游戏新增可办普通报名。另一个合辑视频的流量券仍等待新服务协议确认，保留原待办、不重复通知；本次没有新发视频，不用券。"
+    }
+  },
+  "pending_merge": [],
+  "notes": "notes.md",
+  "integration": {
+    "branch": "codex/chongchao-tactics-20261007",
+    "upstream_before_push": "9bb790fa648ff66d165649ffba31cb1d49fccd66",
+    "merged_commit": "1e7aad40751d461493a7c3a188e079c8e0608b99",
+    "swarm_shared_changes_from_merge": false
+  },
+  "website_bundle_sha256": "87e96d929cf0082e25e9f97542c8279969de6725434e40d4931bda8e492bf549",
+  "completed_at": "2026-10-07T07:20:01.485036+08:00"
+}

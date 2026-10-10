@@ -79,6 +79,8 @@ kbd{display:inline-block;min-width:1.5em;padding:0 .35em;margin:0 .1em;border-ra
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(14px + var(--sat)) calc(14px + var(--sar)) calc(14px + var(--sab)) calc(14px + var(--sal));z-index:20;background:linear-gradient(90deg,#0b1220d8,#0b122070 60%,#0b122030)}
 .overlay#pause,.overlay#result{background:#000000a8}
 .panel{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);gap:26px;width:min(1000px,100%);max-height:100%;overflow:auto;padding:24px 28px;border-radius:22px;background:#111a28e8;border:2px solid #ffffff2a;box-shadow:0 18px 60px #0008}
+.overlay .panel,.overlay .panel *{touch-action:auto}
+body:has(.overlay:not([hidden])) #stage{touch-action:auto}
 .panel.small{grid-template-columns:1fr;width:min(470px,100%);gap:12px}
 .kicker{color:#ffd23a;font-size:13px;letter-spacing:2px;font-weight:700}
 .logo{margin:8px 0 4px;font-size:46px;line-height:1.05;letter-spacing:2px;color:#fff;text-shadow:4px 4px 0 #b8501a,7px 7px 0 #0006}
@@ -100,6 +102,10 @@ body:not(.touch-on) .help-touch{display:none}
 .items .val.warn{color:#ff7a6a}
 .items a,.items .fs-btn{justify-content:center}
 .items .coop-link{color:#bfe0ff}
+#menu .mode-choices{display:grid;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0;border:0;background:transparent;cursor:default}
+#menu .mode-choices button{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:44px;padding:8px 14px;border:2px solid #d6cba8;border-radius:12px;background:#fffaf0;color:#2f4436;font:700 13px "Microsoft YaHei",sans-serif;cursor:pointer;white-space:nowrap}
+#menu .mode-choices button[aria-pressed="true"]{background:#ffe09a;border-color:#d59b37;box-shadow:inset 0 0 0 1px #b57519}
+#menu .mode-choices button:focus-visible{outline:3px solid #e6a32b;outline-offset:1px}
 #res-table{width:100%;border-collapse:collapse;font-size:14px}
 #res-table td{padding:5px 8px;border-bottom:1px solid #ffffff1c}
 #res-table td:last-child{text-align:right;color:#ffd23a;font-weight:700}
@@ -195,8 +201,6 @@ body.touch-on #hud-top{bottom:auto;top:calc(8px + var(--sat));right:calc(10px + 
 #stage.portrait.short .items>*{min-height:34px;padding:5px 11px;font-size:12.5px}
 .items>*>span:first-child{white-space:nowrap}
 
-/* Mobile browsers do not reliably support fullscreen; keep desktop controls. */
-body.mobile-device #btn-fs,body.mobile-device .fs-btn{display:none!important}
 
 #stage{touch-action:none}
 
@@ -258,3 +262,12 @@ button::before,button::after{content:none!important}
 #lobby .coop-panel .lobby-footer,#lobby #coop-settings{display:block}
 #app #lobby .coop-panel.in-room{max-width:600px!important;width:min(94vw,600px)!important;grid-template-columns:1fr}
 @media(max-width:650px){#app #lobby .coop-panel{grid-template-columns:1fr}#lobby #coop-directory{grid-row:3}#lobby #coop-rooms{max-height:300px}}
+/* 全屏按钮由脚本按浏览器能力设置 hidden；需压过公共界面里 body.mobile-device 的 display:block!important */
+html body #btn-fs[hidden],html body .items>.fs-btn[hidden]{display:none!important}
+
+/* 手机横屏紧凑主菜单（2026-10-07）：手机竖着拿时菜单也直接旋转成横屏，菜单要在逻辑 844×390 一类横屏里少占一行：
+   收起与三键操作模式行重复的「操作模式」循环项，「开始游戏」与「起始关卡」同排，三键行去掉外边距 */
+#stage.compact .title-screen .items>[data-opt=touch]{display:none}
+#stage.compact:not(.narrow) .title-screen .items>.primary{grid-column:auto}
+#stage.compact .control-modes{margin:0!important;gap:6px!important}
+#stage.compact .control-modes button[data-control-mode]{min-height:40px;padding:4px 8px;font-size:13px}

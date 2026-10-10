@@ -1,0 +1,47 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [
+        {
+          "code": "SCE_AGREEMENT_REQUIRED",
+          "field_ids": [],
+          "message": "需签署《创意工坊内容授权协议》（https://www.taptap.cn/doc/ugcgame-agreement）"
+        }
+      ],
+      "preaudit_passed": false,
+      "version_id": "1041012",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题涉及知名游戏IP（《赤色要塞》），存在侵权与误导风险。如已获得官方正版授权，请在游戏资质页面上传相关授权文件；如为同人/致敬作品，请修改游戏名称以避免直接套用原版IP名称。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "16:9宣传图画面构成较为简单，缺乏完整的场景与视觉包装，建议重新设计并丰富画面层次与细节以符合展示标准。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "竖版封面构图较为简陋，仅使用单色背景与简单模型拼贴，未能充分展现游戏的核心场景与风格特色，建议优化画面排版并丰富背景与视觉设计。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

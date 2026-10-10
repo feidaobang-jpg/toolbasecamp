@@ -1,0 +1,10 @@
+{
+  "source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "version": "web-rv-v0.29.1",
+  "runtime_sha256": "ba7aca6e8944d14466b85f62a23c412f9aabd35f9b129d78eb06c3f0c2d5ce09",
+  "server_deployed_sha": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "hash_verification": "SSH live runtime SHA256 matches merged local game.compat.js",
+  "public_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "qa": "qa/production/results.json",
+  "verified_at": "2026-10-08T11:44:17.464493+00:00"
+}

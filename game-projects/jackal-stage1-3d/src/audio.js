@@ -22,7 +22,7 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0);
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "stage.mp3", "ruins": "stage3.mp3", "boss": "boss.mp3"});
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "stage.mp3?v=bgmfull1", "ruins": "stage3.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1"});
   return ctx;
 }
 let fakeNow = null;   // 离线渲染时用游戏时间代替音频时钟

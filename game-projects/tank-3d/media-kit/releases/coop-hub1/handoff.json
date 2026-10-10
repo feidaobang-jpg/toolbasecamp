@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "game_id": "tank-3d-stage-1",
+  "version": "coop-hub1",
+  "base_version": "landscape-menu1",
+  "created_at": "2026-10-07T01:54:15.710139+00:00",
+  "classification": "正式版本",
+  "changes": [
+    "坦克作为统一房间基础，兼容旧坦克联机协议，2–4人合作与邀请链接。",
+    "统一网站联机大厅；保留游戏菜单入口，共用昵称、房间、密码、准备、邀请、分页与暂停/重开流程。"
+  ],
+  "build": {
+    "id": "coop-hub1",
+    "commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+    "dirty": false,
+    "entrypoint": "public/html/game/tank-3d/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "cooperative",
+      "status": "implemented",
+      "description": "坦克作为统一房间基础，兼容旧坦克联机协议，2–4人合作与邀请链接。"
+    }
+  ],
+  "media": [
+    {
+      "type": "published_video",
+      "bvid": "BV1TepK69Eet",
+      "url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "recorded_version": "landscape-menu1",
+      "scope": "双人房间码联机合作实战，未展示此后新增的统一跨游戏大厅",
+      "publication_record": "game-projects/tank-3d/video/online-20261007/work/publication-result.json"
+    }
+  ],
+  "qa": [
+    {
+      "method": "server/tests/test_coop_lobby.py + test_tank3d_lobby.py",
+      "result": "13 passed",
+      "scope": "旧坦克兼容、跨游戏隔离、输入裁剪、席位和动作权限、房间目录"
+    },
+    {
+      "method": "site-games/qa/coop-capacity.cjs",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/capacity-summary.json",
+      "scope": "最大席位、独立角色、横竖屏按钮、第二关（赤色/恐龙）、共享扣款（虫潮）、房主/队友离线"
+    },
+    {
+      "method": "two independent Edge browser contexts using exact Toy preview package, real keyboard and virtual joystick; desktop and mobile viewport simulation",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/qa/toy-preview-frame/qa.json"
+    },
+    {
+      "method": "published Toy core JS hash equals tested package",
+      "result": "passed",
+      "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json"
+    }
+  ],
+  "limitations": [
+    "暂不支持中途加入、断线重连和房主迁移",
+    "联机不写入单机存档/排行榜",
+    "手机横竖屏为Edge设备模拟，未做手机真机和多指触控验收"
+  ],
+  "site": {
+    "status": "public_verified",
+    "version": "coop-hub1",
+    "verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+    "evidence": "game-projects/site-games/media-kit/releases/coop-hub1/website.json",
+    "post_publication_entry_verification": {
+      "checked_at": "2026-10-07T03:05:33.706206+00:00",
+      "evidence": "game-projects/tank-3d/video/online-20261007/work/publish-entry-verification.json"
+    }
+  },
+  "toy": {
+    "id": 39043249461248,
+    "status": "published",
+    "version": "coop-hub1",
+    "package_sha256": "6f675c3835e94fcc724905214fd375a9907463831983ebf852d4bd4d1a30f8f7",
+    "file_hashes": {
+      "audio.js": "5e8bb41f1723cca52940035d41cf0f69f8e0555d2a0ec38f47e8ced0e8d05e39",
+      "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+      "coop-shared.js": "92621763250dc3678531c5825db9e4155604333e100ee79411260aba414d16b9",
+      "coop.js": "2a8709cdeb4bbdf31fcd499fb385b69a747c8ed54232e8deca08d5fc7f5622e1",
+      "drag-look.js": "b662e935a8849d59387fe8cf36494a0ef824d471323069ffcf90598e387aa0f0",
+      "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
+      "index.html": "d30e2ecfd32fe48a9b0272159ade9d40f38ed483059006e7574e4e81b2359bce",
+      "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
+      "main.js": "bc276df4f269f46e54e3db339977d8f88d139f79209ca10db8416a5dfa951dfb",
+      "scene.js": "364bb0ed72e20394ef7aeea3a2032e83ab740b8de5fc32e571a4093b800845ae",
+      "sim.js": "ff5b2f94123dbc581800f5b977d77f9f81ba62a38e1319e895c662b654dd22e5",
+      "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
+      "sounds/bullet_hit_2.mp3": "76004f25187fd2898cecbf657aa9d3aed46685b2d61d2e6ff7825ec137638937",
+      "sounds/bullet_shot.mp3": "cee289b8b5cfb42c4772a3a7a8072da7ef626470ffbe0d390720cdc25b11679d",
+      "sounds/explosion_1.mp3": "34df0f75fd4e65b67a82269fe2fe502c5c2a0136154b8ff875b51a88236ba2bf",
+      "sounds/explosion_2.mp3": "3502c677ec9d318015be16739150c1afc5487a8e9301a835e2e2d92052bc90c8",
+      "sounds/game_over.mp3": "d23197bd8ab662160ecba3d8fa9926f6c0c2e2431c0d327fc97275578a40375e",
+      "sounds/pause.mp3": "9308b7bcd60c7adb6fefd23e398d4e899e432212deb6297733e7d9227cc20f5e",
+      "sounds/powerup_appear.mp3": "608dd494f5cb66baded7f1bcab33acb34dcc2b136856a19c13de0c11218d8fda",
+      "sounds/powerup_pick.mp3": "786c9f41ab03438e7ba23a6878ee9d09bc03d0f18ae28c47f503914dfd8da80c",
+      "sounds/snow_slide.mp3": "10462c41c3c32a84196e4b4b18972e31c0b23f380fd9d5fc4a5ef4987e5b1d8c",
+      "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
+      "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
+      "style.css": "ca67cabfb67945af808a18390fe9e170e040a704360bc9c7d35f1436890e9178",
+      "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+    },
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_X0l2USEs/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AVDJkYmP/index.html",
+    "submitted_at": "2026-10-07T02:35:39+00:00",
+    "public_verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "public_runtime_evidence": "game-projects/site-games/media-kit/releases/coop-hub1/toy-public-runtime.json",
+    "public_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "video_bindings": [
+      "BV1TepK69Eet",
+      "BV1Wqaz6AEJb"
+    ]
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "record": "releases/coop-hub1/bilibili-sync.json",
+    "bvid": "BV1TepK69Eet",
+    "url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+    "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+    "public_verified_at": "2026-10-07T03:24:00+00:00",
+    "old_video_maintenance": "BV1Wqaz6AEJb description and new update comment publicly verified; comment pinned"
+  },
+  "taptap": {
+    "status": "reviewing",
+    "version": "coop-hub1",
+    "record": "releases/coop-hub1/taptap-build.json",
+    "package_sha256": "e846ccf62df9d37ff143e0b333291a2b723448193a8ebc8c820804f59baedbb2"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "ready",
+    "gaps": [
+      "本期双人联机成片已公开发布，网站与Toy的coop-hub1入口已核验；尚未补拍统一跨游戏大厅，手机真机与多指触控未验收。"
+    ]
+  }
+}

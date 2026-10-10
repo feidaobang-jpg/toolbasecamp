@@ -1,0 +1,11 @@
+{
+  "slot": "main",
+  "package": {
+    "type": "h5",
+    "id": "275356"
+  },
+  "expected": {
+    "h5_version_id": "274950",
+    "kind": "h5"
+  }
+}

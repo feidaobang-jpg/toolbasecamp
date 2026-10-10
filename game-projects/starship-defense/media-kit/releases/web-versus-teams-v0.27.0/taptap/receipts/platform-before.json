@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "app_platforms": {
+          "field_id": "app_platforms",
+          "filled": false,
+          "input_type": "select",
+          "label": "发布平台",
+          "options": [
+            "MOBILE",
+            "PC_OFFICIAL"
+          ],
+          "state": "required",
+          "value_labels": {
+            "MOBILE": "手机",
+            "PC_OFFICIAL": "电脑端-官方下载"
+          }
+        }
+      },
+      "module_id": "platform-status",
+      "revision": 0
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

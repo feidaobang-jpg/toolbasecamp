@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#3a2a5a">
-<meta name="description" content="街机恐龙快打（Cadillacs and Dinosaurs）第一关、第二关的 3D 重置版：杰克、汉娜、穆斯塔法、梅斯四位主角，从海上都市打到 Boss 维斯·T 和岩跳龙，再开着凯迪拉克闯沼泽森林——三角龙、熟睡的霸王龙、泥沼、链锤兵和 Boss 屠夫。电脑键盘与手机触屏均可游玩。">
-<title>恐龙快打 · 第一、二关 3D 重置版</title>
+<meta name="description" content="街机恐龙快打（Cadillacs and Dinosaurs）第一至三关的 3D 重制版：杰克、汉娜、穆斯塔法、梅斯四位主角，从海上都市打到 Boss 维斯·T 和岩跳龙，再开着凯迪拉克闯沼泽森林——三角龙、熟睡的霸王龙、泥沼、链锤兵和 Boss 屠夫；第三关地狱公路开车一路撞过去，对上骑摩托扔手雷的霍格。电脑键盘与手机触屏均可游玩。">
+<title>恐龙快打 · 第一至三关 3D 重制版</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=controls-inset1">
+<link rel="stylesheet" href="css/style.css?v=hellroad1">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" tabindex="-1">
+<div id="app" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="恐龙快打 3D 游戏画面"></canvas>
 
@@ -71,17 +71,18 @@
     <div id="menu" class="overlay title-screen">
       <div class="panel">
         <div class="brand">
-          <div class="kicker">CAPCOM 1993 街机经典 · 3D 重置版</div>
+          <div class="kicker">CAPCOM 1993 街机经典 · 3D 重制版</div>
           <h1 class="logo"><span class="l1">恐龙快打</span><span class="l2">Cadillacs and Dinosaurs</span></h1>
-          <div class="sub" id="menu-sub">第一关 · 海上都市　第二关 · 沼泽森林</div>
-          <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。第一关从大楼楼顶打到第 47 街，揍趴 Boss 维斯·T 和他的岩跳龙；第二关开着凯迪拉克进沼泽森林：躲开三角龙的冲撞，别让胖子吵醒睡着的霸王龙，蹚过齐腰深的泥沼，最后对上挥舞双刀的屠夫。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。菜单里可以直接选起始关卡。</p>
+          <div class="sub" id="menu-sub">第一关 · 海上都市　第二关 · 沼泽森林　第三关 · 地狱公路</div>
+          <p class="rules">2513 年的东海岸，偷猎恐龙的黑市团伙在海上都市作乱。第一关从大楼楼顶打到第 47 街，揍趴 Boss 维斯·T 和他的岩跳龙；第二关开着凯迪拉克进沼泽森林：躲开三角龙的冲撞，别让胖子吵醒睡着的霸王龙，蹚过齐腰深的泥沼，最后对上挥舞双刀的屠夫；第三关穿过死亡沙漠，开着凯迪拉克在地狱公路上一路撞过去，躲开霍格的手雷、用车把他连人带摩托撞翻。连打、抓投、冲刺攻击、捡枪捡刀全都有；默认无限命，倒下后原地复活。菜单里可以直接选起始关卡。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 攻击 · <kbd>K</kbd> 跳跃 · <kbd>U</kbd> 必杀 · <kbd>I</kbd> 冲刺（<kbd>L</kbd> 也行）<br><kbd>C</kbd> 切换视角 · <kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
-          <p class="help help-touch">左侧摇杆移动 · 右侧四键：下排 <b>J</b> 攻击、<b>K</b> 跳跃，上排 <b>U</b> 必杀、<b>I</b> 冲刺（点后推摇杆保持，回中停止） · 右上角 <b>C</b> 切换视角与暂停 · 按住画面拖动转视角</p>
-          <p class="help help-desktop">特殊技：<kbd>S</kbd>→<kbd>W</kbd>→<kbd>J</kbd>（下→上→攻击）</p>
-          <p class="help help-touch">特殊技：摇杆下→上→J；第一人称向右拖就是向右转头。</p>
-          <p class="help">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击<br>空手贴近敌人自动抓住，J 膝撞，反向＋J 投掷；冲锋枪按住 J 连射。</p>
+          <p class="help help-touch help-compact">左侧摇杆移动 · 右侧 <b>J</b> 攻击、<b>K</b> 跳跃、<b>U</b> 必杀、<b>I</b> 冲刺 · 完整操作和特殊技见暂停菜单</p>
+          <p class="help help-touch help-extra">左侧摇杆移动 · 右侧四键：下排 <b>J</b> 攻击、<b>K</b> 跳跃，上排 <b>U</b> 必杀、<b>I</b> 冲刺（点后推摇杆保持，回中停止） · 右上角 <b>C</b> 切换视角与暂停 · 按住画面拖动转视角</p>
+          <p class="help help-desktop help-extra">特殊技：<kbd>S</kbd>→<kbd>W</kbd>→<kbd>J</kbd>（下→上→攻击）</p>
+          <p class="help help-touch help-extra">特殊技：摇杆下→上→J；第一人称向右拖就是向右转头。</p>
+          <p class="help help-extra">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击<br>空手贴近敌人自动抓住：J 膝撞，上／下＋J 背摔（正视时左／右），反向＋J 往后扔；冲锋枪按住 J 连射。</p>
           <p class="hi">最高分 <span id="hi-val">50000</span></p>
-          <p class="legal">粉丝向非官方重置：3D 模型重新制作，音乐采用原版录音，缺项音效保留合成；《恐龙快打》（Cadillacs and Dinosaurs）原作版权归 Capcom 及原著方所有。</p>
+          <p class="legal">粉丝向非官方重制：3D 模型重新制作，音乐采用原版录音，缺项音效保留合成；《恐龙快打》（Cadillacs and Dinosaurs）原作版权归 Capcom 及原著方所有。</p>
         </div>
         <nav class="items" aria-label="主菜单">
           <button data-act="select" class="primary">开始游戏 <kbd>Enter</kbd></button>
@@ -95,7 +96,6 @@
           <button data-opt="touch"></button>
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -115,6 +115,9 @@
     <div id="pause" class="overlay" hidden>
       <div class="panel small">
         <h2>暂停</h2>
+        <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 攻击 · <kbd>K</kbd> 跳跃 · <kbd>U</kbd> 必杀 · <kbd>I</kbd> 冲刺 · <kbd>C</kbd> 切换视角 · 特殊技 <kbd>S</kbd>→<kbd>W</kbd>→<kbd>J</kbd></p>
+        <p class="help help-touch">摇杆移动 · J 攻击 · K 跳跃 · U 必杀 · I 冲刺（点后推摇杆保持）· 特殊技：摇杆下→上→J</p>
+        <p class="help">斜下踢：K 起跳后推方向＋J · 奔跑中 J 冲刺攻击 · 空手贴近敌人自动抓住：J 膝撞，上／下＋J 背摔（正视时左／右），反向＋J 往后扔；冲锋枪按住 J 连射。</p>
         <nav class="items" aria-label="暂停菜单">
           <button data-act="resume" class="primary">继续 <kbd>Esc</kbd></button>
           <button data-act="restart">重新开始</button>
@@ -125,7 +128,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -147,7 +149,6 @@
           <button data-act="restart" class="primary">再玩一次 <kbd>Enter</kbd></button>
           <button data-act="select">换个英雄</button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -160,9 +161,36 @@
 <script>
   window.addEventListener('error', function (e) {
     var el = document.getElementById('loading');
-    if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
+    if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
 </script>
-<script src="js/game.min.js?v=v055"></script>
+<script src="js/game.min.js?v=v0110-hellroad2"></script>
+<script type="module">
+// 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
+(function(){
+if(window.__landscapeTypingInstalled)return;window.__landscapeTypingInstalled=true;
+const COARSE_UA=/Android|iPhone|iPad|iPod|Mobile|HarmonyOS|OpenHarmony/i;
+const isTouch=()=>(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||COARSE_UA.test(navigator.userAgent||'');
+const HINT='键盘按竖屏方向弹出，建议先把手机转为横屏再输入';
+function showHint(text){let el=document.getElementById('landscape-typing-hint');
+ if(!el){el=document.createElement('div');el.id='landscape-typing-hint';el.setAttribute('role','status');
+  el.style.cssText='position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);z-index:2147483000;background:rgba(20,28,40,.92);color:#fff;font:14px/1.4 system-ui,sans-serif;padding:10px 16px;border-radius:10px;max-width:86vw;text-align:center;pointer-events:none;transition:opacity .3s;opacity:0';
+  document.body.appendChild(el);}
+ el.textContent=text;el.style.opacity='1';clearTimeout(showHint.timer);showHint.timer=setTimeout(()=>{el.style.opacity='0';},3000);}
+document.addEventListener('focusin',(e)=>{
+ const el=e.target;
+ if(!(el instanceof HTMLInputElement)&&!(el instanceof HTMLTextAreaElement))return;
+ if(el.disabled||el.readOnly||/^(checkbox|radio|button|submit|file|range|color)$/.test(el.type||'text'))return;
+ if(window.innerWidth>=window.innerHeight||!isTouch())return;
+ const fsEl=document.fullscreenElement||document.webkitFullscreenElement;
+ if(fsEl){try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>showHint(HINT));}catch{showHint(HINT);}return;}
+ const de=document.documentElement,req=de.requestFullscreen||de.webkitRequestFullscreen;
+ if(!req){showHint(HINT);return;}
+ try{Promise.resolve(req.call(de,{navigationUI:'hide'})).then(()=>{
+  try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{});}catch{}
+ },()=>showHint(HINT));}catch{showHint(HINT);}
+});
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{
+ "bvid": "BV18XHW66E55",
+ "version": "v0.9.3",
+ "classification": "说明纠正",
+ "reason": "v0.9.2 更新行写了「连招最后一下换成原版重击声」，该改动已撤回，需立即纠正；同时写入开场等改用原版音乐",
+ "old_desc_sha256": "8f6ce548f37022588bf1b5cc37cdc41e3eca19e03d58fbb6f54fe69ea157458f",
+ "new_desc_sha256": "278bdf4ec76b8a2257895a1bb49bfedf030b10e63f8b69098bebf08228b5b576",
+ "old_desc": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢，抓住敌人后上／下＋J背摔。\n更新（2026-10-07·v0.9.2）：加入原作开场——海边远景翼龙飞过，主角一记必杀震飞维斯的手下；新增背摔；连招最后一下换成原版重击声。仍支持2–4人联机合作；TapTap新版审核中。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+ "new_desc": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢，抓住敌人后上／下＋J背摔。\n更新（2026-10-07·v0.9.3）：加入原作开场——海边远景翼龙飞过，主角一记必杀震飞维斯的手下；新增背摔；开场、过关、续关都改用原版音乐。仍支持2–4人联机合作；TapTap新版审核中。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+ "method": "Edge 独立配置 + Playwright 创作中心编辑页，读回一致后立即投稿；持 account-write.lock",
+ "submitted_at": "2026-10-07T19:06:57+08:00",
+ "submit_result": "稿件投递成功",
+ "status": "public_verified",
+ "public_verified_at": "2026-10-07T19:07:15+08:00"
+}

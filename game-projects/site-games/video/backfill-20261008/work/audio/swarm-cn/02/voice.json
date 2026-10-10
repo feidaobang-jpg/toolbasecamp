@@ -1,0 +1,134 @@
+{
+  "text": "先选医疗兵出门。现在默认自动瞄准、自动攻击，走位更重要。靠近敌人，角色自己开火；需要拉开距离，就按空格冲刺。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "先",
+      "offset": 1000000,
+      "duration": 3500000
+    },
+    {
+      "text": "选医",
+      "offset": 4500000,
+      "duration": 4500000
+    },
+    {
+      "text": "疗兵",
+      "offset": 9125000,
+      "duration": 3125000
+    },
+    {
+      "text": "出门",
+      "offset": 12250000,
+      "duration": 5000000
+    },
+    {
+      "text": "现在",
+      "offset": 22875000,
+      "duration": 3875000
+    },
+    {
+      "text": "默认",
+      "offset": 26875000,
+      "duration": 3625000
+    },
+    {
+      "text": "自动",
+      "offset": 30750000,
+      "duration": 2625000
+    },
+    {
+      "text": "瞄准",
+      "offset": 33500000,
+      "duration": 4875000
+    },
+    {
+      "text": "自动",
+      "offset": 41125000,
+      "duration": 3500000
+    },
+    {
+      "text": "攻击",
+      "offset": 44750000,
+      "duration": 4250000
+    },
+    {
+      "text": "走位",
+      "offset": 51500000,
+      "duration": 3000000
+    },
+    {
+      "text": "更",
+      "offset": 54750000,
+      "duration": 1625000
+    },
+    {
+      "text": "重要",
+      "offset": 56375000,
+      "duration": 3875000
+    },
+    {
+      "text": "靠近",
+      "offset": 65875000,
+      "duration": 4000000
+    },
+    {
+      "text": "敌人",
+      "offset": 70000000,
+      "duration": 4750000
+    },
+    {
+      "text": "角色",
+      "offset": 77250000,
+      "duration": 3625000
+    },
+    {
+      "text": "自己",
+      "offset": 81125000,
+      "duration": 2125000
+    },
+    {
+      "text": "开火",
+      "offset": 83375000,
+      "duration": 5125000
+    },
+    {
+      "text": "需要",
+      "offset": 91875000,
+      "duration": 3000000
+    },
+    {
+      "text": "拉开",
+      "offset": 95000000,
+      "duration": 3250000
+    },
+    {
+      "text": "距离",
+      "offset": 98375000,
+      "duration": 5000000
+    },
+    {
+      "text": "就",
+      "offset": 105125000,
+      "duration": 1625000
+    },
+    {
+      "text": "按",
+      "offset": 106750000,
+      "duration": 1000000
+    },
+    {
+      "text": "空格",
+      "offset": 108000000,
+      "duration": 3125000
+    },
+    {
+      "text": "冲刺",
+      "offset": 111250000,
+      "duration": 4375000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

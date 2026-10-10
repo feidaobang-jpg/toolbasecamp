@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "dry_run": true,
+  "data": {
+    "appId": 962354,
+    "archive_preflight": {
+      "entry_count": 5,
+      "top_level_entries": [
+        "chongchao-qianshao"
+      ],
+      "violations": [],
+      "warnings": []
+    },
+    "developerId": 100726,
+    "filePath": "dist/taptap/chongchao-qianshao/chongchao-qianshao.zip",
+    "networkRequests": 0,
+    "nextStep": "rerun with --yes to execute upload-h5-package",
+    "operation": "upload-h5-package",
+    "requiresConfirmation": true,
+    "status": "preview"
+  }
+}

@@ -1,11 +1,181 @@
 [
-  {"id":"ref-map-1-1","purpose":"1-1 关卡布局的逐格依据（砖块、问号砖、水管、坑、台阶、敌人位置）","source_type":"reference","tool":null,"input":"https://ian-albert.com/games/super_mario_bros_maps/mario-1-1.gif","local_copy":"assets/reference/mario-1-1.gif（仅本机）","processing":"按 16 像素一格切分，与 TheVGLC 文本地图对照后手工录入 levels.js","usage":"public/html/game/mario-3d/levels.js build11"},
-  {"id":"ref-map-1-2","purpose":"1-2 关卡布局的逐格依据","source_type":"reference","tool":null,"input":"https://ian-albert.com/games/super_mario_bros_maps/mario-1-2.gif","local_copy":"assets/reference/mario-1-2.gif（仅本机）","processing":"TheVGLC 的 1-2 文本地图有缺失，改用截图按格分类后录入","usage":"public/html/game/mario-3d/levels.js build12"},
-  {"id":"ref-vglc","purpose":"原作地图的文本版（辅助核对）","source_type":"reference","tool":null,"input":"https://raw.githubusercontent.com/TheVGLC/TheVGLC/master/Super%20Mario%20Bros/Processed/mario-1-1.txt 与 mario-1-2.txt","local_copy":"assets/reference/mario-1-1.txt、mario-1-2.txt（仅本机）","processing":"对照用","usage":"levels.js"},
-  {"id":"ref-mariowiki","purpose":"道具位置、奖励房间、隐藏 1UP、传送区说明","source_type":"reference","tool":null,"input":"https://www.mariowiki.com/World_1-1_(Super_Mario_Bros.) ; https://www.mariowiki.com/World_1-2_(Super_Mario_Bros.)","processing":"文字核对；1-1/1-2 奖励房间与 1-2 出口地面区只有文字描述，布局为推测还原","usage":"levels.js"},
-  {"id":"tiles-procedural","purpose":"地面、砖块、问号砖、硬块、空砖、升降台、旗子与城堡星旗的像素纹理","source_type":"procedural","tool":"Canvas 2D","input":"textures.js","processing":"16×16 像素按原作配色绘制，NearestFilter 放大；地下关换蓝色调","usage":"public/html/game/mario-3d/textures.js"},
-  {"id":"models-procedural","purpose":"玛丽（小/大/火焰）、栗宝宝、绿/红乌龟、食人花、蘑菇、1UP、火焰花、无敌星、金币、火球","source_type":"procedural","tool":"Three.js","input":"models.js","processing":"球体、方块、圆柱组合，按原作造型与配色","usage":"public/html/game/mario-3d/models.js"},
-  {"id":"scene-procedural","purpose":"体素跑道、纵向 3 根水管、城堡、远景山丘灌木云、地下砖墙与遮挡淡化","source_type":"procedural","tool":"Three.js","input":"scene.js","processing":"InstancedMesh 实例化方块；自定义着色器做网点淡化与地下剖面","usage":"public/html/game/mario-3d/scene.js"},
-  {"id":"audio-resynth","purpose":"地面、地下、无敌星音乐，过关、死亡、GAME OVER、催促、1UP 等短曲与音效","source_type":"procedural","tool":"Web Audio API","input":"audio.js","processing":"按公开乐谱转写的音符用方波/三角波实时重新合成，无敌星音乐为近似还原；不加载原始音频文件","usage":"public/html/game/mario-3d/audio.js"},
-  {"id":"three-vendor","purpose":"WebGL 渲染","source_type":"licensed","tool":"Three.js 0.170.0（MIT）","input":"public/vendor/three/0.170.0/build/three.module.js","processing":"仓库已固定版本，three.js 包装模块转出","usage":"public/html/game/mario-3d/three.js"}
+  {
+    "id": "ref-map-1-1",
+    "purpose": "1-1 关卡布局的逐格依据（砖块、问号砖、水管、坑、台阶、敌人位置）",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://ian-albert.com/games/super_mario_bros_maps/mario-1-1.gif",
+    "local_copy": "assets/reference/mario-1-1.gif（仅本机）",
+    "processing": "按 16 像素一格切分，与 TheVGLC 文本地图对照后手工录入 levels.js",
+    "usage": "public/html/game/mario-3d/levels.js build11"
+  },
+  {
+    "id": "ref-map-1-2",
+    "purpose": "1-2 关卡布局的逐格依据",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://ian-albert.com/games/super_mario_bros_maps/mario-1-2.gif",
+    "local_copy": "assets/reference/mario-1-2.gif（仅本机）",
+    "processing": "TheVGLC 的 1-2 文本地图有缺失，改用截图按格分类后录入",
+    "usage": "public/html/game/mario-3d/levels.js build12"
+  },
+  {
+    "id": "ref-vglc",
+    "purpose": "原作地图的文本版（辅助核对）",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://raw.githubusercontent.com/TheVGLC/TheVGLC/master/Super%20Mario%20Bros/Processed/mario-1-1.txt 与 mario-1-2.txt",
+    "local_copy": "assets/reference/mario-1-1.txt、mario-1-2.txt（仅本机）",
+    "processing": "对照用",
+    "usage": "levels.js"
+  },
+  {
+    "id": "ref-mariowiki",
+    "purpose": "道具位置、奖励房间、隐藏 1UP、传送区说明",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://www.mariowiki.com/World_1-1_(Super_Mario_Bros.) ; https://www.mariowiki.com/World_1-2_(Super_Mario_Bros.)",
+    "processing": "文字核对；1-1/1-2 奖励房间与 1-2 出口地面区只有文字描述，布局为推测还原",
+    "usage": "levels.js"
+  },
+  {
+    "id": "tiles-procedural",
+    "purpose": "地面、砖块、问号砖、硬块、空砖、升降台、旗子与城堡星旗的像素纹理",
+    "source_type": "procedural",
+    "tool": "Canvas 2D",
+    "input": "textures.js",
+    "processing": "16×16 像素按原作配色绘制，NearestFilter 放大；地下关换蓝色调",
+    "usage": "public/html/game/mario-3d/textures.js"
+  },
+  {
+    "id": "models-procedural",
+    "purpose": "玛丽（小/大/火焰）、栗宝宝、绿/红乌龟、食人花、蘑菇、1UP、火焰花、无敌星、金币、火球",
+    "source_type": "procedural",
+    "tool": "Three.js",
+    "input": "models.js",
+    "processing": "球体、方块、圆柱组合，按原作造型与配色",
+    "usage": "public/html/game/mario-3d/models.js"
+  },
+  {
+    "id": "scene-procedural",
+    "purpose": "体素跑道、纵向 3 根水管、城堡、远景山丘灌木云、地下砖墙与遮挡淡化",
+    "source_type": "procedural",
+    "tool": "Three.js",
+    "input": "scene.js",
+    "processing": "InstancedMesh 实例化方块；自定义着色器做网点淡化与地下剖面",
+    "usage": "public/html/game/mario-3d/scene.js"
+  },
+  {
+    "id": "audio-resynth",
+    "purpose": "地面、地下、无敌星音乐，过关、死亡、GAME OVER、催促、1UP 等短曲与音效",
+    "source_type": "procedural",
+    "tool": "Web Audio API",
+    "input": "audio.js",
+    "processing": "按公开乐谱转写的音符用方波/三角波实时重新合成，无敌星音乐为近似还原；不加载原始音频文件",
+    "usage": "public/html/game/mario-3d/audio.js"
+  },
+  {
+    "id": "three-vendor",
+    "purpose": "WebGL 渲染",
+    "source_type": "licensed",
+    "tool": "Three.js 0.170.0（MIT）",
+    "input": "public/vendor/three/0.170.0/build/three.module.js",
+    "processing": "仓库已固定版本，three.js 包装模块转出",
+    "usage": "public/html/game/mario-3d/three.js"
+  },
+  {
+    "id": "entry-cutscene-v2.4.7",
+    "purpose": "1-1通关到1-2地下的钻管衔接",
+    "source_type": "reference",
+    "input": "https://www.mariowiki.com/World_1-2_(Super_Mario_Bros.) ; 用户反馈缺失地面钻管动画",
+    "processing": "地下入场从屋顶落下按已有路线保留；地面横管、场景距离与约4秒动作是本版三维适配，非逐帧还原。",
+    "usage": "levels.js entry area, world.js updateEntrance; 复用现有模型与声音"
+  },
+  {
+    "id": "ref-map-1-3",
+    "purpose": "原作 WORLD 1-3 树冠、金币、道具、浮台、敌人、阶梯与城堡布局",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://themushroomkingdom.net/maps/smb/1-3",
+    "original_image": "https://themushroomkingdom.net/images/maps/smb/smb_1-3.png",
+    "local_copy": "D:/project/task-artifacts/mario-stage3-preview-20261007/references/original-1-3.png",
+    "processing": "2624×240 地图按16px每格，与原作者实现坐标交叉核对；仅开发参考，不打包原图",
+    "usage": "public/html/game/mario-3d/levels.js build13"
+  },
+  {
+    "id": "ref-world13-coordinates",
+    "purpose": "原作者 World13 地图坐标交叉核对",
+    "source_type": "reference",
+    "input": "https://github.com/timmywil/FullScreenMario/blob/master/Maps/World13.js",
+    "processing": "原实现8单位换算成本工程1格，手工录入数据；现有3D碰撞/手感下浮台及飞行时序近似，不复制引擎代码",
+    "usage": "levels.js build13"
+  },
+  {
+    "id": "treetops-wings-procedural",
+    "purpose": "第三关树冠/树干/枝条、飞行乌龟翅膀与大城堡",
+    "source_type": "procedural",
+    "tool": "Three.js 0.170.0",
+    "input": "scene.js buildTrees/buildCastle；models.js koopa",
+    "processing": "实例化平顶树冠与低模圆润叶缘，圆柱树干放跑道后侧，奶油色羽片随飞行摆动，沿用玛丽自然色哑光材质",
+    "usage": "public/html/game/mario-3d/scene.js、models.js",
+    "version": "v2.5.0-preview1"
+  },
+  {
+    "id": "original-audio-current",
+    "purpose": "当前地面/地下/无敌星 BGM 及常用音效",
+    "source_type": "reference",
+    "input": "沿用 v2.4.6，详细出处见 game-projects/site-games/releases/bgm-full-20261007/audio-sources.json",
+    "processing": "第三关复用完整 overworld.mp3，不修改或截断音源；audio-resynth 为历史来源兼加载失败回退",
+    "usage": "audio.js/SampleAudio"
+  },
+  {
+    "id": "ref-map-1-4",
+    "purpose": "原作 WORLD 1-4 逐格地形、岩浆坑、火棒轴心、隐藏砖、桥、斧头、蘑菇人位置",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://themushroomkingdom.net/images/maps/smb/smb_1-4.png ; https://ian-albert.com/games/super_mario_bros_maps/mario-1-4.gif",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/references/",
+    "processing": "2560×240，16 像素一格逐格读出并与坐标源码交叉核对；只作参考，不入库",
+    "usage": "public/html/game/mario-3d/levels.js build14"
+  },
+  {
+    "id": "ref-world14-coordinates",
+    "purpose": "1-4 坐标、火棒长度 / 转速 / 初始角、库巴移动与喷火计时、斧头演出顺序",
+    "source_type": "reference",
+    "tool": null,
+    "input": "https://github.com/timmywil/FullScreenMario/blob/master/Maps/World14.js ; maps.js ; things.js",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/references/",
+    "processing": "8 单位 = 1 格换算；数值按本工程手感换算并记入 restoration.md",
+    "usage": "levels.js build14, world.js 城堡段"
+  },
+  {
+    "id": "ref-footage-1-4",
+    "purpose": "核对火棒转向与转速、库巴跳跃、斧头后演出、结尾计时与分数",
+    "source_type": "reference",
+    "tool": "yt-dlp + ffmpeg 抽帧",
+    "input": "https://www.youtube.com/watch?v=5j4nHkZFizo 3:05–3:48",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/footage/",
+    "processing": "每秒 1 帧 / 0.2 秒一帧联系表；只作参考，不入库",
+    "usage": "restoration.md 的核对项"
+  },
+  {
+    "id": "castle-audio",
+    "purpose": "1-4 城堡背景乐",
+    "source_type": "original_game_recording",
+    "tool": "ffmpeg",
+    "input": "zophar NSF 7 - Bowser's Castle.mp3",
+    "local_copy": "D:/project/task-artifacts/mario-stage4-20261010/audio/7-bowsers-castle.mp3",
+    "processing": "完整时长，单声道 32 kHz 96 kbps，未加增益",
+    "usage": "public/html/game/mario-3d/sounds/castle.mp3",
+    "record": "releases/v2.6.0-preview1/audio-sources.json"
+  },
+  {
+    "id": "castle-procedural",
+    "purpose": "城堡石、岩浆贴图，库巴、火焰、蘑菇人、斧头、吊桥、铁链、火棒火球模型",
+    "source_type": "procedural",
+    "tool": null,
+    "input": null,
+    "processing": "程序化 Canvas 贴图与球 / 方块 / 圆柱 / 圆锥组合低模，自然色哑光画风，与前三关一致",
+    "usage": "textures.js castleStone / lavaTexture；models.js bowser / bowserFlame / toad / axe；scene.js buildCastleInterior"
+  }
 ]

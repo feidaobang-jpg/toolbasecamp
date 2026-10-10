@@ -1,0 +1,1151 @@
+{
+  "method": "headless Edge, real mouse / CDP touch with rotated logical coordinates; isolated controller timing; no physical phone",
+  "results": [
+    {
+      "name": "desktop third drag response",
+      "ok": false,
+      "detail": {
+        "turn": 0.1799227666777701,
+        "firstStep": 0.02617993877991494,
+        "pending": 0.02007723332222988,
+        "key": 1.5707963267948954
+      }
+    },
+    {
+      "name": "desktop third keyboard speed",
+      "ok": false,
+      "detail": {
+        "turn": 0.1799227666777701,
+        "firstStep": 0.02617993877991494,
+        "pending": 0.02007723332222988,
+        "key": 1.5707963267948954
+      }
+    },
+    {
+      "name": "desktop first drag response",
+      "ok": false,
+      "detail": {
+        "turn": 0.1713021417324643,
+        "firstStep": 0.017453292519943292,
+        "pending": 0.028697858267535705,
+        "key": 1.0471975511965987
+      }
+    },
+    {
+      "name": "desktop first keyboard speed",
+      "ok": false,
+      "detail": {
+        "turn": 0.1713021417324643,
+        "firstStep": 0.017453292519943292,
+        "pending": 0.028697858267535705,
+        "key": 1.0471975511965987
+      }
+    },
+    {
+      "name": "desktop preset 0 right drag",
+      "ok": false,
+      "detail": {
+        "dot": 0.3979553722717634,
+        "turn": -0.47817098468445013
+      }
+    },
+    {
+      "name": "desktop preset 0 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.4691005456616022
+      }
+    },
+    {
+      "name": "desktop preset 0 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.008435036342438203,
+          -0.36765888937108904,
+          0.9299224651702522
+        ],
+        "after": [
+          -0.00002092714706220617,
+          -0.503412056534162,
+          0.8640464691774975
+        ]
+      }
+    },
+    {
+      "name": "desktop preset 1 right drag",
+      "ok": false,
+      "detail": {
+        "dot": 0.34666044772883015,
+        "turn": -0.4773610583469952
+      }
+    },
+    {
+      "name": "desktop preset 1 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.46754635557026525
+      }
+    },
+    {
+      "name": "desktop preset 1 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.008525295027934376,
+          -0.4954458490943092,
+          0.8685969893799458
+        ],
+        "after": [
+          -0.000019113170044459594,
+          -0.6198810801961953,
+          0.7846957665550929
+        ]
+      }
+    },
+    {
+      "name": "desktop preset 2 right drag",
+      "ok": false,
+      "detail": {
+        "dot": 0.058764395098966804,
+        "turn": -0.47733560790112173
+      }
+    },
+    {
+      "name": "desktop preset 2 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.4673709700386368
+      }
+    },
+    {
+      "name": "desktop preset 2 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.0035637665167868823,
+          -0.9338567516961643,
+          0.3576295106387365
+        ],
+        "after": [
+          -0.000005665351053170477,
+          -0.9769015275715769,
+          0.21368997495489464
+        ]
+      }
+    },
+    {
+      "name": "desktop preset 3 right drag",
+      "ok": false,
+      "detail": {
+        "dot": 0.4354052375080064,
+        "turn": -0.4776915421493266
+      }
+    },
+    {
+      "name": "desktop preset 3 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.46852820899062486
+      }
+    },
+    {
+      "name": "desktop preset 3 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.008917490035239286,
+          -0.23002545392896975,
+          0.9731437555244564
+        ],
+        "after": [
+          -0.000027958827538131837,
+          -0.37421364669229873,
+          0.9273425180846372
+        ]
+      }
+    },
+    {
+      "name": "desktop preset 4 right drag",
+      "ok": false,
+      "detail": {
+        "dot": 0.30180791076312985,
+        "turn": -0.4784972171541073
+      }
+    },
+    {
+      "name": "desktop preset 4 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.46880566114531774
+      }
+    },
+    {
+      "name": "desktop preset 4 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.007846262127771722,
+          -0.5869675714609309,
+          0.8095724218523498
+        ],
+        "after": [
+          -0.000017130506594691076,
+          -0.7010737678346299,
+          0.7130887544763984
+        ]
+      }
+    },
+    {
+      "name": "desktop preset 5 right drag",
+      "ok": false,
+      "detail": {
+        "dot": 0.4390104246940511,
+        "turn": -0.45449699082928263
+      }
+    },
+    {
+      "name": "desktop preset 5 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.4254885229413343
+      }
+    },
+    {
+      "name": "desktop preset 5 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.029004399664000636,
+          0,
+          0.9995792838990468
+        ],
+        "after": [
+          -0.00007103746411972206,
+          -0.14708459196637694,
+          0.9891239142593626
+        ]
+      }
+    },
+    {
+      "name": "desktop left blank area responds",
+      "ok": false,
+      "detail": {
+        "turn": -0.4778451236445494
+      }
+    },
+    {
+      "name": "desktop pause clears queued input",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.805340183535037,
+          "forward": [
+            -0.42765800518002417,
+            -0.3676588893710891,
+            0.8257939038718193
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.805340183535037,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.805340183535037,
+          "forward": [
+            -0.42765800518002417,
+            -0.3676588893710891,
+            0.8257939038718193
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.805340183535037,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "name": "desktop preset clears raw and queued input",
+      "ok": false,
+      "detail": {
+        "a": {
+          "yaw": 5.7951300074108705,
+          "forward": [
+            -0.40731267322945386,
+            -0.4954458490943092,
+            0.7672221300522395
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.7951300074108705,
+          "pending": 0.3897898238758332
+        },
+        "b": {
+          "yaw": 5.480451383842123,
+          "forward": [
+            -0.6247755555773266,
+            -0.4954458490943091,
+            0.6034806672696831
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.480451383842123,
+          "pending": 0.07511120030709595
+        }
+      }
+    },
+    {
+      "name": "desktop mode switch preserves progress and clears input",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.475317398331553,
+          "forward": [
+            -0.6278655691297148,
+            -0.49544584909430917,
+            0.60026513951473
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.475317398331553,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.475317398331553,
+          "forward": [
+            -0.6278655691297148,
+            -0.49544584909430917,
+            0.60026513951473
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.475317398331553,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "name": "desktop moving and turning together",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.475317398331553,
+          "forward": [
+            -0.6278655691297148,
+            -0.49544584909430917,
+            0.60026513951473
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.475317398331553,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.130880719147225,
+          "forward": [
+            -0.7936778240500207,
+            -0.4954458490943092,
+            0.3529998898391381
+          ],
+          "pos": [
+            -2.016423911340007,
+            0,
+            71.43087757830972
+          ],
+          "heading": 5.130880719147225,
+          "pending": 0.14306206196557403
+        }
+      }
+    },
+    {
+      "name": "desktop runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "landscape third drag response",
+      "ok": false,
+      "detail": {
+        "turn": 0.1799227666777701,
+        "firstStep": 0.02617993877991494,
+        "pending": 0.02007723332222988,
+        "key": 1.5707963267948954
+      }
+    },
+    {
+      "name": "landscape third keyboard speed",
+      "ok": false,
+      "detail": {
+        "turn": 0.1799227666777701,
+        "firstStep": 0.02617993877991494,
+        "pending": 0.02007723332222988,
+        "key": 1.5707963267948954
+      }
+    },
+    {
+      "name": "landscape first drag response",
+      "ok": false,
+      "detail": {
+        "turn": 0.1713021417324643,
+        "firstStep": 0.017453292519943292,
+        "pending": 0.028697858267535705,
+        "key": 1.0471975511965987
+      }
+    },
+    {
+      "name": "landscape first keyboard speed",
+      "ok": false,
+      "detail": {
+        "turn": 0.1713021417324643,
+        "firstStep": 0.017453292519943292,
+        "pending": 0.028697858267535705,
+        "key": 1.0471975511965987
+      }
+    },
+    {
+      "name": "landscape preset 0 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.535350146167409,
+        "turn": -0.6675015993405291
+      }
+    },
+    {
+      "name": "landscape preset 0 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6560935183434786
+      }
+    },
+    {
+      "name": "landscape preset 0 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.01060883710302461,
+          -0.36765888937108904,
+          0.9299002062811572
+        ],
+        "after": [
+          -0.00000837255759747782,
+          -0.5215232396854546,
+          0.8532370774866079
+        ]
+      }
+    },
+    {
+      "name": "landscape preset 1 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.4687228270824058,
+        "turn": -0.6702843518789854
+      }
+    },
+    {
+      "name": "landscape preset 1 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6563828693554807
+      }
+    },
+    {
+      "name": "landscape preset 1 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.012074978537371866,
+          -0.4954458490943092,
+          0.8685548949309659
+        ],
+        "after": [
+          -0.000007478746526141298,
+          -0.6361048310497601,
+          0.7716026463531758
+        ]
+      }
+    },
+    {
+      "name": "landscape preset 2 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.0795628812697046,
+        "turn": -0.6713131767500384
+      }
+    },
+    {
+      "name": "landscape preset 2 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.661569018439895
+      }
+    },
+    {
+      "name": "landscape preset 2 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.0034849164363964344,
+          -0.9338567516961643,
+          0.35763028768397087
+        ],
+        "after": [
+          -0.000001865518530877114,
+          -0.9811157793328769,
+          0.1934213730190166
+        ]
+      }
+    },
+    {
+      "name": "landscape preset 3 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.5869438288743198,
+        "turn": -0.668405087634284
+      }
+    },
+    {
+      "name": "landscape preset 3 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6558585082952533
+      }
+    },
+    {
+      "name": "landscape preset 3 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.012209817611736009,
+          -0.2300254539289699,
+          0.9731080160489172
+        ],
+        "after": [
+          -0.00000869228082229978,
+          -0.3940407032753149,
+          0.9190929899018594
+        ]
+      }
+    },
+    {
+      "name": "landscape preset 4 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.40754463472557084,
+        "turn": -0.6709882345771023
+      }
+    },
+    {
+      "name": "landscape preset 4 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6544459913977256
+      }
+    },
+    {
+      "name": "landscape preset 4 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.013392162030856452,
+          -0.5869675714609309,
+          0.8094996726678747
+        ],
+        "after": [
+          -0.000008044556028376236,
+          -0.715785132843932,
+          0.6983205879357132
+        ]
+      }
+    },
+    {
+      "name": "landscape preset 5 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.5662663057486325,
+        "turn": -0.601968808456981
+      }
+    },
+    {
+      "name": "landscape preset 5 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.5475577524927182
+      }
+    },
+    {
+      "name": "landscape preset 5 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.054384212044945604,
+          0,
+          0.9985200836639442
+        ],
+        "after": [
+          -0.000032386346595815915,
+          -0.16725052787033826,
+          0.9859144282736803
+        ]
+      }
+    },
+    {
+      "name": "landscape left blank area responds",
+      "ok": false,
+      "detail": {
+        "turn": 0
+      }
+    },
+    {
+      "name": "landscape pause clears queued input",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 0,
+          "forward": [
+            0,
+            -0.36765888937108937,
+            0.9299607201739315
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 6.283152458135435,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 0,
+          "forward": [
+            0,
+            -0.36765888937108937,
+            0.9299607201739315
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 6.283152458135435,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "name": "landscape preset clears raw and queued input",
+      "ok": false,
+      "detail": {
+        "a": {
+          "yaw": 6.273884759797983,
+          "forward": [
+            -0.008078700092474867,
+            -0.4954458490943092,
+            0.8686012578968759
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 6.273884759797983,
+          "pending": 0.39073230166254747
+        },
+        "b": {
+          "yaw": 5.957904698270973,
+          "forward": [
+            -0.2775949858351097,
+            -0.49544584909430933,
+            0.8230883515482553
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.957904698270973,
+          "pending": 0.07475224013554686
+        }
+      }
+    },
+    {
+      "name": "landscape mode switch preserves progress and clears input",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.957904698270973,
+          "forward": [
+            -0.2775949858351097,
+            -0.49544584909430933,
+            0.8230883515482553
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.957904698270973,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.957904698270973,
+          "forward": [
+            -0.2775949858351097,
+            -0.49544584909430933,
+            0.8230883515482553
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.957904698270973,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "name": "landscape moving and turning together",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.957904698270973,
+          "forward": [
+            -0.2775949858351097,
+            -0.49544584909430933,
+            0.8230883515482553
+          ],
+          "pos": [
+            -0.020644525172866766,
+            0,
+            70.06121244640609
+          ],
+          "heading": -0.3252806089086138,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.439628112027165,
+          "forward": [
+            -0.6488842343550407,
+            -0.495445849094309,
+            0.5774795762801413
+          ],
+          "pos": [
+            -1.9863246890331099,
+            0,
+            73.3014894045232
+          ],
+          "heading": -0.8435571951524212,
+          "pending": 0.1642235352479738
+        }
+      }
+    },
+    {
+      "name": "landscape runtime errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "portrait third drag response",
+      "ok": false,
+      "detail": {
+        "turn": 0.1799227666777701,
+        "firstStep": 0.02617993877991494,
+        "pending": 0.02007723332222988,
+        "key": 1.5707963267948954
+      }
+    },
+    {
+      "name": "portrait third keyboard speed",
+      "ok": false,
+      "detail": {
+        "turn": 0.1799227666777701,
+        "firstStep": 0.02617993877991494,
+        "pending": 0.02007723332222988,
+        "key": 1.5707963267948954
+      }
+    },
+    {
+      "name": "portrait first drag response",
+      "ok": false,
+      "detail": {
+        "turn": 0.1713021417324643,
+        "firstStep": 0.017453292519943292,
+        "pending": 0.028697858267535705,
+        "key": 1.0471975511965987
+      }
+    },
+    {
+      "name": "portrait first keyboard speed",
+      "ok": false,
+      "detail": {
+        "turn": 0.1713021417324643,
+        "firstStep": 0.017453292519943292,
+        "pending": 0.028697858267535705,
+        "key": 1.0471975511965987
+      }
+    },
+    {
+      "name": "portrait preset 0 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.5362919278829796,
+        "turn": -0.6688889428583773
+      }
+    },
+    {
+      "name": "portrait preset 0 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6544512479328796
+      }
+    },
+    {
+      "name": "portrait preset 0 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.013426022723453203,
+          -0.36765888937108904,
+          0.92986379808026
+        ],
+        "after": [
+          -0.000010595173458573755,
+          -0.5216368042096292,
+          0.8531676531501339
+        ]
+      }
+    },
+    {
+      "name": "portrait preset 1 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.4664810313911785,
+        "turn": -0.6664986359448515
+      }
+    },
+    {
+      "name": "portrait preset 1 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6557359319078877
+      }
+    },
+    {
+      "name": "portrait preset 1 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.009348722114296515,
+          -0.4954458490943091,
+          0.8685885170839233
+        ],
+        "after": [
+          -0.000008822724412226366,
+          -0.636129003081888,
+          0.7715827184172822
+        ]
+      }
+    },
+    {
+      "name": "portrait preset 2 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.07951823962192178,
+        "turn": -0.6708675320802338
+      }
+    },
+    {
+      "name": "portrait preset 2 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6567433863807253
+      }
+    },
+    {
+      "name": "portrait preset 2 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.0050512941503123646,
+          -0.9338567516961642,
+          0.3576115934067234
+        ],
+        "after": [
+          -0.0000018046686370488241,
+          -0.9812971604335002,
+          0.19249904654800962
+        ]
+      }
+    },
+    {
+      "name": "portrait preset 3 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.5887901497231905,
+        "turn": -0.6708915311145633
+      }
+    },
+    {
+      "name": "portrait preset 3 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6571877411342228
+      }
+    },
+    {
+      "name": "portrait preset 3 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.013335900136415012,
+          -0.23002545392896975,
+          0.9730932351590585
+        ],
+        "after": [
+          -0.000010094079634839059,
+          -0.3938491200100266,
+          0.9191751033211446
+        ]
+      }
+    },
+    {
+      "name": "portrait preset 4 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.40630137427174284,
+        "turn": -0.6685687850455226
+      }
+    },
+    {
+      "name": "portrait preset 4 left drag",
+      "ok": true,
+      "detail": {
+        "turn": 0.6593080246966245
+      }
+    },
+    {
+      "name": "portrait preset 4 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.0074975011247834745,
+          -0.586967571460931,
+          0.8095757268657089
+        ],
+        "after": [
+          -0.000006873720991788087,
+          -0.7154843951031612,
+          0.6986287142084953
+        ]
+      }
+    },
+    {
+      "name": "portrait preset 5 right drag",
+      "ok": true,
+      "detail": {
+        "dot": 0.5441800438593206,
+        "turn": -0.5754114661457594
+      }
+    },
+    {
+      "name": "portrait preset 5 left drag",
+      "ok": false,
+      "detail": {
+        "turn": 0.5020334738745387
+      }
+    },
+    {
+      "name": "portrait preset 5 vertical drag",
+      "ok": true,
+      "detail": {
+        "before": [
+          -0.07331216144533685,
+          0,
+          0.9973090428669606
+        ],
+        "after": [
+          -0.00006222967160032126,
+          -0.16702778150300424,
+          0.985952187650929
+        ]
+      }
+    },
+    {
+      "name": "portrait left blank area responds",
+      "ok": false,
+      "detail": {
+        "turn": 0
+      }
+    },
+    {
+      "name": "portrait pause clears queued input",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 0,
+          "forward": [
+            0,
+            -0.36765888937108937,
+            0.9299607201739315
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 6.2831221908618815,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 0,
+          "forward": [
+            0,
+            -0.36765888937108937,
+            0.9299607201739315
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 6.2831221908618815,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "name": "portrait preset clears raw and queued input",
+      "ok": false,
+      "detail": {
+        "a": {
+          "yaw": 6.2831221908618815,
+          "forward": [
+            0,
+            -0.36765888937108937,
+            0.9299607201739315
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 6.2831221908618815,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.958232571736399,
+          "forward": [
+            -0.2773251020889,
+            -0.4954458490943092,
+            0.8231793233352016
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.958232571736399,
+          "pending": 0.07511038087452526
+        }
+      }
+    },
+    {
+      "name": "portrait mode switch preserves progress and clears input",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.958232571736399,
+          "forward": [
+            -0.2773251020889,
+            -0.4954458490943092,
+            0.8231793233352016
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.958232571736399,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.958232571736399,
+          "forward": [
+            -0.2773251020889,
+            -0.4954458490943092,
+            0.8231793233352016
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.958232571736399,
+          "pending": 0
+        }
+      }
+    },
+    {
+      "name": "portrait moving and turning together",
+      "ok": true,
+      "detail": {
+        "a": {
+          "yaw": 5.958232571736399,
+          "forward": [
+            -0.2773251020889,
+            -0.4954458490943092,
+            0.8231793233352016
+          ],
+          "pos": [
+            0,
+            0,
+            70
+          ],
+          "heading": 5.958232571736399,
+          "pending": 0
+        },
+        "b": {
+          "yaw": 5.486169696393336,
+          "forward": [
+            -0.6213144685392101,
+            -0.4954458490943092,
+            0.6070434430904085
+          ],
+          "pos": [
+            -1.6917618287611627,
+            0,
+            72.86616262966868
+          ],
+          "heading": -0.7970156107862503,
+          "pending": 0.21043724614872444
+        }
+      }
+    },
+    {
+      "name": "portrait runtime errors",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}

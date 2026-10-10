@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>游戏投票榜 — 百宝箱</title>
-    <meta name="description" content="给你爱玩的自研游戏投票，写下想玩的游戏愿望，榜单决定我们优先优化哪几款。">
+    <meta name="description" content="给你爱玩的自研游戏投票，写下想玩的游戏愿望，查看已兑现的愿望并直接试玩。">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/base.css?v=nosTW1">
     <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
     <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
-    <link rel="stylesheet" href="css/game-vote.css?v=vote-layout4">
+    <link rel="stylesheet" href="css/game-vote.css?v=wish-fulfilled1">
 </head>
 <body id="top" class="site-page site-page--hub">
     <header class="site-header site-header--shrink">
@@ -32,7 +32,7 @@
             <div class="gv-wrap">
                 <div class="gv-page-head">
                     <h2 data-i18n="gameVote.title">游戏投票榜</h2>
-                    <p data-i18n="gameVote.subtitle">自研游戏你最爱玩哪个、想让我们接着做什么，投一票，榜单决定优化顺序。</p>
+                    <p data-i18n="gameVote.subtitle">给喜欢的游戏投票，写下游戏愿望，也看看哪些愿望已经能玩。</p>
                 </div>
 
                 <div class="tip-box gv-rules">
@@ -81,7 +81,11 @@
 
                     <section id="gv-wish-board" class="gv-card">
                         <h3 data-i18n="gameVote.wishBoardTitle">愿望单 · 想玩这些</h3>
-                        <p class="gv-desc" data-i18n="gameVote.wishBoardDesc">网友自己填的愿望，票多的优先安排复刻或新做。</p>
+                        <p class="gv-desc" data-i18n="gameVote.wishBoardDesc">票数作为选题线索，结合玩法、工作量和试玩反馈安排。已兑现的愿望保留原需求与票数，已投票可撤回改投。</p>
+                        <div class="action-row gv-progress-tabs" role="group" aria-label="愿望进度">
+                            <button type="button" class="tb-btn" data-wish-progress="pending" aria-pressed="true">待实现</button>
+                            <button type="button" class="tb-btn" data-wish-progress="fulfilled" aria-pressed="false">已兑现</button>
+                        </div>
                         <label class="gv-sort"><span data-i18n="gameVote.sortLabel">排序</span> <select id="gv-wish-sort"><option value="votes" data-i18n="gameVote.sortVotes">票数优先</option><option value="newest" data-i18n="gameVote.sortNewest">最新提交</option></select></label>
                         <ul id="gv-wishlist" class="gv-list"></ul>
                         <div id="gv-wish-pager"></div>
@@ -109,13 +113,13 @@
         </main>
     </div>
 
-    <script src="js/locales/zh-CN.js?v=tank-title1"></script>
+    <script src="js/locales/zh-CN.js?v=wish-fulfilled1"></script>
     <script src="js/i18n.js?v=nosTW1"></script>
     <script src="js/astra-games-catalog.js?v=cfb7f37d20"></script>
     <script src="js/config.js?v=journey-hidden1"></script>
     <script src="js/common_ui.js?v=nosTW1"></script>
-    <script src="js/game-vote-client.js?v=vote-layout3"></script>
+    <script src="js/game-vote-client.js?v=wish-fulfilled1"></script>
     <script src="js/tb-pager.js?v=1"></script>
-    <script src="js/game-vote.js?v=vote-layout3"></script>
+    <script src="js/game-vote.js?v=wish-fulfilled1"></script>
 </body>
 </html>

@@ -70,8 +70,30 @@ def run():
         assert votes.get_board(limit=20, offset=0, sort="votes")["wishlist"][0]["votes"] == 1
         assert votes.get_my_votes(first)["wishlist"] == []
         assert votes.get_my_votes(second)["wishlist"] == [wish["key"]]
+        # Publication progress must preserve original text, visibility and ballots.
+        previous_progress = votes.WISH_PROGRESS
+        votes.WISH_PROGRESS = {str(wish["id"]): {
+            "name": "双人守城", "source": "user", "progress": "fulfilled",
+            "gameName": "测试游戏", "playUrl": "/html/game/starship-defense/index.html",
+            "releaseNote": "可试玩", "videoUrl": "",
+        }}
+        fulfilled = votes.get_board(limit=20, offset=0, sort="votes", progress="fulfilled")
+        pending = votes.get_board(limit=20, offset=0, sort="votes", progress="pending")
+        assert fulfilled["wishlistTotal"] == 1 and pending["wishlistTotal"] == 0
+        assert fulfilled["wishCounts"] == {"pending": 0, "fulfilled": 1}
+        archived = fulfilled["wishlist"][0]
+        assert archived["name"] == "双人守城" and archived["note"] == "建炮塔、选升级"
+        assert archived["source"] == "user" and archived["votes"] == 1
+        assert archived["progress"] == "fulfilled" and archived["playUrl"].startswith("/")
+        assert fulfilled["totals"]["votes"] == 1 and votes.get_my_votes(second)["wishlist"] == [wish["key"]]
+        rejected(lambda: votes.cast_vote(ballot, None), 400)
+        votes.WISH_PROGRESS[str(wish["id"])]["name"] = "另一个同编号愿望"
+        assert votes.get_board(limit=20, offset=0, sort="votes", progress="pending")["wishlistTotal"] == 1
+        votes.WISH_PROGRESS[str(wish["id"])]["name"] = "双人守城"
         votes.cancel_vote(ballot)
         assert votes.get_my_votes(second)["remaining"]["wishlist"] == 5
+        assert votes.get_board(limit=20, offset=0, sort="votes", progress="fulfilled")["wishlist"][0]["votes"] == 0
+        votes.WISH_PROGRESS = previous_progress
         for i in range(23):
             votes.submit_wish(votes.WishIn(device_id=f"{i:024x}", name=f"关卡愿望{i:02d}", note="支持手机"), None)
         page1 = votes.get_board(limit=20, offset=0, sort="newest")
@@ -82,7 +104,7 @@ def run():
         for game in votes.original_games()[:3]:
             votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=game["key"]), None)
         rejected(lambda: votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=votes.original_games()[3]["key"]), None), 429)
-        print("PASS: retired options and wishes hidden; quotas restored; cross-user votes, duplicate votes, cancellation, limits and pagination")
+        print("PASS: retired options, quotas, votes and pagination; fulfilled/pending separation, identity guard, original text and ballot preservation, fulfilled vote rejection and cancellation")
     finally:
         conn.close()
 

@@ -6,39 +6,104 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "coop1",
-      "blockHash": "34143e8291c751c758677fef50fbe44604cfa6c360069d21d665e478af68a6aa",
-      "release": "releases/coop1/handoff.json",
+      "lastPublicVerifiedVersion": "remix-entry1-menu-text1",
+      "blockHash": "82aaa4c69baf8a1b148c925f29c55fce6c63c5c36f846c7e3096044f2021f911",
+      "release": "releases/backfill-20261010/release-status.json",
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
-      "descriptionHash": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b",
-      "publicVerifiedAt": "2026-10-06T11:40:48.423653+00:00"
+      "descriptionHash": "20f0f852bffcd44d99eb1b05d231c649b4e3d7e035dd201a6ef06c6eb6e6aa9b",
+      "publicVerifiedAt": "2026-10-10T02:50:36.090Z",
+      "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "submitted_version": "remix-entry1-menu-text1",
+      "submitted_at": "2026-10-10T02:43:53.016Z",
+      "status": "public_verified",
+      "last_public_verified_version": "remix-entry1-menu-text1",
+      "public_verified_at": "2026-10-10T02:50:36.090Z",
+      "description_revision": "remix-entry1-menu-text1",
+      "description_sha256": "20f0f852bffcd44d99eb1b05d231c649b4e3d7e035dd201a6ef06c6eb6e6aa9b",
+      "last_public_verified_at": "2026-10-10T02:50:36.090Z",
+      "description_public_verified_at": "2026-10-10T02:50:36.090Z",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "aid": 117397444957530,
+      "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+      "version": "coop-hub1",
+      "release": "releases/backfill-20261010/release-status.json",
+      "publicVerifiedAt": "2026-10-10T02:46:24.480Z",
+      "publicUrl": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "toyUrl": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "status": "public_verified",
+      "commentStatus": "pinned",
+      "qqPromotionStatus": "submitted_and_autosaved",
+      "recordedFootageVersion": "landscape-menu1",
+      "lastPublicVerifiedVersion": "remix-entry1-menu-text1",
+      "last_public_verified_version": "remix-entry1-menu-text1",
+      "public_verified_at": "2026-10-10T02:46:24.480Z",
+      "descriptionHash": "a0cdd25231100e28173dd1645066fadf18b55f1cb56a1e310eccdb04beca3a7a",
+      "submitted_version": "remix-entry1-menu-text1",
+      "submitted_at": "2026-10-10T02:43:56.962Z",
+      "description_revision": "remix-entry1-menu-text1",
+      "description_sha256": "a0cdd25231100e28173dd1645066fadf18b55f1cb56a1e310eccdb04beca3a7a",
+      "last_public_verified_at": "2026-10-10T02:46:24.480Z",
+      "description_public_verified_at": "2026-10-10T02:46:24.480Z",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
     }
   ],
   "pending_updates": [
     {
+      "version": "coop-hub1",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "summary": "统一联机大厅、2–4人合作、房间码/密码/邀请链接；新视频已公开发布并绑定坦克 Toy。",
+      "record": "releases/coop-hub1/handoff.json",
+      "bvid": "BV1TepK69Eet",
+      "reason": "新视频已公开并绑定Toy；旧简介的coop-hub1更新段落及新版入口已公开核验。",
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ]
+    },
+    {
       "version": "drag-look1",
       "release": "releases/drag-look1/handoff.json",
       "classification": "普通补丁",
-      "status": "included_in_public_verified",
+      "status": "included_in_public_verified_release",
       "summary": "空白画面拖动转视角、竖屏坐标、输入释放与操作模式切换",
       "reason": "并入下一次有意义的说明更新；保留现有成功同步基线，不重复改简介",
-      "included_version": "toy3dui2"
+      "included_version": "remix-entry1-menu-text1",
+      "previous_status": "included_in_public_verified",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "unified3d1",
       "classification": "普通补丁",
       "summary": "统一角色视线转向、慢速第一人称、动作键布局、选中状态及全部暂停音频；玛丽另换自然哑光低模画风；三款复刻接入原版音乐。",
-      "status": "included_in_public_verified",
+      "status": "included_in_public_verified_release",
       "record": "releases/unified3d-20261006/handoff.json",
       "reason": "普通操作音频修复并入下一次有意义的说明更新；无确认视频映射时待关联",
-      "included_version": "toy3dui2"
+      "included_version": "remix-entry1-menu-text1",
+      "previous_status": "included_in_public_verified",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "toy3dui3",
       "classification": "普通补丁",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "summary": "右上贴边单行按钮，HUD避让；原视频说明仍准确。",
-      "record": "releases/toy3dui3/handoff.json"
+      "record": "releases/toy3dui3/handoff.json",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "coop1",
@@ -51,43 +116,126 @@
     {
       "version": "pickup-clean1",
       "classification": "普通补丁",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "record": "releases/pickup-clean1/handoff.json",
       "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。",
-      "reason": "普通补丁并入下一次有意义的说明更新；已有入口与操作说明无变化，保留公开核验基线。"
+      "reason": "普通补丁并入下一次有意义的说明更新；已有入口与操作说明无变化，保留公开核验基线。",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "hit-audio1",
       "classification": "普通补丁",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "record": "releases/hit-audio1/handoff.json",
       "summary": "恢复子弹击毁敌人的爆炸声与重甲命中声。",
-      "reason": "普通音效补丁并入下次有意义的说明更新；保留公开成功基线。"
+      "reason": "普通音效补丁并入下次有意义的说明更新；保留公开成功基线。",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "lobby1",
       "classification": "正式版本",
-      "status": "pending_review",
+      "status": "included_in_public_verified_release",
       "record": "releases/lobby1/bilibili-sync.json",
       "summary": "公开/密码房间大厅、2–4人合作、离线规则和按钮反馈",
-      "reason": "平台已保存，公开页面暂为旧版；保留coop1成功基线，不重复提交。"
+      "reason": "2–4人合作、大厅、密码与离线规则已并入公开核验的coop-hub1说明。",
+      "included_version": "remix-entry1-menu-text1",
+      "previous_status": "included_in_public_verified",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "camera-follow1",
       "classification": "普通补丁",
-      "status": "superseded",
+      "status": "included_in_public_verified_release",
       "record": "releases/camera-follow1/handoff.json",
       "summary": "斜俯视拉近并跟随本地坦克，正俯视保留全图；其他游戏核查无同类统一拉远",
       "reason": "普通体验补丁累计，下次正式说明更新合并；操作入口仍准确",
-      "superseded_by": "camera-fullmap1"
+      "superseded_by": "camera-fullmap1",
+      "previous_status": "superseded",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "camera-fullmap1",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "classification": "普通补丁",
       "summary": "按用户反馈恢复斜俯视全图取景，取消跟随；正俯视和按钮内移保留",
       "record": "releases/camera-fullmap1/handoff.json",
-      "reason": "普通镜头补丁累计，下次有意义的简介更新合并；现有操作说明仍准确"
+      "reason": "普通镜头补丁累计，下次有意义的简介更新合并；现有操作说明仍准确",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "fs-capable1",
+      "classification": "普通补丁",
+      "status": "included_in_public_verified_release",
+      "summary": "全屏入口按浏览器能力显示；现有简介未提全屏，仍准确。",
+      "record": "releases/fs-capable1/handoff.json",
+      "reason": "普通补丁并入下一次有意义的说明更新，保留公开核验基线。",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "landscape-menu1",
+      "classification": "普通补丁",
+      "status": "included_in_public_verified_release",
+      "record": "releases/landscape-menu1/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏。",
+      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "coop-live2",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "baseline_version": "coop-hub1",
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ],
+      "summary": "联机统一2–4人合作：建房可选2/3/4人、中途加入/退出保留战场、闲置30秒电脑接管、房主踢人。",
+      "prepared_update_line": "更新（2026-10-07·coop-live2）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "reason": "浏览器自动化在当前子代理环境不可用（agent.browsers 报 Browser is not available in subagent），未能读取/编辑B站简介；未向平台提交，保留原公开核验基线，待浏览器可用后按本行文案先读平台全文再合并提交。",
+      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)"
+    },
+    {
+      "version": "lobby-hint1",
+      "classification": "普通补丁",
+      "status": "included_in_public_verified_release",
+      "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+      "prepared_update_line": "更新（2026-10-07·联机大厅）：建房改为玩家自己点「创建房间」，进来不再静默建房；已在房间时创建/加入按钮会说明原因和\"先退出房间\"；把邀请链接发给朋友，点开公开房直接进、密码房会提示填密码。",
+      "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
+      "record": "releases/lobby-hint1/notes.md",
+      "recorded_at": "2026-10-07",
+      "previous_status": "pending_merge",
+      "included_version": "remix-entry1-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "remix-entry1",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ],
+      "record": "releases/remix-entry1/bilibili-sync.json",
+      "summary": "默认推荐魔改、保留经典入口和已有选择，简介突出Boss/敌军抢道具/火箭筒/四连发导弹，纠正Toy已上线状态。"
     }
   ],
   "history": [
@@ -103,12 +251,108 @@
       "version": "coop1",
       "status": "public_verified",
       "checked_at": "2026-10-06T11:40:48.423653+00:00"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "coop-hub1",
+      "status": "public_verified",
+      "checked_at": "2026-10-07T04:32:00+00:00",
+      "description_sha256": "d67e95636096256a4c8ddc8f6bac4a91469ab2e12f23c4ee8a49f478f0551ee8",
+      "record": "../video/online-20261007/work/publication-result.json"
+    },
+    {
+      "bv": "BV1Wqaz6AEJb",
+      "version": "coop-live2",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·coop-live2）：联机统一支持2–4人合作，建房可选2/3/4人；支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "bv": "BV1TepK69Eet",
+      "version": "coop-live2",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "version": "remix-entry1",
+      "status": "public_verified",
+      "description_sha256": "529803c19f95ac466f07500c42e9a518735e78d06690873a48bb7daf6c45231c",
+      "checked_at": "2026-10-08T02:45:15.057Z",
+      "record": "releases/remix-entry1/bilibili-sync.json"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "version": "remix-entry1",
+      "status": "public_verified",
+      "description_sha256": "544c63a9ac04e7f5cb2e41bc4cb76002d0c78124ace6a6ea29fb902d991976d0",
+      "checked_at": "2026-10-08T02:44:53.237Z",
+      "record": "releases/remix-entry1/bilibili-sync.json"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1Wqaz6AEJb",
+      "previous_baseline": {
+        "bvid": "BV1Wqaz6AEJb",
+        "aid": 117364309890693,
+        "lastPublicVerifiedVersion": "remix-entry1",
+        "blockHash": "82aaa4c69baf8a1b148c925f29c55fce6c63c5c36f846c7e3096044f2021f911",
+        "release": "releases/remix-entry1/bilibili-sync.json",
+        "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
+        "descriptionHash": "529803c19f95ac466f07500c42e9a518735e78d06690873a48bb7daf6c45231c",
+        "publicVerifiedAt": "2026-10-08T02:45:15.057Z",
+        "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
+        "submitted_version": "remix-entry1",
+        "submitted_at": "2026-10-08T02:44:30.631Z",
+        "status": "public_verified",
+        "last_public_verified_version": "remix-entry1",
+        "public_verified_at": "2026-10-08T02:45:15.057Z"
+      }
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1TepK69Eet",
+      "previous_baseline": {
+        "bvid": "BV1TepK69Eet",
+        "aid": 117397444957530,
+        "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+        "version": "coop-hub1",
+        "release": "releases/remix-entry1/bilibili-sync.json",
+        "publicVerifiedAt": "2026-10-08T02:44:53.237Z",
+        "publicUrl": "https://www.bilibili.com/video/BV1TepK69Eet/",
+        "toyUrl": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "status": "public_verified",
+        "commentStatus": "pinned",
+        "qqPromotionStatus": "submitted_and_autosaved",
+        "recordedFootageVersion": "landscape-menu1",
+        "lastPublicVerifiedVersion": "remix-entry1",
+        "last_public_verified_version": "remix-entry1",
+        "public_verified_at": "2026-10-08T02:44:53.237Z",
+        "descriptionHash": "544c63a9ac04e7f5cb2e41bc4cb76002d0c78124ace6a6ea29fb902d991976d0",
+        "submitted_version": "remix-entry1",
+        "submitted_at": "2026-10-08T02:43:41.438Z"
+      }
     }
   ],
   "last_public_verified": {
-    "bvid": "BV1Wqaz6AEJb",
-    "version": "coop1",
-    "at": "2026-10-06T11:40:48.423653+00:00",
-    "description_sha256": "9e4d9f95d89a91a79a1ee8009e16405d161996e6af949a1a1d7dccbe728d5f3b"
-  }
+    "version": "remix-entry1-menu-text1",
+    "at": "2026-10-10T03:02:52.978211+00:00",
+    "bvids": [
+      "BV1Wqaz6AEJb",
+      "BV1TepK69Eet"
+    ],
+    "record": "releases/backfill-20261010/release-status.json"
+  },
+  "latest_record": "releases/backfill-20261010/release-status.json",
+  "pending": [],
+  "pending_note": null,
+  "status": "public_verified",
+  "version": "remix-entry1-menu-text1",
+  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "last_release_record": "releases/backfill-20261010/release-status.json"
 }

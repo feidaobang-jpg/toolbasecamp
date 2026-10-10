@@ -1,0 +1,132 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "category": {
+          "current_value": "action",
+          "field_id": "category",
+          "filled": true,
+          "input_type": "select",
+          "label": "游戏类型",
+          "options": [
+            "rpg",
+            "casual",
+            "action",
+            "strategy",
+            "simulation",
+            "trivia",
+            "arcade",
+            "adventure",
+            "card",
+            "sports",
+            "racing",
+            "puzzle",
+            "educational",
+            "music",
+            "word",
+            "board"
+          ],
+          "state": "required",
+          "value_labels": {
+            "action": "动作",
+            "adventure": "冒险",
+            "arcade": "街机",
+            "board": "桌游",
+            "card": "卡牌",
+            "casual": "休闲",
+            "educational": "教育",
+            "music": "音乐",
+            "puzzle": "解谜",
+            "racing": "竞速",
+            "rpg": "角色扮演",
+            "simulation": "模拟",
+            "sports": "体育",
+            "strategy": "策略",
+            "trivia": "益智",
+            "word": "文字"
+          }
+        },
+        "description": {
+          "current_value": "选四位英雄闯海上都市、沼泽森林与地狱公路，连打、抓投、捡起枪械与刀具迎战。\n\n这是恐龙快打玩法的非官方3D复刻试玩，包含第一至三关，可直接选择起始关卡；保留角色差异、跳跃攻击、冲刺、必杀与场景道具。第三关捡无线电叫车，驾驶凯迪拉克躲油桶与手雷、追击摩托Boss霍格；车毁或下车后步行续战。支持2–4人合作共乘。\n\n支持电脑键盘与手机触屏、操作模式即时切换，以及多种视角、暂停和画质设置。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。",
+          "field_id": "description",
+          "filled": true,
+          "input_type": "textarea",
+          "label": "游戏简介",
+          "state": "suggested"
+        },
+        "description_ios": {
+          "field_id": "description_ios",
+          "filled": false,
+          "input_type": "textarea",
+          "label": "游戏简介(iOS)",
+          "state": "optional"
+        },
+        "icon": {
+          "current_value": "https://img-tc.tapimg.com/market/images/5f37b28d5295729ed169fbcde43b46d3.jpg",
+          "field_id": "icon",
+          "filled": true,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "必须为方图，禁止自行切圆角",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 512,
+            "min_width": 512
+          },
+          "input_type": "image",
+          "label": "游戏图标",
+          "state": "required"
+        },
+        "icon_ios": {
+          "field_id": "icon_ios",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "必须为方图，禁止自行切圆角",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 512,
+            "min_width": 512
+          },
+          "input_type": "image",
+          "label": "游戏图标(iOS)",
+          "state": "optional"
+        },
+        "title": {
+          "constraints": {
+            "max_length": 50,
+            "min_length": 1
+          },
+          "current_value": "恐龙快打 3D",
+          "field_id": "title",
+          "filled": true,
+          "input_type": "text",
+          "label": "游戏名称",
+          "state": "required"
+        },
+        "title_ios": {
+          "field_id": "title_ios",
+          "filled": false,
+          "input_type": "text",
+          "label": "游戏名称(iOS)",
+          "state": "optional"
+        }
+      },
+      "module_id": "basic-info",
+      "revision": 1047324
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

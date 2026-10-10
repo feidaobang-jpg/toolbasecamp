@@ -1,0 +1,9 @@
+﻿Title
+One Little Jeep, Two Rescue Missions | Jackal 3D Gameplay
+Description
+Play my games: https://www.zhengxiaohui.cn/games.html
+Select 赤色要塞 in the list; copy the URL into your browser if it is not clickable.
+Drive a little jeep, open barracks, rescue prisoners, upgrade rockets and deliver everyone to the helipad across two stages.
+Edited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.
+Chinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.
+Fan-made, unofficial Jackal remake. Original game rights belong to Konami.

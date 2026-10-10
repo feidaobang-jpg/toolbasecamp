@@ -1,0 +1,15 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "verified_at": "2026-10-08T13:26:38.008680+00:00",
+  "contains_pager": true,
+  "cache_marker": "a1e443c6",
+  "cache_marker_source": "部署脚本以已部署提交短号替换HTML查询标记；不是源码literal shop292",
+  "runtime_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?v=a1e443c6",
+  "runtime_sha256": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+  "expected_sha256": "0981a916bad30bbcacb564965ec4452922235d317c829a8ed1f0b0b03b876f4f",
+  "matches": true,
+  "deployment_commit": "a1e443c65a9f4f34da9e59063d8faae65c100b1e",
+  "cache_source_commit": "74fa76682e380f5c3cad3db11eca909e09ffbd11",
+  "runtime_source_commit": "d03f87e1ba59e3652cb92cf1b2f6680bada053ee",
+  "server_last_deployed_sha": "a1e443c65a9f4f34da9e59063d8faae65c100b1e"
+}

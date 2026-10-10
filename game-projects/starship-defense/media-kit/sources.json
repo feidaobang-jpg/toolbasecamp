@@ -1,5 +1,44 @@
 [
   {
+    "id": "conquest-military-v032",
+    "purpose": "战地模式地图、建筑、枪械、兵种与军用载具",
+    "source_type": "procedural",
+    "tool": "Codex / Three.js primitive geometry and material batching",
+    "runtime_files": [
+      "../../../public/html/game/starship-defense/battlefield-assets.js"
+    ],
+    "reference": "用户提供的战地风格截图，仅用于观察外形与场景构成",
+    "processing": "程序化建模，静态同色零件合批；保留腿部、炮塔、旋翼动作节点；无位图或模型下载",
+    "usage": "本项目原创代码生成资产，未提取参考游戏模型贴图"
+  },
+  {
+    "id": "versus-creatures-v031",
+    "purpose": "兵线/付费非人形远程与治疗兵、野怪模型",
+    "source_type": "procedural",
+    "tool": "Codex; Three.js vertex-colored shared BufferGeometry",
+    "runtime_file": "../../../public/html/game/starship-defense/versus-creatures.js",
+    "processing": "共享材质/模板；护盾甲壳、酸囊口器、炮管、治疗孢子翼、野怪晶角；行走摇摆和攻击俯仰",
+    "usage": "本项目程序化实现，无新增第三方资产或AI图片"
+  },
+  {
+    "id": "rv-abandoned-town-zombies-v030",
+    "purpose": "房车废弃城镇、设施、路网、地图标识与人形僵尸",
+    "source_type": "procedural",
+    "tool": "Codex; Three.js geometry, InstancedMesh, CanvasTexture",
+    "runtime_file": "../../../public/html/game/starship-defense/rv-town.js",
+    "processing": "实例化建筑/道路/街边遗物；破损开放屋顶与侧面设施标牌；共享几何的僵尸四肢摆动；未使用AI生成图片或第三方新资源",
+    "usage": "本项目程序化实现；房车模型、玩家、现有音效复用原有资源"
+  },
+  {
+    "id": "rv-road-and-armored-vehicle",
+    "purpose": "房车突围场景、补给站和装甲房车模型",
+    "source_type": "procedural",
+    "tool": "Codex; Three.js geometry and CanvasTexture",
+    "runtime_file": "../../../public/html/game/starship-defense/rv-breakout.js",
+    "processing": "盒体车身、轮胎与车顶炮塔；实例化公路标线、围栏和岩石；程序绘制补给站中文标牌",
+    "usage": "项目原创程序化几何，虫群/角色/音效复用现有资产"
+  },
+  {
     "id": "roach",
     "provider": "OpenGameArt",
     "source": "https://opengameart.org/content/roach-game-ready-and-animated",
@@ -243,5 +282,48 @@
     "source": "Restored project DarkVisuals.bug geometry from commit af5668d6; muted palettes and reduced emissive wings/queen abdomen.",
     "processing": "Merged meshes cached per species/rank/flight; animated body, six jointed legs and optional wings.",
     "usage": "Original project geometry; no external assets or movie models."
+  },
+  {
+    "id": "defense-towers-v021",
+    "type": "procedural",
+    "runtime": "public/html/game/starship-defense/game.js:makeBuildingMesh",
+    "description": "原创钢灰寒霜双管/冷却罐与仰角迫击炮，沿用既有深色战场材质；程序化Three.js几何，无外部下载",
+    "tool": "Codex",
+    "version": "web-defense-v0.21.0"
+  },
+  {
+    "id": "resistance-period-assets-v033",
+    "source_type": "procedural",
+    "runtime_file": "public/html/game/starship-defense/resistance-assets.js",
+    "tool": "Codex / Three.js r152",
+    "purpose": "二战人物、枪械、骑兵、炮位与中式村镇三个战役地图",
+    "parameters": "几何尺寸、合并网格与顶点色见运行源码；复用既有合成音效",
+    "processing": "原创建模及动画，未下载或提取电影、电视剧和商业游戏素材",
+    "story_references": [
+      {
+        "title": "央视《亮剑》第4集（李家坡作战）",
+        "url": "https://dianshiju.cctv.com/2009/12/27/VIDE1354512802260697.shtml"
+      },
+      {
+        "title": "央视《亮剑》骑兵连冲锋片段",
+        "url": "https://tv.cctv.com/2015/05/13/VIDE1431511418411371.shtml"
+      },
+      {
+        "title": "央视《亮剑》第13集（平安县城）",
+        "url": "https://tv.cctv.com/v/v4/VIDErn4ARx8m7lOrx6dYkuLd120120.html"
+      }
+    ],
+    "adaptation": "玩法改编，非逐镜还原，骑兵关以运输车突围构成可重玩结局",
+    "sha256": "9281751b7c1b620e114c62943b98783115ef32cc4f9eb674f3e7f3e0710fb2a4",
+    "updated_version": "web-resistance-aim-v0.33.1"
+  },
+  {
+    "id": "resistance-aim-tracers-v0331",
+    "source_type": "procedural",
+    "runtime_file": "public/html/game/starship-defense/resistance-campaign.js",
+    "tool": "Codex / Three.js r152",
+    "purpose": "铜色弹头、深棕外圈/橙金内芯曳光、短枪口闪光、灰色烟团和炮弹预计落点",
+    "processing": "代码几何与材质，共用几何；简化重力积分，无下载素材、视频、真实弹道参数或镜头震动。",
+    "sha256": "d748ab677bebc8c48a840c404ac156c086e39759b70caf3dc33be0ac677425bc"
   }
 ]

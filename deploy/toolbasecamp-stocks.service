@@ -1,0 +1,16 @@
+[Unit]
+Description=Toolbasecamp stock pullback paper tracking
+After=network-online.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/toolbasecamp-api
+EnvironmentFile=-/etc/toolbasecamp-api.env
+Environment=PYTHONUTF8=1
+Environment=PYTHONIOENCODING=utf-8
+ExecStart=/opt/toolbasecamp-api/venv/bin/python -B stocks_job.py
+TimeoutStartSec=240
+StandardOutput=journal
+StandardError=journal

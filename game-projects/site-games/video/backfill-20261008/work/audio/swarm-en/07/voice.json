@@ -1,0 +1,124 @@
+{
+  "text": "Next, I hire a teammate and enter the elite nest. The squad helps fight and collect supplies. Mission rewards pay for stronger equipment.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "Next",
+      "offset": 1000000,
+      "duration": 4000000
+    },
+    {
+      "text": "I",
+      "offset": 6625000,
+      "duration": 875000
+    },
+    {
+      "text": "hire",
+      "offset": 7750000,
+      "duration": 2875000
+    },
+    {
+      "text": "a",
+      "offset": 10875000,
+      "duration": 625000
+    },
+    {
+      "text": "teammate",
+      "offset": 11750000,
+      "duration": 4375000
+    },
+    {
+      "text": "and",
+      "offset": 16250000,
+      "duration": 1000000
+    },
+    {
+      "text": "enter",
+      "offset": 17500000,
+      "duration": 2250000
+    },
+    {
+      "text": "the",
+      "offset": 20000000,
+      "duration": 750000
+    },
+    {
+      "text": "elite",
+      "offset": 20875000,
+      "duration": 2875000
+    },
+    {
+      "text": "nest",
+      "offset": 23875000,
+      "duration": 4250000
+    },
+    {
+      "text": "The",
+      "offset": 37000000,
+      "duration": 1375000
+    },
+    {
+      "text": "squad",
+      "offset": 38625000,
+      "duration": 3000000
+    },
+    {
+      "text": "helps",
+      "offset": 41875000,
+      "duration": 2875000
+    },
+    {
+      "text": "fight",
+      "offset": 45000000,
+      "duration": 2625000
+    },
+    {
+      "text": "and",
+      "offset": 47750000,
+      "duration": 1125000
+    },
+    {
+      "text": "collect",
+      "offset": 49125000,
+      "duration": 3500000
+    },
+    {
+      "text": "supplies",
+      "offset": 52875000,
+      "duration": 6375000
+    },
+    {
+      "text": "Mission",
+      "offset": 68125000,
+      "duration": 4250000
+    },
+    {
+      "text": "rewards",
+      "offset": 72500000,
+      "duration": 4750000
+    },
+    {
+      "text": "pay",
+      "offset": 77375000,
+      "duration": 2500000
+    },
+    {
+      "text": "for",
+      "offset": 80000000,
+      "duration": 1750000
+    },
+    {
+      "text": "stronger",
+      "offset": 82000000,
+      "duration": 4625000
+    },
+    {
+      "text": "equipment",
+      "offset": 86875000,
+      "duration": 6125000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

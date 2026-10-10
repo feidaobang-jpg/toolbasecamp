@@ -1,0 +1,21 @@
+{
+  "bvid": "BV1C5HQ6gEvD",
+  "author_uid": 479258671,
+  "author_name": "bili_50539966983",
+  "original": "不能挪动啊,无法上下挪动只能用一些普通的防御塔和普通的武器,等离子炮和激光枪都不能用,点不到",
+  "reply": "修好了！已处理商店刷新时列表回弹、影响点击的问题，商店和建造现在都能滑动，也可以点「上一页／下一页」找到后面的装备。激光炮、等离子炮和高级炮塔都能选了，网站和Toy已更新。重新打开试玩再试试，感谢反馈！",
+  "status": "public_verified",
+  "version": "web-shop-scroll-v0.29.2",
+  "rpid": null,
+  "root": null,
+  "time_precision": "date_only",
+  "verified_at": "2026-10-08T13:11:45.992Z",
+  "screenshot": "D:/project/toolbasecamp-artifacts/chongchao-shop-scroll-v0.29.2-20261008/comment-public-verified.jpg",
+  "evidence": "刷新视频并重新加载评论后，原作者原文下可见飞刀班长回复；未从隐藏状态提取评论ID",
+  "feedback_key": "BV1C5HQ6gEvD:479258671:2026-10-08:6f44b1cc84b64601d765fcd6807f80793499d6cefffbb75af9ce0e1f9cfd8284",
+  "reply_sha256": "2de0eccbe7b0b180f383604b4fe4d5b6654721c8f0dc20393664e7a61f4c0e0b",
+  "submitted_at": null,
+  "submission_time_note": "精确发送时间未单独保存；公开刷新核验时间有记录",
+  "source": "Codex",
+  "task_id": "01a11b2b-2580-7223-9318-1624d4ff841c-shop-scroll-03"
+}

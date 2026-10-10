@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "task_id": "01a115e7-9ecb-7ce1-8784-020e5e528077-cloudsave-03",
+  "classification": "服务端普通补丁与原任务上线收尾",
+  "original_release": "web-cloudsave-v0.24.0",
+  "original_implementation": "Qoder 已完成并合入主线；本任务只核验并补遗漏",
+  "repair_commit": "66d8d031",
+  "changes": [
+    "服务端接收 RPG、四连导弹架及强化等级，避免最新游戏合法存档被拒绝",
+    "新增客户端道具目录与服务端校验目录兼容检查，及两款新武器的云档往返测试"
+  ],
+  "validation": {
+    "server_tests": "26 passed（存档14、联机12），1条第三方Starlette弃用提示",
+    "cloud_unit": "26项通过",
+    "platform_unit": "云存储去重、缓存、退避与回退通过",
+    "previous_browser_qa": "原云存档版本7场景通过；云端API为隔离mock，手机为视口模拟",
+    "previous_production_qa": "Qoder已核验MySQL与公网账号接口；本次上线后额外核验新武器存档",
+    "public_coop": "公网网站与 Toy 来源各4人私密房通过：进房、准备、开局、输入转发、全员状态广播、房主离开结束；见 coop-public-qa.json",
+    "production_smoke": "临时 QA 账号公网登录、Bearer 鉴权、RPG与导弹架及强化、96建筑、MySQL并发revision冲突保护、三快照、H5 CORS与private no-store均通过；临时数据清理通过。",
+    "post_deploy_coop": "10:33公网网站与Toy来源各4人全链路通过；初次复验遇本机HTTP代理握手超时，排除本机代理后直连TLS通过，公网大厅与health正常。"
+  },
+  "site": {
+    "original_cloud_release": "verified",
+    "save_ui": true,
+    "cloud_auth_http": 401,
+    "h5_cors": "*",
+    "compatibility_patch": "deployed_verified",
+    "deployed_sha": "222219356be4cdd31239110b0a7d1424b0d657bf",
+    "module_sha256": "3d31c4baa1a7de9ce2e391ed0a17bd74488c8fb41cc7384601c08e8cc2aeab9f",
+    "production_smoke": "passed",
+    "production_fixture_cleanup": "verified",
+    "verified_at": "2026-10-08T10:31:04+08:00",
+    "health": {
+      "ok": true,
+      "db": true,
+      "deploy_sha": "222219356be4cdd31239110b0a7d1424b0d657bf"
+    }
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "published",
+    "checked_at": "2026-10-08T08:47:00+08:00",
+    "package_unchanged_by_this_task": true
+  },
+  "taptap": {
+    "app_id": 962354,
+    "platform_version": "V-20261007-3",
+    "h5_version_id": 273272,
+    "status": "online",
+    "last_event": "published",
+    "checked_at": "2026-10-08T08:47:00+08:00",
+    "public_url": "https://www.taptap.cn/app/962354",
+    "play_button_observed": "TapTap PC端 试玩DEMO",
+    "cloud_provider": "SiteSaveProvider；在游戏档案站登录网站账号，不是TapTap账号云存储",
+    "community_status": "public_verified",
+    "community_url": "https://www.taptap.cn/moment/857205558501965884",
+    "forum_app_id": 962354,
+    "forum_group_id": 1518030,
+    "public_verified_at": "2026-10-08T10:31:04+08:00",
+    "other_task_draft": {
+      "platform_version": "V-20261008",
+      "revision": 1045140,
+      "status": "draft",
+      "observed_at": "2026-10-08T10:37:54+08:00",
+      "note": "另一任务已在 v0.25.0 草稿中把介绍纠正为游戏内网站账号云备份；不覆盖或提交他人正在准备的玩法包。"
+    }
+  },
+  "bilibili": {
+    "status": "current_descriptions_public_verified",
+    "bvids": [
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf"
+    ],
+    "description_update": "本次服务端兼容补丁并入下次有意义说明，不重复发布",
+    "checked_at": "2026-10-08T10:37:54+08:00",
+    "description_version": "v0.25.0",
+    "description_cloud_save_retained": true,
+    "record": "bilibili-public-check.json"
+  },
+  "limitations": [
+    "没有恢复该玩家已经丢失且从未备份的历史进度",
+    "原玩家的设备、浏览器和进房路径仍待他确认；不能据测试称其个人问题已消失",
+    "未进行真实手机隔夜和多指触控验收",
+    "Toy账号云档与网站账号云档独立，不能称三平台同账号互通"
+  ],
+  "git": {
+    "status": "merged_pushed_and_api_verified",
+    "branch": "codex/chongchao-cloudsave-closure-20261008",
+    "lock_recovery": {
+      "previous_task": "chongchao-unstick-rpg-20261007",
+      "previous_source": "ZCode",
+      "session": "sess_0654236d-e394-48b7-a3ff-072e43eb5084",
+      "last_turn_status": "error",
+      "last_turn_ended_at": "2026-10-07T23:44:51+08:00",
+      "evidence": "只读核验 ZCode turn_usage 最新轮次为 error；该会话最后 model-io 为 exceed quota limit，之后无新轮次；当前应用进程均在今日启动；VPS 无 rsync/restart/apt 部署进程。只恢复该遗留锁，不改其工作区。",
+      "checked_at": "2026-10-08T09:01:43+08:00",
+      "result": "旧锁写前重读发现已被另一 Codex 任务恢复，因此本任务未删除或获取；随后按2026-10-08新规则无全局锁整合推送。"
+    },
+    "main_commit": "222219356be4cdd31239110b0a7d1424b0d657bf"
+  },
+  "updated_at": "2026-10-08T10:37:54+08:00"
+}

@@ -1,0 +1,819 @@
+{
+  "at": "2026-10-06T22:47:00.467Z",
+  "physical_phone": false,
+  "results": [
+    {
+      "name": "mario-3d desktop full decoded tracks",
+      "ok": true,
+      "detail": [
+        {
+          "file": "sounds/overworld.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/underground.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/star.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "mario-3d desktop crosses 70s without restart (32x audio test)",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 1.952
+            },
+            {
+              "state": "running",
+              "time": 1.912
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 1.024000000000001
+            }
+          ]
+        },
+        "boundary": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 1.952
+            },
+            {
+              "state": "running",
+              "time": 4.6
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 87.03999999999999
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "mario-3d pause freezes BGM",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 1.952
+          },
+          {
+            "state": "suspended",
+            "time": 4.690666666666667
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 89.94133333333335
+          }
+        ]
+      }
+    },
+    {
+      "name": "mario-3d continue preserves source",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 1.952
+          },
+          {
+            "state": "running",
+            "time": 5.050666666666666
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 101.46133333333333
+          }
+        ]
+      }
+    },
+    {
+      "name": "mario-3d no runtime exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "mario-3d mobile full decoded tracks",
+      "ok": true,
+      "detail": [
+        {
+          "file": "sounds/overworld.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/underground.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/star.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "mario-3d mobile crosses 70s without restart (32x audio test)",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 1.632
+            },
+            {
+              "state": "running",
+              "time": 0.8106666666666666
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 0.9386666666666663
+            }
+          ]
+        },
+        "boundary": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 1.632
+            },
+            {
+              "state": "running",
+              "time": 3.52
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 87.63733333333333
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "mario-3d pause freezes BGM",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 1.632
+          },
+          {
+            "state": "suspended",
+            "time": 3.64
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 91.47733333333333
+          }
+        ]
+      }
+    },
+    {
+      "name": "mario-3d continue preserves source",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 1.632
+          },
+          {
+            "state": "running",
+            "time": 3.872
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 98.90133333333333
+          }
+        ]
+      }
+    },
+    {
+      "name": "mario-3d no runtime exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "cadillacs-stage1-3d desktop full decoded tracks",
+      "ok": true,
+      "detail": [
+        {
+          "file": "sounds/roof.mp3",
+          "expected": 339.758531,
+          "decoded": 339.7585208333333,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/hall.mp3",
+          "expected": 118.496063,
+          "decoded": 118.4960625,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/street.mp3",
+          "expected": 115.153406,
+          "decoded": 115.15339583333333,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "expected": 89.010438,
+          "decoded": 89.0104375,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/forest.mp3",
+          "expected": 199.3415,
+          "decoded": 199.3415,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/swamp.mp3",
+          "expected": 82.737594,
+          "decoded": 82.73758333333333,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/boss2.mp3",
+          "expected": 103.697219,
+          "decoded": 103.69720833333334,
+          "channels": 1,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "cadillacs-stage1-3d desktop crosses 70s without restart (32x audio test)",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 3.6106666666666665
+            },
+            {
+              "state": "running",
+              "time": 7.8613333333333335
+            }
+          ],
+          "sources": [
+            {
+              "duration": 339.7585208333333,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 8.021333333333331
+            }
+          ]
+        },
+        "boundary": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 3.6106666666666665
+            },
+            {
+              "state": "running",
+              "time": 10.530666666666667
+            }
+          ],
+          "sources": [
+            {
+              "duration": 339.7585208333333,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 93.44
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadillacs-stage1-3d pause freezes BGM",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 3.6106666666666665
+          },
+          {
+            "state": "suspended",
+            "time": 10.610666666666667
+          }
+        ],
+        "sources": [
+          {
+            "duration": 339.7585208333333,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 96
+          }
+        ]
+      }
+    },
+    {
+      "name": "cadillacs-stage1-3d continue preserves source",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 3.6106666666666665
+          },
+          {
+            "state": "running",
+            "time": 11.101333333333333
+          }
+        ],
+        "sources": [
+          {
+            "duration": 339.7585208333333,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 111.70133333333331
+          }
+        ]
+      }
+    },
+    {
+      "name": "cadillacs-stage1-3d no runtime exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "cadillacs-stage1-3d mobile full decoded tracks",
+      "ok": true,
+      "detail": [
+        {
+          "file": "sounds/roof.mp3",
+          "expected": 339.758531,
+          "decoded": 339.7585208333333,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/hall.mp3",
+          "expected": 118.496063,
+          "decoded": 118.4960625,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/street.mp3",
+          "expected": 115.153406,
+          "decoded": 115.15339583333333,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "expected": 89.010438,
+          "decoded": 89.0104375,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/forest.mp3",
+          "expected": 199.3415,
+          "decoded": 199.3415,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/swamp.mp3",
+          "expected": 82.737594,
+          "decoded": 82.73758333333333,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/boss2.mp3",
+          "expected": 103.697219,
+          "decoded": 103.69720833333334,
+          "channels": 1,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "cadillacs-stage1-3d mobile crosses 70s without restart (32x audio test)",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 2.6106666666666665
+            },
+            {
+              "state": "running",
+              "time": 7.250666666666667
+            }
+          ],
+          "sources": [
+            {
+              "duration": 339.7585208333333,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 1.2800000000000011
+            }
+          ]
+        },
+        "boundary": {
+          "contexts": [
+            {
+              "state": "closed",
+              "time": 2.6106666666666665
+            },
+            {
+              "state": "running",
+              "time": 10.530666666666667
+            }
+          ],
+          "sources": [
+            {
+              "duration": 339.7585208333333,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 106.24000000000001
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "cadillacs-stage1-3d pause freezes BGM",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 2.6106666666666665
+          },
+          {
+            "state": "suspended",
+            "time": 10.64
+          }
+        ],
+        "sources": [
+          {
+            "duration": 339.7585208333333,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 109.73866666666669
+          }
+        ]
+      }
+    },
+    {
+      "name": "cadillacs-stage1-3d continue preserves source",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "closed",
+            "time": 2.6106666666666665
+          },
+          {
+            "state": "running",
+            "time": 10.88
+          }
+        ],
+        "sources": [
+          {
+            "duration": 339.7585208333333,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 117.4186666666667
+          }
+        ]
+      }
+    },
+    {
+      "name": "cadillacs-stage1-3d no runtime exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "jackal-stage1-3d desktop full decoded tracks",
+      "ok": true,
+      "detail": [
+        {
+          "file": "sounds/stage.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/stage3.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "jackal-stage1-3d desktop crosses 70s without restart (32x audio test)",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "contexts": [
+            {
+              "state": "running",
+              "time": 3.541333333333333
+            },
+            {
+              "state": "closed",
+              "time": 1.3013333333333332
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 7.679999999999993
+            }
+          ]
+        },
+        "boundary": {
+          "contexts": [
+            {
+              "state": "running",
+              "time": 6.2
+            },
+            {
+              "state": "closed",
+              "time": 1.3013333333333332
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 92.75733333333334
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "jackal-stage1-3d pause freezes BGM",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "suspended",
+            "time": 6.301333333333333
+          },
+          {
+            "state": "closed",
+            "time": 1.3013333333333332
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 95.99999999999999
+          }
+        ]
+      }
+    },
+    {
+      "name": "jackal-stage1-3d continue preserves source",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "running",
+            "time": 6.472
+          },
+          {
+            "state": "closed",
+            "time": 1.3013333333333332
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 101.46133333333334
+          }
+        ]
+      }
+    },
+    {
+      "name": "jackal-stage1-3d no runtime exceptions",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "jackal-stage1-3d mobile full decoded tracks",
+      "ok": true,
+      "detail": [
+        {
+          "file": "sounds/stage.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/stage3.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        },
+        {
+          "file": "sounds/boss.mp3",
+          "expected": 180.001469,
+          "decoded": 180.00145833333335,
+          "channels": 1,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "jackal-stage1-3d mobile crosses 70s without restart (32x audio test)",
+      "ok": true,
+      "detail": {
+        "initial": {
+          "contexts": [
+            {
+              "state": "running",
+              "time": 3.0613333333333332
+            },
+            {
+              "state": "closed",
+              "time": 1.4613333333333334
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 5.802666666666667
+            }
+          ]
+        },
+        "boundary": {
+          "contexts": [
+            {
+              "state": "running",
+              "time": 5.992
+            },
+            {
+              "state": "closed",
+              "time": 1.4613333333333334
+            }
+          ],
+          "sources": [
+            {
+              "duration": 180.00145833333335,
+              "loop": true,
+              "stopped": false,
+              "elapsed": 99.584
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "jackal-stage1-3d pause freezes BGM",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "suspended",
+            "time": 6.072
+          },
+          {
+            "state": "closed",
+            "time": 1.4613333333333334
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 102.144
+          }
+        ]
+      }
+    },
+    {
+      "name": "jackal-stage1-3d continue preserves source",
+      "ok": true,
+      "detail": {
+        "contexts": [
+          {
+            "state": "running",
+            "time": 6.24
+          },
+          {
+            "state": "closed",
+            "time": 1.4613333333333334
+          }
+        ],
+        "sources": [
+          {
+            "duration": 180.00145833333335,
+            "loop": true,
+            "stopped": false,
+            "elapsed": 107.52000000000001
+          }
+        ]
+      }
+    },
+    {
+      "name": "jackal-stage1-3d no runtime exceptions",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "retested": "Jackal async AudioContext.resume clock wait replaces fixed 600ms sleep; no product change required."
+}

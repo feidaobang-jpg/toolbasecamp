@@ -1,0 +1,236 @@
+{
+  "url": "https://www.bilibili.com/toy/preview/preview_pjfDAIW3/index.html",
+  "at": "2026-10-09T09:34:15.922Z",
+  "results": [
+    {
+      "width": 1280,
+      "height": 720,
+      "tabs": [
+        {
+          "tab": "units",
+          "top": 0,
+          "height": 231,
+          "total": 231,
+          "panelHeight": 404,
+          "stageHeight": 540,
+          "topOffset": 84,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "虫王",
+          "clipped": []
+        },
+        {
+          "tab": "build",
+          "top": 0,
+          "height": 195,
+          "total": 195,
+          "panelHeight": 368,
+          "stageHeight": 540,
+          "topOffset": 84,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "🔨 拆除",
+          "clipped": []
+        },
+        {
+          "tab": "weapons",
+          "top": 0,
+          "height": 244,
+          "total": 244,
+          "panelHeight": 417,
+          "stageHeight": 540,
+          "topOffset": 84,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "四连导弹架",
+          "clipped": []
+        }
+      ],
+      "ok": true
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "tabs": [
+        {
+          "tab": "units",
+          "top": 106,
+          "height": 221,
+          "total": 327,
+          "panelHeight": 386,
+          "stageHeight": 394,
+          "topOffset": 4,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "虫王",
+          "clipped": []
+        },
+        {
+          "tab": "build",
+          "top": 0,
+          "height": 192,
+          "total": 192,
+          "panelHeight": 357,
+          "stageHeight": 394,
+          "topOffset": 4,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "🔨 拆除",
+          "clipped": []
+        },
+        {
+          "tab": "weapons",
+          "top": 0,
+          "height": 205,
+          "total": 205,
+          "panelHeight": 370,
+          "stageHeight": 394,
+          "topOffset": 4,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "四连导弹架",
+          "clipped": []
+        }
+      ],
+      "ok": true
+    },
+    {
+      "width": 844,
+      "height": 346,
+      "tabs": [
+        {
+          "tab": "units",
+          "top": 156,
+          "height": 171,
+          "total": 327,
+          "panelHeight": 336,
+          "stageHeight": 344,
+          "topOffset": 4,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "虫王",
+          "clipped": []
+        },
+        {
+          "tab": "build",
+          "top": 21,
+          "height": 171,
+          "total": 192,
+          "panelHeight": 336,
+          "stageHeight": 344,
+          "topOffset": 4,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "🔨 拆除",
+          "clipped": []
+        },
+        {
+          "tab": "weapons",
+          "top": 34,
+          "height": 171,
+          "total": 205,
+          "panelHeight": 336,
+          "stageHeight": 344,
+          "topOffset": 4,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "四连导弹架",
+          "clipped": []
+        }
+      ],
+      "ok": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "tabs": [
+        {
+          "tab": "units",
+          "top": 123,
+          "height": 217,
+          "total": 340,
+          "panelHeight": 390,
+          "stageHeight": 468,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "虫王",
+          "clipped": []
+        },
+        {
+          "tab": "build",
+          "top": 0,
+          "height": 192,
+          "total": 192,
+          "panelHeight": 365,
+          "stageHeight": 468,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "🔨 拆除",
+          "clipped": []
+        },
+        {
+          "tab": "weapons",
+          "top": 0,
+          "height": 205,
+          "total": 205,
+          "panelHeight": 378,
+          "stageHeight": 468,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "四连导弹架",
+          "clipped": []
+        }
+      ],
+      "ok": true
+    },
+    {
+      "width": 346,
+      "height": 844,
+      "tabs": [
+        {
+          "tab": "units",
+          "top": 176,
+          "height": 164,
+          "total": 340,
+          "panelHeight": 337,
+          "stageHeight": 415,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "虫王",
+          "clipped": []
+        },
+        {
+          "tab": "build",
+          "top": 28,
+          "height": 164,
+          "total": 192,
+          "panelHeight": 337,
+          "stageHeight": 415,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "🔨 拆除",
+          "clipped": []
+        },
+        {
+          "tab": "weapons",
+          "top": 41,
+          "height": 164,
+          "total": 205,
+          "panelHeight": 337,
+          "stageHeight": 415,
+          "topOffset": 58,
+          "within": true,
+          "action": "pan-x pan-y",
+          "last": "四连导弹架",
+          "clipped": []
+        }
+      ],
+      "ok": true
+    }
+  ]
+}

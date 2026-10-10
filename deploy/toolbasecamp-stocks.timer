@@ -1,0 +1,12 @@
+[Unit]
+Description=Stock screening and monitoring every five minutes on weekdays
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 09..15:00/5:00 Asia/Shanghai
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=false
+Unit=toolbasecamp-stocks.service
+
+[Install]
+WantedBy=timers.target

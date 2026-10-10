@@ -1,0 +1,24 @@
+{
+  "title": "虫潮围城",
+  "slug": "chongchao-qianshao",
+  "version": "web-tactics-v0.20.0",
+  "source": "public/html/game/starship-defense",
+  "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+  "files": {
+    "index.html": "7bb4b9ceb51e87b8c33b1a971bbb161c4d8d10a6a678c4ac5c573f3cf8128441",
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "game.compat.js": "f1c70aecdf05993e8fb2889aa880365eb03632a8290808c224987329c5ced385",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "status": "built_not_submitted",
+  "published_toy_unchanged": true,
+  "preflight": {
+    "ok": true,
+    "warnings": [
+      "4个JS/CSS沿用固定文件名；缓存效率建议，不阻断发布"
+    ]
+  }
+}

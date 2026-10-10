@@ -1,0 +1,154 @@
+{
+  "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+  "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+  "source": "Codex",
+  "source_snapshot": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+  "games": [
+    {
+      "game": "tank-3d",
+      "id": 39043249461248,
+      "slug": "feidao-tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "version": "remix-entry1-menu-text1",
+      "package_sha256": "0185aebff4b162dfcddc672943932c720bffc01833881fcbe990c3b44eb24593",
+      "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+      "submitted_at": "2026-10-09T15:53:29.770547+08:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_BBCsiVou/index.html"
+      },
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_eN0ZNFKW/index.html"
+      },
+      "review_status": "published",
+      "public_verified": true,
+      "public_asset_hashes_verified": [
+        "audio.js",
+        "classic.js",
+        "coop-shared.js",
+        "coop.js",
+        "drag-look.js",
+        "landscape-typing.js",
+        "levels.js",
+        "main.js",
+        "scene.js",
+        "sim.js",
+        "style.css",
+        "vendor/three.module.js"
+      ]
+    },
+    {
+      "game": "mario-3d",
+      "id": 39043286960128,
+      "slug": "feidao-mario-3d",
+      "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+      "version": "v2.5.0-menu-text1",
+      "package_sha256": "e1c20475f5d6493924aa7e273d276fdb83e12c2d500fce123ba4ee4dea5b1cdf",
+      "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+      "submitted_at": "2026-10-09T15:53:36.437561+08:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_oY0GZenQ/index.html"
+      },
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_sH2ZVclt/index.html"
+      },
+      "review_status": "published",
+      "public_verified": true,
+      "public_asset_hashes_verified": [
+        "audio.js",
+        "drag-look.js",
+        "levels.js",
+        "main.js",
+        "models.js",
+        "sample-audio.js",
+        "scene.js",
+        "style.css",
+        "textures.js",
+        "three.js",
+        "vendor/three.module.js",
+        "world.js"
+      ]
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "id": 39863936092160,
+      "slug": "feidao-jackal-3d",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "version": "v0.10.3-menu-text1",
+      "package_sha256": "eb9e124e29fcd004f94e12a5aaf5d6a44eaa939372ac1ff3027b56d645a2e070",
+      "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+      "submitted_at": "2026-10-09T15:53:41.052296+08:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_4MjqN9a0/index.html"
+      },
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_YjjbUeIH/index.html"
+      },
+      "review_status": "published",
+      "public_verified": true,
+      "public_asset_hashes_verified": [
+        "css/style.css",
+        "js/game.min.js"
+      ]
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "id": 40412421031936,
+      "slug": "feidao-cadillacs-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "version": "v0.11.0-preview.1-menu-text1",
+      "package_sha256": "1148908782a0305bd9cba070526a9f789f4fe4434a743713f7083a8f414d932e",
+      "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+      "submitted_at": "2026-10-09T15:53:50.836992+08:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_qebj2elP/index.html"
+      },
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_HL3EH1sk/index.html"
+      },
+      "review_status": "published",
+      "public_verified": true,
+      "public_asset_hashes_verified": [
+        "css/style.css",
+        "js/game.min.js",
+        "sounds/boss3.mp3",
+        "sounds/road-drive.mp3",
+        "sounds/road-walk.mp3"
+      ]
+    },
+    {
+      "game": "starship-defense",
+      "id": 38678478981120,
+      "slug": "chongchao-qianshao",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "version": "web-three-lanes-v0.31.0",
+      "package_sha256": "9e131f6d7aeed246d3d718fd94464c5e997f9171484d8db2d2fe1b3a4405012f",
+      "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+      "submitted_at": "2026-10-09T15:55:44.793236+08:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_maSEPRkl/index.html"
+      },
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_oQPZMUQL/index.html"
+      },
+      "review_status": "published",
+      "public_verified": true,
+      "public_asset_hashes_verified": [
+        "base.css",
+        "boot.js",
+        "combat-controls.css",
+        "game.compat.js"
+      ]
+    }
+  ],
+  "other_channels": "held_by_user",
+  "website_checks": 21,
+  "website_verified": true,
+  "phone_testing": "browser_emulation_only",
+  "artifact_root": "D:\\project\\task-artifacts\\toy-today-sync-20261009",
+  "recorded_at": "2026-10-09T16:00:04.625142+08:00"
+}

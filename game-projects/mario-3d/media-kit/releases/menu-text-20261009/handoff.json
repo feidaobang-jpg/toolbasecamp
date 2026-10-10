@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.5.0-menu-text1",
+  "base_version": "v2.5.0",
+  "created_at": "2026-10-09T11:30:23.769472+08:00",
+  "classification": "routine",
+  "review": {
+    "status": "not_required",
+    "reason": "菜单文字与局部留白修复，不改变核心玩法"
+  },
+  "source": {
+    "type": "direct_user_request",
+    "task_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01",
+    "base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "merged_origin_commit": "413f24973f5685907db1671132f0ca1ee050262d"
+  },
+  "build": {
+    "id": "v2.5.0-menu-text1",
+    "commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+    "source_base_commit": "954fc0b20db3200d79452b327dc30770d2df4246",
+    "dirty": false,
+    "fingerprint": "add0cbec3ae306b836ba1fce63fa96d29332c655224f665958042dce2ac388e1",
+    "files": {
+      "public/html/game/mario-3d/audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
+      "public/html/game/mario-3d/file-warning.css": "7a8c7eb9260df34bfd5f05098e60f817ce860c09f1a02c65a3a4b0e2d7bb923f",
+      "public/html/game/mario-3d/index.html": "54bfa72d85068fa492eb3f122d1f1b834f90f73b62329af2a4d7e7972f4a647d",
+      "public/html/game/mario-3d/levels.js": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
+      "public/html/game/mario-3d/main.js": "8bde57043ff8adc8d8bc84482a6376698c8b42011415c7a02d56a53fdfd90eee",
+      "public/html/game/mario-3d/models.js": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
+      "public/html/game/mario-3d/scene.js": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
+      "public/html/game/mario-3d/style.css": "b601f31599b86307dd6a02cab1ae6d03f1ff6ca36d24c0aa130ec1dc63946f19",
+      "public/html/game/mario-3d/textures.js": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "public/html/game/mario-3d/three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+      "public/html/game/mario-3d/world.js": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe",
+      "public/js/game/drag-look.js": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
+    },
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "source_note": "源修复提交加merged_origin_commit的正常合并；运行文件指纹对应最终合并后产物"
+  },
+  "changes": [
+    {
+      "id": "plain-menu-text",
+      "summary": "去掉菜单标题与副标题的偏移阴影，选人/暂停/结算标题使用普通文字。",
+      "validation_status": "passed"
+    }
+  ],
+  "media": [
+    {
+      "id": "before-mario-3d",
+      "file": "releases/menu-text-20261009/captures/before-mario-3d.png",
+      "sha256": "a1c28dd040f144390997b491d30b4dd1e9ae034e9a6da71e91cb1da82cf9eb4a",
+      "kind": "screenshot",
+      "version": "v2.5.0",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "after-mario-3d",
+      "file": "releases/menu-text-20261009/captures/after-mario-3d.png",
+      "sha256": "ed427ef2144d1b5a8d90e0f900d0416cf3637b2d1828f64701b5eeb2cf9568b4",
+      "kind": "screenshot",
+      "version": "v2.5.0-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-mario-3d-844x390",
+      "file": "releases/menu-text-20261009/captures/verified-mario-3d-844x390.png",
+      "sha256": "ee8922136592703edc46df7d772d2deb8739bd1d55eeb6b81514c1e7840ca6b8",
+      "kind": "screenshot",
+      "version": "v2.5.0-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    },
+    {
+      "id": "verified-mario-3d-390x844",
+      "file": "releases/menu-text-20261009/captures/verified-mario-3d-390x844.png",
+      "sha256": "096ea9539de7a948167172f4b85ffa66bfd62b3d88d72f8b9f235500405f500f",
+      "kind": "screenshot",
+      "version": "v2.5.0-menu-text1",
+      "capture_mode": "realtime-automation",
+      "audio": "none",
+      "visual_review": "pass",
+      "description": "浏览器真实菜单，修复前/后证据；手机为视口模拟"
+    }
+  ],
+  "qa": {
+    "method": "Playwright + Edge真实DOM与点击/键盘，桌面1280×720，手机模拟844×390、390×844、800×346、568×320；选人和暂停经过实际入口，恐龙开场脚本用测试钩子跳过",
+    "checks": [
+      {
+        "game": "mario-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "超级玛丽 3D",
+            "shadow": "none"
+          },
+          {
+            "text": "3D",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "通关！",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "mario-3d",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "超级玛丽 3D",
+            "shadow": "none"
+          },
+          {
+            "text": "3D",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "通关！",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "mario-3d",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "unverified": [
+      "手机真机",
+      "Toy/TapTap本版本包"
+    ],
+    "recordings_location": "D:\\project\\task-artifacts\\game-menu-text-20261009\\videos",
+    "post_merge_revalidation": "cadillacs-stage1-3d: 13浏览器检查重新通过；其余运行文件与已测版本相同"
+  },
+  "thumbnail": {
+    "action": "reuse",
+    "reason": "仅菜单文字和按钮留白变化，玩法、场景和画风不变"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+    "verified_at": "2026-10-09T11:38:09.686387+08:00",
+    "commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+    "resource_checks": [
+      {
+        "file": "js/game/drag-look.js",
+        "ok": true,
+        "url": "https://www.zhengxiaohui.cn/js/game/drag-look.js",
+        "sha256": "937af3c660d3ab8f5dee3b5202b9e6c34843fcdf6e89e2f741c95a650a4a8b2f"
+      },
+      {
+        "file": "html/game/mario-3d/main.js",
+        "ok": true,
+        "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js",
+        "sha256": "8bde57043ff8adc8d8bc84482a6376698c8b42011415c7a02d56a53fdfd90eee"
+      }
+    ],
+    "runtime_checks": [
+      {
+        "game": "mario-3d",
+        "test": "plain menu headings",
+        "ok": true,
+        "detail": [
+          {
+            "text": "超级玛丽 3D",
+            "shadow": "none"
+          },
+          {
+            "text": "3D",
+            "shadow": "none"
+          },
+          {
+            "text": "暂停",
+            "shadow": "none"
+          },
+          {
+            "text": "通关！",
+            "shadow": "none"
+          }
+        ]
+      },
+      {
+        "game": "mario-3d",
+        "test": "pause visible",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "desktop runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "844x390 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "390x844 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "800x346 runtime",
+        "ok": true,
+        "detail": []
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 plain headings",
+        "ok": true
+      },
+      {
+        "game": "mario-3d",
+        "test": "568x320 runtime",
+        "ok": true,
+        "detail": []
+      }
+    ],
+    "evidence": "D:/project/task-artifacts/game-menu-text-20261009/website-qa.json"
+  },
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": 39043286960128
+    },
+    "taptap": {
+      "status": "pending_22_batch"
+    },
+    "existing_video_descriptions": {
+      "status": "pending_22_batch"
+    },
+    "community": {
+      "status": "pending_22_batch"
+    },
+    "feedback_reply": {
+      "status": "not_applicable",
+      "reason": "本人聊天反馈，无B站原楼"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "仅收集本次局部菜单证据，完整介绍沿用历史版本；本次测试录像静音"
+    ]
+  },
+  "artifact_location": "D:\\project\\task-artifacts\\game-menu-text-20261009",
+  "media_preserved_at": "D:/project/task-artifacts/game-menu-text-20261009/delivery/mario-3d/media-kit"
+}

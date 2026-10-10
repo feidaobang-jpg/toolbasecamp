@@ -1,0 +1,39 @@
+{
+  "url": "http://127.0.0.1:8799/taptap/chongchao-qianshao/chongchao-qianshao/index.html",
+  "results": [
+    {
+      "mobile": false,
+      "pass": true,
+      "checks": [
+        "startup",
+        "drive",
+        "I exit",
+        "pause/resume",
+        "independent save/reload",
+        "campaign save preserved",
+        "retry",
+        "responsive controls"
+      ],
+      "blocked_external_js": true
+    },
+    {
+      "mobile": true,
+      "pass": true,
+      "checks": [
+        "startup",
+        "drive",
+        "I exit",
+        "pause/resume",
+        "independent save/reload",
+        "campaign save preserved",
+        "retry",
+        "responsive controls"
+      ],
+      "blocked_external_js": true
+    }
+  ],
+  "limitations": [
+    "Mobile simulation; not physical TapTap/Toy app",
+    "QA direct failure boundary; ordinary keyboard and DOM controls used"
+  ]
+}

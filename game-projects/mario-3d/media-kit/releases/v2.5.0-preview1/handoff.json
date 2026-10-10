@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.5.0-preview1",
+  "base_version": "v2.4.6",
+  "created_at": "2026-10-07T01:05:15.334Z",
+  "classification": "新关卡本地预览（用户明确要求先不要上线）",
+  "build": {
+    "id": "v2.5.0-preview1-d417cf9ffe3e",
+    "commit": null,
+    "dirty": true,
+    "source_base_commit": "c203eda139235aee59d947c5cde5a3eb14984926",
+    "fingerprint": "d417cf9ffe3e926d25cb229df289a67c61e840c709c0f167a62d0641bbb49618",
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "files_sha256": {
+      "public/html/game/mario-3d/audio.js": "296f23c38b200eb62b8406b1b31e60d27a925afcc40e10a749d877bd6157b2bf",
+      "public/html/game/mario-3d/file-warning.css": "7a8c7eb9260df34bfd5f05098e60f817ce860c09f1a02c65a3a4b0e2d7bb923f",
+      "public/html/game/mario-3d/index.html": "03d6135f9aab34b13550bc3667e804f975ba8665d64b162a9ebdef9d22a6af36",
+      "public/html/game/mario-3d/levels.js": "a4dd5fde0abbb63d1b8af6385c578f9d44a19701ea54f58ffcc97abbc172229c",
+      "public/html/game/mario-3d/main.js": "0f794099f1070b8a48a26ced52df7bc921f5e02eed2782849bf11d36440b4c36",
+      "public/html/game/mario-3d/models.js": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
+      "public/html/game/mario-3d/scene.js": "b95cff7a87651b1864e3ed84dcf34e59690de6374bbde55e87fc106665c36da3",
+      "public/html/game/mario-3d/sounds/overworld.mp3": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+      "public/html/game/mario-3d/sounds/smb_1-up.wav": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+      "public/html/game/mario-3d/sounds/smb_bowserfalls.wav": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+      "public/html/game/mario-3d/sounds/smb_bowserfire.wav": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+      "public/html/game/mario-3d/sounds/smb_breakblock.wav": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+      "public/html/game/mario-3d/sounds/smb_bump.wav": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+      "public/html/game/mario-3d/sounds/smb_coin.wav": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+      "public/html/game/mario-3d/sounds/smb_fireball.wav": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+      "public/html/game/mario-3d/sounds/smb_fireworks.wav": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+      "public/html/game/mario-3d/sounds/smb_flagpole.wav": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+      "public/html/game/mario-3d/sounds/smb_gameover.wav": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+      "public/html/game/mario-3d/sounds/smb_jump-small.wav": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+      "public/html/game/mario-3d/sounds/smb_jump-super.wav": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+      "public/html/game/mario-3d/sounds/smb_kick.wav": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+      "public/html/game/mario-3d/sounds/smb_mariodie.wav": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+      "public/html/game/mario-3d/sounds/smb_pause.wav": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+      "public/html/game/mario-3d/sounds/smb_pipe.wav": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+      "public/html/game/mario-3d/sounds/smb_powerup.wav": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+      "public/html/game/mario-3d/sounds/smb_powerup_appears.wav": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+      "public/html/game/mario-3d/sounds/smb_stage_clear.wav": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+      "public/html/game/mario-3d/sounds/smb_stomp.wav": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+      "public/html/game/mario-3d/sounds/smb_vine.wav": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+      "public/html/game/mario-3d/sounds/smb_warning.wav": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+      "public/html/game/mario-3d/sounds/smb_world_clear.wav": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+      "public/html/game/mario-3d/sounds/star.mp3": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+      "public/html/game/mario-3d/sounds/underground.mp3": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+      "public/html/game/mario-3d/style.css": "b601f31599b86307dd6a02cab1ae6d03f1ff6ca36d24c0aa130ec1dc63946f19",
+      "public/html/game/mario-3d/textures.js": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "public/html/game/mario-3d/three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+      "public/html/game/mario-3d/world.js": "b078421e42950bad1c1bb66b6f5fa35a3c9e917560e028461cc587c8d850b6ad"
+    },
+    "note": "截图录像采集于任务工作区尚未提交时；指纹为实际运行目录，不能仅用基线 HEAD 代表本次构建"
+  },
+  "feature_inventory": [
+    {
+      "id": "level-1-3",
+      "description": "17 组树冠、4 个浮台、23 逻辑金币、道具、原作顺序敌人、旗杆与大城堡",
+      "status": "implemented",
+      "evidence_ids": [
+        "side",
+        "oblique",
+        "winged",
+        "castle"
+      ]
+    },
+    {
+      "id": "moving-platforms",
+      "description": "垂直/水平往返浮台带着玩家移动，离开/起跳解除搭乘",
+      "status": "implemented",
+      "evidence_ids": [
+        "lifts"
+      ]
+    },
+    {
+      "id": "winged-koopa",
+      "description": "上下飞行，第一次踩掉翅膀，第二次变龟壳",
+      "status": "implemented",
+      "evidence_ids": [
+        "winged"
+      ]
+    },
+    {
+      "id": "stage-flow",
+      "description": "菜单直接选第三关；前两关自动进入第三关；检查点、重开和最终结算一致",
+      "status": "implemented",
+      "evidence_ids": [
+        "menu"
+      ]
+    },
+    {
+      "id": "level-1-4",
+      "description": "第四关",
+      "status": "planned",
+      "evidence_ids": []
+    }
+  ],
+  "changes": [
+    {
+      "id": "third-stage",
+      "feature_ids": [
+        "level-1-3",
+        "moving-platforms",
+        "winged-koopa"
+      ],
+      "before": "已发布版只含 1-1 和 1-2",
+      "after": "本机加入原作 WORLD 1-3 树冠关，沿用自然色哑光低模画风",
+      "user_visible_result": "高低树冠跳跃、往返浮台与飞行乌龟形成第三关新挑战",
+      "evidence_ids": [
+        "oblique",
+        "winged",
+        "lifts",
+        "castle",
+        "sprint-jump-camera"
+      ],
+      "verification": "pass：物理 10 项、完整地形输入重放、浏览器功能与衔接验证"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "menu",
+      "file": "releases/v2.5.0-preview1/captures/menu.png",
+      "sha256": "9d389c186fd0e496b3d81a828aaad5c155710a8141b9b0c22cb6b2bca6065a10",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "标题菜单可直接选择 1-3；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "side",
+      "file": "releases/v2.5.0-preview1/captures/treetops-view-0.png",
+      "sha256": "d0309417b8416a856ccbaa7f3ef0f27d977319b919269e1d79c700148b8ae2fc",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "树冠侧视；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "oblique",
+      "file": "releases/v2.5.0-preview1/captures/treetops-view-1.png",
+      "sha256": "eaaf84fcd43af5bbc1faaa105c6bddb795eb92d25f1bff61041f3a7ec7e1a045",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "树冠斜视、角色与高低跳跃路线；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "front",
+      "file": "releases/v2.5.0-preview1/captures/treetops-view-2.png",
+      "sha256": "8720949e6b74fd57aba6a18ebec18d890a984ceccf5fe899492c8b53e5111158",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "身后正视观察树冠；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "first-person",
+      "file": "releases/v2.5.0-preview1/captures/treetops-view-3.png",
+      "sha256": "088ac11eaa8f7220758b7b054d817755c8fb02cc5ff4016f4770a8ae9189d713",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "第一人称观察高低树冠与敌人；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "top",
+      "file": "releases/v2.5.0-preview1/captures/treetops-view-4.png",
+      "sha256": "9211f8debfd73a944a5a06806b4d3d34b1f859ff657f2a1df512c78b8e91cdad",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "俯视树冠；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-landscape",
+      "file": "releases/v2.5.0-preview1/captures/phone-844.png",
+      "sha256": "4119249b5b779c1f8da9e36d061432c53a304790dbea5637365c720b3de66de8",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "手机横屏控件与树冠俯视；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 844,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "phone-portrait",
+      "file": "releases/v2.5.0-preview1/captures/phone-390.png",
+      "sha256": "ac55e1b3be69cf739bf3bc72b13b9151b6a7cc80bb48de20c3b2df580507ce90",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "390×844 物理竖屏旋转后的横屏布局；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "portrait-menu",
+      "file": "releases/v2.5.0-preview1/captures/portrait-menu.png",
+      "sha256": "2372244e3be1cd743671695c2fb9af646abb86a883e057ed0d4284f553c336b5",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "竖屏标题菜单立即旋转；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "winged",
+      "file": "releases/v2.5.0-preview1/captures/winged-koopa.png",
+      "sha256": "84377498006fc56de3709ed18fba573592fecd57f2844b1d960d197d9ca9c9e4",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "中段飞行绿乌龟与检查点（物理竖屏截图）；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "lifts",
+      "file": "releases/v2.5.0-preview1/captures/moving-platforms.png",
+      "sha256": "a33884b3600c4f6d00c2c352aa03666b9cf0358399f8e2f946e05b39e3701b76",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "两块横移浮台（物理竖屏截图）；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "castle",
+      "file": "releases/v2.5.0-preview1/captures/final-castle.png",
+      "sha256": "ee9a80b676deac71830f2845d6950cffe916cd4fb4e8f09b51fb5585fc64741d",
+      "kind": "screenshot",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "终点旗杆和大城堡（物理竖屏截图）；使用当前 WebGL 渲染与手动时钟，角色按测试钩子定位，不代表普通通关记录",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "sprint-jump-camera",
+      "file": "releases/v2.5.0-preview1/captures/motion-with-game-audio.webm",
+      "sha256": "d88a07e713a4747fdd7667e99559af02223382f54129c12eec897fb4f778d224",
+      "kind": "video",
+      "version": "v2.5.0-preview1",
+      "build_id": "v2.5.0-preview1-d417cf9ffe3e",
+      "capture_mode": "realtime-automation",
+      "description": "真实按键 I/D/K 起跑跳上高树冠，然后 C/E 观察；从预设树冠定位开始，演示无敌用于保持人物可见，未录麦克风/系统声音。只录游戏 Canvas，不含网页控件。",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 3.769605,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "audio_probe": {
+        "codec": "opus",
+        "sample_rate": 48000,
+        "mean_volume_db": -27,
+        "max_volume_db": -7.2,
+        "note": "存在实际游戏音乐/音效波形，无削顶；尚未人工听审，不称视频媒体就绪"
+      },
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 1.3,
+          "description": "真实冲刺起跳并落在高树冠，浏览器检查 grounded/y=9"
+        },
+        {
+          "in_seconds": 1.3,
+          "out_seconds": 3.7,
+          "description": "斜视与持续左右观察，人物与平台采用实时 WebGL 渲染"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "method": "qa/stage3-physics.mjs",
+      "result": "10/10",
+      "evidence": "qa/physics-results.json",
+      "scope": "隔离物理接触：一向树冠、浮台搭乘/反转、跳离、红龟边缘、飞行两次踩踏、道具、复活、旧循环浮台"
+    },
+    {
+      "method": "qa/stage3-route.mjs",
+      "result": "pass",
+      "evidence": "qa/route-results.json",
+      "scope": "all steps replay actual inputs from x=3,y=0; enemies disabled solely for route geometry; no teleports",
+      "seconds": 44.33,
+      "steps": 5320,
+      "deaths": 0,
+      "note": "敌人关闭，专门检查完整地形可达性，不宣称普通带敌人全程通关"
+    },
+    {
+      "method": "qa/pipe-clear-buttons.cjs",
+      "result": "13/13",
+      "evidence": "qa/regression-results.json",
+      "scope": "实键/指针按钮，实际水管、旗杆/城堡回调，1-1→1-2→1-3→最终结算；测试预定位到出口，不冒充全程操作"
+    },
+    {
+      "method": "qa/stage3-preview.cjs",
+      "result": "32/32（含十组连续视角性能检查）；补采媒体快跑 22/22",
+      "evidence": "qa/preview-results.json",
+      "environment": "Microsoft Edge 154.0.4258.53；1280×720 桌面及 844×390 / 390×844 视口模拟，非手机真机",
+      "performance": [
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "preset": "top",
+          "fps": 167.3,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "preset": "side",
+          "fps": 169,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "preset": "oblique",
+          "fps": 170,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "preset": "front",
+          "fps": 170,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "preset": "fp",
+          "fps": 170,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "preset": "fp",
+          "fps": 170,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "preset": "top",
+          "fps": 170,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "preset": "side",
+          "fps": 167.6,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "preset": "oblique",
+          "fps": 167.1,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 1
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "preset": "front",
+          "fps": 168.8,
+          "frame_p95_ms": 6,
+          "frames_over_50ms": 0
+        }
+      ],
+      "scope": "五视角持续转动、菜单标签/直接选择、检查点坠落复活、重开、双向模式切换、按钮实体/对齐/边界、竖屏菜单旋转、真实冲刺跳跃",
+      "not_tested": [
+        "物理手机多指触控、热机性能、普通带敌人全关连续通关",
+        "声音人工听审（实际音轨和波形已核验）"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "用户要求仅本机预览，尚未公开发布",
+      "动态素材仅为局部跳跃/镜头片段，未采集第三关普通带敌人全程视频",
+      "音轨人工听审未执行，部分辅助截图尚未人工审看，不宣称视频素材就绪"
+    ]
+  },
+  "channels": {
+    "website": {
+      "status": "withheld_per_user",
+      "last_successful_version": "v2.4.6"
+    },
+    "toy": {
+      "id": 39043286960128,
+      "status": "withheld_per_user",
+      "last_successful_version": "v2.4.6",
+      "submitted": false
+    },
+    "bilibili": {
+      "status": "withheld_per_user",
+      "reason": "关卡只在本机预览，公开试玩未改变，不提前修改简介或发布视频"
+    },
+    "taptap": {
+      "status": "withheld_per_user"
+    }
+  },
+  "preview": {
+    "url": "http://127.0.0.1:8953/html/game/mario-3d/index.html?level=1-3",
+    "branch": "codex/mario-stage3-preview-20261007",
+    "worktree": "C:/Users/37818/.codex/worktrees/mario-stage3-preview-20261007/toolbasecamp",
+    "server": "python -m http.server 8953 --bind 127.0.0.1 --directory public",
+    "launch_from": "task worktree root",
+    "repository_commit_policy": "local checkpoint only; no push, main merge, deployment or channel writes until user review",
+    "artifact_backup": "D:/project/task-artifacts/mario-stage3-preview-20261007"
+  }
+}

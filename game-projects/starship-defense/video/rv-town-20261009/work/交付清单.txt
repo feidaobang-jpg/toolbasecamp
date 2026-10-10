@@ -1,0 +1,15 @@
+虫潮围城 · 房车城镇审片包
+画幅1920×1080，30fps，时长1分49.87秒。中文人声云希正常语速。
+B站/抖音：同一完整中文烧录字幕片，复制成两目录便于投稿。
+B站 final/bilibili-zh/：gameplay-zh-final.mp4、首页4:3封面、空间16:9封面、投稿文案.txt。
+抖音 final/douyin-zh/：gameplay-zh-final.mp4、16:9封面参考、投稿文案.txt。封面入口待发布时确认。
+YouTube final/youtube-zh/：gameplay-youtube-final.mp4、中文16:9封面、投稿文案.txt、英文元数据TXT、中英SRT。
+YouTube保持中文音轨；需一并上传两个SRT，播放器可切换。
+状态：三版制作完成、待人工审片；所有视频尚未上传。音频客观检查通过，主观听审未执行。
+其他渠道先不发的限制持续有效。
+review/index.html提供两个唯一完整电影的本地播放器与封面，无自动播放。
+work/保存原片、声音、字幕、脚本、工程、清单、QA与历史版本，可续接编辑。
+电影SHA-256：
+bilibili-zh: 25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe
+douyin-zh: 25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe
+youtube-zh: e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050

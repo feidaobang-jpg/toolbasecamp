@@ -1,0 +1,25 @@
+{
+  "version": "v0.11.0-preview.2",
+  "bossTracksBoundary": [
+    {
+      "player": 5.1000000000000005,
+      "boss": 5.1000000000000005
+    },
+    {
+      "player": -3.7,
+      "boss": -3.7
+    }
+  ],
+  "frames": 1244,
+  "fps": 166.91489218961934,
+  "p95": 6,
+  "over50": 0,
+  "renderer": {
+    "calls": 47,
+    "tris": 28110,
+    "geometries": 384,
+    "textures": 17,
+    "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "capture": "Realtime game canvas and audio, demo immunity, clearing waves fixture"
+}

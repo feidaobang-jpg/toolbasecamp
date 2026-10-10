@@ -1,16 +1,16 @@
 {
   "game_id": "tank-3d-stage-1",
-  "name": "坦克大战 3D：经典 35 关 + 魔改无限周目",
+  "name": "坦克大战 3D：魔改 Boss 挑战 · 含经典 35 关",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "camera-fullmap1",
-  "handoff": "releases/camera-fullmap1/handoff.json",
+  "current_version": "remix-entry1-menu-text1",
+  "handoff": "releases/menu-text-20261009/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
-  "public_play_url_note": "lobby1：房间大厅、可选密码、2–4人合作；菜单按钮边框/阴影/方向箭头。B站App及手机真机未验收。",
+  "public_play_url_note": "新玩家默认魔改挑战，老玩家保留已选模式；经典复刻35关可直接选择。支持2–4人联机；手机真机未验收。",
   "preview_url": "https://claude.ai/artifact/24AYVoSJXaPXLF9KLsKNtp",
   "preview_url_note": "claude.ai 私有预览副本（扁平目录 + 按 ` 显示帧时间浮层），仅所有者可见，不是公开试玩链接。",
   "development_model": "本版 merge1：claude-opus-5-5（Claude Code）；collision-fix1 等：GPT-6 Codex；初版：claude-opus-5-5",
@@ -23,26 +23,27 @@
     "ffmpeg、Pillow"
   ],
   "notes": "经典模式地图、敌军名单取自 MIT 许可的 feichao93/battle-city 关卡数据，数值按该仓库 resources/nes-values 的 ROM 反汇编调研；魔改模式地图由关号确定性生成。3D 模型与贴图程序化制作，音效采用原作 FC 音效（用户已明确不考虑版权顾虑），引擎声等为合成。",
-  "version": "camera-fullmap1",
+  "version": "remix-entry1",
   "toy": {
     "id": 39043249461248,
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_P07nRFPD/index.html",
-    "verified_at": "2026-10-06T18:48:28.119681+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Dt86VZ6Y/index.html",
-    "submitted_version": "camera-fullmap1",
-    "submitted_at": "2026-10-06T15:56:54.216947+00:00",
+    "review_status": "published",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_3PQWkFb5/index.html",
+    "verified_at": "2026-10-08T02:49:45.078750+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_I0Gossrs/index.html",
+    "submitted_version": "remix-entry1-menu-text1",
+    "submitted_at": "2026-10-09T15:53:29.770547+08:00",
     "video_bindings": [
+      "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/camera-fullmap1/handoff.json",
-    "published_version": "coop1",
+    "release_record": "releases/toy-sync-20261009/sync.json",
+    "published_version": "remix-entry1-menu-text1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "全图取景恢复包预览实测通过并提交审核；公开包尚未核验。",
-    "package_sha256": "33beb6289bf5b88730955bad5456209ba3690b446dbe856642e2cf95671847d7",
+    "note": "remix-entry1 已发布并核验魔改推荐入口，保留既有模式选择和经典35关。手机为桌面浏览器模拟，未做真机验收。",
+    "package_sha256": "0185aebff4b162dfcddc672943932c720bffc01833881fcbe990c3b44eb24593",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -69,38 +70,86 @@
       {
         "version": "pickup-clean1",
         "classification": "普通补丁",
-        "status": "platform_published_pending_public_verification",
+        "status": "included_in_published",
         "record": "releases/pickup-clean1/handoff.json",
-        "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。"
+        "summary": "取消击杀分数浮字、道具外圈，魔改满护甲消耗修理包。",
+        "included_version": "remix-entry1"
       },
       {
         "version": "hit-audio1",
         "classification": "普通补丁",
-        "status": "auditing",
+        "status": "included_in_published",
         "record": "releases/hit-audio1/handoff.json",
         "summary": "修复敌军击毁事件覆盖导致无爆炸声，重甲命中改用现有原版金属音。",
         "package_hash": "85bdef4fad95a820243ba2102621a55b6d5b0a285c0e5fe21812703d1a85a204",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_yc330cwk/index.html",
-        "submitted_at": "2026-10-06T11:16:46.505145+00:00"
+        "submitted_at": "2026-10-06T11:16:46.505145+00:00",
+        "included_version": "remix-entry1"
       },
       {
         "version": "lobby1",
         "classification": "正式版本",
-        "status": "auditing",
+        "status": "included_in_published",
         "record": "releases/lobby1/handoff.json",
-        "summary": "2–4人大厅、可选密码、服务端分页筛选及菜单按钮反馈。"
+        "summary": "2–4人大厅、可选密码、服务端分页筛选及菜单按钮反馈。",
+        "included_version": "remix-entry1"
       },
       {
         "version": "controls-inset1",
         "classification": "普通补丁",
         "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
-        "status": "auditing",
-        "record": "releases/controls-inset1/handoff.json"
+        "status": "included_in_published",
+        "record": "releases/controls-inset1/handoff.json",
+        "included_version": "remix-entry1"
+      },
+      {
+        "version": "fs-capable1",
+        "classification": "普通补丁",
+        "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+        "status": "published",
+        "record": "releases/fs-capable1/handoff.json"
+      },
+      {
+        "version": "lobby-hint1",
+        "classification": "普通补丁",
+        "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+        "status": "published",
+        "record": "releases/lobby-hint1/notes.md",
+        "submitted_at": "2026-10-07T21:52:19+08:00",
+        "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
+        "published_verified_at": "2026-10-07T21:56:53+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
+      },
+      {
+        "version": "remix-entry1",
+        "classification": "正式版本",
+        "status": "published",
+        "record": "releases/remix-entry1/handoff.json",
+        "summary": "新玩家默认魔改、保留已有选择、经典35关直接入口、标题与宣传先展示魔改看点。"
       }
     ],
-    "published_verified_at": "2026-10-06T18:48:28.119681+08:00",
-    "status": "auditing",
-    "package_hash": "36d5c97fd4afaacb96c3ad69c4ec106dc539d97bd275739d0fbb8b719381b442"
+    "published_verified_at": "2026-10-07T21:56:53+08:00",
+    "status": "published",
+    "package_hash": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v24035/index.html?test=1&qa=1",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_eN0ZNFKW/index.html",
+    "last_published_version": "remix-entry1-menu-text1",
+    "last_successful_sync_version": "remix-entry1-menu-text1",
+    "last_successful_sync_at": "2026-10-09T16:00:04.578669+08:00",
+    "public_verified_at": "2026-10-09T16:00:04.578669+08:00",
+    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+    "version": "remix-entry1",
+    "website_verified_at": "2026-10-07T21:52:19+08:00",
+    "public_verified_version": "remix-entry1-menu-text1",
+    "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+    "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。",
+    "title": "坦克大战 3D",
+    "current_public_verification": "verified",
+    "channel_authorization": {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "at": "2026-10-09T15:48:29.454287+08:00"
+    }
   },
   "merged_from": {
     "game": "tank-battle",
@@ -109,11 +158,19 @@
   },
   "bilibili_videos": [
     {
+      "bvid": "BV1TepK69Eet",
+      "aid": 117397444957530,
+      "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+      "owner_mid": 16214353,
+      "mapping": "公开视频作者UID16214353、feidao-tank-3d入口与toy video list绑定已核验",
+      "publication_record": "../video/online-20261007/work/publication-result.json"
+    },
+    {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
       "title": "把坦克大战做成立体地图，这次能守住老鹰吗？",
       "owner_mid": 16214353,
-      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；Toy 无视频绑定"
+      "mapping": "toy video mine 标题 + 作者 UID 16214353，旧简介含 feidao-tank-3d 试玩链接；toy video list已确认绑定保留"
     }
   ],
   "drag_camera_controls": {
@@ -128,9 +185,9 @@
   },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "camera-fullmap1",
-  "website_verified_at": "2026-10-06T15:55:16.221735+00:00",
-  "website_commit": "91631600a10393f1a64ecf7ec45b72609c335a98",
+  "website_version": "remix-entry1-menu-text1",
+  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
+  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
   "web_toy_versions_match": false,
   "coop": {
     "protocol": "tank3d-v2",
@@ -156,5 +213,161 @@
     "top": "fixed full battlefield",
     "preference": "用户确认斜俯视也看全图",
     "base_version": "camera-follow1"
-  }
+  },
+  "taptap": {
+    "schema_version": 1,
+    "game_id": "tank-3d",
+    "developer_id": 100726,
+    "app_id": 962376,
+    "automatic_sync_enabled": true,
+    "authorization_date": "2026-10-07",
+    "status": "online",
+    "submitted_version": "remix-entry1-menu-text1",
+    "submitted_package_sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+    "submitted_h5_version_id": 282322,
+    "draft_version_id": "1054182",
+    "submitted_at": null,
+    "last_published_h5_version_id": 282322,
+    "last_public_runtime_verified_version": null,
+    "release_record": "releases/backfill-20261010/release-status.json",
+    "pending": [],
+    "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
+    "submission_time_source": "Submission receipt archived; exact server submission time not persisted.",
+    "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "submitted_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "platform_version": "V-20261010",
+    "staged_version": "remix-entry1-menu-text1",
+    "staged_h5_version_id": 282322,
+    "pending_note": null,
+    "platform_status": "online",
+    "audit_id": "1054182",
+    "last_published_platform_version": "V-20261010",
+    "community_post_status": "public_verified",
+    "community_post_version": "remix-entry1-menu-text1",
+    "qa": {
+      "package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
+      "devices": [
+        "desktop",
+        "landscape",
+        "portrait"
+      ],
+      "co_op": "two independent browser contexts on production relay",
+      "real_mobile_test": false,
+      "taptap_client_test": false,
+      "artifact": "D:\\project\\task-artifacts\\tank-remix-default-20261008\\taptap\\qa.json"
+    },
+    "last_published_source_version_note": "平台V-20261007-2/H5 272259已online；旧台账源版本冲突，不从其推断新的公开运行版本。",
+    "last_published_version": "remix-entry1-menu-text1",
+    "last_published_revision": "1054182",
+    "last_published_at": null,
+    "last_published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_public_page_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_published_status_evidence": "game-projects/site-games/releases/backfill-20261010/taptap-962376-status.json",
+    "staged_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "staged_package_sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+    "community_post_note": null,
+    "community_post": {
+      "app": 962376,
+      "title": "坦克大战 3D 更新：模式入口和菜单更清楚了",
+      "body": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n试玩：https://www.taptap.cn/app/962376\n欢迎反馈菜单与操作体验。",
+      "rendered": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n\n试玩：\n坦克大战 3D\n\n\n欢迎反馈菜单与操作体验。",
+      "status": "public_verified",
+      "at": "2026-10-10T02:47:37.989Z",
+      "url": "https://www.taptap.cn/moment/857935059817074114",
+      "forum_app_id": null,
+      "moment_id": "857935059817074114",
+      "content_sha256": "7c0ad8bd33f2594f40d2221691e48b6bbd63666a493cb8309938faf467fc0c7a",
+      "source_version": "remix-entry1-menu-text1",
+      "own_profile_verified": true
+    },
+    "community_sync": {
+      "automatic_posting_enabled": true,
+      "source_version": "remix-entry1-menu-text1",
+      "h5_version_id": 282322,
+      "platform_version": "V-20261010",
+      "last_public_verified_moment_id": "857935059817074114",
+      "last_public_verified_url": "https://www.taptap.cn/moment/857935059817074114",
+      "content_sha256": "7c0ad8bd33f2594f40d2221691e48b6bbd63666a493cb8309938faf467fc0c7a",
+      "public_verified_at": "2026-10-10T02:47:37.989Z",
+      "own_profile_verified": true,
+      "forum_app_id": null,
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    "verification": {
+      "qa": "game-projects/site-games/releases/backfill-20261010/qa.json",
+      "local_package_verified": true,
+      "public_page": "TapTap PC端 试玩DEMO 入口可见",
+      "phone": "physical TapTap App not tested"
+    },
+    "backfill_authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "sync_ledger": "taptap-sync.json"
+  },
+  "multiplayer": {
+    "players": "2–4",
+    "hub": "https://www.zhengxiaohui.cn/game-online.html",
+    "invitation": "菜单创建房间→复制邀请链接→好友加入准备→房主开始",
+    "authority": "房主模拟，服务器转发；房主离线结束，其他队友可继续",
+    "limitations": [
+      "暂无房主迁移；房主离线结束房间",
+      "联机不写入单机存档/排行榜"
+    ],
+    "late_join": true,
+    "idle_takeover_seconds": 30,
+    "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
+    "host_kick": true
+  },
+  "publication_status": "published",
+  "versions": [
+    {
+      "version": "coop-live2",
+      "base_version": "coop-hub1",
+      "classification": "正式版本",
+      "handoff": "releases/coop-live2/handoff.json",
+      "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
+    }
+  ],
+  "last_release_completed_at": "2026-10-08T02:49:45.078750+00:00",
+  "menu_text_update": {
+    "version": "remix-entry1-menu-text1",
+    "record": "releases/menu-text-20261009/handoff.json",
+    "classification": "routine",
+    "website_status": "public_verified",
+    "platform_status": "pending_22_batch"
+  },
+  "channel_holds": {
+    "status": "superseded_by_current_authorization",
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "website": {
+    "status": "public_verified",
+    "version": "remix-entry1-menu-text1",
+    "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+    "verified_at": "2026-10-09T15:47:30.230676+08:00",
+    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+    "runtime_sha256": "2a3dcf73f25961955204353cfe8d288483de7d83087755f80aebfcf4c9666770",
+    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+  },
+  "channel_hold_history": [
+    {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "since": "2026-10-09T16:00:04.578669+08:00",
+      "targets": [
+        "taptap",
+        "other_game_platforms",
+        "existing_video_descriptions",
+        "announcements"
+      ],
+      "status": "held_by_user"
+    }
+  ],
+  "last_backfill_record": "releases/backfill-20261010/release-status.json"
 }

@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "developer_id": 100726,
+  "app_id": 962722,
+  "automatic_sync_enabled": true,
+  "authorization_date": "2026-10-07",
+  "status": "existing_online_update_deferred_by_user",
+  "platform_status": "rejected",
+  "staged_version": "v0.10.1",
+  "staged_source_commit": "999d4057",
+  "staged_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+  "staged_h5_version_id": 276136,
+  "draft_version_id": "1047324",
+  "submitted_version": "v0.10.1",
+  "submitted_at": "2026-10-08T19:40:31.571191+08:00",
+  "last_published_version": "v0.10.0",
+  "last_published_h5_version_id": 275750,
+  "last_public_runtime_verified_version": null,
+  "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+  "release_record": "releases/backfill-20261010/release-status.json",
+  "pending_material_review": [],
+  "pending": [],
+  "dedupe_rule": "当前同哈希已上线、同版本更新帖已公开核验，不重复上传、提审或发帖；恢复时读取平台及最新台账。",
+  "agreement_authorized": true,
+  "agreement_signed": true,
+  "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
+  "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
+  "agreement_signed_at": "2026-10-07T02:28:33.538741+00:00",
+  "submitted_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+  "submitted_h5_version_id": 276136,
+  "submission_time_source": "平台 list-app-versions created_time=1791384779（V-20261007-6，last_event=review_submitted）",
+  "force_submission_authorized": true,
+  "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
+  "content_preaudit_passed": false,
+  "content_preaudit_warnings": [
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "title"
+      ],
+      "message": "游戏标题涉及知名游戏IP‘恐龙快打’，可能存在侵权风险与误导倾向。如已获得官方正式授权，请前往游戏资质页面上传相关授权证明文件，否则有驳回风险。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "description"
+      ],
+      "message": "游戏简介中声明为‘恐龙快打非官方复刻’，涉及知名IP同人/复刻内容，建议前往游戏资质页面提供软件著作权及相关授权资质证明，否则存在驳回风险。"
+    },
+    {
+      "code": "PREAUDIT",
+      "field_ids": [
+        "trial_note"
+      ],
+      "message": "开发者的话中提及爱好者复刻经典原作，涉及知名IP版权问题，建议前往资质页面补充相关授权文件。"
+    }
+  ],
+  "rights_proof_provided": false,
+  "pending_updates": [
+    {
+      "source_version": "v0.8.0",
+      "source_commit": "33ff01f32206e16f9fb48471c0bc7cf954ae456e",
+      "change": "新合并联机功能",
+      "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审",
+      "next_action": "此前审核包已上线；以后续已合并主线与当前网站核验为准继续同步，不重复送首次上线包。",
+      "status": "superseded_by_v0.8.2_submission"
+    }
+  ],
+  "last_published_platform_version": "V-20261008",
+  "last_published_revision": 1043928,
+  "last_published_at": null,
+  "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
+  "public_url": "https://www.taptap.cn/app/962722",
+  "online_status_evidence_record": "releases/v0.9.4/taptap-online-check.json",
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "last_public_verified_moment_id": "857180359089981386",
+    "last_public_verified_url": "https://www.taptap.cn/moment/857180359089981386",
+    "forum_app_id": 962722,
+    "source_version": "v0.9.4",
+    "h5_version_id": 273318,
+    "platform_version": "V-20261007-6",
+    "content_sha256": "c59ff63eb2e8fee76359287b3cb8f2e0390db18dde2cd7d1204c09e31747af49",
+    "submitted_at": "2026-10-08T08:48:43+08:00",
+    "public_verified_at": "2026-10-08T00:53:21.8174261Z",
+    "own_profile_verified": true,
+    "forum_verified": true,
+    "release_record": "releases/v0.9.4/taptap-community.json",
+    "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+  },
+  "pending_note": "已按用户要求保留既有线上版本，此次IP材料退回的更新不再催办；平台原退回证据保留。",
+  "startup_adapter": "inline-runtime-v1",
+  "pending_community_updates": [],
+  "platform_version": "V-20261008-1",
+  "submitted_source_commit": "999d4057",
+  "verification": {
+    "qa": "最终ZIP三视口25/25，屏蔽独立JS仍启动，非手机真机",
+    "store_description_change": true,
+    "startup_adapter": "inline-runtime-v1",
+    "namespace": "taptap-cadillacs-v1:"
+  },
+  "community_post_status": "deferred_with_current_platform_update",
+  "community_post_note": "原作开场、背摔、音频调整与启动兼容修复合并为一条更新动态，已核验本人主页与恐龙快打论坛显示同一 moment。",
+  "history": [
+    {
+      "version": "v0.9.3",
+      "platform_version": "V-20261007-5",
+      "h5_version_id": 272592,
+      "package_sha256": "7cec7f74ece1ee3793d43a4b9e43ba0b5a3858c309247566cfa894a58147a05d",
+      "draft_version_id": "1043085",
+      "submitted_at": "2026-10-07T19:05:28+08:00",
+      "status": "online",
+      "note": "撤回沼泽声重击、只放原版 BGM；list-app-versions 确认 published/online"
+    },
+    {
+      "version": "v0.9.4",
+      "platform_version": "V-20261007-6",
+      "h5_version_id": 273318,
+      "package_sha256": "71f034bde99cd79b78d020e4280f2bdf377f8cf5870384bcf128a590f16c4001",
+      "status": "online",
+      "last_event": "published",
+      "verified_at": "2026-10-08T00:58:42.737833+00:00",
+      "community_moment_id": "857180359089981386"
+    },
+    {
+      "version": "v0.10.1",
+      "platform_version": "V-20261008-1",
+      "h5_version_id": 276136,
+      "status": "reviewing",
+      "submitted_at": "2026-10-08T19:40:31.571191+08:00",
+      "note": "删除第三关，恢复两关；不继续扩展本次第三关"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "at": "2026-10-10T03:02:52.978211+00:00",
+      "previous_baseline": {
+        "status": "reviewing_v0.10.1",
+        "platform_version": "V-20261008-1",
+        "submitted_version": "v0.10.1",
+        "submitted_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+        "last_published_version": "v0.10.0",
+        "last_published_h5_version_id": 275750,
+        "community_post": null,
+        "community_sync": {
+          "automatic_posting_enabled": true,
+          "last_public_verified_moment_id": "857180359089981386",
+          "last_public_verified_url": "https://www.taptap.cn/moment/857180359089981386",
+          "forum_app_id": 962722,
+          "source_version": "v0.9.4",
+          "h5_version_id": 273318,
+          "platform_version": "V-20261007-6",
+          "content_sha256": "c59ff63eb2e8fee76359287b3cb8f2e0390db18dde2cd7d1204c09e31747af49",
+          "submitted_at": "2026-10-08T08:48:43+08:00",
+          "public_verified_at": "2026-10-08T00:53:21.8174261Z",
+          "own_profile_verified": true,
+          "forum_verified": true,
+          "release_record": "releases/v0.9.4/taptap-community.json",
+          "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+        }
+      }
+    }
+  ],
+  "last_published_verified_at": "2026-10-08T00:58:42.737833+00:00",
+  "community_history": [
+    {
+      "automatic_posting_enabled": true,
+      "last_public_verified_moment_id": "856856050622531778",
+      "last_public_verified_url": "https://www.taptap.cn/moment/856856050622531778",
+      "forum_app_id": 962722,
+      "source_version": "v0.7.0",
+      "h5_version_id": 270844,
+      "platform_version": "V-20261007",
+      "content_sha256": "5e58de5b27fcbae6b195cec8b61586787d2506f81a44f7b9fe2b732be220e92f",
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+      "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+    }
+  ],
+  "resolved_community_updates": [
+    {
+      "gameplay_version": "v0.9.2",
+      "h5_version_id": 272389,
+      "platform_version": "V-20261007-3",
+      "status": "merged_into_public_verified_post",
+      "note": "保留上一任务关于原作开场、背摔与连打重击声的上线动态待办；发布前查本人动态，避免重复。可合并下一次已上线更新说明。",
+      "record": "releases/v0.9.2/handoff.json",
+      "moment_id": "857180359089981386"
+    },
+    {
+      "gameplay_version": "v0.9.2",
+      "startup_adapter": "inline-runtime-v1",
+      "h5_version_id": 272436,
+      "status": "merged_into_public_verified_post",
+      "note": "启动适配审核中；手机故障未确认解决，不能写已全面修好。",
+      "record": "releases/taptap-startup-20261007/handoff.json",
+      "moment_id": "857180359089981386"
+    },
+    {
+      "gameplay_version": "v0.9.4",
+      "h5_version_id": 273318,
+      "platform_version": "V-20261007-6",
+      "status": "merged_into_public_verified_post",
+      "note": "上线后与 v0.9.2/v0.9.3 待合并动态一并发一条更新说明；发布前查重。",
+      "record": "releases/v0.9.4/handoff.json",
+      "moment_id": "857180359089981386"
+    }
+  ],
+  "pending_device_feedback": {
+    "physical_device_verified": false,
+    "scope": "玩家原设备的启动复测与其他手机机型表现",
+    "does_not_block_verified_release": true
+  },
+  "rollback": {
+    "from": "v0.10.0",
+    "to": "v0.10.1",
+    "reason": "用户要求删除本次第三关",
+    "status": "reviewing",
+    "third_stage_community_update": "cancelled_without_publication"
+  },
+  "cover_update": {
+    "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+    "app_id": 962722,
+    "title": "恐龙快打 3D",
+    "phase": "quality-v2",
+    "status": "reviewing",
+    "draft": {
+      "based_on_version_id": "1047324",
+      "status": "draft",
+      "version_id": "1047770"
+    },
+    "draft_id": "1047770",
+    "platform_version": "V-20261008-2",
+    "prepared_at": "2026-10-08T13:12:08.989700+00:00",
+    "changes": [
+      {
+        "field_id": "banner_4",
+        "expected": "https://img-tc.tapimg.com/market/images/efc80bf7d0ae897e9d429114714c3d90.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/7ac44f0bcc17b43fb0a8958fb155cc51.jpg"
+      },
+      {
+        "field_id": "cover_vertical",
+        "expected": "https://img-tc.tapimg.com/market/images/21b4819a1e4141a74becd2ea009dcaef.jpg",
+        "value": "https://img-tc.tapimg.com/market/images/339427ed37e30a3cf53c5e26630d5b2b.jpg"
+      }
+    ],
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\banner_4.jpg",
+        "size": [
+          1920,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\dino-fight.jpg",
+        "source_sha256": "d336bcd5c180d144e1845e263afb9e9ddf9e5ad8e182038e03de9bd6f42a1541",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          400,
+          390,
+          3333,
+          2040
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\banner_4.html",
+        "sha256": "48ae400de5ced7a42de7dc3b4e5abf7eda0c37f49c77f00ae19139f9997dd962",
+        "bytes": 220209
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\cover_vertical.jpg",
+        "size": [
+          720,
+          1080
+        ],
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\dino-fight.jpg",
+        "source_sha256": "d336bcd5c180d144e1845e263afb9e9ddf9e5ad8e182038e03de9bd6f42a1541",
+        "source_size": [
+          3840,
+          2160
+        ],
+        "crop": [
+          620,
+          80,
+          2006,
+          2159
+        ],
+        "processing": "原生实机等比裁切与压缩；独立 HTML/CSS 字标、配色、渐层与版式；未生成或重建游戏角色及场景",
+        "design_source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2\\962722\\cover_vertical.html",
+        "sha256": "1859cba18b2697da66479bd2ad680be64544f397f1591d1bdfca87d6b9d3bc90",
+        "bytes": 82944
+      }
+    },
+    "uploads": {
+      "banner_4": {
+        "assetId": "363812",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 220209,
+          "width": 1920
+        },
+        "url": "https://img-tc.tapimg.com/market/images/7ac44f0bcc17b43fb0a8958fb155cc51.jpg",
+        "width": 1920
+      },
+      "cover_vertical": {
+        "assetId": "363813",
+        "height": 1080,
+        "info": {
+          "format": "jpeg",
+          "height": 1080,
+          "size": 82944,
+          "width": 720
+        },
+        "url": "https://img-tc.tapimg.com/market/images/339427ed37e30a3cf53c5e26630d5b2b.jpg",
+        "width": 720
+      }
+    },
+    "snapshot": {
+      "changes": [],
+      "revision": 1047770,
+      "status": "ready",
+      "version_id": "1047770",
+      "warnings": []
+    },
+    "precheck": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047770",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题涉及知名经典游戏IP‘恐龙快打’，可能存在侵权风险。如已取得官方授权，请前往游戏资质页面上传相关授权证明文件，否则请修改游戏名称。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "游戏简介内容涉及引用知名游戏IP‘恐龙快打’及非官方复刻说明，请确保已取得相关版权授权并在资质页面提交授权书，否则建议调整相关描述。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "trial_note"
+          ],
+          "message": "开发者的话中涉及知名游戏IP‘恐龙快打’的引用，请前往游戏资质页面上传相关授权证明，或修改文本内容以避免侵权风险。"
+        }
+      ]
+    },
+    "only_cover_fields_changed": true,
+    "package_binding_changed": false,
+    "public_verified": false,
+    "material_quality_verified": false,
+    "submission": {
+      "audit_id": "1047770",
+      "status": "reviewing",
+      "version_id": "1047770"
+    },
+    "submitted_at": "2026-10-08T13:14:11.521624+00:00",
+    "remaining_warning_note": "素材构图/排版预检已无提示；既有经典IP版权预审提示保留，未声称已获授权，按本次已授权范围提交正式审核。",
+    "platform_history_head": {
+      "created_time": 1791465107,
+      "last_event": "review_submitted",
+      "status": "reviewing",
+      "status_label": "审核中",
+      "status_value": 1,
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
+    },
+    "game_id": "cadillacs-stage1-3d",
+    "developer_id": 100726,
+    "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/quality-v2/handoff.json",
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\quality-v2",
+    "updated_at": "2026-10-08T13:18:01.227854+00:00",
+    "next_action": "等待本次正式素材审核；读取 published/entry_type/status_reason，公开生效与推荐标准分别核验。entry_type=1仍需按新意见整改，不重复用同图送审。",
+    "history": [
+      {
+        "task_id": "01a11b3b-6a13-7e42-bc1c-3a87198188f2-taptap-covers-01",
+        "app_id": 962722,
+        "status": "pending_existing_review",
+        "checked_at": "2026-10-08T11:49:16.590563+00:00",
+        "reviewing": [
+          {
+            "created_time": 1791458577,
+            "last_event": "review_submitted",
+            "status": "reviewing",
+            "status_label": "审核中",
+            "status_value": 1,
+            "version": "V-20261008-1",
+            "version_id": "V-20261008-1"
+          }
+        ],
+        "title": "恐龙快打 3D",
+        "prepared_at": "2026-10-08T11:44:33.268658+00:00",
+        "fields": {
+          "banner_4": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\banner_4.jpg",
+            "sha256": "8af8018d4f3f936bf8fae9631222164b8497d3e8de61850eb7e6d4a5a3e7bace",
+            "size": [
+              1920,
+              1080
+            ],
+            "bytes": 575945,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover-source.jpg",
+            "source_sha256": "300cd4c49fdef52622a4f57d2c962cfc30f051bf4010fbc50c583ab7bd171fcf",
+            "crop": [
+              120,
+              210,
+              1400,
+              930
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          },
+          "cover_vertical": {
+            "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover_vertical.jpg",
+            "sha256": "a649fe797b4babf9158dbb8695ba1ba6c79534671b95f50ec0baa00a2987a2e4",
+            "size": [
+              720,
+              1080
+            ],
+            "bytes": 243268,
+            "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover-source.jpg",
+            "source_sha256": "300cd4c49fdef52622a4f57d2c962cfc30f051bf4010fbc50c583ab7bd171fcf",
+            "crop": [
+              280,
+              100,
+              920,
+              1060
+            ],
+            "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+          }
+        },
+        "uploads": {
+          "banner_4": {
+            "assetId": "362999",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 575945,
+              "width": 1920
+            },
+            "url": "https://img-tc.tapimg.com/market/images/9a22f7839b5ad4dee945f53acfd07431.jpg",
+            "width": 1920
+          },
+          "cover_vertical": {
+            "assetId": "363000",
+            "height": 1080,
+            "info": {
+              "format": "jpeg",
+              "height": 1080,
+              "size": 243268,
+              "width": 720
+            },
+            "url": "https://img-tc.tapimg.com/market/images/f583e8d807ef08e3301c2d10c8c968f0.jpg",
+            "width": 720
+          }
+        },
+        "public_verified": false,
+        "next_action": "现有玩法版本审核结束后，从最新线上创建资料草稿，写前重读，仅替换已准备的 banner_4 与 cover_vertical，不改包体、不撤审。",
+        "game_id": "cadillacs-stage1-3d",
+        "developer_id": 100726,
+        "release_record": "game-projects/site-games/releases/taptap-real-covers-20261008/handoff.json",
+        "artifact_root": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008",
+        "updated_at": "2026-10-08T11:50:37.154945+00:00",
+        "source_note": "2026-10-07 正常试玩截图；与当前 v0.10.0 相同的第一关角色、画风及场景",
+        "changes": [
+          {
+            "field_id": "banner_4",
+            "expected": null,
+            "value": "https://img-tc.tapimg.com/market/images/9a22f7839b5ad4dee945f53acfd07431.jpg",
+            "applied": false
+          },
+          {
+            "field_id": "cover_vertical",
+            "expected": null,
+            "value": "https://img-tc.tapimg.com/market/images/f583e8d807ef08e3301c2d10c8c968f0.jpg",
+            "applied": false
+          }
+        ],
+        "only_cover_fields_changed": false,
+        "package_binding_changed": false,
+        "platform_read_only": {
+          "blockers": [
+            {
+              "code": "READ_ONLY",
+              "field_ids": [],
+              "message": "当前应用处于「审核中」状态，无法提交审核"
+            }
+          ],
+          "suggestions": [],
+          "warnings": []
+        }
+      }
+    ]
+  },
+  "backfill_authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "pending_release": {
+    "version": "v0.11.0-preview.2",
+    "package_sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+    "status": "deferred_by_user",
+    "run_id": "release-backfill-20261010",
+    "user_action_required": false,
+    "decision_record": "game-projects/site-games/releases/backfill-20261010/followup-03.json"
+  },
+  "rejection": {
+    "created_time": 1791465107,
+    "last_event": "review_rejected",
+    "status": "rejected",
+    "status_label": "审核失败",
+    "status_reason": "1. 您的游戏标题与“恐龙快打”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+    "status_value": 2,
+    "version": "V-20261008-2",
+    "version_id": "V-20261008-2"
+  },
+  "user_handling_preference": {
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-release-followup-03",
+    "recorded_at": "2026-10-10T03:24:15.330063+00:00",
+    "client_timezone": "America/Los_Angeles",
+    "user_quote": "TapTap 恐龙快打、超级玛丽需要 IP 授权材料，这个不需要啊，别管他，之前都上线了，记住。",
+    "app_ids": [
+      962722,
+      962723
+    ],
+    "games": [
+      "cadillacs-stage1-3d",
+      "mario-3d"
+    ],
+    "decision": "keep_existing_online_versions_no_ip_materials_followup",
+    "handling": "保留已上线旧版本；此次因IP材料退回的更新暂不继续，不再作为用户补材料待办，不重复催问或通知。",
+    "future_updates": "后续有新更新时按正常流程查实际平台状态；旧版本已上线不等于本次更新已通过。同一退回及相同包不反复提交，不伪造授权材料或成功状态。",
+    "resume_current_rejected_update": "仅当用户重新要求办理该次更新或实际平台条件有变化时复核。"
+  }
+}

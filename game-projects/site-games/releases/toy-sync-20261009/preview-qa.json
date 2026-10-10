@@ -1,0 +1,348 @@
+[
+  {
+    "game": "tank-3d",
+    "name": "desktop plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "坦克大战 3D",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "tank-3d",
+    "name": "desktop keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": 64,
+        "z": 192
+      },
+      "z": {
+        "x": 72,
+        "z": 192
+      }
+    }
+  },
+  {
+    "game": "tank-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "tank-3d",
+    "name": "desktop start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "tank-3d",
+    "name": "mobile plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "坦克大战 3D",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "tank-3d",
+    "name": "mobile landscape and portrait menu accessible",
+    "ok": true
+  },
+  {
+    "game": "tank-3d",
+    "name": "mobile layout keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": 64,
+        "z": 192
+      },
+      "z": {
+        "x": 72,
+        "z": 192
+      }
+    }
+  },
+  {
+    "game": "tank-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "tank-3d",
+    "name": "mobile start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "mario-3d",
+    "name": "desktop plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "超级玛丽 3D",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "mario-3d",
+    "name": "desktop keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": 3,
+        "z": 0,
+        "stage": "1-1"
+      },
+      "z": {
+        "x": 3.7402777777777776,
+        "z": 0,
+        "stage": "1-1"
+      }
+    }
+  },
+  {
+    "game": "mario-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "mario-3d",
+    "name": "desktop start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "mario-3d",
+    "name": "mobile plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "超级玛丽 3D",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "mario-3d",
+    "name": "mobile landscape and portrait menu accessible",
+    "ok": true
+  },
+  {
+    "game": "mario-3d",
+    "name": "mobile layout keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": 3,
+        "z": 0,
+        "stage": "1-1"
+      },
+      "z": {
+        "x": 3.7402777777777776,
+        "z": 0,
+        "stage": "1-1"
+      }
+    }
+  },
+  {
+    "game": "mario-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "mario-3d",
+    "name": "mobile start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "desktop plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "赤色要塞",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "desktop keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": -19.36,
+        "z": 9.6,
+        "stage": 1
+      },
+      "z": {
+        "x": -15.42,
+        "z": 10,
+        "stage": 1
+      }
+    }
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "desktop start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "mobile plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "赤色要塞",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "mobile landscape and portrait menu accessible",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "mobile layout keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": -19.36,
+        "z": 9.6,
+        "stage": 1
+      },
+      "z": {
+        "x": -15.42,
+        "z": 10,
+        "stage": 1
+      }
+    }
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "jackal-stage1-3d",
+    "name": "mobile start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "desktop plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "恐龙快打\nCadillacs and Dinosaurs",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "Toy starts third stage desert",
+    "ok": true,
+    "data": {
+      "x": 3,
+      "z": 0.5,
+      "stage": 3,
+      "area": "desert"
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "desktop keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": 3,
+        "z": 0.5,
+        "stage": 3,
+        "area": "desert"
+      },
+      "z": {
+        "x": 5.56666666666667,
+        "z": 0.5,
+        "stage": 3,
+        "area": "desert"
+      }
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "desktop start attack camera pause resume without errors",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "mobile plain menu text",
+    "ok": true,
+    "data": [
+      {
+        "text": "恐龙快打\nCadillacs and Dinosaurs",
+        "shadow": "none"
+      }
+    ]
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "mobile landscape and portrait menu accessible",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "Toy starts third stage desert",
+    "ok": true,
+    "data": {
+      "x": 3,
+      "z": 0.5,
+      "stage": 3,
+      "area": "desert"
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "mobile layout keyboard moves actual player",
+    "ok": true,
+    "data": {
+      "a": {
+        "x": 3,
+        "z": 0.5,
+        "stage": 3,
+        "area": "desert"
+      },
+      "z": {
+        "x": 5.56666666666667,
+        "z": 0.5,
+        "stage": 3,
+        "area": "desert"
+      }
+    }
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "bidirectional control switch preserves game",
+    "ok": true
+  },
+  {
+    "game": "cadillacs-stage1-3d",
+    "name": "mobile start attack camera pause resume without errors",
+    "ok": true
+  }
+]

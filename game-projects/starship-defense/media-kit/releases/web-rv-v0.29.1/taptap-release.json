@@ -1,0 +1,14 @@
+{
+  "version": "web-rv-v0.29.1",
+  "source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "package_sha256": "dc77affa26aa1005a2e117427b7056cf1e126ff557be5f7d1a9742b669882ebf",
+  "artifact_zip": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.29.1-20261008\\taptap-chongchao-qianshao.zip",
+  "classification": "影响试玩的严重修复",
+  "summary": "房车虫群追击、35秒顶杆放行、旧卡点存档恢复、箭头/胜利提示和双面正常标牌；含主线12人队友",
+  "status": "queued_previous_review",
+  "reason": "上一版V-20261008-4仍reviewing；不撤审、不重复上传当前版本",
+  "qa": "releases/web-rv-v0.29.1/qa/taptap-package/results.json",
+  "physical_phone_test": false,
+  "recorded_at": "2026-10-08T11:41:23.044637+00:00",
+  "release_record": "releases/web-rv-v0.29.1/taptap-release.json"
+}

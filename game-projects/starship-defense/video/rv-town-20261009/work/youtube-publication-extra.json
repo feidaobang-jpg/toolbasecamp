@@ -1,0 +1,45 @@
+{
+  "id": "jbTIpyh6Clw",
+  "url": "https://www.youtube.com/watch?v=jbTIpyh6Clw",
+  "identity_verified": true,
+  "publishing_settings": {
+    "visibility": "public",
+    "made_for_kids": false,
+    "age_restricted": false,
+    "paid_promotion": false,
+    "synthetic_content": true,
+    "language": "zh-Hans",
+    "category": "游戏",
+    "license": "Standard YouTube License"
+  },
+  "processing": {
+    "sd": "complete",
+    "hd": "complete",
+    "copyright": "no_issues_detected"
+  },
+  "thumbnail": {
+    "status": "uploaded_verified",
+    "file": "cover-zh-16x9.jpg"
+  },
+  "subtitles": {
+    "status": "published_and_public_player_selectable",
+    "languages": [
+      "中文（简体）",
+      "英语"
+    ],
+    "cues_per_track": 52,
+    "files": [
+      "captions-zh.srt",
+      "captions-en.srt"
+    ],
+    "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\youtube-public-subtitles.jpg"
+  },
+  "english_metadata": {
+    "status": "published_saved",
+    "source": "English-localizations.txt"
+  },
+  "public_playback": "正确成片公开页可播放，核验后暂停",
+  "sound_review": "人工审片通过；代理未主观试听",
+  "verified_at": "2026-10-09T17:48:14.379124+08:00",
+  "next_step": null
+}

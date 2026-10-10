@@ -1,0 +1,517 @@
+{
+  "checks": [
+    {
+      "name": "actual normal-rules successful evacuation",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "actual result: two zones, 12 zombies, 314 scrap",
+      "pass": true,
+      "detail": "探索 1109米 · 用时 2分30秒 · 搜索 2/6区 · 击退 12只僵尸 · 剩余 314零件。下次可尝试搜全六区再撤离。"
+    },
+    {
+      "name": "one-to-one Chinese and English cue timing",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "subtitle times within final duration",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "every shot normal speed",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "tail includes full narration plus reading margin",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "bilibili-zh native 1080p and H264/AAC",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "bilibili-zh duration matches timeline",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "bilibili-zh complete decode",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "bilibili-zh measured loudness and peak",
+      "pass": true,
+      "detail": {
+        "input_i": "-16.09",
+        "input_tp": "-0.98",
+        "input_lra": "3.80",
+        "input_thresh": "-27.44",
+        "output_i": "-16.09",
+        "output_tp": "-1.00",
+        "output_lra": "3.90",
+        "output_thresh": "-27.38",
+        "normalization_type": "dynamic",
+        "target_offset": "0.09"
+      }
+    },
+    {
+      "name": "bilibili-zh no unintended black sections",
+      "pass": true,
+      "detail": [
+        "[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_start: 95.206292",
+        "[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_end: 96.613958 | silence_duration: 1.407667",
+        "[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_start: 108.015563",
+        "[Parsed_silencedetect_0 @ 000001d03ebd7540] silence_end: 109.866667 | silence_duration: 1.851104"
+      ]
+    },
+    {
+      "name": "bilibili-zh audio reviewed objectively only",
+      "pass": true,
+      "detail": "Subjective listening unavailable; leave human review pending."
+    },
+    {
+      "name": "youtube-zh native 1080p and H264/AAC",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "youtube-zh duration matches timeline",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "youtube-zh complete decode",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "youtube-zh measured loudness and peak",
+      "pass": true,
+      "detail": {
+        "input_i": "-16.09",
+        "input_tp": "-0.98",
+        "input_lra": "3.80",
+        "input_thresh": "-27.44",
+        "output_i": "-16.09",
+        "output_tp": "-1.00",
+        "output_lra": "3.90",
+        "output_thresh": "-27.38",
+        "normalization_type": "dynamic",
+        "target_offset": "0.09"
+      }
+    },
+    {
+      "name": "youtube-zh no unintended black sections",
+      "pass": true,
+      "detail": [
+        "[Parsed_silencedetect_0 @ 00000227317daa80] silence_start: 95.206292",
+        "[Parsed_silencedetect_0 @ 00000227317daa80] silence_end: 96.613958 | silence_duration: 1.407667",
+        "[Parsed_silencedetect_0 @ 00000227317daa80] silence_start: 108.015563",
+        "[Parsed_silencedetect_0 @ 00000227317daa80] silence_end: 109.866667 | silence_duration: 1.851104"
+      ]
+    },
+    {
+      "name": "youtube-zh audio reviewed objectively only",
+      "pass": true,
+      "detail": "Subjective listening unavailable; leave human review pending."
+    },
+    {
+      "name": "cover-home-4x3.jpg exact ratio",
+      "pass": true,
+      "detail": {
+        "size": [
+          1440,
+          1080
+        ],
+        "bytes": 216378
+      }
+    },
+    {
+      "name": "cover-space-16x9.jpg exact ratio",
+      "pass": true,
+      "detail": {
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 277973
+      }
+    },
+    {
+      "name": "cover-reference-16x9.jpg exact ratio",
+      "pass": true,
+      "detail": {
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 277973
+      }
+    },
+    {
+      "name": "cover-zh-16x9.jpg exact ratio",
+      "pass": true,
+      "detail": {
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 277973
+      }
+    },
+    {
+      "name": "Bilibili and Douyin same verified film",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "probes": {
+    "bilibili-zh": {
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+          "profile": "High",
+          "codec_type": "video",
+          "codec_tag_string": "avc1",
+          "codec_tag": "0x31637661",
+          "mime_codec_string": "avc1.640028",
+          "width": 1920,
+          "height": 1080,
+          "coded_width": 1920,
+          "coded_height": 1080,
+          "has_b_frames": 2,
+          "sample_aspect_ratio": "1:1",
+          "display_aspect_ratio": "16:9",
+          "pix_fmt": "yuv420p",
+          "level": 40,
+          "color_range": "tv",
+          "color_space": "bt709",
+          "color_transfer": "bt709",
+          "color_primaries": "bt709",
+          "chroma_location": "left",
+          "field_order": "progressive",
+          "is_avc": "true",
+          "nal_length_size": "4",
+          "id": "0x1",
+          "r_frame_rate": "30/1",
+          "avg_frame_rate": "30/1",
+          "time_base": "1/15360",
+          "start_pts": 512,
+          "start_time": "0.033333",
+          "duration_ts": 1687040,
+          "duration": "109.833333",
+          "bit_rate": "2335974",
+          "bits_per_raw_sample": "8",
+          "nb_frames": "3295",
+          "extradata_size": 62,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "VideoHandler",
+            "encoder": "Lavc63.1.102 h264_nvenc"
+          }
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_long_name": "AAC (Advanced Audio Coding)",
+          "profile": "LC",
+          "codec_type": "audio",
+          "codec_tag_string": "mp4a",
+          "codec_tag": "0x6134706d",
+          "mime_codec_string": "mp4a.40.2",
+          "sample_fmt": "fltp",
+          "sample_rate": "48000",
+          "channels": 2,
+          "channel_layout": "stereo",
+          "bits_per_sample": 0,
+          "initial_padding": 1024,
+          "id": "0x2",
+          "r_frame_rate": "0/0",
+          "avg_frame_rate": "0/0",
+          "time_base": "1/48000",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "duration_ts": 5273600,
+          "duration": "109.866667",
+          "bit_rate": "189000",
+          "nb_frames": "5151",
+          "extradata_size": 5,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "SoundHandler"
+          }
+        }
+      ],
+      "format": {
+        "filename": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-rv-video-20261009\\toolbasecamp\\game-projects\\starship-defense\\video\\rv-town-20261009\\final\\bilibili-zh\\gameplay-zh-final.mp4",
+        "nb_streams": 2,
+        "nb_programs": 0,
+        "nb_stream_groups": 0,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "start_time": "0.000000",
+        "duration": "109.866667",
+        "size": "34789586",
+        "bit_rate": "2533222",
+        "probe_score": 100,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavf63.1.102"
+        }
+      }
+    },
+    "youtube-zh": {
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+          "profile": "High",
+          "codec_type": "video",
+          "codec_tag_string": "avc1",
+          "codec_tag": "0x31637661",
+          "mime_codec_string": "avc1.640028",
+          "width": 1920,
+          "height": 1080,
+          "coded_width": 1920,
+          "coded_height": 1080,
+          "has_b_frames": 2,
+          "sample_aspect_ratio": "1:1",
+          "display_aspect_ratio": "16:9",
+          "pix_fmt": "yuv420p",
+          "level": 40,
+          "color_range": "tv",
+          "color_space": "bt709",
+          "color_transfer": "bt709",
+          "color_primaries": "bt709",
+          "chroma_location": "left",
+          "field_order": "progressive",
+          "is_avc": "true",
+          "nal_length_size": "4",
+          "id": "0x1",
+          "r_frame_rate": "30/1",
+          "avg_frame_rate": "30/1",
+          "time_base": "1/15360",
+          "start_pts": 512,
+          "start_time": "0.033333",
+          "duration_ts": 1687040,
+          "duration": "109.833333",
+          "bit_rate": "2297275",
+          "bits_per_raw_sample": "8",
+          "nb_frames": "3295",
+          "extradata_size": 62,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "VideoHandler",
+            "encoder": "Lavc63.1.102 h264_nvenc"
+          }
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_long_name": "AAC (Advanced Audio Coding)",
+          "profile": "LC",
+          "codec_type": "audio",
+          "codec_tag_string": "mp4a",
+          "codec_tag": "0x6134706d",
+          "mime_codec_string": "mp4a.40.2",
+          "sample_fmt": "fltp",
+          "sample_rate": "48000",
+          "channels": 2,
+          "channel_layout": "stereo",
+          "bits_per_sample": 0,
+          "initial_padding": 1024,
+          "id": "0x2",
+          "r_frame_rate": "0/0",
+          "avg_frame_rate": "0/0",
+          "time_base": "1/48000",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "duration_ts": 5273600,
+          "duration": "109.866667",
+          "bit_rate": "189000",
+          "nb_frames": "5151",
+          "extradata_size": 5,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "SoundHandler"
+          }
+        }
+      ],
+      "format": {
+        "filename": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-rv-video-20261009\\toolbasecamp\\game-projects\\starship-defense\\video\\rv-town-20261009\\final\\youtube-zh\\gameplay-youtube-final.mp4",
+        "nb_streams": 2,
+        "nb_programs": 0,
+        "nb_stream_groups": 0,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "start_time": "0.000000",
+        "duration": "109.866667",
+        "size": "34258291",
+        "bit_rate": "2494535",
+        "probe_score": 100,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavf63.1.102"
+        }
+      }
+    }
+  },
+  "visual_review_frames": [
+    {
+      "time": 1.5,
+      "file": "qa\\frame-001.5.png"
+    },
+    {
+      "time": 6.8,
+      "file": "qa\\frame-006.8.png"
+    },
+    {
+      "time": 12.3,
+      "file": "qa\\frame-012.3.png"
+    },
+    {
+      "time": 23.7,
+      "file": "qa\\frame-023.7.png"
+    },
+    {
+      "time": 32.5,
+      "file": "qa\\frame-032.5.png"
+    },
+    {
+      "time": 38.8,
+      "file": "qa\\frame-038.8.png"
+    },
+    {
+      "time": 47.5,
+      "file": "qa\\frame-047.5.png"
+    },
+    {
+      "time": 56,
+      "file": "qa\\frame-056.0.png"
+    },
+    {
+      "time": 65.3,
+      "file": "qa\\frame-065.3.png"
+    },
+    {
+      "time": 76.4,
+      "file": "qa\\frame-076.4.png"
+    },
+    {
+      "time": 88.5,
+      "file": "qa\\frame-088.5.png"
+    },
+    {
+      "time": 97.3,
+      "file": "qa\\frame-097.3.png"
+    },
+    {
+      "time": 105.5,
+      "file": "qa\\frame-105.5.png"
+    },
+    {
+      "time": 108.1,
+      "file": "qa\\frame-108.1.png"
+    }
+  ],
+  "subjective_listening": "not-run: model audio input unavailable",
+  "human_review": "pending"
+}

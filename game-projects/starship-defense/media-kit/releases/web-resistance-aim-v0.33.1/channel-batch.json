@@ -1,0 +1,113 @@
+{
+  "status": "pending_22_batch",
+  "schedule": "现有北京时间22:00任务b-2",
+  "website": {
+    "status": "public_verified",
+    "verified_at": "2026-10-10T19:59:04.507933+08:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "source_commit": "ff3a7162691d122b964912f0310696f6d5a3e406",
+    "mainline_at_verification": "e7beb060e8a228b30900f84f1e1840283f123e98",
+    "runtime_sha256": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5",
+    "original_tested_runtime_sha256": "3f04135661584c22731b032d5e15fa860a618c1f7fc3134ca9b1292be809e766",
+    "integrated_later_change": "后续主线仅在本游戏game.js修改原守城激光伤害/热量加成/HUD，抗战三个模块原始哈希未变；最新公网运行产物另做28组机制回归",
+    "files": [
+      {
+        "file": "index.html",
+        "expected_mainline": "ca28ab45e5364b81942e96ef92de1461d2dd309723af42ef6c8caa713d27c545",
+        "public_sha256": "5811df4b86805e5ad8c94f75c8f35e5d59352ee587499be7a03dbbcff18cf7d4",
+        "matches_latest_mainline": false,
+        "original_aim_build_sha256": "ac44db226efde9d5d4d47f7a52ebd220c8ee88151957efb5141dbb4c2805fa88",
+        "aim_source_unchanged": false,
+        "matches_after_deploy_cache_version": true
+      },
+      {
+        "file": "boot.js",
+        "expected_mainline": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+        "public_sha256": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+        "aim_source_unchanged": true,
+        "matches_after_deploy_cache_version": false
+      },
+      {
+        "file": "game.compat.js",
+        "expected_mainline": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5",
+        "public_sha256": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "3f04135661584c22731b032d5e15fa860a618c1f7fc3134ca9b1292be809e766",
+        "aim_source_unchanged": false,
+        "matches_after_deploy_cache_version": false
+      },
+      {
+        "file": "game.js",
+        "expected_mainline": "0af7981ec1937756a865f21ef741f9c5ef65021d174cdc64944449cddb5d2301",
+        "public_sha256": "0af7981ec1937756a865f21ef741f9c5ef65021d174cdc64944449cddb5d2301",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "860591d848312ecfc586e61f5acfd106ccec6c9ddfcebeec208b7cf2d64b07a2",
+        "aim_source_unchanged": false,
+        "matches_after_deploy_cache_version": false
+      },
+      {
+        "file": "resistance-assets.js",
+        "expected_mainline": "9281751b7c1b620e114c62943b98783115ef32cc4f9eb674f3e7f3e0710fb2a4",
+        "public_sha256": "9281751b7c1b620e114c62943b98783115ef32cc4f9eb674f3e7f3e0710fb2a4",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "9281751b7c1b620e114c62943b98783115ef32cc4f9eb674f3e7f3e0710fb2a4",
+        "aim_source_unchanged": true,
+        "matches_after_deploy_cache_version": false
+      },
+      {
+        "file": "resistance-campaign.js",
+        "expected_mainline": "d748ab677bebc8c48a840c404ac156c086e39759b70caf3dc33be0ac677425bc",
+        "public_sha256": "d748ab677bebc8c48a840c404ac156c086e39759b70caf3dc33be0ac677425bc",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "d748ab677bebc8c48a840c404ac156c086e39759b70caf3dc33be0ac677425bc",
+        "aim_source_unchanged": true,
+        "matches_after_deploy_cache_version": false
+      },
+      {
+        "file": "resistance-ui.js",
+        "expected_mainline": "100635dc2a0a7098dece74ea595fe8d77823512be9a0d505ac3c53a663f56c2c",
+        "public_sha256": "100635dc2a0a7098dece74ea595fe8d77823512be9a0d505ac3c53a663f56c2c",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "100635dc2a0a7098dece74ea595fe8d77823512be9a0d505ac3c53a663f56c2c",
+        "aim_source_unchanged": true,
+        "matches_after_deploy_cache_version": false
+      },
+      {
+        "file": "combat-controls.css",
+        "expected_mainline": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+        "public_sha256": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+        "matches_latest_mainline": true,
+        "original_aim_build_sha256": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+        "aim_source_unchanged": true,
+        "matches_after_deploy_cache_version": false
+      }
+    ],
+    "physical_phone": false
+  },
+  "toy": {
+    "id": 38678478981120,
+    "status": "pending",
+    "last_public_version": "web-resistance-v0.33.0"
+  },
+  "taptap": {
+    "id": 962354,
+    "status": "pending"
+  },
+  "video_descriptions": {
+    "status": "pending",
+    "bilibili_targets": [
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf",
+      "BV1C5HQ6gEvD",
+      "BV1xdpx63ETu"
+    ]
+  },
+  "new_video": "not_requested",
+  "feedback_replies": {
+    "status": "not_applicable",
+    "reason": "用户本人本聊天需求，没有外部原楼"
+  },
+  "package_note": "原始v0.33.1自包含QA包已保全，网站随后合并守城武器平衡。22点必须从最新已发布主线重新打包，同一游戏合并一包。"
+}

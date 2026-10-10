@@ -1,0 +1,11 @@
+﻿Title
+I Took the Fight Into the Alien Burrow | Swarm Siege
+Description
+Play my games: https://www.zhengxiaohui.cn/games.html
+Select 虫潮围城 in the list; copy the URL into your browser if it is not clickable.
+Collect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.
+Edited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.
+English narration and captions; Chinese captions are also provided. The game interface is currently in Chinese; follow the current in-game control prompts.
+English-language experiment for this gameplay episode; Swarm Siege is the translated title used in this video.
+Tags
+gamedev, base defense, Swarm Siege

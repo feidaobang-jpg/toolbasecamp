@@ -27,8 +27,9 @@ const fs = require('fs');
     await press('Enter');
     await sleep(200);
   };
-  const skipIntro = async () => { for (let i = 0; i < 12; i++) { const s = await S(); if (s.mode === 'play') break; await press('KeyJ'); await sleep(250); } return S(); };
-  const clearEnemies = async () => { await C(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500); };
+  const skipIntro = async () => { for (let i = 0; i < 48; i++) { const s = await S(); if (s.mode === 'play') break; await press('KeyJ'); await sleep(250); } return S(); };
+  // 开场后还有两名手下排队上场，一并清掉
+  const clearEnemies = async () => { await C(() => { window.__CD_TEST__.cheat.G.pending = []; window.__CD_TEST__.cheat.killAll(); }); await sleep(1500); };
 
   await fresh();
   let s = await S();
@@ -70,7 +71,10 @@ const fs = require('fs');
   await press('Enter');
   await sleep(300);
   s = await S(); ok('Enter 出发，进入楼顶开场', s.ui.uiMode === 'game' && s.area === 0 && s.mode === 'cut', [s.mode, s.area]);
-  ok('开场维斯台词出现', !!s.dialog || !!(await waitFor(x => !!x.dialog, 2500)).dialog);
+  const est = await C(() => ({ pt: window.__CD_TEST__.cheat.G.pteroFly.length, cine: !!window.__CD_TEST__.cheat.G.cineCam, banner: window.__CD_TEST__.cheat.G.banner && window.__CD_TEST__.cheat.G.banner.sub }));
+  ok('开场远景：翼龙飞过、EASTCOAST 2513 字幕、镜头远景', est.pt >= 2 && est.cine && /2513/.test(est.banner || ''), est);
+  await press('KeyJ');   // J 跳过远景
+  ok('开场维斯台词出现', !!(await waitFor(x => !!x.dialog, 3500)).dialog);
   s = await skipIntro();
   ok('J 跳过对话后进入战斗', s.mode === 'play', s.mode);
   s = await waitFor(x => x.ui.music.name === 'roof', 2500);
@@ -273,6 +277,7 @@ const fs = require('fs');
   }
   s = await waitFor(x => x.mode === 'cont', 4000);
   ok('命用完进入续关倒计时', s.mode === 'cont' && s.ui.overlay === 'cont', [s.mode, s.ui.overlay]);
+  ok('续关倒计时放原版「Continue」曲（不是合成曲）', s.ui.music.name === 'cont' && s.ui.music.original && !s.ui.music.synth, s.ui.music);
   await page.screenshot({ path: out('desktop-continue.png') });
   await press('KeyJ'); await sleep(300);
   s = await S(); ok('续关后满命回到战斗', s.mode === 'play' && s.lives === 3, [s.mode, s.lives]);

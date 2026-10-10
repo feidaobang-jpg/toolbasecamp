@@ -1,13 +1,15 @@
-import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=menu-text1';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
-import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=lobby1';
-import { CoopConnection, snapshot, hydrate } from './coop.js?v=lobby1';
+import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop-unstick1';
+import { CoopConnection, snapshot, hydrate } from './coop.js?v=coop-unstick1';
+import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
+installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'camera-fullmap1';
+const VERSION = 'remix-entry1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -16,8 +18,6 @@ const $ = id => document.getElementById(id);
 const app = $('app'), stage = $('stage'), canvas = $('screen');
 const overlays = { menu: $('menu'), pause: $('pause'), tally: $('tally'), result: $('result'), lobby: $('lobby') };
 const hud = $('hud'), touch = $('touch'), keyHint = $('keyhint'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt');
-const listUrl = app.getAttribute('data-list-url') || '../../../games.html';
-document.querySelectorAll('.list-link').forEach(a => { a.href = listUrl; });
 
 // ---------- 本地保存（独立命名空间；读写失败用默认值） ----------
 const NS = 'tank3d-v2:';
@@ -38,7 +38,7 @@ function legacy() {
 legacy();
 const MODES = ['classic', 'remix'];
 const settings = {
-  mode: pick(store.get('mode', 'classic'), MODES, 'classic'),
+  mode: pick(store.get('mode', 'remix'), MODES, 'remix'),
   classicStage: clampInt(store.get('classicStage', 1), 1, CLASSIC_COUNT),
   remixFrom: 'continue',
   lives: { classic: pick(store.get('lives.classic', 'classic'), ['inf', 'classic'], 'classic'), remix: pick(store.get('lives.remix', 'inf'), ['inf', 'classic'], 'inf') },
@@ -64,7 +64,7 @@ let view;
 try { view = createScene(canvas); }
 catch (e) {
   const el = $('loading'); el.hidden = false;
-  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button><br><a href="' + listUrl + '" style="color:#fff">返回游戏列表</a>';
+  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button>';
   throw e;
 }
 view.setPreset(settings.camera[settings.mode]);
@@ -85,12 +85,25 @@ const coop = new CoopConnection(onCoopMessage, text => { $('coop-message').textC
 const roomConfig = () => ({ mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] });
 $('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim() || '坦克手', undefined, { roomName: $('coop-room-name').value.trim(), password: $('coop-create-password').value, maxPlayers: Number($('coop-capacity').value), config: roomConfig() }); });
 function joinRoom() { coop.connect('join', $('coop-name').value.trim() || '坦克手', $('coop-code').value.trim(), { password: $('coop-password').value }); }
+// 邀请链接（?coop=六位房号）进来时：公开房直接加入，密码房/满员房给出明确下一步，不再要求玩家重复确认一次点击。
+function autoJoinInvite() {
+  const code = pendingInvite; pendingInvite = null;
+  if (coop.room || !code) return;
+  const room = directoryRooms.find(r => r.code === code);
+  if (!room) { $('coop-message').textContent = `邀请房间 ${code} 不在线或已结束；房主重新建房后再填房间码加入。`; return; }
+  if (room.players.length >= room.maxPlayers) { $('coop-message').textContent = `邀请房间 ${code} 已满员；可以让房主另开一个房间。`; return; }
+  if (room.started && !room.canJoin) { $('coop-message').textContent = `邀请房间 ${code} 已在游戏中且不支持中途加入；房主重开后点「加入房间」。`; return; }
+  $('coop-code').value = code;
+  if (room.hasPassword) { $('coop-message').textContent = `邀请房间 ${code} 需要密码，请填写密码后点「加入房间」。`; $('coop-password').focus(); return; }
+  $('coop-message').textContent = `正在加入邀请房间 ${code}…`;
+  joinRoom();
+}
 $('coop-join').addEventListener('click', () => {
   const code = $('coop-code').value.trim();
   if (!/^\d{6}$/.test(code)) { $('coop-message').textContent = '请填写好友的六位数字房间码'; return; }
   joinRoom();
 });
-let directoryPage = 1;
+let directoryPage = 1, directoryRooms = [], pendingInvite = null, intentHint = null;
 function requestDirectory(page = directoryPage) {
   const options = { page, passwordFilter: $('coop-filter').value };
   if (!coop.send({ type: 'list', ...options })) coop.connect('list', '', undefined, options);
@@ -103,8 +116,9 @@ $('coop-ready').addEventListener('click', () => { const ready = coop.room?.playe
 $('coop-start').addEventListener('click', () => coop.send({ type: 'start', config: { mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] } }));
 $('coop-copy').addEventListener('click', async () => {
   if (!coop.room) return;
-  try { await navigator.clipboard.writeText(coop.room.code); $('coop-message').textContent = '房间码已复制，把它发给好友即可。'; }
-  catch { $('coop-message').textContent = '房间码：' + coop.room.code + '（可手动复制）'; }
+  const url = new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.zhengxiaohui.cn/html/game/tank-3d/index.html'); url.search = ''; url.hash = ''; url.searchParams.set('coop', coop.room.code);
+  try { await navigator.clipboard.writeText(url.href); $('coop-message').textContent = '邀请链接已复制，发给好友即可加入同一房间。'; }
+  catch { $('coop-message').textContent = '邀请链接：' + url.href; }
 });
 window.addEventListener('pagehide', () => coop.disconnect());
 
@@ -112,9 +126,10 @@ function renderLobby() {
   const room = coop.room;
   $('coop-room').textContent = room ? room.code : '尚未加入';
   $('coop-roster').textContent = room ? room.players.map(p => `${p.slot + 1}P ${p.name} · ${p.slot === 0 ? '房主' : p.ready ? '已准备' : '未准备'}`).join('　 /　 ') : '输入昵称后建房，或填写好友的六位房间码。';
+  if(room&&coop.host)for(const p of room.players.filter(p=>p.slot!==0)){const b=document.createElement('button');b.dataset.kick=p.slot;b.textContent='踢出 '+(p.slot+1)+'P '+p.name;b.onclick=()=>coop.send({type:'kick',slot:p.slot});$('coop-roster').append(b);}
   $('coop-create').disabled = $('coop-join').disabled = !!room;
-  $('coop-ready').hidden = !room || coop.host;
-  $('coop-start').hidden = !room || !coop.host;
+  $('coop-ready').hidden = !room || coop.host || room.started;
+  $('coop-start').hidden = !room || !coop.host || room.started;
   $('coop-copy').disabled = !room;
   $('coop-start').disabled = !room || room.players.length < 2 || !room.players.every(p => p.ready);
   $('coop-ready').textContent = room?.players.find(p => p.slot === coop.slot)?.ready ? '取消准备' : '准备好了';
@@ -128,6 +143,7 @@ function renderLobby() {
 }
 function renderDirectory(message) {
   const list = message.rooms || [];
+  directoryRooms = list;
   directoryPage = message.page || 1;
   const pages = Math.max(1, Math.ceil((message.total || 0) / 20));
   $('coop-page').textContent = `第 ${directoryPage} / ${pages} 页 · ${message.total || 0} 个房间`;
@@ -140,7 +156,7 @@ function renderDirectory(message) {
     const title = document.createElement('strong'); title.textContent = room.name;
     const details = document.createElement('span');
     details.textContent = `${room.hasPassword ? '有密码' : '无密码'} · ${room.players.length}/${room.maxPlayers}人 · ${room.started ? '已开局' : '等待中'} · ${modeName(room.settings.mode)} 第${room.settings.stage}关 · 房主 ${room.players.find(p => p.slot === 0)?.name || ''}`;
-    card.append(title, details); card.disabled = room.started || room.players.length >= room.maxPlayers;
+    card.append(title, details); card.disabled = (room.started&&!room.canJoin) || room.players.length >= room.maxPlayers;
     card.addEventListener('click', () => {
       $('coop-code').value = room.code; $('coop-password').value = '';
       if (room.hasPassword) { $('coop-message').textContent = `已选择“${room.name}”，请填写房间密码后加入。`; $('coop-password').focus(); }
@@ -157,7 +173,7 @@ function networkAction(action) {
   return true;
 }
 function onCoopMessage(msg) {
-  if (msg.type === 'rooms') { renderDirectory(msg); if (!coop.room) $('coop-message').textContent = '大厅已连接，选择房间或创建自己的房间。'; }
+  if (msg.type === 'rooms') { renderDirectory(msg); if (!coop.room && !pendingInvite) $('coop-message').textContent = intentHint || '大厅已连接，选择房间或创建自己的房间。'; autoJoinInvite(); }
   else if (msg.type === 'joined' || msg.type === 'roster') { renderLobby(); $('coop-message').textContent = '加入后点准备；至少两人、所有队友准备后由房主开始。'; }
   else if (msg.type === 'start') {
     settings.mode = msg.config.mode;
@@ -170,6 +186,12 @@ function onCoopMessage(msg) {
   } else if (msg.type === 'input' && coop.host) {
     const previous = remoteInputs[msg.slot];
     remoteInputs[msg.slot] = { ...msg.input, firePressed: !!(previous?.firePressed || msg.input.firePressed), at: performance.now() };
+  } else if (msg.type === 'player_joined') {
+    if(run?.coop)run.playerSlots=coop.room.players.map(p=>p.slot);
+    if(coop.host&&world){joinPlayer(world,msg.slot);sentTerrain=-1;lastStateAt=0;}
+    showToast(msg.message);
+  } else if (msg.type === 'control') {
+    showToast(msg.message);renderLobby();
   } else if (msg.type === 'player_left') {
     if (coop.room) coop.room.players = coop.room.players.filter(p => p.slot !== msg.slot);
     if (run?.coop) run.playerSlots = coop.room.players.map(p => p.slot);
@@ -236,8 +258,8 @@ const MODE_TEXT = {
     rules: '按 FC《坦克大战》逐格还原 35 关：砖墙按 4 像素一块削掉，钢墙只有三颗星能打穿；每关 20 辆敌军按原版顺序从中、右、左三处出场，第 4、11、18 辆闪红色掉道具。移速、弹速、出生间隔、AI 和 6 种道具都照原版。默认原版 3 命、一发就坏，满 2 万分奖一命；打完 35 关进入 36～70 关的困难循环。'
   },
   remix: {
-    kicker: '魔改 · 自创地图 · 周目无限', sub: '100 关一周目 · 10 个章节 · 第 5 关小 Boss、第 10 关大 Boss',
-    rules: '每章 10 关自创战场，加入河道、树林、冰面：吃到「船」才能过河，船还能替你挡炮；「手枪」直升满级火力、装甲加厚，四星还能烧掉树林。精英重炮和火焰车混在敌军里，道具放久了会被敌军抢走。每章第 5 关小 Boss、第 10 关大 Boss，第 100 关终焉 Boss；打通进入下一周目，敌军更快更硬。默认无限命、3 格耐久，修理包固定在每关第 7、14 辆敌军处掉落。'
+    kicker: '魔改挑战 · 推荐玩法', sub: 'Boss 对战 · 敌军抢道具 · 100 关无限周目',
+    rules: '守住老鹰，挑战精英坦克和 Boss！吃船过河、拿手枪升满火力，还能捡到火箭筒与四连导弹；道具放久了，敌军也会来抢。每章第 5 关小 Boss、第 10 关大 Boss，第 100 关终焉 Boss；打通后进入更难的下一周目。默认无限命、3 格耐久，基地被毁仍会失败。想重温原版，可直接选择「经典复刻」。'
   }
 };
 
@@ -270,7 +292,7 @@ function clearInput() {
 }
 
 // ---------- 设置菜单 ----------
-const modeName = m => m === 'classic' ? '经典复刻 · FC 原版 35 关' : '魔改 · 无限周目';
+const modeName = m => m === 'classic' ? '经典复刻 · FC 原版 35 关' : '魔改挑战 · 无限周目';
 function fromLabel() {
   if (settings.mode === 'classic') return ['起始关卡', '第 ' + settings.classicStage + ' 关'];
   if (remixProgress && settings.remixFrom === 'continue') return ['进度', '继续第 ' + remixProgress.level + ' 关' + (remixProgress.cycle > 1 ? '（第 ' + remixProgress.cycle + ' 周目）' : '')];
@@ -295,6 +317,7 @@ function optLabel(name) {
 let refreshControlModes = () => {};
 function refreshOptions() {
   refreshControlModes();
+  document.querySelectorAll('[data-game-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.gameMode === settings.mode)));
   document.querySelectorAll('[data-control-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.controlMode === settings.touch)));
   document.querySelectorAll('[data-opt]').forEach(b => {
     const l = optLabel(b.getAttribute('data-opt'));
@@ -305,17 +328,24 @@ function refreshOptions() {
   const t = MODE_TEXT[settings.mode];
   $('mode-kicker').textContent = t.kicker; $('mode-sub').textContent = t.sub; $('mode-rules').textContent = t.rules;
   $('hi-val').textContent = hiOf(settings.mode);
-  const fsOn = !!fsElement();
-  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  const fsOn = !!fsElement(), fsShow = fsOn || fsCapable();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; b.hidden = !fsShow; });
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('btn-fs').hidden = !fsShow;
   $('cam-label').textContent = PRESETS[view.presetIndex].name;
   $('demo-badge').hidden = !(uiMode === 'game' && run && run.demo);
   $('fire-hint').textContent = settings.mode === 'classic' ? '开炮（每按一下一发）' : '开炮（可按住）';
 }
 function cycle(list, v, delta) { return list[(list.indexOf(v) + (delta < 0 ? list.length - 1 : 1)) % list.length]; }
+function chooseMode(mode) {
+  if (current !== 'menu' || !MODES.includes(mode)) return;
+  clearInput();
+  settings.mode = mode; store.set('mode', mode);
+  view.setPreset(settings.camera[mode]); buildTitle(); refreshOptions();
+}
 function adjust(name, delta) {
   const m = settings.mode;
-  if (name === 'mode') { settings.mode = cycle(MODES, m, delta); store.set('mode', settings.mode); view.setPreset(settings.camera[settings.mode]); buildTitle(); }
+  if (name === 'mode') { chooseMode(cycle(MODES, m, delta)); return; }
   else if (name === 'from') {
     if (m === 'classic') { settings.classicStage = ((settings.classicStage - 1 + (delta < 0 ? CLASSIC_COUNT - 1 : 1)) % CLASSIC_COUNT) + 1; store.set('classicStage', settings.classicStage); }
     else if (remixProgress) settings.remixFrom = settings.remixFrom === 'continue' ? 'new' : 'continue';
@@ -355,11 +385,12 @@ function show(name) {
   current = name;
   clearInput();
   refreshOptions();
+  layout();
   if (name && name !== 'tally') { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
-  layout();
 }
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden) : []);
+// 只取实际显示的项：hidden 属性之外，样式收起的元素 focus() 后会让 ↑↓ 卡住
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .mode-choices > button, .control-modes > button'), el => !el.hidden && el.getClientRects().length > 0) : []);
 const isTyping = e => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', e => {
   if (isTyping(e)) return;
@@ -371,9 +402,13 @@ document.addEventListener('keydown', e => {
       case 'ArrowDown': case 'KeyS': if (list.length) list[(i + 1 + list.length) % list.length].focus(); e.preventDefault(); break;
       case 'ArrowUp': case 'KeyW': if (list.length) list[(i - 1 + list.length) % list.length].focus(); e.preventDefault(); break;
       case 'ArrowLeft': case 'KeyA': case 'ArrowRight': case 'KeyD':
-        if (el && el.hasAttribute('data-opt')) { adjust(el.getAttribute('data-opt'), /Left|KeyA/.test(e.code) ? -1 : 1); e.preventDefault(); }
+        if (el && el.hasAttribute('data-game-mode')) {
+          const choices = Array.from(el.parentElement.querySelectorAll('[data-game-mode]'));
+          const next = choices[(choices.indexOf(el) + 1) % choices.length];
+          next.focus(); chooseMode(next.dataset.gameMode); e.preventDefault();
+        } else if (el && el.hasAttribute('data-opt')) { adjust(el.getAttribute('data-opt'), /Left|KeyA/.test(e.code) ? -1 : 1); e.preventDefault(); }
         break;
-      case 'Enter': case 'NumpadEnter': case 'KeyJ':
+      case 'Enter': case 'NumpadEnter': case 'KeyJ': case 'Space':
         if (!e.repeat) { if (el) el.click(); else if (list[0]) list[0].click(); }
         e.preventDefault(); break;
       case 'Escape': if (current === 'pause') { resume(); e.preventDefault(); } break;
@@ -401,9 +436,11 @@ document.addEventListener('click', e => {
   if (!t) return;
   if (t.hasAttribute('data-opt')) { adjust(t.getAttribute('data-opt'), e.target.closest('[data-step]')?.dataset.step === '-1' ? -1 : 1); return; }
   switch (t.getAttribute('data-act')) {
+    case 'choose-mode': chooseMode(t.dataset.gameMode); break;
     case 'start': startGame(); break;
     case 'coop': openLobby(); break;
-    case 'coop-back': coop.disconnect(); networkStarted = false; show('menu'); break;
+    case 'coop-back': coop.disconnect(); networkStarted = false; toTitle(); show('menu'); break;
+    case 'coop-return': show(paused?'pause':null); break;
     case 'retry': retryRun(); break;
     case 'resume': resume(); break;
     case 'restart': restartStage(); break;
@@ -597,15 +634,17 @@ function tallyDone() {
 }
 
 // ---------- 事件 ----------
-const PU_TEXT = { star: '星星：火力升级', grenade: '手雷：场上敌军全部炸毁', helmet: '头盔：无敌护盾', shovel: '铁锹：老鹰围墙变成钢墙', timer: '定时器：敌军全部冻结', tank: '坦克：生命 +1', gun: '手枪：火力直升、装甲加厚', boat: '船：可以过河，还能挡一发炮弹' };
+const PU_TEXT = { star: '星星：火力升级', grenade: '手雷：场上敌军全部炸毁', helmet: '头盔：无敌护盾', shovel: '铁锹：老鹰围墙变成钢墙', timer: '定时器：敌军全部冻结', tank: '坦克：生命 +1', gun: '手枪：火力直升、装甲加厚', boat: '船：可以过河，还能挡一发炮弹', rpg: '火箭筒：重型火箭弹 ×5，砖墙钢墙一起炸开', missile: '导弹架：一次四连发导弹 ×4，带溅射' };
 const LOOT_TEXT = { star: '敌军抢到星星，火力变强了！', gun: '敌军抢到手枪，能打穿钢墙了！', boat: '敌军抢到船，能过河了！', grenade: '敌军抢到手雷，你被炸了一下！', helmet: '敌军抢到头盔，全体护盾 8 秒！', shovel: '敌军抢到铁锹，老鹰围墙被挖空了！', timer: '敌军抢到定时器，你被冻住 3 秒！', tank: '敌军抢到坦克，增援 +1！' };
 function handleEvent(e) {
   eventLog.push(e.type); if (eventLog.length > 80) eventLog.shift();
   view.effect(e); audio.effect(e);
-  if (run?.coop && e.slot !== undefined && e.slot !== coop.slot && ['pickup', 'repair', 'medal', 'hurt', 'plate', 'boatHit', 'die', 'levelup'].includes(e.type)) return;
+  if (run?.coop && e.slot !== undefined && e.slot !== coop.slot && ['pickup', 'repair', 'medal', 'hurt', 'plate', 'boatHit', 'die', 'levelup', 'weapon', 'weaponEmpty'].includes(e.type)) return;
   switch (e.type) {
     case 'powerup': showToast('战场上出现了道具！' + (run.mode === 'remix' ? '（4 秒后敌军也会抢）' : '')); break;
     case 'pickup': showToast(PU_TEXT[e.kind] || '道具'); break;
+    case 'weapon': showToast(e.kind === 'rpg' ? '火箭筒就位：重型火箭弹还剩 ' + e.ammo + ' 发' : '导弹架就位：四连发导弹还剩 ' + e.ammo + ' 组'); break;
+    case 'weaponEmpty': showToast('特殊弹药耗尽，恢复常规火炮'); break;
     case 'enemyLoot': showToast(LOOT_TEXT[e.kind] || '敌军抢走了道具'); break;
     case 'repair': showToast(e.repaired === false ? '修理包已拾取：护甲已满' : '修理包：耐久补满'); break;
     case 'medal': showToast('奖章：+500 分'); break;
@@ -628,6 +667,14 @@ function handleEvent(e) {
 
 // ---------- 全屏 ----------
 const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+// 全屏入口按浏览器实际能力显示，不按手机/电脑分类隐藏：iPhone Safari 没有元素全屏、未授权全屏的 iframe 报 fullscreenEnabled=false，
+// 这些情况隐藏按钮；能请求但被拒绝时由 toggleFullscreen 提示并继续页面内游玩
+function fsCapable() {
+  const el = document.documentElement;
+  if (!(el.requestFullscreen || el.webkitRequestFullscreen)) return false;
+  const enabled = document.fullscreenEnabled !== undefined ? document.fullscreenEnabled : document.webkitFullscreenEnabled;
+  return enabled !== false;
+}
 const fsLog = [];
 function toggleFullscreen() {
   if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
@@ -665,7 +712,8 @@ function viewport() {
 let lastOrient = null, lastSize = '';
 function layout() {
   const { vw, vh } = viewport(), coarse = inputMode === 'touch';
-  const rotate = uiMode === 'game' && vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
+  // 手机触屏竖着拿时，菜单也直接旋转成横屏（2026-10-07 用户确认）：免得菜单竖屏、开局又变横屏
+  const rotate = vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
@@ -773,7 +821,7 @@ function updateHud() {
   const r = run, w = world, p = localPlayer(w), personal = localStats(w);
   const stars = p ? p.stars : personal.stars, maxStars = r.mode === 'classic' ? 3 : 4;
   const hp = r.armor === 'classic' ? -1 : personal.hp;
-  const key = [r.score, personal.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length].join('|');
+  const key = [r.score, personal.lives, stars, hp, w.spec.displayStage, w.roster.length - w.rosterIndex, w.roster.length, p?.weapon, p?.ammo].join('|');
   if (key !== lastHud) {
     lastHud = key;
     $('h-mode').textContent = r.mode === 'classic' ? 'STAGE' : '魔改' + (r.cycle > 1 ? ' · ' + r.cycle + ' 周目' : '');
@@ -803,6 +851,8 @@ function updateHud() {
   if (p && p.shield > 0 && phase === 'play') chips.push(['护盾 ' + Math.ceil(p.shield / 60), '']);
   if (p && p.boats > 0) chips.push(['船 ×' + p.boats, '']);
   if (p && p.plate > 0) chips.push(['装甲 ×' + p.plate, '']);
+  if (p && p.weapon === 'rpg' && p.ammo > 0) chips.push(['火箭弹 ×' + p.ammo, '']);
+  if (p && p.weapon === 'missile' && p.ammo > 0) chips.push(['四连导弹 ×' + p.ammo, '']);
   if (w.playerFrozen > 0) chips.push(['被冻住 ' + Math.ceil(w.playerFrozen / 60), 'warn']);
   if (w.powerup && w.rules.enemyLoot && w.powerup.age > 240) chips.push(['道具会被敌军抢！', 'warn']);
   const html = chips.map(c => '<span class="' + c[1] + '">' + c[0] + '</span>').join('');
@@ -854,7 +904,7 @@ function simulate(dt) {
   const input = { dir: worldDir(), fire: isDown('fire'), firePressed };
   firePressed = false;
   if (run.coop) {
-    const inputs = world.seats.map(s => s.slot === 0 ? input : performance.now() - (remoteInputs[s.slot]?.at || 0) < 600 ? remoteInputs[s.slot] : { dir: -1 });
+    const inputs = world.seats.map(s => coop.control(s.slot,s.slot===0?input:performance.now()-(remoteInputs[s.slot]?.at||0)<600?remoteInputs[s.slot]:{dir:-1},()=>computerPlayerInput(world,s.slot)));
     step(world, { players: inputs });
     for (const remote of Object.values(remoteInputs)) remote.firePressed = false;
   } else step(world, input);
@@ -866,6 +916,7 @@ function simulate(dt) {
   for (const e of evs) { handleEvent(e); if (current === 'tally') break; }
 }
 function frame(now) {
+  coop.controlTick(paused);
   if (manual) { last = now; requestAnimationFrame(frame); return; }
   const dtReal = Math.min(.1, (now - last) / 1000);
   if (perf.on) perf.frames.push(now - last);
@@ -878,7 +929,7 @@ function frame(now) {
   publishState(now);
   if (coop.active && networkStarted) {
     $('coop-status').hidden = false;
-    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.rtt ? coop.rtt + 'ms' : '多人合作'}${paused ? ' · 全队暂停' : ''}`;
+    $('coop-status').textContent = `房间 ${coop.room.code} · ${coop.slot + 1}P${coop.host ? ' 房主' : ''} · ${coop.room.players.map(p=>(p.slot+1)+'P'+(p.ai?'电脑':'真人')).join(' / ')}${paused ? ' · 全队暂停' : coop.bots.has(coop.slot)?' · 操作即可接回':' · 闲置30秒电脑接管'}`;
     if (!coop.host && coop.stateCount && now - snapshotReceivedAt > 3000 && !paused) { clearInput(); coop.send({ type: 'action', action: 'pause' }); showToast('同步暂时中断，正在暂停战场'); }
   } else $('coop-status').hidden = true;
   if (autoProbe.on && !autoProbe.done && uiMode === 'game' && phase === 'play' && !current) {
@@ -932,7 +983,7 @@ if (TEST) {
       const p = localPlayer(world);
       return {
         uiMode, overlay: current, paused, phase, coop: { room: coop.room, slot: coop.slot, host: coop.host, states: coop.stateCount, rtt: coop.rtt, epoch }, players: world?.seats?.map(s => ({ slot: s.slot, lives: s.state.lives, tank: s.tank && { x: s.tank.x, y: s.tank.y, id: s.tank.id } })), display: Object.assign({}, display), camera: PRESETS[view.presetIndex].id, yawOffset: +view.yawOffset.toFixed(3), fp: view.firstPerson(),
-        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsLog: fsLog.slice(),
+        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsCapable: fsCapable(), fsLog: fsLog.slice(),
         focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id),
         toast: toastEl.hidden ? null : toastEl.textContent, touchHidden: touch.hidden, keys: Array.from(keys), touchHold: Array.from(touchHold), stick: Object.assign({}, stick),
         mode: run ? run.mode : settings.mode, stage: run ? run.stage : null, cycle: run ? run.cycle : null, status: world ? world.status : null,
@@ -955,3 +1006,10 @@ if (TEST) {
 }
 
 installRemakeUI();
+const coopIntent = new URLSearchParams(location.search).get('coop');
+if (coopIntent) {
+  openLobby();
+  if (/^\d{6}$/.test(coopIntent)) { pendingInvite = coopIntent; $('coop-code').value = coopIntent; $('coop-message').textContent = `邀请房间 ${coopIntent} 已填入，正在确认房间状态…`; }
+  // 联机大厅的「创建房间」只把玩家带到建房表单前，不自动建房，避免昵称/房间名/密码未填就静默开房。
+  else if (coopIntent === 'create') { intentHint = '填好昵称、房间名称与密码后点「创建房间」建房。'; $('coop-message').textContent = intentHint; $('coop-room-name').focus(); }
+}

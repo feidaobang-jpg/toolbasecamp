@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-07T03:05:33.706206+00:00",
+  "entries": {
+    "toy": {
+      "url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v23253/main.js",
+      "version": "coop-hub1",
+      "sha256": "bc276df4f269f46e54e3db339977d8f88d139f79209ca10db8416a5dfa951dfb"
+    },
+    "website": {
+      "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js",
+      "version": "coop-hub1",
+      "sha256": "519ae4d074b3898e8266d4ef3b6d9d17fec8bbc71cd497471592fa4d8ff7d977"
+    }
+  },
+  "lobby": "public Toy connected; 2–4 players, six-digit room code, password, prepare/start verified in UI",
+  "recorded_footage_version": "landscape-menu1",
+  "current_compatibility": "recorded room-code workflow and gameplay still apply"
+}

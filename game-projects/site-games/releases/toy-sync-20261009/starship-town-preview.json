@@ -1,0 +1,325 @@
+{
+  "results": [
+    {
+      "name": "开局36只分区僵尸，安全街道不主动遇袭",
+      "pass": true,
+      "data": {
+        "mobs": 36,
+        "zombies": true,
+        "states": [
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ],
+        "vehicle": true,
+        "hp": 1400
+      }
+    },
+    {
+      "name": "真实W驾驶自由前进",
+      "pass": true,
+      "data": 28.946400000211725
+    },
+    {
+      "name": "所有设施/感染区可达，真实建筑碰撞，路口无关卡门槛",
+      "pass": true,
+      "data": {
+        "cells": 27715,
+        "sites": [
+          {
+            "name": "西街加油站",
+            "reachable": true
+          },
+          {
+            "name": "南街汽车修理厂",
+            "reachable": true
+          },
+          {
+            "name": "废弃超市 · 应急售货机",
+            "reachable": true
+          },
+          {
+            "name": "北街汽车修理厂",
+            "reachable": true
+          },
+          {
+            "name": "北街加油站",
+            "reachable": true
+          },
+          {
+            "name": "撤离营地",
+            "reachable": true
+          }
+        ],
+        "zones": [
+          {
+            "name": "旧住宅区",
+            "reachable": true
+          },
+          {
+            "name": "废弃学校",
+            "reachable": true
+          },
+          {
+            "name": "市政广场",
+            "reachable": true
+          },
+          {
+            "name": "旧仓库",
+            "reachable": true
+          },
+          {
+            "name": "荒废公园",
+            "reachable": true
+          },
+          {
+            "name": "旧诊所",
+            "reachable": true
+          }
+        ],
+        "oldGateFree": true,
+        "houseBlocked": true
+      }
+    },
+    {
+      "name": "车内维修改装加油、驶离退款、超市购物与食物恢复",
+      "pass": true,
+      "data": {
+        "remote": false,
+        "began": true,
+        "repaired": 1150,
+        "gear": true,
+        "weapon": 1,
+        "gun": true,
+        "dmg": 21.6,
+        "refunded": true,
+        "fuel": true,
+        "tank": 40,
+        "wrong": false,
+        "foodDelta": 0,
+        "kitsDelta": 1,
+        "person": 75,
+        "inVehicle": true
+      }
+    },
+    {
+      "name": "视距触发、近战伤害、脱战回位及房屋遮挡视线",
+      "pass": true,
+      "data": {
+        "acquired": true,
+        "hurt": true,
+        "reset": true,
+        "wallLOS": false,
+        "homeDistance": 0
+      }
+    },
+    {
+      "name": "搜索和击杀奖励只结算一次，背包和清区状态入存档",
+      "pass": true,
+      "data": {
+        "one": 110,
+        "looted": true,
+        "defeated": 1,
+        "unique": true,
+        "kits": 4,
+        "food": 3
+      }
+    },
+    {
+      "name": "暂停冻结，退出保全基地与旧公路存档",
+      "pass": true,
+      "data": {
+        "campaign": "{\"untouched\":\"campaign\"}",
+        "old": "{\"legacy\":true}",
+        "active": false
+      }
+    },
+    {
+      "name": "刷新续玩保留改装、背包、一次性奖励与已击倒僵尸",
+      "pass": true,
+      "data": {
+        "looted": true,
+        "gun": 1,
+        "gear": 1,
+        "mobs": 35
+      }
+    },
+    {
+      "name": "未搜全也可自愿撤离",
+      "pass": true
+    },
+    {
+      "name": "房车毁坏失败与重玩",
+      "pass": true
+    },
+    {
+      "name": "暂停重开音频恢复",
+      "pass": true
+    },
+    {
+      "name": "城镇连续移动转镜头帧时间",
+      "pass": true,
+      "data": {
+        "samples": 1193,
+        "averageFPS": 170.08111999742988,
+        "medianMs": 5.9000000059604645,
+        "p95Ms": 6.0999999940395355,
+        "over50ms": 0,
+        "drawCalls": 95,
+        "triangles": 10560,
+        "memory": {
+          "geometries": 136,
+          "textures": 13
+        },
+        "viewport": [
+          1280,
+          720
+        ],
+        "dpr": 1.3333333333333333,
+        "drawingBuffer": [
+          1280,
+          720
+        ],
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "quality": "high",
+        "theme": "dark"
+      }
+    },
+    {
+      "name": "首波20秒、每25秒三路自动兵线且不占付费人口",
+      "pass": true,
+      "data": {
+        "split": {
+          "blue": 9,
+          "red": 9
+        },
+        "pop": 0,
+        "next": 18,
+        "lanes": [
+          1,
+          0,
+          -1
+        ],
+        "profiles": [
+          "guard",
+          "recruit"
+        ]
+      }
+    },
+    {
+      "name": "击杀金币/经验、真实等级血量、阵亡保留等级及同步字段",
+      "pass": true,
+      "data": {
+        "before": {
+          "gold": 600,
+          "hp": 120
+        },
+        "count": 18,
+        "lv": 4,
+        "max": 162,
+        "xp": 156,
+        "earned": 324,
+        "snapshot": {
+          "id": "blue0",
+          "g": 924,
+          "b": 1,
+          "bd": 0,
+          "bh": 800,
+          "bm": 800,
+          "l": "left",
+          "cd": {},
+          "ai": null,
+          "it": 0.1,
+          "p": 0,
+          "k": 18,
+          "n": "",
+          "sv": 0,
+          "lv": 4,
+          "xp": 156,
+          "bf": {}
+        },
+        "respawn": {
+          "lv": 4,
+          "hp": 162,
+          "max": 162
+        }
+      }
+    },
+    {
+      "name": "4对4八座位独立等级，重开清零",
+      "pass": true,
+      "data": {
+        "seats": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "heroes": 8
+      }
+    },
+    {
+      "name": "客机同步等级经验与生命上限",
+      "pass": true,
+      "data": {
+        "level": 5,
+        "xp": 23,
+        "max": 176
+      }
+    },
+    {
+      "name": "桌面无页面脚本异常",
+      "pass": true
+    },
+    {
+      "name": "手机横竖屏模拟、实际互动/设施按钮与双向操作切换",
+      "pass": true,
+      "data": {
+        "desktop": true,
+        "touch": true,
+        "progress": true
+      }
+    }
+  ],
+  "limitations": [
+    "浏览器触屏/视口模拟，未做手机真机验收",
+    "规则边界有QA传送与加速时钟，不冒称完整人工试玩"
+  ]
+}

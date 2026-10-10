@@ -40,6 +40,7 @@ function clearAll() {
 }
 
 const I = {
+  network:null,
   active: () => false,       // 由 UI 覆盖：游戏进行中且无菜单时为 true
   // 屏幕空间的移动输入：x 右、y 上（键盘对角归一化；摇杆为模拟量）
   move() {
@@ -48,7 +49,7 @@ const I = {
     if (x && y) { x *= Math.SQRT1_2; y *= Math.SQRT1_2; }
     return { x, y };
   },
-  down: (name) => keyBtn[name] || (name === 'run' ? (touchBtn.run || touchRun) && Math.hypot(stick.x, stick.y) > 0.3 : touchBtn[name]),
+  down: (name) => I.network?!!I.network[name]:keyBtn[name] || (name === 'run' ? (touchBtn.run || touchRun) && Math.hypot(stick.x, stick.y) > 0.3 : touchBtn[name]),
   look,
   // 手机端转视角：画面任意处（摇杆与按钮除外）按住拖动，无极旋转；游戏循环消费 look.dx
   bindLook(el) {
@@ -66,7 +67,7 @@ const I = {
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end); el.addEventListener('lostpointercapture', end);
     I.onClear(() => { look.id = null; look.dx = 0; });
   },
-  take(name) { const i = queue.findIndex(e => e.name === name); if (i >= 0) { return queue.splice(i, 1)[0]; } return null; },
+  take(name) { if(this.network){const i=(this.network.edges||[]).indexOf(name);if(i<0)return null;this.network.edges.splice(i,1);return {name,data:{offensive:this.network.motion}};}const i = queue.findIndex(e => e.name === name); if (i >= 0) { return queue.splice(i, 1)[0]; } return null; },
   peek(name) { return queue.some(e => e.name === name); },
   push(name, data) {
     if (name === 'atk') {

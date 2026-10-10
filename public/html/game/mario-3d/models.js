@@ -85,7 +85,7 @@ export function goomba(theme) {
   box(g, mat('#fbfbf2'), -0.07, 0.36, 0.25, 0.04, 0.06, 0.02); box(g, mat('#fbfbf2'), 0.07, 0.36, 0.25, 0.04, 0.06, 0.02);
   return g;
 }
-export function koopa(red) {
+export function koopa(red, winged=false) {
   const g = new THREE.Group();
   const shellM = mat(red ? '#ab5947' : '#668762'), rim = mat('#f8f4e0'), skin = mat('#f6d27a'), dark = mat(red ? '#8c1c0c' : '#14701e');
   const shell = new THREE.Group(); g.add(shell);
@@ -103,7 +103,16 @@ export function koopa(red) {
     ball(body, skin, s * 0.2, 0.09, 0.08, 0.1, 0.09, 0.15);
     ball(body, skin, s * 0.32, 0.45, 0.18, 0.07);
   }
-  g.userData = { shell, body };
+  const wings=[];
+  if (winged) for (const s of [-1,1]) {
+    const wing=new THREE.Group(); wing.position.set(s*.29,.67,-.12); g.add(wing);
+    for (let i=0;i<3;i++) {
+      const feather=ball(wing,rim,s*(.12+i*.12),.18+i*.12,0,.13,.3-i*.045,.075);
+      feather.rotation.z=-s*.4;
+    }
+    wings.push(wing);
+  }
+  g.userData = { shell, body, wings };
   return g;
 }
 export function piranha() {
@@ -162,6 +171,107 @@ export function star() {
   g.userData = { star: m };
   return g;
 }
+// ---------- 城堡：库巴、火焰、蘑菇人、斧头 ----------
+const cone = new THREE.ConeGeometry(1, 1, 8);
+const coneAt = (p, m, x, y, z, r, h, rx = 0, rz = 0) => { const o = add(p, cone, m, x, y, z, r, h, r); o.rotation.set(rx, 0, rz); return o; };
+// 库巴：本地 +z 为正面（和其他模型一致），脚底 y=0；约 2 格高，左右（世界纵深）比前后宽。
+export function bowser() {
+  const g = new THREE.Group();
+  const shellM = mat('#4f7f3a'), rim = mat('#efe2bc'), spike = mat('#f4f1e6', { roughness: 0.5 }), skin = mat('#d99a3c'), belly = mat('#ecd38e');
+  const head = mat('#6f9d43'), hair = mat('#c8471c'), horn = mat('#f4efe0'), dark = mat('#1a1a1a'), white = mat('#fbfbf2'), claw = mat('#f1ead8');
+  const body = new THREE.Group(); g.add(body);
+  // 龟壳朝后，壳沿一圈奶白色，上面一排尖刺
+  const shell = add(body, halfSphere, shellM, 0, 1.0, -0.2, 0.92, 0.78, 0.95); shell.rotation.x = -Math.PI / 2;
+  const ring = add(body, cyl, rim, 0, 1.0, -0.2, 0.96, 0.1, 0.99); ring.rotation.x = Math.PI / 2;
+  for (const [x, y] of [[0, 0.55], [0, 1.0], [0, 1.45], [-0.45, 0.78], [0.45, 0.78], [-0.45, 1.25], [0.45, 1.25]]) coneAt(body, spike, x, y, -0.2 - 0.66 * Math.cos(Math.hypot(x, y - 1) * 1.6), 0.11, 0.3, -Math.PI / 2);
+  ball(body, belly, 0, 0.92, 0.22, 0.62, 0.72, 0.42);
+  for (let i = 0; i < 3; i++) box(body, mat('#c9ae6a'), 0, 0.62 + i * 0.28, 0.6, 0.62 - i * 0.08, 0.04, 0.06);
+  // 尾巴
+  coneAt(body, skin, 0, 0.35, -1.05, 0.16, 0.5, -Math.PI / 2 - 0.4);
+  // 腿脚
+  const legs = [];
+  for (const s of [-1, 1]) {
+    const leg = new THREE.Group(); leg.position.set(s * 0.42, 0.55, 0.05); body.add(leg);
+    ball(leg, skin, 0, -0.18, 0, 0.26, 0.34, 0.28);
+    ball(leg, skin, 0, -0.45, 0.12, 0.24, 0.12, 0.32);
+    for (const cx of [-0.1, 0.1]) coneAt(leg, claw, cx, -0.48, 0.42, 0.05, 0.16, Math.PI / 2);
+    legs.push(leg);
+  }
+  // 手臂
+  const arms = [];
+  for (const s of [-1, 1]) {
+    const arm = new THREE.Group(); arm.position.set(s * 0.68, 1.3, 0.2); body.add(arm);
+    ball(arm, skin, s * 0.06, -0.18, 0.08, 0.15, 0.26, 0.15);
+    ball(arm, skin, s * 0.08, -0.42, 0.18, 0.13);
+    for (const cx of [-0.05, 0.05]) coneAt(arm, claw, s * 0.08 + cx, -0.5, 0.3, 0.04, 0.13, Math.PI / 2);
+    // 刺环护腕
+    add(arm, cyl, rim, s * 0.07, -0.3, 0.13, 0.15, 0.06, 0.15);
+    arms.push(arm);
+  }
+  // 头：绿脸、黄口鼻、红色头发和眉毛、白角；下巴单独一组用来张嘴喷火
+  const hd = new THREE.Group(); hd.position.set(0, 1.62, 0.42); body.add(hd);
+  ball(hd, head, 0, 0.05, 0, 0.42, 0.36, 0.4);
+  ball(hd, belly, 0, -0.06, 0.32, 0.3, 0.2, 0.24);
+  for (const s of [-1, 1]) {
+    ball(hd, dark, s * 0.08, 0.0, 0.54, 0.03, 0.03, 0.02);   // 鼻孔
+    ball(hd, white, s * 0.17, 0.2, 0.3, 0.1, 0.12, 0.06);
+    ball(hd, dark, s * 0.16, 0.19, 0.35, 0.045, 0.07, 0.02);
+    const brow = box(hd, hair, s * 0.18, 0.32, 0.3, 0.2, 0.06, 0.06); brow.rotation.z = s * -0.35;
+    coneAt(hd, horn, s * 0.3, 0.38, -0.05, 0.08, 0.36, -0.3, s * -0.5);
+  }
+  for (let i = 0; i < 5; i++) { const t = ball(hd, hair, (i - 2) * 0.12, 0.38 - Math.abs(i - 2) * 0.03, -0.22, 0.13, 0.2, 0.16); t.rotation.x = -0.4; }
+  const jaw = new THREE.Group(); jaw.position.set(0, -0.14, 0.12); hd.add(jaw);
+  ball(jaw, belly, 0, -0.08, 0.22, 0.26, 0.1, 0.22);
+  for (const s of [-1, 1]) coneAt(jaw, white, s * 0.14, 0.02, 0.38, 0.035, 0.09);
+  for (const s of [-1, 1]) coneAt(hd, white, s * 0.12, -0.17, 0.44, 0.035, 0.09, Math.PI);
+  g.userData = { body, legs, arms, jaw, head: hd };
+  return g;
+}
+// 库巴的火焰：沿本地 x 拉长、尖头朝前（-x 方向飞），整条跑道纵深排 5 团，不能从旁边绕过
+export function bowserFlame() {
+  const g = new THREE.Group();
+  const outer = new THREE.MeshBasicMaterial({ color: '#ff5a14' }), midM = new THREE.MeshBasicMaterial({ color: '#ffb02a' }), core = new THREE.MeshBasicMaterial({ color: '#fff3b0' });
+  const puffs = [];
+  for (const z of [-2.4, -1.2, 0, 1.2, 2.4]) {
+    const f = new THREE.Group(); f.position.z = z; g.add(f);
+    ball(f, outer, 0, 0, 0, 0.78, 0.26, 0.34);
+    ball(f, midM, -0.12, 0, 0, 0.56, 0.18, 0.26);
+    ball(f, core, -0.26, 0, 0, 0.32, 0.1, 0.16);
+    coneAt(f, outer, 0.82, 0, 0, 0.2, 0.42, 0, -Math.PI / 2);
+    for (const o of f.children) o.castShadow = false;
+    puffs.push(f);
+  }
+  g.userData = { puffs };
+  return g;
+}
+// 蘑菇人（Toad）：白色大伞帽带红点、蓝背心
+export function toad() {
+  const g = new THREE.Group();
+  const capM = mat('#fbfbf2'), spot = mat('#d8402a'), skin = mat('#f6d0a2'), vest = mat('#3d5fb8'), trim = mat('#e8b838'), pants = mat('#f4f0e6'), shoe = mat('#7a4a24'), dark = mat('#1a1a1a');
+  for (const s of [-1, 1]) { ball(g, shoe, s * 0.13, 0.07, 0.05, 0.12, 0.07, 0.16); ball(g, pants, s * 0.12, 0.24, 0, 0.13, 0.16, 0.13); }
+  ball(g, vest, 0, 0.5, 0, 0.26, 0.2, 0.2);
+  for (const s of [-1, 1]) box(g, trim, s * 0.13, 0.5, 0.17, 0.04, 0.32, 0.03);
+  for (const s of [-1, 1]) ball(g, skin, s * 0.3, 0.45, 0.04, 0.08, 0.13, 0.08);
+  ball(g, skin, 0, 0.78, 0.03, 0.22, 0.2, 0.2);
+  for (const s of [-1, 1]) ball(g, dark, s * 0.07, 0.8, 0.21, 0.035, 0.06, 0.02);
+  add(g, halfSphere, capM, 0, 0.86, 0, 0.5, 0.48, 0.48);
+  for (const [x, y, z, r] of [[0, 1.3, 0.15, 0.14], [-0.34, 1.05, 0.25, 0.13], [0.34, 1.05, 0.25, 0.13], [0, 1.08, -0.4, 0.15], [-0.4, 1.0, -0.2, 0.11], [0.4, 1.0, -0.2, 0.11]]) ball(g, spot, x, y, z, r, r * 0.55, r);
+  return g;
+}
+// 斧头：长柄 + 双刃，挂在桥头石台上
+export function axe() {
+  const g = new THREE.Group();
+  const wood = mat('#7a4e2a'), blade = mat('#f0b830', { roughness: 0.35, metalness: 0.45, emissive: '#5a3800' }), edge = mat('#fff2c0', { roughness: 0.3, metalness: 0.5 });
+  add(g, cyl, wood, 0, 0.45, 0, 0.06, 0.9, 0.06);
+  const bladeGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.09, 16, 1, false, 0, Math.PI);
+  for (const s of [-1, 1]) {
+    const b = new THREE.Mesh(bladeGeo, blade); b.position.set(s * 0.04, 0.7, 0); b.rotation.set(Math.PI / 2, s > 0 ? Math.PI : 0, 0); b.rotation.z = Math.PI / 2 * (s > 0 ? 1 : -1); b.castShadow = true; g.add(b);
+    box(g, edge, s * 0.36, 0.7, 0, 0.03, 0.62, 0.1);
+  }
+  ball(g, blade, 0, 0.95, 0, 0.08);
+  return g;
+}
+
 export const coinGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.09, 18).rotateX(Math.PI / 2);
 export const coinMat = new THREE.MeshStandardMaterial({ color: '#ffc531', emissive: '#6a4500', roughness: 0.25, metalness: 0.35 });
 export function coin() { const m = new THREE.Mesh(coinGeo, coinMat); m.castShadow = true; return m; }

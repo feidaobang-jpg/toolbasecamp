@@ -1,0 +1,21 @@
+{
+  "source": "Codex",
+  "task_id": "01a1197a-fb19-78b0-b18d-2c2a07956e2a-work03-rv-breakout",
+  "checked_at": "2026-10-08T09:51:32.179Z",
+  "account_uid": 16214353,
+  "scope": "related only; not full activity survey",
+  "new_video_published": false,
+  "toy_topic_1346285_preserved_on_both_bvs": true,
+  "task_center": {
+    "url": "https://member.bilibili.com/platform/growingUp/taskManage/main",
+    "activity_id": "2610057300",
+    "valid_videos": 3,
+    "views": 2636,
+    "target": 10000,
+    "gap": 7364,
+    "status": "not_eligible_yet",
+    "reward": "80 promotion credit; not cash"
+  },
+  "registration": "existing Toy participation retained; no duplicate registration",
+  "full_check": false
+}

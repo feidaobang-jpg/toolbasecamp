@@ -1,0 +1,49 @@
+{
+  "game": "cadillacs-stage1-3d",
+  "version": "v0.11.0-hellroad.1",
+  "id": 40412421031936,
+  "slug": "feidao-cadillacs-3d",
+  "title": "恐龙快打 3D：第一至三关",
+  "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+  "package": "D:/project/worktrees/toy-sync-20261010/game-projects/cadillacs-stage1-3d/dist/toy-v0.11.0-hellroad.1/package",
+  "file_count": 31,
+  "files": {
+    "css/style.css": "30c849e8186c4d872caa9163d8a3a033373e1343a7bc7f61a67251a82de7714b",
+    "index.html": "0b15ee5098e04e3ee98d67243702ad913736a40842be1c70a1153f85980a50d9",
+    "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+    "js/game.min.js": "7cc87513a55911aff1b985e963a04c18aec5e58639f4a8ebb364c3a59bde9eee"
+  },
+  "source_commit": "1bbf3f92",
+  "changes": [
+    "第三关按原作重做替换旧版：死亡沙漠三波、机修工送车、开车一路撞与霍格摩托战(448dc7bc)",
+    "移除返回游戏列表外链，避免 Toy 外壳内跳出到站点注册/充值页(ec592af0)"
+  ],
+  "authorization": {
+    "instruction": "帮今天的修改都推到toy吧，不用等23点了",
+    "scope": "user_authorized_immediate_toy_sync_20261010",
+    "note": "第三关重做版已由本人对比两版后选定(448dc7bc)并网站公网核验(c12e9dfb)，原登记22点批次同步Toy，本次经用户指令提前",
+    "at": "2026-10-10T21:20:00+08:00"
+  },
+  "doctor": "passed",
+  "doctor_warnings": [],
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_NrCSoT5J/index.html",
+    "content_url": "https://www.bilibilitoy.com/toy/preview/preview_NrCSoT5J/index.html"
+  },
+  "preview_qa": "passed",
+  "preview_qa_method": "本地 iframe 包裹预览内容 URL(避开顶层重定向)，桌面1280x800+手机390x844 双视口，canvas 渲染 1280x800/844x390、标题正确、0 脚本报错、0 HTTP>=400",
+  "submit": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Ly69xQBz/index.html"
+  },
+  "submitted_at": "2026-10-10T21:20:00+08:00",
+  "status_readback": {
+    "id": 40412421031936,
+    "title": "恐龙快打 3D：第一至三关",
+    "status": "auditing",
+    "visibility": "PUBLIC",
+    "category": "GAME"
+  },
+  "review_status": "auditing",
+  "recorded_at": "2026-10-10T21:20:00+08:00"
+}

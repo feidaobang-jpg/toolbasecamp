@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "game_id": "starship-defense",
+  "version": "web-versus-v0.26.0",
+  "base_version": "web-unstick-rpg-v0.25.0",
+  "classification": "正式版本",
+  "summary": "新增虫潮对战（1 对 1）：双堡峡谷、银行经济、9 兵种派兵、5 种设施、三档电脑对手、好友联机 1 对 1",
+  "source": {
+    "wish": "网站愿望榜第 1 名「双人对战塔防」（11 票，按设备去重）",
+    "design": "game-projects/starship-defense/design/versus-mode.md",
+    "user_confirmed": "2026-10-08 用户同意设计第 15 节全部 6 点"
+  },
+  "changes": [
+    "主菜单「⚔ 虫潮对战 · 1 对 1」：对战电脑三档、好友联机（大厅固定 2 人，房间列表标注对战）",
+    "双堡峡谷：点对称场地、两条行军路线、核心/银行/出兵口，只能在本方半场离中线 25 米外建造",
+    "经济：每 10 秒按银行等级进账，升级银行；击杀赏金；银行被打掉停产 30 秒",
+    "9 种派出单位与虫王，阵营着色，边走边打；5 种设施（对战耐久 ×1.6、火力 ×1.3）",
+    "后期 6:00/9:00 升级（收入、免费虫群、单位强化、建筑易损），15:00 比核心血量，接近进入加时",
+    "电脑对手三档（同规则同收入），联机掉线/闲置电脑接管",
+    "R/Z/0-9/L/O 键盘与手机出兵按钮共用不暂停的指挥面板；对战 HUD、小地图、结算、投降",
+    "对战不读写单机存档，退出恢复战役；服务器为虫潮房间保留 mode，对战房间上限 2 人"
+  ],
+  "bugs_found": [
+    "单位死亡同帧被读取位置导致报错（模拟发现，已修）",
+    "左右不对称：英雄出生点、寻路邻格顺序/绕障方向、电脑无威胁时守东路（110 局蓝 34:红 76 → 修后 144 局 78:66）",
+    "电脑给本机英雄买枪被旧值覆盖、联机客人买枪不换上（已修）",
+    "对战菜单与主菜单重叠、手机面板压住跑步键、战役提示残留、敌方核心标签被遮（已修）"
+  ],
+  "qa": {
+    "verify_versus": "qa/verify-versus.json（30 项通过）",
+    "verify_versus_online": "qa/verify-versus-online.json（13 项通过，本地联机服务）",
+    "balance": "qa/versus-balance.json（144 局）",
+    "regression": [
+      "qa/regression-web-verification.json",
+      "qa/regression-web-performance.json",
+      "qa/regression-touch-layout.json",
+      "verify-pc-controls / verify-squad-crew / verify-unstick-weapons 通过",
+      "site-games/qa/coop-capacity.cjs 虫潮 4 人 12 项通过"
+    ],
+    "server_tests": "server/tests/test_coop_lobby.py 9 项 + coop 相关 14 项通过",
+    "performance": "对战满负载 165 FPS、p95 6 ms（RTX 4060 Ti，Edge headless，精致画质）；手机仅视口模拟，未测真机"
+  },
+  "media": {
+    "policy": "截图录像只留本机（.gitignore 排除）",
+    "captures": [
+      {
+        "file": "01-main-menu.png",
+        "kind": "screenshot",
+        "note": "主菜单「⚔ 虫潮对战 · 1 对 1」入口"
+      },
+      {
+        "file": "02-versus-menu.png",
+        "kind": "screenshot",
+        "note": "对战菜单：三档电脑 + 好友联机，规则速览"
+      },
+      {
+        "file": "03-command-panel.png",
+        "kind": "screenshot",
+        "note": "出兵面板：银行 + 9 兵种，价格/冷却/解锁时间"
+      },
+      {
+        "file": "04-sent-wave.png",
+        "kind": "screenshot",
+        "note": "派出小虫群、机枪小队、甲壳战虫，带蓝色阵营环"
+      },
+      {
+        "file": "05-midgame.png",
+        "kind": "screenshot",
+        "note": "中局（约 6 分钟后）双方交战，镜头跟随蓝方英雄"
+      },
+      {
+        "file": "06-midgame-battle.webm",
+        "kind": "video",
+        "note": "电脑困难对困难，加速快进到 5:30 后实时录制约 45 秒；画面为当前构建实时渲染，不含解说"
+      },
+      {
+        "file": "07-result.png",
+        "kind": "screenshot",
+        "note": "胜利结算：双方数据对比"
+      }
+    ],
+    "hook": "愿望榜第一名，我直接做进了虫潮"
+  },
+  "site": {
+    "status": "verified",
+    "verified_at": "2026-10-08T13:45:00+08:00",
+    "commit": "2918b028",
+    "evidence": "线上 index.html 含对战入口与面板、compat 标记为提交号；game.compat.js/versus.js/game.js/key-bindings.js 与仓库逐字节一致；coop.js 含对战标注；生产环境 verify-versus 30 项、verify-versus-online 13 项通过"
+  },
+  "server": {
+    "status": "verified",
+    "verified_at": "2026-10-08T13:45:00+08:00",
+    "evidence": "/opt/toolbasecamp-api/DEPLOY_SHA=2918b028，coop_lobby.py 含 versus 分支；线上 wss 建对战房 maxPlayers=2 mode=versus、合作房不受影响（建完即退）"
+  },
+  "toy": {
+    "status": "published",
+    "id": 38678478981120,
+    "package": "dist/toy/chongchao-qianshao/package",
+    "zip_sha256": "889caad347c47cc416ed7a5e879b470794c93182815f2e95c0194f267ac1c3dd",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Q8fMFtEF/index.html",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_BjHmE0EC/index.html",
+    "submitted_at": "2026-10-08T13:52:31+08:00",
+    "audited_at": "2026-10-08T13:54:15+08:00",
+    "doctor": "passed，1 条 WARN：产物文件名不带内容指纹（建议，不影响发布）",
+    "verification": "预览与公开入口均在 Toy 外壳 iframe 内实测：电脑进入对战/面板/派兵/对局推进、手机竖屏视口点出兵与卡片，无报错（qa/verify-versus-toy-*.json）"
+  },
+  "taptap": {
+    "status": "reviewing",
+    "app_id": 962354,
+    "platform_version": "V-20261008-1",
+    "draft_version_id": "1045922",
+    "h5_version_id": 274950,
+    "zip_sha256": "42be8c7d65104271a13aea371e46e938249fcd5a2c121ed6f7c89dbe7a14994c",
+    "submitted_at": "2026-10-08T13:59:59+08:00",
+    "precheck": "blockers 0、preaudit_passed",
+    "description": "补一行 v0.26.0 更新说明",
+    "verification": "verify-taptap.cjs 同包三视口（电脑、手机横屏、手机竖屏模拟）启动/战役/存档重载/对战通过、无外部请求；手机 TapTap App 未实机验证",
+    "receipts": "D:/project/toolbasecamp-artifacts/taptap/versus-20261008/receipts/962354",
+    "community": "上线后与 v0.25.0 合并发一条动态并挂虫潮论坛"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvids": [
+      "BV1Ujad6DEuf",
+      "BV1WbHq6eEBt"
+    ],
+    "record": "bilibili-sync.json",
+    "public_verified_at": "2026-10-08T14:03:20+08:00"
+  },
+  "site_card_cover": "沿用：主画面、画风和默认视角没变，对战是主菜单里新增的模式；B站/Toy 封面未改"
+}

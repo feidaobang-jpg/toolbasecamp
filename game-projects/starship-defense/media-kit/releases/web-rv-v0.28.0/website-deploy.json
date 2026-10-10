@@ -1,0 +1,12 @@
+{
+  "version": "web-rv-v0.28.0",
+  "source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "runtime_sha256": "69d2dc9db07a9761c892b2fff8afe0cb177bf35a4db94599331b90bf9a29a70e",
+  "deployed_sha_observed": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "evidence": "SSH /opt/toolbasecamp-deploy/state/last-deployed-sha and production runtime hash; real public browser smoke",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "status": "deployed_public_verified",
+  "qa": "qa/production/results.json",
+  "physical_phone_test": false,
+  "recorded_at": "2026-10-08T09:53:22.515247+00:00"
+}

@@ -1,0 +1,124 @@
+{
+  "text": "She is down! In this recorded build, later swarms in the chapter shrink by thirty-five percent. Attacking first takes pressure off the base.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "She",
+      "offset": 1000000,
+      "duration": 2750000
+    },
+    {
+      "text": "is",
+      "offset": 4000000,
+      "duration": 1500000
+    },
+    {
+      "text": "down",
+      "offset": 5750000,
+      "duration": 4375000
+    },
+    {
+      "text": "In",
+      "offset": 18875000,
+      "duration": 1875000
+    },
+    {
+      "text": "this",
+      "offset": 21000000,
+      "duration": 1875000
+    },
+    {
+      "text": "recorded",
+      "offset": 23125000,
+      "duration": 4625000
+    },
+    {
+      "text": "build",
+      "offset": 28000000,
+      "duration": 2875000
+    },
+    {
+      "text": "later",
+      "offset": 32750000,
+      "duration": 3000000
+    },
+    {
+      "text": "swarms",
+      "offset": 35875000,
+      "duration": 4250000
+    },
+    {
+      "text": "in",
+      "offset": 40375000,
+      "duration": 625000
+    },
+    {
+      "text": "the",
+      "offset": 41125000,
+      "duration": 875000
+    },
+    {
+      "text": "chapter",
+      "offset": 42125000,
+      "duration": 4125000
+    },
+    {
+      "text": "shrink",
+      "offset": 46500000,
+      "duration": 3000000
+    },
+    {
+      "text": "by",
+      "offset": 49625000,
+      "duration": 1500000
+    },
+    {
+      "text": "thirty-five",
+      "offset": 51375000,
+      "duration": 5875000
+    },
+    {
+      "text": "percent",
+      "offset": 57375000,
+      "duration": 5500000
+    },
+    {
+      "text": "Attacking",
+      "offset": 71500000,
+      "duration": 5500000
+    },
+    {
+      "text": "first",
+      "offset": 77250000,
+      "duration": 3500000
+    },
+    {
+      "text": "takes",
+      "offset": 81000000,
+      "duration": 2250000
+    },
+    {
+      "text": "pressure",
+      "offset": 83375000,
+      "duration": 4125000
+    },
+    {
+      "text": "off",
+      "offset": 87750000,
+      "duration": 1500000
+    },
+    {
+      "text": "the",
+      "offset": 89500000,
+      "duration": 1000000
+    },
+    {
+      "text": "base",
+      "offset": 90625000,
+      "duration": 4750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

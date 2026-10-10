@@ -1,0 +1,18 @@
+{
+  "status": "public_verified",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "verified_at": "2026-10-09T12:45:32.210Z",
+  "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
+  "runtime_sha256": "ed28a5a15441114c28993a0ef001dd14ff56691b1883ad4c75adbcc828620f39",
+  "html_runtime_revision": "d5eafc25",
+  "runtime_matches_tested_build": true,
+  "tabs": [
+    "兵种",
+    "部署",
+    "装备",
+    "战况"
+  ],
+  "errors": [],
+  "core_regression": "qa/production/results.json",
+  "physical_phone": false
+}

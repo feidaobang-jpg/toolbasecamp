@@ -1,0 +1,260 @@
+[
+  {
+    "app_id": 962354,
+    "title": "虫潮围城",
+    "source_note": "2026-10-06 正常试玩截图；荒漠第三人称场景",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\banner_4.jpg",
+        "sha256": "fd11760c034e656fd62577f6dc773f54b1064f9ff552971e1709d48ea4dbadce",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 338437,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+        "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+        "crop": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover_vertical.jpg",
+        "sha256": "183bf7fa32a076a63ac18bb548b770aeadaa3f402c5004b7a7b201149777b129",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 149875,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962354\\cover-source.jpg",
+        "source_sha256": "8d32a0da5cf6adfd7d8f112906672d9f0fc03f28f51d4317f482d01516c9dac8",
+        "crop": [
+          420,
+          40,
+          1100,
+          1060
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    }
+  },
+  {
+    "app_id": 962376,
+    "title": "坦克大战 3D",
+    "source_note": "本次当前 TapTap H5 包正常试玩截图",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\banner_4.jpg",
+        "sha256": "f668facf9138414997d47462c0533a3ba3173e6f8c4d53d23d0033fded2a7701",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 566617,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover-source.jpg",
+        "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+        "crop": [
+          160,
+          170,
+          2400,
+          1430
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover_vertical.jpg",
+        "sha256": "380095099752fe304947471285c218672cf0e45cd3fb5d719d34f6083e3a0d7d",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 194659,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962376\\cover-source.jpg",
+        "source_sha256": "6f7d27a140c65b442f956dc3dbb6bdbfdedc19b2bc6c46254951787bf32035d3",
+        "crop": [
+          1020,
+          230,
+          1820,
+          1430
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    }
+  },
+  {
+    "app_id": 962721,
+    "title": "赤色要塞 3D",
+    "source_note": "本次当前 TapTap H5 包正常试玩截图",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962721\\banner_4.jpg",
+        "sha256": "020b62712732b2abc8a9b4c81101efcc8264c677c1d592b6c923e27abbeb382e",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 274257,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962721\\cover-source.jpg",
+        "source_sha256": "af84e67d889fac1aa9eecec10d99af6cf89b0d308bc28316d61deeb54abce1ce",
+        "crop": [
+          340,
+          170,
+          2420,
+          1340
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962721\\cover_vertical.jpg",
+        "sha256": "8763a7875bec25acbd987333f426084579e3adae5efb9b16268245811c5987a8",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 117891,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962721\\cover-source.jpg",
+        "source_sha256": "af84e67d889fac1aa9eecec10d99af6cf89b0d308bc28316d61deeb54abce1ce",
+        "crop": [
+          830,
+          170,
+          1670,
+          1430
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    }
+  },
+  {
+    "app_id": 962722,
+    "title": "恐龙快打 3D",
+    "source_note": "2026-10-07 正常试玩截图；与当前 v0.10.0 相同的第一关角色、画风及场景",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\banner_4.jpg",
+        "sha256": "8af8018d4f3f936bf8fae9631222164b8497d3e8de61850eb7e6d4a5a3e7bace",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 575945,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover-source.jpg",
+        "source_sha256": "300cd4c49fdef52622a4f57d2c962cfc30f051bf4010fbc50c583ab7bd171fcf",
+        "crop": [
+          120,
+          210,
+          1400,
+          930
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover_vertical.jpg",
+        "sha256": "a649fe797b4babf9158dbb8695ba1ba6c79534671b95f50ec0baa00a2987a2e4",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 243268,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962722\\cover-source.jpg",
+        "source_sha256": "300cd4c49fdef52622a4f57d2c962cfc30f051bf4010fbc50c583ab7bd171fcf",
+        "crop": [
+          280,
+          100,
+          920,
+          1060
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    }
+  },
+  {
+    "app_id": 962723,
+    "title": "超级玛丽 3D",
+    "source_note": "本次当前 TapTap H5 包正常试玩截图；竖版另选正面视角",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\banner_4.jpg",
+        "sha256": "47ab741097edbdc02b74ea0d4bfea75102253c11b3499d7bc47e3b850825a4b9",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 266909,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\cover-source.jpg",
+        "source_sha256": "d43aa71b949d2393788ca66236d9a36c3519f0db83b752dc001726a918f01dee",
+        "crop": [
+          250,
+          170,
+          2330,
+          1340
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\cover_vertical.jpg",
+        "sha256": "d5c060bd771ca4442918ffd500c655f44a4f2818ea522aab06fe09e5cab7676b",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 138291,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962723\\raw-gameplay-3.jpg",
+        "source_sha256": "3b2a8455b196721cdcf00c5e988edd1151582205857e71105db92acfc5bdbe9c",
+        "crop": [
+          880,
+          170,
+          1640,
+          1310
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    }
+  },
+  {
+    "app_id": 962724,
+    "title": "西游降魔 3D",
+    "source_note": "本次当前 TapTap H5 包正常试玩截图",
+    "fields": {
+      "banner_4": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\banner_4.jpg",
+        "sha256": "803e5fe7834e7e979eaa2bdf917a4dcf7a8bc9d1430bb46c5bc2557c8245d197",
+        "size": [
+          1920,
+          1080
+        ],
+        "bytes": 319767,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover-source.jpg",
+        "source_sha256": "f9c7e2fcca04ca11dc02afb1388ab3e180cc2ea000d4755b51107a19cb9058d3",
+        "crop": [
+          160,
+          170,
+          2400,
+          1430
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      },
+      "cover_vertical": {
+        "path": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover_vertical.jpg",
+        "sha256": "52e2df6914010ee2764a3092c9a581e70a994a9b2974c44c10c52b2758da2a55",
+        "size": [
+          720,
+          1080
+        ],
+        "bytes": 141018,
+        "source": "D:\\project\\toolbasecamp-artifacts\\taptap\\real-covers-20261008\\962724\\cover-source.jpg",
+        "source_sha256": "f9c7e2fcca04ca11dc02afb1388ab3e180cc2ea000d4755b51107a19cb9058d3",
+        "crop": [
+          770,
+          180,
+          1590,
+          1410
+        ],
+        "processing": "等比裁切、缩放、JPEG压缩与游戏名称文字；未重建场景、未添加角色或玩法"
+      }
+    }
+  }
+]

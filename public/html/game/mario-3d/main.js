@@ -1,11 +1,11 @@
-import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=controls-inset1';
+import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=menu-text1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=2.4.3';
-import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.4.3';
-import { LEVEL_ORDER } from './levels.js?v=2.4.3';
-import { GameAudio } from './audio.js?v=toy3dui2';
+import { createView, PRESETS } from './scene.js?v=2.6.0';
+import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.6.0';
+import { LEVEL_ORDER } from './levels.js?v=2.6.0';
+import { GameAudio } from './audio.js?v=castle1';
 
-const VERSION = 'v2.4.3';
+const VERSION = 'v2.6.0-preview1';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -13,9 +13,7 @@ const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌�
 const $ = (id) => document.getElementById(id);
 const app = $('app'), stage = $('stage'), canvas = $('screen');
 const overlays = { menu: $('menu'), pause: $('pause'), result: $('result') };
-const hud = $('hud'), hudTop = $('hud-top'), touch = $('touch'), keyHint = $('keyhint'), card = $('card'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt');
-const listUrl = app.getAttribute('data-list-url') || '../../../games.html';
-document.querySelectorAll('.list-link').forEach(a => { a.href = listUrl; });
+const hud = $('hud'), hudTop = $('hud-top'), touch = $('touch'), keyHint = $('keyhint'), card = $('card'), toastEl = $('toast'), fpsEl = $('fps'), hurtEl = $('hurt'), castleMsg = $('castle-msg');
 
 // ---------- 本地保存（独立命名空间，读写失败用默认值） ----------
 const NS = 'mario3d-v2:';
@@ -46,7 +44,7 @@ let view;
 try { view = createView(canvas); }
 catch (e) {
   const el = $('loading'); el.hidden = false;
-  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button><br><a href="' + listUrl + '" style="color:#fff">返回游戏列表</a>';
+  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button>';
   throw e;
 }
 view.setPreset(settings.camera);
@@ -66,7 +64,9 @@ const eventLog = [];
 
 const LEVEL_TIPS = {
   '1-1': '顶问号砖拿蘑菇、火焰花和无敌星；第 4 根水管上按 U（L兼容） 能钻进奖励房间',
-  '1-2': '地下关：砖墙顶上也能走；出口水管旁边的天花板上面藏着传送区'
+  '1-2': '地下关：砖墙顶上也能走；出口水管旁边的天花板上面藏着传送区',
+  '1-3': '远跳先按 I 冲刺，等浮台靠近再跳；飞行乌龟第一次踩掉翅膀，再踩才变龟壳',
+  '1-4': '火棒会转圈，看准空当再过；跳过库巴的火焰，碰到桥头的斧头就能把桥砍断（火焰花打 5 下也能打倒他）'
 };
 
 // ---------- 输入：键盘与触屏共用一张动作表 ----------
@@ -120,7 +120,7 @@ function buildInput() {
 // ---------- 设置菜单 ----------
 function optLabel(name) {
   switch (name) {
-    case 'level': return ['起始关卡', settings.level + (settings.level === '1-1' ? ' 地面' : ' 地下'), false];
+    case 'level': return ['起始关卡', settings.level + ' ' + {'1-1':'地面','1-2':'地下','1-3':'树冠','1-4':'城堡'}[settings.level], false];
     case 'lives': return ['命数', settings.lives === 'inf' ? '无限命' : '经典 3 命', false];
     case 'armor': return ['耐久', settings.armor === 'classic' ? '原作（小玛丽一碰就输）' : '标准 3 格护心', false];
     case 'demo': return ['演示模式（无敌）', settings.demo ? '开' : '关', settings.demo];
@@ -141,9 +141,10 @@ function refreshOptions() {
     b.innerHTML = '<span>' + l[0] + '</span><span class="val' + (l[2] ? ' warn' : '') + '">◂ ' + l[1] + ' ▸</span>';
   });
   $('hi-val').textContent = hi;
-  const fsOn = !!fsElement();
-  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; });
+  const fsOn = !!fsElement(), fsShow = fsOn || fsCapable();
+  document.querySelectorAll('.fs-btn').forEach(b => { b.textContent = fsOn ? '退出全屏' : '全屏'; b.hidden = !fsShow; });
   document.querySelectorAll('.fs-label').forEach(b => { b.textContent = fsOn ? '退出' : '全屏'; });
+  $('btn-fs').hidden = !fsShow;
   $('cam-label').textContent = PRESETS[view.presetIndex].name;
   $('demo-badge').hidden = !(uiMode === 'game' && session && session.settings.demo);
 }
@@ -193,11 +194,12 @@ function show(name) {
   current = name;
   clearInput();
   refreshOptions();
+  layout();
   if (name) { const first = items()[0]; if (first) first.focus({ preventScroll: true }); }
   else { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); app.focus({ preventScroll: true }); }
-  layout();
 }
-const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden) : []);
+// 只取实际显示的项：hidden 属性之外，样式收起的元素 focus() 后会让 ↑↓ 卡住
+const items = () => (current ? Array.prototype.filter.call(overlays[current].querySelectorAll('.items > button, .items > a, .control-modes > button'), el => !el.hidden && el.getClientRects().length > 0) : []);
 
 const isTyping = (e) => { const t = e.target; return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable); };
 document.addEventListener('keydown', (e) => {
@@ -273,10 +275,13 @@ function startGame() {
 // 进入关卡（新关卡、复活或从头重来）：重新生成关卡，显示 WORLD 卡片
 function beginLevel(opts) {
   w = createWorld(session, opts);
+  clearInput();
   w.events.length = 0;
   if (!opts.respawn && !opts.fromCheckpoint) levelStart = { score: session.score, coins: session.coins, power: session.power, lives: session.lives, hearts: session.hearts };
   view.build(w);
   hurtFx = 0;
+  toastEl.hidden = true; clearTimeout(toastTimer);
+  castleMsg.hidden = true; castleMsg.classList.remove('two');
   latch.jump = latch.fire = false;
   audio.setHurry(false); audio.stopMusic();
   phase = 'card'; cardT = 0;
@@ -309,7 +314,7 @@ function resume() {
 function toTitle() {
   uiMode = 'title'; paused = false; session = null; w = null;
   audio.pause(false); audio.stopMusic(); audio.setHurry(false);
-  card.hidden = true; hurtFx = 0;
+  card.hidden = true; hurtFx = 0; castleMsg.hidden = true;
   buildTitle();
   show('menu');
 }
@@ -337,7 +342,9 @@ function finishRun(win, extraNote, how) {
   $('res-extra').textContent = extra.join(' · ');
   const sl = overlays.result.querySelector('.sanlian');
   sl.hidden = !win;
-  sl.textContent = how === 'warp' ? '连传送区都被你翻出来了！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？' : '旗杆已经拔到顶啦！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？';
+  sl.textContent = how === 'warp' ? '连传送区都被你翻出来了！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？'
+    : how === 'castle' ? '桥砍断了，库巴掉进岩浆……可公主在另一座城堡里。喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？'
+    : '旗杆已经拔到顶啦！喜欢这版 3D 马力欧的话，也给开发者顶一块“三连砖”？';
   if (!win) audio.jingle('gameover');
   card.hidden = true;
   show('result');
@@ -350,11 +357,19 @@ function handleEvent(e) {
   switch (e.type) {
     case 'area':
       view.build(w);
-      if (w.player.star <= 0) audio.music(e.theme);
+      // 同曲子在播不重启：奖励房间等同主题区域往返不打断 BGM
+      if (w.player.star <= 0) audio.music(e.theme, false);
       break;
     case 'jump': case 'coin': case 'bump': case 'break': case 'stomp': case 'kick': case 'fireball': case 'pop': case 'sprout':
     case 'grow': case 'fire': case 'powerup': case 'oneup': case 'pipe': case 'firework': case 'checkpoint': case 'revive':
+    case 'bowserfire':
       audio.sfx(e.type, e); break;
+    case 'bowserHit': audio.sfx('kick'); break;
+    case 'bowserDefeated': audio.sfx('kick'); showToast('原来是栗宝宝假扮的库巴！'); break;
+    case 'axe': audio.stopMusic(); audio.setHurry(false); clearInput(); break;
+    case 'bowserFall': audio.sfx('bowserfall'); break;
+    case 'worldClear': audio.jingle('worldclear'); break;
+    case 'castleText': toastEl.hidden = true; castleMsg.hidden = false; castleMsg.classList.toggle('two', e.line >= 2); break;
     case 'tick': if (gameClock - tickSfxT > 0.05) { tickSfxT = gameClock; audio.sfx('tick'); } break;
     case 'shrink': audio.sfx('shrink'); hurtFx = 1; view.shake = 0.12; break;
     case 'hurt': audio.sfx('hurt'); hurtFx = 1; view.shake = 0.12; showToast('受伤了！剩 ' + e.hearts + ' 格护心'); break;
@@ -363,6 +378,7 @@ function handleEvent(e) {
     case 'starEnd': audio.music(w.area.theme); break;
     case 'flagpole': audio.stopMusic(); audio.sfx('flagpole'); break;
     case 'clearTune': audio.jingle('clear'); break;
+    case 'entranceEnd': clearInput(); break;
     case 'die': audio.jingle('die'); break;
     case 'toast': showToast(e.text); break;
     case 'dead': onDead(); break;
@@ -370,7 +386,7 @@ function handleEvent(e) {
     case 'warp':
       cleared.push(w.levelId + '（传送区）');
       audio.jingle('clear');
-      finishRun(true, '钻进了 ' + e.world + ' 号传送水管！原作会去 WORLD ' + e.world + '-1，这一版只复刻到 1-2', 'warp');
+      finishRun(true, '钻进了 ' + e.world + ' 号传送水管！原作会去 WORLD ' + e.world + '-1，这一版只复刻到 1-4', 'warp');
       break;
   }
   if (e.type === 'checkpoint') showToast('到达中途点：之后从这里继续');
@@ -389,11 +405,19 @@ function onClear() {
   cleared.push(w.levelId);
   const next = nextLevelId(w.levelId);
   if (next) { session.levelId = next; session.checkpoint = null; beginLevel({}); }
-  else finishRun(true, cleared.length >= LEVEL_ORDER.length ? '1-1 与 1-2 全部完成' : '从 WORLD ' + cleared[0] + ' 开始，打到了最后一关');
+  else finishRun(true, cleared.length >= LEVEL_ORDER.length ? '1-1 至 1-4 全部完成' : '从 WORLD ' + cleared[0] + ' 开始，打到了最后一关', w.levelId === '1-4' ? 'castle' : '');
 }
 
 // ---------- 全屏 ----------
 const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+// 全屏入口按浏览器实际能力显示，不按手机/电脑分类隐藏：iPhone Safari 没有元素全屏、未授权全屏的 iframe 报 fullscreenEnabled=false，
+// 这些情况隐藏按钮；能请求但被拒绝时由 toggleFullscreen 提示并继续页面内游玩
+function fsCapable() {
+  const el = document.documentElement;
+  if (!(el.requestFullscreen || el.webkitRequestFullscreen)) return false;
+  const enabled = document.fullscreenEnabled !== undefined ? document.fullscreenEnabled : document.webkitFullscreenEnabled;
+  return enabled !== false;
+}
 const fsLog = [];
 function toggleFullscreen() {
   if (fsElement()) { const ex = document.exitFullscreen || document.webkitExitFullscreen; if (ex) ex.call(document); return; }
@@ -436,7 +460,8 @@ function viewport() {
 let lastOrient = null, lastSize = '';
 function layout() {
   const { vw, vh } = viewport(), coarse = inputMode === 'touch';
-  const rotate = uiMode === 'game' && vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
+  // 手机触屏竖着拿时，菜单也直接旋转成横屏（2026-10-07 用户确认）：免得菜单竖屏、开局又变横屏
+  const rotate = vh > vw && (settings.touch === 'show' || settings.touch === 'auto' && coarse);
   const W = rotate ? vh : vw, H = rotate ? vw : vh;
   stage.style.width = W + 'px'; stage.style.height = H + 'px';
   stage.style.transform = rotate ? 'translate(' + vw + 'px,0) rotate(90deg)' : 'none';
@@ -506,6 +531,9 @@ document.querySelectorAll('#touch [data-hold]').forEach(btn => {
   const name = btn.getAttribute('data-hold');
   let id = null;
   btn.addEventListener('pointerdown', (e) => {
+    if (name === 'fire' && btn.getAttribute('aria-disabled') === 'true') {
+      e.preventDefault(); return;
+    }
     id = e.pointerId;
     try { btn.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
     btn.classList.add('down'); touchHold.add(name);
@@ -547,8 +575,11 @@ function updateHud() {
     $('h-lives').textContent = s.lives === Infinity ? '∞' : '×' + s.lives;
     $('h-hearts-wrap').hidden = hearts < 0;
     if (hearts >= 0) { let h = ''; for (let i = 1; i <= 3; i++) h += i <= hearts ? '♥' : '<span class="off">♥</span>'; $('h-hearts').innerHTML = h; }
+    const fireReady = w.player.power === 'fire';
+    const fireButton = document.querySelector('#touch [data-hold=fire]');
     $('run-label').textContent = '火球';
-    document.querySelector('#touch [data-hold=fire]').disabled = w.player.power !== 'fire';
+    fireButton.setAttribute('aria-disabled', String(!fireReady));
+    fireButton.setAttribute('aria-label', 'J 火球');
   }
   // 只剩 1 格护心：护心按游戏时间闪烁变红
   const low = hearts === 1 && w.mode === 'play';
@@ -566,11 +597,11 @@ function simulate(dt) {
   // 单步推进：Q/E 旋转、卡片计时、世界步进、事件
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
-  if (uiMode === 'game' && !paused && !current) { lookControl.step(dt, rot); pitchControl.step(dt); }
+  if (uiMode === 'game' && !paused && !current && !w?.entrance) { lookControl.step(dt, rot); pitchControl.step(dt); }
   if (uiMode !== 'game' || paused || current || !w) return;
   if (phase === 'card') { cardT += dt; if (cardT >= 2.2) endCard(); return; }
   const input = buildInput();
-  if (!view.firstPerson(w) && Math.hypot(input.mx,input.mz) > .05) delete w.player.lookHeading;
+  if (w.entrance || (!view.firstPerson(w) && Math.hypot(input.mx,input.mz) > .05)) delete w.player.lookHeading;
   if (w.player.lookHeading !== undefined) w.player.facing = w.player.lookHeading;
   const before = w;
   step(w, input, dt);
@@ -645,12 +676,13 @@ if (TEST) {
     get world() { return w; },
     get session() { return session; },
     get view() { return view; },
+    get audio() { return audio; },
     settings,
     state() {
       const p = w && w.player;
       return {
         uiMode, overlay: current, paused, phase, display: Object.assign({}, display), camera: PRESETS[view.presetIndex].id, yawOffset: +view.yawOffset.toFixed(3),
-        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsLog: fsLog.slice(),
+        quality: { setting: settings.quality, effective: effQuality, auto: autoProbe.decided }, fs: !!fsElement(), fsCapable: fsCapable(), fsLog: fsLog.slice(),
         focus: document.activeElement && (document.activeElement.getAttribute('data-act') || document.activeElement.getAttribute('data-opt') || document.activeElement.id),
         toast: toastEl.hidden ? null : toastEl.textContent, card: card.hidden ? null : $('card-world').textContent,
         touchHidden: touch.hidden, keys: Array.from(keys), touchHold: Array.from(touchHold), joy: Object.assign({}, joy),

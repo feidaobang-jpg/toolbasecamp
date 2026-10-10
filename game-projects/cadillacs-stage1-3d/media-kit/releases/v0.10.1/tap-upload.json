@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "data": {
+    "applyCommand": "taptap-cli app select-package --dev-id 100726 --app-id 962722 --data '{\"expected\":{\"h5_version_id\":\"275750\",\"kind\":\"h5\"},\"package\":{\"id\":\"276136\",\"type\":\"h5\"},\"slot\":\"main\"}' --idempotency-key <redacted> --yes",
+    "archive_preflight": {
+      "entry_count": 30,
+      "top_level_entries": [
+        "cadillacs-stage1-3d"
+      ],
+      "violations": [],
+      "warnings": []
+    },
+    "boundMainPackage": false,
+    "cliTaskId": "636b37d0-12ba-428c-98e8-703fdb270ffd",
+    "fileName": "cadillacs-stage1-3d.zip",
+    "h5PackageId": 74133,
+    "h5VersionId": 276136,
+    "handoff": {
+      "stage": "package_uploaded",
+      "completed": [
+        "H5 package uploaded",
+        "H5 version created"
+      ],
+      "pending": [
+        "main package slot is not bound",
+        "profile review is still pending"
+      ],
+      "userActionRequired": true,
+      "userActionSummary": "确认主包位绑定后才能继续",
+      "nextActions": [
+        {
+          "id": "bind_main_package",
+          "label": "预览并确认主包位绑定",
+          "requiresConfirmation": true
+        },
+        {
+          "id": "inspect_package",
+          "label": "检查包体状态和手机试玩入口",
+          "requiresConfirmation": false
+        }
+      ],
+      "links": [
+        {
+          "kind": "admin",
+          "label": "开发者后台资料页",
+          "url": "https://developer.taptap.cn/v3/100726/app/962722/store/update",
+          "available": true,
+          "source": "derived_from_ids"
+        }
+      ]
+    },
+    "nextCommand": "taptap-cli app select-package --dev-id 100726 --app-id 962722 --data '{\"expected\":{\"h5_version_id\":\"275750\",\"kind\":\"h5\"},\"package\":{\"id\":\"276136\",\"type\":\"h5\"},\"slot\":\"main\"}' --idempotency-key <redacted> --dry-run",
+    "nextStep": "H5 version created but not bound; preview the read-before-write main-slot change, then apply it after user confirmation",
+    "packageSize": 15308335,
+    "readinessCheck": {
+      "bindable": true,
+      "bound": false,
+      "packageRecordAvailable": true,
+      "slotReadable": true,
+      "uploaded": true
+    },
+    "screenOrientation": 0
+  }
+}

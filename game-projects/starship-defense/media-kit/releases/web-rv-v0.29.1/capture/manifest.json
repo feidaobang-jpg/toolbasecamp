@@ -1,0 +1,10 @@
+{
+  "video": "rv-supply-real-time.webm",
+  "method": "canvas.captureStream(30) + AudioContext master output; normal RAF; QA staged z=2040 before capture; W/I keys plus scripted movement axis to supply box",
+  "audio": "actual game BGM and effects",
+  "limitations": [
+    "Canvas capture excludes DOM HUD; separate screenshots include HUD",
+    "Automated input; not a human playthrough or phone test",
+    "Capture was not used for performance measurement"
+  ]
+}

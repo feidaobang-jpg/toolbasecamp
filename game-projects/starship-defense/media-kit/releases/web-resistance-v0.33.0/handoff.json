@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-resistance-v0.33.0",
+  "base_version": "web-no-shake-v0.32.1",
+  "created_at": "2026-10-09T21:49:26.673230+08:00",
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-resistance-20261009",
+  "build": {
+    "id": "resistance0330",
+    "commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
+    "base_commit": "13f5de2dc3d435b4904e8ff46f7d210d1baf90a6",
+    "dirty": false,
+    "fingerprint": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "resistance-chapters",
+      "description": "三个独立可重玩任务地图与阶段目标",
+      "status": "implemented",
+      "evidence_ids": [
+        "chapter-menu"
+      ]
+    },
+    {
+      "id": "resistance-period-assets",
+      "description": "二战步兵/军服/枪械与中式城镇",
+      "status": "implemented",
+      "evidence_ids": [
+        "rifle-first-person",
+        "town-breach"
+      ]
+    },
+    {
+      "id": "resistance-cavalry",
+      "description": "上下马、冲刺、军刀与运输车撤离",
+      "status": "implemented",
+      "evidence_ids": [
+        "cavalry-charge",
+        "gameplay-check"
+      ]
+    },
+    {
+      "id": "resistance-cannon",
+      "description": "搬运炮弹、操作火炮、破坏城门、巷战",
+      "status": "implemented",
+      "evidence_ids": [
+        "cannon-fire",
+        "town-breach",
+        "gameplay-check"
+      ]
+    },
+    {
+      "id": "resistance-checkpoints",
+      "description": "独立本地阶段检查点、死亡重整与章节重玩",
+      "status": "implemented",
+      "evidence_ids": [
+        "chapter-menu"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "add-resistance-mode",
+      "feature_ids": [
+        "resistance-chapters",
+        "resistance-period-assets",
+        "resistance-cavalry",
+        "resistance-cannon",
+        "resistance-checkpoints"
+      ],
+      "before": "只有守城、房车和现代战地据点模式",
+      "after": "独立入口的抗战故事战场三章，原模式保留；固定装备、无等级、无震屏",
+      "evidence_ids": [
+        "chapter-menu",
+        "rifle-first-person",
+        "cavalry-charge",
+        "cannon-fire",
+        "town-breach",
+        "gameplay-check"
+      ],
+      "verification": "17组场景测试通过，额外出生点/补弹/刷新继续/提示超时检查通过"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "blocked-checkpoint-spawn",
+      "discovered_version": "web-resistance-v0.33.0",
+      "reproduction": "启动李家坡阶段1检查点",
+      "observed": "玩家出生坐标与掩体相交，部分敌军也与木箱相交",
+      "status": "fixed",
+      "fix": "所有角色出生及队友复起时寻找附近无碰撞空位",
+      "before_media_ids": [],
+      "after_media_ids": [],
+      "verification": "遍历全部10个阶段，所有角色出生点均无碰撞；extra-checks.json"
+    }
+  ],
+  "media": [
+    {
+      "id": "chapter-menu",
+      "file": "releases/web-resistance-v0.33.0/captures/chapter-menu.png",
+      "sha256": "4951cff24e921a6202111b5017841385a94c65b307764d7c1b6a6653e6db63a8",
+      "kind": "screenshot",
+      "version": "web-resistance-v0.33.0",
+      "build_id": "resistance0330",
+      "capture_mode": "realtime-automation",
+      "description": "实机；录制使用QA后期阶段直达/无敌，未改变几何或渲染",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "rifle-first-person",
+      "file": "releases/web-resistance-v0.33.0/captures/rifle-first-person.png",
+      "sha256": "6af2646faa8e703f9fe34f04ab4448589439f88c894fda3b05553dfcdfab6fb9",
+      "kind": "screenshot",
+      "version": "web-resistance-v0.33.0",
+      "build_id": "resistance0330",
+      "capture_mode": "realtime-automation",
+      "description": "实机；录制使用QA后期阶段直达/无敌，未改变几何或渲染",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "cavalry-charge",
+      "file": "releases/web-resistance-v0.33.0/captures/cavalry-charge.png",
+      "sha256": "f7b0919b467fa9296fff9368355198dbee6c72429f19da16d45d09974b66ba72",
+      "kind": "screenshot",
+      "version": "web-resistance-v0.33.0",
+      "build_id": "resistance0330",
+      "capture_mode": "realtime-automation",
+      "description": "实机；录制使用QA后期阶段直达/无敌，未改变几何或渲染",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "cannon-fire",
+      "file": "releases/web-resistance-v0.33.0/captures/cannon-fire.png",
+      "sha256": "4d9af9dab21b65d9ebd6d5bf9093ccad3ad833c77e5f20b629c1809535ba09be",
+      "kind": "screenshot",
+      "version": "web-resistance-v0.33.0",
+      "build_id": "resistance0330",
+      "capture_mode": "realtime-automation",
+      "description": "实机；录制使用QA后期阶段直达/无敌，未改变几何或渲染",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "town-breach",
+      "file": "releases/web-resistance-v0.33.0/captures/town-breach.png",
+      "sha256": "400e831b4122061e3476f27f9520d189e1e2450479313928b29bb6fa8a38a48c",
+      "kind": "screenshot",
+      "version": "web-resistance-v0.33.0",
+      "build_id": "resistance0330",
+      "capture_mode": "realtime-automation",
+      "description": "实机；录制使用QA后期阶段直达/无敌，未改变几何或渲染",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "gameplay-check",
+      "file": "releases/web-resistance-v0.33.0/captures/gameplay-check.webm",
+      "sha256": "6b11783fa5a0b997995d52d4ceac0b2c8aca9b99163d90aeff7f554adc874f26",
+      "kind": "video",
+      "version": "web-resistance-v0.33.0",
+      "build_id": "resistance0330",
+      "capture_mode": "realtime-automation",
+      "description": "真实键盘射击/投雷/骑兵冲刺/攻城三炮；骑兵和攻城以QA直达后期阶段并使用无敌；按1fps联系表检查动态过程，无音轨",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 18.12,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 5,
+          "description": "步兵射击投雷与镜头切换"
+        },
+        {
+          "in_seconds": 6,
+          "out_seconds": 9,
+          "description": "骑兵移动冲锋"
+        },
+        {
+          "in_seconds": 9,
+          "out_seconds": 17,
+          "description": "操炮三次、城门被破坏并进入最后阶段"
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "id": "scenarios",
+      "device": "Windows / Edge headless / D3D11",
+      "viewport": "1440x900 / 844x390 / 390x844",
+      "method": "键盘和触屏按钮；QA隔离阶段、定位、清敌和无敌用于机制验证",
+      "result": "pass",
+      "evidence": [
+        "qa/results.json",
+        "extra-checks.json",
+        "capture-checks.json"
+      ],
+      "unverified": [
+        "手机真机、多指实测",
+        "完整无QA正常难度三章连玩",
+        "战役不提供联机"
+      ]
+    },
+    {
+      "id": "dynamic-capture",
+      "device": "Windows / Edge headless / D3D11",
+      "viewport": "1280x720",
+      "method": "真实键盘连续输入与1fps联系表人工检查，6个镜头静帧",
+      "result": "pass",
+      "evidence": [
+        "captures/gameplay-check.webm",
+        "captures/sequence-review.jpg"
+      ],
+      "unverified": [
+        "录制音轨"
+      ]
+    },
+    {
+      "id": "render-load",
+      "device": "Windows / Edge headless / D3D11",
+      "viewport": "1440x900",
+      "method": "预热后三章分别移动、射击、手雷、转头8秒，QA无敌；测量在门框补齐前，最终包仅增两座门框，未重复性能基准。",
+      "result": "pass",
+      "evidence": [
+        "performance.json"
+      ],
+      "unverified": [
+        "手机性能"
+      ]
+    },
+    {
+      "id": "self-contained-package",
+      "device": "Windows / Edge headless",
+      "viewport": "1280x720",
+      "method": "禁用所有外部网络，自包含包三章真实移动射击投雷",
+      "result": "pass",
+      "evidence": [
+        "package-smoke.json"
+      ],
+      "unverified": [
+        "Toy客户端"
+      ]
+    },
+    {
+      "id": "public-website",
+      "device": "Windows / Edge headless / D3D11",
+      "viewport": "1440x900 / 844x390 / 390x844",
+      "method": "正式公网入口重复17组机制、操作与模式回归测试，SHA256与本地测试产物一致",
+      "result": "pass",
+      "evidence": [
+        "website.json",
+        "qa/production/results.json"
+      ],
+      "unverified": [
+        "手机真机"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "QA原片无音轨，未剪辑或人工审片",
+      "未做手机真机、完整自然通关难度平衡验收"
+    ]
+  }
+}

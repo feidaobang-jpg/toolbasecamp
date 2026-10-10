@@ -1,0 +1,159 @@
+{
+  "text": "侧视看得全，身后视角更有推进感，第一人称更贴近战斗。这是十月五日的开发实录。当前试玩见简介，你更想用哪个视角？",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "侧视",
+      "offset": 1000000,
+      "duration": 4000000
+    },
+    {
+      "text": "看",
+      "offset": 5250000,
+      "duration": 1500000
+    },
+    {
+      "text": "得",
+      "offset": 6750000,
+      "duration": 750000
+    },
+    {
+      "text": "全",
+      "offset": 7625000,
+      "duration": 4125000
+    },
+    {
+      "text": "身后",
+      "offset": 14500000,
+      "duration": 4125000
+    },
+    {
+      "text": "视角",
+      "offset": 18750000,
+      "duration": 4125000
+    },
+    {
+      "text": "更",
+      "offset": 23125000,
+      "duration": 1250000
+    },
+    {
+      "text": "有",
+      "offset": 24375000,
+      "duration": 1000000
+    },
+    {
+      "text": "推进感",
+      "offset": 25500000,
+      "duration": 6625000
+    },
+    {
+      "text": "第一人称",
+      "offset": 35625000,
+      "duration": 7500000
+    },
+    {
+      "text": "更",
+      "offset": 43375000,
+      "duration": 2375000
+    },
+    {
+      "text": "贴近",
+      "offset": 45750000,
+      "duration": 3250000
+    },
+    {
+      "text": "战斗",
+      "offset": 49125000,
+      "duration": 3750000
+    },
+    {
+      "text": "这",
+      "offset": 58625000,
+      "duration": 1750000
+    },
+    {
+      "text": "是",
+      "offset": 60375000,
+      "duration": 1500000
+    },
+    {
+      "text": "十月",
+      "offset": 62125000,
+      "duration": 3000000
+    },
+    {
+      "text": "五日",
+      "offset": 65250000,
+      "duration": 3250000
+    },
+    {
+      "text": "的",
+      "offset": 68500000,
+      "duration": 1625000
+    },
+    {
+      "text": "开发",
+      "offset": 70375000,
+      "duration": 3750000
+    },
+    {
+      "text": "实录",
+      "offset": 74250000,
+      "duration": 5125000
+    },
+    {
+      "text": "当前",
+      "offset": 85000000,
+      "duration": 4125000
+    },
+    {
+      "text": "试",
+      "offset": 89250000,
+      "duration": 1250000
+    },
+    {
+      "text": "玩",
+      "offset": 90500000,
+      "duration": 1375000
+    },
+    {
+      "text": "见",
+      "offset": 92125000,
+      "duration": 1750000
+    },
+    {
+      "text": "简介",
+      "offset": 93875000,
+      "duration": 5000000
+    },
+    {
+      "text": "你",
+      "offset": 101250000,
+      "duration": 6875000
+    },
+    {
+      "text": "更",
+      "offset": 108250000,
+      "duration": 1250000
+    },
+    {
+      "text": "想用",
+      "offset": 109500000,
+      "duration": 2375000
+    },
+    {
+      "text": "哪个",
+      "offset": 112125000,
+      "duration": 1875000
+    },
+    {
+      "text": "视角",
+      "offset": 114125000,
+      "duration": 4875000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

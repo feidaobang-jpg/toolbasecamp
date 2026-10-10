@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-three-lanes-v0.31.0",
+  "base_version": "web-shop-scroll-v0.29.2-menu-text1",
+  "created_at": "2026-10-09T05:10:04.707552+00:00",
+  "classification": "routine",
+  "release_kind": "major",
+  "status": "website_public_verified_channels_pending_22",
+  "build": {
+    "id": "three-lanes031-9adf204cab73",
+    "commit": "505ded3cc7df6b37987c3725e8497e92b908ad2f",
+    "dirty": false,
+    "fingerprint": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "rv-town",
+      "description": "自由城镇和分区僵尸",
+      "status": "implemented",
+      "evidence_ids": [
+        "history-town"
+      ]
+    },
+    {
+      "id": "rv-facilities",
+      "description": "场地补给和车内办理",
+      "status": "implemented",
+      "evidence_ids": [
+        "history-garage"
+      ]
+    },
+    {
+      "id": "versus-three-lanes",
+      "description": "三路持续出兵和六座外塔",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-arena-overview"
+      ]
+    },
+    {
+      "id": "versus-distinct-minions",
+      "description": "四类基础兵与非人形付费兵",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-minion-wave",
+        "shot-creature-closeup"
+      ]
+    },
+    {
+      "id": "versus-jungle",
+      "description": "八处营地、脱战回巢和增益",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-arena-overview"
+      ]
+    },
+    {
+      "id": "versus-hero-level",
+      "description": "局内成长与联机同步",
+      "status": "implemented",
+      "evidence_ids": []
+    }
+  ],
+  "changes": [
+    {
+      "id": "town-three-lanes",
+      "feature_ids": [
+        "rv-town",
+        "rv-facilities",
+        "versus-three-lanes",
+        "versus-distinct-minions",
+        "versus-jungle",
+        "versus-hero-level"
+      ],
+      "before": "房车强制公路关卡，对战双路且无野区和成长",
+      "after": "房车自由城镇、分区僵尸与场地补给；对战三路自动兵线、六座外塔、异形杂兵、八处野区及局内Lv1–15成长。",
+      "user_visible_result": "自由探索与补给，三路推线和野区成长有不同目标",
+      "evidence_ids": [
+        "shot-arena-overview",
+        "shot-minion-wave",
+        "history-town",
+        "history-garage"
+      ],
+      "verification": "passed"
+    }
+  ],
+  "bugs": [],
+  "media": [
+    {
+      "id": "shot-rules",
+      "file": "releases/web-three-lanes-v0.31.0/captures/rules.png",
+      "sha256": "3284a7b52cd51fba34e082756a97faf731af6ec9901f5417fd55c99ac4f69826",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "Actual current rules",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-lane-follow",
+      "file": "releases/web-three-lanes-v0.31.0/captures/lane-follow.png",
+      "sha256": "c328e40c164bce51abb077a6d93e8e927d7f5b60b0ae5a9913e6e7f0bd2df8e3",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "Real W input following the first wave",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-minion-wave",
+      "file": "releases/web-three-lanes-v0.31.0/captures/minion-wave.png",
+      "sha256": "dcd3fe11fe8af49feba94a4ee0be9eee4b3900cbe4ed559cebc3fec65d040d4b",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "QA clock to 5:20; normal wave contains guard, spitter, siege and healer",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-lane-fight",
+      "file": "releases/web-three-lanes-v0.31.0/captures/lane-fight.png",
+      "sha256": "b27ef56eeaefb054c80d5c9ece41499734cf599e3bd7475b58f6fd31f0ea01b3",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "Real shooting and movement",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-jungle-fight",
+      "file": "releases/web-three-lanes-v0.31.0/captures/jungle-fight.png",
+      "sha256": "6605ca0c39f6250b61895925356f61fe49b09030148682ab48d469a3a3888bd8",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "QA approach energy camp; real attacks and jungle pursuit",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-arena-overview",
+      "file": "releases/web-three-lanes-v0.31.0/captures/arena-overview.png",
+      "sha256": "832636ff243ad5d019effabbe761fa6bf1eb8b6a94204dc8cca18de10fde8985",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "Paused live scene, inspection camera only: actual three paths, six towers and eight camps",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-creature-closeup",
+      "file": "releases/web-three-lanes-v0.31.0/captures/creature-closeup.png",
+      "sha256": "521f8da00d000cc6c6dc78b929bab0da5b496476a13bff2fb9c83bc2100be14d",
+      "kind": "screenshot",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "Paused inspection camera on actual insect minion, not hero mesh",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "video-three-lanes",
+      "file": "releases/web-three-lanes-v0.31.0/captures/three-lanes-realtime.webm",
+      "sha256": "94119a38203d8ebcf2b6ae625dfcd6e1f4c8a0b0f459369adfad6bee6f7377bb",
+      "kind": "video",
+      "version": "web-three-lanes-v0.31.0",
+      "build_id": "three-lanes031-9adf204cab73",
+      "capture_mode": "realtime-automation",
+      "description": "Real WebGL RAF and keyboard. QA advances match clock to 0:20 and 5:20, positions hero at lane/camp, then pauses for overhead/close inspection camera. Not a complete human playthrough.",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 22.48,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "history-town",
+      "handoff": "releases/web-town-versus-v0.30.0/handoff.json",
+      "media_id": "shot-town-street",
+      "reason": "房车代码延续同一实现，v031追加回归通过"
+    },
+    {
+      "id": "history-garage",
+      "handoff": "releases/web-town-versus-v0.30.0/handoff.json",
+      "media_id": "shot-town-repaired",
+      "reason": "车内维修流程保留，v031回归通过"
+    }
+  ],
+  "qa": [
+    {
+      "browser": "Edge Chromium headless, D3D11 RTX4060Ti",
+      "viewports": [
+        [
+          1280,
+          720
+        ],
+        [
+          844,
+          390
+        ],
+        [
+          390,
+          844
+        ]
+      ],
+      "method": "真实键鼠/触屏/WebSocket，边界用QA定位和时钟；固定步长电脑整局模拟",
+      "results": "passed",
+      "evidence": [
+        "qa/results.json",
+        "qa/rv/results.json",
+        "qa/teams/verify-versus-teams.json",
+        "qa/online/verify-versus-teams-online.json",
+        "qa/balance-1v1.json",
+        "qa/balance-4v4.json"
+      ],
+      "not_tested": [
+        "手机真机性能与多指触控",
+        "真人长期竞技平衡"
+      ]
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "录像无游戏音轨，未逐帧视听审片",
+      "不是新视频成片，不授权自动发片"
+    ]
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T05:14:27.175293+00:00",
+    "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+    "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+    "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+    "evidence": [
+      "website-assets.json",
+      "qa/public/results.json",
+      "qa/public-rv/results.json"
+    ],
+    "public_checks": 29,
+    "physical_phone": false
+  }
+}

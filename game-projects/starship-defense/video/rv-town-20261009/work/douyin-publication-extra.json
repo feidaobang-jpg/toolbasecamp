@@ -1,0 +1,31 @@
+{
+  "id": "7694602953994358058",
+  "url": "https://www.douyin.com/video/7694602953994358058",
+  "identity_verified": true,
+  "published_at_observed": "2026-10-09T17:49:00+08:00",
+  "duration_seconds": 109.866667,
+  "publishing_settings": {
+    "visibility": "public",
+    "release": "immediate",
+    "ai_content_disclosure": "内容由AI生成",
+    "paid_promotion": false,
+    "simultaneous_other_services": false,
+    "save_permission": "允许"
+  },
+  "covers": {
+    "status": "both_saved_and_platform_check_passed",
+    "source": "已审房车封面在平台编辑器裁切，保留完整标题",
+    "horizontal": "4:3",
+    "vertical": "3:4",
+    "evidence": [
+      "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-horizontal-cover.jpg",
+      "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-vertical-cover.jpg"
+    ]
+  },
+  "public_hashtags": ["虫潮围城", "房车生存", "游戏开发", "AI"],
+  "precheck": "作品未见异常；封面检测通过",
+  "public_playback": "公开规范URL实际播放正确房车成片，时长1:50，画面内中文字幕正常显示",
+  "sound_review": "人工审片通过；代理未主观试听",
+  "evidence": "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009/work/proof/douyin-public.jpg",
+  "next_step": null
+}

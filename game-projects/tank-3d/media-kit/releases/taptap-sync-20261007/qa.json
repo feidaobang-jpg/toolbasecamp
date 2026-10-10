@@ -1,0 +1,52 @@
+{
+  "package_sha256": "77143f1eb30eae0f965417c2500a9674c2e5e457bfc09866e78ac38eab9a95cf",
+  "results": [
+    {
+      "device": "desktop",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "start": true,
+      "control_mode_switch": true,
+      "progress_preserved": true,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "device": "landscape",
+      "viewport": [
+        844,
+        390
+      ],
+      "start": true,
+      "control_mode_switch": true,
+      "progress_preserved": true,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "device": "portrait",
+      "viewport": [
+        390,
+        844
+      ],
+      "start": true,
+      "control_mode_switch": true,
+      "progress_preserved": true,
+      "errors": [],
+      "failed": []
+    },
+    {
+      "co_op": "two real browser clients using production relay",
+      "joined": true,
+      "ready": true,
+      "started": true,
+      "state_sync": true
+    }
+  ],
+  "method": "Normal buttons and keyboard; test hook read-only observations, no invulnerability or scene mutation.",
+  "real_mobile_test": false,
+  "taptap_client_test": false,
+  "captured_at": "2026-10-07T00:35:45.084Z"
+}

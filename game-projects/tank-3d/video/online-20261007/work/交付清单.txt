@@ -1,0 +1,9 @@
+唯一投稿材料目录：final/bilibili-zh/
+中文横屏成片：gameplay-zh-final.mp4，82.40秒，1920×1080，30fps，Edge云希正常语速；配音与烧录字幕。
+首页推荐封面：cover-home-4x3.jpg（1440×1080）
+个人空间封面：cover-space-16x9.jpg（1920×1080）
+投稿文案.txt：标题、标签、话题、简介、置顶评论。
+成片SHA-256：50fdf95e9f48019fea41a7e9c88af5c53deef02f54590e4c2175cb0de0bdc611
+制作和技术检查已完成；主观听审及最终人工审片待用户；尚未上传。
+内部清单：work/publish/bilibili-zh/publish.json；验收：work/qa.md；续接：work/run-state.json。
+完整素材及工程保全：D:/project/task-artifacts/tank-online-video-20261007

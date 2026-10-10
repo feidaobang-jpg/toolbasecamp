@@ -1,0 +1,198 @@
+﻿1
+00:00:00,350 --> 00:00:02,100
+The first stage of Cadillacs and Dinosaurs.
+
+2
+00:00:02,300 --> 00:00:05,913
+This time, fight through the hero's eyes.
+Revolver in hand,
+
+3
+00:00:05,962 --> 00:00:08,925
+a big enemy charges straight at me. I fire
+several shots.
+
+4
+00:00:09,650 --> 00:00:13,225
+I took this stage from Capcom's 1993 game
+and made an unofficial 3D remake.
+
+5
+00:00:13,650 --> 00:00:16,412
+Side view is the default, like the original
+arcade game.
+
+6
+00:00:16,675 --> 00:00:20,463
+Vice threatens us, then jumps away. His men
+close in.
+
+7
+00:00:21,650 --> 00:00:25,438
+Press C, and the camera moves behind the
+hero. This is the rear view.
+
+8
+00:00:25,862 --> 00:00:29,487
+W moves forward in this build. Enemies
+approach from ahead.
+
+9
+00:00:29,538 --> 00:00:32,350
+Who enters punching range first? It is easy
+to see.
+
+10
+00:00:32,775 --> 00:00:36,950
+The trade-off: I cannot see behind me. Look:
+someone comes up from behind.
+
+11
+00:00:37,050 --> 00:00:38,538
+I notice only after getting hit.
+
+12
+00:00:39,250 --> 00:00:42,988
+Press C again: first person. My fists are
+right in front of me.
+
+13
+00:00:43,213 --> 00:00:48,200
+So are the enemies' faces. One last kick
+opens the stairwell door.
+
+14
+00:00:48,650 --> 00:00:51,700
+Inside the building, the rear view gives the
+hall depth.
+
+15
+00:00:51,950 --> 00:00:56,175
+But enemies suddenly emerge from doors.
+Three of them pin me beside the doorway.
+
+16
+00:00:56,412 --> 00:00:59,625
+I cannot see the one behind me. The health
+bar drops to zero.
+
+17
+00:01:00,050 --> 00:01:02,962
+This build has unlimited lives by default. I
+respawn on the spot,
+
+18
+00:01:03,188 --> 00:01:05,438
+knocking nearby enemies down.
+
+19
+00:01:06,050 --> 00:01:10,813
+Back to first person in the hall. Blade
+approaches with a knife.
+
+20
+00:01:11,050 --> 00:01:14,338
+The blade is waving right in front of me.
+Defeat him and a revolver drops:
+
+21
+00:01:14,575 --> 00:01:18,075
+the gun from the opening shots. When the big
+enemies crowd together,
+
+22
+00:01:18,262 --> 00:01:19,800
+bellies fill the screen.
+
+23
+00:01:20,950 --> 00:01:25,350
+Break through the window, and jump onto 47th
+Street. At the end of the route,
+
+24
+00:01:25,600 --> 00:01:30,725
+Vice holds a chained dinosaur right in front
+of us. He cracks the whip.
+
+25
+00:01:30,950 --> 00:01:35,838
+The dinosaur turns orange and goes berserk.
+In the rear-view boss fight,
+
+26
+00:01:35,975 --> 00:01:41,300
+Vice and the dinosaur are both ahead. I can
+see who charges first. Of course,
+
+27
+00:01:41,625 --> 00:01:43,750
+seeing it does not mean dodging it.
+
+28
+00:01:44,950 --> 00:01:50,025
+Switch to first person, and the teeth fill
+my view. A little closer,
+
+29
+00:01:50,238 --> 00:01:53,725
+and the camera enters the dinosaur's mouth.
+That is a bug
+
+30
+00:01:53,863 --> 00:01:57,650
+recorded in this early build. Vice calls for
+help as his health drops.
+
+31
+00:01:57,863 --> 00:02:02,650
+That punch lands, and I go down again. I
+finish by returning to side view.
+
+32
+00:02:03,075 --> 00:02:07,275
+Now I can see enemies on both sides. When to
+kick and which way to dodge
+
+33
+00:02:07,500 --> 00:02:10,975
+are easier to judge. There is a reason the
+original used this view.
+
+34
+00:02:11,400 --> 00:02:16,362
+A few final hits, and Vice finally falls.
+The health bonus is counted.
+
+35
+00:02:16,538 --> 00:02:22,038
+Stage one cleared. A score of 122,400.
+Mustapha went down three times.
+
+36
+00:02:22,250 --> 00:02:26,788
+Unlimited lives kept this run going. The
+footage caught another problem:
+
+37
+00:02:27,050 --> 00:02:30,213
+fight close to a wall in rear view, and the
+camera enters the brickwork.
+
+38
+00:02:30,638 --> 00:02:35,145
+Those two camera problems were the next
+fixes at the time. Side view shows more.
+
+39
+00:02:35,300 --> 00:02:39,258
+Rear view feels more direct. First person
+puts you in the fight.
+
+40
+00:02:39,712 --> 00:02:43,858
+This was recorded on October fifth. The
+current demo is linked below.
+
+41
+00:02:43,975 --> 00:02:45,870
+Which view would you choose?

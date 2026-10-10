@@ -1,0 +1,10 @@
+{
+  "source": "02-guest-lobby",
+  "method": "original frame file persistence timestamps; drop non-increasing timestamps",
+  "duration": 29.646605253219604,
+  "retained_frames": 586,
+  "original_frames": 640,
+  "raw_images_unchanged": true,
+  "audio_unchanged": true,
+  "limitation": "receive/persistence times, not original GPU frame timestamps; inspect synchronization"
+}

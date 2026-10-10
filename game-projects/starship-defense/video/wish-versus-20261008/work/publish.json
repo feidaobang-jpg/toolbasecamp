@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮围城",
+  "game_version": "web-versus-teams-v0.27.0",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [],
+      "status": "published"
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [],
+      "status": "published"
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [],
+      "status": "published"
+    }
+  ],
+  "technical_preparation_complete": true,
+  "human_review_status": "approved",
+  "ready_to_upload": false,
+  "post_publication": {
+    "toy_bind": true,
+    "season_id": 9248439,
+    "wishlist_video_url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+    "x": "free official capability only; skip paid access",
+    "wishlist_video_status": "deployed_verified"
+  },
+  "approval_statement": "可以发布",
+  "publication_status": "complete",
+  "publication_result": "publication-result.json"
+}

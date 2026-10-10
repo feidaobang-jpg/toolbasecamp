@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-camera-response-v0.31.2",
+  "base_version": "web-versus-scroll-v0.31.1",
+  "created_at": "2026-10-09T19:30:20.006516+08:00",
+  "task_id": "01a1205e-4fd7-7401-9c9b-1abef10885ad-01",
+  "source": "Codex",
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009",
+  "build": {
+    "id": "camera-response0312",
+    "commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "base_commit": "7db2d81a3d5fa414179f4e1c0812a46ec38a2f59",
+    "dirty": false,
+    "fingerprint": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "source_feedback": [
+    {
+      "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+      "video": "BV1Ujad6DEuf",
+      "rpid": null,
+      "comment_type": 1,
+      "user": "黄milk龙",
+      "date": "2026-10-09 17:34:59",
+      "text": "新版视角动太那个了，一点都不灵敏。",
+      "source": "user_supplied_screenshot",
+      "screenshot_sha256": "835115c7ea47e868fb2a22b587044746fadc339ee2378500ac5ed605071a2f14",
+      "mapping": "截图卡片标题与已记录BV1Ujad6DEuf题名匹配；回复前须实时原楼核对，不伪造rpid"
+    }
+  ],
+  "changes": [
+    {
+      "id": "camera-response",
+      "before": "拖动量减半，最多积压30度；第三人称90度/秒，第一人称60度/秒；响应系数12",
+      "after": "拖动量完整消费，第三人称360度/秒，第一人称180度/秒，响应系数30；有界队列与平滑保留",
+      "verification": "passed"
+    },
+    {
+      "id": "phone-blank-look",
+      "before": "仅右侧44%之后、80px以下接收拖动，手机左侧空白处无效",
+      "after": "空白画面均可拖动；控件和菜单仍使用独立指针，三指并行通过",
+      "verification": "passed"
+    },
+    {
+      "id": "preset-stale-input",
+      "before": "切换预设只清队列，原始拖动增量仍可能在下一帧转动",
+      "after": "切预设/人称同时清原始增量、队列与拖动捕获；暂停、失焦、模式、尺寸变化均无残留",
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "sluggish-camera",
+      "status": "fixed",
+      "cause": "半灵敏度、低角速度、积压截断叠加；触屏空白区域不完整",
+      "before_evidence": "qa/before.json",
+      "after_evidence": "qa/after.json"
+    }
+  ],
+  "media": [
+    {
+      "id": "desktop-screenshot",
+      "file": "releases/web-camera-response-v0.31.2/captures/desktop.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009\\after-final\\desktop.png",
+      "sha256": "11eca37b89da417fc02974a172eabab368bee390adb34d98657abce16eeb8e7f",
+      "kind": "screenshot",
+      "version": "web-camera-response-v0.31.2",
+      "build_id": "camera-response0312",
+      "capture_mode": "realtime-automation",
+      "description": "真实鼠标/触屏自动操作；自由测试清空敌军以隔离输入与镜头",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "desktop-video",
+      "file": "releases/web-camera-response-v0.31.2/captures/desktop.webm",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009\\after-final\\desktop.webm",
+      "sha256": "0ebe6c5aa5eac0d9f65485dc002791da37d980868e20e01aced08ec983d75bdf",
+      "kind": "video",
+      "version": "web-camera-response-v0.31.2",
+      "build_id": "camera-response0312",
+      "capture_mode": "realtime-automation",
+      "description": "真实鼠标/触屏自动操作；自由测试清空敌军以隔离输入与镜头",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": 17.8
+    },
+    {
+      "id": "landscape-screenshot",
+      "file": "releases/web-camera-response-v0.31.2/captures/landscape.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009\\after-final\\landscape.png",
+      "sha256": "47e4ca13853dc53bd4dc5da6642e3f640555cfdc1dd33540fff9b1265ea67ee2",
+      "kind": "screenshot",
+      "version": "web-camera-response-v0.31.2",
+      "build_id": "camera-response0312",
+      "capture_mode": "realtime-automation",
+      "description": "真实鼠标/触屏自动操作；自由测试清空敌军以隔离输入与镜头",
+      "width": 844,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "landscape-video",
+      "file": "releases/web-camera-response-v0.31.2/captures/landscape.webm",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009\\after-final\\landscape.webm",
+      "sha256": "5d95624864b481f4747c974ae8448396c427053a4e07c0b6d2d5d154fbc5fe44",
+      "kind": "video",
+      "version": "web-camera-response-v0.31.2",
+      "build_id": "camera-response0312",
+      "capture_mode": "realtime-automation",
+      "description": "真实鼠标/触屏自动操作；自由测试清空敌军以隔离输入与镜头",
+      "width": 844,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": 16.96
+    },
+    {
+      "id": "portrait-screenshot",
+      "file": "releases/web-camera-response-v0.31.2/captures/portrait.png",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009\\after-final\\portrait.png",
+      "sha256": "c5978e13f67bb9f31d1ef018530faa101569da4526cc7eb22aadaffacddf26dd",
+      "kind": "screenshot",
+      "version": "web-camera-response-v0.31.2",
+      "build_id": "camera-response0312",
+      "capture_mode": "realtime-automation",
+      "description": "真实鼠标/触屏自动操作；自由测试清空敌军以隔离输入与镜头",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "portrait-video",
+      "file": "releases/web-camera-response-v0.31.2/captures/portrait.webm",
+      "preserved_file": "D:\\project\\toolbasecamp-artifacts\\swarm-camera-response-20261009\\after-final\\portrait.webm",
+      "sha256": "69aeaace51630acc0021d848563bfbeb79c7fd75861f9d64600f5baf4f2b2c0e",
+      "kind": "video",
+      "version": "web-camera-response-v0.31.2",
+      "build_id": "camera-response0312",
+      "capture_mode": "realtime-automation",
+      "description": "真实鼠标/触屏自动操作；自由测试清空敌军以隔离输入与镜头",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "duration_seconds": 16.24
+    }
+  ],
+  "qa": {
+    "status": "passed",
+    "camera_checks": 103,
+    "passed": 103,
+    "default_controller_steps": 1260,
+    "old_input_regression": "desktop and touch pass; movement/build/shop/wing state/input ownership",
+    "devices": "Headless Edge; desktop1280x720, touch844x390 and rotated390x844; CDP three simultaneous contacts",
+    "physical_phone": false,
+    "visual_review": "连续帧联系表已检查，无本次新增闪烁、跳帧或HUD操作遮挡",
+    "limitations": [
+      "手机为桌面触屏模拟，未测真实手机多指和性能",
+      "性能为隔离输入的空场约3.5秒，不外推密集虫潮或所有设备"
+    ],
+    "website_checks": 103
+  },
+  "cover": {
+    "action": "reuse",
+    "reason": "仅输入响应修复，没有画风、默认预设、场景或标志性玩法变化"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "当前材料是技术回归镜头，未制作新视频；新视频仍需独立审片"
+    ]
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T19:39:36.987575+08:00",
+    "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "deployed_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+    "runtime_sha256": "264112fdd81a10cf04c141f81f429f2b32f8e3443d6d2b2a67a8dbc1f92f3b03",
+    "browser_checks": 103,
+    "physical_phone": false,
+    "evidence": [
+      "website-assets.json",
+      "qa/website.json"
+    ]
+  },
+  "channels": {
+    "toy": {
+      "status": "pending_22_batch",
+      "id": "38678478981120"
+    },
+    "taptap": {
+      "status": "held_by_user",
+      "id": "962354",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "existing_video_descriptions": {
+      "status": "held_by_user",
+      "bvids": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "announcements": {
+      "status": "held_by_user",
+      "underlying_pending": "pending_22_batch",
+      "hold_record": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "since": "2026-10-09T16:00:04.613032+08:00",
+        "targets": [
+          "taptap",
+          "other_game_platforms",
+          "existing_video_descriptions",
+          "announcements"
+        ],
+        "status": "held_by_user"
+      }
+    },
+    "feedback_replies": {
+      "status": "pending_22_batch",
+      "video": "BV1Ujad6DEuf",
+      "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+      "verify_original_before_reply": true
+    }
+  },
+  "source_commit": "dae62c3891b551627004d15ceb3becd159b241bc",
+  "updated_at": "2026-10-09T19:39:36.987575+08:00",
+  "automatic_batch_eligible": true,
+  "media_storage_note": "工作区归档后使用artifact_root和各media.preserved_file；源码media相对路径保留为采集时的位置。所有原始截图视频已持久保存。"
+}

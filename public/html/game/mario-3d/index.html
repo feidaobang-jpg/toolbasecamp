@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#6d9cff">
-<meta name="description" content="FC 超级马力欧兄弟 1-1、1-2 原作地图的 3D 复刻：顶砖、蘑菇、火焰花、无敌星、隐藏 1UP、钻水管、奖励房间与传送区。电脑键盘与手机触屏均可游玩。">
-<title>超级玛丽 3D · 1-1 与 1-2</title>
+<meta name="description" content="FC 超级马力欧兄弟 1-1 至 1-4：地面、地下、树冠和库巴城堡。顶砖、蘑菇、火焰花、无敌星、隐藏 1UP、钻水管、传送区、旋转火棒和砍断库巴桥的斧头。电脑键盘与手机触屏均可游玩。">
+<title>超级玛丽 3D · 1-1 至 1-4</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="./style.css?v=controls-inset1">
+<link rel="stylesheet" href="./style.css?v=castle1">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" tabindex="-1">
+<div id="app" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="超级玛丽 3D 游戏画面"></canvas>
     <div id="hurt"></div>
@@ -35,7 +35,7 @@
     <div id="keyhint" hidden>
       <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动</span>
       <span><kbd>K</kbd> 跳（按住跳更高）</span>
-      <span><kbd>J</kbd> 火球 · <kbd>I</kbd> 冲刺</span>
+      <span><kbd>J</kbd> 按住冲刺 / 火球 · <kbd>I</kbd> 冲刺</span>
       <span><kbd>U</kbd> 下蹲（L 兼容） · 钻水管</span>
       <span><kbd>Q</kbd><kbd>E</kbd> 转视角</span>
       <span><kbd>C</kbd> 切视角</span>
@@ -49,7 +49,7 @@
 
       <div class="act-keys">
         <button class="act" data-hold="down" tabindex="-1" aria-label="U 下蹲或钻水管（L 兼容）"><b>U</b><span>蹲/钻管</span></button>
-        <button class="act" data-hold="fire" tabindex="-1" aria-label="J 火球"><b>J</b><span id="run-label">火球</span></button>
+        <button class="act" data-hold="fire" tabindex="-1" aria-label="J 按住冲刺 / 火球"><b>J</b><span id="run-label">火球</span></button>
         <button class="act big" data-hold="jump" tabindex="-1" aria-label="K 跳"><b>K</b><span>跳</span></button>
       <button id="btn-sprint" class="act" data-hold="sprint" aria-label="I 冲刺"><b>I</b><span>冲刺</span></button>
       </div>
@@ -64,12 +64,12 @@
     <div id="menu" class="overlay title-screen">
       <div class="panel">
         <div class="brand">
-          <div class="kicker">FC 经典 · 原作地图 3D 复刻</div>
+          <div class="kicker">FC 经典 · 3D 重制</div>
           <h1 class="logo">超级玛丽 <span>3D</span></h1>
-          <div class="sub">WORLD 1-1 地面 · WORLD 1-2 地下</div>
-          <p class="rules">按原作逐格还原的两关：顶砖块拿蘑菇、火焰花、无敌星，找隐藏 1UP，按 <b>U</b> 钻进水管（L兼容）去奖励房间，1-2 还藏着传送区。水管、台阶和砖墙沿纵深铺满跑道，不能从旁边绕过去。按 <b>C</b> 能切到身后的正视和第一人称。</p>
-          <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>K</kbd> 跳 · <kbd>J</kbd> 火球 · <kbd>I</kbd> 冲刺 · <kbd>U</kbd> 蹲 / 钻水管（L兼容）<br><kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
-          <p class="help help-touch">左侧摇杆移动 · 右侧 <b>K</b> 跳、<b>I</b> 冲刺（松方向停止）、火焰花后 <b>J</b> 火球、<b>U</b> 蹲 / 钻水管 · 拖动画面空白处转视角、<b>C</b> 切视角</p>
+          <div class="sub">WORLD 1-1 地面 · 1-2 地下 · 1-3 树冠 · 1-4 城堡</div>
+          <p class="rules">第四关：库巴城堡——跳过岩浆坑、躲开旋转火棒，冲过喷火的库巴，碰到桥头的斧头把桥砍断。第三关：跳过高低树冠，搭乘往返浮台，踩掉飞行乌龟的翅膀。前两关：顶砖块拿蘑菇、火焰花、无敌星，找隐藏 1UP，按 <b>U</b> 钻进水管（L兼容）去奖励房间，1-2 还藏着传送区。水管、台阶和砖墙沿纵深铺满跑道，不能从旁边绕过去。按 <b>C</b> 能切到身后的正视和第一人称。</p>
+          <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>K</kbd> 跳 · <kbd>J</kbd> 按住冲刺 / 火球 · <kbd>I</kbd> 冲刺 · <kbd>U</kbd> 蹲 / 钻水管（L兼容）<br><kbd>Q</kbd><kbd>E</kbd> 转视角 · <kbd>C</kbd> 切视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
+          <p class="help help-touch">左侧摇杆移动 · 右侧 <b>K</b> 跳、<b>I</b> 冲刺（松方向停止）、<b>J</b> 火球（电脑上按住 = 冲刺）、<b>U</b> 蹲 / 钻水管 · 拖动画面空白处转视角、<b>C</b> 切视角</p>
           <p class="hi">最高分 <span id="hi-val">0</span></p>
           <p class="legal">粉丝向非官方复刻：3D 模型与贴图采用自然色低模画风，音乐与常用音效优先原版音源；《超级马力欧兄弟》原作版权归任天堂所有。</p>
         </div>
@@ -85,7 +85,6 @@
           <button data-opt="touch"></button>
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -103,7 +102,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -117,11 +115,14 @@
         <nav class="items" aria-label="结算菜单">
           <button data-act="again" class="primary">再玩一次 <kbd>Enter</kbd></button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
 
+    <div id="castle-msg" hidden>
+      <p><span class="en">THANK YOU MARIO!</span><span class="zh">谢谢你，马力欧！</span></p>
+      <p class="l2"><span class="en">BUT OUR PRINCESS IS IN<br>ANOTHER CASTLE!</span><span class="zh">可是我们的公主在另一座城堡里！</span></p>
+    </div>
     <div id="fps" hidden></div>
     <div id="toast" role="status" hidden></div>
   </div>
@@ -130,10 +131,10 @@
 <script>
   window.addEventListener('error', function (e) {
     var el = document.getElementById('loading');
-    if (el && !window.__marioReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
+    if (el && !window.__marioReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
-<script type="module" src="./main.js?v=2.4.3"></script>
+<script type="module" src="./main.js?v=castle1"></script>
 </body>
 </html>

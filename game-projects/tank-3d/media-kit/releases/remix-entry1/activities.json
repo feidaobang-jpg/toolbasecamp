@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-10-08T02:49:45.078750+00:00",
+  "scope": "related_only",
+  "toy_challenge": "already participating via both published videos; no duplicate enrollment",
+  "task_center": {
+    "valid_videos": 3,
+    "views": 2574,
+    "target": 10000,
+    "gap": 7426
+  },
+  "new_enrollments": 0,
+  "account_uid": 16214353
+}

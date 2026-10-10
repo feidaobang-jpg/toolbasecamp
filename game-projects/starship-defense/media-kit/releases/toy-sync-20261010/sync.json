@@ -1,0 +1,56 @@
+{
+  "game": "starship-defense",
+  "version": "zerg-mode-20261010",
+  "id": 38678478981120,
+  "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "slug": "chongchao-qianshao",
+  "title": "虫潮围城",
+  "package": "D:/project/worktrees/toy-sync-20261010/dist/toy/chongchao-qianshao/package",
+  "upload": "D:/project/worktrees/toy-sync-20261010/dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
+  "zip_sha256": "c2c748174d5ac5c46b3ce3c6035cf5f42a94d05a0431e201dfd6ac25afd7b2ec",
+  "zip_bytes": 375225,
+  "files": {
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "game.compat.js": "6bbddf62f01ed6391af6ec2aa94aae9ffc75cd9f002c50dc93ff3c7984ea9d3a",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "index.html": "83292f56eb16d9d8ec10f63216bf84a7957ac9b16fed3d1bd5d3a2ad752fa0bd",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "source_commit": "1bbf3f92",
+  "changes": [
+    "曲面屏开战按钮点击修复(201fa97b)",
+    "虫族模式实验玩法(c676d0ef)",
+    "移除返回游戏列表外链(ec592af0)"
+  ],
+  "authorization": {
+    "instruction": "帮今天的修改都推到toy吧，不用等23点了",
+    "scope": "user_authorized_immediate_toy_sync_20261010",
+    "at": "2026-10-10T21:15:16+08:00"
+  },
+  "doctor": "passed_with_1_warning",
+  "doctor_warnings": [
+    "4 个 JS/CSS 资产文件名不含内容指纹(contenthash)：每次更新访客都要重新下载全部资源（既有构建约定，非阻断）"
+  ],
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_HQ8lWZhf/index.html",
+    "content_url": "https://www.bilibilitoy.com/toy/preview/preview_HQ8lWZhf/index.html"
+  },
+  "preview_qa": "passed",
+  "preview_qa_method": "本地 iframe 包裹预览内容 URL(避开顶层重定向)，桌面1280x800+手机390x844 双视口，点击#btnZerg→zergOn()=true→startPrep→#readyBtn→state=battle、城门常闭hp=2500、0 报错",
+  "submit": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_s5G8T82P/index.html"
+  },
+  "submitted_at": "2026-10-10T21:15:16+08:00",
+  "status_readback": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "status": "auditing",
+    "visibility": "PUBLIC",
+    "category": "GAME"
+  },
+  "review_status": "auditing",
+  "recorded_at": "2026-10-10T21:15:16+08:00"
+}

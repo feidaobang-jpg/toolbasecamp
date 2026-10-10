@@ -1,0 +1,96 @@
+{
+  "capture_mode": "realtime-automation",
+  "audio": "none",
+  "viewport": [
+    1280,
+    720
+  ],
+  "method": "Real browser RAF, keyboard/click input; QA repositioning at residential zone, garage, market and versus clock advance only; no offline frames",
+  "video": "town-versus-realtime.webm",
+  "screenshots": [
+    {
+      "file": "town-menu.png",
+      "note": "当前规则菜单"
+    },
+    {
+      "file": "town-street.png",
+      "note": "真实键盘驾驶，起点街道"
+    },
+    {
+      "file": "town-camera-0.png",
+      "note": "实际C切换预设并E转向"
+    },
+    {
+      "file": "town-camera-1.png",
+      "note": "实际C切换预设并E转向"
+    },
+    {
+      "file": "town-camera-2.png",
+      "note": "实际C切换预设并E转向"
+    },
+    {
+      "file": "town-camera-3.png",
+      "note": "实际C切换预设并E转向"
+    },
+    {
+      "file": "town-camera-4.png",
+      "note": "实际C切换预设并E转向"
+    },
+    {
+      "file": "town-camera-5.png",
+      "note": "实际C切换预设并E转向"
+    },
+    {
+      "file": "town-zombies.png",
+      "note": "QA移到住宅感染区，随后实时僵尸追击"
+    },
+    {
+      "file": "town-combat.png",
+      "note": "实际J射击与敌人受伤"
+    },
+    {
+      "file": "town-garage.png",
+      "note": "QA停车在修理厂，真实服务界面"
+    },
+    {
+      "file": "town-repaired.png",
+      "note": "真实6秒维修结束"
+    },
+    {
+      "file": "town-market.png",
+      "note": "QA停车到超市，实际售货机购买界面"
+    },
+    {
+      "file": "versus-menu.png",
+      "note": "当前对战规则"
+    },
+    {
+      "file": "versus-waves.png",
+      "note": "QA推进到开战前，实时自动出双路兵线"
+    },
+    {
+      "file": "versus-follow.png",
+      "note": "真实移动/转向，护送基础兵"
+    }
+  ],
+  "hashes": {
+    "town-versus-realtime.webm": "1ab0ecdd5f05670b61f54ec864f8b3edfc81206d7aa5263450cf39aced5f557f",
+    "town-menu.png": "cbe8e8ac69a0292eb0199f3f1c4f764aa2b0643e24da5825a9a62376134fa14d",
+    "town-street.png": "65ec5df0e6f3821d28ca57060521eef5bc2a3e689933b6cc7625d203ca6d37fa",
+    "town-camera-0.png": "470865716a83150582172d8c001534ec6ef75c4dd840bc7f2197671ccb88fd6c",
+    "town-camera-1.png": "6399b449405d0105408c1d7ff7b70cf3ea9261475c391f8eb8b7f502162dc96a",
+    "town-camera-2.png": "04353f0d13c690c4f3982155600b36910617b17450b780573c71835cf9f84319",
+    "town-camera-3.png": "0fa73bbe8b3d41498b312e244528f207f152ffb48eeeeca2751a3521950f2202",
+    "town-camera-4.png": "8a9cd2fb4ad18074c155b77346be5f8f7fd7aac28773d4e916d620da5711a370",
+    "town-camera-5.png": "714d9882de28c6776be726b8406ab3f8a86587c3e7dc97e2cc6667b610f27ad4",
+    "town-zombies.png": "998b6ac4dbef3010440b67df9ca193bb52857c5d32e606cdeeaf2e7aba7c2368",
+    "town-combat.png": "83d5ea1ecc76160f19d903fd8bed615e58c4dad21af12fb5dae8936f9ffdd967",
+    "town-garage.png": "2384630d4a854560421bcdc6e847360bc7962e31ed7576b62ab4a4348662568d",
+    "town-repaired.png": "c0c482a68ea4183485faef3340abbfdf492b2445a2a30df2cf7efed0b4bb7c52",
+    "town-market.png": "5e16c423391de1381ae4cfafbb94b1e16388b84721dc220570c0958325e43916",
+    "versus-menu.png": "f3b7d7464b52201c9a23d4b5cc72311286087f502e810dd43c904efafefaeab0",
+    "versus-waves.png": "0a54b4a178e37ef6e4401d3773a72ba140622e08c22a8a6db6019f6169d9ee7d",
+    "versus-follow.png": "c69a8303640fcb46806dde6336538f3944d06f688aacdcf49958e049b8233206"
+  },
+  "errors": []
+}

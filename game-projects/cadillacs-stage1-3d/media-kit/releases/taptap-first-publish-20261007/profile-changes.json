@@ -1,0 +1,54 @@
+{
+  "changes": [
+    {
+      "field_id": "description",
+      "expected": [],
+      "value": "选四位英雄闯海上都市与沼泽森林，连打、抓投、捡起枪械与刀具迎战。\n\n这是恐龙快打玩法的非官方3D复刻试玩，包含第一、二关，可直接选择起始关卡；保留角色差异、跳跃攻击、冲刺、必杀与场景道具。\n\n支持电脑键盘与手机触屏、操作模式即时切换，以及多种视角、暂停和画质设置。免费试玩，设置和成绩仅保存在当前浏览器，没有账号及跨设备云存档。"
+    },
+    {
+      "field_id": "icon",
+      "expected": "https://img-tc.tapimg.com/market/images/ef4719159691d7db73760cadfc67eac4.png",
+      "value": "https://img-tc.tapimg.com/market/images/5f37b28d5295729ed169fbcde43b46d3.jpg"
+    },
+    {
+      "field_id": "author_name",
+      "expected": [],
+      "value": "飞刀帮工作室"
+    },
+    {
+      "field_id": "developer_message",
+      "expected": [],
+      "value": "我想保留街机动作关卡的节奏，同时用重新制作的3D人物和场景呈现。这个爱好者复刻仍在调整动作、命中反馈和各角色手感；它不是原作官方作品。"
+    },
+    {
+      "field_id": "promotion_text",
+      "expected": [],
+      "value": "四位英雄闯海上都市与沼泽森林"
+    },
+    {
+      "field_id": "promotion_material_type",
+      "expected": [],
+      "value": "GAMEPLAY_DEMO"
+    },
+    {
+      "field_id": "app_platforms",
+      "expected": [
+        "MOBILE"
+      ],
+      "value": [
+        "MOBILE",
+        "PC_OFFICIAL"
+      ]
+    },
+    {
+      "field_id": "region_flag_android",
+      "expected": 1,
+      "value": 4
+    },
+    {
+      "field_id": "region_flag_ios",
+      "expected": 1,
+      "value": 0
+    }
+  ]
+}

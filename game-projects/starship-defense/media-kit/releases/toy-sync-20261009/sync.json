@@ -1,0 +1,154 @@
+{
+  "game": "starship-defense",
+  "version": "web-three-lanes-v0.31.0",
+  "id": 38678478981120,
+  "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "slug": "chongchao-qianshao",
+  "title": "虫潮围城",
+  "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-today-sync-20261009\\toolbasecamp\\dist\\toy\\chongchao-qianshao\\package",
+  "upload": "C:\\Users\\37818\\.codex\\worktrees\\toy-today-sync-20261009\\toolbasecamp\\dist\\toy\\chongchao-qianshao\\chongchao-qianshao.zip",
+  "package_sha256": "9e131f6d7aeed246d3d718fd94464c5e997f9171484d8db2d2fe1b3a4405012f",
+  "files": {
+    "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+    "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+    "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+    "game.compat.js": "96c152f477f9424f6159065612e3b52b13d460d90cffea46785d0c23aee37ccd",
+    "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+    "index.html": "d877f3a660d0a8e7147565e69fb2c2190d39394f81c594a7ba897c70cd060a3f",
+    "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+  },
+  "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+  "status": "auditing",
+  "authorization": {
+    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+    "at": "2026-10-09T15:48:29.659833+08:00"
+  },
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_maSEPRkl/index.html"
+  },
+  "preview_at": "2026-10-09T15:50:20.968775+08:00",
+  "preview_qa": "passed",
+  "preview_qa_evidence": [
+    "starship-preview/verify-versus-toy.json",
+    "three-lanes-preview/results.json",
+    "town-preview/results.json"
+  ],
+  "submit": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_oQPZMUQL/index.html"
+  },
+  "submit_at": "2026-10-09T15:55:44.793236+08:00",
+  "submitted_at": "2026-10-09T15:55:44.793236+08:00",
+  "status_readback": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+    "watermark_enabled": false,
+    "ctime": 1790739397,
+    "mtime": 1791532650
+  },
+  "preserved_package": "D:\\project\\task-artifacts\\toy-today-sync-20261009\\packages\\starship-defense",
+  "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24040/index.html",
+  "public_asset_hashes_verified": [
+    "base.css",
+    "boot.js",
+    "combat-controls.css",
+    "game.compat.js"
+  ],
+  "public_menu_text": [
+    {
+      "text": "虫潮围城",
+      "shadow": "none"
+    },
+    {
+      "text": "选择前哨守卫",
+      "shadow": "none"
+    },
+    {
+      "text": "战役难度",
+      "shadow": "none"
+    }
+  ],
+  "public_qa": "passed",
+  "public_qa_evidence": "starship-public/verify-versus-toy.json",
+  "public_qa_checks": {
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "at": "2026-10-09T07:59:06.920Z",
+    "results": [
+      {
+        "name": "Toy 电脑：所选规模与座位数一致",
+        "detail": {
+          "teamSize": 4,
+          "seats": 8
+        }
+      },
+      {
+        "name": "Toy 预览·电脑：进入对战、R 面板、派出小虫",
+        "detail": {
+          "blue": 18,
+          "panel": true,
+          "arena": true
+        }
+      },
+      {
+        "name": "Toy 预览·电脑：对局实时推进、电脑在运营",
+        "detail": {
+          "time": 26,
+          "redBuild": 6
+        }
+      },
+      {
+        "name": "Toy 电脑：T 队伍页转账实际到账",
+        "detail": {
+          "before": 300,
+          "after": 500
+        }
+      },
+      {
+        "name": "Toy 预览·电脑无脚本报错"
+      },
+      {
+        "name": "Toy 手机：所选规模与座位数一致",
+        "detail": {
+          "teamSize": 4,
+          "seats": 8
+        }
+      },
+      {
+        "name": "Toy 预览·手机竖屏视口：点「出兵」打开面板",
+        "detail": {
+          "touch": true,
+          "panel": true,
+          "cards": 10
+        }
+      },
+      {
+        "name": "Toy 预览·手机：点卡片升级银行"
+      },
+      {
+        "name": "Toy 手机：点队伍卡片转账实际到账",
+        "detail": {
+          "before": 600,
+          "after": 800
+        }
+      },
+      {
+        "name": "Toy 预览·手机无脚本报错"
+      }
+    ]
+  },
+  "review_status": "published",
+  "public_verified": true,
+  "recorded_at": "2026-10-09T16:00:04.609786+08:00"
+}

@@ -1,0 +1,38 @@
+{
+ "url": "https://www.bilibili.com/toy/preview/preview_Q8fMFtEF/index.html",
+ "at": "2026-10-08T05:52:24.989Z",
+ "results": [
+  {
+   "name": "Toy 预览·电脑：进入对战、R 面板、派出小虫",
+   "detail": {
+    "blue": 6,
+    "panel": true,
+    "arena": true
+   }
+  },
+  {
+   "name": "Toy 预览·电脑：对局实时推进、电脑在运营",
+   "detail": {
+    "time": 26,
+    "redBuild": 1
+   }
+  },
+  {
+   "name": "Toy 预览·电脑无脚本报错"
+  },
+  {
+   "name": "Toy 预览·手机竖屏视口：点「出兵」打开面板",
+   "detail": {
+    "touch": true,
+    "panel": true,
+    "cards": 10
+   }
+  },
+  {
+   "name": "Toy 预览·手机：点卡片升级银行"
+  },
+  {
+   "name": "Toy 预览·手机无脚本报错"
+  }
+ ]
+}

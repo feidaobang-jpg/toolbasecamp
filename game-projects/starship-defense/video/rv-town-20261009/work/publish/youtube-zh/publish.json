@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "variant_id": "youtube-zh",
+  "platform": "YouTube",
+  "content_type": "gameplay update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-three-lanes-v0.31.0",
+  "video_file": "../../../final/youtube-zh/gameplay-youtube-final.mp4",
+  "media_id": "youtube-clean-zh",
+  "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 109.86666666666666,
+  "fps": 30,
+  "title": "开房车进僵尸城搜物资，我能活着回来吗？｜虫潮围城",
+  "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择“虫潮围城”，进入游戏后选择“房车生存”。链接不能点击时可复制到浏览器打开。\n这回开房车探索废弃城镇：改装、补油、搜索、维修，最后带回314零件。六个区域还没搜全，下次挑战全搜路线。\n房车城镇玩法由Codex辅助开发。你会先改枪，还是先加装甲？\n可在百宝箱“游戏 → 自研游戏投票榜”填写想玩的内容。",
+  "tags": [
+    "虫潮围城",
+    "房车生存",
+    "游戏开发",
+    "AI"
+  ],
+  "description_file": "../../../final/youtube-zh/投稿文案.txt",
+  "cover_file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
+  "cover_files": {
+    "main": {
+      "file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "中文缩略图",
+      "sha256": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc"
+    }
+  },
+  "cover_text": "开房车 / 进僵尸城 / 能完整撤出来吗？",
+  "cover_selection_source": "同版本正常规则实机第一场96秒，原片与帧保存在work；正文使用补录第二场",
+  "cover_upload_mode": "custom_thumbnail_saved",
+  "subtitle_mode": "sidecar",
+  "subtitles": [
+    {
+      "file": "../../../final/youtube-zh/captions-zh.srt",
+      "language": "zh",
+      "purpose": "可切换字幕",
+      "sha256": "6202dc39408f35e6c40c25e314105f59fcc5143ffb4aa011f2edd705070f70e7",
+      "required_for_upload": true
+    },
+    {
+      "file": "../../../final/youtube-zh/captions-en.srt",
+      "language": "en",
+      "purpose": "可切换字幕",
+      "sha256": "e2251157ad5dce5169181335253bb3ea1bc04eacfb7dfe8f09f116afa396c86b",
+      "required_for_upload": true
+    }
+  ],
+  "category": "游戏",
+  "copyright_type": "original creator gameplay; account selection pending",
+  "credits": "../../sources.md",
+  "disclosures": {
+    "AI_generated_narration": true,
+    "voice": "Edge-TTS zh-CN-YunxiNeural +0%",
+    "voice_clone": false,
+    "AI_assisted_game_development": true,
+    "exact_game_development_model": "unverified for RV town; do not reuse versus-only model attribution",
+    "setting_status": "实际表单已按内容填写，公开页AI声明核验"
+  },
+  "platform_requirements_checked_at": "2026-10-09T17:53:41.810316+08:00",
+  "platform_sources": [
+    {
+      "url": "https://support.google.com/youtube/answer/72431?hl=zh-Hans",
+      "checked_at": "2026-10-09",
+      "scope": "官方封面格式和16:9建议"
+    },
+    {
+      "url": "https://support.google.com/youtube/answer/2734796?hl=zh-Hans",
+      "checked_at": "2026-10-09",
+      "scope": "官方字幕文件上传流程"
+    }
+  ],
+  "unverified_fields": [],
+  "blocking_issues": [],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "human_review": {
+    "status": "approved",
+    "statement": "可以，发布视频吧",
+    "source": "user",
+    "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+    "file_hashes": {
+      "captions-en.srt": "e2251157ad5dce5169181335253bb3ea1bc04eacfb7dfe8f09f116afa396c86b",
+      "captions-zh.srt": "6202dc39408f35e6c40c25e314105f59fcc5143ffb4aa011f2edd705070f70e7",
+      "cover-zh-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+      "English-localizations.txt": "8451c627add066bd627efcfa15f59e60a5f3cff8b77ad44c4e8d055a5f74f052",
+      "gameplay-youtube-final.mp4": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+      "投稿文案.txt": "2ee595b7a3c3d052138f5bef218b3582508576b983683227e794802229bd3177"
+    },
+    "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050"
+  },
+  "publication": {
+    "status": "published",
+    "id": "jbTIpyh6Clw",
+    "url": "https://www.youtube.com/watch?v=jbTIpyh6Clw",
+    "episode_id": "rv-town-20261009",
+    "variant_id": "youtube-zh",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+    "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+    "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+    "human_review": {
+      "status": "approved",
+      "statement": "可以，发布视频吧",
+      "source": "user",
+      "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+      "file_hashes": {
+        "captions-en.srt": "e2251157ad5dce5169181335253bb3ea1bc04eacfb7dfe8f09f116afa396c86b",
+        "captions-zh.srt": "6202dc39408f35e6c40c25e314105f59fcc5143ffb4aa011f2edd705070f70e7",
+        "cover-zh-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+        "English-localizations.txt": "8451c627add066bd627efcfa15f59e60a5f3cff8b77ad44c4e8d055a5f74f052",
+        "gameplay-youtube-final.mp4": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+        "投稿文案.txt": "2ee595b7a3c3d052138f5bef218b3582508576b983683227e794802229bd3177"
+      },
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050"
+    },
+    "last_observed_at": "2026-10-09T17:49:34.877996+08:00",
+    "platform_id": "jbTIpyh6Clw",
+    "public_url": "https://www.youtube.com/watch?v=jbTIpyh6Clw",
+    "public_verified_at": "2026-10-09T17:49:34.877996+08:00",
+    "identity_verified": true,
+    "publishing_settings": {
+      "visibility": "public",
+      "made_for_kids": false,
+      "age_restricted": false,
+      "paid_promotion": false,
+      "synthetic_content": true,
+      "language": "zh-Hans",
+      "category": "游戏",
+      "license": "Standard YouTube License"
+    },
+    "processing": {
+      "sd": "complete",
+      "hd": "complete",
+      "copyright": "no_issues_detected"
+    },
+    "thumbnail": {
+      "status": "uploaded_verified",
+      "file": "cover-zh-16x9.jpg"
+    },
+    "subtitles": {
+      "status": "published_and_public_player_selectable",
+      "languages": [
+        "中文（简体）",
+        "英语"
+      ],
+      "cues_per_track": 52,
+      "files": [
+        "captions-zh.srt",
+        "captions-en.srt"
+      ],
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\youtube-public-subtitles.jpg"
+    },
+    "english_metadata": {
+      "status": "published_saved",
+      "source": "English-localizations.txt"
+    },
+    "public_playback": "正确成片公开页可播放，核验后暂停",
+    "sound_review": "人工审片通过；代理未主观试听",
+    "verified_at": "2026-10-09T17:48:14.379124+08:00",
+    "next_step": null
+  },
+  "english_localizations": {
+    "title": "Driving an RV into a zombie town: can I bring the supplies back? | Swarm Siege",
+    "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the list, then 房车生存 (RV survival). The game menus are currently in Chinese. Copy the address into your browser if it is not clickable.\nI drive into an abandoned town, upgrade the roof gun, refuel, search for supplies, repair the RV and evacuate with 314 scrap. Next time I will try all six districts.\nThe RV town gameplay was developed with Codex assistance. Would you upgrade the gun or add armor first? You can suggest game ideas through the voting page linked from the game list.\nChinese narration with selectable Chinese and English subtitles.",
+    "file": "../../../final/youtube-zh/English-localizations.txt"
+  },
+  "audio_review": "用户明确通过最终审片；代理未执行主观试听"
+}

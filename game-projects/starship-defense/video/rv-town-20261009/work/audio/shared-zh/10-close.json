@@ -1,0 +1,153 @@
+{
+  "text": "房车模式已经能在哔哩哔哩Toy试玩。你会先改枪，还是先加装甲？也欢迎到百宝箱游戏投票榜，写下想玩的内容。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 11.208,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4000000,
+      "text": "房车"
+    },
+    {
+      "offset": 5125000,
+      "duration": 5125000,
+      "text": "模式"
+    },
+    {
+      "offset": 11250000,
+      "duration": 2125000,
+      "text": "已经"
+    },
+    {
+      "offset": 13500000,
+      "duration": 1250000,
+      "text": "能"
+    },
+    {
+      "offset": 14750000,
+      "duration": 1625000,
+      "text": "在"
+    },
+    {
+      "offset": 16625000,
+      "duration": 5500000,
+      "text": "哔哩哔哩"
+    },
+    {
+      "offset": 22125000,
+      "duration": 3375000,
+      "text": "Toy"
+    },
+    {
+      "offset": 25625000,
+      "duration": 5125000,
+      "text": "试玩"
+    },
+    {
+      "offset": 36375000,
+      "duration": 2750000,
+      "text": "你"
+    },
+    {
+      "offset": 39125000,
+      "duration": 1500000,
+      "text": "会"
+    },
+    {
+      "offset": 40750000,
+      "duration": 1875000,
+      "text": "先"
+    },
+    {
+      "offset": 42625000,
+      "duration": 5375000,
+      "text": "改枪"
+    },
+    {
+      "offset": 51625000,
+      "duration": 2500000,
+      "text": "还是"
+    },
+    {
+      "offset": 54250000,
+      "duration": 1625000,
+      "text": "先"
+    },
+    {
+      "offset": 55875000,
+      "duration": 875000,
+      "text": "加"
+    },
+    {
+      "offset": 56875000,
+      "duration": 5000000,
+      "text": "装甲"
+    },
+    {
+      "offset": 67625000,
+      "duration": 1625000,
+      "text": "也"
+    },
+    {
+      "offset": 69375000,
+      "duration": 3250000,
+      "text": "欢迎"
+    },
+    {
+      "offset": 72625000,
+      "duration": 2125000,
+      "text": "到"
+    },
+    {
+      "offset": 75000000,
+      "duration": 5000000,
+      "text": "百宝箱"
+    },
+    {
+      "offset": 80125000,
+      "duration": 2625000,
+      "text": "游戏"
+    },
+    {
+      "offset": 82875000,
+      "duration": 3250000,
+      "text": "投票"
+    },
+    {
+      "offset": 86125000,
+      "duration": 2250000,
+      "text": "榜"
+    },
+    {
+      "offset": 91250000,
+      "duration": 2375000,
+      "text": "写"
+    },
+    {
+      "offset": 93625000,
+      "duration": 1375000,
+      "text": "下"
+    },
+    {
+      "offset": 95250000,
+      "duration": 1750000,
+      "text": "想"
+    },
+    {
+      "offset": 97000000,
+      "duration": 1250000,
+      "text": "玩"
+    },
+    {
+      "offset": 98250000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 99000000,
+      "duration": 4125000,
+      "text": "内容"
+    }
+  ]
+}

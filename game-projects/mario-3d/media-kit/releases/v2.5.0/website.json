@@ -1,0 +1,79 @@
+{
+  "commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+  "verified_at": "2026-10-07T01:21:36.302Z",
+  "ok": true,
+  "checks": [
+    {
+      "file": "public/html/game/mario-3d/index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+      "status": 200,
+      "ok": true,
+      "method": "HTML semantic verification; Actions changes only resource query strings",
+      "remote_sha256": "7abb4a4f1d772c39dd0139d6065d0880d91233be673d5608e05eeb7b17099014",
+      "git_sha256": "96606649b44ff5b6cbf26d8ae42d14970f3ed07f6c3918290e42da0024804c51"
+    },
+    {
+      "file": "public/html/game/mario-3d/main.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/main.js",
+      "status": 200,
+      "ok": true,
+      "method": "exact canonical Git bytes",
+      "remote_sha256": "0e5cb0b32d0fdcb8cb61e7946bb7733ffabe4e967d62fdd574da5a5369c0b062",
+      "git_sha256": "0e5cb0b32d0fdcb8cb61e7946bb7733ffabe4e967d62fdd574da5a5369c0b062"
+    },
+    {
+      "file": "public/html/game/mario-3d/levels.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/levels.js",
+      "status": 200,
+      "ok": true,
+      "method": "exact canonical Git bytes",
+      "remote_sha256": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6",
+      "git_sha256": "9700546745e84994c9cb7c7bf8fbbc5900ea31e5584d6c6774661444872bf6d6"
+    },
+    {
+      "file": "public/html/game/mario-3d/world.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/world.js",
+      "status": 200,
+      "ok": true,
+      "method": "exact canonical Git bytes",
+      "remote_sha256": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe",
+      "git_sha256": "a92f43d6f56938f4fbd1b550c21094299b64ad4bf182de7df9962511154fb0fe"
+    },
+    {
+      "file": "public/html/game/mario-3d/scene.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/scene.js",
+      "status": 200,
+      "ok": true,
+      "method": "exact canonical Git bytes",
+      "remote_sha256": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d",
+      "git_sha256": "e27ccd7e9feb1ca6a2ee8890f8fffc01b930a1c332a6ce66db5ff350462e612d"
+    },
+    {
+      "file": "public/html/game/mario-3d/models.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/models.js",
+      "status": 200,
+      "ok": true,
+      "method": "exact canonical Git bytes",
+      "remote_sha256": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f",
+      "git_sha256": "a2a5026e41057443257d7da973896f2d7707e6979c35a853b28bb056789afb3f"
+    },
+    {
+      "file": "public/js/locales/zh-CN.js",
+      "url": "https://www.zhengxiaohui.cn/js/locales/zh-CN.js",
+      "status": 200,
+      "ok": true,
+      "method": "exact canonical Git bytes",
+      "remote_sha256": "391124d70002e0168f5ac7c637b7468adf7e430ceaa6fb3c7b9fae5af51db29d",
+      "git_sha256": "391124d70002e0168f5ac7c637b7468adf7e430ceaa6fb3c7b9fae5af51db29d"
+    },
+    {
+      "file": "public/games.html",
+      "url": "https://www.zhengxiaohui.cn/games.html",
+      "status": 200,
+      "ok": true,
+      "method": "HTML semantic verification; Actions changes only resource query strings",
+      "remote_sha256": "9a3f2b3dc6b45014c54b8ada16d30b6ce437abcf54e26e8c0ac2ba67bf63cc5e",
+      "git_sha256": "c40c61e44bf39fe80ea9385f56656ceadc5221b09b7c870ab22948f8e559396f"
+    }
+  ]
+}

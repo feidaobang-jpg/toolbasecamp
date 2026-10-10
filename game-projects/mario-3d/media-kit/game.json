@@ -1,15 +1,15 @@
 {
   "game_id": "mario-3d-world-1-1",
-  "name": "超级玛丽 3D：1-1 与 1-2",
+  "name": "超级玛丽 3D",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块）",
-  "current_version": "v2.4.3",
-  "handoff": "releases/v2.4.3/handoff.json",
+  "current_version": "v2.5.0-menu-text1",
+  "handoff": "releases/menu-text-20261009/handoff.json",
   "entrypoint": "public/html/game/mario-3d/index.html",
-  "launch": "在仓库根目录对 public/ 起本地 HTTP 服务后打开 /html/game/mario-3d/index.html；?test=1 暴露测试钩子，?clean=1 隐藏桌面按键提示，?level=1-2 直接从 1-2 开始，?q=high|low 临时指定画质",
-  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J仅火球(吃火焰花后可用)，键盘J旧跑/火球别名兼容。",
+  "launch": "在任务 worktree 根目录对 public/ 起 HTTP 服务，打开 /html/game/mario-3d/index.html?level=1-3；可直接选 1-1/1-2/1-3，?test=1 为测试钩子，?q=high|low 指定画质",
+  "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；K跳跃，U下蹲(L兼容)，触屏J实体红键，未获得时显示需火焰花并提示，获得后发射火球，键盘J旧跑/火球别名兼容。",
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
-  "development_model": "Claude Opus 5.5（v2.0.0）；更早版本为 GPT-6 Astra",
+  "development_model": "Codex（v2.5.0-preview1，具体模型未记录）；历史 v2.0.0 为 Claude Opus 5.5，更早版本为 GPT-6 Astra",
   "tools": [
     "Three.js 0.170.0",
     "WebGL 哑光低模、InstancedMesh 与 Canvas 石材纹理",
@@ -22,18 +22,18 @@
     "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-06T21:39:01.172522+00:00",
+    "verified_at": "2026-10-07T01:40:46.831Z",
     "video_bindings": [
       "BV1guep6NELt"
     ],
-    "submitted_version": "v2.4.3",
-    "submitted_at": "2026-10-06T21:34:15.115028+00:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kPiZ6KIi/index.html",
-    "release_record": "releases/v2.4.3/handoff.json",
-    "published_version": "v2.4.3",
+    "submitted_version": "v2.5.0-menu-text1",
+    "submitted_at": "2026-10-09T15:53:36.437561+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
+    "release_record": "releases/toy-sync-20261009/sync.json",
+    "published_version": "v2.5.0-menu-text1",
     "published_entry": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_3nVKa6vU/index.html",
-    "note": "同包预览实测36项通过；Toy审核通过，公开包四个核心文件哈希匹配v2.4.3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_CrsjSnSq/index.html",
+    "note": "网站与Toy均已上线1-3；同一40文件包提交前哈希复核，公开8个JS/CSS文件哈希一致，HTML只含平台已观察到的脚本注入，公开22项操作布局检查通过。",
     "pending_updates": [
       {
         "version": "v2.2.2",
@@ -73,15 +73,62 @@
         "summary": "修复地下关检查点坠崖后复活到天花板；清理重开/切区后的食人花残留",
         "status": "published",
         "record": "releases/v2.4.3/handoff.json"
+      },
+      {
+        "version": "v2.4.4",
+        "classification": "严重过关修复 + 普通水管/按钮补丁",
+        "status": "published",
+        "record": "releases/v2.4.4/handoff.json"
+      },
+      {
+        "version": "v2.4.5",
+        "classification": "普通补丁",
+        "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+        "status": "published",
+        "record": "releases/v2.4.5/handoff.json",
+        "included_version": "v2.4.5-bgmfull1"
+      },
+      {
+        "version": "v2.4.7",
+        "classification": "普通补丁",
+        "status": "included_in_published_package",
+        "record": "releases/v2.4.7/handoff.json",
+        "summary": "补齐1-1通关到1-2地下的自动钻管演出。",
+        "package_sha256": "eaf711b274ae3dfd464c4a7b3a65d06a411392d3f6cc66c1e47745341b3d24f3",
+        "included_version": "v2.5.0"
+      },
+      {
+        "version": "v2.5.0",
+        "classification": "正式版本",
+        "status": "published",
+        "record": "releases/v2.5.0/handoff.json",
+        "summary": "第三关树冠、浮台与飞行乌龟，保留钻管过场",
+        "package_sha256": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61"
       }
     ],
-    "package_sha256": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
-    "published_verified_at": "2026-10-06T21:39:01.172522+00:00",
+    "package_sha256": "e1c20475f5d6493924aa7e273d276fdb83e12c2d500fce123ba4ee4dea5b1cdf",
+    "published_verified_at": "2026-10-07T01:40:46.831Z",
     "status": "published",
-    "package_hash": "90aa20cd404a2161b6781cd4953719791a0e4bf9f90e2173e802c5edd0954071",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23208/index.html"
+    "package_hash": "aeb746df2db7044494a275f8f86d7650ef16cd7f619f32b023ccb5e723f4cf61",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v24036/index.html?test=1&qa=1",
+    "version": "v2.5.0",
+    "public_verified_version": "v2.5.0-menu-text1",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_sH2ZVclt/index.html",
+    "last_published_version": "v2.5.0-menu-text1",
+    "last_successful_sync_version": "v2.5.0-menu-text1",
+    "last_successful_sync_at": "2026-10-09T16:00:04.587915+08:00",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_4Fc9TxBU/index.html",
+    "title": "超级玛丽 3D：1-1 至 1-3",
+    "current_public_verification": "verified",
+    "channel_authorization": {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "at": "2026-10-09T15:48:29.505007+08:00"
+    },
+    "public_verified_at": "2026-10-09T16:00:04.587915+08:00",
+    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。"
   },
-  "notes": "粉丝向非官方重制：保留原作关卡布局，采用赤色要塞式自然配色、哑光低模；BGM和常用音效采用原版录音，缺项或加载失败保留合成回退。",
+  "notes": "粉丝向非官方重制：原作 1-1、1-2、1-3 地图与自然色哑光低模；BGM/常用音效原版录音优先、合成回退。",
   "drag_camera_controls": {
     "keyboard": "Q/E 按住转视角，C 切换预设；可用鼠标拖动画面空白处",
     "touch": "空白处上下左右拖动；左右同虫潮，向上拖抬头、向下拖低头；逻辑坐标适配旋转竖屏",
@@ -96,18 +143,289 @@
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
-    "sources": "../../site-games/releases/unified3d-20261006/audio-sources.json"
+    "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json",
+    "revision": "bgmfull1",
+    "processing": "完整音源压缩，不截取前70秒"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "v2.4.3",
-  "website_verified_at": "2026-10-06T21:31:39.632832+00:00",
-  "website_commit": "5c92ea0beb426f3136adc29c0216d8bd4c66c620",
-  "web_toy_versions_match": true,
+  "website_version": "v2.5.0-menu-text1",
+  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
+  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
+  "web_toy_versions_match": false,
   "touch_control_inset": {
     "side_css_px": 40,
     "bottom_css_px": 36,
     "safe_area_added": true,
     "previous_version": "v2.4.1",
     "physical_phone_test": false
+  },
+  "versions": [
+    {
+      "version": "v2.4.5-bgmfull1",
+      "base_version": "v2.4.5",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "恢复完整原版BGM，消除统一70秒截断导致的提前重头循环。",
+      "handoff": "releases/v2.4.5-bgmfull1/handoff.json"
+    },
+    {
+      "version": "v2.4.6",
+      "base_version": "v2.4.5-bgmfull1",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "handoff": "releases/v2.4.6/handoff.json",
+      "summary": "手机竖着拿时菜单直接横屏；紧凑横屏菜单完整显示。"
+    },
+    {
+      "version": "v2.4.7",
+      "base_version": "v2.4.6",
+      "date": "2026-10-07",
+      "classification": "普通补丁",
+      "summary": "补齐1-1通关后地面自动走进横管、落到1-2地下起点的过场。",
+      "handoff": "releases/v2.4.7/handoff.json"
+    },
+    {
+      "version": "v2.5.0-preview1",
+      "base_version": "v2.4.6",
+      "date": "2026-10-07",
+      "classification": "新关卡本地预览",
+      "status": "local_preview",
+      "summary": "WORLD 1-3 树冠、往返浮台与飞行乌龟；仅本机试看",
+      "handoff": "releases/v2.5.0-preview1/handoff.json"
+    },
+    {
+      "version": "v2.5.0",
+      "base_version": "v2.4.7",
+      "date": "2026-10-07",
+      "classification": "正式版本",
+      "status": "published_verified",
+      "summary": "第三关树冠、往返浮台与飞行乌龟；保留1-2钻管过场",
+      "handoff": "releases/v2.5.0/handoff.json"
+    }
+  ],
+  "website": {
+    "status": "public_verified",
+    "version": "v2.5.0-menu-text1",
+    "commit": "47352b283a366abdeb8f20e399c160bb681eb581",
+    "verified_at": "2026-10-09T15:47:30.230676+08:00",
+    "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html",
+    "record": "releases/v2.5.0/website.json",
+    "actions_run": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/37556642893",
+    "runtime_qa": "releases/v2.5.0/qa/website-play-results.json",
+    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+    "runtime_sha256": "8bde57043ff8adc8d8bc84482a6376698c8b42011415c7a02d56a53fdfd90eee",
+    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+  },
+  "pending_channel_changes": [
+    {
+      "version": "v2.4.5-bgmfull1",
+      "classification": "普通补丁",
+      "changes": [
+        "完整原版BGM取消70秒截取"
+      ],
+      "bilibili": "public_verified",
+      "toy": "published",
+      "website": "deployed_verified",
+      "status": "resolved",
+      "resolved_version": "v2.5.0"
+    },
+    {
+      "version": "v2.4.7",
+      "classification": "普通补丁",
+      "changes": [
+        "地面自动钻管与地下落地过场"
+      ],
+      "bilibili": "public_verified",
+      "toy": "published",
+      "website": "deployed_verified",
+      "status": "resolved",
+      "resolved_version": "v2.5.0"
+    },
+    {
+      "version": "v2.5.0-preview1",
+      "classification": "新关卡预览",
+      "changes": [
+        "WORLD 1-3 树冠关"
+      ],
+      "website": "withheld_per_user",
+      "toy": "withheld_per_user",
+      "bilibili": "withheld_per_user",
+      "reason": "用户已确认第三关效果并授权正式发布，转入v2.5.0",
+      "status": "promoted_to_release",
+      "resolved_version": "v2.5.0"
+    },
+    {
+      "version": "v2.5.0",
+      "classification": "正式版本",
+      "changes": [
+        "WORLD 1-3 树冠关",
+        "保留最新1-2钻管过场"
+      ],
+      "website": "deployed_verified",
+      "toy": "published",
+      "bilibili": "public_verified",
+      "reason": "2026-10-07用户明确授权发布",
+      "status": "resolved",
+      "resolved_version": "v2.5.0"
+    }
+  ],
+  "publication_status": "published_verified",
+  "preview_url": "http://127.0.0.1:8953/html/game/mario-3d/index.html?level=1-3",
+  "local_preview_retention": "本机8953预览仍打开且保留原试玩进度，任务worktree/服务暂保留；发布素材另存D:/project/task-artifacts/mario-stage3-release-20261007",
+  "taptap": {
+    "developer_id": 100726,
+    "app_id": 962723,
+    "automatic_sync_enabled": true,
+    "status": "existing_online_update_deferred_by_user",
+    "staged_version": "v2.5.0",
+    "staged_h5_version_id": 274324,
+    "draft_version_id": "1045138",
+    "last_published_version": "v2.5.0",
+    "sync_record": "taptap-sync.json",
+    "release_record": "releases/backfill-20261010/release-status.json",
+    "agreement_authorized": true,
+    "agreement_signed": true,
+    "submitted_version": "v2.5.0",
+    "submitted_h5_version_id": 274324,
+    "submitted_at": "2026-10-08T02:38:03.280324+00:00",
+    "force_submission_authorized": true,
+    "pending_updates": [],
+    "platform_status": "rejected",
+    "submitted_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+    "audit_id": "1045138",
+    "platform_version": "V-20261008",
+    "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
+    "last_published_h5_version_id": 270893,
+    "last_published_platform_version": "V-20261007",
+    "last_published_revision": 1041014,
+    "last_published_at": "2026-10-07T02:48:10+00:00",
+    "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
+    "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962723\\h5-latest.json",
+    "staged_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+    "staged_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+    "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+    "pending_note": "已按用户要求保留既有线上版本，此次IP材料退回的更新不再催办；平台原退回证据保留。",
+    "community_post_status": "deferred_with_current_platform_update",
+    "community_sync": {
+      "automatic_posting_enabled": true,
+      "last_public_verified_moment_id": "856856121875366958",
+      "last_public_verified_url": "https://www.taptap.cn/moment/856856121875366958",
+      "forum_app_id": 962723,
+      "source_version": "v2.5.0",
+      "h5_version_id": 270893,
+      "platform_version": "V-20261007",
+      "content_sha256": "aae8d89cacdb21538589ddd4c434a2ab53feceb1eb1fa0f31b5d4c2355ea3122",
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+      "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+    },
+    "verification": {
+      "startup_guard": "8/8 pass",
+      "player_identity_crypto_storage": "17/17 pass",
+      "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
+      "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
+      "viewports": [
+        "844x390",
+        "390x844"
+      ],
+      "phone": "not tested on actual mobile TapTap App for these exact packages"
+    },
+    "rights_proof_provided": false,
+    "pending_release": {
+      "version": "v2.5.0-menu-text1",
+      "package_sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+      "status": "deferred_by_user",
+      "run_id": "release-backfill-20261010",
+      "user_action_required": false,
+      "decision_record": "game-projects/site-games/releases/backfill-20261010/followup-03.json"
+    },
+    "rejection": {
+      "created_time": 1791465062,
+      "last_event": "review_rejected",
+      "status": "rejected",
+      "status_label": "审核失败",
+      "status_reason": "1. 您的游戏标题、素材与“超级玛丽”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+      "status_value": 2,
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
+    },
+    "backfill_authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "sync_ledger": "taptap-sync.json",
+    "user_handling_preference": {
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-release-followup-03",
+      "recorded_at": "2026-10-10T03:24:15.330063+00:00",
+      "client_timezone": "America/Los_Angeles",
+      "user_quote": "TapTap 恐龙快打、超级玛丽需要 IP 授权材料，这个不需要啊，别管他，之前都上线了，记住。",
+      "app_ids": [
+        962722,
+        962723
+      ],
+      "games": [
+        "cadillacs-stage1-3d",
+        "mario-3d"
+      ],
+      "decision": "keep_existing_online_versions_no_ip_materials_followup",
+      "handling": "保留已上线旧版本；此次因IP材料退回的更新暂不继续，不再作为用户补材料待办，不重复催问或通知。",
+      "future_updates": "后续有新更新时按正常流程查实际平台状态；旧版本已上线不等于本次更新已通过。同一退回及相同包不反复提交，不伪造授权材料或成功状态。",
+      "resume_current_rejected_update": "仅当用户重新要求办理该次更新或实际平台条件有变化时复核。"
+    }
+  },
+  "menu_text_update": {
+    "version": "v2.5.0-menu-text1",
+    "record": "releases/menu-text-20261009/handoff.json",
+    "classification": "routine",
+    "website_status": "public_verified",
+    "platform_status": "pending_22_batch"
+  },
+  "channel_holds": {
+    "status": "superseded_by_current_authorization",
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "channel_hold_history": [
+    {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "since": "2026-10-09T16:00:04.587915+08:00",
+      "targets": [
+        "taptap",
+        "other_game_platforms",
+        "existing_video_descriptions",
+        "announcements"
+      ],
+      "status": "held_by_user"
+    }
+  ],
+  "last_backfill_record": "releases/backfill-20261010/release-status.json",
+  "development_version": "v2.6.0-preview1",
+  "review_candidate": {
+    "version": "v2.6.0-preview1",
+    "status": "pending_user_review",
+    "created_at": "2026-10-10T22:21:55+08:00",
+    "branch": "claude/mario-stage4-20261010",
+    "worktree": "D:/project/toolbasecamp/.claude/worktrees/mario-stage4",
+    "source_commit": "63ca398d0351e5457f74eadeba0c1a086c87a16c",
+    "runtime_fingerprint": "4e8d697bb1cff89ea59802d928c59d5f553a187ac9b4df9a8fa255a7ef0bd05c",
+    "record": "releases/v2.6.0-preview1/handoff.json",
+    "scope": "新增 WORLD 1-4 库巴城堡；用户要求本人审核后全平台上架",
+    "user_instruction": "超级玛丽第四关做一下，我审核后全平台上架",
+    "local_preview": "http://127.0.0.1:8798/html/game/mario-3d/index.html?level=1-4（在 worktree 根目录 node game-projects/mario-3d/qa/serve.mjs 8798）",
+    "channels_after_approval": [
+      "website",
+      "toy 39043286960128",
+      "taptap 962723",
+      "bilibili BV1guep6NELt 简介"
+    ],
+    "website": "not_deployed",
+    "toy": "not_submitted",
+    "taptap": "not_submitted"
   }
 }

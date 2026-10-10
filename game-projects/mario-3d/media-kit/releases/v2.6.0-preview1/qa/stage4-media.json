@@ -1,0 +1,608 @@
+{
+ "url": "http://127.0.0.1:8798/html/game/mario-3d/index.html",
+ "browser": "155.0.4283.45",
+ "gpu": "RTX 4060 Ti (ANGLE D3D11), headless Edge, DPR 1; phone sizes are viewport simulation only",
+ "checks": [
+  {
+   "name": "视角 side 在 stairs 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 side 在 firebars 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 side 在 bridge 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 oblique 在 stairs 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 oblique 在 firebars 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 oblique 在 bridge 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 front 在 stairs 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 front 在 firebars 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 front 在 bridge 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 fp 在 stairs 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 fp 在 firebars 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 fp 在 bridge 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 top 在 stairs 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 top 在 firebars 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "视角 top 在 bridge 正常绘制",
+   "ok": true
+  },
+  {
+   "name": "Q/E 在 stairs 转满一圈",
+   "ok": true,
+   "data": {
+    "turned": 6.283185307179615
+   }
+  },
+  {
+   "name": "Q/E 在 firebars 转满一圈",
+   "ok": true,
+   "data": {
+    "turned": 6.283185307179615
+   }
+  },
+  {
+   "name": "Q/E 在 bridge 转满一圈",
+   "ok": true,
+   "data": {
+    "turned": 6.283185307179615
+   }
+  },
+  {
+   "name": "转镜头流畅 1280 firebars side",
+   "ok": true,
+   "data": {
+    "frames": 510,
+    "fps": 169.99433352221595,
+    "p95": 6,
+    "max": 6.100000000000364,
+    "slow50": 0,
+    "render": {
+     "calls": 94,
+     "triangles": 117426,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 5
+   }
+  },
+  {
+   "name": "转镜头流畅 1280 firebars oblique",
+   "ok": true,
+   "data": {
+    "frames": 511,
+    "fps": 170.0046576618538,
+    "p95": 6,
+    "max": 6.100000000000364,
+    "slow50": 0,
+    "render": {
+     "calls": 94,
+     "triangles": 117426,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 4
+   }
+  },
+  {
+   "name": "转镜头流畅 1280 firebars front",
+   "ok": true,
+   "data": {
+    "frames": 512,
+    "fps": 169.99800783584573,
+    "p95": 6,
+    "max": 6.199999999998909,
+    "slow50": 0,
+    "render": {
+     "calls": 40,
+     "triangles": 117318,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 4
+   }
+  },
+  {
+   "name": "转镜头流畅 1280 bridge side",
+   "ok": true,
+   "data": {
+    "frames": 512,
+    "fps": 169.9980078358456,
+    "p95": 6,
+    "max": 6.100000000000364,
+    "slow50": 0,
+    "render": {
+     "calls": 246,
+     "triangles": 125436,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "转镜头流畅 1280 bridge oblique",
+   "ok": true,
+   "data": {
+    "frames": 511,
+    "fps": 170.0046576618538,
+    "p95": 6,
+    "max": 6.200000000000728,
+    "slow50": 0,
+    "render": {
+     "calls": 160,
+     "triangles": 122904,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 2
+   }
+  },
+  {
+   "name": "转镜头流畅 1280 bridge front",
+   "ok": true,
+   "data": {
+    "frames": 511,
+    "fps": 169.99334664005323,
+    "p95": 6,
+    "max": 6.100000000002183,
+    "slow50": 0,
+    "render": {
+     "calls": 161,
+     "triangles": 123256,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "转镜头流畅 844 firebars side",
+   "ok": true,
+   "data": {
+    "frames": 510,
+    "fps": 170,
+    "p95": 6,
+    "max": 6.200000000000728,
+    "slow50": 0,
+    "render": {
+     "calls": 94,
+     "triangles": 117426,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "转镜头流畅 844 firebars oblique",
+   "ok": true,
+   "data": {
+    "frames": 510,
+    "fps": 170,
+    "p95": 6,
+    "max": 6.100000000002183,
+    "slow50": 0,
+    "render": {
+     "calls": 94,
+     "triangles": 117426,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "转镜头流畅 844 firebars front",
+   "ok": true,
+   "data": {
+    "frames": 511,
+    "fps": 169.9990019628064,
+    "p95": 6,
+    "max": 6.100000000002183,
+    "slow50": 0,
+    "render": {
+     "calls": 40,
+     "triangles": 117318,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "转镜头流畅 844 bridge side",
+   "ok": true,
+   "data": {
+    "frames": 509,
+    "fps": 170.0066800267199,
+    "p95": 6,
+    "max": 6.099999999998545,
+    "slow50": 0,
+    "render": {
+     "calls": 226,
+     "triangles": 124156,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 2
+   }
+  },
+  {
+   "name": "转镜头流畅 844 bridge oblique",
+   "ok": true,
+   "data": {
+    "frames": 512,
+    "fps": 170.00365242221977,
+    "p95": 6,
+    "max": 6.100000000005821,
+    "slow50": 0,
+    "render": {
+     "calls": 233,
+     "triangles": 124724,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "转镜头流畅 844 bridge front",
+   "ok": true,
+   "data": {
+    "frames": 512,
+    "fps": 170.00365242221977,
+    "p95": 6,
+    "max": 6.099999999998545,
+    "slow50": 0,
+    "render": {
+     "calls": 157,
+     "triangles": 123040,
+     "geometries": 23,
+     "textures": 8
+    },
+    "flames": 3
+   }
+  },
+  {
+   "name": "暂停里切换操作模式保留第四关进度 844",
+   "ok": true
+  },
+  {
+   "name": "手机动作键 4 个等大且都在屏幕内 844",
+   "ok": true,
+   "data": [
+    {
+     "w": 60,
+     "h": 60,
+     "x": 674,
+     "y": 224,
+     "r": 734,
+     "b": 284,
+     "o": "1"
+    },
+    {
+     "w": 60,
+     "h": 60,
+     "x": 674,
+     "y": 294,
+     "r": 734,
+     "b": 354,
+     "o": "1"
+    },
+    {
+     "w": 60,
+     "h": 60,
+     "x": 744,
+     "y": 294,
+     "r": 804,
+     "b": 354,
+     "o": "1"
+    },
+    {
+     "w": 60,
+     "h": 60,
+     "x": 744,
+     "y": 224,
+     "r": 804,
+     "b": 284,
+     "o": "1"
+    }
+   ]
+  },
+  {
+   "name": "暂停里切换操作模式保留第四关进度 390",
+   "ok": true
+  },
+  {
+   "name": "手机动作键 4 个等大且都在屏幕内 390",
+   "ok": true,
+   "data": [
+    {
+     "w": 60,
+     "h": 60,
+     "x": 106,
+     "y": 674,
+     "r": 166,
+     "b": 734,
+     "o": "1"
+    },
+    {
+     "w": 60,
+     "h": 60,
+     "x": 36,
+     "y": 674,
+     "r": 96,
+     "b": 734,
+     "o": "1"
+    },
+    {
+     "w": 60,
+     "h": 60,
+     "x": 36,
+     "y": 744,
+     "r": 96,
+     "b": 804,
+     "o": "1"
+    },
+    {
+     "w": 60,
+     "h": 60,
+     "x": 106,
+     "y": 744,
+     "r": 166,
+     "b": 804,
+     "o": "1"
+    }
+   ]
+  },
+  {
+   "name": "无脚本错误",
+   "ok": true,
+   "data": []
+  }
+ ],
+ "perf": [
+  {
+   "viewport": "1280x720",
+   "spot": "firebars",
+   "preset": "side",
+   "frames": 510,
+   "fps": 169.99433352221595,
+   "p95": 6,
+   "max": 6.100000000000364,
+   "slow50": 0,
+   "render": {
+    "calls": 94,
+    "triangles": 117426,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 5
+  },
+  {
+   "viewport": "1280x720",
+   "spot": "firebars",
+   "preset": "oblique",
+   "frames": 511,
+   "fps": 170.0046576618538,
+   "p95": 6,
+   "max": 6.100000000000364,
+   "slow50": 0,
+   "render": {
+    "calls": 94,
+    "triangles": 117426,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 4
+  },
+  {
+   "viewport": "1280x720",
+   "spot": "firebars",
+   "preset": "front",
+   "frames": 512,
+   "fps": 169.99800783584573,
+   "p95": 6,
+   "max": 6.199999999998909,
+   "slow50": 0,
+   "render": {
+    "calls": 40,
+    "triangles": 117318,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 4
+  },
+  {
+   "viewport": "1280x720",
+   "spot": "bridge",
+   "preset": "side",
+   "frames": 512,
+   "fps": 169.9980078358456,
+   "p95": 6,
+   "max": 6.100000000000364,
+   "slow50": 0,
+   "render": {
+    "calls": 246,
+    "triangles": 125436,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  },
+  {
+   "viewport": "1280x720",
+   "spot": "bridge",
+   "preset": "oblique",
+   "frames": 511,
+   "fps": 170.0046576618538,
+   "p95": 6,
+   "max": 6.200000000000728,
+   "slow50": 0,
+   "render": {
+    "calls": 160,
+    "triangles": 122904,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 2
+  },
+  {
+   "viewport": "1280x720",
+   "spot": "bridge",
+   "preset": "front",
+   "frames": 511,
+   "fps": 169.99334664005323,
+   "p95": 6,
+   "max": 6.100000000002183,
+   "slow50": 0,
+   "render": {
+    "calls": 161,
+    "triangles": 123256,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  },
+  {
+   "viewport": "844x390",
+   "spot": "firebars",
+   "preset": "side",
+   "frames": 510,
+   "fps": 170,
+   "p95": 6,
+   "max": 6.200000000000728,
+   "slow50": 0,
+   "render": {
+    "calls": 94,
+    "triangles": 117426,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  },
+  {
+   "viewport": "844x390",
+   "spot": "firebars",
+   "preset": "oblique",
+   "frames": 510,
+   "fps": 170,
+   "p95": 6,
+   "max": 6.100000000002183,
+   "slow50": 0,
+   "render": {
+    "calls": 94,
+    "triangles": 117426,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  },
+  {
+   "viewport": "844x390",
+   "spot": "firebars",
+   "preset": "front",
+   "frames": 511,
+   "fps": 169.9990019628064,
+   "p95": 6,
+   "max": 6.100000000002183,
+   "slow50": 0,
+   "render": {
+    "calls": 40,
+    "triangles": 117318,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  },
+  {
+   "viewport": "844x390",
+   "spot": "bridge",
+   "preset": "side",
+   "frames": 509,
+   "fps": 170.0066800267199,
+   "p95": 6,
+   "max": 6.099999999998545,
+   "slow50": 0,
+   "render": {
+    "calls": 226,
+    "triangles": 124156,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 2
+  },
+  {
+   "viewport": "844x390",
+   "spot": "bridge",
+   "preset": "oblique",
+   "frames": 512,
+   "fps": 170.00365242221977,
+   "p95": 6,
+   "max": 6.100000000005821,
+   "slow50": 0,
+   "render": {
+    "calls": 233,
+    "triangles": 124724,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  },
+  {
+   "viewport": "844x390",
+   "spot": "bridge",
+   "preset": "front",
+   "frames": 512,
+   "fps": 170.00365242221977,
+   "p95": 6,
+   "max": 6.099999999998545,
+   "slow50": 0,
+   "render": {
+    "calls": 157,
+    "triangles": 123040,
+    "geometries": 23,
+    "textures": 8
+   },
+   "flames": 3
+  }
+ ],
+ "errors": []
+}

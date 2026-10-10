@@ -1,0 +1,189 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.9.2",
+ "base_version": "v0.9.1",
+ "created_at": "2026-10-07T15:30:00+08:00",
+ "classification": "正式版本（新增原作开场与背摔，连打重击声修正）",
+ "build": {
+  "bundle_sha256": "50c29a2c580b772f76ee6656f75b13e33df4c69deb4823952499c74bb033d671",
+  "build_id": "intro-v092",
+  "note": "合并四人合作 v0.9.1 后的最终构建"
+ },
+ "changes": [
+  {
+   "id": "heavy-hit",
+   "before": "4 下都用轻打击声，喝声在最后一下起手前",
+   "after": "第 4 下与击倒类打击用原版重击声 0083，喝声在其后 0.12 秒",
+   "verification": "pass"
+  },
+  {
+   "id": "intro",
+   "after": "海边远景、翼龙飞过、EASTCOAST 2513；主角走上楼顶；维斯两句台词；手下被开场必杀全震飞；TOP OF THE BUILDING 后新手下上来",
+   "verification": "pass"
+  },
+  {
+   "id": "ptero-model",
+   "after": "翼龙重做：冠饰长喙、两段式后掠翼",
+   "verification": "pass（截图）"
+  },
+  {
+   "id": "suplex",
+   "after": "抓住后上／下＋J（正视左／右）背摔，摔在身后",
+   "verification": "pass"
+  },
+  {
+   "id": "cine-hud",
+   "after": "远景镜头时隐藏 HUD、计时、键位提示",
+   "verification": "pass"
+  }
+ ],
+ "decisions": [
+  {
+   "topic": "背摔按键",
+   "decision": "与朝向垂直的方向＋J",
+   "reason": "抓住时不能走动，上下键空闲；街机同款；前＋J 易被走过去抓人时按着的前误触"
+  },
+  {
+   "topic": "冲刺踢没打中时的声音",
+   "decision": "不加",
+   "reason": "原作只有起跑声，打中才有重击声"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/intro-throw.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 58/58"
+  },
+  {
+   "method": "qa/desktop.js",
+   "result": "pass 91/91"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35（连跑三次；测试改为同时清掉开场后排队上场的两名手下）",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "site-games/qa/cooperative.cjs（本地联机大厅）",
+   "result": "cadillacs 8/8"
+  },
+  {
+   "method": "实时出口电平（冲刺踢 / 连打）",
+   "result": "有明显音效输出；音效/音乐峰值比约 1.4～1.8，原作约 1.55"
+  }
+ ],
+ "media": [
+  {
+   "id": "arcade-intro-reference",
+   "file": "releases/v0.9.2/captures/arcade-intro-reference.png",
+   "kind": "screenshot",
+   "description": "原作开场 4fps 联系表（参考）"
+  },
+  {
+   "id": "intro-establishing",
+   "file": "releases/v0.9.2/captures/intro-establishing.png",
+   "kind": "screenshot",
+   "version": "v0.9.2",
+   "description": "远景镜头：翼龙飞过、EASTCOAST 2513",
+   "visual_review": "pass"
+  },
+  {
+   "id": "intro-mega",
+   "file": "releases/v0.9.2/captures/intro-mega.png",
+   "kind": "screenshot",
+   "version": "v0.9.2",
+   "description": "开场必杀把手下震飞",
+   "visual_review": "pass"
+  },
+  {
+   "id": "intro-mega-sequence",
+   "file": "releases/v0.9.2/captures/intro-mega-sequence.png",
+   "kind": "screenshot",
+   "version": "v0.9.2",
+   "visual_review": "pass"
+  },
+  {
+   "id": "suplex-land",
+   "file": "releases/v0.9.2/captures/suplex-land.png",
+   "kind": "screenshot",
+   "version": "v0.9.2",
+   "description": "背摔落地",
+   "visual_review": "pending"
+  },
+  {
+   "id": "combo-spectrogram",
+   "file": "releases/v0.9.2/captures/combo-spectrogram-v082-vs-arcade.png",
+   "kind": "analysis",
+   "description": "原作连打 / 冲刺与 v0.8.2 输出的频谱对比"
+  }
+ ],
+ "media_gaps": [
+  "开场动画适合录一段带声音的视频：本版未录，做视频前用 qa/record.js 补录"
+ ],
+ "audio_review": "not-run（AI 无法试听）",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "默认画面不变"
+ },
+ "website": {
+  "status": "deployed_verified",
+  "commit": "5bac01d8",
+  "verified_at": "2026-10-07T17:58:00+08:00",
+  "verification": "线上 game.min.js 与 cd-heavy.wav 与提交逐字节一致，index 引用 ?v=5bac01d8；线上 intro-throw 16/16、original-audio 58/58"
+ },
+ "toy": {
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.9.2/package",
+  "package_tree_sha256": "e909357ecefbdcf86e19c147dc55e2808dce59bce8977b3745769115f57e6259",
+  "preview_checks": "toy-preview-check 20/20、original-audio 58/58（预览外壳内）",
+  "submitted_at": "2026-10-07T18:03:32+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_g0VSUQah/index.html",
+  "public_check": "正式入口电脑 + 手机 20/20 显示 v0.9.2",
+  "verified_at": "2026-10-07T18:07:00+08:00"
+ },
+ "taptap": {
+  "source_version": "v0.9.2",
+  "source_commit": "5bac01d8",
+  "package_sha256": "36b7def3e4f1c406b3d32ac3bc0eea6919a2b69a38d368c8f9d532765be644ee",
+  "h5_version_id": 272389,
+  "draft_version_id": "1042885",
+  "platform_version": "V-20261007-3",
+  "status": "reviewing",
+  "submitted_at": "2026-10-07T18:08:35+08:00",
+  "precheck": {
+   "blockers": [],
+   "preaudit_warnings": [
+    "title IP",
+    "description 非官方复刻"
+   ],
+   "decision": "同一已展示 IP 风险，按 taptap-force3-20261007 用户试审决定继续"
+  },
+  "verification": "verify-taptap-h5.cjs passed ×2"
+ },
+ "bilibili": {
+  "status": "public_verified",
+  "bvid": "BV18XHW66E55",
+  "record": "releases/v0.9.2/bilibili-sync.json",
+  "verified_at": "2026-10-07T18:10:09+08:00"
+ }
+}

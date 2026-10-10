@@ -1,0 +1,174 @@
+// Original recordings must load, fire from gameplay, survive restart, mute and fall back on failure.
+const { launch, BASE, out } = require('./lib');
+const fs = require('fs');
+(async () => {
+  const browser = await launch(), results = [], errors = [];
+  const check = (name, pass, info) => { results.push({ name, pass: !!pass, info }); console.log(`${pass ? 'PASS' : 'FAIL'} ${name} ${JSON.stringify(info ?? '')}`); };
+  const phone = process.env.CD_PHONE === '1';
+  const host = await browser.newPage(phone ? { viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36' } : { viewport: { width: 1280, height: 720 } });
+  host.on('pageerror', e => errors.push(e.message));
+  await host.addInitScript(() => {
+    window.audioProbe = { contexts: [], samples: [], oscillators: 0 };
+    const connect = AudioNode.prototype.connect;
+    AudioNode.prototype.connect = function (target, ...args) {
+      if (target === this.context.destination && !this.context.outputMeter) {
+        const meter = this.context.createAnalyser(); meter.fftSize = 2048;
+        this.context.outputMeter = meter; connect.call(this, meter);
+      }
+      return connect.call(this, target, ...args);
+    };
+    const Native = window.AudioContext;
+    window.AudioContext = class extends Native {
+      constructor(...args) {
+        super(...args); window.audioProbe.contexts.push(this);
+        const makeSource = this.createBufferSource.bind(this);
+        this.createBufferSource = () => {
+          const s = makeSource(), start = s.start.bind(s);
+          s.start = (...a) => { window.audioProbe.samples.push({ duration: s.buffer?.duration, at: a[0] ?? this.currentTime }); return start(...a); };
+          return s;
+        };
+        const makeOsc = this.createOscillator.bind(this);
+        this.createOscillator = () => { window.audioProbe.oscillators++; return makeOsc(); };
+      }
+    };
+  });
+  let page = host;
+  async function navigate() {
+    await host.goto(BASE + '?test=1&seed=21');
+    page = host.frames().find(f => /www\.bilibilitoy\.com/.test(f.url())) || host;
+    await page.waitForFunction(() => window.__CD_TEST__);
+    if (await page.evaluate(() => window.__CD_TEST__.snapshot().ui.audio.volume === 0)) {
+      await page.locator('#menu [data-opt="volume"]').click();
+    }
+  }
+  const state = () => page.evaluate(() => window.__CD_TEST__.snapshot());
+  const megaInput = () => phone ? page.locator('#btn-mega').tap() : host.keyboard.press('KeyU');
+  async function start(hero) {
+    await navigate();
+    await page.locator('#menu [data-act=select]').click();
+    await page.locator(`[data-hero="${hero}"]`).click();
+    if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
+    await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.originalsLoaded.length === 13);
+    // 开场脚本跳过后，开场必杀之后的两名手下要先走进来，再全部清掉
+    await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.step(150); T.cheat.killAll(); T.audioLogStart(); T.step(120); });
+    check(`hero ${hero}: all recordings decoded`, (await state()).ui.audio.failed.length === 0);
+  }
+  // 开场只放原版 BGM：按我们服务器实测的下载速度（约 0.37 MB/s）限速，记录开场音乐时间线
+  {
+    const cdp = await host.context().newCDPSession(host);
+    await cdp.send('Network.enable');
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 40, downloadThroughput: 375000, uploadThroughput: 100000 });
+    await navigate();
+    await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
+    if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
+    const osc0 = await page.evaluate(() => window.audioProbe.oscillators), t0 = Date.now(), line = [];
+    let megaAt = null;
+    while (Date.now() - t0 < 30000) {
+      const r = await page.evaluate(() => { const T = window.__CD_TEST__, m = T.snapshot().ui.music; return { m, mega: T.cheat.G.events.some(e => e.type === 'introMega'), osc: window.audioProbe.oscillators }; });
+      const t = (Date.now() - t0) / 1000;
+      if (r.mega && megaAt === null) megaAt = t;
+      line.push({ t: +t.toFixed(1), track: r.m.track, name: r.m.name, synth: r.m.synth, osc: r.osc - osc0 });
+      if (megaAt !== null && r.m.track === 'roof' && t - megaAt > 1) break;
+      await host.waitForTimeout(250);
+    }
+    await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+    const first = line.find(x => x.track === 'opening'), atMega = line.find(x => megaAt !== null && x.t >= megaAt), roof = line.find(x => x.track === 'roof');
+    const gapAfterOpening = first ? line.filter(x => x.t > first.t && !x.track && (!roof || x.t < roof.t)).length : -1;
+    console.log('   timeline', JSON.stringify(line.filter((x, i) => i % 4 === 0 || x === first || x === atMega || x === roof).map(x => [x.t, x.track || '-', x.osc])));
+    // 合成旧曲每秒要建约 30 个振荡器；远景 3.5 秒内没有别的合成音（之后台词滴答声、开枪等短音效会建少量）
+    const est = line.filter(x => x.t <= 3.5).pop(), total = line[line.length - 1];
+    check('slow network: intro never plays the synthesized old BGM', line.every(x => !x.synth) && est.osc === 0 && total.osc / Math.max(1, total.t) < 4, { establishingOsc: est.osc, perSecond: +(total.osc / total.t).toFixed(1) });
+    check('slow network: original Opening Demo starts within 6 s of the intro', !!first && first.t < 6, first);
+    check('slow network: at the opening mega the music keeps playing (Opening Demo continues until the stage track arrives)', !!atMega && !!atMega.track && gapAfterOpening === 0, { megaAt, atMega, gapAfterOpening });
+    check('slow network: stage 1 original track takes over after the mega', !!roof && megaAt !== null && roof.t >= megaAt - 0.3, { roof, megaAt });
+  }
+  for (let hero = 0; hero < 4; hero++) {
+    await start(hero);
+    const before = await page.evaluate(() => window.audioProbe.samples.length);
+    await megaInput();
+    await page.evaluate(() => window.__CD_TEST__.step(5, true));
+    const log = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
+    const mega = log.find(e => e.name === 'mega');
+    check(`hero ${hero}: U plays own original voice`, mega?.source === 'original' && mega.sample === ['mega-jack', 'mega-hannah', 'mega-mustapha', 'mega-mess'][hero], mega);
+    check(`hero ${hero}: actual buffer source started`, await page.evaluate(n => window.audioProbe.samples.length > n, before));
+  }
+  for (let hero = 0; hero < 4; hero++) {
+    await start(hero);
+    await page.evaluate(() => { const T = window.__CD_TEST__, G = T.cheat.G, p = G.player; p.invul = 999; const id = T.cheat.enemy('ferris', 1.05, 0), e = G.actors.find(a => a.id === id); Object.assign(e, { hp: 999, maxHp: 999, cd: 999, z: p.z, x: p.x + 1.05 }); e.def = { ...e.def, aggr: 0, speed: 0 }; T.audioLogStart(); });
+    for (let k = 0; k < 4; k++) { await host.keyboard.press('KeyJ'); await page.evaluate(() => window.__CD_TEST__.step(9)); }
+    await page.evaluate(() => window.__CD_TEST__.step(40));
+    const clog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
+    const hitsL = clog.filter(e => ['punch', 'punchHeavy', 'kick', 'kickHeavy'].includes(e.name)), fin = clog.filter(e => e.name === 'finisher');
+    check(`hero ${hero}: all four combo hits use the original arcade impact (0083 reverted)`, hitsL.length >= 4 && hitsL.every(e => e.sample === 'hit' && e.source === 'original'), hitsL.map(e => e.name + ':' + e.sample));
+    check(`hero ${hero}: hero's own shout once, ~0.12 s after the heavy 4th hit (arcade: 26.53 heavy -> 26.68 shout)`, fin.length === 1 && fin[0].sample === 'finisher-' + ['jack', 'hannah', 'mustapha', 'mess'][hero] && fin[0].t - hitsL[3].t > 0.08 && fin[0].t - hitsL[3].t < 0.2, { fin, hits: hitsL.map(e => e.t) });
+    check(`hero ${hero}: bare-hand combo has no synthesized whoosh`, !clog.some(e => /^whoosh/.test(e.name)), clog.map(e => e.name));
+  }
+  for (let hero = 0; hero < 4; hero++) {
+    await start(hero);
+    await page.evaluate(() => { const T = window.__CD_TEST__, G = T.cheat.G, p = G.player; p.invul = 999; const id = T.cheat.enemy('ferris', 2.6, 0), e = G.actors.find(a => a.id === id); Object.assign(e, { hp: 999, maxHp: 999, cd: 999, z: p.z, x: p.x + 2.6 }); e.def = { ...e.def, aggr: 0, speed: 0 }; T.audioLogStart(); });
+    await host.keyboard.down('KeyI'); await page.evaluate(() => window.__CD_TEST__.step(4)); await host.keyboard.press('KeyJ'); await page.evaluate(() => window.__CD_TEST__.step(40)); await host.keyboard.up('KeyI');
+    const dlog = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
+    const dash = dlog.find(e => e.name === 'dash'), dhit = dlog.find(e => e.name === 'dashHit'), shout = dlog.find(e => e.name === 'shout');
+    check(`hero ${hero}: dash start plays original dash sound`, dash?.sample === 'dash' && dash.source === 'original', dash);
+    check(`hero ${hero}: dash attack hit uses the original arcade impact`, dhit?.sample === 'hit' && dhit.source === 'original' && dhit.t > dash.t, dlog.map(e => e.name));
+    check(`hero ${hero}: only Mustapha shouts on his flying kick`, hero === 2 ? shout?.sample === 'shout-mustapha' && shout.source === 'original' : !shout || shout.sample === null, shout);
+  }
+  await start(0);
+  await page.evaluate(() => { window.__CD_TEST__.cheat.G.player.invul = 0; window.__CD_TEST__.audioLogStart(); });
+  await host.keyboard.press('KeyU'); await page.evaluate(() => window.__CD_TEST__.step(20));
+  const megaInv = await page.evaluate(() => window.__CD_TEST__.cheat.G.player.invul);
+  await host.keyboard.press('KeyU'); await page.evaluate(() => window.__CD_TEST__.step(20));
+  const mlog = await page.evaluate(() => window.__CD_TEST__.audioLogStop()).then(l => l.filter(e => e.name === 'mega'));
+  check('mega cannot be restarted while it is still spinning', mlog.length === 1, mlog);
+  check('mega keeps the player invincible for its whole ~0.95 s animation', megaInv > 0.55, megaInv);
+  await page.evaluate(() => window.__CD_TEST__.step(30)); await host.keyboard.press('KeyU'); await page.evaluate(() => window.__CD_TEST__.step(5));
+  check('mega can be used again right after it ends (arcade: no cooldown, costs HP)', await page.evaluate(() => window.__CD_TEST__.cheat.G.player.move?.id === 'mega'));
+  await start(0);
+  const log = await page.evaluate(() => window.__CD_TEST__.audioLogStop());
+  check('wave completion plays original GO', log.some(e => e.name === 'go' && e.source === 'original'), log.filter(e => e.name === 'go'));
+  const goSamples = await page.evaluate(() => window.audioProbe.samples.filter(s => Math.abs(s.duration - 0.52) < 0.01));
+  const gaps = goSamples.slice(-3).map((s, i, a) => i ? +(s.at - a[i - 1].at).toFixed(3) : 0).slice(1);
+  check('GO is called three times 0.59 s apart (arcade timing)', goSamples.length >= 3 && gaps.every(g => Math.abs(g - 0.59) < 0.01), gaps);
+  const cues = ['punch', 'punchHeavy', 'kick', 'kickHeavy', 'finisher', 'bodyfall', 'dash', 'dashHit', 'go', 'mega'];
+  const events = cues.map((name, i) => ({ t: i * 1.4, name, vol: 1, hero: 'jack' }));
+  const wav = await page.evaluate(e => window.__CD_TEST__.audioOffline(e, 16), events);
+  const bytes = Buffer.from(wav, 'base64'); fs.writeFileSync(out('original-audio.wav'), bytes);
+  let peak = 0, sum = 0;
+  for (let i = 44; i < bytes.length; i += 2) { const x = bytes.readInt16LE(i) / 32768; peak = Math.max(peak, Math.abs(x)); sum += x * x; }
+  check('offline capture contains audible original effects without clipping', peak > 0.1 && peak < 0.99, { peak, rms: Math.sqrt(sum / ((bytes.length - 44) / 2)) });
+  await page.evaluate(() => window.__CD_TEST__.manual(false));
+  await host.keyboard.press('Escape');
+  await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.paused);
+  check('pause freezes the same AudioContext used by recordings', await page.evaluate(() => window.audioProbe.contexts.every(c => c.state === 'suspended')));
+  const pausedT = await page.evaluate(() => window.audioProbe.contexts[0].currentTime);
+  await host.waitForTimeout(150);
+  check('paused audio clock does not advance', await page.evaluate(t => window.audioProbe.contexts[0].currentTime === t, pausedT));
+  const restart = page.locator('#pause [data-act="restart"]');
+  await restart.click();
+  await page.waitForFunction(() => window.audioProbe.contexts.every(c => c.state === 'running'));
+  check('restart resumes audio', (await state()).ui.audio.ctx === 'running');
+  await page.evaluate(() => { const T = window.__CD_TEST__; T.cheat.skipScript(); });
+  await host.keyboard.press('Escape'); await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.paused);
+  while ((await state()).ui.audio.volume > 0) await page.locator('#pause [data-opt="volume"]').click();
+  await host.keyboard.press('Escape'); await page.waitForFunction(() => !window.__CD_TEST__.snapshot().ui.paused);
+  await host.waitForTimeout(150);
+  const silent = await page.evaluate(() => {
+    const meter = window.audioProbe.contexts[0].outputMeter, data = new Float32Array(meter.fftSize);
+    meter.getFloatTimeDomainData(data); return Math.max(...data.map(Math.abs));
+  });
+  check('menu mute makes the speaker output silent', silent < 0.00001, silent);
+  // Simulated loading failure must leave the game usable and synthesize the event immediately.
+  await host.route('**/cd-*.wav*', r => r.abort());
+  await navigate();
+  await page.locator('#menu [data-act=select]').click(); await page.locator('[data-hero="0"]').click();
+  if (await page.locator('#sel-go').isVisible()) await page.locator('#sel-go').click();
+  await page.waitForFunction(() => window.__CD_TEST__.snapshot().ui.audio.failed.length === 13);
+  await page.evaluate(() => { const T = window.__CD_TEST__; T.manual(true); T.cheat.skipScript(); T.audioLogStart(); T.step(120); });
+  const oscBefore = await page.evaluate(() => window.audioProbe.oscillators);
+  await megaInput(); await page.evaluate(() => window.__CD_TEST__.step(5));
+  const fallback = await page.evaluate(() => window.__CD_TEST__.audioLogStop().find(e => e.name === 'mega'));
+  check('missing recording uses synthesized fallback', fallback?.source === 'fallback' && await page.evaluate(n => window.audioProbe.oscillators > n, oscBefore), fallback);
+  check('no JavaScript errors', errors.length === 0, errors);
+  fs.writeFileSync(out('original-audio.json'), JSON.stringify({ results, errors }, null, 2));
+  await browser.close(); process.exit(results.some(r => !r.pass) ? 1 : 0);
+})().catch(e => { console.error(e); process.exit(1); });

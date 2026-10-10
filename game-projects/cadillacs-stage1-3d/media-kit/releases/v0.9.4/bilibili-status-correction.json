@@ -1,0 +1,22 @@
+{
+  "bvid": "BV18XHW66E55",
+  "old_description": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢，抓住敌人后上／下＋J背摔。\n更新（2026-10-07·v0.9.4）：修复部分安卓机型/旧内核打开Toy即闪退的问题（联机玩家ID在不支持随机数接口的设备自动回退），画面与操作不变；保留原作开场、背摔与原版音乐，仍支持2–4人联机合作。网站与B站Toy已同步上线，TapTap新版审核中。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+  "new_description": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢，抓住敌人后上／下＋J背摔。\n更新（2026-10-07·v0.9.4）：修复部分安卓机型/旧内核打开Toy即闪退的问题（联机玩家ID在不支持随机数接口的设备自动回退），画面与操作不变；保留原作开场、背摔与原版音乐，仍支持2–4人联机合作。网站与B站Toy已同步上线，TapTap修复版也已上线。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+  "reason": "TapTap V-20261007-6 已确认 online，纠正过期渠道状态",
+  "schema_version": 1,
+  "game_id": "cadillacs-stage1-3d",
+  "version": "v0.9.4",
+  "classification": "已过期渠道状态纠正",
+  "task_id": "01a11629-be0c-7693-a960-560b142abbe9-uuid-startup-02",
+  "source": "Codex",
+  "status": "public_verified",
+  "submit_toast": "稿件投递成功",
+  "submitted_at": "2026-10-08T00:59:15.331570+00:00",
+  "method": "创作中心现有简介仅替换TapTap审核状态；读回8段，无空段；不动标题封面、成片及绑定",
+  "old_description_sha256": "90e8fd9756130120b474c9215f8a6b69c2fbed481bcd43e2138dddb4ce92d696",
+  "new_description_sha256": "fc2216dde8a4f8f137fb2b409d7c001cafef543ca0281b1b9a3bb4bd823d96bb",
+  "public_verified_at": "2026-10-08T01:02:01.971243+00:00",
+  "public_description_sha256": "fc2216dde8a4f8f137fb2b409d7c001cafef543ca0281b1b9a3bb4bd823d96bb",
+  "screenshot": "D:/project/artifacts/cadillacs-uuid-20261007/bilibili-status-public.png",
+  "public_layout": "8行，无纯空白行，试玩标签与URL同行；每个URL出现一次"
+}

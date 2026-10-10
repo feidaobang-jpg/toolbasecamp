@@ -1,0 +1,35 @@
+{
+  "task_id": "01a1140c-tank-online-video-20261007-w01",
+  "source": "Codex",
+  "status": "post_publication_complete",
+  "production_complete": true,
+  "human_approval": {
+    "status": "authorized_by_user_follow_up",
+    "quote": "发布视频后后续"
+  },
+  "game_version": "landscape-menu1",
+  "video_sha256": "50fdf95e9f48019fea41a7e9c88af5c53deef02f54590e4c2175cb0de0bdc611",
+  "video_duration_seconds": 82.4,
+  "production_workspace": "D:/project/worktrees/tank-online-video-20261007",
+  "durable_artifacts": "D:/project/task-artifacts/tank-online-video-20261007",
+  "updated_at": "2026-10-07T04:32:00+00:00",
+  "publish_manifest": "publish/bilibili-zh/publish.json",
+  "next_steps": [
+    "未来相关复盘任务按24小时、72小时、7天窗口记录本期数据；本次不创建后台监控"
+  ],
+  "promotion_application": {
+    "status": "submitted_and_autosaved",
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw"
+  },
+  "publication": {
+    "status": "submitted_public_verified",
+    "bvid": "BV1TepK69Eet",
+    "url": "https://www.bilibili.com/video/BV1TepK69Eet/"
+  },
+  "toy_binding": {"status": "bound_and_readback_verified", "toy_id": "39043249461248"},
+  "comment": {"status": "published_and_pinned"},
+  "qq_promotion": {"status": "submitted_and_autosaved"},
+  "limitations": [
+    "本期联机录像为两个独立窗口，未做四人/手机真机压力测试"
+  ]
+}

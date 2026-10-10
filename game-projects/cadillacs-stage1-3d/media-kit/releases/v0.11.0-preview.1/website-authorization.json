@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-10-09T03:25:05.625396+00:00",
+  "user_instruction": "发布到网站里我试玩一下，不要发布到其他游戏平台",
+  "source_commit": "f9004a48",
+  "source_version": "v0.11.0-preview.1",
+  "runtime_sha256": "932c3d69fa116a9c777afef82a82a58c9c1d020db09ebb9262e7bd6a3b0a7825",
+  "authorization_type": "explicit_website_trial_exception",
+  "approved_targets": [
+    "website"
+  ],
+  "excluded_targets": [
+    "toy",
+    "taptap",
+    "other_game_platforms"
+  ],
+  "full_game_review": "pending_user_trial",
+  "automatic_nightly_platform_release": false,
+  "video_descriptions_and_announcements": "held_pending_review; no external changes in this task",
+  "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3"
+}

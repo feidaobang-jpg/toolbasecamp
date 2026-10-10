@@ -1,0 +1,125 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "cover": {
+          "field_id": "cover",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "460:215",
+            "content_note": "含 Logo",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 215,
+            "min_width": 460
+          },
+          "input_type": "image",
+          "label": "横版封面",
+          "state": "optional"
+        },
+        "cover_vertical": {
+          "current_value": "https://img-tc.tapimg.com/market/images/e05b75bce3051d0588c66edb62baebaa.jpg",
+          "field_id": "cover_vertical",
+          "filled": true,
+          "image_spec": {
+            "aspect_ratio": "2:3",
+            "content_note": "含 Logo",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 900,
+            "min_width": 600
+          },
+          "input_type": "image",
+          "label": "竖版封面",
+          "state": "required"
+        },
+        "library_hero": {
+          "field_id": "library_hero",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "3840:1240",
+            "content_note": "禁止包含文字",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 10,
+            "min_height": 1240,
+            "min_width": 3840
+          },
+          "input_type": "image",
+          "label": "游戏库背景壁纸",
+          "state": "optional"
+        },
+        "logo": {
+          "field_id": "logo",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "16:9",
+            "content_note": "透明背景",
+            "formats": [
+              "PNG"
+            ],
+            "max_file_size_mb": 4,
+            "min_height": 720,
+            "min_width": 1280
+          },
+          "input_type": "image",
+          "label": "游戏 Logo",
+          "state": "optional"
+        },
+        "logoless_banner": {
+          "field_id": "logoless_banner",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "16:9",
+            "content_note": "禁止包含 Logo 和文字",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 6,
+            "min_height": 1080,
+            "min_width": 1920
+          },
+          "input_type": "image",
+          "label": "无 Logo 宣传图-横版",
+          "state": "optional"
+        },
+        "logoless_vertical_banner": {
+          "field_id": "logoless_vertical_banner",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "2:3",
+            "content_note": "禁止包含 Logo 和文字",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "max_file_size_mb": 6,
+            "min_height": 1080,
+            "min_width": 720
+          },
+          "input_type": "image",
+          "label": "无 Logo 宣传图-竖版",
+          "state": "optional"
+        }
+      },
+      "module_id": "windows-exclusive",
+      "revision": 1041012
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

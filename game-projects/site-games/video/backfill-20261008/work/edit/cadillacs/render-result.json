@@ -1,0 +1,11 @@
+{
+  "source_video_sha256": "6f43b6f0bb960f67aa31f8372d2e16f3ce93b1f2c7db6c25d12bd2ef15b2f68a",
+  "cut_end": 153.6,
+  "outro_duration": 14.066666666666666,
+  "total": 167.66666666666666,
+  "original_chinese_cues": 83,
+  "tts_timing": "WordBoundary",
+  "picture_is_historical": true,
+  "youtube": "C:\\Users\\37818\\.codex\\worktrees\\video-backfill-20261008\\toolbasecamp\\game-projects\\site-games\\video\\backfill-20261008\\final\\cadillacs\\youtube-zh\\gameplay-youtube-final.mp4",
+  "douyin": "C:\\Users\\37818\\.codex\\worktrees\\video-backfill-20261008\\toolbasecamp\\game-projects\\site-games\\video\\backfill-20261008\\final\\cadillacs\\douyin-zh\\gameplay-zh-final.mp4"
+}

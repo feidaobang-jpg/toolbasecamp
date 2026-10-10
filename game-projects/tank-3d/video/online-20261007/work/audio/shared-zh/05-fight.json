@@ -1,0 +1,143 @@
+{
+  "text": "敌人压下来了，先把左路拦住。二号被打爆，还能重新出发。一号继续顶着，战斗没有因为队友阵亡就停下来。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2875000,
+      "text": "敌人"
+    },
+    {
+      "offset": 4125000,
+      "duration": 1875000,
+      "text": "压"
+    },
+    {
+      "offset": 6000000,
+      "duration": 2375000,
+      "text": "下来"
+    },
+    {
+      "offset": 8375000,
+      "duration": 2500000,
+      "text": "了"
+    },
+    {
+      "offset": 14000000,
+      "duration": 2500000,
+      "text": "先"
+    },
+    {
+      "offset": 16500000,
+      "duration": 1250000,
+      "text": "把"
+    },
+    {
+      "offset": 17875000,
+      "duration": 2125000,
+      "text": "左"
+    },
+    {
+      "offset": 20000000,
+      "duration": 1000000,
+      "text": "路"
+    },
+    {
+      "offset": 21125000,
+      "duration": 3750000,
+      "text": "拦住"
+    },
+    {
+      "offset": 30625000,
+      "duration": 4250000,
+      "text": "二号"
+    },
+    {
+      "offset": 35000000,
+      "duration": 1125000,
+      "text": "被"
+    },
+    {
+      "offset": 36250000,
+      "duration": 4625000,
+      "text": "打爆"
+    },
+    {
+      "offset": 43000000,
+      "duration": 1625000,
+      "text": "还"
+    },
+    {
+      "offset": 44625000,
+      "duration": 1125000,
+      "text": "能"
+    },
+    {
+      "offset": 46000000,
+      "duration": 8500000,
+      "text": "重新出发"
+    },
+    {
+      "offset": 60250000,
+      "duration": 3625000,
+      "text": "一号"
+    },
+    {
+      "offset": 64125000,
+      "duration": 2875000,
+      "text": "继续"
+    },
+    {
+      "offset": 67125000,
+      "duration": 2000000,
+      "text": "顶"
+    },
+    {
+      "offset": 69125000,
+      "duration": 2500000,
+      "text": "着"
+    },
+    {
+      "offset": 76125000,
+      "duration": 3625000,
+      "text": "战斗"
+    },
+    {
+      "offset": 80000000,
+      "duration": 1875000,
+      "text": "没有"
+    },
+    {
+      "offset": 82000000,
+      "duration": 2250000,
+      "text": "因为"
+    },
+    {
+      "offset": 84500000,
+      "duration": 2250000,
+      "text": "队友"
+    },
+    {
+      "offset": 86875000,
+      "duration": 3625000,
+      "text": "阵亡"
+    },
+    {
+      "offset": 90750000,
+      "duration": 1125000,
+      "text": "就"
+    },
+    {
+      "offset": 91875000,
+      "duration": 1750000,
+      "text": "停"
+    },
+    {
+      "offset": 93625000,
+      "duration": 3625000,
+      "text": "下来"
+    }
+  ]
+}

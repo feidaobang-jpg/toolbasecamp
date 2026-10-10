@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "url": "https://www.bilibili.com/toy/preview/preview_5bihsMOt/index.html",
+  "zip_sha256": "cf65928f7c80d38c1968144f07143b9e63bab0f9c2e419674588de1a67620d0a",
+  "viewports": [
+    [
+      1280,
+      720
+    ],
+    [
+      844,
+      390
+    ]
+  ],
+  "checks": [
+    "继续已有第1章第2关、金币478与基地2000保持",
+    "战术部署显示13只本关虫、中央与西侧洞口、额外野怪8只和补给220",
+    "自动回防关闭/开启并恢复原值",
+    "关闭面板返回原本局",
+    "同局电脑→手机操作模式双向切换，恢复原手机选择",
+    "横屏面板与按钮可达，触控目标约44 CSS px"
+  ],
+  "screenshots": [
+    "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/toy-desktop.jpg",
+    "D:/project/game-media/starship-defense/web-tactics-v0.20.0/qa/toy-phone.jpg"
+  ],
+  "physical_phone": false,
+  "resource_hash_note": "匿名脚本获取Toy资源返回HTTP412；预览实际游戏已运行，提交沿用同一已验证ZIP，不宣称逐文件哈希核验成功"
+}

@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-10-07T06:58:31.902298+08:00",
+  "classification": "普通补丁",
+  "website_code_commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+  "games": [
+    {
+      "game": "jackal-stage1-3d",
+      "version": "v0.8.0-bgmfull1",
+      "website": "deployed_verified",
+      "toy": "published",
+      "toy_public_verified": true,
+      "bilibili": "deferred ordinary patch"
+    },
+    {
+      "game": "mario-3d",
+      "version": "v2.4.5-bgmfull1",
+      "website": "deployed_verified",
+      "toy": "published",
+      "toy_public_verified": true,
+      "bilibili": "deferred ordinary patch"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "version": "v0.5.6-bgmfull1",
+      "website": "deployed_verified",
+      "toy": "published",
+      "toy_public_verified": true,
+      "bilibili": "deferred ordinary patch"
+    }
+  ],
+  "audio_tracks_replaced": 13,
+  "original_audio_source_hashes_matched": true,
+  "local_complete_bgm_checks": 30,
+  "restart_output_checks": 15,
+  "toy_preview_checks": 30,
+  "physical_phone_tested": false,
+  "bili_activity_check": {
+    "status": "skipped_recent_success",
+    "last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
+    "pending_account_actions": []
+  },
+  "artifacts": "D:/project/task-artifacts/game-bgm-20261007"
+}

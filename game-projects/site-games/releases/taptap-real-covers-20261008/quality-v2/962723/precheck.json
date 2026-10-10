@@ -1,0 +1,62 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "blockers": [],
+      "preaudit_passed": false,
+      "version_id": "1047765",
+      "warnings": [
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "title"
+          ],
+          "message": "游戏标题涉及知名IP‘超级玛丽’，可能有侵权嫌疑；如已获得官方正式授权，请前往游戏资质页面上传相关授权书，否则将有驳回风险。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "description"
+          ],
+          "message": "简介中包含对‘超级玛丽’等知名IP名称的引用，如已获得授权，请在资质页面上传授权文件。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "icon"
+          ],
+          "message": "图标素材使用了知名游戏IP角色形象，存在版权侵权风险，请提供相应授权证明或更换原创素材。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "screenshots"
+          ],
+          "message": "游戏截图中包含知名IP角色、经典元素（如绿水管、问号砖块等），存在侵权风险，如已获得授权请在资质页面提交授权证明。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "banner_4"
+          ],
+          "message": "宣传图素材包含知名游戏IP形象及名称，存在版权侵权风险，请前往资质页面上传授权书或修改素材。"
+        },
+        {
+          "code": "PREAUDIT",
+          "field_ids": [
+            "cover_vertical"
+          ],
+          "message": "封面图素材包含知名游戏IP形象及名称，存在版权侵权风险，请前往资质页面上传授权书或修改素材。"
+        }
+      ]
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

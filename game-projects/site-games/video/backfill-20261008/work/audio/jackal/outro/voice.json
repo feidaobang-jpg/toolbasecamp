@@ -1,0 +1,129 @@
+{
+  "text": "这段是十月四日的双关卡实录。当前试玩入口见简介，操作以游戏内提示为准。我们下次再见！",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "这",
+      "offset": 1000000,
+      "duration": 2125000
+    },
+    {
+      "text": "段",
+      "offset": 3125000,
+      "duration": 1750000
+    },
+    {
+      "text": "是",
+      "offset": 5000000,
+      "duration": 1500000
+    },
+    {
+      "text": "十月",
+      "offset": 6750000,
+      "duration": 2625000
+    },
+    {
+      "text": "四日",
+      "offset": 9500000,
+      "duration": 3750000
+    },
+    {
+      "text": "的",
+      "offset": 13250000,
+      "duration": 1625000
+    },
+    {
+      "text": "双",
+      "offset": 15125000,
+      "duration": 2375000
+    },
+    {
+      "text": "关卡",
+      "offset": 17500000,
+      "duration": 3250000
+    },
+    {
+      "text": "实录",
+      "offset": 20875000,
+      "duration": 4625000
+    },
+    {
+      "text": "当前",
+      "offset": 31250000,
+      "duration": 5250000
+    },
+    {
+      "text": "试玩",
+      "offset": 36750000,
+      "duration": 3625000
+    },
+    {
+      "text": "入口",
+      "offset": 40375000,
+      "duration": 3875000
+    },
+    {
+      "text": "见",
+      "offset": 44500000,
+      "duration": 1875000
+    },
+    {
+      "text": "简介",
+      "offset": 46500000,
+      "duration": 4875000
+    },
+    {
+      "text": "操作",
+      "offset": 55000000,
+      "duration": 4625000
+    },
+    {
+      "text": "以",
+      "offset": 59875000,
+      "duration": 1125000
+    },
+    {
+      "text": "游戏",
+      "offset": 61125000,
+      "duration": 3500000
+    },
+    {
+      "text": "内",
+      "offset": 64625000,
+      "duration": 2125000
+    },
+    {
+      "text": "提示",
+      "offset": 67750000,
+      "duration": 4250000
+    },
+    {
+      "text": "为",
+      "offset": 72125000,
+      "duration": 1625000
+    },
+    {
+      "text": "准",
+      "offset": 73750000,
+      "duration": 2375000
+    },
+    {
+      "text": "我们",
+      "offset": 81750000,
+      "duration": 2250000
+    },
+    {
+      "text": "下次",
+      "offset": 84125000,
+      "duration": 2375000
+    },
+    {
+      "text": "再见",
+      "offset": 86625000,
+      "duration": 3750000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

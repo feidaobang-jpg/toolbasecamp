@@ -1,0 +1,62 @@
+{
+  "ammo": {
+    "noRefill": 0,
+    "loaded": 3,
+    "carrying": false,
+    "phase": 2
+  },
+  "spawn": [
+    {
+      "chapter": 0,
+      "phase": 0,
+      "blocked": []
+    },
+    {
+      "chapter": 0,
+      "phase": 1,
+      "blocked": []
+    },
+    {
+      "chapter": 0,
+      "phase": 2,
+      "blocked": []
+    },
+    {
+      "chapter": 1,
+      "phase": 0,
+      "blocked": []
+    },
+    {
+      "chapter": 1,
+      "phase": 1,
+      "blocked": []
+    },
+    {
+      "chapter": 1,
+      "phase": 2,
+      "blocked": []
+    },
+    {
+      "chapter": 2,
+      "phase": 0,
+      "blocked": []
+    },
+    {
+      "chapter": 2,
+      "phase": 1,
+      "blocked": []
+    },
+    {
+      "chapter": 2,
+      "phase": 2,
+      "blocked": []
+    },
+    {
+      "chapter": 2,
+      "phase": 3,
+      "blocked": []
+    }
+  ],
+  "nativeMessageExpires": true,
+  "reloadResume": true
+}

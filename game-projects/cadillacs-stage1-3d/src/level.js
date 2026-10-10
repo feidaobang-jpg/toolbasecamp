@@ -1,14 +1,16 @@
 // 关卡数据。第一关「海上都市」：楼顶 → 大楼内部 → 第 47 街（Boss 维斯·特修恩 + 岩跳龙）；
-// 第二关「沼泽森林」：偷猎者森林（三角龙哈克、熟睡的霸王龙希瓦特）→ 泥沼 MUD SWAMP（链锤兵拉什·T）→ 黄昏的恐龙尸骸地（Boss 屠夫）。
+// 第二关「沼泽森林」：偷猎者森林（三角龙哈克、熟睡的霸王龙希瓦特）→ 泥沼 MUD SWAMP（链锤兵拉什·T）→ 黄昏的恐龙尸骸地（Boss 屠夫）；
+// 第三关「地狱公路」：死亡沙漠 DESERT OF DEATH（沃尔瑟，机修工送来凯迪拉克）→ 开车一路撞过去（Boss 霍格骑摩托扔手雷）。
 // 敌人种类、名字与出场顺序按原作实机录像 HUD 整理；具体人数、站位、计时与掉落里查不到的部分为推测，记录在 media-kit 还原清单中。
 export const HALF_W = 6.8;          // 一屏的半宽（米）：玩家与镜头锁定窗口
 export const EDGE = 0.7;            // 角色中心离画面边缘的留量（身体 + 出手）；锁屏时敌人、Boss、被打飞的角色同样受限，侧视镜头保证最前一排纵深也完整入画
 export const ENTER_DX = 8.2;        // 敌人从屏幕外进场的距离
 
-// 两关：first 为该关第一个区域的下标
+// 三关：first 为该关第一个区域的下标
 export const STAGES = [
   { no: 1, name: '海上都市', en: 'CITY IN THE SEA', first: 0 },
-  { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 }
+  { no: 2, name: '沼泽森林', en: 'THE SWAMP FOREST', first: 3 },
+  { no: 3, name: '地狱公路', en: 'HELL ROAD', first: 6 }
 ];
 // 区域：x0..x1 为可走范围，z0..z1 为纵深；timer 为该区域的倒计时（秒）；exit.to 为下一个区域
 // 第二关地面一直铺到画面底部，可走纵深加到 z1 = 4.0（前排到画面约八成高处）；侧视取景仍按 camZ1 那一排算（不因纵深加大而拉远），
@@ -108,8 +110,63 @@ export const AREAS = [
       { id: 'g2', trigger: 22, lock: 28, spawns: [{ type: 'gutter', from: 'right', z: 0.4 }, { type: 'gneiss', from: 'left', z: -0.8, delay: 1.2 }, { type: 'elmer', from: 'right', z: 1.4, delay: 2.6, drop: 'steak' }, { type: 'razor', from: 'left', z: 0.8, delay: 4.4 }] }
     ],
     boss: { type: 'butcher', trigger: 41, lock: 50, x: 54.4, z: -0.8, carcass: { x: 58.6, z: -1.2 } }
+  },
+  // ---------- 第三关「地狱公路 HELL ROAD」（地图上这一带叫 WASTE LAND） ----------
+  // 按原作实机录像（一币通关 Y48MXUjtYwc 8:40–11:05、梅斯无伤 qeHp2Au4rfQ 6:15–8:10）整理，逐项对照见 media-kit/releases/v0.11.0-hellroad.1/restoration.md
+  {
+    // 3-1：荒漠里四个手下蹲着等人 → GO 之后出字幕「DESERT OF DEATH」、木桶里是弹药箱，胖子锤子·T 带着车手、尼斯冲过来
+    // → 仙人掌石堆旁的大块头沃尔瑟 → 打倒后机修工开着凯迪拉克赶到：「开这辆车走，会安全些。上吧！」
+    id: 'desert', stage: 3, name: '死亡沙漠', title: 'DESERT OF DEATH', x0: 0, x1: 60, z0: -2.3, z1: 4.0, camZ1: 2.5, camTy: 0.55, camPitch: -0.07, start: { x: 3.0, z: 0.2 }, timer: 150, noShake: true,
+    props: [
+      { kind: 'barrel', x: 22.6, z: 1.3, item: 'ammo' },
+      { kind: 'barrel', x: 23.5, z: 2.1, item: 'ammo' }
+    ],
+    waves: [
+      { id: 'd1', trigger: 0, lock: 7, clearBanner: true, spawns: [
+        { type: 'ferris', x: 9.4, z: 0.3, stand: true, squat: true }, { type: 'driver', x: 11.7, z: 0.1, stand: true, squat: true },
+        { type: 'gneiss', x: 9.6, z: 1.9, stand: true, squat: true }, { type: 'gneiss', x: 11.9, z: 2.0, stand: true, squat: true }] },
+      { id: 'd2', trigger: 20, lock: 26, spawns: [{ type: 'hammer', from: 'right', z: 0.5, drop: 'hamburger' }, { type: 'driver', from: 'right', z: 1.5, delay: 0.3 }, { type: 'gneiss', from: 'right', z: -0.7, delay: 0.7 }, { type: 'driver', from: 'right', z: 0.9, delay: 6.5 }] },
+      { id: 'd3', trigger: 40, lock: 47.5, spawns: [{ type: 'driver', from: 'left', z: 1.2 }, { type: 'walther', from: 'right', z: 0.3, delay: 1.0, drop: 'steak' }] }
+    ],
+    exit: { type: 'car', to: 7 }   // 这一波打完凯迪拉克就到，不用走到出口
+  },
+  {
+    // 3-2：开着凯迪拉克一路撞过去（画面自动向右卷，车在一屏之内自由移动）→ 霍格骑着喷火涂装的摩托追上来扔手雷，用车撞他；
+    // 车挨够手雷就爆炸，下车徒步打完。整段只有一屏宽，地面和布景按车速向后卷（game 里的 G.roadDist）。
+    // 公路比 3-1 宽得多（可走纵深 9.8 米，用户 2026-10-10 要求加宽到约 1.5～2 倍），侧视相应拉远一点、压平一点
+    id: 'road', stage: 3, name: '地狱公路', title: 'HELL ROAD', x0: 0, x1: 13.6, z0: -4.0, z1: 5.8, camZ1: 4.4, camTy: 0.2, camPitch: -0.03, start: { x: 5.2, z: 0.9 }, timer: 180, noShake: true, road: true,
+    props: [], waves: []
   }
 ];
+// 第三关公路：车速（米/秒）、车身半长半宽、车能开到的范围；路上的敌人与障碍按出发后的秒数出现（顺序照原作，人数与间隔为推测）
+export const ROAD = {
+  // 车的范围：纵深 z0..z1；左右 x0..x1，比 insetZ 更靠镜头的每 1 米左右各收 insetK 米（近处画面窄，车头车尾不出画）
+  speed: 13, carL: 2.62, carW: 0.98, x0: 2.4, x1: 11.2, z0: -2.95, z1: 4.8, insetZ: 1.0, insetK: 0.35, vx: 7.5, vz: 6.2,
+  far: 24,   // 路上的人和路障在离画面右缘这么远的地方就先放好（远排和正视 / 第一人称里不会凭空冒出来）
+  // k: 人 man（pose 蹲 squat / 站 stand / 跑过来 run / 扑上来 leap / 端枪 aim）、摩托 bike、轮胎堆 tires、铁桶 drum、木桶 barrel
+  events: [
+    { t: 0.9, k: 'barrel', z: 1, item: 'ammo' },
+    { t: 1.5, k: 'man', type: 'razor', z: -1, pose: 'leap' }, { t: 1.62, k: 'man', type: 'razor', z: 1, pose: 'leap' }, { t: 1.75, k: 'man', type: 'razor', z: 3, pose: 'leap' },
+    { t: 2.9, k: 'man', type: 'gutter', z: 3.7, pose: 'aim' },
+    { t: 3.7, k: 'man', type: 'skinner', z: -1.6, pose: 'stand' }, { t: 3.9, k: 'man', type: 'punk', z: 0.4, pose: 'squat' }, { t: 4.0, k: 'man', type: 'thug', z: 2.2, pose: 'stand' }, { t: 4.15, k: 'man', type: 'punk', z: 3.9, pose: 'squat' }, { t: 4.3, k: 'man', type: 'thug', z: -0.8, pose: 'squat' },
+    { t: 5.6, k: 'tires', z: -1.9 }, { t: 5.75, k: 'tires', z: 1 }, { t: 5.9, k: 'tires', z: 3.9 },
+    { t: 7.0, k: 'man', type: 'walther', z: -0.3, pose: 'leap' }, { t: 7.25, k: 'tires', z: 2.8 }, { t: 7.5, k: 'man', type: 'walther', z: 4, pose: 'run' }, { t: 7.6, k: 'tires', z: -2.3 },
+    { t: 8.8, k: 'man', type: 'wrench', z: 1.2, pose: 'run' },
+    { t: 9.8, k: 'man', type: 'skinner', z: -1.7, pose: 'aim' }, { t: 10.0, k: 'man', type: 'gutter', z: 2.8, pose: 'stand' }, { t: 10.3, k: 'man', type: 'poacher', z: 0.1, pose: 'aim' },
+    { t: 11.4, k: 'bike', z: 0.2 },
+    { t: 12.6, k: 'man', type: 'hammer', z: 3.3, pose: 'stand' }, { t: 12.85, k: 'man', type: 'hammer', z: -1.6, pose: 'run' },
+    { t: 13.8, k: 'bike', z: 3.5 },
+    { t: 14.7, k: 'man', type: 'wrench', z: -0.3, pose: 'stand' }, { t: 14.95, k: 'man', type: 'wrench', z: 4, pose: 'run' },
+    { t: 16.0, k: 'bike', z: -1.2 },
+    { t: 17.4, k: 'man', type: 'punk', z: -1.7, pose: 'run' }, { t: 17.5, k: 'man', type: 'thug', z: 0.2, pose: 'leap' }, { t: 17.65, k: 'man', type: 'punk', z: 2, pose: 'squat' }, { t: 17.8, k: 'man', type: 'thug', z: 3.7, pose: 'squat' }, { t: 17.95, k: 'man', type: 'punk', z: 1, pose: 'leap' },
+    { t: 19.6, k: 'drum', z: 4, item: 'ammo' }, { t: 19.8, k: 'drum', z: 0.1 }, { t: 20.05, k: 'drum', z: -2.3 }, { t: 20.3, k: 'drum', z: 2.2, item: 'ammo' }, { t: 20.55, k: 'drum', z: -0.5 },
+    { t: 22.2, k: 'man', type: 'ferris', z: 3.9, pose: 'squat' }, { t: 22.3, k: 'man', type: 'gneiss', z: 0.1, pose: 'leap' }, { t: 22.4, k: 'man', type: 'ferris', z: 1.9, pose: 'leap' }, { t: 22.55, k: 'man', type: 'driver', z: -1.7, pose: 'run' }, { t: 22.7, k: 'man', type: 'gneiss', z: 3, pose: 'squat' }, { t: 22.85, k: 'man', type: 'ferris', z: -0.6, pose: 'leap' },
+    { t: 24.4, k: 'barrel', z: -0.3 }, { t: 24.55, k: 'barrel', z: 2, item: 'ammo' }, { t: 24.7, k: 'barrel', z: 4.2 }, { t: 24.9, k: 'barrel', z: -2.1 }, { t: 25.1, k: 'barrel', z: 1 }, { t: 25.3, k: 'barrel', z: 3.1, item: 'ammo' }
+  ],
+  hoggAt: 27.5,          // 霍格出场
+  carHits: { easy: 5, std: 4, classic: 3 },   // 凯迪拉克挨几颗手雷爆炸（原作录像里约 3 颗；宽松 / 标准档多给）
+  ram: 30                // 用车撞霍格一下的伤害（14 下撞死；原作录像里熟练玩家约半分钟）
+};
 
 // 敌人参数（hp 为 1 条血 = 100）：原作数值查不到，按「第一关杂兵三四下连击倒地」的手感推测
 export const ENEMY = {
@@ -131,7 +188,12 @@ export const ENEMY = {
   thug: { name: 'THUG', cn: '打手', hp: 42, speed: 2.1, points: 1000, reach: 0.95, dmg: 6, aggr: 0.6, kick: 0.25 },
   razor: { name: 'RAZOR', cn: '雷泽', hp: 54, speed: 1.5, points: 2000, reach: 1.25, dmg: 10, aggr: 0.45, knife: true },
   lash: { name: 'LASH T.', cn: '拉什·T', hp: 230, speed: 1.8, points: 8000, reach: 1.1, dmg: 10, aggr: 0.65, mace: true },
-  butcher: { name: 'BUTCHER', cn: '屠夫', hp: 520, speed: 2.3, points: 10000, reach: 1.25, dmg: 10, aggr: 0.85, boss: true }
+  butcher: { name: 'BUTCHER', cn: '屠夫', hp: 520, speed: 2.3, points: 10000, reach: 1.25, dmg: 10, aggr: 0.85, boss: true },
+  // 第三关：名字取自原作 HUD（DRIVER、WALTHER、HOGG）；飞车党在录像里没有显示名字，BIKER 为自拟
+  driver: { name: 'DRIVER', cn: '车手', hp: 50, speed: 2.2, points: 1000, reach: 0.95, dmg: 6, aggr: 0.6, kick: 0.3 },
+  walther: { name: 'WALTHER', cn: '沃尔瑟', hp: 170, speed: 1.9, points: 3000, reach: 1.1, dmg: 11, aggr: 0.6, fat: true },
+  biker: { name: 'BIKER', cn: '飞车党', hp: 40, speed: 2.2, points: 2000, reach: 0.95, dmg: 6, aggr: 0.6 },
+  hogg: { name: 'HOGG', cn: '霍格', hp: 420, speed: 6, points: 10000, reach: 1.2, dmg: 12, aggr: 0.9, boss: true }
 };
 // 原作物品分值（来自原作物品表）：食物回血百分比 / 满血时加分；宝物加分
 export const ITEMS = {

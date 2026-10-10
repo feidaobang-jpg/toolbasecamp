@@ -1,0 +1,37 @@
+{
+  "task_id": "01a11a88-91c9-7123-bf83-bbbe6ed5b564-wish-video-02",
+  "approval_event_id": "wish-versus-final-review-4a922fbb-ccef-4625-97b0-a7be8bc16af2",
+  "stage": "complete",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "human_review": "approved",
+  "publication": "published",
+  "website_wishlist": "deployed_verified",
+  "website_commit": "e53324f5bfc97ce8d08852b856d3aee42622c186",
+  "wish_id": 11,
+  "updated_at": "2026-10-08T10:57:56.309560+00:00",
+  "next": null,
+  "technical_checks": "pass",
+  "subjective_listening": "not-run: audio input unavailable",
+  "final_hashes": {
+    "bilibili-zh": "12afcf569f5ce0272417227b383f370c0cacffe56a5e30b8dabf4daf854b4b9d",
+    "youtube-zh": "c7a0e7f153f6b3ed93478fece0b99133ca90331eba131d74f827c10330d1b323"
+  },
+  "artifact_directory": "D:\\project\\toolbasecamp-artifacts\\wish-versus-20261008-codex-multiplatform",
+  "review_entry": "D:\\project\\toolbasecamp-artifacts\\wish-versus-20261008-codex-multiplatform\\work\\review\\index.html",
+  "publication_result": "publication-result.json",
+  "remaining_platform_steps": [],
+  "public_urls": {
+    "douyin": "https://www.douyin.com/video/7694239926304427298",
+    "bilibili": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+    "youtube": "https://www.youtube.com/watch?v=QOTmOfT19_g"
+  },
+  "completed_at": "2026-10-08T10:57:56.309560+00:00",
+  "website_wishlist_video_url": "deployed_verified",
+  "website_video_commit": "a1f7118f",
+  "website_deployed_api_sha": "bd6d5af8974b370814a384aa4f2c78ca927ed88b",
+  "approval_event_status": "resolved"
+}

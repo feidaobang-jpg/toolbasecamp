@@ -7,32 +7,112 @@
     {
       "bvid": "BV1WbHq6eEBt",
       "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
-      "last_public_verified_version": "web-touch-layout-v0.19.1",
-      "last_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+      "last_public_verified_version": "web-resistance-v0.33.0",
       "status": "public_verified",
-      "submitted_at": "2026-10-06T10:21:57.239728+00:00",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-touch-layout-v0.19.1",
-      "description_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
-      "description_sha256": "76888ef5197009e9a9de5fa84cc8b4c31551f483969af5c82f67b0d12534b73d"
+      "description_revision": "web-resistance-v0.33.0",
+      "description_public_verified_at": "2026-10-10T02:43:11.857Z",
+      "description_sha256": "bd8fa6181e4cff091ac93b8064d18ba96db761eb891f97c9165bbf7a8aa32596",
+      "submitted_version": "web-resistance-v0.33.0",
+      "submitted_at": "2026-10-10T02:25:49.221Z",
+      "lastPublicVerifiedVersion": "web-resistance-v0.33.0",
+      "publicVerifiedAt": "2026-10-10T02:43:11.857Z",
+      "descriptionHash": "bd8fa6181e4cff091ac93b8064d18ba96db761eb891f97c9165bbf7a8aa32596",
+      "public_verified_at": "2026-10-10T02:43:11.857Z",
+      "last_public_verified_at": "2026-10-10T02:43:11.857Z",
+      "new_episode_guide_record": "../video/wish-versus-20261008/work/publication-result.json",
+      "record": "releases/backfill-20261010/release-status.json",
+      "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "release": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
     },
     {
       "bvid": "BV1Ujad6DEuf",
       "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
-      "last_public_verified_version": "web-touch-layout-v0.19.1",
-      "last_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
+      "last_public_verified_version": "web-resistance-v0.33.0",
+      "last_public_verified_at": "2026-10-10T02:43:33.833Z",
       "status": "public_verified",
-      "submitted_at": "2026-10-06T10:21:57.239728+00:00",
       "submit_toast": "稿件投递成功",
-      "description_revision": "web-touch-layout-v0.19.1",
-      "description_public_verified_at": "2026-10-06T10:21:57.239728+00:00",
-      "description_sha256": "d4480b40f6c846bae9ac5af0b08f2c550c42b5661c9773b78c2d76f3bbbb21ac"
+      "description_revision": "web-resistance-v0.33.0",
+      "description_public_verified_at": "2026-10-10T02:43:33.833Z",
+      "description_sha256": "3d62722703b1607b4f3585fe6be741d8766625fb5b33535ba967e3a4368b927a",
+      "submitted_version": "web-resistance-v0.33.0",
+      "submitted_at": "2026-10-10T02:25:58.946Z",
+      "lastPublicVerifiedVersion": "web-resistance-v0.33.0",
+      "publicVerifiedAt": "2026-10-10T02:43:33.833Z",
+      "descriptionHash": "3d62722703b1607b4f3585fe6be741d8766625fb5b33535ba967e3a4368b927a",
+      "public_verified_at": "2026-10-10T02:43:33.833Z",
+      "record": "releases/backfill-20261010/release-status.json",
+      "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "release": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+    },
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "recorded_game_version": "web-versus-teams-v0.27.0",
+      "last_public_verified_version": "web-resistance-v0.33.0",
+      "status": "public_verified",
+      "last_public_verified_at": "2026-10-10T02:43:35.073Z",
+      "publication_record": "../video/wish-versus-20261008/work/publication-result.json",
+      "development_model": "Claude Opus 5.5",
+      "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。",
+      "submitted_version": "web-resistance-v0.33.0",
+      "description_revision": "web-resistance-v0.33.0",
+      "description_sha256": "64cdd329d67711d1a7be3f02a84333fc54810fe2126ce21388ed2b39444b7f66",
+      "description_public_verified_at": "2026-10-10T02:43:35.073Z",
+      "submit_toast": "稿件投递成功",
+      "submitted_at": "2026-10-10T02:26:03.109Z",
+      "record": "releases/backfill-20261010/release-status.json",
+      "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text",
+      "lastPublicVerifiedVersion": "web-resistance-v0.33.0",
+      "descriptionHash": "64cdd329d67711d1a7be3f02a84333fc54810fe2126ce21388ed2b39444b7f66",
+      "public_verified_at": "2026-10-10T02:43:35.073Z",
+      "publicVerifiedAt": "2026-10-10T02:43:35.073Z",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "release": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+    },
+    {
+      "bvid": "BV1xdpx63ETu",
+      "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "recorded_game_version": "web-three-lanes-v0.31.0",
+      "last_public_verified_version": "web-resistance-v0.33.0",
+      "status": "public_verified",
+      "last_public_verified_at": "2026-10-10T02:43:10.236Z",
+      "publication_record": "../video/rv-town-20261009/work/publication-result.json",
+      "development_model": "Codex辅助开发；具体RV模型未完整核对",
+      "note": "正常规则房车城镇实战；搜2/6区、击退12只、带回314零件；新片发布不推进其他旧稿说明基线。",
+      "lastPublicVerifiedVersion": "web-resistance-v0.33.0",
+      "submitted_version": "web-resistance-v0.33.0",
+      "description_revision": "web-resistance-v0.33.0",
+      "description_sha256": "08abb8bff33916fe53f09f2be6fa9ffba824293c2463a4837a204f87d29176dd",
+      "descriptionHash": "08abb8bff33916fe53f09f2be6fa9ffba824293c2463a4837a204f87d29176dd",
+      "public_verified_at": "2026-10-10T02:43:10.236Z",
+      "publicVerifiedAt": "2026-10-10T02:43:10.236Z",
+      "description_public_verified_at": "2026-10-10T02:43:10.236Z",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "release": "releases/backfill-20261010/release-status.json",
+      "submitted_at": "2026-10-10T02:25:43.907Z",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
     }
   ],
-  "latest_record": "releases/web-touch-layout-v0.19.1/bilibili-sync.json",
+  "latest_record": "releases/backfill-20261010/release-status.json",
   "pending": [],
-  "pending_note": "手机按键自由摆放已公开核验网站与Toy，两条已确认视频简介同步并公开核验；仅回复指定原留言，不新增公告。",
-  "pending_release": null,
+  "pending_note": null,
+  "pending_release": {
+    "version": "web-resistance-aim-v0.33.1",
+    "status": "pending_22_batch",
+    "scope": "已有同游戏新旧视频说明；保留原BV和历史视频，合并主线后续激光平衡更新",
+    "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
+  },
   "pending_updates": [
     {
       "version": "web-unified3d-v0.18.1",
@@ -42,6 +122,121 @@
       "record": "releases/unified3d-20261006/handoff.json",
       "reason": "普通操作音频修复并入下一次有意义的说明更新；无确认视频映射时待关联",
       "included_version": "web-controls-v0.18.3"
+    },
+    {
+      "version": "web-coop-v0.23.0",
+      "classification": "正式版本",
+      "status": "included",
+      "baseline_version": "web-coop-v0.22.0",
+      "bvids": [
+        "BV1WbHq6eEBt"
+      ],
+      "summary": "联机统一2–4人合作：建房可选2/3/4人、中途加入/退出保留战场、闲置30秒电脑接管、房主踢人。",
+      "prepared_update_line": "更新（2026-10-07·web-coop-v0.23.0）：联机统一支持2–4人合作：建房可选2/3/4人，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。",
+      "reason": "2026-10-07 22:31 随云存档正式版本简介一并同步两期视频并公开核验，过期“Toy/TapTap审核中”状态同时纠正",
+      "recorded_at": "2026-10-07 (browser automation unavailable in agent environment; not submitted)",
+      "included_version": "web-cloudsave-v0.24.0"
+    },
+    {
+      "version": "web-lobby-hint-v0.23.2",
+      "classification": "普通补丁",
+      "status": "included",
+      "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+      "prepared_update_line": "更新（2026-10-07·联机大厅）：建房改为玩家自己点「创建房间」，进来不再静默建房；已在房间时创建/加入按钮会说明原因和\"先退出房间\"；把邀请链接发给朋友，点开公开房直接进、密码房会提示填密码。",
+      "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
+      "record": "releases/web-lobby-hint-v0.23.2/notes.md",
+      "recorded_at": "2026-10-07",
+      "included_version": "web-versus-teams-v0.27.0"
+    },
+    {
+      "version": "web-cloudsave-v0.24.0",
+      "classification": "正式版本",
+      "status": "public_verified",
+      "baseline_version": "web-coop-v0.23.0",
+      "bvids": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "summary": "账号云存档：普通模式检查点自动备份、三快照恢复、云端本地冲突先选不覆盖；网站与Toy同版上线。",
+      "record": "releases/web-cloudsave-v0.24.0/bilibili-sync.json",
+      "recorded_at": "2026-10-07T22:42:00+08:00"
+    },
+    {
+      "version": "web-conquest-v0.32.0",
+      "status": "included_in_public_verified_release",
+      "changes": [
+        "战地三据点战，固定兵种装备与兵力票取代成长经济",
+        "八种枪械、四类军用载具、阵亡部署和联机同步"
+      ],
+      "record": "releases/web-conquest-v0.32.0/handoff.json",
+      "source_commit": "d5eafc25b387a06e76e2f13e0718fb0d133f529a",
+      "website_verified": true,
+      "new_video": "not_requested",
+      "previous_status": "pending_22_batch_subject_to_existing_hold",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "web-no-shake-v0.32.1",
+      "status": "included_in_public_verified_release",
+      "changes": [
+        "取消手雷、爆炸、受伤、开炮等引起的镜头震动"
+      ],
+      "record": "releases/web-no-shake-v0.32.1/handoff.json",
+      "website_verified": true,
+      "new_video": "not_requested",
+      "source_commit": "6b55b57b77339287274211095c9c6ed67a1910d4",
+      "previous_status": "pending_22_batch_subject_to_existing_hold",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "web-resistance-v0.33.0",
+      "status": "included_in_public_verified_release",
+      "changes": [
+        "新增抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮攻城",
+        "二战服装、四款枪械、军马军刀、中式城镇与独立检查点；无成长和震屏"
+      ],
+      "record": "releases/web-resistance-v0.33.0/handoff.json",
+      "website_verified": true,
+      "new_video": "not_requested",
+      "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
+      "previous_status": "pending_22_batch_subject_to_existing_hold",
+      "included_version": "web-resistance-v0.33.0",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "web-resistance-aim-v0.33.1",
+      "status": "pending_22_batch",
+      "changes": [
+        "抗战默认第一人称；Z/右键/按钮举枪，中央准星与实际枪口射击方向收敛",
+        "橙金曳光、烟与简化重力弹道；炮可拉动，支持高低瞄准与预计落点，镜头稳定"
+      ],
+      "record": "releases/web-resistance-aim-v0.33.1/handoff.json",
+      "website_verified": true,
+      "source_commit": "ff3a7162691d122b964912f0310696f6d5a3e406",
+      "new_video": "not_requested",
+      "website_mainline_commit": "e7beb060e8a228b30900f84f1e1840283f123e98"
+    },
+    {
+      "version": "hud-menu-align-20261010",
+      "classification": "界面观感（普通）",
+      "status": "pending_consolidated",
+      "bvids": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu"
+      ],
+      "summary": "主菜单入口按开始游戏/其他玩法·实验内容/设置与存档分组、模式按钮统一中性色；战斗右面板战术入口撑满面板宽、副本/存档排行/画质/声音改等宽两列网格对齐。",
+      "prepared_update_line": "主菜单按「开始游戏 / 其他玩法 / 设置与存档」分组、模式入口配色统一，战斗右面板按钮改等宽对齐更清爽。",
+      "reason": "并行任务 qoder/chongchao-feedback-fix-20261010 实时推送虫潮改动、写向同一批4条简介；本轮为界面观感类改动，避免并发平台写入与二次churn，交下一次单一合并同步携带（应与 aim v0.33.1 / weapon-balance v0.33.2 / 虫族修复 / 手机按键配色一并合并）。",
+      "record": "releases/hud-menu-align-20261010/bilibili-sync.json",
+      "recorded_at": "2026-10-10T23:50:38+08:00",
+      "source_commit": "4a729cf0"
     }
   ],
   "comment_corrections": [
@@ -56,6 +251,165 @@
       "reply_id": null,
       "id_note": "原置顶回复第二页已公开核验；UI未提供回复ID，使用目标BV、原文和回复哈希去重",
       "reply_sha256": "055f0928ea8026cc74048e2d3deef71fd7508135301e485ce2154031d4bd1c4b"
+    },
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "text": "更新说明：本片保留旧版银行、买兵对战实录。当前主菜单请选「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再使用旧银行和经验升级；另有房车生存与抗战战役三章。网站和Toy均已更新，以游戏内提示为准。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html（复制到浏览器打开）",
+      "status": "public_verified_pinned_after_reload",
+      "at": "2026-10-10T02:48:48.254Z",
+      "verified_at": "2026-10-10T02:49:52.697Z",
+      "run_id": "release-backfill-20261010",
+      "reply_sha256": "d3f0868d570b8771abd6ce26da9a3fb127087a5efc3b8726eba311223a22afd7",
+      "original_comment_preserved": true
     }
-  ]
+  ],
+  "history": [
+    {
+      "bv": "BV1WbHq6eEBt",
+      "version": "web-coop-v0.23.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T18:05:00+08:00",
+      "public_verified_at": "2026-10-07T18:05:00+08:00",
+      "line": "更新（2026-10-07·v0.23.0）：联机统一支持2–4人合作，建房可选2/3/4人；支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。保留各选兵种、共享金币与防线、建造与队友指令同步；副本暂为单机。网站试玩已可玩，Toy/TapTap包审核中。",
+      "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "bv": "BV1WbHq6eEBt,BV1Ujad6DEuf",
+      "version": "web-cloudsave-v0.24.0",
+      "type": "description_update_line",
+      "submitted_at": "2026-10-07T22:31:00+08:00",
+      "public_verified_at": "2026-10-07T22:34:00+08:00",
+      "line": "更新（2026-10-07·v0.24.0）：新增云存档——普通模式进度自动同步到账号…网站与B站Toy均已上线同一版本。",
+      "method": "browser编辑投稿replace更新行（创作中心type=edit页，全选替换纯文本，立即投稿）"
+    },
+    {
+      "version": "web-rv-v0.28.0",
+      "bvids": [
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "type": "compact_description",
+      "public_verified_at": "2026-10-08T09:53:22.515247+00:00",
+      "record": "releases/web-rv-v0.28.0/bilibili-sync.json"
+    },
+    {
+      "bv": "BV1WbHq6eEBt",
+      "type": "new_episode_guide",
+      "new_bvid": "BV1C5HQ6gEvD",
+      "public_verified_at": "2026-10-08T10:48:23.100599+00:00",
+      "record": "../video/wish-versus-20261008/work/publication-result.json",
+      "preserved_latest_game_update": "web-rv-v0.28.0"
+    },
+    {
+      "version": "web-rv-v0.29.1",
+      "bvids": [
+        "BV1C5HQ6gEvD",
+        "BV1WbHq6eEBt",
+        "BV1Ujad6DEuf"
+      ],
+      "type": "description_update_line",
+      "public_verified_at": "2026-10-08T11:58:31.525231+00:00",
+      "record": "releases/web-rv-v0.29.1/bilibili-sync.json"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1WbHq6eEBt",
+      "previous_baseline": {
+        "bvid": "BV1WbHq6eEBt",
+        "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+        "last_public_verified_version": "web-shop-scroll-v0.29.2",
+        "status": "public_verified",
+        "submit_toast": "稿件投递成功",
+        "description_revision": "web-shop-scroll-v0.29.2",
+        "description_public_verified_at": "2026-10-08T13:11:55.540Z",
+        "description_sha256": "ca0645dcd2d4991e92528d9bf8803322cd00caec772f71c3bd7d3d6c768b8126",
+        "submitted_version": "web-shop-scroll-v0.29.2",
+        "submitted_at": null,
+        "lastPublicVerifiedVersion": "web-shop-scroll-v0.29.2",
+        "publicVerifiedAt": "2026-10-08T13:11:55.540Z",
+        "descriptionHash": "ca0645dcd2d4991e92528d9bf8803322cd00caec772f71c3bd7d3d6c768b8126",
+        "public_verified_at": "2026-10-08T13:11:55.540Z",
+        "last_public_verified_at": "2026-10-08T13:11:55.540Z",
+        "new_episode_guide_record": "../video/wish-versus-20261008/work/publication-result.json",
+        "record": "releases/web-shop-scroll-v0.29.2/bilibili-sync.json",
+        "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text"
+      }
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1Ujad6DEuf",
+      "previous_baseline": {
+        "bvid": "BV1Ujad6DEuf",
+        "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
+        "last_public_verified_version": "web-shop-scroll-v0.29.2",
+        "last_public_verified_at": "2026-10-08T13:12:20.816Z",
+        "status": "public_verified",
+        "submit_toast": "稿件投递成功",
+        "description_revision": "web-shop-scroll-v0.29.2",
+        "description_public_verified_at": "2026-10-08T13:12:20.816Z",
+        "description_sha256": "a58be8541336003df057bb9c1a626832d1963b3358b0e0aec22bfa477f287221",
+        "submitted_version": "web-shop-scroll-v0.29.2",
+        "submitted_at": null,
+        "lastPublicVerifiedVersion": "web-shop-scroll-v0.29.2",
+        "publicVerifiedAt": "2026-10-08T13:12:20.816Z",
+        "descriptionHash": "a58be8541336003df057bb9c1a626832d1963b3358b0e0aec22bfa477f287221",
+        "public_verified_at": "2026-10-08T13:12:20.816Z",
+        "record": "releases/web-shop-scroll-v0.29.2/bilibili-sync.json",
+        "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text"
+      }
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1C5HQ6gEvD",
+      "previous_baseline": {
+        "bvid": "BV1C5HQ6gEvD",
+        "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+        "recorded_game_version": "web-versus-teams-v0.27.0",
+        "last_public_verified_version": "web-shop-scroll-v0.29.2",
+        "status": "public_verified",
+        "last_public_verified_at": "2026-10-08T13:07:14.496Z",
+        "publication_record": "../video/wish-versus-20261008/work/publication-result.json",
+        "development_model": "Claude Opus 5.5",
+        "note": "本期演示虫潮对战，1v1和4v4为两场独立电脑对局，非8真人实测。",
+        "submitted_version": "web-shop-scroll-v0.29.2",
+        "description_revision": "web-shop-scroll-v0.29.2",
+        "description_sha256": "3c90295b1d40804f9d39b95333c0c89412e10c8bdb3768cd8f67e6c727a88375",
+        "description_public_verified_at": "2026-10-08T13:07:14.496Z",
+        "submit_toast": "稿件投递成功",
+        "submitted_at": null,
+        "record": "releases/web-shop-scroll-v0.29.2/bilibili-sync.json",
+        "description_hash_note": "UTF-8 normalized paragraph text without trailing newline; exact match to public text"
+      }
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1xdpx63ETu",
+      "previous_baseline": {
+        "bvid": "BV1xdpx63ETu",
+        "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+        "recorded_game_version": "web-three-lanes-v0.31.0",
+        "last_public_verified_version": "web-three-lanes-v0.31.0",
+        "status": "public_verified",
+        "last_public_verified_at": "2026-10-09T17:53:41.810316+08:00",
+        "publication_record": "../video/rv-town-20261009/work/publication-result.json",
+        "development_model": "Codex辅助开发；具体RV模型未完整核对",
+        "note": "正常规则房车城镇实战；搜2/6区、击退12只、带回314零件；新片发布不推进其他旧稿说明基线。"
+      }
+    }
+  ],
+  "last_release_record": "releases/backfill-20261010/release-status.json",
+  "status": "public_verified",
+  "version": "web-resistance-v0.33.0",
+  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "last_public_verified": {
+    "version": "web-resistance-v0.33.0",
+    "at": "2026-10-10T03:02:52.978211+00:00",
+    "bvids": [
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf",
+      "BV1C5HQ6gEvD",
+      "BV1xdpx63ETu"
+    ],
+    "record": "releases/backfill-20261010/release-status.json"
+  }
 }

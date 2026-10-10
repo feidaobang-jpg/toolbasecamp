@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-town-versus-v0.30.0",
+  "base_version": "web-shop-scroll-v0.29.2-menu-text1",
+  "created_at": "2026-10-09T04:14:18.043687+00:00",
+  "classification": "review_required",
+  "status": "local_pending_user_review",
+  "build": {
+    "id": "town-versus030-db58cd345248",
+    "commit": "2514e44f1d4b569b566a3ffc98ee65e568cb47aa",
+    "dirty": false,
+    "fingerprint": "db58cd3452480634101a50a3fc6f8a1078a523b5907b4709e09b35f9ab527a75",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "rv-town",
+      "description": "互通城镇、可选六区搜集与自愿撤离",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-town-street"
+      ]
+    },
+    {
+      "id": "rv-facilities",
+      "description": "加油站/修理厂/超市按场地提供服务，车内可办理",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-town-repaired",
+        "shot-town-market"
+      ]
+    },
+    {
+      "id": "rv-zombie-leash",
+      "description": "六区人形僵尸视距索敌和脱战回位",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-town-zombies"
+      ]
+    },
+    {
+      "id": "rv-save-v2",
+      "description": "独立城镇进度与一次性奖励保存",
+      "status": "implemented",
+      "evidence_ids": []
+    },
+    {
+      "id": "versus-lanes",
+      "description": "20秒首波，25秒自动双路基础兵",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-versus-waves"
+      ]
+    },
+    {
+      "id": "versus-hero-level",
+      "description": "独立Lv1–15局内成长，联机同步",
+      "status": "implemented",
+      "evidence_ids": [
+        "shot-versus-menu"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "town-replaces-checkpoint-road",
+      "feature_ids": [
+        "rv-town",
+        "rv-facilities",
+        "rv-zombie-leash",
+        "rv-save-v2"
+      ],
+      "before": "单向公路、三站强制停车守点、车旁随处维修",
+      "after": "自由城镇、分区僵尸、场地服务与可选探索",
+      "user_visible_result": "没有加油站关卡，车内可以在对应设施维修改装",
+      "evidence_ids": [
+        "shot-town-menu",
+        "shot-town-repaired",
+        "shot-town-zombies"
+      ],
+      "verification": "passed"
+    },
+    {
+      "id": "versus-continuous-progression",
+      "feature_ids": [
+        "versus-lanes",
+        "versus-hero-level"
+      ],
+      "before": "主要靠银行和手动出兵，无英雄局内等级",
+      "after": "自动双路基础兵、附近参战分享收益、Lv1–15成长",
+      "user_visible_result": "开局就有持续兵线可争夺，角色成长每局重置",
+      "evidence_ids": [
+        "shot-versus-menu",
+        "shot-versus-waves"
+      ],
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "rv-message-lifetime",
+      "discovered_version": "web-town-versus-v0.30.0",
+      "reproduction_steps": [
+        "开始房车模式，等待提示时长结束"
+      ],
+      "observed": "旧房车更新未处理Game.msgTimer，提示持续留在画面",
+      "impact": "遮挡驾驶画面",
+      "cause": "房车独立循环跳过战役计时器",
+      "status": "fixed",
+      "fix": "在房车update中递减并隐藏到期提示",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "shot-town-street"
+      ],
+      "retest": "真实录制中旧提示消失"
+    },
+    {
+      "id": "facility-roof-camera",
+      "discovered_version": "web-town-versus-v0.30.0",
+      "reproduction_steps": [
+        "第三人称驶入修理厂中心"
+      ],
+      "observed": "完整屋顶和正门大招牌遮住车辆",
+      "impact": "维修时看不清房车与周围",
+      "cause": "不透明完整顶面处于相机和房车之间",
+      "status": "fixed",
+      "fix": "中央屋顶破损开放，招牌移到车位侧面",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "shot-town-repaired"
+      ],
+      "retest": "截图和连续动态帧已复查，车辆可见"
+    }
+  ],
+  "media": [
+    {
+      "id": "shot-town-menu",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-menu.png",
+      "sha256": "cbe8e8ac69a0292eb0199f3f1c4f764aa2b0643e24da5825a9a62376134fa14d",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "当前规则菜单",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-street",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-street.png",
+      "sha256": "65ec5df0e6f3821d28ca57060521eef5bc2a3e689933b6cc7625d203ca6d37fa",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "真实键盘驾驶，起点街道",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-camera-0",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-camera-0.png",
+      "sha256": "470865716a83150582172d8c001534ec6ef75c4dd840bc7f2197671ccb88fd6c",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际C切换预设并E转向",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-camera-1",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-camera-1.png",
+      "sha256": "6399b449405d0105408c1d7ff7b70cf3ea9261475c391f8eb8b7f502162dc96a",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际C切换预设并E转向",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-camera-2",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-camera-2.png",
+      "sha256": "04353f0d13c690c4f3982155600b36910617b17450b780573c71835cf9f84319",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际C切换预设并E转向",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-camera-3",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-camera-3.png",
+      "sha256": "0fa73bbe8b3d41498b312e244528f207f152ffb48eeeeca2751a3521950f2202",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际C切换预设并E转向",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-camera-4",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-camera-4.png",
+      "sha256": "8a9cd2fb4ad18074c155b77346be5f8f7fd7aac28773d4e916d620da5711a370",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际C切换预设并E转向",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-camera-5",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-camera-5.png",
+      "sha256": "714d9882de28c6776be726b8406ab3f8a86587c3e7dc97e2cc6667b610f27ad4",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际C切换预设并E转向",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-zombies",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-zombies.png",
+      "sha256": "998b6ac4dbef3010440b67df9ca193bb52857c5d32e606cdeeaf2e7aba7c2368",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "QA移到住宅感染区，随后实时僵尸追击",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-combat",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-combat.png",
+      "sha256": "83d5ea1ecc76160f19d903fd8bed615e58c4dad21af12fb5dae8936f9ffdd967",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "实际J射击与敌人受伤",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-garage",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-garage.png",
+      "sha256": "2384630d4a854560421bcdc6e847360bc7962e31ed7576b62ab4a4348662568d",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "QA停车在修理厂，真实服务界面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-repaired",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-repaired.png",
+      "sha256": "c0c482a68ea4183485faef3340abbfdf492b2445a2a30df2cf7efed0b4bb7c52",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "真实6秒维修结束",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-town-market",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-market.png",
+      "sha256": "5e16c423391de1381ae4cfafbb94b1e16388b84721dc220570c0958325e43916",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "QA停车到超市，实际售货机购买界面",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-versus-menu",
+      "file": "releases/web-town-versus-v0.30.0/captures/versus-menu.png",
+      "sha256": "f3b7d7464b52201c9a23d4b5cc72311286087f502e810dd43c904efafefaeab0",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "当前对战规则",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-versus-waves",
+      "file": "releases/web-town-versus-v0.30.0/captures/versus-waves.png",
+      "sha256": "0a54b4a178e37ef6e4401d3773a72ba140622e08c22a8a6db6019f6169d9ee7d",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "QA推进到开战前，实时自动出双路兵线",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "shot-versus-follow",
+      "file": "releases/web-town-versus-v0.30.0/captures/versus-follow.png",
+      "sha256": "c69a8303640fcb46806dde6336538f3944d06f688aacdcf49958e049b8233206",
+      "kind": "screenshot",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "真实移动/转向，护送基础兵",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "town-versus-realtime",
+      "file": "releases/web-town-versus-v0.30.0/captures/town-versus-realtime.webm",
+      "sha256": "1ab0ecdd5f05670b61f54ec864f8b3edfc81206d7aa5263450cf39aced5f557f",
+      "kind": "video",
+      "version": "web-town-versus-v0.30.0",
+      "build_id": "town-versus030-db58cd345248",
+      "capture_mode": "realtime-automation",
+      "description": "Real browser RAF, keyboard/click input; QA repositioning at residential zone, garage, market and versus clock advance only; no offline frames",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 37.24,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": [
+        {
+          "in_seconds": 23,
+          "out_seconds": 25,
+          "description": "房车停在修理厂车位内，作业计时继续；破损屋顶下可看清车辆",
+          "supports": [
+            "rv-facilities",
+            "facility-roof-camera"
+          ]
+        }
+      ]
+    }
+  ],
+  "historical_media": [],
+  "qa": [
+    {
+      "status": "passed",
+      "counts": {
+        "functional": 18,
+        "teams": 24,
+        "online": 15
+      },
+      "browser": "Microsoft Edge headless, Playwright, D3D11 hardware WebGL",
+      "device": "Windows desktop; NVIDIA RTX 4060 Ti",
+      "viewports": [
+        "1280x720",
+        "390x844 rotated landscape game",
+        "844x390"
+      ],
+      "method": "真实RAF/键鼠/模拟触屏；规则边界有QA定位与固定步长；四浏览器真实本地WebSocket联机；八局加速电脑对局",
+      "evidence": [
+        "qa/results.json",
+        "qa/teams/verify-versus-teams.json",
+        "qa/online/verify-versus-teams-online.json",
+        "qa/balance-1v1.json",
+        "qa/balance-4v4.json"
+      ],
+      "final_change_scope": "最后仅修改房车设施屋顶和标牌几何；城镇/成长18项重新通过，团队/联机代码与已通过版本相同",
+      "physical_phone_test": false,
+      "human_balance_test": false,
+      "production_test": false
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "本人尚未试玩审核，禁止公开发布",
+      "手机仅浏览器模拟",
+      "本版录像无游戏音轨，不是已审成片",
+      "未录制完整房车探索到撤离和整局对战原片",
+      "部分素材未逐张人工复核，状态已如实标记"
+    ]
+  }
+}

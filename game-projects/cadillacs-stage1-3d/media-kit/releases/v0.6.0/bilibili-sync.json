@@ -1,0 +1,18 @@
+{
+ "bvid": "BV18XHW66E55",
+ "version": "v0.6.0",
+ "classification": "正式版本",
+ "reason": "打击感重做是玩家能明显感到的体验变化；同时并入 v0.5.4～v0.5.6-bgmfull1 累计的普通补丁（开枪看得见子弹、完整原曲 BGM）",
+ "old_desc_sha256": "bf3a971cd566dd9af9e28d4f12289ad2081d61c058301c047a962a1fdb2e36d9",
+ "new_desc_sha256": "d33503da5ecf44c89adafd1283d4f282626a358d8f2bc91d31c19e0f232ee001",
+ "old_update_line": "更新（2026-10-06·v0.5.2）：新增第二关沼泽森林——开凯迪拉克进林子躲三角龙冲撞，别让胖子吵醒睡着的霸王龙，蹚齐腰泥沼斗链锤兵，最后打双刀屠夫；菜单可直接选第二关，打完第一关也会接着打；演示无敌模式不再限时。视频为录制时版本，以当前试玩为准。",
+ "new_update_line": "更新（2026-10-07·v0.6.0）：重做打击感——出拳出腿先蓄力再一下打到位，命中停顿分轻重，敌人挨打会被打歪、弯腰，连招最后一下更重；拳脚、挥空和倒地音效加厚。另有第二关沼泽森林（菜单可直接选）、开枪看得见子弹、背景音乐改为完整原曲。视频为录制时版本，以当前试玩为准。",
+ "old_desc": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n更新（2026-10-06·v0.5.2）：新增第二关沼泽森林——开凯迪拉克进林子躲三角龙冲撞，别让胖子吵醒睡着的霸王龙，蹚齐腰泥沼斗链锤兵，最后打双刀屠夫；菜单可直接选第二关，打完第一关也会接着打；演示无敌模式不再限时。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5辅助开发，音乐采用原版录音，缺少可用原版素材的音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+ "new_desc": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢。\n更新（2026-10-07·v0.6.0）：重做打击感——出拳出腿先蓄力再一下打到位，命中停顿分轻重，敌人挨打会被打歪、弯腰，连招最后一下更重；拳脚、挥空和倒地音效加厚。另有第二关沼泽森林（菜单可直接选）、开枪看得见子弹、背景音乐改为完整原曲。视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5辅助开发，音乐采用原版录音，缺少可用原版素材的音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。",
+ "method": "Edge 独立配置 + Playwright：创作中心编辑页读回旧文案一致后逐行输入，读回一致、无空段后点「立即投稿」；持 account-write.lock",
+ "submitted_at": "2026-10-07T07:20:42+08:00",
+ "submit_result": "稿件投递成功",
+ "status": "public_verified",
+ "public_verified_at": "2026-10-07T07:21:07+08:00",
+ "public_check": "api.bilibili.com/x/web-interface/view desc 与新文案逐字一致（单换行、无空行）"
+}

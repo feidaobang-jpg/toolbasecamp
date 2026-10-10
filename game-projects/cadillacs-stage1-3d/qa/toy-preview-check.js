@@ -36,10 +36,11 @@ const { launch, out, sleep } = require('./lib');
       await frame.evaluate(() => { window.focus(); const b0 = document.querySelector('[data-act=select]'); if (b0) b0.focus(); });
       await page.keyboard.press('Enter'); await sleep(500);
       await page.keyboard.press('Enter'); await sleep(800);
-      for (let i = 0; i < 14; i++) { s = await S(); if (s.mode === 'play') break; await page.keyboard.press('KeyJ'); await sleep(300); }
+      // v0.9.2 起有原作开场（远景、走上楼顶、手下冲上来被开场必杀震飞），其中约 5 秒不能跳过
+      for (let i = 0; i < 40; i++) { s = await S(); if (s.mode === 'play') break; await page.keyboard.press('KeyJ'); await sleep(300); }
       ok('desktop：键盘开局进入战斗', s.mode === 'play', s.mode);
       ok('desktop：电脑键鼠布局（不显示触屏键）', s.ui.touchHidden === true);
-      await frame.evaluate(() => window.__CD_TEST__.cheat.killAll()); await sleep(1500);
+      await frame.evaluate(() => { window.__CD_TEST__.cheat.G.pending = []; window.__CD_TEST__.cheat.killAll(); }); await sleep(1500);   // 连同开场后排队上场的手下一起清掉
       await page.keyboard.down('KeyI'); await page.keyboard.down('KeyD'); await sleep(300);
       s = await S(); ok('desktop：按住 I + D 冲刺', s.player.state === 'run', s.player.state);
       await page.keyboard.up('KeyD'); await page.keyboard.up('KeyI'); await sleep(600);
@@ -56,8 +57,9 @@ const { launch, out, sleep } = require('./lib');
       }
     } else {
       await tap('[data-act=select]'); await tap('#sel-go'); await sleep(600);
-      for (let i = 0; i < 14; i++) { s = await S(); if (s.mode === 'play') break; await tap('#btn-atk'); }
+      for (let i = 0; i < 40; i++) { s = await S(); if (s.mode === 'play') break; await tap('#btn-atk'); await sleep(200); }
       ok('mobile：触屏开局进入战斗', s.mode === 'play', s.mode);
+      await frame.evaluate(() => { window.__CD_TEST__.cheat.G.pending = []; window.__CD_TEST__.cheat.killAll(); }); await sleep(900);   // 清掉开场后上来的手下，并等最后一下 J 收招
       ok('mobile：显示触屏键', s.ui.touchHidden === false);
       const pad = await frame.evaluate(() => { const c = (id) => { const r = document.getElementById(id).getBoundingClientRect(); return [Math.round(r.left + r.width / 2), Math.round(r.top + r.height / 2), Math.round(r.width)]; }; return { J: c('btn-atk'), K: c('btn-jump'), U: c('btn-mega'), I: c('btn-run'), esc: getComputedStyle(document.querySelector('#btn-pause .kb-only')).display, qe: !!document.querySelector('#btn-rotl, #btn-rotr, [aria-label*="左转"]') }; });
       ok('mobile：2×2 方阵（下排 J K、上排 U I）、无 Esc 标签、无左右转键', pad.J[1] === pad.K[1] && pad.U[1] === pad.I[1] && pad.J[0] === pad.U[0] && pad.K[0] === pad.I[0] && pad.J[0] < pad.K[0] && pad.U[1] < pad.J[1] && pad.esc === 'none' && !pad.qe, pad);

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "item_id": "chongchao-three-lanes-v031-02",
+  "game_slug": "starship-defense",
+  "project_path": "game-projects/starship-defense",
+  "task_id": "01a11ec3-a9ee-77c1-9f5e-2f9a403e5c77-02",
+  "source": "Codex",
+  "branch": "codex/chongchao-town-versus-20261009",
+  "worktree": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-town-versus-20261009\\toolbasecamp",
+  "version": "web-three-lanes-v0.31.0",
+  "classification": "routine",
+  "release_kind": "major",
+  "source_commit": "505ded3cc7df6b37987c3725e8497e92b908ad2f",
+  "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+  "summary": "房车自由城镇、分区僵尸与场地补给；对战三路自动兵线、六座外塔、异形杂兵、八处野区及局内Lv1–15成长。",
+  "release_record": "game-projects/starship-defense/media-kit/releases/web-three-lanes-v0.31.0/release-status.json",
+  "tests": {
+    "status": "passed",
+    "counts": {
+      "three_lanes": 11,
+      "town_growth": 18,
+      "teams": 24,
+      "online": 16
+    },
+    "physical_phone": false
+  },
+  "approval": {
+    "required": false,
+    "status": "not_required",
+    "policy": "2026-10-09-website-immediate",
+    "evidence": "所有修改代码对网站立刻生效。就是做完后直接更新网站，除非我单独说要审核的。其他按定时任务走。"
+  },
+  "website": {
+    "status": "public_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "verified_at": "2026-10-09T05:14:27.175293+00:00",
+    "deployed_commit": "46d24fa45be240b78556a61d5852e55c473c2564",
+    "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+    "deployment": "GitHub Actions; VPS last-deployed-sha verified. Fallback prepared but not uploaded because Actions completed.",
+    "evidence": [
+      "website-assets.json",
+      "qa/public/results.json",
+      "qa/public-rv/results.json"
+    ],
+    "public_checks": 29,
+    "physical_phone": false
+  },
+  "channels": {
+    "toy": "pending_22_batch",
+    "taptap": "pending_22_batch",
+    "video_descriptions": "pending_22_batch",
+    "announcements": "pending_22_batch"
+  },
+  "source_feedback_keys": [],
+  "feedback_replies": "not_applicable_no_external_source",
+  "automatic_batch_eligible": true,
+  "created_at": "2026-10-09T05:10:04.707552+00:00",
+  "updated_at": "2026-10-09T05:14:27.175293+00:00",
+  "next_action": "既有b-2在北京时间22点合并最新主线已验证版本，按现有映射同步Toy/TapTap与既有视频简介/公告；本次无外部原楼反馈。",
+  "status": "website_public_verified_channels_pending_22",
+  "artifact_root": "D:/project/task-artifacts/chongchao-town-versus-20261009-v031",
+  "worktree_lifecycle": "archive_after_remote_and_artifact_verification"
+}

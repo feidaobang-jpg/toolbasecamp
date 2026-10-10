@@ -1,0 +1,20 @@
+{
+  "version": "web-versus-teams-v0.27.0",
+  "id": 38678478981120,
+  "source_commit": "eba175f1264c4c79f123f5a21d58f54f7e900121",
+  "package_sha256": "525d93e03a8adf02e96902a7491d9924eb2224361967fc5877d44787ff79006c",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_u4V157YC/index.html",
+  "preview_qa": "qa/toy-preview-4v4/verify-versus-toy.json",
+  "status": "published",
+  "submitted_at": "2026-10-08T08:11:34.190541+00:00",
+  "response": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_VnsIR1zh/index.html"
+  },
+  "doctor_warnings": [
+    "资源文件名没有内容指纹，更新后访客重新下载资源；预检无错误"
+  ],
+  "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "public_verified_at": "2026-10-08T08:18:52.414299+00:00",
+  "public_qa": "qa/toy-public-4v4/verify-versus-toy.json"
+}

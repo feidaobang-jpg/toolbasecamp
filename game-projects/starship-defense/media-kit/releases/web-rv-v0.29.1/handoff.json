@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-rv-v0.29.1",
+  "base_version": "web-squad-v0.29.0",
+  "classification": "影响试玩的严重修复",
+  "summary": "房车虫群直接追击，停车路障35秒自动放行；道路箭头、胜利目标与双面正向标牌；卡点旧档自动恢复",
+  "source_request": "用户反馈房车敌人没有围攻、方向和胜利条件不明、加油站卡死及反字",
+  "created_at": "2026-10-08T11:34:38.037479+00:00",
+  "development_tool": "Codex",
+  "build": {
+    "id": "rv291-ba7aca6e8944",
+    "commit": "496edc1211c84c52b68b6390fca641399d14b99c",
+    "dirty": true,
+    "fingerprint": "ba7aca6e8944d14466b85f62a23c412f9aabd35f9b129d78eb06c3f0c2d5ce09",
+    "entrypoint": "public/html/game/starship-defense/index.html",
+    "note": "captured staged merged RV fix and latest squad v0.29.0; integration commit recorded after commit",
+    "integration_commit": "ff2609daaa3d19554320aad3fdf14586b279e471"
+  },
+  "feature_inventory": [
+    {
+      "id": "rv-pursuit",
+      "description": "虫群追击房车和下车人员",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv291-rv-supply-real-time"
+      ]
+    },
+    {
+      "id": "rv-guidance",
+      "description": "蓝色道路箭头、持续胜利目标和停车倒计时",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv291-checkpoint-countdown"
+      ]
+    },
+    {
+      "id": "rv-sign",
+      "description": "标牌两面正向可读",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv291-sign-front",
+        "rv291-sign-back"
+      ]
+    },
+    {
+      "id": "rv-save",
+      "description": "独立旧档卡点恢复并保留库存",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv291-checkpoint-countdown"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "rv-feedback",
+      "feature_ids": [
+        "rv-pursuit",
+        "rv-guidance",
+        "rv-sign",
+        "rv-save"
+      ],
+      "before": "虫群误用基地坐标；路障停点在计时范围外；标牌背面镜像",
+      "after": "虫群接近攻击；顶路障停稳35秒可通过；标牌两面可读；方向和胜利目标持续提示",
+      "verification": "passed",
+      "evidence_ids": [
+        "rv291-menu",
+        "rv291-checkpoint-countdown",
+        "rv291-sign-front",
+        "rv291-sign-back",
+        "rv291-rv-supply-real-time"
+      ]
+    }
+  ],
+  "bugs": [
+    {
+      "id": "rv-pursuit",
+      "discovered_version": "web-rv-v0.28.0",
+      "reproduction": "车在2000；虫在14,1975；运行寻路",
+      "observation": "虫距车从28.65米增至35.80米",
+      "cause": "navDir沿用基地虫洞入口坐标",
+      "status": "fixed",
+      "fix": "RV平地直接追击，关闭旧地形寻路及飞行标记",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "rv291-rv-supply-real-time"
+      ],
+      "retest": "后方及两翼距离减小，真实RAF近战造成车损；before.json保存旧数值"
+    },
+    {
+      "id": "rv-checkpoint",
+      "discovered_version": "web-rv-v0.28.0",
+      "reproduction": "持续W顶加油站路障",
+      "observation": "z2119.9在17米计时半径外，hold保持0",
+      "cause": "碰撞停点与停车计时区域不一致",
+      "status": "fixed",
+      "fix": "路障前可达停车区、禁用RV脱困挪车、旧档移回当前路障范围",
+      "before_media_ids": [
+        "rv281-media-1"
+      ],
+      "after_media_ids": [
+        "rv291-checkpoint-countdown"
+      ],
+      "retest": "旧档升级库存保留；真实35秒持续W抬杆进入stage1"
+    },
+    {
+      "id": "rv-sign",
+      "discovered_version": "web-rv-v0.28.0",
+      "reproduction": "由公路接近标牌",
+      "observation": "DoubleSide同纹理的背面镜像",
+      "cause": "单面文字被反面观察",
+      "status": "fixed",
+      "fix": "两块朝外FrontSide面",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "rv291-sign-front",
+        "rv291-sign-back"
+      ],
+      "retest": "前后实际截图目视文字方向正常；未留旧反字单独截图"
+    }
+  ],
+  "media": [
+    {
+      "id": "rv291-menu",
+      "file": "releases/web-rv-v0.29.1/qa/menu.png",
+      "sha256": "605143cab2807657ece40503340c9727fb301c8c9142358d61ae8a2ea3adfcaf",
+      "kind": "screenshot",
+      "version": "web-rv-v0.29.1",
+      "build_id": "rv291-ba7aca6e8944",
+      "capture_mode": "realtime-automation",
+      "description": "qa/menu.png; QA staged checkpoint/old-save positions; normal RAF input and screenshot",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv291-checkpoint-countdown",
+      "file": "releases/web-rv-v0.29.1/qa/checkpoint-countdown.png",
+      "sha256": "61753d4243c2906dddb0f1e9897300a95701f071a9a344a4674510f0cd3af4fc",
+      "kind": "screenshot",
+      "version": "web-rv-v0.29.1",
+      "build_id": "rv291-ba7aca6e8944",
+      "capture_mode": "realtime-automation",
+      "description": "qa/checkpoint-countdown.png; QA staged checkpoint/old-save positions; normal RAF input and screenshot",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv291-sign-front",
+      "file": "releases/web-rv-v0.29.1/qa/sign-front.png",
+      "sha256": "a3d0d1d1d66fd4fe9dc03e09f60ea830080b586daec8553c359ec9ea867466d3",
+      "kind": "screenshot",
+      "version": "web-rv-v0.29.1",
+      "build_id": "rv291-ba7aca6e8944",
+      "capture_mode": "realtime-automation",
+      "description": "qa/sign-front.png; QA staged checkpoint/old-save positions; normal RAF input and screenshot",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv291-sign-back",
+      "file": "releases/web-rv-v0.29.1/qa/sign-back.png",
+      "sha256": "0a0c343b13a1fdfdcc9c850b574eebf0ac96c49767de9bd3281c37901c9401dc",
+      "kind": "screenshot",
+      "version": "web-rv-v0.29.1",
+      "build_id": "rv291-ba7aca6e8944",
+      "capture_mode": "realtime-automation",
+      "description": "qa/sign-back.png; QA staged checkpoint/old-save positions; normal RAF input and screenshot",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv291-rv-supply-real-time",
+      "file": "releases/web-rv-v0.29.1/capture/rv-supply-real-time.webm",
+      "sha256": "a4044b9516150befa6809d2daa06d7e8b3d0175cfad7c4d22f8ab621b0bd6b6d",
+      "kind": "video",
+      "version": "web-rv-v0.29.1",
+      "build_id": "rv291-ba7aca6e8944",
+      "capture_mode": "realtime-automation",
+      "description": "capture/rv-supply-real-time.webm; QA staged checkpoint/old-save positions; normal RAF input and screenshot",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 26.306431,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 5,
+          "description": "实际驶入加油站停车区，朝向正确的标牌与道路箭头"
+        },
+        {
+          "in_seconds": 5,
+          "out_seconds": 26,
+          "description": "正常RAF下车搜索，虫群接近攻击和自动射击"
+        }
+      ]
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "rv281-media-1",
+      "handoff": "releases/web-rv-v0.28.1/before/handoff.json",
+      "media_id": "rv281-media-1",
+      "reason": "Actual reproduction before editing runtime"
+    }
+  ],
+  "qa": [
+    {
+      "id": "feedback",
+      "evidence": "qa/feedback-results.json",
+      "result": "pass",
+      "method": "Rear/flank fixed-step approach; real melee and real 35s holding W; old v1 save; tunnel victory boundary"
+    },
+    {
+      "id": "full-route",
+      "evidence": "qa/route-balance.json",
+      "result": "pass",
+      "method": "fixed .05s navigation; no invincibility/health or resource grants; 311.35s win and all three crates searched"
+    },
+    {
+      "id": "squad-integration",
+      "evidence": "qa/squad-integration/merged-all-viewports.json",
+      "result": "pass",
+      "method": "12-member squad shop and saves with merged runtime, three simulated viewports"
+    },
+    {
+      "id": "rv-general",
+      "evidence": "../web-rv-v0.28.1/qa/results.json",
+      "result": "pass",
+      "method": "RV-isolated build before unchanged squad integration: real driving, repair, upgrade, pause, save, mobile UI and performance"
+    },
+    {
+      "id": "versus",
+      "evidence": "../web-rv-v0.28.1/qa/versus-regression/verify-versus-teams.json",
+      "result": "pass"
+    },
+    {
+      "id": "campaign-audio",
+      "evidence": "../web-rv-v0.28.1/qa/campaign-audio/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "limits",
+      "physical_phone_test": false,
+      "human_difficulty_test": false
+    },
+    {
+      "id": "production",
+      "evidence": "qa/production/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "toy-public",
+      "evidence": "qa/toy-public/results.json",
+      "result": "pass"
+    },
+    {
+      "id": "taptap-exact-zip",
+      "evidence": "qa/taptap-package/results.json",
+      "result": "pass",
+      "method": "All standalone JS requests blocked; current exact ZIP; simulated mobile and desktop"
+    }
+  ],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "手机真机",
+      "真人全程与难度评价",
+      "人工听片"
+    ]
+  },
+  "channels": {
+    "website": "deployed_public_verified",
+    "toy": "published_public_verified",
+    "taptap": "queued_previous_review",
+    "bilibili": "three_descriptions_public_verified"
+  },
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.29.1-20261008",
+  "rv_base_version": "web-rv-v0.28.0",
+  "package_source_commit": "ff2609daaa3d19554320aad3fdf14586b279e471",
+  "pending": [
+    "TapTap前一版仍审核中；修复ZIP已保全，结束审核后按既有授权同步并在online后合并社区说明",
+    "视频候选素材尚未人工听片，本次不发布新视频"
+  ]
+}

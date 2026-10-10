@@ -1,0 +1,299 @@
+[
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "focus": [
+      {
+        "field": "name",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "roomName",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "code",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "password",
+        "retained": true,
+        "afterResize": true
+      }
+    ],
+    "combat": {
+      "shots": [
+        {
+          "speed": 0,
+          "time": 0.47500000000000014,
+          "damage": 180
+        },
+        {
+          "speed": 8,
+          "time": 0.47500000000000014,
+          "damage": 180
+        },
+        {
+          "speed": 16,
+          "time": 0.47500000000000014,
+          "damage": 180
+        }
+      ],
+      "routes": [
+        {
+          "id": "W",
+          "kind": "mob",
+          "x": -67.77067672523567,
+          "z": 180.00233346853935,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "W",
+          "kind": "boss",
+          "x": -67.91790376376389,
+          "z": 180.72281247329613,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "C",
+          "kind": "mob",
+          "x": 0,
+          "z": 179.99999999999773,
+          "remaining": false,
+          "index": 25
+        },
+        {
+          "id": "C",
+          "kind": "boss",
+          "x": 0,
+          "z": 180.48500000000257,
+          "remaining": false,
+          "index": 25
+        },
+        {
+          "id": "E",
+          "kind": "mob",
+          "x": 67.77067672523567,
+          "z": 180.00233346853935,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "E",
+          "kind": "boss",
+          "x": 67.91790376376389,
+          "z": 180.72281247329613,
+          "remaining": false,
+          "index": 32
+        }
+      ],
+      "invalid": []
+    },
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "focus": [
+      {
+        "field": "name",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "roomName",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "code",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "password",
+        "retained": true,
+        "afterResize": true
+      }
+    ],
+    "combat": {
+      "shots": [
+        {
+          "speed": 0,
+          "time": 0.47500000000000014,
+          "damage": 180
+        },
+        {
+          "speed": 8,
+          "time": 0.47500000000000014,
+          "damage": 180
+        },
+        {
+          "speed": 16,
+          "time": 0.47500000000000014,
+          "damage": 180
+        }
+      ],
+      "routes": [
+        {
+          "id": "W",
+          "kind": "mob",
+          "x": -67.77067672523567,
+          "z": 180.00233346853935,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "W",
+          "kind": "boss",
+          "x": -67.91790376376389,
+          "z": 180.72281247329613,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "C",
+          "kind": "mob",
+          "x": 0,
+          "z": 179.99999999999773,
+          "remaining": false,
+          "index": 25
+        },
+        {
+          "id": "C",
+          "kind": "boss",
+          "x": 0,
+          "z": 180.48500000000257,
+          "remaining": false,
+          "index": 25
+        },
+        {
+          "id": "E",
+          "kind": "mob",
+          "x": 67.77067672523567,
+          "z": 180.00233346853935,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "E",
+          "kind": "boss",
+          "x": 67.91790376376389,
+          "z": 180.72281247329613,
+          "remaining": false,
+          "index": 32
+        }
+      ],
+      "invalid": []
+    },
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "focus": [
+      {
+        "field": "name",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "roomName",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "code",
+        "retained": true,
+        "afterResize": true
+      },
+      {
+        "field": "password",
+        "retained": true,
+        "afterResize": true
+      }
+    ],
+    "combat": {
+      "shots": [
+        {
+          "speed": 0,
+          "time": 0.47500000000000014,
+          "damage": 180
+        },
+        {
+          "speed": 8,
+          "time": 0.47500000000000014,
+          "damage": 180
+        },
+        {
+          "speed": 16,
+          "time": 0.47500000000000014,
+          "damage": 180
+        }
+      ],
+      "routes": [
+        {
+          "id": "W",
+          "kind": "mob",
+          "x": -67.77067672523567,
+          "z": 180.00233346853935,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "W",
+          "kind": "boss",
+          "x": -67.91790376376389,
+          "z": 180.72281247329613,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "C",
+          "kind": "mob",
+          "x": 0,
+          "z": 179.99999999999773,
+          "remaining": false,
+          "index": 25
+        },
+        {
+          "id": "C",
+          "kind": "boss",
+          "x": 0,
+          "z": 180.48500000000257,
+          "remaining": false,
+          "index": 25
+        },
+        {
+          "id": "E",
+          "kind": "mob",
+          "x": 67.77067672523567,
+          "z": 180.00233346853935,
+          "remaining": false,
+          "index": 32
+        },
+        {
+          "id": "E",
+          "kind": "boss",
+          "x": 67.91790376376389,
+          "z": 180.72281247329613,
+          "remaining": false,
+          "index": 32
+        }
+      ],
+      "invalid": []
+    },
+    "errors": []
+  }
+]

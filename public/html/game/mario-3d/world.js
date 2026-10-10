@@ -1,5 +1,5 @@
 // 玩法模拟：与渲染无关。地形整条跑道纵深一致，碰撞按 (x,y) 网格计算，z 只用于跑道边界和实体之间的接触。
-import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.4.3';
+import { LANE, SOLID, tileKey, buildLevel, LEVEL_ORDER } from './levels.js?v=2.6.0';
 
 export const STEP = 1 / 120;
 export const PW = 0.36;                       // 玛丽半宽
@@ -11,6 +11,12 @@ const ACC_WALK = 13, ACC_RUN = 17, DECEL = 13, SKID = 30, AIR_ACC = 11, CROUCH_F
 const G_FALL = 80, MAX_FALL = 17;
 const STOMP_SCORES = [100, 200, 400, 500, 800, 1000, 2000, 4000, 5000, 8000];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+// 城堡：火棒约 3.3 秒转一圈（实机录像量得，与 FullScreenMario 一致）；火球间距半格、判定半径约 0.22 格
+export const FIREBAR_SPEED = 2 * Math.PI / 3.33, FIREBAR_GAP = 0.5;
+const FIREBAR_R = 0.22;
+// 库巴三条喷火计时叠加（FullScreenMario 按原作取 280/350/490 帧），实际约每 2 秒一口火，间隔不规则
+const BOWSER_FIRE_EVERY = [4.67, 5.83, 8.17];
+export const BOWSER_W = 0.95, BOWSER_H = 1.9, FLAME_HALF = 0.75, FLAME_H = 0.5;
 
 export function createSession(settings) {
   return {
@@ -36,11 +42,13 @@ export function createWorld(session, opts = {}) {
     onLift: null, growT: 0, fireT: 0, lastSafe: null, visible: true, walkT: 0, skid: false
   };
   if (session.settings.armor !== 'classic') session.hearts = 3;
-  enterArea(w, cp ? cp.area : level.startArea);
+  const entrance = level.entranceArea && !opts.respawn && !opts.fromCheckpoint;
+  enterArea(w, cp ? cp.area : entrance ? level.entranceArea : level.startArea);
   const p = w.player, a = w.area;
   // 检查点明确记录站立高度；地下关同一列的天花板不能当作复活地面。
   if (cp) { p.x = cp.x; p.y = cp.y; }
   else { p.x = a.start.x; p.y = a.start.y; }
+  if (entrance) { w.mode = 'entrance'; w.entrance = { phase: 'walk' }; p.grounded = true; }
   p.lastSafe = { x: p.x, y: p.y, z: 0 };
   return w;
 }
@@ -53,15 +61,24 @@ function enterArea(w, id) {
     a.rt = {
       enemies: a.enemies.map(d => ({
         type: d.type, red: !!d.red, x: d.x, y: d.y, z: 0, vx: 0, vy: 0, dir: -1, state: 'walk', active: false,
-        w: 0.42, h: d.type === 'koopa' ? 1.3 : 0.9, t: 0, kickGrace: 0, chain: 0, grounded: false, gone: false
+        w: 0.42, h: d.type === 'koopa' ? 1.3 : 0.9, t: 0, kickGrace: 0, chain: 0, grounded: false, gone: false,
+        winged: !!d.flight, flight: d.flight || null,
+        flyPhase: d.flight ? Math.acos(clamp((d.y-(d.flight.min+d.flight.max)/2)/((d.flight.max-d.flight.min)/2),-1,1)) : 0
       })),
       items: [], fireballs: [],
       coins: a.coins.map(c => ({ x: c.x, y: c.y, alive: true })),
-      lifts: [], piranhas: a.piranhas.map(pr => ({ pipe: pr.pipe, phase: 'hidden', t: 0.6, rise: 0, alive: [true, true, true] }))
+      lifts: [], piranhas: a.piranhas.map(pr => ({ pipe: pr.pipe, phase: 'hidden', t: 0.6, rise: 0, alive: [true, true, true] })),
+      // 火棒统一从右下 45° 起转（FullScreenMario 初始角）
+      firebars: a.firebars.map(b => Object.assign({}, b, { angle: -Math.PI / 4 })),
+      flames: [],
+      bowser: a.bowser ? { x: a.bowser.x, y: a.bowser.y, z: 0, vx: 0, vy: 0, home: a.bowser.x, hp: 5, state: 'idle', t: 0,
+        phase: -0.7 * Math.PI, jumpT: 1.95, fireT: BOWSER_FIRE_EVERY.slice(), windup: 0, face: -1, grounded: true } : null
     };
     for (const l of a.lifts) {
       const span = l.max - l.min;
-      for (let i = 0; i < l.count; i++) a.rt.lifts.push({ x: l.x, w: l.w, y: l.min + span * (i + 0.35) / l.count, dir: l.dir, speed: l.speed, min: l.min, max: l.max, dy: 0 });
+      const count = l.count || 1;
+      for (let i = 0; i < count; i++) a.rt.lifts.push(Object.assign({mode:'cycle',axis:'y'},l,
+        { y:l.mode==='pingpong'?l.y:l.min+span*(i+.35)/count, dx:0,dy:0,wrapped:false }));
     }
   }
   w.area = a; w.areaId = id; w.tiles = a.tiles; w.rt = a.rt; w.areaVersion++;
@@ -76,6 +93,17 @@ function anySolid(w, x0, y0, x1, y1) {
   for (let c = Math.floor(x0); c <= Math.floor(x1 - 1e-6); c++)
     for (let h = Math.floor(y0); h <= Math.floor(y1 - 1e-6); h++) if (solidAt(w, c, h)) return true;
   return false;
+}
+
+// 树冠只接住从上方落下的实体，不把装饰树干当墙，也不挡从下方起跳。
+function landOnTrees(w, b, prevY, hw) {
+  let top = -Infinity;
+  for (const t of w.area.trees) if (b.x+hw>t.x && b.x-hw<t.x+t.w && prevY>=t.y-.08 && b.y<=t.y) top=Math.max(top,t.y);
+  if (top===-Infinity) return false;
+  b.y=top; b.vy=0; return true;
+}
+function supportedAt(w, x, y) {
+  return solidAt(w,Math.floor(x),Math.floor(y-.5)) || w.area.trees.some(t=>x>=t.x&&x<t.x+t.w&&Math.abs(y-t.y)<.12);
 }
 
 // 通用实体移动：先 x 后 y，对整格方块做 AABB 推出。返回 {wall, landed, ceil}
@@ -96,6 +124,7 @@ function moveBody(w, b, dt, hw, hgt) {
   if (b.vy <= 0) {
     const h = Math.floor(b.y);
     if (prevY >= h + 1 - 0.3) for (let c = c0; c <= c1; c++) if (solidAt(w, c, h)) { b.y = h + 1; b.vy = 0; r.landed = true; break; }
+    if (!r.landed && landOnTrees(w,b,prevY,hw)) r.landed=true;
   } else {
     const h = Math.floor(b.y + hgt);
     for (let c = c0; c <= c1; c++) if (solidAt(w, c, h)) { b.y = h - hgt; b.vy = 0; r.ceil = true; break; }
@@ -108,7 +137,7 @@ export function step(w, input, dt) {
   w.clock += dt;
   w.modeT += dt;
   const p = w.player, s = w.session;
-  updateLifts(w, dt);
+  if (!w.entrance) updateLifts(w, dt);
   if (w.mode === 'play') {
     w.timeAcc += dt;
     while (w.timeAcc >= 0.4) {                                // 原作一个时间单位 ≈ 0.4 秒
@@ -117,15 +146,20 @@ export function step(w, input, dt) {
       if (w.time <= 0) { w.time = 0; die(w, 'time'); break; }
     }
     if (w.mode === 'play') updatePlayer(w, input, dt);
-  } else if (w.mode === 'pipe') updatePipe(w, dt);
+  } else if (w.mode === 'entrance') updateEntrance(w, dt);
+  else if (w.mode === 'pipe') updatePipe(w, dt);
   else if (w.mode === 'flag') updateFlag(w, dt);
+  else if (w.mode === 'axe') updateAxe(w, dt);
   else if (w.mode === 'dying') updateDying(w, dt);
-  if (w.mode !== 'dying' && w.mode !== 'clear') {
+  if (!w.entrance && w.mode !== 'dying' && w.mode !== 'clear') {
     updateEnemies(w, dt);
     updatePiranhas(w, dt);
     updateItems(w, dt);
     updateFireballs(w, dt);
   }
+  updateFirebars(w, dt);
+  updateBowser(w, dt);
+  updateFlames(w, dt);
   for (const t of w.bumped || []) t.bump = Math.max(0, t.bump - dt);
   if (w.bumped) w.bumped = w.bumped.filter(t => t.bump > 0);
   p.inv = Math.max(0, p.inv - dt);
@@ -136,12 +170,21 @@ export function step(w, input, dt) {
 
 function updateLifts(w, dt) {
   for (const l of w.rt.lifts) {
-    const before = l.y;
+    const before = l.y, beforeX=l.x;
+    if (l.mode==='pingpong') {
+      const axis=l.axis;
+      l[axis]+=l.dir*l.speed*dt;
+      if (l[axis]>l.max) { l[axis]=2*l.max-l[axis]; l.dir=-1; }
+      else if (l[axis]<l.min) { l[axis]=2*l.min-l[axis]; l.dir=1; }
+      l.dx=l.x-beforeX; l.dy=l.y-before; l.wrapped=false;
+      continue;
+    }
     l.y += l.dir * l.speed * dt;
     l.wrapped = false;
     if (l.dir < 0 && l.y < l.min) { l.y += l.max - l.min; l.wrapped = true; }
     if (l.dir > 0 && l.y > l.max) { l.y -= l.max - l.min; l.wrapped = true; }
     l.dy = l.wrapped ? 0 : l.y - before;
+    l.dx=0;
   }
 }
 
@@ -217,6 +260,7 @@ function updatePlayer(w, input, dt) {
   const prevY0 = p.y;
   if (p.onLift) {
     const l = p.onLift;
+    p.x+=l.dx;
     if (l.wrapped || p.x + PW < l.x || p.x - PW > l.x + l.w) p.onLift = null;
     else { p.y = l.y; }
   }
@@ -246,6 +290,7 @@ function updatePlayer(w, input, dt) {
   if (p.vy <= 0) {
     const h = Math.floor(p.y);
     if (prevBottom >= h + 1 - 0.3) for (let c = c0; c <= c1; c++) if (solidAt(w, c, h)) { p.y = h + 1; p.vy = 0; p.grounded = true; p.onLift = null; break; }
+    if (!p.grounded && landOnTrees(w,p,prevBottom,PW)) { p.grounded=true; p.onLift=null; }
     if (!p.grounded) for (const l of w.rt.lifts) {
       if (p.x + PW > l.x && p.x - PW < l.x + l.w && prevBottom >= l.y - 0.32 && p.y <= l.y && !l.wrapped) { p.y = l.y; p.vy = 0; p.grounded = true; p.onLift = l; break; }
     }
@@ -259,9 +304,12 @@ function updatePlayer(w, input, dt) {
   p.walkT += Math.hypot(p.vx, p.vz) * dt;
 
   if (p.y < w.area.killY) { die(w, 'pit'); return; }
+  // 岩浆：身子沉下去一截就算输（和掉坑一样没有起跳动画）
+  for (const l of w.area.lava) if (p.x > l.x0 && p.x < l.x1 && p.y < l.top - 0.55) { die(w, 'lava'); return; }
   checkCheckpoint(w);
   collectCoins(w);
   checkFlag(w);
+  checkAxe(w);
   void prevY0;
 }
 
@@ -317,6 +365,25 @@ function tryPipes(w, input) {
   return false;
 }
 
+function updateEntrance(w, dt) {
+  const p = w.player;
+  p.facing = Math.PI / 2;
+  if (w.entrance.phase === 'walk') {
+    const pipe = w.area.sidePipes[0], mouth = pipe.x - PW;
+    p.vx = 3.2; p.x = Math.min(mouth, p.x + p.vx * dt); p.walkT += p.vx * dt;
+    if (p.x >= mouth) startPipe(w, 'side', pipe.to, pipe);
+  } else {
+    p.vx = p.vz = 0; p.grounded = false;
+    p.vy = Math.max(-MAX_FALL, p.vy - G_FALL * dt);
+    const hit = moveBody(w, p, dt, PW, heightOf(p));
+    if (hit.landed) {
+      p.grounded = true; w.mode = 'play'; w.entrance = null;
+      p.lastSafe = { x: p.x, y: p.y, z: p.z };
+      emit(w, 'entranceEnd');
+    }
+  }
+}
+
 function startPipe(w, kind, dest, from) {
   const p = w.player;
   w.mode = 'pipe'; w.modeT = 0;
@@ -330,12 +397,15 @@ function startPipe(w, kind, dest, from) {
 function updatePipe(w, dt) {
   const p = w.player, a = w.pipeAnim;
   if (a.phase === 'in') {
-    if (a.kind === 'down') p.y -= 2.3 * dt; else p.x += 1.6 * dt;
+    if (a.kind === 'down') p.y -= 2.3 * dt;
+    else { p.x += 1.6 * dt; p.walkT += 1.6 * dt; }
     if (w.modeT > 0.95) {
       if (a.dest.warp) { w.mode = 'clear'; emit(w, 'warp', { world: a.dest.warp }); w.session.stats.secrets++; return; }
       enterArea(w, a.dest.area);
       if (a.dest.mode === 'drop') {
-        p.x = a.dest.x; p.y = 11.2; p.z = 0; p.vy = 0; w.mode = 'play'; w.pipeAnim = null;
+        p.x = a.dest.x; p.y = a.dest.y ?? 11.2; p.z = 0; p.vy = 0; p.grounded = false;
+        w.mode = a.dest.entrance ? 'entrance' : 'play'; w.pipeAnim = null;
+        if (a.dest.entrance) w.entrance.phase = 'drop';
         if (a.dest.area === 'bonus') w.session.stats.secrets++;
       } else {
         const out = w.area.pipes.find(q => q.exitId === a.dest.pipe);
@@ -352,7 +422,7 @@ function updatePipe(w, dt) {
 
 function checkCheckpoint(w) {
   const cp = w.level.checkpoint, s = w.session, p = w.player;
-  if (s.checkpoint !== w.levelId && w.areaId === cp.area && p.x >= cp.x) {
+  if (cp && s.checkpoint !== w.levelId && w.areaId === cp.area && p.x >= cp.x) {
     s.checkpoint = w.levelId;
     if (s.settings.armor !== 'classic') s.hearts = 3;
     emit(w, 'checkpoint');
@@ -459,7 +529,7 @@ export function die(w, reason) {
     emit(w, 'toast', { text: '演示模式：掉坑后回到站稳的位置' });
     return;
   }
-  w.mode = 'dying'; w.modeT = 0; w.deathAnim = reason !== 'pit'; w.deathReason = reason;
+  w.mode = 'dying'; w.modeT = 0; w.deathAnim = reason !== 'pit' && reason !== 'lava'; w.deathReason = reason;
   p.vx = p.vz = 0; p.vy = 0; p.star = 0; p.crouch = false;
   s.stats.deaths++;
   emit(w, 'die', { reason });
@@ -492,6 +562,13 @@ function updateEnemies(w, dt) {
     e.kickGrace = Math.max(0, e.kickGrace - dt);
     if (e.state === 'squash') { if (e.t > 0.5) e.gone = true; continue; }
     if (e.state === 'dead') { e.vy -= 30 * dt; e.y += e.vy * dt; e.x += e.vx * dt; if (e.y < -10) e.gone = true; continue; }
+    // 飞行乌龟上下巡航；第一次踩中只去掉翅膀，随后才变龟壳。
+    if (e.winged && e.state==='walk') {
+      const f=e.flight, amplitude=(f.max-f.min)/2;
+      e.flyPhase+=f.speed/amplitude*dt;
+      e.y=(f.min+f.max)/2+amplitude*Math.cos(e.flyPhase);
+      e.vx=e.vy=0; e.grounded=false;
+    } else {
     // 行走/滑壳
     if (e.state === 'walk') e.vx = e.dir * 1.9;
     else if (e.state === 'shell') {
@@ -505,7 +582,8 @@ function updateEnemies(w, dt) {
     // 红乌龟不会走下平台
     if (e.red && e.state === 'walk' && e.grounded) {
       const ahead = Math.floor(e.x + e.dir * (e.w + 0.05));
-      if (!solidAt(w, ahead, Math.floor(e.y - 0.5))) e.dir *= -1;
+      if (!supportedAt(w,ahead+.5,e.y)) e.dir *= -1;
+    }
     }
     // 3D：靠近玛丽时缓慢对准她所在的纵深，不能从侧面轻松绕开
     if (e.state === 'walk' && Math.abs(p.x - e.x) < 9) {
@@ -541,6 +619,7 @@ function updateEnemies(w, dt) {
       if (sc < 0) oneUp(w, e.x, e.y + 1.2, e.z); else addScore(w, sc, e.x, e.y + e.h + 0.4, e.z);
       w.session.stats.stomps++;
       if (e.type === 'goomba') { e.state = 'squash'; e.t = 0; emit(w, 'stomp', { x: e.x, y: e.y, z: e.z }); }
+      else if (e.winged) { e.winged=false; e.flight=null; e.vy=0; e.t=0; emit(w,'stomp',{x:e.x,y:e.y,z:e.z}); }
       else { e.state = 'shell'; e.h = 0.85; e.t = 0; e.vx = 0; emit(w, 'stomp', { x: e.x, y: e.y, z: e.z }); }
       bounce(w, p);
       continue;
@@ -619,7 +698,19 @@ function updateFireballs(w, dt) {
     const r = moveBody(w, f, dt, 0.18, 0.36);
     f.z += f.vz * dt;
     if (r.landed) f.vy = 8.5;
-    if (r.wall || r.ceil || f.life <= 0 || Math.abs(f.z) > LANE || f.y < w.area.killY) { f.dead = 0.001; emit(w, 'pop', { x: f.x, y: f.y, z: f.z }); continue; }
+    const inLava = w.area.lava.some(l => f.x > l.x0 && f.x < l.x1 && f.y < l.top);
+    if (r.wall || r.ceil || f.life <= 0 || Math.abs(f.z) > LANE || f.y < w.area.killY || inLava) { f.dead = 0.001; emit(w, 'pop', { x: f.x, y: f.y, z: f.z }); continue; }
+    // 库巴：火球打 5 下翻身，原来是栗宝宝假扮的（原作 1-4）
+    const bw = w.rt.bowser;
+    if (bw && (bw.state === 'active' || bw.state === 'idle') && Math.abs(f.x - bw.x) < BOWSER_W + 0.2 && f.y < bw.y + BOWSER_H && f.y + 0.36 > bw.y && Math.abs(f.z - bw.z) < 1.4) {
+      f.dead = 0.001; bw.hp--; emit(w, 'pop', { x: f.x, y: f.y, z: f.z }); emit(w, 'bowserHit', { hp: bw.hp });
+      if (bw.hp <= 0) {
+        bw.state = 'dead'; bw.vy = 9; bw.vx = 0; bw.windup = 0;
+        addScore(w, 5000, bw.x, bw.y + 2.6, bw.z);
+        emit(w, 'bowserDefeated', { x: bw.x, y: bw.y, z: bw.z });
+      }
+      continue;
+    }
     for (const e of w.rt.enemies) {
       if (e.gone || !e.active || e.state === 'dead' || e.state === 'squash') continue;
       if (Math.abs(e.x - f.x) < e.w + 0.2 && Math.abs(e.z - f.z) < 0.65 && f.y < e.y + e.h && f.y + 0.36 > e.y) {
@@ -671,9 +762,9 @@ function updateFlag(w, dt) {
     if (fl.t > 0.35) { fl.phase = 'walk'; fl.t = 0; p.vy = 0; emit(w, 'clearTune'); }
   } else if (fl.phase === 'walk') {
     p.facing = Math.PI / 2;
-    p.vy -= 40 * dt; p.y += p.vy * dt;
-    if (p.y <= groundTopAt(w, p.x)) { p.y = groundTopAt(w, p.x); p.vy = 0; p.grounded = true; }
-    p.x += 3.2 * dt; p.vx = 3.2; p.walkT += 3.2 * dt;
+    p.vx = 3.2; p.vy -= 40 * dt;
+    const contact = moveBody(w, p, dt, PW, heightOf(p));
+    p.grounded = contact.landed; p.walkT += 3.2 * dt;
     const door = castle ? castle.x + 2.5 : f.x + 6;
     if (p.x >= door) { p.visible = false; p.vx = 0; fl.phase = 'tally'; fl.t = 0; }
   } else if (fl.phase === 'tally') {
@@ -692,6 +783,131 @@ function updateFlag(w, dt) {
   } else if (fl.phase === 'castle') {
     if (fl.t > 1.6) { w.mode = 'clear'; emit(w, 'clear'); }
   }
+}
+
+// ---------- 城堡：火棒、库巴、斧头 ----------
+// 火棒、库巴的火焰沿纵深铺满跑道（和地形一样不能从旁边绕过），判定只看 x/y
+function updateFirebars(w, dt) {
+  const list = w.rt.firebars;
+  if (!list.length) return;
+  const p = w.player, hgt = heightOf(p);
+  for (const b of list) {
+    b.angle += b.dir * FIREBAR_SPEED * dt;
+    if (w.mode !== 'play' || Math.abs(b.x - p.x) > b.len * FIREBAR_GAP + 1.5) continue;
+    const c = Math.cos(b.angle), s = Math.sin(b.angle);
+    for (let i = 0; i < b.len; i++) {
+      const bx = b.x + c * i * FIREBAR_GAP, by = b.y + s * i * FIREBAR_GAP;
+      const nx = clamp(bx, p.x - PW + 0.06, p.x + PW - 0.06), ny = clamp(by, p.y + 0.06, p.y + hgt - 0.06);
+      if ((bx - nx) * (bx - nx) + (by - ny) * (by - ny) < FIREBAR_R * FIREBAR_R) { hurt(w); break; }
+    }
+  }
+}
+
+function updateBowser(w, dt) {
+  const b = w.rt.bowser;
+  if (!b || b.state === 'gone') return;
+  const p = w.player;
+  if (b.state === 'dead' || b.state === 'fall') {           // 被火球打倒翻身，或桥塌后掉进岩浆
+    b.vy = Math.max(b.vy - 22 * dt, -MAX_FALL); b.y += b.vy * dt;
+    if (b.y < -6) b.state = 'gone';
+    return;
+  }
+  if (w.mode !== 'play') return;                            // 碰到斧头后定住；玛丽输了也停下
+  if (b.state === 'idle') { if (p.x > b.x - 24) b.state = 'active'; else return; }
+  b.t += dt;
+  b.face = p.x < b.x ? -1 : 1;
+  // 面朝玛丽时在桥上来回挪约一格（FullScreenMario：sin 摆动）；玛丽绕到身后就转身追
+  if (b.face < 0) { b.phase += 1.32 * dt; b.vx = 1.34 * Math.sin(b.phase); }
+  else b.vx = Math.min(b.vx + 4.2 * dt, 1.58);
+  b.vy = Math.max(b.vy - 16 * dt, -MAX_FALL);
+  const r = moveBody(w, b, dt, BOWSER_W, BOWSER_H);
+  if (r.landed) b.grounded = true; else if (b.vy < -0.5) b.grounded = false;
+  b.x = clamp(b.x, b.home - 2.4, w.area.axe.x - 0.5 - BOWSER_W);
+  b.jumpT -= dt;
+  // 跳约 1.6 格，头顶擦不到上方浮台
+  if (b.jumpT <= 0) { b.jumpT = 1.95; if (b.grounded && b.face < 0) { b.vy = 7.2; b.grounded = false; } }
+  for (let i = 0; i < b.fireT.length; i++) {
+    b.fireT[i] -= dt;
+    if (b.fireT[i] <= 0) { b.fireT[i] += BOWSER_FIRE_EVERY[i]; if (b.face < 0 && b.windup <= 0) { b.windup = 0.23; emit(w, 'bowserInhale'); } }
+  }
+  if (b.windup > 0) { b.windup -= dt; if (b.windup <= 0) breathe(w, b); }
+  // 3D：慢慢转向玛丽所在的纵深，身子宽，不能轻松从旁边溜过去
+  b.z += clamp(p.z - b.z, -1.6 * dt, 1.6 * dt);
+  b.z = clamp(b.z, -(LANE - 1.2), LANE - 1.2);
+  const hgt = heightOf(p);
+  if (Math.abs(p.x - b.x) < BOWSER_W + PW - 0.12 && Math.abs(p.z - b.z) < 1.25 + PW && p.y < b.y + BOWSER_H - 0.05 && p.y + hgt > b.y + 0.1) hurt(w);
+}
+
+// 火焰从嘴里横着飞出去，同时上下挪到玛丽脚下那一格的高度（FullScreenMario 同法：对齐玛丽脚底所在格）
+function breathe(w, b) {
+  const p = w.player;
+  w.rt.flames.push({ x: b.x - BOWSER_W - FLAME_HALF + 0.3, y: b.y + 1.2, ty: Math.max(0, Math.round(p.y)), vx: -4.4, life: 9, t: 0 });
+  emit(w, 'bowserfire', { x: b.x - 1.3, y: b.y + 1.4, z: b.z });
+}
+
+function updateFlames(w, dt) {
+  const list = w.rt.flames;
+  if (!list.length) return;
+  const p = w.player, hgt = heightOf(p);
+  for (const f of list) {
+    f.t += dt; f.life -= dt; f.x += f.vx * dt;
+    f.y += clamp(f.ty - f.y, -7.5 * dt, 7.5 * dt);
+    if (w.mode === 'play' && Math.abs(f.x - p.x) < FLAME_HALF + PW - 0.14 && f.y + FLAME_H > p.y + 0.08 && f.y < p.y + hgt - 0.08) hurt(w);
+  }
+  w.rt.flames = list.filter(f => f.life > 0 && f.x > p.x - 26);
+}
+
+// 斧头：从桥上跳起来碰到（脚离开桥面）或站上石台就算；判定沿纵深铺满，不能从旁边绕过去
+function checkAxe(w) {
+  const ax = w.area.axe, p = w.player;
+  if (!ax || w.mode !== 'play') return;
+  if (p.x + PW >= ax.x - 0.44 && p.y >= ax.y - 0.4 && p.y < ax.y + 2.2) {
+    w.mode = 'axe'; w.modeT = 0;
+    w.axeSeq = { phase: 'chain', t: 0, next: w.area.bridge.c1 };
+    p.vx = p.vz = p.vy = 0; p.onLift = null; p.star = 0;   // 直接清零不发 starEnd，免得通关演出里又放回城堡曲
+    w.rt.flames.length = 0;
+    emit(w, 'axe');
+  }
+}
+
+// 碰斧头后：铁链断 → 桥从斧头那头一格格塌 → 库巴掉进岩浆 → 城堡通关曲，玛丽自己走到蘑菇人跟前 → 两行字 → 进下一关。
+// 原作这里计时停住、剩余时间不换成分数（实机录像核对）。
+function updateAxe(w, dt) {
+  const s = w.axeSeq, p = w.player, b = w.rt.bowser, br = w.area.bridge;
+  s.t += dt;
+  if (s.phase === 'chain') {
+    if (s.t > 0.12) { s.phase = 'bridge'; s.t = 0; emit(w, 'chainGone'); }
+    return;
+  }
+  if (s.phase === 'bridge') {
+    while (s.t >= 0.065 && s.next >= br.c0) {
+      s.t -= 0.065;
+      if (w.tiles.delete(tileKey(s.next, br.h))) emit(w, 'bridgeTile', { c: s.next });
+      s.next--;
+    }
+    if (s.next < br.c0) {
+      s.phase = 'bowser'; s.t = 0;
+      if (b && (b.state === 'active' || b.state === 'idle')) { b.state = 'fall'; b.vy = 0; b.vx = 0; b.windup = 0; emit(w, 'bowserFall'); }
+    }
+    return;
+  }
+  if (s.phase === 'bowser') {
+    if (s.t > 0.6) { s.phase = 'walk'; s.t = 0; emit(w, 'worldClear'); }
+    return;
+  }
+  p.vy = Math.max(p.vy - G_FALL * dt, -MAX_FALL);
+  p.z += clamp(-p.z, -3 * dt, 3 * dt);
+  if (s.phase === 'walk') { p.facing = Math.PI / 2; p.vx = 3.2; p.walkT += 3.2 * dt; } else p.vx = 0;
+  const hit = moveBody(w, p, dt, PW, heightOf(p));
+  p.grounded = hit.landed;
+  if (s.phase === 'walk') {
+    const stop = w.area.toad.x - 1.2;
+    if (p.x >= stop) { p.x = stop; p.vx = 0; s.phase = 'toad'; s.t = 0; }
+    return;
+  }
+  if (!s.line1 && s.t > 0.35) { s.line1 = true; emit(w, 'castleText', { line: 1 }); }
+  if (!s.line2 && s.t > 1.5) { s.line2 = true; emit(w, 'castleText', { line: 2 }); }
+  if (s.t > 5.2) { w.mode = 'clear'; emit(w, 'clear'); }
 }
 
 export function nextLevelId(id) { const i = LEVEL_ORDER.indexOf(id); return i >= 0 && i < LEVEL_ORDER.length - 1 ? LEVEL_ORDER[i + 1] : null; }

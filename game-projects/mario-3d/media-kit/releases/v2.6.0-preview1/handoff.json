@@ -1,0 +1,552 @@
+{
+ "schema_version": 1,
+ "game_id": "mario-3d-world-1-1",
+ "version": "v2.6.0-preview1",
+ "base_version": "v2.5.0-menu-text1",
+ "created_at": "2026-10-10T22:21:55+08:00",
+ "classification": "新关卡（本人审核版，审核前不发布）",
+ "user_request": "超级玛丽第四关做一下，我审核后全平台上架",
+ "build": {
+  "id": "v2.6.0-preview1-4e8d697bb1cf",
+  "commit": "63ca398d0351e5457f74eadeba0c1a086c87a16c",
+  "dirty": false,
+  "fingerprint": "4e8d697bb1cff89ea59802d928c59d5f553a187ac9b4df9a8fa255a7ef0bd05c",
+  "files_sha256": {
+   "index.html": "8b750829f912621c8bd61be19ebe03ef6425f373973fc21dc34dae9b0395d6b5",
+   "main.js": "2c998633755eb2f58668d8ce63aa975af19fa1382b099a7d74264b6b7807cedd",
+   "world.js": "945f7fc76bcfa299e655251a9826f8f0d182d66297091352e559575dfa5e4b61",
+   "levels.js": "8a275a202230f8f350340e3b501bf07042f31b83c81d760cf11042b121a1e306",
+   "scene.js": "61981e7cd9761ffed8c5cdc4a7961db3645e1f94c510c9232d1650db4ac135ca",
+   "models.js": "c476735571d3c0a244abbea0712f409f5aaee22ce716ecc1611ea5baa894ee9b",
+   "textures.js": "eaac34a2c4dd65e92b23ec469f1adcdbc007c2c893dc333cf0345a7d24a866a2",
+   "style.css": "b0117ef1b40db6b48abc5654229a4328ef0692463ca3cfc976c83fcc94d4039f",
+   "audio.js": "c895201c5bbd9237e328f9cfbdf3c2bb0b1a3a91ee02b75506c06e26591d32a7",
+   "sounds/castle.mp3": "2d7c2efd3fbb5a63b1b6958f51a8fbc849c49ad5b559df15e1fa99d22c502c6a"
+  },
+  "entrypoint": "public/html/game/mario-3d/index.html",
+  "base_mainline": "1bbf3f92",
+  "branch": "claude/mario-stage4-20261010"
+ },
+ "feature_inventory": [
+  {
+   "id": "level-1-4",
+   "status": "implemented",
+   "description": "原作 1-4 库巴城堡：160 列，台阶、4 处岩浆、7 根火棒、问号砖、6 块隐藏金币砖、13 格吊桥、斧头、蘑菇人、往返浮台",
+   "evidence_ids": [
+    "stage4-fullrun-side",
+    "view-side-stairs",
+    "view-side-bridge"
+   ]
+  },
+  {
+   "id": "firebars",
+   "status": "implemented",
+   "description": "7 根 6 颗火球的火棒，3.33 秒一圈，第 88 列反转，沿纵深铺满跑道",
+   "evidence_ids": [
+    "view-side-firebars",
+    "view-fp-firebars"
+   ]
+  },
+  {
+   "id": "bowser",
+   "status": "implemented",
+   "description": "假库巴：来回挪、跳、吸气喷火（火焰移到玛丽高度）、碰到受伤、火球 5 下现原形栗宝宝 5000 分",
+   "evidence_ids": [
+    "stage4-fullrun-side",
+    "view-front-bridge"
+   ]
+  },
+  {
+   "id": "castle-ending",
+   "status": "implemented",
+   "description": "碰斧头 → 断链 → 塌桥 → 库巴落下 → 城堡通关曲 → 走到蘑菇人 → 两行字（英文+中文）→ 结算；计时停住不换分数",
+   "evidence_ids": [
+    "toad-message",
+    "stage4-fullrun-side"
+   ]
+  },
+  {
+   "id": "stage-flow",
+   "status": "implemented",
+   "description": "四关可直接选择，1-3 拔旗后接 1-4；第四关新增中途点（原作城堡没有）",
+   "evidence_ids": []
+  },
+  {
+   "id": "warp-zone",
+   "status": "implemented",
+   "description": "1-2 传送区仍只结算，不传送到 2-1 等",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "add-1-4",
+   "feature_ids": [
+    "level-1-4",
+    "firebars",
+    "bowser",
+    "castle-ending",
+    "stage-flow"
+   ],
+   "before": "只有 1-1 至 1-3，1-3 拔旗后直接结算",
+   "after": "新增 1-4 库巴城堡，1-3 之后接 1-4，1-4 斧头演出后结算",
+   "user_visible": true,
+   "evidence_ids": [
+    "stage4-fullrun-side",
+    "stage4-fullrun-front",
+    "toad-message"
+   ],
+   "verification": "local_verified"
+  },
+  {
+   "id": "castle-audio",
+   "feature_ids": [
+    "level-1-4"
+   ],
+   "before": "没有城堡曲；库巴喷火 / 落下 / 城堡通关音效随包但未使用",
+   "after": "原版城堡曲 castle.mp3；三个原版音效接上",
+   "user_visible": true,
+   "evidence_ids": [
+    "stage4-fullrun-side"
+   ],
+   "verification": "local_verified"
+  },
+  {
+   "id": "site-card",
+   "feature_ids": [],
+   "before": "卡片副标题「包含 1-1、1-2 与 1-3」",
+   "after": "「包含 1-1 至 1-4」；封面沿用",
+   "user_visible": true,
+   "evidence_ids": [],
+   "verification": "not_deployed"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "syntax-comment-brace",
+   "found_in": "v2.6.0-preview1",
+   "repro": "改库巴跳跃那行时行尾注释吞掉右括号，页面打不开",
+   "observed": "SyntaxError: Unexpected token export，__marioReady 不出现",
+   "funny_angle": null,
+   "cause": "行尾 // 注释写在了还没闭合的大括号前",
+   "status": "fixed",
+   "fix": "注释挪到上一行",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "stage4.cjs 46/46"
+  },
+  {
+   "id": "orbit-back-black",
+   "found_in": "v2.6.0-preview1",
+   "repro": "城堡里按住 Q/E 转到正后方",
+   "observed": "镜头在背景石墙外，画面几乎全黑",
+   "funny_angle": null,
+   "cause": "背景墙挡在镜头前，网点淡化只开一个小孔",
+   "status": "fixed",
+   "fix": "镜头转到墙后时隐藏背景墙",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "orbit-bridge-180"
+   ],
+   "retest": "stage4-media.cjs 35/35"
+  },
+  {
+   "id": "bowser-through-lift",
+   "found_in": "v2.6.0-preview1",
+   "repro": "库巴起跳",
+   "observed": "头顶穿过上方浮台",
+   "funny_angle": null,
+   "cause": "跳高约 2 格",
+   "status": "fixed",
+   "fix": "跳高降到约 1.6 格",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "view-side-bridge"
+   ],
+   "retest": "库巴最高约 4.6（桥面 3）"
+  }
+ ],
+ "media": [
+  {
+   "id": "stage4-fullrun-side",
+   "file": "releases/v2.6.0-preview1/captures/stage4-fullrun-side.webm",
+   "sha256": "daf2858248ab4134e391da875af5a8b1ee05965ff283fdd1f39f19c95e9fb216",
+   "kind": "video",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "第四关全程（侧视）：页面内按已验证的按键路线实时推进（每秒 120 逻辑步）并派发键盘事件；MediaRecorder 只录画布与游戏自身音频，HUD / 对话框 / 结算是网页层不在画面里；不是人手操作；下沉大房间里有一段顶着石台原地跑约 5 秒（自动路线在等库巴火焰），剪辑时可去掉",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 46.7,
+   "audio": "game",
+   "visual_review": "pass",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 2.1,
+     "description": "WORLD 1-4 黑屏卡片",
+     "facts": [
+      "card"
+     ]
+    },
+    {
+     "in_seconds": 2.1,
+     "out_seconds": 11.1,
+     "description": "台阶走下、跳过两个岩浆坑与小平台火棒",
+     "facts": [
+      "level-1-4",
+      "firebars",
+      "lava"
+     ]
+    },
+    {
+     "in_seconds": 11.1,
+     "out_seconds": 22.1,
+     "description": "压低的走廊与地上火棒",
+     "facts": [
+      "firebars"
+     ]
+    },
+    {
+     "in_seconds": 28.1,
+     "out_seconds": 36.1,
+     "description": "库巴喷火，连跳跳上浮台从库巴头顶越过碰斧头",
+     "facts": [
+      "bowser",
+      "axe"
+     ]
+    },
+    {
+     "in_seconds": 36.1,
+     "out_seconds": 46.69,
+     "description": "断链塌桥、库巴掉进岩浆、城堡通关曲、走到蘑菇人",
+     "facts": [
+      "castle-ending"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stage4-fullrun-front",
+   "file": "releases/v2.6.0-preview1/captures/stage4-fullrun-front.webm",
+   "sha256": "81aad836a0beaf175e5742866b7c8d6c43a1da79cb262bb8f9461af9acbd4f6e",
+   "kind": "video",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "第四关全程（正视（身后））：页面内按已验证的按键路线实时推进（每秒 120 逻辑步）并派发键盘事件；MediaRecorder 只录画布与游戏自身音频，HUD / 对话框 / 结算是网页层不在画面里；不是人手操作；下沉大房间里有一段顶着石台原地跑约 5 秒（自动路线在等库巴火焰），剪辑时可去掉",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 46.7,
+   "audio": "game",
+   "visual_review": "not-run",
+   "audio_review": "not-run",
+   "segments": [
+    {
+     "in_seconds": 0.0,
+     "out_seconds": 2.1,
+     "description": "WORLD 1-4 黑屏卡片",
+     "facts": [
+      "card"
+     ]
+    },
+    {
+     "in_seconds": 2.1,
+     "out_seconds": 11.1,
+     "description": "台阶走下、跳过两个岩浆坑与小平台火棒",
+     "facts": [
+      "level-1-4",
+      "firebars",
+      "lava"
+     ]
+    },
+    {
+     "in_seconds": 11.1,
+     "out_seconds": 22.1,
+     "description": "压低的走廊与地上火棒",
+     "facts": [
+      "firebars"
+     ]
+    },
+    {
+     "in_seconds": 28.1,
+     "out_seconds": 36.1,
+     "description": "库巴喷火，连跳跳上浮台从库巴头顶越过碰斧头",
+     "facts": [
+      "bowser",
+      "axe"
+     ]
+    },
+    {
+     "in_seconds": 36.1,
+     "out_seconds": 46.69,
+     "description": "断链塌桥、库巴掉进岩浆、城堡通关曲、走到蘑菇人",
+     "facts": [
+      "castle-ending"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "toad-message",
+   "file": "releases/v2.6.0-preview1/qa/toad-message.png",
+   "sha256": "bdc31f13cca14344e6271dd40b49a56c585304739cd68fa7cb2e252d07190701",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "斧头后走到蘑菇人跟前，两行字（含网页层）；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-side-bridge",
+   "file": "releases/v2.6.0-preview1/qa/view-side-bridge.png",
+   "sha256": "80ef486a7360e3c6fde3f9e291fed2a15bd8b58df8252b3845492684dfb9499b",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "侧视：库巴桥、岩浆、斧头；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-side-firebars",
+   "file": "releases/v2.6.0-preview1/qa/view-side-firebars.png",
+   "sha256": "7673da23ccd89d2aedc68c7bcc554b67676843745568406920f9cd98e35fc476",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "侧视：压低走廊与天花板火棒；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-side-stairs",
+   "file": "releases/v2.6.0-preview1/qa/view-side-stairs.png",
+   "sha256": "f3c87d6b691726a7cb8e59ddd3d31b4825a70d6c39951e7e60bdc5efa8e35987",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "侧视：开局台阶与第一个岩浆坑；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-front-bridge",
+   "file": "releases/v2.6.0-preview1/qa/view-front-bridge.png",
+   "sha256": "7722f15c887c0ca2d331daeb2596053c634da2aa19af606be57369684bbe7f7e",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "正视：桥上看库巴；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-fp-firebars",
+   "file": "releases/v2.6.0-preview1/qa/view-fp-firebars.png",
+   "sha256": "38ee9e365290f4b705ca6f69b2d24a82e75ad072f7751773eec4afa50d16073a",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称：走廊里迎面的火棒；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-oblique-bridge",
+   "file": "releases/v2.6.0-preview1/qa/view-oblique-bridge.png",
+   "sha256": "a3bfe991605fb836b2233fab72dabb9b94d380f5006e560e4dc1daa43fe52fe5",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "斜视：桥与浮台；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-top-bridge",
+   "file": "releases/v2.6.0-preview1/qa/view-top-bridge.png",
+   "sha256": "bbbc1e34c242322d5b50a1860eaced19161e9a254732ed65958e42a27a4f66dd",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "俯视：桥与岩浆（天花板剖开）；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "orbit-bridge-180",
+   "file": "releases/v2.6.0-preview1/qa/orbit-bridge-180.png",
+   "sha256": "70e2c227a699b6b30ab486b1b14b7b1896a2e44d3da0d896fb979c0fd0e022c5",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "Q/E 转到背面：背景墙隐藏后的城堡剖面；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 1280,
+   "height": 720,
+   "visual_review": "pass",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-844",
+   "file": "releases/v2.6.0-preview1/qa/phone-844.png",
+   "sha256": "341ef642975a4a79d2e461b7e568463f6a017c05c03444928f4adb5343475715",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "手机横屏视口模拟（触屏按键）；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 844,
+   "height": 390,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "phone-390",
+   "file": "releases/v2.6.0-preview1/qa/phone-390.png",
+   "sha256": "113a9640452f68e4e48f74c7731de573c3b94df95418456e63e08d02fe42e2b1",
+   "kind": "screenshot",
+   "version": "v2.6.0-preview1",
+   "build_id": "v2.6.0-preview1-4e8d697bb1cf",
+   "capture_mode": "realtime-automation",
+   "description": "手机竖屏视口模拟（自动旋转为横屏）；测试定位与手动时钟取景，演示模式（无敌）下拍摄",
+   "width": 390,
+   "height": 844,
+   "visual_review": "not-run",
+   "audio": "none",
+   "audio_review": "not-applicable",
+   "segments": []
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "name": "stage4 机制与流程",
+   "device": "Windows 本机 Edge 无头 + RTX 4060 Ti（ANGLE D3D11）",
+   "viewport": "1280×720",
+   "method": "真实页面 + ?test=1 钩子，手动时钟；机制项直接放置玛丽",
+   "result": "46/46",
+   "evidence": "releases/v2.6.0-preview1/qa/stage4-results.json"
+  },
+  {
+   "name": "stage4 全程通关",
+   "device": "同上",
+   "viewport": "1280×720",
+   "method": "DFS over 0.25 s keyboard chunks in a cloned world (same world.js); replayed with Playwright keyboard on the real page, manual clock. The planner reads firebar angles / Bowser state, unlike a human.",
+   "result": "零受伤零失误碰斧头并结算；路线 136 段（34 秒），剩余时间 216",
+   "evidence": "releases/v2.6.0-preview1/qa/stage4-run.json"
+  },
+  {
+   "name": "stage4 画面性能与手机布局",
+   "device": "同上；手机为视口模拟",
+   "viewport": "1280×720 / 844×390 / 390×844",
+   "method": "五视角×三处截图、Q/E 一整圈、真实时钟转镜头帧时间、手机按钮与模式切换",
+   "result": "35/35；转镜头 170–170 FPS，95% 帧 ≤ 6.0 ms，>50 ms 帧 0",
+   "evidence": "releases/v2.6.0-preview1/qa/stage4-media.json"
+  },
+  {
+   "name": "旧回归",
+   "device": "同上",
+   "viewport": "多种",
+   "method": "comment-regressions、entrance-regressions、fullscreen、pipe-clear-buttons、stage3-preview（跳过性能段）、site-games restart-audio（1-4）",
+   "result": "36 项 / 52/52 / 71/71 / 14/14 / 全过 / 5/5；两处“1-3 是最后一关”的期望随本次改动更新，两处火球键旧文案期望按主线 30147c57 更新",
+   "evidence": "releases/v2.6.0-preview1/qa/regress/"
+  },
+  {
+   "name": "未测",
+   "device": null,
+   "viewport": null,
+   "method": null,
+   "result": "真机手机；人工听审音轨",
+   "evidence": null
+  }
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "partial",
+  "gaps": [
+   "录像由自动按键路线驱动，不是人手操作；侧视录像已目视抽帧复核，正视录像与音轨未人工审听",
+   "尚未经本人审核，未上线；网站 / Toy / TapTap 状态均为未发布",
+   "没有真机录像"
+  ]
+ },
+ "release": {
+  "approval": {
+   "required": true,
+   "status": "pending_user_review",
+   "requested_by_user": "我审核后全平台上架",
+   "event_id": "mario-stage4-review-20261010-01"
+  },
+  "website": "not_deployed",
+  "merged_to_master": false,
+  "toy": {
+   "id": 39043286960128,
+   "status": "not_submitted",
+   "candidate_package_sha256": "940e0c9d51b64f10e38e235932279504fc5d179ebcb90a81c76545c58f6ea769",
+   "candidate_manifest": "releases/v2.6.0-preview1/toy-build.json",
+   "note": "审核前只本地打包自检，未上传"
+  },
+  "taptap": {
+   "app_id": 962723,
+   "status": "not_submitted",
+   "note": "审核通过后先查当前审核状态；此前因 IP 材料退回的是旧包，本版是新包"
+  },
+  "video_descriptions": {
+   "status": "unchanged",
+   "target": "BV1guep6NELt"
+  },
+  "local_preview": "http://127.0.0.1:8798/html/game/mario-3d/index.html?level=1-4（在 worktree 根目录 node game-projects/mario-3d/qa/serve.mjs 8798）"
+ },
+ "cover": {
+  "decision": "keep",
+  "reason": "网站卡片封面仍是 1-1 画面，玩家点进去仍是这款；是否换成城堡画面留给本人审核时决定"
+ }
+}

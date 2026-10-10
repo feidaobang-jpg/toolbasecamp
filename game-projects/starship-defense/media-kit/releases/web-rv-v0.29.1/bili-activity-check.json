@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "at": "2026-10-08T11:58:31.525231+00:00",
+  "source": "Codex",
+  "task_id": "01a1197a-fb19-78b0-b18d-2c2a07956e2a-work04-rv-feedback",
+  "scope": "Related game task only; not a full daily eligibility check",
+  "account_mid": 16214353,
+  "toy_activity": {
+    "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+    "deadline": "2026-10-31T23:59:00+08:00",
+    "status": "existing_participation_preserved",
+    "evidence": "Official page reopened; mapped video activity tags and Toy links preserved, all three Toy bindings already verified by CLI. No new video or duplicate registration; no award claim."
+  },
+  "promotion_credit_activity": {
+    "activity_id": "2610057300",
+    "official_url": "https://member.bilibili.com/platform/growingUp/taskManage/main",
+    "period": "2026-10-05~2026-10-18",
+    "status": "not_eligible_yet",
+    "valid_videos": 4,
+    "views": 2781,
+    "target": 10000,
+    "gap": 7219,
+    "reward": "80推广金，非现金",
+    "evidence": "bili-activity-task-center.txt"
+  },
+  "actions": "read only; no new enrollment or reward claim",
+  "full_check_completed": false
+}

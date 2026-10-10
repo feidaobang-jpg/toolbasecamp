@@ -1,0 +1,52 @@
+[
+  {
+    "path": "html/game/cadillacs-stage1-3d/index.html",
+    "matches_after_deployment_query_and_lf_normalization": true,
+    "sha256": "0a072c137f632d2238832b2a8d2d9780905e00de1bf8c41d85eb69e7c891b80e"
+  },
+  {
+    "path": "html/game/cadillacs-stage1-3d/js/game.min.js",
+    "matches_after_deployment_query_and_lf_normalization": true,
+    "sha256": "429a525f5490e42b82e5bada2fcc6eb635589a947f252f0e8ab205d8bbb3be07"
+  },
+  {
+    "path": "js/game/coop.js",
+    "matches_after_deployment_query_and_lf_normalization": true,
+    "sha256": "b2b93dcf7db972f8385c68b7ba3e3ae1ee60b1bde353eb024ab1d7701d1ac28c"
+  },
+  {
+    "path": "js/game/online-hub.js",
+    "matches_after_deployment_query_and_lf_normalization": true,
+    "sha256": "38d305d817687b58f09a9a54fcf95a2058c5a9715364d1d4eb819a97bbd4d849"
+  },
+  {
+    "path": "js/locales/zh-CN.js",
+    "matches_after_deployment_query_and_lf_normalization": true,
+    "sha256": "822fa1db89608b01a58ccef1ce19f7c804df92736b7e2aeb35f7325f3d6afd20"
+  },
+  {
+    "path": "js/config.js",
+    "matches_after_deployment_query_and_lf_normalization": true,
+    "sha256": "d4131165961b5fd56943b6682cb0ab9471fa544654ad921c5cfa21597be9cfe4"
+  },
+  {
+    "removed_sound": "boss3",
+    "status": 404
+  },
+  {
+    "removed_sound": "road-drive",
+    "status": 404
+  },
+  {
+    "removed_sound": "road-walk",
+    "status": 404
+  },
+  {
+    "online_websocket": {
+      "type": "hello",
+      "protocol": "cadillacs3d-v1",
+      "game": "cadillacs",
+      "maxPlayers": 4
+    }
+  }
+]

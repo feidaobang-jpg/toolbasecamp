@@ -1,0 +1,148 @@
+{
+  "text": "这回不守基地了。废弃城镇的街道可以自由探索，六个感染区挑着搜。我先去修理厂，把车顶机枪升一级。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 10.368,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 2625000,
+      "text": "这"
+    },
+    {
+      "offset": 3625000,
+      "duration": 1250000,
+      "text": "回"
+    },
+    {
+      "offset": 5125000,
+      "duration": 1250000,
+      "text": "不"
+    },
+    {
+      "offset": 6375000,
+      "duration": 1625000,
+      "text": "守"
+    },
+    {
+      "offset": 8125000,
+      "duration": 3375000,
+      "text": "基地"
+    },
+    {
+      "offset": 11500000,
+      "duration": 2125000,
+      "text": "了"
+    },
+    {
+      "offset": 19250000,
+      "duration": 4125000,
+      "text": "废弃"
+    },
+    {
+      "offset": 23500000,
+      "duration": 2750000,
+      "text": "城镇"
+    },
+    {
+      "offset": 26250000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 27125000,
+      "duration": 4875000,
+      "text": "街道"
+    },
+    {
+      "offset": 33125000,
+      "duration": 2625000,
+      "text": "可以"
+    },
+    {
+      "offset": 36000000,
+      "duration": 3250000,
+      "text": "自由"
+    },
+    {
+      "offset": 39375000,
+      "duration": 5250000,
+      "text": "探索"
+    },
+    {
+      "offset": 47375000,
+      "duration": 2500000,
+      "text": "六"
+    },
+    {
+      "offset": 49875000,
+      "duration": 875000,
+      "text": "个"
+    },
+    {
+      "offset": 50875000,
+      "duration": 5875000,
+      "text": "感染区"
+    },
+    {
+      "offset": 57000000,
+      "duration": 2000000,
+      "text": "挑"
+    },
+    {
+      "offset": 59000000,
+      "duration": 1000000,
+      "text": "着"
+    },
+    {
+      "offset": 60000000,
+      "duration": 2625000,
+      "text": "搜"
+    },
+    {
+      "offset": 68125000,
+      "duration": 2125000,
+      "text": "我"
+    },
+    {
+      "offset": 70250000,
+      "duration": 1500000,
+      "text": "先"
+    },
+    {
+      "offset": 71750000,
+      "duration": 1000000,
+      "text": "去"
+    },
+    {
+      "offset": 72875000,
+      "duration": 5750000,
+      "text": "修理厂"
+    },
+    {
+      "offset": 81375000,
+      "duration": 1625000,
+      "text": "把"
+    },
+    {
+      "offset": 83000000,
+      "duration": 3125000,
+      "text": "车顶"
+    },
+    {
+      "offset": 86250000,
+      "duration": 3000000,
+      "text": "机枪"
+    },
+    {
+      "offset": 89500000,
+      "duration": 1625000,
+      "text": "升"
+    },
+    {
+      "offset": 91125000,
+      "duration": 3875000,
+      "text": "一级"
+    }
+  ]
+}

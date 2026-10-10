@@ -1,0 +1,134 @@
+{
+  "text": "Supplies, upgrades, defenses, and a raid on the queen now form a complete route. Tunnel visibility and squad following still needed work at this point.",
+  "voice": "en-US-GuyNeural",
+  "rate": "+0%",
+  "words": [
+    {
+      "text": "Supplies",
+      "offset": 1000000,
+      "duration": 5875000
+    },
+    {
+      "text": "upgrades",
+      "offset": 8375000,
+      "duration": 5250000
+    },
+    {
+      "text": "defenses",
+      "offset": 14750000,
+      "duration": 5625000
+    },
+    {
+      "text": "and",
+      "offset": 22625000,
+      "duration": 1125000
+    },
+    {
+      "text": "a",
+      "offset": 24000000,
+      "duration": 500000
+    },
+    {
+      "text": "raid",
+      "offset": 24750000,
+      "duration": 2250000
+    },
+    {
+      "text": "on",
+      "offset": 27250000,
+      "duration": 875000
+    },
+    {
+      "text": "the",
+      "offset": 28375000,
+      "duration": 875000
+    },
+    {
+      "text": "queen",
+      "offset": 29500000,
+      "duration": 2750000
+    },
+    {
+      "text": "now",
+      "offset": 32500000,
+      "duration": 1875000
+    },
+    {
+      "text": "form",
+      "offset": 34500000,
+      "duration": 2125000
+    },
+    {
+      "text": "a",
+      "offset": 36875000,
+      "duration": 625000
+    },
+    {
+      "text": "complete",
+      "offset": 37625000,
+      "duration": 3875000
+    },
+    {
+      "text": "route",
+      "offset": 41750000,
+      "duration": 3500000
+    },
+    {
+      "text": "Tunnel",
+      "offset": 54000000,
+      "duration": 3000000
+    },
+    {
+      "text": "visibility",
+      "offset": 57125000,
+      "duration": 6375000
+    },
+    {
+      "text": "and",
+      "offset": 63750000,
+      "duration": 875000
+    },
+    {
+      "text": "squad",
+      "offset": 64875000,
+      "duration": 4000000
+    },
+    {
+      "text": "following",
+      "offset": 69125000,
+      "duration": 4625000
+    },
+    {
+      "text": "still",
+      "offset": 73875000,
+      "duration": 3000000
+    },
+    {
+      "text": "needed",
+      "offset": 77125000,
+      "duration": 2875000
+    },
+    {
+      "text": "work",
+      "offset": 80250000,
+      "duration": 2375000
+    },
+    {
+      "text": "at",
+      "offset": 82875000,
+      "duration": 750000
+    },
+    {
+      "text": "this",
+      "offset": 83875000,
+      "duration": 1875000
+    },
+    {
+      "text": "point",
+      "offset": 85875000,
+      "duration": 4000000
+    }
+  ],
+  "timing_source": "Edge-TTS WordBoundary",
+  "online_service": true
+}

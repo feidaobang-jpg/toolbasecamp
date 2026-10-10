@@ -1,8 +1,8 @@
 {
   "name": "cadillacs-stage1-3d",
   "private": true,
-  "version": "0.5.5",
-  "description": "恐龙快打（Cadillacs and Dinosaurs）第一、二关 3D 重置版：源码与构建",
+  "version": "0.11.0-hellroad.1",
+  "description": "恐龙快打（Cadillacs and Dinosaurs）第一至三关 3D 重制版：源码与构建（第三关为按原作独立重做的本地候选版）",
   "scripts": {
     "build": "node tools/build.mjs",
     "build:dev": "node tools/build.mjs --dev"

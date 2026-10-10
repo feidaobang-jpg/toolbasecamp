@@ -1,0 +1,23 @@
+{
+  "channel_name": "郑晓辉",
+  "duration_seconds": 104.301,
+  "public_player_ready_state": 4,
+  "video_language": "zh-Hans",
+  "subtitle_tracks": [
+    {
+      "language": "zh-Hans",
+      "type": "manual_srt",
+      "status": "published",
+      "public_selectable": true
+    },
+    {
+      "language": "en",
+      "type": "manual_srt",
+      "status": "published",
+      "public_selectable": true
+    }
+  ],
+  "english_metadata": "published",
+  "checks": "no_issues",
+  "evidence": "work/publication-evidence/youtube-public.png"
+}

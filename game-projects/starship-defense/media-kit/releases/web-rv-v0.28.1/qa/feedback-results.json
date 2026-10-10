@@ -1,0 +1,106 @@
+{
+  "url": "http://127.0.0.1:8798/html/game/starship-defense/index.html",
+  "results": [
+    {
+      "name": "Rear and both flanks converge on RV instead of hive entrance",
+      "pass": true,
+      "data": [
+        {
+          "from": [
+            14,
+            1975
+          ],
+          "oldDistance": 28.653097563788805,
+          "distance": 4.653097563788585,
+          "position": [
+            2.2735191456357136,
+            0,
+            1995.9401443827935
+          ],
+          "target": "vehicle"
+        },
+        {
+          "from": [
+            -19,
+            2000
+          ],
+          "oldDistance": 19,
+          "distance": 4.799999999999999,
+          "position": [
+            -4.799999999999999,
+            0,
+            2000
+          ],
+          "target": "vehicle"
+        },
+        {
+          "from": [
+            18,
+            2022
+          ],
+          "oldDistance": 28.42534080710379,
+          "distance": 4.825340807103286,
+          "position": [
+            3.0555881499284925,
+            0,
+            2003.734607738801
+          ],
+          "target": "vehicle"
+        }
+      ]
+    },
+    {
+      "name": "Real pursuing insect reaches and damages occupied RV",
+      "pass": true,
+      "data": {
+        "hp": 1376,
+        "enemies": 1,
+        "distance": 4.954399999976204
+      }
+    },
+    {
+      "name": "Nearby on-foot player is also attacked",
+      "pass": true
+    },
+    {
+      "name": "Old stranded save resumes inside reachable checkpoint; inventory retained",
+      "pass": true,
+      "data": {
+        "z": 2106,
+        "gun": 1,
+        "fuel": 74.99941280000007,
+        "scrap": 110,
+        "goal": "胜利：通过3个补给站 → 开进撤离隧道",
+        "objective": "第1站 废弃加油站 · 守住，还需35秒抬杆"
+      }
+    },
+    {
+      "name": "Holding forward against barrier completes real 35s defense and opens road",
+      "pass": true,
+      "data": {
+        "stage": 1,
+        "z": 2120.251199999926,
+        "hold": 0,
+        "oldGate": false,
+        "minHP": 1226.8000000000006,
+        "peakEnemies": 4,
+        "objective": "沿蓝色箭头前进 → 2/3 公路检查站 · 600米",
+        "campaign": "{\"campaign\":\"preserved\"}"
+      }
+    },
+    {
+      "name": "Three checkpoints plus tunnel entrance is the explicit win condition",
+      "pass": true,
+      "data": {
+        "outside": false,
+        "won": true,
+        "title": "房车成功撤离！"
+      }
+    }
+  ],
+  "limitations": [
+    "QA isolation/repositioning marked above",
+    "35s checkpoint and initial melee use real wall-clock input",
+    "Not a physical phone or human full playthrough"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "variant_id": "cadillacs-douyin-zh",
+  "platform": "douyin",
+  "content_type": "historical_gameplay_backfill",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "恐龙快打",
+  "game_version": "recorded 2026-10-05",
+  "episode_id": "game-projects/cadillacs-stage1-3d/video/views-20261005",
+  "video_file": "../../../final/cadillacs/douyin-zh/gameplay-zh-final.mp4",
+  "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 167.778667,
+  "title": "恐龙快打换成第一人称，会怎样？三种视角实战",
+  "description": "同一关分别用侧视、角色身后和第一人称打到关底，比较视野与战斗体验。\n画面录于2026-10-05，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n粉丝向非官方恐龙快打重制，原作版权归Capcom及原著方；片中镜头问题为录制时观察。\n当前试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+  "tags": [
+    "游戏开发",
+    "恐龙快打",
+    "实机演示"
+  ],
+  "description_file": "../../../final/cadillacs/douyin-zh/投稿文案.txt",
+  "cover_file": "../../../final/cadillacs/douyin-zh/cover-zh-16x9.jpg",
+  "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
+  "cover_files": [
+    {
+      "file": "../../../final/cadillacs/douyin-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "upload/reference subject to current platform cover entry"
+    }
+  ],
+  "subtitle_mode": "burned_in",
+  "subtitle_files": [],
+  "credits": "credits.txt",
+  "cover_upload_mode": "horizontal_4x3_and_portrait_3x4",
+  "recorded_date": "2026-10-05",
+  "historical_bilibili_source": {
+    "bvid": "BV18XHW66E55",
+    "video_url": "https://www.bilibili.com/video/BV18XHW66E55/",
+    "reupload": false
+  },
+  "demo_http_check": {
+    "status": 200,
+    "checked_at": "2026-10-08",
+    "overseas_playability": "not-tested"
+  },
+  "human_review": {
+    "status": "approved",
+    "statement": "可以，继续把",
+    "accepted_at": "2026-10-08T05:50:15.972565+00:00",
+    "context": "回复已展示的7版审片包及按通过版本继续发布的请求",
+    "approved_variant_ids": [
+      "swarm-youtube-zh",
+      "swarm-douyin-zh",
+      "jackal-youtube-zh",
+      "jackal-douyin-zh",
+      "cadillacs-youtube-zh",
+      "cadillacs-douyin-zh",
+      "swarm-youtube-en"
+    ],
+    "source": "user",
+    "video_sha256": "27ab127d457931b4119645faabea9727fe53ffa0abc74e1c5b99b26cda64db6a",
+    "cover_sha256": "ee83619c73e248fe0917248817b3f92d9b0034ba9a9594367aee83c19eb1e715",
+    "subtitle_sha256": {}
+  },
+  "blocking_issues": [],
+  "ready_to_upload": false,
+  "ready_to_review": true,
+  "uploaded": true,
+  "account_id": "84261875244",
+  "platform_cover_files": [
+    {
+      "file": "../../../final/cadillacs/douyin-zh/cover-horizontal-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "douyin_horizontal",
+      "sha256": "799d0eaa5b1dbd3000d01688c670a89845439632aa866997b16d49a90b203007",
+      "source": "approved gameplay frame; native text layout"
+    },
+    {
+      "file": "../../../final/cadillacs/douyin-zh/cover-portrait-3x4.jpg",
+      "width": 1080,
+      "height": 1440,
+      "purpose": "douyin_portrait",
+      "sha256": "bc92606b7efd1d74bbec72cdd42995086793d4b9886d725fd7f94ee63ffde5df",
+      "source": "approved gameplay frame; native text layout"
+    }
+  ],
+  "status": "published",
+  "last_observed_at": "2026-10-08T06:50:08.404001+00:00",
+  "platform_id": "7694183607279062326",
+  "publishing_settings": {
+    "ai_content_disclosure": true,
+    "custom_cover_uploaded": true,
+    "settings_observed_on": "official creator website",
+    "recorded_at": "2026-10-08T07:17:25.009195+00:00",
+    "original_audio": true,
+    "publish_mode": "immediate",
+    "cover_warning": "Optional portal suggestion: avoid screenshot-based covers; did not block publication"
+  },
+  "public_url": "https://www.douyin.com/video/7694183607279062326",
+  "public_verified_at": "2026-10-08T06:50:08.404001+00:00",
+  "visibility": "public"
+}

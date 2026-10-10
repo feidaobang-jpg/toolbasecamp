@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-08T08:47:34.474Z",
+  "fixtures": true,
+  "production_writes": 0,
+  "reports": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "ok": true,
+      "existingShellOverflow": 0,
+      "checked": [
+        "pending/fulfilled classification",
+        "11 original votes and original demand",
+        "play links",
+        "no new fulfilled vote button",
+        "existing vote cancellation",
+        "no wishlist overflow",
+        "no JS errors"
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "ok": true,
+      "existingShellOverflow": 0,
+      "checked": [
+        "pending/fulfilled classification",
+        "11 original votes and original demand",
+        "play links",
+        "no new fulfilled vote button",
+        "existing vote cancellation",
+        "no wishlist overflow",
+        "no JS errors"
+      ]
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "ok": true,
+      "existingShellOverflow": 19,
+      "checked": [
+        "pending/fulfilled classification",
+        "11 original votes and original demand",
+        "play links",
+        "no new fulfilled vote button",
+        "existing vote cancellation",
+        "no wishlist overflow",
+        "no JS errors"
+      ]
+    }
+  ]
+}

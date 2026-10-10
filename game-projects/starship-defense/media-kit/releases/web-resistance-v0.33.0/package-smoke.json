@@ -1,0 +1,30 @@
+{
+  "selfContained": true,
+  "externalNetworkBlocked": true,
+  "chapters": [
+    {
+      "chapter": 0,
+      "elapsed": 3.944199999988073,
+      "z": -9.3861599998981,
+      "grenades": 3,
+      "actors": 10
+    },
+    {
+      "chapter": 1,
+      "elapsed": 3.8939000000059587,
+      "z": -11.386159999898178,
+      "grenades": 3,
+      "actors": 4
+    },
+    {
+      "chapter": 2,
+      "elapsed": 3.934699999988072,
+      "z": -11.352530000034085,
+      "grenades": 3,
+      "actors": 10
+    }
+  ],
+  "errors": [],
+  "blockedOptionalRequests": [],
+  "physicalPhone": false
+}

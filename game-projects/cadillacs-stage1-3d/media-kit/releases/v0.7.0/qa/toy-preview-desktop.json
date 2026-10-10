@@ -1,0 +1,163 @@
+{
+  "results": [
+    {
+      "name": "hero 0: all recordings decoded",
+      "pass": true
+    },
+    {
+      "name": "hero 0: U plays own original voice",
+      "pass": true,
+      "info": {
+        "t": 2.133,
+        "name": "mega",
+        "vol": 1,
+        "hero": "jack",
+        "sample": "mega-jack",
+        "source": "original"
+      }
+    },
+    {
+      "name": "hero 0: actual buffer source started",
+      "pass": true
+    },
+    {
+      "name": "hero 1: all recordings decoded",
+      "pass": true
+    },
+    {
+      "name": "hero 1: U plays own original voice",
+      "pass": true,
+      "info": {
+        "t": 2.083,
+        "name": "mega",
+        "vol": 1,
+        "hero": "hannah",
+        "sample": "mega-hannah",
+        "source": "original"
+      }
+    },
+    {
+      "name": "hero 1: actual buffer source started",
+      "pass": true
+    },
+    {
+      "name": "hero 2: all recordings decoded",
+      "pass": true
+    },
+    {
+      "name": "hero 2: U plays own original voice",
+      "pass": true,
+      "info": {
+        "t": 2.067,
+        "name": "mega",
+        "vol": 1,
+        "hero": "mustapha",
+        "sample": "mega-mustapha",
+        "source": "original"
+      }
+    },
+    {
+      "name": "hero 2: actual buffer source started",
+      "pass": true
+    },
+    {
+      "name": "hero 3: all recordings decoded",
+      "pass": true
+    },
+    {
+      "name": "hero 3: U plays own original voice",
+      "pass": true,
+      "info": {
+        "t": 2.1,
+        "name": "mega",
+        "vol": 1,
+        "hero": "mess",
+        "sample": "mega-mess",
+        "source": "original"
+      }
+    },
+    {
+      "name": "hero 3: actual buffer source started",
+      "pass": true
+    },
+    {
+      "name": "hero 0: all recordings decoded",
+      "pass": true
+    },
+    {
+      "name": "wave completion plays original GO",
+      "pass": true,
+      "info": [
+        {
+          "t": 0.083,
+          "name": "go",
+          "vol": 1,
+          "hero": "jack",
+          "sample": "go",
+          "source": "original"
+        }
+      ]
+    },
+    {
+      "name": "GO schedules three calls on AudioContext clock",
+      "pass": true,
+      "info": [
+        {
+          "duration": 0.44497916666666665,
+          "at": 0.485
+        },
+        {
+          "duration": 0.44497916666666665,
+          "at": 1.0099791666666667
+        },
+        {
+          "duration": 0.44497916666666665,
+          "at": 1.5349583333333334
+        }
+      ]
+    },
+    {
+      "name": "offline capture contains audible original effects without clipping",
+      "pass": true,
+      "info": {
+        "peak": 0.47503662109375,
+        "rms": 0.08969069114633448
+      }
+    },
+    {
+      "name": "pause freezes the same AudioContext used by recordings",
+      "pass": true
+    },
+    {
+      "name": "paused audio clock does not advance",
+      "pass": true
+    },
+    {
+      "name": "restart resumes audio",
+      "pass": true
+    },
+    {
+      "name": "menu mute makes the speaker output silent",
+      "pass": true,
+      "info": 0
+    },
+    {
+      "name": "missing recording uses synthesized fallback",
+      "pass": true,
+      "info": {
+        "t": 2.267,
+        "name": "mega",
+        "vol": 1,
+        "hero": "jack",
+        "sample": "mega-jack",
+        "source": "fallback"
+      }
+    },
+    {
+      "name": "no JavaScript errors",
+      "pass": true,
+      "info": []
+    }
+  ],
+  "errors": []
+}

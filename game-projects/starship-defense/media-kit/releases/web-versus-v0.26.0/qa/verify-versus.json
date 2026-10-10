@@ -1,0 +1,297 @@
+{
+ "url": "http://127.0.0.1:8794/html/game/starship-defense/index.html",
+ "at": "2026-10-08T05:00:26.868Z",
+ "results": [
+  {
+   "name": "主菜单进入对战菜单，主菜单隐藏",
+   "ok": true
+  },
+  {
+   "name": "键盘 Enter 开始「对战电脑·普通」，对战 HUD 显示、战役 HUD 隐藏",
+   "ok": true,
+   "detail": {
+    "top": "flex",
+    "stat": "none",
+    "hint": "WASD移动 · J/左键射击 · R 出兵面板（打开后 1-9 派兵、0 升级银行）· Z 切换进攻路线 · L 建造 · O 买枪 · U 手雷 · K 跳跃 · C 切换视角 · Q/E 转视角 · Esc 暂停",
+    "diff": "normal",
+    "ai": "normal"
+   }
+  },
+  {
+   "name": "R 打开出兵面板：银行 + 9 个兵种",
+   "ok": true,
+   "detail": {
+    "vis": true,
+    "cards": 10,
+    "first": "🏦 升级银行"
+   }
+  },
+  {
+   "name": "Z 切换进攻路线到右路",
+   "ok": true
+  },
+  {
+   "name": "0 升级银行 Lv2，扣 500 金",
+   "ok": true,
+   "detail": {
+    "bank": 2,
+    "gold": 100
+   }
+  },
+  {
+   "name": "准备阶段按 1 不能出兵并提示原因",
+   "ok": true
+  },
+  {
+   "name": "开战后 1 派出 6 只小虫，走右路（蓝方右手=西路）",
+   "ok": true,
+   "detail": {
+    "n": 6,
+    "gold": 2850,
+    "side": -1
+   }
+  },
+  {
+   "name": "同一兵种冷却中不能连派",
+   "ok": true
+  },
+  {
+   "name": "L→2→J 在本方半场造机枪塔（对战耐久 ×1.6，蓝色阵营环）",
+   "ok": true,
+   "detail": {
+    "n": 1,
+    "kind": "mgTurret",
+    "hp": 400,
+    "ring": true
+   }
+  },
+  {
+   "name": "中线 25 米以内不能建造",
+   "ok": true,
+   "detail": "只能建在本方半场、离中线 25 米以外"
+  },
+  {
+   "name": "O→2 买霰弹枪并换上",
+   "ok": true,
+   "detail": {
+    "owned": [
+     "lmg",
+     "shotgun"
+    ],
+    "cur": "shotgun"
+   }
+  },
+  {
+   "name": "再按 R 关闭面板",
+   "ok": true
+  },
+  {
+   "name": "无友伤 · 英雄受伤 ×0.8 · 小虫赏金 6 · 英雄打建筑 ×0.6",
+   "ok": true,
+   "detail": {
+    "friendly": true,
+    "heroTaken": 34,
+    "bounty": 6,
+    "bldTaken": 60
+   }
+  },
+  {
+   "name": "蓝方机枪塔自动射杀靠近的红方小虫",
+   "ok": true,
+   "detail": {
+    "alive": 0,
+    "kills": 6
+   }
+  },
+  {
+   "name": "打掉红方核心 → 胜利结算与战绩",
+   "ok": true,
+   "detail": {
+    "title": "🏆 胜利！",
+    "rows": 10,
+    "note": "对战电脑·普通：本机累计 1 胜 0 负"
+   }
+  },
+  {
+   "name": "结算界面 Enter 再来一局",
+   "ok": true
+  },
+  {
+   "name": "暂停菜单：有投降、无存档、显示重开对战",
+   "ok": true,
+   "detail": {
+    "sur": "block",
+    "save": "none",
+    "restart": "🔄 重开对战"
+   }
+  },
+  {
+   "name": "5:00 前不能投降",
+   "ok": true
+  },
+  {
+   "name": "回主菜单：退出对战、原战场恢复、单机自动存档未被改动",
+   "ok": true,
+   "detail": {
+    "weapons": [
+     "lmg"
+    ]
+   }
+  },
+  {
+   "name": "之后开始战役：回到原基地，没有对战残留",
+   "ok": true,
+   "detail": {
+    "state": "prep",
+    "base": -20,
+    "bld": 0
+   }
+  },
+  {
+   "name": "电脑满负载帧时间（双方单位 + 32 座设施，实时 6 秒）",
+   "ok": true,
+   "detail": {
+    "blue": 21,
+    "red": 21,
+    "buildings": 26,
+    "fps": 165,
+    "p95": 6,
+    "over50": 1,
+    "draws": 243,
+    "tris": 142122,
+    "quality": "high",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+   }
+  },
+  {
+   "name": "电脑端无脚本报错",
+   "ok": true
+  },
+  {
+   "name": "landscape：触屏显示「出兵」按钮、隐藏医疗",
+   "ok": true,
+   "detail": {
+    "touch": true,
+    "vR": {
+     "x": 693,
+     "y": 183,
+     "w": 51,
+     "h": 51,
+     "vis": true
+    },
+    "vH": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0,
+     "vis": false
+    },
+    "vO": {
+     "x": 753,
+     "y": 243,
+     "w": 51,
+     "h": 51,
+     "vis": true
+    },
+    "vL": {
+     "x": 753,
+     "y": 303,
+     "w": 51,
+     "h": 51,
+     "vis": true
+    },
+    "top": {
+     "x": 248,
+     "y": 4,
+     "w": 347,
+     "h": 45,
+     "vis": true
+    }
+   }
+  },
+  {
+   "name": "landscape：出兵面板不遮挡摇杆和动作键",
+   "ok": true,
+   "detail": {
+    "open": true,
+    "overlap": [],
+    "cards": 10
+   }
+  },
+  {
+   "name": "landscape：点卡片升级银行",
+   "ok": true,
+   "detail": {
+    "gold": 100,
+    "bank": 2
+   }
+  },
+  {
+   "name": "landscape：✕ 关闭面板",
+   "ok": true
+  },
+  {
+   "name": "portrait：触屏显示「出兵」按钮、隐藏医疗",
+   "ok": true,
+   "detail": {
+    "touch": true,
+    "vR": {
+     "x": 156,
+     "y": 693,
+     "w": 51,
+     "h": 51,
+     "vis": true
+    },
+    "vH": {
+     "x": 0,
+     "y": 0,
+     "w": 0,
+     "h": 0,
+     "vis": false
+    },
+    "vO": {
+     "x": 96,
+     "y": 753,
+     "w": 51,
+     "h": 51,
+     "vis": true
+    },
+    "vL": {
+     "x": 36,
+     "y": 753,
+     "w": 51,
+     "h": 51,
+     "vis": true
+    },
+    "top": {
+     "x": 342,
+     "y": 248,
+     "w": 45,
+     "h": 347,
+     "vis": true
+    }
+   }
+  },
+  {
+   "name": "portrait：出兵面板不遮挡摇杆和动作键",
+   "ok": true,
+   "detail": {
+    "open": true,
+    "overlap": [],
+    "cards": 10
+   }
+  },
+  {
+   "name": "portrait：点卡片升级银行",
+   "ok": true,
+   "detail": {
+    "gold": 100,
+    "bank": 2
+   }
+  },
+  {
+   "name": "portrait：✕ 关闭面板",
+   "ok": true
+  }
+ ]
+}

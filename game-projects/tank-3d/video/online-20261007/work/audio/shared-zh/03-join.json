@@ -1,0 +1,103 @@
+{
+  "text": "队友填好房间码和密码，加入之后点准备。房主点击全队开始，一起进同一张地图。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "engine": "Edge-TTS online service",
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3750000,
+      "text": "队友"
+    },
+    {
+      "offset": 5000000,
+      "duration": 2250000,
+      "text": "填"
+    },
+    {
+      "offset": 7250000,
+      "duration": 1750000,
+      "text": "好"
+    },
+    {
+      "offset": 9250000,
+      "duration": 5250000,
+      "text": "房间码"
+    },
+    {
+      "offset": 14750000,
+      "duration": 1500000,
+      "text": "和"
+    },
+    {
+      "offset": 16375000,
+      "duration": 4500000,
+      "text": "密码"
+    },
+    {
+      "offset": 24250000,
+      "duration": 3250000,
+      "text": "加入"
+    },
+    {
+      "offset": 27625000,
+      "duration": 3000000,
+      "text": "之后"
+    },
+    {
+      "offset": 30625000,
+      "duration": 1500000,
+      "text": "点"
+    },
+    {
+      "offset": 32250000,
+      "duration": 4000000,
+      "text": "准备"
+    },
+    {
+      "offset": 42000000,
+      "duration": 3875000,
+      "text": "房主"
+    },
+    {
+      "offset": 46000000,
+      "duration": 3875000,
+      "text": "点击"
+    },
+    {
+      "offset": 50125000,
+      "duration": 3250000,
+      "text": "全队"
+    },
+    {
+      "offset": 53500000,
+      "duration": 5000000,
+      "text": "开始"
+    },
+    {
+      "offset": 61375000,
+      "duration": 3000000,
+      "text": "一起"
+    },
+    {
+      "offset": 64500000,
+      "duration": 3250000,
+      "text": "进同"
+    },
+    {
+      "offset": 67875000,
+      "duration": 750000,
+      "text": "一"
+    },
+    {
+      "offset": 68625000,
+      "duration": 1375000,
+      "text": "张"
+    },
+    {
+      "offset": 70125000,
+      "duration": 4250000,
+      "text": "地图"
+    }
+  ]
+}

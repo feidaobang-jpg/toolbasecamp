@@ -1,0 +1,70 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "list": [
+        {
+          "created_time": 1791465041,
+          "last_event": "review_submitted",
+          "status": "reviewing",
+          "status_label": "审核中",
+          "status_value": 1,
+          "version": "V-20261008-2",
+          "version_id": "V-20261008-2"
+        },
+        {
+          "created_time": 1791458574,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线（素材待优化）",
+          "status_reason": "1. 宣传图（16:9）、竖版游戏封面图目前暂不符合素材要求，宣传图、封面图应在原生高清图片素材的基础上，有清晰可辨识的游戏标题或LOGO以及能稳定传递游戏风格、玩法的元素，并且有符合TapTap标准的审美排版保证宣传图的精美观感，建议参考站内编辑推荐游戏，优化主体呈现、构图排版与整体美术表现。\n",
+          "status_value": 4,
+          "version": "V-20261008-1",
+          "version_id": "V-20261008-1"
+        },
+        {
+          "created_time": 1791426517,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261008",
+          "version_id": "V-20261008"
+        },
+        {
+          "created_time": 1791363750,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007-1",
+          "version_id": "V-20261007-1"
+        },
+        {
+          "created_time": 1791334953,
+          "last_event": "published",
+          "status": "online",
+          "status_label": "已上线",
+          "status_value": 4,
+          "version": "V-20261007",
+          "version_id": "V-20261007"
+        }
+      ],
+      "page": 1,
+      "page_size": 100,
+      "total": 5
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "pagination": {
+      "pages": 1,
+      "truncated": false
+    },
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

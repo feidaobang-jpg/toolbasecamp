@@ -1,0 +1,77 @@
+{
+ "schema_version": 1,
+ "game_id": "mario-3d",
+ "version": "v2.4.5",
+ "base_version": "v2.4.4",
+ "created_at": "2026-10-07T06:19:13+08:00",
+ "classification": "普通补丁",
+ "reason": "AGENTS.md「2026-10-06 右上按钮布局补充」：全屏按实际浏览器能力检测，不因手机分类隐藏，拒绝时保留可玩回退；参考赤色要塞 v0.7.9（0e6bdb8a / a37f8377）。",
+ "build": {
+  "id": "v2.4.5",
+  "entrypoint": "public/html/game/mario-3d/index.html",
+  "source_sha256": {
+   "public/html/game/mario-3d/main.js": "60e6121bc4a1aa10878d56d094ac06b3ec61887a5cdf04cb69d69ae003c54cfe",
+   "public/html/game/mario-3d/style.css": "75bef51a54e22157eb8eca3788f745ce7682eec8651597970e12a2c49b57e793",
+   "public/html/game/mario-3d/index.html": "46f11faf9ddc05c966605192b840d114f93aa65b993aa28bfd9a23d6924bdece"
+  }
+ },
+ "changes": [
+  {
+   "id": "fs-capable",
+   "before": "CSS 按 body.mobile-device 隐藏全屏，但公共 drag-look.js 注入 display:block!important，结果手机上总显示——iPhone Safari、未授权全屏的 iframe 也显示一个点了无效的按钮",
+   "after": "fsCapable()（元素有 requestFullscreen/webkitRequestFullscreen 且 fullscreenEnabled 不为 false）决定 #btn-fs 与菜单「全屏」的 hidden；已在全屏时总显示以便退出；html body #btn-fs[hidden] 压过公共样式"
+  },
+  {
+   "id": "menu-nav-visible",
+   "before": "菜单 ↑↓ 列表只排除 hidden 属性",
+   "after": "同时排除无布局盒（样式隐藏）的项，首焦点在布局完成后设置，避免焦点落到看不见的项"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "fs-shown-unsupported",
+   "status": "fixed",
+   "cause": "旧规则按设备分类隐藏，又被公共界面的 !important 规则反向覆盖，与 10-06 按能力检测的规则矛盾"
+  }
+ ],
+ "qa": {
+  "script": "game-projects/mario-3d/qa/fullscreen.cjs",
+  "results": {
+   "fullscreen.json": "71/71",
+   "comment-regressions.json": "36/36",
+   "pipe-clear-buttons（v2.4.4 任务脚本，合并后重跑）": "12/12"
+  },
+  "viewports": [
+   "desktop 1280×720",
+   "手机横屏 844×390",
+   "手机竖屏 390×844（开局自动旋转）"
+  ],
+  "method": "Playwright + Edge（RTX 4060 Ti），capable 原样 / incapable 用 addInitScript 删掉 requestFullscreen 并令 fullscreenEnabled=false；手机段全程触摸、不按键盘",
+  "f_key": "本游戏没有 F 全屏快捷键，未新增；只测按钮与菜单",
+  "exit_fullscreen": "退出全屏后自动暂停（原行为保持）",
+  "physical_phone_test": false,
+  "screenshots": "只留本机 qa/out/"
+ },
+ "channels": {
+  "website": {
+   "commit": "9e4b9b72",
+   "verified_at": "2026-10-07T06:35:00+08:00",
+   "method": "Actions Deploy 成功；线上 game.min.js / main.js / style.css 与仓库 sha256 一致；线上手机模拟 capable/incapable 各一遍，按钮显隐正确",
+   "status": "deployed_verified",
+   "superseded_by": "v2.4.5-bgmfull1（BGM 任务在本改动之上部署，含本改动）"
+  },
+  "toy": {
+   "id": 39043286960128,
+   "status": "not_submitted_by_this_task",
+   "reason": "并行 Codex 任务正在为 v2.4.4 做 Toy 预览；随后 BGM 任务以含本改动的 v2.4.5-bgmfull1 包于 06:54:47 送审（包内已有 fsCapable 与 #btn-fs[hidden] 规则），不重复提交同一目标",
+   "published_via": {
+    "version": "v2.4.5-bgmfull1",
+    "verified_at": "2026-10-07T07:07:08+08:00",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23217/index.html",
+    "check": "公开包含 fsCapable 与 #btn-fs[hidden] 规则，桌面打开全屏按钮显示"
+   }
+  },
+  "bilibili": "pending_merge（普通补丁；现有视频简介未提全屏，仍准确）"
+ },
+ "merge_note": "并行任务（Codex mario-pipes-buttons-20261007）已占用 v2.4.4（过关中断与水管修复），本改动整合主线后顺延为 v2.4.5，包含其改动。"
+}

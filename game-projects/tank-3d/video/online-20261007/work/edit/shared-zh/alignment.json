@@ -1,0 +1,338 @@
+[
+  {
+    "start": 0.28,
+    "end": 1.35,
+    "text": "这回守老鹰",
+    "segment": "01-hook",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 1.5425,
+    "end": 2.7125000000000004,
+    "text": "终于有人帮忙了",
+    "segment": "01-hook",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 3.1550000000000002,
+    "end": 6.5625,
+    "text": "坦克大战现在支持两到四人联机合作！",
+    "segment": "01-hook",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 7.18,
+    "end": 8.075,
+    "text": "建个房间",
+    "segment": "02-room",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 8.2175,
+    "end": 10.0875,
+    "text": "把六位房间码告诉队友",
+    "segment": "02-room",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 10.5425,
+    "end": 11.9625,
+    "text": "只想跟熟人玩",
+    "segment": "02-room",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 12.192499999999999,
+    "end": 13.4125,
+    "text": "还可以设个密码",
+    "segment": "02-room",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 14.046666666666665,
+    "end": 16.154166666666665,
+    "text": "队友填好房间码和密码",
+    "segment": "03-join",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 16.371666666666666,
+    "end": 17.691666666666666,
+    "text": "加入之后点准备",
+    "segment": "03-join",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 18.146666666666665,
+    "end": 19.916666666666668,
+    "text": "房主点击全队开始",
+    "segment": "03-join",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 20.084166666666665,
+    "end": 21.504166666666666,
+    "text": "一起进同一张地图",
+    "segment": "03-join",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 22.14666666666667,
+    "end": 24.46666666666667,
+    "text": "这次用两个独立窗口实测",
+    "segment": "04-start",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 24.921666666666667,
+    "end": 26.129166666666666,
+    "text": "金色是一号",
+    "segment": "04-start",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 26.296666666666667,
+    "end": 27.366666666666667,
+    "text": "蓝色是二号",
+    "segment": "04-start",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 27.821666666666665,
+    "end": 29.15416666666667,
+    "text": "各开一辆坦克",
+    "segment": "04-start",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 29.33416666666667,
+    "end": 31.09166666666667,
+    "text": "先把挡路的砖墙打通",
+    "segment": "04-start",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 31.713333333333335,
+    "end": 32.82083333333333,
+    "text": "敌人压下来了",
+    "segment": "05-fight",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 33.013333333333335,
+    "end": 34.22083333333333,
+    "text": "先把左路拦住",
+    "segment": "05-fight",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 34.67583333333333,
+    "end": 35.82083333333333,
+    "text": "二号被打爆",
+    "segment": "05-fight",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 35.913333333333334,
+    "end": 37.18333333333333,
+    "text": "还能重新出发",
+    "segment": "05-fight",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 37.638333333333335,
+    "end": 38.89583333333333,
+    "text": "一号继续顶着",
+    "segment": "05-fight",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 39.225833333333334,
+    "end": 41.45833333333333,
+    "text": "战斗没有因为队友阵亡就停下来",
+    "segment": "05-fight",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 42.08,
+    "end": 42.912499999999994,
+    "text": "最后一辆",
+    "segment": "06-result",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 43.154999999999994,
+    "end": 43.762499999999996,
+    "text": "击毁！",
+    "segment": "06-result",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 44.205,
+    "end": 46.012499999999996,
+    "text": "这一关二十辆敌人清完",
+    "segment": "06-result",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 46.305,
+    "end": 47.24999999999999,
+    "text": "老鹰还在",
+    "segment": "06-result",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 47.692499999999995,
+    "end": 48.724999999999994,
+    "text": "合作模式",
+    "segment": "06-result",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 48.83,
+    "end": 50.11249999999999,
+    "text": "这次确实打通了",
+    "segment": "06-result",
+    "y": 805,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 51.946666666666665,
+    "end": 54.416666666666664,
+    "text": "不过现在还不能中途加入",
+    "segment": "07-limits",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 54.87166666666666,
+    "end": 55.916666666666664,
+    "text": "房主退出",
+    "segment": "07-limits",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 56.08416666666666,
+    "end": 57.09166666666666,
+    "text": "房间就结束",
+    "segment": "07-limits",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 57.54666666666667,
+    "end": 58.604166666666664,
+    "text": "开局之前",
+    "segment": "07-limits",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 58.92166666666667,
+    "end": 59.94166666666666,
+    "text": "先把人凑齐",
+    "segment": "07-limits",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 60.58,
+    "end": 62.887499999999996,
+    "text": "游戏已经在哔哩哔哩Toy上线",
+    "segment": "08-toy",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 63.33,
+    "end": 65.4125,
+    "text": "视频下方入口就能试玩",
+    "segment": "08-toy",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 65.5925,
+    "end": 67.15,
+    "text": "叫上队友一起守老鹰",
+    "segment": "08-toy",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 67.5925,
+    "end": 68.8625,
+    "text": "喜欢这次联机",
+    "segment": "08-toy",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 68.99249999999999,
+    "end": 70.5375,
+    "text": "顺手来个三连补给",
+    "segment": "08-toy",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 71.17999999999999,
+    "end": 74.025,
+    "text": "玩完去百宝箱的游戏投票榜点一下",
+    "segment": "09-vote",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 74.3425,
+    "end": 76.3,
+    "text": "想玩什么也写进愿望单",
+    "segment": "09-vote",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 76.74249999999999,
+    "end": 77.925,
+    "text": "票数和反馈",
+    "segment": "09-vote",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  },
+  {
+    "start": 78.155,
+    "end": 80.8375,
+    "text": "会帮我决定接下来优先优化哪款",
+    "segment": "09-vote",
+    "y": 925,
+    "timing_source": "Edge-TTS WordBoundary"
+  }
+]

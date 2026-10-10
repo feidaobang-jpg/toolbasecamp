@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-rv-v0.28.0",
+  "base_version": "web-versus-teams-v0.27.0",
+  "classification": "正式版本",
+  "summary": "新增单人房车突围短线：开车穿过虫群，停车补给、搜索、维修升级，抵达撤离隧道",
+  "source_request": "用户2026-10-08确认增加房车模式，并回复做",
+  "entry": "主菜单 → 房车突围 → 开始/继续房车进度",
+  "save": "房车独立本地存档；不替换战役本地或云存档",
+  "qa": {
+    "functional": "qa/results.json",
+    "complete_route": "qa/route-balance.json",
+    "versus_regression": "qa/versus-regression/verify-versus.json",
+    "campaign_audio": "qa/campaign-audio/results.json",
+    "physical_phone_test": false,
+    "human_difficulty_test": false,
+    "visual_review": "截图和连续视频帧；天空断层已修；手机横竖屏布局模拟通过",
+    "production": "qa/production/results.json",
+    "toy_public": "qa/toy-public/results.json",
+    "taptap_exact_zip": "qa/taptap-package/results.json"
+  },
+  "media": [
+    {
+      "id": "rv-media-1",
+      "file": "releases/web-rv-v0.28.0/qa/desktop-menu.png",
+      "sha256": "3781d0b39175e38d9280e2a891dc96c14082df3f831e6b35fb03c93ece1ea216",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-menu.png; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-2",
+      "file": "releases/web-rv-v0.28.0/qa/desktop-drive.png",
+      "sha256": "bcfeabf5749b4360c0a9e89a10f10d404f7bef34f25f7b7b3dcc34c8d19f91bf",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-drive.png; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-3",
+      "file": "releases/web-rv-v0.28.0/qa/desktop-win.png",
+      "sha256": "01c04336f96ab830de6fed81cc828cdfc7b9744de73f1cce73888ee21cf6d497",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "qa/desktop-win.png; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-4",
+      "file": "releases/web-rv-v0.28.0/qa/mobile-landscape.png",
+      "sha256": "ad9851eeb224beb73c21a2df3834907011dd3a07d1e44ec286ef317d8ac11e06",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "qa/mobile-landscape.png; QA boundary staging where noted",
+      "width": 844,
+      "height": 390,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-5",
+      "file": "releases/web-rv-v0.28.0/qa/mobile-portrait.png",
+      "sha256": "e56527403f8bc3c258bdb7e9a9894d6c6b54a2ef27f7b868d246b8dcd5cf06ef",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "qa/mobile-portrait.png; QA boundary staging where noted",
+      "width": 390,
+      "height": 844,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-6",
+      "file": "releases/web-rv-v0.28.0/capture/01-arrival.png",
+      "sha256": "c393498abb83aebde623a216c0935ab30231c3d053322e4813b46f1a4b36174e",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "capture/01-arrival.png; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-7",
+      "file": "releases/web-rv-v0.28.0/capture/02-search.png",
+      "sha256": "15327c9fa56077ba5ff8abd8380d87414c23b93c4ca9926c52756da29218b4d4",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "capture/02-search.png; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-8",
+      "file": "releases/web-rv-v0.28.0/capture/03-loot.png",
+      "sha256": "d298eaaa8559a63be73323b383930876d5eea07f227ab3412164fecf854ba989",
+      "kind": "screenshot",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "capture/03-loot.png; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "rv-media-9",
+      "file": "releases/web-rv-v0.28.0/capture/rv-supply-real-time.webm",
+      "sha256": "92606cb91a103afa1253a628adb37e5e75cdb96598f0ff6262cbfb3673008481",
+      "kind": "video",
+      "version": "web-rv-v0.28.0",
+      "build_id": "rv280-69d2dc9db07a",
+      "capture_mode": "realtime-automation",
+      "description": "capture/rv-supply-real-time.webm; QA boundary staging where noted",
+      "width": 1280,
+      "height": 720,
+      "duration_seconds": 26.49357,
+      "audio": "game",
+      "visual_review": "pass",
+      "audio_review": "not-run",
+      "segments": [
+        {
+          "in_seconds": 0,
+          "out_seconds": 5,
+          "description": "驾驶驶向补给站"
+        },
+        {
+          "in_seconds": 7,
+          "out_seconds": 25,
+          "description": "下车搜索，虫群进入，房车自动射击"
+        }
+      ]
+    }
+  ],
+  "channels": {
+    "website": "deployed_public_verified",
+    "toy": "published_public_verified",
+    "taptap": "reviewing",
+    "bilibili": "both_descriptions_public_verified"
+  },
+  "next_scope": "先收集房车首版反馈，再决定是否扩展路线或车辆",
+  "created_at": "2026-10-08T09:28:23.444492+00:00",
+  "build": {
+    "id": "rv280-69d2dc9db07a",
+    "commit": "e53324f5bfc97ce8d08852b856d3aee42622c186",
+    "dirty": true,
+    "fingerprint": "69d2dc9db07a9761c892b2fff8afe0cb177bf35a4db94599331b90bf9a29a70e",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "media_summary": {
+    "readiness": "partial",
+    "manifest": "capture/manifest.json",
+    "screenshots": [
+      "qa/desktop-menu.png",
+      "qa/desktop-drive.png",
+      "qa/desktop-win.png",
+      "qa/mobile-landscape.png",
+      "qa/mobile-portrait.png",
+      "capture/01-arrival.png",
+      "capture/02-search.png",
+      "capture/03-loot.png"
+    ],
+    "video": "capture/rv-supply-real-time.webm",
+    "video_note": "实时Canvas与实际游戏音频；录制前QA设置补给站附近起点，之后键盘与自动导航轴操作；DOM HUD另见截图；不冒充真人完整通关",
+    "missing": [
+      "真人完整游玩与难度反馈",
+      "手机真机性能",
+      "本版人工审片成片"
+    ],
+    "hook": "基地能开走了：停车搜物资时，虫潮照样追上来",
+    "thumbnail": "沿用现有虫潮主封面；基地防守仍是主内容，房车为追加短线"
+  },
+  "feature_inventory": [
+    {
+      "id": "rv-drive",
+      "description": "装甲房车短线驾驶和燃料",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv-media-1",
+        "rv-media-9"
+      ]
+    },
+    {
+      "id": "rv-supply",
+      "description": "三个补给站停车通行与搜索",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv-media-1",
+        "rv-media-9"
+      ]
+    },
+    {
+      "id": "rv-service",
+      "description": "零件维修及机枪/装甲升级",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv-media-1",
+        "rv-media-9"
+      ]
+    },
+    {
+      "id": "rv-save",
+      "description": "独立本地自动保存和继续",
+      "status": "implemented",
+      "evidence_ids": [
+        "rv-media-1",
+        "rv-media-9"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "rv-first-route",
+      "feature_ids": [
+        "rv-drive",
+        "rv-supply",
+        "rv-service",
+        "rv-save"
+      ],
+      "before": "无房车模式",
+      "after": "独立单人房车短线，主菜单可进入",
+      "evidence_ids": [
+        "rv-media-1",
+        "rv-media-2",
+        "rv-media-3",
+        "rv-media-4",
+        "rv-media-5",
+        "rv-media-6",
+        "rv-media-7",
+        "rv-media-8",
+        "rv-media-9"
+      ],
+      "verification": "浏览器功能、固定步长完整路线及原模式回归通过"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "rv-sky-offset",
+      "status": "fixed",
+      "cause": "长路线天空球固定在中点",
+      "fix": "随房车平移，退出恢复",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "rv-media-2",
+        "rv-media-9"
+      ],
+      "retest": "真实驾驶录像连续帧无天空断层；修复前未保存媒体"
+    }
+  ],
+  "historical_media": [],
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "真人完整游玩与难度反馈",
+      "手机真机性能",
+      "本版人工审片成片"
+    ]
+  },
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-v0.28.0-20261008",
+  "package_source_commit": "35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "capture_build_note": "captures were made before commit, from the runtime fingerprint now committed at 35736c34293552e1d48d4b4e3cc6f7ccb0f2b5de",
+  "pending": [
+    "TapTap审核自然等待；确认online后核验公开入口，再按既有授权合并社区说明",
+    "房车视频为候选素材，未发布新视频；如制片仍需人工审片"
+  ]
+}

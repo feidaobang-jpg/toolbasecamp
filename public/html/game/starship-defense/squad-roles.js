@@ -1,4 +1,5 @@
 // Squad jobs are independent of the player's starting class.
+export const MAX_SQUAD=12;
 export const SQUAD_ROLES={
   gunner:{name:'机枪兵',hp:130,speed:7,damage:10,rate:.18,range:28,hold:15,color:0x6ba8ef,price:400,brief:'厚甲持续扫射，守线压制',mark:'机'},
   assault:{name:'突击兵',hp:110,speed:8.5,damage:7,pellets:5,rate:.7,range:18,hold:9,color:0xf0ad57,price:450,brief:'近距离霰弹齐射，快速接敌',mark:'突'},

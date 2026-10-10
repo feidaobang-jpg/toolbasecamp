@@ -135,10 +135,10 @@ export function chibiHead(b, x, y, z, s, helmet, helmetColor) {
 }
 
 // 玩家吉普：返回 { root, body, turret, wheels[], riders[] }
-export function makeJeep() {
-  const bodyGeo = cached('jeepBody', () => {
+export function makeJeep(teamColor = C.olive) {
+  const bodyGeo = cached('jeepBody-' + teamColor, () => {
     const b = [];
-    part(b, 'rbox', C.olive, [0, 0.62, 0.05], [1.5, 0.5, 2.5]);
+    part(b, 'rbox', teamColor, [0, 0.62, 0.05], [1.5, 0.5, 2.5]);
     part(b, 'rbox', C.oliveL, [0, 0.9, -0.72], [1.36, 0.24, 0.95]);
     part(b, 'cyl', C.cream, [0, 1.03, -0.72], [0.52, 0.02, 0.52]);
     part(b, 'box', C.dark, [0, 0.66, -1.24], [1.08, 0.34, 0.08]);

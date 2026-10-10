@@ -1,0 +1,132 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "category": {
+          "current_value": "strategy",
+          "field_id": "category",
+          "filled": true,
+          "input_type": "select",
+          "label": "游戏类型",
+          "options": [
+            "rpg",
+            "casual",
+            "action",
+            "strategy",
+            "simulation",
+            "trivia",
+            "arcade",
+            "adventure",
+            "card",
+            "sports",
+            "racing",
+            "puzzle",
+            "educational",
+            "music",
+            "word",
+            "board"
+          ],
+          "state": "required",
+          "value_labels": {
+            "action": "动作",
+            "adventure": "冒险",
+            "arcade": "街机",
+            "board": "桌游",
+            "card": "卡牌",
+            "casual": "休闲",
+            "educational": "教育",
+            "music": "音乐",
+            "puzzle": "解谜",
+            "racing": "竞速",
+            "rpg": "角色扮演",
+            "simulation": "模拟",
+            "sports": "体育",
+            "strategy": "策略",
+            "trivia": "益智",
+            "word": "文字"
+          }
+        },
+        "description": {
+          "current_value": "虫群正在逼近，你要守住围城中的基地。\n\n在准备阶段规划防线、建设炮塔和补给设施，雇佣并指挥队友；战斗开始后亲自移动作战，也可以接管已购载具，抵御来自地面与空中的虫群。\n\n提供休闲、普通、困难三种战役难度，支持电脑键鼠和手机触屏操作，并可在设置中切换操作模式、调整触屏按键布局。\n\n这是持续开发中的免费试玩版本，支持本地存档、存档文件导入/导出，以及使用工具大本营网站账号登录后的云端备份与恢复。\n\n更新（2026-10-07·v0.24.0）：新增网站账号云存档——登录后普通模式检查点自动备份，本地清空后可从档案站选档恢复，云端与本地不一致时先选择上传或读取，不静默覆盖；联机统一支持2–4人合作，建房可选人数、中途加入/退出保留战场、闲置30秒电脑接管。\n\n更新（2026-10-08·v0.25.0）：优化 TapTap 启动加载，异常或等待过久时显示原因并可重试；保留已有存档。修复载具卡地形后无法移动的问题，新增 RPG 火箭筒和四连导弹架。\n\n更新（2026-10-08·v0.26.0）：新增「虫潮对战」1 对 1——每 10 秒进账、可升级银行，派兵放虫去拆对面基地核心，自己也端枪上场；可对战简单/普通/困难三档电脑，或和好友联机 1 对 1（房主计算整局，娱乐对战不计排位）。",
+          "field_id": "description",
+          "filled": true,
+          "input_type": "textarea",
+          "label": "游戏简介",
+          "state": "suggested"
+        },
+        "description_ios": {
+          "field_id": "description_ios",
+          "filled": false,
+          "input_type": "textarea",
+          "label": "游戏简介(iOS)",
+          "state": "optional"
+        },
+        "icon": {
+          "current_value": "https://img-tc.tapimg.com/market/images/0c485bb20d5f274fadc83274039845f4.png",
+          "field_id": "icon",
+          "filled": true,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "必须为方图，禁止自行切圆角",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 512,
+            "min_width": 512
+          },
+          "input_type": "image",
+          "label": "游戏图标",
+          "state": "required"
+        },
+        "icon_ios": {
+          "field_id": "icon_ios",
+          "filled": false,
+          "image_spec": {
+            "aspect_ratio": "1:1",
+            "content_note": "必须为方图，禁止自行切圆角",
+            "formats": [
+              "JPG",
+              "PNG"
+            ],
+            "min_height": 512,
+            "min_width": 512
+          },
+          "input_type": "image",
+          "label": "游戏图标(iOS)",
+          "state": "optional"
+        },
+        "title": {
+          "constraints": {
+            "max_length": 50,
+            "min_length": 1
+          },
+          "current_value": "虫潮围城",
+          "field_id": "title",
+          "filled": true,
+          "input_type": "text",
+          "label": "游戏名称",
+          "state": "required"
+        },
+        "title_ios": {
+          "field_id": "title_ios",
+          "filled": false,
+          "input_type": "text",
+          "label": "游戏名称(iOS)",
+          "state": "optional"
+        }
+      },
+      "module_id": "basic-info",
+      "revision": 1046502
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

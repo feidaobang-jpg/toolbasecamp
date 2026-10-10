@@ -1,0 +1,251 @@
+{
+  "schema_version": 2,
+  "variant_id": "bilibili-zh",
+  "platform": "Bilibili",
+  "content_type": "gameplay update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-three-lanes-v0.31.0",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 109.86666666666666,
+  "fps": 30,
+  "title": "开房车进僵尸城搜物资，我能活着回来吗？｜虫潮围城",
+  "description": "虫潮围城房车模式：开进废弃城镇，升级车顶机枪、搜索物资、维修，再找路撤离。这趟搜了2/6区，击退12只僵尸，带回314零件。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n进入游戏后选择“房车生存”；WASD驾驶/移动，J射击，I上下车/搜索，O地图与设施。\n房车城镇玩法由Codex辅助开发，本期展示实际试玩。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。",
+  "tags": [
+    "虫潮围城",
+    "房车生存",
+    "僵尸生存",
+    "游戏开发",
+    "AI",
+    "bilibilitoy"
+  ],
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "首页推荐",
+      "sha256": "053a4562c1a5f528f800b3b5beb1bb71ea0d4867132d58126a5edd8b7f7a699c"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间",
+      "sha256": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc"
+    }
+  },
+  "cover_text": "开房车 / 进僵尸城 / 能完整撤出来吗？",
+  "cover_selection_source": "同版本正常规则实机第一场96秒，原片与帧保存在work；正文使用补录第二场",
+  "cover_upload_mode": "separate_home_4x3_space_16x9_saved",
+  "subtitle_mode": "burned_in",
+  "subtitles": [],
+  "category": "游戏",
+  "copyright_type": "本人游戏实机与原创解说",
+  "credits": "../../sources.md",
+  "disclosures": {
+    "AI_generated_narration": true,
+    "voice": "Edge-TTS zh-CN-YunxiNeural +0%",
+    "voice_clone": false,
+    "AI_assisted_game_development": true,
+    "exact_game_development_model": "unverified for RV town; do not reuse versus-only model attribution",
+    "setting_status": "实际表单已按内容填写，公开页AI声明核验"
+  },
+  "platform_requirements_checked_at": "2026-10-09T17:53:41.810316+08:00",
+  "platform_sources": [],
+  "unverified_fields": [],
+  "blocking_issues": [],
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "human_review": {
+    "status": "approved",
+    "statement": "可以，发布视频吧",
+    "source": "user",
+    "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+    "file_hashes": {
+      "cover-home-4x3.jpg": "053a4562c1a5f528f800b3b5beb1bb71ea0d4867132d58126a5edd8b7f7a699c",
+      "cover-space-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+      "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "投稿文案.txt": "5ba94f2a6ad7dcdd1753fef61caf3c7f06d371f05d692bd5273ccf7493a295cc"
+    },
+    "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+  },
+  "publication": {
+    "status": "published",
+    "id": "BV1xdpx63ETu",
+    "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+    "episode_id": "rv-town-20261009",
+    "variant_id": "bilibili-zh",
+    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+    "account_id": "16214353",
+    "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+    "human_review": {
+      "status": "approved",
+      "statement": "可以，发布视频吧",
+      "source": "user",
+      "accepted_at": "2026-10-09T17:12:21.426697+08:00",
+      "approved_variant_ids": [
+        "bilibili-zh",
+        "douyin-zh",
+        "youtube-zh"
+      ],
+      "scope": "已展示的完整三平台版本集；本次仅发布该期新片",
+      "file_hashes": {
+        "cover-home-4x3.jpg": "053a4562c1a5f528f800b3b5beb1bb71ea0d4867132d58126a5edd8b7f7a699c",
+        "cover-space-16x9.jpg": "afcb3557d0a518233506139f7681deaf911ea4ecd3756f5c3e68d0392e3092fc",
+        "gameplay-zh-final.mp4": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+        "投稿文案.txt": "5ba94f2a6ad7dcdd1753fef61caf3c7f06d371f05d692bd5273ccf7493a295cc"
+      },
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe"
+    },
+    "last_observed_at": "2026-10-09T17:48:14.496398+08:00",
+    "platform_id": "BV1xdpx63ETu",
+    "public_url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+    "public_verified_at": "2026-10-09T17:48:14.496398+08:00",
+    "identity_verified": true,
+    "published_at_observed": "2026-10-09T17:29:58+08:00",
+    "duration_seconds": 110,
+    "publishing_settings": {
+      "home_cover": "4:3",
+      "space_cover": "16:9",
+      "ai_content_disclosure": true,
+      "paid_promotion": false,
+      "visibility": "public"
+    },
+    "collection_membership": {
+      "season_id": 9248439,
+      "title": "合集·虫潮围城开发实录",
+      "url": "https://space.bilibili.com/16214353/lists/9248439?type=season",
+      "order": 4,
+      "previous_members": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD"
+      ],
+      "status": "public_video_and_directory_verified",
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-collection.jpg"
+    },
+    "toy_binding": {
+      "toy_id": "38678478981120",
+      "slug": "chongchao-qianshao",
+      "status": "bound_verified",
+      "receipt": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\toy-binding-result.json"
+    },
+    "pinned_comment": {
+      "status": "public_pin_verified",
+      "text": "先选“房车生存”，在修理厂改装、加油站补油，再去感染区下车搜物资。你会先升级机枪，还是先加装甲？\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。",
+      "sha256": "df0bf1d9c12f674c9b2b80421a59dc2233f619c02258c5074d1ec66c8c8deb0f",
+      "comment_id": null,
+      "note": "公开页核验作者、全文与置顶标记；未从UI取得评论ID。",
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-comment-pinned.jpg"
+    },
+    "automatic_dynamic": {
+      "status": "public_card_verified",
+      "url": "https://space.bilibili.com/16214353/dynamic",
+      "additional_post": false,
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-dynamic.jpg"
+    },
+    "toy_push_application": {
+      "status": "submitted_cloud_saved",
+      "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+      "sheet": "【进行中】日常推流",
+      "range": "A330:E330",
+      "values": [
+        "飞刀班长",
+        "https://www.bilibili.com/video/BV1xdpx63ETu/",
+        "是",
+        "是",
+        "是"
+      ],
+      "operator_feedback_cell": "F330",
+      "operator_feedback": null,
+      "verified_at": "2026-10-09T17:48:14.379124+08:00",
+      "reload_verified": true,
+      "real_hyperlink_click_verified": true,
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-application-saved-row330.jpg",
+      "note": "申请保存且B330蓝色下划线链接实点到正确BV；F330为空，运营是否推流尚未确认。"
+    },
+    "traffic_reward": {
+      "status": "no_available_free_reward",
+      "available_exposure": 0,
+      "url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-free-rewards.jpg"
+    },
+    "related_activities": {
+      "status": "related_video_check_completed",
+      "scope": "本期Toy活动、推流申请与免费流量奖励；非全账号全面检查",
+      "checked_at": "2026-10-09T17:48:14.379124+08:00",
+      "current_video_bvid": "BV1xdpx63ETu",
+      "current_video_published": true,
+      "toy_challenge": {
+        "official_url": "https://www.bilibili.com/opus/1248175010173943812",
+        "deadline": "2026-10-31T23:59:00+08:00",
+        "topic_id": 1346285,
+        "status": "public_topic_and_toy_binding_verified",
+        "high_energy_video_award": "活动期投稿的参赛Toy视频播放量须超过300；未宣称本片已达标或获奖",
+        "rules_evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-activity-rules.jpg"
+      },
+      "traffic_reward": {
+        "status": "no_available_free_reward",
+        "available_exposure": 0,
+        "url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\bilibili-free-rewards.jpg"
+      },
+      "toy_push_application": {
+        "status": "submitted_cloud_saved",
+        "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "sheet": "【进行中】日常推流",
+        "range": "A330:E330",
+        "values": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV1xdpx63ETu/",
+          "是",
+          "是",
+          "是"
+        ],
+        "operator_feedback_cell": "F330",
+        "operator_feedback": null,
+        "verified_at": "2026-10-09T17:48:14.379124+08:00",
+        "reload_verified": true,
+        "real_hyperlink_click_verified": true,
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-rv-town-20261009\\work\\proof\\toy-application-saved-row330.jpg",
+        "note": "申请保存且B330蓝色下划线链接实点到正确BV；F330为空，运营是否推流尚未确认。"
+      },
+      "shared_full_check_timestamp_advanced": false,
+      "previous_video_maintenance": "held_by_user",
+      "note": "仅登记本期新片；不接管其他未完成活动/协议申请，不新增定时任务。"
+    },
+    "previous_video_maintenance": {
+      "status": "held_by_user"
+    },
+    "sound_review": "人工审片通过；公开页播放状态与时长核验，代理未主观试听",
+    "verified_at": "2026-10-09T17:48:14.379124+08:00",
+    "next_step": null
+  },
+  "topic": {
+    "name": "哔哩哔哩Toy创意挑战",
+    "url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
+    "selected": false,
+    "status": "draft; verify current rules and select during approved submission"
+  },
+  "pinned_comment_draft": "先选“房车生存”，在修理厂改装、加油站补油，再去感染区下车搜物资。你会先升级机枪，还是先加装甲？\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。",
+  "toy_id": "38678478981120",
+  "toy_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+  "season_id": 9248439,
+  "topic_verification": "按用户指定话题准备草稿，未报名",
+  "audio_review": "用户明确通过最终审片；代理未执行主观试听"
+}

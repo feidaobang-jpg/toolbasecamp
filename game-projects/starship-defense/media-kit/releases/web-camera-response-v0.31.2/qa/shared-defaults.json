@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "steps": 1260,
+  "default_profiles_unchanged": true,
+  "rates": [
+    30,
+    60,
+    120
+  ],
+  "baseline": "origin/master at task start"
+}

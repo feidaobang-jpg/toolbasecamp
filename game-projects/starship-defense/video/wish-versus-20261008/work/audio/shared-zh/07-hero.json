@@ -1,0 +1,88 @@
+{
+  "text": "自己也能跟着部队上前线，开枪、扔手雷。既要管钱，也要看住战场。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 7.728,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "自己"
+    },
+    {
+      "offset": 4625000,
+      "duration": 875000,
+      "text": "也"
+    },
+    {
+      "offset": 5500000,
+      "duration": 1250000,
+      "text": "能"
+    },
+    {
+      "offset": 6875000,
+      "duration": 2250000,
+      "text": "跟着"
+    },
+    {
+      "offset": 9250000,
+      "duration": 2375000,
+      "text": "部队"
+    },
+    {
+      "offset": 11875000,
+      "duration": 1500000,
+      "text": "上"
+    },
+    {
+      "offset": 13375000,
+      "duration": 5000000,
+      "text": "前线"
+    },
+    {
+      "offset": 22000000,
+      "duration": 6625000,
+      "text": "开枪"
+    },
+    {
+      "offset": 32250000,
+      "duration": 2750000,
+      "text": "扔"
+    },
+    {
+      "offset": 35000000,
+      "duration": 5125000,
+      "text": "手雷"
+    },
+    {
+      "offset": 45750000,
+      "duration": 2875000,
+      "text": "既要"
+    },
+    {
+      "offset": 48750000,
+      "duration": 6500000,
+      "text": "管钱"
+    },
+    {
+      "offset": 58375000,
+      "duration": 1250000,
+      "text": "也"
+    },
+    {
+      "offset": 59625000,
+      "duration": 875000,
+      "text": "要"
+    },
+    {
+      "offset": 60625000,
+      "duration": 3125000,
+      "text": "看住"
+    },
+    {
+      "offset": 63750000,
+      "duration": 4750000,
+      "text": "战场"
+    }
+  ]
+}

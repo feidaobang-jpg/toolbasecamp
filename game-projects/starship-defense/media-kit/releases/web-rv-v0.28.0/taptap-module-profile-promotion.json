@@ -1,0 +1,48 @@
+{
+  "ok": true,
+  "data": {
+    "result": {
+      "fields": {
+        "promotion_material_type": {
+          "current_value": "GAMEPLAY_DEMO",
+          "field_id": "promotion_material_type",
+          "filled": true,
+          "input_type": "select",
+          "label": "首页推荐素材",
+          "options": [
+            "BANNER_4",
+            "GAMEPLAY_DEMO",
+            "TRAILER"
+          ],
+          "state": "optional",
+          "value_labels": {
+            "BANNER_4": "宣传图",
+            "GAMEPLAY_DEMO": "实机演示",
+            "TRAILER": "预告片"
+          }
+        },
+        "promotion_text": {
+          "constraints": {
+            "max_length": 25
+          },
+          "current_value": "建造防线，指挥队友，开载具抵御虫潮",
+          "field_id": "promotion_text",
+          "filled": true,
+          "input_type": "text",
+          "label": "首页推荐语",
+          "state": "suggested"
+        }
+      },
+      "module_id": "profile-promotion",
+      "revision": 1046885
+    },
+    "status": "completed"
+  },
+  "meta": {
+    "catalog": {
+      "source_version": "1.0.49",
+      "digest": "sha256:9e427b14ab902ce754cc4579163620846ebf5af455b6f00530d9df76aaa18389",
+      "loaded_from": "embedded"
+    }
+  }
+}

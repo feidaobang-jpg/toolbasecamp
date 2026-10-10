@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "game_id": "mario-3d-world-1-1",
+  "version": "v2.4.4",
+  "base_version": "v2.4.3",
+  "created_at": "2026-10-07T06:05:56.017884+08:00",
+  "classification": "严重修复 + 普通视觉/操作补丁",
+  "build": {
+    "id": "v2.4.4",
+    "dirty": false,
+    "commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
+    "entrypoint": "public/html/game/mario-3d/index.html",
+    "source_sha256": {
+      "audio.js": "19fef296da95f430ff73b46cecabd9fff1d0b34f45fbfaa43416cf8c68c3a060",
+      "file-warning.css": "7a8c7eb9260df34bfd5f05098e60f817ce860c09f1a02c65a3a4b0e2d7bb923f",
+      "index.html": "7e8e8a30c74e081f65f7038ab4c7ad7a95116ca992965c0110c1a511341d1b38",
+      "levels.js": "f4663d71f8d2a50e9cf472a13a1818b00f896a42485032348c9dd9f3bc4475d6",
+      "main.js": "849c3f71b64a077327e5e986ba7c30c8c1795fc0e0530fd95573541072ba24d3",
+      "models.js": "51ecb72bd39f9e52ff7df6f97b05662402c82cdabf07d684c166172d0792f46b",
+      "scene.js": "cae3f26c2e6d1fa561d3a82ca602543c9ad6a9e3fd26f7080a28bfda29c50766",
+      "style.css": "2d25324af8f41130d90837a4d892bb6c717dded34587134017a3dc3aa6a851c2",
+      "textures.js": "fb2d3fb4b3426652dee75d324e0f9b917edbed3ad95bcaf449469db840871cfc",
+      "three.js": "63d117b75fbd69fc660512004ac1abc27787a2d66de32720fb8cd62221392d98",
+      "world.js": "3ee6e7ef86ecf2fcb809d57b3a4016a2d8f76d557686d060df59c3dbc4aba9b8"
+    }
+  },
+  "changes": [
+    {
+      "id": "pipe",
+      "before": "十边形平面着色、石块棕色边框、漆面暗绿",
+      "after": "32段平滑绿色圆管、圆润真实管沿与内壁、暗部轻补光",
+      "verification": "五预设截图与实时转圈检查通过，保持原碰撞与地图"
+    },
+    {
+      "id": "clear",
+      "before": "进入城堡步行阶段引用未定义groundTopAt，中断主循环",
+      "after": "复用实体碰撞推进城堡步行，1-1自动进入1-2，1-2正常结算",
+      "verification": "完整降旗/步行/计分/烟花/城堡流程及两关回归通过"
+    },
+    {
+      "id": "J",
+      "before": "无火焰花时native disabled触发共享opacity:.45",
+      "after": "实体红键、需火焰花标签和点击说明，aria-disabled阻止无效火球",
+      "verification": "获得/丢失能力、真实投射、重玩、横竖屏和模式切换通过"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "castle-walk-crash",
+      "status": "fixed",
+      "cause": "groundTopAt未定义",
+      "before_evidence": "before-reproduction.json"
+    },
+    {
+      "id": "unavailable-action-opacity",
+      "status": "fixed",
+      "affected": [
+        "mario-3d",
+        "journey-west-3d"
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "before-pipe-side.png",
+      "file": "releases/v2.4.4/captures/before-pipe-side.png",
+      "sha256": "8d8cac3d78f594ecf7dd2818fc4ac8b51d6b21d672e404fddd1a098f6268b98e",
+      "kind": "screenshot",
+      "version": "v2.4.3",
+      "build_id": "baseline-HEAD",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "pipe-side.png",
+      "file": "releases/v2.4.4/captures/pipe-side.png",
+      "sha256": "b710e6d8b0ea8409e885b3c54ac7e6be8fe1edea4262da8b7d3e63dcc708691e",
+      "kind": "screenshot",
+      "version": "v2.4.4",
+      "build_id": "v2.4.4",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "second-stage.png",
+      "file": "releases/v2.4.4/captures/second-stage.png",
+      "sha256": "c78a37dade463d1951e7e944c3209acec7fe72028cbd8f4b1796f896bade8863",
+      "kind": "screenshot",
+      "version": "v2.4.4",
+      "build_id": "v2.4.4",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "exit-pipe.png",
+      "file": "releases/v2.4.4/captures/exit-pipe.png",
+      "sha256": "3ceb5a873082401957d7c928d8a28fd04af978a794eb94abe7878512d7337d6d",
+      "kind": "screenshot",
+      "version": "v2.4.4",
+      "build_id": "v2.4.4",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-844.png",
+      "file": "releases/v2.4.4/captures/phone-844.png",
+      "sha256": "32a70b7314ae505b9ffb1ffb820e08a9d6235af71eb74c11b9c5f9ee3f968dd8",
+      "kind": "screenshot",
+      "version": "v2.4.4",
+      "build_id": "v2.4.4",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "phone-390.png",
+      "file": "releases/v2.4.4/captures/phone-390.png",
+      "sha256": "6c17c870fc25230b578625558d28cf3a0ff345ea2b201caf9d0290f17aabb45c",
+      "kind": "screenshot",
+      "version": "v2.4.4",
+      "build_id": "v2.4.4",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "motion.webm",
+      "file": "releases/v2.4.4/captures/motion.webm",
+      "sha256": "2731dafd5beb01b0a647a14317b02133dbf6c57f1e276fe88b9762468613de8b",
+      "kind": "video",
+      "version": "v2.4.4",
+      "build_id": "v2.4.4",
+      "capture_mode": "realtime-automation",
+      "description": "Edge实机，明确使用位置迁移；截图与关卡回归有手动时钟，motion.webm为实时键盘跳跃/转镜头",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "qa": {
+    "browser": "Edge headless + D3D11 GPU",
+    "results": "qa.json",
+    "performance": "performance.json",
+    "other_games": "other-game-buttons-before.json",
+    "journey_fix": "journey-qa.json",
+    "physical_phone": false,
+    "coverage": "12项玛丽回归；实时五预设桌面/手机视口转动测量；其他五款3D网页检查",
+    "limits": [
+      "手机为视口/触控模拟，非真机",
+      "录像无音轨，当前版本视频素材仅部分就绪"
+    ],
+    "website": "website-qa.json",
+    "toy": "toy-preview-qa.json"
+  },
+  "thumbnail": {
+    "decision": "沿用",
+    "reason": "水管局部修正与过关/操作补丁，主题、整体自然低模场景和默认机位保持一致"
+  },
+  "release_channels": {
+    "website": {
+      "status": "public_verified",
+      "version": "v2.4.4",
+      "commit": "3b920de9443fa8b4931c5cb6fae810484ca16d68",
+      "verified_at": "2026-10-06T22:19:17.380462+00:00",
+      "record": "website.json"
+    },
+    "toy": {
+      "id": 39043286960128,
+      "status": "published",
+      "submitted_version": "v2.4.4",
+      "submitted_at": "2026-10-06T22:22:41+00:00",
+      "package_sha256": "a7b4ab74c538ba8553f436b01d421f7a41f8ffc0fb02129a75a2c6337a62bbfe",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_WFRQqFXp/index.html",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_HO5JCmCy/index.html",
+      "record": "toy-submit.json",
+      "note": "公开UI、平台published状态和版本资源已核验；HTTP取文件受412限制，未宣称在线逐文件哈希相等。",
+      "published_version": "v2.4.4",
+      "published_verified_at": "2026-10-06T22:29:37.492572+00:00",
+      "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v23212/index.html",
+      "public_verification": "toy-public.json"
+    },
+    "bilibili": {
+      "status": "public_verified",
+      "videos": [
+        "BV1guep6NELt",
+        "BV1Fwpw6FEFx"
+      ],
+      "reason": "通关流程卡死影响试玩，达到严重修复触发条件；保留历史视频",
+      "version": "v2.4.4",
+      "verified_at": "2026-10-06T22:19:35.956Z",
+      "record": "bili-updates.json"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "无游戏声音母版；没有手机真机验收"
+    ]
+  },
+  "preserved_artifacts": "D:\\project\\task-artifacts\\mario-fixes-20261007",
+  "activities": {
+    "status": "skipped_recent_complete_check",
+    "checked_at": "2026-10-06T22:25:35.193188+00:00",
+    "shared_last_completed_check_at": "2026-10-06T19:18:03.077+08:00",
+    "reason": "过去12小时已有全面检查；本任务修复现有游戏/简介，无新视频及已满足而未办理的待办。保留共用台账成功检查时间，不宣称本次完成全面检查。"
+  },
+  "integrated_latest": {
+    "version": "v2.4.5",
+    "mainline_commit": "9e4b9b723f7c02d4d299b5ce16dfc84c1e5c97b3",
+    "merged_head": "a7e3bd42e53b3de26e673993635db6cba830b532",
+    "qa": "final-integration-qa.json",
+    "website": "final-integration-website.json",
+    "website_verified_at": "2026-10-06T22:37:03.895437+00:00",
+    "toy_published_version": "v2.4.4",
+    "note": "最新主线由另一任务增加全屏能力检测并顺延v2.4.5；本次水管、J和过关修复保留，Toy已公开v2.4.4，全屏补丁保留其原任务待同步记录。"
+  }
+}

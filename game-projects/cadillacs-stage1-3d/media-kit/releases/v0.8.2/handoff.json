@@ -1,0 +1,132 @@
+{
+ "schema_version": 1,
+ "game_id": "cadillacs-stage1-3d",
+ "version": "v0.8.2",
+ "base_version": "v0.8.1",
+ "created_at": "2026-10-07T13:30:00+08:00",
+ "classification": "玩家反馈修复（必杀可连按、冲刺与连打声音）",
+ "build": {
+  "bundle_sha256": "5b382fd340ad36b5c1d53128eb36643d60af4ba5c27c7c42dd98bf291ebea8b5",
+  "build_id": "original-sfx-v082"
+ },
+ "changes": [
+  {
+   "id": "mega-no-restart",
+   "before": "必杀转圈中再按会从头再放",
+   "after": "做完才能再放；做完无冷却",
+   "verification": "pass"
+  },
+  {
+   "id": "mega-duration",
+   "before": "0.62 秒",
+   "after": "0.95 秒全程无敌（原作逐帧测得）",
+   "verification": "pass"
+  },
+  {
+   "id": "no-bare-hand-whoosh",
+   "before": "每拳叠合成挥空声",
+   "after": "空手只有原版打击声",
+   "verification": "pass"
+  },
+  {
+   "id": "finisher-shout-timing",
+   "before": "喝声叠在最后一下打中时",
+   "after": "最后一下起手时",
+   "verification": "pass"
+  },
+  {
+   "id": "dash-sounds",
+   "before": "起跑无声，冲刺攻击用普通拳脚声",
+   "after": "起跑 0071，冲刺打中 0083，穆斯塔法飞踢喊 V12",
+   "verification": "pass"
+  }
+ ],
+ "decisions": [
+  {
+   "topic": "必杀后几秒无敌",
+   "decision": "未加",
+   "reason": "原作 60 fps 录像必杀后不闪烁、看不到额外无敌迹象；只把动作中的无敌对齐到原作时长"
+  }
+ ],
+ "qa": [
+  {
+   "method": "qa/original-audio.js",
+   "result": "pass 58/58"
+  },
+  {
+   "method": "qa/feel.js",
+   "result": "pass 16/16"
+  },
+  {
+   "method": "qa/stage2.js",
+   "result": "pass 55/55"
+  },
+  {
+   "method": "qa/mobile.js",
+   "result": "pass 35/35",
+   "unmeasured": [
+    "physical device"
+   ]
+  },
+  {
+   "method": "qa/guns.js",
+   "result": "pass 41/41"
+  },
+  {
+   "method": "qa/combat-feedback.js",
+   "result": "32/33（失败项改前构建同样失败）"
+  },
+  {
+   "method": "site-games/qa/cooperative.cjs（本地联机大厅）",
+   "result": "cadillacs 8/8"
+  }
+ ],
+ "audio_review": "not-run（AI 无法试听）",
+ "thumbnail": {
+  "decision": "沿用",
+  "reason": "无画面变化"
+ },
+ "website": {
+  "status": "deployed_verified",
+  "commit": "1f197c98",
+  "verified_at": "2026-10-07T12:53:00+08:00",
+  "verification": "线上 game.min.js 与新增 cd-dash / cd-dashhit / cd-shout-mustapha 与提交逐字节一致；线上 qa/original-audio.js 58/58"
+ },
+ "toy": {
+  "id": 40412421031936,
+  "status": "published",
+  "package": "dist/toy-v0.8.2/package",
+  "package_tree_sha256": "fd415504604c2f8de3a40af1c760307b370156df3954543293e866b2a0865c25",
+  "preview_checks": "预览 toy-preview-check 20/20、original-audio 58/58",
+  "submitted_at": "2026-10-07T12:51:12+08:00",
+  "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_zCPIWrnh/index.html",
+  "public_check": "正式入口电脑 + 手机 20/20 显示 v0.8.2；正式入口内 original-audio 58/58",
+  "verified_at": "2026-10-07T13:12:00+08:00"
+ },
+ "bilibili": {
+  "status": "pending_merge",
+  "reason": "现有简介「保留原版打击音、必杀语音」仍准确；必杀间隔和冲刺音效属于普通修正，并入下一次有意义的说明更新"
+ },
+ "taptap": {
+  "source_version": "v0.8.2",
+  "source_commit": "1f197c98",
+  "package_sha256": "7f1efad4c023a7d50f675a7ab8df0a4f9917e6d27ef9675114e18f81fdad539f",
+  "h5_version_id": 271477,
+  "draft_version_id": "1041831",
+  "platform_version": "V-20261007-1",
+  "status": "reviewing",
+  "submitted_at": "2026-10-07T13:07:12+08:00",
+  "precheck": {
+   "blockers": [],
+   "preaudit_warnings": [
+    "title IP",
+    "description 非官方复刻",
+    "trial_note 第三方复刻"
+   ],
+   "decision": "同一已展示 IP 风险，按 taptap-force3-20261007 用户试审决定继续"
+  },
+  "verification": "verify-taptap-h5.cjs passed（3 次中 1 次因实时测试里玩家被敌人击倒导致「jump works」失败，与本次改动无关）",
+  "community_post": "pending_until_online",
+  "record": "releases/v0.8.2/handoff.json"
+ }
+}

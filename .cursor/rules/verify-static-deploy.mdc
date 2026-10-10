@@ -5,12 +5,14 @@ alwaysApply: true
 
 # 主站静态部署：push ≠ 上线
 
+游戏运行改动遵循 `game-release-cadence.mdc`：所有已完成并通过验证的代码立即发布网站；仅用户单独要求审核或限制发布时才暂停。其他渠道及原反馈结果回复统一22点批次，网站仍须完整部署核验。
+
 `zhengxiaohui.cn` 静态文件在 VPS **`/var/www/toolbasecamp`**，靠 GitHub Actions `rsync public/`。  
 **git push 成功只表示 GitHub 有新代码**；Actions 失败/卡住时，线上仍是旧 HTML/JS（曾导致改名后侧栏仍显示「文字成片」）。
 
-## 多任务部署来源与互斥
+## 多任务部署来源与顺序（2026-10-08 起无全局锁）
 
-遵守 auto-commit-push 的合并/发布锁。网站只部署已合并主线的提交；补同步前重取最新主线并检查在途 Actions/其他部署，不从过期 worktree 上传文件。旧构建不能覆盖已上线的新提交；记录本次部署提交，公网核验完成后释放本任务的锁。本机锁不自动锁住 Actions，不能把规则写入等同已建立跨主机发布队列。
+部署顺序由 Actions 保证：`deploy.yml` 的 `concurrency: production-deploy` 一次只跑一个部署、最新提交最后部署；比服务器记录 `/opt/toolbasecamp-deploy/state/last-deployed-sha` 更旧的运行会报错拒绝覆盖。推送后不占用任何锁等待部署，自己核验即可。网站只部署已合并主线的提交，不从任务 worktree 上传文件。
 
 ## 何时必须校验
 
@@ -20,9 +22,13 @@ alwaysApply: true
 2. **抽查线上**（优先公网 URL；也可用 SSH 看 VPS 文件）：
    - 改了 locale：`https://www.zhengxiaohui.cn/js/locales/zh-CN.js` 里是否含新字符串
    - 改了某页：该页 HTML 的 `?v=` / 关键文案是否已变
-3. push 后约 **2–3 分钟**仍旧 → **判定部署未生效**，Agent **自己 SSH 补同步**，不要甩给用户。
+3. push 后约 **2–3 分钟**仍旧 → 先查部署是否还在排队：
+   `curl -s "https://api.github.com/repos/feidaobang-jpg/toolbasecamp/actions/workflows/deploy.yml/runs?branch=master&per_page=5"`，看各运行的 `head_sha`、`status`、`conclusion`。有 `queued`/`in_progress` 的运行就等它结束再抽查（最新的部署包含你的提交）。该接口未登录每小时仅 60 次、本机多个 AI 共用，常被限流；限流时改看服务器 `ssh toolbasecamp-cn "cat /opt/toolbasecamp-deploy/state/last-deployed-sha"`（上次**完整成功**的部署提交，是你的提交或其后代即已部署）。
+4. 没有在途运行、而最近一次失败或迟迟没有运行 → **判定部署未生效**，Agent **自己 SSH 补同步**，不要甩给用户；同时查看失败步骤并修复根因。
 
 ## 本机补同步（ubuntu → 需 sudo）
+
+文件**必须取自最新 `origin/master`**：先 `git fetch origin`，再 `git show origin/master:public/<路径> > <临时目录>/<文件>`，不能直接用任务工作区里的文件（可能比线上旧）。补同步不改服务器的 `last-deployed-sha`，下次 Actions 会照常补齐。
 
 Actions 用户可直接写 web root；本机 SSH `ubuntu` **不能**直接 `scp` 进 `/var/www/toolbasecamp`（属主 `lighthouse`）。标准做法：
 
@@ -34,7 +40,7 @@ ssh toolbasecamp-cn "sudo install -o lighthouse -g ubuntu -m 644 ~/sync-static/z
 # 3) 再 curl/SSH 确认新文案
 ```
 
-相关 HTML 同理：先 `~/sync-static/`，再 `sudo install` 到对应路径。改动面大时也可在 VPS 跑 `/opt/toolbasecamp-deploy/fix-static-site.sh`（会拉 origin 并 rsync，注意其内 `perl` bust 全站 `?v=`）。
+相关 HTML 同理：先 `~/sync-static/`，再 `sudo install` 到对应路径。改动面大时也可在 VPS 跑 `/opt/toolbasecamp-deploy/fix-static-site.sh`（会拉 origin 并 rsync，注意其内 `perl` bust 全站 `?v=`，且 rsync `--delete` 未排除 `data/nbcheck/*.json`，非必要不用）。
 
 ## 禁止
 

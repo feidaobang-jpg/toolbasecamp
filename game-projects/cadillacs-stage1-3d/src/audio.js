@@ -1,7 +1,8 @@
+import { ORIGINAL_FILES, originalCue } from './original-sfx.js';
 import {SampleAudio} from "../../../public/js/game/sample-audio.js";
 // 音频：优先原作各区域与 Boss 音乐（第一、二关），未加载或不可用时合成回退。
 // 点击 / 按键后解锁；所有暂停冻结音频时钟。
-let ctx = null, master = null, musicBus = null, sfxBus = null, comp = null, capDest = null, noiseBuf = null, distCurve = null;
+let ctx = null, master = null, musicBus = null, sfxBus = null, comp = null, capDest = null, noiseBuf = null, distCurve = null, roomIn = null;
 let samples=null;
 let volume = 0.8;
 try { const v = parseFloat(localStorage.getItem('cd3d-stage1:volume')); if (!isNaN(v)) volume = Math.max(0, Math.min(1, v)); } catch (e) { /* ignore */ }
@@ -20,11 +21,37 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   distCurve = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; distCurve[i] = Math.tanh(x * 3.2); }
+  roomIn = buildRoom(ctx, sfxBus);
   // 第二关：2-1 In the Poachers' Forest、2-2 Ancient Earth、2-3 与 1-2 同曲 Trap of Silence、Boss 2
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "roof.mp3", "roof":"roof.mp3", "hall": "hall.mp3", "street": "street.mp3", "boss": "boss.mp3", "select": "select.mp3", "forest": "forest.mp3", "swamp": "swamp.mp3", "grave": "hall.mp3", "boss2": "boss2.mp3"});
+  // 原版曲目没加载完时不先放合成的旧版曲子；只有原版加载失败才用合成兜底
+  // 先下最先要用的（选人曲、开场曲、所选起始关的第一首、全部音效），其余排在后面；同一个文件只下一次（stage=roof、grave=hall）
+  const startAt = (() => { try { return JSON.parse(localStorage.getItem('cd3d-stage1:stage')) | 0; } catch (e) { return 0; } })(), startStage2 = startAt === 1, startStage3 = startAt === 2;
+  // 第一批（并行）：选人曲、开场曲、全部音效，都很小；之后按需要的先后逐首下载，起始关的第一首排最前
+  const first = startStage2 || startStage3 ? ['select'] : ['select', 'opening'];
+  const S3 = ['desert', 'road', 'boss3'];
+  const order = startStage3 ? S3.concat(['clear', 'cont', 'roof', 'hall', 'street', 'boss', 'forest', 'swamp', 'boss2']) : startStage2 ? ['forest', 'swamp', 'hall', 'boss2', 'clear', 'cont'].concat(S3, ['roof', 'street', 'boss']) : ['roof', 'hall', 'street', 'boss', 'clear', 'cont', 'forest', 'swamp', 'boss2'].concat(S3);
+  const pick = (names) => Object.fromEntries(names.map(n => [n, MUSIC_FILES[n]]));
+  samples = new SampleAudio(ctx, musicBus, sfxBus, { ...pick(first), ...ORIGINAL_FILES });
+  samples.ready.then(() => loadRest(samples, order.concat(Object.keys(MUSIC_FILES).filter(n => !first.includes(n) && !order.includes(n)))));
   return ctx;
 }
 const now = () => ctx.currentTime;
+// 原版曲子：第一关（楼顶 / 大楼内部 / 47 街 / Boss 1）、第二关（森林 / 泥沼 / 尸骸地 / Boss 2）、
+// 第三关（3-A Roaring Sound 荒漠 / 3-B Like a Squall 公路 / Boss 3）、选人、开场、过关、续关
+const MUSIC_FILES = { select: 'select.mp3', opening: 'opening.mp3?v=1', roof: 'roof.mp3?v=bgmfull1', hall: 'hall.mp3?v=bgmfull1', street: 'street.mp3?v=bgmfull1', boss: 'boss.mp3?v=bgmfull1', forest: 'forest.mp3?v=bgmfull1', swamp: 'swamp.mp3?v=bgmfull1', boss2: 'boss2.mp3?v=bgmfull1', desert: 'desert.mp3?v=hr1', road: 'road.mp3?v=hr1', boss3: 'boss3.mp3?v=hr1', clear: 'clear.mp3?v=1', cont: 'continue.mp3?v=1' };
+const ALIAS = { stage: 'roof', grave: 'hall' };   // 同曲不同名：只下载一次
+// 第二批：依次下载（不和第一批抢带宽），下完一首就能用；同名别名共用同一段解码好的音频
+async function loadRest(s, names) {
+  const base = new URL('./sounds/', location.href);
+  for (const name of names) {
+    try {
+      const r = await fetch(new URL(MUSIC_FILES[name], base)); if (!r.ok) throw Error(r.status);
+      s.buffers.set(name, await s.ctx.decodeAudioData(await r.arrayBuffer()));
+      if (s.track?.name === name) s.startTrack();
+    } catch (e) { s.failed.push(name); }
+  }
+}
+function linkAlias(name) { const src = ALIAS[name]; if (src && samples && !samples.has(name) && samples.has(src)) samples.buffers.set(name, samples.buffers.get(src)); }
 // 总线：压缩 → 软限幅（tanh，小信号增益约为 1，峰值不超过 0.98）→ 主音量。爆炸、霰弹枪叠在一起时不会硬削波
 let softCurve = null;
 function buildChain(c, mBus, sBus, out) {
@@ -35,6 +62,26 @@ function buildChain(c, mBus, sBus, out) {
   mBus.connect(cp); sBus.connect(cp); cp.connect(pre); pre.connect(sh); sh.connect(out);
   return cp;
 }
+// 打击用的短混响：0.32 秒衰减的噪声脉冲，让拳脚声有“在场”的空间感
+function buildRoom(c, out) {
+  const len = Math.floor(c.sampleRate * 0.32), ir = c.createBuffer(2, len, c.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+  const cv = c.createConvolver(); cv.buffer = ir;
+  const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200;
+  const g = c.createGain(); g.gain.value = 0.22;
+  const inp = c.createGain(); inp.connect(cv); cv.connect(lp); lp.connect(g); g.connect(out);
+  return inp;
+}
+// 打击的“肉感”：正弦急速降调 + 失真，dest 可额外送进混响
+function thump(t, f0, f1, dur, peak, slide) {
+  const o = ctx.createOscillator(), sh = ctx.createWaveShaper(), g = ctx.createGain(), pre = ctx.createGain();
+  o.type = 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + (slide || dur * 0.7));
+  sh.curve = distCurve; pre.gain.value = 1.6;
+  g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(pre); pre.connect(sh); sh.connect(g); g.connect(sfxBus); if (roomIn) g.connect(roomIn);
+  o.start(t); o.stop(t + dur + 0.05);
+}
+const vary = () => 0.92 + Math.random() * 0.16;   // 每一下音高略有不同，连打不机械
 function env(g, t, a, peak, d, sus, r, len) {
   g.gain.setValueAtTime(0.0001, t);
   g.gain.linearRampToValueAtTime(peak, t + a);
@@ -59,16 +106,48 @@ function noise(t, dur, gainPeak, filt, f, q, dest, opts) {
   g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gainPeak, t + (opts && opts.a || 0.003));
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   s.connect(fl); fl.connect(g); g.connect(dest || sfxBus);
+  if (opts && opts.room && roomIn) g.connect(roomIn);
   s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.05);
+}
+
+// Short samples use this same context/bus for pause, mute, capture and offline rendering.
+const lastSample = new Map();
+const CUE_GAIN = { hit: 1.2, bodyfall: 1.0, finisher: 0.95, mega: 1.0, go: 0.9, dash: 0.9, shout: 0.95 };
+const activeSamples = new Set();
+function playOriginal(name, v, hero, t, throttle = true) {
+  const key = originalCue(name, hero), buffer = samples?.buffers.get(key);
+  if (!buffer) return false;
+  // One impact per simultaneous hit group; every subsequent combo hit still sounds.
+  if (throttle && name !== 'mega' && name !== 'go' && t - (lastSample.get(key) ?? -9) < 0.035) return true;
+  if (throttle) lastSample.set(key, t);
+  // 原作清完一波喊三遍 GO，间隔 0.59 秒（实机录像测得）
+  const repeats = name === 'go' ? 3 : 1;
+  for (let i = 0; i < repeats; i++) {
+    const source = ctx.createBufferSource(), gain = ctx.createGain();
+    source.buffer = buffer; gain.gain.value = v * (CUE_GAIN[key.split('-')[0]] ?? 1);
+    source.connect(gain); gain.connect(sfxBus);
+    if (throttle) activeSamples.add(source);
+    source.onended = () => { activeSamples.delete(source); source.disconnect(); gain.disconnect(); };
+    source.start(t + i * 0.59);
+  }
+  return true;
 }
 
 // ---------- 音效 ----------
 const SFX = {
-  punch(t, v) { noise(t, 0.09, 0.9 * v, 'lowpass', 2200, 1, null, { to: 500 }); osc('sine', 160, t, 0.12, 0.8 * v, null, { to: 60 }); },
-  punchHeavy(t, v) { noise(t, 0.16, 1.0 * v, 'lowpass', 1800, 1, null, { to: 300 }); osc('sine', 120, t, 0.2, 1.0 * v, null, { to: 40 }); osc('square', 90, t, 0.06, 0.15 * v); },
-  kick(t, v) { noise(t, 0.12, 0.9 * v, 'bandpass', 900, 0.8, null, { to: 300 }); osc('sine', 130, t, 0.16, 0.9 * v, null, { to: 45 }); },
-  whoosh(t, v) { noise(t, 0.12, 0.28 * v, 'bandpass', 900, 2, null, { to: 2600, a: 0.04 }); },
-  slam(t, v) { noise(t, 0.35, 1.0 * v, 'lowpass', 900, 1, null, { to: 120 }); osc('sine', 90, t, 0.4, 1.1 * v, null, { to: 30 }); },
+  // 拳：高频“啪”的瞬态 + 中频皮肉拍击 + 失真的降调闷响；重拳再叠低频冲击与碎裂感
+  punch(t, v) { const r = vary(); noise(t, 0.022, 0.75 * v, 'highpass', 2600 * r, 0.8); noise(t, 0.075, 0.95 * v, 'bandpass', 1500 * r, 0.9, null, { to: 650, room: true }); thump(t, 200 * r, 62, 0.13, 0.75 * v); },
+  punchHeavy(t, v) { const r = vary(); noise(t, 0.03, 0.9 * v, 'highpass', 2200 * r, 0.8); noise(t, 0.13, 1.05 * v, 'bandpass', 1100 * r, 0.8, null, { to: 380, room: true }); thump(t, 165 * r, 44, 0.26, 1.05 * v, 0.16); osc('sine', 62, t, 0.32, 0.7 * v, null, { to: 32 }); noise(t + 0.008, 0.06, 0.4 * v, 'lowpass', 3400, 1); },
+  kick(t, v) { const r = vary(); noise(t, 0.025, 0.65 * v, 'highpass', 1900 * r, 0.8); noise(t, 0.1, 0.95 * v, 'bandpass', 950 * r, 0.8, null, { to: 360, room: true }); thump(t, 160 * r, 50, 0.17, 0.9 * v); },
+  dashHit(t, v) { SFX.kickHeavy(t, v); },
+  dash(t, v) { SFX.whoosh(t, v * 0.8); },
+  kickHeavy(t, v) { const r = vary(); noise(t, 0.032, 0.85 * v, 'highpass', 1700 * r, 0.8); noise(t, 0.16, 1.1 * v, 'bandpass', 800 * r, 0.8, null, { to: 260, room: true }); thump(t, 140 * r, 38, 0.3, 1.1 * v, 0.18); osc('sine', 55, t, 0.34, 0.75 * v, null, { to: 30 }); },
+  // 挥空：轻招短促偏高，重招更长更沉（带一点低频“呼”）
+  whoosh(t, v) { const r = vary(); noise(t, 0.11, 0.5 * v, 'bandpass', 1300 * r, 1.4, null, { to: 3400 * r, a: 0.035 }); },
+  whooshHeavy(t, v) { const r = vary(); noise(t, 0.2, 0.6 * v, 'bandpass', 600 * r, 1.2, null, { to: 2200 * r, a: 0.07 }); noise(t, 0.18, 0.3 * v, 'lowpass', 500, 1, null, { a: 0.06 }); },
+  // 倒地：身体砸地的闷响 + 尘土沙沙声
+  bodyfall(t, v) { const r = vary(); thump(t, 110 * r, 40, 0.22, 0.85 * v); noise(t, 0.2, 0.75 * v, 'lowpass', 700 * r, 1, null, { to: 180, room: true }); noise(t + 0.02, 0.22, 0.18 * v, 'highpass', 3500, 0.7); },
+  slam(t, v) { noise(t, 0.35, 1.0 * v, 'lowpass', 900, 1, null, { to: 120, room: true }); thump(t, 120, 32, 0.42, 1.1 * v, 0.25); noise(t, 0.04, 0.6 * v, 'highpass', 2000, 0.8); },
   land(t, v) { noise(t, 0.08, 0.35 * v, 'lowpass', 700, 1); },
   slash(t, v) { noise(t, 0.16, 0.5 * v, 'highpass', 3000, 1, null, { to: 6000 }); osc('sawtooth', 1400, t, 0.1, 0.06 * v, null, { to: 600 }); },
   clink(t, v) { osc('triangle', 2400, t, 0.25, 0.3 * v); osc('triangle', 3600, t, 0.18, 0.18 * v); },
@@ -100,7 +179,7 @@ const SFX = {
     env(g, t, 0.01, 0.45 * v, 0.6, 0.2, 0.1, 0.6);
     o.connect(f1); f1.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + 0.9);
   },
-  hurtP(t, v) { osc('sawtooth', 300, t, 0.18, 0.18 * v, null, { to: 180 }); },
+  hurtP(t, v) { const r = vary(); osc('sawtooth', 300 * r, t, 0.18, 0.18 * v, null, { to: 180 }); thump(t, 150 * r, 55, 0.12, 0.5 * v); },
   roar(t, v) {   // 迅猛龙嘶吼
     const o = ctx.createOscillator(), g = ctx.createGain(), f1 = ctx.createBiquadFilter(), lfo = ctx.createOscillator(), lg = ctx.createGain();
     o.type = 'sawtooth'; o.frequency.setValueAtTime(380, t); o.frequency.linearRampToValueAtTime(520, t + 0.2); o.frequency.exponentialRampToValueAtTime(160, t + 0.9);
@@ -123,6 +202,17 @@ const SFX = {
   rifle(t, v) { noise(t, 0.3, 1.1 * v, 'lowpass', 5200, 0.7, null, { to: 300 }); osc('square', 260, t, 0.05, 0.4 * v, null, { to: 70 }); noise(t + 0.02, 0.5, 0.18 * v, 'bandpass', 900, 1); },
   splash(t, v) { noise(t, 0.35, 0.6 * v, 'bandpass', 1200, 0.8, null, { to: 400 }); noise(t + 0.05, 0.25, 0.25 * v, 'highpass', 3000, 1); },
   engine(t, v) { const o = osc('sawtooth', 48, t, 2.0, 0.22 * v, null, { to: 70, slide: 1.4 }); noise(t, 2.0, 0.14 * v, 'lowpass', 300, 1); },
+  // 第三关（合成）：凯迪拉克行驶中的低沉引擎声（一段约 2 秒，首尾渐入渐出，隔 1.5 秒接一段）、摩托轰油门
+  carHum(t, v) {
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+    o.type = 'sawtooth'; o.frequency.value = 54 + Math.random() * 3; o2.type = 'square'; o2.frequency.value = 27.5;
+    lfo.frequency.value = 11; lg.gain.value = 2.5; lfo.connect(lg); lg.connect(o.frequency);
+    f.type = 'lowpass'; f.frequency.value = 230; f.Q.value = 0.8;
+    env(g, t, 0.3, 0.1 * v, 0.1, 1, 0.55, 1.5);
+    o.connect(f); o2.connect(f); f.connect(g); g.connect(sfxBus);
+    for (const x of [o, o2, lfo]) { x.start(t); x.stop(t + 2.15); }
+  },
+  bikeRev(t, v) { osc('sawtooth', 92, t, 0.9, 0.2 * v, null, { to: 190, slide: 0.35 }); osc('square', 46, t, 0.8, 0.1 * v, null, { to: 95, slide: 0.35 }); noise(t, 0.9, 0.12 * v, 'bandpass', 520, 1.2); },
   brake(t, v) { osc('triangle', 1700, t, 0.4, 0.06 * v, null, { to: 1300 }); noise(t, 0.4, 0.2 * v, 'bandpass', 2200, 3); },
   snort(t, v) { noise(t, 0.25, 0.5 * v, 'bandpass', 500, 1.5, null, { to: 250 }); },
   roarBig(t, v) {   // 霸王龙：更低更长的吼声
@@ -206,6 +296,24 @@ const SONGS = {
   }
 };
 const seq = { song: null, name: null, step: 0, next: 0, timer: 0, duck: false, gain: null };
+// 有原版录音的曲目（第一、二关各区域、Boss、选人）
+// 第一关开场用原版「Opening Demo」，过关「Stage Clear」，续关倒数「Continue 1」
+let pendingMusic = null, pendingTimer = 0;
+// 原版曲还没下载好、当前也没在放原版曲：保持安静等它；下载失败才用合成兜底（开场曲没有合成版，失败就安静）
+function waitOriginal(name) {
+  const id = setInterval(() => {
+    if (seq.name !== name) return clearInterval(id);
+    linkAlias(name);
+    if (samples.has(name)) { clearInterval(id); if (!samples.track || samples.track.name !== name || !samples.source) samples.music(name, name !== 'clear' && name !== 'opening', true); }
+    else if (samples.failed.includes(name) || samples.failed.includes(ALIAS[name])) { clearInterval(id); if (name !== 'opening' && !seq.song) startSynth(name); }
+  }, 150);
+}
+const ORIGINAL_MUSIC = new Set(['stage', 'roof', 'hall', 'street', 'boss', 'select', 'forest', 'swamp', 'grave', 'boss2', 'opening', 'clear', 'cont']);
+function startSynth(name) {
+  seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
+  seq.song = SONGS[name] || (name === 'boss2' ? SONGS.boss : SONGS.stage); seq.step = 0; seq.next = now() + 0.08;
+  if (!seq.timer) seq.timer = setInterval(schedule, 25);
+}
 function leadVoice(f, t, dur, dest) {
   const g = ctx.createGain(), sh = ctx.createWaveShaper(), lp = ctx.createBiquadFilter();
   sh.curve = distCurve; lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 1.2;
@@ -260,31 +368,48 @@ const A = {
   get volume() { return volume; },
   setClock(fn) { clockFn = fn; },
   unlock() { if (!ensure()) return; syncAudioPause(); },
+  clearEffects() { for (const s of activeSamples) s.stop(); activeSamples.clear(); lastSample.clear(); },
   setVolume(v) { volume = v; try { localStorage.setItem('cd3d-stage1:volume', String(v)); } catch (e) { /* ignore */ } if (master) master.gain.value = v; },
   tick() { if (ctx && ctx.state === 'running') SFX.select(now(), 1); },
-  play(name, vol) {
-    if (log.on) log.events.push({ t: +clockFn().toFixed(3), name, vol: vol || 1 });
+  play(name, vol, hero = 'jack') {
+    if (log.on) log.events.push({ t: +clockFn().toFixed(3), name, vol: vol ?? 1, hero, sample: originalCue(name, hero), source: samples?.has(originalCue(name, hero)) ? 'original' : 'fallback' });
     if (!ctx || offRendering || ctx.state !== 'running' || volume <= 0) return;
+    if (playOriginal(name, vol ?? 1, hero, now() + 0.005)) return;
     const f = SFX[name]; if (!f) return;
     try { f(now() + 0.005, vol === undefined ? 1 : vol); } catch (e) { /* 节点上限等 */ }
   },
   music(name) {
-    if (seq.name === name && (seq.song || samples?.track)) return;
+    if (seq.name === name && (seq.song || samples?.track || pendingMusic === name)) return;
     if (log.on) log.events.push({ t: +clockFn().toFixed(3), music: name });
     seq.name = name;
     if (!ensure()) return;
-    samples?.music(name, name!=="clear");
+    if (name) linkAlias(name);
+    pendingMusic = null;
+    if (name && samples && !samples.has(name) && samples.source && !samples.failed.includes(name) && !samples.failed.includes(ALIAS[name])) {
+      // 新原版曲还没下载完：先接着放当前这首原版曲，下好立刻换（开场必杀时第一关曲还在下载就是这种情况）
+      pendingMusic = name;
+      if (!pendingTimer) pendingTimer = setInterval(() => {
+        if (!pendingMusic) return;
+        linkAlias(pendingMusic);
+        if (samples.has(pendingMusic)) { const n = pendingMusic; pendingMusic = null; samples.music(n, n !== 'clear' && n !== 'opening'); }
+        else if (samples.failed.includes(pendingMusic) || samples.failed.includes(ALIAS[pendingMusic])) { const n = pendingMusic; pendingMusic = null; samples.music(null); if (n !== 'opening') startSynth(n); }
+      }, 150);
+      if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
+      seq.gain = null; seq.song = null;
+      return;
+    }
+    samples?.music(name, name !== 'clear' && name !== 'opening');
     if (seq.gain) { const g = seq.gain; g.gain.setTargetAtTime(0, now(), 0.08); setTimeout(() => g.disconnect(), 600); }
     seq.gain = null; seq.song = null;
-    if (!name || !(SONGS[name] || ["roof","hall","street","forest","swamp","grave","boss2"].includes(name))) return;
-    seq.gain = ctx.createGain(); seq.gain.gain.value = seq.duck ? 0.25 : 1; seq.gain.connect(musicBus);
-    seq.song = SONGS[name] || (name === 'boss2' ? SONGS.boss : SONGS.stage); seq.step = 0; seq.next = now() + 0.08;
-    if (!seq.timer) seq.timer = setInterval(schedule, 25);
+    if (!name || !(SONGS[name] || ORIGINAL_MUSIC.has(name))) return;
+    if (ORIGINAL_MUSIC.has(name) && !samples?.failed.includes(name)) { waitOriginal(name); return; }
+    startSynth(name);
   },
+
   musicDuck(on) { audioPaused = !!on; syncAudioPause(); },
   pause() { /* 音效都很短，暂停时不需要单独处理 */ },
-  state: () => ({ ctx: ctx ? ctx.state : 'none', volume }),
-  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden }),
+  state: () => ({ ctx: ctx ? ctx.state : 'none', volume, originalsLoaded: Object.keys(ORIGINAL_FILES).filter(k => samples?.has(k)), failed: samples?.failed.slice() || [] }),
+  musicState: () => ({ name: seq.name, playing: !!(seq.song || samples?.source) && !audioPaused && !document.hidden, synth: !!seq.song, original: !!samples?.source, track: samples?.source ? samples.track?.name || null : null, loaded: samples ? Object.keys(MUSIC_FILES).filter(n => samples.has(n)) : [] }),
   captureStream() { if (!ensure()) return null; if (!capDest) { capDest = ctx.createMediaStreamDestination(); master.connect(capDest); } return capDest.stream; },
   logStart() { log.on = true; log.events = []; },
   logStop() { log.on = false; return log.events.slice(); },
@@ -294,7 +419,7 @@ const A = {
     const sr = 44100, SEG = 15, TAIL = 2.5;
     const N = Math.ceil(sr * dur);
     const outL = new Float32Array(N), outR = new Float32Array(N);
-    const saved = { ctx, master, musicBus, sfxBus, comp, noiseBuf };
+    const saved = { ctx, master, musicBus, sfxBus, comp, noiseBuf, roomIn };
     offRendering = true;
     try {
       const mus = events.filter(e => 'music' in e);
@@ -308,6 +433,7 @@ const A = {
         sfxBus = off.createGain(); sfxBus.gain.value = 0.9;
         comp = buildChain(off, musicBus, sfxBus, master); master.connect(off.destination);
         noiseBuf = off.createBuffer(1, sr, sr); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+        roomIn = buildRoom(off, sfxBus);
         const dest = off.createGain(); dest.connect(musicBus);
         // 本段开始的音符：只排起点落在 [s0, s1) 的
         mus.forEach((m, k) => {
@@ -328,7 +454,7 @@ const A = {
             if (D && D !== '.') drumVoice(D, lt, dest);
           }
         });
-        for (const e of events) if (e.name && SFX[e.name] && e.t >= s0 && e.t < s1) { try { SFX[e.name](e.t - s0 + 0.005, e.vol || 1); } catch (err) { /* ignore */ } }
+        for (const e of events) if (e.name && (SFX[e.name] || originalCue(e.name, e.hero)) && e.t >= s0 && e.t < s1) { try { if (!playOriginal(e.name, e.vol ?? 1, e.hero, e.t - s0 + 0.005, false) && SFX[e.name]) SFX[e.name](e.t - s0 + 0.005, e.vol ?? 1); } catch (err) { /* ignore */ } }
         const buf = await off.startRendering();
         const a = buf.getChannelData(0), b = buf.getChannelData(1), o = Math.round(s0 * sr);
         for (let i = 0; i < a.length && o + i < N; i++) { outL[o + i] += a[i]; outR[o + i] += b[i]; }
@@ -345,7 +471,7 @@ const A = {
       for (let i = 0; i < bytes.length; i += CH) { const sub = bytes.subarray(i, i + CH); let bin = ''; for (let k = 0; k < sub.length; k += 8192) bin += String.fromCharCode.apply(null, sub.subarray(k, k + 8192)); parts.push(btoa(bin)); }
       return parts.join('');
     } finally {
-      ({ ctx, master, musicBus, sfxBus, comp, noiseBuf } = saved);
+      ({ ctx, master, musicBus, sfxBus, comp, noiseBuf, roomIn } = saved);
       offRendering = false;
     }
   },

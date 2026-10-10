@@ -94,19 +94,21 @@
  {
   "id": "music",
   "use": "关卡曲、Boss 曲、过关、续关",
-  "runtime": "src/audio.js SONGS",
-  "source_type": "procedural",
-  "tool": "WebAudio 实时合成（失真锯齿主音、强力和弦、贝斯、鼓）",
-  "process": "按原作摇滚风格重新编写，非逐音转录",
-  "status": "替代（原作曲缺乐谱）"
+  "runtime": "src/audio.js SampleAudio / SONGS fallback",
+  "source_type": "original_game_recording",
+  "tool": "原版录音；合成仅在未加载/解码失败时回退",
+  "process": "下载并核对源哈希，压缩保留完整时长",
+  "status": "正式",
+  "sources": "../../site-games/releases/bgm-full-20261007/audio-sources.json"
  },
  {
   "id": "sfx",
   "use": "拳脚、枪声、爆炸、惨叫、恐龙嘶吼、拾取等",
-  "runtime": "src/audio.js SFX",
-  "source_type": "procedural",
-  "tool": "WebAudio 合成",
-  "status": "替代（非原作采样）"
+  "runtime": "src/audio.js + src/original-sfx.js; sounds/original-*.wav",
+  "source_type": "original_game_recording + procedural_fallback",
+  "tool": "WebAudio decoded arcade recordings; synthesizer retained for remaining events or download failure",
+  "status": "轻重拳脚、四名角色必杀、GO 使用原版；其他音效仍为合成",
+  "sources": "releases/v0.7.0/audio-sources.json"
  },
  {
   "id": "site-thumb",
@@ -163,11 +165,11 @@
    "boss2": "02ba43a90ea49578ff0174309280eaf16e91e84813c2d3a3890517408ec635d8"
   },
   "sha256": {
-   "forest.mp3": "d635c99fd83098c2115ddb136d36c47907009a38d16b1fa06603c87e6b22883e",
-   "swamp.mp3": "1c0c30167670107e590c4cbe6254d485f5faca717ff3d20cdb373e146b95724e",
-   "boss2.mp3": "b74295d4adbbb2b6f3bda66612f8157298d24616b69a731d1a8e3eeb24b05291"
+   "forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+   "swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93",
+   "boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d"
   },
-  "processing": "与第一关相同：前 70 秒，单声道 32kHz MP3 96kbps，无音乐改动"
+  "processing": "完整原录音，单声道32kHz MP3 96kbps；取消70秒截取"
  },
  {
   "id": "char-stage2",
@@ -185,5 +187,92 @@
   "source_type": "procedural",
   "tool": "WebAudio 合成",
   "status": "替代（非原作采样）"
- }
+ },
+  {
+    "id": "road-walk",
+    "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/ljjvbsla/16.%20Roaring%20Around%20%28Stage%203-A%29.mp3",
+    "file": "public/html/game/cadillacs-stage1-3d/sounds/road-walk.mp3",
+    "sha256": "85d6433a1cda8c5dbd47a7cfa2e9284e7bb399fda0b3fdd65bb4995d3d9e5ae2",
+    "bytes": 1599535,
+    "source_type": "supplied",
+    "use": "第三关完整原版街机BGM",
+    "process": "完整音轨，ffmpeg loudnorm I=-18 TP=-1.5 LRA=11，44.1kHz立体声96kbpsMP3；不截断循环",
+    "usage_condition": "原作录音，保留原作版权说明，不声明原创或授权"
+  },
+  {
+    "id": "road-drive",
+    "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/whuejkyn/17.%20Like%20a%20Gale%20%28Stage%203-B%2C%207-2%29.mp3",
+    "file": "public/html/game/cadillacs-stage1-3d/sounds/road-drive.mp3",
+    "sha256": "570cc8e1a2843c5a2e2710de9125728978b0d6ae2a576d35d5642d73dc45a8dd",
+    "bytes": 1024321,
+    "source_type": "supplied",
+    "use": "第三关完整原版街机BGM",
+    "process": "完整音轨，ffmpeg loudnorm I=-18 TP=-1.5 LRA=11，44.1kHz立体声96kbpsMP3；不截断循环",
+    "usage_condition": "原作录音，保留原作版权说明，不声明原创或授权"
+  },
+  {
+    "id": "boss3",
+    "url": "https://nu.vgmtreasurechest.com/soundtracks/cadillacs-dinosaurs-arcade/xnwukorq/19.%20Boss%203%20%28Stage%203%29.mp3",
+    "file": "public/html/game/cadillacs-stage1-3d/sounds/boss3.mp3",
+    "sha256": "7775e9ad043afa75849abff68d2e8ee8c35344d63d5a17341779035b81821b47",
+    "bytes": 1471630,
+    "source_type": "supplied",
+    "use": "第三关完整原版街机BGM",
+    "process": "完整音轨，ffmpeg loudnorm I=-18 TP=-1.5 LRA=11，44.1kHz立体声96kbpsMP3；不截断循环",
+    "usage_condition": "原作录音，保留原作版权说明，不声明原创或授权"
+  },
+  {
+    "id": "stage3-preview-reference",
+    "source_type": "reference",
+    "source": [
+      "https://www.hardcoregaming101.net/cadillacs-dinosaurs/",
+      "https://en.wikipedia.org/wiki/Cadillacs_and_Dinosaurs_(video_game)"
+    ],
+    "use": "电台叫车、公路撞击、霍格投雷、毁车步战流程；数值与预警为本项目调校，不宣称逐帧复刻"
+  },
+  {
+    "id": "stage3-preview-art",
+    "source_type": "procedural",
+    "runtime": [
+      "src/road-world.js",
+      "src/road.js"
+    ],
+    "use": "荒漠公路、摩托、电台、路障与预警；沿用当前人物比例与卡通色阶描边",
+    "tool": "Three.js r170；本地Canvas程序化噪声纹理"
+  },
+  {
+    "id": "ref-video-stage3-hellroad",
+    "use": "v0.11.0-hellroad.1 第三关独立重做的依据：过场、荒漠三波、送车、开车路上的顺序、霍格车战与徒步战、两种结局、结算与下一关过场",
+    "source_type": "reference",
+    "source": [
+      "https://www.youtube.com/watch?v=Y48MXUjtYwc（8:25–11:05）",
+      "https://www.youtube.com/watch?v=qeHp2Au4rfQ（6:15–8:10）"
+    ],
+    "notes": "只截帧看画面（本机临时目录），不入库、不进游戏；逐项对照见 releases/v0.11.0-hellroad.1/restoration.md"
+  },
+  {
+    "id": "music-stage3-hellroad",
+    "use": "3-1、3-2、Boss 3 原版音乐",
+    "runtime": [
+      "public/html/game/cadillacs-stage1-3d/sounds/desert.mp3",
+      "public/html/game/cadillacs-stage1-3d/sounds/road.mp3",
+      "public/html/game/cadillacs-stage1-3d/sounds/boss3.mp3"
+    ],
+    "source_type": "original_game_recording",
+    "tool": "yt-dlp 取音轨，ffmpeg 转单声道 32kHz MP3 96kbps 并对齐响度",
+    "sources": "releases/v0.11.0-hellroad.1/audio-sources.json",
+    "status": "本地候选版"
+  },
+  {
+    "id": "stage3-hellroad-art",
+    "use": "第三关荒漠 / 公路场景（红沙地、车辙土路、仙人掌、碎石堆、平顶台地、云带天空与黄昏变色）、霍格与摩托、飞车党、沃尔瑟、车手、机修工、轮胎堆",
+    "source_type": "procedural",
+    "runtime": [
+      "src/world.js（desert / road）",
+      "src/models.js（SPECS.hogg / walther / driver / biker / mechanic、buildBike、tiresGeo）",
+      "src/hellroad.js"
+    ],
+    "tool": "Three.js r170；Canvas 程序化贴图；沿用本作的写实比例 + 卡通色阶着色 + 黑描边",
+    "notes": "造型配色照原作实机画面；与仓库里另一版第三关（src/road.js、road-world.js）无关，这条分支上已不含那两个文件"
+  }
 ]

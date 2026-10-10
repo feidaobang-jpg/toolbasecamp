@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-08T10:49:38.137514+00:00",
+  "status": "pass",
+  "checks": [
+    "exact wish id/name/source guard",
+    "real published BV link",
+    "all 3 approved movie SHA256 unchanged",
+    "all platform statuses published and reupload disabled",
+    "Toy binding and previous BV bindings preserved"
+  ]
+}

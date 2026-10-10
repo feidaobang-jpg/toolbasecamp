@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "game_name": "坦克大战",
+  "game_version": "landscape-menu1",
+  "requested_variants": [
+    "bilibili-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [],
+      "publication_status": "submitted_public_verified",
+      "bvid": "BV1TepK69Eet",
+      "result_file": "publication-result.json"
+    }
+  ],
+  "ready_to_upload": false,
+  "publication_status": "submitted_public_verified",
+  "note": "本期已发布，恢复时按BV查重，不再重复上传。"
+}

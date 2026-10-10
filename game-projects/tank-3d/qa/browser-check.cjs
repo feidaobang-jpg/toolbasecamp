@@ -48,11 +48,15 @@ async function dirAfter(p, code) {
     {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 1280, height: 720 } });
       await g.evaluate(() => localStorage.clear()); await reload();
-      await p.screenshot({ path: path.join(out, 'desktop-menu-classic.png') });
-      const label = name => g.locator(`#menu [data-opt="${name}"] .val`).innerText();
-      assert.match(await label('mode'), /经典复刻/); assert.match(await label('lives'), /经典 3 命/); assert.match(await label('armor'), /经典一发/); assert.match(await label('camera'), /正俯视/);
-      // 键盘：↓ 到「模式」→ → 切到魔改：命数、耐久、视角跟着换成魔改默认
+      const label = name => name === 'mode' ? g.locator('#menu [data-game-mode][aria-pressed="true"]').innerText() : g.locator(`#menu [data-opt="${name}"] .val`).innerText();
+      assert.match(await label('mode'), /魔改[\s\S]*推荐/); assert.match(await label('lives'), /无限命/); assert.match(await label('armor'), /标准 3 格/); assert.match(await label('camera'), /斜俯视/);
+      await p.screenshot({ path: path.join(out, 'desktop-menu-new-player.png') });
+      // 键盘：↓ 到魔改按钮，→ 选经典；刷新保留主动选择，不强制切回推荐模式
       await tap(g, 'ArrowDown'); await tap(g, 'ArrowRight');
+      assert.match(await label('mode'), /经典复刻/); assert.match(await label('lives'), /经典 3 命/); assert.match(await label('armor'), /经典一发/); assert.match(await label('camera'), /正俯视/);
+      await p.screenshot({ path: path.join(out, 'desktop-menu-classic.png') });
+      await reload(); assert.match(await label('mode'), /经典复刻/, 'saved classic choice survives new default');
+      await g.focus('#menu [data-game-mode="classic"]'); await tap(g, 'ArrowLeft');
       assert.match(await label('mode'), /魔改/); assert.match(await label('lives'), /无限命/); assert.match(await label('armor'), /标准 3 格/); assert.match(await label('camera'), /斜俯视/);
       await p.screenshot({ path: path.join(out, 'desktop-menu-remix.png') });
       // 触屏式点击：音量、帧率、画质、触屏按键，刷新后保留；演示模式刷新后回到关
@@ -65,6 +69,7 @@ async function dirAfter(p, code) {
       ok('menu options keyboard/click/persist', { before, after });
       // 经典起始关卡可选 1～35，标题背景换成该关原版地图
       await g.evaluate(() => localStorage.clear()); await reload();
+      await g.click('#menu [data-game-mode="classic"]');
       await g.focus('#menu [data-opt="from"]'); for (let i = 0; i < 3; i++) await tap(g, 'ArrowLeft');
       assert.match(await label('from'), /第 33 关/);
       await p.screenshot({ path: path.join(out, 'desktop-menu-stage33.png') });
@@ -77,6 +82,7 @@ async function dirAfter(p, code) {
     {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 1280, height: 720 }, video: true });
       await g.evaluate(() => localStorage.clear()); await reload();
+      await g.click('#menu [data-game-mode="classic"]'); await g.focus('#start-btn');
       await tap(g, 'Enter');
       await p.waitForTimeout(400); await p.screenshot({ path: path.join(out, 'desktop-curtain.png') });
       await g.waitForFunction(() => window.__TANK_TEST__.state().phase === 'play', null, { timeout: 5000 });
@@ -169,7 +175,7 @@ async function dirAfter(p, code) {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 1280, height: 720 } });
       await g.evaluate(() => { localStorage.clear(); localStorage.setItem('tb-game-tank3d-progress', JSON.stringify({ stage: 7, loop: 2, runScore: 12345 })); localStorage.setItem('tb-game-tank3d-hi', '54321'); });
       await reload();
-      await g.focus('#menu [data-opt="mode"]'); await tap(g, 'ArrowRight');
+      await g.click('#menu [data-game-mode="remix"]');
       assert.match(await g.locator('#menu [data-opt="from"] .val').innerText(), /继续第 7 关（第 2 周目）/);
       assert.equal(await g.locator('#hi-val').innerText(), '54321');
       ok('legacy 50-stage save migrated into remix');
@@ -216,6 +222,10 @@ async function dirAfter(p, code) {
     {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 390, height: 844 }, mobile: true, dpr: 2, video: true });
       await g.evaluate(() => localStorage.clear()); await reload();
+      // 2026-10-07：手机竖着拿时菜单也直接旋转成横屏，免得菜单竖屏、开局又变横屏
+      const m0 = await g.evaluate(T('return T.state()'));
+      assert.equal(m0.display.rotated, true, 'portrait menu is rotated to landscape');
+      ok('phone portrait menu opens in rotated landscape layout', m0.display);
       await p.screenshot({ path: path.join(out, 'phone-portrait-menu.png') });
       await g.locator('#start-btn').tap();
       await g.waitForFunction(() => window.__TANK_TEST__.state().phase === 'play', null, { timeout: 5000 });
@@ -242,7 +252,7 @@ async function dirAfter(p, code) {
       const cam = await g.locator('#btn-cam-t').boundingBox();
       await touchAt('touchStart', cam.x + cam.width / 2, cam.y + cam.height / 2, 3); await touchAt('touchEnd');
       await p.waitForTimeout(100);
-      assert.equal(await g.evaluate(T('return T.state().camera')), 'close');
+      assert.equal(await g.evaluate(T('return T.state().camera')), 'top');
       const beforeDrag = await g.evaluate(T('return T.state().yawOffset'));
       await touchAt('touchStart', 195, 450, 4); await touchAt('touchMove', 195, 380, 4); await touchAt('touchMove', 195, 300, 4); await touchAt('touchEnd');
       await p.waitForTimeout(350);
@@ -258,8 +268,8 @@ async function dirAfter(p, code) {
       assert.deepEqual(errors, []);
       await ctx.close();
     }
-    // ---------- 实时帧时间（桌面，满场敌军，每个视角） ----------
-    {
+    // ---------- 实时帧时间（纯菜单更新可用 QA_SKIP_PERF=1 只验受影响功能） ----------
+    if (!process.env.QA_SKIP_PERF) {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 1280, height: 720 }, qs: '&q=high' });
       const perf = {};
       for (const [mode, stage] of [['classic', 35], ['remix', 10], ['remix', 27]]) {

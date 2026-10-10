@@ -1,0 +1,4 @@
+﻿游戏画面、音乐与音效：本项目线上同版（录制构建 game.min.js?v=3，sha256 1c5227d2b8ea3651…）实机录制。原作《Cadillacs and Dinosaurs／恐龙快打》版权归 Capcom 及原著方，粉丝向非官方 3D 重置；音乐按原作风格重新编写（非转录），音效为合成。Three.js MIT 许可随游戏保留（js/THREE-LICENSE.txt）。
+解说：Microsoft Edge 在线神经网络预置音色 zh-CN-YunxiNeural，正常语速；未克隆真人。
+字幕、尾卡与封面字体：Microsoft YaHei Bold，渲染入画，不分发字体文件。
+封面：实机第一人称截帧加程序排版，非 AI 生成。外加音乐：无。

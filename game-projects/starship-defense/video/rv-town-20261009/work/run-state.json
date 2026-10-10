@@ -1,0 +1,81 @@
+{
+  "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-video-02",
+  "source": "Codex",
+  "stage": "published",
+  "mode": "update",
+  "subject": "房车生存·废弃城镇：整备、搜索、应对僵尸与自愿撤离",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "publication": "published",
+  "human_review": "approved",
+  "publication_restriction": "本期新片获准B站/抖音/YouTube；其他游戏渠道和旧说明仍暂缓",
+  "game_version": "web-three-lanes-v0.31.0",
+  "source_commit": "d7f8b733e991234d3b5ffe901bcc01e000ec6807",
+  "runtime_sha256": "9adf204cab731631dcd2c4c4f685699785c020782990e4f3a40bb27ed217e840",
+  "approval_event_id": "rv-town-video-review-e03bf6f6-e919-40c0-9a2e-9cdbe30a1ff4",
+  "normal_rules": true,
+  "gameplay_modified": false,
+  "time_scale": 1,
+  "audio_review": "用户明确通过最终人工审片；代理未主观试听",
+  "started_at": "2026-10-09T16:21:40.236502+08:00",
+  "capture_result": "探索 1109米 · 用时 2分30秒 · 搜索 2/6区 · 击退 12只僵尸 · 剩余 314零件。下次可尝试搜全六区再撤离。",
+  "capture_errors": [],
+  "visual_issue": "首场把房车停在物资箱边，人物被车体遮挡；第二场改为正常停车在箱外11米，完整拍到下车与走近物资箱。",
+  "production_completed_at": "2026-10-09T17:01:44.813301+08:00",
+  "visual_issue_resolved": true,
+  "final_duration_seconds": 109.86666666666666,
+  "ready_to_review": true,
+  "ready_to_upload": false,
+  "artifact_directory": "D:/project/toolbasecamp-artifacts/chongchao-rv-town-20261009",
+  "source_worktree": "C:\\Users\\37818\\.codex\\worktrees\\chongchao-rv-video-20261009\\toolbasecamp",
+  "render_entry": "render.py",
+  "packaging_entry": "package.py",
+  "next_step": null,
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [],
+      "publication_status": "published"
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "25331baa5c84f6f71e1c1f06de0593deffb7a44bb6d15f5e8b7dd2ac31ff6afe",
+      "blocking_issues": [],
+      "publication_status": "published"
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "ready_to_review": true,
+      "ready_to_upload": false,
+      "video_sha256": "e9a3947492fe0181156a82ef3d7c2140076bdcdd9001580f646f8b9647be5050",
+      "blocking_issues": [],
+      "publication_status": "published"
+    }
+  ],
+  "cover_stage": "completed",
+  "publication_task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-rv-publish-03",
+  "platform_statuses": {
+    "bilibili-zh": "published",
+    "douyin-zh": "published",
+    "youtube-zh": "published"
+  },
+  "completed_at": "2026-10-09T17:53:41.810316+08:00",
+  "post_publication": {
+    "x": {
+      "status": "skipped_paid_access_declined",
+      "user_instruction": "要收费吗？如果收费就不做",
+      "reason": "当前官方API连接未开通；现有Metricool路径需付费，按用户要求跳过。未购买、未发X。"
+    }
+  }
+}
