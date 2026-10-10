@@ -50,6 +50,7 @@ B站网友「一只烂仔睡觉」在虫潮视频下评论：「飞刀班长，�
 - `verify-unstick-weapons.cjs`：RPG 实际开火、四连导弹错开发射（`burstOk`）、载具脱困均通过，`pageErrors` 0。
 - `verify-arsenal-build.cjs`：12 通过 / 8 失败。这 8 项在改动前基线（ff3a7162）用同一脚本跑出完全相同的 12/8 结果，属于 v0.9.1 时期遗留的过期断言（例如硬编码「武器只有 6 把」，实际已有 8 把），与本次削弱无关。该脚本用 `RELEASE` 而非 `QA_OUTPUT` 变量，首次运行时误将结果写入了 `web-arsenal-build-v0.9.1/arsenal-build.json` 覆盖历史证据（原为 2026-10-02、20 通过 / 0 失败），已 `git restore` 还原并核验，随后用正确变量重跑，证据落在本任务目录。该脚本中「所有武器在 12 米造成伤害」一项对全部八把枪都测出 0，未改动的机枪同样为 0，说明是脚本内 `Input.keys.J=true` 的旧输入方式已失效，不是武器失效。
 - UTF-8 完整性：`index.html`、`game.js`、`game.compat.js` 三个改动文件均可 `decode("utf-8")`、无 BOM、`index.html` 含完整 `</title>`、无「问号+半截闭合标签」；打包产物含 `dmg:13` 且无残留 `dmg:16`。
+- 合并后复验：整合 `origin/master`（主线新增 9 个提交，全部只涉及恐龙快打第三关重做与外链游戏目录，`git diff --name-only` 确认未触及 `starship-defense` 任何文件）之后重跑 `verify-weapon-balance.cjs`，得到与合并前逐位相同的结果——等离子炮 720、激光炮 586.6、灼热冷枪 13.04 → 满灼热 16.9 即 +30%、HUD 显示 30%、4 项检查通过、`pageErrors` 0。证据 `qa-postmerge/weapon-balance.json`。合并后兼容包 sha256 仍为 `7c1509199a…`，与 `index.html` 的 `?v=7c1509199a` 一致，说明合并未改变游戏运行文件，无需重建兼容包。
 
 ## 影响范围与未覆盖
 
