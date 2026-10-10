@@ -1,0 +1,439 @@
+{
+  "results": [
+    {
+      "check": "所有武器在单体与集群靶上都造成伤害",
+      "pass": true,
+      "data": {
+        "rows": {
+          "lmg": {
+            "name": "机枪",
+            "price": 0,
+            "range": 32,
+            "rate": 0.08,
+            "beam": false,
+            "pierce": 0,
+            "explode": 0,
+            "pellets": 1,
+            "burst": 1,
+            "tableDps": 100,
+            "solo": {
+              "lv0": {
+                "dps": 96,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 288,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 96,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 288,
+                "targetsHit": 1
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 0,
+                "dpsPerGold": null
+              },
+              "lv10": {
+                "price": 0,
+                "dpsPerGold": null
+              }
+            }
+          },
+          "shotgun": {
+            "name": "霰弹枪",
+            "price": 450,
+            "range": 19,
+            "rate": 0.62,
+            "beam": false,
+            "pierce": 0,
+            "explode": 0,
+            "pellets": 7,
+            "burst": 1,
+            "tableDps": 124,
+            "solo": {
+              "lv0": {
+                "dps": 55,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 165,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 123.2,
+                "targetsHit": 6
+              },
+              "lv10": {
+                "dps": 369.6,
+                "targetsHit": 6
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 450,
+                "dpsPerGold": 0.2738
+              },
+              "lv10": {
+                "price": 450,
+                "dpsPerGold": 0.8213
+              }
+            }
+          },
+          "launcher": {
+            "name": "榴弹炮",
+            "price": 900,
+            "range": 42,
+            "rate": 0.95,
+            "beam": false,
+            "pierce": 0,
+            "explode": 4.5,
+            "pellets": 1,
+            "burst": 1,
+            "tableDps": 105,
+            "solo": {
+              "lv0": {
+                "dps": 120,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 360,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 720,
+                "targetsHit": 6
+              },
+              "lv10": {
+                "dps": 2160,
+                "targetsHit": 6
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 900,
+                "dpsPerGold": 0.8
+              },
+              "lv10": {
+                "price": 900,
+                "dpsPerGold": 2.4
+              }
+            }
+          },
+          "flamer": {
+            "name": "火焰喷射器",
+            "price": 1100,
+            "range": 15,
+            "rate": 0.05,
+            "beam": false,
+            "pierce": 2,
+            "explode": 0,
+            "pellets": 1,
+            "burst": 1,
+            "tableDps": 140,
+            "solo": {
+              "lv0": {
+                "dps": 75.6,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 226.8,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 221.2,
+                "targetsHit": 4
+              },
+              "lv10": {
+                "dps": 663.6,
+                "targetsHit": 4
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 1100,
+                "dpsPerGold": 0.2011
+              },
+              "lv10": {
+                "price": 1100,
+                "dpsPerGold": 0.6033
+              }
+            }
+          },
+          "laser": {
+            "name": "脉冲激光炮",
+            "price": 1500,
+            "range": 48,
+            "rate": 0.08,
+            "beam": true,
+            "pierce": 1,
+            "explode": 0,
+            "pellets": 1,
+            "burst": 1,
+            "tableDps": 163,
+            "solo": {
+              "lv0": {
+                "dps": 195.5,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 586.6,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 391.1,
+                "targetsHit": 2
+              },
+              "lv10": {
+                "dps": 1173.3,
+                "targetsHit": 2
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 1500,
+                "dpsPerGold": 0.2607
+              },
+              "lv10": {
+                "price": 1500,
+                "dpsPerGold": 0.7822
+              }
+            }
+          },
+          "plasma": {
+            "name": "等离子炮",
+            "price": 2300,
+            "range": 40,
+            "rate": 0.24,
+            "beam": false,
+            "pierce": 0,
+            "explode": 2.8,
+            "pellets": 1,
+            "burst": 1,
+            "tableDps": 250,
+            "solo": {
+              "lv0": {
+                "dps": 240,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 720,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 720,
+                "targetsHit": 3
+              },
+              "lv10": {
+                "dps": 2160,
+                "targetsHit": 3
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 2300,
+                "dpsPerGold": 0.313
+              },
+              "lv10": {
+                "price": 2300,
+                "dpsPerGold": 0.9391
+              }
+            }
+          },
+          "rpg": {
+            "name": "RPG火箭筒",
+            "price": 1300,
+            "range": 46,
+            "rate": 1.25,
+            "beam": false,
+            "pierce": 0,
+            "explode": 5,
+            "pellets": 1,
+            "burst": 1,
+            "tableDps": 108,
+            "solo": {
+              "lv0": {
+                "dps": 108,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 324,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 648,
+                "targetsHit": 6
+              },
+              "lv10": {
+                "dps": 1944,
+                "targetsHit": 6
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 1300,
+                "dpsPerGold": 0.4985
+              },
+              "lv10": {
+                "price": 1300,
+                "dpsPerGold": 1.4954
+              }
+            }
+          },
+          "missilePod": {
+            "name": "四连导弹架",
+            "price": 2100,
+            "range": 44,
+            "rate": 1.15,
+            "beam": false,
+            "pierce": 0,
+            "explode": 2.4,
+            "pellets": 1,
+            "burst": 4,
+            "tableDps": 146,
+            "solo": {
+              "lv0": {
+                "dps": 168,
+                "targetsHit": 1
+              },
+              "lv10": {
+                "dps": 504,
+                "targetsHit": 1
+              }
+            },
+            "cluster": {
+              "lv0": {
+                "dps": 504,
+                "targetsHit": 3
+              },
+              "lv10": {
+                "dps": 1512,
+                "targetsHit": 3
+              }
+            },
+            "efficiency": {
+              "lv0": {
+                "price": 2100,
+                "dpsPerGold": 0.24
+              },
+              "lv10": {
+                "price": 2100,
+                "dpsPerGold": 0.72
+              }
+            }
+          }
+        },
+        "window": 5,
+        "targets": 6,
+        "upgrades": [
+          0,
+          10
+        ],
+        "radius": 2
+      }
+    },
+    {
+      "check": "Lv10 集群秒伤排名",
+      "pass": true,
+      "data": [
+        {
+          "id": "launcher",
+          "name": "榴弹炮",
+          "dps": 2160,
+          "price": 900
+        },
+        {
+          "id": "plasma",
+          "name": "等离子炮",
+          "dps": 2160,
+          "price": 2300
+        },
+        {
+          "id": "rpg",
+          "name": "RPG火箭筒",
+          "dps": 1944,
+          "price": 1300
+        },
+        {
+          "id": "missilePod",
+          "name": "四连导弹架",
+          "dps": 1512,
+          "price": 2100
+        },
+        {
+          "id": "laser",
+          "name": "脉冲激光炮",
+          "dps": 1173.3,
+          "price": 1500
+        },
+        {
+          "id": "flamer",
+          "name": "火焰喷射器",
+          "dps": 663.6,
+          "price": 1100
+        },
+        {
+          "id": "shotgun",
+          "name": "霰弹枪",
+          "dps": 369.6,
+          "price": 450
+        },
+        {
+          "id": "lmg",
+          "name": "机枪",
+          "dps": 288,
+          "price": 0
+        }
+      ]
+    },
+    {
+      "check": "等离子炮仍为最高单体秒伤",
+      "pass": true,
+      "data": [
+        {
+          "id": "plasma",
+          "dps": 720
+        },
+        {
+          "id": "laser",
+          "dps": 586.6
+        },
+        {
+          "id": "missilePod",
+          "dps": 504
+        }
+      ]
+    },
+    {
+      "check": "HUD 灼热百分比与实际伤害加成一致",
+      "pass": true,
+      "data": {
+        "cold": 13.04,
+        "hot": 16.9,
+        "actualBonusPct": 30,
+        "shown": 30,
+        "hudText": "🔫 脉冲激光炮 🔥30%"
+      }
+    }
+  ],
+  "errors": []
+}

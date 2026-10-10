@@ -504,7 +504,7 @@ const WEAPONS={
   shotgun:{name:'霰弹枪',dmg:11,rate:.62,range:19,speed:52,spread:.13,pellets:7,knock:.35,price:450,color:0xffaa66,sfx:'shoot',auto:true,desc:'一次7发弹丸，贴脸爆发并把虫击退'},
   launcher:{name:'榴弹炮',dmg:100,rate:.95,range:42,speed:30,spread:.02,price:900,color:0xff8844,sfx:'cannon',auto:true,explode:4.5,arc:true,desc:'自动抛射落到目标，大范围爆炸清虫群'},
   flamer:{name:'火焰喷射器',dmg:7,rate:.05,range:15,speed:28,spread:.12,price:1100,color:0xff6622,sfx:'mg',auto:true,flame:true,pierce:2,burn:35,desc:'火焰穿透3个敌人并点燃，持续灼烧'},
-  laser:{beam:true,name:'脉冲激光炮',dmg:16,rate:.08,range:48,speed:170,spread:.006,price:1500,color:0x44ffff,sfx:'laser',auto:true,pierce:1,desc:'按住持续光束，越烧越烫(+50%)，贯穿2个敌人，远程打飞虫'},
+  laser:{beam:true,name:'脉冲激光炮',dmg:13,rate:.08,range:48,speed:170,spread:.006,price:1500,color:0x44ffff,sfx:'laser',auto:true,pierce:1,desc:'按住持续光束，越烧越烫(+30%)，贯穿2个敌人，远程打飞虫'},
   plasma:{name:'等离子炮',dmg:60,rate:.24,range:40,speed:52,spread:.025,price:2300,color:0xcc66ff,sfx:'shoot',auto:true,explode:2.8,desc:'最高秒伤的重型弹，小范围爆炸，打首领和厚甲'},
   rpg:{name:'RPG火箭筒',dmg:135,rate:1.25,range:46,speed:38,spread:.02,price:1300,color:0xff7733,sfx:'cannon',auto:true,explode:5,desc:'重型火箭弹：直飞命中后5米大范围爆炸，一发拆一片虫群和巢穴墙'},
   missilePod:{name:'四连导弹架',dmg:42,rate:1.15,range:44,speed:44,spread:.05,price:2100,color:0x77ffaa,sfx:'shoot',auto:true,explode:2.4,homing:.6,burst:4,desc:'扣一次扳机错开半拍连发4枚小型导弹，自动追目标，边跑边轰'},
@@ -2695,7 +2695,7 @@ function updPlayer(dt){
     if(camMode==='third'&&player.lookHeading===undefined)player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
     const from=playerMuzzle(aim.dir);
     if(aim.target)aim.dir.subVectors(aim.target,from).normalize();
-    fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*classDamage(Game.curWeapon)*(wp.beam?1+.5*player.heat:1),heat:player.heat,fp:camMode==='first'},true,aim.target);
+    fireBullet(from,aim.dir,{...wp,dmg:wp.dmg*weaponMul(Game.curWeapon)*classDamage(Game.curWeapon)*(wp.beam?1+.3*player.heat:1),heat:player.heat,fp:camMode==='first'},true,aim.target);
     AudioSys.sfx(wp.sfx);
     player.muzzle.intensity=2;setTimeout(()=>{if(player.muzzle)player.muzzle.intensity=0;},50);
     viewKick=Math.min(1,viewKick+(wp.rate>.3?1:.35));
@@ -3596,7 +3596,7 @@ function updHUD(dt){
   $('goldTxt').textContent=Game.testMode?'∞':Math.floor(Game.gold);
   $('scoreTxt').textContent=Game.score;
   if(player.inVehicle)$('weapTxt').textContent='🚗 '+player.inVehicle.cfg.name+' · I 下车';
-  else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(weaponLv(Game.curWeapon)?' Lv'+weaponLv(Game.curWeapon):'')+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*50)+'%':'');
+  else $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(weaponLv(Game.curWeapon)?' Lv'+weaponLv(Game.curWeapon):'')+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*30)+'%':'');
   updHUDItem();updJumpUI();
   $('squadTxt').textContent=Game.squadCount||squad.length?`🪖 小队 ${squad.length}/${Math.max(Game.squadCount,squad.length)} · ${squadTaskLabel()} · 驾驶${squad.filter(s=>s.vehicle).length}`:'';
   if((tacticalHUDTimer-=dt)<=0){
