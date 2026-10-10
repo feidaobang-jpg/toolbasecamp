@@ -247,6 +247,8 @@ button::before,button::after{content:none!important}
 .saveAuto{display:block;padding:8px}.saveAuto input{width:20px;height:20px;vertical-align:middle}
 #localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto;z-index:30;transition:opacity .35s}.save-health:active{transform:translateX(-50%) scale(.95)}.save-health.faded{opacity:0;pointer-events:none}#hud.hidden~#saveHealth{display:none}
 #saveNotice{font-size:11px;max-width:700px}
+#zergHud{position:absolute;left:10px;top:10px;font-size:12px;line-height:1.6;padding:8px 11px;min-width:216px;max-width:270px;color:#eaffea;background:rgba(10,26,14,.82);border:1px solid rgba(140,220,150,.4);border-radius:8px;z-index:12;pointer-events:none;text-shadow:0 1px 2px #000}
+.zerg-mode .campaign-only{display:none!important}
 
 /* ===== 虫潮对战（1 对 1 到 4 对 4） ===== */
 .versus-only{display:none!important}
@@ -390,6 +392,8 @@ button::before,button::after{content:none!important}
     <div id="weaponBar" aria-label="武器栏"></div>
     <div id="keysHint">WASD移动 · 按住Shift跑步 · J/鼠标左键射击 · 点画面用鼠标转视角 · K/空格跳跃 · I互动(门/载具) · H医疗包 · U手雷 · 直升机Y升/H降 · 1-6/X/滚轮换枪 · C切换视角 · Q/E转视角 · O商店 · L建造 · R开战 · P/Esc暂停</div>
   </div>
+  <!-- 虫族战况面板必须在 #hud 之外：虫族开局会隐藏战役 HUD，面板要能独立显示。 -->
+  <div id="zergHud" class="hidden" aria-label="虫族战况"></div>
   <!-- 放置工具栏与触控层同级，避免视角区域遮挡按钮。 -->
     <!-- 保存状态提示同样提到触控层之上，手机上才能点它打开档案站；显隐跟随 #hud。 -->
     <!-- 开战按钮也必须在触控层之上：#hud(z10) 低于 #touchUI(z20)，留在 hud 内会被全屏视角拖拽层吞掉触摸。 -->
