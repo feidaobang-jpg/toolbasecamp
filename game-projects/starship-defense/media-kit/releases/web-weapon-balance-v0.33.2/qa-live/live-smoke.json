@@ -1,0 +1,129 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "checked_at": "2026-10-10T09:03:01.693Z",
+  "checks": [
+    {
+      "shape": "desktop",
+      "step": "游戏初始化完成（__ccReady）",
+      "pass": true
+    },
+    {
+      "shape": "desktop",
+      "step": "未出现启动失败提示层",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "shape": "desktop",
+      "step": "主菜单「开始新游戏」可见",
+      "pass": true
+    },
+    {
+      "shape": "desktop",
+      "step": "进入准备阶段并渲染武器栏",
+      "pass": true,
+      "detail": {
+        "weaponBar": 1,
+        "gold": "150"
+      }
+    },
+    {
+      "shape": "desktop",
+      "step": "无页面异常",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "shape": "landscape",
+      "step": "游戏初始化完成（__ccReady）",
+      "pass": true
+    },
+    {
+      "shape": "landscape",
+      "step": "未出现启动失败提示层",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "shape": "landscape",
+      "step": "主菜单「开始新游戏」可见",
+      "pass": true
+    },
+    {
+      "shape": "landscape",
+      "step": "进入准备阶段并渲染武器栏",
+      "pass": true,
+      "detail": {
+        "weaponBar": 1,
+        "gold": "150"
+      }
+    },
+    {
+      "shape": "landscape",
+      "step": "无页面异常",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "shape": "portrait",
+      "step": "游戏初始化完成（__ccReady）",
+      "pass": true
+    },
+    {
+      "shape": "portrait",
+      "step": "未出现启动失败提示层",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "shape": "portrait",
+      "step": "主菜单「开始新游戏」可见",
+      "pass": true
+    },
+    {
+      "shape": "portrait",
+      "step": "进入准备阶段并渲染武器栏",
+      "pass": true,
+      "detail": {
+        "weaponBar": 1,
+        "gold": "150"
+      }
+    },
+    {
+      "shape": "portrait",
+      "step": "无页面异常",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "shape": "numbers",
+      "step": "线上激光炮 dmg 已为削弱后的 13",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "shape": "numbers",
+      "step": "线上描述文案为 +30%",
+      "pass": true,
+      "detail": "按住持续光束，越烧越烫(+30%)，贯穿2个敌人，远程打飞虫"
+    },
+    {
+      "shape": "numbers",
+      "step": "等离子炮表值仍高于激光炮",
+      "pass": true,
+      "detail": {
+        "plasma": 250,
+        "laser": 163
+      }
+    }
+  ],
+  "numbers": {
+    "laserDmg": 13,
+    "laserPrice": 1500,
+    "laserRange": 48,
+    "desc": "按住持续光束，越烧越烫(+30%)，贯穿2个敌人，远程打飞虫",
+    "laserDpsLv0": 163,
+    "plasmaDpsLv0": 250,
+    "compatV": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?v=c68afded"
+  }
+}

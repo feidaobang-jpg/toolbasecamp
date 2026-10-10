@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "updated_at": "2026-10-10T09:05:00+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -701,6 +701,50 @@
       "reply_verified_at": "2026-10-10T02:40:45.181Z",
       "reply_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
       "reply_sha256": "27acfa7d6bcc6d0ddad4a86f4fd7c8c4d9c522e61c151f84038ec39bdaa71b6f"
+    },
+    {
+      "feedback_key": "chongchao|一只烂仔睡觉|2026-10-09 09:29|b4abb7e24e9e2ccd40a08ebfe46ebce52cd9cd13cbc9c9daa823ac2192d2943e",
+      "rpid": null,
+      "root_rpid": null,
+      "video": null,
+      "comment_type": 1,
+      "user": "一只烂仔睡觉",
+      "user_mid": null,
+      "date": "2026-10-09 09:29",
+      "comment_time_precision": "screenshot_visible",
+      "text": "飞刀班长，你这个非常棒的一个模式，但是里面的脉冲激光炮和等离子炮太超模了",
+      "author_reply_in_screenshot": "好！我会适当进行削弱（2026-10-09 09:32）",
+      "source": "user_supplied_screenshot",
+      "screenshot_sha256": "b4abb7e24e9e2ccd40a08ebfe46ebce52cd9cd13cbc9c9daa823ac2192d2943e",
+      "screenshot_bytes": 26567,
+      "mapping": "截图未显示所属视频与楼层 rpid，只有评论正文、时间(2026-10-09 09:29 来自浙江)与作者回复(09:32)。同一网友 2026-10-03 曾在 BV1Ujad6DEuf 留言，属候选视频但未确认，不得据此认定。回复前必须实时打开原楼核对视频与 rpid，不伪造。",
+      "kind": "balance-feedback",
+      "status": "fixed_website_verified_channels_pending",
+      "fixed_in": "web-weapon-balance-v0.33.2",
+      "adoption_basis": "本人本轮明确要求按推荐方案实施削弱（先跑数据确认范围，再削弱）",
+      "resolution_summary": "实测确认网友方向正确但对象只有一个：等离子炮单体秒伤反被更便宜800金的脉冲激光炮顶替，与其自称「最高秒伤的重型弹」不符。只削激光炮（dmg 16→13、灼热加成 50%→30%，同步 HUD 与描述），未改动的六把武器及等离子炮四项数值逐位未变。削弱后等离子炮 720 重回最高单体秒伤，激光炮 586.6 让位但仍为免费机枪的约2倍。",
+      "website_status": "public_verified",
+      "website": {
+        "status": "public_verified",
+        "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+        "verified_at": "2026-10-10T17:05:00+08:00",
+        "source_commit": "c68afded",
+        "runtime_sha256": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5",
+        "runtime_matches_tested_build": true,
+        "live_laser_dmg": 13,
+        "live_desc": "按住持续光束，越烧越烫(+30%)，贯穿2个敌人，远程打飞虫",
+        "smoke_checks": "18/18（三视口初始化、开局、武器栏渲染、无页面异常、线上数值）",
+        "physical_phone": false,
+        "evidence": [
+          "releases/web-weapon-balance-v0.33.2/qa-live/live-smoke.json"
+        ]
+      },
+      "reply_rpid": null,
+      "reply_status": "pending_22_batch",
+      "reply_draft": "收到！已经削弱了：脉冲激光炮的单发伤害和「越烧越烫」加成一起下调（+50% 改 +30%），等离子炮重新回到单体秒伤最高的位置。激光炮还是保留最远射程和贯穿，打飞虫依然好用。网站已经更新，可以直接试。感谢反馈！",
+      "reply_instruction": "登记到22点批次统一回复；发送前必须先实时定位原楼（视频BV与rpid未确认，见mapping），按feedback_key与正文哈希查重，不重复回复，不伪造rpid。",
+      "record": "game-projects/starship-defense/media-kit/releases/web-weapon-balance-v0.33.2/notes.md",
+      "note": "本人当轮只要求先跑数据再按推荐方案削弱，未要求立即回复评论。按2026-10-09指令白天不回复原楼、不改视频简介、不提交平台包。"
     }
   ]
 }
