@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "episode": "zerg-mode-20261010",
+  "updated_at": "2026-10-11T07:40:00+08:00",
+  "platforms": {
+    "bilibili": {
+      "platform": "bilibili",
+      "account_uid": "16214353",
+      "account_name": "飞刀班长",
+      "account_verified_at": "2026-10-11T07:00:00+08:00",
+      "account_verified_by": "创作中心首页头像与主页链接均为 space.bilibili.com/16214353，昵称飞刀班长",
+      "dedupe_check": "公开空间 29 条稿件无同题或同主题视频；无本期 BV；判定为首次投稿",
+      "state": "draft_saved",
+      "draft_id": "3973028",
+      "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028",
+      "video_file": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "video_sha256": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+      "uploaded_bytes": 40080848,
+      "video_duration_s": 125.167,
+      "human_review": {
+        "status": "approved",
+        "evidence": "用户 2026-10-11 回复原话：发布",
+        "file_hashes_note": "三版成片哈希见 publish/*/publish.json"
+      },
+      "form_state_verified": {
+        "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城 (25/80)",
+        "creation_statement": "含AI生成内容",
+        "category": "游戏",
+        "tags": [
+          "原创",
+          "虫潮围城",
+          "塔防",
+          "游戏开发",
+          "AI",
+          "玩家建议",
+          "挑战模式",
+          "bilibilitoy"
+        ],
+        "description_chars": 474,
+        "description_matches_approved_copy": true,
+        "covers_state": "未定稿：4:3/16:9 两张自定义封面已上传到编辑态（origin_4_3=183229B、origin_16_9=230216B 与本地文件同字节），但点击完成时导出的是 1600x900 的单张图，未能确认双比例分别生效",
+        "collection": "未选择（投稿阶段可选）"
+      },
+      "blocker": {
+        "kind": "tool_surface_unavailable",
+        "detail": "Qoder 内置浏览器面板未打开，页面 visibilityState=hidden、viewport=0x0；指针点击与真实键盘事件不投递，依赖 rAF/过渡动画的封面编辑器无法初始化（isCoverEditorReady_4_3/16_9 始终 false），无法可靠设置并核验 4:3 与 16:9 双封面，也无法对投稿结果截图留证",
+        "what_worked": "导航、文件上传（视频与两张封面）、只读 DOM 结构、部分合成点击（创作声明、标签删除、Quill 简介）",
+        "needed_from_user": "打开 Qoder 内置浏览器面板后回复继续；随后只需完成封面双比例设置、加入合集 9248439、点投稿并核验",
+        "not_done": "未提交投稿、未获得 BV、未绑 Toy、未进合集、未填推流表、未用流量券"
+      },
+      "traffic_reward_observed": {
+        "available_exposure": "0",
+        "note": "创作中心首页流量奖励显示待使用 0 曝光，近3月已使用1000曝光；本期暂无可用免费券，如实登记为未使用",
+        "checked_at": "2026-10-11T07:00:00+08:00"
+      },
+      "timestamp": "2026-10-11T07:40:00+08:00"
+    }
+  },
+  "douyin": {
+    "platform": "douyin",
+    "state": "not_started",
+    "reason": "同受内置浏览器面板未打开影响，B站走通后再执行"
+  },
+  "youtube": {
+    "platform": "youtube",
+    "state": "not_started",
+    "reason": "同上"
+  },
+  "x": {
+    "platform": "x",
+    "state": "skipped_unless_free_official",
+    "reason": "仅在 YouTube 公开且官方免费能力可用时发布，否则记录草稿并跳过"
+  }
+}

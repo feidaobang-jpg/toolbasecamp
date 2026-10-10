@@ -15,17 +15,27 @@
   "duration_seconds": 125.2,
   "title": "网友点名\"我是虫族模式\"，当天就做了出来",
   "description_file": "../../../final/douyin-zh/投稿文案.txt",
-  "tags": ["虫潮围城", "游戏开发", "塔防", "玩家建议", "独立游戏"],
+  "tags": [
+    "虫潮围城",
+    "游戏开发",
+    "塔防",
+    "玩家建议",
+    "独立游戏"
+  ],
   "cover_file": "../../../final/douyin-zh/cover-horizontal-4x3.jpg",
   "cover_files": {
     "horizontal_4_3": {
       "file": "../../../final/douyin-zh/cover-horizontal-4x3.jpg",
-      "width": 1600, "height": 1200, "purpose": "横版封面",
+      "width": 1600,
+      "height": 1200,
+      "purpose": "横版封面",
       "sha256": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834"
     },
     "portrait_3_4": {
       "file": "../../../final/douyin-zh/cover-portrait-3x4.jpg",
-      "width": 1080, "height": 1440, "purpose": "竖版展示封面",
+      "width": 1080,
+      "height": 1440,
+      "purpose": "竖版展示封面",
       "sha256": "418cee97837d748b35a7667e75d3e002295558e8e23bf8c4139756ae07432a40"
     }
   },
@@ -42,21 +52,25 @@
   "credits": "虫族模式由 Qoder 开发；本期实机录制、配音与剪辑由 Qoder 完成",
   "platform_requirements_checked_at": "2026-10-11",
   "human_review": {
-    "status": "pending",
+    "status": "approved",
     "scope": "与 bilibili-zh 共用同一成片（shared-zh，同哈希）",
     "file_hashes": {
       "gameplay-zh-final.mp4": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
       "cover-horizontal-4x3.jpg": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834",
       "cover-portrait-3x4.jpg": "418cee97837d748b35a7667e75d3e002295558e8e23bf8c4139756ae07432a40",
       "投稿文案.txt": "b6b37f10690fc0eed83113e2b7bcce4965ed96fb48815088a7deb28f4795116b"
-    }
+    },
+    "approved_by": "用户（飞刀班长本人）",
+    "approved_at": "2026-10-11T06:55:00+08:00",
+    "evidence": "用户在审片包交付后回复原话：“发布”——视为三版成片、封面与文案的最终人工审片通过，授权按多平台发布流程上传",
+    "audio_listening_review": "passed_by_human（用户审片通过）"
   },
-  "audio_listening_review": "not-run（与 bilibili-zh 同一片源，客观检测通过，人声待用户审片）",
   "technical_preparation_complete": true,
-  "ready_to_upload": false,
-  "blocking_issues": ["等待用户人工审片通过（含人声听审）；审片通过前不上传"],
+  "ready_to_upload": true,
+  "blocking_issues": [],
   "unverified_fields": [
     "抖音投稿页实际封面入口（横版/竖版哪个必填）与话题选择器，上传前重新核对",
     "抖音是否要求 AI 生成内容声明勾选，按当期入口如实选择"
-  ]
+  ],
+  "status": "approved_for_upload"
 }

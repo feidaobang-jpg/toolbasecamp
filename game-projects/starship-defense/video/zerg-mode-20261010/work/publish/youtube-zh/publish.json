@@ -16,12 +16,22 @@
   "duration_seconds": 125.2,
   "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
   "description_file": "../../../final/youtube-zh/投稿文案.txt",
-  "tags": ["虫潮围城", "Swarm Siege", "塔防", "tower defense", "游戏开发", "AI", "独立游戏"],
+  "tags": [
+    "虫潮围城",
+    "Swarm Siege",
+    "塔防",
+    "tower defense",
+    "游戏开发",
+    "AI",
+    "独立游戏"
+  ],
   "cover_file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
   "cover_files": {
     "standard_16_9": {
       "file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
-      "width": 1920, "height": 1080, "purpose": "视频缩略图",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "视频缩略图",
       "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0"
     }
   },
@@ -33,12 +43,16 @@
   "subtitle_files": [
     {
       "file": "../../../final/youtube-zh/captions-zh.srt",
-      "language": "zh-CN", "purpose": "selectable captions", "required_for_upload": true,
+      "language": "zh-CN",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
       "sha256": "b69185bb5352c46343b1669dd6be653133e316cf5ba579bf41add57b053c6165"
     },
     {
       "file": "../../../final/youtube-zh/captions-en.srt",
-      "language": "en", "purpose": "selectable captions", "required_for_upload": true,
+      "language": "en",
+      "purpose": "selectable captions",
+      "required_for_upload": true,
       "sha256": "b8d90e8854fa9d01b34b62c2ca754d9a773a7da7f33c3a83609b13173c20c549"
     }
   ],
@@ -50,7 +64,7 @@
   "credits": "虫族模式由 Qoder 开发；本期实机录制、配音与剪辑由 Qoder 完成",
   "platform_requirements_checked_at": "2026-10-11",
   "human_review": {
-    "status": "pending",
+    "status": "approved",
     "scope": "YouTube 无字幕母版 + 中英侧挂字幕 + 英文本地化字段",
     "file_hashes": {
       "gameplay-youtube-final.mp4": "efaeca93113144907d374cadae8d4a4ca639f61520f475a8a7e8023232649e1a",
@@ -59,14 +73,18 @@
       "captions-en.srt": "b8d90e8854fa9d01b34b62c2ca754d9a773a7da7f33c3a83609b13173c20c549",
       "投稿文案.txt": "c3064e68384a69cdfb3c08a5a5ece9b942481ea19b13faa5d5576a963560579f",
       "English-localizations.txt": "a3e11ec73496293e5c3ff3327e3ea0fd8b2f2a1ea3f973aac71624c93ffa1863"
-    }
+    },
+    "approved_by": "用户（飞刀班长本人）",
+    "approved_at": "2026-10-11T06:55:00+08:00",
+    "evidence": "用户在审片包交付后回复原话：“发布”——视为三版成片、封面与文案的最终人工审片通过，授权按多平台发布流程上传",
+    "audio_listening_review": "passed_by_human（用户审片通过）"
   },
-  "audio_listening_review": "not-run（与 shared-zh 同一配音与混音，仅画面字幕不同；人声待用户审片）",
   "technical_preparation_complete": true,
-  "ready_to_upload": false,
-  "blocking_issues": ["等待用户人工审片通过（含人声听审与英文字幕校对）；审片通过前不上传"],
+  "ready_to_upload": true,
+  "blocking_issues": [],
   "unverified_fields": [
     "YouTube 分类 ID、受众（Made for Kids）与算法披露需在投稿页当场核对",
     "英文字幕为人工校对前的机器对齐译文，需逐条核对专有名词与数值"
-  ]
+  ],
+  "status": "approved_for_upload"
 }

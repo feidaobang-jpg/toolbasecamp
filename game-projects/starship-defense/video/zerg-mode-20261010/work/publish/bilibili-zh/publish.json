@@ -15,17 +15,28 @@
   "duration_seconds": 125.2,
   "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
   "description_file": "../../../final/bilibili-zh/投稿文案.txt",
-  "tags": ["虫潮围城", "塔防", "游戏开发", "AI", "玩家建议", "挑战模式"],
+  "tags": [
+    "虫潮围城",
+    "塔防",
+    "游戏开发",
+    "AI",
+    "玩家建议",
+    "挑战模式"
+  ],
   "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
   "cover_files": {
     "home_4_3": {
       "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
-      "width": 1600, "height": 1200, "purpose": "首页推荐",
+      "width": 1600,
+      "height": 1200,
+      "purpose": "首页推荐",
       "sha256": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834"
     },
     "space_16_9": {
       "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
-      "width": 1920, "height": 1080, "purpose": "个人空间",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间",
       "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0"
     }
   },
@@ -51,21 +62,30 @@
   "season_id": 9248439,
   "platform_requirements_checked_at": "2026-10-11",
   "human_review": {
-    "status": "pending",
+    "status": "approved",
     "scope": "bilibili-zh / douyin-zh / youtube-zh 三版成片、封面与文案",
     "file_hashes": {
       "gameplay-zh-final.mp4": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
       "cover-home-4x3.jpg": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834",
       "cover-space-16x9.jpg": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0",
       "投稿文案.txt": "e7a10c46481a0651926b6f4e7b1d993b7fceccee37a473e56ff89bc9d55e5aa2"
-    }
+    },
+    "approved_by": "用户（飞刀班长本人）",
+    "approved_at": "2026-10-11T06:55:00+08:00",
+    "evidence": "用户在审片包交付后回复原话：“发布”——视为三版成片、封面与文案的最终人工审片通过，授权按多平台发布流程上传",
+    "audio_listening_review": "passed_by_human（用户审片通过）"
   },
-  "audio_listening_review": "not-run（模型仅做客观检测：125.2s 有连续音轨、-16.1 LUFS、无静音黑帧；人声可懂度待用户审片）",
   "technical_preparation_complete": true,
-  "ready_to_upload": false,
-  "blocking_issues": ["等待用户人工审片通过（含人声听审）；审片通过前不上传"],
+  "ready_to_upload": true,
+  "blocking_issues": [
+    "内置浏览器面板未打开（viewport 0x0），双比例封面无法可靠设置与核验；已存草稿，等面板可用后继续投稿"
+  ],
   "unverified_fields": [
     "本期投稿页分类、AI 声明勾选与登录状态，上传前重新核对",
     "B站活动话题：发布时先检查当期活动，有则直接参加（2026-10-10 起的新流程）"
-  ]
+  ],
+  "status": "approved_for_upload",
+  "upload_state": "draft_saved",
+  "draft_id": "3973028",
+  "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028"
 }

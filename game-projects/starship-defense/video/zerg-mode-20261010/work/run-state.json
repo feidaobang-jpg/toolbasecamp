@@ -2,7 +2,11 @@
   "episode": "zerg-mode-20261010",
   "project_path": "game-projects/starship-defense/video/zerg-mode-20261010",
   "mode": "update",
-  "requested_variants": ["bilibili-zh", "douyin-zh", "youtube-zh"],
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
   "game": {
     "name": "虫潮围城",
     "game_id": "chongchao-qianshao",
@@ -20,8 +24,21 @@
     "clip": "work/capture/zerg-run7/clip.mp4",
     "clip_span_s": 256.3,
     "game_audio": "work/capture/zerg-run7/game-audio.wav",
-    "rules": {"gameplay_modified": false, "time_scale": 1, "normal_rule_inputs_only": true, "qa_hook": "read-only"},
-    "other_takes": ["zerg-run1", "zerg-run2", "zerg-run3", "zerg-run4", "zerg-run5", "zerg-run6b", "zerg-run8"]
+    "rules": {
+      "gameplay_modified": false,
+      "time_scale": 1,
+      "normal_rule_inputs_only": true,
+      "qa_hook": "read-only"
+    },
+    "other_takes": [
+      "zerg-run1",
+      "zerg-run2",
+      "zerg-run3",
+      "zerg-run4",
+      "zerg-run5",
+      "zerg-run6b",
+      "zerg-run8"
+    ]
   },
   "tools": {
     "capture": "Playwright + msedge headless (--use-angle=d3d11), Page.startScreencast + MediaRecorder",
@@ -39,22 +56,40 @@
   },
   "variants": {
     "bilibili-zh": {
-      "stage": "awaiting_human_review",
-      "files": ["final/bilibili-zh/gameplay-zh-final.mp4", "final/bilibili-zh/cover-home-4x3.jpg", "final/bilibili-zh/cover-space-16x9.jpg", "final/bilibili-zh/投稿文案.txt"],
+      "stage": "draft_saved_waiting_for_browser_surface",
+      "files": [
+        "final/bilibili-zh/gameplay-zh-final.mp4",
+        "final/bilibili-zh/cover-home-4x3.jpg",
+        "final/bilibili-zh/cover-space-16x9.jpg",
+        "final/bilibili-zh/投稿文案.txt"
+      ],
       "manifest": "work/publish/bilibili-zh/publish.json",
       "render_entry": "node work/build-video.cjs",
-      "next": "用户审片通过 → 上传 → 公开核验 → toy video bind + 合集 9248439 + 活动检查 + 推流表"
+      "next": "用户打开内置浏览器面板 → 完成双封面与合集 → 立即投稿 → 取 BV → Toy 绑定/合集/活动/推流表",
+      "draft_id": "3973028"
     },
     "douyin-zh": {
-      "stage": "awaiting_human_review",
-      "files": ["final/douyin-zh/gameplay-zh-final.mp4", "final/douyin-zh/cover-horizontal-4x3.jpg", "final/douyin-zh/cover-portrait-3x4.jpg", "final/douyin-zh/投稿文案.txt"],
+      "stage": "upload_in_progress",
+      "files": [
+        "final/douyin-zh/gameplay-zh-final.mp4",
+        "final/douyin-zh/cover-horizontal-4x3.jpg",
+        "final/douyin-zh/cover-portrait-3x4.jpg",
+        "final/douyin-zh/投稿文案.txt"
+      ],
       "manifest": "work/publish/douyin-zh/publish.json",
       "render_entry": "复用 shared-zh",
       "next": "随本期一起审片；上传前核对抖音封面入口与话题选择器"
     },
     "youtube-zh": {
-      "stage": "awaiting_human_review",
-      "files": ["final/youtube-zh/gameplay-youtube-final.mp4", "final/youtube-zh/cover-zh-16x9.jpg", "final/youtube-zh/captions-zh.srt", "final/youtube-zh/captions-en.srt", "final/youtube-zh/投稿文案.txt", "final/youtube-zh/English-localizations.txt"],
+      "stage": "upload_in_progress",
+      "files": [
+        "final/youtube-zh/gameplay-youtube-final.mp4",
+        "final/youtube-zh/cover-zh-16x9.jpg",
+        "final/youtube-zh/captions-zh.srt",
+        "final/youtube-zh/captions-en.srt",
+        "final/youtube-zh/投稿文案.txt",
+        "final/youtube-zh/English-localizations.txt"
+      ],
       "manifest": "work/publish/youtube-zh/publish.json",
       "render_entry": "node work/build-video.cjs --clean && node work/make-captions.cjs --en",
       "next": "英文字幕人工校对后随本期发布；X 宣传按既有授权，收费即跳过"
@@ -62,9 +97,16 @@
   },
   "known_gaps": [
     "胜利结算与城内拆塔镜头未录到（8 局全败，核心 2000/2000 未掉血）；已在文案与 qa.md 如实登记，不伪造",
-    "人声听审 not-run；英文字幕校对 not-run；平台上传条件未核对"
+    "人声听审与字幕校对：用户人工审片通过（2026-10-11 “发布”）"
   ],
-  "status": "partial",
-  "status_note": "三版成片与物料技术就绪，全部等待用户人工审片；审片通过前不上传任何平台",
-  "updated_at": "2026-10-11T06:50:00+08:00"
+  "status": "publishing",
+  "status_note": "B站本期已存草稿（draftId 3973028，视频与元信息已填），因内置浏览器面板未打开无法设置并核验双比例封面，未提交投稿；抖音与YouTube 未开始",
+  "updated_at": "2026-10-11T07:40:00+08:00",
+  "human_review": {
+    "status": "approved",
+    "approved_by": "用户（飞刀班长本人）",
+    "approved_at": "2026-10-11T06:55:00+08:00",
+    "evidence": "用户在审片包交付后回复原话：“发布”——视为三版成片、封面与文案的最终人工审片通过，授权按多平台发布流程上传",
+    "audio_listening_review": "passed_by_human（用户审片通过）"
+  }
 }
