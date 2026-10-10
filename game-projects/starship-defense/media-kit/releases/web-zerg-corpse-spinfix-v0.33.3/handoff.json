@@ -71,8 +71,9 @@
       "compat_bundle": "a729ad9815(=线上)",
       "preview_url": "https://www.bilibili.com/toy/preview/preview_jJlyN7qQ/index.html",
       "local_qa": "桌面harness ALL PASS + 手机视口boot通过(zerg激活/母虫生成/无pageerror)",
-      "blocker": "当前Toy处于v0.33.3审核中，重投返回 无权限操作 code=307008",
-      "action": "待审核结束后重投该合并包，使Toy与网站(a729ad9815)一致"
+      "superseded_by": "web-touch-cream-pause-20261010 包 da83017ecc096bc4be2d6eb58f4d7bae8d7c497f3a8db5fa41e016318573f0f1(源提交08028efe，含移除召回按钮与画质自动，与线上一致)；本包不再单独补提",
+      "blocker": "toy update --yes 连续7次返回 code=307008 无权限操作(2026-10-10T23:49~2026-10-11T05:07)。toy mylist 期间一直为 published、mtime 停在 2026-10-10T15:47:46Z 未推进，说明并非“v0.33.3 审核中锁住重投”，原归因作废；whoami/mylist 正常，非登录失效",
+      "action": "待本人在 Toy 创作者后台确认 307008 原因后，以主线最新 release.json 的 zip_sha256(da83017e…) 做预检与双视口实测，再提交一次，使 Toy 与网站一致；不循环重试、不提本旧包"
     }
   },
   "taptap": {

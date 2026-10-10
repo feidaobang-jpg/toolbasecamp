@@ -58,7 +58,8 @@
       "2026-10-11 移除召回按钮新包(39ef3ebe)预检+预览双视口通过后再试仍被拒",
       "2026-10-11 画质自动新包(da83017e)预检+预览双视口通过后再试仍被拒"
     ],
-    "note": "预览上传成功(Toy mtime 推进)但 --yes 提审被拒；同日21:15已由 toy-sync-20261010 提交一批(当时 auditing，现已 published)。whoami/mylist 正常、Toy 归属本账号且 published，故非登录态失效。不盲目重试，待平台/本人确认后以同包重提。"
+    "note": "预览上传成功(Toy mtime 推进)但 --yes 提审被拒；同日21:15已由 toy-sync-20261010 提交一批(当时 auditing，现已 published)。whoami/mylist 正常、Toy 归属本账号且 published，故非登录态失效。不盲目重试，待平台/本人确认后以同包重提。",
+    "note_20261011_recheck": "收尾会话 2026-10-11 05:10/05:12 两次 toy mylist 复查：38678478981120 仍为 published、mtime 停在 2026-10-10T15:47:46Z 未再推进，未按 --yes 结果变化。故 v0.33.3 handoff 里“审核中导致重投被拒、等审核结束即可”的归因作废——不是审核中锁，只读接口查不出原因，需本人进 Toy 创作者后台确认；审核结束也不会自动解开。补提目标仍为本包 da83017e(=主线最新)，未再第8次尝试。"
   },
   "prior_submission": {
     "record": "releases/toy-sync-20261010/sync.json",
