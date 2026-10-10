@@ -7,18 +7,18 @@
   "title": "虫潮围城",
   "package": "D:/project/worktrees/chongchao-hud-labels-20261010/dist/toy/chongchao-qianshao/package",
   "upload": "D:/project/worktrees/chongchao-hud-labels-20261010/dist/toy/chongchao-qianshao/chongchao-qianshao.zip",
-  "zip_sha256": "7d6c63deece13ee046e4963bf42fe96d93776fd181277615c1c3960f9f86733a",
-  "zip_bytes": 371258,
+  "zip_sha256": "a9f3f57c4b2dd2324f022822b6354a22660552630163cbf1143239b7bad0b89c",
+  "zip_bytes": 370715,
   "files": {
-    "index.html": "fa18c0522d29c7d80a691eb5d86a175980c742a6117d7faa1db546f7aa808b6b",
+    "index.html": "0e9b012269a363c605d9a7b2f8451193c8ea61a48949f6760c614e91669ea7dc",
     "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
-    "game.compat.js": "4a1abc3fdec9f4433e5d1fa70bb6fbb2055118fe4ce78ba856ee5771aad20201",
+    "game.compat.js": "54e48d4a7747c98f37c92964c441504626334159dd79ba3e911a9070b3cfa684",
     "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
     "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
     "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
     "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
   },
-  "source_commit": "f83e0440",
+  "source_commit": "06531e9e",
   "changes": [
     "右上按钮去\"人称：\"前缀与Ⅱ符号、桌面补P键提示、触屏隐藏键位(eeac50cf)",
     "暂停菜单移除与分段按钮重复的原生操作模式下拉(eeac50cf)",
@@ -26,31 +26,33 @@
     "手机暂停/切视角开关键只响应位移≤14px干净tap，防拖视角误触(5486d417)",
     "难度选中态改金色实底(eeac50cf)",
     "暂停菜单(电脑/手机共用)改奶油色复刻系：奶油面板、深绿标题、奶油棕边按键、绿主操作红回主菜单、金色选中绿色焦点(5b7c4c6c)",
-    "移除暂停菜单与战术部署重复的队友任务下拉，全队跟随/守基地统一在战术部署(f83e0440)"
+    "移除暂停菜单与战术部署重复的队友任务下拉，全队跟随/守基地统一在战术部署(f83e0440)",
+    "队友指挥只留全局一键：HUD与暂停菜单加「队友：跟随我/守基地」切换按钮、永远自动回防，战术部署面板只留虫潮预告与战报(51f52d25,06531e9e)"
   ],
   "website_deploy": {
-    "pushed": "53435e80 -> origin/master",
+    "pushed": "06531e9e -> origin/master",
     "verified": true,
-    "method": "curl 线上 index.html 含奶油/实底新CSS标记，game.compat.js 与本地字节一致"
+    "method": "curl 线上 index.html 含 squadOrderBtn/squadOrderPause 新标记且无 allSquadFollow/tacticalSquad 旧标记，game.compat.js 与本地字节一致(cmp IDENTICAL)"
   },
   "doctor": "passed_with_1_warning",
   "doctor_warnings": [
     "4 个 JS/CSS 资产文件名不含内容指纹(contenthash)：每次更新访客都要重新下载全部资源（既有构建约定，非阻断）"
   ],
   "preview": {
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_FLphKnJq/index.html"
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_swLmEljP/index.html"
   },
   "preview_qa": "passed",
   "preview_qa_method": "Playwright(Edge) 桌面1280x720 + 手机844x390(touch) 双视口加载预览，主菜单正常渲染、无白屏、0 console/pageerror",
   "submit": {
     "status": "blocked",
-    "attempts": 4,
+    "attempts": 5,
     "error": "code=307008 message=无权限操作",
     "attempt_log": [
       "2026-10-10T23:49+08:00 首次 --yes 被拒",
       "2026-10-10T23:52+08:00 重试被拒",
       "2026-10-11 跨天后重试仍被拒（非时间性限制）",
-      "2026-10-11 合并包(含移除队友任务下拉)预检+预览双视口通过后再试仍被拒"
+      "2026-10-11 合并包(含移除队友任务下拉)预检+预览双视口通过后再试仍被拒",
+      "2026-10-11 只留全局一键新包(a9f3f57c)预检+预览双视口通过后再试仍被拒"
     ],
     "note": "预览上传成功(Toy mtime 推进)但 --yes 提审被拒；同日21:15已由 toy-sync-20261010 提交一批(当时 auditing，现已 published)。whoami/mylist 正常、Toy 归属本账号且 published，故非登录态失效。不盲目重试，待平台/本人确认后以同包重提。"
   },
@@ -61,5 +63,5 @@
     "status_now": "published"
   },
   "review_status": "not_submitted_blocked_307008",
-  "recorded_at": "2026-10-10T23:55:00+08:00"
+  "recorded_at": "2026-10-11T04:55:00+08:00"
 }
