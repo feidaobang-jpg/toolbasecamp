@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "game_name": "虫潮围城",
+  "game_version": "web-zerg-corpse-spinfix-v0.33.3",
+  "episode": "zerg-mode-20261010",
+  "requested_variants": ["bilibili-zh", "douyin-zh", "youtube-zh"],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "media_id": "shared-zh",
+      "ready_to_upload": false,
+      "blocking_issues": ["等待用户人工审片（含人声听审）"],
+      "status": "awaiting_human_review"
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "media_id": "shared-zh",
+      "ready_to_upload": false,
+      "blocking_issues": ["等待用户人工审片（含人声听审）"],
+      "status": "awaiting_human_review"
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "media_id": "youtube-zh-clean",
+      "ready_to_upload": false,
+      "blocking_issues": ["等待用户人工审片（含英文字幕校对）"],
+      "status": "awaiting_human_review"
+    }
+  ],
+  "technical_preparation_complete": true,
+  "human_review_status": "pending",
+  "ready_to_upload": false,
+  "post_publication": {
+    "toy_bind": "待审片通过后执行：toy video bind <BV号> --toy 38678478981120",
+    "season_id": 9248439,
+    "collection_url": "https://space.bilibili.com/16214353/lists/9248439?type=season",
+    "pinned_comment": "本期不预生成置顶评论（用户未要求）",
+    "activity_check": "发布时先检查当期B站活动，有则直接参加",
+    "x": "free official capability only; skip paid access"
+  },
+  "honesty_notes": [
+    "本期为真实失败局：城门破、核心未掉血、母虫5次阵亡，未录到胜利结算，文案与口播均按实际结果表述",
+    "虫族模式仅网站可玩；Toy v0.33.3 仍在 auditing，公开版本仍是 web-resistance-v0.33.0，不得称 Toy 已上线",
+    "TapTap 默认不发布，本期不涉及"
+  ]
+}

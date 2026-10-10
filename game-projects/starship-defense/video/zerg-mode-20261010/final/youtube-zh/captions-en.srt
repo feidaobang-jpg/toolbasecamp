@@ -1,0 +1,159 @@
+1
+00:00:00,300 --> 00:00:01,816
+A Bilibili player asked:
+
+2
+00:00:01,816 --> 00:00:04,468
+"Can you make an 'I am the bugs' mode?"
+
+3
+00:00:04,468 --> 00:00:06,742
+So I built it the same day.
+
+4
+00:00:06,742 --> 00:00:09,963
+No more defending — you ARE the swarm.
+
+5
+00:00:11,506 --> 00:00:14,281
+Simple rule: inside 360 seconds,
+
+6
+00:00:14,281 --> 00:00:16,461
+tear down the human base core.
+
+7
+00:00:16,461 --> 00:00:19,633
+Against you: 6 defenders, 9 turrets and buildings,
+
+8
+00:00:19,633 --> 00:00:21,417
+a 2500-HP gate,
+
+9
+00:00:21,417 --> 00:00:23,993
+and a 2000-HP core behind it.
+
+10
+00:00:25,520 --> 00:00:27,452
+The controls are flipped.
+
+11
+00:00:27,452 --> 00:00:30,887
+WASD drives the Mother, J bites, K spits acid,
+
+12
+00:00:30,887 --> 00:00:34,752
+U summons warriors, I flyers, O molts, L dashes.
+
+13
+00:00:34,752 --> 00:00:36,898
+The only resource is Biomass:
+
+14
+00:00:36,898 --> 00:00:40,333
+every point of damage you deal comes back,
+
+15
+00:00:40,333 --> 00:00:42,695
+summoning and healing both cost it.
+
+16
+00:00:44,214 --> 00:00:46,335
+Human turrets show no mercy.
+
+17
+00:00:46,335 --> 00:00:48,070
+Stand at the gate and chew it,
+
+18
+00:00:48,070 --> 00:00:50,576
+and the sniper takes 160 HP a shot.
+
+19
+00:00:50,576 --> 00:00:54,432
+Low? Molt: 40 Biomass heals 35%;
+
+20
+00:00:54,432 --> 00:00:56,938
+send small bugs to soak the fire —
+
+21
+00:00:56,938 --> 00:00:59,252
+turrets always hit the nearest unit.
+
+22
+00:01:00,796 --> 00:01:03,361
+The Mother can die, but only 5 times.
+
+23
+00:01:03,361 --> 00:01:07,637
+Each death respawns her at full HP; on the fifth,
+
+24
+00:01:07,637 --> 00:01:09,134
+the swarm collapses.
+
+25
+00:01:10,658 --> 00:01:12,002
+The gate — is down!
+
+26
+00:01:12,002 --> 00:01:15,363
+Bugs pour in, the Mother charges after them.
+
+27
+00:01:15,363 --> 00:01:19,396
+If this looks fun, hit like.
+
+28
+00:01:20,928 --> 00:01:21,939
+After the breach,
+
+29
+00:01:21,939 --> 00:01:25,780
+I drove the Mother through the hole — bunker,
+
+30
+00:01:25,780 --> 00:01:28,004
+cannon and sniper on both flanks,
+
+31
+00:01:28,004 --> 00:01:30,228
+one life gone in twenty seconds.
+
+32
+00:01:34,928 --> 00:01:38,808
+Result: gate destroyed, five Mother deaths,
+
+33
+00:01:38,808 --> 00:01:42,076
+110s left, core untouched at full HP.
+
+34
+00:01:42,076 --> 00:01:45,547
+Honestly this mode is much harder than I thought —
+
+35
+00:01:45,547 --> 00:01:47,794
+it's a real challenge mode now.
+
+36
+00:01:47,794 --> 00:01:51,266
+Think you can crack the core? Prove me wrong.
+
+37
+00:01:52,782 --> 00:01:56,373
+Playable now — link in the description.
+
+38
+00:01:56,373 --> 00:01:59,207
+Next: more bug unit types
+
+39
+00:01:59,207 --> 00:02:00,908
+and another balance pass.
+
+40
+00:02:00,908 --> 00:02:03,932
+What should you get to play as next? Tell me below.

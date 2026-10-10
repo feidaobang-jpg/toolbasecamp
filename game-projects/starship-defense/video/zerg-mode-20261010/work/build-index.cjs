@@ -12,8 +12,9 @@ const EVENT_SHOT={start:2,dash:'9,1',view:'1',acid:'5,1','summon-warrior':6,'sum
 function shotOf(name){const key=Object.keys(EVENT_SHOT).find(k=>name===k||name.startsWith(k+'-')||name.startsWith(k));return key?EVENT_SHOT[key]:'';}
 function frameAt(frames,t){
   if(!frames||!frames.length)return'';
+  const base=frames[0].timestamp;const at=base+t;   // 事件 t 是相对秒，帧戳是绝对 epoch 秒
   let lo=0,hi=frames.length-1,best=frames[0];
-  while(lo<=hi){const m=(lo+hi)>>1;if(frames[m].timestamp<=t){best=frames[m];lo=m+1;}else hi=m-1;}
+  while(lo<=hi){const m=(lo+hi)>>1;if(frames[m].timestamp<=at){best=frames[m];lo=m+1;}else hi=m-1;}
   return best.file;
 }
 const takes=process.argv.slice(2).length?process.argv.slice(2)

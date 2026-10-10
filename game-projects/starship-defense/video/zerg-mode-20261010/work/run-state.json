@@ -1,0 +1,70 @@
+{
+  "episode": "zerg-mode-20261010",
+  "project_path": "game-projects/starship-defense/video/zerg-mode-20261010",
+  "mode": "update",
+  "requested_variants": ["bilibili-zh", "douyin-zh", "youtube-zh"],
+  "game": {
+    "name": "虫潮围城",
+    "game_id": "chongchao-qianshao",
+    "version_recorded": "web-zerg-corpse-spinfix-v0.33.3",
+    "website_entry": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "toy_id": "38678478981120",
+    "toy_review_status": "auditing",
+    "toy_public_version": "web-resistance-v0.33.0"
+  },
+  "confirmed_feedback": "用户指令：game-video 录制虫潮的虫族模式（本期为更新视频，主题=网友点名当天上线）",
+  "source_media": {
+    "capture": "work/capture/zerg-run7",
+    "frames": 5829,
+    "capture_duration_s": 283.42,
+    "clip": "work/capture/zerg-run7/clip.mp4",
+    "clip_span_s": 256.3,
+    "game_audio": "work/capture/zerg-run7/game-audio.wav",
+    "rules": {"gameplay_modified": false, "time_scale": 1, "normal_rule_inputs_only": true, "qa_hook": "read-only"},
+    "other_takes": ["zerg-run1", "zerg-run2", "zerg-run3", "zerg-run4", "zerg-run5", "zerg-run6b", "zerg-run8"]
+  },
+  "tools": {
+    "capture": "Playwright + msedge headless (--use-angle=d3d11), Page.startScreencast + MediaRecorder",
+    "tts": "edge_tts 7.2.8 / zh-CN-YunxiNeural / rate +0%",
+    "edit": "ffmpeg 9.0.2（concat + sidechaincompress + loudnorm + subtitles 烧录）",
+    "covers": "ffmpeg drawtext + 本机微软雅黑，脚本 work/make-cover.cjs",
+    "packaging": "work/package-final.cjs（硬链接复用 + PNG→JPG + SHA256）"
+  },
+  "shared_dependencies": {
+    "media_shared_zh": "final/bilibili-zh/gameplay-zh-final.mp4 == final/douyin-zh/gameplay-zh-final.mp4（同哈希 2739ee70…）",
+    "media_youtube_clean": "final/youtube-zh/gameplay-youtube-final.mp4（efaeca93…，同时间线无烧录字幕）",
+    "timeline": "work/edit/timeline.json",
+    "captions_lines": "work/edit/captions-zh.lines.json",
+    "glossary": "work/edit/glossary.json"
+  },
+  "variants": {
+    "bilibili-zh": {
+      "stage": "awaiting_human_review",
+      "files": ["final/bilibili-zh/gameplay-zh-final.mp4", "final/bilibili-zh/cover-home-4x3.jpg", "final/bilibili-zh/cover-space-16x9.jpg", "final/bilibili-zh/投稿文案.txt"],
+      "manifest": "work/publish/bilibili-zh/publish.json",
+      "render_entry": "node work/build-video.cjs",
+      "next": "用户审片通过 → 上传 → 公开核验 → toy video bind + 合集 9248439 + 活动检查 + 推流表"
+    },
+    "douyin-zh": {
+      "stage": "awaiting_human_review",
+      "files": ["final/douyin-zh/gameplay-zh-final.mp4", "final/douyin-zh/cover-horizontal-4x3.jpg", "final/douyin-zh/cover-portrait-3x4.jpg", "final/douyin-zh/投稿文案.txt"],
+      "manifest": "work/publish/douyin-zh/publish.json",
+      "render_entry": "复用 shared-zh",
+      "next": "随本期一起审片；上传前核对抖音封面入口与话题选择器"
+    },
+    "youtube-zh": {
+      "stage": "awaiting_human_review",
+      "files": ["final/youtube-zh/gameplay-youtube-final.mp4", "final/youtube-zh/cover-zh-16x9.jpg", "final/youtube-zh/captions-zh.srt", "final/youtube-zh/captions-en.srt", "final/youtube-zh/投稿文案.txt", "final/youtube-zh/English-localizations.txt"],
+      "manifest": "work/publish/youtube-zh/publish.json",
+      "render_entry": "node work/build-video.cjs --clean && node work/make-captions.cjs --en",
+      "next": "英文字幕人工校对后随本期发布；X 宣传按既有授权，收费即跳过"
+    }
+  },
+  "known_gaps": [
+    "胜利结算与城内拆塔镜头未录到（8 局全败，核心 2000/2000 未掉血）；已在文案与 qa.md 如实登记，不伪造",
+    "人声听审 not-run；英文字幕校对 not-run；平台上传条件未核对"
+  ],
+  "status": "partial",
+  "status_note": "三版成片与物料技术就绪，全部等待用户人工审片；审片通过前不上传任何平台",
+  "updated_at": "2026-10-11T06:50:00+08:00"
+}
