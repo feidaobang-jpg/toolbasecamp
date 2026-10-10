@@ -37,7 +37,7 @@ export function createRVBreakout(a){
   }
   function mount(){
     const style=document.createElement('style');style.textContent=`
-      .rv-mode .campaign-only,.rv-mode #hudTop,.rv-mode #hudRight,.rv-mode #radar,.rv-mode #weaponBar,.rv-mode #hint,.rv-mode #readyBtn,.rv-mode #webTools .mbtn:not(#menuButton):not(#fullBtn):not(#qualityBtn):not(#muteBtn):not(#personBtn),.rv-mode #vL,.rv-mode #vR,.rv-mode #vX{display:none!important}
+      .rv-mode .campaign-only,.rv-mode #hudTop,.rv-mode #hudRight,.rv-mode #radar,.rv-mode #weaponBar,.rv-mode #hint,.rv-mode #readyBtn,.rv-mode #webTools .mbtn:not(#menuButton):not(#fullBtn):not(#muteBtn):not(#personBtn),.rv-mode #vL,.rv-mode #vR,.rv-mode #vX{display:none!important}
       #rvHUD{position:absolute;left:10px;top:10px;max-width:300px;padding:8px 12px;border-radius:9px;background:rgba(8,18,29,.82);color:#e8f1f7;line-height:1.5;font-size:12px;pointer-events:none}
       #rvHUD b{color:#ffda85}#rvMeter{height:7px;background:#253848;border-radius:4px;overflow:hidden;margin:4px 0}#rvFill{height:100%;background:#5ed0b2}#rvObjective{color:#96e3e8}#rvAction{color:#ffd28c}
       #rvPanel,#rvMenu,#rvResult{background:rgba(8,18,29,.97);color:#e8f1f7}#rvPanel{width:610px;max-height:90%;overflow:auto}#rvPanel .mbtn{min-height:44px}#rvPanel .small{margin:7px 0}

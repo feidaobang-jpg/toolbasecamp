@@ -118,7 +118,11 @@ export function createZergMode(a){
     mo.hp-=d;a.updHPBar(mo.bar,Math.max(0,mo.hp/mo.maxHp));
     mo.dmgT=.14;
     if(mo.hp<=0){
-      mo.dead=true;a.spawnParticles(mo.mesh.position.clone().add(new T.Vector3(0,1,0)),0x8bf06a,14,6,.6,1.2);
+      mo.dead=true;
+      // 母虫死亡不走 killMonster，但必须进同一套尸体生命周期：
+      // 否则网格没人从场景移除，会留一个孤立模型并跟到后续模式/周目。
+      a.visuals.death(mo.mesh);
+      a.spawnParticles(mo.mesh.position.clone().add(new T.Vector3(0,1,0)),0x8bf06a,14,6,.6,1.2);
       a.AudioSys.sfx('hurt');
       s.deaths++;s.bug=null;
       if(s.deaths>=MAX_DEATHS)s.defeat('母虫损失过重，虫群失去指挥溃散了…');
@@ -176,7 +180,8 @@ export function createZergMode(a){
     const n=fly?2:3;
     for(let i=0;i<n;i++){
       const mo2=a.spawnMonster('mob',p.x+(Math.random()*8-4),p.z+(Math.random()*8-4),fly?{ch:a.CHAPTERS[1],quiet:true}:{quiet:true});
-      if(fly&&!mo2.fly){mo2.fly=true;mo2.mesh.position.y=a.flyHeight(mo2.mesh.position.x,mo2.mesh.position.z);}
+      // AI 每帧按 flightAfterExit&&!route&&!ceiling 重算 fly；只强设 fly 会在下一帧被第 2 章模板的 false 覆盖
+      if(fly&&!mo2.fly){mo2.fly=true;mo2.flightAfterExit=true;mo2.route=null;mo2.mesh.position.y=a.flyHeight(mo2.mesh.position.x,mo2.mesh.position.z);}
     }
     a.AudioSys.sfx('buy');a.showMsg(fly?'🪽 飞虫出巢：越墙直扑设施':'🐛 战士虫出巢：扑向最近的人类目标',1.6);
   }

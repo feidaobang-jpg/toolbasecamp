@@ -90,6 +90,8 @@ const startZerg=async(page)=>{await page.evaluate(()=>document.getElementById('b
     results.push('K 酸液远程吐息可用（进入冷却）');
 
     // 7. 召唤战士/飞虫：给足生物量，U/I 应增加虫群并进入冷却
+    // 召唤单位出生在母虫身边；母虫随机到火线/障碍区时单位会被重定位或秒杀，先传送到开阔安全位保证计数可靠
+    await page.evaluate(()=>{const b=__gameQA.zerg.bug;if(b)b.mesh.position.set(0,0,110);});
     await page.evaluate(()=>{__gameQA.zerg.biomass=400;__gameQA.zerg.sumCd=0;});
     const mBeforeU=(await st(page)).monsters;
     await page.keyboard.press('KeyU');await wait(120);
@@ -97,7 +99,7 @@ const startZerg=async(page)=>{await page.evaluate(()=>document.getElementById('b
     assert.ok(s.sumCd>0,'U 召战士应进入冷却');
     assert.ok(s.monsters>mBeforeU,'U 应新增战士虫 '+mBeforeU+'->'+s.monsters);
     assert.ok(s.biomass<400,'召唤应消耗生物量');
-    await page.evaluate(()=>{__gameQA.zerg.biomass=400;__gameQA.zerg.flyCd=0;});
+    await page.evaluate(()=>{__gameQA.zerg.biomass=400;__gameQA.zerg.flyCd=0;const b=__gameQA.zerg.bug;if(b)b.mesh.position.set(0,0,110);});
     const mBeforeI=(await st(page)).monsters;
     await page.keyboard.press('KeyI');await wait(120);
     s=await st(page);

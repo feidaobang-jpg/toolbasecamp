@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-10T12:58:30.267172+00:00",
+  "updated_at": "2026-10-10T23:51:14+08:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -777,6 +777,69 @@
       "record": "releases/zerg-mode/qa/results.md",
       "note": "新增虫族模式实验玩法：扮演母虫带虫群攻人类要塞，限时6分钟，撕咬/酸液/召唤/蜕皮/冲刺五系技能+生物量经济，独立战绩不占战役存档，触屏动作键改技能标签。本地QA15项通过；待本人审核，回复进22点批次。 已整合主线并部署网站核验通过（commit 3dc64a72）；原评论回复进22点批次。",
       "deployed_at": "2026-10-10T12:58:30.267172+00:00"
+    },
+    {
+      "rpid": "316673457873",
+      "root_rpid": "316673457873",
+      "comment_type": 1,
+      "video": "BV1xdpx63ETu",
+      "url": "https://www.bilibili.com/video/BV1xdpx63ETu#reply316673457873",
+      "user": "骄傲的打变",
+      "date": "2026-10-10 22:22",
+      "text": "塔防模式为啥没了[笑哭]",
+      "kind": "question",
+      "status": "no_code_change",
+      "fixed_in": null,
+      "website_status": "n/a",
+      "toy_status": "n/a",
+      "reply_text": "塔防玩法没有下架哦～《虫潮围城》本身就是塔防（基地防守）游戏：主菜单「🚀开始新游戏 / ▶继续上次」这条战役线就是打怪攒钱→造炮塔、雇队友→守住基地顶住虫潮。这期视频里开房车进僵尸城搜物资，是战役同一局里的载具玩法，不是把塔防换掉了。如果你指的是之前B站直播间的AI互动守城，那是直播活动限定、活动结束已下线。要是你说的是别的入口，回我一下具体在哪看到的，我再确认～",
+      "reply_rpid": null,
+      "reply_status": "public_verified",
+      "public_verified_at": "2026-10-10T20:56:04Z",
+      "record": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
+      "note": "核实：git历史从无“塔防模式”命名(git log -S 塔防 空)；菜单重组d11cdc3d仅重排行未删模式。塔防=战役(开始新游戏/继续上次)仍在；视频为房车搜物资载具玩法；直播AI互动守城活动限定已下线。非代码bug，回复澄清。已发送并公开读回：创作中心评论页显示本人回复（B站时间2026-10-11 04:46:33）。发送方式：in-app浏览器UI；回复/发布控件在shadow DOM且命中测试被遮挡，改用shadow内DOM click触发站点自身处理器，提交前以回复框标签校验目标。"
+    },
+    {
+      "rpid": "320294105968",
+      "root_rpid": "316545286145",
+      "comment_type": 2,
+      "video": "BV1xdpx63ETu",
+      "url": "https://www.bilibili.com/video/BV1xdpx63ETu#reply320294105968",
+      "user": "我不是abbie",
+      "date": "2026-10-10 22:19",
+      "text": "回复 @飞刀班长 : 有bug虫族模式死了会留模型，再去玩周目也有",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-zerg-corpse-spinfix-v0.33.3",
+      "website_status": "deployed_verified",
+      "toy_status": "auditing",
+      "reply_text": "这个确实是bug，已经修好了：之前虫族模式母虫阵亡没走正常的尸体消失流程，模型会留在场景里、开新周目也还在。现在阵亡后正常消失，切模式/开新周目都不再残留。网站版本已更新生效，Toy版本已提交审核（过审后同步）。感谢反馈！",
+      "reply_rpid": null,
+      "reply_status": "public_verified",
+      "public_verified_at": "2026-10-10T20:56:04Z",
+      "record": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
+      "note": "根因：母虫死亡走s.hurt未进killMonster/尸体生命周期，仅释放材质致网格残留场景，且已出列clearEntities扫不到，跟到后续模式/周目。修复：s.hurt调visuals.death + updMonsters死亡分支兜底scene.remove。线上pre-fix包复现残留、本地修复包ALL PASS。已发送并公开读回：创作中心评论页重载后显示本人回复。发送方式：in-app浏览器UI；shadow DOM内回复/发布控件命中测试被遮挡，改用shadow内DOM click触发站点自身处理器，提交前以回复框标签校验目标。"
+    },
+    {
+      "rpid": "316672186289",
+      "root_rpid": "316672186289",
+      "comment_type": 1,
+      "video": "opus:1253705235842465792",
+      "url": "https://www.bilibili.com/opus/1253705235842465792#reply316672186289",
+      "user": "fallen_chen",
+      "date": "2026-10-10 22:10",
+      "text": "在武职里飞的虫王上空时虫王会打转。",
+      "kind": "bug",
+      "status": "fixed",
+      "fixed_in": "web-zerg-corpse-spinfix-v0.33.3",
+      "website_status": "deployed_verified",
+      "toy_status": "auditing",
+      "reply_text": "这个bug已经修复：武直（武装直升机）悬停在虫王正上方时，目标几乎在头顶、水平方向趋近于0，朝向计算会把抖动放大成原地打转。现在加了保护，悬停头顶时保持稳定朝向、不再转圈。网站版本已更新生效，Toy版本已提交审核（过审后同步）。感谢反馈！",
+      "reply_rpid": null,
+      "reply_status": "public_verified",
+      "public_verified_at": "2026-10-10T20:56:04Z",
+      "record": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
+      "note": "“武职”=武直(武装直升机)。根因：目标在正上方时dir.y=0后水平向量趋零，atan2放大噪声成原地打转。修复：朝向/导航/冲锋加hlen>1守卫。本地ALL PASS(B1武直悬停虫王正上方朝向稳定)。已发送并公开读回：opus动态页fallen_chen楼下显示本人回复（截图留证，B站时间“刚刚”）。发送方式：in-app浏览器UI；shadow DOM内回复/发布控件命中测试被遮挡，改用shadow内DOM click触发站点自身处理器，提交前以回复框标签“回复 @fallen_chen :”校验目标。"
     }
   ]
 }
