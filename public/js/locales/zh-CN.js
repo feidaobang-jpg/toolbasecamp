@@ -1412,12 +1412,6 @@ window.TB_LOCALES['zh-CN'] = {
         world: 'WORLD 1–1', coins: '金币', score: '分数', time: '时间', pause: '暂停', resume: '继续', full: '全屏', fileWarning: '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。',
         title: '超级玛丽\n进入新的 3D 维度', intro: '熟悉的第一关，现在可以在更大的空间里探索。', move: '移动', jump: '跳跃', run: '加速', camera: '旋转 · 俯仰 · 镜头回正', start: '回车 · 开始冒险', restart: '重新开始', touch: '触屏操作', note: '同人第一关演示 · 程序化美术与音效 · 非官方作品', help: 'WASD 移动 · K 跳跃 · J 加速 · Q/E 旋转 · C 回正 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '你的冒险会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', deadTitle: '这次掉进了坑里', deadCopy: '第一关还在等你。按回车或重新开始再试一次。', winTitle: '第一关通关！', winCopy: '旗杆、城堡和一段新的 3D 路线都完成了。', grow: '蘑菇让你变大了', checkpoint: '到达中途检查点', hurt: '被撞到了，但还能继续', mushroom: '砖块里有东西！', paused: '游戏已暂停', continued: '继续前进', soundOn: '静音', soundOff: '打开声音'
     },
-    hopfox3d: {
-        stage: '第一关 · 草原', score: '分数', acorns: '橡果', lives: '生命', time: '时间', pause: '暂停', resume: '继续', full: '全屏',
-        title: '跳跳狐\n草原 3D 冒险', intro: '跑、跳、踩，一路穿过草原：顶木箱拿橡果，踩扁甲虫，踢飞蜗牛壳，最后敲响终点的铃铛。', move: '移动', jump: '跳跃（按住跳更高）', run: '奔跑 · 拿到灯笼后发射火花', camera: '旋转 · 俯仰 · 五种视角', start: '回车 · 开始', restart: '回车 · 再玩一次', touch: '触屏操作', note: '原创角色、关卡、美术与音乐 · 程序化 3D · 横版闯关演示', runShort: '奔跑', jumpShort: '跳跃', help: 'A/D 移动 · K 跳跃 · J 奔跑/发射 · Q/E 旋转 · R/F 俯仰 · C 切换视角 · Esc 暂停', rotate: '请将手机横过来', rotateHint: '草原会在这里等你。', loadError: '游戏加载失败，请重新加载页面。', retry: '重新加载', fullFail: '浏览器未允许全屏，可点「全屏」重试，或直接横屏游玩。', soundOn: '静音', soundOff: '打开声音', paused: '暂停中',
-        winTitle: '第一关通关！', winCopy: '铃声响彻草原。再来一次，试试抓得更高、跑得更快。', deadTitle: '生命用完了', deadCopy: '按回车或点按钮，从草原起点重新出发。', bell: '铃铛高度奖励', total: '总分',
-        gotBerry: '发光莓：戴上矿工帽，可以顶碎陶砖', gotJar: '萤火灯笼：按 J 发射火花', shrink: '哎呀！装备掉了', oneup: '生命 +1！', checkpoint: '点亮了中途灯笼', hurry: '快点！时间不多了！', timeUp: '时间到', bellRang: '叮！铃铛奖励 +{n}'
-    },
     games: {
         collectionTitle: '飞刀班长的游戏 · 选一款直接开玩',
         collectionDesc: '虫潮围城、恐龙快打、赤色要塞和经典休闲游戏。B站合集集中展示全部 Toy，下面也可选择本站试玩。',
@@ -1428,7 +1422,6 @@ window.TB_LOCALES['zh-CN'] = {
         playSite3d: '本站 3D',
         playToy2d: 'B站 2D 旧版',
         earlyDesc: '保留早期尝试与试玩入口，暂缓扩展。',
-        journeyVersions: '本站为 3D 实验版，B站保留 2D 旧版。',
         tags: {
             threeD: '3D',
             developing: '开发中',
@@ -1721,10 +1714,6 @@ window.TB_LOCALES['zh-CN'] = {
             title: '坦克大战',
             desc: '推荐魔改挑战：吃船过河、拿火箭筒与四连导弹，和抢道具的敌军及 Boss 对战，100 关无限周目。支持 2–4 人联机合作，保留 FC 原版经典复刻 35 关。五种视角含第一人称，键盘与手机触屏都能玩。'
         },
-        hopfox3d: {
-            title: '跳跳狐 3D：第一关',
-            desc: '原创 3D 横版闯关：跑跳顶箱拿橡果、踩甲虫、踢蜗牛壳，终点敲响铃铛。键盘与手机横屏都能玩。'
-        },
         jackal3d: {
             title: '赤色要塞',
             desc: 'FC 赤色要塞的 3D 重制版：包含海滩登陆和废墟城两关，驾驶武装吉普救出俘虏、送上直升机，对战蓝色坦克和石像。键盘与手机横屏都能玩。'
@@ -1887,17 +1876,9 @@ window.TB_LOCALES['zh-CN'] = {
             title: '潜水捕鱼',
             desc: '类似《潜水员戴夫》：下潜捕鱼、管理氧气、回船卖鱼升级、再潜更深。单文件零依赖。'
         },
-        tankBattle: {
-            title: '坦克大战',
-            desc: '经典坦克大战：20 关地形递进、敌方吃道具模式，横屏双端操控。'
-        },
         starshipDefense: {
             title: '虫潮围城',
             desc: '3D 守卫基地：深色星际战场，虫群从隧道钻出；第一/第三人称、武器强化、小队与载具，可突袭虫巢母皇；电脑手机均可玩。'
-        },
-        journeyWest: {
-            title: '西游降魔',
-            desc: '完整山寺降魔第一关：四种武器、闪避与法术，三轮妖群和镇山石魔；电脑键盘与手机虚拟按钮均可玩。'
         },
         rmbUppercase: {
             title: '人民币大写',
