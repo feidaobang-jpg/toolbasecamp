@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-resistance-aim-v0.33.1",
+  "base_version": "web-resistance-v0.33.0",
+  "created_at": "2026-10-10T15:16:52.432711+08:00",
+  "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010",
+  "build": {
+    "id": "resistance-aim0331",
+    "base_commit": "ed8e73f11cdec08fd0dc255814853c5dbcf9a7b4",
+    "commit": null,
+    "fingerprint": "3f04135661584c22731b032d5e15fa860a618c1f7fc3134ca9b1292be809e766",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "resistance-first-person-aim",
+      "status": "implemented",
+      "description": "默认第一人称、Z/右键/按钮举枪、瞄准收敛与散布缩小"
+    },
+    {
+      "id": "resistance-ballistics",
+      "status": "implemented",
+      "description": "橙金曳光、简化重力、短闪光和烟、命中反馈"
+    },
+    {
+      "id": "resistance-tow-cannon",
+      "status": "implemented",
+      "description": "炮车慢速拖行、安全碰撞、轮转、放炮存姿态"
+    },
+    {
+      "id": "resistance-cannon-preview",
+      "status": "implemented",
+      "description": "左右/高低键盘与触屏操作、预计落点/仰角/射程"
+    }
+  ],
+  "changes": [
+    {
+      "before": "默认第三人称；枪口射线与中央准星有偏差；炮位固定",
+      "after": "默认第一人称举枪射击；炮可拖行/瞄高低，预计落点帮助打门",
+      "verification": "11组新机制+17组原战役回归、连续真实按键开门和离线三章测试通过"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "touch-hud-occluded",
+      "observed": "拖视角区域遮住战役瞄准按钮；既有切枪和小队按钮也受此层级影响",
+      "status": "fixed",
+      "fix": "交互控件置于触控层上、菜单层下，新按钮按缩放保证44像素",
+      "verification": "真实Playwright点击按钮成功，横竖模拟截图已复查"
+    }
+  ],
+  "media": [
+    {
+      "id": "default-first",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\qa\\default-first.png",
+      "sha256": "331dca11a7c5981eab50a649585758ab2a6ed26a0aa6df2f86d9ae9151aae509",
+      "kind": "screenshot",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "本版默认第一人称",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "iron-sight",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\qa\\iron-sight.png",
+      "sha256": "c9ccc0efd9c50d53d32bb339e7a2702a7e78d9a0d086afe89f956c7a496be8a6",
+      "kind": "screenshot",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "举枪放大，准星与枪方向一致",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "tow-cannon",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\qa\\tow-cannon.png",
+      "sha256": "e6575fb90b5b5fe2c505e6780ede0db6f9be39497bae2381a535a179262da88f",
+      "kind": "screenshot",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "实时拖炮",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "cannon-prediction",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\qa\\cannon-prediction.png",
+      "sha256": "c99210a228bd6b269743fe0445c3a239d766c95aa02015b1d9ed519a3e087b19",
+      "kind": "screenshot",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "炮口高低与预计落点",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "touch-aim",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\qa\\touch-aim-landscape.png",
+      "sha256": "20664a41855f9fd656b4fc397690f8c0fdb475294573d657b9280b4da3d60501",
+      "kind": "screenshot",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "手机横屏模拟瞄准按钮",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "touch-cannon",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\qa\\touch-cannon-portrait.png",
+      "sha256": "4ea553e8b065ab2811fef66121415f595209b837f6e95044d5a3bc59abf21eec",
+      "kind": "screenshot",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "手机竖屏自动旋转模拟操炮",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "gameplay-aim",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\captures\\gameplay-aim.webm",
+      "sha256": "f37c7f162d4ed45d7cd5745b110ecab97d358a0834695c4a6037d0ddf985ad63",
+      "kind": "video",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "真实按键连续射击、拖炮、瞄准和三发开门；QA直达炮阶段及无敌，无音轨",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    },
+    {
+      "id": "camera-sweeps",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\views\\sweeps.webm",
+      "sha256": "63f05e9751feadbd627df639e6560adb148879435b43c24207e00a6d7689c5d1",
+      "kind": "video",
+      "version": "web-resistance-aim-v0.33.1",
+      "build_id": "resistance-aim0331",
+      "capture_mode": "realtime-automation",
+      "description": "20个角色，五种第三人称与第一人称各连续旋转超过一圈；QA后期阶段负载及无敌，原片无音轨",
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "before-default",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\before-default.png",
+      "version": "web-resistance-v0.33.0"
+    },
+    {
+      "id": "before-cannon",
+      "file": "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\before-cannon.png",
+      "version": "web-resistance-v0.33.0"
+    }
+  ],
+  "qa": [
+    {
+      "id": "aim-tow",
+      "result": "pass",
+      "evidence": [
+        "qa/results.json",
+        "regression.json",
+        "capture-checks.json"
+      ],
+      "device": "Windows Edge headless / D3D11",
+      "method": "真实键鼠/点击动作，QA隔离姿态、射击和阶段；手机为844x390/390x844浏览器模拟",
+      "unverified": [
+        "手机真机/多指",
+        "完整自然难度三章连续通关"
+      ]
+    },
+    {
+      "id": "package",
+      "result": "pass",
+      "evidence": [
+        "package-smoke.json",
+        "build-manifest.json"
+      ],
+      "method": "自包含离线包三章移动射击投雷，外网请求全部禁止；包已构建未提审"
+    },
+    {
+      "id": "render",
+      "result": "pass",
+      "evidence": [
+        "performance.json"
+      ],
+      "method": "三章预热后8秒持续第一人称操作；帧率测量没有录制，RTX4060Ti，手机性能未测"
+    },
+    {
+      "id": "camera-sweeps",
+      "result": "pass",
+      "method": "20个角色负载下，每种镜头连续Q/E旋转；实际角度累计超过2π再通过，五种第三人称与第一人称",
+      "evidence": [
+        "views/checks.json",
+        "D:\\project\\toolbasecamp-artifacts\\chongchao-aim-20261010\\views\\sweeps.webm"
+      ],
+      "unverified": [
+        "手机真机性能"
+      ]
+    }
+  ],
+  "publication": {
+    "website": "pending_verification",
+    "other_channels": "pending_22_batch",
+    "approval": {
+      "required": false,
+      "status": "not_required",
+      "basis": "2026-10-09最新网站即时发布规则"
+    },
+    "new_video": "not_requested"
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "原片无音轨/未剪辑/未人工审片",
+      "手机真机与自然通关未验收"
+    ]
+  }
+}

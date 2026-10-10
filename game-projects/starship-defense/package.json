@@ -4,7 +4,8 @@
     "build": "node build-compat.mjs",
     "test:conquest": "node verify-conquest.cjs",
     "test:conquest-online": "node verify-conquest-online.cjs",
-    "test:resistance": "node verify-resistance.cjs"
+    "test:resistance": "node verify-resistance.cjs",
+    "test:resistance-aim": "node verify-resistance-aim.cjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2"

@@ -1,0 +1,53 @@
+{
+  "result": [
+    {
+      "view": 0,
+      "mode": "third",
+      "start": 0,
+      "end": 4.084698768347298,
+      "measuredRadians": -27.299183522708724,
+      "actors": 20
+    },
+    {
+      "view": 1,
+      "mode": "third",
+      "start": 4.084698768347298,
+      "end": 1.9031768297694818,
+      "measuredRadians": -27.276564055453086,
+      "actors": 20
+    },
+    {
+      "view": 2,
+      "mode": "third",
+      "start": 1.9031768297694818,
+      "end": 5.037857979371587,
+      "measuredRadians": -28.19390911030132,
+      "actors": 20
+    },
+    {
+      "view": 3,
+      "mode": "third",
+      "start": 5.037857979371587,
+      "end": 2.859477633447362,
+      "measuredRadians": -27.276564055453083,
+      "actors": 20
+    },
+    {
+      "view": 4,
+      "mode": "third",
+      "start": 2.859477633447362,
+      "end": 0.9399645221040407,
+      "measuredRadians": -27.020210094845247,
+      "actors": 20
+    },
+    {
+      "view": 5,
+      "mode": "first",
+      "start": 0.9399645221040407,
+      "end": 6.18391097943873,
+      "measuredRadians": -13.58424663412221,
+      "actors": 20
+    }
+  ],
+  "method": "Five third-person presets and first person; Q/E full revolution under 20-actor cavalry combat; QA starts later phase without cleanup for worst visible load, invulnerability"
+}

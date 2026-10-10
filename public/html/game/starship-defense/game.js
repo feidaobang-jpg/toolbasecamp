@@ -228,7 +228,7 @@ const Input={
       if(e.pointerType==='touch'){if(!isTouch&&this.onTouchDetected)this.onTouchDetected();return;}
       if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
-      if(e.button===2){e.preventDefault();if(vsOn())toggleBattlefieldAim();return;}
+      if(e.button===2){e.preventDefault();if(warOn())resistanceCampaign.toggleAim();else if(vsOn())toggleBattlefieldAim();return;}
       if(e.button!==0)return;
       this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');
       if(document.pointerLockElement===cv)return;
@@ -4070,7 +4070,12 @@ player.reset('gunner');
 player.mesh.visible=false; // 菜单时隐藏
 resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get player(){return player;},showHUD,
   isTouch:()=>isTouch,view:()=>({yaw:camYaw,pitch:camPitch,first:camMode==='first',preset:CAMERA_VIEWS[camView]}),
-  autoAim:()=>isTouch||CombatControls.autoAim,cycleView:cycleCamView,syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
+  autoAim:()=>isTouch||CombatControls.autoAim,cycleView:cycleCamView,
+  viewState:()=>({mode:camMode,index:camView,yaw:camYaw,pitch:camPitch}),
+  firstPerson(){camMode='first';camState.init=false;Input.resetLook();syncViewLabels();},
+  restoreView(v){if(!v)return;camMode=v.mode;camView=v.index;camYaw=v.yaw;camPitch=v.pitch;camState.init=false;Input.resetLook();syncViewLabels();},
+  setLook(yaw,pitch){camYaw=yaw;camPitch=pitch;Input.resetLook();},
+  cannonLook(){camPitch=clamp(camPitch,-.10,.50);},syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
   faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
   prepare(){if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
 });

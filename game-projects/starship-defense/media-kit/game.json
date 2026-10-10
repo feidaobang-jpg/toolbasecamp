@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-resistance-v0.33.0",
+  "current_version": "web-resistance-aim-v0.33.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -12,7 +12,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-resistance-v0.33.0/handoff.json",
+  "qa": "releases/web-resistance-aim-v0.33.1/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-three-lanes-v0.31.0",
@@ -88,6 +88,12 @@
         "public_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
         "included_version": "web-cloudsave-v0.24.0",
         "note": "大厅补丁已于 21:52 单独提审并在 21:56 公开入口双视口复测生效；随后 22:25 的云存档 v0.24.0 包再次带入同一改动并覆盖为最新基线。"
+      },
+      {
+        "version": "web-resistance-aim-v0.33.1",
+        "status": "pending_22_batch",
+        "summary": "抗战默认第一人称与举枪瞄准；橙金曳光和简化弹道；拖炮/高低调节/预计落点；手机按钮层级修复。",
+        "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
@@ -126,7 +132,7 @@
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-resistance-v0.33.0",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
@@ -144,7 +150,7 @@
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-resistance-v0.33.0/handoff.json",
+  "handoff": "releases/web-resistance-aim-v0.33.1/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -946,7 +952,7 @@
     }
   ],
   "resistance_campaign": {
-    "version": "web-resistance-v0.33.0",
+    "version": "web-resistance-aim-v0.33.1",
     "entry": "抗战战役 · 亮剑名场面",
     "chapters": [
       "李家坡 · 交通壕突击",
@@ -972,7 +978,9 @@
       "没有演员语音",
       "战役暂不支持联机或云存档"
     ],
-    "website_verified": true
+    "website_verified": false,
+    "controls": "默认第一人称，C保留切换；Z/右键或举枪按钮瞄准；炮旁K拉炮，WASD/摇杆移动，I放下再操炮；Q/E或A/D左右、W/S或±调高低、空白处拖动瞄炮，J开炮。",
+    "ballistics": "简化重力弹道、橙金曳光、枪口烟与命中反馈；炮位预计落点。无镜头震动。"
   },
   "channel_baseline_history": [
     {
@@ -1173,5 +1181,18 @@
     "platform_id": "3xr939t2s66s7ma",
     "record": "game-projects/site-games/releases/backfill-20261010/followup-03.json",
     "public_verified_at": "2026-10-10T03:22:17.380Z"
-  }
+  },
+  "pending_channel_updates": {
+    "version": "web-resistance-aim-v0.33.1",
+    "status": "pending_22_batch",
+    "queue_item_id": "chongchao-resistance-aim-v0331-04",
+    "channels": [
+      "Toy",
+      "TapTap",
+      "existing_video_descriptions",
+      "community_announcements"
+    ],
+    "new_video_authorized": false
+  },
+  "website_status": "pending_verification"
 }

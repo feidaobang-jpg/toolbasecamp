@@ -30,7 +30,7 @@ export function periodGun(id='rifle'){
  if(pistol){b.box(wood,0,-.16,-.1,.07,.25,.1).rotation.x=-.2;b.box(steel,0,-.055,.08,.09,.18,.13);}
  else {b.box(wood,0,-.015,len*.26,.075,.10,len*.48);b.box(steel,.074,.05,.0,.10,.022,.032);b.ball(steel,.12,.052,.0,.026);}
  const barrel=b.cyl(steel,0,.038,len*.46,mg?.027:.019,len*.48,10);barrel.rotation.x=Math.PI/2;
- for(const z of [.22,len*.60])b.box(steel,0,.082,z,.014,.045,.032);
+ for(const z of [.22,len*.60])b.box(steel,mg?.10:0,.082,z,.014,.045,.032);
  if(mg){b.box(steel,0,.21,-.02,.06,.33,.19).rotation.x=-.18;for(const s of [-1,1])b.box(steel,s*.09,-.22,.55,.018,.43,.022).rotation.z=s*.25;b.box(wood,0,-.12,-.16,.08,.21,.08);}
  if(id==='arisaka'){b.box(0x9eaaab,0,-.02,len*.87,.018,.025,.32);b.box(steel,0,-.02,len*.70,.10,.015,.025);}
  const muzzle=new T.Object3D();muzzle.position.set(0,.038,len*.70);g.add(muzzle);g.userData={muzzle,weapon:id};return compact(g);
@@ -66,10 +66,10 @@ export function horse(color=0x70503b){
 }
 export function fieldGun(){
  const g=new T.Group(),b=build(g),green=0x646847,steel=0x373b30;
- for(const s of [-1,1]){const wheel=b.cyl(0x3c3d30,s*1.08,.68,0,.63,.17,16);wheel.rotation.z=Math.PI/2;const hub=b.cyl(green,s*1.19,.68,0,.16,.19,10);hub.rotation.z=Math.PI/2;for(let a=0;a<Math.PI;a+=Math.PI/4){b.box(0x8d7e57,s*1.2,.68,0,.03,1.08,.038).rotation.x=a;}b.box(green,s*.48,.42,-1.15,.16,.18,2.9).rotation.y=s*.24;}
+ const wheels=[];for(const s of [-1,1]){const wheelRoot=new T.Group();wheelRoot.position.set(s*1.08,.68,0);g.add(wheelRoot);wheels.push(wheelRoot);const wb=build(wheelRoot);const wheel=wb.cyl(0x3c3d30,0,0,0,.63,.17,16);wheel.rotation.z=Math.PI/2;const hub=wb.cyl(green,s*.11,0,0,.16,.19,10);hub.rotation.z=Math.PI/2;for(let a=0;a<Math.PI;a+=Math.PI/4){wb.box(0x8d7e57,s*.12,0,0,.03,1.08,.038).rotation.x=a;}b.box(green,s*.48,.42,-1.15,.16,.18,2.9).rotation.y=s*.24;}
  b.box(green,0,1.11,.04,1.95,1.30,.14);b.box(green,0,.6,-.2,1.4,.23,1.1);
  const tube=new T.Group();tube.position.set(0,1.35,0);g.add(tube);const gun=b.cyl(steel,0,0,1.25,.13,3.0,14,tube);gun.rotation.x=Math.PI/2;b.box(green,0,-.19,.72,.30,.22,1.5,tube);b.box(steel,0,.03,-.34,.34,.30,.58,tube);
- const muzzle=new T.Object3D();muzzle.position.set(0,0,2.75);tube.add(muzzle);compact(g);g.userData={tube,muzzle};return g;
+ const muzzle=new T.Object3D();muzzle.position.set(0,0,2.75);tube.add(muzzle);compact(g);g.userData={tube,muzzle,wheels};return g;
 }
 export function sign(text,color='#eadfc3',bg='#343b36',width=4,height=.9){
  const c=document.createElement('canvas');c.width=512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle=bg;ctx.fillRect(0,0,512,128);ctx.strokeStyle='#998360';ctx.lineWidth=8;ctx.strokeRect(4,4,504,120);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 58px sans-serif';ctx.fillText(text,256,66,476);const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;const mesh=new T.Mesh(new T.PlaneGeometry(width,height),new T.MeshBasicMaterial({map:texture,side:T.DoubleSide}));mesh.rotation.y=Math.PI;return mesh;

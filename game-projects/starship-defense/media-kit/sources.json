@@ -314,6 +314,16 @@
       }
     ],
     "adaptation": "玩法改编，非逐镜还原，骑兵关以运输车突围构成可重玩结局",
-    "sha256": "b803026edf8f884d881bbecc971c33e2a763044266f3b5d6dc61164190fe667b"
+    "sha256": "9281751b7c1b620e114c62943b98783115ef32cc4f9eb674f3e7f3e0710fb2a4",
+    "updated_version": "web-resistance-aim-v0.33.1"
+  },
+  {
+    "id": "resistance-aim-tracers-v0331",
+    "source_type": "procedural",
+    "runtime_file": "public/html/game/starship-defense/resistance-campaign.js",
+    "tool": "Codex / Three.js r152",
+    "purpose": "铜色弹头、深棕外圈/橙金内芯曳光、短枪口闪光、灰色烟团和炮弹预计落点",
+    "processing": "代码几何与材质，共用几何；简化重力积分，无下载素材、视频、真实弹道参数或镜头震动。",
+    "sha256": "d748ab677bebc8c48a840c404ac156c086e39759b70caf3dc33be0ac677425bc"
   }
 ]
