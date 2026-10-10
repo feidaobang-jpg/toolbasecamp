@@ -28,7 +28,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #baseBarWrap.low{outline:2px solid #ff5757;animation:base-warning 1s infinite alternate}
 @keyframes base-warning{to{filter:brightness(1.8)}}
 .rescue-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-#rescueStatus{max-width:620px;text-align:center}
 #menuPause{justify-content:flex-start;padding-top:22px}
 #menuPause>*{flex-shrink:0}
 #menuPause label{color:#e3edf4}
@@ -519,8 +518,6 @@ button::before,button::after{content:none!important}
     </div>
     <p class="small campaign-only" id="squadTaskHint">队友默认跟随出击，基地告急时自动回防；可随时一键切换全队「跟随/守家」。</p>
     <div class="btnRow campaign-only"><button class="mbtn" id="squadOrderPause">队友：跟随我</button><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button></div>
-    <div class="rescue-actions campaign-only"><button class="tb-btn" id="recallSquad">队友集合</button><button class="tb-btn" id="rescueVehicles">载具救援</button></div>
-    <p class="small campaign-only" id="rescueStatus" role="status">救援保留血量，各冷却 20 秒。队友集合时驾驶员下车、分配保留；洞内救援载具会送到洞口。直升机跟随到洞口待命。</p>
     <div class="btnRow optRow">
       <button class="mbtn" id="personBtnMenu">第三人称</button>
       <button class="mbtn" id="qualityBtnMenu">画质</button>

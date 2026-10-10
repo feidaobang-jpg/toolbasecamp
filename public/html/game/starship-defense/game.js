@@ -2184,41 +2184,6 @@ function rescueSpot(center,radius,canStand,occupied){
   }
   return null;
 }
-function recallUnits(kind){
-  if(coopCommand({kind:'rescue',id:kind}))return true;
-  const state=Game.state==='paused'?Game.pausedFrom:Game.state;
-  if(!['squad','vehicles'].includes(kind)||!['prep','battle'].includes(state))return false;
-  if(player.dead){$('rescueStatus').textContent='阵亡期间无法救援，复活后可用。';return false;}
-  if(operations.active){$('rescueStatus').textContent='副本内暂不使用救援；完成或撤离后可用。';return false;}
-  const cooldown=Game.rescueCooldown||(Game.rescueCooldown={squad:0,vehicles:0});
-  if(cooldown[kind]>0){$('rescueStatus').textContent='救援冷却还剩 '+Math.ceil(cooldown[kind])+' 秒（游戏进行时计时）';return false;}
-  const pp=player.inVehicle?player.inVehicle.mesh.position:player.pos;
-  const occupied=[{x:pp.x,z:pp.z,r:player.inVehicle?3:1},...vehicles.filter(v=>!v.dead).map(v=>({x:v.mesh.position.x,z:v.mesh.position.z,r:3,unit:v}))];
-  let count=0;
-  if(kind==='squad'){
-    for(const s of squad){
-      if(s.dead)continue;
-      const spot=rescueSpot(pp,.65,squadCanWalk,occupied);if(!spot)continue;
-      if(s.vehicle)leaveSquadVehicle(s);
-      s.mesh.position.set(spot.x,groundY(spot.x,spot.z),spot.z);s.target=null;s.navPath=null;s.stuck=0;s.insideT=0;s.wantsGate=false;s.boardDelay=10;
-      occupied.push({...spot,r:.65});count++;
-    }
-    if(count){Game.squadOrder='follow';Game.squadAlert=0;for(const gear of Game.squadGear)if(gear)gear.order=null;}
-  }else{
-    const cave=Number.isFinite(hiveCeiling(pp.x,pp.z));
-    const center=cave?nearestHiveMouth(pp).out:pp;
-    for(const v of vehicles){
-      if(v.dead||v===player.inVehicle)continue;
-      const spot=rescueSpot(center,3,(x,z)=>vehicleCanStand(v,x,z)&&!Number.isFinite(hiveCeiling(x,z)),occupied.filter(o=>o.unit!==v));if(!spot)continue;
-      v.mesh.position.set(spot.x,groundY(spot.x,spot.z),spot.z);v.alt=0;v.moving=false;v.landing=false;v.navPath=null;
-      if(v.driver){v.driver.mesh.position.copy(v.mesh.position);v.driver.stuck=0;v.driver.wantsGate=false;}
-      const old=occupied.find(o=>o.unit===v);Object.assign(old,spot);count++;
-    }
-  }
-  const note=count?(kind==='squad'?'已集合 '+count+' 名队友；驾驶员下车，驾驶分配保留':'已救援 '+count+' 辆载具'+(Number.isFinite(hiveCeiling(pp.x,pp.z))?'至洞口空地':'')):'没有可召回的单位或附近缺少安全空地';
-  if(count){cooldown[kind]=20;autoSave();syncPauseOptions();}
-  $('rescueStatus').textContent=note;showMsg(note,3);return count>0;
-}
 function setSquadTask(task){
   if(coopCommand({kind:'order',task}))return;
   if(!Object.hasOwn(SQUAD_ORDERS,task))return false;
@@ -3835,10 +3800,8 @@ function syncPauseOptions(){
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
-$('recallSquad').onclick=()=>recallUnits('squad');
 function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'defend');updSquadOrderBtn();}
 $('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
-$('rescueVehicles').onclick=()=>recallUnits('vehicles');
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
 stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
 Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&$('confirmPanel').classList.contains('hidden');
@@ -4206,7 +4169,7 @@ function setupWebControls(){
   if(new URLSearchParams(location.search).get('qa')==='1'){
     window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,saveStore,getPlatformSave:()=>platformSave,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
       get resistanceCampaign(){return resistanceCampaign;},get rvBreakout(){return rvBreakout;},get versus(){return versus;},get zerg(){return zergMode;},zergOn,startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,VS_UNITS,VS_AI,VS_RULES,VS_SIZES,get coopHumans(){return coopHumans;},
-      touchLayout,setDeviceMode,recallUnits,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
+      touchLayout,setDeviceMode,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality:$('qualityBtn').dataset.quality,theme:THEME,raw:frameTimes.slice()};}
     };
@@ -4326,7 +4289,6 @@ function handleCoopCommand(slot,c){
   else if(c.kind==='order')setSquadTask(c.task);
   else if(c.kind==='memberOrder')setSquadMemberTask(c.slot,c.task);
   else if(c.kind==='autoDefense')setSquadAutoDefense(c.enabled===true);
-  else if(c.kind==='rescue'&&['squad','vehicles'].includes(c.id))recallUnits(c.id);
   else if(c.kind==='squadRole'&&Number.isInteger(c.slot))changeSquadRole(c.slot,c.role);
   else if(c.kind==='squadVehicle'&&Number.isInteger(c.slot))assignSquadVehicle(c.slot,c.id);
   else if(c.kind==='squadUpgrade'&&Number.isInteger(c.slot))upgradeSquad(c.slot,c.gear);
