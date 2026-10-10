@@ -12,7 +12,7 @@ import threading
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.security import HTTPBearer
 import stock_market as market_data
-from stock_calendar import CN_TZ, CALENDAR_SOURCE, cn_now, phase_at, trade_days_between
+from stock_calendar import CN_TZ, CALENDAR_SOURCE, cn_now, phase_at, session_message, trade_days_between
 from stock_strategy import RULES, VERSION, close_accounting, entry_order, evaluate_pullback, exit_reason, fees, money
 
 router = APIRouter(prefix="/stocks", tags=["stocks"])
@@ -349,12 +349,14 @@ def dashboard():
     now=cn_now()
     try:
         phase=phase_at(now)
+        session=session_message(now)
         calendar_ok=True
-    except ValueError:
+    except ValueError as exc:
         phase="calendar_unverified"
+        session=str(exc)+"。"
         calendar_ok=False
     return {"success":True,"rules":RULES,"calendar_source":CALENDAR_SOURCE,"calendar_ok":calendar_ok,
-        "phase":phase,"generated_at":now.strftime("%Y-%m-%d %H:%M:%S"),"stats":summary,
+        "phase":phase,"session_message":session,"generated_at":now.strftime("%Y-%m-%d %H:%M:%S"),"stats":summary,
         "latest_screen":decode(screened["result_json"]).get("screen") if screened else None,
         "last_success_at":serial(successful["finished_at"]) if successful else None,
         "last_run":{**json.loads(dump(latest)),"result":decode(latest["result_json"])} if latest else None}
@@ -367,7 +369,8 @@ def status(_admin=Depends(_admin_user)):
 def recommend(_admin=Depends(_admin_user)):
     now=cn_now()
     if phase_at(now) in ("closed","idle","close"):
-        return {"success":True,"preview":True,"items":[],"message":"当前非盘中筛选时段；查看最近自动运行结果即可，预览不会记作成交"}
+        return {"success":True,"preview":True,"items":[],"generated_at":now.strftime("%Y-%m-%d %H:%M:%S"),
+            "message":session_message(now)}
     if not _preview_lock.acquire(blocking=False):
         raise HTTPException(409,"筛选正在进行，请稍后刷新")
     try:

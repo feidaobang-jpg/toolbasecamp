@@ -11,7 +11,7 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import stocks
 import stock_market
-from stock_calendar import CN_TZ, is_trade_day, phase_at, trade_days_between
+from stock_calendar import CN_TZ, is_trade_day, phase_at, session_message, trade_days_between
 from stock_strategy import RULES, close_accounting, entry_order, evaluate_pullback, execution_price, exit_reason, fees
 
 sqlite3.register_converter("DATETIME",lambda b:datetime.fromisoformat(b.decode()))
@@ -87,6 +87,26 @@ class RulesTests(unittest.TestCase):
         self.assertEqual(phase_at(at(time="14:57:00")),"idle")
         self.assertEqual(phase_at(at(time="15:10:00")),"close")
         self.assertEqual(phase_at(at(time="12:00:00")),"idle")
+    def test_session_message_weekend_and_holiday(self):
+        weekend=session_message(at("2026-10-10"))
+        self.assertIn("今日周六休市",weekend)
+        self.assertIn("2026-10-12（周一），09:35",weekend)
+        holiday=session_message(at("2026-10-01"))
+        self.assertIn("今日节假日休市",holiday)
+        self.assertIn("2026-10-08（周四）",holiday)
+    def test_session_message_time_boundaries(self):
+        for time,reason in [("09:29:59","尚未开盘"),("09:30:00","市场已开盘"),
+                            ("09:34:59","09:35开始"),("09:35:00","交易日盘中"),
+                            ("11:30:59","交易日盘中"),("11:31:00","午间休市"),
+                            ("12:59:59","13:00恢复"),("13:00:00","交易日盘中"),
+                            ("14:56:59","交易日盘中"),("14:57:00","收盘集合竞价"),
+                            ("15:00:00","今日已收盘"),("15:10:00","今日已收盘")]:
+            with self.subTest(time=time):
+                self.assertIn(reason,session_message(at(time=time)))
+    def test_session_message_uses_beijing_time_and_unverified_next_year(self):
+        self.assertIn("今日周六休市",session_message(at("2026-10-10").astimezone(stocks.timezone.utc)))
+        self.assertIn("2027年交易日历尚未核验，下个交易日待确认",session_message(at("2026-12-31","15:00:00")))
+        with self.assertRaises(ValueError): session_message(at("2027-01-04"))
     def test_quote_must_be_current_and_not_future(self):
         now=at()
         self.assertFalse(stock_market.fresh_quote(quote(now-timedelta(days=1)),now))
@@ -168,6 +188,21 @@ class PersistenceTests(unittest.TestCase):
         self.job(at())
         self.job(at(time="14:55:00"))
         return self.rows()[0]
+    def test_closed_preview_and_dashboard_explain_without_saving(self):
+        with patch("stocks.cn_now",return_value=at("2026-10-10")), patch("stocks.compute_screen") as compute:
+            preview=stocks.recommend(_admin={})
+            status=stocks.dashboard()
+        compute.assert_not_called()
+        self.assertIn("今日周六休市",preview["message"])
+        self.assertEqual(preview["message"],status["session_message"])
+        self.assertEqual(preview["generated_at"],"2026-10-10 14:50:00")
+        self.assertEqual(status["phase"],"closed")
+        self.assertEqual(self.rows(),[])
+    def test_unverified_calendar_dashboard_explains_pause(self):
+        with patch("stocks.cn_now",return_value=at("2027-01-04")):
+            status=stocks.dashboard()
+        self.assertFalse(status["calendar_ok"])
+        self.assertIn("2027年交易日历尚未核验",status["session_message"])
     def test_signal_replay_immutable_and_entry_replay(self):
         self.job(at())
         snapshot=self.rows()[0]["snapshot_json"]
