@@ -9,12 +9,16 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
   try{token=storage?.getItem(tokenKey)||'';}catch{}
   const status=text=>{if($('cloudSaveStatus'))$('cloudSaveStatus').textContent=text;updateNotice();};
   const describe=d=>d?`${campaignDifficulty(d.difficulty).name} · 周目${d.loop} 第${d.chapter}章第${d.level}关 · 金币${Math.floor(d.gold)} · ${new Date(d.time).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})}`:'尚无存档';
+  let noticeTimer=0;
   function updateNotice(){
     const text=store.status+'；'+(sync?.statusText||(toy?'连接 Toy 云备份中':'登录网站账号可启用云备份'));
     if($('saveNotice'))$('saveNotice').textContent=text;
     const cloud=sync?.statusText||'',cloudLabel=/已备份/.test(cloud)?'云端已备份':/不同|另一份/.test(cloud)?'云档待选择':/失败|不可用|不兼容|异常/.test(cloud)?'云备份暂停':/登录/.test(cloud)||(!toy&&!token)?'云备份未登录':/关闭/.test(cloud)?'云备份已关闭':/发现云端/.test(cloud)?'可恢复云档':/连接/.test(cloud)?'云备份已连接':'云备份待写入';
     if($('saveHealth')){$('saveHealth').textContent=store.status.split(' · ')[0].split('：')[0]+' · '+cloudLabel;$('saveHealth').title=text;}
     if($('localSaveStatus'))$('localSaveStatus').textContent=store.status;
+    // 状态条只是提醒，几秒后淡出，避免长期挡在战场画面上；存档面板仍可从菜单进入。
+    const chip=$('saveHealth');
+    if(chip){chip.classList.remove('faded');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>chip.classList.add('faded'),5000);}
   }
   function renderCloud(current,backups){
     if(sync)$('cloudProvider').textContent=sync.provider.label;
