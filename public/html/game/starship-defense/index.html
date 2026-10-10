@@ -220,7 +220,6 @@ button::before,button::after{content:none!important}
 .theme-dark #menuPause .mbtn.red{color:#fff6df;background:#b0453a;border-color:#8a3128}
 #menuPause .tb-btn{color:#3a2f1c;background:#fff6df;border:2px solid #785a28;border-radius:9999px}
 #menuPause .tb-btn:hover{background:#f4e4c2}
-#menuPause #squadTask{background:#fff6df!important;color:#3a2f1c!important;border:2px solid #785a28!important}
 #menuPause :focus{outline:3px solid #2f7d3f!important;outline-offset:2px;box-shadow:0 0 10px rgba(47,125,63,.5)}
 #menuPause .rescue-actions button[aria-pressed="true"]{outline:2px solid #2f7d3f;outline-offset:2px}
 
@@ -521,8 +520,7 @@ button::before,button::after{content:none!important}
       <button class="mbtn red versus-only" id="vsSurrender">🏳 投降</button>
       <button class="mbtn red" id="btnQuit">🏠 回主菜单</button>
     </div>
-    <div class="btnRow campaign-only"><label for="squadTask">队友任务：<select id="squadTask" style="font:inherit;padding:8px 12px;background:#172b35;color:#fff;border:1px solid #8ca6b2;border-radius:6px"><option value="follow">跟随我</option><option value="defend">守基地</option></select></label></div>
-    <p class="small campaign-only" id="squadTaskHint">全队指令会统一分工；战术部署可逐人安排跟随/留守。</p>
+    <p class="small campaign-only" id="squadTaskHint">队友跟随/守基地在「战术部署」里统一或逐人安排，并可设置自动回防。</p>
     <div class="btnRow campaign-only"><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button></div>
     <div class="rescue-actions campaign-only"><button class="tb-btn" id="recallSquad">队友集合</button><button class="tb-btn" id="rescueVehicles">载具救援</button></div>
     <p class="small campaign-only" id="rescueStatus" role="status">救援保留血量，各冷却 20 秒。队友集合时驾驶员下车、分配保留；洞内救援载具会送到洞口。直升机跟随到洞口待命。</p>

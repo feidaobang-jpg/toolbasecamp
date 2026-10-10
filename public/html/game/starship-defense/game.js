@@ -3175,7 +3175,7 @@ if(it.type==='weapon'){if(!Game.weapons.includes(it.id))Game.weapons.push(it.id)
         showMsg('📦 获得 '+c.name,1.6);
       }
       else if(it.type==='vehicle'){if(!Game.testMode||!vehicles.some(v=>v.kind===it.id)){Game.vehiclesOwned.push(it.id);spawnVehicle(it.id);}showMsg('🚗 '+VEHICLES[it.id].name+' 已送达停机坪！靠近按I驾驶',2.2);}
-      else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad(it.slot);if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 队友已加入！暂停菜单可选队友任务：'+SQUAD_ORDERS[Game.squadOrder],2.2);}
+      else if(it.type==='squad'){if(Game.testMode||squad.length<Game.squadCount)spawnSquad(it.slot);if(Game.testMode)Game.squadCount=squad.length;showMsg('🪖 队友已加入！战术部署可安排队友任务：'+SQUAD_ORDERS[Game.squadOrder],2.2);}
 }
 function updAirdrops(dt){
   for(let i=airdrops.length-1;i>=0;i--){
@@ -3808,13 +3808,11 @@ document.querySelectorAll('#shopTabs .tab').forEach(el=>{
 });
 function syncPauseOptions(){
   syncViewLabels();
-  $('squadTask').value=Game.squadOrder;
-  $('squadTaskHint').textContent=operations.active?'副本中自动跟随，返回后恢复分工。':'全队指令会统一分工；在「战术部署」可逐人安排跟随/留守，并设置自动回防。';
+  $('squadTaskHint').textContent=operations.active?'副本中自动跟随，返回后恢复分工。':'队友跟随/守基地在「战术部署」里统一或逐人安排，并可设置自动回防。';
   $('qualityBtnMenu').textContent=$('qualityBtn').textContent;$('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
 $('personBtn').onclick=$('personBtnMenu').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
-$('squadTask').onchange=e=>setSquadTask(e.target.value);
 $('recallSquad').onclick=()=>recallUnits('squad');
 $('rescueVehicles').onclick=()=>recallUnits('vehicles');
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
