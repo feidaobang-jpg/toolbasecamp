@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-zerg-corpse-spinfix-v0.33.3",
+  "base_version": "web-resistance-aim-v0.33.1",
+  "created_at": "2026-10-10T23:43:52+08:00",
+  "classification": "bugfix",
+  "review": {
+    "status": "not_required",
+    "reason": "2026-10-10实时节奏：大小Bug完成测试后网站+Toy实时发布，无本地审核门槛"
+  },
+  "source": {
+    "type": "user_directed_feedback_fix",
+    "task_id": "chongchao-feedback-fix-20261010",
+    "merged_origin_commit": "586c619f",
+    "website_commit": "3fe4557547465d6d18270a28a2d0461ea1a66ddc",
+    "feedback": [
+      "B站 我不是abbie rpid=320294105968：虫族模式母虫死亡残留模型，切周目仍在",
+      "B站 fallen_chen rpid=316672186289：武直悬停虫王正上方时虫王原地打转",
+      "B站 骄傲的打变 rpid=316673457873：问塔防模式为何没了（非代码Bug，仅回复澄清）"
+    ]
+  },
+  "changes": [
+    "zerg-mode.js s.hurt 母虫死亡改走 visuals.death 进入尸体生命周期，避免孤立网格残留并跟到后续模式/周目",
+    "game.js updMonsters 死亡分支对无 corpse 标记的网格兜底 scene.remove",
+    "game.js 朝向/导航/冲锋加 hlen>1 守卫：目标在正上/正下（武直悬停头顶）时水平向量趋零，避免 atan2 把噪声放大成原地打转"
+  ],
+  "build": {
+    "commit": "3fe4557547465d6d18270a28a2d0461ea1a66ddc",
+    "compat_bundle_sha256_prefix": "40ed1ea260",
+    "files": {
+      "public/html/game/starship-defense/game.js": "f9c30d29074776c52cc078bdbb32cb03df06f08c87898702f885d5fe2918d9d6",
+      "public/html/game/starship-defense/zerg-mode.js": "457fa2d91f2234039cb0745bed42f22ea046c81198a5495aa476aae6e5f63789",
+      "public/html/game/starship-defense/game.compat.js": "40ed1ea260a7c4c2774f99b51ae9ae22b3d4eec74299d9f1e03ad60eec5d61b0",
+      "public/html/game/starship-defense/index.html": "462924c56f921b0d591e621d58ade2649536818561940f992bab7660c887759e"
+    }
+  },
+  "validation": {
+    "harness": "verify-zerg-corpse-spin.cjs",
+    "local_merged_build": "ALL PASS（A1/A2 母虫尸体移除且切战役无残留；B/B1 武直悬停虫王朝向稳定不打转；C1 地面行军回归）",
+    "toy_package_local": "ALL PASS（对 dist/toy 打包后的同一包，含 toy-chongchao-v1 存档命名空间，桌面视口复验通过）",
+    "toy_package_mobile": "iPhone 视口 844x390 boot 通过：canvas/touchUI 就位、虫族模式激活并生成母虫、无 pageerror",
+    "toy_preview_note": "Toy预览为 bilibili toy-host 嵌套跨源沙箱且当前浏览器视口不可见，无法脚本交互；以同一提交包的本地桌面+手机实测为准",
+    "qa_results": [
+      "A1 母虫阵亡后尸体按生命周期移除：inScene=false corpses=0",
+      "A2 切回战役后无残留：inScene=false state=battle corpses=1",
+      "B 目标=vehicle dy=42 水平距=0 1.4s 累计转向=0.00rad 累计位移=0.00m",
+      "B1 武直悬停虫王正上方：朝向稳定、不再打转",
+      "C1 地面行军回归通过：4s 位移 50.1m"
+    ]
+  },
+  "website": {
+    "status": "deployed_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "live_compat_sha256_prefix": "40ed1ea260",
+    "verified_at": "2026-10-10T23:43:52+08:00"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "slug": "chongchao-qianshao",
+    "submitted_version": "web-zerg-corpse-spinfix-v0.33.3",
+    "package_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
+    "zip_bytes": 369149,
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
+    "submitted_at": "2026-10-10T23:43:52+08:00"
+  },
+  "taptap": {
+    "status": "not_pushed",
+    "reason": "2026-10-10规则：TapTap默认不发"
+  }
+}
