@@ -32,11 +32,12 @@ function check(name, ok, data) { checks.push({ name, ok, data }); if (!ok) throw
       check('baseline reproduces castle walk crash', result.error === 'groundTopAt is not defined', result);
     } else {
       const unavailable = await p.locator('[data-hold=fire]').evaluate(e => ({ opacity: getComputedStyle(e).opacity, nativeDisabled: e.disabled, aria: e.getAttribute('aria-disabled'), label: e.innerText }));
-      check('unavailable fire keeps solid button and explains requirement', unavailable.opacity === '1' && !unavailable.nativeDisabled && unavailable.aria === 'true' && unavailable.label.includes('火焰花'), unavailable);
+      // 主线 30147c57 起火球键固定显示「火球」，未吃火焰花时只用 aria-disabled 标记，不再弹提示
+      check('unavailable fire keeps solid button and is marked unavailable', unavailable.opacity === '1' && !unavailable.nativeDisabled && unavailable.aria === 'true' && unavailable.label.includes('火球'), unavailable);
       // ARIA marks the unavailable action; a real pointer still reaches its explanatory hint.
       const fireRect = await p.locator('[data-hold=fire]').boundingBox();
       await p.mouse.click(fireRect.x + fireRect.width / 2, fireRect.y + fireRect.height / 2);
-      check('unavailable fire gives hint without shooting', await p.evaluate(() => __MARIO_TEST__.world.rt.fireballs.length === 0 && document.querySelector('#toast').innerText.includes('火焰花')));
+      check('unavailable fire does not shoot', await p.evaluate(() => __MARIO_TEST__.world.rt.fireballs.length === 0));
       await p.evaluate(() => { const q = __MARIO_TEST__; q.world.player.power = 'fire'; q.step(1); });
       await p.locator('[data-hold=fire]').click();
       await p.evaluate(() => __MARIO_TEST__.step(2));
@@ -64,8 +65,14 @@ function check(name, ok, data) { checks.push({ name, ok, data }); if (!ok) throw
       if (third) {
         check('1-2 flag sequence automatically enters 1-3', await p.evaluate(() => __MARIO_TEST__.state().cleared.join() === '1-1,1-2'));
         await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); q.world.player.x = q.world.area.flag.x - .2; q.world.player.y = 1; q.world.player.vx = q.world.player.vy = 0; q.step(1800); });
+        // v2.6.0 起 1-3 之后是 1-4 城堡：到桥头碰斧头，结尾演出放完才结算
+        if (await p.evaluate(() => __MARIO_TEST__.state().level === '1-4')) {
+          check('1-3 flag sequence automatically enters 1-4', await p.evaluate(() => __MARIO_TEST__.state().cleared.join() === '1-1,1-2,1-3'));
+          await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); q.world.rt.flames.length = 0; Object.assign(q.world.player, { x: 140.9, y: 4.4, vx: 0, vy: 0, inv: 9 }); q.step(2400); });
+        }
       }
-      check('last implemented stage ends run once', await p.evaluate(hasThird => __MARIO_TEST__.state().overlay === 'result' && __MARIO_TEST__.state().cleared.join() === (hasThird ? '1-1,1-2,1-3' : '1-1,1-2'), third));
+      const cleared = await p.evaluate(() => __MARIO_TEST__.state().cleared.join());
+      check('last implemented stage ends run once', await p.evaluate(() => __MARIO_TEST__.state().overlay === 'result') && ['1-1,1-2', '1-1,1-2,1-3', '1-1,1-2,1-3,1-4'].includes(cleared), cleared);
       await p.locator('[data-act=again]').click();
       await p.evaluate(() => { const q = __MARIO_TEST__; q.skipCard(); q.world.player.inv = 999; });
       for (const viewport of [{ width: 844, height: 390 }, { width: 390, height: 844 }]) {

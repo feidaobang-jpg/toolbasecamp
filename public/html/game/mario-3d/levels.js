@@ -1,11 +1,11 @@
-// 关卡数据：FC《超级马力欧兄弟》1-1、1-2 与 1-3。
+// 关卡数据：FC《超级马力欧兄弟》1-1、1-2、1-3 与 1-4。
 // 坐标单位 = 1 格；第 c 列占 x∈[c,c+1]；h 为方块底边离地高度（地面顶 = 0），占 y∈[h,h+1]。
 // 所有地形沿纵深（z）铺满整条跑道，水管为纵向并排 3 根，防止从旁边绕过。
 // 来源：Ian Albert 原作地图截图逐格核对 + TheVGLC 文本地图 + MarioWiki 道具说明；
 // 1-1 / 1-2 奖励房间与 1-2 出口地面区只有文字描述，布局为推测还原（见 media-kit/sources.json）。
 
 export const LANE = 3;            // 跑道半宽：z ∈ [-3, 3]
-export const SOLID = new Set(['G', 'B', 'Q', 'S', 'U', 'P', 'F', 'W']);
+export const SOLID = new Set(['G', 'B', 'Q', 'S', 'U', 'P', 'F', 'W', 'R']);   // R = 库巴桥（碰斧头后逐格塌掉）
 
 const key = (c, h) => c * 512 + (h + 64);
 export { key as tileKey };
@@ -13,7 +13,8 @@ export { key as tileKey };
 function area(id, opts) {
   return Object.assign({
     id, theme: 'overworld', width: 40, ceiling: false, tiles: new Map(), pipes: [], sidePipes: [],
-    enemies: [], coins: [], lifts: [], trees: [], piranhas: [], flag: null, castle: null, signs: [], start: null, killY: -4
+    enemies: [], coins: [], lifts: [], trees: [], piranhas: [], flag: null, castle: null, signs: [], start: null, killY: -4,
+    firebars: [], lava: [], bowser: null, axe: null, bridge: null, toad: null
   }, opts);
 }
 function set(a, c, h, t, extra) { a.tiles.set(key(c, h), Object.assign({ c, h, t }, extra || {})); }
@@ -200,7 +201,50 @@ function build13() {
     checkpoint:{area:'main',x:77.5,y:7}};
 }
 
-const BUILDERS = { '1-1': build11, '1-2': build12, '1-3': build13 };
-export const LEVEL_ORDER = ['1-1', '1-2', '1-3'];
+// ---------- 1-4：库巴城堡 ----------
+// 原作地图（themushroomkingdom 2560×240 逐格读出）+ FullScreenMario World14 坐标交叉核对 + 原作实机录像核对火棒转向。
+// 地板、天花板、墙都是城堡石（G）；火棒轴心和普通棕块是 U；岩浆坑只记表面高度，掉进去即输。
+function build14() {
+  const m = area('main', { theme: 'castle', width: 160, ceiling: true, killY: -5 });
+  const floor = (c0, c1, top) => { for (let c = c0; c <= c1; c++) column(m, c, -2, top - 1, 'G'); };
+  const hang = (c0, c1, bottom) => { for (let c = c0; c <= c1; c++) column(m, c, bottom, 10, 'G'); };
+  const bar = (c, h, dir = 1) => { set(m, c, h, 'U'); m.firebars.push({ x: c + 0.5, y: h + 0.5, len: 6, dir }); };
+  // 起点：左上三级台阶走下来
+  floor(0, 2, 6); floor(3, 3, 5); floor(4, 4, 4); floor(5, 12, 3);
+  floor(15, 25, 3); floor(29, 31, 3);
+  floor(35, 71, 4); floor(72, 103, 3); floor(104, 127, 0); floor(116, 119, 3); floor(123, 127, 3);
+  // 天花板：整条一层，几段压低
+  hang(0, 23, 8); hang(24, 159, 10); hang(37, 71, 7); hang(97, 103, 8); hang(123, 127, 8); hang(142, 143, 7);
+  set(m, 23, 7, 'G'); set(m, 23, 6, 'U');                     // 第一段天花板下垂的石块和棕块
+  m.lava.push({ x0: 13, x1: 15, top: 0.95 }, { x0: 26, x1: 29, top: -0.05 }, { x0: 32, x1: 35, top: -0.05 });
+  // 火棒：原作 7 根，每根 6 颗火球；dir=1 逆时针（实机录像确认第一根），第 88 列那根顺时针
+  bar(30, 2);                                                  // 岩浆中间小平台上，头顶是道具问号砖
+  set(m, 30, 6, 'Q', { content: 'power' });
+  set(m, 37, 6, 'U');
+  bar(49, 6); bar(60, 6); bar(67, 6);                          // 压低的天花板下三根
+  bar(76, 3); bar(84, 3);                                      // 地上两根
+  set(m, 80, 9, 'G'); set(m, 80, 8, 'U');
+  set(m, 88, 9, 'G'); bar(88, 8, -1);
+  set(m, 92, 3, 'U');
+  // 下沉的大房间：上下两排各 3 块隐藏金币砖
+  for (const c of [106, 109, 112]) set(m, c, 3, 'Q', { content: 'coin', hidden: true });
+  for (const c of [107, 110, 113]) set(m, c, 7, 'Q', { content: 'coin', hidden: true });
+  // 库巴桥：13 格，桥下岩浆；桥头石台上是斧头，台子右边下去是蘑菇人
+  row(m, 128, 140, 2, 'R');
+  m.lava.push({ x0: 128, x1: 141, top: -0.05 });
+  m.bridge = { c0: 128, c1: 140, h: 2 };
+  floor(141, 143, 4); floor(144, 159, 0);
+  column(m, 159, 0, 9, 'G');                                   // 3D 版补的右墙：原作这里是屏幕边，转镜头不能看到外面
+  m.axe = { x: 141.5, y: 4 };
+  m.bowser = { x: 137.6, y: 3 };
+  m.toad = { x: 153.5, y: 0 };
+  m.lifts.push({ mode: 'pingpong', axis: 'x', x: 138.5, y: 7, w: 2, min: 135, max: 139, dir: -1, speed: 1.6, count: 1 });
+  m.start = { x: 1.4, y: 6 };
+  return { id: '1-4', name: 'WORLD 1-4', time: 300, theme: 'castle', areas: { main: m }, startArea: 'main',
+    checkpoint: { area: 'main', x: 104.5, y: 0 } };     // 原作城堡没有中途点；3D 版按无限命规则加在火棒段之后
+}
+
+const BUILDERS = { '1-1': build11, '1-2': build12, '1-3': build13, '1-4': build14 };
+export const LEVEL_ORDER = ['1-1', '1-2', '1-3', '1-4'];
 // 每次进入关卡都重新生成一份，方块、敌人、道具回到原样（与原作死亡后重置一致）
 export function buildLevel(id) { return BUILDERS[id](); }

@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8903/html/game/starship-defense/index.html",
+  "at": "2026-10-10T15:32:13.618Z",
+  "results": [
+    "A1 母虫阵亡后尸体按生命周期移除：inScene=false corpses=0",
+    "A2 切回战役后无残留：inScene=false state=battle corpses=1",
+    "B 目标=vehicle dy=42 水平距=0 1.4s 累计转向=0.00rad 累计位移=0.00m",
+    "B1 武直悬停虫王正上方：朝向稳定、不再打转",
+    "C1 地面行军回归通过：4s 位移 50.1m"
+  ]
+}

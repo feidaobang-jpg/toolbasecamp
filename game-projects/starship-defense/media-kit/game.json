@@ -2,7 +2,7 @@
   "game_id": "chongchao-qianshao",
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-resistance-aim-v0.33.1",
+  "current_version": "web-zerg-corpse-spinfix-v0.33.3",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -15,10 +15,12 @@
   "qa": "releases/web-resistance-aim-v0.33.1/handoff.json",
   "pending_toy_merge": [
     {
-      "version": "web-three-lanes-v0.31.0",
-      "status": "included",
-      "record": "releases/web-three-lanes-v0.31.0/release-status.json",
-      "included_version": "web-versus-scroll-v0.31.1"
+      "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
+      "reason": "网站现运行合并包a729ad9815(含本修复+并行HUD会话5486d417/5b7c4c6c改动)；已构建同内容Toy包zip b23dce86并桌面+手机实测通过、预览preview_jJlyN7qQ，但当前Toy处于v0.33.3审核中，重复提交返回无权限操作(307008)。",
+      "package_sha256": "b23dce8635bcc102de95467cccaed6df06ca4caa396ffc2932c0b62ff28ad759",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_jJlyN7qQ/index.html",
+      "action": "待当前审核结束后重投此合并包，使Toy与网站一致",
+      "status": "blocked_by_inflight_audit"
     }
   ],
   "toy": {
@@ -26,7 +28,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-10T03:02:52.978211+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
@@ -35,16 +37,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
-    "submitted_date": "2026-10-08",
-    "release_record": "releases/backfill-20261010/release-status.json",
-    "submitted_version": "web-resistance-v0.33.0",
+    "zip_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
+    "submitted_date": "2026-10-10",
+    "release_record": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
+    "submitted_version": "web-zerg-corpse-spinfix-v0.33.3",
     "published_version": "web-resistance-v0.33.0",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
-    "note": "本批最终稳定包已公开核验；版本与证据见补发记录。",
-    "package_sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
+    "note": "送审包含虫族母虫尸体残留与武直悬停打转修复(基于master@586c619f)。审核中。",
+    "package_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -98,10 +100,10 @@
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "published_verified_at": "2026-10-10T03:02:52.978211+00:00",
-    "status": "published",
+    "status": "auditing",
     "package_hash": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "submitted_at": null,
+    "submitted_at": "2026-10-10T23:43:09+08:00",
     "public_verified_at": "2026-10-10T03:02:52.978211+00:00",
     "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
     "version": "web-resistance-v0.33.0",
@@ -143,14 +145,14 @@
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
   "preview_version": "web-resistance-v0.33.0",
-  "submitted_toy_version": "web-resistance-v0.33.0",
-  "website_version": "web-resistance-aim-v0.33.1",
-  "website_verified_at": "2026-10-10T19:59:04.507933+08:00",
+  "submitted_toy_version": "web-zerg-corpse-spinfix-v0.33.3",
+  "website_version": "web-zerg-corpse-spinfix-v0.33.3",
+  "website_verified_at": "2026-10-10T23:58:25+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-resistance-aim-v0.33.1/handoff.json",
+  "handoff": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -198,7 +200,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "e7beb060e8a228b30900f84f1e1840283f123e98",
+  "website_commit": "53435e80048fd5300fc21045de60aa1bc88c08d9",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -215,19 +217,27 @@
     "legacy_save": "normal",
     "operation_difficulty": "独立，不叠加战役倍率"
   },
-  "live": {
-    "version": "live-v0.1.0",
-    "entrypoint": "public/html/game/starship-defense/live.html",
-    "console": "public/html/game/starship-defense/live-console.html",
-    "runtime": "game-projects/starship-defense/live",
-    "status": "local_verified_pending_bilibili_permissions",
-    "modes": [
-      "auto",
-      "assist",
-      "host"
+  "live_status": "removed",
+  "live_removal": {
+    "date": "2026-10-10",
+    "reason": "用户决定不再做无人直播，相关代码、公网入口与版本记录整体移除",
+    "removed": [
+      "public/html/game/starship-defense/live.html",
+      "public/html/game/starship-defense/live.css",
+      "public/html/game/starship-defense/live-console.html",
+      "public/html/game/starship-defense/live-console.js",
+      "public/html/game/starship-defense/live-controller.js",
+      "public/html/game/starship-defense/live-host.js",
+      "public/html/game/starship-defense/live-rules.js",
+      "game-projects/starship-defense/live",
+      "game-projects/starship-defense/media-kit/releases/live-v0.1.0"
     ],
-    "release_record": "releases/live-v0.1.0/handoff.json",
-    "normal_gameplay_changed": false
+    "code_refs_removed_from": [
+      "public/html/game/starship-defense/game.js",
+      "game-projects/starship-defense/build-taptap.mjs"
+    ],
+    "normal_gameplay_changed": false,
+    "do_not_reintroduce": true
   },
   "touch_control_inset": {
     "side_css_px": 40,

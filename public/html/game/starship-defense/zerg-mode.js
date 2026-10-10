@@ -118,7 +118,11 @@ export function createZergMode(a){
     mo.hp-=d;a.updHPBar(mo.bar,Math.max(0,mo.hp/mo.maxHp));
     mo.dmgT=.14;
     if(mo.hp<=0){
-      mo.dead=true;a.spawnParticles(mo.mesh.position.clone().add(new T.Vector3(0,1,0)),0x8bf06a,14,6,.6,1.2);
+      mo.dead=true;
+      // 母虫死亡不走 killMonster，但必须进同一套尸体生命周期：
+      // 否则网格没人从场景移除，会留一个孤立模型并跟到后续模式/周目。
+      a.visuals.death(mo.mesh);
+      a.spawnParticles(mo.mesh.position.clone().add(new T.Vector3(0,1,0)),0x8bf06a,14,6,.6,1.2);
       a.AudioSys.sfx('hurt');
       s.deaths++;s.bug=null;
       if(s.deaths>=MAX_DEATHS)s.defeat('母虫损失过重，虫群失去指挥溃散了…');
@@ -256,12 +260,12 @@ export function createZergMode(a){
   }
   s.update=update;
 
-  // 主菜单入口：放在「战地模式」之后、「读取存档」之前，与其他独立玩法并列
-  const anchor=$('btnLoadMenu');
-  const row=anchor?anchor.parentNode:document.querySelector('#menuMain .btnRow');
+  // 主菜单入口：放进「其他玩法」分组，排在自由测试之前，与其他独立玩法并列
+  const anchor=$('btnTest');
+  const row=anchor?anchor.parentNode:document.getElementById('modeRow')||document.querySelector('#menuMain .btnRow');
   if(row&&!$('btnZerg')){
     const b=document.createElement('button');
-    b.className='mbtn red';b.id='btnZerg';
+    b.className='mbtn';b.id='btnZerg';
     b.textContent='🪲 虫族模式 · 攻陷人类要塞';
     b.onclick=()=>start();
     if(anchor)row.insertBefore(b,anchor);else row.appendChild(b);

@@ -51,13 +51,11 @@ await build({
     // Toy account, rankings and external video navigation are unavailable on TapTap.
     // Site-account cloud saves and local file backups remain available on TapTap.
     b.onLoad({filter: /[\\/]toy-platform\.js$/}, () => ({contents: "import {mountSavePanel} from './save-panel.js'; export function setupToyPlatform(game){return mountSavePanel(game,{storage:game.store.storage});}", loader: 'js', resolveDir: source}));
-    b.onLoad({filter: /[\\/]live-controller\.js$/}, () => ({contents: 'export function createLiveController() { throw new Error("Live mode is unavailable in the TapTap trial"); }', loader: 'js'}));
     b.onLoad({filter: /[\\/]starship-defense[\\/]game\.js$/}, args => {
       const original = fs.readFileSync(args.path, 'utf8');
-      const expected = ["const SAVE_PREFIX='sst_save_';", "const SAVE_PREFIX=LIVE_MODE?'sst_live_save_':'sst_save_';"].find(value => original.includes(value));
-      if (!expected) throw new Error('Save namespace changed; review the channel adapter');
-      const contents = original.replace(expected, "const SAVE_PREFIX='taptap-chongchao-v1-sst_save_';")
-        .replace("const LIVE_MODE=new URLSearchParams(location.search).get('live')==='1';", 'const LIVE_MODE=false;');
+      const expected = "const SAVE_PREFIX='sst_save_';";
+      if (!original.includes(expected)) throw new Error('Save namespace changed; review the channel adapter');
+      const contents = original.replace(expected, "const SAVE_PREFIX='taptap-chongchao-v1-sst_save_';");
       return {contents, loader: 'js', resolveDir: source};
     });
   }}],

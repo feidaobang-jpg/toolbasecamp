@@ -1,0 +1,40 @@
+{
+  "game": "starship-defense",
+  "release": "web-touch-cream-pause-20261010",
+  "baseline_version": "web-resistance-v0.33.0",
+  "target_version": "web-touch-cream-pause-20261010",
+  "status": "pending_not_applied",
+  "reason": "创作中心稿件编辑入口经搜索/直链两种方式均未能稳定打开编辑表单（搜索未过滤、frame?bvid 落到投稿页）；为避免半程外部写入，本轮仅存草稿待下次稳定入口后应用。",
+  "aggregated_unsynced_changes": [
+    "手机摇杆/动作键/右上键改深蓝实底+亮蓝描边、射击键实红，亮场景看清",
+    "暂停菜单(电脑/手机共用)改奶油色复刻系",
+    "修复拖视角起手/滑过暂停、切视角键误触(只响应≤14px干净tap)",
+    "难度选中态金色实底、右上按钮文案清理、移除重复操作模式下拉",
+    "虫族模式实验玩法、曲面屏开战按钮点击修复、移除返回游戏列表外链(21:15批次)",
+    "暂停菜单精简：队友任务下拉移除，全队跟随/守基地统一在战术部署设置"
+  ],
+  "shared_update_line": "更新（2026-10-10·网站最新）：手机摇杆/动作键/右上键改高对比实底、暂停菜单改奶油色并精简（队友任务改在战术部署统一设置），修复拖视角滑过暂停/切视角键误触；新增虫族模式实验玩法与曲面屏开战按钮修复。网站已更新。",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "status": "draft_ready",
+      "draft_description": "本片为早期版本实录。旧版「虫潮对战」实录（1对1到4对4）看：https://www.bilibili.com/video/BV1C5HQ6gEvD/\n《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-10·网站最新）：手机摇杆/动作键/右上键改高对比实底、暂停菜单改奶油色并精简（队友任务改在战术部署统一设置），修复拖视角滑过暂停/切视角键误触；新增虫族模式实验玩法与曲面屏开战按钮修复。网站已更新。\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作；抗战战役三章与废弃城镇房车探索。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "status": "draft_ready",
+      "draft_description": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-10·网站最新）：手机摇杆/动作键/右上键改高对比实底、暂停菜单改奶油色并精简（队友任务改在战术部署统一设置），修复拖视角滑过暂停/切视角键误触；新增虫族模式实验玩法与曲面屏开战按钮修复。网站已更新。\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；普通模式云存档；联机2–4人合作；抗战战役三章与废弃城镇房车探索。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。"
+    },
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "status": "pending_read_current_first",
+      "note": "应用前先读当前全文，仅替换/新增更新行，保留其原有介绍与链接"
+    },
+    {
+      "bvid": "BV1xdpx63ETu",
+      "status": "pending_read_current_first",
+      "note": "应用前先读当前全文，仅替换/新增更新行，保留其原有介绍与链接"
+    }
+  ],
+  "recorded_at": "2026-10-10T23:58:00+08:00"
+}
