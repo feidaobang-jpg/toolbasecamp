@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-10T12:45:21.598105+00:00",
+  "updated_at": "2026-10-10T12:58:30.267172+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -754,12 +754,13 @@
       "date": "2026-10-10",
       "text": "那个开战位置能不能改一下曲面屏按不了。",
       "kind": "bug",
-      "status": "fixed_local_pending_review",
+      "status": "fixed",
       "fixed_in": "web-startbtn-curved-fix@qoder/chongchao-readybtn-fix-20261010",
       "reply_rpid": null,
       "reply_status": "pending_22_00_batch_after_release",
       "record": "releases/web-startbtn-curved-fix/qa/results.md",
-      "note": "根因：#touchUI(z20)全屏视角拖拽层盖住 #hud(z10) 内开战按钮，且竖屏旋转后按钮贴曲面/手势边缘。修复：按钮移出 #hud 提到触控层之上并放入底部安全带，存档状态条5秒淡出不再挡点击。本地 Playwright 竖屏/横屏真实触摸与桌面回归通过；待本人本地审核后合并部署，回复进22点批次。"
+      "note": "根因：#touchUI(z20)全屏视角拖拽层盖住 #hud(z10) 内开战按钮，且竖屏旋转后按钮贴曲面/手势边缘。修复：按钮移出 #hud 提到触控层之上并放入底部安全带，存档状态条5秒淡出不再挡点击。本地 Playwright 竖屏/横屏真实触摸与桌面回归通过；待本人本地审核后合并部署，回复进22点批次。 已整合主线并部署网站核验通过（commit 3dc64a72）；原评论回复进22点批次。",
+      "deployed_at": "2026-10-10T12:58:30.267172+00:00"
     },
     {
       "rpid": null,
@@ -769,12 +770,13 @@
       "date": "2026-10-10",
       "text": "能不能整个我是虫族模式？",
       "kind": "feature",
-      "status": "fixed_local_pending_review",
+      "status": "fixed",
       "fixed_in": "zerg-mode@qoder/chongchao-zerg-mode-20261010",
       "reply_rpid": null,
       "reply_status": "pending_22_00_batch_after_release",
       "record": "releases/zerg-mode/qa/results.md",
-      "note": "新增虫族模式实验玩法：扮演母虫带虫群攻人类要塞，限时6分钟，撕咬/酸液/召唤/蜕皮/冲刺五系技能+生物量经济，独立战绩不占战役存档，触屏动作键改技能标签。本地QA15项通过；待本人审核，回复进22点批次。"
+      "note": "新增虫族模式实验玩法：扮演母虫带虫群攻人类要塞，限时6分钟，撕咬/酸液/召唤/蜕皮/冲刺五系技能+生物量经济，独立战绩不占战役存档，触屏动作键改技能标签。本地QA15项通过；待本人审核，回复进22点批次。 已整合主线并部署网站核验通过（commit 3dc64a72）；原评论回复进22点批次。",
+      "deployed_at": "2026-10-10T12:58:30.267172+00:00"
     }
   ]
 }
