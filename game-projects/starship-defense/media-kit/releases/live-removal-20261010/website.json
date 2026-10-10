@@ -1,0 +1,52 @@
+{
+  "verified_at": "2026-10-10T23:05:00-07:00",
+  "verified_at_cn": "2026-10-11 14:05 北京时间",
+  "commit": "3ce88c5f",
+  "base_commit": "fde6e977",
+  "deploy_mechanism": "GitHub Actions rsync public/ to VPS /var/www/toolbasecamp",
+  "live_entry_removed": {
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/live.html": 404,
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/live-console.html": 404,
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/live-controller.js": 404
+  },
+  "normal_gameplay_intact": {
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html": 200,
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js": 200
+  },
+  "online_bundle_sha256": "cedef445ac43d039a9a1a854aea999ee9d5e7e034c99a709e9569cac4efd868d",
+  "local_bundle_sha256": "cedef445ac43d039a9a1a854aea999ee9d5e7e034c99a709e9569cac4efd868d",
+  "bundle_sha_match": true,
+  "online_bundle_bytes": 1138857,
+  "online_bundle_live_residue": {
+    "sst_live_save": 0,
+    "liveController": 0,
+    "setupLiveGame": 0,
+    "__CHONGCHAO_LIVE_TEST__": 0,
+    "直播守城": 0
+  },
+  "online_bundle_keeps_sst_save_literal": true,
+  "cache_bust": {
+    "committed_value": "?v=cedef445ac",
+    "committed_value_derivation": "game.compat.js content SHA-256 first 10 hex chars, per existing project convention",
+    "served_value": "?v=3ce88c5f",
+    "note": "部署流水线在 rsync 阶段把 index.html 的 ?v= 改写为提交哈希，git 内保留内容哈希值。两种写法都指向同一份已核验产物，不影响生效。"
+  },
+  "public_statement_check": {
+    "games_html_links_to_live": false,
+    "site_nav_links_to_live": false,
+    "bilibili_sync_status": "deferred",
+    "bilibili_videos_claiming_live": 0,
+    "correction_needed": false,
+    "note": "移除前 live.html 公网可访问但站内无任何链接指向它，两条已发视频简介从未宣称具备无人直播能力，因此没有需要更正的公开表述。"
+  },
+  "channels_not_touched": {
+    "toy": "直播从未进入 Toy 包，本次未重新提交，按 2026-10-09 节奏登记 22 点 b-2",
+    "taptap": "直播从未进入 TapTap 包，本次未重新提交"
+  },
+  "verification_method": "Invoke-WebRequest public URL + Get-FileHash SHA-256 comparison against local build",
+  "limitations": [
+    "未做线上真人试玩，仅 HTTP 状态与产物哈希核验",
+    "未做手机真机验收",
+    "浏览器端本地缓存可能仍存有旧产物，需用户强制刷新或等待缓存过期"
+  ]
+}
