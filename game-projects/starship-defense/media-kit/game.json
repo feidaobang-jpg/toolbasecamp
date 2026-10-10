@@ -215,19 +215,27 @@
     "legacy_save": "normal",
     "operation_difficulty": "独立，不叠加战役倍率"
   },
-  "live": {
-    "version": "live-v0.1.0",
-    "entrypoint": "public/html/game/starship-defense/live.html",
-    "console": "public/html/game/starship-defense/live-console.html",
-    "runtime": "game-projects/starship-defense/live",
-    "status": "local_verified_pending_bilibili_permissions",
-    "modes": [
-      "auto",
-      "assist",
-      "host"
+  "live_status": "removed",
+  "live_removal": {
+    "date": "2026-10-10",
+    "reason": "用户决定不再做无人直播，相关代码、公网入口与版本记录整体移除",
+    "removed": [
+      "public/html/game/starship-defense/live.html",
+      "public/html/game/starship-defense/live.css",
+      "public/html/game/starship-defense/live-console.html",
+      "public/html/game/starship-defense/live-console.js",
+      "public/html/game/starship-defense/live-controller.js",
+      "public/html/game/starship-defense/live-host.js",
+      "public/html/game/starship-defense/live-rules.js",
+      "game-projects/starship-defense/live",
+      "game-projects/starship-defense/media-kit/releases/live-v0.1.0"
     ],
-    "release_record": "releases/live-v0.1.0/handoff.json",
-    "normal_gameplay_changed": false
+    "code_refs_removed_from": [
+      "public/html/game/starship-defense/game.js",
+      "game-projects/starship-defense/build-taptap.mjs"
+    ],
+    "normal_gameplay_changed": false,
+    "do_not_reintroduce": true
   },
   "touch_control_inset": {
     "side_css_px": 40,

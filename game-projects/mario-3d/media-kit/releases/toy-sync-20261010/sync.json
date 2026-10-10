@@ -1,0 +1,44 @@
+{
+  "game": "mario-3d",
+  "version": "v2.5.0-menu-text1",
+  "id": 39043286960128,
+  "slug": "feidao-mario-3d",
+  "title": "超级玛丽 3D：1-1 至 1-3",
+  "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+  "package": "D:/project/worktrees/toy-sync-20261010/game-projects/mario-3d/dist/toy-v2.5.0-menu-text1/package",
+  "package_sha256": "86c0828fd0f736ae945fc56bff9cdf949148c31bb29f3e7c22491d03e782fc4f",
+  "file_count": 40,
+  "source_commit": "1bbf3f92",
+  "changes": [
+    "移除返回游戏列表外链，避免 Toy 外壳内跳出到站点注册/充值页(ec592af0)"
+  ],
+  "authorization": {
+    "instruction": "帮今天的修改都推到toy吧，不用等23点了",
+    "scope": "user_authorized_immediate_toy_sync_20261010",
+    "at": "2026-10-10T21:20:00+08:00"
+  },
+  "doctor": "passed_with_1_warning",
+  "doctor_warnings": [
+    "12 个 JS/CSS 资产文件名不含内容指纹(contenthash)：每次更新访客都要重新下载全部资源（既有构建约定，非阻断）"
+  ],
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_iMe1f1ZZ/index.html",
+    "content_url": "https://www.bilibilitoy.com/toy/preview/preview_iMe1f1ZZ/index.html"
+  },
+  "preview_qa": "passed",
+  "preview_qa_method": "本地 iframe 包裹预览内容 URL(避开顶层重定向)，桌面1280x800+手机390x844 双视口，canvas 渲染 1280x800/844x390、标题正确、0 脚本报错、0 HTTP>=400",
+  "submit": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_QjLxH188/index.html"
+  },
+  "submitted_at": "2026-10-10T21:20:00+08:00",
+  "status_readback": {
+    "id": 39043286960128,
+    "title": "超级玛丽 3D：1-1 至 1-3",
+    "status": "auditing",
+    "visibility": "PUBLIC",
+    "category": "GAME"
+  },
+  "review_status": "auditing",
+  "recorded_at": "2026-10-10T21:20:00+08:00"
+}
