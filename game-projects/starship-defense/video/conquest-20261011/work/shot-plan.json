@@ -1,0 +1,136 @@
+{
+  "01-hook": [
+    [
+      "capture/match-01/02-battle/raw.mp4",
+      34.9693359375,
+      3.6,
+      "主战局结尾预览 · 兵力票见底",
+      false
+    ],
+    [
+      "capture/match-01/real-result.png",
+      0,
+      null,
+      "实际结算：3 : 0 险胜",
+      true
+    ]
+  ],
+  "02-map": [
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      57,
+      null,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑",
+      false
+    ]
+  ],
+  "03-tickets": [
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      70,
+      null,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑",
+      false
+    ]
+  ],
+  "04-kit": [
+    [
+      "capture/vehicle-02/01-opening/raw.mp4",
+      0.7,
+      4.1,
+      "补拍：另一局载具实战 · 普通规则 · 五兵种固定装备",
+      false
+    ],
+    [
+      "capture/vehicle-02/01-opening/raw.mp4",
+      8.1,
+      null,
+      "补拍：另一局载具实战 · 普通规则 · I 登乘坦克",
+      false
+    ]
+  ],
+  "05-tank": [
+    [
+      "capture/vehicle-02/01-opening/raw.mp4",
+      50.2,
+      null,
+      "补拍：另一局载具实战 · 普通规则",
+      false
+    ]
+  ],
+  "06-spawn": [
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      26,
+      5.2,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 阵亡后选择兵种与据点",
+      false
+    ],
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      35,
+      null,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 仓库附近重新部署",
+      false
+    ]
+  ],
+  "07-heal": [
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      41.262318992614745,
+      4.0,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑 · H 医疗支援",
+      false
+    ],
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      69,
+      null,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 进入补给仓库占领圈",
+      false
+    ]
+  ],
+  "08-fight": [
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      119.47331910133362,
+      null,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 掩体交火与手雷",
+      false
+    ]
+  ],
+  "09-finish": [
+    [
+      "capture/match-01/02-battle/raw.mp4",
+      30.1693359375,
+      null,
+      "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 最后两个据点",
+      false
+    ]
+  ],
+  "10-result": [
+    [
+      "capture/match-01/real-result.png",
+      0,
+      null,
+      "主战局 · 03:45 实际结算 · 击杀94 : 105",
+      true
+    ]
+  ],
+  "11-close": [
+    [
+      "capture/match-01/01-opening/raw.mp4",
+      54,
+      5.7,
+      "主战局复盘 · 向侧翼推进",
+      false
+    ],
+    [
+      "edit/shared-zh/closing.png",
+      0,
+      null,
+      "",
+      true
+    ]
+  ]
+}

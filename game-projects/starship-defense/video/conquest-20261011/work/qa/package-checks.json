@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-10T21:35:02.322312+00:00",
+  "references": "pass",
+  "video_hashes": "pass",
+  "subtitle_hashes": "pass",
+  "platform_text_manifest_match": "pass",
+  "bilibili_forbidden_tags": "pass",
+  "public_descriptions_no_empty_lines": "pass",
+  "toy_link_not_claimed_playable": "pass",
+  "human_review": "pending",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "segments": [
+    {"id":"01-hook","text":"只剩三张兵力票，还能赢吗？这场据点争夺，最后真的险胜了。","english":["Only three tickets left.","Could we still win?","This conquest match","ended in a very close victory."]},
+    {"id":"02-map","text":"这是虫潮围城的战地模式。旧镇、通信站、补给仓库，抢的就是这三个点。","english":["This is the Battlefield mode in Swarm Siege.","Old Town, Comms Station and Supply Depot:","these are the three objectives."]},
+    {"id":"03-tickets","text":"控制两个点，就会持续扣掉对面的兵力票。光顾着追人，旗子被偷，照样会输。喜欢这个玩法，顺手点个赞。","english":["Control two objectives","and the enemy keeps losing tickets.","Chase enemies while","your flags get taken,","and you can still lose.","If you like this mode,","leave a like."]},
+    {"id":"04-kit","text":"这次没有买兵和升级。五种兵种用固定装备，开局我选工程兵，先开坦克推进。","english":["There is no troop purchasing or leveling up here.","Five classes have fixed loadouts.","I choose Engineer at the start","and push forward in a tank."]},
+    {"id":"05-tank","text":"这段是另开一局补拍的载具战。坦克沿着道路推进，挨打会掉装甲，步兵也在往旗点靠。","english":["This vehicle footage is from a separate match.","The tank advances along the road.","Its armor drops when it takes hits.","Infantry are moving toward the objectives too."]},
+    {"id":"06-spawn","text":"回到主战局，第一波我就倒了。但不用一直从老家跑：选已经占住的仓库，换成医疗兵，再部署到前线。","english":["Back in the main match,","I went down in the first push.","Select our captured depot instead of running from HQ,","switch to Medic,","and redeploy near the front."]},
+    {"id":"07-heal","text":"残血的时候按支援，血量就能补回来。活着留在圈里，比冲出去再送一次更有用。","english":["Use support when hurt","to recover health.","Staying alive inside the objective","helps more than rushing out and dying again."]},
+    {"id":"08-fight","text":"中间的通信站反复易手。我贴着掩体交火，再扔手雷压住路口。对面也会开车和反扑，真不能一直硬冲。","english":["The central Comms Station changes hands repeatedly.","I fight from cover","and throw a grenade toward the junction.","The enemy uses vehicles and counterattacks too.","I cannot just keep charging straight in."]},
+    {"id":"09-finish","text":"到最后，两边兵力都见底了。我们守住通信站和仓库，对面票数归零，我方剩三票。","english":["By the end,","both teams were almost out of tickets.","We held Comms Station and Supply Depot.","The enemy reached zero;","we had three left."]},
+    {"id":"10-result","text":"结算挺有意思：我方击杀九十四，对面一百零五。杀得更多的一边，反而输了。抢点和保住自己，都得算进去。","english":["The result is interesting: our team scored 94 kills,","and theirs scored 105.","The team with more kills","still lost.","Objectives and staying alive","both matter."]},
+    {"id":"11-close","text":"这一局靠占点赢下来了，正面硬冲还是很容易倒。下次我想试试兵种配合和侧翼夺点。虫潮围城现在可以在百宝箱试玩，想玩什么也可以填愿望单。","english":["We won this match through objective control,","but direct charges were still deadly.","Next time I want to try class teamwork and flanking.","You can now play 虫潮围城, Swarm Siege, on the Treasure Box website.","You can also submit a game idea to the wishlist."]}
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-10T21:36:08.874Z",
+  "local_video_metadata": "pass",
+  "shared_video": {
+    "duration": 110.533333,
+    "width": 1920,
+    "height": 1080,
+    "paused": true,
+    "error": null
+  },
+  "local_blob_subtitles": "pass",
+  "youtube_tracks": [
+    {
+      "language": "zh",
+      "label": "中文",
+      "cues": 52
+    },
+    {
+      "language": "en",
+      "label": "English",
+      "cues": 52
+    }
+  ],
+  "no_autoplay": true,
+  "no_upload": true
+}

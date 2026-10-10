@@ -1,0 +1,17 @@
+{
+  "index": 13,
+  "segment": "10-result",
+  "start": 82.8,
+  "end": 94.26666666666667,
+  "duration": 11.466666666666667,
+  "frames": 344,
+  "source": "capture/match-01/real-result.png",
+  "source_in": 0,
+  "source_out": 11.466666666666667,
+  "speed": 1,
+  "label": "主战局 · 03:45 实际结算 · 击杀94 : 105",
+  "still": true,
+  "source_size": 892412,
+  "source_mtime_ns": 1791666926087792700,
+  "encoding_schema": "bt709-limited-v2"
+}

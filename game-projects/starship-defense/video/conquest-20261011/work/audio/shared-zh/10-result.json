@@ -1,0 +1,133 @@
+{
+  "text": "结算挺有意思：我方击杀九十四，对面一百零五。杀得更多的一边，反而输了。抢点和保住自己，都得算进去。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 11.112,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4000000,
+      "text": "结算"
+    },
+    {
+      "offset": 5250000,
+      "duration": 1375000,
+      "text": "挺"
+    },
+    {
+      "offset": 6625000,
+      "duration": 1250000,
+      "text": "有"
+    },
+    {
+      "offset": 7875000,
+      "duration": 4625000,
+      "text": "意思"
+    },
+    {
+      "offset": 16750000,
+      "duration": 4125000,
+      "text": "我方"
+    },
+    {
+      "offset": 21000000,
+      "duration": 3000000,
+      "text": "击杀"
+    },
+    {
+      "offset": 24125000,
+      "duration": 5500000,
+      "text": "九十四"
+    },
+    {
+      "offset": 32875000,
+      "duration": 3625000,
+      "text": "对面"
+    },
+    {
+      "offset": 36750000,
+      "duration": 6375000,
+      "text": "一百零五"
+    },
+    {
+      "offset": 48875000,
+      "duration": 3375000,
+      "text": "杀"
+    },
+    {
+      "offset": 52250000,
+      "duration": 750000,
+      "text": "得"
+    },
+    {
+      "offset": 53250000,
+      "duration": 2875000,
+      "text": "更多"
+    },
+    {
+      "offset": 56125000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 57000000,
+      "duration": 4000000,
+      "text": "一边"
+    },
+    {
+      "offset": 64000000,
+      "duration": 3375000,
+      "text": "反而"
+    },
+    {
+      "offset": 67500000,
+      "duration": 2750000,
+      "text": "输"
+    },
+    {
+      "offset": 70250000,
+      "duration": 1750000,
+      "text": "了"
+    },
+    {
+      "offset": 77625000,
+      "duration": 4125000,
+      "text": "抢点"
+    },
+    {
+      "offset": 82000000,
+      "duration": 1000000,
+      "text": "和"
+    },
+    {
+      "offset": 83125000,
+      "duration": 2875000,
+      "text": "保住"
+    },
+    {
+      "offset": 86125000,
+      "duration": 5000000,
+      "text": "自己"
+    },
+    {
+      "offset": 94125000,
+      "duration": 2000000,
+      "text": "都"
+    },
+    {
+      "offset": 96125000,
+      "duration": 750000,
+      "text": "得"
+    },
+    {
+      "offset": 97000000,
+      "duration": 2000000,
+      "text": "算"
+    },
+    {
+      "offset": 99000000,
+      "duration": 3375000,
+      "text": "进去"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "index": 4,
+  "segment": "04-kit",
+  "start": 26.53333333333333,
+  "end": 30.633333333333333,
+  "duration": 4.1,
+  "frames": 123,
+  "source": "capture/vehicle-02/01-opening/raw.mp4",
+  "source_in": 0.7,
+  "source_out": 4.8,
+  "speed": 1,
+  "label": "补拍：另一局载具实战 · 普通规则 · 五兵种固定装备",
+  "still": false,
+  "source_size": 43678450,
+  "source_mtime_ns": 1791667138817567400,
+  "encoding_schema": "bt709-limited-v2"
+}

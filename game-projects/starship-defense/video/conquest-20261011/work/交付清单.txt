@@ -1,0 +1,37 @@
+﻿虫潮围城｜战地模式·据点争夺｜三平台审片包
+标题：只剩3票险胜！虫潮围城的据点争夺实战
+时长：110.533秒；1920×1080，16:9横屏，30fps输出。
+制作完成；画面、完整配音、字幕待人工审片。审片通过前不上传。
+
+bilibili-zh
+音轨：中文；包装：中文
+字幕：中文烧录字幕
+成片：../final/bilibili-zh/gameplay-zh-final.mp4
+文案：../final/bilibili-zh/投稿文案.txt
+封面：首页4:3 cover-home-4x3.jpg；空间16:9 cover-space-16x9.jpg
+投稿清单：publish/bilibili-zh/publish.json
+状态：未上传；待人工审片及投稿入口核对。
+
+douyin-zh
+音轨：中文；包装：中文
+字幕：中文烧录字幕
+成片：../final/douyin-zh/gameplay-zh-final.mp4
+文案：../final/douyin-zh/投稿文案.txt
+封面：16:9 cover-horizontal-16x9.jpg（抖音实际上传控件待核验）
+投稿清单：publish/douyin-zh/publish.json
+状态：未上传；待人工审片及投稿入口核对。
+
+youtube-zh
+音轨：中文；包装：中文，附英文标题/简介翻译字段
+字幕：中文/英文SRT可切换，需上传两份；视频未烧录口播字幕
+成片：../final/youtube-zh/gameplay-youtube-final.mp4
+文案：../final/youtube-zh/投稿文案.txt
+封面：16:9 cover-zh-16x9.jpg
+投稿清单：publish/youtube-zh/publish.json
+状态：未上传；待人工审片及投稿入口核对。
+
+B站与抖音共用相同视频内容和哈希；YouTube无口播烧录字幕版另验收。
+主观听审未运行；请完整听一遍，检查音量、读音、字幕和结尾。
+Toy：后台列表published，但公开入口显示不可访问；本版使用网站试玩引导，未绑定新视频、未参加Toy话题或提交推流申请。
+审批哈希和EventId：run-state.json；确认通过后按已批准哈希继续三平台发布，不自动发片。
+本地预览：review/index.html（选择B站/抖音或YouTube，YouTube可切换中英字幕）。
