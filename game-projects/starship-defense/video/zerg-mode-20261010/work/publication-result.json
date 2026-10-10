@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "episode": "zerg-mode-20261010",
-  "updated_at": "2026-10-11T07:40:00+08:00",
+  "updated_at": "2026-10-11T07:55:00+08:00",
   "platforms": {
     "bilibili": {
       "platform": "bilibili",
@@ -9,8 +9,8 @@
       "account_name": "飞刀班长",
       "account_verified_at": "2026-10-11T07:00:00+08:00",
       "account_verified_by": "创作中心首页头像与主页链接均为 space.bilibili.com/16214353，昵称飞刀班长",
-      "dedupe_check": "公开空间 29 条稿件无同题或同主题视频；无本期 BV；判定为首次投稿",
-      "state": "draft_saved",
+      "dedupe_check": "公开空间 29 条稿件无同题或同主题视频；无本期 BV；/x/web/archives 读到 pubed=29、not_pubed=0、is_pubing=0，判定既未投稿也未重复投稿",
+      "state": "draft_ready_blocked_by_risk_captcha",
       "draft_id": "3973028",
       "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028",
       "video_file": "final/bilibili-zh/gameplay-zh-final.mp4",
@@ -25,7 +25,7 @@
       "form_state_verified": {
         "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城 (25/80)",
         "creation_statement": "含AI生成内容",
-        "category": "游戏",
+        "category": "游戏（tid=17）",
         "tags": [
           "原创",
           "虫潮围城",
@@ -38,33 +38,74 @@
         ],
         "description_chars": 474,
         "description_matches_approved_copy": true,
-        "covers_state": "未定稿：4:3/16:9 两张自定义封面已上传到编辑态（origin_4_3=183229B、origin_16_9=230216B 与本地文件同字节），但点击完成时导出的是 1600x900 的单张图，未能确认双比例分别生效",
-        "collection": "未选择（投稿阶段可选）"
+        "description_note": "草稿重新打开后简介会被清空，已按审定文案逐字重填并核验 equal=true",
+        "topic": {
+          "name": "哔哩哔哩Toy创意挑战",
+          "topic_id": 1346285,
+          "mission_check": "GET /x/vupre/web/topic/mission/check 返回 code=0、mission_id=0、state=0（话题已参加，无额外任务要求）",
+          "selected_in_form": true
+        },
+        "collection": {
+          "season_id": 9248439,
+          "section_id": 10340633,
+          "title": "虫潮围城开发实录",
+          "selected_in_form": true,
+          "note": "投稿阶段直接选中合集；过审后仍需在合集目录核验归入"
+        },
+        "publish_time": "立即发布（dtime=null，未定时）",
+        "covers_state": "已定稿并上传成功",
+        "covers_verified": {
+          "home_4_3": {
+            "source_file": "final/bilibili-zh/cover-home-4x3.jpg",
+            "source_bytes": 183229,
+            "uploaded_url": "https://archive.biliimg.com/bfs/archive/aab3fbe2c9da6919834b9cd62950c370cde8de4b.jpg",
+            "uploaded_decoded": "1600x1200, 160610B（平台重编码，比例与设计一致）",
+            "slot": "extra（首页推荐 4:3）"
+          },
+          "space_16_9": {
+            "source_file": "final/bilibili-zh/cover-space-16x9.jpg",
+            "source_bytes": 230216,
+            "uploaded_url": "https://archive.biliimg.com/bfs/archive/fe08bd1e94f6e2241cc4052345ff614adde41602.jpg",
+            "uploaded_decoded": "1920x1080, 198739B（平台重编码，比例与设计一致）",
+            "slot": "main（个人空间 16:9）"
+          },
+          "how": "封面编辑器的 fabric 画布在隐藏页面下不渲染，点“完成”只会导出一张 1600x900；改为把两张本地封面分别作为 origin_4_3 / origin_16_9 直接写入 VideoCover.submitCoverEditor，绕开画布裁剪，投稿时由 /x/vu/web/cover/up 原图上传，已回读两张 CDN 图并解码核对尺寸"
+        },
+        "draft_saved_at": "2026-10-11T07:50:00+08:00",
+        "draft_save_result": "POST /x/vupre/web/draft/update 返回 code=0 OK；/x/vupre/web/draft/list 可见 id=3973028、cover=fe08bd1e…"
+      },
+      "submit_attempts": {
+        "count": 3,
+        "endpoint_expected": "POST //member.bilibili.com/x/vu/web/add/v3",
+        "observed": "每次均完成两张封面上传、话题 mission/check、gaia ExGetAxe，随后卡在风控人机验证，add/v3 从未发出，页面停留在“提交中…”",
+        "stopped_reason": "同一阻塞点连续 3 次结果一致，按技能规则不再循环重试"
       },
       "blocker": {
-        "kind": "tool_surface_unavailable",
-        "detail": "Qoder 内置浏览器面板未打开，页面 visibilityState=hidden、viewport=0x0；指针点击与真实键盘事件不投递，依赖 rAF/过渡动画的封面编辑器无法初始化（isCoverEditorReady_4_3/16_9 始终 false），无法可靠设置并核验 4:3 与 16:9 双封面，也无法对投稿结果截图留证",
-        "what_worked": "导航、文件上传（视频与两张封面）、只读 DOM 结构、部分合成点击（创作声明、标签删除、Quill 简介）",
-        "needed_from_user": "打开 Qoder 内置浏览器面板后回复继续；随后只需完成封面双比例设置、加入合集 9248439、点投稿并核验",
-        "not_done": "未提交投稿、未获得 BV、未绑 Toy、未进合集、未填推流表、未用流量券"
+        "kind": "risk_captcha_and_hidden_surface",
+        "detail": "B站投稿接口在 gaia 风控之后要求 GeeTest 人机验证（页面存在 window.captchaInstance / initGeetest4 与 risk-captcha-adapt-pc 容器）。Qoder 内置浏览器面板未打开时页面 visibilityState=hidden、viewport=0x0，验证码 iframe 不渲染且不接收真实指针事件，无法由 AI 完成；绕过人机验证不属于授权范围",
+        "already_unblocked_today": "本轮页面已能加载并完成表单、文件上传、封面双比例与话题/合集选择（此前这些全部受阻）；剩余卡点只有人机验证",
+        "needed_from_user": "打开 Qoder 内置浏览器面板（或直接在自己浏览器打开 resume_url 的草稿），点“立即投稿”，如出现滑块/人机验证就完成一次；随后把 BV 回告或回复继续由我核验并做发布后闭环",
+        "not_done": "未提交投稿、未获得 BV、未做发布后闭环（Toy 绑定、置顶评论、推流申请表、流量券、旧视频维护）",
+        "feishu_event_id": "zerg-mode-20261010-bili-captcha-20261011"
       },
       "traffic_reward_observed": {
         "available_exposure": "0",
-        "note": "创作中心首页流量奖励显示待使用 0 曝光，近3月已使用1000曝光；本期暂无可用免费券，如实登记为未使用",
+        "note": "创作中心首页流量奖励显示待使用 0 曝光，近3月已使用1000曝光；本期暂无可用免费券，如实登记为未使用（待稿件过审后再复查一次）",
         "checked_at": "2026-10-11T07:00:00+08:00"
       },
-      "timestamp": "2026-10-11T07:40:00+08:00"
+      "toy_note": "Toy 端 v0.33.3 仍在 auditing，公开版本为 web-resistance-v0.33.0；文案未宣称 Toy 已上线虫族模式。BV 拿到后再执行 toy video bind <BV> --toy 38678478981120",
+      "timestamp": "2026-10-11T07:55:00+08:00"
     }
   },
   "douyin": {
     "platform": "douyin",
     "state": "not_started",
-    "reason": "同受内置浏览器面板未打开影响，B站走通后再执行"
+    "reason": "B站投稿卡在人机验证，等待用户处理期间未启动抖音；抖音同样需要可见浏览器表面做封面裁剪与发布确认"
   },
   "youtube": {
     "platform": "youtube",
     "state": "not_started",
-    "reason": "同上"
+    "reason": "同上；YouTube Studio 上传与字幕、受众与合成内容披露均需真实指针事件"
   },
   "x": {
     "platform": "x",

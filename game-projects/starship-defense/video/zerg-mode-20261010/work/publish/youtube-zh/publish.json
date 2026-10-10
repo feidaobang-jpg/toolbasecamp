@@ -81,10 +81,13 @@
   },
   "technical_preparation_complete": true,
   "ready_to_upload": true,
-  "blocking_issues": [],
+  "blocking_issues": [
+    "与B站同一阻塞：内置浏览器面板未打开时页面隐藏、视口 0x0，上传与发布确认所需的真实指针事件不投递；本期尚未上传"
+  ],
   "unverified_fields": [
     "YouTube 分类 ID、受众（Made for Kids）与算法披露需在投稿页当场核对",
     "英文字幕为人工校对前的机器对齐译文，需逐条核对专有名词与数值"
   ],
-  "status": "approved_for_upload"
+  "status": "approved_for_upload",
+  "upload_state": "ready_not_uploaded"
 }

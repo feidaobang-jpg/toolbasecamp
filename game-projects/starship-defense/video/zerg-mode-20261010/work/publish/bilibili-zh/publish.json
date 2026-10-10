@@ -78,14 +78,38 @@
   "technical_preparation_complete": true,
   "ready_to_upload": true,
   "blocking_issues": [
-    "内置浏览器面板未打开（viewport 0x0），双比例封面无法可靠设置与核验；已存草稿，等面板可用后继续投稿"
+    "B站投稿接口在 gaia 风控后要求 GeeTest 人机验证；内置浏览器面板未打开（visibilityState=hidden、viewport 0x0）时验证码 iframe 不渲染且不接收真实指针事件，须本人在可见页面完成一次验证或自行点“立即投稿”"
   ],
   "unverified_fields": [
-    "本期投稿页分类、AI 声明勾选与登录状态，上传前重新核对",
-    "B站活动话题：发布时先检查当期活动，有则直接参加（2026-10-10 起的新流程）"
+    "稿件审核状态（尚无 BV）"
   ],
   "status": "approved_for_upload",
-  "upload_state": "draft_saved",
+  "upload_state": "draft_ready_blocked_by_risk_captcha",
   "draft_id": "3973028",
-  "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028"
+  "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028",
+  "upload_form_verified": {
+    "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
+    "category": "游戏(tid=17)",
+    "creation_statement": "含AI生成内容",
+    "tags": [
+      "原创",
+      "虫潮围城",
+      "塔防",
+      "游戏开发",
+      "AI",
+      "玩家建议",
+      "挑战模式",
+      "bilibilitoy"
+    ],
+    "description_chars": 474,
+    "topic": "哔哩哔哩Toy创意挑战(topic_id 1346285) 已在话题选择器实际选中",
+    "season": "虫潮围城开发实录(season_id 9248439 / section_id 10340633) 已选择",
+    "covers": {
+      "home_4_3": "https://archive.biliimg.com/bfs/archive/aab3fbe2c9da6919834b9cd62950c370cde8de4b.jpg (1600x1200)",
+      "space_16_9": "https://archive.biliimg.com/bfs/archive/fe08bd1e94f6e2241cc4052345ff614adde41602.jpg (1920x1080)"
+    },
+    "tag_count": 8,
+    "publish_time": "立即发布（dtime=null）",
+    "draft_save": "POST /x/vupre/web/draft/update code=0 OK（2026-10-11 07:50 +08:00）"
+  }
 }
