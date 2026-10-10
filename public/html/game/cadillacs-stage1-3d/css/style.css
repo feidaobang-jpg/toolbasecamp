@@ -30,7 +30,7 @@ kbd {
   border: 1px solid #8a7aa8; border-bottom-width: 3px; border-radius: 5px;
   font: 700 .82em/1.45 ui-monospace, Consolas, monospace; color: #fff; background: #3a2c56; text-align: center;
 }
-button, .list-link { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
 /* ---------- 覆盖层菜单 ---------- */
 .overlay {

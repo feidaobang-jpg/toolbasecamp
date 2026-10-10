@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="css/style.css?v=combo-v080">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" tabindex="-1">
+<div id="app" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="赤色要塞 3D 游戏画面"></canvas>
 
@@ -81,7 +81,6 @@
           <button data-opt="touch"></button>
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -103,7 +102,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -117,7 +115,6 @@
           <button data-act="next" id="res-next" class="primary" hidden>进入下一关 <kbd>Enter</kbd></button>
           <button data-act="restart" id="res-restart" class="primary">再玩一次 <kbd>Enter</kbd></button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -130,7 +127,7 @@
 <script>
   window.addEventListener('error', function (e) {
     var el = document.getElementById('loading');
-    if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
+    if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
 </script>
 <script src="js/game.min.js?v=menu-text1"></script>

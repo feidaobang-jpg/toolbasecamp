@@ -30,7 +30,7 @@ kbd {
   border: 1px solid #b9a77c; border-bottom-width: 3px; border-radius: 5px;
   font: 700 .82em/1.45 ui-monospace, Consolas, monospace; color: var(--ink); background: #fffaf0; text-align: center;
 }
-button, .list-link { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
 /* ---------- 覆盖层菜单 ---------- */
 .overlay {
@@ -311,7 +311,7 @@ html body #btn-fs[hidden], html body .items > .fs-btn[hidden] { display: none !i
 #stage.compact .control-modes { margin: 0 !important; gap: 6px !important; }
 #stage.compact .control-modes button[data-control-mode] { min-height: 40px; padding: 4px 8px; font-size: 13px; }
 /* 主菜单：三键操作模式行已可直接切换，紧凑时收起重复的「操作模式」循环项；「开始游戏」与「起始关卡」同排。
-   网站与 Toy 版（无「返回游戏列表」）都只占 7 行，Toy 外壳顶栏下的 844×346 也能完整显示 */
+   网站与 Toy 版菜单都只占 7 行（均无跳出链接），Toy 外壳顶栏下的 844×346 也能完整显示 */
 #stage.compact .title-screen .items > [data-opt=touch] { display: none; }
 #stage.compact:not(.narrow) .title-screen .items > .primary { grid-column: auto; }
 /* 暂停：左列标题、得分与操作提示，右列两列选项 */

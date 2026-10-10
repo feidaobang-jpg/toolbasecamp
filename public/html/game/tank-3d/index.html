@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="./style.css?v=menu-text1">
 </head>
 <body>
-<div id="app" data-list-url="../../../games.html" tabindex="-1">
+<div id="app" tabindex="-1">
   <div id="stage">
     <canvas id="screen" aria-label="坦克大战 3D 游戏画面"></canvas>
     <div id="hurt"></div>
@@ -93,7 +93,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="coop" class="coop-link"><svg class="button-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="9" cy="7" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 4a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-4-5.65"/></svg><span>联机大厅 · 2–4人合作</span></button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -150,7 +149,6 @@
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -176,7 +174,6 @@
         <nav class="items" aria-label="结算菜单">
           <button data-act="retry" class="primary" id="retry-btn">再来一次 <kbd>Enter</kbd></button>
           <button data-act="title">返回主菜单</button>
-          <a data-act="list" class="list-link" href="../../../games.html">返回游戏列表</a>
         </nav>
       </div>
     </div>
@@ -189,7 +186,7 @@
 <script>
   window.addEventListener('error', function (e) {
     var el = document.getElementById('loading');
-    if (el && !window.__tankReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button><br><a href="../../../games.html" style="color:#fff">返回游戏列表</a>'; }
+    if (el && !window.__tankReady) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
   if (location.protocol === 'file:') document.getElementById('loading').textContent = '本地双击打开（file://）无法加载 3D 模块，请使用网站地址或 HTTP 本地服务。';
 </script>
