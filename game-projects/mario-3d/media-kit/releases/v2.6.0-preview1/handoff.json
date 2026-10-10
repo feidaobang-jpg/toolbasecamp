@@ -4,8 +4,8 @@
  "version": "v2.6.0-preview1",
  "base_version": "v2.5.0-menu-text1",
  "created_at": "2026-10-10T22:21:55+08:00",
- "classification": "新关卡（本人审核版，审核前不发布）",
- "user_request": "超级玛丽第四关做一下，我审核后全平台上架",
+ "classification": "新关卡（2026-10-11 已按实时节奏发布网站+Toy；TapTap按默认不发）",
+ "user_request": "超级玛丽第四关开发好了，上架网站和toy（2026-10-10 当次指令，替代此前的审核门槛）",
  "build": {
   "id": "v2.6.0-preview1-4e8d697bb1cf",
   "commit": "63ca398d0351e5457f74eadeba0c1a086c87a16c",
@@ -118,7 +118,7 @@
    "after": "「包含 1-1 至 1-4」；封面沿用",
    "user_visible": true,
    "evidence_ids": [],
-   "verification": "not_deployed"
+   "verification": "deployed_verified"
   }
  ],
  "bugs": [
@@ -514,36 +514,67 @@
   "update": "partial",
   "gaps": [
    "录像由自动按键路线驱动，不是人手操作；侧视录像已目视抽帧复核，正视录像与音轨未人工审听",
-   "尚未经本人审核，未上线；网站 / Toy / TapTap 状态均为未发布",
+   "已按用户当次指令与 2026-10-10 实时节奏发布：网站已核验生效、Toy 已过审上线、TapTap 按策略不发",
    "没有真机录像"
   ]
  },
  "release": {
   "approval": {
    "required": true,
-   "status": "pending_user_review",
-   "requested_by_user": "我审核后全平台上架",
+   "status": "approved_by_user_20261010",
+   "requested_by_user": "超级玛丽第四关开发好了，上架网站和toy",
+   "approved_targets": [
+    "website",
+    "toy",
+    "video_descriptions"
+   ],
+   "excluded_targets": [
+    "taptap"
+   ],
    "event_id": "mario-stage4-review-20261010-01"
   },
-  "website": "not_deployed",
-  "merged_to_master": false,
+  "website": {
+   "status": "deployed_verified",
+   "merged_to_master": true,
+   "branch": "claude/mario-stage4-20261010",
+   "merge_head": "586c619f",
+   "source_commit_in_master": "63ca398d0351e5457f74eadeba0c1a086c87a16c",
+   "url": "https://www.zhengxiaohui.cn/html/game/mario-3d/index.html?level=1-4",
+   "evidence": "公网 levels.js 含 1-4 关卡数据；js/locales/zh-CN.js mario 副标题为「包含 1-1 至 1-4」；castle.mp3 已核验。初次核验于合并推送当日，2026-10-11 04:52 复抽仍生效",
+   "verified_at": "2026-10-11T04:52:00+08:00"
+  },
   "toy": {
    "id": 39043286960128,
-   "status": "not_submitted",
-   "candidate_package_sha256": "940e0c9d51b64f10e38e235932279504fc5d179ebcb90a81c76545c58f6ea769",
-   "candidate_manifest": "releases/v2.6.0-preview1/toy-build.json",
-   "note": "审核前只本地打包自检，未上传"
+   "status": "published",
+   "package_sha256": "940e0c9d51b64f10e38e235932279504fc5d179ebcb90a81c76545c58f6ea769",
+   "manifest": "releases/v2.6.0-preview1/toy-build.json",
+   "preview_url": "https://www.bilibili.com/toy/preview/preview_SBF25n8D/index.html",
+   "public_url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+   "note": "同一稳定包（预检→桌面与手机横屏预览实测 11/11→提审）：2026-10-10 23:46:34 update --yes 提交，mylist mtime 23:49:05 过审；2026-10-11 公网核验壳页标题「1-1 至 1-4」、内容 v24673、levels.js 哈希与稳定包一致",
+   "submitted_at": "2026-10-10T23:46:34+08:00",
+   "published_at": "2026-10-10T23:49:05+08:00",
+   "content_version": "v24673",
+   "verified_at": "2026-10-11T05:11:41+08:00"
   },
   "taptap": {
    "app_id": 962723,
-   "status": "not_submitted",
-   "note": "审核通过后先查当前审核状态；此前因 IP 材料退回的是旧包，本版是新包"
+   "status": "deferred_by_policy_2026-10-10",
+   "note": "TapTap 默认不发，页面保持在线不下架；用户当次未点名同步"
   },
   "video_descriptions": {
-   "status": "unchanged",
-   "target": "BV1guep6NELt"
-  },
-  "local_preview": "http://127.0.0.1:8798/html/game/mario-3d/index.html?level=1-4（在 worktree 根目录 node game-projects/mario-3d/qa/serve.mjs 8798）"
+   "status": "public_verified",
+   "targets": [
+    "BV1guep6NELt",
+    "BV1Fwpw6FEFx"
+   ],
+   "submitted_at": [
+    "2026-10-11T04:38:00+08:00",
+    "2026-10-11T04:47:00+08:00"
+   ],
+   "record": "releases/v2.6.0-preview1/bili-update.json",
+   "note": "v2.6.0 文案已公开渲染（view API）；发现「Toy新版审核中」过时（Toy 已上线），纠错提交与最终基线见 bilibili-sync.json",
+   "public_verified_at": "2026-10-11T05:11:41+08:00"
+  }
  },
  "cover": {
   "decision": "keep",
