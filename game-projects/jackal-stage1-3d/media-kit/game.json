@@ -447,21 +447,21 @@
     "app_id": 962721,
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
-    "status": "reviewing",
-    "platform_status": "reviewing",
-    "staged_version": "v0.8.1",
-    "staged_source_commit": "b0dd1a4d992e214cc6130f92e539c7493c2740e7",
-    "staged_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
-    "staged_h5_version_id": 270833,
+    "status": "online",
+    "platform_status": "online",
+    "staged_version": "v0.10.3-menu-text1",
+    "staged_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "staged_package_sha256": "307e6be505934e402189526f464e0523558883d4cc849d3f2580d33ab0f74e6d",
+    "staged_h5_version_id": 282323,
     "staged_h5_package_id": 71922,
-    "draft_version_id": "1041012",
-    "submitted_version": "v0.8.1",
-    "submitted_at": "2026-10-07T02:28:18.912443+00:00",
-    "last_published_version": null,
-    "last_published_h5_version_id": null,
+    "draft_version_id": "1054184",
+    "submitted_version": "v0.10.3-menu-text1",
+    "submitted_at": null,
+    "last_published_version": "v0.10.3-menu-text1",
+    "last_published_h5_version_id": 282323,
     "last_public_runtime_verified_version": null,
-    "last_status_checked_at": "2026-10-07T02:43:57.353796+00:00",
-    "release_record": "releases/taptap-force3-20261007/handoff.json",
+    "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "release_record": "releases/backfill-20261010/release-status.json",
     "pending_material_review": [],
     "pending": [
       "等待TapTap正式审核；内容预审未通过，已按用户明确指令尝试提交，仍可能因IP风险驳回",
@@ -481,9 +481,9 @@
     "agreement_consent_record": "../../site-games/releases/taptap-force3-20261007/authorization.json",
     "prepared_release_record": "releases/taptap-first-publish-20261007/handoff.json",
     "agreement_signed_at": "2026-10-07T02:27:46.325186+00:00",
-    "submitted_package_sha256": "1ccce7c63b3aa15f4191a5e9cb7455aec9d1983628411b8dc815886ef6ff703e",
-    "submitted_h5_version_id": 270833,
-    "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
+    "submitted_package_sha256": "307e6be505934e402189526f464e0523558883d4cc849d3f2580d33ab0f74e6d",
+    "submitted_h5_version_id": 282323,
+    "submission_time_source": "Submission receipt archived; exact server submission time not persisted.",
     "force_submission_authorized": true,
     "force_submission_task_id": "01a1133e-6078-7841-9fb4-6e1cd9b36b21-taptap-force3-20261007-05",
     "content_preaudit_passed": false,
@@ -504,7 +504,60 @@
         "change": "新合并联机功能",
         "reason": "平台包尚待构建、验证与部署核验；本次试审复用已验证单机稳定包，审核期间不替换或撤审"
       }
-    ]
+    ],
+    "audit_id": "1054184",
+    "platform_version": "V-20261010",
+    "last_published_platform_version": "V-20261010",
+    "last_published_revision": "1054184",
+    "last_published_at": null,
+    "last_published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_public_page_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_published_status_evidence": "game-projects/site-games/releases/backfill-20261010/taptap-962721-status.json",
+    "submitted_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "pending_note": null,
+    "community_post_status": "public_verified",
+    "community_post_version": "v0.10.3-menu-text1",
+    "community_post_note": null,
+    "community_post": {
+      "app": 962721,
+      "title": "赤色要塞 3D 更新：联机移动和大厅衔接更顺了",
+      "body": "驾驶武装吉普救人、送上直升机，两关试玩继续开放。本次 TapTap v0.10.3-menu-text1 已上线，改善联机移动平滑度、大厅衔接与菜单文字清晰度。\n支持2–4人合作，可中途加入和退出；闲置30秒由电脑队友接管，重新操作即交还。\n这是爱好者制作的非官方3D复刻。试玩：https://www.taptap.cn/app/962721\n欢迎反馈联机体验和操作手感。",
+      "rendered": "驾驶武装吉普救人、送上直升机，两关试玩继续开放。本次 TapTap v0.10.3-menu-text1 已上线，改善联机移动平滑度、大厅衔接与菜单文字清晰度。\n\n支持2–4人合作，可中途加入和退出；闲置30秒由电脑队友接管，重新操作即交还。\n\n这是爱好者制作的非官方3D复刻。试玩：\n赤色要塞 3D\n\n\n欢迎反馈联机体验和操作手感。",
+      "status": "public_verified",
+      "at": "2026-10-10T02:48:18.725Z",
+      "url": "https://www.taptap.cn/moment/857935299848701802",
+      "forum_app_id": null,
+      "moment_id": "857935299848701802",
+      "content_sha256": "e70fc4fabdf82afc6a6ae3cf00317457f5795efb4b51500c98947b3f0bbb7cce",
+      "source_version": "v0.10.3-menu-text1",
+      "own_profile_verified": true
+    },
+    "community_sync": {
+      "automatic_posting_enabled": true,
+      "source_version": "v0.10.3-menu-text1",
+      "h5_version_id": 282323,
+      "platform_version": "V-20261010",
+      "last_public_verified_moment_id": "857935299848701802",
+      "last_public_verified_url": "https://www.taptap.cn/moment/857935299848701802",
+      "content_sha256": "e70fc4fabdf82afc6a6ae3cf00317457f5795efb4b51500c98947b3f0bbb7cce",
+      "public_verified_at": "2026-10-10T02:48:18.725Z",
+      "own_profile_verified": true,
+      "forum_app_id": null,
+      "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    "verification": {
+      "qa": "game-projects/site-games/releases/backfill-20261010/qa.json",
+      "local_package_verified": true,
+      "public_page": "TapTap PC端 试玩DEMO 入口可见",
+      "phone": "physical TapTap App not tested"
+    },
+    "backfill_authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "sync_ledger": "taptap-sync.json"
   },
   "website": {
     "version": "v0.10.3-menu-text1",
@@ -532,15 +585,25 @@
     "platform_status": "pending_22_batch"
   },
   "channel_holds": {
-    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-    "since": "2026-10-09T16:00:04.596643+08:00",
-    "targets": [
-      "taptap",
-      "other_game_platforms",
-      "existing_video_descriptions",
-      "announcements"
-    ],
-    "status": "held_by_user"
-  }
+    "status": "superseded_by_current_authorization",
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "channel_hold_history": [
+    {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "since": "2026-10-09T16:00:04.596643+08:00",
+      "targets": [
+        "taptap",
+        "other_game_platforms",
+        "existing_video_descriptions",
+        "announcements"
+      ],
+      "status": "held_by_user"
+    }
+  ],
+  "last_backfill_record": "releases/backfill-20261010/release-status.json"
 }

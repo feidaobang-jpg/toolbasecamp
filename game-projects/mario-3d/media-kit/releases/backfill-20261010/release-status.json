@@ -1,0 +1,65 @@
+{
+  "run_id": "release-backfill-20261010",
+  "version": "v2.5.0-menu-text1",
+  "authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "status": "completed_with_external_pending",
+  "central_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
+  "toy": {
+    "status": "already_published_20261009_not_resubmitted",
+    "version": "v2.5.0-menu-text1"
+  },
+  "taptap": {
+    "app_id": 962723,
+    "version": "v2.5.0-menu-text1",
+    "status": "blocked_ip_materials",
+    "public_url": "https://www.taptap.cn/app/962723",
+    "platform_observation": {
+      "created_time": 1791465062,
+      "last_event": "review_rejected",
+      "status": "rejected",
+      "status_label": "审核失败",
+      "status_reason": "1. 您的游戏标题、素材与“超级玛丽”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+      "status_value": 2,
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
+    },
+    "checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\mario-3d.zip",
+      "sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+      "bytes": 6905475,
+      "submitted": false
+    },
+    "public_page_verified": false,
+    "physical_taptap_app_tested": false,
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "evidence": "taptap-962723-versions-before.json",
+    "submitted_this_run": false,
+    "reason": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvids": [
+      "BV1guep6NELt",
+      "BV1Fwpw6FEFx"
+    ],
+    "version": "v2.5.0-menu-text1"
+  },
+  "remaining": [
+    {
+      "channel": "taptap",
+      "games": [
+        "cadillacs-stage1-3d",
+        "mario-3d"
+      ],
+      "status": "blocked_ip_materials",
+      "event_id": "ip-materials-20261010-962722-962723",
+      "next_action": "用户提供相应IP授权材料后复核条件；不重复上传当前包。"
+    }
+  ]
+}

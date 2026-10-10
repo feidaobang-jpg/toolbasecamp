@@ -5,8 +5,8 @@
   "app_id": 962722,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_v0.10.1",
-  "platform_status": "reviewing",
+  "status": "blocked_ip_materials",
+  "platform_status": "blocked_ip_materials",
   "staged_version": "v0.10.1",
   "staged_source_commit": "999d4057",
   "staged_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
@@ -17,8 +17,8 @@
   "last_published_version": "v0.10.0",
   "last_published_h5_version_id": 275750,
   "last_public_runtime_verified_version": null,
-  "last_status_checked_at": "2026-10-08T19:40:31.571191+08:00",
-  "release_record": "releases/v0.10.1/handoff.json",
+  "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+  "release_record": "releases/backfill-20261010/release-status.json",
   "pending_material_review": [],
   "pending": [],
   "dedupe_rule": "当前同哈希已上线、同版本更新帖已公开核验，不重复上传、提审或发帖；恢复时读取平台及最新台账。",
@@ -89,7 +89,7 @@
     "release_record": "releases/v0.9.4/taptap-community.json",
     "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
   },
-  "pending_note": "用户要求撤回第三关；两关回退包已提审，等待替换现网第三关包",
+  "pending_note": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。",
   "startup_adapter": "inline-runtime-v1",
   "pending_community_updates": [],
   "platform_version": "V-20261008-1",
@@ -100,7 +100,7 @@
     "startup_adapter": "inline-runtime-v1",
     "namespace": "taptap-cadillacs-v1:"
   },
-  "community_post_status": "public_verified",
+  "community_post_status": "blocked_until_platform_update",
   "community_post_note": "原作开场、背摔、音频调整与启动兼容修复合并为一条更新动态，已核验本人主页与恐龙快打论坛显示同一 moment。",
   "history": [
     {
@@ -130,6 +130,35 @@
       "status": "reviewing",
       "submitted_at": "2026-10-08T19:40:31.571191+08:00",
       "note": "删除第三关，恢复两关；不继续扩展本次第三关"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "at": "2026-10-10T03:02:52.978211+00:00",
+      "previous_baseline": {
+        "status": "reviewing_v0.10.1",
+        "platform_version": "V-20261008-1",
+        "submitted_version": "v0.10.1",
+        "submitted_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
+        "last_published_version": "v0.10.0",
+        "last_published_h5_version_id": 275750,
+        "community_post": null,
+        "community_sync": {
+          "automatic_posting_enabled": true,
+          "last_public_verified_moment_id": "857180359089981386",
+          "last_public_verified_url": "https://www.taptap.cn/moment/857180359089981386",
+          "forum_app_id": 962722,
+          "source_version": "v0.9.4",
+          "h5_version_id": 273318,
+          "platform_version": "V-20261007-6",
+          "content_sha256": "c59ff63eb2e8fee76359287b3cb8f2e0390db18dde2cd7d1204c09e31747af49",
+          "submitted_at": "2026-10-08T08:48:43+08:00",
+          "public_verified_at": "2026-10-08T00:53:21.8174261Z",
+          "own_profile_verified": true,
+          "forum_verified": true,
+          "release_record": "releases/v0.9.4/taptap-community.json",
+          "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+        }
+      }
     }
   ],
   "last_published_verified_at": "2026-10-08T00:58:42.737833+00:00",
@@ -470,5 +499,27 @@
         }
       }
     ]
+  },
+  "backfill_authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "pending_release": {
+    "version": "v0.11.0-preview.2",
+    "package_sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+    "status": "blocked_ip_materials",
+    "run_id": "release-backfill-20261010"
+  },
+  "rejection": {
+    "created_time": 1791465107,
+    "last_event": "review_rejected",
+    "status": "rejected",
+    "status_label": "审核失败",
+    "status_reason": "1. 您的游戏标题与“恐龙快打”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+    "status_value": 2,
+    "version": "V-20261008-2",
+    "version_id": "V-20261008-2"
   }
 }

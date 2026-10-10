@@ -5,21 +5,25 @@
       "bvid": "BV1EyHz6wE5u",
       "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
       "owner_uid": 16214353,
-      "last_public_verified_version": "v0.10.0",
+      "last_public_verified_version": "v0.10.3-menu-text1",
       "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
       "verified_at": "2026-10-06T22:35:15.869180+00:00",
-      "release_record": "releases/v0.8.0/bilibili-sync.json",
-      "last_public_verified_at": "2026-10-07T02:35:12.420Z",
-      "last_sync_record": "releases/v0.8.0/bilibili-sync.json",
-      "description_sha256": "d482a0c4de892106d8994a4ad1c9ae7be3f6b3dfb0e1e78e077a4b495cf612db",
-      "lastPublicVerifiedVersion": "v0.9.0",
-      "descriptionHash": "d482a0c4de892106d8994a4ad1c9ae7be3f6b3dfb0e1e78e077a4b495cf612db",
-      "release": "releases/v0.8.0/bilibili-sync.json",
-      "publicVerifiedAt": "2026-10-07T02:35:12.420Z",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "last_public_verified_at": "2026-10-10T02:46:25.627Z",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "description_sha256": "8b50c3fef8d12b510e4c4a999269d567a5b2463c2a93c2974c6a10f84595d930",
+      "lastPublicVerifiedVersion": "v0.10.3-menu-text1",
+      "descriptionHash": "8b50c3fef8d12b510e4c4a999269d567a5b2463c2a93c2974c6a10f84595d930",
+      "release": "releases/backfill-20261010/release-status.json",
+      "publicVerifiedAt": "2026-10-10T02:46:25.627Z",
       "status": "public_verified",
-      "submitted_version": "v0.9.0",
-      "submitted_at": "2026-10-07T02:35:12.420Z",
-      "public_verified_at": "2026-10-07T18:05:00+08:00"
+      "submitted_version": "v0.10.3-menu-text1",
+      "submitted_at": "2026-10-10T02:46:10.184Z",
+      "public_verified_at": "2026-10-10T02:46:25.627Z",
+      "description_revision": "v0.10.3-menu-text1",
+      "description_public_verified_at": "2026-10-10T02:46:25.627Z",
+      "record": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
     }
   ],
   "pending": [],
@@ -33,10 +37,14 @@
     {
       "version": "v0.8.1",
       "classification": "普通补丁",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "record": "releases/v0.8.1/handoff.json",
       "summary": "手机竖着拿时菜单直接横屏。",
-      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。"
+      "reason": "普通补丁累计；现有简介未写菜单方向，仍准确。",
+      "previous_status": "pending_merge",
+      "included_version": "v0.10.3-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "v0.10.0",
@@ -54,22 +62,30 @@
     {
       "version": "v0.10.2",
       "classification": "严重修复",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "summary": "联机真人队友车头不随视角转向、加入者画面逐快照跳格；地物增量同步与数值量化使联机包体从 68.6KB 降到 26.3KB。",
       "prepared_update_line": "更新（2026-10-07·v0.10.2）：联机修复——真人队友的车头会跟着你自己的视角转，加入者画面按帧插值不再一顿一顿。网站已可玩，Toy 包审核中。",
       "reason": "本会话浏览器未登录 B站创作中心（member.bilibili.com 返回出错页），未能读取并编辑简介；不盲目提交。网站与 Toy 已按节奏同步，本条累计到下一次有意义的简介更新（现有公开说明 v0.10.0 仍准确，未写车头细节）。",
       "record": "releases/v0.10.2/notes.md",
-      "recorded_at": "2026-10-07"
+      "recorded_at": "2026-10-07",
+      "previous_status": "pending_merge",
+      "included_version": "v0.10.3-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     },
     {
       "version": "v0.10.3",
       "classification": "普通补丁",
-      "status": "pending_merge",
+      "status": "included_in_public_verified_release",
       "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
       "prepared_update_line": "更新（2026-10-07·联机大厅）：建房改为玩家自己点「创建房间」，进来不再静默建房；已在房间时创建/加入按钮会说明原因和\"先退出房间\"；把邀请链接发给朋友，点开公开房直接进、密码房会提示填密码。",
       "reason": "本次是交互说明类普通补丁，现有公开上线说明未描述大厅建房步骤，无需单独改简介；文案已按一句话备好，累计到下一次有意义的简介更新一起提交。本会话浏览器无 B站创作中心登录态（Playwright 全新上下文未带 Cookie），未向平台提交。",
       "record": "releases/v0.10.3/notes.md",
-      "recorded_at": "2026-10-07"
+      "recorded_at": "2026-10-07",
+      "previous_status": "pending_merge",
+      "included_version": "v0.10.3-menu-text1",
+      "resolved_by_run": "release-backfill-20261010",
+      "release_record": "releases/backfill-20261010/release-status.json"
     }
   ],
   "resolved_updates": [
@@ -174,8 +190,8 @@
     }
   ],
   "status": "public_verified",
-  "version": "v0.8.0",
-  "updated_at": "2026-10-06T22:35:15.869180+00:00",
+  "version": "v0.10.3-menu-text1",
+  "updated_at": "2026-10-10T03:02:52.978211+00:00",
   "history": [
     {
       "bvid": "BV1EyHz6wE5u",
@@ -199,14 +215,41 @@
       "public_verified_at": "2026-10-07T18:05:00+08:00",
       "line": "更新（2026-10-07·v0.10.0）：联机统一支持2–4人合作，建房可选2/3/4人；中途加入/退出保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。网站试玩已可玩，Toy/TapTap包审核中。视频为录制时版本，以当前试玩为准。",
       "method": "browser编辑投稿replace更新行"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV1EyHz6wE5u",
+      "previous_baseline": {
+        "bvid": "BV1EyHz6wE5u",
+        "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
+        "owner_uid": 16214353,
+        "last_public_verified_version": "v0.10.0",
+        "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
+        "verified_at": "2026-10-06T22:35:15.869180+00:00",
+        "release_record": "releases/v0.8.0/bilibili-sync.json",
+        "last_public_verified_at": "2026-10-07T02:35:12.420Z",
+        "last_sync_record": "releases/v0.8.0/bilibili-sync.json",
+        "description_sha256": "d482a0c4de892106d8994a4ad1c9ae7be3f6b3dfb0e1e78e077a4b495cf612db",
+        "lastPublicVerifiedVersion": "v0.9.0",
+        "descriptionHash": "d482a0c4de892106d8994a4ad1c9ae7be3f6b3dfb0e1e78e077a4b495cf612db",
+        "release": "releases/v0.8.0/bilibili-sync.json",
+        "publicVerifiedAt": "2026-10-07T02:35:12.420Z",
+        "status": "public_verified",
+        "submitted_version": "v0.9.0",
+        "submitted_at": "2026-10-07T02:35:12.420Z",
+        "public_verified_at": "2026-10-07T18:05:00+08:00"
+      }
     }
   ],
   "last_public_verified": {
-    "bvid": "BV1EyHz6wE5u",
-    "version": "v0.8.0",
-    "at": "2026-10-06T22:35:15.869180+00:00",
-    "description_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be"
+    "version": "v0.10.3-menu-text1",
+    "at": "2026-10-10T03:02:52.978211+00:00",
+    "bvids": [
+      "BV1EyHz6wE5u"
+    ],
+    "record": "releases/backfill-20261010/release-status.json"
   },
-  "latest_record": "releases/v0.9.0/bilibili-sync.json",
-  "pending_note": "统一2–4人合作正式版本简介更新待平台提交（浏览器自动化不可用）；仅公开核验成功的目标推进基线。"
+  "latest_record": "releases/backfill-20261010/release-status.json",
+  "pending_note": null,
+  "last_release_record": "releases/backfill-20261010/release-status.json"
 }

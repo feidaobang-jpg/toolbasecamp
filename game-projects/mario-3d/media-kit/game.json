@@ -276,20 +276,85 @@
     "developer_id": 100726,
     "app_id": 962723,
     "automatic_sync_enabled": true,
-    "status": "reviewing",
+    "status": "blocked_ip_materials",
     "staged_version": "v2.5.0",
-    "staged_h5_version_id": 270893,
-    "draft_version_id": "1041014",
-    "last_published_version": null,
+    "staged_h5_version_id": 274324,
+    "draft_version_id": "1045138",
+    "last_published_version": "v2.5.0",
     "sync_record": "taptap-sync.json",
-    "release_record": "releases/taptap-force3-20261007/handoff.json",
+    "release_record": "releases/backfill-20261010/release-status.json",
     "agreement_authorized": true,
     "agreement_signed": true,
     "submitted_version": "v2.5.0",
-    "submitted_h5_version_id": 270893,
-    "submitted_at": "2026-10-07T02:30:03.682018+00:00",
+    "submitted_h5_version_id": 274324,
+    "submitted_at": "2026-10-08T02:38:03.280324+00:00",
     "force_submission_authorized": true,
-    "pending_updates": []
+    "pending_updates": [],
+    "platform_status": "blocked_ip_materials",
+    "submitted_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+    "audit_id": "1045138",
+    "platform_version": "V-20261008",
+    "submission_time_source": "local receipt observation timestamp; API accepted reviewing",
+    "last_published_h5_version_id": 270893,
+    "last_published_platform_version": "V-20261007",
+    "last_published_revision": 1041014,
+    "last_published_at": "2026-10-07T02:48:10+00:00",
+    "last_public_page_verified_at": "2026-10-07T04:43:29.723Z",
+    "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "last_published_status_evidence": "D:\\project\\toolbasecamp-artifacts\\taptap\\all-startup\\01a115b7-20261008\\receipts\\962723\\h5-latest.json",
+    "staged_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+    "staged_package_sha256": "73927944622ab0de93680512b307b75a1778190c9031e62d4c7d89b6ba6b2cf4",
+    "submitted_source_commit": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+    "pending_note": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。",
+    "community_post_status": "blocked_until_platform_update",
+    "community_sync": {
+      "automatic_posting_enabled": true,
+      "last_public_verified_moment_id": "856856121875366958",
+      "last_public_verified_url": "https://www.taptap.cn/moment/856856121875366958",
+      "forum_app_id": 962723,
+      "source_version": "v2.5.0",
+      "h5_version_id": 270893,
+      "platform_version": "V-20261007",
+      "content_sha256": "aae8d89cacdb21538589ddd4c434a2ab53feceb1eb1fa0f31b5d4c2355ea3122",
+      "public_verified_at": "2026-10-07T04:43:29.723Z",
+      "release_record": "../../site-games/releases/taptap-community-20261007/handoff.json",
+      "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
+    },
+    "verification": {
+      "startup_guard": "8/8 pass",
+      "player_identity_crypto_storage": "17/17 pass",
+      "complete_zips": "single archive root, inline classic runtime, no standalone JS files",
+      "browser": "IAB real UI clicks with independent JS requests denied; startup/start/actions/pause/modes and existing restart routes checked",
+      "viewports": [
+        "844x390",
+        "390x844"
+      ],
+      "phone": "not tested on actual mobile TapTap App for these exact packages"
+    },
+    "rights_proof_provided": false,
+    "pending_release": {
+      "version": "v2.5.0-menu-text1",
+      "package_sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+      "status": "blocked_ip_materials",
+      "run_id": "release-backfill-20261010"
+    },
+    "rejection": {
+      "created_time": 1791465062,
+      "last_event": "review_rejected",
+      "status": "rejected",
+      "status_label": "审核失败",
+      "status_reason": "1. 您的游戏标题、素材与“超级玛丽”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+      "status_value": 2,
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
+    },
+    "backfill_authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "sync_ledger": "taptap-sync.json"
   },
   "menu_text_update": {
     "version": "v2.5.0-menu-text1",
@@ -299,15 +364,25 @@
     "platform_status": "pending_22_batch"
   },
   "channel_holds": {
-    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-    "since": "2026-10-09T16:00:04.587915+08:00",
-    "targets": [
-      "taptap",
-      "other_game_platforms",
-      "existing_video_descriptions",
-      "announcements"
-    ],
-    "status": "held_by_user"
-  }
+    "status": "superseded_by_current_authorization",
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "channel_hold_history": [
+    {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "since": "2026-10-09T16:00:04.587915+08:00",
+      "targets": [
+        "taptap",
+        "other_game_platforms",
+        "existing_video_descriptions",
+        "announcements"
+      ],
+      "status": "held_by_user"
+    }
+  ],
+  "last_backfill_record": "releases/backfill-20261010/release-status.json"
 }

@@ -1,0 +1,45 @@
+{
+  "taptap:starship-defense": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\chongchao-qianshao.zip",
+    "sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+    "bytes": 358433,
+    "submitted": true
+  },
+  "taptap:tank-3d": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\tank-3d.zip",
+    "sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+    "bytes": 260955,
+    "submitted": true
+  },
+  "taptap:jackal-stage1-3d": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\jackal-stage1-3d.zip",
+    "sha256": "307e6be505934e402189526f464e0523558883d4cc849d3f2580d33ab0f74e6d",
+    "bytes": 6678129,
+    "submitted": true
+  },
+  "taptap:cadillacs-stage1-3d": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\cadillacs-stage1-3d.zip",
+    "sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+    "bytes": 19361851,
+    "submitted": false
+  },
+  "taptap:mario-3d": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\mario-3d.zip",
+    "sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+    "bytes": 6905475,
+    "submitted": false
+  },
+  "toy:starship-defense": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\chongchao-qianshao.zip",
+    "sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+    "bytes": 366485,
+    "submitted": true
+  },
+  "toy:cadillacs-stage1-3d": {
+    "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
+    "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+    "files": 31,
+    "submitted": true,
+    "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+  }
+}

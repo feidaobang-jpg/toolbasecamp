@@ -1,0 +1,10 @@
+{
+  "created_time": 1791465107,
+  "last_event": "review_rejected",
+  "status": "rejected",
+  "status_label": "审核失败",
+  "status_reason": "1. 您的游戏标题与“恐龙快打”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+  "status_value": 2,
+  "version": "V-20261008-2",
+  "version_id": "V-20261008-2"
+}

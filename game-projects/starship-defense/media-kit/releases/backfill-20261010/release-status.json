@@ -1,0 +1,117 @@
+{
+  "run_id": "release-backfill-20261010",
+  "version": "web-resistance-v0.33.0",
+  "authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "status": "completed_with_external_pending",
+  "central_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
+  "toy": {
+    "id": 38678478981120,
+    "slug": "chongchao-qianshao",
+    "status": "published",
+    "review_status": "published",
+    "public_verified": true,
+    "version": "web-resistance-v0.33.0",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24275/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
+    "verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "evidence": "toy-status-latest.json + toy-insect-public.png",
+    "verification": "官方 CLI published；公开 Toy 内嵌实际运行菜单及第三章/第三关入口核验",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\chongchao-qianshao.zip",
+      "sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+      "bytes": 366485,
+      "submitted": true
+    }
+  },
+  "taptap": {
+    "app_id": 962354,
+    "version": "web-resistance-v0.33.0",
+    "status": "online",
+    "public_url": "https://www.taptap.cn/app/962354",
+    "platform_observation": {
+      "created_time": 1791596317,
+      "last_event": "published",
+      "status": "online",
+      "status_label": "已上线（素材待优化）",
+      "status_reason": "1. 游戏封面图、宣传图目前暂不符合素材要求，封面图、宣传图应在原生高清图片素材的基础上，有清晰可辨识的游戏标题或LOGO以及能稳定传递游戏风格、玩法的元素，并且有符合TapTap标准的审美排版保证宣传图的精美观感，建议参考站内编辑推荐游戏，优化主体呈现、构图排版与整体美术表现。",
+      "status_value": 4,
+      "version": "V-20261010",
+      "version_id": "V-20261010"
+    },
+    "checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\chongchao-qianshao.zip",
+      "sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+      "bytes": 358433,
+      "submitted": true
+    },
+    "public_page_verified": true,
+    "physical_taptap_app_tested": false,
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "evidence": "taptap-962354-versions-final.json",
+    "audit_id": 1054180,
+    "h5_version_id": 282321,
+    "file_id": 76887,
+    "platform_version": "V-20261010",
+    "submitted_this_run": true,
+    "announcement": {
+      "app": 962354,
+      "title": "虫潮围城 v0.33.0：房车探城、据点争夺与三章战役",
+      "body": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：https://www.taptap.cn/app/962354\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+      "rendered": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：\n虫潮围城\n\n\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+      "status": "public_verified",
+      "at": "2026-10-10T02:46:54.560Z",
+      "url": "https://www.taptap.cn/moment/857934878203711369",
+      "forum_app_id": 962354,
+      "moment_id": "857934878203711369",
+      "content_sha256": "793767fb9037aee76924a6de6d000519c5bea0916ab92578e3fdd3f377e4520f",
+      "source_version": "web-resistance-v0.33.0",
+      "own_profile_verified": true
+    }
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvids": [
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf",
+      "BV1C5HQ6gEvD",
+      "BV1xdpx63ETu"
+    ],
+    "version": "web-resistance-v0.33.0"
+  },
+  "remaining": [
+    {
+      "channel": "taptap",
+      "games": [
+        "cadillacs-stage1-3d",
+        "mario-3d"
+      ],
+      "status": "blocked_ip_materials",
+      "event_id": "ip-materials-20261010-962722-962723",
+      "next_action": "用户提供相应IP授权材料后复核条件；不重复上传当前包。"
+    },
+    {
+      "channel": "kuaishou",
+      "platform_id": "3xr939t2s66s7ma",
+      "status": "blocked_login",
+      "account_id": "3x2fca3w3qwq5qc",
+      "event_id": "kuaishou-login-20261010-backfill",
+      "next_action": "在现有浏览器登录飞刀助理后，按既有稿件修改简介并公开核验。"
+    },
+    {
+      "channel": "xiaohongshu",
+      "platform_ids": [
+        "6ac79a4a000000001402cad8",
+        "6ac79a330000000001008c04"
+      ],
+      "status": "reviewing",
+      "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
+    }
+  ]
+}

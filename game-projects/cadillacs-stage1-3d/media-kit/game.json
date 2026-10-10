@@ -18,28 +18,37 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-09T15:53:50.836992+08:00",
-    "package": "dist/toy-v0.10.1/package",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_kMmXRmza/index.html",
-    "note": "第三关已撤回；两关包published，公开入口实测版本和关卡选择循环均正确，无脚本报错",
+    "submitted_at": null,
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
+      "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+      "files": 31,
+      "submitted": true,
+      "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+    },
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+    "note": "本批最终稳定包已公开核验；版本与证据见补发记录。",
     "status_verified": "v0.10.1 published；公开运行版本v0.10.1、关卡只有第一及第二关",
     "bound_videos": [
       "BV18XHW66E55"
     ],
     "review_status": "published",
-    "version": "v0.10.1",
-    "verified_at": "2026-10-08T11:43:53.379Z",
+    "version": "v0.11.0-preview.2",
+    "verified_at": "2026-10-10T03:02:52.978211+00:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-    "last_published_version": "v0.11.0-preview.1-menu-text1",
+    "last_published_version": "v0.11.0-preview.2",
     "pending_updates": [
       {
         "version": "v0.2.1",
         "classification": "普通补丁",
         "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
-        "status": "included_in_submitted_package",
+        "status": "included_in_public_verified_release",
         "record": "releases/drag-direction-20261005/handoff.json",
         "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
-        "included_version": "v0.3.0"
+        "included_version": "v0.11.0-preview.2",
+        "previous_status": "included_in_submitted_package",
+        "resolved_by_run": "release-backfill-20261010",
+        "release_record": "releases/backfill-20261010/release-status.json"
       },
       {
         "version": "v0.4.0",
@@ -68,8 +77,12 @@
         "version": "v0.5.3",
         "classification": "普通补丁",
         "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
-        "status": "auditing",
-        "record": "releases/v0.5.3/handoff.json"
+        "status": "included_in_public_verified_release",
+        "record": "releases/v0.5.3/handoff.json",
+        "previous_status": "auditing",
+        "included_version": "v0.11.0-preview.2",
+        "resolved_by_run": "release-backfill-20261010",
+        "release_record": "releases/backfill-20261010/release-status.json"
       },
       {
         "version": "v0.5.6",
@@ -94,24 +107,26 @@
       {
         "version": "v0.10.0",
         "classification": "正式版本",
-        "status": "withdrawn_by_user",
+        "status": "included_in_public_verified_release",
         "record": "releases/v0.10.0/handoff.json",
-        "reason": "用户明确要求删除本次第三关，不继续扩展或补发宣传"
+        "reason": "用户明确要求删除本次第三关，不继续扩展或补发宣传",
+        "previous_status": "withdrawn_by_user",
+        "included_version": "v0.11.0-preview.2",
+        "resolved_by_run": "release-backfill-20261010",
+        "release_record": "releases/backfill-20261010/release-status.json"
       }
     ],
-    "submitted_version": "v0.11.0-preview.1-menu-text1",
-    "package_sha256": "1148908782a0305bd9cba070526a9f789f4fe4434a743713f7083a8f414d932e",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_1wCDYoZD/index.html",
-    "release_record": "releases/toy-sync-20261009/sync.json",
-    "published_version": "v0.11.0-preview.1-menu-text1",
-    "published_verified_at": "2026-10-08T19:43:54.608891+08:00",
+    "submitted_version": "v0.11.0-preview.2",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+    "release_record": "releases/backfill-20261010/release-status.json",
+    "published_version": "v0.11.0-preview.2",
+    "published_verified_at": "2026-10-10T03:02:52.978211+00:00",
     "previous_published_version": "v0.10.0",
     "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
     "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "video_bindings": [
       "BV18XHW66E55"
     ],
-    "package_hash": "df8f27eee40763cb2f373f8005e72ca9de3b380d22ab7e784913b70f2235aad9",
     "title_changed": {
       "from": "恐龙快打 3D：第一关",
       "to": "恐龙快打 3D：第一、二关",
@@ -120,12 +135,12 @@
       "status": "published",
       "verified_at": "2026-10-06T23:38:00+08:00"
     },
-    "public_verified_version": "v0.11.0-preview.1-menu-text1",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_HL3EH1sk/index.html",
-    "last_successful_sync_version": "v0.11.0-preview.1-menu-text1",
-    "last_successful_sync_at": "2026-10-09T16:00:04.604242+08:00",
+    "public_verified_version": "v0.11.0-preview.2",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+    "last_successful_sync_version": "v0.11.0-preview.2",
+    "last_successful_sync_at": "2026-10-10T03:02:52.978211+00:00",
     "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
-    "public_verified_at": "2026-10-09T16:00:04.604242+08:00",
+    "public_verified_at": "2026-10-10T03:02:52.978211+00:00",
     "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
     "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -134,14 +149,19 @@
     "pending_note": "",
     "package_hash_method": "sha256 of canonical sorted relative-path to file-sha256 map",
     "public_runtime_verified_version": "v0.10.1",
-    "source_commit": "999d4057",
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
     "current_public_verification": "verified",
     "channel_authorization": {
-      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-      "at": "2026-10-09T15:48:29.607907+08:00"
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24038/index.html?test=1&qa=1"
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24276/index.html",
+    "last_submitted_version": "v0.11.0-preview.2",
+    "published_at": null,
+    "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
+    "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd"
   },
   "website_version": "v0.11.0-preview.2",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
@@ -425,7 +445,7 @@
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
-  "web_toy_versions_match": false,
+  "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
@@ -435,7 +455,7 @@
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
   "release_intent": "撤回本次第三关，保留前两关",
-  "toy_note": "用户要求删除本次第三关，网站和Toy均已恢复两关；TapTap回退包审核中",
+  "toy_note": "网站与Toy现为v0.11.0-preview.2，第一至三关试玩及道路边界修复已核验；TapTap新版因IP授权材料退回，旧版保留在线。",
   "entrypoint": "public/html/game/cadillacs-stage1-3d/index.html",
   "media_policy": "截图、录像、音轨只留本机 media-kit/releases/*/captures/，不提交 git",
   "pending_channel_changes": [
@@ -473,8 +493,8 @@
     "app_id": 962722,
     "automatic_sync_enabled": true,
     "authorization_date": "2026-10-07",
-    "status": "reviewing_v0.10.1",
-    "platform_status": "reviewing",
+    "status": "blocked_ip_materials",
+    "platform_status": "blocked_ip_materials",
     "staged_version": "v0.10.1",
     "staged_source_commit": "999d4057",
     "staged_package_sha256": "d75fd8dc15c7c2063742773b5b173e21ef81d96c1f313cc32e497a3b3b27cc0f",
@@ -485,8 +505,8 @@
     "last_published_version": "v0.10.0",
     "last_published_h5_version_id": 275750,
     "last_public_runtime_verified_version": null,
-    "last_status_checked_at": "2026-10-08T19:40:31.571191+08:00",
-    "release_record": "releases/v0.10.1/handoff.json",
+    "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "release_record": "releases/backfill-20261010/release-status.json",
     "pending_material_review": [],
     "pending": [],
     "dedupe_rule": "当前同哈希已上线、同版本更新帖已公开核验，不重复上传、提审或发帖；恢复时读取平台及最新台账。",
@@ -557,7 +577,7 @@
       "release_record": "releases/v0.9.4/taptap-community.json",
       "policy_reference": "C:/Users/37818/.claude/skills/game-maker/references/taptap-release.md"
     },
-    "pending_note": "用户要求撤回第三关；两关回退包已提审，等待替换现网第三关包",
+    "pending_note": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。",
     "startup_adapter": "inline-runtime-v1",
     "pending_community_updates": [],
     "platform_version": "V-20261008-1",
@@ -568,7 +588,7 @@
       "startup_adapter": "inline-runtime-v1",
       "namespace": "taptap-cadillacs-v1:"
     },
-    "community_post_status": "public_verified",
+    "community_post_status": "blocked_until_platform_update",
     "community_post_note": "原作开场、背摔、音频调整与启动兼容修复合并为一条更新动态，已核验本人主页与恐龙快打论坛显示同一 moment。",
     "history": [
       {
@@ -656,7 +676,30 @@
       "reason": "用户要求删除本次第三关",
       "status": "reviewing",
       "third_stage_community_update": "cancelled_without_publication"
-    }
+    },
+    "pending_release": {
+      "version": "v0.11.0-preview.2",
+      "package_sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+      "status": "blocked_ip_materials",
+      "run_id": "release-backfill-20261010"
+    },
+    "rejection": {
+      "created_time": 1791465107,
+      "last_event": "review_rejected",
+      "status": "rejected",
+      "status_label": "审核失败",
+      "status_reason": "1. 您的游戏标题与“恐龙快打”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+      "status_value": 2,
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
+    },
+    "backfill_authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "sync_ledger": "taptap-sync.json"
   },
   "website": {
     "version": "v0.11.0-preview.1-menu-text1",
@@ -724,21 +767,19 @@
     "taptap": "reviewing",
     "bilibili": "public_verified"
   },
-  "bilibili_update_version": "v0.10.1",
+  "bilibili_update_version": "v0.11.0-preview.2",
   "bilibili_update_status": "public_verified",
   "release_restrictions": {
-    "version": "v0.11.0-preview.1",
-    "website": "authorized_trial_published",
-    "other_game_platforms": "held_by_current_user_instruction",
-    "automatic_platform_sync": false,
-    "video_descriptions": "held_by_current_user_instruction",
-    "source": "releases/v0.11.0-preview.1/website-authorization.json",
-    "toy": "authorized_by_current_user_instruction",
-    "toy_authorization": {
-      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-      "at": "2026-10-09T15:48:29.607907+08:00"
-    }
+    "authorization": {
+      "instruction": "昨天没发布的都做一下",
+      "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+      "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+      "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+    },
+    "toy": "published",
+    "video_descriptions": "public_verified",
+    "taptap": "blocked_ip_materials",
+    "automatic_platform_sync": true
   },
   "menu_text_update": {
     "version": "v0.10.1-menu-text1",
@@ -749,16 +790,181 @@
     "website_source_version": "v0.11.0-preview.1-menu-text1"
   },
   "channel_holds": {
-    "instruction": "今天的修改先同步发布到toy，其他平台先不发",
-    "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
-    "since": "2026-10-09T16:00:04.604242+08:00",
-    "targets": [
-      "taptap",
-      "other_game_platforms",
-      "existing_video_descriptions",
-      "announcements"
-    ],
-    "status": "held_by_user"
+    "status": "superseded_by_current_authorization",
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
   },
-  "development_version": "v0.11.0-preview.2"
+  "development_version": "v0.11.0-preview.2",
+  "channel_baseline_history": [
+    {
+      "run_id": "release-backfill-20261010",
+      "channel": "toy",
+      "previous": {
+        "id": 40412421031936,
+        "title": "恐龙快打 3D：第一至三关",
+        "slug": "feidao-cadillacs-3d",
+        "category": "GAME",
+        "visibility": "public",
+        "status": "published",
+        "submitted_at": "2026-10-09T15:53:50.836992+08:00",
+        "package": "dist/toy-v0.10.1/package",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_kMmXRmza/index.html",
+        "note": "第三关已撤回；两关包published，公开入口实测版本和关卡选择循环均正确，无脚本报错",
+        "status_verified": "v0.10.1 published；公开运行版本v0.10.1、关卡只有第一及第二关",
+        "bound_videos": [
+          "BV18XHW66E55"
+        ],
+        "review_status": "published",
+        "version": "v0.10.1",
+        "verified_at": "2026-10-08T11:43:53.379Z",
+        "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "last_published_version": "v0.11.0-preview.1-menu-text1",
+        "pending_updates": [
+          {
+            "version": "v0.2.1",
+            "classification": "普通补丁",
+            "summary": "以虫潮为基准统一所有现有视角：右拖右看、左拖左看，Q左转/E右转；修正普通与第一人称的反向差异。",
+            "status": "included_in_submitted_package",
+            "record": "releases/drag-direction-20261005/handoff.json",
+            "reason": "遵从本次用户最新AGENTS分渠道节奏：累计普通补丁到稳定批次，活跃期原则上同游戏每天最多一批；本次不重复送Toy或改简介。",
+            "included_version": "v0.3.0"
+          },
+          {
+            "version": "v0.4.0",
+            "classification": "正式版本",
+            "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+            "status": "published",
+            "record": "releases/v0.4.0/handoff.json",
+            "included_version": "v0.4.0"
+          },
+          {
+            "version": "v0.4.1",
+            "classification": "普通补丁",
+            "status": "published",
+            "record": "releases/v0.4.1/handoff.json",
+            "summary": "右上贴边单行按钮，HUD避让。"
+          },
+          {
+            "version": "v0.5.0",
+            "classification": "正式版本",
+            "summary": "画风与赤色要塞统一；新增第二关沼泽森林；起始关卡可选。",
+            "status": "published",
+            "record": "releases/v0.5.0/handoff.json",
+            "included_version": "v0.5.0"
+          },
+          {
+            "version": "v0.5.3",
+            "classification": "普通补丁",
+            "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+            "status": "auditing",
+            "record": "releases/v0.5.3/handoff.json"
+          },
+          {
+            "version": "v0.5.6",
+            "classification": "普通补丁",
+            "summary": "全屏入口按浏览器实际能力显示（手机支持时显示，iPhone Safari/未授权 iframe 隐藏）。",
+            "status": "published",
+            "record": "releases/v0.5.6/handoff.json",
+            "note": "06:41 已以 v0.5.6 送审，06:54 被 BGM 任务的 v0.5.6-bgmfull1（含本改动）替换",
+            "included_version": "v0.5.6-bgmfull1"
+          },
+          {
+            "version": "v0.9.5",
+            "classification": "普通补丁",
+            "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+            "status": "published",
+            "record": "releases/v0.9.5/notes.md",
+            "submitted_at": "2026-10-07T21:52:19+08:00",
+            "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
+            "published_verified_at": "2026-10-07T21:56:53+08:00",
+            "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
+          },
+          {
+            "version": "v0.10.0",
+            "classification": "正式版本",
+            "status": "withdrawn_by_user",
+            "record": "releases/v0.10.0/handoff.json",
+            "reason": "用户明确要求删除本次第三关，不继续扩展或补发宣传"
+          }
+        ],
+        "submitted_version": "v0.11.0-preview.1-menu-text1",
+        "package_sha256": "1148908782a0305bd9cba070526a9f789f4fe4434a743713f7083a8f414d932e",
+        "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_1wCDYoZD/index.html",
+        "release_record": "releases/toy-sync-20261009/sync.json",
+        "published_version": "v0.11.0-preview.1-menu-text1",
+        "published_verified_at": "2026-10-08T19:43:54.608891+08:00",
+        "previous_published_version": "v0.10.0",
+        "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
+        "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "video_bindings": [
+          "BV18XHW66E55"
+        ],
+        "package_hash": "df8f27eee40763cb2f373f8005e72ca9de3b380d22ab7e784913b70f2235aad9",
+        "title_changed": {
+          "from": "恐龙快打 3D：第一关",
+          "to": "恐龙快打 3D：第一、二关",
+          "requested_by": "user",
+          "submitted_at": "2026-10-06T22:44:10+08:00",
+          "status": "published",
+          "verified_at": "2026-10-06T23:38:00+08:00"
+        },
+        "public_verified_version": "v0.11.0-preview.1-menu-text1",
+        "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_HL3EH1sk/index.html",
+        "last_successful_sync_version": "v0.11.0-preview.1-menu-text1",
+        "last_successful_sync_at": "2026-10-09T16:00:04.604242+08:00",
+        "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
+        "public_verified_at": "2026-10-09T16:00:04.604242+08:00",
+        "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+        "website_verified_at": "2026-10-07T21:52:19+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "package_fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+        "package_fingerprint_note": "为随 v0.9.5 包一并生效的 v0.9.4 闪退修复指纹",
+        "pending_note": "",
+        "package_hash_method": "sha256 of canonical sorted relative-path to file-sha256 map",
+        "public_runtime_verified_version": "v0.10.1",
+        "source_commit": "999d4057",
+        "current_public_verification": "verified",
+        "channel_authorization": {
+          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+          "at": "2026-10-09T15:48:29.607907+08:00"
+        },
+        "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24038/index.html?test=1&qa=1"
+      }
+    }
+  ],
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+  "channel_hold_history": [
+    {
+      "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+      "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+      "since": "2026-10-09T16:00:04.604242+08:00",
+      "targets": [
+        "taptap",
+        "other_game_platforms",
+        "existing_video_descriptions",
+        "announcements"
+      ],
+      "status": "held_by_user"
+    }
+  ],
+  "release_restrictions_history": [
+    {
+      "version": "v0.11.0-preview.1",
+      "website": "authorized_trial_published",
+      "other_game_platforms": "held_by_current_user_instruction",
+      "automatic_platform_sync": false,
+      "video_descriptions": "held_by_current_user_instruction",
+      "source": "releases/v0.11.0-preview.1/website-authorization.json",
+      "toy": "authorized_by_current_user_instruction",
+      "toy_authorization": {
+        "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+        "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+        "at": "2026-10-09T15:48:29.607907+08:00"
+      }
+    }
+  ],
+  "last_backfill_record": "releases/backfill-20261010/release-status.json"
 }

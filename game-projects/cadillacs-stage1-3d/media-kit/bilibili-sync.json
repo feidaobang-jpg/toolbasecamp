@@ -7,25 +7,31 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": "v0.10.1",
+      "last_public_verified_version": "v0.11.0-preview.2",
       "status": "public_verified",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
       "pinned_comment_rpid": 316113740017,
-      "last_public_verified_at": "2026-10-08T11:48:26.160Z",
-      "last_sync_record": "releases/v0.10.1/bilibili-sync.json",
+      "last_public_verified_at": "2026-10-10T02:43:36.232Z",
+      "last_sync_record": "releases/backfill-20261010/release-status.json",
       "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-      "description_sha256": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc",
-      "lastPublicVerifiedVersion": "v0.10.1",
-      "descriptionHash": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc",
-      "release": "releases/v0.10.1/bilibili-sync.json",
-      "publicVerifiedAt": "2026-10-08T11:48:26.160Z",
-      "submitted_version": "v0.10.1",
-      "submitted_at": "2026-10-08T19:47:45.272057+08:00"
+      "description_sha256": "0c4a47269a95c01dfc5c1502920a95b225b28e0e809c49e717ee97a7babfab0a",
+      "lastPublicVerifiedVersion": "v0.11.0-preview.2",
+      "descriptionHash": "0c4a47269a95c01dfc5c1502920a95b225b28e0e809c49e717ee97a7babfab0a",
+      "release": "releases/backfill-20261010/release-status.json",
+      "publicVerifiedAt": "2026-10-10T02:43:36.232Z",
+      "submitted_version": "v0.11.0-preview.2",
+      "submitted_at": "2026-10-10T02:26:07.795Z",
+      "description_revision": "v0.11.0-preview.2",
+      "public_verified_at": "2026-10-10T02:43:36.232Z",
+      "description_public_verified_at": "2026-10-10T02:43:36.232Z",
+      "record": "releases/backfill-20261010/release-status.json",
+      "release_record": "releases/backfill-20261010/release-status.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
     }
   ],
   "status": "public_verified",
-  "updated_at": "2026-10-08T11:48:26.160Z",
+  "updated_at": "2026-10-10T03:02:52.978211+00:00",
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
     "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -174,7 +180,7 @@
     }
   ],
   "pending_updates": [],
-  "version": "v0.10.1",
+  "version": "v0.11.0-preview.2",
   "history": [
     {
       "bvid": "BV18XHW66E55",
@@ -216,20 +222,48 @@
       "status": "public_verified",
       "record": "releases/v0.10.0/bilibili-sync.json",
       "checked_at": "2026-10-08T10:08:26.834Z"
+    },
+    {
+      "run_id": "release-backfill-20261010",
+      "bvid": "BV18XHW66E55",
+      "previous_baseline": {
+        "bvid": "BV18XHW66E55",
+        "url": "https://www.bilibili.com/video/BV18XHW66E55/",
+        "owner_uid": 16214353,
+        "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
+        "last_public_verified_version": "v0.10.1",
+        "status": "public_verified",
+        "publish_record": "video/views-20261005/work/publication-result.json",
+        "toy_bound": true,
+        "pinned_comment_rpid": 316113740017,
+        "last_public_verified_at": "2026-10-08T11:48:26.160Z",
+        "last_sync_record": "releases/v0.10.1/bilibili-sync.json",
+        "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
+        "description_sha256": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc",
+        "lastPublicVerifiedVersion": "v0.10.1",
+        "descriptionHash": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc",
+        "release": "releases/v0.10.1/bilibili-sync.json",
+        "publicVerifiedAt": "2026-10-08T11:48:26.160Z",
+        "submitted_version": "v0.10.1",
+        "submitted_at": "2026-10-08T19:47:45.272057+08:00"
+      }
     }
   ],
   "last_public_verified": {
-    "bvid": "BV18XHW66E55",
-    "version": "v0.10.1",
-    "at": "2026-10-08T11:48:26.160Z",
-    "description_sha256": "c8ea6e6c972b5b14fb42add320679042bcfb0188428c2cd62a284526dd027afc"
+    "version": "v0.11.0-preview.2",
+    "at": "2026-10-10T03:02:52.978211+00:00",
+    "bvids": [
+      "BV18XHW66E55"
+    ],
+    "record": "releases/backfill-20261010/release-status.json"
   },
-  "latest_record": "releases/v0.10.1/bilibili-sync.json",
+  "latest_record": "releases/backfill-20261010/release-status.json",
   "pending": false,
   "pending_note": null,
   "rollback": {
     "version": "v0.10.1",
     "status": "public_verified",
     "reason": "用户要求删除本次第三关"
-  }
+  },
+  "last_release_record": "releases/backfill-20261010/release-status.json"
 }

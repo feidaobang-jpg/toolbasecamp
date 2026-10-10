@@ -5,29 +5,29 @@
   "app_id": 962376,
   "automatic_sync_enabled": true,
   "authorization_date": "2026-10-07",
-  "status": "reviewing_remix-entry1",
-  "submitted_version": "remix-entry1",
-  "submitted_package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
-  "submitted_h5_version_id": 274362,
-  "draft_version_id": "1045147",
-  "submitted_at": "2026-10-08T02:40:06.611058+00:00",
-  "last_published_h5_version_id": 272259,
+  "status": "online",
+  "submitted_version": "remix-entry1-menu-text1",
+  "submitted_package_sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+  "submitted_h5_version_id": 282322,
+  "draft_version_id": "1054182",
+  "submitted_at": null,
+  "last_published_h5_version_id": 282322,
   "last_public_runtime_verified_version": null,
-  "release_record": "releases/remix-entry1/handoff.json",
+  "release_record": "releases/backfill-20261010/release-status.json",
   "pending": [],
   "dedupe_rule": "submitted_package_sha256已在审核或上线时不重发；先查询再推进对应基线",
-  "submission_time_source": "官方CLI提交回执保存时间；不把草稿created_time当提交时间",
-  "last_status_checked_at": "2026-10-08T02:43:20.850596+00:00",
-  "submitted_source_commit": "5b91e40416fb074a04b45e5d18a40554a3444f5b",
-  "platform_version": "V-20261008",
-  "staged_version": "remix-entry1",
-  "staged_h5_version_id": 274362,
-  "pending_note": "新版包及魔改推荐文案已提审；审核中不重发，确认online后再发布本次动态并关联坦克论坛。",
-  "platform_status": "reviewing",
-  "audit_id": "1045147",
-  "last_published_platform_version": "V-20261007-2",
-  "community_post_status": "pending_online",
-  "community_post_version": "remix-entry1",
+  "submission_time_source": "Submission receipt archived; exact server submission time not persisted.",
+  "last_status_checked_at": "2026-10-10T03:02:52.978211+00:00",
+  "submitted_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+  "platform_version": "V-20261010",
+  "staged_version": "remix-entry1-menu-text1",
+  "staged_h5_version_id": 282322,
+  "pending_note": null,
+  "platform_status": "online",
+  "audit_id": "1054182",
+  "last_published_platform_version": "V-20261010",
+  "community_post_status": "public_verified",
+  "community_post_version": "remix-entry1-menu-text1",
   "qa": {
     "package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
     "devices": [
@@ -519,6 +519,72 @@
         "updated_at": "2026-10-08T11:50:37.151935+00:00",
         "source_note": "本次当前 TapTap H5 包正常试玩截图"
       }
-    ]
+    ],
+    "current_platform_note": "",
+    "latest_status_checked_at": "2026-10-10T03:02:52.978211+00:00"
+  },
+  "history": [
+    {
+      "run_id": "release-backfill-20261010",
+      "at": "2026-10-10T03:02:52.978211+00:00",
+      "previous_baseline": {
+        "status": "reviewing_remix-entry1",
+        "platform_version": "V-20261008",
+        "submitted_version": "remix-entry1",
+        "submitted_package_sha256": "fc8a5b68b3fcb58a67ffdf622098a83154ebb98a3278ef3d12b89d85662fc387",
+        "last_published_version": null,
+        "last_published_h5_version_id": 272259,
+        "community_post": null,
+        "community_sync": null
+      }
+    }
+  ],
+  "backfill_authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "last_published_version": "remix-entry1-menu-text1",
+  "last_published_revision": "1054182",
+  "last_published_at": null,
+  "last_published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+  "last_public_page_verified_at": "2026-10-10T03:02:52.978211+00:00",
+  "last_published_status_evidence": "game-projects/site-games/releases/backfill-20261010/taptap-962376-status.json",
+  "staged_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+  "staged_package_sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+  "community_post_note": null,
+  "community_post": {
+    "app": 962376,
+    "title": "坦克大战 3D 更新：模式入口和菜单更清楚了",
+    "body": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n试玩：https://www.taptap.cn/app/962376\n欢迎反馈菜单与操作体验。",
+    "rendered": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n\n试玩：\n坦克大战 3D\n\n\n欢迎反馈菜单与操作体验。",
+    "status": "public_verified",
+    "at": "2026-10-10T02:47:37.989Z",
+    "url": "https://www.taptap.cn/moment/857935059817074114",
+    "forum_app_id": null,
+    "moment_id": "857935059817074114",
+    "content_sha256": "7c0ad8bd33f2594f40d2221691e48b6bbd63666a493cb8309938faf467fc0c7a",
+    "source_version": "remix-entry1-menu-text1",
+    "own_profile_verified": true
+  },
+  "community_sync": {
+    "automatic_posting_enabled": true,
+    "source_version": "remix-entry1-menu-text1",
+    "h5_version_id": 282322,
+    "platform_version": "V-20261010",
+    "last_public_verified_moment_id": "857935059817074114",
+    "last_public_verified_url": "https://www.taptap.cn/moment/857935059817074114",
+    "content_sha256": "7c0ad8bd33f2594f40d2221691e48b6bbd63666a493cb8309938faf467fc0c7a",
+    "public_verified_at": "2026-10-10T02:47:37.989Z",
+    "own_profile_verified": true,
+    "forum_app_id": null,
+    "release_record": "releases/backfill-20261010/release-status.json"
+  },
+  "verification": {
+    "qa": "game-projects/site-games/releases/backfill-20261010/qa.json",
+    "local_package_verified": true,
+    "public_page": "TapTap PC端 试玩DEMO 入口可见",
+    "phone": "physical TapTap App not tested"
   }
 }

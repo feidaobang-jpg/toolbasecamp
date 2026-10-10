@@ -1,0 +1,81 @@
+{
+  "run_id": "release-backfill-20261010",
+  "version": "v0.11.0-preview.2",
+  "authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "status": "completed_with_external_pending",
+  "central_record": "game-projects/site-games/releases/backfill-20261010/handoff.json",
+  "toy": {
+    "id": 40412421031936,
+    "slug": "feidao-cadillacs-3d",
+    "status": "published",
+    "review_status": "published",
+    "public_verified": true,
+    "version": "v0.11.0-preview.2",
+    "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24276/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+    "verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "evidence": "toy-status-latest.json + toy-dino-public.png",
+    "verification": "官方 CLI published；公开 Toy 内嵌实际运行菜单及第三章/第三关入口核验",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
+      "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+      "files": 31,
+      "submitted": true,
+      "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+    }
+  },
+  "taptap": {
+    "app_id": 962722,
+    "version": "v0.11.0-preview.2",
+    "status": "blocked_ip_materials",
+    "public_url": "https://www.taptap.cn/app/962722",
+    "platform_observation": {
+      "created_time": 1791465107,
+      "last_event": "review_rejected",
+      "status": "rejected",
+      "status_label": "审核失败",
+      "status_reason": "1. 您的游戏标题与“恐龙快打”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+      "status_value": 2,
+      "version": "V-20261008-2",
+      "version_id": "V-20261008-2"
+    },
+    "checked_at": "2026-10-10T03:02:52.978211+00:00",
+    "package": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\cadillacs-stage1-3d.zip",
+      "sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+      "bytes": 19361851,
+      "submitted": false
+    },
+    "public_page_verified": false,
+    "physical_taptap_app_tested": false,
+    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "evidence": "taptap-962722-versions-before.json",
+    "submitted_this_run": false,
+    "reason": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。"
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "bvids": [
+      "BV18XHW66E55"
+    ],
+    "version": "v0.11.0-preview.2"
+  },
+  "remaining": [
+    {
+      "channel": "taptap",
+      "games": [
+        "cadillacs-stage1-3d",
+        "mario-3d"
+      ],
+      "status": "blocked_ip_materials",
+      "event_id": "ip-materials-20261010-962722-962723",
+      "next_action": "用户提供相应IP授权材料后复核条件；不重复上传当前包。"
+    }
+  ]
+}

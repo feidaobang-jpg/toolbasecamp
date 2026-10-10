@@ -1,0 +1,397 @@
+{
+  "run_id": "release-backfill-20261010",
+  "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+  "source": "Codex",
+  "authorization": {
+    "instruction": "昨天没发布的都做一下",
+    "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+    "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+    "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+  },
+  "snapshot_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+  "status": "completed_with_external_pending",
+  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "artifact_root": "D:\\project\\task-artifacts\\release-backfill-20261010",
+  "toy": {
+    "starship-defense": {
+      "id": 38678478981120,
+      "slug": "chongchao-qianshao",
+      "status": "published",
+      "review_status": "published",
+      "public_verified": true,
+      "version": "web-resistance-v0.33.0",
+      "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24275/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
+      "verified_at": "2026-10-10T03:02:52.978211+00:00",
+      "evidence": "toy-status-latest.json + toy-insect-public.png",
+      "verification": "官方 CLI published；公开 Toy 内嵌实际运行菜单及第三章/第三关入口核验",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\chongchao-qianshao.zip",
+        "sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+        "bytes": 366485,
+        "submitted": true
+      }
+    },
+    "cadillacs-stage1-3d": {
+      "id": 40412421031936,
+      "slug": "feidao-cadillacs-3d",
+      "status": "published",
+      "review_status": "published",
+      "public_verified": true,
+      "version": "v0.11.0-preview.2",
+      "public_url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24276/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+      "verified_at": "2026-10-10T03:02:52.978211+00:00",
+      "evidence": "toy-status-latest.json + toy-dino-public.png",
+      "verification": "官方 CLI published；公开 Toy 内嵌实际运行菜单及第三章/第三关入口核验",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
+        "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+        "files": 31,
+        "submitted": true,
+        "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+      }
+    }
+  },
+  "taptap": {
+    "starship-defense": {
+      "app_id": 962354,
+      "version": "web-resistance-v0.33.0",
+      "status": "online",
+      "public_url": "https://www.taptap.cn/app/962354",
+      "platform_observation": {
+        "created_time": 1791596317,
+        "last_event": "published",
+        "status": "online",
+        "status_label": "已上线（素材待优化）",
+        "status_reason": "1. 游戏封面图、宣传图目前暂不符合素材要求，封面图、宣传图应在原生高清图片素材的基础上，有清晰可辨识的游戏标题或LOGO以及能稳定传递游戏风格、玩法的元素，并且有符合TapTap标准的审美排版保证宣传图的精美观感，建议参考站内编辑推荐游戏，优化主体呈现、构图排版与整体美术表现。",
+        "status_value": 4,
+        "version": "V-20261010",
+        "version_id": "V-20261010"
+      },
+      "checked_at": "2026-10-10T03:02:52.978211+00:00",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\chongchao-qianshao.zip",
+        "sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+        "bytes": 358433,
+        "submitted": true
+      },
+      "public_page_verified": true,
+      "physical_taptap_app_tested": false,
+      "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+      "evidence": "taptap-962354-versions-final.json",
+      "audit_id": 1054180,
+      "h5_version_id": 282321,
+      "file_id": 76887,
+      "platform_version": "V-20261010",
+      "submitted_this_run": true,
+      "announcement": {
+        "app": 962354,
+        "title": "虫潮围城 v0.33.0：房车探城、据点争夺与三章战役",
+        "body": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：https://www.taptap.cn/app/962354\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+        "rendered": "这次可以开房车探索废弃城镇，也可以在三处据点之间争夺兵力票，或挑战抗战战役三章：交通壕突击、骑兵冲锋、运弹开炮。TapTap 本次版本已上线。\n\n旧对战已改为「战地模式·据点争夺」，使用固定兵种与装备，不再沿用经验升级、买兵和银行。普通守城和房车模式继续保留各自玩法。\n\n本批还合并了转视角响应优化、移除爆炸与受击晃屏、商店滚动修复和菜单文字优化；单人守城最多可雇佣12名队友。普通模式保留本地存档与网站账号云备份。\n\n试玩：\n虫潮围城\n\n\n你更喜欢房车探索、据点战，还是闯关战役？欢迎反馈实际操作和难度。",
+        "status": "public_verified",
+        "at": "2026-10-10T02:46:54.560Z",
+        "url": "https://www.taptap.cn/moment/857934878203711369",
+        "forum_app_id": 962354,
+        "moment_id": "857934878203711369",
+        "content_sha256": "793767fb9037aee76924a6de6d000519c5bea0916ab92578e3fdd3f377e4520f",
+        "source_version": "web-resistance-v0.33.0",
+        "own_profile_verified": true
+      }
+    },
+    "tank-3d": {
+      "app_id": 962376,
+      "version": "remix-entry1-menu-text1",
+      "status": "online",
+      "public_url": "https://www.taptap.cn/app/962376",
+      "platform_observation": {
+        "created_time": 1791596324,
+        "last_event": "published",
+        "status": "online",
+        "status_label": "已上线",
+        "status_value": 4,
+        "version": "V-20261010",
+        "version_id": "V-20261010"
+      },
+      "checked_at": "2026-10-10T03:02:52.978211+00:00",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\tank-3d.zip",
+        "sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+        "bytes": 260955,
+        "submitted": true
+      },
+      "public_page_verified": true,
+      "physical_taptap_app_tested": false,
+      "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+      "evidence": "taptap-962376-versions-final.json",
+      "audit_id": 1054182,
+      "h5_version_id": 282322,
+      "file_id": 76888,
+      "platform_version": "V-20261010",
+      "submitted_this_run": true,
+      "announcement": {
+        "app": 962376,
+        "title": "坦克大战 3D 更新：模式入口和菜单更清楚了",
+        "body": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n试玩：https://www.taptap.cn/app/962376\n欢迎反馈菜单与操作体验。",
+        "rendered": "开坦克清敌、保护老鹰基地，本次 TapTap 更新已上线：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认进入魔改挑战，已有模式选择继续保留。\n\n经典35关、魔改100关一周目与2–4人合作仍可玩。这是爱好者制作的非官方3D复刻。\n\n试玩：\n坦克大战 3D\n\n\n欢迎反馈菜单与操作体验。",
+        "status": "public_verified",
+        "at": "2026-10-10T02:47:37.989Z",
+        "url": "https://www.taptap.cn/moment/857935059817074114",
+        "forum_app_id": null,
+        "moment_id": "857935059817074114",
+        "content_sha256": "7c0ad8bd33f2594f40d2221691e48b6bbd63666a493cb8309938faf467fc0c7a",
+        "source_version": "remix-entry1-menu-text1",
+        "own_profile_verified": true
+      }
+    },
+    "jackal-stage1-3d": {
+      "app_id": 962721,
+      "version": "v0.10.3-menu-text1",
+      "status": "online",
+      "public_url": "https://www.taptap.cn/app/962721",
+      "platform_observation": {
+        "created_time": 1791596332,
+        "last_event": "published",
+        "status": "online",
+        "status_label": "已上线",
+        "status_value": 4,
+        "version": "V-20261010",
+        "version_id": "V-20261010"
+      },
+      "checked_at": "2026-10-10T03:02:52.978211+00:00",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\jackal-stage1-3d.zip",
+        "sha256": "307e6be505934e402189526f464e0523558883d4cc849d3f2580d33ab0f74e6d",
+        "bytes": 6678129,
+        "submitted": true
+      },
+      "public_page_verified": true,
+      "physical_taptap_app_tested": false,
+      "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+      "evidence": "taptap-962721-versions-final.json",
+      "audit_id": 1054184,
+      "h5_version_id": 282323,
+      "file_id": 76889,
+      "platform_version": "V-20261010",
+      "submitted_this_run": true,
+      "announcement": {
+        "app": 962721,
+        "title": "赤色要塞 3D 更新：联机移动和大厅衔接更顺了",
+        "body": "驾驶武装吉普救人、送上直升机，两关试玩继续开放。本次 TapTap v0.10.3-menu-text1 已上线，改善联机移动平滑度、大厅衔接与菜单文字清晰度。\n支持2–4人合作，可中途加入和退出；闲置30秒由电脑队友接管，重新操作即交还。\n这是爱好者制作的非官方3D复刻。试玩：https://www.taptap.cn/app/962721\n欢迎反馈联机体验和操作手感。",
+        "rendered": "驾驶武装吉普救人、送上直升机，两关试玩继续开放。本次 TapTap v0.10.3-menu-text1 已上线，改善联机移动平滑度、大厅衔接与菜单文字清晰度。\n\n支持2–4人合作，可中途加入和退出；闲置30秒由电脑队友接管，重新操作即交还。\n\n这是爱好者制作的非官方3D复刻。试玩：\n赤色要塞 3D\n\n\n欢迎反馈联机体验和操作手感。",
+        "status": "public_verified",
+        "at": "2026-10-10T02:48:18.725Z",
+        "url": "https://www.taptap.cn/moment/857935299848701802",
+        "forum_app_id": null,
+        "moment_id": "857935299848701802",
+        "content_sha256": "e70fc4fabdf82afc6a6ae3cf00317457f5795efb4b51500c98947b3f0bbb7cce",
+        "source_version": "v0.10.3-menu-text1",
+        "own_profile_verified": true
+      }
+    },
+    "cadillacs-stage1-3d": {
+      "app_id": 962722,
+      "version": "v0.11.0-preview.2",
+      "status": "blocked_ip_materials",
+      "public_url": "https://www.taptap.cn/app/962722",
+      "platform_observation": {
+        "created_time": 1791465107,
+        "last_event": "review_rejected",
+        "status": "rejected",
+        "status_label": "审核失败",
+        "status_reason": "1. 您的游戏标题与“恐龙快打”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+        "status_value": 2,
+        "version": "V-20261008-2",
+        "version_id": "V-20261008-2"
+      },
+      "checked_at": "2026-10-10T03:02:52.978211+00:00",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\cadillacs-stage1-3d.zip",
+        "sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+        "bytes": 19361851,
+        "submitted": false
+      },
+      "public_page_verified": false,
+      "physical_taptap_app_tested": false,
+      "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+      "evidence": "taptap-962722-versions-before.json",
+      "submitted_this_run": false,
+      "reason": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。"
+    },
+    "mario-3d": {
+      "app_id": 962723,
+      "version": "v2.5.0-menu-text1",
+      "status": "blocked_ip_materials",
+      "public_url": "https://www.taptap.cn/app/962723",
+      "platform_observation": {
+        "created_time": 1791465062,
+        "last_event": "review_rejected",
+        "status": "rejected",
+        "status_label": "审核失败",
+        "status_reason": "1. 您的游戏标题、素材与“超级玛丽”高度相似。若已经获得授权，请在旧版后台【商店-资质与审核-游戏资质】/新版后台【库管理-资质认证】中上传IP可使用授权书。\n",
+        "status_value": 2,
+        "version": "V-20261008-2",
+        "version_id": "V-20261008-2"
+      },
+      "checked_at": "2026-10-10T03:02:52.978211+00:00",
+      "package": {
+        "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\mario-3d.zip",
+        "sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+        "bytes": 6905475,
+        "submitted": false
+      },
+      "public_page_verified": false,
+      "physical_taptap_app_tested": false,
+      "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+      "evidence": "taptap-962723-versions-before.json",
+      "submitted_this_run": false,
+      "reason": "V-20261008-2 正式审核退回，要求 IP 授权书；等待材料，保留旧在线版本，不重复提审。"
+    }
+  },
+  "descriptions": {
+    "bilibili": {
+      "public_verified": 10
+    },
+    "youtube": {
+      "public_verified": 6,
+      "english_localizations_saved_and_reopened": 5,
+      "locale_specific_public_verified": false
+    },
+    "douyin": {
+      "public_verified": 5
+    },
+    "xiaohongshu": {
+      "reviewing": 2
+    },
+    "kuaishou": {
+      "blocked_login": 1
+    }
+  },
+  "feedback": {
+    "feedback_key": "BV1Ujad6DEuf|黄milk龙|2026-10-09 17:34:59",
+    "text": "视角响应已经调快了，也修复了手机左侧拖动不生效的问题；爆炸和受击晃屏也已去掉。网站和Toy都已更新，重新打开试玩试试，感谢反馈！",
+    "status": "public_verified",
+    "at": "2026-10-10T02:31:39.445Z",
+    "user_mid": 1672483578,
+    "verified_at": "2026-10-10T02:40:45.181Z"
+  },
+  "pinned_comment_correction": {
+    "bvid": "BV1C5HQ6gEvD",
+    "text": "更新说明：本片保留旧版银行、买兵对战实录。当前主菜单请选「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再使用旧银行和经验升级；另有房车生存与抗战战役三章。网站和Toy均已更新，以游戏内提示为准。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html（复制到浏览器打开）",
+    "status": "public_verified_pinned_after_reload",
+    "at": "2026-10-10T02:48:48.254Z",
+    "verified_at": "2026-10-10T02:49:52.697Z"
+  },
+  "pending": [
+    {
+      "channel": "taptap",
+      "games": [
+        "cadillacs-stage1-3d",
+        "mario-3d"
+      ],
+      "status": "blocked_ip_materials",
+      "event_id": "ip-materials-20261010-962722-962723",
+      "next_action": "用户提供相应IP授权材料后复核条件；不重复上传当前包。"
+    },
+    {
+      "channel": "kuaishou",
+      "platform_id": "3xr939t2s66s7ma",
+      "status": "blocked_login",
+      "account_id": "3x2fca3w3qwq5qc",
+      "event_id": "kuaishou-login-20261010-backfill",
+      "next_action": "在现有浏览器登录飞刀助理后，按既有稿件修改简介并公开核验。"
+    },
+    {
+      "channel": "xiaohongshu",
+      "platform_ids": [
+        "6ac79a4a000000001402cad8",
+        "6ac79a330000000001008c04"
+      ],
+      "status": "reviewing",
+      "next_action": "已有两条说明修改在审核，查回状态；未生效前不推进公开基线，不重复提交。"
+    }
+  ],
+  "qa": {
+    "toy_doctor": "both passed; insect 4 unhashed-filename cache warnings only",
+    "startup_unit_tests": {
+      "passed": 8
+    },
+    "packages_actually_tested": [
+      "toy:starship-defense",
+      "toy:cadillacs-stage1-3d",
+      "taptap:starship-defense",
+      "taptap:tank-3d",
+      "taptap:jackal-stage1-3d"
+    ],
+    "checks": [
+      "开始及实际动作",
+      "暂停/继续/重玩",
+      "电脑与手机模式双向切换及进度保留",
+      "844x390与390x844视口",
+      "虫潮战役第二、三章",
+      "恐龙第三关启动/攻击/跳跃"
+    ],
+    "physical_phone_tested": false,
+    "physical_taptap_app_tested": false,
+    "browser_network_block_tested": false,
+    "artifact_root": "D:\\project\\task-artifacts\\release-backfill-20261010",
+    "frozen_source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a"
+  },
+  "packages": {
+    "taptap:starship-defense": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\chongchao-qianshao.zip",
+      "sha256": "18683d59bbceaa55b36f7f458342ed0136fdb363b7837054d654ee99456f05c1",
+      "bytes": 358433,
+      "submitted": true
+    },
+    "taptap:tank-3d": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\tank-3d.zip",
+      "sha256": "9816f781f55809505a3194fd954e28a4f4f0f771569ea328f32f0cd90ad926c3",
+      "bytes": 260955,
+      "submitted": true
+    },
+    "taptap:jackal-stage1-3d": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\jackal-stage1-3d.zip",
+      "sha256": "307e6be505934e402189526f464e0523558883d4cc849d3f2580d33ab0f74e6d",
+      "bytes": 6678129,
+      "submitted": true
+    },
+    "taptap:cadillacs-stage1-3d": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\cadillacs-stage1-3d.zip",
+      "sha256": "5260d22921dc2207d71db097eb1e74f974cee611117df9b57208e93656251962",
+      "bytes": 19361851,
+      "submitted": false
+    },
+    "taptap:mario-3d": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\taptap\\mario-3d.zip",
+      "sha256": "c6b7a04346fc43172ba8ddc6e7b1d3ae71e8e96f9a94e8b426b49717398ae6d3",
+      "bytes": 6905475,
+      "submitted": false
+    },
+    "toy:starship-defense": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\chongchao-qianshao.zip",
+      "sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+      "bytes": 366485,
+      "submitted": true
+    },
+    "toy:cadillacs-stage1-3d": {
+      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
+      "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+      "files": 31,
+      "submitted": true,
+      "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+    }
+  },
+  "automation": {
+    "id": "b-2",
+    "missed_run": "2026-10-09 22:00 Asia/Shanghai",
+    "reason": "heartbeat_automation_resume_failed; target thread archived",
+    "repair": "unarchived existing target thread; schedule unchanged; next actual scheduled execution still to be observed",
+    "thread_id": "01a110dc-42bf-7f72-b35a-fa4427b80901"
+  },
+  "new_videos": "未制作或上传；原人工审片规则和待办不变",
+  "nonblocking_followup": "TapTap虫潮已上线，但平台提示封面/宣传图待优化；保留已有素材工作，不宣称整改完成。"
+}
