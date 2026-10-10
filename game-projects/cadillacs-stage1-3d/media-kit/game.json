@@ -1,7 +1,7 @@
 {
   "comparison_candidate": {
     "version": "v0.11.0-hellroad.1",
-    "status": "local_only_awaiting_user_comparison",
+    "status": "adopted_replacing_website_stage3",
     "summary": "按原作实机录像独立重做的第三关「地狱公路」（不参考另一版实现），供本人与网站上的 v0.11.0-preview.2 对比",
     "branch": "claude/cadillacs-stage3-original-20261009",
     "worktree": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-stage3-original",
@@ -11,7 +11,10 @@
     "authorization": "先别上架，先本地做。可以再替换网站和发布。",
     "merged_to_master": false,
     "website_deployed": false,
-    "automatic_platform_sync": false
+    "automatic_platform_sync": false,
+    "adopted_at": "2026-10-10T16:31:37+08:00",
+    "adoption_quote": "感觉差不多了，先替换掉网站里的第三关吧，把之前codex写的第三关代码去掉，用这份代码。",
+    "revision_20261010": "按本人试玩反馈把公路加宽到约 1.8 倍（纵深 9.8 米、车上下 7.75 米）"
   },
   "local_preview": {
     "version": "v0.11.0-preview.2",
@@ -23,7 +26,10 @@
     "public_channel_baselines_unchanged": false,
     "website_url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html?stage=3",
     "automatic_platform_sync": false,
-    "website_verified_at": "2026-10-09T09:27:18.690515+00:00"
+    "website_verified_at": "2026-10-09T09:27:18.690515+00:00",
+    "superseded_by": "v0.11.0-hellroad.1",
+    "superseded_at": "2026-10-10T16:31:37+08:00",
+    "superseded_note": "本人对比后改用按原作独立重做的第三关；本版的 src/road.js、road-world.js 与 road-drive / road-walk 曲已从主线移除"
   },
   "toy": {
     "id": 40412421031936,
@@ -455,7 +461,7 @@
       "area": "0..5：测试用直接从某个区域开始（3 起为第二关）"
     }
   },
-  "current_version": "v0.11.0-preview.2",
+  "current_version": "v0.11.0-hellroad.1",
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
@@ -830,7 +836,7 @@
     "recorded_at": "2026-10-10T03:02:52.978211+00:00",
     "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
   },
-  "development_version": "v0.11.0-preview.2",
+  "development_version": "v0.11.0-hellroad.1",
   "channel_baseline_history": [
     {
       "run_id": "release-backfill-20261010",
