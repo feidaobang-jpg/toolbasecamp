@@ -1,0 +1,48 @@
+{
+  "release": "hud-menu-align-20261010",
+  "game_id": "chongchao-qianshao",
+  "account_mid": 16214353,
+  "mode": "compact_description",
+  "baseline_version": "web-resistance-v0.33.0",
+  "baseline_public_verified_at": "2026-10-10T03:02:52.978211+00:00",
+  "target_version": "hud-menu-align-20261010",
+  "source_commit": "4a729cf0",
+  "live_head_at_decision": "53435e80",
+  "live_compat_at_decision": "3fe45575",
+  "bvids": ["BV1WbHq6eEBt", "BV1Ujad6DEuf", "BV1C5HQ6gEvD", "BV1xdpx63ETu"],
+  "change_summary_mine": [
+    "主菜单入口按「开始游戏 / 其他玩法·实验内容 / 设置与存档」三组分组，模式按钮统一中性色、绿色仅留主操作",
+    "战斗右面板对齐：战术入口按钮撑满面板内容宽，副本/存档排行/画质/声音改等宽两列网格，消除左靠/右靠/换行参差"
+  ],
+  "unsynced_backlog_since_baseline": [
+    { "version": "web-resistance-aim-v0.33.1", "owner": "other-task", "note": "抗战默认第一人称举枪瞄准、准星与枪口收敛、橙金曳光与简化弹道、炮可拉动高低瞄准与预计落点" },
+    { "version": "web-weapon-balance-v0.33.2", "owner": "other-task", "note": "武器平衡调整" },
+    { "version": "web-zerg-corpse-spinfix", "owner": "qoder/chongchao-feedback-fix-20261010", "note": "虫族母虫尸体残留移除、直升机悬停不打转" },
+    { "version": "mobile-controls-recolor", "owner": "qoder/chongchao-feedback-fix-20261010", "note": "手机暂停/切视角键误触修复；动作键与右上键深蓝实底+亮蓝描边、射击键实红；暂停菜单改奶油色复刻系" }
+  ],
+  "prepared_update_line_mine": "主菜单按「开始游戏 / 其他玩法 / 设置与存档」分组、模式入口配色统一，战斗右面板按钮改等宽对齐更清爽。",
+  "suggested_consolidated_line_for_next_sync": "更新（2026-10-10）：抗战战役改第一人称举枪瞄准、曳光与火炮高低瞄准；修复虫族母虫尸体残留与直升机悬停打转、手机暂停/切视角键误触；手机动作键与暂停菜单改高对比复刻配色；主菜单按开始游戏/其他玩法/设置与存档分组、战斗右面板按钮对齐。网站试玩已更新，Toy同版本审核中。",
+  "suggested_line_caveat": "合并行中除本人主菜单/右面板外的条目由对应任务负责核对其真实测试与措辞后再公开；本人未测试其他任务的玩法改动，不代其断定已修复。",
+  "old_description_sha256": {
+    "BV1WbHq6eEBt": "bd8fa6181e4cff091ac93b8064d18ba96db761eb891f97c9165bbf7a8aa32596",
+    "BV1Ujad6DEuf": "3d62722703b1607b4f3585fe6be741d8766625fb5b33535ba967e3a4368b927a",
+    "BV1C5HQ6gEvD": "64cdd329d67711d1a7be3f02a84333fc54810fe2126ce21388ed2b39444b7f66",
+    "BV1xdpx63ETu": "08abb8bff33916fe53f09f2be6fa9ffba824293c2463a4837a204f87d29176dd"
+  },
+  "new_description_submitted": null,
+  "status": "consolidated_deferred",
+  "submitted_at": null,
+  "public_verified_at": null,
+  "decided_at": "2026-10-10T23:50:38+08:00",
+  "deferral_reason": [
+    "共享外部目标冲突规避：并行任务 qoder/chongchao-feedback-fix-20261010 正在实时推送虫潮改动（最近提交 53435e80 于 23:44:34，决策时约6分钟前），与本人写向同一批4条B站视频简介的目标重叠；按共享操作规则需取得写锁、查重再写，不做并发平台写入。",
+    "本人本轮改动为界面观感类（主菜单分组 + 右面板对齐），属玩家可感知但非功能/修复级；单独为其churn 4条公开简介不符合『每个稳定版本合并成一次说明』。",
+    "自 v0.33.0 基线以来存在多项其他任务未同步的实质改动（第一人称瞄准 v0.33.1、武器平衡 v0.33.2、虫族修复、手机按键/暂停菜单配色），应由下一次单一合并同步统一携带；本人未测试这些改动，不代其断定已修复。"
+  ],
+  "handoff": "下一次对当前线上稳定版的合并简介同步（自然由持有实质改动的并行任务或后续协调run执行）应读取本记录与 media-kit/bilibili-sync.json 的 pending_updates，把 prepared_update_line_mine 并入；并入后在 media-kit/bilibili-sync.json 推进各BV的 last_public_verified_version 并回写本记录 status。",
+  "evidence": {
+    "captures": ["captures/menu-grouped.png", "captures/hud-desktop-right.png", "captures/hud-touch-right.png"],
+    "website_verified": true,
+    "toy_status": "auditing (package 4a729cf0 / zip sha 911ee82a…dd98)"
+  }
+}
