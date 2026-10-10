@@ -63,6 +63,7 @@
     if (result && result.errors && result.errors.length) text += ' ' + result.errors.join('；');
     el('schedulerStatus').textContent = text;
     el('schedulerStatus').classList.toggle('is-error', !data.calendar_ok || !!(result && result.errors && result.errors.length));
+    notify('marketSessionStatus', data.session_message || '', !data.calendar_ok);
     el('rulesText').innerHTML = '<p>主板普通股；20/60日趋势向上，回调2～5日且缩量，重新转强；市场和行业偏弱时空仓，最多扫描100只、推荐3只。</p>' +
       '<p>模型本金' + fmt(r.capital,0) + '元，每仓预算' + fmt(r.position_budget,0) + '元，最多' + r.max_positions +
       '仓。正常持有3～10个交易日；止损' + r.stop_loss_pct + '%、止盈' + r.take_profit_pct +
