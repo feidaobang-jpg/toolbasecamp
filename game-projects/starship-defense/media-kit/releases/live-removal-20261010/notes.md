@@ -14,4 +14,6 @@
 
 未做与限制：未做真人键鼠试玩与手机真机验收；未采集音轨、未人工试听。`verify-save-browser.cjs` 未运行，它硬编码 8941 端口并需要 Toy/TapTap 打包产物；`build-taptap.mjs` 在本工作区未跑通，原因是同级 `game-projects/site-games` 缺 esbuild 依赖（全新工作区未安装），与本次改动无关，其语法检查通过、存档命名空间替换逻辑已单独验证正确。Toy 与 TapTap 包未重新提交，按 2026-10-09 节奏登记 22 点 b-2 批次；直播从未进入这两个渠道的包。
 
-对外影响：本次改动前公网 `live.html` 仍可访问（HTTP 200），但站内导航与 `games.html` 均无指向它的链接，B站简介同步状态为 `deferred`，两条已发视频从未宣称具备无人直播能力，因此没有需要更正的公开表述。移除后由 GitHub Actions `rsync public/` 撤下入口，线上核验结果见 `website.json`。
+对外影响：本次改动前公网 `live.html` 仍可访问（HTTP 200），但站内导航与 `games.html` 均无指向它的链接，B站简介同步状态为 `deferred`。已绑定 Toy 的四条视频（BV1Ujad6DEuf、BV1WbHq6eEBt、BV1C5HQ6gEvD、BV1xdpx63ETu）投稿文案与简介均无直播相关表述——对 `game-projects/starship-defense/` 全目录检索「无人直播」「AI战地直播」「直播守城」「弹幕」「live.html」只命中本次新增的移除记录与 `menu-text-20261009` 的历史哈希快照，因此没有需要更正的公开表述。移除后由 GitHub Actions `rsync public/` 撤下入口，线上核验结果见 `website.json`。
+
+Toy 与 TapTap 包本身从未包含任何 `live.*` 文件（Toy 白名单只有 `index.html`、`boot.js`、`game.compat.js`、`combat-controls.css`、`icon.svg`、`vendor/LICENSE.txt`；TapTap entries 亦不含），且这些包里 `LIVE_MODE` 由 URL 参数决定、恒为 `false`，因此平台玩家看不到任何变化。但两个包都会 bundle 本次改动的 `game.js`，重新打包后内容哈希必然变化。v0.33.1 的 `channel-batch.json` 已是 `pending_22_batch`，其 `package_note` 要求 22 点从最新已发布主线重新打包并同游戏合并一包；本次移除随之并入该批次，不单独触发一次平台审核，也不改写该既有台账。Toy（ID 38678478981120）与 TapTap（962354）的 `pending` 状态、四条视频简介待办均保持原样，由 b-2 统一处理。
