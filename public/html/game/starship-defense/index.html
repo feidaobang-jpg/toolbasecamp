@@ -164,7 +164,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .theme-dark .mbtn.green{background:linear-gradient(180deg,#2a9a5d,#145233);border-color:#63e29b}
 .theme-dark .mbtn.red{background:linear-gradient(180deg,#8f3a3a,#4f1b1b);border-color:#e08080}
 .theme-dark .menu{color:#e3edf4;background:linear-gradient(90deg,rgba(5,11,20,.96),rgba(5,11,20,.86) 50%,rgba(5,11,20,.2))}
-.theme-dark #menuPause,.theme-dark #menuOver{background:rgba(4,9,17,.78)}
+.theme-dark #menuOver{background:rgba(4,9,17,.78)}
 .theme-dark .menu h1{color:#e9f6ff;text-shadow:none}
 .theme-dark .menu .subtitle{color:#7fd7ff}.theme-dark .menu h2{color:#ffd36a}
 .theme-dark .small{color:#a9c2d3}
@@ -178,10 +178,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 .theme-dark .tab{background:rgba(24,46,72,.6);border:1px solid #3d6a8c;color:#cfe0ec}.theme-dark .tab.on{background:#2a5d9e;border-color:#9ef;color:#fff}
 .theme-dark .closeX{color:#ff9b9b}
 .theme-dark .testGrid select{background:#10233a;color:#e3edf4;border:1px solid #3d6a8c}
-.theme-dark .vbtn{color:#fff;background:rgba(14,30,48,.72);border:2px solid rgba(140,200,240,.55);text-shadow:0 1px 2px #000}
-.theme-dark #vJ{background:linear-gradient(180deg,rgba(210,80,60,.85),rgba(170,40,30,.75));border-color:rgba(255,190,170,.8)}
-.theme-dark #joyBase{background:radial-gradient(circle,#27455f,#152a3e 72%);border:2px solid #8cc4ec;box-shadow:0 2px 10px rgba(0,0,0,.5),inset 0 0 12px rgba(9,18,30,.8)}
-.theme-dark #joyKnob{background:radial-gradient(circle at 35% 30%,#eef6ff,#79aede 78%);border:2px solid #0d1c2c;box-shadow:0 0 8px rgba(120,200,255,.7),0 2px 6px rgba(0,0,0,.5)}
+.theme-dark .vbtn{color:#fff6df;background:#0e1e30;border:2px solid #8cc8f0;text-shadow:0 1px 2px #000;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.theme-dark #vJ{background:#b03a2a;border-color:#ffc0aa;color:#fff6df}
+.theme-dark #joyBase{background:#0e1e30;border:2px solid #8cc8f0;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.theme-dark #joyKnob{background:#fff6df;border:2px solid #785a28;box-shadow:0 2px 6px rgba(0,0,0,.45)}
 
 #keyGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 0}
 #keyGrid button{text-align:left;min-height:42px;font-size:13px}
@@ -209,6 +209,21 @@ html,body,#stage,.menu,.menu *,.panel,.panel *{touch-action:pan-x pan-y}
 button::before,button::after{content:none!important}
 [data-device-mode][aria-pressed="true"]{background:#ffe09a!important;color:#24372c!important;border:2px solid #ffbe36!important;box-shadow:inset 0 0 0 1px #b57519;font-weight:900}
 
+/* 暂停菜单统一奶油色复刻系（电脑/手机共用），亮场景下清晰；金色为选中/焦点反馈 */
+.theme-dark #menuPause{background:linear-gradient(180deg,#f7ead0,#ecdbb6);color:#33452f}
+.theme-dark #menuPause h2{color:#2f4a34;text-shadow:none}
+.theme-dark #menuPause .small{color:#6b5a3e}
+#menuPause label{color:#3a2f1c}
+.theme-dark #menuPause .mbtn{color:#3a2f1c;background:#fff6df;border:2px solid #785a28;border-radius:10px;text-shadow:none;box-shadow:0 2px 5px rgba(90,70,40,.22)}
+.theme-dark #menuPause .mbtn:hover{filter:brightness(1.04)}
+.theme-dark #menuPause .mbtn.green{color:#fff6df;background:#3f8f4f;border-color:#2c6b39}
+.theme-dark #menuPause .mbtn.red{color:#fff6df;background:#b0453a;border-color:#8a3128}
+#menuPause .tb-btn{color:#3a2f1c;background:#fff6df;border:2px solid #785a28;border-radius:9999px}
+#menuPause .tb-btn:hover{background:#f4e4c2}
+#menuPause #squadTask{background:#fff6df!important;color:#3a2f1c!important;border:2px solid #785a28!important}
+#menuPause :focus{outline:3px solid #2f7d3f!important;outline-offset:2px;box-shadow:0 0 10px rgba(47,125,63,.5)}
+#menuPause .rescue-actions button[aria-pressed="true"]{outline:2px solid #2f7d3f;outline-offset:2px}
+
 /* Arcade rows: U I O directly above J K L; utilities remain separate. */
 #touchUI .vbtn:not(#vC):not(#vP){width:58px;height:58px;line-height:56px;font-size:12px}
 #vJ{right:calc(var(--touch-right,40px) + 136px);bottom:var(--touch-bottom,36px)}#vK{right:calc(var(--touch-right,40px) + 68px);bottom:var(--touch-bottom,36px)}#vL{right:var(--touch-right,40px);bottom:var(--touch-bottom,36px)}
@@ -216,7 +231,7 @@ button::before,button::after{content:none!important}
 #vSPRINT{right:calc(var(--touch-right,40px) + 136px);bottom:calc(var(--touch-bottom,36px) + 136px)}#vH{right:calc(var(--touch-right,40px) + 68px);bottom:calc(var(--touch-bottom,36px) + 136px)}#vX{right:var(--touch-right,40px);bottom:calc(var(--touch-bottom,36px) + 136px)}
 /* Corner utilities share one compact row; action controls keep their own theme. */
 #cornerTools{position:absolute;top:var(--corner-top);right:var(--corner-right);z-index:35;display:flex;gap:var(--corner-gap);align-items:center}
-#cornerTools .mbtn,#vC,#vP{height:var(--corner-height);min-width:72px;white-space:nowrap;line-height:normal;display:flex;align-items:center;justify-content:center;padding:0 12px;border-radius:14px;background:#fff6df;border:2px solid #785a28;color:#2f4436;font:800 13px "Microsoft YaHei",sans-serif;text-shadow:none;box-shadow:0 3px 0 rgba(64,45,15,.45),0 2px 8px rgba(0,0,0,.35)}
+#cornerTools .mbtn,#vC,#vP{height:var(--corner-height);min-width:72px;white-space:nowrap;line-height:normal;display:flex;align-items:center;justify-content:center;padding:0 12px;border-radius:14px;background:#0e1e30;border:2px solid #8cc8f0;color:#fff6df;font:800 13px "Microsoft YaHei",sans-serif;text-shadow:0 1px 2px #000;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .touch-mode #cornerTools #menuButton,.touch-mode #cornerTools #personBtn{display:none}
 #vC,#vP{top:var(--corner-top);bottom:auto}#vC{right:calc(var(--corner-right) + 144px + 2 * var(--corner-gap));width:86px}#vP{right:calc(var(--corner-right) + 72px + var(--corner-gap));width:72px}#cornerTools #fullBtn{width:72px}
 #hudRight{right:var(--corner-right);top:calc(var(--corner-top) + var(--corner-height) + var(--corner-gap))}
