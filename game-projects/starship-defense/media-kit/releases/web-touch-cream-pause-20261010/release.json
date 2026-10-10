@@ -43,9 +43,14 @@
   "preview_qa_method": "Playwright(Edge) 桌面1280x720 + 手机844x390(touch) 双视口加载预览，主菜单正常渲染、无白屏、0 console/pageerror",
   "submit": {
     "status": "blocked",
-    "attempts": 2,
+    "attempts": 3,
     "error": "code=307008 message=无权限操作",
-    "note": "预览上传成功(Toy mtime 推进)但 --yes 提审被拒；同日21:15已由 toy-sync-20261010 提交一批(当时 auditing，现已 published)。不盲目重试，待平台/本人确认后以同包重提。"
+    "attempt_log": [
+      "2026-10-10T23:49+08:00 首次 --yes 被拒",
+      "2026-10-10T23:52+08:00 重试被拒",
+      "2026-10-11 跨天后重试仍被拒（非时间性限制）"
+    ],
+    "note": "预览上传成功(Toy mtime 推进)但 --yes 提审被拒；同日21:15已由 toy-sync-20261010 提交一批(当时 auditing，现已 published)。whoami/mylist 正常、Toy 归属本账号且 published，故非登录态失效。不盲目重试，待平台/本人确认后以同包重提。"
   },
   "prior_submission": {
     "record": "releases/toy-sync-20261010/sync.json",
