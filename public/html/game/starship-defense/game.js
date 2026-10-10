@@ -362,7 +362,7 @@ function cycleCamView(){
 }
 function syncViewLabels(){
   const label=camMode==='first'?'第一人称':'第三人称';
-  for(const id of ['personBtn','personBtnMenu'])if($(id))$(id).textContent='人称：'+label;
+  for(const id of ['personBtn','personBtnMenu'])if($(id))$(id).textContent=label;
   if($('crosshair'))$('crosshair').classList.toggle('hidden',camMode!=='first');
 }
 
@@ -3814,7 +3814,6 @@ function setDeviceMode(mode){
   if(document.pointerLockElement)document.exitPointerLock();
   setTouchMode(mode==='touch'||mode==='auto'&&autoTouch());
   for(const el of document.querySelectorAll('[data-device-mode]'))el.setAttribute('aria-pressed',String(el.dataset.deviceMode===mode));
-  $('deviceMode').value=mode;
   syncKeyLabels();
 }
 function setTouchMode(on){
@@ -3823,7 +3822,6 @@ function setTouchMode(on){
   touchLayout.refresh();
 }
 for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>setDeviceMode(el.dataset.deviceMode);
-$('deviceMode').onchange=e=>setDeviceMode(e.target.value);
 
 /* ================= 纯键盘界面导航 =================
    最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
@@ -4019,7 +4017,7 @@ function actionLabel(a){return (vsOn()?{R:'换弹',O:'装备',L:'部署',Z:'瞄�
 function syncKeyLabels(){
   $('fullBtn').textContent=isTouch?'全屏':'全屏 F';
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
-  $('menuButton').textContent='Ⅱ 暂停';
+  $('menuButton').textContent=isTouch?'暂停':'暂停 '+keyBindings.label('P');
   $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
