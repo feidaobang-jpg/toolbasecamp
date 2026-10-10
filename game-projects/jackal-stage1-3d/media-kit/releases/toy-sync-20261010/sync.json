@@ -1,0 +1,50 @@
+{
+  "game": "jackal-stage1-3d",
+  "version": "v0.10.3-menu-text1",
+  "id": 39863936092160,
+  "slug": "feidao-jackal-3d",
+  "title": "赤色要塞 3D",
+  "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+  "package": "D:/project/worktrees/toy-sync-20261010/game-projects/jackal-stage1-3d/dist/toy-v0.10.3-menu-text1/package",
+  "file_count": 7,
+  "files": {
+    "css/style.css": "bd95f92188c85b34c6fcdcbb5387e1a471bf8e74152ba4a2e59aa89a7faf94fd",
+    "index.html": "1d45e1e3db44592d3d8bd24240dc92fdbb5b7519c9d482b07b757f4a10f9b91a",
+    "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+    "js/game.min.js": "0de0f9bc521a17a147704adbc756b765a1919cac36552c8092ffc489cbb8a36c",
+    "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+    "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+    "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+  },
+  "source_commit": "1bbf3f92",
+  "changes": [
+    "移除返回游戏列表外链，避免 Toy 外壳内跳出到站点注册/充值页(ec592af0)"
+  ],
+  "authorization": {
+    "instruction": "帮今天的修改都推到toy吧，不用等23点了",
+    "scope": "user_authorized_immediate_toy_sync_20261010",
+    "at": "2026-10-10T21:20:00+08:00"
+  },
+  "doctor": "passed",
+  "doctor_warnings": [],
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_VT0kWB1P/index.html",
+    "content_url": "https://www.bilibilitoy.com/toy/preview/preview_VT0kWB1P/index.html"
+  },
+  "preview_qa": "passed",
+  "preview_qa_method": "本地 iframe 包裹预览内容 URL(避开顶层重定向)，桌面1280x800+手机390x844 双视口，canvas 渲染 1280x800/844x390、标题正确、0 脚本报错、0 HTTP>=400",
+  "submit": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_GIlNYlj8/index.html"
+  },
+  "submitted_at": "2026-10-10T21:20:00+08:00",
+  "status_readback": {
+    "id": 39863936092160,
+    "title": "赤色要塞 3D",
+    "status": "auditing",
+    "visibility": "PUBLIC",
+    "category": "GAME"
+  },
+  "review_status": "auditing",
+  "recorded_at": "2026-10-10T21:20:00+08:00"
+}
