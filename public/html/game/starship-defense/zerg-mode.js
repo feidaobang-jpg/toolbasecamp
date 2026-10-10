@@ -118,7 +118,11 @@ export function createZergMode(a){
     mo.hp-=d;a.updHPBar(mo.bar,Math.max(0,mo.hp/mo.maxHp));
     mo.dmgT=.14;
     if(mo.hp<=0){
-      mo.dead=true;a.spawnParticles(mo.mesh.position.clone().add(new T.Vector3(0,1,0)),0x8bf06a,14,6,.6,1.2);
+      mo.dead=true;
+      // 母虫死亡不走 killMonster，但必须进同一套尸体生命周期：
+      // 否则网格没人从场景移除，会留一个孤立模型并跟到后续模式/周目。
+      a.visuals.death(mo.mesh);
+      a.spawnParticles(mo.mesh.position.clone().add(new T.Vector3(0,1,0)),0x8bf06a,14,6,.6,1.2);
       a.AudioSys.sfx('hurt');
       s.deaths++;s.bug=null;
       if(s.deaths>=MAX_DEATHS)s.defeat('母虫损失过重，虫群失去指挥溃散了…');
