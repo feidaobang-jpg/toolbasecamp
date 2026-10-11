@@ -9,7 +9,7 @@
     "id": "web-menu-history-v0.36.1",
     "commit": null,
     "dirty": true,
-    "fingerprint": "ce7af95618e0c17331877279cf9656075f868829e451a002ae31413a675a0d78",
+    "fingerprint": "dc512921c0c2509e6a9e6b173deddb30e8e13e69c43218019f6c44aa564068eb",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
   "feature_inventory": [
@@ -67,8 +67,8 @@
   "qa": {
     "method": "Codex CUA浏览器点击本地verify-menu-viewport.html回归按钮；测试夹具经qa=1访问本地QA接口。截图与手动点击检查使用真实浏览器。",
     "record": "qa.json",
-    "passed": 42,
-    "total": 42,
+    "passed": 43,
+    "total": 43,
     "viewports": [
       "390×844",
       "360×780",
@@ -87,11 +87,13 @@
       "主菜单日志4版、End翻到底、Escape关闭回入口",
       "触屏玩法说明隐藏键盘段落",
       "暂停银行对局查看日志不丢进度、不自动继续",
-      "查看日志和操作布局切换保留sst_save_存档"
+      "查看日志和操作布局切换保留sst_save_存档",
+      "后期存档的长继续标签不挤出首页；云状态用简短玩家提示，详细信息放存档面板。"
     ],
     "unverified": [
       "B站App真机触控与手机性能"
-    ]
+    ],
+    "save_regressions": 26
   },
   "readiness": {
     "overview": "partial",
