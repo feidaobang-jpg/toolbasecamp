@@ -1,0 +1,3 @@
+# Full raw observations stay with locally preserved recordings. The compact
+# capture-receipts.json and final source timeline remain in version control.
+/capture/**/session.json

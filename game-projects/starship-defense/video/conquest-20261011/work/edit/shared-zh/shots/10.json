@@ -1,0 +1,17 @@
+{
+  "index": 10,
+  "segment": "07-heal",
+  "start": 58.1,
+  "end": 62.36666666666667,
+  "duration": 4.266666666666667,
+  "frames": 128,
+  "source": "capture/match-01/01-opening/raw.mp4",
+  "source_in": 69,
+  "source_out": 73.26666666666667,
+  "speed": 1,
+  "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 进入补给仓库占领圈",
+  "still": false,
+  "source_size": 54723103,
+  "source_mtime_ns": 1791666953488570800,
+  "encoding_schema": "bt709-limited-v2"
+}

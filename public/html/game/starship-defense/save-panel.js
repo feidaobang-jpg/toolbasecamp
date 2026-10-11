@@ -1,21 +1,19 @@
 import {CloudSaveSync} from './cloud-save.js';
 import {saveSignature} from './save-store.js';
-import {SiteSaveProvider} from './site-save.js';
 import {campaignDifficulty} from './campaign-difficulty.js';
 export function mountSavePanel(game,{toyProvider,storage}={}){
   const $=id=>document.getElementById(id),store=game.store;
-  let sync=null,pending=null,selected=null,token='';
-  const toy=!!toyProvider,tokenKey=location.hostname.endsWith('zhengxiaohui.cn')?'auth_token':game.prefix+'site-token';
-  try{token=storage?.getItem(tokenKey)||'';}catch{}
-  const status=text=>{if($('cloudSaveStatus'))$('cloudSaveStatus').textContent=text;updateNotice();};
+  let sync=null,pending=null,selected=null,localMessage='';
+  const toy=!!toyProvider;
+  const status=text=>{if(!toy)localMessage=text;if($('cloudSaveStatus'))$('cloudSaveStatus').textContent=text;updateNotice();};
   const describe=d=>d?`${campaignDifficulty(d.difficulty).name} · 周目${d.loop} 第${d.chapter}章第${d.level}关 · 金币${Math.floor(d.gold)} · ${new Date(d.time).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})}`:'尚无存档';
   let noticeTimer=0;
   function updateNotice(){
-    const text=store.status+'；'+(sync?.statusText||(toy?'连接 Toy 云备份中':'登录网站账号可启用云备份'));
+    const text=store.status+'；'+(sync?.statusText||(toy?'连接 Toy 云备份中':localMessage||'本地存档可用，可导出文件备份'));
     if($('saveNotice'))$('saveNotice').textContent=text;
-    const cloud=sync?.statusText||'',cloudLabel=/已备份/.test(cloud)?'云端已备份':/不同|另一份/.test(cloud)?'云档待选择':/失败|不可用|不兼容|异常/.test(cloud)?'云备份暂停':/登录/.test(cloud)||(!toy&&!token)?'云备份未登录':/关闭/.test(cloud)?'云备份已关闭':/发现云端/.test(cloud)?'可恢复云档':/连接/.test(cloud)?'云备份已连接':'云备份待写入';
+    const cloud=sync?.statusText||'',cloudLabel=!toy?'可导出备份':/已备份/.test(cloud)?'云端已备份':/不同|另一份/.test(cloud)?'云档待选择':/失败|不可用|不兼容|异常/.test(cloud)?'云备份暂停':/登录/.test(cloud)?'云备份未登录':/关闭/.test(cloud)?'云备份已关闭':/发现云端/.test(cloud)?'可恢复云档':/连接/.test(cloud)?'云备份已连接':'云备份待写入';
     if($('saveHealth')){$('saveHealth').textContent=store.status.split(' · ')[0].split('：')[0]+' · '+cloudLabel;$('saveHealth').title=text;}
-    if($('localSaveStatus'))$('localSaveStatus').textContent=store.status;
+    if($('localSaveStatus'))$('localSaveStatus').textContent=store.status+(!toy&&localMessage?'；'+localMessage:'');
     // 状态条只是提醒，几秒后淡出，避免长期挡在战场画面上；存档面板仍可从菜单进入。
     const chip=$('saveHealth');
     if(chip){chip.classList.remove('faded');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>chip.classList.add('faded'),5000);}
@@ -34,7 +32,7 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     sync?.destroy();sync=new CloudSaveSync({provider,store,getSave:game.getSave,validate:game.validate,isTest:game.isTest,onStatus:status,onCloud:renderCloud});
     sync.enabled=$('cloudAuto').checked;
     $('cloudProvider').textContent=provider.label;
-    if(toy||token)sync.start();else status('尚未登录网站账号；本地存档可用');
+    sync.start();
   }
   function error(e){status(e.message||'操作失败；已有进度已保留');}
   async function action(button,fn){button.disabled=true;try{await fn();}catch(e){error(e);}finally{button.disabled=false;}}
@@ -57,7 +55,7 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     if(!game.validate(d))throw Error('备份数据不兼容，未覆盖本地进度');
     const old=game.getSave();if(old&&saveSignature(old)!==saveSignature(d)&&!store.backup(old))throw Error('无法备份当前进度，请先导出再恢复');
     if(!store.write(game.prefix+'auto',d))throw Error(store.status);
-    if(record)sync.accept(record);else {sync.paused=true;status('本地备份已恢复；上传云端前请先比较进度');}
+    if(record)sync.accept(record);else if(sync){sync.paused=true;status('本地备份已恢复；上传云端前请先比较进度');}else status('本地备份已恢复');
     game.load(JSON.parse(JSON.stringify(d)));game.updateContinue?.();updateNotice();
   }
   $('cloudLoad').onclick=()=>{
@@ -83,15 +81,9 @@ export function mountSavePanel(game,{toyProvider,storage}={}){
     for(const d of rows){const b=document.createElement('button');b.className='mbtn';b.textContent=describe(d);b.onclick=()=>game.confirm('读取这份本地历史备份？','读取备份',()=>{try{restore(d);}catch(e){error(e);}});$('localHistory').append(b);}
     if(!rows.length)$('localHistory').textContent='还没有历史备份；游玩时会保留最近三个不同进度。';
   };
-  $('saveLoginToggle').hidden=toy;$('saveLogout').hidden=toy||!token;
-  $('saveLoginToggle').onclick=()=>{$('saveLoginForm').hidden=!$('saveLoginForm').hidden;};
-  $('saveLoginForm').onsubmit=e=>{e.preventDefault();action($('saveLoginSubmit'),async()=>{
-    const account=$('saveAccount').value.trim(),password=$('savePassword').value;
-    try{const result=await sync.provider.login(account,password);token=result.token;if(!token)throw Error('登录未完成');try{storage?.setItem(tokenKey,token);}catch{}connect(new SiteSaveProvider({token:()=>token,validate:game.validate}));$('saveLoginForm').hidden=true;$('saveLogout').hidden=false;}
-    finally{$('savePassword').value='';}
-  });};
-  $('saveLogout').onclick=()=>{sync.destroy();token='';try{storage?.removeItem(tokenKey);}catch{}$('saveLogout').hidden=true;connect(new SiteSaveProvider({token:()=>token,validate:game.validate}));};
-  window.addEventListener('online',()=>{if(toy||token){sync.paused=false;sync.start().then(()=>sync.checkpoint(game.getSave()));}});
-  connect(toyProvider||new SiteSaveProvider({token:()=>token,validate:game.validate}));updateNotice();
-  return {checkpoint:d=>{if(toy||token)sync.checkpoint(d);},localStatus:updateNotice,open,get sync(){return sync;}};
+  $('cloudSaveTools').hidden=!toy;
+  window.addEventListener('online',()=>{if(sync){sync.paused=false;sync.start().then(()=>sync.checkpoint(game.getSave()));}});
+  if(toy)connect(toyProvider);
+  updateNotice();
+  return {checkpoint:d=>{if(sync)sync.checkpoint(d);},localStatus:updateNotice,open,get sync(){return sync;}};
 }

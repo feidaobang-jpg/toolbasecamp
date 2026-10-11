@@ -34,7 +34,7 @@ export function createVersus(api){
     VS.hq=Object.fromEntries(TEAMS.map(t=>[t,{pos:hqPos(t),hp:R.tickets,maxHp:R.tickets}]));
     for(const h of humans()){if(!VS.seatById[h.vsPid])h.vsPid=(h.team||'blue')+'0';setupHero(h,seatOf(h).team);placeHero(h,true);}
     if(VS.role!=='guest')for(const team of TEAMS){for(let i=0;i<8;i++)spawnInfantry(team,i);for(let i=0;i<KINDS.length;i++)spawnVehicle(team,KINDS[i],i);}
-    updateFlags();api.showMsg('沙漠据点战：占领 A / B / C，消耗敌方兵力票；在部署面板选择兵种与复活点',4);return VS;
+    updateFlags();api.showMsg('沙漠据点战：占领 A / B / C，消耗敌方兵力票。第一人称手动瞄准，按住射击；部署面板可换兵种与复活点',5);return VS;
   }
   function stop(){
     if(!VS.active)return;
@@ -85,7 +85,8 @@ export function createVersus(api){
   function visible(a,b){return api.shotCover(a,b,false)>=.995;}
   function beamHits(a,b,team,hitSet){const out=[];for(const t of hostiles(team)){if(hitSet?.has(t))continue;const hit=api.segmentHit(a,b,center(t),(t.radius||.65)+.15);if(hit!==null)out.push({m:t,t:hit});}return out.sort((a,b)=>a.t-b.t);}
   function bulletStep(b,a,p,cover){for(const hit of beamHits(a,p,b.team,b.hitSet)){if(hit.t>=cover)break;if(!b.explode)damage(hit.m,b.dmg,b.team,b.src||'unit',b.pid,false);p.lerpVectors(a,p,hit.t);return true;}if(cover<1){p.lerpVectors(a,p,cover);return true;}return false;}
-  function explodeAt(p,r,d,team,opts={}){for(const t of hostiles(team)){const c=center(t),dist=c.distanceTo(p);if(dist>r+(t.radius||.65))continue;const from=p.clone();from.y+=.25;if(!visible(from,c))continue;damage(t,d*Math.max(.25,1-dist/(r+(t.radius||1))),team,opts.src||'unit',opts.by,true);}}
+  // 手动瞄准常把炮弹打在目标脚边，我方炮弹会陷进地面约 0.3 米才爆：从地面以上判断遮挡，否则整发没有溅射伤害。
+  function explodeAt(p,r,d,team,opts={}){for(const t of hostiles(team)){const c=center(t),dist=c.distanceTo(p);if(dist>r+(t.radius||.65))continue;const from=p.clone();from.y=Math.max(p.y,api.groundY(p.x,p.z))+.25;if(!visible(from,c))continue;damage(t,d*Math.max(.25,1-dist/(r+(t.radius||1))),team,opts.src||'unit',opts.by,true);}}
   function credit(team,by,field,n=1){const s=VS.seatById[by];if(s&&s.team===team)s.stats[field]=(s.stats[field]||0)+n;VS.teams[team].stats[field]=(VS.teams[team].stats[field]||0)+n;}
   function loseTickets(team,n){VS.teams[team].tickets=Math.max(0,VS.teams[team].tickets-n);VS.hq[team].hp=VS.teams[team].tickets;}
   function damage(t,d,team,src='unit',by=null,explosive=false){

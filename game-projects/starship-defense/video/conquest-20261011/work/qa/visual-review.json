@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-10T21:35:03.191212+00:00",
+  "method": "representative final frame inspection",
+  "frame_count": 37,
+  "all_contact_pages_inspected": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "hud_and_subtitle_safe_area": "pass",
+  "result_table_not_obscured": "pass",
+  "source_actions": "pass: engineer boarding, tank road movement/armor, death/forward deployment, H support, grenade, capture HUD and natural result",
+  "medic_hp_evidence": "Original frame HUD at raw42.6915/42.7576 shows60; raw42.8042 returns100 after H, final55.53-55.65 approximately. No gameplay state modification.",
+  "youtube_no_spoken_burned_captions": "pass; qa/youtube-clean-39.68.jpg inspected",
+  "ending_full_text_and_hold": "pass",
+  "cover_full_and_320px_thumbnail": "pass",
+  "subjective_audio_listening": "not-run",
+  "complete_motion_review": "pending human review",
+  "actual_phone_platform_overlay_review": "not-run"
+}

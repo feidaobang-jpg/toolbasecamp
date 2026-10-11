@@ -1,0 +1,17 @@
+{
+  "index": 15,
+  "segment": "11-close",
+  "start": 99.96666666666667,
+  "end": 110.53333333333333,
+  "duration": 10.566666666666666,
+  "frames": 317,
+  "source": "edit/shared-zh/closing.png",
+  "source_in": 0,
+  "source_out": 10.566666666666666,
+  "speed": 1,
+  "label": "",
+  "still": true,
+  "source_size": 101158,
+  "source_mtime_ns": 1791667674131286000,
+  "encoding_schema": "bt709-limited-v2"
+}

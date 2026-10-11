@@ -1,0 +1,140 @@
+{
+ "request_text": "母虫可以死，但最多五次。每次倒下都会从虫洞满血重来，第五次一到，虫群直接溃散。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "edge_tts_version": "7.2.8",
+ "marks": [
+  {
+   "type": "WordBoundary",
+   "offset": 1000000,
+   "duration": 4375000,
+   "text": "母虫"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 5625000,
+   "duration": 1875000,
+   "text": "可以"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 7500000,
+   "duration": 3250000,
+   "text": "死"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 14500000,
+   "duration": 1625000,
+   "text": "但"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 16250000,
+   "duration": 3500000,
+   "text": "最多"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 19875000,
+   "duration": 1375000,
+   "text": "五"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 21250000,
+   "duration": 2750000,
+   "text": "次"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 29625000,
+   "duration": 3500000,
+   "text": "每次"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 33250000,
+   "duration": 5375000,
+   "text": "倒下"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 39625000,
+   "duration": 1375000,
+   "text": "都"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 41000000,
+   "duration": 1125000,
+   "text": "会"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 42250000,
+   "duration": 1625000,
+   "text": "从"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 44125000,
+   "duration": 3750000,
+   "text": "虫洞"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 47875000,
+   "duration": 3625000,
+   "text": "满血"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 51625000,
+   "duration": 2500000,
+   "text": "重"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 54125000,
+   "duration": 2500000,
+   "text": "来"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 59875000,
+   "duration": 3375000,
+   "text": "第五"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 63250000,
+   "duration": 1500000,
+   "text": "次"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 64875000,
+   "duration": 3875000,
+   "text": "一到"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 70500000,
+   "duration": 5375000,
+   "text": "虫群"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 76125000,
+   "duration": 3625000,
+   "text": "直接"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 79875000,
+   "duration": 4500000,
+   "text": "溃散"
+  }
+ ]
+}

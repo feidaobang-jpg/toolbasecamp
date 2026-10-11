@@ -1,0 +1,19 @@
+{
+  "source": "capture\\vehicle-02\\01-opening\\000300.jpg",
+  "source_type": "current real game screenshot, separate normal-rule tank match",
+  "crop": [
+    270,
+    230,
+    1535,
+    952
+  ],
+  "text": [
+    "虫潮围城 · 战地模式",
+    "只剩3票",
+    "抢点险胜！",
+    "杀敌更少，也能赢？"
+  ],
+  "result_evidence": "capture/match-01/real-result.png",
+  "method": "native typography and crop, no synthetic objects or model-detail enhancement",
+  "font": "installed Microsoft YaHei, no font redistribution"
+}

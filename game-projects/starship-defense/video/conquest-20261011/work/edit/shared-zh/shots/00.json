@@ -1,0 +1,17 @@
+{
+  "index": 0,
+  "segment": "01-hook",
+  "start": 0,
+  "end": 3.6,
+  "duration": 3.6,
+  "frames": 108,
+  "source": "capture/match-01/02-battle/raw.mp4",
+  "source_in": 34.9693359375,
+  "source_out": 38.5693359375,
+  "speed": 1,
+  "label": "主战局结尾预览 · 兵力票见底",
+  "still": false,
+  "source_size": 12432352,
+  "source_mtime_ns": 1791667116687202700,
+  "encoding_schema": "bt709-limited-v2"
+}

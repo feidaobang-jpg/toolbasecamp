@@ -1,0 +1,31 @@
+{
+  "status": "awaiting_account_write_lock",
+  "reply_authorized": true,
+  "reply_target": {
+    "user": "骄傲的打变",
+    "uid": "3546931158583563",
+    "date": "2026-10-11 10:36:55",
+    "bvid": "BV1xdpx63ETu"
+  },
+  "reply_after": "Toy bank release public verified",
+  "reply_text": "带升级银行的旧玩法已经恢复成独立模式了！主菜单选择「银行塔防对战」即可进入，银行升级、买兵和建造都保留了，战地模式也还在。",
+  "other_approved_replies": "10 availability replies +1 mobile-entry reply in feedback-ledger.json",
+  "description_trigger": "重大玩法恢复，旧说明称银行已被战地替换需纠正",
+  "description_change": "保留各稿件当前介绍与链接，把旧对战已被替换说明改为银行塔防与战地据点并存；合并0.34.1修复；等待Toy上线后准确标注。",
+  "dedupe_before_write": true,
+  "blocked_by": "QianwenWorkAssistant account-write.lock, not removed",
+  "pending_question_event": "bili-qianwen-write-lock-20261011-170038",
+  "toy_public_verified_at": "2026-10-11T10:07:11.194993+00:00",
+  "reply_precondition_satisfied": true,
+  "prepared_update_line": "更新（2026-10-11）：银行塔防对战恢复为独立模式，可升级银行、买兵和建造，与战地据点模式并存；基地防守的开始/继续入口已标清。另修复虫洞内下车位置、虫群卡在洞外和跳跃穿顶问题，无限手雷调整为每3秒一次。",
+  "prepared_reply_count": 12,
+  "description_targets": [
+    "BV1WbHq6eEBt",
+    "BV1Ujad6DEuf",
+    "BV1C5HQ6gEvD",
+    "BV1xdpx63ETu",
+    "BV14hpL62EZ5",
+    "BV1KFpJ6sEEK"
+  ],
+  "note": "回复正文已准备，未发出；简介更新行已准备，须获锁后重读各目标全文合并，不覆盖其他发布任务改动。"
+}

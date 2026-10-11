@@ -1,0 +1,260 @@
+{
+ "request_text": "操作整个反过来了。WASD 开母虫，J 撕咬，K 喷酸，U 召战士，I 召飞虫，O 蜕皮，L 冲刺。唯一的资源叫生物量：你打出去的每一点伤害都会返给你，召唤要它，回血也要它。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "edge_tts_version": "7.2.8",
+ "marks": [
+  {
+   "type": "WordBoundary",
+   "offset": 1000000,
+   "duration": 3500000,
+   "text": "操作"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 4625000,
+   "duration": 2500000,
+   "text": "整个"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 7375000,
+   "duration": 4250000,
+   "text": "反过来"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 11625000,
+   "duration": 2000000,
+   "text": "了"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 19250000,
+   "duration": 10375000,
+   "text": "WASD"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 29750000,
+   "duration": 6750000,
+   "text": "开母虫"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 38750000,
+   "duration": 2125000,
+   "text": "J"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 41000000,
+   "duration": 4375000,
+   "text": "撕咬"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 47625000,
+   "duration": 2250000,
+   "text": "K"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 50000000,
+   "duration": 4625000,
+   "text": "喷酸"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 57000000,
+   "duration": 2625000,
+   "text": "U"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 59625000,
+   "duration": 6250000,
+   "text": "召战士"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 69000000,
+   "duration": 2875000,
+   "text": "I"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 71875000,
+   "duration": 1500000,
+   "text": "召"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 73500000,
+   "duration": 4500000,
+   "text": "飞虫"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 80375000,
+   "duration": 1750000,
+   "text": "O"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 82125000,
+   "duration": 5500000,
+   "text": "蜕皮"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 90000000,
+   "duration": 2500000,
+   "text": "L"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 92625000,
+   "duration": 4125000,
+   "text": "冲刺"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 102500000,
+   "duration": 3000000,
+   "text": "唯一"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 105500000,
+   "duration": 1000000,
+   "text": "的"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 106625000,
+   "duration": 3000000,
+   "text": "资源"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 109875000,
+   "duration": 1250000,
+   "text": "叫"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 111125000,
+   "duration": 5125000,
+   "text": "生物量"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 118875000,
+   "duration": 6875000,
+   "text": "你"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 125750000,
+   "duration": 1500000,
+   "text": "打"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 127250000,
+   "duration": 2000000,
+   "text": "出去"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 129250000,
+   "duration": 750000,
+   "text": "的"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 130250000,
+   "duration": 1375000,
+   "text": "每"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 131625000,
+   "duration": 2000000,
+   "text": "一点"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 133750000,
+   "duration": 5750000,
+   "text": "伤害"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 140500000,
+   "duration": 1250000,
+   "text": "都"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 141750000,
+   "duration": 875000,
+   "text": "会"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 142750000,
+   "duration": 3125000,
+   "text": "返给"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 145875000,
+   "duration": 2000000,
+   "text": "你"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 151500000,
+   "duration": 3875000,
+   "text": "召唤"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 155500000,
+   "duration": 1500000,
+   "text": "要"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 157000000,
+   "duration": 2750000,
+   "text": "它"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 163000000,
+   "duration": 4750000,
+   "text": "回血"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 168000000,
+   "duration": 1125000,
+   "text": "也"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 169125000,
+   "duration": 1125000,
+   "text": "要"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 170250000,
+   "duration": 2500000,
+   "text": "它"
+  }
+ ]
+}

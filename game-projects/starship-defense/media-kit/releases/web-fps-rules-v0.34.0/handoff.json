@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-fps-rules-v0.34.0",
+  "base_version": "web-zerg-corpse-spinfix-v0.33.3",
+  "created_at": "2026-10-11T08:30:00+08:00",
+  "classification": "gameplay_rule_change",
+  "review": {
+    "status": "not_required",
+    "reason": "2026-10-10实时节奏：完成测试后网站+Toy实时发布，无本地审核门槛；用户2026-10-11当次确认按此范围改战地和抗战"
+  },
+  "source": {
+    "type": "user_directed_change",
+    "task_id": "309ae271-bf-resistance-manual-fps-01",
+    "tool": "Claude Code",
+    "branch": "claude/chongchao-fps-manual-20261011",
+    "request": "战地、抗战改为第一人称、所有视角手动瞄准、按住射击；手机留轻度辅助瞄准，载具保留第三人称；其他模式不动"
+  },
+  "changes": [
+    "战地、抗战步行固定第一人称；战地载具与抗战骑马用第三人称跟随，C 只在两档跟随距离间切换",
+    "两个模式全部手动瞄准：子弹从枪口汇聚到准星落点；战地载具镜头改为朝准星方向看",
+    "只在按住时开火，不读取也不改写保存的瞄准/射击设置与战役视角偏好；设置面板内两项锁住并说明",
+    "键鼠：按住左键或 J 射击，右键拖动只转视角、原地点按举枪；不使用鼠标锁定",
+    "触屏和纯键盘保留准星约 7° 内轻度吸附；触屏按住射击键可继续拖动瞄准",
+    "联机战地：客人发送俯仰与镜头距离，房主还原准星；只用服务端已放行字段，服务端未改",
+    "修复：炮弹落在目标脚边时爆炸点陷进地面被判遮挡、没有溅射伤害",
+    "修复：恢复视角偏好时先复位后读取，把保存的第一人称覆盖成第三人称"
+  ],
+  "unchanged": [
+    "主战役、房车生存、虫族模式仍是多视角 + 默认自动瞄准，不增加有限弹药模式",
+    "战地弹匣与无限备弹、抗战弹匣与军需箱补给规则未改",
+    "server/coop_lobby.py 未改"
+  ],
+  "build": {
+    "compat_bundle_sha256_prefix": "6d72d4bf45",
+    "files": {
+      "public/html/game/starship-defense/game.js": "18a9a61becfe21a9de62226445910d6e5f3aaea36dcee3eeb4f2255e69c23ad2",
+      "public/html/game/starship-defense/battlefield-versus.js": "75f05ff3d29b6c857910171cdbe85347652fd4d689b8413f8a87a98947e1750d",
+      "public/html/game/starship-defense/resistance-campaign.js": "17c78e294a3accf781c99a5622f3b48260869e80815b92aeb18bab19ad9e1cb8",
+      "public/html/game/starship-defense/resistance-ui.js": "7c266706cc80823f6ad24e0b6c1b8e84182277f9343e9e7d6ba854936e234939",
+      "public/html/game/starship-defense/combat-controls.js": "5c49510cf53917d7ca645c2cbb011cd00370400f38791a1b7c05eef37f9abf21",
+      "public/html/game/starship-defense/game.compat.js": "6d72d4bf4574b0335f91c019154fda15813ecbbbaf75e61cc1dc55f240bb7453"
+    },
+    "commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+    "feature_commit": "5046dfed"
+  },
+  "verification": {
+    "new_suites": {
+      "verify-fps-rules.cjs": "26 项通过，结果见 qa/results.json",
+      "verify-fps-rules-online.cjs": "5 项通过（本地联机大厅，房主 + 1 名客人），结果见 qa/results-online.json"
+    },
+    "regression_passed": [
+      "verify-conquest.cjs（触屏布局检查按新规则更新）",
+      "verify-conquest-online.cjs",
+      "verify-resistance.cjs 17 项",
+      "verify-resistance-aim.cjs 11 项",
+      "verify-combat-controls.mjs",
+      "verify-pc-controls.cjs",
+      "verify-camera-response.cjs 103 项",
+      "verify-touch-layout.cjs",
+      "verify-feedback-input-flight.cjs",
+      "verify-zerg-corpse-spin.cjs"
+    ],
+    "flaky": "verify-zerg-mode.cjs：本版 11 次中 10 次通过，失败一次未复现、原因未查实；基线 3 次通过",
+    "stale_suites_failing_on_baseline_too": [
+      "verify-rv-breakout.cjs（旧房车路线已重做）",
+      "verify-town-versus.cjs 的对战成长段（旧对战接口已移除；房车城镇段通过）"
+    ],
+    "limits": [
+      "手机为桌面浏览器触屏视口模拟（真实触摸事件），未做实体手机多指与性能验收",
+      "未做真人平衡验收",
+      "电脑端无鼠标锁定，沿用既有约定"
+    ]
+  },
+  "media": {
+    "artifact_root": "D:\\project\\toolbasecamp-artifacts\\chongchao-fps-rules-20261011",
+    "screenshots": [
+      "qa/battlefield-first-person.png",
+      "qa/battlefield-tank-view.png",
+      "qa/battlefield-touch.png",
+      "qa/battlefield-settings-locked.png",
+      "qa/resistance-touch.png",
+      "qa/resistance-mounted.png",
+      "qa/online-guest-first-person.png",
+      "qa/campaign-regression.png"
+    ],
+    "note": "自动化实机截图，无音轨，不是已审成片；本版不制作或发布新视频"
+  },
+  "channels": {
+    "website": {
+      "status": "public_verified",
+      "commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+      "verified_at": "2026-10-11T08:32:47+08:00",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "evidence": "线上 game.compat.js 的 sha256 与构建一致（6d72d4bf45…），页面引用 ?v=3767ef0b 并含新说明；线上实机冒烟：战地、抗战均固定第一人称、C 不切视角、无脚本错误"
+    },
+    "toy": {
+      "status": "blocked_needs_user",
+      "error": "toy update --yes 返回 status=200 code=307008 message=无权限操作",
+      "attempt": "虫潮 Toy 自 2026-10-10 晚起各会话累计第 9 次被拒；本次 2026-10-11T08:35+08:00",
+      "package_zip_sha256": "c59dd29758b2d4bd41ea52cc8b709f82213214b8bf35bcfd4b492213ad41f3ca",
+      "package_compat_sha256": "7b78f8822b3f585c23da7d3eb83e2c3993eaf73b59d091ee7bde787b74d45783",
+      "source_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_6GeeraCn/index.html",
+      "preview_qa": "电脑 1280x720 与手机横屏 844x390 视口实测 4 项通过（verify-fps-rules-toy.cjs），页面脚本与上传包哈希一致",
+      "doctor": "静态检查通过；1 条提示：4 个 JS/CSS 文件名不带内容指纹（缓存建议，不影响发布）",
+      "platform_readback": "toy mylist：status=published，mtime=1791647266（2026-10-10 23:47:46 +08:00）未推进；toy whoami 登录正常（飞刀班长 16214353）",
+      "needs_user": "请本人在 B站 Toy 创作后台打开「虫潮围城」，看是否有待处理的审核、整改或权限提示；处理后补提主线最新包",
+      "notify_event": {
+        "task_id": "toy-38678478981120",
+        "event_id": "toy-307008-chongchao-20261010"
+      }
+    },
+    "bilibili_descriptions": {
+      "status": "pending_account_lock",
+      "reason": "B站账号写锁由其他会话持有（Trae，mario-stage4-release-20261010，2026-10-10T23:53+08:00 起），未写入、未删除他人的锁",
+      "prepared_update_line": "更新（2026-10-11·v0.34.0）：战地模式和抗战战役改成第一人称手动瞄准——步行固定第一人称，按住射击键才开火，载具和骑马用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击键还能继续拖动瞄准。主战役、房车、虫族模式操作不变。",
+      "next": "锁释放后与此前未同步的草稿合并更新一次并公开读回"
+    },
+    "taptap": {
+      "status": "not_published_by_default"
+    }
+  },
+  "notes_for_other_sessions": "战地（codex/conquest-video-20261011）与抗战（video-liangjian 等）两期视频如在本版之前录制，画面是旧的第三人称/自动瞄准操作；是否补录由用户决定。"
+}

@@ -1,0 +1,134 @@
+{
+ "request_text": "城门——破了！虫群涌入，母虫跟着往院子里冲。看到这儿要是觉得有意思，顺手点个赞。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "edge_tts_version": "7.2.8",
+ "marks": [
+  {
+   "type": "WordBoundary",
+   "offset": 1000000,
+   "duration": 4375000,
+   "text": "城门"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 8875000,
+   "duration": 2375000,
+   "text": "破"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 11250000,
+   "duration": 2000000,
+   "text": "了"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 18875000,
+   "duration": 2875000,
+   "text": "虫"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 21750000,
+   "duration": 1875000,
+   "text": "群"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 23750000,
+   "duration": 4375000,
+   "text": "涌入"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 31125000,
+   "duration": 4125000,
+   "text": "母虫"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 35375000,
+   "duration": 4375000,
+   "text": "跟着"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 40875000,
+   "duration": 2125000,
+   "text": "往"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 43125000,
+   "duration": 2250000,
+   "text": "院"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 45375000,
+   "duration": 5500000,
+   "text": "子里冲"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 56625000,
+   "duration": 3125000,
+   "text": "看到"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 59875000,
+   "duration": 4000000,
+   "text": "这儿"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 63875000,
+   "duration": 2375000,
+   "text": "要是"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 66375000,
+   "duration": 1875000,
+   "text": "觉得"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 68375000,
+   "duration": 1375000,
+   "text": "有"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 69750000,
+   "duration": 5375000,
+   "text": "意思"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 77250000,
+   "duration": 5750000,
+   "text": "顺手"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 83125000,
+   "duration": 1375000,
+   "text": "点"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 84500000,
+   "duration": 875000,
+   "text": "个"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 85375000,
+   "duration": 3000000,
+   "text": "赞"
+  }
+ ]
+}

@@ -1,7 +1,10 @@
 import {installRemakeCoop} from '../../../js/game/remake-coop.js';
 import {markTree,treeState,applyTree,scalarState,createSoundRelay} from '../../../js/game/coop.js?v=lobby-hint1';
 let coopDriver=null,coopHumans=[],coopNextId=1,coopEpoch=0,coopPendingEdges=[];
-import {createVersus,VS_UNITS,VS_RULES,VS_BUILD_KINDS,VS_SIZES,TEAM_CSS,TEAM_NAME,VS_AI,fmtTime} from './versus.js?v=vs2';
+import * as Conquest from './versus.js?v=vs2';
+import * as Bank from './bank-versus.js';
+const {VS_SIZES,TEAM_CSS,TEAM_NAME,fmtTime}=Conquest;
+let {VS_UNITS,VS_RULES,VS_BUILD_KINDS,VS_AI}=Conquest;
 import {BF_WEAPONS,BF_VEHICLES,militaryGun,militarySoldier,militaryVehicle} from './battlefield-assets.js';
 import {createRVBreakout,makeRVMesh,RV_CFG} from './rv-breakout.js';
 import {createResistanceCampaign} from './resistance-campaign.js';
@@ -10,8 +13,19 @@ let resistanceCampaign=null;
 const warOn=()=>!!resistanceCampaign?.state.active;
 let rvBreakout=null,rvFrameDt=0;
 const rvOn=()=>!!rvBreakout?.state.active;
-let versus=null,lobbyMode='coop',versusBackup=null;
+let versus=null,bankVersus=null,battleVersus=null,bankMode=false,lobbyMode='coop',versusBackup=null;
+const bankOn=()=>bankMode&&vsOn(),battleOn=()=>!bankMode&&vsOn();
+function selectVersusRules(rules){
+ const bank=rules==='bank';if(bankMode===bank&&versus)return;
+ if(vsOn()||versusBackup)exitVersus();
+ bankMode=bank;versus=bank?bankVersus:battleVersus;
+ ({VS_UNITS,VS_RULES,VS_BUILD_KINDS,VS_AI}=bank?Bank:Conquest);
+ viewModelKey='';vsUI.rosterSig='';
+}
 function vsOn(){return !!(versus&&versus.state.active);}
+// 枪战规则（战地、抗战，用户 2026-10-11 确认）：步行固定第一人称、手动瞄准、按住射击；载具和骑马用第三人称跟随。
+// 主战役、房车、虫族仍是多视角 + 自动瞄准，也不改玩家保存的瞄准/射击设置。
+function fpsRules(){return battleOn()||warOn();}
 let zergMode=null;
 function zergOn(){return !!(zergMode&&zergMode.active);}
 import {createPitchController,createLookController} from '../../../js/game/drag-look.js?v=camera-response0312';
@@ -42,6 +56,7 @@ let selectedDifficulty='normal';
 try{selectedDifficulty=campaignDifficultyId(localStorage.getItem('chongchao-campaign-difficulty'));}catch(_e){}
 let combatStorage;try{combatStorage=localStorage;}catch(_e){}
 const CombatControls=createCombatControls(combatStorage);
+let combatSection=null;
 const keyBindings=createKeyBindings();
 let bindingAction=null;
 const currentBuildingLimit=()=>buildingLimit(Game,operations.active);
@@ -228,7 +243,8 @@ const Input={
       if(e.pointerType==='touch'){if(!isTouch&&this.onTouchDetected)this.onTouchDetected();return;}
       if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
-      if(e.button===2){e.preventDefault();if(warOn())resistanceCampaign.toggleAim();else if(vsOn())toggleBattlefieldAim();return;}
+      // 枪战规则下左键是开火，转视角不能只靠它：右键拖动只转视角，原地点一下才举枪。
+      if(e.button===2){e.preventDefault();if(fpsRules()){this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}return;}
       if(e.button!==0)return;
       this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');
       if(document.pointerLockElement===cv)return;
@@ -237,10 +253,12 @@ const Input={
     cv.addEventListener('pointermove',e=>{
       if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
       if(document.pointerLockElement===cv){this.look.yaw-=e.movementX*.0032;this.look.pitch-=e.movementY*.0032;return;}
+      // 已按着一个键再按另一个键，浏览器只发 pointermove：右键拖视角时补按左键也要能开火。
+      if(e.pointerType==='mouse'&&fpsRules()&&this.drag?.sight){const left=!!(e.buttons&1);if(left&&!this.mouseFire){this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');}else if(!left&&this.mouseFire){this.mouseFire=false;CombatControls.release('mouse');}}
       const d=this.drag;if(!d||d.id!==e.pointerId)return;
       const s=toStageScale();this.look.yaw-=(e.clientX-d.x)/s*.0075;this.look.pitch-=(e.clientY-d.y)/s*.0075;d.moved+=Math.abs(e.clientX-d.x)+Math.abs(e.clientY-d.y);d.x=e.clientX;d.y=e.clientY;
     });
-    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId)this.drag=null;if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
+    const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId){const d=this.drag;this.drag=null;if(d.sight&&e.type==='pointerup'&&e.button===2&&d.moved<6&&this.isPlaying()){if(warOn())resistanceCampaign.toggleAim();else if(battleOn())toggleBattlefieldAim();}}if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,endDrag));
     document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0){this.mouseFire=false;CombatControls.release('mouse');}});
     document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv){this.mouseFire=false;CombatControls.reset();}else if(!this.lockHinted){this.lockHinted=true;showMsg('🖱 鼠标已接管视角：移动转向，左键射击，Esc 暂停',2.6);}});
@@ -279,8 +297,14 @@ const Input={
         e.preventDefault();el._pointer=e.pointerId;el.setPointerCapture(e.pointerId);if(e.pointerType==='touch')this.lastTouchT=performance.now();
         if(!this.keys[key])this.pressed[key]=true;
         this.keys[key]=true;el.classList.add('on');AudioSys.init();AudioSys.resume();
+        if(key==='J')el._drag=toStage(e.clientX,e.clientY);
       });
-      const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;this.keys[key]=false;el.classList.remove('on');};
+      // 枪战规则：按住射击键的同一根手指可以继续拖动瞄准，不用松开去拖空白处。
+      if(key==='J')el.addEventListener('pointermove',e=>{
+        if(e.pointerId!==el._pointer||!el._drag||!fpsRules()||!this.isPlaying())return;
+        const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-el._drag.x)*.0105;this.look.pitch-=(p.y-el._drag.y)*.0085;el._drag=p;
+      });
+      const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;el._drag=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
     ['J','K','U','I','H','O','L','X','SPRINT','R','Z'].forEach(k=>bind('v'+k,k));
@@ -328,7 +352,11 @@ const Input={
     return keyBindings.action(c);
   },
   network:null,
-  firing(hasTarget=false){if(this.network)return !!(this.network.fire||(this.network.autoFire&&hasTarget));return this.isPlaying()&&!place.kind&&(isTouch?!!this.keys.J:CombatControls.firing(hasTarget));},
+  firing(hasTarget=false){
+    if(this.network)return !!(this.network.fire||(this.network.autoFire&&hasTarget));
+    if(fpsRules())return this.isPlaying()&&!place.kind&&(isTouch?!!this.keys.J:CombatControls.held);
+    return this.isPlaying()&&!place.kind&&(isTouch?!!this.keys.J:CombatControls.firing(hasTarget));
+  },
   axis(){
     let x=0,y=0;
     if(this.keys.left)x-=1;if(this.keys.right)x+=1;
@@ -373,16 +401,33 @@ function setCamMode(mode,notify=true){
   if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
 }
+// 战地载具的跟随机位：镜头朝准星方向看，车身留在画面下方，不挡住瞄准点。
+// 两档仰角相同、只差距离：联机时房主只凭镜头距离就能还原客人的镜头位置。
+const BF_VEHICLE_VIEWS=[{d:9,h:3.4,name:'近身跟随'},{d:15,h:5.67,name:'远距跟随'}];
+let bfVehicleView=0;
 /* C 循环：各第三人称预设 → 第一人称 → 回到第一个预设 */
 function cycleCamView(){
+  if(battleOn()){
+    if(!player.inVehicle){showMsg(isTouch?'战地模式步行固定第一人称，上载具后可切换跟随距离':'战地模式步行固定第一人称，上载具后 C 切换跟随距离',1.8);return;}
+    bfVehicleView=1-bfVehicleView;camState.init=false;showMsg('载具视角：'+BF_VEHICLE_VIEWS[bfVehicleView].name,1.2);return;
+  }
   if(camMode==='first')setCameraView(0);
   else if(camView+1>=CAMERA_VIEWS.length)setCamMode('first');
   else setCameraView(camView+1);
 }
+// 战地视角跟着是否在载具里走：步行第一人称，上车切第三人称跟随，下车切回。不写入战役保存的视角偏好。
+function syncBattlefieldView(){
+  if(!battleOn())return;
+  const want=player.inVehicle?'third':'first';
+  if(camMode===want)return;
+  camMode=want;camPitch=want==='third'?-.12:0;camState.init=false;Input.resetLook();
+  if(want==='third'&&bfAiming)toggleBattlefieldAim();
+  syncViewLabels();
+}
 function syncViewLabels(){
   const label=camMode==='first'?'第一人称':'第三人称';
-  if($('personBtn'))$('personBtn').textContent=label;
-  if($('crosshair'))$('crosshair').classList.toggle('hidden',camMode!=='first');
+  if($('personBtn')){$('personBtn').textContent=label;$('personBtn').classList.toggle('hidden',fpsRules());}
+  if($('crosshair'))$('crosshair').classList.toggle('hidden',camMode!=='first'&&!(battleOn()&&player.inVehicle));
 }
 
 /* 灯光：阳光阴影跟随玩家，远离基地也有清楚的投影 */
@@ -535,7 +580,7 @@ function weaponLv(id){return Game.weaponLv[id]||0;}
 function weaponMul(id){return 1+.2*weaponLv(id);}
 function upgradeCost(price,lv){return Math.round(Math.max(300,price)*.35*(lv+1)/10)*10;}
 function upgradePrice(id){return upgradeCost(WEAPONS[id].price,weaponLv(id));}
-function classDamage(id){if(vsOn())return 1;const c=CLASSES[Game.cls];return c.specialty===id?c.damage:1;}
+function classDamage(id){if(battleOn())return 1;const c=CLASSES[Game.cls];return c.specialty===id?c.damage:1;}
 function weaponDps(id){const w=WEAPONS[id];return Math.round(w.dmg*(w.pellets||1)*(w.burst||1)/w.rate*weaponMul(id)*classDamage(id));}
 const CLASSES={
   gunner:{specialty:'lmg',damage:1.25,armor:.85,name:'机枪兵',hp:120,speed:9.5,weapon:'lmg',weapons:['lmg'],color:0x3a7bd5},
@@ -662,7 +707,7 @@ function createMobileInfantryModel(spec){
   return root;
 }
 function makeSoldier(color){
-  if(versusBackup)return militarySoldier(THREE,player?.team||'blue',Game.curWeapon);
+  if(versusBackup&&!bankMode)return militarySoldier(THREE,player?.team||'blue',Game.curWeapon);
   return visualAssets ? visuals.soldier(color) : createMobileInfantryModel({color});
 }
 function makeBug(color,legs=4,scale=1,fly=false){
@@ -786,7 +831,7 @@ function createArachnidBugModel(spec){
 }
 
 function makeVehicleMesh(kind){
-  if(vsOn()&&BF_VEHICLES[kind])return militaryVehicle(THREE,kind);
+  if(battleOn()&&BF_VEHICLES[kind])return militaryVehicle(THREE,kind);
   if(kind==='rv')return makeRVMesh(THREE);
   if(visualAssets&&kind==='mech')return visuals.mech();
   const cfg=VEHICLES[kind];
@@ -1015,6 +1060,7 @@ function updSmartGate(dt){
 function damageGate(d){
   if(Game.testMode)return;
   if(gate.open||gate.dead)return;
+  if(zergOn()&&zergMode.shielded()){zergMode.shieldHit();return;}
   gate.hp-=d;updHPBar(gate.bar,gate.hp/gate.maxHp);
   if(gate.hp<=0){
     gate.hp=0;gate.dead=true;AudioSys.sfx('boom');
@@ -1054,7 +1100,7 @@ function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textCont
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
   $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
-    +` · 手雷(${keyBindings.label('U')})`
+    +` · 手雷∞(${keyBindings.label('U')})${player.grenadeCd>0?' '+Math.ceil(player.grenadeCd)+'s':' 就绪'}`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
 }
@@ -1063,14 +1109,14 @@ function updHUDItem(){
 let player={
   mesh:null,bar:null,hp:120,maxHp:120,speed:9.5,
   pos:new THREE.Vector3(0,0,-24),vy:0,onGround:true,yaw:0,
-  fireCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
+  fireCd:0,grenadeCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
   muzzle:null,shield:0,buffT:0,heat:0,moveZ:0,
   reset(cls){
     const c=CLASSES[cls];
     this.maxHp=c.hp+Game.hpBonus;this.hp=this.maxHp;this.speed=c.speed;
     this.pos.set(0,0,-20);this.vy=0;this.dead=false;this.inVehicle=null;this.yaw=0;
     this.shield=0;this.buffT=0;this.respawnT=0;this.invulnerable=0;this.heat=0;this.moveZ=0;
-    this.onGround=true;
+    this.onGround=true;this.grenadeCd=0;
     if(this.mesh){visuals.release(this.mesh);scene.remove(this.mesh);}
     this.mesh=makeSoldier(c.color);this.mesh.rotation.order='YXZ';
     this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=3;this.mesh.add(this.bar);updHPBar(this.bar,1);
@@ -1093,7 +1139,7 @@ function playerDamage(d){
   if(Game.testMode)return;
   if(player.dead||player.invulnerable>0)return;
 
-  d*=vsOn()?1:CLASSES[Game.cls].armor||1;
+  d*=battleOn()?1:CLASSES[Game.cls].armor||1;
   if(player.shield>0){ // 护盾优先吸收
     const ab=Math.min(player.shield,d);
     player.shield-=ab;d-=ab;
@@ -1389,7 +1435,7 @@ function killMonster(mo){
     dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'gold',Math.round(mo.gold*.6));
     dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'hp',40);
   }
-  if(!mo.rvZombie&&Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
+  if(!mo.rvZombie&&!zergOn()&&Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
   if(mo.kind!=='mob'&&mo.kind!=='queen')dropPickup(p.clone().add(new THREE.Vector3(rand(-2,2),0,rand(-2,2))),'gold',mo.gold);
   Game.score+=mo.kind==='mob'?10:(mo.kind==='miniboss'?150:mo.kind==='queen'?2000:500);
   if(!visuals.death(mo.mesh))scene.remove(mo.mesh);
@@ -1475,19 +1521,23 @@ function monsterTargets(mo){
     const d2=dist2(mo.mesh.position,pos);
     if(d2<bd2){bd2=d2;best={pos,obj,kind,r,d2};}
   };
-  for(const human of coopHumans.length?coopHumans:[player]){
+  // 虫族模式：母虫标记的集火目标和当前阶段目标优先于“最近的人类”。
+  const ordered=zergOn()?zergMode.focus(mo):null;
+  if(ordered)consider(ordered.pos,ordered.obj,ordered.kind,ordered.r);
+  else for(const human of coopHumans.length?coopHumans:[player]){
     if(!human.dead&&!human.inVehicle)consider(human.mesh.position,human,'player',1);
     if(human.inVehicle&&!human.inVehicle.dead)consider(human.inVehicle.mesh.position,human.inVehicle,'vehicle',2);
   }
-  for(const s of squad)if(!s.dead){if(s.vehicle)consider(s.vehicle.mesh.position,s.vehicle,'vehicle',2);else consider(s.mesh.position,s,'squad',1);}
-  if(!mo.wild){
+  if(!ordered)for(const s of squad)if(!s.dead){if(s.vehicle)consider(s.vehicle.mesh.position,s.vehicle,'vehicle',2);else consider(s.mesh.position,s,'squad',1);}
+  if(!ordered&&!mo.wild){
     for(const bd of buildings)if(!bd.dead)consider(bd.mesh.position,bd,'building',bd.radius);
-    consider(base.pos,base,'base',4);
-    if(!mo.fly&&gateBlocked())consider(gate.mesh.position,gate,'gate',6);
+    // 虫族模式：城门未破前核心有护壁，护盾未消前城门也咬不动，不让虫群白白去撞。
+    if(!zergOn()||zergMode.coreOpen())consider(base.pos,base,'base',4);
+    if(!mo.fly&&gateBlocked()&&!(zergOn()&&zergMode.shielded()))consider(gate.mesh.position,gate,'gate',6);
   }
   // Ground attackers must break the gate before reaching a courtyard/wall-top
   // target. Otherwise a closer turret traps them shooting into the ramp forever.
-  if(best&&!mo.wild&&!mo.fly&&gateBlocked()&&mo.mesh.position.z>gate.pos.z+1&&
+  if(best&&!mo.wild&&!mo.fly&&gateBlocked()&&!(zergOn()&&zergMode.shielded())&&mo.mesh.position.z>gate.pos.z+1&&
     (best.pos.z<gate.pos.z||rampartHeight(best.pos.x,best.pos.z)>=WALL_TOP-.01)){
     best={pos:gate.mesh.position,obj:gate,kind:'gate',r:6,d2:dist2(mo.mesh.position,gate.mesh.position)};
   }
@@ -1603,6 +1653,8 @@ function updMonsters(dt){
       // 远处行军加速，缩短从虫洞到基地的空档；近基地恢复原速。
       const far=!rvOn()&&!mo.wild&&!mo.home&&mo.kind!=='boss'&&Math.hypot(mo.mesh.position.x-base.pos.x,mo.mesh.position.z-base.pos.z)>120;
       moveMonster(mo,mdir,dt,far?2.2:1,mo.navWaypoint||tgt.pos);
+    }else if(tgt.kind==='escort'){
+      // 虫族模式：护卫母虫的虫群到位后原地待命
     }else if(mo.atkCd<=0){
       mo.atkCd=mo.ranged?1.6:1.0;
       if(mo.ranged&&dist>mo.radius+tgt.r+2){
@@ -1723,11 +1775,13 @@ function damageBuilding(bd,d){
     AudioSys.sfx('boom');
     scene.remove(bd.mesh);
     buildings.splice(buildings.indexOf(bd),1);
+    if(zergOn())zergMode.onKill('building',bd);
   }
 }
 function damageBase(d){
   if(Game.testMode)return;
   if(Game.state==='over')return;
+  if(zergOn()&&!zergMode.coreOpen())return; // 城门未破前核心有护壁
   base.hp-=d;updHPBar(base.bar,base.hp/base.maxHp);
   if(zergOn()){if(base.hp<=0){base.hp=0;zergMode.victory();}return;}
   if(!(Game.baseAlarm>0)){showMsg('⚠ 基地正在受袭！耐久归零即失败，立即回防',3);AudioSys.sfx('wave');}
@@ -1897,7 +1951,7 @@ function spawnVehicle(kind){
 /* 载具：停放时不会被打坏；驾驶中被击毁只是“损毁”，仍归玩家所有，下一关准备阶段在停机坪修好。
    （原来击毁后直接从拥有列表删除，网友反馈“攒钱买的载具全没了”） */
 function damageVehicle(v,d){
-  if(vsOn()){versus.damage(v,d,v.team==='blue'?'red':'blue','vehicle',null,true);return;}
+  if(battleOn()){versus.damage(v,d,v.team==='blue'?'red':'blue','vehicle',null,true);return;}
   if(Game.testMode)return;
   if(rvOn()&&v===rvBreakout.state.rv){
     if(v.dead||rvBreakout.state.over)return;
@@ -1929,7 +1983,7 @@ function repairVehicles(){
 }
 function enterVehicle(v){
   if(!v||v.dead)return;
-  if(vsOn()){const why=versus.enterReason(player,v);if(why){showMsg(why,1.5);return;}versus.takeVehicle(player,v);}
+  if(battleOn()){const why=versus.enterReason(player,v);if(why){showMsg(why,1.5);return;}versus.takeVehicle(player,v);}
   if(coopHumans.some(p=>p!==player&&p.inVehicle===v)){showMsg('已有队友驾驶这辆载具',1.5);return;}
   let reassigned=false;
   for(let slot=0;slot<Game.squadCount;slot++)if(squadGear(slot).vehicle===v.kind){squadGear(slot).vehicle=null;reassigned=true;}
@@ -1950,8 +2004,8 @@ function exitVehicle(){
     if(spot)break;
   }
   spot=spot||findFreeSpot(vp.x,vp.z)||{x:0,z:-20};
-  player.pos.set(spot.x,0,spot.z);
-  player.vy=0;player.mesh.position.copy(player.pos);
+  player.pos.set(spot.x,groundY(spot.x,spot.z),spot.z);
+  player.vy=0;player.onGround=true;player.mesh.position.copy(player.pos);
   if(v.cfg.fly)v.landing=true;
   v.noEnter=1.2; // 下车冷却：防止立刻又上车
 }
@@ -2160,7 +2214,8 @@ function damageSquad(s,d){
     recordBattleLoss('squadLosses');
     s.dead=true;spawnParticles(s.mesh.position.clone().add(new THREE.Vector3(0,1,0)),0xff6666,8,5,.5);
     visuals.release(s.mesh);scene.remove(s.mesh);squad.splice(squad.indexOf(s),1);
-    showMsg('🚑 一名队友重伤撤离，下一关归队',1.6);
+    if(zergOn())zergMode.onKill('squad',s);
+    else showMsg('🚑 一名队友重伤撤离，下一关归队',1.6);
   }
 }
 const SQUAD_ORDERS={follow:'跟随我',defend:'守基地'};
@@ -2431,7 +2486,7 @@ function autoAim(from,facing,range,minDot=.2){
     if(mo.dead||mo.emerge>0)continue;
     const d2=dist2(from,mo.mesh.position);
     if(d2>range*range)continue;
-    if(vsOn()&&!versus.visible(from,mo.mesh.position.clone().add(new THREE.Vector3(0,mo.hitH||1,0))))continue;
+    if(battleOn()&&!versus.visible(from,mo.mesh.position.clone().add(new THREE.Vector3(0,mo.hitH||1,0))))continue;
     const dir=new THREE.Vector3().subVectors(mo.mesh.position,from);dir.y=0;dir.normalize();
     const dot=dir.dot(flat);
     if(dot<minDot)continue;
@@ -2451,7 +2506,41 @@ function camForward(withPitch){const cp=withPitch?Math.cos(camPitch):1;return ne
 function lookUser(){return !!document.pointerLockElement||performance.now()-(Input.lastLook||-1e9)<5000;}
 // PC 第三人称自动瞄准覆盖四周；手动瞄准沿镜头，第一人称保留准星附近辅助。
 // 触屏沿用镜头前方寻敌和移动方向兜底。
+// 战地手动瞄准：沿准星射线找第一个落点（敌人、掩体、地面或最大射程），子弹从枪口汇聚到这一点。
+// 键鼠完全手动；触屏和纯键盘保留准星附近约 7° 的轻度吸附，纯键盘没有俯仰键所以吸附不看高低差。
+const AIM_ASSIST_COS=Math.cos(7*Math.PI/180);
+function aimAssistKind(){return isTouch?'touch':CombatControls.mouseEnabled?null:'keyboard';}
+// 联机时房主按客人发来的朝向、俯仰和镜头距离还原载具镜头位置（服务端只放行这几个数字字段）。
+function vehicleEye(v,dist){
+  const el=clamp(Math.atan2(BF_VEHICLE_VIEWS[0].h,BF_VEHICLE_VIEWS[0].d)-camPitch,.06,1.45);
+  return v.mesh.position.clone().add(new THREE.Vector3(-Math.sin(camYaw)*Math.cos(el)*dist,2.6+Math.sin(el)*dist,-Math.cos(camYaw)*Math.cos(el)*dist));
+}
+// 战地里由真人手动瞄准的英雄：本机玩家，或发来镜头距离（look）的新版联机客人；电脑英雄和旧版客人不算。
+function manualHuman(){return battleOn()&&(!Input.network||Number.isFinite(Input.network.look));}
+function crosshairPoint(range){
+  const net=Input.network,dir=camForward(true),v=player.inVehicle;
+  // 步行是第一人称，从眼睛出发；载具镜头在车后上方，跳过镜头到车身这一段，免得瞄到自己或车后的地面。
+  const back=!v?0:net?clamp(net.look,0,40):camState.dist;
+  const eye=!v?player.pos.clone().add(new THREE.Vector3(0,1.72,0)):net?vehicleEye(v,back):camera.position.clone();
+  const a=eye.addScaledVector(dir,v?back+2:0),b=a.clone().addScaledVector(dir,range);
+  const foes=versus.aimTargets(player.team).filter(t=>!t.dead&&t.mesh),center=t=>t.mesh.position.clone().add(new THREE.Vector3(0,t.hitH||1,0)),assist=net?(net.autoAim?'touch':null):aimAssistKind();
+  if(assist){
+    const flat=new THREE.Vector3(dir.x,0,dir.z).normalize();let best=null,score=AIM_ASSIST_COS;
+    for(const t of foes){
+      const c=center(t),to=c.clone().sub(a),d=to.length();if(d>range||d<1)continue;
+      if(assist==='keyboard')to.y=0;
+      const cos=to.normalize().dot(assist==='keyboard'?flat:dir);
+      if(cos>score&&versus.visible(a,c)){score=cos;best=c;}
+    }
+    if(best)return best;
+  }
+  let hit=shotCover(a,b,false);
+  for(const t of foes){const s=segmentHit(a,b,center(t),(t.radius||.65)+.15);if(s!==null&&s<hit)hit=s;}
+  return a.lerp(b,Math.max(hit,Math.min(1,3/range)));
+}
+function manualAim(from,range){const target=crosshairPoint(range);return {dir:target.clone().sub(from).normalize(),target,mo:null};}
 function playerAim(from,range,moveDir){
+  if(manualHuman())return manualAim(from,range);
   if(Input.network){if(Input.network.autoAim)return autoAim(from,camForward(false),range,.3);return {dir:camForward(false),target:null,mo:null};}
   if(!isTouch){
     const f=camForward(camMode==='first');
@@ -2490,14 +2579,15 @@ function updInteraction(){
   const medicalDistance=Math.hypot(player.pos.x-fortress.shelter.x,player.pos.z-fortress.shelter.z);
   if(!tip&&!player.inVehicle&&medicalDistance<10)tip=medicalDistance<fortress.shelter.r?(player.hp<player.maxHp?'＋ 野战医疗站 · 正在自动回血':'＋ 野战医疗站 · 生命已恢复'):'＋ 野战医疗站 · 走进绿色圆圈自动回血';
   if(player.dead)tip='';
-  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5&&vsOn())tip='生命偏低：回营地治疗，或向医疗兵靠拢';
+  else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5&&vsOn())tip=bankMode?'生命偏低：回己方核心附近自动回血':'生命偏低：回营地治疗，或向医疗兵靠拢';
   else if(!tip&&!player.inVehicle&&player.hp<player.maxHp*.5)tip=Game.testMode||Game.items.medkit>0?'生命偏低：H 使用医疗包（剩'+(Game.testMode?'∞':Game.items.medkit)+'）':'医疗包用完：O 商店购买，或回基地医疗平台回血';
   if($('interactHint').textContent!==tip){$('vI').setAttribute('aria-label',a.tip||'互动');$('interactHint').textContent=tip;}
   $('interactHint').classList.toggle('hidden',!tip);
-  const mk=vsOn()?(player.inVehicle?.cfg.fly?'降低':player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':'医疗'):'医疗'+(Game.testMode?'∞':Game.items.medkit);if($('vH').textContent!==mk)$('vH').textContent=mk;
+  const mk=battleOn()?(player.inVehicle?.cfg.fly?'降低':player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':'医疗'):'医疗'+(Game.testMode?'∞':Game.items.medkit);if($('vH').textContent!==mk)$('vH').textContent=mk;
 }
 function useMedkit(){
-  if(vsOn()){if(!versus.support(player)&&player===versus.state.local)showMsg('兵种支援：医疗兵治疗、工程兵维修、支援兵补弹；靠近友军使用',2);return;}
+  if(bankOn()){showMsg('靠近己方核心可自动回血',1.5);return;}
+  if(battleOn()){if(!versus.support(player)&&player===versus.state.local)showMsg('兵种支援：医疗兵治疗、工程兵维修、支援兵补弹；靠近友军使用',2);return;}
   if(player.inVehicle&&!rvOn()){showMsg('驾驶中不能用医疗包，先按 I 下车',1.6);return;}
   if(player.hp>=player.maxHp){showMsg('生命已满，医疗包留到关键时刻',1.4);return;}
   if(!Game.testMode&&Game.items.medkit<=0){showMsg('没有医疗包！O 打开商店购买',2);return;}
@@ -2510,16 +2600,19 @@ function useMedkit(){
 function throwGrenade(){
   if(player.dead||place.kind)return false;
   if(player.inVehicle){showMsg('下车后可投掷手雷',1.2);return false;}
-  if(vsOn()){if(player.grenadeCd>0){if(player===versus.state.local)showMsg('手雷冷却中 '+Math.ceil(player.grenadeCd)+' 秒',.9);return false;}player.grenadeCd=versus.grenadeCooldown(player);}
+  if(player.grenadeCd>0){if(!vsOn()||player===versus.state.local)showMsg('手雷冷却中 '+Math.ceil(player.grenadeCd)+' 秒',.9);return false;}
+  player.grenadeCd=vsOn()?versus.grenadeCooldown(player):3;
   const from=player.pos.clone();from.y+=1.45;
-  const facing=camForward(false),aim=CombatControls.autoAim?autoAim(from,facing,26,.65):{mo:null};
-  const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,22);
+  // 战地真人手动投掷：朝镜头方向扔，抬头扔得远、低头扔得近；电脑英雄和其他模式沿用自动寻敌。
+  const manual=manualHuman(),auto=battleOn()?!manual&&!!Input.network?.autoAim:CombatControls.autoAim;
+  const facing=camForward(false),aim=auto?autoAim(from,facing,26,.65):{mo:null};
+  const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,manual?clamp(22+camPitch*25,8,28):22);
   target.y=groundY(target.x,target.z)+.2;
   fireBullet(from,facing,{arc:true,grenade:true,dmg:160,explode:6,speed:20,range:26,spread:0,color:0x96a85a},true,target);
   updHUDItem();AudioSys.sfx('shoot');return true;
 }
 function selectWeapon(id,quiet=false){
-  if(vsOn()){battlefieldCommand({kind:'weapon',id});renderWeaponBar();updViewModel();return;}
+  if(battleOn()){battlefieldCommand({kind:'weapon',id});renderWeaponBar();updViewModel();return;}
   if(coopCommand({kind:'weapon',id}))return;
   if(!Game.weapons.includes(id))return;
   if(Game.curWeapon!==id){Game.curWeapon=id;player.fireCd=Math.min(player.fireCd,.15);player.heat=0;player.burstLeft=0;AudioSys.sfx('reload');}
@@ -2560,6 +2653,8 @@ function playerCanMove(x,z){
 }
 function updPlayer(dt){
   if(player.dead)return;
+  // 据点战已有独立冷却更新；战役/房车按游戏时间计时，暂停不流逝。
+  if(!vsOn())player.grenadeCd=Math.max(0,(player.grenadeCd||0)-dt);
   if(Input.pop('U'))throwGrenade();
   const t=performance.now()/1000;
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
@@ -2620,7 +2715,8 @@ function updPlayer(dt){
     const facing=new THREE.Vector3(Math.sin(v.yaw),0,Math.cos(v.yaw));
     const probe=v.mesh.position.clone();probe.y+=v.cfg.seatH+.6;
     let aim;
-    if(isTouch){aim=autoAim(probe,camForward(false),v.cfg.range,.5);if(!aim.mo)aim=autoAim(probe,facing,v.cfg.range,.2);}
+    // 战地里本机和联机真人都沿准星手动瞄准；其他模式的触屏仍自动寻敌。
+    if(isTouch&&!manualHuman()){aim=autoAim(probe,camForward(false),v.cfg.range,.5);if(!aim.mo)aim=autoAim(probe,facing,v.cfg.range,.2);}
     else aim=playerAim(probe,v.cfg.range,facing);
     if(Input.firing(automaticFireTarget(probe,v.cfg.range,aim))&&player.fireCd<=0){
       player.fireCd=v.cfg.rate;
@@ -2675,6 +2771,10 @@ function updPlayer(dt){
   let gy=insideMap?groundY(player.pos.x,player.pos.z):-Infinity;
   // A jump may clear a low wall; land on its cap instead of sinking through it.
   for(const bd of buildings)if(bd.isWall&&!bd.dead&&wallTouches(bd,player.pos.x,player.pos.z)&&player.pos.y>=bd.mesh.position.y+COVER_HEIGHT-.05)gy=Math.max(gy,bd.mesh.position.y+COVER_HEIGHT);
+  // 洞顶同时是地表玩家的落脚面；只接住从上方落下的人，不把洞内玩家抬到地面。
+  if(insideMap&&!rvOn())for(const s of fortress.near(player.pos.x,player.pos.z,0)){
+    if(s.roof&&fortress.inside(s,player.pos.x,player.pos.z)&&player.pos.y>=s.top-.05)gy=Math.max(gy,s.top);
+  }
   player.vy-=24*dt;
   player.pos.y+=player.vy*dt;
   const headLimit=insideMap?fortress.ceilingAt(player.pos.x,player.pos.z,Math.max(gy,player.pos.y)+.1)-2.6:Infinity;
@@ -2689,7 +2789,7 @@ function updPlayer(dt){
   player.mesh.rotation.y=player.yaw;
   player.mesh.rotation.x=0;
   // 医疗兵自愈
-  if(!vsOn()&&CLASSES[Game.cls].heal){
+  if(!battleOn()&&CLASSES[Game.cls].heal){
     player.hp=Math.min(player.maxHp,player.hp+CLASSES[Game.cls].heal*dt);
     updHPBar(player.bar,player.hp/player.maxHp);
   }
@@ -2700,7 +2800,7 @@ function updPlayer(dt){
   const aim=playerAim(probe,wp.range,moveDir);
   const firing=Input.firing(automaticFireTarget(probe,wp.range,aim));
   player.heat=firing&&wp.beam?Math.min(1,(player.heat||0)+dt/1.5):Math.max(0,(player.heat||0)-dt*2);
-  if(firing&&player.fireCd<=0&&!place.kind&&(!vsOn()||versus.canShoot(player,Game.curWeapon))){
+  if(firing&&player.fireCd<=0&&!place.kind&&(!battleOn()||versus.canShoot(player,Game.curWeapon))){
     player.fireCd=wp.rate*(player.buffT>0?1/1.4:1);
     // Reuse the target sampled for this frame.
     if(camMode==='third'&&player.lookHeading===undefined)player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
@@ -2730,7 +2830,7 @@ function updPlayer(dt){
     if(action.kind==='rv-search')rvBreakout.interact();
     else if(action.kind==='vehicle')enterVehicle(action.vehicle);
     else if(action.kind==='gate'){if(!gate.dead)setGate(!gate.open);else showMsg(action.tip,2);}
-    else showMsg(vsOn()?'靠近本方载具按 I 驾驶；H 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；H 是医疗包',2.4);
+    else showMsg(bankOn()?'R 出兵、0 升级银行、Z 切换路线；靠近核心回血':battleOn()?'靠近本方载具按 I 驾驶；H 使用当前兵种支援能力':'附近没有可互动的东西：靠近载具驾驶，靠近城门开关门；H 是医疗包',2.4);
     updInteraction();
   }
   if(Input.pop('H'))useMedkit();
@@ -3469,9 +3569,10 @@ function renderSlots(){if(coopDriver?.config){showMsg('联机进度独立于单�
   }
 }
 function restoreView(){
-  setCameraView(0,false);
+  // 先读偏好再复位：当前若是第一人称（例如刚退出战地），setCameraView 会把保存值写成第三人称。
   let pref='third';try{pref=localStorage.getItem('chongchao-person')||'third';}catch(_e){}
-  if(pref==='first')setCamMode('first',false);
+  setCameraView(0,false);
+  setCamMode(pref==='first'?'first':'third',false);
 }
 function loadGame(d){if(!d||(!d.testMode&&!validateStoredSave(d))){showAlert('存档内容异常，未读取或覆盖原档');return;}if(coopDriver?.config){showMsg('联机中不能读入单机存档',2);return;}
   closePanels();hideConfirm();
@@ -3571,6 +3672,7 @@ function togglePause(){
 // P / Esc / 手机暂停键：任何游玩状态都立即响应；面板打开时先关面板再暂停
 function pauseKey(fromEsc=false){
   if(!$('confirmPanel').classList.contains('hidden'))return;
+  if(zergMode&&zergMode.frozen)return; // 进化三选一必须先选完
   if(vsOn()&&Game.state==='over')return;
   if(vsOn()&&vsUI.open&&!panelOpen&&!(fromEsc&&place.kind)){versusClosePanel();return;}
   if(fromEsc&&place.kind&&!panelOpen){cancelPlacement();return;}
@@ -3586,9 +3688,9 @@ function updJumpUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
   const txt=v?'':player.onGround?'跳跃 就绪（'+(isTouch?'跳跃':keyBindings.label('K'))+'）':'跳跃 腾空中';
   $('vSPRINT').classList.toggle('hidden',!!v);
-  $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷';
+  $('vU').classList.toggle('hidden',!!v);$('vU').textContent=player.grenadeCd>0?'手雷 '+Math.ceil(player.grenadeCd)+'s':'手雷';
   const el=$('jumpTxt');if(el.textContent!==txt)el.textContent=txt;
-  const k=$('vK'),h=$('vH'),kl=fly?'升':'跳跃',hl=fly?'降':vsOn()?(player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':player.bfKit==='medic'?'医疗':'支援'):'医疗';
+  const k=$('vK'),h=$('vH'),kl=fly?'升':'跳跃',hl=fly?'降':battleOn()?(player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':player.bfKit==='medic'?'医疗':'支援'):'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
 
 }
@@ -3662,9 +3764,9 @@ function drawRadar(){
 const viewModel=new THREE.Group();viewModel.visible=false;camera.add(viewModel);
 let viewKick=0,viewBob=0,viewModelKey='',bfAiming=false;
 function updViewModel(){
-  const id=Game.curWeapon,key=(vsOn()?'battlefield:':'campaign:')+id;if(viewModelKey===key)return;viewModelKey=key;
+  const id=Game.curWeapon,key=(battleOn()?'battlefield:':'campaign:')+id;if(viewModelKey===key)return;viewModelKey=key;
   viewModel.children.slice().forEach(c=>{viewModel.remove(c);c.traverse(n=>{n.geometry?.dispose();n.material?.dispose();});});
-  if(vsOn()){const gun=militaryGun(THREE,id);gun.rotation.y=Math.PI;viewModel.add(gun);viewModel.position.set(.21,-.21,-.62);return;}
+  if(battleOn()){const gun=militaryGun(THREE,id);gun.rotation.y=Math.PI;viewModel.add(gun);viewModel.position.set(.21,-.21,-.62);return;}
   const w=WEAPONS[id],len=w.pierce>2?.62:w.pellets?.42:.5,fat=w.explode||w.flame?.075:.055;
   const add=(geo,color,x,y,z,basic)=>{const m=new THREE.Mesh(geo,basic?new THREE.MeshBasicMaterial({color}):new THREE.MeshPhongMaterial({color,shininess:50,specular:0x445566}));m.position.set(x,y,z);viewModel.add(m);return m;};
   add(new THREE.BoxGeometry(fat*1.2,fat*1.4,len),0x2a323b,0,0,0);
@@ -3680,8 +3782,8 @@ function updFirstPersonModel(dt,show){
   const moving=Math.hypot(Input.axis().x,Input.axis().y)>.1;viewBob+=dt*(moving?9:2);
   viewModel.position.set(.21+Math.sin(viewBob)*(moving?.008:.002),-.21+Math.abs(Math.cos(viewBob))*(moving?.008:.003)-viewKick*.012,-.62+viewKick*.045);
   viewModel.rotation.x=viewKick*.12;
-  if(vsOn()&&bfAiming){viewModel.position.x=0;viewModel.position.y=Game.curWeapon==='laser'?-.14:-.125;}
-  if(vsOn()&&player.bfReload){viewModel.rotation.x=-.55;viewModel.rotation.z=-.28;viewModel.position.y-=.12;}else viewModel.rotation.z=0;
+  if(battleOn()&&bfAiming){viewModel.position.x=0;viewModel.position.y=Game.curWeapon==='laser'?-.14:-.125;}
+  if(battleOn()&&player.bfReload){viewModel.rotation.x=-.55;viewModel.rotation.z=-.28;viewModel.position.y-=.12;}else viewModel.rotation.z=0;
 }
 
 /* ================= 摄像机 ================= */
@@ -3709,7 +3811,7 @@ function updCamera(dt){
     return;
   }
   updFirstPersonModel(dt,false);
-  const view=CAMERA_VIEWS[camView];
+  const sight=battleOn()&&!!v,view=sight?BF_VEHICLE_VIEWS[bfVehicleView]:CAMERA_VIEWS[camView];
   const look=_look.copy(camState.target);look.y+=v?2.6:1.9;
   let R=Math.hypot(view.d,view.h),el=clamp(Math.atan2(view.h,view.d)-camPitch,.06,1.45);
   const inside=isFinite(fortress.ceilingAt(tp.x,tp.z,tp.y+.5))?1:0;
@@ -3721,7 +3823,9 @@ function updCamera(dt){
   if(camState.dist>R+1)camState.dist=free;
   camState.dist+=(free-camState.dist)*(free<camState.dist?1-Math.exp(-dt*24):1-Math.exp(-dt*3.5));
   camera.position.copy(look).addScaledVector(_dir,camState.dist);
-  camera.lookAt(look.x,look.y+.5,look.z);
+  // 战地载具手动瞄准：镜头朝准星方向看，屏幕中心就是炮口要打的地方。
+  if(sight)camera.lookAt(_probe.copy(camera.position).add(camForward(true)));
+  else camera.lookAt(look.x,look.y+.5,look.z);
   if(!player.dead&&!v)player.mesh.visible=camState.dist>1.2;
 }
 
@@ -3799,12 +3903,12 @@ function syncPauseOptions(){
   $('muteBtnMenu').textContent=$('muteBtn').textContent;
 }
 $('placeOk').onclick=confirmPlacement;$('placeCancel').onclick=()=>cancelPlacement();
-$('personBtn').onclick=()=>{setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
+$('personBtn').onclick=()=>{if(fpsRules())return;setCamMode(camMode==='first'?'third':'first');syncPauseOptions();};
 function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'defend');updSquadOrderBtn();}
 $('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
 stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
-Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&$('confirmPanel').classList.contains('hidden');
+Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!(zergMode&&zergMode.frozen)&&$('confirmPanel').classList.contains('hidden');
 Input.onPause=pauseKey;
 Input.onTouchDetected=()=>{if(deviceMode==='auto')setTouchMode(true);};
 let layoutPreviousTouch=isTouch;
@@ -3830,7 +3934,7 @@ for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>s
 /* ================= 纯键盘界面导航 =================
    最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
-const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','menuOver','menuPause','vsMenu','menuMain'];
+const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
 function navRoot(){
   // The modal owns its native text fields and Tab/Escape handling.
@@ -3845,6 +3949,7 @@ function navDefault(root){
   const pick=root.id==='menuMain'?(hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart'))
     :root.id==='menuPause'?$('btnResume'):root.id==='menuOver'?$('btnRetry'):root.id==='confirmPanel'?$('confirmCancel')
     :root.id==='vsResult'?$('vsRematch'):root.id==='vsMenu'?root.querySelector('[data-vs-ai="normal"]')
+    :root.id==='zergMenu'?$('zergStart'):root.id==='zergResult'?$('zergAgain')
     :root.querySelector('.shopItem,.saveSlot button,select')||items.find(el=>!el.classList.contains('closeX'));
   return pick&&items.includes(pick)?pick:items[0];
 }
@@ -3896,6 +4001,9 @@ window.addEventListener('keydown',e=>{
     else if(root.id==='warResult')$('warResultBack').click();
     else if(root.id==='rvMenu')$('rvBack').click();
     else if(root.id==='rvResult')$('rvResultBack').click();
+    else if(root.id==='zergMenu')$('zergBack').click();
+    else if(root.id==='zergResult')$('zergResultBack').click();
+    else if(root.id==='zergEvolve'){}
     else if(root.id==='vsPanel')versusClosePanel();
     else if(root.id==='menuPause')togglePause();
     else if(!['menuMain','menuOver'].includes(root.id))closePanels();
@@ -3941,20 +4049,20 @@ function loop(){
     frameStats(now);renderer.render(resistanceCampaign.state.scene,camera);Input.clearFrame();return;
   }
   if(vsOn()&&Game.state==='battle'&&!panelOpen){
-    if(Input.pop('O'))versusTogglePanel('weapons');else if(Input.pop('L'))versusTogglePanel('build');else if(Input.pop('R'))battlefieldCommand({kind:'bfReload'});else if(Input.pop('T'))versusTogglePanel('team');
+    if(Input.pop('O'))versusTogglePanel('weapons');else if(Input.pop('L'))versusTogglePanel('build');else if(Input.pop('R')){if(bankOn())versusTogglePanel('units');else battlefieldCommand({kind:'bfReload'});}else if(Input.pop('T'))versusTogglePanel('team');
   }else if((Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!zergOn()){
     if(Input.pop('O')){cancelPlacement(true);openShop();}
     else if(Input.pop('L'))openBuild();
   }else if(panelOpen&&(Input.pop('O')||Input.pop('L'))){closePanels();}
-  const playing=(Game.state==='prep'||Game.state==='battle')&&!panelOpen;
+  const playing=(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!(zergMode&&zergMode.frozen);
   if(coopDriver?.config&&!coopDriver.connection.host){
     for(const [key,name] of [['K','jump'],['U','grenade'],['I','interact'],['H','heal']])if(Input.pop(key))coopPendingEdges.push(name);
-    if(playing){updLook(dt);if(Input.pop('C'))cycleCamView();if(vsOn())versusPanelInput();for(let n=1;n<=9;n++)if(Input.pop('N'+n)&&Game.weapons[n-1])selectWeapon(Game.weapons[n-1]);if(Input.pop('X'))cycleWeapon(1);placementInput();updPlacement();updCamera(dt);updSun(camState.target);updHUD(dt);AudioSys.bgm(dt,Game.state==='battle');}
+    if(playing){if(vsOn())syncBattlefieldView();updLook(dt);if(Input.pop('C'))cycleCamView();if(vsOn())versusPanelInput();for(let n=1;n<=9;n++)if(Input.pop('N'+n)&&Game.weapons[n-1])selectWeapon(Game.weapons[n-1]);if(Input.pop('X'))cycleWeapon(1);placementInput();updPlacement();updCamera(dt);updSun(camState.target);updHUD(dt);AudioSys.bgm(dt,Game.state==='battle');}
     for(const mo of monsters)visuals.animate(mo.mesh,dt,'Walk',camera);
     if(vsOn())versus.guestFrame(dt);
     for(const human of coopHumans){if(human.mesh){visuals.animate(human.mesh,dt,human.moving?'Run':'Idle',camera);human.mesh.visible=!human.dead&&!human.inVehicle&&!(human===player&&camMode==='first');}}
     updParticles(dt);updScreenFx(dt);explorationLight.update(dt,player.pos,camera,camForward(true),camMode==='first',battlefield,!player.dead);
-    coopDriver.tick(now);frameStats(now);if(vsOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);Input.clearFrame();return;
+    coopDriver.tick(now);frameStats(now);if(battleOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);Input.clearFrame();return;
   }
   if(playing&&rvOn()){
     updLook(dt);player.invulnerable=Math.max(0,player.invulnerable-dt);updPlayer(dt);
@@ -4000,7 +4108,7 @@ function loop(){
     AudioSys.bgm(dt,false);
     updParticles(dt);
     $('interactHint').classList.add('hidden');
-    frameStats(now);if(vsOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);
+    frameStats(now);if(battleOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);
     Input.clearFrame();
     return;
   }
@@ -4010,23 +4118,24 @@ function loop(){
   if(playing){updCamera(dt);updSun(camState.target);updPlacement();}
   explorationLight.update(dt,player.inVehicle?player.inVehicle.mesh.position:player.pos,camera,camForward(true),camMode==='first',battlefield,!player.dead);
   coopDriver?.tick(now);
-  frameStats(now);if(vsOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);
+  frameStats(now);if(battleOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);
   Input.clearFrame();
 }
 const operations=createOperations({Game,player,monsters,squad,THREE,scene,showMsg,showHint,findFreeSpot,groundY,exitVehicle,clearEntities,autoSave,closePanels,collectAllGold,startPrep,showHUD,spawnMonster,playerDamage,getYaw:()=>camYaw,canWalk:(x,z,r)=>!collideWalls(x,z,r)&&!tooSteep(x,z),
   resetCamera(){camState.init=false;},openPanel(){closePanels();Input.reset();panelOpen=true;$('operationsPanel').classList.remove('hidden');if(document.pointerLockElement)document.exitPointerLock();}});
 const tacticalPanel=mountTacticalPanel({Game,squad,vehicles,squadGear,squadRole,squadBehavior,setSquadTask,setSquadMemberTask,setSquadAutoDefense,openingSupply,preview:tacticalPreview,closePanels,resetInput:()=>Input.reset(),autoSave,
   operationActive:()=>operations.active,cancelPlacement:()=>cancelPlacement(true),setPanelOpen:v=>{markPanelOpen();panelOpen=v;AudioSys.pause(v||Game.state==='paused');},releasePointer:()=>{if(document.pointerLockElement)document.exitPointerLock();}});
-function actionLabel(a){return (vsOn()?{R:'换弹',O:'装备',L:'部署',Z:'瞄准',H:'兵种支援',T:'战况'}[a]:null)||KEY_ACTIONS[a][0];}
+function actionLabel(a){return (bankOn()?{R:'出兵',O:'买枪',L:'建造',Z:'换路线',N0:'升级银行',T:'队伍'}[a]:null)||(battleOn()?{R:'换弹',O:'装备',L:'部署',Z:'举枪',H:'兵种支援',T:'战况',C:'载具视角'}[a]:null)||KEY_ACTIONS[a][0];}
 function syncKeyLabels(){
+  syncViewLabels();combatSection?.lockAim(fpsRules());
   $('fullBtn').textContent=isTouch?'全屏':'全屏 F';
   $('readyBtn').textContent='✅ 准备完毕，开战！（'+keyBindings.label('R')+'）';
   $('menuButton').textContent=isTouch?'暂停':'暂停 '+keyBindings.label('P');
   $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
-  const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire];
-  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','P']:['SPRINT','J','K','U','I','H','O','L','C','Q','E','P']).map(a=>keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
+  const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(battleOn()?'手动瞄准 · 按住射击'+(combat.input==='keyboard'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire]);
+  $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','Q','E','P']:['SPRINT','J','K','U','I','H','O','L','C','Q','E','P']).map(a=>keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
 }
 function renderKeys(){
   const grid=$('keyGrid');grid.replaceChildren();
@@ -4034,7 +4143,7 @@ function renderKeys(){
     b.onclick=()=>{Input.reset();bindingAction=a;$('keyStatus').textContent='正在修改「'+actionLabel(a)+'」：请按新键，Esc 取消';};grid.appendChild(b);}
 }
 function setupFeaturePanels(){
-  const open=()=>{closePanels();Input.reset();panelOpen=true;$('keyPanel').classList.remove('hidden');$('keyStatus').textContent='选择要修改的动作';renderKeys();if(document.pointerLockElement)document.exitPointerLock();};
+  const open=()=>{closePanels();Input.reset();panelOpen=true;$('keyPanel').classList.remove('hidden');$('keyStatus').textContent='选择要修改的动作';renderKeys();combatSection?.lockAim(fpsRules());if(document.pointerLockElement)document.exitPointerLock();};
   $('keysMenu').onclick=$('keysPause').onclick=open;$('keysClose').onclick=closePanels;
   $('keysReset').onclick=()=>{bindingAction=null;keyBindings.reset();Input.reset();renderKeys();syncKeyLabels();$('keyStatus').textContent='已恢复默认键位';};
   $('menuButton').onclick=()=>pauseKey();
@@ -4085,19 +4194,34 @@ player.reset('gunner');
 player.mesh.visible=false; // 菜单时隐藏
 resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get player(){return player;},showHUD,
   isTouch:()=>isTouch,view:()=>({yaw:camYaw,pitch:camPitch,first:camMode==='first',preset:CAMERA_VIEWS[camView]}),
-  autoAim:()=>isTouch||CombatControls.autoAim,cycleView:cycleCamView,
+  // 抗战同样是枪战规则：键鼠完全手动，触屏和纯键盘保留准星附近的轻度吸附。
+  aimAssist:()=>!!aimAssistKind(),
   viewState:()=>({mode:camMode,index:camView,yaw:camYaw,pitch:camPitch}),
   firstPerson(){camMode='first';camState.init=false;Input.resetLook();syncViewLabels();},
+  // 骑马用第三人称跟随，只在近身/高位两档之间切换；不写入战役保存的视角偏好。
+  rideView(next=false){const riding=camMode==='third';camMode='third';camView=riding&&next?(camView===0?1:0):camView>1?0:camView;camPitch=0;camState.init=false;Input.resetLook();syncViewLabels();return CAMERA_VIEWS[camView].name;},
   restoreView(v){if(!v)return;camMode=v.mode;camView=v.index;camYaw=v.yaw;camPitch=v.pitch;camState.init=false;Input.resetLook();syncViewLabels();},
   setLook(yaw,pitch){camYaw=yaw;camPitch=pitch;Input.resetLook();},
   cannonLook(){camPitch=clamp(camPitch,-.10,.50);},syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
   faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
   prepare(){if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
 });
-zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,camera,player,base,gate,buildings,squad,vehicles,
-  monsters:()=>monsters,MOUTHS,CHAPTERS,spawnMonster,moveMonster,damageSquad,damageVehicle,damageBuilding,damageGate,damageBase,
+let zergView=null;
+zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,scene,camera,player,base,gate,buildings,squad,vehicles,BUILDINGS,
+  monsters:()=>monsters,MOUTHS,CHAPTERS,spawnMonster,moveMonster,damageMonster,damageSquad,damageVehicle,damageBuilding,damageGate,damageBase,
   fireBullet,groundY,flyHeight,visuals,showMsg,showHint,spawnParticles,placeBuilding,spawnSquad,squadGear,clearEntities,updHPBar,baseMaxHp,
-  isTouch:()=>isTouch,getCamYaw:()=>camYaw,camForward:v=>camForward(v),bumpRun:()=>{runGeneration++;}});
+  isTouch:()=>isTouch,getCamYaw:()=>camYaw,getCamMode:()=>camMode,camForward:v=>camForward(v),bumpRun:()=>{runGeneration++;},
+  keyLabel:action=>keyBindings.label(action),cycleView:()=>cycleCamView(),
+  setLook(yaw,pitch=0){camYaw=yaw;camPitch=pitch;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
+  // 虫族开局用高位跟随看清战场；只改本局镜头，不写入玩家保存的人称偏好，退出时还原。
+  enterView(){zergView={camMode,camView,saved:null};try{zergView.saved=localStorage.getItem('chongchao-person');}catch(_e){}camMode='third';camView=1;camPitch=0;camState.init=false;syncViewLabels();},
+  leaveView(){
+    if(!zergView)return;
+    camMode=zergView.camMode;camView=zergView.camView;camPitch=0;camState.init=false;
+    // 局内按 C 切人称会写入偏好；退出时把战役原来的偏好原样放回去。
+    try{if(zergView.saved===null)localStorage.removeItem('chongchao-person');else localStorage.setItem('chongchao-person',zergView.saved);}catch(_e){}
+    zergView=null;syncViewLabels();
+  }});
 const _origNewGame=newGame;
 newGame=function(t){if(zergOn())zergMode.stop();player.mesh.visible=true;_origNewGame(t);};
 const _origLoadGame=loadGame;
@@ -4124,7 +4248,7 @@ function setupWebControls(){
     try{localStorage.setItem('chongchao-daylight',battlefield.timeOfDay);}catch(_e){}
     syncLightingLabels();
   };
-  const combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
+  combatSection=mountCombatSettings($('keyPanel'),CombatControls,()=>{Input.reset();if(!CombatControls.mouseEnabled&&document.pointerLockElement)document.exitPointerLock();syncKeyLabels();});
   $('keyPanel').insertBefore(combatSection,$('keyStatus'));
   platformSave=setupToyPlatform({
     store:saveStore,confirm:askConfirm,updateContinue:refreshContinue,
@@ -4163,7 +4287,8 @@ function setupWebControls(){
   setDeviceMode(deviceMode);
   if(new URLSearchParams(location.search).get('qa')==='1'){
     window.__gameQA={CAMPAIGN_DIFFICULTIES,campaignDifficulty,campaignEliteChance,campaignWaveCount,campaignSpawnInterval,baseMaxHp,AudioSys,lookControl,hiveFloor,hiveCeiling,hiveNavigation,hiveRoute,rampartHeight,rampartNavigation,RAMPARTS,mouthSpawn,navDir,moveMonster,SQUAD_ROLES,squadRole,changeSquadRole,assignSquadVehicle,boardSquadVehicle,leaveSquadVehicle,updSquadSupport,updSquadDriver,monsterTargets,buyItem,battlefield,groundMesh,environmentForChapter,classDamage,updSmartGate,setGate,CombatControls,playerAim,automaticFireTarget,operations,keyBindings,squadGear,upgradeSquad,squadMaxHp,MAX_BUILDINGS,updPickups,openShop,closePanels,WEAPONS,CHAPTERS,ELITES,BUILDINGS,ITEMS,VEHICLES,MOUTHS,HIVE,THEME,bullets,buildings,rockColliders,fortress,hive,groundY,tooSteep,slopeSpeed,interactionTarget,getCamYaw:()=>camYaw,setCamYaw:v=>{camYaw=v;},getCamMode:()=>camMode,setCamMode,collideWalls,fireBullet,updBullets,updBuildings,updPlayer,updSquad,updWave,updMonsters,updGate,updCamera,sandboxWave,loadGame,autoSave,saveData,applySave,damageGate,damageBuilding,damageSquad,damageVehicle,placeBuilding,sandboxSpawn,claimSandbox,openSandbox,saveStore,getPlatformSave:()=>platformSave,Game,player,base,gate,monsters,squad,vehicles,pickups,renderer,scene,camera,Input,newGame,requestNewGame,startBattle,startPrep,spawnMonster,spawnSquad,spawnVehicle,enterVehicle,exitVehicle,damageMonster,playerDamage,damageBase,restartLevel,clearEntities,setCameraView,visuals,weaponDps,weaponMul,upgradeWeapon,startPlacement,confirmPlacement,cancelPlacement,startDemolish,demolishTarget,findFreeSpot,spotFree,placementCheck,place,migrateWeapons,LEGACY_WEAPONS,CLASSES,renderBuild,selectWeapon,cycleWeapon,useMedkit,setSquadTask,squadBehavior,squadTaskLabel,validateNormalSave,vehicleMuzzle,vehicleAim,squadMuzzle,squadFollowPoint,squadPatrolPoint,squadAnchor,muzzleTip,updateSquadHeading,levelWin,togglePause,pauseKey,hasProgress,slotInfo,camState,dropPickup,explode,
-      get resistanceCampaign(){return resistanceCampaign;},get rvBreakout(){return rvBreakout;},get versus(){return versus;},get zerg(){return zergMode;},zergOn,startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,VS_UNITS,VS_AI,VS_RULES,VS_SIZES,get coopHumans(){return coopHumans;},
+      fpsRules,manualHuman,aimAssistKind,crosshairPoint,cycleCamView,syncBattlefieldView,restoreView,starshipInput,withHuman,getCamPitch:()=>camPitch,setCamPitch:v=>{camPitch=v;},getCamView:()=>camView,getVehicleView:()=>bfVehicleView,getCamDist:()=>camState.dist,
+      get resistanceCampaign(){return resistanceCampaign;},get rvBreakout(){return rvBreakout;},get versus(){return versus;},get zerg(){return zergMode;},zergOn,selectVersusRules,bankOn,battleOn,versusBank,versusSend,versusBuildPick,startVersusAI,startVersusSim,versusSimStep,exitVersus,versusTogglePanel,versusPick,versusSeatPlan,versusGive,get VS_UNITS(){return VS_UNITS;},get VS_AI(){return VS_AI;},get VS_RULES(){return VS_RULES;},VS_SIZES,get coopHumans(){return coopHumans;},
       touchLayout,setDeviceMode,vehicleCanStand,queenSupply,updHUD,throwGrenade,explorationLight,tacticalWavePlan,openingSupply,tacticalPreview,tacticalPanel,setSquadMemberTask,setSquadAutoDefense,finishBattleReport,updAirdrops,updParticles,get panelOpen(){return panelOpen;},get isTouch(){return isTouch;},
       startMeasure(){frameTimes.length=0;previousFrame=0;measuring=true;},
       endMeasure(){measuring=false;const s=[...frameTimes].sort((a,b)=>a-b),sum=s.reduce((a,b)=>a+b,0);return{samples:s.length,averageFPS:1000/(sum/s.length),medianMs:s[Math.floor(s.length*.5)],p95Ms:s[Math.floor(s.length*.95)],over50ms:s.filter(v=>v>50).length,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,memory:renderer.info.memory,viewport:[innerWidth,innerHeight],dpr:renderer.getPixelRatio(),drawingBuffer:[renderer.domElement.width,renderer.domElement.height],renderer:renderer.getContext().getParameter((renderer.getContext().getExtension('WEBGL_debug_renderer_info')||{}).UNMASKED_RENDERER_WEBGL||renderer.getContext().RENDERER),quality,theme:THEME,raw:frameTimes.slice()};}
@@ -4174,12 +4299,12 @@ function setupWebControls(){
 
 function withHuman(human,fn){
   if(!human||human===player&&!coopDriver?.config&&!human.vsAI)return fn();
-  const old=player,cls=Game.cls,weapon=Game.curWeapon,yaw=camYaw,mode=camMode,network=Input.network,weapons=Game.weapons,vs=vsOn();
+  const old=player,cls=Game.cls,weapon=Game.curWeapon,yaw=camYaw,pitch=camPitch,mode=camMode,network=Input.network,weapons=Game.weapons,vs=vsOn();
   old.curWeapon=Game.curWeapon;player=human;Game.cls=human.cls||cls;Game.curWeapon=human.curWeapon||weapon;
   if(vs&&Array.isArray(human.vsWeapons))Game.weapons=human.vsWeapons; // 对战：每个英雄各买各的枪
   Input.network=human.vsAI&&vs?versus.aiHeroInput(human):coopDriver?.connection.host?coopDriver.connection.control(human.slot,human.slot===0?null:coopDriver.connection.input(human.slot),()=>computerHumanInput(human)):null;
-  if(Input.network){camYaw=Input.network.yaw??human.yaw;camMode=Input.network.fp?'first':'third';}
-  try{return fn();}finally{human.curWeapon=Game.curWeapon;human.moving=!!human.moveZ;if(vs){human.vsWeapons=Game.weapons;Game.weapons=weapons;}player=old;Game.cls=cls;Game.curWeapon=weapon;camYaw=yaw;camMode=mode;Input.network=network;}
+  if(Input.network){camYaw=Input.network.yaw??human.yaw;camPitch=Number.isFinite(Input.network.pitch)?clamp(Input.network.pitch,-1,1):0;camMode=Input.network.fp?'first':'third';}
+  try{return fn();}finally{human.curWeapon=Game.curWeapon;human.moving=!!human.moveZ;if(vs){human.vsWeapons=Game.weapons;Game.weapons=weapons;}player=old;Game.cls=cls;Game.curWeapon=weapon;camYaw=yaw;camPitch=pitch;camMode=mode;Input.network=network;}
 }
 function clearCoopHumans(){
   for(const h of coopHumans)if(h!==player&&h.mesh){visuals.release(h.mesh);scene.remove(h.mesh);}
@@ -4225,8 +4350,11 @@ function applyRoot(obj,row){
 function starshipInput(){
   const axis=Input.axis(),cs=Math.cos(camYaw),sn=Math.sin(camYaw),f=-axis.y,r=axis.x,edges=[];
   edges.push(...coopPendingEdges.splice(0));
-  return {x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!(Input.keys.K||Input.keys.Y),lower:!!Input.keys.H,
+  const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!(Input.keys.K||Input.keys.Y),lower:!!Input.keys.H,
     fire:isTouch?!!Input.keys.J:CombatControls.firing(true),autoFire:!isTouch&&CombatControls.settings.fire==='auto',autoAim:isTouch||CombatControls.settings.aim==='auto'};
+  // 战地：客人只在按住时开火；俯仰和镜头距离（look，步行为 0）让房主还原准星，autoAim 表示触屏/纯键盘的轻度吸附。
+  if(battleOn())Object.assign(input,{pitch:camPitch,look:player.inVehicle?camState.dist:0,fire:isTouch?!!Input.keys.J:CombatControls.held,autoFire:false,autoAim:!!aimAssistKind()});
+  return input;
 }
 function starshipSnapshot(){
   player.curWeapon=Game.curWeapon;
@@ -4277,7 +4405,7 @@ function coopCommand(command){
 function handleCoopCommand(slot,c){
  if(!c||!['prep','battle'].includes(Game.state))return;
  const human=coopHumans.find(h=>h.slot===slot&&!h.disconnected);if(!human)return;
- if(vsOn()){withHuman(human,()=>versus.handleCommand(human,c));return;}
+ if(vsOn()){const handled=withHuman(human,()=>versus.handleCommand(human,c));if(handled||battleOn()||c.kind!=='weapon')return;}
  withHuman(human,()=>{
   if(c.kind==='weapon'&&Game.weapons.includes(c.id))selectWeapon(c.id,true);
   else if(c.kind==='battle'&&Game.state==='prep')startBattle();
@@ -4307,13 +4435,13 @@ function handleCoopCommand(slot,c){
    每队 size 个座位、每个座位一名英雄：本机玩家、联机真人（slot=房间槽位）或电脑（slot=100+座位序号）。
    对战期间不读写单机存档，退出时把战役状态原样恢复。 */
 const vsUI={open:false,tab:'units',t:0,built:'',size:1,rosterSig:''};
-const VS_RECORD='chongchao-conquest-record-v1';
+const versusRecordStore=()=>bankMode?'chongchao-versus-record-v1':'chongchao-conquest-record-v1';
 const VS_CLASSES=['gunner','rifle','medic'];
-function versusRecord(){try{return JSON.parse(localStorage.getItem(VS_RECORD)||'{}')||{};}catch(_e){return {};}}
+function versusRecord(){try{return JSON.parse(localStorage.getItem(versusRecordStore())||'{}')||{};}catch(_e){return {};}}
 const versusRecordKey=(k,n)=>n>1?k+'-'+n:k; // 1 对 1 沿用原来的键，多人对战按规模分开记
 function setupVersus(){
   const campaignWeapons={...WEAPONS},campaignVehicles={...VEHICLES};
-  versus=createVersus({THREE,scene,camera,visuals,fortress,buildings,bullets,vehicles,WEAPONS,BUILDINGS,CLASSES,WORLD,AudioSys,spawnVehicle,vehicleAim,vehicleMuzzle,shotCover,
+  const api={THREE,scene,camera,visuals,fortress,buildings,bullets,vehicles,WEAPONS,BUILDINGS,CLASSES,WORLD,AudioSys,spawnVehicle,vehicleAim,vehicleMuzzle,shotCover,
     setBattlefieldAssets:active=>{for(const k of Object.keys(WEAPONS))delete WEAPONS[k];Object.assign(WEAPONS,active?BF_WEAPONS:campaignWeapons);for(const k of Object.keys(VEHICLES))delete VEHICLES[k];Object.assign(VEHICLES,active?BF_VEHICLES:campaignVehicles);viewModelKey='';},
     setMilitaryHero:(h,team,id)=>{if(h.mesh?.userData.bfWeapon===id&&h.mesh?.userData.bfTeam===team)return;const old=h.mesh,mesh=militarySoldier(THREE,team,id);mesh.userData.bfWeapon=id;mesh.userData.bfTeam=team;mesh.rotation.order='YXZ';if(old){mesh.position.copy(old.position);mesh.quaternion.copy(old.quaternion);mesh.visible=old.visible;if(h.bar)old.remove(h.bar);if(h.muzzle)old.remove(h.muzzle);scene.remove(old);visuals.release(old);}if(h.bar)mesh.add(h.bar);if(h.muzzle)mesh.add(h.muzzle);h.mesh=mesh;markTree(mesh);scene.add(mesh);},
     makeVehicleMesh,makeSoldier,placeBuilding,makeHPBar,updHPBar,spawnParticles,fireBullet,zapLine,segmentHit,collideWalls,showMsg,playerDamage,withHuman,
@@ -4331,8 +4459,10 @@ function setupVersus(){
     equipHero:(h,id)=>{h.curWeapon=id;if(h===player){Game.curWeapon=id;if(h.vsWeapons)Game.weapons=h.vsWeapons;}},
     onEnd:res=>versusEnded(res),
     onGuestMatch:data=>{if(coopDriver?.config?.mode==='versus')startVersusOnline(coopDriver.config,data.m);},
-  });
-  $('btnVersus').onclick=()=>{AudioSys.init();renderVersusSize();$('menuMain').classList.add('hidden');$('vsMenu').classList.remove('hidden');};
+  };
+  bankVersus=Bank.createVersus(api);battleVersus=Conquest.createVersus(api);versus=battleVersus;
+  const open=rules=>{AudioSys.init();selectVersusRules(rules);renderVersusSize();$('menuMain').classList.add('hidden');$('vsMenu').classList.remove('hidden');};
+  $('btnVersus').onclick=()=>open('conquest');$('btnBankVersus').onclick=()=>open('bank');
   $('vsMenuBack').onclick=()=>{$('vsMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
   document.querySelectorAll('[data-vs-ai]').forEach(b=>b.onclick=()=>startVersusAI(b.dataset.vsAi,vsUI.size));
   document.querySelectorAll('[data-vs-size]').forEach(b=>b.onclick=()=>{vsUI.size=+b.dataset.vsSize;renderVersusSize();AudioSys.sfx('click');});
@@ -4360,8 +4490,9 @@ function setupVersus(){
 function renderVersusSize(){
   const n=vsUI.size;
   document.querySelectorAll('[data-vs-size]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.vsSize===n?'true':'false'));
-  $('vsMenuTitle').textContent='⚑ 战地模式 · 沙漠据点战';
-  $('vsSizeNote').textContent='每队 '+n+' 个玩家/电脑座位，另有 8 名步兵增援与 4 类载具。空位由电脑补充，双方固定装备与生命。';
+  $('vsMenuTitle').textContent=bankMode?'🏦 银行塔防对战':'⚑ 战地模式 · 沙漠据点战';
+  document.querySelectorAll('#vsMenu .vs-rules').forEach((el,i)=>{if(!el.dataset.conquest)el.dataset.conquest=el.textContent;el.textContent=bankMode?(i===0?'经营银行、每10秒收入、派兵放虫、建造炮塔，英雄升级并购买武器。三路推进，摧毁敌方核心获胜。每局独立，仅保存战绩，退出后重新开局。':'R 出兵 / 面板内 0 升级银行 / Z 换路线 / L 建造 / O 买枪 / T 给队友转钱。保留多种视角与自动瞄准设置；手机使用同名按钮。好友可中途加入接手电脑，双方每人独立银行与金币。'):el.dataset.conquest;});
+  $('vsSizeNote').textContent=bankMode?'每队 '+n+' 人，每人独立银行与金币，空位由电脑补充。':'每队 '+n+' 个玩家/电脑座位，另有 8 名步兵增援与 4 类载具。空位由电脑补充，双方固定装备与生命。';
   renderVersusRecord();
 }
 function versusGuest(){return !!(coopDriver?.config&&!coopDriver.connection.host);}
@@ -4391,7 +4522,7 @@ function syncLobbyMode(){
 }
 function versusLobbyConfig(){
   const lobby=coopDriver?.lobby,cap=lobby?.field('capacity'),f=lobby?.vsFields;
-  return {size:Math.max(1,Math.min(4,Math.round((+cap?.value||2)/2))),team:f?.team.select.value||'auto',diff:f?.diff.select.value||'normal'};
+  return {rules:bankMode?'bank':'conquest',size:Math.max(1,Math.min(4,Math.round((+cap?.value||2)/2))),team:f?.team.select.value||'auto',diff:f?.diff.select.value||'normal'};
 }
 function renderVersusRecord(){
   const r=versusRecord(),n=vsUI.size,t=['easy','normal','hard'].map(k=>{const x=r[versusRecordKey(k,n)];return VS_AI[k].name+' '+(x?.w||0)+' 胜 '+(x?.l||0)+' 负';}).join(' · ');
@@ -4457,7 +4588,7 @@ function startVersusSim(blue='normal',red='normal',size=1){
   versusEnterUI();
 }
 function startVersusOnline(config,matchId){
-  versusPrepare();
+  selectVersusRules(config.rules);versusPrepare();
   const local=config.localSlot??coopDriver?.connection.slot??0,plan=versusSeatPlan(config),mine=plan.find(s=>s.slot===local)||plan[0],diff=config.diff||'normal';
   Game.cls=mine.cls;player.reset(Game.cls);player.mesh.visible=true;restoreView();player.cls=Game.cls;
   const names={};for(const p of coopDriver?.connection.room?.players||[])names[p.slot]=p.name;
@@ -4508,22 +4639,28 @@ function exitVersus(){
   delete player.vsAI;delete player.team;delete player.vsPid;delete player.vsName;
   if(versusBackup){const b=versusBackup;versusBackup=null;for(const k of Object.keys(Game))if(!(k in b))delete Game[k];Object.assign(Game,b);}
   Game.state='menu';
+  restoreView(); // 战地强制过第一人称，退出后恢复玩家在战役里保存的视角偏好
 }
 function versusEnterUI(){
-  bfAiming=false;$('vZ').classList.remove('aiming');$('vZ').setAttribute('aria-pressed','false');
+  if(bankOn())return bankVersusEnterUI();
+  document.querySelectorAll('[data-vslane]').forEach((b,i)=>{b.dataset.vslane=['auto','A','B','C'][i];});
+  $('vZ').textContent='举枪';$('vZ').setAttribute('aria-label','举枪瞄准');$('vR').setAttribute('aria-label','重新装填弹匣');bfAiming=false;$('vZ').classList.remove('aiming');$('vZ').setAttribute('aria-pressed','false');
   stage.classList.add('versus-mode');$('hud').classList.add('versus');
   showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
   vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.remove('hidden');
   const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
-  hint.textContent='WASD移动 · J/左键射击 · R换弹 · O装备 · L部署 · T战况 · Z瞄准 · H兵种支援 · I上/下载具 · U手雷 · K跳跃 · C切换视角 · Q/E转视角 · Esc暂停';
+  hint.textContent='WASD移动 · 按住J/左键射击 · 右键拖动或Q/E转视角 · Z/右键点按举枪 · R换弹 · O装备 · L部署 · T战况 · H兵种支援 · I上/下载具 · U手雷 · K跳跃 · C载具视角 · Esc暂停';
   const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
   $('vH').classList.remove('hidden');$('vO').textContent='装备';$('vL').textContent='部署';$('vR').textContent='换弹';
+  bfVehicleView=0;syncViewLabels();
 }
 function versusLeaveUI(){
+  stage.classList.remove('bank-mode');$('bfFlags').classList.remove('hidden');
   bfAiming=false;stage.classList.remove('versus-mode');$('hud').classList.remove('versus');$('vsPanel').classList.add('hidden');$('vsResult').classList.add('hidden');vsUI.open=false;
   const hint=$('keysHint');if(hint.dataset.campaign)hint.textContent=hint.dataset.campaign;
   const rl=$('btnRestartLv');if(rl.dataset.campaign)rl.textContent=rl.dataset.campaign;
   $('vH').classList.remove('hidden');$('vO').textContent='商店';$('vL').textContent='建造';$('vR').textContent='开战';
+  $('vC').classList.remove('hidden');syncViewLabels();
 }
 // 房主/单机每帧：玩家 → 步兵、载具、据点 → 子弹。本机玩家最后更新，界面提示不被其他英雄覆盖。
 function versusHeroes(dt){
@@ -4536,7 +4673,7 @@ function versusHeroes(dt){
   });
 }
 function versusFrame(dt){
-  updLook(dt);placementInput();versusPanelInput();
+  syncBattlefieldView();updLook(dt);placementInput();versusPanelInput();
   versusHeroes(dt);if(player.dead)$('interactHint').classList.add('hidden');
   visuals.update(dt);
   versus.update(dt);updBullets(dt);
@@ -4557,6 +4694,7 @@ function versusTogglePanel(tab){
 function versusClosePanel(){vsUI.open=false;$('vsPanel').classList.add('hidden');Input.reset();}
 const mySeat=()=>versus.seatOf(player)||versus.seat(versus.state.localPid);
 function versusCards(){
+  if(bankOn())return bankVersusCards();
   const s=mySeat();if(!s)return [];
   if(vsUI.tab==='units')return Object.entries(versus.kits).map(([id,k],i)=>({key:String(i+1),name:k.name,desc:k.desc,state:s.kit===id?'当前兵种':s.pendingKit===id?'下次部署使用':'营地立即换装 · 战场下次复活生效',owned:s.kit===id,ok:true,act:()=>battlefieldCommand({kind:'bfKit',id})}));
   if(vsUI.tab==='build')return [{id:'HQ',name:'本方营地',owner:s.team,contested:false},...versus.state.points].map((p,i)=>({key:String(i+1),name:p.id+' · '+p.name,desc:p.id==='HQ'?'安全部署、医疗与载具补充':'占领后可作为复活点；争夺中暂不可部署',state:s.spawn===p.id?'已选择':p.owner===s.team&&!p.contested?'可以部署':p.contested?'争夺中':'尚未占领',owned:s.spawn===p.id,ok:p.owner===s.team&&!p.contested,act:()=>battlefieldCommand({kind:'bfSpawn',id:p.id})}));
@@ -4564,6 +4702,7 @@ function versusCards(){
   return (player.vsWeapons||[]).map((id,i)=>({key:String(i+1),name:WEAPONS[id].name,desc:WEAPONS[id].desc,state:Game.curWeapon===id?'已装备':'切换武器',owned:Game.curWeapon===id,ok:true,act:()=>selectWeapon(id)}));
 }
 function renderVersusPanel(rebuild=false){
+  if(bankOn())return bankRenderVersusPanel(rebuild);
   if(!vsOn())return;const s=mySeat(),cards=versusCards();if(!s)return;
   document.querySelectorAll('[data-vstab]').forEach(b=>{const id=b.dataset.vstab;b.setAttribute('aria-selected',id===vsUI.tab?'true':'false');b.textContent=({units:'兵种',build:'部署',weapons:'装备',team:'战况'})[id]+(isTouch?'':({units:'',build:' L',weapons:' O',team:' T'})[id]);});
   document.querySelectorAll('[data-vslane]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.vslane===s.order?'true':'false'));
@@ -4572,16 +4711,21 @@ function renderVersusPanel(rebuild=false){
   if(rebuild||grid.dataset.sig!==sig){grid.dataset.sig=sig;grid.replaceChildren();grid.scrollTop=0;cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='vs-card';b.innerHTML='<b></b><span class="k"></span><small></small><span class="st"></span>';b.onclick=()=>{const now=versusCards()[i];if(now?.ok)now.act();renderVersusPanel();};grid.appendChild(b);});}
   cards.forEach((c,i)=>{const b=grid.children[i];b.querySelector('b').textContent=c.name;b.querySelector('.k').textContent=isTouch?'':c.key;b.querySelector('small').textContent=c.desc;b.querySelector('.st').textContent=c.state;b.classList.toggle('owned',!!c.owned);b.classList.toggle('ready',!!c.ok);b.setAttribute('aria-disabled',c.ok?'false':'true');});
 }
-function versusPick(i){const c=versusCards()[i];if(c?.ok)c.act();renderVersusPanel();}
-function toggleBattlefieldAim(){bfAiming=!bfAiming;if(bfAiming&&camMode!=='first')setCamMode('first');$('vZ').classList.toggle('aiming',bfAiming);$('vZ').setAttribute('aria-pressed',String(bfAiming));}
+function versusPick(i){
+  if(bankOn())return bankVersusPick(i);const c=versusCards()[i];if(c?.ok)c.act();renderVersusPanel();}
+function toggleBattlefieldAim(){bfAiming=!bfAiming&&!player.inVehicle;$('vZ').classList.toggle('aiming',bfAiming);$('vZ').setAttribute('aria-pressed',String(bfAiming));} // 举枪只在步行第一人称下有意义
 function versusPanelInput(){
+  if(bankOn())return bankVersusPanelInput();
   if(Input.pop('Z'))toggleBattlefieldAim();
   if(!vsUI.open)return;
   for(let n=1;n<=9;n++)if(Input.pop('N'+n))versusPick(n-1);
 }
-function versusSetLane(order){const s=mySeat(),ids=['auto','A','B','C'];const id=order||ids[(ids.indexOf(s.order)+1)%ids.length];battlefieldCommand({kind:'bfOrder',id});renderVersusPanel();}
-function versusGive(){return false;}
+function versusSetLane(order){
+  if(bankOn())return bankVersusSetLane(order);const s=mySeat(),ids=['auto','A','B','C'];const id=order||ids[(ids.indexOf(s.order)+1)%ids.length];battlefieldCommand({kind:'bfOrder',id});renderVersusPanel();}
+function versusGive(to){
+  if(bankOn())return bankVersusGive(to);return false;}
 function updVersusHUD(dt){
+  if(bankOn())return bankUpdVersusHUD(dt);
   const vs=versus.state,s=mySeat();if(!s)return;const me=s.team,foe=me==='blue'?'red':'blue',v=player.inVehicle;
   $('hpTxt').textContent=player.dead?'阵亡 · '+Math.ceil(player.respawnT||0)+'秒后部署':Math.ceil(player.hp)+'/100'+(v?' · 装甲 '+Math.ceil(v.hp)+'/'+v.maxHp:'');
   $('hpBar').style.width=clamp(player.hp/player.maxHp*100,0,100)+'%';$('hpBarWrap').classList.toggle('low',player.hp<30);
@@ -4589,6 +4733,7 @@ function updVersusHUD(dt){
   $('baseGuide').textContent=point.id+' '+point.name+' · '+Math.round(Math.hypot(point.x-player.pos.x,point.z-player.pos.z))+'米 · '+(point.contested?'争夺中':point.owner===me?'我方控制':point.owner?'敌方控制':'未占领');
   const reload=player.bfReload;
   $('weapTxt').textContent=v?v.cfg.name:WEAPONS[Game.curWeapon].name+' · '+(reload?'换弹 '+reload.left.toFixed(1)+'s':(player.bfAmmo?.[Game.curWeapon]??WEAPONS[Game.curWeapon].mag)+' / '+WEAPONS[Game.curWeapon].mag);
+  $('vC').classList.toggle('hidden',!v); // 步行固定第一人称，切换视角键只在载具里出现
   updJumpUI();
   for(const [team,prefix] of [[me,'vsMe'],[foe,'vsFoe']]){$(prefix+'Name').textContent=(team===me?'我方':'敌方')+'兵力';$(prefix+'Hp').textContent=Math.ceil(vs.teams[team].tickets);$(prefix+'Bar').style.width=vs.teams[team].tickets/VS_RULES.tickets*100+'%';$(prefix+'Bar').style.background=TEAM_CSS[team];}
   $('vsClock').textContent=fmtTime(VS_RULES.limit-vs.time);$('vsPhase').textContent='控制多数据点，消耗敌方兵力';
@@ -4599,6 +4744,7 @@ function updVersusHUD(dt){
   if((radarT-=dt)<=0){radarT=.15;versus.drawRadar(rctx,radar.width,radar.height,player.inVehicle?player.inVehicle.mesh.position:player.pos,camYaw,player.yaw);}
 }
 function versusEnded(res){
+  if(bankOn())return bankVersusEnded(res);
   if(versus.state.sim)return;Game.state='over';cancelPlacement(true);versusClosePanel();if(document.pointerLockElement)document.exitPointerLock();
   const me=player.team||versus.state.localTeam,foe=me==='blue'?'red':'blue',won=res.winner===me,draw=!res.winner,n=res.size||1;
   AudioSys.sfx(won?'win':draw?'click':'lose');$('vsResultTitle').textContent=draw?'战局平局':won?'任务完成 · 胜利':'任务失败';
@@ -4608,7 +4754,7 @@ function versusEnded(res){
   row(['战地统计','我方','敌方'],true);row(['剩余兵力',res.tickets[me],res.tickets[foe]]);
   for(const [key,label] of [['kills','击杀'],['deaths','阵亡'],['captures','占领据点'],['vehicles','摧毁载具']])row([label,res.stats[me][key],res.stats[foe][key]]);
   row(['参战人员','击杀 / 阵亡','夺点'],true);for(const p of res.seats)row([TEAM_NAME[p.team]+' '+(p.pid===player.vsPid?'你':p.name||'电脑'),p.kills+' / '+p.deaths,p.captures]);
-  let note='好友战地对抗 · 娱乐对战，不计排位';if(res.mode==='ai'){const r=versusRecord(),key=versusRecordKey(res.difficulty,n);r[key]=r[key]||{w:0,l:0};if(won)r[key].w++;else if(!draw)r[key].l++;try{localStorage.setItem(VS_RECORD,JSON.stringify(r));}catch(_e){}note='本机据点战：'+r[key].w+'胜 '+r[key].l+'负';}
+  let note='好友战地对抗 · 娱乐对战，不计排位';if(res.mode==='ai'){const r=versusRecord(),key=versusRecordKey(res.difficulty,n);r[key]=r[key]||{w:0,l:0};if(won)r[key].w++;else if(!draw)r[key].l++;try{localStorage.setItem(versusRecordStore(),JSON.stringify(r));}catch(_e){}note='本机据点战：'+r[key].w+'胜 '+r[key].l+'负';}
   $('vsResultNote').textContent=note;$('vsRematch').textContent=versusGuest()?'等待房主再来一局':'再来一局';$('vsResult').classList.remove('hidden');$('touchUI').classList.add('hidden');$('menuPause').classList.add('hidden');
 }
 
@@ -4638,7 +4784,7 @@ function installStarshipCoop(){
  const original=coopDriver.lobby.onMessage;
  coopDriver.lobby.onMessage=m=>{original(m);
   // 点邀请链接或房间号进了对战房间：大厅切到对战选项（队伍、电脑补位难度），准备时带上所选队伍
-  if((m.type==='joined'||m.type==='roster')&&m.room?.settings?.mode==='versus'&&lobbyMode!=='versus'){lobbyMode='versus';syncLobbyMode();}
+  if((m.type==='joined'||m.type==='roster')&&m.room?.settings?.mode==='versus'){selectVersusRules(m.room.settings.rules);lobbyMode='versus';syncLobbyMode();}
   if(m.type==='command'&&coopDriver.connection.host)handleCoopCommand(m.slot,m.command);};
  const saveBlock=e=>{if(coopDriver.config){e.preventDefault();e.stopImmediatePropagation();showMsg('联机不读写单机存档',1.5);}};
  for(const id of ['btnSaveMenu','btnLoadMenu','btnLoadMenu2'])$(id).addEventListener('click',saveBlock,true);
@@ -4646,3 +4792,165 @@ function installStarshipCoop(){
  if(new URLSearchParams(location.search).get('test')==='1'){coopDriver.snapshot=starshipSnapshot;window.__COOP_QA__=coopDriver;}
 }
 const coopBootTimer=setInterval(()=>{if(battlefield&&player.mesh){clearInterval(coopBootTimer);installStarshipCoop();}},200);
+
+// 原银行塔防规则的界面适配，与战地模式并存。
+function bankVersusEnterUI(){
+  stage.classList.add('versus-mode','bank-mode');$('hud').classList.add('versus');
+  showHUD();$('readyBtn').classList.add('hidden');$('sandboxBtn').classList.add('hidden');showHint(null);
+  vsUI.open=false;vsUI.tab='units';$('vsPanel').classList.add('hidden');$('vsTeamTab').classList.toggle('hidden',versus.size<2);
+  const hint=$('keysHint');if(!hint.dataset.campaign)hint.dataset.campaign=hint.textContent;
+  hint.textContent='WASD移动 · J/左键射击 · R 出兵面板（打开后 1-9 派兵、0 升级银行）· Z 切换进攻路线 · L 建造 · O 买枪'+(versus.size>1?' · T 队伍（给队友转钱）':'')+' · U 手雷 · K 跳跃 · C 切换视角 · Q/E 转视角 · Esc 暂停';
+  const rl=$('btnRestartLv');if(!rl.dataset.campaign)rl.dataset.campaign=rl.textContent;rl.textContent='🔄 重开对战';
+  $('vH').classList.add('hidden');$('vC').classList.remove('hidden');$('vO').textContent='买枪';$('vL').textContent='建造';$('vR').textContent='出兵';$('vZ').textContent='路线';$('vZ').setAttribute('aria-label','切换进攻路线');$('vR').setAttribute('aria-label','出兵与升级银行');$('vZ').classList.remove('aiming');$('vZ').setAttribute('aria-pressed','false');syncViewLabels();
+}
+function bankVersusCards(){
+  const t=mySeat(),vs=versus.state;if(!t)return [];const me=t.pid;
+  if(vsUI.tab==='units'){
+    const bankCost=VS_RULES.bankCost[t.bank],nextIncome=t.bank<5?VS_RULES.income[t.bank]:0;
+    const cards=[{key:'0',name:'🏦 升级银行',price:t.bank<5?bankCost:null,desc:t.bank<5?'Lv'+t.bank+' → Lv'+(t.bank+1)+'：每 10 秒 '+VS_RULES.income[t.bank-1]+' → '+nextIncome:'已满级 Lv5',act:()=>versusBank(),
+      state:t.bankDown>0?'重建中 '+Math.ceil(t.bankDown)+' 秒':t.bank>=5?'满级':t.gold<bankCost?'还差 '+Math.ceil(bankCost-t.gold):'可升级',ok:t.bank<5&&!(t.bankDown>0)&&t.gold>=bankCost}];
+    VS_UNITS.forEach((u,i)=>{
+      const unlock=versus.tier(u.id),cd=t.cd[u.id]||0,why=versus.sendReason(me,u.id);
+      cards.push({key:String(i+1),name:u.name,price:u.price,desc:u.desc,act:()=>versusSend(u.id),locked:vs.time<unlock,cool:cd>0,cdRatio:cd>0?cd/u.cd:0,poor:t.gold<u.price,
+        state:vs.time<unlock?fmtTime(unlock)+' 解锁':cd>0?'冷却 '+Math.ceil(cd)+' 秒':why?why.replace(/（.*$/,''):'可派出',ok:!why});
+    });
+    return cards;
+  }
+  if(vsUI.tab==='build'){
+    const cards=VS_BUILD_KINDS.map((k,i)=>{const c=BUILDINGS[k];return {key:String(i+1),name:c.name,price:c.price,desc:c.desc+(c.range?' · 射程'+c.range:''),act:()=>versusBuildPick(k),poor:t.gold<c.price,state:t.gold<c.price?'还差 '+Math.ceil(c.price-t.gold):'选好后在面前放置',ok:t.gold>=c.price};});
+    cards.push({key:String(VS_BUILD_KINDS.length+1),name:'🔨 拆除',price:null,desc:versus.size>1?'拆自己建的设施，返还一半造价':'拆本方设施，返还一半造价',act:()=>{versusClosePanel();startDemolish();},state:'进入拆除模式',ok:true});
+    return cards;
+  }
+  if(vsUI.tab==='team'){
+    const step=VS_RULES.giveStep;
+    return versus.members(t.team).filter(s=>s.pid!==me).map((s,i)=>({key:String(i+1),name:(s.ai?'🤖 ':'👤 ')+versus.seatName(s),price:null,
+      desc:'💰 '+Math.floor(s.gold)+' · 银行 Lv'+s.bank+(s.bankDown>0?'（重建中）':'')+' · 击杀 '+(s.stats.kills||0)+(s.ai?' · 电脑'+(VS_AI[s.ai]?.name||''):''),
+      act:()=>versusGive(s.pid),poor:t.gold<step,state:t.gold>=step?'点一下转 '+step+' 金':'金币不足 '+step,ok:t.gold>=step}));
+  }
+  return Object.keys(WEAPONS).map((id,i)=>{const w=WEAPONS[id],owned=Game.weapons.includes(id);
+    return {key:String(i+1),name:w.name,price:owned?null:w.price,desc:w.desc,act:()=>versusWeapon(id),owned,poor:!owned&&t.gold<w.price,state:owned?(Game.curWeapon===id?'使用中':'已拥有 · 点击换上'):t.gold<w.price?'还差 '+Math.ceil(w.price-t.gold):'购买并换上',ok:owned||t.gold>=w.price};});
+}
+function bankRenderVersusPanel(rebuild=false){
+  if(!vsOn())return;
+  document.querySelectorAll('[data-vstab]').forEach(b=>{b.textContent=({units:'出兵',build:'建造',weapons:'买枪',team:'队伍'})[b.dataset.vstab];});
+  const lanes=['left','mid','right','alt'];document.querySelectorAll('[data-vslane]').forEach((b,i)=>{b.dataset.vslane=lanes[i];b.textContent=['上路','中路','下路','轮换'][i];});
+  const t=mySeat();if(!t)return;const cards=versusCards();
+  document.querySelectorAll('[data-vstab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.vstab===vsUI.tab?'true':'false'));
+  document.querySelectorAll('[data-vslane]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.vslane===t.lane?'true':'false'));
+  $('vsPanelEco').textContent='💰 '+Math.floor(t.gold)+' · 每 10 秒 +'+versus.incomeOf(t.pid)+'（银行 Lv'+t.bank+'）· 兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+' · '+(vsUI.tab==='team'?'每次转 '+VS_RULES.giveStep+' 金 · ':'')+(isTouch?'点卡片执行':'按数字键执行');
+  const grid=$('vsGrid'),sig=vsUI.tab+':'+cards.length;
+  if(rebuild||grid.dataset.sig!==sig){
+    grid.dataset.sig=sig;grid.replaceChildren();grid.scrollTop=0;
+    cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='vs-card';b.dataset.i=String(i);
+      b.innerHTML='<b></b><span class="k"></span><em></em><small></small><span class="st"></span><i class="cd"></i>';
+      b.onclick=()=>{const cur=versusCards()[i];if(cur)cur.act();renderVersusPanel();};grid.appendChild(b);});
+  }
+  cards.forEach((c,i)=>{
+    const b=grid.children[i];if(!b)return;
+    b.querySelector('b').textContent=c.name;b.querySelector('.k').textContent=isTouch?'':c.key;
+    b.querySelector('em').textContent=c.price==null?(c.owned?'已拥有':''):'💰'+c.price;b.querySelector('small').textContent=c.desc;b.querySelector('.st').textContent=c.state;
+    b.querySelector('.cd').style.width=Math.round((c.cdRatio||0)*100)+'%';
+    b.classList.toggle('locked',!!c.locked);b.classList.toggle('poor',!!c.poor&&!c.locked);b.classList.toggle('owned',!!c.owned);b.classList.toggle('ready',!!c.ok);
+    b.setAttribute('aria-disabled',c.ok?'false':'true');b.setAttribute('aria-label',c.name+' '+(c.price!=null?c.price+'金 ':'')+c.state);
+  });
+}
+function bankVersusPick(i){const c=versusCards()[vsUI.tab==='units'?i+1:i];if(c)c.act();renderVersusPanel();}
+function bankVersusPanelInput(){
+  if(Input.pop('Z'))versusSetLane(null);
+  if(!vsUI.open)return;
+  if(Input.pop('N0')&&vsUI.tab==='units')versusBank();
+  for(let n=1;n<=9;n++)if(Input.pop('N'+n))versusPick(n-1);
+}
+function bankVersusSetLane(lane){
+  const t=mySeat(),order=['left','mid','right','alt'];
+  const next=lane||order[(order.indexOf(t.lane)+1)%order.length];
+  if(versusGuest())versusSendCommand({kind:'vsLane',lane:next});
+  versus.setLane(player.vsPid,next);
+  showMsg('进攻路线：'+({left:'上路',mid:'中路',right:'下路',alt:'三路轮换'})[next],1.1);renderVersusPanel();
+}
+function bankVersusGive(to){
+  const t=mySeat(),step=VS_RULES.giveStep,s=versus.seat(to);
+  if(t.gold<step){showMsg('金币不足（还差 '+Math.ceil(step-t.gold)+'）',1.4);AudioSys.sfx('click');return;}
+  if(versusGuest()){versusSendCommand({kind:'vsGive',to});AudioSys.sfx('build');showMsg('💸 转给'+versus.seatName(s)+' '+step+' 金…',1.2);return;}
+  const why=versus.give(player.vsPid,to,step);if(why){showMsg(why,1.4);AudioSys.sfx('click');}else AudioSys.sfx('build');
+}
+function bankUpdVersusHUD(dt){
+  const vs=versus.state,t=mySeat();if(!t)return;const me=t.team,foe=me==='blue'?'red':'blue',n=versus.size;
+  $('hpTxt').textContent=player.dead?'阵亡 · '+Math.ceil(player.respawnT||0)+' 秒后复活':Math.ceil(player.hp)+'/'+player.maxHp;
+  $('hpBar').style.width=clamp(player.hp/player.maxHp*100,0,100)+'%';
+  $('hpBarWrap').classList.toggle('low',player.hp<player.maxHp*.3);
+  const hq=versus.hq(me),dx=hq.pos.x-player.pos.x,dz=hq.pos.z-player.pos.z,sx=-Math.cos(camYaw)*dx+Math.sin(camYaw)*dz,sy=-Math.sin(camYaw)*dx-Math.cos(camYaw)*dz,dist=Math.hypot(dx,dz);
+  $('baseGuide').textContent=dist<12?'🏰 在己方核心旁（自动回血）':['→','↘','↓','↙','←','↖','↑','↗'][(Math.round(Math.atan2(sy,sx)/(Math.PI/4))+8)%8]+' 己方核心 '+Math.round(dist)+'米';
+  const gold=$('goldTxt');gold.textContent=Math.floor(t.gold);
+  if(vs.flags.incomePop){vs.flags.incomePop=0;gold.classList.add('pulse');setTimeout(()=>gold.classList.remove('pulse'),600);}
+  $('weapTxt').textContent='🔫 '+WEAPONS[Game.curWeapon].name+(WEAPONS[Game.curWeapon].beam&&player.heat>.05?' 🔥'+Math.round(player.heat*50)+'%':'')+(player.grenadeCd>0?' · 手雷 '+Math.ceil(player.grenadeCd)+'s':'');
+  updJumpUI();
+  const hm=versus.hq(me),hf=versus.hq(foe),foes=versus.members(foe),foeAI=foes.filter(s=>s.ai);
+  const foeTag=!foeAI.length?'':vs.mode!=='online'?' · 电脑'+(VS_AI[foeAI[0].ai]?.name||''):n>1?' · 电脑 '+foeAI.length+' 人':' · 电脑接管';
+  $('vsMeName').textContent='我方核心（'+TEAM_NAME[me].slice(0,1)+(n>1?' '+n+' 人':'')+'）';$('vsFoeName').textContent='敌方核心（'+TEAM_NAME[foe].slice(0,1)+'）'+foeTag;
+  $('vsMeBar').style.width=clamp(hm.hp/hm.maxHp*100,0,100)+'%';$('vsMeBar').style.background=TEAM_CSS[me];$('vsMeHp').textContent=Math.ceil(Math.max(0,hm.hp));
+  $('vsFoeBar').style.width=clamp(hf.hp/hf.maxHp*100,0,100)+'%';$('vsFoeBar').style.background=TEAM_CSS[foe];$('vsFoeHp').textContent=Math.ceil(Math.max(0,hf.hp));
+  const time=vs.time;let phase;
+  if(vs.overtime)phase='⏱ 加时 · 先掉核心血者输 '+fmtTime(vs.overtime.start+VS_RULES.overtime-time);
+  else if(time<VS_RULES.prep)phase='准备 · '+Math.ceil(VS_RULES.prep-time)+' 秒后开战';
+  else if(time<VS_RULES.tier2)phase='二级兵种 '+fmtTime(VS_RULES.tier2-time)+' 后';
+  else if(time<VS_RULES.tier3)phase='虫王 '+fmtTime(VS_RULES.tier3-time)+' 后';
+  else if(time<VS_RULES.lateBoost)phase='收入 +50% '+fmtTime(VS_RULES.lateBoost-time)+' 后';
+  else phase='时限 '+fmtTime(VS_RULES.limit-time);
+  $('vsClock').textContent=fmtTime(time);$('vsPhase').textContent=phase+(time>=VS_RULES.prep?' · 基础兵 '+Math.ceil(VS_RULES.laneEvery-(time-VS_RULES.prep)%VS_RULES.laneEvery)+'秒':'');
+  const lane=({left:'上路',mid:'中路',right:'下路',alt:'轮换'})[t.lane];
+  let mates='';
+  if(n>1){const list=versus.members(me).filter(s=>s.pid!==t.pid);mates='\n👥 '+'队友：'+list.map(s=>versus.seatName(s)+(s.ai&&s.name&&s.name!=='电脑'?'（电脑接管）':'')+' 英雄Lv'+s.level).join(' · ');const votes=versus.members(me).filter(s=>s.surrender).length;if(votes)mates+=' · 🏳 投降 '+votes+'/'+versus.members(me).filter(s=>!s.ai).length;}
+  $('vsEco').textContent='💰 '+Math.floor(t.gold)+' · 英雄 Lv'+t.level+'/15 · '+(t.level>=15?'经验已满':Math.floor(t.xp)+'/'+versus.xpNeeded(t.level)+'经验')+' · 伤害 +'+Math.round((t.level-1)*VS_RULES.heroDamagePerLevel*100)+'%'+versus.buffText(t.pid)+'\n🏦 银行 Lv'+t.bank+(t.bankDown>0?'（重建 '+Math.ceil(t.bankDown)+' 秒）':'')+' · 每10秒 +'+versus.incomeOf(t.pid)+'\n⚔ 增援 '+lane+' · 付费兵力 '+versus.popOf(t.pid)+'/'+versus.popCap()+mates+'\n'+(isTouch?'出兵 / 建造 / 商店 按钮':'R 出兵 · L 建造 · O 买枪 · Z 换路线'+(n>1?' · T 队伍':''));
+  renderWeaponBar();
+  if(vsUI.open&&(vsUI.t-=dt)<=0){vsUI.t=.2;renderVersusPanel();}
+  if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
+  if((radarT-=dt)<=0){radarT=.1;versus.drawRadar(rctx,radar.width,radar.height,player.inVehicle?player.inVehicle.mesh.position:player.pos,camYaw,player.yaw);}
+}
+function bankVersusEnded(res){
+  if(versus.state.sim)return;
+  Game.state='over';cancelPlacement(true);versusClosePanel();if(document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
+  const me=player.team||versus.state.localTeam,foe=me==='blue'?'red':'blue',won=res.winner===me,draw=!res.winner,n=res.size||1;
+  AudioSys.sfx(won?'win':draw?'click':'lose');
+  $('vsResultTitle').textContent=draw?'🤝 平局':won?'🏆 胜利！':'💀 失败';
+  $('vsResultReason').textContent=(n>1?n+' 对 '+n+' · ':'')+res.reason+' · 用时 '+fmtTime(res.time);
+  const table=$('vsStats');table.replaceChildren();
+  const row=(values,header=false)=>{const tr=document.createElement('tr');for(const value of values){const td=document.createElement(header?'th':'td');td.textContent=value;tr.append(td);}table.append(tr);};
+  row(['银行塔防统计','我方','敌方'],true);row(['核心剩余',Math.round(res.hq[me]*100)+'%',Math.round(res.hq[foe]*100)+'%']);
+  for(const [key,label] of [['sent','派出单位'],['kills','击杀单位'],['heroKills','击倒英雄'],['built','建造设施'],['lostBuildings','损失设施'],['heroDeaths','英雄阵亡']])row([label,res.stats[me][key],res.stats[foe][key]]);
+  row(['银行等级','Lv'+res.bank[me],'Lv'+res.bank[foe]]);
+  row(['参战人员','派兵 / 击杀','银行'],true);for(const seat of res.seats||[])row([TEAM_NAME[seat.team]+' '+(seat.pid===player.vsPid?'你':seat.name||'电脑'),seat.sent+' / '+seat.kills,'Lv'+seat.bank]);
+  let note='';
+  if(res.mode==='ai'){
+    const r=versusRecord(),k=versusRecordKey(res.difficulty||'normal',n);r[k]=r[k]||{w:0,l:0};if(won)r[k].w++;else if(!draw)r[k].l++;
+    try{localStorage.setItem(versusRecordStore(),JSON.stringify(r));}catch(_e){}
+    note='对战电脑·'+VS_AI[res.difficulty||'normal'].name+(n>1?'·'+n+' 对 '+n:'')+'：本机累计 '+r[k].w+' 胜 '+r[k].l+' 负';
+  }else note='好友对战 · 娱乐模式，不计排位'+(versusGuest()?' · 由房主开始下一局':'');
+  $('vsResultNote').textContent=note;
+  $('vsRematch').textContent=versusGuest()?'⏳ 等待房主再来一局':'🔄 再来一局';
+  $('vsResult').classList.remove('hidden');$('touchUI').classList.add('hidden');$('menuPause').classList.add('hidden');
+}
+function versusSend(id){
+  const why=versus.sendReason(player.vsPid,id);
+  if(why&&!(versusGuest()&&/兵力已满/.test(why))){showMsg(why,1.4);AudioSys.sfx('click');return;}
+  if(versusGuest()){versusSendCommand({kind:'vsSend',id});AudioSys.sfx('build');showMsg('已下令派出 '+VS_UNITS.find(u=>u.id===id).name,1.2);return;}
+  versus.send(player.vsPid,id,null);
+}
+function versusBank(){
+  const t=mySeat();
+  if(versusGuest()){if(t.bank>=5){showMsg('银行已满级',1.2);return;}versusSendCommand({kind:'vsBank'});AudioSys.sfx('build');return;}
+  const why=versus.upgradeBank(player.vsPid);if(why){showMsg(why,1.4);AudioSys.sfx('click');}
+}
+function versusWeapon(id){
+  if(Game.weapons.includes(id)){selectWeapon(id);return;}
+  const t=mySeat(),w=WEAPONS[id];
+  if(t.gold<w.price){showMsg('金币不足（还差 '+Math.ceil(w.price-t.gold)+'）',1.4);AudioSys.sfx('click');return;}
+  if(versusGuest()){versusSendCommand({kind:'vsWeapon',id});AudioSys.sfx('reload');showMsg('🔫 购买 '+w.name+'…',1);return;}
+  const why=versus.buyWeapon(player,id);if(why&&why!=='owned'){showMsg(why,1.4);return;}
+  Game.weapons=player.vsWeapons;selectWeapon(id);showMsg('🔫 已购买 '+w.name,1.4);
+}
+function versusBuildPick(kind){
+  const t=mySeat(),c=BUILDINGS[kind];
+  if(t.gold<c.price){showMsg('金币不足！还差 '+Math.ceil(c.price-t.gold),1.4);AudioSys.sfx('click');return;}
+  versusClosePanel();startPlacement(kind);
+}

@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>银行塔防恢复验证</title><style>body{font:15px sans-serif;margin:12px;background:#eaf0df}button{padding:10px}iframe{display:block;width:1100px;height:620px;border:0}pre{white-space:pre-wrap}</style><button id="run">运行银行和战地回归</button><button id="sim">模拟完整对局</button><button id="bank">进入银行试玩</button><button id="phone">手机布局</button><button id="desktop">电脑布局</button><iframe src="../../public/html/game/starship-defense/index.html?qa=1&test=1"></iframe><pre>加载游戏后运行</pre><script type="module">
+const f=document.querySelector('iframe'),out=document.querySelector('pre'),results=[];const check=(name,pass,detail)=>{results.push({name,pass:!!pass,detail});out.textContent=JSON.stringify({passed:results.filter(x=>x.pass).length,total:results.length,results},null,2);};
+const pause=q=>q.Game.state='paused';
+document.querySelector('#run').onclick=()=>{results.length=0;try{
+ const q=f.contentWindow.__gameQA,doc=f.contentDocument;const weapons=Object.keys(q.WEAPONS).join(),tank=q.VEHICLES.tank.hp,saves=Object.fromEntries(Object.entries(f.contentWindow.localStorage).filter(([k])=>k.startsWith('sst_save_')));q.Game.gold=7654;const campaignGold=q.Game.gold;
+ check('银行、战地菜单独立入口',!!doc.querySelector('#btnBankVersus')&&!!doc.querySelector('#btnVersus'));
+ q.selectVersusRules('bank');q.startVersusAI('normal',2);pause(q);let v=q.versus,s=v.seat('blue0');
+ check('恢复每人银行和金币、2对2座位',v.size===2&&v.state.seats.length===4&&s.gold===600&&s.bank===1,{size:v.size,bank:s.bank,gold:s.gold});
+ check('不强制第一人称、保留原武器',!q.fpsRules()&&Object.keys(q.WEAPONS).join()===weapons);
+ q.versusTogglePanel('units');check('银行和派兵卡片可达',doc.querySelector('#vsGrid').textContent.includes('升级银行')&&doc.querySelectorAll('#vsGrid .vs-card').length===q.VS_UNITS.length+1);
+ q.versusBank();check('升级扣款并增加收入',s.bank===2&&s.gold===100&&v.incomeOf(s.pid)===85,{bank:s.bank,gold:s.gold,income:v.incomeOf(s.pid)});
+ for(let i=0;i<201;i++)v.update(.05);check('每10秒收入结算',s.gold===185,{gold:s.gold,time:v.state.time});
+ for(let i=0;i<205;i++)v.update(.05);s.gold=5000;const u=q.VS_UNITS[0],g=s.gold;q.versusSend(u.id);check('出兵扣款、归属和冷却',s.gold===g-u.price&&s.cd[u.id]>0&&v.state.units.some(x=>x.owner===s.pid),{id:u.id,gold:s.gold,cd:s.cd[u.id]});
+ const mate=v.seat('blue1'),before=mate.gold; q.versusGive(mate.pid);check('队友转账保持个人经济',mate.gold===before+q.VS_RULES.giveStep);
+ const owned=q.Game.weapons.slice(),weapon=Object.keys(q.WEAPONS).find(id=>!owned.includes(id));s.gold=100000;v.buyWeapon(q.player,weapon);q.Game.weapons=q.player.vsWeapons;q.selectWeapon(weapon);check('买枪并切换',q.Game.curWeapon===weapon&&q.Game.weapons.includes(weapon),weapon);
+ const pos=q.player.pos.clone();let placed=false,reason='';for(let dx=-15;dx<=15&&!placed;dx+=3)for(let dz=-15;dz<=15&&!placed;dz+=3){reason=v.build(s.pid,'mgTurret',pos.x+dx,pos.z+dz,0);if(!reason)placed=true;}
+ check('本方区域可建炮塔',placed,reason);const own=q.buildings.find(b=>b.owner===s.pid);const gold=s.gold;if(own)v.demolish(s.pid,own);check('只能拆本方设施并返还金币',own&&s.gold>gold&&!q.buildings.includes(own));
+ q.versusTogglePanel('weapons');q.updHUD(.01);q.throwGrenade();q.versusSimStep(.05);check('英雄射击、手雷和HUD正常',q.player.grenadeCd>0&&doc.querySelector('#vsEco').textContent.includes('银行'));
+ q.exitVersus();check('退出保留原战役金币与存档',q.Game.gold===campaignGold&&JSON.stringify(saves)===JSON.stringify(Object.fromEntries(Object.entries(f.contentWindow.localStorage).filter(([k])=>k.startsWith('sst_save_')))));
+ q.selectVersusRules('conquest');q.startVersusAI('normal',1);pause(q);v=q.versus;q.syncBattlefieldView();q.updHUD(.01);check('战地仍是固定装备、据点与载具',v.state.points.length===3&&q.vehicles.length===8&&!('gold' in v.seat('blue0'))&&q.fpsRules()&&q.getCamMode()==='first',{points:v.state.points.length,vehicles:q.vehicles.length});
+ q.versusTogglePanel('units');check('战地面板无银行、保留五兵种',doc.querySelectorAll('#vsGrid .vs-card').length===5&&!doc.querySelector('#vsGrid').textContent.includes('银行'));
+ q.exitVersus();check('战地退出恢复武器和载具配置',Object.keys(q.WEAPONS).join()===weapons&&q.VEHICLES.tank.hp===tank);
+ q.selectVersusRules('bank');q.startVersusAI('normal',4);pause(q);check('战地后再次开银行4对4',q.versus.state.seats.length===8&&q.versus.seat('blue0').bank===1&&q.player.maxHp===q.CLASSES[q.Game.cls].hp);
+ q.updHUD(.01);q.updCamera(.1);q.exitVersus();
+ q.startVersusAI('easy',1);pause(q);const bankKey='chongchao-versus-record-v1',bfKey='chongchao-conquest-record-v1',storage=f.contentWindow.localStorage,bankBefore=storage.getItem(bankKey),bfBefore=storage.getItem(bfKey);q.versus.state.time=q.VS_RULES.surrenderAfter;q.versus.surrender(q.player.vsPid);check('银行独立结算并沿用旧战绩，战地战绩不变',q.Game.state==='over'&&doc.querySelector('#vsStats').textContent.includes('银行塔防统计')&&storage.getItem(bankKey)!==bankBefore&&storage.getItem(bfKey)===bfBefore);if(bankBefore===null)storage.removeItem(bankKey);else storage.setItem(bankKey,bankBefore);q.exitVersus();
+}catch(e){check('运行无异常',false,e.stack);}};
+document.querySelector('#sim').onclick=async()=>{try{const q=f.contentWindow.__gameQA;for(const rules of ['bank','conquest'])for(const size of [1,4]){q.selectVersusRules(rules);q.startVersusSim('normal','normal',size);pause(q);let steps=0;while(!q.versus.state.over&&steps<21000){for(let i=0;i<250&&!q.versus.state.over;i++,steps++)q.versusSimStep(.05);out.textContent=rules+' '+size+'对'+size+' '+steps+'步';await new Promise(r=>setTimeout(r,0));}check(rules+' '+size+'对'+size+' 完整AI对局',q.versus.state.over,{steps,result:q.versus.state.result});q.exitVersus();}}catch(e){check('完整对局无异常',false,e.stack);}};
+document.querySelector('#bank').onclick=()=>{const q=f.contentWindow.__gameQA;q.selectVersusRules('bank');q.startVersusAI('normal',1);};
+document.querySelector('#phone').onclick=()=>{f.style.width='390px';f.style.height='844px';f.contentWindow.__gameQA.setDeviceMode('touch');};document.querySelector('#desktop').onclick=()=>{f.style.width='1100px';f.style.height='620px';f.contentWindow.__gameQA.setDeviceMode('desktop');};
+</script></html>

@@ -104,6 +104,44 @@ def run():
         for game in votes.original_games()[:3]:
             votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=game["key"]), None)
         rejected(lambda: votes.cast_vote(votes.VoteIn(device_id=first, vote_type="favorite", target=votes.original_games()[3]["key"]), None), 429)
+        before = votes.get_board(limit=20, offset=0, sort="votes")
+        mine_before = votes.get_my_votes(first)
+        empty = votes.get_mode_poll(first)
+        assert len(empty["options"]) == 5 and empty["total"] == 0 and empty["selected"] == ""
+        rejected(lambda: votes.get_mode_poll("invalid-device"), 400)
+        rejected(lambda: votes.cast_mode_vote(votes.ModeVoteIn(device_id=first, target="sandbox"), None), 400)
+        def choose(device, target):
+            return votes.cast_mode_vote(votes.ModeVoteIn(device_id=device, target=target), None)
+        for _ in range(3):
+            result = choose(first, "defense")
+            assert result["total"] == 1 and result["selected"] == "defense"
+        result = choose(first, "rv")
+        assert result["total"] == 1 and result["selected"] == "rv"
+        assert next(o["votes"] for o in result["options"] if o["key"] == "defense") == 0
+        assert votes.get_mode_poll(first)["selected"] == "rv"
+        choose(second, "zerg")
+        assert votes.get_mode_poll(second)["selected"] == "zerg"
+        assert votes.get_mode_poll()["selected"] == "" and votes.get_mode_poll()["total"] == 2
+        # Primary key rejects a second row even when a caller bypasses the upsert.
+        with conn.cursor() as cur:
+            try:
+                cur.execute("INSERT INTO starship_mode_ballots (device_id, mode_key, created_at) VALUES (%s,%s,%s)",
+                            (first, "defense", votes._now_utc()))
+            except pymysql.IntegrityError:
+                pass
+            else:
+                raise AssertionError("One device must never have two mode ballots")
+        assert choose(first, "")["total"] == 1
+        assert choose(first, "")["total"] == 1  # withdrawal is idempotent
+        assert votes.get_mode_poll(first)["selected"] == ""
+        for i in range(4):
+            choose(f"{100+i:024x}", "battlefield")
+        rejected(lambda: choose("f" * 24, "rv"), 429)
+        assert choose(second, "resistance")["total"] == 5  # existing device may switch at network cap
+        assert choose(second, "")["total"] == 4  # and withdraw
+        assert votes.get_board(limit=20, offset=0, sort="votes")["totals"] == before["totals"]
+        assert votes.get_my_votes(first) == mine_before
+        print("PASS: mode poll, independent quotas/ballots, choice persistence, idempotent writes, replacement, withdrawal, unique-device constraint, validation and network limit")
         print("PASS: retired options, quotas, votes and pagination; fulfilled/pending separation, identity guard, original text and ballot preservation, fulfilled vote rejection and cancellation")
     finally:
         conn.close()

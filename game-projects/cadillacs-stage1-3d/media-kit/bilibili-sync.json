@@ -7,27 +7,35 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": "v0.11.0-preview.2",
+      "last_public_verified_version": "v0.11.0-hellroad.1",
       "status": "public_verified",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
       "pinned_comment_rpid": 316113740017,
-      "last_public_verified_at": "2026-10-10T02:43:36.232Z",
-      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "last_public_verified_at": "2026-10-11T08:43:08Z",
+      "last_sync_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
       "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-      "description_sha256": "0c4a47269a95c01dfc5c1502920a95b225b28e0e809c49e717ee97a7babfab0a",
-      "lastPublicVerifiedVersion": "v0.11.0-preview.2",
-      "descriptionHash": "0c4a47269a95c01dfc5c1502920a95b225b28e0e809c49e717ee97a7babfab0a",
+      "description_sha256": "17ea51edef312aa68a99a05e8e424a8eb3cac0a6c4547c0b85e94a09fbc9c503",
+      "lastPublicVerifiedVersion": "v0.11.0-hellroad.1",
+      "descriptionHash": "17ea51edef312aa68a99a05e8e424a8eb3cac0a6c4547c0b85e94a09fbc9c503",
       "release": "releases/backfill-20261010/release-status.json",
-      "publicVerifiedAt": "2026-10-10T02:43:36.232Z",
-      "submitted_version": "v0.11.0-preview.2",
+      "publicVerifiedAt": "2026-10-11T08:43:08Z",
+      "submitted_version": "v0.11.0-hellroad.1",
       "submitted_at": "2026-10-10T02:26:07.795Z",
-      "description_revision": "v0.11.0-preview.2",
-      "public_verified_at": "2026-10-10T02:43:36.232Z",
-      "description_public_verified_at": "2026-10-10T02:43:36.232Z",
+      "description_revision": "v0.11.0-hellroad.1",
+      "public_verified_at": "2026-10-11T08:43:08Z",
+      "description_public_verified_at": "2026-10-11T08:43:08Z",
       "record": "releases/backfill-20261010/release-status.json",
-      "release_record": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+      "release_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
+      "exact_text_record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
+      "takeover_history": [
+        {
+          "last_public_verified_version": "v0.11.0-preview.2",
+          "description_sha256": "0c4a47269a95c01dfc5c1502920a95b225b28e0e809c49e717ee97a7babfab0a",
+          "description_public_verified_at": "2026-10-10T02:43:36.232Z",
+          "last_sync_record": "releases/backfill-20261010/release-status.json"
+        }
+      ]
     }
   ],
   "status": "public_verified",
@@ -257,7 +265,7 @@
     ],
     "record": "releases/backfill-20261010/release-status.json"
   },
-  "latest_record": "releases/backfill-20261010/release-status.json",
+  "latest_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
   "pending": false,
   "pending_note": null,
   "rollback": {
@@ -265,5 +273,15 @@
     "status": "public_verified",
     "reason": "用户要求删除本次第三关"
   },
-  "last_release_record": "releases/backfill-20261010/release-status.json"
+  "last_release_record": "releases/backfill-20261010/release-status.json",
+  "takeover_sync": {
+    "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+    "at": "2026-10-11T08:45:31.215699+00:00",
+    "reason": "重大FPS/关卡/瞄准变化及网站账号云档和Toy公开状态失实，按2026-10-11规则即时纠正；新视频首次发布及上一主推引导。",
+    "covered_bvids": [
+      "BV18XHW66E55"
+    ],
+    "note": "游戏包清理普通菜单变化未按小改单独宣传；Toy状态以实际公开入口和发布核验为准。",
+    "latest_platform_state": "all_five_toy_clean_packages_published"
+  }
 }

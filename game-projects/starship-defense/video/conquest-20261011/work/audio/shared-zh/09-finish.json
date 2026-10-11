@@ -1,0 +1,113 @@
+{
+  "text": "到最后，两边兵力都见底了。我们守住通信站和仓库，对面票数归零，我方剩三票。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 8.904,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1625000,
+      "text": "到"
+    },
+    {
+      "offset": 2750000,
+      "duration": 4875000,
+      "text": "最后"
+    },
+    {
+      "offset": 11000000,
+      "duration": 4125000,
+      "text": "两边"
+    },
+    {
+      "offset": 15250000,
+      "duration": 3375000,
+      "text": "兵力"
+    },
+    {
+      "offset": 18875000,
+      "duration": 1000000,
+      "text": "都"
+    },
+    {
+      "offset": 20000000,
+      "duration": 4125000,
+      "text": "见底"
+    },
+    {
+      "offset": 24125000,
+      "duration": 2125000,
+      "text": "了"
+    },
+    {
+      "offset": 31875000,
+      "duration": 2625000,
+      "text": "我们"
+    },
+    {
+      "offset": 34625000,
+      "duration": 2250000,
+      "text": "守"
+    },
+    {
+      "offset": 36875000,
+      "duration": 1375000,
+      "text": "住"
+    },
+    {
+      "offset": 38500000,
+      "duration": 5500000,
+      "text": "通信站"
+    },
+    {
+      "offset": 44250000,
+      "duration": 1000000,
+      "text": "和"
+    },
+    {
+      "offset": 45375000,
+      "duration": 5500000,
+      "text": "仓库"
+    },
+    {
+      "offset": 54375000,
+      "duration": 1625000,
+      "text": "对"
+    },
+    {
+      "offset": 56125000,
+      "duration": 3875000,
+      "text": "面票"
+    },
+    {
+      "offset": 60125000,
+      "duration": 6625000,
+      "text": "数归零"
+    },
+    {
+      "offset": 69500000,
+      "duration": 2250000,
+      "text": "我"
+    },
+    {
+      "offset": 71750000,
+      "duration": 2125000,
+      "text": "方"
+    },
+    {
+      "offset": 73875000,
+      "duration": 1625000,
+      "text": "剩"
+    },
+    {
+      "offset": 75625000,
+      "duration": 2125000,
+      "text": "三"
+    },
+    {
+      "offset": 77750000,
+      "duration": 2625000,
+      "text": "票"
+    }
+  ]
+}

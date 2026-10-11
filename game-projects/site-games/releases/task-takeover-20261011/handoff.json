@@ -1,0 +1,459 @@
+{
+  "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+  "source": "Codex",
+  "checked_at": "2026-10-11T08:45:31.215699+00:00",
+  "scope": "接管遗留锁导致的未完成发布，保留其他任务现场，不接管已有明确预览/审片门槛的作品。",
+  "locks": {
+    "recovered": [
+      {
+        "target": "bilibili-16214353",
+        "previous_source": "Trae",
+        "previous_task": "mario-stage4-release-20261010",
+        "reason": "第四关网站、Toy及两视频简介已完成公开核验；遗留账号锁不再对应未完成写操作。",
+        "archived_owner": "C:/Users/37818/.claude/state/bili-activities/recovered-locks/mario-stage4-release-20261010-takeover-20261011/owner.json"
+      }
+    ],
+    "git_integration_locks": "not_used",
+    "external_write_locks": "only_owned_short_write_locks; release at completion",
+    "active_user_authorized": {
+      "source": "QianwenWorkAssistant",
+      "task": "resistance-war-20261011 三平台发布",
+      "acquired_at": "2026-10-11T09:00:38.161760Z",
+      "user_confirmation": "是我叫千问做的",
+      "action": "preserve active writer lock; do not interrupt or duplicate upload"
+    }
+  },
+  "completed": [
+    {
+      "task": "conquest-video-20261011",
+      "status": "all_three_videos_published",
+      "bilibili": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+      "youtube": "https://youtu.be/X3Lc6SZ6whE",
+      "douyin": "https://www.douyin.com/video/7695187880532135178",
+      "approval_hash": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "followup": "Toy binding verified; public pinned comment; formal collection; topic; previous guide; free reward check"
+    },
+    {
+      "task": "old_game_video_descriptions",
+      "status": "public_verified",
+      "bvids": [
+        "BV14hpL62EZ5",
+        "BV18XHW66E55",
+        "BV1C5HQ6gEvD",
+        "BV1TepK69Eet",
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1Wqaz6AEJb",
+        "BV1xdpx63ETu"
+      ],
+      "exact_record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json"
+    },
+    {
+      "task": "privacy_cleanup_readback",
+      "status": "website_verified_all_five_toy_games_published",
+      "games": {
+        "starship-defense": {
+          "version": "web-fps-rules-v0.34.0-privacy1",
+          "status": "published",
+          "public_verified_at": "2026-10-11T16:54:59.708606+08:00"
+        },
+        "tank-3d": {
+          "version": "remix-entry1-menu-text1-fp-aim1-privacy1",
+          "status": "published",
+          "public_verified_at": "2026-10-11T08:21:18.515309+00:00"
+        },
+        "mario-3d": {
+          "version": "v2.6.0-preview1-privacy1",
+          "status": "published",
+          "public_verified_at": "2026-10-11T08:21:18.515309+00:00"
+        },
+        "jackal-stage1-3d": {
+          "version": "v0.10.3-menu-text1-privacy1",
+          "status": "published",
+          "public_verified_at": "2026-10-11T08:21:18.515309+00:00"
+        },
+        "cadillacs-stage1-3d": {
+          "version": "v0.11.0-hellroad.1-privacy1",
+          "status": "published",
+          "public_verified_at": "2026-10-11T08:21:18.515309+00:00"
+        }
+      },
+      "record": "game-projects/site-games/releases/privacy-cleanup-20261011/release-status.json"
+    },
+    {
+      "task": "activity_2610057300",
+      "status": "reward_claimed",
+      "reward": "80推广金，非现金"
+    },
+    {
+      "task": "multiplatform_major_update_descriptions",
+      "status": "initial_major_updates_public_verified_restoration_partly_pending",
+      "youtube_primary_and_english": 10,
+      "douyin_initial_major_update_public_verified": 4,
+      "douyin_toy_restoration_public_verified": 2,
+      "douyin_toy_restoration_reviewing": 1,
+      "record": "game-projects/site-games/releases/task-takeover-20261011/multiplatform.json"
+    }
+  ],
+  "remaining": [
+    {
+      "task": "conquest-toy-promotion-form",
+      "status": "pending_authorized_account_writer",
+      "action": "Toy公开入口已恢复；待Qianwen账号写操作结束后查重并登记已绑定且置顶的本期BV，片内平台宣传E=否，运营反馈F留空。"
+    },
+    {
+      "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+      "source": "Codex",
+      "original_commit": "b179d802",
+      "resume_commit": "3552df5e",
+      "branch": "codex/finish-image-enhance-20261011",
+      "status": "blocked_quota",
+      "tests": "13 unit tests passed; frontend JS syntax passed",
+      "live_check_at": "2026-10-11T08:45:31.215699+00:00",
+      "live_code": "ResourceUnavailable.ResourcePackageRunOut",
+      "production_changed": false,
+      "next_action": "恢复CropEnhanceImageOCR额度后在当前分支重试真实调用，成功再整合主线部署。",
+      "notification": {
+        "task_id": "tencent-ocr-100044456994",
+        "event_id": "cropenhance-resource-package-20261009-18d6fba2",
+        "result": "already_sent"
+      }
+    },
+    {
+      "task": "resistance-war_video_variants",
+      "status": "separate_active_user_authorized_task",
+      "action": "用户2026-10-11说明“是我叫千问做的”，保留当前发布工作和账号写锁，不接管或重复上传。",
+      "owner": "QianwenWorkAssistant"
+    },
+    {
+      "task": "contra-stage1-3d",
+      "status": "completed_local_preview",
+      "action": "原任务明确先不上架；无遗留写锁，不属于待解锁的发布任务。"
+    },
+    {
+      "task": "bilibili_toy_restoration_clarification",
+      "status": "pending_authorized_account_writer",
+      "owner": "QianwenWorkAssistant",
+      "owner_acquired_at": "2026-10-11T09:00:38.161760Z",
+      "user_confirmation": "是我叫千问做的",
+      "action": "账号锁释放后重读全文和最新合集，若仍有临时下架说明则只修正平台状态，保留千问最新视频引导和历史介绍；不重复发游戏包。",
+      "record": "pending-bilibili-restoration.json"
+    },
+    {
+      "task": "douyin_7694239926304427298_restoration",
+      "status": "platform_edit_under_review",
+      "observed_ui": "修改信息正在审核中，请稍后再修改",
+      "action": "既有审核结束后读回，仍显示临时下架时再合并恢复说明；不在灰色提交按钮上重复点击，不宣称恢复说明已公开。"
+    }
+  ],
+  "worktrees": [
+    {
+      "path": "D:/project/toolbasecamp",
+      "head": "58c886043a89a10925beaf19c588293716189906",
+      "branch": "refs/heads/master",
+      "head_in_origin_master": true,
+      "working_changes": [
+        "?? .claude/"
+      ]
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/3d-camera-mobile/toolbasecamp",
+      "head": "f705a6fbe31debb229b83341d7f54b33b48e9a62",
+      "branch": "refs/heads/codex/3d-camera-mobile",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/conquest-video-20261011/toolbasecamp",
+      "head": "af18d7cc45948ccd913cf79f782b733be4f777c3",
+      "branch": "refs/heads/codex/conquest-video-20261011",
+      "head_in_origin_master": true,
+      "working_changes": [
+        " M game-projects/starship-defense/video/conquest-20261011/work/publication-result.json",
+        " M game-projects/starship-defense/video/conquest-20261011/work/publish.json",
+        " M game-projects/starship-defense/video/conquest-20261011/work/publish/bilibili-zh/publish.json",
+        " M game-projects/starship-defense/video/conquest-20261011/work/run-state.json"
+      ]
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/drag-camera-continuation/toolbasecamp",
+      "head": "0e9640d4b2c76ce8bc13b25da7eda0f8555d5089",
+      "branch": "refs/heads/codex/drag-camera-continuation",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/finish-image-enhance-20261011/toolbasecamp",
+      "head": "3552df5e2f4a17b01a3d6191d97f83ddbe5f597f",
+      "branch": "refs/heads/codex/finish-image-enhance-20261011",
+      "head_in_origin_master": false,
+      "working_changes": [
+        "?? game-projects/site-games/releases/tencent-ocr-takeover-20261011/"
+      ]
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/task-takeover-20261011/toolbasecamp",
+      "head": "eb4f73a668ea4712b644ffdfd73a724a375ad840",
+      "branch": "refs/heads/codex/task-takeover-20261011",
+      "head_in_origin_master": true,
+      "working_changes": [
+        " M game-projects/cadillacs-stage1-3d/media-kit/bilibili-sync.json",
+        " M game-projects/site-games/releases/privacy-cleanup-20261011/release-status.json",
+        " M game-projects/starship-defense/media-kit/bilibili-sync.json",
+        " M game-projects/tank-3d/media-kit/bilibili-sync.json",
+        "?? game-projects/site-games/releases/task-takeover-20261011/"
+      ]
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/toy-privacy-cleanup-20261011/toolbasecamp",
+      "head": "eb4f73a668ea4712b644ffdfd73a724a375ad840",
+      "branch": "refs/heads/codex/toy-privacy-cleanup-20261011",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "C:/Users/37818/.codex/worktrees/video-backfill-20261008/toolbasecamp",
+      "head": "eba175f1264c4c79f123f5a21d58f54f7e900121",
+      "branch": "refs/heads/codex/video-backfill-20261008",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-feel",
+      "head": "f89734b30f9490f4aadd12310b6ab617688cee6c",
+      "branch": "refs/heads/claude/cadillacs-combat-feel",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-sfx",
+      "head": "9529177d841c50cbbbc6d7245283fe049faa9543",
+      "branch": "refs/heads/claude/cadillacs-original-sfx",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-stage2",
+      "head": "0e9f01cd785f2ca95be6e414cba2d5ecafd2f223",
+      "branch": "refs/heads/claude/cadillacs-style-stage2",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/cadillacs-stage3-original",
+      "head": "c12e9dfbb67e8236f1b3033b11f98d0bc3b9cc44",
+      "branch": "refs/heads/claude/cadillacs-stage3-original-20261009",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/contra-stage1-3d",
+      "head": "fa292d88142322da2c5996598641ccd8ed1a11f2",
+      "branch": "refs/heads/claude/contra-stage1-3d",
+      "head_in_origin_master": false,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/ecstatic-margulis-d9954e",
+      "head": "0250bd994933db6dc2a34183a1a82652e540d5e6",
+      "branch": "detached",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/game-hud-controls",
+      "head": "cc0e8e27a934931cb32149a94695d1214348ed06",
+      "branch": "refs/heads/qoder/game-hud-controls-tweaks",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/sharp-tesla-a5c0ac",
+      "head": "c203eda139235aee59d947c5cde5a3eb14984926",
+      "branch": "detached",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp/.claude/worktrees/stoic-bardeen-7b5e86",
+      "head": "9ee34a62c10c85837af5eeef7879e40c22ef2b5d",
+      "branch": "detached",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp-video-liangjian-composer-20261011",
+      "head": "efa1c5ff0c168628e646c2febf34a9d336acdc64",
+      "branch": "refs/heads/composer/video-liangjian-20261011",
+      "head_in_origin_master": true,
+      "working_changes": [
+        "?? game-projects/starship-defense/video/liangjian-composer-20261011/"
+      ]
+    },
+    {
+      "path": "D:/project/toolbasecamp-video-liangjian-cursor-20261011",
+      "head": "efa1c5ff0c168628e646c2febf34a9d336acdc64",
+      "branch": "refs/heads/cursor/video-liangjian-20261011",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp-video-resistance-war",
+      "head": "c6ae2613c11c7773d78a8290c54ee4b721761d34",
+      "branch": "refs/heads/video/resistance-war-20261011",
+      "head_in_origin_master": false,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/toolbasecamp-video-zerg",
+      "head": "eeb54510c85b794f47c44112b9470cd0b62d265e",
+      "branch": "refs/heads/video/zerg-mode-20261010",
+      "head_in_origin_master": true,
+      "working_changes": [
+        "?? game-projects/starship-defense/video/zerg-mode-20261010/work/capture-zerg-v35.cjs",
+        "?? game-projects/starship-defense/video/zerg-mode-20261010/work/capture-zerg-v36.cjs",
+        "?? game-projects/starship-defense/video/zerg-mode-20261010/work/capture-zerg-v37.cjs",
+        "?? game-projects/starship-defense/video/zerg-mode-20261010/work/capture-zerg-v38.cjs",
+        "?? game-projects/starship-defense/video/zerg-mode-20261010/work/capture-zerg-v39.cjs"
+      ]
+    },
+    {
+      "path": "D:/project/worktrees/cadillacs-original-audio-20261007",
+      "head": "5118eabeca294b1ab5ff1e4b1ffec39d0e9f479a",
+      "branch": "refs/heads/codex/cadillacs-original-audio-20261007",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-feedback-fix-20261010",
+      "head": "bcb9ead616318a695eab16b5830260efa5136cb2",
+      "branch": "refs/heads/qoder/chongchao-feedback-fix-20261010",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-hud-labels-20261010",
+      "head": "793254fc6747403c2123a2019b6ed6d556af714c",
+      "branch": "refs/heads/qoder/chongchao-hud-labels-20261010",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-hud-menu-20261010",
+      "head": "269a58b92d289254341364665fb17da17fc8c5e2",
+      "branch": "refs/heads/qoder/chongchao-hud-menu-20261010",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-live-removal-20261010",
+      "head": "69e7f8d0ad4029cc12c6a7ce4c540b88842d5118",
+      "branch": "refs/heads/qwen/chongchao-live-removal-20261010",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-readybtn-fix-20261010",
+      "head": "201fa97b298931f97764fe171b773990733d623c",
+      "branch": "refs/heads/qoder/chongchao-readybtn-fix-20261010",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-versus-design-20261008",
+      "head": "ff52a166ee4602146329a0317c146f30a93aa498",
+      "branch": "refs/heads/claude/chongchao-versus-design-20261008",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/chongchao-zerg-mode-20261010",
+      "head": "1b32305139a532426632870c03a35e4e402fa051",
+      "branch": "refs/heads/qoder/chongchao-zerg-mode-20261010",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/codex-takeover-20261007",
+      "head": "e85ac341967c5ecc426ab674dea9760b67d0e41c",
+      "branch": "refs/heads/qoder/codex-takeover-20261007",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/coop-lobby-manual-create-20261007",
+      "head": "c3ad2e68c829b0d621e9e41f88be9cb528bc060b",
+      "branch": "refs/heads/qoder/coop-lobby-manual-create-20261007",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/five-games-video-20261006",
+      "head": "24c684cf8b04619e102f0a4bec48350ae3e6dbae",
+      "branch": "refs/heads/codex/five-games-video-20261006",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/jackal-coop-fix-20261007",
+      "head": "815a12a7f90080aa622fb541757b9e3b25d1d872",
+      "branch": "refs/heads/qoder/jackal-coop-heading-perf-20261007",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/remove-back-link-20261010",
+      "head": "ec592af0885afbe6a481a67f1485cd4f6033b536",
+      "branch": "refs/heads/qoder/remove-back-link-20261010",
+      "head_in_origin_master": true,
+      "working_changes": [
+        " M game-projects/jackal-stage1-3d/media-kit/releases/toy-v0.10.3-menu-text1/toy-build.json",
+        " M game-projects/mario-3d/media-kit/releases/v2.5.0-menu-text1/toy-build.json",
+        " M game-projects/tank-3d/media-kit/releases/remix-entry1-menu-text1/toy-build.json",
+        "?? game-projects/cadillacs-stage1-3d/media-kit/releases/toy-v0.11.0-hellroad.1/"
+      ]
+    },
+    {
+      "path": "D:/project/worktrees/tank-coop-stuck-fix-20261007",
+      "head": "1482cbbbaac514096da52b6dddf9d4899d1f2da9",
+      "branch": "refs/heads/claude/tank-coop-stuck-fix-20261007",
+      "head_in_origin_master": true,
+      "working_changes": [
+        "?? game-projects/tank-3d/media-kit/releases/coop-unstick1/toy-build.json"
+      ]
+    },
+    {
+      "path": "D:/project/worktrees/tank-online-video-20261007",
+      "head": "df579175f5ec2b76e1ffd64259eb99424a10cd54",
+      "branch": "refs/heads/codex/tank-online-video-20261007",
+      "head_in_origin_master": true,
+      "working_changes": []
+    },
+    {
+      "path": "D:/project/worktrees/toy-sync-20261010",
+      "head": "e087487c49e07147d69128e011ae1fd8a28477db",
+      "branch": "detached",
+      "head_in_origin_master": true,
+      "working_changes": []
+    }
+  ],
+  "taptap": "not_requested_not_operated",
+  "schedules": "no_new_schedule",
+  "shared_original_worktree": "preserved",
+  "final_checked_at": "2026-10-11T09:18:31.879859+00:00",
+  "completion": "available_takeover_work_published_remaining_external_dependencies_preserved",
+  "note": "旧Trae锁已归档；新增Qianwen锁经用户确认属于其正在安排的发布，不解锁或中断。腾讯新版OCR仍真实额度不足，代码在独立远端分支保全。",
+  "notification_events": {
+    "quota": {
+      "task_id": "tencent-ocr-100044456994",
+      "event_id": "cropenhance-resource-package-20261009-18d6fba2",
+      "status": "already_sent"
+    },
+    "active_writer": {
+      "task_id": "bilibili-16214353-active-write",
+      "event_id": "qianwen-resistance-war-publish-20261011-090038",
+      "status": "resolved_by_user_confirmation"
+    },
+    "old_toy_permission": "resolved_by_actual_published_readback"
+  }
+}

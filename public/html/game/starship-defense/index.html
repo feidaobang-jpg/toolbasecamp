@@ -254,12 +254,11 @@ button::before,button::after{content:none!important}
 .no-flexgap #hudRight #webTools>*{margin:0}
 #platformPanel{overflow-y:auto;touch-action:pan-y}#platformPanel,#platformPanel *{touch-action:pan-y}
 #platformPanel .mbtn{min-height:44px}#platformPanel h4{margin:14px 0 4px}#cloudInfo{white-space:pre-line}
-#cloudChoices{max-width:100%;padding:8px}#saveLoginForm label{display:block;margin:8px 0}
-#saveLoginForm input:not([type=checkbox]){margin-left:8px;width:220px;max-width:65%;font:inherit;padding:8px}
+#cloudChoices{max-width:100%;padding:8px}
+.mbtn[data-author-home]{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:44px;box-sizing:border-box}
 .saveAuto{display:block;padding:8px}.saveAuto input{width:20px;height:20px;vertical-align:middle}
 #localHistory{display:flex;flex-wrap:wrap;gap:8px}.save-health{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:block;max-width:220px;min-height:44px;padding:6px 10px;font-size:12px!important;text-align:center;white-space:normal;pointer-events:auto;z-index:30;transition:opacity .35s}.save-health:active{transform:translateX(-50%) scale(.95)}.save-health.faded{opacity:0;pointer-events:none}#hud.hidden~#saveHealth{display:none}
 #saveNotice{font-size:11px;max-width:700px}
-#zergHud{position:absolute;left:10px;top:10px;font-size:12px;line-height:1.6;padding:8px 11px;min-width:216px;max-width:270px;color:#eaffea;background:rgba(10,26,14,.82);border:1px solid rgba(140,220,150,.4);border-radius:8px;z-index:12;pointer-events:none;text-shadow:0 1px 2px #000}
 .zerg-mode .campaign-only{display:none!important}
 
 /* ===== 虫潮对战（1 对 1 到 4 对 4） ===== */
@@ -355,6 +354,10 @@ button::before,button::after{content:none!important}
 #stage.versus-mode.touch-mode #vP,#stage.versus-mode.touch-mode #cornerTools #fullBtn{width:var(--bf-corner);min-width:var(--corner-height)}
 #stage.versus-mode.touch-mode #vP{right:calc(var(--corner-right) + var(--bf-corner) + var(--corner-gap))}
 #stage.versus-mode.touch-mode #vC{right:calc(var(--corner-right) + var(--bf-corner) * 2 + var(--corner-gap) * 2)}
+/* 银行塔防保留经济与路线面板；战地仍用原布局。 */
+#stage.bank-mode #bfFlags,#stage.bank-mode #vH{display:none!important}
+#stage.bank-mode #vsPanel .vs-lane{display:flex}
+#stage.bank-mode #vsEco{max-width:250px}
 </style>
 </head>
 <body>
@@ -440,7 +443,7 @@ button::before,button::after{content:none!important}
     <div class="vbtn" id="vU" aria-label="投掷手雷">手雷</div>
     <div class="vbtn" id="vX">换枪</div>
     <div class="vbtn sm" id="vO">商店</div>
-    <div class="vbtn versus-only" id="vZ" aria-label="切换瞄准" aria-pressed="false">瞄准</div>
+    <div class="vbtn versus-only" id="vZ" aria-label="举枪瞄准" aria-pressed="false">举枪</div>
     <div class="vbtn versus-only" id="vR" aria-label="重新装填弹匣">换弹</div>
     <div class="vbtn sm" id="vL">建造</div>
     <div class="vbtn sm" id="vC" aria-label="切换视角预设"><span>切换视角</span></div>
@@ -474,13 +477,14 @@ button::before,button::after{content:none!important}
     </div>
     <p id="saveNotice" class="small" role="status"></p>
     <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
-    <h2>开始游戏</h2>
+    <h2>基地防守 · 开始与继续</h2>
     <div class="btnRow" id="startRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
     </div>
     <h2>其他玩法 · 实验内容</h2>
     <div class="btnRow" id="modeRow">
+      <button class="mbtn" id="btnBankVersus">🏦 银行塔防对战</button>
       <button class="mbtn" id="btnVersus">⚑ 战地模式 · 据点争夺</button>
       <button class="mbtn" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
@@ -489,12 +493,13 @@ button::before,button::after{content:none!important}
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
       <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复 / 作者</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
+      <a class="mbtn" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a>
       <button class="mbtn" id="daylightMain">地表：白天</button>
     </div>
     <div class="small">
       地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，无需按键、不耗电。<br>
       电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 按住画面用鼠标拖动转视角 · 按住Shift跑步 · 空格跳跃 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
-      按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 跳跃（落地后可再次起跳，无冷却）· I 互动（开关城门、上下载具）· H 医疗包 · U 无限手雷（无需补充，无投掷间隔）· 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
+      按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 跳跃（落地后可再次起跳，无冷却）· I 互动（开关城门、上下载具）· H 医疗包 · U 无限手雷（无需补充，每3秒一次）· 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
       手机：左摇杆移动，右侧空白处拖动转视角；「切换视角」在各第三人称预设与第一/第三人称间循环，无需记键盘；商店、建造、换枪、医疗、手雷都有对应按钮<br>
       菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
       玩法：打怪攒钱 → 买枪强化、造炮塔、雇最多12名队友 → 开战守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。<br>
@@ -529,13 +534,13 @@ button::before,button::after{content:none!important}
 
   <div id="vsMenu" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsMenuTitle">
     <h2 id="vsMenuTitle">⚑ 战地模式 · 沙漠据点战</h2>
-    <p class="small vs-rules">沙漠战场：争夺 A旧镇、B通信站、C补给仓库。控制多数据点消耗敌方兵力票，兵力归零或15分钟结束时决胜。选择固定兵种装备，上车作战；阵亡后8秒重新部署。</p>
+    <p class="small vs-rules">沙漠战场：争夺 A旧镇、B通信站、C补给仓库。控制多数据点消耗敌方兵力票，兵力归零或15分钟结束时决胜。选择固定兵种装备，上车作战；阵亡后8秒重新部署。步行固定第一人称、手动瞄准、按住射击，载具用第三人称跟随。</p>
     <div class="btnRow vs-size" role="group" aria-label="对战规模"><span class="small">规模</span><button class="mbtn" data-vs-size="1" aria-pressed="true">1 对 1</button><button class="mbtn" data-vs-size="2" aria-pressed="false">2 对 2</button><button class="mbtn" data-vs-size="3" aria-pressed="false">3 对 3</button><button class="mbtn" data-vs-size="4" aria-pressed="false">4 对 4</button></div>
     <p class="small" id="vsSizeNote" role="status"></p>
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">装备：O / 部署：L / 战况：T / 换弹：R / 支援：H / 上下车：I。手机使用同名按钮。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
+    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R / 支援：H / 上下车：I。手机使用同名按钮，按住射击键可继续拖动瞄准。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -615,27 +620,21 @@ button::before,button::after{content:none!important}
     <p id="localSaveStatus" role="status">正在检查本地存档…</p>
     <div class="btnRow"><button class="mbtn" id="saveExport">导出存档文件</button><button class="mbtn" id="saveImport">导入存档文件</button><button class="mbtn" id="saveHistory">查看本地历史备份</button><button class="mbtn" id="cloudBackup">恢复前次本地进度</button></div>
     <input id="saveImportFile" type="file" accept=".json,application/json" hidden><div id="localHistory"></div>
-    <h4 id="cloudProvider">账号云存档</h4>
+    <div id="cloudSaveTools">
+    <h4 id="cloudProvider">Toy 账号云存档</h4>
     <p id="cloudSaveStatus" role="status">尚未连接云备份；本地游戏可继续。</p>
     <label class="saveAuto"><input id="cloudAuto" type="checkbox" checked> 自动备份普通进度到云端</label>
     <p class="small">关键进度合并上传。网络失败会保留本地档；两端进度不同时暂停上传，由你选择。联机与测试模式独立。</p>
     <div class="btnRow"><button class="mbtn" id="cloudRead">查看云档 / 重试</button><button class="mbtn" id="cloudWrite">选择上传本地进度</button><button class="mbtn green hidden" id="cloudConfirm">确认上传并保留旧云档</button></div>
     <p id="cloudConfirmInfo" class="small"></p><p id="cloudInfo" class="small"></p>
     <select id="cloudChoices" aria-label="选择云存档或历史备份" hidden></select><button class="mbtn green hidden" id="cloudLoad">读取选中云档</button>
-    <div class="btnRow"><button class="mbtn" id="saveLoginToggle">登录网站账号</button><button class="mbtn" id="saveLogout" hidden>退出云存档账号</button></div>
-    <form id="saveLoginForm" hidden>
-      <p class="small">使用工具大本营网站账号，与游戏平台账号独立。密码只用于本次登录。</p>
-      <label>手机号或邮箱<input id="saveAccount" autocomplete="username" maxlength="255" required></label>
-      <label>密码<input id="savePassword" type="password" autocomplete="current-password" maxlength="200" required></label>
-      <button class="mbtn green" id="saveLoginSubmit" type="submit">登录并连接云备份</button>
-      <a href="https://www.zhengxiaohui.cn/html/auth/register.html" target="_blank" rel="noopener">注册网站账号</a>
-    </form>
+    </div>
     <div id="toyExtras">
       <div id="rankTools"><div class="btnRow"><button class="mbtn" id="rankRead">普通通关积分榜</button><button class="mbtn" id="rankSubmit">提交最佳通关成绩</button></div>
       <p class="small">普通通关积分，自由测试与调试不参与；这是休闲榜单。</p><ol id="rankList"></ol></div>
       <p id="platformStatus" role="status">云存档和排行榜需在 B站 Toy 中登录。</p>
       <p id="authorInfo">作者：飞刀班长 · 万物皆可游戏</p>
-      <div class="btnRow"><button class="mbtn" id="authorVisit">支持作者</button><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
+      <div class="btnRow"><a class="mbtn" id="authorVisit" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a><button class="mbtn" id="videoVisit">查看游戏视频</button><button class="mbtn" id="toyShare">分享试玩</button></div>
       <p class="small">玩得开心的话，去视频给开发者空投个三连补给？</p>
     </div>
   </section>
@@ -653,7 +652,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=40ed1ea260" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=aadc0293545a" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
@@ -682,4 +681,5 @@ document.addEventListener('focusin',(e)=>{
 });
 })();
 </script>
+<script defer src="../../../js/game/author-home.js?v=1"></script>
 </body></html>

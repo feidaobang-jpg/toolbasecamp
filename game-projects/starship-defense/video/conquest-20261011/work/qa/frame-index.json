@@ -1,0 +1,150 @@
+[
+  {
+    "t": 0.2,
+    "file": "qa\\frames\\00-0.20.jpg"
+  },
+  {
+    "t": 0.5,
+    "file": "qa\\frames\\01-0.50.jpg"
+  },
+  {
+    "t": 1.8,
+    "file": "qa\\frames\\02-1.80.jpg"
+  },
+  {
+    "t": 3.2,
+    "file": "qa\\frames\\03-3.20.jpg"
+  },
+  {
+    "t": 3.8,
+    "file": "qa\\frames\\04-3.80.jpg"
+  },
+  {
+    "t": 5.383,
+    "file": "qa\\frames\\05-5.38.jpg"
+  },
+  {
+    "t": 6.7,
+    "file": "qa\\frames\\06-6.70.jpg"
+  },
+  {
+    "t": 7.367,
+    "file": "qa\\frames\\07-7.37.jpg"
+  },
+  {
+    "t": 11.233,
+    "file": "qa\\frames\\08-11.23.jpg"
+  },
+  {
+    "t": 15.5,
+    "file": "qa\\frames\\09-15.50.jpg"
+  },
+  {
+    "t": 20.917,
+    "file": "qa\\frames\\10-20.92.jpg"
+  },
+  {
+    "t": 26.733,
+    "file": "qa\\frames\\11-26.73.jpg"
+  },
+  {
+    "t": 28.583,
+    "file": "qa\\frames\\12-28.58.jpg"
+  },
+  {
+    "t": 30.833,
+    "file": "qa\\frames\\13-30.83.jpg"
+  },
+  {
+    "t": 32.933,
+    "file": "qa\\frames\\14-32.93.jpg"
+  },
+  {
+    "t": 35.433,
+    "file": "qa\\frames\\15-35.43.jpg"
+  },
+  {
+    "t": 39.683,
+    "file": "qa\\frames\\16-39.68.jpg"
+  },
+  {
+    "t": 44.333,
+    "file": "qa\\frames\\17-44.33.jpg"
+  },
+  {
+    "t": 46.733,
+    "file": "qa\\frames\\18-46.73.jpg"
+  },
+  {
+    "t": 49.533,
+    "file": "qa\\frames\\19-49.53.jpg"
+  },
+  {
+    "t": 51.717,
+    "file": "qa\\frames\\20-51.72.jpg"
+  },
+  {
+    "t": 54.3,
+    "file": "qa\\frames\\21-54.30.jpg"
+  },
+  {
+    "t": 56.1,
+    "file": "qa\\frames\\22-56.10.jpg"
+  },
+  {
+    "t": 58.3,
+    "file": "qa\\frames\\23-58.30.jpg"
+  },
+  {
+    "t": 60.233,
+    "file": "qa\\frames\\24-60.23.jpg"
+  },
+  {
+    "t": 62.567,
+    "file": "qa\\frames\\25-62.57.jpg"
+  },
+  {
+    "t": 67.95,
+    "file": "qa\\frames\\26-67.95.jpg"
+  },
+  {
+    "t": 73.733,
+    "file": "qa\\frames\\27-73.73.jpg"
+  },
+  {
+    "t": 78.167,
+    "file": "qa\\frames\\28-78.17.jpg"
+  },
+  {
+    "t": 83.0,
+    "file": "qa\\frames\\29-83.00.jpg"
+  },
+  {
+    "t": 88.533,
+    "file": "qa\\frames\\30-88.53.jpg"
+  },
+  {
+    "t": 94.467,
+    "file": "qa\\frames\\31-94.47.jpg"
+  },
+  {
+    "t": 97.117,
+    "file": "qa\\frames\\32-97.12.jpg"
+  },
+  {
+    "t": 100.167,
+    "file": "qa\\frames\\33-100.17.jpg"
+  },
+  {
+    "t": 105.25,
+    "file": "qa\\frames\\34-105.25.jpg"
+  },
+  {
+    "t": 107.53333333333333,
+    "file": "qa\\frames\\35-107.53.jpg"
+  },
+  {
+    "t": 108.83333333333333,
+    "file": "qa\\frames\\36-108.83.jpg"
+  }
+]

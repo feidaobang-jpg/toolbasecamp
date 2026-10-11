@@ -1,18 +1,26 @@
 {
   "game_id": "chongchao-qianshao",
+  "toy_cover": {
+    "status": "published",
+    "record": "releases/toy-cover-20261011/release.json",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_24960.jpg",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_24960_upload",
+    "method": "AI-edited promotional artwork based on a current real gameplay screenshot",
+    "game_package_changed": false
+  },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-zerg-corpse-spinfix-v0.33.3",
+  "current_version": "web-zerg-v0.36.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
   "publication_status": "published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_ulNIAOJh/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-resistance-aim-v0.33.1/handoff.json",
+  "qa": "releases/web-zerg-v0.36.0/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -20,7 +28,18 @@
       "package_sha256": "b23dce8635bcc102de95467cccaed6df06ca4caa396ffc2932c0b62ff28ad759",
       "preview_url": "https://www.bilibili.com/toy/preview/preview_jJlyN7qQ/index.html",
       "action": "待当前审核结束后重投此合并包，使Toy与网站一致",
-      "status": "blocked_by_inflight_audit"
+      "status": "superseded",
+      "superseded_by": "web-fps-rules-v0.34.0"
+    },
+    {
+      "version": "web-fps-rules-v0.34.0",
+      "status": "blocked_needs_user",
+      "package_sha256": "c59dd29758b2d4bd41ea52cc8b709f82213214b8bf35bcfd4b492213ad41f3ca",
+      "source_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_6GeeraCn/index.html",
+      "reason": "预览电脑+手机视口实测通过，--yes 提审第 9 次返回 307008 无权限操作；mylist 仍为 published 且 mtime 未推进，登录正常",
+      "action": "本人确认 Toy 后台后，从主线最新提交重新构建并补提；此前待补提的包均已被本包包含",
+      "record": "releases/web-fps-rules-v0.34.0/handoff.json"
     }
   ],
   "toy": {
@@ -29,7 +48,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "auditing",
-    "verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "verified_at": "2026-10-11T11:08:23.468719+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -37,16 +56,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_ulNIAOJh/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
-    "submitted_date": "2026-10-10",
-    "release_record": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
-    "submitted_version": "web-zerg-corpse-spinfix-v0.33.3",
-    "published_version": "web-resistance-v0.33.0",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
-    "note": "送审包含虫族母虫尸体残留与武直悬停打转修复(基于master@586c619f)。mylist 显示 published(线上仍为 v0.33.0)，v0.33.3 及后续包 --yes 提审连续7次 code=307008 无权限操作，非登录失效、也非审核中锁包；补提以主线 releases/web-touch-cream-pause-20261010/release.json 的 zip_sha256 为准，待本人确认后台权限。",
-    "package_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
+    "zip_sha256": "446a33a3459a764bbbf582acf19cd64cbca6081fedc7287316cd19609df338d2",
+    "submitted_date": "2026-10-11",
+    "release_record": "releases/web-bank-restore-v0.35.0/handoff.json",
+    "submitted_version": "web-bank-restore-v0.35.0",
+    "published_version": "web-bank-restore-v0.35.0",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_jYNBf9a8/index.html",
+    "note": "网站与同包Toy均公开核验；B站回复和简介仍待账号写锁。",
+    "package_sha256": "446a33a3459a764bbbf582acf19cd64cbca6081fedc7287316cd19609df338d2",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -99,19 +118,19 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-10T03:02:52.978211+00:00",
-    "status": "auditing",
-    "package_hash": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
+    "published_verified_at": "2026-10-11T10:07:11.194993+00:00",
+    "status": "published",
+    "package_hash": "446a33a3459a764bbbf582acf19cd64cbca6081fedc7287316cd19609df338d2",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "submitted_at": "2026-10-10T23:43:09+08:00",
-    "public_verified_at": "2026-10-10T03:02:52.978211+00:00",
-    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
-    "version": "web-resistance-v0.33.0",
-    "published_at": null,
-    "publication_time_note": "精确提交与过审时间未单独记录；确认published并在2026-10-08T11:44:17.464493+00:00核验公开入口",
-    "last_published_version": "web-resistance-v0.33.0",
-    "last_submitted_version": "web-resistance-v0.33.0",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
+    "submitted_at": "2026-10-11T10:01:23.323200+00:00",
+    "public_verified_at": "2026-10-11T10:07:11.194993+00:00",
+    "public_runtime_evidence": "正式Toy入口开局并升级银行Lv2，每10秒85金；银行与战地菜单并存。",
+    "version": "web-bank-restore-v0.35.0",
+    "published_at": "2026-10-11T10:03:07+00:00",
+    "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
+    "last_published_version": "web-bank-restore-v0.35.0",
+    "last_submitted_version": "web-bank-restore-v0.35.0",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_p9bnWqFA/index.html",
     "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
@@ -119,21 +138,21 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-resistance-v0.33.0",
-    "last_successful_sync_at": "2026-10-10T03:02:52.978211+00:00",
-    "public_verified_version": "web-resistance-v0.33.0",
-    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24275/index.html",
+    "last_successful_sync_version": "web-bank-restore-v0.35.0",
+    "last_successful_sync_at": "2026-10-11T10:07:11.194993+00:00",
+    "public_verified_version": "web-bank-restore-v0.35.0",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "source_commit": "8578cc3ec32adb2f3bac273cd5b3226f47f8f817",
     "package": {
-      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\chongchao-qianshao.zip",
-      "sha256": "a530abf352d5c5a39c604659f7b540bbc4e569c9269d11ee0f1b145ffe9b531c",
-      "bytes": 366485,
+      "path": "D:/project/task-artifacts/bili-feedback-20261011/web-bank-restore-v0.35.0.zip",
+      "sha256": "446a33a3459a764bbbf582acf19cd64cbca6081fedc7287316cd19609df338d2",
+      "bytes": 403877,
       "submitted": true
-    }
+    },
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24997/index.html"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-resistance-v0.33.0",
+  "published_toy_version": "web-bank-restore-v0.35.0",
   "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
@@ -144,15 +163,15 @@
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
   "extension_review_status": "published",
-  "preview_version": "web-resistance-v0.33.0",
-  "submitted_toy_version": "web-zerg-corpse-spinfix-v0.33.3",
-  "website_version": "web-zerg-corpse-spinfix-v0.33.3",
-  "website_verified_at": "2026-10-10T23:58:25+08:00",
+  "preview_version": "web-bank-restore-v0.35.0",
+  "submitted_toy_version": "web-zerg-v0.36.0",
+  "website_version": "web-zerg-v0.36.0",
+  "website_verified_at": "2026-10-11T11:08:23.468719+00:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
+  "handoff": "releases/web-zerg-v0.36.0/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -200,7 +219,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "53435e80048fd5300fc21045de60aa1bc88c08d9",
+  "website_commit": "7121afe8",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -785,6 +804,13 @@
       "classification": "routine",
       "handoff": "releases/web-camera-response-v0.31.2/handoff.json",
       "summary": "视角响应与触屏空白区域修复"
+    },
+    {
+      "version": "web-zerg-v0.36.0",
+      "base_version": "web-bank-restore-v0.35.0",
+      "classification": "routine",
+      "handoff": "releases/web-zerg-v0.36.0/handoff.json",
+      "summary": "虫族模式重做为三段攻城：哨站、城门、核心；简报与三档难度、虫群指挥、地穴、进化、炮击预警、评级战绩"
     }
   ],
   "comment_feedback_fix": {
@@ -811,7 +837,7 @@
       "capture-versus-teams.cjs"
     ]
   },
-  "website_deploy_record": "releases/web-resistance-v0.33.0/website.json",
+  "website_deploy_record": "releases/web-bank-restore-v0.35.0/website.json",
   "development_model_scope": "确认v0.26.0/v0.27.0虫潮对战模式的开发来源；更早版本未完整核对，Codex完成接管核验和视频制作。",
   "current_video_preparation": {
     "episode": "rv-town-20261009",
@@ -880,13 +906,12 @@
   "website": {
     "status": "public_verified",
     "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-    "verified_at": "2026-10-09T21:53:12.762458+08:00",
-    "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
-    "html_runtime_revision": "game.compat.js?v=a47bc064",
-    "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
+    "verified_at": "2026-10-11T10:01:23.323200+00:00",
+    "source_commit": "8578cc3ec32adb2f3bac273cd5b3226f47f8f817",
+    "runtime_sha256": "e61d1521039caa257a5b348ab1a95ced5194a67497f41bd70f1c9a9ead04df55",
     "runtime_matches_tested_build": true,
     "physical_phone": false,
-    "version": "web-resistance-v0.33.0"
+    "version": "web-bank-restore-v0.35.0"
   },
   "current_development_tool": "Codex",
   "rv_town": {
@@ -959,6 +984,17 @@
       "runtime_matches_tested_build": true,
       "physical_phone": false,
       "version": "web-no-shake-v0.32.1"
+    },
+    {
+      "status": "public_verified",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "verified_at": "2026-10-09T21:53:12.762458+08:00",
+      "source_commit": "a47bc064903f499c7bb3b2e14205a70dbe13cbda",
+      "html_runtime_revision": "game.compat.js?v=a47bc064",
+      "runtime_sha256": "aa5a2738258732693bbc69429bc156753fdae28a7a3ba57ba17b6e778394bcbc",
+      "runtime_matches_tested_build": true,
+      "physical_phone": false,
+      "version": "web-resistance-v0.33.0"
     }
   ],
   "resistance_campaign": {
@@ -1206,5 +1242,79 @@
     "new_video_authorized": false
   },
   "website_status": "public_verified",
-  "website_runtime_sha256": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5"
+  "website_runtime_sha256": "aadc0293545a6d99376280e33adad99939cc75c320e30451492000ebe37cdebe",
+  "feedback_oct11": {
+    "version": "web-feedback-v0.34.1",
+    "status": "website_verified_toy_auditing",
+    "record": "releases/web-feedback-v0.34.1/handoff.json",
+    "changes": [
+      "修复地下下车高度",
+      "修复洞外目标被误判洞内导致的卡怪",
+      "修复西侧跳上洞顶后穿透坠落",
+      "主战役及房车无限手雷增加3秒冷却"
+    ]
+  },
+  "bank_versus": {
+    "version": "web-bank-restore-v0.35.0",
+    "entry": "银行塔防对战",
+    "rules": "bank",
+    "restored_from": "5c03aeeb^",
+    "size": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "progress": "independent_match_records_only",
+    "features": [
+      "银行升级与定时收入",
+      "买兵放虫与三路推进",
+      "英雄等级和买枪",
+      "建造与队友转账",
+      "电脑对战与好友联机"
+    ],
+    "website_status": "public_verified",
+    "toy_status": "auditing"
+  },
+  "zerg_mode": {
+    "version": "web-zerg-v0.36.0",
+    "entry": "虫族模式 · 攻陷人类要塞",
+    "module": "public/html/game/starship-defense/zerg-mode.js",
+    "single_player": true,
+    "phases": [
+      "拔除三处哨站",
+      "攻破城门",
+      "摧毁基地核心"
+    ],
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard"
+    ],
+    "evolutions": 6,
+    "swarm_cap": 28,
+    "record_keys": [
+      "chongchao-zerg-best-v2",
+      "chongchao-zerg-difficulty-v1"
+    ],
+    "record": "releases/web-zerg-v0.36.0/handoff.json",
+    "physical_phone_test": false,
+    "website_status": "public_verified",
+    "toy_status": "auditing"
+  },
+  "mode_rework_plan": {
+    "requested_at": "2026-10-11",
+    "instruction": "四个实验模式逐个重做，一次做一个",
+    "order": [
+      "zerg",
+      "rv",
+      "resistance",
+      "conquest"
+    ],
+    "done": [
+      "zerg"
+    ],
+    "next": "rv",
+    "reason": "虫族刚发片且最薄先做；房车整体最粗糙且无视频绑定排第二；抗战、战地完成度最高且各有视频在制作/发布，放最后"
+  }
 }

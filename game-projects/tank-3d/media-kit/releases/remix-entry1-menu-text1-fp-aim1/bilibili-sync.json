@@ -1,0 +1,34 @@
+{
+  "game": "tank-3d",
+  "version": "remix-entry1-menu-text1-fp-aim1",
+  "toy_submission": "auditing 2026-10-11T10:03:39+08:00",
+  "website_verified": true,
+  "prepared_at": "2026-10-11T10:20:00+08:00",
+  "status": "prepared_not_submitted",
+  "blocked_reason": "本会话的浏览器连接器只有结构读取能力，指针/键盘操作报 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE（0x0 视口），无法在创作中心编辑页输入并点「立即投稿」；未用页面脚本或接口绕过只读限制，故不改动线上简介，保留待办。",
+  "update_line": "更新（2026-10-11·fp-aim1）：第一人称改为按画面中心的准星开炮，转个方向再按 J 也能看到炮弹飞出去，不再像打不出子弹；网站已更新可直接玩，Toy 新版已提交审核。",
+  "videos": [
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "aid": "117364309890693",
+      "title": "把坦克大战做成立体地图，这次能守住老鹰吗？",
+      "old_sha256": "20f0f852bffcd44d99eb1b05d231c649b4e3d7e035dd201a6ef06c6eb6e6aa9b",
+      "old_public_desc": "早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前玩法：新玩家默认魔改挑战，100关一周目、无限周目，可抢道具、挑战Boss；经典35关和困难循环可直接选择，老玩家保留原选择。WASD/方向键移动，J开火，Esc暂停；基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-10·remix-entry1-menu-text1）：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认魔改，已有选择保留。网站、Toy已更新；TapTap本次版本也已上线。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+      "new_sha256": "ed37f63454a40719ff2f50296e5c1f5d67e9e39b0f1c9e5257b79c6a4a9ef84e",
+      "new_public_desc": "早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前玩法：新玩家默认魔改挑战，100关一周目、无限周目，可抢道具、挑战Boss；经典35关和困难循环可直接选择，老玩家保留原选择。WASD/方向键移动，J开火，Esc暂停；基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-11·fp-aim1）：第一人称改为按画面中心的准星开炮，转个方向再按 J 也能看到炮弹飞出去，不再像打不出子弹；网站已更新可直接玩，Toy 新版已提交审核。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+      "method": "创作中心 type=edit&bvid 直达→简介富文本全选替换纯文本→立即投稿；提交后按公开接口读回核验",
+      "current_line_replaced": "更新（2026-10-10·remix-entry1-menu-text1）：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认魔改，已有选择保留。网站、Toy已更新；TapTap本次版本也已上线。"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "aid": "117397444957530",
+      "title": "坦克大战能联机了！两个人能守住老鹰吗？",
+      "old_sha256": "a0cdd25231100e28173dd1645066fadf18b55f1cb56a1e310eccdb04beca3a7a",
+      "old_public_desc": "坦克大战支持2–4人联机合作：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n更新（2026-10-10·remix-entry1-menu-text1）：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认魔改，已有选择保留。网站、Toy已更新；TapTap本次版本也已上线。\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n视频为录制时版本，以当前试玩为准。",
+      "new_sha256": "8bac1bdff1102c2bcacf7a057ccb94df41390b22b8cbd168952c658631521474",
+      "new_public_desc": "坦克大战支持2–4人联机合作：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n更新（2026-10-11·fp-aim1）：第一人称改为按画面中心的准星开炮，转个方向再按 J 也能看到炮弹飞出去，不再像打不出子弹；网站已更新可直接玩，Toy 新版已提交审核。\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n视频为录制时版本，以当前试玩为准。",
+      "method": "创作中心 type=edit&bvid 直达→简介富文本全选替换纯文本→立即投稿；提交后按公开接口读回核验",
+      "current_line_replaced": "更新（2026-10-10·remix-entry1-menu-text1）：菜单文字更清晰，魔改挑战与经典复刻入口更明确；新玩家默认魔改，已有选择保留。网站、Toy已更新；TapTap本次版本也已上线。"
+    }
+  ]
+}

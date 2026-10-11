@@ -1,10 +1,10 @@
 // Shared rooms transport and portable lobby UI. Gameplay stays in each game's adapter.
 import {installLandscapeTyping} from './landscape-typing.js?v=lt1';
 export const GAMES = {
-  tank: {title:'坦克大战', protocol:'tank3d-v2', max:4, path:'tank-3d'},
-  jackal: {title:'赤色要塞', protocol:'jackal3d-v1', max:4, path:'jackal-stage1-3d'},
-  cadillacs: {title:'恐龙快打', protocol:'cadillacs3d-v1', max:4, path:'cadillacs-stage1-3d'},
-  starship: {title:'虫潮围城', protocol:'starship-v1', max:4, path:'starship-defense'}
+  tank: {toy:'feidao-tank-3d',title:'坦克大战', protocol:'tank3d-v2', max:4, path:'tank-3d'},
+  jackal: {toy:'feidao-jackal-3d',title:'赤色要塞', protocol:'jackal3d-v1', max:4, path:'jackal-stage1-3d'},
+  cadillacs: {toy:'feidao-cadillacs-3d',title:'恐龙快打', protocol:'cadillacs3d-v1', max:4, path:'cadillacs-stage1-3d'},
+  starship: {toy:'chongchao-qianshao',title:'虫潮围城', protocol:'starship-v1', max:4, path:'starship-defense'}
 };
 export function endpoint(game='tank') {
   const local = typeof location !== 'undefined' && /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
@@ -139,7 +139,7 @@ export class CooperativeLobby {
     const entry=document.createElement('button');entry.className='coop-entry';entry.type='button';entry.dataset.act='coop';entry.textContent='联机大厅 · 2–'+GAMES[game].max+'人合作';menu.append(entry);entry.addEventListener('click',()=>this.open());
     this.entry=entry;
     const panel=document.createElement('div');panel.className='coop-panel';panel.hidden=true;panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label',GAMES[game].title+'联机大厅');
-    panel.innerHTML='<section class="coop-card"><h2>'+GAMES[game].title+' · 联机大厅</h2><p>填昵称即可联机，单机存档独立保留。</p><div class="coop-grid"><label>昵称<input data-field="name" maxlength="12" autocomplete="nickname" value="玩家"></label><label>房间名称<input data-field="roomName" maxlength="32" placeholder="我的合作房间"></label><label>人数<select data-field="capacity"></select></label><label>房间号<input data-field="code" inputmode="numeric" maxlength="6" placeholder="六位房间号"></label><label>密码（选填）<input data-field="password" maxlength="32" type="password" autocomplete="off"></label><label>房间筛选<select data-field="filter"><option value="all">全部房间</option><option value="open">无需密码</option><option value="locked">密码房</option></select></label></div><div class="coop-actions"><button data-do="create">创建房间</button><button data-do="join">加入房间</button><button data-do="refresh">刷新列表</button><button data-do="close">返回游戏</button></div><p class="coop-status" role="status" aria-live="polite"></p><div class="coop-roster" hidden></div><div class="coop-actions coop-room-actions" hidden><button data-do="ready">准备</button><button data-do="start">开始合作</button><button data-do="invite">复制邀请链接</button><button data-do="leave">退出房间</button></div><ul class="coop-rooms"></ul><div class="coop-actions coop-pager"><button data-do="prev">上一页</button><span></span><button data-do="next">下一页</button></div><p class="coop-footer">合作同步暂停；房主退出则结束房间，支持中途加入；闲置30秒电脑接管，操作后交还真人。<a href="https://www.zhengxiaohui.cn/game-online.html" target="_blank" rel="noopener">全部游戏联机大厅</a></p></section>';
+    panel.innerHTML='<section class="coop-card"><h2>'+GAMES[game].title+' · 联机大厅</h2><p>填昵称即可联机，单机存档独立保留。</p><div class="coop-grid"><label>昵称<input data-field="name" maxlength="12" autocomplete="nickname" value="玩家"></label><label>房间名称<input data-field="roomName" maxlength="32" placeholder="我的合作房间"></label><label>人数<select data-field="capacity"></select></label><label>房间号<input data-field="code" inputmode="numeric" maxlength="6" placeholder="六位房间号"></label><label>密码（选填）<input data-field="password" maxlength="32" type="password" autocomplete="off"></label><label>房间筛选<select data-field="filter"><option value="all">全部房间</option><option value="open">无需密码</option><option value="locked">密码房</option></select></label></div><div class="coop-actions"><button data-do="create">创建房间</button><button data-do="join">加入房间</button><button data-do="refresh">刷新列表</button><button data-do="close">返回游戏</button></div><p class="coop-status" role="status" aria-live="polite"></p><div class="coop-roster" hidden></div><div class="coop-actions coop-room-actions" hidden><button data-do="ready">准备</button><button data-do="start">开始合作</button><button data-do="invite">复制邀请链接</button><button data-do="leave">退出房间</button></div><ul class="coop-rooms"></ul><div class="coop-actions coop-pager"><button data-do="prev">上一页</button><span></span><button data-do="next">下一页</button></div><p class="coop-footer">合作同步暂停；房主退出则结束房间，支持中途加入；闲置30秒电脑接管，操作后交还真人。</p></section>';
     container.append(panel);this.panel=panel;
     for(let n=2;n<=GAMES[game].max;n++){const o=document.createElement('option');o.value=n;o.textContent=n+'人';this.field('capacity').append(o);}this.field('capacity').value=GAMES[game].max;
     if(game==='cadillacs'||game==='starship'){
@@ -194,7 +194,7 @@ export class CooperativeLobby {
     else if(kind==='prev'||kind==='next'){this.page+=kind==='prev'?-1:1;this.list();}
   }
   async invite(){
-    const u=new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.zhengxiaohui.cn/html/game/'+GAMES[this.game].path+'/index.html');u.search='';u.hash='';u.searchParams.set('coop',this.connection.room.code);
+    const u=new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.bilibili.com/toy/'+GAMES[this.game].toy+'/index.html');u.search='';u.hash='';u.searchParams.set('coop',this.connection.room.code);
     try{await navigator.clipboard.writeText(u.href);this.status('邀请链接已复制，发给朋友后即可加入');}catch{this.status(u.href);}
   }
   autoJoin(){

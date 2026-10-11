@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-10-10T21:35:03.191212+00:00",
+  "source": "toy mylist --json",
+  "game": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+    "watermark_enabled": false,
+    "ctime": 1790739397,
+    "mtime": 1791647266
+  },
+  "public_page_text": "该内容已下架",
+  "public_browser_checks": [
+    "anonymous Playwright",
+    "Codex in-app browser"
+  ],
+  "public_runtime_verified": false,
+  "backend_status_observed": "published",
+  "interpretation": "公开运行入口与CLI published信号不一致；不擅自断言已下架或已可玩。"
+}

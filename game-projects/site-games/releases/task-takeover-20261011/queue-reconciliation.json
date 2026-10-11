@@ -1,0 +1,287 @@
+{
+  "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+  "at": "2026-10-11T09:14:53.067806+00:00",
+  "items": [
+    {
+      "item_id": "cadillacs-stage3-v0.11.0-preview.1-website-trial",
+      "game_slug": "cadillacs-stage1-3d",
+      "version": null,
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01-tank-3d",
+      "game_slug": "tank-3d",
+      "version": "remix-entry1-menu-text1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01-mario-3d",
+      "game_slug": "mario-3d",
+      "version": "v2.5.0-menu-text1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01-jackal-stage1-3d",
+      "game_slug": "jackal-stage1-3d",
+      "version": "v0.10.3-menu-text1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01-cadillacs-stage1-3d",
+      "game_slug": "cadillacs-stage1-3d",
+      "version": "v0.11.0-preview.1-menu-text1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a11eae-47c0-7c42-933f-b5f59f431498-menu-text-01-starship-defense",
+      "game_slug": "starship-defense",
+      "version": "web-shop-scroll-v0.29.2-menu-text1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-three-lanes-v031-02",
+      "game_slug": "starship-defense",
+      "version": "web-three-lanes-v0.31.0",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "cadillacs-road-bounds-v0.11.0-preview.2",
+      "game_slug": "cadillacs-stage1-3d",
+      "version": "v0.11.0-preview.2",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-versus-scroll-v0311-01",
+      "game_slug": "starship-defense",
+      "version": "web-versus-scroll-v0.31.1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-camera-response-v0312-01",
+      "game_slug": "starship-defense",
+      "version": "web-camera-response-v0.31.2",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-conquest-v0320-01",
+      "game_slug": "starship-defense",
+      "version": "web-conquest-v0.32.0",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-no-shake-v0321-02",
+      "game_slug": "starship-defense",
+      "version": "web-no-shake-v0.32.1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-resistance-v0330-03",
+      "game_slug": "starship-defense",
+      "version": "web-resistance-v0.33.0",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "cadillacs-stage3-hellroad-original-01",
+      "game_slug": "cadillacs-stage1-3d",
+      "version": "v0.11.0-hellroad.1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-weapon-balance-v0332-01",
+      "game_slug": "starship-defense",
+      "version": "web-weapon-balance-v0.33.2",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-resistance-aim-v0331-04",
+      "game_slug": "starship-defense",
+      "version": "web-resistance-aim-v0.33.1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-remove-back-link-20261010-starship-defense",
+      "game_slug": "starship-defense",
+      "version": "backlink-removal-20261010",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-remove-back-link-20261010-tank-3d",
+      "game_slug": "tank-3d",
+      "version": "backlink-removal-20261010",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-remove-back-link-20261010-mario-3d",
+      "game_slug": "mario-3d",
+      "version": "backlink-removal-20261010",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-remove-back-link-20261010-jackal-stage1-3d",
+      "game_slug": "jackal-stage1-3d",
+      "version": "backlink-removal-20261010",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-remove-back-link-20261010-cadillacs-stage1-3d",
+      "game_slug": "cadillacs-stage1-3d",
+      "version": "backlink-removal-20261010",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-chongchao-readybtn-fix-20261010",
+      "game_slug": "starship-defense",
+      "version": "web-startbtn-curved-fix",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "qoder-chongchao-zerg-mode-20261010",
+      "game_slug": "starship-defense",
+      "version": "zerg-mode-v1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "mario-stage4-castle-v260-preview1",
+      "game_slug": "mario-3d",
+      "version": "v2.6.0-preview1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-hud-menu-align-20261010",
+      "game_slug": "starship-defense",
+      "version": "hud-menu-align-20261010",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "chongchao-fps-rules-v0.34.0",
+      "game_slug": "starship-defense",
+      "version": "web-fps-rules-v0.34.0",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a129f0-0b78-74d2-ac5b-87d9c5c7318e-toy-cleanup-20261011-02-starship-defense",
+      "game_slug": "starship-defense",
+      "version": "web-fps-rules-v0.34.0-privacy1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a129f0-0b78-74d2-ac5b-87d9c5c7318e-toy-cleanup-20261011-02-tank-3d",
+      "game_slug": "tank-3d",
+      "version": "remix-entry1-menu-text1-fp-aim1-privacy1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a129f0-0b78-74d2-ac5b-87d9c5c7318e-toy-cleanup-20261011-02-mario-3d",
+      "game_slug": "mario-3d",
+      "version": "v2.6.0-preview1-privacy1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a129f0-0b78-74d2-ac5b-87d9c5c7318e-toy-cleanup-20261011-02-jackal-stage1-3d",
+      "game_slug": "jackal-stage1-3d",
+      "version": "v0.10.3-menu-text1-privacy1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    },
+    {
+      "item_id": "01a129f0-0b78-74d2-ac5b-87d9c5c7318e-toy-cleanup-20261011-02-cadillacs-stage1-3d",
+      "game_slug": "cadillacs-stage1-3d",
+      "version": "v0.11.0-hellroad.1-privacy1",
+      "changed_fields": [
+        "channels",
+        "takeover_reconciled_at"
+      ]
+    }
+  ],
+  "old_queue_snapshot": "D:\\project\\task-artifacts\\task-takeover-20261011\\queue-before.json",
+  "starship_status_correction": "published -> blocked_needs_user307008 for privacy1 target"
+}

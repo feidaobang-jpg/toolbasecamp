@@ -1,0 +1,354 @@
+{
+  "capture_mode": "realtime-automation",
+  "gameplay_modified": false,
+  "time_scale": 1,
+  "main_result": {
+    "winner": "blue",
+    "reason": "敌方兵力耗尽",
+    "time": 225.01139999943962,
+    "size": 4,
+    "mode": "ai",
+    "difficulty": "normal",
+    "tickets": {
+      "blue": 3,
+      "red": 0
+    },
+    "stats": {
+      "blue": {
+        "kills": 94,
+        "deaths": 105,
+        "captures": 6,
+        "vehicles": 10,
+        "healing": 0,
+        "repairs": 0,
+        "tickets": 3
+      },
+      "red": {
+        "kills": 105,
+        "deaths": 94,
+        "captures": 5,
+        "vehicles": 9,
+        "healing": 0,
+        "repairs": 0,
+        "tickets": 0
+      }
+    },
+    "seats": [
+      {
+        "pid": "blue0",
+        "team": "blue",
+        "name": "",
+        "ai": null,
+        "kit": "medic",
+        "kills": 16,
+        "deaths": 9,
+        "captures": 2,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      },
+      {
+        "pid": "blue1",
+        "team": "blue",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "support",
+        "kills": 7,
+        "deaths": 8,
+        "captures": 2,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      },
+      {
+        "pid": "blue2",
+        "team": "blue",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "medic",
+        "kills": 9,
+        "deaths": 6,
+        "captures": 2,
+        "vehicles": 0,
+        "healing": 391.99285714285685,
+        "repairs": 0
+      },
+      {
+        "pid": "blue3",
+        "team": "blue",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "engineer",
+        "kills": 0,
+        "deaths": 8,
+        "captures": 2,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 600.7399999999997
+      },
+      {
+        "pid": "red0",
+        "team": "red",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "assault",
+        "kills": 9,
+        "deaths": 8,
+        "captures": 1,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      },
+      {
+        "pid": "red1",
+        "team": "red",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "support",
+        "kills": 14,
+        "deaths": 9,
+        "captures": 3,
+        "vehicles": 1,
+        "healing": 0,
+        "repairs": 0
+      },
+      {
+        "pid": "red2",
+        "team": "red",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "medic",
+        "kills": 4,
+        "deaths": 8,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 410.78571428571524,
+        "repairs": 0
+      },
+      {
+        "pid": "red3",
+        "team": "red",
+        "name": "电脑",
+        "ai": "normal",
+        "kit": "engineer",
+        "kills": 5,
+        "deaths": 6,
+        "captures": 1,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 597.2799999999999
+      }
+    ]
+  },
+  "source_recordings": [
+    {
+      "file": "capture/match-01/01-opening/raw.mp4",
+      "duration": 163.74200201034546,
+      "frame_count": 1978
+    },
+    {
+      "file": "capture/match-01/02-battle/raw.mp4",
+      "duration": 46.03962683677673,
+      "frame_count": 466
+    },
+    {
+      "file": "capture/vehicle-02/01-opening/raw.mp4",
+      "duration": 100.8099479675293,
+      "frame_count": 1143
+    }
+  ],
+  "events": [
+    {
+      "name": "start-normal-4v4",
+      "wall_seconds": 0.087,
+      "game_seconds": 0.18719999998807912,
+      "hp": 100,
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "engineer-selected",
+      "wall_seconds": 4.2,
+      "game_seconds": 4.290800000011918,
+      "hp": 100,
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "move-to-undefined-5",
+      "wall_seconds": 4.67,
+      "game_seconds": 4.765499999999996,
+      "hp": 100,
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "move-to-B-22",
+      "wall_seconds": 23.356,
+      "game_seconds": 22.11310000014305,
+      "hp": 100,
+      "stats": {
+        "kills": 0,
+        "deaths": 0,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "medic-and-forward-spawn",
+      "wall_seconds": 30.078,
+      "game_seconds": 28.581800000309922,
+      "hp": 0,
+      "stats": {
+        "kills": 0,
+        "deaths": 1,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "aim-and-view",
+      "wall_seconds": 41.751,
+      "game_seconds": 40.045900000393544,
+      "hp": 100,
+      "stats": {
+        "kills": 1,
+        "deaths": 1,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 0,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "medic-heal",
+      "wall_seconds": 42.898,
+      "game_seconds": 41.13520000040546,
+      "hp": 100,
+      "stats": {
+        "kills": 2,
+        "deaths": 1,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "move-to-A-51",
+      "wall_seconds": 53.501,
+      "game_seconds": 51.09950000017915,
+      "hp": 100,
+      "stats": {
+        "kills": 3,
+        "deaths": 2,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "move-to-C-52",
+      "wall_seconds": 54.641,
+      "game_seconds": 52.222700000167244,
+      "hp": 100,
+      "stats": {
+        "kills": 3,
+        "deaths": 2,
+        "captures": 0,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "move-to-B-66",
+      "wall_seconds": 70.965,
+      "game_seconds": 66.51590000015527,
+      "hp": 100,
+      "stats": {
+        "kills": 3,
+        "deaths": 2,
+        "captures": 1,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "grenade-116",
+      "wall_seconds": 123.709,
+      "game_seconds": 116.73790000027284,
+      "hp": 30,
+      "stats": {
+        "kills": 5,
+        "deaths": 3,
+        "captures": 1,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "move-to-A-223",
+      "wall_seconds": 246.745,
+      "game_seconds": 223.0496999994515,
+      "hp": 100,
+      "stats": {
+        "kills": 15,
+        "deaths": 9,
+        "captures": 2,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    },
+    {
+      "name": "real-result",
+      "wall_seconds": 249.469,
+      "game_seconds": 225.01139999943962,
+      "hp": 100,
+      "stats": {
+        "kills": 16,
+        "deaths": 9,
+        "captures": 2,
+        "vehicles": 0,
+        "healing": 205.6428571428577,
+        "repairs": 0
+      }
+    }
+  ],
+  "raw_time_offsets": {
+    "result_in_late": 38.5693359375,
+    "heal_in_opening": 42.862318992614746,
+    "grenade_in_opening": 123.67331910133362
+  },
+  "limitations": [
+    "One player seat and seven bots, not eight human players.",
+    "Supplemental tank footage is a separate match.",
+    "Final 30fps retains lower source frame cadence; no interpolation."
+  ]
+}

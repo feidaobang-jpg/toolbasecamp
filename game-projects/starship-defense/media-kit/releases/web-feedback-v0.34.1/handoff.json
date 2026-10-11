@@ -1,0 +1,51 @@
+{
+  "version": "web-feedback-v0.34.1",
+  "source_commit": "99f304b0",
+  "scope": "2026-10-11 00:01:06 七诈ing：我显示的还是下架。及时间更新的评论；截至读取快照16:52:21",
+  "viewer_comments": 24,
+  "availability_replies_pending": 10,
+  "requirements_decided": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "requirement_4": {
+    "decision": "restore_independent_bank_versus",
+    "implementation": "web-bank-restore-v0.35.0",
+    "record": "../web-bank-restore-v0.35.0/handoff.json"
+  },
+  "website": {
+    "status": "deployed_verified",
+    "verified_at": "2026-10-11T09:36:22.228681+00:00",
+    "runtime_sha256": "0a3dfaeb71b7c69e9fe8592615f6b62d877d05d4f4370b127a24db12964ed8f2",
+    "new_menu_copy_verified": true
+  },
+  "toy": {
+    "id": "38678478981120",
+    "status": "published_superseded",
+    "submitted_at": "2026-10-11T09:36:22.228681+00:00",
+    "version": "web-feedback-v0.34.1",
+    "zip_sha256": "f142889083025f7c0d2ae3a16943a3c0e51adfcebd8e2a6e3d661f13ab9fb4e3",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_MdPfVWqU/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Yi7A7PkU/index.html",
+    "qa": [
+      "desktop keyboard repeated grenade blocked",
+      "pause retains cooldown",
+      "390x844 touch layout and grenade button",
+      "local save preserved; preview SDK lacks Toy ID, local fallback shown"
+    ],
+    "privacy_scan": "passed",
+    "included_in": "web-bank-restore-v0.35.0",
+    "current_public_record": "../web-bank-restore-v0.35.0/toy-public.json"
+  },
+  "bilibili": "pending_account_write_lock",
+  "runtime_sha256": "0a3dfaeb71b7c69e9fe8592615f6b62d877d05d4f4370b127a24db12964ed8f2",
+  "qa": {
+    "desktop": 20,
+    "mobile_emulated": 20,
+    "physical_mobile": false
+  },
+  "tap_tap": "not_requested_not_submitted",
+  "record": "releases/web-feedback-v0.34.1/handoff.json"
+}

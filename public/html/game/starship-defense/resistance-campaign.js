@@ -62,13 +62,13 @@ export function createResistanceCampaign(a){
   if(chapter===2&&phase>0)destroy(s.map.destructibles.find(d=>d.key==='street-bunker'),false);
   if(chapter===2&&phase>=3)destroy(s.map.destructibles.find(d=>d.key==='city-gate'),false);
   if(chapter===2&&progress?.cannonPose){const cp=progress.cannonPose;if(Number.isFinite(cp.x)&&Number.isFinite(cp.z)&&Number.isFinite(cp.yaw)&&!cannonCollision(cp.x,cp.z)){s.map.objectives.cannon.position.set(cp.x,0,cp.z);s.map.objectives.cannon.rotation.y=cp.yaw;if(phase===2)s.player.root.position.copy(spawnPosition(cp.x-Math.sin(cp.yaw)*3,cp.z-Math.cos(cp.yaw)*3));}}
-  spawnPhase();a.faceForward();a.firstPerson();ui.show();a.showHUD();a.player.inVehicle=null;a.player.dead=false;a.player.pos.copy(s.player.root.position);a.player.yaw=0;a.player.mesh.visible=false;
+  spawnPhase();a.faceForward();syncView();ui.show();a.showHUD();a.player.inVehicle=null;a.player.dead=false;a.player.pos.copy(s.player.root.position);a.player.yaw=0;a.player.mesh.visible=false;
   ui.$('btnRestartLv').textContent='重开本章';refreshWeapons();hudT=0;save();
   say(chapter===1?'孙德胜':'李云龙',phase?'从检查点重新组织，继续完成任务。':chapter===0?'沿交通壕接近，手榴弹留给火力点！':chapter===1?'骑兵连，准备进攻！先上马，跟紧队伍！':'先压住城外火力，把炮和弹药送上来！',6);
   camera(1);hud();return s;
  }
  function stop(restore=true){
-  if(!s.active){ui?.stop();return;}save();s.active=false;s.cannon=false;s.towing=false;s.aiming=false;a.Input.reset();
+  if(!s.active){ui?.stop();return;}save();s.active=false;s.cannon=false;s.towing=false;s.aiming=false;a.Input.reset();ui.$('vC').classList.remove('hidden');
   // Effect/projectile geometry is shared and kept outside per-scene disposal.
   for(const x of [...s.shots,...s.effects]){x.mesh.removeFromParent();if(x.smoke)x.mesh.material.dispose();}
   disposeTree(s.scene);s.scene=null;s.map=null;s.units=[];s.shots=[];s.effects=[];ui.stop();a.camera.fov=62;a.camera.updateProjectionMatrix();
@@ -105,14 +105,19 @@ export function createResistanceCampaign(a){
   if(team==='ally')for(const d of s.map.destructibles)if(!d.dead&&(!d.cannonOnly||cannon)&&distance(d,pos)<radius+2){d.hp-=damage;if(d.hp<=0)destroy(d);}
  }
  function destroy(d,fx=true){if(!d||d.dead)return;d.dead=true;d.hp=0;d.mesh.visible=false;d.collider.disabled=true;if(fx){effect(vec(d.x,2,d.z),0xa69673,35,10);a.AudioSys.sfx('boom');}const g=new T.Group(),b=build(g);for(let i=0;i<9;i++){const rock=b.box(0x857e68,d.x+(Math.random()-.5)*5,.1+Math.random()*.15,d.z+(Math.random()-.5)*3,.4+Math.random()*.7,.3,.45);rock.rotation.y=Math.random()*3;}compact(g);s.scene.add(g);}
- function sightPoint(range){
-  const from=a.camera.position.clone(),dir=a.camera.getWorldDirection(vec()),to=from.clone().addScaledVector(dir,range);let nearest=1;
-  for(const c of s.map.colliders)if(!c.disabled){const t=boxHit(from,to,c);if(t!==null)nearest=Math.min(nearest,t);}
-  for(const u of s.units)if(!u.dead&&u.team==='enemy'){const t=capsuleHit(from,to,u.root.position,u.mounted?.9:.63,u.mounted?3.4:2.05);if(t!==null)nearest=Math.min(nearest,t);}
-  return from.addScaledVector(dir,range*nearest);
+ function sightHit(range){
+  const from=a.camera.position.clone(),dir=a.camera.getWorldDirection(vec()),to=from.clone().addScaledVector(dir,range);let nearest=1,unit=null;
+  for(const c of s.map.colliders)if(!c.disabled){const t=boxHit(from,to,c);if(t!==null&&t<nearest){nearest=t;unit=null;}}
+  for(const u of s.units)if(!u.dead&&u.team==='enemy'){const t=capsuleHit(from,to,u.root.position,u.mounted?.9:.63,u.mounted?3.4:2.05);if(t!==null&&t<nearest){nearest=t;unit=u;}}
+  return {point:from.addScaledVector(dir,range*nearest),unit};
  }
+ const sightPoint=range=>sightHit(range).point;
+ // 枪战规则：键鼠完全手动，准星压到敌人身上才算对准；触屏和纯键盘在准星约 7° 内轻度吸附。
+ const aimed=()=>a.aimAssist()?aimTarget():sightHit(PERIOD_GUNS[s.weapon].range).unit;
+ // 步行固定第一人称，骑马切到第三人称跟随。
+ function syncView(){if(s.player?.mounted)a.rideView();else a.firstPerson();}
  function aimTarget(u=s.player){const view=a.view(),forward=vec(Math.sin(view.yaw)*Math.cos(view.pitch),Math.sin(view.pitch),Math.cos(view.yaw)*Math.cos(view.pitch)),from=view.first?a.camera.position.clone():u.root.position.clone().add(vec(0,u.mounted?3:1.3,0));let best=null,score=-Infinity;
-  for(const enemy of s.units){if(enemy.dead||enemy.team===u.team)continue;const to=enemy.root.position.clone().add(vec(0,enemy.mounted?2.4:1.2,0)),dir=to.clone().sub(from),d=dir.length();if(d>PERIOD_GUNS[s.weapon].range||d<.1)continue;const dot=dir.normalize().dot(forward);if(dot<(view.first?(s.aiming?.997:.991):.75)||!visible(from,to))continue;const n=dot*40-d*.3;if(n>score){score=n;best=enemy;}}
+  for(const enemy of s.units){if(enemy.dead||enemy.team===u.team)continue;const to=enemy.root.position.clone().add(vec(0,enemy.mounted?2.4:1.2,0)),dir=to.clone().sub(from),d=dir.length();if(d>PERIOD_GUNS[s.weapon].range||d<.1)continue;const dot=dir.normalize().dot(forward);if(dot<(view.first?(s.aiming?.997:.9925):.75)||!visible(from,to))continue;const n=dot*40-d*.3;if(n>score){score=n;best=enemy;}}
   return best;
  }
  function toggleAim(){if(!s.active||s.player.dead||s.cannon||s.towing||s.player.mounted||s.carrying||a.Game.state!=='battle')return;s.aiming=!s.aiming;if(s.aiming)a.firstPerson();hudT=0;}
@@ -152,13 +157,13 @@ export function createResistanceCampaign(a){
   if(s.cannon){if(s.loaded<=0){say('炮手','需要炮弹，先到弹药箱搬运。',2);return;}s.fireCd=2.8;s.loaded--;s.gateShots++;const {from,dir}=cannonAim();projectile(from,dir,{damage:270,speed:SHELL_SPEED,life:5,radius:5,cannon:true,gravity:GRAVITY,player:true});muzzleFlash(from,true);a.AudioSys.sfx('cannon');say('李云龙','开炮！',1.8);return;}
   if(s.player.mounted){s.fireCd=.45;s.saberT=.32;const heading=s.player.root.rotation.y;let hits=0;for(const e of s.units)if(e.team==='enemy'&&!e.dead&&distance(e.root.position,s.player.root.position)<3.8){const dx=e.root.position.x-s.player.root.position.x,dz=e.root.position.z-s.player.root.position.z;if(dx*Math.sin(heading)+dz*Math.cos(heading)>-1.2){hurt(e,s.chargeT>0?140:90);effect(e.root.position.clone().add(vec(0,1.5,0)),0xb9b096,7,3);hits++;}}a.AudioSys.sfx(hits?'hit':'shoot');return;}
   const cfg=PERIOD_GUNS[s.weapon];if(!s.ammo[s.weapon]){reload();return;}s.ammo[s.weapon]--;s.fireCd=cfg.rate;gunKick=1;
-  camera(0);const target=a.autoAim()?aimTarget():null,view=a.view();s.player.root.rotation.y=view.yaw;
+  camera(0);const target=a.aimAssist()?aimTarget():null,view=a.view();s.player.root.rotation.y=view.yaw;
   let from=muzzle(s.player);if(view.first&&sceneGun.children[0]){sceneGun.updateMatrixWorld(true);from=sceneGun.children[0].userData.muzzle.getWorldPosition(vec());}
   const dir=target?target.root.position.clone().add(vec(0,target.mounted?2.4:1.2,0)).sub(from).normalize():sightPoint(cfg.range).sub(from).normalize();const spread=cfg.spread*(s.aiming?.32:1);dir.x+=(Math.random()-.5)*spread;dir.y+=(Math.random()-.5)*spread;dir.normalize();projectile(from,dir,{damage:cfg.damage,life:cfg.range/240,speed:240,gravity:GRAVITY,player:true});muzzleFlash(from);a.AudioSys.sfx(cfg.sound);
  }
  function grenade(){if(!s.grenades||s.grenadeCd>0||s.cannon||s.towing||s.player.dead)return;s.grenades--;s.grenadeCd=.8;const view=a.view(),from=s.player.root.position.clone().add(vec(0,s.player.mounted?2.8:1.5,0)),dir=vec(Math.sin(view.yaw),.48+view.pitch*.3,Math.cos(view.yaw)).normalize();projectile(from,dir,{damage:185,speed:20,life:2.2,radius:7,grenade:true,gravity:15});a.AudioSys.sfx('shoot');}
- function mount(){if(s.player.mounted)return;s.player.mounted=true;s.mountMesh.removeFromParent();s.mountMesh.position.set(0,0,0);s.player.root.add(s.mountMesh);s.player.horse=s.mountMesh;s.player.body.position.y=1.25;s.player.body.userData.gun.visible=false;s.player.body.userData.saber.visible=true;s.player.root.position.y=0;s.player.vy=0;}
- function dismount(){if(!s.player.mounted)return;const p=s.player.root.position;let spot=null;for(const x of [2.5,-2.5,4,-4])if(!collision(p.x+x,p.z)){spot={x:p.x+x,z:p.z};break;}if(!spot){say('骑兵','这里没有安全的下马位置。',2);return;}s.player.mounted=false;s.scene.add(s.mountMesh);s.mountMesh.position.copy(p);s.mountMesh.rotation.y=s.player.root.rotation.y;s.player.body.position.y=0;s.player.body.userData.gun.visible=true;s.player.body.userData.saber.visible=false;s.player.horse=null;p.set(spot.x,0,spot.z);}
+ function mount(){if(s.player.mounted)return;s.player.mounted=true;s.mountMesh.removeFromParent();s.mountMesh.position.set(0,0,0);s.player.root.add(s.mountMesh);s.player.horse=s.mountMesh;s.player.body.position.y=1.25;s.player.body.userData.gun.visible=false;s.player.body.userData.saber.visible=true;s.player.root.position.y=0;s.player.vy=0;syncView();}
+ function dismount(){if(!s.player.mounted)return;const p=s.player.root.position;let spot=null;for(const x of [2.5,-2.5,4,-4])if(!collision(p.x+x,p.z)){spot={x:p.x+x,z:p.z};break;}if(!spot){say('骑兵','这里没有安全的下马位置。',2);return;}s.player.mounted=false;s.scene.add(s.mountMesh);s.mountMesh.position.copy(p);s.mountMesh.rotation.y=s.player.root.rotation.y;s.player.body.position.y=0;s.player.body.userData.gun.visible=true;s.player.body.userData.saber.visible=false;s.player.horse=null;p.set(spot.x,0,spot.z);syncView();}
  function interaction(){const p=s.player?.root.position;if(!p)return {text:'',kind:'none'};
   if(s.towing)return {kind:'drop-cannon',text:'WASD 慢速拉炮 · I 放下 · 放稳后 I 操炮'};
   if(s.cannon)return {kind:'leave-cannon',text:'Q/E 左右 · W/S 高低 · J 开炮 · I 离炮 · K 拉炮'};
@@ -179,7 +184,7 @@ export function createResistanceCampaign(a){
   if(s.player.mounted||s.carrying||s.towing||!view.first)s.aiming=false;
   if(s.reload>0){s.reload-=dt;if(s.reload<=0)s.ammo[s.weapon]=PERIOD_GUNS[s.weapon].mag;}
   if(p.dead)return;
-  if(input.pop('C')){s.aiming=false;a.cycleView();}if(input.pop('Z'))toggleAim();if(input.pop('R')||input.pop('L'))reload();if(input.pop('U'))grenade();if(input.pop('I'))interact();if(input.pop('T'))order();if(input.pop('O')||input.pop('X')){const ids=Object.keys(PERIOD_GUNS);selectWeapon(ids[(ids.indexOf(s.weapon)+1)%ids.length]);}
+  if(input.pop('C')){if(p.mounted)say('视角',a.rideView(true),1.5);else if(!s.cannon)say('视角',a.isTouch()?'步行固定第一人称，骑马时可切换跟随距离':'步行固定第一人称，骑马时 C 切换跟随距离',2.2);}if(input.pop('Z'))toggleAim();if(input.pop('R')||input.pop('L'))reload();if(input.pop('U'))grenade();if(input.pop('I'))interact();if(input.pop('T'))order();if(input.pop('O')||input.pop('X')){const ids=Object.keys(PERIOD_GUNS);selectWeapon(ids[(ids.indexOf(s.weapon)+1)%ids.length]);}
   for(let i=1;i<=4;i++)if(input.pop('N'+i))selectWeapon(Object.keys(PERIOD_GUNS)[i-1]);
   if(input.pop('H')&&s.medkits&&p.hp<p.maxHp){s.medkits--;p.hp=Math.min(p.maxHp,p.hp+70);a.AudioSys.sfx('buy');}
   if(input.pop('K')){if(s.towing||s.chapter===2&&s.phase<3&&!s.carrying&&distance(p.root.position,s.map.objectives.cannon.position)<5)toggleTow();else if(p.mounted&&s.chargeCd<=0){s.chargeT=2.8;s.chargeCd=5.5;a.AudioSys.sfx('vehicle');}else if(!p.mounted&&!s.cannon&&p.root.position.y<=.01)p.vy=6.5;}
@@ -187,7 +192,7 @@ export function createResistanceCampaign(a){
   const speed=s.aiming?3.2:s.carrying?4.3:p.mounted?(s.chargeT>0?22:12):(input.keys.SPRINT?8.2:5.7);
   if(s.towing){moveTow(motion,dt);p.vy=0;}else if(!s.cannon){move(p,motion.x*speed*dt,motion.z*speed*dt,dt);if(motion.lengthSq()>.03&&!view.first)p.root.rotation.y=Math.atan2(motion.x,motion.z);else if(view.first||input.keys.Q||input.keys.E)p.root.rotation.y=view.yaw;}else{p.moving=0;p.root.rotation.y=view.yaw;if(Math.abs(axis.x)+Math.abs(axis.y)>.01)a.setLook(view.yaw-axis.x*.5*dt,clamp(view.pitch-axis.y*.25*dt,-.10,.50));}
   if(!p.mounted&&!s.towing){p.vy=(p.vy||0)-18*dt;p.root.position.y=Math.max(0,p.root.position.y+p.vy*dt);if(p.root.position.y===0)p.vy=0;}
-  s.hitT=Math.max(0,s.hitT-dt);camera(0);if(input.firing(!s.cannon&&!s.towing&&!!aimTarget()))fire();
+  s.hitT=Math.max(0,s.hitT-dt);camera(0);if(input.firing())fire();
   if(p.mounted&&s.chargeT>0&&p.moving>8)for(const e of s.units)if(e.team==='enemy'&&!e.dead&&distance(p.root.position,e.root.position)<1.9){hurt(e,140);effect(e.root.position.clone().add(vec(0,1.3,0)),0xc1b091,8,4);}
   a.player.pos.copy(p.root.position);a.player.yaw=p.root.rotation.y;a.player.hp=p.hp;
  }
@@ -243,13 +248,13 @@ export function createResistanceCampaign(a){
   $('warStatus').textContent='生命 '+Math.ceil(p.hp)+' / '+p.maxHp+'　手雷 '+s.grenades+'　医疗 '+s.medkits+'\n'+weapon;$('warStatus').style.whiteSpace='pre-line';$('warOrder').textContent='小队：'+(s.order==='follow'?'跟随':'进攻')+(a.isTouch()?'':' T');
   $('warLoadout').classList.toggle('hidden',s.aiming||s.cannon||p.mounted||s.carrying||s.towing);
   $('warAim').classList.toggle('hidden',s.cannon||p.mounted||s.carrying||s.towing);$('warAim').textContent=(s.aiming?'放下枪':'举枪瞄准')+(a.isTouch()?'':' Z');$('warAim').setAttribute('aria-pressed',String(s.aiming));
-  $('warReticle').classList.toggle('sighted',s.aiming);$('warReticle').classList.toggle('hit',s.hitT>0);$('warReticle').classList.toggle('target',!!aimTarget());
+  $('warReticle').classList.toggle('sighted',s.aiming);$('warReticle').classList.toggle('hit',s.hitT>0);$('warReticle').classList.toggle('target',!!aimed());$('vC').classList.toggle('hidden',!p.mounted);
   $('warCannonTools').classList.toggle('hidden',!s.cannon);$('warImpact').classList.toggle('hidden',!s.cannon);
   if(s.cannon){const prediction=predictShell(),screen=prediction.pos.clone().project(a.camera),onGate=prediction.target?.key==='city-gate';$('warImpact').style.left=(screen.x*.5+.5)*100+'%';$('warImpact').style.top=(-screen.y*.5+.5)*100+'%';$('warImpact').classList.toggle('hidden',screen.z>1||Math.abs(screen.x)>1||Math.abs(screen.y)>1);$('warImpact').classList.toggle('onGate',onGate);$('warCannonReadout').textContent='仰角 '+(a.view().pitch*180/Math.PI).toFixed(1)+'° · 预计 '+prediction.distance.toFixed(0)+'米 · '+(onGate?'对准城门':'调整预计落点');}
   $('warTow').classList.toggle('hidden',!(s.chapter===2&&s.phase<3&&!s.carrying&&(s.towing||distance(p.root.position,s.map.objectives.cannon.position)<5)));$('warTow').textContent=s.towing?'放下炮':'拉动炮';
   if(a.isTouch()){for(const id of ['warHint','warStatus'])$(id).textContent=$(id).textContent.replace(/Q\/E 左右 · W\/S 高低/g,'拖动左右/高低').replace(/WASD 慢速拉炮/g,'摇杆慢速拉炮').replace(/\b[IJKU] /g,'');}
   for(const [id,label] of Object.entries({vJ:p.mounted?'军刀':s.cannon?'开炮':'射击',vK:s.towing?'放炮':s.chapter===2&&s.phase<3&&!s.carrying&&distance(p.root.position,s.map.objectives.cannon.position)<5?'拉炮':p.mounted?'冲刺':'跳跃',vU:'手雷',vI:s.towing?'放炮':p.mounted?'下马':s.cannon?'离炮':'互动',vO:'切枪',vL:'换弹',vH:'医疗'})){if($(id).textContent!==label)$(id).textContent=label;}
-  $('keysHint').textContent='WASD 移动 · Z/右键 举枪 · J 射击/挥刀 · U 手雷 · I 互动 · K 跳跃/骑马冲刺 · O 切枪 · R/L 换弹 · H 医疗 · T 队友 · C 视角';
+  $('keysHint').textContent='WASD 移动 · 按住 J/左键 射击（骑马挥刀）· 右键拖动或 Q/E 转视角 · Z/右键点按 举枪 · U 手雷 · I 互动 · K 跳跃/骑马冲刺 · O 切枪 · R/L 换弹 · H 医疗 · T 队友 · C 骑马视角';
   const ctx=$('warMap').getContext('2d'),map=(x,z)=>({x:90+x*1.15,y:194-(z+35)*.84});ctx.clearRect(0,0,180,204);ctx.fillStyle='#8c886b';ctx.fillRect(84,0,12,204);for(const c of s.map.colliders)if(!c.disabled){const q=map(c.x,c.z);ctx.fillStyle='#637463';ctx.fillRect(q.x-c.w*.575,q.y-c.d*.42,Math.max(1,c.w*1.15),Math.max(1,c.d*.84));}for(const u of s.units)if(!u.dead){const q=map(u.root.position.x,u.root.position.z);ctx.fillStyle=u===p?'#fff4ba':u.team==='ally'?'#90c9e6':'#d68165';ctx.beginPath();ctx.arc(q.x,q.y,u===p?3.5:2.2,0,6.3);ctx.fill();}const goal=map(o.x,o.z);ctx.strokeStyle='#ffd577';ctx.lineWidth=2;ctx.strokeRect(goal.x-5,goal.y-5,10,10);
  }
  function update(dt,playing){

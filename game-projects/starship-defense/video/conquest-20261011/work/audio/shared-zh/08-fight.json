@@ -1,0 +1,128 @@
+{
+  "text": "中间的通信站反复易手。我贴着掩体交火，再扔手雷压住路口。对面也会开车和反扑，真不能一直硬冲。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 10.824,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3750000,
+      "text": "中间"
+    },
+    {
+      "offset": 4750000,
+      "duration": 875000,
+      "text": "的"
+    },
+    {
+      "offset": 5750000,
+      "duration": 6625000,
+      "text": "通信站"
+    },
+    {
+      "offset": 13375000,
+      "duration": 4500000,
+      "text": "反复"
+    },
+    {
+      "offset": 18000000,
+      "duration": 4125000,
+      "text": "易手"
+    },
+    {
+      "offset": 27875000,
+      "duration": 1750000,
+      "text": "我"
+    },
+    {
+      "offset": 29625000,
+      "duration": 2375000,
+      "text": "贴着"
+    },
+    {
+      "offset": 32250000,
+      "duration": 3250000,
+      "text": "掩体"
+    },
+    {
+      "offset": 35625000,
+      "duration": 6125000,
+      "text": "交火"
+    },
+    {
+      "offset": 44500000,
+      "duration": 1750000,
+      "text": "再"
+    },
+    {
+      "offset": 46375000,
+      "duration": 3750000,
+      "text": "扔手"
+    },
+    {
+      "offset": 50125000,
+      "duration": 2875000,
+      "text": "雷压"
+    },
+    {
+      "offset": 53000000,
+      "duration": 1000000,
+      "text": "住"
+    },
+    {
+      "offset": 54125000,
+      "duration": 4000000,
+      "text": "路口"
+    },
+    {
+      "offset": 63875000,
+      "duration": 5750000,
+      "text": "对面"
+    },
+    {
+      "offset": 70625000,
+      "duration": 1375000,
+      "text": "也"
+    },
+    {
+      "offset": 72000000,
+      "duration": 1250000,
+      "text": "会"
+    },
+    {
+      "offset": 73375000,
+      "duration": 3875000,
+      "text": "开车"
+    },
+    {
+      "offset": 77500000,
+      "duration": 875000,
+      "text": "和"
+    },
+    {
+      "offset": 78500000,
+      "duration": 5000000,
+      "text": "反扑"
+    },
+    {
+      "offset": 86500000,
+      "duration": 2625000,
+      "text": "真"
+    },
+    {
+      "offset": 89125000,
+      "duration": 2250000,
+      "text": "不能"
+    },
+    {
+      "offset": 91625000,
+      "duration": 2875000,
+      "text": "一直"
+    },
+    {
+      "offset": 94625000,
+      "duration": 4875000,
+      "text": "硬冲"
+    }
+  ]
+}

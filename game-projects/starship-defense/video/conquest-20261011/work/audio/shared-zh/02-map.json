@@ -1,0 +1,108 @@
+{
+  "text": "这是虫潮围城的战地模式。旧镇、通信站、补给仓库，抢的就是这三个点。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 7.776,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 1500000,
+      "text": "这"
+    },
+    {
+      "offset": 2500000,
+      "duration": 1375000,
+      "text": "是"
+    },
+    {
+      "offset": 4125000,
+      "duration": 4125000,
+      "text": "虫潮"
+    },
+    {
+      "offset": 8375000,
+      "duration": 3500000,
+      "text": "围城"
+    },
+    {
+      "offset": 11875000,
+      "duration": 1375000,
+      "text": "的"
+    },
+    {
+      "offset": 13500000,
+      "duration": 3875000,
+      "text": "战地"
+    },
+    {
+      "offset": 17500000,
+      "duration": 4750000,
+      "text": "模式"
+    },
+    {
+      "offset": 28000000,
+      "duration": 1750000,
+      "text": "旧"
+    },
+    {
+      "offset": 29750000,
+      "duration": 3250000,
+      "text": "镇"
+    },
+    {
+      "offset": 35250000,
+      "duration": 6125000,
+      "text": "通信站"
+    },
+    {
+      "offset": 45000000,
+      "duration": 2750000,
+      "text": "补给"
+    },
+    {
+      "offset": 47875000,
+      "duration": 5375000,
+      "text": "仓库"
+    },
+    {
+      "offset": 56875000,
+      "duration": 3250000,
+      "text": "抢"
+    },
+    {
+      "offset": 60125000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 61000000,
+      "duration": 1250000,
+      "text": "就"
+    },
+    {
+      "offset": 62250000,
+      "duration": 625000,
+      "text": "是"
+    },
+    {
+      "offset": 63000000,
+      "duration": 1000000,
+      "text": "这"
+    },
+    {
+      "offset": 64000000,
+      "duration": 1875000,
+      "text": "三"
+    },
+    {
+      "offset": 65875000,
+      "duration": 875000,
+      "text": "个"
+    },
+    {
+      "offset": 66750000,
+      "duration": 2375000,
+      "text": "点"
+    }
+  ]
+}

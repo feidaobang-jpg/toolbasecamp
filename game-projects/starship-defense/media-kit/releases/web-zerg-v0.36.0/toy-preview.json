@@ -1,0 +1,16 @@
+{
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_AJDlfmlD/index.html",
+ "zip_sha256": "a33a3e93e9a625a4a3d105a09ca2956593de2e76472aad32d7bfd5ac7278d92b",
+ "doctor": "passed，1 条建议性警告：脚本文件名不带内容指纹，每次更新访客需重新下载；不影响发布",
+ "qa": {
+  "script": "verify-zerg-toy.cjs",
+  "passed": 15,
+  "viewports": [
+   "1280x720",
+   "844x390 touch"
+  ],
+  "runtime_matches_package": true,
+  "record": "qa/toy-preview/results.json"
+ },
+ "privacy_scan": "passed（包内仅保留联机传输地址 wss://www.zhengxiaohui.cn/api，无网站跳转与账号代码）"
+}

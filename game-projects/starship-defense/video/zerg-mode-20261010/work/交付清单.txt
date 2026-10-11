@@ -1,0 +1,56 @@
+虫潮围城 · 虫族模式更新视频 · 交付清单（2026-10-11，待人工审片）
+
+本期三平台共用同一次实机录制（capture/zerg-run7，正常规则、未改数值、未变速），
+中文配音（Edge-TTS 云希）与同步烧录字幕；YouTube 另交同时间线的无字幕母版 + 中英侧挂字幕。
+审片通过前不上传任何平台。
+
+一、bilibili-zh（B站中文）
+  成片：final/bilibili-zh/gameplay-zh-final.mp4
+        1920x1080 / 30fps / 125.2s / 有音轨（-16.1 LUFS）
+        sha256 2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4
+  音轨/字幕/包装：中文配音 / 字幕烧录在画面（约 75% 高度）/ 中文包装
+  封面：final/bilibili-zh/cover-home-4x3.jpg   1600x1200 首页推荐（4:3）
+        final/bilibili-zh/cover-space-16x9.jpg 1920x1080 个人空间（16:9）
+        均为 run7 实机帧 + 本机微软雅黑排版，无生成图
+  文案：final/bilibili-zh/投稿文案.txt（【标题】【标签】【简介】三段，UTF-8）
+  状态：技术就绪，待审片；ready_to_upload=false
+
+二、douyin-zh（抖音中文）
+  成片：final/douyin-zh/gameplay-zh-final.mp4 —— 与 B站同一文件（硬链接复用，同哈希）
+  音轨/字幕/包装：同 B站
+  封面：final/douyin-zh/cover-horizontal-4x3.jpg 1600x1200 横版
+        final/douyin-zh/cover-portrait-3x4.jpg  1080x1440 竖版展示
+  文案：final/douyin-zh/投稿文案.txt（标题/说明/话题，不含B站站内路径与三连话术）
+  待核：投稿页实际封面入口与话题选择器（上传前当场核对）
+  状态：技术就绪，待审片
+
+三、youtube-zh（YouTube 中文主版 + 英文本地化字段）
+  成片：final/youtube-zh/gameplay-youtube-final.mp4
+        1920x1080 / 30fps / 125.2s / 有音轨
+        sha256 efaeca93113144907d374cadae8d4a4ca639f61520f475a8a7e8023232649e1a
+        与 B站版同一时间线、同一配音混音，但不烧字幕（供侧挂字幕使用）
+  字幕附件：final/youtube-zh/captions-zh.srt（zh-CN，40 条）
+            final/youtube-zh/captions-en.srt（en，40 条，与中文同时间码）
+  封面：final/youtube-zh/cover-zh-16x9.jpg 1920x1080
+  文案：final/youtube-zh/投稿文案.txt（中文标题/简介/标签，首行统一 games.html 入口）
+        final/youtube-zh/English-localizations.txt（英文标题/简介/字幕与音轨语言说明）
+  状态：技术就绪，待审片（英文字幕需人工校对）
+
+四、三平台差异说明
+  B站与抖音共用同一 MP4（哈希相同，技术与视听验收共用）；
+  YouTube 用无烧录字幕的同内容母版，字幕改为可选附件，避免中英双语与画面字幕叠加。
+  封面同一构图，按平台入口分别输出 4:3 / 16:9 / 3:4 三种画幅。
+
+五、本期未交付项（如实登记，不用假画面占位）
+  1) 胜利结算镜头未录到：8 局完整实机（run1–run8）全部"虫群溃散"或超时，基地核心 2000/2000 从未掉血。
+     成片按真实结果叙述"门破了、核心没掉血、这是真·挑战模式"，不宣称通关。
+  2) 城内攻坚（拆塔/拆建筑）只录到部分：母虫进门后约 20 秒被打空一条命，未形成滚雪球段落。
+  3) 置顶评论本期不预生成（用户未要求）。
+  4) 英文配音未录制（仅英文字幕与英文标题/简介字段）。
+
+六、审片入口
+  本地播放：final/bilibili-zh/gameplay-zh-final.mp4（B站/抖音版）
+            final/youtube-zh/gameplay-youtube-final.mp4（YouTube 无字幕版）
+  封面：final/covers/*.png（未压缩源图）与 final/<平台>/*.jpg（投稿用）
+  口播与画面时间码对照：work/script.md、work/edit/timeline.json
+  实机证据：work/capture/zerg-run7/{capture.json,final-result.png,gate-dead.png,gate-25.png}

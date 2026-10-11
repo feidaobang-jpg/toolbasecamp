@@ -1,0 +1,17 @@
+{
+  "index": 12,
+  "segment": "09-finish",
+  "start": 73.53333333333333,
+  "end": 82.8,
+  "duration": 9.266666666666667,
+  "frames": 278,
+  "source": "capture/match-01/02-battle/raw.mp4",
+  "source_in": 30.1693359375,
+  "source_out": 39.43600260416667,
+  "speed": 1,
+  "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 最后两个据点",
+  "still": false,
+  "source_size": 12432352,
+  "source_mtime_ns": 1791667116687202700,
+  "encoding_schema": "bt709-limited-v2"
+}

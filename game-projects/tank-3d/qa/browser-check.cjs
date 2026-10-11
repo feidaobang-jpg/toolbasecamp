@@ -49,7 +49,7 @@ async function dirAfter(p, code) {
       const { p, g, ctx, errors, reload } = await page(b, { viewport: { width: 1280, height: 720 } });
       await g.evaluate(() => localStorage.clear()); await reload();
       const label = name => name === 'mode' ? g.locator('#menu [data-game-mode][aria-pressed="true"]').innerText() : g.locator(`#menu [data-opt="${name}"] .val`).innerText();
-      assert.match(await label('mode'), /魔改[\s\S]*推荐/); assert.match(await label('lives'), /无限命/); assert.match(await label('armor'), /标准 3 格/); assert.match(await label('camera'), /斜俯视/);
+      assert.match(await label('mode'), /魔改/); assert.match(await g.locator('#mode-kicker').innerText(), /推荐/); assert.match(await label('lives'), /无限命/); assert.match(await label('armor'), /标准 3 格/); assert.match(await label('camera'), /斜俯视/);
       await p.screenshot({ path: path.join(out, 'desktop-menu-new-player.png') });
       // 键盘：↓ 到魔改按钮，→ 选经典；刷新保留主动选择，不强制切回推荐模式
       await tap(g, 'ArrowDown'); await tap(g, 'ArrowRight');
@@ -130,6 +130,27 @@ async function dirAfter(p, code) {
       // 当前第一人称独立转头，行驶不带着视线跳转；再次 D 仍相对同一视线向右。
       assert.equal(fpD, 1); assert.equal(mid, 1); assert.equal(fpHeld.dir, 1); assert.ok(fpHeld.x > 120, 'fp keeps driving east ' + fpHeld.x);
       ok('first person latched steering', { fpD, fpHeld });
+      // 第一人称开炮跟着准星：转车时视线不跳转，炮口若仍按车体方向，炮弹会从画面侧面飞走，
+      // 又因为同时只允许 1 发在飞，玩家看到的就是"按 J 打不出子弹"。
+      await g.evaluate(T('const w = T.world; w.terrain.brick.fill(0); w.terrain.steel.fill(0); w.terrain.water.fill(0); w.bullets.length = 0; w.player.x = 96; w.player.y = 96; w.player.dir = 0; w.player.cool = 0; T.view.setPreset(4); T.view.yawOffset = 0; T.view.snap = true; T.step(4);'));
+      await key(g, 'KeyD'); const turned = await g.evaluate(T('return T.step(30)')); await key(g, 'KeyD', 'keyup');
+      await g.evaluate(T('const w = T.world; w.bullets.length = 0; w.player.cool = 0;'));
+      await tap(g, 'KeyJ');
+      await g.evaluate(T('T.step(6)'));
+      const aim = await g.evaluate(T(`
+        const w = T.world, pl = w.player, cam = T.view.cameraYaw();
+        const fwd = [-Math.sin(cam), -Math.cos(cam)], b = w.bullets.find(x => x.owner === pl && x.state === 'fly');
+        if (!b) return { live: false, camDeg: +(cam * 180 / Math.PI).toFixed(1), bodyDir: pl.dir };
+        const dot = (b.vx * fwd[0] + b.vy * fwd[1]) / Math.hypot(b.vx, b.vy);
+        return { live: true, camDeg: +(cam * 180 / Math.PI).toFixed(1), bodyDir: pl.dir, bulletDir: b.dir, offDeg: +(Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI).toFixed(1) };
+      `));
+      await p.screenshot({ path: path.join(out, 'desktop-fp-fire.png') });
+      assert.equal(turned.player.dir, 1, 'fp: D turns the hull east');
+      assert.equal(aim.bodyDir, 1, 'fp: hull still faces east when firing');
+      assert.ok(aim.live, 'fp: shell leaves the barrel after a hull turn');
+      assert.equal(aim.bulletDir, 0, 'fp: shell follows the crosshair (north), not the hull ' + JSON.stringify(aim));
+      assert.ok(aim.offDeg < .6, 'fp: shell flies straight out of screen centre ' + aim.offDeg);
+      ok('first person fires along the crosshair', aim);
       // 暂停菜单（Esc）→ 继续
       await g.evaluate(T('T.manual(false); T.view.setPreset(1)'));
       await tap(g, 'Escape'); await p.waitForTimeout(200);

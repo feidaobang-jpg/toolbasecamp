@@ -1,0 +1,138 @@
+{
+  "text": "回到主战局，第一波我就倒了。但不用一直从老家跑：选已经占住的仓库，换成医疗兵，再部署到前线。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 9.624,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3125000,
+      "text": "回到"
+    },
+    {
+      "offset": 4250000,
+      "duration": 6375000,
+      "text": "主战局"
+    },
+    {
+      "offset": 14125000,
+      "duration": 2500000,
+      "text": "第一"
+    },
+    {
+      "offset": 16625000,
+      "duration": 2125000,
+      "text": "波"
+    },
+    {
+      "offset": 19000000,
+      "duration": 875000,
+      "text": "我"
+    },
+    {
+      "offset": 19875000,
+      "duration": 1000000,
+      "text": "就"
+    },
+    {
+      "offset": 21000000,
+      "duration": 1875000,
+      "text": "倒"
+    },
+    {
+      "offset": 22875000,
+      "duration": 2375000,
+      "text": "了"
+    },
+    {
+      "offset": 30875000,
+      "duration": 1875000,
+      "text": "但"
+    },
+    {
+      "offset": 32875000,
+      "duration": 2000000,
+      "text": "不用"
+    },
+    {
+      "offset": 35125000,
+      "duration": 2125000,
+      "text": "一直"
+    },
+    {
+      "offset": 37375000,
+      "duration": 1625000,
+      "text": "从"
+    },
+    {
+      "offset": 39000000,
+      "duration": 3375000,
+      "text": "老家"
+    },
+    {
+      "offset": 42500000,
+      "duration": 2875000,
+      "text": "跑"
+    },
+    {
+      "offset": 48750000,
+      "duration": 2375000,
+      "text": "选"
+    },
+    {
+      "offset": 51250000,
+      "duration": 2375000,
+      "text": "已经"
+    },
+    {
+      "offset": 53750000,
+      "duration": 2750000,
+      "text": "占住"
+    },
+    {
+      "offset": 56500000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 57375000,
+      "duration": 5375000,
+      "text": "仓库"
+    },
+    {
+      "offset": 65000000,
+      "duration": 2375000,
+      "text": "换"
+    },
+    {
+      "offset": 67375000,
+      "duration": 1375000,
+      "text": "成"
+    },
+    {
+      "offset": 69000000,
+      "duration": 6500000,
+      "text": "医疗兵"
+    },
+    {
+      "offset": 77250000,
+      "duration": 1625000,
+      "text": "再"
+    },
+    {
+      "offset": 79000000,
+      "duration": 2750000,
+      "text": "部署"
+    },
+    {
+      "offset": 81750000,
+      "duration": 1125000,
+      "text": "到"
+    },
+    {
+      "offset": 83000000,
+      "duration": 4375000,
+      "text": "前线"
+    }
+  ]
+}

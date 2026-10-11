@@ -1,0 +1,40 @@
+﻿虫潮围城｜战地模式·据点争夺｜三平台发布记录
+标题：只剩3票险胜！虫潮围城的据点争夺实战
+时长：110.533秒；1920×1080，16:9横屏，30fps输出。
+用户已回复“发布”，三平台成片和中英文字幕的审片授权已按哈希保留。
+
+bilibili-zh
+音轨：中文；包装：中文；字幕：中文烧录
+成片：../final/bilibili-zh/gameplay-zh-final.mp4
+文案：../final/bilibili-zh/投稿文案.txt
+封面：首页4:3 cover-home-4x3.jpg；空间16:9 cover-space-16x9.jpg
+投稿清单：publish/bilibili-zh/publish.json
+状态：尚未投稿；Trae的mario-stage4-release-20261010任务持有共用B站账号写锁，待持有者释放或确认已退出且没有B站写操作。
+续接：publication-handoff.md；授权有效，不需要重新审片。
+
+douyin-zh
+音轨：中文；包装：中文；字幕：中文烧录
+成片：../final/douyin-zh/gameplay-zh-final.mp4
+文案：../final/douyin-zh/投稿文案.txt
+封面：实际入口为横向4:3＋纵向3:4，使用已审片的../final/bilibili-zh/cover-home-4x3.jpg，纵向裁剪已调整以保留完整文字；原16:9图片留作参考。
+投稿清单：publish/douyin-zh/publish.json
+状态：已发布，2026-10-11 07:39；作品状态正常，公开播放核验通过。
+链接：https://www.douyin.com/video/7695187880532135178
+
+youtube-zh
+音轨：中文；包装：中文，英文标题/简介翻译已发布
+字幕：中文/英文SRT均已上传并发布，可切换；视频未烧录口播字幕
+成片：../final/youtube-zh/gameplay-youtube-final.mp4
+文案：../final/youtube-zh/投稿文案.txt、English-localizations.txt
+字幕：../final/youtube-zh/captions-zh.srt、captions-en.srt
+封面：16:9 cover-zh-16x9.jpg
+投稿清单：publish/youtube-zh/publish.json
+状态：已发布，公开播放及双语字幕菜单核验通过。
+链接：https://youtu.be/X3Lc6SZ6whE
+
+B站与抖音共用相同视频和哈希；YouTube无口播烧录字幕版单独验收。
+模型未运行主观听审；用户最终审片授权已记录，不据波形或截图声称模型听过音频。
+Toy：制作时后台列表published，但公开入口显示“该内容已下架”；本版使用网站试玩引导。B站新BV尚未生成，因此未绑定新视频、未参加Toy话题或提交推流申请；续接时重新核对实际公开入口。
+结果和哈希：publication-result.json、run-state.json；已发布平台不得重复上传。
+公开核验证据：qa/publishing/；完整素材持久保存在D:/project/toolbasecamp-artifacts/conquest-video-20261011。
+本地审片：review/index.html；后续保留同一已审片视频。

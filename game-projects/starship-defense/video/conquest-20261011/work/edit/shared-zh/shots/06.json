@@ -1,0 +1,17 @@
+{
+  "index": 6,
+  "segment": "05-tank",
+  "start": 35.233333333333334,
+  "end": 44.13333333333333,
+  "duration": 8.9,
+  "frames": 267,
+  "source": "capture/vehicle-02/01-opening/raw.mp4",
+  "source_in": 50.2,
+  "source_out": 59.1,
+  "speed": 1,
+  "label": "补拍：另一局载具实战 · 普通规则",
+  "still": false,
+  "source_size": 43678450,
+  "source_mtime_ns": 1791667138817567400,
+  "encoding_schema": "bt709-limited-v2"
+}

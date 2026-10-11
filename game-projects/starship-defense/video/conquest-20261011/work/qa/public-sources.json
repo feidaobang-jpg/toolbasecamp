@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-10T21:23:09.440Z",
+  "website": {
+    "url": "https://www.zhengxiaohui.cn/games.html",
+    "game_visible": true
+  },
+  "toy": {
+    "entry_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "frames": [
+      "https://www.bilibili.com/toy/chongchao-qianshao/index.html"
+    ],
+    "runtime_game_found": false,
+    "limitation": "Public runtime did not become accessible in this anonymous browser."
+  },
+  "sources": [
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?qa=1",
+      "file": "build-current/index.html",
+      "sha256": "c767cc7fa5c7c41bf35b4f5b2b597665e49c606523229cda23dd212841998cd7",
+      "bytes": 60825
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/boot.js?v=08028efe",
+      "file": "build-current/boot.js",
+      "sha256": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+      "bytes": 2974
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?v=08028efe",
+      "file": "build-current/game.compat.js",
+      "sha256": "ddd041966ef1db758179bfa48ca7995aaea33cf60aaedcfd2107f8453831273e",
+      "bytes": 1136213
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/js/game/thumb-preview.js?v=08028efe",
+      "file": "build-current/thumb-preview.js",
+      "sha256": "76852a9d6c6439c4308a4de812bbcf85b7e4baebb6029f63a4916eda8521bcb5",
+      "bytes": 8571
+    }
+  ]
+}

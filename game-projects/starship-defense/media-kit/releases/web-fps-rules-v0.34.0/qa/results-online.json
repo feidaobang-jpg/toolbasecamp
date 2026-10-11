@@ -1,0 +1,64 @@
+{
+ "url": "http://127.0.0.1:8961/html/game/starship-defense/index.html",
+ "date": "2026-10-11T00:24:11.953Z",
+ "results": [
+  {
+   "name": "客人默认设置（自动攻击）下不按键 1.5 秒：房主那边不替它开火，客人画面固定第一人称",
+   "data": {
+    "view": {
+     "mode": "first",
+     "settings": {
+      "input": "mouse",
+      "aim": "auto",
+      "fire": "auto"
+     },
+     "sent": {
+      "pitch": 0,
+      "look": 0,
+      "fire": false,
+      "autoFire": false,
+      "autoAim": false
+     }
+    },
+    "idle": {
+     "ammo": 80,
+     "reload": false,
+     "hp": 1000000
+    }
+   }
+  },
+  {
+   "name": "客人对准后按住 J：房主出弹并命中",
+   "data": {
+    "ammo": 72,
+    "reload": false,
+    "hp": 999920
+   }
+  },
+  {
+   "name": "客人准星偏开 20°：出弹但不命中，房主不替它锁定",
+   "data": {
+    "ammo": 72,
+    "reload": false,
+    "hp": 1000000
+   }
+  },
+  {
+   "name": "客人抬头约 29°：子弹从目标上方飞过，说明俯仰传到了房主",
+   "data": {
+    "ammo": 72,
+    "reload": false,
+    "hp": 1000000
+   }
+  },
+  {
+   "name": "客人放平准星后再次命中",
+   "data": {
+    "ammo": 72,
+    "reload": false,
+    "hp": 999860
+   }
+  }
+ ],
+ "errors": []
+}

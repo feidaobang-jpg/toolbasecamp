@@ -1,0 +1,17 @@
+{
+  "index": 8,
+  "segment": "06-spawn",
+  "start": 49.333333333333336,
+  "end": 54.1,
+  "duration": 4.766666666666667,
+  "frames": 143,
+  "source": "capture/match-01/01-opening/raw.mp4",
+  "source_in": 35,
+  "source_out": 39.766666666666666,
+  "speed": 1,
+  "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑 · 仓库附近重新部署",
+  "still": false,
+  "source_size": 54723103,
+  "source_mtime_ns": 1791666953488570800,
+  "encoding_schema": "bt709-limited-v2"
+}
