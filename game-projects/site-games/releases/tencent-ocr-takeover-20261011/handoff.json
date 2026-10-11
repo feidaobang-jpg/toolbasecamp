@@ -1,0 +1,18 @@
+{
+  "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+  "source": "Codex",
+  "original_commit": "b179d802",
+  "resume_commit": "3552df5e",
+  "branch": "codex/finish-image-enhance-20261011",
+  "status": "blocked_quota",
+  "tests": "13 unit tests passed; frontend JS syntax passed",
+  "live_check_at": "2026-10-11T08:45:31.215699+00:00",
+  "live_code": "ResourceUnavailable.ResourcePackageRunOut",
+  "production_changed": false,
+  "next_action": "恢复CropEnhanceImageOCR额度后在当前分支重试真实调用，成功再整合主线部署。",
+  "notification": {
+    "task_id": "tencent-ocr-100044456994",
+    "event_id": "cropenhance-resource-package-20261009-18d6fba2",
+    "result": "already_sent"
+  }
+}
