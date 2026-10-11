@@ -59,7 +59,7 @@
   "disclosures": {
     "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload"
   },
-  "platform_requirements_checked_at": "2026-10-10T21:35:02.322312+00:00",
+  "platform_requirements_checked_at": "2026-10-11T02:15:52.630508+00:00",
   "platform_sources": [],
   "unverified_fields": [
     "account login",
@@ -69,10 +69,14 @@
   ],
   "technical_preparation": "pass",
   "human_review": {
-    "status": "pending",
-    "approved_variants": [],
-    "user_statement": null,
-    "approved_at": null,
+    "status": "approved",
+    "approved_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "user_statement": "发布",
+    "approved_at": "2026-10-10T23:11:00.747760+00:00",
     "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
     "reviewed_media_required": {
       "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
@@ -82,16 +86,16 @@
     "reviewed_subtitles_required": {
       "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
       "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
-    }
+    },
+    "approval_source": "direct user message in this chat",
+    "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
   },
   "subjective_audio_listening": "not-run",
   "blocking_issues": [
-    "人工审片待确认（画面、配音、字幕）",
-    "主观听审未运行：请在审片时核验人声清晰度与混音",
-    "实际账号投稿入口、分类及平台声明待发布时核对"
+    "共用B站账号写锁由Trae任务mario-stage4-release-20261010持有，待持有者释放或确认任务已退出且无写操作。"
   ],
   "ready_to_upload": false,
-  "publication_status": "not_uploaded",
+  "publication_status": "blocked_account_write_lock",
   "toy": {
     "id": "38678478981120",
     "slug": "chongchao-qianshao",
@@ -108,5 +112,31 @@
     "topic_url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
     "topic_name": "哔哩哔哩Toy创意挑战",
     "topic_status": "pending_public_entry_and_current_rules"
+  },
+  "publication_result": {
+    "status": "blocked_account_write_lock",
+    "submitted": false,
+    "public_verified": false,
+    "account_id": "16214353",
+    "lock_path": "C:\\Users\\37818\\.claude\\state\\bili-activities\\account-write.lock",
+    "lock_owner_source": "Trae",
+    "lock_owner_task_id": "mario-stage4-release-20261010",
+    "last_checked_at": "2026-10-10T23:45:33.741325+00:00",
+    "user_approval": "发布",
+    "approval_retained": true,
+    "reason": "Cannot confirm lock holder task has exited and no account write is in progress. Waiting for human lifecycle confirmation or owner release.",
+    "notification_task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01",
+    "notification_event_id": "bilibili-16214353-write-lock-mario-stage4-release-20261010",
+    "notification_reason": "Manual",
+    "pending_steps": [
+      "verify active account UID and duplicates",
+      "upload same approved MP4 and dual covers",
+      "check suitable official activities",
+      "submit and read public result",
+      "add formal season 9248439",
+      "bind Toy video 38678478981120 and verify",
+      "check eligible free traffic reward",
+      "maintain previous main promo once new BV is visible"
+    ]
   }
 }

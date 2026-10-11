@@ -9,13 +9,17 @@
     "douyin-zh",
     "youtube-zh"
   ],
-  "stage": "waiting_for_user",
-  "production_stage": "completed_pending_human_review",
+  "stage": "partially_published_bilibili_blocked",
+  "production_stage": "completed_approved",
   "human_review": {
-    "status": "pending",
-    "approved_variants": [],
-    "user_statement": null,
-    "approved_at": null,
+    "status": "approved",
+    "approved_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "user_statement": "发布",
+    "approved_at": "2026-10-10T23:11:00.747760+00:00",
     "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
     "reviewed_media_required": {
       "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
@@ -25,7 +29,9 @@
     "reviewed_subtitles_required": {
       "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
       "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
-    }
+    },
+    "approval_source": "direct user message in this chat",
+    "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
   },
   "game_version": "deployed-08028efe",
   "source_capture": "current deployed website; exact hashes retained",
@@ -40,17 +46,18 @@
   ],
   "cover_stage": "completed",
   "render_entrypoint": "render.py",
-  "updated_at": "2026-10-10T21:35:02.322312+00:00",
-  "next_step": "用户人工审片三平台版本和中英字幕，确认后按审批哈希继续发布；先核对真实投稿入口与Toy异常，不接管游戏发布待办。",
+  "updated_at": "2026-10-11T02:15:52.630508+00:00",
+  "next_step": "等待Trae任务释放B站共用写锁，或用户确认持有任务已退出且没有B站写操作；发布授权和已审片哈希保留，随后完成B站投稿、合集、Toy绑定与适用活动/流量奖励核验。不要重新上传抖音或YouTube。",
   "publication_status": {
-    "bilibili-zh": "not_uploaded",
-    "douyin-zh": "not_uploaded",
-    "youtube-zh": "not_uploaded"
+    "bilibili-zh": "blocked_account_write_lock",
+    "douyin-zh": "published",
+    "youtube-zh": "published"
   },
   "notification": {
-    "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
+    "review_event_status": "resolved",
+    "blocking_event_id": "bilibili-16214353-write-lock-mario-stage4-release-20261010",
     "needs_user_status": "sent",
-    "reason": "Approval"
+    "reason": "Manual"
   },
   "delivery_path": "D:/project/toolbasecamp-artifacts/conquest-video-20261011",
   "preservation_status": "final_media_and_subtitle_hashes_verified",
@@ -62,5 +69,6 @@
     "preview_server_started": false
   },
   "git_worktree": "C:/Users/37818/.codex/worktrees/conquest-video-20261011/toolbasecamp",
-  "review_page_check": "pass: local 1080p video and both 52-cue subtitle tracks load without starting playback"
+  "review_page_check": "pass: local 1080p video and both 52-cue subtitle tracks load without starting playback",
+  "publication_task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01"
 }
