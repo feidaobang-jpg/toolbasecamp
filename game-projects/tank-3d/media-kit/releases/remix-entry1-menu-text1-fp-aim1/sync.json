@@ -1,0 +1,55 @@
+{
+  "game": "tank-3d",
+  "version": "remix-entry1-menu-text1-fp-aim1",
+  "toyId": 39043249461248,
+  "slug": "feidao-tank-3d",
+  "title": "坦克大战 3D",
+  "toyUrl": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+  "source_commit": "7efb670b",
+  "changes": [
+    "第一人称改为按准星（视线）发射：A/D 转车后炮弹不再从画面侧面飞走，修掉玩家反馈的「按 J 打不出子弹」",
+    "第一人称退回正视或阵亡重生时清掉残留的瞄准朝向，避免沿用上一帧视线",
+    "browser-check 补第一人称开炮跟准星的回归断言；菜单「推荐」断言改指向 #mode-kicker（原先取按钮文字导致整条 QA 提前中断）"
+  ],
+  "authorization": {
+    "instruction": "坦克大战第一人称时子弹打不出来了？（玩家问题，按 AGENTS.md 已授权的大小问题实时发布节奏收尾）",
+    "scope": "standing_realtime_toy_sync_20261010",
+    "at": "2026-10-11T10:03:39+08:00"
+  },
+  "package": "game-projects/tank-3d/dist/remix-entry1-menu-text1-fp-aim1/package",
+  "packageHash": "47b9613d255fcd5018a75341f7527d6f75d9b2b5d070f80ebc1391439fdca405",
+  "file_count": 26,
+  "doctor": "passed_with_1_warning",
+  "doctor_warnings": [
+    "12 个 JS/CSS 资产文件名不含内容指纹(contenthash)：每次更新访客都要重新下载全部资源（既有构建约定，非阻断）"
+  ],
+  "website": {
+    "pushed_commit": "7efb670b",
+    "verified_at": "2026-10-11T09:52:00+08:00",
+    "main_js": "https://www.zhengxiaohui.cn/html/game/tank-3d/main.js 与主线 HEAD 逐字节一致（含 remix-entry1-fp-aim1）",
+    "index_html": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html 引用 main.js?v=7efb670b（部署管道按提交号改写 ?v=）"
+  },
+  "local_qa": {
+    "sim_check": "passed 19/19",
+    "coop_sim_check": "passed（双人 + 四席移动/开火/快照）",
+    "browser_check_website": "20/20 通过，含新增 first person fires along the crosshair",
+    "browser_check_package": "20/20 通过（本地服务 Toy 包目录）",
+    "fp_evidence": {
+      "before_master": { "camDeg": 0, "bodyDir": 1, "bulletDir": 1, "offDeg": 90 },
+      "after_fix": { "camDeg": 0, "bodyDir": 1, "bulletDir": 0, "offDeg": 0 }
+    },
+    "note": "桌面 Playwright/Edge 模拟，不等于手机真机验收"
+  },
+  "preview": {
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_teZUaOjT/index.html",
+    "qa": "browser-check 在预览 iframe 内 20/20 通过（桌面 1280x720 + 手机竖屏自动横屏 844x390 + 横屏），含第一人称开炮跟准星"
+  },
+  "submit": {
+    "status": "auditing",
+    "submitted_at": "2026-10-11T10:03:39+08:00",
+    "submit_preview_url": "https://www.bilibili.com/toy/preview/preview_BGCVSR78/index.html",
+    "readback": { "id": 39043249461248, "title": "坦克大战 3D", "status": "auditing", "visibility": "PUBLIC", "category": "GAME", "slug_url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html" }
+  },
+  "taptap": "按 2026-10-10 规则默认不发布，本次未推送",
+  "recorded_at": "2026-10-11T10:05:00+08:00"
+}
