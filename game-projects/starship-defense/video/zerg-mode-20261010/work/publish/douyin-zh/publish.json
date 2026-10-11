@@ -67,13 +67,51 @@
   },
   "technical_preparation_complete": true,
   "ready_to_upload": true,
-  "blocking_issues": [
-    "与B站同一阻塞：内置浏览器面板未打开时页面隐藏、视口 0x0，上传与发布确认所需的真实指针事件不投递；本期尚未上传"
-  ],
+  "blocking_issues": [],
   "unverified_fields": [
     "抖音投稿页实际封面入口（横版/竖版哪个必填）与话题选择器，上传前重新核对",
     "抖音是否要求 AI 生成内容声明勾选，按当期入口如实选择"
   ],
-  "status": "approved_for_upload",
-  "upload_state": "ready_not_uploaded"
+  "status": "published_in_review",
+  "upload_state": "uploaded_and_submitted",
+  "publication": {
+    "aweme_id": "7695229555732139299",
+    "public_url": "https://www.douyin.com/video/7695229555732139299",
+    "published_at": "2026-10-11T10:20:57+08:00",
+    "review_state": "审核中（work_list: reviewed=false, self_see=true）",
+    "title": "网友点名\"我是虫族模式\"，当天就做了出来",
+    "description_chars": 294,
+    "hashtags": [
+      "#虫潮围城",
+      "#游戏开发",
+      "#塔防",
+      "#玩家建议",
+      "#独立游戏"
+    ],
+    "covers": {
+      "horizontal_4x3": {
+        "file": "final/douyin-zh/cover-horizontal-4x3.jpg",
+        "size": "1600x1200",
+        "sha256": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834"
+      },
+      "portrait_3x4": {
+        "file": "final/douyin-zh/cover-portrait-3x4.jpg",
+        "size": "1080x1440",
+        "sha256": "418cee97837d748b35a7667e75d3e002295558e8e23bf8c4139756ae07432a40"
+      },
+      "detection": "封面效果检测通过"
+    },
+    "ai_content_disclosure": "内容由AI生成",
+    "publish_settings": {
+      "visibility": "公开",
+      "publish_time": "立即发布",
+      "cross_post": "不同时发布",
+      "download_permission": "允许",
+      "collection": "未加入合集"
+    },
+    "video_sha256": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+    "verified_at": "2026-10-11T10:30:00+08:00",
+    "correction": "此前 upload_state=ready_not_uploaded 与“未登录”阻塞均不成立，本期已发布进入审核",
+    "next_step": "过审后核验公开页并更新 publication-result.json"
+  }
 }

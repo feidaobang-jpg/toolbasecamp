@@ -116,7 +116,7 @@ $('coop-ready').addEventListener('click', () => { const ready = coop.room?.playe
 $('coop-start').addEventListener('click', () => coop.send({ type: 'start', config: { mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] } }));
 $('coop-copy').addEventListener('click', async () => {
   if (!coop.room) return;
-  const url = new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.zhengxiaohui.cn/html/game/tank-3d/index.html'); url.search = ''; url.hash = ''; url.searchParams.set('coop', coop.room.code);
+  const url = new URL(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)?location.href:'https://www.bilibili.com/toy/feidao-tank-3d/index.html'); url.search = ''; url.hash = ''; url.searchParams.set('coop', coop.room.code);
   try { await navigator.clipboard.writeText(url.href); $('coop-message').textContent = '邀请链接已复制，发给好友即可加入同一房间。'; }
   catch { $('coop-message').textContent = '邀请链接：' + url.href; }
 });

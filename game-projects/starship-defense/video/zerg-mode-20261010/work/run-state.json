@@ -56,7 +56,7 @@
   },
   "variants": {
     "bilibili-zh": {
-      "stage": "blocked_risk_captcha_draft_ready",
+      "stage": "published",
       "files": [
         "final/bilibili-zh/gameplay-zh-final.mp4",
         "final/bilibili-zh/cover-home-4x3.jpg",
@@ -65,11 +65,17 @@
       ],
       "manifest": "work/publish/bilibili-zh/publish.json",
       "render_entry": "node work/build-video.cjs",
-      "next": "用户在可见浏览器打开 resume_url → 完成人机验证并点“立即投稿” → 取 BV → 我做合集归入核验/Toy绑定/置顶评论/推流表/流量券/旧视频维护",
-      "draft_id": "3973028"
+      "next": "仅推流申请表第 363 行待本人登录腾讯文档填写（材料见 work/publish/bilibili-zh/Toy推流申请.txt）",
+      "published": {
+        "url": "https://www.bilibili.com/video/BV14hpL62EZ5/",
+        "bvid": "BV14hpL62EZ5",
+        "aid": 117419557261429,
+        "at": "2026-10-11T08:59:55+08:00",
+        "evidence": "x/web-interface/view 匿名读数 state=0、duration=126、desc 474 字与审定文案一致；合集 9248439 第 5/5；toy video list 38678478981120 首条为本 BV；置顶 rpid 316712098129 匿名核验"
+      }
     },
     "douyin-zh": {
-      "stage": "ready_not_uploaded",
+      "stage": "published",
       "files": [
         "final/douyin-zh/gameplay-zh-final.mp4",
         "final/douyin-zh/cover-horizontal-4x3.jpg",
@@ -78,7 +84,13 @@
       ],
       "manifest": "work/publish/douyin-zh/publish.json",
       "render_entry": "复用 shared-zh",
-      "next": "浏览器面板可用后按 final/douyin-zh 素材上传并核验"
+      "next": "浏览器面板可用后按 final/douyin-zh 素材上传并核验",
+      "published": {
+        "url": "https://www.douyin.com/video/7695229555732139299",
+        "aweme_id": "7695229555732139299",
+        "at": "2026-10-11T10:20:57+08:00",
+        "evidence": "创作者中心内容管理首条=该作品（02:05，2026年10月11日 10:20，审核中）；work_list API aweme_id 7695229555732139299，desc 与审核通过文案一致"
+      }
     },
     "youtube-zh": {
       "stage": "published",
@@ -107,11 +119,13 @@
   "known_gaps": [
     "胜利结算与城内拆塔镜头未录到（8 局全败，核心 2000/2000 未掉血）；已在文案与 qa.md 如实登记，不伪造",
     "人声听审与字幕校对：用户人工审片通过（2026-10-11 “发布”）",
-    "三平台均待可见浏览器表面：B站只差一次人机验证+投稿点击；抖音/YouTube 尚未上传"
+    "推流申请表 B 列待真超链接且需云端保存核验：本机腾讯文档为游客态，无法写入，已准备第 363 行材料并发 NeedsUser(Login) 事件",
+    "截图证据缺口：内置浏览器面板隐藏期间无法截图（take_screenshot 报 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE），闭环核验以公开 API 读数与登录态接口返回为准",
+    "虫潮 Toy 合并包 da83017e…（源提交 08028efe）补提仍被 code=307008 拒绝，待本人在 Toy 创作者后台确认权限；与本视频发布无关，属游戏发布任务待办"
   ],
-  "status": "publishing_blocked_needs_user",
-  "status_note": "YouTube 本期已公开发布并核验（中英字幕轨道 + 英文标题/说明翻译）；B站草稿卡在人机验证、抖音 creator center 未登录，均等待用户处理",
-  "updated_at": "2026-10-11T10:05:00+08:00",
+  "status": "published_closing_loop_pending_push_application",
+  "status_note": "三平台已发：YouTube 公开核验（TZWvJqbMIJI）；抖音审核中（7695229555732139299）；B站 BV14hpL62EZ5 已公开（08:59:55，用户本人过一次 GeeTest 后投稿），合集/话题/置顶/Toy 绑定/流量券(0)/上一条简介与置顶维护均公开核验。仅剩腾讯文档推流申请第 363 行因游客态无法写入，材料已备好待本人登录。",
+  "updated_at": "2026-10-11T11:05:00+08:00",
   "human_review": {
     "status": "approved",
     "approved_by": "用户（飞刀班长本人）",

@@ -28,7 +28,8 @@ def build():
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, dest)
     text = (PACKAGE / 'index.html').read_text('utf-8')
-    text = text.replace('../../../games.html', 'https://www.zhengxiaohui.cn/games.html')
+    text = text.replace('../../../js/game/author-home.js', './author-home.js')
+    shutil.copy2(ROOT / 'public/js/game/author-home.js', PACKAGE / 'author-home.js')
     text = text.replace('../../../css/base.css', './base.css')
     shutil.copy2(ROOT / 'public/css/base.css', PACKAGE / 'base.css')
     text = text.replace('<script src="../../../js/game/thumb-preview.js"></script>', '')
@@ -40,6 +41,7 @@ def build():
     archive = OUT / 'chongchao-qianshao.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
         z.write(PACKAGE / 'base.css', 'base.css')
+        z.write(PACKAGE / 'author-home.js', 'author-home.js')
         for source in runtime_files:
             rel = source.relative_to(SOURCE)
             z.write(PACKAGE / rel, str(rel).replace('\\', '/'))
@@ -51,6 +53,7 @@ def build():
         'status': 'built_not_submitted', 'published_toy_unchanged': True,
     }
     manifest['files']['base.css'] = hashlib.sha256((PACKAGE / 'base.css').read_bytes()).hexdigest()
+    manifest['files']['author-home.js'] = hashlib.sha256((PACKAGE / 'author-home.js').read_bytes()).hexdigest()
     (OUT / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), 'utf-8')
     print(json.dumps({'output': str(OUT), 'zip_bytes': archive.stat().st_size, 'status': 'built_not_submitted'}, ensure_ascii=False))
 

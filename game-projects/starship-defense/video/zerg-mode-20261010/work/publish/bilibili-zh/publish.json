@@ -77,16 +77,9 @@
   },
   "technical_preparation_complete": true,
   "ready_to_upload": true,
-  "blocking_issues": [
-    "B站投稿接口在 gaia 风控后要求 GeeTest 人机验证；内置浏览器面板未打开（visibilityState=hidden、viewport 0x0）时验证码 iframe 不渲染且不接收真实指针事件，须本人在可见页面完成一次验证或自行点“立即投稿”"
-  ],
-  "unverified_fields": [
-    "稿件审核状态（尚无 BV）"
-  ],
-  "status": "approved_for_upload",
-  "upload_state": "draft_ready_blocked_by_risk_captcha",
+  "status": "published_public_verified",
+  "upload_state": "uploaded_submitted_and_public",
   "draft_id": "3973028",
-  "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028",
   "upload_form_verified": {
     "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
     "category": "游戏(tid=17)",
@@ -111,5 +104,70 @@
     "tag_count": 8,
     "publish_time": "立即发布（dtime=null）",
     "draft_save": "POST /x/vupre/web/draft/update code=0 OK（2026-10-11 07:50 +08:00）"
+  },
+  "publication": {
+    "bvid": "BV14hpL62EZ5",
+    "aid": 117419557261429,
+    "cid": 42637854616,
+    "url": "https://www.bilibili.com/video/BV14hpL62EZ5/",
+    "submitted_at": "2026-10-11T08:59:55+08:00",
+    "submitted_by": "用户（飞刀班长本人）在可见浏览器完成一次 GeeTest 人机验证后点“立即投稿”；草稿 3973028 即本期稿件",
+    "public_state": 0,
+    "public_verified_at": "2026-10-11T10:50:24+08:00",
+    "duration_on_platform_s": 126,
+    "title_on_platform": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
+    "description_chars_on_platform": 474,
+    "description_matches_approved_copy": true,
+    "tags_on_platform": [
+      "AI",
+      "原创",
+      "游戏开发",
+      "bilibilitoy",
+      "虫潮围城",
+      "塔防",
+      "挑战模式",
+      "玩家建议",
+      "哔哩哔哩Toy创意挑战"
+    ],
+    "topic_public_verified": "话题“哔哩哔哩Toy创意挑战”(topic_id 1346285) 出现在公开 tag 列表，视为已参加",
+    "cover_main_visible": "http://i1.hdslb.com/bfs/archive/fe08bd1e94f6e2241cc4052345ff614adde41602.jpg",
+    "initial_stats_at_verification": {
+      "view": 177,
+      "like": 9,
+      "favorite": 2,
+      "reply": 2,
+      "coin": 0,
+      "share": 0,
+      "danmaku": 0
+    },
+    "pinned_comment": {
+      "rpid": 316712098129,
+      "mid": "16214353",
+      "posted_at": "2026-10-11T09:5x+08:00（本会话写操作）",
+      "pinned_via": "POST x/v2/reply/top oid=&type=1&rpid=&action=1&csrf（action 而非 top，top 参数返回 code=0 但不生效）",
+      "anonymous_verified_at": "2026-10-11T10:50:24+08:00"
+    },
+    "collection_membership": {
+      "season_id": 9248439,
+      "title": "合集·虫潮围城开发实录",
+      "position": 5,
+      "total": 5,
+      "order": [
+        "BV1Ujad6DEuf",
+        "BV1WbHq6eEBt",
+        "BV1C5HQ6gEvD",
+        "BV1xdpx63ETu",
+        "BV14hpL62EZ5"
+      ],
+      "verified_at": "2026-10-11T10:50:24+08:00",
+      "url": "https://space.bilibili.com/16214353/lists/9248439?type=season"
+    },
+    "toy_video_binding": {
+      "toy_id": "38678478981120",
+      "slug": "chongchao-qianshao",
+      "verified_by": "toy video list 38678478981120 返回首条即 BV14hpL62EZ5（aid 117419557261429，duration 126，封面 fe08bd1e…）",
+      "verified_at": "2026-10-11T10:40:00+08:00"
+    },
+    "toy_package_status_note": "简介写“Toy 包已提交审核中”仍然成立：v0.33.3 包 51e53be1… 于 2026-10-10T23:43:09+08 提交并记为 auditing；其后的合并包 da83017e…（源提交 08028efe，与线上一致）补提被 code=307008 拒绝，待本人在 Toy 创作者后台确认，见项目记忆 toy-submit-307008-blocked。"
   }
 }

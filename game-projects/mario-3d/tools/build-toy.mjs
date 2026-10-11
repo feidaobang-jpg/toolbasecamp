@@ -37,7 +37,9 @@ writeFileSync(join(out, 'three.js'), "// 固定版本 Three.js 0.170.0（随 Toy
 
 let html = readFileSync(join(source, 'index.html'), 'utf8');
 const before = html;
+cpSync(join(root, 'public/js/game/author-home.js'), join(out, 'author-home.js'));
 html = html
+  .replaceAll('../../../js/game/author-home.js', './author-home.js')
   .replace(/\s*<link rel="icon" href="\.\.\/\.\.\/\.\.\/favicon\.svg"[^>]*>/, '')
   .replace('data-list-url="../../../games.html"', 'data-list-url="index.html"')
   .replace(/\s*<a data-act="list" class="list-link" href="\.\.\/\.\.\/\.\.\/games\.html">返回游戏列表<\/a>/g, '')

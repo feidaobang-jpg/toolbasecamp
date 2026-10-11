@@ -1,0 +1,22 @@
+腾讯文档《【哔哩哔哩Toy】稿件推流申请表》—【进行中】日常推流
+https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw
+
+本期：虫潮围城「我是虫族模式」（BV14hpL62EZ5，2026-10-11 08:59:55 已公开）
+去重结果：表内查找 BV14hpL62EZ5 → 无结果（本期未登记过）
+目标行：363（现有末行 362 = 慌张椰子最也 / BV1v3pL68Ekk；A363:F363 均为空）
+
+A363  飞刀班长
+B363  https://www.bilibili.com/video/BV14hpL62EZ5/（需为真超链接）
+C363  是
+D363  是
+E363  否
+F363  （留空，由运营填写）
+
+依据：
+- C（是否含 bilibilitoy 与指定话题）：公开标签列表含 bilibilitoy、哔哩哔哩Toy创意挑战(topic_id 1346285)
+- D（是否含置顶 Toy 链接）：置顶评论 rpid 316712098129 含 Toy 试玩链接，匿名读回已核验
+- E（是否在视频中宣传 Toy 平台）：口播与尾卡只给网站试玩入口 https://www.zhengxiaohui.cn/html/game/starship-defense/index.html，片内未宣传 Toy 平台
+
+未完成原因：本机浏览器打开该腾讯文档为游客态（body class 含 skeleton-guest-mode），
+名称框逐格读取可用，但粘贴与键入都无法写入单元格，无法产生云端保存，因此不能记为“已申请”。
+待本人登录腾讯文档后按上面第 363 行填入（或授权我登录后补填并核验云端保存）。

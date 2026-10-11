@@ -19,9 +19,7 @@ const $ = (id) => document.getElementById(id);
 const app = $('app'), stage = $('stage'), canvas = $('screen');
 const overlays = { menu: $('menu'), select: $('select'), pause: $('pause'), result: $('result'), cont: $('cont') };
 const hud = $('hud'), hudTop = $('hud-top'), touch = $('touch'), toastEl = $('toast'), bannerEl = $('banner'), keyHint = $('keyhint');
-const listUrl = app.getAttribute('data-list-url') || '../index.html';
 const fpsEl = $('fps');
-document.querySelectorAll('.list-link').forEach(a => { a.href = listUrl; });
 
 // ---------- 设置 ----------
 const pickOpt = (k, list, def) => { const v = store.get(k, def); return list.indexOf(v) >= 0 ? v : def; };
@@ -49,7 +47,7 @@ try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 } catch (e) {
   const el = $('loading'); el.hidden = false;
-  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button><br><a href="' + listUrl + '">返回游戏列表</a>';
+  el.innerHTML = '无法启动 3D 画面（WebGL 不可用）：' + (e.message || e) + '<br><button onclick="location.reload()">重试</button>';
   throw e;
 }
 renderer.outputColorSpace = THREE.SRGBColorSpace;

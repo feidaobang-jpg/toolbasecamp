@@ -1,0 +1,162 @@
+{
+  "status": "loop_completed_except_push_application",
+  "scope": "本期 Toy 活动/话题、置顶评论、合集、Toy 视频绑定、免费流量奖励与推流申请；非全账号全面检查",
+  "checked_at": "2026-10-11T10:50:24+08:00",
+  "current_video_bvid": "BV14hpL62EZ5",
+  "current_video_published": true,
+  "toy_topic_and_activity": {
+    "topic_name": "哔哩哔哩Toy创意挑战",
+    "topic_id": 1346285,
+    "status": "public_tag_verified",
+    "public_tags": [
+      "AI",
+      "原创",
+      "游戏开发",
+      "bilibilitoy",
+      "虫潮围城",
+      "塔防",
+      "挑战模式",
+      "玩家建议",
+      "哔哩哔哩Toy创意挑战"
+    ],
+    "official_toy_activity_url": "https://www.bilibili.com/opus/1248175010173943812",
+    "activity_deadline": "2026-10-31T23:59:00+08:00",
+    "note": "活动仍在期内，本期投稿已带话题与 bilibilitoy 标签；未宣称已达 300 播放获奖门槛。"
+  },
+  "pinned_comment": {
+    "status": "posted_and_anonymous_verified",
+    "rpid": 316712098129,
+    "mid": "16214353",
+    "contains": [
+      "网站试玩入口",
+      "操作键位与规则",
+      "Toy 试玩链接",
+      "愿望榜投票入口"
+    ],
+    "verified_at": "2026-10-11T10:50:24+08:00"
+  },
+  "toy_video_binding": {
+    "status": "bound_and_relisted",
+    "command": "toy video bind BV14hpL62EZ5 --toy 38678478981120",
+    "verified_at": "2026-10-11T10:40:00+08:00"
+  },
+  "collection_membership": {
+    "season_id": 9248439,
+    "status": "verified_position_5_of_5",
+    "url": "https://space.bilibili.com/16214353/lists/9248439?type=season",
+    "verified_at": "2026-10-11T10:50:24+08:00"
+  },
+  "traffic_reward": {
+    "status": "no_available_free_reward",
+    "available_exposure": 0,
+    "url": "https://member.bilibili.com/york/flow-reward/?navhide=1",
+    "note": "本会话内以登录态检查，账号可用免费曝光额度为 0，未使用流量券；不虚构官方券ID。",
+    "screenshot": null,
+    "screenshot_note": "内置浏览器面板处于隐藏状态时无法取得截图；以页面读数登记。"
+  },
+  "toy_push_application": {
+    "status": "blocked_docs_guest_mode_material_prepared",
+    "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "sheet": "【进行中】日常推流",
+    "target_row": 363,
+    "last_existing_row": 362,
+    "dedupe": "表内查找“BV14hpL62EZ5”返回“无结果”，本期未登记过",
+    "row_is_empty": "A363:F363 均为空（用名称框逐格读公式栏核验）",
+    "planned_values": {
+      "A": "飞刀班长",
+      "B": "https://www.bilibili.com/video/BV14hpL62EZ5/",
+      "C": "是",
+      "D": "是",
+      "E": "否",
+      "F": "（留空，由运营填写）"
+    },
+    "value_basis": {
+      "C": "公开 tag 列表含 bilibilitoy 与指定话题“哔哩哔哩Toy创意挑战”",
+      "D": "置顶评论含 Toy 试玩链接，已匿名核验",
+      "E": "本期口播与尾卡只引导网站试玩入口，片内未宣传 Toy 平台（简介与置顶含 Toy 链接不计入“视频中宣传”）"
+    },
+    "blocker": "docs.qq.com 本机浏览器为游客态（document.body.className 含 skeleton-guest-mode）：名称框导航与查找面板可用，但剪贴板 paste 事件不被消费、trusted 键入不进入单元格编辑（.cell-editor-container 为空、公式栏不变），无法写入与云端保存",
+    "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
+    "cloud_save_verified": false,
+    "feishu_event": {
+      "status": "sent",
+      "action": "LoginRequired",
+      "source": "Qoder",
+      "task_id": "zerg-mode-20261010-publish",
+      "event_id": "tencent-docs-push-application-363",
+      "sent_at": "2026-10-11T11:10:00+08:00",
+      "ask": "登录本机腾讯文档后由我补填第363行，或本人直接填写"
+    }
+  },
+  "previous_video_maintenance": {
+    "bvid": "BV1xdpx63ETu",
+    "aid": 117410246103040,
+    "status": "description_publicly_verified_and_pinned_comment_updated",
+    "new_bvid_pointer": "BV14hpL62EZ5",
+    "description_edit": {
+      "submitted_at": "2026-10-11T10:36:00+08:00",
+      "submit_evidence": "编辑表单点“立即投稿”后页面出现“稿件投递成功/上传成功”，aid 117410246103040",
+      "publicly_verified_at": "2026-10-11T10:50:24+08:00",
+      "public_desc_chars": 571,
+      "public_desc_head": "最新一期：网友点名\"我是虫族模式\"，当天就做了出来 https://www.bilibili.com/video/BV14hpL62EZ5/ ；本期为早期版本实录，玩法与操作以当前试玩为准。",
+      "note": "简介编辑提交后公开读数已由 475 字变为 571 字，说明改版已生效；稿件 state 仍为 0。"
+    },
+    "pinned_comment": {
+      "new_rpid": 316713098881,
+      "new_comment_first_line": "最新一期：网友点名“我是虫族模式”，当天就做了出来 https://www.bilibili.com/video/BV14hpL62EZ5/",
+      "original_rpid": 316545286145,
+      "original_comment_preserved": true,
+      "original_now_pinned": false,
+      "anonymous_verified_at": "2026-10-11T10:50:24+08:00"
+    },
+    "toy_binding_preserved": true
+  },
+  "player_comments_observed_not_acting": {
+    "rule": "玩家反馈由用户自己看过后再指示修改，不自动修复、不自动回复",
+    "current_video": [
+      {
+        "rpid": 320332084016,
+        "mid": 3546861742852339,
+        "text": "现在可以玩了，点开简介的链接就可以玩"
+      }
+    ],
+    "previous_video": [
+      {
+        "rpid": 320277398512,
+        "mid": 3461572999514730,
+        "text": "就这样"
+      },
+      {
+        "rpid": 320304867120,
+        "mid": 1836679226,
+        "text": "我显示的还是下架。"
+      },
+      {
+        "rpid": 320304867216,
+        "mid": 1836679226,
+        "text": "我显示的还是下架。"
+      },
+      {
+        "rpid": 316673457873,
+        "mid": 3546931158583563,
+        "text": "塔防模式为啥没了[笑哭]"
+      },
+      {
+        "rpid": 320277173344,
+        "mid": 3461572999514730,
+        "text": "怎么玩不了了"
+      },
+      {
+        "rpid": 320271892416,
+        "mid": 3707062815033929,
+        "text": "哎，不是怎么给删掉这款游戏了，还有那个你做的虫潮围城怎么也被…"
+      },
+      {
+        "rpid": 316645784321,
+        "mid": 1672483578,
+        "text": "那个开战位置能不能改一下曲面屏按不了。"
+      }
+    ]
+  },
+  "note": "仅登记本期新片与其上一条维护；不接管其他未完成活动，不新增定时任务。"
+}

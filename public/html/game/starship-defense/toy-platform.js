@@ -5,7 +5,7 @@ import {cloudRecord,SaveConflict} from './cloud-save.js';
 const CLOUD_KEY='chongchao_normal_v1';
 const AUTO_KEY='chongchao_auto_v2',BACKUP_KEY='chongchao_previous_v2';
 const PLAY_URL='https://www.bilibili.com/toy/chongchao-qianshao/index.html';
-const AUTHOR='16214353',VIDEO='BV1Ujad6DEuf';
+const VIDEO='BV1Ujad6DEuf';
 
 // Cache reads and serialize writes. These are application UX cooldowns, not platform quotas.
 export class ToyBridge {
@@ -97,7 +97,6 @@ export function setupToyPlatform(game,{sdkPromise}={}){
   });
   // Navigation must be called directly from a gesture; capability detection is done beforehand.
   function visit(type,id,url){if(sdk&&support.has('navigate'))sdk.navigate({type,id}).catch(error);else window.open(url,'_blank','noopener,noreferrer');}
-  $('authorVisit').onclick=()=>visit('space',AUTHOR,'https://space.bilibili.com/'+AUTHOR);
   $('videoVisit').onclick=()=>visit('video',VIDEO,'https://www.bilibili.com/video/'+VIDEO);
   $('toyShare').onclick=()=>{
     if(sdk&&support.has('share'))sdk.share({path:'index.html'}).catch(error);

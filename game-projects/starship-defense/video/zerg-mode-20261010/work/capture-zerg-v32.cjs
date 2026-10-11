@@ -308,8 +308,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           if(s.spitCd<=0){const nt=s.turrets.map(t=>({t,d:Math.hypot(t.x-s.bx,t.z-s.bz)})).sort((x,y)=>x.d-y.d)[0];
             if(nt&&nt.d<27){const s2=await aimAt(nt.t.x,nt.t.z,await observe());await p.keyboard.press('KeyK');acidN++;await sleep(150);}}
         }
-        // dash 时机：冲锋只在门洞走廊 bz∈(-24,-4)（火力最密处）按；重走行军 dg>35 随手用
-        if(s.dashCd<=0&&s.binv<=0&&(phase==='assault'?(s.bz<-4&&s.bz>-24):dg>35)){await p.keyboard.press('KeyL');dashN++;if(dashN===1)await mark('dash-1');}
+        // dash 时机：冲锋/直冲核心在门洞走廊 bz∈(-24,-4)（火力最密处）按；重走行军 dg>35 随手用
+        if(s.dashCd<=0&&s.binv<=0&&(((phase==='assault'||phase==='coremove')&&s.bz<-4&&s.bz>-24)||dg>35)){await p.keyboard.press('KeyL');dashN++;if(dashN===1)await mark('dash-1');}
         if(!s.gateDead&&hpPct<.45&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-march-'+moltN);await sleep(250);}
         if(s.gateDead&&!inAssault&&hpPct<.6&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(200);}
       }else if(place==='siege'){
