@@ -44,11 +44,15 @@ export const MOUTHS=TUNNELS.map(t=>{const s=t.samples[0];return {id:t.id,name:t.
 export function hiveRoute(id){const t=TUNNELS.find(t=>t.id===id)||TUNNELS[1],m=MOUTHS.find(m=>m.id===t.id);return [...t.samples].reverse().filter((_,i)=>i%3===0).concat([t.samples[0],m.out]);}
 export function hiveNavigation(from,to){
   if(from.z<182&&to.z<182)return null;
+  // 外侧地表和洞内必须按实际洞形/高度区分，不能仅凭 z 判定。
+  // 否则站在西侧地图边缘也会把追兵持续引回洞口。
+  const inside=p=>p.z>=184&&hiveField(p.x,p.z)<=-2.5&&(!Number.isFinite(p.y)||p.y<hiveCeiling(p.x,p.z));
+  const fromInside=inside(from),toInside=inside(to);
+  if(!fromInside&&!toInside)return null;
   const nearest=p=>{let best=null;for(const t of TUNNELS)for(let i=0;i<t.samples.length;i++){const s=t.samples[i],d=Math.hypot(p.x-s.x,p.z-s.z);if(!best||d<best.d)best={t,i,d};}return best;};
-  const a=nearest(from),b=nearest(to),inRoom=p=>Math.hypot(p.x-HIVE.x,p.z-HIVE.z)<24;
+  const a=nearest(from),b=nearest(to),inRoom=p=>inside(p)&&Math.hypot(p.x-HIVE.x,p.z-HIVE.z)<24;
   if(inRoom(from)&&inRoom(to))return null;
-  if(from.z<184||hiveField(from.x,from.z)>-2.5){
-    if(to.z<182)return null;
+  if(!fromInside){
     const m=inRoom(to)?MOUTHS.reduce((best,m)=>Math.hypot(from.x-m.x,from.z-m.z)<Math.hypot(from.x-best.x,from.z-best.z)?m:best):MOUTHS.find(m=>m.id===b.t.id);
     const t=TUNNELS.find(t=>t.id===m.id);
     const aligned=Math.abs((from.x-m.x)*m.dz-(from.z-m.z)*m.dx)<3;
@@ -62,8 +66,8 @@ export function hiveNavigation(from,to){
     for(let i=exit.samples.length-1;i>=0;i--){const s=exit.samples[i];if(Math.hypot(s.x-HIVE.x,s.z-HIVE.z)>=26)return s;}
     return exit.samples[0];
   }
-  const inward=to.z>=182&&(inRoom(to)||a.t!==b.t||b.i>a.i);
-  if(a.t===b.t&&Math.hypot(from.x-to.x,from.z-to.z)<7)return null;
+  const inward=toInside&&(inRoom(to)||a.t!==b.t||b.i>a.i);
+  if(toInside&&a.t===b.t&&Math.hypot(from.x-to.x,from.z-to.z)<7)return null;
   if(inward&&a.i>=a.t.samples.length-4)return {x:HIVE.x,z:HIVE.z};
   if(!inward&&a.i<4)return MOUTHS.find(m=>m.id===a.t.id).out;
   return a.t.samples[Math.max(0,Math.min(a.t.samples.length-1,a.i+(inward?4:-4)))];

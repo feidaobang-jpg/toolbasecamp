@@ -1087,7 +1087,7 @@ function showMsg(t,dur=2.2){if(panelOpen){showAlert(t);return;}$('msg').textCont
 function showHint(t){if(t){$('hint').textContent=t;$('hint').classList.remove('hidden');}else $('hint').classList.add('hidden');}
 function updHUDItem(){
   $('itemTxt').textContent=`🧰 医疗包×${Game.testMode?'∞':Game.items.medkit}(H)`
-    +` · 手雷(${keyBindings.label('U')})`
+    +` · 手雷∞(${keyBindings.label('U')})${player.grenadeCd>0?' '+Math.ceil(player.grenadeCd)+'s':' 就绪'}`
     +(player.shield>0?` 🛡${Math.ceil(player.shield)}`:'')
     +(player.buffT>0?` ⚡${Math.ceil(player.buffT)}s`:'');
 }
@@ -1096,14 +1096,14 @@ function updHUDItem(){
 let player={
   mesh:null,bar:null,hp:120,maxHp:120,speed:9.5,
   pos:new THREE.Vector3(0,0,-24),vy:0,onGround:true,yaw:0,
-  fireCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
+  fireCd:0,grenadeCd:0,healTick:0,inVehicle:null,dead:false,anim:0,respawnT:0,invulnerable:0,
   muzzle:null,shield:0,buffT:0,heat:0,moveZ:0,
   reset(cls){
     const c=CLASSES[cls];
     this.maxHp=c.hp+Game.hpBonus;this.hp=this.maxHp;this.speed=c.speed;
     this.pos.set(0,0,-20);this.vy=0;this.dead=false;this.inVehicle=null;this.yaw=0;
     this.shield=0;this.buffT=0;this.respawnT=0;this.invulnerable=0;this.heat=0;this.moveZ=0;
-    this.onGround=true;
+    this.onGround=true;this.grenadeCd=0;
     if(this.mesh){visuals.release(this.mesh);scene.remove(this.mesh);}
     this.mesh=makeSoldier(c.color);this.mesh.rotation.order='YXZ';
     this.bar=makeHPBar(1.8,'#3f6');this.bar.position.y=3;this.mesh.add(this.bar);updHPBar(this.bar,1);
@@ -1983,8 +1983,8 @@ function exitVehicle(){
     if(spot)break;
   }
   spot=spot||findFreeSpot(vp.x,vp.z)||{x:0,z:-20};
-  player.pos.set(spot.x,0,spot.z);
-  player.vy=0;player.mesh.position.copy(player.pos);
+  player.pos.set(spot.x,groundY(spot.x,spot.z),spot.z);
+  player.vy=0;player.onGround=true;player.mesh.position.copy(player.pos);
   if(v.cfg.fly)v.landing=true;
   v.noEnter=1.2; // 下车冷却：防止立刻又上车
 }
@@ -2577,7 +2577,8 @@ function useMedkit(){
 function throwGrenade(){
   if(player.dead||place.kind)return false;
   if(player.inVehicle){showMsg('下车后可投掷手雷',1.2);return false;}
-  if(vsOn()){if(player.grenadeCd>0){if(player===versus.state.local)showMsg('手雷冷却中 '+Math.ceil(player.grenadeCd)+' 秒',.9);return false;}player.grenadeCd=versus.grenadeCooldown(player);}
+  if(player.grenadeCd>0){if(!vsOn()||player===versus.state.local)showMsg('手雷冷却中 '+Math.ceil(player.grenadeCd)+' 秒',.9);return false;}
+  player.grenadeCd=vsOn()?versus.grenadeCooldown(player):3;
   const from=player.pos.clone();from.y+=1.45;
   // 战地真人手动投掷：朝镜头方向扔，抬头扔得远、低头扔得近；电脑英雄和其他模式沿用自动寻敌。
   const manual=manualHuman(),auto=vsOn()?!manual&&!!Input.network?.autoAim:CombatControls.autoAim;
@@ -2629,6 +2630,8 @@ function playerCanMove(x,z){
 }
 function updPlayer(dt){
   if(player.dead)return;
+  // 据点战已有独立冷却更新；战役/房车按游戏时间计时，暂停不流逝。
+  if(!vsOn())player.grenadeCd=Math.max(0,(player.grenadeCd||0)-dt);
   if(Input.pop('U'))throwGrenade();
   const t=performance.now()/1000;
   if(player.mesh&&typeof player.mesh.userData.tick==='function')player.mesh.userData.tick(dt,t);
@@ -3657,7 +3660,7 @@ function updJumpUI(){
   const v=player.inVehicle,fly=!!(v&&v.cfg.fly);
   const txt=v?'':player.onGround?'跳跃 就绪（'+(isTouch?'跳跃':keyBindings.label('K'))+'）':'跳跃 腾空中';
   $('vSPRINT').classList.toggle('hidden',!!v);
-  $('vU').classList.toggle('hidden',!!v);$('vU').textContent='手雷';
+  $('vU').classList.toggle('hidden',!!v);$('vU').textContent=player.grenadeCd>0?'手雷 '+Math.ceil(player.grenadeCd)+'s':'手雷';
   const el=$('jumpTxt');if(el.textContent!==txt)el.textContent=txt;
   const k=$('vK'),h=$('vH'),kl=fly?'升':'跳跃',hl=fly?'降':vsOn()?(player.bfKit==='engineer'?'维修':player.bfKit==='support'?'补弹':player.bfKit==='medic'?'医疗':'支援'):'医疗';
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
