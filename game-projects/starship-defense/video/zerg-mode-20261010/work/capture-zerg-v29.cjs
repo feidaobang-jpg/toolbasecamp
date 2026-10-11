@@ -51,9 +51,9 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     }
     await mark('start');
     // ===== 策略层 v29（nest(1,176) gate(0,-16) base(-12,-42)；前线机枪(±15,-13)；GATE_FACE=门北脸）=====
-    const MARCH=[[-69,140],[-69,90],[-69,20],[-30,16],[1,12]];
+    const MARCH=[[-69,140],[-69,90],[-69,20],[-14,18],[1,11]];
     const ASSAULT=[[0,-12],[-4,-22],[-11.8,-42]];
-    const SIEGE=[1,13],FARM=[-11.8,-42],GATE_FACE=[0,-13.2];
+    const SIEGE=[1,11],FARM=[-11.8,-42],GATE_FACE=[0,-13.2];
     const MGS=[[-15,-13],[15,-13]];          // 前线双机枪：围攻位可安全酸
     const MGKILL_GHP=900;                    // 城门剩余 900 时转杀机枪
     let wpIdx=0,phase='march',way=MARCH,turnKey=null,turnRate=1.9;
@@ -103,7 +103,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
       if(GATE_ONLY&&s.gateDead){await mark('gate-only-stop');break;}
       const mgAlive=MGS.filter(([x,z])=>s.turrets.some(t=>Math.abs(t.x-x)<2.5&&Math.abs(t.z-z)<2.5)).length;
       // ===== 围攻期(1,12)：酸磨城门；gate<=900 先酸死前线双机枪（安全位白嫖）；双机枪亡+血70% → 贴门速破门 =====
-      if(phase==='siege'&&!s.gateDead&&mgAlive===0&&s.gateHp<=MGKILL_GHP&&hpPct>=.7&&s.biomass>=40){
+      if(phase==='siege'&&!s.gateDead&&mgAlive===0&&s.gateHp<=MGKILL_GHP&&hpPct>=.75&&s.biomass>=40){
         phase='gaterush';way=[GATE_FACE];wpIdx=0;wpSince=Date.now();lastPos=null;stuckN=0;
         if(!rushMarked){rushMarked=true;await mark('gate-rush');}
         await sleep(120);continue;
@@ -190,17 +190,18 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const w=[];if(f>.5)w.push('KeyW');if(r>.5)w.push('KeyD');else if(r<-.5)w.push('KeyA');
           if(w.length){await keys(w);await sleep(140);await keys([]);}
         }
-        const mgWin=s.gateHp<=MGKILL_GHP;   // 只有杀机枪窗口才把酸倒向机枪，其余时间一律酸门
-        const mgT=mgWin&&mgAlive?s.turrets.map(t=>({t,d:Math.hypot(t.x-SIEGE[0],t.z-SIEGE[1])})).filter(o=>MGS.some(([mx,mz])=>Math.abs(o.t.x-mx)<2.5&&Math.abs(o.t.z-mz)<2.5)).sort((a,b)=>a.d-b.d)[0]:null;
+        const mgWin=mgAlive>0;              // 一到位就先酸死前线双机枪：其 r26 罩住整个门前沿，不杀则战士虫出巢即被扫光、
+                                            // 虫群永远攒不起来、城门没人啃；杀完后虫群才能在门前站住分摊狙击火力
+        const mgT=mgWin?s.turrets.map(t=>({t,d:Math.hypot(t.x-SIEGE[0],t.z-SIEGE[1])})).filter(o=>MGS.some(([mx,mz])=>Math.abs(o.t.x-mx)<2.5&&Math.abs(o.t.z-mz)<2.5)).sort((a,b)=>a.d-b.d)[0]:null;
         if(!held.size&&s.spitCd<=0&&Date.now()-lastMoveAt>400&&(mgT&&mgT.d<=30.6||!mgT&&dGate<=30)){
           const at=mgT?{x:mgT.t.x,z:mgT.t.z}:{x:s.gateX,z:s.gateZ};
           const y0=s.yaw;s=await aimAt(at.x,at.z,s);
           if(Math.abs(wrap(s.yaw-y0))>.1)await sleep(380);
           if(!held.size){await p.keyboard.press('KeyK');acidN++;if(mgT){if(!mgMarked.has(mgT.t.x+','+mgT.t.z)){mgMarked.add(mgT.t.x+','+mgT.t.z);await mark('acid-mg');}}else{acidGateN++;if(acidGateN===1)await mark('acid-1');}}
         }
-        const moltTh=mgAlive?.8:(s.gateHp<=800?.95:.55);
+        const moltTh=mgAlive?.7:(s.gateHp<=800?.95:.55);
         if(hpPct<moltTh&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(250);}
-        else if(!mgWin&&s.biomass>=60&&s.sumCd<=0&&s.swarm<40){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');await sleep(350);}
+        else if(s.sumCd<=0&&s.swarm<(mgWin?14:40)&&((!mgWin||warN===0)&&s.biomass>=60||mgWin&&s.biomass>=110)){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');await sleep(350);}
       }else{
         // ===== 贴脸输出（gaterush=门北脸爪+酸 177dps 速破门 / grind=核心爪+酸+就地召唤滚雪球）=====
         if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}

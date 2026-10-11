@@ -56,7 +56,7 @@
   },
   "variants": {
     "bilibili-zh": {
-      "stage": "draft_saved_waiting_for_browser_surface",
+      "stage": "blocked_risk_captcha_draft_ready",
       "files": [
         "final/bilibili-zh/gameplay-zh-final.mp4",
         "final/bilibili-zh/cover-home-4x3.jpg",
@@ -65,11 +65,11 @@
       ],
       "manifest": "work/publish/bilibili-zh/publish.json",
       "render_entry": "node work/build-video.cjs",
-      "next": "用户打开内置浏览器面板 → 完成双封面与合集 → 立即投稿 → 取 BV → Toy 绑定/合集/活动/推流表",
+      "next": "用户在可见浏览器打开 resume_url → 完成人机验证并点“立即投稿” → 取 BV → 我做合集归入核验/Toy绑定/置顶评论/推流表/流量券/旧视频维护",
       "draft_id": "3973028"
     },
     "douyin-zh": {
-      "stage": "upload_in_progress",
+      "stage": "ready_not_uploaded",
       "files": [
         "final/douyin-zh/gameplay-zh-final.mp4",
         "final/douyin-zh/cover-horizontal-4x3.jpg",
@@ -78,10 +78,10 @@
       ],
       "manifest": "work/publish/douyin-zh/publish.json",
       "render_entry": "复用 shared-zh",
-      "next": "随本期一起审片；上传前核对抖音封面入口与话题选择器"
+      "next": "浏览器面板可用后按 final/douyin-zh 素材上传并核验"
     },
     "youtube-zh": {
-      "stage": "upload_in_progress",
+      "stage": "ready_not_uploaded",
       "files": [
         "final/youtube-zh/gameplay-youtube-final.mp4",
         "final/youtube-zh/cover-zh-16x9.jpg",
@@ -92,16 +92,17 @@
       ],
       "manifest": "work/publish/youtube-zh/publish.json",
       "render_entry": "node work/build-video.cjs --clean && node work/make-captions.cjs --en",
-      "next": "英文字幕人工校对后随本期发布；X 宣传按既有授权，收费即跳过"
+      "next": "浏览器面板可用后上传 clean master + 中英字幕并核验公开 watch URL"
     }
   },
   "known_gaps": [
     "胜利结算与城内拆塔镜头未录到（8 局全败，核心 2000/2000 未掉血）；已在文案与 qa.md 如实登记，不伪造",
-    "人声听审与字幕校对：用户人工审片通过（2026-10-11 “发布”）"
+    "人声听审与字幕校对：用户人工审片通过（2026-10-11 “发布”）",
+    "三平台均待可见浏览器表面：B站只差一次人机验证+投稿点击；抖音/YouTube 尚未上传"
   ],
-  "status": "publishing",
-  "status_note": "B站本期已存草稿（draftId 3973028，视频与元信息已填），因内置浏览器面板未打开无法设置并核验双比例封面，未提交投稿；抖音与YouTube 未开始",
-  "updated_at": "2026-10-11T07:40:00+08:00",
+  "status": "publishing_blocked_needs_user",
+  "status_note": "B站草稿 3973028 已全部就绪（视频已上传、标题/分区/创作声明/8标签/474字简介逐字核验、话题1346285已选、合集9248439已选、双比例封面已分别上传并回读核验 4:3=aab3fbe2(1600x1200)、16:9=fe08bd1e(1920x1080)，存草稿返回 code=0）；点“立即投稿”3次均停在B站GeeTest人机验证（面板未打开：hidden+viewport 0x0），add/v3 未发出、暂无 BV。抖音/YouTube 尚未上传。已登记飞书 NeedsUser 提醒。",
+  "updated_at": "2026-10-11T07:58:00+08:00",
   "human_review": {
     "status": "approved",
     "approved_by": "用户（飞刀班长本人）",

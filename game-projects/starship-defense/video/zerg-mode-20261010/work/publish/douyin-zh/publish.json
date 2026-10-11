@@ -67,10 +67,13 @@
   },
   "technical_preparation_complete": true,
   "ready_to_upload": true,
-  "blocking_issues": [],
+  "blocking_issues": [
+    "与B站同一阻塞：内置浏览器面板未打开时页面隐藏、视口 0x0，上传与发布确认所需的真实指针事件不投递；本期尚未上传"
+  ],
   "unverified_fields": [
     "抖音投稿页实际封面入口（横版/竖版哪个必填）与话题选择器，上传前重新核对",
     "抖音是否要求 AI 生成内容声明勾选，按当期入口如实选择"
   ],
-  "status": "approved_for_upload"
+  "status": "approved_for_upload",
+  "upload_state": "ready_not_uploaded"
 }
