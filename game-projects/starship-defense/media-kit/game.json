@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-feedback-v0.34.1",
+  "current_version": "web-zerg-v0.35.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -20,7 +20,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-fps-rules-v0.34.0/handoff.json",
+  "qa": "releases/web-zerg-v0.35.0/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -171,7 +171,7 @@
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-zerg-corpse-spinfix-v0.33.3/handoff.json",
+  "handoff": "releases/web-zerg-v0.35.0/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -804,6 +804,13 @@
       "classification": "routine",
       "handoff": "releases/web-camera-response-v0.31.2/handoff.json",
       "summary": "视角响应与触屏空白区域修复"
+    },
+    {
+      "version": "web-zerg-v0.35.0",
+      "base_version": "web-feedback-v0.34.1",
+      "classification": "routine",
+      "handoff": "releases/web-zerg-v0.35.0/handoff.json",
+      "summary": "虫族模式重做为三段攻城：哨站、城门、核心；简报与三档难度、虫群指挥、地穴、进化、炮击预警、评级战绩"
     }
   ],
   "comment_feedback_fix": {
@@ -1236,5 +1243,44 @@
       "修复西侧跳上洞顶后穿透坠落",
       "主战役及房车无限手雷增加3秒冷却"
     ]
+  },
+  "zerg_mode": {
+    "version": "web-zerg-v0.35.0",
+    "entry": "虫族模式 · 攻陷人类要塞",
+    "module": "public/html/game/starship-defense/zerg-mode.js",
+    "single_player": true,
+    "phases": [
+      "拔除三处哨站",
+      "攻破城门",
+      "摧毁基地核心"
+    ],
+    "difficulties": [
+      "easy",
+      "normal",
+      "hard"
+    ],
+    "evolutions": 6,
+    "swarm_cap": 28,
+    "record_keys": [
+      "chongchao-zerg-best-v2",
+      "chongchao-zerg-difficulty-v1"
+    ],
+    "record": "releases/web-zerg-v0.35.0/handoff.json",
+    "physical_phone_test": false
+  },
+  "mode_rework_plan": {
+    "requested_at": "2026-10-11",
+    "instruction": "四个实验模式逐个重做，一次做一个",
+    "order": [
+      "zerg",
+      "rv",
+      "resistance",
+      "conquest"
+    ],
+    "done": [
+      "zerg"
+    ],
+    "next": "rv",
+    "reason": "虫族刚发片且最薄先做；房车整体最粗糙且无视频绑定排第二；抗战、战地完成度最高且各有视频在制作/发布，放最后"
   }
 }

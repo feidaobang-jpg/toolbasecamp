@@ -1048,6 +1048,7 @@ function updSmartGate(dt){
 function damageGate(d){
   if(Game.testMode)return;
   if(gate.open||gate.dead)return;
+  if(zergOn()&&zergMode.shielded()){zergMode.shieldHit();return;}
   gate.hp-=d;updHPBar(gate.bar,gate.hp/gate.maxHp);
   if(gate.hp<=0){
     gate.hp=0;gate.dead=true;AudioSys.sfx('boom');
@@ -1422,7 +1423,7 @@ function killMonster(mo){
     dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'gold',Math.round(mo.gold*.6));
     dropPickup(p.clone().add(new THREE.Vector3(rand(-1.5,1.5),0,rand(-1.5,1.5))),'hp',40);
   }
-  if(!mo.rvZombie&&Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
+  if(!mo.rvZombie&&!zergOn()&&Math.random()<(mo.kind==='mob'?(mo.elite?1:.12):.9))dropPickup(p.clone().add(new THREE.Vector3(rand(-1,1),0,rand(-1,1))),'hp',25);
   if(mo.kind!=='mob'&&mo.kind!=='queen')dropPickup(p.clone().add(new THREE.Vector3(rand(-2,2),0,rand(-2,2))),'gold',mo.gold);
   Game.score+=mo.kind==='mob'?10:(mo.kind==='miniboss'?150:mo.kind==='queen'?2000:500);
   if(!visuals.death(mo.mesh))scene.remove(mo.mesh);
@@ -1508,19 +1509,23 @@ function monsterTargets(mo){
     const d2=dist2(mo.mesh.position,pos);
     if(d2<bd2){bd2=d2;best={pos,obj,kind,r,d2};}
   };
-  for(const human of coopHumans.length?coopHumans:[player]){
+  // 虫族模式：母虫标记的集火目标和当前阶段目标优先于“最近的人类”。
+  const ordered=zergOn()?zergMode.focus(mo):null;
+  if(ordered)consider(ordered.pos,ordered.obj,ordered.kind,ordered.r);
+  else for(const human of coopHumans.length?coopHumans:[player]){
     if(!human.dead&&!human.inVehicle)consider(human.mesh.position,human,'player',1);
     if(human.inVehicle&&!human.inVehicle.dead)consider(human.inVehicle.mesh.position,human.inVehicle,'vehicle',2);
   }
-  for(const s of squad)if(!s.dead){if(s.vehicle)consider(s.vehicle.mesh.position,s.vehicle,'vehicle',2);else consider(s.mesh.position,s,'squad',1);}
-  if(!mo.wild){
+  if(!ordered)for(const s of squad)if(!s.dead){if(s.vehicle)consider(s.vehicle.mesh.position,s.vehicle,'vehicle',2);else consider(s.mesh.position,s,'squad',1);}
+  if(!ordered&&!mo.wild){
     for(const bd of buildings)if(!bd.dead)consider(bd.mesh.position,bd,'building',bd.radius);
-    consider(base.pos,base,'base',4);
-    if(!mo.fly&&gateBlocked())consider(gate.mesh.position,gate,'gate',6);
+    // 虫族模式：城门未破前核心有护壁，护盾未消前城门也咬不动，不让虫群白白去撞。
+    if(!zergOn()||zergMode.coreOpen())consider(base.pos,base,'base',4);
+    if(!mo.fly&&gateBlocked()&&!(zergOn()&&zergMode.shielded()))consider(gate.mesh.position,gate,'gate',6);
   }
   // Ground attackers must break the gate before reaching a courtyard/wall-top
   // target. Otherwise a closer turret traps them shooting into the ramp forever.
-  if(best&&!mo.wild&&!mo.fly&&gateBlocked()&&mo.mesh.position.z>gate.pos.z+1&&
+  if(best&&!mo.wild&&!mo.fly&&gateBlocked()&&!(zergOn()&&zergMode.shielded())&&mo.mesh.position.z>gate.pos.z+1&&
     (best.pos.z<gate.pos.z||rampartHeight(best.pos.x,best.pos.z)>=WALL_TOP-.01)){
     best={pos:gate.mesh.position,obj:gate,kind:'gate',r:6,d2:dist2(mo.mesh.position,gate.mesh.position)};
   }
@@ -1636,6 +1641,8 @@ function updMonsters(dt){
       // 远处行军加速，缩短从虫洞到基地的空档；近基地恢复原速。
       const far=!rvOn()&&!mo.wild&&!mo.home&&mo.kind!=='boss'&&Math.hypot(mo.mesh.position.x-base.pos.x,mo.mesh.position.z-base.pos.z)>120;
       moveMonster(mo,mdir,dt,far?2.2:1,mo.navWaypoint||tgt.pos);
+    }else if(tgt.kind==='escort'){
+      // 虫族模式：护卫母虫的虫群到位后原地待命
     }else if(mo.atkCd<=0){
       mo.atkCd=mo.ranged?1.6:1.0;
       if(mo.ranged&&dist>mo.radius+tgt.r+2){
@@ -1756,11 +1763,13 @@ function damageBuilding(bd,d){
     AudioSys.sfx('boom');
     scene.remove(bd.mesh);
     buildings.splice(buildings.indexOf(bd),1);
+    if(zergOn())zergMode.onKill('building',bd);
   }
 }
 function damageBase(d){
   if(Game.testMode)return;
   if(Game.state==='over')return;
+  if(zergOn()&&!zergMode.coreOpen())return; // 城门未破前核心有护壁
   base.hp-=d;updHPBar(base.bar,base.hp/base.maxHp);
   if(zergOn()){if(base.hp<=0){base.hp=0;zergMode.victory();}return;}
   if(!(Game.baseAlarm>0)){showMsg('⚠ 基地正在受袭！耐久归零即失败，立即回防',3);AudioSys.sfx('wave');}
@@ -2193,7 +2202,8 @@ function damageSquad(s,d){
     recordBattleLoss('squadLosses');
     s.dead=true;spawnParticles(s.mesh.position.clone().add(new THREE.Vector3(0,1,0)),0xff6666,8,5,.5);
     visuals.release(s.mesh);scene.remove(s.mesh);squad.splice(squad.indexOf(s),1);
-    showMsg('🚑 一名队友重伤撤离，下一关归队',1.6);
+    if(zergOn())zergMode.onKill('squad',s);
+    else showMsg('🚑 一名队友重伤撤离，下一关归队',1.6);
   }
 }
 const SQUAD_ORDERS={follow:'跟随我',defend:'守基地'};
@@ -3649,6 +3659,7 @@ function togglePause(){
 // P / Esc / 手机暂停键：任何游玩状态都立即响应；面板打开时先关面板再暂停
 function pauseKey(fromEsc=false){
   if(!$('confirmPanel').classList.contains('hidden'))return;
+  if(zergMode&&zergMode.frozen)return; // 进化三选一必须先选完
   if(vsOn()&&Game.state==='over')return;
   if(vsOn()&&vsUI.open&&!panelOpen&&!(fromEsc&&place.kind)){versusClosePanel();return;}
   if(fromEsc&&place.kind&&!panelOpen){cancelPlacement();return;}
@@ -3884,7 +3895,7 @@ function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'de
 $('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
 stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
-Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&$('confirmPanel').classList.contains('hidden');
+Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!(zergMode&&zergMode.frozen)&&$('confirmPanel').classList.contains('hidden');
 Input.onPause=pauseKey;
 Input.onTouchDetected=()=>{if(deviceMode==='auto')setTouchMode(true);};
 let layoutPreviousTouch=isTouch;
@@ -3910,7 +3921,7 @@ for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>s
 /* ================= 纯键盘界面导航 =================
    最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
-const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','menuOver','menuPause','vsMenu','menuMain'];
+const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
 function navRoot(){
   // The modal owns its native text fields and Tab/Escape handling.
@@ -3925,6 +3936,7 @@ function navDefault(root){
   const pick=root.id==='menuMain'?(hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart'))
     :root.id==='menuPause'?$('btnResume'):root.id==='menuOver'?$('btnRetry'):root.id==='confirmPanel'?$('confirmCancel')
     :root.id==='vsResult'?$('vsRematch'):root.id==='vsMenu'?root.querySelector('[data-vs-ai="normal"]')
+    :root.id==='zergMenu'?$('zergStart'):root.id==='zergResult'?$('zergAgain')
     :root.querySelector('.shopItem,.saveSlot button,select')||items.find(el=>!el.classList.contains('closeX'));
   return pick&&items.includes(pick)?pick:items[0];
 }
@@ -3976,6 +3988,9 @@ window.addEventListener('keydown',e=>{
     else if(root.id==='warResult')$('warResultBack').click();
     else if(root.id==='rvMenu')$('rvBack').click();
     else if(root.id==='rvResult')$('rvResultBack').click();
+    else if(root.id==='zergMenu')$('zergBack').click();
+    else if(root.id==='zergResult')$('zergResultBack').click();
+    else if(root.id==='zergEvolve'){}
     else if(root.id==='vsPanel')versusClosePanel();
     else if(root.id==='menuPause')togglePause();
     else if(!['menuMain','menuOver'].includes(root.id))closePanels();
@@ -4026,7 +4041,7 @@ function loop(){
     if(Input.pop('O')){cancelPlacement(true);openShop();}
     else if(Input.pop('L'))openBuild();
   }else if(panelOpen&&(Input.pop('O')||Input.pop('L'))){closePanels();}
-  const playing=(Game.state==='prep'||Game.state==='battle')&&!panelOpen;
+  const playing=(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!(zergMode&&zergMode.frozen);
   if(coopDriver?.config&&!coopDriver.connection.host){
     for(const [key,name] of [['K','jump'],['U','grenade'],['I','interact'],['H','heal']])if(Input.pop(key))coopPendingEdges.push(name);
     if(playing){if(vsOn())syncBattlefieldView();updLook(dt);if(Input.pop('C'))cycleCamView();if(vsOn())versusPanelInput();for(let n=1;n<=9;n++)if(Input.pop('N'+n)&&Game.weapons[n-1])selectWeapon(Game.weapons[n-1]);if(Input.pop('X'))cycleWeapon(1);placementInput();updPlacement();updCamera(dt);updSun(camState.target);updHUD(dt);AudioSys.bgm(dt,Game.state==='battle');}
@@ -4178,10 +4193,22 @@ resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get play
   faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
   prepare(){if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
 });
-zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,camera,player,base,gate,buildings,squad,vehicles,
-  monsters:()=>monsters,MOUTHS,CHAPTERS,spawnMonster,moveMonster,damageSquad,damageVehicle,damageBuilding,damageGate,damageBase,
+let zergView=null;
+zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,scene,camera,player,base,gate,buildings,squad,vehicles,BUILDINGS,
+  monsters:()=>monsters,MOUTHS,CHAPTERS,spawnMonster,moveMonster,damageMonster,damageSquad,damageVehicle,damageBuilding,damageGate,damageBase,
   fireBullet,groundY,flyHeight,visuals,showMsg,showHint,spawnParticles,placeBuilding,spawnSquad,squadGear,clearEntities,updHPBar,baseMaxHp,
-  isTouch:()=>isTouch,getCamYaw:()=>camYaw,camForward:v=>camForward(v),bumpRun:()=>{runGeneration++;}});
+  isTouch:()=>isTouch,getCamYaw:()=>camYaw,getCamMode:()=>camMode,camForward:v=>camForward(v),bumpRun:()=>{runGeneration++;},
+  keyLabel:action=>keyBindings.label(action),cycleView:()=>cycleCamView(),
+  setLook(yaw,pitch=0){camYaw=yaw;camPitch=pitch;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
+  // 虫族开局用高位跟随看清战场；只改本局镜头，不写入玩家保存的人称偏好，退出时还原。
+  enterView(){zergView={camMode,camView,saved:null};try{zergView.saved=localStorage.getItem('chongchao-person');}catch(_e){}camMode='third';camView=1;camPitch=0;camState.init=false;syncViewLabels();},
+  leaveView(){
+    if(!zergView)return;
+    camMode=zergView.camMode;camView=zergView.camView;camPitch=0;camState.init=false;
+    // 局内按 C 切人称会写入偏好；退出时把战役原来的偏好原样放回去。
+    try{if(zergView.saved===null)localStorage.removeItem('chongchao-person');else localStorage.setItem('chongchao-person',zergView.saved);}catch(_e){}
+    zergView=null;syncViewLabels();
+  }});
 const _origNewGame=newGame;
 newGame=function(t){if(zergOn())zergMode.stop();player.mesh.visible=true;_origNewGame(t);};
 const _origLoadGame=loadGame;

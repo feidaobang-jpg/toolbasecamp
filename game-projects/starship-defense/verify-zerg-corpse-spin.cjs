@@ -7,7 +7,7 @@ const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-run
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const ROOT=path.join(__dirname,'..','..','public');
 const PORT=8903;
-const out=path.join(__dirname,'media-kit/releases/web-zerg-corpse-spinfix/qa');fs.mkdirSync(out,{recursive:true});
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-zerg-corpse-spinfix/qa');fs.mkdirSync(out,{recursive:true});
 const MIME={'.html':'text/html;charset=utf-8','.js':'text/javascript;charset=utf-8','.css':'text/css;charset=utf-8','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.jpg':'image/jpeg','.woff2':'font/woff2','.ico':'image/x-icon'};
 const server=http.createServer((req,res)=>{
   const u=decodeURIComponent(req.url.split('?')[0]);let f=path.join(ROOT,u==='/'?'index.html':u);
@@ -28,7 +28,8 @@ const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
     let ctx=await browser.newContext({viewport:{width:1280,height:720}});
     let page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.goto(url+'?qa=1');await page.waitForFunction(()=>window.__ccReady&&window.__gameQA);
-    await page.evaluate(()=>document.getElementById('btnZerg').click());
+    // 虫族模式 v2 起入口先进简报，再点「开始进攻」；旧版线上页面没有这个按钮，点入口即开局。
+    await page.evaluate(()=>{document.getElementById('btnZerg').click();const go=document.getElementById('zergStart');if(go)go.click();});
     await page.waitForFunction(()=>__gameQA.zergOn()&&__gameQA.Game.state==='battle');
     const born=await page.evaluate(()=>{const mo=__gameQA.zerg.bug;if(!mo)return null;window.__qaMesh=mo.mesh;return {inScene:!!mo.mesh.parent,hp:mo.hp};});
     assert.ok(born&&born.inScene,'母虫出生后网格应在场景内');
