@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "episode": "zerg-mode-20261010",
-  "updated_at": "2026-10-11T11:05:00+08:00",
+  "updated_at": "2026-10-11T20:42:25.028075+08:00",
   "platforms": {
     "bilibili": {
       "platform": "bilibili",
@@ -78,12 +78,9 @@
         "stopped_reason": "同一阻塞点连续 3 次结果一致，按技能规则不再循环重试"
       },
       "blocker": {
-        "kind": "risk_captcha_and_hidden_surface",
-        "detail": "B站投稿接口在 gaia 风控之后要求 GeeTest 人机验证（页面存在 window.captchaInstance / initGeetest4 与 risk-captcha-adapt-pc 容器）。Qoder 内置浏览器面板未打开时页面 visibilityState=hidden、viewport=0x0，验证码 iframe 不渲染且不接收真实指针事件，无法由 AI 完成；绕过人机验证不属于授权范围",
-        "already_unblocked_today": "本轮页面已能加载并完成表单、文件上传、封面双比例与话题/合集选择（此前这些全部受阻）；剩余卡点只有人机验证",
-        "needed_from_user": "打开 Qoder 内置浏览器面板（或直接在自己浏览器打开 resume_url 的草稿），点“立即投稿”，如出现滑块/人机验证就完成一次；随后把 BV 回告或回复继续由我核验并做发布后闭环",
-        "not_done": "未提交投稿、未获得 BV、未做发布后闭环（Toy 绑定、置顶评论、推流申请表、流量券、旧视频维护）",
-        "feishu_event_id": "zerg-mode-20261010-bili-captcha-20261011"
+        "status": "resolved",
+        "resolved_at": "2026-10-11T12:45:16.3330100Z",
+        "note": "稿件已公开，腾讯文档当前可编辑，发布后收尾已完成。"
       },
       "traffic_reward_observed": {
         "available_exposure": "0",
@@ -170,38 +167,23 @@
         "screenshot_note": "内置浏览器面板处于隐藏状态时无法取得截图；以页面读数登记。"
       },
       "toy_push_application": {
-        "status": "blocked_docs_guest_mode_material_prepared",
-        "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "status": "submitted_pending_operator_feedback",
+        "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
         "sheet": "【进行中】日常推流",
-        "target_row": 363,
-        "last_existing_row": 362,
-        "dedupe": "表内查找“BV14hpL62EZ5”返回“无结果”，本期未登记过",
-        "row_is_empty": "A363:F363 均为空（用名称框逐格读公式栏核验）",
-        "planned_values": {
-          "A": "飞刀班长",
-          "B": "https://www.bilibili.com/video/BV14hpL62EZ5/",
-          "C": "是",
-          "D": "是",
-          "E": "否",
-          "F": "（留空，由运营填写）"
-        },
-        "value_basis": {
-          "C": "公开 tag 列表含 bilibilitoy 与指定话题“哔哩哔哩Toy创意挑战”",
-          "D": "置顶评论含 Toy 试玩链接，已匿名核验",
-          "E": "本期口播与尾卡只引导网站试玩入口，片内未宣传 Toy 平台（简介与置顶含 Toy 链接不计入“视频中宣传”）"
-        },
-        "blocker": "docs.qq.com 本机浏览器为游客态（document.body.className 含 skeleton-guest-mode）：名称框导航与查找面板可用，但剪贴板 paste 事件不被消费、trusted 键入不进入单元格编辑（.cell-editor-container 为空、公式栏不变），无法写入与云端保存",
-        "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
-        "cloud_save_verified": false,
-        "feishu_event": {
-          "status": "sent",
-          "action": "LoginRequired",
-          "source": "Qoder",
-          "task_id": "zerg-mode-20261010-publish",
-          "event_id": "tencent-docs-push-application-363",
-          "sent_at": "2026-10-11T11:10:00+08:00",
-          "ask": "登录本机腾讯文档后由我补填第363行，或本人直接填写"
-        }
+        "row": 367,
+        "fields": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV14hpL62EZ5/",
+          "是",
+          "是",
+          "否",
+          ""
+        ],
+        "cloud_reload_verified_at": "2026-10-11T20:28:42.798997+08:00",
+        "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+        "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。",
+        "cloud_save_verified": true,
+        "previous_event_resolved": "zerg-mode-20261010-publish / tencent-docs-push-application-363"
       },
       "previous_video_maintenance": {
         "bvid": "BV1xdpx63ETu",
@@ -273,13 +255,56 @@
           }
         ]
       },
-      "toy_package_status_note": "简介写“Toy 包已提交审核中”仍然成立：v0.33.3 包 51e53be1… 于 2026-10-10T23:43:09+08 提交并记为 auditing；其后的合并包 da83017e…（源提交 08028efe，与线上一致）补提被 code=307008 拒绝，待本人在 Toy 创作者后台确认，见项目记忆 toy-submit-307008-blocked。",
-      "next": "只剩推流申请表第 363 行待腾讯文档登录态填写；其余闭环已公开核验。"
+      "toy_package_status_note": "2026-10-11晚已核验Toy作品PUBLIC/published、公开v25023且可玩；本期旧说明已纠正。",
+      "next": "发布收尾完成；推流申请第367行已填并核验，等待运营反馈，不重复填写。",
+      "historical_blocker": {
+        "kind": "risk_captcha_and_hidden_surface",
+        "detail": "B站投稿接口在 gaia 风控之后要求 GeeTest 人机验证（页面存在 window.captchaInstance / initGeetest4 与 risk-captcha-adapt-pc 容器）。Qoder 内置浏览器面板未打开时页面 visibilityState=hidden、viewport=0x0，验证码 iframe 不渲染且不接收真实指针事件，无法由 AI 完成；绕过人机验证不属于授权范围",
+        "already_unblocked_today": "本轮页面已能加载并完成表单、文件上传、封面双比例与话题/合集选择（此前这些全部受阻）；剩余卡点只有人机验证",
+        "needed_from_user": "打开 Qoder 内置浏览器面板（或直接在自己浏览器打开 resume_url 的草稿），点“立即投稿”，如出现滑块/人机验证就完成一次；随后把 BV 回告或回复继续由我核验并做发布后闭环",
+        "not_done": "未提交投稿、未获得 BV、未做发布后闭环（Toy 绑定、置顶评论、推流申请表、流量券、旧视频维护）",
+        "feishu_event_id": "zerg-mode-20261010-bili-captcha-20261011"
+      },
+      "toy_push_application_previous": {
+        "status": "blocked_docs_guest_mode_material_prepared",
+        "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "sheet": "【进行中】日常推流",
+        "target_row": 363,
+        "last_existing_row": 362,
+        "dedupe": "表内查找“BV14hpL62EZ5”返回“无结果”，本期未登记过",
+        "row_is_empty": "A363:F363 均为空（用名称框逐格读公式栏核验）",
+        "planned_values": {
+          "A": "飞刀班长",
+          "B": "https://www.bilibili.com/video/BV14hpL62EZ5/",
+          "C": "是",
+          "D": "是",
+          "E": "否",
+          "F": "（留空，由运营填写）"
+        },
+        "value_basis": {
+          "C": "公开 tag 列表含 bilibilitoy 与指定话题“哔哩哔哩Toy创意挑战”",
+          "D": "置顶评论含 Toy 试玩链接，已匿名核验",
+          "E": "本期口播与尾卡只引导网站试玩入口，片内未宣传 Toy 平台（简介与置顶含 Toy 链接不计入“视频中宣传”）"
+        },
+        "blocker": "docs.qq.com 本机浏览器为游客态（document.body.className 含 skeleton-guest-mode）：名称框导航与查找面板可用，但剪贴板 paste 事件不被消费、trusted 键入不进入单元格编辑（.cell-editor-container 为空、公式栏不变），无法写入与云端保存",
+        "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
+        "cloud_save_verified": false,
+        "feishu_event": {
+          "status": "sent",
+          "action": "LoginRequired",
+          "source": "Qoder",
+          "task_id": "zerg-mode-20261010-publish",
+          "event_id": "tencent-docs-push-application-363",
+          "sent_at": "2026-10-11T11:10:00+08:00",
+          "ask": "登录本机腾讯文档后由我补填第363行，或本人直接填写"
+        }
+      },
+      "toy_package_status_previous": "简介写“Toy 包已提交审核中”仍然成立：v0.33.3 包 51e53be1… 于 2026-10-10T23:43:09+08 提交并记为 auditing；其后的合并包 da83017e…（源提交 08028efe，与线上一致）补提被 code=307008 拒绝，待本人在 Toy 创作者后台确认，见项目记忆 toy-submit-307008-blocked。"
     }
   },
   "douyin": {
     "platform": "douyin",
-    "state": "published_in_review",
+    "state": "published_public_verified",
     "note": "更正：本文件此前记录为 blocked_not_logged_in，判定错误。创作者中心实际已登录（账号 飞刀帮主 / 抖音号 84261875244），先前误判来自 ERR_ABORTED 导航与 body 为 null 的空白页；本期已直接发布。",
     "account": {
       "name": "飞刀帮主",
@@ -327,14 +352,27 @@
       "collection": "未加入合集"
     },
     "verification": {
-      "creator_center_list": "内容管理首条为该作品，时长 02:05，发布时间 2026年10月11日 10:20，状态“审核中”，作品总数由 248 增至 249",
-      "work_list_api": "aweme_id 7695229555732139299，desc 与 approved 文案一致（含 5 个话题），status.reviewed=false、self_see=true 即审核中未公开",
-      "public_page": "curl https://www.douyin.com/video/7695229555732139299 返回 200，但页面尚未出现“虫族模式”文案，说明作品仍未公开展示",
-      "not_verified": "公开播放页正文/封面/声明尚未在过审后逐项目视核验；审核通过后需再次核验并补登记"
+      "creator_center_list": "2026-10-11晚复查状态为已发布。",
+      "public_page": "公开页标题、AI声明与125.2秒视频正常播放，readyState=4，截图已保存。",
+      "not_verified": null,
+      "post_publish_verification_20261011": {
+        "creator_status": "已发布",
+        "public_title_and_description": "verified",
+        "ai_declaration": "verified",
+        "duration_seconds": 125.199675,
+        "ready_state": 4,
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\video-takeover-20261011\\zerg-douyin-public.png"
+      },
+      "historical_submission_check": {
+        "creator_center_list": "内容管理首条为该作品，时长 02:05，发布时间 2026年10月11日 10:20，状态“审核中”，作品总数由 248 增至 249",
+        "work_list_api": "aweme_id 7695229555732139299，desc 与 approved 文案一致（含 5 个话题），status.reviewed=false、self_see=true 即审核中未公开"
+      }
     },
-    "next": "过审转“已发布”后核验 https://www.douyin.com/video/7695229555732139299 的标题、话题、AI 声明与双封面；把本条 verification.public_page 更新为已过审。",
+    "next": "本期公开核验已完成，无需重复上传或继续等待旧审核状态。",
     "feishu_event_resolved": "zerg-mode-20261010-douyin-login-20261011（该登录待办系误判，已关闭）",
-    "timestamp": "2026-10-11T10:35:00+08:00"
+    "timestamp": "2026-10-11T10:35:00+08:00",
+    "status": "published",
+    "public_verified_at": "2026-10-11T20:42:25.028075+08:00"
   },
   "youtube": {
     "platform": "youtube",
@@ -352,7 +390,7 @@
     "upload_method": "本地 127.0.0.1 静态服务 fetch→File→DataTransfer 注入 ytcp-uploads-dialog input[type=file] 并派发 change（面板未打开时选择文件按钮不在可访问性树，真实指针点击无效）",
     "upload_result": "已保存为私享视频（YouTube 创建草稿并返回 video-id）",
     "human_review_note": "沿用审片通过的 clean master 哈希，未换文件",
-    "next": "按发布策略：YouTube 公开已核验；X 仍按“仅官方免费能力”条件跳过，B站与抖音等待用户处理验证码/登录",
+    "next": "已公开，中英文字幕及英文元信息已完成；X按用户拒绝付费自动化要求跳过。",
     "timestamp": "2026-10-11T10:05:00+08:00",
     "public_url": "https://www.youtube.com/watch?v=TZWvJqbMIJI",
     "published_at": "2026-10-11T10:05:00+08:00",
@@ -418,5 +456,48 @@
     "state": "not_applicable_no_official_capability",
     "reason": "YouTube 本期已公开（TZWvJqbMIJI），但本机没有 X 登录会话或官方免费发布能力可用，且历史各期也未建立 X 台账；按规则跳过，不创建定时/后台任务",
     "timestamp": "2026-10-11T10:08:00+08:00"
+  },
+  "toy_push_application": {
+    "status": "submitted_pending_operator_feedback",
+    "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "sheet": "【进行中】日常推流",
+    "row": 367,
+    "fields": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV14hpL62EZ5/",
+      "是",
+      "是",
+      "否",
+      ""
+    ],
+    "cloud_reload_verified_at": "2026-10-11T20:28:42.798997+08:00",
+    "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+    "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。",
+    "cloud_save_verified": true,
+    "previous_event_resolved": "zerg-mode-20261010-publish / tencent-docs-push-application-363"
+  },
+  "post_publish_audit_20261011": {
+    "toy_binding": "verified",
+    "formal_collection": "verified",
+    "toy_push_application": {
+      "status": "submitted_pending_operator_feedback",
+      "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+      "sheet": "【进行中】日常推流",
+      "row": 367,
+      "fields": [
+        "飞刀班长",
+        "https://www.bilibili.com/video/BV14hpL62EZ5/",
+        "是",
+        "是",
+        "否",
+        ""
+      ],
+      "cloud_reload_verified_at": "2026-10-11T20:28:42.798997+08:00",
+      "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+      "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。"
+    },
+    "toy_status_correction": "public_description_verified",
+    "newest_episode": "BV1Lfp76KEDd",
+    "douyin": "published_public_verified"
   }
 }

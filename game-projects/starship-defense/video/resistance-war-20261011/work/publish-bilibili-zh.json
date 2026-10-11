@@ -28,7 +28,8 @@
     "douyin-zh": {
       "video": "gameplay-zh-final.mp4",
       "covers": [
-        "cover-space-16x9.png"
+        "../bilibili-zh/cover-home-4x3.png",
+        "cover-portrait-3x4.png"
       ],
       "submission": "投稿文案.txt",
       "subtitles": []
@@ -45,7 +46,20 @@
       ]
     }
   },
-  "review_status": "待用户人工审片",
-  "publish_status": "未发布",
-  "platform": "bilibili-zh"
+  "review_status": "用户已批准发布",
+  "publish_status": "B站、抖音与YouTube均已公开核验；发布收尾已完成",
+  "platform": "bilibili-zh",
+  "human_review": {
+    "status": "approved",
+    "statement": "发布",
+    "accepted_at": "2026-10-11T08:54:16.437Z",
+    "source": "Qianwen original user message, seq 2394",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ]
+  },
+  "publication_result": "publication-result.json",
+  "updated_at": "2026-10-11T12:42:25.028075+00:00"
 }

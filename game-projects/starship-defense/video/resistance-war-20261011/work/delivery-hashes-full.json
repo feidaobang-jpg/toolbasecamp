@@ -1,0 +1,19 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "bilibili-zh/cover-home-4x3.png": "e95517952427043e87c386e9cbbda580ea964493f2fadd46df64f163db3f34d9",
+    "bilibili-zh/cover-space-16x9.png": "37a8b5177e112fc26d91b6c0b4b975de286c188ec4fb7a5dbeb0820700804cbe",
+    "bilibili-zh/gameplay-zh-final.mp4": "3a1b4520ce54c5d6a46bdf2b9f223c1f67f54da92a3cea4e1a5e21ec7f511710",
+    "bilibili-zh/投稿文案.txt": "8a458c25f684b9c879905faf0d18ac652a905984baf2a41a4de0fb7919b48504",
+    "douyin-zh/cover-portrait-3x4.png": "7ede44413737dee314ab798e45dcf2697b9a8244d024fb86f11e48305a2eae2b",
+    "douyin-zh/cover-space-16x9.png": "37a8b5177e112fc26d91b6c0b4b975de286c188ec4fb7a5dbeb0820700804cbe",
+    "douyin-zh/gameplay-zh-final.mp4": "3a1b4520ce54c5d6a46bdf2b9f223c1f67f54da92a3cea4e1a5e21ec7f511710",
+    "douyin-zh/投稿文案.txt": "b8d7c955042c3799526b8d2fd2e877a0232247e74bc347a0699e9c0d998319fe",
+    "youtube-zh/captions-en.srt": "87ccef6c40dc6fc607ef9f232f43f7b762f677cab577b56d53ad8823b4b6c0bc",
+    "youtube-zh/captions-zh.srt": "02fc881e350b0f3dcdcb932ace1de4efd4b3c147ca6abceeb68e534c64002110",
+    "youtube-zh/cover-space-16x9.png": "37a8b5177e112fc26d91b6c0b4b975de286c188ec4fb7a5dbeb0820700804cbe",
+    "youtube-zh/gameplay-youtube-final.mp4": "e5e3e57d10c1583d4e6c790d65d6c412dc16355e3d792af8482733b98bb35779",
+    "youtube-zh/投稿文案.txt": "5076bed20c844c34974227bf1946c4e594adf651498e892bf6b56621cda3622f"
+  },
+  "verified_at": "2026-10-11T12:42:25.028075+00:00"
+}

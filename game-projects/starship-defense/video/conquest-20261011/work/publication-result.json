@@ -58,7 +58,24 @@
         "status": "approved",
         "user_statement": "发布",
         "approved_at": "2026-10-10T23:11:00.747760+00:00",
-        "reviewed_media_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef"
+        "reviewed_media_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+        "approved_variants": [
+          "bilibili-zh",
+          "douyin-zh",
+          "youtube-zh"
+        ],
+        "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
+        "reviewed_media_required": {
+          "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+          "douyin-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+          "youtube-zh": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4"
+        },
+        "reviewed_subtitles_required": {
+          "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
+          "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
+        },
+        "approval_source": "direct user message in this chat",
+        "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
       },
       "title": "只剩3票险胜！虫潮围城的据点争夺实战",
       "covers": "separate_home_4x3_and_space_16x9_uploaded_sync_disabled",
@@ -79,17 +96,9 @@
       "collection_selected": "9248439 虫潮围城开发实录",
       "submission_ui": "稿件投递成功",
       "recorded_version_note": "视频为已审自动瞄准实况，简介改为当前第一人称手动瞄准并说明录制版本差异",
-      "next_actions": [
-        "verify public playback and description",
-        "Toy bind/readback",
-        "comment and pin",
-        "traffic reward",
-        "QQ docs application",
-        "previous main video guide"
-      ],
+      "next_actions": [],
       "platform_id": "BV1KFpJ6sEEK",
       "public_verified_at": "2026-10-11T08:45:31.215699+00:00",
-      "description_sha256": "86ace77359c581a40acf4718eb2e6a2f7715b435eb04a88d2b907084c9e8da66",
       "description_record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
       "topic_id": 1346285,
       "season_id": 9248439,
@@ -102,11 +111,13 @@
         "note": "Toy clean package now published and public verified after permission recovery; binding already verified, do not repeat."
       },
       "pinned_comment": {
-        "rpid": 316747092353,
         "status": "public_verified_pinned",
-        "verified_at": "2026-10-11T08:45:31.215699+00:00",
+        "verified_at": "2026-10-11T12:43:34.529530+00:00",
+        "rpid": null,
+        "note": "新置顶已公开核验；原评论保留未删除，新评论ID未从UI读到，不使用旧ID冒充。",
+        "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/conquest-pin-updated.png",
         "toy_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-        "note": "首条多段输入只保存首段；完整单段链接评论另行发布并置顶，保留原游戏讨论评论。"
+        "latest_video": "BV1Lfp76KEDd"
       },
       "auto_profile_dynamic": "public_verified",
       "free_traffic_reward": {
@@ -124,18 +135,21 @@
         "checked_at": "2026-10-11T08:45:31.215699+00:00"
       },
       "toy_promotion_form": {
-        "status": "pending_authorized_account_writer",
-        "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
-        "dedupe_result": "BV1KFpJ6sEEK无结果",
-        "reason": "Toy入口已恢复，当前B站写锁属于用户确认的Qianwen抗战视频发布；保留并待其结束后查重填表。",
-        "planned_columns": {
-          "A": "飞刀班长",
-          "B": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
-          "C": "是",
-          "D": "是（置顶链接已核验，入口暂不可玩）",
-          "E": "否"
-        },
-        "F": "留空，未获得运营反馈"
+        "status": "submitted_pending_operator_feedback",
+        "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "sheet": "【进行中】日常推流",
+        "row": 368,
+        "fields": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+          "是",
+          "是",
+          "否",
+          ""
+        ],
+        "cloud_reload_verified_at": "2026-10-11T12:28:42.798997+00:00",
+        "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+        "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。"
       },
       "previous_main_promo": {
         "bvid": "BV14hpL62EZ5",
@@ -143,7 +157,53 @@
         "new_guide_bvid": "BV1KFpJ6sEEK"
       },
       "pending_steps": [],
-      "last_check_result": "公开视频、合集、实际绑定列表、公开置顶评论、话题标签、自动动态均核验成功；Toy推流表以入口恢复为前提。"
+      "last_check_result": "Toy已恢复可玩；简介与置顶已纠正并引导抗战新片；合集、绑定、话题、动态核验；推流表第368行已云端刷新核验，运营反馈尚为空。",
+      "episode_id": "conquest-20261011",
+      "variant_id": "bilibili-zh",
+      "task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01",
+      "takeover_task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+      "public_url": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+      "toy_id": "38678478981120",
+      "toy_binding_status": "bound_verified",
+      "followup_status": "completed_pending_operator_feedback",
+      "toy_push_application": {
+        "status": "submitted_pending_operator_feedback",
+        "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "sheet": "【进行中】日常推流",
+        "row": 368,
+        "fields": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+          "是",
+          "是",
+          "否",
+          ""
+        ],
+        "cloud_reload_verified_at": "2026-10-11T12:28:42.798997+00:00",
+        "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+        "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。"
+      },
+      "toy_binding": {
+        "toy_id": "38678478981120",
+        "status": "verified",
+        "verified_at": "2026-10-11T12:28:42.798997+00:00"
+      },
+      "last_observed_at": "2026-10-11T12:28:42.798997+00:00",
+      "toy_status_correction": {
+        "description": "public_verified",
+        "verified_at": "2026-10-11T12:28:42.798997+00:00",
+        "pin": "updated_to_restored_status_and_latest_video"
+      },
+      "pinned_comment_previous": {
+        "rpid": 316747092353,
+        "status": "public_verified_pinned",
+        "verified_at": "2026-10-11T08:45:31.215699+00:00",
+        "toy_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "note": "首条多段输入只保存首段；完整单段链接评论另行发布并置顶，保留原游戏讨论评论。"
+      },
+      "previous_pinned_comment_rpid": 316747092353,
+      "previous_description_sha256": "86ace77359c581a40acf4718eb2e6a2f7715b435eb04a88d2b907084c9e8da66",
+      "description_latest_verified_at": "2026-10-11T12:43:34.529530+00:00"
     },
     "douyin": {
       "episode_id": "conquest-20261011",
@@ -184,7 +244,7 @@
       "platform_auto_summary_note": "平台自动章节摘要将工程兵误写为攻城兵；本人已发布标题、简介和成片仍为工程兵，未主动添加此摘要。"
     }
   },
-  "updated_at": "2026-10-11T08:45:31.215699+00:00",
+  "updated_at": "2026-10-11T12:43:34.529530+00:00",
   "existing_video_description_policy": {
     "policy_date": "2026-10-11",
     "decision": "previous_main_guide_and_inaccurate_status_corrected",
@@ -227,5 +287,45 @@
     }
   ],
   "publication_status": "all_requested_videos_published",
-  "followup_status": "bilibili_restoration_pin_and_form_pending_authorized_writer"
+  "followup_status": "completed_pending_operator_feedback",
+  "toy_push_application": {
+    "status": "submitted_pending_operator_feedback",
+    "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "sheet": "【进行中】日常推流",
+    "row": 368,
+    "fields": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+      "是",
+      "是",
+      "否",
+      ""
+    ],
+    "cloud_reload_verified_at": "2026-10-11T12:28:42.798997+00:00",
+    "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+    "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。"
+  },
+  "post_publish_audit_20261011": {
+    "toy_binding": "verified",
+    "formal_collection": "verified",
+    "toy_push_application": {
+      "status": "submitted_pending_operator_feedback",
+      "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+      "sheet": "【进行中】日常推流",
+      "row": 368,
+      "fields": [
+        "飞刀班长",
+        "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+        "是",
+        "是",
+        "否",
+        ""
+      ],
+      "cloud_reload_verified_at": "2026-10-11T12:28:42.798997+00:00",
+      "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+      "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。"
+    },
+    "toy_status_correction": "public_description_verified",
+    "newest_episode": "BV1Lfp76KEDd"
+  }
 }

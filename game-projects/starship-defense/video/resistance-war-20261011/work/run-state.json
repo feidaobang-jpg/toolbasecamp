@@ -1,0 +1,58 @@
+{
+  "episode_id": "resistance-war-20261011",
+  "task_id": "01a12adb-b454-7aa3-a23f-b58ddb47dec7-work1",
+  "stage": "published_and_verified",
+  "human_review": {
+    "status": "approved",
+    "statement": "发布",
+    "accepted_at": "2026-10-11T08:54:16.437Z",
+    "source": "Qianwen original user message, seq 2394",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ]
+  },
+  "platforms": {
+    "bilibili": {
+      "status": "published",
+      "platform_id": "BV1Lfp76KEDd",
+      "public_url": "https://www.bilibili.com/video/BV1Lfp76KEDd/"
+    },
+    "youtube": {
+      "status": "published",
+      "platform_id": "BGHrB0j0TMo",
+      "public_url": "https://www.youtube.com/watch?v=BGHrB0j0TMo"
+    },
+    "douyin": {
+      "status": "published",
+      "platform_id": "7695388718374456576",
+      "public_url": "https://www.douyin.com/video/7695388718374456576"
+    }
+  },
+  "toy_push_application": {
+    "status": "submitted_pending_operator_feedback",
+    "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+    "sheet": "【进行中】日常推流",
+    "row": 369,
+    "fields": [
+      "飞刀班长",
+      "https://www.bilibili.com/video/BV1Lfp76KEDd/",
+      "是",
+      "是",
+      "否",
+      ""
+    ],
+    "cloud_reload_verified_at": "2026-10-11T12:28:42.798997+00:00",
+    "evidence": "D:/project/toolbasecamp-artifacts/video-takeover-20261011/toy-form-three-applications.png",
+    "notes": "视频成片未宣传Toy，按实填否；运营反馈空白，申请不代表推流。"
+  },
+  "x": {
+    "status": "skipped_user_no_paid_automation",
+    "youtube_id": "BGHrB0j0TMo",
+    "user_decision": "2026-10-08 用户明确：要收费吗？如果收费就不做",
+    "account_state": "C:/Users/37818/.claude/state/game-video/accounts/x-publication-access-pending-owner.json",
+    "note": "沿用已解决的付费拒绝事件，不重复催办、不购买、不通过网页脚本绕开官方API。"
+  },
+  "updated_at": "2026-10-11T12:42:25.028075+00:00"
+}

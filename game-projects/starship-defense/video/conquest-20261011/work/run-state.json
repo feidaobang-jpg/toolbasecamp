@@ -46,10 +46,10 @@
   ],
   "cover_stage": "completed",
   "render_entrypoint": "render.py",
-  "updated_at": "2026-10-11T08:45:31.215699+00:00",
-  "next_step": "等待Trae任务释放B站共用写锁，或用户确认持有任务已退出且没有B站写操作；发布授权和已审片哈希保留，随后完成B站投稿、合集、Toy绑定与适用活动/流量奖励核验。不要重新上传抖音或YouTube。",
+  "updated_at": "2026-10-11T12:43:34.529530+00:00",
+  "next_step": "本轮发布收尾已完成，推流表第368行等待运营反馈；不重复填表或投稿。",
   "publication_status": {
-    "bilibili-zh": "blocked_account_write_lock",
+    "bilibili-zh": "published",
     "douyin-zh": "published",
     "youtube-zh": "published"
   },
@@ -77,5 +77,5 @@
     "bvid": "BV1KFpJ6sEEK",
     "url": "https://www.bilibili.com/video/BV1KFpJ6sEEK/"
   },
-  "followup_status": "toy_promotion_deferred_until_entry_restored"
+  "followup_status": "completed_pending_operator_feedback"
 }
