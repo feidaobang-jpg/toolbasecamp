@@ -112,5 +112,14 @@
  "record": "releases/web-zerg-v0.36.0/handoff.json",
  "created_at": "2026-10-11T10:58:46.349527+00:00",
  "merged_mainline": "整合主线的银行塔防恢复（web-bank-restore-v0.35.0）与模式投票后重建兼容包并复验",
- "source_commit": "7121afe8"
+ "source_commit": "7121afe8",
+ "site_card_cover": {
+  "decision": "沿用",
+  "reason": "列表封面表现的是主战役守城画面；本版只重做虫族实验模式，游戏主画面、主色调和默认视角未变"
+ },
+ "worktree_kept": {
+  "path": "D:/project/worktrees/chongchao-modes-rework-20261011",
+  "branch": "claude/chongchao-modes-rework-20261011",
+  "reason": "同一任务继续逐个重做房车、抗战、战地；本机截图留在 releases/web-zerg-v0.36.0/qa/"
+ }
 }
