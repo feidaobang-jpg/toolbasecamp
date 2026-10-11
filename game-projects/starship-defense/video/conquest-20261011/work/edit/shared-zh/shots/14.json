@@ -1,0 +1,17 @@
+{
+  "index": 14,
+  "segment": "11-close",
+  "start": 94.26666666666667,
+  "end": 99.96666666666667,
+  "duration": 5.7,
+  "frames": 171,
+  "source": "capture/match-01/01-opening/raw.mp4",
+  "source_in": 54,
+  "source_out": 59.7,
+  "speed": 1,
+  "label": "主战局复盘 · 向侧翼推进",
+  "still": false,
+  "source_size": 54723103,
+  "source_mtime_ns": 1791666953488570800,
+  "encoding_schema": "bt709-limited-v2"
+}

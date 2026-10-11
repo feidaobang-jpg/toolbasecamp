@@ -1,0 +1,131 @@
+{
+  "schema_version": 2,
+  "variant_id": "douyin-zh",
+  "platform": "douyin",
+  "content_type": "真实游戏实战介绍",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "deployed-08028efe",
+  "metadata_version_label": "web-zerg-corpse-spinfix-v0.33.3（开始时资料，运行内容以现场资产哈希为准）",
+  "video_file": "../../../final/douyin-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration_seconds": 110.53333333333333,
+  "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+  "description": "这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n抢两个点就能持续扣敌方兵力票，追人也别丢了旗。\n试玩：https://www.zhengxiaohui.cn/games.html （复制到浏览器，选择虫潮围城 → 战地模式）\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html\n战地据点模式由Codex辅助开发。",
+  "tags": [
+    "虫潮围城",
+    "据点争夺",
+    "游戏开发",
+    "AI"
+  ],
+  "description_file": "../../../final/douyin-zh/投稿文案.txt",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "horizontal": {
+      "file": "../../../final/douyin-zh/cover-horizontal-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "横屏封面 16:9",
+      "sha256": "e36f0d966e2c63a1418eded2e7d8b268351456a7c0dec17814945a73c0ef0cb0"
+    },
+    "uploaded_horizontal": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "实际上传横屏4:3，自同步竖屏3:4并调整裁剪",
+      "sha256": "1481e18603f3c44dfd20cfc295cadf1a73b115974f6742ae43548cbf32e01530"
+    }
+  },
+  "cover_text": [
+    "只剩3票",
+    "抢点险胜！",
+    "杀敌更少，也能赢？"
+  ],
+  "cover_selection_source": "../../edit/covers/cover-source.json",
+  "cover_upload_mode": "custom_image_uploaded",
+  "subtitle_mode": "burned_in",
+  "subtitles": [],
+  "category": null,
+  "copyright_type": "original_self_recorded_gameplay",
+  "credits_attachment": "credits.txt",
+  "disclosures": {
+    "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload",
+    "platform_declaration": "内容由AI生成"
+  },
+  "platform_requirements_checked_at": "2026-10-11T02:15:52.630508+00:00",
+  "platform_sources": [],
+  "unverified_fields": [],
+  "technical_preparation": "pass",
+  "human_review": {
+    "status": "approved",
+    "approved_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "user_statement": "发布",
+    "approved_at": "2026-10-10T23:11:00.747760+00:00",
+    "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
+    "reviewed_media_required": {
+      "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "douyin-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "youtube-zh": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4"
+    },
+    "reviewed_subtitles_required": {
+      "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
+      "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
+    },
+    "approval_source": "direct user message in this chat",
+    "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
+  },
+  "subjective_audio_listening": "not-run",
+  "blocking_issues": [],
+  "ready_to_upload": true,
+  "publication_status": "published",
+  "publication_result": {
+    "episode_id": "conquest-20261011",
+    "variant_id": "douyin-zh",
+    "task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01",
+    "account_id": "84261875244",
+    "display_name": "飞刀帮主",
+    "status": "published",
+    "platform_id": "7695187880532135178",
+    "url": "https://www.douyin.com/video/7695187880532135178",
+    "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+    "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+    "human_review": {
+      "statement": "发布",
+      "scope": "bilibili-zh, douyin-zh, youtube-zh",
+      "confirmed_at": "2026-10-11"
+    },
+    "submitted_at_local": "2026-10-11 07:39",
+    "observed_status": "已发布；作品状态正常",
+    "public_verified": true,
+    "public_verified_at": "2026-10-11T02:15:52.630508+00:00",
+    "updated_at": "2026-10-11T02:15:52.630508+00:00",
+    "evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\douyin-published-manager.png",
+    "public_playback_evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\douyin-public-playback.png",
+    "public_video_duration_seconds": 110.549002,
+    "public_playback_observed_time_seconds": 101.845194,
+    "playback_paused_after_verification": true,
+    "ai_declaration": "内容由AI生成",
+    "cover_upload_mode": "custom_image_uploaded",
+    "uploaded_cover_file": "final/bilibili-zh/cover-home-4x3.jpg",
+    "uploaded_cover_sha256": "1481e18603f3c44dfd20cfc295cadf1a73b115974f6742ae43548cbf32e01530",
+    "cover_variants": [
+      "horizontal 4:3",
+      "vertical 3:4 with adjusted crop"
+    ],
+    "cover_detection": "通过；暂未发现封面低质问题",
+    "video_detection": "作品未见异常",
+    "platform_auto_summary_note": "平台自动章节摘要将工程兵误写为攻城兵；本人已发布标题、简介和成片仍为工程兵，未主动添加此摘要。"
+  },
+  "upload_completed": true,
+  "prepared_cover_file": "../../../final/douyin-zh/cover-horizontal-16x9.jpg"
+}

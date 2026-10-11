@@ -1,0 +1,17 @@
+{
+  "index": 2,
+  "segment": "02-map",
+  "start": 7.166666666666667,
+  "end": 15.3,
+  "duration": 8.133333333333333,
+  "frames": 244,
+  "source": "capture/match-01/01-opening/raw.mp4",
+  "source_in": 57,
+  "source_out": 65.13333333333333,
+  "speed": 1,
+  "label": "主战局 · 普通规则 · 1名玩家 + 7名电脑",
+  "still": false,
+  "source_size": 54723103,
+  "source_mtime_ns": 1791666953488570800,
+  "encoding_schema": "bt709-limited-v2"
+}

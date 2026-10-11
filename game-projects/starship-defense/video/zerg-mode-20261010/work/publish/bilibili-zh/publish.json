@@ -1,0 +1,115 @@
+{
+  "variant_id": "bilibili-zh",
+  "platform": "bilibili",
+  "content_type": "gameplay_update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "虫潮围城",
+  "game_version": "web-zerg-corpse-spinfix-v0.33.3",
+  "video_file": "../../../final/bilibili-zh/gameplay-zh-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 125.2,
+  "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
+  "description_file": "../../../final/bilibili-zh/投稿文案.txt",
+  "tags": [
+    "虫潮围城",
+    "塔防",
+    "游戏开发",
+    "AI",
+    "玩家建议",
+    "挑战模式"
+  ],
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+  "cover_files": {
+    "home_4_3": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1600,
+      "height": 1200,
+      "purpose": "首页推荐",
+      "sha256": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834"
+    },
+    "space_16_9": {
+      "file": "../../../final/bilibili-zh/cover-space-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "个人空间",
+      "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0"
+    }
+  },
+  "cover_upload_mode": "custom_image",
+  "cover_text": "我是虫族 / 网友点名 当天上线 / 城门磨破了 核心却没掉血",
+  "cover_selection_source": "run7 实机帧 capture/zerg-run7/gate-dead.png（破门瞬间）与 gate-25.png（虫群+酸液），work/make-cover.cjs 排版，无生成图",
+  "subtitle_mode": "burned_in",
+  "subtitle_files": [],
+  "disclosures": {
+    "synthetic_narration": true,
+    "ai_assisted_development": true,
+    "gameplay_is_generated_video": false
+  },
+  "credits": "虫族模式由 Qoder 开发（分支 qoder/chongchao-zerg-mode-20261010）；本期实机录制、配音与剪辑同样由 Qoder 完成",
+  "toy_context": {
+    "toy_id": "38678478981120",
+    "slug": "chongchao-qianshao",
+    "toy_public_version": "web-resistance-v0.33.0",
+    "toy_submitted_version": "web-zerg-corpse-spinfix-v0.33.3",
+    "toy_review_status": "auditing",
+    "note": "虫族模式只在网站可玩；Toy 仍在审核中，文案不得称 Toy 已上线，试玩入口只给网站"
+  },
+  "season_id": 9248439,
+  "platform_requirements_checked_at": "2026-10-11",
+  "human_review": {
+    "status": "approved",
+    "scope": "bilibili-zh / douyin-zh / youtube-zh 三版成片、封面与文案",
+    "file_hashes": {
+      "gameplay-zh-final.mp4": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+      "cover-home-4x3.jpg": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834",
+      "cover-space-16x9.jpg": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0",
+      "投稿文案.txt": "e7a10c46481a0651926b6f4e7b1d993b7fceccee37a473e56ff89bc9d55e5aa2"
+    },
+    "approved_by": "用户（飞刀班长本人）",
+    "approved_at": "2026-10-11T06:55:00+08:00",
+    "evidence": "用户在审片包交付后回复原话：“发布”——视为三版成片、封面与文案的最终人工审片通过，授权按多平台发布流程上传",
+    "audio_listening_review": "passed_by_human（用户审片通过）"
+  },
+  "technical_preparation_complete": true,
+  "ready_to_upload": true,
+  "blocking_issues": [
+    "B站投稿接口在 gaia 风控后要求 GeeTest 人机验证；内置浏览器面板未打开（visibilityState=hidden、viewport 0x0）时验证码 iframe 不渲染且不接收真实指针事件，须本人在可见页面完成一次验证或自行点“立即投稿”"
+  ],
+  "unverified_fields": [
+    "稿件审核状态（尚无 BV）"
+  ],
+  "status": "approved_for_upload",
+  "upload_state": "draft_ready_blocked_by_risk_captcha",
+  "draft_id": "3973028",
+  "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028",
+  "upload_form_verified": {
+    "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城",
+    "category": "游戏(tid=17)",
+    "creation_statement": "含AI生成内容",
+    "tags": [
+      "原创",
+      "虫潮围城",
+      "塔防",
+      "游戏开发",
+      "AI",
+      "玩家建议",
+      "挑战模式",
+      "bilibilitoy"
+    ],
+    "description_chars": 474,
+    "topic": "哔哩哔哩Toy创意挑战(topic_id 1346285) 已在话题选择器实际选中",
+    "season": "虫潮围城开发实录(season_id 9248439 / section_id 10340633) 已选择",
+    "covers": {
+      "home_4_3": "https://archive.biliimg.com/bfs/archive/aab3fbe2c9da6919834b9cd62950c370cde8de4b.jpg (1600x1200)",
+      "space_16_9": "https://archive.biliimg.com/bfs/archive/fe08bd1e94f6e2241cc4052345ff614adde41602.jpg (1920x1080)"
+    },
+    "tag_count": 8,
+    "publish_time": "立即发布（dtime=null）",
+    "draft_save": "POST /x/vupre/web/draft/update code=0 OK（2026-10-11 07:50 +08:00）"
+  }
+}

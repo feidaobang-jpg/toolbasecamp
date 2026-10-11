@@ -1,0 +1,14 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html?qa=1",
+  "scripts": [
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/boot.js?v=08028efe",
+    "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js?v=08028efe",
+    "https://www.zhengxiaohui.cn/js/game/thumb-preview.js?v=08028efe",
+    ""
+  ],
+  "controls": {
+    "input": "mouse",
+    "aim": "auto",
+    "fire": "auto"
+  }
+}

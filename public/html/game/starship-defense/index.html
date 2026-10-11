@@ -440,7 +440,7 @@ button::before,button::after{content:none!important}
     <div class="vbtn" id="vU" aria-label="投掷手雷">手雷</div>
     <div class="vbtn" id="vX">换枪</div>
     <div class="vbtn sm" id="vO">商店</div>
-    <div class="vbtn versus-only" id="vZ" aria-label="切换瞄准" aria-pressed="false">瞄准</div>
+    <div class="vbtn versus-only" id="vZ" aria-label="举枪瞄准" aria-pressed="false">举枪</div>
     <div class="vbtn versus-only" id="vR" aria-label="重新装填弹匣">换弹</div>
     <div class="vbtn sm" id="vL">建造</div>
     <div class="vbtn sm" id="vC" aria-label="切换视角预设"><span>切换视角</span></div>
@@ -519,7 +519,6 @@ button::before,button::after{content:none!important}
     <p class="small campaign-only" id="squadTaskHint">队友默认跟随出击，基地告急时自动回防；可随时一键切换全队「跟随/守家」。</p>
     <div class="btnRow campaign-only"><button class="mbtn" id="squadOrderPause">队友：跟随我</button><button class="mbtn" id="tacticsPause">战术部署 / 虫潮预告</button></div>
     <div class="btnRow optRow">
-      <button class="mbtn" id="personBtnMenu">第三人称</button>
       <button class="mbtn" id="daylightPause">地表：白天</button>
       <button class="mbtn" id="muteBtnMenu">声音</button>
       <button class="mbtn" id="keysPause">⌨ 操作设置</button>
@@ -530,13 +529,13 @@ button::before,button::after{content:none!important}
 
   <div id="vsMenu" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsMenuTitle">
     <h2 id="vsMenuTitle">⚑ 战地模式 · 沙漠据点战</h2>
-    <p class="small vs-rules">沙漠战场：争夺 A旧镇、B通信站、C补给仓库。控制多数据点消耗敌方兵力票，兵力归零或15分钟结束时决胜。选择固定兵种装备，上车作战；阵亡后8秒重新部署。</p>
+    <p class="small vs-rules">沙漠战场：争夺 A旧镇、B通信站、C补给仓库。控制多数据点消耗敌方兵力票，兵力归零或15分钟结束时决胜。选择固定兵种装备，上车作战；阵亡后8秒重新部署。步行固定第一人称、手动瞄准、按住射击，载具用第三人称跟随。</p>
     <div class="btnRow vs-size" role="group" aria-label="对战规模"><span class="small">规模</span><button class="mbtn" data-vs-size="1" aria-pressed="true">1 对 1</button><button class="mbtn" data-vs-size="2" aria-pressed="false">2 对 2</button><button class="mbtn" data-vs-size="3" aria-pressed="false">3 对 3</button><button class="mbtn" data-vs-size="4" aria-pressed="false">4 对 4</button></div>
     <p class="small" id="vsSizeNote" role="status"></p>
     <div class="btnRow"><button class="mbtn green" data-vs-ai="easy">对战电脑 · 简单</button><button class="mbtn green" data-vs-ai="normal">对战电脑 · 普通</button><button class="mbtn green" data-vs-ai="hard">对战电脑 · 困难</button></div>
     <div class="btnRow"><button class="mbtn" id="vsOnline">👥 好友对战（联机，最多 8 人，空位电脑补）</button><button class="mbtn" id="vsMenuBack">← 返回</button></div>
     <p class="small" id="vsRecordTxt" role="status"></p>
-    <div class="small vs-rules">装备：O / 部署：L / 战况：T / 换弹：R / 支援：H / 上下车：I。手机使用同名按钮。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
+    <div class="small vs-rules">射击：按住 J 或左键 / 转视角：右键拖动或 Q E / 举枪：Z 或右键点按 / 装备：O / 部署：L / 战况：T / 换弹：R / 支援：H / 上下车：I。手机使用同名按钮，按住射击键可继续拖动瞄准。双方各有8名电脑步兵与越野车、坦克、装甲车、直升机；弹匣打空自动换弹，备用弹药无限。联机由房主计算战局，中途加入接手电脑座位。</div>
   </div>
   <div id="vsResult" class="overlay menu hidden" role="dialog" aria-modal="true" aria-labelledby="vsResultTitle">
     <h2 id="vsResultTitle"></h2>
@@ -654,7 +653,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=40ed1ea260" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=6d72d4bf45" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

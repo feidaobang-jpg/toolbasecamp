@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-10T21:35:03.191212+00:00",
+  "unexpected_black_runs": "none at >=0.4 seconds",
+  "unexpected_silence_runs": "none before ending hold at >=1.5 seconds / -45dB",
+  "silence_start_seconds": [
+    107.440146
+  ],
+  "intentional_tail_hold": true,
+  "media": "shared-zh",
+  "youtube_audio_shared_mix": true,
+  "subjective_listening": "not-run"
+}

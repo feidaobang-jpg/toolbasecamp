@@ -1,0 +1,194 @@
+{
+ "request_text": "B站有位网友问：能不能整个「我是虫族模式」？当天，我就把它做了出来。现在不用再守家了——你就是虫群本身。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "edge_tts_version": "7.2.8",
+ "marks": [
+  {
+   "type": "WordBoundary",
+   "offset": 1000000,
+   "duration": 2000000,
+   "text": "B"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 3000000,
+   "duration": 1375000,
+   "text": "站"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 4500000,
+   "duration": 1125000,
+   "text": "有"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 5625000,
+   "duration": 1000000,
+   "text": "位"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 6750000,
+   "duration": 3250000,
+   "text": "网友"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 10000000,
+   "duration": 3250000,
+   "text": "问"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 15625000,
+   "duration": 6375000,
+   "text": "能"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 22125000,
+   "duration": 2500000,
+   "text": "不能"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 24750000,
+   "duration": 2875000,
+   "text": "整个"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 27875000,
+   "duration": 1000000,
+   "text": "我"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 28875000,
+   "duration": 1125000,
+   "text": "是"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 30125000,
+   "duration": 3375000,
+   "text": "虫族"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 33625000,
+   "duration": 4625000,
+   "text": "模式"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 44000000,
+   "duration": 6500000,
+   "text": "当天"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 53625000,
+   "duration": 1125000,
+   "text": "我"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 54750000,
+   "duration": 750000,
+   "text": "就"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 55625000,
+   "duration": 875000,
+   "text": "把"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 56500000,
+   "duration": 875000,
+   "text": "它"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 57625000,
+   "duration": 1750000,
+   "text": "做"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 59375000,
+   "duration": 625000,
+   "text": "了"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 60125000,
+   "duration": 3375000,
+   "text": "出来"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 69250000,
+   "duration": 3500000,
+   "text": "现在"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 73000000,
+   "duration": 2000000,
+   "text": "不用"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 75125000,
+   "duration": 750000,
+   "text": "再"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 76000000,
+   "duration": 3625000,
+   "text": "守家"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 79625000,
+   "duration": 2250000,
+   "text": "了"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 85750000,
+   "duration": 2125000,
+   "text": "你"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 88000000,
+   "duration": 1000000,
+   "text": "就"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 89000000,
+   "duration": 875000,
+   "text": "是"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 90125000,
+   "duration": 3375000,
+   "text": "虫群"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 93625000,
+   "duration": 4000000,
+   "text": "本身"
+  }
+ ]
+}

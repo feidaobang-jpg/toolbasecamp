@@ -1,0 +1,118 @@
+{
+  "text": "残血的时候按支援，血量就能补回来。活着留在圈里，比冲出去再送一次更有用。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 7.92,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 4250000,
+      "text": "残血"
+    },
+    {
+      "offset": 5250000,
+      "duration": 750000,
+      "text": "的"
+    },
+    {
+      "offset": 6125000,
+      "duration": 2750000,
+      "text": "时候"
+    },
+    {
+      "offset": 9125000,
+      "duration": 1500000,
+      "text": "按"
+    },
+    {
+      "offset": 10625000,
+      "duration": 5250000,
+      "text": "支援"
+    },
+    {
+      "offset": 19875000,
+      "duration": 4625000,
+      "text": "血量"
+    },
+    {
+      "offset": 24750000,
+      "duration": 875000,
+      "text": "就"
+    },
+    {
+      "offset": 25625000,
+      "duration": 1125000,
+      "text": "能"
+    },
+    {
+      "offset": 26875000,
+      "duration": 1375000,
+      "text": "补"
+    },
+    {
+      "offset": 28250000,
+      "duration": 3250000,
+      "text": "回来"
+    },
+    {
+      "offset": 37125000,
+      "duration": 3125000,
+      "text": "活着"
+    },
+    {
+      "offset": 40500000,
+      "duration": 1125000,
+      "text": "留"
+    },
+    {
+      "offset": 41625000,
+      "duration": 1125000,
+      "text": "在"
+    },
+    {
+      "offset": 42875000,
+      "duration": 2500000,
+      "text": "圈"
+    },
+    {
+      "offset": 45375000,
+      "duration": 3000000,
+      "text": "里"
+    },
+    {
+      "offset": 51500000,
+      "duration": 3625000,
+      "text": "比冲"
+    },
+    {
+      "offset": 55125000,
+      "duration": 4500000,
+      "text": "出去"
+    },
+    {
+      "offset": 59875000,
+      "duration": 1625000,
+      "text": "再"
+    },
+    {
+      "offset": 61500000,
+      "duration": 1625000,
+      "text": "送"
+    },
+    {
+      "offset": 63250000,
+      "duration": 1750000,
+      "text": "一次"
+    },
+    {
+      "offset": 65250000,
+      "duration": 1750000,
+      "text": "更"
+    },
+    {
+      "offset": 67000000,
+      "duration": 3375000,
+      "text": "有用"
+    }
+  ]
+}

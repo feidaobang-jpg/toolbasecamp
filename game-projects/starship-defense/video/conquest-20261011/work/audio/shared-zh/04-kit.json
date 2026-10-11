@@ -1,0 +1,103 @@
+{
+  "text": "这次没有买兵和升级。五种兵种用固定装备，开局我选工程兵，先开坦克推进。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 8.352,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3250000,
+      "text": "这次"
+    },
+    {
+      "offset": 4500000,
+      "duration": 2000000,
+      "text": "没有"
+    },
+    {
+      "offset": 6625000,
+      "duration": 5000000,
+      "text": "买兵"
+    },
+    {
+      "offset": 11875000,
+      "duration": 1500000,
+      "text": "和"
+    },
+    {
+      "offset": 13500000,
+      "duration": 5125000,
+      "text": "升级"
+    },
+    {
+      "offset": 24375000,
+      "duration": 1875000,
+      "text": "五"
+    },
+    {
+      "offset": 26250000,
+      "duration": 1625000,
+      "text": "种"
+    },
+    {
+      "offset": 28000000,
+      "duration": 4625000,
+      "text": "兵种"
+    },
+    {
+      "offset": 32875000,
+      "duration": 1500000,
+      "text": "用"
+    },
+    {
+      "offset": 34500000,
+      "duration": 2750000,
+      "text": "固定"
+    },
+    {
+      "offset": 37375000,
+      "duration": 4750000,
+      "text": "装备"
+    },
+    {
+      "offset": 45625000,
+      "duration": 4250000,
+      "text": "开局"
+    },
+    {
+      "offset": 49875000,
+      "duration": 1250000,
+      "text": "我"
+    },
+    {
+      "offset": 51250000,
+      "duration": 3500000,
+      "text": "选工"
+    },
+    {
+      "offset": 54750000,
+      "duration": 4625000,
+      "text": "程兵"
+    },
+    {
+      "offset": 63625000,
+      "duration": 2375000,
+      "text": "先"
+    },
+    {
+      "offset": 66000000,
+      "duration": 1500000,
+      "text": "开"
+    },
+    {
+      "offset": 67625000,
+      "duration": 3250000,
+      "text": "坦克"
+    },
+    {
+      "offset": 71000000,
+      "duration": 3750000,
+      "text": "推进"
+    }
+  ]
+}
