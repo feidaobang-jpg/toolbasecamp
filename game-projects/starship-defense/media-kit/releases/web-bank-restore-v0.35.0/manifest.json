@@ -1,0 +1,8 @@
+{
+  "privacy": "pass",
+  "room_password_only": "Optional multiplayer room access code, not website account login",
+  "checked_files": 8,
+  "runtime_sha256": "e61d1521039caa257a5b348ab1a95ced5194a67497f41bd70f1c9a9ead04df55",
+  "package_sha256": "446a33a3459a764bbbf582acf19cd64cbca6081fedc7287316cd19609df338d2",
+  "toy_doctor": "pass; advisory fixed JS/CSS filenames. Main runtime uses hash query; Toy isolates each release URL."
+}
