@@ -1,0 +1,366 @@
+{
+  "task_id": "01a129f0-0b78-74d2-ac5b-87d9c5c7318e-toy-cleanup-20261011-02",
+  "source": "Codex",
+  "source_commit": "57d3bdb3824987cda72ae5769a6196e7dbb7ecfc",
+  "website": {
+    "status": "verified",
+    "verified_at": "2026-10-11T08:11:52.512616+00:00",
+    "checks": "all 5 menus author link, no website login; updated bundles verified; old site-save.js HTTP404; deployment rewrites cache query values",
+    "deploy_commit": "57d3bdb3824987cda72ae5769a6196e7dbb7ecfc",
+    "server_last_successful_deploy": "57d3bdb3824987cda72ae5769a6196e7dbb7ecfc"
+  },
+  "games": {
+    "starship-defense": {
+      "id": 38678478981120,
+      "version": "web-fps-rules-v0.34.0-privacy1",
+      "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-privacy-cleanup-20261011\\toolbasecamp\\dist\\toy\\chongchao-qianshao\\package",
+      "files": {
+        "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+        "base.css": "cdc418b7d801cfb1bfbb2750774e22d6c65464a3964ec1f6797d5b8a86d9b245",
+        "boot.js": "7979d9681c198fee05dc861861e68034e693a2e9510c962f5c0664242cfbae82",
+        "combat-controls.css": "522894ad91cb6556f58f4ebeded71050bf1cf5e63a90d9dae52610f06c3fc9f0",
+        "game.compat.js": "ba6f735964c56fc49863ab8d6bbeb64a13ce8e9e9544c4f8432afd72dc1b085b",
+        "icon.svg": "d7a884ba6651019625c5e9090514367ce597505d1f887e8ca2135c1bfd28c5c9",
+        "index.html": "256c39ab0f47aa4322b1b434b46a266423cabda2c075346fa7f85d41c5ef833a",
+        "vendor/LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+      },
+      "package_fingerprint": "8eb3f9a858e8b0b72f55d06e1fe92b4d9f98441fefa9751b5e43906e7d584381",
+      "last_history_checked_at": "2026-10-11T08:13:54.023819+00:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_EEC2WxGS/index.html"
+      },
+      "preview_at": "2026-10-11T08:11:53.581494+00:00",
+      "readback": {
+        "id": 38678478981120,
+        "title": "虫潮围城",
+        "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "user_info": {
+          "mid": 16214353,
+          "name": "飞刀班长",
+          "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+        },
+        "status": "published",
+        "visibility": "PUBLIC",
+        "category": "GAME",
+        "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+        "watermark_enabled": false,
+        "ctime": 1790739397,
+        "mtime": 1791647266
+      },
+      "status": "blocked_needs_user",
+      "preview_qa": "passed",
+      "preview_qa_method": "actual Toy hosted preview inspected via browser; 3 viewport packaged runtime regression; shared author link navigated to UID16214353; starship save inputs absent; desktop viewport simulations, no physical phone",
+      "submit": {
+        "stdout": "",
+        "stderr": "error: update Toy failed: status=200 code=307008 message=无权限操作",
+        "exit_code": 1
+      },
+      "submit_at": "2026-10-11T08:13:55.037660+00:00",
+      "notification": {
+        "task_id": "toy-38678478981120",
+        "event_id": "toy-307008-chongchao-20261010",
+        "result": "already_sent"
+      },
+      "public_observation": "Public URL currently says content removed; mylist published refers to last successful old version, not this cleanup package.",
+      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\starship-defense"
+    },
+    "tank-3d": {
+      "id": 39043249461248,
+      "version": "remix-entry1-menu-text1-fp-aim1-privacy1",
+      "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-privacy-cleanup-20261011\\toolbasecamp\\game-projects\\tank-3d\\dist\\remix-entry1-menu-text1-fp-aim1-privacy1\\package",
+      "files": {
+        "audio.js": "5e8bb41f1723cca52940035d41cf0f69f8e0555d2a0ec38f47e8ced0e8d05e39",
+        "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+        "classic.js": "b964a98d05857b5f03ccf06451fb94530dd0112415fc786b495d72abf6c81f79",
+        "coop-shared.js": "33677fa19c75f5e28b72c62a196637158981957a8c248e9d8fd6567d71762093",
+        "coop.js": "99e403507c01fad315144167f64a32585d5b3047734e209502d929662159349f",
+        "drag-look.js": "1151213184a794be12fc032e836581ab67928e62af3e8151670c74ffaf604ea2",
+        "favicon.svg": "5798ae76cb5c5b18274b9f164e2318992a26f02a03f71c6223a3da1cd4d86014",
+        "index.html": "2a9745a4a24d2465c00002e47d19361cb0f17a5734861d9fcb4d1f706d871982",
+        "landscape-typing.js": "30b2d8ac79aa27cf16dc61642ad9871c37258867917ce55e1bf3a10a87248892",
+        "levels.js": "2e4c4bfa3d087c6b270b0ad0de38834f90753e5bee00b3789f2838dd529c85e0",
+        "main.js": "79cf81c4848fb71afcb00c5122014967af2f86a3bcfb4abf17b9f640516ab86f",
+        "scene.js": "d0f7033aab37e8c23155773faa40552fc72c14c1d15c3ff994a3d687338633c5",
+        "sim.js": "7cd914dd2edb733250a7704735a0887f722e939e3a0a02b6cb33fd3adf04bb6c",
+        "sounds/bullet_hit_1.mp3": "a7914df573c995b0fe628b3ffc03cf70ed8e6f9774d3de31b936565caa6d831f",
+        "sounds/bullet_hit_2.mp3": "76004f25187fd2898cecbf657aa9d3aed46685b2d61d2e6ff7825ec137638937",
+        "sounds/bullet_shot.mp3": "cee289b8b5cfb42c4772a3a7a8072da7ef626470ffbe0d390720cdc25b11679d",
+        "sounds/explosion_1.mp3": "34df0f75fd4e65b67a82269fe2fe502c5c2a0136154b8ff875b51a88236ba2bf",
+        "sounds/explosion_2.mp3": "3502c677ec9d318015be16739150c1afc5487a8e9301a835e2e2d92052bc90c8",
+        "sounds/game_over.mp3": "d23197bd8ab662160ecba3d8fa9926f6c0c2e2431c0d327fc97275578a40375e",
+        "sounds/pause.mp3": "9308b7bcd60c7adb6fefd23e398d4e899e432212deb6297733e7d9227cc20f5e",
+        "sounds/powerup_appear.mp3": "608dd494f5cb66baded7f1bcab33acb34dcc2b136856a19c13de0c11218d8fda",
+        "sounds/powerup_pick.mp3": "786c9f41ab03438e7ba23a6878ee9d09bc03d0f18ae28c47f503914dfd8da80c",
+        "sounds/snow_slide.mp3": "10462c41c3c32a84196e4b4b18972e31c0b23f380fd9d5fc4a5ef4987e5b1d8c",
+        "sounds/stage_start.mp3": "740cb6a0f775e1704e6897e1f6c6209ac1402e8af091bd93853971301b196eef",
+        "sounds/statistics_1.mp3": "ee5e0df48818c53d8cf92307411f0285e9a05df2505f797519bbaa563bdd2ca9",
+        "style.css": "6b01dc1c8e97a655325463b2319e3dde23ed3b1eac9ca0952c743f3e0031b8ee",
+        "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb"
+      },
+      "package_fingerprint": "ab4be89ae92237a066ee83a156a79c5f0b2b6e1871f5419c7badebb5847d384a",
+      "last_history_checked_at": "2026-10-11T08:13:55.445291+00:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_fmTOsmlB/index.html"
+      },
+      "preview_at": "2026-10-11T08:11:54.979292+00:00",
+      "readback": {
+        "id": 39043249461248,
+        "title": "坦克大战 3D",
+        "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "user_info": {
+          "mid": 16214353,
+          "name": "飞刀班长",
+          "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+        },
+        "status": "auditing",
+        "visibility": "PUBLIC",
+        "category": "GAME",
+        "watermark_enabled": false,
+        "ctime": 1791706435,
+        "mtime": 1791706435
+      },
+      "status": "published",
+      "preview_qa": "passed",
+      "preview_qa_method": "actual Toy hosted preview inspected via browser; 3 viewport packaged runtime regression; shared author link navigated to UID16214353; starship save inputs absent; desktop viewport simulations, no physical phone",
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_VVdv5kfs/index.html"
+      },
+      "submit_at": "2026-10-11T08:13:56.528414+00:00",
+      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\tank-3d",
+      "public_verified_at": "2026-10-11T08:21:18.515309+00:00",
+      "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v24926/index.html",
+      "public_verification": {
+        "method": "Browser opened public Toy URL (not preview); current versioned iframe renders new author homepage link; mylist now published with mtime after submission. Public raw HTTP asset retrieval returned412, so no public byte-hash assertion.",
+        "new_author_link_count": 1,
+        "user_id": "16214353"
+      }
+    },
+    "mario-3d": {
+      "id": 39043286960128,
+      "version": "v2.6.0-preview1-privacy1",
+      "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-privacy-cleanup-20261011\\toolbasecamp\\game-projects\\mario-3d\\dist\\toy-v2.6.0-preview1-privacy1\\package",
+      "files": {
+        "audio.js": "e88c32ad26f9c0105b6252c641c7bf18ab284d0d7e8b8aebdbc6c64e78ce4112",
+        "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+        "drag-look.js": "1151213184a794be12fc032e836581ab67928e62af3e8151670c74ffaf604ea2",
+        "index.html": "bc7114748169c8a908248d5f1ecd53dbe303f1b90405ced64060c6769f14d338",
+        "levels.js": "8a275a202230f8f350340e3b501bf07042f31b83c81d760cf11042b121a1e306",
+        "main.js": "9a546b65cf45c5e3f0e7f5516b64e557299df936776d4905e522fd8d0bb6255e",
+        "models.js": "c476735571d3c0a244abbea0712f409f5aaee22ce716ecc1611ea5baa894ee9b",
+        "sample-audio.js": "421b1b6e0d1e3c9bf8ab9a157c3ae6c88b047e6ae972515bceddf98ca015a704",
+        "scene.js": "61981e7cd9761ffed8c5cdc4a7961db3645e1f94c510c9232d1650db4ac135ca",
+        "sounds/castle.mp3": "2d7c2efd3fbb5a63b1b6958f51a8fbc849c49ad5b559df15e1fa99d22c502c6a",
+        "sounds/overworld.mp3": "5dd59213cf9cd667b137ae44f0f625aba937de30f266be3b834adf4891089fb0",
+        "sounds/smb_1-up.wav": "c5e2da02e363ab625e5764522f727241b77039c8ab65000f0d81c05b5a44cdb8",
+        "sounds/smb_bowserfalls.wav": "f898f98ec6533299be8f931ac1237f960540a64571f81b18303ebcfa0b95c732",
+        "sounds/smb_bowserfire.wav": "fc351571ae762111b47eca84368c49f5817d18e71d087f713bc7359549f0fc91",
+        "sounds/smb_breakblock.wav": "def80c69067e925cbf14d3ac2601c77beefce40e9eb3944b41e6a126561e0262",
+        "sounds/smb_bump.wav": "8f336b9857810d104f10e81ec3cb626e57fb8790babbf1a0025788040e38c5f8",
+        "sounds/smb_coin.wav": "b94e81c94fae7f28fa20de96c1b7710271cc3fee538d0673272000587d51c38f",
+        "sounds/smb_fireball.wav": "0ab68ae00b476f4f75ae9b6b30ff2f8d30af88ba1d7bf282206bc1deb8c7a5c5",
+        "sounds/smb_fireworks.wav": "aefe1db19f04a6b774c0a6af9695c70d30181ae659f9b228b1519dd2e0c36d9d",
+        "sounds/smb_flagpole.wav": "fd660d39a39f7f90ed58c63f97b4a133f80bfcdb9fbb5a319d142b1fb570f557",
+        "sounds/smb_gameover.wav": "677f6a093924f3c3d72fb7ce5ac9e31c9c980a6b65433347ef6c8a220c6ff1d9",
+        "sounds/smb_jump-small.wav": "9a1c26efa3447fbcbe0f1892d0569e0dded82dd3ff107e72d66d04c5753d6e51",
+        "sounds/smb_jump-super.wav": "8de33b3f7ec8fc3207921f95a927a4889c7a5cc86a9beff805cd8707bf5d1a15",
+        "sounds/smb_kick.wav": "41f7305578610aa409a69fae8094f2f5b809f28661eb649dfe2fc6f415daafc4",
+        "sounds/smb_mariodie.wav": "9934dbf26c48c4219d3770c5eedd5f1fc1a1e616c98d0413fae0ba9d4533f005",
+        "sounds/smb_pause.wav": "f3090f8c798085b54f19a98a55f4120bab3c6bb0d430fb0ac0bc09b0fa276247",
+        "sounds/smb_pipe.wav": "bd8f36627e83b155584b7b038ce1155ea8632760c521e2ec9fffbeed5b22c772",
+        "sounds/smb_powerup.wav": "af56b835aa2f6fc773b2c5c8b4fc3ae034dffb84ae5b61193d6b149301dd211b",
+        "sounds/smb_powerup_appears.wav": "dc76b01e4b46817d36dc7f767e0bf78f5aa47074aeba1a7ab73079235963db39",
+        "sounds/smb_stage_clear.wav": "44f78f4ffdfa3b8566efb8dbe48a188e391b471eefa20aec175e16ba6a3ee105",
+        "sounds/smb_stomp.wav": "91e68666743fedfd4641fdba7251c008e66ff50ea496ebda951aead1cd7024fe",
+        "sounds/smb_vine.wav": "2e4123262c357f36c127f0b06276f48b87e9628aea0ca05239c74746234db205",
+        "sounds/smb_warning.wav": "269be2e5c3d62b55f8164a27320a67924be6b7a2d06725ddce853443c86bdb86",
+        "sounds/smb_world_clear.wav": "3630389fbe6783c35899e0ce73132587d8c97084cba4149f34d5a06496da69ed",
+        "sounds/star.mp3": "05dd67fd0ef165fa5537519d09f2492488b10a8b3658847b0c9939c226b97cea",
+        "sounds/underground.mp3": "6d86e32247f82dd3416dc52b8ea7fb630bd5a976254bb3fafc6e5f1030591bdc",
+        "style.css": "b0117ef1b40db6b48abc5654229a4328ef0692463ca3cfc976c83fcc94d4039f",
+        "textures.js": "eaac34a2c4dd65e92b23ec469f1adcdbc007c2c893dc333cf0345a7d24a866a2",
+        "three.js": "59cc1d99fbfda58eafe899234f06492d75ef1b33aacd3075f534800918dcce68",
+        "vendor/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+        "vendor/three.module.js": "ce1fa418de16a19495a9f72495580e3015d7745c296d3ce0485897f902ddedfb",
+        "world.js": "945f7fc76bcfa299e655251a9826f8f0d182d66297091352e559575dfa5e4b61"
+      },
+      "package_fingerprint": "04e5ea09c038e49dcd4897dca20275e45d1051b86415c63a6494b6dfdedd0139",
+      "last_history_checked_at": "2026-10-11T08:13:56.892186+00:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_BKkXwPyL/index.html"
+      },
+      "preview_at": "2026-10-11T08:12:01.126572+00:00",
+      "readback": {
+        "id": 39043286960128,
+        "title": "超级玛丽 3D：1-1 至 1-4",
+        "url": "https://www.bilibili.com/toy/feidao-mario-3d/index.html",
+        "user_info": {
+          "mid": 16214353,
+          "name": "飞刀班长",
+          "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+        },
+        "status": "auditing",
+        "visibility": "PUBLIC",
+        "category": "GAME",
+        "watermark_enabled": false,
+        "ctime": 1791706441,
+        "mtime": 1791706441
+      },
+      "status": "published",
+      "preview_qa": "passed",
+      "preview_qa_method": "actual Toy hosted preview inspected via browser; 3 viewport packaged runtime regression; shared author link navigated to UID16214353; starship save inputs absent; desktop viewport simulations, no physical phone",
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_WWgFEtpc/index.html"
+      },
+      "submit_at": "2026-10-11T08:14:02.485013+00:00",
+      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\mario-3d",
+      "public_verified_at": "2026-10-11T08:21:18.515309+00:00",
+      "public_content_url": "https://www.bilibilitoy.com/toy/feidao-mario-3d/39043286960128-v24927/index.html",
+      "public_verification": {
+        "method": "Browser opened public Toy URL (not preview); current versioned iframe renders new author homepage link; mylist now published with mtime after submission. Public raw HTTP asset retrieval returned412, so no public byte-hash assertion.",
+        "new_author_link_count": 1,
+        "user_id": "16214353"
+      }
+    },
+    "jackal-stage1-3d": {
+      "id": 39863936092160,
+      "version": "v0.10.3-menu-text1-privacy1",
+      "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-privacy-cleanup-20261011\\toolbasecamp\\game-projects\\jackal-stage1-3d\\dist\\toy-v0.10.3-menu-text1-privacy1\\package",
+      "files": {
+        "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+        "css/style.css": "bd95f92188c85b34c6fcdcbb5387e1a471bf8e74152ba4a2e59aa89a7faf94fd",
+        "index.html": "fb80f538159837c60bbc92baed5f745701f2dbb0368e76059b6b415c6a7e2cf6",
+        "js/game.min.js": "f12b25c5760bb010db318a623ceea34e9fabd1067939cf81bcc80122ee9084e2",
+        "js/THREE-LICENSE.txt": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d",
+        "sounds/boss.mp3": "cdc0eaaf3f47deec97e6d5c7177e35d01869dcba8aee1ab4107d2a73b8654675",
+        "sounds/stage.mp3": "4dd286a7239f3a44801e196d62a0b5aa5a683d1fd0605478b0f022ef46ba4cca",
+        "sounds/stage3.mp3": "780427f4293d31f3ac35e35fc85523015b76af94603d35a3d04bb78130272949"
+      },
+      "package_fingerprint": "21a69702c867e43d7f37d62208a4c3dcb751c3be62e67989fea5cfcde0c068ce",
+      "last_history_checked_at": "2026-10-11T08:14:02.854430+00:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_I4TIYXpD/index.html"
+      },
+      "preview_at": "2026-10-11T08:12:05.979289+00:00",
+      "readback": {
+        "id": 39863936092160,
+        "title": "赤色要塞 3D",
+        "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+        "user_info": {
+          "mid": 16214353,
+          "name": "飞刀班长",
+          "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+        },
+        "status": "auditing",
+        "visibility": "PUBLIC",
+        "category": "GAME",
+        "watermark_enabled": false,
+        "ctime": 1791706443,
+        "mtime": 1791706443
+      },
+      "status": "published",
+      "preview_qa": "passed",
+      "preview_qa_method": "actual Toy hosted preview inspected via browser; 3 viewport packaged runtime regression; shared author link navigated to UID16214353; starship save inputs absent; desktop viewport simulations, no physical phone",
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_FsOhhrQ9/index.html"
+      },
+      "submit_at": "2026-10-11T08:14:04.664723+00:00",
+      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\jackal-stage1-3d",
+      "public_verified_at": "2026-10-11T08:21:18.515309+00:00",
+      "public_content_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v24928/index.html",
+      "public_verification": {
+        "method": "Browser opened public Toy URL (not preview); current versioned iframe renders new author homepage link; mylist now published with mtime after submission. Public raw HTTP asset retrieval returned412, so no public byte-hash assertion.",
+        "new_author_link_count": 1,
+        "user_id": "16214353"
+      }
+    },
+    "cadillacs-stage1-3d": {
+      "id": 40412421031936,
+      "version": "v0.11.0-hellroad.1-privacy1",
+      "package": "C:\\Users\\37818\\.codex\\worktrees\\toy-privacy-cleanup-20261011\\toolbasecamp\\game-projects\\cadillacs-stage1-3d\\dist\\toy-v0.11.0-hellroad.1-privacy1\\package",
+      "files": {
+        "author-home.js": "5b4b8fc50b73dec1d8f70182453c35f3d07101336345ccad6b689de7e2eb19f7",
+        "css/style.css": "30c849e8186c4d872caa9163d8a3a033373e1343a7bc7f61a67251a82de7714b",
+        "index.html": "2866da8d5600d68c2c4a79bf40ad01b9d1b4707143ede88b8286804430315ee6",
+        "js/game.min.js": "d0bd04aebfc7a57f162a190d71b5e01b980272a204e7590190b30252d8daa2f8",
+        "js/THREE-LICENSE.txt": "1b273e5d0dfbf140db67219a6115cb0298e36f10ec83d7d1ad266aa93b0b43ff",
+        "sounds/boss.mp3": "1e64e6b29e232b69ccccba15cb47a08d9a66d3f5725ecd19cefeff8f3167fced",
+        "sounds/boss2.mp3": "24ca408fb0ffff0691aa6751022fa51871f2c09d1e46887b60b3af78cfde5d0d",
+        "sounds/boss3.mp3": "00223dd3b9dd80a7edf3cbc5503dc0ec4664827b3cbd48c1311e149e3b83c86b",
+        "sounds/cd-bodyfall.wav": "1626f823242a7d7874d32680e1514d014c085380c674c68904422baa75a5f3c9",
+        "sounds/cd-dash.wav": "840fa24558486b275197e0690eec40ebd0526f5a774f0d85da3030bb15f3b5b2",
+        "sounds/cd-finisher-hannah.wav": "d323e860ba2c487748d41082262c96e250ab7cfc36b6177daab00f550ef8898a",
+        "sounds/cd-finisher-jack.wav": "c4edcfdcb04842d88db398c369b2e3796f5c8353e9deb305e37460098d0dd56c",
+        "sounds/cd-finisher-mess.wav": "2ecc1bbf054b42e2d42e91aa84f03276b05eea2f5c6bf96f2d6a0e0be8a07829",
+        "sounds/cd-finisher-mustapha.wav": "5a3674ae1e4d7fe0072aa984345d0e61597862fdf5cc96bb2786576e13001a67",
+        "sounds/cd-go.wav": "88d1178b05569f37d5f4357fd719fa6c7d56cfe6635e2948d2fef2734f1017d6",
+        "sounds/cd-hit.wav": "f866d6d31c18e63534f45d42460eaf7e9818d3a832f97f50aa85c5fc3800c181",
+        "sounds/cd-mega-hannah.wav": "8929ae9132bcfd14b6a6178ec9e93ded220e74f0f68011a98817c86f3a0f015a",
+        "sounds/cd-mega-jack.wav": "1af3e3d75ab1bc4291dfca4959621641f05d0129aee02152d78d9bc58e67e490",
+        "sounds/cd-mega-mess.wav": "a1a46e46808f0d1231bd396c3fc9b1a892e5cc32f20dcf0d0f0b54965b5c0114",
+        "sounds/cd-mega-mustapha.wav": "afdf2a774ade31143bd51623cc07dfd3d8d821e9af0b7be6a7f027ba442e6708",
+        "sounds/cd-shout-mustapha.wav": "73169d360d9483a4c1f19e6ad1f0e3fb702e7d6341d5753700e749f89489ddaa",
+        "sounds/clear.mp3": "e6f3f840f5841ef0d592f869d51afb7060621e831b9e6aeb861827401114d7d6",
+        "sounds/continue.mp3": "afa6d330f330fba4af1ec21624e32cf501dbb41b1403c30e0b7da357a0c93ff9",
+        "sounds/desert.mp3": "46d46c94e021a88e21b9fcab8398d57e60975f5eb2f707e016955e5a2c20b67f",
+        "sounds/forest.mp3": "649e60c583513ae0d74bce7de10e1b53b02fe93a0cf93fc6a924a6049368837a",
+        "sounds/hall.mp3": "ca283f15c86854c8495a5213ced1bd559995356aa7329feecdb1259e551f344c",
+        "sounds/opening.mp3": "4b4d386a41265f6ebe36aad5a8d292f1087c09734291c6d818c8adeeb9b7e732",
+        "sounds/road.mp3": "4902b897907e390b93e83ba0c4a8f6b13ddc85f4a65b31513f25683987a7668d",
+        "sounds/roof.mp3": "93b9d2880b070201be30e78b6cde36586044e95d166c07e8345c22174db947fa",
+        "sounds/select.mp3": "ce91128254195a85a9b03c1e896a7d35fd6b63bba0da58549fd1ed6b19bfb060",
+        "sounds/street.mp3": "dece2e8d1448f2b8b9f49d2d6685538949feee9bb525cd43613c41443cc91be9",
+        "sounds/swamp.mp3": "61f074b683c003d68b9648ea53df5df7d62072420a2b7e3b80acc9b7544f6e93"
+      },
+      "package_fingerprint": "8e6b0c612111ad65a316ba8210ebe2e0d7261555aab4f7549e4425b10391ccde",
+      "last_history_checked_at": "2026-10-11T08:14:05.010578+00:00",
+      "preview": {
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_JKcA9y6y/index.html"
+      },
+      "preview_at": "2026-10-11T08:12:18.906026+00:00",
+      "readback": {
+        "id": 40412421031936,
+        "title": "恐龙快打 3D：第一至三关",
+        "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "user_info": {
+          "mid": 16214353,
+          "name": "飞刀班长",
+          "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+        },
+        "status": "auditing",
+        "visibility": "PUBLIC",
+        "category": "GAME",
+        "watermark_enabled": false,
+        "ctime": 1791706474,
+        "mtime": 1791706474
+      },
+      "status": "published",
+      "preview_qa": "passed",
+      "preview_qa_method": "actual Toy hosted preview inspected via browser; 3 viewport packaged runtime regression; shared author link navigated to UID16214353; starship save inputs absent; desktop viewport simulations, no physical phone",
+      "submit": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_gkIH9HRQ/index.html"
+      },
+      "submit_at": "2026-10-11T08:14:35.832629+00:00",
+      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\cadillacs-stage1-3d",
+      "public_verified_at": "2026-10-11T08:21:18.515309+00:00",
+      "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24929/index.html",
+      "public_verification": {
+        "method": "Browser opened public Toy URL (not preview); current versioned iframe renders new author homepage link; mylist now published with mtime after submission. Public raw HTTP asset retrieval returned412, so no public byte-hash assertion.",
+        "new_author_link_count": 1,
+        "user_id": "16214353"
+      }
+    }
+  },
+  "updated_at": "2026-10-11T08:21:18.515309+00:00",
+  "bilibili": {
+    "decision": "pending_other_active_task",
+    "reason": "Account write lock owned by active Codex task 01a129f8-5691-7273-aab0-54954767f34f (takeover). No override or duplicate writes. Ordinary author-menu change alone has not reached 7 day threshold; starship save/status clarification is necessary and recorded for current maintenance owner.",
+    "pending_clarification": "Website no longer offers website account cloud save; local export/import retained. Toy official cloud retained in clean preview, but starship submission blocked307008 and public Toy currently removed. Do not announce Toy cleanup as published.",
+    "owner_title": "接管并完成未结任务"
+  },
+  "taptap": "not_requested_not_operated"
+}
