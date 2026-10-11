@@ -1,6 +1,6 @@
 {
   "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
-  "at": "2026-10-11T08:59:05.170464+00:00",
+  "at": "2026-10-11T09:14:53.067806+00:00",
   "items": [
     {
       "item_id": "cadillacs-stage3-v0.11.0-preview.1-website-trial",
@@ -17,7 +17,6 @@
       "version": "remix-entry1-menu-text1",
       "changed_fields": [
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -27,7 +26,6 @@
       "version": "v2.5.0-menu-text1",
       "changed_fields": [
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -37,7 +35,6 @@
       "version": "v0.10.3-menu-text1",
       "changed_fields": [
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -56,7 +53,6 @@
       "version": "web-shop-scroll-v0.29.2-menu-text1",
       "changed_fields": [
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -83,9 +79,7 @@
       "game_slug": "starship-defense",
       "version": "web-versus-scroll-v0.31.1",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -94,9 +88,7 @@
       "game_slug": "starship-defense",
       "version": "web-camera-response-v0.31.2",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -105,9 +97,7 @@
       "game_slug": "starship-defense",
       "version": "web-conquest-v0.32.0",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -116,9 +106,7 @@
       "game_slug": "starship-defense",
       "version": "web-no-shake-v0.32.1",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -127,9 +115,7 @@
       "game_slug": "starship-defense",
       "version": "web-resistance-v0.33.0",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -138,9 +124,7 @@
       "game_slug": "cadillacs-stage1-3d",
       "version": "v0.11.0-hellroad.1",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -149,10 +133,7 @@
       "game_slug": "starship-defense",
       "version": "web-weapon-balance-v0.33.2",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
-        "next_action",
         "takeover_reconciled_at"
       ]
     },
@@ -161,9 +142,7 @@
       "game_slug": "starship-defense",
       "version": "web-resistance-aim-v0.33.1",
       "changed_fields": [
-        "automatic_batch_eligible",
         "channels",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -173,8 +152,6 @@
       "version": "backlink-removal-20261010",
       "changed_fields": [
         "channels",
-        "automatic_batch_eligible",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -184,8 +161,6 @@
       "version": "backlink-removal-20261010",
       "changed_fields": [
         "channels",
-        "automatic_batch_eligible",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -195,9 +170,6 @@
       "version": "backlink-removal-20261010",
       "changed_fields": [
         "channels",
-        "automatic_batch_eligible",
-        "next_step",
-        "next_action",
         "takeover_reconciled_at"
       ]
     },
@@ -207,8 +179,6 @@
       "version": "backlink-removal-20261010",
       "changed_fields": [
         "channels",
-        "automatic_batch_eligible",
-        "next_step",
         "takeover_reconciled_at"
       ]
     },
@@ -218,9 +188,6 @@
       "version": "backlink-removal-20261010",
       "changed_fields": [
         "channels",
-        "automatic_batch_eligible",
-        "next_step",
-        "next_action",
         "takeover_reconciled_at"
       ]
     },
@@ -229,7 +196,6 @@
       "game_slug": "starship-defense",
       "version": "web-startbtn-curved-fix",
       "changed_fields": [
-        "next_action",
         "channels",
         "takeover_reconciled_at"
       ]
@@ -239,7 +205,6 @@
       "game_slug": "starship-defense",
       "version": "zerg-mode-v1",
       "changed_fields": [
-        "next_action",
         "channels",
         "takeover_reconciled_at"
       ]

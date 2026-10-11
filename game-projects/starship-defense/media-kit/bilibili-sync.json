@@ -508,6 +508,8 @@
       "BV14hpL62EZ5",
       "BV1KFpJ6sEEK"
     ],
-    "note": "游戏包清理普通菜单变化未按小改单独宣传；Toy状态以实际公开入口和发布核验为准。"
+    "note": "游戏包清理普通菜单变化未按小改单独宣传；Toy状态以实际公开入口和发布核验为准。",
+    "latest_platform_state": "all_five_toy_clean_packages_published",
+    "pending_toy_restoration_clarification": "game-projects/site-games/releases/task-takeover-20261011/pending-bilibili-restoration.json"
   }
 }

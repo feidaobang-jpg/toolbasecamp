@@ -409,8 +409,8 @@
   },
   "updated_at": "2026-10-11T16:54:59.708606+08:00",
   "bilibili": {
-    "decision": "public_verified",
-    "reason": "接管账号写锁后纠正两期网站账号云档说明与全部5期虫潮Toy状态；Tank瞄准和Dino第三关重大变更已公开核验。普通作者按钮变更保留合并节奏。",
+    "decision": "initial_clarification_verified_restoration_pending_authorized_writer",
+    "reason": "原账号云档及游戏版本说明已纠正公开；Toy随后恢复上线，B站现由用户确认的Qianwen发布任务持锁。恢复状态文案已准备，待锁释放后重读合并。",
     "pending_clarification": null,
     "owner_title": "接管并完成未结任务",
     "history": [
@@ -427,7 +427,8 @@
       "at": "2026-10-11T16:54:59.708606+08:00",
       "status": "published",
       "followup": "本任务立即纠正暂时下架文案并完成推流表。"
-    }
+    },
+    "restoration_record": "game-projects/site-games/releases/task-takeover-20261011/pending-bilibili-restoration.json"
   },
   "taptap": "not_requested_not_operated"
 }

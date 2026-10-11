@@ -2,7 +2,7 @@
   "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
   "source": "Codex",
   "reason": "Major gameplay changes and inaccurate platform/account-cloud status trigger immediate correction; preserve all historical footage and IDs.",
-  "verified_at": "2026-10-11T09:00:41.410364+00:00",
+  "verified_at": "2026-10-11T09:17:13.045873+00:00",
   "records": [
     {
       "platform": "youtube",
@@ -12,7 +12,7 @@
       "title": "恐龙快打换成第一人称，会怎样？三种视角实战",
       "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n打开后选择“恐龙快打”；如链接不可点击，请复制到浏览器打开。\n同一关分别用侧视、角色身后和第一人称打到关底，比较视野与战斗体验。\n画面录于2026-10-05，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n粉丝向非官方恐龙快打重制，原作版权归Capcom及原著方；片中镜头问题为录制时观察。\n\n更新（2026-10-11·v0.11.0-hellroad.1）：第三关重做为死亡沙漠与地狱公路，沙漠三波后机修工送车，驾车撞击、躲霍格手雷；可以在车上击败霍格，也可车毁后徒步决战。网站与Toy均已更新；本片保留第一关历史实录，以当前游戏为准。",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:56:01Z",
+      "verified_at": "2026-10-11T09:12:32Z",
       "description_sha256": "47b3ce1bd4e11b74310957a7e2500b1693696ec4d77a982d0ad901def8c1daa8"
     },
     {
@@ -21,10 +21,10 @@
       "language": "zh-CN",
       "url": "https://www.youtube.com/watch?v=jbTIpyh6Clw&hl=zh-CN",
       "title": "开房车进僵尸城搜物资，我能活着回来吗？｜虫潮围城",
-      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择“虫潮围城”，进入游戏后选择“房车生存”。链接不能点击时可复制到浏览器打开。\n这回开房车探索废弃城镇：改装、补油、搜索、维修，最后带回314零件。六个区域还没搜全，下次挑战全搜路线。\n房车城镇玩法由Codex辅助开发。你会先改枪，还是先加装甲？\n可在百宝箱“游戏 → 自研游戏投票榜”填写想玩的内容。\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择“虫潮围城”，进入游戏后选择“房车生存”。链接不能点击时可复制到浏览器打开。\n这回开房车探索废弃城镇：改装、补油、搜索、维修，最后带回314零件。六个区域还没搜全，下次挑战全搜路线。\n房车城镇玩法由Codex辅助开发。你会先改枪，还是先加装甲？\n可在百宝箱“游戏 → 自研游戏投票榜”填写想玩的内容。\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:56:04Z",
-      "description_sha256": "1f3fa3c64ec2474ed4dd79cc60afa8950ec52a7fbc28b77885fb7896da8a6f92"
+      "verified_at": "2026-10-11T09:12:35Z",
+      "description_sha256": "23934eca4a5cccd08cb8be9e667c22b16fdb2c8adc8c1277314e97dc43981e00"
     },
     {
       "platform": "youtube",
@@ -32,10 +32,10 @@
       "language": "zh-CN",
       "url": "https://www.youtube.com/watch?v=QOTmOfT19_g&hl=zh-CN",
       "title": "愿望榜第一名做出来了：双人塔防还能4对4｜虫潮围城",
-      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择「虫潮围城」，主菜单进入「战地模式·据点争夺」；链接不可点击时可复制到浏览器。\n本片记录愿望榜双人对战塔防的旧版玩法，包含1对1到4对4、独立银行与队伍转账。本片演示普通规则电脑对战，4对4段落为1个玩家席位加7个电脑。\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n旧版银行和出兵玩法现已改为据点战，详见下方更新。\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择「虫潮围城」，主菜单进入「战地模式·据点争夺」；链接不可点击时可复制到浏览器。\n本片记录愿望榜双人对战塔防的旧版玩法，包含1对1到4对4、独立银行与队伍转账。本片演示普通规则电脑对战，4对4段落为1个玩家席位加7个电脑。\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n旧版银行和出兵玩法现已改为据点战，详见下方更新。\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:56:07Z",
-      "description_sha256": "596b72df268638c32a054d2df56bc4d99409c590728724a44596d0e288d0bf42"
+      "verified_at": "2026-10-11T09:12:38Z",
+      "description_sha256": "d30a874d39d4d6210095b6eab01b7e540a1a75207cb2a85e9f2034ac32e9436e"
     },
     {
       "platform": "youtube",
@@ -43,10 +43,10 @@
       "language": "zh-CN",
       "url": "https://www.youtube.com/watch?v=5pr0fr0CMl0&hl=zh-CN",
       "title": "先守城还是先反攻？虫潮围城母皇战实录",
-      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n打开后选择“虫潮围城”；如链接不可点击，请复制到浏览器打开。\n打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n打开后选择“虫潮围城”；如链接不可点击，请复制到浏览器打开。\n打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。\n画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:56:10Z",
-      "description_sha256": "abe0c757b66b0ec44efc818993264a362274eea377316514f253f3e5d1653ba4"
+      "verified_at": "2026-10-11T09:12:41Z",
+      "description_sha256": "f1edd52d2402b7b1b608097371b8b95a4ac213e070bb1e260b6986e16594bd17"
     },
     {
       "platform": "youtube",
@@ -54,10 +54,10 @@
       "language": "zh-CN",
       "url": "https://www.youtube.com/watch?v=X3Lc6SZ6whE&hl=zh-CN",
       "title": "只剩3票险胜！虫潮围城的据点争夺实战",
-      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择「虫潮围城」，进入「战地模式」。地址不可点击时可复制到浏览器；游戏界面为中文。\n这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n双方围绕旧镇、通信站、补给仓库争夺。控制两个据点，会持续消耗对方兵力票。\n本期中文解说，提供中文和英文可切换字幕。战地据点模式由Codex辅助开发。\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表选择「虫潮围城」，进入「战地模式」。地址不可点击时可复制到浏览器；游戏界面为中文。\n这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n双方围绕旧镇、通信站、补给仓库争夺。控制两个据点，会持续消耗对方兵力票。\n本期中文解说，提供中文和英文可切换字幕。战地据点模式由Codex辅助开发。\n玩法建议／愿望单：https://www.zhengxiaohui.cn/game-vote.html\n\n更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:56:13Z",
-      "description_sha256": "c303ff1732cd60ce47faf0c731794cd24f03706a9a1ae78a8ea016085b1308f6"
+      "verified_at": "2026-10-11T09:12:44Z",
+      "description_sha256": "0c74e787271a61ca8db10881124b9aa5cb46940e45434020b185f60c39817794"
     },
     {
       "platform": "youtube",
@@ -67,7 +67,7 @@
       "url": "https://www.youtube.com/watch?v=fJBtG1-njZc&hl=en",
       "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nSelect 恐龙快打 in the list; copy the URL into your browser if it is not clickable.\nPlay the first stage in side view, rear view and first person, comparing visibility and combat all the way to the boss.\nEdited development footage recorded on 2026-10-05. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\nFan-made, unofficial Cadillacs and Dinosaurs remake. Original rights belong to Capcom and the original rights holders.\n\nUpdate (2026-10-11, v0.11.0-hellroad.1): Stage 3 is now Death Desert and Hell Road. Clear three desert waves, get a car from the mechanic, ram enemies and avoid Hogg grenades. Defeat Hogg while driving, or fight on foot after the car is destroyed. Website and Toy versions are updated; this video preserves its earlier stage-1 footage.",
       "description_sha256": "b1d4beffa8f60bffd1f4e69b42f99a853a7123a16e7eed0f43d335b5748c0c0b",
-      "verified_at": "2026-10-11T09:00:41.410364+00:00",
+      "verified_at": "2026-10-11T09:17:13.045873+00:00",
       "method": "Public watch-page ytInitialData localized description; language-only anonymous PREF, no account credentials."
     },
     {
@@ -76,9 +76,9 @@
       "language": "en",
       "status": "public_verified",
       "url": "https://www.youtube.com/watch?v=jbTIpyh6Clw&hl=en",
-      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the list, then 房车生存 (RV survival). The game menus are currently in Chinese. Copy the address into your browser if it is not clickable.\nI drive into an abandoned town, upgrade the roof gun, refuel, search for supplies, repair the RV and evacuate with 314 scrap. Next time I will try all six districts.\nThe RV town gameplay was developed with Codex assistance. Would you upgrade the gun or add armor first? You can suggest game ideas through the voting page linked from the game list.\nChinese narration with selectable Chinese and English subtitles.\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. The public Toy entry currently says unavailable and the clean package could not be submitted because of a platform permission error. Play the website version for now. This video preserves the earlier recorded gameplay.",
-      "description_sha256": "caac7884c8c7e75c069d763b2a866fbc4d7e9d7b6bdf526736793815f7610c59",
-      "verified_at": "2026-10-11T09:00:41.410364+00:00",
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the list, then 房车生存 (RV survival). The game menus are currently in Chinese. Copy the address into your browser if it is not clickable.\nI drive into an abandoned town, upgrade the roof gun, refuel, search for supplies, repair the RV and evacuate with 314 scrap. Next time I will try all six districts.\nThe RV town gameplay was developed with Codex assistance. Would you upgrade the gun or add armor first? You can suggest game ideas through the voting page linked from the game list.\nChinese narration with selectable Chinese and English subtitles.\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. Website and Toy versions are updated. Toy retains official platform cloud saves independently, with local saves available when cloud support is unavailable. This video preserves the earlier recorded gameplay.",
+      "description_sha256": "977ab536b3a8a6c90d02125267cbc6189c3d9e3645ee08b915914c50f81aca5d",
+      "verified_at": "2026-10-11T09:17:13.045873+00:00",
       "method": "Public watch-page ytInitialData localized description; language-only anonymous PREF, no account credentials."
     },
     {
@@ -87,9 +87,9 @@
       "language": "en",
       "status": "public_verified",
       "url": "https://www.youtube.com/watch?v=QOTmOfT19_g&hl=en",
-      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the Chinese game list, then select 战地模式·据点争夺 (Conquest). Copy the URL into your browser if it is not clickable.\nThis video records the previous version of the top-voted wish: earn income, upgrade your bank and deploy troops, from 1v1 to 4v4. Each player has their own economy, with 200-gold team transfers. The recorded 4v4 demonstration uses one player seat and seven bots.\nThe Versus mode was developed with Claude; Codex handled release verification and this video.\nThe old bank and troop-deployment systems have now been replaced; see the update below.\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. The public Toy entry currently says unavailable and the clean package could not be submitted because of a platform permission error. Play the website version for now. This video preserves the earlier recorded gameplay.",
-      "description_sha256": "6cc8dfa8c223e2ed50c529bb16ffa9f1540fa3741d32e374fc8cacd76747dd58",
-      "verified_at": "2026-10-11T09:00:41.410364+00:00",
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) from the Chinese game list, then select 战地模式·据点争夺 (Conquest). Copy the URL into your browser if it is not clickable.\nThis video records the previous version of the top-voted wish: earn income, upgrade your bank and deploy troops, from 1v1 to 4v4. Each player has their own economy, with 200-gold team transfers. The recorded 4v4 demonstration uses one player seat and seven bots.\nThe Versus mode was developed with Claude; Codex handled release verification and this video.\nThe old bank and troop-deployment systems have now been replaced; see the update below.\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. Website and Toy versions are updated. Toy retains official platform cloud saves independently, with local saves available when cloud support is unavailable. This video preserves the earlier recorded gameplay.",
+      "description_sha256": "54d59e6bda5f69d44da0eb5bcecfa8534e653f4369ca5e5d9627ed176fb0a90a",
+      "verified_at": "2026-10-11T09:17:13.045873+00:00",
       "method": "Public watch-page ytInitialData localized description; language-only anonymous PREF, no account credentials."
     },
     {
@@ -98,9 +98,9 @@
       "language": "en",
       "status": "public_verified",
       "url": "https://www.youtube.com/watch?v=5pr0fr0CMl0&hl=en",
-      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nSelect 虫潮围城 in the list; copy the URL into your browser if it is not clickable.\nCollect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. The public Toy entry currently says unavailable and the clean package could not be submitted because of a platform permission error. Play the website version for now. This video preserves the earlier recorded gameplay.",
-      "description_sha256": "4e62c8661a0d9f22e55edcca475bbaaf6b065114874f468ef3fc554ee6520094",
-      "verified_at": "2026-10-11T09:00:41.410364+00:00",
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nSelect 虫潮围城 in the list; copy the URL into your browser if it is not clickable.\nCollect supplies, upgrade weapons, place turrets, raid the queen, then return to defend the base.\nEdited development footage recorded on 2026-10-04. Features, controls and issues shown belong to that earlier build; the current demo may differ.\nChinese narration with reviewed English subtitles. The game interface is currently in Chinese; follow the current in-game control prompts.\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. Website and Toy versions are updated. Toy retains official platform cloud saves independently, with local saves available when cloud support is unavailable. This video preserves the earlier recorded gameplay.",
+      "description_sha256": "024887fa942a24435a8ac044bba5687193070218785c62c3b1cb616c52a3ec44",
+      "verified_at": "2026-10-11T09:17:13.045873+00:00",
       "method": "Public watch-page ytInitialData localized description; language-only anonymous PREF, no account credentials."
     },
     {
@@ -109,9 +109,9 @@
       "language": "en",
       "status": "public_verified",
       "url": "https://www.youtube.com/watch?v=X3Lc6SZ6whE&hl=en",
-      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) in the list, then 战地模式 (Battlefield mode). Copy the URL into your browser if needed. The game interface is in Chinese.\nWe won this conquest match 3–0 on tickets, despite scoring 94 kills against the enemy team’s 105. This run shows a tank push, redeployment at a captured objective, Medic support, and the final defense of Comms Station and Supply Depot.\nControl two of the three objectives to drain the opposing team’s tickets. Chasing kills alone can still lose the match.\nChinese narration with selectable Chinese and English subtitles. The conquest mode was developed with Codex assistance.\nGame suggestions / wishlist: https://www.zhengxiaohui.cn/game-vote.html\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. The public Toy entry currently says unavailable and the clean package could not be submitted because of a platform permission error. Play the website version for now. This video preserves the earlier recorded gameplay.",
-      "description_sha256": "4a61925f0bfa1e472c9dfc2b537c2b9155a3b9ab46375674ec025cbad2c0c443",
-      "verified_at": "2026-10-11T09:00:41.410364+00:00",
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) in the list, then 战地模式 (Battlefield mode). Copy the URL into your browser if needed. The game interface is in Chinese.\nWe won this conquest match 3–0 on tickets, despite scoring 94 kills against the enemy team’s 105. This run shows a tank push, redeployment at a captured objective, Medic support, and the final defense of Comms Station and Supply Depot.\nControl two of the three objectives to drain the opposing team’s tickets. Chasing kills alone can still lose the match.\nChinese narration with selectable Chinese and English subtitles. The conquest mode was developed with Codex assistance.\nGame suggestions / wishlist: https://www.zhengxiaohui.cn/game-vote.html\n\nUpdate (2026-10-11, website v0.34.0): Conquest and the three-chapter campaign now use first-person manual aiming and held fire while on foot; vehicles and horses use third-person views. Touch controls include light aim assist. Saves use local storage and file backup/restore; in-game website-account login and account cloud saves have been removed. Website and Toy versions are updated. Toy retains official platform cloud saves independently, with local saves available when cloud support is unavailable. This video preserves the earlier recorded gameplay.",
+      "description_sha256": "244e49344ab34ae69e38f42ef773c545ae305680b69f54185c94e429229e43c5",
+      "verified_at": "2026-10-11T09:17:13.045873+00:00",
       "method": "Public watch-page ytInitialData localized description; language-only anonymous PREF, no account credentials."
     },
     {
@@ -122,7 +122,7 @@
       "verified_at": "2026-10-11T08:58:03.393Z",
       "updated_paragraph": "更新（2026-10-11·v0.11.0-hellroad.1）：第三关重做为死亡沙漠与地狱公路，沙漠三波后机修工送车，驾车撞击、躲霍格手雷；可以在车上击败霍格，也可车毁后徒步决战。网站与Toy均已更新；本片保留第一关历史实录，以当前游戏为准。",
       "preserved_original": "同一关分别用侧视、角色身后和第一人称打到关底，比较视野与战斗体验。画面录于2026-10-05，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。粉丝向非官方恐龙快打重制，原作版权归Capcom及原著方；片中镜头问题为录制时观察。当前试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html#游戏开发 #恐龙快打 #实机演示",
-      "method": "CUA opened public video page and checked H1 contains complete update paragraph, original introduction and hashtags. Raw HTTP returned412, so not used as evidence.",
+      "method": "CUA public page checked complete paragraph and historical introduction. Toy-restoration update is public for RV and queen; versus previous edit remains under platform review, so its temporary-down paragraph has not yet been corrected publicly. Raw HTTP412 is not used as evidence.",
       "description_hash_note": "No raw byte-hash assertion for browser-rendered text."
     },
     {
@@ -130,33 +130,37 @@
       "id": "7694602953994358058",
       "url": "https://www.douyin.com/video/7694602953994358058",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:59:14.574Z",
-      "updated_paragraph": "更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "verified_at": "2026-10-11T09:18:31.879859+00:00",
+      "updated_paragraph": "更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "preserved_original": "开房车进僵尸城搜物资，我能活着回来吗？｜虫潮围城 更新（2026-10-10·v0.33.0）：网站新增房车城镇与抗战战役三章，旧对战改为三据点战（固定兵种装备，无经验升级、银行和买兵），优化视角并移除爆炸受击晃屏。当前试玩：https://www.zhengxiaohui.cn/games.html（复制到浏览器）。以下为录制时的旧版说明，以当前游戏为准。开房车进僵尸城，边搜物资边找退路。这趟带回314零件，下次挑战搜全六区。#虫潮围城 #房车生存 #游戏开发 #AI",
-      "method": "CUA opened public video page and checked H1 contains complete update paragraph, original introduction and hashtags. Raw HTTP returned412, so not used as evidence.",
-      "description_hash_note": "No raw byte-hash assertion for browser-rendered text."
+      "method": "CUA public page checked complete paragraph and historical introduction. Toy-restoration update is public for RV and queen; versus previous edit remains under platform review, so its temporary-down paragraph has not yet been corrected publicly. Raw HTTP412 is not used as evidence.",
+      "description_hash_note": "No raw byte-hash assertion for browser-rendered text.",
+      "initial_major_update_verified_at": "2026-10-11T08:59:14.574Z"
     },
     {
       "platform": "douyin",
       "id": "7694239926304427298",
       "url": "https://www.douyin.com/video/7694239926304427298",
-      "status": "public_verified",
+      "status": "restoration_pending_existing_edit_review",
       "verified_at": "2026-10-11T08:59:14.902Z",
-      "updated_paragraph": "更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "updated_paragraph": "更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "preserved_original": "定时赚钱、升级银行、派兵攻城：双人对战塔防已经做进虫潮围城，还能打4对4。试玩入口：https://www.zhengxiaohui.cn/games.html （复制到浏览器打开，选择虫潮围城→虫潮对战）。你会先升级银行，还是先出兵？#虫潮围城 #塔防 #游戏开发 #AI",
-      "method": "CUA opened public video page and checked H1 contains complete update paragraph, original introduction and hashtags. Raw HTTP returned412, so not used as evidence.",
-      "description_hash_note": "No raw byte-hash assertion for browser-rendered text."
+      "method": "CUA public page checked complete paragraph and historical introduction. Toy-restoration update is public for RV and queen; versus previous edit remains under platform review, so its temporary-down paragraph has not yet been corrected publicly. Raw HTTP412 is not used as evidence.",
+      "description_hash_note": "No raw byte-hash assertion for browser-rendered text.",
+      "pending_reason": "修改信息正在审核中，请稍后再修改",
+      "latest_public_status": "previous temporary-down wording remains; no recovery baseline advanced"
     },
     {
       "platform": "douyin",
       "id": "7694177740940922131",
       "url": "https://www.douyin.com/video/7694177740940922131",
       "status": "public_verified",
-      "verified_at": "2026-10-11T08:59:15.209Z",
-      "updated_paragraph": "更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。Toy当前公开入口显示下架，最新清理包因权限错误尚未成功提交，暂以网站试玩为准。本片为录制时版本，以当前游戏操作提示为准。",
+      "verified_at": "2026-10-11T09:18:31.879859+00:00",
+      "updated_paragraph": "更新（2026-10-11·网站v0.34.0）：战地模式与抗战战役现在是步行第一人称手动瞄准、按住射击；载具和骑马保持第三人称，手机提供轻度辅助瞄准。网站保留本地存档与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档。网站与Toy均已更新，Toy保留平台官方云档，各平台存档独立，不可用时继续本地保存。本片为录制时版本，以当前游戏操作提示为准。",
       "preserved_original": "打补给、换武器、布置机枪塔，再钻进虫洞反攻母皇，最后回防守住第一波。画面录于2026-10-04，是历史开发实录；片中玩法、操作和问题属于当时版本，当前试玩以游戏内提示为准。当前试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html#游戏开发 #虫潮围城 #实机演示",
-      "method": "CUA opened public video page and checked H1 contains complete update paragraph, original introduction and hashtags. Raw HTTP returned412, so not used as evidence.",
-      "description_hash_note": "No raw byte-hash assertion for browser-rendered text."
+      "method": "CUA public page checked complete paragraph and historical introduction. Toy-restoration update is public for RV and queen; versus previous edit remains under platform review, so its temporary-down paragraph has not yet been corrected publicly. Raw HTTP412 is not used as evidence.",
+      "description_hash_note": "No raw byte-hash assertion for browser-rendered text.",
+      "initial_major_update_verified_at": "2026-10-11T08:59:15.209Z"
     }
   ]
 }

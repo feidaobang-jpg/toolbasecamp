@@ -14,7 +14,14 @@
       }
     ],
     "git_integration_locks": "not_used",
-    "external_write_locks": "only_owned_short_write_locks; release at completion"
+    "external_write_locks": "only_owned_short_write_locks; release at completion",
+    "active_user_authorized": {
+      "source": "QianwenWorkAssistant",
+      "task": "resistance-war-20261011 三平台发布",
+      "acquired_at": "2026-10-11T09:00:38.161760Z",
+      "user_confirmation": "是我叫千问做的",
+      "action": "preserve active writer lock; do not interrupt or duplicate upload"
+    }
   },
   "completed": [
     {
@@ -43,12 +50,12 @@
     },
     {
       "task": "privacy_cleanup_readback",
-      "status": "website_verified_four_toy_games_published",
+      "status": "website_verified_all_five_toy_games_published",
       "games": {
         "starship-defense": {
           "version": "web-fps-rules-v0.34.0-privacy1",
-          "status": "blocked_needs_user",
-          "public_verified_at": null
+          "status": "published",
+          "public_verified_at": "2026-10-11T16:54:59.708606+08:00"
         },
         "tank-3d": {
           "version": "remix-entry1-menu-text1-fp-aim1-privacy1",
@@ -80,24 +87,19 @@
     },
     {
       "task": "multiplatform_major_update_descriptions",
-      "status": "public_verified",
+      "status": "initial_major_updates_public_verified_restoration_partly_pending",
       "youtube_primary_and_english": 10,
-      "douyin": 4,
+      "douyin_initial_major_update_public_verified": 4,
+      "douyin_toy_restoration_public_verified": 2,
+      "douyin_toy_restoration_reviewing": 1,
       "record": "game-projects/site-games/releases/task-takeover-20261011/multiplatform.json"
     }
   ],
   "remaining": [
     {
-      "task": "starship-defense-toy",
-      "status": "blocked_platform_permission",
-      "code": "307008",
-      "preview": "https://www.bilibili.com/toy/preview/preview_EEC2WxGS/index.html",
-      "action": "需本人向Toy平台核对作品权限/下架原因；不重复提审同包，不新建替代作品绕过。"
-    },
-    {
       "task": "conquest-toy-promotion-form",
-      "status": "deferred_until_toy_entry_available",
-      "action": "Toy入口恢复后才提交真实可试玩申请，当前没有申报获得推流。"
+      "status": "pending_authorized_account_writer",
+      "action": "Toy公开入口已恢复；待Qianwen账号写操作结束后查重并登记已绑定且置顶的本期BV，片内平台宣传E=否，运营反馈F留空。"
     },
     {
       "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
@@ -119,13 +121,29 @@
     },
     {
       "task": "resistance-war_video_variants",
-      "status": "awaiting_human_review",
-      "action": "保留各自成片及哈希，未收到对应最终包审片批准，不擅自发布。"
+      "status": "separate_active_user_authorized_task",
+      "action": "用户2026-10-11说明“是我叫千问做的”，保留当前发布工作和账号写锁，不接管或重复上传。",
+      "owner": "QianwenWorkAssistant"
     },
     {
       "task": "contra-stage1-3d",
       "status": "completed_local_preview",
       "action": "原任务明确先不上架；无遗留写锁，不属于待解锁的发布任务。"
+    },
+    {
+      "task": "bilibili_toy_restoration_clarification",
+      "status": "pending_authorized_account_writer",
+      "owner": "QianwenWorkAssistant",
+      "owner_acquired_at": "2026-10-11T09:00:38.161760Z",
+      "user_confirmation": "是我叫千问做的",
+      "action": "账号锁释放后重读全文和最新合集，若仍有临时下架说明则只修正平台状态，保留千问最新视频引导和历史介绍；不重复发游戏包。",
+      "record": "pending-bilibili-restoration.json"
+    },
+    {
+      "task": "douyin_7694239926304427298_restoration",
+      "status": "platform_edit_under_review",
+      "observed_ui": "修改信息正在审核中，请稍后再修改",
+      "action": "既有审核结束后读回，仍显示临时下架时再合并恢复说明；不在灰色提交按钮上重复点击，不宣称恢复说明已公开。"
     }
   ],
   "worktrees": [
@@ -421,5 +439,21 @@
   ],
   "taptap": "not_requested_not_operated",
   "schedules": "no_new_schedule",
-  "shared_original_worktree": "preserved"
+  "shared_original_worktree": "preserved",
+  "final_checked_at": "2026-10-11T09:18:31.879859+00:00",
+  "completion": "available_takeover_work_published_remaining_external_dependencies_preserved",
+  "note": "旧Trae锁已归档；新增Qianwen锁经用户确认属于其正在安排的发布，不解锁或中断。腾讯新版OCR仍真实额度不足，代码在独立远端分支保全。",
+  "notification_events": {
+    "quota": {
+      "task_id": "tencent-ocr-100044456994",
+      "event_id": "cropenhance-resource-package-20261009-18d6fba2",
+      "status": "already_sent"
+    },
+    "active_writer": {
+      "task_id": "bilibili-16214353-active-write",
+      "event_id": "qianwen-resistance-war-publish-20261011-090038",
+      "status": "resolved_by_user_confirmation"
+    },
+    "old_toy_permission": "resolved_by_actual_published_readback"
+  }
 }
