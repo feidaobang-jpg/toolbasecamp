@@ -38,7 +38,7 @@
       ],
       "before": "手机旋转后的菜单纵向内容远超可视高度，实际表现为只露出一部分和横向滑动。",
       "after": "首页显示选人、战役难度、开始/继续及6个模式；长说明独立放入玩法面板。",
-      "verification": "42/42 browser fixture checks passed"
+      "verification": "43/43 browser fixture checks passed"
     },
     {
       "id": "update-log",
@@ -264,15 +264,62 @@
   },
   "tap_tap": "not_requested_not_submitted",
   "bilibili": {
-    "decision": "merge_with_pending",
-    "reason": "原千问任务已由用户手动停止，新Codex视频接手任务正在持有B站账号锁。本版小改可合并入既有银行恢复/虫族重做待更新说明。",
-    "status": "pending_active_video_task_lock",
-    "lock_owner_task": "01a12adb-b454-7aa3-a23f-b58ddb47dec7-work1"
+    "status": "public_verified",
+    "decision": "merge_with_existing_major_updates",
+    "reason": "六条B站简介及两条纠正置顶已公开核验；13条玩家原楼回复已公开核验。",
+    "record": "bilibili-sync.json",
+    "public_verified": [
+      "BV1KFpJ6sEEK",
+      "BV1xdpx63ETu",
+      "BV14hpL62EZ5",
+      "BV1C5HQ6gEvD",
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf"
+    ],
+    "pending_public_readback": [],
+    "replies_status": "public_verified",
+    "actual_replies": 13,
+    "reply_record": "feedback-replies.json"
   },
   "resume": {
     "worktree": "C:\\Users\\37818\\.codex\\worktrees\\bili-feedback-20261011\\toolbasecamp",
     "branch": "codex/bili-feedback-20261011",
     "original_feedback": "releases/web-bank-restore-v0.35.0/handoff.json",
-    "pending_replies": 12
+    "pending_replies": 0,
+    "pending_description_readback": [],
+    "do_not_repeat_submissions": true,
+    "pending_localization_edit": [
+      {
+        "platform": "youtube",
+        "video_id": "jbTIpyh6Clw",
+        "language": "en",
+        "record": "releases/web-menu-history-v0.36.1/multiplatform-sync.json"
+      },
+      {
+        "platform": "youtube",
+        "video_id": "QOTmOfT19_g",
+        "language": "en",
+        "record": "releases/web-menu-history-v0.36.1/multiplatform-sync.json"
+      },
+      {
+        "platform": "youtube",
+        "video_id": "5pr0fr0CMl0",
+        "language": "en",
+        "record": "releases/web-menu-history-v0.36.1/multiplatform-sync.json"
+      },
+      {
+        "platform": "youtube",
+        "video_id": "X3Lc6SZ6whE",
+        "language": "en",
+        "record": "releases/web-menu-history-v0.36.1/multiplatform-sync.json"
+      }
+    ]
+  },
+  "multiplatform": {
+    "status": "primary_descriptions_public_verified_localizations_pending",
+    "record": "multiplatform-sync.json",
+    "youtube_public": 5,
+    "douyin_public": 5,
+    "youtube_localizations_pending": 4
   }
 }

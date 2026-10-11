@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-11T10:07:11.194993+00:00",
+  "updated_at": "2026-10-11T13:04:55.279701+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -925,8 +925,16 @@
       "id": "oct11-d058b6b7d13bbbab",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 16:33:28",
@@ -962,9 +970,16 @@
       "id": "oct11-b7d9fa516d4de62c",
       "kind": "request",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "reply_approved",
+      "status": "replied",
       "reply_text": "游戏已恢复上架，手机点视频里的 Toy 入口即可玩；进入后选择虫族模式。",
-      "reply_status": "pending"
+      "reply_status": "public_verified_after_reload",
+      "previous_status": "reply_approved",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "1d5363ea854e4b8b0666f55a63ef9222797d09ec0c373a0fbb848dd97483d26b",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 13:55:27",
@@ -986,9 +1001,17 @@
       "id": "oct11-de40b6563b6e61de",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
+      "status": "replied",
       "reply_text": "游戏已恢复上架。",
-      "image_note": "公开评论附图显示“该内容已下架”，2026-10-11读取确认"
+      "image_note": "公开评论附图显示“该内容已下架”，2026-10-11读取确认",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 12:12:30",
@@ -1010,8 +1033,16 @@
       "id": "oct11-d01f93c12358a78e",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 11:06:40",
@@ -1022,8 +1053,16 @@
       "id": "oct11-4a6f0c3775a0444a",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 10:36:55",
@@ -1034,14 +1073,21 @@
       "id": "oct11-bcb195fca7077e77",
       "kind": "request",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "implemented_pending_reply",
+      "status": "implemented_replied",
       "note": "旧银行玩法已作为独立模式恢复，正式Toy实测升级银行成功；与战地并存，每局独立只保存战绩。",
       "fixed_in": "web-bank-restore-v0.35.0",
       "user_decision": "恢复独立银行塔防模式，上线后回复",
       "reply_text": "带升级银行的旧玩法已经恢复成独立模式了！主菜单选择「银行塔防对战」即可进入，银行升级、买兵和建造都保留了，战地模式也还在。",
-      "reply_status": "pending_account_lock",
+      "reply_status": "public_verified_after_reload",
       "website_status": "deployed_verified",
-      "toy_status": "published"
+      "toy_status": "published",
+      "previous_status": "implemented_pending_reply",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "be8b6cf8025fdb99fa5a8116c9e3c7225a60ebb76ac2107f9271fe43d6d49519",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 09:34:57",
@@ -1063,8 +1109,16 @@
       "id": "oct11-ec5607facc1ce4b0",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 08:44:50",
@@ -1075,8 +1129,16 @@
       "id": "oct11-7fbbb9924f139c1d",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 08:42:43",
@@ -1087,8 +1149,16 @@
       "id": "oct11-f82cf0316e0e7e3f",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 08:42:13",
@@ -1110,8 +1180,16 @@
       "id": "oct11-65054cacec82daa8",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 08:05:59",
@@ -1122,8 +1200,16 @@
       "id": "oct11-077a23a3bf4f5cf9",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 1,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。"
     },
     {
       "date": "2026-10-11 00:01:06",
@@ -1134,8 +1220,17 @@
       "id": "oct11-ce446469ce907aa3",
       "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "pending_reply",
-      "reply_text": "游戏已恢复上架。"
+      "status": "replied",
+      "reply_text": "游戏已恢复上架。",
+      "previous_status": "pending_reply",
+      "reply_status": "public_verified_after_reload",
+      "reply_verified_at": "2026-10-11T13:04:55.279701+00:00",
+      "reply_count": 2,
+      "reply_sha256": "07b4a438703b0c35ad4dafcf22a4b77ea76e71ab1cba9ce10cc00b184b95a060",
+      "reply_record": "releases/web-menu-history-v0.36.1/feedback-replies.json",
+      "reply_id": null,
+      "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。",
+      "duplicate_root_note": "公开视频存在两条不同根楼，作者、时间、文字相同；各回复一次，未重复回复同一楼。"
     }
   ]
 }
