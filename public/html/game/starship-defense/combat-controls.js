@@ -28,6 +28,8 @@ export function createCombatControls(storage){
       if(settings.fire==='auto')return hasTarget||held.size>0;
       return settings.fire==='toggle'?latched:held.size>0;
     },
+    // 战地、抗战固定按住射击：不看「射击方式」设置，只认当前是否按着开火键。
+    get held(){return held.size>0;},
     get mouseEnabled(){return settings.input==='mouse';},
     get autoAim(){return settings.aim==='auto';}
   };
@@ -49,5 +51,8 @@ export function mountCombatSettings(container,controls,onChange){
     row.appendChild(select);section.appendChild(row);
   }
   const help=document.createElement('p');help.className='small';help.textContent='默认自动寻敌并开火，可边撤退边攻击。键鼠模式：点击画面转视角；纯键盘模式：左转视角 / 右转视角键调整方向。手动瞄准配合第一人称更准确。菜单用方向键 / WASD / Tab 选择、J / 回车确认、K / Esc 返回。触屏仍使用原有按钮。设置自动保存。';section.appendChild(help);
+  const fixed=document.createElement('p');fixed.className='small';fixed.id='combat-fixed';fixed.textContent='战地模式和抗战战役固定为步行第一人称、手动瞄准、按住射击，不使用上面的瞄准和射击设置；键鼠按住左键射击，右键拖动只转视角。';section.appendChild(fixed);
+  // 枪战规则生效时锁住瞄准、射击两项，避免玩家以为改了设置却没变化；保存的设置本身不动。
+  section.lockAim=locked=>{for(const key of ['aim','fire'])section.querySelector('#combat-'+key).disabled=!!locked;};
   container.appendChild(section);return section;
 }

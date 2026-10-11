@@ -9,7 +9,7 @@ installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'remix-entry1';
+const VERSION = 'remix-entry1-fp-aim1';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -880,6 +880,12 @@ function simulate(dt) {
   gameClock += dt;
   const rot = (isDown('rotR') ? 1 : 0) - (isDown('rotL') ? 1 : 0);
   if (uiMode === 'game' && !paused && !current) { lookControl.step(dt, rot); pitchControl.step(dt); }
+  // 第一人称按准星（视线）发射：视线不随 A/D 转车跳转，炮口必须跟着画面中心。
+  // 早先子弹仍按车体方向飞出，转向后炮弹从画面侧面飞走，加上同时只能有 1 发在飞，玩家看成"打不出子弹"。
+  if (uiMode === 'game' && !paused && !current && world) {
+    const lp = localPlayer(world);
+    if (lp) { if (view.firstPerson()) lp.lookHeading = view.cameraYaw(); else if (PRESETS[view.presetIndex].fp) delete lp.lookHeading; }
+  }
   if (coop.active && !coop.host && world) {
     const now = performance.now();
     if (now - lastInputAt >= 33 || firePressed) {

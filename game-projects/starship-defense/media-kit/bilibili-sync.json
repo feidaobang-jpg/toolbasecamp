@@ -237,6 +237,16 @@
       "record": "releases/hud-menu-align-20261010/bilibili-sync.json",
       "recorded_at": "2026-10-10T23:50:38+08:00",
       "source_commit": "4a729cf0"
+    },
+    {
+      "version": "web-fps-rules-v0.34.0",
+      "classification": "正式版本",
+      "status": "pending_account_lock",
+      "summary": "战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击；载具与骑马第三人称跟随；手机保留轻度辅助瞄准；主战役、房车、虫族不变。",
+      "prepared_update_line": "更新（2026-10-11·v0.34.0）：战地模式和抗战战役改成第一人称手动瞄准——步行固定第一人称，按住射击键才开火，载具和骑马用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击键还能继续拖动瞄准。主战役、房车、虫族模式操作不变。",
+      "reason": "B站账号写锁由其他会话持有，未写入；Toy 更新尚未提交成功，文案不写“Toy 已更新”",
+      "record": "releases/web-fps-rules-v0.34.0/handoff.json",
+      "recorded_at": "2026-10-11T08:40:00+08:00"
     }
   ],
   "comment_corrections": [
