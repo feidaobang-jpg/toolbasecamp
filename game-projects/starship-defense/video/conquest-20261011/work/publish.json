@@ -12,12 +12,12 @@
       "variant_id": "bilibili-zh",
       "manifest_file": "publish/bilibili-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "等待共用B站写锁释放"
-      ],
+      "blocking_issues": [],
       "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
-      "publication_status": "blocked_account_write_lock",
-      "upload_completed": false
+      "publication_status": "published",
+      "upload_completed": true,
+      "public_url": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+      "platform_id": "BV1KFpJ6sEEK"
     },
     {
       "variant_id": "douyin-zh",
@@ -68,6 +68,6 @@
       "policy": "No paid X service; no X action in this production task"
     }
   },
-  "publication_stage": "partially_published_bilibili_blocked",
-  "updated_at": "2026-10-11T02:15:52.630508+00:00"
+  "publication_stage": "all_requested_platforms_published",
+  "updated_at": "2026-10-11T08:45:31.215699+00:00"
 }

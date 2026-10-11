@@ -17,14 +17,16 @@
   "fps": 30,
   "duration_seconds": 110.53333333333333,
   "title": "只剩3票险胜！虫潮围城的据点争夺实战",
-  "description": "这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/games.html （选择虫潮围城 → 战地模式）\n操作：WASD移动，I登乘/下车，H兵种支援，U手雷；电脑默认自动瞄准、自动开火，可在设置中切换。\n战地据点模式由Codex辅助开发，本期展示真实实战。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "description": "这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/games.html （选择虫潮围城 → 战地模式）\nToy入口（当前显示下架，暂以网站试玩为准）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n当前操作：WASD移动，J按住射击，I登乘/下车，H兵种支援，U手雷；步行第一人称手动瞄准、载具第三人称。视频保留此前自动瞄准的录制实况，以当前试玩为准。\n战地据点模式由Codex辅助开发，本期展示真实实战。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
   "tags": [
+    "哔哩哔哩Toy创意挑战",
     "虫潮围城",
     "据点争夺",
     "战地模式",
     "游戏开发",
     "Codex",
-    "AI"
+    "AI",
+    "bilibilitoy"
   ],
   "description_file": "../../../final/bilibili-zh/投稿文案.txt",
   "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
@@ -53,20 +55,15 @@
   "cover_upload_mode": "custom_image",
   "subtitle_mode": "burned_in",
   "subtitles": [],
-  "category": null,
-  "copyright_type": "original_self_recorded_gameplay_pending_account_confirmation",
+  "category": "游戏",
+  "copyright_type": "original_self_recorded_gameplay",
   "credits_attachment": "credits.txt",
   "disclosures": {
     "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload"
   },
-  "platform_requirements_checked_at": "2026-10-11T02:15:52.630508+00:00",
+  "platform_requirements_checked_at": "2026-10-11T08:45:31.215699+00:00",
   "platform_sources": [],
-  "unverified_fields": [
-    "account login",
-    "current category options",
-    "platform synthetic-content declaration",
-    "live cover upload control"
-  ],
+  "unverified_fields": [],
   "technical_preparation": "pass",
   "human_review": {
     "status": "approved",
@@ -91,11 +88,9 @@
     "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
   },
   "subjective_audio_listening": "not-run",
-  "blocking_issues": [
-    "共用B站账号写锁由Trae任务mario-stage4-release-20261010持有，待持有者释放或确认任务已退出且无写操作。"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
-  "publication_status": "blocked_account_write_lock",
+  "publication_status": "published",
   "toy": {
     "id": "38678478981120",
     "slug": "chongchao-qianshao",
@@ -105,9 +100,9 @@
     "public_runtime_verified": false,
     "public_page_observed_text": "该内容已下架",
     "status_conflict": "CLI状态与匿名公开入口不一致，未据此断言平台后台已下架",
-    "public_link_in_current_draft": false,
+    "public_link_in_current_draft": true,
     "promotion_in_video": false,
-    "binding_status": "not_bound_to_this_unpublished_video",
+    "binding_status": "bound_verified",
     "topic_id": "1346285",
     "topic_url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
     "topic_name": "哔哩哔哩Toy创意挑战",
@@ -138,5 +133,8 @@
       "check eligible free traffic reward",
       "maintain previous main promo once new BV is visible"
     ]
-  }
+  },
+  "public_url": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+  "platform_id": "BV1KFpJ6sEEK",
+  "ai_declaration": "含AI生成内容"
 }

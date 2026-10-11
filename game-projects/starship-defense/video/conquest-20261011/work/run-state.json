@@ -46,7 +46,7 @@
   ],
   "cover_stage": "completed",
   "render_entrypoint": "render.py",
-  "updated_at": "2026-10-11T02:15:52.630508+00:00",
+  "updated_at": "2026-10-11T08:45:31.215699+00:00",
   "next_step": "等待Trae任务释放B站共用写锁，或用户确认持有任务已退出且没有B站写操作；发布授权和已审片哈希保留，随后完成B站投稿、合集、Toy绑定与适用活动/流量奖励核验。不要重新上传抖音或YouTube。",
   "publication_status": {
     "bilibili-zh": "blocked_account_write_lock",
@@ -70,5 +70,12 @@
   },
   "git_worktree": "C:/Users/37818/.codex/worktrees/conquest-video-20261011/toolbasecamp",
   "review_page_check": "pass: local 1080p video and both 52-cue subtitle tracks load without starting playback",
-  "publication_task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01"
+  "publication_task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01",
+  "publication_stage": "all_requested_platforms_published",
+  "bilibili_publication": {
+    "status": "published",
+    "bvid": "BV1KFpJ6sEEK",
+    "url": "https://www.bilibili.com/video/BV1KFpJ6sEEK/"
+  },
+  "followup_status": "toy_promotion_deferred_until_entry_restored"
 }

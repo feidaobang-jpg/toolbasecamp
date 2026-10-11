@@ -46,24 +46,76 @@
         "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
         "watermark_enabled": false,
         "ctime": 1790739397,
-        "mtime": 1791647266
+        "mtime": 1791708809
       },
-      "status": "blocked_needs_user",
+      "status": "published",
       "preview_qa": "passed",
       "preview_qa_method": "actual Toy hosted preview inspected via browser; 3 viewport packaged runtime regression; shared author link navigated to UID16214353; starship save inputs absent; desktop viewport simulations, no physical phone",
       "submit": {
-        "stdout": "",
-        "stderr": "error: update Toy failed: status=200 code=307008 message=无权限操作",
-        "exit_code": 1
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_E5x3z4C2/index.html"
       },
-      "submit_at": "2026-10-11T08:13:55.037660+00:00",
+      "submit_at": "2026-10-11T16:51:54.889810+08:00",
       "notification": {
         "task_id": "toy-38678478981120",
         "event_id": "toy-307008-chongchao-20261010",
-        "result": "already_sent"
+        "result": "resolved"
       },
-      "public_observation": "Public URL currently says content removed; mylist published refers to last successful old version, not this cleanup package.",
-      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\starship-defense"
+      "public_observation": "Clean package published and actual public UI verified; previous removed-page and permission errors preserved under previous_attempts.",
+      "preserved_package": "D:\\project\\task-artifacts\\privacy-cleanup-20261011\\toy\\starship-defense",
+      "previous_attempts": [
+        {
+          "submit": {
+            "stdout": "",
+            "stderr": "error: update Toy failed: status=200 code=307008 message=无权限操作",
+            "exit_code": 1
+          },
+          "submit_at": "2026-10-11T08:13:55.037660+00:00",
+          "status": "blocked_needs_user",
+          "public_observation": "Public URL currently says content removed; mylist published refers to last successful old version, not this cleanup package.",
+          "notification": {
+            "task_id": "toy-38678478981120",
+            "event_id": "toy-307008-chongchao-20261010",
+            "result": "resolved"
+          }
+        }
+      ],
+      "readback_at": "2026-10-11T16:54:59.708606+08:00",
+      "resume_record": "starship-resume-20261011.json",
+      "permission_event_resolved_at": "2026-10-11T16:53:48.216555+08:00",
+      "public_verified_at": "2026-10-11T16:54:59.708606+08:00",
+      "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24947/index.html",
+      "public_verification": {
+        "status": "published",
+        "verified_at": "2026-10-11T16:54:59.708606+08:00",
+        "readback": {
+          "id": 38678478981120,
+          "title": "虫潮围城",
+          "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_21840.jpg",
+          "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+          "user_info": {
+            "mid": 16214353,
+            "name": "飞刀班长",
+            "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+          },
+          "status": "published",
+          "visibility": "PUBLIC",
+          "category": "GAME",
+          "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_20265.png",
+          "watermark_enabled": false,
+          "ctime": 1790739397,
+          "mtime": 1791708809
+        },
+        "content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24947/index.html",
+        "checks": [
+          "Public Toy entry loads new versioned frame, not preview",
+          "Main menu and save panel include author Bilibili homepage",
+          "No website account or password form in save panel",
+          "Official Toy cloud save read successfully; local/cloud conflict shown with automatic upload paused; no manual write or overwrite performed"
+        ],
+        "screenshot": "D:/project/task-artifacts/privacy-cleanup-20261011/starship-published-save-panel.jpg",
+        "method": "Actual browser UI plus CLI mylist published after submission; no public byte-hash assertion; desktop browser only"
+      }
     },
     "tank-3d": {
       "id": 39043249461248,
@@ -355,7 +407,7 @@
       }
     }
   },
-  "updated_at": "2026-10-11T08:21:18.515309+00:00",
+  "updated_at": "2026-10-11T16:54:59.708606+08:00",
   "bilibili": {
     "decision": "public_verified",
     "reason": "接管账号写锁后纠正两期网站账号云档说明与全部5期虫潮Toy状态；Tank瞄准和Dino第三关重大变更已公开核验。普通作者按钮变更保留合并节奏。",
@@ -370,7 +422,12 @@
       }
     ],
     "verified_at": "2026-10-11T08:45:31.215699+00:00",
-    "record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json"
+    "record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
+    "platform_recovered": {
+      "at": "2026-10-11T16:54:59.708606+08:00",
+      "status": "published",
+      "followup": "本任务立即纠正暂时下架文案并完成推流表。"
+    }
   },
   "taptap": "not_requested_not_operated"
 }
