@@ -11,6 +11,8 @@ cat .cursor/rules/*.mdc        # 全量；或按下方索引只读与本次任�
 
 ## 规则索引（.cursor/rules/）
 
+用户 2026-10-11 决定移除本地视频生成模型、工作流及网站后台相关模块，保留图片、3D、语音、音乐与已有素材。不得自动恢复本机视频生成；未来研究按具体授权使用租用 GPU 服务器或云端服务。细则见 `home-pc-media-pipeline.mdc`。
+
 流程与部署（几乎每次都适用）：`game-release-cadence`、`game-privacy`、`auto-commit-push`、`git-sync-before-work`、`verify-static-deploy`、`vps-ssh-ops`、`html-utf8-encoding`、`no-scratch-leftovers`、`windows-host`、`windows-log-utf8`
 
 全站 UI 与文案：`no-tailwind`、`tool-ui-globals`、`i18n-bilingual`、`site-stats-zh-labels`、`list-pagination`、`no-sitewide-cache-bust`、`shared-js-helpers`、`timezone-utc-cn`

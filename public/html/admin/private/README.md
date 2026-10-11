@@ -28,6 +28,8 @@ Android 工具已全部公开，见首页「Android」分类。
 
 ## 家里电脑（ComfyUI）
 
+2026-10-11：本地视频生成模块已移除。后台仅保留图片、3D、语音、音乐、音效与静帧配音合成；视频权重、文生视频/图生视频、短片、剧集、数字人和游戏动作生成入口不再提供。已有输出与素材保留。
+
 - 文档：`../../docs/COMFY-HOME-PC.md`
 - 页面目录：`home-pc/`（后台分组「家里电脑」）
 - API：`siteConfig.homePcApiBase` → `https://comfy.zhengxiaohui.cn`

@@ -137,10 +137,7 @@ if not defined STABLE_AUDIO_ROOT set STABLE_AUDIO_ROOT=D:\sd\stable-audio-open
 if not defined STABLE_AUDIO_MODEL_DIR set STABLE_AUDIO_MODEL_DIR=D:\sd\stable-audio-open\model
 if not defined HUNYUAN3D_ROOT set HUNYUAN3D_ROOT=D:\sd\hunyuan3d
 
-rem 数字人（唇形同步）：引擎根目录 + ffmpeg（MuseTalk 要求 ffmpeg 在 PATH 或 --ffmpeg_path 目录内）
-if not defined MUSETALK_ROOT set MUSETALK_ROOT=D:\sd\musetalk
-if not defined LATENTSYNC_ROOT set LATENTSYNC_ROOT=D:\sd\latentsync
-if not defined WAV2LIP_ROOT set WAV2LIP_ROOT=D:\sd\wav2lip
+rem ffmpeg remains available for audio and static-image composition.
 if exist "D:\sd\ffmpeg\bin\ffmpeg.exe" set "PATH=D:\sd\ffmpeg\bin;%PATH%"
 rem Do not default HF_ENDPOINT=hf-mirror (hub missing commit header). Set it yourself if needed.
 set PYTHONUTF8=1

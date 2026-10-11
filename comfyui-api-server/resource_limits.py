@@ -166,28 +166,3 @@ def set_nvidia_gpu_power_percent(percent: int) -> dict:
         "after": cur,
         "needs_admin": code != 0 and "Insufficient Permissions" in (out or ""),
     }
-
-
-def video_full_gpu_power_enabled() -> bool:
-    raw = (os.environ.get("COMFYUI_VIDEO_FULL_GPU_POWER") or "1").strip().lower()
-    return raw not in ("0", "false", "no", "off")
-
-
-def lift_gpu_power_for_video() -> dict:
-    """成片前尽量拉满功耗；失败不抛错。"""
-    if not video_full_gpu_power_enabled():
-        return {"ok": True, "skipped": True, "reason": "COMFYUI_VIDEO_FULL_GPU_POWER=0"}
-    return set_nvidia_gpu_power_percent(100)
-
-
-def restore_gpu_power_after_video() -> dict:
-    """成片后恢复日常功耗上限（local.env 的 COMFYUI_RESOURCE_GPU_POWER_PERCENT）。"""
-    if not video_full_gpu_power_enabled():
-        return {"ok": True, "skipped": True}
-    enabled = (os.environ.get("COMFYUI_RESOURCE_LIMIT") or "1").strip().lower()
-    if enabled in ("0", "false", "no", "off"):
-        return set_nvidia_gpu_power_percent(0)
-    pct = _env_int("COMFYUI_RESOURCE_GPU_POWER_PERCENT", 0)
-    if pct <= 0:
-        return set_nvidia_gpu_power_percent(0)
-    return set_nvidia_gpu_power_percent(pct)

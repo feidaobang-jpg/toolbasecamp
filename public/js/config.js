@@ -323,39 +323,9 @@ const privateToolsConfig = {
                     url: 'html/admin/private/home-pc/text-to-video.html'
                 },
                 {
-                    titleKey: 'privateHub.homePc.t2vTitle',
-                    descriptionKey: 'privateHub.homePc.t2vDesc',
-                    url: 'html/admin/private/home-pc/t2v.html'
-                },
-                {
-                    titleKey: 'privateHub.homePc.i2vTitle',
-                    descriptionKey: 'privateHub.homePc.i2vDesc',
-                    url: 'html/admin/private/home-pc/i2v.html'
-                },
-                {
-                    titleKey: 'privateHub.homePc.trailerTitle',
-                    descriptionKey: 'privateHub.homePc.trailerDesc',
-                    url: 'html/admin/private/home-pc/trailer.html'
-                },
-                {
-                    titleKey: 'privateHub.homePc.seriesTitle',
-                    descriptionKey: 'privateHub.homePc.seriesDesc',
-                    url: 'html/admin/private/home-pc/series-studio.html'
-                },
-                {
-                    titleKey: 'privateHub.homePc.gameSpriteTitle',
-                    descriptionKey: 'privateHub.homePc.gameSpriteDesc',
-                    url: 'html/admin/private/home-pc/game-sprite-studio.html'
-                },
-                {
                     titleKey: 'privateHub.homePc.ttsTitle',
                     descriptionKey: 'privateHub.homePc.ttsDesc',
                     url: 'html/admin/private/home-pc/tts.html'
-                },
-                {
-                    titleKey: 'privateHub.homePc.digitalHumanTitle',
-                    descriptionKey: 'privateHub.homePc.digitalHumanDesc',
-                    url: 'html/admin/private/home-pc/digital-human.html'
                 },
                 {
                     titleKey: 'privateHub.homePc.musicTitle',
