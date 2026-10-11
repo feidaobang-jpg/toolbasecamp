@@ -1,4 +1,15 @@
-// 虫族模式实机采集 v32：线上部署版本，QA 钩子只读观察，输入全部为真实键盘事件，正常规则不改数值。
+// 虫族模式实机采集 v33：线上部署版本，QA 钩子只读观察，输入全部为真实键盘事件，正常规则不改数值。
+// v33（smoke-v32 复盘：220.6s 再度破门（hp 643），但 bio=5（蜕皮吃光收入）、母虫在围攻位距门洞 28u，
+//   步行穿火区 3.5s 即第 5 死溃散——破门时手里没钱，是两条 smoke 共同的死因）：
+//   【临门经济储备】门血 <=800 起：停止召兵（虫群在门外帮不上忙，钱留给冲刺）+ 蜕皮阈值 .95→.75，
+//   收入 17/s 净存约 12/s → 破门时手握 100-250 生物量；冲刺沿途每 6s 召一窝战士虫
+//   （出巢在母虫身旁，跑过门洞后留在原地吃满炮塔仇恨 = 免费诱饵）；
+//   ① gate-dead 紧急蜕皮阈值 .65→.55（少花 40，血量 >55% 时把钱留给冲刺诱饵）；
+//   ② 行军/冲刺途中 gateDead 紧急蜕皮 hp<.5 不再排除 coremove（v32 只在非冲刺时允许，冲刺中裸奔）；
+//   ③ gaterush 触发门槛不变（bio>=80+hp>=.8+swarm>=3）——储备到位后更易在门口贴脸爪破门，
+//     破门点从围攻位 28u 缩到门脸 2.8u，冲刺暴露时间减半；gaterush 中召唤照常（门口出巢=诱饵就位）；
+//   ④ 其余（v32 直冲核心、coremove 走廊冲刺、重生环线）全部不动。
+// ── 以下为 v32 及更早版本沿革 ──
 // v32（smoke-v31b 复盘：138.3s 首次实机破门 gate 0/2500，但破门后 bio 45<召兵 60 且围攻位零收入，
 //   takedown 集结条件 swarmIn>=4+swarm>=12 永远达不到，狙击 84dps 单点围攻位母虫 6s 一条命，连死溃散）：
 //   核心洞察：核心伤害收入 ×0.6（核心 2000 血 = 1200 生物量总量）→ 破门后唯一正解是直冲核心口袋开饭，
@@ -145,7 +156,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
       // 阶段推进与节点标记
       if(s.gateDead&&!gateMarks.has('gate-dead')){gateMarks.add('gate-dead');await mark('gate-dead');
         wpIdx=0;way=[...KEEWAY,...COREPATH];wpSince=Date.now();lastPos=null;stuckN=0;
-        if(hpPct<.65&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-breach');await sleep(250);}
+        if(hpPct<.55&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-breach');await sleep(250);}
         phase='coremove';takedownAt=Date.now();await mark('core-rush-go');}
       for(const th of [75,50,25]){
         if(!gateMarks.has('gate-'+th)&&!s.gateDead&&s.gateHp<=2500*th/100&&s.gateHp>0){gateMarks.add('gate-'+th);await mark('gate-'+th);}
@@ -311,7 +322,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
         // dash 时机：冲锋/直冲核心在门洞走廊 bz∈(-24,-4)（火力最密处）按；重走行军 dg>35 随手用
         if(s.dashCd<=0&&s.binv<=0&&(((phase==='assault'||phase==='coremove')&&s.bz<-4&&s.bz>-24)||dg>35)){await p.keyboard.press('KeyL');dashN++;if(dashN===1)await mark('dash-1');}
         if(!s.gateDead&&hpPct<.45&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-march-'+moltN);await sleep(250);}
-        if(s.gateDead&&!inAssault&&hpPct<.6&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(200);}
+        if(s.gateDead&&hpPct<.5&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(200);}
       }else if(place==='siege'){
         // ===== 围攻 (1,11)距门28.1：站桩酸磨门+提前养兵（v29.1 原逻辑）=====
         const dGate=Math.hypot(s.gateX-s.bx,s.gateZ-s.bz);
@@ -338,9 +349,9 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           if(Math.abs(wrap(s.yaw-y0))>.1)await sleep(380);
           if(!held.size){await p.keyboard.press('KeyK');acidN++;acidGateN++;if(acidGateN===1)await mark('acid-1');}
         }
-        const moltTh=mgAlive?.7:(s.gateHp<=800?.95:.8); // v31.1：mgAlive===0 时 0.8（狙击单点期勤蜕皮），临破门 0.95 满血冲
+        const moltTh=mgAlive?.7:(s.gateHp<=800?.75:.8); // v33：门血<=800 蜕皮阈值 .95→.75，勤蜕皮但少花钱攒冲刺本钱
         if(hpPct<moltTh&&s.biomass>=40&&s.moltCd<=0){await p.keyboard.press('KeyO');moltN++;await mark('molt-'+moltN);await sleep(250);}
-        else if(s.sumCd<=0&&s.swarm<14&&s.biomass>=60){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');await sleep(350);}
+        else if(s.gateHp>800&&s.sumCd<=0&&s.swarm<14&&s.biomass>=60){await p.keyboard.press('KeyU');warN++;if(warN===1)await mark('summon-warrior-1');await sleep(350);} // v33：门血<=800 停止召兵，钱全留给破门冲刺
       }else{
         // ===== 贴脸输出（gaterush=门北脸爪+酸速破门 / grind=核心爪+酸+就地召唤滚雪球）=====
         if(held.has('ShiftLeft')){await p.keyboard.up('ShiftLeft');held.delete('ShiftLeft');}
@@ -378,7 +389,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     }
     const data={take:process.env.TAKE||'zerg-run2',url:GAME_URL,started,audioStart,duration_s:+((Date.now()-started)/1000).toFixed(2),frames:frames.length,events,states,errors,finalState:fin,
       build:'线上部署 https://www.zhengxiaohui.cn（2026-10-10 飞虫修复版：zerg-mode.js/game.compat.js 已核验含 flightAfterExit）',
-      strategy:'v32 破门直冲核心+收入雪球：①围攻位(1,11)酸磨门+养兵（v31.1 调参：召兵60/上限14/蜕皮0.8）→②贴门爪+酸速破门→③【v32】gate-dead 紧急蜕皮(hp<.65且bio>=40)后 coremove 直插核心口袋 [0,-16.5]→[-2,-24]→[-8,-32]→[-11.8,-42]（核心伤害收入×0.6=1200生物量总量，进门即收入爆炸，不再 takedown 空等集结）；城破重生走西侧环线 MARCH 回场再穿门洞（避免直线暴露狙击55r）→④grind 核心贴脸爪+酸+就地召唤滚雪球到胜；建筑血量实测:机枪250/狙击280/加农350/堡垒1200/对空400，酸75/1.1s 锥形锁30内最近dot>0.2，爪60/0.55s，蜕皮40回35%maxHp/8s，召唤60出3战士/6s',
+      strategy:'v33 临门经济储备+破门直冲核心：①围攻位(1,11)酸磨门+养兵；②门血<=800 停止召兵+蜕皮阈值 .75（净存约12/s，破门时手握 100-250 生物量）→③贴门爪+酸速破门（gaterush 触发则破门点缩到门脸 2.8u）→④gate-dead 紧急蜕皮(hp<.55)后 coremove 直插核心口袋 [0,-16.5]→[-2,-24]→[-8,-32]→[-11.8,-42]（核心伤害收入×0.6=1200生物量总量）；冲刺沿途每6s 召一窝战士虫（跑过门洞留在原地吃炮塔仇恨=免费诱饵）+ 走廊冲刺 + 途中紧急蜕皮(hp<.5)；城破重生走西侧环线 MARCH 回场再穿门洞→⑤grind 核心贴脸爪+酸+就地召唤滚雪球到胜；建筑血量实测:机枪250/狙击280/加农350/堡垒1200/对空400，酸75/1.1s 锥形锁30内最近dot>0.2，爪60/0.55s，蜕皮40回35%maxHp/8s，召唤60出3战士/6s',
       gameplay_modified:false,time_scale:1,normal_rule_inputs_only:true,qa_hook_usage:'read-only observe',no_recording:NOREC};
     fs.writeFileSync(path.join(OUT,'capture.json'),JSON.stringify(data,null,2));
     if(!NOREC)fs.writeFileSync(path.join(OUT,'frames.json'),JSON.stringify(frames));
