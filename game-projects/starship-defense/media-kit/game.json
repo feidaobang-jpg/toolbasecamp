@@ -47,8 +47,8 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "verified_at": "2026-10-11T12:21:44.927163+00:00",
+    "review_status": "published",
+    "verified_at": "2026-10-11T12:28:02.062584+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -62,9 +62,9 @@
     "submitted_date": "2026-10-11",
     "release_record": "releases/web-menu-history-v0.36.1/handoff.json",
     "submitted_version": "web-menu-history-v0.36.1",
-    "published_version": "web-zerg-v0.36.0",
+    "published_version": "web-menu-history-v0.36.1",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_Kx5OGRMh/index.html",
-    "note": "网站v0.36.1已核验；Toy同包已提交审核，auditing不等于上线；原评论回复等待正在进行的视频任务释放B站锁。",
+    "note": "网站与Toy v0.36.1均公开核验；游戏内更新日志可查看。原网友回复等待正在进行的视频任务释放B站账号锁。",
     "package_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
     "pending_updates": [
       {
@@ -118,8 +118,8 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-11T10:07:11.194993+00:00",
-    "status": "auditing",
+    "published_verified_at": "2026-10-11T12:28:02.062584+00:00",
+    "status": "published",
     "package_hash": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
     "submitted_at": "2026-10-11T12:21:44.927163+00:00",
@@ -152,8 +152,8 @@
     "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24997/index.html"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
-  "published_toy_version": "web-zerg-v0.36.0",
-  "web_toy_versions_match": false,
+  "published_toy_version": "web-menu-history-v0.36.1",
+  "web_toy_versions_match": true,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",

@@ -114,6 +114,23 @@
       "visual_review": "pass",
       "audio_review": "not-applicable",
       "segments": []
+    },
+    {
+      "id": "menu-toy-public-log",
+      "file": "captures/menu-toy-public-log.png",
+      "sha256": "1e30f970a8055e9f31fd3d11d06ef08716009765dd135427336dee52f3fefe4c",
+      "kind": "screenshot",
+      "version": "web-menu-history-v0.36.1",
+      "build_id": "web-menu-history-v0.36.1",
+      "capture_mode": "realtime-automation",
+      "description": "过审后的官方公开Toy，实测打开v0.36.1更新日志；浏览器验收，非手机真机",
+      "width": 65536,
+      "height": 4292542531,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
     }
   ],
   "qa": {
@@ -223,18 +240,27 @@
   },
   "toy": {
     "id": "38678478981120",
-    "status": "auditing",
+    "status": "published",
     "version": "web-menu-history-v0.36.1",
     "zip_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
     "preview_tested_url": "https://www.bilibili.com/toy/preview/preview_hr29eSZf/index.html",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Kx5OGRMh/index.html",
     "submitted_at": "2026-10-11T12:21:44.927163+00:00",
     "readback": {
-      "status": "auditing",
-      "mtime": 1791721304
+      "status": "published",
+      "mtime": 1791721442
     },
     "previous_public_version": "web-zerg-v0.36.0",
-    "privacy": "No author-site navigation, website account fields or website cloud-save requests. Existing game WebSocket communications preserved."
+    "privacy": "No author-site navigation, website account fields or website cloud-save requests. Existing game WebSocket communications preserved.",
+    "published_verified_at": "2026-10-11T12:28:02.062584+00:00",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_content_version": "0.36.1",
+    "public_runtime_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v25053/index.html",
+    "public_checks": [
+      "公开入口首页显示v0.36.1",
+      "点击更新日志可查看当前版、虫族v0.36.0、银行v0.35.0与反馈修复v0.34.1",
+      "现有第1章第2关继续标签仍在；云端与本地不同仍提示玩家选择，未覆盖存档"
+    ]
   },
   "tap_tap": "not_requested_not_submitted",
   "bilibili": {

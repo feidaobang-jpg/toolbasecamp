@@ -1,0 +1,26 @@
+{
+  "verified_at": "2026-10-11T12:28:02.062584+00:00",
+  "item": {
+    "id": 38678478981120,
+    "title": "虫潮围城",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_24960.jpg",
+    "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "user_info": {
+      "mid": 16214353,
+      "name": "飞刀班长",
+      "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+    },
+    "status": "published",
+    "visibility": "PUBLIC",
+    "category": "GAME",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_24960_upload",
+    "watermark_enabled": false,
+    "ctime": 1790739397,
+    "mtime": 1791721442
+  },
+  "content_version": "0.36.1",
+  "runtime_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v25053/index.html",
+  "zip_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
+  "evidence": "captures/menu-toy-public-log.png",
+  "physical_mobile": false
+}
