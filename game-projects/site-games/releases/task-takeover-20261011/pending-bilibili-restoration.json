@@ -1,0 +1,54 @@
+{
+  "status": "pending_other_user_authorized_writer",
+  "account_mid": 16214353,
+  "lock_owner": "QianwenWorkAssistant",
+  "user_confirmed": true,
+  "prepared_at": "2026-10-11T09:16:20.868216+00:00",
+  "instructions": "实际写入前再次核对自有账号锁、重读当前全文；只合并上述Toy恢复说明，保留他人最新引导，不直接覆盖准备时的整段旧文。",
+  "targets": [
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "before_sha256": "80fd890a568a40a44d862ad9db159647cc6a5796ca555da6d1f6bbea4b9ff161",
+      "current_public_text": "本片为早期版本实录。旧版「虫潮对战」实录（1对1到4对4）看：https://www.bilibili.com/video/BV1C5HQ6gEvD/\n《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy入口（当前显示下架）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站已更新，Toy当前入口显示下架，新包尚未成功提交，以网站试玩为准。\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "prepared_correction": "本片为早期版本实录。旧版「虫潮对战」实录（1对1到4对4）看：https://www.bilibili.com/video/BV1C5HQ6gEvD/\n《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\n哔哩哔哩Toy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站与Toy均已更新，Toy清理版已公开可玩；保留平台官方云档、本地存档和文件备份恢复。\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。",
+      "checked_at": "2026-10-11T09:16:20.868216+00:00"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "before_sha256": "18f6fd2d0d0d562887ce7534965ecf582a213e22bb3fc4f6e3e7fe92cb32137c",
+      "current_public_text": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy入口（当前显示下架）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站已更新，Toy当前入口显示下架，新包尚未成功提交，以网站试玩为准。\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "prepared_correction": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\n哔哩哔哩Toy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站与Toy均已更新，Toy清理版已公开可玩；保留平台官方云档、本地存档和文件备份恢复。\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。",
+      "checked_at": "2026-10-11T09:16:20.868216+00:00"
+    },
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "before_sha256": "5c322381a28fd69e773c29d3f16ca3d4f53ba37669b2dc03c90cf0358e048268",
+      "current_public_text": "本片记录旧版双人对战塔防：定时赚钱、升级银行、派兵拆核心，从1对1扩到4对4；本片含电脑对战与队伍操作演示。\n哔哩哔哩 Toy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站已更新，Toy当前入口显示下架，新包尚未成功提交，以网站试玩为准。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。视频保留旧版实录，以当前试玩为准。\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "prepared_correction": "本片记录旧版双人对战塔防：定时赚钱、升级银行、派兵拆核心，从1对1扩到4对4；本片含电脑对战与队伍操作演示。\n哔哩哔哩 Toy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站与Toy均已更新，Toy清理版已公开可玩；保留平台官方云档、本地存档和文件备份恢复。\n旧对战现已改为「战地模式·据点争夺」：固定兵种与装备，争夺三处据点和兵力票，不再沿用经验升级、买兵和独立银行。视频保留旧版实录，以当前试玩为准。\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "checked_at": "2026-10-11T09:16:20.868216+00:00"
+    },
+    {
+      "bvid": "BV1xdpx63ETu",
+      "before_sha256": "fe633fac2ea75deed9f95c4b041011e95f4c57d8c3a39d3c72f5819ea5242f06",
+      "current_public_text": "最新一期：网友点名\"我是虫族模式\"，当天就做了出来 https://www.bilibili.com/video/BV14hpL62EZ5/ ；本期为早期版本实录，玩法与操作以当前试玩为准。\n虫潮围城房车模式：开进废弃城镇，升级车顶机枪、搜索物资、维修，再找路撤离。这趟搜了2/6区，击退12只僵尸，带回314零件。\nToy入口（当前显示下架）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n进入游戏后选择“房车生存”；WASD驾驶/移动，J射击，I上下车/搜索，O地图与设施。\n房车城镇玩法由Codex辅助开发，本期展示实际试玩。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站已更新，Toy当前入口显示下架，新包尚未成功提交，以网站试玩为准。\n网站试玩：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "prepared_correction": "最新一期：网友点名\"我是虫族模式\"，当天就做了出来 https://www.bilibili.com/video/BV14hpL62EZ5/ ；本期为早期版本实录，玩法与操作以当前试玩为准。\n虫潮围城房车模式：开进废弃城镇，升级车顶机枪、搜索物资、维修，再找路撤离。这趟搜了2/6区，击退12只僵尸，带回314零件。\n哔哩哔哩Toy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n进入游戏后选择“房车生存”；WASD驾驶/移动，J射击，I上下车/搜索，O地图与设施。\n房车城镇玩法由Codex辅助开发，本期展示实际试玩。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。\n更新（2026-10-11·网站v0.34.0）：战地模式和抗战战役改为步行第一人称、手动瞄准、按住射击，载具和骑马使用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击还能拖动瞄准。保留三据点战、抗战三章，并新增“我是虫族”模式、修复虫族攻击和手机开战按钮；主战役与房车操作不变。网站与Toy均已更新，Toy清理版已公开可玩；保留平台官方云档、本地存档和文件备份恢复。\n网站试玩：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "checked_at": "2026-10-11T09:16:20.868216+00:00"
+    },
+    {
+      "bvid": "BV14hpL62EZ5",
+      "before_sha256": "ddbf21703e01ed031a436835a801234cea6d5af40efcb7b290d7c4c6941df584",
+      "current_public_text": "最新一期据点争夺实战：只剩3票险胜！https://www.bilibili.com/video/BV1KFpJ6sEEK/ ；本期保留虫族模式录制时的实况。B站网友\"我不是abbie\"在评论区点名：能不能整个我是虫族模式？当天就把它做了出来——现在不用再守家，你就是虫群本身。\n玩法：360秒之内拆掉人类基地核心。WASD开母虫，J撕咬，K喷酸，U召战士，I召飞虫，O蜕皮回血，L冲刺；你打出去的每一点伤害都会返成生物量，召唤和回血都靠它。母虫最多死五次，第五次一到虫群直接溃散。\n本片实机为正常规则真机录制，没有改数值、没有变速：城门2500血被我们磨破了，后面2000血的基地核心却一点没掉——这个模式比我以为的难得多，现在是真·挑战模式。有自信拆掉核心的，欢迎来打我的脸。\n试玩（复制到浏览器）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n虫族模式由 Qoder 开发，本期视频的录制与剪辑同样由 Qoder 完成。网站已更新第一人称手动射击等玩法；Toy当前入口显示下架，最新清理版包因平台权限错误尚未成功提交，暂以网站试玩为准。\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "prepared_correction": "最新一期据点争夺实战：只剩3票险胜！https://www.bilibili.com/video/BV1KFpJ6sEEK/ ；本期保留虫族模式录制时的实况。B站网友\"我不是abbie\"在评论区点名：能不能整个我是虫族模式？当天就把它做了出来——现在不用再守家，你就是虫群本身。\n玩法：360秒之内拆掉人类基地核心。WASD开母虫，J撕咬，K喷酸，U召战士，I召飞虫，O蜕皮回血，L冲刺；你打出去的每一点伤害都会返成生物量，召唤和回血都靠它。母虫最多死五次，第五次一到虫群直接溃散。\n本片实机为正常规则真机录制，没有改数值、没有变速：城门2500血被我们磨破了，后面2000血的基地核心却一点没掉——这个模式比我以为的难得多，现在是真·挑战模式。有自信拆掉核心的，欢迎来打我的脸。\n试玩（复制到浏览器）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n虫族模式由 Qoder 开发，本期视频的录制与剪辑同样由 Qoder 完成。网站与Toy均已更新第一人称手动射击等玩法；最新清理版已公开可玩，游戏内无网站账号登录或网站跳转。\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "checked_at": "2026-10-11T09:16:20.868216+00:00"
+    },
+    {
+      "bvid": "BV1KFpJ6sEEK",
+      "before_sha256": "86ace77359c581a40acf4718eb2e6a2f7715b435eb04a88d2b907084c9e8da66",
+      "current_public_text": "这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/games.html （选择虫潮围城 → 战地模式）\nToy入口（当前显示下架，暂以网站试玩为准）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n当前操作：WASD移动，J按住射击，I登乘/下车，H兵种支援，U手雷；步行第一人称手动瞄准、载具第三人称。视频保留此前自动瞄准的录制实况，以当前试玩为准。\n战地据点模式由Codex辅助开发，本期展示真实实战。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "prepared_correction": "这场据点争夺最后3∶0险胜：我方击杀94，对方105。工程兵开坦克推进、阵亡后从已占据点部署、医疗兵回血，再守住通信站和补给仓库。\n百宝箱试玩（复制到浏览器打开）：https://www.zhengxiaohui.cn/games.html （选择虫潮围城 → 战地模式）\n哔哩哔哩Toy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n当前操作：WASD移动，J按住射击，I登乘/下车，H兵种支援，U手雷；步行第一人称手动瞄准、载具第三人称。视频保留此前自动瞄准的录制实况，以当前试玩为准。\n战地据点模式由Codex辅助开发，本期展示真实实战。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+      "checked_at": "2026-10-11T09:16:20.868216+00:00"
+    }
+  ],
+  "conquest_pin": "核对现有置顶；必要时发一条简短恢复提示且只保留一个最新置顶，保留历史评论。",
+  "promotion_form": "待账号锁释放后在既有QQ表按BV查重登记；入口恢复，E=否，F空白。"
+}

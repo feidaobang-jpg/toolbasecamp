@@ -97,8 +97,8 @@
     "entry_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "cli_status": "published",
     "visibility": "PUBLIC",
-    "public_runtime_verified": false,
-    "public_page_observed_text": "该内容已下架",
+    "public_runtime_verified": true,
+    "public_page_observed_text": "清理版公开可玩，平台官方云档可读；历史下架说明已解除",
     "status_conflict": "CLI状态与匿名公开入口不一致，未据此断言平台后台已下架",
     "public_link_in_current_draft": true,
     "promotion_in_video": false,
@@ -106,7 +106,9 @@
     "topic_id": "1346285",
     "topic_url": "https://www.bilibili.com/v/topic/detail?topic_id=1346285",
     "topic_name": "哔哩哔哩Toy创意挑战",
-    "topic_status": "pending_public_entry_and_current_rules"
+    "topic_status": "pending_public_entry_and_current_rules",
+    "current_runtime_verification_record": "game-projects/site-games/releases/privacy-cleanup-20261011/starship-resume-20261011.json",
+    "promotion_form_status": "pending_authorized_Qianwen_account_writer"
   },
   "publication_result": {
     "status": "blocked_account_write_lock",

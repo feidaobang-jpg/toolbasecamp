@@ -41,7 +41,7 @@
           "en"
         ],
         "record": "game-projects/site-games/releases/task-takeover-20261011/multiplatform.json",
-        "at": "2026-10-11T09:00:41.410364+00:00"
+        "at": "2026-10-11T09:17:13.045873+00:00"
       }
     },
     "bilibili": {
@@ -99,7 +99,7 @@
         "toy_id": "38678478981120",
         "status": "bound_verified",
         "checked_at": "2026-10-11T08:45:31.215699+00:00",
-        "note": "绑定成功不等于游戏入口恢复；公开Toy仍显示下架，清理包提交失败307008。"
+        "note": "Toy clean package now published and public verified after permission recovery; binding already verified, do not repeat."
       },
       "pinned_comment": {
         "rpid": 316747092353,
@@ -124,10 +124,10 @@
         "checked_at": "2026-10-11T08:45:31.215699+00:00"
       },
       "toy_promotion_form": {
-        "status": "deferred_until_toy_entry_available",
+        "status": "pending_authorized_account_writer",
         "url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
         "dedupe_result": "BV1KFpJ6sEEK无结果",
-        "reason": "Toy公开入口下架，不申报可试玩或已获推流；片内未宣传Toy，E应为否。",
+        "reason": "Toy入口已恢复，当前B站写锁属于用户确认的Qianwen抗战视频发布；保留并待其结束后查重填表。",
         "planned_columns": {
           "A": "飞刀班长",
           "B": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
@@ -227,5 +227,5 @@
     }
   ],
   "publication_status": "all_requested_videos_published",
-  "followup_status": "toy_promotion_deferred_until_entry_restored"
+  "followup_status": "bilibili_restoration_pin_and_form_pending_authorized_writer"
 }

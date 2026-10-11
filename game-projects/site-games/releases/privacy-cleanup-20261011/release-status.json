@@ -409,10 +409,26 @@
   },
   "updated_at": "2026-10-11T16:54:59.708606+08:00",
   "bilibili": {
-    "decision": "pending_other_active_task",
-    "reason": "Account write lock owned by active Codex task 01a129f8-5691-7273-aab0-54954767f34f (takeover). No override or duplicate writes. Ordinary author-menu change alone has not reached 7 day threshold; starship save/status clarification is necessary and recorded for current maintenance owner.",
-    "pending_clarification": "Toy cleanup package is now published and public verified on 2026-10-11: no website account form/navigation; official Toy cloud read verified; website retains local saves and file backups. Existing video-maintenance handoff remains separate; this retry is not another stable update.",
-    "owner_title": "接管并完成未结任务"
+    "decision": "initial_clarification_verified_restoration_pending_authorized_writer",
+    "reason": "原账号云档及游戏版本说明已纠正公开；Toy随后恢复上线，B站现由用户确认的Qianwen发布任务持锁。恢复状态文案已准备，待锁释放后重读合并。",
+    "pending_clarification": null,
+    "owner_title": "接管并完成未结任务",
+    "history": [
+      {
+        "decision": "pending_other_active_task",
+        "reason": "Account write lock owned by active Codex task 01a129f8-5691-7273-aab0-54954767f34f (takeover). No override or duplicate writes. Ordinary author-menu change alone has not reached 7 day threshold; starship save/status clarification is necessary and recorded for current maintenance owner.",
+        "pending_clarification": "Website no longer offers website account cloud save; local export/import retained. Toy official cloud retained in clean preview, but starship submission blocked307008 and public Toy currently removed. Do not announce Toy cleanup as published.",
+        "owner_title": "接管并完成未结任务"
+      }
+    ],
+    "verified_at": "2026-10-11T08:45:31.215699+00:00",
+    "record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
+    "platform_recovered": {
+      "at": "2026-10-11T16:54:59.708606+08:00",
+      "status": "published",
+      "followup": "本任务立即纠正暂时下架文案并完成推流表。"
+    },
+    "restoration_record": "game-projects/site-games/releases/task-takeover-20261011/pending-bilibili-restoration.json"
   },
   "taptap": "not_requested_not_operated"
 }

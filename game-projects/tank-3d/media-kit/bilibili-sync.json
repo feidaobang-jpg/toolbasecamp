@@ -6,26 +6,34 @@
     {
       "bvid": "BV1Wqaz6AEJb",
       "aid": 117364309890693,
-      "lastPublicVerifiedVersion": "remix-entry1-menu-text1",
+      "lastPublicVerifiedVersion": "remix-entry1-menu-text1-fp-aim1",
       "blockHash": "82aaa4c69baf8a1b148c925f29c55fce6c63c5c36f846c7e3096044f2021f911",
       "release": "releases/backfill-20261010/release-status.json",
       "dedupeFixVerifiedAt": "2026-10-05T00:48:00+08:00",
-      "descriptionHash": "20f0f852bffcd44d99eb1b05d231c649b4e3d7e035dd201a6ef06c6eb6e6aa9b",
-      "publicVerifiedAt": "2026-10-10T02:50:36.090Z",
+      "descriptionHash": "aea99478718b8a92eaa0db9dae9d57fd369113df0b764997369464abb530ae17",
+      "publicVerifiedAt": "2026-10-11T08:43:07Z",
       "newVideoLink": "https://www.bilibili.com/video/BV1TepK69Eet/",
-      "submitted_version": "remix-entry1-menu-text1",
+      "submitted_version": "remix-entry1-menu-text1-fp-aim1",
       "submitted_at": "2026-10-10T02:43:53.016Z",
       "status": "public_verified",
-      "last_public_verified_version": "remix-entry1-menu-text1",
-      "public_verified_at": "2026-10-10T02:50:36.090Z",
-      "description_revision": "remix-entry1-menu-text1",
-      "description_sha256": "20f0f852bffcd44d99eb1b05d231c649b4e3d7e035dd201a6ef06c6eb6e6aa9b",
-      "last_public_verified_at": "2026-10-10T02:50:36.090Z",
-      "description_public_verified_at": "2026-10-10T02:50:36.090Z",
-      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "last_public_verified_version": "remix-entry1-menu-text1-fp-aim1",
+      "public_verified_at": "2026-10-11T08:43:07Z",
+      "description_revision": "remix-entry1-menu-text1-fp-aim1",
+      "description_sha256": "aea99478718b8a92eaa0db9dae9d57fd369113df0b764997369464abb530ae17",
+      "last_public_verified_at": "2026-10-11T08:43:07Z",
+      "description_public_verified_at": "2026-10-11T08:43:07Z",
+      "last_sync_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
       "record": "releases/backfill-20261010/release-status.json",
-      "release_record": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+      "release_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
+      "exact_text_record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
+      "takeover_history": [
+        {
+          "last_public_verified_version": "remix-entry1-menu-text1",
+          "description_sha256": "20f0f852bffcd44d99eb1b05d231c649b4e3d7e035dd201a6ef06c6eb6e6aa9b",
+          "description_public_verified_at": "2026-10-10T02:50:36.090Z",
+          "last_sync_record": "releases/backfill-20261010/release-status.json"
+        }
+      ]
     },
     {
       "bvid": "BV1TepK69Eet",
@@ -33,27 +41,35 @@
       "title": "坦克大战能联机了！两个人能守住老鹰吗？",
       "version": "coop-hub1",
       "release": "releases/backfill-20261010/release-status.json",
-      "publicVerifiedAt": "2026-10-10T02:46:24.480Z",
+      "publicVerifiedAt": "2026-10-11T08:43:08Z",
       "publicUrl": "https://www.bilibili.com/video/BV1TepK69Eet/",
       "toyUrl": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
       "status": "public_verified",
       "commentStatus": "pinned",
       "qqPromotionStatus": "submitted_and_autosaved",
       "recordedFootageVersion": "landscape-menu1",
-      "lastPublicVerifiedVersion": "remix-entry1-menu-text1",
-      "last_public_verified_version": "remix-entry1-menu-text1",
-      "public_verified_at": "2026-10-10T02:46:24.480Z",
-      "descriptionHash": "a0cdd25231100e28173dd1645066fadf18b55f1cb56a1e310eccdb04beca3a7a",
-      "submitted_version": "remix-entry1-menu-text1",
+      "lastPublicVerifiedVersion": "remix-entry1-menu-text1-fp-aim1",
+      "last_public_verified_version": "remix-entry1-menu-text1-fp-aim1",
+      "public_verified_at": "2026-10-11T08:43:08Z",
+      "descriptionHash": "a57f314f76f9b7fb96688499e2d63540e508896b12ad33fb3791ad4e9c632c62",
+      "submitted_version": "remix-entry1-menu-text1-fp-aim1",
       "submitted_at": "2026-10-10T02:43:56.962Z",
-      "description_revision": "remix-entry1-menu-text1",
-      "description_sha256": "a0cdd25231100e28173dd1645066fadf18b55f1cb56a1e310eccdb04beca3a7a",
-      "last_public_verified_at": "2026-10-10T02:46:24.480Z",
-      "description_public_verified_at": "2026-10-10T02:46:24.480Z",
-      "last_sync_record": "releases/backfill-20261010/release-status.json",
+      "description_revision": "remix-entry1-menu-text1-fp-aim1",
+      "description_sha256": "a57f314f76f9b7fb96688499e2d63540e508896b12ad33fb3791ad4e9c632c62",
+      "last_public_verified_at": "2026-10-11T08:43:08Z",
+      "description_public_verified_at": "2026-10-11T08:43:08Z",
+      "last_sync_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
       "record": "releases/backfill-20261010/release-status.json",
-      "release_record": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+      "release_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
+      "exact_text_record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
+      "takeover_history": [
+        {
+          "last_public_verified_version": "remix-entry1-menu-text1",
+          "description_sha256": "a0cdd25231100e28173dd1645066fadf18b55f1cb56a1e310eccdb04beca3a7a",
+          "description_public_verified_at": "2026-10-10T02:46:24.480Z",
+          "last_sync_record": "releases/backfill-20261010/release-status.json"
+        }
+      ]
     }
   ],
   "pending_updates": [
@@ -362,11 +378,22 @@
     ],
     "record": "releases/backfill-20261010/release-status.json"
   },
-  "latest_record": "releases/backfill-20261010/release-status.json",
+  "latest_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
   "pending": [],
   "pending_note": null,
   "status": "public_verified",
   "version": "remix-entry1-menu-text1",
   "updated_at": "2026-10-10T03:02:52.978211+00:00",
-  "last_release_record": "releases/backfill-20261010/release-status.json"
+  "last_release_record": "releases/backfill-20261010/release-status.json",
+  "takeover_sync": {
+    "task_id": "01a129f8-5691-7273-aab0-54954767f34f-takeover-20261011-01",
+    "at": "2026-10-11T08:45:31.215699+00:00",
+    "reason": "重大FPS/关卡/瞄准变化及网站账号云档和Toy公开状态失实，按2026-10-11规则即时纠正；新视频首次发布及上一主推引导。",
+    "covered_bvids": [
+      "BV1Wqaz6AEJb",
+      "BV1TepK69Eet"
+    ],
+    "note": "游戏包清理普通菜单变化未按小改单独宣传；Toy状态以实际公开入口和发布核验为准。",
+    "latest_platform_state": "all_five_toy_clean_packages_published"
+  }
 }
