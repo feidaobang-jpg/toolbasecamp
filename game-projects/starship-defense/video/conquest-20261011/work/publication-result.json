@@ -100,5 +100,12 @@
       "platform_auto_summary_note": "平台自动章节摘要将工程兵误写为攻城兵；本人已发布标题、简介和成片仍为工程兵，未主动添加此摘要。"
     }
   },
-  "updated_at": "2026-10-11T02:15:52.630508+00:00"
+  "updated_at": "2026-10-11T02:15:52.630508+00:00",
+  "existing_video_description_policy": {
+    "policy_date": "2026-10-11",
+    "decision": "no_old_video_update_performed",
+    "reason": "本任务为已审新片首次发布，未产生游戏代码稳定更新。已有说明按重大版本、失实或具体必要性即时修正；普通小改3次且7天后合并，不因本期发布记录提交自动触发。",
+    "new_video_first_publication": "accurate initial description exempt from accumulation gate",
+    "bilibili_followup": "re-read existing targets and baselines after new BV is public; record actual trigger before write"
+  }
 }

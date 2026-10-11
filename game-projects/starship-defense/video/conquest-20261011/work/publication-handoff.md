@@ -25,3 +25,7 @@
 7. 更新两份项目结果、对应共享台账，保存公开截图，提交本任务文件、整合最新master后正常推送；全部请求目标完成才标记completed。
 
 使用`C:/Users/37818/.claude/skills/game-video/SKILL.md`、`references/multiplatform-publishing.md`和`references/bilibili-publishing.md`的实际流程。通知工具每次必须Source Codex。所有最终素材保存在D:/project/toolbasecamp-artifacts/conquest-video-20261011，工作分支codex/conquest-video-20261011。
+
+## 2026-10-11简介更新规则
+
+本期首次投稿简介不受普通小改累计门槛限制。既有视频简介和公告独立判断：重大版本、现有说明失实或有具体必要性时立即更新；普通小改须累计至少3次有意义的稳定更新且距该目标最后公开核验更新至少7天。未达条件只记待合并，不新增评论或公告绕过门槛。此次发布记录和内部提交不算游戏稳定更新；不接管其他开发任务的说明同步。B站过审后的旧主推视频维护须先核对最新公开全文与基线并记录触发理由。
