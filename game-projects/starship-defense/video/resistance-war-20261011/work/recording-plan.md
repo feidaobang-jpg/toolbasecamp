@@ -195,4 +195,3 @@ O 切枪 · R/L 换弹 · H 医疗 · T 队友 · C 视角
 - **中文字体**：`C:/Windows/Fonts/msyh.ttc`（微软雅黑）、`msyhbd.ttc`（粗体）、`simhei.ttf`（黑体）可用于字幕烧录。
 - **配音**：`D:/project/toolbasecamp/comfyui-api-server/.venv/Scripts/python.exe` + `edge_tts 3.11.16`，音色 `zh-CN-YunxiNeural`、`rate='+0%'`，保存 WordBoundary 真实时间戳。
 - **目录约定**（沿用 rv-town-20261009）：`work/capture/<take>/` 原片帧序列、`work/audio/` 配音、`work/edit/` 时间线、`final/<平台>/` 只放投稿文案与字幕（视频本体不入 git）、`review/` 字幕预览。
-
