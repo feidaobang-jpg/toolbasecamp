@@ -43,7 +43,7 @@
     "杀敌更少，也能赢？"
   ],
   "cover_selection_source": "../../edit/covers/cover-source.json",
-  "cover_upload_mode": "custom_image",
+  "cover_upload_mode": "custom_image_uploaded",
   "subtitle_mode": "sidecar",
   "subtitles": [
     {
@@ -61,28 +61,28 @@
       "required_for_upload": true
     }
   ],
-  "category": null,
-  "copyright_type": "original_self_recorded_gameplay_pending_account_confirmation",
+  "category": "游戏",
+  "copyright_type": "original_self_recorded_gameplay",
   "credits_attachment": "credits.txt",
   "disclosures": {
-    "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload"
+    "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload",
+    "platform_declaration": "Altered or synthetic content: Yes"
   },
-  "platform_requirements_checked_at": "2026-10-10T21:35:02.322312+00:00",
+  "platform_requirements_checked_at": "2026-10-11T02:15:52.630508+00:00",
   "platform_sources": [
     "https://support.google.com/youtube/answer/1722171?hl=en"
   ],
-  "unverified_fields": [
-    "account login",
-    "current category options",
-    "platform synthetic-content declaration",
-    "live cover upload control"
-  ],
+  "unverified_fields": [],
   "technical_preparation": "pass",
   "human_review": {
-    "status": "pending",
-    "approved_variants": [],
-    "user_statement": null,
-    "approved_at": null,
+    "status": "approved",
+    "approved_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "user_statement": "发布",
+    "approved_at": "2026-10-10T23:11:00.747760+00:00",
     "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
     "reviewed_media_required": {
       "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
@@ -92,21 +92,54 @@
     "reviewed_subtitles_required": {
       "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
       "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
-    }
+    },
+    "approval_source": "direct user message in this chat",
+    "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
   },
   "subjective_audio_listening": "not-run",
-  "blocking_issues": [
-    "人工审片待确认（画面、配音、字幕）",
-    "主观听审未运行：请在审片时核验人声清晰度与混音",
-    "实际账号投稿入口、分类及平台声明待发布时核对"
-  ],
-  "ready_to_upload": false,
-  "publication_status": "not_uploaded",
+  "blocking_issues": [],
+  "ready_to_upload": true,
+  "publication_status": "published",
   "localizations": {
     "en": {
       "title": "Three Tickets Left! A Close Conquest Win in Swarm Siege",
       "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nChoose 虫潮围城 (Swarm Siege) in the list, then 战地模式 (Battlefield mode). Copy the URL into your browser if needed. The game interface is in Chinese.\nWe won this conquest match 3–0 on tickets, despite scoring 94 kills against the enemy team’s 105. This run shows a tank push, redeployment at a captured objective, Medic support, and the final defense of Comms Station and Supply Depot.\nControl two of the three objectives to drain the opposing team’s tickets. Chasing kills alone can still lose the match.\nChinese narration with selectable Chinese and English subtitles. The conquest mode was developed with Codex assistance.\nGame suggestions / wishlist: https://www.zhengxiaohui.cn/game-vote.html",
       "file": "../../../final/youtube-zh/English-localizations.txt"
     }
-  }
+  },
+  "publication_result": {
+    "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+    "video_id": "X3Lc6SZ6whE",
+    "url": "https://youtu.be/X3Lc6SZ6whE",
+    "status": "published",
+    "ui_status": "已发布；中英文字幕及英文标题、简介均已发布",
+    "uploaded_video_sha256": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4",
+    "checked_at": "2026-10-11T02:15:52.630508+00:00",
+    "metadata_and_subtitles_pending": false,
+    "public_verified": true,
+    "episode_id": "conquest-20261011",
+    "variant_id": "youtube-zh",
+    "task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01",
+    "updated_at": "2026-10-10T23:39:52.530629+00:00",
+    "video_sha256": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4",
+    "human_review": {
+      "statement": "发布",
+      "scope": "bilibili-zh, douyin-zh, youtube-zh",
+      "confirmed_at": "2026-10-11"
+    },
+    "platform_id": "X3Lc6SZ6whE",
+    "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+    "evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\youtube-published.png",
+    "chinese_captions_status": "published",
+    "english_captions_status": "published",
+    "english_metadata_status": "published",
+    "public_verified_at": "2026-10-10T23:39:52.530629+00:00",
+    "public_playback_evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\youtube-public-playback.png",
+    "subtitle_menu_evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\youtube-public-captions.png",
+    "translations_evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\youtube-translations-published.png",
+    "playback_paused_after_verification": true
+  },
+  "upload_completed": true,
+  "video_language": "中文（简体）",
+  "audience": "not made for kids"
 }
