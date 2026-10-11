@@ -572,8 +572,8 @@
     "2026-10-11T04:47:00+08:00"
    ],
    "record": "releases/v2.6.0-preview1/bili-update.json",
-   "note": "v2.6.0 文案已公开渲染（view API）；发现「Toy新版审核中」过时（Toy 已上线），纠错提交与最终基线见 bilibili-sync.json",
-   "public_verified_at": "2026-10-11T05:11:41+08:00"
+   "note": "v2.6.0 文案与纠错均已公开渲染（view API desc 核验，「网站与Toy均已更新」）；纠错由用户在创作中心手动点击提交，最终基线见 bilibili-sync.json",
+   "public_verified_at": "2026-10-11T10:11:00+08:00"
   }
  },
  "cover": {
