@@ -3,7 +3,8 @@ const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-run
 const fs=require('fs'),path=require('path'),assert=require('assert/strict'),http=require('http');
 const root=path.resolve(__dirname,'../../..');
 const out=process.env.PRIVACY_QA_OUT||path.join(process.env.LOCALAPPDATA||require('os').tmpdir(),'CodexGameQA','privacy-cleanup-20261011');
-const games=['starship-defense','tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d'];
+const games=['starship-defense','tank-3d','mario-3d','jackal-stage1-3d','cadillacs-stage1-3d'].filter(game=>!process.env.PRIVACY_QA_GAMES||process.env.PRIVACY_QA_GAMES.split(',').includes(game));
+assert(games.length,'PRIVACY_QA_GAMES must select at least one known game');
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.json':'application/json','.mp3':'audio/mpeg','.wav':'audio/wav'};
 function packageDir(game){const meta=JSON.parse(fs.readFileSync(path.join(root,'game-projects',game,'media-kit/game.json')));return game==='starship-defense'?path.join(root,'dist/toy/chongchao-qianshao/package'):path.join(root,'game-projects',game,'dist',(game==='tank-3d'?'':'toy-')+meta.current_version,'package');}
 function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);}

@@ -50,8 +50,8 @@ export function mountCombatSettings(container,controls,onChange){
     select.value=controls.settings[key];select.onchange=()=>{controls.set(key,select.value);onChange();};
     row.appendChild(select);section.appendChild(row);
   }
-  const help=document.createElement('p');help.className='small';help.textContent='默认自动寻敌并开火，可边撤退边攻击。键鼠模式：点击画面转视角；纯键盘模式：左转视角 / 右转视角键调整方向。手动瞄准配合第一人称更准确。菜单用方向键 / WASD / Tab 选择、J / 回车确认、K / Esc 返回。触屏仍使用原有按钮。设置自动保存。';section.appendChild(help);
-  const fixed=document.createElement('p');fixed.className='small';fixed.id='combat-fixed';fixed.textContent='战地模式和抗战战役固定为步行第一人称、手动瞄准、按住射击，不使用上面的瞄准和射击设置；键鼠按住左键射击，右键拖动只转视角。';section.appendChild(fixed);
+  const help=document.createElement('p');help.className='small';help.textContent='默认自动寻敌并开火，可边撤退边攻击。键鼠第一人称：进入游戏后鼠标接管瞄准，移动鼠标转向，左键射击，Esc 释放并暂停；未接管时点击画面。第三人称或浏览器拒绝接管时按住画面拖动。纯键盘用左转视角 / 右转视角键调整方向。手动瞄准配合第一人称更准确。菜单用方向键 / WASD / Tab 选择、J / 回车确认、K / Esc 返回。触屏仍使用原有按钮。设置自动保存。';section.appendChild(help);
+  const fixed=document.createElement('p');fixed.className='small';fixed.id='combat-fixed';fixed.textContent='战地模式和抗战战役固定为步行第一人称、手动瞄准、按住射击，不使用上面的瞄准和射击设置；鼠标接管后直接移动瞄准，按住左键射击、右键举枪。未接管时右键拖动只转视角，右键点击举枪。';section.appendChild(fixed);
   // 枪战规则生效时锁住瞄准、射击两项，避免玩家以为改了设置却没变化；保存的设置本身不动。
   section.lockAim=locked=>{for(const key of ['aim','fire'])section.querySelector('#combat-'+key).disabled=!!locked;};
   container.appendChild(section);return section;

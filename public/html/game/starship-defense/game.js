@@ -223,6 +223,17 @@ const Input={
   joy:{active:false,id:-1,x:0,y:0},
   look:{yaw:0,pitch:0},wheel:0,mouseFire:false,drag:null,touchLook:null,
   isPlaying:()=>false,onPause:null,onTouchDetected:null,
+  canMouseLook(){return this.isPlaying()&&!isTouch&&CombatControls.mouseEnabled&&camMode==='first'&&!place.kind;},
+  requestMouseLook(){
+    const cv=$('c3d');
+    if(!this.canMouseLook()||document.pointerLockElement||this.lockPending||this.lockUnavailable||!cv.requestPointerLock||navigator.userActivation?.isActive===false)return;
+    this.lockPending=true;this.lockExpectedRelease=false;
+    const failed=()=>{this.lockPending=false;this.lockUnavailable=true;if(this.canMouseLook())showMsg('鼠标未能接管：可按住画面拖动瞄准，或使用 Q/E 转向',2.6);};
+    try{cv.requestPointerLock()?.catch?.(failed);}catch(_e){failed();}
+  },
+  releaseMouseLook(){
+    if(document.pointerLockElement===$('c3d')){this.lockExpectedRelease=true;document.exitPointerLock?.();}
+  },
   init(){
     window.addEventListener('keydown',e=>{
       if(e.target.closest&&e.target.closest('select,input,textarea'))return;
@@ -242,18 +253,25 @@ const Input={
     const cv=$('c3d');
     cv.addEventListener('pointerdown',e=>{
       if(e.pointerType==='touch'){if(!isTouch&&this.onTouchDetected)this.onTouchDetected();return;}
-      if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
+      if(!this.isPlaying()||isTouch||!CombatControls.mouseEnabled)return;
       AudioSys.init();AudioSys.resume();
       // 枪战规则下左键是开火，转视角不能只靠它：右键拖动只转视角，原地点一下才举枪。
-      if(e.button===2){e.preventDefault();if(fpsRules()){this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}return;}
+      if(e.button===2){e.preventDefault();if(fpsRules()){if(document.pointerLockElement===cv){if(warOn())resistanceCampaign.toggleAim();else if(battleOn())toggleBattlefieldAim();}else{this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0,sight:true};cv.setPointerCapture(e.pointerId);}}return;}
       if(e.button!==0)return;
+      // 首次点击只接管鼠标，不把返回游戏的点击算成一枪；拒绝接管时仍可拖动。
+      if(this.canMouseLook()&&cv.requestPointerLock&&!this.lockUnavailable&&document.pointerLockElement!==cv){this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};cv.setPointerCapture(e.pointerId);this.requestMouseLook();return;}
       this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');
       if(document.pointerLockElement===cv)return;
       this.drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:0};cv.setPointerCapture(e.pointerId);
     });
     cv.addEventListener('pointermove',e=>{
-      if(!this.isPlaying()||!CombatControls.mouseEnabled)return;
-      if(document.pointerLockElement===cv){this.look.yaw-=e.movementX*.0032;this.look.pitch-=e.movementY*.0032;return;}
+      if(!this.isPlaying()||isTouch||!CombatControls.mouseEnabled)return;
+      if(document.pointerLockElement===cv){
+        const left=!!(e.buttons&1);
+        if(left&&!this.mouseFire){this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');}
+        else if(!left&&this.mouseFire){this.mouseFire=false;CombatControls.release('mouse');}
+        this.look.yaw-=e.movementX*.0032;this.look.pitch-=e.movementY*.0032;return;
+      }
       // 已按着一个键再按另一个键，浏览器只发 pointermove：右键拖视角时补按左键也要能开火。
       if(e.pointerType==='mouse'&&fpsRules()&&this.drag?.sight){const left=!!(e.buttons&1);if(left&&!this.mouseFire){this.mouseFire=true;if(!place.kind)CombatControls.press('mouse');}else if(!left&&this.mouseFire){this.mouseFire=false;CombatControls.release('mouse');}}
       const d=this.drag;if(!d||d.id!==e.pointerId)return;
@@ -262,7 +280,18 @@ const Input={
     const endDrag=e=>{if(this.drag&&this.drag.id===e.pointerId){const d=this.drag;this.drag=null;if(d.sight&&e.type==='pointerup'&&e.button===2&&d.moved<6&&this.isPlaying()){if(warOn())resistanceCampaign.toggleAim();else if(battleOn())toggleBattlefieldAim();}}if(e.type==='lostpointercapture'&&document.pointerLockElement===cv)return;if(e.button===0||e.type!=='pointerup'){this.mouseFire=false;CombatControls.release('mouse');}if(e.type==='pointercancel')CombatControls.reset();};
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>cv.addEventListener(t,endDrag));
     document.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.button===0){this.mouseFire=false;CombatControls.release('mouse');}});
-    document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv){this.mouseFire=false;CombatControls.reset();}else if(!this.lockHinted){this.lockHinted=true;showMsg('🖱 鼠标已接管视角：移动转向，左键射击，Esc 暂停',2.6);}});
+    document.addEventListener('pointerlockchange',()=>{
+      this.lockPending=false;
+      if(document.pointerLockElement===cv){
+        if(!this.canMouseLook()){this.releaseMouseLook();return;}
+        this.lockOwned=true;this.resetLook();
+        showMsg('鼠标已接管瞄准：移动转向，左键射击，Esc 释放并暂停',2.6);
+      }else if(this.lockOwned){
+        const expected=this.lockExpectedRelease;this.lockOwned=false;this.lockExpectedRelease=false;this.reset();
+        if(!expected&&this.isPlaying()&&this.onPause)this.onPause();
+      }
+    });
+    document.addEventListener('pointerlockerror',()=>{this.lockPending=false;this.lockUnavailable=true;});
     cv.addEventListener('contextmenu',e=>e.preventDefault());
     cv.addEventListener('wheel',e=>{if(!this.isPlaying()||!CombatControls.mouseEnabled)return;e.preventDefault();this.wheel+=Math.sign(e.deltaY);},{passive:false});
     window.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!isTouch&&this.onTouchDetected)this.onTouchDetected();},true);
@@ -337,6 +366,7 @@ const Input={
     document.addEventListener('visibilitychange',()=>{if(document.hidden)this.reset();});
   },
   reset(){
+    this.releaseMouseLook();
     CombatControls.reset();
     this.resetLook();this.keys={};this.pressed={};this.joy={active:false,id:-1,x:0,y:0};this.mouseFire=false;this.wheel=0;
     $('joyKnob').style.left=$('joyKnob').style.top='35px';
@@ -398,9 +428,10 @@ function setCameraView(index,notify=true){
 function setCamMode(mode,notify=true){
   camMode=mode==='first'?'first':'third';camPitch=0;camYaw=behindYaw();camState.init=false;delete player.lookHeading;Input.resetLook();
   try{localStorage.setItem('chongchao-person',camMode);}catch(_e){}
-  if(camMode==='third'&&document.pointerLockElement)document.exitPointerLock&&document.exitPointerLock();
+  if(camMode==='third')Input.releaseMouseLook();
   if(notify)showMsg(camMode==='first'?'第一人称（C 切回第三人称）':'第三人称 · '+CAMERA_VIEWS[camView].name,1.4);
   syncViewLabels();
+  Input.requestMouseLook();
 }
 // 战地载具的跟随机位：镜头朝准星方向看，车身留在画面下方，不挡住瞄准点。
 // 两档仰角相同、只差距离：联机时房主只凭镜头距离就能还原客人的镜头位置。
@@ -421,9 +452,10 @@ function syncBattlefieldView(){
   if(!battleOn())return;
   const want=player.inVehicle?'third':'first';
   if(camMode===want)return;
-  camMode=want;camPitch=want==='third'?-.12:0;camState.init=false;Input.resetLook();
+  Input.releaseMouseLook();camMode=want;camPitch=want==='third'?-.12:0;camState.init=false;Input.resetLook();
   if(want==='third'&&bfAiming)toggleBattlefieldAim();
   syncViewLabels();
+  Input.requestMouseLook();
 }
 function syncViewLabels(){
   const label=camMode==='first'?'第一人称':'第三人称';
@@ -3668,6 +3700,7 @@ function togglePause(){
     $('menuPause').classList.add('hidden');
     closePanels();
     AudioSys.sfx('click');
+    Input.requestMouseLook();
   }
 }
 // P / Esc / 手机暂停键：任何游玩状态都立即响应；面板打开时先关面板再暂停
@@ -3908,7 +3941,7 @@ $('personBtn').onclick=()=>{if(fpsRules())return;setCamMode(camMode==='first'?'t
 function toggleSquadOrder(){setSquadTask(Game.squadOrder==='defend'?'follow':'defend');updSquadOrderBtn();}
 $('squadOrderBtn').onclick=toggleSquadOrder;$('squadOrderPause').onclick=toggleSquadOrder;
 // 游玩中用鼠标点过的按钮不保留焦点，避免空格/回车再次触发它
-stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying())setTimeout(()=>b.blur(),0);});
+stage.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&Input.isPlaying()){setTimeout(()=>b.blur(),0);Input.requestMouseLook();}});
 Input.isPlaying=()=>(Game.state==='prep'||Game.state==='battle')&&!panelOpen&&!(zergMode&&zergMode.frozen)&&$('confirmPanel').classList.contains('hidden');
 Input.onPause=pauseKey;
 Input.onTouchDetected=()=>{if(deviceMode==='auto')setTouchMode(true);};
@@ -3920,7 +3953,7 @@ const touchLayout=mountTouchLayout({stage,storage:combatStorage,toStage,resetInp
 function setDeviceMode(mode){
   if(!['auto','desktop','touch'].includes(mode))return;
   deviceMode=mode;try{localStorage.setItem('chongchao-device-mode',mode);}catch(_e){}
-  if(document.pointerLockElement)document.exitPointerLock();
+  Input.releaseMouseLook();
   setTouchMode(mode==='touch'||mode==='auto'&&autoTouch());
   for(const el of document.querySelectorAll('[data-device-mode]'))el.setAttribute('aria-pressed',String(el.dataset.deviceMode===mode));
   syncKeyLabels();
@@ -4231,9 +4264,9 @@ resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get play
   // 抗战同样是枪战规则：键鼠完全手动，触屏和纯键盘保留准星附近的轻度吸附。
   aimAssist:()=>!!aimAssistKind(),
   viewState:()=>({mode:camMode,index:camView,yaw:camYaw,pitch:camPitch}),
-  firstPerson(){camMode='first';camState.init=false;Input.resetLook();syncViewLabels();},
+  firstPerson(){camMode='first';camState.init=false;Input.resetLook();syncViewLabels();Input.requestMouseLook();},
   // 骑马用第三人称跟随，只在近身/高位两档之间切换；不写入战役保存的视角偏好。
-  rideView(next=false){const riding=camMode==='third';camMode='third';camView=riding&&next?(camView===0?1:0):camView>1?0:camView;camPitch=0;camState.init=false;Input.resetLook();syncViewLabels();return CAMERA_VIEWS[camView].name;},
+  rideView(next=false){Input.releaseMouseLook();const riding=camMode==='third';camMode='third';camView=riding&&next?(camView===0?1:0):camView>1?0:camView;camPitch=0;camState.init=false;Input.resetLook();syncViewLabels();return CAMERA_VIEWS[camView].name;},
   restoreView(v){if(!v)return;camMode=v.mode;camView=v.index;camYaw=v.yaw;camPitch=v.pitch;camState.init=false;Input.resetLook();syncViewLabels();},
   setLook(yaw,pitch){camYaw=yaw;camPitch=pitch;Input.resetLook();},
   cannonLook(){camPitch=clamp(camPitch,-.10,.50);},syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),

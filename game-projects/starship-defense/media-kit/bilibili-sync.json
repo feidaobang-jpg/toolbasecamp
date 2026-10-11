@@ -356,6 +356,16 @@
       "decision": "merge_with_existing_pending",
       "reason": "距上次公开说明核验不足7天，本版不单独触发；若办理既有银行/虫族重大更新，同轮合并准确说明。",
       "record": "releases/web-menu-history-v0.36.1/handoff.json"
+    },
+    {
+      "version": "web-fps-mouse-v0.36.2",
+      "classification": "普通可见补丁",
+      "status": "pending_merge",
+      "summary": "电脑第一人称鼠标接管瞄准，Esc释放暂停，保留拖动与纯键盘回退。",
+      "decision": "deferred_accumulating",
+      "reason": "普通电脑操作改进；最后公开核验为2026-10-11，未满7天；不影响原玩法规则，既有拖动说明仍有回退路径；保留其他已有重大待办。",
+      "record": "releases/web-fps-mouse-v0.36.2/handoff.json",
+      "recorded_at": "2026-10-11T20:50:24.788527+08:00"
     }
   ],
   "comment_corrections": [

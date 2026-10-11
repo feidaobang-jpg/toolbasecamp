@@ -11,7 +11,9 @@ const browser=await chromium.launch({channel:'msedge',headless:true,args:['--use
 try{
  const context=await browser.newContext({viewport:{width:1280,height:720}}),p=await context.newPage();
  p.on('pageerror',e=>errors.push(e.message));
- const load=async(pg=p)=>{await pg.goto(URL+'?qa=1&test=1');await pg.waitForFunction(()=>window.__gameQA&&window.__ccReady);};
+ // This suite exercises the drag fallback and shooting rules. Captured free mouse aim
+ // is covered by verify-first-person-mouse.cjs with the real Pointer Lock API.
+ const load=async(pg=p)=>{await pg.addInitScript(()=>{Element.prototype.requestPointerLock=function(){return Promise.reject(new DOMException('QA drag fallback','SecurityError'));};});await pg.goto(URL+'?qa=1&test=1');await pg.waitForFunction(()=>window.__gameQA&&window.__ccReady);};
  const frames=(n,pg=p)=>pg.evaluate(n=>new Promise(done=>{const step=()=>--n<=0?done():requestAnimationFrame(step);requestAnimationFrame(step);}),n);
  // 战地：只留一个被钉住的敌方步兵当靶子，摆在玩家正前方 dist 米处，其余单位和载具电脑都停掉。
  const arena=(dist=18,pg=p)=>pg.evaluate(dist=>{

@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.1';
+export const GAME_VERSION='0.36.2';
 export const UPDATE_HISTORY=[
+  {version:'0.36.2',date:'2026-10-11',title:'电脑第一人称鼠标瞄准',changes:[
+    '键鼠第一人称接管鼠标，直接移动就能转向瞄准；左键射击，Esc 释放鼠标并暂停。',
+    '菜单、触屏和第三人称会释放鼠标；浏览器不支持接管时仍可拖动或用 Q/E 转向。']},
   {version:'0.36.1',date:'2026-10-11',title:'手机首页与更新日志',changes:[
     '手机首页改为横屏分区：选人、基地防守和其他模式同时可见，避免长菜单只露出一部分。',
     '主菜单和暂停菜单可查看更新日志；详细玩法说明可单独打开。']},
