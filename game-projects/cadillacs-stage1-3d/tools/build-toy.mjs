@@ -28,7 +28,9 @@ for (const name of expected.filter(n => n !== 'index.html')) {
 }
 let html = readFileSync(join(source, 'index.html'), 'utf8');
 const before = html;
+cpSync(join(root, 'public/js/game/author-home.js'), join(out, 'author-home.js'));
 html = html
+  .replaceAll('../../../js/game/author-home.js', './author-home.js')
   .replace(/\s*<link rel="icon" href="\.\.\/\.\.\/\.\.\/favicon\.svg"[^>]*>/, '')
   .replace('data-list-url="../../../games.html"', 'data-list-url="index.html"')
   .replace(/\s*<a data-act="list" class="list-link" href="\.\.\/\.\.\/\.\.\/games\.html">返回游戏列表<\/a>/g, '')
@@ -41,7 +43,7 @@ const manifest = {
   version,
   source: 'public/html/game/cadillacs-stage1-3d',
   source_sha256: Object.fromEntries(expected.map(n => [n, sha(join(source, n))])),
-  files: Object.fromEntries(expected.map(n => [n, sha(join(out, n))])),
+  files: Object.fromEntries([...expected, 'author-home.js'].map(n => [n, sha(join(out, n))])),
   status: 'built_not_submitted'
 };
 const manifestPath = join(project, 'media-kit/releases', 'toy-' + version, 'toy-build.json');

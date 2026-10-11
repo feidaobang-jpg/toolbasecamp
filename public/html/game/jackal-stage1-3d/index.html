@@ -81,6 +81,7 @@
           <button data-opt="touch"></button>
           <button data-opt="fps"></button>
           <button data-act="fullscreen" class="fs-btn">全屏</button>
+          <a class="author-link" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a>
         </nav>
       </div>
     </div>
@@ -130,7 +131,7 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
 </script>
-<script src="js/game.min.js?v=menu-text1"></script>
+<script src="js/game.min.js?v=menu-text1-privacy1"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
 (function(){
@@ -158,5 +159,6 @@ document.addEventListener('focusin',(e)=>{
 });
 })();
 </script>
+<script defer src="../../../js/game/author-home.js?v=1"></script>
 </body>
 </html>

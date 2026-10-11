@@ -24,7 +24,7 @@ for (const name of readdirSync(source)) {
   if (!/\.(js|html|css)$/.test(name)) throw Error('Unexpected runtime asset: ' + name);
   let text = readFileSync(full, 'utf8')
     .replaceAll('../../../vendor/three/0.170.0/build/three.module.js', './vendor/three.module.js')
-    .replaceAll('../../../favicon.svg', './favicon.svg').replaceAll('../../../js/game/drag-look.js', './drag-look.js').replaceAll('../../../js/game/coop.js', './coop-shared.js').replaceAll('../../../js/game/landscape-typing.js', './landscape-typing.js');
+    .replaceAll('../../../favicon.svg', './favicon.svg').replaceAll('../../../js/game/author-home.js', './author-home.js').replaceAll('../../../js/game/drag-look.js', './drag-look.js').replaceAll('../../../js/game/coop.js', './coop-shared.js').replaceAll('../../../js/game/landscape-typing.js', './landscape-typing.js');
   if (name === 'index.html') {
     text = text.replace(/\s*<a data-act="list"[^>]*>[\s\S]*?<\/a>/g, '')
       .replaceAll('data-list-url="../../../games.html"', 'data-list-url="./index.html"').replace(' data-coop-url="../tank_battle.html"', '')
@@ -36,6 +36,7 @@ for (const name of readdirSync(source)) {
 }
 copy(join(root, 'public/vendor/three/0.170.0/build/three.module.js'), 'vendor/three.module.js');
 copy(join(root, 'public/favicon.svg'), 'favicon.svg');
+copy(join(root, 'public/js/game/author-home.js'), 'author-home.js');
 copy(join(root, 'public/js/game/drag-look.js'), 'drag-look.js');
 copy(join(root, 'public/js/game/coop.js'), 'coop-shared.js');
 copy(join(root, 'public/js/game/landscape-typing.js'), 'landscape-typing.js');

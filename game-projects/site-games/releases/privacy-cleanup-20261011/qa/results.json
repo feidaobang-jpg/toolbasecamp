@@ -1,0 +1,257 @@
+{
+  "method": "Isolated headless Edge; Toy SDK mocked; mobile viewport simulations",
+  "results": [
+    {
+      "game": "starship-defense",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "starship-defense",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "starship-defense",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "tank-3d",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "tank-3d",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "tank-3d",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "mario-3d",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "mario-3d",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "mario-3d",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "toy-package",
+      "checks": [
+        "packaged code contains no website credentials or navigation",
+        "author homepage keyboard/SDK navigation",
+        "menu reachable",
+        "no credential requests",
+        "no page errors"
+      ],
+      "passed": true
+    },
+    {
+      "game": "starship-defense",
+      "channel": "website",
+      "checks": [
+        "legacy save retained",
+        "local export/import",
+        "previous save backup",
+        "no account form",
+        "no account requests"
+      ],
+      "passed": true
+    }
+  ]
+}
