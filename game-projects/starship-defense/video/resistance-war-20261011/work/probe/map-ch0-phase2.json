@@ -1,0 +1,82 @@
+{
+  "phase": 2,
+  "objectiveNow": {
+    "x": 0,
+    "z": 137
+  },
+  "objectives": {
+    "trench": {
+      "kind": "plain",
+      "x": -7,
+      "z": 58
+    },
+    "assault": {
+      "kind": "plain",
+      "x": 0,
+      "z": 91
+    },
+    "final": {
+      "kind": "plain",
+      "x": 0,
+      "z": 137
+    }
+  },
+  "loaded": 0,
+  "destructibles": [
+    {
+      "key": "left-bunker",
+      "dead": true,
+      "cannonOnly": false,
+      "hp": 0
+    },
+    {
+      "key": "right-bunker",
+      "dead": true,
+      "cannonOnly": false,
+      "hp": 0
+    }
+  ],
+  "enemies": [
+    {
+      "name": "日军步兵",
+      "x": -10.78900120357666,
+      "z": 125.67391095098213,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 10.811309740502047,
+      "z": 127.67408046086716,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": -4.9651145348859655,
+      "z": 138.7906872093158,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 5.982111456180002,
+      "z": 141.90161300899,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 20.90715085029054,
+      "z": 132.89388668604633,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": -0.1582530913081852,
+      "z": 147.0814895232921,
+      "mounted": false
+    }
+  ],
+  "playerSpawn": {
+    "x": 0,
+    "z": 109
+  },
+  "wagonHp": 550
+}

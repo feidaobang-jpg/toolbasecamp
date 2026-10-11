@@ -1,0 +1,438 @@
+{
+  "generated": "2026-10-10T22:36:26.751Z",
+  "normal_rule_inputs_only": false,
+  "phase_isolation": [
+    {
+      "chapter": 1,
+      "phase": 0,
+      "reason": "专项验证从本章开头 start(1,0) 进入，属正常开局"
+    },
+    {
+      "chapter": 2,
+      "phase": 2,
+      "reason": "专项验证操炮机制，从 P2 隔离进入（loaded=3）；正式成片走 P0→P1→P2 连续正常通关"
+    }
+  ],
+  "no_invulnerable": true,
+  "no_enemy_clearing": true,
+  "no_teleport": true,
+  "no_hp_edit": true,
+  "results": [
+    {
+      "name": "ch1-enter",
+      "ok": true,
+      "detail": {
+        "chapter": 1,
+        "phase": 0,
+        "mounted": false,
+        "hp": 140,
+        "allies": 0
+      }
+    },
+    {
+      "name": "ch1-horse-found",
+      "ok": true,
+      "detail": {
+        "horse": {
+          "x": 3,
+          "z": -18
+        }
+      }
+    },
+    {
+      "name": "ch1-p0-hint",
+      "ok": true,
+      "detail": {
+        "hint": "I 上马，加入骑兵连",
+        "distToHorse": 1.9
+      }
+    },
+    {
+      "name": "ch1-p0-mounted",
+      "ok": true,
+      "detail": {
+        "mounted": true,
+        "phase": 1,
+        "dialogue": "孙德胜：骑兵连，进攻！",
+        "hint": "I 下马 · K 冲刺 · J 挥刀"
+      }
+    },
+    {
+      "name": "ch1-p1-start",
+      "ok": true,
+      "detail": {
+        "phase": 1,
+        "enemies": 12,
+        "cavalry": 4,
+        "z": -17,
+        "killsBaseline": 0
+      }
+    },
+    {
+      "name": "ch1-p1-breakthrough",
+      "ok": true,
+      "detail": {
+        "phase": 2,
+        "z": 87.9,
+        "killsThisPhase": 12,
+        "killsTotal": 12,
+        "hp": 140,
+        "dialogue": "孙德胜：冲开缺口了，运输车跟上！掩护他们撤离！",
+        "tail": [
+          {
+            "t": 30.6,
+            "z": 74,
+            "kills": 11,
+            "phase": 1,
+            "hp": 94,
+            "charge": false,
+            "saber": false
+          },
+          {
+            "t": 32.2,
+            "z": 64.5,
+            "kills": 11,
+            "phase": 1,
+            "hp": 94,
+            "charge": true,
+            "saber": false
+          },
+          {
+            "t": 33.6,
+            "z": 56.8,
+            "kills": 12,
+            "phase": 1,
+            "hp": 94,
+            "charge": true,
+            "saber": false
+          },
+          {
+            "t": 35,
+            "z": 62.3,
+            "kills": 12,
+            "phase": 1,
+            "hp": 94,
+            "charge": false,
+            "saber": false
+          },
+          {
+            "t": 36.1,
+            "z": 67.8,
+            "kills": 12,
+            "phase": 1,
+            "hp": 94,
+            "charge": false,
+            "saber": false
+          },
+          {
+            "t": 36.6,
+            "z": 73.1,
+            "kills": 12,
+            "phase": 1,
+            "hp": 94,
+            "charge": false,
+            "saber": false
+          },
+          {
+            "t": 37.1,
+            "z": 78.5,
+            "kills": 12,
+            "phase": 1,
+            "hp": 94,
+            "charge": false,
+            "saber": false
+          },
+          {
+            "t": 37.9,
+            "z": 87.9,
+            "kills": 12,
+            "phase": 2,
+            "hp": 140,
+            "charge": true,
+            "saber": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "ch1-p2-start",
+      "ok": true,
+      "detail": {
+        "wagon": 77.6,
+        "wagonHp": 550,
+        "enemies": 4,
+        "dialogue": "孙德胜：冲开缺口了，运输车跟上！掩护他们撤离！",
+        "progress": "运输车 550 / 550 · 距撤离 69米"
+      }
+    },
+    {
+      "name": "ch1-p2-escort-done",
+      "ok": true,
+      "detail": {
+        "wagonZ0": 77.6,
+        "wagonZEnd": 146,
+        "wagonHp": 523,
+        "over": true,
+        "phase": 2,
+        "tail": [
+          {
+            "t": 53.6,
+            "wz": 127.8,
+            "whp": 543,
+            "hp": 84,
+            "enemies": 4,
+            "nearWagon": 2,
+            "distW": 18.6,
+            "phase": 2
+          },
+          {
+            "t": 54.1,
+            "wz": 127.8,
+            "whp": 540,
+            "hp": 84,
+            "enemies": 4,
+            "nearWagon": 2,
+            "distW": 12.5,
+            "phase": 2
+          },
+          {
+            "t": 54.6,
+            "wz": 127.8,
+            "whp": 537,
+            "hp": 84,
+            "enemies": 3,
+            "nearWagon": 2,
+            "distW": 8.2,
+            "phase": 2
+          },
+          {
+            "t": 55,
+            "wz": 128,
+            "whp": 535,
+            "hp": 84,
+            "enemies": 2,
+            "nearWagon": 1,
+            "distW": 9.6,
+            "phase": 2
+          },
+          {
+            "t": 56.3,
+            "wz": 132.2,
+            "whp": 531,
+            "hp": 77,
+            "enemies": 2,
+            "nearWagon": 1,
+            "distW": 4.3,
+            "phase": 2
+          },
+          {
+            "t": 56.8,
+            "wz": 133.7,
+            "whp": 530,
+            "hp": 77,
+            "enemies": 2,
+            "nearWagon": 1,
+            "distW": 0.1,
+            "phase": 2
+          },
+          {
+            "t": 57.1,
+            "wz": 134.8,
+            "whp": 529,
+            "hp": 77,
+            "enemies": 2,
+            "nearWagon": 1,
+            "distW": 4.3,
+            "phase": 2
+          },
+          {
+            "t": 57.5,
+            "wz": 136,
+            "whp": 528,
+            "hp": 77,
+            "enemies": 2,
+            "nearWagon": 1,
+            "distW": 8.7,
+            "phase": 2
+          },
+          {
+            "t": 58.2,
+            "wz": 138.4,
+            "whp": 525,
+            "hp": 77,
+            "enemies": 2,
+            "nearWagon": 1,
+            "distW": 13.7,
+            "phase": 2
+          },
+          {
+            "t": 60.4,
+            "wz": 145.4,
+            "whp": 523,
+            "hp": 63,
+            "enemies": 1,
+            "nearWagon": 0,
+            "distW": 12.5,
+            "phase": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "ch1-complete",
+      "ok": true,
+      "detail": {
+        "over": true,
+        "finished": true,
+        "kills": 15,
+        "elapsed": 60.6,
+        "hp": 133
+      }
+    },
+    {
+      "name": "ch2-p2-enter",
+      "ok": true,
+      "detail": {
+        "chapter": 2,
+        "phase": 2,
+        "loaded": 3,
+        "cannonPos": {
+          "x": 0,
+          "z": 64,
+          "yaw": 0
+        },
+        "destructibles": [
+          {
+            "key": "city-gate",
+            "dead": false,
+            "hp": 750
+          },
+          {
+            "key": "street-bunker",
+            "dead": true,
+            "hp": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "ch2-p2-hint",
+      "ok": true,
+      "detail": {
+        "hint": "I 操炮 · K 拉炮移动 · 炮弹木箱在左侧",
+        "distToCannon": 3
+      }
+    },
+    {
+      "name": "ch2-p2-at-cannon",
+      "ok": true,
+      "detail": {
+        "cannon": true,
+        "loaded": 3,
+        "dialogue": "炮手：转动炮口，让预计落点对上城门，再开炮。",
+        "progress": "城门耐久 750 / 750 · 炮弹 3",
+        "readout": "仰角 0.0° · 预计 20米 · 对准城门"
+      }
+    },
+    {
+      "name": "ch2-gate-initial",
+      "ok": true,
+      "detail": {
+        "gate": {
+          "key": "city-gate",
+          "dead": false,
+          "hp": 750
+        },
+        "progress": "城门耐久 750 / 750 · 炮弹 3"
+      }
+    },
+    {
+      "name": "ch2-cannon-aimed-on-gate",
+      "ok": true,
+      "detail": {
+        "pred": {
+          "dist": 19.8,
+          "onGate": true,
+          "x": 0,
+          "y": 0.8,
+          "z": 86.5,
+          "targetKey": "city-gate"
+        },
+        "readout": "仰角 0.0° · 预计 20米 · 对准城门",
+        "impactClass": "onGate",
+        "pitchLog": []
+      }
+    },
+    {
+      "name": "ch2-gate-destroyed",
+      "ok": true,
+      "detail": {
+        "gate": {
+          "key": "city-gate",
+          "dead": true,
+          "hp": 0
+        },
+        "phase": 3,
+        "dialogue": "李云龙：城门打开了，全团跟我进城！",
+        "fireLog": [
+          {
+            "shot": 0,
+            "aimOnGate": true,
+            "loadedAfter": 2,
+            "gateHp": 480,
+            "gateDead": false,
+            "phase": 2,
+            "gateShots": 1,
+            "dialogue": null,
+            "progress": "城门耐久 480 / 750 · 炮弹 2"
+          },
+          {
+            "shot": 1,
+            "aimOnGate": true,
+            "loadedAfter": 1,
+            "gateHp": 210,
+            "gateDead": false,
+            "phase": 2,
+            "gateShots": 2,
+            "dialogue": null,
+            "progress": "城门耐久 210 / 750 · 炮弹 1"
+          },
+          {
+            "shot": 2,
+            "aimOnGate": true,
+            "loadedAfter": 0,
+            "gateHp": 0,
+            "gateDead": true,
+            "phase": 3,
+            "gateShots": 3,
+            "dialogue": "李云龙：城门打开了，全团跟我进城！",
+            "progress": "目标 82米 · 敌军 7 · 队友 3"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ch2-p3-entered-town",
+      "ok": true,
+      "detail": {
+        "phase": 3,
+        "x": -1,
+        "z": 111,
+        "enemies": 0,
+        "dialogue": null
+      }
+    },
+    {
+      "name": "ch2-complete",
+      "ok": false,
+      "detail": {
+        "over": false,
+        "finished": false,
+        "kills": 7,
+        "elapsed": 37.9,
+        "hp": 119
+      }
+    }
+  ],
+  "errors": []
+}

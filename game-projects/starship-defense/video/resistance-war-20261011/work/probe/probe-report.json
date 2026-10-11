@@ -1,0 +1,1272 @@
+{
+  "generated": "2026-10-10T21:24:17.173Z",
+  "errors": [],
+  "menu": {
+    "buttonFound": true,
+    "buttonText": "抗战战役 · 亮剑名场面",
+    "buttonVisible": true,
+    "chapters": [
+      {
+        "name": "李家坡 · 交通壕突击",
+        "tag": "步兵 / 手榴弹 / 阵地突破",
+        "brief": "扮演李云龙带领突击班，从交通壕逼近山崎部队。利用掩体接近机枪火力点，用手榴弹打开突破口，再夺取坡顶阵地。",
+        "stages": [
+          "夺取前沿交通壕",
+          "炸毁两座机枪堡垒",
+          "冲入坡顶指挥阵地"
+        ]
+      },
+      {
+        "name": "骑兵连 · 冲锋突围",
+        "tag": "骑乘 / 军刀 / 掩护撤离",
+        "brief": "跟随孙德胜的骑兵连冲开封锁。上马后用冲刺拉近距离，挥刀冲击敌骑和步兵，掩护后方运输车撤离。以骑兵连冲锋名场面改编为可重玩的突围任务。",
+        "stages": [
+          "上马，与骑兵连集结",
+          "冲破前方日军封锁线",
+          "掩护运输车抵达撤离点"
+        ]
+      },
+      {
+        "name": "平安县城 · 开炮",
+        "tag": "城镇 / 运弹 / 操炮 / 巷战",
+        "brief": "扮演李云龙夺取城外街道，运送炮弹、接管攻城炮。向城门开炮打开通路，带队进入县城，夺下守备队部。",
+        "stages": [
+          "攻下城外机枪阵地",
+          "运送炮弹到攻城炮",
+          "操作火炮，轰开城门",
+          "突入县城，夺取守备队部"
+        ]
+      }
+    ],
+    "guns": {
+      "rifle": {
+        "name": "汉阳造步枪",
+        "mag": 5,
+        "reload": 2.4,
+        "rate": 0.8,
+        "damage": 62,
+        "range": 90,
+        "spread": 0.014,
+        "sound": "sniper"
+      },
+      "mauser": {
+        "name": "驳壳枪",
+        "mag": 10,
+        "reload": 1.7,
+        "rate": 0.22,
+        "damage": 29,
+        "range": 42,
+        "spread": 0.033,
+        "sound": "shoot"
+      },
+      "zb26": {
+        "name": "捷克式轻机枪",
+        "mag": 20,
+        "reload": 3.1,
+        "rate": 0.13,
+        "damage": 27,
+        "range": 75,
+        "spread": 0.036,
+        "sound": "mg"
+      },
+      "arisaka": {
+        "name": "三八式步枪",
+        "mag": 5,
+        "reload": 2.5,
+        "rate": 0.95,
+        "damage": 66,
+        "range": 100,
+        "spread": 0.01,
+        "sound": "sniper"
+      }
+    },
+    "existingCheckpoint": null
+  },
+  "chapters": [
+    {
+      "chapter": 0,
+      "name": "李家坡 · 交通壕突击",
+      "objectives": {
+        "trench": {
+          "kind": "plain",
+          "x": -7,
+          "z": 58
+        },
+        "assault": {
+          "kind": "plain",
+          "x": 0,
+          "z": 91
+        },
+        "final": {
+          "kind": "plain",
+          "x": 0,
+          "z": 137
+        }
+      },
+      "destructibles": [
+        {
+          "key": "left-bunker",
+          "x": -14,
+          "z": 93,
+          "hp": 250,
+          "maxHp": 250,
+          "cannonOnly": false,
+          "dead": false,
+          "cw": 6,
+          "cd": 4,
+          "chh": 3.3
+        },
+        {
+          "key": "right-bunker",
+          "x": 14,
+          "z": 98,
+          "hp": 250,
+          "maxHp": 250,
+          "cannonOnly": false,
+          "dead": false,
+          "cw": 6,
+          "cd": 4,
+          "chh": 3.3
+        }
+      ],
+      "stations": [
+        {
+          "label": "军需箱",
+          "x": -5,
+          "z": -9
+        },
+        {
+          "label": "前沿弹药",
+          "x": -7,
+          "z": 58
+        }
+      ],
+      "playerSpawn": {
+        "x": 0,
+        "y": 0,
+        "z": -18
+      },
+      "enemyCount": 6,
+      "allyCount": 4,
+      "bounds": {
+        "minX": -64,
+        "maxX": 64,
+        "minZ": -38,
+        "maxZ": 170
+      },
+      "colliderCount": 56,
+      "loadout": {
+        "weapon": "rifle",
+        "ammo": {
+          "rifle": 5,
+          "mauser": 10,
+          "zb26": 20,
+          "arisaka": 5
+        },
+        "grenades": 4,
+        "medkits": 3
+      },
+      "phase1": {
+        "objectiveNow": {
+          "x": 0,
+          "z": 91
+        },
+        "objectives": {
+          "trench": {
+            "kind": "plain",
+            "x": -7,
+            "z": 58
+          },
+          "assault": {
+            "kind": "plain",
+            "x": 0,
+            "z": 91
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 137
+          }
+        },
+        "enemyCount": 4,
+        "enemies": [
+          {
+            "name": "日军步兵",
+            "x": -16.89003224154738,
+            "z": 85.83046432741826,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 17.92109564252034,
+            "z": 87.86670153088158,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -8.58475967644005,
+            "z": 101.12579687989786,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 9.645933211431046,
+            "z": 105.1132834634545,
+            "mounted": false
+          }
+        ],
+        "playerSpawn": {
+          "x": 0.9238795325112867,
+          "z": 56.61731656763491
+        },
+        "loaded": 0,
+        "wagonHp": 550,
+        "destructibles": [
+          {
+            "key": "left-bunker",
+            "dead": false,
+            "cannonOnly": false,
+            "hp": 250
+          },
+          {
+            "key": "right-bunker",
+            "dead": false,
+            "cannonOnly": false,
+            "hp": 250
+          }
+        ]
+      },
+      "phase2": {
+        "objectiveNow": {
+          "x": 0,
+          "z": 137
+        },
+        "objectives": {
+          "trench": {
+            "kind": "plain",
+            "x": -7,
+            "z": 58
+          },
+          "assault": {
+            "kind": "plain",
+            "x": 0,
+            "z": 91
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 137
+          }
+        },
+        "enemyCount": 6,
+        "enemies": [
+          {
+            "name": "日军步兵",
+            "x": -10.78900120357666,
+            "z": 125.67391095098213,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 10.811309740502047,
+            "z": 127.67408046086716,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -4.9651145348859655,
+            "z": 138.7906872093158,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 5.982111456180002,
+            "z": 141.90161300899,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 20.90715085029054,
+            "z": 132.89388668604633,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -0.1582530913081852,
+            "z": 147.0814895232921,
+            "mounted": false
+          }
+        ],
+        "playerSpawn": {
+          "x": 0,
+          "z": 109
+        },
+        "loaded": 0,
+        "wagonHp": 550,
+        "destructibles": [
+          {
+            "key": "left-bunker",
+            "dead": true,
+            "cannonOnly": false,
+            "hp": 0
+          },
+          {
+            "key": "right-bunker",
+            "dead": true,
+            "cannonOnly": false,
+            "hp": 0
+          }
+        ]
+      }
+    },
+    {
+      "chapter": 1,
+      "name": "骑兵连 · 冲锋突围",
+      "objectives": {
+        "charge": {
+          "kind": "plain",
+          "x": 0,
+          "z": 83
+        },
+        "final": {
+          "kind": "plain",
+          "x": 0,
+          "z": 146
+        },
+        "wagon": {
+          "kind": "Object3D",
+          "x": -3,
+          "y": 0,
+          "z": -9,
+          "yaw": 0
+        }
+      },
+      "destructibles": [],
+      "stations": [
+        {
+          "label": "军需箱",
+          "x": -7,
+          "z": -10
+        }
+      ],
+      "playerSpawn": {
+        "x": 0,
+        "y": 0,
+        "z": -20
+      },
+      "enemyCount": 0,
+      "allyCount": 4,
+      "bounds": {
+        "minX": -64,
+        "maxX": 64,
+        "minZ": -38,
+        "maxZ": 170
+      },
+      "colliderCount": 46,
+      "loadout": {
+        "weapon": "rifle",
+        "ammo": {
+          "rifle": 5,
+          "mauser": 10,
+          "zb26": 20,
+          "arisaka": 5
+        },
+        "grenades": 4,
+        "medkits": 3
+      },
+      "phase1": {
+        "objectiveNow": {
+          "x": 0,
+          "z": 83
+        },
+        "objectives": {
+          "charge": {
+            "kind": "plain",
+            "x": 0,
+            "z": 83
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 146
+          },
+          "wagon": {
+            "kind": "Object3D",
+            "x": -3,
+            "y": 0,
+            "z": -9
+          }
+        },
+        "enemyCount": 12,
+        "enemies": [
+          {
+            "name": "日军步兵",
+            "x": -11.650267137452811,
+            "z": 33.457331428796635,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 11.442161289670597,
+            "z": 38.187569512290246,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -21.519490013583823,
+            "z": 56.375360044822656,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 19.486076336295383,
+            "z": 61.42513428922842,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -4.929389266584204,
+            "z": 64.10111831045015,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 8,
+            "z": 80,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -12,
+            "z": 86,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 14,
+            "z": 90,
+            "mounted": false
+          },
+          {
+            "name": "日军骑兵",
+            "x": -9.242127479309149,
+            "z": 52.46557309949525,
+            "mounted": true
+          },
+          {
+            "name": "日军骑兵",
+            "x": -2.954212118783109,
+            "z": 61.7357517327598,
+            "mounted": true
+          },
+          {
+            "name": "日军骑兵",
+            "x": 4,
+            "z": 78,
+            "mounted": true
+          },
+          {
+            "name": "日军骑兵",
+            "x": 11,
+            "z": 87,
+            "mounted": true
+          }
+        ],
+        "playerSpawn": {
+          "x": 0,
+          "z": -10
+        },
+        "loaded": 0,
+        "wagonHp": 550,
+        "destructibles": []
+      },
+      "phase2": {
+        "objectiveNow": {
+          "x": 0,
+          "z": 146
+        },
+        "objectives": {
+          "charge": {
+            "kind": "plain",
+            "x": 0,
+            "z": 83
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 146
+          },
+          "wagon": {
+            "kind": "Object3D",
+            "x": -3,
+            "y": 0,
+            "z": 87.07167999992363
+          }
+        },
+        "enemyCount": 4,
+        "enemies": [
+          {
+            "name": "日军步兵",
+            "x": -19.898300245119348,
+            "z": 109.86779031865515,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 20.959047620814292,
+            "z": 118.39000883913381,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -10.966433390965,
+            "z": 134.91453571628352,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 13.485972354897205,
+            "z": 143.1537569077016,
+            "mounted": false
+          }
+        ],
+        "playerSpawn": {
+          "x": 0,
+          "z": 84
+        },
+        "loaded": 0,
+        "wagonHp": 550,
+        "destructibles": []
+      }
+    },
+    {
+      "chapter": 2,
+      "name": "平安县城 · 开炮",
+      "objectives": {
+        "cannon": {
+          "kind": "Object3D",
+          "x": 0,
+          "y": 0,
+          "z": 64,
+          "yaw": 0
+        },
+        "ammo": {
+          "kind": "plain",
+          "x": -12,
+          "z": 59
+        },
+        "outpost": {
+          "kind": "plain",
+          "x": 0,
+          "z": 42
+        },
+        "final": {
+          "kind": "plain",
+          "x": 0,
+          "z": 143
+        }
+      },
+      "destructibles": [
+        {
+          "key": "city-gate",
+          "x": 0,
+          "z": 87,
+          "hp": 750,
+          "maxHp": 750,
+          "cannonOnly": true,
+          "dead": false,
+          "cw": 10,
+          "cd": 1,
+          "chh": 6.2
+        },
+        {
+          "key": "street-bunker",
+          "x": -12,
+          "z": 52,
+          "hp": 250,
+          "maxHp": 250,
+          "cannonOnly": false,
+          "dead": false,
+          "cw": 6,
+          "cd": 4,
+          "chh": 3.3
+        }
+      ],
+      "stations": [
+        {
+          "label": "炮弹木箱",
+          "x": -12,
+          "z": 59
+        },
+        {
+          "label": "军需箱",
+          "x": -6,
+          "z": -12
+        }
+      ],
+      "playerSpawn": {
+        "x": 0,
+        "y": 0,
+        "z": -20
+      },
+      "enemyCount": 6,
+      "allyCount": 4,
+      "bounds": {
+        "minX": -64,
+        "maxX": 64,
+        "minZ": -38,
+        "maxZ": 170
+      },
+      "colliderCount": 61,
+      "loadout": {
+        "weapon": "rifle",
+        "ammo": {
+          "rifle": 5,
+          "mauser": 10,
+          "zb26": 20,
+          "arisaka": 5
+        },
+        "grenades": 4,
+        "medkits": 3
+      },
+      "phase1": {
+        "objectiveNow": {
+          "x": -12,
+          "z": 59
+        },
+        "objectives": {
+          "cannon": {
+            "kind": "Object3D",
+            "x": 0,
+            "y": 0,
+            "z": 64
+          },
+          "ammo": {
+            "kind": "plain",
+            "x": -12,
+            "z": 59
+          },
+          "outpost": {
+            "kind": "plain",
+            "x": 0,
+            "z": 42
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 143
+          }
+        },
+        "enemyCount": 0,
+        "enemies": [],
+        "playerSpawn": {
+          "x": 0,
+          "z": 52
+        },
+        "loaded": 0,
+        "wagonHp": 550,
+        "destructibles": [
+          {
+            "key": "city-gate",
+            "dead": false,
+            "cannonOnly": true,
+            "hp": 750
+          },
+          {
+            "key": "street-bunker",
+            "dead": true,
+            "cannonOnly": false,
+            "hp": 0
+          }
+        ]
+      },
+      "phase2": {
+        "objectiveNow": {
+          "x": 0,
+          "z": 87
+        },
+        "objectives": {
+          "cannon": {
+            "kind": "Object3D",
+            "x": 0,
+            "y": 0,
+            "z": 64
+          },
+          "ammo": {
+            "kind": "plain",
+            "x": -12,
+            "z": 59
+          },
+          "outpost": {
+            "kind": "plain",
+            "x": 0,
+            "z": 42
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 143
+          }
+        },
+        "enemyCount": 0,
+        "enemies": [],
+        "playerSpawn": {
+          "x": 0,
+          "z": 61
+        },
+        "loaded": 3,
+        "wagonHp": 550,
+        "destructibles": [
+          {
+            "key": "city-gate",
+            "dead": false,
+            "cannonOnly": true,
+            "hp": 750
+          },
+          {
+            "key": "street-bunker",
+            "dead": true,
+            "cannonOnly": false,
+            "hp": 0
+          }
+        ]
+      },
+      "phase3": {
+        "objectiveNow": {
+          "x": 0,
+          "z": 143
+        },
+        "objectives": {
+          "cannon": {
+            "kind": "Object3D",
+            "x": 0,
+            "y": 0,
+            "z": 64
+          },
+          "ammo": {
+            "kind": "plain",
+            "x": -12,
+            "z": 59
+          },
+          "outpost": {
+            "kind": "plain",
+            "x": 0,
+            "z": 42
+          },
+          "final": {
+            "kind": "plain",
+            "x": 0,
+            "z": 143
+          }
+        },
+        "enemyCount": 7,
+        "enemies": [
+          {
+            "name": "日军步兵",
+            "x": -8.801257246635263,
+            "z": 101.84994971711214,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 10.777316427372552,
+            "z": 103.82241675799415,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -15.877754644566693,
+            "z": 127.75609674494838,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 14.895894328837992,
+            "z": 124.79982436807353,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": -6.726758280924925,
+            "z": 142.11186551140975,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 6.746743353720991,
+            "z": 146.1090811695372,
+            "mounted": false
+          },
+          {
+            "name": "日军步兵",
+            "x": 0.003483586670921743,
+            "z": 147.09220000382103,
+            "mounted": false
+          }
+        ],
+        "playerSpawn": {
+          "x": 0,
+          "z": 95
+        },
+        "loaded": 3,
+        "wagonHp": 550,
+        "destructibles": [
+          {
+            "key": "city-gate",
+            "dead": true,
+            "cannonOnly": true,
+            "hp": 0
+          },
+          {
+            "key": "street-bunker",
+            "dead": true,
+            "cannonOnly": false,
+            "hp": 0
+          }
+        ]
+      }
+    }
+  ],
+  "trialCh0Normal": [
+    {
+      "t": 1.4,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -16.1,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 74.5
+    },
+    {
+      "t": 1.7,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -14.2,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 72.5
+    },
+    {
+      "t": 2.1,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -12.3,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 70.7
+    },
+    {
+      "t": 2.4,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -10.5,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 68.8
+    },
+    {
+      "t": 2.7,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -8.6,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 67
+    },
+    {
+      "t": 3,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -6.8,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 65.1
+    },
+    {
+      "t": 3.4,
+      "phase": 0,
+      "hp": 140,
+      "kills": 0,
+      "x": 0,
+      "z": -4.9,
+      "enemies": 6,
+      "hold": 0,
+      "distToObj": 63.2
+    },
+    {
+      "t": 3.7,
+      "phase": 0,
+      "hp": 140,
+      "kills": 1,
+      "x": 0,
+      "z": -3,
+      "enemies": 5,
+      "hold": 0,
+      "distToObj": 61.4
+    },
+    {
+      "t": 4,
+      "phase": 0,
+      "hp": 140,
+      "kills": 1,
+      "x": 0,
+      "z": -1.2,
+      "enemies": 5,
+      "hold": 0,
+      "distToObj": 59.6
+    },
+    {
+      "t": 4.4,
+      "phase": 0,
+      "hp": 140,
+      "kills": 1,
+      "x": 0,
+      "z": 0.7,
+      "enemies": 5,
+      "hold": 0,
+      "distToObj": 57.8
+    },
+    {
+      "t": 4.7,
+      "phase": 0,
+      "hp": 133,
+      "kills": 1,
+      "x": 0,
+      "z": 2.6,
+      "enemies": 5,
+      "hold": 0,
+      "distToObj": 55.9
+    },
+    {
+      "t": 5,
+      "phase": 0,
+      "hp": 133,
+      "kills": 1,
+      "x": 0,
+      "z": 4.5,
+      "enemies": 5,
+      "hold": 0,
+      "distToObj": 54
+    },
+    {
+      "t": 5.4,
+      "phase": 0,
+      "hp": 133,
+      "kills": 1,
+      "x": 0,
+      "z": 6.4,
+      "enemies": 5,
+      "hold": 0,
+      "distToObj": 52.1
+    },
+    {
+      "t": 5.7,
+      "phase": 0,
+      "hp": 133,
+      "kills": 2,
+      "x": 0,
+      "z": 8.3,
+      "enemies": 4,
+      "hold": 0,
+      "distToObj": 50.2
+    },
+    {
+      "t": 6,
+      "phase": 0,
+      "hp": 133,
+      "kills": 2,
+      "x": 0,
+      "z": 10.2,
+      "enemies": 4,
+      "hold": 0,
+      "distToObj": 48.3
+    },
+    {
+      "t": 6.4,
+      "phase": 0,
+      "hp": 133,
+      "kills": 2,
+      "x": 0,
+      "z": 12,
+      "enemies": 4,
+      "hold": 0,
+      "distToObj": 46.5
+    },
+    {
+      "t": 6.7,
+      "phase": 0,
+      "hp": 133,
+      "kills": 2,
+      "x": 0,
+      "z": 13.8,
+      "enemies": 4,
+      "hold": 0,
+      "distToObj": 44.7
+    },
+    {
+      "t": 7.4,
+      "phase": 0,
+      "hp": 133,
+      "kills": 2,
+      "x": 0,
+      "z": 15.8,
+      "enemies": 4,
+      "hold": 0,
+      "distToObj": 42.8
+    },
+    {
+      "t": 8.2,
+      "phase": 0,
+      "hp": 119,
+      "kills": 3,
+      "x": 0,
+      "z": 17.6,
+      "enemies": 3,
+      "hold": 0,
+      "distToObj": 41
+    },
+    {
+      "t": 8.9,
+      "phase": 0,
+      "hp": 119,
+      "kills": 3,
+      "x": 0,
+      "z": 19.5,
+      "enemies": 3,
+      "hold": 0,
+      "distToObj": 39.1
+    },
+    {
+      "t": 9.6,
+      "phase": 0,
+      "hp": 119,
+      "kills": 3,
+      "x": 0,
+      "z": 21.3,
+      "enemies": 3,
+      "hold": 0,
+      "distToObj": 37.3
+    },
+    {
+      "t": 10.4,
+      "phase": 0,
+      "hp": 105,
+      "kills": 4,
+      "x": 0,
+      "z": 23.2,
+      "enemies": 2,
+      "hold": 0,
+      "distToObj": 35.5
+    },
+    {
+      "t": 11.1,
+      "phase": 0,
+      "hp": 105,
+      "kills": 4,
+      "x": 0,
+      "z": 25,
+      "enemies": 2,
+      "hold": 0,
+      "distToObj": 33.7
+    },
+    {
+      "t": 11.9,
+      "phase": 0,
+      "hp": 98,
+      "kills": 5,
+      "x": 0,
+      "z": 27,
+      "enemies": 1,
+      "hold": 0,
+      "distToObj": 31.8
+    },
+    {
+      "t": 12.6,
+      "phase": 0,
+      "hp": 98,
+      "kills": 5,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 1,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 13.4,
+      "phase": 0,
+      "hp": 98,
+      "kills": 5,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 1,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 14.1,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 14.4,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 14.8,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 15.1,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 15.4,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 15.8,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 16.1,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 16.4,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 16.7,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 17.1,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 17.4,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 17.7,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 18.1,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    },
+    {
+      "t": 18.4,
+      "phase": 0,
+      "hp": 98,
+      "kills": 6,
+      "x": 0,
+      "z": 27.1,
+      "enemies": 0,
+      "hold": 0,
+      "distToObj": 31.7
+    }
+  ]
+}

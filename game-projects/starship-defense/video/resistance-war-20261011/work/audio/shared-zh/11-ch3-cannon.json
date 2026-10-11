@@ -1,0 +1,250 @@
+{
+  "id": "11-ch3-cannon",
+  "text": "然后上炮位。转炮口、调仰角，屏幕上有个预计落点环，对准城门它会变红、显示「城门命中」。开炮！城门七百五的血，一发两百七，三发轰开。李云龙那句「城门打开了，全团跟我进城」，就是这么来的。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 19.848,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3000000,
+      "text": "然后"
+    },
+    {
+      "offset": 4250000,
+      "duration": 1750000,
+      "text": "上"
+    },
+    {
+      "offset": 6000000,
+      "duration": 4250000,
+      "text": "炮位"
+    },
+    {
+      "offset": 15875000,
+      "duration": 7250000,
+      "text": "转炮口"
+    },
+    {
+      "offset": 24875000,
+      "duration": 4500000,
+      "text": "调仰"
+    },
+    {
+      "offset": 29375000,
+      "duration": 3125000,
+      "text": "角"
+    },
+    {
+      "offset": 35875000,
+      "duration": 3000000,
+      "text": "屏幕"
+    },
+    {
+      "offset": 38875000,
+      "duration": 2750000,
+      "text": "上"
+    },
+    {
+      "offset": 41875000,
+      "duration": 1000000,
+      "text": "有"
+    },
+    {
+      "offset": 42875000,
+      "duration": 625000,
+      "text": "个"
+    },
+    {
+      "offset": 43625000,
+      "duration": 2750000,
+      "text": "预计"
+    },
+    {
+      "offset": 46500000,
+      "duration": 3125000,
+      "text": "落点"
+    },
+    {
+      "offset": 49625000,
+      "duration": 3250000,
+      "text": "环"
+    },
+    {
+      "offset": 56125000,
+      "duration": 2875000,
+      "text": "对准"
+    },
+    {
+      "offset": 59125000,
+      "duration": 4375000,
+      "text": "城门"
+    },
+    {
+      "offset": 64500000,
+      "duration": 1625000,
+      "text": "它"
+    },
+    {
+      "offset": 66125000,
+      "duration": 1250000,
+      "text": "会"
+    },
+    {
+      "offset": 67500000,
+      "duration": 4875000,
+      "text": "变红"
+    },
+    {
+      "offset": 74625000,
+      "duration": 3375000,
+      "text": "显示"
+    },
+    {
+      "offset": 78250000,
+      "duration": 3375000,
+      "text": "城门"
+    },
+    {
+      "offset": 81750000,
+      "duration": 3625000,
+      "text": "命中"
+    },
+    {
+      "offset": 91125000,
+      "duration": 6000000,
+      "text": "开炮"
+    },
+    {
+      "offset": 102750000,
+      "duration": 3875000,
+      "text": "城门"
+    },
+    {
+      "offset": 106875000,
+      "duration": 4125000,
+      "text": "七百五"
+    },
+    {
+      "offset": 111000000,
+      "duration": 875000,
+      "text": "的"
+    },
+    {
+      "offset": 111875000,
+      "duration": 3375000,
+      "text": "血"
+    },
+    {
+      "offset": 118375000,
+      "duration": 3500000,
+      "text": "一发"
+    },
+    {
+      "offset": 122125000,
+      "duration": 3250000,
+      "text": "两百"
+    },
+    {
+      "offset": 125375000,
+      "duration": 3625000,
+      "text": "七"
+    },
+    {
+      "offset": 131250000,
+      "duration": 3500000,
+      "text": "三"
+    },
+    {
+      "offset": 134750000,
+      "duration": 1625000,
+      "text": "发"
+    },
+    {
+      "offset": 136500000,
+      "duration": 2125000,
+      "text": "轰"
+    },
+    {
+      "offset": 138625000,
+      "duration": 2875000,
+      "text": "开"
+    },
+    {
+      "offset": 147125000,
+      "duration": 5000000,
+      "text": "李云龙"
+    },
+    {
+      "offset": 152250000,
+      "duration": 1000000,
+      "text": "那"
+    },
+    {
+      "offset": 153250000,
+      "duration": 875000,
+      "text": "句"
+    },
+    {
+      "offset": 154375000,
+      "duration": 3000000,
+      "text": "城门"
+    },
+    {
+      "offset": 157500000,
+      "duration": 3875000,
+      "text": "打开"
+    },
+    {
+      "offset": 161375000,
+      "duration": 2250000,
+      "text": "了"
+    },
+    {
+      "offset": 166875000,
+      "duration": 4500000,
+      "text": "全团"
+    },
+    {
+      "offset": 171500000,
+      "duration": 1000000,
+      "text": "跟"
+    },
+    {
+      "offset": 172500000,
+      "duration": 875000,
+      "text": "我"
+    },
+    {
+      "offset": 173500000,
+      "duration": 5500000,
+      "text": "进城"
+    },
+    {
+      "offset": 182125000,
+      "duration": 1750000,
+      "text": "就"
+    },
+    {
+      "offset": 183875000,
+      "duration": 625000,
+      "text": "是"
+    },
+    {
+      "offset": 184625000,
+      "duration": 1625000,
+      "text": "这么"
+    },
+    {
+      "offset": 186375000,
+      "duration": 1625000,
+      "text": "来"
+    },
+    {
+      "offset": 188000000,
+      "duration": 1875000,
+      "text": "的"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}

@@ -1,0 +1,189 @@
+{
+  "error": "keyboard.press: Unknown key: \"KeyEscape\"\n    at tap (D:\\project\\toolbasecamp-video-resistance-war\\game-projects\\starship-defense\\video\\resistance-war-20261011\\work\\verify-actions.cjs:26:47)\n    at D:\\project\\toolbasecamp-video-resistance-war\\game-projects\\starship-defense\\video\\resistance-war-20261011\\work\\verify-actions.cjs:237:9",
+  "results": [
+    {
+      "name": "ch0-enter",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "chapter": 0,
+        "phase": 0,
+        "testMode": false,
+        "invuln": true,
+        "hp": 140,
+        "weapon": "rifle"
+      }
+    },
+    {
+      "name": "ch0-p0-advance",
+      "ok": true,
+      "detail": {
+        "goal": {
+          "x": -7,
+          "z": 52
+        },
+        "reached": {
+          "x": -6.8,
+          "z": 50.1
+        },
+        "ms": 18223,
+        "hp": 119
+      }
+    },
+    {
+      "name": "ch0-p0-near-trench",
+      "ok": true,
+      "detail": {
+        "distObj": 7.9,
+        "enemies": 0,
+        "hp": 119,
+        "kills": 6
+      }
+    },
+    {
+      "name": "ch0-p0-capture",
+      "ok": false,
+      "detail": {
+        "phase": 0,
+        "hold": 0,
+        "kills": 6,
+        "hp": 89,
+        "progress": "目标 8米 · 敌军 0 · 队友 3"
+      }
+    },
+    {
+      "name": "ch0-p1-order",
+      "ok": true,
+      "detail": {
+        "order": "attack"
+      }
+    },
+    {
+      "name": "ch0-p1-to-left-bunker",
+      "ok": true,
+      "detail": {
+        "goal": {
+          "x": -14,
+          "z": 84
+        },
+        "reached": {
+          "x": -14.5,
+          "z": 83
+        },
+        "ms": 7129,
+        "hp": 119
+      }
+    },
+    {
+      "name": "ch0-p1-left-bunker-destroyed",
+      "ok": false,
+      "detail": {
+        "before": [
+          {
+            "k": "left-bunker",
+            "dead": false,
+            "hp": 250
+          },
+          {
+            "k": "right-bunker",
+            "dead": false,
+            "hp": 213
+          }
+        ],
+        "after": [
+          {
+            "k": "left-bunker",
+            "dead": false,
+            "hp": 250
+          },
+          {
+            "k": "right-bunker",
+            "dead": false,
+            "hp": 213
+          }
+        ],
+        "grenades": 1
+      }
+    },
+    {
+      "name": "ch0-p1-to-right-bunker",
+      "ok": false,
+      "detail": {
+        "reason": "行进超时",
+        "goal": {
+          "x": 14,
+          "z": 89
+        },
+        "pos": {
+          "x": 6.7,
+          "z": 63.1
+        },
+        "distObj": 14.6,
+        "hp": 99
+      }
+    },
+    {
+      "name": "ch0-p1-right-bunker-destroyed",
+      "ok": false,
+      "detail": {
+        "after": [
+          {
+            "k": "left-bunker",
+            "dead": false,
+            "hp": 250
+          },
+          {
+            "k": "right-bunker",
+            "dead": false,
+            "hp": 250
+          }
+        ],
+        "phase": 0,
+        "grenades": 1
+      }
+    },
+    {
+      "name": "ch0-p1-advance",
+      "ok": false,
+      "detail": {
+        "phase": 0,
+        "progress": "目标 15米 · 敌军 0 · 队友 3"
+      }
+    },
+    {
+      "name": "ch0-p2-to-hilltop",
+      "ok": true,
+      "detail": {
+        "goal": {
+          "x": 0,
+          "z": 131
+        },
+        "reached": {
+          "x": -0.9,
+          "z": 130
+        },
+        "ms": 15658,
+        "hp": 74
+      }
+    },
+    {
+      "name": "ch0-complete",
+      "ok": false,
+      "detail": {
+        "over": false,
+        "finished": false,
+        "kills": 12,
+        "elapsed": 164.6,
+        "hp": 74
+      }
+    },
+    {
+      "name": "ch0-result-text",
+      "ok": true,
+      "detail": {
+        "text": null
+      }
+    }
+  ],
+  "errors": []
+}

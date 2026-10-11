@@ -1,0 +1,160 @@
+{
+  "id": "10-ch3-shell",
+  "text": "接着是这章最有意思的部分——搬炮弹。走到弹药箱按 I 把炮弹扛上，人物会慢下来，再送到攻城炮那儿交付。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 9.624,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3250000,
+      "text": "接着"
+    },
+    {
+      "offset": 4375000,
+      "duration": 1000000,
+      "text": "是"
+    },
+    {
+      "offset": 5500000,
+      "duration": 1250000,
+      "text": "这"
+    },
+    {
+      "offset": 6750000,
+      "duration": 1500000,
+      "text": "章"
+    },
+    {
+      "offset": 8500000,
+      "duration": 2250000,
+      "text": "最"
+    },
+    {
+      "offset": 10750000,
+      "duration": 1250000,
+      "text": "有"
+    },
+    {
+      "offset": 12000000,
+      "duration": 2375000,
+      "text": "意思"
+    },
+    {
+      "offset": 14375000,
+      "duration": 875000,
+      "text": "的"
+    },
+    {
+      "offset": 15375000,
+      "duration": 4125000,
+      "text": "部分"
+    },
+    {
+      "offset": 22375000,
+      "duration": 2000000,
+      "text": "搬"
+    },
+    {
+      "offset": 24375000,
+      "duration": 4125000,
+      "text": "炮弹"
+    },
+    {
+      "offset": 34125000,
+      "duration": 1875000,
+      "text": "走"
+    },
+    {
+      "offset": 36000000,
+      "duration": 1000000,
+      "text": "到"
+    },
+    {
+      "offset": 37125000,
+      "duration": 4250000,
+      "text": "弹药箱"
+    },
+    {
+      "offset": 41375000,
+      "duration": 2500000,
+      "text": "按"
+    },
+    {
+      "offset": 44875000,
+      "duration": 1625000,
+      "text": "I"
+    },
+    {
+      "offset": 46500000,
+      "duration": 1250000,
+      "text": "把"
+    },
+    {
+      "offset": 47875000,
+      "duration": 2750000,
+      "text": "炮弹"
+    },
+    {
+      "offset": 50750000,
+      "duration": 2500000,
+      "text": "扛"
+    },
+    {
+      "offset": 53250000,
+      "duration": 2375000,
+      "text": "上"
+    },
+    {
+      "offset": 59125000,
+      "duration": 3125000,
+      "text": "人物"
+    },
+    {
+      "offset": 62375000,
+      "duration": 1375000,
+      "text": "会"
+    },
+    {
+      "offset": 63750000,
+      "duration": 2125000,
+      "text": "慢"
+    },
+    {
+      "offset": 66000000,
+      "duration": 4125000,
+      "text": "下来"
+    },
+    {
+      "offset": 72500000,
+      "duration": 1750000,
+      "text": "再"
+    },
+    {
+      "offset": 74250000,
+      "duration": 1750000,
+      "text": "送"
+    },
+    {
+      "offset": 76000000,
+      "duration": 1125000,
+      "text": "到"
+    },
+    {
+      "offset": 77375000,
+      "duration": 4875000,
+      "text": "攻城炮"
+    },
+    {
+      "offset": 82250000,
+      "duration": 1250000,
+      "text": "那儿"
+    },
+    {
+      "offset": 83625000,
+      "duration": 3875000,
+      "text": "交付"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}

@@ -1,0 +1,190 @@
+{
+  "id": "02-mode-intro",
+  "text": "入口就在主菜单，叫「抗战战役 · 亮剑名场面」。一共三章：李家坡的交通壕突击、骑兵连的冲锋突围，还有平安县城的开炮。你扮演李云龙，队友是张大彪、孙德胜这些独立团的人。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 17.616,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 5250000,
+      "text": "入口"
+    },
+    {
+      "offset": 6500000,
+      "duration": 1250000,
+      "text": "就"
+    },
+    {
+      "offset": 7750000,
+      "duration": 1125000,
+      "text": "在"
+    },
+    {
+      "offset": 9000000,
+      "duration": 1375000,
+      "text": "主"
+    },
+    {
+      "offset": 10375000,
+      "duration": 5000000,
+      "text": "菜单"
+    },
+    {
+      "offset": 18125000,
+      "duration": 2750000,
+      "text": "叫"
+    },
+    {
+      "offset": 21125000,
+      "duration": 4000000,
+      "text": "抗战"
+    },
+    {
+      "offset": 25250000,
+      "duration": 4625000,
+      "text": "战役"
+    },
+    {
+      "offset": 33125000,
+      "duration": 5000000,
+      "text": "亮剑"
+    },
+    {
+      "offset": 38250000,
+      "duration": 1625000,
+      "text": "名"
+    },
+    {
+      "offset": 39875000,
+      "duration": 4625000,
+      "text": "场面"
+    },
+    {
+      "offset": 50125000,
+      "duration": 8375000,
+      "text": "一共三章"
+    },
+    {
+      "offset": 62250000,
+      "duration": 4875000,
+      "text": "李家坡"
+    },
+    {
+      "offset": 67125000,
+      "duration": 1500000,
+      "text": "的"
+    },
+    {
+      "offset": 68875000,
+      "duration": 4750000,
+      "text": "交通壕"
+    },
+    {
+      "offset": 73750000,
+      "duration": 4375000,
+      "text": "突击"
+    },
+    {
+      "offset": 81875000,
+      "duration": 4875000,
+      "text": "骑兵连"
+    },
+    {
+      "offset": 86750000,
+      "duration": 1000000,
+      "text": "的"
+    },
+    {
+      "offset": 88000000,
+      "duration": 3500000,
+      "text": "冲锋"
+    },
+    {
+      "offset": 91625000,
+      "duration": 4125000,
+      "text": "突围"
+    },
+    {
+      "offset": 97625000,
+      "duration": 3125000,
+      "text": "还有"
+    },
+    {
+      "offset": 101000000,
+      "duration": 3250000,
+      "text": "平安"
+    },
+    {
+      "offset": 104375000,
+      "duration": 3375000,
+      "text": "县城"
+    },
+    {
+      "offset": 107750000,
+      "duration": 625000,
+      "text": "的"
+    },
+    {
+      "offset": 108500000,
+      "duration": 4250000,
+      "text": "开炮"
+    },
+    {
+      "offset": 118500000,
+      "duration": 1625000,
+      "text": "你"
+    },
+    {
+      "offset": 120250000,
+      "duration": 3750000,
+      "text": "扮演"
+    },
+    {
+      "offset": 124250000,
+      "duration": 6375000,
+      "text": "李云龙"
+    },
+    {
+      "offset": 133125000,
+      "duration": 2375000,
+      "text": "队友"
+    },
+    {
+      "offset": 135625000,
+      "duration": 1125000,
+      "text": "是"
+    },
+    {
+      "offset": 137000000,
+      "duration": 6750000,
+      "text": "张大彪"
+    },
+    {
+      "offset": 147250000,
+      "duration": 7625000,
+      "text": "孙德胜"
+    },
+    {
+      "offset": 155875000,
+      "duration": 2875000,
+      "text": "这些"
+    },
+    {
+      "offset": 159000000,
+      "duration": 5000000,
+      "text": "独立团"
+    },
+    {
+      "offset": 164000000,
+      "duration": 1125000,
+      "text": "的"
+    },
+    {
+      "offset": 165125000,
+      "duration": 2250000,
+      "text": "人"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}

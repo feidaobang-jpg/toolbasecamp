@@ -1,0 +1,22 @@
+抗战战役 · 亮剑名场面 —— 交付清单
+
+成片（待人工审片，审片通过后再发布）：
+  final/bilibili-zh/gameplay-zh-final.mp4   B站（烧中文字幕）
+  final/douyin-zh/gameplay-zh-final.mp4     抖音（烧中文字幕，同片）
+  final/youtube-zh/gameplay-youtube-final.mp4  YouTube（烧角标，另附中英可切换字幕）
+
+封面：
+  covers/cover-home-4x3.png   1440x1080  B站首页推荐
+  covers/cover-space-16x9.png 1920x1080  B站空间 / 抖音 / YouTube
+
+字幕：final/youtube-zh/captions-zh.srt、captions-en.srt（90 句，时间轴校验 OK）
+投稿文案：final/<平台>/投稿文案.txt（B站含试玩+投票入口；YouTube 含英文翻译字段）
+
+制作记录：
+  work/recording-plan.md  三章地图/武器/弹道/操作实测与镜头计划
+  work/edit/shared-zh/timeline.json  时间线（26 镜头、90 字幕）
+  work/capture/war-ch{0,1,2}/capture.json  三章录制事件与真实性标注
+  work/qa/acceptance-report.json  技术验收（响度 -16.17 LUFS / TP -0.93 / 黑帧 0）
+
+真实性：三章均正常规则通关（testMode=false、无无敌/清敌/瞬移/时间缩放，phase_isolation 为空）。
+署名：抗战战役由 Codex 开发（game.json development_model），已写入简介与标签。
