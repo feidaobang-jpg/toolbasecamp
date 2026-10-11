@@ -39,21 +39,25 @@
   "cover_text": "我是虫族 / 网友点名要的模式 当天上线 / 虫潮围城 · 虫族模式",
   "cover_selection_source": "run7 实机帧 capture/zerg-run7/gate-25.png + make-cover.cjs",
   "subtitle_mode": "sidecar",
-  "subtitle_note": "YouTube 版使用无烧录字幕的同一时间线母版（media_id youtube-zh-clean），中英字幕作为可选附件上传，不与画面字幕叠加",
+  "subtitle_note": "YouTube 版使用无烧录字幕的同一时间线母版（media_id youtube-zh-clean），中英字幕作为可选附件上传，不与画面字幕叠加；两份 SRT 在上传前仅调整时间轴以满足 YouTube 相邻片段≥0.5秒的空档要求，文本未改（审片哈希见 human_review，新哈希见 subtitle_files）",
   "subtitle_files": [
     {
       "file": "../../../final/youtube-zh/captions-zh.srt",
       "language": "zh-CN",
       "purpose": "selectable captions",
       "required_for_upload": true,
-      "sha256": "b69185bb5352c46343b1669dd6be653133e316cf5ba579bf41add57b053c6165"
+      "sha256": "82624212514eaa9182bc7dc5af68ab920371c994de471b02b11b9836ff329ed5",
+      "upload_state": "published",
+      "track_status": "TRANSLATION_STATUS_PUBLISHED"
     },
     {
       "file": "../../../final/youtube-zh/captions-en.srt",
       "language": "en",
       "purpose": "selectable captions",
       "required_for_upload": true,
-      "sha256": "b8d90e8854fa9d01b34b62c2ca754d9a773a7da7f33c3a83609b13173c20c549"
+      "sha256": "7dc9a4f6222109ddc5b398d0f0c48913f8339638dbe48b939b975231fc1f17d0",
+      "upload_state": "published",
+      "track_status": "TRANSLATION_STATUS_PUBLISHED"
     }
   ],
   "disclosures": {
@@ -81,13 +85,80 @@
   },
   "technical_preparation_complete": true,
   "ready_to_upload": true,
-  "blocking_issues": [
-    "与B站同一阻塞：内置浏览器面板未打开时页面隐藏、视口 0x0，上传与发布确认所需的真实指针事件不投递；本期尚未上传"
-  ],
+  "blocking_issues": [],
   "unverified_fields": [
-    "YouTube 分类 ID、受众（Made for Kids）与算法披露需在投稿页当场核对",
-    "英文字幕为人工校对前的机器对齐译文，需逐条核对专有名词与数值"
+    "线上字幕正文未逐条重新下载比对（timedtext 签名URL绑定请求IP，返回空体）；已核验公开播放器存在 zh-Hans 与 en 两条 CREATOR 轨道"
   ],
-  "status": "approved_for_upload",
-  "upload_state": "ready_not_uploaded"
+  "status": "published",
+  "upload_state": "published",
+  "publication": {
+    "status": "published",
+    "id": "TZWvJqbMIJI",
+    "url": "https://www.youtube.com/watch?v=TZWvJqbMIJI",
+    "episode_id": "zerg-mode-20261010",
+    "variant_id": "youtube-zh",
+    "account_id": "UCha4DVE3db0P1eJvu4qsLJg",
+    "video_sha256": "efaeca93113144907d374cadae8d4a4ca639f61520f475a8a7e8023232649e1a",
+    "public_url": "https://www.youtube.com/watch?v=TZWvJqbMIJI",
+    "public_verified_at": "2026-10-11T10:05:00+08:00",
+    "identity_verified": true,
+    "publishing_settings": {
+      "visibility": "public",
+      "made_for_kids": false,
+      "age_restricted": false,
+      "paid_promotion": false,
+      "synthetic_content": true,
+      "language": "zh-Hans",
+      "category": "Gaming（游戏）",
+      "license": "Standard YouTube License",
+      "tags": [
+        "虫潮围城",
+        "Swarm Siege",
+        "塔防",
+        "tower defense",
+        "游戏开发",
+        "AI",
+        "独立游戏"
+      ]
+    },
+    "processing": "已完成（公开页可播放，时长 125 秒、分类 Gaming）",
+    "thumbnail": {
+      "status": "uploaded_verified",
+      "file": "final/youtube-zh/cover-zh-16x9.jpg",
+      "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0",
+      "public_maxresdefault": "https://i.ytimg.com/vi/TZWvJqbMIJI/maxresdefault.jpg（200，111966 字节）"
+    },
+    "subtitles": {
+      "status": "published_and_public_player_selectable",
+      "languages": [
+        "中文（简体）",
+        "英语"
+      ],
+      "zh_track": {
+        "language_code": "zh-Hans",
+        "file": "final/youtube-zh/captions-zh.srt",
+        "sha256": "82624212514eaa9182bc7dc5af68ab920371c994de471b02b11b9836ff329ed5",
+        "cues": 40,
+        "studio_status": "TRANSLATION_STATUS_PUBLISHED / TRANSLATION_SOURCE_CREATOR"
+      },
+      "en_track": {
+        "language_code": "en",
+        "file": "final/youtube-zh/captions-en.srt",
+        "sha256": "7dc9a4f6222109ddc5b398d0f0c48913f8339638dbe48b939b975231fc1f17d0",
+        "cues": 40,
+        "studio_status": "TRANSLATION_STATUS_PUBLISHED / TRANSLATION_SOURCE_CREATOR"
+      },
+      "note": "早先一次中文上传只落了元数据翻译，字幕轨道 captionsTranslation 为 undefined；本轮重做后两条轨道均在公开播放器 captionTracks 可见。上传前按 YouTube“相邻片段至少 0.5 秒空档”要求只改时间轴（文本与审片一致），旧哈希 b69185bb…/b8d90e88… 作废",
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-zerg-mode-20261010\\work\\proof\\youtube-public-verification.json"
+    },
+    "english_metadata": {
+      "status": "published_saved",
+      "source": "final/youtube-zh/English-localizations.txt",
+      "title": "A viewer asked me to make a \"play as the bugs\" mode. I shipped it the same day. | Swarm Siege",
+      "studio_row_verified": "英语行“标题和说明”列显示 已发布 2026年10月11日，reload 后仍在"
+    },
+    "public_playback": "curl 无登录抓 watch 页：playabilityStatus=OK，captionTracks 含 .zh-Hans 与 .en",
+    "verified_at": "2026-10-11T10:05:00+08:00",
+    "next_step": "本期 YouTube 侧收尾完成；B站/抖音仍待用户处理验证码与登录"
+  }
 }
