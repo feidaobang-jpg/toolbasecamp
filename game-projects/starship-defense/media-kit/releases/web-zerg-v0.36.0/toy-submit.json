@@ -1,0 +1,14 @@
+{
+ "id": "38678478981120",
+ "status": "auditing",
+ "submitted_at": "2026-10-11T19:07:44+08:00",
+ "version": "web-zerg-v0.36.0",
+ "zip_sha256": "a33a3e93e9a625a4a3d105a09ca2956593de2e76472aad32d7bfd5ac7278d92b",
+ "preview_url": "https://www.bilibili.com/toy/preview/preview_ulNIAOJh/index.html",
+ "readback": {
+  "mylist_status": "auditing",
+  "mtime": 1791716863
+ },
+ "previous_public": "web-bank-restore-v0.35.0（2026-10-11 18:03 起 published）",
+ "note": "提交审核不等于上线；过审前公开页仍是上一版"
+}

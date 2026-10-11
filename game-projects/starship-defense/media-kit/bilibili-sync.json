@@ -337,6 +337,16 @@
       "summary": "银行塔防恢复独立入口，与战地并存；并合并v0.34.1地下下车、卡怪、洞顶与3秒手雷修复",
       "trigger": "重大玩法恢复且旧说明称银行已被替换，需要更新",
       "record": "releases/web-bank-restore-v0.35.0/handoff.json"
+    },
+    {
+      "version": "web-zerg-v0.36.0",
+      "classification": "模式重做",
+      "status": "pending_account_lock",
+      "decision": "immediate",
+      "summary": "虫族模式重做为三步攻城（哨站、城门、核心），新增难度、目标指引、进化与号令",
+      "trigger": "虫族模式视频的玩法段与当前试玩不符，需要纠正",
+      "prepared_update_line": "更新（2026-10-11·网站v0.36.0）：虫族模式重做为三步攻城——先拔除三处哨站，城门护盾消失后破门，再摧毁核心；新增简单/普通/困难、目标标记与雷达、每步三选一进化和 H 号令，虫群会跟随母虫并集火酸液标记的目标，靠近自动撕咬。网站已更新，Toy 新包审核中。",
+      "record": "releases/web-zerg-v0.36.0/bilibili-pending.json"
     }
   ],
   "comment_corrections": [

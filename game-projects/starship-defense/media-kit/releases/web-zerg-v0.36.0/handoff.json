@@ -31,7 +31,8 @@
   "public/html/game/starship-defense/game.compat.js",
   "public/html/game/starship-defense/index.html",
   "game-projects/starship-defense/verify-zerg-mode.cjs",
-  "game-projects/starship-defense/verify-zerg-corpse-spin.cjs"
+  "game-projects/starship-defense/verify-zerg-corpse-spin.cjs",
+  "game-projects/starship-defense/verify-zerg-toy.cjs"
  ],
  "runtime_sha256": "aadc0293545a6d99376280e33adad99939cc75c320e30451492000ebe37cdebe",
  "storage": {
@@ -73,15 +74,43 @@
   "video": "未录制；旧版虫族模式视频内容与本版流程不同，是否做新片由用户决定"
  },
  "website": {
-  "status": "pending_deploy"
+  "status": "deployed_verified",
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "source_commit": "7121afe8",
+  "verified_at": "2026-10-11T11:08:23.468719+00:00",
+  "runtime_sha256": "aadc0293545a6d99376280e33adad99939cc75c320e30451492000ebe37cdebe",
+  "checks": [
+   "线上 game.compat.js 的 sha256 与本地构建一致",
+   "线上 zerg-mode.js 含新版三步目标文案",
+   "线上页面脚本版本号为部署提交 7121afe8",
+   "线上无痕浏览器冒烟：入口进简报、开局 8 只随行虫、7 座哨站炮塔、目标标记指向东丘哨站，无页面错误；银行塔防入口仍在"
+  ]
  },
  "toy": {
   "id": "38678478981120",
-  "status": "pending_submit"
+  "status": "auditing",
+  "submitted_at": "2026-10-11T19:07:44+08:00",
+  "version": "web-zerg-v0.36.0",
+  "zip_sha256": "a33a3e93e9a625a4a3d105a09ca2956593de2e76472aad32d7bfd5ac7278d92b",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_ulNIAOJh/index.html",
+  "readback": {
+   "mylist_status": "auditing",
+   "mtime": 1791716863
+  },
+  "previous_public": "web-bank-restore-v0.35.0（2026-10-11 18:03 起 published）",
+  "note": "提交审核不等于上线；过审前公开页仍是上一版",
+  "preview_tested_url": "https://www.bilibili.com/toy/preview/preview_AJDlfmlD/index.html",
+  "qa": "verify-zerg-toy.cjs 15 项（预览外壳内，电脑与手机视口）",
+  "privacy_scan": "passed"
  },
  "tap_tap": "not_requested_not_submitted",
- "bilibili": "pending_decision_after_deploy",
+ "bilibili": {
+  "status": "pending_account_write_lock",
+  "decision": "immediate",
+  "record": "releases/web-zerg-v0.36.0/bilibili-pending.json"
+ },
  "record": "releases/web-zerg-v0.36.0/handoff.json",
  "created_at": "2026-10-11T10:58:46.349527+00:00",
- "merged_mainline": "整合主线的银行塔防恢复（web-bank-restore-v0.35.0）与模式投票后重建兼容包并复验"
+ "merged_mainline": "整合主线的银行塔防恢复（web-bank-restore-v0.35.0）与模式投票后重建兼容包并复验",
+ "source_commit": "7121afe8"
 }
