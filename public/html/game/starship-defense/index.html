@@ -355,6 +355,10 @@ button::before,button::after{content:none!important}
 #stage.versus-mode.touch-mode #vP,#stage.versus-mode.touch-mode #cornerTools #fullBtn{width:var(--bf-corner);min-width:var(--corner-height)}
 #stage.versus-mode.touch-mode #vP{right:calc(var(--corner-right) + var(--bf-corner) + var(--corner-gap))}
 #stage.versus-mode.touch-mode #vC{right:calc(var(--corner-right) + var(--bf-corner) * 2 + var(--corner-gap) * 2)}
+/* 银行塔防保留经济与路线面板；战地仍用原布局。 */
+#stage.bank-mode #bfFlags,#stage.bank-mode #vH{display:none!important}
+#stage.bank-mode #vsPanel .vs-lane{display:flex}
+#stage.bank-mode #vsEco{max-width:250px}
 </style>
 </head>
 <body>
@@ -474,13 +478,14 @@ button::before,button::after{content:none!important}
     </div>
     <p id="saveNotice" class="small" role="status"></p>
     <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
-    <h2>开始游戏</h2>
+    <h2>基地防守 · 开始与继续</h2>
     <div class="btnRow" id="startRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
     </div>
     <h2>其他玩法 · 实验内容</h2>
     <div class="btnRow" id="modeRow">
+      <button class="mbtn" id="btnBankVersus">🏦 银行塔防对战</button>
       <button class="mbtn" id="btnVersus">⚑ 战地模式 · 据点争夺</button>
       <button class="mbtn" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
@@ -648,7 +653,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=0a3dfaeb71b7" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=e61d1521039c" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

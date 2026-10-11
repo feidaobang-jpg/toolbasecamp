@@ -1032,8 +1032,12 @@
       "id": "oct11-bcb195fca7077e77",
       "kind": "request",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "clarified_awaiting_menu_decision",
-      "note": "用户指出默认开始/继续即基地防守；已解释旧银行对战区别，并询问是否按模式独立开始/继续菜单。"
+      "status": "implemented_pending_public_toy",
+      "note": "用户指出默认开始/继续即基地防守；已解释旧银行对战区别，并询问是否按模式独立开始/继续菜单。",
+      "fixed_in": "web-bank-restore-v0.35.0",
+      "user_decision": "恢复独立银行塔防模式，上线后回复",
+      "reply_text": "带升级银行的旧玩法已经恢复成独立模式了！主菜单选择「银行塔防对战」即可进入，银行升级、买兵和建造都保留了，战地模式也还在。",
+      "reply_status": "pending_account_lock"
     },
     {
       "date": "2026-10-11 09:34:57",

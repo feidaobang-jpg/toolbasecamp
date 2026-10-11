@@ -39,6 +39,7 @@ def game_config(game, raw):
         # 虫潮对战：1 对 1 到 4 对 4，房间人数上限 = 两队座位数，空座位由房主那台电脑补电脑；客户端按 mode 开局。
         settings['mode'] = 'versus' if raw.get('mode') == 'versus' else 'coop'
         if settings['mode'] == 'versus':
+            settings['rules'] = 'bank' if raw.get('rules') == 'bank' else 'conquest'
             settings['size'] = bounded(raw.get('size'), 1, 4, 1)
             settings['diff'] = raw.get('diff') if raw.get('diff') in ('easy', 'normal', 'hard') else 'normal'
     return settings

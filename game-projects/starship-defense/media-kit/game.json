@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-feedback-v0.34.1",
+  "current_version": "web-bank-restore-v0.35.0",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -20,7 +20,7 @@
   "preview_url": "https://www.bilibili.com/toy/preview/preview_AGQmXkJm/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-fps-rules-v0.34.0/handoff.json",
+  "qa": "releases/web-bank-restore-v0.35.0/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -1235,6 +1235,26 @@
       "修复洞外目标被误判洞内导致的卡怪",
       "修复西侧跳上洞顶后穿透坠落",
       "主战役及房车无限手雷增加3秒冷却"
+    ]
+  },
+  "bank_versus": {
+    "version": "web-bank-restore-v0.35.0",
+    "entry": "银行塔防对战",
+    "rules": "bank",
+    "restored_from": "5c03aeeb^",
+    "size": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "progress": "independent_match_records_only",
+    "features": [
+      "银行升级与定时收入",
+      "买兵放虫与三路推进",
+      "英雄等级和买枪",
+      "建造与队友转账",
+      "电脑对战与好友联机"
     ]
   }
 }

@@ -1,0 +1,24 @@
+{
+  "version": "web-bank-restore-v0.35.0",
+  "task_id": "01a12a3b-9d84-7291-9b7b-219b4fc9b9a1-feedback-20261011-01",
+  "source_commit": "pending",
+  "runtime_sha256": "e61d1521039caa257a5b348ab1a95ced5194a67497f41bd70f1c9a9ead04df55",
+  "website": "pending",
+  "toy": "pending",
+  "qa": {
+    "mechanics_and_isolation": 18,
+    "complete_ai_matches": 4,
+    "campaign_bug_regression": 20,
+    "server_tests": 11,
+    "real_websocket_clients": 3,
+    "desktop_and_mobile_emulation": true,
+    "physical_phone": false
+  },
+  "bilibili": {
+    "reply_target": "骄傲的打变",
+    "reply": "带升级银行的旧玩法已经恢复成独立模式了！主菜单选择「银行塔防对战」即可进入，银行升级、买兵和建造都保留了，战地模式也还在。",
+    "status": "pending_public_toy_and_account_lock"
+  },
+  "tap_tap": "not_requested",
+  "artifacts": "D:\\project\\task-artifacts\\bili-feedback-20261011"
+}
