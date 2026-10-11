@@ -20,7 +20,18 @@
       "package_sha256": "b23dce8635bcc102de95467cccaed6df06ca4caa396ffc2932c0b62ff28ad759",
       "preview_url": "https://www.bilibili.com/toy/preview/preview_jJlyN7qQ/index.html",
       "action": "待当前审核结束后重投此合并包，使Toy与网站一致",
-      "status": "blocked_by_inflight_audit"
+      "status": "superseded",
+      "superseded_by": "web-fps-rules-v0.34.0"
+    },
+    {
+      "version": "web-fps-rules-v0.34.0",
+      "status": "blocked_needs_user",
+      "package_sha256": "c59dd29758b2d4bd41ea52cc8b709f82213214b8bf35bcfd4b492213ad41f3ca",
+      "source_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_6GeeraCn/index.html",
+      "reason": "预览电脑+手机视口实测通过，--yes 提审第 9 次返回 307008 无权限操作；mylist 仍为 published 且 mtime 未推进，登录正常",
+      "action": "本人确认 Toy 后台后，从主线最新提交重新构建并补提；此前待补提的包均已被本包包含",
+      "record": "releases/web-fps-rules-v0.34.0/handoff.json"
     }
   ],
   "toy": {
@@ -45,7 +56,7 @@
     "submitted_version": "web-zerg-corpse-spinfix-v0.33.3",
     "published_version": "web-resistance-v0.33.0",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_diHsReBm/index.html",
-    "note": "送审包含虫族母虫尸体残留与武直悬停打转修复(基于master@586c619f)。mylist 显示 published(线上仍为 v0.33.0)，v0.33.3 及后续包 --yes 提审连续7次 code=307008 无权限操作，非登录失效、也非审核中锁包；补提以主线 releases/web-touch-cream-pause-20261010/release.json 的 zip_sha256 为准，待本人确认后台权限。",
+    "note": "送审包含虫族母虫尸体残留与武直悬停打转修复(基于master@586c619f)。mylist 显示 published(线上仍为 v0.33.0)，v0.33.3 及后续包 --yes 提审连续7次 code=307008 无权限操作，非登录失效、也非审核中锁包；补提以主线 releases/web-touch-cream-pause-20261010/release.json 的 zip_sha256 为准，待本人确认后台权限。 2026-10-11：web-fps-rules-v0.34.0 新包（zip c59dd297，源提交 3767ef0b）预览实测通过后提审第 9 次仍为 307008，补提目标以本包或其后的主线最新包为准。",
     "package_sha256": "51e53be16ebfe06fefd0748963dbc4acbcc4dc0ac3d2aeed349777bcaa1b126a",
     "pending_updates": [
       {
@@ -146,8 +157,8 @@
   "extension_review_status": "published",
   "preview_version": "web-resistance-v0.33.0",
   "submitted_toy_version": "web-zerg-corpse-spinfix-v0.33.3",
-  "website_version": "web-zerg-corpse-spinfix-v0.33.3",
-  "website_verified_at": "2026-10-10T23:58:25+08:00",
+  "website_version": "web-fps-rules-v0.34.0",
+  "website_verified_at": "2026-10-11T08:32:47+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
@@ -200,7 +211,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "53435e80048fd5300fc21045de60aa1bc88c08d9",
+  "website_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -1206,5 +1217,5 @@
     "new_video_authorized": false
   },
   "website_status": "public_verified",
-  "website_runtime_sha256": "7c1509199a86ba4b29b36302d06993454ec5feac219d569589bbc7debb855fc5"
+  "website_runtime_sha256": "6d72d4bf4574b0335f91c019154fda15813ecbbbaf75e61cc1dc55f240bb7453"
 }

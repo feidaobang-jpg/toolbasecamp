@@ -40,7 +40,9 @@
       "public/html/game/starship-defense/resistance-ui.js": "7c266706cc80823f6ad24e0b6c1b8e84182277f9343e9e7d6ba854936e234939",
       "public/html/game/starship-defense/combat-controls.js": "5c49510cf53917d7ca645c2cbb011cd00370400f38791a1b7c05eef37f9abf21",
       "public/html/game/starship-defense/game.compat.js": "6d72d4bf4574b0335f91c019154fda15813ecbbbaf75e61cc1dc55f240bb7453"
-    }
+    },
+    "commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+    "feature_commit": "5046dfed"
   },
   "verification": {
     "new_suites": {
@@ -85,10 +87,39 @@
     "note": "自动化实机截图，无音轨，不是已审成片；本版不制作或发布新视频"
   },
   "channels": {
-    "website": {"status": "pending"},
-    "toy": {"status": "pending"},
-    "bilibili_descriptions": {"status": "pending"},
-    "taptap": {"status": "not_published_by_default"}
+    "website": {
+      "status": "public_verified",
+      "commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+      "verified_at": "2026-10-11T08:32:47+08:00",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "evidence": "线上 game.compat.js 的 sha256 与构建一致（6d72d4bf45…），页面引用 ?v=3767ef0b 并含新说明；线上实机冒烟：战地、抗战均固定第一人称、C 不切视角、无脚本错误"
+    },
+    "toy": {
+      "status": "blocked_needs_user",
+      "error": "toy update --yes 返回 status=200 code=307008 message=无权限操作",
+      "attempt": "虫潮 Toy 自 2026-10-10 晚起各会话累计第 9 次被拒；本次 2026-10-11T08:35+08:00",
+      "package_zip_sha256": "c59dd29758b2d4bd41ea52cc8b709f82213214b8bf35bcfd4b492213ad41f3ca",
+      "package_compat_sha256": "7b78f8822b3f585c23da7d3eb83e2c3993eaf73b59d091ee7bde787b74d45783",
+      "source_commit": "3767ef0bdc27b8ebdee31402d76eb867c027ab47",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_6GeeraCn/index.html",
+      "preview_qa": "电脑 1280x720 与手机横屏 844x390 视口实测 4 项通过（verify-fps-rules-toy.cjs），页面脚本与上传包哈希一致",
+      "doctor": "静态检查通过；1 条提示：4 个 JS/CSS 文件名不带内容指纹（缓存建议，不影响发布）",
+      "platform_readback": "toy mylist：status=published，mtime=1791647266（2026-10-10 23:47:46 +08:00）未推进；toy whoami 登录正常（飞刀班长 16214353）",
+      "needs_user": "请本人在 B站 Toy 创作后台打开「虫潮围城」，看是否有待处理的审核、整改或权限提示；处理后补提主线最新包",
+      "notify_event": {
+        "task_id": "toy-38678478981120",
+        "event_id": "toy-307008-chongchao-20261010"
+      }
+    },
+    "bilibili_descriptions": {
+      "status": "pending_account_lock",
+      "reason": "B站账号写锁由其他会话持有（Trae，mario-stage4-release-20261010，2026-10-10T23:53+08:00 起），未写入、未删除他人的锁",
+      "prepared_update_line": "更新（2026-10-11·v0.34.0）：战地模式和抗战战役改成第一人称手动瞄准——步行固定第一人称，按住射击键才开火，载具和骑马用第三人称跟随；手机保留准星附近的轻度辅助瞄准，按住射击键还能继续拖动瞄准。主战役、房车、虫族模式操作不变。",
+      "next": "锁释放后与此前未同步的草稿合并更新一次并公开读回"
+    },
+    "taptap": {
+      "status": "not_published_by_default"
+    }
   },
   "notes_for_other_sessions": "战地（codex/conquest-video-20261011）与抗战（video-liangjian 等）两期视频如在本版之前录制，画面是旧的第三人称/自动瞄准操作；是否补录由用户决定。"
 }
