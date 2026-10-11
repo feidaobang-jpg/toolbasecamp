@@ -1,10 +1,10 @@
 {
   "version": "web-bank-restore-v0.35.0",
   "task_id": "01a12a3b-9d84-7291-9b7b-219b4fc9b9a1-feedback-20261011-01",
-  "source_commit": "pending",
+  "source_commit": "8578cc3ec32adb2f3bac273cd5b3226f47f8f817",
   "runtime_sha256": "e61d1521039caa257a5b348ab1a95ced5194a67497f41bd70f1c9a9ead04df55",
-  "website": "pending",
-  "toy": "pending",
+  "website": "public_verified",
+  "toy": "auditing",
   "qa": {
     "mechanics_and_isolation": 18,
     "complete_ai_matches": 4,
@@ -12,13 +12,20 @@
     "server_tests": 11,
     "real_websocket_clients": 3,
     "desktop_and_mobile_emulation": true,
-    "physical_phone": false
+    "physical_phone": false,
+    "toy_preview": "desktop keyboard R/0, bank Lv2, touch buttons, pause/input switch, old chapter1 level2 save preserved"
   },
   "bilibili": {
     "reply_target": "骄傲的打变",
     "reply": "带升级银行的旧玩法已经恢复成独立模式了！主菜单选择「银行塔防对战」即可进入，银行升级、买兵和建造都保留了，战地模式也还在。",
-    "status": "pending_public_toy_and_account_lock"
+    "status": "pending_public_toy_and_account_lock",
+    "write_lock": "QianwenWorkAssistant resistance-war-20261011 since17:00:38 local; asked user whether task finished, no override"
   },
   "tap_tap": "not_requested",
-  "artifacts": "D:\\project\\task-artifacts\\bili-feedback-20261011"
+  "artifacts": "D:\\project\\task-artifacts\\bili-feedback-20261011",
+  "website_verified_at": "2026-10-11T10:01:23.323200+00:00",
+  "toy_submitted_at": "2026-10-11T10:01:23.323200+00:00",
+  "toy_package_sha256": "446a33a3459a764bbbf582acf19cd64cbca6081fedc7287316cd19609df338d2",
+  "toy_preview_url": "https://www.bilibili.com/toy/preview/preview_jYNBf9a8/index.html",
+  "toy_submission_preview": "https://www.bilibili.com/toy/preview/preview_p9bnWqFA/index.html"
 }

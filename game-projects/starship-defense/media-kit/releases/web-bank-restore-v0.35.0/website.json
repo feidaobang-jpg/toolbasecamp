@@ -1,0 +1,10 @@
+{
+  "status": "public_verified",
+  "html_cache_versions_only": true,
+  "production_room": {
+    "rules": "bank",
+    "room_created_and_left": true
+  },
+  "source_commit": "8578cc3ec32adb2f3bac273cd5b3226f47f8f817",
+  "runtime_sha256": "e61d1521039caa257a5b348ab1a95ced5194a67497f41bd70f1c9a9ead04df55"
+}
