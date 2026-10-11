@@ -1,0 +1,94 @@
+{
+  "phase": 3,
+  "objectiveNow": {
+    "x": 0,
+    "z": 143
+  },
+  "objectives": {
+    "cannon": {
+      "kind": "Object3D",
+      "x": 0,
+      "y": 0,
+      "z": 64
+    },
+    "ammo": {
+      "kind": "plain",
+      "x": -12,
+      "z": 59
+    },
+    "outpost": {
+      "kind": "plain",
+      "x": 0,
+      "z": 42
+    },
+    "final": {
+      "kind": "plain",
+      "x": 0,
+      "z": 143
+    }
+  },
+  "loaded": 3,
+  "destructibles": [
+    {
+      "key": "city-gate",
+      "dead": true,
+      "cannonOnly": true,
+      "hp": 0
+    },
+    {
+      "key": "street-bunker",
+      "dead": true,
+      "cannonOnly": false,
+      "hp": 0
+    }
+  ],
+  "enemies": [
+    {
+      "name": "日军步兵",
+      "x": -8.801257246635263,
+      "z": 101.84994971711214,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 10.777316427372552,
+      "z": 103.82241675799415,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": -15.877754644566693,
+      "z": 127.75609674494838,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 14.895894328837992,
+      "z": 124.79982436807353,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": -6.726758280924925,
+      "z": 142.11186551140975,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 6.746743353720991,
+      "z": 146.1090811695372,
+      "mounted": false
+    },
+    {
+      "name": "日军步兵",
+      "x": 0.003483586670921743,
+      "z": 147.09220000382103,
+      "mounted": false
+    }
+  ],
+  "playerSpawn": {
+    "x": 0,
+    "z": 95
+  },
+  "wagonHp": 550
+}

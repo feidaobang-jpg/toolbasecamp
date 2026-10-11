@@ -1,0 +1,652 @@
+{
+  "generated": "2026-10-10T22:22:33.183Z",
+  "note": "阶段直达与清敌仅用于隔离弹道测试，不用于正式成片的连续正常通关叙事",
+  "grenadeParams": {
+    "launchHeight": 1.5,
+    "dirY": 0.48,
+    "speed": 20,
+    "gravity": 15,
+    "life": 2.2,
+    "damage": 185,
+    "blastRadius": 7,
+    "destructibleBlastBonus": 2
+  },
+  "bunker": {
+    "hp": 250,
+    "height": 3.3
+  },
+  "trials": [
+    {
+      "standDist": 9,
+      "placed": {
+        "x": -14,
+        "z": 84,
+        "grenades": 8,
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "distToBunker": 9,
+        "yaw": 0
+      },
+      "aimYawErr": 0.04,
+      "minYInFlight": 0.75,
+      "maxDistFromBunkerInFlight": 0.4,
+      "trajectory": [
+        {
+          "x": -14.1,
+          "y": 2.33,
+          "z": 85.9,
+          "distFromBunker": 7.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.1,
+          "y": 2.99,
+          "z": 87.8,
+          "distFromBunker": 5.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.2,
+          "y": 3.43,
+          "z": 89.5,
+          "distFromBunker": 3.5,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.75,
+          "z": 91.2,
+          "distFromBunker": 1.8,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.94,
+          "z": 93.1,
+          "distFromBunker": 0.4,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.96,
+          "z": 95,
+          "distFromBunker": 2.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.84,
+          "z": 96.7,
+          "distFromBunker": 3.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.53,
+          "z": 98.7,
+          "distFromBunker": 5.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 3.06,
+          "z": 100.6,
+          "distFromBunker": 7.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.7,
+          "y": 2.49,
+          "z": 102.3,
+          "distFromBunker": 9.4,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.7,
+          "y": 1.71,
+          "z": 104.2,
+          "distFromBunker": 11.3,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.8,
+          "y": 0.75,
+          "z": 106.2,
+          "distFromBunker": 13.2,
+          "bunkerHp": 250
+        },
+        {
+          "gone": true,
+          "bunkerHp": 250,
+          "bunkerDead": false
+        }
+      ],
+      "final": {
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "grenades": 7
+      },
+      "hit": false,
+      "predicted": {
+        "t": 0.499,
+        "yAtBunker": 3.95,
+        "landsAt": 23.4,
+        "passesOver": true
+      }
+    },
+    {
+      "standDist": 16,
+      "placed": {
+        "x": -14,
+        "z": 77,
+        "grenades": 8,
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "distToBunker": 16,
+        "yaw": 0
+      },
+      "aimYawErr": 0.05,
+      "minYInFlight": 2.37,
+      "maxDistFromBunkerInFlight": 1.8,
+      "trajectory": [
+        {
+          "x": -14.1,
+          "y": 2.37,
+          "z": 79,
+          "distFromBunker": 14,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.2,
+          "y": 2.95,
+          "z": 80.7,
+          "distFromBunker": 12.3,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.41,
+          "z": 82.4,
+          "distFromBunker": 10.6,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.73,
+          "z": 84.1,
+          "distFromBunker": 8.9,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.93,
+          "z": 86,
+          "distFromBunker": 7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.97,
+          "z": 87.7,
+          "distFromBunker": 5.3,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 3.87,
+          "z": 89.4,
+          "distFromBunker": 3.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.7,
+          "y": 3.61,
+          "z": 91.3,
+          "distFromBunker": 1.8,
+          "bunkerHp": 250
+        },
+        {
+          "gone": true,
+          "bunkerHp": 65,
+          "bunkerDead": false
+        }
+      ],
+      "final": {
+        "bunkerHp": 65,
+        "bunkerDead": false,
+        "grenades": 7
+      },
+      "hit": true,
+      "predicted": {
+        "t": 0.887,
+        "yAtBunker": 3.27,
+        "landsAt": 23.4,
+        "passesOver": false
+      }
+    },
+    {
+      "standDist": 18,
+      "placed": {
+        "x": -14,
+        "z": 75,
+        "grenades": 8,
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "distToBunker": 18,
+        "yaw": 0
+      },
+      "aimYawErr": 0.04,
+      "minYInFlight": 2.33,
+      "maxDistFromBunkerInFlight": 3.8,
+      "trajectory": [
+        {
+          "x": -14.1,
+          "y": 2.33,
+          "z": 76.9,
+          "distFromBunker": 16.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.1,
+          "y": 2.92,
+          "z": 78.6,
+          "distFromBunker": 14.4,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.2,
+          "y": 3.43,
+          "z": 80.5,
+          "distFromBunker": 12.5,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.74,
+          "z": 82.2,
+          "distFromBunker": 10.8,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.92,
+          "z": 83.9,
+          "distFromBunker": 9.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.97,
+          "z": 85.6,
+          "distFromBunker": 7.4,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.88,
+          "z": 87.3,
+          "distFromBunker": 5.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.63,
+          "z": 89.2,
+          "distFromBunker": 3.8,
+          "bunkerHp": 250
+        },
+        {
+          "gone": true,
+          "bunkerHp": 65,
+          "bunkerDead": false
+        }
+      ],
+      "final": {
+        "bunkerHp": 65,
+        "bunkerDead": false,
+        "grenades": 7
+      },
+      "hit": true,
+      "predicted": {
+        "t": 0.998,
+        "yAtBunker": 2.67,
+        "landsAt": 23.4,
+        "passesOver": false
+      }
+    },
+    {
+      "standDist": 20,
+      "placed": {
+        "x": -14,
+        "z": 73,
+        "grenades": 8,
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "distToBunker": 20,
+        "yaw": 0
+      },
+      "aimYawErr": 0.04,
+      "minYInFlight": 2.33,
+      "maxDistFromBunkerInFlight": 2.8,
+      "trajectory": [
+        {
+          "x": -14.1,
+          "y": 2.33,
+          "z": 74.9,
+          "distFromBunker": 18.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.1,
+          "y": 3.02,
+          "z": 76.9,
+          "distFromBunker": 16.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.2,
+          "y": 3.5,
+          "z": 78.8,
+          "distFromBunker": 14.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.79,
+          "z": 80.5,
+          "distFromBunker": 12.5,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.95,
+          "z": 82.4,
+          "distFromBunker": 10.6,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.94,
+          "z": 84.5,
+          "distFromBunker": 8.6,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.76,
+          "z": 86.4,
+          "distFromBunker": 6.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 3.41,
+          "z": 88.3,
+          "distFromBunker": 4.8,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 2.86,
+          "z": 90.3,
+          "distFromBunker": 2.8,
+          "bunkerHp": 250
+        },
+        {
+          "gone": true,
+          "bunkerHp": 65,
+          "bunkerDead": false
+        }
+      ],
+      "final": {
+        "bunkerHp": 65,
+        "bunkerDead": false,
+        "grenades": 7
+      },
+      "hit": true,
+      "predicted": {
+        "t": 1.109,
+        "yAtBunker": 1.87,
+        "landsAt": 23.4,
+        "passesOver": false
+      }
+    },
+    {
+      "standDist": 23,
+      "placed": {
+        "x": -14,
+        "z": 70,
+        "grenades": 8,
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "distToBunker": 23,
+        "yaw": 0
+      },
+      "aimYawErr": 0.04,
+      "minYInFlight": 1.46,
+      "maxDistFromBunkerInFlight": 2.4,
+      "trajectory": [
+        {
+          "x": -14.1,
+          "y": 2.33,
+          "z": 71.9,
+          "distFromBunker": 21.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.1,
+          "y": 2.99,
+          "z": 73.8,
+          "distFromBunker": 19.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.2,
+          "y": 3.5,
+          "z": 75.8,
+          "distFromBunker": 17.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.83,
+          "z": 77.8,
+          "distFromBunker": 15.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.96,
+          "z": 79.6,
+          "distFromBunker": 13.4,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.93,
+          "z": 81.7,
+          "distFromBunker": 11.3,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.73,
+          "z": 83.6,
+          "distFromBunker": 9.5,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 3.36,
+          "z": 85.5,
+          "distFromBunker": 7.5,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 2.9,
+          "z": 87.2,
+          "distFromBunker": 5.9,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.7,
+          "y": 2.29,
+          "z": 88.9,
+          "distFromBunker": 4.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.8,
+          "y": 1.46,
+          "z": 90.8,
+          "distFromBunker": 2.4,
+          "bunkerHp": 250
+        },
+        {
+          "gone": true,
+          "bunkerHp": 65,
+          "bunkerDead": false
+        }
+      ],
+      "final": {
+        "bunkerHp": 65,
+        "bunkerDead": false,
+        "grenades": 7
+      },
+      "hit": true,
+      "predicted": {
+        "t": 1.276,
+        "yAtBunker": 0.34,
+        "landsAt": 23.4,
+        "passesOver": false
+      }
+    },
+    {
+      "standDist": 26,
+      "placed": {
+        "x": -14,
+        "z": 67,
+        "grenades": 8,
+        "bunkerHp": 250,
+        "bunkerDead": false,
+        "distToBunker": 26,
+        "yaw": 0
+      },
+      "aimYawErr": 0.04,
+      "minYInFlight": 0.81,
+      "maxDistFromBunkerInFlight": 4,
+      "trajectory": [
+        {
+          "x": -14.1,
+          "y": 2.33,
+          "z": 68.9,
+          "distFromBunker": 24.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.1,
+          "y": 2.99,
+          "z": 70.8,
+          "distFromBunker": 22.2,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.2,
+          "y": 3.43,
+          "z": 72.5,
+          "distFromBunker": 20.5,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.3,
+          "y": 3.74,
+          "z": 74.2,
+          "distFromBunker": 18.8,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.94,
+          "z": 76.2,
+          "distFromBunker": 16.8,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.4,
+          "y": 3.96,
+          "z": 78.1,
+          "distFromBunker": 14.9,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.5,
+          "y": 3.79,
+          "z": 80.1,
+          "distFromBunker": 12.9,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.6,
+          "y": 3.46,
+          "z": 82.1,
+          "distFromBunker": 11,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.7,
+          "y": 2.96,
+          "z": 84,
+          "distFromBunker": 9.1,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.7,
+          "y": 2.38,
+          "z": 85.7,
+          "distFromBunker": 7.4,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.8,
+          "y": 1.66,
+          "z": 87.3,
+          "distFromBunker": 5.7,
+          "bunkerHp": 250
+        },
+        {
+          "x": -14.8,
+          "y": 0.81,
+          "z": 89,
+          "distFromBunker": 4,
+          "bunkerHp": 250
+        },
+        {
+          "gone": true,
+          "bunkerHp": 65,
+          "bunkerDead": false
+        }
+      ],
+      "final": {
+        "bunkerHp": 65,
+        "bunkerDead": false,
+        "grenades": 7
+      },
+      "hit": true,
+      "predicted": {
+        "t": 1.442,
+        "yAtBunker": -1.62,
+        "landsAt": 23.4,
+        "passesOver": false
+      }
+    },
+    {
+      "twoGrenadeKillTest": {
+        "dead": true,
+        "hp": 0
+      },
+      "standDist": 18
+    }
+  ],
+  "errors": []
+}

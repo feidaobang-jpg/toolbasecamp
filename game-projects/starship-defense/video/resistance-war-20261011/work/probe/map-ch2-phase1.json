@@ -1,0 +1,51 @@
+{
+  "phase": 1,
+  "objectiveNow": {
+    "x": -12,
+    "z": 59
+  },
+  "objectives": {
+    "cannon": {
+      "kind": "Object3D",
+      "x": 0,
+      "y": 0,
+      "z": 64
+    },
+    "ammo": {
+      "kind": "plain",
+      "x": -12,
+      "z": 59
+    },
+    "outpost": {
+      "kind": "plain",
+      "x": 0,
+      "z": 42
+    },
+    "final": {
+      "kind": "plain",
+      "x": 0,
+      "z": 143
+    }
+  },
+  "loaded": 0,
+  "destructibles": [
+    {
+      "key": "city-gate",
+      "dead": false,
+      "cannonOnly": true,
+      "hp": 750
+    },
+    {
+      "key": "street-bunker",
+      "dead": true,
+      "cannonOnly": false,
+      "hp": 0
+    }
+  ],
+  "enemies": [],
+  "playerSpawn": {
+    "x": 0,
+    "z": 52
+  },
+  "wagonHp": 550
+}

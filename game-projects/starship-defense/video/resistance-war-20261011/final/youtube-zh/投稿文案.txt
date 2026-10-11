@@ -1,0 +1,34 @@
+【投稿标题（中文主版）】
+平安县城，开炮！我在虫潮围城把亮剑名场面做成了能玩的战役
+
+【简介（中文主版）】
+试玩入口（首行）：https://www.zhengxiaohui.cn/games.html —— 在列表选择「虫潮围城」，主菜单进入「抗战战役 · 亮剑名场面」。
+这期给虫潮围城加了一个独立剧情模式：抗战战役，共三章，把亮剑里几个名场面改编成能真打的关卡。
+第一章李家坡：沿交通壕推进，手雷炸掉两座机枪堡垒，再夺坡顶指挥阵地。
+第二章骑兵连：上马冲刺挥刀冲破封锁线，再护送运输车抵达撤离点。
+第三章平安县城：搬炮弹、接管攻城炮，落点环对准城门连开三炮轰开城门，带队进城打巷战。
+全程正常规则通关，未开无敌、未改数值；三章可随时重玩、检查点续关。
+抗战战役这一版用 Codex 开发。
+本期提供中英可切换字幕。
+
+【标题（英文翻译字段）】
+Fire on Pingan County! I turned famous scenes into a playable campaign in Swarm Siege
+
+【简介（英文翻译字段）】
+Play it here (first line): https://www.zhengxiaohui.cn/games.html — pick "Swarm Siege" from the list, then enter "Anti-Japanese War Campaign" from the main menu.
+This update adds a standalone story mode to Swarm Siege: a three-chapter campaign that turns famous wartime scenes into real, playable battles.
+Chapter 1 Lijia Slope: push along the trenches, grenade two machine-gun bunkers, then take the hilltop command post.
+Chapter 2 Cavalry: mount up, charge and saber through the blockade line, then escort the supply wagon to the evac point.
+Chapter 3 Pingan County: haul shells, man the siege cannon, line the impact ring on the gate and blow it open in three shots, then fight street by street into town.
+Completed on normal rules — no invincibility, no stat edits; all three chapters are replayable with checkpoint resume.
+This campaign version was developed with Codex.
+Switchable Chinese / English captions included.
+
+【标签】
+虫潮围城
+抗战战役
+亮剑名场面
+攻城炮
+骑兵连
+Codex
+AI

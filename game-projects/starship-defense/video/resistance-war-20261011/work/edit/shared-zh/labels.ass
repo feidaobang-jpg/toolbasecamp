@@ -1,0 +1,36 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 0
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Microsoft YaHei,46,&H00FFFFFF,&H00FFFFFF,&H00201810,&H99000000,-1,0,0,0,100,100,0,0,1,3,1,2,150,150,300,1
+Style: Label,Microsoft YaHei,30,&H00D7EFEB,&H00FFFFFF,&H00101820,&H99000000,0,0,0,0,100,100,0,0,1,2,0,2,70,70,118,1
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:04.50,Label,,0,0,0,,{\an8\pos(960,160)}平安县城 · 攻城炮破门
+Dialogue: 0,0:00:04.50,0:00:08.70,Label,,0,0,0,,{\an8\pos(960,160)}骑兵连 · 冲锋突围
+Dialogue: 0,0:00:08.70,0:00:14.37,Label,,0,0,0,,{\an8\pos(960,160)}抗战战役 · 亮剑名场面
+Dialogue: 0,0:00:14.37,0:00:19.87,Label,,0,0,0,,{\an8\pos(960,160)}主菜单 · 三章战役
+Dialogue: 0,0:00:19.87,0:00:32.83,Label,,0,0,0,,{\an8\pos(960,160)}第一章 · 李家坡交通壕
+Dialogue: 0,0:00:32.83,0:00:40.33,Label,,0,0,0,,{\an8\pos(960,160)}沿交通壕推进 · 实战交火
+Dialogue: 0,0:00:40.33,0:00:45.33,Label,,0,0,0,,{\an8\pos(960,160)}按距离换枪 · 三八式/捷克式
+Dialogue: 0,0:00:45.33,0:00:53.47,Label,,0,0,0,,{\an8\pos(960,160)}T 下令 · 突击班前压
+Dialogue: 0,0:00:53.47,0:01:01.97,Label,,0,0,0,,{\an8\pos(960,160)}手雷炸左堡垒 · 站 18m 外
+Dialogue: 0,0:01:01.97,0:01:10.27,Label,,0,0,0,,{\an8\pos(960,160)}手雷炸右堡垒 · 250血两发清
+Dialogue: 0,0:01:10.27,0:01:14.27,Label,,0,0,0,,{\an8\pos(960,160)}交通壕驻守读秒
+Dialogue: 0,0:01:14.27,0:01:23.47,Label,,0,0,0,,{\an8\pos(960,160)}坡顶总攻 · 第一章结算
+Dialogue: 0,0:01:23.47,0:01:30.47,Label,,0,0,0,,{\an8\pos(960,160)}按 I 上马 · 军刀出鞘
+Dialogue: 0,0:01:30.47,0:01:34.70,Label,,0,0,0,,{\an8\pos(960,160)}C 切视角 · 骑兵连集结
+Dialogue: 0,0:01:34.70,0:01:51.30,Label,,0,0,0,,{\an8\pos(960,160)}K 冲刺 + J 挥刀 · 冲破封锁线
+Dialogue: 0,0:01:51.30,0:02:08.30,Label,,0,0,0,,{\an8\pos(960,160)}护送运输车 · 抵达撤离点
+Dialogue: 0,0:02:08.30,0:02:15.30,Label,,0,0,0,,{\an8\pos(960,160)}第三章 · 城外机枪阵地
+Dialogue: 0,0:02:15.30,0:02:18.33,Label,,0,0,0,,{\an8\pos(960,160)}手雷拆街道堡垒
+Dialogue: 0,0:02:18.33,0:02:24.33,Label,,0,0,0,,{\an8\pos(960,160)}搬炮弹 · 人物负重变慢
+Dialogue: 0,0:02:24.33,0:02:28.80,Label,,0,0,0,,{\an8\pos(960,160)}送到攻城炮位
+Dialogue: 0,0:02:28.80,0:02:36.30,Label,,0,0,0,,{\an8\pos(960,160)}操炮 · 落点环对准城门
+Dialogue: 0,0:02:36.30,0:02:49.50,Label,,0,0,0,,{\an8\pos(960,160)}开炮三发 · 轰开平安县城门
+Dialogue: 0,0:02:49.50,0:02:57.50,Label,,0,0,0,,{\an8\pos(960,160)}突入县城 · 巷战夺守备队部
+Dialogue: 0,0:02:57.50,0:03:02.50,Label,,0,0,0,,{\an8\pos(960,160)}战役通关 · 三章名场面
+Dialogue: 0,0:03:02.50,0:03:07.50,Label,,0,0,0,,{\an8\pos(960,160)}平安县城 · 通关结算

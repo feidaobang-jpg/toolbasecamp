@@ -1,0 +1,250 @@
+{
+  "id": "03-ch1-trench",
+  "text": "第一章是步兵战。沿着交通壕往北推进，一路上都是日军步兵。这里有四把制式武器：汉阳造、驳壳枪、捷克式轻机枪，还有三八式。距离远我就用三八式点名，冲近了切捷克式扫，弹匣二十发，压得住。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 19.776,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3250000,
+      "text": "第一"
+    },
+    {
+      "offset": 4250000,
+      "duration": 2125000,
+      "text": "章"
+    },
+    {
+      "offset": 6625000,
+      "duration": 1125000,
+      "text": "是"
+    },
+    {
+      "offset": 7875000,
+      "duration": 6125000,
+      "text": "步兵战"
+    },
+    {
+      "offset": 19750000,
+      "duration": 3125000,
+      "text": "沿着"
+    },
+    {
+      "offset": 23000000,
+      "duration": 5000000,
+      "text": "交通壕"
+    },
+    {
+      "offset": 28250000,
+      "duration": 1750000,
+      "text": "往"
+    },
+    {
+      "offset": 30000000,
+      "duration": 1250000,
+      "text": "北"
+    },
+    {
+      "offset": 31375000,
+      "duration": 4375000,
+      "text": "推进"
+    },
+    {
+      "offset": 39250000,
+      "duration": 6500000,
+      "text": "一路上"
+    },
+    {
+      "offset": 46000000,
+      "duration": 1500000,
+      "text": "都"
+    },
+    {
+      "offset": 47500000,
+      "duration": 1250000,
+      "text": "是"
+    },
+    {
+      "offset": 49000000,
+      "duration": 2625000,
+      "text": "日军"
+    },
+    {
+      "offset": 51750000,
+      "duration": 4375000,
+      "text": "步兵"
+    },
+    {
+      "offset": 61875000,
+      "duration": 3000000,
+      "text": "这里"
+    },
+    {
+      "offset": 65000000,
+      "duration": 1625000,
+      "text": "有"
+    },
+    {
+      "offset": 66750000,
+      "duration": 2500000,
+      "text": "四"
+    },
+    {
+      "offset": 69250000,
+      "duration": 1500000,
+      "text": "把"
+    },
+    {
+      "offset": 71000000,
+      "duration": 2750000,
+      "text": "制式"
+    },
+    {
+      "offset": 73875000,
+      "duration": 4750000,
+      "text": "武器"
+    },
+    {
+      "offset": 83000000,
+      "duration": 4375000,
+      "text": "汉阳"
+    },
+    {
+      "offset": 87375000,
+      "duration": 2375000,
+      "text": "造"
+    },
+    {
+      "offset": 91375000,
+      "duration": 6875000,
+      "text": "驳壳枪"
+    },
+    {
+      "offset": 100375000,
+      "duration": 3500000,
+      "text": "捷克"
+    },
+    {
+      "offset": 103875000,
+      "duration": 1875000,
+      "text": "式"
+    },
+    {
+      "offset": 105875000,
+      "duration": 2375000,
+      "text": "轻"
+    },
+    {
+      "offset": 108250000,
+      "duration": 4375000,
+      "text": "机枪"
+    },
+    {
+      "offset": 114500000,
+      "duration": 2750000,
+      "text": "还有"
+    },
+    {
+      "offset": 117500000,
+      "duration": 3750000,
+      "text": "三八"
+    },
+    {
+      "offset": 121250000,
+      "duration": 2500000,
+      "text": "式"
+    },
+    {
+      "offset": 129375000,
+      "duration": 3125000,
+      "text": "距离"
+    },
+    {
+      "offset": 132625000,
+      "duration": 2000000,
+      "text": "远"
+    },
+    {
+      "offset": 134625000,
+      "duration": 1125000,
+      "text": "我"
+    },
+    {
+      "offset": 135875000,
+      "duration": 1250000,
+      "text": "就"
+    },
+    {
+      "offset": 137125000,
+      "duration": 1375000,
+      "text": "用"
+    },
+    {
+      "offset": 138750000,
+      "duration": 3500000,
+      "text": "三八"
+    },
+    {
+      "offset": 142250000,
+      "duration": 1500000,
+      "text": "式"
+    },
+    {
+      "offset": 143875000,
+      "duration": 5375000,
+      "text": "点名"
+    },
+    {
+      "offset": 151625000,
+      "duration": 3625000,
+      "text": "冲近"
+    },
+    {
+      "offset": 155250000,
+      "duration": 1500000,
+      "text": "了"
+    },
+    {
+      "offset": 157000000,
+      "duration": 2125000,
+      "text": "切"
+    },
+    {
+      "offset": 159250000,
+      "duration": 2500000,
+      "text": "捷克"
+    },
+    {
+      "offset": 161750000,
+      "duration": 1250000,
+      "text": "式"
+    },
+    {
+      "offset": 163125000,
+      "duration": 3500000,
+      "text": "扫"
+    },
+    {
+      "offset": 169875000,
+      "duration": 4000000,
+      "text": "弹匣"
+    },
+    {
+      "offset": 174125000,
+      "duration": 3375000,
+      "text": "二十"
+    },
+    {
+      "offset": 177500000,
+      "duration": 3125000,
+      "text": "发"
+    },
+    {
+      "offset": 183250000,
+      "duration": 5625000,
+      "text": "压得住"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}

@@ -1,0 +1,1614 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration": 200.66666666666666,
+  "segments": [
+    {
+      "id": "01-hook",
+      "text": "骑兵连，进攻！这一炮，是打给平安县城的。我在《虫潮围城》里新做了一个抗战战役模式，把亮剑里几个名场面，改编成了真能玩的关卡。",
+      "start": 0.0,
+      "end": 14.366666666666667,
+      "duration": 14.366666666666667,
+      "voice_duration": 13.512,
+      "voice_offset": 0.12,
+      "frames": 431,
+      "wav": "audio\\shared-zh\\01-hook.wav"
+    },
+    {
+      "id": "02-mode-intro",
+      "text": "入口就在主菜单，叫「抗战战役 · 亮剑名场面」。一共三章：李家坡的交通壕突击、骑兵连的冲锋突围，还有平安县城的开炮。你扮演李云龙，队友是张大彪、孙德胜这些独立团的人。",
+      "start": 14.366666666666667,
+      "end": 32.83333333333333,
+      "duration": 18.466666666666665,
+      "voice_duration": 17.616,
+      "voice_offset": 0.12,
+      "frames": 554,
+      "wav": "audio\\shared-zh\\02-mode-intro.wav"
+    },
+    {
+      "id": "03-ch1-trench",
+      "text": "第一章是步兵战。沿着交通壕往北推进，一路上都是日军步兵。这里有四把制式武器：汉阳造、驳壳枪、捷克式轻机枪，还有三八式。距离远我就用三八式点名，冲近了切捷克式扫，弹匣二十发，压得住。",
+      "start": 32.83333333333333,
+      "end": 53.46666666666666,
+      "duration": 20.633333333333333,
+      "voice_duration": 19.776,
+      "voice_offset": 0.12,
+      "frames": 619,
+      "wav": "audio\\shared-zh\\03-ch1-trench.wav"
+    },
+    {
+      "id": "04-ch1-grenade",
+      "text": "推进到坡下，前面有两座机枪堡垒，各二百五的血。这里有个坑：手雷是有抛物线的，站太近反而会从堡垒头顶飞过去。得退到十六米开外再扔，两发一个，炸得干干净净。",
+      "start": 53.46666666666666,
+      "end": 70.26666666666667,
+      "duration": 16.8,
+      "voice_duration": 15.96,
+      "voice_offset": 0.12,
+      "frames": 504,
+      "wav": "audio\\shared-zh\\04-ch1-grenade.wav"
+    },
+    {
+      "id": "05-ch1-hilltop",
+      "text": "堡垒端掉，就向坡顶的指挥阵地总攻。守住阵地几秒钟，第一章拿下。要是你顺手觉得这段打得还行，点个赞我接着往下做。",
+      "start": 70.26666666666667,
+      "end": 83.46666666666667,
+      "duration": 13.2,
+      "voice_duration": 12.336,
+      "voice_offset": 0.12,
+      "frames": 396,
+      "wav": "audio\\shared-zh\\05-ch1-hilltop.wav"
+    },
+    {
+      "id": "06-ch2-mount",
+      "text": "第二章直接换玩法——骑兵。走过去按 I 上马，步枪收起、军刀出鞘，孙德胜带着骑兵连就在旁边集结。",
+      "start": 83.46666666666667,
+      "end": 94.7,
+      "duration": 11.233333333333333,
+      "voice_duration": 10.368,
+      "voice_offset": 0.12,
+      "frames": 337,
+      "wav": "audio\\shared-zh\\06-ch2-mount.wav"
+    },
+    {
+      "id": "07-ch2-charge",
+      "text": "然后就是冲锋。按 K 冲刺，马速一下子拉满，撞上去直接一百四的伤害，再补一刀。这一关要在封锁线上砍翻至少六个，冲到坡后面才算突破。骑兵连，进攻！",
+      "start": 94.7,
+      "end": 111.30000000000001,
+      "duration": 16.6,
+      "voice_duration": 15.744,
+      "voice_offset": 0.12,
+      "frames": 498,
+      "wav": "audio\\shared-zh\\07-ch2-charge.wav"
+    },
+    {
+      "id": "08-ch2-escort",
+      "text": "冲开缺口还没完，后面有辆运输车要撤离。你得守在车旁边清敌兵——敌人贴到车九米内，车就开始掉血；把它清干净，车才会往前开。一路护送到撤离点，这章才算真过。",
+      "start": 111.30000000000001,
+      "end": 128.3,
+      "duration": 17.0,
+      "voice_duration": 16.152,
+      "voice_offset": 0.12,
+      "frames": 510,
+      "wav": "audio\\shared-zh\\08-ch2-escort.wav"
+    },
+    {
+      "id": "09-ch3-outpost",
+      "text": "第三章，平安县城。先在城外把机枪阵地和街道堡垒打下来，跟第一章一样，手雷拉开距离扔。",
+      "start": 128.3,
+      "end": 138.33333333333334,
+      "duration": 10.033333333333333,
+      "voice_duration": 9.168,
+      "voice_offset": 0.12,
+      "frames": 301,
+      "wav": "audio\\shared-zh\\09-ch3-outpost.wav"
+    },
+    {
+      "id": "10-ch3-shell",
+      "text": "接着是这章最有意思的部分——搬炮弹。走到弹药箱按 I 把炮弹扛上，人物会慢下来，再送到攻城炮那儿交付。",
+      "start": 138.33333333333334,
+      "end": 148.8,
+      "duration": 10.466666666666667,
+      "voice_duration": 9.624,
+      "voice_offset": 0.12,
+      "frames": 314,
+      "wav": "audio\\shared-zh\\10-ch3-shell.wav"
+    },
+    {
+      "id": "11-ch3-cannon",
+      "text": "然后上炮位。转炮口、调仰角，屏幕上有个预计落点环，对准城门它会变红、显示「城门命中」。开炮！城门七百五的血，一发两百七，三发轰开。李云龙那句「城门打开了，全团跟我进城」，就是这么来的。",
+      "start": 148.8,
+      "end": 169.5,
+      "duration": 20.7,
+      "voice_duration": 19.848,
+      "voice_offset": 0.12,
+      "frames": 621,
+      "wav": "audio\\shared-zh\\11-ch3-cannon.wav"
+    },
+    {
+      "id": "12-ch3-town",
+      "text": "城门一破，就带队冲进县城打巷战，把守备队部夺下来，整个战役通关。",
+      "start": 169.5,
+      "end": 177.5,
+      "duration": 8.0,
+      "voice_duration": 7.128,
+      "voice_offset": 0.12,
+      "frames": 240,
+      "wav": "audio\\shared-zh\\12-ch3-town.wav"
+    },
+    {
+      "id": "13-close",
+      "text": "这一版抗战战役用 Codex 开发，已经能在网页上玩，电脑手机都行，入口在视频简介。三章都是独立存档、随时能重玩。你更想先玩骑兵冲锋，还是先开那门炮？也可以去简介里的自研游戏投票页，告诉我下期想看什么。",
+      "start": 177.5,
+      "end": 200.66666666666666,
+      "duration": 23.166666666666668,
+      "voice_duration": 20.808,
+      "voice_offset": 0.12,
+      "frames": 695,
+      "wav": "audio\\shared-zh\\13-close.wav"
+    }
+  ],
+  "shots": [
+    {
+      "index": 0,
+      "segment": "01-hook",
+      "chapter": "ch2",
+      "start": 0.0,
+      "end": 4.5,
+      "duration": 4.5,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 121.39760796546936,
+      "source_out": 125.89760796546936,
+      "speed": 1,
+      "label": "平安县城 · 攻城炮破门",
+      "still": false
+    },
+    {
+      "index": 1,
+      "segment": "01-hook",
+      "chapter": "ch1",
+      "start": 4.5,
+      "end": 8.7,
+      "duration": 4.2,
+      "source": "capture/war-ch1/raw.mp4",
+      "source_in": 25.21394012260437,
+      "source_out": 29.41394012260437,
+      "speed": 1,
+      "label": "骑兵连 · 冲锋突围",
+      "still": false
+    },
+    {
+      "index": 2,
+      "segment": "01-hook",
+      "chapter": "ch0",
+      "start": 8.7,
+      "end": 14.366666666666667,
+      "duration": 5.666666666666667,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 0.02275190544128418,
+      "source_out": 5.689418572107951,
+      "speed": 1,
+      "label": "抗战战役 · 亮剑名场面",
+      "still": false
+    },
+    {
+      "index": 3,
+      "segment": "02-mode-intro",
+      "chapter": "ch0",
+      "start": 14.366666666666667,
+      "end": 19.866666666666667,
+      "duration": 5.5,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 0.02275190544128418,
+      "source_out": 5.522751905441284,
+      "speed": 1,
+      "label": "主菜单 · 三章战役",
+      "still": false
+    },
+    {
+      "index": 4,
+      "segment": "02-mode-intro",
+      "chapter": "ch0",
+      "start": 19.866666666666667,
+      "end": 32.833333333333336,
+      "duration": 12.966666666666667,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 5.324751905441284,
+      "source_out": 18.29141857210795,
+      "speed": 1,
+      "label": "第一章 · 李家坡交通壕",
+      "still": false
+    },
+    {
+      "index": 5,
+      "segment": "03-ch1-trench",
+      "chapter": "ch0",
+      "start": 32.83333333333333,
+      "end": 40.33333333333333,
+      "duration": 7.5,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 19.929751905441286,
+      "source_out": 27.429751905441286,
+      "speed": 1,
+      "label": "沿交通壕推进 · 实战交火",
+      "still": false
+    },
+    {
+      "index": 6,
+      "segment": "03-ch1-trench",
+      "chapter": "ch0",
+      "start": 40.33333333333333,
+      "end": 45.33333333333333,
+      "duration": 5.0,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 52.445751905441284,
+      "source_out": 57.445751905441284,
+      "speed": 1,
+      "label": "按距离换枪 · 三八式/捷克式",
+      "still": false
+    },
+    {
+      "index": 7,
+      "segment": "03-ch1-trench",
+      "chapter": "ch0",
+      "start": 45.33333333333333,
+      "end": 53.46666666666666,
+      "duration": 8.133333333333333,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 57.09875190544128,
+      "source_out": 65.23208523877462,
+      "speed": 1,
+      "label": "T 下令 · 突击班前压",
+      "still": false
+    },
+    {
+      "index": 8,
+      "segment": "04-ch1-grenade",
+      "chapter": "ch0",
+      "start": 53.46666666666666,
+      "end": 61.96666666666666,
+      "duration": 8.5,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 145.9597519054413,
+      "source_out": 154.4597519054413,
+      "speed": 1,
+      "label": "手雷炸左堡垒 · 站 18m 外",
+      "still": false
+    },
+    {
+      "index": 9,
+      "segment": "04-ch1-grenade",
+      "chapter": "ch0",
+      "start": 61.96666666666666,
+      "end": 70.26666666666667,
+      "duration": 8.3,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 195.4947519054413,
+      "source_out": 203.7947519054413,
+      "speed": 1,
+      "label": "手雷炸右堡垒 · 250血两发清",
+      "still": false
+    },
+    {
+      "index": 10,
+      "segment": "05-ch1-hilltop",
+      "chapter": "ch0",
+      "start": 70.26666666666667,
+      "end": 74.26666666666667,
+      "duration": 4.0,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 64.27675190544129,
+      "source_out": 68.27675190544129,
+      "speed": 1,
+      "label": "交通壕驻守读秒",
+      "still": false
+    },
+    {
+      "index": 11,
+      "segment": "05-ch1-hilltop",
+      "chapter": "ch0",
+      "start": 74.26666666666667,
+      "end": 83.46666666666667,
+      "duration": 9.2,
+      "source": "capture/war-ch0/raw.mp4",
+      "source_in": 248.4657519054413,
+      "source_out": 257.6657519054413,
+      "speed": 1,
+      "label": "坡顶总攻 · 第一章结算",
+      "still": false
+    },
+    {
+      "index": 12,
+      "segment": "06-ch2-mount",
+      "chapter": "ch1",
+      "start": 83.46666666666667,
+      "end": 90.46666666666667,
+      "duration": 7.0,
+      "source": "capture/war-ch1/raw.mp4",
+      "source_in": 0.0,
+      "source_out": 7.0,
+      "speed": 1,
+      "label": "按 I 上马 · 军刀出鞘",
+      "still": false
+    },
+    {
+      "index": 13,
+      "segment": "06-ch2-mount",
+      "chapter": "ch1",
+      "start": 90.46666666666667,
+      "end": 94.7,
+      "duration": 4.233333333333333,
+      "source": "capture/war-ch1/raw.mp4",
+      "source_in": 16.33194012260437,
+      "source_out": 20.565273455937703,
+      "speed": 1,
+      "label": "C 切视角 · 骑兵连集结",
+      "still": false
+    },
+    {
+      "index": 14,
+      "segment": "07-ch2-charge",
+      "chapter": "ch1",
+      "start": 94.7,
+      "end": 111.30000000000001,
+      "duration": 16.6,
+      "source": "capture/war-ch1/raw.mp4",
+      "source_in": 25.21394012260437,
+      "source_out": 41.81394012260437,
+      "speed": 1,
+      "label": "K 冲刺 + J 挥刀 · 冲破封锁线",
+      "still": false
+    },
+    {
+      "index": 15,
+      "segment": "08-ch2-escort",
+      "chapter": "ch1",
+      "start": 111.30000000000001,
+      "end": 128.3,
+      "duration": 17.0,
+      "source": "capture/war-ch1/raw.mp4",
+      "source_in": 62.28194012260437,
+      "source_out": 79.28194012260437,
+      "speed": 1,
+      "label": "护送运输车 · 抵达撤离点",
+      "still": false
+    },
+    {
+      "index": 16,
+      "segment": "09-ch3-outpost",
+      "chapter": "ch2",
+      "start": 128.3,
+      "end": 135.3,
+      "duration": 7.0,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 0.0,
+      "source_out": 7.0,
+      "speed": 1,
+      "label": "第三章 · 城外机枪阵地",
+      "still": false
+    },
+    {
+      "index": 17,
+      "segment": "09-ch3-outpost",
+      "chapter": "ch2",
+      "start": 135.3,
+      "end": 138.33333333333334,
+      "duration": 3.033333333333333,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 27.37460796546936,
+      "source_out": 30.40794129880269,
+      "speed": 1,
+      "label": "手雷拆街道堡垒",
+      "still": false
+    },
+    {
+      "index": 18,
+      "segment": "10-ch3-shell",
+      "chapter": "ch2",
+      "start": 138.33333333333334,
+      "end": 144.33333333333334,
+      "duration": 6.0,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 104.03560796546937,
+      "source_out": 110.03560796546937,
+      "speed": 1,
+      "label": "搬炮弹 · 人物负重变慢",
+      "still": false
+    },
+    {
+      "index": 19,
+      "segment": "10-ch3-shell",
+      "chapter": "ch2",
+      "start": 144.33333333333334,
+      "end": 148.8,
+      "duration": 4.466666666666667,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 110.04660796546936,
+      "source_out": 114.51327463213603,
+      "speed": 1,
+      "label": "送到攻城炮位",
+      "still": false
+    },
+    {
+      "index": 20,
+      "segment": "11-ch3-cannon",
+      "chapter": "ch2",
+      "start": 148.8,
+      "end": 156.3,
+      "duration": 7.5,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 117.89360796546936,
+      "source_out": 125.39360796546936,
+      "speed": 1,
+      "label": "操炮 · 落点环对准城门",
+      "still": false
+    },
+    {
+      "index": 21,
+      "segment": "11-ch3-cannon",
+      "chapter": "ch2",
+      "start": 156.3,
+      "end": 169.5,
+      "duration": 13.2,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 121.39760796546936,
+      "source_out": 134.59760796546936,
+      "speed": 1,
+      "label": "开炮三发 · 轰开平安县城门",
+      "still": false
+    },
+    {
+      "index": 22,
+      "segment": "12-ch3-town",
+      "chapter": "ch2",
+      "start": 169.5,
+      "end": 177.5,
+      "duration": 8.0,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 136.82860796546936,
+      "source_out": 144.82860796546936,
+      "speed": 1,
+      "label": "突入县城 · 巷战夺守备队部",
+      "still": false
+    },
+    {
+      "index": 23,
+      "segment": "13-close",
+      "chapter": "ch2",
+      "start": 177.5,
+      "end": 182.5,
+      "duration": 5.0,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 121.39760796546936,
+      "source_out": 126.39760796546936,
+      "speed": 1,
+      "label": "战役通关 · 三章名场面",
+      "still": false
+    },
+    {
+      "index": 24,
+      "segment": "13-close",
+      "chapter": "ch2",
+      "start": 182.5,
+      "end": 187.5,
+      "duration": 5.0,
+      "source": "capture/war-ch2/raw.mp4",
+      "source_in": 170.86360796546936,
+      "source_out": 175.86360796546936,
+      "speed": 1,
+      "label": "平安县城 · 通关结算",
+      "still": false
+    },
+    {
+      "index": 25,
+      "segment": "13-close",
+      "chapter": "STILL",
+      "start": 187.5,
+      "end": 200.66666666666666,
+      "duration": 13.166666666666666,
+      "source": "D:\\project\\toolbasecamp-video-resistance-war\\game-projects\\starship-defense\\video\\resistance-war-20261011\\work\\edit\\shared-zh\\closing.png",
+      "source_in": 0,
+      "source_out": 13.166666666666666,
+      "speed": 1,
+      "label": "",
+      "still": true
+    }
+  ],
+  "subtitles": [
+    {
+      "start": 0.22,
+      "end": 0.9650000000000001,
+      "text": "骑兵连，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 1.2200000000000002,
+      "end": 1.7775,
+      "text": "进攻！",
+      "segment": "01-hook"
+    },
+    {
+      "start": 2.27,
+      "end": 3.14,
+      "text": "这一炮，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 3.2825,
+      "end": 4.79,
+      "text": "是打给平安县城的。",
+      "segment": "01-hook"
+    },
+    {
+      "start": 5.2825,
+      "end": 9.165,
+      "text": "我在《虫潮围城》里新做了一个抗战战役模式，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 9.4575,
+      "end": 10.99,
+      "text": "把亮剑里几个名场面，",
+      "segment": "01-hook"
+    },
+    {
+      "start": 11.194999999999999,
+      "end": 12.815,
+      "text": "改编成了真能玩的关卡。",
+      "segment": "01-hook"
+    },
+    {
+      "start": 14.586666666666666,
+      "end": 16.094166666666666,
+      "text": "入口就在主菜单，",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 16.299166666666665,
+      "end": 19.006666666666668,
+      "text": "叫「抗战战役 · 亮剑名场面」。",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 19.499166666666667,
+      "end": 24.131666666666668,
+      "text": "一共三章：李家坡的交通壕突击、骑兵连的冲锋突围，",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 24.249166666666667,
+      "end": 25.831666666666667,
+      "text": "还有平安县城的开炮。",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 26.336666666666666,
+      "end": 27.619166666666665,
+      "text": "你扮演李云龙，",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 27.799166666666665,
+      "end": 31.29416666666667,
+      "text": "队友是张大彪、孙德胜这些独立团的人。",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 33.05333333333333,
+      "end": 34.423333333333325,
+      "text": "第一章是步兵战。",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 34.92833333333333,
+      "end": 36.59833333333333,
+      "text": "沿着交通壕往北推进，",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 36.87833333333332,
+      "end": 38.63583333333332,
+      "text": "一路上都是日军步兵。",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 39.140833333333326,
+      "end": 44.28583333333332,
+      "text": "这里有四把制式武器：汉阳造、驳壳枪、捷克式轻机枪，",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 44.40333333333332,
+      "end": 45.398333333333326,
+      "text": "还有三八式。",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 45.890833333333326,
+      "end": 47.94833333333333,
+      "text": "距离远我就用三八式点名，",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 48.11583333333333,
+      "end": 49.68583333333333,
+      "text": "冲近了切捷克式扫，",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 49.94083333333333,
+      "end": 51.085833333333326,
+      "text": "弹匣二十发，",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 51.27833333333332,
+      "end": 51.91083333333332,
+      "text": "压得住。",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 53.68666666666666,
+      "end": 54.73166666666666,
+      "text": "推进到坡下，",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 55.03666666666666,
+      "end": 56.644166666666656,
+      "text": "前面有两座机枪堡垒，",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 56.81166666666666,
+      "end": 57.769166666666656,
+      "text": "各二百五的血。",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 58.261666666666656,
+      "end": 60.98166666666666,
+      "text": "这里有个坑：手雷是有抛物线的，",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 61.17416666666666,
+      "end": 63.769166666666656,
+      "text": "站太近反而会从堡垒头顶飞过去。",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 64.26166666666666,
+      "end": 66.29416666666665,
+      "text": "得退到十六米开外再扔，",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 66.57416666666666,
+      "end": 67.46916666666665,
+      "text": "两发一个，",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 67.58666666666666,
+      "end": 68.73166666666665,
+      "text": "炸得干干净净。",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 70.48666666666666,
+      "end": 71.41916666666667,
+      "text": "堡垒端掉，",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 71.58666666666667,
+      "end": 73.74416666666666,
+      "text": "就向坡顶的指挥阵地总攻。",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 74.24916666666667,
+      "end": 75.75666666666666,
+      "text": "守住阵地几秒钟，",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 76.01166666666667,
+      "end": 77.00666666666666,
+      "text": "第一章拿下。",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 77.51166666666667,
+      "end": 80.20666666666666,
+      "text": "要是你顺手觉得这段打得还行，",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 80.47416666666668,
+      "end": 81.91916666666667,
+      "text": "点个赞我接着往下做。",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 83.68666666666667,
+      "end": 86.16916666666667,
+      "text": "第二章直接换玩法——骑兵。",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 86.66166666666668,
+      "end": 88.01916666666666,
+      "text": "走过去按 I 上马，",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 88.11166666666668,
+      "end": 90.16916666666667,
+      "text": "步枪收起、军刀出鞘，",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 90.41166666666668,
+      "end": 93.14416666666666,
+      "text": "孙德胜带着骑兵连就在旁边集结。",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 94.92,
+      "end": 95.965,
+      "text": "然后就是冲锋。",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 96.47000000000001,
+      "end": 97.515,
+      "text": "按 K 冲刺，",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 97.7325,
+      "end": 99.09,
+      "text": "马速一下子拉满，",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 99.37,
+      "end": 101.265,
+      "text": "撞上去直接一百四的伤害，",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 101.39500000000001,
+      "end": 102.2275,
+      "text": "再补一刀。",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 102.70750000000001,
+      "end": 105.765,
+      "text": "这一关要在封锁线上砍翻至少六个，",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 105.9825,
+      "end": 107.69,
+      "text": "冲到坡后面才算突破。",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 108.19500000000001,
+      "end": 108.94,
+      "text": "骑兵连，",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 109.19500000000001,
+      "end": 109.7525,
+      "text": "进攻！",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 111.52000000000001,
+      "end": 112.9025,
+      "text": "冲开缺口还没完，",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 113.25750000000002,
+      "end": 115.04,
+      "text": "后面有辆运输车要撤离。",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 115.54500000000002,
+      "end": 118.94000000000001,
+      "text": "你得守在车旁边清敌兵——敌人贴到车九米内，",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 119.07000000000002,
+      "end": 120.19000000000001,
+      "text": "车就开始掉血；",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 120.50750000000002,
+      "end": 121.4025,
+      "text": "把它清干净，",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 121.63250000000002,
+      "end": 123.11500000000001,
+      "text": "车才会往前开。",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 123.60750000000002,
+      "end": 125.17750000000001,
+      "text": "一路护送到撤离点，",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 125.47000000000001,
+      "end": 126.76500000000001,
+      "text": "这章才算真过。",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 128.52,
+      "end": 129.22750000000002,
+      "text": "第三章，",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 129.42000000000002,
+      "end": 130.39000000000001,
+      "text": "平安县城。",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 130.88250000000002,
+      "end": 134.01500000000001,
+      "text": "先在城外把机枪阵地和街道堡垒打下来，",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 134.35750000000002,
+      "end": 135.315,
+      "text": "跟第一章一样，",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 135.48250000000002,
+      "end": 136.7775,
+      "text": "手雷拉开距离扔。",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 138.55333333333334,
+      "end": 141.37333333333333,
+      "text": "接着是这章最有意思的部分——搬炮弹。",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 141.86583333333334,
+      "end": 144.08583333333334,
+      "text": "走到弹药箱按 I 把炮弹扛上，",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 144.36583333333334,
+      "end": 145.53583333333333,
+      "text": "人物会慢下来，",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 145.70333333333335,
+      "end": 147.27333333333334,
+      "text": "再送到攻城炮那儿交付。",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 149.02,
+      "end": 150.01500000000001,
+      "text": "然后上炮位。",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 150.50750000000002,
+      "end": 152.24,
+      "text": "转炮口、调仰角，",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 152.50750000000002,
+      "end": 154.2775,
+      "text": "屏幕上有个预计落点环，",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 154.53250000000003,
+      "end": 157.5275,
+      "text": "对准城门它会变红、显示「城门命中」。",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 158.03250000000003,
+      "end": 158.70250000000001,
+      "text": "开炮！",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 159.19500000000002,
+      "end": 160.51500000000001,
+      "text": "城门七百五的血，",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 160.75750000000002,
+      "end": 161.89000000000001,
+      "text": "一发两百七，",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 162.04500000000002,
+      "end": 163.14000000000001,
+      "text": "三发轰开。",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 163.63250000000002,
+      "end": 165.35250000000002,
+      "text": "李云龙那句「城门打开了，",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 165.60750000000002,
+      "end": 166.89000000000001,
+      "text": "全团跟我进城」，",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 167.13250000000002,
+      "end": 167.97750000000002,
+      "text": "就是这么来的。",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 169.72,
+      "end": 170.59,
+      "text": "城门一破，",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 170.695,
+      "end": 172.9275,
+      "text": "就带队冲进县城打巷战，",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 173.1825,
+      "end": 174.6775,
+      "text": "把守备队部夺下来，",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 174.85750000000002,
+      "end": 175.94,
+      "text": "整个战役通关。",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 177.72,
+      "end": 180.54,
+      "text": "这一版抗战战役用 Codex 开发，",
+      "segment": "13-close"
+    },
+    {
+      "start": 180.77,
+      "end": 182.0525,
+      "text": "已经能在网页上玩，",
+      "segment": "13-close"
+    },
+    {
+      "start": 182.23250000000002,
+      "end": 183.4025,
+      "text": "电脑手机都行，",
+      "segment": "13-close"
+    },
+    {
+      "start": 183.52,
+      "end": 184.915,
+      "text": "入口在视频简介。",
+      "segment": "13-close"
+    },
+    {
+      "start": 185.42000000000002,
+      "end": 188.84,
+      "text": "三章都是独立存档、随时能重玩。",
+      "segment": "13-close"
+    },
+    {
+      "start": 189.345,
+      "end": 190.99,
+      "text": "你更想先玩骑兵冲锋，",
+      "segment": "13-close"
+    },
+    {
+      "start": 191.3325,
+      "end": 192.44,
+      "text": "还是先开那门炮？",
+      "segment": "13-close"
+    },
+    {
+      "start": 192.9325,
+      "end": 195.34,
+      "text": "也可以去简介里的自研游戏投票页，",
+      "segment": "13-close"
+    },
+    {
+      "start": 195.6825,
+      "end": 197.6025,
+      "text": "告诉我下期想看什么。",
+      "segment": "13-close"
+    }
+  ],
+  "english_subtitles": [
+    {
+      "start": 0.22,
+      "end": 0.9650000000000001,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 1.2200000000000002,
+      "end": 1.7775,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 2.27,
+      "end": 3.14,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 3.2825,
+      "end": 4.79,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 5.2825,
+      "end": 9.165,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 9.4575,
+      "end": 10.99,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 11.194999999999999,
+      "end": 12.815,
+      "text": "Cavalry company, charge! This shot is fired at Pingan County town. I built a new anti-Japanese-war campaign in Swarm Siege, turning famous scenes into playable levels.",
+      "segment": "01-hook"
+    },
+    {
+      "start": 14.586666666666666,
+      "end": 16.094166666666666,
+      "text": "The entry is right in the main menu, called \"Anti-Japanese War Campaign\". Three chapters: the trench assault at Lijia Slope, the cavalry breakout, and shelling Pingan County town. You play Li Yunlong, with Zhang Dabiao and Sun Desheng as squadmates.",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 16.299166666666665,
+      "end": 19.006666666666668,
+      "text": "The entry is right in the main menu, called \"Anti-Japanese War Campaign\". Three chapters: the trench assault at Lijia Slope, the cavalry breakout, and shelling Pingan County town. You play Li Yunlong, with Zhang Dabiao and Sun Desheng as squadmates.",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 19.499166666666667,
+      "end": 24.131666666666668,
+      "text": "The entry is right in the main menu, called \"Anti-Japanese War Campaign\". Three chapters: the trench assault at Lijia Slope, the cavalry breakout, and shelling Pingan County town. You play Li Yunlong, with Zhang Dabiao and Sun Desheng as squadmates.",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 24.249166666666667,
+      "end": 25.831666666666667,
+      "text": "The entry is right in the main menu, called \"Anti-Japanese War Campaign\". Three chapters: the trench assault at Lijia Slope, the cavalry breakout, and shelling Pingan County town. You play Li Yunlong, with Zhang Dabiao and Sun Desheng as squadmates.",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 26.336666666666666,
+      "end": 27.619166666666665,
+      "text": "The entry is right in the main menu, called \"Anti-Japanese War Campaign\". Three chapters: the trench assault at Lijia Slope, the cavalry breakout, and shelling Pingan County town. You play Li Yunlong, with Zhang Dabiao and Sun Desheng as squadmates.",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 27.799166666666665,
+      "end": 31.29416666666667,
+      "text": "The entry is right in the main menu, called \"Anti-Japanese War Campaign\". Three chapters: the trench assault at Lijia Slope, the cavalry breakout, and shelling Pingan County town. You play Li Yunlong, with Zhang Dabiao and Sun Desheng as squadmates.",
+      "segment": "02-mode-intro"
+    },
+    {
+      "start": 33.05333333333333,
+      "end": 34.423333333333325,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 34.92833333333333,
+      "end": 36.59833333333333,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 36.87833333333332,
+      "end": 38.63583333333332,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 39.140833333333326,
+      "end": 44.28583333333332,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 44.40333333333332,
+      "end": 45.398333333333326,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 45.890833333333326,
+      "end": 47.94833333333333,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 48.11583333333333,
+      "end": 49.68583333333333,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 49.94083333333333,
+      "end": 51.085833333333326,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 51.27833333333332,
+      "end": 51.91083333333332,
+      "text": "Chapter one is infantry combat. Push north along the trenches, facing Japanese infantry all the way. There are four period weapons here.",
+      "segment": "03-ch1-trench"
+    },
+    {
+      "start": 53.68666666666666,
+      "end": 54.73166666666666,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 55.03666666666666,
+      "end": 56.644166666666656,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 56.81166666666666,
+      "end": 57.769166666666656,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 58.261666666666656,
+      "end": 60.98166666666666,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 61.17416666666666,
+      "end": 63.769166666666656,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 64.26166666666666,
+      "end": 66.29416666666665,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 66.57416666666666,
+      "end": 67.46916666666665,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 67.58666666666666,
+      "end": 68.73166666666665,
+      "text": "At the foot of the slope are two machine-gun bunkers, each with 250 health. Here is a catch: grenades follow an arc, so standing too close throws them over the bunker. Fall back beyond sixteen meters, and two grenades wipe it out.",
+      "segment": "04-ch1-grenade"
+    },
+    {
+      "start": 70.48666666666666,
+      "end": 71.41916666666667,
+      "text": "Once the bunkers are down, assault the hilltop command post. Hold it for a few seconds and chapter one is clear. If you liked this fight, drop a like and I will keep going.",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 71.58666666666667,
+      "end": 73.74416666666666,
+      "text": "Once the bunkers are down, assault the hilltop command post. Hold it for a few seconds and chapter one is clear. If you liked this fight, drop a like and I will keep going.",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 74.24916666666667,
+      "end": 75.75666666666666,
+      "text": "Once the bunkers are down, assault the hilltop command post. Hold it for a few seconds and chapter one is clear. If you liked this fight, drop a like and I will keep going.",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 76.01166666666667,
+      "end": 77.00666666666666,
+      "text": "Once the bunkers are down, assault the hilltop command post. Hold it for a few seconds and chapter one is clear. If you liked this fight, drop a like and I will keep going.",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 77.51166666666667,
+      "end": 80.20666666666666,
+      "text": "Once the bunkers are down, assault the hilltop command post. Hold it for a few seconds and chapter one is clear. If you liked this fight, drop a like and I will keep going.",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 80.47416666666668,
+      "end": 81.91916666666667,
+      "text": "Once the bunkers are down, assault the hilltop command post. Hold it for a few seconds and chapter one is clear. If you liked this fight, drop a like and I will keep going.",
+      "segment": "05-ch1-hilltop"
+    },
+    {
+      "start": 83.68666666666667,
+      "end": 86.16916666666667,
+      "text": "Chapter two changes the game: cavalry. Walk over and press I to mount, the rifle is stowed and the saber drawn.",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 86.66166666666668,
+      "end": 88.01916666666666,
+      "text": "Chapter two changes the game: cavalry. Walk over and press I to mount, the rifle is stowed and the saber drawn.",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 88.11166666666668,
+      "end": 90.16916666666667,
+      "text": "Chapter two changes the game: cavalry. Walk over and press I to mount, the rifle is stowed and the saber drawn.",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 90.41166666666668,
+      "end": 93.14416666666666,
+      "text": "Chapter two changes the game: cavalry. Walk over and press I to mount, the rifle is stowed and the saber drawn.",
+      "segment": "06-ch2-mount"
+    },
+    {
+      "start": 94.92,
+      "end": 95.965,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 96.47000000000001,
+      "end": 97.515,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 97.7325,
+      "end": 99.09,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 99.37,
+      "end": 101.265,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 101.39500000000001,
+      "end": 102.2275,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 102.70750000000001,
+      "end": 105.765,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 105.9825,
+      "end": 107.69,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 108.19500000000001,
+      "end": 108.94,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 109.19500000000001,
+      "end": 109.7525,
+      "text": "Then comes the charge. Press K to sprint, the horse speed maxes out, the impact deals heavy damage, then a saber follow-up. You must cut down at least six on the blockade line.",
+      "segment": "07-ch2-charge"
+    },
+    {
+      "start": 111.52000000000001,
+      "end": 112.9025,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 113.25750000000002,
+      "end": 115.04,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 115.54500000000002,
+      "end": 118.94000000000001,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 119.07000000000002,
+      "end": 120.19000000000001,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 120.50750000000002,
+      "end": 121.4025,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 121.63250000000002,
+      "end": 123.11500000000001,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 123.60750000000002,
+      "end": 125.17750000000001,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 125.47000000000001,
+      "end": 126.76500000000001,
+      "text": "Breaking through is not the end; a supply wagon must evacuate. Guard it and clear enemies, enemies within nine meters drain its health. Escort it all the way to the evac point.",
+      "segment": "08-ch2-escort"
+    },
+    {
+      "start": 128.52,
+      "end": 129.22750000000002,
+      "text": "Chapter three, Pingan County town. First take the outer machine-gun post and street bunker, same as before, throw grenades from range.",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 129.42000000000002,
+      "end": 130.39000000000001,
+      "text": "Chapter three, Pingan County town. First take the outer machine-gun post and street bunker, same as before, throw grenades from range.",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 130.88250000000002,
+      "end": 134.01500000000001,
+      "text": "Chapter three, Pingan County town. First take the outer machine-gun post and street bunker, same as before, throw grenades from range.",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 134.35750000000002,
+      "end": 135.315,
+      "text": "Chapter three, Pingan County town. First take the outer machine-gun post and street bunker, same as before, throw grenades from range.",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 135.48250000000002,
+      "end": 136.7775,
+      "text": "Chapter three, Pingan County town. First take the outer machine-gun post and street bunker, same as before, throw grenades from range.",
+      "segment": "09-ch3-outpost"
+    },
+    {
+      "start": 138.55333333333334,
+      "end": 141.37333333333333,
+      "text": "Then the fun part: hauling shells.",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 141.86583333333334,
+      "end": 144.08583333333334,
+      "text": "Walk to the ammo crate and press I to carry,",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 144.36583333333334,
+      "end": 145.53583333333333,
+      "text": "the character slows down,",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 145.70333333333335,
+      "end": 147.27333333333334,
+      "text": "then deliver it to the siege cannon.",
+      "segment": "10-ch3-shell"
+    },
+    {
+      "start": 149.02,
+      "end": 150.01500000000001,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 150.50750000000002,
+      "end": 152.24,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 152.50750000000002,
+      "end": 154.2775,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 154.53250000000003,
+      "end": 157.5275,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 158.03250000000003,
+      "end": 158.70250000000001,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 159.19500000000002,
+      "end": 160.51500000000001,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 160.75750000000002,
+      "end": 161.89000000000001,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 162.04500000000002,
+      "end": 163.14000000000001,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 163.63250000000002,
+      "end": 165.35250000000002,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 165.60750000000002,
+      "end": 166.89000000000001,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 167.13250000000002,
+      "end": 167.97750000000002,
+      "text": "Now man the cannon. Turn the barrel, adjust elevation, an impact ring turns red when it lines up on the gate. Fire! The gate has 750 health, each shell does 270, three shots blow it open.",
+      "segment": "11-ch3-cannon"
+    },
+    {
+      "start": 169.72,
+      "end": 170.59,
+      "text": "Once the gate falls, lead the regiment into town for street fighting and capture the garrison HQ to finish the campaign.",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 170.695,
+      "end": 172.9275,
+      "text": "Once the gate falls, lead the regiment into town for street fighting and capture the garrison HQ to finish the campaign.",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 173.1825,
+      "end": 174.6775,
+      "text": "Once the gate falls, lead the regiment into town for street fighting and capture the garrison HQ to finish the campaign.",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 174.85750000000002,
+      "end": 175.94,
+      "text": "Once the gate falls, lead the regiment into town for street fighting and capture the garrison HQ to finish the campaign.",
+      "segment": "12-ch3-town"
+    },
+    {
+      "start": 177.72,
+      "end": 180.54,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 180.77,
+      "end": 182.0525,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 182.23250000000002,
+      "end": 183.4025,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 183.52,
+      "end": 184.915,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 185.42000000000002,
+      "end": 188.84,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 189.345,
+      "end": 190.99,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 191.3325,
+      "end": 192.44,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 192.9325,
+      "end": 195.34,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    },
+    {
+      "start": 195.6825,
+      "end": 197.6025,
+      "text": "This campaign was developed with Codex, playable in the browser on both PC and phone, link in the description. Which would you play first, the cavalry charge or the cannon? You can also tell me what to make next on the voting page.",
+      "segment": "13-close"
+    }
+  ],
+  "time_scale": 1,
+  "normal_rules": true,
+  "chapters": {
+    "ch0": "capture/war-ch0/raw.mp4",
+    "ch1": "capture/war-ch1/raw.mp4",
+    "ch2": "capture/war-ch2/raw.mp4"
+  },
+  "sources": [
+    "capture/war-ch0/raw.mp4",
+    "capture/war-ch1/raw.mp4",
+    "capture/war-ch2/raw.mp4"
+  ],
+  "result_screen_hold_only": true
+}

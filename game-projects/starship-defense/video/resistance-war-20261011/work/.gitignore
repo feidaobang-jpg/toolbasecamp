@@ -1,0 +1,14 @@
+# 实机采集素材（数千帧 jpg + 音频 webm + 编码原片 mp4，单章约 0.5-2GB）只留本地，不入库
+capture/
+# 剪辑中间产物（逐镜头切片、拼接画面、配音 wav）只留本地
+edit/shared-zh/shots/
+edit/shared-zh/*.mp4
+edit/shared-zh/*.png
+audio/shared-zh/*.wav
+audio/shared-zh/*.mp3
+# 质检抽帧与封面源帧只留本地
+qa/
+cover-src-*.png
+*_run.log
+capture-*.log
+verify-*.log

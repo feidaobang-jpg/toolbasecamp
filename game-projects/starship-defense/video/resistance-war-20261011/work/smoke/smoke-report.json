@@ -1,0 +1,194 @@
+{
+  "generated": "2026-10-10T22:11:23.209Z",
+  "results": [
+    {
+      "name": "enter-ch0",
+      "ok": true,
+      "detail": {
+        "active": true,
+        "chapter": 0,
+        "testMode": false,
+        "pos": [
+          0,
+          -18
+        ],
+        "yaw": 0
+      }
+    },
+    {
+      "name": "yaw-readable",
+      "ok": true,
+      "detail": {
+        "yaw": 0,
+        "camMode": "first"
+      }
+    },
+    {
+      "name": "faceTo-turns-and-converges",
+      "ok": true,
+      "detail": {
+        "before": 0,
+        "after": 0.83,
+        "expected": 0.87,
+        "err": 0.04,
+        "ok": true,
+        "ms": 909,
+        "steps": 7
+      }
+    },
+    {
+      "name": "route-found",
+      "ok": true,
+      "detail": {
+        "waypoints": 5,
+        "path": [
+          [
+            0,
+            -17
+          ],
+          [
+            3,
+            27
+          ],
+          [
+            3,
+            33
+          ],
+          [
+            2,
+            33
+          ],
+          [
+            -7,
+            56
+          ]
+        ]
+      }
+    },
+    {
+      "name": "reached-trench",
+      "ok": true,
+      "detail": {
+        "pos": [
+          -7.2,
+          53.1
+        ],
+        "distObj": 4.9,
+        "replan": 0,
+        "turnFails": 0,
+        "kills": 6,
+        "hp": 111,
+        "phase": 0,
+        "seconds": 17
+      }
+    },
+    {
+      "name": "trench-captured",
+      "ok": true,
+      "detail": {
+        "phase": 1,
+        "hold": 0,
+        "kills": 6,
+        "hp": 140,
+        "progress": "堡垒 0 / 2 · U 手雷可造成大范围伤害",
+        "holdTrace": [
+          {
+            "t": null,
+            "hold": 1.1,
+            "phase": 0,
+            "near": 0,
+            "hp": 111,
+            "progress": "目标 5米 · 敌军 0 · 队友 3 · 占领 2秒"
+          },
+          {
+            "t": null,
+            "hold": 1.8,
+            "phase": 0,
+            "near": 0,
+            "hp": 111,
+            "progress": "目标 5米 · 敌军 0 · 队友 3 · 占领 2秒"
+          },
+          {
+            "t": null,
+            "hold": 2.4,
+            "phase": 0,
+            "near": 0,
+            "hp": 111,
+            "progress": "目标 5米 · 敌军 0 · 队友 3 · 占领 3秒"
+          },
+          {
+            "t": null,
+            "hold": 3,
+            "phase": 0,
+            "near": 0,
+            "hp": 111,
+            "progress": "目标 5米 · 敌军 0 · 队友 3 · 占领 3秒"
+          },
+          {
+            "t": null,
+            "hold": 0,
+            "phase": 1,
+            "near": 0,
+            "hp": 140,
+            "progress": "堡垒 0 / 2 · U 手雷可造成大范围伤害"
+          }
+        ]
+      }
+    },
+    {
+      "name": "no-cheats-used",
+      "ok": true,
+      "detail": {
+        "invulnerableNeverSet": true,
+        "noEnemyClearing": true,
+        "noTeleport": true,
+        "testMode": false
+      }
+    }
+  ],
+  "errors": [],
+  "trace": [
+    {
+      "ev": "move",
+      "x": 0.5,
+      "z": -16.2,
+      "hp": 140,
+      "phase": 0,
+      "hold": 0,
+      "distObj": 74.6
+    },
+    {
+      "ev": "fight",
+      "d": 29,
+      "kills": 4,
+      "hp": 126,
+      "turnOk": true
+    },
+    {
+      "ev": "fight",
+      "d": 29,
+      "kills": 5,
+      "hp": 126,
+      "turnOk": true
+    },
+    {
+      "ev": "fight",
+      "d": 29,
+      "kills": 5,
+      "hp": 126,
+      "turnOk": true
+    },
+    {
+      "ev": "fight",
+      "d": 29,
+      "kills": 6,
+      "hp": 126,
+      "turnOk": true
+    },
+    {
+      "ev": "ARRIVE",
+      "x": -7.150589928743346,
+      "z": 53.13559788069007
+    }
+  ]
+}

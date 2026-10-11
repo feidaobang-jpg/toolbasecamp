@@ -1,0 +1,64 @@
+{
+  "baseline": {
+    "yaw": 0,
+    "camMode": "first",
+    "gameState": "battle",
+    "panelOpen": false,
+    "x": 0,
+    "z": -18,
+    "keysE": false,
+    "keysQ": false,
+    "keysW": false,
+    "keysUp": false,
+    "keysJ": false,
+    "active": true,
+    "chapter": 0,
+    "phase": 0,
+    "bindingE": "KeyE",
+    "bindingQ": "KeyQ",
+    "bindingUp": "KeyW"
+  },
+  "keyE": {
+    "y0": 0,
+    "mid_keysE": true,
+    "y1": 4.361787240356453,
+    "delta": 4.361787240356453
+  },
+  "keyQ": {
+    "y1": 4.361787240356453,
+    "mid_keysQ": true,
+    "y2": 0.020420352435571054,
+    "delta": -4.3413668879208815
+  },
+  "keyW": {
+    "before": {
+      "x": 0,
+      "z": -18
+    },
+    "mid_keysW": false,
+    "mid_keysUp": true,
+    "after": {
+      "x": 0.082158232518674,
+      "z": -13.97720887931827
+    },
+    "dz": 4.022791120681729,
+    "dx": 0.082158232518674
+  },
+  "combo": {
+    "yaw0": 0.020420352435571054,
+    "yaw1": 3.7717961401621007,
+    "dYaw": 3.7513757877265297,
+    "z0": -13.97720887931827,
+    "z1": -12.90129911673658,
+    "dz": 1.0759097625816914
+  },
+  "keyJ": {
+    "keysJ_during_hold": true
+  },
+  "focus": {
+    "activeElement": "BODY",
+    "navRoot": null,
+    "panelOpen": false
+  },
+  "errors": []
+}

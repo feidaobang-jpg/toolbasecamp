@@ -1,0 +1,125 @@
+{
+  "id": "09-ch3-outpost",
+  "text": "第三章，平安县城。先在城外把机枪阵地和街道堡垒打下来，跟第一章一样，手雷拉开距离扔。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 9.168,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "第三"
+    },
+    {
+      "offset": 4500000,
+      "duration": 2875000,
+      "text": "章"
+    },
+    {
+      "offset": 10000000,
+      "duration": 3625000,
+      "text": "平安"
+    },
+    {
+      "offset": 13750000,
+      "duration": 5250000,
+      "text": "县城"
+    },
+    {
+      "offset": 24625000,
+      "duration": 2500000,
+      "text": "先"
+    },
+    {
+      "offset": 27125000,
+      "duration": 875000,
+      "text": "在"
+    },
+    {
+      "offset": 28125000,
+      "duration": 5625000,
+      "text": "城外"
+    },
+    {
+      "offset": 34750000,
+      "duration": 1625000,
+      "text": "把"
+    },
+    {
+      "offset": 36500000,
+      "duration": 3500000,
+      "text": "机枪"
+    },
+    {
+      "offset": 40125000,
+      "duration": 3500000,
+      "text": "阵地"
+    },
+    {
+      "offset": 43875000,
+      "duration": 1000000,
+      "text": "和"
+    },
+    {
+      "offset": 45000000,
+      "duration": 2250000,
+      "text": "街道"
+    },
+    {
+      "offset": 47375000,
+      "duration": 2750000,
+      "text": "堡垒"
+    },
+    {
+      "offset": 50375000,
+      "duration": 1500000,
+      "text": "打"
+    },
+    {
+      "offset": 51875000,
+      "duration": 3375000,
+      "text": "下来"
+    },
+    {
+      "offset": 59375000,
+      "duration": 1750000,
+      "text": "跟"
+    },
+    {
+      "offset": 61250000,
+      "duration": 2125000,
+      "text": "第一"
+    },
+    {
+      "offset": 63375000,
+      "duration": 1625000,
+      "text": "章"
+    },
+    {
+      "offset": 65125000,
+      "duration": 3125000,
+      "text": "一样"
+    },
+    {
+      "offset": 70625000,
+      "duration": 4250000,
+      "text": "手雷"
+    },
+    {
+      "offset": 75000000,
+      "duration": 2750000,
+      "text": "拉开"
+    },
+    {
+      "offset": 77875000,
+      "duration": 2875000,
+      "text": "距离"
+    },
+    {
+      "offset": 80875000,
+      "duration": 2000000,
+      "text": "扔"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}

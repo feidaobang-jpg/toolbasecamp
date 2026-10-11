@@ -1,0 +1,10 @@
+{
+  "bilibili-zh/gameplay-zh-final.mp4": "3a1b4520ce54c5d6",
+  "douyin-zh/gameplay-zh-final.mp4": "3a1b4520ce54c5d6",
+  "youtube-zh/gameplay-youtube-final.mp4": "e5e3e57d10c1583d",
+  "youtube-zh/captions-zh.srt": "02fc881e350b0f3d",
+  "youtube-zh/captions-en.srt": "87ccef6c40dc6fc6",
+  "bilibili-zh/cover-home-4x3.png": "e95517952427043e",
+  "bilibili-zh/cover-space-16x9.png": "37a8b5177e112fc2",
+  "_note": "sha256 前16位；审片确认请关联到这些哈希，实质改动成片需重新审片。"
+}

@@ -1,0 +1,90 @@
+{
+  "id": "12-ch3-town",
+  "text": "城门一破，就带队冲进县城打巷战，把守备队部夺下来，整个战役通关。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 7.128,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3250000,
+      "text": "城门"
+    },
+    {
+      "offset": 4375000,
+      "duration": 1500000,
+      "text": "一"
+    },
+    {
+      "offset": 5875000,
+      "duration": 3125000,
+      "text": "破"
+    },
+    {
+      "offset": 10750000,
+      "duration": 1500000,
+      "text": "就"
+    },
+    {
+      "offset": 12375000,
+      "duration": 2750000,
+      "text": "带队"
+    },
+    {
+      "offset": 15250000,
+      "duration": 4500000,
+      "text": "冲进"
+    },
+    {
+      "offset": 20750000,
+      "duration": 6000000,
+      "text": "县城"
+    },
+    {
+      "offset": 26750000,
+      "duration": 5625000,
+      "text": "打巷战"
+    },
+    {
+      "offset": 35625000,
+      "duration": 1500000,
+      "text": "把"
+    },
+    {
+      "offset": 37250000,
+      "duration": 3875000,
+      "text": "守备"
+    },
+    {
+      "offset": 41250000,
+      "duration": 2625000,
+      "text": "队部"
+    },
+    {
+      "offset": 44125000,
+      "duration": 2000000,
+      "text": "夺"
+    },
+    {
+      "offset": 46125000,
+      "duration": 3750000,
+      "text": "下来"
+    },
+    {
+      "offset": 52375000,
+      "duration": 3375000,
+      "text": "整个"
+    },
+    {
+      "offset": 55875000,
+      "duration": 2375000,
+      "text": "战役"
+    },
+    {
+      "offset": 58375000,
+      "duration": 4125000,
+      "text": "通关"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}

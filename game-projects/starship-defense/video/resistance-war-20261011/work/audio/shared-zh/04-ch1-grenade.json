@@ -1,0 +1,230 @@
+{
+  "id": "04-ch1-grenade",
+  "text": "推进到坡下，前面有两座机枪堡垒，各二百五的血。这里有个坑：手雷是有抛物线的，站太近反而会从堡垒头顶飞过去。得退到十六米开外再扔，两发一个，炸得干干净净。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "duration": 15.96,
+  "marks": [
+    {
+      "offset": 1000000,
+      "duration": 3500000,
+      "text": "推进"
+    },
+    {
+      "offset": 4500000,
+      "duration": 1000000,
+      "text": "到"
+    },
+    {
+      "offset": 5625000,
+      "duration": 2000000,
+      "text": "坡"
+    },
+    {
+      "offset": 7625000,
+      "duration": 3125000,
+      "text": "下"
+    },
+    {
+      "offset": 14500000,
+      "duration": 3000000,
+      "text": "前面"
+    },
+    {
+      "offset": 17625000,
+      "duration": 875000,
+      "text": "有"
+    },
+    {
+      "offset": 18625000,
+      "duration": 2000000,
+      "text": "两"
+    },
+    {
+      "offset": 20625000,
+      "duration": 1625000,
+      "text": "座"
+    },
+    {
+      "offset": 22500000,
+      "duration": 3375000,
+      "text": "机枪"
+    },
+    {
+      "offset": 26000000,
+      "duration": 3875000,
+      "text": "堡垒"
+    },
+    {
+      "offset": 32250000,
+      "duration": 1500000,
+      "text": "各"
+    },
+    {
+      "offset": 33750000,
+      "duration": 3625000,
+      "text": "二百五"
+    },
+    {
+      "offset": 37375000,
+      "duration": 1000000,
+      "text": "的"
+    },
+    {
+      "offset": 38375000,
+      "duration": 2750000,
+      "text": "血"
+    },
+    {
+      "offset": 46750000,
+      "duration": 5000000,
+      "text": "这里有个"
+    },
+    {
+      "offset": 51750000,
+      "duration": 3500000,
+      "text": "坑"
+    },
+    {
+      "offset": 58500000,
+      "duration": 4500000,
+      "text": "手雷"
+    },
+    {
+      "offset": 63250000,
+      "duration": 1250000,
+      "text": "是"
+    },
+    {
+      "offset": 64500000,
+      "duration": 875000,
+      "text": "有"
+    },
+    {
+      "offset": 65500000,
+      "duration": 5250000,
+      "text": "抛物线"
+    },
+    {
+      "offset": 70750000,
+      "duration": 2500000,
+      "text": "的"
+    },
+    {
+      "offset": 75875000,
+      "duration": 2250000,
+      "text": "站"
+    },
+    {
+      "offset": 78125000,
+      "duration": 2000000,
+      "text": "太"
+    },
+    {
+      "offset": 80125000,
+      "duration": 2625000,
+      "text": "近"
+    },
+    {
+      "offset": 83750000,
+      "duration": 3125000,
+      "text": "反而"
+    },
+    {
+      "offset": 87000000,
+      "duration": 1375000,
+      "text": "会"
+    },
+    {
+      "offset": 88375000,
+      "duration": 1500000,
+      "text": "从"
+    },
+    {
+      "offset": 90125000,
+      "duration": 2625000,
+      "text": "堡垒"
+    },
+    {
+      "offset": 92875000,
+      "duration": 3375000,
+      "text": "头顶"
+    },
+    {
+      "offset": 96500000,
+      "duration": 1750000,
+      "text": "飞"
+    },
+    {
+      "offset": 98250000,
+      "duration": 2875000,
+      "text": "过去"
+    },
+    {
+      "offset": 106750000,
+      "duration": 2000000,
+      "text": "得"
+    },
+    {
+      "offset": 108750000,
+      "duration": 2875000,
+      "text": "退到"
+    },
+    {
+      "offset": 111875000,
+      "duration": 3750000,
+      "text": "十六"
+    },
+    {
+      "offset": 115625000,
+      "duration": 2375000,
+      "text": "米"
+    },
+    {
+      "offset": 118250000,
+      "duration": 3250000,
+      "text": "开外"
+    },
+    {
+      "offset": 121625000,
+      "duration": 1875000,
+      "text": "再"
+    },
+    {
+      "offset": 123500000,
+      "duration": 2875000,
+      "text": "扔"
+    },
+    {
+      "offset": 129875000,
+      "duration": 2875000,
+      "text": "两"
+    },
+    {
+      "offset": 132750000,
+      "duration": 1500000,
+      "text": "发"
+    },
+    {
+      "offset": 134375000,
+      "duration": 3750000,
+      "text": "一个"
+    },
+    {
+      "offset": 140000000,
+      "duration": 2250000,
+      "text": "炸"
+    },
+    {
+      "offset": 142250000,
+      "duration": 1000000,
+      "text": "得"
+    },
+    {
+      "offset": 143500000,
+      "duration": 7250000,
+      "text": "干干净净"
+    }
+  ],
+  "engine": "edge-tts (online service)"
+}
