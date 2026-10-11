@@ -357,10 +357,20 @@
   },
   "updated_at": "2026-10-11T08:21:18.515309+00:00",
   "bilibili": {
-    "decision": "pending_other_active_task",
-    "reason": "Account write lock owned by active Codex task 01a129f8-5691-7273-aab0-54954767f34f (takeover). No override or duplicate writes. Ordinary author-menu change alone has not reached 7 day threshold; starship save/status clarification is necessary and recorded for current maintenance owner.",
-    "pending_clarification": "Website no longer offers website account cloud save; local export/import retained. Toy official cloud retained in clean preview, but starship submission blocked307008 and public Toy currently removed. Do not announce Toy cleanup as published.",
-    "owner_title": "接管并完成未结任务"
+    "decision": "public_verified",
+    "reason": "接管账号写锁后纠正两期网站账号云档说明与全部5期虫潮Toy状态；Tank瞄准和Dino第三关重大变更已公开核验。普通作者按钮变更保留合并节奏。",
+    "pending_clarification": null,
+    "owner_title": "接管并完成未结任务",
+    "history": [
+      {
+        "decision": "pending_other_active_task",
+        "reason": "Account write lock owned by active Codex task 01a129f8-5691-7273-aab0-54954767f34f (takeover). No override or duplicate writes. Ordinary author-menu change alone has not reached 7 day threshold; starship save/status clarification is necessary and recorded for current maintenance owner.",
+        "pending_clarification": "Website no longer offers website account cloud save; local export/import retained. Toy official cloud retained in clean preview, but starship submission blocked307008 and public Toy currently removed. Do not announce Toy cleanup as published.",
+        "owner_title": "接管并完成未结任务"
+      }
+    ],
+    "verified_at": "2026-10-11T08:45:31.215699+00:00",
+    "record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json"
   },
   "taptap": "not_requested_not_operated"
 }
