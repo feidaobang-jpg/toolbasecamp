@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>手机首页与更新日志验证</title>
+<style>body{font:15px sans-serif;background:#eaf0df;margin:12px}button{padding:10px}iframe{display:block;border:0;width:844px;height:390px}pre{white-space:pre-wrap}</style>
+<button id="run">运行首页适配回归</button><button id="phone">手机竖屏</button><button id="landscape">手机横屏</button><button id="desktop">电脑布局</button>
+<iframe src="../../public/html/game/starship-defense/index.html?qa=1"></iframe><pre>加载游戏后运行</pre>
+<script type="module">
+const f=document.querySelector('iframe'),out=document.querySelector('pre'),results=[];
+const frame=()=>new Promise(r=>requestAnimationFrame(r));
+const settle=async()=>{for(let i=0;i<6;i++)await frame();};
+const check=(name,pass,detail)=>{results.push({name,pass:!!pass,detail});out.textContent=JSON.stringify({passed:results.filter(x=>x.pass).length,total:results.length,results},null,2);};
+const resize=async(w,h,mode='touch')=>{f.style.width=w+'px';f.style.height=h+'px';f.contentWindow.__gameQA.setDeviceMode(mode);await settle();};
+const metric=()=>{const d=f.contentDocument,m=d.querySelector('#menuMain'),r=m.getBoundingClientRect();return {w:m.clientWidth,h:m.clientHeight,sw:m.scrollWidth,sh:m.scrollHeight,stage:d.querySelector('#stage').getBoundingClientRect().toJSON(),buttons:[...m.querySelectorAll('button,a,[role=button]')].filter(x=>!x.disabled&&x.getClientRects().length).map(x=>({id:x.id,text:x.textContent.trim(),box:x.getBoundingClientRect().toJSON()}))};};
+document.querySelector('#phone').onclick=()=>resize(390,844);
+document.querySelector('#landscape').onclick=()=>resize(844,346);
+document.querySelector('#desktop').onclick=()=>resize(1100,620,'desktop');
+document.querySelector('#run').onclick=async()=>{results.length=0;const q=f.contentWindow.__gameQA,d=f.contentDocument;
+try{
+ const before=JSON.stringify(Object.fromEntries(Object.entries(f.contentWindow.localStorage).filter(([k])=>k.startsWith('sst_save_'))));
+ for(const [w,h] of [[390,844],[360,780],[375,667],[390,700],[844,390],[844,346],[800,390],[740,360],[568,320]]){
+   await resize(w,h);const m=metric(),fullRequired=w>=740||h>=667;
+   check(w+'×'+h+' 无横向溢出',m.sw<=m.w+1,m);
+   check(w+'×'+h+' 首屏或纵向可达',fullRequired?m.sh<=m.h+1:m.sh>=m.h,{h:m.h,sh:m.sh});
+   const s=m.stage;check(w+'×'+h+' 舞台覆盖视口且不越界',Math.abs(s.width-w)<1&&Math.abs(s.height-h)<1&&s.x>=-1&&s.y>=-1,s);
+   if(fullRequired)check(w+'×'+h+' 全部首页按钮可见',m.buttons.every(x=>x.box.left>=-1&&x.box.top>=-1&&x.box.right<=w+1&&x.box.bottom<=h+1));
+ }
+ await resize(844,346);const continueButton=d.querySelector('#btnContinue'),oldContinue=continueButton.textContent;
+ continueButton.textContent='▶ 继续上次（普通 · 第10章第4关）';await settle();const savedMetric=metric();
+ check('已有后期存档的长继续文字不挤出首页',savedMetric.sh<=savedMetric.h+1&&savedMetric.buttons.every(x=>x.box.left>=-1&&x.box.top>=-1&&x.box.right<=844+1&&x.box.bottom<=346+1),savedMetric);continueButton.textContent=oldContinue;
+ d.querySelector('#updatesMenu').click();await settle();const u=d.querySelector('#updatesPanel');
+ check('主菜单更新日志版本与最近4版记录',!u.classList.contains('hidden')&&u.textContent.includes('v0.36.1')&&d.querySelectorAll('.updateEntry').length===4);
+ const trigger=code=>d.dispatchEvent(new f.contentWindow.KeyboardEvent('keydown',{key:code,code,bubbles:true,cancelable:true}));
+ trigger('End');await settle();check('更新日志键盘可到末尾',u.scrollTop>=u.scrollHeight-u.clientHeight-1,{top:u.scrollTop,h:u.clientHeight,sh:u.scrollHeight});
+ trigger('Escape');await settle();check('关闭日志回首页并恢复焦点',u.classList.contains('hidden')&&d.activeElement.id==='updatesMenu'&&q.Game.state==='menu');
+ d.querySelector('#helpMenu').click();await settle();check('详细玩法独立面板，触屏不显示键盘段落',!d.querySelector('#helpPanel').classList.contains('hidden')&&getComputedStyle(d.querySelector('.desktop-help')).display==='none');d.querySelector('#helpClose').click();
+ await resize(1100,620,'desktop');const m=metric();check('电脑首页完整且不旋转',m.sw<=m.w+1&&m.sh<=m.h+1&&Math.abs(m.stage.width-1100)<1&&Math.abs(m.stage.height-620)<1,m);
+ q.selectVersusRules('bank');q.startVersusAI('normal',1);q.togglePause();await settle();const state=q.Game.state,gold=q.versus.seat('blue0').gold;
+ d.querySelector('#updatesPause').click();await settle();d.querySelector('#updatesClose').click();await settle();check('暂停查看日志不丢银行局且不自动续玩',q.Game.state===state&&q.versus.state.active&&q.versus.seat('blue0').gold===gold&&!d.querySelector('#menuPause').classList.contains('hidden'));
+ q.exitVersus();d.querySelector('#btnQuit').click();await settle();
+ check('查看日志与布局切换保留旧存档',before===JSON.stringify(Object.fromEntries(Object.entries(f.contentWindow.localStorage).filter(([k])=>k.startsWith('sst_save_')))));
+ await resize(390,844);
+}catch(e){check('运行无异常',false,e.stack);}
+};
+</script></html>

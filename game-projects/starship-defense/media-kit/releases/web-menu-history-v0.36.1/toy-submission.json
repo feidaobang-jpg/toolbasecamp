@@ -1,0 +1,56 @@
+{
+  "submission": {
+    "status": "auditing",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Kx5OGRMh/index.html"
+  },
+  "readback": {
+    "at": "2026-10-11T12:21:44.927163+00:00",
+    "item": {
+      "id": 38678478981120,
+      "title": "虫潮围城",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "user_info": {
+        "mid": 16214353,
+        "name": "飞刀班长",
+        "face": "https://i1.hdslb.com/bfs/face/e4aedc71448ab8376bf794163001785b16f25e62.jpg"
+      },
+      "status": "auditing",
+      "visibility": "PUBLIC",
+      "category": "GAME",
+      "watermark_enabled": false,
+      "ctime": 1791721304,
+      "mtime": 1791721304
+    },
+    "zip_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f"
+  },
+  "preview_qa": {
+    "preview": "https://www.bilibili.com/toy/preview/preview_hr29eSZf/index.html",
+    "portrait": {
+      "height": 444,
+      "scrollHeight": 444,
+      "scrollWidth": 960,
+      "version": "v0.36.1",
+      "width": 960
+    },
+    "desktop": {
+      "height": 541,
+      "scrollHeight": 541,
+      "scrollWidth": 960,
+      "version": "v0.36.1",
+      "width": 960
+    },
+    "landscape": {
+      "viewport": [
+        844,
+        346
+      ],
+      "height": 394,
+      "scrollHeight": 394,
+      "width": 960,
+      "scrollWidth": 960
+    },
+    "log_end_scroll": true,
+    "bank_pause_retained": true,
+    "method": "CUA browser controls inside official Toy shell; desktop simulation only"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-11T12:18:20.010158+00:00",
+  "checks": [
+    {
+      "file": "index.html",
+      "status": 200,
+      "sha256": "b2c46bc29081ee2c39fb22672b3c7d3cab5239965fe0d5a11a999cfac9f6c04e",
+      "matches_source": false,
+      "contains_log": true
+    },
+    {
+      "file": "game.compat.js",
+      "status": 200,
+      "sha256": "dc512921c0c2509e6a9e6b173deddb30e8e13e69c43218019f6c44aa564068eb",
+      "matches_source": true,
+      "contains_log": null
+    },
+    {
+      "file": "update-history.js",
+      "status": 200,
+      "sha256": "0312aadc25234637eae0b990c54f7f6c96c10cb2b142d11363a177f7c374ba12",
+      "matches_source": true,
+      "contains_log": null
+    }
+  ],
+  "ok": true,
+  "index_matches_except_deploy_cache_versions": true
+}

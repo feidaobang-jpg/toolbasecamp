@@ -347,6 +347,15 @@
       "trigger": "虫族模式视频的玩法段与当前试玩不符，需要纠正",
       "prepared_update_line": "更新（2026-10-11·网站v0.36.0）：虫族模式重做为三步攻城——先拔除三处哨站，城门护盾消失后破门，再摧毁核心；新增简单/普通/困难、目标标记与雷达、每步三选一进化和 H 号令，虫群会跟随母虫并集火酸液标记的目标，靠近自动撕咬。网站已更新，Toy 新包审核中。",
       "record": "releases/web-zerg-v0.36.0/bilibili-pending.json"
+    },
+    {
+      "version": "web-menu-history-v0.36.1",
+      "classification": "普通可见更新",
+      "status": "pending_merge",
+      "summary": "手机首页分区适配；游戏内新增当前版本与更新日志、独立玩法说明。",
+      "decision": "merge_with_existing_pending",
+      "reason": "距上次公开说明核验不足7天，本版不单独触发；若办理既有银行/虫族重大更新，同轮合并准确说明。",
+      "record": "releases/web-menu-history-v0.36.1/handoff.json"
     }
   ],
   "comment_corrections": [
