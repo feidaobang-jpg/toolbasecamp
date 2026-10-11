@@ -909,8 +909,10 @@
       "id": "oct11-fb9c1119465aee62",
       "kind": "bug",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "fixed_pending_release",
-      "fixed_in": "web-feedback-v0.34.1"
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.34.1",
+      "website_status": "deployed_verified",
+      "toy_status": "auditing"
     },
     {
       "date": "2026-10-11 16:34:20",
@@ -933,8 +935,10 @@
       "id": "oct11-58499cf5039ddc91",
       "kind": "bug",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "fixed_pending_release",
-      "fixed_in": "web-feedback-v0.34.1"
+      "status": "fixed",
+      "fixed_in": "web-feedback-v0.34.1",
+      "website_status": "deployed_verified",
+      "toy_status": "auditing"
     },
     {
       "date": "2026-10-11 16:25:42",
@@ -978,9 +982,11 @@
       "url": "//www.bilibili.com/video/BV14hpL62EZ5",
       "user": "一个方块而已",
       "id": "oct11-de40b6563b6e61de",
-      "kind": "discussion",
+      "kind": "availability",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "read_no_action"
+      "status": "pending_reply",
+      "reply_text": "游戏已恢复上架。",
+      "image_note": "公开评论附图显示“该内容已下架”，2026-10-11读取确认"
     },
     {
       "date": "2026-10-11 12:12:30",
@@ -1026,7 +1032,8 @@
       "id": "oct11-bcb195fca7077e77",
       "kind": "request",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "awaiting_user_decision"
+      "status": "clarified_awaiting_menu_decision",
+      "note": "用户指出默认开始/继续即基地防守；已解释旧银行对战区别，并询问是否按模式独立开始/继续菜单。"
     },
     {
       "date": "2026-10-11 09:34:57",
