@@ -58,6 +58,20 @@
   ],
   "pending_updates": [
     {
+      "version": "remix-entry1-menu-text1-fp-aim1",
+      "classification": "普通补丁（玩家可感知的操作修复）",
+      "status": "prepared_not_submitted",
+      "summary": "第一人称改为按画面中心准星开炮，修掉“转个方向就打不出子弹”",
+      "bvids": [
+        "BV1Wqaz6AEJb",
+        "BV1TepK69Eet"
+      ],
+      "record": "releases/remix-entry1-menu-text1-fp-aim1/bilibili-sync.json",
+      "prepared_at": "2026-10-11T10:20:00+08:00",
+      "reason": "网站已逐字节核验、Toy 同包已提审（auditing）；本会话浏览器连接器无可用视口，指针/键盘操作被拒（NATIVE_BROWSER_VIEWPORT_UNAVAILABLE），未用页面脚本绕过只读限制，故线上简介原样保留。",
+      "next_action": "浏览器可交互时按该记录的新旧全文与哈希，在创作中心 type=edit&bvid 编辑页全选替换后点「立即投稿」，再用公开接口读回核验；旧行基线 20f0f852 / a0cdd252 已确认未被他人改动。"
+    },
+    {
       "version": "coop-hub1",
       "classification": "正式版本",
       "status": "public_verified",

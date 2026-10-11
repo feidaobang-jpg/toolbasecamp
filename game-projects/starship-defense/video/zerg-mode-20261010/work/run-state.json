@@ -1,0 +1,122 @@
+{
+  "episode": "zerg-mode-20261010",
+  "project_path": "game-projects/starship-defense/video/zerg-mode-20261010",
+  "mode": "update",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "game": {
+    "name": "虫潮围城",
+    "game_id": "chongchao-qianshao",
+    "version_recorded": "web-zerg-corpse-spinfix-v0.33.3",
+    "website_entry": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "toy_id": "38678478981120",
+    "toy_review_status": "auditing",
+    "toy_public_version": "web-resistance-v0.33.0"
+  },
+  "confirmed_feedback": "用户指令：game-video 录制虫潮的虫族模式（本期为更新视频，主题=网友点名当天上线）",
+  "source_media": {
+    "capture": "work/capture/zerg-run7",
+    "frames": 5829,
+    "capture_duration_s": 283.42,
+    "clip": "work/capture/zerg-run7/clip.mp4",
+    "clip_span_s": 256.3,
+    "game_audio": "work/capture/zerg-run7/game-audio.wav",
+    "rules": {
+      "gameplay_modified": false,
+      "time_scale": 1,
+      "normal_rule_inputs_only": true,
+      "qa_hook": "read-only"
+    },
+    "other_takes": [
+      "zerg-run1",
+      "zerg-run2",
+      "zerg-run3",
+      "zerg-run4",
+      "zerg-run5",
+      "zerg-run6b",
+      "zerg-run8"
+    ]
+  },
+  "tools": {
+    "capture": "Playwright + msedge headless (--use-angle=d3d11), Page.startScreencast + MediaRecorder",
+    "tts": "edge_tts 7.2.8 / zh-CN-YunxiNeural / rate +0%",
+    "edit": "ffmpeg 9.0.2（concat + sidechaincompress + loudnorm + subtitles 烧录）",
+    "covers": "ffmpeg drawtext + 本机微软雅黑，脚本 work/make-cover.cjs",
+    "packaging": "work/package-final.cjs（硬链接复用 + PNG→JPG + SHA256）"
+  },
+  "shared_dependencies": {
+    "media_shared_zh": "final/bilibili-zh/gameplay-zh-final.mp4 == final/douyin-zh/gameplay-zh-final.mp4（同哈希 2739ee70…）",
+    "media_youtube_clean": "final/youtube-zh/gameplay-youtube-final.mp4（efaeca93…，同时间线无烧录字幕）",
+    "timeline": "work/edit/timeline.json",
+    "captions_lines": "work/edit/captions-zh.lines.json",
+    "glossary": "work/edit/glossary.json"
+  },
+  "variants": {
+    "bilibili-zh": {
+      "stage": "blocked_risk_captcha_draft_ready",
+      "files": [
+        "final/bilibili-zh/gameplay-zh-final.mp4",
+        "final/bilibili-zh/cover-home-4x3.jpg",
+        "final/bilibili-zh/cover-space-16x9.jpg",
+        "final/bilibili-zh/投稿文案.txt"
+      ],
+      "manifest": "work/publish/bilibili-zh/publish.json",
+      "render_entry": "node work/build-video.cjs",
+      "next": "用户在可见浏览器打开 resume_url → 完成人机验证并点“立即投稿” → 取 BV → 我做合集归入核验/Toy绑定/置顶评论/推流表/流量券/旧视频维护",
+      "draft_id": "3973028"
+    },
+    "douyin-zh": {
+      "stage": "ready_not_uploaded",
+      "files": [
+        "final/douyin-zh/gameplay-zh-final.mp4",
+        "final/douyin-zh/cover-horizontal-4x3.jpg",
+        "final/douyin-zh/cover-portrait-3x4.jpg",
+        "final/douyin-zh/投稿文案.txt"
+      ],
+      "manifest": "work/publish/douyin-zh/publish.json",
+      "render_entry": "复用 shared-zh",
+      "next": "浏览器面板可用后按 final/douyin-zh 素材上传并核验"
+    },
+    "youtube-zh": {
+      "stage": "published",
+      "files": [
+        "final/youtube-zh/gameplay-youtube-final.mp4",
+        "final/youtube-zh/cover-zh-16x9.jpg",
+        "final/youtube-zh/captions-zh.srt",
+        "final/youtube-zh/captions-en.srt",
+        "final/youtube-zh/投稿文案.txt",
+        "final/youtube-zh/English-localizations.txt"
+      ],
+      "manifest": "work/publish/youtube-zh/publish.json",
+      "render_entry": "node work/build-video.cjs --clean && node work/make-captions.cjs --en",
+      "next": "无（已公开核验）；如需补真机截图证据，请在浏览器面板可见时补一次 Studio 字幕页截图",
+      "published": {
+        "url": "https://www.youtube.com/watch?v=TZWvJqbMIJI",
+        "at": "2026-10-11T10:05:00+08:00",
+        "subtitles": [
+          "zh-Hans",
+          "en"
+        ],
+        "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-zerg-mode-20261010\\work\\proof\\youtube-public-verification.json"
+      }
+    }
+  },
+  "known_gaps": [
+    "胜利结算与城内拆塔镜头未录到（8 局全败，核心 2000/2000 未掉血）；已在文案与 qa.md 如实登记，不伪造",
+    "人声听审与字幕校对：用户人工审片通过（2026-10-11 “发布”）",
+    "三平台均待可见浏览器表面：B站只差一次人机验证+投稿点击；抖音/YouTube 尚未上传"
+  ],
+  "status": "publishing_blocked_needs_user",
+  "status_note": "YouTube 本期已公开发布并核验（中英字幕轨道 + 英文标题/说明翻译）；B站草稿卡在人机验证、抖音 creator center 未登录，均等待用户处理",
+  "updated_at": "2026-10-11T10:05:00+08:00",
+  "human_review": {
+    "status": "approved",
+    "approved_by": "用户（飞刀班长本人）",
+    "approved_at": "2026-10-11T06:55:00+08:00",
+    "evidence": "用户在审片包交付后回复原话：“发布”——视为三版成片、封面与文案的最终人工审片通过，授权按多平台发布流程上传",
+    "audio_listening_review": "passed_by_human（用户审片通过）"
+  }
+}

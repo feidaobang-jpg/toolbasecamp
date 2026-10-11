@@ -1,0 +1,283 @@
+{
+ "url": "http://127.0.0.1:8961/html/game/starship-defense/index.html",
+ "date": "2026-10-11T00:25:59.593Z",
+ "results": [
+  {
+   "name": "战地开局：俯视预设也被固定为第一人称，人称按钮隐藏，保存的视角偏好和默认自动设置都没被改写",
+   "data": {
+    "mode": "first",
+    "fps": true,
+    "manual": true,
+    "assist": null,
+    "person": true,
+    "cross": true,
+    "pref": "third",
+    "settings": {
+     "input": "mouse",
+     "aim": "auto",
+     "fire": "auto"
+    }
+   }
+  },
+  {
+   "name": "战地步行按 C 不切视角，只提示",
+   "data": {
+    "mode": "first",
+    "msg": "战地模式步行固定第一人称，上载具后 C 切换跟随距离",
+    "pref": "third"
+   }
+  },
+  {
+   "name": "默认设置（自动瞄准+自动攻击）下敌人站在准星上 1.3 秒也不会自动开火",
+   "data": {
+    "ammo": 30,
+    "hp": 1000000
+   }
+  },
+  {
+   "name": "准星对准后按住 J 才开火并命中",
+   "data": {
+    "ammo": 24,
+    "hp": 999862,
+    "max": 1000000
+   }
+  },
+  {
+   "name": "准星偏开 20° 时照样出弹但打不中：不再自动锁定",
+   "data": {
+    "ammo": 24,
+    "hp": 1000000
+   }
+  },
+  {
+   "name": "吸附范围：键鼠偏 5° 不吸附；触屏偏 5° 吸附、偏 10° 不吸附；纯键盘对高处目标也吸附（数值为落点到目标中心的米数）",
+   "data": {
+    "mouse5": 22.13,
+    "touch5": 0,
+    "touch10": 22.5,
+    "touchKind": "touch",
+    "keyboardKind": "keyboard",
+    "keyboardHigh5": 0,
+    "touchHigh5": 22.78
+   }
+  },
+  {
+   "name": "右键拖动只转视角：不开火、不举枪",
+   "data": {
+    "yaw": 5.38,
+    "ammo": 30
+   }
+  },
+  {
+   "name": "右键原地点一下举枪，再点放下",
+   "data": {
+    "fov": 52
+   }
+  },
+  {
+   "name": "按住左键开火；右键拖视角时补按左键同样开火",
+   "data": {
+    "left": 26,
+    "chord": 26
+   }
+  },
+  {
+   "name": "上坦克切第三人称跟随：镜头朝准星方向看，准星显示，不写视角偏好",
+   "data": {
+    "kind": "tank",
+    "mode": "third",
+    "pitch": -0.12,
+    "cross": true,
+    "forward": 1.0000000000000002,
+    "view": 0,
+    "pref": "third"
+   }
+  },
+  {
+   "name": "载具里 C 在近身/远距两档之间切换",
+   "data": {
+    "view": 1,
+    "msg": "载具视角：远距跟随"
+   }
+  },
+  {
+   "name": "坦克按准星落点开炮：对准命中，炮口转开 25° 不命中",
+   "data": {
+    "onTarget": {
+     "hp": 999896.2347923133,
+     "max": 1000000,
+     "distance": 29.9
+    },
+    "offTarget": {
+     "hp": 1000000,
+     "max": 1000000,
+     "distance": 29.9
+    }
+   }
+  },
+  {
+   "name": "联机输入只用服务端放行的字段，房主还原的载具准星落点与客人本机相差不到 1.5 米；电脑英雄不受影响",
+   "data": {
+    "gap": 0,
+    "manual": true,
+    "computer": false,
+    "sent": {
+     "pitch": -0.15,
+     "look": 9.62,
+     "fire": false,
+     "autoFire": false,
+     "autoAim": false
+    }
+   }
+  },
+  {
+   "name": "下车回第一人称，触屏切换视角键收起；步行时房主还原的准星与本机一致",
+   "data": {
+    "mode": "first",
+    "vehicle": false,
+    "look": 0,
+    "gap": 0,
+    "vC": true
+   }
+  },
+  {
+   "name": "战地里设置面板的瞄准、射击两项锁住并说明原因，保存值不变",
+   "data": {
+    "aim": true,
+    "fire": true,
+    "input": false,
+    "note": "战地模式和抗战战役固定为步行第一人称、手动瞄准、按住射击，不使用上面的瞄准和射击设置；键鼠按住左键射击，右键拖动只转视角。",
+    "saved": {
+     "input": "mouse",
+     "aim": "auto",
+     "fire": "auto"
+    }
+   }
+  },
+  {
+   "name": "退出战地恢复战役视角偏好（第三人称、第一人称两种都保留），按钮恢复显示",
+   "data": {
+    "third": {
+     "mode": "third",
+     "pref": "third",
+     "person": false,
+     "vC": false
+    },
+    "first": {
+     "mode": "first",
+     "pref": "first"
+    }
+   }
+  },
+  {
+   "name": "抗战步行固定第一人称，按 C 不切视角，人称按钮隐藏，偏好未改写",
+   "data": {
+    "mode": "first",
+    "view": 2,
+    "ammo": 5,
+    "reticle": false,
+    "pref": "third"
+   }
+  },
+  {
+   "name": "抗战默认设置下敌人在准星上 1.3 秒也不自动开火，准星提示已对准",
+   "data": {
+    "mode": "first",
+    "view": 2,
+    "ammo": 5,
+    "hp": 85,
+    "reticle": true,
+    "pref": "third"
+   }
+  },
+  {
+   "name": "抗战按住 J 开火并命中",
+   "data": {
+    "mode": "first",
+    "view": 2,
+    "ammo": 4,
+    "hp": 23,
+    "reticle": true,
+    "pref": "third"
+   }
+  },
+  {
+   "name": "抗战准星偏 5°：键鼠出弹但打不中，准星不提示",
+   "data": {
+    "ammo": 4,
+    "hp": 85
+   }
+  },
+  {
+   "name": "抗战骑马用第三人称跟随，C 在两档间切换，下马回第一人称",
+   "data": {
+    "mounted": {
+     "mode": "third",
+     "view": 0,
+     "mounted": true
+    },
+    "toggled": 1,
+    "walk": {
+     "mode": "first",
+     "mounted": false
+    }
+   }
+  },
+  {
+   "name": "退出抗战后视角恢复到进入前的预设，偏好未改写，按钮恢复显示",
+   "data": {
+    "mode": "third",
+    "view": 2,
+    "pref": "third",
+    "person": false,
+    "vC": false,
+    "fps": false
+   }
+  },
+  {
+   "name": "手机视口真实触摸：战地步行第一人称、切换视角键收起；按住射击键拖动能边开火边转视角",
+   "data": {
+    "yaw": 0.86,
+    "ammo": 23,
+    "mode": "first",
+    "assist": "touch",
+    "vC": true,
+    "hint": "沙漠据点战：占领 A / B / C，消耗敌方兵力票。第一人称手动瞄准，按住射击；部署面板可换兵种与复活点"
+   }
+  },
+  {
+   "name": "手机视口：不按射击键不开火（敌人在准星上也一样），拖空白处只转视角",
+   "data": {
+    "ammo": 30,
+    "yaw": 5.28
+   }
+  },
+  {
+   "name": "手机视口抗战：准星偏 5° 时不自动开火；按住射击键后轻度吸附命中；步行时切换视角键收起",
+   "data": {
+    "idle": {
+     "ammo": 5,
+     "hp": 85
+    },
+    "fired": {
+     "ammo": 4,
+     "hp": 23
+    }
+   }
+  },
+  {
+   "name": "主战役不受影响：第三人称、侧面 90° 的虫子仍被自动锁定并自动开火，C 照常切视角，右键拖动没有新增行为",
+   "data": {
+    "fps": false,
+    "mode": "third",
+    "lockedOn": true,
+    "autoFire": true,
+    "idle": false,
+    "person": false,
+    "aimDisabled": false,
+    "cycled": 1
+   }
+  }
+ ],
+ "errors": []
+}

@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "episode": "zerg-mode-20261010",
+  "updated_at": "2026-10-11T10:08:00+08:00",
+  "platforms": {
+    "bilibili": {
+      "platform": "bilibili",
+      "account_uid": "16214353",
+      "account_name": "飞刀班长",
+      "account_verified_at": "2026-10-11T07:00:00+08:00",
+      "account_verified_by": "创作中心首页头像与主页链接均为 space.bilibili.com/16214353，昵称飞刀班长",
+      "dedupe_check": "公开空间 29 条稿件无同题或同主题视频；无本期 BV；/x/web/archives 读到 pubed=29、not_pubed=0、is_pubing=0，判定既未投稿也未重复投稿",
+      "state": "draft_ready_blocked_by_risk_captcha",
+      "draft_id": "3973028",
+      "resume_url": "https://member.bilibili.com/platform/upload/video/frame?type=draft&draftId=3973028",
+      "video_file": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "video_sha256": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+      "uploaded_bytes": 40080848,
+      "video_duration_s": 125.167,
+      "human_review": {
+        "status": "approved",
+        "evidence": "用户 2026-10-11 回复原话：发布",
+        "file_hashes_note": "三版成片哈希见 publish/*/publish.json"
+      },
+      "form_state_verified": {
+        "title": "网友点名\"我是虫族模式\"，当天就做了出来｜虫潮围城 (25/80)",
+        "creation_statement": "含AI生成内容",
+        "category": "游戏（tid=17）",
+        "tags": [
+          "原创",
+          "虫潮围城",
+          "塔防",
+          "游戏开发",
+          "AI",
+          "玩家建议",
+          "挑战模式",
+          "bilibilitoy"
+        ],
+        "description_chars": 474,
+        "description_matches_approved_copy": true,
+        "description_note": "草稿重新打开后简介会被清空，已按审定文案逐字重填并核验 equal=true",
+        "topic": {
+          "name": "哔哩哔哩Toy创意挑战",
+          "topic_id": 1346285,
+          "mission_check": "GET /x/vupre/web/topic/mission/check 返回 code=0、mission_id=0、state=0（话题已参加，无额外任务要求）",
+          "selected_in_form": true
+        },
+        "collection": {
+          "season_id": 9248439,
+          "section_id": 10340633,
+          "title": "虫潮围城开发实录",
+          "selected_in_form": true,
+          "note": "投稿阶段直接选中合集；过审后仍需在合集目录核验归入"
+        },
+        "publish_time": "立即发布（dtime=null，未定时）",
+        "covers_state": "已定稿并上传成功",
+        "covers_verified": {
+          "home_4_3": {
+            "source_file": "final/bilibili-zh/cover-home-4x3.jpg",
+            "source_bytes": 183229,
+            "uploaded_url": "https://archive.biliimg.com/bfs/archive/aab3fbe2c9da6919834b9cd62950c370cde8de4b.jpg",
+            "uploaded_decoded": "1600x1200, 160610B（平台重编码，比例与设计一致）",
+            "slot": "extra（首页推荐 4:3）"
+          },
+          "space_16_9": {
+            "source_file": "final/bilibili-zh/cover-space-16x9.jpg",
+            "source_bytes": 230216,
+            "uploaded_url": "https://archive.biliimg.com/bfs/archive/fe08bd1e94f6e2241cc4052345ff614adde41602.jpg",
+            "uploaded_decoded": "1920x1080, 198739B（平台重编码，比例与设计一致）",
+            "slot": "main（个人空间 16:9）"
+          },
+          "how": "封面编辑器的 fabric 画布在隐藏页面下不渲染，点“完成”只会导出一张 1600x900；改为把两张本地封面分别作为 origin_4_3 / origin_16_9 直接写入 VideoCover.submitCoverEditor，绕开画布裁剪，投稿时由 /x/vu/web/cover/up 原图上传，已回读两张 CDN 图并解码核对尺寸"
+        },
+        "draft_saved_at": "2026-10-11T07:50:00+08:00",
+        "draft_save_result": "POST /x/vupre/web/draft/update 返回 code=0 OK；/x/vupre/web/draft/list 可见 id=3973028、cover=fe08bd1e…"
+      },
+      "submit_attempts": {
+        "count": 3,
+        "endpoint_expected": "POST //member.bilibili.com/x/vu/web/add/v3",
+        "observed": "每次均完成两张封面上传、话题 mission/check、gaia ExGetAxe，随后卡在风控人机验证，add/v3 从未发出，页面停留在“提交中…”",
+        "stopped_reason": "同一阻塞点连续 3 次结果一致，按技能规则不再循环重试"
+      },
+      "blocker": {
+        "kind": "risk_captcha_and_hidden_surface",
+        "detail": "B站投稿接口在 gaia 风控之后要求 GeeTest 人机验证（页面存在 window.captchaInstance / initGeetest4 与 risk-captcha-adapt-pc 容器）。Qoder 内置浏览器面板未打开时页面 visibilityState=hidden、viewport=0x0，验证码 iframe 不渲染且不接收真实指针事件，无法由 AI 完成；绕过人机验证不属于授权范围",
+        "already_unblocked_today": "本轮页面已能加载并完成表单、文件上传、封面双比例与话题/合集选择（此前这些全部受阻）；剩余卡点只有人机验证",
+        "needed_from_user": "打开 Qoder 内置浏览器面板（或直接在自己浏览器打开 resume_url 的草稿），点“立即投稿”，如出现滑块/人机验证就完成一次；随后把 BV 回告或回复继续由我核验并做发布后闭环",
+        "not_done": "未提交投稿、未获得 BV、未做发布后闭环（Toy 绑定、置顶评论、推流申请表、流量券、旧视频维护）",
+        "feishu_event_id": "zerg-mode-20261010-bili-captcha-20261011"
+      },
+      "traffic_reward_observed": {
+        "available_exposure": "0",
+        "note": "创作中心首页流量奖励显示待使用 0 曝光，近3月已使用1000曝光；本期暂无可用免费券，如实登记为未使用（待稿件过审后再复查一次）",
+        "checked_at": "2026-10-11T07:00:00+08:00"
+      },
+      "toy_note": "Toy 端 v0.33.3 仍在 auditing，公开版本为 web-resistance-v0.33.0；文案未宣称 Toy 已上线虫族模式。BV 拿到后再执行 toy video bind <BV> --toy 38678478981120",
+      "timestamp": "2026-10-11T07:55:00+08:00"
+    }
+  },
+  "douyin": {
+    "platform": "douyin",
+    "state": "blocked_not_logged_in",
+    "reason": "创作者中心 creator.douyin.com 在本机内置浏览器（面板未打开）显示未登录，需要本人扫码/验证码/密码登录才能上传与发布；AI 不代持凭据、不代扫码",
+    "resume_entry": "https://creator.douyin.com/creator-micro/content/upload",
+    "account_hint": "需用户本人账号登录（台账中无可用的抖音已登录基线）",
+    "feishu_event_id": "zerg-mode-20261010-douyin-login-20261011",
+    "timestamp": "2026-10-11T10:08:00+08:00"
+  },
+  "youtube": {
+    "platform": "youtube",
+    "channel_id": "UCha4DVE3db0P1eJvu4qsLJg",
+    "channel_name": "郑晓辉",
+    "channel_verified_at": "2026-10-11T09:10:00+08:00",
+    "channel_verified_by": "YouTube Studio 左侧显示我的频道 郑晓辉，与上期 rv-town 发布台账同一频道ID",
+    "dedupe_check": "Studio 现有8条稿件无本期同题视频；本期 TZWvJqbMIJI 为首次上传",
+    "state": "published_verified",
+    "video_id": "TZWvJqbMIJI",
+    "edit_url": "https://studio.youtube.com/video/TZWvJqbMIJI/edit",
+    "video_file": "final/youtube-zh/gameplay-youtube-final.mp4",
+    "video_sha256": "efaeca93113144907d374cadae8d4a4ca639f61520f475a8a7e8023232649e1a",
+    "uploaded_bytes": 40003795,
+    "upload_method": "本地 127.0.0.1 静态服务 fetch→File→DataTransfer 注入 ytcp-uploads-dialog input[type=file] 并派发 change（面板未打开时选择文件按钮不在可访问性树，真实指针点击无效）",
+    "upload_result": "已保存为私享视频（YouTube 创建草稿并返回 video-id）",
+    "human_review_note": "沿用审片通过的 clean master 哈希，未换文件",
+    "next": "按发布策略：YouTube 公开已核验；X 仍按“仅官方免费能力”条件跳过，B站与抖音等待用户处理验证码/登录",
+    "timestamp": "2026-10-11T10:05:00+08:00",
+    "public_url": "https://www.youtube.com/watch?v=TZWvJqbMIJI",
+    "published_at": "2026-10-11T10:05:00+08:00",
+    "identity_verified": "频道 UCha4DVE3db0P1eJvu4qsLJg（郑晓辉）",
+    "publish_method": "Studio 隐藏表面：rAF 垫片 + 合成指针事件逐步完成详情/高级设置/可见性；字幕用 openModalEditor 打开语言编辑器，127.0.0.1 fetch→DataTransfer 注入 ytve-captions-editor-upload-dialog 的 file input，再点“发布”",
+    "publishing_settings": {
+      "visibility": "public",
+      "made_for_kids": false,
+      "age_restricted": false,
+      "paid_promotion": false,
+      "synthetic_content": true,
+      "language": "zh-Hans",
+      "category": "Gaming（游戏）",
+      "license": "Standard YouTube License",
+      "tags": [
+        "虫潮围城",
+        "Swarm Siege",
+        "塔防",
+        "tower defense",
+        "游戏开发",
+        "AI",
+        "独立游戏"
+      ]
+    },
+    "thumbnail": {
+      "status": "uploaded_verified",
+      "file": "final/youtube-zh/cover-zh-16x9.jpg",
+      "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0",
+      "public_maxresdefault": "https://i.ytimg.com/vi/TZWvJqbMIJI/maxresdefault.jpg（200，111966 字节）"
+    },
+    "subtitles": {
+      "status": "published_and_public_player_selectable",
+      "languages": [
+        "中文（简体）",
+        "英语"
+      ],
+      "zh_track": {
+        "language_code": "zh-Hans",
+        "file": "final/youtube-zh/captions-zh.srt",
+        "sha256": "82624212514eaa9182bc7dc5af68ab920371c994de471b02b11b9836ff329ed5",
+        "cues": 40,
+        "studio_status": "TRANSLATION_STATUS_PUBLISHED / TRANSLATION_SOURCE_CREATOR"
+      },
+      "en_track": {
+        "language_code": "en",
+        "file": "final/youtube-zh/captions-en.srt",
+        "sha256": "7dc9a4f6222109ddc5b398d0f0c48913f8339638dbe48b939b975231fc1f17d0",
+        "cues": 40,
+        "studio_status": "TRANSLATION_STATUS_PUBLISHED / TRANSLATION_SOURCE_CREATOR"
+      },
+      "note": "早先一次中文上传只落了元数据翻译，字幕轨道 captionsTranslation 为 undefined；本轮重做后两条轨道均在公开播放器 captionTracks 可见。上传前按 YouTube“相邻片段至少 0.5 秒空档”要求只改时间轴（文本与审片一致），旧哈希 b69185bb…/b8d90e88… 作废",
+      "evidence": "D:\\project\\toolbasecamp-artifacts\\chongchao-zerg-mode-20261010\\work\\proof\\youtube-public-verification.json"
+    },
+    "english_metadata": {
+      "status": "published_saved",
+      "source": "final/youtube-zh/English-localizations.txt",
+      "title": "A viewer asked me to make a \"play as the bugs\" mode. I shipped it the same day. | Swarm Siege",
+      "studio_row_verified": "英语行“标题和说明”列显示 已发布 2026年10月11日，reload 后仍在"
+    }
+  },
+  "x": {
+    "platform": "x",
+    "state": "not_applicable_no_official_capability",
+    "reason": "YouTube 本期已公开（TZWvJqbMIJI），但本机没有 X 登录会话或官方免费发布能力可用，且历史各期也未建立 X 台账；按规则跳过，不创建定时/后台任务",
+    "timestamp": "2026-10-11T10:08:00+08:00"
+  }
+}

@@ -1,0 +1,272 @@
+{
+ "request_text": "人类的炮塔可不惯着你。站到城门底下磨门，狙击塔一炮就是一百六的血。血线掉了就蜕皮，四十生物量换回三成的血；再派小虫子冲门帮你扛火力——炮塔永远只打最近的单位。",
+ "voice": "zh-CN-YunxiNeural",
+ "rate": "+0%",
+ "edge_tts_version": "7.2.8",
+ "marks": [
+  {
+   "type": "WordBoundary",
+   "offset": 1000000,
+   "duration": 3625000,
+   "text": "人类"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 4625000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 5625000,
+   "duration": 8125000,
+   "text": "炮塔"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 14875000,
+   "duration": 1625000,
+   "text": "可"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 16625000,
+   "duration": 3250000,
+   "text": "不惯"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 19875000,
+   "duration": 1000000,
+   "text": "着"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 20875000,
+   "duration": 2375000,
+   "text": "你"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 28875000,
+   "duration": 3000000,
+   "text": "站到"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 31875000,
+   "duration": 3125000,
+   "text": "城门"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 35125000,
+   "duration": 2625000,
+   "text": "底下"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 37875000,
+   "duration": 5375000,
+   "text": "磨门"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 46375000,
+   "duration": 4875000,
+   "text": "狙击塔"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 51375000,
+   "duration": 4500000,
+   "text": "一炮"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 56875000,
+   "duration": 1750000,
+   "text": "就"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 58625000,
+   "duration": 875000,
+   "text": "是"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 59750000,
+   "duration": 3375000,
+   "text": "一百六"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 63125000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 64000000,
+   "duration": 3000000,
+   "text": "血"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 72625000,
+   "duration": 3000000,
+   "text": "血"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 75625000,
+   "duration": 2875000,
+   "text": "线掉"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 78500000,
+   "duration": 625000,
+   "text": "了"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 79375000,
+   "duration": 875000,
+   "text": "就"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 80375000,
+   "duration": 5875000,
+   "text": "蜕皮"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 89250000,
+   "duration": 4000000,
+   "text": "四十"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 93375000,
+   "duration": 4125000,
+   "text": "生物量"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 97500000,
+   "duration": 2875000,
+   "text": "换回"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 100625000,
+   "duration": 3000000,
+   "text": "三成"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 103625000,
+   "duration": 875000,
+   "text": "的"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 104500000,
+   "duration": 3125000,
+   "text": "血"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 111000000,
+   "duration": 1875000,
+   "text": "再"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 112875000,
+   "duration": 1250000,
+   "text": "派"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 114375000,
+   "duration": 5125000,
+   "text": "小虫子"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 119625000,
+   "duration": 3250000,
+   "text": "冲门"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 122875000,
+   "duration": 1250000,
+   "text": "帮"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 124125000,
+   "duration": 750000,
+   "text": "你"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 125000000,
+   "duration": 2125000,
+   "text": "扛"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 127125000,
+   "duration": 3750000,
+   "text": "火力"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 133625000,
+   "duration": 4375000,
+   "text": "炮塔"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 138250000,
+   "duration": 3250000,
+   "text": "永远"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 141625000,
+   "duration": 1375000,
+   "text": "只"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 143000000,
+   "duration": 1250000,
+   "text": "打"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 144500000,
+   "duration": 2750000,
+   "text": "最近"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 147250000,
+   "duration": 625000,
+   "text": "的"
+  },
+  {
+   "type": "WordBoundary",
+   "offset": 148000000,
+   "duration": 3375000,
+   "text": "单位"
+  }
+ ]
+}

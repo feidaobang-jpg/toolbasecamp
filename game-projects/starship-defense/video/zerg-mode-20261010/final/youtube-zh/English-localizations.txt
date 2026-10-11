@@ -1,0 +1,17 @@
+English title
+A viewer asked me to make a "play as the bugs" mode. I shipped it the same day. | Swarm Siege
+
+English description
+Play my games: https://www.zhengxiaohui.cn/games.html
+Pick "虫潮围城" (Swarm Siege) in the list and choose "虫族模式" (Swarm Mode) on the main menu; the game UI is currently Chinese only.
+A Bilibili player ("我不是abbie") asked in the comments: can you make a mode where I am the swarm? It shipped the same day - you no longer defend the base, you ARE the swarm.
+The rules: destroy the human base core within 360 seconds. WASD drives the Mother, J bites, K spits acid, U summons warriors, I summons flyers, O molts to heal, L dashes. Every point of damage you deal comes back as Biomass, which pays for summons and healing. The Mother can die at most 5 times; on the fifth the swarm collapses.
+This gameplay was recorded under normal rules on the live web build - no stat edits, no speed changes. We did grind the 2500-HP gate down to zero, but the 2000-HP core behind it never lost a single point of HP. This mode is much harder than I expected, so it is a genuine challenge mode now. If you can crack the core, come prove me wrong.
+Swarm Mode was developed by Qoder; this video (capture, narration, edit) was also produced by Qoder. It is playable on the website today.
+Suggest a mode or vote: https://www.zhengxiaohui.cn/game-vote.html
+
+English captions file
+captions-en.srt (same timings as captions-zh.srt; 40 cues, human-readable translation of the Chinese narration)
+
+Audio language
+zh-CN (Chinese narration, Microsoft Edge TTS voice zh-CN-YunxiNeural). No English dub was recorded for this episode.

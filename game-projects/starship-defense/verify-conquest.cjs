@@ -70,8 +70,12 @@ try{
  await p.evaluate(()=>__gameQA.startVersusAI('normal',2));await p.keyboard.press('Escape');await p.locator('#menuPause [data-device-mode="touch"]').click();await p.click('#btnResume');
  for(const viewport of [{width:844,height:390},{width:390,height:844},{width:568,height:320}]){
    await p.setViewportSize(viewport);await p.waitForTimeout(100);
-   const bounds=await p.evaluate(()=>{const ids=['vJ','vK','vU','vI','vR','vH','vZ','vC','vP','fullBtn'];return ids.map(id=>{const e=document.getElementById(id),r=e.getBoundingClientRect();return {id,visible:!!e.getClientRects().length,x:r.x,y:r.y,w:r.width,h:r.height};});});
+   const bounds=await p.evaluate(()=>{const ids=['vJ','vK','vU','vI','vR','vH','vZ','vP','fullBtn'];return ids.map(id=>{const e=document.getElementById(id),r=e.getBoundingClientRect();return {id,visible:!!e.getClientRects().length,x:r.x,y:r.y,w:r.width,h:r.height};});});
    for(const r of bounds)assert.ok(r.visible&&r.x>=-1&&r.y>=-1&&r.x+r.w<=viewport.width+1&&r.y+r.h<=viewport.height+1,JSON.stringify(r));
+   // 步行固定第一人称：切换视角键收起；上载具后才出现，同样不能超出视口。
+   assert.equal(await p.evaluate(()=>!!document.getElementById('vC').getClientRects().length),false);
+   const rideC=await p.evaluate(()=>{const q=__gameQA,v=q.vehicles.find(v=>v.team==='blue'&&v.kind==='jeep'&&!v.dead);q.enterVehicle(v);q.updHUD(.016);const e=document.getElementById('vC'),r=e.getBoundingClientRect(),out={visible:!!e.getClientRects().length,x:r.x,y:r.y,w:r.width,h:r.height};q.exitVehicle();q.updHUD(.016);return out;});
+   assert.ok(rideC.visible&&rideC.x>=-1&&rideC.y>=-1&&rideC.x+rideC.w<=viewport.width+1&&rideC.y+rideC.h<=viewport.height+1,JSON.stringify(rideC));
    await p.screenshot({path:path.join(OUT,`touch-${viewport.width}x${viewport.height}.png`)});
  }
  await p.setViewportSize({width:844,height:390});const fireRect=await p.locator('#vJ').boundingBox();await p.mouse.move(fireRect.x+fireRect.width/2,fireRect.y+fireRect.height/2);await p.mouse.down();await p.waitForTimeout(300);await p.mouse.up();

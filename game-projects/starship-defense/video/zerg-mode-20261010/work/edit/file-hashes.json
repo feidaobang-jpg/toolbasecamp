@@ -1,0 +1,103 @@
+{
+ "bilibili-zh": {
+  "cover-home-4x3.jpg": {
+   "bytes": 183229,
+   "sha256": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834",
+   "width": 1600,
+   "height": 1200
+  },
+  "cover-space-16x9.jpg": {
+   "bytes": 230216,
+   "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0",
+   "width": 1920,
+   "height": 1080
+  },
+  "gameplay-zh-final.mp4": {
+   "bytes": 40080848,
+   "sha256": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+   "width": 1920,
+   "height": 1080,
+   "fps": "30/1",
+   "duration_seconds": 125.2,
+   "audio": true
+  },
+  "投稿文案.txt": {
+   "bytes": 1269,
+   "sha256": "e7a10c46481a0651926b6f4e7b1d993b7fceccee37a473e56ff89bc9d55e5aa2"
+  }
+ },
+ "covers": {
+  "bili-16x9.png": {
+   "bytes": 501388,
+   "sha256": "bd1501894b03d8e4f596464a0a2fa15eca9a08a28eae9c5eeeffcb8690ecd178"
+  },
+  "bili-4x3.png": {
+   "bytes": 485451,
+   "sha256": "e6f30cf7e8292019c3c9a49c1d23ccbcc1e56ba55a595475b32657a6b58d4a92"
+  },
+  "douyin-3x4.png": {
+   "bytes": 404789,
+   "sha256": "e5a46a627304857c3031d17d442ba13f990b503d5d33b46b2f105bdf94b6ce03"
+  }
+ },
+ "douyin-zh": {
+  "cover-horizontal-4x3.jpg": {
+   "bytes": 183229,
+   "sha256": "e4d9fa9914b39c75ff21c626619107de16c4f4169b0740190fd3ec740126e834",
+   "width": 1600,
+   "height": 1200
+  },
+  "cover-portrait-3x4.jpg": {
+   "bytes": 136906,
+   "sha256": "418cee97837d748b35a7667e75d3e002295558e8e23bf8c4139756ae07432a40",
+   "width": 1080,
+   "height": 1440
+  },
+  "gameplay-zh-final.mp4": {
+   "bytes": 40080848,
+   "sha256": "2739ee70b68c0ea825bfc657562abb035af2290d5dca0632b1a8f30d5f3107c4",
+   "width": 1920,
+   "height": 1080,
+   "fps": "30/1",
+   "duration_seconds": 125.2,
+   "audio": true
+  },
+  "投稿文案.txt": {
+   "bytes": 780,
+   "sha256": "b6b37f10690fc0eed83113e2b7bcce4965ed96fb48815088a7deb28f4795116b"
+  }
+ },
+ "youtube-zh": {
+  "captions-en.srt": {
+   "bytes": 2776,
+   "sha256": "b8d90e8854fa9d01b34b62c2ca754d9a773a7da7f33c3a83609b13173c20c549"
+  },
+  "captions-zh.srt": {
+   "bytes": 2984,
+   "sha256": "b69185bb5352c46343b1669dd6be653133e316cf5ba579bf41add57b053c6165"
+  },
+  "cover-zh-16x9.jpg": {
+   "bytes": 230216,
+   "sha256": "28e3e46411694358631c91a55e740678ecf2680801ec719f2344cc5d6d355de0",
+   "width": 1920,
+   "height": 1080
+  },
+  "English-localizations.txt": {
+   "bytes": 1647,
+   "sha256": "a3e11ec73496293e5c3ff3327e3ea0fd8b2f2a1ea3f973aac71624c93ffa1863"
+  },
+  "gameplay-youtube-final.mp4": {
+   "bytes": 40003795,
+   "sha256": "efaeca93113144907d374cadae8d4a4ca639f61520f475a8a7e8023232649e1a",
+   "width": 1920,
+   "height": 1080,
+   "fps": "30/1",
+   "duration_seconds": 125.2,
+   "audio": true
+  },
+  "投稿文案.txt": {
+   "bytes": 1259,
+   "sha256": "c3064e68384a69cdfb3c08a5a5ece9b942481ea19b13faa5d5576a963560579f"
+  }
+ }
+}
