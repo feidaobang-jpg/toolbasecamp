@@ -1,0 +1,9 @@
+{
+  "status": "public_verified",
+  "verified_at": "2026-10-11T20:54:28.241481+08:00",
+  "source_commit": "f07e5c815b439bd2eed3026db76f648dfda5e37c",
+  "entry": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "runtime_sha256": "c7008c580aa834075ffe7cedf0863beac6fcf24930bb7fc07b69923a4b03fc8f",
+  "deployed_script_src": "./game.compat.js?v=f07e5c81",
+  "action_url": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/38140856542"
+}

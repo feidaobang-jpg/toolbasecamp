@@ -47,7 +47,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-11T12:28:02.062584+00:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
@@ -56,15 +56,15 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Kx5OGRMh/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_pCzOJVG8/index.html",
     "title": "虫潮围城",
     "zip_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
     "submitted_date": "2026-10-11",
-    "release_record": "releases/web-menu-history-v0.36.1/handoff.json",
-    "submitted_version": "web-menu-history-v0.36.1",
+    "release_record": "releases/web-fps-mouse-v0.36.2/handoff.json",
+    "submitted_version": "web-fps-mouse-v0.36.2",
     "published_version": "web-menu-history-v0.36.1",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_Kx5OGRMh/index.html",
-    "note": "网站与Toy v0.36.1均公开核验；游戏内更新日志可查看。原网友回复等待正在进行的视频任务释放B站账号锁。",
+    "note": "v0.36.2第一人称鼠标接管已提交审核；成功上线基线在正式入口核验后推进。",
     "package_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
     "pending_updates": [
       {
@@ -119,10 +119,10 @@
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "published_verified_at": "2026-10-11T12:28:02.062584+00:00",
-    "status": "published",
+    "status": "auditing",
     "package_hash": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "submitted_at": "2026-10-11T12:21:44.927163+00:00",
+    "submitted_at": "2026-10-11T20:55:15.461238+08:00",
     "public_verified_at": "2026-10-11T10:07:11.194993+00:00",
     "public_runtime_evidence": "正式Toy入口开局并升级银行Lv2，每10秒85金；银行与战地菜单并存。",
     "version": "web-bank-restore-v0.35.0",
@@ -149,7 +149,8 @@
       "bytes": 403877,
       "submitted": true
     },
-    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24997/index.html"
+    "public_content_url": "https://www.bilibilitoy.com/toy/chongchao-qianshao/38678478981120-v24997/index.html",
+    "submitted_package_sha256": "0b32f76595ffdd808c8fd41cbef04eb8bf13d78d068229ca52e6ad7b26b33134"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-menu-history-v0.36.1",
@@ -1323,5 +1324,14 @@
     "keyboard": "Q/E retained",
     "touch": "drag retained",
     "escape": "release and pause"
+  },
+  "website_mouse_aim": {
+    "status": "public_verified",
+    "verified_at": "2026-10-11T20:54:28.241481+08:00",
+    "source_commit": "f07e5c815b439bd2eed3026db76f648dfda5e37c",
+    "entry": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "runtime_sha256": "c7008c580aa834075ffe7cedf0863beac6fcf24930bb7fc07b69923a4b03fc8f",
+    "deployed_script_src": "./game.compat.js?v=f07e5c81",
+    "action_url": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/38140856542"
   }
 }
