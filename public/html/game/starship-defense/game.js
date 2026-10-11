@@ -2748,6 +2748,10 @@ function updPlayer(dt){
   let gy=insideMap?groundY(player.pos.x,player.pos.z):-Infinity;
   // A jump may clear a low wall; land on its cap instead of sinking through it.
   for(const bd of buildings)if(bd.isWall&&!bd.dead&&wallTouches(bd,player.pos.x,player.pos.z)&&player.pos.y>=bd.mesh.position.y+COVER_HEIGHT-.05)gy=Math.max(gy,bd.mesh.position.y+COVER_HEIGHT);
+  // 洞顶同时是地表玩家的落脚面；只接住从上方落下的人，不把洞内玩家抬到地面。
+  if(insideMap&&!rvOn())for(const s of fortress.near(player.pos.x,player.pos.z,0)){
+    if(s.roof&&fortress.inside(s,player.pos.x,player.pos.z)&&player.pos.y>=s.top-.05)gy=Math.max(gy,s.top);
+  }
   player.vy-=24*dt;
   player.pos.y+=player.vy*dt;
   const headLimit=insideMap?fortress.ceilingAt(player.pos.x,player.pos.z,Math.max(gy,player.pos.y)+.1)-2.6:Infinity;

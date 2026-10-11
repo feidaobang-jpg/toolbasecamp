@@ -1,0 +1,24 @@
+{
+  "version": "web-feedback-v0.34.1",
+  "source_commit": "pending",
+  "scope": "2026-10-11 00:01:06 七诈ing：我显示的还是下架。及时间更新的评论；截至读取快照16:52:21",
+  "viewer_comments": 24,
+  "availability_replies_pending": 9,
+  "requirements_decided": [
+    1,
+    2,
+    3
+  ],
+  "requirement_4": "awaiting_user_decision",
+  "website": "pending",
+  "toy": "pending",
+  "bilibili": "pending_account_write_lock",
+  "runtime_sha256": "0a3dfaeb71b7c69e9fe8592615f6b62d877d05d4f4370b127a24db12964ed8f2",
+  "qa": {
+    "desktop": 20,
+    "mobile_emulated": 20,
+    "physical_mobile": false
+  },
+  "tap_tap": "not_requested_not_submitted",
+  "record": "releases/web-feedback-v0.34.1/handoff.json"
+}

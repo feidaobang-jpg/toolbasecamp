@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-fps-rules-v0.34.0-privacy1",
+  "current_version": "web-feedback-v0.34.1",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -1225,5 +1225,16 @@
     "new_video_authorized": false
   },
   "website_status": "public_verified",
-  "website_runtime_sha256": "6d72d4bf4574b0335f91c019154fda15813ecbbbaf75e61cc1dc55f240bb7453"
+  "website_runtime_sha256": "6d72d4bf4574b0335f91c019154fda15813ecbbbaf75e61cc1dc55f240bb7453",
+  "feedback_oct11": {
+    "version": "web-feedback-v0.34.1",
+    "status": "validated",
+    "record": "releases/web-feedback-v0.34.1/handoff.json",
+    "changes": [
+      "修复地下下车高度",
+      "修复洞外目标被误判洞内导致的卡怪",
+      "修复西侧跳上洞顶后穿透坠落",
+      "主战役及房车无限手雷增加3秒冷却"
+    ]
+  }
 }

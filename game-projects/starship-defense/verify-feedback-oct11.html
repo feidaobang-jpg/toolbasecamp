@@ -20,8 +20,11 @@ document.querySelector('#run').onclick=()=>{
   let steps=0;for(;steps<1600&&m.mesh.position.distanceTo(target)>3;steps++){
    const dir=q.navDir(m,target)||target.clone().sub(m.mesh.position).setY(0).normalize();q.moveMonster(m,dir,.05,1,m.navWaypoint);
   }
-  check(`追击 ${x},${z} 到 ${tx},${tz}`,m.mesh.position.distanceTo(target)<3,{steps,end:m.mesh.position.toArray()});
+  check(`追击 ${x},${z} 到 ${tx},${tz}`,m.mesh.position.distanceTo(target)<=3,{steps,end:m.mesh.position.toArray()});
  }
+ q.clearEntities(true);setPos(q,-74,230);q.setCamYaw(0);q.Input.keys.left=true;q.Input.pressed.K=true;
+ for(let i=0;i<30;i++)q.updPlayer(.05);q.Input.reset();
+ check('从西侧跳上洞顶不穿进洞内',q.player.pos.y>=0,{position:q.player.pos.toArray()});
  q.clearEntities(true);setPos(q,0,30);q.player.grenadeCd=0;
  const gold=q.Game.gold,items=JSON.stringify(q.Game.items),first=q.throwGrenade();let repeated=0;
  for(let i=0;i<40;i++)if(q.throwGrenade())repeated++;
