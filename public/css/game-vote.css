@@ -1,5 +1,57 @@
 /* 游戏投票：独立投票页 + 游戏页顶部榜单卡 */
 
+.gv-mode-card {
+    scroll-margin-top: 1rem;
+}
+
+.gv-mode-card .gv-mode-row {
+    padding: 1rem 0;
+    gap: 1rem;
+}
+
+.gv-mode-row.is-selected .gv-name {
+    color: #1d4ed8;
+}
+
+.gv-mode-meter {
+    display: block;
+    height: 5px;
+    margin-top: 0.375rem;
+    background: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.gv-mode-meter span {
+    display: block;
+    height: 100%;
+    background: #2563eb;
+}
+
+.gv-mode-button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+.gv-mode-button[aria-pressed="true"] {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+}
+
+.gv-mode-actions {
+    margin-top: 1rem;
+}
+
+@media (max-width: 420px) {
+    .gv-mode-card .gv-mode-row {
+        flex-wrap: wrap;
+    }
+    .gv-mode-row .gv-row-main {
+        flex-basis: 100%;
+    }
+}
+
 .gv-wrap {
     max-width: 860px;
     margin: 0 auto;

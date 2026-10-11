@@ -79,6 +79,9 @@ _SPAM_RE = re.compile(
 VOTE_FAVORITE = "favorite"
 VOTE_WISHLIST = "wishlist"
 
+# 固定模式 ID 不随展示文案变化；与原游戏/愿望选票分表，互不占用额度。
+STARSHIP_MODES = ("defense", "zerg", "rv", "battlefield", "resistance")
+
 # 自研游戏候选项的唯一来源是游戏页 public/js/config.js 的 gamesConfig：上了游戏页就自动可投票、
 # 可统计点击，从游戏页撤下即退出榜单（历史票保留在库里），后端不再手工维护名单。
 # key 与 games-hub.js 埋点一致，取 html/game/<slug>(.html|/index.html) 的 slug；titleKey 交给前端 i18n。
@@ -237,6 +240,18 @@ def wire(
 def ensure_game_votes_tables(cur) -> None:
     cur.execute(
         """
+        CREATE TABLE IF NOT EXISTS starship_mode_ballots (
+            device_id CHAR(32) PRIMARY KEY,
+            mode_key VARCHAR(24) NOT NULL,
+            ip_hash CHAR(32) NOT NULL DEFAULT '',
+            created_at DATETIME NOT NULL,
+            INDEX idx_starship_mode (mode_key),
+            INDEX idx_starship_mode_ip (ip_hash, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        """
+    )
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS game_vote_ballots (
             id BIGINT PRIMARY KEY AUTO_INCREMENT,
             vote_type VARCHAR(16) NOT NULL,
@@ -386,6 +401,75 @@ class WishIn(BaseModel):
     device_id: str = Field(..., min_length=16, max_length=32)
     name: str = Field(..., min_length=1, max_length=NAME_MAX)
     note: str = Field(default="", max_length=NOTE_MAX)
+
+
+class ModeVoteIn(BaseModel):
+    device_id: str = Field(..., min_length=16, max_length=32)
+    target: str = Field(..., max_length=24)  # 空串表示撤回本机选择
+
+
+def _mode_poll(cur, device: str) -> dict:
+    cur.execute("SELECT mode_key, COUNT(*) AS votes FROM starship_mode_ballots GROUP BY mode_key")
+    counts = {r["mode_key"]: int(r["votes"]) for r in cur.fetchall()}
+    selected = ""
+    if device:
+        cur.execute("SELECT mode_key FROM starship_mode_ballots WHERE device_id=%s", (device,))
+        row = cur.fetchone()
+        if row and row["mode_key"] in STARSHIP_MODES:
+            selected = row["mode_key"]
+    return {
+        "options": [{"key": key, "votes": counts.get(key, 0)} for key in STARSHIP_MODES],
+        "total": sum(counts.get(key, 0) for key in STARSHIP_MODES),
+        "selected": selected,
+        "limit": 1,
+    }
+
+
+@router.get("/starship-modes")
+def get_mode_poll(device_id: str = "") -> dict:
+    device = _check_device(device_id) if device_id else ""
+    conn = _db()
+    try:
+        with conn.cursor() as cur:
+            return _mode_poll(cur, device)
+    finally:
+        conn.close()
+
+
+@router.post("/starship-modes/vote")
+def cast_mode_vote(body: ModeVoteIn, request: Request) -> dict:
+    device = _check_device(body.device_id)
+    target = body.target.strip()
+    if target and target not in STARSHIP_MODES:
+        raise HTTPException(status_code=400, detail="Unknown mode option")
+    conn = _db()
+    try:
+        with conn.cursor() as cur:
+            if target:
+                ip_hash = _ip_hash(_request_ip(request))
+                now = _now_utc()
+                # 已投设备可随时改票；只限制同网络当天新投票设备。
+                cur.execute("SELECT mode_key FROM starship_mode_ballots WHERE device_id=%s", (device,))
+                if not cur.fetchone():
+                    day_start = datetime(now.year, now.month, now.day)
+                    cur.execute(
+                        "SELECT COUNT(*) AS c FROM starship_mode_ballots WHERE ip_hash=%s AND created_at>=%s",
+                        (ip_hash, day_start),
+                    )
+                    if int((cur.fetchone() or {}).get("c") or 0) >= IP_DEVICE_DAY_LIMIT:
+                        raise HTTPException(status_code=429, detail="This network voted too many times today")
+                # 主键 + 原子 upsert：重复提交、并发改投均只有一张选票。
+                cur.execute(
+                    """INSERT INTO starship_mode_ballots (device_id, mode_key, ip_hash, created_at)
+                    VALUES (%s, %s, %s, %s)
+                    ON DUPLICATE KEY UPDATE mode_key=VALUES(mode_key)""",
+                    (device, target, ip_hash, now),
+                )
+            else:
+                cur.execute("DELETE FROM starship_mode_ballots WHERE device_id=%s", (device,))
+            return _mode_poll(cur, device)
+    finally:
+        conn.close()
 
 
 class WishAdminIn(BaseModel):
