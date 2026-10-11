@@ -7,7 +7,7 @@ const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),
 const PW=['C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright','D:/project/godot/absurd-3d-daily/node_modules/playwright'].find(p=>fs.existsSync(p))||'playwright';
 const {chromium}=require(PW);
 const ROOT=path.join(__dirname,'..','..','public'),PORT=Number(process.env.QA_PORT)||8902;
-const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-zerg-v0.35.0/qa');fs.mkdirSync(out,{recursive:true});
+const out=process.env.QA_OUTPUT||path.join(__dirname,'media-kit/releases/web-zerg-v0.36.0/qa');fs.mkdirSync(out,{recursive:true});
 const MIME={'.html':'text/html;charset=utf-8','.js':'text/javascript;charset=utf-8','.css':'text/css;charset=utf-8','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.jpg':'image/jpeg','.glb':'model/gltf-binary','.woff2':'font/woff2','.ico':'image/x-icon'};
 const server=http.createServer((req,res)=>{
   const u=decodeURIComponent(req.url.split('?')[0]),f=path.join(ROOT,u==='/'?'index.html':u);

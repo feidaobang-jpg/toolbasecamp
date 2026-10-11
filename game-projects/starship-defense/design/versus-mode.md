@@ -1,3 +1,5 @@
+> 2026-10-11 v0.35.0：本玩法已恢复为独立「银行塔防对战」，与战地据点模式并存；运行实现 bank-versus.js，当前恢复验收 verify-bank-restore.html。下段保留替换历史。
+
 > 历史设计：v0.32.0起原对战已全面替换为战地据点模式。当前规则见media-kit/overview.md和releases/web-conquest-v0.32.0/handoff.json；使用verify-conquest.cjs与verify-conquest-online.cjs验收。旧verify-versus系列脚本用于对应历史版本，不代表当前验收标准。
 
 # 虫潮围城 · 对战模式 玩法设计（草案）

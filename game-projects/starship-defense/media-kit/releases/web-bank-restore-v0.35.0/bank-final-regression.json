@@ -1,0 +1,103 @@
+{
+  "passed": 18,
+  "total": 18,
+  "results": [
+    {
+      "name": "银行、战地菜单独立入口",
+      "pass": true
+    },
+    {
+      "name": "恢复每人银行和金币、2对2座位",
+      "pass": true,
+      "detail": {
+        "size": 2,
+        "bank": 1,
+        "gold": 600
+      }
+    },
+    {
+      "name": "不强制第一人称、保留原武器",
+      "pass": true
+    },
+    {
+      "name": "银行和派兵卡片可达",
+      "pass": true
+    },
+    {
+      "name": "升级扣款并增加收入",
+      "pass": true,
+      "detail": {
+        "bank": 2,
+        "gold": 100,
+        "income": 85
+      }
+    },
+    {
+      "name": "每10秒收入结算",
+      "pass": true,
+      "detail": {
+        "gold": 185,
+        "time": 10.050000000000008
+      }
+    },
+    {
+      "name": "出兵扣款、归属和冷却",
+      "pass": true,
+      "detail": {
+        "id": "swarm",
+        "gold": 4850,
+        "cd": 6
+      }
+    },
+    {
+      "name": "队友转账保持个人经济",
+      "pass": true
+    },
+    {
+      "name": "买枪并切换",
+      "pass": true,
+      "detail": "shotgun"
+    },
+    {
+      "name": "本方区域可建炮塔",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "只能拆本方设施并返还金币",
+      "pass": true
+    },
+    {
+      "name": "英雄射击、手雷和HUD正常",
+      "pass": true
+    },
+    {
+      "name": "退出保留原战役金币与存档",
+      "pass": true
+    },
+    {
+      "name": "战地仍是固定装备、据点与载具",
+      "pass": true,
+      "detail": {
+        "points": 3,
+        "vehicles": 8
+      }
+    },
+    {
+      "name": "战地面板无银行、保留五兵种",
+      "pass": true
+    },
+    {
+      "name": "战地退出恢复武器和载具配置",
+      "pass": true
+    },
+    {
+      "name": "战地后再次开银行4对4",
+      "pass": true
+    },
+    {
+      "name": "银行独立结算并沿用旧战绩，战地战绩不变",
+      "pass": true
+    }
+  ]
+}

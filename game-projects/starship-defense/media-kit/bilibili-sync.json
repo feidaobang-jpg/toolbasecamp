@@ -329,6 +329,14 @@
       "summary": "修复洞内下车、洞外卡怪及穿洞顶；无限手雷增加3秒冷却",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
       "reason": "普通小改合并计数1；Toy恢复说明已有独立任务及现成待办，不覆盖其稿件维护。"
+    },
+    {
+      "version": "web-bank-restore-v0.35.0",
+      "classification": "玩法恢复",
+      "status": "pending_account_lock",
+      "summary": "银行塔防恢复独立入口，与战地并存；并合并v0.34.1地下下车、卡怪、洞顶与3秒手雷修复",
+      "trigger": "重大玩法恢复且旧说明称银行已被替换，需要更新",
+      "record": "releases/web-bank-restore-v0.35.0/handoff.json"
     }
   ],
   "comment_corrections": [

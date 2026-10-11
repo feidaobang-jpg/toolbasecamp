@@ -7,9 +7,14 @@
   "requirements_decided": [
     1,
     2,
-    3
+    3,
+    4
   ],
-  "requirement_4": "bank mode distinction explained; awaiting decision on per-mode menus",
+  "requirement_4": {
+    "decision": "restore_independent_bank_versus",
+    "implementation": "web-bank-restore-v0.35.0",
+    "record": "../web-bank-restore-v0.35.0/handoff.json"
+  },
   "website": {
     "status": "deployed_verified",
     "verified_at": "2026-10-11T09:36:22.228681+00:00",
@@ -18,7 +23,7 @@
   },
   "toy": {
     "id": "38678478981120",
-    "status": "auditing",
+    "status": "published_superseded",
     "submitted_at": "2026-10-11T09:36:22.228681+00:00",
     "version": "web-feedback-v0.34.1",
     "zip_sha256": "f142889083025f7c0d2ae3a16943a3c0e51adfcebd8e2a6e3d661f13ab9fb4e3",
@@ -30,7 +35,9 @@
       "390x844 touch layout and grenade button",
       "local save preserved; preview SDK lacks Toy ID, local fallback shown"
     ],
-    "privacy_scan": "passed"
+    "privacy_scan": "passed",
+    "included_in": "web-bank-restore-v0.35.0",
+    "current_public_record": "../web-bank-restore-v0.35.0/toy-public.json"
   },
   "bilibili": "pending_account_write_lock",
   "runtime_sha256": "0a3dfaeb71b7c69e9fe8592615f6b62d877d05d4f4370b127a24db12964ed8f2",
