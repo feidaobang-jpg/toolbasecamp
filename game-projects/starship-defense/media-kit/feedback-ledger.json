@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-11T09:31:19.405376+00:00",
+  "updated_at": "2026-10-11T10:07:11.194993+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -898,7 +898,9 @@
       "record": "releases/web-feedback-v0.34.1/handoff.json",
       "status": "implemented_3_second_cooldown",
       "fixed_in": "web-feedback-v0.34.1",
-      "user_decision": "无限手雷，每3秒可投掷一次"
+      "user_decision": "无限手雷，每3秒可投掷一次",
+      "website_status": "deployed_verified",
+      "toy_status": "published"
     },
     {
       "date": "2026-10-11 16:37:40",
@@ -912,7 +914,7 @@
       "status": "fixed",
       "fixed_in": "web-feedback-v0.34.1",
       "website_status": "deployed_verified",
-      "toy_status": "auditing"
+      "toy_status": "published"
     },
     {
       "date": "2026-10-11 16:34:20",
@@ -938,7 +940,7 @@
       "status": "fixed",
       "fixed_in": "web-feedback-v0.34.1",
       "website_status": "deployed_verified",
-      "toy_status": "auditing"
+      "toy_status": "published"
     },
     {
       "date": "2026-10-11 16:25:42",
@@ -1032,12 +1034,14 @@
       "id": "oct11-bcb195fca7077e77",
       "kind": "request",
       "record": "releases/web-feedback-v0.34.1/handoff.json",
-      "status": "implemented_pending_public_toy",
-      "note": "用户指出默认开始/继续即基地防守；已解释旧银行对战区别，并询问是否按模式独立开始/继续菜单。",
+      "status": "implemented_pending_reply",
+      "note": "旧银行玩法已作为独立模式恢复，正式Toy实测升级银行成功；与战地并存，每局独立只保存战绩。",
       "fixed_in": "web-bank-restore-v0.35.0",
       "user_decision": "恢复独立银行塔防模式，上线后回复",
       "reply_text": "带升级银行的旧玩法已经恢复成独立模式了！主菜单选择「银行塔防对战」即可进入，银行升级、买兵和建造都保留了，战地模式也还在。",
-      "reply_status": "pending_account_lock"
+      "reply_status": "pending_account_lock",
+      "website_status": "deployed_verified",
+      "toy_status": "published"
     },
     {
       "date": "2026-10-11 09:34:57",
