@@ -11,13 +11,19 @@ cat .cursor/rules/*.mdc        # 全量；或按下方索引只读与本次任�
 
 ## 规则索引（.cursor/rules/）
 
-流程与部署（几乎每次都适用）：`game-release-cadence`、`auto-commit-push`、`git-sync-before-work`、`verify-static-deploy`、`vps-ssh-ops`、`html-utf8-encoding`、`no-scratch-leftovers`、`windows-host`、`windows-log-utf8`
+流程与部署（几乎每次都适用）：`game-release-cadence`、`game-privacy`、`auto-commit-push`、`git-sync-before-work`、`verify-static-deploy`、`vps-ssh-ops`、`html-utf8-encoding`、`no-scratch-leftovers`、`windows-host`、`windows-log-utf8`
 
 全站 UI 与文案：`no-tailwind`、`tool-ui-globals`、`i18n-bilingual`、`site-stats-zh-labels`、`list-pagination`、`no-sitewide-cache-bust`、`shared-js-helpers`、`timezone-utc-cn`
 
 图像与生成类：`image-upload-compress`、`input-image-square`、`result-image-gallery`、`i2i-keep-aspect`、`wechat-image-download`、`tool-hub-badges`
 
 服务端与设备：`comfyui-api-restart`、`home-pc-admin-ui`、`home-pc-media-pipeline`
+
+## 游戏内永久禁止作者网站跳转与网站账号登录（用户2026-10-11）
+
+适用于所有现有及以后制作的游戏、所有渠道，包括游戏在网站自身运行时。游戏内不得通过菜单、存档、返回游戏列表、报错回退、联机邀请、分享或其他入口跳转到作者网站 `zhengxiaohui.cn` 及其子域名、替代域名；不得用重定向、二维码、复制网址或内嵌网页绕过。不得收集网站账号的手机号／邮箱和密码，不得重新接入网站注册、登录、账号令牌或作者服务器账号云存档。用户原因：网站需要登录，游戏导流过去有被平台认定收集用户信息的风险；这是用户的产品约束，不把该判断扩写成所有平台的统一审核结论。
+
+允许玩家主动点击「作者B站主页」打开 `https://space.bilibili.com/16214353`，Toy 内优先用官方跳转能力；不自动跳转、不与游玩或奖励绑定。云存档只采用对应平台的官方能力，能力不可用时保持本地存档和文件备份，不回退到网站登录。当前建议保留 Toy 官方云档；其他平台按实际需要另行接入，不因记录本规则自动新增接入或发布 TapTap。详见 `.cursor/rules/game-privacy.mdc`，每次游戏发布前检查实际包体与可触发路径。
 
 ## 网站 + Toy 实时发布，取消所有定时任务（用户2026-10-10最新指令）
 
