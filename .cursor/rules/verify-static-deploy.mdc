@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 主站静态部署：push ≠ 上线
 
-游戏运行改动遵循 `game-release-cadence.mdc`：所有已完成并通过验证的代码立即发布网站；仅用户单独要求审核或限制发布时才暂停。其他渠道及原反馈结果回复统一22点批次，网站仍须完整部署核验。
+游戏运行改动遵循 `game-release-cadence.mdc`：所有已完成并通过验证的代码立即发布网站；仅用户单独要求审核或限制发布时才暂停。网站仍须完整部署核验；Toy按共享规则实时提交，简介/公告按 bili-game-update 的按需/累计门槛判断，原反馈回复按用户指示处理，不再有22点或其他定时批次。
 
 `zhengxiaohui.cn` 静态文件在 VPS **`/var/www/toolbasecamp`**，靠 GitHub Actions `rsync public/`。  
 **git push 成功只表示 GitHub 有新代码**；Actions 失败/卡住时，线上仍是旧 HTML/JS（曾导致改名后侧栏仍显示「文字成片」）。
