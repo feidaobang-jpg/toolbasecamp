@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/base.css?v=nosTW1">
     <link rel="stylesheet" href="css/site-shell.css?v=nosTW1">
     <link rel="stylesheet" href="css/docs/docs-common.css?v=nosTW1">
-    <link rel="stylesheet" href="css/game-vote.css?v=wish-fulfilled1">
+    <link rel="stylesheet" href="css/game-vote.css?v=starship-mode1">
 </head>
 <body id="top" class="site-page site-page--hub">
     <header class="site-header site-header--shrink">
@@ -44,11 +44,24 @@
                 <p id="gv-totals" class="gv-totals"></p>
 
                 <nav class="action-row gv-section-nav" aria-label="投票分区">
+                    <a class="tb-btn" href="#gv-starship-modes" data-i18n="gameVote.modeNav">虫潮模式投票</a>
                     <a class="tb-btn" href="#gv-original-games" data-i18n="gameVote.originalNav">自研游戏投票</a>
                     <a class="tb-btn" href="#gv-compose" data-i18n="gameVote.composeNav">填写愿望</a>
                     <a class="tb-btn" href="#gv-wish-board" data-i18n="gameVote.wishNav">愿望投票</a>
                 </nav>
                 <div id="gv-boards">
+                    <section id="gv-starship-modes" class="gv-card gv-mode-card" aria-labelledby="gv-mode-title">
+                        <h3 id="gv-mode-title" data-i18n="gameVote.modeTitle">虫潮围城，你最希望下一步重点完善哪个模式？</h3>
+                        <p class="gv-desc" data-i18n="gameVote.modeDesc">不用登录，每台设备选一个，可直接改投或撤回，不占用游戏票和愿望票。票数结合具体反馈与开发成本参考，不承诺最高票必做。</p>
+                        <p id="gv-mode-summary" class="gv-desc" data-i18n="gameVote.modeLoading">正在加载模式投票…</p>
+                        <ul id="gv-mode-list" class="gv-list" aria-labelledby="gv-mode-title"></ul>
+                        <p id="gv-mode-msg" class="gv-msg" role="status" aria-live="polite"></p>
+                        <div class="action-row gv-mode-actions">
+                            <button type="button" id="gv-mode-refresh" class="tb-btn" data-i18n="gameVote.modeRefresh">刷新模式票数</button>
+                            <a class="tb-btn" href="#gv-compose" data-i18n="gameVote.modeFeedback">写下具体玩法建议</a>
+                        </div>
+                        <p class="gv-tip" data-i18n="gameVote.modeDeviceNote">按当前浏览器的本机标识计票，设备数不等于独立玩家人数。清除浏览器数据或更换设备后，原选择无法在这里找回。</p>
+                    </section>
                     <section id="gv-original-games" class="gv-card">
                         <h3 data-i18n="gameVote.boardTitle">自研原创 · 最爱玩哪个</h3>
                         <p class="gv-desc" data-i18n="gameVote.boardDesc">已上线自研游戏的得票数，右侧括号里是近 7 天新增。</p>
@@ -113,7 +126,7 @@
         </main>
     </div>
 
-    <script src="js/locales/zh-CN.js?v=wish-fulfilled1"></script>
+    <script src="js/locales/zh-CN.js?v=starship-mode1"></script>
     <script src="js/i18n.js?v=nosTW1"></script>
     <script src="js/astra-games-catalog.js?v=cfb7f37d20"></script>
     <script src="js/config.js?v=journey-hidden1"></script>
@@ -121,5 +134,6 @@
     <script src="js/game-vote-client.js?v=wish-fulfilled1"></script>
     <script src="js/tb-pager.js?v=1"></script>
     <script src="js/game-vote.js?v=wish-fulfilled1"></script>
+    <script src="js/starship-mode-vote.js?v=starship-mode1"></script>
 </body>
 </html>
