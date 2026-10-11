@@ -1,5 +1,13 @@
 {
   "game_id": "chongchao-qianshao",
+  "toy_cover": {
+    "status": "published",
+    "record": "releases/toy-cover-20261011/release.json",
+    "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/poster_24960.jpg",
+    "icon_url": "https://i0.hdslb.com/bfs/static/toy/app/chongchao-qianshao/icon_24960_upload",
+    "method": "AI-edited promotional artwork based on a current real gameplay screenshot",
+    "game_package_changed": false
+  },
   "name": "虫潮围城",
   "engine": "Three.js r152",
   "current_version": "web-fps-rules-v0.34.0-privacy1",
