@@ -13,42 +13,42 @@
       "manifest_file": "publish/bilibili-zh/publish.json",
       "ready_to_upload": false,
       "blocking_issues": [
-        "人工审片待确认（画面、配音、字幕）",
-        "主观听审未运行：请在审片时核验人声清晰度与混音",
-        "实际账号投稿入口、分类及平台声明待发布时核对"
+        "等待共用B站写锁释放"
       ],
-      "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef"
+      "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "publication_status": "blocked_account_write_lock",
+      "upload_completed": false
     },
     {
       "variant_id": "douyin-zh",
       "manifest_file": "publish/douyin-zh/publish.json",
-      "ready_to_upload": false,
-      "blocking_issues": [
-        "人工审片待确认（画面、配音、字幕）",
-        "主观听审未运行：请在审片时核验人声清晰度与混音",
-        "实际账号投稿入口、分类及平台声明待发布时核对"
-      ],
-      "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef"
+      "ready_to_upload": true,
+      "blocking_issues": [],
+      "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+      "publication_status": "published",
+      "upload_completed": true
     },
     {
       "variant_id": "youtube-zh",
       "manifest_file": "publish/youtube-zh/publish.json",
-      "ready_to_upload": false,
-      "blocking_issues": [
-        "人工审片待确认（画面、配音、字幕）",
-        "主观听审未运行：请在审片时核验人声清晰度与混音",
-        "实际账号投稿入口、分类及平台声明待发布时核对"
-      ],
-      "video_sha256": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4"
+      "ready_to_upload": true,
+      "blocking_issues": [],
+      "video_sha256": "ce31cf73a3c517c20e367acb30ac07558df5c42c19a8257076e69a8c93f8e1e4",
+      "publication_status": "published",
+      "upload_completed": true
     }
   ],
   "ready_to_upload": false,
-  "production_stage": "completed_pending_human_review",
+  "production_stage": "completed_approved",
   "human_review": {
-    "status": "pending",
-    "approved_variants": [],
-    "user_statement": null,
-    "approved_at": null,
+    "status": "approved",
+    "approved_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "user_statement": "发布",
+    "approved_at": "2026-10-10T23:11:00.747760+00:00",
     "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
     "reviewed_media_required": {
       "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
@@ -58,12 +58,16 @@
     "reviewed_subtitles_required": {
       "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
       "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
-    }
+    },
+    "approval_source": "direct user message in this chat",
+    "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
   },
   "post_publication": {
     "x": {
       "status": "skipped_paid_capability_not_requested",
       "policy": "No paid X service; no X action in this production task"
     }
-  }
+  },
+  "publication_stage": "partially_published_bilibili_blocked",
+  "updated_at": "2026-10-11T02:15:52.630508+00:00"
 }

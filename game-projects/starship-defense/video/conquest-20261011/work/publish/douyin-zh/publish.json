@@ -25,7 +25,7 @@
     "AI"
   ],
   "description_file": "../../../final/douyin-zh/投稿文案.txt",
-  "cover_file": "../../../final/douyin-zh/cover-horizontal-16x9.jpg",
+  "cover_file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
   "cover_files": {
     "horizontal": {
       "file": "../../../final/douyin-zh/cover-horizontal-16x9.jpg",
@@ -33,6 +33,13 @@
       "height": 1080,
       "purpose": "横屏封面 16:9",
       "sha256": "e36f0d966e2c63a1418eded2e7d8b268351456a7c0dec17814945a73c0ef0cb0"
+    },
+    "uploaded_horizontal": {
+      "file": "../../../final/bilibili-zh/cover-home-4x3.jpg",
+      "width": 1440,
+      "height": 1080,
+      "purpose": "实际上传横屏4:3，自同步竖屏3:4并调整裁剪",
+      "sha256": "1481e18603f3c44dfd20cfc295cadf1a73b115974f6742ae43548cbf32e01530"
     }
   },
   "cover_text": [
@@ -41,29 +48,29 @@
     "杀敌更少，也能赢？"
   ],
   "cover_selection_source": "../../edit/covers/cover-source.json",
-  "cover_upload_mode": "custom_image_prepared_pending_live_entry",
+  "cover_upload_mode": "custom_image_uploaded",
   "subtitle_mode": "burned_in",
   "subtitles": [],
   "category": null,
-  "copyright_type": "original_self_recorded_gameplay_pending_account_confirmation",
+  "copyright_type": "original_self_recorded_gameplay",
   "credits_attachment": "credits.txt",
   "disclosures": {
-    "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload"
+    "synthetic_narration": "Microsoft Edge TTS Yunxi; applicable platform declaration to verify at upload",
+    "platform_declaration": "内容由AI生成"
   },
-  "platform_requirements_checked_at": "2026-10-10T21:35:02.322312+00:00",
+  "platform_requirements_checked_at": "2026-10-11T02:15:52.630508+00:00",
   "platform_sources": [],
-  "unverified_fields": [
-    "account login",
-    "current category options",
-    "platform synthetic-content declaration",
-    "live cover upload control"
-  ],
+  "unverified_fields": [],
   "technical_preparation": "pass",
   "human_review": {
-    "status": "pending",
-    "approved_variants": [],
-    "user_statement": null,
-    "approved_at": null,
+    "status": "approved",
+    "approved_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "user_statement": "发布",
+    "approved_at": "2026-10-10T23:11:00.747760+00:00",
     "approval_event_id": "01a127a5-4cda-7690-9d07-873303243176-battlefield-video-20261011-human-review-v1",
     "reviewed_media_required": {
       "bilibili-zh": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
@@ -73,14 +80,52 @@
     "reviewed_subtitles_required": {
       "zh": "1fdfd12d4f6c511550864a7c720fa9796001e2c3d76c46af6a82fd9684fd5cf1",
       "en": "1f0333b69758779a68cbd7d0ff5767fc42eb66175303e77499cbfc797caa829a"
-    }
+    },
+    "approval_source": "direct user message in this chat",
+    "subjective_audio_review": "covered by user final review approval; model listening remains not-run"
   },
   "subjective_audio_listening": "not-run",
-  "blocking_issues": [
-    "人工审片待确认（画面、配音、字幕）",
-    "主观听审未运行：请在审片时核验人声清晰度与混音",
-    "实际账号投稿入口、分类及平台声明待发布时核对"
-  ],
-  "ready_to_upload": false,
-  "publication_status": "not_uploaded"
+  "blocking_issues": [],
+  "ready_to_upload": true,
+  "publication_status": "published",
+  "publication_result": {
+    "episode_id": "conquest-20261011",
+    "variant_id": "douyin-zh",
+    "task_id": "01a127a5-4cda-7690-9d07-873303243176-conquest-publish-20261011-01",
+    "account_id": "84261875244",
+    "display_name": "飞刀帮主",
+    "status": "published",
+    "platform_id": "7695187880532135178",
+    "url": "https://www.douyin.com/video/7695187880532135178",
+    "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+    "video_sha256": "25733511fcedbb7e76e9b32408c0269278200ece1a1acddd329e960b6f5241ef",
+    "human_review": {
+      "statement": "发布",
+      "scope": "bilibili-zh, douyin-zh, youtube-zh",
+      "confirmed_at": "2026-10-11"
+    },
+    "submitted_at_local": "2026-10-11 07:39",
+    "observed_status": "已发布；作品状态正常",
+    "public_verified": true,
+    "public_verified_at": "2026-10-11T02:15:52.630508+00:00",
+    "updated_at": "2026-10-11T02:15:52.630508+00:00",
+    "evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\douyin-published-manager.png",
+    "public_playback_evidence": "D:\\project\\toolbasecamp-artifacts\\conquest-video-20261011\\work\\qa\\publishing\\douyin-public-playback.png",
+    "public_video_duration_seconds": 110.549002,
+    "public_playback_observed_time_seconds": 101.845194,
+    "playback_paused_after_verification": true,
+    "ai_declaration": "内容由AI生成",
+    "cover_upload_mode": "custom_image_uploaded",
+    "uploaded_cover_file": "final/bilibili-zh/cover-home-4x3.jpg",
+    "uploaded_cover_sha256": "1481e18603f3c44dfd20cfc295cadf1a73b115974f6742ae43548cbf32e01530",
+    "cover_variants": [
+      "horizontal 4:3",
+      "vertical 3:4 with adjusted crop"
+    ],
+    "cover_detection": "通过；暂未发现封面低质问题",
+    "video_detection": "作品未见异常",
+    "platform_auto_summary_note": "平台自动章节摘要将工程兵误写为攻城兵；本人已发布标题、简介和成片仍为工程兵，未主动添加此摘要。"
+  },
+  "upload_completed": true,
+  "prepared_cover_file": "../../../final/douyin-zh/cover-horizontal-16x9.jpg"
 }
