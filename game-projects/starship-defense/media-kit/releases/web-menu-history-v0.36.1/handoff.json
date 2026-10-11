@@ -7,8 +7,8 @@
   "request": "用户要求游戏内可查看版本更新日志，并修复手机首页只露出一半且左右滑动的问题。",
   "build": {
     "id": "web-menu-history-v0.36.1",
-    "commit": null,
-    "dirty": true,
+    "commit": "ce3f7221bfee1dea8b31f82aa24ba076f8734137",
+    "dirty": false,
     "fingerprint": "dc512921c0c2509e6a9e6b173deddb30e8e13e69c43218019f6c44aa564068eb",
     "entrypoint": "public/html/game/starship-defense/index.html"
   },
@@ -63,7 +63,59 @@
       "after_media_ids": []
     }
   ],
-  "media": [],
+  "media": [
+    {
+      "id": "menu-toy-portrait",
+      "file": "captures/menu-toy-portrait.png",
+      "sha256": "1b497ab5462daded283493786611becd7d4a2497c10ed155bdd96ab2f657a74e",
+      "kind": "screenshot",
+      "version": "web-menu-history-v0.36.1",
+      "build_id": "web-menu-history-v0.36.1",
+      "capture_mode": "realtime-automation",
+      "description": "官方Toy预览390×844竖屏容器完整首页；桌面浏览器模拟，非手机真机",
+      "width": 420,
+      "height": 960,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "menu-toy-landscape",
+      "file": "captures/menu-toy-landscape.png",
+      "sha256": "31896510e0c549605edbc012f1a70ce86d9f6a7ac44759d0182c595176be5a47",
+      "kind": "screenshot",
+      "version": "web-menu-history-v0.36.1",
+      "build_id": "web-menu-history-v0.36.1",
+      "capture_mode": "realtime-automation",
+      "description": "官方Toy预览844×346横屏容器完整首页；桌面浏览器模拟，非手机真机",
+      "width": 870,
+      "height": 450,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "menu-toy-update-log",
+      "file": "captures/menu-toy-update-log.png",
+      "sha256": "91e6441e70cf6059f48cd030a58d2f92d5602e279c7baa1d302a7c2207706abd",
+      "kind": "screenshot",
+      "version": "web-menu-history-v0.36.1",
+      "build_id": "web-menu-history-v0.36.1",
+      "capture_mode": "realtime-automation",
+      "description": "官方Toy预览电脑键鼠布局的版本更新日志；桌面浏览器模拟，非手机真机",
+      "width": 1128,
+      "height": 730,
+      "duration_seconds": null,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
   "qa": {
     "method": "Codex CUA浏览器点击本地verify-menu-viewport.html回归按钮；测试夹具经qa=1访问本地QA接口。截图与手动点击检查使用真实浏览器。",
     "record": "qa.json",
@@ -93,7 +145,38 @@
     "unverified": [
       "B站App真机触控与手机性能"
     ],
-    "save_regressions": 26
+    "save_regressions": 26,
+    "toy_preview": {
+      "preview": "https://www.bilibili.com/toy/preview/preview_hr29eSZf/index.html",
+      "portrait": {
+        "height": 444,
+        "scrollHeight": 444,
+        "scrollWidth": 960,
+        "version": "v0.36.1",
+        "width": 960
+      },
+      "desktop": {
+        "height": 541,
+        "scrollHeight": 541,
+        "scrollWidth": 960,
+        "version": "v0.36.1",
+        "width": 960
+      },
+      "landscape": {
+        "viewport": [
+          844,
+          346
+        ],
+        "height": 394,
+        "scrollHeight": 394,
+        "width": 960,
+        "scrollWidth": 960
+      },
+      "log_end_scroll": true,
+      "bank_pause_retained": true,
+      "method": "CUA browser controls inside official Toy shell; desktop simulation only"
+    },
+    "doctor": "passed; only unchanged advisory about unhashed asset filenames"
   },
   "readiness": {
     "overview": "partial",
@@ -103,16 +186,62 @@
     ]
   },
   "website": {
-    "status": "pending"
+    "status": "deployed_verified",
+    "version": "web-menu-history-v0.36.1",
+    "source_commit": "ce3f7221bfee1dea8b31f82aa24ba076f8734137",
+    "verified_at": "2026-10-11T12:18:20.010158+00:00",
+    "runtime_sha256": "dc512921c0c2509e6a9e6b173deddb30e8e13e69c43218019f6c44aa564068eb",
+    "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+    "checks": {
+      "at": "2026-10-11T12:18:20.010158+00:00",
+      "checks": [
+        {
+          "file": "index.html",
+          "status": 200,
+          "sha256": "b2c46bc29081ee2c39fb22672b3c7d3cab5239965fe0d5a11a999cfac9f6c04e",
+          "matches_source": false,
+          "contains_log": true
+        },
+        {
+          "file": "game.compat.js",
+          "status": 200,
+          "sha256": "dc512921c0c2509e6a9e6b173deddb30e8e13e69c43218019f6c44aa564068eb",
+          "matches_source": true,
+          "contains_log": null
+        },
+        {
+          "file": "update-history.js",
+          "status": 200,
+          "sha256": "0312aadc25234637eae0b990c54f7f6c96c10cb2b142d11363a177f7c374ba12",
+          "matches_source": true,
+          "contains_log": null
+        }
+      ],
+      "ok": true,
+      "index_matches_except_deploy_cache_versions": true
+    }
   },
   "toy": {
     "id": "38678478981120",
-    "status": "pending"
+    "status": "auditing",
+    "version": "web-menu-history-v0.36.1",
+    "zip_sha256": "4c7df7de1bdf2ec02decb4081e86250cddafb22d4ce5f50512ab974eec82e94f",
+    "preview_tested_url": "https://www.bilibili.com/toy/preview/preview_hr29eSZf/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Kx5OGRMh/index.html",
+    "submitted_at": "2026-10-11T12:21:44.927163+00:00",
+    "readback": {
+      "status": "auditing",
+      "mtime": 1791721304
+    },
+    "previous_public_version": "web-zerg-v0.36.0",
+    "privacy": "No author-site navigation, website account fields or website cloud-save requests. Existing game WebSocket communications preserved."
   },
   "tap_tap": "not_requested_not_submitted",
   "bilibili": {
     "decision": "merge_with_pending",
-    "reason": "本版普通可见更新记录待合并；既有银行恢复与虫族模式重做说明立即更新条件仍成立，但B站账号锁由千问视频发布任务持有。"
+    "reason": "原千问任务已由用户手动停止，新Codex视频接手任务正在持有B站账号锁。本版小改可合并入既有银行恢复/虫族重做待更新说明。",
+    "status": "pending_active_video_task_lock",
+    "lock_owner_task": "01a12adb-b454-7aa3-a23f-b58ddb47dec7-work1"
   },
   "resume": {
     "worktree": "C:\\Users\\37818\\.codex\\worktrees\\bili-feedback-20261011\\toolbasecamp",
