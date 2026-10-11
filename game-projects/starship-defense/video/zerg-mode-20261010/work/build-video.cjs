@@ -2,8 +2,9 @@
 // 用法：node build-video.cjs            （读 audio/segments.json + audio/mp3/*.mp3，输出 work/edit/seg-*.mp4 与 final-zh.mp4）
 //       node build-video.cjs --clean    （同一时间线但无烧录字幕，供 YouTube 侧挂字幕版：edit/final-youtube-clean.mp4）
 const fs=require('fs'),path=require('path'),{execSync}=require('child_process');
-const W=__dirname, CAP=path.join(W,'capture','zerg-run7');
-const CLIP=path.join(CAP,'clip.mp4'), GAMEWAV=path.join(CAP,'game-audio.wav');
+const W=__dirname, CAPROOT=path.join(W,'capture'), DEF_TAKE='zerg-run7';
+const CAPS={}; // take -> {CLIP,GAMEWAV} 按分段解析（segments.json 每段可带 take 字段，缺省 run7）
+const cap=take=>{if(!CAPS[take]){const d=path.join(CAPROOT,take);CAPS[take]={CLIP:path.join(d,'clip.mp4'),GAMEWAV:path.join(d,'game-audio.wav')};}return CAPS[take];};
 const MP3=path.join(W,'audio','mp3'), ED=path.join(W,'edit');
 fs.mkdirSync(ED,{recursive:true});
 const cfg=JSON.parse(fs.readFileSync(path.join(W,'audio','segments.json'),'utf8'));
@@ -34,7 +35,7 @@ for(const s of cfg.segments){
       const parts=chunk(s.text);const tot=parts.reduce((x,p)=>x+p.length,0)||1;let acc=a;
       parts.forEach(p=>{const d=(b-a)*p.length/tot;subs.push({a:acc,b:acc+d,t:p});acc+=d;});}
   }
-  plan.push({id:s.id,src:s.src,narr_s:+nd.toFixed(3),segDur:vDur,start,subs,text:s.text});
+  plan.push({id:s.id,src:s.src,take:s.take||DEF_TAKE,narr_s:+nd.toFixed(3),segDur:vDur,start,subs,text:s.text});
 }
 fs.writeFileSync(path.join(ED,'timeline.json'),JSON.stringify({fps:30,total:+tl.toFixed(3),segments:plan},null,2));
 console.log('TIMELINE total',tl.toFixed(1)+'s');
@@ -46,6 +47,7 @@ const CLEAN=process.argv.includes('--clean');
 const SEGDIR=path.join(ED,CLEAN?'clean':'.'); fs.mkdirSync(SEGDIR,{recursive:true});
 plan.forEach((s,i)=>{
   const [a,b]=s.src;
+  const {CLIP,GAMEWAV}=cap(s.take||DEF_TAKE);
   const srt=path.join(ED,`seg-${i}-${s.id}.srt`);
   fs.writeFileSync(srt,s.subs.map((x,n)=>`${n+1}\n${srtTime(x.a)} --> ${srtTime(x.b)}\n${x.t}\n`).join('\n'),'utf8');
   const out=path.join(SEGDIR,`seg-${i}-${s.id}.mp4`);
