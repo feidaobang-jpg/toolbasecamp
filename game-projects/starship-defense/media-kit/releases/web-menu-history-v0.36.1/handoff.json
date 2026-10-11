@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-menu-history-v0.36.1",
+  "base_version": "web-zerg-v0.36.0",
+  "created_at": "2026-10-11T12:12:39.374115+00:00",
+  "request": "用户要求游戏内可查看版本更新日志，并修复手机首页只露出一半且左右滑动的问题。",
+  "build": {
+    "id": "web-menu-history-v0.36.1",
+    "commit": null,
+    "dirty": true,
+    "fingerprint": "ce7af95618e0c17331877279cf9656075f868829e451a002ae31413a675a0d78",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "menu-partitions",
+      "description": "横屏首页分为基地防守设置、独立模式与底部设置区",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-menu"
+      ]
+    },
+    {
+      "id": "local-update-history",
+      "description": "主菜单与暂停菜单可查看随包提供的最近版本日志",
+      "status": "implemented",
+      "evidence_ids": [
+        "qa-log"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "menu-layout",
+      "feature_ids": [
+        "menu-partitions"
+      ],
+      "before": "手机旋转后的菜单纵向内容远超可视高度，实际表现为只露出一部分和横向滑动。",
+      "after": "首页显示选人、战役难度、开始/继续及6个模式；长说明独立放入玩法面板。",
+      "verification": "42/42 browser fixture checks passed"
+    },
+    {
+      "id": "update-log",
+      "feature_ids": [
+        "local-update-history"
+      ],
+      "before": "游戏内没有版本号与更新日志入口。",
+      "after": "首页显示v0.36.1，主菜单和暂停菜单可打开含版本、日期、变化的日志，支持触屏滚动、键盘翻页、关闭返回焦点。",
+      "verification": "passed"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "portrait-menu-half",
+      "found_version": "web-zerg-v0.36.0",
+      "status": "fixed",
+      "reproduction": "手机触屏模式，390×844竖屏容器打开首页。",
+      "observed": "旧菜单scrollHeight1252，clientHeight444，旋转90度使逻辑纵向滚动映射为物理横向滑动。",
+      "fix": "缩短首页并采用两列分区；详细说明独立面板；保留44 CSS px触控目标，限制横向溢出。",
+      "retest": "九个尺寸首页覆盖视口、按钮可达，常用尺寸无滚动溢出。",
+      "before_media_ids": [],
+      "after_media_ids": []
+    }
+  ],
+  "media": [],
+  "qa": {
+    "method": "Codex CUA浏览器点击本地verify-menu-viewport.html回归按钮；测试夹具经qa=1访问本地QA接口。截图与手动点击检查使用真实浏览器。",
+    "record": "qa.json",
+    "passed": 42,
+    "total": 42,
+    "viewports": [
+      "390×844",
+      "360×780",
+      "375×667",
+      "390×700",
+      "844×390",
+      "844×346",
+      "800×390",
+      "740×360",
+      "568×320",
+      "1100×620 desktop"
+    ],
+    "physical_mobile": false,
+    "checks": [
+      "首页无横向溢出，舞台覆盖视口且不越界，常用尺寸全部按钮可见",
+      "主菜单日志4版、End翻到底、Escape关闭回入口",
+      "触屏玩法说明隐藏键盘段落",
+      "暂停银行对局查看日志不丢进度、不自动继续",
+      "查看日志和操作布局切换保留sst_save_存档"
+    ],
+    "unverified": [
+      "B站App真机触控与手机性能"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "没有录制版本更新视频；未作B站App真机验收"
+    ]
+  },
+  "website": {
+    "status": "pending"
+  },
+  "toy": {
+    "id": "38678478981120",
+    "status": "pending"
+  },
+  "tap_tap": "not_requested_not_submitted",
+  "bilibili": {
+    "decision": "merge_with_pending",
+    "reason": "本版普通可见更新记录待合并；既有银行恢复与虫族模式重做说明立即更新条件仍成立，但B站账号锁由千问视频发布任务持有。"
+  },
+  "resume": {
+    "worktree": "C:\\Users\\37818\\.codex\\worktrees\\bili-feedback-20261011\\toolbasecamp",
+    "branch": "codex/bili-feedback-20261011",
+    "original_feedback": "releases/web-bank-restore-v0.35.0/handoff.json",
+    "pending_replies": 12
+  }
+}

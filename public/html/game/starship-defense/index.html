@@ -358,6 +358,54 @@ button::before,button::after{content:none!important}
 #stage.bank-mode #bfFlags,#stage.bank-mode #vH{display:none!important}
 #stage.bank-mode #vsPanel .vs-lane{display:flex}
 #stage.bank-mode #vsEco{max-width:250px}
+
+/* The title page fits the logical landscape, including a portrait Toy WebView. */
+html,body{overscroll-behavior:none}
+#stage{overflow:hidden}
+.menu{overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin}
+.menu>*{flex-shrink:0;max-width:100%;min-width:0}
+.menu .btnRow{max-width:100%;min-width:0}
+#menuMain{padding:10px 24px;gap:6px}
+.mainHeader{display:flex;align-items:center;justify-content:space-between;width:100%;padding-right:90px;gap:12px}
+#menuMain .mainHeader h1{margin:0;font-size:30px;letter-spacing:3px}
+#gameVersion{font-size:13px;color:#bcd5e4;white-space:nowrap}
+.mainColumns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;width:100%}
+.mainColumns section{min-width:0}
+#menuMain h2{margin:3px 0;font-size:16px;line-height:1.3}
+#menuMain .btnRow{margin:3px 0}
+#menuMain #classRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#menuMain .classCard{width:auto;min-width:0;padding:6px;font-size:10px;line-height:1.35}
+#menuMain .classCard b{display:block;font-size:17px}
+.classRole{display:none}
+#menuMain #startRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#menuMain #startRow .coop-entry{word-break:keep-all;overflow-wrap:normal}
+#menuMain #modeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#menuMain .mbtn,#menuMain .coop-entry{margin:0;min-width:0;min-height:44px;padding:6px 8px;font-size:13px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
+#menuMain .difficulty-options{margin:3px 0;gap:8px}
+#menuMain .difficulty-options .tb-btn{min-height:44px;padding:6px 14px;font-size:15px}
+#menuMain .small{font-size:11px;line-height:1.5;max-width:100%;overflow-wrap:anywhere}
+#menuMain #difficultyHint{display:none}
+.mainModeNote{margin-top:8px}
+.mainSettings{width:100%;margin-top:auto}
+#menuMain #settingsRow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+#menuMain #settingsRow a{width:auto;text-align:center;display:flex;align-items:center;justify-content:center}
+.touch-mode #menuMain .classStats{display:none}
+.touch-mode #menuMain .classRole{display:block;margin-top:4px;font-size:12px}
+.touch-mode #menuMain .classCard{min-height:var(--corner-height,44px)}
+.touch-mode #menuMain .mbtn,.touch-mode #menuMain .coop-entry,.touch-mode #menuMain .difficulty-options .tb-btn{min-height:var(--corner-height,44px);font-size:14px}
+.infoPanel{width:740px;max-width:94%;max-height:90%;padding:14px 18px;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin}
+.infoHeader{position:sticky;top:-14px;margin:-14px -18px 10px;padding:14px 44px 10px 18px;background:#132432;z-index:2}
+.infoHeader h3{margin:0;text-align:left}
+.updateEntry{border-top:1px solid #4b6577;margin-top:12px;padding-top:10px;line-height:1.65}
+.updateEntry h4{font-size:16px;color:#ffda8b;margin-bottom:4px}
+.updateEntry time{font-size:12px;color:#bcd5e4}
+.updateEntry ul{padding-left:22px;font-size:14px}
+#helpPanel .small{max-width:100%;font-size:13px;overflow-wrap:anywhere}
+.infoHeader .closeX{width:var(--corner-height,44px);min-height:var(--corner-height,44px);top:4px}
+.helpText p{margin:10px 0;line-height:1.7}
+.touch-help{display:none}.touch-mode .touch-help{display:block}.touch-mode .desktop-help{display:none}
+.touch-mode #menuPause{justify-content:flex-start}
+
 </style>
 </head>
 <body>
@@ -461,13 +509,14 @@ button::before,button::after{content:none!important}
   </section>
   <!-- 开始菜单 -->
   <div id="menuMain" class="overlay menu">
-    <h1>虫潮围城</h1>
-    <div class="subtitle">守 卫 基 地 · 星 际 虫 潮 防 线</div>
-    <h2>选择前哨守卫</h2>
+    <header class="mainHeader"><h1>虫潮围城</h1><span id="gameVersion" aria-label="当前游戏版本"></span></header>
+    <div class="mainColumns">
+      <section class="mainCampaign" aria-label="基地防守设置">
+        <h2>选择前哨守卫</h2>
     <div class="btnRow" id="classRow">
-      <div class="classCard sel" tabindex="0" role="button" data-c="gunner"><b>机枪兵</b><br>机枪伤害 +25%<br>受到伤害 −15%<br>生命 120 · 持续守线</div>
-      <div class="classCard" tabindex="0" role="button" data-c="rifle"><b>火枪兵</b><br>霰弹伤害 +30%<br>移动速度 10.5<br>生命 100 · 近战突围</div>
-      <div class="classCard" tabindex="0" role="button" data-c="medic"><b>医疗兵</b><br>自身每秒回血 4<br>12 米内队友每秒回血 4<br>生命 90 · 小队续航</div>
+      <div class="classCard sel" tabindex="0" role="button" data-c="gunner"><b>机枪兵</b><span class="classStats"><br>机枪伤害 +25%<br>受到伤害 −15%<br>生命 120 · 持续守线</span><span class="classRole">持续守线</span></div>
+      <div class="classCard" tabindex="0" role="button" data-c="rifle"><b>火枪兵</b><span class="classStats"><br>霰弹伤害 +30%<br>移动速度 10.5<br>生命 100 · 近战突围</span><span class="classRole">近战突围</span></div>
+      <div class="classCard" tabindex="0" role="button" data-c="medic"><b>医疗兵</b><span class="classStats"><br>自身每秒回血 4<br>12 米内队友每秒回血 4<br>生命 90 · 小队续航</span><span class="classRole">小队续航</span></div>
     </div>
     <h2 id="difficultyTitle">战役难度</h2>
     <div class="rescue-actions difficulty-options" role="group" aria-labelledby="difficultyTitle">
@@ -475,38 +524,54 @@ button::before,button::after{content:none!important}
       <button type="button" class="tb-btn" data-campaign-difficulty="normal" aria-pressed="true">普通</button>
       <button type="button" class="tb-btn" data-campaign-difficulty="hard" aria-pressed="false">困难</button>
     </div>
-    <p id="saveNotice" class="small" role="status"></p>
-    <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
-    <h2>基地防守 · 开始与继续</h2>
+        <p id="saveNotice" class="small" role="status"></p>
+        <p class="small" id="difficultyHint" role="status">普通保留现有守线节奏。仅用于新游戏；继续和读档沿用存档难度。</p>
+        <h2>基地防守 · 开始与继续</h2>
     <div class="btnRow" id="startRow">
       <button class="mbtn" id="btnContinue">▶ 继续上次</button>
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
     </div>
-    <h2>其他玩法 · 实验内容</h2>
+      </section>
+      <section class="mainModes" aria-label="其他玩法">
+        <h2>其他玩法 · 独立模式</h2>
     <div class="btnRow" id="modeRow">
       <button class="mbtn" id="btnBankVersus">🏦 银行塔防对战</button>
       <button class="mbtn" id="btnVersus">⚑ 战地模式 · 据点争夺</button>
       <button class="mbtn" id="btnTest">🧪 自由测试 · 无限资源 T</button>
     </div>
-    <h2>设置与存档</h2>
+        <p class="small mainModeNote">银行塔防、战地、房车和虫族各有独立入口；「继续上次」用于基地防守。</p>
+      </section>
+    </div>
+    <nav class="mainSettings" aria-label="设置、存档与游戏说明">
     <div class="btnRow" id="settingsRow">
       <button class="mbtn" id="btnLoadMenu">📂 读取存档</button>
-      <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复 / 作者</button>
+      <button class="mbtn" id="btnPlatformMenu">☁ 存档与恢复</button>
       <button class="mbtn" id="keysMenu">⌨ 操作设置</button>
       <a class="mbtn" data-author-home href="https://space.bilibili.com/16214353" target="_blank" rel="noopener noreferrer">作者B站主页</a>
       <button class="mbtn" id="daylightMain">地表：白天</button>
+      <button class="mbtn" id="updatesMenu">📋 更新日志</button>
+      <button class="mbtn" id="helpMenu">❔ 玩法说明</button>
     </div>
-    <div class="small">
-      地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，无需按键、不耗电。<br>
-      电脑默认：WASD / 方向键移动 · 自动寻敌并攻击 · 按住画面用鼠标拖动转视角 · 按住Shift跑步 · 空格跳跃 · 操作设置可选纯键盘、手动瞄准、按住/切换射击及改键<br>
-      按住 Shift / 手机跑步键持续加速（无冷却）· K/空格 跳跃（落地后可再次起跳，无冷却）· I 互动（开关城门、上下载具）· H 医疗包 · U 无限手雷（无需补充，每3秒一次）· 直升机 Y 升 / H 降 · 1-6 / X / 滚轮 换枪 · O 商店 · L 建造 · R 开战 · P/Esc 暂停<br>
-      手机：左摇杆移动，右侧空白处拖动转视角；「切换视角」在各第三人称预设与第一/第三人称间循环，无需记键盘；商店、建造、换枪、医疗、手雷都有对应按钮<br>
-      菜单和面板：方向键 / WASD / Tab 选择（黄色框），J / 回车确认，K / Esc 返回，全程不用鼠标<br>
-      玩法：打怪攒钱 → 买枪强化、造炮塔、雇最多12名队友 → 开战守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。<br>
-      母皇：早杀可减少本章后续虫潮 35%，每次通关额外领补给；晚杀保留更多虫群掉落。菜单可「队友集合 / 载具救援」，各冷却 20 秒，保留血量；在虫洞内救援时载具停在洞口。<br>
-      城门：玩家和队友靠近自动开门，队友通过后自动关门，I 手动开关 · 走远了看小地图和基地方向提示找家 · 载具被打坏下关自动修好 · 进度自动保存<br>新功能：队友拾金币与血包、商店「队友」升级武器和护甲、最多 64 座设施、9 个副本随章节解锁，副本三档难度分别领奖（独立于战役难度）；右侧「菜单」或 P/Esc 暂停
-    </div>
+    </nav>
   </div>
+  <section id="updatesPanel" class="panel hidden infoPanel" role="dialog" aria-modal="true" aria-labelledby="updatesTitle">
+    <header class="infoHeader"><h3 id="updatesTitle">📋 更新日志</h3><button id="updatesClose" class="closeX" aria-label="关闭更新日志">×</button></header>
+    <p class="small" id="updatesVersion"></p><div id="updatesList" tabindex="0" role="region" aria-label="更新内容"></div>
+  </section>
+  <section id="helpPanel" class="panel hidden infoPanel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <header class="infoHeader"><h3 id="helpTitle">❔ 玩法说明</h3><button id="helpClose" class="closeX" aria-label="关闭玩法说明">×</button></header>
+    <div class="small helpText" tabindex="0" role="region" aria-label="玩法内容">
+      <p>前哨守卫：机枪兵生命 120、机枪伤害 +25%、受到伤害 −15%；火枪兵生命 100、霰弹伤害 +30%、移动速度 10.5；医疗兵生命 90，自身与 12 米内队友每秒恢复 4 点生命。</p>
+      <p>基地防守：打怪攒钱，买枪强化、造炮塔、雇最多12名队友，守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。难度只用于新游戏，继续和读档沿用存档难度。</p>
+      <p class="desktop-help">电脑：WASD / 方向键移动，Shift 跑步，鼠标拖动或 Q/E 转视角，C 切换视角，J 射击，K/空格跳跃，I 互动，H 医疗，U 手雷，O 商店，L 建造，R 开战，P/Esc 暂停。菜单可用方向键、Tab 和回车操作。</p>
+      <p class="touch-help">手机：左下摇杆移动，右侧空白处拖动转视角；右侧按钮可跳跃、跑步、互动、用医疗包和投掷手雷，商店、建造、换枪也有独立按钮。右上「切换视角」和「菜单」随时可用。</p>
+      <p>基地防守、房车和自由测试可无限投掷手雷，每3秒一次。战地和抗战使用各自的枪战规则，具体操作进入对应模式查看。</p>
+      <p>母皇：早杀可减少本章后续虫潮35%，每次通关额外领补给；晚杀保留更多虫群掉落。「队友集合 / 载具救援」各冷却20秒并保留血量，在虫洞内救援时载具停在洞口。</p>
+      <p>城门：玩家和队友靠近自动开门，队友通过后自动关门，也可用互动手动开关。看小地图和基地方向提示找家；载具被打坏下关自动修好，进度自动保存。</p>
+      <p>建造与小队：最多64座设施；队友可拾金币与血包，商店可升级队友武器和护甲。9个副本随章节解锁，每个副本三档难度分别领奖。</p>
+      <p>地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，不耗电。银行塔防、战地、房车和虫族为独立模式；「继续上次」继续基地防守。</p>
+    </div>
+  </section>
 
   <!-- 暂停 -->
   <div id="menuPause" class="overlay menu hidden">
@@ -527,6 +592,7 @@ button::before,button::after{content:none!important}
       <button class="mbtn" id="daylightPause">地表：白天</button>
       <button class="mbtn" id="muteBtnMenu">声音</button>
       <button class="mbtn" id="keysPause">⌨ 操作设置</button>
+      <button class="mbtn" id="updatesPause">📋 更新日志</button>
       <button class="mbtn campaign-only" id="opsPause">⚑ 副本</button>
       <button class="mbtn campaign-only" id="platformBtnMenu">☁ 存档/排行</button>
       </div>
@@ -652,7 +718,7 @@ button::before,button::after{content:none!important}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=aadc0293545a" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=ce7af95618e0" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

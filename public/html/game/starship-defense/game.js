@@ -1,3 +1,4 @@
+import {GAME_VERSION,UPDATE_HISTORY} from './update-history.js';
 import {installRemakeCoop} from '../../../js/game/remake-coop.js';
 import {markTree,treeState,applyTree,scalarState,createSoundRelay} from '../../../js/game/coop.js?v=lobby-hint1';
 let coopDriver=null,coopHumans=[],coopNextId=1,coopEpoch=0,coopPendingEdges=[];
@@ -3429,7 +3430,7 @@ function placementInput(){
 function closePanels(){
   $('rvPanel')?.classList.add('hidden');
   if(!$('tacticsPanel').classList.contains('hidden'))AudioSys.pause(Game.state==='paused');
-  bindingAction=null;['keyPanel','operationsPanel','tacticsPanel'].forEach(id=>$(id).classList.add('hidden'));
+  bindingAction=null;['keyPanel','operationsPanel','tacticsPanel','updatesPanel','helpPanel'].forEach(id=>$(id).classList.add('hidden'));
   $('shopPanel').classList.add('hidden');$('buildPanel').classList.add('hidden');$('savePanel').classList.add('hidden');$('sandboxPanel').classList.add('hidden');$('platformPanel').classList.add('hidden');
   panelOpen=false;Input.reset();
 }
@@ -3934,7 +3935,7 @@ for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>s
 /* ================= 纯键盘界面导航 =================
    最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
-const NAV_ROOTS=['vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
+const NAV_ROOTS=['updatesPanel','helpPanel','vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
 function navRoot(){
   // The modal owns its native text fields and Tab/Escape handling.
@@ -3987,6 +3988,16 @@ window.addEventListener('keydown',e=>{
   if(nav.root!==root){nav.root=root;if(navItems(root).includes(document.activeElement))nav.index=navItems(root).indexOf(document.activeElement);else navFocus(navDefault(root));}
   const t=document.activeElement,inSelect=t&&t.tagName==='SELECT';
   if(t&&t.matches('input,textarea'))return;
+  if(['updatesPanel','helpPanel'].includes(root.id)&&(
+    ['PageDown','PageUp','Home','End'].includes(e.code)||
+    t?.getAttribute('role')==='region'&&['ArrowUp','ArrowDown','KeyW','KeyS','Space'].includes(e.code))){
+    e.preventDefault();e.stopImmediatePropagation();
+    const page=Math.max(80,root.clientHeight*.8);
+    if(e.code==='Home')root.scrollTop=0;
+    else if(e.code==='End')root.scrollTop=root.scrollHeight;
+    else root.scrollTop+=['ArrowUp','KeyW','PageUp'].includes(e.code)?-(e.code==='PageUp'?page:40):(['Space','PageDown'].includes(e.code)?page:40);
+    return;
+  }
   const dirs={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',KeyW:'up',KeyS:'down',KeyA:'left',KeyD:'right'};
   if(dirs[e.code]){
     if(inSelect&&['ArrowUp','ArrowDown'].includes(e.code))return;
@@ -3996,7 +4007,8 @@ window.addEventListener('keydown',e=>{
   }
   if(e.code==='KeyK'||e.code==='Escape'){
     e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;Input.reset();
-    if(root.id==='confirmPanel')$('confirmCancel').click();
+    if(['updatesPanel','helpPanel'].includes(root.id))closeInfoPanel();
+    else if(root.id==='confirmPanel')$('confirmCancel').click();
     else if(root.id==='warMenu')$('warBack').click();
     else if(root.id==='warResult')$('warResultBack').click();
     else if(root.id==='rvMenu')$('rvBack').click();
@@ -4017,6 +4029,28 @@ window.addEventListener('keydown',e=>{
     e.preventDefault();e.stopImmediatePropagation();if(!e.repeat){Input.reset();t.click();}
   }
 },true);
+
+// Update notes and help are local, keyboard-accessible dialogs. Closing keeps the current game paused.
+let infoReturn=null;
+function openInfoPanel(id,source=document.activeElement){
+  infoReturn=source;
+  if(['prep','battle'].includes(Game.state))togglePause();
+  closePanels();Input.reset();panelOpen=true;$(id).classList.remove('hidden');
+}
+function closeInfoPanel(){const back=infoReturn;closePanels();if(back&&back.getClientRects().length)back.focus({preventScroll:true});}
+$('gameVersion').textContent='v'+GAME_VERSION;
+$('updatesVersion').textContent='当前版本 v'+GAME_VERSION+' · 最近更新';
+for(const entry of UPDATE_HISTORY){
+  const section=document.createElement('section');section.className='updateEntry';
+  const heading=document.createElement('h4');heading.textContent='v'+entry.version+' · '+entry.title;
+  const date=document.createElement('time');date.dateTime=entry.date;date.textContent=entry.date;
+  const list=document.createElement('ul');
+  for(const text of entry.changes){const li=document.createElement('li');li.textContent=text;list.appendChild(li);}
+  section.appendChild(heading);section.appendChild(date);section.appendChild(list);$('updatesList').appendChild(section);
+}
+$('updatesMenu').onclick=$('updatesPause').onclick=e=>openInfoPanel('updatesPanel',e.currentTarget);
+$('helpMenu').onclick=e=>openInfoPanel('helpPanel',e.currentTarget);
+$('updatesClose').onclick=$('helpClose').onclick=closeInfoPanel;
 
 /* ================= 主循环 ================= */
 let lastT=performance.now(),saveTimer=30;
