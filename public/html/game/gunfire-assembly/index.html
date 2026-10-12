@@ -387,13 +387,14 @@ html,body{overscroll-behavior:none}
 #menuMain #difficultyHint{display:none}
 .mainModeNote{margin-top:8px}
 .mainSettings{width:100%;margin-top:auto}
-#menuMain.gunfire-lobby{padding:18px 28px;gap:10px;align-items:stretch}
-#menuMain.gunfire-lobby .mainHeader{padding-right:12px}
+#menuMain.gunfire-lobby{padding:12px 28px;gap:8px;align-items:stretch}
+#menuMain.gunfire-lobby .mainHeader{padding-right:12px;justify-content:flex-start;align-items:baseline;gap:14px}   /* 版本号跟在标题后面，不再被右上角按钮压住 */
 #menuMain.gunfire-lobby .mainHeader h1{font-size:36px;letter-spacing:6px;color:#ffe09a}
 #menuMain.gunfire-lobby .subtitle{color:#9ec4d8;letter-spacing:8px;margin:0 0 4px}
-#menuMain.gunfire-lobby .lobbyLead{max-width:820px;color:#c5d7e4;margin:0 0 10px}
-.lobbyGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(920px,100%)}
-.lobbyCard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;min-height:108px;padding:16px 18px;border-radius:12px;border:1px solid #6f8ea3;background:linear-gradient(160deg,#1a3142,#243f52);color:#eef6fb;cursor:pointer;font:inherit;box-shadow:0 6px 0 #0f1c26}
+#menuMain.gunfire-lobby .lobbyLead{max-width:820px;color:#c5d7e4;margin:0 0 4px}
+/* 电脑上五张模式卡排三列（原来两列三行，1920×1080 也要滚动才看到底下那排按钮）；手机触屏仍按下面的单列规则 */
+.lobbyGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.lobbyCard{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;min-height:96px;padding:12px 16px;border-radius:12px;border:1px solid #6f8ea3;background:linear-gradient(160deg,#1a3142,#243f52);color:#eef6fb;cursor:pointer;font:inherit;box-shadow:0 6px 0 #0f1c26}
 .lobbyCard strong{font-size:20px;letter-spacing:1px;color:#ffe9b0}
 .lobbyCard span{font-size:13px;line-height:1.55;color:#b9cfe0}
 .lobbyCard:hover,.lobbyCard:focus-visible{outline:3px solid #ffe066;outline-offset:2px;transform:translateY(-2px)}
@@ -752,7 +753,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=aed4c93e615c" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=lobby3-011" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
