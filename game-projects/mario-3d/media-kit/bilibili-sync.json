@@ -64,7 +64,33 @@
     }
   ],
   "mapping_audit": "2026-10-06重新核验：用户2026-10-05确认与toy video list均绑定BV1guep6NELt；公开简介已有当前3D试玩。保留历史视频并注明早期演示。",
-  "pending_updates": [],
+  "pending_updates": [
+    {
+      "type": "new_video_awaiting_manual_review",
+      "video": "超级玛丽 3D · 1-4 库巴城堡完整实机（新片，未上传）",
+      "episode_dir": "game-projects/mario-3d/video/stage4-bowser-castle-20261012",
+      "review_page": "game-projects/mario-3d/video/stage4-bowser-castle-20261012/work/审片.html",
+      "master": "D:/project/task-artifacts/mario-stage4-video-20261012/master/mario-1-4-master.mp4",
+      "master_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+      "duration_seconds": 176.6,
+      "game_version_covered": "v2.6.0-preview1",
+      "status": "awaiting_manual_review",
+      "ready_to_upload": false,
+      "created_at": "2026-10-12T17:05:00+08:00",
+      "why": "旧片 BV1guep6NELt 只有早期 1-1 画面，1-4 库巴城堡没有实机片；用户 2026-10-12 选择直接开做整期，成片+配音+字幕+封面+三平台文案已交付，等人工审片",
+      "disclosures": [
+        "画面由已验证按键路线驱动录制，不是真人手操",
+        "手机段为桌面触屏模拟，未做真机验收",
+        "配音为本地 IndexTTS-2.5，非官方云希音色（Edge-TTS 本机 403）"
+      ],
+      "next_actions": [
+        "用户人工审片通过后上传 B 站/抖音/YouTube",
+        "B 站投稿时实际选择话题「哔哩哔哩Toy创意挑战」(topic_id 1346285)",
+        "发布后 toy video bind <BV号> --toy 39043286960128 并读回核验",
+        "按 work/publish/bilibili-zh/publish.json 的 pinned_comment_draft 发置顶评论"
+      ]
+    }
+  ],
   "resolved_updates": [
     {
       "version": "v2.2.1",

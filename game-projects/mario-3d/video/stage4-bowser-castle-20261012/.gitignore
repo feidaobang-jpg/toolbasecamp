@@ -1,0 +1,20 @@
+# 视频工程：只提交脚本、JSON 清单与文本记录。
+# 媒体二进制（成片、录制素材、抽帧、封面图、音频）一律留在仓库外：
+#   D:/project/task-artifacts/mario-stage4-video-20261012/
+*.mp4
+*.webm
+*.mov
+*.mkv
+*.wav
+*.mp3
+*.aac
+*.m4a
+*.jpg
+*.jpeg
+*.png
+*.gif
+frames.ffconcat
+
+# 逐镜头/字幕同步抽帧仅本地核验用
+work/qa/frames/
+work/qa/sync/

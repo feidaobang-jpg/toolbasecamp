@@ -1,0 +1,278 @@
+{
+  "_note": "本期解说稿：超级玛丽 3D WORLD 1-4 库巴城堡（整期介绍）。文案只依据已核验事实：media-kit/releases/v2.6.0-preview1/notes.md 与 qa 结果、media-kit/game.json（current v2.6.0-preview1-privacy1，Toy 39043286960128 已 published 并于 2026-10-11 公网核验）、capture/*/capture.json 的实机事件时间码。src/in/out 是母版源区间（秒），render.py 会按配音实测时长在源里自动放宽。镜头为脚本按已验证路线驱动，成片与简介都要写明，不称真人手操。",
+  "voice": "zh-CN-YunxiNeural",
+  "rate": "+0%",
+  "title_zh": "超级玛丽3D 第四关：库巴城堡，砍桥的那一下我调了七根火棒",
+  "shots": [
+    {
+      "id": "01-hook",
+      "src": "heroic-front",
+      "in": 29.0,
+      "out": 38.5,
+      "lines": [
+        {
+          "id": "01a",
+          "text": "桥一断，库巴连一句狠话都没来得及说，就掉进了岩浆。",
+          "en": "The bridge snaps, and Bowser drops into the lava before he can finish a single threat."
+        },
+        {
+          "id": "01b",
+          "text": "这是超级玛丽 3D 的第四关，库巴城堡。",
+          "en": "This is World 1-4 in Super Mario 3D: Bowser's Castle."
+        }
+      ]
+    },
+    {
+      "id": "02-menu",
+      "src": "menu-levels",
+      "in": 0.5,
+      "out": 12.5,
+      "lines": [
+        {
+          "id": "02a",
+          "text": "前三关大家玩得差不多了，蓝天、地下、树冠。",
+          "en": "You've already played the first three worlds - sky, cave, treetops."
+        },
+        {
+          "id": "02b",
+          "text": "这次把最后一道门补上，菜单里起始关卡多了 1-4 城堡，从 1-3 拔旗也能直接接进来。",
+          "en": "This update adds the last door: the menu can start straight at 1-4 Castle, and finishing 1-3 rolls right into it."
+        }
+      ]
+    },
+    {
+      "id": "03-dark",
+      "src": "heroic-side",
+      "in": 2.1,
+      "out": 10.0,
+      "lines": [
+        {
+          "id": "03a",
+          "text": "一进来反差就很明显，背景基本是黑的，只有岩浆在发光。",
+          "en": "The contrast hits immediately - the background is basically black, only the lava glows."
+        },
+        {
+          "id": "03b",
+          "text": "地面是 160 列城堡石，台阶一格一格往下走。",
+          "en": "The floor is 160 columns of castle stone, with stairs stepping down one block at a time."
+        }
+      ]
+    },
+    {
+      "id": "04-firebars",
+      "src": "heroic-side",
+      "in": 10.0,
+      "out": 21.5,
+      "lines": [
+        {
+          "id": "04a",
+          "text": "这一关埋了 4 处岩浆坑，掉下去就是一次失败。",
+          "en": "Four lava pits are hidden along the way; fall into one and that's a life gone."
+        },
+        {
+          "id": "04b",
+          "text": "走廊里 7 根火棒会转圈，转速和转向是我一帧一帧对原作录像调出来的。",
+          "en": "Seven fire bars spin down the corridor - I matched their speed and turning direction frame by frame against the original."
+        },
+        {
+          "id": "04c",
+          "text": "看准空当再过，硬闯必挨。",
+          "en": "Wait for the gap. Charging through always costs you."
+        },
+        {
+          "id": "04d",
+          "text": "喜欢这种火棒从面前扫过去的感觉，顺手点个赞。",
+          "en": "If you like watching a fire bar sweep past, tap that like button."
+        }
+      ]
+    },
+    {
+      "id": "05-secret",
+      "src": "heroic-side",
+      "in": 21.0,
+      "out": 25.5,
+      "lines": [
+        {
+          "id": "05a",
+          "text": "路上还有 6 块隐藏金币砖，这一趟顶到一块，金币从零变成一。",
+          "en": "Six hidden coin blocks are tucked in this level. I bonked one this run, so the coin counter goes from 0 to 1."
+        }
+      ]
+    },
+    {
+      "id": "06-front",
+      "src": "heroic-front",
+      "in": 5.0,
+      "out": 13.5,
+      "lines": [
+        {
+          "id": "06a",
+          "text": "同一套路线，五种视角我都跑了一遍。",
+          "en": "I ran the exact same route in all five camera views."
+        },
+        {
+          "id": "06b",
+          "text": "正视在玛丽肩上，火棒扫过来最有压迫感。",
+          "en": "Over-the-shoulder is the most intense - the fire bars come straight at you."
+        }
+      ]
+    },
+    {
+      "id": "07-fp",
+      "src": "fp-corridor",
+      "in": 5.0,
+      "out": 14.0,
+      "lines": [
+        {
+          "id": "07a",
+          "text": "再按一次 C 就是第一人称，火球直接糊到脸上，路基本看不清。",
+          "en": "Press C once more and you're in first person, where fireballs fill your face and the path basically disappears."
+        },
+        {
+          "id": "07b",
+          "text": "看个新鲜够用，真过关还得靠前面几个视角。",
+          "en": "Fun for a look; the earlier views are what actually clear the level."
+        }
+      ]
+    },
+    {
+      "id": "08-top",
+      "src": "top-run",
+      "in": 12.0,
+      "out": 22.0,
+      "lines": [
+        {
+          "id": "08a",
+          "text": "最后是俯视，整段城堡的布局一眼看得清。",
+          "en": "The last preset is top-down, where the whole castle layout reads at a glance."
+        },
+        {
+          "id": "08b",
+          "text": "除了按 C 换预设，Q 和 E 还能自己转到任何角度。",
+          "en": "And besides C for presets, Q and E rotate the camera to any angle you want."
+        }
+      ]
+    },
+    {
+      "id": "09-mobile",
+      "src": "mobile-touch",
+      "in": 2.0,
+      "out": 16.0,
+      "lines": [
+        {
+          "id": "09a",
+          "text": "手机上是另一套操作，摇杆推到底就是跑，右下四个键，I 冲刺、J 火球、K 跳、U 蹲。",
+          "en": "On a phone it's a different control set: push the stick all the way to run, and the four buttons are I sprint, J fireball, K jump, U crouch."
+        },
+        {
+          "id": "09b",
+          "text": "竖着拿手机，菜单也会自动横过来，不用重开。",
+          "en": "Hold the phone vertically and the menu turns itself sideways - no restart needed."
+        },
+        {
+          "id": "09c",
+          "text": "这段就是摇杆和触屏键打下来的，中间被火棒蹭了两下，没摔死，照样通关。",
+          "en": "This stretch really was driven on the touchscreen. A fire bar clipped me twice, but no deaths, and it still cleared."
+        }
+      ]
+    },
+    {
+      "id": "10-bowser",
+      "src": "heroic-side",
+      "in": 25.5,
+      "out": 33.0,
+      "lines": [
+        {
+          "id": "10a",
+          "text": "走廊尽头是库巴守着的吊桥，它会来回挪、会跳、还会吸气喷火。",
+          "en": "At the end of the corridor is the bridge Bowser guards - he paces, jumps, and inhales before breathing fire."
+        },
+        {
+          "id": "10b",
+          "text": "火球打它五下能现原形，不过更快的办法是别理它。",
+          "en": "Five fireballs reveal what he really is, but honestly the faster option is to just ignore him."
+        }
+      ]
+    },
+    {
+      "id": "11-axe",
+      "src": "heroic-side",
+      "in": 33.0,
+      "out": 40.5,
+      "lines": [
+        {
+          "id": "11a",
+          "text": "桥上方有一块来回走的浮台，连跳跳上去，从库巴头顶越过去碰斧头。",
+          "en": "A platform paces above the bridge. Double-jump onto it, go clean over Bowser's head and hit the axe."
+        },
+        {
+          "id": "11b",
+          "text": "斧头一碰，铁链断、桥塌，库巴掉进岩浆。",
+          "en": "Touch the axe and the chains snap, the bridge collapses, and Bowser falls."
+        }
+      ]
+    },
+    {
+      "id": "12-ending",
+      "src": "heroic-side",
+      "in": 40.5,
+      "out": 46.2,
+      "lines": [
+        {
+          "id": "12a",
+          "text": "然后蘑菇人告诉你，桥砍断了，可公主还在另一座城堡里。",
+          "en": "Then the toad tells you: the bridge is cut, but the princess is in another castle."
+        }
+      ]
+    },
+    {
+      "id": "13-result",
+      "src": "heroic-front",
+      "in": 44.0,
+      "out": 47.6,
+      "lines": [
+        {
+          "id": "13a",
+          "text": "到这儿，1-1 到 1-4 就齐了，这一关四十六项机制测试全过，网站和 Toy 也已经是这个版本。",
+          "en": "That completes 1-1 through 1-4. All 46 mechanic tests pass, and the website and Toy builds are already on this version."
+        }
+      ]
+    },
+    {
+      "id": "14-honest",
+      "src": "mobile-touch",
+      "in": 22.0,
+      "out": 32.0,
+      "lines": [
+        {
+          "id": "14a",
+          "text": "说明一下，这几段实机是脚本按验证过的路线驱动的，不是真人手操。",
+          "en": "One honest note: this footage is driven by a test script along a verified route, not played by hand."
+        },
+        {
+          "id": "14b",
+          "text": "路线是在同一个世界里用深度优先搜索试出来的，三百多个节点，一百三十六段零受伤。",
+          "en": "The route came out of a depth-first search inside the same world - a few hundred nodes, 136 segments, zero damage."
+        }
+      ]
+    },
+    {
+      "id": "15-next",
+      "src": "fp-corridor",
+      "in": 20.0,
+      "out": 30.0,
+      "lines": [
+        {
+          "id": "15a",
+          "text": "下一期要么继续往后做，要么按你们的投票来，投票页和试玩链接都在简介第一条。",
+          "en": "Next episode either keeps pushing forward or follows your votes - the voting page and the play link are the first lines of the description."
+        },
+        {
+          "id": "15b",
+          "text": "你要是也砍到了这座桥，评论区告诉我还剩多少时间。",
+          "en": "If you cut this bridge too, tell me in the comments how much time you had left."
+        }
+      ]
+    }
+  ]
+}

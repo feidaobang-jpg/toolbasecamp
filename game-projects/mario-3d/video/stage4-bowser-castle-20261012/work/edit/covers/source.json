@@ -1,0 +1,16 @@
+{
+ "source": "capture/heroic-side.mp4（未烧字幕的实机母版，避免封面带上解说字幕）",
+ "source_seconds": {
+  "firebars": [
+   "heroic-side",
+   20.0
+  ],
+  "bowser": [
+   "heroic-side",
+   35.5
+  ]
+ },
+ "operations": "抽帧自真实实机段，裁切缩放 + 本机微软雅黑原生排版",
+ "gameplay_features_generated": false,
+ "font": "C:/Windows/Fonts/msyhbd.ttc / msyh.ttc，字体文件不随包分发"
+}
