@@ -1,0 +1,279 @@
+{
+  "episode_id": "stage4-bowser-castle-20261012",
+  "game": "mario-3d",
+  "game_version": "v2.6.0",
+  "toy_id": "39043286960128",
+  "updated_at": "2026-10-12T18:30:00+08:00",
+  "human_review": {
+    "status": "approved",
+    "statement": "看了，发布吧",
+    "accepted_at": "2026-10-12T17:20:00+08:00",
+    "source": "user message in this session",
+    "scope": "已展示的三平台审片包（成片+双封面+字幕+三平台文案）",
+    "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "file_hashes": {
+      "final/bilibili-zh/gameplay-zh-final.mp4": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+      "final/bilibili-zh/cover-home-4x3.jpg": "74feec4508430d6dfe03ffb79eac8486414deebade221f0792b6ac7beb971ddb",
+      "final/bilibili-zh/cover-space-16x9.jpg": "e820dc0e222c6895ed923d674063c6ff35f2ea1669f9458da919e50a3ba68e08",
+      "final/douyin-zh/cover-16x9.jpg": "e820dc0e222c6895ed923d674063c6ff35f2ea1669f9458da919e50a3ba68e08",
+      "final/youtube-zh/cover-zh-16x9.jpg": "e820dc0e222c6895ed923d674063c6ff35f2ea1669f9458da919e50a3ba68e08",
+      "final/youtube-zh/captions-zh.srt": "8130abb53884038371affbee22433dfe8a74ca3c179456244c7a68e310d1acf0",
+      "final/youtube-zh/captions-en.srt": "340e563ac118e90e8258466bdcca1141e4db29227dbc6df5a99a8836a695e87f"
+    }
+  },
+  "platforms": {
+    "bilibili": {
+      "account": {
+        "platform": "bilibili",
+        "uid": "16214353",
+        "name": "飞刀班长"
+      },
+      "variant_id": "bilibili-zh",
+      "bvid": "BV1Wmp96JEBD",
+      "aid": 117427241228028,
+      "public_url": "https://www.bilibili.com/video/BV1Wmp96JEBD/",
+      "title": "超级玛丽3D 1-4 库巴城堡完整实机：砍断吊桥那一下，库巴话都没说完",
+      "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+      "duration_seconds": 177,
+      "status": "published",
+      "state": 0,
+      "visibility": "public",
+      "published_at": "2026-10-12T17:36:15+08:00",
+      "public_verified_at": "2026-10-12T18:20:00+08:00",
+      "covers": {
+        "home_4x3": "cover-home-4x3.jpg",
+        "space_16x9": "cover-space-16x9.jpg",
+        "note": "两张构图分别上传，投稿后页面双预览可见"
+      },
+      "tags_published": [
+        "超级玛丽",
+        "实机演示",
+        "AI",
+        "游戏开发",
+        "库巴城堡",
+        "Claude开发",
+        "bilibilitoy",
+        "哔哩哔哩Toy创意挑战"
+      ],
+      "topic": {
+        "id": 1346285,
+        "name": "哔哩哔哩Toy创意挑战",
+        "verified_by": [
+          "x/tag/archive/tags",
+          "个人空间自动投稿动态带话题"
+        ]
+      },
+      "ai_declaration": "已按实际（AI 辅助开发与本地 TTS 配音）声明",
+      "pinned_comment": {
+        "rpid": 316849673057,
+        "posted_via": "POST x/v2/reply/add (message/type=1/oid=aid/plat=1/csrf)",
+        "pinned_via": "POST x/v2/reply/top action=1",
+        "anonymous_verified_at": "2026-10-12T18:05:00+08:00",
+        "verification": "credentials:omit 的 x/v2/reply?sort=2&ps=20 返回 data.upper.top.rpid 与之一致（mode=3 接口当次被风控 -352，未采用）",
+        "contains": [
+          "玩法提示",
+          "完整 Toy 链接 /index.html",
+          "具体反馈问题（砍桥剩余时间）",
+          "投票／愿望单复制说明与站内路径"
+        ]
+      },
+      "toy_binding": {
+        "toy_id": "39043286960128",
+        "slug": "feidao-mario-3d",
+        "verified_by": "toy video list 39043286960128",
+        "bindings": [
+          "BV1Wmp96JEBD",
+          "BV1guep6NELt"
+        ],
+        "note": "本期新片绑定成功，旧片 BV1guep6NELt 原绑定保留"
+      },
+      "collection_membership": {
+        "status": "pending_no_collection",
+        "reason": "该账号当前只有一个合集「合集·虫潮围城开发实录」(9248439)，属另一款游戏；超级玛丽 3D 无已确认正式合集，空间“系列”列表为空。按长期授权不新建合集、不混入虫潮合集，记为待关联。",
+        "verified_at": "2026-10-12T18:12:00+08:00",
+        "evidence": "space.bilibili.com/16214353/lists 合集页与系列页实测",
+        "action_needed": "若要为超级玛丽 3D 建正式合集，需用户明确要求后再建并归入本期 BV"
+      },
+      "traffic_reward": {
+        "status": "no_available_free_reward",
+        "checked_at": "2026-10-12T18:08:00+08:00",
+        "evidence": "创作中心首页「流量奖励」显示 待使用 0 曝光（近3月已使用1000曝光）；官方入口 member.bilibili.com/york/flow-reward/ 无适用于本期新稿件的免费券",
+        "paid_option": "页面另有付费推广入口，未使用、未购买",
+        "bvid": "BV1Wmp96JEBD"
+      },
+      "space_dynamic": {
+        "status": "auto_video_dynamic_present",
+        "note": "空间动态已有本期「投稿了视频」卡片并带「哔哩哔哩Toy创意挑战」话题，不再另发重复宣传动态",
+        "verified_at": "2026-10-12T18:10:00+08:00"
+      },
+      "previous_video_maintenance": {
+        "target_bvid": "BV1guep6NELt",
+        "target_aid": 117275558418458,
+        "description_before_chars": 571,
+        "description_after_chars_public": 678,
+        "prefix_added": "最新一期：超级玛丽3D 1-4 库巴城堡完整实机 https://www.bilibili.com/video/BV1Wmp96JEBD/（本片为 2026-09-15 的早期版本实录，玩法与操作以当前试玩为准）",
+        "submitted_via": "稿件管理 → 编辑 → Quill insertText(0,...) → span.submit-add（出现「稿件投递成功」）",
+        "public_verified_at": "2026-10-12T18:16:00+08:00",
+        "public_verification": "x/web-interface/view?bvid=BV1guep6NELt 匿名读回 desc 长度 678、开头为新增引导、state=0，保留原说明与 Toy 试玩链接",
+        "pinned_comment": {
+          "before": "无（x/v2/reply 实测 count=0、upper.top 为空）",
+          "new_rpid": 316850416913,
+          "content_summary": "新版链接 + 早期版本提示 + 完整 Toy 链接 + 投票／愿望单复制说明与站内路径",
+          "pinned_via": "x/v2/reply/top action=1",
+          "anonymous_verified_at": "2026-10-12T18:20:00+08:00",
+          "verification": "匿名 x/v2/reply 返回 upper.top.rpid=316850416913，且列表首条即该评论"
+        },
+        "toy_binding_preserved": true,
+        "promotion_application": "推流表只申报本期 BV1Wmp96JEBD，旧片不重复申报"
+      },
+      "promotion_application": {
+        "status": "blocked_login_required",
+        "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
+        "worksheet": "【进行中】日常推流",
+        "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
+        "headers_verified": "第2行 A:F 与既有列序一致；A1 资源周期 9月17日—10月15日（本期在期内）",
+        "duplicate_check": "表内查找 BV1Wmp96JEBD 返回“无结果”",
+        "row": "未定位（游客态只读，需在可编辑会话内重新逐段定位末行）",
+        "reason": "腾讯文档本次为 skeleton-guest-mode，右上角「只能查看」「登录腾讯文档」，paste 与键入均不能写入单元格，因此不记为已申请",
+        "feishu_login_required": "sent",
+        "next_step": "用户登录腾讯文档后按材料粘贴 A:E（F 留空），确认云端自动保存并截图留档"
+      }
+    },
+    "douyin": {
+      "account": {
+        "platform": "douyin",
+        "uid": "84261875244",
+        "name": "飞刀帮主"
+      },
+      "variant_id": "douyin-zh",
+      "platform_id": "7695717723644382491",
+      "public_url": "https://www.douyin.com/video/7695717723644382491",
+      "title": "砍断吊桥那一下，库巴话都没说完｜超级玛丽3D 1-4",
+      "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+      "duration": "02:57",
+      "status": "published",
+      "visibility": "public",
+      "submitted_at": "2026-10-12T17:55:00+08:00",
+      "public_verified_at": "2026-10-12T18:24:00+08:00",
+      "verification": "作品管理显示「已发布」；公开页可播放（video 元素 currentSrc 就绪、时长 02:57），标题/简介/#超级玛丽 话题、16:9 封面与「作者声明：内容由 AI 生成」均在线可见",
+      "topics": {
+        "kept": [
+          "#超级玛丽"
+        ],
+        "dropped": [
+          "#库巴城堡",
+          "#游戏开发"
+        ],
+        "reason": "后两个关键词在抖音话题面板无可选项，插入后被静默丢弃，不冒充已带话题"
+      },
+      "cover": {
+        "uploaded": "cover-16x9.jpg（横版）",
+        "portrait": "未上传竖版封面：本期只交付了 16:9 一张封面素材"
+      },
+      "bilibili_only_steps_not_copied": [
+        "三连/投币引导",
+        "Toy 站内路径与 Toy 运营申请",
+        "B 站合集归入",
+        "B 站流量奖励",
+        "腾讯文档推流申请"
+      ],
+      "pinned_comment": {
+        "status": "not_posted",
+        "reason": "抖音无 Toy 站内入口，置顶引导属 B 站分支；本期抖音简介已带网站试玩复制说明，未额外发评论"
+      }
+    },
+    "youtube": {
+      "channel": {
+        "platform": "youtube",
+        "channel_id": "UCha4DVE3db0P1eJvu4qsLJg",
+        "name": "郑晓辉"
+      },
+      "variant_id": "youtube-zh",
+      "platform_id": "4UnBUTQnmvU",
+      "public_url": "https://www.youtube.com/watch?v=4UnBUTQnmvU",
+      "video_id_short_url": "https://youtu.be/4UnBUTQnmvU",
+      "title": "超级玛丽 3D · 1-4 库巴城堡完整实机：岩浆、七根火棒与砍断吊桥",
+      "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+      "status": "uploading",
+      "visibility": "private",
+      "uploaded_at": "2026-10-12T18:20:00+08:00",
+      "upload_progress_observed": "18:30 左右 26%，Studio 显示剩余约 26 分钟；文件 452231536 字节，文件名 gameplay-youtube-final.mp4",
+      "details_filled": {
+        "description_chars": 470,
+        "description_lines": 6,
+        "tags": [
+          "超级玛丽",
+          "库巴城堡",
+          "超级玛丽3D",
+          "游戏开发",
+          "实机演示",
+          "AI 开发",
+          "Claude",
+          "Three.js"
+        ],
+        "made_for_kids": false,
+        "age_restriction": "none",
+        "paid_promotion": false,
+        "ai_usage_declaration": "是，使用了 AI（本地 TTS 配音，与审片包披露一致）",
+        "video_language": "中文（简体）",
+        "category": "游戏",
+        "license": "标准 YouTube 许可",
+        "game_name": "超级玛丽 3D",
+        "custom_thumbnail": "cover-zh-16x9.jpg 已上传（界面显示「已上传的缩略图」）",
+        "auto_chapters": "开启（默认）",
+        "save_state": "Studio 显示「已保存所有更改。」"
+      },
+      "remaining_steps": [
+        "等上传与处理完成",
+        "上传中英字幕 attachments（captions-zh.srt / captions-en.srt）并在播放器核验可选",
+        "英文本地化标题与说明（English-localizations.txt）在完整编辑页补填并核验",
+        "播放列表：超级玛丽 3D 无已确认正式播放列表，与 B 站合集同样记待关联，不新建",
+        "过完「检查」后改为公开，核验公开页可播放、时长、缩略图与字幕",
+        "X：本期未见已授权的官方 API 通路（见 x 字段），不发布"
+      ],
+      "earlier_blocked_incident": {
+        "status": "resolved_this_session",
+        "detail": "上一段会话在 Studio 上传入口遇到 Google 账号二次验证，已按 LoginRequired 发飞书并保存进度；本次会话实测 studio.youtube.com 已可正常进入频道（郑晓辉 UCha4DVE3db0P1eJvu4qsLJg），上传流程已实际开始。"
+      }
+    }
+  },
+  "x": {
+    "status": "not_published_no_api_access",
+    "reason": "本期 X 同步需要本人账号 + 官方 API 或已授权连接器；共享状态仅有 accounts/x-publication-access-pending-owner.json（账号与 API 权限未确定）。按规则不用网页脚本规避，YouTube 也尚未公开，因此只保留草稿条件，不发帖。",
+    "draft_condition": "YouTube 公开核验通过后，向本人已确认 X 账号发一条英文介绍 + 视频链接；账号未确认前继续保留待办"
+  },
+  "taptap": {
+    "status": "not_in_scope",
+    "reason": "TapTap 默认不发布（用户 2026-10-10），本期未被点名，未做任何 TapTap 操作"
+  },
+  "toy_package_push": {
+    "status": "not_triggered",
+    "reason": "本任务未改游戏代码，稳定版本未变，不触发新的 Toy 提审；沿用已 published 的 v2.6.0 包"
+  },
+  "login_incidents": [
+    {
+      "platform": "tencent-docs",
+      "target": "哔哩哔哩Toy稿件推流申请表（日常推流）",
+      "action_required": "登录腾讯文档后才有编辑权限（本次为「只能查看」游客态）",
+      "login_incident_id": "mario-stage4-tencent-docs-20261012",
+      "status": "open",
+      "feishu_login_required": "sent at 2026-10-12T18:34+08:00 (Source=Qoder, event mario-stage4-tencent-docs-20261012)",
+      "login_entry": "https://docs.qq.com/login",
+      "resume_material": "game-projects/mario-3d/video/stage4-bowser-castle-20261012/work/publish/bilibili-zh/Toy推流申请.txt"
+    },
+    {
+      "platform": "youtube",
+      "status": "resolved",
+      "note": "本会话已能进入 Studio 并开始上传，无需再提醒登录"
+    }
+  ],
+  "cleanup": {
+    "cors_server": "D:/project/task-artifacts/mario-stage4-video-20261012/serve_cors.py 端口 8814（YouTube 上传与封面注入用），收尾需停止",
+    "bilibili_account_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock（本任务持有，收尾释放；先前遗留锁已改名保留 account-write.recovered-lock-20261012-1800.qoder）"
+  }
+}

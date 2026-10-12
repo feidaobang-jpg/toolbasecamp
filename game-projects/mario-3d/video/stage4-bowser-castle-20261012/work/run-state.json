@@ -3,10 +3,11 @@
   "game": "mario-3d",
   "game_version": "v2.6.0-preview1",
   "toy_id": "39043286960128",
-  "stage": "awaiting_manual_review",
+  "stage": "published_partial",
   "ready_to_upload": false,
   "blocking_issues": [
-    "等待用户人工审片，未通过前不上传任何平台"
+    "YouTube 上传与字幕/英文本地化/公开核验未完成",
+    "腾讯文档推流申请受登录限制未填入（本地材料已存）"
   ],
   "artifacts": {
     "master": "D:\\project\\task-artifacts\\mario-stage4-video-20261012\\master\\mario-1-4-master.mp4",
@@ -65,9 +66,42 @@
     "配音为本地 TTS，非官方云希音色"
   ],
   "next_actions": [
-    "用户人工审片（work/审片.html）",
-    "通过后上传三平台并在 B 站话题入口实际选择「哔哩哔哩Toy创意挑战」",
-    "B 站发布后 toy video bind <BV号> --toy 39043286960128",
-    "按置顶评论文案在 B 站 / 抖音发布置顶评论（含完整 Toy /index.html 链接）"
-  ]
+    "YouTube：等上传完成后上传 captions-zh.srt/captions-en.srt 并核验播放器可选，补英文本地化标题与说明，改公开并核验",
+    "腾讯文档：用户登录后把 work/publish/bilibili-zh/Toy推流申请.txt 的 A:E 填入本期新行（F 留空），确认云端保存",
+    "超级玛丽 3D 正式合集/播放列表：无已确认目标，记待关联，需用户明确要求才新建",
+    "YouTube 公开且 X 官方 API 可用时按已授权范围发一条英文介绍"
+  ],
+  "human_review": {
+    "status": "approved",
+    "statement": "看了，发布吧",
+    "accepted_at": "2026-10-12T17:20:00+08:00",
+    "source": "user message in this session",
+    "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ]
+  },
+  "publication": {
+    "bilibili": {
+      "status": "published",
+      "bvid": "BV1Wmp96JEBD",
+      "record": "work/publication-result.json"
+    },
+    "douyin": {
+      "status": "published",
+      "platform_id": "7695717723644382491"
+    },
+    "youtube": {
+      "status": "uploading",
+      "platform_id": "4UnBUTQnmvU"
+    },
+    "x": {
+      "status": "not_published_no_api_access"
+    },
+    "taptap": {
+      "status": "not_in_scope"
+    }
+  }
 }
