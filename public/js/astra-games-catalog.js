@@ -1,5 +1,5 @@
 /** Auto-parsed from awesome-gpt-6-astra README.zh-CN (external play links). */
-/** generated_at: 2026-10-10T08:04:01Z */
+/** generated_at: 2026-10-12T08:33:11Z */
 (function (global) {
   var groups = [
     { titleKey: 'games.groups.astraAction', items: [
@@ -77,7 +77,7 @@
       { title: "Lantern Cove — The Borrowed Light", url: "https://lantern-cove.akartit.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/lantern-cove/gameplay.jpg", external: true },
     ] },
     { titleKey: 'games.groups.astraStrategy', items: [
-      { title: "Yu-Gi-Oh! Ruins Duel", url: "https://www.bilibili.com/toy/astral-duel-game/index.html", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astral-duel/public-lobby.png", external: true },
+      { title: "Yu-Gi-Oh! Ruins Duel", url: "https://astral-duel-game.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/astral-duel/public-lobby.png", external: true },
       { title: "Tidehook", url: "https://tidehook-mallow.vercel.app/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/tidehook/gameplay.png", external: true },
       { title: "Dwellcraft · 住进想象", url: "https://dwellcraft.vercel.app/", thumb: "https://raw.githubusercontent.com/Ryan-fm/Dwellcraft/main/docs/screenshots/editor-en.png", external: true },
       { title: "Little Kingdom Chess / 작은 왕국 체스", url: "https://little-kingdom-chess.echo3042.chatgpt.site/", thumb: "https://raw.githubusercontent.com/MartinDelophy/awesome-gpt-6-astra/main/assets/screenshots/little-kingdom-chess/gameplay.jpg", external: true },
@@ -194,7 +194,7 @@
   global.astraGamesCatalog = {
     source: 'https://github.com/MartinDelophy/awesome-gpt-6-astra',
     gallery: 'https://astragames.aigccreative.com/',
-    generatedAt: "2026-10-10T08:04:01Z",
+    generatedAt: "2026-10-12T08:33:11Z",
     count: 176,
     groups: groups
   };
