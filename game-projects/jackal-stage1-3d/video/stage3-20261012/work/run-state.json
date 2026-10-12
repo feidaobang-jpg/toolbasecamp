@@ -36,6 +36,18 @@
     "redo_when_edge_recovers": "voice.py → render.py audio/shared-zh final → package.py（会改变成片哈希，需重新审片）"
   },
   "human_review": null,
+  "review_request": {
+    "requested_at": "2026-10-12T19:45:00+08:00",
+    "review_folder": "D:/project/toolbasecamp/.claude/review/jackal-stage3-20261012（成片原文件的拷贝，哈希与 videos 一致）",
+    "feishu": {
+      "task_id": "f40a799e-jackal-stage3-01",
+      "event_id": "jackal-stage3-video-review-20261012-01",
+      "reason": "Approval",
+      "result": "sent",
+      "resolve_after": "用户在聊天里明确通过或给出修改意见并记录后调用 Resolve"
+    },
+    "edge_retry": "2026-10-12 19:40 再试一次 Edge 云希，仍 403"
+  },
   "toy_status": "published v0.11.0（2026-10-12 公开核验）",
   "subjective_audio_review": "not-run",
   "honesty_disclosures": [
