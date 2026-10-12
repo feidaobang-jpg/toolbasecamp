@@ -1,0 +1,20 @@
+{
+  "version": "web-weapon-bar-v0.36.5",
+  "source_commit": "f4d0adf5",
+  "website": {
+    "status": "deployed_verified",
+    "verified_at": "2026-10-12T22:50:00+08:00"
+  },
+  "toy": {
+    "id": "38678478981120",
+    "slug": "chongchao-qianshao",
+    "status": "auditing",
+    "zip_sha256": "bcba022aad44d7c04553bfe0505b6d7e2b357512365323d27e8df814bbd80d38",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html",
+    "preflight_preview_url": "https://www.bilibili.com/toy/preview/preview_HjSQDGvc/index.html",
+    "submitted_at": "2026-10-12T22:57:32+08:00"
+  },
+  "change": "战地/抗战顶部点枪换枪",
+  "bili_desc_decision": "deferred_accumulating",
+  "bili_desc_reason": "普通 UX 小改，未达重大版本或累计门槛，只记待合并"
+}

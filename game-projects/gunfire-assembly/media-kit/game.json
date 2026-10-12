@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-lobby-v0.1.1",
+  "current_version": "web-weapon-bar-v0.1.2",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
@@ -10,7 +10,7 @@
   "toy_id": "43022175699968",
   "toy_slug": "feidao-gunfire",
   "toy_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
-  "toy_status": "published",
+  "toy_status": "auditing",
   "notes": "从虫潮围城拆出的枪战模式大厅；首版含战地据点与抗战战役。网站与 Toy 已上线；相关视频简介已公开核验含枪火集结入口。",
   "toy_public_verified_at": "2026-10-12T14:43:00.000Z",
   "bilibili_descriptions_verified_at": "2026-10-12T17:10:00+08:00",
@@ -23,9 +23,9 @@
       "toy": {}
     }
   ],
-  "website_version": "web-lobby-v0.1.1",
-  "website_commit": "1eec0f61",
-  "website_verified_at": "2026-10-12T22:36:00+08:00",
+  "website_version": "web-weapon-bar-v0.1.2",
+  "website_commit": "f4d0adf5",
+  "website_verified_at": "2026-10-12T22:50:00+08:00",
   "website": {
     "status": "deployed_verified",
     "version": "web-lobby-v0.1.0-input-safety1",
@@ -39,10 +39,10 @@
     "id": 43022175699968,
     "slug": "feidao-gunfire",
     "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
-    "status": "published",
+    "status": "auditing",
     "review_status": "published",
     "submitted_version": "web-lobby-v0.1.1",
-    "submitted_at": "2026-10-12T14:38:23+00:00",
+    "submitted_at": "2026-10-12T22:57:32+08:00",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_nLzTEdH7/index.html",
     "package_sha256": "3c233673c702761326561ee79a08a65db2486e6bb2e3de098d2b1054d6e7801d",
     "published_version": "web-lobby-v0.1.1",
@@ -65,6 +65,9 @@
       "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
       "evidence": "Public revision v25562; lobby grid 3 columns, version v0.1.1, lobby fits without scrolling at 1280x720 (logged-in read-only check)."
     },
-    "status_checked_at": "2026-10-12T22:42:27+08:00"
+    "status_checked_at": "2026-10-12T22:42:27+08:00",
+    "last_submitted_version": "web-weapon-bar-v0.1.2",
+    "last_zip_sha256": "7483462c5ad3db9178e3c20401831eda980cb82b7b0c785149346048671aac26",
+    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_q06U35z2/index.html"
   }
 }
