@@ -1,0 +1,33 @@
+{
+  "item_id": "gunfire-assembly-toy-lobby-v0.1.0",
+  "game_slug": "gunfire-assembly",
+  "version": "web-lobby-v0.1.0",
+  "summary": "枪火集结独立大厅上线：Toy published，相关5条视频简介公开核验含枪火集结与 feidao-gunfire 入口。",
+  "website": {
+    "status": "deployed_verified",
+    "url": "https://www.zhengxiaohui.cn/html/game/gunfire-assembly/index.html",
+    "commit": "360b2a9e"
+  },
+  "toy": {
+    "id": "43022175699968",
+    "slug": "feidao-gunfire",
+    "status": "published",
+    "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "videos_bound": ["BV1Lfp76KEDd", "BV1KFpJ6sEEK"]
+  },
+  "bilibili": {
+    "status": "public_verified",
+    "record": "bilibili-sync.json",
+    "targets": [
+      "BV1C5HQ6gEvD",
+      "BV1WbHq6eEBt",
+      "BV1Ujad6DEuf",
+      "BV1Lfp76KEDd",
+      "BV1KFpJ6sEEK"
+    ],
+    "decision": "manual",
+    "reason": "用户明确要求更新视频简介；入口说明因模式迁出已失实，立即更新。"
+  },
+  "taptap": "not_requested",
+  "updated_at": "2026-10-12T17:10:00+08:00"
+}

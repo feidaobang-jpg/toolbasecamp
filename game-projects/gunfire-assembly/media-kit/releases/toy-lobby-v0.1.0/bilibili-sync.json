@@ -1,0 +1,55 @@
+{
+  "verified_at": "2026-10-12T09:06:20.758873Z",
+  "decision": "manual",
+  "reason": "用户明确要求上线Toy并更新视频简介；公开API读回均含枪火集结与feidao-gunfire",
+  "toy_id": "43022175699968",
+  "toy_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+  "toy_status": "published",
+  "targets": [
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "title": "愿望榜第一名做出来了：双人塔防还能4对4｜虫潮围城",
+      "desc_sha256": "80452a7d6f5708d1300209c95dd8b9854d637c3a4e8702b49c0584791ccc58a6",
+      "matches_prepared": true,
+      "has_gunfire": true,
+      "has_toy": true,
+      "desc_len": 423
+    },
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "title": "这次不只守城，我直接钻进虫洞反攻母皇！《虫潮围城》新版实战",
+      "desc_sha256": "cf27226e206996432e5bf1aa9ad957615aee3e3d3ea9cd3f660835d2701d2b5f",
+      "matches_prepared": true,
+      "has_gunfire": true,
+      "has_toy": true,
+      "desc_len": 739
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "title": "虫潮来了，这座基地你能守住吗？我的小游戏上线B站Toy了",
+      "desc_sha256": "8a8e32d30ef735f5514c42c8ad1d3723aba4220addfc770e6b91329c65443a7c",
+      "matches_prepared": false,
+      "has_gunfire": true,
+      "has_toy": true,
+      "desc_len": 732
+    },
+    {
+      "bvid": "BV1Lfp76KEDd",
+      "title": "平安县城，开炮！我在虫潮围城把亮剑名场面做成了能玩的战役",
+      "desc_sha256": "8cdd19789af0804c0d4c14dd9960a8d6c336fe135b737d06e197562577d630f2",
+      "matches_prepared": true,
+      "has_gunfire": true,
+      "has_toy": true,
+      "desc_len": 454
+    },
+    {
+      "bvid": "BV1KFpJ6sEEK",
+      "title": "只剩3票险胜！虫潮围城的据点争夺实战",
+      "desc_sha256": "5d83999277ceaaf92fa85cce93307e01def5b301014f911da349bfe0e532959f",
+      "matches_prepared": false,
+      "has_gunfire": true,
+      "has_toy": true,
+      "desc_len": 545
+    }
+  ]
+}
