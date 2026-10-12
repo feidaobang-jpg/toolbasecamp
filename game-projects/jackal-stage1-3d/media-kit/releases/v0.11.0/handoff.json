@@ -463,11 +463,14 @@
    "qa/coop-heading-perf.cjs": "通过",
    "site-games/qa/restart-audio.cjs（赤色要塞）": "5/5",
    "server/tests/test_coop_lobby.py + test_jackal_capacity.py": "15 项通过",
-   "qa/botrun.js 第三关 种子 11": "155 秒通关，阵亡 1，受击 15，12 名俘虏全部送达，两颗星都拿到"
+   "qa/botrun.js 第三关 种子 11": "155 秒通关，阵亡 1，受击 15，12 名俘虏全部送达，两颗星都拿到",
+   "Toy 预览实测（电脑 / 手机竖屏 / 手机横屏）": "22/23；未通过项为电脑 1280×720 主菜单需滚动（旧版同样如此）",
+   "qa/stage3.js 对线上网站": "44/44"
   },
   "performance": "实时运行 3 秒左右移动（1280×720 高画质）：第三关五处取样 43–71 次绘制、11.4–19.5 万三角形、每帧逻辑 + 渲染中位 1.4–2.2 毫秒；第一关同法 30–95 次绘制、12.1–22.6 万三角形。只在这台电脑的显卡上测过。",
   "known_failing_before": [
-   "qa/touch-view.js「默认机枪沿视线瞄准」一项在线上现行版本同样失败（v0.8.0 起默认机枪固定向北，断言过期），本次未改"
+   "qa/touch-view.js「默认机枪沿视线瞄准」一项在线上现行版本同样失败（v0.8.0 起默认机枪固定向北，断言过期），本次未改",
+   "电脑 1280×720 / 1366×768 窗口下主菜单高 806 像素，需要滚动才能看到最后几行（旧版公开 Toy 同样如此；「开始游戏」在第一行不受影响），本次未改"
   ],
   "not_tested": [
    "手机真机（性能、多指触控、音频）",
@@ -491,10 +494,19 @@
   ]
  },
  "site": {
-  "status": "pending"
+  "status": "public_verified",
+  "commit": "14cb5d3c",
+  "verified_at": "2026-10-12T16:28:00+08:00",
+  "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html"
  },
  "toy": {
-  "status": "pending"
+  "status": "auditing",
+  "id": 39863936092160,
+  "submitted_at": "2026-10-12T16:31:37+08:00",
+  "package_hash": "57c40d0b90d114dbb0461fb9389dad5dde741b8a8c70e9c24ab881ceb6217b86",
+  "preview_tested": "https://www.bilibili.com/toy/preview/preview_bVKNokBY/index.html",
+  "preview_submitted": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
+  "preview_result": "22/23"
  },
  "taptap": {
   "status": "not_published_by_default"
@@ -504,5 +516,5 @@
   "decision": "immediate",
   "reason": "重大版本：新关卡"
  },
- "updated_at": "2026-10-12T16:19:26+08:00"
+ "updated_at": "2026-10-12T16:32:56+08:00"
 }
