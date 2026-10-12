@@ -1,0 +1,43 @@
+{
+  "task_id": "01a12ef5-2f1f-7a73-a003-ca649ec88bcb-cover-01",
+  "source": "Codex",
+  "game_id": "gunfire-assembly",
+  "kind": "cover_only",
+  "runtime_version": "web-lobby-v0.1.0",
+  "summary": "用枪火集结的步兵、坦克与吉普实机场景替换虫潮缩略图，参考赤色要塞采用铺满画面的4:3横向封面。",
+  "poster": {
+    "path": "public/assets/game/thumbs/gunfire-assembly.jpg",
+    "sha256": "26ac542bfe86e6b530eff461e8034e79c7e5ac715ae85da911da733841cb088d",
+    "width": 1200,
+    "height": 900,
+    "bytes": 102564,
+    "source_commit": "42b028f0",
+    "source_mode": "战地据点 · 沙漠据点战 · 普通难度4v4",
+    "capture": "从实际游戏WebGL画布直接截图；封面相机position=[22,8,766]、target=[4,0,782]、fov=48；暂停后隐藏HUD和第一人称武器，无素材合成、边框或留白。",
+    "local_source": "D:/project/task-artifacts/gunfire-cover-20261012/battle-tank.jpg",
+    "website_cache_version": 2
+  },
+  "checks": {
+    "jpeg_decode": "passed",
+    "aspect_ratio": "4:3",
+    "visual_review": "passed",
+    "config_js_syntax": "passed",
+    "capture_page_errors": [],
+    "runtime_changed": false,
+    "package_reupload": false
+  },
+  "website": {"status": "pending_deploy"},
+  "toy": {
+    "id": "43022175699968",
+    "slug": "feidao-gunfire",
+    "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "update_scope": "poster_metadata_only",
+    "status": "pending_target_lock",
+    "previous_poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-gunfire/poster_25252.jpg"
+  },
+  "video_descriptions": {
+    "decision": "not_triggered",
+    "reason": "仅封面素材与网站卡片变化，无玩法、操作或入口变化；不计为游戏稳定更新，原任务的视频说明迁移由原任务继续办理。"
+  },
+  "taptap": "not_requested"
+}
