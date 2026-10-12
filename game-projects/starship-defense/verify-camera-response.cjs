@@ -29,8 +29,8 @@ try{for(const [tag,viewport,touch] of [['desktop',{width:1280,height:720},false]
   check(`${tag} ${first?'first':'third'} drag response`,r.turn>.38&&Math.abs(r.pending)<.02,r);
   check(`${tag} ${first?'first':'third'} keyboard speed`,r.key>=(first?Math.PI:Math.PI*2)-.01,r);
  }
- for(let preset=0;preset<6;preset++){
-  await p.evaluate(i=>{const q=__gameQA;q.Input.reset();if(i===5)q.setCamMode('first',false);else q.setCameraView(i,false);q.setCamYaw(0);q.Game.shake=0;},preset);await p.waitForTimeout(120);
+ for(let preset=0;preset<4;preset++){
+  await p.evaluate(i=>{const q=__gameQA;q.Input.reset();if(i===3)q.setCamMode('first',false);else q.setCameraView(i,false);q.setCamYaw(0);q.Game.shake=0;},preset);await p.waitForTimeout(120);
   let a=await sample(p);await drag(p,cdp,[520,155],[650,155],touch);await p.waitForTimeout(220);let b=await sample(p);
   const right=[-a.forward[2],0,a.forward[0]],dot=b.forward[0]*right[0]+b.forward[2]*right[2];
   check(`${tag} preset ${preset} right drag`,dot>.015&&Math.abs(angle(a.yaw,b.yaw))>.55,{dot,turn:angle(a.yaw,b.yaw)});

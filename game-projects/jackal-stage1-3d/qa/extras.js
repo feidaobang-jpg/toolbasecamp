@@ -18,7 +18,7 @@ const { BASE, snap, launch } = require('./lib');
   await steps(150);
   await page.evaluate(() => { __JK_TEST__.cheat.teleport(-21, 112); __JK_TEST__.cheat.invuln(0.01); });
   await steps(40);
-  for (const cam of ['oblique', 'top', 'low']) {
+  for (const cam of ['oblique', 'top', 'front']) {
     while ((await snap(page)).ui.camera !== cam) { await page.keyboard.press('KeyC'); await steps(1); }
     await steps(30);
     await shot('camera-' + cam);

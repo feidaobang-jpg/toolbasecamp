@@ -45,7 +45,7 @@ function check(name, ok, data) { checks.push({ name, ok, data }); if (!ok) throw
       await p.evaluate(() => { const q = __MARIO_TEST__; q.world.player.power = 'small'; q.step(1); });
       check('losing flower returns to unavailable state', await p.locator('[data-hold=fire]').getAttribute('aria-disabled') === 'true');
       // Observe pipe from every preset; settle camera with normal frame updates.
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         if (i) await p.keyboard.press('KeyC');
         await p.evaluate(() => { const q = __MARIO_TEST__; q.world.player.x = 27; q.world.player.y = 0; for (let i = 0; i < 100; i++) q.step(1); });
         await p.screenshot({ path: path.join(out, 'pipe-view-' + i + '.png') });

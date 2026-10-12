@@ -1,4 +1,4 @@
-// 浏览器实机验收（Playwright + Edge）：菜单与选项（键盘 / 触屏、保存）、两种模式开局、5 个视角下的 WASD 方向、
+// 浏览器实机验收（Playwright + Edge）：菜单与选项（键盘 / 触屏、保存）、两种模式开局、4 个视角下的 WASD 方向、
 // Q/E 一整圈、第一人称锁定方向、暂停、原版计分页 → 下一关、GAME OVER → 结算 → 重打、耐久 / 命数 / 演示模式、
 // 手机竖屏自动旋转与触控逆变换，以及实时帧时间。截图 / 录像写到输出目录（只留本机）。
 // PLAYWRIGHT_MODULE=… BROWSER_EXECUTABLE=… node game-projects/tank-3d/qa/browser-check.cjs <输出目录> [页面地址]
@@ -98,16 +98,16 @@ async function dirAfter(p, code) {
       assert.equal(shotsHeld, 1, 'classic: holding J fires once');
       ok('classic realtime drive + single shot per press', { y: s.player.y, fires: shotsHeld });
       await p.screenshot({ path: path.join(out, 'desktop-classic-top.png') });
-      // 5 个视角：按 D 都是屏幕右方（Q/E 未转时 = 东）；第一人称按 D 右转后继续直行
+      // 4 个视角：按 D 都是屏幕右方（Q/E 未转时 = 东）；第一人称按 D 右转后继续直行
       const dirs = {};
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 4; i++) {
         const cam = await g.evaluate(T('return T.state().camera'));
         dirs[cam] = await dirAfter(g, 'KeyD');
         await g.evaluate(T('T.world.player.dir = 0; T.view.yawOffset = 0; T.step(2);'));
         await p.screenshot({ path: path.join(out, 'desktop-view-' + cam + '.png') });
         await tap(g, 'KeyC'); await g.evaluate(T('T.step(2)'));
       }
-      assert.deepEqual(Object.values(dirs), [1, 1, 1, 1, 1], JSON.stringify(dirs));
+      assert.deepEqual(Object.values(dirs), [1, 1, 1, 1], JSON.stringify(dirs));
       ok('every view: D = screen right', dirs);
       // Q/E：转 90° 后 W 方向跟着视线；E 一整圈回到原方向
       await g.evaluate(T('T.view.setPreset(0); T.view.yawOffset = -Math.PI / 2; T.step(2)'));
@@ -122,7 +122,7 @@ async function dirAfter(p, code) {
       assert.ok(Math.abs(Math.abs(yawAfterCircle) - 2 * Math.PI) < .5, 'E held 4s ≈ one turn ' + yawAfterCircle);
       ok('Q/E rotation maps WASD', { wAt90, wAt180, yawAfterCircle: +yawAfterCircle.toFixed(2) });
       // 第一人称：按 D 后车头转向东，再按住 D 不会原地打转
-      await g.evaluate(T('T.view.setPreset(4); T.view.yawOffset = 0; T.world.player.dir = 0; T.step(2)'));
+      await g.evaluate(T('T.view.setPreset(3); T.view.yawOffset = 0; T.world.player.dir = 0; T.step(2)'));
       const fpD = await dirAfter(g, 'KeyD');
       await g.evaluate(T('T.manual(true); T.world.player.x = 96; T.world.player.y = 64;'));
       await key(g, 'KeyD'); const mid = await g.evaluate(T('T.step(45); return T.state().player.dir')); await g.evaluate(T('T.step(45)')); await key(g, 'KeyD', 'keyup');
@@ -132,7 +132,7 @@ async function dirAfter(p, code) {
       ok('first person latched steering', { fpD, fpHeld });
       // 第一人称开炮跟着准星：转车时视线不跳转，炮口若仍按车体方向，炮弹会从画面侧面飞走，
       // 又因为同时只允许 1 发在飞，玩家看到的就是"按 J 打不出子弹"。
-      await g.evaluate(T('const w = T.world; w.terrain.brick.fill(0); w.terrain.steel.fill(0); w.terrain.water.fill(0); w.bullets.length = 0; w.player.x = 96; w.player.y = 96; w.player.dir = 0; w.player.cool = 0; T.view.setPreset(4); T.view.yawOffset = 0; T.view.snap = true; T.step(4);'));
+      await g.evaluate(T('const w = T.world; w.terrain.brick.fill(0); w.terrain.steel.fill(0); w.terrain.water.fill(0); w.bullets.length = 0; w.player.x = 96; w.player.y = 96; w.player.dir = 0; w.player.cool = 0; T.view.setPreset(3); T.view.yawOffset = 0; T.view.snap = true; T.step(4);'));
       await key(g, 'KeyD'); const turned = await g.evaluate(T('return T.step(30)')); await key(g, 'KeyD', 'keyup');
       await g.evaluate(T('const w = T.world; w.bullets.length = 0; w.player.cool = 0;'));
       await tap(g, 'KeyJ');
@@ -297,7 +297,7 @@ async function dirAfter(p, code) {
         await g.evaluate(([m, s]) => { const T = window.__TANK_TEST__; T.settings.mode = m; T.settings.classicStage = s; T.startGame(m === 'classic' ? { stage: s, cycle: 1, score: 0 } : { stage: s, cycle: 1, score: 0 }); T.world.run.demo = true; }, [mode, stage]);
         await g.waitForFunction(() => window.__TANK_TEST__.state().phase === 'play', null, { timeout: 6000 });
         await p.waitForTimeout(6000);
-        for (let v = 0; v < 5; v++) {
+        for (let v = 0; v < 4; v++) {
           await g.evaluate(v2 => { const T = window.__TANK_TEST__; T.view.setPreset(v2); }, v);
           await key(g, 'KeyE');
           await p.waitForTimeout(500);
@@ -306,7 +306,7 @@ async function dirAfter(p, code) {
           const r = await g.evaluate(T('return { ...T.perfStop(), info: T.renderInfo() }'));
           await key(g, 'KeyE', 'keyup');
           const f = r.frames.slice().sort((a, b) => a - b), mean = f.reduce((a, b) => a + b, 0) / f.length;
-          perf[mode + stage + ':' + ['overview', 'top', 'close', 'front', 'fp'][v]] = { fps: +(1000 / mean).toFixed(1), median: +f[Math.floor(f.length / 2)].toFixed(1), p95: +f[Math.floor(f.length * .95)].toFixed(1), over50: f.filter(x => x > 50).length, calls: r.info.calls, tris: r.info.triangles };
+          perf[mode + stage + ':' + ['overview', 'top', 'front', 'fp'][v]] = { fps: +(1000 / mean).toFixed(1), median: +f[Math.floor(f.length / 2)].toFixed(1), p95: +f[Math.floor(f.length * .95)].toFixed(1), over50: f.filter(x => x > 50).length, calls: r.info.calls, tris: r.info.triangles };
         }
         await p.screenshot({ path: path.join(out, 'perf-' + mode + stage + '.png') });
       }

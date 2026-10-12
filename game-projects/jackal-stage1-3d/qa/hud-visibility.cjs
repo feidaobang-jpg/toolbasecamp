@@ -58,13 +58,13 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     check('ordinary rescue stays visible',ordinary.rescue!=='none');
     check('ordinary stage2 also has no fog',ordinary.cameraState.fog);
     await page.evaluate(()=>{const q=__JK_TEST__;q.cheat.teleport(0,325);q.step(180);});
-    const presets=['oblique','top','low','wide','front','fp'];
+    const presets=['oblique','top','front','fp'];
     for(const viewport of [{width:1280,height:720},{width:844,height:390},{width:667,height:375},{width:390,height:844}]) {
       if (await page.evaluate(()=>!__JK_TEST__.snapshot().ui.overlay)) { await page.locator('#btn-pause').click(); }
       await browserPage.setViewportSize(viewport);
       await page.locator('[data-control-mode=show]:visible').click();await page.locator('[data-act=resume]').click();
       await page.evaluate(()=>__JK_TEST__.step(120));
-      for(let i=0;i<6;i++) {
+      for(let i=0;i<presets.length;i++) {
         const m=await measure(page), label=viewport.width+'x'+viewport.height+' '+presets[i];
         check(label+' boss fight and four targets',m.state.boss.state==='fight'&&m.projected.length===4,m.projected);
         check(label+' armor and toolbar do not overlap',!overlap(m.armor,m.blocks.find(b=>b.id==='hud-top'))&&m.armor.w>0);

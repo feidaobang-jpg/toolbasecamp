@@ -51,18 +51,17 @@ const PILOT = `(() => {
     fs.renameSync(video, path.join(out, name));
     if (errors.length) throw Error(name + ': ' + errors.join('; '));
   }
-  // 经典第 1 关：正俯视开打 → 近景 → 正视 → 第一人称 → 斜俯视
+  // 经典第 1 关：正俯视开打 → 正视 → 第一人称 → 斜俯视
   await clip('play-classic-stage1.webm', "(() => { const T = window.__TANK_TEST__; T.settings.mode = 'classic'; T.startGame({ stage: 1, cycle: 1, score: 0 }); T.run.demo = true; })()", [
     [9000, null, 'play-classic-top.png'],
-    [6000, "window.__TANK_TEST__.view.setPreset(2)", 'play-classic-close.png'],
-    [6000, "window.__TANK_TEST__.view.setPreset(3)", 'play-classic-front.png'],
-    [6000, "window.__TANK_TEST__.view.setPreset(4)", 'play-classic-fp.png'],
+    [6000, "window.__TANK_TEST__.view.setPreset(2)", 'play-classic-front.png'],
+    [6000, "window.__TANK_TEST__.view.setPreset(3)", 'play-classic-fp.png'],
     [5000, "window.__TANK_TEST__.view.setPreset(0)", 'play-classic-overview.png']
   ]);
   // 魔改第 10 关：大 Boss 锈湾堡垒
   await clip('play-remix-boss10.webm', "(() => { const T = window.__TANK_TEST__; T.settings.mode = 'remix'; T.startGame({ stage: 10, cycle: 1, score: 0 }); T.run.demo = true; })()", [
     [10000, null, 'play-remix-boss10-a.png'],
-    [8000, "window.__TANK_TEST__.view.setPreset(3)", 'play-remix-boss10-front.png'],
+    [8000, "window.__TANK_TEST__.view.setPreset(2)", 'play-remix-boss10-front.png'],
     [6000, "window.__TANK_TEST__.view.setPreset(0)", 'play-remix-boss10-b.png']
   ]);
   await b.close();

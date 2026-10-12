@@ -413,9 +413,9 @@ scene.fog=new THREE.Fog(PAL.fog,PAL.fogNear,PAL.fogFar);
 const camera=new THREE.PerspectiveCamera(62,BASE_W/BASE_H,.1,950);
 scene.add(camera); // first-person weapon model is parented to the camera
 window.addEventListener('resize',()=>{renderer.setSize(BASE_W,BASE_H,false);camera.aspect=BASE_W/BASE_H;camera.updateProjectionMatrix();});
-/* 镜头：第三人称（默认，五档预设）与第一人称；C 循环全部视角；鼠标/触屏拖动或 Q/E 自由转向 */
+/* 镜头：第三人称（默认，三档预设）与第一人称，共四个视角（2026-10-12 去掉了与近身 / 高位相近的「低位跟随」「战术远景」，保留的三档序号不变）；C 循环全部视角；鼠标/触屏拖动或 Q/E 自由转向 */
 let camYaw=0,camPitch=0,camView=0,camMode='third',camYawVel=0;
-const CAMERA_VIEWS=[{d:8.6,h:3.9,name:'近身跟随'},{d:13.5,h:8.2,name:'高位跟随'},{d:9,h:24,name:'战术俯视'},{d:5.5,h:1.8,name:'低位跟随'},{d:20,h:15,name:'战术远景'}];
+const CAMERA_VIEWS=[{d:8.6,h:3.9,name:'近身跟随'},{d:13.5,h:8.2,name:'高位跟随'},{d:9,h:24,name:'战术俯视'}];
 const camState={target:new THREE.Vector3(),dist:8.6,init:false,inTunnel:0};
 function behindYaw(){return player.inVehicle?player.inVehicle.yaw:player.yaw;}
 function setCameraView(index,notify=true){

@@ -86,7 +86,7 @@ const server = http.createServer((req, res) => {
     const frame = await openGame(page, entry);
     await frame.locator('[data-act=start]').first().click(); await frame.evaluate(() => __MARIO_TEST__.skipCard()); await page.waitForTimeout(1500);
     const timings = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
       await frame.evaluate(i => { const t = __MARIO_TEST__; t.view.setPreset(i); Object.assign(t.world.player, { x: 100, y: 0, vx: 0, vy: 0, inv: 999 }); t.perfStart(); }, i);
       await page.keyboard.down('KeyE'); await page.keyboard.down('KeyA'); await page.waitForTimeout(4200); await page.keyboard.up('KeyA'); await page.keyboard.up('KeyE');
       const data = await frame.evaluate(() => { const t = __MARIO_TEST__, g = t.view.renderer.getContext(), ext = g.getExtension('WEBGL_debug_renderer_info'); return { ...t.perfStop(), info: t.renderInfo(), renderer: ext && g.getParameter(ext.UNMASKED_RENDERER_WEBGL), dpr: t.view.renderer.getPixelRatio() }; });

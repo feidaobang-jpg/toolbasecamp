@@ -1,7 +1,7 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=menu-text1';
 // 坦克大战 3D · 入口：模式选择（经典复刻 35 关 / 魔改无限周目）、标准选项、关卡流程
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
+import { createScene, PRESETS } from './scene.js?v=views4';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop-unstick1';
 import { CoopConnection, snapshot, hydrate, installNicknameButton } from './coop.js?v=coop-safety1';
 import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
@@ -9,7 +9,7 @@ installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
 import { GameAudio } from './audio.js?v=hit-audio1';
 
-const VERSION = 'remix-entry1-fp-aim1';
+const VERSION = 'remix-entry1-views4';
 const STEP = 1 / 60;
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1' || params.has('qa');
@@ -37,19 +37,26 @@ function legacy() {
 }
 legacy();
 const MODES = ['classic', 'remix'];
+// 视角从 5 个减到 4 个（去掉「近景」）：把以前存的序号换算一次，近景并回斜俯视，正视和第一人称各往前挪一位。
+function savedCamera(mode, fallback) {
+  let v = clampInt(store.get('camera.' + mode, fallback), 0, 4);
+  if (store.get('camera.rev', 0) !== 2) v = [0, 1, 0, 2, 3][v];
+  return clampInt(v, 0, PRESETS.length - 1);
+}
 const settings = {
   mode: pick(store.get('mode', 'remix'), MODES, 'remix'),
   classicStage: clampInt(store.get('classicStage', 1), 1, CLASSIC_COUNT),
   remixFrom: 'continue',
   lives: { classic: pick(store.get('lives.classic', 'classic'), ['inf', 'classic'], 'classic'), remix: pick(store.get('lives.remix', 'inf'), ['inf', 'classic'], 'inf') },
   armor: { classic: pick(store.get('armor.classic', 'classic'), ['std', 'classic'], 'classic'), remix: pick(store.get('armor.remix', 'std'), ['std', 'classic'], 'std') },
-  camera: { classic: clampInt(store.get('camera.classic', 1), 0, PRESETS.length - 1), remix: clampInt(store.get('camera.remix', 0), 0, PRESETS.length - 1) },
+  camera: { classic: savedCamera('classic', 1), remix: savedCamera('remix', 0) },
   demo: false,
   quality: pick(store.get('quality', 'auto'), ['auto', 'high', 'low'], 'auto'),
   volume: Math.max(0, Math.min(1, Number(store.get('volume', .7)))),
   touch: pick(store.get('touch', 'auto'), ['auto', 'show', 'hide'], 'auto'),
   fps: store.get('fps', false) === true
 };
+if (store.get('camera.rev', 0) !== 2) { store.set('camera.classic', settings.camera.classic); store.set('camera.remix', settings.camera.remix); store.set('camera.rev', 2); }
 if (Number.isNaN(settings.volume)) settings.volume = .7;
 if (params.get('q') === 'low' || params.get('q') === 'high') settings.quality = params.get('q');
 if (MODES.includes(params.get('mode'))) settings.mode = params.get('mode');

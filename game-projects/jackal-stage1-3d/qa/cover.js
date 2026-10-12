@@ -11,8 +11,8 @@ const { BASE, snap, launch } = require('./lib');
   const steps = (n) => page.evaluate((n) => { let r; for (let i = 0; i < n; i++) r = __JK_TEST__.step(1, false); return r; }, n);
   await steps(140);
   await page.addStyleTag({ content: '#hud,#hud-top,#keyhint,#toast,#banner,#fps,#boss-bar{display:none!important}' });
-  for (const [x, y, name, k, cam] of [[1.5, 45, 'gate-ob', 44, 0], [1.5, 46.5, 'gate-low', 44, 2]]) {
-    while ((await snap(page)).ui.camera !== ['oblique', 'top', 'low'][cam]) { await page.keyboard.press('KeyC'); await steps(1); }
+  for (const [x, y, name, k, cam] of [[1.5, 45, 'gate-ob', 44, 0], [1.5, 46.5, 'gate-front', 44, 2]]) {
+    while ((await snap(page)).ui.camera !== ['oblique', 'top', 'front'][cam]) { await page.keyboard.press('KeyC'); await steps(1); }
     await page.evaluate(([x, y]) => { __JK_TEST__.cheat.teleport(x, y); __JK_TEST__.cheat.invuln(0.01); __JK_TEST__.cheat.carry(3); }, [x, y]);
     await page.keyboard.down('KeyW'); await steps(6); await page.keyboard.up('KeyW');
     await steps(60);
