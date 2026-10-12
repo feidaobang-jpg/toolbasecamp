@@ -108,5 +108,23 @@
     "taptap": {
       "status": "not_in_scope"
     }
+  },
+  "cleanup": {
+    "status": "done",
+    "done_at": "2026-10-12T19:40:00+08:00",
+    "stopped": [
+      "serve_cors.py 8814 (PID 36728)"
+    ],
+    "released": [
+      "bili-activities/account-write.lock（本任务锁）"
+    ],
+    "removed": [
+      "D:/project/task-artifacts/mario-stage4-video-20261012/tmp"
+    ],
+    "left_untouched": [
+      "account-write.recovered-lock-20261012-1800.qoder",
+      "account-write.lock-stopped-qianwen-20261011-200610",
+      "其他会话的 8765 / 8799 本地服务"
+    ]
   }
 }

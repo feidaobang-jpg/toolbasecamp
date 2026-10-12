@@ -328,7 +328,10 @@
     }
   ],
   "cleanup": {
-    "cors_server": "D:/project/task-artifacts/mario-stage4-video-20261012/serve_cors.py 端口 8814（YouTube 上传与封面注入用），收尾需停止",
-    "bilibili_account_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock（本任务持有，收尾释放；先前遗留锁已改名保留 account-write.recovered-lock-20261012-1800.qoder）"
+    "cors_server": "D:/project/task-artifacts/mario-stage4-video-20261012/serve_cors.py 端口 8814（YouTube 上传与封面注入用）已于 2026-10-12T19:40:00+08:00 taskkill 停止 PID 36728，netstat 复核 127.0.0.1:8814 已无监听。",
+    "bilibili_account_lock": "C:/Users/37818/.claude/state/bili-activities/account-write.lock（本任务持有，owner.json 确认 tool=Qoder、task=mario-stage4-video-publish-20261012）已于 2026-10-12T19:40:00+08:00 删除并释放；只释放自己的锁。先前遗留锁 account-write.recovered-lock-20261012-1800.qoder 与 account-write.lock-stopped-qianwen-20261011-200610 原样保留，未改动。",
+    "scratch_files": "已删除 D:/project/task-artifacts/mario-stage4-video-20261012/tmp（含 YouTube 公开核验抓取的 tmp/verify：watch/chan/pl 快照、maxres 与本地封面比对图、checks.txt、cors8814.log）。成片、字幕、封面与文案证据仍保留在本期 episode 目录 final/ 与 work/publish/ 下。",
+    "other_local_servers": "127.0.0.1:8765（站点静态服务，10:41 启动）与 127.0.0.1:8799（15:26 启动）均早于本任务会话（17:58 取得账号锁），判定为其他任务进程，按要求不越权停止，仅记录。",
+    "cleanup_done_at": "2026-10-12T19:40:00+08:00"
   }
 }
