@@ -12,28 +12,42 @@
       "variant_id": "bilibili-zh",
       "manifest_file": "publish/bilibili-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "用户尚未审片"
-      ]
+      "blocking_issues": [],
+      "published": "BV1avpd6KE3h"
     },
     {
       "variant_id": "douyin-zh",
       "manifest_file": "publish/douyin-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "用户尚未审片"
-      ]
+      "blocking_issues": [],
+      "published": "7695767660625202470"
     },
     {
       "variant_id": "youtube-zh",
       "manifest_file": "publish/youtube-zh/publish.json",
       "ready_to_upload": false,
-      "blocking_issues": [
-        "用户尚未审片"
-      ]
+      "blocking_issues": [],
+      "published": "TT3uvOfYiVo"
     }
   ],
   "ready_to_upload": false,
-  "human_review": null,
-  "updated_at": "2026-10-12T17:28:05+08:00"
+  "human_review": {
+    "status": "approved",
+    "statement": "视频可以发布了，包括后续简介，评论等。",
+    "accepted_at": "2026-10-12T20:20:00+08:00",
+    "source": "user message in this session",
+    "scope": "已展示的三平台成片集（B 站 / 抖音 / YouTube 成片 + 封面 + 字幕 + 文案），含后续简介与评论维护",
+    "voice_decision": "用户听过成片：本地 IndexTTS 配音效果可以，以后就用它",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "file_hashes": {
+      "final/bilibili-zh/gameplay-zh-final.mp4": "68a7e12e59d768490882339c56a898f1f9df1531bae24f33f848c20faecaa4e0",
+      "final/douyin-zh/gameplay-zh-final.mp4": "3e7c53eaab8a55abb3e9c179f7d4a49f80904826b0299163a949fd6026f725e2",
+      "final/youtube-zh/gameplay-youtube-final.mp4": "888034e9c06bc4203332997293a4915ee95c396c356bd173312a8b88803ae451"
+    }
+  },
+  "updated_at": "2026-10-12T21:15:36+08:00"
 }

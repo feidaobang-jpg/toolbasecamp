@@ -5,25 +5,39 @@
       "bvid": "BV1EyHz6wE5u",
       "url": "https://www.bilibili.com/video/BV1EyHz6wE5u/",
       "owner_uid": 16214353,
-      "last_public_verified_version": "v0.10.3-menu-text1",
+      "last_public_verified_version": "v0.11.0",
       "block_sha256": "bf3cc8c7456e8066e431d59ddb45518349814a49510823fcff63cfd01438e3be",
       "verified_at": "2026-10-06T22:35:15.869180+00:00",
-      "release_record": "releases/backfill-20261010/release-status.json",
-      "last_public_verified_at": "2026-10-10T02:46:25.627Z",
-      "last_sync_record": "releases/backfill-20261010/release-status.json",
-      "description_sha256": "8b50c3fef8d12b510e4c4a999269d567a5b2463c2a93c2974c6a10f84595d930",
-      "lastPublicVerifiedVersion": "v0.10.3-menu-text1",
-      "descriptionHash": "8b50c3fef8d12b510e4c4a999269d567a5b2463c2a93c2974c6a10f84595d930",
-      "release": "releases/backfill-20261010/release-status.json",
-      "publicVerifiedAt": "2026-10-10T02:46:25.627Z",
+      "release_record": "video/stage3-20261012/work/publication-result.json",
+      "last_public_verified_at": "2026-10-12T12:55:00.000Z",
+      "last_sync_record": "video/stage3-20261012/work/publication-result.json",
+      "description_sha256": "ca98d3336c432b4e5fb1561f738e68e1a9c56711c22f33dea64ca4a1581384a1",
+      "lastPublicVerifiedVersion": "v0.11.0",
+      "descriptionHash": "ca98d3336c432b4e5fb1561f738e68e1a9c56711c22f33dea64ca4a1581384a1",
+      "release": "video/stage3-20261012/work/publication-result.json",
+      "publicVerifiedAt": "2026-10-12T12:55:00.000Z",
       "status": "public_verified",
-      "submitted_version": "v0.10.3-menu-text1",
-      "submitted_at": "2026-10-10T02:46:10.184Z",
-      "public_verified_at": "2026-10-10T02:46:25.627Z",
-      "description_revision": "v0.10.3-menu-text1",
-      "description_public_verified_at": "2026-10-10T02:46:25.627Z",
-      "record": "releases/backfill-20261010/release-status.json",
-      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json"
+      "submitted_version": "v0.11.0",
+      "submitted_at": "2026-10-12T12:54:00.000Z",
+      "public_verified_at": "2026-10-12T12:55:00.000Z",
+      "description_revision": "v0.11.0",
+      "description_public_verified_at": "2026-10-12T12:55:00.000Z",
+      "record": "video/stage3-20261012/work/publication-result.json",
+      "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json",
+      "pinned_guide_rpid": 316866720209
+    },
+    {
+      "bvid": "BV1avpd6KE3h",
+      "url": "https://www.bilibili.com/video/BV1avpd6KE3h/",
+      "owner_uid": 16214353,
+      "title": "一辆吉普单挑一艘战舰！赤色要塞3D第三关上线，直接开玩",
+      "episode": "video/stage3-20261012",
+      "published_at": "2026-10-12T20:48:38+08:00",
+      "last_public_verified_version": "v0.11.0",
+      "status": "public_verified",
+      "last_public_verified_at": "2026-10-12T12:52:00.000Z",
+      "record": "video/stage3-20261012/work/publication-result.json",
+      "pinned_comment_rpid": 316866507505
     }
   ],
   "pending": [],
@@ -197,8 +211,8 @@
     }
   ],
   "status": "public_verified",
-  "version": "v0.10.3-menu-text1",
-  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "version": "v0.11.0",
+  "updated_at": "2026-10-12T21:15:36+08:00",
   "history": [
     {
       "bvid": "BV1EyHz6wE5u",
@@ -246,17 +260,57 @@
         "submitted_at": "2026-10-07T02:35:12.420Z",
         "public_verified_at": "2026-10-07T18:05:00+08:00"
       }
+    },
+    {
+      "at": "2026-10-12T21:15:36+08:00",
+      "version": "v0.11.0",
+      "decision": "update_now",
+      "reason": "重大版本（新关卡）且新一期视频发布：旧视频简介补第三关与新一期链接",
+      "targets": [
+        "BV1EyHz6wE5u",
+        "douyin 7694182043927760191",
+        "youtube 9MwVi2fVMPo"
+      ],
+      "record": "video/stage3-20261012/work/publication-result.json",
+      "source": "Claude Code"
     }
   ],
-  "last_public_verified": {
-    "version": "v0.10.3-menu-text1",
-    "at": "2026-10-10T03:02:52.978211+00:00",
-    "bvids": [
-      "BV1EyHz6wE5u"
+  "last_public_verified": "2026-10-12T21:15:36+08:00",
+  "latest_record": "video/stage3-20261012/work/publication-result.json",
+  "pending_note": "无待合并项（v0.11.0 已覆盖）",
+  "last_release_record": "video/stage3-20261012/work/publication-result.json",
+  "other_platforms": {
+    "douyin": [
+      {
+        "id": "7694182043927760191",
+        "title": "一辆小吉普，救完两关的人：赤色要塞实战",
+        "last_synced_version": "v0.11.0",
+        "status": "submitted_creator_readback",
+        "at": "2026-10-12T21:13:00+08:00"
+      },
+      {
+        "id": "7695767660625202470",
+        "title": "一辆吉普单挑一艘战舰！赤色要塞3D第三关上线",
+        "last_synced_version": "v0.11.0",
+        "status": "published",
+        "at": "2026-10-12T21:09:04+08:00"
+      }
     ],
-    "record": "releases/backfill-20261010/release-status.json"
-  },
-  "latest_record": "releases/backfill-20261010/release-status.json",
-  "pending_note": null,
-  "last_release_record": "releases/backfill-20261010/release-status.json"
+    "youtube": [
+      {
+        "id": "9MwVi2fVMPo",
+        "title": "一辆小吉普，救完两关的人：赤色要塞实战",
+        "last_synced_version": "v0.11.0",
+        "status": "public_verified",
+        "at": "2026-10-12T21:11:00+08:00"
+      },
+      {
+        "id": "TT3uvOfYiVo",
+        "title": "一辆吉普单挑一艘战舰！赤色要塞 3D 重制版第三关「港口」上线",
+        "last_synced_version": "v0.11.0",
+        "status": "published",
+        "at": "2026-10-12T21:03:00+08:00"
+      }
+    ]
+  }
 }

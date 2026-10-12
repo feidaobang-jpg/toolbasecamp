@@ -31,9 +31,7 @@
   "unverified_fields": [
     "当期投稿页的封面尺寸与字段限制未在投稿页实测"
   ],
-  "blocking_issues": [
-    "用户尚未审片"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "title": "一辆吉普单挑一艘战舰！赤色要塞3D第三关上线",
   "description": "小时候的赤色要塞，做成了 3D 网页版。第三关港口上线：炸闸门、冲栈桥，最后单挑一艘战舰。原作一共六关，下一关你想先看哪个？",
@@ -53,5 +51,9 @@
       "height": 1080,
       "purpose": "封面（入口只支持选帧时改选成片 0:05 左右）"
     }
+  },
+  "human_review": {
+    "status": "approved",
+    "accepted_at": "2026-10-12T20:20:00+08:00"
   }
 }

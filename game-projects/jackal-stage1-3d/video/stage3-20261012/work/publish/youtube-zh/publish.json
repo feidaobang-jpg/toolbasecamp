@@ -31,9 +31,7 @@
   "unverified_fields": [
     "当期投稿页的封面尺寸与字段限制未在投稿页实测"
   ],
-  "blocking_issues": [
-    "用户尚未审片"
-  ],
+  "blocking_issues": [],
   "ready_to_upload": false,
   "title": "一辆吉普单挑一艘战舰！赤色要塞 3D 重制版第三关「港口」上线",
   "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表里选「赤色要塞」即可，电脑手机都能玩；链接点不开就复制到浏览器。\n赤色要塞 3D 第三关「港口」：炸开三道闸门，冲过两条栈桥和仓库之间的之字通道，最后在码头单挑一艘战舰。这期还讲了第一版闹的笑话，和一个会让新玩家八秒阵亡的老问题是怎么改的。\n用 Claude 辅助开发的粉丝向非官方重制，《赤色要塞》（Jackal）原作版权归 Konami 所有。\n操作：WASD 移动，J 机枪，K 手雷或火箭，U 联合开火，C 切换视角。",
@@ -79,5 +77,9 @@
       "height": 1080,
       "purpose": "缩略图（16:9）"
     }
+  },
+  "human_review": {
+    "status": "approved",
+    "accepted_at": "2026-10-12T20:20:00+08:00"
   }
 }

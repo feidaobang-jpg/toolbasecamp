@@ -1,5 +1,5 @@
 {
-  "status": "rendered_awaiting_user_review",
+  "status": "published_all_three",
   "mode": "update",
   "game_id": "jackal-stage1-3d",
   "version": "v0.11.0",
@@ -35,7 +35,24 @@
     "reason": "Edge 在线语音 2026-10-12 返回 403（上游已知问题）",
     "redo_when_edge_recovers": "voice.py → render.py audio/shared-zh final → package.py（会改变成片哈希，需重新审片）"
   },
-  "human_review": null,
+  "human_review": {
+    "status": "approved",
+    "statement": "视频可以发布了，包括后续简介，评论等。",
+    "accepted_at": "2026-10-12T20:20:00+08:00",
+    "source": "user message in this session",
+    "scope": "已展示的三平台成片集（B 站 / 抖音 / YouTube 成片 + 封面 + 字幕 + 文案），含后续简介与评论维护",
+    "voice_decision": "用户听过成片：本地 IndexTTS 配音效果可以，以后就用它",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "file_hashes": {
+      "final/bilibili-zh/gameplay-zh-final.mp4": "68a7e12e59d768490882339c56a898f1f9df1531bae24f33f848c20faecaa4e0",
+      "final/douyin-zh/gameplay-zh-final.mp4": "3e7c53eaab8a55abb3e9c179f7d4a49f80904826b0299163a949fd6026f725e2",
+      "final/youtube-zh/gameplay-youtube-final.mp4": "888034e9c06bc4203332997293a4915ee95c396c356bd173312a8b88803ae451"
+    }
+  },
   "review_request": {
     "requested_at": "2026-10-12T19:45:00+08:00",
     "review_folder": "D:/project/toolbasecamp/.claude/review/jackal-stage3-20261012（成片原文件的拷贝，哈希与 videos 一致）",
@@ -43,7 +60,7 @@
       "task_id": "f40a799e-jackal-stage3-01",
       "event_id": "jackal-stage3-video-review-20261012-01",
       "reason": "Approval",
-      "result": "sent",
+      "result": "sent → resolved（用户 2026-10-12 回复可以发布）",
       "resolve_after": "用户在聊天里明确通过或给出修改意见并记录后调用 Resolve"
     },
     "edge_retry": "2026-10-12 19:40 再试一次 Edge 云希，仍 403"
@@ -56,11 +73,11 @@
     "开发中画面与改动前片段都是当天的真实截图 / 录像，已在画面上标注"
   ],
   "next_actions": [
-    "用户审片（三版；B 站版与另外两版只差结尾一句和片尾卡）",
-    "通过后按 game-video 发布流程：三平台上传、B 站选话题、绑定 Toy 39863936092160、置顶评论、推流申请、加入合集（赤色要塞暂无合集映射则记待关联）",
-    "发布时顺带查 B 站当期活动与可用流量券",
-    "同时把旧视频 BV1EyHz6wE5u 的简介补上第三关（重大版本，按 bili-game-update）"
+    "24 小时 / 72 小时 / 7 天复盘同窗口数据",
+    "推流申请表 A385 的运营反馈（F 列）有结果时记录",
+    "约 10-14 后看 Toy 留存再决定第四关"
   ],
   "capture_permission": "用户 2026-10-04 长期授权用 Playwright 脚本录制",
-  "updated_at": "2026-10-12T17:29:43+08:00"
+  "updated_at": "2026-10-12T21:15:36+08:00",
+  "publication_result": "work/publication-result.json"
 }
