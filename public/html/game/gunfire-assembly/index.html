@@ -82,7 +82,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:"Mi
 #vI{right:28px;bottom:100px}#vH{right:102px;bottom:106px}#vX{right:172px;bottom:88px}
 #vO{right:24px;bottom:172px}#vL{right:78px;bottom:172px}#vC{right:132px;bottom:172px}#vP{right:186px;bottom:172px}
 .touch-mode #keysHint{display:none}
-.touch-mode #weaponBar{bottom:auto;top:58px;max-width:520px}
+.touch-mode #weaponBar{bottom:auto;top:58px;max-width:520px;z-index:26}
+.touch-mode #weaponBar .wslot{min-height:44px;font-size:12px;padding:8px 11px 8px 9px}
 .touch-mode #hint{bottom:auto;top:116px;max-width:470px;font-size:10px;padding:5px 9px}
 /* 曲面屏/手势返回会吞掉贴边触摸：触屏把开战按钮放进底部安全带，建造条出现时暂避 */
 .touch-mode #readyBtn{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 56px);min-height:44px;padding:12px 26px;font-size:15px}
@@ -349,7 +350,10 @@ button::before,button::after{content:none!important}
 #stage.versus-mode.touch-mode #vsPanel{right:calc(var(--touch-right) + var(--bf-step) * 3 + var(--bf-size) + 12px);max-width:55%;max-height:calc(100% - 70px)}
 #stage.versus-mode.touch-mode #vsPanel .vs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 #stage.versus-mode.touch-mode #vsPanel button{min-height:var(--corner-height)}
-#stage.versus-mode.touch-mode #weaponBar{display:none}
+/* 战地手机：顶部直选枪槽，避免只能轮切或开商店 */
+#stage.versus-mode #weaponBar{bottom:auto;top:112px;z-index:26;max-width:min(640px,72%)}
+#stage.versus-mode.touch-mode #weaponBar{display:flex;top:96px;max-width:min(560px,78%);gap:6px}
+#stage.versus-mode.touch-mode #weaponBar .wslot{min-height:44px;font-size:12px;padding:8px 12px}
 #stage.versus-mode.touch-mode{--bf-corner:max(72px,var(--corner-height))}
 #stage.versus-mode.touch-mode #vP,#stage.versus-mode.touch-mode #cornerTools #fullBtn{width:var(--bf-corner);min-width:var(--corner-height)}
 #stage.versus-mode.touch-mode #vP{right:calc(var(--corner-right) + var(--bf-corner) + var(--corner-gap))}
@@ -753,7 +757,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=lobby3-011" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=wbar-012" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

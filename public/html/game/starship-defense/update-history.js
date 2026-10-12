@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.4';
+export const GAME_VERSION='0.36.5';
 export const UPDATE_HISTORY=[
+  {version:'0.36.5',date:'2026-10-12',title:'顶部点枪换枪',changes:[
+    '战地模式恢复顶部武器栏：点枪名即可换枪，不必再轮切过头或开进商店。',
+    '手机触屏枪槽加大；主战役手机武器栏同样更容易点中。']},
   {version:'0.36.4',date:'2026-10-12',title:'视角精简',changes:[
     '按 C 切换的视角从 6 个减到 4 个：近身跟随、高位跟随、战术俯视、第一人称。',
     '去掉了和近身、高位很像的「低位跟随」「战术远景」，少按两下就能转回来。']},

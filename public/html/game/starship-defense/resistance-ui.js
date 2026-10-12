@@ -23,7 +23,7 @@ export function mountResistanceUI(api){
  #warHUD strong{font-size:17px;display:block;color:#e7d49d}#warMission{margin-top:4px;color:#fff}#warProgress{color:#b8cda7}#warHint{color:#decb90;font-size:12px;margin-top:5px}
  #warMap{position:absolute;right:12px;top:118px;width:142px;height:160px;background:#1f2c27e6;border:1px solid #8c9777;border-radius:5px;pointer-events:none}
  #warStatus{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);color:#f1e9d2;background:#1d2a25ed;border:1px solid #6d785f;border-radius:6px;padding:9px 15px;line-height:1.6;text-align:center;min-width:280px;pointer-events:none;font-size:14px}
- #warLoadout{position:absolute;left:50%;bottom:79px;transform:translateX(-50%);display:flex;gap:5px}
+ #warLoadout{position:absolute;left:50%;top:58px;bottom:auto;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:5px;max-width:min(640px,78%);z-index:26}
  #warLoadout button{min-height:42px;border-radius:4px;border:1px solid #80866e;background:#dfd7bd;color:#25362b;padding:5px 10px;font-size:12px;cursor:pointer}#warLoadout button.on{background:#b6cb99;border-color:#e4c475;box-shadow:0 0 0 2px #e4c475}
  #warDialogue{position:absolute;left:50%;bottom:132px;transform:translateX(-50%);max-width:640px;width:60%;background:#17211de8;border-left:4px solid #dac389;padding:12px 18px;color:#f5e9c7;font-size:19px;line-height:1.65;pointer-events:none}
  #warReticle{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;border:1px solid #efe4b1;border-radius:50%;pointer-events:none}#warReticle:after{content:'';position:absolute;width:3px;height:3px;left:7px;top:7px;background:#fff4c0}
@@ -37,7 +37,7 @@ export function mountResistanceUI(api){
  #warOrder{position:absolute;right:12px;top:285px;min-height:var(--corner-height,44px);background:#e2d8b9;color:#304335;border:1px solid #b4a974;border-radius:6px;padding:6px 12px;cursor:pointer}
  .touch-mode #warHUD{width:275px;font-size:11px;padding:6px 10px}.touch-mode #warHUD strong{font-size:14px}.touch-mode #warHint{font-size:10px}
  .touch-mode #warMap{width:103px;height:117px;top:108px}.touch-mode #warOrder{top:230px;font-size:11px;min-height:44px}
- .touch-mode #warStatus{bottom:12px;min-width:205px;font-size:11px;padding:5px 9px}.touch-mode #warLoadout{bottom:62px;gap:4px;max-width:50%}.touch-mode #warLoadout button{font-size:10px;min-height:44px;padding:3px 6px}
+ .touch-mode #warStatus{bottom:12px;min-width:205px;font-size:11px;padding:5px 9px}.touch-mode #warLoadout{top:52px;bottom:auto;gap:6px;max-width:min(560px,78%)}.touch-mode #warLoadout button{font-size:12px;min-height:44px;padding:8px 10px}
  .touch-mode #warDialogue{bottom:120px;width:45%;font-size:14px;padding:8px 12px}
  .touch-mode #warMenu{padding:10px 22px;gap:6px}.touch-mode #warMenu h1{font-size:27px}.touch-mode .warChapter{min-height:160px;padding:10px;font-size:12px}.touch-mode .warChapter strong{font-size:17px}
  @media(max-height:450px){#warMenu{padding:10px 20px}#warMenu h1{font-size:24px}.warChapter{padding:10px;min-height:160px;font-size:12px}.warChapter strong{font-size:17px}#warMenu .small{font-size:11px}}
