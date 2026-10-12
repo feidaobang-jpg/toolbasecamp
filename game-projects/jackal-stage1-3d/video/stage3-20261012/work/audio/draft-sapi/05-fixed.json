@@ -1,0 +1,63 @@
+{
+    "text":  "改完之后，才像个正经港口。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  965000,
+                      "duration":  0,
+                      "text":  "改",
+                      "pos":  0,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  3309375,
+                      "duration":  0,
+                      "text":  "完",
+                      "pos":  1,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  5638125,
+                      "duration":  0,
+                      "text":  "之后",
+                      "pos":  2,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  15180625,
+                      "duration":  0,
+                      "text":  "才",
+                      "pos":  5,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  17898750,
+                      "duration":  0,
+                      "text":  "像",
+                      "pos":  6,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  20753125,
+                      "duration":  0,
+                      "text":  "个",
+                      "pos":  7,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  23058750,
+                      "duration":  0,
+                      "text":  "正经",
+                      "pos":  8,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  27965625,
+                      "duration":  0,
+                      "text":  "港口",
+                      "pos":  10,
+                      "chars":  2
+                  }
+              ]
+}

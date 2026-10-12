@@ -1,0 +1,35 @@
+{
+  "status": "waiting_for_user",
+  "waiting_on": "正式配音怎么办（Edge 云希今天生成不了）",
+  "mode": "update",
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.11.0",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "project": "game-projects/jackal-stage1-3d/video/stage3-20261012",
+  "worktree": "D:/project/worktrees/jackal-stage3-20261012",
+  "done": [
+    "实时录制（run / run-front / idle1 / idle / fp）",
+    "解说稿与两版结尾",
+    "时间线与渲染脚本",
+    "英文字幕译文表",
+    "三平台封面与投稿文案",
+    "系统语音配的画面样片（三版）"
+  ],
+  "todo": [
+    "正式配音：Edge 恢复后运行 voice.py（或按用户选的声音生成到 audio/shared-zh/）",
+    "python render.py audio/shared-zh final",
+    "python package.py",
+    "响度与成片抽查，更新 qa.md",
+    "交用户审片",
+    "审片通过后三平台发布、绑定 Toy、置顶评论、推流申请"
+  ],
+  "resume": "在 work/ 下依次运行：voice.py → render.py audio/shared-zh final → package.py",
+  "toy_status": "published v0.11.0（2026-10-12 公开核验）",
+  "subjective_audio_review": "not-run",
+  "capture_permission": "用户 2026-10-04 长期授权用 Playwright 脚本录制",
+  "updated_at": "2026-10-12T17:15:59+08:00"
+}

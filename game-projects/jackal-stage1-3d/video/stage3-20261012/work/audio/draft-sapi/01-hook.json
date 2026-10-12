@@ -1,0 +1,147 @@
+{
+    "text":  "赤色要塞第三关，码头尽头停着一艘战舰。六座炮塔，得一座一座打掉。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  989375,
+                      "duration":  0,
+                      "text":  "赤色",
+                      "pos":  0,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  5675000,
+                      "duration":  0,
+                      "text":  "要塞",
+                      "pos":  2,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  11171250,
+                      "duration":  0,
+                      "text":  "第三",
+                      "pos":  4,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  16058125,
+                      "duration":  0,
+                      "text":  "关",
+                      "pos":  6,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  23974375,
+                      "duration":  0,
+                      "text":  "码头",
+                      "pos":  8,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  28808125,
+                      "duration":  0,
+                      "text":  "尽头",
+                      "pos":  10,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  34427500,
+                      "duration":  0,
+                      "text":  "停",
+                      "pos":  12,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  37423750,
+                      "duration":  0,
+                      "text":  "着",
+                      "pos":  13,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  38920625,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  14,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  40583750,
+                      "duration":  0,
+                      "text":  "艘",
+                      "pos":  15,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  43191875,
+                      "duration":  0,
+                      "text":  "战舰",
+                      "pos":  16,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  58269375,
+                      "duration":  0,
+                      "text":  "六",
+                      "pos":  19,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  60630000,
+                      "duration":  0,
+                      "text":  "座",
+                      "pos":  20,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  62586250,
+                      "duration":  0,
+                      "text":  "炮塔",
+                      "pos":  21,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  72936250,
+                      "duration":  0,
+                      "text":  "得",
+                      "pos":  24,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  74821250,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  25,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  76481250,
+                      "duration":  0,
+                      "text":  "座",
+                      "pos":  26,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  79190000,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  27,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  81401250,
+                      "duration":  0,
+                      "text":  "座",
+                      "pos":  28,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  83335625,
+                      "duration":  0,
+                      "text":  "打掉",
+                      "pos":  29,
+                      "chars":  2
+                  }
+              ]
+}

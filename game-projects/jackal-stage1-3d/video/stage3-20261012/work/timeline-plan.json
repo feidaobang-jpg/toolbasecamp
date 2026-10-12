@@ -1,0 +1,173 @@
+{
+  "note": "in 为原片里的秒数；每段长度由该段配音实际时长决定，最后一个镜头补足剩余时间。A/F 是 v0.11.0 线上版本的实时录制（自动试玩机器人按正常规则游玩），I1 是新版第一关进场不操作，B 是改动前线上旧版进场不操作。 镜头里写 phrases 的，按配音实际讲到第几句切换。",
+  "sources": {
+    "A": "capture/run-1791794419016/raw.mp4",
+    "F": "capture/run-front-1791794615235/raw.mp4",
+    "I1": "capture/idle1-1791794354371/raw.mp4",
+    "B": "../../../media-kit/releases/v0.11.0/dev/before-live-v0103-idle-22s.webm"
+  },
+  "segments": [
+    {
+      "id": "01-hook",
+      "shots": [
+        {
+          "source": "A",
+          "in": 145.4
+        }
+      ]
+    },
+    {
+      "id": "02-sink",
+      "shots": [
+        {
+          "source": "A",
+          "in": 160.3
+        }
+      ]
+    },
+    {
+      "id": "03-why",
+      "shots": [
+        {
+          "source": "F",
+          "in": 3.6
+        }
+      ]
+    },
+    {
+      "id": "04-first",
+      "shots": [
+        {
+          "source": "mk:releases/v0.11.0/dev/first-03-x-10y58.png",
+          "label": "开发中画面 · 第一版",
+          "zoom": true,
+          "phrases": 2
+        },
+        {
+          "source": "mk:releases/v0.11.0/dev/first-06-x-11y150.png",
+          "label": "开发中画面 · 第一版",
+          "zoom": true,
+          "phrases": 1
+        },
+        {
+          "source": "mk:releases/v0.11.0/dev/first-18-x0y331.png",
+          "label": "开发中画面 · 第一版",
+          "zoom": true
+        }
+      ]
+    },
+    {
+      "id": "05-fixed",
+      "shots": [
+        {
+          "source": "mk:releases/v0.11.0/dev/fix1-03-x-26y212.png",
+          "label": "改完之后",
+          "zoom": true,
+          "phrases": 1
+        },
+        {
+          "source": "mk:releases/v0.11.0/dev/fix1-07-x8y331.png",
+          "label": "改完之后",
+          "zoom": true
+        }
+      ]
+    },
+    {
+      "id": "06-before",
+      "shots": [
+        {
+          "source": "B",
+          "in": 6.8,
+          "label": "改动前 · 线上旧版实录",
+          "mute": true
+        }
+      ]
+    },
+    {
+      "id": "07-after",
+      "shots": [
+        {
+          "source": "I1",
+          "in": 3.6,
+          "label": "改动后 · 同样站着不动"
+        }
+      ]
+    },
+    {
+      "id": "08-pier",
+      "shots": [
+        {
+          "source": "A",
+          "in": 42.3
+        }
+      ]
+    },
+    {
+      "id": "09-star",
+      "shots": [
+        {
+          "source": "A",
+          "in": 57.2
+        }
+      ]
+    },
+    {
+      "id": "10-corridor",
+      "shots": [
+        {
+          "source": "A",
+          "in": 84.6
+        }
+      ]
+    },
+    {
+      "id": "11-pad",
+      "shots": [
+        {
+          "source": "A",
+          "in": 117.6,
+          "phrases": 1
+        },
+        {
+          "source": "A",
+          "in": 134.6
+        }
+      ]
+    },
+    {
+      "id": "12-front",
+      "shots": [
+        {
+          "source": "F",
+          "in": 12.6
+        }
+      ]
+    },
+    {
+      "id": "13-end-bili",
+      "shots": [
+        {
+          "source": "A",
+          "in": 166.3,
+          "phrases": 3
+        },
+        {
+          "source": "card:bili"
+        }
+      ]
+    },
+    {
+      "id": "13-end-generic",
+      "shots": [
+        {
+          "source": "A",
+          "in": 166.3,
+          "phrases": 3
+        },
+        {
+          "source": "card:generic"
+        }
+      ]
+    }
+  ]
+}

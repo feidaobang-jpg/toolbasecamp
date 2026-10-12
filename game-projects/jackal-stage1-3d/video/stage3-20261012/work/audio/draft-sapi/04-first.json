@@ -1,0 +1,224 @@
+{
+    "text":  "第一版刚跑起来就闹了笑话：地上的箭头全画成了字母 Y，海水亮得像游泳池，战舰的舰桥黑成一团。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  965000,
+                      "duration":  0,
+                      "text":  "第一",
+                      "pos":  0,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  4498125,
+                      "duration":  0,
+                      "text":  "版",
+                      "pos":  2,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  7626875,
+                      "duration":  0,
+                      "text":  "刚",
+                      "pos":  3,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  10109375,
+                      "duration":  0,
+                      "text":  "跑",
+                      "pos":  4,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  12668750,
+                      "duration":  0,
+                      "text":  "起来",
+                      "pos":  5,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  17343125,
+                      "duration":  0,
+                      "text":  "就",
+                      "pos":  7,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  19228125,
+                      "duration":  0,
+                      "text":  "闹",
+                      "pos":  8,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  21278125,
+                      "duration":  0,
+                      "text":  "了",
+                      "pos":  9,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  22663750,
+                      "duration":  0,
+                      "text":  "笑话",
+                      "pos":  10,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  32958750,
+                      "duration":  0,
+                      "text":  "地",
+                      "pos":  13,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  34948125,
+                      "duration":  0,
+                      "text":  "上",
+                      "pos":  14,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  37436250,
+                      "duration":  0,
+                      "text":  "的",
+                      "pos":  15,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  38761875,
+                      "duration":  0,
+                      "text":  "箭头",
+                      "pos":  16,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  44601875,
+                      "duration":  0,
+                      "text":  "全",
+                      "pos":  18,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  47673750,
+                      "duration":  0,
+                      "text":  "画",
+                      "pos":  19,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  50333125,
+                      "duration":  0,
+                      "text":  "成",
+                      "pos":  20,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  53288125,
+                      "duration":  0,
+                      "text":  "了",
+                      "pos":  21,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  55696250,
+                      "duration":  0,
+                      "text":  "字母",
+                      "pos":  22,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  59761875,
+                      "duration":  0,
+                      "text":  "Y",
+                      "pos":  25,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  67477500,
+                      "duration":  0,
+                      "text":  "海水",
+                      "pos":  27,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  73220625,
+                      "duration":  0,
+                      "text":  "亮",
+                      "pos":  29,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  75865625,
+                      "duration":  0,
+                      "text":  "得",
+                      "pos":  30,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  77986250,
+                      "duration":  0,
+                      "text":  "像",
+                      "pos":  31,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  80890000,
+                      "duration":  0,
+                      "text":  "游泳池",
+                      "pos":  32,
+                      "chars":  3
+                  },
+                  {
+                      "offset":  93373125,
+                      "duration":  0,
+                      "text":  "战舰",
+                      "pos":  36,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  98110625,
+                      "duration":  0,
+                      "text":  "的",
+                      "pos":  38,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  100313750,
+                      "duration":  0,
+                      "text":  "舰桥",
+                      "pos":  39,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  106215625,
+                      "duration":  0,
+                      "text":  "黑",
+                      "pos":  41,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  108766250,
+                      "duration":  0,
+                      "text":  "成",
+                      "pos":  42,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  111373125,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  43,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  113203125,
+                      "duration":  0,
+                      "text":  "团",
+                      "pos":  44,
+                      "chars":  1
+                  }
+              ]
+}

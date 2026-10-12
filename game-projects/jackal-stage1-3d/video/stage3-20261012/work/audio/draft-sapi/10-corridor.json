@@ -1,0 +1,203 @@
+{
+    "text":  "最难的是仓库之间的之字通道，炮台贴着墙排成一排，这一趟就在这儿被打翻了一次。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  982500,
+                      "duration":  0,
+                      "text":  "最",
+                      "pos":  0,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  3147500,
+                      "duration":  0,
+                      "text":  "难",
+                      "pos":  1,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  5485000,
+                      "duration":  0,
+                      "text":  "的",
+                      "pos":  2,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  7768125,
+                      "duration":  0,
+                      "text":  "是",
+                      "pos":  3,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  10548750,
+                      "duration":  0,
+                      "text":  "仓库",
+                      "pos":  4,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  15596875,
+                      "duration":  0,
+                      "text":  "之间",
+                      "pos":  6,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  19748125,
+                      "duration":  0,
+                      "text":  "的",
+                      "pos":  8,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  21792500,
+                      "duration":  0,
+                      "text":  "之",
+                      "pos":  9,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  24113750,
+                      "duration":  0,
+                      "text":  "字",
+                      "pos":  10,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  26318750,
+                      "duration":  0,
+                      "text":  "通道",
+                      "pos":  11,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  36244375,
+                      "duration":  0,
+                      "text":  "炮台",
+                      "pos":  14,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  41735000,
+                      "duration":  0,
+                      "text":  "贴",
+                      "pos":  16,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  44397500,
+                      "duration":  0,
+                      "text":  "着",
+                      "pos":  17,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  45948750,
+                      "duration":  0,
+                      "text":  "墙",
+                      "pos":  18,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  48996250,
+                      "duration":  0,
+                      "text":  "排",
+                      "pos":  19,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  51096875,
+                      "duration":  0,
+                      "text":  "成",
+                      "pos":  20,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  53805625,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  21,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  55630625,
+                      "duration":  0,
+                      "text":  "排",
+                      "pos":  22,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  63760000,
+                      "duration":  0,
+                      "text":  "这",
+                      "pos":  24,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  65625000,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  25,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  67381250,
+                      "duration":  0,
+                      "text":  "趟",
+                      "pos":  26,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  70676875,
+                      "duration":  0,
+                      "text":  "就",
+                      "pos":  27,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  72715625,
+                      "duration":  0,
+                      "text":  "在",
+                      "pos":  28,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  74926875,
+                      "duration":  0,
+                      "text":  "这儿",
+                      "pos":  29,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  79459375,
+                      "duration":  0,
+                      "text":  "被",
+                      "pos":  31,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  82001250,
+                      "duration":  0,
+                      "text":  "打翻",
+                      "pos":  32,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  86367500,
+                      "duration":  0,
+                      "text":  "了",
+                      "pos":  34,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  87868125,
+                      "duration":  0,
+                      "text":  "一次",
+                      "pos":  35,
+                      "chars":  2
+                  }
+              ]
+}

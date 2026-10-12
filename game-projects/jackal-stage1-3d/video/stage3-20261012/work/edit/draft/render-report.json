@@ -1,0 +1,26 @@
+{
+ "bilibili-zh": {
+  "file": "work/tmp/draft/bilibili-zh-画面样片-临时配音.mp4",
+  "seconds": 98.57,
+  "sha256": "35fa11fd73df393b8bff4078448f94f380aac186e16b8cea57bae79202542e0a",
+  "burned_subtitles": true,
+  "ending": "13-end-bili",
+  "voice_dir": "audio/draft-sapi"
+ },
+ "douyin-zh": {
+  "file": "work/tmp/draft/douyin-zh-画面样片-临时配音.mp4",
+  "seconds": 98.09,
+  "sha256": "7e27cda64c81889eabde3438255b1bd00d8ca94ca1c964c9a045e4c9ddebdb36",
+  "burned_subtitles": true,
+  "ending": "13-end-generic",
+  "voice_dir": "audio/draft-sapi"
+ },
+ "youtube-zh": {
+  "file": "work/tmp/draft/youtube-zh-画面样片-临时配音.mp4",
+  "seconds": 98.09,
+  "sha256": "c56a277b4825bb5a6240da9f1c9bd7d3c9d8bb109c031f50334112aa48324d75",
+  "burned_subtitles": false,
+  "ending": "13-end-generic",
+  "voice_dir": "audio/draft-sapi"
+ }
+}

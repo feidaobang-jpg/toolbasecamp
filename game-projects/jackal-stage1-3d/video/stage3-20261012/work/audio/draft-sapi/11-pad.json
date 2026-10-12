@@ -1,0 +1,140 @@
+{
+    "text":  "把十二个人全部送上直升机，再炸开最后一道闸门，就到码头了。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  965000,
+                      "duration":  0,
+                      "text":  "把",
+                      "pos":  0,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  4070625,
+                      "duration":  0,
+                      "text":  "十二",
+                      "pos":  1,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  8698125,
+                      "duration":  0,
+                      "text":  "个",
+                      "pos":  3,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  10357500,
+                      "duration":  0,
+                      "text":  "人",
+                      "pos":  4,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  13364375,
+                      "duration":  0,
+                      "text":  "全部",
+                      "pos":  5,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  18091875,
+                      "duration":  0,
+                      "text":  "送",
+                      "pos":  7,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  20966250,
+                      "duration":  0,
+                      "text":  "上",
+                      "pos":  8,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  24061250,
+                      "duration":  0,
+                      "text":  "直升机",
+                      "pos":  9,
+                      "chars":  3
+                  },
+                  {
+                      "offset":  36151250,
+                      "duration":  0,
+                      "text":  "再",
+                      "pos":  13,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  38671250,
+                      "duration":  0,
+                      "text":  "炸",
+                      "pos":  14,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  40833750,
+                      "duration":  0,
+                      "text":  "开",
+                      "pos":  15,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  43831250,
+                      "duration":  0,
+                      "text":  "最后",
+                      "pos":  16,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  48371875,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  18,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  50048125,
+                      "duration":  0,
+                      "text":  "道",
+                      "pos":  19,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  52061250,
+                      "duration":  0,
+                      "text":  "闸门",
+                      "pos":  20,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  62318750,
+                      "duration":  0,
+                      "text":  "就",
+                      "pos":  23,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  64518125,
+                      "duration":  0,
+                      "text":  "到",
+                      "pos":  24,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  66916250,
+                      "duration":  0,
+                      "text":  "码头",
+                      "pos":  25,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  72054375,
+                      "duration":  0,
+                      "text":  "了",
+                      "pos":  27,
+                      "chars":  1
+                  }
+              ]
+}

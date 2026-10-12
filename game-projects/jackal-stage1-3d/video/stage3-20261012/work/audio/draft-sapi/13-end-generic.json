@@ -1,0 +1,217 @@
+{
+    "text":  "第三关已经上线，网页版电脑手机都能玩，入口在简介里。原作一共六关，下一关想先看哪个，评论里告诉我。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  965000,
+                      "duration":  0,
+                      "text":  "第三",
+                      "pos":  0,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  5653750,
+                      "duration":  0,
+                      "text":  "关",
+                      "pos":  2,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  8661250,
+                      "duration":  0,
+                      "text":  "已经",
+                      "pos":  3,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  12979375,
+                      "duration":  0,
+                      "text":  "上线",
+                      "pos":  5,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  23763125,
+                      "duration":  0,
+                      "text":  "网页",
+                      "pos":  8,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  28240000,
+                      "duration":  0,
+                      "text":  "版",
+                      "pos":  10,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  31113125,
+                      "duration":  0,
+                      "text":  "电脑",
+                      "pos":  11,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  35471250,
+                      "duration":  0,
+                      "text":  "手机",
+                      "pos":  13,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  40759375,
+                      "duration":  0,
+                      "text":  "都",
+                      "pos":  15,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  42866875,
+                      "duration":  0,
+                      "text":  "能",
+                      "pos":  16,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  45196250,
+                      "duration":  0,
+                      "text":  "玩",
+                      "pos":  17,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  53219375,
+                      "duration":  0,
+                      "text":  "入口",
+                      "pos":  19,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  58260000,
+                      "duration":  0,
+                      "text":  "在",
+                      "pos":  21,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  60876875,
+                      "duration":  0,
+                      "text":  "简介",
+                      "pos":  22,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  65371250,
+                      "duration":  0,
+                      "text":  "里",
+                      "pos":  24,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  78196875,
+                      "duration":  0,
+                      "text":  "原作",
+                      "pos":  26,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  83797500,
+                      "duration":  0,
+                      "text":  "一共",
+                      "pos":  28,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  88087500,
+                      "duration":  0,
+                      "text":  "六",
+                      "pos":  30,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  90393125,
+                      "duration":  0,
+                      "text":  "关",
+                      "pos":  31,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  98403125,
+                      "duration":  0,
+                      "text":  "下",
+                      "pos":  33,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  101213125,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  34,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  102920625,
+                      "duration":  0,
+                      "text":  "关",
+                      "pos":  35,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  105840625,
+                      "duration":  0,
+                      "text":  "想",
+                      "pos":  36,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  109422500,
+                      "duration":  0,
+                      "text":  "先",
+                      "pos":  37,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  112141250,
+                      "duration":  0,
+                      "text":  "看",
+                      "pos":  38,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  114470000,
+                      "duration":  0,
+                      "text":  "哪个",
+                      "pos":  39,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  123783125,
+                      "duration":  0,
+                      "text":  "评论",
+                      "pos":  42,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  128788125,
+                      "duration":  0,
+                      "text":  "里",
+                      "pos":  44,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  131085000,
+                      "duration":  0,
+                      "text":  "告诉",
+                      "pos":  45,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  135660625,
+                      "duration":  0,
+                      "text":  "我",
+                      "pos":  47,
+                      "chars":  1
+                  }
+              ]
+}

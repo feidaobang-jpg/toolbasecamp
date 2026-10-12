@@ -1,0 +1,147 @@
+{
+    "text":  "停车场里停着的吉普别放过。炸开这一辆，里面藏着一颗星。",
+    "voice":  "Microsoft Huihui Desktop (SAPI, draft only)",
+    "rate":  "Rate=2",
+    "marks":  [
+                  {
+                      "offset":  982500,
+                      "duration":  0,
+                      "text":  "停车",
+                      "pos":  0,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  5594375,
+                      "duration":  0,
+                      "text":  "场",
+                      "pos":  2,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  8434375,
+                      "duration":  0,
+                      "text":  "里",
+                      "pos":  3,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  10706875,
+                      "duration":  0,
+                      "text":  "停",
+                      "pos":  4,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  13626875,
+                      "duration":  0,
+                      "text":  "着",
+                      "pos":  5,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  15058125,
+                      "duration":  0,
+                      "text":  "的",
+                      "pos":  6,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  16545000,
+                      "duration":  0,
+                      "text":  "吉普",
+                      "pos":  7,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  21449375,
+                      "duration":  0,
+                      "text":  "别",
+                      "pos":  9,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  23873750,
+                      "duration":  0,
+                      "text":  "放过",
+                      "pos":  10,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  38810625,
+                      "duration":  0,
+                      "text":  "炸",
+                      "pos":  13,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  41188750,
+                      "duration":  0,
+                      "text":  "开",
+                      "pos":  14,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  44140625,
+                      "duration":  0,
+                      "text":  "这",
+                      "pos":  15,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  46144375,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  16,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  48043750,
+                      "duration":  0,
+                      "text":  "辆",
+                      "pos":  17,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  55773750,
+                      "duration":  0,
+                      "text":  "里面",
+                      "pos":  19,
+                      "chars":  2
+                  },
+                  {
+                      "offset":  61331875,
+                      "duration":  0,
+                      "text":  "藏",
+                      "pos":  21,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  64571250,
+                      "duration":  0,
+                      "text":  "着",
+                      "pos":  22,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  66053125,
+                      "duration":  0,
+                      "text":  "一",
+                      "pos":  23,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  67765000,
+                      "duration":  0,
+                      "text":  "颗",
+                      "pos":  24,
+                      "chars":  1
+                  },
+                  {
+                      "offset":  69895000,
+                      "duration":  0,
+                      "text":  "星",
+                      "pos":  25,
+                      "chars":  1
+                  }
+              ]
+}

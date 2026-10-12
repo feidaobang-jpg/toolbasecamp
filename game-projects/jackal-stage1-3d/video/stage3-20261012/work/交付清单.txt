@@ -1,0 +1,15 @@
+赤色要塞 3D 第三关更新视频 · 交付清单（2026-10-12T17:15:59+08:00）
+
+【现在有的】
+- 画面样片（系统自带语音，仅供看画面和稿子，不上传）：work/tmp/draft/ 下三个 mp4，约 99 秒，1920×1080
+- 封面：final/bilibili-zh/cover-home-4x3.jpg（首页推荐 4:3）、cover-space-16x9.jpg（个人空间 16:9）；final/douyin-zh/cover-16x9.jpg；final/youtube-zh/cover-zh-16x9.jpg
+- 文案：final/bilibili-zh/投稿文案.txt；final/douyin-zh/投稿文案.txt；final/youtube-zh/投稿文案.txt 与 English-localizations.txt
+
+【还没有的】
+- 三平台正式成片（gameplay-zh-final.mp4 / gameplay-youtube-final.mp4）和 YouTube 的中英文字幕文件：等正式配音
+- 原因：Edge 在线语音（云希）今天对配音库返回 403，是上游已知问题，不是本机设置
+
+【三版的差别】
+- B 站：中文配音 + 烧录中文字幕；结尾讲「点视频下方的 Toy 入口」
+- 抖音：同一套画面与配音，结尾改成「入口在简介里」；烧录中文字幕；横屏 16:9
+- YouTube：结尾同抖音；不烧字幕，另附中文、英文可切换字幕；中文标题简介 + 英文标题简介翻译
