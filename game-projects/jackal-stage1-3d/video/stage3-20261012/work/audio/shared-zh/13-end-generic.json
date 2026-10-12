@@ -1,0 +1,37 @@
+{
+ "text": "第三关已经上线，网页版电脑手机都能玩，入口在简介里。原作一共六关，下一关想先看哪个，评论里告诉我。",
+ "voice": "IndexTTS-2.5 本地合成（参考音 yunxi-ref-8s.wav）",
+ "rate": "1.0",
+ "unit_level": true,
+ "timestamp_source": "逐句合成，按解码采样数累计的真实起止时间",
+ "marks": [
+  {
+   "offset": 0,
+   "duration": 17725833,
+   "text": "第三关已经上线，",
+   "pos": 0,
+   "chars": 8
+  },
+  {
+   "offset": 19025833,
+   "duration": 32492083,
+   "text": "网页版电脑手机都能玩，入口在简介里。",
+   "pos": 8,
+   "chars": 18
+  },
+  {
+   "offset": 54517916,
+   "duration": 16376250,
+   "text": "原作一共六关，",
+   "pos": 26,
+   "chars": 7
+  },
+  {
+   "offset": 72194166,
+   "duration": 24849166,
+   "text": "下一关想先看哪个，评论里告诉我。",
+   "pos": 33,
+   "chars": 16
+  }
+ ]
+}

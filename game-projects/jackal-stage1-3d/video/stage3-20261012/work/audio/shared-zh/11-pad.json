@@ -1,0 +1,23 @@
+{
+ "text": "把十二个人全部送上直升机，再炸开最后一道闸门，就到码头了。",
+ "voice": "IndexTTS-2.5 本地合成（参考音 yunxi-ref-8s.wav）",
+ "rate": "1.0",
+ "unit_level": true,
+ "timestamp_source": "逐句合成，按解码采样数累计的真实起止时间",
+ "marks": [
+  {
+   "offset": 0,
+   "duration": 25950000,
+   "text": "把十二个人全部送上直升机，",
+   "pos": 0,
+   "chars": 13
+  },
+  {
+   "offset": 27250000,
+   "duration": 29932916,
+   "text": "再炸开最后一道闸门，就到码头了。",
+   "pos": 13,
+   "chars": 16
+  }
+ ]
+}

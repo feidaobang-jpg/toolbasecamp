@@ -16,6 +16,7 @@ DRAFT = TAG != 'final'
 E = R / 'edit' / ('shared-zh' if not DRAFT else 'draft'); E.mkdir(parents=True, exist_ok=True)
 MK = R.parent.parent.parent / 'media-kit'
 FONT = 'C:/Windows/Fonts/msyhbd.ttc'
+VOICE_GAIN = float(sys.argv[3]) if len(sys.argv) > 3 else 1.3   # 人声相对游戏声的增益，最后整体再做响度归一
 
 
 def run(args): subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y'] + args, check=True)
@@ -64,10 +65,11 @@ def word_spans(sid, text, dur):
     """把配音的词边界换成（字符起点, 字符终点, 开始秒, 结束秒），字符位置按去掉标点后的文字计。"""
     marks = json.loads((VOICE / (sid + '.json')).read_text(encoding='utf-8-sig'))['marks']
     spans = []
-    if marks and 'pos' in marks[0]:   # 系统语音：给的是原文里的字符位置和音频位置，没有词长
+    if marks and 'pos' in marks[0]:   # 系统语音 / 本地逐句合成：给的是原文里的字符位置和音频位置
         for i, m in enumerate(marks):
             a = len(clean(text[:m['pos']])); b = a + len(clean(text[m['pos']:m['pos'] + m['chars']]))
             start = m['offset'] / 1e7; end = marks[i + 1]['offset'] / 1e7 if i + 1 < len(marks) else dur
+            if m.get('duration'): end = start + m['duration'] / 1e7   # 逐句合成知道每句的真实时长
             if b > a: spans.append((a, b, start, min(end, dur)))
     else:                              # Edge：按顺序的词与起止时间
         pos = 0
@@ -91,7 +93,9 @@ def render_segment(seg):
     dur = max(vdur + .6, seg.get('min_duration', 0)); lead = .22
     part = E / f'{sid}.mp4'
     spans = word_spans(sid, texts[sid], vdur)
-    phrases = [p.strip() for p in re.findall(r'[^，。！？；：]+[，。！？；：]?', texts[sid]) if p.strip()]
+    meta = json.loads((VOICE / (sid + '.json')).read_text(encoding='utf-8-sig'))
+    if meta.get('unit_level'): phrases = [m['text'] for m in meta['marks']]   # 逐句合成：字幕就按合成时的句子显示
+    else: phrases = [p.strip() for p in re.findall(r'[^，。！？；：]+[，。！？；：]?', texts[sid]) if p.strip()]
     subs = []; pos = 0
     for phrase in phrases:
         size = len(clean(phrase)); ww = [w for w in spans if w[1] > pos and w[0] < pos + size]; pos += size
@@ -128,7 +132,7 @@ def render_segment(seg):
         pieces.append({'source': src, 'in': sh.get('in'), 'duration': round(length, 3), 'label': sh.get('label')}); idx = nxt
     n = len(pieces); inputs += ['-i', str(voice)]
     gain = seg.get('game_volume', 0.16)
-    filt = ';'.join(vf + af) + ';' + ''.join(f'[v{i}][a{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][g];[g]volume={gain}[gq];[{idx}:a]aresample=48000,aformat=channel_layouts=stereo,adelay={int(lead * 1000)}:all=1,apad,atrim=duration={dur},volume={1.5 if voice.suffix == ".mp3" else 1.25}[n];[gq][n]amix=inputs=2:normalize=0[a]'
+    filt = ';'.join(vf + af) + ';' + ''.join(f'[v{i}][a{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][g];[g]volume={gain}[gq];[{idx}:a]aresample=48000,aformat=channel_layouts=stereo,adelay={int(lead * 1000)}:all=1,apad,atrim=duration={dur},volume={VOICE_GAIN}[n];[gq][n]amix=inputs=2:normalize=0[a]'
     run(inputs + ['-filter_complex', filt, '-map', '[v]', '-map', '[a]', '-t', str(dur), '-c:v', 'h264_nvenc', '-preset', 'p5', '-cq', '18', '-pix_fmt', 'yuv420p', '-r', '30', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', str(part)])
     return {'id': sid, 'part': part, 'duration': dur, 'voice_seconds': vdur, 'subs': subs, 'pieces': pieces, 'text': texts[sid]}
 
@@ -165,9 +169,10 @@ for variant, cfg in VARIANTS.items():
     vfs = []
     if cfg['burn']: vfs.append(f"ass={(E / f'captions-{variant}.ass').relative_to(R).as_posix()}")
     if DRAFT: vfs.append("drawtext=fontfile='C\\:/Windows/Fonts/msyhbd.ttc':text='画面样片 · 临时配音（非正式）':fontsize=34:fontcolor=white@0.85:box=1:boxcolor=black@0.45:boxborderw=12:x=w-tw-40:y=h-th-36")
+    vfs.append('scale=in_range=pc:out_range=tv,format=yuv420p')   # 截图来的原片是全范围色彩，成片转成电视范围，免得有的播放器把画面放灰或放暗
     vfs.append(f'fade=t=out:st={offset - 1.0}:d=1.0')
     cmd = ['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(assemblies[key]), '-vf', ','.join(vfs), '-af', f'loudnorm=I=-15:TP=-1.5:LRA=9,afade=t=out:st={offset - 1.0}:d=1.0',
-           '-c:v', 'h264_nvenc', '-preset', 'p5', '-cq', '19', '-pix_fmt', 'yuv420p', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', str(out)]
+           '-c:v', 'h264_nvenc', '-preset', 'p5', '-cq', '19', '-pix_fmt', 'yuv420p', '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', str(out)]
     subprocess.run(cmd, cwd=R, check=True)
     if not cfg['burn']:   # YouTube：中文与英文可切换字幕，英文沿用同一时间轴
         en = json.loads((R / 'edit/glossary.json').read_text(encoding='utf-8'))['en']

@@ -13,6 +13,6 @@
   - `fp`（第一人称）开进闸门后镜头贴墙、随后阵亡，没有采用。
 - 改动前对照：`media-kit/releases/v0.11.0/dev/before-live-v0103-idle-22s.webm`，2026-10-12 部署前录自线上旧版（1280×720，无声）。
 - 开发中画面：`media-kit/releases/v0.11.0/dev/first-*.png`（第一版）与 `fix1-*.png`（修正后），都是当天开发过程的真实截图（1280×720），成片里放大并标注。
-- 配音：正式版用 Edge 在线语音云希（`voice.py`）；2026-10-12 该服务对 edge-tts 7.2.8 返回 403（上游 rany2/edge-tts issue #490），尚未生成。`audio/draft-sapi/` 是 Windows 自带「慧慧」语音，只用于画面样片。
+- 配音：本地 IndexTTS-2.5 逐句合成（`voice_indextts.py`，参考音 `yunxi-ref-8s.wav`，与当天超级玛丽 1-4 那条视频用的是同一个），**不是微软官方云希**。原因：2026-10-12 Edge 在线语音对 edge-tts 7.2.8 返回 403（上游 rany2/edge-tts issue #490；换成本机 Edge 版本号仍 403，语音列表接口正常）。每句单独合成，字幕时间取每句的真实时长。`audio/draft-sapi/` 是更早用系统自带语音做的画面样片，已不用。
 - 字体：微软雅黑粗体（系统字体）。没有使用外部音乐或生成图片。
 - 原作《Jackal / 赤色要塞》版权归 Konami；游戏内第三关 BGM 是原版录音，曲目对应关系未核实（见 media-kit/releases/v0.11.0/audio-sources.json）。

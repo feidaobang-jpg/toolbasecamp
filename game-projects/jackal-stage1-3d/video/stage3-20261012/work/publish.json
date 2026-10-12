@@ -13,7 +13,6 @@
       "manifest_file": "publish/bilibili-zh/publish.json",
       "ready_to_upload": false,
       "blocking_issues": [
-        "正式配音未生成：Edge 在线配音（云希）今天被服务端拒绝（403，上游已知问题），成片尚未渲染；现有的只是系统自带语音配的画面样片",
         "用户尚未审片"
       ]
     },
@@ -22,7 +21,6 @@
       "manifest_file": "publish/douyin-zh/publish.json",
       "ready_to_upload": false,
       "blocking_issues": [
-        "正式配音未生成：Edge 在线配音（云希）今天被服务端拒绝（403，上游已知问题），成片尚未渲染；现有的只是系统自带语音配的画面样片",
         "用户尚未审片"
       ]
     },
@@ -31,12 +29,11 @@
       "manifest_file": "publish/youtube-zh/publish.json",
       "ready_to_upload": false,
       "blocking_issues": [
-        "正式配音未生成：Edge 在线配音（云希）今天被服务端拒绝（403，上游已知问题），成片尚未渲染；现有的只是系统自带语音配的画面样片",
         "用户尚未审片"
       ]
     }
   ],
   "ready_to_upload": false,
   "human_review": null,
-  "updated_at": "2026-10-12T17:13:06+08:00"
+  "updated_at": "2026-10-12T17:28:05+08:00"
 }

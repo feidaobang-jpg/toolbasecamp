@@ -1,0 +1,47 @@
+﻿[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,Microsoft YaHei,50,&H00FFFFFF,&H00FFFFFF,&H00251B12,&H90000000,-1,0,0,0,100,100,0,0,1,3.2,1.2,2,80,80,60,1
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:00.22,0:00:02.05,Default,,0,0,0,,{\an2\pos(960,820)}赤色要塞第三关
+Dialogue: 0,0:00:02.08,0:00:04.48,Default,,0,0,0,,{\an2\pos(960,820)}码头尽头停着一艘战舰
+Dialogue: 0,0:00:04.66,0:00:07.27,Default,,0,0,0,,{\an2\pos(960,820)}六座炮塔，得一座一座打掉
+Dialogue: 0,0:00:07.75,0:00:09.44,Default,,0,0,0,,{\an2\pos(960,820)}最后一座炸掉
+Dialogue: 0,0:00:09.47,0:00:11.76,Default,,0,0,0,,{\an2\pos(960,820)}整艘船起火下沉
+Dialogue: 0,0:00:11.94,0:00:14.69,Default,,0,0,0,,{\an2\pos(960,820)}喜欢这种打法，顺手点个赞
+Dialogue: 0,0:00:15.17,0:00:18.16,Default,,0,0,0,,{\an2\pos(960,820)}这款是我几个复刻里玩的人最多的
+Dialogue: 0,0:00:18.19,0:00:20.25,Default,,0,0,0,,{\an2\pos(960,820)}可它一直只有两关
+Dialogue: 0,0:00:20.43,0:00:23.21,Default,,0,0,0,,{\an2\pos(960,820)}这次照着原版第三关的地图
+Dialogue: 0,0:00:23.24,0:00:25.28,Default,,0,0,0,,{\an2\pos(960,820)}把整个港口搭了出来
+Dialogue: 0,0:00:25.76,0:00:28.44,Default,,0,0,0,,{\an2\pos(960,820)}第一版刚跑起来就闹了笑话
+Dialogue: 0,0:00:28.52,0:00:31.34,Default,,0,0,0,,{\an2\pos(960,820)}地上的箭头全画成了字母 Y
+Dialogue: 0,0:00:31.37,0:00:33.48,Default,,0,0,0,,{\an2\pos(960,820)}海水亮得像游泳池
+Dialogue: 0,0:00:33.51,0:00:36.05,Default,,0,0,0,,{\an2\pos(960,820)}战舰的舰桥黑成一团
+Dialogue: 0,0:00:36.53,0:00:38.98,Default,,0,0,0,,{\an2\pos(960,820)}改完之后，才像个正经港口
+Dialogue: 0,0:00:39.46,0:00:41.89,Default,,0,0,0,,{\an2\pos(960,820)}还顺手查出一个老问题
+Dialogue: 0,0:00:41.97,0:00:44.21,Default,,0,0,0,,{\an2\pos(960,820)}新玩家进场站着不动
+Dialogue: 0,0:00:44.24,0:00:46.17,Default,,0,0,0,,{\an2\pos(960,820)}八秒就会被打死
+Dialogue: 0,0:00:46.65,0:00:49.59,Default,,0,0,0,,{\an2\pos(960,820)}现在你不动，敌人就先不开火
+Dialogue: 0,0:00:49.62,0:00:52.05,Default,,0,0,0,,{\an2\pos(960,820)}屏幕上还会提示怎么开车
+Dialogue: 0,0:00:52.53,0:00:53.60,Default,,0,0,0,,{\an2\pos(960,820)}回到关卡里
+Dialogue: 0,0:00:53.78,0:00:56.55,Default,,0,0,0,,{\an2\pos(960,820)}两条栈桥并排伸进海里
+Dialogue: 0,0:00:56.58,0:00:58.58,Default,,0,0,0,,{\an2\pos(960,820)}两边的炮艇夹着你打
+Dialogue: 0,0:00:58.61,0:01:01.07,Default,,0,0,0,,{\an2\pos(960,820)}另一条桥上还有坦克堵路
+Dialogue: 0,0:01:01.55,0:01:04.54,Default,,0,0,0,,{\an2\pos(960,820)}停车场里停着的吉普别放过
+Dialogue: 0,0:01:04.72,0:01:07.28,Default,,0,0,0,,{\an2\pos(960,820)}炸开这一辆，里面藏着一颗星
+Dialogue: 0,0:01:07.76,0:01:10.92,Default,,0,0,0,,{\an2\pos(960,820)}最难的是仓库之间的之字通道
+Dialogue: 0,0:01:10.95,0:01:13.62,Default,,0,0,0,,{\an2\pos(960,820)}炮台贴着墙排成一排
+Dialogue: 0,0:01:13.65,0:01:16.16,Default,,0,0,0,,{\an2\pos(960,820)}这一趟就在这儿被打翻了一次
+Dialogue: 0,0:01:16.64,0:01:19.34,Default,,0,0,0,,{\an2\pos(960,820)}把十二个人全部送上直升机
+Dialogue: 0,0:01:19.37,0:01:22.48,Default,,0,0,0,,{\an2\pos(960,820)}再炸开最后一道闸门，就到码头了
+Dialogue: 0,0:01:22.96,0:01:25.32,Default,,0,0,0,,{\an2\pos(960,820)}按 C 换成低位视角
+Dialogue: 0,0:01:25.35,0:01:27.69,Default,,0,0,0,,{\an2\pos(960,820)}整个港口就立在你眼前
+Dialogue: 0,0:01:28.17,0:01:30.05,Default,,0,0,0,,{\an2\pos(960,820)}第三关已经上线
+Dialogue: 0,0:01:30.08,0:01:33.45,Default,,0,0,0,,{\an2\pos(960,820)}网页版电脑手机都能玩，入口在简介里
+Dialogue: 0,0:01:33.63,0:01:35.36,Default,,0,0,0,,{\an2\pos(960,820)}原作一共六关
+Dialogue: 0,0:01:35.39,0:01:38.00,Default,,0,0,0,,{\an2\pos(960,820)}下一关想先看哪个，评论里告诉我

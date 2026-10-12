@@ -63,7 +63,7 @@
           "source": "mk:releases/v0.11.0/dev/fix1-03-x-26y212.png",
           "label": "改完之后",
           "zoom": true,
-          "phrases": 1
+          "duration": 1.1
         },
         {
           "source": "mk:releases/v0.11.0/dev/fix1-07-x8y331.png",
@@ -162,7 +162,7 @@
         {
           "source": "A",
           "in": 166.3,
-          "phrases": 3
+          "phrases": 2
         },
         {
           "source": "card:generic"

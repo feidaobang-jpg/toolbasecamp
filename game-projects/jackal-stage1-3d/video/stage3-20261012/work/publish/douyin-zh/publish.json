@@ -9,8 +9,8 @@
   "game_version": "v0.11.0",
   "video_file": "../../../final/douyin-zh/gameplay-zh-final.mp4",
   "media_id": "generic-ending",
-  "video_sha256": null,
-  "duration_seconds": null,
+  "video_sha256": "3e7c53eaab8a55abb3e9c179f7d4a49f80904826b0299163a949fd6026f725e2",
+  "duration_seconds": 98.438125,
   "width": 1920,
   "height": 1080,
   "description_file": "../../../final/douyin-zh/投稿文案.txt",
@@ -23,14 +23,15 @@
   "credits": "credits.txt",
   "disclosures": {
     "ai_assisted": "游戏用 Claude 辅助开发；解说为合成语音",
-    "fan_remake": "粉丝向非官方重制，原作版权归 Konami"
+    "fan_remake": "粉丝向非官方重制，原作版权归 Konami",
+    "narration": "解说为本地合成语音（IndexTTS-2.5），不是微软官方云希；Edge 在线语音当天不可用",
+    "capture": "画面由自动试玩机器人按正常规则游玩录制，不是真人手打"
   },
   "platform_requirements_checked_at": null,
   "unverified_fields": [
     "当期投稿页的封面尺寸与字段限制未在投稿页实测"
   ],
   "blocking_issues": [
-    "正式配音未生成：Edge 在线配音（云希）今天被服务端拒绝（403，上游已知问题），成片尚未渲染；现有的只是系统自带语音配的画面样片",
     "用户尚未审片"
   ],
   "ready_to_upload": false,
