@@ -1,0 +1,104 @@
+{
+  "task_id": "01a12fd9-5098-7262-b717-1e3dcf7a3766-input-safety-20261012-02",
+  "version": "input-safety-20261012",
+  "base_versions": {
+    "tank-3d": "remix-entry1-menu-text1-fp-aim1-privacy1",
+    "jackal-stage1-3d": "v0.11.0",
+    "cadillacs-stage1-3d": "v0.11.0-hellroad.1-privacy1",
+    "starship-defense": "web-fps-mouse-v0.36.2",
+    "gunfire-assembly": "web-lobby-v0.1.0"
+  },
+  "affected": [
+    "tank-3d",
+    "jackal-stage1-3d",
+    "cadillacs-stage1-3d",
+    "starship-defense",
+    "gunfire-assembly"
+  ],
+  "reviewed_unchanged": [
+    "mario-3d",
+    "brick_breaker",
+    "bubble_dragon",
+    "fly_bird",
+    "frog_zuma",
+    "gemswap",
+    "lianliankan",
+    "sheepstack",
+    "worms"
+  ],
+  "unchanged_reason": "无他人可见自由文本入口；存档编号输入为本地数字，文件备份与设置不公开",
+  "sdk_document": "https://www.bilibili.com/toy/publish/sdk",
+  "behavior": {
+    "approve": "status=ok 且 passed=true，核对并发送检测过的同一文本",
+    "reject": "不广播、不显示拒绝内容，清空相应输入并报错",
+    "unavailable": "失败关闭，自定义文本不放行；默认名称和本地单机回退",
+    "receiving": "房间列表/队友名称/系统提示/战斗结果均有显示前检查，不信任旧客户端",
+    "private_inputs": "房间密码和六位房间号不作为公开自由文本发送审核服务",
+    "profile": "玩家主动点击使用B站昵称，授权后检测通过再填入；拒绝继续默认名称；不保存头像/不发送toyOpenId"
+  },
+  "verification": {
+    "website_ui": {
+      "passed": true,
+      "cases": 11,
+      "artifact": "D:/project/task-artifacts/all-games-input-safety-20261012/website/results.json"
+    },
+    "unit": {
+      "passed": true,
+      "cases": 15
+    },
+    "physical_phone": false,
+    "final_package_ui": {
+      "passed": true,
+      "cases": 11,
+      "artifact": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\packages-profile-qa\\results.json",
+      "method": "headless Edge; real package, mocked SDK and websocket, desktop/portrait"
+    },
+    "privacy": {
+      "passed": true,
+      "browser_cases": 13,
+      "static_packages": 5,
+      "artifact": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\privacy\\results.json"
+    },
+    "multiplayer": {
+      "passed": true,
+      "games": [
+        "tank-3d",
+        "starship-defense"
+      ],
+      "players": 2,
+      "method": "independent headless Edge contexts, real local room relay",
+      "artifact": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\coop-live\\capacity.json"
+    },
+    "package_doctor": {
+      "passed": true,
+      "packages": 5,
+      "warnings": "Only JS/CSS filenames without content fingerprint; caching recommendation, no blockers"
+    }
+  },
+  "channels": {
+    "website": "pending_deploy",
+    "toy": "pending_preview",
+    "taptap": "not_requested"
+  },
+  "notes": "保留原Toy ID、slug、可见性、视频绑定与存档标识。虫潮公开页已下架，CLI published不作为可访问证明。",
+  "skills": {
+    "updated": [
+      "C:/Users/37818/.claude/skills/toy/SKILL.md",
+      "C:/Users/37818/.claude/skills/game-maker/SKILL.md",
+      "C:/Users/37818/.claude/skills/toy/references/content-safety.md"
+    ],
+    "validated": true,
+    "source_reviewed_at": "2026-10-12",
+    "sdk_full_page_read": true,
+    "official_sources": [
+      "https://www.bilibili.com/toy/publish/sdk",
+      "https://www.bilibili.com/toy/publish/guide/faq",
+      "https://www.bilibili.com/toy/publish/agreement"
+    ]
+  },
+  "watermark": {
+    "requested": true,
+    "reason": "Current publish page says Toy containing user input should enable visitor watermark",
+    "status": "pending_submission"
+  }
+}

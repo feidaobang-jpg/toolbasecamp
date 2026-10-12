@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.11.0-input-safety1",
+  "base_version": "v0.11.0",
+  "changes": [
+    "昵称与最终房间名按Toy SDK检测，通过后才发送；失败清空输入并报错",
+    "旧客户端/网站房间、队友提示、战斗结果中的自由文本未通过检测时隐藏",
+    "普通网站保留默认名称联机，SDK失败不影响单机与本地存档",
+    "增加玩家主动授权的使用B站昵称按钮，填入前检测；不采集头像或平台用户标识"
+  ],
+  "qa": {
+    "website": "passed: desktop and portrait simulation; SDK and transport mocked",
+    "unit": "15 transport and moderation cases passed",
+    "physical_phone": false,
+    "final_package": "11 desktop/portrait UI cases across five games; profile denial/rejection/approval and no identifier transmission"
+  },
+  "channels": {
+    "website": "pending_deploy",
+    "toy": "pending_preview",
+    "taptap": "not_requested"
+  },
+  "record": "game-projects/site-games/releases/input-safety-20261012/handoff.json",
+  "cover": {
+    "decision": "keep",
+    "reason": "安全修复，不改变画面与玩法"
+  },
+  "video_descriptions": {
+    "decision": "deferred_accumulating",
+    "reason": "安全检测修复，无新增玩法；Toy入口状态另行核验并按事实处理"
+  },
+  "package": {
+    "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\jackal-stage1-3d.zip",
+    "sha256": "ae3240d8e01d915e4909d7d0e6684894769a9b0d5a952570e89d41712b54a630",
+    "doctor": "passed; filename fingerprint warning only"
+  },
+  "watermark": "enable_on_toy_update"
+}

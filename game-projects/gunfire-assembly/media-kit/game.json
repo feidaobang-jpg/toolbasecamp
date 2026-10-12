@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-lobby-v0.1.0",
+  "current_version": "web-lobby-v0.1.0-input-safety1",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
@@ -13,5 +13,6 @@
   "toy_status": "published",
   "notes": "从虫潮围城拆出的枪战模式大厅；首版含战地据点与抗战战役。网站与 Toy 已上线；相关视频简介已公开核验含枪火集结入口。",
   "toy_public_verified_at": "2026-10-12T17:10:00+08:00",
-  "bilibili_descriptions_verified_at": "2026-10-12T17:10:00+08:00"
+  "bilibili_descriptions_verified_at": "2026-10-12T17:10:00+08:00",
+  "handoff": "releases/web-lobby-v0.1.0-input-safety1/handoff.json"
 }

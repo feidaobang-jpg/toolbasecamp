@@ -1,0 +1,9 @@
+{
+  "agreement": "https://www.bilibili.com/toy/publish/agreement",
+  "reason": "Approval",
+  "status": "resolved",
+  "event_id": "toy-account-16214353-agreement-20261012",
+  "task_id": "01a12fd9-5098-7262-b717-1e3dcf7a3766-input-safety-20261012-02",
+  "detail": "用户当次明确授权同意当前协议并继续提审；已在发布页勾选并确认，弹窗消失。",
+  "accepted_at": "2026-10-12T20:01:31.8438277+08:00"
+}

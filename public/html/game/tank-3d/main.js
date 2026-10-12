@@ -3,7 +3,7 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=camera-fullmap1';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop-unstick1';
-import { CoopConnection, snapshot, hydrate } from './coop.js?v=coop-unstick1';
+import { CoopConnection, snapshot, hydrate, installNicknameButton } from './coop.js?v=coop-safety1';
 import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
 installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';
@@ -82,6 +82,8 @@ let applyingNetworkAction = false, epoch = 0, remoteEpoch = -1, lastStateAt = 0,
 let remoteInputs = {}, lastInputAt = 0;
 let pendingEvents = [], networkStarted = false, snapshotReceivedAt = 0;
 const coop = new CoopConnection(onCoopMessage, text => { $('coop-message').textContent = text; });
+coop.onInputRejected=field=>{$(field==='name'?'coop-name':'coop-room-name').value='';};
+installNicknameButton($('coop-bili-name'),$('coop-name'),text=>{$('coop-message').textContent=text;});
 const roomConfig = () => ({ mode: settings.mode, stage: startStageOf(settings.mode).stage, lives: settings.lives[settings.mode], armor: settings.armor[settings.mode] });
 $('coop-create').addEventListener('click', () => { coop.connect('create', $('coop-name').value.trim() || '坦克手', undefined, { roomName: $('coop-room-name').value.trim(), password: $('coop-create-password').value, maxPlayers: Number($('coop-capacity').value), config: roomConfig() }); });
 function joinRoom() { coop.connect('join', $('coop-name').value.trim() || '坦克手', $('coop-code').value.trim(), { password: $('coop-password').value }); }
@@ -139,6 +141,7 @@ function renderLobby() {
   $('coop-create-fields').hidden = !!room;
   $('coop-join-fields').hidden = !!room;
   $('coop-name').disabled = !!room;
+  $('coop-bili-name').disabled = !!room || !$('coop-bili-name').dataset.profileReady;
   $('lobby').querySelector('.coop-panel').classList.toggle('in-room', !!room);
 }
 function renderDirectory(message) {

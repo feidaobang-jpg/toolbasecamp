@@ -40,6 +40,7 @@ copy(join(root, 'public/js/game/author-home.js'), 'author-home.js');
 copy(join(root, 'public/js/game/drag-look.js'), 'drag-look.js');
 copy(join(root, 'public/js/game/coop.js'), 'coop-shared.js');
 copy(join(root, 'public/js/game/landscape-typing.js'), 'landscape-typing.js');
+copy(join(root, 'public/js/game/input-safety.js'), 'input-safety.js');
 // 打包目录里不允许混进别的生成残留
 function walk(dir) { return readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(join(dir, e.name)) : [join(dir, e.name)]); }
 for (const p of walk(out)) if (!writes.has(relative(out, p).replaceAll('\\', '/'))) throw Error('Unexpected package file: ' + p);

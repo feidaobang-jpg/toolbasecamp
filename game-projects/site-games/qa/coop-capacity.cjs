@@ -11,7 +11,7 @@ for(const g of (process.env.GAMES_ONLY||'tank,jackal,cadillacs,starship').split(
  for(let i=0;i<count;i++){
   const c=await browser.newContext({viewport:i===1?{width:844,height:390}:{width:960,height:540},hasTouch:i===1,isMobile:i===1});cs.push(c);const p=await c.newPage();ps.push(p);p.on('pageerror',e=>errors.push(e.message));
   await p.goto(base+'html/game/'+paths[g]+'/index.html?test=1&qa=1&q=low');await p.waitForFunction(g=>g==='tank'?window.__TANK_TEST__:window.__COOP_QA__,g,{timeout:120000});
-  await p.locator('[data-act=coop]').click();console.log('STEP',g,i,'lobby opened');
+  await p.locator('[data-act=coop]:visible').first().click();console.log('STEP',g,i,'lobby opened');
   if(g==='tank')await p.evaluate(()=>__TANK_TEST__.manual(true));
   if(g==='cadillacs'||g==='starship')await p.locator('[data-field=hero]').selectOption(String(g==='starship'?i%3:i));
  }
@@ -30,7 +30,7 @@ for(const g of (process.env.GAMES_ONLY||'tank,jackal,cadillacs,starship').split(
  if(g==='cadillacs')await host.waitForFunction(()=>__CD_TEST__.snapshot().mode==='play');
  const initial=await snap(host,g),rows=s=>g==='tank'?s.players:g==='starship'?s.humans.map(h=>h.s):g==='jackal'?s.players:s.actors.filter(a=>a.s.side==='player').map(a=>a.s);
  check(g,'maximum seats spawn',rows(initial).length===count,{count});
- if(g==='cadillacs'||g==='starship')check(g,'per-player role selection',new Set(rows(initial).map(p=>p.cls||p.type)).size===(g==='starship'?3:count),rows(initial).map(p=>p.cls||p.type));
+ if(g==='cadillacs'||g==='starship')check(g,'per-player role selection',new Set(rows(initial).map(p=>p.cls||p.type)).size===(g==='starship'?Math.min(3,count):count),rows(initial).map(p=>p.cls||p.type));
  const fire=g==='tank'?'[data-hold=fire]':g==='jackal'?'#btn-fire':g==='cadillacs'?'#btn-atk':'#vJ',joy=g==='starship'?'#joyBase':'#joy-base';
  await phone.locator(fire).waitFor({state:'visible'});const box=await phone.locator(joy).boundingBox();assert.ok(box);await phone.mouse.move(box.x+box.width/2,box.y+box.height/2);await phone.mouse.down();await phone.mouse.move(box.x+box.width*.85,box.y+box.height/2,{steps:5});await phone.waitForTimeout(700);await phone.mouse.up();await phone.locator(fire).click();
  await phone.screenshot({path:path.join(out,g+'-phone-landscape.png')});await phone.setViewportSize({width:390,height:844});await phone.waitForTimeout(300);check(g,'portrait touch button remains reachable',await phone.locator(fire).isVisible());await phone.screenshot({path:path.join(out,g+'-phone-portrait.png')});
