@@ -1,0 +1,20 @@
+Mech by Skorpio
+Source: https://opengameart.org/content/mech
+Original download: https://opengameart.org/sites/default/files/mech4.zip
+This adaptation uses the offered Creative Commons Attribution-ShareAlike
+3.0 Unported license option:
+https://creativecommons.org/licenses/by-sa/3.0/
+Legal code: https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+Breachline adaptation (2026): normalize to metre scale and a 3.6m height,
+apply the original mirror, normalize skin influences, bevel hard edges,
+convert the original camo3 and normal maps to a contemporary material,
+export the original rig and adapted mesh to GLB. Source legacy clips were
+not loaded by Blender 5.2; runtime ground-contact and aiming motion is a
+new adaptation rather than the supplier's animation clips.
+
+The adapted model, textures, and included mech_view.gd/walker_feet.gd
+runtime animation adaptation are also available under CC BY-SA 3.0.
+Reusable model and editable Blender source are supplied in the player's
+third-party-assets/mech folder. No endorsement by Skorpio is implied.
+Other game assets retain their separately stated licenses.

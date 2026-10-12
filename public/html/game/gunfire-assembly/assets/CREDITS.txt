@@ -1,0 +1,12 @@
+Breachline → 虫潮前哨 browser asset adaptations
+Roach: Atmostatic (model), Danimal (rigging, animation, retexturing).
+https://opengameart.org/content/roach-game-ready-and-animated
+CC-BY-SA-3.0: https://creativecommons.org/licenses/by-sa/3.0/
+Adapted by Breachline: subdivision, PBR material and named/baked clips.
+Browser adaptation: texture resizing/JPEG compression. roach.glb remains CC-BY-SA-3.0.
+Sci-fi soldier: Irondust. https://opengameart.org/content/sci-fi-soldier
+CC0: https://creativecommons.org/publicdomain/zero/1.0/
+Breachline adaptation: skinning cleanup, military material and authored clips; CC0.
+Coast rocks diffuse: Rob Tuytel / Rico Cilliers, Poly Haven.
+https://polyhaven.com/a/coast_rocks_02 — CC0.
+Three.js r152.2 and addons: Three.js authors, MIT (vendor/LICENSE.txt).

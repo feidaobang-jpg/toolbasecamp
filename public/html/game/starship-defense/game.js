@@ -4529,7 +4529,9 @@ function setupVersus(){
   };
   bankVersus=Bank.createVersus(api);battleVersus=Conquest.createVersus(api);versus=battleVersus;
   const open=rules=>{AudioSys.init();selectVersusRules(rules);renderVersusSize();$('menuMain').classList.add('hidden');$('vsMenu').classList.remove('hidden');};
-  $('btnVersus').onclick=()=>open('conquest');$('btnBankVersus').onclick=()=>open('bank');
+  // 战地据点已迁至《枪火集结》；虫潮仅保留银行塔防对战入口。
+  const btnVersus=$('btnVersus');if(btnVersus)btnVersus.onclick=()=>open('conquest');
+  $('btnBankVersus').onclick=()=>open('bank');
   $('vsMenuBack').onclick=()=>{$('vsMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
   document.querySelectorAll('[data-vs-ai]').forEach(b=>b.onclick=()=>startVersusAI(b.dataset.vsAi,vsUI.size));
   document.querySelectorAll('[data-vs-size]').forEach(b=>b.onclick=()=>{vsUI.size=+b.dataset.vsSize;renderVersusSize();AudioSys.sfx('click');});

@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.2';
+export const GAME_VERSION='0.36.3';
 export const UPDATE_HISTORY=[
+  {version:'0.36.3',date:'2026-10-12',title:'枪战模式迁至枪火集结',changes:[
+    '战地据点与抗战战役拆到独立游戏《枪火集结》；主菜单新增枪战大厅入口。',
+    '虫潮继续保留基地防守、银行塔防、房车生存与虫族模式。']},
   {version:'0.36.2',date:'2026-10-11',title:'电脑第一人称鼠标瞄准',changes:[
     '键鼠第一人称接管鼠标，直接移动就能转向瞄准；左键射击，Esc 释放鼠标并暂停。',
     '菜单、触屏和第三人称会释放鼠标；浏览器不支持接管时仍可拖动或用 Q/E 转向。']},

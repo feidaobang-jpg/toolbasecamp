@@ -1062,7 +1062,7 @@ window.TB_LOCALES['zh-CN'] = {
     },
     games: {
         collectionTitle: '飞刀班长的游戏 · 选一款直接开玩',
-        collectionDesc: '虫潮围城、恐龙快打、赤色要塞和经典休闲游戏。B站合集集中展示全部 Toy，下面也可选择本站试玩。',
+        collectionDesc: '枪火集结、虫潮围城、恐龙快打、赤色要塞和经典休闲游戏。B站合集集中展示全部 Toy，下面也可选择本站试玩。',
         collectionOpen: 'B站全部游戏合集',
         collectionVote: '投票与愿望单',
         playHere: '本站玩',
@@ -1082,7 +1082,8 @@ window.TB_LOCALES['zh-CN'] = {
             jackal: '海滩登陆 · 废墟城两关',
             cadillacs: '海上都市 · 沼泽森林 · 地狱公路三关',
             tank: '魔改 Boss 挑战 · 含经典 35 关',
-            starshipDefense: '基地防守 · 小队与载具'
+            starshipDefense: '基地防守 · 小队与载具',
+            gunfireAssembly: '枪战大厅 · 战地与抗战'
         },
         groups: {
             all: '游戏',
@@ -1554,6 +1555,10 @@ window.TB_LOCALES['zh-CN'] = {
         starshipDefense: {
             title: '虫潮围城',
             desc: '3D 守卫基地：深色星际战场，虫群从隧道钻出；第一/第三人称、武器强化、小队与载具，可突袭虫巢母皇；电脑手机均可玩。'
+        },
+        gunfireAssembly: {
+            title: '枪火集结',
+            desc: '枪战模式大厅：手动瞄准、有限弹药；战地据点争夺与抗战战役已开放，大灾变 / 大逃杀 / 躲猫猫陆续加入。'
         },
         rmbUppercase: {
             title: '人民币大写',

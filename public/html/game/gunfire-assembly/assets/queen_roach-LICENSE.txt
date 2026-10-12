@@ -1,0 +1,13 @@
+Roach, game-ready and animated
+Original model: Atmostatic https://opengameart.org/users/atmostatic
+Rigging, animation and retexturing: Danimal https://opengameart.org/users/danimal
+Source: https://opengameart.org/content/roach-game-ready-and-animated
+License: CC BY-SA 3.0
+https://creativecommons.org/licenses/by-sa/3.0/
+https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+Breachline queen adaptation, 2026: articulated brood abdomen, acid sacs,
+crown, jaw sickles, foreclaw blades, material and runtime animation adaptation.
+This adapted model, its Blender source and model-specific adaptation remain
+under CC BY-SA 3.0, without additional restrictions. No endorsement implied.
+Original Roach legal notice is also included in the distribution.

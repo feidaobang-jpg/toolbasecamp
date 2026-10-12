@@ -47,7 +47,9 @@ export function createRVBreakout(a){
       .touch-mode #rvHUD{max-width:270px;font-size:10px;padding:5px 8px}.touch-mode #rvMap{width:115px;height:117px}.rv-mode #vO{display:block!important}.rv-mode #interactHint{max-width:400px;white-space:normal}
       @media(max-height:420px){#rvMenu,#rvResult{justify-content:flex-start;padding:12px 28px}#rvMenu h1,#rvResult h1{font-size:24px}#rvMenu .small,#rvResult .small{font-size:11px;line-height:1.5}}
     `;document.head.append(style);
-    const button=document.createElement('button');button.id='btnRV';button.className='mbtn';button.textContent='🚐 房车生存 · 废弃城镇';$('btnVersus').after(button);
+    const button=document.createElement('button');button.id='btnRV';button.className='mbtn';button.textContent='🚐 房车生存 · 废弃城镇';
+    const anchor=$('btnGunfire')||$('btnBankVersus')||$('btnTest');
+    if(anchor)anchor.after(button);else ($('modeRow')||$('menuMain'))?.append?.(button);
     const host=document.createElement('div');host.innerHTML=`
       <div id="rvMenu" class="overlay menu hidden"><h1>房车生存 · 废弃城镇</h1>
       <p class="small">开车自由探索街道、庭院与广场，随时回头，没有加油站关卡。<br>目标自选：搜索六个感染区、整备房车，或前往北侧营地撤离。</p>
