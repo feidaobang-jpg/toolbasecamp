@@ -3,7 +3,7 @@
   "task_id": "f40a799e-views-menu-02",
   "source": "Claude Code",
   "branch": "claude/views-menu-20261012",
-  "updated_at": "2026-10-12T21:58:19+08:00",
+  "updated_at": "2026-10-12T22:02:44+08:00",
   "user_request": "「4：改吧，别的游戏也要改吗？游戏的视角好像太多了点？有一些视角太相似了，要不要合并去掉几个？如果你觉得可以合并去掉几个，别的游戏也改一下，并记入规则。」（2026-10-12）",
   "website": {
     "status": "verified",
@@ -29,10 +29,17 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_zujfSTGl/index.html"
       },
-      "status": "auditing",
-      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "status": "published",
+      "status_checked_at": "2026-10-12T22:02:44+08:00",
       "platform_mtime": "2026-10-12T21:56:56+08:00",
-      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）",
+      "published_observed_at": "2026-10-12T22:01:37+08:00",
+      "public_version": "v25541",
+      "public_verified": {
+        "at": "2026-10-12T22:05:00+08:00",
+        "method": "公开页匿名访问会弹登录提示，所以在已登录的投稿窗口里打开公开入口，在游戏框架内只读核对",
+        "fact": "按 C：斜俯视 → 俯视 → 低位正视 → 第一人称 → 斜俯视；标题菜单两列、1280×720 下没有超出画面的项"
+      }
     },
     "cadillacs-stage1-3d": {
       "name": "恐龙快打 3D",
@@ -51,10 +58,17 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_3t1WnIIv/index.html"
       },
-      "status": "auditing",
-      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "status": "published",
+      "status_checked_at": "2026-10-12T22:02:44+08:00",
       "platform_mtime": "2026-10-12T21:57:09+08:00",
-      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）",
+      "published_observed_at": "2026-10-12T22:01:37+08:00",
+      "public_version": "v25542",
+      "public_verified": {
+        "at": "2026-10-12T22:05:00+08:00",
+        "method": "公开页匿名访问会弹登录提示，所以在已登录的投稿窗口里打开公开入口，在游戏框架内只读核对",
+        "fact": "按 C：侧视 → 斜视 → 正视 → 第一人称 → 侧视；标题菜单两列、没有超出画面的项"
+      }
     },
     "mario-3d": {
       "name": "超级玛丽 3D",
@@ -73,10 +87,17 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_mAPM4ZRC/index.html"
       },
-      "status": "auditing",
-      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "status": "published",
+      "status_checked_at": "2026-10-12T22:02:44+08:00",
       "platform_mtime": "2026-10-12T21:57:15+08:00",
-      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）",
+      "published_observed_at": "2026-10-12T22:01:37+08:00",
+      "public_version": "v25543",
+      "public_verified": {
+        "at": "2026-10-12T22:05:00+08:00",
+        "method": "公开页匿名访问会弹登录提示，所以在已登录的投稿窗口里打开公开入口，在游戏框架内只读核对",
+        "fact": "按 C：侧视 → 斜视 → 正视 → 第一人称 → 侧视；标题菜单两列、没有超出画面的项"
+      }
     },
     "tank-3d": {
       "name": "坦克大战 3D",
@@ -95,10 +116,17 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_mGmJSsZG/index.html"
       },
-      "status": "auditing",
-      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "status": "published",
+      "status_checked_at": "2026-10-12T22:02:44+08:00",
       "platform_mtime": "2026-10-12T21:57:16+08:00",
-      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）",
+      "published_observed_at": "2026-10-12T22:01:37+08:00",
+      "public_version": "v25544",
+      "public_verified": {
+        "at": "2026-10-12T22:05:00+08:00",
+        "method": "公开页匿名访问会弹登录提示，所以在已登录的投稿窗口里打开公开入口，在游戏框架内只读核对",
+        "fact": "按 C：斜俯视 → 正俯视 → 正视 → 第一人称 → 斜俯视；标题菜单两列、没有超出画面的项"
+      }
     },
     "starship-defense": {
       "name": "虫潮围城",
@@ -117,10 +145,17 @@
         "status": "auditing",
         "preview_url": "https://www.bilibili.com/toy/preview/preview_Ccr8PrFh/index.html"
       },
-      "status": "auditing",
-      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "status": "published",
+      "status_checked_at": "2026-10-12T22:02:44+08:00",
       "platform_mtime": "2026-10-12T21:57:18+08:00",
-      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）",
+      "published_observed_at": "2026-10-12T22:01:37+08:00",
+      "public_version": "v25545",
+      "public_verified": {
+        "at": "2026-10-12T22:05:00+08:00",
+        "method": "公开页匿名访问会弹登录提示，所以在已登录的投稿窗口里打开公开入口，在游戏框架内只读核对",
+        "fact": "按 C：第三人称 0 → 1 → 2 → 第一人称 → 0（近身 / 高位 / 战术俯视 / 第一人称）"
+      }
     }
   },
   "taptap": {
@@ -133,8 +168,7 @@
   },
   "not_done": [
     "手机真机没有实测（视口模拟）",
-    "枪火集结大厅在 1920×1080 也要滚动才看到最下面一排按钮——另一任务当天新建的页面，本次没动",
-    "Toy 审核结果以平台状态为准，过审前不算上线"
+    "枪火集结大厅在 1920×1080 也要滚动才看到最下面一排按钮——另一任务当天新建的页面，本次没动"
   ],
   "records_commit": "62aa57d5"
 }
