@@ -3,7 +3,7 @@
   "game": "mario-3d",
   "game_version": "v2.6.0",
   "toy_id": "39043286960128",
-  "updated_at": "2026-10-12T18:30:00+08:00",
+  "updated_at": "2026-10-12T19:20:00+08:00",
   "human_review": {
     "status": "approved",
     "statement": "看了，发布吧",
@@ -199,8 +199,8 @@
       "video_id_short_url": "https://youtu.be/4UnBUTQnmvU",
       "title": "超级玛丽 3D · 1-4 库巴城堡完整实机：岩浆、七根火棒与砍断吊桥",
       "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
-      "status": "uploading",
-      "visibility": "private",
+      "status": "published",
+      "visibility": "public",
       "uploaded_at": "2026-10-12T18:20:00+08:00",
       "upload_progress_observed": "18:30 左右 26%，Studio 显示剩余约 26 分钟；文件 452231536 字节，文件名 gameplay-youtube-final.mp4",
       "details_filled": {
@@ -229,17 +229,72 @@
         "save_state": "Studio 显示「已保存所有更改。」"
       },
       "remaining_steps": [
-        "等上传与处理完成",
-        "上传中英字幕 attachments（captions-zh.srt / captions-en.srt）并在播放器核验可选",
-        "英文本地化标题与说明（English-localizations.txt）在完整编辑页补填并核验",
-        "播放列表：超级玛丽 3D 无已确认正式播放列表，与 B 站合集同样记待关联，不新建",
-        "过完「检查」后改为公开，核验公开页可播放、时长、缩略图与字幕",
-        "X：本期未见已授权的官方 API 通路（见 x 字段），不发布"
+        "已完成：上传→元数据→中英人工字幕→英文标题/说明本地化→检查→公开并核验"
       ],
       "earlier_blocked_incident": {
         "status": "resolved_this_session",
         "detail": "上一段会话在 Studio 上传入口遇到 Google 账号二次验证，已按 LoginRequired 发飞书并保存进度；本次会话实测 studio.youtube.com 已可正常进入频道（郑晓辉 UCha4DVE3db0P1eJvu4qsLJg），上传流程已实际开始。"
-      }
+      },
+      "published_at": "2026-10-12T18:50:32+08:00",
+      "sd_hd_processing": "标清与高清版本处理均已完成（Studio 侧栏两项勾满）",
+      "premiere_note": "上传时已把公开范围设为公开，Studio 提示“标清处理完毕后才会首映”，因此 18:50:32 SD 处理完成后以自动首映（Premiere）形式上线，首映已结束，公开页 dateText 仍显示“Premiered …”，播放形态为普通点播（isLiveContent=false）。",
+      "subtitles": {
+        "zh-Hans": {
+          "file": "final/youtube-zh/captions-zh.srt",
+          "sha256": "8130abb53884038371affbee22433dfe8a74ca3c179456244c7a68e310d1acf0",
+          "track_type": "字幕（人工，非自动）",
+          "studio_state": "已发布 2026年10月12日",
+          "public_verified_at": "2026-10-12T19:14:00+08:00"
+        },
+        "en": {
+          "file": "final/youtube-zh/captions-en.srt",
+          "sha256": "340e563ac118e90e8258466bdcca1141e4db29227dbc6df5a99a8836a695e87f",
+          "track_type": "字幕（人工，非自动）",
+          "studio_state": "已发布 2026年10月12日",
+          "public_verified_at": "2026-10-12T19:14:00+08:00",
+          "note": "上传文件类型选“包含时间”，导入 59 条 cue，时间码与中文轨一致"
+        },
+        "auto_asr": "自动字幕仍在“正在处理…”，不影响人工轨",
+        "public_player_tracks": [
+          "zh-Hans Chinese (Simplified)",
+          "en English"
+        ],
+        "verified_by": "无 Cookie 抓取公开页 watch.html 的 captionTracks 字段（kind 为空＝人工轨）"
+      },
+      "localization": {
+        "en": {
+          "title": "Super Mario 3D World 1-4: Bowser's Castle, one clean run",
+          "title_chars": 56,
+          "description_source": "final/youtube-zh/English-localizations.txt",
+          "description_chars": 922,
+          "description_lines": 6,
+          "studio_state": "标题和说明 已发布 2026年10月12日",
+          "verified_at": "2026-10-12T19:14:00+08:00",
+          "note": "在“视频字幕→添加语言→英语→标题和说明”里填写并发布；公开页默认仍返回中文标题，英文文案随观看者界面语言生效，仓库内 English-localizations.txt 为唯一来源"
+        }
+      },
+      "playlist": {
+        "status": "not_attached_no_existing_playlist",
+        "checked_at": "2026-10-12T19:14:00+08:00",
+        "detail": "Studio“选择播放列表”面板显示“没有可用的播放列表”，频道当前 0 个播放列表；按既定口径不新建，记待关联，需用户明确要求才创建"
+      },
+      "public_verification": {
+        "checked_at": "2026-10-12T19:14:00+08:00",
+        "method": "本机 curl（无登录 Cookie）+ 解析公开页",
+        "facts": {
+          "oembed": "HTTP 200，标题/频道名正确",
+          "watch_page_playability": "OK",
+          "lengthSeconds": "177（成片 176.6s，与审片包一致）",
+          "channel_videos_tab": "https://www.youtube.com/@郑晓辉-z3k/videos 首条即 4UnBUTQnmvU（不公开列出不会出现在此）",
+          "custom_thumbnail": "https://i.ytimg.com/vi/4UnBUTQnmvU/maxresdefault.jpg 已回读并与 cover-zh-16x9.jpg 目视一致（“库巴城堡 砍桥那一刻”）",
+          "keywords": "8 个标签已在公开页 keywords 中回读",
+          "view_count": "0（发布后即时值，不作效果承诺）"
+        }
+      },
+      "not_done": [
+        "播放列表未关联（频道无播放列表，按要求不新建）",
+        "手机 YouTube App 真机观看体验未验收（仅桌面公开页核验）"
+      ]
     }
   },
   "x": {

@@ -74,9 +74,7 @@
     "话题是否已在投稿入口选中",
     "推流申请字段"
   ],
-  "blocking_issues": [
-    "上传进行中；字幕与英文本地化字段、公开核验待完成"
-  ],
+  "blocking_issues": [],
   "platform_requirements_checked_at": "2026-10-12",
   "platform_sources": [
     "C:/Users/37818/.claude/skills/game-video/references/toy-operations.md",
@@ -99,11 +97,18 @@
     ]
   },
   "publication": {
-    "status": "uploading",
+    "status": "published",
     "platform_id": "4UnBUTQnmvU",
     "public_url": "https://www.youtube.com/watch?v=4UnBUTQnmvU",
-    "visibility_now": "private",
-    "started_at": "2026-10-12T18:20:00+08:00",
+    "visibility_now": "public",
+    "published_at": "2026-10-12T18:50:32+08:00",
+    "public_verified_at": "2026-10-12T19:14:00+08:00",
+    "subtitles": {
+      "zh-Hans": "published",
+      "en": "published"
+    },
+    "localization_en": "published",
+    "playlist": "not_attached_no_existing_playlist",
     "record": "work/publication-result.json"
   }
 }
