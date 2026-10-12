@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import * as L from './level.js';
 import { part, merged, mesh, MAT, C, hutGeo, gateGeo, barrelGeo, sandbagGeo, crateGeo, isCached } from './models.js';
 import { fixedRng } from './core.js';
+import { stackCrateGeo, pjeepGeo } from './models3.js';
 
 const Z = (y) => -y;   // 逻辑 y（北）→ three 的 -Z
 const T = L.T;
@@ -192,21 +193,22 @@ export function buildWorld(scene) {
     {
       const VX = L.COLS + 1, VY = L.ROWS + 1;
       const pos = new Float32Array(VX * VY * 3), col = new Float32Array(VX * VY * 3);
-      const tmp = new THREE.Color(), acc = new THREE.Color();
+      const tmp = new THREE.Color(), acc = new THREE.Color(), accL = new THREE.Color();
       const bluffCell = new Uint8Array(L.COLS * L.ROWS), ridgeCell = new Uint8Array(L.COLS * L.ROWS);
       for (const b of L.BLUFFS) for (const c of b.cells) bluffCell[c] = 1;
       for (const s of L.statics) if (s && s.kind === 'ridge') for (const c of s.cells) ridgeCell[c] = 1;
       const ridgeCol = new THREE.Color(cfg.ridgeColor || 0x8a6a45), ridgeTop = new THREE.Color(cfg.ridgeTop || 0x9a9a4a);
       for (let j = 0; j < VY; j++) for (let i = 0; i < VX; i++) {
-        let h = 0, n = 0, nr = 0; acc.setRGB(0, 0, 0);
+        let h = 0, n = 0, nr = 0, land = 0; acc.setRGB(0, 0, 0); accL.setRGB(0, 0, 0);
         for (let dj = -1; dj <= 0; dj++) for (let di = -1; di <= 0; di++) {
           const ii = Math.min(L.COLS - 1, Math.max(0, i + di)), jj = Math.min(L.ROWS - 1, Math.max(0, j + dj));
           const c = L.idx(ii, jj), t = L.terrain[c];
           if (ridgeCell[c]) { h += 2.9; nr++; tmp.copy(ridgeCol); }
-          else { h += CELL_H[t] || 0; tmp.copy(COLOR[t] || COLOR[T.GRASS]); if (bluffCell[c]) tmp.setHex(0xb59c74); }
+          else { h += CELL_H[t] || 0; tmp.copy(COLOR[t] || COLOR[T.GRASS]); if (bluffCell[c]) tmp.setHex(0xb59c74); if (cfg.quay && !CELL_H[t]) { land++; accL.add(tmp); } }
           acc.add(tmp); n++;
         }
         h /= n; acc.multiplyScalar(1 / n);
+        if (cfg.quay && land) { h = 0; acc.copy(accL).multiplyScalar(1 / land); }   // 码头：岸边不做斜坡
         if (nr === 4) { acc.lerp(ridgeTop, 0.55 + (R() - 0.5) * 0.2); h += (R() - 0.5) * 0.8; }
         else if (nr > 0) h += (R() - 0.5) * 0.4;
         const x = L.X0 + i, y = j;
@@ -359,10 +361,15 @@ export function buildWorld(scene) {
       else if (m.kind === 'arrow') {
         const ca = Math.cos(a), sa = Math.sin(a), fx = (dx, dy) => [m.x + dx * ca + dy * sa, Z(m.y - dx * sa + dy * ca)];
         let p = fx(0, -0.4); part(b, 'box', col, [p[0], 0.025, p[1]], [0.26, 0.02, 1.6], [0, -a, 0]);
-        p = fx(-0.32, 0.6); part(b, 'box', col, [p[0], 0.026, p[1]], [0.24, 0.02, 0.9], [0, -a + 0.8, 0]);
-        p = fx(0.32, 0.6); part(b, 'box', col, [p[0], 0.026, p[1]], [0.24, 0.02, 0.9], [0, -a - 0.8, 0]);
+        p = fx(-0.32, 0.6); part(b, 'box', col, [p[0], 0.026, p[1]], [0.24, 0.02, 0.9], [0, -a - 0.8, 0]);
+        p = fx(0.32, 0.6); part(b, 'box', col, [p[0], 0.026, p[1]], [0.24, 0.02, 0.9], [0, -a + 0.8, 0]);
       } else if (m.kind === 'hatch') {
         for (let k = -2; k <= 2; k++) part(b, 'box', col, [m.x + k * 0.6, 0.025, Z(m.y)], [0.22, 0.02, (m.l || 3)], [0, 0.5, 0]);
+      } else if (m.kind === 'grate') {
+        const l = m.l || 8;
+        part(b, 'box', 0x8d9296, [m.x, 0.02, Z(m.y)], [l, 0.03, 1.5]);
+        part(b, 'box', 0xe4e6e4, [m.x, 0.03, Z(m.y)], [l - 0.3, 0.03, 1.2]);
+        for (let k = 0; k < l * 2 - 1; k++) part(b, 'box', 0x6f7478, [m.x - l / 2 + 0.5 + k * 0.5, 0.045, Z(m.y)], [0.14, 0.02, 1.0]);
       } else if (m.kind === 'emblem') {
         part(b, 'cone4', 0x7a2a22, [m.x, 0.06, Z(m.y)], [m.s || 6, 0.1, (m.s || 6) * 0.6], [0, Math.PI / 4, 0]);
         part(b, 'sphere', 0xe9e2cf, [m.x, 0.14, Z(m.y + 0.2)], [1.4, 0.06, 1.2]);
@@ -392,9 +399,27 @@ export function buildWorld(scene) {
       } else if (p.kind === 'flag') {
         part(b, 'cyl6', 0x8e969c, [p.x, 2.2, Z(p.y)], [0.1, 4.4, 0.1]);
         part(b, 'box', 0xc9583f, [p.x + 0.6, 3.9, Z(p.y)], [1.2, 0.7, 0.04]);
+      } else if (p.kind === 'padlight') {
+        part(b, 'cyl6', 0x55595d, [p.x, 0.12, Z(p.y)], [0.5, 0.24, 0.5]);
+        part(b, 'sphere', p.c ? 0xff6b5a : 0x6fb8ff, [p.x, 0.32, Z(p.y)], [0.4, 0.3, 0.4]);
       } else if (p.kind === 'statueDecor') {
         part(b, 'rbox', 0x9c9a92, [p.x, 0.6, Z(p.y)], [1.6, 1.2, 1.6]);
         part(b, 'sphere', 0xe6e0cf, [p.x, 1.9, Z(p.y)], [1.2, 1.4, 1.1]);
+      }
+    }
+    if (cfg.quay) {
+      const wet = (i, j) => L.inGrid(i, j) && L.isNoGo(L.terrain[L.idx(i, j)]);
+      for (let j = 0; j < L.ROWS; j++) for (let i = 0; i < L.COLS; i++) {
+        if (wet(i, j)) continue;
+        const x = L.cellX(i), y = L.cellY(j), b = chunkList(y);
+        for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          if (!wet(i + di, j + dj)) continue;
+          for (let k = 0; k < 2; k++) {
+            const t = (k - 0.5) * 0.5, col = (i + j + k) % 2 ? 0xe8a020 : 0x2b2b2b;
+            if (di) part(b, 'box', col, [x + di * 0.3, 0.02, Z(y + t)], [0.4, 0.03, 0.5]);
+            else part(b, 'box', col, [x + t, 0.02, Z(y + dj * 0.3)], [0.5, 0.03, 0.4]);
+          }
+        }
       }
     }
     for (const [, list] of chunks) {
@@ -415,6 +440,7 @@ export function buildWorld(scene) {
       else if (s.kind === 'sandbag') m = mesh(sandbagGeo(s.x1 - s.x0));
       else if (s.kind === 'crate') m = mesh(crateGeo());
       else if (s.kind === 'jet') { if (!jetG) jetG = jetGeo(); m = mesh(jetG); m.rotation.y = s.data.a || 0; }
+      else if (s.kind === 'pjeep') m = mesh(pjeepGeo());
       if (m) {
         m.position.set(s.x, 0, Z(s.y));
         if (s.kind === 'crate') m.rotation.y = (s.id % 4) * 0.3;
@@ -470,6 +496,31 @@ export function buildWorld(scene) {
           im.setColorAt(n, col);
         });
         im.castShadow = !(opts && opts.noShadow); im.receiveShadow = true; im.computeBoundingSphere();
+        add(im);
+      }
+    }
+    // 码头货箱堆：每 2×2 格一只大木箱，按位置固定叠一层或两层（实例化，按 32 单位分带便于剔除）
+    {
+      const crates = [];
+      for (const s of L.statics) {
+        if (!s || s.kind !== 'stack') continue;
+        for (let y = s.y0; y < s.y1; y += 2) for (let x = s.x0; x < s.x1; x += 2) {
+          const w = Math.min(2, s.x1 - x), d = Math.min(2, s.y1 - y), hsh = Math.abs(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1;
+          crates.push({ x: x + w / 2, y: y + d / 2, w, d, h: 0, t: hsh });
+          if (hsh > 0.42) crates.push({ x: x + w / 2, y: y + d / 2, w: w * 0.96, d: d * 0.96, h: 1.9, t: (hsh * 7) % 1 });
+        }
+      }
+      const bands = new Map();
+      for (const it of crates) { const k = Math.floor(it.y / 32); if (!bands.has(k)) bands.set(k, []); bands.get(k).push(it); }
+      const d = new THREE.Object3D(), col = new THREE.Color(), geo = stackCrateGeo();
+      for (const [, list] of bands) {
+        const im = new THREE.InstancedMesh(geo, MAT.flat, list.length);
+        list.forEach((it, n) => {
+          d.position.set(it.x, it.h, Z(it.y)); d.rotation.set(0, 0, 0); d.scale.set(it.w / 2, 1, it.d / 2); d.updateMatrix();
+          im.setMatrixAt(n, d.matrix);
+          col.setScalar(0.86 + it.t * 0.2); im.setColorAt(n, col);
+        });
+        im.castShadow = true; im.receiveShadow = true; im.computeBoundingSphere();
         add(im);
       }
     }

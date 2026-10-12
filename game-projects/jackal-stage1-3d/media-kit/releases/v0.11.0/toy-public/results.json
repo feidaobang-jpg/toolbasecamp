@@ -1,0 +1,306 @@
+{
+ "shell": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+ "when": "2026-10-12T08:35:03.110Z",
+ "env": "Playwright + 系统 Edge 无头；手机为设备模拟，不是真机",
+ "pass": 22,
+ "total": 23,
+ "results": [
+  {
+   "name": "[desktop] 预览包版本与第三关菜单",
+   "ok": true,
+   "detail": {
+    "version": "v0.11.0",
+    "sub": "第三关 · 港口",
+    "frame": [
+     1280,
+     720
+    ],
+    "shellBox": [
+     0,
+     0,
+     1280,
+     720
+    ]
+   }
+  },
+  {
+   "name": "[desktop] 主菜单完整落在游戏区内",
+   "ok": false,
+   "detail": {
+    "panel": [
+     100,
+     10,
+     1180,
+     816
+    ],
+    "vw": 1280,
+    "vh": 720,
+    "rotated": false
+   }
+  },
+  {
+   "name": "[desktop] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[desktop] 第三关与 Boss 的原版录音可取可解码",
+   "ok": true,
+   "detail": {
+    "harbor": [
+     200,
+     180
+    ],
+    "boss": [
+     200,
+     180
+    ]
+   }
+  },
+  {
+   "name": "[desktop] 进入第三关；不操作 3 秒多没有受击，并出现操作提示",
+   "ok": true,
+   "detail": {
+    "stage": 3,
+    "music": "harbor",
+    "hits": 0,
+    "grace": {
+     "on": true,
+     "acted": false,
+     "left": 6.63
+    },
+    "toast": "W A S D 开车 · J 机枪 · K 手雷；动起来之前敌人不开火",
+    "touchHidden": true
+   }
+  },
+  {
+   "name": "[desktop] Boss 战舰靠泊开战，6 座炮塔，Boss 血条 6 格",
+   "ok": true,
+   "detail": {
+    "type": "battleship",
+    "state": "fight",
+    "spawned": 6,
+    "killed": 0,
+    "pips": [
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   }
+  },
+  {
+   "name": "[desktop] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[phone-portrait] 预览包版本与第三关菜单",
+   "ok": true,
+   "detail": {
+    "version": "v0.11.0",
+    "sub": "第三关 · 港口",
+    "frame": [
+     390,
+     800
+    ],
+    "shellBox": [
+     0,
+     44,
+     390,
+     800
+    ]
+   }
+  },
+  {
+   "name": "[phone-portrait] 主菜单完整落在游戏区内",
+   "ok": true,
+   "detail": {
+    "panel": [
+     33,
+     12,
+     357,
+     788
+    ],
+    "vw": 390,
+    "vh": 800,
+    "rotated": true
+   }
+  },
+  {
+   "name": "[phone-portrait] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[phone-portrait] 第三关与 Boss 的原版录音可取可解码",
+   "ok": true,
+   "detail": {
+    "harbor": [
+     200,
+     180
+    ],
+    "boss": [
+     200,
+     180
+    ]
+   }
+  },
+  {
+   "name": "[phone-portrait] 进入第三关；不操作 3 秒多没有受击，并出现操作提示",
+   "ok": true,
+   "detail": {
+    "stage": 3,
+    "music": "harbor",
+    "hits": 0,
+    "grace": {
+     "on": true,
+     "acted": false,
+     "left": 6.7
+    },
+    "toast": "推左下角摇杆开车 · J 机枪 · K 手雷；动起来之前敌人不开火",
+    "touchHidden": false
+   }
+  },
+  {
+   "name": "[phone-portrait] 触屏摇杆向上：吉普向北开，开局保护随第一次操作结束",
+   "ok": true,
+   "detail": {
+    "dy": 4.44,
+    "grace": {
+     "on": true,
+     "acted": true,
+     "left": 0.7
+    }
+   }
+  },
+  {
+   "name": "[phone-portrait] Boss 战舰靠泊开战，6 座炮塔，Boss 血条 6 格",
+   "ok": true,
+   "detail": {
+    "type": "battleship",
+    "state": "fight",
+    "spawned": 6,
+    "killed": 0,
+    "pips": [
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   }
+  },
+  {
+   "name": "[phone-portrait] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[phone-landscape] 预览包版本与第三关菜单",
+   "ok": true,
+   "detail": {
+    "version": "v0.11.0",
+    "sub": "第三关 · 港口",
+    "frame": [
+     844,
+     346
+    ],
+    "shellBox": [
+     0,
+     44,
+     844,
+     346
+    ]
+   }
+  },
+  {
+   "name": "[phone-landscape] 主菜单完整落在游戏区内",
+   "ok": true,
+   "detail": {
+    "panel": [
+     12,
+     11,
+     832,
+     335
+    ],
+    "vw": 844,
+    "vh": 346,
+    "rotated": false
+   }
+  },
+  {
+   "name": "[phone-landscape] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[phone-landscape] 第三关与 Boss 的原版录音可取可解码",
+   "ok": true,
+   "detail": {
+    "harbor": [
+     200,
+     180
+    ],
+    "boss": [
+     200,
+     180
+    ]
+   }
+  },
+  {
+   "name": "[phone-landscape] 进入第三关；不操作 3 秒多没有受击，并出现操作提示",
+   "ok": true,
+   "detail": {
+    "stage": 3,
+    "music": "harbor",
+    "hits": 0,
+    "grace": {
+     "on": true,
+     "acted": false,
+     "left": 6.68
+    },
+    "toast": "推左下角摇杆开车 · J 机枪 · K 手雷；动起来之前敌人不开火",
+    "touchHidden": false
+   }
+  },
+  {
+   "name": "[phone-landscape] 触屏摇杆向上：吉普向北开，开局保护随第一次操作结束",
+   "ok": true,
+   "detail": {
+    "dy": 4.44,
+    "grace": {
+     "on": true,
+     "acted": true,
+     "left": 0.7
+    }
+   }
+  },
+  {
+   "name": "[phone-landscape] Boss 战舰靠泊开战，6 座炮塔，Boss 血条 6 格",
+   "ok": true,
+   "detail": {
+    "type": "battleship",
+    "state": "fight",
+    "spawned": 6,
+    "killed": 0,
+    "pips": [
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok",
+     "ok"
+    ]
+   }
+  },
+  {
+   "name": "[phone-landscape] 无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

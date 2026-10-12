@@ -1079,7 +1079,7 @@ window.TB_LOCALES['zh-CN'] = {
         content: {
             firstStage: '第一关',
             mario: '包含 1-1 至 1-4',
-            jackal: '海滩登陆 · 废墟城两关',
+            jackal: '海滩登陆 · 废墟城 · 港口三关',
             cadillacs: '海上都市 · 沼泽森林 · 地狱公路三关',
             tank: '魔改 Boss 挑战 · 含经典 35 关',
             starshipDefense: '基地防守 · 小队与载具',
@@ -1392,7 +1392,7 @@ window.TB_LOCALES['zh-CN'] = {
         },
         jackal3d: {
             title: '赤色要塞',
-            desc: 'FC 赤色要塞的 3D 重制版：包含海滩登陆和废墟城两关，驾驶武装吉普救出俘虏、送上直升机，对战蓝色坦克和石像。键盘与手机横屏都能玩。'
+            desc: 'FC 赤色要塞的 3D 重制版：包含海滩登陆、废墟城和港口三关，驾驶武装吉普救出俘虏、送上直升机，对战蓝色坦克、石像和港口战舰。键盘与手机横屏都能玩。'
         },
         cadillacs3d: {
             title: '恐龙快打',

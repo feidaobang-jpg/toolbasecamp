@@ -1,26 +1,26 @@
 {
-  "handoff": "releases/menu-text-20261009/handoff.json",
+  "handoff": "releases/v0.11.0/handoff.json",
   "toy": {
     "id": 39863936092160,
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
     "review_status": "published",
-    "verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "verified_at": "2026-10-12T16:35:27+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_o1QjrBAb/index.html",
-    "preview_verified_at": "2026-10-06T22:35:15.869180+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_bVKNokBY/index.html",
+    "preview_verified_at": "2026-10-12T16:32:56+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.10.3 大厅手动建房补丁已审核通过并公开生效：公开入口 1280×720 与 390×844 双视口实测：大厅可开、手动建房得到房间号、已在房间时按钮为可见锁定态且点击说明\"你已在房间…退出房间\"、无脚本报错（12/12）",
-    "submitted_at": "2026-10-09T15:53:41.052296+08:00",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_YjjbUeIH/index.html",
-    "submitted_version": "v0.10.3-menu-text1",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_rS8VqubD/index.html",
-    "release_record": "releases/toy-sync-20261009/sync.json",
-    "published_version": "v0.10.3-menu-text1",
+    "note": "v0.11.0（第三关港口 + 开局保护）已审核通过并公开生效：mylist 显示 published（平台更新时间 2026-10-12T16:33:01+08:00），公开入口实测游戏内版本号 v0.11.0。",
+    "submitted_at": "2026-10-12T16:31:37+08:00",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
+    "submitted_version": "v0.11.0",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
+    "release_record": "releases/v0.11.0/release-status.json",
+    "published_version": "v0.11.0",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -124,22 +124,33 @@
         "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
         "published_verified_at": "2026-10-07T21:52:19+08:00",
         "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
+      },
+      {
+        "version": "v0.11.0",
+        "classification": "正式版本",
+        "status": "published",
+        "record": "releases/v0.11.0/handoff.json",
+        "summary": "第三关港口与战舰 Boss；每关开局保护；Toy 手机横屏主菜单完整显示；联机可选第三关。",
+        "submitted_at": "2026-10-12T16:31:37+08:00",
+        "preview_verified": "电脑、手机竖屏、手机横屏三种视口实测：第三关可进、原版录音可解码、触屏摇杆、Boss 战舰靠泊开战、无脚本错误",
+        "published_verified_at": "2026-10-12T16:35:27+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
       }
     ],
-    "last_successful_sync_at": "2026-10-09T16:00:04.596643+08:00",
-    "last_successful_sync_version": "v0.10.3-menu-text1",
+    "last_successful_sync_at": "2026-10-12T16:35:27+08:00",
+    "last_successful_sync_version": "v0.11.0",
     "package_sha256": "eb9e124e29fcd004f94e12a5aaf5d6a44eaa939372ac1ff3027b56d645a2e070",
-    "published_verified_at": "2026-10-07T21:56:53+08:00",
+    "published_verified_at": "2026-10-12T16:35:27+08:00",
     "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
     "status": "published",
-    "package_hash": "7dc517b436d541bd83d9fdc804510b98f22255e5473c990dab530014fbe3c555",
-    "version": "v0.10.3",
-    "package": "dist/toy-v0.8.0/package",
-    "last_published_version": "v0.10.3-menu-text1",
+    "package_hash": "57c40d0b90d114dbb0461fb9389dad5dde741b8a8c70e9c24ab881ceb6217b86",
+    "version": "v0.11.0",
+    "package": "dist/toy-v0.11.0/package",
+    "last_published_version": "v0.11.0",
     "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
-    "public_verified_version": "v0.10.3-menu-text1",
-    "public_verified_at": "2026-10-09T16:00:04.596643+08:00",
-    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+    "public_verified_version": "v0.11.0",
+    "public_verified_at": "2026-10-12T16:35:27+08:00",
+    "public_runtime_evidence": "公开入口三种视口实测 22/23（未通过项为电脑 1280×720 主菜单需滚动，旧版同样如此）；游戏内版本号 v0.11.0，第三关可进，Boss 战舰可开战；手机为设备模拟",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
     "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "current_public_verification": "verified",
@@ -148,7 +159,8 @@
       "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
       "at": "2026-10-09T15:48:29.546449+08:00"
     },
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v24037/index.html?test=1&qa=1"
+    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-jackal-3d/39863936092160-v24037/index.html?test=1&qa=1",
+    "preserved_package": "D:/project/task-artifacts/jackal-stage3-20261012/toy-v0.11.0-package"
   },
   "game_id": "jackal-stage1-3d",
   "launch": {
@@ -168,12 +180,12 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.10.3-menu-text1-privacy1",
+  "current_version": "v0.11.0",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
-  "website_version": "v0.10.3-menu-text1",
+  "website_version": "v0.11.0",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
-  "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
-  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
+  "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩、废墟城、港口三关，第三关打停在码头的战舰；每关进场后第一次操作前敌人不开火；机枪默认固定向北，可选跟随车头；U 联合开火。",
+  "website_verified_at": "2026-10-12T16:28:00+08:00",
   "versions": [
     {
       "version": "v0.1",
@@ -288,10 +300,18 @@
       "classification": "正式版本",
       "handoff": "releases/v0.10.0/handoff.json",
       "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
+    },
+    {
+      "version": "v0.11.0",
+      "base_version": "v0.10.3-menu-text1-privacy1",
+      "date": "2026-10-12",
+      "classification": "正式版本",
+      "handoff": "releases/v0.11.0/handoff.json",
+      "summary": "新增第三关「港口」与战舰 Boss；每关开局保护（第一次操作前敌人不开火）；修 Toy 手机横屏主菜单被截、联机选不了第三关。"
     }
   ],
-  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
-  "web_toy_versions_match": false,
+  "website_commit": "14cb5d3c",
+  "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "dev": {
     "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
@@ -360,6 +380,22 @@
       "toy": "待合并：纯文案不单独送审，随下次本游戏更新一并打包",
       "taptap": "待合并：同 Toy",
       "bilibili": "不更新：已发视频标题与简介保留原文"
+    },
+    {
+      "version": "v0.11.0",
+      "date": "2026-10-12",
+      "classification": "正式版本",
+      "changes": [
+        "第三关港口与战舰 Boss",
+        "开局保护",
+        "Toy 手机横屏主菜单完整显示",
+        "联机可选第三关"
+      ],
+      "record": "releases/v0.11.0/handoff.json",
+      "website": "public_verified",
+      "toy": "public_verified（2026-10-12T16:33:01+08:00 过审）",
+      "taptap": "默认不发布",
+      "bilibili": "重大版本：网站核验后立即更新简介"
     }
   ],
   "drag_camera_controls": {
@@ -560,14 +596,15 @@
     "sync_ledger": "taptap-sync.json"
   },
   "website": {
-    "version": "v0.10.3-menu-text1",
+    "version": "v0.11.0",
     "status": "public_verified",
-    "verified_at": "2026-10-09T15:47:30.230676+08:00",
-    "commit": "21970a0f358cb767fb82ef025c5b3d9c11a1e232",
+    "verified_at": "2026-10-12T16:28:00+08:00",
+    "commit": "14cb5d3c",
+    "source_commit": "2ade468b",
     "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html",
-    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
-    "runtime_sha256": "0de0f9bc521a17a147704adbc756b765a1919cac36552c8092ffc489cbb8a36c",
-    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+    "runtime_sha256": "71443421c1c3ca630dfe844f33b13187e0fd28a7ca927a442d6060442cb85251",
+    "verification": "线上 game.min.js 哈希与构建一致；sounds/harbor.mp3 200 且可解码 180 秒；zh-CN.js 含「港口三关」；qa/stage3.js 对线上 44/44；服务端 coop_lobby.py 已是 1–9 上限、API 健康",
+    "verification_record": "releases/v0.11.0/release-status.json"
   },
   "touch_control_inset": {
     "side_css_px": 40,

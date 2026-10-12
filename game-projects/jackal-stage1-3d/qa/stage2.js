@@ -166,8 +166,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   s = await snap(page);
   const resTitle = await page.textContent('#res-title'), resExtra = await page.textContent('#res-extra');
   const nextHidden = await page.$eval('#res-next', x => x.hidden), restartTxt = await page.textContent('#res-restart');
-  check('第二关结算：标题、Boss 石像击毁数、「后续关卡制作中」、主按钮「从第一关再玩一次」', s.ui.overlay === 'result' && /第二关完成/.test(resTitle) && /Boss 石像/.test(await page.textContent('#tally')) && /后续关卡制作中/.test(resExtra) && nextHidden && /从第一关再玩一次/.test(restartTxt) && s.ui.focus === 'restart', { resTitle, resExtra, nextHidden, restartTxt, focus: s.ui.focus });
-  check('打通最后一关的结算不显示「进入下一关」按钮', !(await page.isVisible('#res-next')));
+  check('第二关结算：标题、Boss 石像击毁数；还有第三关，所以主按钮是「进入第三关」，另有「重玩第二关」', s.ui.overlay === 'result' && /第二关完成/.test(resTitle) && /Boss 石像/.test(await page.textContent('#tally')) && !/后续关卡制作中/.test(resExtra) && !nextHidden && /进入第三关/.test(await page.textContent('#res-next')) && /重玩第二关/.test(restartTxt) && s.ui.focus === 'next', { resTitle, resExtra, nextHidden, restartTxt, focus: s.ui.focus });
   await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(300);
   const rfit = await page.evaluate(() => { const p = document.querySelector('#result .panel').getBoundingClientRect(); return { top: Math.round(p.top), bottom: Math.round(p.bottom), left: Math.round(p.left), right: Math.round(p.right), vw: innerWidth, vh: innerHeight, rows: document.querySelectorAll('#tally tr').length }; });
   check('第二关结算面板在 844×390 横屏下完整落在视口内', rfit.top >= 0 && rfit.bottom <= rfit.vh && rfit.left >= 0 && rfit.right <= rfit.vw, rfit);

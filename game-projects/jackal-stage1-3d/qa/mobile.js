@@ -63,8 +63,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   const fitsToy = await panelFits(page, '#menu');
   check('[横屏] Toy 外壳顶栏下（844×346）菜单仍完整落在视口内', inside(fitsToy), fitsToy);
   await page.setViewportSize({ width: 844, height: 390 }); await page.waitForTimeout(300);
-  const listLink = await box(page, '#menu .list-link');
-  check('[横屏] 菜单有「返回游戏列表」且可点（≥40px）', listLink.h >= 40, listLink);
+  check('[横屏] 菜单没有「返回游戏列表」链接', (await page.$$('#menu .list-link')).length === 0);
   await page.screenshot({ path: 'out/m_land_menu.png' });
   const armB = await box(page, '#menu [data-opt=armor]');
   await T.tap(armB.x, armB.y); const armT1 = await page.textContent('#menu [data-opt=armor]');
@@ -270,7 +269,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   await page.screenshot({ path: 'out/m_narrow_menu.png' });
   await T.swipe(150, 260, 0, -240); await T.swipe(150, 260, 0, -240);
   r = await reach(page, '#menu');
-  check('[窄横屏] 手指上滑到底：最后一项（操作模式「手机触屏」）完整可见可点', r.max > 0 && r.scrollTop >= r.max - 1 && r.last && r.lastName === 'show', r);
+  check('[窄横屏] 手指上滑到底：最后一项（联机大厅入口）完整可见可点', r.max > 0 && r.scrollTop >= r.max - 1 && r.last && /联机大厅/.test(r.lastName), r);
   const lastMode = await box(page, '#menu [data-control-mode=show]');
   await T.tap(lastMode.x, lastMode.y);
   const pressed = await page.getAttribute('#menu [data-control-mode=show]', 'aria-pressed');

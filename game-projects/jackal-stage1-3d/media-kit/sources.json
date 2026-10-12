@@ -139,5 +139,51 @@
   "prompt_or_params": "?seed=9&q=high；吉普在营地大门前，机枪曳光与手雷爆炸",
   "processing": "由冻结前的开发构建渲染。冻结前之后的改动只涉及特效随机数来源、镜头震动与可视区判定分离、音频混音、菜单版权说明，画面元素与 v0.1 一致",
   "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-STAGE3-LAYOUT",
+  "purpose": "第三关「港口」关卡布局：地形、货箱堆、集装箱、仓库、闸门、俘虏棚、停机坪、敌人与检查点",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/stages/stage3.js"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "手工按原作地图布置；参考 VGMaps「Jackal-Stage3」（512×2932，sonyball 2007 年绘制，https://www.vgmaps.com/Atlas/NES/Jackal-Stage3.png）与 Arcade History、Hardcore Gaming 101 对 Boss 的文字描述",
+  "prompt_or_params": "横向 72 格对应原图 512 像素；纵向 352 行对应 2876 像素（压缩约 13%）",
+  "processing": "参考地图只在无头浏览器里分 8 段截图查看，没有保存或随包分发；地图没标的步兵、坦克、炮艇、敌方吉普按流程补",
+  "usage_terms": "布局为本项目按原作流程重建；参考图版权归原作者，未使用其图像"
+ },
+ {
+  "id": "A-STAGE3-MODELS",
+  "purpose": "第三关新增模型：码头货箱（实例化）、停着的敌方吉普、Boss 战舰、舰上三联炮塔；码头警戒条纹、格栅、停机坪边灯",
+  "original_files": [
+   "game-projects/jackal-stage1-3d/src/models3.js",
+   "game-projects/jackal-stage1-3d/src/world.js"
+  ],
+  "runtime_files": [
+   "js/game.min.js"
+  ],
+  "source_type": "procedural",
+  "tool_or_model": "原创程序化低模：盒、圆柱、球、四棱锥拼合 + 顶点色，沿用前两关的共享材质",
+  "prompt_or_params": "战舰全长约 52、宽 9、甲板高 1.45；船头棕色、白色舰桥加红色腰线；炮塔圆顶 + 三联短炮管 + 顶灯",
+  "processing": "首版舰桥顶盖是深灰色，俯视一片黑，改成白色（开发截图 releases/v0.11.0/dev/first-18-x0y331.png → fix1-07-x8y331.png）",
+  "usage_terms": "本项目原创"
+ },
+ {
+  "id": "A-AUDIO-HARBOR",
+  "purpose": "第三关关卡音乐",
+  "original_files": [
+   "D:/project/_backups/cleanup-20261007-01a111e1/preserved/task-artifacts/unified3d-20261006/jackal-stage1-3d-clear.mp3"
+  ],
+  "runtime_files": [
+   "sounds/harbor.mp3"
+  ],
+  "source_type": "supplied",
+  "tool_or_model": "NES 版 Jackal 原版录音（Zophar 的 NSF 转录「6 - Stage Clear.mp3」）；ffmpeg 转单声道 32kHz 96kbps",
+  "prompt_or_params": null,
+  "processing": "完整 180 秒，不截取；详见 releases/v0.11.0/audio-sources.json",
+  "usage_terms": "原作音乐版权归 Konami；粉丝向非官方重制，与前两关同样处理。曲目与关卡的对应关系未核实"
  }
 ]
