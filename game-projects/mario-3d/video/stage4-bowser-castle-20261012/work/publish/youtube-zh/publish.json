@@ -1,89 +1,114 @@
 {
- "schema_version": 2,
- "variant_id": "youtube-zh",
- "platform": "youtube",
- "content_type": "gameplay",
- "language": "zh-CN",
- "audio_language": "zh-CN",
- "packaging_language": "zh-CN",
- "game_name": "超级玛丽 3D",
- "game_version": "v2.6.0",
- "video_file": "../../../final/youtube-zh/gameplay-youtube-final.mp4",
- "media_id": "shared-zh",
- "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
- "width": 1920,
- "height": 1080,
- "duration_seconds": 176.6,
- "title": "超级玛丽 3D · 1-4 库巴城堡完整实机：岩浆、七根火棒与砍断吊桥",
- "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n（在列表里选“超级玛丽 3D”，链接不能点时复制到浏览器打开；游戏界面目前为中文。）\nWORLD 1-4 库巴城堡完整实机：160 列城堡、4 处岩浆、7 根火棒、6 块隐藏金币砖、13 格库巴吊桥。穿过火棒走廊、顶出隐藏金币砖，跳上桥上方浮台从库巴头顶过去碰到斧头，断链塌桥，库巴掉进岩浆。\n当前版本 v2.6.0：1-1 至 1-4 可直接选关，1-3 拔旗后自动接 1-4，配原版城堡曲。电脑 I 冲刺、K 跳、J 火球（需火焰花）、U 下蹲、C 切视角、Q/E 转镜头；手机为摇杆加动作键，竖屏自动转横屏。\n第四关由 Claude 在任务分支 claude/mario-stage4-20261010 上开发。片中画面由已验证的按键路线驱动录制，不是真人手操；手机段为桌面触屏模拟。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
- "tags": [
-  "超级玛丽",
-  "库巴城堡",
-  "超级玛丽3D",
-  "游戏开发",
-  "实机演示",
-  "AI 开发",
-  "Claude",
-  "Three.js"
- ],
- "topic": null,
- "pinned_comment_draft": null,
- "description_file": "../../../final/youtube-zh/投稿文案.txt",
- "cover_files": [
-  {
-   "file": "cover-zh-16x9.jpg",
-   "width": 1920,
-   "height": 1080,
-   "purpose": "YouTube 缩略图（16:9）"
-  }
- ],
- "cover_selection_source": "capture/heroic-side.mp4 抽帧（真实实机，未烧字幕）+ 原生排版",
- "cover_upload_mode": "custom_image",
- "subtitle_mode": "burned_in_and_sidecar",
- "subtitle_attachments": [
-  {
-   "file": "captions-zh.srt",
-   "language": "zh",
-   "purpose": "YouTube 可切换字幕附件",
-   "sha256": "8130abb53884038371affbee22433dfe8a74ca3c179456244c7a68e310d1acf0",
-   "required_for_upload": true
+  "schema_version": 2,
+  "variant_id": "youtube-zh",
+  "platform": "youtube",
+  "content_type": "gameplay",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "超级玛丽 3D",
+  "game_version": "v2.6.0",
+  "video_file": "../../../final/youtube-zh/gameplay-youtube-final.mp4",
+  "media_id": "shared-zh",
+  "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+  "width": 1920,
+  "height": 1080,
+  "duration_seconds": 176.6,
+  "title": "超级玛丽 3D · 1-4 库巴城堡完整实机：岩浆、七根火棒与砍断吊桥",
+  "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n（在列表里选“超级玛丽 3D”，链接不能点时复制到浏览器打开；游戏界面目前为中文。）\nWORLD 1-4 库巴城堡完整实机：160 列城堡、4 处岩浆、7 根火棒、6 块隐藏金币砖、13 格库巴吊桥。穿过火棒走廊、顶出隐藏金币砖，跳上桥上方浮台从库巴头顶过去碰到斧头，断链塌桥，库巴掉进岩浆。\n当前版本 v2.6.0：1-1 至 1-4 可直接选关，1-3 拔旗后自动接 1-4，配原版城堡曲。电脑 I 冲刺、K 跳、J 火球（需火焰花）、U 下蹲、C 切视角、Q/E 转镜头；手机为摇杆加动作键，竖屏自动转横屏。\n第四关由 Claude 在任务分支 claude/mario-stage4-20261010 上开发。片中画面由已验证的按键路线驱动录制，不是真人手操；手机段为桌面触屏模拟。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）",
+  "tags": [
+    "超级玛丽",
+    "库巴城堡",
+    "超级玛丽3D",
+    "游戏开发",
+    "实机演示",
+    "AI 开发",
+    "Claude",
+    "Three.js"
+  ],
+  "topic": null,
+  "pinned_comment_draft": null,
+  "description_file": "../../../final/youtube-zh/投稿文案.txt",
+  "cover_files": [
+    {
+      "file": "cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "YouTube 缩略图（16:9）"
+    }
+  ],
+  "cover_selection_source": "capture/heroic-side.mp4 抽帧（真实实机，未烧字幕）+ 原生排版",
+  "cover_upload_mode": "custom_image",
+  "subtitle_mode": "burned_in_and_sidecar",
+  "subtitle_attachments": [
+    {
+      "file": "captions-zh.srt",
+      "language": "zh",
+      "purpose": "YouTube 可切换字幕附件",
+      "sha256": "8130abb53884038371affbee22433dfe8a74ca3c179456244c7a68e310d1acf0",
+      "required_for_upload": true
+    },
+    {
+      "file": "captions-en.srt",
+      "language": "en",
+      "purpose": "YouTube 可切换字幕附件",
+      "sha256": "340e563ac118e90e8258466bdcca1141e4db29227dbc6df5a99a8836a695e87f",
+      "required_for_upload": true
+    }
+  ],
+  "category": null,
+  "copyright_type": null,
+  "credits": {
+    "development_model": "第四关 1-4（v2.6.0）由 Claude 在分支 claude/mario-stage4-20261010 开发；更早版本见 media-kit/game.json 的 development_model",
+    "narration_voice": "IndexTTS-2.5 本地合成（参考音色为公开演示样本派生的中性男声），非微软官方云希音色；Edge-TTS 当次返回 403，可后续换声重渲",
+    "music_sfx": "游戏内使用原版城堡曲与音效，随游戏包分发，视频不单独分发音频源文件"
   },
-  {
-   "file": "captions-en.srt",
-   "language": "en",
-   "purpose": "YouTube 可切换字幕附件",
-   "sha256": "340e563ac118e90e8258466bdcca1141e4db29227dbc6df5a99a8836a695e87f",
-   "required_for_upload": true
+  "disclosures": [
+    "画面由已验证按键路线驱动录制，不是真人手操",
+    "手机段为桌面触屏模拟，未做真机验收",
+    "配音为本地 TTS，非官方云希音色"
+  ],
+  "unverified_fields": [
+    "category",
+    "copyright_type",
+    "话题是否已在投稿入口选中",
+    "推流申请字段"
+  ],
+  "blocking_issues": [],
+  "platform_requirements_checked_at": "2026-10-12",
+  "platform_sources": [
+    "C:/Users/37818/.claude/skills/game-video/references/toy-operations.md",
+    "C:/Users/37818/.claude/skills/game-video/references/delivery.md"
+  ],
+  "ready_to_upload": false,
+  "title_en": "Super Mario 3D World 1-4: Bowser's Castle, one clean run",
+  "description_en": "Play my games: https://www.zhengxiaohui.cn/games.html\n(Open the list and pick 超级玛丽 3D — the in-game UI is currently Chinese only.)\nA full run of World 1-4, Bowser's Castle, rebuilt in 3D on the web: 160 columns of castle, 4 lava pits, 7 rotating fire bars, 6 hidden coin blocks and the 13-tile drawbridge. Past the fire bars, over Bowser's head, onto the axe: the chain snaps, the bridge collapses and Bowser drops into the lava.\nCurrent build v2.6.0: levels 1-1 to 1-4 are selectable from the menu, 1-3 flows straight into 1-4, original castle theme music.\nWorld 1-4 was developed with Claude on branch claude/mario-stage4-20261010. The footage is driven by a pre-verified key-input route rather than live hand play, and the phone segment is a desktop touch simulation; narration is local TTS (IndexTTS-2.5), not an official voice.",
+  "localization_file": "English-localizations.txt",
+  "human_review": {
+    "status": "approved",
+    "statement": "看了，发布吧",
+    "accepted_at": "2026-10-12T17:20:00+08:00",
+    "source": "user message in this session",
+    "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ]
+  },
+  "publication": {
+    "status": "published",
+    "platform_id": "4UnBUTQnmvU",
+    "public_url": "https://www.youtube.com/watch?v=4UnBUTQnmvU",
+    "visibility_now": "public",
+    "published_at": "2026-10-12T18:50:32+08:00",
+    "public_verified_at": "2026-10-12T19:14:00+08:00",
+    "subtitles": {
+      "zh-Hans": "published",
+      "en": "published"
+    },
+    "localization_en": "published",
+    "playlist": "not_attached_no_existing_playlist",
+    "record": "work/publication-result.json"
   }
- ],
- "category": null,
- "copyright_type": null,
- "credits": {
-  "development_model": "第四关 1-4（v2.6.0）由 Claude 在分支 claude/mario-stage4-20261010 开发；更早版本见 media-kit/game.json 的 development_model",
-  "narration_voice": "IndexTTS-2.5 本地合成（参考音色为公开演示样本派生的中性男声），非微软官方云希音色；Edge-TTS 当次返回 403，可后续换声重渲",
-  "music_sfx": "游戏内使用原版城堡曲与音效，随游戏包分发，视频不单独分发音频源文件"
- },
- "disclosures": [
-  "画面由已验证按键路线驱动录制，不是真人手操",
-  "手机段为桌面触屏模拟，未做真机验收",
-  "配音为本地 TTS，非官方云希音色"
- ],
- "unverified_fields": [
-  "category",
-  "copyright_type",
-  "话题是否已在投稿入口选中",
-  "推流申请字段"
- ],
- "blocking_issues": [
-  "等待用户人工审片，未通过前不上传"
- ],
- "platform_requirements_checked_at": "2026-10-12",
- "platform_sources": [
-  "C:/Users/37818/.claude/skills/game-video/references/toy-operations.md",
-  "C:/Users/37818/.claude/skills/game-video/references/delivery.md"
- ],
- "ready_to_upload": false,
- "title_en": "Super Mario 3D World 1-4: Bowser's Castle, one clean run",
- "description_en": "Play my games: https://www.zhengxiaohui.cn/games.html\n(Open the list and pick 超级玛丽 3D — the in-game UI is currently Chinese only.)\nA full run of World 1-4, Bowser's Castle, rebuilt in 3D on the web: 160 columns of castle, 4 lava pits, 7 rotating fire bars, 6 hidden coin blocks and the 13-tile drawbridge. Past the fire bars, over Bowser's head, onto the axe: the chain snaps, the bridge collapses and Bowser drops into the lava.\nCurrent build v2.6.0: levels 1-1 to 1-4 are selectable from the menu, 1-3 flows straight into 1-4, original castle theme music.\nWorld 1-4 was developed with Claude on branch claude/mario-stage4-20261010. The footage is driven by a pre-verified key-input route rather than live hand play, and the phone segment is a desktop touch simulation; narration is local TTS (IndexTTS-2.5), not an official voice.",
- "localization_file": "English-localizations.txt"
 }

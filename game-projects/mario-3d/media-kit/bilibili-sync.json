@@ -18,14 +18,16 @@
       "status": "public_verified",
       "description_revision": "v2.6.0-preview1-correction",
       "public_verified_at": "2026-10-11T10:11:00+08:00",
-      "description_public_verified_at": "2026-10-11T10:11:00+08:00",
+      "description_public_verified_at": "2026-10-12T18:32:00+08:00",
       "record": "releases/v2.6.0-preview1/bili-update.json",
       "release_record": "releases/v2.6.0-preview1/bili-update.json",
       "exact_text_record": "game-projects/site-games/releases/backfill-20261010/bilibili.json",
       "submitted_version": "v2.6.0-preview1",
       "submitted_at": "2026-10-11T10:09:00+08:00",
       "submitted_record": "releases/v2.6.0-preview1/bili-update.json",
-      "pending_public_verification": false
+      "pending_public_verification": false,
+      "new_video_pointer_added": "2026-10-12 增补新片引导并公开核验（desc 571→678）",
+      "pinned_guide_comment_rpid": 316850416913
     },
     {
       "bvid": "BV1Fwpw6FEFx",
@@ -51,6 +53,19 @@
       "submitted_at": "2026-10-11T10:06:00+08:00",
       "submitted_record": "releases/v2.6.0-preview1/bili-update.json",
       "pending_public_verification": false
+    },
+    {
+      "bvid": "BV1Wmp96JEBD",
+      "url": "https://www.bilibili.com/video/BV1Wmp96JEBD/",
+      "owner_uid": 16214353,
+      "toy_bound": true,
+      "status": "public_verified",
+      "published_at": "2026-10-12T17:36:15+08:00",
+      "public_verified_at": "2026-10-12T18:32:00+08:00",
+      "last_public_verified_version": "v2.6.0",
+      "description_public_verified_at": "2026-10-12T18:32:00+08:00",
+      "note": "本期新视频（1-4 库巴城堡完整实机），简介含 v2.6.0 与 Toy 完整链接；随下一稳定版按 bili-game-update 判断是否更新",
+      "record": "game-projects/mario-3d/video/stage4-bowser-castle-20261012/work/publication-result.json"
     }
   ],
   "status": "public_verified",
@@ -150,7 +165,7 @@
       "resolved_at": "2026-10-07T01:40:46.831Z"
     }
   ],
-  "updated_at": "2026-10-11T05:11:41+08:00",
+  "updated_at": "2026-10-12T18:32:00+08:00",
   "history": [
     {
       "bvid": "BV1guep6NELt",

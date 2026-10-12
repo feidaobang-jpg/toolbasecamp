@@ -3,10 +3,10 @@
   "game": "mario-3d",
   "game_version": "v2.6.0-preview1",
   "toy_id": "39043286960128",
-  "stage": "awaiting_manual_review",
+  "stage": "published",
   "ready_to_upload": false,
   "blocking_issues": [
-    "等待用户人工审片，未通过前不上传任何平台"
+    "腾讯文档推流申请受登录限制未填入（本地材料已存，等用户登录后补）"
   ],
   "artifacts": {
     "master": "D:\\project\\task-artifacts\\mario-stage4-video-20261012\\master\\mario-1-4-master.mp4",
@@ -65,9 +65,66 @@
     "配音为本地 TTS，非官方云希音色"
   ],
   "next_actions": [
-    "用户人工审片（work/审片.html）",
-    "通过后上传三平台并在 B 站话题入口实际选择「哔哩哔哩Toy创意挑战」",
-    "B 站发布后 toy video bind <BV号> --toy 39043286960128",
-    "按置顶评论文案在 B 站 / 抖音发布置顶评论（含完整 Toy /index.html 链接）"
-  ]
+    "腾讯文档：用户登录后把 work/publish/bilibili-zh/Toy推流申请.txt 的 A:E 填入本期新行（F 留空），确认云端保存",
+    "超级玛丽 3D 正式合集/播放列表：B 站无对应合集、YouTube 频道无播放列表，均记待关联，需用户明确要求才新建",
+    "YouTube 已公开核验；X 仍无已确认官方 API 通路，待用户授权后再发一条英文介绍"
+  ],
+  "human_review": {
+    "status": "approved",
+    "statement": "看了，发布吧",
+    "accepted_at": "2026-10-12T17:20:00+08:00",
+    "source": "user message in this session",
+    "video_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+    "approved_variant_ids": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ]
+  },
+  "publication": {
+    "bilibili": {
+      "status": "published",
+      "bvid": "BV1Wmp96JEBD",
+      "record": "work/publication-result.json"
+    },
+    "douyin": {
+      "status": "published",
+      "platform_id": "7695717723644382491"
+    },
+    "youtube": {
+      "status": "published_public_verified",
+      "platform_id": "4UnBUTQnmvU",
+      "public_url": "https://www.youtube.com/watch?v=4UnBUTQnmvU",
+      "published_at": "2026-10-12T18:50:32+08:00",
+      "public_verified_at": "2026-10-12T19:14:00+08:00",
+      "subtitles": "zh-Hans + en 人工轨均已发布并在公开播放器回读",
+      "localization": "英文标题/说明已发布",
+      "playlist": "待关联（频道无播放列表，不新建）",
+      "record": "work/publication-result.json → platforms.youtube"
+    },
+    "x": {
+      "status": "not_published_no_api_access"
+    },
+    "taptap": {
+      "status": "not_in_scope"
+    }
+  },
+  "cleanup": {
+    "status": "done",
+    "done_at": "2026-10-12T19:40:00+08:00",
+    "stopped": [
+      "serve_cors.py 8814 (PID 36728)"
+    ],
+    "released": [
+      "bili-activities/account-write.lock（本任务锁）"
+    ],
+    "removed": [
+      "D:/project/task-artifacts/mario-stage4-video-20261012/tmp"
+    ],
+    "left_untouched": [
+      "account-write.recovered-lock-20261012-1800.qoder",
+      "account-write.lock-stopped-qianwen-20261011-200610",
+      "其他会话的 8765 / 8799 本地服务"
+    ]
+  }
 }
