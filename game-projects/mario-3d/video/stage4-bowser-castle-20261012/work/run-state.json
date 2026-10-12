@@ -1,0 +1,73 @@
+{
+  "episode": "stage4-bowser-castle-20261012",
+  "game": "mario-3d",
+  "game_version": "v2.6.0-preview1",
+  "toy_id": "39043286960128",
+  "stage": "awaiting_manual_review",
+  "ready_to_upload": false,
+  "blocking_issues": [
+    "等待用户人工审片，未通过前不上传任何平台"
+  ],
+  "artifacts": {
+    "master": "D:\\project\\task-artifacts\\mario-stage4-video-20261012\\master\\mario-1-4-master.mp4",
+    "master_sha256": "b5062c780cab797ffb6823677d1e767d5e9a16c672d611fae1017f7a1e52d02c",
+    "duration_seconds": 176.6,
+    "final_variants": [
+      "bilibili-zh",
+      "douyin-zh",
+      "youtube-zh"
+    ],
+    "delivery_manifest": "D:\\project\\worktrees\\mario-stage4-video-20261012\\toolbasecamp\\game-projects\\mario-3d\\video\\stage4-bowser-castle-20261012\\work\\publish.json",
+    "checklist": "D:\\project\\worktrees\\mario-stage4-video-20261012\\toolbasecamp\\game-projects\\mario-3d\\video\\stage4-bowser-castle-20261012\\work\\交付清单.txt"
+  },
+  "capture_sources": {
+    "fp-corridor.mp4": {
+      "seconds": 37.883333,
+      "bytes": 74802359
+    },
+    "heroic-front.mp4": {
+      "seconds": 47.666667,
+      "bytes": 145945707
+    },
+    "heroic-side.mp4": {
+      "seconds": 47.566667,
+      "bytes": 122835966
+    },
+    "menu-levels.mp4": {
+      "seconds": 34.116016,
+      "bytes": 40694443
+    },
+    "mobile-touch.mp4": {
+      "seconds": 46.554521,
+      "bytes": 27469383
+    },
+    "top-run.mp4": {
+      "seconds": 45.55,
+      "bytes": 141585192
+    }
+  },
+  "pipeline": {
+    "capture": "work/capture.cjs（Playwright + Edge headless，CDP Page.startScreencast JPEG → frames.ffconcat → ffmpeg h264_nvenc cq18 60fps，手动时钟 120 逻辑步/秒）",
+    "route_plan": "work/plan/stage4-heroic.json（136 段按键路线，DFS 322 节点零受伤，work/probe-full.cjs 校验）",
+    "narration": "work/narration.json + work/voice_indextts.py（本地 IndexTTS-2.5，D:/sd/index-tts，uv CPython 3.11 + PYTHONPATH）",
+    "render": "work/render.py（逐镜头切段→concat→逐行 adelay/amix→侧链压低游戏原声→loudnorm→ASS 烧字幕）",
+    "covers": "work/covers.py（从未经字幕烧录的 capture 帧取图，PIL 排版）",
+    "packaging": "work/packaging.py（三平台 final/<variant>/ 入口 + publish.json + 交付清单）"
+  },
+  "known_issues": {
+    "edge_tts_403": "微软 Edge-TTS 全线 403（直连与代理均失败），改用本地 IndexTTS-2.5，非官方云希音色，已在各平台文案与 credits 中披露",
+    "touch_real_device": "手机段为桌面触屏模拟，真机验收未做",
+    "capture_is_script_driven": "画面由已验证按键路线驱动录制，不是真人手操，已在文案与披露项中写明"
+  },
+  "honesty_disclosures": [
+    "画面由已验证按键路线驱动录制，不是真人手操",
+    "手机段为桌面触屏模拟，未做真机验收",
+    "配音为本地 TTS，非官方云希音色"
+  ],
+  "next_actions": [
+    "用户人工审片（work/审片.html）",
+    "通过后上传三平台并在 B 站话题入口实际选择「哔哩哔哩Toy创意挑战」",
+    "B 站发布后 toy video bind <BV号> --toy 39043286960128",
+    "按置顶评论文案在 B 站 / 抖音发布置顶评论（含完整 Toy /index.html 链接）"
+  ]
+}
