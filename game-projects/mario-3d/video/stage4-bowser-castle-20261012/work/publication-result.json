@@ -3,7 +3,7 @@
   "game": "mario-3d",
   "game_version": "v2.6.0",
   "toy_id": "39043286960128",
-  "updated_at": "2026-10-12T19:20:00+08:00",
+  "updated_at": "2026-10-12T22:36:24+08:00",
   "human_review": {
     "status": "approved",
     "statement": "看了，发布吧",
@@ -132,16 +132,24 @@
         "promotion_application": "推流表只申报本期 BV1Wmp96JEBD，旧片不重复申报"
       },
       "promotion_application": {
-        "status": "blocked_login_required",
+        "status": "submitted_cloud_saved",
         "sheet_url": "https://docs.qq.com/sheet/DU3dnQkR1WG5RUnp0?tab=7mm8hw",
         "worksheet": "【进行中】日常推流",
-        "local_material": "work/publish/bilibili-zh/Toy推流申请.txt",
-        "headers_verified": "第2行 A:F 与既有列序一致；A1 资源周期 9月17日—10月15日（本期在期内）",
-        "duplicate_check": "表内查找 BV1Wmp96JEBD 返回“无结果”",
-        "row": "未定位（游客态只读，需在可编辑会话内重新逐段定位末行）",
-        "reason": "腾讯文档本次为 skeleton-guest-mode，右上角「只能查看」「登录腾讯文档」，paste 与键入均不能写入单元格，因此不记为已申请",
-        "feishu_login_required": "sent",
-        "next_step": "用户登录腾讯文档后按材料粘贴 A:E（F 留空），确认云端自动保存并截图留档"
+        "range": "A389:E389",
+        "values": [
+          "飞刀班长",
+          "https://www.bilibili.com/video/BV1Wmp96JEBD/",
+          "是",
+          "是",
+          "否"
+        ],
+        "duplicate_check": "表内查找 BV1Wmp96JEBD「无结果」；A389:C389 填写前为空，上一行是 flyhighest",
+        "link_check": "B389 显示为蓝色下划线链接",
+        "saved_ui": "最近保存 22:32",
+        "filled_at": "2026-10-12T22:32:00+08:00",
+        "operator_feedback": null,
+        "filled_by": "Claude Code（任务 f40a799e-gunfire-push-03）：用户 2026-10-12 回复「1和2做」后，用已登录腾讯文档的投稿 Edge 配置无窗口填写；原会话当时是游客态没填上",
+        "local_material": "work/publish/bilibili-zh/Toy推流申请.txt"
       }
     },
     "douyin": {
@@ -316,10 +324,12 @@
       "target": "哔哩哔哩Toy稿件推流申请表（日常推流）",
       "action_required": "登录腾讯文档后才有编辑权限（本次为「只能查看」游客态）",
       "login_incident_id": "mario-stage4-tencent-docs-20261012",
-      "status": "open",
+      "status": "resolved",
       "feishu_login_required": "sent at 2026-10-12T18:34+08:00 (Source=Qoder, event mario-stage4-tencent-docs-20261012)",
       "login_entry": "https://docs.qq.com/login",
-      "resume_material": "game-projects/mario-3d/video/stage4-bowser-castle-20261012/work/publish/bilibili-zh/Toy推流申请.txt"
+      "resume_material": "game-projects/mario-3d/video/stage4-bowser-castle-20261012/work/publish/bilibili-zh/Toy推流申请.txt",
+      "resolved_at": "2026-10-12T22:36:24+08:00",
+      "resolution": "改由已登录的投稿 Edge 配置填写，A389:E389 已云端保存；飞书事件已 Resolve"
     },
     {
       "platform": "youtube",

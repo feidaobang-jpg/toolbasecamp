@@ -3,7 +3,7 @@
   "task_id": "f40a799e-views-menu-02",
   "source": "Claude Code",
   "branch": "claude/views-menu-20261012",
-  "updated_at": "2026-10-12T22:02:44+08:00",
+  "updated_at": "2026-10-12T22:42:27+08:00",
   "user_request": "「4：改吧，别的游戏也要改吗？游戏的视角好像太多了点？有一些视角太相似了，要不要合并去掉几个？如果你觉得可以合并去掉几个，别的游戏也改一下，并记入规则。」（2026-10-12）",
   "website": {
     "status": "verified",
@@ -156,6 +156,38 @@
         "method": "公开页匿名访问会弹登录提示，所以在已登录的投稿窗口里打开公开入口，在游戏框架内只读核对",
         "fact": "按 C：第三人称 0 → 1 → 2 → 第一人称 → 0（近身 / 高位 / 战术俯视 / 第一人称）"
       }
+    },
+    "gunfire-assembly": {
+      "name": "枪火集结",
+      "toy_id": 43022175699968,
+      "version": "web-lobby-v0.1.1（游戏内 v0.1.1）",
+      "change": "大厅模式卡两列改三列、收紧留白，电脑上不用滚动；版本号挪到标题旁。视角不变（步行固定第一人称、载具两档）",
+      "website": {
+        "commit": "1eec0f61",
+        "verified_at": "2026-10-12T22:36:00+08:00",
+        "checks": "game.compat.js 线上哈希与本地一致；线上 1920×1080 / 1366×768 / 1280×720 / 1366×625 / 1280×580 大厅被截断 0、需滚动 0；电脑三列、手机单列、更新日志含 0.1.1、无脚本错误"
+      },
+      "package": "dist/toy/feidao-gunfire/package",
+      "zip_sha256": "3c233673c702761326561ee79a08a65db2486e6bb2e3de098d2b1054d6e7801d",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_nLzTEdH7/index.html",
+      "preview_qa": "18/18",
+      "preview_qa_file": "toy-preview/gunfire-results.json",
+      "submitted_at": "2026-10-12T22:38:23+08:00",
+      "submit_response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_cyvPbeig/index.html"
+      },
+      "status": "published",
+      "status_checked_at": "2026-10-12T22:42:27+08:00",
+      "user_request": "用户 2026-10-12 回复「1和2做」（1 = 枪火集结大厅适配）",
+      "concurrency_note": "另有 cursor/gunfire-assembly-20261012 工作区在做这款游戏；本次只动了大厅的几行样式、更新日志和重建产物",
+      "published_observed_at": "2026-10-12T22:41:50+08:00",
+      "public_version": "v25562",
+      "public_verified": {
+        "at": "2026-10-12T22:43:00+08:00",
+        "method": "公开页匿名访问会弹登录提示，用已登录的投稿配置无窗口打开公开入口，在游戏框架内只读核对",
+        "fact": "模式卡 3 列、版本 v0.1.1、大厅高度 540/540 不用滚动"
+      }
     }
   },
   "taptap": {
@@ -167,8 +199,7 @@
     "reason": "普通体验小改，不涉及入口或操作说明失实；赤色要塞新视频里展示的「低位正视」仍在。记为各游戏一次待合并的稳定更新"
   },
   "not_done": [
-    "手机真机没有实测（视口模拟）",
-    "枪火集结大厅在 1920×1080 也要滚动才看到最下面一排按钮——另一任务当天新建的页面，本次没动"
+    "手机真机没有实测（视口模拟）"
   ],
   "records_commit": "62aa57d5"
 }
