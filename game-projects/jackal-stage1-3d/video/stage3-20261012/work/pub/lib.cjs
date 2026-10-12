@@ -1,4 +1,5 @@
-// 投稿用的独立 Edge 窗口：Playwright 持久配置（已扫码登录的那份），脚本短时间运行，跑完即关。
+// 投稿用的独立 Edge 配置：Playwright 持久配置（已扫码登录的那份），脚本短时间运行，跑完即关。
+// 默认无头运行，不弹窗口、不抢焦点（用户 2026-10-12 希望不影响他操作电脑）；需要本人扫码 / 登录，或某个站点无头下不正常时，设 PUB_HEADED=1 才开可见窗口。
 // 不在这里保存或输出任何 Cookie / 令牌；csrf 只在页面内部取用。
 const path = require('path'), fs = require('fs');
 const { chromium } = require('../../../../node_modules/playwright');
@@ -8,7 +9,7 @@ const OUT = path.join(__dirname, 'out'); fs.mkdirSync(OUT, { recursive: true });
 
 async function open(opts = {}) {
   const ctx = await chromium.launchPersistentContext(PROFILE, {
-    channel: 'msedge', headless: false, viewport: { width: 1440, height: 900 },
+    channel: 'msedge', headless: process.env.PUB_HEADED !== '1', viewport: { width: 1440, height: 900 },
     args: ['--disable-blink-features=AutomationControlled', '--window-position=40,40', '--no-first-run', '--no-default-browser-check'], ...opts,
   });
   ctx.setDefaultTimeout(30000);
