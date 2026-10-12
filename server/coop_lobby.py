@@ -31,7 +31,7 @@ def game_config(game, raw):
             'armor': 'classic' if raw.get('armor') == 'classic' else 'std',
             'dur': raw.get('dur') if raw.get('dur') in ('std', 'easy', 'classic') else 'std',
             'gun': 'follow' if raw.get('gun') == 'follow' else 'up',
-            'stage': bounded(raw.get('stage'), 1, 2, 1),
+            'stage': bounded(raw.get('stage'), 1, 9, 1),   # 各游戏关卡数不同（赤色要塞已有第三关），客户端按自己的关卡数再夹一次
             'area': bounded(raw.get('area'), 0, 7, 0),
             'hero': bounded(raw.get('hero'), 0, 3, 0),
             'seed': secrets.randbelow(1000000), 'demo': False, 'coop': True}

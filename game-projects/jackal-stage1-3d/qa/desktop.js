@@ -22,8 +22,8 @@ const { BASE, results, check, snap, waitFor, launch } = require('./lib');
   const ri = await page.evaluate(() => __JK_TEST__.renderInfo());
   check('加载完成并显示主菜单，WebGL 正常', s.ui.overlay === 'menu' && s.ui.uiMode === 'title' && /SwiftShader|ANGLE|WebGL/i.test(ri.gl), { gl: ri.gl });
   check('首个焦点在「开始游戏」', s.ui.focus === 'start', s.ui.focus);
-  const listHref = await page.evaluate(() => Array.from(document.querySelectorAll('.list-link')).map(a => a.getAttribute('href')));
-  check('菜单/暂停/结算都有「返回游戏列表」普通链接', listHref.length === 3 && listHref.every(h => h === '../../../games.html'), listHref);
+  const siteLinks = await page.evaluate(() => Array.from(document.querySelectorAll('a[href], [data-act=list], .list-link')).map(a => a.getAttribute('href') || a.className).filter(h => !/space\.bilibili\.com\/16214353/.test(h)));
+  check('菜单/暂停/结算没有「返回游戏列表」，也没有指向作者网站的链接（只保留作者 B 站主页）', siteLinks.length === 0, siteLinks);
 
   // ---------- 菜单键盘导航 ----------
   await page.keyboard.press('ArrowDown'); s = await snap(page);

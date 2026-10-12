@@ -96,7 +96,8 @@ const overlap = (a,b) => a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+
     check('real K rockets damage boss',await page.evaluate(hp=>__JK_TEST__.cheat.state().ents.filter(e=>e.type==='bust').reduce((a,e)=>a+e.hp,0)<hp,hpBefore));
     await browserPage.keyboard.press('Escape');await page.evaluate(()=>__JK_TEST__.step(1));await page.locator('[data-act=title]:visible').click();
     check('return to menu clears boss layout',await page.locator('#stage').evaluate(e=>!e.classList.contains('boss-fight')));
-    await page.locator('[data-opt=stage]').first().click();await page.locator('[data-act=start]').click();
+    for(let k=0;k<3&&!/第一关/.test(await page.locator('[data-opt=stage]').first().textContent());k++)await page.locator('[data-opt=stage]').first().click();   // 现在有三关：点到回第一关为止
+    await page.locator('[data-act=start]').click();
     await page.evaluate(()=>{const q=__JK_TEST__;q.step(240);q.cheat.invuln(999);q.cheat.teleport(0,310);q.step(900);});
     const first=await measure(page);
     check('first stage tank boss remains playable',first.state.stage===1&&first.state.boss.state==='fight'&&first.state.boss.spawned===4);

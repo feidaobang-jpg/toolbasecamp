@@ -44,7 +44,26 @@ const MISSION2 = [
   { type: 'goto', x: 10, y: 306.5 }, { type: 'star', item: 'up', from: 'west' },
   { type: 'goto', x: 0, y: 312 }, { type: 'boss' }
 ];
-const MISSIONS = { 1: MISSION, 2: MISSION2 };
+// 第三关：第一道闸门 → 船坞 → 两间俘虏棚 → 西栈桥 → 俘虏棚货场（炸停着的吉普出绿星）→ 之字通道 → 停机坪 → 第二道闸门 → 棕色星 → 第三道闸门 → 战舰
+const MISSION3 = [
+  { type: 'gate', name: '第一道闸门' },
+  { type: 'goto', x: 9, y: 40 }, { type: 'goto', x: -10, y: 57 }, { type: 'goto', x: -20, y: 66 }, { type: 'goto', x: -20, y: 82 },
+  { type: 'hut', name: 'P2' }, { type: 'pows', near: 'P2' },
+  { type: 'hut', name: 'P1' }, { type: 'pows', near: 'P1' },
+  { type: 'goto', x: -20, y: 106 }, { type: 'goto', x: -19, y: 126 }, { type: 'goto', x: -11, y: 134 }, { type: 'goto', x: -11, y: 174 }, { type: 'goto', x: -4, y: 180 },
+  { type: 'hut', name: 'P3' }, { type: 'pows', near: 'P3' },
+  { type: 'star', item: 'up' },
+  { type: 'hut', name: 'P4' }, { type: 'pows', near: 'P4' },
+  { type: 'goto', x: -26.5, y: 204 }, { type: 'goto', x: -26.5, y: 218.5 }, { type: 'goto', x: 22, y: 219.5 }, { type: 'goto', x: 29, y: 219.5 }, { type: 'goto', x: 29, y: 232 },
+  { type: 'goto', x: 10, y: 234.5 }, { type: 'goto', x: -17.5, y: 234 }, { type: 'goto', x: -17.5, y: 247 },
+  { type: 'pad' },
+  { type: 'gate', name: '第二道闸门' },
+  { type: 'goto', x: 4, y: 272 }, { type: 'star', item: 'bomb' },
+  { type: 'goto', x: -16, y: 279 }, { type: 'goto', x: -20, y: 290 },
+  { type: 'gate', name: '第三道闸门' },
+  { type: 'goto', x: -14, y: 302 }, { type: 'goto', x: 0, y: 309 }, { type: 'boss' }
+];
+const MISSIONS = { 1: MISSION, 2: MISSION2, 3: MISSION3 };
 
 function makeBot(page, opts) {
   const o = opts || {};
@@ -247,6 +266,16 @@ function makeBot(page, opts) {
         const t = busts[0];
         if (t) {
           const so = { x: t.x, y: t.y - (s.weapon === 1 ? 8.8 : 8) };
+          const dd = Math.sqrt(d2(P.x, P.y, so.x, so.y));
+          if (dd > 1.2) dir = steerTo(s, so.x, so.y); else { dir = P.dir !== 0 ? 0 : -1; if (P.dir === 0) bomb = true; }
+        }
+      }
+      else if (s.boss.type === 'battleship') {
+        // 战舰：站到最近一座炮塔正南、贴着码头边朝北开炮（手雷要贴边才够得着北排），机枪一直开着
+        const guns = s.enemies.filter(e => e.type === 'shipgun').sort((a, b) => (Math.abs(a.x - P.x) - Math.abs(b.x - P.x)) || (a.y - b.y));
+        const t = guns[0];
+        if (t) {
+          const so = { x: t.x, y: Math.min(332.5, t.y - (s.weapon === 1 ? 8.8 : 8)) };
           const dd = Math.sqrt(d2(P.x, P.y, so.x, so.y));
           if (dd > 1.2) dir = steerTo(s, so.x, so.y); else { dir = P.dir !== 0 ? 0 : -1; if (P.dir === 0) bomb = true; }
         }

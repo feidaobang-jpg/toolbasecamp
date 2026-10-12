@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import * as L from './level.js';
 import * as M from './models.js';
 import * as M2 from './models2.js';
+import * as M3 from './models3.js';
 import A from './audio.js';
 import IN from './input.js';
 import { DIR8, rand, randRange, clamp, angTo, angDiff, approachAng, store, STEP, reseed, seed, dist2 } from './core.js';
@@ -17,7 +18,7 @@ const WEAPON_DESC = ['', '', '火箭直线飞行、可炸毁岩崖', '火箭爆�
 export const MAX_WEAPON = 4;
 export const POINTS = {
   repair: 300, soldier: 100, officer: 200, mg: 300, cannon: 500, turret: 500, boat: 800, tank: 1000, brownTank: 500, bulltank: 800, ejeep: 800, bomber: 1000,
-  wstatue: 800, bust: 800, fallpillar: 500, boss: 2000, hut: 200, gate: 500, sandbag: 50, crate: 50, bluff: 100, barrel: 100,
+  wstatue: 800, bust: 800, fallpillar: 500, boss: 2000, shipgun: 2000, pjeep: 300, hut: 200, gate: 500, sandbag: 50, crate: 50, bluff: 100, barrel: 100,
   pow: 500, flashMax: 1000, star: 0, upStar: 3000, powBonus: 2000
 };
 const ENEMY_STATS = {
@@ -34,9 +35,11 @@ const ENEMY_STATS = {
   bomber: { hp: 1, r: 2.4, solid: false, air: true, bulletProof: true },
   wstatue: { hp: 4, r: 1.2, solid: true, bulletProof: true },
   bust: { hp: 12, r: 1.9, solid: true, bulletProof: true },
-  fallpillar: { hp: 7, r: 0.6, solid: true, oneShot: true }
+  fallpillar: { hp: 7, r: 0.6, solid: true, oneShot: true },
+  ship: { hp: 1, r: 0, solid: false },
+  shipgun: { hp: 20, r: 1.4, solid: false }
 };
-const emptyKills = () => ({ soldier: 0, officer: 0, mg: 0, turret: 0, cannon: 0, tank: 0, brownTank: 0, bulltank: 0, ejeep: 0, bomber: 0, boat: 0, wstatue: 0, fallpillar: 0, boss: 0, bust: 0, hut: 0 });
+const emptyKills = () => ({ soldier: 0, officer: 0, mg: 0, turret: 0, cannon: 0, tank: 0, brownTank: 0, bulltank: 0, ejeep: 0, bomber: 0, boat: 0, wstatue: 0, fallpillar: 0, boss: 0, bust: 0, shipgun: 0, hut: 0 });
 
 export const G = {
   mode: 'title', t: 0, frame: 0, settings: { lives: 'inf', demo: false, armor: 'std', gun: 'up' }, armorMax: 3, hitId: 0,
@@ -93,7 +96,7 @@ export function joinCoopSlot(slot) {
 }
 export function computerInput(slot) {
   const p=coopPlayers.find(p=>p.slot===slot);if(!p||!p.alive)return {dir:-1};
-  const target=ents.filter(e=>e.alive&&e.active).sort((a,b)=>dist2(p.x,p.y,a.x,a.y)-dist2(p.x,p.y,b.x,b.y))[0];
+  const target=ents.filter(e=>e.alive&&e.active&&!e.noHit).sort((a,b)=>dist2(p.x,p.y,a.x,a.y)-dist2(p.x,p.y,b.x,b.y))[0];
   const friend=coopPlayers.filter(h=>h!==p&&h.alive&&!h.disconnected).sort((a,b)=>dist2(p.x,p.y,a.x,a.y)-dist2(p.x,p.y,b.x,b.y))[0];
   const close=target&&dist2(p.x,p.y,target.x,target.y)<22*22;
   const goal=p.carried>0&&dist2(p.x,p.y,L.PAD.x,L.PAD.y)<20*20?L.PAD:close?target:friend&&dist2(p.x,p.y,friend.x,friend.y)>4*4?friend:{x:p.x,y:p.y+4};
@@ -189,7 +192,7 @@ function setupScene() {
 function resetStageState() {
   Object.assign(G, {
     carried: 0, delivered: 0, freed: 0, cp: 0, ended: false, endT: 0, kills: emptyKills(), banner: null, toast: null,
-    hits: 0, kitsPicked: 0, hurtFx: 0, introT: 0, stageT0: G.t, stageDeaths0: G.deaths,
+    hits: 0, kitsPicked: 0, hurtFx: 0, introT: 0, stageT0: G.t, stageDeaths0: G.deaths, grace: null,
     boss: { state: 'idle', type: L.BOSS.type, t: 0, spawned: 0, killed: 0, tanks: [], spawnT: 0, flow: null, flowT: 0 }
   });
 }
@@ -288,6 +291,8 @@ function spawnEntity(s) {
   else if (type === 'bomber') { e.obj = M2.makeBomber(); e.state = 'wait'; e.h = 7; e.obj.root.visible = false; e.ang = PI; }
   else if (type === 'wstatue') { e.obj = M2.makeWaterStatue(); e.h = -0.2; e.fireT = randRange(1.5, 3.5); e.ang = PI; }
   else if (type === 'bust') { e.obj = M2.makeBust(); e.ang = PI; e.boss = true; e.phase = 'idle'; e.fireT = 2.2 + (s.order || 0) * 1.1; }
+  else if (type === 'ship') { e.obj = M3.makeBattleship(); e.boss = true; e.noHit = true; e.ang = 0; e.tx = s.x; e.x = s.x + (s.from || 0); e.enter = !!s.from; e.sink = 0; }
+  else if (type === 'shipgun') { e.obj = M3.makeShipGun(); e.boss = true; e.h = M3.SHIP_DECK; e.ang = PI; e.tAng = PI; e.phase = 'idle'; e.fireT = 2.4 + (s.order || 0) * 0.75; e.ox = s.ox; e.x = s.x + (s.from || 0); e.enter = !!s.from; }
   else if (type === 'fallpillar') { e.obj = M2.makeFallPillar(); e.state = 'stand'; e.fall = 0; e.len = s.len || 6; e.fdir = s.dir || 1; e.ang = 0; }
   else if (type === 'star') { e.obj = M.makeStar(s.item); e.item = s.item || 'bomb'; e.hidden = !!s.hidden; e.obj.root.visible = !e.hidden; e.r = 1; e.solid = false; e.hp = 1; }
   markTree(e.obj.root);
@@ -380,9 +385,22 @@ function updateIntro(dt) {
     if (L.STAGE.intro === 'craft') { p.dir = 1; p.ang = DIR8[1].a + (DIR8[2].a - DIR8[1].a) * s; }
     if (k >= 1) { p.dir = L.START.dir; p.ang = DIR8[L.START.dir].a; p.invuln = 1.2; }
   }
-  if (k >= 1) { G.mode = 'play'; ev('introDone'); }
+  if (k >= 1) { G.mode = 'play'; G.grace = { t0: G.t, until: G.t + GRACE_MAX, acted: false }; ev('introDone'); }
 }
 
+// 开局保护：新玩家还在找按键时不该被打。每关开头，玩家第一次推摇杆 / 开火之前敌人都不开火，最多等 GRACE_MAX 秒；
+// 第一次操作后再留 GRACE_AFTER 秒，并把在场敌人的开火时间错开，免得保护一结束就被齐射。
+const GRACE_MAX = 10, GRACE_AFTER = 1.2;
+const graceOn = () => !!G.grace && G.t < G.grace.until;
+function endGrace(why) {
+  const g = G.grace; if (!g || g.acted) return;
+  g.acted = true;
+  // 玩家操作 / 超时：留缓冲并错开开火；Boss 开战或测试传送：立即结束，不动敌人的开火计时
+  const soft = why === 'input' || why === 'timeout', after = why === 'input' ? GRACE_AFTER : 0;
+  g.until = soft ? Math.min(g.until, G.t + after) : G.t;
+  if (soft) for (const e of ents) if (e.alive && e.fireT !== undefined) e.fireT = Math.max(e.fireT, after + 0.3 + rand() * 1.4);
+  ev('graceEnd', { why, after: +(G.t - g.t0).toFixed(2) });
+}
 function updatePlayer(dt) {
   if (P.invuln > 0) P.invuln -= dt;
   if (P.shield > 0) P.shield -= dt;
@@ -393,6 +411,7 @@ function updatePlayer(dt) {
   }
   const d0 = IN.dir();
   let d = d0;
+  if (G.grace && !G.grace.acted && (d0 >= 0 || IN.fire() || IN.bomb())) endGrace('input');
   // 方向换算：输入始终相对画面（镜头）。常规视角按镜头 yaw 换算；第一人称按车头+yaw 换算，
   // 且按住同一输入期间锁定换算结果（镜头会随车头转，避免画圈）。
   if (d0 >= 0) {
@@ -696,6 +715,8 @@ function aimAt(e) { return angTo(e.x, e.y, P.x, P.y) + (rand() - 0.5) * 0.12; }
 function updateEnts(dt) {
   const savedP=P;
   const bossFight = G.boss.state === 'fight' || G.boss.state === 'intro';
+  if (G.grace && !G.grace.acted && G.t >= G.grace.until) endGrace('timeout');
+  const grace = graceOn();
   for (let i = ents.length - 1; i >= 0; i--) {
     const e = ents[i];P=nearestPlayer(e.x,e.y);
     if (e.dead) {
@@ -714,7 +735,7 @@ function updateEnts(dt) {
     if (e.type === 'bomber') { bomberAI(e, dt); syncEnt(e, dt); continue; }
     if (e.type === 'fallpillar') { fallPillarAI(e, dt); syncEnt(e, dt); continue; }
     if (!e.active && !e.boss) { if (wasActive && e.type === 'boat') { /* 炮艇离开画面继续巡航 */ } if (e.type !== 'boat') { syncEnt(e, dt); continue; } }
-    const canShoot = P.alive && G.mode === 'play' && inView(e.x, e.y, 1.2) && !(bossFight && !e.boss);
+    const canShoot = P.alive && G.mode === 'play' && inView(e.x, e.y, 1.2) && !(bossFight && !e.boss) && !grace;
     const d2p = dist2(e.x, e.y, P.x, P.y);
     switch (e.type) {
       case 'soldier': case 'officer': soldierAI(e, dt, canShoot, d2p); break;
@@ -748,6 +769,8 @@ function updateEnts(dt) {
         break;
       }
       case 'bust': bustAI(e, dt, canShoot); break;
+      case 'ship': shipAI(e, dt); break;
+      case 'shipgun': shipGunAI(e, dt, d2p); break;
       case 'boat': {
         e.x += e.vx * dt;
         if (e.x > e.range[1]) { e.x = e.range[1]; e.vx = -Math.abs(e.vx); }
@@ -890,6 +913,36 @@ function bustAI(e, dt, canShoot) {
   else if (e.phase === 'open') { e.phaseT -= dt; if (e.phaseT <= 0) { e.phase = 'idle'; e.fireT = randRange(2.8, 4.0); } }
 }
 
+// Boss 战舰：开战时从东面海上靠泊；六座炮塔全毁后起火下沉
+function shipAI(e, dt) {
+  if (e.enter) { e.x = Math.max(e.tx, e.x - 24 * dt); if (e.x <= e.tx) { e.enter = false; ev('shipDocked'); } }
+  if (G.boss.state === 'done') {
+    e.sink += dt;
+    e.fxT = (e.fxT || 0) - dt;
+    if (e.fxT <= 0) { e.fxT = 0.22; const ox = (rand() - 0.5) * 40, oy = (rand() - 0.5) * 6; fx.explosion(e.x + ox, e.y + oy, 2 - e.sink * 0.3, 1.1); fx.smoke(e.x + ox, e.y + oy, 2.5, 2, 0x3a3532); if (rand() < 0.4) A.boom(false); }
+  }
+}
+// 舰上炮塔：瞄准 → 顶灯闪烁预警 → 三发扇形炮弹。剩下的炮塔越少打得越急。不看镜头，只要在射程内就打。
+function shipGunAI(e, dt, d2p) {
+  const ship = e.ship && e.ship.alive ? e.ship : (e.ship = ents.find(q => q.type === 'ship' && q.alive));
+  if (ship) { e.x = ship.x + e.ox; e.enter = ship.enter; }
+  if (G.boss.state !== 'fight' || e.enter) return;
+  const want = angTo(e.x, e.y, P.x, P.y);
+  e.tAng = approachAng(e.tAng, want, dt * 1.8);
+  e.fireT -= dt;
+  const live = P.alive && G.mode === 'play' && d2p < 26 * 26 && !graceOn();
+  if (e.phase === 'idle' && e.fireT <= 0 && live) { e.phase = 'warn'; e.phaseT = 0.55; A.tick(); }
+  else if (e.phase === 'warn') {
+    e.phaseT -= dt;
+    if (e.phaseT <= 0) {
+      e.phase = 'idle';
+      const left = 6 - G.boss.killed;
+      e.fireT = left <= 2 ? randRange(2.0, 2.8) : left <= 4 ? randRange(3.2, 4.2) : randRange(4.2, 5.4);
+      if (live) { for (const s of [-0.26, 0, 0.26]) enemyFire(e, e.tAng + s, 'shell', { muzzle: 2.1, muzzleAngle: e.tAng, h0: 0.2, speed: 7.2, life: 3.3, high: true }); e.recoil = 0.25; }
+    }
+  }
+}
+
 function syncEnt(e, dt) {
   const o = e.obj, root = e.objRoot;
   root.position.x = e.x; root.position.z = Z(e.y);
@@ -937,6 +990,16 @@ function syncEnt(e, dt) {
   } else if (e.type === 'fallpillar') {
     const k = e.state === 'stand' ? 0 : e.state === 'falling' ? e.fall * e.fall : 1;
     o.pivot.rotation.z = -e.fdir * k * PI / 2;
+  } else if (e.type === 'ship') {
+    root.rotation.y = 0;
+    root.position.y = Math.sin(e.t * 1.1) * 0.05 - e.sink * 0.42;
+    root.rotation.x = Math.sin(e.t * 0.9) * 0.008 + Math.min(0.2, e.sink * 0.035);
+  } else if (e.type === 'shipgun') {
+    root.rotation.y = 0;
+    root.position.y = e.h + (e.ship ? Math.sin(e.ship.t * 1.1) * 0.05 : 0);
+    o.turret.rotation.y = -e.tAng;
+    if (e.recoil > 0) { e.recoil -= dt; o.turret.position.set(-Math.sin(e.tAng) * e.recoil, 0, Math.cos(e.tAng) * e.recoil); } else o.turret.position.set(0, 0, 0);
+    o.lampMat.color.setHex(e.phase === 'warn' ? (Math.floor(e.t * 18) % 2 ? 0xff3d2a : 0xfff27a) : 0x3b3f42);
   }
   // 受击闪白
   if (e.hitT > 0 && !e.flashOn) { e.flashOn = true; root.traverse(m => { if (m.isMesh && m.material === M.MAT.toy) { m.material = HIT_MAT; m.userData.wasToy = true; } }); }
@@ -981,7 +1044,8 @@ function updateStar(e, dt) {
 
 // ---------- 伤害 ----------
 function damageEnemy(e, dmg, kind, hx, hy) {
-  if (!e.alive || e.type === 'star') return;
+  if (!e.alive || e.type === 'star' || e.noHit) return;
+  if (e.type === 'shipgun' && (e.enter || G.boss.state !== 'fight')) return;
   if (e.type === 'boss' && e.enter) return;
   if (e.type === 'bomber' && e.state !== 'fly') return;
   if (e.type === 'fallpillar' && e.state === 'stand') return;
@@ -993,8 +1057,9 @@ function damageEnemy(e, dmg, kind, hx, hy) {
     ev('bossDamaged', { id: e.bossId });
   }
   if (e.type === 'bust' && e.hp > 0) { fx.debris(e.x, e.y, 3.5, 0xe9e3d2, 6, 0.8); ev('bustHit', { id: e.bossId, hp: e.hp }); }
+  if (e.type === 'shipgun' && e.hp > 0 && kind !== 'bullet') { fx.debris(e.x, e.y, e.h + 1, 0xaab2b7, 5, 0.8); ev('shipgunHit', { id: e.bossId, hp: e.hp }); }
   if (e.hp <= 0) killEnemy(e, kind);
-  else if (kind === 'bullet' && (e.type === 'tank' || e.type === 'bulltank' || e.type === 'boss' || e.type === 'cannon' || e.type === 'mg' || e.type === 'turret' || e.type === 'boat' || e.type === 'ejeep' || e.type === 'fallpillar')) { A.ping(); fx.hit(hx, hy, (e.h || 0) + 1, 0xfff2a8); }
+  else if (kind === 'bullet' && (e.type === 'tank' || e.type === 'bulltank' || e.type === 'boss' || e.type === 'cannon' || e.type === 'mg' || e.type === 'turret' || e.type === 'boat' || e.type === 'ejeep' || e.type === 'fallpillar' || e.type === 'shipgun')) { A.ping(); fx.hit(hx, hy, (e.h || 0) + 1, 0xfff2a8); }
 }
 function killEnemy(e, kind) {
   if (!e.alive) return;
@@ -1018,9 +1083,9 @@ function killEnemy(e, kind) {
     scene.remove(e.objRoot); ents.splice(ents.indexOf(e), 1);
   } else {
     G.kills[key] = (G.kills[key] || 0) + 1; addScore(POINTS[key] || 0);
-    const size = t === 'boss' || t === 'bust' ? 1.6 : t === 'tank' || t === 'bulltank' ? 1.4 : 1.1;
+    const size = t === 'boss' || t === 'bust' || t === 'shipgun' ? 1.6 : t === 'tank' || t === 'bulltank' ? 1.4 : 1.1;
     fx.bigExplosion(e.x, e.y, (e.h || 0) + (t === 'bust' ? 2.5 : 0.6), size); A.boom(true);
-    fx.debris(e.x, e.y, (e.h || 0) + 0.8, t === 'boss' ? M.C.brown : t === 'tank' ? M.C.khaki : t === 'boat' ? 0x8c5145 : t === 'bust' ? 0xe9e3d2 : t === 'wstatue' ? 0x7ea4c0 : M.C.gray, 10, 1.2);
+    fx.debris(e.x, e.y, (e.h || 0) + 0.8, t === 'boss' ? M.C.brown : t === 'tank' ? M.C.khaki : t === 'boat' ? 0x8c5145 : t === 'bust' ? 0xe9e3d2 : t === 'wstatue' ? 0x7ea4c0 : t === 'shipgun' ? 0xaab2b7 : M.C.gray, 10, 1.2);
     e.dead = true; e.deadT = t === 'mg' ? 0.01 : 5; e.smokeT = 0; e.solid = false;
     if (t === 'mg') { scene.remove(e.objRoot); }
     else e.objRoot.traverse(m => { if (m.isMesh && m.material !== M.MAT.shadowBlob) m.material = WRECK_MAT; });
@@ -1029,6 +1094,7 @@ function killEnemy(e, kind) {
     if (e.data.flashPow) { releasePows(e.x, e.y - 0.4, 0, 1); toast('坦克里关着一名闪光俘虏！'); }
     if (t === 'boss') { G.boss.killed++; ev('bossTankDown', { killed: G.boss.killed }); }
     if (t === 'bust') { G.boss.killed++; ev('bustDown', { id: e.bossId, killed: G.boss.killed }); }
+    if (t === 'shipgun') { e.deadT = 999; e.phase = 'idle'; e.obj.lampMat.color.setHex(0x3d3632); G.boss.killed++; ev('shipgunDown', { id: e.bossId, killed: G.boss.killed }); if (G.boss.killed === 4) toast('只剩两座炮塔，它们打得更急了'); }
   }
   ev('kill', { type: t, by: kind, x: +e.x.toFixed(1), y: +e.y.toFixed(1) });
 }
@@ -1041,7 +1107,7 @@ function explode(x, y, h, radius, dmg, kind, opts) {
   else { fx.explosion(x, y, h, radius / 2); A.boom(false); }
   // 敌人
   for (const e of ents.slice()) {
-    if (!e.alive || e.type === 'star') continue;
+    if (!e.alive || e.type === 'star' || e.noHit) continue;
     const reach = e.type === 'boss' ? e.r + 0.7 : e.capsule ? radius + e.capsule.r : radius + e.r * 0.6;   // Boss 坦克只吃直接命中
     if (entD2(e, x, y) < reach * reach) damageEnemy(e, dmg, kind, e.x, e.y);
   }
@@ -1096,6 +1162,9 @@ function destroyStatic(s) {
   } else if (k === 'barrel') {
     addScore(POINTS.barrel);
     pending.push({ t: 0.12, fn: () => { explode(s.x, s.y, 0.5, 2.4, 6, 'explosive'); fx.bigExplosion(s.x, s.y, 0.6, 1.1); } });
+  } else if (k === 'pjeep') {
+    addScore(POINTS.pjeep); fx.bigExplosion(s.x, s.y, 0.6, 1.1); fx.debris(s.x, s.y, 0.8, 0x8b9399, 10, 1.1); fx.debris(s.x, s.y, 0.6, M.C.tire, 4); A.boom(true);
+    for (let k2 = 0; k2 < 4; k2++) pending.push({ t: 0.3 * k2, fn: () => fx.smoke(s.x, s.y, 0.8, 2, 0x4a4541) });
   } else if (k === 'bluff') {
     addScore(POINTS.bluff); fx.debris(s.x, s.y, 2.2, 0xc6a983, 10, 1.1); fx.smoke(s.x, s.y, 1.5, 4, 0xcdb89a);
     // 失去支撑的崖顶炮台一起坠毁
@@ -1119,7 +1188,7 @@ function updateBullets(dt) {
       for (let k = ebul.length - 1; k >= 0; k--) { const m = ebul[k]; if (m.kind === 'missile' && dist2(b.x, b.y, m.x, m.y) < (m.r + 0.3) ** 2) { fx.hit(m.x, m.y, m.h, 0xffd27a); A.ping(); ebul.splice(k, 1); dead = true; ev('missileShot'); break; } }
       if (dead) break;
       for (const e of ents) {
-        if (!e.alive || e.type === 'star' || e.elevated || e.dead) continue;
+        if (!e.alive || e.type === 'star' || e.elevated || e.dead || e.noHit) continue;
         if (e.type === 'bomber' || (e.type === 'fallpillar' && e.state === 'stand')) continue;
         const rr = e.capsule ? e.capsule.r : e.r;
         if (entD2(e, b.x, b.y) < (rr + b.r) ** 2) { damageEnemy(e, 1, 'bullet', b.x, b.y); dead = true; break; }
@@ -1205,7 +1274,7 @@ function updateBombs(dt) {
     for (let sub = 0; sub < 3 && !boom; sub++) {
       b.x += b.vx * dt / 3; b.y += b.vy * dt / 3;
       for (const e of ents) {
-        if (!e.alive || e.type === 'star' || e.dead || (e.elevated && b.kind === 'shrap')) continue;
+        if (!e.alive || e.type === 'star' || e.dead || e.noHit || (e.elevated && b.kind === 'shrap')) continue;
         if (e.elevated) continue;
         if (e.type === 'fallpillar' && e.state === 'stand') continue;
         if (e.type === 'bomber' && e.state !== 'fly') continue;
@@ -1279,10 +1348,34 @@ const BOSS_TYPES = {
       return B.killed >= 4;
     },
     pips(B) { return (B.tanks || []).map(e => !e.alive ? 'dead' : e.hp < e.maxHp ? 'hurt' : 'ok'); }
+  },
+  // 第三关：战舰从东面靠上码头，甲板上 6 座炮塔轮流打三发扇形炮弹；全部击毁后战舰起火下沉
+  battleship: {
+    start(B) {
+      const sh = L.BOSS.ship;
+      const ship = spawnEntity({ t: 'ship', x: sh.x, y: sh.y, from: sh.from });
+      B.tanks = [];
+      L.BOSS.guns.forEach((g, k) => {
+        const e = spawnEntity({ t: 'shipgun', x: sh.x + g[0], y: sh.y + g[1], ox: g[0], from: sh.from, order: k });
+        e.bossId = k + 1; e.ship = ship; B.tanks.push(e);
+      });
+      B.spawned = B.tanks.length;
+      A.plane();
+    },
+    update(B) {
+      if (B.killed >= B.tanks.length) {
+        for (const e of B.tanks) if (e.dead) e.deadT = 3.4;
+        ev('shipSunk');
+        return true;
+      }
+      return false;
+    },
+    pips(B) { return (B.tanks || []).map(e => !e.alive ? 'dead' : e.hp < e.maxHp ? 'hurt' : 'ok'); }
   }
 };
 function startBoss() {
   const B = G.boss;
+  endGrace('boss');
   B.state = 'intro'; B.t = 0; B.type = L.BOSS.type;
   L.activateBarricade();
   // 场外残余敌人撤出（被路障隔在身后）
@@ -1507,7 +1600,7 @@ export function snapshot() {
   const enemies = ents.filter(e => e.alive && e.type !== 'star').map(e => ({ type: e.type, x: +e.x.toFixed(2), y: +e.y.toFixed(2), hp: e.hp, active: e.active, elevated: !!e.elevated, id: e.bossId || null, stage: e.stage || null, state: e.state || e.phase || null }));
   const stars = ents.filter(e => e.type === 'star').map(e => ({ item: e.item, hidden: e.hidden, x: e.x, y: e.y }));
   return {
-    mode: G.mode, t: +G.t.toFixed(2), frame: G.frame, score: G.score, hi: G.hi, deaths: G.deaths, lives: G.lives, settings: Object.assign({}, G.settings), demoUsed: G.demoUsed,
+    mode: G.mode, t: +G.t.toFixed(2), frame: G.frame, grace: G.grace ? { on: graceOn(), acted: G.grace.acted, left: +Math.max(0, G.grace.until - G.t).toFixed(2) } : null, score: G.score, hi: G.hi, deaths: G.deaths, lives: G.lives, settings: Object.assign({}, G.settings), demoUsed: G.demoUsed,
     stage: G.stage, stageCount: L.STAGE_COUNT, stageNo: L.STAGE_NO,
     weapon: G.weapon, carried: G.carried, delivered: G.delivered, freed: G.freed, powTotal: L.POW_TOTAL, cp: G.cp, kills: Object.assign({}, G.kills),
     player: P ? { x: +P.x.toFixed(2), y: +P.y.toFixed(2), dir: P.dir, alive: P.alive, invuln: +P.invuln.toFixed(2), shield: +P.shield.toFixed(2), moving: P.moving, armor: P.armor, armorMax: G.armorMax } : null,
@@ -1522,7 +1615,7 @@ export function snapshot() {
   };
 }
 export const _test = {
-  teleport(x, y) { if (!P) return; P.x = x; P.y = y; camCtl.snap(x, y); for (let k = G.cp + 1; k < L.CHECKPOINTS.length; k++) if (y >= L.CHECKPOINTS[k].ty) G.cp = k; },
+  teleport(x, y) { if (!P) return; endGrace('test'); P.x = x; P.y = y; camCtl.snap(x, y); for (let k = G.cp + 1; k < L.CHECKPOINTS.length; k++) if (y >= L.CHECKPOINTS[k].ty) G.cp = k; },
   weapon(w) { G.weapon = w; },
   kill(type) { for (const e of ents.slice()) if (e.alive && (type ? e.type === type : e.type !== 'star')) killEnemy(e, 'test'); },
   hurt() { const was = P.invuln; P.invuln = 0; const ok = killPlayer('test'); if (!ok) P.invuln = was; return ok; },
@@ -1541,6 +1634,7 @@ export const _test = {
   face(d) { if (!P) return; P.dir = d; P.ang = DIR8[d].a; fpLatch = null; camCtl.yaw = 0; },
   nextStage() { return nextStage(); },
   bossReady() { _test.teleport(L.BOSS.respawn.x, L.BOSS.trigger - 1.5); },
+  grace(on) { if (on) G.grace = { t0: G.t, until: G.t + GRACE_MAX, acted: false }; else endGrace('test'); },
   state: () => ({ P, ents, pows, ebul, earc })
 };
 export function snapshotBoss(k) {
@@ -1599,6 +1693,7 @@ export function coopApply(data){
   data.pows.forEach((row,i)=>{const p=pows[i]||spawnPow(row.s.x,row.s.y,row.s.flash,true);Object.assign(p,row.s);applyTree(p.obj.root,row.tree);});
   while(kits.length>data.kits.length)scene.remove(kits.pop().obj.root);
   data.kits.forEach((row,i)=>{if(!kits[i])spawnKit(row.x,row.y);Object.assign(kits[i],row);kits[i].obj.root.position.set(row.x,.5,-row.y);});
-  A.music(['intro','play'].includes(G.mode)?L.STAGE.music:null);
+  // 加入者不跑 Boss 逻辑，音乐跟着主机同步过来的 Boss 状态换（原先加入者在 Boss 战里一直听关卡曲）
+  A.music(['intro','play'].includes(G.mode)?(['intro','fight'].includes(G.boss?.state)?'boss':L.STAGE.music):null);
   for(const [target,rows] of [[pbul,data.bullets],[ebul,data.enemyBullets],[bombs,data.bombs],[earc,data.arcs]]){target.length=0;target.push(...rows);}
 }

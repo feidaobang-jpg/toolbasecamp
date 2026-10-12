@@ -266,8 +266,8 @@ function toTitle() {
 }
 G.onEnd = (res) => { if(coopDriver?.config)coopDriver.result=res; setTimeout(() => showResult(res), 300); };
 const KILL_ROWS = [['soldier', '步兵'], ['officer', '军官'], ['mg', '机枪巢'], ['turret', '炮塔'], ['cannon', '炮台'], ['boat', '炮艇'], ['tank', '坦克'], ['brownTank', '棕色坦克'], ['bulltank', '重型坦克'],
-  ['ejeep', '敌方吉普'], ['bomber', '轰炸机'], ['wstatue', '水中石像'], ['fallpillar', '倒塌石柱'], ['boss', 'Boss 蓝色坦克'], ['bust', 'Boss 石像'], ['hut', '营房']];
-const BOSS_KEY = { tanks: 'boss', statues: 'bust' };
+  ['ejeep', '敌方吉普'], ['bomber', '轰炸机'], ['wstatue', '水中石像'], ['fallpillar', '倒塌石柱'], ['boss', 'Boss 蓝色坦克'], ['bust', 'Boss 石像'], ['shipgun', 'Boss 战舰炮塔'], ['hut', '营房']];
+const BOSS_KEY = { tanks: 'boss', statues: 'bust', battleship: 'shipgun' };
 function showResult(res) {
   if (uiMode !== 'game') return;
   $('res-title').textContent = res.win ? GM.STAGE_NAME[res.stage] + '完成！' : '任务失败 · ' + GM.STAGE_NAME[res.stage];
@@ -278,6 +278,7 @@ function showResult(res) {
   if (res.win) rows += '<tr><td>救援奖励</td><td>' + res.delivered + ' × ' + GM.POINTS.powBonus + '</td><td>' + res.powBonus + '</td></tr>';
   rows += '<tr class="total"><td>总分</td><td></td><td>' + res.score + '</td></tr>';
   $('tally').innerHTML = rows;
+  $('tally').classList.toggle('dense', $('tally').querySelectorAll('tr').length > 11);   // 第三关击毁种类多：紧凑横屏下收紧行距，免得结算表超出屏幕
   const extra = [];
   extra.push('本关用时 ' + Math.floor(res.seconds / 60) + ' 分 ' + (res.seconds % 60) + ' 秒 · 阵亡 ' + res.deaths + ' 次');
   if (res.finalStage) extra.push('已打通目前全部 ' + res.stageCount + ' 关，后续关卡制作中');
@@ -443,6 +444,10 @@ function updateHud() {
   if (G.banner && G.banner.id !== lastBanner) { lastBanner = G.banner.id; bannerEl.innerHTML = '<b>' + G.banner.text + '</b>' + (G.banner.sub ? '<span>' + G.banner.sub + '</span>' : ''); bannerEl.hidden = false; bannerEl.classList.remove('pop'); void bannerEl.offsetWidth; bannerEl.classList.add('pop'); }
   if (!G.banner && !bannerEl.hidden) { bannerEl.hidden = true; lastBanner = null; }
   if (G.toast && G.toast.id !== lastToast) { lastToast = G.toast.id; showToast(G.toast.text); }
+  if (G.mode === 'play' && G.grace && !G.grace.acted && !G.grace.hinted && G.t - G.grace.t0 > 2.5 && !coopDriver?.config) {
+    G.grace.hinted = true;
+    showToast(display.touchOn ? '推左下角摇杆开车 · J 机枪 · K 手雷；动起来之前敌人不开火' : 'W A S D 开车 · J 机枪 · K 手雷；动起来之前敌人不开火');
+  }
   const b = G.boss;
   const bossOn = b && (b.state === 'fight' || b.state === 'intro');
   if (bossOn && /^(视角：|拖动画面)/.test(toastEl.textContent)) toastEl.hidden = true;
@@ -452,7 +457,7 @@ function updateHud() {
   if (bossOn) {
     const pips = GM.bossPips().map(v => '<i class="' + v + '"></i>');
     bossBar.dataset.type = b.type || '';
-    const html = '<b>BOSS</b>' + pips.join('') + (b.type === 'statues' ? '<span class="boss-tip">K 手雷 / 火箭</span>' : '');
+    const html = '<b>BOSS</b>' + pips.join('') + (b.type === 'statues' ? '<span class="boss-tip">K 手雷 / 火箭</span>' : b.type === 'battleship' ? '<span class="boss-tip">贴近码头边打炮塔</span>' : '');
     if (bossBar.innerHTML !== html) bossBar.innerHTML = html;
   }
   $('demo-badge').hidden = !(uiMode === 'game' && G.settings.demo);

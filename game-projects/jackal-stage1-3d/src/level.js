@@ -3,9 +3,10 @@
 import { fixedRng } from './core.js';
 import stage1 from './stages/stage1.js';
 import stage2 from './stages/stage2.js';
+import stage3 from './stages/stage3.js';
 
 export const COLS = 72, ROWS = 352, X0 = -36;
-export const STAGE_COUNT = 2;   // 目前做到第二关
+export const STAGE_COUNT = 3;   // 目前做到第三关
 export const T = { GRASS: 0, SAND: 1, ROAD: 2, WATER: 3, SEA: 4, BRIDGE: 5, FLOOR: 6, DIRT: 7, PAD: 8, STONE: 9, CONCRETE: 10, MARSH: 11, CHASM: 12, CONVEYOR: 13 };
 
 export const terrain = new Uint8Array(COLS * ROWS);
@@ -55,7 +56,10 @@ const KIND = {
   ridge:     { move: true,  shot: true,  by: null },            // 山脊 / 崖壁
   hedge:     { move: true,  shot: false, by: null },            // 草坡（子弹能飞过）
   jet:       { move: true,  shot: true,  by: 'explosive', hp: 4 },   // 停机坪上的战机
-  pylon:     { move: true,  shot: false, by: null }             // 桥墩 / 系缆桩等小件
+  pylon:     { move: true,  shot: false, by: null },            // 桥墩 / 系缆桩等小件
+  // 第三关港口
+  stack:     { move: true,  shot: true,  by: null },            // 码头货箱堆（不可破坏，当围墙用）
+  pjeep:     { move: true,  shot: true,  by: 'explosive', hp: 2 }   // 停车场里停着的敌方吉普（可炸毁）
 };
 
 export function addStatic(kind, x0, y0, x1, y1, data) {
@@ -212,7 +216,7 @@ function makeBuilder(n) {
   return B;
 }
 
-const BUILDERS = [null, stage1, stage2];
+const BUILDERS = [null, stage1, stage2, stage3];
 
 // 载入第 n 关：清空网格与列表，调用该关布局，返回关卡配置
 export function loadStage(n) {

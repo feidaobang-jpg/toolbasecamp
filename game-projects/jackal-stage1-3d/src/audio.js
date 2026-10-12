@@ -22,7 +22,7 @@ function ensure() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0);
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "stage.mp3?v=bgmfull1", "ruins": "stage3.mp3?v=bgmfull1", "boss": "boss.mp3?v=bgmfull1"});
+  samples = new SampleAudio(ctx,musicBus,sfxBus,{"stage": "stage.mp3?v=bgmfull1", "ruins": "stage3.mp3?v=bgmfull1", "harbor": "harbor.mp3?v=s3a", "boss": "boss.mp3?v=bgmfull1"});
   return ctx;
 }
 let fakeNow = null;   // 离线渲染时用游戏时间代替音频时钟
@@ -86,6 +86,7 @@ const SONGS = {
     drum: 'k h s k k h s h'
   }
 };
+SONGS.harbor = SONGS.stage;   // 第三关原版录音解码失败时的合成回退：沿用关卡进行曲
 const parsed = {};
 for (const k in SONGS) {
   const s = SONGS[k];

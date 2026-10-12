@@ -161,3 +161,12 @@ def test_starship_coop_rooms_keep_coop_mode():
         host.receive_json(); host.send_json({'type': 'create', 'maxPlayers': 3, 'config': {'mode': 'nonsense'}})
         room = until(host, 'joined')['room']
         assert room['maxPlayers'] == 3 and room['settings']['mode'] == 'coop'
+
+def test_stage_choice_is_kept_beyond_two_and_still_bounded():
+    """赤色要塞第三关：房主选的关卡号不能被压回 2；非法值仍回到合法范围。"""
+    from coop_lobby import game_config
+    assert game_config('jackal', {'stage': 3})['stage'] == 3
+    assert game_config('jackal', {'stage': 1})['stage'] == 1
+    assert game_config('jackal', {'stage': 99})['stage'] == 9
+    assert game_config('jackal', {'stage': 0})['stage'] == 1
+    assert game_config('jackal', {'stage': '3'})['stage'] == 1

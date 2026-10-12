@@ -7,7 +7,7 @@
 <meta name="description" content="FC 赤色要塞的 3D 重制版（第一、二关）：驾驶武装吉普炸开营房救出俘虏、送上直升机；第一关打 4 辆蓝色坦克，第二关闯废墟城、打北墙 4 座石像。电脑键盘与手机触屏均可游玩。">
 <title>赤色要塞 · 3D 重制版</title>
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=combo-v080">
+<link rel="stylesheet" href="css/style.css?v=stage3-v0110">
 </head>
 <body>
 <div id="app" tabindex="-1">
@@ -62,7 +62,7 @@
           <div class="kicker">FC 经典 · 3D 重制版</div>
           <h1 class="logo">赤色要塞</h1>
           <div class="sub" id="menu-sub">第一关 · 海滩登陆</div>
-          <p class="rules">驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪；闪光俘虏让武器升级（手雷 → 火箭 → 双向 → 四向火箭）。第一关打 4 辆蓝色坦克，第二关打废墟北墙的 4 座石像。吉普有 3 格护甲，营房里会掉修理包；默认无限命，阵亡后从检查点继续。</p>
+          <p class="rules">驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪；闪光俘虏让武器升级（手雷 → 火箭 → 双向 → 四向火箭）。第一关打 4 辆蓝色坦克，第二关打废墟北墙的 4 座石像，第三关打停在港口的战舰。吉普有 3 格护甲，营房里会掉修理包；默认无限命，阵亡后从检查点继续。</p>
           <p class="help help-desktop"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 · <kbd>J</kbd> 机枪（默认固定向北） · <kbd>K</kbd> 手雷 / 火箭（朝车头） · <kbd>U</kbd> 联合开火<br><kbd>Q</kbd>/<kbd>E</kbd> 转视角 · <kbd>C</kbd> 视角 · <kbd>Esc</kbd> 暂停 · <kbd>↑</kbd><kbd>↓</kbd> 选择 · <kbd>←</kbd><kbd>→</kbd> 调整 · <kbd>Enter</kbd> 确认</p>
           <p class="help help-touch">左侧摇杆移动 · <b>J</b> 机枪（默认固定向北）、<b>K</b> 手雷 / 火箭、<b>U</b> 联合开火 · 拖动画面空白处转视角 · 右上角切换视角与暂停</p>
           <p class="hi">最高分 <span id="hi-val">30000</span></p>
@@ -131,7 +131,7 @@
     if (el) { el.hidden = false; el.innerHTML = '游戏加载失败：' + (e.message || '未知错误') + '<br><button onclick="location.reload()">重试</button>'; }
   });
 </script>
-<script src="js/game.min.js?v=menu-text1-privacy1"></script>
+<script src="js/game.min.js?v=stage3-v0110"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失
 (function(){

@@ -243,6 +243,9 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 62px); }
 #stage.compact h2 { font-size: 20px; }
 #stage.compact #tally { font-size: 13px; }
 #stage.compact #tally td { padding: 2px 6px; }
+#stage.compact #tally.dense { font-size: 12px; line-height: 1.2; }
+#stage.compact #tally.dense td { padding: 1px 6px; }
+#stage.compact #tally.dense tr.total td { font-size: 15px; padding-top: 3px; }
 #stage.compact .panel.small { max-width: 600px; }
 #stage.compact #pause .items, #stage.compact #result .items { display: grid; grid-template-columns: 1fr 1fr; }
 #stage.compact .title-screen .items { display: grid; grid-template-columns: 1fr 1fr; }
@@ -260,6 +263,7 @@ body.touch-on #fps { bottom: auto; top: calc(var(--sat) + 62px); }
 .stage-tag { font-size: 11px; font-weight: 800; color: #fff; background: var(--olive); border-radius: 8px; padding: 0 7px; display: inline-block; margin-bottom: 2px; letter-spacing: .12em; }
 .lv4 { background: #d9a43a; }
 #boss-bar[data-type=statues] i.ok { background: #ece6d6; } #boss-bar[data-type=statues] i.hurt { background: #c99a5a; }
+#boss-bar[data-type=battleship] i.ok { background: #aab2b7; } #boss-bar[data-type=battleship] i.hurt { background: #e8a020; }
 .items > button > span:first-child { white-space: nowrap; }
 /* 内容比屏幕高时（手机竖屏主菜单）：用 margin:auto 居中，溢出部分可以滚动看到，不会被顶出屏幕 */
 .overlay { align-items: flex-start; }
@@ -314,6 +318,10 @@ html body #btn-fs[hidden], html body .items > .fs-btn[hidden] { display: none !i
    网站与 Toy 版菜单都只占 7 行（均无跳出链接），Toy 外壳顶栏下的 844×346 也能完整显示 */
 #stage.compact .title-screen .items > [data-opt=touch] { display: none; }
 #stage.compact:not(.narrow) .title-screen .items > .primary { grid-column: auto; }
+/* v0.11：后来加的「联机大厅」入口让菜单变成 8 行，844×346 下底部被截掉约 29px。紧凑横屏里把它和三键操作模式行并排，回到 7 行 */
+#stage.compact:not(.narrow) .title-screen .items > .coop-entry { order: 1; grid-column: 1 !important; }
+#stage.compact:not(.narrow) .title-screen .items > .control-modes { order: 2; grid-column: 2 !important; gap: 4px !important; }
+#stage.compact:not(.narrow) .title-screen .items > .control-modes button[data-control-mode] { padding: 4px 2px; font-size: 12px; min-width: 0; }
 /* 暂停：左列标题、得分与操作提示，右列两列选项 */
 #stage.compact:not(.narrow) #pause .panel {
   max-width: 820px; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto 1fr;
