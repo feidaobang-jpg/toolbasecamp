@@ -1,5 +1,5 @@
 {
-  "handoff": "releases/menu-text-20261009/handoff.json",
+  "handoff": "releases/v0.11.0/handoff.json",
   "toy": {
     "id": 39863936092160,
     "slug": "feidao-jackal-3d",
@@ -168,11 +168,11 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.10.3-menu-text1-privacy1",
+  "current_version": "v0.11.0",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "website_version": "v0.10.3-menu-text1",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",
-  "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩与废墟城两关，机枪默认固定向北，可选跟随车头；U联合开火同时发射机枪和手雷或火箭。",
+  "one_liner": "驾驶武装吉普炸营房救人、升级武器、送上直升机；海滩、废墟城、港口三关，第三关打停在码头的战舰；每关进场后第一次操作前敌人不开火；机枪默认固定向北，可选跟随车头；U 联合开火。",
   "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
   "versions": [
     {
@@ -288,6 +288,14 @@
       "classification": "正式版本",
       "handoff": "releases/v0.10.0/handoff.json",
       "summary": "统一2–4人；中途加入和退出、30秒挂机电脑接管与真人回来交还、房主踢人"
+    },
+    {
+      "version": "v0.11.0",
+      "base_version": "v0.10.3-menu-text1-privacy1",
+      "date": "2026-10-12",
+      "classification": "正式版本",
+      "handoff": "releases/v0.11.0/handoff.json",
+      "summary": "新增第三关「港口」与战舰 Boss；每关开局保护（第一次操作前敌人不开火）；修 Toy 手机横屏主菜单被截、联机选不了第三关。"
     }
   ],
   "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
@@ -360,6 +368,22 @@
       "toy": "待合并：纯文案不单独送审，随下次本游戏更新一并打包",
       "taptap": "待合并：同 Toy",
       "bilibili": "不更新：已发视频标题与简介保留原文"
+    },
+    {
+      "version": "v0.11.0",
+      "date": "2026-10-12",
+      "classification": "正式版本",
+      "changes": [
+        "第三关港口与战舰 Boss",
+        "开局保护",
+        "Toy 手机横屏主菜单完整显示",
+        "联机可选第三关"
+      ],
+      "record": "releases/v0.11.0/handoff.json",
+      "website": "pending",
+      "toy": "pending",
+      "taptap": "默认不发布",
+      "bilibili": "重大版本：网站核验后立即更新简介"
     }
   ],
   "drag_camera_controls": {
