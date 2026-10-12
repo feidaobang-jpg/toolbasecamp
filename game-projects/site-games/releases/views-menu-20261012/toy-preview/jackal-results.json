@@ -1,0 +1,126 @@
+{
+ "name": "jackal",
+ "preview": "https://www.bilibili.com/toy/preview/preview_EBs9hA3m/index.html",
+ "checked_at": "2026-10-12T13:55:19.466Z",
+ "passed": 13,
+ "total": 13,
+ "results": [
+  {
+   "name": "[jackal · 电脑 1280×720] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     1280,
+     720
+    ],
+    "stage": "",
+    "controls": 17,
+    "text": "FC 经典 · 3D 重制版 赤色要塞 第一关 · 海滩登陆 驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪"
+   }
+  },
+  {
+   "name": "[jackal · 电脑 1280×720] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[jackal · 电脑 1280×720] 标题菜单不用滚动就看全",
+   "ok": true,
+   "detail": {
+    "off": [],
+    "frame": [
+     1280,
+     720
+    ]
+   }
+  },
+  {
+   "name": "[jackal · 电脑 1280×720] 按 C 循环共 4 个视角并回到第一个",
+   "ok": true,
+   "detail": [
+    "斜俯视",
+    "俯视",
+    "低位正视",
+    "第一人称",
+    "斜俯视"
+   ]
+  },
+  {
+   "name": "[jackal · 电脑 1280×720] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[jackal · 手机横屏 844×390] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     844,
+     346
+    ],
+    "stage": "compact",
+    "controls": 16,
+    "text": "FC 经典 · 3D 重制版 赤色要塞 第一关 · 海滩登陆 驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪"
+   }
+  },
+  {
+   "name": "[jackal · 手机横屏 844×390] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[jackal · 手机横屏 844×390] 标题菜单各项都在画面内或可滚动到",
+   "ok": true,
+   "detail": {
+    "off": 0,
+    "stuck": 0,
+    "frame": [
+     844,
+     346
+    ],
+    "stage": "compact"
+   }
+  },
+  {
+   "name": "[jackal · 手机横屏 844×390] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[jackal · 手机竖屏 390×844] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     390,
+     800
+    ],
+    "stage": "rotated compact",
+    "controls": 16,
+    "text": "FC 经典 · 3D 重制版 赤色要塞 第一关 · 海滩登陆 驾驶武装吉普一路向北：炸开营房救出俘虏，接上车送到直升机坪"
+   }
+  },
+  {
+   "name": "[jackal · 手机竖屏 390×844] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[jackal · 手机竖屏 390×844] 标题菜单各项都在画面内或可滚动到",
+   "ok": true,
+   "detail": {
+    "off": 0,
+    "stuck": 0,
+    "frame": [
+     390,
+     800
+    ],
+    "stage": "rotated compact"
+   }
+  },
+  {
+   "name": "[jackal · 手机竖屏 390×844] 无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

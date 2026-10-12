@@ -1,0 +1,140 @@
+{
+  "release": "views-menu-20261012",
+  "task_id": "f40a799e-views-menu-02",
+  "source": "Claude Code",
+  "branch": "claude/views-menu-20261012",
+  "updated_at": "2026-10-12T21:58:19+08:00",
+  "user_request": "「4：改吧，别的游戏也要改吗？游戏的视角好像太多了点？有一些视角太相似了，要不要合并去掉几个？如果你觉得可以合并去掉几个，别的游戏也改一下，并记入规则。」（2026-10-12）",
+  "website": {
+    "status": "verified",
+    "commit": "c5893a17",
+    "verified_at": "2026-10-12T21:50:00+08:00",
+    "checks": "10 个运行文件线上哈希与本地一致；线上复跑视角验收 26 项通过；四款复刻游戏在 1366×768 / 1280×720 / 1366×625 / 1280×580 标题菜单被截断 0、需滚动 0；虫潮线上显示 v0.36.4"
+  },
+  "toy": {
+    "jackal-stage1-3d": {
+      "name": "赤色要塞 3D",
+      "toy_id": 39863936092160,
+      "version": "v0.11.1",
+      "views": "斜俯视 / 俯视 / 低位正视 / 第一人称（原 6 个，去掉近景斜视、战术远景）",
+      "menu_two_column": true,
+      "package": "game-projects/jackal-stage1-3d/dist/toy-v0.11.1/package",
+      "package_tree_sha256": "a48e3b54782575a0db979a692204c8914ed664376103a126ada26acffa6ce757",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_EBs9hA3m/index.html",
+      "preview_qa": "13/13",
+      "preview_qa_note": null,
+      "preview_qa_file": "toy-preview/jackal-results.json",
+      "submitted_at": "2026-10-12T21:57:00+08:00",
+      "submit_response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_zujfSTGl/index.html"
+      },
+      "status": "auditing",
+      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "platform_mtime": "2026-10-12T21:56:56+08:00",
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+    },
+    "cadillacs-stage1-3d": {
+      "name": "恐龙快打 3D",
+      "toy_id": 40412421031936,
+      "version": "v0.11.0-hellroad.1-menu-desk1",
+      "views": "侧视 / 斜视 / 正视 / 第一人称（不变）",
+      "menu_two_column": true,
+      "package": "game-projects/cadillacs-stage1-3d/dist/toy-v0.11.0-hellroad.1-menu-desk1/package",
+      "package_tree_sha256": "7f9f3b830e28d53fbe1742f81c0d52b5cc9779bb5881f52844f3b32cc8e880bc",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_7gsH1u0E/index.html",
+      "preview_qa": "13/13",
+      "preview_qa_note": null,
+      "preview_qa_file": "toy-preview/cadillacs-results.json",
+      "submitted_at": "2026-10-12T21:57:00+08:00",
+      "submit_response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_3t1WnIIv/index.html"
+      },
+      "status": "auditing",
+      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "platform_mtime": "2026-10-12T21:57:09+08:00",
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+    },
+    "mario-3d": {
+      "name": "超级玛丽 3D",
+      "toy_id": 39043286960128,
+      "version": "v2.6.1",
+      "views": "侧视 / 斜视 / 正视 / 第一人称（原 5 个，去掉俯视）",
+      "menu_two_column": true,
+      "package": "game-projects/mario-3d/dist/toy-v2.6.1/package",
+      "package_tree_sha256": "cab614438f5f116ab87fd1422c0ad2330d0faa0fbd9b7c1394208f14f9fe36e2",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_qEOqJLI1/index.html",
+      "preview_qa": "13/13",
+      "preview_qa_note": null,
+      "preview_qa_file": "toy-preview/mario-results.json",
+      "submitted_at": "2026-10-12T21:57:00+08:00",
+      "submit_response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_mAPM4ZRC/index.html"
+      },
+      "status": "auditing",
+      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "platform_mtime": "2026-10-12T21:57:15+08:00",
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+    },
+    "tank-3d": {
+      "name": "坦克大战 3D",
+      "toy_id": 39043249461248,
+      "version": "remix-entry1-views4",
+      "views": "斜俯视 / 正俯视 / 正视 / 第一人称（原 5 个，去掉近景）",
+      "menu_two_column": true,
+      "package": "game-projects/tank-3d/dist/remix-entry1-views4/package",
+      "package_tree_sha256": "c9f32a9be630c3394a1a016dae8c9ff0b24a450a9c546b650b0289486f2a3aad",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_Bwfjhhos/index.html",
+      "preview_qa": "13/13",
+      "preview_qa_note": null,
+      "preview_qa_file": "toy-preview/tank-results.json",
+      "submitted_at": "2026-10-12T21:57:00+08:00",
+      "submit_response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_mGmJSsZG/index.html"
+      },
+      "status": "auditing",
+      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "platform_mtime": "2026-10-12T21:57:16+08:00",
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+    },
+    "starship-defense": {
+      "name": "虫潮围城",
+      "toy_id": 38678478981120,
+      "version": "0.36.4",
+      "views": "近身跟随 / 高位跟随 / 战术俯视 / 第一人称（原 6 个，去掉低位跟随、战术远景）",
+      "menu_two_column": false,
+      "package": "dist/toy/chongchao-qianshao/package",
+      "package_tree_sha256": "c7c1e82f07cfb8a112f810baa3e9032203152bc76b706935b502c69cc9ce9627",
+      "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_etIABjgV/index.html",
+      "preview_qa": "10/11",
+      "preview_qa_note": "预览 10/11：未过的一项是验收脚本没认出第一人称的提示文字；随后直接读人称与预设序号，确认循环为 第三人称 0 → 1 → 2 → 第一人称 → 0，无脚本错误",
+      "preview_qa_file": "toy-preview/chongchao-results.json",
+      "submitted_at": "2026-10-12T21:57:00+08:00",
+      "submit_response": {
+        "status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_Ccr8PrFh/index.html"
+      },
+      "status": "auditing",
+      "status_checked_at": "2026-10-12T21:58:19+08:00",
+      "platform_mtime": "2026-10-12T21:57:18+08:00",
+      "privacy_check": "包内没有指向作者网站的链接或账号表单；唯一出现的站点域名是联机状态通信的 WebSocket 地址（虫潮、赤色要塞、恐龙快打、坦克大战）"
+    }
+  },
+  "taptap": {
+    "status": "not_in_scope",
+    "reason": "TapTap 默认不发布"
+  },
+  "video_descriptions": {
+    "decision": "deferred_accumulating",
+    "reason": "普通体验小改，不涉及入口或操作说明失实；赤色要塞新视频里展示的「低位正视」仍在。记为各游戏一次待合并的稳定更新"
+  },
+  "not_done": [
+    "手机真机没有实测（视口模拟）",
+    "枪火集结大厅在 1920×1080 也要滚动才看到最下面一排按钮——另一任务当天新建的页面，本次没动",
+    "Toy 审核结果以平台状态为准，过审前不算上线"
+  ],
+  "records_commit": "62aa57d5"
+}
