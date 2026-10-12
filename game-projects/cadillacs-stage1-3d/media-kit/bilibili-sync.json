@@ -7,27 +7,27 @@
       "url": "https://www.bilibili.com/video/BV18XHW66E55/",
       "owner_uid": 16214353,
       "recorded_version": "v0.1.0（录制构建 game.min.js?v=3；桌面玩法与 v=5 相同）",
-      "last_public_verified_version": "v0.11.0-hellroad.1",
+      "last_public_verified_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
       "status": "public_verified",
       "publish_record": "video/views-20261005/work/publication-result.json",
       "toy_bound": true,
       "pinned_comment_rpid": 316113740017,
-      "last_public_verified_at": "2026-10-11T08:43:08Z",
-      "last_sync_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
+      "last_public_verified_at": "2026-10-12T12:27:18.706Z",
+      "last_sync_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
       "last_description_compacted_at": "2026-10-05T20:00:59+08:00",
-      "description_sha256": "17ea51edef312aa68a99a05e8e424a8eb3cac0a6c4547c0b85e94a09fbc9c503",
-      "lastPublicVerifiedVersion": "v0.11.0-hellroad.1",
-      "descriptionHash": "17ea51edef312aa68a99a05e8e424a8eb3cac0a6c4547c0b85e94a09fbc9c503",
+      "description_sha256": "cca4fd54cb74c39c41a1ff8dba9bec59f1e5b2d81d08f20da6acaabe4f90793c",
+      "lastPublicVerifiedVersion": "v0.11.0-hellroad.1-privacy1-input-safety1",
+      "descriptionHash": "cca4fd54cb74c39c41a1ff8dba9bec59f1e5b2d81d08f20da6acaabe4f90793c",
       "release": "releases/backfill-20261010/release-status.json",
-      "publicVerifiedAt": "2026-10-11T08:43:08Z",
-      "submitted_version": "v0.11.0-hellroad.1",
-      "submitted_at": "2026-10-10T02:26:07.795Z",
-      "description_revision": "v0.11.0-hellroad.1",
-      "public_verified_at": "2026-10-11T08:43:08Z",
-      "description_public_verified_at": "2026-10-11T08:43:08Z",
+      "publicVerifiedAt": "2026-10-12T12:27:18.706Z",
+      "submitted_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+      "submitted_at": "2026-10-12T12:25:31.752Z",
+      "description_revision": "input-safety-restoration-20261012",
+      "public_verified_at": "2026-10-12T12:27:18.706Z",
+      "description_public_verified_at": "2026-10-12T12:27:18.706Z",
       "record": "releases/backfill-20261010/release-status.json",
-      "release_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
-      "exact_text_record": "game-projects/site-games/releases/task-takeover-20261011/bilibili.json",
+      "release_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+      "exact_text_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
       "takeover_history": [
         {
           "last_public_verified_version": "v0.11.0-preview.2",
@@ -39,7 +39,7 @@
     }
   ],
   "status": "public_verified",
-  "updated_at": "2026-10-10T03:02:52.978211+00:00",
+  "updated_at": "2026-10-12T12:38:50.037199+00:00",
   "mapping_sources": [
     "本期发布记录 video/views-20261005/work/publication-result.json",
     "创作中心稿件列表（BV18XHW66E55 审核中）"
@@ -255,17 +255,30 @@
         "submitted_version": "v0.10.1",
         "submitted_at": "2026-10-08T19:47:45.272057+08:00"
       }
+    },
+    {
+      "at": "2026-10-12T12:31:12.320579+00:00",
+      "reason": "input-safety status correction",
+      "previous_last_public_verified": {
+        "version": "v0.11.0-preview.2",
+        "at": "2026-10-10T03:02:52.978211+00:00",
+        "bvids": [
+          "BV18XHW66E55"
+        ],
+        "record": "releases/backfill-20261010/release-status.json"
+      }
     }
   ],
   "last_public_verified": {
-    "version": "v0.11.0-preview.2",
-    "at": "2026-10-10T03:02:52.978211+00:00",
+    "version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "at": "2026-10-12T12:27:18.706Z",
     "bvids": [
       "BV18XHW66E55"
     ],
-    "record": "releases/backfill-20261010/release-status.json"
+    "record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
+    "scope": "availability status and website safety notice"
   },
-  "latest_record": "game-projects/site-games/releases/task-takeover-20261011/handoff.json",
+  "latest_record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json",
   "pending": false,
   "pending_note": null,
   "rollback": {

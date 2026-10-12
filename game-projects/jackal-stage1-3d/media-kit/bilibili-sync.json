@@ -86,6 +86,13 @@
       "included_version": "v0.10.3-menu-text1",
       "resolved_by_run": "release-backfill-20261010",
       "release_record": "releases/backfill-20261010/release-status.json"
+    },
+    {
+      "version": "v0.11.0-input-safety1",
+      "status": "deferred_accumulating",
+      "summary": "联机文本检测与可选B站昵称",
+      "reason": "普通补丁距最后公开核验不足7天；不重复更新简介",
+      "record": "game-projects/site-games/releases/input-safety-20261012/handoff.json"
     }
   ],
   "resolved_updates": [

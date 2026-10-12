@@ -11,7 +11,7 @@
   "release_intent": "web_demo",
   "public_play_url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
   "public_play_url_note": "新玩家默认魔改挑战，老玩家保留已选模式；经典复刻35关可直接选择。支持2–4人联机；手机真机未验收。",
-  "preview_url": "https://claude.ai/artifact/24AYVoSJXaPXLF9KLsKNtp",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
   "preview_url_note": "claude.ai 私有预览副本（扁平目录 + 按 ` 显示帧时间浮层），仅所有者可见，不是公开试玩链接。",
   "development_model": "本版 merge1：claude-opus-5-5（Claude Code）；collision-fix1 等：GPT-6 Codex；初版：claude-opus-5-5",
   "tools": [
@@ -29,21 +29,21 @@
     "slug": "feidao-tank-3d",
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_teZUaOjT/index.html",
-    "verified_at": "2026-10-11T10:03:39+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_BGCVSR78/index.html",
-    "submitted_version": "remix-entry1-menu-text1-fp-aim1",
-    "submitted_at": "2026-10-11T10:03:39+08:00",
+    "review_status": "published",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
+    "verified_at": "2026-10-12T12:26:21.857Z",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
+    "submitted_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+    "submitted_at": "2026-10-12T12:22:20.004524+00:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/toy-sync-20261009/sync.json",
-    "published_version": "remix-entry1-menu-text1",
+    "release_record": "releases/remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1/handoff.json",
+    "published_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "remix-entry1 已发布并核验魔改推荐入口，保留既有模式选择和经典35关。手机为桌面浏览器模拟，未做真机验收。",
-    "package_sha256": "0185aebff4b162dfcddc672943932c720bffc01833881fcbe990c3b44eb24593",
+    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
+    "package_sha256": "0e66f8a1f269f1be7731630a6779ee241c1d8521e6c55a7815a5ad4d8ce442d2",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -128,19 +128,29 @@
         "summary": "新玩家默认魔改、保留已有选择、经典35关直接入口、标题与宣传先展示魔改看点。"
       }
     ],
-    "published_verified_at": "2026-10-07T21:56:53+08:00",
+    "published_verified_at": "2026-10-12T12:26:21.857Z",
     "status": "published",
-    "package_hash": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v24035/index.html?test=1&qa=1",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_eN0ZNFKW/index.html",
-    "last_published_version": "remix-entry1-menu-text1",
-    "last_successful_sync_version": "remix-entry1-menu-text1",
-    "last_successful_sync_at": "2026-10-09T16:00:04.578669+08:00",
-    "public_verified_at": "2026-10-09T16:00:04.578669+08:00",
-    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
-    "version": "remix-entry1",
+    "package_hash": "0e66f8a1f269f1be7731630a6779ee241c1d8521e6c55a7815a5ad4d8ce442d2",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
+    "last_published_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+    "last_successful_sync_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+    "last_successful_sync_at": "2026-10-12T12:26:21.857Z",
+    "public_verified_at": "2026-10-12T12:26:21.857Z",
+    "public_runtime_evidence": {
+      "status": "public_verified",
+      "at": "2026-10-12T12:26:21.857Z",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "revision": "v25479",
+      "checks": [
+        "runtime loaded",
+        "lobby connected",
+        "optional nickname button enabled"
+      ],
+      "no_profile_request_or_room_created": true
+    },
+    "version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
-    "public_verified_version": "remix-entry1-menu-text1",
+    "public_verified_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。",
     "title": "坦克大战 3D",
@@ -149,7 +159,10 @@
       "instruction": "今天的修改先同步发布到toy，其他平台先不发",
       "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
       "at": "2026-10-09T15:48:29.454287+08:00"
-    }
+    },
+    "watermark_enabled": true,
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "public_runtime_revision": "v25479"
   },
   "merged_from": {
     "game": "tank-battle",
@@ -185,10 +198,10 @@
   },
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_version": "remix-entry1-menu-text1",
-  "website_verified_at": "2026-10-09T11:38:09.686387+08:00",
-  "website_commit": "5d4ca4ecf6ecbc2b0474250eb2644b65ac9ec95a",
-  "web_toy_versions_match": false,
+  "website_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+  "website_verified_at": "2026-10-12T12:31:12.320579+00:00",
+  "website_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+  "web_toy_versions_match": true,
   "coop": {
     "protocol": "tank3d-v2",
     "endpoint": "wss://www.zhengxiaohui.cn/api/game/tank-coop/ws?game=tank3d-v2",
@@ -321,7 +334,7 @@
     "computer_player": "房主运行普通NPC逻辑，恢复操作立即交还真人",
     "host_kick": true
   },
-  "publication_status": "published",
+  "publication_status": "website_live_toy_published",
   "versions": [
     {
       "version": "coop-live2",
@@ -347,13 +360,13 @@
     "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
   },
   "website": {
-    "status": "public_verified",
-    "version": "remix-entry1-menu-text1",
+    "status": "deployed_verified",
+    "version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
-    "verified_at": "2026-10-09T15:47:30.230676+08:00",
-    "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
-    "runtime_sha256": "2a3dcf73f25961955204353cfe8d288483de7d83087755f80aebfcf4c9666770",
-    "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+    "verified_at": "2026-10-12T12:31:12.320579+00:00",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "runtime_sha256": "9d19df18155e829cff2e05708b7803d563ef78f9f12fcab787c55ce5b3bea3ff",
+    "verification_record": "game-projects/site-games/releases/input-safety-20261012/website-deployed.json"
   },
   "channel_hold_history": [
     {
@@ -369,5 +382,63 @@
       "status": "held_by_user"
     }
   ],
-  "last_backfill_record": "releases/backfill-20261010/release-status.json"
+  "last_backfill_record": "releases/backfill-20261010/release-status.json",
+  "channel_baseline_history": [
+    {
+      "at": "2026-10-12T12:31:12.320579+00:00",
+      "reason": "input-safety-20261012",
+      "website": {
+        "status": "public_verified",
+        "version": "remix-entry1-menu-text1",
+        "url": "https://www.zhengxiaohui.cn/html/game/tank-3d/index.html",
+        "verified_at": "2026-10-09T15:47:30.230676+08:00",
+        "source_commit": "2c6df749e3e888e7345a3c6a241ebcb7265a7bb1",
+        "runtime_sha256": "2a3dcf73f25961955204353cfe8d288483de7d83087755f80aebfcf4c9666770",
+        "verification_record": "../site-games/releases/toy-sync-20261009/website-assets.json"
+      },
+      "toy": {
+        "id": 39043249461248,
+        "slug": "feidao-tank-3d",
+        "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "visibility": "PUBLIC",
+        "review_status": "auditing",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_teZUaOjT/index.html",
+        "verified_at": "2026-10-11T10:03:39+08:00",
+        "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_BGCVSR78/index.html",
+        "submitted_version": "remix-entry1-menu-text1-fp-aim1",
+        "submitted_at": "2026-10-11T10:03:39+08:00",
+        "video_bindings": [
+          "BV1TepK69Eet",
+          "BV1Wqaz6AEJb"
+        ],
+        "release_record": "releases/toy-sync-20261009/sync.json",
+        "published_version": "remix-entry1-menu-text1",
+        "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "note": "remix-entry1 已发布并核验魔改推荐入口，保留既有模式选择和经典35关。手机为桌面浏览器模拟，未做真机验收。",
+        "package_sha256": "0185aebff4b162dfcddc672943932c720bffc01833881fcbe990c3b44eb24593",
+        "published_verified_at": "2026-10-07T21:56:53+08:00",
+        "status": "published",
+        "package_hash": "b5638838b4914c7dfdddaf4ebea4d58294c3386741c0a23cff72089249433283",
+        "public_content_url": "https://www.bilibilitoy.com/toy/feidao-tank-3d/39043249461248-v24035/index.html?test=1&qa=1",
+        "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_eN0ZNFKW/index.html",
+        "last_published_version": "remix-entry1-menu-text1",
+        "last_successful_sync_version": "remix-entry1-menu-text1",
+        "last_successful_sync_at": "2026-10-09T16:00:04.578669+08:00",
+        "public_verified_at": "2026-10-09T16:00:04.578669+08:00",
+        "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+        "version": "remix-entry1",
+        "website_verified_at": "2026-10-07T21:52:19+08:00",
+        "public_verified_version": "remix-entry1-menu-text1",
+        "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。",
+        "title": "坦克大战 3D",
+        "current_public_verification": "verified",
+        "channel_authorization": {
+          "instruction": "今天的修改先同步发布到toy，其他平台先不发",
+          "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
+          "at": "2026-10-09T15:48:29.454287+08:00"
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,14 @@
+{
+  "status": "resolved",
+  "action": "none; same packages must not be resubmitted",
+  "evidence": "Toy发布记录显示三款已下架；坦克整改提交返回307008无权限操作；发布页要求解除下线后才能更新",
+  "task_id": "01a12fd9-5098-7262-b717-1e3dcf7a3766-input-safety-20261012-02",
+  "event_id": "toy-removed-three-games-20261012",
+  "games": [
+    "虫潮围城 38678478981120",
+    "坦克大战 39043249461248",
+    "恐龙快打 40412421031936"
+  ],
+  "resolved_at": "2026-10-12T12:31:12.320579+00:00",
+  "resolution": "User reported platform permissions restored; official publish page confirmed update buttons at 20:20. All three prepared packages submitted and now published."
+}

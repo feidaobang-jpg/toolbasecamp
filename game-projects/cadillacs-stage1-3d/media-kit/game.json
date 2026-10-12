@@ -38,25 +38,24 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": null,
+    "submitted_at": "2026-10-12T12:23:09.816162+00:00",
     "package": {
-      "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
-      "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
-      "files": 31,
-      "submitted": true,
-      "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+      "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\cadillacs-stage1-3d.zip",
+      "sha256": "ab47a688b73868eaace12808c9fe2eb629464626599b7d40bb471ca7c94b971f",
+      "bytes": 20361412,
+      "submitted": true
     },
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
-    "note": "本批最终稳定包已公开核验；版本与证据见补发记录。",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
+    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
     "status_verified": "v0.10.1 published；公开运行版本v0.10.1、关卡只有第一及第二关",
     "bound_videos": [
       "BV18XHW66E55"
     ],
     "review_status": "published",
-    "version": "v0.11.0-preview.2",
-    "verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "verified_at": "2026-10-12T12:26:46.405Z",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-    "last_published_version": "v0.11.0-preview.2",
+    "last_published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
     "pending_updates": [
       {
         "version": "v0.2.1",
@@ -136,11 +135,11 @@
         "release_record": "releases/backfill-20261010/release-status.json"
       }
     ],
-    "submitted_version": "v0.11.0-preview.2",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
-    "release_record": "releases/backfill-20261010/release-status.json",
-    "published_version": "v0.11.0-preview.2",
-    "published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+    "submitted_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
+    "release_record": "releases/v0.11.0-hellroad.1-privacy1-input-safety1/handoff.json",
+    "published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "published_verified_at": "2026-10-12T12:26:46.405Z",
     "previous_published_version": "v0.10.0",
     "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
     "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -155,13 +154,24 @@
       "status": "published",
       "verified_at": "2026-10-06T23:38:00+08:00"
     },
-    "public_verified_version": "v0.11.0-preview.2",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
-    "last_successful_sync_version": "v0.11.0-preview.2",
-    "last_successful_sync_at": "2026-10-10T03:02:52.978211+00:00",
+    "public_verified_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
+    "last_successful_sync_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "last_successful_sync_at": "2026-10-12T12:26:46.405Z",
     "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
-    "public_verified_at": "2026-10-10T03:02:52.978211+00:00",
-    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+    "public_verified_at": "2026-10-12T12:26:46.405Z",
+    "public_runtime_evidence": {
+      "status": "public_verified",
+      "at": "2026-10-12T12:26:46.405Z",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "revision": "v25480",
+      "checks": [
+        "runtime loaded",
+        "lobby rendered",
+        "optional nickname button enabled"
+      ],
+      "no_profile_request_or_room_created": true
+    },
     "website_verified_at": "2026-10-07T21:52:19+08:00",
     "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
     "package_fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
@@ -169,7 +179,7 @@
     "pending_note": "",
     "package_hash_method": "sha256 of canonical sorted relative-path to file-sha256 map",
     "public_runtime_verified_version": "v0.10.1",
-    "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
     "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
@@ -177,16 +187,18 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24276/index.html",
-    "last_submitted_version": "v0.11.0-preview.2",
+    "last_submitted_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
     "published_at": null,
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd"
+    "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+    "package_sha256": "ab47a688b73868eaace12808c9fe2eb629464626599b7d40bb471ca7c94b971f",
+    "watermark_enabled": true,
+    "public_runtime_revision": "v25480"
   },
-  "website_version": "v0.11.0-hellroad.1",
+  "website_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",
-  "website_verified_at": "2026-10-10T16:41:49+08:00",
-  "website_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+  "website_verified_at": "2026-10-12T12:31:12.320579+00:00",
+  "website_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
   "versions": [
     {
       "version": "v0.5.6-bgmfull1",
@@ -465,7 +477,7 @@
   "engine": "Three.js r170（WebGL，站内 public/vendor/three/0.170.0），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "bilibili": "media-kit/bilibili-sync.json（BV18XHW66E55，2026-10-05 发布）",
   "one_liner": "Capcom 街机恐龙快打搬进 3D，已做到第二关：海上都市打倒维斯和岩跳龙，再开凯迪拉克闯沼泽森林——三角龙冲撞、别吵醒霸王龙、齐腰泥沼、链锤兵、双刀屠夫；硬派写实画风（卡通着色 + 描边 + 写实贴图）。",
-  "web_toy_versions_match": false,
+  "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "audio_assets": {
     "policy": "original first; synthesis fallback",
@@ -755,16 +767,17 @@
     }
   },
   "website": {
-    "version": "v0.11.0-hellroad.1",
-    "status": "public_verified",
-    "verified_at": "2026-10-10T16:41:49+08:00",
-    "source_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+    "version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "status": "deployed_verified",
+    "verified_at": "2026-10-12T12:31:12.320579+00:00",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
     "deployed_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
-    "runtime_sha256": "7cc87513a55911aff1b985e963a04c18aec5e58639f4a8ebb364c3a59bde9eee",
+    "runtime_sha256": "0943c8e541389d04e58904ba2979e596338b8fb4c3f38179fefdc01d2197f75e",
     "evidence": "线上 game.min.js 与本地构建 sha256 一致；index.html 标题「第一至三关」；三首第三关曲子可访问；游戏列表卡片副标题含地狱公路",
     "record": "releases/v0.11.0-hellroad.1/handoff.json",
     "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
-    "previous": "v0.11.0-preview.2（codex 版第三关）"
+    "previous": "v0.11.0-preview.2（codex 版第三关）",
+    "verification_record": "game-projects/site-games/releases/input-safety-20261012/website-deployed.json"
   },
   "touch_control_inset": {
     "side_css_px": 40,
@@ -802,7 +815,7 @@
       "resolution": "网站已部署；Toy 合并提交；B站简介已公开核验，原文渠道字段保留为历史状态"
     }
   ],
-  "publication_status": "published",
+  "publication_status": "website_live_toy_published",
   "withdrawn_releases": [
     {
       "version": "v0.10.0",
@@ -987,9 +1000,98 @@
         },
         "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24038/index.html?test=1&qa=1"
       }
+    },
+    {
+      "at": "2026-10-12T12:31:12.320579+00:00",
+      "reason": "input-safety-20261012",
+      "website": {
+        "version": "v0.11.0-hellroad.1",
+        "status": "public_verified",
+        "verified_at": "2026-10-10T16:41:49+08:00",
+        "source_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+        "deployed_commit": "448dc7bc5f25a9aea9d58b35016045d5a9dacad2",
+        "runtime_sha256": "7cc87513a55911aff1b985e963a04c18aec5e58639f4a8ebb364c3a59bde9eee",
+        "evidence": "线上 game.min.js 与本地构建 sha256 一致；index.html 标题「第一至三关」；三首第三关曲子可访问；游戏列表卡片副标题含地狱公路",
+        "record": "releases/v0.11.0-hellroad.1/handoff.json",
+        "url": "https://www.zhengxiaohui.cn/html/game/cadillacs-stage1-3d/index.html",
+        "previous": "v0.11.0-preview.2（codex 版第三关）"
+      },
+      "toy": {
+        "id": 40412421031936,
+        "title": "恐龙快打 3D：第一至三关",
+        "slug": "feidao-cadillacs-3d",
+        "category": "GAME",
+        "visibility": "public",
+        "status": "published",
+        "submitted_at": null,
+        "package": {
+          "path": "D:\\project\\task-artifacts\\release-backfill-20261010\\packages\\toy\\cadillacs-stage1-3d-package",
+          "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
+          "files": 31,
+          "submitted": true,
+          "hash_definition": "SHA256 of UTF-8 lines sorted by source relative path: sha256 + two spaces + posix path + LF; submitted directory, not a ZIP hash"
+        },
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+        "note": "本批最终稳定包已公开核验；版本与证据见补发记录。",
+        "status_verified": "v0.10.1 published；公开运行版本v0.10.1、关卡只有第一及第二关",
+        "bound_videos": [
+          "BV18XHW66E55"
+        ],
+        "review_status": "published",
+        "version": "v0.11.0-preview.2",
+        "verified_at": "2026-10-10T03:02:52.978211+00:00",
+        "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "last_published_version": "v0.11.0-preview.2",
+        "submitted_version": "v0.11.0-preview.2",
+        "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+        "release_record": "releases/backfill-20261010/release-status.json",
+        "published_version": "v0.11.0-preview.2",
+        "published_verified_at": "2026-10-10T03:02:52.978211+00:00",
+        "previous_published_version": "v0.10.0",
+        "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
+        "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "video_bindings": [
+          "BV18XHW66E55"
+        ],
+        "title_changed": {
+          "from": "恐龙快打 3D：第一关",
+          "to": "恐龙快打 3D：第一、二关",
+          "requested_by": "user",
+          "submitted_at": "2026-10-06T22:44:10+08:00",
+          "status": "published",
+          "verified_at": "2026-10-06T23:38:00+08:00"
+        },
+        "public_verified_version": "v0.11.0-preview.2",
+        "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+        "last_successful_sync_version": "v0.11.0-preview.2",
+        "last_successful_sync_at": "2026-10-10T03:02:52.978211+00:00",
+        "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
+        "public_verified_at": "2026-10-10T03:02:52.978211+00:00",
+        "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+        "website_verified_at": "2026-10-07T21:52:19+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "package_fingerprint": "4e8a808e88c3eceef7cb920e25285d890f8a78fcf7c4941f18dffb71a8752bbc",
+        "package_fingerprint_note": "为随 v0.9.5 包一并生效的 v0.9.4 闪退修复指纹",
+        "pending_note": "",
+        "package_hash_method": "sha256 of canonical sorted relative-path to file-sha256 map",
+        "public_runtime_verified_version": "v0.10.1",
+        "source_commit": "fde6b72ce1cfe883dd44f15711b26feb0c1d655a",
+        "current_public_verification": "verified",
+        "channel_authorization": {
+          "instruction": "昨天没发布的都做一下",
+          "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+          "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+          "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+        },
+        "public_content_url": "https://www.bilibilitoy.com/toy/feidao-cadillacs-3d/40412421031936-v24276/index.html",
+        "last_submitted_version": "v0.11.0-preview.2",
+        "published_at": null,
+        "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
+        "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd"
+      }
     }
   ],
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_kEQxETxw/index.html",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
   "channel_hold_history": [
     {
       "instruction": "今天的修改先同步发布到toy，其他平台先不发",

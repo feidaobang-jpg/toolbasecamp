@@ -73,14 +73,22 @@
       "passed": true,
       "packages": 5,
       "warnings": "Only JS/CSS filenames without content fingerprint; caching recommendation, no blockers"
+    },
+    "actual_toy_previews": {
+      "passed": true,
+      "games": 5,
+      "physical_phone": false
     }
   },
   "channels": {
-    "website": "pending_deploy",
-    "toy": "pending_preview",
-    "taptap": "not_requested"
+    "website": "deployed_verified",
+    "toy": "all_five_published",
+    "bilibili": "eight_descriptions_public_verified",
+    "youtube": "two_status_corrections_public_verified",
+    "taptap": "not_requested",
+    "feedback": "four_replies_public_verified"
   },
-  "notes": "保留原Toy ID、slug、可见性、视频绑定与存档标识。虫潮公开页已下架，CLI published不作为可访问证明。",
+  "notes": "五款同哈希实测包均已 published，访问者水印开启；已核验正式入口。其他九款无公开自由文本入口。保留全部ID、slug、可见性、存档与绑定；未发TapTap。",
   "skills": {
     "updated": [
       "C:/Users/37818/.claude/skills/toy/SKILL.md",
@@ -99,6 +107,11 @@
   "watermark": {
     "requested": true,
     "reason": "Current publish page says Toy containing user input should enable visitor watermark",
-    "status": "pending_submission"
-  }
+    "status": "enabled_verified_all_five"
+  },
+  "finished_at": "2026-10-12T12:38:50.037199+00:00",
+  "website_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+  "toy_results": "toy-results.json",
+  "platform_block": "resolved",
+  "feedback_record": "feedback-replies.json"
 }

@@ -1,0 +1,155 @@
+{
+  "task_id": "01a12fd9-5098-7262-b717-1e3dcf7a3766-input-safety-20261012-02",
+  "status": "public_verified",
+  "decision": "correct_inaccurate_availability",
+  "reason": "Platform removal and restoration occurred during this task; eight descriptions now accurately state restored public entries. Original videos, metadata and bindings preserved.",
+  "targets": [
+    {
+      "bvid": "BV14hpL62EZ5",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:48.849Z",
+      "url": "https://www.bilibili.com/video/BV14hpL62EZ5/?vd_source=398000ff6f3bcabc7b966c418bf11706",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《虫潮围城》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n最新一期据点争夺实战：只剩3票险胜！https://www.bilibili.com/video/BV1KFpJ6sEEK/ ；本期保留虫族模式录制时的实况。B站网友\"我不是abbie\"在评论区点名：能不能整个我是虫族模式？当天就把它做了出来——现在不用再守家，你就是虫群本身。\n本片录制时的规则：360秒内拆掉人类基地核心，伤害返还生物量，母虫最多阵亡五次。当前虫族模式已重做，限时和重生次数随难度变化，击杀守军与清空哨站获得生物量；J撕咬、K喷酸、U召战士、I召飞虫、O蜕皮回血、L冲刺，新增H号令。\n本片实机为正常规则真机录制，没有改数值、没有变速：城门2500血被我们磨破了，后面2000血的基地核心却一点没掉——这个模式比我以为的难得多，现在是真·挑战模式。有自信拆掉核心的，欢迎来打我的脸。\n试玩（复制到浏览器）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n虫族模式由 Qoder 开发，本期视频的录制与剪辑同样由 Qoder 完成。网站已更新第一人称手动射击等玩法；Toy已恢复公开：https://www.bilibili.com/toy/chongchao-qianshao/index.html （进入主菜单选「我是虫族」）。\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）\n更新（2026-10-11·v0.36.1）：「银行塔防对战」已独立恢复，保留升级银行、买兵与建造，战地模式也保留；虫族模式先拆3个护盾前哨、破门，再摧毁核心。手机首页已适配，主菜单和暂停菜单可查看更新日志；手雷继续无限，间隔3秒。修复虫巢下车穿层、墙外吸怪与房顶跳跃受阻。以上为此前版本记录，当前Toy状态见首行。",
+      "exact_after_whitespace_normalization": true,
+      "game": "starship-defense",
+      "before": "最新一期据点争夺实战：只剩3票险胜！https://www.bilibili.com/video/BV1KFpJ6sEEK/ ；本期保留虫族模式录制时的实况。B站网友\"我不是abbie\"在评论区点名：能不能整个我是虫族模式？当天就把它做了出来——现在不用再守家，你就是虫群本身。\n\n本片录制时的规则：360秒内拆掉人类基地核心，伤害返还生物量，母虫最多阵亡五次。当前虫族模式已重做，限时和重生次数随难度变化，击杀守军与清空哨站获得生物量；J撕咬、K喷酸、U召战士、I召飞虫、O蜕皮回血、L冲刺，新增H号令。\n\n本片实机为正常规则真机录制，没有改数值、没有变速：城门2500血被我们磨破了，后面2000血的基地核心却一点没掉——这个模式比我以为的难得多，现在是真·挑战模式。有自信拆掉核心的，欢迎来打我的脸。\n\n试玩（复制到浏览器）：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n虫族模式由 Qoder 开发，本期视频的录制与剪辑同样由 Qoder 完成。网站与Toy已更新第一人称手动射击等玩法；Toy已恢复可玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html （进入主菜单选「我是虫族」）。\n\n给这款投票、想玩哪款复刻：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）\n\n更新（2026-10-11·v0.36.1）：「银行塔防对战」已独立恢复，保留升级银行、买兵与建造，战地模式也保留；虫族模式先拆3个护盾前哨、破门，再摧毁核心。手机首页已适配，主菜单和暂停菜单可查看更新日志；手雷继续无限，间隔3秒。修复虫巢下车穿层、墙外吸怪与房顶跳跃受阻。网站和Toy均已更新。",
+      "submitted_at": "2026-10-12T12:24:39.440Z",
+      "description_sha256": "940169de3c1389fac5052599cad23ff8405670a23d1c686cf84cfdb49ac286de",
+      "covered_versions": [
+        "web-fps-mouse-v0.36.2-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV14hpL62EZ5-public.jpg"
+    },
+    {
+      "bvid": "BV1xdpx63ETu",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:10.585Z",
+      "url": "https://www.bilibili.com/video/BV1xdpx63ETu/",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《虫潮围城》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n最新一期：网友点名\"我是虫族模式\"，当天就做了出来 https://www.bilibili.com/video/BV14hpL62EZ5/ ；本期为早期版本实录，玩法与操作以当前试玩为准。\n虫潮围城房车模式：开进废弃城镇，升级车顶机枪、搜索物资、维修，再找路撤离。这趟搜了2/6区，击退12只僵尸，带回314零件。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n进入游戏后选择“房车生存”；WASD驾驶/移动，J射击，I上下车/搜索，O地图与设施。\n房车城镇玩法由Codex辅助开发，本期展示实际试玩。\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。\n网站试玩：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n更新（2026-10-11·v0.36.1）：「银行塔防对战」已独立恢复，保留升级银行、买兵与建造，战地模式也保留；虫族模式先拆3个护盾前哨、破门，再摧毁核心。手机首页已适配，主菜单和暂停菜单可查看更新日志；手雷继续无限，间隔3秒。修复虫巢下车穿层、墙外吸怪与房顶跳跃受阻。以上为此前版本记录，当前Toy状态见首行。",
+      "exact_after_whitespace_normalization": true,
+      "game": "starship-defense",
+      "before": "最新一期：网友点名\"我是虫族模式\"，当天就做了出来 https://www.bilibili.com/video/BV14hpL62EZ5/ ；本期为早期版本实录，玩法与操作以当前试玩为准。\n\n虫潮围城房车模式：开进废弃城镇，升级车顶机枪、搜索物资、维修，再找路撤离。这趟搜了2/6区，击退12只僵尸，带回314零件。\n\nToy直接试玩（已恢复可玩）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n进入游戏后选择“房车生存”；WASD驾驶/移动，J射击，I上下车/搜索，O地图与设施。\n\n房车城镇玩法由Codex辅助开发，本期展示实际试玩。\n\n投票／愿望单（复制到浏览器打开）：https://www.zhengxiaohui.cn/game-vote.html，百宝箱 → 游戏 → 自研游戏投票榜。\n\n网站试玩：https://www.zhengxiaohui.cn/html/game/starship-defense/index.html\n\n更新（2026-10-11·v0.36.1）：「银行塔防对战」已独立恢复，保留升级银行、买兵与建造，战地模式也保留；虫族模式先拆3个护盾前哨、破门，再摧毁核心。手机首页已适配，主菜单和暂停菜单可查看更新日志；手雷继续无限，间隔3秒。修复虫巢下车穿层、墙外吸怪与房顶跳跃受阻。网站和Toy均已更新。",
+      "submitted_at": "2026-10-12T12:24:46.022Z",
+      "description_sha256": "b291ab18e7fd78523f0ed9640c263ea94ade060e072ec5f20675a16e52f1ffa2",
+      "covered_versions": [
+        "web-fps-mouse-v0.36.2-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV1xdpx63ETu-public.jpg"
+    },
+    {
+      "bvid": "BV1C5HQ6gEvD",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:12.331Z",
+      "url": "https://www.bilibili.com/video/BV1C5HQ6gEvD/",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《虫潮围城》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n本片记录旧版双人对战塔防：定时赚钱、升级银行、派兵拆核心，从1对1扩到4对4；本片含电脑对战与队伍操作演示。\n哔哩哔哩 Toy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n百宝箱试玩（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）\n更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。",
+      "exact_after_whitespace_normalization": true,
+      "game": "starship-defense",
+      "before": "本片记录旧版双人对战塔防：定时赚钱、升级银行、派兵拆核心，从1对1扩到4对4；本片含电脑对战与队伍操作演示。\n\n哔哩哔哩 Toy 试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n百宝箱试玩（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n虫潮对战模式由 Claude 开发，Codex 完成接管核验与本期视频制作。\n\n投票／愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/game-vote.html （百宝箱 → 游戏 → 自研游戏投票榜）\n\n更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。",
+      "submitted_at": "2026-10-12T12:24:51.125Z",
+      "description_sha256": "50b6707f136044a30ab6a5d9a49689d75bc2ad2ed26d208490b74246a4b4607d",
+      "covered_versions": [
+        "web-fps-mouse-v0.36.2-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV1C5HQ6gEvD-public.jpg"
+    },
+    {
+      "bvid": "BV1WbHq6eEBt",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:13.659Z",
+      "url": "https://www.bilibili.com/video/BV1WbHq6eEBt/",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《虫潮围城》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n本片为早期版本实录。旧版「虫潮对战」实录（1对1到4对4）看：https://www.bilibili.com/video/BV1C5HQ6gEvD/\n《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。\n更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。",
+      "exact_after_whitespace_normalization": true,
+      "game": "starship-defense",
+      "before": "本片为早期版本实录。旧版「虫潮对战」实录（1对1到4对4）看：https://www.bilibili.com/video/BV1C5HQ6gEvD/\n\n《虫潮围城》（原名《虫潮前哨》）实战：建炮塔、带队攻巢，再钻进虫洞反攻母皇。\n\nToy直接试玩（已恢复可玩）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n\nAI辅助开发；视频为录制时版本，玩法与操作以当前试玩为准。\n\n更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。",
+      "submitted_at": "2026-10-12T12:25:02.395Z",
+      "description_sha256": "9084e7946eb5513702b9c7caecb6ca6535003f0b296ba6a73c5fc7f274e7bb02",
+      "covered_versions": [
+        "web-fps-mouse-v0.36.2-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV1WbHq6eEBt-public.jpg"
+    },
+    {
+      "bvid": "BV1Ujad6DEuf",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:15.425Z",
+      "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/?vd_source=398000ff6f3bcabc7b966c418bf11706",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《虫潮围城》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\nToy试玩：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n本视频为早期版本，玩法与操作以当前试玩为准。\n更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。",
+      "exact_after_whitespace_normalization": true,
+      "game": "starship-defense",
+      "before": "用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。\n\n\n\n\nToy直接试玩（已恢复可玩）：https://www.bilibili.com/toy/chongchao-qianshao/index.html\n\n\n\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n\n\n\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n\n\n\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n\n\n\n新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/\n\n\n\n\n房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。\n\n\n\n\n此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。\n\n\n\n\n新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。\n\n\n\n\n本视频为早期版本，玩法与操作以当前试玩为准。\n\n\n\n\n更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。",
+      "submitted_at": "2026-10-12T12:25:08.871Z",
+      "description_sha256": "dc3fe9bac263b6dee0ab45642f8fc0610368c0d50daf711d7ef02751ddaa0854",
+      "covered_versions": [
+        "web-fps-mouse-v0.36.2-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV1Ujad6DEuf-public.jpg"
+    },
+    {
+      "bvid": "BV1TepK69Eet",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:16.568Z",
+      "url": "https://www.bilibili.com/video/BV1TepK69Eet/",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《坦克大战》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n坦克大战支持2–4人联机合作：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n更新（2026-10-11·fp-aim1）：第一人称改为按画面中心准星开炮，修复转向后炮弹方向错误；网站已更新；当前Toy状态见首行，TapTap仍为旧版。\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n视频为录制时版本，以当前试玩为准。",
+      "exact_after_whitespace_normalization": true,
+      "game": "tank-3d",
+      "before": "坦克大战支持2–4人联机合作：房间码邀请、可选密码，一起守住老鹰。本期用两个独立窗口实测，双人清完一关20辆敌人。\n\nToy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n\n更新（2026-10-11·fp-aim1）：第一人称改为按画面中心准星开炮，修复转向后炮弹方向错误；网站与Toy均已更新，TapTap仍为旧版。\n\n联机：大厅建房（可选2/3/4人）或填房间码，支持中途加入/退出且保留战场，闲置30秒由电脑队友接管、操作即交还，房主可踢人。\n\n视频为录制时版本，以当前试玩为准。",
+      "submitted_at": "2026-10-12T12:25:13.518Z",
+      "description_sha256": "d959a9629538a07d7926782ed2d22018cff6f27c33f3976db59f3eb01de44bef",
+      "covered_versions": [
+        "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV1TepK69Eet-public.jpg"
+    },
+    {
+      "bvid": "BV1Wqaz6AEJb",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:17.684Z",
+      "url": "https://www.bilibili.com/video/BV1Wqaz6AEJb/",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《坦克大战》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n当前玩法：新玩家默认魔改挑战，100关一周目、无限周目，可抢道具、挑战Boss；经典35关和困难循环可直接选择，老玩家保留原选择。WASD/方向键移动，J开火，Esc暂停；基地被打掉仍会失败。\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n更新（2026-10-11·fp-aim1）：第一人称改为按画面中心准星开炮，修复转向后炮弹方向错误；网站已更新；当前Toy状态见首行，TapTap仍为旧版。\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+      "exact_after_whitespace_normalization": true,
+      "game": "tank-3d",
+      "before": "早期版本实录；坦克大战现已支持2–4人联机合作。新版实测：https://www.bilibili.com/video/BV1TepK69Eet/\n\n开坦克、打砖墙、守住老鹰基地！本期展示正常实战、六种道具，以及基地失守后的重试。\n\n本期Toy试玩：https://www.bilibili.com/toy/feidao-tank-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n当前玩法：新玩家默认魔改挑战，100关一周目、无限周目，可抢道具、挑战Boss；经典35关和困难循环可直接选择，老玩家保留原选择。WASD/方向键移动，J开火，Esc暂停；基地被打掉仍会失败。\n\n视角：C切换斜俯视、正俯视、近景、正视和第一人称，Q/E旋转；支持手机横屏触屏。视频保留录制时画面，玩法与操作以当前试玩为准。\n\n更新（2026-10-11·fp-aim1）：第一人称改为按画面中心准星开炮，修复转向后炮弹方向错误；网站与Toy均已更新，TapTap仍为旧版。\n\n你会先清敌人，还是优先回防？欢迎试玩、提建议。",
+      "submitted_at": "2026-10-12T12:25:24.999Z",
+      "description_sha256": "ff1bd3a0f8a9743d34557bba30ff73e9f173e16756bb6cbba4b86b26e37651c1",
+      "covered_versions": [
+        "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV1Wqaz6AEJb-public.jpg"
+    },
+    {
+      "bvid": "BV18XHW66E55",
+      "status": "public_verified",
+      "at": "2026-10-12T12:27:18.706Z",
+      "url": "https://www.bilibili.com/video/BV18XHW66E55/",
+      "author_uid": 16214353,
+      "text": "状态更新（2026-10-12）：《恐龙快打》Toy入口已恢复公开，网站已补齐昵称与房间名称安全检测。\n把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢，抓住敌人后上／下＋J背摔。\n网站已开放第一至三关试玩，支持2–4人合作；视频为录制时版本，以当前试玩为准。\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。\n更新（2026-10-11·v0.11.0-hellroad.1）：第三关重做为死亡沙漠与地狱公路：清完沙漠三波后机修工送车，驾车撞击、躲霍格手雷，支持车上击败霍格或车毁后徒步决战两种结局，补齐对应关卡与Boss音乐。网站已更新；当前Toy状态见首行，TapTap仍为旧版。",
+      "exact_after_whitespace_normalization": true,
+      "game": "cadillacs-stage1-3d",
+      "before": "把《恐龙快打》第一关做成3D：从楼顶打到第47街，切换侧视、角色身后和第一人称，换个角度挑战维斯与岩跳龙。\n\nB站Toy试玩：https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html\n\n全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html\n\n联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html\n\n网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html\n\n操作：J攻击、K跳跃、U必杀、I冲刺、C切视角；下→上→J（S→W→J）出特殊技，K后方向＋J斜下踢，抓住敌人后上／下＋J背摔。\n\n网站与Toy已开放第一至三关试玩，支持2–4人合作；视频为录制时版本，以当前试玩为准。\n\nClaude Opus 5.5、Codex辅助开发，音乐、拳脚打击与必杀/Go语音采用原版录音，其余缺项音效保留合成。粉丝向非官方重制，原作版权归Capcom及原著方。\n\n更新（2026-10-11·v0.11.0-hellroad.1）：第三关重做为死亡沙漠与地狱公路：清完沙漠三波后机修工送车，驾车撞击、躲霍格手雷，支持车上击败霍格或车毁后徒步决战两种结局，补齐对应关卡与Boss音乐。网站与Toy均已更新，TapTap仍为旧版。",
+      "submitted_at": "2026-10-12T12:25:31.752Z",
+      "description_sha256": "cca4fd54cb74c39c41a1ff8dba9bec59f1e5b2d81d08f20da6acaabe4f90793c",
+      "covered_versions": [
+        "v0.11.0-hellroad.1-privacy1-input-safety1"
+      ],
+      "scope": "availability correction and website safety notice",
+      "screenshot": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\bilibili\\BV18XHW66E55-public.jpg"
+    }
+  ],
+  "skipped": [
+    "BV1KFpJ6sEEK and BV1Lfp76KEDd already point to online gunfire; no availability correction needed."
+  ]
+}

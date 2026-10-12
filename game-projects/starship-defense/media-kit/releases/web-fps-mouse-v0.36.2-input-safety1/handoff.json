@@ -13,11 +13,12 @@
     "website": "passed: desktop and portrait simulation; SDK and transport mocked",
     "unit": "15 transport and moderation cases passed",
     "physical_phone": false,
-    "final_package": "11 desktop/portrait UI cases across five games; profile denial/rejection/approval and no identifier transmission"
+    "final_package": "11 desktop/portrait UI cases across five games; profile denial/rejection/approval and no identifier transmission",
+    "actual_toy_preview": "desktop/portrait preview UI passed; no profile request or room creation"
   },
   "channels": {
-    "website": "pending_deploy",
-    "toy": "pending_preview",
+    "website": "deployed_verified",
+    "toy": "published",
     "taptap": "not_requested"
   },
   "record": "game-projects/site-games/releases/input-safety-20261012/handoff.json",
@@ -26,13 +27,45 @@
     "reason": "安全修复，不改变画面与玩法"
   },
   "video_descriptions": {
-    "decision": "deferred_accumulating",
-    "reason": "安全检测修复，无新增玩法；Toy入口状态另行核验并按事实处理"
+    "decision": "correct_inaccurate_availability",
+    "reason": "三款临时下架说明随恢复公开再次纠正；其余普通补丁距上次说明不足7天。",
+    "record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json"
   },
   "package": {
     "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\starship-defense.zip",
     "sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "doctor": "passed; filename fingerprint warning only"
   },
-  "watermark": "enable_on_toy_update"
+  "watermark": "enabled_verified",
+  "toy": {
+    "id": "38678478981120",
+    "slug": "chongchao-qianshao",
+    "version": "web-fps-mouse-v0.36.2-input-safety1",
+    "status": "published",
+    "watermark_enabled": true,
+    "package_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
+    "package": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\starship-defense.zip",
+    "submitted_at": "2026-10-12T12:23:26.332507+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
+    "public_verified_at": "2026-10-12T12:29:13.804Z",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_evidence": {
+      "status": "public_verified",
+      "at": "2026-10-12T12:29:13.804Z",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "revision": "v25481",
+      "checks": [
+        "runtime loaded",
+        "lobby rendered",
+        "optional nickname button enabled"
+      ],
+      "no_profile_request_or_room_created": true
+    },
+    "platform_mtime": 1791807958
+  },
+  "website": {
+    "status": "deployed_verified",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "evidence": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\website-deployed.json"
+  }
 }

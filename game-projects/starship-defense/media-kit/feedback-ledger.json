@@ -1,6 +1,6 @@
 {
   "note": "评论反馈台账：已处理的评论不再重复修复/回复。video 为视频 BV 或动态 opus:<id>；kind/status 由开发判断；reply_rpid 为我方回复。",
-  "updated_at": "2026-10-11T13:04:55.279701+00:00",
+  "updated_at": "2026-10-12T12:38:50.037199+00:00",
   "items": [
     {
       "rpid": "319415014640",
@@ -1231,6 +1231,110 @@
       "reply_id": null,
       "reply_id_note": "浏览器原楼展开并刷新公开读回；UI未直接显示ID，以BV、原作者UID、时间、原文和回复哈希查重。",
       "duplicate_root_note": "公开视频存在两条不同根楼，作者、时间、文字相同；各回复一次，未重复回复同一楼。"
+    },
+    {
+      "feedback_key": "9576bd8871819a026c3ecdef3e02b4f82e424f36e20a5bccc0f5f1bc98db0e3e",
+      "rpid": null,
+      "root_rpid": null,
+      "key_method": "sha256(BV|UID|observed time|original text); IDs not exposed by UI",
+      "video": "BV1KFpJ6sEEK",
+      "url": "https://www.bilibili.com/video/BV1KFpJ6sEEK/",
+      "user": "爱听术曲的帅气小男孩",
+      "uid": "660469801",
+      "date": "2026-10-12 19:37:06",
+      "time_precision": "second_creator_center",
+      "text": "为什么还是已下架？",
+      "kind": "availability",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：回复这些人，说修复合规了，已上架",
+      "fixed_in": "input-safety-20261012",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "all_five_published",
+        "taptap": "not_requested"
+      },
+      "reply_text": "已经按平台要求补齐昵称、房间名的安全检测，整改版已过审并恢复上架，可以重新打开试玩了。本视频的战地模式现在在《枪火集结》：https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "reply_rpid": null,
+      "reply_verified_at": "2026-10-12T12:35:11.409Z",
+      "evidence": "D:/project/task-artifacts/all-games-input-safety-20261012/replies/boy-public.jpg"
+    },
+    {
+      "feedback_key": "cfec8f50684595d8b0e6b03deaaaf99cef902f0e550aa81749979ca94d9f1715",
+      "rpid": null,
+      "root_rpid": null,
+      "key_method": "sha256(BV|UID|observed time|original text); IDs not exposed by UI",
+      "video": "BV1Lfp76KEDd",
+      "url": "https://www.bilibili.com/video/BV1Lfp76KEDd/",
+      "user": "我不是abbie",
+      "uid": "3493105508550940",
+      "date": "2026-10-12 19:21:21",
+      "time_precision": "second_creator_center",
+      "text": "怎么又显示下架了？",
+      "kind": "availability",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：回复这些人，说修复合规了，已上架",
+      "fixed_in": "input-safety-20261012",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "all_five_published",
+        "taptap": "not_requested"
+      },
+      "reply_text": "这次是联机输入内容的合规问题，已经补齐昵称和房间名的安全检测，整改包也已过审、恢复上架。抗战战役现已迁到《枪火集结》大厅，打开这里就能找到：https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "reply_rpid": null,
+      "reply_verified_at": "2026-10-12T12:36:34.714Z",
+      "evidence": "D:/project/task-artifacts/all-games-input-safety-20261012/replies/campaign-public.jpg"
+    },
+    {
+      "feedback_key": "fd99cc80a7ca7af90b9ace46c694a3ee830fe25459033ef9e730b5b5db543be3",
+      "rpid": null,
+      "root_rpid": null,
+      "key_method": "sha256(BV|UID|observed time|original text); IDs not exposed by UI",
+      "video": "BV1Lfp76KEDd",
+      "url": "https://www.bilibili.com/video/BV1Lfp76KEDd/",
+      "user": "biIi88914121182",
+      "uid": "3546868225149817",
+      "date": "2026-10-12 16:56",
+      "time_precision": "minute_notification",
+      "text": "下架了怎么？",
+      "kind": "availability",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：回复这些人，说修复合规了，已上架",
+      "fixed_in": "input-safety-20261012",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "all_five_published",
+        "taptap": "not_requested"
+      },
+      "reply_text": "之前因联机昵称、房间名缺少安全检测被下架，现在已按平台要求修复，整改版审核通过并恢复上架了，可以重新打开试玩。",
+      "reply_rpid": null,
+      "reply_verified_at": "2026-10-12T12:36:34.714Z",
+      "evidence": "D:/project/task-artifacts/all-games-input-safety-20261012/replies/campaign-public.jpg"
+    },
+    {
+      "feedback_key": "058622de83b40aaf9087fb9986b228dd8ac412793902f86332def44a80ecac78",
+      "rpid": null,
+      "root_rpid": null,
+      "key_method": "sha256(BV|UID|observed time|original text); IDs not exposed by UI",
+      "video": "BV1Ujad6DEuf",
+      "url": "https://www.bilibili.com/video/BV1Ujad6DEuf/",
+      "user": "这里没名字吗",
+      "uid": "3707016069515438",
+      "date": "2026-10-12 17:32:23",
+      "time_precision": "second_creator_center",
+      "text": "主播，我把图片放评论区了，是不是因为我这个平板是学习机的原因？一直显示下架",
+      "kind": "availability",
+      "status": "fixed_and_replied",
+      "adopted_by": "用户截图指定：回复这些人，说修复合规了，已上架",
+      "fixed_in": "input-safety-20261012",
+      "channels": {
+        "website": "deployed_verified",
+        "toy": "all_five_published",
+        "taptap": "not_requested"
+      },
+      "reply_text": "这次显示“下架”是平台下架整改造成的，不是因为你的平板是学习机。昵称、房间名的安全检测已经补齐，整改版已过审并恢复上架，重新打开原Toy入口就可以了，谢谢你补图反馈！",
+      "reply_rpid": null,
+      "reply_verified_at": "2026-10-12T12:37:47.283Z",
+      "evidence": "D:/project/task-artifacts/all-games-input-safety-20261012/replies/tablet-public.jpg"
     }
   ]
 }

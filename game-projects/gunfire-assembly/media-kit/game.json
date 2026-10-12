@@ -12,7 +12,58 @@
   "toy_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
   "toy_status": "published",
   "notes": "从虫潮围城拆出的枪战模式大厅；首版含战地据点与抗战战役。网站与 Toy 已上线；相关视频简介已公开核验含枪火集结入口。",
-  "toy_public_verified_at": "2026-10-12T17:10:00+08:00",
+  "toy_public_verified_at": "2026-10-12T12:18:34.770Z",
   "bilibili_descriptions_verified_at": "2026-10-12T17:10:00+08:00",
-  "handoff": "releases/web-lobby-v0.1.0-input-safety1/handoff.json"
+  "handoff": "releases/web-lobby-v0.1.0-input-safety1/handoff.json",
+  "channel_baseline_history": [
+    {
+      "at": "2026-10-12T12:31:12.320579+00:00",
+      "reason": "input-safety-20261012",
+      "website": null,
+      "toy": {}
+    }
+  ],
+  "website_version": "web-lobby-v0.1.0-input-safety1",
+  "website_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+  "website_verified_at": "2026-10-12T12:31:12.320579+00:00",
+  "website": {
+    "status": "deployed_verified",
+    "version": "web-lobby-v0.1.0-input-safety1",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "verified_at": "2026-10-12T12:31:12.320579+00:00",
+    "verification_record": "game-projects/site-games/releases/input-safety-20261012/website-deployed.json",
+    "runtime_sha256": "aed4c93e615c0ed73016b159127892864842aec1cfc0eaeff0d725eb67ab8406"
+  },
+  "web_toy_versions_match": true,
+  "toy": {
+    "id": 43022175699968,
+    "slug": "feidao-gunfire",
+    "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "status": "published",
+    "review_status": "published",
+    "submitted_version": "web-lobby-v0.1.0-input-safety1",
+    "submitted_at": "2026-10-12T12:08:28.837958+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_qyUHEV52/index.html",
+    "package_sha256": "d821be88666302fd5680aee64bc88c766b75728a9fa68a64db7c529c1c9a3fa6",
+    "published_version": "web-lobby-v0.1.0-input-safety1",
+    "last_published_version": "web-lobby-v0.1.0-input-safety1",
+    "last_successful_sync_version": "web-lobby-v0.1.0-input-safety1",
+    "last_successful_sync_at": "2026-10-12T12:18:34.770Z",
+    "public_verified_at": "2026-10-12T12:18:34.770Z",
+    "published_verified_at": "2026-10-12T12:18:34.770Z",
+    "public_verified_version": "web-lobby-v0.1.0-input-safety1",
+    "current_public_verification": "verified",
+    "watermark_enabled": true,
+    "release_record": "releases/web-lobby-v0.1.0-input-safety1/handoff.json",
+    "verified_at": "2026-10-12T12:18:34.770Z",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
+    "public_runtime_revision": "v25471",
+    "public_runtime_evidence": {
+      "status": "public_verified",
+      "at": "2026-10-12T12:18:34.770Z",
+      "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "evidence": "Public revision v25471; multiplayer renders moderation notice and enabled optional nickname button; no profile request or room created."
+    }
+  }
 }

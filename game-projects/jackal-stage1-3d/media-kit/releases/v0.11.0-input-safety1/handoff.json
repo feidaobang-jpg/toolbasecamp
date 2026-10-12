@@ -13,11 +13,12 @@
     "website": "passed: desktop and portrait simulation; SDK and transport mocked",
     "unit": "15 transport and moderation cases passed",
     "physical_phone": false,
-    "final_package": "11 desktop/portrait UI cases across five games; profile denial/rejection/approval and no identifier transmission"
+    "final_package": "11 desktop/portrait UI cases across five games; profile denial/rejection/approval and no identifier transmission",
+    "actual_toy_preview": "desktop/portrait preview UI passed; no profile request or room creation"
   },
   "channels": {
-    "website": "pending_deploy",
-    "toy": "pending_preview",
+    "website": "deployed_verified",
+    "toy": "published",
     "taptap": "not_requested"
   },
   "record": "game-projects/site-games/releases/input-safety-20261012/handoff.json",
@@ -27,12 +28,38 @@
   },
   "video_descriptions": {
     "decision": "deferred_accumulating",
-    "reason": "安全检测修复，无新增玩法；Toy入口状态另行核验并按事实处理"
+    "reason": "三款临时下架说明随恢复公开再次纠正；其余普通补丁距上次说明不足7天。",
+    "record": "game-projects/site-games/releases/input-safety-20261012/bilibili-sync.json"
   },
   "package": {
     "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\jackal-stage1-3d.zip",
     "sha256": "ae3240d8e01d915e4909d7d0e6684894769a9b0d5a952570e89d41712b54a630",
     "doctor": "passed; filename fingerprint warning only"
   },
-  "watermark": "enable_on_toy_update"
+  "watermark": "enabled_verified",
+  "toy": {
+    "id": "39863936092160",
+    "slug": "feidao-jackal-3d",
+    "version": "v0.11.0-input-safety1",
+    "status": "published",
+    "watermark_enabled": true,
+    "package_sha256": "ae3240d8e01d915e4909d7d0e6684894769a9b0d5a952570e89d41712b54a630",
+    "package": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\jackal-stage1-3d.zip",
+    "submitted_at": "2026-10-12T12:08:27.615788+00:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_b28JNEPp/index.html",
+    "public_verified_at": "2026-10-12T12:18:21.938Z",
+    "public_url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+    "public_evidence": {
+      "status": "public_verified",
+      "at": "2026-10-12T12:18:21.938Z",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "evidence": "Public revision v25470; lobby renders new moderation notice and enabled optional profile button. No profile request or room creation performed."
+    },
+    "platform_mtime": 1791807012
+  },
+  "website": {
+    "status": "deployed_verified",
+    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "evidence": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\website-deployed.json"
+  }
 }
