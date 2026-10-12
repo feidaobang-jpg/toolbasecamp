@@ -1,0 +1,11 @@
+用AI辅助做了基地防守小游戏《虫潮围城》（原名《虫潮前哨》），本期展示第一波迎敌、扫射和手雷防守。
+Toy直接试玩（已恢复可玩）：https://www.bilibili.com/toy/chongchao-qianshao/index.html
+全部游戏合集（B站内打开）：https://www.bilibili.com/toy/feidao-games/index.html
+联机大厅（复制到浏览器）：https://www.zhengxiaohui.cn/game-online.html
+网站游戏、投票与愿望单（复制到浏览器）：https://www.zhengxiaohui.cn/games.html
+新版实战·反攻母皇：https://www.bilibili.com/video/BV1WbHq6eEBt/
+房车生存现可探索废弃城镇，开车搜物资、维修升级并撤离；I上下车/搜索，O地图与设施，进度独立保存。
+此前：商店新增RPG火箭筒和四连导弹架，载具卡地形会自动脱困；联机2–4人合作。存档保留本地保存与文件备份恢复，游戏内不再使用网站账号登录或网站账号云档；Toy官方云档按平台能力独立保存，不可用时继续本地存档。
+新局可选休闲/普通/困难，旧档普通、副本难度独立；手机可在操作设置→自定义按键位置，拖动后保存或恢复默认。
+本视频为早期版本，玩法与操作以当前试玩为准。
+更新（2026-10-12）：战地据点与抗战战役已迁至独立游戏《枪火集结》（Toy：https://www.bilibili.com/toy/feidao-gunfire/index.html）；虫潮围城保留基地防守、银行塔防、房车与虫族。网站已同步。
