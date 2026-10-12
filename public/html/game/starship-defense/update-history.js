@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.3';
+export const GAME_VERSION='0.36.4';
 export const UPDATE_HISTORY=[
+  {version:'0.36.4',date:'2026-10-12',title:'视角精简',changes:[
+    '按 C 切换的视角从 6 个减到 4 个：近身跟随、高位跟随、战术俯视、第一人称。',
+    '去掉了和近身、高位很像的「低位跟随」「战术远景」，少按两下就能转回来。']},
   {version:'0.36.3',date:'2026-10-12',title:'枪战模式迁至枪火集结',changes:[
     '战地据点与抗战战役拆到独立游戏《枪火集结》；主菜单新增枪战大厅入口。',
     '虫潮继续保留基地防守、银行塔防、房车生存与虫族模式。']},

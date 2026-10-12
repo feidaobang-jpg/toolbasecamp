@@ -70,7 +70,7 @@ let browser;
   await game.locator('#menu [data-opt=gun]').click(); await load();
   check('手动切回原作朝上刷新后保留', /原作朝上/.test(await game.locator('#menu [data-opt=gun]').innerText()));
   await start();
-  const cameraIds = ['oblique', 'top', 'low', 'wide', 'front', 'fp'];
+  const cameraIds = ['oblique', 'top', 'front', 'fp'];
   for (const id of cameraIds) {
     while ((await snap(game)).ui.camera !== id) { await page.keyboard.press('KeyC'); await step(1); }
     await cheat('face', 2);

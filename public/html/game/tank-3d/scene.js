@@ -1,5 +1,6 @@
 // 坦克大战 3D · 渲染：地形（4px 砖块、钢、河、树林、冰）、坦克与 Boss 模型、特效，
-// 以及 5 个视角预设（斜俯视 / 正俯视 / 近景 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
+// 以及 4 个视角预设（斜俯视 / 正俯视 / 正视 / 第一人称）+ Q/E 无极旋转、正视剖面。
+// 2026-10-12 去掉「近景」：它和斜俯视只差距离，留看法明显不同的四个。
 // 美术全部程序化：基础几何体 + Canvas 纹理。1 个 8px 格 = 1 个世界单位，战场中心在原点。
 import * as THREE from '../../../vendor/three/0.170.0/build/three.module.js';
 import { N, Q, FIELD, DIRS, BASE_WALL, localPlayer, playerSpawn } from './sim.js?v=coop-unstick1';
@@ -9,10 +10,10 @@ const P = v => v / 8 - C;                       // FC 像素 → 世界坐标
 export const PRESETS = [
   { id: 'overview', name: '斜俯视', pitch: .98, fov: 38, fit: true },
   { id: 'top', name: '正俯视', pitch: 1.53, fov: 36, fit: true },
-  { id: 'close', name: '近景', pitch: .82, fov: 42, dist: 15, follow: true },
   { id: 'front', name: '正视', pitch: .36, fov: 58, dist: 7.4, follow: true, front: true },
   { id: 'fp', name: '第一人称', fov: 76, fp: true }
 ];
+const FRONT = PRESETS.find(p => p.front);
 function rngFrom(seed) { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
 // ---------------- 纹理 ----------------
@@ -363,7 +364,7 @@ export function createScene(canvas) {
   const pp = new THREE.Vector3();
   function updateCamera(dt) {
     let pr = PRESETS[view.presetIndex];
-    if (pr.fp && !fpActive()) pr = PRESETS[3];       // 第一人称在出生 / 阵亡 / 标题时退回正视
+    if (pr.fp && !fpActive()) pr = FRONT;       // 第一人称在出生 / 阵亡 / 标题时退回正视
     if (view.titleMode && (pr.front || pr.follow)) pr = PRESETS[0];
     playerPos(pp);
     const k = view.snap ? 1 : 1 - Math.exp(-5 * dt);

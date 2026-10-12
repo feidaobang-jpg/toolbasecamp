@@ -1,11 +1,11 @@
 import { installRemakeUI, createPitchController, bindDragLook, addControlModeButtons, createLookController } from '../../../js/game/drag-look.js?v=menu-text1';
 // 入口：设置与菜单、关卡流程（WORLD 卡片 → 游玩 → 死亡 / 过关 → 下一关）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
-import { createView, PRESETS } from './scene.js?v=2.6.0';
+import { createView, PRESETS } from './scene.js?v=views4';
 import { createSession, createWorld, step, STEP, nextLevelId } from './world.js?v=2.6.0';
 import { LEVEL_ORDER } from './levels.js?v=2.6.0';
 import { GameAudio } from './audio.js?v=castle1';
 
-const VERSION = 'v2.6.0-preview1';
+const VERSION = 'v2.6.1';
 const params = new URLSearchParams(location.search);
 const TEST = params.get('test') === '1';      // 自动化测试钩子
 const CLEAN = params.get('clean') === '1';    // 录制干净画面：隐藏桌面按键提示
@@ -27,7 +27,7 @@ const settings = {
   lives: pick(store.get('lives', 'inf'), ['inf', 'classic'], 'inf'),
   armor: pick(store.get('armor', 'std'), ['std', 'classic'], 'std'),
   demo: false,
-  camera: Math.max(0, Math.min(PRESETS.length - 1, store.get('camera', 0) | 0)),
+  camera: (c => c >= 0 && c < PRESETS.length ? c : 0)(store.get('camera', 0) | 0),   // 以前存的「俯视」（序号 4）已取消，回到侧视
   quality: pick(store.get('quality', 'auto'), ['auto', 'high', 'low'], 'auto'),
   volume: Math.max(0, Math.min(1, Number(store.get('volume', 0.7)) || 0)),
   touch: pick(store.get('touch', 'auto'), ['auto', 'show', 'hide'], 'auto'),

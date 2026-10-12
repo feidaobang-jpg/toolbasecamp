@@ -91,7 +91,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   await page.screenshot({ path: 'out/m_land_play.png' });
 
   // 摇杆：每个视角下拖向屏幕右/上（第一人称下先摆正车头，方向相对车头）
-  for (let v = 0; v < 6; v++) {
+  for (let v = 0; v < 4; v++) {
     s = await snap(page);
     const isFp = s.ui.camera === 'fp';
     await page.evaluate(() => { __JK_TEST__.cheat.teleport(-8, 22); __JK_TEST__.cheat.invuln(60); });
@@ -128,7 +128,7 @@ const UA = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, 
   let lb = await snap(page);
   await T.up(1); await steps(1);
   check('[横屏] 镜头左转 90° 后摇杆上 → 视线前方（世界西）', Math.abs(s.cam.yaw - Math.PI / 2) < 0.2 && lb.player.x - la.player.x < -2, { yaw: s.cam.yaw, dx: +(lb.player.x - la.player.x).toFixed(2) });
-  for (let i = 0; i < 6; i++) { await T.tap(Cb.x, Cb.y); await steps(1); }   // 循环回斜俯视并复位 yaw
+  for (let i = 0; i < 4; i++) { await T.tap(Cb.x, Cb.y); await steps(1); }   // 循环回斜俯视并复位 yaw
   s = await snap(page);
   check('[横屏] 循环后回到斜俯视且 yaw 复位', s.ui.camera === 'oblique' && Math.abs(s.cam.yaw) < 0.01, { camera: s.ui.camera, yaw: s.cam.yaw });
   // 多点：摇杆上 + 按住 J

@@ -1,0 +1,126 @@
+{
+ "name": "tank",
+ "preview": "https://www.bilibili.com/toy/preview/preview_Bwfjhhos/index.html",
+ "checked_at": "2026-10-12T13:56:00.324Z",
+ "passed": 13,
+ "total": 13,
+ "results": [
+  {
+   "name": "[tank · 电脑 1280×720] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     1280,
+     720
+    ],
+    "stage": "short",
+    "controls": 18,
+    "text": "魔改挑战 · 推荐玩法 坦克大战 3D Boss 对战 · 敌军抢道具 · 100 关无限周目 守住老鹰，挑战精英坦克和"
+   }
+  },
+  {
+   "name": "[tank · 电脑 1280×720] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[tank · 电脑 1280×720] 标题菜单不用滚动就看全",
+   "ok": true,
+   "detail": {
+    "off": [],
+    "frame": [
+     1280,
+     720
+    ]
+   }
+  },
+  {
+   "name": "[tank · 电脑 1280×720] 按 C 循环共 4 个视角并回到第一个",
+   "ok": true,
+   "detail": [
+    "斜俯视",
+    "正俯视",
+    "正视",
+    "第一人称",
+    "斜俯视"
+   ]
+  },
+  {
+   "name": "[tank · 电脑 1280×720] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[tank · 手机横屏 844×390] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     844,
+     346
+    ],
+    "stage": "compact short",
+    "controls": 17,
+    "text": "魔改挑战 · 推荐玩法 坦克大战 3D Boss 对战 · 敌军抢道具 · 100 关无限周目 守住老鹰，挑战精英坦克和"
+   }
+  },
+  {
+   "name": "[tank · 手机横屏 844×390] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[tank · 手机横屏 844×390] 标题菜单各项都在画面内或可滚动到",
+   "ok": true,
+   "detail": {
+    "off": 6,
+    "stuck": 0,
+    "frame": [
+     844,
+     346
+    ],
+    "stage": "compact short"
+   }
+  },
+  {
+   "name": "[tank · 手机横屏 844×390] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[tank · 手机竖屏 390×844] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     390,
+     800
+    ],
+    "stage": "rotated compact short",
+    "controls": 17,
+    "text": "魔改挑战 · 推荐玩法 坦克大战 3D Boss 对战 · 敌军抢道具 · 100 关无限周目 守住老鹰，挑战精英坦克和"
+   }
+  },
+  {
+   "name": "[tank · 手机竖屏 390×844] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[tank · 手机竖屏 390×844] 标题菜单各项都在画面内或可滚动到",
+   "ok": true,
+   "detail": {
+    "off": 6,
+    "stuck": 0,
+    "frame": [
+     390,
+     800
+    ],
+    "stage": "rotated compact short"
+   }
+  },
+  {
+   "name": "[tank · 手机竖屏 390×844] 无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

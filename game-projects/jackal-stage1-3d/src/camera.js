@@ -1,4 +1,6 @@
 // 镜头：固定朝北的预设（C 键循环、即时切换），跟随吉普；第一人称跟车头（仅渲染）。
+// 预设只留四个看法明显不同的：斜俯视（默认）、俯视（原作画面）、低位正视（车后）、第一人称。
+// 2026-10-12 去掉了「近景斜视」「战术远景」——它们和斜俯视只差一点俯仰和距离，按 C 要多按两下才转得回来。
 // 玩法判定（敌人激活/开火的可视四边形）始终用独立的朝北判定镜头，不随第一人称转。
 import * as THREE from 'three';
 import { clamp } from './core.js';
@@ -7,8 +9,6 @@ const D = Math.PI / 180;
 export const PRESETS = [
   { id: 'oblique', name: '斜俯视', pitch: 56 * D, dist: 34, fov: 40, ahead: 4 },
   { id: 'top', name: '俯视', pitch: 84 * D, dist: 42, fov: 40, ahead: 2 },
-  { id: 'low', name: '近景斜视', pitch: 40 * D, dist: 24, fov: 46, ahead: 7 },
-  { id: 'wide', name: '战术远景', pitch: 64 * D, dist: 48, fov: 40, ahead: 6 },
   { id: 'front', name: '低位正视', pitch: 32 * D, dist: 18, fov: 48, ahead: 5 },
   { id: 'fp', name: '第一人称', fov: 76, dist: 24, ahead: 4, fp: true }
 ];

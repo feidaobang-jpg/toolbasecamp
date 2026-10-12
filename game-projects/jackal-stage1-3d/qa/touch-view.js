@@ -33,7 +33,7 @@ async function setup(p) {
   return p;
 }
 async function preset(p, idx) {
-  for (let i = 0; i < 6 && await p.evaluate(() => __JK_TEST__._cam.idx) !== idx; i++) {
+  for (let i = 0; i < 4 && await p.evaluate(() => __JK_TEST__._cam.idx) !== idx; i++) {
     await p.locator('#btn-cam').click(); await steps(p, 1);
   }
   await p.evaluate(idx => { const t = __JK_TEST__; t.clearInput(); t.cheat.teleport(-8, 22); t._cam.idx = idx; t._cam.yaw = 0; t._cam.clearLook(); t.cheat.face(0); t.step(1, false); }, idx);
@@ -43,7 +43,7 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
 (async () => {
   const browser = activeBrowser = await launch();
   let context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-  let p = await context.newPage(); p = await setup(p); await preset(p, 5);
+  let p = await context.newPage(); p = await setup(p); await preset(p, 3);
   // 真实键盘输入 + 固定时钟，逐帧检查横移/倒车/反向时镜头不甩动。
   for (const key of ['a', 's', 'd', 'w']) {
     const before = await state(p); await p.keyboard.down(key);
@@ -54,7 +54,7 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
     const bodyStep = Math.max(...samples.map((s, i) => Math.abs(diff(i ? samples[i - 1].bodyHeading : before.cam.bodyHeading, s.bodyHeading))));
     check('第一人称 ' + key + ' 横移/倒车视线稳定且车身缓转', viewDrift < 1e-8 && bodyStep <= 2.1 / 60 + 1e-8, { viewDrift, bodyStep });
   }
-  await preset(p, 5);
+  await preset(p, 3);
   const before = await state(p);
   await drag(p, [670, 270], [1150, 270]);
   const immediate = await state(p); await steps(p, 1); const one = await state(p);
@@ -63,7 +63,7 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
   check('拖动积压有界且平滑收敛，默认机枪沿视线瞄准', settled.cam.heading > 0 && settled.cam.heading <= Math.PI / 6 + 1e-6 && settled.cam.lookPending === 0 && Math.abs(diff(settled.cam.heading, settled.cam.gunAngle)) < 1e-8, settled.cam);
   await p.keyboard.down('e'); await steps(p, 390); await p.keyboard.up('e');
   check('第一人称可连续转满360度并跨越角度边界', Math.abs(diff(settled.cam.heading, (await state(p)).cam.heading) - Math.PI / 6) < 0.001, (await state(p)).cam.heading);
-  for (let idx = 0; idx < 6; idx++) {
+  for (let idx = 0; idx < 4; idx++) {
     await preset(p, idx); const f0 = await forward(p);
     await drag(p, [650, 270], [760, 270]); await steps(p, 75); const f1 = await forward(p);
     const projection = f1.x * -f0.z + f1.z * f0.x;
@@ -81,7 +81,7 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
     const ahead = (movingAfter.x - movingBefore.x) * looking.x - (movingAfter.y - movingBefore.y) * looking.z;
     check('视角 ' + idx + ' 转90度后W沿实际视线前进', ahead > 0.6, { looking, ahead });
   }
-  await preset(p, 5); await drag(p, [700, 270], [1000, 270]);
+  await preset(p, 3); await drag(p, [700, 270], [1000, 270]);
   await p.evaluate(() => document.getElementById('stage').dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 1 })));
   check('触控取消清空未消费的转头量', (await state(p)).cam.lookPending === 0, (await state(p)).cam.lookPending);
   await drag(p, [700, 270], [1000, 270]);
@@ -91,7 +91,7 @@ async function drag(p, start, end) { await p.mouse.move(...start); await p.mouse
   await context.close();
   for (const viewport of [{ width: 844, height: 390 }, { width: 390, height: 844 }, { width: 667, height: 375 }]) {
     context = await browser.newContext({ viewport, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/141.0 Mobile Safari/537.36', recordVideo: { dir: out, size: viewport } });
-    p = await context.newPage(); p = await setup(p); await preset(p, 5);
+    p = await context.newPage(); p = await setup(p); await preset(p, 3);
     const label = viewport.width + 'x' + viewport.height;
     const layout = await p.evaluate(() => {
       const box = id => { const e = document.getElementById(id), r = e.getBoundingClientRect(), c = __JK_TEST__.toLocal(r.x + r.width / 2, r.y + r.height / 2); return { x: c.x - e.offsetWidth / 2, y: c.y - e.offsetHeight / 2, w: e.offsetWidth, h: e.offsetHeight }; };

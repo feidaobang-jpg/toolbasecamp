@@ -1,0 +1,126 @@
+{
+ "name": "cadillacs",
+ "preview": "https://www.bilibili.com/toy/preview/preview_7gsH1u0E/index.html",
+ "checked_at": "2026-10-12T13:55:33.215Z",
+ "passed": 13,
+ "total": 13,
+ "results": [
+  {
+   "name": "[cadillacs · 电脑 1280×720] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     1280,
+     720
+    ],
+    "stage": "",
+    "controls": 16,
+    "text": "CAPCOM 1993 街机经典 · 3D 重制版 恐龙快打 Cadillacs and Dinosaurs 第一关 ·"
+   }
+  },
+  {
+   "name": "[cadillacs · 电脑 1280×720] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[cadillacs · 电脑 1280×720] 标题菜单不用滚动就看全",
+   "ok": true,
+   "detail": {
+    "off": [],
+    "frame": [
+     1280,
+     720
+    ]
+   }
+  },
+  {
+   "name": "[cadillacs · 电脑 1280×720] 按 C 循环共 4 个视角并回到第一个",
+   "ok": true,
+   "detail": [
+    "侧视",
+    "斜视",
+    "正视",
+    "第一人称",
+    "侧视"
+   ]
+  },
+  {
+   "name": "[cadillacs · 电脑 1280×720] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[cadillacs · 手机横屏 844×390] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     844,
+     346
+    ],
+    "stage": "compact",
+    "controls": 15,
+    "text": "CAPCOM 1993 街机经典 · 3D 重制版 恐龙快打 Cadillacs and Dinosaurs 第一关 ·"
+   }
+  },
+  {
+   "name": "[cadillacs · 手机横屏 844×390] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[cadillacs · 手机横屏 844×390] 标题菜单各项都在画面内或可滚动到",
+   "ok": true,
+   "detail": {
+    "off": 1,
+    "stuck": 0,
+    "frame": [
+     844,
+     346
+    ],
+    "stage": "compact"
+   }
+  },
+  {
+   "name": "[cadillacs · 手机横屏 844×390] 无脚本错误",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[cadillacs · 手机竖屏 390×844] 预览包加载出画面与菜单",
+   "ok": true,
+   "detail": {
+    "frame": [
+     390,
+     800
+    ],
+    "stage": "rotated compact",
+    "controls": 15,
+    "text": "CAPCOM 1993 街机经典 · 3D 重制版 恐龙快打 Cadillacs and Dinosaurs 第一关 ·"
+   }
+  },
+  {
+   "name": "[cadillacs · 手机竖屏 390×844] 没有指向作者网站的链接",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "name": "[cadillacs · 手机竖屏 390×844] 标题菜单各项都在画面内或可滚动到",
+   "ok": true,
+   "detail": {
+    "off": 0,
+    "stuck": 0,
+    "frame": [
+     390,
+     800
+    ],
+    "stage": "rotated compact"
+   }
+  },
+  {
+   "name": "[cadillacs · 手机竖屏 390×844] 无脚本错误",
+   "ok": true,
+   "detail": []
+  }
+ ]
+}

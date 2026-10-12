@@ -18,8 +18,8 @@ const SPOTS=[['stairs',6,6],['firebars',53,4],['bridge',131,3]];
   await p.locator('#menu [data-act=start]').click();await p.evaluate(()=>{__MARIO_TEST__.manual(true);__MARIO_TEST__.skipCard();__MARIO_TEST__.session.settings.demo=true;});
   const put=(x,y)=>p.evaluate(([x,y])=>{const q=__MARIO_TEST__;Object.assign(q.world.player,{x,y,z:0,vx:0,vy:0,vz:0,grounded:true,inv:0});q.view.snap=true;q.step(30);},[x,y]);
   const cam=()=>p.evaluate(()=>__MARIO_TEST__.state().camera);
-  // 五种视角 × 三处
-  for(let i=0;i<5;i++){
+  // 四种视角 × 三处
+  for(let i=0;i<4;i++){
    if(i)await p.keyboard.press('KeyC');
    const id=await cam();
    for(const [name,x,y] of SPOTS){await put(x,y);await p.evaluate(()=>__MARIO_TEST__.step(1,true));await p.screenshot({path:path.join(out,'view-'+id+'-'+name+'.png')});
