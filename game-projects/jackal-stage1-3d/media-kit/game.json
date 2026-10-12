@@ -5,8 +5,8 @@
     "slug": "feidao-jackal-3d",
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
-    "review_status": "auditing",
-    "verified_at": "2026-10-07T02:43:57.353796+00:00",
+    "review_status": "published",
+    "verified_at": "2026-10-12T16:35:27+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
@@ -14,13 +14,13 @@
     "preview_verified_at": "2026-10-12T16:32:56+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "v0.11.0（第三关港口 + 开局保护）已提交审核，审核通过前公开入口仍是 v0.10.3-menu-text1-privacy1。预览实测：电脑 1280×720、手机竖屏 390×844、手机横屏 844×390（游戏区 844×346）共 23 项，22 项通过；未通过的一项是电脑 1280×720 下主菜单高 806 像素、需要滚动——旧版公开入口同样如此，不是这次引入的。手机为设备模拟。",
+    "note": "v0.11.0（第三关港口 + 开局保护）已审核通过并公开生效：mylist 显示 published（平台更新时间 2026-10-12T16:33:01+08:00），公开入口实测游戏内版本号 v0.11.0。",
     "submitted_at": "2026-10-12T16:31:37+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
     "submitted_version": "v0.11.0",
     "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
     "release_record": "releases/v0.11.0/release-status.json",
-    "published_version": "v0.10.3-menu-text1",
+    "published_version": "v0.11.0",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -128,30 +128,32 @@
       {
         "version": "v0.11.0",
         "classification": "正式版本",
-        "status": "auditing",
+        "status": "published",
         "record": "releases/v0.11.0/handoff.json",
         "summary": "第三关港口与战舰 Boss；每关开局保护；Toy 手机横屏主菜单完整显示；联机可选第三关。",
         "submitted_at": "2026-10-12T16:31:37+08:00",
-        "preview_verified": "电脑、手机竖屏、手机横屏三种视口实测：第三关可进、原版录音可解码、触屏摇杆、Boss 战舰靠泊开战、无脚本错误"
+        "preview_verified": "电脑、手机竖屏、手机横屏三种视口实测：第三关可进、原版录音可解码、触屏摇杆、Boss 战舰靠泊开战、无脚本错误",
+        "published_verified_at": "2026-10-12T16:35:27+08:00",
+        "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
       }
     ],
-    "last_successful_sync_at": "2026-10-09T16:00:04.596643+08:00",
-    "last_successful_sync_version": "v0.10.3-menu-text1",
+    "last_successful_sync_at": "2026-10-12T16:35:27+08:00",
+    "last_successful_sync_version": "v0.11.0",
     "package_sha256": "eb9e124e29fcd004f94e12a5aaf5d6a44eaa939372ac1ff3027b56d645a2e070",
-    "published_verified_at": "2026-10-07T21:56:53+08:00",
+    "published_verified_at": "2026-10-12T16:35:27+08:00",
     "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
-    "status": "auditing",
+    "status": "published",
     "package_hash": "57c40d0b90d114dbb0461fb9389dad5dde741b8a8c70e9c24ab881ceb6217b86",
     "version": "v0.11.0",
     "package": "dist/toy-v0.11.0/package",
-    "last_published_version": "v0.10.3-menu-text1",
+    "last_published_version": "v0.11.0",
     "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
-    "public_verified_version": "v0.10.3-menu-text1",
-    "public_verified_at": "2026-10-09T16:00:04.596643+08:00",
-    "public_runtime_evidence": "Toy 外壳电脑及手机视口实测通过；公开资源哈希与实测包一致，手机为浏览器模拟。",
+    "public_verified_version": "v0.11.0",
+    "public_verified_at": "2026-10-12T16:35:27+08:00",
+    "public_runtime_evidence": "公开入口三种视口实测 22/23（未通过项为电脑 1280×720 主菜单需滚动，旧版同样如此）；游戏内版本号 v0.11.0，第三关可进，Boss 战舰可开战；手机为设备模拟",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
     "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
-    "current_public_verification": "pending_review",
+    "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "今天的修改先同步发布到toy，其他平台先不发",
       "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
@@ -309,7 +311,7 @@
     }
   ],
   "website_commit": "14cb5d3c",
-  "web_toy_versions_match": false,
+  "web_toy_versions_match": true,
   "control_audio_camera_update": "2026-10-06: Toy 3D scope; remake UI/menu standard, vertical look, normal movement facing, first-person slow look, keyboard mode shortcuts, latched sprint.",
   "dev": {
     "model": "claude-opus-5-5（Claude Cowork 会话配置的模型标识；实际服务模型可能不同）",
@@ -391,7 +393,7 @@
       ],
       "record": "releases/v0.11.0/handoff.json",
       "website": "public_verified",
-      "toy": "auditing（2026-10-12T16:31:37+08:00 提交）",
+      "toy": "public_verified（2026-10-12T16:33:01+08:00 过审）",
       "taptap": "默认不发布",
       "bilibili": "重大版本：网站核验后立即更新简介"
     }

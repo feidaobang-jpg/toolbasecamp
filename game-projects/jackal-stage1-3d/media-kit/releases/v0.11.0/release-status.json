@@ -30,7 +30,7 @@
  "toy": {
   "id": 39863936092160,
   "slug": "feidao-jackal-3d",
-  "status": "auditing",
+  "status": "published",
   "submitted_at": "2026-10-12T16:31:37+08:00",
   "package": "dist/toy-v0.11.0/package",
   "preserved_package": "D:/project/task-artifacts/jackal-stage3-20261012/toy-v0.11.0-package",
@@ -52,7 +52,10 @@
   "preview_tested": "https://www.bilibili.com/toy/preview/preview_bVKNokBY/index.html",
   "preview_submitted": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
   "preview_results": "releases/v0.11.0/toy-preview/results.json",
-  "public_before_approval": "v0.10.3-menu-text1-privacy1（39863936092160-v24928）"
+  "published_at": "2026-10-12T16:33:01+08:00",
+  "public_verified_at": "2026-10-12T16:35:27+08:00",
+  "public_results": "releases/v0.11.0/toy-public/results.json",
+  "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
  },
  "taptap": {
   "status": "not_published",
@@ -64,7 +67,7 @@
   "reason": "重大版本：新关卡。简介更新见 bilibili-sync.json"
  },
  "video": {
-  "status": "pending_toy_approval",
+  "status": "in_production",
   "plan": "Toy 过审后录第三关实机，做一期视频，人工审片通过后发布并绑定 Toy"
  }
 }

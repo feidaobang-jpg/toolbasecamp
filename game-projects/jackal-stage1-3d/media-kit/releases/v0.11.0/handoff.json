@@ -480,7 +480,6 @@
   ]
  },
  "limitations": [
-  "Toy 审核期间，网站新版房主开第三关时，仍是旧版的 Toy 队友进不了第三关（旧版没有这一关）",
   "第三关 BGM 的原作对应关系未核实",
   "步兵、坦克、炮艇、敌方吉普的位置与 Boss 数值是按流程设计的，不是逐格对照原作"
  ],
@@ -500,13 +499,16 @@
   "url": "https://www.zhengxiaohui.cn/html/game/jackal-stage1-3d/index.html"
  },
  "toy": {
-  "status": "auditing",
+  "status": "published",
   "id": 39863936092160,
   "submitted_at": "2026-10-12T16:31:37+08:00",
   "package_hash": "57c40d0b90d114dbb0461fb9389dad5dde741b8a8c70e9c24ab881ceb6217b86",
   "preview_tested": "https://www.bilibili.com/toy/preview/preview_bVKNokBY/index.html",
   "preview_submitted": "https://www.bilibili.com/toy/preview/preview_M3E34CPR/index.html",
-  "preview_result": "22/23"
+  "preview_result": "22/23",
+  "published_at": "2026-10-12T16:33:01+08:00",
+  "public_verified_at": "2026-10-12T16:35:27+08:00",
+  "public_result": "22/23"
  },
  "taptap": {
   "status": "not_published_by_default"
@@ -516,5 +518,5 @@
   "decision": "immediate",
   "reason": "重大版本：新关卡"
  },
- "updated_at": "2026-10-12T16:32:56+08:00"
+ "updated_at": "2026-10-12T16:35:27+08:00"
 }
