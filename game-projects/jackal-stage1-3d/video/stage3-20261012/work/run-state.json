@@ -1,0 +1,54 @@
+{
+  "status": "rendered_awaiting_user_review",
+  "mode": "update",
+  "game_id": "jackal-stage1-3d",
+  "version": "v0.11.0",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "project": "game-projects/jackal-stage1-3d/video/stage3-20261012",
+  "worktree": "D:/project/worktrees/jackal-stage3-20261012",
+  "files_complete": true,
+  "videos": {
+    "bilibili-zh": {
+      "file": "final/bilibili-zh/gameplay-zh-final.mp4",
+      "seconds": 99.84,
+      "sha256": "68a7e12e59d768490882339c56a898f1f9df1531bae24f33f848c20faecaa4e0"
+    },
+    "douyin-zh": {
+      "file": "final/douyin-zh/gameplay-zh-final.mp4",
+      "seconds": 98.26,
+      "sha256": "3e7c53eaab8a55abb3e9c179f7d4a49f80904826b0299163a949fd6026f725e2"
+    },
+    "youtube-zh": {
+      "file": "final/youtube-zh/gameplay-youtube-final.mp4",
+      "seconds": 98.26,
+      "sha256": "888034e9c06bc4203332997293a4915ee95c396c356bd173312a8b88803ae451"
+    }
+  },
+  "voice": {
+    "engine": "IndexTTS-2.5 本地合成",
+    "reference": "yunxi-ref-8s.wav",
+    "not_official_yunxi": true,
+    "reason": "Edge 在线语音 2026-10-12 返回 403（上游已知问题）",
+    "redo_when_edge_recovers": "voice.py → render.py audio/shared-zh final → package.py（会改变成片哈希，需重新审片）"
+  },
+  "human_review": null,
+  "toy_status": "published v0.11.0（2026-10-12 公开核验）",
+  "subjective_audio_review": "not-run",
+  "honesty_disclosures": [
+    "画面由自动试玩机器人按正常规则游玩录制，不是真人手打",
+    "配音为本地合成语音，不是微软官方云希",
+    "开发中画面与改动前片段都是当天的真实截图 / 录像，已在画面上标注"
+  ],
+  "next_actions": [
+    "用户审片（三版；B 站版与另外两版只差结尾一句和片尾卡）",
+    "通过后按 game-video 发布流程：三平台上传、B 站选话题、绑定 Toy 39863936092160、置顶评论、推流申请、加入合集（赤色要塞暂无合集映射则记待关联）",
+    "发布时顺带查 B 站当期活动与可用流量券",
+    "同时把旧视频 BV1EyHz6wE5u 的简介补上第三关（重大版本，按 bili-game-update）"
+  ],
+  "capture_permission": "用户 2026-10-04 长期授权用 Playwright 脚本录制",
+  "updated_at": "2026-10-12T17:29:43+08:00"
+}

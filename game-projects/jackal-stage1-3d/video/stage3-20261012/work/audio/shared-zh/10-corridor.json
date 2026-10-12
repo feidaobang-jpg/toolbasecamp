@@ -1,0 +1,30 @@
+{
+ "text": "最难的是仓库之间的之字通道，炮台贴着墙排成一排，这一趟就在这儿被打翻了一次。",
+ "voice": "IndexTTS-2.5 本地合成（参考音 yunxi-ref-8s.wav）",
+ "rate": "1.0",
+ "unit_level": true,
+ "timestamp_source": "逐句合成，按解码采样数累计的真实起止时间",
+ "marks": [
+  {
+   "offset": 0,
+   "duration": 30562500,
+   "text": "最难的是仓库之间的之字通道，",
+   "pos": 0,
+   "chars": 14
+  },
+  {
+   "offset": 31862499,
+   "duration": 25680833,
+   "text": "炮台贴着墙排成一排，",
+   "pos": 14,
+   "chars": 10
+  },
+  {
+   "offset": 58843333,
+   "duration": 23924583,
+   "text": "这一趟就在这儿被打翻了一次。",
+   "pos": 24,
+   "chars": 14
+  }
+ ]
+}

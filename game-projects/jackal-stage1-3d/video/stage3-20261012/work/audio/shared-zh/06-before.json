@@ -1,0 +1,30 @@
+{
+ "text": "还顺手查出一个老问题：新玩家进场站着不动，八秒就会被打死。",
+ "voice": "IndexTTS-2.5 本地合成（参考音 yunxi-ref-8s.wav）",
+ "rate": "1.0",
+ "unit_level": true,
+ "timestamp_source": "逐句合成，按解码采样数累计的真实起止时间",
+ "marks": [
+  {
+   "offset": 0,
+   "duration": 23075833,
+   "text": "还顺手查出一个老问题：",
+   "pos": 0,
+   "chars": 11
+  },
+  {
+   "offset": 25075833,
+   "duration": 21459166,
+   "text": "新玩家进场站着不动，",
+   "pos": 11,
+   "chars": 10
+  },
+  {
+   "offset": 47835000,
+   "duration": 18095000,
+   "text": "八秒就会被打死。",
+   "pos": 21,
+   "chars": 8
+  }
+ ]
+}

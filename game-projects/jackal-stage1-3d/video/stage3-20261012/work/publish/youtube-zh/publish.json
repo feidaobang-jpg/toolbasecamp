@@ -1,0 +1,83 @@
+{
+  "variant_id": "youtube-zh",
+  "platform": "youtube",
+  "content_type": "update",
+  "language": "zh-CN",
+  "audio_language": "zh-CN",
+  "packaging_language": "zh-CN",
+  "game_name": "赤色要塞 3D",
+  "game_version": "v0.11.0",
+  "video_file": "../../../final/youtube-zh/gameplay-youtube-final.mp4",
+  "media_id": "generic-ending",
+  "video_sha256": "888034e9c06bc4203332997293a4915ee95c396c356bd173312a8b88803ae451",
+  "duration_seconds": 98.438125,
+  "width": 1920,
+  "height": 1080,
+  "description_file": "../../../final/youtube-zh/投稿文案.txt",
+  "cover_text": [
+    "吉普单挑战舰",
+    "赤色要塞 3D · 第三关上线"
+  ],
+  "cover_selection_source": "AI 按实机看点定稿",
+  "cover_upload_mode": "custom_image",
+  "credits": "credits.txt",
+  "disclosures": {
+    "ai_assisted": "游戏用 Claude 辅助开发；解说为合成语音",
+    "fan_remake": "粉丝向非官方重制，原作版权归 Konami",
+    "narration": "解说为本地合成语音（IndexTTS-2.5），不是微软官方云希；Edge 在线语音当天不可用",
+    "capture": "画面由自动试玩机器人按正常规则游玩录制，不是真人手打"
+  },
+  "platform_requirements_checked_at": null,
+  "unverified_fields": [
+    "当期投稿页的封面尺寸与字段限制未在投稿页实测"
+  ],
+  "blocking_issues": [
+    "用户尚未审片"
+  ],
+  "ready_to_upload": false,
+  "title": "一辆吉普单挑一艘战舰！赤色要塞 3D 重制版第三关「港口」上线",
+  "description": "游戏试玩：https://www.zhengxiaohui.cn/games.html\n在列表里选「赤色要塞」即可，电脑手机都能玩；链接点不开就复制到浏览器。\n赤色要塞 3D 第三关「港口」：炸开三道闸门，冲过两条栈桥和仓库之间的之字通道，最后在码头单挑一艘战舰。这期还讲了第一版闹的笑话，和一个会让新玩家八秒阵亡的老问题是怎么改的。\n用 Claude 辅助开发的粉丝向非官方重制，《赤色要塞》（Jackal）原作版权归 Konami 所有。\n操作：WASD 移动，J 机枪，K 手雷或火箭，U 联合开火，C 切换视角。",
+  "tags": [
+    "赤色要塞",
+    "Jackal",
+    "FC",
+    "独立游戏",
+    "游戏开发",
+    "Three.js",
+    "Claude",
+    "AI"
+  ],
+  "localizations": {
+    "en": {
+      "title": "One Jeep vs. a Battleship — Jackal 3D Fan Remake, Stage 3 (Harbor) Is Live",
+      "description": "Play my games: https://www.zhengxiaohui.cn/games.html\nPick 赤色要塞 (Jackal) from the list. It runs in the browser on desktop and phone; copy the link if it is not clickable.\nStage 3 of my 3D fan remake of Jackal (NES): blow open three gates, cross the twin piers and the warehouse corridors, then take on a docked battleship with six turrets. This episode also shows what the very first build looked like, and how I fixed an old problem that got idle new players killed in eight seconds.\nUnofficial fan remake built with help from Claude. Jackal is © Konami. The game UI is in Chinese.\nControls: WASD move, J machine gun, K grenade / rocket, U fire both, C change view.",
+      "file": "../../../final/youtube-zh/English-localizations.txt"
+    }
+  },
+  "subtitle_mode": "sidecar",
+  "subtitles": [
+    {
+      "file": "../../../final/youtube-zh/captions-zh.srt",
+      "language": "zh-CN",
+      "purpose": "中文可切换字幕",
+      "sha256": "247228e2d55e426ece38ab7f1a7aedef65abe568eb3edfb98fab1c3b73710920",
+      "required_for_upload": true
+    },
+    {
+      "file": "../../../final/youtube-zh/captions-en.srt",
+      "language": "en",
+      "purpose": "英文可切换字幕（人工校对的译文，沿用中文音轨时间）",
+      "sha256": "7e037df1358f36e04279cd203918960be861eb8878649fe41a0c574c0214cc12",
+      "required_for_upload": true
+    }
+  ],
+  "cover_file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
+  "cover_files": {
+    "main_16_9": {
+      "file": "../../../final/youtube-zh/cover-zh-16x9.jpg",
+      "width": 1920,
+      "height": 1080,
+      "purpose": "缩略图（16:9）"
+    }
+  }
+}

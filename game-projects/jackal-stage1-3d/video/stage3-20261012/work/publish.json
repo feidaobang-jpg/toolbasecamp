@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "game_name": "赤色要塞 3D",
+  "game_version": "v0.11.0",
+  "requested_variants": [
+    "bilibili-zh",
+    "douyin-zh",
+    "youtube-zh"
+  ],
+  "variants": [
+    {
+      "variant_id": "bilibili-zh",
+      "manifest_file": "publish/bilibili-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "用户尚未审片"
+      ]
+    },
+    {
+      "variant_id": "douyin-zh",
+      "manifest_file": "publish/douyin-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "用户尚未审片"
+      ]
+    },
+    {
+      "variant_id": "youtube-zh",
+      "manifest_file": "publish/youtube-zh/publish.json",
+      "ready_to_upload": false,
+      "blocking_issues": [
+        "用户尚未审片"
+      ]
+    }
+  ],
+  "ready_to_upload": false,
+  "human_review": null,
+  "updated_at": "2026-10-12T17:28:05+08:00"
+}

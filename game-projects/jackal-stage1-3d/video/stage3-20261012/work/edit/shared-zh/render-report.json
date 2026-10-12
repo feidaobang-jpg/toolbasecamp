@@ -1,0 +1,26 @@
+{
+ "bilibili-zh": {
+  "file": "final/bilibili-zh/gameplay-zh-final.mp4",
+  "seconds": 99.84,
+  "sha256": "68a7e12e59d768490882339c56a898f1f9df1531bae24f33f848c20faecaa4e0",
+  "burned_subtitles": true,
+  "ending": "13-end-bili",
+  "voice_dir": "audio/shared-zh"
+ },
+ "douyin-zh": {
+  "file": "final/douyin-zh/gameplay-zh-final.mp4",
+  "seconds": 98.26,
+  "sha256": "3e7c53eaab8a55abb3e9c179f7d4a49f80904826b0299163a949fd6026f725e2",
+  "burned_subtitles": true,
+  "ending": "13-end-generic",
+  "voice_dir": "audio/shared-zh"
+ },
+ "youtube-zh": {
+  "file": "final/youtube-zh/gameplay-youtube-final.mp4",
+  "seconds": 98.26,
+  "sha256": "888034e9c06bc4203332997293a4915ee95c396c356bd173312a8b88803ae451",
+  "burned_subtitles": false,
+  "ending": "13-end-generic",
+  "voice_dir": "audio/shared-zh"
+ }
+}

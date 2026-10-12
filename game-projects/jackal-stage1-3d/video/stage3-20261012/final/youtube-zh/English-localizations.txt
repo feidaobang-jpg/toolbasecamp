@@ -1,0 +1,9 @@
+﻿[Title]
+One Jeep vs. a Battleship — Jackal 3D Fan Remake, Stage 3 (Harbor) Is Live
+
+[Description]
+Play my games: https://www.zhengxiaohui.cn/games.html
+Pick 赤色要塞 (Jackal) from the list. It runs in the browser on desktop and phone; copy the link if it is not clickable.
+Stage 3 of my 3D fan remake of Jackal (NES): blow open three gates, cross the twin piers and the warehouse corridors, then take on a docked battleship with six turrets. This episode also shows what the very first build looked like, and how I fixed an old problem that got idle new players killed in eight seconds.
+Unofficial fan remake built with help from Claude. Jackal is © Konami. The game UI is in Chinese.
+Controls: WASD move, J machine gun, K grenade / rocket, U fire both, C change view.
