@@ -26,18 +26,46 @@
     "runtime_changed": false,
     "package_reupload": false
   },
-  "website": {"status": "pending_deploy"},
+  "website": {
+    "status": "deployed_verified",
+    "commit": "25c37b62",
+    "image_sha256": "26ac542bfe86e6b530eff461e8034e79c7e5ac715ae85da911da733841cb088d",
+    "config_v2": true,
+    "public_url": "https://www.zhengxiaohui.cn/assets/game/thumbs/gunfire-assembly.jpg?v=2",
+    "verified_at": "2026-10-12T07:32:33.850025+00:00",
+    "card_visual_review": "passed",
+    "evidence_local": "D:/project/task-artifacts/gunfire-cover-20261012/website-card.jpg"
+  },
   "toy": {
     "id": "43022175699968",
     "slug": "feidao-gunfire",
     "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
     "update_scope": "poster_metadata_only",
-    "status": "pending_target_lock",
-    "previous_poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-gunfire/poster_25252.jpg"
+    "status": "published",
+    "previous_poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-gunfire/poster_25252.jpg",
+    "submit_result": {
+      "status": "auditing"
+    },
+    "submitted_at": "2026-10-12T07:32:33.850025+00:00",
+    "readback": {
+      "poster_url": "https://i0.hdslb.com/bfs/static/toy/app/feidao-gunfire/poster_25354.jpg",
+      "mtime": 1791790312,
+      "status": "published"
+    },
+    "public_poster_verified": true,
+    "public_poster_sha256": "26ac542bfe86e6b530eff461e8034e79c7e5ac715ae85da911da733841cb088d",
+    "public_poster_dimensions": [
+      1200,
+      900
+    ],
+    "public_card_visual_review": "passed",
+    "verified_at": "2026-10-12T07:34:27.606855+00:00",
+    "evidence_local": "D:/project/task-artifacts/gunfire-cover-20261012/toy-card.jpg"
   },
   "video_descriptions": {
     "decision": "not_triggered",
     "reason": "仅封面素材与网站卡片变化，无玩法、操作或入口变化；不计为游戏稳定更新，原任务的视频说明迁移由原任务继续办理。"
   },
-  "taptap": "not_requested"
+  "taptap": "not_requested",
+  "updated_at": "2026-10-12T07:34:27.606855+00:00"
 }
