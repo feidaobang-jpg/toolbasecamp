@@ -37,6 +37,18 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-pingan-art-v0.1.7",
+      "website_verified_at": "2026-10-13T11:21:26.378862+00:00",
+      "record": "releases/web-pingan-art-v0.1.7/handoff.json",
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "summary": "平安县城砖石、房屋山墙、炮身与制服细节优化，原玩法和操作保留。",
+      "reason": "局部美术精修，非新增玩法或入口变化；现有说明仍适用，距2026-10-12简介公开核验未满7天。",
+      "channels": [
+        "bilibili"
+      ]
     }
   ]
 }
