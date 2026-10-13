@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "task_id": "01a132f7-3d5e-7a60-a635-d1962513c8d2-work1",
+  "game_id": "chongchao-qianshao",
+  "version": "web-independent-menu-v0.36.6",
+  "base_version": "web-weapon-bar-v0.36.5",
+  "created_at": "2026-10-13T02:13:34.471609+00:00",
+  "changes": [
+    {
+      "id": "independent-game-menu",
+      "before": "虫潮的独立模式区含枪火集结Toy跳转及引导文字",
+      "after": "移除跨游戏按钮和当前玩法说明中的引导，仅保留虫潮自身模式",
+      "verification": "source_and_packaged_menu_checked"
+    }
+  ],
+  "qa": {
+    "privacy_and_save_cases": 4,
+    "result": "passed",
+    "method": "Isolated headless Edge; Toy SDK mocked; mobile viewport simulations",
+    "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\privacy\\results.json",
+    "unverified": [
+      "physical Bilibili App device"
+    ]
+  },
+  "website": {
+    "status": "pending_deployment"
+  },
+  "toy": {
+    "id": 38678478981120,
+    "slug": "chongchao-qianshao",
+    "status": "built_not_submitted"
+  },
+  "cover_decision": {
+    "changed": false,
+    "reason": "菜单入口整理，不改变画风、场景或玩法主体"
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "普通菜单整理；上次简介公开核验为2026-10-12，未满7天，本次无新增玩法或关卡",
+    "pending_versions": [
+      "web-independent-menu-v0.36.6"
+    ]
+  },
+  "readiness": {
+    "overview": "not_applicable",
+    "update": "partial",
+    "gaps": [
+      "未制作视频；本次仅菜单整理，截图用于后续合并选题"
+    ]
+  }
+}

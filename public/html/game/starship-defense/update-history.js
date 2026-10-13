@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.5';
+export const GAME_VERSION='0.36.6';
 export const UPDATE_HISTORY=[
+  {version:'0.36.6',date:'2026-10-13',title:'独立游戏入口整理',changes:[
+    '主菜单只展示虫潮自己的玩法，移除已独立枪战游戏的跳转入口。',
+    '保留基地防守、银行塔防、房车生存、虫族模式，以及原有继续与存档。']},
   {version:'0.36.5',date:'2026-10-12',title:'顶部点枪换枪',changes:[
     '战地模式恢复顶部武器栏：点枪名即可换枪，不必再轮切过头或开进商店。',
     '手机触屏枪槽加大；主战役手机武器栏同样更容易点中。']},
