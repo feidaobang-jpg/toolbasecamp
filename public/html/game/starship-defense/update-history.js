@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.6';
+export const GAME_VERSION='0.36.7';
 export const UPDATE_HISTORY=[
+  {version:'0.36.7',date:'2026-10-13',title:'直接单机与匿名联机',changes:[
+    '默认匿名联机，无需游戏内登录；房间名称和玩家称呼自动生成，保留六位房间号加入与密码房。',
+    'B站昵称为可选项；Toy云档在主动查看、上传或开启自动备份后连接，本地存档与文件备份继续可用。']},
   {version:'0.36.6',date:'2026-10-13',title:'独立游戏入口整理',changes:[
     '主菜单只展示虫潮自己的玩法，移除已独立枪战游戏的跳转入口。',
     '保留基地防守、银行塔防、房车生存、虫族模式，以及原有继续与存档。']},

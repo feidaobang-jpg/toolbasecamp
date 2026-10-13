@@ -10,17 +10,17 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-independent-menu-v0.36.6",
+  "current_version": "web-anonymous-v0.36.7",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
-  "publication_status": "website_live_toy_auditing",
+  "publication_status": "website_live_toy_published",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "partial",
-  "qa": "releases/web-menu-history-v0.36.1/handoff.json",
+  "qa": "releases/web-anonymous-v0.36.7/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -47,8 +47,8 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "auditing",
-    "verified_at": "2026-10-12T12:29:13.804Z",
+    "review_status": "published",
+    "verified_at": "2026-10-13T11:04:41.015087+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -56,16 +56,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_j6ONJME3/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_K3HxzO6f/index.html",
     "title": "虫潮围城",
     "zip_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "submitted_date": "2026-10-12",
-    "release_record": "releases/web-independent-menu-v0.36.6/handoff.json",
-    "submitted_version": "web-independent-menu-v0.36.6",
-    "published_version": "web-fps-mouse-v0.36.2-input-safety1",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_j6ONJME3/index.html",
-    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
-    "package_sha256": "d2ad7cf872cfa4f3670c3d751cba30fe3bd9f0a627709564cc6c02fecbe72a99",
+    "release_record": "releases/web-anonymous-v0.36.7/handoff.json",
+    "submitted_version": "web-anonymous-v0.36.7",
+    "published_version": "web-anonymous-v0.36.7",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_2q7sLW5w/index.html",
+    "note": "v0.36.6已过审且正式菜单公开核验：跨游戏入口移除，自身模式和旧存档入口保留。",
+    "package_sha256": "2a99c0665a6b58462e149f55a107ca59923220a0b877922914af9aae0c492fdb",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -118,12 +118,12 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-12T12:29:13.804Z",
-    "status": "auditing",
+    "published_verified_at": "2026-10-13T02:25:36.275437+00:00",
+    "status": "published",
     "package_hash": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "submitted_at": "2026-10-13T02:20:37.193425+00:00",
-    "public_verified_at": "2026-10-12T12:29:13.804Z",
+    "submitted_at": "2026-10-13T02:55:37.676971+00:00",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-12T12:29:13.804Z",
@@ -139,7 +139,7 @@
     "version": "web-fps-mouse-v0.36.2-input-safety1",
     "published_at": "2026-10-11T10:03:07+00:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
-    "last_published_version": "web-fps-mouse-v0.36.2-input-safety1",
+    "last_published_version": "web-independent-menu-v0.36.6",
     "last_submitted_version": "web-independent-menu-v0.36.6",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
     "current_public_verification": "verified",
@@ -149,9 +149,9 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-fps-mouse-v0.36.2-input-safety1",
-    "last_successful_sync_at": "2026-10-12T12:29:13.804Z",
-    "public_verified_version": "web-fps-mouse-v0.36.2-input-safety1",
+    "last_successful_sync_version": "web-independent-menu-v0.36.6",
+    "last_successful_sync_at": "2026-10-13T02:25:36.275437+00:00",
+    "public_verified_version": "web-independent-menu-v0.36.6",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
     "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
     "package": {
@@ -162,7 +162,7 @@
     },
     "submitted_package_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "watermark_enabled": true,
-    "public_runtime_revision": "v25481",
+    "public_runtime_revision": "v25661",
     "last_zip_sha256": "bcba022aad44d7c04553bfe0505b6d7e2b357512365323d27e8df814bbd80d38",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html"
   },
@@ -1418,5 +1418,5 @@
     "deployed_script_src": "./game.compat.js?v=f07e5c81",
     "action_url": "https://github.com/feidaobang-jpg/toolbasecamp/actions/runs/38140856542"
   },
-  "toy_status": "auditing"
+  "toy_status": "published"
 }

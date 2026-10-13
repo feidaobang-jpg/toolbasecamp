@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "game_id": "gunfire-assembly",
+  "version": "web-anonymous-v0.1.3",
+  "created_at": "2026-10-13T10:34:51.436246+08:00",
+  "build": {
+    "id": "web-anonymous-v0.1.3",
+    "commit": "da4c54e89677f56a80183bc037dbc3285d5cf06d",
+    "dirty": false,
+    "fingerprint": "9604c4ff22f1cb0549b72dd46ed0d3cec69c7045cfffbdc4fd3ba0a4e06b9095",
+    "entrypoint": "public/html/game/gunfire-assembly/index.html"
+  },
+  "changes": [
+    {
+      "id": "anonymous-no-login",
+      "before": "Default names used login-dependent Toy text safety; campaign cloud read was requested at startup",
+      "after": "Default anonymous seats and rooms have server-generated labels; cloud storage is requested only on player action",
+      "verification": "passed",
+      "evidence": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json"
+    }
+  ],
+  "qa": {
+    "website": "passed",
+    "final_package": "passed",
+    "physical_phone": "not-tested",
+    "artifact_directory": "D:/project/task-artifacts/anonymous-coop-20261013",
+    "actual_toy_preview": "passed"
+  },
+  "media": [
+    {
+      "id": "anonymous-lobby-desktop",
+      "file": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-cloud-package-qa\\gunfire-assembly-anonymous-1280x720.png",
+      "sha256": "0cbaa8a4e03f582e853fc6221b9405254fe1ed4bbd3b14755fbb2f7f5aa9d96e",
+      "kind": "screenshot",
+      "version": "web-anonymous-v0.1.3",
+      "build_id": "web-anonymous-v0.1.3",
+      "capture_mode": "realtime-automation",
+      "description": "Actual final package menu with mocked logged-out SDK; default anonymous checked; no account API calls",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "not-run",
+      "audio_review": "not-applicable"
+    }
+  ],
+  "readiness": {
+    "update": "partial",
+    "overview": "not_applicable",
+    "gaps": [
+      "No new edited video; menu screenshots and multiplayer QA are retained for a later combined Bilibili episode"
+    ]
+  },
+  "cover": "reuse; login/menu flow does not change gameplay art",
+  "channel_record": "../../../../site-games/releases/anonymous-coop-20261013/handoff.json",
+  "channels": {
+    "website": "deployed_verified",
+    "toy": {
+      "game": "gunfire-assembly",
+      "id": "43022175699968",
+      "slug": "feidao-gunfire",
+      "version": "web-anonymous-v0.1.3",
+      "zip": "D:\\project\\task-artifacts\\anonymous-coop-20261013\\final-packages\\gunfire-assembly.zip",
+      "sha256": "9604c4ff22f1cb0549b72dd46ed0d3cec69c7045cfffbdc4fd3ba0a4e06b9095",
+      "superseded_previews": [
+        {
+          "url": "https://www.bilibili.com/toy/preview/preview_SwAHF1Tr/index.html",
+          "sha256": "50b6b4c5dc3a05a094b2dfe384634265d43880655128b4aaa01d25f27406da19",
+          "reason": "Correct unread/failed cloud status before any review submission"
+        },
+        {
+          "url": "https://www.bilibili.com/toy/preview/preview_GjOYDona/index.html",
+          "sha256": "327ab7b75c52eff8c761f1f75a268510d3638a26ce6eec25ea5d4dd02bfa1eea",
+          "reason": "Clarify default anonymous versus-room instructions before final review"
+        }
+      ],
+      "previous_platform_status": "published",
+      "watermark_enabled": true,
+      "preview_attempt_at": "2026-10-13T02:53:06.244974+00:00",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_HytZliDb/index.html",
+      "preview_verified": true,
+      "preview_method": "Codex IAB real Toy iframe; desktop and portrait viewport; anonymous create/exit succeeded; final cloud unknown state and optional backup controls checked on starship",
+      "preview_verified_at": "2026-10-13T02:55:17.414497+00:00",
+      "submit_attempt_at": "2026-10-13T02:55:37.842789+00:00",
+      "status": "published",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_E5cmnDxD/index.html",
+      "submitted_at": "2026-10-13T02:55:38.866344+00:00",
+      "submitted_status": "auditing",
+      "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+      "public_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "public_evidence": {
+        "method": "Codex IAB official public iframe; actual published version directory; default anonymous checkbox checked and optional Bilibili nickname present",
+        "anonymous_default": true,
+        "no_room_created_or_account_profile_requested": true
+      }
+    },
+    "bilibili": "deferred_accumulating",
+    "taptap": "not_requested"
+  }
+}

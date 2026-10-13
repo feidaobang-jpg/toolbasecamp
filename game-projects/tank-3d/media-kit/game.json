@@ -3,7 +3,7 @@
   "name": "坦克大战 3D：魔改 Boss 挑战 · 含经典 35 关",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "remix-entry1-views4",
+  "current_version": "remix-entry1-views4-anonymous1",
   "handoff": "releases/remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
@@ -30,20 +30,20 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
-    "verified_at": "2026-10-12T12:26:21.857Z",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
-    "submitted_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
-    "submitted_at": "2026-10-12T12:22:20.004524+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_YYo3LSfJ/index.html",
+    "verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Rch25BB2/index.html",
+    "submitted_version": "remix-entry1-views4-anonymous1",
+    "submitted_at": "2026-10-13T02:55:18.702761+00:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1/handoff.json",
-    "published_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+    "release_record": "releases/remix-entry1-views4-anonymous1/handoff.json",
+    "published_version": "remix-entry1-views4-anonymous1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
-    "package_sha256": "0e66f8a1f269f1be7731630a6779ee241c1d8521e6c55a7815a5ad4d8ce442d2",
+    "package_sha256": "ab43d26b0be2eb789bb3faf82f5352c1fe99236396cd89410f2a5f050837d416",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -135,7 +135,7 @@
     "last_published_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "last_successful_sync_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
     "last_successful_sync_at": "2026-10-12T12:26:21.857Z",
-    "public_verified_at": "2026-10-12T12:26:21.857Z",
+    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
     "public_runtime_evidence": {
       "status": "public_verified",
       "at": "2026-10-12T12:26:21.857Z",
@@ -440,5 +440,6 @@
         }
       }
     }
-  ]
+  ],
+  "qa": "releases/remix-entry1-views4-anonymous1/handoff.json"
 }

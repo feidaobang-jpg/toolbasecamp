@@ -3,6 +3,8 @@
 const SDK_URL='https://s1.hdslb.com/bfs/seed/toy/app/sdk/toy-sdk.js';
 const DEFAULT_NAMES=new Set(['玩家','坦克手']);
 const DEFAULT_ROOMS=new Set(['合作房间','玩家的房间','坦克手的房间']);
+export const anonymousPlayerName=slot=>Number.isInteger(slot)&&slot>=0&&slot<8?'玩家'+(slot+1):'玩家';
+function builtInText(text){return DEFAULT_NAMES.has(text)||DEFAULT_ROOMS.has(text)||/^玩家[1-8]$/.test(text)||/^合作房间 · \d{6}$/.test(text);}
 const records=new Map(),listeners=new Set();
 const jobs=[];
 let activeChecks=0;
@@ -69,30 +71,48 @@ export async function checkPublicText(text,scene='nickname'){
   })();
   return record.pending;
 }
-export function publicText(text,fallback='玩家'){
+export function publicText(text,fallback='玩家',allowCheck=false){
   if(typeof text!=='string'||!text)return fallback;
+  // Literal labels and bounded server-generated names contain no player input.
+  if(builtInText(text))return text;
   if(isPublicTextApproved(text))return text;
   // Outside Toy, only literal built-in labels may be displayed. Never accept arbitrary text.
   if(!isToyTextEnvironment())return DEFAULT_NAMES.has(text)||DEFAULT_ROOMS.has(text)?text:fallback;
-  void checkPublicText(text,'display_text');
+  // Anonymous readers show a fixed fallback without requesting a logged-in API.
+  if(allowCheck)void checkPublicText(text,'display_text');
   return fallback;
 }
-export async function preparePublicIdentity(name,roomName,create){
+export async function preparePublicIdentity(name,roomName,create,anonymous=false){
+  if(anonymous)return {passed:true,name:'',roomName:create?'':null,anonymous:true};
   const nickname=String(name||'玩家').trim().slice(0,12)||'玩家';
-  const room=create?(String(roomName||'').trim().slice(0,32)||nickname+'的房间'):null;
+  const room=create?String(roomName||'').trim().slice(0,32):null;
   if(!isToyTextEnvironment()){
-    if(!DEFAULT_NAMES.has(nickname))return {passed:false,field:'name',status:'unavailable',message:'此环境暂不支持自定义昵称，请使用默认名称「玩家」或「坦克手」；单机仍可玩'};
-    if(create&&!DEFAULT_ROOMS.has(room))return {passed:false,field:'roomName',status:'unavailable',message:'此环境暂不支持自定义房间名，请留空或使用「合作房间」；单机仍可玩'};
-    return {passed:true,name:nickname,roomName:room};
+    if(!builtInText(nickname))return {passed:false,field:'name',status:'unavailable',message:'此环境暂不支持自定义昵称，请勾选匿名联机；单机与匿名联机无需游戏内登录'};
+    if(room&&!builtInText(room))return {passed:false,field:'roomName',status:'unavailable',message:'此环境暂不支持自定义房间名，请留空或勾选匿名联机'};
+    return {passed:true,name:nickname,roomName:room,anonymous:false};
   }
   for(const [field,text,scene,label] of [['name',nickname,'nickname','昵称'],...(create?[['roomName',room,'room_name','房间名称']]:[])]){
+    if(!text||builtInText(text))continue;
     const result=await checkPublicText(text,scene);
-    if(!result.passed)return {passed:false,field,status:result.status,message:result.status==='rejected'?label+'未通过安全检测，请换一个再试':label+'暂时无法完成安全检测，请确认已登录B站后稍后重试；单机仍可玩'};
+    if(!result.passed)return {passed:false,field,status:result.status,message:result.status==='rejected'?label+'未通过安全检测，请换一个再试':label+'暂时无法完成安全检测；自定义名称需登录B站，也可勾选匿名联机直接游玩'};
   }
-  return {passed:true,name:nickname,roomName:room};
+  return {passed:true,name:nickname,roomName:room,anonymous:false,customText:!builtInText(nickname)||!!room&&!builtInText(room)};
+}
+// Each visit starts anonymously; a cached custom name must not become a login gate.
+export function installAnonymousControls(toggle,name,room,onChange=()=>{}){
+  const update=()=>{
+    name.dataset.identityRevision=String(Number(name.dataset.identityRevision||0)+1);
+    name.readOnly=room.readOnly=toggle.checked;
+    if(toggle.checked){name.value='玩家';room.value='';}
+    name.placeholder=toggle.checked?'进入房间后自动分配':'自定义昵称（需安全检测）';
+    room.placeholder=toggle.checked?'自动生成房间名称':'留空自动生成';
+  };
+  toggle.checked=true;update();toggle.addEventListener('change',()=>{update();onChange();});
+  for(const input of [name,room])input.addEventListener('input',()=>{name.dataset.identityRevision=String(Number(name.dataset.identityRevision||0)+1);onChange();});
+  return ()=>{toggle.checked=false;update();};
 }
 // Load capability ahead of the click so the profile request retains the player's gesture.
-export function installNicknameButton(button,input,status){
+export function installNicknameButton(button,input,status,onUse=()=>{}){
   button.hidden=!isToyTextEnvironment();button.disabled=true;
   if(button.hidden)return;
   let api=null;
@@ -103,25 +123,25 @@ export function installNicknameButton(button,input,status){
   }).catch(()=>{});
   button.addEventListener('click',async()=>{
     if(!api||input.disabled)return;
-    const before=input.value;button.disabled=true;
+    const before=input.value,revision=input.dataset.identityRevision;button.disabled=true;
     try{
       const profile=await api.getUserProfile();
       const name=typeof profile?.nickname==='string'?profile.nickname.trim().slice(0,12):'';
       if(!name){status('未获得B站昵称，可继续使用默认名称');return;}
       const checked=await checkPublicText(name,'nickname');
-      if(input.value!==before||input.disabled)return;
-      if(!checked.passed){input.value='';status(checked.status==='rejected'?'B站昵称未通过安全检测，请使用其他昵称':'暂时无法检测B站昵称，请稍后重试');return;}
-      input.value=name;status('已填入B站昵称；创建或加入房间时使用');
+      if(input.value!==before||input.disabled||input.dataset.identityRevision!==revision)return;
+      if(!checked.passed){if(!input.readOnly)input.value='';status(checked.status==='rejected'?'B站昵称未通过安全检测；可继续匿名联机':'暂时无法检测B站昵称；可继续匿名联机');return;}
+      onUse();input.value=name;status('已填入B站昵称；创建或加入房间时使用');
     }catch{status('未获得B站昵称，可继续使用默认名称');}
     finally{button.disabled=input.disabled;}
   });
 }
 // Names in battle snapshots and result tables must not bypass lobby moderation.
-export function protectSnapshotText(value,depth=0){
+export function protectSnapshotText(value,depth=0,allowCheck=false){
   if(!value||typeof value!=='object'||depth>24)return value;
   for(const [key,item] of Object.entries(value)){
-    if(typeof item==='string'&&/^(name|nickname|roomName|playerName|message|msg|toast|banner|reason|title|text)$/.test(key))value[key]=publicText(item,/name/i.test(key)?'玩家':'');
-    else if(item&&typeof item==='object')protectSnapshotText(item,depth+1);
+    if(typeof item==='string'&&/^(name|nickname|roomName|playerName|message|msg|toast|banner|reason|title|text)$/.test(key))value[key]=publicText(item,/name/i.test(key)?'玩家':'',allowCheck);
+    else if(item&&typeof item==='object')protectSnapshotText(item,depth+1,allowCheck);
   }
   return value;
 }

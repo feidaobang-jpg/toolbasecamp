@@ -1,6 +1,7 @@
 *{box-sizing:border-box}
 .coop-panel{max-width:560px!important;width:min(94vw,560px)!important}
 .coop-panel label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0;color:#31523f}
+.coop-panel label.anonymous-option{justify-content:flex-start;min-height:44px}.coop-panel .anonymous-option input{width:20px;height:20px;flex:none}.coop-panel input[readonly]{background:#e8eedb}
 .coop-panel input{width:62%;min-height:42px;border:1px solid #8a9c84;border-radius:8px;background:#fffdf4;padding:8px 12px;font:inherit;user-select:text}
 .coop-panel input:focus{outline:3px solid #d7bb62}
 .coop-panel p{line-height:1.6;font-size:13px;margin:4px 0}
