@@ -21,7 +21,13 @@ export const L = {
   bossPos: { x: 0, z: -98 },
   flag: { x: -9, z: -101 },
   fieldX: 45,
+  platA: { x: 6, z: 60, h: 1.5 },      // 土台：可从侧面压制左翼机枪阵地
+  platB: { x: -4, z: 40, h: 1.5 },     // 土台：可从侧面压制右翼机枪阵地
+  shed: { x: -10.7, z: -63, h: 2.4 },  // 十字街口的矮棚顶
+  wires: [[-24, -9, 63.5], [8, 22, 43.5]],
 };
+// 站不上去的碰撞体（跳到上面也会滑下来）
+const NO_STAND = { bound: 1, citywall: 1, house: 1, tree: 1, gate: 1, hqdoor: 1, rock: 1, wire: 1, solid: 1 };
 
 const C = {
   loess: 0xc7a56c, loess2: 0xb8935a, road: 0xa98a58, crater: 0x6d5a3e,
@@ -182,6 +188,23 @@ export function buildWorld(scene, quality) {
     col(cx - 0.3, cx + 0.3, cz - 0.3, cz + 0.3, h, 'tree');
   };
 
+  // 弹药箱：能跳上去当台阶
+  const crate = (g, cx, cz, w, h, d, color = 0x6f7440) => {
+    g.box(w, h, d, cx, h / 2, cz, color, R(-0.05, 0.05), 0, 0, 0.3);
+    g.box(w + 0.04, 0.07, d + 0.04, cx, h * 0.28, cz, 0x3d4428, 0, 0, 0, 0);
+    g.box(w + 0.04, 0.07, d + 0.04, cx, h * 0.78, cz, 0x3d4428, 0, 0, 0, 0);
+    return col(cx - w / 2, cx + w / 2, cz - d / 2, cz + d / 2, h, 'crate');
+  };
+  // 平顶土台：南侧放一只箱子当台阶，跳上去能从侧面看到机枪阵地里面
+  const platform = (g, cx, cz, h) => {
+    const w = 4.2, d = 3.2;
+    g.box(w + 0.8, h * 0.45, d + 0.8, cx, h * 0.225, cz, C.loess2, 0, 0, 0, 0.35);
+    g.box(w, h, d, cx, h / 2, cz, 0xb38f58, 0, 0, 0, 0.3);
+    g.box(w - 0.3, 0.06, d - 0.3, cx, h + 0.03, cz, 0xa98652, 0, 0, 0, 0);
+    for (let i = 0; i < 6; i++) g.box(0.66, 0.28, 0.5, cx - 1.7 + i * 0.68, h + 0.14, cz - d / 2 + 0.3, i % 2 ? C.bag : C.bag2, R(-0.05, 0.05), 0, 0, 0.3);
+    col(cx - w / 2, cx + w / 2, cz - d / 2, cz + d / 2, h, 'mound');
+    crate(g, cx + 0.6, cz + d / 2 + 0.85, 2.0, 0.78, 1.7);
+  };
   world.nests = {
     A: nest(field, L.nestA.x, L.nestA.z, 'A'),
     B: nest(field, L.nestB.x, L.nestB.z, 'B'),
@@ -206,11 +229,14 @@ export function buildWorld(scene, quality) {
     col(x - 1.4, x + 1.4, z - 0.9, z + 0.9, 1.2, 'cart');
   }
   // 铁丝网（装饰）
-  for (const [x0, x1, z] of [[-24, -9, 63.5], [8, 22, 43.5]]) {
+  for (const [x0, x1, z] of L.wires) {
     for (let x = x0; x <= x1; x += 2.5) { field.box(0.08, 1.0, 0.08, x, 0.5, z, 0x4a3a2a, 0, 0, 0.2); field.box(0.08, 1.0, 0.08, x, 0.5, z, 0x4a3a2a, 0, 0, -0.2); }
-    field.box(x1 - x0, 0.03, 0.03, (x0 + x1) / 2, 0.75, z, 0x55504a, 0, 0, 0, 0);
-    field.box(x1 - x0, 0.03, 0.03, (x0 + x1) / 2, 0.4, z, 0x55504a, 0, 0, 0, 0);
+    for (const [yy, zz] of [[0.75, 0], [0.42, 0.12], [0.58, -0.12], [0.2, 0]]) field.box(x1 - x0, 0.035, 0.035, (x0 + x1) / 2, yy, z + zz, 0x55504a, 0, 0, 0, 0);
+    col(x0, x1, z - 0.28, z + 0.28, 0.8, 'wire', { heroOnly: true });
   }
+  platform(field, L.platA.x, L.platA.z, L.platA.h);
+  platform(field, L.platB.x, L.platB.z, L.platB.h);
+  crate(field, 19, 47, 1.9, 0.8, 1.9, 0x7a6a3c); crate(field, -12, 30, 1.9, 0.8, 1.9, 0x7a6a3c);
   add(field.build(matVC));
   // 场地边界
   col(-140, -L.fieldX, -17, 140, 30, 'bound');
@@ -385,15 +411,28 @@ export function buildWorld(scene, quality) {
   // ---------- 街垒、缴获仓库、守备队部 ----------
   const town = new Geo();
   // 街垒 S1
-  sandbagRow(town, -6.6, -1.6, -41, 5);
-  sandbagRow(town, 1.6, 6.6, -41, 5);
-  col(-6.7, -1.5, -41.5, -40.5, 1.6, 'bags');
-  col(1.5, 6.7, -41.5, -40.5, 1.6, 'bags');
+  // 胸口高：守军能越过沙袋开枪，露出的上半身也打得到；主角可以直接跳上去
+  sandbagRow(town, -6.6, -1.6, -41, 4);
+  sandbagRow(town, 1.6, 6.6, -41, 4);
+  col(-6.7, -1.5, -41.5, -40.5, 1.1, 'bags');
+  col(1.5, 6.7, -41.5, -40.5, 1.1, 'bags');
   town.box(2.4, 0.2, 1.3, -4.6, 0.8, -36, C.woodDark, 0.3, 0.1);
   town.cyl(0.5, 0.1, -5.6, 0.5, -35.6, 0x2c241c, 10, 1, 0, 0.3, Math.PI / 2);
   col(-5.9, -3.3, -36.8, -35.2, 1.2, 'cart');
+  crate(town, -4.1, -39.5, 1.8, 0.8, 1.8);
+  crate(town, 4.1, -39.5, 1.8, 0.8, 1.8, 0x7a6a3c);
   // 十字街口机枪阵地
   world.nests.S = nest(town, L.streetNest.x, L.streetNest.z, 'S');
+  // 街口西侧的矮棚：踩两级箱子能上棚顶，从侧面打街口机枪
+  {
+    const x0 = -12.6, x1 = -8.8, z0 = -64.3, z1 = -61.7, hh = L.shed.h;
+    town.box(x1 - x0, hh - 0.2, z1 - z0, (x0 + x1) / 2, (hh - 0.2) / 2, (z0 + z1) / 2, C.grayBrick, 0, 0, 0, 0.3);
+    town.box(x1 - x0 + 0.5, 0.2, z1 - z0 + 0.5, (x0 + x1) / 2, hh - 0.1, (z0 + z1) / 2, C.woodDark, 0, 0, 0, 0);
+    town.box(1.1, 1.7, 0.1, (x0 + x1) / 2, 0.85, z1 + 0.04, C.woodDark, 0, 0, 0, 0.1);
+    col(x0, x1, z0, z1, hh, 'shed');
+    crate(town, -7.95, -63, 1.5, 1.6, 2.2, 0x7a6a3c);
+    crate(town, -6.3, -63, 1.7, 0.8, 2.2);
+  }
   // 缴获仓库：矮墙院子，门朝南开在横街上
   {
     const x0 = 9, x1 = 21, z0 = -79, z1 = -66.5, hh = 2.6;
@@ -436,6 +475,7 @@ export function buildWorld(scene, quality) {
     town.roof(30, 2.6, 10, 0, 8.05, -108.2, C.tile);
     col(-14.5, 14.5, -112.5, -103.6, 9, 'house');
     for (const [x, z] of [[-9, -88], [9, -88], [-9, -97], [9, -97]]) { town.box(1.3, 1.7, 1.3, x, 0.85, z, C.stone, 0, 0, 0, 0.25); town.box(1.5, 0.2, 1.5, x, 1.78, z, 0x8b887f, 0, 0, 0, 0); col(x - 0.65, x + 0.65, z - 0.65, z + 0.65, 1.8, 'pillar'); }
+    crate(town, -13.4, -93, 1.9, 0.9, 1.8); crate(town, 13.4, -90.5, 1.9, 0.9, 1.8, 0x7a6a3c);
     town.cyl(0.12, 9, L.flag.x, 4.5, L.flag.z, 0x4a4640, 6, 1);
     town.box(0.9, 0.5, 0.9, L.flag.x, 0.25, L.flag.z, C.stone);
   }
@@ -477,11 +517,13 @@ function signPlane(text, w, h, fg, bg) {
 }
 
 // ---------- 碰撞工具 ----------
-export function resolveCircle(world, u, r) {
+export function resolveCircle(world, u, r, feet = 0, hero = false) {
   const cs = world.colliders;
   for (let i = 0; i < cs.length; i++) {
     const c = cs[i];
-    if (!c.on || c.y0 > 1.5) continue;
+    if (!c.on || c.y0 > feet + 1.5) continue;
+    if (c.heroOnly && !hero) continue;          // 铁丝网只拦主角，电脑单位照常通过
+    if (feet >= c.h - 0.02) continue;           // 已经站在顶面以上
     if (u.x < c.x0 - r || u.x > c.x1 + r || u.z < c.z0 - r || u.z > c.z1 + r) continue;
     const nx = clamp(u.x, c.x0, c.x1), nz = clamp(u.z, c.z0, c.z1);
     let dx = u.x - nx, dz = u.z - nz;
@@ -497,6 +539,18 @@ export function resolveCircle(world, u, r) {
       if (m === l) u.x = c.x0 - r; else if (m === rr) u.x = c.x1 + r; else if (m === t) u.z = c.z0 - r; else u.z = c.z1 + r;
     }
   }
+}
+
+// 脚下能站的最高顶面（地面为 0）。只认不高于脚面一点点的顶面，所以必须跳上去而不是走上去
+export function groundAt(world, x, z, feet) {
+  const cs = world.colliders;
+  let g = 0;
+  for (let i = 0; i < cs.length; i++) {
+    const c = cs[i];
+    if (!c.on || c.y0 > 0 || NO_STAND[c.tag] || c.h > feet + 0.06 || c.h <= g) continue;
+    if (x >= c.x0 - 0.3 && x <= c.x1 + 0.3 && z >= c.z0 - 0.3 && z <= c.z1 + 0.3) g = c.h;
+  }
+  return g;
 }
 
 // 子弹等空间点是否打在实体上

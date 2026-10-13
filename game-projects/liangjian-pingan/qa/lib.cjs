@@ -5,7 +5,7 @@ const PW = process.env.PLAYWRIGHT_DIR || 'D:/project/godot/absurd-3d-daily/node_
 const { chromium } = require(PW);
 const EDGE = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/liangjian-pingan/';
-const OUT = process.env.QA_OUTPUT || path.join(__dirname, '../media-kit/releases/v0.1.0/captures/qa');
+const OUT = process.env.QA_OUTPUT || path.join(__dirname, '../media-kit/releases/v0.2.0/captures/qa');
 fs.mkdirSync(OUT, { recursive: true });
 
 async function open(opts = {}) {
@@ -23,4 +23,10 @@ async function open(opts = {}) {
   return { browser, ctx, page, errors };
 }
 const shot = (page, name) => page.screenshot({ path: path.join(OUT, name) });
-module.exports = { open, shot, OUT, BASE };
+// 从主菜单开局：按 Enter；万一按键没送到（偶发），改点“开始战斗”
+async function start(page) {
+  await page.keyboard.press('Enter');
+  try { await page.waitForFunction(() => __lj.app.state === 'play', null, { timeout: 1500 }); }
+  catch (e) { await page.evaluate(() => document.querySelector('#menu .btn.primary').click()); await page.waitForFunction(() => __lj.app.state === 'play', null, { timeout: 3000 }); }
+}
+module.exports = { open, shot, start, OUT, BASE };

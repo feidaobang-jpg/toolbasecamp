@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#2a231b">
 <title>亮剑：攻打平安县城</title>
-<link rel="stylesheet" href="style.css?v=0.1.0">
+<link rel="stylesheet" href="style.css?v=0.2.0">
 </head>
 <body>
 <div id="stage">
@@ -28,7 +28,8 @@
       <button id="btn-full" type="button" aria-label="全屏">全屏</button>
     </div>
     <div id="marker" hidden><i></i><span></span></div>
-    <div id="crosshair" hidden></div>
+    <div id="crosshair" hidden><i></i></div>
+    <div id="cross-tip" hidden></div>
     <div id="aim-info" hidden></div>
     <div id="skills" aria-hidden="true"></div>
     <div id="keyhint"></div>
@@ -40,11 +41,17 @@
   </div>
 
   <div id="touch" hidden>
-    <div id="joy-zone"><div id="joy-base"><div id="joy-knob"></div></div></div>
-    <button class="act" id="act-U" data-act="U" type="button"><b>U</b><span>亮剑</span><em></em></button>
-    <button class="act" id="act-I" data-act="I" type="button"><b>I</b><span>骑兵连</span><em></em></button>
-    <button class="act" id="act-J" data-act="J" type="button"><b>J</b><span>射击</span><em></em></button>
-    <button class="act" id="act-K" data-act="K" type="button"><b>K</b><span>手榴弹</span><em></em></button>
+    <div id="joy-zone"></div>
+    <div id="joy-base"><div id="joy-knob"></div></div>
+    <button class="tb" id="act-fire2" data-act="fire" type="button" aria-label="左手开火" hidden><span>开火</span></button>
+    <button class="tb" id="act-fire" data-act="fire" type="button" aria-label="开火"><b class="kb">J</b><span>开火</span><em></em></button>
+    <button class="tb" id="act-jump" data-act="jump" type="button" aria-label="跳跃"><b class="kb">K</b><span>跳</span></button>
+    <button class="tb" id="act-ads" data-act="ads" type="button" aria-label="开镜"><b class="kb">O</b><span>开镜</span></button>
+    <button class="tb" id="act-reload" data-act="reload" type="button" aria-label="换弹"><b class="kb">R</b><span>换弹</span></button>
+    <button class="tb" id="act-nade" data-act="nade" type="button" aria-label="手榴弹"><b class="kb">L</b><span>手榴弹</span><em></em></button>
+    <button class="tb" id="act-dash" data-act="dash" type="button" aria-label="亮剑"><b class="kb">U</b><span>亮剑</span><em></em></button>
+    <button class="tb" id="act-cav" data-act="cav" type="button" aria-label="骑兵连"><b class="kb">I</b><span>骑兵连</span><em></em></button>
+    <button class="tb" id="act-use" data-act="use" type="button" aria-label="互动" hidden><b class="kb">F</b><span>操炮</span></button>
   </div>
 
   <div id="fps" hidden></div>
@@ -62,6 +69,6 @@ window.addEventListener('error', function (e) {
   if (b) { b.hidden = false; b.onclick = function () { location.reload(); }; }
 }, true);
 </script>
-<script type="module" src="js/main.js?v=0.1.0"></script>
+<script type="module" src="js/main.js?v=0.2.0"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 const { open } = require('./lib.cjs');
 const fs = require('fs');
 const path = require('path');
-const bot = fs.readFileSync(path.join(__dirname, 'playthrough.cjs'), 'utf8').match(/function installBot\(\) \{[\s\S]*?\n\}\n/)[0];
+const BOT = fs.readFileSync(path.join(__dirname, 'bot.browser.js'), 'utf8');
 
 async function sample(page, seconds) {
   return page.evaluate((sec) => new Promise((res) => {
@@ -36,11 +36,13 @@ async function sample(page, seconds) {
     const env = await page.evaluate(() => { const gl = __lj.app.renderer.getContext(); const e = gl.getExtension('WEBGL_debug_renderer_info'); const cv = document.getElementById('gl'); return { renderer: e ? gl.getParameter(e.UNMASKED_RENDERER_WEBGL) : 'unknown', dpr: devicePixelRatio, canvas: [cv.width, cv.height], ua: navigator.userAgent.replace(/^.*(Edg\/[\d.]+).*$/, '$1') }; });
     await page.evaluate((q) => { const a = __lj.app; a.s.quality = q; a.applyQuality(); a.layout(true); a.s.lives = 'inf'; }, c.quality);
     const run = { name: c.name, env, samples: [] };
-    for (const [phase, view, secs] of [[1, 0, 12], [1, 2, 8], [1, 3, 8], [2, 0, 12], [4, 0, 14], [4, 2, 8], [5, 0, 10]]) {
-      await page.evaluate(`(function(){ const a = __lj.app; a.s.view = ${view}; a.s.startPhase = ${phase}; if (a.state !== 'menu') a.toMenu(); a.start(false); window.__bot = (${bot})(); })()`);
+    await page.evaluate(async () => { window.__W = await import('./js/world.js'); });
+    await page.addScriptTag({ content: BOT });
+    for (const [phase, view, secs] of [[1, 0, 12], [1, 1, 10], [2, 0, 12], [4, 0, 14], [4, 1, 10], [5, 0, 10]]) {
+      await page.evaluate(([v, ph]) => { const a = __lj.app; a.s.view = v; a.s.startPhase = ph; if (a.state !== 'menu') a.toMenu(); a.start(false); window.__bot = window.__installBot(); }, [view, phase]);
       await page.waitForTimeout(1500);   // 预热
       const s = await sample(page, secs);
-      s.view = ['斜俯视', '战术俯视', '正视', '第一人称'][view];
+      s.view = ['第三人称', '第一人称'][view];
       s.canvas = await page.evaluate(() => { const cv = document.getElementById('gl'); return [cv.width, cv.height]; });
       run.samples.push(s);
       console.log(c.name, `阶段${phase} ${s.view}`, JSON.stringify(s));

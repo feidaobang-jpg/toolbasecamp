@@ -5,7 +5,7 @@ const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
 
 export const PHASE_NAMES = ['', '扫清城外', '拉炮上阵', '开炮！', '打进县城', '决战山本'];
-export const VIEW_NAMES = ['斜俯视', '战术俯视', '正视', '第一人称'];
+export const VIEW_NAMES = ['第三人称', '第一人称'];
 
 const OPTS = {
   startPhase: { label: '起始阶段', where: 'm', fmt: (v) => v + ' ' + PHASE_NAMES[v] },
@@ -18,6 +18,9 @@ const OPTS = {
   danmaku: { label: '弹幕', where: 'mp', fmt: (v) => (v ? '开' : '关') },
   touchKeys: { label: '触屏按键', where: 'm', fmt: (v) => ({ auto: '自动', show: '显示', hide: '隐藏' }[v]) },
   fps: { label: '帧率显示', where: 'mp', fmt: (v) => (v ? '开' : '关') },
+  aimSens: { label: '瞄准灵敏度', where: 'mp', fmt: (v) => ({ low: '低', mid: '中', high: '高' }[v]) },
+  mouseAim: { label: '鼠标瞄准', where: 'mp', fmt: (v) => (v === 'lock' ? '鼠标锁定' : '按住拖动') },
+  leftFire: { label: '左手开火键', where: 'mp', fmt: (v) => (v ? '开' : '关') },
 };
 const MODES = [['auto', '自动识别'], ['pc', '电脑键鼠'], ['touch', '手机触屏']];
 
@@ -82,7 +85,7 @@ export class UI {
     opts.appendChild(this.btnFullM);
     this.btnBili = this._btn('<span class="ol">作者B站主页</span><span class="ov">飞刀班长</span>', 'opt', () => this.app.openAuthor());
     opts.appendChild(this.btnBili);
-    const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　<kbd>J</kbd> 射击/开炮　<kbd>K</kbd> 手榴弹　<kbd>U</kbd> 亮剑　<kbd>I</kbd> 骑兵连　<kbd>Q</kbd><kbd>E</kbd> 转视角　<kbd>C</kbd> 切换视角　鼠标按住空白处拖动转视角　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右下四键出手，按住画面空白处拖动转视角。</span>');
+    const foot = el('div', 'foot', '<span class="pc-only"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动　鼠标按住拖动瞄准、左键开火、右键开镜　<kbd>空格</kbd> 跳　<kbd>R</kbd> 换弹　<kbd>G</kbd> 手榴弹　<kbd>F</kbd> 操炮　<kbd>V</kbd> 亮剑　<kbd>X</kbd> 骑兵连　<kbd>C</kbd> 切换人称<br>纯键盘：<kbd>Q</kbd><kbd>E</kbd> 左右转　<kbd>Y</kbd><kbd>H</kbd> 上下转　<kbd>J</kbd> 开火　<kbd>K</kbd> 跳　<kbd>U</kbd> 亮剑　<kbd>I</kbd> 骑兵连　<kbd>L</kbd> 手榴弹　<kbd>O</kbd> 开镜　<kbd>Enter</kbd> 开始</span><span class="touch-only">左下摇杆移动，右半屏滑动瞄准，按住开火键也能拖着瞄；准星靠近敌人会自动吸一点。</span>');
     p.append(head, start, opts, this._modes(), foot);
     menu.appendChild(p);
     this.menuPanel = p;
@@ -98,7 +101,7 @@ export class UI {
     for (const k of Object.keys(OPTS)) if (OPTS[k].where.includes('p')) o2.appendChild(this._optBtn(k));
     o2.appendChild(this._btn('<span class="ol">全屏</span><span class="ov">切换</span>', 'opt', () => this.app.fullscreen()));
     c2.append(o2, this._modes());
-    c2.appendChild(el('div', 'foot', '<span class="pc-only"><kbd>J</kbd> 射击（炮位旁按 J 操炮，操炮时 J 开炮、<kbd>W</kbd><kbd>S</kbd> 调仰角、<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>K</kbd> 离开）　<kbd>K</kbd> 手榴弹　<kbd>U</kbd> 亮剑突进（能和山本拼刀）　<kbd>I</kbd> 骑兵连冲锋　<kbd>Esc</kbd> 继续</span><span class="touch-only">J 射击（炮位旁按 J 操炮，摇杆调炮口与仰角，K 离开）；K 手榴弹；U 亮剑突进，能和山本拼刀；I 呼叫骑兵连。</span>'));
+    c2.appendChild(el('div', 'foot', '<span class="pc-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍；<kbd>R</kbd> 换弹，打空自动换。<kbd>空格</kbd>/<kbd>K</kbd> 跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。炮位旁按 <kbd>F</kbd> 操炮：<kbd>A</kbd><kbd>D</kbd> 转炮口、<kbd>W</kbd><kbd>S</kbd> 调仰角、开火键开炮、<kbd>F</kbd> 离开。<kbd>V</kbd>/<kbd>U</kbd> 亮剑能和山本拼刀，<kbd>X</kbd>/<kbd>I</kbd> 骑兵连，<kbd>Esc</kbd> 继续。</span><span class="touch-only">准星对着敌人开火，靠近目标会吸附，打头伤害加倍。跳：能跳过铁丝网、跳上箱子和土台、跳进机枪阵地侧面，也能跳起躲山本的突进。炮位旁点“操炮”：摇杆转炮口、调仰角，开火键开炮。亮剑能和山本拼刀。</span>'));
     cols.append(c1, c2); pp.appendChild(cols); pause.appendChild(pp);
 
     // 结算
@@ -204,21 +207,34 @@ export class UI {
   _skills() {
     const box = $('skills');
     this.chips = {};
-    for (const k of ['J', 'K', 'U', 'I']) { const d = el('div'); box.appendChild(d); this.chips[k] = d; }
+    for (const k of ['fire', 'nade', 'dash', 'cav']) { const d = el('div'); box.appendChild(d); this.chips[k] = d; }
   }
-  setAction(key, label, sub, disabled) {
+  // 动作键状态：触屏按钮与电脑右下角的状态条共用
+  setAction(key, label, sub, disabled, keyText) {
     const sig = label + '|' + sub + '|' + disabled;
     if (this.cache['a' + key] === sig) return;
     this.cache['a' + key] = sig;
-    const b = $('act-' + key);
-    b.querySelector('span').textContent = label;
-    b.querySelector('em').textContent = sub || '';
-    b.setAttribute('aria-disabled', String(!!disabled));
-    b.setAttribute('aria-label', key + ' ' + label + (sub ? ' ' + sub : ''));
+    for (const id of key === 'fire' ? ['act-fire', 'act-fire2'] : ['act-' + key]) {
+      const b = $(id);
+      if (!b) continue;
+      b.querySelector('span').textContent = label;
+      const em = b.querySelector('em');
+      if (em) em.textContent = sub || '';
+      b.setAttribute('aria-disabled', String(!!disabled));
+      b.setAttribute('aria-label', label + (sub ? ' ' + sub : ''));
+    }
     const c = this.chips[key];
-    c.innerHTML = `<b>${key}</b>${label}<em>${sub || '就绪'}</em>`;
-    c.classList.toggle('off', !!disabled);
+    if (c) { c.innerHTML = `<b>${keyText || ''}</b>${label}<em>${sub || '就绪'}</em>`; c.classList.toggle('off', !!disabled); }
   }
+  // 互动键（操炮 / 离开炮位）：电脑显示提示条，触屏显示按钮
+  setUse(label) {
+    if (this.cache.use === label) return;
+    this.cache.use = label;
+    const b = $('act-use');
+    b.hidden = !label;
+    if (label) b.querySelector('span').textContent = label;
+  }
+  setLeftFire(on) { $('act-fire2').hidden = !on; }
   setTouch(on, compact) {
     document.body.classList.toggle('touch-on', on);
     this.touch.hidden = !on;
@@ -263,7 +279,13 @@ export class UI {
     if (this.cache.aim !== html) { this.cache.aim = html; a.innerHTML = html; }
     a.classList.toggle('ok', !!ok);
   }
-  setCross(on, lock) { const c = $('crosshair'); if (c.hidden === on) c.hidden = !on; c.classList.toggle('lock', !!lock); }
+  setCross(on, mag, ads, hit) {
+    const c = $('crosshair');
+    if (c.hidden === on) c.hidden = !on;
+    const cls = (mag ? 'mag ' : '') + (ads ? 'ads ' : '') + (hit === 2 ? 'head' : hit === 1 ? 'hit' : '');
+    if (this.cache.cx !== cls) { this.cache.cx = cls; c.className = cls; }
+  }
+  setCrossTip(t, head) { const e = $('cross-tip'); const sig = (t || '') + (head ? '!' : ''); if (this.cache.ct === sig) return; this.cache.ct = sig; e.hidden = !t; if (t) { e.textContent = t; e.className = head ? 'head' : ''; } }
   setVignette(v) { const s = v.toFixed(2); if (this.cache.vg !== s) { this.cache.vg = s; $('vignette').style.opacity = s; } }
   setPrompt(t) { const p = $('prompt'); if (this.cache.pr === t) return; this.cache.pr = t; p.hidden = !t; if (t) p.textContent = t; }
   setFps(t) { const f = $('fps'); if (t === null) { f.hidden = true; return; } f.hidden = false; f.textContent = t; }
@@ -327,7 +349,7 @@ export class UI {
     this.dlgQ.length = 0; this.dlgT = 0; $('dialog').hidden = true;
     $('stamp').hidden = true; this.stampD = 0;
     $('toast').hidden = true; this.toastT = 0;
-    this.setPrompt(null); this.setAim(null); this.marker(false); this.setBoss(null); this.setCannon(null);
+    this.setPrompt(null); this.setAim(null); this.marker(false); this.setBoss(null); this.setCannon(null); this.setUse(null); this.setCrossTip(null); this.setCross(false);
     this.clearLabels();
     this.setVignette(0);
   }

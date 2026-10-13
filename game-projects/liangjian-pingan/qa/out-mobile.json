@@ -1,5 +1,5 @@
 {
- "at": "2026-10-13T10:59:41.013Z",
+ "at": "2026-10-13T15:23:20.948Z",
  "note": "触屏为 Edge 无头浏览器的触控模拟，不是手机真机",
  "results": [
   {
@@ -43,9 +43,7 @@
       "false",
       "true",
       "false"
-     ],
-     "touch": false,
-     "body": false
+     ]
     }
    }
   },
@@ -60,6 +58,19 @@
    }
   },
   {
+   "name": "电脑 1280×720 的触屏布局：功能键不出界、不重叠、不压信息栏",
+   "ok": true,
+   "detail": {
+    "n": 11,
+    "off": [],
+    "over": [],
+    "small": [],
+    "text": [],
+    "hudOver": [],
+    "viewText": true
+   }
+  },
+  {
    "name": "电脑用鼠标拖虚拟摇杆向上＝前进",
    "ok": true,
    "detail": {
@@ -67,24 +78,10 @@
    }
   },
   {
-   "name": "电脑用鼠标按住虚拟 J 键开火",
+   "name": "电脑用鼠标按住虚拟开火键开火",
    "ok": true,
    "detail": {
-    "x": 0,
-    "z": 76.84999999999988,
-    "yaw": 0,
-    "bullets": 2,
-    "state": "play",
-    "view": 0,
-    "mode": "touch",
-    "rot": false,
-    "size": [
-     1280,
-     720
-    ],
-    "nades": 3,
-    "dashCd": 0,
-    "cavCd": 0
+    "bullets": 2
    }
   },
   {
@@ -94,8 +91,7 @@
     "touch": false,
     "body": false,
     "z": 76.84999999999988,
-    "state": "pause",
-    "phase": 1
+    "state": "pause"
    }
   },
   {
@@ -149,8 +145,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -162,7 +160,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -183,7 +185,7 @@
    }
   },
   {
-   "name": "手机 844×390：菜单不出现键盘专属提示",
+   "name": "手机 844×390：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },
@@ -192,8 +194,10 @@
    "ok": true,
    "detail": {
     "x": 0,
-    "z": 80,
+    "y": 0,
+    "z": 92,
     "yaw": 0,
+    "pitch": 0,
     "bullets": 0,
     "state": "play",
     "view": 0,
@@ -205,17 +209,23 @@
     ],
     "nades": 3,
     "dashCd": 0,
-    "cavCd": 0
+    "cavCd": 0,
+    "mag": 20,
+    "reloadT": 0,
+    "ads": false,
+    "manned": false
    }
   },
   {
-   "name": "手机 844×390：摇杆、四个动作键、右上三键都在屏内且不重叠",
+   "name": "手机 844×390：摇杆、七个功能键、右上三键都在屏内、互不重叠、≥44px、不压信息栏",
    "ok": true,
    "detail": {
+    "n": 11,
     "off": [],
     "over": [],
     "small": [],
-    "hudOver": false,
+    "text": [],
+    "hudOver": [],
     "viewText": true
    }
   },
@@ -224,100 +234,164 @@
    "ok": true,
    "detail": {
     "dx": "0.00",
-    "dz": "-3.00"
+    "dz": "-3.15"
    }
   },
   {
-   "name": "手机 844×390：边移动边按 J 开火（多点触控）",
+   "name": "手机 844×390：边移动边按开火（多点触控）",
    "ok": true,
    "detail": {
     "bullets": 2,
-    "dz": "-1.15"
+    "dz": "-1.25"
    }
   },
   {
-   "name": "手机 844×390：摇杆右推＝右移",
+   "name": "手机 844×390：按住开火键拖动＝边打边转准星",
    "ok": true,
    "detail": {
-    "dx": "1.97"
+    "dyaw": "-0.26"
    }
   },
   {
-   "name": "手机 844×390：松手后停止移动",
+   "name": "手机 844×390：摇杆右推＝向右平移",
+   "ok": true,
+   "detail": {
+    "moved": [
+     "2.07",
+     "0.54"
+    ]
+   }
+  },
+  {
+   "name": "手机 844×390：松手后停止移动、停止开火",
    "ok": true,
    "detail": null
   },
   {
-   "name": "手机 844×390：画面空白处向右拖＝向右看",
+   "name": "手机 844×390：浮动摇杆跟到手指落点，松手回到默认位置",
    "ok": true,
    "detail": {
-    "dyaw": "-0.44"
-   }
-  },
-  {
-   "name": "手机 844×390：向左拖＝向左看",
-   "ok": true,
-   "detail": {
-    "dyaw": "0.44"
-   }
-  },
-  {
-   "name": "手机 844×390：在动作键上滑动不会转视角",
-   "ok": true,
-   "detail": {
-    "dyaw": "0.000"
-   }
-  },
-  {
-   "name": "手机 844×390：K 键生效",
-   "ok": true,
-   "detail": {
-    "p0": [
-     3,
-     0,
-     0
+    "bc": [
+     219.765625,
+     187.984375
     ],
-    "p1": [
-     2,
-     "0.0",
-     "0.0"
-    ]
+    "zone": [
+     219.770625,
+     187.984375
+    ],
+    "back": [
+     90,
+     310
+    ],
+    "jx": 90,
+    "jy": 310
    }
   },
   {
-   "name": "手机 844×390：U 键生效",
+   "name": "手机 844×390：右半屏向右滑＝向右看",
    "ok": true,
    "detail": {
-    "p0": [
-     2,
-     0,
-     0
-    ],
-    "p1": [
-     2,
-     "6.9",
-     "0.0"
-    ]
+    "dyaw": "-0.40"
    }
   },
   {
-   "name": "手机 844×390：I 键生效",
+   "name": "手机 844×390：向上滑＝抬头",
    "ok": true,
    "detail": {
-    "p0": [
-     2,
-     6.916666666666667,
-     0
-    ],
-    "p1": [
-     2,
-     "6.8",
-     "44.9"
-    ]
+    "dp": "0.23"
    }
   },
   {
-   "name": "手机 844×390：右上“切换视角”按下即切",
+   "name": "手机 844×390：跳跃键",
+   "ok": true,
+   "detail": {
+    "y": "0.67"
+   }
+  },
+  {
+   "name": "手机 844×390：手榴弹键",
+   "ok": true,
+   "detail": [
+    3,
+    2
+   ]
+  },
+  {
+   "name": "手机 844×390：亮剑键",
+   "ok": true,
+   "detail": 6.916666666666667
+  },
+  {
+   "name": "手机 844×390：骑兵连键",
+   "ok": true,
+   "detail": 44.91666666666667
+  },
+  {
+   "name": "手机 844×390：开镜键点一下开、再点一下关",
+   "ok": true,
+   "detail": {
+    "on": true,
+    "off": false
+   }
+  },
+  {
+   "name": "手机 844×390：换弹键",
+   "ok": true,
+   "detail": {
+    "mag": 11,
+    "reloadT": 1.016666666666667
+   }
+  },
+  {
+   "name": "手机 844×390：开火键上显示余弹",
+   "ok": true,
+   "detail": {
+    "label": "换弹"
+   }
+  },
+  {
+   "name": "手机 844×390：打开“左手开火键”后左侧多一个开火键，可用且不挤占其他控件",
+   "ok": true,
+   "detail": {
+    "lay2": {
+     "n": 12,
+     "off": [],
+     "over": [],
+     "small": [],
+     "text": [],
+     "hudOver": [],
+     "viewText": true
+    },
+    "bullets": 2
+   }
+  },
+  {
+   "name": "手机 844×390：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”",
+   "ok": true,
+   "detail": {
+    "useVis": {
+     "hidden": false,
+     "text": "操炮",
+     "prompt": true
+    },
+    "manned": true,
+    "useText2": "离开炮位",
+    "cy0": 0,
+    "cy1": -0.20000000000000004,
+    "sh": 7,
+    "layU": {
+     "n": 12,
+     "off": [],
+     "over": [],
+     "small": [],
+     "text": [],
+     "hudOver": [],
+     "viewText": true
+    }
+   }
+  },
+  {
+   "name": "手机 844×390：右上“切换人称”按下即切到第一人称",
    "ok": true,
    "detail": {
     "view": 1
@@ -327,7 +401,7 @@
    "name": "手机 844×390：切视角提示不含键盘字样",
    "ok": true,
    "detail": {
-    "tip": "视角：战术俯视　按住画面空白处拖动转视角"
+    "tip": "视角：第一人称"
    }
   },
   {
@@ -375,8 +449,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -388,7 +464,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -409,9 +489,249 @@
    }
   },
   {
-   "name": "手机 844×346：菜单不出现键盘专属提示",
+   "name": "手机 844×346：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
+  },
+  {
+   "name": "手机 844×346：点“开始战斗”进入游戏且不自动全屏",
+   "ok": true,
+   "detail": {
+    "x": 0,
+    "y": 0,
+    "z": 92,
+    "yaw": 0,
+    "pitch": 0,
+    "bullets": 0,
+    "state": "play",
+    "view": 0,
+    "mode": "touch",
+    "rot": false,
+    "size": [
+     844,
+     346
+    ],
+    "nades": 3,
+    "dashCd": 0,
+    "cavCd": 0,
+    "mag": 20,
+    "reloadT": 0,
+    "ads": false,
+    "manned": false
+   }
+  },
+  {
+   "name": "手机 844×346：摇杆、七个功能键、右上三键都在屏内、互不重叠、≥44px、不压信息栏",
+   "ok": true,
+   "detail": {
+    "n": 11,
+    "off": [],
+    "over": [],
+    "small": [],
+    "text": [],
+    "hudOver": [],
+    "viewText": true
+   }
+  },
+  {
+   "name": "手机 844×346：摇杆上推＝前进",
+   "ok": true,
+   "detail": {
+    "dx": "0.00",
+    "dz": "-3.15"
+   }
+  },
+  {
+   "name": "手机 844×346：边移动边按开火（多点触控）",
+   "ok": true,
+   "detail": {
+    "bullets": 2,
+    "dz": "-1.25"
+   }
+  },
+  {
+   "name": "手机 844×346：按住开火键拖动＝边打边转准星",
+   "ok": true,
+   "detail": {
+    "dyaw": "-0.26"
+   }
+  },
+  {
+   "name": "手机 844×346：摇杆右推＝向右平移",
+   "ok": true,
+   "detail": {
+    "moved": [
+     "2.07",
+     "0.54"
+    ]
+   }
+  },
+  {
+   "name": "手机 844×346：松手后停止移动、停止开火",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 844×346：浮动摇杆跟到手指落点，松手回到默认位置",
+   "ok": true,
+   "detail": {
+    "bc": [
+     219.765625,
+     166.765625
+    ],
+    "zone": [
+     219.770625,
+     166.778125
+    ],
+    "back": [
+     90,
+     266
+    ],
+    "jx": 90,
+    "jy": 266
+   }
+  },
+  {
+   "name": "手机 844×346：右半屏向右滑＝向右看",
+   "ok": true,
+   "detail": {
+    "dyaw": "-0.40"
+   }
+  },
+  {
+   "name": "手机 844×346：向上滑＝抬头",
+   "ok": true,
+   "detail": {
+    "dp": "0.23"
+   }
+  },
+  {
+   "name": "手机 844×346：跳跃键",
+   "ok": true,
+   "detail": {
+    "y": "0.67"
+   }
+  },
+  {
+   "name": "手机 844×346：手榴弹键",
+   "ok": true,
+   "detail": [
+    3,
+    2
+   ]
+  },
+  {
+   "name": "手机 844×346：亮剑键",
+   "ok": true,
+   "detail": 6.916666666666667
+  },
+  {
+   "name": "手机 844×346：骑兵连键",
+   "ok": true,
+   "detail": 44.91666666666667
+  },
+  {
+   "name": "手机 844×346：开镜键点一下开、再点一下关",
+   "ok": true,
+   "detail": {
+    "on": true,
+    "off": false
+   }
+  },
+  {
+   "name": "手机 844×346：换弹键",
+   "ok": true,
+   "detail": {
+    "mag": 11,
+    "reloadT": 1.016666666666667
+   }
+  },
+  {
+   "name": "手机 844×346：开火键上显示余弹",
+   "ok": true,
+   "detail": {
+    "label": "换弹"
+   }
+  },
+  {
+   "name": "手机 844×346：打开“左手开火键”后左侧多一个开火键，可用且不挤占其他控件",
+   "ok": true,
+   "detail": {
+    "lay2": {
+     "n": 12,
+     "off": [],
+     "over": [],
+     "small": [],
+     "text": [],
+     "hudOver": [],
+     "viewText": true
+    },
+    "bullets": 2
+   }
+  },
+  {
+   "name": "手机 844×346：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”",
+   "ok": true,
+   "detail": {
+    "useVis": {
+     "hidden": false,
+     "text": "操炮",
+     "prompt": true
+    },
+    "manned": true,
+    "useText2": "离开炮位",
+    "cy0": 0,
+    "cy1": -0.20000000000000004,
+    "sh": 7,
+    "layU": {
+     "n": 12,
+     "off": [],
+     "over": [],
+     "small": [],
+     "text": [],
+     "hudOver": [],
+     "viewText": true
+    }
+   }
+  },
+  {
+   "name": "手机 844×346：右上“切换人称”按下即切到第一人称",
+   "ok": true,
+   "detail": {
+    "view": 1
+   }
+  },
+  {
+   "name": "手机 844×346：切视角提示不含键盘字样",
+   "ok": true,
+   "detail": {
+    "tip": "视角：第一人称"
+   }
+  },
+  {
+   "name": "手机 844×346：暂停菜单完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
+  },
+  {
+   "name": "手机 844×346：暂停菜单不出现键盘提示",
+   "ok": true,
+   "detail": null
+  },
+  {
+   "name": "手机 844×346：结算面板完整显示",
+   "ok": true,
+   "detail": {
+    "out": [],
+    "scroll": false,
+    "rot": false,
+    "compact": true
+   }
   },
   {
    "name": "手机 800×390：识别为触屏，横屏不旋转",
@@ -419,8 +739,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -432,7 +754,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -453,7 +779,7 @@
    }
   },
   {
-   "name": "手机 800×390：菜单不出现键盘专属提示",
+   "name": "手机 800×390：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },
@@ -463,8 +789,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -476,7 +804,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -503,7 +835,7 @@
    }
   },
   {
-   "name": "手机 740×360：菜单不出现键盘专属提示",
+   "name": "手机 740×360：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },
@@ -513,8 +845,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -526,11 +860,15 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
-     "scroll": false,
+     "scroll": true,
      "rot": false,
      "compact": true
     }
@@ -546,14 +884,14 @@
     },
     "f": {
      "out": [],
-     "scroll": false,
+     "scroll": true,
      "rot": false,
      "compact": true
     }
    }
   },
   {
-   "name": "手机 568×320：菜单不出现键盘专属提示",
+   "name": "手机 568×320：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },
@@ -563,8 +901,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -576,7 +916,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -597,7 +941,7 @@
    }
   },
   {
-   "name": "手机 390×844：菜单不出现键盘专属提示",
+   "name": "手机 390×844：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },
@@ -606,8 +950,10 @@
    "ok": true,
    "detail": {
     "x": 0,
-    "z": 80,
+    "y": 0,
+    "z": 92,
     "yaw": 0,
+    "pitch": 0,
     "bullets": 0,
     "state": "play",
     "view": 0,
@@ -619,17 +965,23 @@
     ],
     "nades": 3,
     "dashCd": 0,
-    "cavCd": 0
+    "cavCd": 0,
+    "mag": 20,
+    "reloadT": 0,
+    "ads": false,
+    "manned": false
    }
   },
   {
-   "name": "手机 390×844：摇杆、四个动作键、右上三键都在屏内且不重叠",
+   "name": "手机 390×844：摇杆、七个功能键、右上三键都在屏内、互不重叠、≥44px、不压信息栏",
    "ok": true,
    "detail": {
+    "n": 11,
     "off": [],
     "over": [],
     "small": [],
-    "hudOver": false,
+    "text": [],
+    "hudOver": [],
     "viewText": true
    }
   },
@@ -638,100 +990,164 @@
    "ok": true,
    "detail": {
     "dx": "0.00",
-    "dz": "-3.00"
+    "dz": "-3.15"
    }
   },
   {
-   "name": "手机 390×844：边移动边按 J 开火（多点触控）",
+   "name": "手机 390×844：边移动边按开火（多点触控）",
    "ok": true,
    "detail": {
     "bullets": 2,
-    "dz": "-1.15"
+    "dz": "-1.25"
    }
   },
   {
-   "name": "手机 390×844：摇杆右推＝右移",
+   "name": "手机 390×844：按住开火键拖动＝边打边转准星",
    "ok": true,
    "detail": {
-    "dx": "1.97"
+    "dyaw": "-0.26"
    }
   },
   {
-   "name": "手机 390×844：松手后停止移动",
+   "name": "手机 390×844：摇杆右推＝向右平移",
+   "ok": true,
+   "detail": {
+    "moved": [
+     "2.07",
+     "0.54"
+    ]
+   }
+  },
+  {
+   "name": "手机 390×844：松手后停止移动、停止开火",
    "ok": true,
    "detail": null
   },
   {
-   "name": "手机 390×844：画面空白处向右拖＝向右看",
+   "name": "手机 390×844：浮动摇杆跟到手指落点，松手回到默认位置",
    "ok": true,
    "detail": {
-    "dyaw": "-0.44"
-   }
-  },
-  {
-   "name": "手机 390×844：向左拖＝向左看",
-   "ok": true,
-   "detail": {
-    "dyaw": "0.44"
-   }
-  },
-  {
-   "name": "手机 390×844：在动作键上滑动不会转视角",
-   "ok": true,
-   "detail": {
-    "dyaw": "0.000"
-   }
-  },
-  {
-   "name": "手机 390×844：K 键生效",
-   "ok": true,
-   "detail": {
-    "p0": [
-     3,
-     0,
-     0
+    "bc": [
+     178.9375,
+     106.328125
     ],
-    "p1": [
-     2,
-     "0.0",
-     "0.0"
-    ]
+    "zone": [
+     178.928125,
+     106.340625
+    ],
+    "back": [
+     80,
+     90
+    ],
+    "jx": 80,
+    "jy": 90
    }
   },
   {
-   "name": "手机 390×844：U 键生效",
+   "name": "手机 390×844：右半屏向右滑＝向右看",
    "ok": true,
    "detail": {
-    "p0": [
-     2,
-     0,
-     0
-    ],
-    "p1": [
-     2,
-     "6.9",
-     "0.0"
-    ]
+    "dyaw": "-0.40"
    }
   },
   {
-   "name": "手机 390×844：I 键生效",
+   "name": "手机 390×844：向上滑＝抬头",
    "ok": true,
    "detail": {
-    "p0": [
-     2,
-     6.916666666666667,
-     0
-    ],
-    "p1": [
-     2,
-     "6.8",
-     "44.9"
-    ]
+    "dp": "0.23"
    }
   },
   {
-   "name": "手机 390×844：右上“切换视角”按下即切",
+   "name": "手机 390×844：跳跃键",
+   "ok": true,
+   "detail": {
+    "y": "0.67"
+   }
+  },
+  {
+   "name": "手机 390×844：手榴弹键",
+   "ok": true,
+   "detail": [
+    3,
+    2
+   ]
+  },
+  {
+   "name": "手机 390×844：亮剑键",
+   "ok": true,
+   "detail": 6.916666666666667
+  },
+  {
+   "name": "手机 390×844：骑兵连键",
+   "ok": true,
+   "detail": 44.91666666666667
+  },
+  {
+   "name": "手机 390×844：开镜键点一下开、再点一下关",
+   "ok": true,
+   "detail": {
+    "on": true,
+    "off": false
+   }
+  },
+  {
+   "name": "手机 390×844：换弹键",
+   "ok": true,
+   "detail": {
+    "mag": 11,
+    "reloadT": 1.016666666666667
+   }
+  },
+  {
+   "name": "手机 390×844：开火键上显示余弹",
+   "ok": true,
+   "detail": {
+    "label": "换弹"
+   }
+  },
+  {
+   "name": "手机 390×844：打开“左手开火键”后左侧多一个开火键，可用且不挤占其他控件",
+   "ok": true,
+   "detail": {
+    "lay2": {
+     "n": 12,
+     "off": [],
+     "over": [],
+     "small": [],
+     "text": [],
+     "hudOver": [],
+     "viewText": true
+    },
+    "bullets": 2
+   }
+  },
+  {
+   "name": "手机 390×844：炮位旁出现“操炮”键（不出现键盘提示），点击上炮；摇杆转炮口、开火键开炮；再点“离开炮位”",
+   "ok": true,
+   "detail": {
+    "useVis": {
+     "hidden": false,
+     "text": "操炮",
+     "prompt": true
+    },
+    "manned": true,
+    "useText2": "离开炮位",
+    "cy0": 0,
+    "cy1": -0.20000000000000004,
+    "sh": 7,
+    "layU": {
+     "n": 12,
+     "off": [],
+     "over": [],
+     "small": [],
+     "text": [],
+     "hudOver": [],
+     "viewText": true
+    }
+   }
+  },
+  {
+   "name": "手机 390×844：右上“切换人称”按下即切到第一人称",
    "ok": true,
    "detail": {
     "view": 1
@@ -741,7 +1157,7 @@
    "name": "手机 390×844：切视角提示不含键盘字样",
    "ok": true,
    "detail": {
-    "tip": "视角：战术俯视　按住画面空白处拖动转视角"
+    "tip": "视角：第一人称"
    }
   },
   {
@@ -775,8 +1191,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -788,7 +1206,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -815,7 +1237,7 @@
    }
   },
   {
-   "name": "手机 360×780：菜单不出现键盘专属提示",
+   "name": "手机 360×780：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },
@@ -825,8 +1247,10 @@
    "detail": {
     "s0": {
      "x": 0,
+     "y": 0,
      "z": 92,
      "yaw": 0,
+     "pitch": 0,
      "bullets": 0,
      "state": "menu",
      "view": 0,
@@ -838,7 +1262,11 @@
      ],
      "nades": 3,
      "dashCd": 0,
-     "cavCd": 0
+     "cavCd": 0,
+     "mag": 20,
+     "reloadT": 0,
+     "ads": false,
+     "manned": false
     },
     "f": {
      "out": [],
@@ -865,7 +1293,7 @@
    }
   },
   {
-   "name": "手机 375×667：菜单不出现键盘专属提示",
+   "name": "手机 375×667：菜单与按键上不出现键盘专属提示",
    "ok": true,
    "detail": null
   },

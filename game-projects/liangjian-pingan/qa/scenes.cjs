@@ -1,41 +1,50 @@
-// 画面巡检：把主角摆到容易穿帮/被遮挡的位置，各视角截图人工查看（城门洞、房后、巷子、院子、转 180°），并做全屏与 0×0 启动两项检查
-const { open, shot, BASE } = require('./lib.cjs');
+// 画面巡检：把主角摆到容易穿帮/被遮挡的位置，第三人称与第一人称各截图人工查看（城墙根、门洞、贴墙、巷子、棚顶、院子、回头看），并做全屏与 0×0 启动两项检查
+const { open, shot, start, BASE } = require('./lib.cjs');
 
 (async () => {
   const { browser, ctx, page, errors } = await open();
-  await page.keyboard.press('Enter');
+  await start(page);
   await page.evaluate(() => { __lj.manual(true); __lj.app.demo = true; });
-  const put = (phase, view, x, z, yaw, extra = '') => page.evaluate(`(function(){ const g = __lj.game; g.reset(${phase}, false); for (const e of g.enemies) { if (e.type !== 'boss') { e.alive = false; e.deadT = 9; } } g.timers.length = 0; g.cut = 0; g.app.s.view = ${view}; g.setView(${view}); g.place(g.hero, ${x}, ${z}); g.cam.yaw = ${yaw}; g.hero.yaw = ${yaw}; ${extra}; __lj.app.ui.clearTransient(); __lj.step(50, true); })()`);
+  const put = (phase, view, x, z, yaw, extra = '') => page.evaluate(`(function(){ const g = __lj.game; g.reset(${phase}, false); for (const e of g.enemies) { if (e.type !== 'boss') { e.alive = false; e.deadT = 9; } } g.timers.length = 0; g.cut = 0; g.app.s.view = ${view}; g.setView(${view}); g.place(g.hero, ${x}, ${z}); g.cam.yaw = ${yaw}; g.cam.pitch = 0; g.hero.yaw = ${yaw}; g.flags.counter = 1; g.flags.nA = 1; g.flags.nB = 1; g.flags.p1done = 1; ${extra}; __lj.app.ui.clearTransient(); __lj.step(50, true); })()`);
   const cases = [
-    ['gate-tunnel-tilt', 4, 0, 0, -20, 0],
-    ['gate-tunnel-top', 4, 1, 0, -20, 0],
-    ['gate-tunnel-chase', 4, 2, 0, -20.5, 0],
-    ['gate-tunnel-fp', 4, 3, 0, -16, 0],
-    ['behind-house-tilt', 4, 0, -15, -55.3, 0],
-    ['street-chase', 4, 2, 0, -34, 0],
-    ['street-chase-back', 4, 2, 0, -34, Math.PI],
-    ['street-chase-side', 4, 2, 5.5, -48, Math.PI / 2],
-    ['alley-tilt-rot', 4, 0, 24, -60, Math.PI / 2],
-    ['depot-fp', 4, 3, 15, -68, 0],
-    ['hq-fp', 5, 3, 0, -86, 0],
-    ['hq-chase', 5, 2, 0, -86, 0],
-    ['hq-top', 5, 1, 0, -92, 0],
-    ['field-chase-back', 1, 2, 0, 60, Math.PI],
-    ['field-fp-east', 1, 3, 20, 60, -Math.PI / 2],
-    ['wallbase-chase', 1, 2, 20, -12, 0],
-    ['under-tower-tilt', 3, 0, 0, -13, 0],
+    ['field-tp', 1, 0, 0, 84, 0],
+    ['field-fp', 1, 1, 0, 84, 0],
+    ['field-tp-back', 1, 0, 0, 60, Math.PI],
+    ['field-tp-east', 1, 0, 20, 60, -Math.PI / 2],
+    ['behind-mound-tp', 1, 0, -6, 75.4, 0],
+    ['wallbase-tp', 1, 0, 20, -12, 0],
+    ['wallbase-tp-up', 1, 0, 20, -9, 0, 'g.cam.pitch = 0.6'],
+    ['gate-tunnel-tp', 4, 0, 0, -20.5, 0],
+    ['gate-tunnel-fp', 4, 1, 0, -16, 0],
+    ['street-tp', 4, 0, 0, -34, 0],
+    ['street-tp-back', 4, 0, 0, -34, Math.PI],
+    ['street-tp-wall-right', 4, 0, 7.4, -48, 0],
+    ['street-tp-side', 4, 0, 5.5, -48, Math.PI / 2],
+    ['alley-tp', 4, 0, 24, -60, Math.PI / 2],
+    ['shed-top-tp', 4, 0, -4, -61, -1.2, 'g.hero.x = -10.7; g.hero.z = -63; g.hero.y = 2.4; g.hero.vy = 0; g.cam.gy = 2.4'],
+    ['depot-fp', 4, 1, 15, -68, 0],
+    ['hq-tp', 5, 0, 0, -86, 0],
+    ['hq-fp', 5, 1, 0, -86, 0],
+    ['hq-tp-corner', 5, 0, -16, -84, -0.8],
+    ['platform-top-tp', 1, 0, 6, 66, 1.2, 'g.hero.x = 6; g.hero.z = 60; g.hero.y = 1.5; g.hero.vy = 0; g.cam.gy = 1.5; g.addUnit("enemy", "mg", -16, 58.3, { group: "T", hold: true, wake: 0 })'],
   ];
-  for (const [name, phase, view, x, z, yaw] of cases) { await put(phase, view, x, z, yaw); await shot(page, `scene-${name}.png`); }
-  // 亮剑、骑兵、手榴弹的动态截图
-  await put(1, 2, 0, 70, 0);
-  await page.keyboard.press('KeyI'); await page.evaluate(() => __lj.step(75, true)); await shot(page, 'scene-cavalry-chase.png');
+  for (const [name, phase, view, x, z, yaw, extra] of cases) { await put(phase, view, x, z, yaw, extra || ''); await shot(page, `scene-${name}.png`); }
+  // 骑兵连、亮剑、跳跃、开镜、操炮的动态截图
   await put(1, 0, 0, 70, 0);
-  await page.keyboard.press('KeyI'); await page.evaluate(() => __lj.step(80, true)); await shot(page, 'scene-cavalry-tilt.png');
-  await put(1, 2, 0, 70, 0);
-  await page.keyboard.press('KeyU'); await page.evaluate(() => __lj.step(9, true)); await shot(page, 'scene-dash-chase.png');
-  await put(3, 3, 0.5, 28, 0, 'for (const b of g.world.bunkers) b.cd = 999');
-  await page.keyboard.press('KeyJ'); await page.evaluate(() => __lj.step(30, true)); await shot(page, 'scene-cannon-fp.png');
-  await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(4, true)); await page.keyboard.up('KeyJ'); await page.evaluate(() => __lj.step(10, true)); await shot(page, 'scene-cannon-fp-fire.png');
+  await page.keyboard.press('KeyI'); await page.evaluate(() => __lj.step(75, true)); await shot(page, 'scene-cavalry-tp.png');
+  await put(1, 0, 0, 70, 0);
+  await page.keyboard.press('KeyU'); await page.evaluate(() => __lj.step(9, true)); await shot(page, 'scene-dash-tp.png');
+  await put(1, 0, 0, 70, 0);
+  await page.keyboard.press('KeyK'); await page.evaluate(() => __lj.step(14, true)); await shot(page, 'scene-jump-tp.png');
+  await put(1, 0, 0, 84, 0);
+  await page.keyboard.down('KeyO'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(26, true)); await shot(page, 'scene-ads-fire-tp.png'); await page.keyboard.up('KeyJ'); await page.keyboard.up('KeyO');
+  await put(1, 1, 0, 84, 0);
+  await page.keyboard.down('KeyO'); await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(26, true)); await shot(page, 'scene-ads-fire-fp.png'); await page.keyboard.up('KeyJ'); await page.keyboard.up('KeyO');
+  for (const v of [0, 1]) {
+    await put(3, v, 0.5, 28, 0, 'for (const b of g.world.bunkers) b.cd = 999');
+    await page.keyboard.press('KeyF'); await page.evaluate(() => __lj.step(30, true)); await shot(page, `scene-cannon-${v ? 'fp' : 'tp'}.png`);
+    await page.keyboard.down('KeyJ'); await page.evaluate(() => __lj.step(4, true)); await page.keyboard.up('KeyJ'); await page.evaluate(() => __lj.step(10, true)); await shot(page, `scene-cannon-${v ? 'fp' : 'tp'}-fire.png`);
+  }
 
   // 全屏按钮：请求的是整页（含控件），失败时保持可玩
   await page.evaluate(() => { __lj.manual(false); });

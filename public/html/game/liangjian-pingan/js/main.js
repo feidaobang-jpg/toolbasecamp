@@ -6,9 +6,11 @@ import { Input } from './input.js';
 import { GameAudio } from './audio.js';
 
 const NS = 'lj_pingan_v1_';
-const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto' };
+const DEFAULTS = { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'drag', leftFire: false };
+const SETTINGS_VERSION = 2;   // 2：视角从四个精简为 第三人称 / 第一人称
 const CYCLE = {
-  startPhase: [1, 2, 3, 4, 5], lives: ['inf', '3'], armor: ['std', 'easy', 'one'], demo: [false, true], view: [0, 1, 2, 3],
+  startPhase: [1, 2, 3, 4, 5], lives: ['inf', '3'], armor: ['std', 'easy', 'one'], demo: [false, true], view: [0, 1],
+  aimSens: ['low', 'mid', 'high'], mouseAim: ['drag', 'lock'], leftFire: [false, true],
   quality: ['auto', 'high', 'low'], volume: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], danmaku: [true, false], touchKeys: ['auto', 'show', 'hide'], fps: [false, true],
 };
 const $ = (id) => document.getElementById(id);
@@ -23,6 +25,8 @@ class App {
     this.stage = $('stage');
     this.canvas = $('gl');
     const saved = store.get('settings') || {};
+    // 旧存档的视角只换算一次：斜俯视 / 战术俯视 / 正视 → 第三人称，第一人称保持
+    if (saved.sv !== SETTINGS_VERSION && saved.view !== undefined) saved.view = saved.view === 3 ? 1 : 0;
     this.s = Object.assign({}, DEFAULTS);
     for (const k in DEFAULTS) if (saved[k] !== undefined && (!CYCLE[k] || CYCLE[k].includes(saved[k]) || k === 'mode')) this.s[k] = saved[k];
     if (!['auto', 'pc', 'touch'].includes(this.s.mode)) this.s.mode = 'auto';
@@ -31,7 +35,7 @@ class App {
     this.qa = q.get('qa') === '1';
     this.override = {};                  // 测试用临时覆盖，不写回
     if (q.get('quality')) this.override.quality = q.get('quality');
-    if (q.get('view')) this.s.view = Math.max(0, Math.min(3, +q.get('view') || 0));
+    if (q.get('view')) this.s.view = Math.max(0, Math.min(1, +q.get('view') || 0));
     this.device = navigator.maxTouchPoints > 0 && matchMedia('(pointer: coarse)').matches ? 'touch' : 'pc';
     this.w = 1280; this.h = 720; this.rot = false;
     this.state = 'menu';
@@ -45,7 +49,14 @@ class App {
     this.audio = new GameAudio();
     this.audio.setVolume(this.s.volume / 100);
     this.ui = new UI(this);
-    this.input = new Input(this.stage, { rotated: () => this.rot, size: () => [this.w, this.h], onDevice: (k) => this.onDevice(k), onEdge: () => this.audio.unlock() });
+    this.input = new Input(this.stage, {
+      rotated: () => this.rot, size: () => [this.w, this.h],
+      toLogical: (x, y) => (this.rot ? [y, (this._W || window.innerWidth) - x] : [x, y]),
+      onDevice: (k) => this.onDevice(k), onEdge: () => this.audio.unlock(),
+      mouseAim: () => (this.state === 'play' && !this.isTouch() ? this.s.mouseAim : 'drag'),
+      onLockLost: () => { if (this.state === 'play') this.pause(); },
+      onLockFail: () => { this.ui.toast('这里不能锁定鼠标，继续用“按住拖动”瞄准', 2.6); },
+    });
     this.game = new Game(this);
     this.applyQuality();
     this.applyMode();
@@ -60,7 +71,7 @@ class App {
 
   // ---------- 设置 ----------
   get(k) { if (k === 'demo') return this.demo; if (this.override[k] !== undefined) return this.override[k]; return this.s[k]; }
-  save() { store.set('settings', this.s); }
+  save() { store.set('settings', Object.assign({ sv: SETTINGS_VERSION }, this.s)); }
   cycle(k, dir) {
     const arr = CYCLE[k]; if (!arr) return;
     const cur = k === 'demo' ? this.demo : this.s[k];
@@ -70,7 +81,8 @@ class App {
     if (k === 'view') this.game.setView(v);
     if (k === 'quality') this.applyQuality();
     if (k === 'volume') { this.audio.setVolume(v / 100); }
-    if (k === 'touchKeys') this.applyMode();
+    if (k === 'touchKeys' || k === 'leftFire') this.applyMode();
+    if (k === 'mouseAim' && v === 'drag') this.input.exitLock();
     if (k === 'fps' && !v) this.ui.setFps(null);
     if (k === 'danmaku' && !v) for (const d of this.ui.dm.splice(0)) d.el.remove();
     this.audio.unlock();
@@ -84,6 +96,7 @@ class App {
     const keys = this.s.touchKeys === 'show' || (this.s.touchKeys === 'auto' && touch);
     document.body.classList.toggle('touch-on', touch);
     $('touch').hidden = !keys;
+    this.ui.setLeftFire(!!this.s.leftFire);
     this.input.clear();
     this.layout(true);
     this.ui.refresh();
@@ -178,6 +191,7 @@ class App {
   pause() {
     if (this.state !== 'play' || this.game.over) return;
     this.state = 'pause';
+    this.input.exitLock();
     this.input.clear();
     this.audio.suspend();
     this.ui.show('pause');
@@ -212,6 +226,7 @@ class App {
     let best = store.get('best') || 0;
     if (d.win && !d.demo) { if (d.score > best) { best = d.score; store.set('best', best); } store.del('cp'); }
     d.best = best;
+    this.input.exitLock();
     this.state = 'result';
     this.audio.setMusic(-1);
     this.input.clear();
@@ -222,8 +237,7 @@ class App {
     const v = this.game.nextView();
     this.s.view = v; this.save();
     this.ui.refresh();
-    const tip = v === 3 ? (this.isTouch() ? '按住画面拖动转头' : 'Q/E 或按住鼠标拖动转头') : (this.isTouch() ? '按住画面空白处拖动转视角' : 'Q/E 或按住鼠标拖动转视角');
-    this.ui.toast('视角：' + VIEW_NAMES[v] + '　' + tip, 2.2);
+    this.ui.toast('视角：' + VIEW_NAMES[v], 1.6);
     this.sfx('ui');
   }
   fullscreen() {

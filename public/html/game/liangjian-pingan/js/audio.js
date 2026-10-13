@@ -122,6 +122,7 @@ export class GameAudio {
         break;
       case 'whistle': this._tone(t, 1.5, 'sine', 1700, 520, 0.09 * vol, null, 0.3); break;
       case 'throw': this._noise(t, 0.16, 'bandpass', 700, 1800, 0.18 * vol, 1.5); break;
+      case 'jump': this._noise(t, 0.12, 'bandpass', 420, 1300, 0.14 * vol, 1.2); this._tone(t, 0.1, 'sine', 180, 300, 0.08 * vol); break;
       case 'slash': this._noise(t, 0.16, 'bandpass', 3400, 700, 0.5 * vol, 1.6); this._tone(t, 0.12, 'sawtooth', 900, 240, 0.1 * vol); break;
       case 'unsheathe': this._noise(t, 0.3, 'bandpass', 2200, 5200, 0.3 * vol, 4); this._tone(t + 0.05, 0.5, 'sine', 2900, 3100, 0.08 * vol, null, 0.02); break;
       case 'clang':

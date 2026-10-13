@@ -1,14 +1,14 @@
 // 实机录像：实时运行，由脚本按键从头打到结算（自动化操作，无声音轨），存到 media-kit 的 captures
-// 用法：node record.cjs [视角 0-3] [起始阶段]
+// 用法：node record.cjs [视角 0 第三人称 / 1 第一人称] [起始阶段]
 const path = require('path');
 const fs = require('fs');
 const PW = process.env.PLAYWRIGHT_DIR || 'D:/project/godot/absurd-3d-daily/node_modules/playwright';
 const { chromium } = require(PW);
 const EDGE = process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
 const BASE = process.env.LJ_URL || 'http://localhost:8795/html/game/liangjian-pingan/';
-const OUT = path.join(__dirname, '../media-kit/releases/v0.1.0/captures');
+const OUT = path.join(__dirname, '../media-kit/releases/v0.2.0/captures');
 const view = +(process.argv[2] || 0), startPhase = +(process.argv[3] || 1);
-const bot = fs.readFileSync(path.join(__dirname, 'playthrough.cjs'), 'utf8').match(/function installBot\(\) \{[\s\S]*?\n\}\n/)[0];
+const BOT = fs.readFileSync(path.join(__dirname, 'bot.browser.js'), 'utf8');
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
@@ -22,7 +22,9 @@ const bot = fs.readFileSync(path.join(__dirname, 'playthrough.cjs'), 'utf8').mat
   await page.evaluate(([v, sp]) => { const a = __lj.app; a.noAutoPause = true; a.s.view = v; a.s.startPhase = sp; a.s.lives = 'inf'; a.s.armor = 'std'; a.s.quality = 'high'; a.applyQuality(); a.ui.refresh(); }, [view, startPhase]);
   await page.waitForTimeout(1500);
   await page.keyboard.press('Enter');
-  await page.evaluate(`(function(){ window.__bot = (${bot})(); const tick = () => { if (__lj.app.state === 'play') window.__bot(1 / 60); requestAnimationFrame(tick); }; requestAnimationFrame(tick); })()`);
+  await page.evaluate(async () => { window.__W = await import('./js/world.js'); });
+  await page.addScriptTag({ content: BOT });
+  await page.evaluate(() => { window.__bot = window.__installBot(); let last = performance.now(); const tick = (t) => { const dt = Math.min(0.05, (t - last) / 1000); last = t; if (__lj.app.state === 'play') window.__bot(dt); requestAnimationFrame(tick); }; requestAnimationFrame(tick); });
   const t0 = Date.now();
   let res = null;
   while (Date.now() - t0 < 12 * 60 * 1000) {

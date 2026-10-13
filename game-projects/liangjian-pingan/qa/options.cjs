@@ -1,5 +1,5 @@
 // 选项与规则：每个选项的切换/保存/实际效果，命数与耐久，演示模式，暂停与重开的声音，起始阶段与继续，核心失败条件
-const { open, shot } = require('./lib.cjs');
+const { open, shot, start } = require('./lib.cjs');
 const results = [];
 const check = (name, ok, detail) => results.push({ name, ok: !!ok, detail });
 const step = (page, n) => page.evaluate((k) => __lj.step(k, true), n);
@@ -11,7 +11,7 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
 (async () => {
   const { browser, ctx, page, errors } = await open();
   // ---------- 主菜单每个选项：点一下切到下一个值，显示同步，刷新后保留 ----------
-  const opts = ['startPhase', 'lives', 'armor', 'view', 'quality', 'volume', 'danmaku', 'touchKeys', 'fps'];
+  const opts = ['startPhase', 'lives', 'armor', 'view', 'quality', 'volume', 'danmaku', 'touchKeys', 'fps', 'aimSens', 'mouseAim', 'leftFire'];
   const before = await page.evaluate(() => Object.assign({}, __lj.app.s));
   for (const k of opts) {
     const r = await page.evaluate((key) => { const b = document.querySelector(`#menu .btn[data-opt="${key}"]`); const t0 = b.querySelector('.ov').textContent; b.click(); return { t0, t1: b.querySelector('.ov').textContent, v: __lj.app.s[key], rect: b.getBoundingClientRect().height }; }, k);
@@ -25,11 +25,20 @@ const clean = (page, phase = 1) => page.evaluate((p) => { const g = __lj.game; g
   const after = await page.evaluate(() => Object.assign({ demo: __lj.app.demo }, __lj.app.s));
   check('刷新后设置保留', opts.every((k) => after[k] === saved[k]), { saved, after });
   check('演示模式不保存：刷新后回到关', saved.demo === true && after.demo === false, { saved: saved.demo, after: after.demo });
+  // 旧版本存下的视角只换算一次：斜俯视 / 战术俯视 / 正视 → 第三人称，旧的第一人称（3）→ 第一人称（1）
+  const mig = {};
+  for (const [label, saved] of [['old3', { view: 3 }], ['old1', { view: 1 }], ['old2', { view: 2 }], ['new1', { view: 1, sv: 2 }]]) {
+    await page.evaluate((v) => localStorage.setItem('lj_pingan_v1_settings', JSON.stringify(v)), saved);
+    await page.reload({ waitUntil: 'load' });
+    await page.waitForFunction(() => window.__lj && document.getElementById('loading').hidden);
+    mig[label] = await page.evaluate(() => ({ view: __lj.app.s.view, name: document.querySelector('#menu .btn[data-opt="view"] .ov').textContent }));
+  }
+  check('旧存档视角换算：旧第一人称→第一人称，其余旧视角→第三人称；新存档不再换算', mig.old3.view === 1 && mig.old1.view === 0 && mig.old2.view === 0 && mig.new1.view === 1 && /第一人称/.test(mig.old3.name) && /第三人称/.test(mig.old1.name), mig);
   // 恢复默认
-  await page.evaluate(() => { const a = __lj.app; Object.assign(a.s, { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto' }); a.save(); a.applyQuality(); a.applyMode(); a.audio.setVolume(0.8); });
+  await page.evaluate(() => { const a = __lj.app; a.noAutoPause = true; Object.assign(a.s, { startPhase: 1, lives: 'inf', armor: 'std', view: 0, quality: 'auto', volume: 80, danmaku: true, touchKeys: 'auto', fps: false, mode: 'auto', aimSens: 'mid', mouseAim: 'drag', leftFire: false }); a.save(); a.applyQuality(); a.applyMode(); a.audio.setVolume(0.8); });
 
   // ---------- 声音：开局、暂停冻结、继续续播、暂停后重开仍有声 ----------
-  await page.keyboard.press('Enter');
+  await start(page);
   await page.waitForTimeout(900);
   const a0 = await page.evaluate(() => { const au = __lj.app.audio; window.__an = au.ctx.createAnalyser(); au.comp.connect(window.__an); return { state: au.ctx.state, t: au.ctx.currentTime }; });
   const rms = () => page.evaluate(() => { const d = new Float32Array(window.__an.fftSize); window.__an.getFloatTimeDomainData(d); let s = 0; for (const v of d) s += v * v; return Math.sqrt(s / d.length); });

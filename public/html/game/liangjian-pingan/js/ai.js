@@ -8,13 +8,13 @@ export const DEF = {
   ally: { look: 'ally', hp: 6, speed: 6.4, range: 27 },
   dabiao: { look: 'dabiao', hp: 9, speed: 6.4, range: 27 },
   monk: { look: 'monk', hp: 9, speed: 6.6, range: 24 },
-  rifle: { look: 'rifle', hp: 3, speed: 3.1, range: 30, score: 100 },
-  mg: { look: 'mg', hp: 7, speed: 0, range: 36, score: 250 },
-  officer: { look: 'officer', hp: 6, speed: 6.0, range: 2, score: 200 },
-  elite: { look: 'elite', hp: 9, speed: 4.7, range: 24, score: 300 },
-  wall: { look: 'rifle', hp: 3, speed: 0, range: 50, score: 120 },
-  mortar: { look: 'rifle', hp: 3, speed: 0, range: 90, score: 200 },
-  boss: { look: 'boss', hp: 300, speed: 4.9, score: 3000 },
+  rifle: { look: 'rifle', hp: 2, speed: 3.1, range: 30, score: 100 },
+  mg: { look: 'mg', hp: 6, speed: 0, range: 36, score: 250 },
+  officer: { look: 'officer', hp: 5, speed: 6.0, range: 2, score: 200 },
+  elite: { look: 'elite', hp: 7, speed: 4.7, range: 24, score: 300 },
+  wall: { look: 'rifle', hp: 2, speed: 0, range: 50, score: 120 },
+  mortar: { look: 'rifle', hp: 2, speed: 0, range: 90, score: 200 },
+  boss: { look: 'boss', hp: 280, speed: 4.9, score: 3000 },
 };
 const _v = new THREE.Vector3();
 
@@ -48,9 +48,9 @@ export function spawnPhase(g, n) {
     E('rifle', -2.5, -46.5, { group: 'S1' }); E('rifle', 2.5, -47.5, { group: 'S1' }); E('officer', -1.5, -50, { group: 'S1', wake: 24 }); E('officer', 1.5, -51, { group: 'S1', wake: 24 });
     E('mg', L.streetNest.x, L.streetNest.z + 0.3, { group: 'S2', hold: true, nest: 'S' });
     E('elite', -5, -72, { group: 'S2' }); E('elite', 5, -72, { group: 'S2' });
-    E('rifle', -13, -60, { group: 'S2' }); E('rifle', 13, -60, { group: 'S2' }); E('rifle', -18, -61, { group: 'S2' }); E('rifle', 5.5, -58, { group: 'S2' });
+    E('rifle', -15, -58.5, { group: 'S2' }); E('rifle', 13, -60, { group: 'S2' }); E('rifle', -19, -60, { group: 'S2' });
     E('rifle', 12, -70, { group: 'D', hold: true, wake: 14 }); E('rifle', 18, -71, { group: 'D', hold: true, wake: 14 });
-    E('elite', -4, -76.5, { group: 'S3', wake: 26 }); E('elite', 4, -76.5, { group: 'S3', wake: 26 }); E('elite', 0, -78, { group: 'S3', wake: 26 });
+    E('elite', -4, -76.5, { group: 'S3', wake: 26 }); E('elite', 4, -76.5, { group: 'S3', wake: 26 });
     E('rifle', -6, -74.5, { group: 'S3', hold: true, wake: 26 }); E('rifle', 6, -74.5, { group: 'S3', hold: true, wake: 26 });
     if (!g.flags.loot) g.spawnLoot(15.5, -73);
   } else if (n === 5) {
@@ -63,9 +63,16 @@ export function spawnPhase(g, n) {
 function move(g, u, dx, dz, speed, dt) {
   const l = Math.hypot(dx, dz);
   if (l < 1e-4) { u.moving = damp(u.moving, 0, 12, dt); u.vx = u.vz = 0; return; }
+  let nx = dx / l, nz = dz / l;
+  // 没有寻路：被箱子、土台、房角顶住时横着绕一下，下次再顶住就换另一边
+  if (u.avoidT > 0) { u.avoidT -= dt; const px = -nz * u.avoidDir, pz = nx * u.avoidDir; nx = px * 0.92 + nx * 0.25; nz = pz * 0.92 + nz * 0.25; }
   const ox = u.x, oz = u.z;
-  u.x += (dx / l) * speed * dt; u.z += (dz / l) * speed * dt;
+  u.x += nx * speed * dt; u.z += nz * speed * dt;
   resolveCircle(g.world, u, u.r);
+  if (Math.hypot(u.x - ox, u.z - oz) < speed * dt * 0.35) {
+    u.stuckT = (u.stuckT || 0) + dt;
+    if (u.stuckT > 0.22 && !(u.avoidT > 0)) { u.avoidT = 0.9; u.avoidDir = u.avoidDir ? -u.avoidDir : (rand() < 0.5 ? 1 : -1); u.stuckT = 0; }
+  } else u.stuckT = 0;
   u.vx = (u.x - ox) / dt; u.vz = (u.z - oz) / dt;
   u.moving = damp(u.moving, 1, 12, dt);
   u.walk += dt * (3 + speed * 1.3);
@@ -151,14 +158,14 @@ export function updateEnemy(g, u, dt) {
       u.yaw = angStep(u.yaw, yawTo(u.tx - u.x, u.tz - u.z), 5 * dt);
       if (u.sh <= 0) {
         u.sh = 0.085; u.burst--;
-        g.fireBullet(1, ox, 1.72, oz, u.tx + rand(-1.8, 1.8), 1.0, u.tz + rand(-1.8, 1.8), 1, 36, null);
+        g.fireBullet(1, ox, 1.72, oz, u.tx + rand(-2.0, 2.0), 1.0, u.tz + rand(-2.0, 2.0), 1, 36, null);
         g.fx.sparks(ox, 1.72, oz + 0.3, 1, 0xffe08a);
         g.sfxAt('mg', u.x, u.z, 0.9);
-        if (u.burst <= 0) { u.state = 'idle'; u.stT = rand(1.8, 2.6); }
+        if (u.burst <= 0) { u.state = 'idle'; u.stT = rand(2.2, 3.2); }
       }
     } else if (u.state === 'wind') {
       u.yaw = angStep(u.yaw, yawTo(dx, dz), 5 * dt);
-      if (u.stT <= 0) { u.state = 'burst'; u.burst = 12; u.sh = 0; }
+      if (u.stT <= 0) { u.state = 'burst'; u.burst = 10; u.sh = 0; }
     } else if (ok && u.stT <= 0) {
       u.state = 'wind'; u.stT = 0.75; u.tx = t.x; u.tz = t.z;
       g.fx.strip(ox, oz, yawTo(t.x - ox, t.z - oz), dist(ox, oz, t.x, t.z), 0.5, 0.75);
@@ -172,7 +179,7 @@ export function updateEnemy(g, u, dt) {
       still(u, dt);
       if (u.slash > 0.45 && !u.hitDone) {
         u.hitDone = true;
-        if (d < 2.5) { if (t === h) g.hurtHero(1, u.x, u.z); else if (t === g.cannon) g.hurtCannon(2); else g.hurtUnit(t, 2, dx, dz, 'blade'); }
+        if (d < 2.5 && !(t === h && h.y > u.y + 1.1)) { if (t === h) g.hurtHero(1, u.x, u.z); else if (t === g.cannon) g.hurtCannon(2); else g.hurtUnit(t, 2, dx, dz, 'blade'); }
       }
     } else if (d < 1.9 + (t === g.cannon ? 1.4 : 0) && u.stT <= 0) {
       u.slash = 0; u.hitDone = false; u.stT = 1.3; g.sfxAt('slash', u.x, u.z, 0.8);
@@ -183,23 +190,24 @@ export function updateEnemy(g, u, dt) {
 
   // 步兵 / 特工队 / 城墙守军
   const elite = type === 'elite', wall = type === 'wall';
-  const los = !losBlocked(g.world, u.x, u.z, t.x, t.z, 1.7, u.y + 1.4, (t.y || 0) + 1.2);
+  // 射界按子弹实际飞的高度算（枪口到目标胸口），矮掩体也算进去：被自己面前的沙袋、土坎挡住时就换位置，不对着掩体白打
+  const los = !losBlocked(g.world, u.x, u.z, t.x, t.z, wall ? 1.7 : 0, u.y + 1.3, (t.y || 0) + 1.1);
   u.yaw = angStep(u.yaw, yawTo(dx, dz), 7 * dt);
   if (u.state === 'aim') {
     still(u, dt); u.aim = damp(u.aim, 1, 14, dt);
     if (u.stT <= 0) {
       if (elite) { u.state = 'burst'; u.burst = 3; u.sh = 0; }
-      else { shootAt(g, u, t, wall ? 0.065 : 0.052, 0.35); u.state = 'cool'; u.stT = rand(1.6, 2.8) * (wall ? 1.5 : 1); }
+      else { shootAt(g, u, t, wall ? 0.065 : 0.052, 0.35); u.state = 'cool'; u.stT = rand(1.9, 3.2) * (wall ? 1.5 : 1); }
     }
   } else if (u.state === 'burst') {
     still(u, dt); u.aim = 1; u.sh -= dt;
-    if (u.sh <= 0) { u.sh = 0.13; u.burst--; shootAt(g, u, t, 0.04, 0.4, 38); if (u.burst <= 0) { u.state = 'cool'; u.stT = rand(1.5, 2.3); } }
+    if (u.sh <= 0) { u.sh = 0.13; u.burst--; shootAt(g, u, t, 0.04, 0.4, 38); if (u.burst <= 0) { u.state = 'cool'; u.stT = rand(1.8, 2.7); } }
   } else {
     u.aim = damp(u.aim, 0.2, 8, dt);
     const pref = elite ? Math.min(u.pref, 15) : u.pref;
     if (!u.hold && (d > pref || !los)) {
       if (d > pref) move(g, u, dx, dz, def.speed, dt);
-      else move(g, u, -dz * u.strafe, dx * u.strafe, def.speed, dt);
+      else move(g, u, dx * 0.5 - dz * u.strafe, dz * 0.5 + dx * u.strafe, def.speed, dt);   // 没射界：斜着往前绕出掩体
     } else if (elite) {
       u.strafeT -= dt;
       if (u.strafeT <= 0) { u.strafeT = rand(0.7, 1.5); u.strafe = pick([-1, 0, 1]); }
@@ -213,7 +221,7 @@ const SIEGE_POSTS = [[-9, 24.6], [9, 24.6], [-12.5, 27], [12.5, 27], [-6.5, 29.5
 const ESCORT = [[-3.6, -1.5], [3.6, -1.5], [0, 5]];
 const FORM = [[-2.3, 2.6], [2.3, 2.6], [-4.6, 4.4], [4.6, 4.4], [-1.2, 5.6], [1.6, 6.6]];
 // 正视 / 第一人称时改成并排散开，免得战友挤在镜头正前方
-const FORM_WIDE = [[-3.4, 0.6], [3.6, 0.6], [-5.6, 2.2], [5.8, 2.2], [-7.6, 3.6], [7.8, 3.6]];
+const FORM_WIDE = [[-5, -1.5], [5.6, -1.5], [-8, 0.6], [8.6, 0.6], [-11, 2.4], [11.6, 2.4]];
 
 export function updateAlly(g, u, dt) {
   if (!u.alive) return;
@@ -236,7 +244,7 @@ export function updateAlly(g, u, dt) {
   else {
     // 跟随主角：按前进方向排成散兵线
     const adv = p >= 4 ? 0 : (g.advYaw === undefined ? 0 : g.advYaw);
-    const f = (g.cam.view >= 2 ? FORM_WIDE : FORM)[u.slot];
+    const f = FORM_WIDE[u.slot];
     sx = h.x + Math.cos(adv) * f[0] + Math.sin(adv) * f[1];
     sz = h.z - Math.sin(adv) * f[0] + Math.cos(adv) * f[1];
     if (p >= 4 && h.z < -23) sx = clamp(sx, -6.2, 6.2);
@@ -355,7 +363,9 @@ export function updateBoss(g, u, dt) {
       if (!u.hitDone && d < 1.7) {
         u.hitDone = true;
         if (h.dashT > 0) { g.tryClash(u); break; }
-        g.hurtHero(2, u.x, u.z);
+        // 刀锋贴地横扫：跳起来就躲过去了
+        if (h.y > 0.7) { g.addScore(150); g.stats.dodges = (g.stats.dodges || 0) + 1; if (!g.flags.jumpDodge) { g.flags.jumpDodge = 1; g.ui.toast('跳过去了！山本的突进扑了个空', 2.2); g.ui.danmaku(['跳得好', '山本：？', '这也行'], ''); } }
+        else g.hurtHero(2, u.x, u.z);
       }
       if (u.left <= 0 || moved < sp * dt * 0.3) {
         if (fast && !u.second) { u.second = true; startDash(g, u, 0.45); }
