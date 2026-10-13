@@ -22,9 +22,10 @@ const results=[];
    };
    await visible('#btnStart');await visible('#btnContinue');await visible('.menuTools');
    if(await frame.locator('#fullBtn').isVisible())await visible('#fullBtn');
-   if(width>=800||height>=800){for(const selector of ['[data-c="gunner"]','[data-campaign-difficulty="hard"]','#btnTest'])await visible(selector);}
+   if(width>=800||height>=800){for(const selector of ['[data-c="gunner"]','[data-campaign-difficulty="hard"]'])await visible(selector);}
+   if(width>=1000)await visible('#btnTest'); // Six 44px touch rows may scroll; launch/settings stay fixed.
    assert(await frame.locator('#menuMain').evaluate(e=>e.scrollHeight<=e.clientHeight+2),name+' entire menu overflows');
-   for(const [button,title,next,back] of [['btnBankVersus','银行塔防对战','vsMenu','vsMenuBack'],['btnRV','房车生存','rvMenu','rvBack'],['btnZerg','虫族模式','zergMenu','zergBack']]){
+   for(const [button,title,next,back] of [['btnBankVersus','银行塔防对战','vsMenu','vsMenuBack'],['btnRV','房车生存','rvMenu','rvBack'],['btnZerg','虫族模式','zergMenu','zergBack'],['btnAcid','酸液围场','acidMenu','acidBack']]){
     await frame.locator('#'+button).click();assert.equal(await frame.locator('#modeTitle').innerText(),title);assert(await frame.locator('#menuMain').isVisible());
     await visible('#btnModeStart');await frame.locator('#btnModeStart').click();assert(await frame.locator('#'+next).isVisible());await frame.locator('#'+back).click();
     assert.equal(await frame.locator('#modeTitle').innerText(),'基地防守');

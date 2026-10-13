@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.4';
+export const GAME_VERSION='0.38.0';
 export const UPDATE_HISTORY=[
+  {version:'0.38.0',date:'2026-10-13',title:'酸液围场 · 三轮躲避挑战',changes:[
+    '新增可选单人挑战：封闭围场内躲避固定朝向、交错喷射的酸液，金线预警，喷后蓝色弱点可集中反击。',
+    '三次命中容错，受伤短暂无敌；闪避与穿甲、贯穿、护盾升级帮助突破三轮。独立本机通关纪录，原有模式存档保留。']},
   {version:'0.37.4',date:'2026-10-13',title:'房车与城镇画面细化',changes:[
     '装甲房车增加车窗边框、轮毂、保险杠、车顶装备与实际车灯照明。',
     '废弃城镇加入夕阳冷暖光、远处天际线、建筑窗框与街边细节；探索路线、战斗规则与原有存档保持兼容。']},
