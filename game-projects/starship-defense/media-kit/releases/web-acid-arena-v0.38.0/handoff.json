@@ -2,11 +2,11 @@
   "schema_version": 1,
   "game_id": "chongchao-qianshao",
   "version": "web-acid-arena-v0.38.0",
-  "base_version": "web-rv-art-v0.37.4",
+  "base_version": "web-defense-art-v0.37.5",
   "created_at": "2026-10-13T19:43:39.986723+08:00",
   "build": {
-    "id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
-    "fingerprint": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+    "id": "bcf1824e74db9e041a3427c5b1489da0bc13e2b14e4f6cced0bc650e7ffe91f1",
+    "fingerprint": "bcf1824e74db9e041a3427c5b1489da0bc13e2b14e4f6cced0bc650e7ffe91f1",
     "commit": null,
     "dirty": false,
     "entrypoint": "public/html/game/starship-defense/index.html"
@@ -334,5 +334,9 @@
     "toy": "pending",
     "taptap": "not_requested",
     "bilibili": "major feature; update confirmed videos after website verification"
+  },
+  "integration": {
+    "included": "web-defense-art-v0.37.5",
+    "resolution": "保留基地新装甲与光照；围场prepare关闭基地光照，退出恢复；兼容包重建并复验。"
   }
 }

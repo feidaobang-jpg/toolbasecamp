@@ -16,6 +16,7 @@ const results=[];
     await f.locator('#btnAcid').click();await f.locator('#btnModeStart').click();await page.screenshot({path:path.join(out,name+'-rules.png')});
     await f.locator('#acidStart').click();await page.waitForTimeout(1300);await page.screenshot({path:path.join(out,name+'-battle.png')});
     assert.equal(await f.evaluate(()=>__gameQA.acidArena.state.round),1);assert.equal(await f.locator('#readyBtn').isVisible(),false);assert.equal(await f.locator('#saveHealth').isVisible(),false);
+    assert.equal(await f.evaluate(()=>__gameQA.battlefield.defenseArt),false,'campaign lighting isolated');
     const start=await f.evaluate(()=>__gameQA.player.pos.toArray());await page.keyboard.down('KeyD');await page.waitForTimeout(300);await page.keyboard.up('KeyD');
     const moved=await f.evaluate(()=>__gameQA.player.pos.toArray());assert(Math.hypot(moved[0]-start[0],moved[2]-start[2])>1,'movement');
     if(width<1000){
@@ -64,6 +65,7 @@ const results=[];
     await f.locator('#acidResultBack').click();assert(await f.locator('#menuMain').isVisible());
     assert(await f.evaluate(()=>JSON.stringify(__acidSaveBefore)===JSON.stringify(Object.fromEntries(Object.entries(localStorage).filter(([k])=>k.includes('sst_save_'))))),'campaign saves are byte-for-byte unchanged');
     await f.locator('#btnContinue').click();await page.waitForTimeout(250);assert.equal(await f.evaluate(()=>__gameQA.acidOn()),false);assert.equal(await f.evaluate(()=>__gameQA.Game.state),'prep');assert.equal(await f.evaluate(()=>__gameQA.Game.gold),777);
+    assert.equal(await f.evaluate(()=>__gameQA.battlefield.defenseArt&&__gameQA.scene.getObjectByName('defense-armour').visible),true,'campaign artwork restored');
     assert.deepEqual(errors,[]);results.push({viewport:[width,height],mechanics,shield,status:'pass'});
    }finally{await context.close();}
   }

@@ -39,6 +39,7 @@ import {createPitchController,createLookController} from '../../../js/game/drag-
 import * as THREE from './vendor/three.module.js';
 import {DarkVisuals} from './dark-visuals.js?v=fb97';
 import {FortressWorld} from './fortress-world.js?v=toy3dui2';
+import {createDefenseArt} from './defense-art.js';
 import {HILL_HEIGHT,HILL_FORTS,hillHeight,slopeSpeed} from './terrain-controls.js';
 import {setupToyPlatform} from './toy-platform.js?v=cloud240';
 import {LocalSaveStore,newSaveId} from './save-store.js';
@@ -555,6 +556,7 @@ function clearOfFeatures(x,z,pad=0){
 })();
 
 const fortress=new FortressWorld(scene,terrainH,PAL);
+const defenseArtAllowed=!(new URLSearchParams(location.search).has('qa')&&new URLSearchParams(location.search).get('art')==='before');
 fortress.solids.push(...rockColliders);
 const hive=new HiveWorld(scene,terrainH,PAL,fortress.solids);
 
@@ -1135,6 +1137,8 @@ function gateBlocked(){return !gate.open&&!gate.dead;}
   grp.position.y=PLAT.H;
   scene.add(grp);
 })();
+
+const defenseArt=createDefenseArt(scene,terrainH,groundMesh,gate.door);
 
 /* ---------- 通用工具 ---------- */
 function groundY(x,z){return rvOn()||acidOn()?0:terrainH(x,z);}
@@ -3327,8 +3331,7 @@ function renderBuild(){
   dm.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();dm.click();}};
   grid.appendChild(dm);
 }
-/* ================= 建造虚影：先看位置再放 =================
-   选中设施后关闭面板，角色面前出现半透明 3D 虚影（绿=可放，红=不行并写明原因）；
+/* ================= 建造虚影：先看位置再放 ==========   选中设施后关闭面板，角色面前出现半透明 3D 虚影（绿=可放，红=不行并写明原因）；
    走动或 Q/E/鼠标转视角调整位置和朝向（虚影跟着视角转），J/回车/左键/「放置」确认（此时才扣钱），Esc/「取消」退出，L 返回建造菜单。 */
 const place={mode:null,target:null,kind:null,ghost:null,ring:null,mat:null,x:0,z:0,yaw:0,valid:false,reason:'',free:false,lastMouse:false};
 function startPlacement(kind,free=false){
@@ -3978,8 +3981,7 @@ function setTouchMode(on){
 }
 for(const el of document.querySelectorAll('[data-device-mode]'))el.onclick=()=>setDeviceMode(el.dataset.deviceMode);
 
-/* ================= 纯键盘界面导航 =================
-   最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
+/* ================= 纯键盘界面导航 ==========   最上层可见的面板/菜单自动选中第一项（带黄色选中框）；方向键按屏幕位置移动，
    Tab/Shift+Tab 在面板内循环，回车/空格确认，Esc 关闭或返回。重新渲染后回到原位置。 */
 const NAV_ROOTS=['menuSettingsPanel','menuSavePanel','menuMorePanel','updatesPanel','helpPanel','vsPanel','touchLayoutEditor','confirmPanel','keyPanel','tacticsPanel','operationsPanel','sandboxPanel','platformPanel','savePanel','shopPanel','buildPanel','acidUpgrade','acidResult','acidMenu','warResult','warMenu','rvResult','rvPanel','rvMenu','vsResult','zergEvolve','zergResult','zergMenu','menuOver','menuPause','vsMenu','menuMain'];
 const nav={root:null,index:0};
@@ -4132,6 +4134,8 @@ function loop(){
     updParticles(playing?dt:0);updScreenFx(playing?dt:0);
     frameStats(now);renderer.render(scene,camera);Input.clearFrame();return;
   }
+  const showDefenseArt=defenseArtAllowed&&!acidOn()&&!rvOn()&&!vsOn()&&!warOn()&&!zergOn();
+  defenseArt.setEnabled(showDefenseArt);battlefield.setDefenseArt(showDefenseArt);
   if(warOn()){
     const playing=Game.state==='battle'&&!panelOpen;
     if(Game.msgTimer>0){Game.msgTimer-=dt;if(Game.msgTimer<=0)$('msg').classList.add('hidden');}
@@ -4297,7 +4301,7 @@ resistanceCampaign=createResistanceCampaign({Game,Input,AudioSys,camera,get play
   setLook(yaw,pitch){camYaw=yaw;camPitch=pitch;Input.resetLook();},
   cannonLook(){camPitch=clamp(camPitch,-.10,.50);},syncLabels:syncKeyLabels,quit:()=>$('btnQuit').click(),
   faceForward:()=>{camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();},
-  prepare(){if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
+  prepare(){defenseArt.setEnabled(false);battlefield.setDefenseArt(false);if(rvOn())rvBreakout.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);viewModel.visible=false;}
 });
 let zergView=null;
 zergMode=createZergMode({THREE,Game,Input,AudioSys,stage,scene,camera,player,base,gate,buildings,squad,vehicles,BUILDINGS,
@@ -4321,7 +4325,7 @@ const _origLoadGame=loadGame;
 loadGame=function(d){if(acidOn())acidArena.stop();if(zergOn())zergMode.stop();player.mesh.visible=true;_origLoadGame(d);};
 acidArena=createAcidArena({THREE,Game,player,Input,AudioSys,scene,stage,camera,monsters,visuals,clearEntities,showHUD,showHint,spawnParticles,playerAim,automaticFireTarget,playerMuzzle,syncFireButton,
   isTouch:()=>isTouch,getYaw:()=>camYaw,getMode:()=>camMode,cycleView:cycleCamView,quit:()=>$('btnQuit').click(),hitFlash:()=>hurtFlash=.8,
-  prepare(){if(rvOn())rvBreakout.stop();if(zergOn())zergMode.stop();if(warOn())resistanceCampaign.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);operations.clear();},
+  prepare(){defenseArt.setEnabled(false);battlefield.setDefenseArt(false);if(rvOn())rvBreakout.stop();if(zergOn())zergMode.stop();if(warOn())resistanceCampaign.stop();if(vsOn()||versusBackup)exitVersus();coopDriver?.leave();clearCoopHumans();Game.coop=false;closePanels();hideConfirm();cancelPlacement(true);operations.clear();},
   enterView(){const view={camMode,camView,camYaw,camPitch,saved:null};try{view.saved=localStorage.getItem('chongchao-person');}catch(_){}camMode='third';camView=2;camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();Input.resetLook();syncViewLabels();return view;},
   leaveView(v){if(!v)return;camMode=v.camMode;camView=v.camView;camYaw=v.camYaw;camPitch=v.camPitch;camState.init=false;try{if(v.saved===null)localStorage.removeItem('chongchao-person');else localStorage.setItem('chongchao-person',v.saved);}catch(_){}Input.resetLook();syncKeyLabels();}
 });
@@ -4537,8 +4541,7 @@ function handleCoopCommand(slot,c){
   }
  });
 }
-/* ================= 虫潮对战（1 对 1 到 4 对 4）：开局、座位、面板、HUD、结算、联机房间 =================
-   玩法规则在 versus.js；这里只负责把对战接到现有英雄操作、建造、联机和界面上。
+/* ================= 虫潮对战（1 对 1 到 4 对 4）：开局、座位、面板、HUD、结算、联机房间 ==========   玩法规则在 versus.js；这里只负责把对战接到现有英雄操作、建造、联机和界面上。
    每队 size 个座位、每个座位一名英雄：本机玩家、联机真人（slot=房间槽位）或电脑（slot=100+座位序号）。
    对战期间不读写单机存档，退出时把战役状态原样恢复。 */
 const vsUI={open:false,tab:'units',t:0,built:'',size:1,rosterSig:''};

@@ -1,0 +1,30 @@
+{
+  "samples": 3276,
+  "averageFPS": 163.83932143712047,
+  "medianMs": 5.899999998509884,
+  "p95Ms": 7,
+  "over50ms": 0,
+  "drawCalls": 167,
+  "triangles": 283016,
+  "memory": {
+    "geometries": 137,
+    "textures": 6
+  },
+  "viewport": [
+    1280,
+    720
+  ],
+  "dpr": 1.6666666666666665,
+  "drawingBuffer": [
+    1599,
+    899
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "quality": "high",
+  "theme": "dark",
+  "version": "before",
+  "monsters": 19,
+  "cameraMode": "third",
+  "cameraView": 0,
+  "terrainMaterials": "original"
+}

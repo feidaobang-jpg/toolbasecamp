@@ -96,11 +96,18 @@ export class BattlefieldEnvironment{
     this.applyLighting();
     this.clearDecor();this.buildDecor(p);return true;
   }
+  setDefenseArt(value){if(this.defenseArt===value)return;this.defenseArt=value;this.applyLighting();}
   setTimeOfDay(value){this.timeOfDay=value==='night'?'night':'day';this.applyLighting();}
   applyLighting(){
     if(!this.current)return;
-    const p=this.current,day=this.timeOfDay==='day',light=day?DAYLIGHT[p.id]:p,o=this.objects,s=this.scene;
-    this.lightProfile=light;this.hemiIntensity=day?.95:.68;
+    const p=this.current,day=this.timeOfDay==='day',o=this.objects,s=this.scene;
+    let light=day?DAYLIGHT[p.id]:p;
+    if(this.defenseArt){
+      // Preserve chapter identity, day/night choice and long-range visibility.
+      const tint=p.id==='desert'?{sky:0x3a4b60,horizon:0x657282,zenith:0x21364c,glow:0x8babb6}:p.id==='frost'?{sky:0x416175,horizon:0x75939d,zenith:0x294865,glow:0x99cdd0}:{sky:0x3b505c,horizon:0x617979,zenith:0x223b4c,glow:0x85bbb1};
+      light={...light,...(day?tint:{}),hemi:day?0xa9bdcf:0x93b4d0,groundLight:day?0x555a5e:0x424950,sun:day?0xc5d4dc:0xb7ccdf,intensity:day?1.25:1.17};
+    }
+    this.lightProfile=light;this.hemiIntensity=this.defenseArt?(day?.83:.72):(day?.95:.68);
     s.background.set(light.sky);s.fog.color.set(light.fog);s.fog.near=130;s.fog.far=430;
     for(const m of this.hemi){m.color.set(light.hemi);m.groundColor.set(light.groundLight);}
     for(const m of this.sun)m.color.set(light.sun);
