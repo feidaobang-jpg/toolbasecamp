@@ -36,16 +36,22 @@
   },
   "toy": {
     "id": "38678478981120",
-    "status": "auditing",
+    "status": "included_in_newer_published_version",
     "submitted_at": "2026-10-13T19:54:20.141082+08:00",
     "tested_preview": "https://www.bilibili.com/toy/preview/preview_bNDrkv7L/index.html",
     "submission_preview": "https://www.bilibili.com/toy/preview/preview_4Pe20Hax/index.html",
     "zip_sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
-    "validation": "Official Toy preview: continue existing level2 progress, W movement, jump, desktop/touch switch, landscape and portrait desktop simulation; no console errors. Real phone not tested."
+    "validation": "Official Toy preview: continue existing level2 progress, W movement, jump, desktop/touch switch, landscape and portrait desktop simulation; no console errors. Real phone not tested.",
+    "public_verified_at": "2026-10-13T20:12:54.608733+08:00",
+    "public_runtime_revision": "v25876",
+    "current_public_version": "v0.38.0",
+    "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+    "public_validation": "Official public entry rendered version label; defense continued prior level2 save and new gate/ground art visible."
   },
   "bilibili": {
     "decision": "deferred_accumulating",
     "reason": "Appearance refinement of existing defense mode, no new gameplay or changed controls; existing description remains applicable. Latest public description verification 2026-10-12, less than 7 days."
   },
-  "taptap": "not_in_scope"
+  "taptap": "not_in_scope",
+  "thumbnail_decision": "retain: current card still represents the same game; this is local chapter/base material refinement, not a new identity or changed core gameplay"
 }
