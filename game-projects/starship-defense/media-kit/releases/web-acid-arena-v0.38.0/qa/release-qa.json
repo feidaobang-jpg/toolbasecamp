@@ -1,0 +1,62 @@
+[
+  {
+    "viewport": [
+      1280,
+      720
+    ],
+    "mechanics": {
+      "stationary": true,
+      "shell": 30,
+      "weak": 180,
+      "one": 2,
+      "grace": 2,
+      "dead": true
+    },
+    "shield": {
+      "hp": 3,
+      "blocks": 1,
+      "cooldown": 12
+    },
+    "status": "pass"
+  },
+  {
+    "viewport": [
+      844,
+      346
+    ],
+    "mechanics": {
+      "stationary": true,
+      "shell": 30,
+      "weak": 180,
+      "one": 2,
+      "grace": 2,
+      "dead": true
+    },
+    "shield": {
+      "hp": 3,
+      "blocks": 1,
+      "cooldown": 12
+    },
+    "status": "pass"
+  },
+  {
+    "viewport": [
+      390,
+      844
+    ],
+    "mechanics": {
+      "stationary": true,
+      "shell": 30,
+      "weak": 180,
+      "one": 2,
+      "grace": 2,
+      "dead": true
+    },
+    "shield": {
+      "hp": 3,
+      "blocks": 1,
+      "cooldown": 12
+    },
+    "status": "pass"
+  }
+]

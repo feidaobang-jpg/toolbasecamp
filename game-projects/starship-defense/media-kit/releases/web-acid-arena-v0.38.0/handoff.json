@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-acid-arena-v0.38.0",
+  "base_version": "web-defense-art-v0.37.5",
+  "created_at": "2026-10-13T19:43:39.986723+08:00",
+  "build": {
+    "id": "bcf1824e74db9e041a3427c5b1489da0bc13e2b14e4f6cced0bc650e7ffe91f1",
+    "fingerprint": "bcf1824e74db9e041a3427c5b1489da0bc13e2b14e4f6cced0bc650e7ffe91f1",
+    "commit": null,
+    "dirty": false,
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "feature_inventory": [
+    {
+      "id": "acid-arena",
+      "description": "三轮独立酸液弹幕挑战，固定朝向、喷后弱点、三次命中、闪避、轮间升级与本机纪录",
+      "status": "implemented",
+      "evidence_ids": [
+        "1280x720-battle",
+        "390x844-upgrade",
+        "1280x720-win"
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "acid-arena",
+      "feature_ids": [
+        "acid-arena"
+      ],
+      "before": "主菜单五种玩法，无独立酸液躲避挑战",
+      "after": "新增酸液围场入口，三轮3/4/5只酸液虫，沿用操作设置与视角，战役进度逐字节保持",
+      "evidence_ids": [
+        "1280x720-battle",
+        "390x844-upgrade",
+        "1280x720-win"
+      ],
+      "verification": "pass"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "acid-ready-button",
+      "found_in": "v0.38.0-dev",
+      "status": "fixed",
+      "observed": "从既有战役菜单进入后残留准备完毕按钮",
+      "fix": "模式样式隔离旧战役开战按钮，并增加实际可见性回归",
+      "before_media_ids": [],
+      "after_media_ids": [
+        "1280x720-battle"
+      ],
+      "retest": "three viewports pass"
+    }
+  ],
+  "media": [
+    {
+      "id": "1280x720-battle",
+      "file": "releases/web-acid-arena-v0.38.0/captures/1280x720-battle.png",
+      "sha256": "ecaf4de58d0d02667a2340046cb0d66a9ecd99f39c18448d8563fb2cc2295da8",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "1280x720-failure",
+      "file": "releases/web-acid-arena-v0.38.0/captures/1280x720-failure.png",
+      "sha256": "a2667c4d56f625acc56f8b81e291910c9a51ec1fd3401a82f3b19a4479de6d4b",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "1280x720-rules",
+      "file": "releases/web-acid-arena-v0.38.0/captures/1280x720-rules.png",
+      "sha256": "1b8dea395fbe04336f75d3d8bdf51ad51797febd0adf1445070140e71e12ffe7",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "1280x720-upgrade",
+      "file": "releases/web-acid-arena-v0.38.0/captures/1280x720-upgrade.png",
+      "sha256": "ec4aa6b89e056e017a16627f3dfee79d184aafb6676567ae7a3530da4b0ba7ad",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "1280x720-win",
+      "file": "releases/web-acid-arena-v0.38.0/captures/1280x720-win.png",
+      "sha256": "a6bd953a969f9a87ac66e9feab36aa1537faff338e4a1e5ac60bacf62312251a",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 1280,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "390x844-battle",
+      "file": "releases/web-acid-arena-v0.38.0/captures/390x844-battle.png",
+      "sha256": "f6af43d06ca5b6cfc6036c8348a2d35a35621ea73102d70b2aef221972ad7c7e",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "390x844-failure",
+      "file": "releases/web-acid-arena-v0.38.0/captures/390x844-failure.png",
+      "sha256": "af45c247197d2416517a80ac199b59579cfea0187910fe9093dc916e677e56a5",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "390x844-rules",
+      "file": "releases/web-acid-arena-v0.38.0/captures/390x844-rules.png",
+      "sha256": "5015a404283d9d644dc81a03481cbcdf4b8494ea5de14da00c1250b164863186",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "390x844-upgrade",
+      "file": "releases/web-acid-arena-v0.38.0/captures/390x844-upgrade.png",
+      "sha256": "5d2b53174c044c0f2896127f89ede2d7d6c15042a0fa27785e14d85160a76108",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "390x844-win",
+      "file": "releases/web-acid-arena-v0.38.0/captures/390x844-win.png",
+      "sha256": "d09891b6d135401578c69d8f9738adeb2944172099b5ece9195b2e54d15934a8",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "844x346-battle",
+      "file": "releases/web-acid-arena-v0.38.0/captures/844x346-battle.png",
+      "sha256": "414a0c71beb6fb979eb685fc62c9b86d873495498dbb6d6c21e938c95658cce6",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 844,
+      "height": 346,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "844x346-failure",
+      "file": "releases/web-acid-arena-v0.38.0/captures/844x346-failure.png",
+      "sha256": "3726d4bc92fb0c9966c5984b36240d5b5b2fe164146d872fda1dcbe8174c8010",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 844,
+      "height": 346,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "844x346-rules",
+      "file": "releases/web-acid-arena-v0.38.0/captures/844x346-rules.png",
+      "sha256": "16543c0e6d8b6125c495cf8e738d311eadbae446151ee90b87066ac916222222",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 844,
+      "height": 346,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "844x346-upgrade",
+      "file": "releases/web-acid-arena-v0.38.0/captures/844x346-upgrade.png",
+      "sha256": "5417af85970ac8d300c630da48ec7304515d77321e2f39cffc15a1b2996da815",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 844,
+      "height": 346,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    },
+    {
+      "id": "844x346-win",
+      "file": "releases/web-acid-arena-v0.38.0/captures/844x346-win.png",
+      "sha256": "5974ff5c78337c37b37b10197ce7fe25c13da40081248917ba8843559fb710fa",
+      "kind": "screenshot",
+      "version": "web-acid-arena-v0.38.0",
+      "build_id": "cc797ad309dbbacc18ad0e047aa670ca687d5565c9c46deb89f6caeaad6e53c2",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单输入；失败/升级/胜利采用明确标注的战斗夹具，不代表真人自然通关",
+      "width": 844,
+      "height": 346,
+      "audio": "none",
+      "visual_review": "pass",
+      "audio_review": "not-applicable",
+      "segments": []
+    }
+  ],
+  "historical_media": [
+    {
+      "id": "natural-play",
+      "handoff": "releases/web-acid-arena-v0.38.0-dev-final1/handoff.json",
+      "media_id": "play-page@bead9d20b8c72b0857c91692fbe57b22",
+      "reason": "完整三轮真实时间实战，最终版仅清除无效触屏换枪键"
+    }
+  ],
+  "qa": {
+    "records": {
+      "stable-qa.json": "releases/web-acid-arena-v0.38.0/qa/stable-qa.json",
+      "fire-results.json": "releases/web-acid-arena-v0.38.0/qa/fire-results.json",
+      "privacy-results.json": "releases/web-acid-arena-v0.38.0/qa/privacy-results.json",
+      "menu-results.json": "releases/web-acid-arena-v0.38.0/qa/menu-results.json",
+      "measure-final-balance.json": "releases/web-acid-arena-v0.38.0/qa/measure-final-balance.json",
+      "measure-final-1280x720-performance.json": "releases/web-acid-arena-v0.38.0/qa/measure-final-1280x720-performance.json",
+      "measure-final-844x390-performance.json": "releases/web-acid-arena-v0.38.0/qa/measure-final-844x390-performance.json"
+    },
+    "cloud_save": {
+      "cases": 26,
+      "passed": true
+    },
+    "method": "Edge d3d11 on RTX4060Ti, actual keyboard/touch input plus labeled deterministic fixtures; balance is simulated perfect-foresight bot; FPS live browser independent of capture",
+    "not_tested": [
+      "physical mobile multitouch and GPU performance"
+    ]
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "partial",
+    "gaps": [
+      "原片为静音浏览器录屏，正式视频若需游戏音轨应补录；完整游戏介绍沿用历史交接"
+    ]
+  },
+  "release": {
+    "website": "pending",
+    "toy": "pending",
+    "taptap": "not_requested",
+    "bilibili": "major feature; update confirmed videos after website verification"
+  },
+  "integration": {
+    "included": "web-defense-art-v0.37.5",
+    "resolution": "保留基地新装甲与光照；围场prepare关闭基地光照，退出恢复；兼容包重建并复验。"
+  }
+}

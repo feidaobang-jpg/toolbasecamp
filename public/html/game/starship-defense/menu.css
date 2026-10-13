@@ -91,4 +91,6 @@
 #stage.menu-compact #campaignConfig h3,#stage.menu-compact #menuMain #difficultyTitle{margin:2px 0;align-self:center}
 #stage.menu-compact #menuMain .classCard{padding:5px}
 #stage.menu-compact #menuMain #saveNotice{margin:0}
+#stage.menu-compact #menuMain .lobbyCard{padding:6px 10px;gap:0}
+#stage.menu-compact #menuMain .lobbyCard span{display:none}
 #stage #campaignConfig.hidden{display:none!important}
