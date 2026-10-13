@@ -1,0 +1,28 @@
+{
+  "verified_at": "2026-10-13T19:50:29.335950+08:00",
+  "files": [
+    {
+      "file": "index.html",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "sha256": "6fa9369254dcf49b1701c4bca8b23ffd65829a4d14fe2c061376581133a2a647",
+      "expected": "246145d42fec4a52abc0bb803d5af06f4413fd6db190ad42ac37d2034c9876bc",
+      "match": false
+    },
+    {
+      "file": "game.compat.js",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+      "sha256": "9e0a7b5fd5fae463a0b8397764205b226976c14400ba7c0437430d823d820753",
+      "expected": "9e0a7b5fd5fae463a0b8397764205b226976c14400ba7c0437430d823d820753",
+      "match": true
+    },
+    {
+      "file": "menu.css",
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/menu.css",
+      "sha256": "e66e01b9cfccd1ca3d354beb4262e56e92d50ef7592d36b992d560e4da80029f",
+      "expected": "e66e01b9cfccd1ca3d354beb4262e56e92d50ef7592d36b992d560e4da80029f",
+      "match": true
+    }
+  ],
+  "status": "public_verified",
+  "html_difference": "Only deployment-generated ?v=778b8611 resource cache parameters; real browser passes v0.38.0 challenge"
+}
