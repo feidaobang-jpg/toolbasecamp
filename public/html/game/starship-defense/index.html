@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>虫潮围城</title>
 <link rel="stylesheet" href="../../../css/base.css?v=rescue180">
-<link rel="stylesheet" href="./combat-controls.css?v=layout191">
+<link rel="stylesheet" href="./combat-controls.css?v=fire0373">
 <style>
 /* ---------- 结构 ---------- */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:none;}
@@ -523,7 +523,7 @@ html,body{overscroll-behavior:none}
     <header class="infoHeader"><h3 id="menuSettingsTitle">游戏设置</h3><button class="closeX" data-menu-close aria-label="关闭设置">×</button></header>
     <p class="small" id="deviceModeCaption">操作模式 · 立即生效，保留本局进度</p>
     <div class="rescue-actions" role="group" aria-labelledby="deviceModeCaption"><button class="tb-btn" data-device-mode="desktop">电脑键鼠</button><button class="tb-btn" data-device-mode="touch">手机触屏</button><button class="tb-btn" data-device-mode="auto">自动识别</button></div>
-    <div class="dialogGrid"><button class="mbtn" id="keysMenu">操作与按键设置</button><button class="mbtn" id="muteBtnMenu">声音</button><button class="mbtn" id="daylightMain">地表：白天</button></div>
+    <div class="dialogGrid"><button class="mbtn" id="keysMenu">射击、瞄准与按键</button><button class="mbtn" id="muteBtnMenu">声音</button><button class="mbtn" id="daylightMain">地表：白天</button></div>
   </section>
   <section id="menuSavePanel" class="panel menuDialog hidden" role="dialog" aria-modal="true" aria-labelledby="menuSaveTitle">
     <header class="infoHeader"><h3 id="menuSaveTitle">存档与恢复</h3><button class="closeX" data-menu-close aria-label="关闭存档菜单">×</button></header>
@@ -547,6 +547,7 @@ html,body{overscroll-behavior:none}
       <p>基地防守：打怪攒钱，买枪强化、造炮塔、雇最多12名队友，守住基地。基地耐久归零即失败；玩家阵亡会复活，基地损伤保留。难度只用于新游戏，继续和读档沿用存档难度。</p>
       <p class="desktop-help">电脑：WASD / 方向键移动，Shift 跑步，鼠标拖动或 Q/E 转视角，C 切换视角，J 射击，K/空格跳跃，I 互动，H 医疗，U 手雷，O 商店，L 建造，R 开战，P/Esc 暂停。菜单可用方向键、Tab 和回车操作。</p>
       <p class="touch-help">手机：左下摇杆移动，右侧空白处拖动转视角；右侧按钮可跳跃、跑步、互动、用医疗包和投掷手雷，商店、建造、换枪也有独立按钮。右上「切换视角」和「菜单」随时可用。</p>
+      <p>电脑和手机默认自动瞄准、自动射击；在设置的「射击、瞄准与按键」中可改为按住射击或点击开关连射，也可分别选择瞄准方式。手雷、医疗和技能仍需主动使用；房车自动射击只对已追击的敌人生效。</p>
       <p>基地防守、房车和自由测试可无限投掷手雷，每3秒一次。</p>
       <p>母皇：早杀可减少本章后续虫潮35%，每次通关额外领补给；晚杀保留更多虫群掉落。「队友集合 / 载具救援」各冷却20秒并保留血量，在虫洞内救援时载具停在洞口。</p>
       <p>城门：玩家和队友靠近自动开门，队友通过后自动关门，也可用互动手动开关。看小地图和基地方向提示找家；载具被打坏下关自动修好，进度自动保存。</p>
@@ -691,7 +692,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=slope-aim-0371" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=fire0373" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

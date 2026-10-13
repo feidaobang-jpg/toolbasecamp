@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.1';
+export const GAME_VERSION='0.37.3';
 export const UPDATE_HISTORY=[
+  {version:'0.37.3',date:'2026-10-13',title:'电脑手机共用射击设置',changes:[
+    '手机默认自动寻敌并开火，可与电脑一样选择自动射击、按住射击或点击开关连射；瞄准方式可单独选择，偏好自动保存。',
+    '暂停、失焦和切换操作模式会清除连射状态；联机自动开火由房主按有效目标判断，手雷和技能保留手动触发。']},
   {version:'0.37.1',date:'2026-10-13',title:'一人高山坡与最近目标瞄准',changes:[
     '六处野外山坡降到约一个角色高，山顶堡垒、行走与碰撞同步调整。',
     '自动瞄准改为锁定射程内离自己最近的敌人，不再优先首领、精英或镜头正前方；电脑、触屏与联机一致。']},

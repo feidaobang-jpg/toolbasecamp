@@ -4,10 +4,11 @@ const saved=new Map();const storage={getItem:k=>saved.get(k),setItem:(k,v)=>save
 const c=createCombatControls(storage);
 assert.deepEqual(c.settings,{input:'mouse',aim:'auto',fire:'auto'});
 assert.equal(c.firing(false),false);assert.equal(c.firing(true),true);
+assert.equal(c.fireIntent,false,'automatic mode must not send unconditional fire to the host');
 c.press('mouse');assert.equal(c.firing(false),true);c.release('mouse');assert.equal(c.firing(false),false);
 c.set('fire','hold');assert.equal(c.firing(true),false);
 c.press('KeyJ');c.press('mouse');c.release('mouse');assert.equal(c.firing(),true);c.release('KeyJ');assert.equal(c.firing(),false);
-c.set('fire','toggle');c.press('KeyJ');c.press('KeyJ');c.release('KeyJ');assert.equal(c.firing(),true);
+c.set('fire','toggle');c.press('KeyJ');c.press('KeyJ');c.release('KeyJ');assert.equal(c.firing(),true);assert.equal(c.fireIntent,true);assert.equal(c.toggled,true);
 c.press('mouse');c.release('mouse');assert.equal(c.firing(),false);
 c.press('KeyJ');c.reset();assert.equal(c.firing(),false);
 c.set('input','keyboard');c.set('aim','manual');assert.equal(c.mouseEnabled,false);assert.equal(c.autoAim,false);

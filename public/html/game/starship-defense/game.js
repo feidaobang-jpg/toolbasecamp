@@ -332,14 +332,17 @@ const Input={
         e.preventDefault();el._pointer=e.pointerId;el.setPointerCapture(e.pointerId);if(e.pointerType==='touch')this.lastTouchT=performance.now();
         if(!this.keys[key])this.pressed[key]=true;
         this.keys[key]=true;el.classList.add('on');AudioSys.init();AudioSys.resume();
-        if(key==='J')el._drag=toStage(e.clientX,e.clientY);
+        if(key==='J'){
+          el._drag=toStage(e.clientX,e.clientY);
+          if(this.isPlaying()&&!place.kind)CombatControls.press('virtual:'+e.pointerId);
+        }
       });
       // 枪战规则：按住射击键的同一根手指可以继续拖动瞄准，不用松开去拖空白处。
       if(key==='J')el.addEventListener('pointermove',e=>{
-        if(e.pointerId!==el._pointer||!el._drag||!fpsRules()||!this.isPlaying())return;
+        if(e.pointerId!==el._pointer||!el._drag||(!fpsRules()&&CombatControls.autoAim)||!this.isPlaying())return;
         const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-el._drag.x)*.0105;this.look.pitch-=(p.y-el._drag.y)*.0085;el._drag=p;
       });
-      const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;el._drag=null;this.keys[key]=false;el.classList.remove('on');};
+      const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;el._drag=null;this.keys[key]=false;el.classList.remove('on');if(key==='J'){CombatControls.release('virtual:'+e.pointerId);if(e.type!=='pointerup')CombatControls.reset();}};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
     };
     ['J','K','U','I','H','O','L','X','SPRINT','R','Z'].forEach(k=>bind('v'+k,k));
@@ -390,8 +393,8 @@ const Input={
   network:null,
   firing(hasTarget=false){
     if(this.network)return !!(this.network.fire||(this.network.autoFire&&hasTarget));
-    if(fpsRules())return this.isPlaying()&&!place.kind&&(isTouch?!!this.keys.J:CombatControls.held);
-    return this.isPlaying()&&!place.kind&&(isTouch?!!this.keys.J:CombatControls.firing(hasTarget));
+    if(fpsRules())return this.isPlaying()&&!place.kind&&CombatControls.held;
+    return this.isPlaying()&&!place.kind&&CombatControls.firing(hasTarget);
   },
   axis(){
     let x=0,y=0;
@@ -2576,14 +2579,14 @@ function manualAim(from,range){const target=crosshairPoint(range);return {dir:ta
 function playerAim(from,range,moveDir){
   if(manualHuman())return manualAim(from,range);
   const f=camForward(camMode==='first');
-  const auto=Input.network?Input.network.autoAim:isTouch||CombatControls.autoAim;
+  const auto=Input.network?Input.network.autoAim:CombatControls.autoAim;
   if(auto)return autoAim(from,f,range);
   return {dir:f,target:from.clone().addScaledVector(f,Math.min(range,26)),mo:null};
 }
 function automaticFireTarget(from,range,aim){
   if(rvOn())return !!aim.mo&&aim.mo.mode==='chase';
   if(aim.mo)return true;
-  if(isTouch||CombatControls.autoAim)return false;
+  if(Input.network?Input.network.autoAim:CombatControls.autoAim)return false;
   const target=autoAim(from,aim.dir,range,.995);
   return !!target.mo&&target.dir.dot(aim.dir)>.995;
 }
@@ -2627,7 +2630,7 @@ function throwGrenade(){
   player.grenadeCd=vsOn()?versus.grenadeCooldown(player):3;
   const from=player.pos.clone();from.y+=1.45;
   // 战地真人手动投掷：朝镜头方向扔，抬头扔得远、低头扔得近；电脑英雄和其他模式沿用自动寻敌。
-  const manual=manualHuman(),auto=battleOn()?!manual&&!!Input.network?.autoAim:Input.network?Input.network.autoAim:isTouch||CombatControls.autoAim;
+  const manual=manualHuman(),auto=battleOn()?!manual&&!!Input.network?.autoAim:Input.network?Input.network.autoAim:CombatControls.autoAim;
   const facing=camForward(false),aim=auto?autoAim(from,facing,26):{mo:null};
   const target=aim.mo?aim.mo.mesh.position.clone():from.clone().addScaledVector(facing,manual?clamp(22+camPitch*25,8,28):22);
   target.y=groundY(target.x,target.z)+.2;
@@ -3715,7 +3718,17 @@ function updJumpUI(){
   if(k.textContent!==kl)k.textContent=kl;if(h.textContent!==hl)h.textContent=hl;
 
 }
+function syncFireButton(){
+  const el=$('vJ'),toggle=!fpsRules()&&!zergOn()&&CombatControls.settings.fire==='toggle';
+  el.classList.toggle('fire-latched',toggle&&CombatControls.toggled);
+  if(toggle)el.setAttribute('aria-pressed',String(CombatControls.toggled));else el.removeAttribute('aria-pressed');
+  if(zergOn()||warOn())return; // These modes own their attack labels and skills.
+  const text=place.kind?'确认':toggle?(CombatControls.toggled?'连射：开':'连射：关'):fpsRules()||CombatControls.settings.fire==='hold'?'射击':'自动射击';
+  if(el.textContent!==text)el.textContent=text;
+  el.setAttribute('aria-label',toggle?(CombatControls.toggled?'关闭连射':'开启连射'):text);
+}
 function updHUD(dt){
+  syncFireButton();
   if(rvOn()){rvBreakout.hud();return;}
   if(vsOn()){updVersusHUD(dt);return;}
   $('statLine').textContent=Game.testMode?'🧪 自由测试 · 无限资源':levelName();
@@ -4195,7 +4208,7 @@ function syncKeyLabels(){
   $('menuButton').setAttribute('aria-label','打开游戏菜单，'+keyBindings.label('P')+' 或 Esc');
   $('weaponBar').dataset.key='';renderWeaponBar();
   const combat=CombatControls.settings;
-  const combatLabel=(combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(battleOn()?'手动瞄准 · 按住射击'+(combat.input==='keyboard'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动攻击',hold:'按住射击',toggle:'切换射击'})[combat.fire]);
+  const combatLabel=(isTouch?'触屏':combat.input==='keyboard'?'纯键盘':'键鼠')+' · '+(fpsRules()?'手动瞄准 · 按住射击'+(isTouch||combat.input==='keyboard'?'':' · 右键拖动转视角'):(combat.aim==='auto'?'自动瞄准':'手动瞄准')+' · '+({auto:'自动射击',hold:'按住射击',toggle:'点击开关连射'})[combat.fire]);
   $('keysHint').textContent=combatLabel+' · 移动 '+['up','left','down','right'].map(a=>keyBindings.label(a)).join('/')+' · '+(vsOn()?['J','R','Z','K','U','I','H','O','L','T','C','Q','E','P']:['SPRINT','J','K','U','I','H','O','L','C','Q','E','P']).map(a=>keyBindings.label(a)+' '+actionLabel(a)).join(' · ');
 }
 function renderKeys(){
@@ -4418,10 +4431,11 @@ function applyRoot(obj,row){
 function starshipInput(){
   const axis=Input.axis(),cs=Math.cos(camYaw),sn=Math.sin(camYaw),f=-axis.y,r=axis.x,edges=[];
   edges.push(...coopPendingEdges.splice(0));
+  const active=Input.isPlaying()&&!place.kind;
   const input={x:f*sn-r*cs,z:f*cs+r*sn,edges,yaw:camYaw,fp:camMode==='first',run:!!Input.keys.SPRINT,rise:!!(Input.keys.K||Input.keys.Y),lower:!!Input.keys.H,
-    fire:isTouch?!!Input.keys.J:CombatControls.firing(true),autoFire:!isTouch&&CombatControls.settings.fire==='auto',autoAim:isTouch||CombatControls.settings.aim==='auto'};
+    fire:active&&CombatControls.fireIntent,autoFire:active&&CombatControls.settings.fire==='auto',autoAim:CombatControls.autoAim};
   // 战地：客人只在按住时开火；俯仰和镜头距离（look，步行为 0）让房主还原准星，autoAim 表示触屏/纯键盘的轻度吸附。
-  if(battleOn())Object.assign(input,{pitch:camPitch,look:player.inVehicle?camState.dist:0,fire:isTouch?!!Input.keys.J:CombatControls.held,autoFire:false,autoAim:!!aimAssistKind()});
+  if(battleOn())Object.assign(input,{pitch:camPitch,look:player.inVehicle?camState.dist:0,fire:active&&CombatControls.held,autoFire:false,autoAim:!!aimAssistKind()});
   return input;
 }
 function starshipSnapshot(){
