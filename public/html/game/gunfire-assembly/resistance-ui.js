@@ -8,9 +8,10 @@ export function mountResistanceUI(api){
  const css=document.createElement('style');css.textContent=`
  .resistance-mode #hudTop,.resistance-mode #hudRight,.resistance-mode #radar,.resistance-mode #weaponBar,.resistance-mode #readyBtn,.resistance-mode #hint,.resistance-mode #interactHint,.resistance-mode #screenFx,.resistance-mode #crosshair,.resistance-mode #bfScore,.resistance-mode #bfFlags,.resistance-mode #bfInfo{display:none!important}
  .resistance-mode #webTools .mbtn:not(#personBtn):not(#menuButton):not(#fullBtn):not(#muteBtn){display:none!important}
- .resistance-mode #vX,.resistance-mode #vR,.resistance-mode #vT,.resistance-mode #vZ{display:none!important}
+ .resistance-mode #vX,.resistance-mode #vT{display:none!important}
  .resistance-mode #vJ{background:#a65348!important}.resistance-mode #vK{background:#5b8260!important}.resistance-mode #vU{background:#9b8151!important}.resistance-mode #vI{background:#527b91!important}
- .resistance-mode #vU,.resistance-mode #vI,.resistance-mode #vO,.resistance-mode #vL,.resistance-mode #vH{display:block!important}
+ .resistance-mode #vU,.resistance-mode #vI,.resistance-mode #vO,.resistance-mode #vL,.resistance-mode #vH,.resistance-mode #vR,.resistance-mode #vZ{display:block!important}
+ .resistance-mode #vR{background:#5a6f86!important}.resistance-mode #vZ{background:#8b7948!important}
  .resistance-mode .campaign-only,.resistance-mode #btnSaveMenu,.resistance-mode #btnLoadMenu2,.resistance-mode #saveHealth{display:none!important}
  #warMenu,#warResult{background:linear-gradient(140deg,rgba(31,39,35,.99),rgba(53,54,41,.98));color:#f0e6cc;overflow:auto;justify-content:flex-start;padding:28px 30px;gap:12px}
  #warKeysTouch{display:none}.touch-mode #warKeysDesktop{display:none}.touch-mode #warKeysTouch{display:block}
@@ -58,7 +59,7 @@ export function mountResistanceUI(api){
   }
  }
  const wrap=document.createElement('div');wrap.innerHTML=`
- <div id="warMenu" class="overlay menu hidden"><div class="warKicker">枪火集结 · 剧情模式</div><h1>抗 战 战 役</h1><p class="small">《亮剑》名场面改编 · 单人带领电脑队友 · 三章直接选择与重玩 · 检查点继续 · 固定装备</p><div id="warChapters"></div><p id="warKeysDesktop" class="small">WASD 移动 · J 射击 / 军刀 · U 手雷 · I 互动 / 上下马 / 操炮 · K 跳跃 / 骑马冲刺<br>按住 J / 左键射击 · 右键拖动或 Q / E 转头 · Z / 右键点按 举枪瞄准 · O 切枪 · R / L 换弹 · H 医疗 · T 小队指令 · Esc 暂停<br>步行固定第一人称、手动瞄准；骑马时 C 切换跟随距离</p><p id="warKeysTouch" class="small">步行固定第一人称、手动瞄准：左下摇杆移动，空白处拖动瞄准，按住射击键开火并可继续拖动，点上方“举枪瞄准”精确射击；右下还有手雷、跳跃和互动。骑乘后射击变为挥刀，跳跃变为冲刺。炮旁“拉炮”带动炮车，互动放下；操炮后拖动高低左右，预计落点对准城门后开炮。骑马时右上可切换跟随距离。</p><div class="btnRow"><button id="warContinue" class="mbtn green">继续检查点</button><button id="warBack" class="mbtn">返回大厅</button></div><p id="warSaveInfo" class="small"></p></div>
+ <div id="warMenu" class="overlay menu hidden"><div class="warKicker">枪火集结 · 剧情模式</div><h1>抗 战 战 役</h1><p class="small">《亮剑》名场面改编 · 单人带领电脑队友 · 三章直接选择与重玩 · 检查点继续 · 固定装备</p><div id="warChapters"></div><p id="warKeysDesktop" class="small">WASD 移动 · J 射击 / 军刀 · U 手雷 · I 互动 / 上下马 / 操炮 · K 跳跃 / 骑马冲刺<br>按住 J / 左键射击 · 右键拖动或 Q / E 转头 · Z / 右键点按 举枪瞄准 · O 切枪 · R / L 手动换弹（空仓不会自动装填） · H 医疗 · T 小队指令 · Esc 暂停<br>步行固定第一人称、手动瞄准；骑马时 C 切换跟随距离</p><p id="warKeysTouch" class="small">对照吃鸡手感：左摇杆移动，空白处拖视角；大红射击键按住开火并可拖枪；旁侧「举枪」「换弹」空仓必点换弹。手雷、跳跃、互动在右侧。骑乘后射击变挥刀、跳跃变冲刺。炮旁拉炮/操炮后拖动对准城门再开炮。</p><div class="btnRow"><button id="warContinue" class="mbtn green">继续检查点</button><button id="warBack" class="mbtn">返回大厅</button></div><p id="warSaveInfo" class="small"></p></div>
  <div id="warHUD" class="hidden"><strong id="warTitle"></strong><div id="warMission"></div><div id="warProgress"></div><div id="warHint"></div></div>
  <canvas id="warMap" class="hidden" width="180" height="204" aria-label="战役地图：金色目标、红色敌军、蓝色队友、白色玩家"></canvas>
  <button id="warAim" class="hidden" aria-pressed="false">举枪瞄准 Z</button><button id="warTow" class="hidden">拉动炮</button><div id="warCannonTools" class="hidden"><button id="warElevationDown" aria-label="降低炮口">−</button><span id="warCannonReadout"></span><button id="warElevationUp" aria-label="抬高炮口">＋</button></div><div id="warImpact" class="hidden"></div>

@@ -3880,8 +3880,21 @@ for(const el of document.querySelectorAll('[data-campaign-difficulty]'))el.oncli
   syncDifficultySelection();
 };
 syncDifficultySelection();
+function selectLobbyMode(modeId){
+  document.querySelectorAll('#modeRow .lobbyCard').forEach(el=>{
+    const on=el.id===modeId;
+    el.classList.toggle('mode-sel',on);
+    if(el.hasAttribute('aria-pressed'))el.setAttribute('aria-pressed',on?'true':'false');
+  });
+}
+function selectCampaignMode(){selectLobbyMode('btnCampaign');}
+$('btnCampaign')?.addEventListener('click',()=>{
+  selectCampaignMode();AudioSys.init();AudioSys.sfx('click');
+  const focus=hasProgress(slotInfo(SAVE_PREFIX+'auto'))?$('btnContinue'):$('btnStart');
+  focus?.focus?.();
+});
 $('btnStart').onclick=requestNewGame;
-$('btnTest').onclick=()=>{AudioSys.init();AudioSys.resume();newGame(true);};
+$('btnTest').onclick=()=>{selectLobbyMode('btnTest');AudioSys.init();AudioSys.resume();newGame(true);};
 $('btnContinue').onclick=()=>{
   AudioSys.init();AudioSys.resume();
   const d=slotInfo(SAVE_PREFIX+'auto');
@@ -3919,7 +3932,7 @@ $('btnQuit').onclick=$('btnOverQuit').onclick=()=>{
   $('menuPause').classList.add('hidden');$('menuOver').classList.add('hidden');
   $('hud').classList.add('hidden');$('touchUI').classList.add('hidden');
   $('menuMain').classList.remove('hidden');viewModel.visible=false;
-  closePanels();refreshContinue();
+  closePanels();refreshContinue();selectCampaignMode();
 };
 $('readyBtn').onclick=()=>{if(Game.state==='prep')startBattle();};
 $('shopClose').onclick=closePanels;
@@ -4531,8 +4544,8 @@ function setupVersus(){
   const open=rules=>{AudioSys.init();selectVersusRules(rules);renderVersusSize();$('menuMain').classList.add('hidden');$('vsMenu').classList.remove('hidden');};
   // 战地据点已迁至《枪火集结》；虫潮仅保留银行塔防对战入口。
   const btnVersus=$('btnVersus');if(btnVersus)btnVersus.onclick=()=>open('conquest');
-  $('btnBankVersus').onclick=()=>open('bank');
-  $('vsMenuBack').onclick=()=>{$('vsMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
+  $('btnBankVersus').onclick=()=>{selectLobbyMode('btnBankVersus');open('bank');};
+  $('vsMenuBack').onclick=()=>{$('vsMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');selectCampaignMode();};
   document.querySelectorAll('[data-vs-ai]').forEach(b=>b.onclick=()=>startVersusAI(b.dataset.vsAi,vsUI.size));
   document.querySelectorAll('[data-vs-size]').forEach(b=>b.onclick=()=>{vsUI.size=+b.dataset.vsSize;renderVersusSize();AudioSys.sfx('click');});
   $('vsOnline').onclick=()=>{

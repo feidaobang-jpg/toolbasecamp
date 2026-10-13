@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.1.4';
+export const GAME_VERSION='0.1.5';
 export const UPDATE_HISTORY=[
+  {version:'0.1.5',date:'2026-10-13',title:'手动换弹与手机吃鸡手感',changes:[
+    '战地与抗战空仓不再自动装填，须按 R 或点「换弹」；空仓再开枪会提示并高亮换弹键。',
+    '手机射击键加大，举枪/换弹贴在射击旁；按住射击可继续拖枪，抗战也显示换弹与举枪键。']},
   {version:'0.1.4',date:'2026-10-13',title:'第一人称鼠标不再发飘',changes:[
     '战地与抗战第一人称瞄准改为跟鼠标/触屏 1:1，不再走第三人称扫视用的平滑限速。',
     'Q/E 按住转视角仍按原转速；打空自动换弹与大厅模式布局暂未改。']},

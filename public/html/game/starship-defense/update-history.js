@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.36.7';
+export const GAME_VERSION='0.36.8';
 export const UPDATE_HISTORY=[
+  {version:'0.36.8',date:'2026-10-13',title:'主模式放进右侧模式选择',changes:[
+    '基地防守作为右侧模式卡默认第一项，与银行、房车、虫族、自由测试统一选择。',
+    '选中主模式后仍在左侧设兵种与难度，用继续/开始开局；其它模式点卡片直接进入。']},
   {version:'0.36.7',date:'2026-10-13',title:'直接单机与匿名联机',changes:[
     '默认匿名联机，无需游戏内登录；房间名称和玩家称呼自动生成，保留六位房间号加入与密码房。',
     'B站昵称为可选项；Toy云档在主动查看、上传或开启自动备份后连接，本地存档与文件备份继续可用。']},

@@ -179,8 +179,12 @@ export function createZergMode(a){
       ?'操作：左摇杆移动，拖动画面转视角；靠近目标自动撕咬。右侧按键：撕咬、酸液、冲刺、战士、飞虫、蜕皮、号令。'
       :`操作：WASD 移动，按住画面拖动或 ${k('Q')} / ${k('E')} 转视角，${k('C')} 切换视角；靠近目标自动撕咬。${k('J')} 撕咬 · ${k('K')} 酸液（标记集火）· ${k('U')} 战士虫 · ${k('I')} 飞虫 · ${k('O')} 蜕皮 · ${k('L')} 冲刺 · ${k('H')} 号令；也可以用鼠标点下方技能栏。`;
   }
-  function openMenu(){a.AudioSys.init();refreshMenu();$('menuMain').classList.add('hidden');$('zergResult').classList.add('hidden');$('zergMenu').classList.remove('hidden');}
-  $('zergBack').onclick=()=>{$('zergMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
+  const markMode=id=>document.querySelectorAll('#modeRow .lobbyCard').forEach(el=>{
+    const on=el.id===id;el.classList.toggle('mode-sel',on);
+    if(el.hasAttribute('aria-pressed'))el.setAttribute('aria-pressed',on?'true':'false');
+  });
+  function openMenu(){markMode('btnZerg');a.AudioSys.init();refreshMenu();$('menuMain').classList.add('hidden');$('zergResult').classList.add('hidden');$('zergMenu').classList.remove('hidden');}
+  $('zergBack').onclick=()=>{markMode('btnCampaign');$('zergMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
   $('zergStart').onclick=()=>start();
   $('zergAgain').onclick=()=>{stop(true);start();};
   $('zergResultMenu').onclick=()=>{stop(true);openMenu();};
@@ -752,7 +756,8 @@ export function createZergMode(a){
   const anchor=$('btnTest'),row=anchor?anchor.parentNode:$('modeRow')||document.querySelector('#menuMain .btnRow');
   if(row&&!$('btnZerg')){
     const b=document.createElement('button');
-    b.className='mbtn';b.id='btnZerg';b.textContent='🪲 虫族模式 · 攻陷人类要塞';
+    b.type='button';b.className='lobbyCard';b.id='btnZerg';b.dataset.mode='zerg';
+    b.innerHTML='<strong>虫族模式 · 攻陷人类要塞</strong><span>扮演母虫 · 三段攻城 · 进化增援</span>';
     b.onclick=openMenu;
     if(anchor)row.insertBefore(b,anchor);else row.appendChild(b);
   }

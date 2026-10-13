@@ -61,8 +61,9 @@ export function createVersus(api){
   function chooseKit(h,id){const s=seatOf(h);if(!s||!BF_KITS[id]||VS.over)return false;s.pendingKit=id;if(!h.dead&&h.pos.distanceTo(hqPos(h.team))<24&&!h.inVehicle){loadout(h);api.setMilitaryHero(h,h.team,h.curWeapon);}return true;}
   function chooseSpawn(h,id){const s=seatOf(h),p=VS.points.find(p=>p.id===id);if(!s||id!=='HQ'&&(!p||p.owner!==h.team||p.contested))return false;s.spawn=id;return true;}
   function chooseWeapon(h,id){if(!h.vsWeapons?.includes(id)||h.dead)return false;h.bfReload=null;api.equipHero(h,id);api.setMilitaryHero(h,h.team,id);return true;}
-  function reload(h){if(h.dead||h.inVehicle||h.bfReload)return false;const id=h.curWeapon,w=BF_WEAPONS[id];if(!w||(h.bfAmmo?.[id]??w.mag)>=w.mag)return false;h.bfReload={id,left:w.reload,total:w.reload};api.AudioSys.sfx('reload');return true;}
-  function canShoot(h,id){if(h.bfReload)return false;const w=BF_WEAPONS[id];if(!w)return false;h.bfAmmo=h.bfAmmo||{};if(h.bfAmmo[id]==null)h.bfAmmo[id]=w.mag;if(h.bfAmmo[id]<=0){reload(h);return false;}h.bfAmmo[id]--;return true;}
+  function reload(h){if(h.dead||h.inVehicle||h.bfReload)return false;const id=h.curWeapon,w=BF_WEAPONS[id];if(!w||(h.bfAmmo?.[id]??w.mag)>=w.mag)return false;h.bfReload={id,left:w.reload,total:w.reload};api.AudioSys.sfx('reload');if(h===VS.local)document.getElementById('vR')?.classList.remove('need-reload');return true;}
+  // 玩家须手动换弹；电脑队友仍可在空仓时自动装填。
+  function canShoot(h,id){if(h.bfReload)return false;const w=BF_WEAPONS[id];if(!w)return false;h.bfAmmo=h.bfAmmo||{};if(h.bfAmmo[id]==null)h.bfAmmo[id]=w.mag;if(h.bfAmmo[id]<=0)return false;h.bfAmmo[id]--;return true;}
   function support(h){
     if(h.dead||h.inVehicle||h.bfSupportCd>0)return false;const s=seatOf(h);if(!s)return false;
     if(s.kit==='engineer'){let total=0;for(const v of api.vehicles)if(!v.dead&&v.team===h.team&&posOf(v).distanceTo(h.pos)<9){const n=Math.min(220,v.maxHp-v.hp);v.hp+=n;total+=n;api.updHPBar(v.bar,v.hp/v.maxHp);}if(!total)return false;s.stats.repairs+=total;}

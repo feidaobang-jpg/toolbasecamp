@@ -47,8 +47,9 @@ export function createRVBreakout(a){
       .touch-mode #rvHUD{max-width:270px;font-size:10px;padding:5px 8px}.touch-mode #rvMap{width:115px;height:117px}.rv-mode #vO{display:block!important}.rv-mode #interactHint{max-width:400px;white-space:normal}
       @media(max-height:420px){#rvMenu,#rvResult{justify-content:flex-start;padding:12px 28px}#rvMenu h1,#rvResult h1{font-size:24px}#rvMenu .small,#rvResult .small{font-size:11px;line-height:1.5}}
     `;document.head.append(style);
-    const button=document.createElement('button');button.id='btnRV';button.className='mbtn';button.textContent='🚐 房车生存 · 废弃城镇';
-    const anchor=$('btnGunfire')||$('btnBankVersus')||$('btnTest');
+    const button=document.createElement('button');button.id='btnRV';button.type='button';button.className='lobbyCard';button.dataset.mode='rv';
+    button.innerHTML='<strong>房车生存 · 废弃城镇</strong><span>开车探索 · 搜刮补给 · 前往撤离点</span>';
+    const anchor=$('btnBankVersus')||$('btnTest');
     if(anchor)anchor.after(button);else ($('modeRow')||$('menuMain'))?.append?.(button);
     const host=document.createElement('div');host.innerHTML=`
       <div id="rvMenu" class="overlay menu hidden"><h1>房车生存 · 废弃城镇</h1>
@@ -64,8 +65,12 @@ export function createRVBreakout(a){
       <div id="rvResult" class="overlay menu hidden"><h1 id="rvResultTitle"></h1><p id="rvResultInfo" class="small"></p><div class="btnRow"><button id="rvRetry" class="mbtn green">再探索一趟</button><button id="rvResultBack" class="mbtn">返回主菜单</button></div></div>`;
     for(const child of [...host.children])a.stage.append(child);
     for(const site of RV_SITES){const b=document.createElement('button');b.className='mbtn';b.textContent=site.name;b.dataset.site=site.id;b.onclick=()=>{s.destination=site.id;panelInfo();};$('rvSites').append(b);}
-    button.onclick=()=>{AudioSys.init();refresh();$('menuMain').classList.add('hidden');$('rvMenu').classList.remove('hidden');};
-    $('rvBack').onclick=()=>{$('rvMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
+    const markMode=id=>document.querySelectorAll('#modeRow .lobbyCard').forEach(el=>{
+      const on=el.id===id;el.classList.toggle('mode-sel',on);
+      if(el.hasAttribute('aria-pressed'))el.setAttribute('aria-pressed',on?'true':'false');
+    });
+    button.onclick=()=>{markMode('btnRV');AudioSys.init();refresh();$('menuMain').classList.add('hidden');$('rvMenu').classList.remove('hidden');};
+    $('rvBack').onclick=()=>{markMode('btnCampaign');$('rvMenu').classList.add('hidden');$('menuMain').classList.remove('hidden');};
     $('rvStart').onclick=()=>{if(read())a.askConfirm('新探索将替换城镇进度，其他模式存档保留。','开始新探索',()=>start());else start();};
     $('rvContinue').onclick=()=>{const d=read();if(d)start(d);else refresh();};$('rvClose').onclick=a.closePanels;
     for(const [id,kind] of [['rvRepair','repair'],['rvGun','gun'],['rvArmor','armor'],['rvGear','gear'],['rvFuel','fuel'],['rvFood','food'],['rvMedkit','medkit']])$(id).onclick=()=>job(kind);

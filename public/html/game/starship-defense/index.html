@@ -383,13 +383,21 @@ html,body{overscroll-behavior:none}
 .classRole{display:none}
 #menuMain #startRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 #menuMain #startRow .coop-entry{word-break:keep-all;overflow-wrap:normal}
-#menuMain #modeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#menuMain #modeRow.lobbyGrid{display:grid;grid-template-columns:1fr;gap:8px}
+#menuMain .lobbyCard{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;min-height:72px;padding:10px 12px;border-radius:10px;border:1px solid #6f8ea3;background:linear-gradient(160deg,#1a3142,#243f52);color:#eef6fb;cursor:pointer;font:inherit;box-shadow:0 5px 0 #0f1c26;margin:0;width:100%}
+#menuMain .lobbyCard strong{font-size:16px;letter-spacing:.5px;color:#ffe9b0}
+#menuMain .lobbyCard span{font-size:12px;line-height:1.45;color:#b9cfe0}
+#menuMain .lobbyCard:hover,#menuMain .lobbyCard:focus-visible{outline:3px solid #ffe066;outline-offset:2px;transform:translateY(-1px)}
+#menuMain .lobbyCard.mode-sel{border-color:#ffbe36;box-shadow:0 0 0 2px #ffbe36,0 5px 0 #0f1c26;background:linear-gradient(160deg,#243f52,#2f5368)}
 #menuMain .mbtn,#menuMain .coop-entry{margin:0;min-width:0;min-height:44px;padding:6px 8px;font-size:13px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
 #menuMain .difficulty-options{margin:3px 0;gap:8px}
 #menuMain .difficulty-options .tb-btn{min-height:44px;padding:6px 14px;font-size:15px}
 #menuMain .small{font-size:11px;line-height:1.5;max-width:100%;overflow-wrap:anywhere}
 #menuMain #difficultyHint{display:none}
 .mainModeNote{margin-top:8px}
+.touch-mode #menuMain .lobbyCard{min-height:var(--corner-height,64px);padding:10px 12px}
+.touch-mode #menuMain .lobbyCard strong{font-size:15px}
+.touch-mode #menuMain .lobbyCard span{font-size:11px}
 .mainSettings{width:100%;margin-top:auto}
 #menuMain #settingsRow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
 #menuMain #settingsRow a{width:auto;text-align:center;display:flex;align-items:center;justify-content:center}
@@ -536,13 +544,23 @@ html,body{overscroll-behavior:none}
       <button class="mbtn green" id="btnStart">🚀 开始新游戏</button>
     </div>
       </section>
-      <section class="mainModes" aria-label="其他玩法">
-        <h2>其他玩法 · 独立模式</h2>
-    <div class="btnRow" id="modeRow">
-      <button class="mbtn" id="btnBankVersus">🏦 银行塔防对战</button>
-      <button class="mbtn" id="btnTest">🧪 自由测试 · 无限资源 T</button>
+      <section class="mainModes" aria-label="模式选择">
+        <h2>模式选择</h2>
+    <div class="lobbyGrid btnRow" id="modeRow">
+      <button type="button" class="lobbyCard mode-sel" id="btnCampaign" data-mode="campaign" aria-pressed="true">
+        <strong>基地防守 · 主模式</strong>
+        <span>打怪攒钱 · 造塔雇队友 · 守住前哨（默认）</span>
+      </button>
+      <button type="button" class="lobbyCard" id="btnBankVersus" data-mode="bank">
+        <strong>银行塔防对战</strong>
+        <span>升级银行 · 派兵造塔 · 可电脑/好友对战</span>
+      </button>
+      <button type="button" class="lobbyCard" id="btnTest" data-mode="test">
+        <strong>自由测试</strong>
+        <span>无限资源 · 调试武器与建造 · 快捷键 T</span>
+      </button>
     </div>
-        <p class="small mainModeNote">银行塔防、房车和虫族是本游戏的独立模式。「继续上次」用于基地防守。</p>
+        <p class="small mainModeNote">默认选中基地防守：左侧设兵种与难度后「继续/开始」。银行、房车、虫族、测试点卡片直接进入。</p>
       </section>
     </div>
     <nav class="mainSettings" aria-label="设置、存档与游戏说明">
@@ -572,7 +590,7 @@ html,body{overscroll-behavior:none}
       <p>母皇：早杀可减少本章后续虫潮35%，每次通关额外领补给；晚杀保留更多虫群掉落。「队友集合 / 载具救援」各冷却20秒并保留血量，在虫洞内救援时载具停在洞口。</p>
       <p>城门：玩家和队友靠近自动开门，队友通过后自动关门，也可用互动手动开关。看小地图和基地方向提示找家；载具被打坏下关自动修好，进度自动保存。</p>
       <p>建造与小队：最多64座设施；队友可拾金币与血包，商店可升级队友武器和护甲。9个副本随章节解锁，每个副本三档难度分别领奖。</p>
-      <p>地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，不耗电。银行塔防、房车和虫族为独立模式；「继续上次」继续基地防守。</p>
+      <p>地表白天 / 夜晚可在主菜单或暂停菜单切换并保存；进入虫洞自动开启手电，跟随视角照亮前路，不耗电。右侧模式选择默认是「基地防守」；银行塔防、房车和虫族点卡片进入；「继续上次」继续基地防守。</p>
     </div>
   </section>
 
@@ -721,7 +739,7 @@ html,body{overscroll-behavior:none}
   </div>
 </div>
 <script src="./boot.js?v=mobile12"></script>
-<script defer src="./game.compat.js?v=anonymous-20261013" onerror="window.__ccBootError('游戏资源下载失败')"></script>
+<script defer src="./game.compat.js?v=mode-0368" onerror="window.__ccBootError('游戏资源下载失败')"></script>
 <script src="../../../js/game/thumb-preview.js"></script>
 <script type="module">
 // 内联自 /js/game/landscape-typing.js：Toy/TapTap 包不含站点共享目录，外链模块会缺失

@@ -298,7 +298,7 @@ const Input={
     // Blank-area look sits below the joystick, action buttons and HUD.
     const lz=$('lookZone');
     lz.addEventListener('pointerdown',e=>{if(!this.isPlaying()||this.touchLook||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();lz.setPointerCapture(e.pointerId);const p=toStage(e.clientX,e.clientY);this.touchLook={id:e.pointerId,x:p.x,y:p.y};});
-    lz.addEventListener('pointermove',e=>{const t=this.touchLook;if(!t||t.id!==e.pointerId)return;const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-t.x)*.0105;this.look.pitch-=(p.y-t.y)*.0085;t.x=p.x;t.y=p.y;});
+    lz.addEventListener('pointermove',e=>{const t=this.touchLook;if(!t||t.id!==e.pointerId)return;const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-t.x)*.012;this.look.pitch-=(p.y-t.y)*.01;t.x=p.x;t.y=p.y;});
     ['pointerup','pointercancel','lostpointercapture'].forEach(t=>lz.addEventListener(t,e=>{if(this.touchLook&&this.touchLook.id===e.pointerId)this.touchLook=null;}));
     // 每个控件独立捕获指针；菜单滚动不会占用摇杆。
     const jb=$('joyBase'),jk=$('joyKnob');
@@ -329,10 +329,10 @@ const Input={
         this.keys[key]=true;el.classList.add('on');AudioSys.init();AudioSys.resume();
         if(key==='J')el._drag=toStage(e.clientX,e.clientY);
       });
-      // 枪战规则：按住射击键的同一根手指可以继续拖动瞄准，不用松开去拖空白处。
+      // 枪战规则（对照吃鸡）：按住射击键的同一根手指可继续拖动瞄准，灵敏度与空白处拖视角一致。
       if(key==='J')el.addEventListener('pointermove',e=>{
         if(e.pointerId!==el._pointer||!el._drag||!fpsRules()||!this.isPlaying())return;
-        const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-el._drag.x)*.0105;this.look.pitch-=(p.y-el._drag.y)*.0085;el._drag=p;
+        const p=toStage(e.clientX,e.clientY);this.look.yaw-=(p.x-el._drag.x)*.012;this.look.pitch-=(p.y-el._drag.y)*.01;el._drag=p;
       });
       const up=e=>{if(e.pointerId!==el._pointer)return;el._pointer=null;el._drag=null;this.keys[key]=false;el.classList.remove('on');};
       ['pointerup','pointercancel','lostpointercapture'].forEach(t=>el.addEventListener(t,up));
@@ -2844,7 +2844,12 @@ function updPlayer(dt){
   const aim=playerAim(probe,wp.range,moveDir);
   const firing=Input.firing(automaticFireTarget(probe,wp.range,aim));
   player.heat=firing&&wp.beam?Math.min(1,(player.heat||0)+dt/1.5):Math.max(0,(player.heat||0)-dt*2);
-  if(firing&&player.fireCd<=0&&!place.kind&&(!battleOn()||versus.canShoot(player,Game.curWeapon))){
+  if(player.emptyClickT>0)player.emptyClickT-=dt;
+  if(firing&&player.fireCd<=0&&!place.kind){
+    if(battleOn()&&!player.bfReload&&player.bfAmmo?.[Game.curWeapon]===0){
+      player.fireCd=.28;
+      if((player.emptyClickT||0)<=0){showMsg('弹匣空了 · 点换弹或按 R',1.4);player.emptyClickT=1.6;$('vR')?.classList.add('need-reload');AudioSys.sfx('click');}
+    }else if(!battleOn()||versus.canShoot(player,Game.curWeapon)){
     player.fireCd=wp.rate*(player.buffT>0?1/1.4:1);
     // Reuse the target sampled for this frame.
     if(camMode==='third'&&player.lookHeading===undefined)player.yaw=Math.atan2(aim.dir.x,aim.dir.z);
@@ -2855,6 +2860,7 @@ function updPlayer(dt){
     player.muzzle.intensity=2;setTimeout(()=>{if(player.muzzle)player.muzzle.intensity=0;},50);
     viewKick=Math.min(1,viewKick+(wp.rate>.3?1:.35));
     if(wp.burst){player.burstLeft=wp.burst-1;player.burstT=0;}   // 四连导弹：首发已出，余下在后续帧错开续发
+    }
   }
   // 四连发导弹续发：每 90ms 一枚，微散布并追踪当帧目标
   if(player.burstLeft>0){
@@ -4784,7 +4790,7 @@ function renderVersusPanel(rebuild=false){
   if(!vsOn())return;const s=mySeat(),cards=versusCards();if(!s)return;
   document.querySelectorAll('[data-vstab]').forEach(b=>{const id=b.dataset.vstab;b.setAttribute('aria-selected',id===vsUI.tab?'true':'false');b.textContent=({units:'兵种',build:'部署',weapons:'装备',team:'战况'})[id]+(isTouch?'':({units:'',build:' L',weapons:' O',team:' T'})[id]);});
   document.querySelectorAll('[data-vslane]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.vslane===s.order?'true':'false'));
-  $('vsPanelEco').textContent=versus.kits[s.kit].name+' · 100生命 · 弹匣打空自动换弹，备用弹药无限 · '+(isTouch?'点卡片选择':'数字键选择 / Tab切换 / Enter确认');
+  $('vsPanelEco').textContent=versus.kits[s.kit].name+' · 100生命 · 空仓须手动换弹（R），备用弹药无限 · '+(isTouch?'点卡片选择':'数字键选择 / Tab切换 / Enter确认');
   const grid=$('vsGrid'),sig=vsUI.tab+':'+cards.map(c=>c.name).join('|');
   if(rebuild||grid.dataset.sig!==sig){grid.dataset.sig=sig;grid.replaceChildren();grid.scrollTop=0;cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.className='vs-card';b.innerHTML='<b></b><span class="k"></span><small></small><span class="st"></span>';b.onclick=()=>{const now=versusCards()[i];if(now?.ok)now.act();renderVersusPanel();};grid.appendChild(b);});}
   cards.forEach((c,i)=>{const b=grid.children[i];b.querySelector('b').textContent=c.name;b.querySelector('.k').textContent=isTouch?'':c.key;b.querySelector('small').textContent=c.desc;b.querySelector('.st').textContent=c.state;b.classList.toggle('owned',!!c.owned);b.classList.toggle('ready',!!c.ok);b.setAttribute('aria-disabled',c.ok?'false':'true');});
