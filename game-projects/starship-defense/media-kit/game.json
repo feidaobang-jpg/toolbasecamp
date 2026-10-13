@@ -16,11 +16,11 @@
   "release_intent": "web_demo",
   "development_model": "Codex（抗战战役、战地据点模式）；历史版本工具见各 release",
   "toy_id": "38678478981120",
-  "publication_status": "website_live_toy_published",
-  "preview_url": "https://www.bilibili.com/toy/preview/preview_tFCaXCNQ/index.html",
+  "publication_status": "website_live_toy_auditing",
+  "preview_url": "https://www.bilibili.com/toy/preview/preview_bNDrkv7L/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
   "media_readiness": "房车视觉样板与动态阶段证据已保存；正式视频仍需取材审片",
-  "qa": "releases/web-rv-art-v0.37.4/handoff.json",
+  "qa": "releases/web-defense-art-v0.37.5/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",
@@ -47,7 +47,7 @@
     "slug": "chongchao-qianshao",
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
-    "review_status": "published",
+    "review_status": "auditing",
     "verified_at": "2026-10-13T16:52:13.082189+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
@@ -56,16 +56,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_5tKCpy1N/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_4Pe20Hax/index.html",
     "title": "虫潮围城",
-    "zip_sha256": "3ab3666092841b97efc47cf3934e0fb2588f421e70ca412f917ef95321653359",
+    "zip_sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
     "submitted_date": "2026-10-13",
-    "release_record": "releases/web-rv-art-v0.37.4/handoff.json",
-    "submitted_version": "web-rv-art-v0.37.4",
+    "release_record": "releases/web-defense-art-v0.37.5/handoff.json",
+    "submitted_version": "web-defense-art-v0.37.5",
     "published_version": "web-rv-art-v0.37.4",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_tFCaXCNQ/index.html",
-    "note": "房车美术0.37.4已published；正式入口菜单、继续房车进度和新画面可见，保留游客设置和存档。",
-    "package_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_bNDrkv7L/index.html",
+    "note": "防守主模式美术0.37.5已提交审核；之前公开版本和核验时间保留。",
+    "package_sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -119,10 +119,10 @@
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "published_verified_at": "2026-10-13T16:44:09.436239+08:00",
-    "status": "published",
+    "status": "auditing",
     "package_hash": "3ab3666092841b97efc47cf3934e0fb2588f421e70ca412f917ef95321653359",
     "submission_time_note": "本次提交时间与CLI回执已保存于 release。",
-    "submitted_at": "2026-10-13T16:38:38.853614+08:00",
+    "submitted_at": "2026-10-13T19:54:20.141082+08:00",
     "public_verified_at": "2026-10-13T16:44:09.436239+08:00",
     "public_runtime_evidence": {
       "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-fire-20261013-3",
@@ -153,9 +153,9 @@
     "published_at": "2026-10-13T16:42:34+08:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
     "last_published_version": "web-fire-v0.37.3",
-    "last_submitted_version": "web-fire-v0.37.3",
-    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_NWlgSQwr/index.html",
-    "current_public_verification": "verified",
+    "last_submitted_version": "web-defense-art-v0.37.5",
+    "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_4Pe20Hax/index.html",
+    "current_public_verification": "previous_version_until_review",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
       "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
@@ -166,14 +166,14 @@
     "last_successful_sync_at": "2026-10-13T16:44:09.436239+08:00",
     "public_verified_version": "web-fire-v0.37.3",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "8509d00c4973908f2e099f891458f60b5725de94",
+    "source_commit": "2dd8c10e",
     "package": {
       "path": "C:\\Users\\37818\\.claude\\state\\game-releases\\artifacts\\chongchao-shallow-hive-20261013\\package\\chongchao-qianshao.zip",
       "sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
       "bytes": 429993,
       "submitted": true
     },
-    "submitted_package_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
+    "submitted_package_sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
     "watermark_enabled": false,
     "public_runtime_revision": "v25804",
     "last_zip_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
@@ -199,7 +199,7 @@
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-rv-art-v0.37.4",
-  "web_toy_versions_match": true,
+  "web_toy_versions_match": false,
   "migration": {
     "source": "D:/project/gpt/worlds/breachline",
     "mode": "asset-and-presentation-merge",
@@ -208,16 +208,16 @@
   "visual_style": "Segmented chitin insects with six jointed legs, mandibles, bone spikes and small red eyes; muted species palettes, winged variants and enlarged queen abdomen. Day/night surface and automatic cave flashlight retained.",
   "skill_updated": true,
   "steam_status": "Optional possibility only; Toy/video response determines any future decision",
-  "extension_review_status": "published",
-  "preview_version": "web-rv-art-v0.37.4",
-  "submitted_toy_version": "web-rv-art-v0.37.4",
-  "website_version": "web-rv-art-v0.37.4",
-  "website_verified_at": "2026-10-13T16:47:44.115897+08:00",
+  "extension_review_status": "auditing",
+  "preview_version": "web-defense-art-v0.37.5",
+  "submitted_toy_version": "web-defense-art-v0.37.5",
+  "website_version": "web-defense-art-v0.37.5",
+  "website_verified_at": "2026-10-13T19:54:20.141082+08:00",
   "site_list_name": "虫潮围城",
   "controls": "原有多动作按键和Shift按住冲刺保留；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。",
   "default_theme": "dark",
   "feedback_ledger": "feedback-ledger.json",
-  "handoff": "releases/web-rv-art-v0.37.4/handoff.json",
+  "handoff": "releases/web-defense-art-v0.37.5/handoff.json",
   "squad_controls": "商店雇佣机枪/突击/医疗/工程队友；准备阶段免费转职，强化保留；队友卡片分配四种已购载具，玩家I接管；暂停菜单跟随/守基地。",
   "environments": {
     "desert": "第1–3章：荒漠，可选白天/夜晚",
@@ -265,7 +265,7 @@
     "keyboard_modes": "Tab/菜单上下进入模式组，左右或A/D选项，Enter/空格/J确认，有aria-pressed选中状态"
   },
   "corner_controls": "赤色要塞式右上单行，10 CSS px边距加安全区；HUD让出按钮区；触屏全屏按浏览器能力检测。",
-  "website_commit": "8548623d9eafed15069bb138dc20e649eb334f1e",
+  "website_commit": "91fc9515",
   "campaign_difficulty": {
     "default": "normal",
     "choices": [
@@ -1459,5 +1459,167 @@
     ],
     "physical_phone_tested": false
   },
-  "last_fire_release": "releases/web-fire-v0.37.3/handoff.json"
+  "last_fire_release": "releases/web-fire-v0.37.3/handoff.json",
+  "channel_history": [
+    {
+      "at": "2026-10-13T19:54:20.141082+08:00",
+      "reason": "web-defense-art-v0.37.5",
+      "website_version": "web-rv-art-v0.37.4",
+      "toy": {
+        "id": 38678478981120,
+        "slug": "chongchao-qianshao",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "visibility": "PUBLIC",
+        "review_status": "published",
+        "verified_at": "2026-10-13T16:52:13.082189+08:00",
+        "video_bindings": [
+          "BV1Ujad6DEuf",
+          "BV1WbHq6eEBt",
+          "BV1C5HQ6gEvD",
+          "BV1xdpx63ETu"
+        ],
+        "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
+        "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_5tKCpy1N/index.html",
+        "title": "虫潮围城",
+        "zip_sha256": "3ab3666092841b97efc47cf3934e0fb2588f421e70ca412f917ef95321653359",
+        "submitted_date": "2026-10-13",
+        "release_record": "releases/web-rv-art-v0.37.4/handoff.json",
+        "submitted_version": "web-rv-art-v0.37.4",
+        "published_version": "web-rv-art-v0.37.4",
+        "preview_url": "https://www.bilibili.com/toy/preview/preview_tFCaXCNQ/index.html",
+        "note": "房车美术0.37.4已published；正式入口菜单、继续房车进度和新画面可见，保留游客设置和存档。",
+        "package_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
+        "pending_updates": [
+          {
+            "version": "web-controls-v0.18.2",
+            "classification": "普通补丁",
+            "summary": "复刻统一赤色要塞式菜单/摇杆/四色动作键/视角暂停全屏，所有已发布Toy的3D游戏增加有边界的上下观察；普通视角及时转身，第一人称独立慢速转头；键盘切换操作模式；玛丽/恐龙快打松冲刺键保持、松方向停止；赤色要塞两关直接选择。",
+            "status": "published",
+            "record": "releases/web-controls-v0.18.2/handoff.json",
+            "included_version": "web-controls-v0.18.2"
+          },
+          {
+            "version": "web-controls-v0.18.3",
+            "classification": "普通补丁",
+            "status": "published",
+            "record": "releases/web-controls-v0.18.3/handoff.json",
+            "summary": "右上贴边单行按钮，HUD避让。"
+          },
+          {
+            "version": "web-difficulty-v0.19.0",
+            "classification": "正式版本",
+            "status": "published",
+            "record": "releases/web-difficulty-v0.19.0/handoff.json",
+            "summary": "新局可选休闲/普通/困难，难度随存档保存，普通保留原体验，困难增援与精英压力更强。"
+          },
+          {
+            "version": "web-controls-inset-v0.19.3",
+            "classification": "普通补丁",
+            "summary": "左右下角虚拟控件内移，适配旋转安全区与缩放。",
+            "status": "included",
+            "record": "releases/web-controls-inset-v0.19.3/handoff.json",
+            "included_version": "web-tactics-v0.20.0"
+          },
+          {
+            "version": "web-lobby-hint-v0.23.2",
+            "classification": "普通补丁",
+            "summary": "联机大厅改为手动建房：?coop=create 只进大厅并提示先填昵称/房间名/密码再点创建；已在房间时创建、加入按钮呈可见锁定态，点击会说明\"你已在房间 XXXXXX，请先点退出房间\"；邀请链接进公开房自动加入、密码房提示填密码、房间不在线或已满给出原因。",
+            "status": "published",
+            "record": "releases/web-lobby-hint-v0.23.2/notes.md",
+            "submitted_at": "2026-10-07T21:52:19+08:00",
+            "preview_verified": "1280×720 与 390×844 双视口实测（菜单可开、手动建房、锁定态说明、无脚本报错）",
+            "published_verified_at": "2026-10-07T21:56:53+08:00",
+            "public_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+            "included_version": "web-cloudsave-v0.24.0",
+            "note": "大厅补丁已于 21:52 单独提审并在 21:56 公开入口双视口复测生效；随后 22:25 的云存档 v0.24.0 包再次带入同一改动并覆盖为最新基线。"
+          },
+          {
+            "version": "web-resistance-aim-v0.33.1",
+            "status": "pending_22_batch",
+            "summary": "抗战默认第一人称与举枪瞄准；橙金曳光和简化弹道；拖炮/高低调节/预计落点；手机按钮层级修复。",
+            "record": "releases/web-resistance-aim-v0.33.1/handoff.json"
+          }
+        ],
+        "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "published_verified_at": "2026-10-13T16:44:09.436239+08:00",
+        "status": "published",
+        "package_hash": "3ab3666092841b97efc47cf3934e0fb2588f421e70ca412f917ef95321653359",
+        "submission_time_note": "本次提交时间与CLI回执已保存于 release。",
+        "submitted_at": "2026-10-13T16:38:38.853614+08:00",
+        "public_verified_at": "2026-10-13T16:44:09.436239+08:00",
+        "public_runtime_evidence": {
+          "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-fire-20261013-3",
+          "status": "public_verified",
+          "at": "2026-10-13T16:44:09.436239+08:00",
+          "version": "web-fire-v0.37.3",
+          "source_commit": "8509d00c4973908f2e099f891458f60b5725de94",
+          "package_sha256": "3ab3666092841b97efc47cf3934e0fb2588f421e70ca412f917ef95321653359",
+          "authenticated": false,
+          "sdk_mocked": false,
+          "viewports": [
+            [
+              1280,
+              580
+            ],
+            [
+              844,
+              346
+            ],
+            [
+              390,
+              720
+            ]
+          ],
+          "record": "releases/web-fire-v0.37.3/toy-public-qa.json"
+        },
+        "version": "web-fire-v0.37.3",
+        "published_at": "2026-10-13T16:42:34+08:00",
+        "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
+        "last_published_version": "web-fire-v0.37.3",
+        "last_submitted_version": "web-fire-v0.37.3",
+        "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_NWlgSQwr/index.html",
+        "current_public_verification": "verified",
+        "channel_authorization": {
+          "instruction": "昨天没发布的都做一下",
+          "task_id": "01a12366-3bf3-7660-a504-6010bf4dc35d-20261010-release-backfill-02",
+          "recorded_at": "2026-10-10T03:02:52.978211+00:00",
+          "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
+        },
+        "last_successful_sync_version": "web-fire-v0.37.3",
+        "last_successful_sync_at": "2026-10-13T16:44:09.436239+08:00",
+        "public_verified_version": "web-fire-v0.37.3",
+        "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
+        "source_commit": "8509d00c4973908f2e099f891458f60b5725de94",
+        "package": {
+          "path": "C:\\Users\\37818\\.claude\\state\\game-releases\\artifacts\\chongchao-shallow-hive-20261013\\package\\chongchao-qianshao.zip",
+          "sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
+          "bytes": 429993,
+          "submitted": true
+        },
+        "submitted_package_sha256": "95411959a5ddfa8402f1bca9107a307c32e77a8d915fd4df6027023192bc557c",
+        "watermark_enabled": false,
+        "public_runtime_revision": "v25804",
+        "last_zip_sha256": "deb723413e1fdb51b2a9e20ae06ab173c493710a6afb999b1fdc5b427d9925fd",
+        "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html",
+        "public_verified_without_login": true,
+        "public_runtime_history": [
+          {
+            "status": "public_verified",
+            "at": "2026-10-12T12:29:13.804Z",
+            "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+            "revision": "v25481",
+            "checks": [
+              "runtime loaded",
+              "lobby rendered",
+              "optional nickname button enabled"
+            ],
+            "no_profile_request_or_room_created": true
+          }
+        ],
+        "package_hash_kind": "zip_sha256",
+        "previous_public_runtime_revision": "v25661",
+        "platform_readback_at": "2026-10-13T16:42:38.168100+08:00"
+      }
+    }
+  ]
 }

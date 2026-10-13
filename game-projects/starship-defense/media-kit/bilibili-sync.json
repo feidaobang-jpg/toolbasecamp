@@ -592,6 +592,15 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-defense-art-v0.37.5",
+      "status": "deferred_accumulating",
+      "classification": "普通美术精修",
+      "summary": "防守主模式基地装甲与城门细节、轻量地表颗粒、按章节区分的冷色日光；玩法/操作保持。",
+      "reason": "Appearance refinement of existing defense mode, no new gameplay or changed controls; existing description remains applicable. Latest public description verification 2026-10-12, less than 7 days.",
+      "record": "releases/web-defense-art-v0.37.5/handoff.json",
+      "recorded_at": "2026-10-13T19:54:20.141082+08:00"
     }
   ],
   "comment_corrections": [
@@ -999,7 +1008,7 @@
   "last_release_record": "releases/web-slope-aim-v0.37.1/handoff.json",
   "status": "public_verified",
   "version": "web-menu-history-v0.36.1",
-  "updated_at": "2026-10-13T16:03:23.299989+08:00",
+  "updated_at": "2026-10-13T19:54:20.141082+08:00",
   "last_public_verified": {
     "version": "web-fps-mouse-v0.36.2-input-safety1",
     "at": "2026-10-12T12:27:48.849Z",

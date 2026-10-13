@@ -29,11 +29,19 @@
     "doctor": "pass; only existing unhashed filename advisory"
   },
   "website": {
-    "status": "pending"
+    "status": "verified",
+    "commit": "91fc9515",
+    "evidence": "website.json",
+    "at": "2026-10-13T19:54:20.141082+08:00"
   },
   "toy": {
     "id": "38678478981120",
-    "status": "not_submitted"
+    "status": "auditing",
+    "submitted_at": "2026-10-13T19:54:20.141082+08:00",
+    "tested_preview": "https://www.bilibili.com/toy/preview/preview_bNDrkv7L/index.html",
+    "submission_preview": "https://www.bilibili.com/toy/preview/preview_4Pe20Hax/index.html",
+    "zip_sha256": "ec1bc8120cb04e50e0ac369e4d3f4d687175fbb3cfc8c3e79c30db8c93381f14",
+    "validation": "Official Toy preview: continue existing level2 progress, W movement, jump, desktop/touch switch, landscape and portrait desktop simulation; no console errors. Real phone not tested."
   },
   "bilibili": {
     "decision": "deferred_accumulating",
