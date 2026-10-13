@@ -1,0 +1,16 @@
+# 游戏回归索引
+
+修改前按游戏、文件和行为检索本索引；发布前运行受影响的检查。历史 release 保存当时证据，本索引只保存仍须遵守的行为与复验入口，不复制版本流水账。不把「记住」或静态属性检查当作行为已验证，也不因本索引顺带修改其他游戏。
+
+| ID / 适用范围 | 已确认行为与容易再次引入的问题 | 验证入口与基线 |
+| --- | --- | --- |
+| MENU-TOUCH-001：虫潮 `menu-scroll.js`、`menu.css`、`game.js` 的坐标/焦点与菜单结构、Toy 打包 | 超出可用高度的菜单/说明能用真实指针上滑、下滑；90° 旋转后仍按游戏逻辑纵轴滚动。滚动后不误触模式/按钮，下一次正常点击立即可用。`overflow:auto`、滚轮和直接写 `scrollTop` 不能替代触摸验收。接管隐式 pointer capture 时，子节点的 lostpointercapture 不能取消当前滚动。 | `node game-projects/starship-defense/verify-menu.cjs`；环境变量 `MENU_URL` 支持本地、网站、Toy 预览或正式入口。基线 `starship-defense/media-kit/releases/web-menu-v0.37.0/`。浏览器触屏模拟与真机分别记录。 |
+| MENU-LAYOUT-002：虫潮主菜单/暂停、动态模式入口 | 常用开始/继续/设置保持可见；较小视口中内容可滚到首尾。五种模式选中、进入、返回一致。主菜单、暂停、设置采用同一款游戏的深色主题，不套复刻奶油配色；重排不得删除队友/副本/存档功能。 | 同上，覆盖 1280×580、844×346、800×390、667×375、390×720、390×844、360×640、568×320；逐控件位置 + 实际点击 + 图像复核。 |
+| GUEST-ENTRY-003：已有 Toy 3D 游戏公开入口、昵称、大厅与打包 | 单机和默认匿名联机直接可用；无自由公开昵称/房间名输入，授权昵称仍严格检测。平台访问者水印可能在游戏加载前要求登录，因此不能用已登录预览代替正式游客入口验证。 | `game-projects/site-games/qa/guest-entry.cjs`，参数见文件头；历史证据 `site-games/releases/guest-entry-20261013/`。改到包体时保留原 Toy ID/slug、游客设置及存档命名空间。 |
+| SAVE-PRIVACY-004：游戏存档面板、入口、Toy 构建器 | 不跳作者网站、不恢复网站账号表单；本地继续/导入导出保留，Toy 云档按需请求。重排菜单后通过玩家可见入口打开存档，不能仅调用隐藏按钮跳过导航。 | `game-projects/site-games/qa/privacy-cleanup.cjs`、虫潮 `verify-cloud-save.mjs`；基线 `site-games/releases/guest-entry-20261013/`。 |
+
+| SLOPE-AIM-005：虫潮 `terrain-controls.js`、`game.js` 与最终包 | 六处野外山坡最高2米，堡垒可从坡上步行进入；自动瞄准按自己水平距离选射程内最近活敌，不因首领、精英或朝向选远敌。四视角、触屏和联机一致，手动瞄准保留。 | `game-projects/starship-defense/verify-slope-aim.cjs`；v0.37.1取代旧山坡高度与朝向/首领优先。`verify-platform-unit.mjs`、`verify-low-walls.cjs`、`verify-first-person-mouse.cjs`检查相邻行为。 |
+
+新增条目需包含触发条件、受影响路径、期望行为、修复版本和可复验入口。可以稳定自动复现的缺陷优先增加行为回归；视觉调整留同视口截图和人工检查项。后续需求明确改变行为时更新条目并写明取代关系，不永久冻结旧实现或只写「禁止再犯」。
+
+不重跑全部历史测试；按改动范围选择。检查失败先修复再发布；无法真机验证时如实保留未测项，不能用桌面模拟冒充。

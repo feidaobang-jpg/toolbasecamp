@@ -23,11 +23,15 @@ const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+deco
   await context.addInitScript(()=>{window.__authorCalls=[];window.toy={isSupport:async()=>true,navigate:async args=>{window.__authorCalls.push(args);},getCloudStorage:async()=>({}),setCloudStorage:async()=>{},getAuthorProfile:async()=>({status:'denied'}),getRankList:async()=>[]};});
   const dir=packageDir(game),prefix='https://www.bilibilitoy.com/toy/privacy-qa-'+game+'/';
   await page.route(prefix+'**',r=>{const file=path.resolve(dir,decodeURIComponent(new URL(r.request().url()).pathname.split('/').slice(3).join('/')));return file.startsWith(dir+path.sep)&&fs.existsSync(file)?r.fulfill({path:file,contentType:mime[path.extname(file)]||'application/octet-stream'}):r.fulfill({status:404});});
-  await page.goto(prefix+'index.html');const author=page.locator(['starship-defense','gunfire-assembly'].includes(game)?'#settingsRow [data-author-home]':'#menu [data-author-home]');
+  await page.goto(prefix+'index.html');
+  const groupedMenu=await page.locator('#menuMorePanel').count();
+  if(groupedMenu)await page.locator('[data-menu-panel="menuMorePanel"]').first().click();
+  const author=page.locator(groupedMenu?'#menuMorePanel [data-author-home]':['starship-defense','gunfire-assembly'].includes(game)?'#settingsRow [data-author-home]':'#menu [data-author-home]');
   await author.waitFor({state:'visible'});await page.waitForFunction(()=>window.toy&&document.querySelector('[data-author-home]'));
   await author.scrollIntoViewIfNeeded();await author.focus();await author.press('Enter');
   await page.waitForFunction(()=>window.__authorCalls.length===1);assert.deepEqual(await page.evaluate(()=>window.__authorCalls[0]),{type:'space',id:'16214353'});
   if(['starship-defense','gunfire-assembly'].includes(game)){
+    if(groupedMenu){await page.locator('#menuMorePanel [data-menu-close]').click();await page.locator('[data-menu-panel="menuSavePanel"]').first().click();}
     // Gunfire's current title menu offers arena play, not campaign save controls.
     if(await page.locator('#btnPlatformMenu').isVisible()){await page.locator('#btnPlatformMenu').click();await page.locator('#platformPanel').waitFor({state:'visible'});assert.equal(await page.locator('#cloudSaveTools').isVisible(),true);}
     assert.equal(await page.locator('#saveAccount,#savePassword,#saveLoginForm').count(),0);

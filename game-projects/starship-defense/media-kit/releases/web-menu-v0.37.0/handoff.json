@@ -1,0 +1,500 @@
+{
+  "schema_version": 1,
+  "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-menu-20261013-2",
+  "game_id": "chongchao-qianshao",
+  "version": "web-menu-v0.37.0",
+  "base_version": "web-guest-v0.36.9",
+  "created_at": "2026-10-13T15:46:50.944315+08:00",
+  "build": {
+    "id": "menu0370",
+    "commit": "ccaaeb00355b92e629d187dce1bdf004d23df3b7",
+    "dirty": false,
+    "fingerprint": "c7f3c60524327fc310984ddefde339af0105cabac37eaa399078c109576c9925",
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    {
+      "id": "menu-layout",
+      "before": "模式卡撑高整页，底部功能被挤出；左侧空白，触摸不能带动滚动",
+      "after": "左侧模式列表、右侧配置、固定开始/继续/联机；存档设置更多集中入口",
+      "validation": "8 viewport behavior checks and visual review"
+    },
+    {
+      "id": "pause-theme",
+      "before": "虫潮深色标题与奶油色暂停混用",
+      "after": "本游戏主菜单、暂停与设置使用深色主题"
+    },
+    {
+      "id": "regression-memory",
+      "after": "项目回归索引关联路径、期望、测试与 release；game-maker 只收共性"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "MENU-TOUCH-001",
+      "found_in": "v0.36.8 user phone / v0.36.9 browser",
+      "reproduce": [
+        "Toy 手机尺寸进入菜单或更新日志",
+        "连续手指滑动",
+        "内容未随手指滚动，滚轮可滚"
+      ],
+      "cause": "原生滚动在缩放/旋转舞台和实际触控链路中未可靠工作；只检查 overflow 或滚轮未覆盖此问题。没有真机根因追踪，避免把桌面推断当成真机证据。",
+      "fix": "面板使用舞台逆变换坐标处理连续 pointer 拖动；转交指针捕获不误取消，拖动后的 click 拦截仅到下一次新按下",
+      "status": "fixed",
+      "retest": "本地8视口、真实Toy预览4视口、实际提审预览2视口；连续上下滑动及后续点击通过。手机真机未测。"
+    },
+    {
+      "id": "MENU-LAYOUT-002",
+      "reproduce": [
+        "1280×580 或 Toy 小高度打开菜单"
+      ],
+      "cause": "整层滚动和长模式列撑高，父裁切/前景遮挡未在原检查中覆盖",
+      "fix": "内容与固定操作分区，矮窗口压缩配置排列，检查父容器裁切与命中对象",
+      "status": "fixed"
+    }
+  ],
+  "qa": {
+    "menu": {
+      "cases": 8,
+      "record": "menu-qa.json",
+      "method": "headless Edge actual pointer/keyboard; desktop/mobile simulation"
+    },
+    "privacy": {
+      "cases": 4,
+      "record": "privacy-qa.json"
+    },
+    "save_cloud_unit": {
+      "cases": 26,
+      "passed": true
+    },
+    "physical_phone": "not_tested",
+    "toy_preview": {
+      "passed": true,
+      "cases": 4,
+      "record": "toy-preview-qa.json"
+    },
+    "website": {
+      "passed": true,
+      "cases": 2,
+      "record": "website-qa.json"
+    },
+    "submission_preview": {
+      "passed": true,
+      "cases": 2,
+      "authenticated": false,
+      "record": "submission-preview-qa.json"
+    },
+    "toy_public": {
+      "passed": true,
+      "cases": 4,
+      "record": "toy-public-qa.json"
+    }
+  },
+  "media": [
+    {
+      "id": "1280x580-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\1280x580-main.png",
+      "sha256": "d82da1dbf6318440e9145a0855ad716cfe9e450dc112f9f04f1e41f19c961974",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 1280,
+      "height": 580,
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "360x640-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\360x640-main.png",
+      "sha256": "91b44a7d0e8ca915336267bae54ab39406cf2464c4fa93a3b3e2d1e6f03fefb5",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 360,
+      "height": 640,
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "390x720-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\390x720-main.png",
+      "sha256": "93ee83c815a641d9f174dead0e2abe7dd16c493d9f9813d46aed1e29453a3e7b",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 390,
+      "height": 720,
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "390x844-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\390x844-main.png",
+      "sha256": "47d4dc36d1b840dd0ab782c247d5fd831f0d40125a3f5328bf811afe15246d4a",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 390,
+      "height": 844,
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "568x320-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\568x320-main.png",
+      "sha256": "db70f8e759e1c44ae23b8fdc8812b8d943c5a9a0b29bb62fc05224adcbc5cfec",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 568,
+      "height": 320,
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "667x375-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\667x375-main.png",
+      "sha256": "8f1e3b851b47525cd39a93268a95cced81f6992f9daee818d338c4fa2cb3f67f",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 667,
+      "height": 375,
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "800x390-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\800x390-main.png",
+      "sha256": "efca3568a792419846ca66987d19e59d2a19e6cba3b9c8532b426e71daab957e",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 800,
+      "height": 390,
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x346-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\844x346-main.png",
+      "sha256": "6cacbe9ed6d36e9fa6ef2e05de7de6120e6ea1577c0f1143385bc0b89d486b43",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "真实菜单操作后的浏览器截图",
+      "width": 844,
+      "height": 346,
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "1280x580-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\1280x580-pause.png",
+      "sha256": "d088f729daa5188f8565b47ffd69012e507a502f6b3f1502534406dd1eb35164",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "360x640-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\360x640-pause.png",
+      "sha256": "39b95eb6dad2d61e31c370399616e9ead193459c9e62b026df3c15cb848e44ff",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "390x720-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\390x720-pause.png",
+      "sha256": "e09497569615081defd94a43135c5c3308e7a87802e558992bcf96d2643f69b8",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "390x844-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\390x844-pause.png",
+      "sha256": "968b5913bea925bf549d22c6872c8cf31bed1d11b13fe63ada04f744a3e6dc5c",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "568x320-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\568x320-pause.png",
+      "sha256": "6f3add4e78d2dd82ea108ad218609e49828bb00267e73cc71f4cfd046b9490ec",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "667x375-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\667x375-pause.png",
+      "sha256": "5ff69e6052462000cb598ba8c7b73a3924ebb40304a7b393924b6f76390daa05",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "pass"
+    },
+    {
+      "id": "800x390-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\800x390-pause.png",
+      "sha256": "e7adb5756f5f5b65779b34c3df22991c49b6eaa981428d9558937709298fb0bd",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "844x346-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\844x346-pause.png",
+      "sha256": "37ed612da2aab7861cdcede8b947eb838e788706faeb277799e3b41ef682f728",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际暂停菜单",
+      "audio": "none",
+      "visual_review": "not-run"
+    },
+    {
+      "id": "submitted-568x320-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\submitted-preview\\568x320-main.png",
+      "sha256": "1c985101a5e6e409f8d99de56616206c9f4c51ae9c7bf6cd63e7690b32f62e81",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际提审预览，匿名浏览器；关闭弹窗并等两帧再截图",
+      "visual_review": "pass"
+    },
+    {
+      "id": "submitted-390x720-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\submitted-preview\\390x720-main.png",
+      "sha256": "7f57bc3c4f8e1abe3b83b374ab7b7bd9beab52b96dde6f14cd3d4273009c44a4",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "实际提审预览，匿名浏览器；关闭弹窗并等两帧再截图",
+      "visual_review": "pass"
+    },
+    {
+      "id": "public-1280x580-main",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\public\\1280x580-main.png",
+      "sha256": "892c6c837b5800a18ce52106db98280e28f1a35b10259c2c35efc5889c6314a7",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "Toy正式入口，未登录浏览器；已实际操作后截图",
+      "visual_review": "pass"
+    },
+    {
+      "id": "public-844x346-pause",
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\public\\844x346-pause.png",
+      "sha256": "5ec8875122e33465fbea95589a5181bd5c1561944d10d5125d222fe0db9de49d",
+      "kind": "screenshot",
+      "version": "web-menu-v0.37.0",
+      "build_id": "menu0370",
+      "capture_mode": "realtime-automation",
+      "description": "Toy正式入口，未登录浏览器；已实际操作后截图",
+      "visual_review": "pass"
+    }
+  ],
+  "automation_videos": [
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@08b61088666a4dc407886ea1a328029a.webm",
+      "sha256": "fe0dec94e68b1d54aa32210e68259184db5a638f6c1b2b117946292fc1612070",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@1e3c7c849f0c873f3ad802cca6d2d63f.webm",
+      "sha256": "3483adb310ab12842804ae1a88853c30fdcc44a3067e11c2f8ae51346c4f7b42",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@321a24be47f6b3f13b6765a0db3cc6b8.webm",
+      "sha256": "b262cc4605674fad25b2a30b5d92b0e3d9dd1b6e4d76b20d707739abc2204f67",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@3dd7ce35d61a26fc4772e5ebff82f7d3.webm",
+      "sha256": "4445c60381c341836a709a7e88fc3e819acab9b9b2a9b26e89aa8b06efb7ed0e",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@71404b75720b7193deb4c4724d988414.webm",
+      "sha256": "798e0ac1e670d198fa17beac202c975a82f97859c5043c1c181438bb321e483a",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@91ef642868a837212974c27e22aa839f.webm",
+      "sha256": "e2b03b5c00278fbbb817291c3202adf50b984fdeac0615a69eb059b9b36f46bf",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@9c0c3d3688f174adf3c8349396006fe1.webm",
+      "sha256": "e8224df5ce5344ba0f190ab4fb8aac96ff4f5c3e83275d83fd66ef6b8693af15",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@a731ddaaf8c9e204d33d07c28c9704c2.webm",
+      "sha256": "82f6443a4db4c4eb2a234bd6584b2621d137c10be5201ed0e901547242292b33",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@c082b05a1dba09501d4009a21e8a18c0.webm",
+      "sha256": "556d75e0bb26912f9a21d07ad0d2f64bcc398fe74b0a0ca0bb80265fd819ce8c",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@c5ff98fbddded84e92b2fce946aff943.webm",
+      "sha256": "efc31330b4e7c6cc6d3e514b79532d446f7a2c3f86ebaea08a7557161bb442ff",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@cdf29d31823ac609e0baa2d29dee9701.webm",
+      "sha256": "6e9dadd719b284be133636a6c7c9187482af34a21c5d975bb6e9e9d4fc4ac1c3",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@d134f2ae7414aecc66049486b83d7301.webm",
+      "sha256": "a587fc6cf12a9fec1b1670a1d945f71a9b6caba0a3cd075b1822f6e49e678428",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@d3adde2b1a171eff0c0f37b595cbc893.webm",
+      "sha256": "91ac176d6d117db8d55b348b9d66c1e40a7ed8fe06e49b802e73cbfe6601abd9",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@d731d5391bd0de3d4cfd0857f087242b.webm",
+      "sha256": "8ebd52665fabd1cdffcad043b3a329aa8578d76bd2cdef3ec2b272d4fe6e4fb7",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@de0ae4d56ac60e252883311b999bffd0.webm",
+      "sha256": "19ee869bd093074ab54667b3121c20a96ca6b1380ec8632fba50f44506770ee4",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    },
+    {
+      "file": "D:\\project\\task-artifacts\\starship-menu-20261013\\local-final\\page@dec1a1bb196e0568e978b3b3338c1b04.webm",
+      "sha256": "32ecffb9d2e7c363b478ab859919b01bf5769d2dfc05631d2902986762afac45",
+      "capture_mode": "realtime-automation",
+      "description": "菜单切换、触摸滑动、开局、暂停和继续的实际测试录像；浏览器模拟"
+    }
+  ],
+  "channels": {
+    "website": {
+      "status": "deployed_verified",
+      "source_commit": "ccaaeb00355b92e629d187dce1bdf004d23df3b7",
+      "version": "web-menu-v0.37.0",
+      "verified_at": "2026-10-13T15:48:54.728137+08:00",
+      "record": "releases/web-menu-v0.37.0/website.json"
+    },
+    "toy": {
+      "id": "38678478981120",
+      "slug": "chongchao-qianshao",
+      "version": "web-menu-v0.37.0",
+      "status": "published_guest_verified",
+      "platform_status": "published",
+      "source_commit": "ccaaeb00355b92e629d187dce1bdf004d23df3b7",
+      "package_sha256": "c7f3c60524327fc310984ddefde339af0105cabac37eaa399078c109576c9925",
+      "zip_sha256": "c7f3c60524327fc310984ddefde339af0105cabac37eaa399078c109576c9925",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_HlsLkAaB/index.html",
+      "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_9Xye0NFw/index.html",
+      "submitted_at": "2026-10-13T15:50:19.390668+08:00",
+      "submitted_once": true,
+      "watermark_enabled": false,
+      "platform_readback_at": "2026-10-13T15:58:47.419665+08:00",
+      "public_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "public_verified_at": "2026-10-13T16:00:14.100933+08:00"
+    },
+    "bilibili": {
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "reason": "菜单与触摸体验优化，没有增加玩法；上次相关简介公开核验2026-10-12，未满7天，当前已知说明没有指定旧菜单布局。",
+      "version": "web-menu-v0.37.0",
+      "summary": "虫潮菜单重排、触摸滚动修复、暂停与设置统一深色主题；游客和本地存档路径保留。",
+      "website_verified": true,
+      "website_verified_at": "2026-10-13T15:48:54.728137+08:00",
+      "record": "releases/web-menu-v0.37.0/handoff.json",
+      "recorded_at": "2026-10-13T16:00:14.100933+08:00",
+      "channels": [
+        "bilibili"
+      ]
+    },
+    "taptap": {
+      "status": "not_requested"
+    }
+  },
+  "readiness": {
+    "overview": "partial",
+    "update": "ready",
+    "gaps": [
+      "未做手机真机验证；本版提供浏览器触屏模拟及实际Toy入口验证"
+    ]
+  },
+  "status": "complete",
+  "updated_at": "2026-10-13T16:00:14.100933+08:00",
+  "next_step": null,
+  "finished_at": "2026-10-13T16:00:14.100933+08:00"
+}

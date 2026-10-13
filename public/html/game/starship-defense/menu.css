@@ -1,0 +1,94 @@
+/* 虫潮 owns its dark menu theme. Remake palettes must not override this file. */
+#stage{--menu-font:16px;--menu-gap:12px;--menu-line:#456378;--menu-ink:#e6f2f8;--menu-gold:#ffd36a}
+#stage .menu [hidden],#stage .panel [hidden]{display:none!important}
+#stage .menu,#stage .menu *,#stage .panel,#stage .panel *{touch-action:none}
+#stage .menu,#stage .panel{overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#769aac #132532}
+#menuMain,#menuPause{padding:14px 24px;gap:14px;overflow:hidden;color:var(--menu-ink);background:linear-gradient(115deg,rgba(5,14,23,.98),rgba(10,27,40,.94) 65%,rgba(15,34,46,.88))}
+#stage.title-menu #personBtn,#stage.title-menu #menuButton{display:none}
+#cornerTools{z-index:38}
+#stage.title-menu #cornerTools .mbtn{font-size:var(--menu-font)}
+#menuMain .mainHeader{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;width:100%;padding-right:90px;min-height:var(--corner-height,44px)}
+.menuBrand{display:flex;align-items:baseline;gap:12px;white-space:nowrap}
+#menuMain h1{font-size:30px;letter-spacing:2px;margin:0}
+#gameVersion{font-size:12px;color:#9cb7c8}
+.menuTools{display:flex;gap:8px}
+#stage .menuTools .mbtn{margin:0;min-width:76px;padding:6px 12px;min-height:var(--corner-height,44px);font-size:var(--menu-font)}
+.mainColumns{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;min-height:0;flex:1;width:100%}
+.mainModes,.mainWorkspace{min-width:0;min-height:0;display:flex;flex-direction:column}
+#menuMain .mainModes h2{font-size:var(--menu-font);color:#a9c5d4;margin:0 0 8px}
+.modeScroll{min-height:0;overflow-y:auto;padding:3px 5px 5px 3px}
+#menuMain #modeRow{display:flex;flex-direction:column;gap:6px;margin:0;width:100%;max-width:none;flex-wrap:nowrap}
+#menuMain .lobbyCard{flex-shrink:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:3px;width:100%;min-width:0;min-height:var(--corner-height,44px);padding:8px 12px;border:1px solid var(--menu-line);border-radius:9px;background:#152b3b;color:var(--menu-ink);text-align:left;cursor:pointer;font:inherit;box-shadow:none}
+#menuMain .lobbyCard strong{font-size:var(--menu-font);line-height:1.25;color:#e1edf3}
+#menuMain .lobbyCard span{font-size:12px;color:#9fbcca;line-height:1.25}
+#menuMain .lobbyCard.mode-sel{border-color:var(--menu-gold);background:#30434a;box-shadow:inset 3px 0 var(--menu-gold)}
+#menuMain .lobbyCard.mode-sel strong{color:#ffe39c}
+.mainWorkspace{border:1px solid var(--menu-line);border-radius:12px;background:rgba(19,40,55,.85);overflow:hidden}
+.modeContent{flex:1;min-height:0;overflow-y:auto;padding:16px 18px}
+.modeHeading{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+#modeTag{font-size:12px;color:#8fb5c9;letter-spacing:1px}
+#menuMain #modeTitle{margin:0;font-size:26px;line-height:1.25;color:#ffe2a0}
+#modeDescription{font-size:var(--menu-font);line-height:1.55;color:#b8cfda;margin:0 0 12px}
+#campaignConfig h3,#menuMain #difficultyTitle{font-size:var(--menu-font);line-height:1.3;color:#d2e2e9;margin:8px 0}
+#menuMain #classRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}
+#menuMain .classCard{width:auto;min-width:0;padding:8px 5px;min-height:var(--corner-height,44px);font-size:12px;line-height:1.4}
+#menuMain .classCard b{font-size:var(--menu-font);line-height:1.3}
+#menuMain .classRole{display:none}
+#menuMain .difficulty-options{justify-content:flex-start;gap:8px;margin:0}
+#stage .menu .tb-btn,#stage .menuDialog .tb-btn{font-size:var(--menu-font);min-height:var(--corner-height,44px);padding:6px 14px;color:#d6e8f2;background:#1b384b;border:1px solid #537c94;border-radius:8px;min-width:0}
+#stage [data-device-mode][aria-pressed="true"],#stage [data-campaign-difficulty][aria-pressed="true"]{background:#ffe09a!important;color:#203342!important;border:1px solid #ffd36a!important;box-shadow:none}
+#menuMain #difficultyHint{display:none}
+#menuMain #saveNotice{font-size:12px;line-height:1.4;margin:8px 0 0;color:#9fb9c7;max-width:none}
+.mainLaunch{flex-shrink:0;padding:12px 14px;border-top:1px solid var(--menu-line);background:#102333}
+#menuMain #startRow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0;max-width:none}
+#stage #menuMain .mbtn,#stage #menuMain .coop-entry{min-width:0;min-height:var(--corner-height,44px);margin:0;font-size:var(--menu-font);padding:6px 8px;line-height:1.25;white-space:normal;word-break:normal;overflow-wrap:anywhere;border-radius:8px}
+#modeActionRow .mbtn{width:100%}
+#stage .menu :focus-visible,#stage .panel :focus-visible{outline:3px solid var(--menu-gold);outline-offset:2px}
+#stage .menuDialog{width:700px;max-width:92%;max-height:88%;padding:14px 18px;z-index:62;font-size:var(--menu-font)}
+.dialogGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+#stage .dialogGrid .mbtn{display:flex;align-items:center;justify-content:center;text-align:center;font-size:var(--menu-font);min-height:var(--corner-height,44px);line-height:1.3;white-space:normal;margin:0;padding:8px 12px;border-radius:8px;text-decoration:none}
+#stage .menuDialog .small,#stage #menuPause .small{font-size:var(--menu-font);line-height:1.5;max-width:none;text-align:left;margin:6px 0 12px;color:#adc5d2}
+#stage .menuDialog .rescue-actions{gap:8px;justify-content:flex-start;margin:12px 0}
+#stage .menuDialog h3{font-size:24px}
+#stage .menuDialog .closeX{min-height:var(--corner-height,44px);width:var(--corner-height,44px)}
+#stage #menuPause{align-items:stretch;justify-content:flex-start}
+.pauseHeader{flex-shrink:0;min-height:var(--corner-height,44px);padding-right:280px}
+#menuPause .pauseHeader h2{font-size:28px;color:#ffe2a0;margin:0}
+.pauseColumns{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;min-height:0;overflow-y:auto}
+.pauseCard{min-width:0;padding:16px;border:1px solid var(--menu-line);border-radius:12px;background:rgba(19,40,55,.9)}
+.pauseCard h3{font-size:var(--menu-font);color:#90c4dd;margin-bottom:8px}
+#stage.touch-mode #menuMain .classStats{display:none}
+#stage.touch-mode #menuMain .classRole{display:block;font-size:var(--menu-font)}
+#stage.touch-mode #menuMain .lobbyCard span{display:none}
+#stage.touch-mode #menuMain .lobbyCard{padding:5px 12px}
+#stage.touch-mode #menuMain .mainHeader{gap:8px}
+#stage.touch-mode #menuMain #modeDescription{font-size:var(--menu-font);margin-bottom:6px}
+#stage.touch-mode #menuMain .modeHeading{margin-bottom:6px}
+#stage.touch-mode #menuMain #modeTag{display:none}
+#stage.touch-mode #menuMain #saveNotice{font-size:var(--menu-font)}
+#stage .infoPanel .small,#stage .infoPanel .helpText p,#stage .infoPanel .updateEntry ul{font-size:var(--menu-font);line-height:1.55}
+#stage .infoPanel .updateEntry h4{font-size:calc(var(--menu-font) + 2px)}
+#stage .infoPanel .updateEntry time{font-size:var(--menu-font)}
+#stage.touch-mode #menuPause .pauseHeader .small{display:none}
+#stage.touch-mode .pauseHeader{padding-right:90px}
+#stage.vs-compact #menuMain,#stage.vs-compact #menuPause{padding:10px 16px;gap:10px}
+#stage.vs-compact #menuMain .modeContent{padding:10px 12px}
+#stage.vs-compact #menuMain #modeTitle{font-size:22px}
+#stage.vs-compact #menuMain #modeDescription{font-size:14px;line-height:1.35}
+#stage.vs-compact #menuMain .classStats{display:none}
+#stage.vs-compact #menuMain .classRole{display:block}
+#stage.vs-compact #menuMain .mainLaunch{padding:8px 12px}
+#stage.vs-compact #menuMain .classCard{padding:5px}
+#stage.vs-compact #menuMain #saveNotice{margin-top:5px}
+#stage.menu-compact #menuMain .modeContent{padding:10px 12px}
+#stage.menu-compact #menuMain #modeTag{display:none}
+#stage.menu-compact #menuMain #modeTitle{font-size:24px}
+#stage.menu-compact #menuMain #modeDescription{font-size:var(--menu-font);line-height:1.35;margin-bottom:6px}
+#stage.menu-compact #menuMain .classStats{display:none}
+#stage.menu-compact #menuMain .classRole{display:block;font-size:var(--menu-font)}
+#stage.menu-compact #campaignConfig{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px}
+#stage.menu-compact #campaignConfig h3,#stage.menu-compact #menuMain #classRow,#stage.menu-compact #menuMain #saveNotice{grid-column:1 / -1}
+#stage.menu-compact #campaignConfig h3,#stage.menu-compact #menuMain #difficultyTitle{margin:2px 0;align-self:center}
+#stage.menu-compact #menuMain .classCard{padding:5px}
+#stage.menu-compact #menuMain #saveNotice{margin:0}
+#stage #campaignConfig.hidden{display:none!important}

@@ -1,0 +1,55 @@
+{
+  "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+  "results": [
+    {
+      "viewport": [
+        1280,
+        580
+      ],
+      "passed": true,
+      "touch": false,
+      "scroll": {
+        "before": 0,
+        "after": 312,
+        "back": 0
+      },
+      "checks": [
+        "mode selection and back",
+        "fixed actions and utilities",
+        "touch/keyboard scrolling",
+        "input mode switching",
+        "dark pause",
+        "resume and return",
+        "local save menu and continue"
+      ],
+      "limitations": [
+        "browser simulation; physical phone not tested"
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        720
+      ],
+      "passed": true,
+      "touch": true,
+      "scroll": {
+        "before": 0,
+        "after": 259,
+        "back": 0
+      },
+      "checks": [
+        "mode selection and back",
+        "fixed actions and utilities",
+        "touch/keyboard scrolling",
+        "input mode switching",
+        "dark pause",
+        "resume and return",
+        "local save menu and continue"
+      ],
+      "limitations": [
+        "browser simulation; physical phone not tested"
+      ]
+    }
+  ]
+}
