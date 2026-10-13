@@ -49,6 +49,18 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-pingan-remake-v0.2.0",
+      "record": "releases/web-pingan-remake-v0.2.0/handoff.json",
+      "website_verified_at": "2026-10-14T00:25:37+08:00",
+      "status": "pending_until_toy_published",
+      "decision": "update_required_after_toy_published",
+      "reason": "重大版本，且两条关联视频的简介会失实：BV1Lfp76KEDd 写的第三章流程（搬炮弹、连开三炮轰开城门）是旧实现；BV1KFpJ6sEEK 写的“H兵种支援”默认键已改为 N。Toy 仍在审核，视频里的主入口此时还是旧版，等 Toy 过审后两条一起改，避免说明与入口不一致。",
+      "summary": "抗战第三章平安县城整章重做（越肩 / 第一人称手动瞄准、跳跃、护送意大利炮、轰塌城楼、可接管机枪，去掉搬炮弹流程）；医疗 / 兵种支援 / 直升机降低默认键 H→N，Y / H 抬头低头；视频为录制时版本。",
+      "channels": [
+        "bilibili"
+      ]
     }
   ]
 }
