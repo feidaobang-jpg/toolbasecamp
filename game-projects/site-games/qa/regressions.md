@@ -11,6 +11,8 @@
 
 | SLOPE-AIM-005：虫潮 `terrain-controls.js`、`game.js` 与最终包 | 六处野外山坡最高2米，堡垒可从坡上步行进入；自动瞄准按自己水平距离选射程内最近活敌，不因首领、精英或朝向选远敌。四视角、触屏和联机一致，手动瞄准保留。 | `game-projects/starship-defense/verify-slope-aim.cjs`；v0.37.1取代旧山坡高度与朝向/首领优先。`verify-platform-unit.mjs`、`verify-low-walls.cjs`、`verify-first-person-mouse.cjs`检查相邻行为。 |
 
+| HIVE-RETURN-006：虫潮 `hive-world.js` 与地下移动 | 母巢深4米、最大路径坡度约3.5°，回程保持至少95%平地速度；三洞往返、虫潮出洞、队友载具通行与存档有效。取代v0.15.0旧22米深度。 | `verify-hive-return.cjs`、`verify-underground.cjs`、`HIVE_ONLY=1 verify-rescue-economy.cjs`（均位于game-projects/starship-defense）；v0.37.2含三视口真实输入与旧高度恢复。 |
+
 新增条目需包含触发条件、受影响路径、期望行为、修复版本和可复验入口。可以稳定自动复现的缺陷优先增加行为回归；视觉调整留同视口截图和人工检查项。后续需求明确改变行为时更新条目并写明取代关系，不永久冻结旧实现或只写「禁止再犯」。
 
 不重跑全部历史测试；按改动范围选择。检查失败先修复再发布；无法真机验证时如实保留未测项，不能用桌面模拟冒充。

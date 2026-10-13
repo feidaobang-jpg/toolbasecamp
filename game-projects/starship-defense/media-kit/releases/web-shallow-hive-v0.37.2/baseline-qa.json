@@ -1,0 +1,123 @@
+{
+  "baseline": true,
+  "physicalPhone": false,
+  "results": [
+    {
+      "shape": "desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "checks": {
+        "depth": 22,
+        "routes": [
+          {
+            "id": "W",
+            "inward": {
+              "seconds": 15.183333333333334,
+              "failed": null,
+              "end": [
+                -0.31624133453167036,
+                -22,
+                297.8486266942949
+              ]
+            },
+            "outward": {
+              "seconds": 17.65,
+              "failed": null,
+              "end": [
+                -67.95678023663169,
+                0,
+                179.43017304306613
+              ]
+            },
+            "clearance": 10
+          },
+          {
+            "id": "C",
+            "inward": {
+              "seconds": 12.316666666666666,
+              "failed": null,
+              "end": [
+                0,
+                -22,
+                297.68280095934887
+              ]
+            },
+            "outward": {
+              "seconds": 14.833333333333334,
+              "failed": null,
+              "end": [
+                -2.6117430202463204e-18,
+                0,
+                179.31238189638577
+              ]
+            },
+            "clearance": 10
+          },
+          {
+            "id": "E",
+            "inward": {
+              "seconds": 15.183333333333334,
+              "failed": null,
+              "end": [
+                0.31624133453167036,
+                -22,
+                297.8486266942949
+              ]
+            },
+            "outward": {
+              "seconds": 17.65,
+              "failed": null,
+              "end": [
+                67.95678023663169,
+                0,
+                179.43017304306613
+              ]
+            },
+            "clearance": 10
+          }
+        ],
+        "waves": [
+          {
+            "id": "W",
+            "exited": true,
+            "pos": [
+              -67.84725778748611,
+              0,
+              180.51734142707167
+            ]
+          },
+          {
+            "id": "C",
+            "exited": true,
+            "pos": [
+              0,
+              0,
+              180.80000000000257
+            ]
+          },
+          {
+            "id": "E",
+            "exited": true,
+            "pos": [
+              67.84725778748611,
+              0,
+              180.51734142707167
+            ]
+          }
+        ],
+        "minSpeed": 0.7306329331111396,
+        "maxSlope": 18.60883393145194,
+        "savePreserved": true,
+        "legacyFloor": -22,
+        "realInput": {
+          "distance": 21.383784637136785,
+          "seconds": 3.0245,
+          "y": -4.256455660037977
+        }
+      },
+      "errors": []
+    }
+  ]
+}

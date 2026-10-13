@@ -2,7 +2,9 @@ import * as THREE from './vendor/three.module.js';
 
 // Three sloping galleries share one continuous underground chamber. All geometry,
 // collision, radar and marching routes derive from these same centre lines.
-export const HIVE={x:0,z:302,r:28,depth:22};
+// Keep the three galleries and their headroom; a shallow descent makes the return
+// walk almost as fast as level ground (maximum centre-line grade is about 6%).
+export const HIVE={x:0,z:302,r:28,depth:4};
 const LINES=[
   {id:'W',name:'西侧虫洞',pts:[[-68,184],[-68,214],[-54,247],[-30,276],[-12,294]]},
   {id:'C',name:'中央主洞',main:true,pts:[[0,184],[0,219],[0,253],[0,284]]},

@@ -27,8 +27,14 @@ const row=await p.evaluate(({kind,direction})=>{const q=qaSetup();for(const s of
  return{pos:v.mesh.position.toArray(),gap:v.mesh.position.distanceTo(q.player.pos),safe:q.vehicleCanStand(v,v.mesh.position.x,v.mesh.position.z)};},{kind,direction});
 check(`${kind}沿弯曲洞道${direction}`,row.gap<14&&row.safe,row);
 }
-let row=await p.evaluate(()=>{const q=qaSetup();for(const s of q.squad.splice(1))q.scene.remove(s.mesh);const v=q.spawnVehicle('heli');v.mesh.position.set(0,0,170);q.boardSquadVehicle(q.squad[0],v);q.player.pos.set(0,-22,300);q.player.mesh.position.copy(q.player.pos);for(let i=0;i<900;i++)q.updSquad(1/30);return{pos:v.mesh.position.toArray(),ceiling:q.hiveCeiling(v.mesh.position.x,v.mesh.position.z)};});
+let row=await p.evaluate(()=>{const q=qaSetup();for(const s of q.squad.splice(1))q.scene.remove(s.mesh);const v=q.spawnVehicle('heli');v.mesh.position.set(0,0,170);q.boardSquadVehicle(q.squad[0],v);q.player.pos.set(0,q.groundY(0,300),300);q.player.mesh.position.copy(q.player.pos);for(let i=0;i<900;i++)q.updSquad(1/30);return{pos:v.mesh.position.toArray(),ceiling:q.hiveCeiling(v.mesh.position.x,v.mesh.position.z)};});
 check('直升机在洞口待命，不追到洞顶',row.pos[2]<184,row);
+// The current game no longer exports the old recallUnits QA helper. Keep the
+// cave/vehicle regression usable independently of those historical rescue checks.
+if(process.env.HIVE_ONLY==='1'){
+ fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({checks,errors,scope:'hive-navigation-only',physicalPhone:false},null,2));
+ assert.ok(checks.every(c=>c.ok));assert.deepEqual(errors,[]);return;
+}
 row=await p.evaluate(()=>{const q=qaSetup();q.Game.squadGear.forEach(g=>{g.weapon=2;g.armor=1;});q.Game.vehiclesOwned=['tank'];q.squadGear(0).vehicle='tank';const v=q.spawnVehicle('tank');q.boardSquadVehicle(q.squad[0],v);v.hp=217;
  q.player.pos.set(0,q.groundY(0,250),250);q.player.mesh.position.copy(q.player.pos);q.squad.forEach((s,i)=>{s.hp=30+i;s.mesh.position.set(i*3,0,300);});
  const gold=q.Game.gold,health=q.squad.map(s=>s.hp),ok=q.recallUnits('squad'),positions=q.squad.map(s=>s.mesh.position.toArray()),second=q.recallUnits('squad');
