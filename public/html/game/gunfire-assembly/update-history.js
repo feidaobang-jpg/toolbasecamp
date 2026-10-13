@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.1.6';
+export const GAME_VERSION='0.1.7';
 export const UPDATE_HISTORY=[
+  {version:'0.1.7',date:'2026-10-13',title:'平安县城场景精修',changes:[
+    '平安县城增加城墙砖缝、石板路、房屋山墙与瓦檐、炮身铆钉和制服细节，调整日光与远处烟尘。',
+    '保留原关卡路线、手动枪战和检查点；拉炮及破门时细节跟随实际物体。']},
   {version:'0.1.6',date:'2026-10-13',title:'游客先玩，账号功能按需使用',changes:[
     '联机昵称不再自由填写，只用系统匿名称呼或主动授权并通过检测的B站昵称；房间名称统一自动生成。',
     '单机、本地存档与文件备份直接可用；Toy云存档和成绩提交在主动使用时才连接账号。']},

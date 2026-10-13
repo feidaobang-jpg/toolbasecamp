@@ -13,6 +13,7 @@ function boxHit(from,to,c,margin=0){
 function capsuleHit(from,to,p,r=.65,height=1.7){const d=to.clone().sub(from),center=p.clone().add(vec(0,height*.55,0)),t=clamp(center.clone().sub(from).dot(d)/Math.max(.0001,d.lengthSq()),0,1),near=from.clone().addScaledVector(d,t);return Math.hypot(near.x-p.x,near.z-p.z)<r&&near.y>p.y-.1&&near.y<p.y+height?t:null;}
 
 export function createResistanceCampaign(a){
+ const artEnabled=!(new URLSearchParams(location.search).has('qa')&&new URLSearchParams(location.search).get('art')==='before');
  const s={active:false,scene:null,map:null,chapter:0,phase:0,units:[],shots:[],effects:[],player:null,elapsed:0,kills:0,hold:0,dialogueT:0,invulnerable:0,deadT:0,failedT:0,order:'follow',checkpoint:0,cannon:false,carrying:false,loaded:0,grenades:4,medkits:3,grenadeCd:0,reload:0,fireCd:0,chargeT:0,chargeCd:0,damageFlash:0,over:false,backup:null};
  let uid=0,ui,sceneGun,gunKind,gunKick=0,marker,markerRing,hudT=0,viewBackup=null;
  const tracerGeo=new T.CylinderGeometry(1,1,1,6).rotateX(Math.PI/2);
@@ -25,7 +26,8 @@ export function createResistanceCampaign(a){
  function setupScene(){
   const scene=new T.Scene();scene.background=new T.Color(s.chapter===1?0xb7b6a0:0xc1bca8);scene.fog=new T.Fog(0xb7b6a0,90,300);scene.add(new T.HemisphereLight(0xc8d5da,0x5c4d35,1.1));
   const light=new T.DirectionalLight(0xffdfac,1.6);light.position.set(-45,65,-25);light.castShadow=true;light.shadow.mapSize.set(1024,1024);Object.assign(light.shadow.camera,{left:-42,right:42,top:42,bottom:-42,near:1,far:180});light.shadow.bias=-.00025;light.shadow.normalBias=.06;scene.add(light,light.target);s.sun=light;
-  s.map=buildResistanceMap(s.chapter);scene.add(s.map.root);s.scene=scene;
+  if(s.chapter===2&&artEnabled){scene.background.set(0xbab5a7);scene.fog.color.set(0xbab5a7);scene.fog.near=65;scene.fog.far=280;const hemi=scene.children.find(o=>o.isHemisphereLight);hemi.color.set(0xb0c5cf);hemi.groundColor.set(0x685a46);hemi.intensity=.73;light.color.set(0xffdfad);light.intensity=2.5;}
+  s.map=buildResistanceMap(s.chapter,artEnabled);scene.add(s.map.root);s.scene=scene;
   marker=new T.Group();const b=build(marker);b.cyl(0xd8bc70,0,2.7,0,.065,5.4,6);b.box(0xbc6953,.55,4.45,0,1.2,.75,.035);compact(marker);scene.add(marker);
   markerRing=new T.Mesh(new T.RingGeometry(2.9,3.08,32),new T.MeshBasicMaterial({color:0xffdb84,side:T.DoubleSide,transparent:true,opacity:.65,depthWrite:false}));markerRing.rotation.x=-Math.PI/2;scene.add(markerRing);
   sceneGun=new T.Group();scene.add(sceneGun);gunKind=null;updateViewGun();
@@ -36,7 +38,7 @@ export function createResistanceCampaign(a){
   return vec(0,0,-20);
  }
  function unit(name,team,x,z,weapon='rifle',mounted=false,officer=false){
-  const root=new T.Group(),body=periodSoldier(team,weapon,officer);root.position.copy(spawnPosition(x,z,mounted?1:.75));root.add(body);
+  const root=new T.Group(),body=periodSoldier(team,weapon,officer,s.chapter===2&&artEnabled);root.position.copy(spawnPosition(x,z,mounted?1:.75));root.add(body);
   const u={id:++uid,name,team,root,body,hp:team==='enemy'?85:130,maxHp:team==='enemy'?85:130,weapon,cd:Math.random(),brain:Math.random()*.2,dead:false,mounted,moving:0,phase:s.phase,home:vec(x,0,z),target:null,revive:0,age:0};
   if(mounted){const h=horse(team==='enemy'?0x4e4438:0x765039);root.add(h);body.position.y=1.25;body.userData.gun.visible=false;body.userData.saber.visible=true;u.horse=h;}
   root.rotation.y=team==='enemy'?Math.PI:0;s.scene.add(root);s.units.push(u);return u;
@@ -237,7 +239,7 @@ export function createResistanceCampaign(a){
   else if(v.first){a.camera.position.copy(head);a.camera.lookAt(head.clone().add(f));}
   else {const cfg=v.preset,el=clamp(Math.atan2(cfg.h,cfg.d)-v.pitch,.08,1.4),radius=Math.hypot(cfg.h,cfg.d),dir=vec(-Math.sin(v.yaw)*Math.cos(el),Math.sin(el),-Math.cos(v.yaw)*Math.cos(el)),dest=head.clone().addScaledVector(dir,radius);let t=1;for(const c of s.map.colliders)if(!c.disabled){const k=boxHit(head,dest,c,.15);if(k!==null)t=Math.min(t,Math.max(.08,k-.03));}a.camera.position.copy(head).addScaledVector(dir,radius*t);a.camera.position.y=Math.max(.4,a.camera.position.y);a.camera.lookAt(head.clone().add(vec(0,.22,0)));}
   a.camera.fov=s.cannon?48:s.aiming?44:62;a.camera.updateProjectionMatrix();sceneGun.position.copy(a.camera.position);sceneGun.quaternion.copy(a.camera.quaternion);if(sceneGun.children[0]){sceneGun.children[0].position.set(s.aiming?(s.weapon==='zb26'?.10:0):.25,s.aiming?-.112:-.24,(s.aiming?-.86:-.75)+gunKick*.06);sceneGun.children[0].rotation.x=gunKick*.055;}gunKick=Math.max(0,gunKick-dt*7);
-  const x=Math.round(pos.x/.082)*.082,z=Math.round(pos.z/.082)*.082;s.sun.position.set(x-45,65,z-25);s.sun.target.position.set(x,0,z);
+  const x=Math.round(pos.x/.082)*.082,z=Math.round(pos.z/.082)*.082;s.sun.position.set(x-(s.chapter===2&&artEnabled?24:45),s.chapter===2&&artEnabled?28:65,z-(s.chapter===2&&artEnabled?18:25));s.sun.target.position.set(x,0,z);
  }
  function animate(u,dt){if(u.dead)return;const phase=u.age*10+(u.id%4);u.body.userData.legs.forEach((leg,i)=>{leg.rotation.x=u.mounted?-.82:Math.sin(phase+i*Math.PI)*Math.min(.52,u.moving*.10);});if(u.horse)u.horse.userData.legs.forEach((leg,i)=>leg.rotation.x=Math.sin(phase+(i%2)*Math.PI)*Math.min(.75,u.moving*.065));const swing=u===s.player?s.saberT:u.saberT;if(swing>0){if(u===s.player)s.saberT=Math.max(0,swing-dt);else u.saberT=Math.max(0,swing-dt);}u.body.userData.saber.rotation.z=swing>0?-1.2+Math.sin(swing*12)*1.3:-.4;}
  function hud(){if(!s.active)return;const $=ui.$,p=s.player,c=WAR_CHAPTERS[s.chapter],o=objective(),alive=s.units.filter(u=>u.team==='enemy'&&!u.dead).length;
@@ -259,7 +261,7 @@ export function createResistanceCampaign(a){
   const ctx=$('warMap').getContext('2d'),map=(x,z)=>({x:90+x*1.15,y:194-(z+35)*.84});ctx.clearRect(0,0,180,204);ctx.fillStyle='#8c886b';ctx.fillRect(84,0,12,204);for(const c of s.map.colliders)if(!c.disabled){const q=map(c.x,c.z);ctx.fillStyle='#637463';ctx.fillRect(q.x-c.w*.575,q.y-c.d*.42,Math.max(1,c.w*1.15),Math.max(1,c.d*.84));}for(const u of s.units)if(!u.dead){const q=map(u.root.position.x,u.root.position.z);ctx.fillStyle=u===p?'#fff4ba':u.team==='ally'?'#90c9e6':'#d68165';ctx.beginPath();ctx.arc(q.x,q.y,u===p?3.5:2.2,0,6.3);ctx.fill();}const goal=map(o.x,o.z);ctx.strokeStyle='#ffd577';ctx.lineWidth=2;ctx.strokeRect(goal.x-5,goal.y-5,10,10);
  }
  function update(dt,playing){
-  if(!s.active)return;if(!playing||s.over){camera(0);return;}s.elapsed+=dt;
+  if(!s.active)return;s.map?.dressing?.update(playing?dt:0,a.isTouch());if(!playing||s.over){camera(0);return;}s.elapsed+=dt;
   if(s.deadT>0){s.deadT-=dt;if(s.deadT<=0){start(s.chapter,s.checkpoint,{elapsed:s.elapsed,kills:s.kills});return;}}
   if(s.failedT>0){s.failedT-=dt;if(s.failedT<=0){start(s.chapter,s.checkpoint,{elapsed:s.elapsed,kills:s.kills});return;}}
   updatePlayer(dt);s.player.age+=dt;ai(dt);updateShots(dt);mission(dt);for(const u of s.units)animate(u,dt);
