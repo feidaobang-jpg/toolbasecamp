@@ -1,0 +1,1155 @@
+{
+ "schema_version": 1,
+ "game_id": "liangjian-pingan",
+ "version": "v0.1.0",
+ "base_version": null,
+ "created_at": "2026-10-13T19:11:11+08:00",
+ "build": {
+  "id": "local-6b9f7fccdbfc",
+  "commit": "5dacec50",
+  "dirty": false,
+  "fingerprint": "sha256:6b9f7fccdbfc1ea77cba37ae19046b1d2c5713b5004d9e1573b8098da9f637d6（public/html/game/liangjian-pingan 下 26 个文件按路径排序连接）",
+  "entrypoint": "public/html/game/liangjian-pingan/index.html"
+ },
+ "feature_inventory": [
+  {
+   "id": "phase1",
+   "desc": "第一阶段：端掉两处机枪阵地（正面打不穿、可绕侧/手榴弹/骑兵），拔掉第一处后有一波反扑",
+   "status": "implemented",
+   "evidence_ids": [
+    "view-tilt",
+    "view-chase"
+   ]
+  },
+  {
+   "id": "phase2",
+   "desc": "第二阶段：护送意大利炮到炮位，四波侧翼冲击与掷弹筒红圈；炮被打坏则本阶段重来",
+   "status": "implemented",
+   "evidence_ids": [
+    "yidalipao"
+   ]
+  },
+  {
+   "id": "phase3",
+   "desc": "第三阶段：操炮（弹道预览、落点提示），轰掉两个机枪堡和城门，最后轰塌城楼",
+   "status": "implemented",
+   "evidence_ids": [
+    "cannon-tilt",
+    "cannon-fp",
+    "fire",
+    "tower"
+   ]
+  },
+  {
+   "id": "phase4",
+   "desc": "第四阶段：巷战，街垒、十字街口机枪阵地、小巷援兵、特工队；军火库缴获换枪",
+   "status": "implemented",
+   "evidence_ids": [
+    "street",
+    "loot"
+   ]
+  },
+  {
+   "id": "phase5",
+   "desc": "Boss 山本一木：点射、手雷、拔刀突进、两次召唤；亮剑拼刀",
+   "status": "implemented",
+   "evidence_ids": [
+    "hq",
+    "clash",
+    "won"
+   ]
+  },
+  {
+   "id": "skills",
+   "desc": "J 射击（自动锁定、实体子弹）/ K 手榴弹 / U 亮剑突进 / I 骑兵连",
+   "status": "implemented",
+   "evidence_ids": [
+    "cavalry",
+    "dash"
+   ]
+  },
+  {
+   "id": "memes",
+   "desc": "开炮、意大利炮、天才、骑兵连进攻、打的就是精锐、富裕的仗、勇者胜、一锅粥等大字/弹幕/喊话",
+   "status": "implemented",
+   "evidence_ids": [
+    "fire",
+    "yidalipao",
+    "loot",
+    "cavalry",
+    "result"
+   ]
+  },
+  {
+   "id": "views",
+   "desc": "四视角 + Q/E + 拖动转视角；遮挡淡化与镜头避让",
+   "status": "implemented",
+   "evidence_ids": [
+    "view-tilt",
+    "view-top",
+    "view-chase",
+    "view-fp",
+    "fade"
+   ]
+  },
+  {
+   "id": "cross",
+   "desc": "自动识别/电脑键鼠/手机触屏；手机竖屏旋转；2×2 动作键与摇杆",
+   "status": "implemented",
+   "evidence_ids": [
+    "menu-phone",
+    "menu-portrait",
+    "touch-play",
+    "touch-portrait"
+   ]
+  },
+  {
+   "id": "options",
+   "desc": "起始阶段、命数、耐久、演示、视角、画质、音量、弹幕、触屏按键、帧率、全屏；暂停/结算菜单",
+   "status": "implemented",
+   "evidence_ids": [
+    "menu",
+    "result"
+   ]
+  },
+  {
+   "id": "publish",
+   "desc": "接入网站游戏列表、Toy 打包与提交",
+   "status": "planned",
+   "evidence_ids": []
+  }
+ ],
+ "changes": [
+  {
+   "id": "new-game",
+   "feature_ids": [
+    "phase1",
+    "phase2",
+    "phase3",
+    "phase4",
+    "phase5",
+    "skills",
+    "memes",
+    "views",
+    "cross",
+    "options"
+   ],
+   "before": "无（新作）",
+   "after": "完整一关五个阶段可从头打到结算",
+   "user_visible": "本地可玩的新游戏，用于和《枪火集结》原版同章节对比",
+   "evidence_ids": [
+    "playthrough-view0-p1"
+   ],
+   "verification": "automated-pass; human-play not-run"
+  }
+ ],
+ "bugs": [
+  {
+   "id": "fade-opaque",
+   "found_in": "v0.1.0 开发中",
+   "repro": "斜俯视站到房子北侧或城门洞里",
+   "observed": "挡住主角的房子、门洞不变透明",
+   "cause": "材质编译为不透明后透明度被写死，运行中切换透明需触发重新编译",
+   "status": "fixed",
+   "fix": "切换透明标志时设置 needsUpdate；城楼废墟纳入淡化",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "fade"
+   ],
+   "retest": "房后、门洞斜俯视与俯视复拍可见主角",
+   "gap": "修复前的原图已被同名文件覆盖，只留有修复后的联系表"
+  },
+  {
+   "id": "cannon-fp-blocked",
+   "found_in": "v0.1.0 开发中",
+   "repro": "操炮时切到第一人称",
+   "observed": "整屏被炮盾挡成一块绿色",
+   "cause": "镜头放在炮盾后方",
+   "status": "fixed",
+   "fix": "镜头移到炮盾前沿、炮管右侧",
+   "before_media_ids": [],
+   "after_media_ids": [
+    "cannon-fp"
+   ],
+   "retest": "可见炮管、城墙、弹道与落点"
+  },
+  {
+   "id": "man-and-fire",
+   "found_in": "v0.1.0 开发中",
+   "repro": "炮位旁按住 J",
+   "observed": "上炮的同一下按键直接把炮打出去",
+   "cause": "按住状态延续到操炮逻辑",
+   "status": "fixed",
+   "fix": "上炮后须先松开 J",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "views.cjs「上炮那一下按键不会直接开炮」通过"
+  },
+  {
+   "id": "too-easy",
+   "found_in": "v0.1.0 首版数值",
+   "repro": "按键脚本自动通关",
+   "observed": "1 分 55 秒通关，敌人过脆、支援过强、推炮过快",
+   "cause": "首版数值",
+   "status": "fixed",
+   "fix": "敌人血量、波次、冷却、Boss 血量整体重调",
+   "before_media_ids": [],
+   "after_media_ids": [],
+   "retest": "同一脚本约 2 分 50 秒；真人手感未测"
+  }
+ ],
+ "media": [
+  {
+   "id": "menu",
+   "file": "releases/v0.1.0/captures/qa/smoke-menu.png",
+   "sha256": "973488987ff3c3c98dd24f6941a43053e3fa384ba4cf8f7161e0012dd95e0b79",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "主菜单与全部选项（电脑 1280×720）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "menu-phone",
+   "file": "releases/v0.1.0/captures/qa/menu-844x346.png",
+   "sha256": "1614859aa06794485e2316ecfb1141f8468fb4dc0df2409c061848e59cda5cad",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "手机横屏紧凑主菜单（844×346 触控模拟，DPR2）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1688,
+   "height": 692,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "menu-portrait",
+   "file": "releases/v0.1.0/captures/qa/menu-390x844.png",
+   "sha256": "02bd1a9e29b6e115c054c83fafc036a5c87b6453b0c0cff937dfd525f58fef84",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "手机竖屏打开即旋转成横屏的主菜单（390×844 触控模拟）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 780,
+   "height": 1688,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-tilt",
+   "file": "releases/v0.1.0/captures/qa/view-0.png",
+   "sha256": "f293a7c610fe5123c2955105391d617cec781a5a2d618ec2c76de63fac2655bd",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "斜俯视（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-top",
+   "file": "releases/v0.1.0/captures/qa/view-1.png",
+   "sha256": "767ef9d415810e6df0820e965105562bbdf587fbb0746c4a728cd4055cb85b90",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "战术俯视（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-chase",
+   "file": "releases/v0.1.0/captures/qa/view-2.png",
+   "sha256": "393896ef7726ca09808c2e3dd775d9387ad4d7907e8086604cee8c335578ae5c",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "正视（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "view-fp",
+   "file": "releases/v0.1.0/captures/qa/view-3.png",
+   "sha256": "a53d495654f03ca661c37551db984203747095d9c8b33001b868e8e9a6c52e09",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "第一人称（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cannon-tilt",
+   "file": "releases/v0.1.0/captures/qa/cannon-view-0.png",
+   "sha256": "fc6014495e15d7aebfbe10f74fe1ef778909150f8c367b835e7717c81742f158",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "操炮·斜俯视，弹道线与落点圈（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cannon-fp",
+   "file": "releases/v0.1.0/captures/qa/scene-cannon-fp.png",
+   "sha256": "771adf2be56c22174fa6fd84cf8e5a0d1eea28097526968637fd1e332b2b370e",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "操炮·第一人称（炮手视角）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "fire",
+   "file": "releases/v0.1.0/captures/qa/play-shells-1.png",
+   "sha256": "038bb813182d70be4f147907225a0dec5b10645d4bd6cec150e51992fb1a1288",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "第一炮：“开炮！”大字与弹幕（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "tower",
+   "file": "releases/v0.1.0/captures/qa/play-tower-1.png",
+   "sha256": "5171b4567feda9e3b9151f82dd82c9f97ec41128583c09c67e5140dfa428e7e1",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "城楼被轰塌（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "cavalry",
+   "file": "releases/v0.1.0/captures/qa/scene-cavalry-tilt.png",
+   "sha256": "817312e5c1752af84b59b22ee9e3cd70ad58ed13c9e617c6806ef8c476c48c64",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "骑兵连冲锋（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "dash",
+   "file": "releases/v0.1.0/captures/qa/scene-dash-chase.png",
+   "sha256": "a420bfdd344ec9f76d3706d6ef3c863392b809541a2eabba998c4cf1f65b85e9",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "亮剑突进（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "yidalipao",
+   "file": "releases/v0.1.0/captures/qa/play-phase2-start.png",
+   "sha256": "43b1fe5ae0eca913787e825a611cf268ea9026261540e20b312b0a4204c926d9",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "第二阶段开场：“意大利炮呢？”（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "loot",
+   "file": "releases/v0.1.0/captures/qa/play-loot-1.png",
+   "sha256": "540b5bd53e53d0c2efdf6b39b3e025c2c6c63e2d0eb6c34c48e06d5dfabf47b6",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "缴获军火库：“发财了！”（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "clash",
+   "file": "releases/v0.1.0/captures/qa/play-clash-1.png",
+   "sha256": "364f93816771f66de789928ee74c7b4eb6cf8158575762d808ca4feb97a4a61e",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "与山本拼刀成功（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "won",
+   "file": "releases/v0.1.0/captures/qa/play-won-1.png",
+   "sha256": "8f09d0bd3d58ddf191d8c1299903ce0079a10b9a6d38f7ecdcb4f770a7e53c07",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "胜利升旗（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "result",
+   "file": "releases/v0.1.0/captures/qa/play-result.png",
+   "sha256": "9683867bb6c5c6a039c4f0d315a65c3f4c1c6aa88b7501af11b50e0518132a81",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "结算战报（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "street",
+   "file": "releases/v0.1.0/captures/qa/scene-gate-tunnel-chase.png",
+   "sha256": "459f0c691637f9c1edef211dda152141f04eb5c89f621e4ba1e1000d91a13b98",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "从城门洞看城内主街（正视）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "hq",
+   "file": "releases/v0.1.0/captures/qa/scene-hq-chase.png",
+   "sha256": "e95bc3b891ef37f56b3c24054211cf2bf4583742bf08175105ca3ce330156d91",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "守备队部决战（正视）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "touch-play",
+   "file": "releases/v0.1.0/captures/qa/play-844x390.png",
+   "sha256": "28896ec4e703708de53e571828d8866ff8416c47f252b2878bb80396c9cb42c9",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "手机横屏游玩布局（触控模拟）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 1688,
+   "height": 780,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "touch-portrait",
+   "file": "releases/v0.1.0/captures/qa/play-390x844.png",
+   "sha256": "75716b2e07091e7c0336eed410efb12d47ceb191ec2a5e3831497a03d3539598",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "手机竖屏旋转后的游玩布局（触控模拟）（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": 780,
+   "height": 1688,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "fade",
+   "file": "releases/v0.1.0/captures/qa/sheet-fix.jpg",
+   "sha256": "2b60ed130d8f0019203728f60af781939ecb7b2b6a05d13919351c490d2c320e",
+   "kind": "screenshot",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "遮挡淡化、炮手视角等修复后的联系表（Edge 无头 + 本机显卡；脚本摆位或脚本按键，手动步进后截图）",
+   "width": null,
+   "height": null,
+   "duration_seconds": null,
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": []
+  },
+  {
+   "id": "playthrough-view0-p1",
+   "file": "releases/v0.1.0/captures/playthrough-view0-p1.webm",
+   "sha256": "6dd9dc123d369b96a55875d99c3ce048fb7861bf85643d9428949b6cb6e05a7f",
+   "kind": "video",
+   "version": "v0.1.0",
+   "build_id": "local-6b9f7fccdbfc",
+   "capture_mode": "realtime-automation",
+   "description": "实时运行，由按键脚本从第一阶段打到结算的整局录像（斜俯视，无头浏览器录屏，无声音；不是真人操作）",
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 211.7,
+   "audio": "none",
+   "visual_review": "not-run",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "note": "录像完成后若又改过代码，build_id 以录制时为准；本条在最终构建上录制"
+  }
+ ],
+ "historical_media": [],
+ "qa": [
+  {
+   "what": "四个视角：移动/射击方向、Q/E 与鼠标拖动转向、纵向限位、C 循环回正、操炮四视角",
+   "method": "qa/views.cjs，Edge 无头，真实键盘与鼠标事件 + 手动步进",
+   "viewport": "1280×720",
+   "result": "52/52",
+   "evidence": "qa/out-views.json"
+  },
+  {
+   "what": "电脑五种窗口与手机八种视口的菜单完整性；竖屏旋转；摇杆、动作键、拖动转视角、多点触控；三种操作模式切换；暂停/结算布局",
+   "method": "qa/mobile.cjs，Edge 无头，CDP 触控模拟（不是手机真机）",
+   "viewport": "1366×768、1280×720、1366×625、1280×580、1920×1080；844×390、844×346、800×390、740×360、568×320、390×844、360×780、375×667",
+   "result": "73/73",
+   "evidence": "qa/out-mobile.json"
+  },
+  {
+   "what": "每个选项的切换/保存/实际效果；命数与耐久；急救包；演示模式；暂停冻结声音、继续/重开/回主菜单后有声；起始阶段直达与继续；炮被打坏后本阶段重来；包内无作者网站地址与账号表单",
+   "method": "qa/options.cjs，Edge 无头；声音在输出端挂分析器实测",
+   "viewport": "1280×720",
+   "result": "40/40",
+   "evidence": "qa/out-options.json"
+  },
+  {
+   "what": "自动通关（流程不软锁、无脚本报错；压力参考）",
+   "method": "qa/playthrough.cjs，按键脚本走键盘输入层，手动步进；脚本不躲子弹、不用掩体",
+   "result": {
+    "std": {
+     "finished": true,
+     "game_seconds": 208.6,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 30.5,
+       "deaths": 1,
+       "hurt": 7
+      },
+      {
+       "phase": 2,
+       "seconds": 70.7,
+       "deaths": 0,
+       "hurt": 3
+      },
+      {
+       "phase": 3,
+       "seconds": 17.7,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 4,
+       "seconds": 49.3,
+       "deaths": 1,
+       "hurt": 9
+      },
+      {
+       "phase": 5,
+       "seconds": 40.3,
+       "deaths": 1,
+       "hurt": 6
+      }
+     ],
+     "deaths": 3,
+     "hurt": 25,
+     "kills": 77,
+     "score": 24705,
+     "errors": []
+    },
+    "easy": {
+     "finished": true,
+     "game_seconds": 183.8,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 27.3,
+       "deaths": 0,
+       "hurt": 6
+      },
+      {
+       "phase": 2,
+       "seconds": 38.5,
+       "deaths": 0,
+       "hurt": 4
+      },
+      {
+       "phase": 3,
+       "seconds": 17.5,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 4,
+       "seconds": 53.8,
+       "deaths": 1,
+       "hurt": 12
+      },
+      {
+       "phase": 5,
+       "seconds": 46.8,
+       "deaths": 0,
+       "hurt": 4
+      }
+     ],
+     "deaths": 1,
+     "hurt": 26,
+     "kills": 79,
+     "score": 25330,
+     "errors": []
+    },
+    "one": {
+     "finished": true,
+     "game_seconds": 263,
+     "phases": [
+      {
+       "phase": 1,
+       "seconds": 96.5,
+       "deaths": 11,
+       "hurt": 11
+      },
+      {
+       "phase": 2,
+       "seconds": 44.5,
+       "deaths": 2,
+       "hurt": 2
+      },
+      {
+       "phase": 3,
+       "seconds": 17.5,
+       "deaths": 0,
+       "hurt": 0
+      },
+      {
+       "phase": 4,
+       "seconds": 50.8,
+       "deaths": 5,
+       "hurt": 5
+      },
+      {
+       "phase": 5,
+       "seconds": 53.7,
+       "deaths": 6,
+       "hurt": 6
+      }
+     ],
+     "deaths": 24,
+     "hurt": 24,
+     "kills": 86,
+     "score": 26235,
+     "errors": []
+    }
+   },
+   "evidence": "qa/out-playthrough-p1-*.json"
+  },
+  {
+   "what": "帧时间（实时运行，脚本边打边测）",
+   "method": "qa/perf.cjs",
+   "result": [
+    {
+     "name": "电脑 1920×1080 高画质",
+     "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "dpr": 1,
+     "samples": [
+      {
+       "phase": 1,
+       "view": "斜俯视",
+       "avgFps": 164.4,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 29.5,
+       "over50ms": 0,
+       "avgCalls": 64,
+       "avgTris": 35108,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 1,
+       "view": "正视",
+       "avgFps": 163.7,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 35.2,
+       "over50ms": 0,
+       "avgCalls": 114,
+       "avgTris": 45204,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 1,
+       "view": "第一人称",
+       "avgFps": 163.6,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 35.5,
+       "over50ms": 0,
+       "avgCalls": 113,
+       "avgTris": 44949,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 2,
+       "view": "斜俯视",
+       "avgFps": 165.9,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 41.2,
+       "over50ms": 0,
+       "avgCalls": 67,
+       "avgTris": 35024,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 4,
+       "view": "斜俯视",
+       "avgFps": 165.2,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 52.9,
+       "over50ms": 1,
+       "avgCalls": 108,
+       "avgTris": 38651,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 4,
+       "view": "正视",
+       "avgFps": 163.8,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 35.4,
+       "over50ms": 0,
+       "avgCalls": 157,
+       "avgTris": 43288,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 5,
+       "view": "斜俯视",
+       "avgFps": 166.2,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 23.6,
+       "over50ms": 0,
+       "avgCalls": 40,
+       "avgTris": 31699,
+       "canvas": [
+        1920,
+        1080
+       ],
+       "quality": "high"
+      }
+     ]
+    },
+    {
+     "name": "电脑 1280×720 高画质",
+     "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "dpr": 1,
+     "samples": [
+      {
+       "phase": 1,
+       "view": "斜俯视",
+       "avgFps": 164,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 29.4,
+       "over50ms": 0,
+       "avgCalls": 64,
+       "avgTris": 35135,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 1,
+       "view": "正视",
+       "avgFps": 163.6,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 35.2,
+       "over50ms": 0,
+       "avgCalls": 117,
+       "avgTris": 45369,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 1,
+       "view": "第一人称",
+       "avgFps": 163.6,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 41.2,
+       "over50ms": 0,
+       "avgCalls": 115,
+       "avgTris": 44939,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 2,
+       "view": "斜俯视",
+       "avgFps": 165.4,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 53,
+       "over50ms": 1,
+       "avgCalls": 65,
+       "avgTris": 34897,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 4,
+       "view": "斜俯视",
+       "avgFps": 164.1,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 58.9,
+       "over50ms": 2,
+       "avgCalls": 112,
+       "avgTris": 38731,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 4,
+       "view": "正视",
+       "avgFps": 164,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 35.3,
+       "over50ms": 0,
+       "avgCalls": 154,
+       "avgTris": 42902,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      },
+      {
+       "phase": 5,
+       "view": "斜俯视",
+       "avgFps": 166.8,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 23.6,
+       "over50ms": 0,
+       "avgCalls": 41,
+       "avgTris": 31685,
+       "canvas": [
+        1280,
+        720
+       ],
+       "quality": "high"
+      }
+     ]
+    },
+    {
+     "name": "手机模拟 844×390 DPR3 流畅",
+     "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+     "dpr": 3,
+     "samples": [
+      {
+       "phase": 1,
+       "view": "斜俯视",
+       "avgFps": 167.6,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 23.5,
+       "over50ms": 0,
+       "avgCalls": 64,
+       "avgTris": 34866,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      },
+      {
+       "phase": 1,
+       "view": "正视",
+       "avgFps": 166.3,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 17.7,
+       "over50ms": 0,
+       "avgCalls": 117,
+       "avgTris": 45157,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      },
+      {
+       "phase": 1,
+       "view": "第一人称",
+       "avgFps": 166.3,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 23.3,
+       "over50ms": 0,
+       "avgCalls": 109,
+       "avgTris": 44455,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      },
+      {
+       "phase": 2,
+       "view": "斜俯视",
+       "avgFps": 167.5,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 17.7,
+       "over50ms": 0,
+       "avgCalls": 71,
+       "avgTris": 35175,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      },
+      {
+       "phase": 4,
+       "view": "斜俯视",
+       "avgFps": 166.1,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 35.3,
+       "over50ms": 0,
+       "avgCalls": 113,
+       "avgTris": 38625,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      },
+      {
+       "phase": 4,
+       "view": "正视",
+       "avgFps": 166.4,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 17.6,
+       "over50ms": 0,
+       "avgCalls": 161,
+       "avgTris": 43401,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      },
+      {
+       "phase": 5,
+       "view": "斜俯视",
+       "avgFps": 168.8,
+       "medianMs": 5.9,
+       "p95Ms": 6,
+       "maxMs": 11.9,
+       "over50ms": 0,
+       "avgCalls": 41,
+       "avgTris": 31519,
+       "canvas": [
+        1055,
+        487
+       ],
+       "quality": "low"
+      }
+     ]
+    }
+   ],
+   "evidence": "qa/out-perf.json",
+   "note": "只代表本机 RTX 4060 Ti；“手机模拟”只是视口与像素比，不是手机性能"
+  },
+  {
+   "what": "画面巡检：城门洞、房后、巷子、院子、转 180°、骑兵/亮剑/操炮动态；全屏；以 0×0 启动后重排",
+   "method": "qa/scenes.cjs + 人工看图（由 AI 查看截图）",
+   "result": "遮挡淡化、炮手视角、战友挡镜头三处问题已修并复拍；全屏对整页生效；0×0 启动后 1.2 秒内按 844×390 重排",
+   "evidence": "captures/qa/scene-*.png、sheet-*.jpg"
+  }
+ ],
+ "untested": [
+  "手机真机（触控、多指、性能、全屏与横屏锁定）",
+  "真人完整试玩与难度手感",
+  "喊话语音的听感（未试听）",
+  "带声音的录像",
+  "Toy 外壳内运行（本版不发布）",
+  "动态画面的逐帧人工审看（只看了截图）"
+ ],
+ "readiness": {
+  "overview": "partial",
+  "update": "not_applicable",
+  "gaps": [
+   "没有真人操作、带声音的实机录像（现有录像为脚本操作、无音轨）",
+   "语音未试听",
+   "手机真机未测",
+   "本版只在本地，未发布，没有可公开的试玩链接"
+  ]
+ }
+}
