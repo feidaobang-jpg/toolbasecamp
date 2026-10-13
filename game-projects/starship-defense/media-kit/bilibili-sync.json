@@ -651,6 +651,17 @@
       ],
       "covered_by": "web-acid-arena-v0.38.0",
       "public_verified_at": "2026-10-13T20:10:19.195225+08:00"
+    },
+    {
+      "version": "web-defense-art-v0.37.5",
+      "status": "included_in_public_verified_release",
+      "classification": "普通美术精修",
+      "summary": "防守主模式基地装甲与城门细节、轻量地表颗粒、按章节区分的冷色日光；玩法/操作保持。",
+      "reason": "六条简介已于本轮公开核验，合并说明基地与房车美术更新。",
+      "record": "releases/web-defense-art-v0.37.5/handoff.json",
+      "recorded_at": "2026-10-13T19:54:20.141082+08:00",
+      "included_version": "web-acid-arena-v0.38.0",
+      "public_verification_record": "releases/web-acid-arena-v0.38.0/bilibili-sync.json"
     }
   ],
   "comment_corrections": [
