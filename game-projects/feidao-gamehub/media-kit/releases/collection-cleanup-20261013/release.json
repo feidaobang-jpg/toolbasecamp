@@ -5,8 +5,11 @@
     "toy_id": 40495283951616,
     "slug": "feidao-games",
     "url": "https://www.bilibili.com/toy/feidao-games/index.html",
-    "status": "built_not_submitted",
-    "game_count": 14
+    "status": "auditing",
+    "game_count": 14,
+    "submitted_at": "2026-10-13T02:20:37.193425+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_ejS3boyM/index.html",
+    "watermark_enabled": false
   },
   "changes": [
     "加入枪火集结，独立动作射击分类，真实游戏封面",
@@ -44,11 +47,23 @@
     "method": "Isolated headless Edge; Toy SDK mocked; desktop and mobile viewport simulations",
     "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\collection-qa.json",
     "doctor": "passed_no_findings",
-    "actual_toy_preview": "pending"
+    "actual_toy_preview": {
+      "status": "passed",
+      "preview_url": "https://www.bilibili.com/toy/preview/preview_F0Yoe6YJ/index.html",
+      "checks": [
+        "gunfire card present",
+        "journey removed",
+        "14 cards",
+        "no author website links",
+        "actual card opened gunfire Toy v0.1.2"
+      ],
+      "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\toy-collection-preview.jpg"
+    }
   },
   "bilibili": {
     "decision": "deferred_accumulating",
     "reason": "合集清单整理，已有视频入口继续有效，本次不改历史成片或发布新视频"
   },
-  "created_at": "2026-10-13T02:15:33.887216+00:00"
+  "created_at": "2026-10-13T02:15:33.887216+00:00",
+  "source_commit": "c8d5bfd402216ca5e75f07de318fe6013679ee5d"
 }

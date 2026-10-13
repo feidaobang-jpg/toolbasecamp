@@ -501,7 +501,9 @@
       "decision": "deferred_accumulating",
       "summary": "移除虫潮菜单中已独立枪战游戏的跳转，保留自身模式与存档",
       "reason": "普通菜单整理，距上次公开核验未满7天",
-      "record": "releases/web-independent-menu-v0.36.6/handoff.json"
+      "record": "releases/web-independent-menu-v0.36.6/handoff.json",
+      "website_verified": true,
+      "website_verified_at": "2026-10-13T02:18:12.406788+00:00"
     }
   ],
   "comment_corrections": [

@@ -23,12 +23,24 @@
     ]
   },
   "website": {
-    "status": "pending_deployment"
+    "status": "deployed_verified",
+    "source_commit": "c8d5bfd402216ca5e75f07de318fe6013679ee5d",
+    "verified_at": "2026-10-13T02:18:12.406788+00:00",
+    "runtime_sha256": "d5f844322f1016fa98747a3e38dc6c7bc61b80a88911804dc0289b34e988b26d",
+    "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\website-check.json"
   },
   "toy": {
     "id": 38678478981120,
     "slug": "chongchao-qianshao",
-    "status": "built_not_submitted"
+    "status": "auditing",
+    "submitted_version": "web-independent-menu-v0.36.6",
+    "submitted_at": "2026-10-13T02:20:37.193425+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_j6ONJME3/index.html",
+    "tested_preview_url": "https://www.bilibili.com/toy/preview/preview_J6hLD2ab/index.html",
+    "package_sha256": "d2ad7cf872cfa4f3670c3d751cba30fe3bd9f0a627709564cc6c02fecbe72a99",
+    "watermark_enabled": true,
+    "preview_qa": "actual Toy preview menu checked; no gunfire entry; existing local save still recognized",
+    "evidence": "D:\\project\\task-artifacts\\toy-collection-cleanup-20261013\\toy-starship-preview.jpg"
   },
   "cover_decision": {
     "changed": false,
@@ -47,5 +59,6 @@
     "gaps": [
       "未制作视频；本次仅菜单整理，截图用于后续合并选题"
     ]
-  }
+  },
+  "source_commit": "c8d5bfd402216ca5e75f07de318fe6013679ee5d"
 }
