@@ -1,0 +1,75 @@
+{
+ "schema_version": 1,
+ "game_id": "liangjian-pingan",
+ "version": "v0.2.0-dev01",
+ "base_version": "v0.1.0",
+ "created_at": "2026-10-13T23:34:23+08:00",
+ "build": {
+  "id": "local-50630872913a",
+  "commit": "d45a57a7",
+  "dirty": true,
+  "fingerprint": "sha256:50630872913a2bfbc8109a34655fc10bb6ac6dc0f77ae6394b3aac0562a09bdb（public/html/game/liangjian-pingan 下 26 个文件按路径排序连接）；修复街垒之前的工作区，文件已被后续修改覆盖，无法重算",
+  "entrypoint": "public/html/game/liangjian-pingan/index.html"
+ },
+ "feature_inventory": [],
+ "changes": [],
+ "bugs": [],
+ "media": [
+  {
+   "id": "stalemate-video",
+   "file": "releases/v0.2.0-dev01/captures/barricade-stalemate-before-fix.webm",
+   "sha256": "386b826398da88e733f1db1961318d5935635828a0afc2c39ea12207c73a01ac",
+   "kind": "video",
+   "version": "v0.2.0-dev01",
+   "build_id": "local-50630872913a",
+   "capture_mode": "realtime-automation",
+   "description": "修复前的实时录像（脚本操作、无声音）：前约 130 秒打到第四阶段，之后主角站在街垒前，与沙袋后的敌人互相打不到，一直僵持到 12 分钟超时",
+   "audio": "none",
+   "visual_review": "not-run",
+   "audio_review": "not-applicable",
+   "segments": [
+    {
+     "in_seconds": 118,
+     "out_seconds": 150,
+     "description": "走到街垒前开始僵持"
+    },
+    {
+     "in_seconds": 600,
+     "out_seconds": 620,
+     "description": "僵持中，画面几乎不动"
+    }
+   ],
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": 726.7,
+   "note": "只抽了 10 帧看过，没有逐帧审看，所以 visual_review 记为 not-run"
+  },
+  {
+   "id": "stalemate-sheet",
+   "file": "releases/v0.2.0-dev01/captures/sheet-barricade-stalemate.jpg",
+   "sha256": "48025162e236b63f0343483648e5a62f3fdb17a31acd7c8154000b0ac2d71584",
+   "kind": "screenshot",
+   "version": "v0.2.0-dev01",
+   "build_id": "local-50630872913a",
+   "capture_mode": "realtime-automation",
+   "description": "同一段录像第 330 / 450 / 600 / 720 秒的四帧拼图：主角与街垒后的三个敌人互相打不到",
+   "audio": "none",
+   "visual_review": "pass",
+   "audio_review": "not-applicable",
+   "segments": [],
+   "width": 1280,
+   "height": 720,
+   "duration_seconds": null
+  }
+ ],
+ "historical_media": [],
+ "qa": [],
+ "untested": [
+  "阶段构建，只为保留修复前的原片；验收以最终版清单为准"
+ ],
+ "readiness": {
+  "overview": "not_applicable",
+  "update": "not_applicable",
+  "gaps": []
+ }
+}
