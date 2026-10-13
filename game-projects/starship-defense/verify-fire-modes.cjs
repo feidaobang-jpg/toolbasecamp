@@ -12,7 +12,7 @@ const sizes=process.env.FIRE_SIZES?JSON.parse(process.env.FIRE_SIZES):[[1280,580
    const response=await page.goto(url+(url.includes('?')?'&':'?')+'qa=1');assert(!(await response.text()).includes('__TOY_LOGIN_GATE__'));
    let f=page.mainFrame();
    if(url.includes('bilibili.com/toy/')){await page.locator('iframe').first().waitFor();f=await(await page.locator('iframe').first().elementHandle()).contentFrame();await f.goto(f.url()+(f.url().includes('?')?'&':'?')+'qa=1');}
-   await f.waitForFunction(()=>window.__gameQA&&window.__ccReady);assert.equal(await f.evaluate(()=>__gameQA.CombatControls.settings.fire),'auto');
+   await f.waitForFunction(()=>window.__gameQA&&window.__ccReady);const version=await f.locator('#gameVersion').textContent();if(process.env.FIRE_VERSION)assert.equal(version,'v'+process.env.FIRE_VERSION);assert.equal(await f.evaluate(()=>__gameQA.CombatControls.settings.fire),'auto');
    await f.locator('#btnStart').click();
    await f.evaluate(()=>{const q=__gameQA;q.Input.releaseMouseLook();q.clearEntities(true);q.Game.testMode=true;q.Game.state='prep';q.sandboxWave.enabled=false;q.player.pos.set(0,q.groundY(0,90),90);q.player.mesh.position.copy(q.player.pos);q.player.dead=false;q.player.invulnerable=999;q.setCameraView(0,false);q.setCamYaw(0);q.Input.reset();});
    const fixture=()=>f.evaluate(()=>{const q=__gameQA;q.clearEntities(true);q.player.fireCd=0;const m=q.spawnMonster('mob',0,101,{quiet:true});m.emerge=0;m.hp=m.maxHp=100000;m.speed=0;m.mesh.position.set(0,q.groundY(0,101),101);window.__fireEnemy=m;});
@@ -46,7 +46,7 @@ const sizes=process.env.FIRE_SIZES?JSON.parse(process.env.FIRE_SIZES):[[1280,580
    await f.locator('#combat-fire').selectOption('hold');await f.locator('#combat-fire').scrollIntoViewIfNeeded();await f.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:path.join(out,name+'-settings.png')});
    await f.goto(f.url());await f.waitForFunction(()=>window.__gameQA&&window.__ccReady);assert.equal(await f.evaluate(()=>__gameQA.CombatControls.settings.fire),'hold');
    assert.deepEqual(errors,[]);assert.deepEqual((await ctx.cookies()).filter(c=>['SESSDATA','DedeUserID','bili_jct'].includes(c.name)),[]);
-   results.push({viewport:[width,height],passed:true,authenticated:false,autoDamage,network,checks:['automatic damage','hold and release','toggle and feedback','pause/blur/cancel reset','device switches preserve run','manual aim','network target gating','build blocks fire','settings persistence'],limitations:['deterministic enemy fixture','browser touch simulation; physical phone not tested']});console.log(JSON.stringify(results.at(-1)));
+   results.push({viewport:[width,height],version,passed:true,authenticated:false,autoDamage,network,checks:['automatic damage','hold and release','toggle and feedback','pause/blur/cancel reset','device switches preserve run','manual aim','network target gating','build blocks fire','settings persistence'],limitations:['deterministic enemy fixture','browser touch simulation; physical phone not tested']});console.log(JSON.stringify(results.at(-1)));
   }catch(e){await page.screenshot({path:path.join(out,name+'-failure.png')}).catch(()=>{});throw e;}
   finally{await ctx.close();fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({url,results},null,2));}
  }}finally{await browser.close();}

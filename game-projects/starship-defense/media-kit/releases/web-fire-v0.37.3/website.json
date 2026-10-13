@@ -1,0 +1,42 @@
+{
+  "verified_at": "2026-10-13T16:36:51.514448+08:00",
+  "source_commit": "8509d00c4973908f2e099f891458f60b5725de94",
+  "passed": true,
+  "files": [
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
+      "passed": true,
+      "sha256": "af87e429b759887e5fb10186241ef68d17e4782296f7e3a14aa136af3ad7d2c9"
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/combat-controls.css",
+      "passed": true,
+      "sha256": "022bd4e122e134ebaa9ecb03b3a9ce221b85179a1392041c2346cf220a96d38e"
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/combat-controls.js",
+      "passed": true,
+      "sha256": "4b435ed59226ac9cc85be3e1aebd85e9c0aeb5fe171920079a31177f749d12fd"
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.js",
+      "passed": true,
+      "sha256": "8c7174c46ad180139dbdb28d613528f78c82ee3d26c1ef8b9781f3511d3b2780"
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/game.compat.js",
+      "passed": true,
+      "sha256": "256df07c1e0175d9cb5354eb4f7c2e71f2cd42740bc9204ef678e11a29dca2e9"
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/update-history.js",
+      "passed": true,
+      "sha256": "903a8837161a7363610f4e1e558e2c16163526a280b49b8ef6760565b30d577d"
+    },
+    {
+      "url": "https://www.zhengxiaohui.cn/html/game/starship-defense/hive-world.js",
+      "passed": true,
+      "sha256": "b2e10d1095e99a63b83ae4b3e86d92a95940cce034dd880bbc3150cc915fa549"
+    }
+  ]
+}
