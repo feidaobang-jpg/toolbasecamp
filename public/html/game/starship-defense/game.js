@@ -4191,6 +4191,7 @@ function loop(){
   updDamageNumbers(playing?dt:0);updScreenFx(playing?dt:0);
   if(playing){updCamera(dt);updSun(camState.target);updPlacement();}
   explorationLight.update(dt,player.inVehicle?player.inVehicle.mesh.position:player.pos,camera,camForward(true),camMode==='first',battlefield,!player.dead);
+  if(rvOn()){rvBreakout.renderFrame(playing?dt:0);updSun(camState.target);}
   coopDriver?.tick(now);
   frameStats(now);if(battleOn()&&bfAiming&&camMode==='first'){camera.fov=Game.curWeapon==='laser'?32:52;camera.updateProjectionMatrix();}renderer.render(scene,camera);
   Input.clearFrame();
@@ -4260,6 +4261,7 @@ try{battlefield.setTimeOfDay(localStorage.getItem('chongchao-daylight'));}catch(
 setBattlefieldEnvironment(environmentForChapter(Game.chapter));
 setupVersus();
 rvBreakout=createRVBreakout({THREE,scene,Game,player,WORLD,AudioSys,stage,camera,Input,visuals,monsters,CHAPTERS,spawnMonster,spawnVehicle,enterVehicle,clearEntities,closePanels,hideConfirm,askConfirm,showMsg,showHint,showHUD,updHPBar,vehicleAim,vehicleMuzzle,fireBullet,damageVehicle,playerDamage,
+  artContext:{renderer,sun,hemi,sunOffset:SUN_OFFSET},
   isTouch:()=>isTouch,lastDt:()=>rvFrameDt,setPanel:v=>panelOpen=v,vsOn,exitVersus,clearCoop:()=>{coopDriver?.leave();clearCoopHumans();Game.coop=false;},quit:()=>$('btnQuit').click(),
   skyObjects:()=>[visuals.environmentObjects.sky,visuals.environmentObjects.stars,visuals.environmentObjects.moon].filter(Boolean),
   faceForward:()=>{setCameraView(0,false);camYaw=0;camPitch=0;camState.init=false;lookControl.clear();pitchControl.clear();}

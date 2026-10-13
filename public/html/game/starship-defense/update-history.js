@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.3';
+export const GAME_VERSION='0.37.4';
 export const UPDATE_HISTORY=[
+  {version:'0.37.4',date:'2026-10-13',title:'房车与城镇画面细化',changes:[
+    '装甲房车增加车窗边框、轮毂、保险杠、车顶装备与实际车灯照明。',
+    '废弃城镇加入夕阳冷暖光、远处天际线、建筑窗框与街边细节；探索路线、战斗规则与原有存档保持兼容。']},
   {version:'0.37.3',date:'2026-10-13',title:'电脑手机共用射击设置',changes:[
     '手机默认自动寻敌并开火，可与电脑一样选择自动射击、按住射击或点击开关连射；瞄准方式可单独选择，偏好自动保存。',
     '暂停、失焦和切换操作模式会清除连射状态；联机自动开火由房主按有效目标判断，手雷和技能保留手动触发。']},

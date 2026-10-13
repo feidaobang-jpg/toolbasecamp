@@ -1,5 +1,17 @@
 [
   {
+    "id": "rv-sunset-art-v0372",
+    "purpose": "装甲房车细节、暖光城镇、分区僵尸外形",
+    "source_type": "procedural",
+    "tool": "Codex / Three.js r152",
+    "runtime_files": [
+      "../../../public/html/game/starship-defense/rv-art.js",
+      "../../../public/html/game/starship-defense/rv-town.js"
+    ],
+    "processing": "原创建模、倒角、顶点色合批、实例化建筑装饰、程序天空和地面纹理；没有下载外部模型或生成位图",
+    "usage": "原有游戏内实时渲染，可驾驶、战斗和切换视角；不把封面插画当游戏截图"
+  },
+  {
     "id": "conquest-military-v032",
     "purpose": "战地模式地图、建筑、枪械、兵种与军用载具",
     "source_type": "procedural",
