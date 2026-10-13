@@ -1,0 +1,27 @@
+{
+  "samples": 2171,
+  "averageFPS": 108.57768731027221,
+  "medianMs": 8.900000005960464,
+  "p95Ms": 13.399999998509884,
+  "over50ms": 0,
+  "drawCalls": 33,
+  "triangles": 22102,
+  "memory": {
+    "geometries": 99,
+    "textures": 3
+  },
+  "viewport": [
+    1280,
+    720
+  ],
+  "dpr": 1.6666666666666665,
+  "drawingBuffer": [
+    1599,
+    899
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "quality": "high",
+  "theme": "dark",
+  "phase": 3,
+  "version": "before"
+}

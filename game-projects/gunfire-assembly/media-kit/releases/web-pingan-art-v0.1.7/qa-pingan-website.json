@@ -1,0 +1,18 @@
+{
+  "index.html": {
+    "matches": true,
+    "sha256": "b0a96ee28ddf1093ec0db76038885b02166b35aba58cdbdd2b0528bea82ea1a7",
+    "html_cache_bust": "6aa6e727"
+  },
+  "game.compat.js": {
+    "matches": true,
+    "sha256": "3a37915cc806e382c64828efa618ab242ef0adc21a01ed808d72588494cdb12c",
+    "html_cache_bust": null
+  },
+  "pingan-art.js": {
+    "matches": true,
+    "sha256": "3fd410731e77f8e71a69add0c4d18e1c87357a3b69ae1bed8a59f42beb2fe1ac",
+    "html_cache_bust": null
+  },
+  "verified_at": "2026-10-13T11:21:26.378862+00:00"
+}
