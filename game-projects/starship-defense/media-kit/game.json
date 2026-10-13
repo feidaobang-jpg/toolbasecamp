@@ -19,8 +19,8 @@
   "publication_status": "validated_pending_website_and_toy",
   "preview_url": "https://www.bilibili.com/toy/preview/preview_mMzZgpip/index.html",
   "public_play_url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-  "media_readiness": "partial",
-  "qa": "releases/web-shallow-hive-v0.37.2/handoff.json",
+  "media_readiness": "房车视觉更新素材就绪；全游戏介绍仍需单独采集",
+  "qa": "releases/web-rv-art-v0.37.3/handoff.json",
   "pending_toy_merge": [
     {
       "version": "web-zerg-corpse-spinfix-v0.33.3-combined",

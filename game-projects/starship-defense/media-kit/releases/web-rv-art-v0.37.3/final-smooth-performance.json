@@ -1,0 +1,39 @@
+{
+  "kind": "drive",
+  "method": "QA起点重定位，随后实际RAF和DOM键盘事件驱动，性能采样与录像分开",
+  "metrics": {
+    "samples": 3058,
+    "averageFPS": 169.8888888888889,
+    "medianMs": 5.899999998509884,
+    "p95Ms": 6.200000002980232,
+    "over50ms": 0,
+    "drawCalls": 149,
+    "triangles": 42812,
+    "memory": {
+      "geometries": 59,
+      "textures": 12
+    },
+    "viewport": [
+      1265,
+      720
+    ],
+    "dpr": 1.2,
+    "drawingBuffer": [
+      1152,
+      655
+    ],
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "quality": "smooth",
+    "theme": "dark"
+  },
+  "rv": {
+    "hp": 1400,
+    "position": [
+      26.490347048761876,
+      0,
+      1630.3002312803785
+    ],
+    "distance": 83.23918103630355
+  },
+  "errors": []
+}
