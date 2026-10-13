@@ -1,0 +1,277 @@
+{
+  "version": "v0.11.2",
+  "variant": "before",
+  "results": [
+    {
+      "stage": 1,
+      "gridHash": 4175767513,
+      "jeepCount": 0,
+      "environmentCount": 0,
+      "bodyVertices": 6828,
+      "wheelVertices": 240,
+      "sharedAcrossStages": true,
+      "wheelsShareGeometry": true,
+      "render": {
+        "calls": 77,
+        "tris": 156048,
+        "geometries": 55,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "reach": {
+        "cells": 15705,
+        "pad": true,
+        "boss": true,
+        "huts": [
+          {
+            "name": "H0",
+            "ok": true
+          },
+          {
+            "name": "H1",
+            "ok": true
+          },
+          {
+            "name": "B1",
+            "ok": true
+          },
+          {
+            "name": "B2",
+            "ok": true
+          },
+          {
+            "name": "H2",
+            "ok": true
+          },
+          {
+            "name": "H3",
+            "ok": true
+          },
+          {
+            "name": "H4",
+            "ok": true
+          }
+        ],
+        "checkpoints": [
+          {
+            "name": "海滩",
+            "ok": true
+          },
+          {
+            "name": "营地外",
+            "ok": true
+          },
+          {
+            "name": "营地内",
+            "ok": true
+          },
+          {
+            "name": "南岸",
+            "ok": true
+          },
+          {
+            "name": "北岸",
+            "ok": true
+          },
+          {
+            "name": "崖顶",
+            "ok": true
+          },
+          {
+            "name": "丛林",
+            "ok": true
+          },
+          {
+            "name": "最后阵地",
+            "ok": true
+          },
+          {
+            "name": "场地入口",
+            "ok": true
+          }
+        ]
+      },
+      "hiddenDestroyedDetails": 0
+    },
+    {
+      "stage": 2,
+      "gridHash": 367762747,
+      "jeepCount": 0,
+      "environmentCount": 0,
+      "bodyVertices": 6828,
+      "wheelVertices": 240,
+      "sharedAcrossStages": true,
+      "wheelsShareGeometry": true,
+      "render": {
+        "calls": 61,
+        "tris": 141970,
+        "geometries": 60,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "reach": {
+        "cells": 18352,
+        "pad": true,
+        "boss": true,
+        "huts": [
+          {
+            "name": "B1",
+            "ok": true
+          },
+          {
+            "name": "B2",
+            "ok": true
+          },
+          {
+            "name": "B3",
+            "ok": true
+          },
+          {
+            "name": "H1",
+            "ok": true
+          },
+          {
+            "name": "H2",
+            "ok": true
+          },
+          {
+            "name": "H3",
+            "ok": true
+          }
+        ],
+        "checkpoints": [
+          {
+            "name": "废墟入口",
+            "ok": true
+          },
+          {
+            "name": "窄口",
+            "ok": true
+          },
+          {
+            "name": "营地内",
+            "ok": true
+          },
+          {
+            "name": "营地后门",
+            "ok": true
+          },
+          {
+            "name": "石柱长廊",
+            "ok": true
+          },
+          {
+            "name": "土路",
+            "ok": true
+          },
+          {
+            "name": "草场",
+            "ok": true
+          },
+          {
+            "name": "石柱废墟",
+            "ok": true
+          },
+          {
+            "name": "护城河",
+            "ok": true
+          },
+          {
+            "name": "庭院入口",
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "stage": 3,
+      "gridHash": 217973630,
+      "jeepCount": 0,
+      "environmentCount": 0,
+      "bodyVertices": 6828,
+      "wheelVertices": 240,
+      "sharedAcrossStages": true,
+      "wheelsShareGeometry": true,
+      "render": {
+        "calls": 56,
+        "tris": 145454,
+        "geometries": 66,
+        "textures": 2,
+        "gl": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Ti (0x00002803) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      },
+      "reach": {
+        "cells": 11812,
+        "pad": true,
+        "boss": true,
+        "huts": [
+          {
+            "name": "P1",
+            "ok": true
+          },
+          {
+            "name": "P2",
+            "ok": true
+          },
+          {
+            "name": "P3",
+            "ok": true
+          },
+          {
+            "name": "P4",
+            "ok": true
+          }
+        ],
+        "checkpoints": [
+          {
+            "name": "货场",
+            "ok": true
+          },
+          {
+            "name": "停车场",
+            "ok": true
+          },
+          {
+            "name": "船坞",
+            "ok": true
+          },
+          {
+            "name": "仓库货场",
+            "ok": true
+          },
+          {
+            "name": "栈桥",
+            "ok": true
+          },
+          {
+            "name": "俘虏棚货场",
+            "ok": true
+          },
+          {
+            "name": "仓库通道",
+            "ok": true
+          },
+          {
+            "name": "通道东口",
+            "ok": true
+          },
+          {
+            "name": "通道西口",
+            "ok": true
+          },
+          {
+            "name": "停机坪",
+            "ok": true
+          },
+          {
+            "name": "炮台院",
+            "ok": true
+          },
+          {
+            "name": "码头",
+            "ok": true
+          }
+        ]
+      }
+    }
+  ]
+}

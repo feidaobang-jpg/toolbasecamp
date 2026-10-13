@@ -1,11 +1,11 @@
-// 第一关开局美术试改：只补原模型细节，不改配色、地形、碰撞或游戏随机数。
+// 全关共用吉普精修与第一关开局地物细节：不改配色、地形、碰撞或游戏随机数。
 import { part, merged, mesh, cached, C } from './models.js';
 import { TEST, params } from './core.js';
 export const openingArtEnabled = !(TEST && params.get('art') === 'before');
 
-export function refineOpeningJeep(obj, team) {
+export function refineJeepDetails(obj, team) {
   const base = obj.body.children[0];
-  base.geometry = cached('openingJeep-' + team, () => {
+  base.geometry = cached('detailedJeep-' + team, () => {
     const b = [base.geometry.clone()];
     // 格栅保留原来的黑底，用浅金属竖条提供近景结构。
     for (let i = -3; i <= 3; i++) part(b, 'box', 0x879b89, [i * .115, .65, -1.29], [.045, .24, .03]);
@@ -22,7 +22,7 @@ export function refineOpeningJeep(obj, team) {
     return merged(b);
   });
   const wheel = obj.wheels[0];
-  const geo = cached('openingJeepWheel', () => {
+  const geo = cached('detailedJeepWheel', () => {
     const b = [wheel.geometry.clone()];
     for (let k = 0; k < 10; k++) {
       const a = k * Math.PI / 5;
@@ -38,7 +38,7 @@ export function refineOpeningJeep(obj, team) {
   });
   // 合并到原轮胎，继续沿用真实车轮动画，不增加车轮绘制批次。
   obj.wheels.forEach(w => { w.geometry = geo; });
-  base.name = 'opening-jeep-detail';
+  base.name = 'jeep-detail';
 }
 
 export function openingStaticDetail(s) {

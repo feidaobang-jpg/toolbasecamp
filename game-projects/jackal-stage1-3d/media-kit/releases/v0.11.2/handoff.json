@@ -1,0 +1,45 @@
+{
+  "version": "v0.11.2",
+  "status": "validated_ready_to_publish",
+  "authorization": "User accepted extending shared jeep detail to all existing stages; keep stage1 opening details, preserve cartoon style; other games unchanged. Prior local-only preview gate resolved.",
+  "task_id": "01a133ef-17fb-7b32-8c69-9f5b9b94f1f8-jeep-art-07",
+  "scope": [
+    "all 3 stages shared jeep grille, tow rings, side steps, hood locks, tail lights, wheel tread and hubs",
+    "previously tested stage1 opening hut/gate/wall details only"
+  ],
+  "website": "pending",
+  "toy": {
+    "id": 39863936092160,
+    "slug": "feidao-jackal-3d",
+    "status": "not_submitted",
+    "package": "D:\\project\\task-artifacts\\art-rollout-20261013\\jackal-v0.11.2.zip",
+    "version": "v0.11.2",
+    "index_bytes": 10198,
+    "zip_bytes": 8838299,
+    "zip_sha256": "ec35f7fbef36e8a9efcba06aa3681605a5550f2b7611eb932a63f385952acc45",
+    "bundle_sha256": "74bbe27753678119af96ac76352e74746197eabe18a1009f350db553c2e6b478",
+    "old_bundle_bytes": 720923,
+    "bundle_bytes": 723336,
+    "old_gzip_bytes": 209302,
+    "gzip_bytes": 210250
+  },
+  "bilibili": {
+    "decision": "deferred_accumulating",
+    "reason": "Ordinary cosmetic update; last public description verification 2026-10-12T21:15:36+08:00, less than 7 days; no changed gameplay instructions."
+  },
+  "validation": {
+    "all_stage_collision_and_reachability": "passed",
+    "stage2_3_added_draw_calls": 0,
+    "stage1_details_hide_on_destruction": true,
+    "four_team_models_and_rejoin": "passed; presentation stubbed, not network transport test",
+    "native_stage2": "W moved 45→48.15, J fired9 shots, all4 wheels rotation -8.1987",
+    "performance": "RTX4060Ti, same browser and position,20sec held camera orbit: before169.901/after169.902FPS,p95 6ms both,>50ms frames0; not real-phone performance",
+    "dynamic_video": "third stage four camera views,20.404sec,613frames,1280x720",
+    "mobile": "pending Toy preview",
+    "privacy": "Only author link is Bili; retained game coop WebSocket, no website account API/form. Room password is not website account password.",
+    "toy_doctor": "passed; existing unhashed JS/CSS filename warning"
+  },
+  "artifacts": "D:\\project\\task-artifacts\\art-rollout-20261013",
+  "screenshot": "D:\\project\\task-artifacts\\art-rollout-20261013\\jeep-stage3-after.png",
+  "video": "D:\\project\\task-artifacts\\art-rollout-20261013\\qa-jeep-all-views.webm"
+}

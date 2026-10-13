@@ -1,5 +1,5 @@
 {
-  "status": "local_preview_ready_for_user_test",
+  "status": "user_accepted_superseded_by_v0.11.2",
   "authorization": "Only stage1/opening; user tests before deciding later stages/remakes; do not merge/publish this preview until user decides.",
   "version": "v0.11.1-opening-art-local",
   "branch": "codex/three-art-previews-20261013",
@@ -44,7 +44,12 @@
   "notification_event": {
     "id": "jackal-opening-art-test-20261013",
     "reason": "Approval",
-    "status": "pending_user_test"
+    "status": "resolved"
   },
-  "preserve_workspace_and_server": "Required for user local preview; no cleanup while review pending."
+  "preserve_workspace_and_server": "Preview gate resolved; original media retained outside repository.",
+  "approval_resolution": {
+    "user": "按你说的做吧",
+    "scope": "All stages shared jeep detail; other games unchanged",
+    "release": "../v0.11.2/handoff.json"
+  }
 }

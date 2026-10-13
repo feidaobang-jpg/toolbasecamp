@@ -1,4 +1,4 @@
-import { openingArtEnabled, refineOpeningJeep } from './opening-art.js';
+import { openingArtEnabled, refineJeepDetails } from './opening-art.js';
 import { markTree, treeState, applyTree, scalarState } from '../../../public/js/game/coop.js';
 // 玩法核心：吉普车、武器、敌军 AI、俘虏救援、检查点、各关 Boss、过关与结算。
 import * as THREE from 'three';
@@ -266,7 +266,7 @@ const TEAM_COLORS = [M.C.olive, 0xa56b53, 0x648eaa, 0xb79b52];
 function spawnOffset(slot) { return G.coop ? slot * 2.2 : 0; }
 function makePlayer(slot = 0) {
   const obj = M.makeJeep(G.coop ? TEAM_COLORS[slot] : M.C.olive);
-  if (L.STAGE_NO === 1 && openingArtEnabled) refineOpeningJeep(obj, G.coop ? TEAM_COLORS[slot] : M.C.olive);
+  if (openingArtEnabled) refineJeepDetails(obj, G.coop ? TEAM_COLORS[slot] : M.C.olive);
   markTree(obj.root);
   scene.add(obj.root);
   P = { slot, weapon: 1, carried: 0, x: L.START.x + spawnOffset(slot), y: L.START.y, dir: L.START.dir, ang: DIR8[L.START.dir].a, r: 0.82, alive: true, invuln: 0, shield: 0, armor: G.armorMax || 3, hitFlash: 0, smokeT: 0, respawnT: 0, fireCd: 0, bombCd: 0, moving: false, obj, wheelSpin: 0, bob: 0, dust: 0, speed: 8.6, vis: null };
