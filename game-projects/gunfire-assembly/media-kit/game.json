@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-anonymous-v0.1.3",
+  "current_version": "web-reload-touch-v0.1.5",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
