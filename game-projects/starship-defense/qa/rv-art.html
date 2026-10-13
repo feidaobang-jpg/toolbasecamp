@@ -2,10 +2,12 @@
 <style>body{margin:0;background:#101820;color:#eee;font:14px system-ui}nav{padding:10px;display:flex;gap:8px;flex-wrap:wrap}button{padding:9px;cursor:pointer}iframe{width:100%;height:720px;border:0}pre{white-space:pre-wrap;padding:12px}</style>
 <nav><button id="street">街道对照</button><button id="front">房车正面</button><button id="combat">住宅区实战（20秒）</button><button id="drive">驾驶与转镜头（20秒）</button><button id="views">四个视角回归</button><button id="restore">退出与重进回归</button><button id="behaviour">碰撞存档与服务回归</button><button id="record">录制20秒实机</button></nav>
 <iframe id="game" src="../../../public/html/game/starship-defense/index.html?qa=1"></iframe><pre id="result">等待游戏加载。本页仅供开发验证；重定位和模拟按键均明确标识，不随Toy发布。</pre>
+<button id="desktop">QA电脑高画质</button><button id="touch">QA触屏流畅画质</button>
 <script>
 const frame=document.querySelector('iframe'),out=document.querySelector('pre'),sleep=ms=>new Promise(r=>setTimeout(r,ms));let running=false;
 if(new URLSearchParams(location.search).has('baseline'))frame.src='/baseline/public/html/game/starship-defense/index.html?qa=1';
 const get=()=>frame.contentWindow.__gameQA,win=()=>frame.contentWindow;
+document.querySelector('#desktop').onclick=()=>{get().setDeviceMode('desktop');win().location.reload();out.textContent='按电脑模式重新启动，初始化高画质';};document.querySelector('#touch').onclick=()=>{get().setDeviceMode('touch');win().location.reload();out.textContent='按触屏模式重新启动，初始化流畅画质';};
 function mute(q){q.AudioSys.init();if(q.AudioSys.master)q.AudioSys.master.gain.value=0;}
 function position(scene='street'){
  const q=get();if(!q)throw Error('游戏未就绪');q.rvBreakout.start();mute(q);q.Game.state='paused';q.Game.msgTimer=0;frame.contentDocument.getElementById('msg').classList.add('hidden');

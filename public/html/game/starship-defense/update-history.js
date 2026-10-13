@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.37.1';
+export const GAME_VERSION='0.37.2';
 export const UPDATE_HISTORY=[
+  {version:'0.37.2',date:'2026-10-13',title:'房车与城镇画面细化',changes:[
+    '装甲房车增加车窗边框、轮毂、保险杠、车顶装备与实际车灯照明。',
+    '废弃城镇加入夕阳冷暖光、远处天际线、建筑窗框与街边细节；探索路线、战斗规则与原有存档保持兼容。']},
   {version:'0.37.1',date:'2026-10-13',title:'一人高山坡与最近目标瞄准',changes:[
     '六处野外山坡降到约一个角色高，山顶堡垒、行走与碰撞同步调整。',
     '自动瞄准改为锁定射程内离自己最近的敌人，不再优先首领、精英或镜头正前方；电脑、触屏与联机一致。']},
