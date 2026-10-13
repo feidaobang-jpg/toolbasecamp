@@ -30,20 +30,20 @@
     "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_YYo3LSfJ/index.html",
-    "verified_at": "2026-10-13T11:04:41.015087+08:00",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_Rch25BB2/index.html",
-    "submitted_version": "remix-entry1-views4-anonymous1",
-    "submitted_at": "2026-10-13T02:55:18.702761+00:00",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Iju44kHU/index.html",
+    "verified_at": "2026-10-13T14:59:45.528834+08:00",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_g95ek9A5/index.html",
+    "submitted_version": "remix-entry1-views4-guest1",
+    "submitted_at": "2026-10-13T14:51:19.635903+08:00",
     "video_bindings": [
       "BV1TepK69Eet",
       "BV1Wqaz6AEJb"
     ],
-    "release_record": "releases/remix-entry1-views4-anonymous1/handoff.json",
-    "published_version": "remix-entry1-views4-anonymous1",
+    "release_record": "releases/remix-entry1-views4-guest1/handoff.json",
+    "published_version": "remix-entry1-views4-guest1",
     "published_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
-    "package_sha256": "ab43d26b0be2eb789bb3faf82f5352c1fe99236396cd89410f2a5f050837d416",
+    "note": "正式入口已用未登录独立浏览器核验，访问者水印关闭；默认匿名联机与单机直接进入，账号功能按需使用。",
+    "package_sha256": "b71d2e0b3f3941b229974d902bff1ac64db131480b1547d6e0f1e00a4831a220",
     "pending_updates": [
       {
         "version": "toy3dui2",
@@ -128,29 +128,40 @@
         "summary": "新玩家默认魔改、保留已有选择、经典35关直接入口、标题与宣传先展示魔改看点。"
       }
     ],
-    "published_verified_at": "2026-10-12T12:26:21.857Z",
+    "published_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "status": "published",
-    "package_hash": "0e66f8a1f269f1be7731630a6779ee241c1d8521e6c55a7815a5ad4d8ce442d2",
+    "package_hash": "b71d2e0b3f3941b229974d902bff1ac64db131480b1547d6e0f1e00a4831a220",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_AEEST9eQ/index.html",
-    "last_published_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
-    "last_successful_sync_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
-    "last_successful_sync_at": "2026-10-12T12:26:21.857Z",
-    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "last_published_version": "remix-entry1-views4-guest1",
+    "last_successful_sync_version": "remix-entry1-views4-guest1",
+    "last_successful_sync_at": "2026-10-13T14:59:45.528834+08:00",
+    "public_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "public_runtime_evidence": {
+      "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
       "status": "public_verified",
-      "at": "2026-10-12T12:26:21.857Z",
+      "at": "2026-10-13T14:59:45.528834+08:00",
       "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
-      "revision": "v25479",
-      "checks": [
-        "runtime loaded",
-        "lobby connected",
-        "optional nickname button enabled"
+      "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+      "version": "remix-entry1-views4-guest1",
+      "package_sha256": "b71d2e0b3f3941b229974d902bff1ac64db131480b1547d6e0f1e00a4831a220",
+      "authenticated": false,
+      "sdk_mocked": false,
+      "viewports": [
+        "1280x720",
+        "844x390",
+        "390x844"
       ],
-      "no_profile_request_or_room_created": true
+      "checks": [
+        "no Toy login gate",
+        "readonly names after identity toggle",
+        "single player started without login",
+        "real anonymous room created and immediately exited"
+      ],
+      "record": "game-projects/site-games/releases/guest-entry-20261013/public-qa.json"
     },
-    "version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+    "version": "remix-entry1-views4-guest1",
     "website_verified_at": "2026-10-07T21:52:19+08:00",
-    "public_verified_version": "remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1",
+    "public_verified_version": "remix-entry1-views4-guest1",
     "public_entry": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
     "public_content_url_note": "正式入口当前iframe地址，已核验魔改推荐和经典按钮。",
     "title": "坦克大战 3D",
@@ -160,15 +171,26 @@
       "task_id": "codex-01a11f9e-64b0-7780-97b0-527d03024f44-20261009-toy-sync-01",
       "at": "2026-10-09T15:48:29.454287+08:00"
     },
-    "watermark_enabled": true,
-    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
-    "public_runtime_revision": "v25479",
-    "pending_guest_entry": {
-      "version": "remix-entry1-views4-guest1",
-      "watermark_enabled": false,
-      "status": "prepared_not_submitted",
-      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
-    }
+    "watermark_enabled": false,
+    "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+    "public_runtime_revision": null,
+    "public_verified_without_login": true,
+    "public_runtime_history": [
+      {
+        "status": "public_verified",
+        "at": "2026-10-12T12:26:21.857Z",
+        "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+        "revision": "v25479",
+        "checks": [
+          "runtime loaded",
+          "lobby connected",
+          "optional nickname button enabled"
+        ],
+        "no_profile_request_or_room_created": true
+      }
+    ],
+    "package_hash_kind": "zip_sha256",
+    "previous_public_runtime_revision": "v25479"
   },
   "merged_from": {
     "game": "tank-battle",

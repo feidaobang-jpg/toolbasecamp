@@ -1,0 +1,43 @@
+{
+  "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
+  "version": "web-guest-v0.1.6",
+  "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+  "summary": "游客先玩；公开名称只来自系统或已授权并严格检测的B站昵称，云档和成绩提交按需连接账号",
+  "website": {
+    "status": "deployed_verified",
+    "commit": "b7627cf75568dd469fde1b576683ed1746976283",
+    "verified_at": "2026-10-13T14:50:19.984897+08:00"
+  },
+  "toy": {
+    "id": "43022175699968",
+    "status": "published_guest_verified",
+    "platform_status": "published",
+    "version": "web-guest-v0.1.6",
+    "package_sha256": "d610a6cb1281714393a4cd4d8ea4f79029fca4f28a6dcb0f61e1c16dce275156",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_uwmo3AmP/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_56c41s52/index.html",
+    "submitted_at": "2026-10-13T14:52:11.890852+08:00",
+    "submitted_once": true,
+    "watermark_enabled": false,
+    "requested_watermark_enabled": false,
+    "public_verified_at": "2026-10-13T14:59:45.528834+08:00",
+    "public_url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "source_commit": "b7627cf75568dd469fde1b576683ed1746976283"
+  },
+  "verification": {
+    "unit_cases": 17,
+    "identity_compatibility_cases": 17,
+    "cloud_save_cases": 26,
+    "package_browser_cases": 11,
+    "privacy_and_backup_cases": 16,
+    "physical_phone": false,
+    "method": "Isolated mock-SDK package regressions and fresh unauthenticated browsers on actual website/Toy previews/public entries; mobile viewport simulation only",
+    "actual_website_cases": 15,
+    "actual_toy_preview_cases": 15,
+    "actual_guest_public_cases": 15
+  },
+  "common_record": "game-projects/site-games/releases/guest-entry-20261013/handoff.json",
+  "artifacts": "D:\\project\\task-artifacts\\toy-guest-play-20261013",
+  "bilibili": "deferred_accumulating",
+  "taptap": "not_requested"
+}

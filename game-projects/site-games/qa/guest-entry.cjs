@@ -1,7 +1,7 @@
 // Real Toy/Web entry regression in fresh browsers. No account cookies or SDK mocks.
 const {chromium}=require('C:/Users/37818/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const targets=JSON.parse(fs.readFileSync(process.env.GUEST_ENTRY_TARGETS,'utf8')).games;
+const targets=JSON.parse(fs.readFileSync(process.env.GUEST_ENTRY_TARGETS,'utf8')).games.filter(g=>!process.env.GUEST_ENTRY_GAMES||process.env.GUEST_ENTRY_GAMES.split(',').includes(g.game));
 const mode=process.env.GUEST_ENTRY_MODE||'public';
 const out=process.env.GUEST_ENTRY_OUT||path.join(require('node:os').tmpdir(),'guest-entry-qa');
 (async()=>{
@@ -43,6 +43,7 @@ const out=process.env.GUEST_ENTRY_OUT||path.join(require('node:os').tmpdir(),'gu
       if(!native)await frame.locator('[data-do="close"]').click();
       else if(viewport.width!==1280||mode!=='public')await frame.locator('#lobby [data-act="coop-back"]').click();
       if(target.game==='gunfire-assembly'){
+        if(!await frame.locator('[data-vs-ai="normal"]').isVisible())await frame.locator('#btnVersus').click();
         await frame.locator('[data-vs-ai="normal"]').click();
       }else if(target.game==='starship-defense'){
         await frame.locator('#btnStart').click();

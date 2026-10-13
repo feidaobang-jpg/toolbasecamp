@@ -6,21 +6,21 @@
     "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "visibility": "public",
     "review_status": "published",
-    "verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "verified_at": "2026-10-13T14:59:45.528834+08:00",
     "video_bindings": [
       "BV1EyHz6wE5u"
     ],
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_Q0p0L694/index.html",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_Lwn2USaB/index.html",
     "preview_verified_at": "2026-10-12T16:32:56+08:00",
     "title": "赤色要塞 3D",
     "category": "GAME",
-    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
-    "submitted_at": "2026-10-13T02:55:24.584433+00:00",
+    "note": "正式入口已用未登录独立浏览器核验，访问者水印关闭；默认匿名联机与单机直接进入，账号功能按需使用。",
+    "submitted_at": "2026-10-13T14:51:22.001515+08:00",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_b28JNEPp/index.html",
-    "submitted_version": "v0.11.1-anonymous1",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_umfcBOH5/index.html",
-    "release_record": "releases/v0.11.1-anonymous1/handoff.json",
-    "published_version": "v0.11.1-anonymous1",
+    "submitted_version": "v0.11.1-guest1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_VxbS8FRP/index.html",
+    "release_record": "releases/v0.11.1-guest1/handoff.json",
+    "published_version": "v0.11.1-guest1",
     "published_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
     "pending_updates": [
       {
@@ -137,29 +137,46 @@
         "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
       }
     ],
-    "last_successful_sync_at": "2026-10-12T12:18:21.938Z",
-    "last_successful_sync_version": "v0.11.0-input-safety1",
-    "package_sha256": "9935f5bd5c62cccf287d7a6baea232bbb96bc9f8d56acea7e6d7dbd2c4eadb74",
-    "published_verified_at": "2026-10-12T12:18:21.938Z",
+    "last_successful_sync_at": "2026-10-13T14:59:45.528834+08:00",
+    "last_successful_sync_version": "v0.11.1-guest1",
+    "package_sha256": "f82394f7812dd6b14b818fbf71c41bbd377d535c80a952c9d5833051b1d13ec1",
+    "published_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "package_hash_method": "UTF-8 sorted relative path:sha256 LF",
     "status": "published",
-    "package_hash": "ae3240d8e01d915e4909d7d0e6684894769a9b0d5a952570e89d41712b54a630",
-    "version": "v0.11.0-input-safety1",
+    "package_hash": "f82394f7812dd6b14b818fbf71c41bbd377d535c80a952c9d5833051b1d13ec1",
+    "version": "v0.11.1-guest1",
     "package": {
       "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\jackal-stage1-3d.zip",
       "sha256": "ae3240d8e01d915e4909d7d0e6684894769a9b0d5a952570e89d41712b54a630",
       "bytes": 8836849,
       "submitted": true
     },
-    "last_published_version": "v0.11.0-input-safety1",
+    "last_published_version": "v0.11.1-guest1",
     "status_verified": "toy mylist published；正式入口combo-fire 46/46，实际v0.8.0",
-    "public_verified_version": "v0.11.0-input-safety1",
-    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_verified_version": "v0.11.1-guest1",
+    "public_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "public_runtime_evidence": {
+      "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
       "status": "public_verified",
-      "at": "2026-10-12T12:18:21.938Z",
+      "at": "2026-10-13T14:59:45.528834+08:00",
       "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
-      "evidence": "Public revision v25470; lobby renders new moderation notice and enabled optional profile button. No profile request or room creation performed."
+      "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+      "version": "v0.11.1-guest1",
+      "package_sha256": "f82394f7812dd6b14b818fbf71c41bbd377d535c80a952c9d5833051b1d13ec1",
+      "authenticated": false,
+      "sdk_mocked": false,
+      "viewports": [
+        "1280x720",
+        "844x390",
+        "390x844"
+      ],
+      "checks": [
+        "no Toy login gate",
+        "readonly names after identity toggle",
+        "single player started without login",
+        "real anonymous room created and immediately exited"
+      ],
+      "record": "game-projects/site-games/releases/guest-entry-20261013/public-qa.json"
     },
     "website_verified_at": "2026-10-07T21:52:19+08:00",
     "public_entry": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
@@ -170,15 +187,20 @@
       "at": "2026-10-09T15:48:29.546449+08:00"
     },
     "preserved_package": "D:/project/task-artifacts/jackal-stage3-20261012/toy-v0.11.0-package",
-    "watermark_enabled": true,
-    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
-    "public_runtime_revision": "v25470",
-    "pending_guest_entry": {
-      "version": "v0.11.1-guest1",
-      "watermark_enabled": false,
-      "status": "prepared_not_submitted",
-      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
-    }
+    "watermark_enabled": false,
+    "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+    "public_runtime_revision": null,
+    "public_verified_without_login": true,
+    "public_runtime_history": [
+      {
+        "status": "public_verified",
+        "at": "2026-10-12T12:18:21.938Z",
+        "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+        "evidence": "Public revision v25470; lobby renders new moderation notice and enabled optional profile button. No profile request or room creation performed."
+      }
+    ],
+    "package_hash_kind": "zip_sha256",
+    "previous_public_runtime_revision": "v25470"
   },
   "game_id": "jackal-stage1-3d",
   "launch": {

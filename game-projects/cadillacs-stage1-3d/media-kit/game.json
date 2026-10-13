@@ -38,24 +38,24 @@
     "category": "GAME",
     "visibility": "public",
     "status": "published",
-    "submitted_at": "2026-10-13T02:55:36.396355+00:00",
+    "submitted_at": "2026-10-13T14:52:09.276026+08:00",
     "package": {
       "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\cadillacs-stage1-3d.zip",
       "sha256": "ab47a688b73868eaace12808c9fe2eb629464626599b7d40bb471ca7c94b971f",
       "bytes": 20361412,
       "submitted": true
     },
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_AFFhu3Xb/index.html",
-    "note": "昵称与房间名安全整改包已过审；正式入口可用，访问者水印开启。",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_c7Bgxs64/index.html",
+    "note": "正式入口已用未登录独立浏览器核验，访问者水印关闭；默认匿名联机与单机直接进入，账号功能按需使用。",
     "status_verified": "v0.10.1 published；公开运行版本v0.10.1、关卡只有第一及第二关",
     "bound_videos": [
       "BV18XHW66E55"
     ],
     "review_status": "published",
-    "version": "v0.11.0-hellroad.1-privacy1-input-safety1",
-    "verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "version": "v0.11.0-hellroad.1-menu-desk1-guest1",
+    "verified_at": "2026-10-13T14:59:45.528834+08:00",
     "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-    "last_published_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "last_published_version": "v0.11.0-hellroad.1-menu-desk1-guest1",
     "pending_updates": [
       {
         "version": "v0.2.1",
@@ -135,11 +135,11 @@
         "release_record": "releases/backfill-20261010/release-status.json"
       }
     ],
-    "submitted_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_D9g3jDBe/index.html",
-    "release_record": "releases/v0.11.0-hellroad.1-menu-desk1-anonymous1/handoff.json",
-    "published_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
-    "published_verified_at": "2026-10-12T12:26:46.405Z",
+    "submitted_version": "v0.11.0-hellroad.1-menu-desk1-guest1",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_9u76MDTV/index.html",
+    "release_record": "releases/v0.11.0-hellroad.1-menu-desk1-guest1/handoff.json",
+    "published_version": "v0.11.0-hellroad.1-menu-desk1-guest1",
+    "published_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "previous_published_version": "v0.10.0",
     "previous_published_verified_at": "2026-10-07T21:52:04+08:00",
     "published_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -154,23 +154,34 @@
       "status": "published",
       "verified_at": "2026-10-06T23:38:00+08:00"
     },
-    "public_verified_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
+    "public_verified_version": "v0.11.0-hellroad.1-menu-desk1-guest1",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_1jswCVjT/index.html",
-    "last_successful_sync_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
-    "last_successful_sync_at": "2026-10-12T12:26:46.405Z",
+    "last_successful_sync_version": "v0.11.0-hellroad.1-menu-desk1-guest1",
+    "last_successful_sync_at": "2026-10-13T14:59:45.528834+08:00",
     "package_tree_sha256": "97073435dcaa5c8b1c380bd6abc6acbef489335d1a824758254dceb2ac7fac4b",
-    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "public_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "public_runtime_evidence": {
+      "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
       "status": "public_verified",
-      "at": "2026-10-12T12:26:46.405Z",
+      "at": "2026-10-13T14:59:45.528834+08:00",
       "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
-      "revision": "v25480",
-      "checks": [
-        "runtime loaded",
-        "lobby rendered",
-        "optional nickname button enabled"
+      "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+      "version": "v0.11.0-hellroad.1-menu-desk1-guest1",
+      "package_sha256": "50f6f59426db1ba981d1326a09e0e7b0a8210041edcc7866fefbe90c75f5e645",
+      "authenticated": false,
+      "sdk_mocked": false,
+      "viewports": [
+        "1280x720",
+        "844x390",
+        "390x844"
       ],
-      "no_profile_request_or_room_created": true
+      "checks": [
+        "no Toy login gate",
+        "readonly names after identity toggle",
+        "single player started without login",
+        "real anonymous room created and immediately exited"
+      ],
+      "record": "game-projects/site-games/releases/guest-entry-20261013/public-qa.json"
     },
     "website_verified_at": "2026-10-07T21:52:19+08:00",
     "public_entry": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
@@ -179,7 +190,7 @@
     "pending_note": "",
     "package_hash_method": "sha256 of canonical sorted relative-path to file-sha256 map",
     "public_runtime_verified_version": "v0.10.1",
-    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
     "current_public_verification": "verified",
     "channel_authorization": {
       "instruction": "昨天没发布的都做一下",
@@ -191,15 +202,27 @@
     "published_at": null,
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
     "directory_manifest_sha256": "e0758388eafb0ed7633a23252e279c7013b69302bf57c1dae695b9ad038b5efd",
-    "package_sha256": "a9658ba81e1a31c0ed1da225ad0ac5d39e0dcb654ba015ec4b49b3605c5153db",
-    "watermark_enabled": true,
-    "public_runtime_revision": "v25480",
-    "pending_guest_entry": {
-      "version": "v0.11.0-hellroad.1-menu-desk1-guest1",
-      "watermark_enabled": false,
-      "status": "prepared_not_submitted",
-      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
-    }
+    "package_sha256": "50f6f59426db1ba981d1326a09e0e7b0a8210041edcc7866fefbe90c75f5e645",
+    "watermark_enabled": false,
+    "public_runtime_revision": null,
+    "public_verified_without_login": true,
+    "public_runtime_history": [
+      {
+        "status": "public_verified",
+        "at": "2026-10-12T12:26:46.405Z",
+        "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+        "revision": "v25480",
+        "checks": [
+          "runtime loaded",
+          "lobby rendered",
+          "optional nickname button enabled"
+        ],
+        "no_profile_request_or_room_created": true
+      }
+    ],
+    "package_hash": "50f6f59426db1ba981d1326a09e0e7b0a8210041edcc7866fefbe90c75f5e645",
+    "package_hash_kind": "zip_sha256",
+    "previous_public_runtime_revision": "v25480"
   },
   "website_version": "v0.11.0-hellroad.1-privacy1-input-safety1",
   "controls": "左下摇杆，右下等大2×2 J红/K绿/U金/I蓝（按已实现动作显示），右上C视角/暂停/全屏；空白处上下左右拖动观察、Q/E左右转头、C重置预设；菜单支持键盘选择自动/电脑/触屏，第一人称慢速转头，其余视角移动及时转身。I独立冲刺松键保持，方向归零停止；",

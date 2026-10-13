@@ -48,7 +48,7 @@
     "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
     "visibility": "PUBLIC",
     "review_status": "published",
-    "verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "verified_at": "2026-10-13T14:59:45.528834+08:00",
     "video_bindings": [
       "BV1Ujad6DEuf",
       "BV1WbHq6eEBt",
@@ -56,16 +56,16 @@
       "BV1xdpx63ETu"
     ],
     "linked_game_video": "https://www.bilibili.com/video/BV1Ujad6DEuf",
-    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_K3HxzO6f/index.html",
+    "submission_preview_url": "https://www.bilibili.com/toy/preview/preview_r5YzADS3/index.html",
     "title": "虫潮围城",
     "zip_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
     "submitted_date": "2026-10-12",
-    "release_record": "releases/web-anonymous-v0.36.7/handoff.json",
-    "submitted_version": "web-anonymous-v0.36.7",
-    "published_version": "web-anonymous-v0.36.7",
-    "preview_url": "https://www.bilibili.com/toy/preview/preview_2q7sLW5w/index.html",
-    "note": "v0.36.6已过审且正式菜单公开核验：跨游戏入口移除，自身模式和旧存档入口保留。",
-    "package_sha256": "2a99c0665a6b58462e149f55a107ca59923220a0b877922914af9aae0c492fdb",
+    "release_record": "releases/web-guest-v0.36.9/handoff.json",
+    "submitted_version": "web-guest-v0.36.9",
+    "published_version": "web-guest-v0.36.9",
+    "preview_url": "https://www.bilibili.com/toy/preview/preview_cFZxl2an/index.html",
+    "note": "正式入口已用未登录独立浏览器核验，访问者水印关闭；默认匿名联机与单机直接进入，账号功能按需使用。",
+    "package_sha256": "45c9d8763070c6482c17ef4f9c8cd411d15c25278cda44d499a48e734fb07052",
     "pending_updates": [
       {
         "version": "web-controls-v0.18.2",
@@ -118,28 +118,39 @@
       }
     ],
     "published_entry": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-    "published_verified_at": "2026-10-13T02:25:36.275437+00:00",
+    "published_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "status": "published",
-    "package_hash": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
+    "package_hash": "45c9d8763070c6482c17ef4f9c8cd411d15c25278cda44d499a48e734fb07052",
     "submission_time_note": "Exact submission time not persisted; receipts and final public status preserved.",
-    "submitted_at": "2026-10-13T02:55:37.676971+00:00",
-    "public_verified_at": "2026-10-13T11:04:41.015087+08:00",
+    "submitted_at": "2026-10-13T14:52:10.587034+08:00",
+    "public_verified_at": "2026-10-13T14:59:45.528834+08:00",
     "public_runtime_evidence": {
+      "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
       "status": "public_verified",
-      "at": "2026-10-12T12:29:13.804Z",
+      "at": "2026-10-13T14:59:45.528834+08:00",
       "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
-      "revision": "v25481",
-      "checks": [
-        "runtime loaded",
-        "lobby rendered",
-        "optional nickname button enabled"
+      "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
+      "version": "web-guest-v0.36.9",
+      "package_sha256": "45c9d8763070c6482c17ef4f9c8cd411d15c25278cda44d499a48e734fb07052",
+      "authenticated": false,
+      "sdk_mocked": false,
+      "viewports": [
+        "1280x720",
+        "844x390",
+        "390x844"
       ],
-      "no_profile_request_or_room_created": true
+      "checks": [
+        "no Toy login gate",
+        "readonly names after identity toggle",
+        "single player started without login",
+        "real anonymous room created and immediately exited"
+      ],
+      "record": "game-projects/site-games/releases/guest-entry-20261013/public-qa.json"
     },
-    "version": "web-fps-mouse-v0.36.2-input-safety1",
+    "version": "web-guest-v0.36.9",
     "published_at": "2026-10-11T10:03:07+00:00",
     "publication_time_note": "平台mtime记录为本次published状态时间；公开实测时间另记。",
-    "last_published_version": "web-independent-menu-v0.36.6",
+    "last_published_version": "web-guest-v0.36.9",
     "last_submitted_version": "web-independent-menu-v0.36.6",
     "submitted_preview_url": "https://www.bilibili.com/toy/preview/preview_G5Asukje/index.html",
     "current_public_verification": "verified",
@@ -149,11 +160,11 @@
       "recorded_at": "2026-10-10T03:02:52.978211+00:00",
       "scope": "2026-10-09 已完成并已发布网站的冻结版本补发；替代昨日其他渠道暂缓指令，不包含新视频或其他未完成开发"
     },
-    "last_successful_sync_version": "web-independent-menu-v0.36.6",
-    "last_successful_sync_at": "2026-10-13T02:25:36.275437+00:00",
-    "public_verified_version": "web-independent-menu-v0.36.6",
+    "last_successful_sync_version": "web-guest-v0.36.9",
+    "last_successful_sync_at": "2026-10-13T14:59:45.528834+08:00",
+    "public_verified_version": "web-guest-v0.36.9",
     "video_binding_verified_at": "2026-10-09T17:53:41.810316+08:00",
-    "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
+    "source_commit": "b7627cf75568dd469fde1b576683ed1746976283",
     "package": {
       "path": "D:\\project\\task-artifacts\\all-games-input-safety-20261012\\final-packages\\starship-defense.zip",
       "sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
@@ -161,16 +172,27 @@
       "submitted": true
     },
     "submitted_package_sha256": "7fdcde9a3e849d51d78b25ef6a67137e85b3addc3103a425aacf9e26ff31edd5",
-    "watermark_enabled": true,
-    "public_runtime_revision": "v25661",
+    "watermark_enabled": false,
+    "public_runtime_revision": null,
     "last_zip_sha256": "bcba022aad44d7c04553bfe0505b6d7e2b357512365323d27e8df814bbd80d38",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html",
-    "pending_guest_entry": {
-      "version": "web-guest-v0.36.9",
-      "watermark_enabled": false,
-      "status": "prepared_not_submitted",
-      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
-    }
+    "public_verified_without_login": true,
+    "public_runtime_history": [
+      {
+        "status": "public_verified",
+        "at": "2026-10-12T12:29:13.804Z",
+        "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+        "revision": "v25481",
+        "checks": [
+          "runtime loaded",
+          "lobby rendered",
+          "optional nickname button enabled"
+        ],
+        "no_profile_request_or_room_created": true
+      }
+    ],
+    "package_hash_kind": "zip_sha256",
+    "previous_public_runtime_revision": "v25661"
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-fps-mouse-v0.36.2-input-safety1",

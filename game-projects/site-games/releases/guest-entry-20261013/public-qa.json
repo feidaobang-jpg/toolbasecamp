@@ -1,0 +1,281 @@
+{
+  "mode": "public",
+  "method": "Fresh headless Edge contexts, actual remote games; no SDK mocks; mobile viewport simulation",
+  "results": [
+    {
+      "game": "jackal-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\jackal-stage1-3d-1280x720.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login",
+        "real anonymous room created and immediately left"
+      ]
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\jackal-stage1-3d-844x390.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\jackal-stage1-3d-390x844.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "starship-defense",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\starship-defense-1280x720.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login",
+        "real anonymous room created and immediately left"
+      ]
+    },
+    {
+      "game": "starship-defense",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\starship-defense-844x390.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "starship-defense",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\starship-defense-390x844.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "gunfire-assembly",
+      "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\gunfire-assembly-1280x720.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login",
+        "real anonymous room created and immediately left"
+      ]
+    },
+    {
+      "game": "gunfire-assembly",
+      "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\gunfire-assembly-844x390.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "gunfire-assembly",
+      "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part1\\gunfire-assembly-390x844.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part2\\tank-3d-1280x720.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login",
+        "real anonymous room created and immediately left"
+      ]
+    },
+    {
+      "game": "tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part2\\tank-3d-844x390.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "tank-3d",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part2\\tank-3d-390x844.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part2\\cadillacs-stage1-3d-1280x720.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login",
+        "real anonymous room created and immediately left"
+      ]
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part2\\cadillacs-stage1-3d-844x390.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "authenticated": false,
+      "screenshot": "D:\\project\\task-artifacts\\toy-guest-play-20261013\\public-part2\\cadillacs-stage1-3d-390x844.png",
+      "checks": [
+        "fresh context without account cookies",
+        "no Toy login gate",
+        "public name inputs remain readonly",
+        "default anonymous identity",
+        "single player starts without login"
+      ]
+    }
+  ]
+}

@@ -516,6 +516,18 @@
       "channels": [
         "bilibili"
       ]
+    },
+    {
+      "version": "web-guest-v0.36.9",
+      "record": "game-projects/site-games/releases/guest-entry-20261013/handoff.json",
+      "website_verified_at": "2026-10-13T14:50:19.984897+08:00",
+      "status": "deferred_accumulating",
+      "decision": "deferred_accumulating",
+      "reason": "此轮是试玩入口与身份的小改；上次相关简介公开核验在2026-10-12，未满7天。现有恢复入口和历史安全整改说明仍准确，本轮合并为一个稳定更新，不逐版本更新简介。",
+      "summary": "Toy游客直接进入单机与匿名联机；关闭无自由公开输入游戏的访问者水印，系统生成房间名称，保留可选B站昵称与按需云档。",
+      "channels": [
+        "bilibili"
+      ]
     }
   ],
   "comment_corrections": [
