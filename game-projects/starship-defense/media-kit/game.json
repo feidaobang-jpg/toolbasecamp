@@ -10,7 +10,7 @@
   },
   "name": "虫潮围城",
   "engine": "Three.js r152",
-  "current_version": "web-mode-select-v0.36.8",
+  "current_version": "web-guest-v0.36.9",
   "entrypoint": "public/html/game/starship-defense/index.html",
   "build_command": "cd game-projects/starship-defense && npm ci && npm run build; python build-toy.py",
   "release_intent": "web_demo",
@@ -164,7 +164,13 @@
     "watermark_enabled": true,
     "public_runtime_revision": "v25661",
     "last_zip_sha256": "bcba022aad44d7c04553bfe0505b6d7e2b357512365323d27e8df814bbd80d38",
-    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html"
+    "last_preview_url": "https://www.bilibili.com/toy/preview/preview_ywZcH4SZ/index.html",
+    "pending_guest_entry": {
+      "version": "web-guest-v0.36.9",
+      "watermark_enabled": false,
+      "status": "prepared_not_submitted",
+      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
+    }
   },
   "website_url": "https://www.zhengxiaohui.cn/html/game/starship-defense/index.html",
   "published_toy_version": "web-fps-mouse-v0.36.2-input-safety1",

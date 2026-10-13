@@ -100,16 +100,23 @@ export async function preparePublicIdentity(name,roomName,create,anonymous=false
 }
 // Each visit starts anonymously; a cached custom name must not become a login gate.
 export function installAnonymousControls(toggle,name,room,onChange=()=>{}){
+  let profileName='';
   const update=()=>{
     name.dataset.identityRevision=String(Number(name.dataset.identityRevision||0)+1);
-    name.readOnly=room.readOnly=toggle.checked;
-    if(toggle.checked){name.value='玩家';room.value='';}
-    name.placeholder=toggle.checked?'进入房间后自动分配':'自定义昵称（需安全检测）';
-    room.placeholder=toggle.checked?'自动生成房间名称':'留空自动生成';
+    // Public names come from the server or a checked official profile, never free input.
+    if(!profileName)toggle.checked=true;
+    name.readOnly=room.readOnly=true;
+    room.value='';
+    if(toggle.checked){profileName='';name.value='玩家';}else name.value=profileName;
+    name.placeholder='默认匿名；也可主动使用B站昵称';
+    room.placeholder='系统自动生成房间名称';
   };
   toggle.checked=true;update();toggle.addEventListener('change',()=>{update();onChange();});
-  for(const input of [name,room])input.addEventListener('input',()=>{name.dataset.identityRevision=String(Number(name.dataset.identityRevision||0)+1);onChange();});
-  return ()=>{toggle.checked=false;update();};
+  for(const input of [name,room])input.addEventListener('input',()=>{update();onChange();});
+  return nickname=>{
+    if(typeof nickname!=='string'||!isPublicTextApproved(nickname))return false;
+    profileName=nickname;toggle.checked=false;update();return true;
+  };
 }
 // Load capability ahead of the click so the profile request retains the player's gesture.
 export function installNicknameButton(button,input,status,onUse=()=>{}){
@@ -131,7 +138,7 @@ export function installNicknameButton(button,input,status,onUse=()=>{}){
       const checked=await checkPublicText(name,'nickname');
       if(input.value!==before||input.disabled||input.dataset.identityRevision!==revision)return;
       if(!checked.passed){if(!input.readOnly)input.value='';status(checked.status==='rejected'?'B站昵称未通过安全检测；可继续匿名联机':'暂时无法检测B站昵称；可继续匿名联机');return;}
-      onUse();input.value=name;status('已填入B站昵称；创建或加入房间时使用');
+      onUse(name);input.value=name;status('已填入B站昵称；创建或加入房间时使用，房间名称由系统生成');
     }catch{status('未获得B站昵称，可继续使用默认名称');}
     finally{button.disabled=input.disabled;}
   });

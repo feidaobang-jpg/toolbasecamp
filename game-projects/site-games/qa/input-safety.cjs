@@ -81,17 +81,23 @@ async function installMocks(context,toy=true){
       const defaultName=await name.inputValue();await profile.click();await status.filter({hasText:'可继续使用默认名称'}).waitFor();assert.equal(await name.inputValue(),defaultName);
       await page.evaluate(()=>window.__profileMode='reject');await profile.click();await status.filter({hasText:'B站昵称未通过安全检测'}).waitFor();assert.equal(await name.inputValue(),'玩家');assert.equal(await anonymous.isChecked(),true);
       await page.evaluate(()=>window.__profileMode='allow');await profile.click();await status.filter({hasText:'已填入B站昵称'}).waitFor();assert.equal(await name.inputValue(),'B站安全昵称');
-      assert.equal(await anonymous.isChecked(),false);assert.equal(await name.getAttribute('readonly'),null);
+      assert.equal(await anonymous.isChecked(),false);assert.equal(await name.getAttribute('readonly'),'');assert.equal(await room.getAttribute('readonly'),'');
       assert(!JSON.stringify(await page.evaluate(()=>__wire)).includes('not-to-be-transmitted'),'Toy OpenID leaked into shared transport');
-      await name.fill('blocked-name');await room.fill('安全房间');await create.click();await status.filter({hasText:'未通过安全检测'}).waitFor();
-      assert.equal(await name.inputValue(),'');assert.equal(await page.evaluate(()=>__wire.filter(m=>m.type==='create').length),0);
-      await name.fill('安全昵称');await room.fill('unavailable');await create.click();await status.filter({hasText:'暂时无法完成安全检测'}).waitFor();
-      assert.equal(await room.inputValue(),'');assert.equal(await page.evaluate(()=>__wire.filter(m=>m.type==='create').length),0);
-      await name.fill('安全昵称');await room.fill('安全房间');await create.click();await page.waitForFunction(()=>__wire.some(m=>m.type==='create'));
-      const sent=await page.evaluate(()=>__wire.find(m=>m.type==='create'));assert.equal(sent.name,'安全昵称');assert.equal(sent.roomName,'安全房间');
-      const checked=await page.evaluate(()=>__safetyRequests);assert(checked.some(r=>r.text===sent.name));assert(checked.some(r=>r.text===sent.roomName));
+      // Neither switching identity nor an input event may restore free public text.
+      await name.evaluate(el=>{el.value='blocked-name';el.dispatchEvent(new Event('input',{bubbles:true}));});
+      await room.evaluate(el=>{el.value='blocked-room';el.dispatchEvent(new Event('input',{bubbles:true}));});
+      assert.equal(await name.inputValue(),'B站安全昵称');assert.equal(await room.inputValue(),'');
+      await create.click();await page.waitForFunction(()=>__wire.some(m=>m.type==='create'));
+      const sent=await page.evaluate(()=>__wire.find(m=>m.type==='create'));assert.equal(sent.name,'B站安全昵称');assert.equal(sent.roomName,'');assert.equal(sent.anonymous,false);
+      const checked=await page.evaluate(()=>__safetyRequests);assert(checked.some(r=>r.text===sent.name));
+      assert(!checked.some(r=>r.text==='blocked-name'||r.text==='blocked-room'),'free input reached account moderation');
+      await leave();await anonymous.check();
+      const beforeRequests=await page.evaluate(()=>__safetyRequests.length+__profileCalls+__cloudReads);
+      await anonymous.click();assert.equal(await anonymous.isChecked(),true,'unchecking without an authorized profile restored custom identity');
+      assert.equal(await name.inputValue(),'玩家');assert.equal(await name.getAttribute('readonly'),'');assert.equal(await room.getAttribute('readonly'),'');
+      assert.equal(await page.evaluate(()=>__safetyRequests.length+__profileCalls+__cloudReads),beforeRequests,'identity toggle requested an account');
       assert.deepEqual(errors,[]);await page.screenshot({path:path.join(out,game+'-'+viewport.width+'x'+viewport.height+'.png')});
-      results.push({game,viewport,passed:true,checks:['anonymous default ignores cached custom names','logged-out anonymous create/join with zero account API calls','no startup cloud request','profile only on player click','profile denied/rejected anonymous fallback','profile nickname checked before filling','Toy OpenID not transmitted','old remote text hidden','rejected nickname cleared and not sent','unavailable room cleared and not sent','approved exact text sent','no page errors']});await context.close();
+      results.push({game,viewport,passed:true,checks:['anonymous default ignores cached custom names','logged-out anonymous create/join with zero account API calls','no startup cloud request','profile only on player click','profile denied/rejected anonymous fallback','profile nickname checked before filling','Toy OpenID not transmitted','old remote text hidden','name and room remain readonly after profile selection','injected input resets to authorized profile/system room','only approved official profile sent','anonymous selection never opens free input','no page errors']});await context.close();
     }
     const context=await browser.newContext();await installMocks(context,false);const page=await context.newPage();
     await page.goto(base+'/public/html/game/tank-3d/index.html');await page.locator('#menu [data-act="coop"]').click();await page.locator('#coop-create').click();await page.waitForFunction(()=>__wire.some(m=>m.type==='create'));

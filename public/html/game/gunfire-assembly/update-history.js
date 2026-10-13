@@ -1,6 +1,9 @@
 // Player-facing notes travel with the same game package; no network or account required.
-export const GAME_VERSION='0.1.5';
+export const GAME_VERSION='0.1.6';
 export const UPDATE_HISTORY=[
+  {version:'0.1.6',date:'2026-10-13',title:'游客先玩，账号功能按需使用',changes:[
+    '联机昵称不再自由填写，只用系统匿名称呼或主动授权并通过检测的B站昵称；房间名称统一自动生成。',
+    '单机、本地存档与文件备份直接可用；Toy云存档和成绩提交在主动使用时才连接账号。']},
   {version:'0.1.5',date:'2026-10-13',title:'手动换弹与手机吃鸡手感',changes:[
     '战地与抗战空仓不再自动装填，须按 R 或点「换弹」；空仓再开枪会提示并高亮换弹键。',
     '手机射击键加大，举枪/换弹贴在射击旁；按住射击可继续拖枪，抗战也显示换弹与举枪键。']},

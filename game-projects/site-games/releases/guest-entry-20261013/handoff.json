@@ -1,0 +1,75 @@
+{
+  "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-toy-guest-20261013-1",
+  "branch": "codex/toy-guest-play-20261013",
+  "created_at": "2026-10-13T14:31:09.507077+08:00",
+  "games": [
+    {
+      "game": "tank-3d",
+      "id": "39043249461248",
+      "slug": "feidao-tank-3d",
+      "old_version": "remix-entry1-views4-anonymous1",
+      "version": "remix-entry1-views4-guest1",
+      "url": "https://www.bilibili.com/toy/feidao-tank-3d/index.html"
+    },
+    {
+      "game": "jackal-stage1-3d",
+      "id": "39863936092160",
+      "slug": "feidao-jackal-3d",
+      "old_version": "v0.11.1-anonymous1",
+      "version": "v0.11.1-guest1",
+      "url": "https://www.bilibili.com/toy/feidao-jackal-3d/index.html"
+    },
+    {
+      "game": "cadillacs-stage1-3d",
+      "id": "40412421031936",
+      "slug": "feidao-cadillacs-3d",
+      "old_version": "v0.11.0-hellroad.1-menu-desk1-anonymous1",
+      "version": "v0.11.0-hellroad.1-menu-desk1-guest1",
+      "url": "https://www.bilibili.com/toy/feidao-cadillacs-3d/index.html"
+    },
+    {
+      "game": "starship-defense",
+      "id": "38678478981120",
+      "slug": "chongchao-qianshao",
+      "old_version": "web-mode-select-v0.36.8",
+      "version": "web-guest-v0.36.9",
+      "url": "https://www.bilibili.com/toy/chongchao-qianshao/index.html"
+    },
+    {
+      "game": "gunfire-assembly",
+      "id": "43022175699968",
+      "slug": "feidao-gunfire",
+      "old_version": "web-reload-touch-v0.1.5",
+      "version": "web-guest-v0.1.6",
+      "url": "https://www.bilibili.com/toy/feidao-gunfire/index.html"
+    }
+  ],
+  "behavior": {
+    "single_player": "No account dependency",
+    "anonymous_multiplayer": "Default, bounded server-generated labels",
+    "free_public_text": "Removed from game UI, never restored by switching identity",
+    "official_nickname": "Optional player gesture and strict exact-text safety check; no avatar/openId transmission",
+    "cloud": "Existing official provider, on demand; previous saves and file backup retained",
+    "watermark": "Request false only with verified package lacking free public content input"
+  },
+  "channels": {
+    "website": "pending",
+    "toy": "pending",
+    "taptap": "not_requested",
+    "bilibili": "pending_decision"
+  },
+  "cover": {
+    "decision": "reuse",
+    "reason": "Entry/identity flow only; gameplay scenes and art unchanged"
+  },
+  "artifacts": "D:\\project\\task-artifacts\\toy-guest-play-20261013",
+  "verification": {
+    "unit_cases": 17,
+    "identity_compatibility_cases": 17,
+    "cloud_save_cases": 26,
+    "package_browser_cases": 11,
+    "privacy_and_backup_cases": 16,
+    "physical_phone": false,
+    "method": "Isolated Edge browsers; SDK and room relay mocked for package tests; actual no-account public entry verification pending"
+  }
+}

@@ -11,7 +11,7 @@ class Socket {
   message(value){this.onmessage({data:JSON.stringify(value)});}
 }
 globalThis.WebSocket=Socket;
-const safety=await import('../../../public/js/game/input-safety.js?v=anonymous1');
+const safety=await import('../../../public/js/game/input-safety.js?v=guest1');
 const {CoopConnection}=await import('../../../public/js/game/coop.js');
 let calls=[],checks=0;
 function sdk(handler){window.toy={isSupport:async()=>true,checkInputSafety:async req=>{calls.push(req);return handler(req);}};}

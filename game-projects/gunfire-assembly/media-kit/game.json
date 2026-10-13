@@ -2,7 +2,7 @@
   "game_id": "gunfire-assembly",
   "name": "枪火集结",
   "engine": "Three.js r152",
-  "current_version": "web-reload-touch-v0.1.5",
+  "current_version": "web-guest-v0.1.6",
   "entrypoint": "public/html/game/gunfire-assembly/index.html",
   "release_intent": "web_demo",
   "development_model": "Composer",
@@ -70,7 +70,13 @@
     "last_zip_sha256": "7483462c5ad3db9178e3c20401831eda980cb82b7b0c785149346048671aac26",
     "last_preview_url": "https://www.bilibili.com/toy/preview/preview_q06U35z2/index.html",
     "preview_url": "https://www.bilibili.com/toy/preview/preview_HytZliDb/index.html",
-    "published_entry": "https://www.bilibili.com/toy/feidao-gunfire/index.html"
+    "published_entry": "https://www.bilibili.com/toy/feidao-gunfire/index.html",
+    "pending_guest_entry": {
+      "version": "web-guest-v0.1.6",
+      "watermark_enabled": false,
+      "status": "prepared_not_submitted",
+      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
+    }
   },
   "qa": "releases/web-anonymous-v0.1.3/handoff.json"
 }

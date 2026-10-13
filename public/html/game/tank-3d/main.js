@@ -3,7 +3,7 @@ import { installRemakeUI, createPitchController, bindDragLook, addControlModeBut
 // （幕布 → 游玩 → 原版计分页 → 下一关 / GAME OVER）、输入映射、HUD、布局（手机竖屏自动旋转）、主循环与测试钩子。
 import { createScene, PRESETS } from './scene.js?v=views4';
 import { createRun, createWorld, step, turnPlayer, localPlayer, localStats, SCORE, TYPE_NAMES, qa } from './sim.js?v=coop-unstick1';
-import { CoopConnection, snapshot, hydrate, installNicknameButton, installAnonymousControls } from './coop.js?v=coop-anonymous1';
+import { CoopConnection, snapshot, hydrate, installNicknameButton, installAnonymousControls } from './coop.js?v=guest1';
 import { installLandscapeTyping } from '../../../js/game/landscape-typing.js?v=lt1';
 installLandscapeTyping();
 import { CLASSIC_COUNT, REMIX_LEVELS, remixInfo, MINI_INFO, CHAPTERS } from './levels.js?v=merge1';

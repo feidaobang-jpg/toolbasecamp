@@ -172,7 +172,13 @@
     "preserved_package": "D:/project/task-artifacts/jackal-stage3-20261012/toy-v0.11.0-package",
     "watermark_enabled": true,
     "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
-    "public_runtime_revision": "v25470"
+    "public_runtime_revision": "v25470",
+    "pending_guest_entry": {
+      "version": "v0.11.1-guest1",
+      "watermark_enabled": false,
+      "status": "prepared_not_submitted",
+      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
+    }
   },
   "game_id": "jackal-stage1-3d",
   "launch": {
@@ -192,7 +198,7 @@
       "q": "high / low：测试用强制画质"
     }
   },
-  "current_version": "v0.11.1-anonymous1",
+  "current_version": "v0.11.1-guest1",
   "engine": "Three.js r152（WebGL），原生 JavaScript ES 模块，用 esbuild 0.28.2 打包为单个普通脚本",
   "website_version": "v0.11.0-input-safety1",
   "controls": "WASD/方向键或左下摇杆移动；J/空格机枪，K手雷或当前等级火箭，U联合开火（按住连发，沿用各自冷却）；机枪默认原作朝上（固定世界北），菜单可选跟随车头并保存；手机J红/K绿下排、U金在J正上方等大对齐；C切换视角，Q/E或空白处拖动转视角；右上暂停/全屏；操作模式切换保留本局并释放输入。",

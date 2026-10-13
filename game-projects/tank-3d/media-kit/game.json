@@ -3,7 +3,7 @@
   "name": "坦克大战 3D：魔改 Boss 挑战 · 含经典 35 关",
   "name_en": "Tank Battle 3D: Classic 35 Stages + Remix Endless Loops",
   "engine": "Three.js 0.170.0 + 原生 JavaScript（ES 模块，无构建步骤；玩法逻辑固定 60 帧/秒、FC 像素坐标）",
-  "current_version": "remix-entry1-views4-anonymous1",
+  "current_version": "remix-entry1-views4-guest1",
   "handoff": "releases/remix-entry1-menu-text1-fp-aim1-privacy1-input-safety1/handoff.json",
   "entrypoint": "public/html/game/tank-3d/index.html",
   "launch": "在仓库根目录运行本地 HTTP 服务（例如 python -m http.server 8765）后打开 /public/html/game/tank-3d/index.html；上线后路径为 /html/game/tank-3d/index.html；?test=1 打开测试钩子",
@@ -162,7 +162,13 @@
     },
     "watermark_enabled": true,
     "source_commit": "e8fcfe3dd37dc1966c894722079676f44f57c0ec",
-    "public_runtime_revision": "v25479"
+    "public_runtime_revision": "v25479",
+    "pending_guest_entry": {
+      "version": "remix-entry1-views4-guest1",
+      "watermark_enabled": false,
+      "status": "prepared_not_submitted",
+      "reason": "No editable public names; server labels or explicitly authorized and checked official Bilibili profile only; local backup remains private"
+    }
   },
   "merged_from": {
     "game": "tank-battle",
