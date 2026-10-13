@@ -81,18 +81,7 @@ const pass=(name,data)=>{results.push({name,data});console.log('PASS',name,JSON.
    }
    assert.equal(await locked(page),null);pass(mode+' keeps its playable input without mouse capture');await c.close();
   }
-  for(const mode of ['battlefield','resistance']){
-   const {context:c,page}=await load();
-   await page.click(mode==='battlefield'?'#btnVersus':'#btnResistance');await page.click(mode==='battlefield'?'[data-vs-ai="normal"]':'[data-chapter="0"]');
-   await page.waitForFunction(()=>document.pointerLockElement?.id==='c3d');
-   await page.evaluate(()=>{__gameQA.player.invulnerable=999;__gameQA.AudioSys.master.gain.value=0;});
-   const t=await mouseTurn(page);assert.notEqual(t.a.yaw,t.b.yaw);assert.equal(t.b.fire,false);
-   await page.mouse.click(640,360,{button:'right'});await settle(page);
-   const sight=await page.evaluate(mode=>mode==='battlefield'?document.getElementById('vZ').getAttribute('aria-pressed')==='true':__gameQA.resistanceCampaign.state.aiming,mode);
-   assert.equal(sight,true);
-   await page.mouse.down();assert.equal((await state(page)).fire,true);await page.mouse.up();assert.equal((await state(page)).fire,false);
-   pass(mode+' starts with captured free aim, right-button sight and held left-button fire');await c.close();
-  }
+  // Gunfire modes now live in their own game; this regression covers the playable insect campaign.
   assert.deepEqual(errors,[]);pass('No browser runtime errors');
  }finally{await browser.close();fs.writeFileSync(path.join(OUT,'results.json'),JSON.stringify({method:'Headless Edge, real mouse/keyboard input and CDP touch simulation; no physical phone',results,errors},null,2));}
 })().catch(e=>{console.error(e);process.exitCode=1;});

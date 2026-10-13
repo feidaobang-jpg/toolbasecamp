@@ -37,7 +37,7 @@ const baseline=process.env.BASELINE==='1';
    const near=spawn(3,87),far=spawn(0,102,'boss');far.elite=true;far.aimBias=100;
    const probe=()=>q.player.pos.clone().add(q.player.pos.clone().set(0,1.35,0));
    const aim=()=>q.playerAim(probe(),40).mo;
-   tests.views=[];for(let view=0;view<4;view++){q.setCameraView(view,false);q.setCamYaw(0);tests.views.push(aim()===near);}
+   tests.views=[];for(let view=0;view<4;view++){if(view===3)q.setCamMode('first',false);else q.setCameraView(view,false);q.setCamYaw(0);tests.views.push(aim()===near);}
    // A different player's position, not camera alignment or entity iteration order, determines priority.
    q.player.pos.set(0,0,101);tests.moved=aim()===far;q.player.pos.set(0,0,90);
    q.Input.network={autoAim:true,yaw:0,edges:[]};tests.network=aim()===near;
