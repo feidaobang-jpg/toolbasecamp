@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "game_id": "chongchao-qianshao",
+  "version": "web-fire-v0.37.3",
+  "base_version": "web-shallow-hive-v0.37.2",
+  "task_id": "01a133de-6dff-7e82-901b-e857af3188b6-fire-20261013-3",
+  "created_at": "2026-10-13T16:31:34.310137+08:00",
+  "build": {
+    "commit": null,
+    "entrypoint": "public/html/game/starship-defense/index.html"
+  },
+  "changes": [
+    "电脑手机共用自动、按住、点击开关连射；独立瞄准设置与既有偏好保留",
+    "触屏按钮显示连射开关状态；暂停/失焦/取消触摸/操作模式切换清除连射",
+    "联机发送真实按键/开关意图，目标检测由房主完成；菜单与建造阶段不发射",
+    "设置页深色对比度修复，游戏内帮助与版本说明同步"
+  ],
+  "qa": {
+    "passed": true,
+    "tests": [
+      "verify-combat-controls.mjs",
+      "verify-fire-modes.cjs",
+      "verify-fire-online.cjs",
+      "verify-slope-aim.cjs",
+      "verify-first-person-mouse.cjs"
+    ],
+    "viewports": [
+      [
+        1280,
+        580
+      ],
+      [
+        844,
+        346
+      ],
+      [
+        390,
+        720
+      ]
+    ],
+    "physical_phone_test": false,
+    "method": "actual bundled Edge browser runtime, deterministic enemy fixture, real keyboard and CDP touch; actual local FastAPI relay for two clients",
+    "network_players": 2,
+    "limitations": [
+      "浏览器触屏模拟，未做手机真机验收",
+      "未改变联机传输协议；四人全流程未在本次重复验证"
+    ]
+  },
+  "bugs": [
+    {
+      "id": "FIRE-INPUT-007",
+      "cause": "触屏绕过公共射击设置；旧联机调用firing(true)把自动选择当成明确开火",
+      "fix": "统一输入状态并分开发送 fire 与 autoFire",
+      "retest": "单机三视口和真实双人房间通过"
+    }
+  ],
+  "media": [],
+  "channels": {
+    "website": {
+      "status": "pending"
+    },
+    "toy": {
+      "status": "pending"
+    },
+    "bilibili": {
+      "status": "decision_pending"
+    },
+    "taptap": {
+      "status": "not_requested"
+    }
+  },
+  "status": "validated_pending_release"
+}
