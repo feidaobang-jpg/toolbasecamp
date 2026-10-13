@@ -49,6 +49,30 @@ class MarketAdapterTests(unittest.TestCase):
             market.get_text('https://hq.sinajs.cn/list=sh000001')
             self.assertEqual(fetch.call_args.kwargs['headers']['Referer'], 'https://finance.sina.com.cn/')
 
+    def test_fund_nav_referer_parse_and_fail_closed(self):
+        body='{"Data":{"LSJZList":[{"FSRQ":"2026-10-09","DWJZ":"1.7232"},{"FSRQ":"2026-10-08","DWJZ":""},{"FSRQ":"2026-09-30","DWJZ":"1.7059"}]}}'
+        with patch('stock_market.requests.get', return_value=response(body)) as fetch:
+            self.assertEqual(market.fund_navs('513030'), {'2026-10-09': 1.7232, '2026-09-30': 1.7059})
+        self.assertEqual(fetch.call_args.kwargs['headers']['Referer'], 'https://fundf10.eastmoney.com/')
+        self.assertEqual(fetch.call_args.kwargs['params']['fundCode'], '513030')
+        for bad in ('{"Data":null}', '{"Data":{"LSJZList":[]}}'):
+            with patch('stock_market.requests.get', return_value=response(bad)):
+                with self.assertRaises(RuntimeError):
+                    market.fund_navs('513030')
+
+    def test_fund_codes_map_to_their_exchange(self):
+        line='var hq_str_sh513030="德国ETF,1.765,1.766,1.757,1.765,1.752,1.756,1.757,16411400,28831837.000,30200,1.756,1,1.755,1,1.754,1,1.753,1,1.752,753100,1.757,1,1.758,1,1.759,1,1.760,1,1.761,2026-10-13,10:46:28,00,";'
+        with patch('stock_market.requests.get', return_value=response(line)) as fetch:
+            q = market.quotes(['513030'])['513030']
+        self.assertTrue(fetch.call_args.args[0].endswith('list=sh513030'))
+        self.assertEqual((q['last'], q['bid'], q['ask'], q['ask_size']), (1.757, 1.756, 1.757, 753100))
+        kline = '{"data":{"klines":["2026-10-12,1.771,1.766,1.782,1.760,444858,78500000.00"]}}'
+        for symbol, secid in (('513030', '1.513030'), ('159866', '0.159866'), ('600000', '1.600000'), ('sz000001', '0.000001')):
+            with patch('stock_market.requests.get', return_value=response(kline)) as fetch:
+                bars = market.daily_bars(symbol, 5)
+            self.assertEqual(fetch.call_args.kwargs['params']['secid'], secid)
+        self.assertEqual(bars[0]['amount'], 78500000.0)
+
     def test_connection_retry_is_bounded_and_message_sanitized(self):
         with patch('stock_market.requests.get', side_effect=requests.ConnectionError('private diagnostics')) as fetch, patch('stock_market.time.sleep'):
             with self.assertRaisesRegex(RuntimeError, '东方财富行情接口暂不可用') as raised:

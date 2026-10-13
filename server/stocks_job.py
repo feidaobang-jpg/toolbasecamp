@@ -21,6 +21,7 @@ def main():
     parser.add_argument("--probe",action="store_true",help="Read-only data probe, no signals or fills")
     parser.add_argument("--init",action="store_true",help="Install tables under the database write lock")
     parser.add_argument("--days",type=int,default=90)
+    parser.add_argument("--version",default=None,help="Strategy version; default exports/runs every strategy")
     args=parser.parse_args()
     if not 7<=args.days<=365:
         parser.error("--days must be between 7 and 365")
@@ -31,11 +32,11 @@ def main():
                 stocks.ensure_stock_pick_tables(cur)
             result={"success":True,"message":"股票记录表已就绪"}
         elif args.export:
-            result=stocks.review_export(args.days)
+            result=stocks.review_export(args.days,args.version)
         elif args.probe:
-            result=stocks.compute_screen(cn_now())
+            result=stocks.compute_screen(cn_now(),stocks.rules_for(args.version)["version"])
         else:
-            result=stocks.run_job()
+            result=stocks.run_job(version=args.version)
         print(stocks.dump(result))
         return 0 if result.get("success",result.get("data_ok",True)) else 1
     except Exception as exc:

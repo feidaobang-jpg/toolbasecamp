@@ -12,7 +12,10 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import stocks
 import stock_market
 from stock_calendar import CN_TZ, is_trade_day, phase_at, session_message, trade_days_between
-from stock_strategy import RULES, close_accounting, entry_order, evaluate_pullback, execution_price, exit_reason, fees
+from stock_strategy import (ETF_RULES, RULES, STRATEGY_RULES, close_accounting, entry_order, etf_dip_setup,
+    etf_exit_reason, evaluate_pullback, execution_price, exit_reason, fees, premium_level, rsi)
+
+ETF = "etf-dip-v1"
 
 sqlite3.register_converter("DATETIME",lambda b:datetime.fromisoformat(b.decode()))
 sqlite3.register_converter("DATE",lambda b:date.fromisoformat(b.decode()))
@@ -26,6 +29,22 @@ def quote(now,last=10):
     return {"symbol":"000001","name":"样本股票","at":now.isoformat(),"last":last,
         "prev_close":10,"open":10,"low":9.9,"high":10.1,"volume":1000000,
         "bid":last-0.01,"bid_size":100000,"ask":last+0.01,"ask_size":100000}
+
+def trade_days(count,end="2026-10-08"):
+    days=[]; day=date.fromisoformat(end)
+    while len(days)<count:
+        day-=timedelta(days=1)
+        if is_trade_day(day): days.append(day.isoformat())
+    return days[::-1]
+
+def etf_bars(closes,amount=8e7,end="2026-10-08"):
+    return [{"date":d,"open":c,"close":c,"high":c,"low":c,"volume":amount/c,"amount":amount}
+            for d,c in zip(trade_days(len(closes),end),closes)]
+
+def etf_quote(now,last,prev=0.98,symbol="513030",name="德国ETF"):
+    return {"symbol":symbol,"name":name,"at":now.isoformat(),"last":last,"prev_close":prev,"open":prev,
+        "low":last,"high":prev,"volume":5e7,"bid":round(last-0.001,3),"bid_size":900000,
+        "ask":round(last+0.001,3),"ask_size":900000}
 
 def screen(now):
     return {"version":"pullback-v1","generated_at":now.strftime("%Y-%m-%d %H:%M:%S"),
@@ -112,6 +131,11 @@ class RulesTests(unittest.TestCase):
         self.assertFalse(stock_market.fresh_quote(quote(now-timedelta(days=1)),now))
         self.assertFalse(stock_market.fresh_quote(quote(now+timedelta(minutes=1)),now))
         self.assertTrue(stock_market.fresh_quote(quote(now),now))
+    def test_fund_fills_keep_sub_cent_precision(self):
+        q=etf_quote(at(),0.955)
+        self.assertEqual(execution_price(q,100,"buy",ETF_RULES),0.957)
+        self.assertEqual(execution_price(q,100,"sell",ETF_RULES),0.953)
+        self.assertEqual(execution_price(quote(at()),100,"buy"),10.02)
     def test_minimum_fee_tax_and_slippage(self):
         self.assertEqual(fees(10,100,"buy"),5.01)
         self.assertEqual(fees(10,100,"sell"),5.51)
@@ -165,6 +189,150 @@ class RulesTests(unittest.TestCase):
         self.assertEqual(result,evaluate_pullback(row,bars+[future],q,at(),sector,market))
         self.assertIsNone(evaluate_pullback(row,bars,q,at(),sector,{"allow_recommend":False}))
 
+class EtfDipRulesTests(unittest.TestCase):
+    def test_registry_runs_primary_first_and_keeps_versions_apart(self):
+        self.assertEqual(list(STRATEGY_RULES),[ETF,"pullback-v1"])
+        self.assertEqual(stocks.rules_for(None)["version"],ETF)
+        self.assertEqual(set(stocks.SCREENS),set(STRATEGY_RULES))
+        self.assertEqual(set(stocks.EXITS),set(STRATEGY_RULES))
+        with self.assertRaises(Exception): stocks.rules_for("unknown")
+        symbols=[s for members in ETF_RULES["families"].values() for s in members]
+        self.assertEqual(len(symbols),len(set(symbols)))
+    def test_exchange_prefix_for_funds(self):
+        self.assertEqual([stock_market.exchange(s) for s in ("513100","159941","600000","000001")],["sh","sz","sh","sz"])
+    def test_etf_fees_have_no_stamp_tax_or_transfer_fee(self):
+        self.assertEqual(fees(1.0,9900,"buy",ETF_RULES),5.0)
+        self.assertEqual(fees(1.0,9900,"sell",ETF_RULES),5.0)
+        self.assertEqual(fees(2.0,25000,"sell",ETF_RULES),15.0)
+    def test_wilder_rsi(self):
+        self.assertEqual(rsi([10,10,10,10]),50.0)
+        self.assertEqual(rsi([10,10.1,10.2]),100.0)
+        self.assertEqual(rsi([10,10,10,9.5,9.0]),0.0)
+        self.assertAlmostEqual(rsi([10,10.2,10.0,9.9]),20.0)
+    def test_setup_needs_sharp_drop_liquidity_and_ignores_today_bar(self):
+        now=at()
+        bars=etf_bars([1.0]*38+[0.99,0.98])
+        found=etf_dip_setup(bars,etf_quote(now,0.955),now)
+        self.assertLess(found["rsi"],5)
+        self.assertEqual(found["two_day_pct"],-3.54)
+        self.assertEqual(len(found["history"]),40)
+        future={"date":"2026-10-08","open":9,"close":9,"high":9,"low":9,"volume":1,"amount":1}
+        self.assertEqual(found["rsi"],etf_dip_setup(bars+[future],etf_quote(now,0.955),now)["rsi"])
+        self.assertIsNone(etf_dip_setup(bars,etf_quote(now,0.985),now))
+        self.assertIsNone(etf_dip_setup(etf_bars([1.0]*38+[0.99,0.98],amount=4e7),etf_quote(now,0.955),now))
+        self.assertIsNone(etf_dip_setup(bars,etf_quote(now-timedelta(minutes=5),0.955),now))
+        self.assertIsNone(etf_dip_setup(bars[-20:],etf_quote(now,0.955),now))
+    def test_setup_rejects_unknown_price_basis(self):
+        now=at()
+        split=etf_bars([2.0]*30+[1.0]*8+[0.99,0.98])
+        self.assertIsNone(etf_dip_setup(split,etf_quote(now,0.955),now))
+        bars=etf_bars([1.0]*38+[0.99,0.98])
+        self.assertIsNone(etf_dip_setup(bars,etf_quote(now,0.955,prev=0.49),now))
+    def test_sina_bars_without_amount_use_volume_times_close(self):
+        now=at()
+        bars=etf_bars([1.0]*38+[0.99,0.98])
+        for b in bars: del b["amount"]
+        self.assertEqual(etf_dip_setup(bars,etf_quote(now,0.955),now)["amount_20d"],80000000)
+    def test_premium_uses_only_published_sessions(self):
+        bars=etf_bars([1.02]*40)
+        navs={b["date"]:1.0 for b in bars}
+        self.assertEqual(premium_level(bars,navs),2.0)
+        bars[-1]["close"]=9.9
+        self.assertEqual(premium_level(bars,navs),2.0)
+        bars[-2]["close"]=1.07
+        self.assertEqual(premium_level(bars,navs),3.0)
+    def test_premium_borrows_recent_nav_and_fails_closed(self):
+        bars=etf_bars([1.02]*40)
+        navs={b["date"]:1.0 for b in bars}
+        del navs[bars[-3]["date"]]
+        self.assertEqual(premium_level(bars,navs),2.0)
+        for b in bars[-9:]: navs.pop(b["date"],None)
+        self.assertIsNone(premium_level(bars,navs))
+        self.assertIsNone(premium_level(bars[:4],{b["date"]:1.0 for b in bars}))
+    def test_exit_target_rebound_time_limit_and_no_stop(self):
+        trade={"entry_day":date(2026,10,8),"entry_price":1.0}
+        closes=[1.0,1.0,1.0,0.98,0.96]
+        q=etf_quote(at("2026-10-09","09:35:00"),1.021)
+        self.assertIsNone(etf_exit_reason(trade,etf_quote(at(time="14:56:00"),1.05),at(time="14:56:00"),closes=closes))
+        self.assertEqual(etf_exit_reason(trade,q,at("2026-10-09","09:35:00"),closes=closes),"止盈")
+        q["last"]=0.9
+        self.assertIsNone(etf_exit_reason(trade,q,at("2026-10-09","09:35:00"),closes=closes))
+        self.assertIsNone(etf_exit_reason(trade,q,at("2026-10-09","14:55:00"),closes=closes))
+        q["last"]=0.99
+        self.assertIsNone(etf_exit_reason(trade,q,at("2026-10-09","13:00:00"),closes=closes))
+        self.assertEqual(etf_exit_reason(trade,q,at("2026-10-09","14:55:00"),closes=closes),"反弹离场")
+        q["last"]=0.9
+        self.assertIsNone(etf_exit_reason(trade,q,at("2026-10-21","14:55:00"),closes=closes))
+        self.assertEqual(etf_exit_reason(trade,q,at("2026-10-22","14:55:00"),closes=closes),"持仓到期")
+        self.assertIsNone(etf_exit_reason(trade,q,at("2026-10-22","10:00:00"),closes=closes))
+
+class EtfDipScreenTests(unittest.TestCase):
+    def feeds(self,now,quotes=None,bars=None,navs=None):
+        pool=[s for members in ETF_RULES["families"].values() for s in members]
+        qmap={s:etf_quote(now,0.985,symbol=s,name="平稳"+s) for s in pool}
+        qmap.update(quotes or {})
+        dip=etf_bars([1.0]*38+[0.99,0.98])
+        def daily(symbol,limit=100):
+            value=(bars or {}).get(symbol,dip)
+            if isinstance(value,Exception): raise value
+            return value
+        def fund(symbol,limit=20):
+            value=(navs or {}).get(symbol,{b["date"]:b["close"]/1.01 for b in dip})
+            if isinstance(value,Exception): raise value
+            return value
+        return patch("stock_market.quotes",return_value=qmap),patch("stock_market.daily_bars",side_effect=daily),patch("stock_market.fund_navs",side_effect=fund)
+    def run_screen(self,now,**kwargs):
+        a,b,c=self.feeds(now,**kwargs)
+        with a,b,c: return stocks.screen_etf_dip(now)
+    def test_quiet_market_gives_no_signal(self):
+        result=self.run_screen(at())
+        self.assertEqual(result["items"],[])
+        self.assertTrue(result["data_ok"])
+        self.assertEqual(result["scan_count"],23)
+        self.assertEqual(len(result["watch"]),5)
+        self.assertGreaterEqual(result["watch"][0]["rsi"],5)
+    def test_lowest_premium_member_per_family_ordered_by_rsi(self):
+        now=at()
+        dip=etf_bars([1.0]*38+[0.99,0.98])
+        quotes={"513100":etf_quote(now,0.955,symbol="513100",name="纳指甲"),
+                "159941":etf_quote(now,0.955,symbol="159941",name="纳指乙"),
+                "513030":etf_quote(now,0.94,symbol="513030",name="德国")}
+        navs={"513100":{b["date"]:b["close"]/1.025 for b in dip},"159941":{b["date"]:b["close"]/1.004 for b in dip}}
+        result=self.run_screen(now,quotes=quotes,navs=navs)
+        self.assertEqual([i["symbol"] for i in result["items"]],["513030","159941"])
+        self.assertEqual(result["items"][1]["sector"],"纳斯达克100")
+        self.assertEqual(result["items"][1]["metrics"]["premium_pct"],0.4)
+        self.assertEqual(result["items"][0]["quote"]["last"],0.94)
+        self.assertTrue(result["data_ok"])
+        self.assertEqual([w["symbol"] for w in result["watch"][:3]],["513100","159941","513030"])
+        self.assertNotIn("history",result["items"][0]["metrics"])
+    def test_rich_premium_is_blocked_not_bought(self):
+        now=at()
+        dip=etf_bars([1.0]*38+[0.99,0.98])
+        result=self.run_screen(now,quotes={"513400":etf_quote(now,0.955,symbol="513400",name="道琼斯")},
+            navs={"513400":{b["date"]:b["close"]/1.08 for b in dip}})
+        self.assertEqual(result["items"],[])
+        self.assertEqual(result["premium_blocked"][0]["symbol"],"513400")
+        self.assertIn("溢价超过3%",result["message"])
+    def test_unverified_nav_or_bars_block_formal_signal(self):
+        now=at()
+        quotes={"513400":etf_quote(now,0.955,symbol="513400",name="道琼斯")}
+        result=self.run_screen(now,quotes=quotes,navs={"513400":RuntimeError("offline")})
+        self.assertEqual(result["items"],[])
+        self.assertFalse(result["data_ok"])
+        result=self.run_screen(now,quotes=quotes,navs={"513400":{"2026-09-01":1.0}})
+        self.assertFalse(result["data_ok"])
+        result=self.run_screen(now,bars={"513030":RuntimeError("offline")})
+        self.assertFalse(result["data_ok"])
+        result=self.run_screen(now,bars={"513030":[{"date":"2026-10-07"}]*40})
+        self.assertFalse(result["data_ok"])
+        self.assertEqual(result["data_error_count"],1)
+    def test_missing_quotes_for_most_funds_stop_the_screen(self):
+        now=at()
+        a,b,c=self.feeds(now)
+        with patch("stock_market.quotes",return_value={}),b,c:
+            with self.assertRaisesRegex(RuntimeError,"大面积缺失"): stocks.screen_etf_dip(now)
+
 class PersistenceTests(unittest.TestCase):
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory()
@@ -174,12 +342,24 @@ class PersistenceTests(unittest.TestCase):
     def tearDown(self):
         stocks.wire(None,None,None,None)
         self.tmp.cleanup()
-    def job(self,now,screen_data=None,q=None,bars=None,finished=None):
+    def job(self,now,screen_data=None,q=None,bars=None,finished=None,version="pullback-v1"):
         with patch("stocks.cn_now",return_value=finished or now), \
              patch("stocks.compute_screen",return_value=screen_data or screen(now)), \
              patch("stock_market.quotes",return_value={"000001":q or quote(now)}), \
              patch("stock_market.daily_bars",return_value=bars or [{"date":"2026-10-07","close":10}]*70):
-            return stocks.run_job(now)
+            return stocks.run_job(now,version)
+    def etf_screen(self,now,last=0.955):
+        return {"version":ETF,"generated_at":now.strftime("%Y-%m-%d %H:%M:%S"),"data_ok":True,"message":"测试行情",
+            "items":[{"symbol":"513030","name":"德国ETF","sector":"德国DAX","quote":etf_quote(now,last),
+                      "match_score":97,"metrics":{},"reason":"测试信号"}]}
+    def etf_job(self,now,last,screen_data=None,bars=None,prev=0.98):
+        with patch("stocks.cn_now",return_value=now), \
+             patch("stocks.compute_screen",return_value=screen_data or self.etf_screen(now,last)), \
+             patch("stock_market.quotes",return_value={"513030":etf_quote(now,last,prev=prev)}), \
+             patch("stock_market.daily_bars",return_value=bars or etf_bars([1.0]*38+[0.99,0.98])):
+            return stocks.run_job(now,ETF)
+    def etf_rows(self):
+        return [r for r in self.rows() if r["version"]==ETF]
     def rows(self):
         with stocks.db() as cur:
             cur.execute("SELECT * FROM stock_strategy_trades ORDER BY id")
@@ -271,9 +451,15 @@ class PersistenceTests(unittest.TestCase):
     def test_read_endpoints_do_not_write_or_use_page_for_stats(self):
         self.entered()
         before=self.rows()
-        stocks.records(limit=20,offset=0,state="",_admin={})
+        listed=stocks.records(limit=20,offset=0,state="",version="pullback-v1",_admin={})
+        self.assertEqual(listed["total"],1)
+        self.assertEqual(stocks.records(limit=20,offset=0,state="",version="",_admin={})["total"],0)
         data=stocks.review_export(90)
-        self.assertEqual(data["rules"]["version"],"pullback-v1")
+        self.assertEqual(data["rules"]["version"],ETF)
+        self.assertEqual(data["trades"],[])
+        self.assertEqual(data["others"]["pullback-v1"]["rules"]["version"],"pullback-v1")
+        self.assertEqual(len(data["others"]["pullback-v1"]["trades"]),1)
+        self.assertNotIn("others",stocks.review_export(90,"pullback-v1"))
         self.assertEqual(self.rows(),before)
     def test_retired_routes_and_admin_gate(self):
         paths={r.path for r in stocks.router.routes}
@@ -297,6 +483,76 @@ class PersistenceTests(unittest.TestCase):
         self.assertEqual(sum(r['status']=='open' for r in self.rows()),3)
         self.assertEqual(self.rows()[-1]['status'],'expired')
 
+    def test_etf_target_exit_net_of_etf_fees_and_separate_stats(self):
+        self.etf_job(at(),0.955)
+        self.etf_job(at(time="14:55:00"),0.955)
+        opened=self.etf_rows()[0]
+        self.assertEqual(opened["status"],"open")
+        self.assertEqual(opened["quantity"]%100,0)
+        self.assertLessEqual(opened["entry_cash"],10000)
+        self.assertEqual(opened["entry_fee"],5.0)
+        self.assertEqual(opened["entry_price"],0.957)
+        self.etf_job(at(time="14:56:00"),0.99)
+        self.assertEqual(self.etf_rows()[0]["status"],"open")
+        bars=etf_bars([1.0]*38+[0.99,0.98,0.955],end="2026-10-09")
+        self.etf_job(at("2026-10-09","09:35:00"),0.97,bars=bars,prev=0.955)
+        self.assertEqual(self.etf_rows()[0]["status"],"open")
+        self.etf_job(at("2026-10-09","09:40:00"),0.98,bars=bars,prev=0.955)
+        closed=self.etf_rows()[0]
+        self.assertEqual(closed["status"],"closed")
+        self.assertEqual(closed["exit_reason"],"止盈")
+        self.assertEqual(closed["exit_fee"],5.0)
+        self.assertGreater(closed["net_return"],2.0)
+        with stocks.db() as cur:
+            self.assertEqual(stocks.stats(cur,ETF)["win_rate"],100)
+            self.assertEqual(stocks.stats(cur,"pullback-v1")["total"],0)
+        self.assertEqual(stocks.dashboard(ETF)["stats"]["settled"],1)
+        self.assertEqual(stocks.dashboard("pullback-v1")["stats"]["settled"],0)
+    def test_etf_rebound_exit_only_at_tail(self):
+        self.etf_job(at(),0.955)
+        self.etf_job(at(time="14:55:00"),0.955)
+        bars=etf_bars([1.0]*36+[0.99,0.98,0.955,0.95,0.95],end="2026-10-13")
+        self.etf_job(at("2026-10-13","13:00:00"),0.97,bars=bars,prev=0.95)
+        self.assertEqual(self.etf_rows()[0]["status"],"open")
+        self.etf_job(at("2026-10-13","14:55:00"),0.97,bars=bars,prev=0.95)
+        closed=self.etf_rows()[0]
+        self.assertEqual((closed["status"],closed["exit_reason"]),("closed","反弹离场"))
+        self.assertLess(closed["net_return"],2.0)
+    def test_etf_scale_in_adds_a_lot_of_the_same_fund(self):
+        self.etf_job(at(),0.955)
+        self.etf_job(at(time="14:55:00"),0.955)
+        bars=etf_bars([1.0]*38+[0.99,0.98,0.955],end="2026-10-09")
+        nxt=at("2026-10-09")
+        self.etf_job(nxt,0.93,screen_data=self.etf_screen(nxt,0.93),bars=bars,prev=0.955)
+        self.etf_job(at("2026-10-09","14:55:00"),0.93,bars=bars,prev=0.955)
+        self.assertEqual([r["status"] for r in self.etf_rows()],["open","open"])
+        with stocks.db() as cur:
+            self.assertLess(stocks._cash(cur,stocks._open_rows(cur,ETF_RULES),ETF_RULES),10100)
+            self.assertEqual(stocks._cash(cur,stocks._open_rows(cur,RULES),RULES),RULES["capital"])
+    def test_etf_split_marks_review_instead_of_profit(self):
+        self.etf_job(at(),0.955)
+        self.etf_job(at(time="14:55:00"),0.955)
+        nxt=at("2026-10-09","09:35:00")
+        self.etf_job(nxt,1.9,bars=etf_bars([1.0]*38+[0.99,0.98,0.955],end="2026-10-09"),prev=1.91)
+        self.assertEqual(self.etf_rows()[0]["status"],"review")
+    def test_run_all_strategies_reports_each_and_survives_one_failure(self):
+        now=at()
+        def screens(when,version="pullback-v1"):
+            if version==ETF: raise RuntimeError("ETF行情或净值大面积缺失，暂停正式信号")
+            return screen(when)
+        with patch("stocks.cn_now",return_value=now), patch("stocks.compute_screen",side_effect=screens), \
+             patch("stock_market.quotes",return_value={"000001":quote(now)}), \
+             patch("stock_market.daily_bars",return_value=[{"date":"2026-10-07","close":10}]*70):
+            result=stocks.run_job(now)
+        self.assertEqual(list(result["strategies"]),[ETF,"pullback-v1"])
+        self.assertFalse(result["success"])
+        self.assertTrue(result["strategies"]["pullback-v1"]["success"])
+        self.assertTrue(result["errors"][0].startswith("指数ETF急跌低吸："))
+        self.assertEqual([r["version"] for r in self.rows()],["pullback-v1"])
+        closed=stocks.run_job(at("2026-10-10"))
+        self.assertTrue(closed["success"])
+        self.assertIn("非执行时段",closed["message"])
+
     def test_api_requires_admin_and_paginates(self):
         from fastapi import FastAPI, HTTPException
         from fastapi.testclient import TestClient
@@ -314,6 +570,12 @@ class PersistenceTests(unittest.TestCase):
         self.assertEqual(result.status_code,200)
         self.assertEqual(result.json()['total'],0)
         self.assertEqual(client.get('/stocks/records?limit=21',headers={'Authorization':'Bearer admin'}).status_code,422)
+        self.assertEqual(client.get('/stocks/records?version=nope',headers={'Authorization':'Bearer admin'}).status_code,400)
+        status=client.get('/stocks/status',headers={'Authorization':'Bearer admin'}).json()
+        self.assertEqual(status['rules']['version'],ETF)
+        self.assertEqual([s['version'] for s in status['strategies']],[ETF,'pullback-v1'])
+        self.assertEqual(client.get('/stocks/status?version=pullback-v1',headers={'Authorization':'Bearer admin'}).json()['rules']['name'],'回调企稳')
+        self.assertEqual(client.get('/stocks/preview').status_code,401)
 
 if __name__=="__main__":
     unittest.main()

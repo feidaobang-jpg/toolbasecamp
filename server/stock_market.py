@@ -34,7 +34,9 @@ def get_text(url, params=None):
     headers = dict(HEADERS)
     host = urlsplit(url).hostname or ""
     if host.endswith(".eastmoney.com"):
-        headers["Referer"] = "https://data.eastmoney.com/" if host.startswith(("np-anotice-stock.", "datacenter.")) else "https://quote.eastmoney.com/center/gridlist.html"
+        headers["Referer"] = ("https://fundf10.eastmoney.com/" if host.startswith("api.fund.")
+            else "https://data.eastmoney.com/" if host.startswith(("np-anotice-stock.", "datacenter."))
+            else "https://quote.eastmoney.com/center/gridlist.html")
         headers.pop("Accept-Encoding", None)
     for attempt in range(3):
         try:
@@ -48,7 +50,8 @@ def get_text(url, params=None):
             last = exc
             if attempt < 2:
                 time.sleep(0.5 * (attempt + 1))
-    source = "东方财富公告" if host.startswith("np-anotice-stock.") else "东方财富行情" if host.endswith(".eastmoney.com") else "新浪行情"
+    source = ("东方财富公告" if host.startswith("np-anotice-stock.") else "东方财富基金净值" if host.startswith("api.fund.")
+              else "东方财富行情" if host.endswith(".eastmoney.com") else "新浪行情")
     raise RuntimeError(source + "接口暂不可用，已重试，请稍后重试") from last
 
 
@@ -57,6 +60,11 @@ def get_json(url, params=None):
         return json.loads(get_text(url, params))
     except (ValueError, UnicodeError) as exc:
         raise RuntimeError("行情接口返回无效数据") from exc
+
+
+def exchange(symbol):
+    """Shanghai lists stocks under 6 and funds under 5; the other codes used here trade in Shenzhen."""
+    return "sh" if symbol.startswith(("5", "6")) else "sz"
 
 
 def normal_stock(code, name):
@@ -160,7 +168,8 @@ def _sina_spot_market():
 
 def daily_bars(symbol, limit=100):
     """Unadjusted OHLCV: never retroactively replace recorded fill prices."""
-    secid = ("1." if symbol.startswith(("6", "sh")) else "0.") + symbol.removeprefix("sh").removeprefix("sz")
+    code = symbol.removeprefix("sh").removeprefix("sz")
+    secid = ("1." if symbol.startswith("sh") or (code == symbol and exchange(code) == "sh") else "0.") + code
     try:
         payload = get_json("https://push2his.eastmoney.com/api/qt/stock/kline/get", {
             "secid": secid, "klt": 101, "fqt": 0, "lmt": limit, "end": "20500101",
@@ -174,7 +183,7 @@ def daily_bars(symbol, limit=100):
             return rows
     except RuntimeError:
         pass
-    sina_symbol = symbol if symbol.startswith(("sh", "sz")) else ("sh" if symbol.startswith("6") else "sz") + symbol
+    sina_symbol = symbol if symbol.startswith(("sh", "sz")) else exchange(symbol) + symbol
     payload = get_json("https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData", {
         "symbol": sina_symbol, "scale": 240, "ma": "no", "datalen": limit})
     rows = []
@@ -189,7 +198,7 @@ def daily_bars(symbol, limit=100):
 def quotes(symbols):
     if not symbols:
         return {}
-    names = [s if s.startswith(("sh", "sz")) else ("sh" if s.startswith("6") else "sz") + s for s in symbols]
+    names = [s if s.startswith(("sh", "sz")) else exchange(s) + s for s in symbols]
     text = get_text("https://hq.sinajs.cn/list=" + ",".join(names))
     result = {}
     for symbol, body in re.findall(r'var hq_str_(\w+)="([^"]*)"', text):
@@ -219,6 +228,20 @@ def fresh_quote(q, now, max_age=120):
         return at.date() == now.astimezone(CN_TZ).date() and -5 <= age <= max_age
     except (ValueError, TypeError, KeyError):
         return False
+
+
+def fund_navs(symbol, limit=20):
+    """Published unit NAVs of an exchange-traded fund as {date: nav}; the newest dates lag the market."""
+    payload = get_json("https://api.fund.eastmoney.com/f10/lsjz", {
+        "fundCode": symbol, "pageIndex": 1, "pageSize": limit})
+    rows = (payload.get("Data") or {}).get("LSJZList")
+    if not isinstance(rows, list):
+        raise RuntimeError("基金净值核验失败")
+    navs = {str(r.get("FSRQ") or "")[:10]: number(r.get("DWJZ")) for r in rows}
+    navs = {day: nav for day, nav in navs.items() if day and nav and nav > 0}
+    if not navs:
+        raise RuntimeError("基金净值列表为空")
+    return navs
 
 
 def announcements(symbol, day):

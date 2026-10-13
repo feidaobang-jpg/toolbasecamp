@@ -434,6 +434,8 @@
 .stock-page-wrap{max-width:56rem;margin:0 auto;}
 .stock-page-wrap h2{font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 1rem;}
 
+.stock-strategy-tabs{margin-bottom:16px;padding-bottom:10px;}
+.stock-backtest .records-stats-row{margin-top:12px;}
 .stock-strategy-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;}
 .stock-strategy-heading h2{margin-bottom:6px;}
 .stock-strategy-heading p,.stock-explanation{font-size:13px;color:#64748b;line-height:1.7;margin:8px 0 14px;}
